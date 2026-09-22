@@ -2,6 +2,13 @@
 
 Mod source code and runtime resources for Minecraft 1.20.1 / Forge.
 
+## Downloads
+
+Use the [download list](DOWNLOADS.md) for matching BVP/SBW JARs, checksums and companion mods.
+The current Tu-95 KH-55 testing build is an unpublished draft; the list explains access requirements.
+
+## Source layout
+
 | Directory | Contents |
 | --- | --- |
 | `bvp/` | Bert's Vehicle Pack Java code, committed runtime resources, and project metadata |

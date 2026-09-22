@@ -1,0 +1,39 @@
+# Downloads
+
+Bert's Vehicle Pack and the matching Superb Warfare fork target Minecraft 1.20.1 / Forge.
+Download the mod JARs from the release assets. GitHub's source-code ZIP and TAR archives are
+source snapshots, not installable mods.
+
+## Stable releases
+
+No stable release is currently published in this repository. See [all releases](https://github.com/bert11882157-games/BVP-SBW/releases)
+for the complete release history.
+The `0.9.19beta` source tag currently has no GitHub Release or compiled download assets.
+
+## Tu-95 KH-55 testing build — draft
+
+[BVP / SBW — Tu-95 KH-55 testing build](https://github.com/bert11882157-games/BVP-SBW/releases/tag/untagged-de887257b447b534452b)
+is an unpublished draft for `v0.1.1-kh55-test.1`. Draft releases require repository write access;
+sign in with an eligible account and open the draft's **Assets** section. The links below are
+the current draft asset links and are not public downloads.
+
+| Component | Version | Mod JAR | Checksum |
+| --- | --- | --- | --- |
+| Bert's Vehicle Pack | `0.1.1-kh55-test.1` | [BVP JAR](https://github.com/bert11882157-games/BVP-SBW/releases/download/untagged-de887257b447b534452b/berts_vehicle_pack-0.1.1-kh55-test.1.jar) | [SHA-256](https://github.com/bert11882157-games/BVP-SBW/releases/download/untagged-de887257b447b534452b/berts_vehicle_pack-0.1.1-kh55-test.1.jar.sha256) |
+| Superb Warfare fork | `0.8.9-bvp.2` | [SBW JAR](https://github.com/bert11882157-games/BVP-SBW/releases/download/untagged-de887257b447b534452b/superbwarfare-0.8.9-bvp.2-mc1.20.1-6effe43-all.jar) | [SHA-256](https://github.com/bert11882157-games/BVP-SBW/releases/download/untagged-de887257b447b534452b/superbwarfare-0.8.9-bvp.2-mc1.20.1-6effe43-all.jar.sha256) |
+
+Use these two builds together with **Fire From Above `1.0.5-bvp.2`** on clients and the server.
+See the [Fire From Above download list](https://github.com/xenoperk/Fire-From-Above/blob/main/DOWNLOADS.md)
+for that matching testing build and its access requirements, and the
+[Dominions download list](https://github.com/xenoperk/Dominions/blob/main/DOWNLOADS.md) for the required Dominions `1.0.11` or newer.
+
+Keep the matching **`sbwmeshloader` `0.1.1`** and the pack's other required dependencies.
+Meshloader is supplied separately by the pack maintainer; this repository does not currently
+host a meshloader download. The draft release notes describe compatibility, changes and
+validation limits; this testing build has not been promoted to a stable release.
+
+## Release history
+
+Keep earlier version entries and their version-specific links here when adding a new build.
+When a draft is published, update its status and replace temporary draft links with the
+published release and asset URLs. Do not relabel a testing build as stable without the release review.
