@@ -30,9 +30,16 @@ Existing optional `Model`, `Texture`, `Item`, `Scale` and `Capacity` fields rema
 `LaunchOffset` is a vehicle-local displacement of at most eight blocks. `LaunchDirection` is
 a nonzero finite vehicle-local vector with length at most 128 and is normalized at launch.
 It defaults to forward `[0, 0, 1]`; an upward ground launcher can use `[0, 1, 0]` or an authored
-angled direction. The existing profile boost phase uses that direction and inherited vehicle
-velocity before returning to the profile's normal guidance. Stationary FFA launchers retain
-their original behavior.
+angled direction. Ground launches use that direction and inherited vehicle velocity during
+the existing boost phase before returning to the profile's normal guidance. Stationary FFA
+launchers retain their original behavior.
+
+Registered cruise profiles launched from aircraft instead hold their actual release Y until
+final approach. They inherit horizontal carrier motion, suppress launch climb/descent, and
+turn toward the assigned target without climbing to a standard altitude. The common aircraft
+guidance owns heading, altitude hold and final approach, using the profile's speed, acceleration
+and turn limits; custom profile guidance callbacks remain in use for ground/stationary launches.
+The aircraft mode and release altitude persist across save/reload.
 
 ## Author separate weapon slots
 

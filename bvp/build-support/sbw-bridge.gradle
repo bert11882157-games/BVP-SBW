@@ -3,9 +3,35 @@ import groovy.json.JsonSlurper
 import java.security.MessageDigest
 
 // Loaded by the matching SBW wrapper with -I; no changes to SBW source/build files.
+gradle.beforeProject { p ->
+    p.pluginManager.withPlugin('net.minecraftforge.gradle') {
+        if (p.findProperty('mod_id') != 'superbwarfare') return
+        // These client APIs belong to BVP's renderer, not SBW's production graph.
+        // Resolve them through the same Forge mappings and record their exact identities below.
+        def addonLibraries = p.configurations.create('bvpCompilerLibraries') {
+            canBeConsumed = false
+            canBeResolved = true
+            transitive = false
+        }
+        p.repositories.maven {
+            name = 'BvpFlywheel'
+            url = p.uri('https://maven.createmod.net/')
+            content { includeGroup('dev.engine-room.flywheel') }
+        }
+        def forgeDependencies = p.extensions.getByName('fg')
+        p.dependencies.add(addonLibraries.name, forgeDependencies.deobf(
+            'curse.maven:sbw-komodo-rendering-accelerator-1616090:8545181')) // Komodo 1.2.3
+        p.dependencies.add(addonLibraries.name, forgeDependencies.deobf(
+            'dev.engine-room.flywheel:flywheel-forge-api-1.20.1:1.0.5'))
+    }
+}
+
 gradle.projectsEvaluated {
     def p = gradle.rootProject
     if (p.findProperty('mod_id') != 'superbwarfare') throw new GradleException('Bridge requires matching Superb Warfare source project')
+    def addonLibraries = p.configurations.getByName('bvpCompilerLibraries')
+    // Forge's supported argument file avoids Windows' process command-length limit.
+    p.tasks.matching { it.name in ['reobfJar', 'reobfJarJar'] }.configureEach { useArgsFile() }
     // Release identity comes from the frozen source pin, never a containing checkout's HEAD.
     def pinnedVersion = "${p.property('mod_version')}-mc${p.property('minecraft_version')}-${p.property('source_commit')}".toString()
     p.version = pinnedVersion
@@ -20,6 +46,7 @@ gradle.projectsEvaluated {
         manifest.attributes(['Implementation-Version': pinnedVersion])
     }
     def main = p.sourceSets.main
+    def compilerLibraries = p.files(main.compileClasspath, addonLibraries)
     p.tasks.named('compileJava', JavaCompile).configure {
         doFirst {
             println 'SBW Java compiler class directories: ' + classpath.files.findAll { it.isDirectory() }
@@ -47,10 +74,12 @@ gradle.projectsEvaluated {
         dependsOn(namedApi, p.tasks.named('reobfJarJar'), p.tasks.named('createMcpToSrg'), p.tasks.named('createSrgToMcp'))
         doLast {
             def artifactIds = [:]
-            p.configurations.compileClasspath.resolvedConfiguration.resolvedArtifacts.each { a ->
-                artifactIds[a.file.canonicalPath] = [id: a.moduleVersion.id.group + ':' + a.name, version: a.moduleVersion.id.version]
+            [p.configurations.compileClasspath, addonLibraries].each { configuration ->
+                configuration.resolvedConfiguration.resolvedArtifacts.each { a ->
+                    artifactIds[a.file.canonicalPath] = [id: a.moduleVersion.id.group + ':' + a.name, version: a.moduleVersion.id.version]
+                }
             }
-            def cp = main.compileClasspath.files.sort { it.path }.collect { f ->
+            def cp = compilerLibraries.files.sort { it.path }.collect { f ->
                 def module = artifactIds[f.canonicalPath]
                 identity(f, module?.id ?: f.name, module?.version ?: 'resolved')
             }
@@ -86,7 +115,7 @@ gradle.projectsEvaluated {
             dependsOn(mappingTask)
             mappings.set(mappingTask.get().outputs.files.singleFile)
             input.set(p.file(p.property('sourceAddonJar')))
-            libraries.from(main.compileClasspath)
+            libraries.from(compilerLibraries)
             if (!p.hasProperty('sourceAddonLibraryManifest')) throw new GradleException('Missing exact addon inheritance library manifest')
             def libraryManifest = p.file(p.property('sourceAddonLibraryManifest'))
             def proof = new JsonSlurper().parse(libraryManifest)

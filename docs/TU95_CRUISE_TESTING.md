@@ -17,6 +17,10 @@ The profile uses FFA's base cruise-missile tuning with boost acceleration reduce
 0.025 to 0.0125 blocks/tick squared. Damage, range, speed, and other base-profile behavior
 remain unchanged. This is game testing data, not a historical missile simulation.
 
+Aircraft-launched cruise missiles hold their release Y while turning toward the assigned target,
+then change elevation on final approach. They do not climb to FFA's standard launch altitude,
+including when released from a climbing aircraft. Ground launchers retain their normal climb.
+
 The store reuses the existing Kh-29L mesh and texture on the pylons. The optional BVP client
 renderer reuses the Kh-29 flight mesh for launched KH-55s; FFA can draw its native fallback
 while the optional mesh loads. No duplicate artwork or new meshloader dependency is introduced.
@@ -53,7 +57,8 @@ source audit of that supplied meshloader binary.
    a different X/Y/Z target, using the coordinate screen or map. Verify all eight markers.
 3. Close the terminal, select the desired Belly weapon using the normal vehicle weapon
    controls, and fire. Confirm that exactly its missile disappears and flies toward its own
-   saved point. The terminal has no launch or arming control.
+   saved point. Check release-height retention during heading changes and the later final
+   approach. Repeat while the plane climbs or descends. The terminal has no launch or arming control.
 4. Clear a slot's assignment and attempt to fire it. It must retain its missile and refuse
    the shot. Repeat with an out-of-range point. Changing or clearing another slot must not
    redirect a missile already in flight.

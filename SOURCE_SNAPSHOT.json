@@ -1,10 +1,10 @@
 {
   "schema": 1,
   "policyVersion": 4,
-  "label": "tu95-kh55-20260922-review-r1",
+  "label": "tu95-kh55-20260922-review-r2",
   "status": "review",
-  "createdAt": "2026-09-22T05:05:19.475Z",
-  "treeSha256": "c6205cd8f7ae997f68345cbd94419cd4b807b9c712d25f6817c38d10d0279cce",
+  "createdAt": "2026-09-22T05:25:43.649Z",
+  "treeSha256": "f16cf12ea14455b29021175622c1be28aff736db3b965383c714b981a5cc8a03",
   "files": [
     {
       "path": ".editorconfig",
@@ -43,8 +43,8 @@
     },
     {
       "path": "bvp/build-support/README.md",
-      "size": 4146,
-      "sha256": "ccb9df4136ae0a8a2a4301e561c2f57f906c9afe3b8cbc52ea6faf68155d45ee"
+      "size": 4752,
+      "sha256": "13fa84ea62bb16740b973b800445d1dce68c73afbda4d344605299e3dcab831a"
     },
     {
       "path": "bvp/build-support/build-release.mjs",
@@ -98,8 +98,8 @@
     },
     {
       "path": "bvp/build-support/sbw-bridge.gradle",
-      "size": 7110,
-      "sha256": "e35aa6fdbe88bf8af77f62dd943feaa8fa8392f70e9cf6c7293590bafdfc577a"
+      "size": 8626,
+      "sha256": "6ff84aec001283f60286f91b4ebe60800fdbe133455ef63188b39be77014ff41"
     },
     {
       "path": "bvp/build.gradle",
@@ -15898,13 +15898,13 @@
     },
     {
       "path": "docs/BUILDING.md",
-      "size": 3231,
-      "sha256": "2334974ea245207a639f1ac22653e3b9bcb9b60e8d591093c72738f4ed79d5e0"
+      "size": 3336,
+      "sha256": "3b7397d6b85533d687730864b5e281716b61de3c639efff8a8b47216edc7af7a"
     },
     {
       "path": "docs/COORDINATE_WEAPONS.md",
-      "size": 5243,
-      "sha256": "6a8c1604dabfe0ef6b50ed9dd6c5a336f074510d5ccd5e358f05ed384a677ba8"
+      "size": 5795,
+      "sha256": "926a334a4beb3a78770e7f29aa40ee8160fa788907599fb4da293c6d365c1260"
     },
     {
       "path": "docs/ENGINEERING.md",
@@ -15928,8 +15928,8 @@
     },
     {
       "path": "docs/TU95_CRUISE_TESTING.md",
-      "size": 4444,
-      "sha256": "eb8f4e82a2a32f35550cdfc51a6327877a0b1b42c6b12a44d39058821e8f73a6"
+      "size": 4860,
+      "sha256": "2144184774ce66c3775281624bf700accc74c6b3591dded43a5e1f4d8ee95464"
     },
     {
       "path": "sbw/LICENSE",
