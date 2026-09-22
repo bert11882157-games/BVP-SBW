@@ -4,7 +4,7 @@ license = "All Rights Reserved"
 
 [[mods]]
 modId = "berts_vehicle_pack"
-version = "0.1.0"
+version = "0.1.1-kh55-test.3"
 displayName = "Bert's Vehicle Pack"
 authors = "Bert"
 description = '''Superb Warfare vehicle pack generated from cleaned MTB vehicle models.'''
@@ -26,7 +26,7 @@ side = "BOTH"
 [[dependencies."berts_vehicle_pack"]]
 modId = "superbwarfare"
 mandatory = true
-versionRange = "[0.8.9,)"
+versionRange = "[0.8.9-bvp.4,)"
 ordering = "AFTER"
 side = "BOTH"
 
@@ -54,7 +54,7 @@ side = "CLIENT"
 [[dependencies."berts_vehicle_pack"]]
 modId = "ballistics"
 mandatory = true
-versionRange = "[1.0.1,)"
+versionRange = "[1.0.5-bvp.4,)"
 ordering = "AFTER"
 side = "BOTH"
 

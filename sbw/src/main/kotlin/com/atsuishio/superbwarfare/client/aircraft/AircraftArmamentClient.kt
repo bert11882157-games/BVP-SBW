@@ -89,7 +89,8 @@ object AircraftArmamentClient {
             lockTargetEntity = seek?.target?.let { id -> mc.level?.entitiesForRendering()?.firstOrNull { it.uuid == id } }
         if (entry.pointRevision > previousPointRevision && state.point != null && isPodActive(vehicle)) aim.designate(state.point)
         if (selectedOwner != state.vehicle) { selectedOwner = state.vehicle; selectedPair = null }
-        if (state.definition.mounts.none { it.id == selectedPair }) selectedPair = state.definition.mounts.firstOrNull()?.id
+        val shortcuts = state.legacyShortcutMounts()
+        if (shortcuts.none { it.id == selectedPair }) selectedPair = shortcuts.firstOrNull()?.id
         if (!state.podActive) { if (exitPending == state.vehicle) exitPending = null; leavePod() }
         if (json.has("Definition")) (mc.screen as? AircraftLoadoutScreen)?.accept(state)
         if (open) {
@@ -219,11 +220,20 @@ object AircraftArmamentClient {
             })
             AircraftArmamentKeys.CLEAR.isActiveAndMatches(key) -> request("CLEAR_POINT")
             AircraftArmamentKeys.CYCLE.isActiveAndMatches(key) -> {
-                val pairs = getVehicleSnapshot(vehicle)?.definition?.mounts.orEmpty()
+                val pairs = getVehicleSnapshot(vehicle)?.legacyShortcutMounts().orEmpty()
                 if (pairs.isNotEmpty()) selectedPair = pairs[(pairs.indexOfFirst { it.id == selectedPair } + 1) % pairs.size].id
             }
-            AircraftArmamentKeys.FIRE.isActiveAndMatches(key) -> selectedPair?.let { pair ->
-                request("FIRE", JsonObject().apply { addProperty("Pair", pair) })
+            AircraftArmamentKeys.FIRE.isActiveAndMatches(key) -> {
+                val state = getVehicleSnapshot(vehicle) ?: return
+                val pair = state.legacyShortcutMounts().firstOrNull { it.id == selectedPair }
+                if (pair != null) {
+                    request("FIRE", JsonObject().apply { addProperty("Pair", pair.id) })
+                } else if (state.selections.values.any {
+                        com.atsuishio.superbwarfare.api.aircraft.AircraftCoordinateLauncher.isCoordinate(
+                            state.stores[it]?.category) }) {
+                    mc.player?.displayClientMessage(net.minecraft.network.chat.Component.literal(
+                        com.atsuishio.superbwarfare.api.aircraft.AircraftStoreControls.COORDINATE_INPUT_HINT), true)
+                }
             }
         }
     }

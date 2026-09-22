@@ -45,7 +45,7 @@ internal class VehicleWeaponRuntime(
     ): ShotResult {
         val serverLevel = vehicle.level() as? ServerLevel
         val selectedName = weaponName ?: vehicle.getGunName(vehicle.getSeatIndex(living))
-        if (selectedName != null && com.atsuishio.superbwarfare.api.aircraft.AircraftStoreWeapons.mountId(selectedName) != null) {
+        if (selectedName != null && com.atsuishio.superbwarfare.api.aircraft.AircraftStoreWeapons.isChannel(selectedName)) {
             val rejected = when {
                 vehicle.isWreck -> ShotRejectionReason.WRECKED
                 serverLevel == null -> ShotRejectionReason.NOT_SERVER_AUTHORITY
@@ -183,11 +183,7 @@ internal class VehicleWeaponRuntime(
 
     fun validWeaponIndices(seatIndex: Int): List<Int> {
         val weapons = vehicle.getWeaponIds(seatIndex)
-        return weapons.indices.filter { index ->
-            val name = weapons.getOrNull(index)
-            !name.isNullOrBlank() && vehicle.getGunData(name) != null &&
-                com.atsuishio.superbwarfare.api.aircraft.AircraftArmamentManager.selectableWeapon(vehicle, name)
-        }
+        return com.atsuishio.superbwarfare.api.aircraft.AircraftArmamentManager.selectableWeaponIndices(vehicle, weapons)
     }
 
     fun resolvedPrimaryIndex(seatIndex: Int, ordered: List<Int>): Int {

@@ -1,10 +1,10 @@
 {
   "schema": 1,
   "policyVersion": 4,
-  "label": "downloads-docs-20260922-review",
+  "label": "tu95-kh55-hud-performance-test3-20260922",
   "status": "review",
-  "createdAt": "2026-09-22T07:15:40.677Z",
-  "treeSha256": "756bbc69db2a6559c3408a0a107e6ecbcc5ba25c7a5e7962061a7cce4893fbbb",
+  "createdAt": "2026-09-22T07:56:02.600Z",
+  "treeSha256": "2e72e1d2cd2e91c72f84748a6e6269205baa0c60db93532269b7cb47fefe00f2",
   "files": [
     {
       "path": ".editorconfig",
@@ -48,8 +48,8 @@
     },
     {
       "path": "bvp/build-support/README.md",
-      "size": 4146,
-      "sha256": "ccb9df4136ae0a8a2a4301e561c2f57f906c9afe3b8cbc52ea6faf68155d45ee"
+      "size": 4752,
+      "sha256": "13fa84ea62bb16740b973b800445d1dce68c73afbda4d344605299e3dcab831a"
     },
     {
       "path": "bvp/build-support/build-release.mjs",
@@ -103,8 +103,8 @@
     },
     {
       "path": "bvp/build-support/sbw-bridge.gradle",
-      "size": 7110,
-      "sha256": "e35aa6fdbe88bf8af77f62dd943feaa8fa8392f70e9cf6c7293590bafdfc577a"
+      "size": 8626,
+      "sha256": "6ff84aec001283f60286f91b4ebe60800fdbe133455ef63188b39be77014ff41"
     },
     {
       "path": "bvp/build.gradle",
@@ -113,8 +113,8 @@
     },
     {
       "path": "bvp/gradle.properties",
-      "size": 3412,
-      "sha256": "dfb121e328d78d7c33f9ee8832a4e1796415dfc8fa0a3b250e83bdcfee688af0"
+      "size": 3424,
+      "sha256": "45ce39bd9b2cd3e98d8de7ae79ed6fd2e1e33352e4f4f48449974f2fa95845f6"
     },
     {
       "path": "bvp/gradle/wrapper/gradle-wrapper.jar",
@@ -140,6 +140,26 @@
       "path": "bvp/libs/README.md",
       "size": 1108,
       "sha256": "ecc6185ad94a8ee2a3e6dabce87ec91b1e94ce0c6546699896523ffe5702cf3f"
+    },
+    {
+      "path": "bvp/model-source/kh55/README.md",
+      "size": 3619,
+      "sha256": "4691c627fb94baf858c283ad4a9da90bd70851cf54cff2f3b7ce3656b250a52e"
+    },
+    {
+      "path": "bvp/model-source/kh55/convert.mjs",
+      "size": 6853,
+      "sha256": "1d066a0b5da9d0621052dd56dd3d498c7f92843e8530219db25cc429cbbcc784"
+    },
+    {
+      "path": "bvp/model-source/kh55/convert.test.mjs",
+      "size": 3458,
+      "sha256": "b39222dcc55d70c5167a9743ed3ac16faed398b4fa73193b4d4a5fe1e47802fd"
+    },
+    {
+      "path": "bvp/model-source/kh55/kh55.bbmodel.json",
+      "size": 100334,
+      "sha256": "30d9cc2ddbb4fbdd315a3540c62de5d762288e765bdde00aa67af26bf719b7ac"
     },
     {
       "path": "bvp/settings.gradle",
@@ -14277,6 +14297,11 @@
       "sha256": "8c6397bdc2930d6af6191aace7831acb894f11207610e7ceb1adb658120e34d2"
     },
     {
+      "path": "bvp/src/main/java/com/yourname/berts_vehicle_pack/client/renderer/BvpCoordinateMissileRenderer.java",
+      "size": 2518,
+      "sha256": "124336f7b41d114fbb9aaeab80be0ab30c72ad4a8cb12d237b28d3428eaa7885"
+    },
+    {
       "path": "bvp/src/main/java/com/yourname/berts_vehicle_pack/client/renderer/BvpEngineExhaustRenderer.java",
       "size": 5432,
       "sha256": "175a1336717096722e986db486991e95331b6c6a82d02ab9f9da9e65f76cf226"
@@ -15238,13 +15263,23 @@
     },
     {
       "path": "bvp/src/main/resources/META-INF/mods.toml",
-      "size": 1365,
-      "sha256": "81fedfbf60a69ac0309e7897123ec5ce213447594a95e26bb7012c17b53a51e8"
+      "size": 1389,
+      "sha256": "15c1c6f564106abd1954464ed9500fbce337645d717a1018eb6ea16d4b502ac4"
     },
     {
       "path": "bvp/src/main/resources/THIRD_PARTY_AFTERBURNER.md",
       "size": 2426,
       "sha256": "25df816dd9255899330075d28974fee498953dc4b3f219612202d8740bf01614"
+    },
+    {
+      "path": "bvp/src/main/resources/assets/berts_vehicle_pack/custom_geo/aircraft_stores/kh55.geo.json",
+      "size": 692834,
+      "sha256": "75ce0cb736956625fb98f60f6f4336e0ef82ffeadaae285cc3a9a84883eafb67"
+    },
+    {
+      "path": "bvp/src/main/resources/assets/berts_vehicle_pack/custom_geo/projectiles/kh55.geo.json",
+      "size": 692657,
+      "sha256": "862d1d63f68a4083fd1fe2aa234cfa2a4359c51d4f1ce0749b199ab15da1dd51"
     },
     {
       "path": "bvp/src/main/resources/assets/berts_vehicle_pack/models/item/vehicle.json",
@@ -15280,6 +15315,11 @@
       "path": "bvp/src/main/resources/assets/berts_vehicle_pack/shaders/core/tap_exhaust.json",
       "size": 1670,
       "sha256": "1f6895bbae4c1c1ba88005b47bc2803ac992e266558032cc2b6c2097f8539c4c"
+    },
+    {
+      "path": "bvp/src/main/resources/assets/berts_vehicle_pack/textures/aircraft_stores/kh55.png",
+      "size": 6117,
+      "sha256": "99553cf96eb530873e9fa21b980b134de90609e3c9d26b8cc71794437ef1096f"
     },
     {
       "path": "bvp/src/main/resources/assets/berts_vehicle_pack/textures/item/vehicle_icons/2s25_sprut_sd.png",
@@ -15747,9 +15787,29 @@
       "sha256": "168ec351a9ce476d7691151ea32d5d4fb5da2e04a9457704167fa563323b3485"
     },
     {
+      "path": "bvp/src/main/resources/data/berts_vehicle_pack/flight_reference/tu_95ms.json",
+      "size": 2350,
+      "sha256": "2ddcb35ca46c475a5e0ea530eb56948aa992095ff979048f8ebfd928c1c293ab"
+    },
+    {
+      "path": "bvp/src/main/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/tu_95ms.json",
+      "size": 1860,
+      "sha256": "fa94b0dbd9220d3d2aba47e24323c817a63dfb5a61606c8f8df92f71b0d5c4bc"
+    },
+    {
+      "path": "bvp/src/main/resources/data/berts_vehicle_pack/sbw/aircraft_stores/kh55.json",
+      "size": 355,
+      "sha256": "268c980e21ffc7f197337b15b10af6f88a3683bcf3d3ca06ff82f26f9ad11296"
+    },
+    {
       "path": "bvp/src/main/resources/data/berts_vehicle_pack/sbw/projectile_profiles/handheld_at/heat_110.json",
       "size": 585,
       "sha256": "49526e09014488e75cf3e1e15c92840e64a8d5a5df55b9205fb90cb0bc0c877f"
+    },
+    {
+      "path": "bvp/src/main/resources/data/berts_vehicle_pack/sbw/vehicles/tu_95ms.json",
+      "size": 62982,
+      "sha256": "0a42ce2f76a718abd6c4d99f4bb1177085b56d620553574af57d8214b9e26c0b"
     },
     {
       "path": "bvp/src/main/resources/data/berts_vehicle_pack/sbw/weapon_system_metadata/aircraft_guns/a127.json",
@@ -15878,8 +15938,13 @@
     },
     {
       "path": "docs/BUILDING.md",
-      "size": 3231,
-      "sha256": "2334974ea245207a639f1ac22653e3b9bcb9b60e8d591093c72738f4ed79d5e0"
+      "size": 3336,
+      "sha256": "3b7397d6b85533d687730864b5e281716b61de3c639efff8a8b47216edc7af7a"
+    },
+    {
+      "path": "docs/COORDINATE_WEAPONS.md",
+      "size": 6577,
+      "sha256": "34049c7b7915d17ef14c50409c835705bc25c97e775616d1b0b2fa6db0438f8a"
     },
     {
       "path": "docs/ENGINEERING.md",
@@ -15900,6 +15965,21 @@
       "path": "docs/RELEASING.md",
       "size": 1968,
       "sha256": "fc3d525546eefc9b4b5fba75c24d8e2ba9bddd5584a2b11575aa2e6c4661985d"
+    },
+    {
+      "path": "docs/TU95_CRUISE_TESTING.md",
+      "size": 6095,
+      "sha256": "92ca4ff729b77fe763d822664adcbba7ea118d429936c308b16cb11d091447e2"
+    },
+    {
+      "path": "docs/releases/0.1.1-kh55-test.2.md",
+      "size": 3172,
+      "sha256": "1f43dbb9d72d5fc95a22fb75f61a017819a0c4e8c490656378339c420278655e"
+    },
+    {
+      "path": "docs/releases/0.1.1-kh55-test.3.md",
+      "size": 1676,
+      "sha256": "111c6266256a448f08dbc938b2294d3af203ca3a43f67ca3cb3a9c29a9dca88f"
     },
     {
       "path": "sbw/LICENSE",
@@ -15924,7 +16004,7 @@
     {
       "path": "sbw/gradle.properties",
       "size": 565,
-      "sha256": "7eecaccaee02ea2d25249b6a60e11bd46e4e1cfc3562ee6fd1599b9d40701198"
+      "sha256": "139ea4533d769ddd9749f9e14b2905d4d13c026b9b48b8b8bb9be3b8db172927"
     },
     {
       "path": "sbw/gradle/wrapper/gradle-wrapper.jar",
@@ -25788,18 +25868,23 @@
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/api/aircraft/AircraftArmamentManager.kt",
-      "size": 38528,
-      "sha256": "6754f2cd73de609674db1e8cd0a9d0be8cbf948640e86ad3a546d6a9c757670f"
+      "size": 43062,
+      "sha256": "b6c34b7dfa19433d6f70badbaf40ee33ba7a0f380f31f5b33ed529c993821118"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/api/aircraft/AircraftArmamentRegistry.kt",
-      "size": 8318,
-      "sha256": "a64548601786545c0972dcad5a2049c8dab793af69548345a72a7b14092dc0be"
+      "size": 9307,
+      "sha256": "3ab3645958ab52df4e66d3c6aa331b4174d85c5521602078d2cfe74d5ae7ebf2"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/api/aircraft/AircraftCombatEffects.kt",
       "size": 1947,
       "sha256": "077761ece22d1ad8ebe2f402aec2b84b0c83e6bf0ec3ab275ec8248e0a6576bb"
+    },
+    {
+      "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/api/aircraft/AircraftCoordinateLauncher.kt",
+      "size": 3368,
+      "sha256": "dbe49c86401f41003384408d7c7faddeae60719a510132a8d485795f340de8e0"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/api/aircraft/AircraftCountermeasureState.kt",
@@ -25818,8 +25903,8 @@
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/api/aircraft/AircraftGunPodGroups.kt",
-      "size": 2463,
-      "sha256": "df1b8b080188b4dc3d1bf78ac8607d0bda13493ac4eadbcde607cc5768dc43ca"
+      "size": 3156,
+      "sha256": "39540e145adb92bdb60687327bfc6d033f3de192b336cf21b2c8eac17dadfdac"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/api/aircraft/AircraftLaserLauncher.kt",
@@ -25862,9 +25947,24 @@
       "sha256": "d0bb6e846da85056425a31530c60454d67eddb9097148d47365e6b34d822ac68"
     },
     {
+      "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/api/aircraft/AircraftStoreControls.kt",
+      "size": 1059,
+      "sha256": "a8bf250b855754f1c401bd0d5d1896c0eb999ff7b56af861a1901c5b4146dfd6"
+    },
+    {
+      "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/api/aircraft/AircraftStoreLaunchTransaction.kt",
+      "size": 879,
+      "sha256": "7ef27b6b298237c8c43b49025cadfd70e4128820770c8b74b13b7461bb5e8fa5"
+    },
+    {
+      "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/api/aircraft/AircraftStoreWeaponState.kt",
+      "size": 4044,
+      "sha256": "4468878908b3c51746f7e35553f5431832051cc40da9582a1e7956e43dee437d"
+    },
+    {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/api/aircraft/AircraftStoreWeapons.kt",
-      "size": 2981,
-      "sha256": "7024cefffc6cc7f727a922a77e32dee060500ccfb66005f3e94f0249f7153659"
+      "size": 7571,
+      "sha256": "6dca64994d7b2444c06f8463fc447921a5f56d761ef02963dc187e8b50e4a804"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/api/aircraft/AircraftSurfaceModules.kt",
@@ -25873,8 +25973,8 @@
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/api/aircraft/AircraftTerminalAccess.kt",
-      "size": 843,
-      "sha256": "42a2fe784f9ab1798d4f7957a06a84862d6846bdc5e5750fe08feb65721ba7f1"
+      "size": 2683,
+      "sha256": "2692e109dbc58515db020d922b570ffbcac954966a99ac8fb54d570af0569bcd"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/api/effect/ExplosionBurstPresentations.kt",
@@ -27078,8 +27178,8 @@
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/client/aircraft/AircraftArmamentClient.kt",
-      "size": 16587,
-      "sha256": "79d2426d0a2f7354e43b041c7cfd82ace7171211dc6180327d041afe3380d27d"
+      "size": 17250,
+      "sha256": "45bd95d8050c138334cc48c961505c6375312d469866ac540e2763943dd8ca18"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/client/aircraft/AircraftArmamentKeys.kt",
@@ -27088,13 +27188,13 @@
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/client/aircraft/AircraftArmamentSnapshot.kt",
-      "size": 16276,
-      "sha256": "8b4072bae8e41c28795518fa04d2b8b73f190e20a2a09ab905e6f013ab1d7502"
+      "size": 17115,
+      "sha256": "04c5f9ec7587d8eb587e9fd8b580d9dffbd929b9027cfd9a05d28e8cf5f955dc"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/client/aircraft/AircraftArmamentStateCache.kt",
-      "size": 4839,
-      "sha256": "16ae7619cbbb3f1ea0c409ec549d9d57f5d159ec28c85f14f3e16228e748ca5a"
+      "size": 5198,
+      "sha256": "55b4a1c9f9511bbcfd14fd02c32b73f6135a17f3c0a283da1d79311c2053a957"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/client/aircraft/AircraftLoadoutScreen.kt",
@@ -28588,8 +28688,8 @@
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/client/weapon/VehicleWeaponHudSnapshot.kt",
-      "size": 5085,
-      "sha256": "fb0d159fb9935f0c26315e749ef0fdaa282de08f2301883354f6036b6d60a594"
+      "size": 4973,
+      "sha256": "be44d9df85e74dc464ea7a2332fcd85162f47ed50f4126ea6df9f7b84ed2b80b"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/command/AamTestCommand.kt",
@@ -29693,8 +29793,8 @@
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/base/VehicleEntity.kt",
-      "size": 319280,
-      "sha256": "a11638dee64cce68f1fdc15ea2068ba9e7b632a6e41e7fe73465a398d70be9ca"
+      "size": 319377,
+      "sha256": "5cf4700fcfe07a29c3e9e36c497047a509f802f33509b91b3954f84c6638f187"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/base/VehicleEntityContacts.kt",
@@ -29743,8 +29843,8 @@
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/base/VehicleWeaponRuntime.kt",
-      "size": 16483,
-      "sha256": "d51917567601e7b54f76c2d7ccdd73d413ad2283db36f18b968e32df5e4c8396"
+      "size": 16306,
+      "sha256": "bbf40825f4a8cec051592fce081403b0d60b35e47309382fa60fe597f4095e83"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/base/VehicleWeaponSlots.kt",
@@ -42927,14 +43027,19 @@
       "sha256": "92359a5b475a9046d78a6da0df59ef181bd27362e2b06bbe185249b4be9862c4"
     },
     {
+      "path": "sbw/src/test/kotlin/com/atsuishio/superbwarfare/api/aircraft/AircraftCoordinateLaunchTest.kt",
+      "size": 7627,
+      "sha256": "1e7deaef30547f949296ad9fe141e10b66965718b5a8e1842ed3dbcdc8ec2c21"
+    },
+    {
       "path": "sbw/src/test/kotlin/com/atsuishio/superbwarfare/api/aircraft/AircraftCountermeasureDefinitionTest.kt",
       "size": 1515,
       "sha256": "f5d9190c5c51468eda9fc34acc396519637120168dcb173f8aa247c496f00fd3"
     },
     {
       "path": "sbw/src/test/kotlin/com/atsuishio/superbwarfare/api/aircraft/AircraftCountermeasureStateTest.kt",
-      "size": 4001,
-      "sha256": "1fd0bd41f82c69ad31b25b4d701793e40555074350c7a708775f7232cee9c699"
+      "size": 5325,
+      "sha256": "0ba6db082e09032f42c9b79bd0e8b9124b0af82d4110fadf7ec93c2385953c81"
     },
     {
       "path": "sbw/src/test/kotlin/com/atsuishio/superbwarfare/api/aircraft/AircraftLaserGuidanceTest.kt",
@@ -42962,9 +43067,34 @@
       "sha256": "7496200be42514e004437e22551e92ece5c8f607bbefeea104e67d1552e1b1ef"
     },
     {
+      "path": "sbw/src/test/kotlin/com/atsuishio/superbwarfare/api/aircraft/AircraftStoreControlsTest.kt",
+      "size": 4880,
+      "sha256": "7167191e6a17c2ff01fd87fe89b377dfcb8bad5f00d80ac92ee1d36f4afd9e55"
+    },
+    {
+      "path": "sbw/src/test/kotlin/com/atsuishio/superbwarfare/api/aircraft/AircraftStoreGroupsTest.kt",
+      "size": 9992,
+      "sha256": "f7fc54882338e9d48cbd39a4acc56975b051873dc5777055c780370a020e6b5e"
+    },
+    {
+      "path": "sbw/src/test/kotlin/com/atsuishio/superbwarfare/api/aircraft/AircraftStoreReadBenchmark.kt",
+      "size": 3805,
+      "sha256": "2019319182c8fc32e98e74a4e5dcdf6f6bb9f9b57d0c972258f57d79ba4b5996"
+    },
+    {
+      "path": "sbw/src/test/kotlin/com/atsuishio/superbwarfare/api/aircraft/AircraftStoreWeaponStateTest.kt",
+      "size": 6046,
+      "sha256": "6fb4a35c8d55181aa9bd984b3f32ccbec7932358637ca2d8a43b8aa0eca1612f"
+    },
+    {
       "path": "sbw/src/test/kotlin/com/atsuishio/superbwarfare/api/aircraft/AircraftSurfaceModulesTest.kt",
       "size": 6968,
       "sha256": "e1c28eb369fa90331f64175b4d591aa56fb97537e6e7c1998637b78d16205e8d"
+    },
+    {
+      "path": "sbw/src/test/kotlin/com/atsuishio/superbwarfare/api/aircraft/BvpCoordinateResourcesTest.kt",
+      "size": 8368,
+      "sha256": "30978e41c9c4743e94a084dc52ea342ae7c0e5f8e608f2358bdafaeaab148d64"
     },
     {
       "path": "sbw/src/test/kotlin/com/atsuishio/superbwarfare/api/aircraft/TaczAircraftDamageTest.kt",
@@ -43338,8 +43468,8 @@
     },
     {
       "path": "sbw/src/test/kotlin/com/atsuishio/superbwarfare/api/vehicle/weapon/VehicleFixedGunBanksTest.kt",
-      "size": 7693,
-      "sha256": "1ce46581846985947a7254616055db62a3268e7081773bab62f4d44dd2a6c507"
+      "size": 10123,
+      "sha256": "0ac2a5aab8139aa022a1092d29d7479a3e8a60da39087c7b0767c408d2f16271"
     },
     {
       "path": "sbw/src/test/kotlin/com/atsuishio/superbwarfare/api/vehicle/weapon/VehicleWeaponDamagePolicyTest.kt",
@@ -43400,6 +43530,11 @@
       "path": "sbw/src/test/kotlin/com/atsuishio/superbwarfare/client/aircraft/AircraftArmamentClientTest.kt",
       "size": 9434,
       "sha256": "dd22796290ff1aff305ffefede2b30a40195db36869498231999232f099fa2d6"
+    },
+    {
+      "path": "sbw/src/test/kotlin/com/atsuishio/superbwarfare/client/aircraft/AircraftArmamentReceiptCacheTest.kt",
+      "size": 2595,
+      "sha256": "7fc2d16ae1cacb52dee34427390da4be84663eca96193e0643ee7f01f77c703f"
     },
     {
       "path": "sbw/src/test/kotlin/com/atsuishio/superbwarfare/client/aircraft/AircraftPodAndSeekTest.kt",
@@ -43628,8 +43763,8 @@
     },
     {
       "path": "sbw/src/test/kotlin/com/atsuishio/superbwarfare/entity/vehicle/base/VehicleLandingGearFireAdmissionTest.kt",
-      "size": 3036,
-      "sha256": "ed1a8766edda131008e01a7308eec2e6f51984524797861a1c8bb794c06e35c5"
+      "size": 3319,
+      "sha256": "be990183093eeb7944363f9c2ef0c20a4d66208d867528d578bfe24cadca0346"
     },
     {
       "path": "sbw/src/test/kotlin/com/atsuishio/superbwarfare/entity/vehicle/base/VehicleModuleStateServiceTest.kt",

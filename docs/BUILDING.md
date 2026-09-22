@@ -35,7 +35,8 @@ node bvp/build-support/build-release.mjs --tree . --meshloader-manifest PATH_TO_
 See [the build contract](../bvp/build-support/README.md) for dependency input details. The
 meshloader is an external, separately source-built dependency, identified by version, exact size,
 and SHA-256. Its source and compiled JAR are not committed to this repository. Other dependencies
-come from the matching SBW project's resolved build graph. Dependency resolution may need network
+come from the matching SBW project's resolved build graph, plus the bridge's isolated BVP
+renderer API configuration for published Komodo 1.2.3 and Flywheel 1.0.5. Dependency resolution may need network
 access, or a populated Gradle dependency cache.
 
 The entry point builds the sibling SBW source project and consumes its compiler API and mapping

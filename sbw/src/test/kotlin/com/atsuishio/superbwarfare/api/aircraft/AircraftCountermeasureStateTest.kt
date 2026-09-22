@@ -80,4 +80,31 @@ class AircraftCountermeasureStateTest {
         assertEquals(0, result.chaffLevel)
         assertFalse(result.chaffEmitting)
     }
+
+    @Test fun `128 flare magazine resumes its final eight flares after unloading`() {
+        val restored = AircraftCountermeasureState()
+        restored.restore(200, 0, 0, 120)
+        var flares = 0
+        for (tick in 200L..207L) {
+            flares += 2 * restored.sample(tick, flares = true, rate = 20, burst = 128).flarePairs
+        }
+        assertEquals(8, flares)
+        assertEquals(400, restored.sample(207, rate = 20, burst = 128).flareCooldown)
+        for (tick in 208L..606L) {
+            assertEquals(0, restored.sample(tick, flares = true, rate = 20, burst = 128).flarePairs)
+        }
+        assertEquals(1, restored.sample(607, flares = true, rate = 20, burst = 128).flarePairs)
+    }
+
+    @Test fun `failed final flare pair preserves magazine contents and does not start reload`() {
+        val state = AircraftCountermeasureState()
+        state.restore(100, 0, 0, 126)
+        assertEquals(1, state.sample(101, flares = true, rate = 20, burst = 128).flarePairs)
+        state.abortPair()
+        assertEquals(126, state.burstExpenditure())
+        assertEquals(0, state.sample(101, rate = 20, burst = 128).flareCooldown)
+        val retry = state.sample(103, flares = true, rate = 20, burst = 128)
+        assertEquals(1, retry.flarePairs)
+        assertEquals(400, retry.flareCooldown)
+    }
 }

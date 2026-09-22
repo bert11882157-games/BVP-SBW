@@ -19,6 +19,8 @@ data class AircraftStoreView(
         "AIR_TO_AIR" -> if (guidedAirToAir) "Air-to-air guided missile" else "Air-to-air · visual only"
         "VISUAL_ONLY" -> "Visual only"
         "LASER_GUIDED" -> "Laser guided"
+        "CRUISE_MISSILE" -> "Cruise missile · coordinates required"
+        "COORDINATE_MISSILE" -> "Coordinate-guided missile"
         "GUN_POD" -> "Gun pod"
         "ROCKET_POD" -> "Rocket pod"
         else -> "Bomb"
@@ -77,10 +79,19 @@ data class AircraftArmamentSnapshot(
     val fired: Map<String, Int> = emptyMap(), val seekPair: String = "", val seekStatus: Int = 0,
     val seek: AircraftSeekView? = null,
 ) {
+    /** Coordinate launchers belong exclusively to the normal primary/secondary selectors. */
+    internal fun legacyShortcutMounts(): List<AircraftMountView> = definition.mounts.filter {
+        val store = stores[selections[it.id]] ?: return@filter false
+        com.atsuishio.superbwarfare.api.aircraft.AircraftStoreControls.acceptsLegacyShortcut(
+            store.category)
+    }
+
     /** Launches alternate across the mount's physical positions. Pods stay after firing. */
     fun storePresent(mount: AircraftMountView, position: Int): Boolean {
         val store = stores[selections[mount.id]] ?: return false
-        if (store.category != "LASER_GUIDED" && store.category != "BOMB" && !store.guidedAirToAir) return true
+        if (store.category != "LASER_GUIDED" && store.category != "BOMB" &&
+            store.category != "CRUISE_MISSILE" && store.category != "COORDINATE_MISSILE" &&
+            !store.guidedAirToAir) return true
         val capacity = store.capacity ?: 1
         return (fired[mount.id] ?: 0) < (capacity - 1) * mount.positions.size + position + 1
     }
@@ -95,7 +106,8 @@ data class AircraftArmamentSnapshot(
     })
 
     companion object {
-        private val categories = setOf("LASER_GUIDED", "GUN_POD", "BOMB", "AIR_TO_AIR", "ROCKET_POD", "VISUAL_ONLY")
+        private val categories = setOf("LASER_GUIDED", "GUN_POD", "BOMB", "AIR_TO_AIR", "ROCKET_POD", "VISUAL_ONLY",
+            "CRUISE_MISSILE", "COORDINATE_MISSILE")
 
         fun decode(json: JsonObject): AircraftArmamentSnapshot? = try {
             val vehicle = UUID.fromString(string(json, "Vehicle", 36))
@@ -145,6 +157,8 @@ data class AircraftArmamentSnapshot(
                 val store = value.asJsonObject
                 require(integer(store, "Schema", 1, 1) == 1)
                 val category = string(store, "Category", 32).also { require(it in categories) }
+                if (category == "CRUISE_MISSILE" || category == "COORDINATE_MISSILE")
+                    require(optionalResource(store, "CoordinateProfile") != null)
                 id to AircraftStoreView(id, string(store, "Name", 96), category,
                     optionalResource(store, "Item"), optionalResource(store, "Model"),
                     optionalResource(store, "Texture"), number(store, "Scale", 1.0, 0.001, 64.0),

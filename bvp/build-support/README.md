@@ -43,6 +43,12 @@ Dependency identities come from the matching SBW source graph (currently Forge
 1.20.1-47.2.0, Parchment 2023.08.13-1.20.1, GeckoLib 4.4.6, SimpleBedrockModel
 2.3.3-forge-mc1.20.1, MAE 1.1.2 and SBW's other resolved dependencies). Actual
 versions/file hashes, mapping inputs and tool identities are recorded in private proof.
+The bridge additionally resolves BVP's existing client renderer APIs in a separate
+compiler configuration: [Komodo 1.2.3 (CurseForge file 8545181)](https://www.curseforge.com/minecraft/mc-mods/sbw-komodo-rendering-accelerator/files/8545181)
+and [Flywheel Forge API 1.0.5](https://maven.createmod.net/dev/engine-room/flywheel/flywheel-forge-api-1.20.1/1.0.5/).
+These use the matching Forge mappings and join the recorded compiler/remapper inputs;
+they do not change SBW's production dependencies or get bundled into BVP. Forge's
+argument-file support is enabled for remapping to fit Windows process limits.
 No legacy SuperbWarfare filename, patched historical base JAR, authoring tool or
 generator is an input to this build.
 
