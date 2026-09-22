@@ -23,12 +23,13 @@ object AircraftStoreWeapons {
     data class Member(val mountId: String, val nativeWeapons: List<String>, val capacity: Int, val ammo: Int)
     data class Group(val storeId: String, val store: JsonObject, val members: List<Member>,
                      val nativeWeapons: List<String>, val capacity: Int, val ammo: Int) {
-        val weaponId get() = groupId(storeId)
-        val virtual get() = virtual(store)
+        val weaponId = groupId(storeId)
+        val virtual = virtual(store)
         val next get() = members.firstOrNull { it.ammo > 0 }
     }
     internal data class Equipped(val storeId: String, val store: JsonObject, val member: Member)
-    private data class Cached(val signature: String, val data: GunData)
+    private data class Cached(val store: JsonObject, val capacity: Int, val data: GunData)
+    // Entries hold no entity references. Access is serialized between integrated server/client.
     private val cache = WeakHashMap<VehicleEntity, MutableMap<String, Cached>>()
     fun mountId(weapon: String): String? = weapon.takeIf { it.startsWith(PREFIX) }?.removePrefix(PREFIX)
     fun groupId(storeId: String): String {
@@ -59,24 +60,19 @@ object AircraftStoreWeapons {
         }
 
     fun groups(vehicle: VehicleEntity): List<Group> {
-        val definition = AircraftArmamentManager.definition(vehicle) ?: return emptyList()
-        val entries = AircraftArmamentRegistry.mounts(definition).mapNotNull { mount ->
-            val id = mount["Id"].asString
-            val storeId = AircraftArmamentManager.equippedStoreId(vehicle, id) ?: return@mapNotNull null
-            val store = AircraftArmamentManager.equippedStore(vehicle, id) ?: return@mapNotNull null
-            Equipped(storeId, store, Member(id, AircraftArmamentManager.nativeWeapons(mount, storeId),
-                AircraftArmamentManager.mountCapacity(vehicle, id), AircraftArmamentManager.mountRemaining(vehicle, id)))
-        }
-        return collect(entries) { channel -> vehicle.gunDataMap[channel]?.let { it.get(GunProp.MAGAZINE) to it.ammo.get() } }
+        val state = AircraftArmamentManager.storeWeaponState(vehicle)
+        return state.groups(AircraftArmamentManager.equipmentRevision(vehicle), {
+            AircraftArmamentManager.storeWeaponEntries(vehicle, state.mounts)
+        }) { channel -> vehicle.gunDataMap[channel]?.let { it.get(GunProp.MAGAZINE) to it.ammo.get() } }
     }
     fun group(vehicle: VehicleEntity, weapon: String): Group? {
-        val legacyMount = mountId(weapon)
-        return groups(vehicle).firstOrNull { it.weaponId == weapon || legacyMount != null && it.members.any { member -> member.mountId == legacyMount } }
+        if (!isChannel(weapon)) return null
+        groups(vehicle)
+        return vehicle.aircraftStoreWeaponState.group(weapon)
     }
     fun ids(vehicle: VehicleEntity, seat: Int, native: List<String>): List<String> {
         if (seat != 0) return native
-        val definition = AircraftArmamentManager.definition(vehicle) ?: return native
-        return channelIds(AircraftArmamentRegistry.mounts(definition), native)
+        return AircraftArmamentManager.storeWeaponState(vehicle).channels(native)
     }
     internal fun channelIds(mounts: List<JsonObject>, native: List<String>): List<String> {
         // Reserve old channel indices and every authored store type, including unfitted ones.
@@ -111,18 +107,25 @@ object AircraftStoreWeapons {
                 alias.ammo.set(group.ammo)
             }
         }
-        val signature = group.store.toString() + "|" + group.capacity
-        val entries = cache.getOrPut(vehicle) { mutableMapOf() }
-        var cached = entries[weapon]
-        if (cached?.signature != signature) {
-            val profile = DefaultGunData().apply {
-                this.name = name; magazine = group.capacity; rpm = 120
-                projectileAmount = 1; defaultFireMode = "Semi"
+        return synchronized(cache) {
+            val entries = cache.getOrPut(vehicle) { mutableMapOf() }
+            // Bound retained profiles across refits/reloads to the maximum fitted mount count.
+            if (entries.size >= 16 && group.weaponId !in entries) entries.clear()
+            var cached = entries[group.weaponId]
+            if (cached == null || cached.capacity != group.capacity || cached.store != group.store) {
+                val profile = DefaultGunData().apply {
+                    this.name = name; magazine = group.capacity; rpm = 120
+                    projectileAmount = 1; defaultFireMode = "Semi"
+                }
+                cached = Cached(group.store, group.capacity,
+                    GunData.from(ItemStack(ModItems.VEHICLE_GUN.get())) { profile })
+                entries[group.weaponId] = cached
             }
-            cached = Cached(signature, GunData.from(ItemStack(ModItems.VEHICLE_GUN.get())) { profile })
-            entries[weapon] = cached
+            cached.data.also {
+                it.vehicleWeaponIdentity = group.weaponId
+                if (it.ammo.get() != group.ammo) it.ammo.set(group.ammo)
+            }
         }
-        return cached.data.also { it.vehicleWeaponIdentity = group.weaponId; it.ammo.set(group.ammo) }
     }
-    fun clear() = cache.clear()
+    fun clear() = synchronized(cache) { cache.clear() }
 }

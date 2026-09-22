@@ -90,7 +90,7 @@ the old assignment. The world origin is valid; missing targets are null.
 This requires the matching FFA coordinate-launch integration on both client and server. The
 built-in cruise profile IDs are `ballistics:basic`, `ballistics:cluster`, and
 `ballistics:hypersonic_cruise`. The `ballistics:kh55` test profile matches the basic cruise profile
-with acceleration reduced from `0.025` to `0.0125` blocks/tick² and a dedicated 2,000-block
+with acceleration reduced from `0.025` to `0.0125` blocks/tick² and a dedicated 1,500-block
 horizontal launch range. BVP supplies the maintained KH-55 model and texture converted from
 the provided Blockbench asset. Known ballistic profiles can be referenced by
 `COORDINATE_MISSILE`; drones cannot use this path.

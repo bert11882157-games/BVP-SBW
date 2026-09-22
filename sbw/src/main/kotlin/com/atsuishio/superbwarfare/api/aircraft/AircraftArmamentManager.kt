@@ -74,6 +74,37 @@ object AircraftArmamentManager {
         return root.getCompound(EQUIPMENT)
     }
     private fun mounts(def: JsonObject) = AircraftArmamentRegistry.mounts(def)
+    internal fun equipmentRevision(vehicle: VehicleEntity): Long = if (vehicle.level().isClientSide)
+        AircraftArmamentClient.getState(vehicle.uuid)?.get("Revision")?.asLong ?: 0
+    else equipment(vehicle).getLong("Revision")
+
+    private fun catalogueRevision(vehicle: VehicleEntity): Long = if (vehicle.level().isClientSide)
+        AircraftArmamentClient.getCatalogueRevision(vehicle.uuid)
+    else AircraftArmamentRegistry.revision
+
+    internal fun storeWeaponState(vehicle: VehicleEntity): AircraftStoreWeaponState =
+        vehicle.aircraftStoreWeaponState.layout(definition(vehicle), catalogueRevision(vehicle))
+
+    /** Resolve the accepted loadout once per revision, rather than re-scan every mount per read. */
+    internal fun storeWeaponEntries(vehicle: VehicleEntity, mounts: List<JsonObject>): List<AircraftStoreWeapons.Equipped> {
+        if (mounts.isEmpty()) return emptyList()
+        val chosen = selection(vehicle)
+        val client = vehicle.level().isClientSide
+        val receipt = if (client) AircraftArmamentClient.getState(vehicle.uuid) else null
+        val used = if (client) null else equipment(vehicle).getCompound("Fired")
+        return mounts.mapNotNull { mount ->
+            val id = mount["Id"].asString
+            val storeId = chosen[id]?.asString ?: return@mapNotNull null
+            val store = if (client) receipt?.getAsJsonObject("Stores")?.getAsJsonObject(storeId)
+                else AircraftArmamentRegistry.stores[ResourceLocation.tryParse(storeId)]
+            store ?: return@mapNotNull null
+            val capacity = AircraftArmamentRegistry.mountCapacity(mount, store["Capacity"]?.asInt ?: 1)
+            val fired = if (client) receipt?.getAsJsonObject("Fired")?.get(id)?.asInt ?: 0
+                else used!!.getInt(id)
+            AircraftStoreWeapons.Equipped(storeId, store, AircraftStoreWeapons.Member(id,
+                nativeWeapons(mount, storeId), capacity, (capacity - fired).coerceAtLeast(0)))
+        }
+    }
     private fun selection(vehicle: VehicleEntity): JsonObject {
         if (vehicle.level().isClientSide) return AircraftArmamentClient.getState(vehicle.uuid)
             ?.getAsJsonObject("Selections") ?: JsonObject()
@@ -120,13 +151,13 @@ object AircraftArmamentManager {
         }.distinct()
     }
     @JvmStatic fun selectableWeapon(vehicle: VehicleEntity, weapon: String): Boolean {
-        if (AircraftStoreWeapons.mountId(weapon) != null || weapon == AircraftGunPodGroups.GROUP) return false
-        val definition = definition(vehicle)
-        if (definition != null && mounts(definition).any { mount ->
-                mount.getAsJsonArray("AllowedStores")?.any { weapon in nativeWeapons(mount, it.asString) } == true
-            }) return false
+        if (!storeWeaponState(vehicle).selectable(weapon)) return false
         return allowsWeapon(vehicle, weapon)
     }
+    @JvmStatic fun selectableWeaponIndices(vehicle: VehicleEntity, names: List<String>): List<Int> =
+        storeWeaponState(vehicle).selectableIndices(names) {
+            allowsWeapon(vehicle, it) && vehicle.getGunData(it) != null
+        }
     @JvmStatic fun weaponPresentation(vehicle: VehicleEntity, weaponId: String): AircraftWeaponPresentation? {
         AircraftStoreWeapons.group(vehicle, weaponId)?.let { group ->
             val category = when (group.store["Category"]?.asString) {
@@ -225,8 +256,8 @@ object AircraftArmamentManager {
     }
 
     @JvmStatic fun weaponSelectionRevision(vehicle: VehicleEntity): Int =
-        if (definition(vehicle) == null) 0 else selection(vehicle).hashCode() + AircraftArmamentRegistry.revision.toInt() +
-            (if (vehicle.level().isClientSide) AircraftArmamentClient.getState(vehicle.uuid)?.get("Revision")?.asLong ?: 0 else equipment(vehicle).getLong("Revision")).toInt()
+        if (definition(vehicle) == null) 0 else
+            (equipmentRevision(vehicle) + catalogueRevision(vehicle)).toInt()
 
     private fun base(vehicle: VehicleEntity) = JsonObject().also {
         it.addProperty("Vehicle", vehicle.uuid.toString()); it.addProperty("EntityId", vehicle.id)

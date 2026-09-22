@@ -47,9 +47,7 @@ data class VehicleWeaponHudSnapshot(
                 player.isRemoved || vehicle.isRemoved || vehicle.isWreck || seat < 0 ||
                 vehicle.getNthEntity(seat) !== player) return null
             val names = vehicle.getWeaponIds(seat)
-            val indices = VehicleWeaponHudMetadata.equippedIndices(names) { name ->
-                vehicle.getGunData(name) != null && AircraftArmamentManager.allowsWeapon(vehicle, name)
-            }
+            val indices = AircraftArmamentManager.selectableWeaponIndices(vehicle, names)
             val primary = vehicle.getPrimaryWeaponIndex(seat)
             val secondary = vehicle.getSecondaryWeaponIndex(seat)
             val station = vehicle.computed().passengerWeaponStationBinding

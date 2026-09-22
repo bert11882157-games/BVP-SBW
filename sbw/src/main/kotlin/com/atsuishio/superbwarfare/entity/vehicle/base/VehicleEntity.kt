@@ -182,6 +182,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
 
     private val persistentStateOwner = VehiclePersistentStateOwner()
     private val synchronizedStateOwner = VehicleSynchronizedStateOwner()
+    internal val aircraftStoreWeaponState = com.atsuishio.superbwarfare.api.aircraft.AircraftStoreWeaponState()
     private val vehicleWeaponRuntime = VehicleWeaponRuntime(this) {
         weaponScheduler.shouldEmitNativeSound()
     }

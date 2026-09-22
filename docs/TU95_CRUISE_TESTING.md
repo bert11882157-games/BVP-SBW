@@ -15,7 +15,7 @@ radar-warning receiver are enabled.
 `CoordinateProfile` is `ballistics:kh55`, supplied by the matching Fire From Above build.
 The profile uses FFA's base cruise-missile tuning with boost acceleration reduced from
 0.025 to 0.0125 blocks/tick squared, with a dedicated maximum horizontal launch range of
-2,000 blocks. Damage, speed, and other base-profile behavior remain unchanged. This is game
+1,500 blocks. Damage, speed, and other base-profile behavior remain unchanged. This is game
 testing data, not a historical missile simulation.
 
 Aircraft-launched cruise missiles hold their release Y while turning toward the assigned target,
@@ -74,6 +74,10 @@ source audit of that supplied meshloader binary.
    that the selector shows one entry per munition type with the combined ammunition count,
    that different types remain separate, and that native reload, seeker and firing behavior
    remain available after the first mount runs out.
+9. Compare frame times in the same position/view with empty pylons and eight loaded missiles,
+   then repeat after firing, refitting, and a resource reload. The bottom-right HUD must show
+   one KH-55 entry throughout, with ammunition falling from 8 to 0. Check external stores on
+   another aircraft as well. The TU-95's concealed bay stores should add no store mesh draws.
 
 ## Source ownership
 

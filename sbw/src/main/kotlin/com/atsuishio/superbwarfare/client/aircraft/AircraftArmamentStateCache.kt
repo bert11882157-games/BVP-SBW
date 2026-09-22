@@ -51,7 +51,7 @@ internal class AircraftArmamentStateCache {
                 if (json.has("Seek")) {
                     val seek = AircraftArmamentSnapshot.decodeSeek(json.getAsJsonObject("Seek"))
                     if (seek.revision <= (previous.snapshot.seek?.revision ?: -1L)) return null
-                    val merged = previous.json.deepCopy()
+                    val merged = copyEnvelope(previous.json)
                     merged.add("Seek", json.get("Seek").deepCopy())
                     val result = previous.copy(snapshot = previous.snapshot.copy(seek = seek), json = merged)
                     entries[id] = result
@@ -65,7 +65,7 @@ internal class AircraftArmamentStateCache {
                 } ?: false
                 if (!clear && !json.has("Point")) return null
                 val point = if (clear) null else AircraftArmamentSnapshot.vector(json.get("Point"), 30_000_000.0)
-                val merged = previous.json.deepCopy()
+                val merged = copyEnvelope(previous.json)
                 if (clear) merged.remove("Point") else merged.add("Point", json.get("Point").deepCopy())
                 merged.addProperty("PointRevision", pointRevision)
                 previous.copy(snapshot = previous.snapshot.copy(point = point), json = merged, pointRevision = pointRevision)
@@ -74,6 +74,12 @@ internal class AircraftArmamentStateCache {
             while (entries.size > MAX_ENTRIES) entries.remove(entries.keys.first())
             result
         } catch (_: RuntimeException) { null }
+    }
+
+    // Accepted nested trees are read-only. Thin receipts replace only top-level fields; sharing
+    // the catalogue avoids copying it and invalidating derived loadout caches on every seek tick.
+    private fun copyEnvelope(json: JsonObject) = JsonObject().also { copy ->
+        json.entrySet().forEach { (key, value) -> copy.add(key, value) }
     }
 
     private fun revision(json: JsonObject, key: String): Long? = json.get(key)?.let {

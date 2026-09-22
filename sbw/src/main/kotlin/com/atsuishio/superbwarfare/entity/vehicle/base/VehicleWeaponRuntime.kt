@@ -183,11 +183,7 @@ internal class VehicleWeaponRuntime(
 
     fun validWeaponIndices(seatIndex: Int): List<Int> {
         val weapons = vehicle.getWeaponIds(seatIndex)
-        return weapons.indices.filter { index ->
-            val name = weapons.getOrNull(index)
-            !name.isNullOrBlank() && vehicle.getGunData(name) != null &&
-                com.atsuishio.superbwarfare.api.aircraft.AircraftArmamentManager.selectableWeapon(vehicle, name)
-        }
+        return com.atsuishio.superbwarfare.api.aircraft.AircraftArmamentManager.selectableWeaponIndices(vehicle, weapons)
     }
 
     fun resolvedPrimaryIndex(seatIndex: Int, ordered: List<Int>): Int {
