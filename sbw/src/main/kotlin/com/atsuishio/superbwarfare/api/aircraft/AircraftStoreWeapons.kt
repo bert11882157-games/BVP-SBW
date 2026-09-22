@@ -25,7 +25,9 @@ object AircraftStoreWeapons {
         val mount = mountId(weapon) ?: return false
         val store = AircraftArmamentManager.equippedStore(vehicle, mount) ?: return false
         return (store["Category"]?.asString == "LASER_GUIDED" ||
-            store["Category"]?.asString == "AIR_TO_AIR" && store.has("Guidance")) &&
+            store["Category"]?.asString in setOf("AIR_TO_AIR", "ANTI_RADIATION") && store.has("Guidance") ||
+            store["Category"]?.asString == "BOMB" && store.has("Bomb") ||
+            store["Category"]?.asString == "CRUISE" && store.has("Flight")) &&
             AircraftArmamentManager.mountRemaining(vehicle, mount) > 0
     }
     fun data(vehicle: VehicleEntity, weapon: String): GunData? {

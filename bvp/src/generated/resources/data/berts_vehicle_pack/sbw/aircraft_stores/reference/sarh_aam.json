@@ -1,0 +1,22 @@
+{
+  "Schema": 1,
+  "Name": "Reference · semi-active radar AAM",
+  "Category": "AIR_TO_AIR",
+  "Capacity": 1,
+  "MassKg": 220,
+  "Guidance": {
+    "Mode": "SEMI_ACTIVE_RADAR",
+    "LockTicks": 60,
+    "Range": 1000,
+    "ConeDegrees": 25,
+    "CountermeasureVulnerability": 0.75
+  },
+  "Flight": {
+    "InitialSpeed": 0.5,
+    "MaxSpeed": 8,
+    "AccelerationPerTick": 0.1,
+    "TurnDegreesPerSecond": 65,
+    "Damage": 60,
+    "BlastRadius": 4
+  }
+}

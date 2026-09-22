@@ -126,19 +126,11 @@ object AircraftArmamentManager {
         val key = pair["Id"].asString
         val store = equippedStore(vehicle, key) ?: return null
         val category = when (store["Category"]?.asString) {
-            "ROCKET_POD" -> "RKT"; "GUN_POD" -> "CNN"; "LASER_GUIDED" -> "AGM"; "AIR_TO_AIR" -> "AAM"; else -> return null
+            "ROCKET_POD" -> "RKT"; "GUN_POD" -> "CNN"; "LASER_GUIDED", "ANTI_RADIATION" -> "AGM"
+            "AIR_TO_AIR" -> "AAM"; "BOMB" -> "BMB"; "CRUISE" -> "AGM"; else -> return null
         }
         val ammo = if (category in setOf("RKT", "CNN")) vehicle.getGunData(weaponId)?.ammo?.get() ?: 0 else mountRemaining(vehicle, key)
         return AircraftWeaponPresentation(category, store["Name"].asString, ammo, mountCapacity(vehicle, key))
-    }
-    @JvmStatic fun onDesignationAccepted(vehicle: VehicleEntity) {
-        if (vehicle.level().isClientSide) return
-        val def = definition(vehicle) ?: return
-        val pair = mounts(def).firstOrNull { val key = it["Id"].asString
-            equippedStore(vehicle, key)?.get("Category")?.asString == "LASER_GUIDED" && mountRemaining(vehicle, key) > 0
-        } ?: return
-        val index = vehicle.getWeaponIds(0).indexOf(AircraftStoreWeapons.PREFIX + pair["Id"].asString)
-        if (index >= 0) vehicle.setWeaponIndex(0, index)
     }
     private fun selectGuns(vehicle: VehicleEntity) {
         val builtIn = definition(vehicle)?.getAsJsonArray("BuiltInWeapons")?.map { it.asString } ?: return
@@ -190,7 +182,7 @@ object AircraftArmamentManager {
                 val actualProjectile = vehicle.getGunData(weaponName)
                     ?.get(com.atsuishio.superbwarfare.data.gun.GunProp.PROJECTILE)?.resolvedProfileId()
                 compatible && store != null && store["Category"]?.asString !in
-                    setOf("LASER_GUIDED", "AIR_TO_AIR", "VISUAL_ONLY") &&
+                    setOf("LASER_GUIDED", "AIR_TO_AIR", "ANTI_RADIATION", "BOMB", "CRUISE", "VISUAL_ONLY") &&
                     (vehicle.level().isClientSide || gunProfile == null || actualProjectile != null && actualProjectile in expectedProjectiles)
             } == true }
     }
@@ -364,6 +356,18 @@ object AircraftArmamentManager {
             require(allowed(pair, id)) { "Store is not approved for $key." }
             nbt.putString(key, id)
         }
+        val definition = definition(vehicle)!!
+        if (available.isEmpty()) return nbt
+        val limit = definition["MaxPayloadKg"]?.asDouble
+        require(limit != null && limit > 0.0) { "Aircraft payload limit is not authored." }
+        val selected = nbt.allKeys.associateWith { key ->
+            AircraftArmamentRegistry.stores[ResourceLocation(nbt.getString(key))]!!
+        }
+        require(selected.values.all { it["MassKg"]?.asDouble?.let { mass -> mass > 0.0 && mass.isFinite() } == true }) {
+            "Store mass is not authored."
+        }
+        val mass = AircraftArmamentRegistry.loadoutMassKg(definition, selected)
+        require(mass <= limit + 1.0e-6) { "Payload ${mass.toInt()} kg exceeds maximum ${limit.toInt()} kg." }
         return nbt
     }
     private fun apply(vehicle: VehicleEntity, body: JsonObject) {
@@ -380,18 +384,21 @@ object AircraftArmamentManager {
         val id = selection(vehicle)[pair["Id"].asString]?.asString
         require(id != null && allowed(pair, id)) { "No store equipped." }
         val store = AircraftArmamentRegistry.stores[ResourceLocation(id)]!!
-        val airToAir = store["Category"].asString == "AIR_TO_AIR" && store.has("Guidance")
-        require(store["Category"].asString != "VISUAL_ONLY" && (store["Category"].asString != "AIR_TO_AIR" || airToAir)) { "This store is visual only in this version." }
+        val category = store["Category"].asString
+        val guidedMissile = category in setOf("AIR_TO_AIR", "ANTI_RADIATION") && store.has("Guidance")
+        val bomb = category == "BOMB" && store.has("Bomb")
+        val cruise = category == "CRUISE" && store.has("Flight")
+        require(category != "VISUAL_ONLY" && (category !in setOf("AIR_TO_AIR", "ANTI_RADIATION", "BOMB", "CRUISE") || guidedMissile || bomb || cruise)) { "This store is visual only in this version." }
         val weapon = nativeWeapons(pair, id).singleOrNull()
-        if (store["Category"].asString != "LASER_GUIDED" && !airToAir) {
+        if (category != "LASER_GUIDED" && !guidedMissile && !bomb && !cruise) {
             require(weapon != null) { "This store has no firing implementation yet." }
             require(vehicle.vehicleShootResult(player, weapon).isAccepted()) { "Weapon cannot fire now." }
             return
         }
         val weaponId = AircraftStoreWeapons.PREFIX + pair["Id"].asString
         val equipped = listOfNotNull(vehicle.getGunName(0), vehicle.getSecondaryWeaponIndex(0)?.let { vehicle.getGunName(0, it) })
-        require(weaponId in equipped) { "Equip this missile in a weapon slot first." }
-        if (airToAir) {
+        require(weaponId in equipped) { "Select this store in a weapon slot first." }
+        if (guidedMissile) {
             val lock = AircraftMissileLauncher.update(vehicle, player, weaponId, store)
             require(lock >= 0) { "Compatible Fire From Above missile support is unavailable." }
             require(lock == 2) { "Hold the target in the seeker cone until locked." }
@@ -404,11 +411,13 @@ object AircraftArmamentManager {
         val times = state.getCompound("LastFire"); val now = player.serverLevel().gameTime
         require(!times.contains(key) || now - times.getLong(key) >= 10) { "Launcher is cycling." }
         val mount = AircraftArmamentRegistry.launchPosition(pair, used)
-        if (airToAir) require(AircraftMissileLauncher.launch(vehicle, player, AircraftStoreWeapons.PREFIX + key, mount, store)) { "Missile lock or launch conditions changed." }
+        if (guidedMissile) require(AircraftMissileLauncher.launch(vehicle, player, AircraftStoreWeapons.PREFIX + key, mount, store)) { "Missile lock or launch conditions changed." }
+        else if (bomb) require(AircraftBombLauncher.launch(vehicle, player, mount, store)) { "Bomb release failed." }
+        else if (cruise) require(AircraftCruiseLauncher.launch(vehicle, player, mount, store)) { "Cruise missile launch failed." }
         else require(AircraftLaserLauncher.launch(vehicle, player, mount, store)) { "Invalid laser-munition profile." }
         fired.putInt(key, used + 1); state.put("Fired", fired); times.putLong(key, now); state.put("LastFire", times)
         state.putLong("Revision", state.getLong("Revision") + 1)
-        if (!airToAir) selectGuns(vehicle)
+        if (!guidedMissile && !bomb && !cruise) selectGuns(vehicle)
     }
 
     private fun designateAsync(player: ServerPlayer, vehicle: VehicleEntity, lease: Lease, body: JsonObject) {
@@ -466,7 +475,6 @@ object AircraftArmamentManager {
                     reply(player, lease, message = "Designation storage is full.")
                     return@execute
                 }
-                onDesignationAccepted(vehicle)
                 publishPoint(vehicle)
                 reply(player, lease, message = "Target designated.")
             }
@@ -540,8 +548,12 @@ object AircraftArmamentManager {
                 addProperty("Progress", state.getDouble("Progress").coerceIn(0.0, 1.0))
                 addProperty("Ready", status == 2)
                 addProperty("Status", when (status) { -1 -> "UNAVAILABLE"; 1 -> "ACQUIRING"; 2 -> "READY"; else -> "NO_TARGET" })
-                if (status > 0 && state.hasUUID("TargetUUID")) {
-                    addProperty("TargetUUID", state.getUUID("TargetUUID").toString())
+                if (status > 0 && (state.hasUUID("TargetUUID") || state.getString("TargetType") == "BLOCK")) {
+                    if (state.hasUUID("TargetUUID")) addProperty("TargetUUID", state.getUUID("TargetUUID").toString())
+                    if (state.getString("TargetType") == "BLOCK") {
+                        addProperty("TargetType", "BLOCK")
+                        addProperty("TargetBlock", state.getLong("TargetBlock"))
+                    }
                     add("TargetPosition", pointJson(Vec3(state.getDouble("TargetX"), state.getDouble("TargetY"), state.getDouble("TargetZ"))))
                 }
             }

@@ -1,0 +1,15 @@
+{
+  "Schema": 1,
+  "Name": "Reference · dumb bomb 250 kg",
+  "Category": "BOMB",
+  "Capacity": 1,
+  "MassKg": 250,
+  "Bomb": {
+    "Mode": "DUMB",
+    "Gravity": 0.08,
+    "DragMultiplier": 1,
+    "TurnDegreesPerTick": 0,
+    "BlastRadius": 20,
+    "BlastDamage": 500
+  }
+}

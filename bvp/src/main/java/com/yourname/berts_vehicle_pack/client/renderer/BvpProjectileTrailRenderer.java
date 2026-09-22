@@ -106,6 +106,7 @@ public final class BvpProjectileTrailRenderer {
 
     private static void emit(FastThrowableProjectile entity, BvpProjectileEffectDefinition definition,
                              ProjectileTrailKind kind) {
+        if (entity != null && com.atsuishio.superbwarfare.api.effect.MissilePresentation.hasSharedVisual(entity)) return;
         if (entity == null || entity.m_9236_() == null || !entity.m_9236_().f_46443_) {
             return;
         }

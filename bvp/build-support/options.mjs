@@ -1,5 +1,6 @@
 export function parseOptions(args) {
-  const valued = new Set(['--tree', '--output', '--gradle-home', '--meshloader-source', '--meshloader-manifest']);
+  const valued = new Set(['--tree', '--output', '--gradle-home', '--meshloader-source',
+    '--meshloader-manifest', '--compiler-extras-manifest']);
   const flags = new Set(['--offline']);
   const result = new Map();
   for (let i = 0; i < args.length; i++) {

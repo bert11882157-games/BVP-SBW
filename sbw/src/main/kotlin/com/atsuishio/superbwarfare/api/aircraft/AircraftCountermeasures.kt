@@ -35,11 +35,12 @@ class AircraftCountermeasures(private val vehicle: VehicleEntity) {
         val controlled = pilot?.isAlive == true && !pilot.isSpectator && pilot.vehicle === vehicle
         var output = state.tick(now, controlled && vehicle.decoyInputDown,
             controlled && (vehicle.getVehicleFlightControlBits().toInt() and CHAFF_INPUT_BIT) != 0,
-            definition.flares, definition.chaff, definition.flaresPerSecond, definition.flaresPerBurst)
+            definition.flares, definition.chaff, definition.flaresPerSecond, definition.flaresPerBurst,
+            definition.chaffReleaseTicks)
         if (output.flarePairs > 0 && !launchPair(level, definition)) {
             state.abortPair()
             output = state.tick(now, false, false, definition.flares, definition.chaff,
-                definition.flaresPerSecond, definition.flaresPerBurst)
+                definition.flaresPerSecond, definition.flaresPerBurst, definition.chaffReleaseTicks)
         }
         // Chaff presentation consumes the synchronized accepted state on the client.
         val levels = output.flareLevel or (output.chaffLevel shl 8)
@@ -60,8 +61,8 @@ class AircraftCountermeasures(private val vehicle: VehicleEntity) {
             nextWarningAt = now + if (threat == 2) 6 else 24
         }
         if (threat == 0) nextWarningAt = now
-        vehicle.publishAircraftCountermeasures(levels or (threat shl 12) or
-            (if (output.chaffEmitting) 1 shl 14 else 0),
+        vehicle.publishAircraftCountermeasures(AircraftCountermeasureWire.pack(
+            output.flareLevel, output.chaffLevel, threat, output.chaffEmitting),
             output.flareCooldown or (output.chaffCooldown shl 9))
         vehicle.decoyReady = definition.flares && output.flareCooldown == 0
         vehicle.decoyReloadCoolDown = output.flareCooldown

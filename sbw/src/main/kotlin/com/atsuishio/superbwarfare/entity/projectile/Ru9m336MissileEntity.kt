@@ -80,7 +80,7 @@ open class Ru9m336MissileEntity(type: EntityType<out Ru9m336MissileEntity>, leve
 
                 if (!lostTarget) {
                     turn(toVec, ((tickCount - 1) * 0.5f).coerceIn(0f, 15f))
-                    this.deltaMovement = this.deltaMovement.scale(0.05).add(lookAngle.scale(8.0))
+                    this.deltaMovement = NativeMissileThrust.step(deltaMovement, lookAngle, tickCount, 8.4, 0.24)
                 }
 
                 if (lostTarget) {

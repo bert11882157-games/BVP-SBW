@@ -71,11 +71,18 @@ class AircraftLoadoutScreen(private var state: AircraftArmamentSnapshot) : Scree
         mounts.drop(pairPage * rows).take(if (showPresets) 0 else rows).forEachIndexed { index, mount ->
             val options = listOf<String?>(null) + mount.allowed.filter { state.stores.containsKey(it) }
             val current = draft[mount.id]
-            val name = current?.let { state.stores[it]?.name } ?: "Empty"
+            val store = current?.let { state.stores[it] }
+            val name = store?.let { "${it.name} (${(it.massKg * (it.capacity ?: 1) * mount.positions.size).toInt()} kg)" } ?: "Empty"
             val label = if (mount.allowed.isEmpty()) "${mount.name} · unavailable" else
                 "${mount.name} · $name${if (mount.positions.size == 2) " · both wings" else ""}"
             val choice = button(label, left + 12, top + 56 + index * 26, columnWidth, true) {
-                val next = options[(options.indexOf(current).coerceAtLeast(0) + 1) % options.size]
+                val start = options.indexOf(current).coerceAtLeast(0)
+                val next = (1..options.size).asSequence().map { options[(start + it) % options.size] }
+                    .firstOrNull { candidate ->
+                        val proposed = LinkedHashMap(draft)
+                        if (candidate == null) proposed.remove(mount.id) else proposed[mount.id] = candidate
+                        state.payloadKg(proposed) <= state.definition.maxPayloadKg + 1.0e-6
+                    }
                 if (next == null) draft.remove(mount.id) else draft[mount.id] = next
                 rebuild()
             }
@@ -147,7 +154,9 @@ class AircraftLoadoutScreen(private var state: AircraftArmamentSnapshot) : Scree
         graphics.fill(left, top, left + panelWidth, top + 3, 0xFFE2B66D.toInt())
         val headerWidth = if (diagnosticPreviewEnabled && !previewOnly)
             panelWidth - 148 else panelWidth - 24
-        graphics.drawString(font, font.plainSubstrByWidth(state.definition.name, headerWidth),
+        val mass = "${state.payloadKg(draft).toInt()} / ${state.definition.maxPayloadKg.toInt()} kg"
+        graphics.drawString(font, mass, left + panelWidth - 12 - font.width(mass), top + 12, 0xFFF1E8D8.toInt(), false)
+        graphics.drawString(font, font.plainSubstrByWidth(state.definition.name, headerWidth - font.width(mass) - 8),
             left + 12, top + 12, 0xFFF1E8D8.toInt(), false)
         val status = when {
             previewOnly -> "PRIVATE UI PREVIEW · server actions disabled · Esc to close"

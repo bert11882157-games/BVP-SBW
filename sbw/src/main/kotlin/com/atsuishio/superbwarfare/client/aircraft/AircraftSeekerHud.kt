@@ -34,7 +34,12 @@ object AircraftSeekerHud {
         var previous: Vec3? = null
         graphics.enableScissor(0, 0, width, height)
         try {
-            for (i in 0..96) {
+            if (seek.guidanceMode == "ANTI_RADIATION") {
+                val r = circle.radius
+                val points = listOf(Vec3(circle.x-r,circle.y-r,1.0), Vec3(circle.x+r,circle.y-r,1.0),
+                    Vec3(circle.x+r,circle.y+r,1.0), Vec3(circle.x-r,circle.y+r,1.0))
+                for (i in points.indices) line(graphics, points[i], points[(i+1)%4], width, height, color)
+            } else for (i in 0..96) {
                 val angle = i * Math.PI * 2 / 96
                 val coordinates = circle.point(angle)
                 val point = Vec3(coordinates.first, coordinates.second, 1.0)

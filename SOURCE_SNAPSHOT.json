@@ -1,10 +1,10 @@
 {
   "schema": 1,
   "policyVersion": 4,
-  "label": "downloads-docs-20260922-review",
-  "status": "review",
-  "createdAt": "2026-09-22T08:04:21.610Z",
-  "treeSha256": "f73d3162f23204c9358deb62761bc4470d3eda4b40b721765498e44fae24db18",
+  "label": "munition-overhaul-20260922-candidate-r2",
+  "status": "release-candidate",
+  "createdAt": "2026-09-22T22:18:59.234Z",
+  "treeSha256": "fb4da9927d046d571ed64309daa0ebf9918c6af1f7b3a6c166a439d0fbeb904f",
   "files": [
     {
       "path": ".editorconfig",
@@ -27,14 +27,9 @@
       "sha256": "b0fe19f2e8a7e9b037a324e1a26f4b4bf26b9f92e65f79c860478f728f4333c9"
     },
     {
-      "path": "DOWNLOADS.md",
-      "size": 6385,
-      "sha256": "49cb3ce6c4c37ff3cff54c949b0fd645a641855869a714356671fc1d8f9414a0"
-    },
-    {
       "path": "README.md",
-      "size": 2446,
-      "sha256": "990c9999dedebffb85d8027c6467c0cff2193b3b37e3c1bfbc8880c2c543cf44"
+      "size": 2130,
+      "sha256": "755b2cd2ef9bb464e5c2df5c4d00e08479ff7897c10497c8bb7b8e03cd8c0d83"
     },
     {
       "path": "bvp/CREDITS.txt",
@@ -48,13 +43,13 @@
     },
     {
       "path": "bvp/build-support/README.md",
-      "size": 4146,
-      "sha256": "ccb9df4136ae0a8a2a4301e561c2f57f906c9afe3b8cbc52ea6faf68155d45ee"
+      "size": 4693,
+      "sha256": "bb0cb90c5d1821fc04fcae0ec3b1c1349ec44e8d43c567ac042e38dbf263cfaa"
     },
     {
       "path": "bvp/build-support/build-release.mjs",
-      "size": 10427,
-      "sha256": "199c58ddb7eab1560d8fd67467b04ea3ac86db0e0e04a2e560ee9d4fbb235ae2"
+      "size": 11529,
+      "sha256": "11c6d6c1b0dca80454e145b544481bfd524c4a51184d0152db3685d12023bb94"
     },
     {
       "path": "bvp/build-support/dependency.gradle",
@@ -63,13 +58,13 @@
     },
     {
       "path": "bvp/build-support/options.mjs",
-      "size": 822,
-      "sha256": "d4a8ab47bc5623d3e3f6db4858d3da4ceb148eb6b05000b78cf12b9bfecea0a1"
+      "size": 856,
+      "sha256": "1719b5968646591d055d82053ffe31424309530223ec47439c7660189ef3dd04"
     },
     {
       "path": "bvp/build-support/options.test.mjs",
-      "size": 908,
-      "sha256": "9431d1e29a1fee69d9d3ca5a447d5e73ce59545525fce109376574eaffbd7e89"
+      "size": 1224,
+      "sha256": "d19b5cbfd763ee840f4d360ddc93582274337d2d3d543bfc3694c21ce3736074"
     },
     {
       "path": "bvp/build-support/remap-addon.mjs",
@@ -245,6 +240,11 @@
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/custom_geo/aircraft_stores/kh29l.geo.json",
       "size": 343076,
       "sha256": "79e2e11b629c895b60398e4f5f6306c93d4978cfbb2178b729041349deac6371"
+    },
+    {
+      "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/custom_geo/aircraft_stores/kh55.geo.json",
+      "size": 692834,
+      "sha256": "75ce0cb736956625fb98f60f6f4336e0ef82ffeadaae285cc3a9a84883eafb67"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/custom_geo/aircraft_stores/r60.geo.json",
@@ -1165,6 +1165,11 @@
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/custom_geo/projectiles/kh29l.geo.json",
       "size": 342860,
       "sha256": "2665299bfd943c239c915a3f22c2636a9b6e1e84ec01f04d1dadd5eadf2cc37c"
+    },
+    {
+      "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/custom_geo/projectiles/kh55.geo.json",
+      "size": 692657,
+      "sha256": "862d1d63f68a4083fd1fe2aa234cfa2a4359c51d4f1ce0749b199ab15da1dd51"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/custom_geo/pzh_2000.geo.json",
@@ -4855,6 +4860,11 @@
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/textures/aircraft_stores/kh29l.png",
       "size": 2978,
       "sha256": "2f568916d191b6601ea1039e8f92bd2bb6e3b3572de77e1044b4ee8e56ee18b7"
+    },
+    {
+      "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/textures/aircraft_stores/kh55.png",
+      "size": 6117,
+      "sha256": "99553cf96eb530873e9fa21b980b134de90609e3c9d26b8cc71794437ef1096f"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/textures/aircraft_stores/r60.png",
@@ -8603,383 +8613,383 @@
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/a_7d.json",
-      "size": 680,
-      "sha256": "7104be50d3c811d78a198e463073b23c1e216a3896f1c5ecf29c52cee50cf8f0"
+      "size": 704,
+      "sha256": "2b5e45c8c50fec373c3eae67a9dfe231f5d0d1a7c0beb0723598cc9f7bb4831f"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/ah1w_super_cobra.json",
-      "size": 135,
-      "sha256": "6323ed353320fea5ad467cf7422f349177eaf5a24665f43885195ccd824f7ba5"
+      "size": 159,
+      "sha256": "4af946e7a171eb40dcbf2abd1e24f5ba5908c2ff88d1a7f01def9ecbfb31ef36"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/ah_1f.json",
-      "size": 146,
-      "sha256": "d89425f155530962c2ed07a02227c82da8ff4e7c412306af23ffd480bc247473"
+      "size": 170,
+      "sha256": "397b7b70d774eb782e926ef1afe069f805a80e0a50ddeb53083fe996c50a2338"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/ah_1g_cobra.json",
-      "size": 272,
-      "sha256": "abd7f4f81face3c26cfd9b53b05165e39d32b7ce8633e21c239ee508e1f2665d"
+      "size": 295,
+      "sha256": "ea131020ec7d901321563fc5fc322efff1fd663c203372a40c6b5d9f84556818"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/ah_6j.json",
-      "size": 260,
-      "sha256": "90bd33dde0b45260ae11b3582e13b9218c48d85a2d0168d142cc5908ade7b7d4"
+      "size": 283,
+      "sha256": "c22e3fb996f207c0b0472a75b863f8c4b4f94ff496f220790de117335f18c247"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/an_12b.json",
-      "size": 162,
-      "sha256": "bc4f4f6aa35fe216bc914b46942a7d993b7db4de0ca142941cdad3a4ea3b55d9"
+      "size": 187,
+      "sha256": "2838e70513ff762372600702ff0638eb0470ce2b811ed03c94c4d255791a718c"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/b_47e.json",
-      "size": 170,
-      "sha256": "7c0aeab2a635baaffd67323fb6603539a48c54b639db2b5266f2a330c3e041f4"
+      "size": 195,
+      "sha256": "200bb2390b94f8c1f3cf21b1857b1cca0024d6ebf4725e18cee7236dd3e4b079"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/eurofighter_typhoon.json",
-      "size": 826,
-      "sha256": "486be4fceb13309ed13c1902448ee5830c8d3df6dda0d5759cce83f2f311f7f3"
+      "size": 888,
+      "sha256": "be733091b9d61ccafe70c195c20bc88b0f1ac2ffe4d7c4cc31c094c26877915d"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/f8f_1.json",
-      "size": 173,
-      "sha256": "1574a14a8a2271f07a39993aa336f193f3d585370bd1aa69a3c8e1bdf8b6b720"
+      "size": 196,
+      "sha256": "c7a9ec4cfa625a6847818c376e848f7f5a1cdcf95c9c4c36000036b3950900b4"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/f9f_2.json",
-      "size": 405,
-      "sha256": "4db0f31ea455684284ab7074cd2061954e19358c8ca1ea00f911dded17f9f5ca"
+      "size": 429,
+      "sha256": "d5a8ba68c097f8bae1a4261600d04752c27c230e4f7c9078471a0adfbcb7d5ad"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/f_100c.json",
-      "size": 598,
-      "sha256": "fcbb0b0d87e176e31f23ec3d55803a77bd42c80e5e1f41559932feff78c13870"
+      "size": 622,
+      "sha256": "e179ccfeee56451c4a894ebc566e7d06f994688177aab58907205c7e48a94144"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/f_104g.json",
-      "size": 253,
-      "sha256": "bdbbc46bce08661e27078810974aeef9c4e9cc2f6b948276ed270714248a7539"
+      "size": 277,
+      "sha256": "d641f6820aa7690ea77e635a6fc36b0de4d8fafbcce59d26d7f1d956e978fc99"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/f_111f.json",
-      "size": 908,
-      "sha256": "4f3d0b69d1238be05215277d88b1be0426407dadd21db18d4459f6c9a35cb2a1"
+      "size": 933,
+      "sha256": "8b3735175091baf1deade81fbc0acebe75aff9ec3cf1793b19888b603735c087"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/f_15c.json",
-      "size": 601,
-      "sha256": "91159b5f89e48e7c9e1ed6b965effd2c397cfa8af30412018fb68b763eccafae"
+      "size": 625,
+      "sha256": "6c9358bd69447c20b18b46182ac4ffe14d5398071a405c058584f951bd4c731b"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/f_16c.json",
-      "size": 785,
-      "sha256": "eb19b49ae915aa1196f52a899779b8e06ebc16b1014b15a0957b40a0994eb122"
+      "size": 809,
+      "sha256": "c63ef355b55f71d0a2211657e71611c779753e8191e32501af34a0553409523d"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/f_22a.json",
-      "size": 139,
-      "sha256": "135f19cf70aaadef5d978f4d57c24deedd0ea50c15aff7c3fff506572c853e5b"
+      "size": 163,
+      "sha256": "3793c85895f06244f00bf9037929aa9aabb9bf566d86eabba7adb7c17f7e8bae"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/f_4c.json",
-      "size": 862,
-      "sha256": "78c8e3ad8abe208b54575c9dda7d4948ea8402fcc9298e52e2b75ca79696f4c2"
+      "size": 886,
+      "sha256": "5c9de3ed6afca9b3320cfd84b191384f2f632492a4b69e422fd781a5547892e7"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/f_5a.json",
-      "size": 587,
-      "sha256": "96b771ae72638228bac2387c08f78c8ff357e9dfae0a33307b7a6a27332e5ba4"
+      "size": 611,
+      "sha256": "a4b08925b63bf88d71e3fecd386f18a97d0417cae09e0d98cf9f8c483176fbe7"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/f_84f.json",
-      "size": 258,
-      "sha256": "20bd3a4f1f13f6cdfec21624497b0b5a072d888a648e89bb318e3b4b7ff53abd"
+      "size": 282,
+      "sha256": "85b901d6480b73ba78aaff6131d0c2cf420dcbb0f9ab2578197191a419c7ed87"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/f_86k.json",
-      "size": 133,
-      "sha256": "24df64acd8c093d3709fa5452c0acd82073140f54f120e4f991e3191a8f9daff"
+      "size": 156,
+      "sha256": "c736361dfb3ac8b450bc983604e504d7455b087dde97728ccd8d72a4563b1d1a"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/f_8h.json",
-      "size": 438,
-      "sha256": "8d8731927786c8a88f6259267a0ea2ba3965faccf20bfa8dcc76e7014bcf1fd5"
+      "size": 462,
+      "sha256": "a9420d6e5c61ed83d6bfeffed5ee19929a0784d6e64d3e5d0f06df819355f4cf"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/fiat_g_91.json",
-      "size": 278,
-      "sha256": "76db28869b1be108fa1d79e3f2b58f703acab20806ea65ac20a6bf8a49dec302"
+      "size": 301,
+      "sha256": "ea5f32d5e4be5340ed886ca37587c22339e1298252d2cb2e25ea395c7e181cbd"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/il_10.json",
-      "size": 198,
-      "sha256": "2a7b52dc0e6a127c013818d3011c190e5a63990a48696f7907071b7423144b88"
+      "size": 221,
+      "sha256": "cb4862e650fb4ac1b79027232d46fa32c501fa0a09e335c4751fb1cbb23a2a18"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/il_76m.json",
-      "size": 162,
-      "sha256": "0618284346b44834cc23f3b5214a90534f5b9fb0530233e3d46f13a3d9a6f2ca"
+      "size": 187,
+      "sha256": "14902e70956235d715e66d346c7174c13be893ad59af5605454176abe6f8084b"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/j_11a.json",
-      "size": 685,
-      "sha256": "eb90bdc81dc7667e643d3acd438c18dbb95c5c5012bff9edf9fec321e6b41d02"
+      "size": 709,
+      "sha256": "50abbf3393efb87da77332047ee7e6dd8543dec7fb12bbd7fc60b384fc9167c9"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/j_2.json",
-      "size": 159,
-      "sha256": "e51c0bd17d0bcf444c0f2bff903c653ede69403ce3ea5bc77bd4761c65e34267"
+      "size": 182,
+      "sha256": "3b1947dcb802f3fe4becf626980c26ec86ea785d3ddd18adcc8fd1ec15c266d7"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/j_26.json",
-      "size": 290,
-      "sha256": "741d1b445f2a219c4b772cc82f4b7c6eb6cfd119fc54c7aaea8cb7e804caff9c"
+      "size": 313,
+      "sha256": "5ffc57a0725c055cbf8190a9d8116466e4f5b3c0209489375e27fe0bfe205c9d"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/j_5.json",
-      "size": 159,
-      "sha256": "fef3bce8701dce3df9706d9813092a7983287b4b6a1fadd8aacbfbe547a75ddc"
+      "size": 182,
+      "sha256": "34288e6071e0e0561d261e21ca17d07d65d3020707a718d163aef4bebbe24617"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/ka50.json",
-      "size": 297,
-      "sha256": "b9805458ae8c4b99647614d829797ec75fd5720b45b0446d456819b4734ba741"
+      "size": 321,
+      "sha256": "1aacf37bfb018968de73a055418e6312c036f2bef32b58257a2e8822238aec1a"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/m_50a.json",
-      "size": 123,
-      "sha256": "298c1c27b8ce81fcab8916538557d889e1a02a9305e9287245653545a6dd4e2f"
+      "size": 147,
+      "sha256": "ced4dc2e7e58fd08f12c66ecff863b4e710370eed783565669de7cd5c60a5937"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/md_450_ouragan.json",
-      "size": 183,
-      "sha256": "852ed2fe611d4f0e50fb3b311c5879805b4d222c3f7e3bb1155aa6e0fb17f4a4"
+      "size": 207,
+      "sha256": "aa46790084c3d2a7f87f23c8dbad6c1802501e6ab6bf0ce24f668c9fd7390e9c"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/meteor_f_8.json",
-      "size": 178,
-      "sha256": "809bb0022642183f3acd65b7e0379d479193aab65294b4e0548d12ac9b1af232"
+      "size": 201,
+      "sha256": "d31c9b03e79d615da2a393c7e2e98d5b96c2d53a1145eb3d4ead0dcb77b0ea21"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/mi24_hind_a.json",
-      "size": 129,
-      "sha256": "d7800c81feb246bb9b833e51d0826b85071fb3f60a6c028698e526266b371da0"
+      "size": 153,
+      "sha256": "c8d28f2fe578581974d80f3448c6a50ed628b9af8c7403638db0e05076cd4a40"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/mi24v.json",
-      "size": 334,
-      "sha256": "fead0433fd6c8238093baa390c03ca6c7e5bc1fcff0e2dfd27d4ba86dd4c2784"
+      "size": 358,
+      "sha256": "3b717315751917b4ac4534af7eb66505c702656b7111b692accd778d03f1a57d"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/mi28n.json",
-      "size": 297,
-      "sha256": "7823cd5966ddfa82fdcfd765df979b7e5b2007ae4db1c616d8faf06b15fcb5fb"
+      "size": 321,
+      "sha256": "1ea1929c4bb9a5c785957e5525f303e196fdaac3601c1bc544531dbca2941939"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/mi_24a.json",
-      "size": 147,
-      "sha256": "1c13566b355b9a8dcaff18f75d7184a92200ffc7ed627a1500337552a6e9b47d"
+      "size": 171,
+      "sha256": "6d52a1fe205254f4a2f37364fa5f65ade965783b1dd354f98f7628ca0c8de740"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/mi_24d.json",
-      "size": 147,
-      "sha256": "5c2be7cf30392b9548768473f203512c94ba4497a73f79d0cc07bd38570fee40"
+      "size": 171,
+      "sha256": "a6a21159d06882bf71ab8e3512618e83d4d9e27efe678c4a209564b1c2cd4ae3"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/mi_26.json",
-      "size": 123,
-      "sha256": "b295b6003b88c7999358eca7fd7d29ed52654a8e3209d7c3c472f47b3a191bab"
+      "size": 148,
+      "sha256": "21df2698097ab88f366a67e7931b6ddfc68644e5b0961fb5202c4331b759db41"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/mig19.json",
-      "size": 178,
-      "sha256": "33cfc493158a127ac02246d2a03466c26fff4671f83ba332ecdda2ada452623a"
+      "size": 201,
+      "sha256": "aac891c08de994232b0bdf9136398f90441fc26a6cc2da38d64f593781a70e6c"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/mig_15bis.json",
-      "size": 195,
-      "sha256": "8f260da9e0f124aed7bd0159d31c465eabb7bacde261aef64ef49008503d2c21"
+      "size": 218,
+      "sha256": "c62b1587df933799d0b2669667f9c6a4a38158c950d573dd7edb075a17380bc5"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/mig_19s.json",
-      "size": 182,
-      "sha256": "2ef7893f9dcec85e767ec01e60a82d0ddbc7cd0e525ab20d6a8558de29723234"
+      "size": 205,
+      "sha256": "74b470a2b0ef9e89abf96edfa14ed7f5f3408134c5473c7e76c4aa3336d26cc4"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/mig_21bis.json",
-      "size": 239,
-      "sha256": "a6b09c827d93d9c7121cb60239ca1a28e596e3842ad3c7375c0b9655e0d5ada0"
+      "size": 263,
+      "sha256": "b0fea0918f4b99e0e15220ff170cffd6f2f72741566d51ec9105995e14e251f3"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/mig_23mld.json",
-      "size": 157,
-      "sha256": "ed2ebcfc59da4156bbbaea184c7cb9e70fe252d8f7cbd73287199ae91cd2df4a"
+      "size": 181,
+      "sha256": "19e7217bf28a8150ab6747ac9419d2a3ba058625cef43709895e97d7aea1ac03"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/mig_29.json",
-      "size": 344,
-      "sha256": "893de3ce188a9d0d68a47e2c70f539c64f421a9169a66cd5e0b8ecfec983d073"
+      "size": 368,
+      "sha256": "c2ece81215a1bdb646ea65e46c9c1eefb9b196be84b4227d1399d2e3ade32d88"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/mig_9.json",
-      "size": 182,
-      "sha256": "f32da05c4d9c677d8caaa2c055cbe7cdb38eef53d8aa627226fec851f6fff146"
+      "size": 203,
+      "sha256": "aeb8aec09cdc9880c45698de5babd7a3f7ed222ca23df39fa169b1e8b45c2efc"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/mirage_5.json",
-      "size": 429,
-      "sha256": "82956b77495f4af4166c27232bd29601b4d9589b1731600fad898e48be3a8d01"
+      "size": 453,
+      "sha256": "57724762d3aa48037eb48ae388a73581dbfaf8881ec6bbb6e873113dcdd5fc87"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/p_51d.json",
-      "size": 200,
-      "sha256": "d95a9518e2f71d36e415ed27d94bc6f59e5df9d2168c4fa2741231db2908cd80"
+      "size": 223,
+      "sha256": "0e5c1acdc4ec25b569eb30af200f3e71dcbc6d349f26a4a76a2b29696e576acd"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/panavia_tornado_ids_marineflieger.json",
-      "size": 564,
-      "sha256": "fb3a91746f729ed459d284a32c6d6e33724dc191d02dfdae3ba1a4f1157f761a"
+      "size": 588,
+      "sha256": "862e284d10220a20ecc6aeacfc34e34da44447df7a19f0e9cd757ff5af331037"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/rafale.json",
-      "size": 530,
-      "sha256": "08e6930a21f03e5e41c7217703c870eb5e70b5dea3d88258108ec430f916e55d"
+      "size": 554,
+      "sha256": "620aeacfa2278bd5cd19e63e0e06ee28dec5f84c70ba4247fdd311a5b2af9a16"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/saab_105.json",
-      "size": 246,
-      "sha256": "73cc6c3168bcdf3c4c16f676f55cce12718689874dc9fad3f674ce3fa2786b52"
+      "size": 269,
+      "sha256": "35a17f9ee63e061e729fcd426cae4fba140585e498d594f08fe8860b0a789607"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/saab_29_tunnan.json",
-      "size": 341,
-      "sha256": "5529928cb46d44d7cc8c525083e2078fb3edc1ba9ceda5e50fdc889b8049c03e"
+      "size": 364,
+      "sha256": "d78bf601f714172126516cd844f475137dfcdbb266cc770bffed1da497abe0a9"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/saab_32_lansen.json",
-      "size": 230,
-      "sha256": "a0dc1aeab6d296de6818164cbbb8ef75cfefbb0550003a88a137233ff3c4ae70"
+      "size": 254,
+      "sha256": "882bbbc21f80e390089d5bf376c0a368c81d3e9efc3c03eadc9c7e23482cecc6"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/saab_35_draken.json",
-      "size": 282,
-      "sha256": "fd1acfae6eefdd94bc7b916430e0ae563b65464c52ec43e07f907168affbe3ab"
+      "size": 305,
+      "sha256": "cc30c95d1663fce3a6518024697ca3d9e3976972d742401613efd1bb9dceb4b5"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/saab_37_viggen.json",
-      "size": 266,
-      "sha256": "ca28fab8b523301e44665d6ad59588f9568f7090cfc431c38dfe4becf66e8321"
+      "size": 290,
+      "sha256": "f1bfe3597d3ee176c9a4ec306a38cc7e41e0822c1978e1168d74a6562dec370b"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/saab_j_21a_1.json",
-      "size": 251,
-      "sha256": "cd5d068a024a7dd55871529691af6a1e6a1ea009bfa52226fee325d0ea0c33c0"
+      "size": 274,
+      "sha256": "c47748908c18d7b0e8205d45e8774abbac030ac6b88183cb0928caf6b11da24b"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/saab_jas_39_gripen.json",
-      "size": 487,
-      "sha256": "e2cd98177c38d82703c46030a220e3d4a38e1d7f1adea035d757caa11087c832"
+      "size": 511,
+      "sha256": "e03268a3c9ea47c4cb7d9e3ab76bd3f4c98790ab03c735b4f12f131bccd27d64"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/sabre_mk_6.json",
-      "size": 357,
-      "sha256": "df84fea9df04987f7cd96e8983417f0cf6590de4a59f63b7c4631ff592f4f5dd"
+      "size": 380,
+      "sha256": "2594f884f79c0ca69a747587ce1416279503a0c73a74fbb6199a9f6fa8c583b7"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/su_17.json",
-      "size": 362,
-      "sha256": "f5813055b7b12bfb470ebf9b162f2032597adb4bb084fd9d51fe95bc2fac215d"
+      "size": 386,
+      "sha256": "2a9e508802e3e6dfb61dc764d1ac8e70383425c003b8872fd9c5cfeb86c945b3"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/su_25.json",
-      "size": 3837,
-      "sha256": "f90dd69a19ec1b38226f3026368626164e6ed197cbdf6c33993f2191e1bad193"
+      "size": 5061,
+      "sha256": "a4a539b9e42eb052704998103a93161e800d1577e5ec8f13445617f31c5cce84"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/su_27.json",
-      "size": 481,
-      "sha256": "74e832f5f543a311a793ee9815d475e3080c801e5516dfd2747bbddc81ca8ac4"
+      "size": 505,
+      "sha256": "5bfd572ef9351725e748e8da985c5f262b192e9c08af7892f9196f8f8fb5a3fe"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/su_57.json",
-      "size": 325,
-      "sha256": "7729bb7c4375fcef6b32a6892970b1b98a03462dbc0ffce5acb2ef343f0c7993"
+      "size": 349,
+      "sha256": "632e4bc8561d538df6a5cdfe2ab6bcd64eb5435bb161b7f8ef245e7f5a63d5b4"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/su_9.json",
-      "size": 130,
-      "sha256": "5575e393adc345cb33465145be917b430921bf00fb6b0d0ade3ccc655d05b55a"
+      "size": 153,
+      "sha256": "5e0e1777240ffa430e914cc92850f04a978930991eeaae14d6677bcbc8abd408"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/super_mystere.json",
-      "size": 158,
-      "sha256": "c37f721e9d74e8248504bf577206217af0aedfc385d6daae3b97b5916836dca6"
+      "size": 181,
+      "sha256": "43df4a4cf81c7ef2ef01a1d5f03c57d8f77dcf863016b9557393b2c8c6a8c341"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/supermarine_spitfire_griffon.json",
-      "size": 295,
-      "sha256": "1aae134bce887209638fce9ee7a40cb154dd340ba43f53cf8d5faa95b8e4194c"
+      "size": 318,
+      "sha256": "9b29af0464f7cb5624fa014c75559c6e7202c5f5584154e83b0aced79477dc0a"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/tu_22m.json",
-      "size": 145,
-      "sha256": "7e84acb3b3442b679e4a5f27c4e91a63a41964f3eaf872777592ac6fc29d08e6"
+      "size": 170,
+      "sha256": "7e990ecd3d6e77fbc46c96b69599602b14dcf6dde0f0f1bc7dcd987c2bea7db8"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/tu_95ms.json",
-      "size": 185,
-      "sha256": "997b9d967cd915fae417ee3e04c07874253acafcd56b6800f1e82a4dc65da966"
+      "size": 3766,
+      "sha256": "c416cf636baf452e756a4ed884113f1d84861a82ea067d86d2d8b310d7c0714d"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/uh1d_huey.json",
-      "size": 128,
-      "sha256": "ac5c68094317b7021b0cd7416626f81e96427bc5538a70c9d18f1e595d995522"
+      "size": 152,
+      "sha256": "528c5593f85f105f548732da7110099e7c01d711097ed61cdc6d1abfdb37411f"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/yak_15p.json",
-      "size": 141,
-      "sha256": "613b085d32beac02c1538814d096bb0d17127895e88d6e5e6b8d211081fbafd2"
+      "size": 163,
+      "sha256": "77539147910b9387889ee552d0258e3e17eb08ee99e8c2bb716c8b294a8ef10d"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/yak_3.json",
-      "size": 184,
-      "sha256": "1e559f96c4103b0b116132d846aa514ad37062483c39cc838f4764b465a82531"
+      "size": 207,
+      "sha256": "4590229f92d7408941be09c9da16ba0567e5e24575debb68966331bab225a857"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/yak_9u.json",
-      "size": 185,
-      "sha256": "784cec3a19dacacc46c6a13339d887379ffb0320bee15ec9a1ad04ce2d27d36b"
+      "size": 208,
+      "sha256": "f2b1ced578d147064883a517ef8e45600243505c83fd2b6173720914b4aff3b4"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/gsh23_pod.json",
-      "size": 320,
-      "sha256": "d8d70855eb82ab0bf0aed1685dc0afab0fc5813258709784b2e37f278a062b78"
+      "size": 338,
+      "sha256": "46bc78ad89e11c49eca1e3cca736fa5eebd11dc182e15bd1adbb72d96427e553"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/gun_pod/f111_m61_bay.json",
-      "size": 79,
-      "sha256": "afbc35601faa7a26dc84ae8d5fef5759f9f4b1401653380db10b305a2111353e"
+      "size": 96,
+      "sha256": "b1c87f1266237e2ecd4c56fef4e388216c49188fced3118fe6ed247b9fb40f3f"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/gun_pod/f4c_gau4.json",
-      "size": 86,
-      "sha256": "e7b371dc459827002155a5083086fe35ee6bd33796721311141129a3ed62e7dc"
+      "size": 103,
+      "sha256": "b71da4f2b98b582165c3fc6a3ba166779ad93467388c6194e92bba93e548d03f"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/gun_pod/m134.json",
-      "size": 69,
-      "sha256": "eeb380f61e38132228124ec2bde77e204869420dc1481d2d98abf915b82e4ab0"
+      "size": 86,
+      "sha256": "386c9f3352231a8cd2f090b1f4d873b13196780126aa898137c5f6c81d7ea69e"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/gun_pod/m195_m35.json",
-      "size": 67,
-      "sha256": "b2412c776aa0a78b209dedc8575c1d807b365be303d2fdbbe0447d14c59f8af2"
+      "size": 84,
+      "sha256": "2e43d7067e509d7abbf79700731181734807bc2577cfdfbb14be53dd17c7fa84"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/kh29l.json",
-      "size": 434,
-      "sha256": "86a613f2f74f35af46d7f9e326da4a1d497f3e2817ad3f5c15445396108c5124"
+      "size": 451,
+      "sha256": "641743303490c0082a133054df9c30f1e2eeccbfce150ff5a290741200f0f494"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/modeled_store/a_7d/assembly_0.json",
@@ -9373,13 +9383,63 @@
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/r60.json",
-      "size": 430,
-      "sha256": "ef98448d7f7d507c1e17b188366e6bb07d47e93b7602f8f95949208fdfcf13d7"
+      "size": 446,
+      "sha256": "7830f38b39b3de97ff9f7b73557f73120c8c9646106754ed92b82cb93a24e263"
+    },
+    {
+      "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/reference/arh_aam.json",
+      "size": 442,
+      "sha256": "1512005220150c8cb1cf848b502125608ee1b7df5fdddda6ea1d59abb9fb451d"
+    },
+    {
+      "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/reference/arm.json",
+      "size": 451,
+      "sha256": "0ab2d8443cd2090d2a6783572f12092cd69e9dde4ce30e8f12a3579411d3fdb4"
+    },
+    {
+      "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/reference/dumb_bomb_250kg.json",
+      "size": 275,
+      "sha256": "6fc6e75ed281466bc21c84d55626d010f2cb21afe4b54af479926e247f832a88"
+    },
+    {
+      "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/reference/dumb_bomb_5000kg.json",
+      "size": 285,
+      "sha256": "80fece96c7a4ce14229b8ceba5101c58aac05e4bcc61caf67a378f72e3a76fe2"
+    },
+    {
+      "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/reference/gps_bomb_250kg.json",
+      "size": 283,
+      "sha256": "0275d197b66fd3b98cc39309dac3c2c7cb043cec7f26019d975c71b156abb6a6"
+    },
+    {
+      "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/reference/ir_aam.json",
+      "size": 428,
+      "sha256": "740e5c4721e83178df42f780e603f7791889a721854c995355b6bbbf837410a9"
+    },
+    {
+      "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/reference/kh29l_laser.json",
+      "size": 484,
+      "sha256": "20976ec3fc98607831da96436bec53eedc9f9728759ae3d34d6a0c3a1a9f407d"
+    },
+    {
+      "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/reference/kh55_cruise.json",
+      "size": 532,
+      "sha256": "21499b71f872a0a53479de85b706270338419e17099643ff7a800e8fe481c22c"
+    },
+    {
+      "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/reference/laser_bomb_250kg.json",
+      "size": 287,
+      "sha256": "930aea6adc69add25d1bba41dd07530de5b26357f35adb0dab070d3b5ed9df17"
+    },
+    {
+      "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/reference/sarh_aam.json",
+      "size": 451,
+      "sha256": "f0eaa30696d29854df0b8b5e23b8b2c8cd85aa081658047992a369ac1b4ccf0f"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/su25_s8ko_pod.json",
-      "size": 409,
-      "sha256": "ebdc4314258ad2d9c793cd36d416a5c948feac20e7b7660c91ff293bff20ec06"
+      "size": 427,
+      "sha256": "8b5daec021dc9a45ce04f2968e248f43917849a282e1e95bd015cf443e1c6c0c"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/containers/land_vehicles.json",
@@ -10264,7 +10324,7 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/aircraft_stores/kh29l.json",
       "size": 3075,
-      "sha256": "4b3c16971db7f96e3e18893d77e02689409282848ea572159cd10bf467659fe5"
+      "sha256": "1c72512c50dc9d7be3444e0bf3c23cf72b56853b6a8df31e7674a93912d96567"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/amx_10rc/cannon/ammo_00_ofl_f3_apfsds.json",
@@ -13928,8 +13988,8 @@
     },
     {
       "path": "bvp/src/main/java/com/yourname/berts_vehicle_pack/armor/AmmoRackService.java",
-      "size": 4749,
-      "sha256": "c605f9d49322d8420a158f9c47dc316377e466a13de4ddfd3d6d02de73525688"
+      "size": 5298,
+      "sha256": "3a3419541aec7b2656cb3ba15f63324e1a8ab790185bb22dacb0ae93e3c55f2c"
     },
     {
       "path": "bvp/src/main/java/com/yourname/berts_vehicle_pack/armor/ArmorCoordinateFrame.java",
@@ -14277,6 +14337,11 @@
       "sha256": "8c6397bdc2930d6af6191aace7831acb894f11207610e7ceb1adb658120e34d2"
     },
     {
+      "path": "bvp/src/main/java/com/yourname/berts_vehicle_pack/client/renderer/BvpCoordinateMissileRenderer.java",
+      "size": 2518,
+      "sha256": "124336f7b41d114fbb9aaeab80be0ab30c72ad4a8cb12d237b28d3428eaa7885"
+    },
+    {
       "path": "bvp/src/main/java/com/yourname/berts_vehicle_pack/client/renderer/BvpEngineExhaustRenderer.java",
       "size": 5432,
       "sha256": "175a1336717096722e986db486991e95331b6c6a82d02ab9f9da9e65f76cf226"
@@ -14308,8 +14373,8 @@
     },
     {
       "path": "bvp/src/main/java/com/yourname/berts_vehicle_pack/client/renderer/BvpProjectileTrailRenderer.java",
-      "size": 30021,
-      "sha256": "6f44879323dc7824540984212bfcb4ddf464c928282467f45a68c584b0f6561b"
+      "size": 30143,
+      "sha256": "a278f6d453ebccaa1195ddf0982ad5ff0a0641de7f5350578c1ab09453d5251f"
     },
     {
       "path": "bvp/src/main/java/com/yourname/berts_vehicle_pack/client/renderer/BvpSpinningProjectileRenderer.java",
@@ -14623,8 +14688,8 @@
     },
     {
       "path": "bvp/src/main/java/com/yourname/berts_vehicle_pack/effects/BvpLeanImpactEffects.java",
-      "size": 14005,
-      "sha256": "018ea1da1dba6a57199e8f49ae85326b719d466a89850bf774a928131d1251a7"
+      "size": 14544,
+      "sha256": "ac86e43717bed5929b92af6327dad8d1af011ae200372b097a820260426239e9"
     },
     {
       "path": "bvp/src/main/java/com/yourname/berts_vehicle_pack/effects/BvpProjectileEffectDefinition.java",
@@ -14633,8 +14698,8 @@
     },
     {
       "path": "bvp/src/main/java/com/yourname/berts_vehicle_pack/effects/BvpProjectileTrailHooks.java",
-      "size": 5458,
-      "sha256": "6e8ff04cb41eb69fcc1e263625abb4f653aa680f821d641b998b36e2a8d6f29b"
+      "size": 5623,
+      "sha256": "2571bf25fd940e297076dbac07fe43e20e8f08c2cd0f62d190ecd66a821a040d"
     },
     {
       "path": "bvp/src/main/java/com/yourname/berts_vehicle_pack/effects/BvpTracerProfile.java",
@@ -15812,71 +15877,6 @@
       "sha256": "6188b0f388e7847a996e017fd257ef076965e61aa709315c3c90610f62c5b7b2"
     },
     {
-      "path": "bvp/src/test/java/com/yourname/berts_vehicle_pack/client/BvpClientImpactFragmentsTest.java",
-      "size": 5093,
-      "sha256": "2b58d4be40713f7bef32c86ec2dddace0349ec000d6a78a5e76c85089d8e88ff"
-    },
-    {
-      "path": "bvp/src/test/java/com/yourname/berts_vehicle_pack/client/renderer/AircraftRigAnimatorTest.java",
-      "size": 39309,
-      "sha256": "b86dcee1cbe9f28edfdd6ce4feed3c2ac037dff9ff1560320e712920119a803d"
-    },
-    {
-      "path": "bvp/src/test/java/com/yourname/berts_vehicle_pack/client/renderer/BvpAircraftAfterburnerTest.java",
-      "size": 9809,
-      "sha256": "2a33bc8ccc4d40373a5eef4192656fb0d7540c92f98b6a6fc27cf7c32aee636b"
-    },
-    {
-      "path": "bvp/src/test/java/com/yourname/berts_vehicle_pack/client/renderer/FittedGroundRigPoseTest.java",
-      "size": 7790,
-      "sha256": "f984381e8db2fe07f7a89b69a0ba2678cf748af173ebfb9894f6bc0d46ccc890"
-    },
-    {
-      "path": "bvp/src/test/java/com/yourname/berts_vehicle_pack/client/renderer/RendererBonesRecoilTest.java",
-      "size": 4780,
-      "sha256": "9ca905515714bca8c6d2a8d75e3259e1a0ece195ced1b5d85790724c9c9b1695"
-    },
-    {
-      "path": "bvp/src/test/java/com/yourname/berts_vehicle_pack/client/renderer/WheelSteeringPoseTest.java",
-      "size": 13547,
-      "sha256": "91383da3a1ff375d5dfedef20f49852108d03f4e24758dc30eead75ebb40cea1"
-    },
-    {
-      "path": "bvp/src/test/java/com/yourname/berts_vehicle_pack/effects/BvpCaliberExplosionTest.java",
-      "size": 1185,
-      "sha256": "cad5593d2c061798baa24b352d63b6e470c2bc0ea93df93163cb323ae7e7488b"
-    },
-    {
-      "path": "bvp/src/test/java/com/yourname/berts_vehicle_pack/entity/BvpMovementCollisionBoundsTest.java",
-      "size": 7470,
-      "sha256": "0bd1db2e5e98e8fd3660c871c858b284f893b654d086e8e8c0692d283aeef454"
-    },
-    {
-      "path": "bvp/src/test/java/com/yourname/berts_vehicle_pack/entity/BvpRotorSpoolTest.java",
-      "size": 1026,
-      "sha256": "ce663ec52650e5ab6e4106e7add4b072b0e4efe5b168542416847b2a9501f9b5"
-    },
-    {
-      "path": "bvp/src/test/java/com/yourname/berts_vehicle_pack/entity/aircraft/BvpAircraftFlightProfilesTest.java",
-      "size": 24302,
-      "sha256": "e138acf0c0c76b77db1d5c5a8247e14a1ad8055f10bc5f818b3a452ee748fcde"
-    },
-    {
-      "path": "bvp/src/test/java/com/yourname/berts_vehicle_pack/entity/helicopter/HelicopterAttitudeControllerTest.java",
-      "size": 11364,
-      "sha256": "e02a1807446f1eb823e7d5eb633962bbb0e6877f50f03afaf1b31fede289dbdf"
-    },
-    {
-      "path": "bvp/src/test/java/com/yourname/berts_vehicle_pack/entity/helicopter/HelicopterForceModelAcceptance.java",
-      "size": 17498,
-      "sha256": "6cdc098b6b89bbb3ecf97febfbf766f3a2a0ba51f3018ad7e6fe9ccf203b3df3"
-    },
-    {
-      "path": "bvp/src/test/java/com/yourname/berts_vehicle_pack/entity/helicopter/HelicopterPhysicalControlsTest.java",
-      "size": 2337,
-      "sha256": "ea21f131bf91cece1bbc02a5eada9c49f3297249c619846598ee09b12ccc633a"
-    },
-    {
       "path": "docs/BUILDING.md",
       "size": 3231,
       "sha256": "2334974ea245207a639f1ac22653e3b9bcb9b60e8d591093c72738f4ed79d5e0"
@@ -15898,8 +15898,8 @@
     },
     {
       "path": "docs/RELEASING.md",
-      "size": 1968,
-      "sha256": "fc3d525546eefc9b4b5fba75c24d8e2ba9bddd5584a2b11575aa2e6c4661985d"
+      "size": 1605,
+      "sha256": "9e6db472685092e6de4ee1c1cb239bb71d57c1a4fd0a485b3330fb7981bfffbf"
     },
     {
       "path": "sbw/LICENSE",
@@ -24953,8 +24953,8 @@
     },
     {
       "path": "sbw/src/main/java/com/atsuishio/superbwarfare/data/vehicle/subdata/AircraftCountermeasureDefinition.kt",
-      "size": 1444,
-      "sha256": "4839fad0fe9a9e6f7ea417c7d542a531624eaac2da28ed1fd18fc45d2f36189e"
+      "size": 1592,
+      "sha256": "57ce5e693f854aa6c92eb2738d10da9023160b541a000cbe2871a136ba3738c5"
     },
     {
       "path": "sbw/src/main/java/com/atsuishio/superbwarfare/data/vehicle/subdata/AircraftSurfaceModuleInfo.kt",
@@ -25728,8 +25728,8 @@
     },
     {
       "path": "sbw/src/main/java/com/atsuishio/superbwarfare/tools/ParticleTool.kt",
-      "size": 20174,
-      "sha256": "a73e1bf9295a157719b966b36bf56301f9f73d4d7cb79958f6894a2da4b1a488"
+      "size": 20791,
+      "sha256": "bd366a702d873ec31828eae607767c4a1a17fe89dbd37f84ec7589a1d26607da"
     },
     {
       "path": "sbw/src/main/java/com/atsuishio/superbwarfare/tools/SeekTool.java",
@@ -25788,13 +25788,28 @@
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/api/aircraft/AircraftArmamentManager.kt",
-      "size": 38528,
-      "sha256": "6754f2cd73de609674db1e8cd0a9d0be8cbf948640e86ad3a546d6a9c757670f"
+      "size": 39609,
+      "sha256": "bf9ca9c5ae864824abb3289c772173dd91b13b8a95a2ccc235ca22bbdd8ecdf9"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/api/aircraft/AircraftArmamentRegistry.kt",
-      "size": 8318,
-      "sha256": "a64548601786545c0972dcad5a2049c8dab793af69548345a72a7b14092dc0be"
+      "size": 10725,
+      "sha256": "01fa176e5fbd2671dedbd87175d34e1b1b7fb7d6f2029eda4fc3ebdcc5faed1b"
+    },
+    {
+      "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/api/aircraft/AircraftBombLauncher.kt",
+      "size": 2306,
+      "sha256": "eb5148847b7d75d470610525e9e523bf51dbb6127fe677c1073c43cfbe4211d9"
+    },
+    {
+      "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/api/aircraft/AircraftBombPredictor.kt",
+      "size": 2703,
+      "sha256": "740d3e831ea958f334b3ac26a331845da38a9d9824e35442385594ffaf42adac"
+    },
+    {
+      "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/api/aircraft/AircraftBombTargeting.kt",
+      "size": 1730,
+      "sha256": "73aa8e819c82bf871cd07525b00b0fe255626bafab975a64a7a047fb9ba87427"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/api/aircraft/AircraftCombatEffects.kt",
@@ -25803,13 +25818,23 @@
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/api/aircraft/AircraftCountermeasureState.kt",
-      "size": 3731,
-      "sha256": "9427cd659444c391a7841a1b0326fb3d05669b2bd01bf282c8472cb32df6cd69"
+      "size": 4641,
+      "sha256": "31aa891d3dad8a056ecb984d1e268092f80cfb35b4f01cbd847d48190683b980"
+    },
+    {
+      "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/api/aircraft/AircraftCountermeasureWire.kt",
+      "size": 632,
+      "sha256": "2467527819128e44fdcfa870c8a52f83f98d4456ae898a7ca56000b8973decfc"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/api/aircraft/AircraftCountermeasures.kt",
-      "size": 5956,
-      "sha256": "5eac4eede034ffa4354de8197ae030a0732803f8a122907489e55dcd195f46ba"
+      "size": 6056,
+      "sha256": "8170994f83f20fdbbfdf53f27761b43afa2c22e95f6d3c6a0c1316610a761298"
+    },
+    {
+      "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/api/aircraft/AircraftCruiseLauncher.kt",
+      "size": 1811,
+      "sha256": "24c1f2af6467614b7560cd1e5bebe4ab25bbfe5b3cd758680a4ec6d118a6839b"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/api/aircraft/AircraftDesignationData.kt",
@@ -25828,13 +25853,18 @@
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/api/aircraft/AircraftMissileLauncher.kt",
-      "size": 4334,
-      "sha256": "d8c312ab4a0c24093c0d176a349587030c5791c523fe855526639ea307845047"
+      "size": 5295,
+      "sha256": "4b545d8d41f8a3ee621aa82adc326b2d3bfcafa5fa3b275b5acc52a2619e341a"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/api/aircraft/AircraftMobileRadar.kt",
       "size": 2326,
       "sha256": "6329f1f23ca0fe637bf94f3c5550388824082899e231a67b3ac4473018578393"
+    },
+    {
+      "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/api/aircraft/AircraftMunitionDebug.kt",
+      "size": 599,
+      "sha256": "e7f8e236a5b47514cf83a1927e03c49fe4d857e3367c74e9182314c754d3859a"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/api/aircraft/AircraftNativeThreats.kt",
@@ -25863,8 +25893,8 @@
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/api/aircraft/AircraftStoreWeapons.kt",
-      "size": 2981,
-      "sha256": "7024cefffc6cc7f727a922a77e32dee060500ccfb66005f3e94f0249f7153659"
+      "size": 3158,
+      "sha256": "996aa8e8ef4aa9c9d39362b7480e697b098f6bd045d314929bc400931825ee35"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/api/aircraft/AircraftSurfaceModules.kt",
@@ -25873,13 +25903,18 @@
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/api/aircraft/AircraftTerminalAccess.kt",
-      "size": 843,
-      "sha256": "42a2fe784f9ab1798d4f7957a06a84862d6846bdc5e5750fe08feb65721ba7f1"
+      "size": 1571,
+      "sha256": "bf48decad7bb1148a4cbf76f3ffabbe2e5b8dbbbf7d0f93f9dd4d4395e7518e2"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/api/effect/ExplosionBurstPresentations.kt",
       "size": 636,
       "sha256": "e59d93d947ad63ad28235a78c383c01bf5853dc4c00173564490d099502ea034"
+    },
+    {
+      "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/api/effect/MissilePresentation.kt",
+      "size": 3485,
+      "sha256": "28cccd40ce6525df061592120f41694effcc4de6fa130df80c80b35918ff7507"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/api/event/LoadingDataEvent.kt",
@@ -27088,8 +27123,8 @@
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/client/aircraft/AircraftArmamentSnapshot.kt",
-      "size": 16276,
-      "sha256": "8b4072bae8e41c28795518fa04d2b8b73f190e20a2a09ab905e6f013ab1d7502"
+      "size": 17087,
+      "sha256": "a0e50f276d7bce23b0aca0409f789cb12dd19f46dd5359ded5d2aa89deb8c974"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/client/aircraft/AircraftArmamentStateCache.kt",
@@ -27097,9 +27132,14 @@
       "sha256": "16ae7619cbbb3f1ea0c409ec549d9d57f5d159ec28c85f14f3e16228e748ca5a"
     },
     {
+      "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/client/aircraft/AircraftBombHud.kt",
+      "size": 3352,
+      "sha256": "74e4a38d5e8afcb23806f4e12d542f92371c4c028d904477f66678ca5bd531e1"
+    },
+    {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/client/aircraft/AircraftLoadoutScreen.kt",
-      "size": 8559,
-      "sha256": "1be7c8dff01cc8a3825500efafe0dc25aee13c898f40031e91007759c88ec7ea"
+      "size": 9326,
+      "sha256": "30717afa8dc316e0266e8c61d190d37fffe69a8570208d11459946cbd7b036d0"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/client/aircraft/AircraftPodAim.kt",
@@ -27113,18 +27153,18 @@
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/client/aircraft/AircraftSeekerHud.kt",
-      "size": 4015,
-      "sha256": "c720ecf6ec7305dfc652d48ed9a36dc1e448eb8e80e71725209921516d4bcdfc"
+      "size": 4412,
+      "sha256": "1292fd8694c907b7afcbb67c64279674ba4db62165e16099f1d6dc192a769e3e"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/client/aircraft/AircraftSeekerPresentation.kt",
-      "size": 3679,
-      "sha256": "c48274cf4555026ebdd3e68bdd038e490b3997c7a1e4c9dbdf026970e9b8c6c9"
+      "size": 3765,
+      "sha256": "5457248ccf97a36fc66083439fc35408fb93051952013fba91375e66bddc6102"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/client/aircraft/AircraftSeekerSounds.kt",
-      "size": 2267,
-      "sha256": "5a4256caa680d58af46a975c9970a1af903345bbdeb45e4023d47f2fae8a169d"
+      "size": 2364,
+      "sha256": "3d3b81a05ccdc38ac8ea582e9d4d894b7558b2cc43bf01742781132532c2d168"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/client/aircraft/AircraftStoreItemRenderer.kt",
@@ -29128,13 +29168,13 @@
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/entity/projectile/AerialBombEntity.kt",
-      "size": 3129,
-      "sha256": "ccfc5f4d70d8c11eb10f3c6bba145b4def36f4d398e075e558f9d74c425197b9"
+      "size": 6851,
+      "sha256": "ba68d8deb008af59990b4bbb7f91111c5b2fe44ebf29ffac652de8b038782457"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/entity/projectile/Agm65Entity.kt",
-      "size": 6174,
-      "sha256": "c70954c9529a48d733c157d1de057852d7490452777f1a68a049947dd4461e44"
+      "size": 6111,
+      "sha256": "57eee5a36147013002689cfdc506c139013bf2becf4e883e7d684ca6f0ef6b3b"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/entity/projectile/BasicGeoProjectileEntity.kt",
@@ -29218,18 +29258,18 @@
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/entity/projectile/IglaMissileEntity.kt",
-      "size": 4587,
-      "sha256": "f624ebf5361998a42b0ca744d4649975c9f73176843b9e8ec112a280029dafd1"
+      "size": 4603,
+      "sha256": "04f46592c1ca4cdf0dc7707545ca5a6ea69d61195ef9b12bac6eaf7d72394c7c"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/entity/projectile/JavelinMissileEntity.kt",
-      "size": 8205,
-      "sha256": "ee709d5ce4a165ce7ba5f5d62f55f4617dbaf54614fca95059dbab0c1667e66e"
+      "size": 7995,
+      "sha256": "90c2b81172c581f38bce1136b71d355a3385df017525aecd4a8283454fce2353"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/entity/projectile/Kh39Entity.kt",
-      "size": 6202,
-      "sha256": "e20847b238957b1ea8e9292c763a9d9a17fd6ec25e7e5a6818bceda09b5ad3de"
+      "size": 6139,
+      "sha256": "98d6a9d7c93eaa63d50797a9a762160d04c313baed4eb983e48f97d4ebae0f79"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/entity/projectile/M18SmokeGrenadeEntity.kt",
@@ -29265,6 +29305,11 @@
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/entity/projectile/MortarShellEntity.kt",
       "size": 10251,
       "sha256": "102bed54d327432c6bfa9f541611ef03f4585c7d1e8294206044a4f089237c0b"
+    },
+    {
+      "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/entity/projectile/NativeMissileThrust.kt",
+      "size": 749,
+      "sha256": "634e4ade4215b7a3045379a6c58cd2ca0d78c396e06dff827c078b209e8e1383"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/entity/projectile/PrismaticBoltEntity.kt",
@@ -29308,8 +29353,8 @@
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/entity/projectile/Ru9m336MissileEntity.kt",
-      "size": 3450,
-      "sha256": "d62083944a79a0bb39dbc24bb447c396f9b3bcc4b0dbdee9fec2ab51e08d1de9"
+      "size": 3466,
+      "sha256": "68692aa45499b144134350ba494ae9505568f8142d687c9aba4f7d7528fc854f"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/entity/projectile/Sc250Entity.kt",
@@ -29693,8 +29738,8 @@
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/base/VehicleEntity.kt",
-      "size": 319280,
-      "sha256": "a11638dee64cce68f1fdc15ea2068ba9e7b632a6e41e7fe73465a398d70be9ca"
+      "size": 319457,
+      "sha256": "0ba96e50fa7b418c1918e2712c9ecd8f998b07021015301e0627d43f4831e9f2"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/base/VehicleEntityContacts.kt",
@@ -30444,7 +30489,7 @@
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/network/NetworkSchema.kt",
       "size": 5847,
-      "sha256": "cd99bf7f6e10eabb04493019859b10490319c9c5dd90a8dacd26f5c30982baec"
+      "sha256": "a1b4fcd3527d008136bc87bba32e8a65c711d517c40fa4eb6495aaa175620a68"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/network/NetworkTelemetry.kt",
@@ -31385,6 +31430,11 @@
       "path": "sbw/src/main/resources/META-INF/mods.toml",
       "size": 1405,
       "sha256": "59013a9cf57802074c73be0dc35688ef948021b203726eca2f916e9f7908a920"
+    },
+    {
+      "path": "sbw/src/main/resources/META-INF/superbwarfare/packet-schema-manifest-v35.tsv",
+      "size": 10435,
+      "sha256": "a8e29f28128f973ea462e300f661786f839f4259fc002485ffe619013d0f952a"
     },
     {
       "path": "sbw/src/main/resources/META-INF/superbwarfare/packet-schema-manifest-v36.tsv",
@@ -33923,8 +33973,8 @@
     },
     {
       "path": "sbw/src/main/resources/assets/superbwarfare/sounds.json",
-      "size": 86054,
-      "sha256": "aefd2ff3ff22abb19731d02ea7d95df2f394941402639f5fa1c379f59d593558"
+      "size": 86147,
+      "sha256": "a907a6c790906222ae6c9276dfe47547f9c4a8c0bce3fcafd64d13e1c024865c"
     },
     {
       "path": "sbw/src/main/resources/assets/superbwarfare/sounds/adjust_fov.ogg",
@@ -36395,6 +36445,11 @@
       "path": "sbw/src/main/resources/assets/superbwarfare/sounds/vehicle/aircraft_tire_touchdown.ogg",
       "size": 8020,
       "sha256": "82f1670c2d378b45a090684e4f4dfd377a8f056998a787d8942d5ae22f465bc7"
+    },
+    {
+      "path": "sbw/src/main/resources/assets/superbwarfare/sounds/vehicle/arm_lock.ogg",
+      "size": 4824,
+      "sha256": "2a7ae44708db1e2f27d9bf0be411c2ee8c1f18f8f3cfc754a41429b245ae7439"
     },
     {
       "path": "sbw/src/main/resources/assets/superbwarfare/sounds/vehicle/bmp_2/bmp_2_cannon_fire_1p.ogg",
@@ -42933,8 +42988,8 @@
     },
     {
       "path": "sbw/src/test/kotlin/com/atsuishio/superbwarfare/api/aircraft/AircraftCountermeasureStateTest.kt",
-      "size": 4001,
-      "sha256": "1fd0bd41f82c69ad31b25b4d701793e40555074350c7a708775f7232cee9c699"
+      "size": 5541,
+      "sha256": "d15be933c4bc4f1084323ce07fbb9fd9a7bdb3e2e4f07ce9c2f098f6461cd4d4"
     },
     {
       "path": "sbw/src/test/kotlin/com/atsuishio/superbwarfare/api/aircraft/AircraftLaserGuidanceTest.kt",
@@ -43711,5 +43766,1525 @@
       "size": 81508,
       "sha256": "5794aaf31a6363d9dc6725cfa96b718666a1aeb0ba699fdf7d6019f9b2d422e1"
     }
-  ]
+  ],
+  "release": {
+    "schema": 1,
+    "buildRecordSha256": "281f0ed62044f98ac9a4a8a042fc2051b95fc956d449cfd8bc1689ac43bd4364",
+    "artifacts": [
+      {
+        "id": "bvp",
+        "version": "0.1.0",
+        "filename": "berts_vehicle_pack-0.1.0.jar",
+        "size": 189813552,
+        "sha256": "9ca60486d913bf6e2b3d506c98217d1de11a8054bb97de50c4e7c94399ebe031"
+      },
+      {
+        "id": "sbw",
+        "version": "0.8.9-bvp.1",
+        "filename": "superbwarfare-0.8.9-bvp.1-mc1.20.1-6effe43-all.jar",
+        "size": 35742931,
+        "sha256": "af4989104b998c7d3105500998826fb99256caea7c1de6c43975489cb6530145"
+      }
+    ],
+    "dependencies": [
+      {
+        "id": "build-tool:com.google.code.findbugs:jsr305:3.0.2:766ad2a0783f",
+        "version": "3.0.2",
+        "filename": "jsr305-3.0.2.jar",
+        "size": 19936,
+        "sha256": "766ad2a0783f2687962c8ad74ceecc38a28b9f72a2d085ee438b7813e928d0c7"
+      },
+      {
+        "id": "build-tool:com.google.code.gson:gson:2.10.1:4241c14a7727",
+        "version": "2.10.1",
+        "filename": "gson-2.10.1.jar",
+        "size": 283367,
+        "sha256": "4241c14a7727c34feea6507ec801318a3d4a90f070e4525681079fb94ee4c593"
+      },
+      {
+        "id": "build-tool:com.google.errorprone:error_prone_annotations:2.11.0:721cb91842b4",
+        "version": "2.11.0",
+        "filename": "error_prone_annotations-2.11.0.jar",
+        "size": 15979,
+        "sha256": "721cb91842b46fa056847d104d5225c8b8e1e8b62263b993051e1e5a0137b7ec"
+      },
+      {
+        "id": "build-tool:com.google.guava:failureaccess:1.0.1:a171ee4c734d",
+        "version": "1.0.1",
+        "filename": "failureaccess-1.0.1.jar",
+        "size": 4617,
+        "sha256": "a171ee4c734dd2da837e4b16be9df4661afab72a41adaf31eb84dfdaf936ca26"
+      },
+      {
+        "id": "build-tool:com.google.guava:guava:31.1-jre:a42edc9cab79",
+        "version": "31.1-jre",
+        "filename": "guava-31.1-jre.jar",
+        "size": 2959479,
+        "sha256": "a42edc9cab792e39fe39bb94f3fca655ed157ff87a8af78e1d6ba5b07c4a00ab"
+      },
+      {
+        "id": "build-tool:com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava:b372a037d423",
+        "version": "9999.0-empty-to-avoid-conflict-with-guava",
+        "filename": "listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar",
+        "size": 2199,
+        "sha256": "b372a037d4230aa57fbeffdef30fd6123f9c0c2db85d0aced00c91b974f33f99"
+      },
+      {
+        "id": "build-tool:com.google.j2objc:j2objc-annotations:1.3:21af30c92267",
+        "version": "1.3",
+        "filename": "j2objc-annotations-1.3.jar",
+        "size": 8781,
+        "sha256": "21af30c92267bd6122c0e0b4d20cccb6641a37eaf956c6540ec471d584e64a7b"
+      },
+      {
+        "id": "build-tool:com.machinezoo.noexception:noexception:1.7.1:3d70aaea3904",
+        "version": "1.7.1",
+        "filename": "noexception-1.7.1.jar",
+        "size": 250861,
+        "sha256": "3d70aaea3904918587a21bdf99ab6ade9ab1dd0eaf6119344ba513f60f575816"
+      },
+      {
+        "id": "build-tool:commons-codec:commons-codec:1.11:e599d5318e97",
+        "version": "1.11",
+        "filename": "commons-codec-1.11.jar",
+        "size": 335042,
+        "sha256": "e599d5318e97aa48f42136a2927e6dfa4e8881dff0e6c8e3109ddbbff51d7b7d"
+      },
+      {
+        "id": "build-tool:commons-io:commons-io:2.11.0:961b2f6d87db",
+        "version": "2.11.0",
+        "filename": "commons-io-2.11.0.jar",
+        "size": 327135,
+        "sha256": "961b2f6d87dbacc5d54abf45ab7a6e2495f89b75598962d8c723cea9bc210908"
+      },
+      {
+        "id": "build-tool:commons-logging:commons-logging:1.2:daddea1ea0be",
+        "version": "1.2",
+        "filename": "commons-logging-1.2.jar",
+        "size": 61829,
+        "sha256": "daddea1ea0be0f56978ab3006b8ac92834afeefbd9b7e4e6316fca57df0fa636"
+      },
+      {
+        "id": "build-tool:de.siegmar:fastcsv:2.2.1:8a2ffdeff6a8",
+        "version": "2.2.1",
+        "filename": "fastcsv-2.2.1.jar",
+        "size": 32009,
+        "sha256": "8a2ffdeff6a8134befef3fa9aa0e7d4506626826434d6bc45d0c3d7b6330c0f7"
+      },
+      {
+        "id": "build-tool:it.unimi.dsi:fastutil:8.3.1:1ee5da1ebfdc",
+        "version": "8.3.1",
+        "filename": "fastutil-8.3.1.jar",
+        "size": 19011744,
+        "sha256": "1ee5da1ebfdc86ab9574be3cc290769f319df901ae95932a118889b7c63636b9"
+      },
+      {
+        "id": "build-tool:net.minecraftforge:artifactural:3.0.21:e09481015625",
+        "version": "3.0.21",
+        "filename": "artifactural-3.0.21.jar",
+        "size": 63223,
+        "sha256": "e0948101562515212e4f7bd0c7d0789f240e6a01372ff432817e38f48cb34a50"
+      },
+      {
+        "id": "build-tool:net.minecraftforge:DiffPatch:2.0.12:3749059d529d",
+        "version": "2.0.12",
+        "filename": "DiffPatch-2.0.12-all.jar",
+        "size": 1362400,
+        "sha256": "3749059d529d69534b068679d9c1bd4b40ef4f974a189ff1bb8931215d7ce10a"
+      },
+      {
+        "id": "build-tool:net.minecraftforge:JarJarMetadata:0.3.19:6141c710b5b7",
+        "version": "0.3.19",
+        "filename": "JarJarMetadata-0.3.19.jar",
+        "size": 15895,
+        "sha256": "6141c710b5b7b673bd544740a31339f0754d7a794cc46b952b7ef7897b7ce265"
+      },
+      {
+        "id": "build-tool:net.minecraftforge:JarJarSelector:0.3.19:f7acfbafc9a7",
+        "version": "0.3.19",
+        "filename": "JarJarSelector-0.3.19.jar",
+        "size": 17374,
+        "sha256": "f7acfbafc9a715ee7d7ce2d539815b3ebccebc5064e0a7252c4a6a1c71d1e740"
+      },
+      {
+        "id": "build-tool:net.minecraftforge:srgutils:0.6.2:f10b366cdc4d",
+        "version": "0.6.2",
+        "filename": "srgutils-0.6.2.jar",
+        "size": 74235,
+        "sha256": "f10b366cdc4df20de8a50511f49fded5ea0fe8f7a476ff984a12f65a1602533e"
+      },
+      {
+        "id": "build-tool:net.minecraftforge:unsafe:0.2.0:946937e182ab",
+        "version": "0.2.0",
+        "filename": "unsafe-0.2.0.jar",
+        "size": 2834,
+        "sha256": "946937e182ab3b518b5b88264f367e1f35ac12bc83abed220490c60c717be239"
+      },
+      {
+        "id": "build-tool:net.minecraftforge.gradle:ForgeGradle:6.0.54:1d54a97a225e",
+        "version": "6.0.54",
+        "filename": "ForgeGradle-6.0.54.jar",
+        "size": 508115,
+        "sha256": "1d54a97a225ed5180300e8070a1c818597d98ec45a11fedecb425254b7982da2"
+      },
+      {
+        "id": "build-tool:net.sf.jopt-simple:jopt-simple:5.0.4:df26cc58f235",
+        "version": "5.0.4",
+        "filename": "jopt-simple-5.0.4.jar",
+        "size": 78146,
+        "sha256": "df26cc58f235f477db07f753ba5a3ab243ebe5789d9f89ecf68dd62ea9a66c28"
+      },
+      {
+        "id": "build-tool:org.apache.commons:commons-compress:1.18:5f2df1e46782",
+        "version": "1.18",
+        "filename": "commons-compress-1.18.jar",
+        "size": 591748,
+        "sha256": "5f2df1e467825e4cac5996d44890c4201c000b43c0b23cffc0782d28a0beb9b0"
+      },
+      {
+        "id": "build-tool:org.apache.commons:commons-lang3:3.9:de2e1dcdcf3e",
+        "version": "3.9",
+        "filename": "commons-lang3-3.9.jar",
+        "size": 503880,
+        "sha256": "de2e1dcdcf3ef917a8ce858661a06726a9a944f28e33ad7f9e08bea44dc3c230"
+      },
+      {
+        "id": "build-tool:org.apache.httpcomponents:httpclient:4.5.14:c8bc7e1c51a6",
+        "version": "4.5.14",
+        "filename": "httpclient-4.5.14.jar",
+        "size": 785639,
+        "sha256": "c8bc7e1c51a6d4ce72f40d2ebbabf1c4b68bfe76e732104b04381b493478e9d6"
+      },
+      {
+        "id": "build-tool:org.apache.httpcomponents:httpcore:4.4.16:6c9b3dd142a0",
+        "version": "4.4.16",
+        "filename": "httpcore-4.4.16.jar",
+        "size": 327891,
+        "sha256": "6c9b3dd142a09dc468e23ad39aad6f75a0f2b85125104469f026e52a474e464f"
+      },
+      {
+        "id": "build-tool:org.apache.maven:maven-artifact:3.9.1:1b673d76cf87",
+        "version": "3.9.1",
+        "filename": "maven-artifact-3.9.1.jar",
+        "size": 58589,
+        "sha256": "1b673d76cf8777344c6350d588533ea394dd93fe9a1b2bff319d96cb0dde74f2"
+      },
+      {
+        "id": "build-tool:org.checkerframework:checker-qual:3.13.0:3ea0dcd73b4d",
+        "version": "3.13.0",
+        "filename": "checker-qual-3.13.0.jar",
+        "size": 209527,
+        "sha256": "3ea0dcd73b4d6cb2fb34bd7ed4dad6db327a01ebad7db05eb7894076b3d64491"
+      },
+      {
+        "id": "build-tool:org.codehaus.plexus:plexus-utils:3.5.1:86e0255d4c87",
+        "version": "3.5.1",
+        "filename": "plexus-utils-3.5.1.jar",
+        "size": 269335,
+        "sha256": "86e0255d4c879c61b4833ed7f13124e8bb679df47debb127326e7db7dd49a07b"
+      },
+      {
+        "id": "build-tool:org.jetbrains.intellij.deps:trove4j:1.0.20200330:c5fd725bffab",
+        "version": "1.0.20200330",
+        "filename": "trove4j-1.0.20200330.jar",
+        "size": 572985,
+        "sha256": "c5fd725bffab51846bf3c77db1383c60aaaebfe1b7fe2f00d23fe1b7df0a439d"
+      },
+      {
+        "id": "build-tool:org.jetbrains.kotlin:kotlin-build-statistics:2.0.0:f089b5f057f7",
+        "version": "2.0.0",
+        "filename": "kotlin-build-statistics-2.0.0.jar",
+        "size": 119464,
+        "sha256": "f089b5f057f7c78630107bf4661f75b68cf1ce7492f415bdf2b50bc2b47ef815"
+      },
+      {
+        "id": "build-tool:org.jetbrains.kotlin:kotlin-build-tools-api:2.0.0:8be57288054d",
+        "version": "2.0.0",
+        "filename": "kotlin-build-tools-api-2.0.0.jar",
+        "size": 26713,
+        "sha256": "8be57288054decd4bca5a2dcb89e4e8e896c2520e45a2488765d813ffd229f11"
+      },
+      {
+        "id": "build-tool:org.jetbrains.kotlin:kotlin-compiler-embeddable:2.0.0:eb8ae09df38e",
+        "version": "2.0.0",
+        "filename": "kotlin-compiler-embeddable-2.0.0.jar",
+        "size": 57192195,
+        "sha256": "eb8ae09df38e212eec3965cafa97ab08112773fe2e870ebeb6131b8f69bfb92e"
+      },
+      {
+        "id": "build-tool:org.jetbrains.kotlin:kotlin-compiler-runner:2.0.0:18f22b00697b",
+        "version": "2.0.0",
+        "filename": "kotlin-compiler-runner-2.0.0.jar",
+        "size": 19816,
+        "sha256": "18f22b00697b84ef45a41d2b0a572261f299eaa7dcdda819d8773948e4472474"
+      },
+      {
+        "id": "build-tool:org.jetbrains.kotlin:kotlin-daemon-client:2.0.0:dfa5ae84fc66",
+        "version": "2.0.0",
+        "filename": "kotlin-daemon-client-2.0.0.jar",
+        "size": 560799,
+        "sha256": "dfa5ae84fc665b0478475fd9a63f2f984a9155ce1bfb4dc2abea278c6a0f2d94"
+      },
+      {
+        "id": "build-tool:org.jetbrains.kotlin:kotlin-daemon-embeddable:2.0.0:b907a36e9cfa",
+        "version": "2.0.0",
+        "filename": "kotlin-daemon-embeddable-2.0.0.jar",
+        "size": 346229,
+        "sha256": "b907a36e9cfa587ca0523793d89eb2ea9bb545456935f180e12422486c14049f"
+      },
+      {
+        "id": "build-tool:org.jetbrains.kotlin:kotlin-gradle-plugin-annotations:2.0.0:42b614cf7036",
+        "version": "2.0.0",
+        "filename": "kotlin-gradle-plugin-annotations-2.0.0.jar",
+        "size": 5495,
+        "sha256": "42b614cf70363be1195490e2567ad38cf26ccb32cf45db90509434e9621cb633"
+      },
+      {
+        "id": "build-tool:org.jetbrains.kotlin:kotlin-gradle-plugin-api:2.0.0:f95693a82de0",
+        "version": "2.0.0",
+        "filename": "kotlin-gradle-plugin-api-2.0.0-gradle85.jar",
+        "size": 244668,
+        "sha256": "f95693a82de0bbfb06d6b1eac364954b68bf488ba0c8cc2ff273976bb28ee223"
+      },
+      {
+        "id": "build-tool:org.jetbrains.kotlin:kotlin-gradle-plugin-idea-proto:2.0.0:51d31fe50bc8",
+        "version": "2.0.0",
+        "filename": "kotlin-gradle-plugin-idea-proto-2.0.0.jar",
+        "size": 2405225,
+        "sha256": "51d31fe50bc89ac080d49bc87cc77f139586cfcb1098d4aaafbbc72a71d8e207"
+      },
+      {
+        "id": "build-tool:org.jetbrains.kotlin:kotlin-gradle-plugin-idea:2.0.0:c1f4ea0c1926",
+        "version": "2.0.0",
+        "filename": "kotlin-gradle-plugin-idea-2.0.0.jar",
+        "size": 94911,
+        "sha256": "c1f4ea0c19267f1eed474b541b07715c49167acfbf027a8a2fd07cbbc81b8e72"
+      },
+      {
+        "id": "build-tool:org.jetbrains.kotlin:kotlin-gradle-plugin-model:2.0.0:b7b436caef0b",
+        "version": "2.0.0",
+        "filename": "kotlin-gradle-plugin-model-2.0.0.jar",
+        "size": 13202,
+        "sha256": "b7b436caef0b0d5f571ddd88214418cf8580a34ec8e81f22503cef35755552d9"
+      },
+      {
+        "id": "build-tool:org.jetbrains.kotlin:kotlin-gradle-plugin:2.0.0:fa9f364fb3ff",
+        "version": "2.0.0",
+        "filename": "kotlin-gradle-plugin-2.0.0-gradle85.jar",
+        "size": 14561833,
+        "sha256": "fa9f364fb3ff1330ea2908e6ddfe66ee3d20abe975d61ae9f81e1e6bd276eaf7"
+      },
+      {
+        "id": "build-tool:org.jetbrains.kotlin:kotlin-klib-commonizer-api:2.0.0:1e1b57dc1f80",
+        "version": "2.0.0",
+        "filename": "kotlin-klib-commonizer-api-2.0.0.jar",
+        "size": 73595,
+        "sha256": "1e1b57dc1f802aa778f5f46054a253213d8b03c58357e347f08222a2d1950175"
+      },
+      {
+        "id": "build-tool:org.jetbrains.kotlin:kotlin-native-utils:2.0.0:20d5904b4f0f",
+        "version": "2.0.0",
+        "filename": "kotlin-native-utils-2.0.0.jar",
+        "size": 438529,
+        "sha256": "20d5904b4f0fa20624cab109ae303dff039142651b77901e0e14aae5feeb0ae6"
+      },
+      {
+        "id": "build-tool:org.jetbrains.kotlin:kotlin-serialization:2.0.0:4784dbb454cc",
+        "version": "2.0.0",
+        "filename": "kotlin-serialization-2.0.0-gradle85.jar",
+        "size": 6061,
+        "sha256": "4784dbb454cc3acbe1bb6ee781ea6c55e24afc1b2de9146d110437460460f88f"
+      },
+      {
+        "id": "build-tool:org.jetbrains.kotlin:kotlin-tooling-core:2.0.0:73464aa3c214",
+        "version": "2.0.0",
+        "filename": "kotlin-tooling-core-2.0.0.jar",
+        "size": 100532,
+        "sha256": "73464aa3c214567013a4373f09e7b6f0b63185b3a6df6988b347430d7777a971"
+      },
+      {
+        "id": "build-tool:org.jetbrains.kotlin:kotlin-util-io:2.0.0:088e45d9522d",
+        "version": "2.0.0",
+        "filename": "kotlin-util-io-2.0.0.jar",
+        "size": 50045,
+        "sha256": "088e45d9522db6406f0b1e4ed328389c9b5992a9567cd91b57ae21c1b9221610"
+      },
+      {
+        "id": "build-tool:org.jetbrains.kotlin:kotlin-util-klib:2.0.0:95f1a677e8d2",
+        "version": "2.0.0",
+        "filename": "kotlin-util-klib-2.0.0.jar",
+        "size": 285142,
+        "sha256": "95f1a677e8d24bc0b32e76783ef173c5c0e09ed41b50471736d6599bed19d875"
+      },
+      {
+        "id": "build-tool:org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.5.0:78d6cc7135f8",
+        "version": "1.5.0",
+        "filename": "kotlinx-coroutines-core-jvm-1.5.0.jar",
+        "size": 1482528,
+        "sha256": "78d6cc7135f84d692ff3752fcfd1fa1bbe0940d7df70652e4f1eaeec0c78afbb"
+      },
+      {
+        "id": "build-tool:org.ow2.asm:asm-tree:9.2:aabf9bd23091",
+        "version": "9.2",
+        "filename": "asm-tree-9.2.jar",
+        "size": 52660,
+        "sha256": "aabf9bd23091a4ebfc109c1f3ee7cf3e4b89f6ba2d3f51c5243f16b3cffae011"
+      },
+      {
+        "id": "build-tool:org.ow2.asm:asm:9.2:b9d4fe4d7193",
+        "version": "9.2",
+        "filename": "asm-9.2.jar",
+        "size": 122004,
+        "sha256": "b9d4fe4d71938df38839f0eca42aaaa64cf8b313d678da036f0cb3ca199b47f5"
+      },
+      {
+        "id": "build-tool:org.parchmentmc:feather:0.6.5:5e328391fbc6",
+        "version": "0.6.5",
+        "filename": "feather-0.6.5.jar",
+        "size": 92745,
+        "sha256": "5e328391fbc6728cceb0878be40433b1a55aac248594260fcf0bb10f2631333e"
+      },
+      {
+        "id": "build-tool:org.parchmentmc:librarian:1.2.0.7-dev-SNAPSHOT:111df769f522",
+        "version": "1.2.0.7-dev-SNAPSHOT",
+        "filename": "librarian-1.2.0.7-dev-SNAPSHOT.jar",
+        "size": 17879,
+        "sha256": "111df769f5227dab1ad150201e10efe6d440d647680c47facfcfe2b4010a6af2"
+      },
+      {
+        "id": "build-tool:org.parchmentmc.feather:io-gson:0.6.5:0a9292ab2cab",
+        "version": "0.6.5",
+        "filename": "io-gson-0.6.5.jar",
+        "size": 42081,
+        "sha256": "0a9292ab2cab1f9d8143ada277d83c8f3cbeb26fab69287110be02821a911c4f"
+      },
+      {
+        "id": "build-tool:org.slf4j:slf4j-api:1.7.30:cdba07964d1b",
+        "version": "1.7.30",
+        "filename": "slf4j-api-1.7.30.jar",
+        "size": 41472,
+        "sha256": "cdba07964d1bb40a0761485c6b1e8c2f8fd9eb1d19c53928ac0d7f9510105c57"
+      },
+      {
+        "id": "build-tool:org.slf4j:slf4j-simple:1.7.30:8b9279cbff6b",
+        "version": "1.7.30",
+        "filename": "slf4j-simple-1.7.30.jar",
+        "size": 15239,
+        "sha256": "8b9279cbff6b9f88594efae3cf02039b6995030eec023ed43928748c41670fee"
+      },
+      {
+        "id": "build-tool:org.spongepowered:mixingradle:0.7.38:f347b0edd348",
+        "version": "0.7.38",
+        "filename": "mixingradle-0.7.38.jar",
+        "size": 140706,
+        "sha256": "f347b0edd348802cebeddc966eb37d3631b364f14fa6c2513ff0900c783b7da7"
+      },
+      {
+        "id": "build-tool:org.tukaani:xz:1.8:8c7964b36fe3",
+        "version": "1.8",
+        "filename": "xz-1.8.jar",
+        "size": 108555,
+        "sha256": "8c7964b36fe3f0cbe644b04fcbff84e491ce81917db2f5bfa0cba8e9548aff5d"
+      },
+      {
+        "id": "ca.weblite:java-objc-bridge:1.1:77e34a13bccf",
+        "version": "1.1",
+        "filename": "java-objc-bridge-1.1.jar",
+        "size": 1330045,
+        "sha256": "77e34a13bccffc6c8b1a0e3ed46ddb0ea7dd56f2104ecdfacaaec9e4054ac332"
+      },
+      {
+        "id": "com.electronwill.night-config:core:3.6.4:1bc71c67b54b",
+        "version": "3.6.4",
+        "filename": "core-3.6.4.jar",
+        "size": 199834,
+        "sha256": "1bc71c67b54ba9c8e5030b3ddaef7dee16ae43fee6850368f76b0cffef819700"
+      },
+      {
+        "id": "com.electronwill.night-config:toml:3.6.4:3cb3d0ef3352",
+        "version": "3.6.4",
+        "filename": "toml-3.6.4.jar",
+        "size": 31816,
+        "sha256": "3cb3d0ef3352e204cda68215fbe41afdc7f56425ef4fd8e84006964a656117d4"
+      },
+      {
+        "id": "com.eliotlash.mclib:mclib:20_mapped_parchment_2023.08.13-1.20.1:762b5f30bfd3",
+        "version": "20_mapped_parchment_2023.08.13-1.20.1",
+        "filename": "mclib-20_mapped_parchment_2023.08.13-1.20.1.jar",
+        "size": 57187,
+        "sha256": "762b5f30bfd3de1ebd7d29ecde50e9a3c788f63f9c04f7e0df720b5729123ac0"
+      },
+      {
+        "id": "com.github.mcmodderanchor:simplebedrockmodel:2.3.3-forge-mc1.20.1_mapped_parchment_2023.08.13-1.20.1:fd871616b9a8",
+        "version": "2.3.3-forge-mc1.20.1_mapped_parchment_2023.08.13-1.20.1",
+        "filename": "simplebedrockmodel-2.3.3-forge-mc1.20.1_mapped_parchment_2023.08.13-1.20.1.jar",
+        "size": 743216,
+        "sha256": "fd871616b9a8957aebb316f3f4fcc3af27a93fb8e53340eb7a63465f291c0ec7"
+      },
+      {
+        "id": "com.github.oshi:oshi-core:6.2.2:efbca93df18f",
+        "version": "6.2.2",
+        "filename": "oshi-core-6.2.2.jar",
+        "size": 947865,
+        "sha256": "efbca93df18f3eb16964a92d8342f0674dd5d90da575ef8e04ef2e4eabec6910"
+      },
+      {
+        "id": "com.google.code.findbugs:jsr305:3.0.2:766ad2a0783f",
+        "version": "3.0.2",
+        "filename": "jsr305-3.0.2.jar",
+        "size": 19936,
+        "sha256": "766ad2a0783f2687962c8ad74ceecc38a28b9f72a2d085ee438b7813e928d0c7"
+      },
+      {
+        "id": "com.google.code.gson:gson:2.10:0cdd163ce359",
+        "version": "2.10",
+        "filename": "gson-2.10.jar",
+        "size": 286235,
+        "sha256": "0cdd163ce3598a20fc04eee71b140b24f6f2a3b35f0a499dbbdd9852e83fbfaf"
+      },
+      {
+        "id": "com.google.errorprone:error_prone_annotations:2.11.0:721cb91842b4",
+        "version": "2.11.0",
+        "filename": "error_prone_annotations-2.11.0.jar",
+        "size": 15979,
+        "sha256": "721cb91842b46fa056847d104d5225c8b8e1e8b62263b993051e1e5a0137b7ec"
+      },
+      {
+        "id": "com.google.guava:failureaccess:1.0.1:a171ee4c734d",
+        "version": "1.0.1",
+        "filename": "failureaccess-1.0.1.jar",
+        "size": 4617,
+        "sha256": "a171ee4c734dd2da837e4b16be9df4661afab72a41adaf31eb84dfdaf936ca26"
+      },
+      {
+        "id": "com.google.guava:guava:31.1-jre:a42edc9cab79",
+        "version": "31.1-jre",
+        "filename": "guava-31.1-jre.jar",
+        "size": 2959479,
+        "sha256": "a42edc9cab792e39fe39bb94f3fca655ed157ff87a8af78e1d6ba5b07c4a00ab"
+      },
+      {
+        "id": "com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava:b372a037d423",
+        "version": "9999.0-empty-to-avoid-conflict-with-guava",
+        "filename": "listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar",
+        "size": 2199,
+        "sha256": "b372a037d4230aa57fbeffdef30fd6123f9c0c2db85d0aced00c91b974f33f99"
+      },
+      {
+        "id": "com.google.j2objc:j2objc-annotations:1.3:21af30c92267",
+        "version": "1.3",
+        "filename": "j2objc-annotations-1.3.jar",
+        "size": 8781,
+        "sha256": "21af30c92267bd6122c0e0b4d20cccb6641a37eaf956c6540ec471d584e64a7b"
+      },
+      {
+        "id": "com.ibm.icu:icu4j:71.1:91c4f8ebf0ce",
+        "version": "71.1",
+        "filename": "icu4j-71.1.jar",
+        "size": 13963762,
+        "sha256": "91c4f8ebf0ceb489547098fe9d5c09a65eb419caea6ed714867f5280800bcf1a"
+      },
+      {
+        "id": "com.machinezoo.noexception:noexception:1.7.1:3d70aaea3904",
+        "version": "1.7.1",
+        "filename": "noexception-1.7.1.jar",
+        "size": 250861,
+        "sha256": "3d70aaea3904918587a21bdf99ab6ade9ab1dd0eaf6119344ba513f60f575816"
+      },
+      {
+        "id": "com.maydaymemory:mae:1.1.2:39e6337f1214",
+        "version": "1.1.2",
+        "filename": "mae-1.1.2.jar",
+        "size": 169761,
+        "sha256": "39e6337f1214a9facadc9128d2aca501be36789d376d7fba56f15b2c3a5a27d3"
+      },
+      {
+        "id": "com.mojang:authlib:4.0.43:697043d19e0b",
+        "version": "4.0.43",
+        "filename": "authlib-4.0.43.jar",
+        "size": 121766,
+        "sha256": "697043d19e0b84b04f011dbec1bec3d80c04d8c468e7e4c6b221c0183bc1c0ef"
+      },
+      {
+        "id": "com.mojang:blocklist:1.0.10:830bfd639c8d",
+        "version": "1.0.10",
+        "filename": "blocklist-1.0.10.jar",
+        "size": 964,
+        "sha256": "830bfd639c8db49236bbd8e45d3a2b8c96c56ff654a10118654958a6235d4c44"
+      },
+      {
+        "id": "com.mojang:brigadier:1.1.8:cf65afa612ff",
+        "version": "1.1.8",
+        "filename": "brigadier-1.1.8.jar",
+        "size": 77121,
+        "sha256": "cf65afa612fffbe4dc976115dac0312f48b9c84b3ddaf58bec8018a9454440d7"
+      },
+      {
+        "id": "com.mojang:datafixerupper:6.0.8:6e38e9fc5404",
+        "version": "6.0.8",
+        "filename": "datafixerupper-6.0.8.jar",
+        "size": 689960,
+        "sha256": "6e38e9fc5404be7e45189aa14ca6058bc85df20d6760a212b6d48e666abf0fef"
+      },
+      {
+        "id": "com.mojang:logging:1.1.1:c1756eaf0685",
+        "version": "1.1.1",
+        "filename": "logging-1.1.1.jar",
+        "size": 15343,
+        "sha256": "c1756eaf0685da94142bacc84309bb7ccddf65e004638c3299ab645710b5938c"
+      },
+      {
+        "id": "com.mojang:patchy:2.2.10:16d70e7968b4",
+        "version": "2.2.10",
+        "filename": "patchy-2.2.10.jar",
+        "size": 4439,
+        "sha256": "16d70e7968b45caffc81576268eb000f473fb60bf257182d3447dea8ec919d5a"
+      },
+      {
+        "id": "com.mojang:text2speech:1.17.9:c2a95b499e76",
+        "version": "1.17.9",
+        "filename": "text2speech-1.17.9.jar",
+        "size": 12243,
+        "sha256": "c2a95b499e76fada7dd63e9b0ec797b678d411c2b0ee6f37f4dc674662bfb0af"
+      },
+      {
+        "id": "commons-codec:commons-codec:1.15:b3e9f6d63a79",
+        "version": "1.15",
+        "filename": "commons-codec-1.15.jar",
+        "size": 353793,
+        "sha256": "b3e9f6d63a790109bf0d056611fbed1cf69055826defeb9894a71369d246ed63"
+      },
+      {
+        "id": "commons-io:commons-io:2.11.0:961b2f6d87db",
+        "version": "2.11.0",
+        "filename": "commons-io-2.11.0.jar",
+        "size": 327135,
+        "sha256": "961b2f6d87dbacc5d54abf45ab7a6e2495f89b75598962d8c723cea9bc210908"
+      },
+      {
+        "id": "commons-logging:commons-logging:1.2:daddea1ea0be",
+        "version": "1.2",
+        "filename": "commons-logging-1.2.jar",
+        "size": 61829,
+        "sha256": "daddea1ea0be0f56978ab3006b8ac92834afeefbd9b7e4e6316fca57df0fa636"
+      },
+      {
+        "id": "cpw.mods:bootstraplauncher:1.1.2:853b61fd165c",
+        "version": "1.1.2",
+        "filename": "bootstraplauncher-1.1.2.jar",
+        "size": 8284,
+        "sha256": "853b61fd165caf4103b5b969afbc5b2b037abc310ed644518cd967b50d5189a4"
+      },
+      {
+        "id": "cpw.mods:modlauncher:10.0.9:a9b3dcde1434",
+        "version": "10.0.9",
+        "filename": "modlauncher-10.0.9.jar",
+        "size": 130343,
+        "sha256": "a9b3dcde1434d02702a251ef1d0671dbc90250b349778e1c27151d86c2a4aa81"
+      },
+      {
+        "id": "cpw.mods:securejarhandler:2.1.10:7ec9207f47bc",
+        "version": "2.1.10",
+        "filename": "securejarhandler-2.1.10.jar",
+        "size": 88749,
+        "sha256": "7ec9207f47bc8847a16566b9a3b4ced8d073c49592897eb30ce2aaf643fdfcab"
+      },
+      {
+        "id": "curse.maven:architectury-api-419699:5137938_mapped_parchment_2023.08.13-1.20.1:20e36e656267",
+        "version": "5137938_mapped_parchment_2023.08.13-1.20.1",
+        "filename": "architectury-api-419699-5137938_mapped_parchment_2023.08.13-1.20.1.jar",
+        "size": 596082,
+        "sha256": "20e36e656267c937b2abef5a39a690726655b62fd65895ee7b1e613544dcccd7"
+      },
+      {
+        "id": "curse.maven:better-combat-by-daedelus-639842:5625757_mapped_parchment_2023.08.13-1.20.1:c3c9feade35a",
+        "version": "5625757_mapped_parchment_2023.08.13-1.20.1",
+        "filename": "better-combat-by-daedelus-639842-5625757_mapped_parchment_2023.08.13-1.20.1.jar",
+        "size": 1055538,
+        "sha256": "c3c9feade35ae57885dcd8cf4931cf07ac1792b7233e7b7537a990c6ac3783ab"
+      },
+      {
+        "id": "curse.maven:cold-sweat-506194:6503192_mapped_parchment_2023.08.13-1.20.1:49f134d829ba",
+        "version": "6503192_mapped_parchment_2023.08.13-1.20.1",
+        "filename": "cold-sweat-506194-6503192_mapped_parchment_2023.08.13-1.20.1.jar",
+        "size": 2148676,
+        "sha256": "49f134d829ba7546e737c90af74f1a1891e55a047535b17474d32a60c84d3473"
+      },
+      {
+        "id": "curse.maven:create-328085:6255513_mapped_parchment_2023.08.13-1.20.1:a8a689c3b973",
+        "version": "6255513_mapped_parchment_2023.08.13-1.20.1",
+        "filename": "create-328085-6255513_mapped_parchment_2023.08.13-1.20.1.jar",
+        "size": 18820268,
+        "sha256": "a8a689c3b9734463c3e21801aee09f59350ebb820e923ba59b9ae8f5637bd1b0"
+      },
+      {
+        "id": "curse.maven:create-power-loader-936020:6549987_mapped_parchment_2023.08.13-1.20.1:4c47e1b6bfb6",
+        "version": "6549987_mapped_parchment_2023.08.13-1.20.1",
+        "filename": "create-power-loader-936020-6549987_mapped_parchment_2023.08.13-1.20.1.jar",
+        "size": 229886,
+        "sha256": "4c47e1b6bfb698aab4394c53510948be7fddf5253550c5759c9c74f0c0b0c52c"
+      },
+      {
+        "id": "curse.maven:jade-324717:4681833_mapped_parchment_2023.08.13-1.20.1:4b4d3b9e3eb8",
+        "version": "4681833_mapped_parchment_2023.08.13-1.20.1",
+        "filename": "jade-324717-4681833_mapped_parchment_2023.08.13-1.20.1.jar",
+        "size": 498713,
+        "sha256": "4b4d3b9e3eb8b243716c3dc3b35a9937e03898b5bac2fc6feb6599855a8b6aef"
+      },
+      {
+        "id": "curse.maven:kubejs-238086:5853326_mapped_parchment_2023.08.13-1.20.1:6d12577ffbc2",
+        "version": "5853326_mapped_parchment_2023.08.13-1.20.1",
+        "filename": "kubejs-238086-5853326_mapped_parchment_2023.08.13-1.20.1.jar",
+        "size": 1650010,
+        "sha256": "6d12577ffbc25987db70b21af252ca87abdbb35f6a4fd6dc8286864ceab22aa0"
+      },
+      {
+        "id": "curse.maven:limitless-vehicle-1446269:7675116_mapped_parchment_2023.08.13-1.20.1:0cccd1442cc5",
+        "version": "7675116_mapped_parchment_2023.08.13-1.20.1",
+        "filename": "limitless-vehicle-1446269-7675116_mapped_parchment_2023.08.13-1.20.1.jar",
+        "size": 7609616,
+        "sha256": "0cccd1442cc55b2229a4392a2854e86239ad7ba4d46b3ccf7b545575d7471a97"
+      },
+      {
+        "id": "curse.maven:mmmmmmmmmmmm-225738:6237015_mapped_parchment_2023.08.13-1.20.1:796d70004d6c",
+        "version": "6237015_mapped_parchment_2023.08.13-1.20.1",
+        "filename": "mmmmmmmmmmmm-225738-6237015_mapped_parchment_2023.08.13-1.20.1.jar",
+        "size": 362754,
+        "sha256": "796d70004d6cd7b44a3fea1215b11b60e6c6d19fd870b5754614622da6ef145f"
+      },
+      {
+        "id": "curse.maven:net-music-978569:6838602_mapped_parchment_2023.08.13-1.20.1:a16e5008d702",
+        "version": "6838602_mapped_parchment_2023.08.13-1.20.1",
+        "filename": "net-music-978569-6838602_mapped_parchment_2023.08.13-1.20.1.jar",
+        "size": 653529,
+        "sha256": "a16e5008d7026cd4d2191ef6335eb983b645a4a620561dac9c60d99548b80726"
+      },
+      {
+        "id": "curse.maven:playeranimator-658587:4587214_mapped_parchment_2023.08.13-1.20.1:57cdc0696f32",
+        "version": "4587214_mapped_parchment_2023.08.13-1.20.1",
+        "filename": "playeranimator-658587-4587214_mapped_parchment_2023.08.13-1.20.1.jar",
+        "size": 181860,
+        "sha256": "57cdc0696f32af9d1f1fc8a50537b9513ee03c2e09ff85a7c0112404e8765354"
+      },
+      {
+        "id": "curse.maven:real-camera-851574:6943465_mapped_parchment_2023.08.13-1.20.1:188f5b63dd6f",
+        "version": "6943465_mapped_parchment_2023.08.13-1.20.1",
+        "filename": "real-camera-851574-6943465_mapped_parchment_2023.08.13-1.20.1.jar",
+        "size": 212425,
+        "sha256": "188f5b63dd6fa957cf9fd3d2551b16e7434c0681c6fbd012861cd76015aeb87a"
+      },
+      {
+        "id": "curse.maven:rhino-416294:6186971_mapped_parchment_2023.08.13-1.20.1:a4072d783602",
+        "version": "6186971_mapped_parchment_2023.08.13-1.20.1",
+        "filename": "rhino-416294-6186971_mapped_parchment_2023.08.13-1.20.1.jar",
+        "size": 1798007,
+        "sha256": "a4072d78360236e81718e54aa91ba18f702cfff1ca56ff3550a2ee183dfab40f"
+      },
+      {
+        "id": "curse.maven:selene-499980:6249659_mapped_parchment_2023.08.13-1.20.1:87c624f849dc",
+        "version": "6249659_mapped_parchment_2023.08.13-1.20.1",
+        "filename": "selene-499980-6249659_mapped_parchment_2023.08.13-1.20.1.jar",
+        "size": 1257081,
+        "sha256": "87c624f849dca04d8f36adcf3a2fb53f66ee04700fa4c81f78beb20c280bf782"
+      },
+      {
+        "id": "curse.maven:timeless-and-classics-zero-1028108:6518539_mapped_parchment_2023.08.13-1.20.1:2d92a5f08059",
+        "version": "6518539_mapped_parchment_2023.08.13-1.20.1",
+        "filename": "timeless-and-classics-zero-1028108-6518539_mapped_parchment_2023.08.13-1.20.1.jar",
+        "size": 47232975,
+        "sha256": "2d92a5f080598886f4fbe506ed30748fd023102cb8b9ad6c9bb4608623b1e202"
+      },
+      {
+        "id": "curse.maven:touhou-little-maid-355044:7510714_mapped_parchment_2023.08.13-1.20.1:8915257614bf",
+        "version": "7510714_mapped_parchment_2023.08.13-1.20.1",
+        "filename": "touhou-little-maid-355044-7510714_mapped_parchment_2023.08.13-1.20.1.jar",
+        "size": 23275978,
+        "sha256": "8915257614bf076277d12f9ead3eb38f808745ca7dbd796b0596b3a9a4ad610d"
+      },
+      {
+        "id": "flywheel:1.0.5:316ca250f192",
+        "version": "1.0.5",
+        "filename": "flywheel-forge-1.20.1-1.0.5.jar",
+        "size": 868892,
+        "sha256": "316ca250f19244956b5f0cd75329309ea65a77b4b8da854389b6a9222e7f427c"
+      },
+      {
+        "id": "io.netty:netty-buffer:4.1.82.Final:a7ce7f6d8c1e",
+        "version": "4.1.82.Final",
+        "filename": "netty-buffer-4.1.82.Final.jar",
+        "size": 304664,
+        "sha256": "a7ce7f6d8c1e82b044cd56765dab4338251596416de03b1f9a05d7402429c29d"
+      },
+      {
+        "id": "io.netty:netty-codec:4.1.82.Final:170c0ce091c2",
+        "version": "4.1.82.Final",
+        "filename": "netty-codec-4.1.82.Final.jar",
+        "size": 339155,
+        "sha256": "170c0ce091c2e1cc1d952d87a6a30deb773922507bbc609b962b539f03f53407"
+      },
+      {
+        "id": "io.netty:netty-common:4.1.82.Final:d5923db1cc68",
+        "version": "4.1.82.Final",
+        "filename": "netty-common-4.1.82.Final.jar",
+        "size": 653880,
+        "sha256": "d5923db1cc68b26baf5368f1f76ec2c6100d12db8406c6de00eb6dbc08052550"
+      },
+      {
+        "id": "io.netty:netty-handler:4.1.82.Final:31015505983d",
+        "version": "4.1.82.Final",
+        "filename": "netty-handler-4.1.82.Final.jar",
+        "size": 538569,
+        "sha256": "31015505983dc57eec491ad4873411ba51f0f3beb24d22d509336c72511019cb"
+      },
+      {
+        "id": "io.netty:netty-resolver:4.1.82.Final:4cfeba7ec535",
+        "version": "4.1.82.Final",
+        "filename": "netty-resolver-4.1.82.Final.jar",
+        "size": 37776,
+        "sha256": "4cfeba7ec535964a35722178aeecc87ec186dba0203d04389a850e8e62575383"
+      },
+      {
+        "id": "io.netty:netty-transport-classes-epoll:4.1.82.Final:73f827fca188",
+        "version": "4.1.82.Final",
+        "filename": "netty-transport-classes-epoll-4.1.82.Final.jar",
+        "size": 142066,
+        "sha256": "73f827fca18870959b9581c6875130576e5de684cfb4e6f346f8c1c266840ba3"
+      },
+      {
+        "id": "io.netty:netty-transport-native-unix-common:4.1.82.Final:1096f16527a5",
+        "version": "4.1.82.Final",
+        "filename": "netty-transport-native-unix-common-4.1.82.Final.jar",
+        "size": 43684,
+        "sha256": "1096f16527a51dd5f44ced90636110a429cc7359a9a8a91db25000b747793429"
+      },
+      {
+        "id": "io.netty:netty-transport:4.1.82.Final:c210069be4ab",
+        "version": "4.1.82.Final",
+        "filename": "netty-transport-4.1.82.Final.jar",
+        "size": 485752,
+        "sha256": "c210069be4ab4120f5ac7cb5e4a126d3a007e78a64fd44c9971220e013dbaef1"
+      },
+      {
+        "id": "it.unimi.dsi:fastutil:8.5.9:9578bf2a1700",
+        "version": "8.5.9",
+        "filename": "fastutil-8.5.9.jar",
+        "size": 23376043,
+        "sha256": "9578bf2a1700cf20d21746a2ee89e57ba1abbd37fa9feda68ff5e9a28473a7f9"
+      },
+      {
+        "id": "komodo:1.2.3:c15752cb3060",
+        "version": "1.2.3",
+        "filename": "komodo-1.20.1-Forge-1.2.3.jar",
+        "size": 878174,
+        "sha256": "c15752cb30605d0162894023b185771230ef16af112a008c764813a86ccf7cdc"
+      },
+      {
+        "id": "me.shedaniel.cloth:cloth-config-forge:11.1.106_mapped_parchment_2023.08.13-1.20.1:c8eaf2d2696e",
+        "version": "11.1.106_mapped_parchment_2023.08.13-1.20.1",
+        "filename": "cloth-config-forge-11.1.106_mapped_parchment_2023.08.13-1.20.1.jar",
+        "size": 1168417,
+        "sha256": "c8eaf2d2696e00a98021b77820c2f7742c9100975bfb43df7728b86cbe88db8e"
+      },
+      {
+        "id": "mezz.jei:jei-1.20.1-common-api:15.20.0.106_mapped_parchment_2023.08.13-1.20.1:43d4695def4c",
+        "version": "15.20.0.106_mapped_parchment_2023.08.13-1.20.1",
+        "filename": "jei-1.20.1-common-api-15.20.0.106_mapped_parchment_2023.08.13-1.20.1.jar",
+        "size": 124058,
+        "sha256": "43d4695def4c4dd09ee9845c865dd9f39a5ef0b8c1e4e57134f53a424f50d793"
+      },
+      {
+        "id": "mezz.jei:jei-1.20.1-forge-api:15.20.0.106_mapped_parchment_2023.08.13-1.20.1:bfd8e0196020",
+        "version": "15.20.0.106_mapped_parchment_2023.08.13-1.20.1",
+        "filename": "jei-1.20.1-forge-api-15.20.0.106_mapped_parchment_2023.08.13-1.20.1.jar",
+        "size": 3231,
+        "sha256": "bfd8e01960201adf7f1f47a45920dd761cf0008594ffe3c5bad62bfd1f945902"
+      },
+      {
+        "id": "named-to-srg:1.20.1:246dc9d32f07",
+        "version": "1.20.1",
+        "filename": "output.tsrg",
+        "size": 9129252,
+        "sha256": "246dc9d32f075e71167debb9b4ad1bb75be6a0a8584c08c5c06cc6b7b73d5d15"
+      },
+      {
+        "id": "net.java.dev.jna:jna-platform:5.12.1:8ce969116cac",
+        "version": "5.12.1",
+        "filename": "jna-platform-5.12.1.jar",
+        "size": 1356627,
+        "sha256": "8ce969116cac95bd61b07a8d5e07174b352e63301473caac72c395e3c08488d2"
+      },
+      {
+        "id": "net.java.dev.jna:jna:5.12.1:91a814ac4f40",
+        "version": "5.12.1",
+        "filename": "jna-5.12.1.jar",
+        "size": 1866196,
+        "sha256": "91a814ac4f40d60dee91d842e1a8ad874c62197984403d0e3c30d39e55cf53b3"
+      },
+      {
+        "id": "net.jodah:typetools:0.6.3:408300867804",
+        "version": "0.6.3",
+        "filename": "typetools-0.6.3.jar",
+        "size": 18281,
+        "sha256": "408300867804be05d1083cc0287dd3a21295a9e76090e288013ba5a4182dc96d"
+      },
+      {
+        "id": "net.minecraft:client:1.20.1:f43d1ac034a8",
+        "version": "1.20.1",
+        "filename": "client-extra.jar",
+        "size": 10436626,
+        "sha256": "f43d1ac034a8907edab190a17501fd4ca2b0af107d4231da364eeca8ab5ee317"
+      },
+      {
+        "id": "net.minecraftforge:accesstransformers:8.0.4:3225e2a513f6",
+        "version": "8.0.4",
+        "filename": "accesstransformers-8.0.4.jar",
+        "size": 77756,
+        "sha256": "3225e2a513f658df686fe8b2ae5b4808525851a2c238ce65e38847cc4ffc6441"
+      },
+      {
+        "id": "net.minecraftforge:coremods:5.0.1:a0678f4d444c",
+        "version": "5.0.1",
+        "filename": "coremods-5.0.1.jar",
+        "size": 24199,
+        "sha256": "a0678f4d444c9d9ac816f91638308604576aa1297168e33a154538d1acc0c1ac"
+      },
+      {
+        "id": "net.minecraftforge:eventbus:6.0.5:ae8bd4ea6b32",
+        "version": "6.0.5",
+        "filename": "eventbus-6.0.5.jar",
+        "size": 53985,
+        "sha256": "ae8bd4ea6b32509ace6dba904698b52e13d222625488c8291a05ab870e66c1dd"
+      },
+      {
+        "id": "net.minecraftforge:fmlcore:1.20.1-47.2.0:e3085cb83e16",
+        "version": "1.20.1-47.2.0",
+        "filename": "fmlcore-1.20.1-47.2.0.jar",
+        "size": 117589,
+        "sha256": "e3085cb83e160e237f9632c645dc787a1f58579f622945c167be86bde01214ad"
+      },
+      {
+        "id": "net.minecraftforge:fmlearlydisplay:1.20.1-47.2.0:62045bddd8b7",
+        "version": "1.20.1-47.2.0",
+        "filename": "fmlearlydisplay-1.20.1-47.2.0.jar",
+        "size": 170333,
+        "sha256": "62045bddd8b7e959d4449f63bc052f06c7cbd7e954a8d6de80016984ac530d80"
+      },
+      {
+        "id": "net.minecraftforge:fmlloader:1.20.1-47.2.0:ed24dc77caa0",
+        "version": "1.20.1-47.2.0",
+        "filename": "fmlloader-1.20.1-47.2.0.jar",
+        "size": 264245,
+        "sha256": "ed24dc77caa01a715021b0f47217ba46296949ea6b92046986c1be0573f0a93a"
+      },
+      {
+        "id": "net.minecraftforge:forge:1.20.1-47.2.0_mapped_parchment_2023.08.13-1.20.1_at_9416a54543054a131d42d6dab91b05f8d420bf85:d75c66726afa",
+        "version": "1.20.1-47.2.0_mapped_parchment_2023.08.13-1.20.1_at_9416a54543054a131d42d6dab91b05f8d420bf85",
+        "filename": "forge-1.20.1-47.2.0_mapped_parchment_2023.08.13-1.20.1.jar",
+        "size": 19157980,
+        "sha256": "d75c66726afa9c779c0f13fc88deceed2bb49e71906d4d8010a05fb39aced7be"
+      },
+      {
+        "id": "net.minecraftforge:forgespi:7.0.1:2298eaba25d0",
+        "version": "7.0.1",
+        "filename": "forgespi-7.0.1.jar",
+        "size": 29831,
+        "sha256": "2298eaba25d066afd9b329de7f75e7bf78ef47f3045e6ecb0e40428d875e4b84"
+      },
+      {
+        "id": "net.minecraftforge:JarJarFileSystems:0.3.19:beaa1875dd43",
+        "version": "0.3.19",
+        "filename": "JarJarFileSystems-0.3.19.jar",
+        "size": 32195,
+        "sha256": "beaa1875dd433f2dd152395c3e3c52ef2bb99f20b74860a07d70f7c4626e56d4"
+      },
+      {
+        "id": "net.minecraftforge:JarJarMetadata:0.3.19:6141c710b5b7",
+        "version": "0.3.19",
+        "filename": "JarJarMetadata-0.3.19.jar",
+        "size": 15895,
+        "sha256": "6141c710b5b7b673bd544740a31339f0754d7a794cc46b952b7ef7897b7ce265"
+      },
+      {
+        "id": "net.minecraftforge:JarJarSelector:0.3.19:f7acfbafc9a7",
+        "version": "0.3.19",
+        "filename": "JarJarSelector-0.3.19.jar",
+        "size": 17374,
+        "sha256": "f7acfbafc9a715ee7d7ce2d539815b3ebccebc5064e0a7252c4a6a1c71d1e740"
+      },
+      {
+        "id": "net.minecraftforge:javafmllanguage:1.20.1-47.2.0:55c3d3e02c71",
+        "version": "1.20.1-47.2.0",
+        "filename": "javafmllanguage-1.20.1-47.2.0.jar",
+        "size": 16371,
+        "sha256": "55c3d3e02c711ade58b3790eac94d1d6cff7f9fe5c089505c85909e36fa883b7"
+      },
+      {
+        "id": "net.minecraftforge:lowcodelanguage:1.20.1-47.2.0:fea575aaae87",
+        "version": "1.20.1-47.2.0",
+        "filename": "lowcodelanguage-1.20.1-47.2.0.jar",
+        "size": 7397,
+        "sha256": "fea575aaae873c6f409559d72fe083dbf22c722b4b0b610a0a321e3490bfda6e"
+      },
+      {
+        "id": "net.minecraftforge:mclanguage:1.20.1-47.2.0:da4f82aff217",
+        "version": "1.20.1-47.2.0",
+        "filename": "mclanguage-1.20.1-47.2.0.jar",
+        "size": 4996,
+        "sha256": "da4f82aff217eec3c9f23710e02dbaed659e9b9798396604d708a0ef9fadd7fa"
+      },
+      {
+        "id": "net.minecraftforge:mergetool:1.1.5:39d9a3d9277c",
+        "version": "1.1.5",
+        "filename": "mergetool-1.1.5-api.jar",
+        "size": 2572,
+        "sha256": "39d9a3d9277c1402b8e7b97f917ce278241cf1796312aec85b87f19a376dd99a"
+      },
+      {
+        "id": "net.minecraftforge:renamer:2.0.4:all:2.0.4:86a5c5d35b87",
+        "version": "2.0.4",
+        "filename": "renamer-2.0.4-all.jar",
+        "size": 453943,
+        "sha256": "86a5c5d35b87e19c3ea99ffdc6d8e12b2bca3067a646a40a9fd91b6dc0d9376c"
+      },
+      {
+        "id": "net.minecraftforge:unsafe:0.2.0:946937e182ab",
+        "version": "0.2.0",
+        "filename": "unsafe-0.2.0.jar",
+        "size": 2834,
+        "sha256": "946937e182ab3b518b5b88264f367e1f35ac12bc83abed220490c60c717be239"
+      },
+      {
+        "id": "net.minecrell:terminalconsoleappender:1.2.0:912e432c9355",
+        "version": "1.2.0",
+        "filename": "terminalconsoleappender-1.2.0.jar",
+        "size": 15977,
+        "sha256": "912e432c9355c4b2025d788ed87fd72bb95542e2fc967ad6875fbbeb6e1c7a1c"
+      },
+      {
+        "id": "net.sf.jopt-simple:jopt-simple:5.0.4:df26cc58f235",
+        "version": "5.0.4",
+        "filename": "jopt-simple-5.0.4.jar",
+        "size": 78146,
+        "sha256": "df26cc58f235f477db07f753ba5a3ab243ebe5789d9f89ecf68dd62ea9a66c28"
+      },
+      {
+        "id": "org.abego.treelayout:org.abego.treelayout.core:1.0.3:fa5e31395c39",
+        "version": "1.0.3",
+        "filename": "org.abego.treelayout.core-1.0.3.jar",
+        "size": 26773,
+        "sha256": "fa5e31395c39c2e7d46aca0f81f72060931607b2fa41bd36038eb2cb6fb93326"
+      },
+      {
+        "id": "org.antlr:antlr-runtime:3.5.2:ce3fc8ecb10f",
+        "version": "3.5.2",
+        "filename": "antlr-runtime-3.5.2.jar",
+        "size": 167761,
+        "sha256": "ce3fc8ecb10f39e9a3cddcbb2ce350d272d9cd3d0b1e18e6fe73c3b9389c8734"
+      },
+      {
+        "id": "org.antlr:antlr4-runtime:4.9.1:a80502c3140a",
+        "version": "4.9.1",
+        "filename": "antlr4-runtime-4.9.1.jar",
+        "size": 337868,
+        "sha256": "a80502c3140ae7acfbb1f57847c8eb1c101461a969215ec38c3f1ebdff61ac29"
+      },
+      {
+        "id": "org.antlr:antlr4:4.9.1:e6bd18f14126",
+        "version": "4.9.1",
+        "filename": "antlr4-4.9.1.jar",
+        "size": 1231658,
+        "sha256": "e6bd18f14126ab85a42dcb80ba5f67da2f35ba164ec5a64d40024bd0e7436584"
+      },
+      {
+        "id": "org.antlr:ST4:4.3:28547dba48cf",
+        "version": "4.3",
+        "filename": "ST4-4.3.jar",
+        "size": 251104,
+        "sha256": "28547dba48cfceb77b6efbfe069aebe9ed3324ae60dbd52093d13a1d636ed069"
+      },
+      {
+        "id": "org.apache.commons:commons-compress:1.21:6aecfd545972",
+        "version": "1.21",
+        "filename": "commons-compress-1.21.jar",
+        "size": 1018316,
+        "sha256": "6aecfd5459728a595601cfa07258d131972ffc39b492eb48bdd596577a2f244a"
+      },
+      {
+        "id": "org.apache.commons:commons-lang3:3.12.0:d919d904486c",
+        "version": "3.12.0",
+        "filename": "commons-lang3-3.12.0.jar",
+        "size": 587402,
+        "sha256": "d919d904486c037f8d193412da0c92e22a9fa24230b9d67a57855c5c31c7e94e"
+      },
+      {
+        "id": "org.apache.httpcomponents:httpclient:4.5.13:6fe9026a566c",
+        "version": "4.5.13",
+        "filename": "httpclient-4.5.13.jar",
+        "size": 780321,
+        "sha256": "6fe9026a566c6a5001608cf3fc32196641f6c1e5e1986d1037ccdbd5f31ef743"
+      },
+      {
+        "id": "org.apache.httpcomponents:httpcore:4.4.15:3cbaed088c49",
+        "version": "4.4.15",
+        "filename": "httpcore-4.4.15.jar",
+        "size": 328324,
+        "sha256": "3cbaed088c499a10f96dde58f39dc0e7985171abd88138ca1655a872011bb142"
+      },
+      {
+        "id": "org.apache.logging.log4j:log4j-api:2.19.0:5ccb24ad9f92",
+        "version": "2.19.0",
+        "filename": "log4j-api-2.19.0.jar",
+        "size": 317566,
+        "sha256": "5ccb24ad9f92e768d0bc456d3061a737951262df803e004d2cad096b75a88d60"
+      },
+      {
+        "id": "org.apache.logging.log4j:log4j-core:2.19.0:b4a1796fab7b",
+        "version": "2.19.0",
+        "filename": "log4j-core-2.19.0.jar",
+        "size": 1864386,
+        "sha256": "b4a1796fab7bfc36df015c1b4052459147997e8d215a7199d71d05f9e747e4f4"
+      },
+      {
+        "id": "org.apache.logging.log4j:log4j-slf4j2-impl:2.19.0:825605eacb2d",
+        "version": "2.19.0",
+        "filename": "log4j-slf4j2-impl-2.19.0.jar",
+        "size": 27721,
+        "sha256": "825605eacb2d5605b105c53d4108c18125e0f82f62960d0be583278b9c524f3c"
+      },
+      {
+        "id": "org.apache.maven:maven-artifact:3.8.5:91172bc294d6",
+        "version": "3.8.5",
+        "filename": "maven-artifact-3.8.5.jar",
+        "size": 58077,
+        "sha256": "91172bc294d6eab02fc9f45f4ea01fd0e418962d128cf489abea7b6957d988ee"
+      },
+      {
+        "id": "org.checkerframework:checker-qual:3.12.0:ff10785ac2a3",
+        "version": "3.12.0",
+        "filename": "checker-qual-3.12.0.jar",
+        "size": 208835,
+        "sha256": "ff10785ac2a357ec5de9c293cb982a2cbb605c0309ea4cc1cb9b9bc6dbe7f3cb"
+      },
+      {
+        "id": "org.codehaus.plexus:plexus-utils:3.3.0:76d174792540",
+        "version": "3.3.0",
+        "filename": "plexus-utils-3.3.0.jar",
+        "size": 263253,
+        "sha256": "76d174792540e2775af94d03d10fb2d3c776e2cd0ac0ebf427d3e570072bb9ce"
+      },
+      {
+        "id": "org.glassfish:javax.json:1.0.4:0e1dec40a1ed",
+        "version": "1.0.4",
+        "filename": "javax.json-1.0.4.jar",
+        "size": 85147,
+        "sha256": "0e1dec40a1ede965941251eda968aeee052cc4f50378bc316cc48e8159bdbeb4"
+      },
+      {
+        "id": "org.jetbrains:annotations:24.0.1:61666dbce7e4",
+        "version": "24.0.1",
+        "filename": "annotations-24.0.1.jar",
+        "size": 30651,
+        "sha256": "61666dbce7e42e6c85b43c04fcfb8293a21dcb55b3c80e869270ce42c01a6b35"
+      },
+      {
+        "id": "org.jetbrains.kotlin:kotlin-reflect:2.0.0:111bd9069219",
+        "version": "2.0.0",
+        "filename": "kotlin-reflect-2.0.0.jar",
+        "size": 3056424,
+        "sha256": "111bd906921937f76da17760641116d04b57a7a12fcf980efe7c6767f45179f0"
+      },
+      {
+        "id": "org.jetbrains.kotlin:kotlin-stdlib-jdk7:2.0.0:dd958064f946",
+        "version": "2.0.0",
+        "filename": "kotlin-stdlib-jdk7-2.0.0.jar",
+        "size": 961,
+        "sha256": "dd958064f946b01f745365c2efa11e4c5812a22e26b6caa4433f207fb5b4a5c5"
+      },
+      {
+        "id": "org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.0.0:92035a0fa8b9",
+        "version": "2.0.0",
+        "filename": "kotlin-stdlib-jdk8-2.0.0.jar",
+        "size": 967,
+        "sha256": "92035a0fa8b97a97bb430d30ba03e5ad51f4cfa839cf1559e55245cba735aa94"
+      },
+      {
+        "id": "org.jetbrains.kotlin:kotlin-stdlib:2.0.0:240938c4aab8",
+        "version": "2.0.0",
+        "filename": "kotlin-stdlib-2.0.0.jar",
+        "size": 1729731,
+        "sha256": "240938c4aab8e73e888703e3e7d3f87383ffe5bd536d6d5e3c100d4cd0379fcf"
+      },
+      {
+        "id": "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.8.1:f3d4f5de1c39",
+        "version": "1.8.1",
+        "filename": "kotlinx-coroutines-core-jvm-1.8.1.jar",
+        "size": 1546991,
+        "sha256": "f3d4f5de1c391bbcc20f3b3435ccbac013521e76b6902d7d59635ec15c1f797e"
+      },
+      {
+        "id": "org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.8.1:d8cfb4c363c9",
+        "version": "1.8.1",
+        "filename": "kotlinx-coroutines-jdk8-1.8.1.jar",
+        "size": 953,
+        "sha256": "d8cfb4c363c91c773353b115bd4a6b5a04608e7916fe235d3a9d87efcb996c01"
+      },
+      {
+        "id": "org.jetbrains.kotlinx:kotlinx-serialization-core-jvm:1.6.3:29c821a8d4e2",
+        "version": "1.6.3",
+        "filename": "kotlinx-serialization-core-jvm-1.6.3.jar",
+        "size": 420348,
+        "sha256": "29c821a8d4e25cbfe4f2ce96cdd4526f61f8f4e69a135f9612a34a81d93b65f1"
+      },
+      {
+        "id": "org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:1.6.3:d3234179bcff",
+        "version": "1.6.3",
+        "filename": "kotlinx-serialization-json-jvm-1.6.3.jar",
+        "size": 265019,
+        "sha256": "d3234179bcff1886d53d67c11eca47f7f3cf7b63c349d16965f6db51b7f3dd9a"
+      },
+      {
+        "id": "org.jline:jline-reader:3.12.1:4d1037c71100",
+        "version": "3.12.1",
+        "filename": "jline-reader-3.12.1.jar",
+        "size": 150765,
+        "sha256": "4d1037c7110027ed64816c510fad2afa0a5aa9bbc38fb9f0e772870823fcad2a"
+      },
+      {
+        "id": "org.jline:jline-terminal:3.12.1:eb6115680f73",
+        "version": "3.12.1",
+        "filename": "jline-terminal-3.12.1.jar",
+        "size": 211712,
+        "sha256": "eb6115680f732562f0e8e6777f127dece81e23b25015925f3c4a2a900d48cc9e"
+      },
+      {
+        "id": "org.joml:joml:1.10.5:cac9f22f83a7",
+        "version": "1.10.5",
+        "filename": "joml-1.10.5.jar",
+        "size": 712082,
+        "sha256": "cac9f22f83a7aa33eebda73c16ff5261e3cb4911b6bafcf4c79ea486099d0c9a"
+      },
+      {
+        "id": "org.lwjgl:lwjgl-glfw:3.3.1:08bbc34eb752",
+        "version": "3.3.1",
+        "filename": "lwjgl-glfw-3.3.1.jar",
+        "size": 128801,
+        "sha256": "08bbc34eb752f863e37f83ab1c7b0c22f7cb26d0f8fb0a4a4a8c6028ac45b385"
+      },
+      {
+        "id": "org.lwjgl:lwjgl-glfw:3.3.1:1c8209a714eb",
+        "version": "3.3.1",
+        "filename": "lwjgl-glfw-3.3.1-natives-windows-arm64.jar",
+        "size": 123808,
+        "sha256": "1c8209a714eb3309d711786f01a068c8a2307bba947306530f47b86d47ef378d"
+      },
+      {
+        "id": "org.lwjgl:lwjgl-glfw:3.3.1:9e744ecb8402",
+        "version": "3.3.1",
+        "filename": "lwjgl-glfw-3.3.1-natives-windows.jar",
+        "size": 145512,
+        "sha256": "9e744ecb84029d7acedae876e2557659184a29afee55e453f4ab2567349bf849"
+      },
+      {
+        "id": "org.lwjgl:lwjgl-glfw:3.3.1:a58020066e1e",
+        "version": "3.3.1",
+        "filename": "lwjgl-glfw-3.3.1-natives-windows-x86.jar",
+        "size": 139251,
+        "sha256": "a58020066e1e3d53ffc4c7fb4a158c0cb3ffb4f33aaeb3e54d2552732194c412"
+      },
+      {
+        "id": "org.lwjgl:lwjgl-jemalloc:3.3.1:225f37df5500",
+        "version": "3.3.1",
+        "filename": "lwjgl-jemalloc-3.3.1-natives-windows.jar",
+        "size": 135585,
+        "sha256": "225f37df5500614675be9acb6278cb6c9c80a349264798b2cfc7ec434f1ed472"
+      },
+      {
+        "id": "org.lwjgl:lwjgl-jemalloc:3.3.1:639bb2d75df3",
+        "version": "3.3.1",
+        "filename": "lwjgl-jemalloc-3.3.1-natives-windows-x86.jar",
+        "size": 110405,
+        "sha256": "639bb2d75df3dd59ea7b0bf8b847e0af57074694d793920ba1c9537897b2c3d8"
+      },
+      {
+        "id": "org.lwjgl:lwjgl-jemalloc:3.3.1:c186df9b20a4",
+        "version": "3.3.1",
+        "filename": "lwjgl-jemalloc-3.3.1-natives-windows-arm64.jar",
+        "size": 114250,
+        "sha256": "c186df9b20a4dfa5cf853215ef519399f55ce374f682fc2c35d26249a2c7a363"
+      },
+      {
+        "id": "org.lwjgl:lwjgl-jemalloc:3.3.1:ee49fc0a8d94",
+        "version": "3.3.1",
+        "filename": "lwjgl-jemalloc-3.3.1.jar",
+        "size": 36601,
+        "sha256": "ee49fc0a8d9456452e54cd6f777823eda666e2c63fc14d65b2fd2cc2cfed5dbe"
+      },
+      {
+        "id": "org.lwjgl:lwjgl-openal:3.3.1:5f7e666aa24c",
+        "version": "3.3.1",
+        "filename": "lwjgl-openal-3.3.1-natives-windows.jar",
+        "size": 576872,
+        "sha256": "5f7e666aa24ca8b3fb758e72c03ffb9d809b30489c6a7b47ead67c6977ff654e"
+      },
+      {
+        "id": "org.lwjgl:lwjgl-openal:3.3.1:7325ee1b91a8",
+        "version": "3.3.1",
+        "filename": "lwjgl-openal-3.3.1.jar",
+        "size": 88237,
+        "sha256": "7325ee1b91a8a10c0626c69b557a88f2df6ac1bdca0e52e2a92d324249f2cad0"
+      },
+      {
+        "id": "org.lwjgl:lwjgl-openal:3.3.1:7d5b5b6fad5e",
+        "version": "3.3.1",
+        "filename": "lwjgl-openal-3.3.1-natives-windows-x86.jar",
+        "size": 520313,
+        "sha256": "7d5b5b6fad5efbb2e8c24f347600c7cbc6efdd1361fd37b0b5a13319231e851e"
+      },
+      {
+        "id": "org.lwjgl:lwjgl-openal:3.3.1:a62cf181751a",
+        "version": "3.3.1",
+        "filename": "lwjgl-openal-3.3.1-natives-windows-arm64.jar",
+        "size": 505234,
+        "sha256": "a62cf181751a439e9b9c4a346920b64cf96a567a9ee21e566764bcac20f0750c"
+      },
+      {
+        "id": "org.lwjgl:lwjgl-opengl:3.3.1:683d8ad3d0d0",
+        "version": "3.3.1",
+        "filename": "lwjgl-opengl-3.3.1-natives-windows-x86.jar",
+        "size": 87463,
+        "sha256": "683d8ad3d0d0977a6ea18b88a4cbe7e8fd4f06c1ab21babedab88309740bcc60"
+      },
+      {
+        "id": "org.lwjgl:lwjgl-opengl:3.3.1:851b9b593cac",
+        "version": "3.3.1",
+        "filename": "lwjgl-opengl-3.3.1-natives-windows.jar",
+        "size": 100205,
+        "sha256": "851b9b593cac21e3af51dd4c303e8df3fe6a344a3f81d6b9bcc186e7e540bfda"
+      },
+      {
+        "id": "org.lwjgl:lwjgl-opengl:3.3.1:ce0463d1557b",
+        "version": "3.3.1",
+        "filename": "lwjgl-opengl-3.3.1-natives-windows-arm64.jar",
+        "size": 82445,
+        "sha256": "ce0463d1557baf3a7c19fc1a7b4b633c5d4d6df30252a35aaa50294dde063562"
+      },
+      {
+        "id": "org.lwjgl:lwjgl-opengl:3.3.1:e436d2144f3a",
+        "version": "3.3.1",
+        "filename": "lwjgl-opengl-3.3.1.jar",
+        "size": 921563,
+        "sha256": "e436d2144f3a36fff772fd64233316809b795f390defd4d55660fc686e7c2834"
+      },
+      {
+        "id": "org.lwjgl:lwjgl-stb:3.3.1:64e5ccce2fc7",
+        "version": "3.3.1",
+        "filename": "lwjgl-stb-3.3.1.jar",
+        "size": 112380,
+        "sha256": "64e5ccce2fc7cbcf0c834a5be8642d9e2498ce3fe31c14ff1df741878a3f8121"
+      },
+      {
+        "id": "org.lwjgl:lwjgl-stb:3.3.1:a7f7d7cda44d",
+        "version": "3.3.1",
+        "filename": "lwjgl-stb-3.3.1-natives-windows-arm64.jar",
+        "size": 216848,
+        "sha256": "a7f7d7cda44d627659e80c3cf4868b531d9d6ab81e9dfdd5edca6381a0d1f618"
+      },
+      {
+        "id": "org.lwjgl:lwjgl-stb:3.3.1:bf73e3b51bb4",
+        "version": "3.3.1",
+        "filename": "lwjgl-stb-3.3.1-natives-windows-x86.jar",
+        "size": 225147,
+        "sha256": "bf73e3b51bb430e588bd158e96cca298e98ca12f29dc5cf1445c1f0c5c39ba1b"
+      },
+      {
+        "id": "org.lwjgl:lwjgl-stb:3.3.1:fd6ff7a26e86",
+        "version": "3.3.1",
+        "filename": "lwjgl-stb-3.3.1-natives-windows.jar",
+        "size": 256301,
+        "sha256": "fd6ff7a26e8645af79a0d21ca73e8dc9e473f3402d1333e544a81d21ca5077e7"
+      },
+      {
+        "id": "org.lwjgl:lwjgl-tinyfd:3.3.1:488f51ed95f0",
+        "version": "3.3.1",
+        "filename": "lwjgl-tinyfd-3.3.1.jar",
+        "size": 6767,
+        "sha256": "488f51ed95f0fac48d1d87cb0e3bac08c012dcbf6ef3c1688685d708cdbccd56"
+      },
+      {
+        "id": "org.lwjgl:lwjgl-tinyfd:3.3.1:50e5d0345dcb",
+        "version": "3.3.1",
+        "filename": "lwjgl-tinyfd-3.3.1-natives-windows-arm64.jar",
+        "size": 109139,
+        "sha256": "50e5d0345dcbe004972de853aa54650c77b3f0d0d2056dd5bae0f66528ebe78f"
+      },
+      {
+        "id": "org.lwjgl:lwjgl-tinyfd:3.3.1:ecc715210968",
+        "version": "3.3.1",
+        "filename": "lwjgl-tinyfd-3.3.1-natives-windows.jar",
+        "size": 127930,
+        "sha256": "ecc7152109680597569d9b322045f29c1a7ddeec7182cf69189dae154138b9c8"
+      },
+      {
+        "id": "org.lwjgl:lwjgl-tinyfd:3.3.1:fb244153f2ff",
+        "version": "3.3.1",
+        "filename": "lwjgl-tinyfd-3.3.1-natives-windows-x86.jar",
+        "size": 110042,
+        "sha256": "fb244153f2ff990716d263a859c2e170c7e5db2ea42993831083c79527212517"
+      },
+      {
+        "id": "org.lwjgl:lwjgl:3.3.1:093d13d62a64",
+        "version": "3.3.1",
+        "filename": "lwjgl-3.3.1-natives-windows.jar",
+        "size": 159361,
+        "sha256": "093d13d62a6434bc656bf10a3b37e2530fd9af3b0bc20f8e9545be58659d1443"
+      },
+      {
+        "id": "org.lwjgl:lwjgl:3.3.1:ce3def195e91",
+        "version": "3.3.1",
+        "filename": "lwjgl-3.3.1-natives-windows-arm64.jar",
+        "size": 130064,
+        "sha256": "ce3def195e9174f7df0039bbd555d83ae2a5e2358ee6fa02a27232f5d100f0de"
+      },
+      {
+        "id": "org.lwjgl:lwjgl:3.3.1:cf83f90e32fb",
+        "version": "3.3.1",
+        "filename": "lwjgl-3.3.1.jar",
+        "size": 724243,
+        "sha256": "cf83f90e32fb973ff5edfca4ef35f55ca51bb70a579b6a1f290744f552e8e484"
+      },
+      {
+        "id": "org.lwjgl:lwjgl:3.3.1:e90c1f9cf570",
+        "version": "3.3.1",
+        "filename": "lwjgl-3.3.1-natives-windows-x86.jar",
+        "size": 134695,
+        "sha256": "e90c1f9cf5701aeef2982ebf0905a2b991f4622b8a7f8250eaf0873b5a0a0223"
+      },
+      {
+        "id": "org.openjdk.nashorn:nashorn-core:15.3:efc4f1e61643",
+        "version": "15.3",
+        "filename": "nashorn-core-15.3.jar",
+        "size": 2167288,
+        "sha256": "efc4f1e6164377a6a347dae255cf764fb3e5461cafd859abbdfb39e2dc831b62"
+      },
+      {
+        "id": "org.ow2.asm:asm-analysis:9.5:39f1cf179133",
+        "version": "9.5",
+        "filename": "asm-analysis-9.5.jar",
+        "size": 33978,
+        "sha256": "39f1cf1791335701c3b02cae7b2bc21057ec9a55b2240789cb6d552b2b2c62fa"
+      },
+      {
+        "id": "org.ow2.asm:asm-commons:9.5:72eee9fbafb9",
+        "version": "9.5",
+        "filename": "asm-commons-9.5.jar",
+        "size": 72209,
+        "sha256": "72eee9fbafb9de8d9463f20dd584a48ceeb7e5152ad4c987bfbe17dd4811c9ae"
+      },
+      {
+        "id": "org.ow2.asm:asm-tree:9.5:3c33a6481910",
+        "version": "9.5",
+        "filename": "asm-tree-9.5.jar",
+        "size": 51944,
+        "sha256": "3c33a648191079aeaeaeb7c19a49b153952f9e40fe86fbac5205554ddd9acd94"
+      },
+      {
+        "id": "org.ow2.asm:asm-util:9.5:c467f1bb3c08",
+        "version": "9.5",
+        "filename": "asm-util-9.5.jar",
+        "size": 91076,
+        "sha256": "c467f1bb3c08888f47243e2d475209b34a772d627e44fca06752e18bb038bd74"
+      },
+      {
+        "id": "org.ow2.asm:asm:9.5:b62e84b59807",
+        "version": "9.5",
+        "filename": "asm-9.5.jar",
+        "size": 121863,
+        "sha256": "b62e84b5980729751b0458c534cf1366f727542bb8d158621335682a460f0353"
+      },
+      {
+        "id": "org.slf4j:slf4j-api:2.0.1:b36b99b8d99e",
+        "version": "2.0.1",
+        "filename": "slf4j-api-2.0.1.jar",
+        "size": 61388,
+        "sha256": "b36b99b8d99ea7857554d9b25dfdbd1fb25378c926f7b9e0249983c99335b2c4"
+      },
+      {
+        "id": "org.spongepowered:mixin:0.8.5:ca15a907e4d1",
+        "version": "0.8.5",
+        "filename": "mixin-0.8.5.jar",
+        "size": 1089277,
+        "sha256": "ca15a907e4d1f6b38cefed51d7df96a83347dcfb0bc8ced53111519e991d887d"
+      },
+      {
+        "id": "sbw-mapped-api:0.8.9-bvp.1-mc1.20.1-6effe43:95499891bf57",
+        "version": "0.8.9-bvp.1-mc1.20.1-6effe43",
+        "filename": "superbwarfare-mapped-api.jar",
+        "size": 8701800,
+        "sha256": "95499891bf579c7504d26037b258146f79651322390055ee9bcf1bfa4c11ef1d"
+      },
+      {
+        "id": "sbwmeshloader-mapped:0.1.1:889d91db7061",
+        "version": "0.1.1",
+        "filename": "meshloader-mapped.jar",
+        "size": 15829,
+        "sha256": "889d91db7061313c2580002cc7970e15c2ff735b29837083b07f8bb557cb5908"
+      },
+      {
+        "id": "sbwmeshloader:0.1.1:4dc9ededeb7e",
+        "version": "0.1.1",
+        "filename": "sbwmeshloader-0.1.1.jar",
+        "size": 16069,
+        "sha256": "4dc9ededeb7eb349938d24c6b798f426bea610dfa6871a3a56419b40c17ef1a8"
+      },
+      {
+        "id": "software.bernie.geckolib:geckolib-forge-1.20.1:4.4.6_mapped_parchment_2023.08.13-1.20.1:52ab92091548",
+        "version": "4.4.6_mapped_parchment_2023.08.13-1.20.1",
+        "filename": "geckolib-forge-1.20.1-4.4.6_mapped_parchment_2023.08.13-1.20.1.jar",
+        "size": 996833,
+        "sha256": "52ab92091548b3f890bdcd806d4f1413148a4dca97b2ecc173fabd89f89d4bb1"
+      },
+      {
+        "id": "srg-to-named:1.20.1:b211d4b0be56",
+        "version": "1.20.1",
+        "filename": "output.srg",
+        "size": 20871086,
+        "sha256": "b211d4b0be560832747b378ca3490986e0662d9fd50888903be27b46b22df301"
+      },
+      {
+        "id": "thedarkcolour:kfflang:4.11.0:6c60cdb43dcc",
+        "version": "4.11.0",
+        "filename": "kfflang-4.11.0.jar",
+        "size": 23535,
+        "sha256": "6c60cdb43dcc1b493ae8a3b9f2bbe0d06dc508a4e5d655a80dbdba6c104e2891"
+      },
+      {
+        "id": "thedarkcolour:kfflib:4.11.0:5dfcc74a7f8d",
+        "version": "4.11.0",
+        "filename": "kfflib-4.11.0.jar",
+        "size": 41653,
+        "sha256": "5dfcc74a7f8d90bf3a73227b65745bf22eeaf2a7e94d05a5b0947f609bef1533"
+      },
+      {
+        "id": "thedarkcolour:kffmod:4.11.0:12152537e1f8",
+        "version": "4.11.0",
+        "filename": "kffmod-4.11.0.jar",
+        "size": 69634,
+        "sha256": "12152537e1f8246aa6d88bb78536a85f47b7b39e49a8983558972b5942f41136"
+      },
+      {
+        "id": "top.theillusivec4.curios:curios-forge:5.14.1+1.20.1_mapped_parchment_2023.08.13-1.20.1:9de57c9240c2",
+        "version": "5.14.1+1.20.1_mapped_parchment_2023.08.13-1.20.1",
+        "filename": "curios-forge-5.14.1+1.20.1_mapped_parchment_2023.08.13-1.20.1-api.jar",
+        "size": 110617,
+        "sha256": "9de57c9240c247317cd47ab245bb81f0e2a56c033fb29dafccaf5e21ba837eb3"
+      },
+      {
+        "id": "vazkii.patchouli:Patchouli:1.20.1-84-FORGE_mapped_parchment_2023.08.13-1.20.1:3a0000b8718b",
+        "version": "1.20.1-84-FORGE_mapped_parchment_2023.08.13-1.20.1",
+        "filename": "Patchouli-1.20.1-84-FORGE_mapped_parchment_2023.08.13-1.20.1-api.jar",
+        "size": 41282,
+        "sha256": "3a0000b8718b77e736f15d5e1d6f8f69aa12a66869aa75947b98a117336f2a9f"
+      }
+    ]
+  }
 }

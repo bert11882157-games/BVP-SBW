@@ -18,11 +18,13 @@ data class AircraftCountermeasureDefinition(
     @SerialName("FlareRightPos") @Serializable(with = Vec3Serializer::class)
     val flareRightPos: Vec3 = Vec3(1.0, -0.2, 0.6),
     @SerialName("FlareEjectionSpeed") val flareEjectionSpeed: Double = 0.7,
+    @SerialName("ChaffReleaseTicks") val chaffReleaseTicks: Int = 60,
 ) {
     init {
         require(flaresPerSecond in 2..40)
         require(flaresPerBurst in 2..128 && flaresPerBurst % 2 == 0)
         require(flareEjectionSpeed.isFinite() && flareEjectionSpeed in 0.05..3.0)
+        require(chaffReleaseTicks in 10..1200 && chaffReleaseTicks % 10 == 0)
         require(listOf(flareLeftPos, flareRightPos).all {
             it.x.isFinite() && it.y.isFinite() && it.z.isFinite() && it.lengthSqr() <= 4096.0
         })

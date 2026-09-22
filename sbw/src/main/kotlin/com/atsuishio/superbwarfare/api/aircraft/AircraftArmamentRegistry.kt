@@ -16,7 +16,14 @@ object AircraftArmamentRegistry {
     var aircraft: Map<ResourceLocation, JsonObject> = emptyMap(); private set
     var stores: Map<ResourceLocation, JsonObject> = emptyMap(); private set
     var revision: Long = 0; private set
-    val categories = setOf("LASER_GUIDED", "GUN_POD", "BOMB", "AIR_TO_AIR", "ROCKET_POD", "VISUAL_ONLY")
+    val categories = setOf("LASER_GUIDED", "GUN_POD", "BOMB", "AIR_TO_AIR", "ANTI_RADIATION", "CRUISE", "ROCKET_POD", "VISUAL_ONLY")
+
+    /** Mass is per physical round or pod; a paired station contains two complete loads. */
+    fun loadoutMassKg(definition: JsonObject, choices: Map<String, JsonObject>): Double =
+        mounts(definition).sumOf { mount ->
+            val store = choices[mount["Id"].asString] ?: return@sumOf 0.0
+            (store["MassKg"]?.asDouble ?: 0.0) * mountCapacity(mount, store["Capacity"]?.asInt ?: 1)
+        }
 
     internal fun installDiagnosticFixture(id: ResourceLocation, definition: JsonObject,
         fixtureStores: Map<ResourceLocation, JsonObject>): () -> Unit {
@@ -68,8 +75,33 @@ object AircraftArmamentRegistry {
                 json[key]?.let { require(it.asString.length <= 128 && ResourceLocation.tryParse(it.asString) != null) }
             }
             json["Guidance"]?.let {
-                require(json["Category"]?.asString == "AIR_TO_AIR")
-                requireNotNull(AircraftMissileLauncher.guidance(json))
+                require(json["Category"]?.asString in setOf("AIR_TO_AIR", "ANTI_RADIATION"))
+                val guidance = requireNotNull(AircraftMissileLauncher.guidance(json))
+                require((json["Category"].asString == "ANTI_RADIATION") == (guidance.mode == "ANTI_RADIATION"))
+            }
+            json.getAsJsonObject("Flight")?.let { flight ->
+                require(json.has("Guidance") || json["Category"]?.asString == "CRUISE")
+                for ((key, limits) in mapOf("InitialSpeed" to (0.01..20.0), "MaxSpeed" to (0.1..30.0),
+                    "AccelerationPerTick" to (0.001..2.0), "TurnDegreesPerSecond" to (0.1..360.0),
+                    "Damage" to (1.0..5000.0), "BlastRadius" to (0.0..64.0))) {
+                    val n = flight[key]?.asDouble ?: error("Missing missile $key")
+                    require(n.isFinite() && n in limits)
+                }
+                require(flight["InitialSpeed"].asDouble <= flight["MaxSpeed"].asDouble)
+                if (json["Category"]?.asString == "CRUISE") {
+                    val range = flight["Range"]?.asDouble ?: error("Missing cruise Range")
+                    require(range.isFinite() && range in 16.0..4096.0)
+                }
+            }
+            json["MassKg"]?.let { require(it.asDouble.isFinite() && it.asDouble in 0.1..50000.0) }
+            json.getAsJsonObject("Bomb")?.let { bomb ->
+                require(json["Category"]?.asString == "BOMB")
+                require(bomb["Mode"]?.asString in setOf("DUMB", "LASER", "GPS"))
+                for ((key, range) in mapOf("Gravity" to (0.01..1.0), "DragMultiplier" to (0.0..20.0),
+                    "TurnDegreesPerTick" to (0.0..15.0), "BlastRadius" to (1.0..64.0), "BlastDamage" to (1.0..5000.0))) {
+                    val n = bomb[key]?.asDouble ?: error("Missing bomb $key")
+                    require(n.isFinite() && n in range)
+                }
             }
             json["Capacity"]?.let { require(it.asInt in 1..10000) }
             json["Scale"]?.let { require(it.asDouble.isFinite() && it.asDouble in 0.001..32.0) }
@@ -81,9 +113,11 @@ object AircraftArmamentRegistry {
             require(a.size() <= 64 && a.all { it.asString.length in 1..128 })
         }
         names("BuiltInWeapons"); names("SuspendedWeapons")
+        json["MaxPayloadKg"]?.let { require(it.asDouble.isFinite() && it.asDouble in 0.0..100000.0) }
         val pairs = json.getAsJsonArray("Pairs") ?: JsonArray()
         val singles = json.getAsJsonArray("Singles") ?: JsonArray()
         require(pairs.size() + singles.size() <= 16)
+        require(json["MaxPayloadKg"]?.asDouble != 0.0 || pairs.size() + singles.size() == 0)
         require(pairs.none { it.asJsonObject.has("Position") })
         require(singles.all { it.asJsonObject.has("Position") })
         val ids = mutableSetOf<String>()

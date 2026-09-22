@@ -41,13 +41,13 @@ class AircraftSeekerPresentation {
         return result
     }
     fun sample(seek: AircraftSeekView, seconds: Double): Double {
-        val next = "${seek.weaponId}:${seek.target}"
+        val next = "${seek.weaponId}:${seek.target ?: seek.position}"
         if (identity != next || !seconds.isFinite() || !lastTime.isFinite() || seconds < lastTime) {
             identity = next; lastTime = seconds; convergence = 0.0
         }
         val dt = (seconds - lastTime).coerceIn(0.0, 0.2)
         lastTime = seconds
-        val goal = if (seek.target == null) 0.0 else seek.progress
+        val goal = if (seek.target == null && seek.position == null) 0.0 else seek.progress
         convergence = if (seek.ready) 1.0 else convergence + (goal - convergence) * (1 - exp(-dt * 18))
         return convergence
     }
@@ -60,11 +60,11 @@ class AircraftLockConfirmation {
     private var lastPlayed = Long.MIN_VALUE
     private var missingSince: Long? = null
     fun update(seek: AircraftSeekView?, tick: Long): Boolean {
-        if (seek?.activeAam != true || !seek.ready || seek.target == null) {
+        if (seek?.activeAam != true || !seek.ready || (seek.target == null && seek.position == null)) {
             if (missingSince == null) missingSince = tick
             return false
         }
-        val identity = "${seek.weaponId}:${seek.target}"
+        val identity = "${seek.weaponId}:${seek.target ?: seek.position}"
         val rearmed = missingSince?.let { tick - it >= 10 } == true
         missingSince = null
         val cooled = lastPlayed == Long.MIN_VALUE || tick - lastPlayed >= 20

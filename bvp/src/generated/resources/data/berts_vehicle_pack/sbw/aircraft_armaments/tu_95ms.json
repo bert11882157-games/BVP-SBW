@@ -7,5 +7,136 @@
   ],
   "SuspendedWeapons": [],
   "Pairs": [],
-  "StoreGroups": {}
+  "StoreGroups": {},
+  "MaxPayloadKg": 5000,
+  "Singles": [
+    {
+      "Id": "wing_1",
+      "Name": "Wing station 1",
+      "Position": [
+        -12,
+        2.5,
+        0
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:reference/dumb_bomb_250kg",
+        "berts_vehicle_pack:reference/laser_bomb_250kg",
+        "berts_vehicle_pack:reference/gps_bomb_250kg",
+        "berts_vehicle_pack:reference/dumb_bomb_5000kg",
+        "berts_vehicle_pack:reference/kh55_cruise"
+      ]
+    },
+    {
+      "Id": "wing_2",
+      "Name": "Wing station 2",
+      "Position": [
+        -19,
+        2.5,
+        -1.5
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:reference/dumb_bomb_250kg",
+        "berts_vehicle_pack:reference/laser_bomb_250kg",
+        "berts_vehicle_pack:reference/gps_bomb_250kg",
+        "berts_vehicle_pack:reference/dumb_bomb_5000kg",
+        "berts_vehicle_pack:reference/kh55_cruise"
+      ]
+    },
+    {
+      "Id": "wing_3",
+      "Name": "Wing station 3",
+      "Position": [
+        -26,
+        2.5,
+        -3
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:reference/dumb_bomb_250kg",
+        "berts_vehicle_pack:reference/laser_bomb_250kg",
+        "berts_vehicle_pack:reference/gps_bomb_250kg",
+        "berts_vehicle_pack:reference/dumb_bomb_5000kg",
+        "berts_vehicle_pack:reference/kh55_cruise"
+      ]
+    },
+    {
+      "Id": "wing_4",
+      "Name": "Wing station 4",
+      "Position": [
+        -33,
+        2.5,
+        -4.5
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:reference/dumb_bomb_250kg",
+        "berts_vehicle_pack:reference/laser_bomb_250kg",
+        "berts_vehicle_pack:reference/gps_bomb_250kg",
+        "berts_vehicle_pack:reference/dumb_bomb_5000kg",
+        "berts_vehicle_pack:reference/kh55_cruise"
+      ]
+    },
+    {
+      "Id": "wing_5",
+      "Name": "Wing station 5",
+      "Position": [
+        12,
+        2.5,
+        0
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:reference/dumb_bomb_250kg",
+        "berts_vehicle_pack:reference/laser_bomb_250kg",
+        "berts_vehicle_pack:reference/gps_bomb_250kg",
+        "berts_vehicle_pack:reference/dumb_bomb_5000kg",
+        "berts_vehicle_pack:reference/kh55_cruise"
+      ]
+    },
+    {
+      "Id": "wing_6",
+      "Name": "Wing station 6",
+      "Position": [
+        19,
+        2.5,
+        -1.5
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:reference/dumb_bomb_250kg",
+        "berts_vehicle_pack:reference/laser_bomb_250kg",
+        "berts_vehicle_pack:reference/gps_bomb_250kg",
+        "berts_vehicle_pack:reference/dumb_bomb_5000kg",
+        "berts_vehicle_pack:reference/kh55_cruise"
+      ]
+    },
+    {
+      "Id": "wing_7",
+      "Name": "Wing station 7",
+      "Position": [
+        26,
+        2.5,
+        -3
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:reference/dumb_bomb_250kg",
+        "berts_vehicle_pack:reference/laser_bomb_250kg",
+        "berts_vehicle_pack:reference/gps_bomb_250kg",
+        "berts_vehicle_pack:reference/dumb_bomb_5000kg",
+        "berts_vehicle_pack:reference/kh55_cruise"
+      ]
+    },
+    {
+      "Id": "wing_8",
+      "Name": "Wing station 8",
+      "Position": [
+        33,
+        2.5,
+        -4.5
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:reference/dumb_bomb_250kg",
+        "berts_vehicle_pack:reference/laser_bomb_250kg",
+        "berts_vehicle_pack:reference/gps_bomb_250kg",
+        "berts_vehicle_pack:reference/dumb_bomb_5000kg",
+        "berts_vehicle_pack:reference/kh55_cruise"
+      ]
+    }
+  ]
 }

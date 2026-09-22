@@ -6863,9 +6863,9 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
 
     /** Accepted server countermeasure levels, also synchronized for cockpit/HUD consumers. */
     fun getFlareLevel(): Int = entityData.get(AIRCRAFT_COUNTERMEASURE_LEVELS) and 255
-    fun getChaffLevel(): Int = (entityData.get(AIRCRAFT_COUNTERMEASURE_LEVELS) shr 8) and 15
-    fun getAircraftThreatLevel(): Int = (entityData.get(AIRCRAFT_COUNTERMEASURE_LEVELS) shr 12) and 3
-    fun isChaffEmitting(): Boolean = (entityData.get(AIRCRAFT_COUNTERMEASURE_LEVELS) and (1 shl 14)) != 0
+    fun getChaffLevel(): Int = com.atsuishio.superbwarfare.api.aircraft.AircraftCountermeasureWire.chaff(entityData.get(AIRCRAFT_COUNTERMEASURE_LEVELS))
+    fun getAircraftThreatLevel(): Int = com.atsuishio.superbwarfare.api.aircraft.AircraftCountermeasureWire.threat(entityData.get(AIRCRAFT_COUNTERMEASURE_LEVELS))
+    fun isChaffEmitting(): Boolean = com.atsuishio.superbwarfare.api.aircraft.AircraftCountermeasureWire.emitting(entityData.get(AIRCRAFT_COUNTERMEASURE_LEVELS))
     fun getFlareCooldownTicks(): Int = entityData.get(AIRCRAFT_COUNTERMEASURE_TIMERS) and 511
     fun getChaffCooldownTicks(): Int = (entityData.get(AIRCRAFT_COUNTERMEASURE_TIMERS) shr 9) and 511
     internal fun publishAircraftCountermeasures(levels: Int, timers: Int) {

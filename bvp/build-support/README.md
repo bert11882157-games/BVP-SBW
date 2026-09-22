@@ -8,7 +8,7 @@ needed: BVP defaults to `src/main/java`; development can explicitly pass
 Java 17 and Node.js 20+ are required. The supported entry point is:
 
 ```
-node bvp/build-support/build-release.mjs --tree . --meshloader-manifest /path/dependency.json
+node bvp/build-support/build-release.mjs --tree . --meshloader-manifest /path/dependency.json --compiler-extras-manifest /path/compiler-extras.json
 ```
 
 The external manifest declares one separately source-built `sbwmeshloader` dependency:
@@ -23,6 +23,13 @@ Dependency maintainers can use `--meshloader-source <source-project>` instead of
 hashes, and writes a reusable `meshloader-dependency.json`. Its sources remain outside
 the BVP/SBW tree.
 
+Komodo 1.2.3 and Flywheel 1.0.5 are BVP client compiler/inheritance dependencies.
+`--compiler-extras-manifest` supplies both as hash-pinned JARs with `schema: 1`,
+`kind: "bvp-compiler-extras"` and `dependencies` entries containing `id`, `version`,
+`path`, `size` and `sha256`. The build verifies their bytes, records them in the
+private build proof and includes them in runtime remapping. Keep the dependency
+manifest and binaries outside the public source tree.
+
 `--offline` reuses already-resolved dependencies; `--gradle-home <directory>` selects
 a writable Gradle cache. Gradle's documented `GRADLE_RO_DEP_CACHE` may point at an
 existing cache parent containing `modules-2`. No machine path is embedded in the recipe.
@@ -34,7 +41,8 @@ Comments, literals and canonical files remain unchanged. The matching SBW ForgeG
 remapper maps the external meshloader dependency to compiler names, and the compiled
 BVP candidate back to runtime names. This avoids a second inconsistent Forge ABI.
 
-Runtime remapping also receives the matching named SBW API and named meshloader JAR
+Runtime remapping also receives the matching named SBW API, named meshloader JAR
+and pinned Komodo/Flywheel JARs
 as inheritance libraries. Their hashes are checked before and after remapping and
 again inside the Gradle task. Reverse dependency remapping uses runtime SBW instead.
 Compiler dependencies alone do not contain SBW's own superclass definitions.

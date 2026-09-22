@@ -19,7 +19,7 @@ object AircraftMissileLauncher {
         val range = raw["Range"].asDouble
         val cone = raw["ConeDegrees"].asDouble
         val vulnerability = raw["CountermeasureVulnerability"].asDouble
-        require(mode in setOf("ACTIVE_RADAR", "SEMI_ACTIVE_RADAR", "INFRARED"))
+        require(mode in setOf("ACTIVE_RADAR", "SEMI_ACTIVE_RADAR", "INFRARED", "ANTI_RADIATION"))
         require(ticks.isFinite() && ticks == kotlin.math.floor(ticks) && ticks in 0.0..200.0)
         require(mode != "INFRARED" || ticks >= 1)
         require(range.isFinite() && range in 16.0..4096.0 && cone.isFinite() && cone in 1.0..60.0)
@@ -27,6 +27,7 @@ object AircraftMissileLauncher {
         return Guidance(mode, ticks.toInt(), range, cone, vulnerability)
     }
     private data class Api(val update: java.lang.reflect.Method, val launch: java.lang.reflect.Method,
+        val launchProfile: java.lang.reflect.Method?,
         val clear: java.lang.reflect.Method, val clearChannel: java.lang.reflect.Method, val state: java.lang.reflect.Method)
     private val api by lazy {
         runCatching {
@@ -36,6 +37,10 @@ object AircraftMissileLauncher {
                 cls.getMethod("launch", Entity::class.java, Entity::class.java, String::class.java, Vec3::class.java, Vec3::class.java,
                     String::class.java, Int::class.javaPrimitiveType, Double::class.javaPrimitiveType,
                     Double::class.javaPrimitiveType, Double::class.javaPrimitiveType),
+                runCatching { cls.getMethod("launch", Entity::class.java, Entity::class.java, String::class.java,
+                    Vec3::class.java, Vec3::class.java, String::class.java, Int::class.javaPrimitiveType,
+                    Double::class.javaPrimitiveType, Double::class.javaPrimitiveType, Double::class.javaPrimitiveType,
+                    CompoundTag::class.java) }.getOrNull(),
                 cls.getMethod("clearLock", Entity::class.java), cls.getMethod("clearLock", Entity::class.java, String::class.java),
                 cls.getMethod("getLockState", Entity::class.java, String::class.java))
         }.getOrNull()
@@ -59,7 +64,14 @@ object AircraftMissileLauncher {
         val offset = if (store.has("LaunchOffset")) requireNotNull(AircraftArmamentRegistry.vector(store["LaunchOffset"])) else Vec3.ZERO
         val local = mount.add(offset)
         val position = vehicle.getVehicleTransform(1f).transformPosition(Vector3d(local.x, local.y, local.z))
-        api?.launch?.invoke(null, vehicle, player, channel, Vec3(position.x, position.y, position.z), forward(vehicle),
-            p.mode, p.lockTicks, p.range, p.cone, p.vulnerability) == true
+        val flight = store.getAsJsonObject("Flight")
+        val profile = CompoundTag()
+        for (key in listOf("InitialSpeed", "MaxSpeed", "AccelerationPerTick", "TurnDegreesPerSecond", "Damage", "BlastRadius"))
+            flight?.get(key)?.let { profile.putDouble(key, it.asDouble) }
+        val method = if (profile.isEmpty) api?.launch else api?.launchProfile
+        val args = arrayOf(vehicle, player, channel, Vec3(position.x, position.y, position.z), forward(vehicle),
+            p.mode, p.lockTicks, p.range, p.cone, p.vulnerability)
+        if (method == api?.launchProfile) method?.invoke(null, *args, profile) == true
+        else method?.invoke(null, *args) == true
     }.getOrDefault(false)
 }

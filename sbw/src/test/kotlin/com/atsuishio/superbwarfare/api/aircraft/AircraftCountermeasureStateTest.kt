@@ -4,6 +4,30 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
 class AircraftCountermeasureStateTest {
+    @Test fun `extended chaff continues at three per half second with independent decay and cooldown`() {
+        val state = AircraftCountermeasureState()
+        state.tick(0, false, true, false, true, 4, 12, 100)
+        assertEquals(12, state.tick(60, false, false, false, true, 4, 12, 60).chaffLevel)
+        assertEquals(24, state.tick(100, false, false, false, true, 4, 12, 60).chaffLevel)
+        assertEquals(12, state.tick(130, false, false, false, true, 4, 12, 60).chaffLevel)
+        assertEquals(0, state.tick(160, false, false, false, true, 4, 12, 60).chaffLevel)
+        assertFalse(state.tick(499, false, true, false, true, 4, 12, 60).chaffEmitting)
+        assertTrue(state.tick(500, false, true, false, true, 4, 12, 60).chaffEmitting)
+    }
+
+    @Test fun `long chaff levels do not overwrite threat or emission bits`() {
+        val maximum = AircraftCountermeasureState.chaffLevelAt(1200, 1200)
+        assertEquals(354, maximum)
+        for (threat in 0..2) for (emitting in listOf(false, true)) {
+            val packed = AircraftCountermeasureWire.pack(128, maximum, threat, emitting)
+            assertEquals(128, AircraftCountermeasureWire.flares(packed))
+            assertEquals(maximum, AircraftCountermeasureWire.chaff(packed))
+            assertEquals(threat, AircraftCountermeasureWire.threat(packed))
+            assertEquals(emitting, AircraftCountermeasureWire.emitting(packed))
+        }
+        assertThrows(IllegalArgumentException::class.java) { AircraftCountermeasureState.chaffLevelAt(0, 61) }
+    }
+
     private fun AircraftCountermeasureState.sample(t: Long, flares: Boolean = false,
         chaff: Boolean = false, rate: Int = 4, burst: Int = 12) =
         tick(t, flares, chaff, true, true, rate, burst)
