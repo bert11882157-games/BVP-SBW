@@ -4,13 +4,38 @@ Bert's Vehicle Pack and the matching Superb Warfare fork target Minecraft 1.20.1
 Download the mod JARs from the release assets. GitHub's source-code ZIP and TAR archives are
 source snapshots, not installable mods.
 
+This repository is private: sign in to a GitHub account with repository access before opening
+the links. Draft releases additionally require repository write access.
+
 ## Stable releases
 
 No stable release is currently published in this repository. See [all releases](https://github.com/bert11882157-games/BVP-SBW/releases)
 for the complete release history.
 The `0.9.19beta` source tag currently has no GitHub Release or compiled download assets.
 
-## Tu-95 KH-55 testing build — draft
+## Latest published testing build: Tu-95 KH-55 test 2
+
+[BVP / SBW — Tu-95 KH-55 and jitter testing build 2](https://github.com/bert11882157-games/BVP-SBW/releases/tag/v0.1.1-kh55-test.2)
+was published as a testing prerelease on 2026-09-22 (UTC). It has not
+been promoted to stable.
+
+| Component | Version | Mod JAR | Checksum |
+| --- | --- | --- | --- |
+| Bert's Vehicle Pack | `0.1.1-kh55-test.2` | [BVP JAR](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.1.1-kh55-test.2/berts_vehicle_pack-0.1.1-kh55-test.2.jar) | [SHA-256](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.1.1-kh55-test.2/berts_vehicle_pack-0.1.1-kh55-test.2.jar.sha256) |
+| Superb Warfare fork | `0.8.9-bvp.3` | [SBW JAR](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.1.1-kh55-test.2/superbwarfare-0.8.9-bvp.3-mc1.20.1-6effe43-all.jar) | [SHA-256](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.1.1-kh55-test.2/superbwarfare-0.8.9-bvp.3-mc1.20.1-6effe43-all.jar.sha256) |
+
+Use these two builds with **Fire From Above `1.0.5-bvp.3`** on clients and the server.
+This update includes grouped munition selection, individual bomb-bay targets, the KH-55 model,
+the ground-vehicle jitter fix, a maximum of two cruise launches per second per vehicle, and
+128 Tu-95 flares before its existing automatic reload. See the release notes for validation
+results and remaining in-game checks.
+
+Keep **`sbwmeshloader` `0.1.1`** and the required **Dominions `1.0.11` or newer**, plus
+the pack's other required dependencies. Meshloader is supplied separately by the pack maintainer.
+See the [Fire From Above download list](https://github.com/xenoperk/Fire-From-Above/blob/main/DOWNLOADS.md)
+and [Dominions download list](https://github.com/xenoperk/Dominions/blob/main/DOWNLOADS.md).
+
+## Earlier Tu-95 KH-55 testing build — draft
 
 [BVP / SBW — Tu-95 KH-55 testing build](https://github.com/bert11882157-games/BVP-SBW/releases/tag/untagged-de887257b447b534452b)
 is an unpublished draft for `v0.1.1-kh55-test.1`. Draft releases require repository write access;
