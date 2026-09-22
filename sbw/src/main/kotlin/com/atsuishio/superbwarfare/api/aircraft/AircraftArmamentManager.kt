@@ -155,7 +155,7 @@ object AircraftArmamentManager {
         if (player == null || !pilot(player, vehicle) || !vehicle.isVehicleActionFireAllowed())
             return com.atsuishio.superbwarfare.api.weapon.ShotResult.rejected(com.atsuishio.superbwarfare.api.weapon.ShotRejectionReason.ACTION_BLOCKED, weaponId)
         return try {
-            fire(player, vehicle, JsonObject().apply { addProperty("Pair", key) })
+            fire(player, vehicle, JsonObject().apply { addProperty("Pair", key) }, weaponSlotInput = true)
             publish(vehicle)
             com.atsuishio.superbwarfare.api.weapon.ShotResult(com.atsuishio.superbwarfare.api.weapon.ShotStatus.ACCEPTED,
                 com.atsuishio.superbwarfare.api.weapon.ShotRejectionReason.NONE, weaponId, null, null, null, emptyList())
@@ -378,12 +378,14 @@ object AircraftArmamentManager {
         state.put("Selections", choices); state.putLong("Revision", state.getLong("Revision") + 1)
         state.remove("Fired"); state.remove("LastFire"); AircraftMissileLauncher.clear(vehicle); selectGuns(vehicle)
     }
-    private fun fire(player: ServerPlayer, vehicle: VehicleEntity, body: JsonObject) {
+    private fun fire(player: ServerPlayer, vehicle: VehicleEntity, body: JsonObject,
+                     weaponSlotInput: Boolean = false) {
         val pair = mounts(definition(vehicle)!!).firstOrNull { it["Id"].asString == body["Pair"]?.asString }
         require(pair != null) { "Choose a hardpoint." }
         val id = selection(vehicle)[pair["Id"].asString]?.asString
         require(id != null && allowed(pair, id)) { "No store equipped." }
         val store = AircraftArmamentRegistry.stores[ResourceLocation(id)]!!
+        AircraftStoreControls.requireFireInput(store["Category"]?.asString, weaponSlotInput)
         val airToAir = store["Category"].asString == "AIR_TO_AIR" && store.has("Guidance")
         val coordinate = AircraftCoordinateLauncher.isCoordinate(store["Category"].asString)
         require(store["Category"].asString != "VISUAL_ONLY" && (store["Category"].asString != "AIR_TO_AIR" || airToAir)) { "This store is visual only in this version." }

@@ -79,6 +79,13 @@ data class AircraftArmamentSnapshot(
     val fired: Map<String, Int> = emptyMap(), val seekPair: String = "", val seekStatus: Int = 0,
     val seek: AircraftSeekView? = null,
 ) {
+    /** Coordinate launchers belong exclusively to the normal primary/secondary selectors. */
+    internal fun legacyShortcutMounts(): List<AircraftMountView> = definition.mounts.filter {
+        val store = stores[selections[it.id]] ?: return@filter false
+        com.atsuishio.superbwarfare.api.aircraft.AircraftStoreControls.acceptsLegacyShortcut(
+            store.category)
+    }
+
     /** Launches alternate across the mount's physical positions. Pods stay after firing. */
     fun storePresent(mount: AircraftMountView, position: Int): Boolean {
         val store = stores[selections[mount.id]] ?: return false

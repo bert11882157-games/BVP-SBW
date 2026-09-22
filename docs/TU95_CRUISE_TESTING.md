@@ -55,15 +55,19 @@ source audit of that supplied meshloader binary.
    `I`), choose KH-55 for Belly 1 through Belly 8, and press Apply. Save a preset if desired.
 2. Open the vehicle control terminal. Cycle through the eight weapon slots and assign each
    a different X/Y/Z target, using the coordinate screen or map. Verify all eight markers.
-3. Close the terminal, select the desired Belly weapon using the normal vehicle weapon
-   controls, and fire. Confirm that exactly its missile disappears and flies toward its own
-   saved point. Check release-height retention during heading changes and the later final
+3. Close the terminal, select the desired Belly weapon in the primary or secondary weapon
+   slot, and use that slot's normal fire control. Cruise missiles do not use the legacy `L`
+   pylon-release shortcut. Confirm that exactly its missile disappears and flies toward its
+   captured point while that Belly slot's saved coordinates clear. Check release-height
+   retention during heading changes and the later final
    approach. Repeat while the plane climbs or descends. The terminal has no launch or arming control.
 4. Clear a slot's assignment and attempt to fire it. It must retain its missile and refuse
    the shot. Repeat with an out-of-range point. Changing or clearing another slot must not
    redirect a missile already in flight.
-5. Fire each loaded station once. A ninth launch must fail until a stopped ground refit.
-   Confirm each assignment survives save/reload and that another dimension cannot reuse it.
+5. Select each loaded station explicitly in a weapon slot and fire it once. The spent station
+   remains selected with zero ammunition; holding fire must not release another station's
+   missile. A ninth launch must fail until a stopped ground refit and new target assignment.
+   Confirm unfired assignments survive save/reload and another dimension cannot reuse them.
 6. Exercise the normal flare and chaff controls. Observe the rapid flare burst and chaff
    response to a radar-guided threat. Countermeasure burst limits and cooldowns still apply.
 7. Check that the aircraft does not display itself on radar, that other vehicles use model

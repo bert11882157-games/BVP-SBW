@@ -69,15 +69,17 @@ define two independently targetable launchers:
 This is a section to merge into a complete existing armament definition, not a complete vehicle
 definition. Each mount `Id` is one selectable weapon and one coordinate assignment. A paired
 mount alternates its left/right physical launch positions but shares one assignment. A capacity
-greater than one also shares one assignment across its rounds. Give each tube/missile a separate
+greater than one also uses one assignment at a time. Give each tube/missile a separate
 mount ID when it needs independent coordinates. Each accepted trigger releases one missile.
 
 The vehicle terminal lists equipped coordinate weapon slots. Assign a target to a slot there,
 then select that weapon through the ordinary vehicle weapon controls and fire normally. Terminal
 actions never arm, select, or fire weapons. Assignments persist per vehicle, slot, store identity,
-profile, and dimension; firing does not consume the assignment. Switching selected weapons does
-not move targets. Refitting a different store/profile cannot use the old assignment. Clear or
-replace the target explicitly when needed. The world origin is valid; missing targets are null.
+profile, and dimension until a successful launch clears the fired slot's assignment. The missile
+keeps its own captured coordinates and continues to that point. Failed launches retain the target,
+and other slots keep their assignments. Assign a new target for each later shot from the same slot.
+Switching selected weapons does not move targets. Refitting a different store/profile cannot use
+the old assignment. The world origin is valid; missing targets are null.
 
 ## Flight profiles and launch admission
 

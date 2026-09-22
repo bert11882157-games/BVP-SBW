@@ -24,10 +24,8 @@ object AircraftStoreWeapons {
     fun available(vehicle: VehicleEntity, weapon: String): Boolean {
         val mount = mountId(weapon) ?: return false
         val store = AircraftArmamentManager.equippedStore(vehicle, mount) ?: return false
-        return (AircraftCoordinateLauncher.isCoordinate(store["Category"]?.asString) ||
-            store["Category"]?.asString == "LASER_GUIDED" ||
-            store["Category"]?.asString == "AIR_TO_AIR" && store.has("Guidance")) &&
-            AircraftArmamentManager.mountRemaining(vehicle, mount) > 0
+        return AircraftStoreControls.selectable(store["Category"]?.asString, store.has("Guidance"),
+            AircraftArmamentManager.mountRemaining(vehicle, mount))
     }
     fun data(vehicle: VehicleEntity, weapon: String): GunData? {
         if (weapon == AircraftGunPodGroups.GROUP) return AircraftGunPodGroups.data(vehicle)
