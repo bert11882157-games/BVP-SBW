@@ -2,6 +2,9 @@ package com.atsuishio.superbwarfare.api.vehicle.weapon
 
 import net.minecraft.resources.ResourceLocation
 import com.atsuishio.superbwarfare.data.vehicle.subdata.SeatInfo
+import com.atsuishio.superbwarfare.api.aircraft.AircraftStoreWeapons
+import com.atsuishio.superbwarfare.api.aircraft.AircraftGunPodGroups
+import com.google.gson.JsonObject
 import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
@@ -78,6 +81,41 @@ class VehicleFixedGunBanksTest {
             }
         }
         assertNull(groups.members("Rockets", listOf("Cannon"), listOf("Pod")))
+    }
+
+    @Test fun `store type aliases isolate gun pods while overlapping main fire shares physical schedules`() {
+        fun fitted(type: String, category: String, mount: String, feeds: List<String>) =
+            AircraftStoreWeapons.Equipped(type, JsonObject().apply { addProperty("Category", category) },
+                AircraftStoreWeapons.Member(mount, feeds, 1, 1))
+        val groups = AircraftStoreWeapons.collect(listOf(
+            fitted("test:pod_a", "GUN_POD", "left", listOf("AL", "AR")),
+            fitted("test:pod_a", "GUN_POD", "right", listOf("AL", "AR")),
+            fitted("test:pod_b", "GUN_POD", "outer", listOf("B")),
+            fitted("test:rockets", "ROCKET_POD", "centre", listOf("R")),
+        )) { 1000 to 1000 }.associateBy { it.storeId }
+        val podA = groups.getValue("test:pod_a")
+        val podB = groups.getValue("test:pod_b")
+        val allPods = listOf("AL", "AR", "B")
+        val bankA = AircraftGunPodGroups.members(podA.weaponId, listOf("Cannon"), allPods, podA)!!
+        val bankB = AircraftGunPodGroups.members(podB.weaponId, listOf("Cannon"), allPods, podB)!!
+        assertEquals(listOf("AL", "AR"), bankA)
+        assertEquals(listOf("B"), bankB)
+        assertEquals(2000, podA.ammo, "repeated mappings must not duplicate ammunition")
+        val rockets = groups.getValue("test:rockets")
+        assertNull(AircraftGunPodGroups.members(rockets.weaponId, listOf("Cannon"), allPods, rockets))
+        val main = AircraftGunPodGroups.members("Cannon", listOf("Cannon"), allPods)!!
+        val schedules = linkedMapOf<String, VehicleWeaponScheduler.RuntimeState>()
+        for (channel in main + bankA + bankB) schedules.putIfAbsent(channel, state(850))
+        assertEquals(setOf("Cannon", "AL", "AR", "B"), schedules.keys)
+        val counts = schedules.mapValues { 0 }.toMutableMap()
+        for (tick in 0..20) for ((channel, runtime) in schedules) {
+            runtime.tick(tick, true)
+            while (runtime.canAttempt()) {
+                runtime.consumeCredit(); runtime.recordAccepted(tick)
+                counts[channel] = counts.getValue(channel) + 1
+            }
+        }
+        assertTrue(counts.values.all { it in 14..15 }, "overlapping aliases must retain one 850 RPM feed")
     }
 
     private fun state(rpm: Int): VehicleWeaponScheduler.RuntimeState {

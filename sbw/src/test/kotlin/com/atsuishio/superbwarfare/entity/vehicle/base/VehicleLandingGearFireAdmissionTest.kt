@@ -2,11 +2,21 @@ package com.atsuishio.superbwarfare.entity.vehicle.base
 
 import com.atsuishio.superbwarfare.data.gun.DefaultGunData
 import kotlinx.serialization.json.Json
+import net.minecraft.SharedConstants
+import net.minecraft.server.Bootstrap
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.objectweb.asm.*
 
 class VehicleLandingGearFireAdmissionTest {
+    companion object {
+        @JvmStatic @BeforeAll fun bootstrap() {
+            SharedConstants.tryDetectVersion()
+            Bootstrap.bootStrap()
+        }
+    }
+
     @Test
     fun `default is disabled and explicit serialized opt in round trips`() {
         assertFalse(DefaultGunData().requiresRetractedLandingGear)

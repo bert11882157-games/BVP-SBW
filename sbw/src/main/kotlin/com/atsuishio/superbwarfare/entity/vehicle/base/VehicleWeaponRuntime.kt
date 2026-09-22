@@ -45,7 +45,7 @@ internal class VehicleWeaponRuntime(
     ): ShotResult {
         val serverLevel = vehicle.level() as? ServerLevel
         val selectedName = weaponName ?: vehicle.getGunName(vehicle.getSeatIndex(living))
-        if (selectedName != null && com.atsuishio.superbwarfare.api.aircraft.AircraftStoreWeapons.mountId(selectedName) != null) {
+        if (selectedName != null && com.atsuishio.superbwarfare.api.aircraft.AircraftStoreWeapons.isChannel(selectedName)) {
             val rejected = when {
                 vehicle.isWreck -> ShotRejectionReason.WRECKED
                 serverLevel == null -> ShotRejectionReason.NOT_SERVER_AUTHORITY

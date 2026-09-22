@@ -26,6 +26,7 @@ object AircraftTerminalAccess {
         val definition = AircraftArmamentManager.definition(vehicle) ?: return result
         val selected = listOfNotNull(vehicle.getGunName(0),
             vehicle.getSecondaryWeaponIndex(0)?.let { vehicle.getGunName(0, it) })
+        val selectedMounts = selected.mapNotNull { AircraftStoreWeapons.group(vehicle, it)?.next?.mountId }.toSet()
         val slots = ListTag()
         for (mount in AircraftArmamentRegistry.mounts(definition)) {
             val id = mount["Id"].asString
@@ -39,7 +40,7 @@ object AircraftTerminalAccess {
                 putString("Store", storeId)
                 putString("Profile", profile)
                 putBoolean("CruiseOnly", store["Category"].asString == "CRUISE_MISSILE")
-                putBoolean("Selected", AircraftStoreWeapons.PREFIX + id in selected)
+                putBoolean("Selected", id in selectedMounts)
             })
         }
         result.put("Slots", slots)

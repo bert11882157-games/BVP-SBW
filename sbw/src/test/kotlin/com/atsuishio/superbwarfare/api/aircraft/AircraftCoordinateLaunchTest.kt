@@ -10,7 +10,7 @@ class AircraftCoordinateLaunchTest {
         "CoordinateProfile":"ballistics:basic","Capacity":1,"LaunchDirection":[0,1,0]
     }""").asJsonObject
 
-    @Test fun `identical coordinate stores keep their individual slot labels in weapon controls`() {
+    @Test fun `identical coordinate stores keep individual slot labels for terminal assignments`() {
         val left = JsonParser.parseString("""{"Id":"belly_3","Name":"Belly 3"}""").asJsonObject
         val right = JsonParser.parseString("""{"Id":"belly_4","Name":"Belly 4"}""").asJsonObject
         for (category in listOf("CRUISE_MISSILE", "COORDINATE_MISSILE")) {
@@ -94,5 +94,43 @@ class AircraftCoordinateLaunchTest {
         assertEquals(2, used); assertEquals(2, revision)
         assertThrows(IllegalArgumentException::class.java) { fire(120) }
         assertEquals(4, events.size)
+    }
+
+    @Test fun `cruise cadence spans primary secondary and switched pylons without consuming rejected targets`() {
+        val used = IntArray(4)
+        val assigned = BooleanArray(4) { true }
+        var lastCruise: Long? = null
+        var inserted = 0
+        fun fire(slot: Int, now: Long, insertionSucceeds: Boolean = true) =
+            AircraftStoreLaunchTransaction.execute(used[slot], 1, null, now, lastCruise,
+                launch = {
+                    require(insertionSucceeds) { "Entity insertion failed" }
+                    assertTrue(assigned[slot])
+                    assigned[slot] = false
+                    inserted++
+                }, commit = { used[slot]++; lastCruise = now })
+
+        fire(0, 0)
+        for (tick in listOf(0L, 1L, 9L)) {
+            assertThrows(IllegalArgumentException::class.java) { fire(1, tick) }
+            assertTrue(assigned[1])
+            assertEquals(0, used[1])
+        }
+        fire(1, 10)
+        assertThrows(IllegalArgumentException::class.java) { fire(2, 19) }
+        assertThrows(IllegalArgumentException::class.java) { fire(2, 20, false) }
+        assertEquals(10L, lastCruise)
+        assertTrue(assigned[2])
+        assertEquals(0, used[2])
+        fire(3, 20)
+        assertEquals(3, inserted)
+        assertArrayEquals(intArrayOf(1, 1, 0, 1), used)
+        assertEquals(20L, lastCruise)
+
+        // Separate vehicles keep their own cadence; non-cruise stores omit the shared clock.
+        var independent = false
+        AircraftStoreLaunchTransaction.execute(0, 1, null, 20,
+            launch = { independent = true }, commit = {})
+        assertTrue(independent)
     }
 }

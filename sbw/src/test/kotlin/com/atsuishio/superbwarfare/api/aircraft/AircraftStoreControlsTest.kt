@@ -1,68 +1,36 @@
 package com.atsuishio.superbwarfare.api.aircraft
 
-import com.atsuishio.superbwarfare.api.vehicle.weapon.VehicleWeaponScheduleProfile
-import com.atsuishio.superbwarfare.api.vehicle.weapon.VehicleWeaponScheduler
 import com.atsuishio.superbwarfare.client.aircraft.AircraftArmamentSnapshot
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleWeaponSlots
 import com.google.gson.JsonParser
-import net.minecraft.resources.ResourceLocation
+
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
 class AircraftStoreControlsTest {
-    @Test fun `coordinate launchers stay in both weapon slots after depletion`() {
-        for (category in listOf("CRUISE_MISSILE", "COORDINATE_MISSILE")) {
+    @Test fun `munitions groups remain in independent weapon slots when ammunition is exhausted`() {
+        for (category in listOf("CRUISE_MISSILE", "COORDINATE_MISSILE", "LASER_GUIDED", "AIR_TO_AIR")) {
             val used = IntArray(3)
-            fun valid() = listOf(used.indices.filter {
-                AircraftStoreControls.selectable(category, false, 1 - used[it])
-            })
-            var selected = VehicleWeaponSlots.normalize(valid(), listOf(0), listOf(1))
-            val primary = trigger()
-            val secondary = trigger()
-            val launched = mutableListOf<Int>()
-
-            fun attempt(slot: Int, now: Long) = AircraftStoreLaunchTransaction.execute(
-                used[slot], 1, null, now,
-                launch = { launched += slot }, commit = { used[slot]++ })
-
-            primary.tick(0, true)
-            assertTrue(primary.canAttempt())
-            primary.consumeCredit()
-            attempt(selected.primary[0], 0)
-            primary.recordAccepted(0)
-            selected = VehicleWeaponSlots.normalize(valid(), selected.primary, selected.secondary)
-            assertEquals(VehicleWeaponSlots(listOf(0), listOf(1)), selected)
-
-            for (tick in 1..40) {
-                primary.tick(tick, true)
-                assertFalse(primary.canAttempt(), "holding primary must not release another pylon")
-                assertEquals(listOf(0, 1, 2), valid()[0])
-            }
-            assertEquals(listOf(0), launched)
-
-            // A fresh press on the depleted primary still addresses that same empty launcher.
-            primary.releaseEdge()
-            primary.tick(41, true)
-            assertTrue(primary.canAttempt())
-            assertThrows(IllegalArgumentException::class.java) { attempt(selected.primary[0], 41) }
-            assertEquals(listOf(0), launched)
-            assertArrayEquals(intArrayOf(1, 0, 0), used)
-
-            // The independent secondary and an explicitly selected next primary remain usable.
-            secondary.tick(42, true)
-            assertTrue(secondary.canAttempt())
-            secondary.consumeCredit()
-            attempt(selected.secondary[0], 42)
-            secondary.recordAccepted(42)
-            selected = VehicleWeaponSlots.normalize(valid(), selected.primary, selected.secondary)
-            assertEquals(VehicleWeaponSlots(listOf(0), listOf(1)), selected)
-            selected = selected.select(valid(), 0, 2, 1)!!
-            attempt(selected.primary[0], 43)
-            assertEquals(listOf(0, 1, 2), launched)
-            assertArrayEquals(intArrayOf(1, 1, 1), used)
+            fun groups() = AircraftStoreWeapons.collect(used.indices.map { index ->
+                AircraftStoreWeapons.Equipped(if (index < 2) "test:first" else "test:second",
+                    JsonParser.parseString("""{"Category":"$category","Guidance":{}}""").asJsonObject,
+                    AircraftStoreWeapons.Member("mount_$index", emptyList(), 1, 1 - used[index]))
+            }) { null }
+            fun valid() = listOf(groups().indices.toList())
+            var slots = VehicleWeaponSlots.normalize(valid(), listOf(0), listOf(1))
+            assertEquals(2, groups().size)
+            val identities = groups().map { it.weaponId }
+            used[0] = 1; used[1] = 1
+            slots = VehicleWeaponSlots.normalize(valid(), slots.primary, slots.secondary)
+            assertEquals(VehicleWeaponSlots(listOf(0), listOf(1)), slots)
+            assertEquals(identities, groups().map { it.weaponId })
+            assertEquals(listOf(0, 1), groups().map { it.ammo })
+            used[2] = 1
+            slots = VehicleWeaponSlots.normalize(valid(), slots.primary, slots.secondary)
+            assertEquals(VehicleWeaponSlots(listOf(0), listOf(1)), slots)
+            assertEquals(identities, groups().map { it.weaponId })
         }
     }
-
     @Test fun `only normal weapon slot inputs may dispatch coordinate stores`() {
         for (category in listOf("CRUISE_MISSILE", "COORDINATE_MISSILE")) {
             assertDoesNotThrow { AircraftStoreControls.requireFireInput(category, true) }
@@ -75,9 +43,9 @@ class AircraftStoreControlsTest {
             assertDoesNotThrow { AircraftStoreControls.requireFireInput(category, false) }
         }
         assertTrue(AircraftStoreControls.selectable("LASER_GUIDED", false, 1))
-        assertFalse(AircraftStoreControls.selectable("LASER_GUIDED", false, 0))
+        assertTrue(AircraftStoreControls.selectable("LASER_GUIDED", false, 0))
         assertTrue(AircraftStoreControls.selectable("AIR_TO_AIR", true, 1))
-        assertFalse(AircraftStoreControls.selectable("AIR_TO_AIR", true, 0))
+        assertTrue(AircraftStoreControls.selectable("AIR_TO_AIR", true, 0))
         assertFalse(AircraftStoreControls.selectable("AIR_TO_AIR", false, 1))
         assertFalse(AircraftStoreControls.selectable("VISUAL_ONLY", false, 1))
     }
@@ -109,8 +77,4 @@ class AircraftStoreControlsTest {
         assertTrue(shortcuts().isEmpty(), "empty pylons must not mask the coordinate control hint")
     }
 
-    private fun trigger() = VehicleWeaponScheduler.RuntimeState(VehicleWeaponScheduleProfile(
-        ResourceLocation("test", "coordinate_controls"), 120, 120, 1, 1,
-        repeatWhileHeld = false, releaseGraceTicks = 0,
-    ))
 }

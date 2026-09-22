@@ -6,11 +6,10 @@ internal object AircraftStoreControls {
         "Select this missile as your primary or secondary weapon, then use that weapon's fire control."
 
     fun selectable(category: String?, guidedAirToAir: Boolean, remaining: Int): Boolean {
-        // Keep an empty coordinate launcher in its equipped slot. Removing it here would let a
-        // held trigger move to another pylon, whose separately assigned target may be different.
-        if (AircraftCoordinateLauncher.isCoordinate(category)) return remaining >= 0
-        return (category == "LASER_GUIDED" || category == "AIR_TO_AIR" && guidedAirToAir) &&
-            remaining > 0
+        // A depleted type retains its identity; the scheduler's held/semi state must not move
+        // to a different weapon just because the final member consumed its ammunition.
+        return remaining >= 0 && (AircraftCoordinateLauncher.isCoordinate(category) ||
+            category == "LASER_GUIDED" || category == "AIR_TO_AIR" && guidedAirToAir)
     }
 
     fun acceptsLegacyShortcut(category: String?): Boolean =

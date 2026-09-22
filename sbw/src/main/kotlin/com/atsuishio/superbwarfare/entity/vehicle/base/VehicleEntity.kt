@@ -324,7 +324,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
     fun getGunData(name: String) = this.gunDataMap[name]
         ?: com.atsuishio.superbwarfare.api.aircraft.AircraftStoreWeapons.data(this, name)
 
-    /** Stable native order plus authored mount channels; both weapon slots use this list. */
+    /** Stable native order plus munition-type aliases; both weapon slots use this list. */
     fun getWeaponIds(seatIndex: Int): List<String> =
         com.atsuishio.superbwarfare.api.aircraft.AircraftStoreWeapons.ids(
             this, seatIndex, getSeat(seatIndex)?.weapons() ?: emptyList())
@@ -356,8 +356,9 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
 
     fun modifyGunData(name: String?, consumer: Consumer<GunData>) {
         if (name == null) return
-        if (name == com.atsuishio.superbwarfare.api.aircraft.AircraftGunPodGroups.GROUP) {
-            com.atsuishio.superbwarfare.api.aircraft.AircraftGunPodGroups.equipped(this).forEach { modifyGunData(it, consumer) }
+        val channels = com.atsuishio.superbwarfare.api.aircraft.AircraftGunPodGroups.mutationChannels(this, name)
+        if (channels != null) {
+            channels.forEach { modifyGunData(it, consumer) }
             return
         }
 

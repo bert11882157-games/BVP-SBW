@@ -7,51 +7,59 @@
   "Singles": [
     {
       "Id": "belly_1",
-      "Name": "Belly 1",
-      "Position": [-0.65, 2.05, 8],
-      "AllowedStores": ["berts_vehicle_pack:kh55"]
+      "Name": "Bay 1",
+      "Position": [-0.55, 4, -7.8],
+      "AllowedStores": ["berts_vehicle_pack:kh55"],
+      "StoreGroups": {"berts_vehicle_pack:kh55": []}
     },
     {
       "Id": "belly_2",
-      "Name": "Belly 2",
-      "Position": [0.65, 2.05, 8],
-      "AllowedStores": ["berts_vehicle_pack:kh55"]
+      "Name": "Bay 2",
+      "Position": [-0.389, 3.611, -7.8],
+      "AllowedStores": ["berts_vehicle_pack:kh55"],
+      "StoreGroups": {"berts_vehicle_pack:kh55": []}
     },
     {
       "Id": "belly_3",
-      "Name": "Belly 3",
-      "Position": [-0.65, 2.05, 3.5],
-      "AllowedStores": ["berts_vehicle_pack:kh55"]
+      "Name": "Bay 3",
+      "Position": [0, 3.45, -7.8],
+      "AllowedStores": ["berts_vehicle_pack:kh55"],
+      "StoreGroups": {"berts_vehicle_pack:kh55": []}
     },
     {
       "Id": "belly_4",
-      "Name": "Belly 4",
-      "Position": [0.65, 2.05, 3.5],
-      "AllowedStores": ["berts_vehicle_pack:kh55"]
+      "Name": "Bay 4",
+      "Position": [0.389, 3.611, -7.8],
+      "AllowedStores": ["berts_vehicle_pack:kh55"],
+      "StoreGroups": {"berts_vehicle_pack:kh55": []}
     },
     {
       "Id": "belly_5",
-      "Name": "Belly 5",
-      "Position": [-0.65, 2.05, -1],
-      "AllowedStores": ["berts_vehicle_pack:kh55"]
+      "Name": "Bay 5",
+      "Position": [0.55, 4, -7.8],
+      "AllowedStores": ["berts_vehicle_pack:kh55"],
+      "StoreGroups": {"berts_vehicle_pack:kh55": []}
     },
     {
       "Id": "belly_6",
-      "Name": "Belly 6",
-      "Position": [0.65, 2.05, -1],
-      "AllowedStores": ["berts_vehicle_pack:kh55"]
+      "Name": "Bay 6",
+      "Position": [0.389, 4.389, -7.8],
+      "AllowedStores": ["berts_vehicle_pack:kh55"],
+      "StoreGroups": {"berts_vehicle_pack:kh55": []}
     },
     {
       "Id": "belly_7",
-      "Name": "Belly 7",
-      "Position": [-0.65, 2.05, -5.5],
-      "AllowedStores": ["berts_vehicle_pack:kh55"]
+      "Name": "Bay 7",
+      "Position": [0, 4.55, -7.8],
+      "AllowedStores": ["berts_vehicle_pack:kh55"],
+      "StoreGroups": {"berts_vehicle_pack:kh55": []}
     },
     {
       "Id": "belly_8",
-      "Name": "Belly 8",
-      "Position": [0.65, 2.05, -5.5],
-      "AllowedStores": ["berts_vehicle_pack:kh55"]
+      "Name": "Bay 8",
+      "Position": [-0.389, 4.389, -7.8],
+      "AllowedStores": ["berts_vehicle_pack:kh55"],
+      "StoreGroups": {"berts_vehicle_pack:kh55": []}
     }
   ],
   "StoreGroups": {},

@@ -33,9 +33,21 @@ object AircraftGunPodGroups {
         val definition = AircraftArmamentManager.definition(vehicle) ?: return null
         if (AircraftArmamentManager.gunPodChannels(vehicle, false).isEmpty()) return null
         val builtIn = definition.getAsJsonArray("BuiltInWeapons")?.map { it.asString } ?: emptyList()
-        return members(selection.weaponName, builtIn, equipped(vehicle))
+        return members(selection.weaponName, builtIn, equipped(vehicle),
+            AircraftStoreWeapons.group(vehicle, selection.weaponName))
     }
-    internal fun members(trigger: String, builtIn: List<String>, pods: List<String>): List<String>? = when {
+
+    /** Alias mutations such as reload/fire-mode changes belong to the underlying native feeds. */
+    fun mutationChannels(vehicle: VehicleEntity, weapon: String): List<String>? {
+        if (weapon == GROUP) return equipped(vehicle)
+        val group = AircraftStoreWeapons.group(vehicle, weapon) ?: return null
+        return if (group.virtual) emptyList() else group.nativeWeapons
+    }
+    internal fun members(trigger: String, builtIn: List<String>, pods: List<String>,
+                         storeGroup: AircraftStoreWeapons.Group? = null): List<String>? = when {
+        storeGroup != null -> storeGroup.nativeWeapons.takeIf {
+            storeGroup.store["Category"]?.asString == "GUN_POD" && it.isNotEmpty()
+        }
         trigger == GROUP -> pods.distinct()
         trigger in builtIn -> (builtIn + pods).distinct()
         else -> null

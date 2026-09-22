@@ -6,14 +6,13 @@ import com.example.sbwmeshloader.core.PolyMeshModel;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.resources.ResourceLocation;
-import org.joml.Quaternionf;
 
 /** Optional client presentation entry point for FFA's vehicle-launched missile tracks. */
 public final class BvpCoordinateMissileRenderer {
     private static final ResourceLocation MODEL = new ResourceLocation(
-            "berts_vehicle_pack", "custom_geo/projectiles/kh29l.geo.json");
+            "berts_vehicle_pack", "custom_geo/projectiles/kh55.geo.json");
     private static final ResourceLocation TEXTURE = new ResourceLocation(
-            "berts_vehicle_pack", "textures/aircraft_stores/kh29l.png");
+            "berts_vehicle_pack", "textures/aircraft_stores/kh55.png");
     private static final MissileAsset KH55 = new MissileAsset();
 
     private BvpCoordinateMissileRenderer() { }
@@ -28,9 +27,7 @@ public final class BvpCoordinateMissileRenderer {
         if (mesh == null) return false;
         pose.m_85836_();
         try {
-            // The reused KH-29 mesh has its nose at +Z and nozzle 1.95 blocks behind its centre.
-            pose.m_85837_(0.0, 1.95, 0.0);
-            pose.m_252781_(new Quaternionf().rotationX((float) (-Math.PI / 2.0)));
+            // The authored flight mesh already uses FFA's +Y nose direction and nozzle origin.
             mesh.renderCutoutOnly(pose, buffers, TEXTURE, light, 1.0F);
             mesh.renderTranslucentOnly(pose, buffers, TEXTURE, light, 1.0F);
         } finally {
@@ -45,7 +42,7 @@ public final class BvpCoordinateMissileRenderer {
         private boolean texturePresent;
 
         private MissileAsset() {
-            super(null, MODEL, TEXTURE, "KH-55 temporary KH-29 model");
+            super(null, MODEL, TEXTURE, "KH-55");
         }
 
         private PolyMeshModel ready() {
