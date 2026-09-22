@@ -1,0 +1,126 @@
+{
+  "Combat": {
+    "WeaponId": "berts_vehicle_pack:m1a2_abrams_sep_v2/passengermachinegun",
+    "RoundId": "berts_vehicle_pack:western_127_m20_api_t_2",
+    "MunitionType": "berts_vehicle_pack:bullet",
+    "DamageType": "berts_vehicle_pack:kinetic",
+    "CaliberMm": 12.7,
+    "DiameterMm": 12.7,
+    "HullDamageClass": "DEFAULT",
+    "HullDamage": 8,
+    "ModuleDamage": 4,
+    "AmmoRackDamage": 1,
+    "PenetrationMm": 29,
+    "PenetrationCurve": {
+      "DistancesMetres": [
+        10,
+        100,
+        500,
+        1000,
+        1500,
+        2000
+      ],
+      "PenetrationMm": [
+        29,
+        27,
+        19,
+        12,
+        7,
+        5
+      ]
+    },
+    "RicochetCurve": {
+      "IncidenceAnglesDegrees": [
+        0,
+        47,
+        49,
+        50,
+        60,
+        65,
+        90
+      ],
+      "Probability": [
+        0,
+        0,
+        0.005,
+        0.35,
+        0.6,
+        1,
+        1
+      ]
+    },
+    "Tandem": false
+  },
+  "VisualProfile": "berts_vehicle_pack:scaled_bullet",
+  "ImpactVisualProfile": "berts_vehicle_pack:autocannon_ap",
+  "MotionSync": "INHERIT",
+  "Collision": {
+    "Width": 0.006,
+    "Height": 0.006
+  },
+  "Luminance": 8,
+  "TrailMode": "DEFAULT",
+  "RenderScale": 1,
+  "Extensions": {
+    "berts_vehicle_pack:projectile_effect_v1": {
+      "Schema": 1,
+      "Trail": {
+        "Emitter": {
+          "Trail": "berts_vehicle_pack:tracer_v2"
+        },
+        "Phases": [
+          {
+            "Name": "SUSTAIN",
+            "StartTick": 0,
+            "EndTickExclusive": 2147483647,
+            "Flame": false,
+            "Smoke": false,
+            "Scale": 1,
+            "Orbit": null
+          }
+        ],
+        "SpacingBlocks": null,
+        "RatePerTick": 1,
+        "LifetimeTicks": {
+          "Trail": 3
+        },
+        "WidthBlocks": 0.025,
+        "AttachmentOffset": [
+          0,
+          0,
+          0
+        ],
+        "VelocityInheritance": 0,
+        "RandomScale": [
+          1,
+          1
+        ],
+        "Tracer": {
+          "Enabled": true,
+          "ColorRgb": [
+            255,
+            32,
+            32
+          ],
+          "EveryNthShot": 1,
+          "LengthBlocks": 4,
+          "WidthBlocks": 0.025,
+          "Opacity": 0.9,
+          "LifetimeTicks": 3,
+          "Core": {
+            "WidthScale": 1,
+            "OpacityScale": 1
+          },
+          "Glow": {
+            "WidthScale": 4,
+            "OpacityScale": 0.25
+          }
+        }
+      },
+      "Impact": {
+        "Explosion": "none",
+        "WaterExplosion": "same"
+      }
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "ID": "berts_vehicle_pack:mi24v",
+  "Model": {
+    "GeometryBackend": "berts_vehicle_pack:vehicle/mi24v",
+    "Model": "berts_vehicle_pack:geo/native_fallback/mi24v.geo.json",
+    "Texture": "berts_vehicle_pack:textures/entity/mi24v.png",
+    "WreckTexture": "berts_vehicle_pack:textures/entity_dead/mi24v.png"
+  },
+  "MouseSpeed": [
+    0.2,
+    0.2
+  ]
+}

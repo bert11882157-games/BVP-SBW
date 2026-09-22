@@ -1,0 +1,31 @@
+{
+  "ID": "berts_vehicle_pack:vbci",
+  "Model": {
+    "GeometryBackend": "berts_vehicle_pack:vehicle/vbci",
+    "Model": "berts_vehicle_pack:geo/native_fallback/vbci.geo.json",
+    "Texture": "berts_vehicle_pack:textures/entity/vbci.png",
+    "WreckTexture": "berts_vehicle_pack:textures/entity_dead/vbci.png"
+  },
+  "MouseSpeed": [
+    0.2,
+    0.2
+  ],
+  "RunningGear": {
+    "Type": "WHEELED",
+    "RoadWheelCount": 4,
+    "WheelBones": {
+      "Left": [
+        "wheelL0",
+        "wheelL1",
+        "wheelL2",
+        "wheelL3"
+      ],
+      "Right": [
+        "wheelR0",
+        "wheelR1",
+        "wheelR2",
+        "wheelR3"
+      ]
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "ID": "berts_vehicle_pack:tow_tripod",
+  "Model": {
+    "GeometryBackend": "berts_vehicle_pack:vehicle/tow_tripod",
+    "Model": "berts_vehicle_pack:geo/native_fallback/tow_tripod.geo.json",
+    "Texture": "berts_vehicle_pack:textures/entity/tow_tripod.png",
+    "WreckTexture": "berts_vehicle_pack:textures/entity_dead/tow_tripod.png"
+  },
+  "MouseSpeed": [
+    0.2,
+    0.2
+  ]
+}

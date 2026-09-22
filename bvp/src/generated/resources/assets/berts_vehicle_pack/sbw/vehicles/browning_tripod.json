@@ -1,0 +1,13 @@
+{
+  "ID": "berts_vehicle_pack:browning_tripod",
+  "Model": {
+    "GeometryBackend": "berts_vehicle_pack:vehicle/browning_tripod",
+    "Model": "berts_vehicle_pack:geo/native_fallback/browning_tripod.geo.json",
+    "Texture": "berts_vehicle_pack:textures/entity/browning_tripod.png",
+    "WreckTexture": "berts_vehicle_pack:textures/entity_dead/browning_tripod.png"
+  },
+  "MouseSpeed": [
+    0.2,
+    0.2
+  ]
+}

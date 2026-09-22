@@ -1,0 +1,13 @@
+{
+  "ID": "berts_vehicle_pack:milan_tripod",
+  "Model": {
+    "GeometryBackend": "berts_vehicle_pack:vehicle/milan_tripod",
+    "Model": "berts_vehicle_pack:geo/native_fallback/milan_tripod.geo.json",
+    "Texture": "berts_vehicle_pack:textures/entity/milan_tripod.png",
+    "WreckTexture": "berts_vehicle_pack:textures/entity_dead/milan_tripod.png"
+  },
+  "MouseSpeed": [
+    0.2,
+    0.2
+  ]
+}

@@ -1,0 +1,32 @@
+# Local environment, editors, caches, and build products
+.env
+.env.*
+!.env.example
+.local/
+.idea/
+.vscode/
+.gradle/
+.kotlin/
+.cache/
+build/
+out/
+bin/
+target/
+run/
+run-data/
+logs/
+*.iml
+*.class
+*.jar
+*.zip
+*.7z
+*.log
+*.tmp
+*.bak
+*.args
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Required build infrastructure; do not exclude these with dependency JARs.
+!**/gradle/wrapper/gradle-wrapper.jar

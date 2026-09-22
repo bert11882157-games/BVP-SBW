@@ -1,0 +1,324 @@
+package com.atsuishio.superbwarfare.event
+
+import com.atsuishio.superbwarfare.client.MouseMovementHandler
+import com.atsuishio.superbwarfare.client.VehicleAimPresentationController
+import com.atsuishio.superbwarfare.client.camera.VehicleFreeCameraController
+import com.atsuishio.superbwarfare.client.camera.VehicleOpticalZoomController
+import com.atsuishio.superbwarfare.config.client.ControlConfig
+import com.atsuishio.superbwarfare.data.gun.GunData
+import com.atsuishio.superbwarfare.data.vehicle.subdata.EngineType
+import com.atsuishio.superbwarfare.data.vehicle.subdata.VehicleType
+import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity
+import com.atsuishio.superbwarfare.init.ModItems
+import com.atsuishio.superbwarfare.init.ModMobEffects
+import com.atsuishio.superbwarfare.item.gun.GunItem
+import com.atsuishio.superbwarfare.network.message.send.MouseMoveMessage
+import com.atsuishio.superbwarfare.tools.*
+import net.minecraft.client.CameraType
+import net.minecraft.util.Mth
+import net.minecraft.world.phys.Vec2
+import net.minecraftforge.api.distmarker.Dist
+import net.minecraftforge.client.event.ViewportEvent
+import net.minecraftforge.event.TickEvent
+import net.minecraftforge.eventbus.api.SubscribeEvent
+import net.minecraftforge.fml.common.Mod
+import kotlin.math.abs
+
+@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE, value = [Dist.CLIENT])
+object ClientMouseHandler {
+    @JvmField
+    var posO: Vec2 = Vec2(0f, 0f)
+
+    @JvmField
+    var posN: Vec2 = Vec2(0f, 0f)
+
+    @JvmField
+    var lerpSpeedX: Double = 0.0
+
+    @JvmField
+    var lerpSpeedY: Double = 0.0
+
+    @JvmField
+    var speedX: Double = 0.0
+
+    @JvmField
+    var speedY: Double = 0.0
+
+    @JvmField
+    var freeCameraPitch: Double = 0.0
+
+    @JvmField
+    var freeCameraYaw: Double = 0.0
+
+    @JvmField
+    var custom3pDistance: Double = 0.0
+
+    @JvmField
+    var custom3pDistanceLerp: Double = 0.0
+
+    @JvmField
+    var mouseXMoveTick: Double = 0.0
+
+    @JvmField
+    var mouseYMoveTick: Double = 0.0
+
+    @SubscribeEvent
+    fun handleClientTick(event: TickEvent.ClientTickEvent) {
+        if (event.phase == TickEvent.Phase.START) return
+        VehicleFreeCameraController.tick(localPlayer)
+        VehicleOpticalZoomController.tick(localPlayer)
+        if (VehicleFreeCameraController.consumeMouseReset()) {
+            resetMouseSampling()
+        }
+        val player = localPlayer
+        if (player == null) {
+            VehicleAimPresentationController.tick(null)
+            return
+        }
+
+        VehicleAimPresentationController.tick(player.vehicle as? VehicleEntity)
+
+        posO = posN
+        posN = MouseMovementHandler.getMousePos()
+        val speed = 256f
+        val moveSpeedX = Mth.clamp(posN.x - posO.x, -speed, speed)
+        val moveSpeedY = Mth.clamp(posN.y - posO.y, -speed, speed)
+
+        val heldFreeCameraVehicle = player.vehicle as? VehicleEntity
+        if (heldFreeCameraVehicle != null && VehicleFreeCameraController.isActive(player)) {
+            val isAircraftOperator = player == heldFreeCameraVehicle.firstPassenger &&
+                    (heldFreeCameraVehicle.vehicleType == VehicleType.AIRPLANE ||
+                            heldFreeCameraVehicle.vehicleType == VehicleType.HELICOPTER)
+            val invert = if (isAircraftOperator && ControlConfig.INVERT_AIRCRAFT_CONTROL.get()) -1 else 1
+            val sensitivity = heldFreeCameraVehicle.mouseSensitivity
+            speedX = sensitivity * moveSpeedX * (if (ClientEventHandler.zoomVehicle) 0.3 else 1.0)
+            speedY = invert * sensitivity * moveSpeedY * (if (ClientEventHandler.zoomVehicle) 0.4 else 1.0)
+            lerpSpeedX = Mth.lerp(0.3, lerpSpeedX, speedX)
+            lerpSpeedY = Mth.lerp(0.3, lerpSpeedY, speedY)
+            if (isAircraftOperator) {
+                sendPacketToServer(MouseMoveMessage(0.0, 0.0))
+            }
+            return
+        }
+
+        val stack = player.mainHandItem
+
+        if (stack.`is`(ModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using")
+            && stack.getOrCreateTag().getBoolean("Linked")
+        ) {
+            val drone = EntityFindUtil.findDrone(player.level(), stack.getOrCreateTag().getString("LinkedDrone")) ?: return
+
+            speedX = (drone.mouseSensitivity / ClientEventHandler.droneFovLerp) * moveSpeedX
+            speedY = (drone.mouseSensitivity / ClientEventHandler.droneFovLerp) * moveSpeedY
+
+            lerpSpeedX = Mth.lerp(0.3, lerpSpeedX, speedX)
+            lerpSpeedY = Mth.lerp(0.3, lerpSpeedY, speedY)
+
+            if (notInGame) {
+                sendPacketToServer(MouseMoveMessage(0.0, 0.0))
+            } else {
+                sendPacketToServer(MouseMoveMessage(lerpSpeedX, lerpSpeedY))
+            }
+
+            return
+        }
+
+        val vehicle = player.vehicle
+        if (vehicle is VehicleEntity && player == vehicle.firstPassenger
+            && (vehicle.vehicleType == VehicleType.AIRPLANE || vehicle.vehicleType == VehicleType.HELICOPTER)
+        ) {
+            var y = 1
+            if (ControlConfig.INVERT_AIRCRAFT_CONTROL.get()) {
+                y = -1
+            }
+
+            val sensitivity = vehicle.mouseSensitivity
+
+            speedX = sensitivity * moveSpeedX * (if (ClientEventHandler.zoomVehicle) 0.3 else 1.0)
+            speedY = y * sensitivity * moveSpeedY * (if (ClientEventHandler.zoomVehicle) 0.4 else 1.0)
+
+            mouseXMoveTick = Mth.lerp(0.1, mouseXMoveTick, speedX)
+            mouseYMoveTick = Mth.lerp(0.1, mouseYMoveTick, speedY)
+
+            if (vehicle.vehicleType == VehicleType.AIRPLANE) {
+                lerpSpeedX = Mth.lerp((0.006 * abs(mouseXMoveTick)).coerceAtLeast(0.12), lerpSpeedX, speedX)
+                lerpSpeedY = Mth.lerp((0.005 * abs(mouseYMoveTick)).coerceAtLeast(0.12), lerpSpeedY, speedY)
+            } else {
+                lerpSpeedX = Mth.lerp((0.0045 * abs(mouseXMoveTick)).coerceAtLeast(0.1), lerpSpeedX, speedX * 0.5)
+                lerpSpeedY = Mth.lerp((0.0035 * abs(mouseYMoveTick)).coerceAtLeast(0.1), lerpSpeedY, speedY * 0.5)
+            }
+
+            var i = 0.0
+            if (vehicle.roll < 0) {
+                i = 1.0
+            } else if (vehicle.roll > 0) {
+                i = -1.0
+            }
+
+            if (Mth.abs(vehicle.roll) > 90) {
+                i *= (1 - (Mth.abs(vehicle.roll) - 90) / 90)
+            }
+
+            if (notInGame) {
+                sendPacketToServer(MouseMoveMessage(0.0, 0.0))
+            } else {
+                if (!ClientEventHandler.isFreeCam(player)) {
+                    if (vehicle.isFixedWingFlightVehicle()) {
+                        // Fixed-wing controls are independent pilot axes.  Do not rotate or blend
+                        // them with the rendered bank angle: the server owns stick integration.
+                        sendPacketToServer(MouseMoveMessage(speedX, speedY))
+                    } else if (mc.options.cameraType == CameraType.FIRST_PERSON) {
+                        if (vehicle.computed().engineType != EngineType.TOM6) {
+                            sendPacketToServer(
+                                MouseMoveMessage(
+                                    (1 - abs(vehicle.roll) / 90) * lerpSpeedX + (abs(vehicle.roll) / 90) * lerpSpeedY * i,
+                                    (1 - abs(vehicle.roll) / 90) * lerpSpeedY + (abs(vehicle.roll) / 90) * lerpSpeedX * if (vehicle.roll < 0) -1.0 else 1.0
+                                )
+                            )
+                        }
+                    } else {
+                        sendPacketToServer(MouseMoveMessage(lerpSpeedX, lerpSpeedY))
+                    }
+                } else {
+                    sendPacketToServer(MouseMoveMessage(0.0, 0.0))
+                }
+            }
+
+        }
+    }
+
+    @Suppress("unused")
+    @SubscribeEvent
+    fun handleClientTick(event: ViewportEvent.ComputeCameraAngles) {
+        val player = localPlayer ?: return
+
+        if (notInGame) {
+            freeCameraYaw = 0.0
+            freeCameraPitch = 0.0
+            return
+        }
+
+        val times = mc.deltaFrameTime
+
+        if (VehicleFreeCameraController.isActive(player)) {
+            VehicleFreeCameraController.applyMouseDelta(
+                (0.2f * times * lerpSpeedX).toFloat(),
+                (0.15f * times * lerpSpeedY).toFloat(),
+            )
+        } else if (isLinkedDroneView(player)) {
+            // The remote Monitor/Drone camera predates vehicle freecam and consumes these offsets
+            // directly. Keep its bounded legacy path separate from the mounted hold controller.
+            freeCameraYaw -= 0.2f * times * lerpSpeedX
+            freeCameraPitch += 0.15f * times * lerpSpeedY
+        }
+
+        val vehicle = player.vehicle as? VehicleEntity
+        val hover = vehicle?.let { it.vehicleType == VehicleType.HELICOPTER && it.hoverMode } == true
+        if (!VehicleFreeCameraController.hasPresentation(player, vehicle)) {
+            var s = if (mc.options.cameraType == CameraType.FIRST_PERSON) 0.6 else 0.2
+            if (hover) {
+                s *= 0.5
+            }
+            freeCameraYaw = Mth.lerp(s * times, freeCameraYaw, 0.0)
+            freeCameraPitch = Mth.lerp(s * times, freeCameraPitch, 0.0)
+        }
+
+        while (freeCameraYaw > 180F) {
+            freeCameraYaw -= 360
+        }
+        while (freeCameraYaw <= -180F) {
+            freeCameraYaw += 360
+        }
+        while (freeCameraPitch > 180F) {
+            freeCameraPitch -= 360
+        }
+        while (freeCameraPitch <= -180F) {
+            freeCameraPitch += 360
+        }
+
+        custom3pDistanceLerp = Mth.lerp(times.toDouble(), custom3pDistanceLerp, custom3pDistance)
+    }
+
+    private fun resetMouseSampling() {
+        val current = MouseMovementHandler.getMousePos()
+        posO = current
+        posN = current
+        speedX = 0.0
+        speedY = 0.0
+        lerpSpeedX = 0.0
+        lerpSpeedY = 0.0
+        mouseXMoveTick = 0.0
+        mouseYMoveTick = 0.0
+    }
+
+    @JvmStatic
+    fun isLinkedDroneView(player: net.minecraft.world.entity.player.Player): Boolean {
+        val stack = player.mainHandItem
+        if (!stack.`is`(ModItems.MONITOR.get())) return false
+        val tag = stack.getOrCreateTag()
+        if (!tag.getBoolean("Using") || !tag.getBoolean("Linked")) return false
+        return EntityFindUtil.findDrone(player.level(), tag.getString("LinkedDrone")) != null
+    }
+
+    /**
+     * 反转鼠标
+     */
+    @JvmStatic
+    fun invertY(): Int {
+        val player = localPlayer ?: return 1
+        val vehicle = player.vehicle as? VehicleEntity ?: return 1
+
+        if ((vehicle.vehicleType == VehicleType.AIRPLANE || vehicle.vehicleType == VehicleType.HELICOPTER)
+            && vehicle.firstPassenger == player
+        ) {
+            return if (ControlConfig.INVERT_AIRCRAFT_CONTROL.get()) -1 else 1
+        }
+        return 1
+    }
+
+    @JvmStatic
+    fun changeSensitivity(original: Double): Double {
+        val player = localPlayer ?: return original
+        if (player.hasEffect(ModMobEffects.SHOCK.get()) && !player.isSpectator) {
+            return 0.0
+        }
+
+        val stack = player.mainHandItem
+
+        if (stack.`is`(ModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using")
+            && stack.getOrCreateTag().getBoolean("Linked")
+        ) {
+            return 0.0
+        }
+
+        if (ClientEventHandler.isFreeCam(player)) {
+            return 0.0
+        }
+
+        if (player.isUsingItem && player.useItem.`is`(ModItems.ARTILLERY_INDICATOR.get()) && mc.options.cameraType == CameraType.FIRST_PERSON) {
+            return original / (1 + 0.2 * ClientEventHandler.artilleryIndicatorZoom).coerceAtLeast(0.1)
+        }
+
+        val vehicle = player.vehicle
+        if (vehicle is VehicleEntity && vehicle.banHand(player)) {
+            return vehicle.getSensitivity(
+                original,
+                ClientEventHandler.zoomVehicle,
+                vehicle.getSeatIndex(player),
+                vehicle.onGround()
+            )
+        }
+
+        if (stack.item is GunItem) {
+            val data = GunData.from(stack)
+            val customSens = data.sensitivity.get()
+
+            if (!player.mainHandItem.isEmpty && mc.options.cameraType == CameraType.FIRST_PERSON) {
+                return original / (1 + (0.2 * (data.zoom() - (0.3 * customSens)) * ClientEventHandler.zoomTime))
+                    .coerceAtLeast(0.1) * (ControlConfig.MOUSE_SENSITIVITY.get() / 100f)
+            }
+        }
+
+        return original
+    }
+}

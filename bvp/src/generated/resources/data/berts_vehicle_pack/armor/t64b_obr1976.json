@@ -1,0 +1,40 @@
+{
+  "id": "t64b_obr1976",
+  "model_scale": 0.6729205,
+  "ap_penetration_mm": 457,
+  "chemical_penetration_mm": 700,
+  "fallback_incoming_penetration_mm": 500,
+  "atgm_tandem": false,
+  "impact_tolerance": 0.25,
+  "internal_ray_length": 10,
+  "unboxed_hits_penetrate": true,
+  "plates": [],
+  "sensitive_internals": [],
+  "engines": [],
+  "ammo_racks": [
+    {
+      "name": "ammo_rack_carousel_00",
+      "center": [
+        0.01611,
+        0.93127,
+        0.14172
+      ],
+      "half_size": [
+        0.92993,
+        0.27087,
+        0.87219
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "health": 10
+    }
+  ],
+  "tracks": [],
+  "modules": [],
+  "explosive_reactive_armor": [],
+  "sbw_obb": [],
+  "ap_round": "3BM42 APFSDS"
+}

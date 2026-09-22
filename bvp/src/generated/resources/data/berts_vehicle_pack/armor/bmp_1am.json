@@ -1,0 +1,2961 @@
+{
+  "id": "bmp_1am",
+  "model_scale": 0.8333332609524522,
+  "ap_penetration_mm": 500,
+  "chemical_penetration_mm": 700,
+  "fallback_incoming_penetration_mm": 500,
+  "atgm_tandem": false,
+  "impact_tolerance": 0.25,
+  "internal_ray_length": 10,
+  "unboxed_hits_penetrate": true,
+  "plates": [
+    {
+      "name": "turret_parented_all_23mm_00",
+      "center": [
+        0.00183,
+        2.22693,
+        -0.00659
+      ],
+      "half_size": [
+        0.15076,
+        0.04626,
+        0.65332
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "turret",
+      "armor_mm": 23
+    },
+    {
+      "name": "turret_parented_all_23mm_01",
+      "center": [
+        0.30847,
+        2.22693,
+        -0.00647
+      ],
+      "half_size": [
+        0.15076,
+        0.04626,
+        0.48596
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "turret",
+      "armor_mm": 23
+    },
+    {
+      "name": "turret_parented_all_23mm_02",
+      "center": [
+        0.55212,
+        2.22693,
+        0.02405
+      ],
+      "half_size": [
+        0.08972,
+        0.04626,
+        0.172
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "turret",
+      "armor_mm": 23
+    },
+    {
+      "name": "turret_parented_all_23mm_03",
+      "center": [
+        0.50488,
+        2.22693,
+        0.2981
+      ],
+      "half_size": [
+        0.04419,
+        0.04626,
+        0.09668
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "turret",
+      "armor_mm": 23
+    },
+    {
+      "name": "turret_parented_all_23mm_04",
+      "center": [
+        0.25903,
+        2.22693,
+        0.52539
+      ],
+      "half_size": [
+        0.10132,
+        0.04626,
+        0.04102
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "turret",
+      "armor_mm": 23
+    },
+    {
+      "name": "turret_parented_all_23mm_05",
+      "center": [
+        0.50488,
+        2.22693,
+        -0.25024
+      ],
+      "half_size": [
+        0.04419,
+        0.04626,
+        0.09668
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "turret",
+      "armor_mm": 23
+    },
+    {
+      "name": "turret_parented_all_23mm_06",
+      "center": [
+        0.25903,
+        2.22693,
+        -0.54126
+      ],
+      "half_size": [
+        0.10132,
+        0.04626,
+        0.04102
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "turret",
+      "armor_mm": 23
+    },
+    {
+      "name": "turret_parented_all_23mm_07",
+      "center": [
+        -0.25903,
+        2.22693,
+        -0.54126
+      ],
+      "half_size": [
+        0.10132,
+        0.04626,
+        0.04102
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "turret",
+      "armor_mm": 23
+    },
+    {
+      "name": "turret_parented_all_23mm_08",
+      "center": [
+        -0.30847,
+        2.22693,
+        -0.00647
+      ],
+      "half_size": [
+        0.15076,
+        0.04626,
+        0.48596
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "turret",
+      "armor_mm": 23
+    },
+    {
+      "name": "turret_parented_all_23mm_09",
+      "center": [
+        -0.50488,
+        2.22693,
+        -0.25024
+      ],
+      "half_size": [
+        0.04419,
+        0.04626,
+        0.09668
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "turret",
+      "armor_mm": 23
+    },
+    {
+      "name": "turret_parented_all_23mm_10",
+      "center": [
+        -0.55212,
+        2.22693,
+        0.02405
+      ],
+      "half_size": [
+        0.08972,
+        0.04626,
+        0.172
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "turret",
+      "armor_mm": 23
+    },
+    {
+      "name": "turret_parented_all_23mm_11",
+      "center": [
+        -0.50488,
+        2.22693,
+        0.2981
+      ],
+      "half_size": [
+        0.04419,
+        0.04626,
+        0.09668
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "turret",
+      "armor_mm": 23
+    },
+    {
+      "name": "turret_parented_all_23mm_12",
+      "center": [
+        -0.25903,
+        2.22693,
+        0.52539
+      ],
+      "half_size": [
+        0.10132,
+        0.04626,
+        0.04102
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "turret",
+      "armor_mm": 23
+    },
+    {
+      "name": "turret_parented_all_23mm_13",
+      "center": [
+        0.63074,
+        2.04477,
+        -0.43545
+      ],
+      "half_size": [
+        0.11035,
+        0.04626,
+        0.21741
+      ],
+      "rotation": [
+        -52,
+        -59,
+        0
+      ],
+      "frame": "turret",
+      "armor_mm": 23
+    },
+    {
+      "name": "turret_parented_all_23mm_14",
+      "center": [
+        0.70691,
+        2.04477,
+        -0.18789
+      ],
+      "half_size": [
+        0.11035,
+        0.04626,
+        0.21741
+      ],
+      "rotation": [
+        -64.50286,
+        -79.42611,
+        7.56151
+      ],
+      "frame": "turret",
+      "armor_mm": 23
+    },
+    {
+      "name": "turret_parented_all_23mm_15",
+      "center": [
+        0.72162,
+        1.98214,
+        -0.32033
+      ],
+      "half_size": [
+        0.01624,
+        0.04626,
+        0.14648
+      ],
+      "rotation": [
+        -64.50286,
+        -79.42611,
+        7.56151
+      ],
+      "frame": "turret",
+      "armor_mm": 23
+    },
+    {
+      "name": "turret_parented_all_23mm_16",
+      "center": [
+        0.77092,
+        1.96138,
+        -0.36987
+      ],
+      "half_size": [
+        0.01587,
+        0.02954,
+        0.09851
+      ],
+      "rotation": [
+        -52,
+        -59,
+        0
+      ],
+      "frame": "turret",
+      "armor_mm": 23
+    },
+    {
+      "name": "turret_parented_all_23mm_17",
+      "center": [
+        0.42265,
+        2.04265,
+        -0.64298
+      ],
+      "half_size": [
+        0.14587,
+        0.04626,
+        0.21741
+      ],
+      "rotation": [
+        -50.80967,
+        -32.87891,
+        0.98506
+      ],
+      "frame": "turret",
+      "armor_mm": 23
+    },
+    {
+      "name": "turret_parented_all_23mm_18",
+      "center": [
+        0.60129,
+        1.97418,
+        -0.59772
+      ],
+      "half_size": [
+        0.02576,
+        0.04626,
+        0.12512
+      ],
+      "rotation": [
+        -50.80967,
+        -32.87891,
+        0.98506
+      ],
+      "frame": "turret",
+      "armor_mm": 23
+    },
+    {
+      "name": "turret_parented_all_23mm_19",
+      "center": [
+        0.65745,
+        1.93503,
+        -0.6008
+      ],
+      "half_size": [
+        0.01648,
+        0.04626,
+        0.07336
+      ],
+      "rotation": [
+        -50.80967,
+        -32.87891,
+        0.98506
+      ],
+      "frame": "turret",
+      "armor_mm": 23
+    },
+    {
+      "name": "turret_parented_all_23mm_20",
+      "center": [
+        0.15636,
+        2.04345,
+        -0.76106
+      ],
+      "half_size": [
+        0.1272,
+        0.04626,
+        0.21741
+      ],
+      "rotation": [
+        -53.56121,
+        -10.03644,
+        2.50417
+      ],
+      "frame": "turret",
+      "armor_mm": 23
+    },
+    {
+      "name": "turret_parented_all_23mm_21",
+      "center": [
+        0.31897,
+        1.96396,
+        -0.79779
+      ],
+      "half_size": [
+        0.02246,
+        0.04626,
+        0.10986
+      ],
+      "rotation": [
+        -53.56121,
+        -10.03644,
+        2.50417
+      ],
+      "frame": "turret",
+      "armor_mm": 23
+    },
+    {
+      "name": "turret_parented_all_23mm_22",
+      "center": [
+        -0.42265,
+        2.04265,
+        -0.64298
+      ],
+      "half_size": [
+        0.14587,
+        0.04626,
+        0.21741
+      ],
+      "rotation": [
+        -50.80967,
+        32.87891,
+        -0.98506
+      ],
+      "frame": "turret",
+      "armor_mm": 23
+    },
+    {
+      "name": "turret_parented_all_23mm_23",
+      "center": [
+        -0.31897,
+        1.96396,
+        -0.79779
+      ],
+      "half_size": [
+        0.02246,
+        0.04626,
+        0.10986
+      ],
+      "rotation": [
+        -53.56121,
+        10.03644,
+        -2.50417
+      ],
+      "frame": "turret",
+      "armor_mm": 23
+    },
+    {
+      "name": "turret_parented_all_23mm_24",
+      "center": [
+        -0.15636,
+        2.04345,
+        -0.76106
+      ],
+      "half_size": [
+        0.1272,
+        0.04626,
+        0.21741
+      ],
+      "rotation": [
+        -53.56121,
+        10.03644,
+        -2.50417
+      ],
+      "frame": "turret",
+      "armor_mm": 23
+    },
+    {
+      "name": "turret_parented_all_23mm_25",
+      "center": [
+        -0.60129,
+        1.97418,
+        -0.59772
+      ],
+      "half_size": [
+        0.02576,
+        0.04626,
+        0.12512
+      ],
+      "rotation": [
+        -50.80967,
+        32.87891,
+        -0.98506
+      ],
+      "frame": "turret",
+      "armor_mm": 23
+    },
+    {
+      "name": "turret_parented_all_23mm_26",
+      "center": [
+        -0.65745,
+        1.93503,
+        -0.6008
+      ],
+      "half_size": [
+        0.01648,
+        0.04626,
+        0.07336
+      ],
+      "rotation": [
+        -50.80967,
+        32.87891,
+        -0.98506
+      ],
+      "frame": "turret",
+      "armor_mm": 23
+    },
+    {
+      "name": "turret_parented_all_23mm_27",
+      "center": [
+        -0.63074,
+        2.04477,
+        -0.43545
+      ],
+      "half_size": [
+        0.11035,
+        0.04626,
+        0.21741
+      ],
+      "rotation": [
+        -52,
+        59,
+        0
+      ],
+      "frame": "turret",
+      "armor_mm": 23
+    },
+    {
+      "name": "turret_parented_all_23mm_28",
+      "center": [
+        -0.77092,
+        1.96138,
+        -0.36987
+      ],
+      "half_size": [
+        0.01587,
+        0.02954,
+        0.09851
+      ],
+      "rotation": [
+        -52,
+        59,
+        0
+      ],
+      "frame": "turret",
+      "armor_mm": 23
+    },
+    {
+      "name": "turret_parented_all_23mm_29",
+      "center": [
+        -0.72162,
+        1.98214,
+        -0.32033
+      ],
+      "half_size": [
+        0.01624,
+        0.04626,
+        0.14648
+      ],
+      "rotation": [
+        -64.50286,
+        79.42611,
+        -7.56151
+      ],
+      "frame": "turret",
+      "armor_mm": 23
+    },
+    {
+      "name": "turret_parented_all_23mm_30",
+      "center": [
+        -0.70691,
+        2.04477,
+        -0.18789
+      ],
+      "half_size": [
+        0.11035,
+        0.04626,
+        0.21741
+      ],
+      "rotation": [
+        -64.50286,
+        79.42611,
+        -7.56151
+      ],
+      "frame": "turret",
+      "armor_mm": 23
+    },
+    {
+      "name": "turret_parented_all_23mm_31",
+      "center": [
+        -0.42265,
+        2.04265,
+        0.5922
+      ],
+      "half_size": [
+        0.14587,
+        0.04626,
+        0.21741
+      ],
+      "rotation": [
+        50.80967,
+        -32.87891,
+        -0.98506
+      ],
+      "frame": "turret",
+      "armor_mm": 23
+    },
+    {
+      "name": "turret_parented_all_23mm_32",
+      "center": [
+        -0.31897,
+        1.96396,
+        0.74701
+      ],
+      "half_size": [
+        0.02246,
+        0.04626,
+        0.10986
+      ],
+      "rotation": [
+        53.56121,
+        -10.03644,
+        -2.50417
+      ],
+      "frame": "turret",
+      "armor_mm": 23
+    },
+    {
+      "name": "turret_parented_all_23mm_33",
+      "center": [
+        -0.15636,
+        2.04345,
+        0.71028
+      ],
+      "half_size": [
+        0.1272,
+        0.04626,
+        0.21741
+      ],
+      "rotation": [
+        53.56121,
+        -10.03644,
+        -2.50417
+      ],
+      "frame": "turret",
+      "armor_mm": 23
+    },
+    {
+      "name": "turret_parented_all_23mm_34",
+      "center": [
+        -0.60129,
+        1.97418,
+        0.54694
+      ],
+      "half_size": [
+        0.02576,
+        0.04626,
+        0.12512
+      ],
+      "rotation": [
+        50.80967,
+        -32.87891,
+        -0.98506
+      ],
+      "frame": "turret",
+      "armor_mm": 23
+    },
+    {
+      "name": "turret_parented_all_23mm_35",
+      "center": [
+        -0.65745,
+        1.93503,
+        0.55002
+      ],
+      "half_size": [
+        0.01648,
+        0.04626,
+        0.07336
+      ],
+      "rotation": [
+        50.80967,
+        -32.87891,
+        -0.98506
+      ],
+      "frame": "turret",
+      "armor_mm": 23
+    },
+    {
+      "name": "turret_parented_all_23mm_36",
+      "center": [
+        -0.63074,
+        2.04477,
+        0.38467
+      ],
+      "half_size": [
+        0.11035,
+        0.04626,
+        0.21741
+      ],
+      "rotation": [
+        52,
+        -59,
+        0
+      ],
+      "frame": "turret",
+      "armor_mm": 23
+    },
+    {
+      "name": "turret_parented_all_23mm_37",
+      "center": [
+        -0.77092,
+        1.96138,
+        0.31908
+      ],
+      "half_size": [
+        0.01587,
+        0.02954,
+        0.09851
+      ],
+      "rotation": [
+        52,
+        -59,
+        0
+      ],
+      "frame": "turret",
+      "armor_mm": 23
+    },
+    {
+      "name": "turret_parented_all_23mm_38",
+      "center": [
+        -0.72162,
+        1.98214,
+        0.26955
+      ],
+      "half_size": [
+        0.01624,
+        0.04626,
+        0.14648
+      ],
+      "rotation": [
+        64.50286,
+        -79.42611,
+        -7.56151
+      ],
+      "frame": "turret",
+      "armor_mm": 23
+    },
+    {
+      "name": "turret_parented_all_23mm_39",
+      "center": [
+        -0.71642,
+        2.04603,
+        0.08575
+      ],
+      "half_size": [
+        0.1626,
+        0.04626,
+        0.21741
+      ],
+      "rotation": [
+        64.50286,
+        -79.42611,
+        -7.56151
+      ],
+      "frame": "turret",
+      "armor_mm": 23
+    },
+    {
+      "name": "turret_parented_all_23mm_40",
+      "center": [
+        0.15636,
+        2.04345,
+        0.71028
+      ],
+      "half_size": [
+        0.1272,
+        0.04626,
+        0.21741
+      ],
+      "rotation": [
+        53.56121,
+        10.03644,
+        2.50417
+      ],
+      "frame": "turret",
+      "armor_mm": 23
+    },
+    {
+      "name": "turret_parented_all_23mm_41",
+      "center": [
+        0.31897,
+        1.96396,
+        0.74701
+      ],
+      "half_size": [
+        0.02246,
+        0.04626,
+        0.10986
+      ],
+      "rotation": [
+        53.56121,
+        10.03644,
+        2.50417
+      ],
+      "frame": "turret",
+      "armor_mm": 23
+    },
+    {
+      "name": "turret_parented_all_23mm_42",
+      "center": [
+        0.42265,
+        2.04265,
+        0.5922
+      ],
+      "half_size": [
+        0.14587,
+        0.04626,
+        0.21741
+      ],
+      "rotation": [
+        50.80967,
+        32.87891,
+        0.98506
+      ],
+      "frame": "turret",
+      "armor_mm": 23
+    },
+    {
+      "name": "turret_parented_all_23mm_43",
+      "center": [
+        0.60129,
+        1.97418,
+        0.54694
+      ],
+      "half_size": [
+        0.02576,
+        0.04626,
+        0.12512
+      ],
+      "rotation": [
+        50.80967,
+        32.87891,
+        0.98506
+      ],
+      "frame": "turret",
+      "armor_mm": 23
+    },
+    {
+      "name": "turret_parented_all_23mm_44",
+      "center": [
+        0.65745,
+        1.93503,
+        0.55002
+      ],
+      "half_size": [
+        0.01648,
+        0.04626,
+        0.07336
+      ],
+      "rotation": [
+        50.80967,
+        32.87891,
+        0.98506
+      ],
+      "frame": "turret",
+      "armor_mm": 23
+    },
+    {
+      "name": "turret_parented_all_23mm_45",
+      "center": [
+        0.63074,
+        2.04477,
+        0.38467
+      ],
+      "half_size": [
+        0.11035,
+        0.04626,
+        0.21741
+      ],
+      "rotation": [
+        52,
+        59,
+        0
+      ],
+      "frame": "turret",
+      "armor_mm": 23
+    },
+    {
+      "name": "turret_parented_all_23mm_46",
+      "center": [
+        0.77092,
+        1.96138,
+        0.31908
+      ],
+      "half_size": [
+        0.01587,
+        0.02954,
+        0.09851
+      ],
+      "rotation": [
+        52,
+        59,
+        0
+      ],
+      "frame": "turret",
+      "armor_mm": 23
+    },
+    {
+      "name": "turret_parented_all_23mm_47",
+      "center": [
+        0.72162,
+        1.98214,
+        0.26955
+      ],
+      "half_size": [
+        0.01624,
+        0.04626,
+        0.14648
+      ],
+      "rotation": [
+        64.50286,
+        79.42611,
+        7.56151
+      ],
+      "frame": "turret",
+      "armor_mm": 23
+    },
+    {
+      "name": "turret_parented_all_23mm_48",
+      "center": [
+        0.71642,
+        2.04603,
+        0.08575
+      ],
+      "half_size": [
+        0.1626,
+        0.04626,
+        0.21741
+      ],
+      "rotation": [
+        64.50286,
+        79.42611,
+        7.56151
+      ],
+      "frame": "turret",
+      "armor_mm": 23
+    },
+    {
+      "name": "hull_all_19mm_49",
+      "center": [
+        0.71912,
+        1.81528,
+        -2.32552
+      ],
+      "half_size": [
+        0.74084,
+        0.03015,
+        0.41174
+      ],
+      "rotation": [
+        -6,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_50",
+      "center": [
+        0.53125,
+        1.69276,
+        -3.2715
+      ],
+      "half_size": [
+        0.5061,
+        0.03015,
+        0.51868
+      ],
+      "rotation": [
+        -10,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_51",
+      "center": [
+        1.10754,
+        1.72195,
+        -3.10596
+      ],
+      "half_size": [
+        0.06677,
+        0.03015,
+        0.35059
+      ],
+      "rotation": [
+        -10,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_52",
+      "center": [
+        1.23633,
+        1.74503,
+        -2.97505
+      ],
+      "half_size": [
+        0.05957,
+        0.03015,
+        0.21765
+      ],
+      "rotation": [
+        -10,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_53",
+      "center": [
+        1.38257,
+        1.76888,
+        -2.83981
+      ],
+      "half_size": [
+        0.08569,
+        0.03015,
+        0.08032
+      ],
+      "rotation": [
+        -10,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_54",
+      "center": [
+        1.38049,
+        1.7414,
+        -2.99561
+      ],
+      "half_size": [
+        0.08362,
+        0.03015,
+        0.07422
+      ],
+      "rotation": [
+        -10,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_55",
+      "center": [
+        0.61182,
+        1.54936,
+        -4.22406
+      ],
+      "half_size": [
+        0.63355,
+        0.03015,
+        0.40027
+      ],
+      "rotation": [
+        -7,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_56",
+      "center": [
+        1.43406,
+        1.52219,
+        -3.968
+      ],
+      "half_size": [
+        0.17639,
+        0.03015,
+        0.53625
+      ],
+      "rotation": [
+        -15.89834,
+        -1.51125,
+        -8.78239
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_57",
+      "center": [
+        1.15231,
+        1.63845,
+        -3.62981
+      ],
+      "half_size": [
+        0.10779,
+        0.03015,
+        0.17664
+      ],
+      "rotation": [
+        -15.95375,
+        0.68723,
+        -1.08973
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_58",
+      "center": [
+        1.42234,
+        1.69124,
+        -3.25503
+      ],
+      "half_size": [
+        0.12402,
+        0.03015,
+        0.18774
+      ],
+      "rotation": [
+        -6.98002,
+        0.32326,
+        -4.06769
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_59",
+      "center": [
+        1.24111,
+        1.69535,
+        -3.3255
+      ],
+      "half_size": [
+        0.05127,
+        0.03015,
+        0.11572
+      ],
+      "rotation": [
+        -6.98002,
+        0.32326,
+        -4.06769
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_60",
+      "center": [
+        0.5625,
+        1.85706,
+        0.62707
+      ],
+      "half_size": [
+        0.53174,
+        0.03015,
+        2.53748
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_61",
+      "center": [
+        1.27783,
+        1.8158,
+        -0.36072
+      ],
+      "half_size": [
+        0.17358,
+        0.03015,
+        1.54968
+      ],
+      "rotation": [
+        0,
+        0,
+        -17
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_62",
+      "center": [
+        1.22297,
+        1.83257,
+        1.59839
+      ],
+      "half_size": [
+        0.11621,
+        0.03015,
+        0.40576
+      ],
+      "rotation": [
+        0,
+        0,
+        -17
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_63",
+      "center": [
+        1.173,
+        1.84785,
+        2.34961
+      ],
+      "half_size": [
+        0.06396,
+        0.03015,
+        0.34302
+      ],
+      "rotation": [
+        0,
+        0,
+        -17
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_64",
+      "center": [
+        0.61182,
+        0.97642,
+        -3.90179
+      ],
+      "half_size": [
+        0.63355,
+        0.03015,
+        0.85144
+      ],
+      "rotation": [
+        37,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_65",
+      "center": [
+        0.53625,
+        1.21246,
+        3.00248
+      ],
+      "half_size": [
+        0.55798,
+        0.03015,
+        0.62903
+      ],
+      "rotation": [
+        -78,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_66",
+      "center": [
+        1.18103,
+        1.02237,
+        2.96207
+      ],
+      "half_size": [
+        0.07898,
+        0.03015,
+        0.43469
+      ],
+      "rotation": [
+        -78,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_67",
+      "center": [
+        1.16958,
+        1.63526,
+        3.09234
+      ],
+      "half_size": [
+        0.05444,
+        0.03015,
+        0.18518
+      ],
+      "rotation": [
+        -78.08688,
+        -1.45192,
+        6.8485
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_68",
+      "center": [
+        0.6499,
+        0.55787,
+        2.75021
+      ],
+      "half_size": [
+        0.61157,
+        0.03015,
+        0.12073
+      ],
+      "rotation": [
+        -31,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_69",
+      "center": [
+        1.53015,
+        1.74589,
+        -2.49221
+      ],
+      "half_size": [
+        0.08093,
+        0.03015,
+        0.57813
+      ],
+      "rotation": [
+        -4.46617,
+        -4.01072,
+        -41.84354
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_70",
+      "center": [
+        1.56509,
+        1.70885,
+        -0.95288
+      ],
+      "half_size": [
+        0.08313,
+        0.03015,
+        0.95752
+      ],
+      "rotation": [
+        0,
+        0,
+        -41
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_71",
+      "center": [
+        1.63418,
+        1.55455,
+        -1.7439
+      ],
+      "half_size": [
+        0.08313,
+        0.03015,
+        1.74854
+      ],
+      "rotation": [
+        0,
+        0,
+        -80
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_72",
+      "center": [
+        1.60542,
+        1.68122,
+        -2.20667
+      ],
+      "half_size": [
+        0.04102,
+        0.03015,
+        0.28845
+      ],
+      "rotation": [
+        0,
+        0,
+        -41
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_73",
+      "center": [
+        1.41891,
+        1.58941,
+        1.53592
+      ],
+      "half_size": [
+        0.15149,
+        0.03015,
+        1.53418
+      ],
+      "rotation": [
+        6.53923,
+        -2.50314,
+        -74.14302
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_74",
+      "center": [
+        1.23968,
+        1.79499,
+        2.5401
+      ],
+      "half_size": [
+        0.03406,
+        0.03015,
+        0.51355
+      ],
+      "rotation": [
+        6.53923,
+        -2.50314,
+        -74.14302
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_75",
+      "center": [
+        1.37183,
+        1.78343,
+        1.45971
+      ],
+      "half_size": [
+        0.03406,
+        0.03015,
+        0.25342
+      ],
+      "rotation": [
+        6.53923,
+        -2.50314,
+        -74.14302
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_76",
+      "center": [
+        1.16435,
+        1.86046,
+        2.88794
+      ],
+      "half_size": [
+        0.0426,
+        0.03015,
+        0.1582
+      ],
+      "rotation": [
+        2.7467,
+        -6.44107,
+        -28.15458
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_77",
+      "center": [
+        1.11459,
+        1.53349,
+        3.07071
+      ],
+      "half_size": [
+        0.01062,
+        0.03015,
+        0.08862
+      ],
+      "rotation": [
+        -78.08688,
+        -1.45192,
+        6.8485
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_78",
+      "center": [
+        0.63525,
+        0.46033,
+        -0.28303
+      ],
+      "half_size": [
+        0.61011,
+        0.03015,
+        2.92053
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_79",
+      "center": [
+        1.63788,
+        1.42614,
+        -3.90807
+      ],
+      "half_size": [
+        0.08313,
+        0.03015,
+        0.40002
+      ],
+      "rotation": [
+        0,
+        -17,
+        -80
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_80",
+      "center": [
+        1.66276,
+        1.28508,
+        -3.96742
+      ],
+      "half_size": [
+        0.03503,
+        0.03015,
+        0.25549
+      ],
+      "rotation": [
+        0,
+        -17,
+        -80
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_81",
+      "center": [
+        1.67895,
+        1.19325,
+        -4.06617
+      ],
+      "half_size": [
+        0.01916,
+        0.03015,
+        0.09375
+      ],
+      "rotation": [
+        0,
+        -17,
+        -80
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_82",
+      "center": [
+        1.7023,
+        1.39561,
+        -0.42139
+      ],
+      "half_size": [
+        0.08313,
+        0.03015,
+        3.07104
+      ],
+      "rotation": [
+        0,
+        0,
+        -60
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_83",
+      "center": [
+        1.73731,
+        1.14953,
+        -0.37683
+      ],
+      "half_size": [
+        0.17041,
+        0.03015,
+        3.11951
+      ],
+      "rotation": [
+        0,
+        0,
+        -91
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_84",
+      "center": [
+        1.25644,
+        0.73528,
+        -0.27161
+      ],
+      "half_size": [
+        0.26953,
+        0.03015,
+        2.93176
+      ],
+      "rotation": [
+        0,
+        0,
+        -91
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_85",
+      "center": [
+        1.26226,
+        1.06849,
+        2.7594
+      ],
+      "half_size": [
+        0.43652,
+        0.03015,
+        0.09241
+      ],
+      "rotation": [
+        0,
+        0,
+        -91
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_86",
+      "center": [
+        1.26661,
+        1.31747,
+        2.9364
+      ],
+      "half_size": [
+        0.1875,
+        0.03015,
+        0.07678
+      ],
+      "rotation": [
+        0,
+        0,
+        -91
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_87",
+      "center": [
+        1.26163,
+        1.0326,
+        2.90405
+      ],
+      "half_size": [
+        0.09375,
+        0.03015,
+        0.04443
+      ],
+      "rotation": [
+        0,
+        0,
+        -91
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_88",
+      "center": [
+        1.40009,
+        1.20947,
+        2.38537
+      ],
+      "half_size": [
+        0.2113,
+        0.03015,
+        0.22668
+      ],
+      "rotation": [
+        48,
+        0,
+        -91
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_89",
+      "center": [
+        1.41919,
+        1.16875,
+        -4.15702
+      ],
+      "half_size": [
+        0.16675,
+        0.03015,
+        0.28162
+      ],
+      "rotation": [
+        37,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_90",
+      "center": [
+        1.26451,
+        1.19749,
+        -3.50928
+      ],
+      "half_size": [
+        0.31848,
+        0.03015,
+        0.2959
+      ],
+      "rotation": [
+        0,
+        0,
+        -91
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_91",
+      "center": [
+        1.2653,
+        1.24265,
+        -3.92761
+      ],
+      "half_size": [
+        0.12268,
+        0.03015,
+        0.11755
+      ],
+      "rotation": [
+        0,
+        0,
+        -91
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_92",
+      "center": [
+        1.25769,
+        0.80668,
+        -3.37952
+      ],
+      "half_size": [
+        0.06458,
+        0.03015,
+        0.16614
+      ],
+      "rotation": [
+        0,
+        0,
+        -91
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_93",
+      "center": [
+        1.25545,
+        0.67853,
+        -3.3075
+      ],
+      "half_size": [
+        0.05945,
+        0.03015,
+        0.09412
+      ],
+      "rotation": [
+        0,
+        0,
+        -91
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_94",
+      "center": [
+        1.26228,
+        1.06995,
+        -3.86755
+      ],
+      "half_size": [
+        0.04541,
+        0.03015,
+        0.0575
+      ],
+      "rotation": [
+        0,
+        0,
+        -91
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_95",
+      "center": [
+        1.40009,
+        1.20947,
+        -3.0819
+      ],
+      "half_size": [
+        0.2113,
+        0.03015,
+        0.22668
+      ],
+      "rotation": [
+        -48,
+        0,
+        -91
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_96",
+      "center": [
+        -0.50781,
+        1.69276,
+        -3.2715
+      ],
+      "half_size": [
+        0.52954,
+        0.03015,
+        0.51868
+      ],
+      "rotation": [
+        -10,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_97",
+      "center": [
+        -1.10754,
+        1.72195,
+        -3.10596
+      ],
+      "half_size": [
+        0.06677,
+        0.03015,
+        0.35059
+      ],
+      "rotation": [
+        -10,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_98",
+      "center": [
+        -1.23633,
+        1.74503,
+        -2.97505
+      ],
+      "half_size": [
+        0.05957,
+        0.03015,
+        0.21765
+      ],
+      "rotation": [
+        -10,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_99",
+      "center": [
+        -1.38049,
+        1.7414,
+        -2.99561
+      ],
+      "half_size": [
+        0.08362,
+        0.03015,
+        0.07422
+      ],
+      "rotation": [
+        -10,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_100",
+      "center": [
+        -0.61182,
+        1.54936,
+        -4.22406
+      ],
+      "half_size": [
+        0.63355,
+        0.03015,
+        0.40027
+      ],
+      "rotation": [
+        -7,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_101",
+      "center": [
+        -1.43406,
+        1.52219,
+        -3.968
+      ],
+      "half_size": [
+        0.17639,
+        0.03015,
+        0.53625
+      ],
+      "rotation": [
+        -15.89834,
+        1.51125,
+        8.78239
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_102",
+      "center": [
+        -1.15231,
+        1.63845,
+        -3.62981
+      ],
+      "half_size": [
+        0.10779,
+        0.03015,
+        0.17664
+      ],
+      "rotation": [
+        -15.95375,
+        -0.68723,
+        1.08973
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_103",
+      "center": [
+        -1.42234,
+        1.69124,
+        -3.25503
+      ],
+      "half_size": [
+        0.12402,
+        0.03015,
+        0.18774
+      ],
+      "rotation": [
+        -6.98002,
+        -0.32326,
+        4.06769
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_104",
+      "center": [
+        -1.24111,
+        1.69535,
+        -3.3255
+      ],
+      "half_size": [
+        0.05127,
+        0.03015,
+        0.11572
+      ],
+      "rotation": [
+        -6.98002,
+        -0.32326,
+        4.06769
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_105",
+      "center": [
+        -0.63818,
+        0.97642,
+        -3.90179
+      ],
+      "half_size": [
+        0.60718,
+        0.03015,
+        0.85144
+      ],
+      "rotation": [
+        37,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_106",
+      "center": [
+        -0.56384,
+        1.21246,
+        3.00248
+      ],
+      "half_size": [
+        0.5304,
+        0.03015,
+        0.62903
+      ],
+      "rotation": [
+        -78,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_107",
+      "center": [
+        -1.18103,
+        1.02237,
+        2.96207
+      ],
+      "half_size": [
+        0.07898,
+        0.03015,
+        0.43469
+      ],
+      "rotation": [
+        -78,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_108",
+      "center": [
+        -1.16958,
+        1.63526,
+        3.09234
+      ],
+      "half_size": [
+        0.05444,
+        0.03015,
+        0.18518
+      ],
+      "rotation": [
+        -78.08688,
+        1.45192,
+        -6.8485
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_109",
+      "center": [
+        -0.61987,
+        0.55787,
+        2.75021
+      ],
+      "half_size": [
+        0.6416,
+        0.03015,
+        0.12073
+      ],
+      "rotation": [
+        -31,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_110",
+      "center": [
+        -1.53015,
+        1.74589,
+        -2.49221
+      ],
+      "half_size": [
+        0.08093,
+        0.03015,
+        0.57813
+      ],
+      "rotation": [
+        -4.46617,
+        4.01072,
+        41.84354
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_111",
+      "center": [
+        -1.56509,
+        1.70885,
+        -0.95288
+      ],
+      "half_size": [
+        0.08313,
+        0.03015,
+        0.95752
+      ],
+      "rotation": [
+        0,
+        0,
+        41
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_112",
+      "center": [
+        -1.63418,
+        1.55455,
+        -1.7439
+      ],
+      "half_size": [
+        0.08313,
+        0.03015,
+        1.74854
+      ],
+      "rotation": [
+        0,
+        0,
+        80
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_113",
+      "center": [
+        -1.60542,
+        1.68122,
+        -2.20667
+      ],
+      "half_size": [
+        0.04102,
+        0.03015,
+        0.28845
+      ],
+      "rotation": [
+        0,
+        0,
+        41
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_114",
+      "center": [
+        -1.41891,
+        1.58941,
+        1.53592
+      ],
+      "half_size": [
+        0.15149,
+        0.03015,
+        1.53418
+      ],
+      "rotation": [
+        6.53923,
+        2.50314,
+        74.14302
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_115",
+      "center": [
+        -1.11459,
+        1.53349,
+        3.07071
+      ],
+      "half_size": [
+        0.01062,
+        0.03015,
+        0.08862
+      ],
+      "rotation": [
+        -78.08688,
+        1.45192,
+        -6.8485
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_116",
+      "center": [
+        -0.61182,
+        0.46033,
+        -0.28303
+      ],
+      "half_size": [
+        0.63355,
+        0.03015,
+        2.92053
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_117",
+      "center": [
+        -1.63788,
+        1.42614,
+        -3.90807
+      ],
+      "half_size": [
+        0.08313,
+        0.03015,
+        0.40002
+      ],
+      "rotation": [
+        0,
+        17,
+        80
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_118",
+      "center": [
+        -1.66276,
+        1.28508,
+        -3.96742
+      ],
+      "half_size": [
+        0.03503,
+        0.03015,
+        0.25549
+      ],
+      "rotation": [
+        0,
+        17,
+        80
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_119",
+      "center": [
+        -1.67895,
+        1.19325,
+        -4.06617
+      ],
+      "half_size": [
+        0.01916,
+        0.03015,
+        0.09375
+      ],
+      "rotation": [
+        0,
+        17,
+        80
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_120",
+      "center": [
+        -1.7023,
+        1.39561,
+        -0.42139
+      ],
+      "half_size": [
+        0.08313,
+        0.03015,
+        3.07104
+      ],
+      "rotation": [
+        0,
+        0,
+        60
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_121",
+      "center": [
+        -1.73731,
+        1.14953,
+        -0.37683
+      ],
+      "half_size": [
+        0.17041,
+        0.03015,
+        3.11951
+      ],
+      "rotation": [
+        0,
+        0,
+        91
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_122",
+      "center": [
+        -1.25644,
+        0.73528,
+        -0.27161
+      ],
+      "half_size": [
+        0.26953,
+        0.03015,
+        2.93176
+      ],
+      "rotation": [
+        0,
+        0,
+        91
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_123",
+      "center": [
+        -1.26226,
+        1.06849,
+        2.7594
+      ],
+      "half_size": [
+        0.43652,
+        0.03015,
+        0.09241
+      ],
+      "rotation": [
+        0,
+        0,
+        91
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_124",
+      "center": [
+        -1.26661,
+        1.31747,
+        2.9364
+      ],
+      "half_size": [
+        0.1875,
+        0.03015,
+        0.07678
+      ],
+      "rotation": [
+        0,
+        0,
+        91
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_125",
+      "center": [
+        -1.26163,
+        1.0326,
+        2.90405
+      ],
+      "half_size": [
+        0.09375,
+        0.03015,
+        0.04443
+      ],
+      "rotation": [
+        0,
+        0,
+        91
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_126",
+      "center": [
+        -1.40009,
+        1.20947,
+        2.38537
+      ],
+      "half_size": [
+        0.2113,
+        0.03015,
+        0.22668
+      ],
+      "rotation": [
+        48,
+        0,
+        91
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_127",
+      "center": [
+        -1.41919,
+        1.16875,
+        -4.15702
+      ],
+      "half_size": [
+        0.16675,
+        0.03015,
+        0.28162
+      ],
+      "rotation": [
+        37,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_128",
+      "center": [
+        -1.26451,
+        1.19749,
+        -3.50928
+      ],
+      "half_size": [
+        0.31848,
+        0.03015,
+        0.2959
+      ],
+      "rotation": [
+        0,
+        0,
+        91
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_129",
+      "center": [
+        -1.2653,
+        1.24265,
+        -3.92761
+      ],
+      "half_size": [
+        0.12268,
+        0.03015,
+        0.11755
+      ],
+      "rotation": [
+        0,
+        0,
+        91
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_130",
+      "center": [
+        -1.25769,
+        0.80668,
+        -3.37952
+      ],
+      "half_size": [
+        0.06458,
+        0.03015,
+        0.16614
+      ],
+      "rotation": [
+        0,
+        0,
+        91
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_131",
+      "center": [
+        -1.25545,
+        0.67853,
+        -3.3075
+      ],
+      "half_size": [
+        0.05945,
+        0.03015,
+        0.09412
+      ],
+      "rotation": [
+        0,
+        0,
+        91
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_132",
+      "center": [
+        -1.26228,
+        1.06995,
+        -3.86755
+      ],
+      "half_size": [
+        0.04541,
+        0.03015,
+        0.0575
+      ],
+      "rotation": [
+        0,
+        0,
+        91
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_133",
+      "center": [
+        -1.40009,
+        1.20947,
+        -3.0819
+      ],
+      "half_size": [
+        0.2113,
+        0.03015,
+        0.22668
+      ],
+      "rotation": [
+        -48,
+        0,
+        91
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_134",
+      "center": [
+        -1.38257,
+        1.76888,
+        -2.83981
+      ],
+      "half_size": [
+        0.08569,
+        0.03015,
+        0.08032
+      ],
+      "rotation": [
+        -10,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_135",
+      "center": [
+        -1.27783,
+        1.8158,
+        -0.36072
+      ],
+      "half_size": [
+        0.17358,
+        0.03015,
+        1.54968
+      ],
+      "rotation": [
+        0,
+        0,
+        17
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_136",
+      "center": [
+        -1.22297,
+        1.83257,
+        1.59839
+      ],
+      "half_size": [
+        0.11621,
+        0.03015,
+        0.40576
+      ],
+      "rotation": [
+        0,
+        0,
+        17
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_137",
+      "center": [
+        -1.173,
+        1.84785,
+        2.34961
+      ],
+      "half_size": [
+        0.06396,
+        0.03015,
+        0.34302
+      ],
+      "rotation": [
+        0,
+        0,
+        17
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_138",
+      "center": [
+        -0.74292,
+        1.81528,
+        -2.32552
+      ],
+      "half_size": [
+        0.71704,
+        0.03015,
+        0.41174
+      ],
+      "rotation": [
+        -6,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_139",
+      "center": [
+        -1.23968,
+        1.79499,
+        2.5401
+      ],
+      "half_size": [
+        0.03406,
+        0.03015,
+        0.51355
+      ],
+      "rotation": [
+        6.53923,
+        2.50314,
+        74.14302
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_140",
+      "center": [
+        -1.37183,
+        1.78343,
+        1.45971
+      ],
+      "half_size": [
+        0.03406,
+        0.03015,
+        0.25342
+      ],
+      "rotation": [
+        6.53923,
+        2.50314,
+        74.14302
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_141",
+      "center": [
+        -0.53625,
+        1.85706,
+        0.62707
+      ],
+      "half_size": [
+        0.55798,
+        0.03015,
+        2.53748
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_142",
+      "center": [
+        -1.16435,
+        1.86046,
+        2.88794
+      ],
+      "half_size": [
+        0.0426,
+        0.03015,
+        0.1582
+      ],
+      "rotation": [
+        2.7467,
+        6.44107,
+        28.15458
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_143",
+      "center": [
+        -1.58414,
+        1.45689,
+        1.75928
+      ],
+      "half_size": [
+        0.08313,
+        0.03015,
+        0.51855
+      ],
+      "rotation": [
+        0,
+        0,
+        8
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    },
+    {
+      "name": "hull_all_19mm_144",
+      "center": [
+        1.58414,
+        1.45689,
+        1.75928
+      ],
+      "half_size": [
+        0.08313,
+        0.03015,
+        0.51855
+      ],
+      "rotation": [
+        0,
+        0,
+        -8
+      ],
+      "frame": "hull",
+      "armor_mm": 19
+    }
+  ],
+  "sensitive_internals": [],
+  "engines": [
+    {
+      "name": "engine_block_00",
+      "center": [
+        -0.02041,
+        0.86095,
+        1.87784
+      ],
+      "half_size": [
+        0.7843,
+        0.41714,
+        0.58635
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull"
+    }
+  ],
+  "ammo_racks": [
+    {
+      "name": "ammo_rack_00",
+      "center": [
+        0.01404,
+        0.7674,
+        0.54985
+      ],
+      "half_size": [
+        0.55033,
+        0.30304,
+        0.65715
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "health": 10
+    }
+  ],
+  "tracks": [],
+  "modules": [],
+  "explosive_reactive_armor": [],
+  "sbw_obb": []
+}

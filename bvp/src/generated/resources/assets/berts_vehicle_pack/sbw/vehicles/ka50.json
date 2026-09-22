@@ -1,0 +1,13 @@
+{
+  "ID": "berts_vehicle_pack:ka50",
+  "Model": {
+    "GeometryBackend": "berts_vehicle_pack:vehicle/ka50",
+    "Model": "berts_vehicle_pack:geo/native_fallback/ka50.geo.json",
+    "Texture": "berts_vehicle_pack:textures/entity/ka50.png",
+    "WreckTexture": "berts_vehicle_pack:textures/entity_dead/ka50.png"
+  },
+  "MouseSpeed": [
+    0.2,
+    0.2
+  ]
+}

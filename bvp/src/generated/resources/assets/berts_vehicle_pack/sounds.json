@@ -1,0 +1,1034 @@
+{
+  "tap_ags30bmp": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/ags30bmp",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "atgm_tube_launch": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/atgmshoot",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "atgm_gun_launch": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/atgmshoot2",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "tap_aw_90mmfire": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/aw_90mmfire",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "tap_bm21fire": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/bm21fire",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "tap_bmp3cannon": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/bmp3cannon",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "tap_bmp3engine": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/bmp3engine",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "tap_bmp3idle": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/bmp3idle",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "tap_bmp3start": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/bmp3start",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "tap_bmpdrive": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/bmpdrive",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "tap_bmp_engine": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/bmp_engine",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "tap_brdm2engine": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/brdm2engine",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "tap_brdm2idle": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/brdm2idle",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "tap_btr80engine": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/btr80engine",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "tap_btr80idle": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/btr80idle",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "tap_btr80shoot": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/btr80shoot",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "tap_btr80start": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/btr80start",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "tap_cv90shoot": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/cv90shoot",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "tap_dshkshoot": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/dshkshoot",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "tap_engineidle_ifv_bradley": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/engineidle_ifv_bradley",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "tap_engineidle_ifv_marder": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/engineidle_ifv_marder",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "tap_engineidle_tnk_turbine": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/engineidle_tnk_turbine",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "tap_enginestart_ifv_bradley": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/enginestart_ifv_bradley",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "tap_enginestart_ifv_marder": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/enginestart_ifv_marder",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "tap_enginestart_tnk_turbine": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/enginestart_tnk_turbine",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "tap_engine_ht_pzv": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/engine_ht_pzv",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "tap_engine_ht_pzvi": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/engine_ht_pzvi",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "tap_engine_ht_pzvikt": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/engine_ht_pzvikt",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "tap_engine_hel_cobrahuey": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/engine_hel_cobrahuey",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "tap_engine_hel_havoc": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/engine_hel_havoc",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "tap_engine_hel_hindhip": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/engine_hel_hindhip",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "tap_engine_hel_kamov": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/engine_hel_kamov",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "tap_engine_hel_lilbird": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/engine_hel_lilbird",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "tap_engine_ifv_bradley": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/engine_ifv_bradley",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "tap_engine_ifv_marder": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/engine_ifv_marder",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "tap_engine_jep_humvee": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/engine_jep_humvee",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "tap_engine_mt_pziii": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/engine_mt_pziii",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "tap_engine_tnk_turbine": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/engine_tnk_turbine",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "tap_hydra": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/hydra",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "tap_jetshoot": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/jetshoot",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "tap_kamazengineidle": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/kamazengineidle",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "tap_kamazenginerun": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/kamazenginerun",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "tap_kamazenginestart": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/kamazenginestart",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "tap_leo1_engine": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/leo1_engine",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "tap_leo1_idle": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/leo1_idle",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "tap_leodieselengine": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/leodieselengine",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "m2hb_shoot_alt": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/m2hbshootalt",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "tap_mg34shootcoax": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/mg34shootcoax",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "tap_mg34shoot": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/mg34shoot",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "tap_minigun": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/minigun",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "tap_missileshoot": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/missileshoot",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "tap_rocketfire1": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/rocketfire1",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "tap_s5rocketshoot": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/s5rocketshoot",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "tap_spg9shoot": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/spg9shoot",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "tap_shoot_75mmde": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/shoot_75mmde",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "tap_shoot_75mmlongde": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/shoot_75mmlongde",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "tap_shoot_88mmde": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/shoot_88mmde",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "tap_shoot_88mmlongde": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/shoot_88mmlongde",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "tap_shoot_90mmus": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/shoot_90mmus",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "tap_shoot_gun_m240": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/shoot_gun_m240",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "tap_shoot_gun_pkt": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/shoot_gun_pkt",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "tap_shoot_ifv_2a42": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/shoot_ifv_2a42",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "tap_shoot_ifv_m242": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/shoot_ifv_m242",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "tap_shoot_ifv_rh202": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/shoot_ifv_rh202",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "tap_shoot_tnk_105mm": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/shoot_tnk_105mm",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "tap_shoot_tnk_120mm": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/shoot_tnk_120mm",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "shoot_tnk_125mm": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/shoot_tnk_125mm",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "tap_soviettank_engine": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/soviettank_engine",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "tap_t62engine": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/t62engine",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "tap_t62idle": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/t62idle",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "tap_t62shoot": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/t62shoot",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "tap_t62start": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/t62start",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "tap_t64_engine": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/t64_engine",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "tap_t64_idle": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/t64_idle",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "tap_t72engine": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/t72engine",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "tap_t72idle": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/t72idle",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "tap_t80engine": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/t80engine",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "tap_t90aengine": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/t90aengine",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "tap_t90aenginerun": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/t90aenginerun",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "tap_zu23shoot": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/zu23shoot",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "t72b_engine": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_t72engine",
+        "type": "event"
+      }
+    ]
+  },
+  "t72b_idle": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_t72idle",
+        "type": "event"
+      }
+    ]
+  },
+  "t72b_pkt_fire": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_shoot_gun_pkt",
+        "type": "event"
+      }
+    ]
+  },
+  "t80b_obr1976_engine": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_t80engine",
+        "type": "event"
+      }
+    ]
+  },
+  "t90a_idle": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_t90aengine",
+        "type": "event"
+      }
+    ]
+  },
+  "t90a_engine_run": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_t90aenginerun",
+        "type": "event"
+      }
+    ]
+  },
+  "bmpt_2a42_fire": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_shoot_ifv_2a42",
+        "type": "event"
+      }
+    ]
+  },
+  "zsu23_4_23mm_fire": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_zu23shoot",
+        "type": "event"
+      }
+    ]
+  },
+  "toyota_jihad_dshk_fire": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_dshkshoot",
+        "type": "event"
+      }
+    ]
+  },
+  "explosion_medium": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:explosion/explosion_medium",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "soviet_125mm_autoloader": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:vehicle/shared/shoot_tnk_125mm_autoloader",
+        "stream": false,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "ricochet_nonpenetration": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:impact/ricochet_nonpenetration",
+        "stream": false
+      }
+    ]
+  },
+  "tank_engine_silent": {
+    "sounds": []
+  },
+  "t72b_kord_fire": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:gun/t72b/t72b_kord_fire",
+        "stream": false
+      }
+    ]
+  },
+  "btr80a_2a72_fire": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:gun/btr80a/shoot_ifv_2a72",
+        "stream": false,
+        "attenuation_distance": 56
+      }
+    ]
+  },
+  "bmp2_engine_idle": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:vehicle/bmp2/bmp2_engine_idle",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "bmp2_engine_drive": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:vehicle/bmp2/bmp2_engine_drive",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "bmp2_2a42_fire": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:gun/bmp2/shoot_ifv_2a42",
+        "stream": false,
+        "attenuation_distance": 56
+      }
+    ]
+  },
+  "mi24v_yakb_silent": {
+    "sounds": []
+  },
+  "mi24v_yakb_fire": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:gun/mi24v/shoot_gun_yakb",
+        "stream": false,
+        "attenuation_distance": 48,
+        "volume": 0.65
+      }
+    ]
+  },
+  "mi24v_atgm_fire": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:weapon/mi24v/9m114_rocket_fire_1",
+        "stream": false,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "mi24v_s8_fire": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:weapon/mi24v/s8ko_rocket",
+        "stream": false,
+        "attenuation_distance": 48
+      }
+    ]
+  },
+  "mi24v_s13_fire": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:weapon/mi24v/s13_rocket_shoot",
+        "stream": false,
+        "attenuation_distance": 56
+      }
+    ]
+  },
+  "mi28n_2a42_fire": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:gun/mi28n/shoot_ifv_2a42",
+        "stream": false,
+        "attenuation_distance": 56,
+        "volume": 0.75
+      }
+    ]
+  },
+  "m48a3_elite_m41_90mm_fire": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:vehicle/m48a3_elite/m41_90mm_fire",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "m48a3_elite_engine": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:vehicle/m48a3_elite/m48_engine",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "t55a_2_0_d10t2s_fire": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:vehicle/t55a_2_0/shoot_100mm_ussr",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "t55a_2_0_dshk_fire": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:gun/t55a_2_0/dshk_fire",
+        "stream": false,
+        "attenuation_distance": 48
+      }
+    ]
+  },
+  "m1_abrams_elite_m68a1_fire": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:vehicle/m1_abrams_elite/m68a1_105mm_fire",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "m1_abrams_elite_m68a1_reload": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:vehicle/m1_abrams_elite/m68a1_105mm_reload",
+        "stream": false,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "m1_abrams_elite_m240_coax_fire": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:gun/m1_abrams_elite/m240_coax_fire",
+        "stream": false,
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "m1_abrams_elite_engine_idle": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:vehicle/m1_abrams_elite/engine_turbine_idle",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "m1_abrams_elite_engine_drive": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:vehicle/m1_abrams_elite/engine_turbine_drive",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "t90m_kord_fire": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:gun/t90m/t90m_kord_fire",
+        "stream": false,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "mig19_idle_start": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:vehicle/mig19/mig15_idle",
+        "stream": false,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "mig19_engine_loop": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:vehicle/mig19/mig15_engine",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "mig19_nr30_fire": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:gun/mig19/ns37_nr30_fire",
+        "stream": false,
+        "attenuation_distance": 64
+      }
+    ]
+  }
+}

@@ -1,0 +1,2518 @@
+{
+  "id": "bmpt",
+  "model_scale": 0.71640856,
+  "ap_penetration_mm": 85,
+  "chemical_penetration_mm": 800,
+  "fallback_incoming_penetration_mm": 500,
+  "atgm_tandem": true,
+  "impact_tolerance": 0.25,
+  "internal_ray_length": 10,
+  "unboxed_hits_penetrate": true,
+  "plates": [
+    {
+      "name": "make_100mm_00",
+      "center": [
+        -0.01372,
+        0.6513,
+        -2.83167
+      ],
+      "half_size": [
+        1.17682,
+        0.26844,
+        0.04715
+      ],
+      "rotation": [
+        137,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 100
+    },
+    {
+      "name": "make_295mm_01",
+      "center": [
+        -0.01363,
+        1.11639,
+        -2.35592
+      ],
+      "half_size": [
+        1.1758,
+        0.76296,
+        0.04533
+      ],
+      "rotation": [
+        71,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 295
+    },
+    {
+      "name": "make_135mm_02",
+      "center": [
+        1.11926,
+        1.2366,
+        0.53384
+      ],
+      "half_size": [
+        0.03849,
+        0.16622,
+        2.19864
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 135
+    },
+    {
+      "name": "make_135mm_03",
+      "center": [
+        1.11981,
+        0.76805,
+        -0.02339
+      ],
+      "half_size": [
+        0.03868,
+        0.30141,
+        2.59067
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 135
+    },
+    {
+      "name": "make_135mm_04",
+      "center": [
+        1.02284,
+        1.06329,
+        -2.15012
+      ],
+      "half_size": [
+        0.13436,
+        0.14873,
+        0.58284
+      ],
+      "rotation": [
+        -18,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 135
+    },
+    {
+      "name": "make_135mm_05",
+      "center": [
+        1.02349,
+        0.76964,
+        -2.6653
+      ],
+      "half_size": [
+        0.135,
+        0.21798,
+        0.20619
+      ],
+      "rotation": [
+        -30,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 135
+    },
+    {
+      "name": "make_135mm_06",
+      "center": [
+        -1.03196,
+        1.06201,
+        -2.15435
+      ],
+      "half_size": [
+        0.15582,
+        0.14882,
+        0.58873
+      ],
+      "rotation": [
+        -18,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 135
+    },
+    {
+      "name": "make_135mm_07",
+      "center": [
+        -1.02597,
+        0.78312,
+        -2.67333
+      ],
+      "half_size": [
+        0.15683,
+        0.21733,
+        0.20379
+      ],
+      "rotation": [
+        -29,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 135
+    },
+    {
+      "name": "make_135mm_08",
+      "center": [
+        -1.14762,
+        1.225,
+        0.51994
+      ],
+      "half_size": [
+        0.04126,
+        0.1688,
+        2.18474
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 135
+    },
+    {
+      "name": "make_135mm_09",
+      "center": [
+        -1.14707,
+        0.76206,
+        -0.02735
+      ],
+      "half_size": [
+        0.04089,
+        0.30334,
+        2.58653
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 135
+    },
+    {
+      "name": "make_65mm_10",
+      "center": [
+        -0.00433,
+        1.37457,
+        -1.22496
+      ],
+      "half_size": [
+        1.14053,
+        0.01556,
+        0.44093
+      ],
+      "rotation": [
+        -4,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 65
+    },
+    {
+      "name": "make_65mm_11",
+      "center": [
+        -0.01437,
+        0.92698,
+        2.68667
+      ],
+      "half_size": [
+        1.08427,
+        0.45881,
+        0.02026
+      ],
+      "rotation": [
+        15,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 65
+    },
+    {
+      "name": "make_65mm_12",
+      "center": [
+        -0.00433,
+        1.37457,
+        -1.22496
+      ],
+      "half_size": [
+        1.14053,
+        0.01556,
+        0.44093
+      ],
+      "rotation": [
+        -4,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 65
+    },
+    {
+      "name": "make_170mm_13",
+      "center": [
+        0.32056,
+        1.53624,
+        -1.05433
+      ],
+      "half_size": [
+        0.33789,
+        0.30945,
+        0.02991
+      ],
+      "rotation": [
+        36,
+        0,
+        0
+      ],
+      "frame": "turret",
+      "armor_mm": 170
+    },
+    {
+      "name": "make_170mm_14",
+      "center": [
+        1.0046,
+        1.59756,
+        -0.58678
+      ],
+      "half_size": [
+        0.3457,
+        0.23804,
+        0.02991
+      ],
+      "rotation": [
+        33.33056,
+        -58.49748,
+        2.30182
+      ],
+      "frame": "turret",
+      "armor_mm": 170
+    },
+    {
+      "name": "make_90mm_15",
+      "center": [
+        1.00405,
+        1.59846,
+        0.58646
+      ],
+      "half_size": [
+        0.3457,
+        0.23694,
+        0.02991
+      ],
+      "rotation": [
+        -33.33056,
+        58.49748,
+        2.30182
+      ],
+      "frame": "turret",
+      "armor_mm": 90
+    },
+    {
+      "name": "make_90mm_16",
+      "center": [
+        1.20154,
+        1.60458,
+        -0.01021
+      ],
+      "half_size": [
+        0.22375,
+        0.23376,
+        0.02991
+      ],
+      "rotation": [
+        159.06838,
+        86.0656,
+        -168.50833
+      ],
+      "frame": "turret",
+      "armor_mm": 90
+    },
+    {
+      "name": "make_170mm_17",
+      "center": [
+        0.74608,
+        1.50063,
+        -0.97208
+      ],
+      "half_size": [
+        0.13696,
+        0.13355,
+        0.02991
+      ],
+      "rotation": [
+        147.08862,
+        31.84606,
+        178.52376
+      ],
+      "frame": "turret",
+      "armor_mm": 170
+    },
+    {
+      "name": "make_170mm_18",
+      "center": [
+        0.70167,
+        1.69676,
+        -0.85429
+      ],
+      "half_size": [
+        0.06531,
+        0.09302,
+        0.02991
+      ],
+      "rotation": [
+        147.08862,
+        31.84606,
+        178.52376
+      ],
+      "frame": "turret",
+      "armor_mm": 170
+    },
+    {
+      "name": "make_90mm_19",
+      "center": [
+        1.11771,
+        1.70161,
+        -0.23644
+      ],
+      "half_size": [
+        0.04541,
+        0.10779,
+        0.02991
+      ],
+      "rotation": [
+        117.50645,
+        81.15588,
+        152.97304
+      ],
+      "frame": "turret",
+      "armor_mm": 90
+    },
+    {
+      "name": "make_90mm_20",
+      "center": [
+        1.24933,
+        1.51013,
+        -0.271
+      ],
+      "half_size": [
+        0.06946,
+        0.12329,
+        0.02991
+      ],
+      "rotation": [
+        117.50645,
+        81.15588,
+        152.97304
+      ],
+      "frame": "turret",
+      "armor_mm": 90
+    },
+    {
+      "name": "make_90mm_21",
+      "center": [
+        1.25024,
+        1.50885,
+        0.27122
+      ],
+      "half_size": [
+        0.06946,
+        0.12488,
+        0.02991
+      ],
+      "rotation": [
+        -117.50645,
+        -81.15588,
+        152.97304
+      ],
+      "frame": "turret",
+      "armor_mm": 90
+    },
+    {
+      "name": "make_90mm_22",
+      "center": [
+        1.11771,
+        1.70161,
+        0.23644
+      ],
+      "half_size": [
+        0.04541,
+        0.10779,
+        0.02991
+      ],
+      "rotation": [
+        -117.50645,
+        -81.15588,
+        152.97304
+      ],
+      "frame": "turret",
+      "armor_mm": 90
+    },
+    {
+      "name": "make_90mm_23",
+      "center": [
+        0.329,
+        1.58268,
+        0.95466
+      ],
+      "half_size": [
+        0.3363,
+        0.21606,
+        0.02991
+      ],
+      "rotation": [
+        -0.17256,
+        22.98519,
+        -0.84872
+      ],
+      "frame": "turret",
+      "armor_mm": 90
+    },
+    {
+      "name": "make_90mm_24",
+      "center": [
+        0.73682,
+        1.57628,
+        0.71542
+      ],
+      "half_size": [
+        0.151,
+        0.21606,
+        0.02991
+      ],
+      "rotation": [
+        -0.22461,
+        44.98506,
+        -0.94011
+      ],
+      "frame": "turret",
+      "armor_mm": 90
+    },
+    {
+      "name": "make_90mm_25",
+      "center": [
+        0.32056,
+        1.79889,
+        -0.09075
+      ],
+      "half_size": [
+        0.33789,
+        0.85938,
+        0.02991
+      ],
+      "rotation": [
+        89,
+        0,
+        0
+      ],
+      "frame": "turret",
+      "armor_mm": 90
+    },
+    {
+      "name": "make_90mm_26",
+      "center": [
+        0.2754,
+        1.80166,
+        0.81368
+      ],
+      "half_size": [
+        0.33789,
+        0.16675,
+        0.02991
+      ],
+      "rotation": [
+        88.92887,
+        20.99665,
+        -0.38384
+      ],
+      "frame": "turret",
+      "armor_mm": 90
+    },
+    {
+      "name": "make_90mm_27",
+      "center": [
+        0.86011,
+        1.80018,
+        -0.01716
+      ],
+      "half_size": [
+        0.20605,
+        0.25818,
+        0.02991
+      ],
+      "rotation": [
+        89,
+        0,
+        0
+      ],
+      "frame": "turret",
+      "armor_mm": 90
+    },
+    {
+      "name": "make_90mm_28",
+      "center": [
+        0.68091,
+        1.79116,
+        0.39219
+      ],
+      "half_size": [
+        0.3457,
+        0.24438,
+        0.02991
+      ],
+      "rotation": [
+        -88.33056,
+        58.49748,
+        2.30182
+      ],
+      "frame": "turret",
+      "armor_mm": 90
+    },
+    {
+      "name": "make_90mm_29",
+      "center": [
+        0.68091,
+        1.79116,
+        -0.39219
+      ],
+      "half_size": [
+        0.3457,
+        0.24438,
+        0.02991
+      ],
+      "rotation": [
+        88.33056,
+        -58.49748,
+        2.30182
+      ],
+      "frame": "turret",
+      "armor_mm": 90
+    },
+    {
+      "name": "make_90mm_30",
+      "center": [
+        -0.32056,
+        1.79889,
+        -0.09075
+      ],
+      "half_size": [
+        0.33789,
+        0.85938,
+        0.02991
+      ],
+      "rotation": [
+        89,
+        0,
+        0
+      ],
+      "frame": "turret",
+      "armor_mm": 90
+    },
+    {
+      "name": "make_90mm_31",
+      "center": [
+        -0.86011,
+        1.80018,
+        -0.01716
+      ],
+      "half_size": [
+        0.20605,
+        0.25818,
+        0.02991
+      ],
+      "rotation": [
+        89,
+        0,
+        0
+      ],
+      "frame": "turret",
+      "armor_mm": 90
+    },
+    {
+      "name": "make_90mm_32",
+      "center": [
+        -0.2754,
+        1.80166,
+        0.81368
+      ],
+      "half_size": [
+        0.33789,
+        0.16675,
+        0.02991
+      ],
+      "rotation": [
+        88.92887,
+        -20.99665,
+        0.38384
+      ],
+      "frame": "turret",
+      "armor_mm": 90
+    },
+    {
+      "name": "make_90mm_33",
+      "center": [
+        -0.329,
+        1.58268,
+        0.95466
+      ],
+      "half_size": [
+        0.3363,
+        0.21606,
+        0.02991
+      ],
+      "rotation": [
+        -0.17256,
+        -22.98519,
+        0.84872
+      ],
+      "frame": "turret",
+      "armor_mm": 90
+    },
+    {
+      "name": "make_90mm_34",
+      "center": [
+        -0.73682,
+        1.57628,
+        0.71542
+      ],
+      "half_size": [
+        0.151,
+        0.21606,
+        0.02991
+      ],
+      "rotation": [
+        -0.22461,
+        -44.98506,
+        0.94011
+      ],
+      "frame": "turret",
+      "armor_mm": 90
+    },
+    {
+      "name": "make_90mm_35",
+      "center": [
+        -1.24933,
+        1.51013,
+        -0.271
+      ],
+      "half_size": [
+        0.06946,
+        0.12329,
+        0.02991
+      ],
+      "rotation": [
+        117.50645,
+        -81.15588,
+        -152.97304
+      ],
+      "frame": "turret",
+      "armor_mm": 90
+    },
+    {
+      "name": "make_90mm_36",
+      "center": [
+        -1.11771,
+        1.70161,
+        0.23644
+      ],
+      "half_size": [
+        0.04541,
+        0.10779,
+        0.02991
+      ],
+      "rotation": [
+        -117.50645,
+        81.15588,
+        -152.97304
+      ],
+      "frame": "turret",
+      "armor_mm": 90
+    },
+    {
+      "name": "make_90mm_37",
+      "center": [
+        -1.25024,
+        1.50885,
+        0.27122
+      ],
+      "half_size": [
+        0.06946,
+        0.12488,
+        0.02991
+      ],
+      "rotation": [
+        -117.50645,
+        81.15588,
+        -152.97304
+      ],
+      "frame": "turret",
+      "armor_mm": 90
+    },
+    {
+      "name": "make_90mm_38",
+      "center": [
+        -1.11771,
+        1.70161,
+        -0.23644
+      ],
+      "half_size": [
+        0.04541,
+        0.10779,
+        0.02991
+      ],
+      "rotation": [
+        117.50645,
+        -81.15588,
+        -152.97304
+      ],
+      "frame": "turret",
+      "armor_mm": 90
+    },
+    {
+      "name": "make_90mm_39",
+      "center": [
+        -1.00405,
+        1.59846,
+        0.58646
+      ],
+      "half_size": [
+        0.3457,
+        0.23694,
+        0.02991
+      ],
+      "rotation": [
+        -33.33056,
+        -58.49748,
+        -2.30182
+      ],
+      "frame": "turret",
+      "armor_mm": 90
+    },
+    {
+      "name": "make_90mm_40",
+      "center": [
+        -0.68091,
+        1.79116,
+        0.39219
+      ],
+      "half_size": [
+        0.3457,
+        0.24438,
+        0.02991
+      ],
+      "rotation": [
+        -88.33056,
+        -58.49748,
+        -2.30182
+      ],
+      "frame": "turret",
+      "armor_mm": 90
+    },
+    {
+      "name": "make_90mm_41",
+      "center": [
+        -0.68091,
+        1.79116,
+        -0.39219
+      ],
+      "half_size": [
+        0.3457,
+        0.24438,
+        0.02991
+      ],
+      "rotation": [
+        88.33056,
+        58.49748,
+        -2.30182
+      ],
+      "frame": "turret",
+      "armor_mm": 90
+    },
+    {
+      "name": "make_90mm_42",
+      "center": [
+        -1.20154,
+        1.60458,
+        -0.01021
+      ],
+      "half_size": [
+        0.22375,
+        0.23376,
+        0.02991
+      ],
+      "rotation": [
+        159.06838,
+        -86.0656,
+        168.50833
+      ],
+      "frame": "turret",
+      "armor_mm": 90
+    },
+    {
+      "name": "make_170mm_43",
+      "center": [
+        -0.32056,
+        1.53624,
+        -1.05433
+      ],
+      "half_size": [
+        0.33789,
+        0.30945,
+        0.02991
+      ],
+      "rotation": [
+        36,
+        0,
+        0
+      ],
+      "frame": "turret",
+      "armor_mm": 170
+    },
+    {
+      "name": "make_170mm_44",
+      "center": [
+        -1.0046,
+        1.59756,
+        -0.58678
+      ],
+      "half_size": [
+        0.3457,
+        0.23804,
+        0.02991
+      ],
+      "rotation": [
+        33.33056,
+        58.49748,
+        -2.30182
+      ],
+      "frame": "turret",
+      "armor_mm": 170
+    },
+    {
+      "name": "make_170mm_45",
+      "center": [
+        -0.74608,
+        1.50063,
+        -0.97208
+      ],
+      "half_size": [
+        0.13696,
+        0.13355,
+        0.02991
+      ],
+      "rotation": [
+        147.08862,
+        -31.84606,
+        -178.52376
+      ],
+      "frame": "turret",
+      "armor_mm": 170
+    },
+    {
+      "name": "make_170mm_46",
+      "center": [
+        -0.70167,
+        1.69676,
+        -0.85429
+      ],
+      "half_size": [
+        0.06531,
+        0.09302,
+        0.02991
+      ],
+      "rotation": [
+        147.08862,
+        -31.84606,
+        -178.52376
+      ],
+      "frame": "turret",
+      "armor_mm": 170
+    }
+  ],
+  "sensitive_internals": [],
+  "engines": [
+    {
+      "name": "engine_block_00",
+      "center": [
+        -0.01391,
+        1.33931,
+        1.78015
+      ],
+      "half_size": [
+        1.08565,
+        0.03319,
+        1.03762
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull"
+    }
+  ],
+  "ammo_racks": [
+    {
+      "name": "ammo_rack_00",
+      "center": [
+        0.6937,
+        0.83241,
+        0.1614
+      ],
+      "half_size": [
+        0.0896,
+        0.23507,
+        0.65798
+      ],
+      "rotation": [
+        -0.01745,
+        0.00015,
+        0.99985
+      ],
+      "frame": "hull",
+      "health": 10
+    },
+    {
+      "name": "ammo_rack_01",
+      "center": [
+        -0.69612,
+        0.83241,
+        0.1614
+      ],
+      "half_size": [
+        0.0896,
+        0.23507,
+        0.65798
+      ],
+      "rotation": [
+        -0.01745,
+        0.00015,
+        0.99985
+      ],
+      "frame": "hull",
+      "health": 10
+    },
+    {
+      "name": "ammo_rack_02",
+      "center": [
+        -0.0035,
+        0.8205,
+        -0.59407
+      ],
+      "half_size": [
+        0.59877,
+        0.23507,
+        0.1025
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "health": 10
+    },
+    {
+      "name": "ammo_rack_03",
+      "center": [
+        0.00157,
+        0.8205,
+        0.90957
+      ],
+      "half_size": [
+        0.60494,
+        0.23507,
+        0.1025
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "health": 10
+    }
+  ],
+  "tracks": [
+    {
+      "name": "right_track_00",
+      "center": [
+        1.36569,
+        0.67863,
+        2.89484
+      ],
+      "half_size": [
+        0.19081,
+        0.03131,
+        0.17506
+      ],
+      "rotation": [
+        -90,
+        0,
+        0
+      ],
+      "frame": "hull"
+    },
+    {
+      "name": "right_track_01",
+      "center": [
+        1.36597,
+        0.31632,
+        2.66379
+      ],
+      "half_size": [
+        0.19053,
+        0.03131,
+        0.30519
+      ],
+      "rotation": [
+        -41,
+        0,
+        0
+      ],
+      "frame": "hull"
+    },
+    {
+      "name": "right_track_02",
+      "center": [
+        1.36588,
+        0.12986,
+        -0.2235
+      ],
+      "half_size": [
+        0.19063,
+        0.06971,
+        2.65578
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull"
+    },
+    {
+      "name": "right_track_03",
+      "center": [
+        1.36459,
+        0.40186,
+        -3.12194
+      ],
+      "half_size": [
+        0.19192,
+        0.03002,
+        0.36992
+      ],
+      "rotation": [
+        47,
+        0,
+        0
+      ],
+      "frame": "hull"
+    },
+    {
+      "name": "right_track_04",
+      "center": [
+        1.36403,
+        0.80498,
+        -3.38118
+      ],
+      "half_size": [
+        0.19247,
+        0.03638,
+        0.14937
+      ],
+      "rotation": [
+        86,
+        0,
+        0
+      ],
+      "frame": "hull"
+    },
+    {
+      "name": "right_track_05",
+      "center": [
+        1.36486,
+        0.91027,
+        2.8467
+      ],
+      "half_size": [
+        0.19164,
+        0.03131,
+        0.08527
+      ],
+      "rotation": [
+        -125,
+        0,
+        0
+      ],
+      "frame": "hull"
+    },
+    {
+      "name": "left_track_06",
+      "center": [
+        -1.40916,
+        0.67863,
+        2.89484
+      ],
+      "half_size": [
+        0.19081,
+        0.03131,
+        0.17506
+      ],
+      "rotation": [
+        -90,
+        0,
+        0
+      ],
+      "frame": "hull"
+    },
+    {
+      "name": "left_track_07",
+      "center": [
+        -1.40999,
+        0.91027,
+        2.8467
+      ],
+      "half_size": [
+        0.19164,
+        0.03131,
+        0.08527
+      ],
+      "rotation": [
+        -125,
+        0,
+        0
+      ],
+      "frame": "hull"
+    },
+    {
+      "name": "left_track_08",
+      "center": [
+        -1.41026,
+        0.3991,
+        -3.12491
+      ],
+      "half_size": [
+        0.19192,
+        0.02597,
+        0.36992
+      ],
+      "rotation": [
+        47,
+        0,
+        0
+      ],
+      "frame": "hull"
+    },
+    {
+      "name": "left_track_09",
+      "center": [
+        -1.41082,
+        0.80516,
+        -3.37852
+      ],
+      "half_size": [
+        0.19247,
+        0.03905,
+        0.14937
+      ],
+      "rotation": [
+        86,
+        0,
+        0
+      ],
+      "frame": "hull"
+    },
+    {
+      "name": "left_track_10",
+      "center": [
+        -1.40897,
+        0.12443,
+        -0.2235
+      ],
+      "half_size": [
+        0.19063,
+        0.07515,
+        2.65578
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull"
+    },
+    {
+      "name": "left_track_11",
+      "center": [
+        -1.40888,
+        0.31632,
+        2.66379
+      ],
+      "half_size": [
+        0.19053,
+        0.03131,
+        0.30519
+      ],
+      "rotation": [
+        -41,
+        0,
+        0
+      ],
+      "frame": "hull"
+    }
+  ],
+  "modules": [
+    {
+      "name": "weaponsystems_00",
+      "center": [
+        0.54297,
+        2.41248,
+        0.8905
+      ],
+      "half_size": [
+        0.18921,
+        0.29773,
+        0.51697
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "turret",
+      "module": "weaponsystems",
+      "unified": true
+    },
+    {
+      "name": "weaponsystems_01",
+      "center": [
+        0.98389,
+        2.51489,
+        0.33569
+      ],
+      "half_size": [
+        0.18921,
+        0.11304,
+        0.82178
+      ],
+      "rotation": [
+        0,
+        0,
+        -14
+      ],
+      "frame": "turret",
+      "module": "weaponsystems",
+      "unified": true
+    },
+    {
+      "name": "weaponsystems_02",
+      "center": [
+        0.16443,
+        2.4657,
+        0.44568
+      ],
+      "half_size": [
+        0.15418,
+        0.16467,
+        0.82459
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "turret",
+      "module": "weaponsystems",
+      "unified": true
+    },
+    {
+      "name": "weaponsystems_03",
+      "center": [
+        -0.16443,
+        2.4657,
+        0.44568
+      ],
+      "half_size": [
+        0.15418,
+        0.16467,
+        0.82459
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "turret",
+      "module": "weaponsystems",
+      "unified": true
+    },
+    {
+      "name": "weaponsystems_04",
+      "center": [
+        -0.54297,
+        2.41248,
+        0.8905
+      ],
+      "half_size": [
+        0.18921,
+        0.29773,
+        0.51697
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "turret",
+      "module": "weaponsystems",
+      "unified": true
+    },
+    {
+      "name": "weaponsystems_05",
+      "center": [
+        -0.98389,
+        2.51489,
+        0.33569
+      ],
+      "half_size": [
+        0.18921,
+        0.11304,
+        0.82178
+      ],
+      "rotation": [
+        0,
+        0,
+        14
+      ],
+      "frame": "turret",
+      "module": "weaponsystems",
+      "unified": true
+    }
+  ],
+  "explosive_reactive_armor": [
+    {
+      "name": "relict_00",
+      "center": [
+        1.64661,
+        0.91211,
+        -2.54321
+      ],
+      "half_size": [
+        0.02771,
+        0.15186,
+        0.30029
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "type": "relict",
+      "kinetic_protection_mm": 200,
+      "chemical_protection_mm": 600
+    },
+    {
+      "name": "relict_01",
+      "center": [
+        1.64661,
+        0.91211,
+        -1.91309
+      ],
+      "half_size": [
+        0.02771,
+        0.15186,
+        0.30029
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "type": "relict",
+      "kinetic_protection_mm": 200,
+      "chemical_protection_mm": 600
+    },
+    {
+      "name": "relict_02",
+      "center": [
+        1.64661,
+        0.91211,
+        -0.64673
+      ],
+      "half_size": [
+        0.02771,
+        0.15186,
+        0.30029
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "type": "relict",
+      "kinetic_protection_mm": 200,
+      "chemical_protection_mm": 600
+    },
+    {
+      "name": "relict_03",
+      "center": [
+        1.64661,
+        0.91211,
+        -1.27686
+      ],
+      "half_size": [
+        0.02771,
+        0.15186,
+        0.30029
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "type": "relict",
+      "kinetic_protection_mm": 200,
+      "chemical_protection_mm": 600
+    },
+    {
+      "name": "relict_04",
+      "center": [
+        1.64661,
+        0.91211,
+        0.61719
+      ],
+      "half_size": [
+        0.02771,
+        0.15186,
+        0.30029
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "type": "relict",
+      "kinetic_protection_mm": 200,
+      "chemical_protection_mm": 600
+    },
+    {
+      "name": "relict_05",
+      "center": [
+        1.64661,
+        0.91211,
+        -0.01294
+      ],
+      "half_size": [
+        0.02771,
+        0.15186,
+        0.30029
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "type": "relict",
+      "kinetic_protection_mm": 200,
+      "chemical_protection_mm": 600
+    },
+    {
+      "name": "relict_06",
+      "center": [
+        1.64661,
+        1.28076,
+        0.61719
+      ],
+      "half_size": [
+        0.02771,
+        0.15186,
+        0.30029
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "type": "relict",
+      "kinetic_protection_mm": 200,
+      "chemical_protection_mm": 600
+    },
+    {
+      "name": "relict_07",
+      "center": [
+        1.64661,
+        1.28076,
+        -0.01294
+      ],
+      "half_size": [
+        0.02771,
+        0.15186,
+        0.30029
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "type": "relict",
+      "kinetic_protection_mm": 200,
+      "chemical_protection_mm": 600
+    },
+    {
+      "name": "relict_08",
+      "center": [
+        1.64661,
+        1.28076,
+        -0.63818
+      ],
+      "half_size": [
+        0.02771,
+        0.15186,
+        0.30029
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "type": "relict",
+      "kinetic_protection_mm": 200,
+      "chemical_protection_mm": 600
+    },
+    {
+      "name": "relict_09",
+      "center": [
+        1.64661,
+        1.28076,
+        -1.26831
+      ],
+      "half_size": [
+        0.02771,
+        0.15186,
+        0.30029
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "type": "relict",
+      "kinetic_protection_mm": 200,
+      "chemical_protection_mm": 600
+    },
+    {
+      "name": "relict_10",
+      "center": [
+        1.64661,
+        1.2218,
+        -1.90259
+      ],
+      "half_size": [
+        0.02771,
+        0.0929,
+        0.30029
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "type": "relict",
+      "kinetic_protection_mm": 200,
+      "chemical_protection_mm": 600
+    },
+    {
+      "name": "relict_11",
+      "center": [
+        1.64661,
+        1.2218,
+        -2.53271
+      ],
+      "half_size": [
+        0.02771,
+        0.0929,
+        0.30029
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "type": "relict",
+      "kinetic_protection_mm": 200,
+      "chemical_protection_mm": 600
+    },
+    {
+      "name": "relict_12",
+      "center": [
+        -0.76457,
+        1.1756,
+        -2.20169
+      ],
+      "half_size": [
+        0.13515,
+        0.22659,
+        0.04948
+      ],
+      "rotation": [
+        71,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "type": "relict",
+      "kinetic_protection_mm": 200,
+      "chemical_protection_mm": 600
+    },
+    {
+      "name": "relict_13",
+      "center": [
+        -0.76066,
+        1.00268,
+        -2.68622
+      ],
+      "half_size": [
+        0.13271,
+        0.22659,
+        0.0507
+      ],
+      "rotation": [
+        71,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "type": "relict",
+      "kinetic_protection_mm": 200,
+      "chemical_protection_mm": 600
+    },
+    {
+      "name": "relict_14",
+      "center": [
+        -0.46745,
+        1.1756,
+        -2.20169
+      ],
+      "half_size": [
+        0.13515,
+        0.22659,
+        0.04948
+      ],
+      "rotation": [
+        71,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "type": "relict",
+      "kinetic_protection_mm": 200,
+      "chemical_protection_mm": 600
+    },
+    {
+      "name": "relict_15",
+      "center": [
+        -0.17546,
+        1.1756,
+        -2.20169
+      ],
+      "half_size": [
+        0.13515,
+        0.22659,
+        0.04948
+      ],
+      "rotation": [
+        71,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "type": "relict",
+      "kinetic_protection_mm": 200,
+      "chemical_protection_mm": 600
+    },
+    {
+      "name": "relict_16",
+      "center": [
+        -0.46989,
+        1.00268,
+        -2.68622
+      ],
+      "half_size": [
+        0.13271,
+        0.22659,
+        0.0507
+      ],
+      "rotation": [
+        71,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "type": "relict",
+      "kinetic_protection_mm": 200,
+      "chemical_protection_mm": 600
+    },
+    {
+      "name": "relict_17",
+      "center": [
+        -0.17765,
+        1.00268,
+        -2.68622
+      ],
+      "half_size": [
+        0.13271,
+        0.22659,
+        0.0507
+      ],
+      "rotation": [
+        71,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "type": "relict",
+      "kinetic_protection_mm": 200,
+      "chemical_protection_mm": 600
+    },
+    {
+      "name": "relict_18",
+      "center": [
+        0.13094,
+        1.1756,
+        -2.20169
+      ],
+      "half_size": [
+        0.13515,
+        0.22659,
+        0.04948
+      ],
+      "rotation": [
+        71,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "type": "relict",
+      "kinetic_protection_mm": 200,
+      "chemical_protection_mm": 600
+    },
+    {
+      "name": "relict_19",
+      "center": [
+        0.42806,
+        1.1756,
+        -2.20169
+      ],
+      "half_size": [
+        0.13515,
+        0.22659,
+        0.04948
+      ],
+      "rotation": [
+        71,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "type": "relict",
+      "kinetic_protection_mm": 200,
+      "chemical_protection_mm": 600
+    },
+    {
+      "name": "relict_20",
+      "center": [
+        0.72005,
+        1.1756,
+        -2.20169
+      ],
+      "half_size": [
+        0.13515,
+        0.22659,
+        0.04948
+      ],
+      "rotation": [
+        71,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "type": "relict",
+      "kinetic_protection_mm": 200,
+      "chemical_protection_mm": 600
+    },
+    {
+      "name": "relict_21",
+      "center": [
+        0.13485,
+        1.00268,
+        -2.68622
+      ],
+      "half_size": [
+        0.13271,
+        0.22659,
+        0.0507
+      ],
+      "rotation": [
+        71,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "type": "relict",
+      "kinetic_protection_mm": 200,
+      "chemical_protection_mm": 600
+    },
+    {
+      "name": "relict_22",
+      "center": [
+        0.71785,
+        1.00268,
+        -2.68622
+      ],
+      "half_size": [
+        0.13271,
+        0.22659,
+        0.0507
+      ],
+      "rotation": [
+        71,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "type": "relict",
+      "kinetic_protection_mm": 200,
+      "chemical_protection_mm": 600
+    },
+    {
+      "name": "relict_23",
+      "center": [
+        0.42562,
+        1.00268,
+        -2.68622
+      ],
+      "half_size": [
+        0.13271,
+        0.22659,
+        0.0507
+      ],
+      "rotation": [
+        71,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "type": "relict",
+      "kinetic_protection_mm": 200,
+      "chemical_protection_mm": 600
+    },
+    {
+      "name": "relict_24",
+      "center": [
+        1.28721,
+        1.63767,
+        -0.1019
+      ],
+      "half_size": [
+        0.22376,
+        0.11121,
+        0.04077
+      ],
+      "rotation": [
+        109.67853,
+        88.44143,
+        148.06503
+      ],
+      "frame": "hull",
+      "type": "relict",
+      "kinetic_protection_mm": 200,
+      "chemical_protection_mm": 600
+    },
+    {
+      "name": "relict_25",
+      "center": [
+        1.11745,
+        1.61725,
+        -0.68345
+      ],
+      "half_size": [
+        0.23938,
+        0.11548,
+        0.06445
+      ],
+      "rotation": [
+        35.30445,
+        -62.96211,
+        1.10624
+      ],
+      "frame": "hull",
+      "type": "relict",
+      "kinetic_protection_mm": 200,
+      "chemical_protection_mm": 600
+    },
+    {
+      "name": "relict_26",
+      "center": [
+        1.11745,
+        1.61725,
+        0.47325
+      ],
+      "half_size": [
+        0.23938,
+        0.11548,
+        0.06445
+      ],
+      "rotation": [
+        -35.30445,
+        62.96211,
+        1.10624
+      ],
+      "frame": "hull",
+      "type": "relict",
+      "kinetic_protection_mm": 200,
+      "chemical_protection_mm": 600
+    },
+    {
+      "name": "relict_27",
+      "center": [
+        -0.17546,
+        1.60602,
+        -1.05008
+      ],
+      "half_size": [
+        0.13515,
+        0.22659,
+        0.04948
+      ],
+      "rotation": [
+        41,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "type": "relict",
+      "kinetic_protection_mm": 200,
+      "chemical_protection_mm": 600
+    },
+    {
+      "name": "relict_28",
+      "center": [
+        -0.48185,
+        1.60602,
+        -1.00711
+      ],
+      "half_size": [
+        0.13515,
+        0.22659,
+        0.04948
+      ],
+      "rotation": [
+        41,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "type": "relict",
+      "kinetic_protection_mm": 200,
+      "chemical_protection_mm": 600
+    },
+    {
+      "name": "relict_29",
+      "center": [
+        -0.74723,
+        1.57789,
+        -0.94657
+      ],
+      "half_size": [
+        0.08681,
+        0.17764,
+        0.06291
+      ],
+      "rotation": [
+        41,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "type": "relict",
+      "kinetic_protection_mm": 200,
+      "chemical_protection_mm": 600
+    },
+    {
+      "name": "relict_30",
+      "center": [
+        -0.91569,
+        1.5544,
+        -0.81846
+      ],
+      "half_size": [
+        0.07143,
+        0.12063,
+        0.09269
+      ],
+      "rotation": [
+        41,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "type": "relict",
+      "kinetic_protection_mm": 200,
+      "chemical_protection_mm": 600
+    },
+    {
+      "name": "relict_31",
+      "center": [
+        0.96525,
+        1.5544,
+        -0.81846
+      ],
+      "half_size": [
+        0.07143,
+        0.12063,
+        0.09269
+      ],
+      "rotation": [
+        41,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "type": "relict",
+      "kinetic_protection_mm": 200,
+      "chemical_protection_mm": 600
+    },
+    {
+      "name": "relict_32",
+      "center": [
+        0.74723,
+        1.57789,
+        -0.94657
+      ],
+      "half_size": [
+        0.08681,
+        0.17764,
+        0.06291
+      ],
+      "rotation": [
+        41,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "type": "relict",
+      "kinetic_protection_mm": 200,
+      "chemical_protection_mm": 600
+    },
+    {
+      "name": "relict_33",
+      "center": [
+        0.48185,
+        1.60602,
+        -1.00711
+      ],
+      "half_size": [
+        0.13515,
+        0.22659,
+        0.04948
+      ],
+      "rotation": [
+        41,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "type": "relict",
+      "kinetic_protection_mm": 200,
+      "chemical_protection_mm": 600
+    },
+    {
+      "name": "relict_34",
+      "center": [
+        0.17546,
+        1.60602,
+        -1.05008
+      ],
+      "half_size": [
+        0.13515,
+        0.22659,
+        0.04948
+      ],
+      "rotation": [
+        41,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "type": "relict",
+      "kinetic_protection_mm": 200,
+      "chemical_protection_mm": 600
+    },
+    {
+      "name": "relict_35",
+      "center": [
+        -1.64661,
+        1.2218,
+        -2.53271
+      ],
+      "half_size": [
+        0.02771,
+        0.0929,
+        0.30029
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "type": "relict",
+      "kinetic_protection_mm": 200,
+      "chemical_protection_mm": 600
+    },
+    {
+      "name": "relict_36",
+      "center": [
+        -1.64661,
+        0.91211,
+        -2.54321
+      ],
+      "half_size": [
+        0.02771,
+        0.15186,
+        0.30029
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "type": "relict",
+      "kinetic_protection_mm": 200,
+      "chemical_protection_mm": 600
+    },
+    {
+      "name": "relict_37",
+      "center": [
+        -1.64661,
+        0.91211,
+        -1.91309
+      ],
+      "half_size": [
+        0.02771,
+        0.15186,
+        0.30029
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "type": "relict",
+      "kinetic_protection_mm": 200,
+      "chemical_protection_mm": 600
+    },
+    {
+      "name": "relict_38",
+      "center": [
+        -1.64661,
+        1.2218,
+        -1.90259
+      ],
+      "half_size": [
+        0.02771,
+        0.0929,
+        0.30029
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "type": "relict",
+      "kinetic_protection_mm": 200,
+      "chemical_protection_mm": 600
+    },
+    {
+      "name": "relict_39",
+      "center": [
+        -1.64661,
+        1.28076,
+        -1.26831
+      ],
+      "half_size": [
+        0.02771,
+        0.15186,
+        0.30029
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "type": "relict",
+      "kinetic_protection_mm": 200,
+      "chemical_protection_mm": 600
+    },
+    {
+      "name": "relict_40",
+      "center": [
+        -1.64661,
+        0.91211,
+        -1.27686
+      ],
+      "half_size": [
+        0.02771,
+        0.15186,
+        0.30029
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "type": "relict",
+      "kinetic_protection_mm": 200,
+      "chemical_protection_mm": 600
+    },
+    {
+      "name": "relict_41",
+      "center": [
+        -1.64661,
+        0.91211,
+        -0.64673
+      ],
+      "half_size": [
+        0.02771,
+        0.15186,
+        0.30029
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "type": "relict",
+      "kinetic_protection_mm": 200,
+      "chemical_protection_mm": 600
+    },
+    {
+      "name": "relict_42",
+      "center": [
+        -1.64661,
+        1.28076,
+        -0.63818
+      ],
+      "half_size": [
+        0.02771,
+        0.15186,
+        0.30029
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "type": "relict",
+      "kinetic_protection_mm": 200,
+      "chemical_protection_mm": 600
+    },
+    {
+      "name": "relict_43",
+      "center": [
+        -1.64661,
+        1.28076,
+        -0.01294
+      ],
+      "half_size": [
+        0.02771,
+        0.15186,
+        0.30029
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "type": "relict",
+      "kinetic_protection_mm": 200,
+      "chemical_protection_mm": 600
+    },
+    {
+      "name": "relict_44",
+      "center": [
+        -1.64661,
+        0.91211,
+        -0.01294
+      ],
+      "half_size": [
+        0.02771,
+        0.15186,
+        0.30029
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "type": "relict",
+      "kinetic_protection_mm": 200,
+      "chemical_protection_mm": 600
+    },
+    {
+      "name": "relict_45",
+      "center": [
+        -1.64661,
+        0.91211,
+        0.61719
+      ],
+      "half_size": [
+        0.02771,
+        0.15186,
+        0.30029
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "type": "relict",
+      "kinetic_protection_mm": 200,
+      "chemical_protection_mm": 600
+    },
+    {
+      "name": "relict_46",
+      "center": [
+        -1.64661,
+        1.28076,
+        0.61719
+      ],
+      "half_size": [
+        0.02771,
+        0.15186,
+        0.30029
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "type": "relict",
+      "kinetic_protection_mm": 200,
+      "chemical_protection_mm": 600
+    },
+    {
+      "name": "relict_47",
+      "center": [
+        -1.14112,
+        1.63683,
+        -0.69573
+      ],
+      "half_size": [
+        0.23938,
+        0.11548,
+        0.03137
+      ],
+      "rotation": [
+        35.30445,
+        62.96211,
+        -1.10624
+      ],
+      "frame": "hull",
+      "type": "relict",
+      "kinetic_protection_mm": 200,
+      "chemical_protection_mm": 600
+    },
+    {
+      "name": "relict_48",
+      "center": [
+        -1.28721,
+        1.63767,
+        -0.1019
+      ],
+      "half_size": [
+        0.22376,
+        0.11121,
+        0.04077
+      ],
+      "rotation": [
+        109.67853,
+        -88.44143,
+        -148.06503
+      ],
+      "frame": "hull",
+      "type": "relict",
+      "kinetic_protection_mm": 200,
+      "chemical_protection_mm": 600
+    },
+    {
+      "name": "relict_49",
+      "center": [
+        -1.11745,
+        1.61725,
+        0.47325
+      ],
+      "half_size": [
+        0.23938,
+        0.11548,
+        0.06445
+      ],
+      "rotation": [
+        -35.30445,
+        -62.96211,
+        -1.10624
+      ],
+      "frame": "hull",
+      "type": "relict",
+      "kinetic_protection_mm": 200,
+      "chemical_protection_mm": 600
+    }
+  ],
+  "sbw_obb": []
+}

@@ -1,0 +1,818 @@
+{
+  "ID": "berts_vehicle_pack:mig19",
+  "MaxHealth": 100,
+  "MaxEnergy": 10000000,
+  "AllowFreeCam": true,
+  "LightlyArmored": true,
+  "OBB": [
+    {
+      "Size": [
+        2.45,
+        0.9,
+        4.95
+      ],
+      "Position": [
+        0,
+        1.15,
+        0.05
+      ]
+    },
+    {
+      "Part": "WheelLeft",
+      "Size": [
+        0.32,
+        0.65,
+        3.55
+      ],
+      "Position": [
+        2.15,
+        0.72,
+        -0.25
+      ]
+    },
+    {
+      "Part": "WheelRight",
+      "Size": [
+        0.32,
+        0.65,
+        3.55
+      ],
+      "Position": [
+        -2.15,
+        0.72,
+        -0.25
+      ]
+    },
+    {
+      "Part": "MainEngine",
+      "Size": [
+        1.15,
+        0.65,
+        0.78
+      ],
+      "Position": [
+        0,
+        1.15,
+        -4.02
+      ]
+    },
+    {
+      "Part": "Turret",
+      "Size": [
+        1.55,
+        0.7,
+        1.85
+      ],
+      "Position": [
+        0,
+        -0.05,
+        0.2
+      ],
+      "Transform": "Turret",
+      "Rotation": "Turret"
+    }
+  ],
+  "Seats": [
+    {
+      "HidePassenger": true,
+      "BanHand": true,
+      "Transform": "Vehicle",
+      "Position": [
+        -0.04516,
+        3.67303,
+        4.41223
+      ],
+      "Weapons": [
+        "Cannon",
+        "Cannon2",
+        "Cannon3"
+      ],
+      "CanRotateHead": true,
+      "CameraPos": {
+        "Transform": "Vehicle",
+        "Position": [
+          -0.04516,
+          3.67303,
+          4.41223
+        ],
+        "UseAircraftCamera": true,
+        "EyeAttachment": "pilot_camera",
+        "ZoomEyeAttachment": "pilot_camera",
+        "DirectionAttachment": "pilot_camera",
+        "ZoomDirectionAttachment": "pilot_camera"
+      },
+      "DismountInfo": {
+        "Transform": "Vehicle",
+        "Position": [
+          0,
+          0,
+          -5.6
+        ]
+      }
+    }
+  ],
+  "Weapons": {
+    "Cannon": {
+      "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/gun_30mm.png",
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "Projectile": {
+        "Type": "superbwarfare:small_cannon_shell",
+        "Profile": "berts_vehicle_pack:mig19/cannon/default"
+      },
+      "ShellType": "AP",
+      "RPM": 850,
+      "Magazine": 70,
+      "EmptyReloadTime": 200,
+      "Velocity": 18,
+      "Damage": 45,
+      "Spread": 0.12,
+      "RecoilTime": 10,
+      "RecoilForce": 0.12,
+      "HeatPerShoot": 2,
+      "NaturalCooldown": 1,
+      "Crosshair": "@VehicleCommonGun",
+      "CrosshairColor": "0xFFFFFF",
+      "Name": "weapon.berts_vehicle_pack.mig19_nr30",
+      "SoundInfo": {
+        "Fire1PGain": 0.5,
+        "Fire3PGain": 0.5,
+        "Fire3PFarGain": 0.5,
+        "Fire3PVeryFarGain": 0.5,
+        "Fire1P": "berts_vehicle_pack:mig19_nr30_fire",
+        "Fire3P": "berts_vehicle_pack:mig19_nr30_fire",
+        "Fire3PFar": "berts_vehicle_pack:mig19_nr30_fire",
+        "Fire3PVeryFar": "berts_vehicle_pack:mig19_nr30_fire"
+      },
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_ap",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:mig19/cannon/ammo_00_nr30_aphe"
+            },
+            "ShellType": "APHE",
+            "Velocity": 39,
+            "ApDurability": 37,
+            "Damage": 45,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 5,
+            "Name": "Air Belt",
+            "ProjectileBelt": {
+              "Name": "Air Belt",
+              "Family": "NR30",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "nr30_aphe",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "nr30_hef_i",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "nr30_hef_i",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "nr30_hefi_t",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "RED"
+                }
+              ]
+            },
+            "ShootShake": [
+              8,
+              10,
+              12
+            ],
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:mig19/cannon/ammo_00_nr30_aphe",
+              "ProjectileLife": 400
+            }
+          }
+        }
+      ],
+      "ShootPos": {
+        "Transform": "Vehicle",
+        "Positions": [
+          [
+            1.4714,
+            2.33023,
+            3.92613
+          ]
+        ],
+        "Directions": [
+          "Vehicle"
+        ],
+        "ViewPosition": [
+          1.051,
+          1.66445,
+          2.80438
+        ],
+        "MuzzleAttachments": [
+          "nr30_muzzle_001"
+        ],
+        "MuzzleDirectionAttachments": [
+          "nr30_muzzle_001"
+        ],
+        "EffectAttachments": [
+          "nr30_muzzle_001"
+        ],
+        "EffectDirectionAttachments": [
+          "nr30_muzzle_001"
+        ]
+      },
+      "ProjectileBeltAmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_he",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:mig19/cannon/belt_ammo_00_nr30_hef_i"
+            },
+            "ShellType": "HE",
+            "Velocity": 39,
+            "ApDurability": 8,
+            "Damage": 250,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 5,
+            "Name": "HEF_I",
+            "ShootShake": [
+              8,
+              10,
+              12
+            ]
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_aa",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:mig19/cannon/belt_ammo_01_nr30_hefi_t"
+            },
+            "ShellType": "HE",
+            "Velocity": 39,
+            "ApDurability": 8,
+            "Damage": 250,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 5,
+            "Name": "HEFI_T",
+            "ShootShake": [
+              8,
+              10,
+              12
+            ]
+          }
+        }
+      ],
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "superbwarfare:small_cannon_shell",
+        "ProjectileProfile": "berts_vehicle_pack:mig19/cannon/default",
+        "ProjectileLife": 400
+      },
+      "ShootShake": [
+        8,
+        10,
+        12
+      ]
+    },
+    "Cannon2": {
+      "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/gun_30mm.png",
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "Projectile": {
+        "Type": "superbwarfare:small_cannon_shell",
+        "Profile": "berts_vehicle_pack:mig19/cannon2/default"
+      },
+      "ShellType": "AP",
+      "RPM": 850,
+      "Magazine": 70,
+      "EmptyReloadTime": 200,
+      "Velocity": 18,
+      "Damage": 45,
+      "Spread": 0.12,
+      "RecoilTime": 10,
+      "RecoilForce": 0.12,
+      "HeatPerShoot": 2,
+      "NaturalCooldown": 1,
+      "Crosshair": "@VehicleCommonGun",
+      "CrosshairColor": "0xFFFFFF",
+      "Name": "weapon.berts_vehicle_pack.mig19_nr30",
+      "SoundInfo": {
+        "Fire1PGain": 0.5,
+        "Fire3PGain": 0.5,
+        "Fire3PFarGain": 0.5,
+        "Fire3PVeryFarGain": 0.5,
+        "Fire1P": "berts_vehicle_pack:mig19_nr30_fire",
+        "Fire3P": "berts_vehicle_pack:mig19_nr30_fire",
+        "Fire3PFar": "berts_vehicle_pack:mig19_nr30_fire",
+        "Fire3PVeryFar": "berts_vehicle_pack:mig19_nr30_fire"
+      },
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_ap",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:mig19/cannon2/ammo_00_nr30_aphe"
+            },
+            "ShellType": "APHE",
+            "Velocity": 39,
+            "ApDurability": 37,
+            "Damage": 45,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 5,
+            "Name": "Air Belt",
+            "ProjectileBelt": {
+              "Name": "Air Belt",
+              "Family": "NR30",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "nr30_aphe",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "nr30_hef_i",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "nr30_hef_i",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "nr30_hefi_t",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "RED"
+                }
+              ]
+            },
+            "ShootShake": [
+              8,
+              10,
+              12
+            ],
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:mig19/cannon2/ammo_00_nr30_aphe",
+              "ProjectileLife": 400
+            }
+          }
+        }
+      ],
+      "ShootPos": {
+        "Transform": "Vehicle",
+        "Positions": [
+          [
+            -1.60496,
+            2.2653,
+            3.52524
+          ]
+        ],
+        "Directions": [
+          "Vehicle"
+        ],
+        "ViewPosition": [
+          -1.1464,
+          1.61807,
+          2.51803
+        ],
+        "MuzzleAttachments": [
+          "nr30_muzzle_002"
+        ],
+        "MuzzleDirectionAttachments": [
+          "nr30_muzzle_002"
+        ],
+        "EffectAttachments": [
+          "nr30_muzzle_002"
+        ],
+        "EffectDirectionAttachments": [
+          "nr30_muzzle_002"
+        ]
+      },
+      "ProjectileBeltAmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_he",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:mig19/cannon2/belt_ammo_00_nr30_hef_i"
+            },
+            "ShellType": "HE",
+            "Velocity": 39,
+            "ApDurability": 8,
+            "Damage": 250,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 5,
+            "Name": "HEF_I",
+            "ShootShake": [
+              8,
+              10,
+              12
+            ]
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_aa",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:mig19/cannon2/belt_ammo_01_nr30_hefi_t"
+            },
+            "ShellType": "HE",
+            "Velocity": 39,
+            "ApDurability": 8,
+            "Damage": 250,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 5,
+            "Name": "HEFI_T",
+            "ShootShake": [
+              8,
+              10,
+              12
+            ]
+          }
+        }
+      ],
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "superbwarfare:small_cannon_shell",
+        "ProjectileProfile": "berts_vehicle_pack:mig19/cannon2/default",
+        "ProjectileLife": 400
+      },
+      "ShootShake": [
+        8,
+        10,
+        12
+      ]
+    },
+    "Cannon3": {
+      "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/gun_30mm.png",
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "Projectile": {
+        "Type": "superbwarfare:small_cannon_shell",
+        "Profile": "berts_vehicle_pack:mig19/cannon3/default"
+      },
+      "ShellType": "AP",
+      "RPM": 850,
+      "Magazine": 70,
+      "EmptyReloadTime": 200,
+      "Velocity": 18,
+      "Damage": 45,
+      "Spread": 0.12,
+      "RecoilTime": 10,
+      "RecoilForce": 0.12,
+      "HeatPerShoot": 2,
+      "NaturalCooldown": 1,
+      "Crosshair": "@VehicleCommonGun",
+      "CrosshairColor": "0xFFFFFF",
+      "Name": "weapon.berts_vehicle_pack.mig19_nr30",
+      "SoundInfo": {
+        "Fire1PGain": 0.5,
+        "Fire3PGain": 0.5,
+        "Fire3PFarGain": 0.5,
+        "Fire3PVeryFarGain": 0.5,
+        "Fire1P": "berts_vehicle_pack:mig19_nr30_fire",
+        "Fire3P": "berts_vehicle_pack:mig19_nr30_fire",
+        "Fire3PFar": "berts_vehicle_pack:mig19_nr30_fire",
+        "Fire3PVeryFar": "berts_vehicle_pack:mig19_nr30_fire"
+      },
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_ap",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:mig19/cannon3/ammo_00_nr30_aphe"
+            },
+            "ShellType": "APHE",
+            "Velocity": 39,
+            "ApDurability": 37,
+            "Damage": 45,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 5,
+            "Name": "Air Belt",
+            "ProjectileBelt": {
+              "Name": "Air Belt",
+              "Family": "NR30",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "nr30_aphe",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "nr30_hef_i",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "nr30_hef_i",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "nr30_hefi_t",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "RED"
+                }
+              ]
+            },
+            "ShootShake": [
+              8,
+              10,
+              12
+            ],
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:mig19/cannon3/ammo_00_nr30_aphe",
+              "ProjectileLife": 400
+            }
+          }
+        }
+      ],
+      "ShootPos": {
+        "Transform": "Vehicle",
+        "Positions": [
+          [
+            0.14407,
+            -1.34127,
+            -9.2204
+          ]
+        ],
+        "Directions": [
+          "Vehicle"
+        ],
+        "ViewPosition": [
+          0.10291,
+          -0.95805,
+          -6.586
+        ],
+        "MuzzleAttachments": [
+          "nr30_muzzle_003"
+        ],
+        "MuzzleDirectionAttachments": [
+          "nr30_muzzle_003"
+        ],
+        "EffectAttachments": [
+          "nr30_muzzle_003"
+        ],
+        "EffectDirectionAttachments": [
+          "nr30_muzzle_003"
+        ]
+      },
+      "ProjectileBeltAmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_he",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:mig19/cannon3/belt_ammo_00_nr30_hef_i"
+            },
+            "ShellType": "HE",
+            "Velocity": 39,
+            "ApDurability": 8,
+            "Damage": 250,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 5,
+            "Name": "HEF_I",
+            "ShootShake": [
+              8,
+              10,
+              12
+            ]
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_aa",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:mig19/cannon3/belt_ammo_01_nr30_hefi_t"
+            },
+            "ShellType": "HE",
+            "Velocity": 39,
+            "ApDurability": 8,
+            "Damage": 250,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 5,
+            "Name": "HEFI_T",
+            "ShootShake": [
+              8,
+              10,
+              12
+            ]
+          }
+        }
+      ],
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "superbwarfare:small_cannon_shell",
+        "ProjectileProfile": "berts_vehicle_pack:mig19/cannon3/default",
+        "ProjectileLife": 400
+      },
+      "ShootShake": [
+        8,
+        10,
+        12
+      ]
+    }
+  },
+  "HUDColor": "0xFFC700",
+  "InertiaRotateRate": 1.2,
+  "ParkingBrakeWhenUnoccupied": false,
+  "EngineType": "Fixed",
+  "EngineInfo": {
+    "Buoyancy": 0,
+    "EnergyCostRate": 120,
+    "WheelRotSpeed": 1.25,
+    "WheelDifferential": 0.75,
+    "TrackRotSpeed": 1.7,
+    "TrackDifferential": 0.6,
+    "MaxForwardSpeedRate": 0.72,
+    "MaxBackwardSpeedRate": 0.16,
+    "Increment": 0.012,
+    "Decrement": 0.01,
+    "SteeringSpeed": 0.065,
+    "EngineSoundVolume": 0.85,
+    "EngineStartSound": "berts_vehicle_pack:mig19_idle_start"
+  },
+  "TurretPos": [
+    0,
+    2.52714,
+    0
+  ],
+  "BarrelPos": [
+    0,
+    0.5775,
+    1.63625
+  ],
+  "TurretTurnSpeed": [
+    1.35,
+    1.35
+  ],
+  "TurretPitchRange": [
+    -5,
+    18
+  ],
+  "HasDecoy": false,
+  "UpStep": 1.5,
+  "RotateOffsetHeight": 3.64,
+  "Mass": 44.5,
+  "DamageModifiers": [
+    "minecraft:arrow 0",
+    "minecraft:trident 0",
+    "minecraft:mob_attack 0",
+    "minecraft:mob_attack_no_aggro 0",
+    "minecraft:mob_projectile 0",
+    "minecraft:player_attack 0",
+    "#superbwarfare:projectile 0",
+    "All - 20",
+    "minecraft:lava + 20",
+    "minecraft:lava * 10",
+    "@minecraft:tnt * 4",
+    "@minecraft:tnt_minecart * 4",
+    "@#superbwarfare:aerial_bomb * 12",
+    "All * 0.23",
+    "superbwarfare:vehicle_strike * 2.5",
+    "minecraft:explosion * 2",
+    "superbwarfare:custom_explosion * 0.65",
+    "superbwarfare:projectile_explosion * 0.65",
+    "superbwarfare:mine * 0.5",
+    "superbwarfare:lunge_mine * 0.5",
+    "superbwarfare:projectile_hit * 1.3",
+    "#superbwarfare:projectile_absolute * 0.15",
+    "@#superbwarfare:aa_missile * 0.3",
+    "@superbwarfare:small_cannon_shell * 0.25",
+    "@superbwarfare:c4 * 4",
+    "@#superbwarfare:at_rocket * 1.1",
+    "@superbwarfare:gun_grenade * 1.25",
+    "@superbwarfare:mortar_shell * 1.25",
+    "@superbwarfare:tm_62 * 2.5"
+  ],
+  "DestroyInfo": {
+    "ParticleType": "Giant",
+    "ExplosionDamage": 160,
+    "ExplosionRadius": 13,
+    "SympatheticDetonation": true,
+    "SympatheticDetonationForce": 2,
+    "SympatheticDetonationChance": 0.55
+  },
+  "ThirdPersonCameraPos": [
+    -1.21375,
+    2.1,
+    7
+  ],
+  "VehicleIcon": "berts_vehicle_pack:textures/vehicle_icon/mig19.png",
+  "ContainerIcon": "superbwarfare:textures/gui/vehicle/type/land.png",
+  "VehicleContainerType": "Large",
+  "Type": "Airplane",
+  "CollisionLevel": {
+    "Level": 4,
+    "PowerLimits": [
+      [
+        0,
+        0,
+        true
+      ],
+      [
+        0,
+        0,
+        true
+      ],
+      [
+        0.1,
+        0.05,
+        false
+      ],
+      [
+        1,
+        0.3,
+        false
+      ]
+    ]
+  },
+  "EngineSound": "berts_vehicle_pack:mig19_engine_loop",
+  "HudType": "@Land",
+  "TerrainCompat": [],
+  "Attachments": {
+    "pilot_camera": {
+      "Parent": "Vehicle",
+      "Position": [
+        -0.04516,
+        3.67303,
+        4.41223
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "nr30_muzzle_001": {
+      "Parent": "Vehicle",
+      "Position": [
+        1.4714,
+        2.33023,
+        3.92613
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "nr30_muzzle_002": {
+      "Parent": "Vehicle",
+      "Position": [
+        -1.60496,
+        2.2653,
+        3.52524
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "nr30_muzzle_003": {
+      "Parent": "Vehicle",
+      "Position": [
+        0.14407,
+        -1.34127,
+        -9.2204
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    }
+  }
+}

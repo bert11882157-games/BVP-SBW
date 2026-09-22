@@ -1,0 +1,583 @@
+{
+  "ID": "berts_vehicle_pack:toyota_jihad_dshk",
+  "MaxHealth": 150,
+  "MaxEnergy": 5000000,
+  "AllowFreeCam": true,
+  "LightlyArmored": true,
+  "HasCCIP": true,
+  "HasFCS": true,
+  "EngineSoundMode": "CUSTOM",
+  "TrackSoundMode": "NATIVE",
+  "CustomSoundProfileId": "berts_vehicle_pack:tap_engine_engine_jep_humvee",
+  "OBB": [
+    {
+      "Size": [
+        0.48,
+        0.6,
+        0.72
+      ],
+      "Position": [
+        1.3,
+        0.55,
+        -3.68
+      ],
+      "Part": "WheelLeft"
+    },
+    {
+      "Size": [
+        0.48,
+        0.6,
+        0.72
+      ],
+      "Position": [
+        -1.3,
+        0.55,
+        -3.68
+      ],
+      "Part": "WheelRight"
+    },
+    {
+      "Size": [
+        0.48,
+        0.6,
+        0.72
+      ],
+      "Position": [
+        1.3,
+        0.55,
+        0.39
+      ],
+      "Part": "WheelLeft"
+    },
+    {
+      "Size": [
+        0.48,
+        0.6,
+        0.72
+      ],
+      "Position": [
+        -1.3,
+        0.55,
+        0.39
+      ],
+      "Part": "WheelRight"
+    },
+    {
+      "Size": [
+        1.55,
+        1.05,
+        5.25
+      ],
+      "Position": [
+        0,
+        1.45,
+        -1.07
+      ]
+    },
+    {
+      "Size": [
+        1.25,
+        0.68,
+        1.75
+      ],
+      "Position": [
+        0,
+        2,
+        0.8
+      ]
+    },
+    {
+      "Part": "Turret",
+      "Size": [
+        0.82,
+        0.82,
+        1.55
+      ],
+      "Position": [
+        0,
+        0,
+        0
+      ],
+      "Transform": "Turret",
+      "Rotation": "Turret"
+    }
+  ],
+  "Seats": [
+    {
+      "IsEnclosed": true,
+      "HidePassenger": true,
+      "BanHand": true,
+      "Transform": "Vehicle",
+      "Position": [
+        -0.57627,
+        0.74773,
+        -3.38562
+      ],
+      "MinPitch": -60,
+      "MaxPitch": 60,
+      "MinYaw": -95,
+      "MaxYaw": 95,
+      "CameraPos": {
+        "UseSimulate3P": true,
+        "Simulate3PPos": [
+          6,
+          1
+        ]
+      }
+    },
+    {
+      "IsEnclosed": true,
+      "HidePassenger": true,
+      "BanHand": true,
+      "Transform": "Vehicle",
+      "Position": [
+        0.57627,
+        0.74773,
+        -3.38562
+      ],
+      "MinPitch": -60,
+      "MaxPitch": 60,
+      "MinYaw": -95,
+      "MaxYaw": 95,
+      "CameraPos": {
+        "UseSimulate3P": true,
+        "Simulate3PPos": [
+          6,
+          1
+        ]
+      }
+    },
+    {
+      "IsEnclosed": false,
+      "Transform": "Vehicle",
+      "Position": [
+        0,
+        2.47656,
+        0.10805
+      ],
+      "MinPitch": -15,
+      "MaxPitch": 65,
+      "MinYaw": -360,
+      "MaxYaw": 360,
+      "Pose": "MachineGunStand",
+      "CameraPos": {
+        "Transform": "WeaponStationBarrel",
+        "UseFixedCameraPos": true,
+        "Position": [
+          0,
+          0,
+          0
+        ],
+        "Direction": "WeaponStationBarrel",
+        "EyeAttachment": "passenger_station_camera",
+        "ZoomEyeAttachment": "passenger_station_camera",
+        "DirectionAttachment": "passenger_station_muzzle",
+        "ZoomDirectionAttachment": "passenger_station_muzzle",
+        "CameraMode": "PLAYER_LOOK_AIM",
+        "AimCameraMode": "PLAYER_LOOK_AIM"
+      },
+      "Weapons": [
+        "DShK"
+      ],
+      "Sensitivity": [
+        0.58,
+        0.62,
+        0.85
+      ],
+      "BodyAttachment": "Vehicle"
+    },
+    {
+      "IsEnclosed": true,
+      "HidePassenger": true,
+      "BanHand": true,
+      "Transform": "Vehicle",
+      "Position": [
+        0.57627,
+        0.74773,
+        -2.01696
+      ],
+      "MinPitch": -60,
+      "MaxPitch": 60,
+      "MinYaw": -95,
+      "MaxYaw": 95,
+      "CameraPos": {
+        "UseSimulate3P": true,
+        "Simulate3PPos": [
+          6,
+          1
+        ]
+      }
+    },
+    {
+      "IsEnclosed": true,
+      "HidePassenger": true,
+      "BanHand": true,
+      "Transform": "Vehicle",
+      "Position": [
+        -0.57627,
+        0.74773,
+        -2.01696
+      ],
+      "MinPitch": -60,
+      "MaxPitch": 60,
+      "MinYaw": -95,
+      "MaxYaw": 95,
+      "CameraPos": {
+        "UseSimulate3P": true,
+        "Simulate3PPos": [
+          6,
+          1
+        ]
+      }
+    }
+  ],
+  "Weapons": {
+    "DShK": {
+      "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/gun_12_7mm.png",
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "Spread": 0.25,
+      "CrosshairColor": "0xFFFFFF",
+      "Projectile": {
+        "Type": "superbwarfare:projectile",
+        "Profile": "berts_vehicle_pack:toyota_jihad_dshk/dshk/default"
+      },
+      "RPM": 550,
+      "DefaultZoom": 1.5,
+      "Damage": 40,
+      "BypassesArmor": 0.6,
+      "Velocity": 25,
+      "RecoilTime": 23,
+      "RecoilForce": 0.15,
+      "HeatPerShoot": 5,
+      "NaturalCooldown": 1,
+      "ShootAnimationTime": 1,
+      "Name": "weapon.berts_vehicle_pack.dshk_12_7_mm_heavy_machine_gun",
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_ap",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:projectile",
+              "Profile": "berts_vehicle_pack:toyota_jihad_dshk/dshk/ammo_00_russian_127_bzt44_api_t_1"
+            },
+            "ShellType": "AP",
+            "Velocity": 43.25,
+            "ApDurability": 29,
+            "Damage": 40,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "AP Belt",
+            "ProjectileBelt": {
+              "Name": "AP Belt",
+              "Family": "RUSSIAN_127",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "API_T_1",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "GREEN"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "IAI",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "API_T_2",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "GREEN"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "AP_I_C",
+                  "Ammo": "superbwarfare:small_shell_gs",
+                  "Tracer": "NONE",
+                  "DisplayLabel": "API(cermet)"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:projectile",
+              "ProjectileProfile": "berts_vehicle_pack:toyota_jihad_dshk/dshk/ammo_00_russian_127_bzt44_api_t_1",
+              "ProjectileLife": 400
+            }
+          }
+        }
+      ],
+      "ShootPos": {
+        "Transform": "WeaponStationBarrel",
+        "Positions": [
+          [
+            0.16928,
+            0.35477,
+            -1.32903
+          ]
+        ],
+        "Directions": [
+          "WeaponStationBarrel"
+        ],
+        "ViewPosition": [
+          0.16928,
+          0.35477,
+          -1.32903
+        ],
+        "MuzzleAttachments": [
+          "passenger_station_muzzle"
+        ],
+        "MuzzleDirectionAttachments": [
+          "passenger_station_muzzle"
+        ],
+        "HudOriginAttachment": "passenger_station_muzzle",
+        "HudDirectionAttachment": "passenger_station_muzzle",
+        "ViewAttachment": "passenger_station_muzzle",
+        "ViewDirectionAttachment": "passenger_station_muzzle",
+        "SeekAttachment": "passenger_station_muzzle",
+        "SeekDirectionAttachment": "passenger_station_muzzle",
+        "EffectAttachments": [
+          "passenger_station_muzzle"
+        ],
+        "EffectDirectionAttachments": [
+          "passenger_station_muzzle"
+        ]
+      },
+      "Crosshair": "@NoCross",
+      "SoundInfo": {
+        "Fire1PGain": 0.5,
+        "Fire3PGain": 0.5,
+        "Fire3PFarGain": 0.5,
+        "Fire3PVeryFarGain": 0.5,
+        "Fire1P": "berts_vehicle_pack:tap_dshkshoot",
+        "Fire3P": "berts_vehicle_pack:tap_dshkshoot",
+        "Fire3PFar": "berts_vehicle_pack:tap_dshkshoot",
+        "Fire3PVeryFar": "berts_vehicle_pack:tap_dshkshoot",
+        "Change": "superbwarfare:into_cannon"
+      },
+      "SoundRadius": 16,
+      "ProjectileBeltAmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_he",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:projectile",
+              "Profile": "berts_vehicle_pack:toyota_jihad_dshk/dshk/belt_ammo_00_russian_127_mdz_iai"
+            },
+            "ShellType": "HE",
+            "Velocity": 43,
+            "ApDurability": 3,
+            "Damage": 83.33333333333333,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 1.6666666666666665,
+            "Name": "IAI"
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_aa",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:projectile",
+              "Profile": "berts_vehicle_pack:toyota_jihad_dshk/dshk/belt_ammo_01_russian_127_bzt44_api_t_2"
+            },
+            "ShellType": "AP",
+            "Velocity": 43.25,
+            "ApDurability": 29,
+            "Damage": 40,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "API_T"
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_gs",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:projectile",
+              "Profile": "berts_vehicle_pack:toyota_jihad_dshk/dshk/belt_ammo_02_russian_127_bs41_ap_i_c"
+            },
+            "ShellType": "AP",
+            "Velocity": 42.5,
+            "ApDurability": 34,
+            "Damage": 40,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "AP_I_C"
+          }
+        }
+      ],
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "superbwarfare:projectile",
+        "ProjectileProfile": "berts_vehicle_pack:toyota_jihad_dshk/dshk/default",
+        "ProjectileLife": 400
+      }
+    }
+  },
+  "HUDColor": "0xFFFFFF",
+  "InertiaRotateRate": 0.6,
+  "ParkingBrakeWhenUnoccupied": true,
+  "EngineType": "Wheel",
+  "EngineInfo": {
+    "Buoyancy": 0,
+    "EnergyCostRate": 32,
+    "WheelRotSpeed": 1.1,
+    "WheelDifferential": 0.5,
+    "MaxForwardSpeedRate": 1.25,
+    "MaxBackwardSpeedRate": 0.75,
+    "Increment": 0.018,
+    "Decrement": 0.012,
+    "SteeringSpeed": 0.065,
+    "EngineSoundVolume": 0.6
+  },
+  "TurretTurnSpeed": [
+    1.35,
+    1.35
+  ],
+  "TurretPitchRange": [
+    -5,
+    18
+  ],
+  "HasDecoy": false,
+  "UpStep": 1.1,
+  "RotateOffsetHeight": 2.2,
+  "Mass": 3,
+  "DamageModifiers": [
+    "minecraft:arrow 0",
+    "minecraft:trident 0",
+    "minecraft:mob_attack 0",
+    "minecraft:mob_attack_no_aggro 0",
+    "minecraft:mob_projectile 0",
+    "minecraft:player_attack 0",
+    "#superbwarfare:projectile 0",
+    "All - 20",
+    "minecraft:lava + 20",
+    "minecraft:lava * 10",
+    "@minecraft:tnt * 4",
+    "@minecraft:tnt_minecart * 4",
+    "@#superbwarfare:aerial_bomb * 12",
+    "All * 0.23",
+    "superbwarfare:vehicle_strike * 2.5",
+    "minecraft:explosion * 2",
+    "superbwarfare:custom_explosion * 0.65",
+    "superbwarfare:projectile_explosion * 0.65",
+    "superbwarfare:mine * 0.5",
+    "superbwarfare:lunge_mine * 0.5",
+    "superbwarfare:projectile_hit * 1.3",
+    "#superbwarfare:projectile_absolute * 0.15",
+    "@#superbwarfare:aa_missile * 0.3",
+    "@superbwarfare:small_cannon_shell * 0.25",
+    "@superbwarfare:c4 * 4",
+    "@#superbwarfare:at_rocket * 1.1",
+    "@superbwarfare:gun_grenade * 1.25",
+    "@superbwarfare:mortar_shell * 1.25",
+    "@superbwarfare:tm_62 * 2.5"
+  ],
+  "DestroyInfo": {
+    "ParticleType": "Large",
+    "ExplosionDamage": 40,
+    "ExplosionRadius": 5
+  },
+  "ThirdPersonCameraPos": [
+    0,
+    0.5,
+    3
+  ],
+  "VehicleIcon": "superbwarfare:textures/vehicle_icon/sodayo_pick_up_hmg_icon.png",
+  "ContainerIcon": "superbwarfare:textures/gui/vehicle/type/civilian.png",
+  "VehicleContainerType": "Small",
+  "Type": "Car",
+  "CollisionLevel": {
+    "Level": 2,
+    "PowerLimits": [
+      [
+        0,
+        0,
+        true
+      ],
+      [
+        0,
+        0,
+        true
+      ]
+    ]
+  },
+  "EngineSound": "berts_vehicle_pack:tank_engine_silent",
+  "HudType": "@Land",
+  "TerrainCompat": [
+    [
+      1.3,
+      0,
+      -3.68
+    ],
+    [
+      -1.3,
+      0,
+      -3.68
+    ],
+    [
+      1.3,
+      0,
+      0.39
+    ],
+    [
+      -1.3,
+      0,
+      0.39
+    ]
+  ],
+  "PassengerWeaponStationTurnSpeed": [
+    24.5,
+    24.5
+  ],
+  "PassengerWeaponStationPos": [
+    0,
+    2.47656,
+    0.10805
+  ],
+  "PassengerWeaponStationBarrelPos": [
+    0,
+    0,
+    0
+  ],
+  "PassengerWeaponStationControllerIndex": 2,
+  "PassengerWeaponStationBinding": {
+    "Schema": "berts_vehicle_pack:passenger_bed_weapon_station/v1",
+    "Parent": "HULL",
+    "WeaponId": "DShK",
+    "WeaponKind": "HEAVY_MACHINE_GUN",
+    "CameraAttachment": "passenger_station_camera",
+    "MuzzleAttachment": "passenger_station_muzzle"
+  },
+  "HornSound": "superbwarfare:car_horn",
+  "TerrainCompatRotateRate": 1.5,
+  "Attachments": {
+    "passenger_station_camera": {
+      "Parent": "WeaponStationBarrel",
+      "Position": [
+        0.16928,
+        0.65911,
+        0.87162
+      ],
+      "Direction": [
+        0,
+        0,
+        -1
+      ]
+    },
+    "passenger_station_muzzle": {
+      "Parent": "WeaponStationBarrel",
+      "Position": [
+        0.16928,
+        0.35477,
+        -1.32903
+      ],
+      "Direction": [
+        0,
+        0,
+        -1
+      ]
+    }
+  }
+}

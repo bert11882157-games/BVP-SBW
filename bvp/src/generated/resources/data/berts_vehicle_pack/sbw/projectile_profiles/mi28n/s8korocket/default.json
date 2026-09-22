@@ -1,0 +1,91 @@
+{
+  "Combat": {
+    "WeaponId": "berts_vehicle_pack:mi28n/s8korocket",
+    "RoundId": "berts_vehicle_pack:s8ko",
+    "MunitionType": "berts_vehicle_pack:rocket",
+    "DamageType": "berts_vehicle_pack:chemical",
+    "CaliberMm": 80,
+    "DiameterMm": 80,
+    "HullDamageClass": "HEAT",
+    "HullDamage": 39,
+    "ModuleDamage": 24,
+    "AmmoRackDamage": 5,
+    "PenetrationMm": 400,
+    "RicochetCurve": {
+      "IncidenceAnglesDegrees": [
+        0,
+        65,
+        70,
+        72,
+        77,
+        90
+      ],
+      "Probability": [
+        0,
+        0,
+        0.25,
+        0.5,
+        1,
+        1
+      ]
+    },
+    "Tandem": false
+  },
+  "VisualProfile": "berts_vehicle_pack:small_rocket",
+  "MotionSync": "NONE",
+  "Luminance": 9,
+  "TrailMode": "REPLACE",
+  "RenderScale": 1,
+  "Extensions": {
+    "berts_vehicle_pack:projectile_effect_v1": {
+      "Schema": 1,
+      "Trail": {
+        "Emitter": {
+          "Flame": "berts_vehicle_pack:rocket_flame",
+          "Smoke": "berts_vehicle_pack:rocket_smoke"
+        },
+        "Phases": [
+          {
+            "Name": "BOOST",
+            "StartTick": 0,
+            "EndTickExclusive": 30,
+            "Flame": true,
+            "Smoke": true,
+            "Scale": 0.35,
+            "Orbit": null
+          },
+          {
+            "Name": "COAST",
+            "StartTick": 30,
+            "EndTickExclusive": 2147483647,
+            "Flame": false,
+            "Smoke": true,
+            "Scale": 0.5,
+            "Orbit": null
+          }
+        ],
+        "SpacingBlocks": 0.25,
+        "RatePerTick": null,
+        "LifetimeTicks": {
+          "Flame": 6,
+          "Smoke": 20
+        },
+        "WidthBlocks": 0.1,
+        "AttachmentOffset": [
+          0,
+          0,
+          0
+        ],
+        "VelocityInheritance": 0,
+        "RandomScale": [
+          0.8,
+          1.3
+        ]
+      },
+      "Impact": {
+        "Explosion": "medium",
+        "WaterExplosion": "same"
+      }
+    }
+  }
+}

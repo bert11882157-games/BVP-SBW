@@ -1,0 +1,31 @@
+{
+  "ID": "berts_vehicle_pack:lav25",
+  "Model": {
+    "GeometryBackend": "berts_vehicle_pack:vehicle/lav25",
+    "Model": "berts_vehicle_pack:geo/native_fallback/lav25.geo.json",
+    "Texture": "berts_vehicle_pack:textures/entity/lav25.png",
+    "WreckTexture": "berts_vehicle_pack:textures/entity_dead/lav25.png"
+  },
+  "MouseSpeed": [
+    0.2,
+    0.2
+  ],
+  "RunningGear": {
+    "Type": "WHEELED",
+    "RoadWheelCount": 4,
+    "WheelBones": {
+      "Left": [
+        "wheelL0",
+        "wheelL1",
+        "wheelL2",
+        "wheelL3"
+      ],
+      "Right": [
+        "wheelR0",
+        "wheelR1",
+        "wheelR2",
+        "wheelR3"
+      ]
+    }
+  }
+}

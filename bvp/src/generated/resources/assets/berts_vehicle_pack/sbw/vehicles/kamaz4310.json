@@ -1,0 +1,29 @@
+{
+  "ID": "berts_vehicle_pack:kamaz4310",
+  "Model": {
+    "GeometryBackend": "berts_vehicle_pack:vehicle/kamaz4310",
+    "Model": "berts_vehicle_pack:geo/native_fallback/kamaz4310.geo.json",
+    "Texture": "berts_vehicle_pack:textures/entity/kamaz4310.png",
+    "WreckTexture": "berts_vehicle_pack:textures/entity_dead/kamaz4310.png"
+  },
+  "MouseSpeed": [
+    0.2,
+    0.2
+  ],
+  "RunningGear": {
+    "Type": "WHEELED",
+    "RoadWheelCount": 3,
+    "WheelBones": {
+      "Left": [
+        "wheelL0",
+        "wheelL1",
+        "wheelL2"
+      ],
+      "Right": [
+        "wheelR0",
+        "wheelR1",
+        "wheelR2"
+      ]
+    }
+  }
+}

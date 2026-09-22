@@ -1,0 +1,28 @@
+{
+  "schema": 1,
+  "zones": [
+    {"id": "upper_left", "x": 0.0, "y": 0.0, "width": 0.3333333333, "height": 0.3333333333, "safePadding": 0.025, "minTextScale": 0.72},
+    {"id": "upper_center", "x": 0.3333333333, "y": 0.0, "width": 0.3333333333, "height": 0.3333333333, "safePadding": 0.025, "minTextScale": 0.72},
+    {"id": "upper_right", "x": 0.6666666667, "y": 0.0, "width": 0.3333333333, "height": 0.3333333333, "safePadding": 0.025, "minTextScale": 0.72},
+    {"id": "middle_left", "x": 0.0, "y": 0.3333333333, "width": 0.3333333333, "height": 0.3333333333, "safePadding": 0.025, "minTextScale": 0.72},
+    {"id": "middle_center", "x": 0.3333333333, "y": 0.3333333333, "width": 0.3333333333, "height": 0.3333333333, "safePadding": 0.025, "minTextScale": 0.72},
+    {"id": "middle_right", "x": 0.6666666667, "y": 0.3333333333, "width": 0.3333333333, "height": 0.3333333333, "safePadding": 0.025, "minTextScale": 0.72},
+    {"id": "lower_left", "x": 0.0, "y": 0.6666666667, "width": 0.3333333333, "height": 0.3333333333, "safePadding": 0.025, "minTextScale": 0.72},
+    {"id": "lower_center", "x": 0.3333333333, "y": 0.6666666667, "width": 0.3333333333, "height": 0.3333333333, "safePadding": 0.025, "minTextScale": 0.72},
+    {"id": "lower_right", "x": 0.6666666667, "y": 0.6666666667, "width": 0.3333333333, "height": 0.3333333333, "safePadding": 0.025, "minTextScale": 0.72}
+  ],
+  "elements": {
+    "info1": "upper_left",
+    "info2": "upper_right",
+    "module_status": "upper_left",
+    "orientation": "upper_center",
+    "speed": "upper_left",
+    "ammo": "lower_left",
+    "reload": "upper_right",
+    "selection": "upper_right",
+    "zero": "upper_left",
+    "selected_ammo": "upper_right",
+    "zoom": "upper_left",
+    "decoy": "middle_center"
+  }
+}

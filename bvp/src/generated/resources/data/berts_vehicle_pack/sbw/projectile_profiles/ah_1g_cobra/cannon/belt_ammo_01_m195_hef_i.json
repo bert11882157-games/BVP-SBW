@@ -1,0 +1,61 @@
+{
+  "Combat": {
+    "WeaponId": "berts_vehicle_pack:ah_1g_cobra/cannon",
+    "RoundId": "berts_vehicle_pack:m195_hef_i",
+    "MunitionType": "berts_vehicle_pack:bullet",
+    "DamageType": "berts_vehicle_pack:chemical",
+    "CaliberMm": 20,
+    "DiameterMm": 20,
+    "HullDamageClass": "HE",
+    "HullDamage": 24,
+    "ModuleDamage": 6,
+    "AmmoRackDamage": 2,
+    "PenetrationMm": 5,
+    "PenetrationCurve": {
+      "DistancesMetres": [
+        10,
+        100,
+        500,
+        1000,
+        1500,
+        2000
+      ],
+      "PenetrationMm": [
+        5,
+        5,
+        3,
+        2,
+        2,
+        2
+      ]
+    },
+    "RicochetCurve": {
+      "IncidenceAnglesDegrees": [
+        0,
+        79,
+        80,
+        81,
+        90
+      ],
+      "Probability": [
+        0,
+        0,
+        0.5,
+        1,
+        1
+      ]
+    },
+    "Tandem": false
+  },
+  "VisualProfile": "berts_vehicle_pack:scaled_bullet",
+  "ImpactVisualProfile": "berts_vehicle_pack:autocannon_he",
+  "MotionSync": "INHERIT",
+  "Collision": {
+    "Width": 0.006,
+    "Height": 0.006
+  },
+  "Luminance": 8,
+  "TrailMode": "DEFAULT",
+  "RenderScale": 1,
+  "Extensions": {}
+}

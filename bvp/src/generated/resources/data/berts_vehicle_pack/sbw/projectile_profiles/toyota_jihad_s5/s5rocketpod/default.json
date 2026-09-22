@@ -1,0 +1,39 @@
+{
+  "Combat": {
+    "WeaponId": "berts_vehicle_pack:toyota_jihad_s5/s5rocketpod",
+    "RoundId": "berts_vehicle_pack:s5k",
+    "MunitionType": "berts_vehicle_pack:rocket",
+    "DamageType": "berts_vehicle_pack:kinetic",
+    "CaliberMm": 55,
+    "DiameterMm": 55,
+    "HullDamageClass": "HEAT",
+    "HullDamage": 27,
+    "ModuleDamage": 17,
+    "AmmoRackDamage": 4,
+    "PenetrationMm": 0,
+    "RicochetCurve": {
+      "IncidenceAnglesDegrees": [
+        0,
+        65,
+        70,
+        72,
+        77,
+        90
+      ],
+      "Probability": [
+        0,
+        0,
+        0.25,
+        0.5,
+        1,
+        1
+      ]
+    },
+    "Tandem": false
+  },
+  "MotionSync": "INHERIT",
+  "Luminance": 0,
+  "TrailMode": "DEFAULT",
+  "RenderScale": 1,
+  "Extensions": {}
+}

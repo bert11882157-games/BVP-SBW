@@ -1,0 +1,293 @@
+{
+  "ID": "berts_vehicle_pack:zsu23_4",
+  "Model": {
+    "GeometryBackend": "berts_vehicle_pack:vehicle/zsu23_4",
+    "Model": "berts_vehicle_pack:geo/native_fallback/zsu23_4.geo.json",
+    "Texture": "berts_vehicle_pack:textures/entity/zsu23_4.png",
+    "WreckTexture": "berts_vehicle_pack:textures/entity_dead/zsu23_4.png"
+  },
+  "MouseSpeed": [
+    0.2,
+    0.2
+  ],
+  "RunningGear": {
+    "Type": "TRACKED",
+    "RoadWheelCount": 6,
+    "WheelBones": {
+      "Left": [
+        "wheelL0",
+        "wheelL1",
+        "wheelL2",
+        "wheelL3",
+        "wheelL4",
+        "wheelL5",
+        "wheelLFront",
+        "wheelLRear"
+      ],
+      "Right": [
+        "wheelR0",
+        "wheelR1",
+        "wheelR2",
+        "wheelR3",
+        "wheelR4",
+        "wheelR5",
+        "wheelRFront",
+        "wheelRRear"
+      ]
+    },
+    "TrackRender": {
+      "Mode": "LINKS",
+      "LinkCount": 91,
+      "PhaseDistance": 1.098901098901099,
+      "TravelScale": 1,
+      "EvaluationLayout": {
+        "YCenter": 8.81046,
+        "Radius": 9.65016,
+        "ZRear": -47.9964,
+        "ZFront": 59.51949
+      },
+      "Sides": [
+        {
+          "Side": "L",
+          "Direction": 1,
+          "XCenter": 23.5574,
+          "YCenter": 8.81046,
+          "Radius": 9.65016,
+          "YBottom": -0.8397,
+          "YTop": 18.46062,
+          "ZRear": -47.9964,
+          "ZFront": 59.51949,
+          "RoadCenters": [
+            -27.76004,
+            -14.12353,
+            -0.48701,
+            13.14949,
+            26.78599,
+            40.42251
+          ],
+          "TrackBone": "TrackL",
+          "BrokenBone": "brokenTrackL",
+          "FallbackBone": "crudeTrackL",
+          "LinkMovePrefix": "trackMovL",
+          "LinkRotationPrefix": "trackRotL",
+          "LegacyFramePrefix": "trackBeltVisualL"
+        },
+        {
+          "Side": "R",
+          "Direction": 1,
+          "XCenter": -23.5574,
+          "YCenter": 8.81046,
+          "Radius": 9.65016,
+          "YBottom": -0.8397,
+          "YTop": 18.46062,
+          "ZRear": -47.9964,
+          "ZFront": 59.51949,
+          "RoadCenters": [
+            -27.76004,
+            -14.12353,
+            -0.48701,
+            13.14949,
+            26.78599,
+            40.42251
+          ],
+          "TrackBone": "TrackR",
+          "BrokenBone": "brokenTrackR",
+          "FallbackBone": "crudeTrackR",
+          "LinkMovePrefix": "trackMovR",
+          "LinkRotationPrefix": "trackRotR",
+          "LegacyFramePrefix": "trackBeltVisualR"
+        }
+      ],
+      "Path": {
+        "SourceYMin": -0.8397,
+        "SourceYMax": 18.46062,
+        "SourceZMin": -47.9964,
+        "SourceZMax": 59.51949,
+        "MoveY": [
+          [
+            0,
+            10.35708
+          ],
+          [
+            9.13359779,
+            18.19025
+          ],
+          [
+            19.54827222,
+            18.28037
+          ],
+          [
+            24.75560944,
+            18.32543
+          ],
+          [
+            29.96294665,
+            18.3705
+          ],
+          [
+            40.37762108,
+            18.46062
+          ],
+          [
+            49.32879464,
+            10.60078
+          ],
+          [
+            59.18894694,
+            -0.8397
+          ],
+          [
+            64.39628554,
+            -0.8397
+          ],
+          [
+            69.60362413,
+            -0.8397
+          ],
+          [
+            80.01829687,
+            -0.8397
+          ],
+          [
+            90.41774333,
+            -0.56491
+          ],
+          [
+            100,
+            10.35708
+          ]
+        ],
+        "MoveZ": [
+          [
+            0,
+            -47.9964
+          ],
+          [
+            9.13359779,
+            -29.06038
+          ],
+          [
+            19.54827222,
+            -5.69409
+          ],
+          [
+            24.75560944,
+            5.98906
+          ],
+          [
+            29.96294665,
+            17.6722
+          ],
+          [
+            40.37762108,
+            41.03849
+          ],
+          [
+            49.32879464,
+            59.51949
+          ],
+          [
+            59.18894694,
+            40.58505
+          ],
+          [
+            64.39628554,
+            28.90181
+          ],
+          [
+            69.60362413,
+            17.21858
+          ],
+          [
+            80.01829687,
+            -6.14788
+          ],
+          [
+            90.41774333,
+            -29.47856
+          ],
+          [
+            100,
+            -47.9964
+          ]
+        ],
+        "RotationX": [
+          [
+            0,
+            -274.02966
+          ],
+          [
+            9.13359779,
+            -348.65292
+          ],
+          [
+            19.54827222,
+            -359.77901
+          ],
+          [
+            24.75560944,
+            -359.77901
+          ],
+          [
+            29.96294665,
+            -359.77901
+          ],
+          [
+            40.37762108,
+            -371.40937
+          ],
+          [
+            49.32879464,
+            -445.94935
+          ],
+          [
+            59.18894694,
+            -524.42949
+          ],
+          [
+            64.39628554,
+            -532.21475
+          ],
+          [
+            69.60362413,
+            -540
+          ],
+          [
+            80.01829687,
+            -540.3374
+          ],
+          [
+            90.41774333,
+            -555.60365
+          ],
+          [
+            100,
+            -634.02966
+          ]
+        ]
+      }
+    }
+  },
+  "EngineExhaust": {
+    "Schema": "berts_vehicle_pack:engine_exhaust_origins/v1",
+    "Parent": "HULL",
+    "Origins": [
+      {
+        "Id": "engine_exhaust_000",
+        "Position": [
+          -1.34,
+          1.42,
+          3.12
+        ]
+      },
+      {
+        "Id": "engine_exhaust_001",
+        "Position": [
+          -1.34,
+          1.42,
+          3.29
+        ]
+      }
+    ]
+  }
+}

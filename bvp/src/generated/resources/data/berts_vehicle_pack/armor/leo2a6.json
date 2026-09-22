@@ -1,0 +1,1912 @@
+{
+  "id": "leo2a6",
+  "model_scale": 0.72627714,
+  "ap_penetration_mm": 500,
+  "chemical_penetration_mm": 700,
+  "fallback_incoming_penetration_mm": 500,
+  "atgm_tandem": false,
+  "impact_tolerance": 0.25,
+  "internal_ray_length": 10,
+  "unboxed_hits_penetrate": true,
+  "plates": [
+    {
+      "name": "leo2a6_1000mm_armor_00",
+      "center": [
+        -0.00625,
+        2.20432,
+        -2.91753
+      ],
+      "half_size": [
+        0.2875,
+        0.3125,
+        0.025
+      ],
+      "rotation": [
+        59,
+        0,
+        0
+      ],
+      "frame": "turret",
+      "armor_mm": 1000
+    },
+    {
+      "name": "leo2a6_1000mm_armor_01",
+      "center": [
+        -0.00625,
+        1.90193,
+        -2.91753
+      ],
+      "half_size": [
+        0.2875,
+        0.3125,
+        0.025
+      ],
+      "rotation": [
+        -59,
+        0,
+        0
+      ],
+      "frame": "turret",
+      "armor_mm": 1000
+    },
+    {
+      "name": "leo2a6_1000mm_armor_02",
+      "center": [
+        -0.84782,
+        2.19702,
+        -2.57134
+      ],
+      "half_size": [
+        0.52812,
+        0.26563,
+        0.025
+      ],
+      "rotation": [
+        57.11951,
+        31.31298,
+        0.46609
+      ],
+      "frame": "turret",
+      "armor_mm": 1000
+    },
+    {
+      "name": "leo2a6_1000mm_armor_03",
+      "center": [
+        0.78773,
+        2.1992,
+        -2.60483
+      ],
+      "half_size": [
+        0.45937,
+        0.2625,
+        0.025
+      ],
+      "rotation": [
+        57.11951,
+        -31.31298,
+        -0.46609
+      ],
+      "frame": "turret",
+      "armor_mm": 1000
+    },
+    {
+      "name": "leo2a6_1000mm_armor_04",
+      "center": [
+        -0.38129,
+        2.12616,
+        -2.98995
+      ],
+      "half_size": [
+        0.08125,
+        0.12813,
+        0.025
+      ],
+      "rotation": [
+        57.11951,
+        31.31298,
+        0.46609
+      ],
+      "frame": "turret",
+      "armor_mm": 1000
+    },
+    {
+      "name": "leo2a6_1000mm_armor_05",
+      "center": [
+        0.38129,
+        2.12616,
+        -2.98995
+      ],
+      "half_size": [
+        0.08125,
+        0.12813,
+        0.025
+      ],
+      "rotation": [
+        57.11951,
+        -31.31298,
+        -0.46609
+      ],
+      "frame": "turret",
+      "armor_mm": 1000
+    },
+    {
+      "name": "leo2a6_1000mm_armor_06",
+      "center": [
+        0.78368,
+        1.88318,
+        -2.59811
+      ],
+      "half_size": [
+        0.45937,
+        0.25312,
+        0.025
+      ],
+      "rotation": [
+        -57.11951,
+        -31.31298,
+        0.46609
+      ],
+      "frame": "turret",
+      "armor_mm": 1000
+    },
+    {
+      "name": "leo2a6_1000mm_armor_07",
+      "center": [
+        0.38129,
+        1.96134,
+        -2.98995
+      ],
+      "half_size": [
+        0.08125,
+        0.12812,
+        0.025
+      ],
+      "rotation": [
+        -57.11951,
+        -31.31298,
+        0.46609
+      ],
+      "frame": "turret",
+      "armor_mm": 1000
+    },
+    {
+      "name": "leo2a6_1000mm_armor_08",
+      "center": [
+        -0.85049,
+        1.89051,
+        -2.56972
+      ],
+      "half_size": [
+        0.53125,
+        0.26562,
+        0.025
+      ],
+      "rotation": [
+        -57.11951,
+        31.31298,
+        -0.46609
+      ],
+      "frame": "turret",
+      "armor_mm": 1000
+    },
+    {
+      "name": "leo2a6_1000mm_armor_09",
+      "center": [
+        -0.38129,
+        1.96134,
+        -2.98995
+      ],
+      "half_size": [
+        0.08125,
+        0.12812,
+        0.025
+      ],
+      "rotation": [
+        -57.11951,
+        31.31298,
+        -0.46609
+      ],
+      "frame": "turret",
+      "armor_mm": 1000
+    },
+    {
+      "name": "leo2a6_450mm_armor_10",
+      "center": [
+        1.32416,
+        1.89858,
+        -1.28438
+      ],
+      "half_size": [
+        0.01875,
+        0.17188,
+        0.80937
+      ],
+      "rotation": [
+        0,
+        0,
+        -27
+      ],
+      "frame": "turret",
+      "armor_mm": 450
+    },
+    {
+      "name": "leo2a6_1000mm_armor_11",
+      "center": [
+        -1.32776,
+        2.26097,
+        -2.15684
+      ],
+      "half_size": [
+        0.09688,
+        0.14063,
+        0.025
+      ],
+      "rotation": [
+        57.11951,
+        31.31298,
+        0.46609
+      ],
+      "frame": "turret",
+      "armor_mm": 1000
+    },
+    {
+      "name": "leo2a6_1000mm_armor_12",
+      "center": [
+        1.21152,
+        2.2738,
+        -2.20611
+      ],
+      "half_size": [
+        0.10938,
+        0.11875,
+        0.025
+      ],
+      "rotation": [
+        57.11951,
+        -31.31298,
+        -0.46609
+      ],
+      "frame": "turret",
+      "armor_mm": 1000
+    },
+    {
+      "name": "leo2a6_1000mm_armor_13",
+      "center": [
+        1.22097,
+        1.83191,
+        -2.2218
+      ],
+      "half_size": [
+        0.10313,
+        0.14063,
+        0.025
+      ],
+      "rotation": [
+        -57.11951,
+        -31.31298,
+        0.46609
+      ],
+      "frame": "turret",
+      "armor_mm": 1000
+    },
+    {
+      "name": "leo2a6_1000mm_armor_14",
+      "center": [
+        -1.32776,
+        1.83278,
+        -2.15684
+      ],
+      "half_size": [
+        0.09688,
+        0.14063,
+        0.025
+      ],
+      "rotation": [
+        -57.11951,
+        31.31298,
+        -0.46609
+      ],
+      "frame": "turret",
+      "armor_mm": 1000
+    },
+    {
+      "name": "leo2a6_450mm_armor_15",
+      "center": [
+        1.32558,
+        2.21739,
+        -1.28438
+      ],
+      "half_size": [
+        0.01875,
+        0.175,
+        0.80937
+      ],
+      "rotation": [
+        0,
+        0,
+        27
+      ],
+      "frame": "turret",
+      "armor_mm": 450
+    },
+    {
+      "name": "leo2a6_450mm_armor_16",
+      "center": [
+        -1.43041,
+        2.22017,
+        -1.25625
+      ],
+      "half_size": [
+        0.01875,
+        0.17188,
+        0.775
+      ],
+      "rotation": [
+        0,
+        0,
+        -27
+      ],
+      "frame": "turret",
+      "armor_mm": 450
+    },
+    {
+      "name": "leo2a6_450mm_armor_17",
+      "center": [
+        -1.43041,
+        1.89858,
+        -1.25625
+      ],
+      "half_size": [
+        0.01875,
+        0.17188,
+        0.775
+      ],
+      "rotation": [
+        0,
+        0,
+        27
+      ],
+      "frame": "turret",
+      "armor_mm": 450
+    },
+    {
+      "name": "leo2a6_450mm_armor_18",
+      "center": [
+        -1.44025,
+        2.11433,
+        -2.20188
+      ],
+      "half_size": [
+        0.01875,
+        0.06563,
+        0.15
+      ],
+      "rotation": [
+        7.12494,
+        -13.96211,
+        -27.62711
+      ],
+      "frame": "turret",
+      "armor_mm": 450
+    },
+    {
+      "name": "leo2a6_450mm_armor_19",
+      "center": [
+        1.33117,
+        2.11704,
+        -2.27373
+      ],
+      "half_size": [
+        0.01875,
+        0.0625,
+        0.16875
+      ],
+      "rotation": [
+        7.12494,
+        13.96211,
+        27.62711
+      ],
+      "frame": "turret",
+      "armor_mm": 450
+    },
+    {
+      "name": "leo2a6_450mm_armor_20",
+      "center": [
+        1.33253,
+        1.99825,
+        -2.2741
+      ],
+      "half_size": [
+        0.01875,
+        0.06562,
+        0.16875
+      ],
+      "rotation": [
+        -7.12494,
+        13.96211,
+        -27.62711
+      ],
+      "frame": "turret",
+      "armor_mm": 450
+    },
+    {
+      "name": "leo2a6_450mm_armor_21",
+      "center": [
+        -1.44431,
+        1.97529,
+        -2.20301
+      ],
+      "half_size": [
+        0.01875,
+        0.075,
+        0.15
+      ],
+      "rotation": [
+        -7.12494,
+        -13.96211,
+        27.62711
+      ],
+      "frame": "turret",
+      "armor_mm": 450
+    },
+    {
+      "name": "leo2a6_450mm_armor_22",
+      "center": [
+        -1.31833,
+        2.44014,
+        -0.96562
+      ],
+      "half_size": [
+        0.01875,
+        0.075,
+        0.48438
+      ],
+      "rotation": [
+        0,
+        0,
+        -27
+      ],
+      "frame": "turret",
+      "armor_mm": 450
+    },
+    {
+      "name": "leo2a6_450mm_armor_23",
+      "center": [
+        1.22343,
+        2.41786,
+        -0.975
+      ],
+      "half_size": [
+        0.01875,
+        0.05,
+        0.49375
+      ],
+      "rotation": [
+        0,
+        0,
+        27
+      ],
+      "frame": "turret",
+      "armor_mm": 450
+    },
+    {
+      "name": "leo2a6_85mm_armor_24",
+      "center": [
+        -0.86479,
+        2.2,
+        2.14867
+      ],
+      "half_size": [
+        0.02188,
+        0.28125,
+        0.55937
+      ],
+      "rotation": [
+        0,
+        28,
+        0
+      ],
+      "frame": "turret",
+      "armor_mm": 85
+    },
+    {
+      "name": "leo2a6_85mm_armor_25",
+      "center": [
+        -1.21563,
+        2.21875,
+        1.06563
+      ],
+      "half_size": [
+        0.02187,
+        0.3,
+        0.58437
+      ],
+      "rotation": [
+        0,
+        8,
+        0
+      ],
+      "frame": "turret",
+      "armor_mm": 85
+    },
+    {
+      "name": "leo2a6_85mm_armor_26",
+      "center": [
+        -1.31562,
+        2.11875,
+        0.09375
+      ],
+      "half_size": [
+        0.02187,
+        0.4,
+        0.36875
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "turret",
+      "armor_mm": 85
+    },
+    {
+      "name": "leo2a6_85mm_armor_27",
+      "center": [
+        -1.35521,
+        2.11875,
+        -0.37748
+      ],
+      "half_size": [
+        0.02187,
+        0.4,
+        0.09687
+      ],
+      "rotation": [
+        0,
+        23,
+        0
+      ],
+      "frame": "turret",
+      "armor_mm": 85
+    },
+    {
+      "name": "leo2a6_85mm_armor_28",
+      "center": [
+        -1.28478,
+        1.78438,
+        0.57359
+      ],
+      "half_size": [
+        0.02187,
+        0.02812,
+        0.0875
+      ],
+      "rotation": [
+        0,
+        8,
+        0
+      ],
+      "frame": "turret",
+      "armor_mm": 85
+    },
+    {
+      "name": "leo2a6_85mm_armor_29",
+      "center": [
+        -1.27042,
+        1.87187,
+        0.67571
+      ],
+      "half_size": [
+        0.02187,
+        0.04688,
+        0.19063
+      ],
+      "rotation": [
+        0,
+        8,
+        0
+      ],
+      "frame": "turret",
+      "armor_mm": 85
+    },
+    {
+      "name": "leo2a6_85mm_armor_30",
+      "center": [
+        0.29664,
+        2.20313,
+        2.67124
+      ],
+      "half_size": [
+        0.02187,
+        0.27813,
+        0.2875
+      ],
+      "rotation": [
+        0,
+        -87,
+        0
+      ],
+      "frame": "turret",
+      "armor_mm": 85
+    },
+    {
+      "name": "leo2a6_85mm_armor_31",
+      "center": [
+        0.83354,
+        2.2,
+        2.14867
+      ],
+      "half_size": [
+        0.02188,
+        0.28125,
+        0.55937
+      ],
+      "rotation": [
+        0,
+        -28,
+        0
+      ],
+      "frame": "turret",
+      "armor_mm": 85
+    },
+    {
+      "name": "leo2a6_85mm_armor_32",
+      "center": [
+        1.18438,
+        2.21875,
+        1.06563
+      ],
+      "half_size": [
+        0.02187,
+        0.3,
+        0.58437
+      ],
+      "rotation": [
+        0,
+        -8,
+        0
+      ],
+      "frame": "turret",
+      "armor_mm": 85
+    },
+    {
+      "name": "leo2a6_85mm_armor_33",
+      "center": [
+        1.23917,
+        1.87187,
+        0.67571
+      ],
+      "half_size": [
+        0.02187,
+        0.04688,
+        0.19063
+      ],
+      "rotation": [
+        0,
+        -8,
+        0
+      ],
+      "frame": "turret",
+      "armor_mm": 85
+    },
+    {
+      "name": "leo2a6_85mm_armor_34",
+      "center": [
+        1.25353,
+        1.78438,
+        0.57359
+      ],
+      "half_size": [
+        0.02187,
+        0.02812,
+        0.0875
+      ],
+      "rotation": [
+        0,
+        -8,
+        0
+      ],
+      "frame": "turret",
+      "armor_mm": 85
+    },
+    {
+      "name": "leo2a6_85mm_armor_35",
+      "center": [
+        1.28437,
+        2.11875,
+        0.10312
+      ],
+      "half_size": [
+        0.02187,
+        0.4,
+        0.37813
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "turret",
+      "armor_mm": 85
+    },
+    {
+      "name": "leo2a6_85mm_armor_36",
+      "center": [
+        1.32396,
+        2.11875,
+        -0.37748
+      ],
+      "half_size": [
+        0.02187,
+        0.4,
+        0.09687
+      ],
+      "rotation": [
+        0,
+        -23,
+        0
+      ],
+      "frame": "turret",
+      "armor_mm": 85
+    },
+    {
+      "name": "leo2a6_85mm_armor_37",
+      "center": [
+        -0.30604,
+        2.20313,
+        2.67238
+      ],
+      "half_size": [
+        0.02187,
+        0.27813,
+        0.30937
+      ],
+      "rotation": [
+        0,
+        87,
+        0
+      ],
+      "frame": "turret",
+      "armor_mm": 85
+    },
+    {
+      "name": "leo2a6_50mm_armor_38",
+      "center": [
+        0.00312,
+        2.5,
+        1.96562
+      ],
+      "half_size": [
+        0.80313,
+        0.025,
+        0.27187
+      ],
+      "rotation": [
+        7,
+        0,
+        0
+      ],
+      "frame": "turret",
+      "armor_mm": 50
+    },
+    {
+      "name": "leo2a6_50mm_armor_39",
+      "center": [
+        0.00312,
+        2.54375,
+        0.33437
+      ],
+      "half_size": [
+        0.80313,
+        0.025,
+        1.34063
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "turret",
+      "armor_mm": 50
+    },
+    {
+      "name": "leo2a6_50mm_armor_40",
+      "center": [
+        0.01875,
+        2.44295,
+        -1.62751
+      ],
+      "half_size": [
+        0.975,
+        0.025,
+        0.61562
+      ],
+      "rotation": [
+        -10,
+        0,
+        0
+      ],
+      "frame": "turret",
+      "armor_mm": 50
+    },
+    {
+      "name": "leo2a6_50mm_armor_41",
+      "center": [
+        1.09062,
+        2.45488,
+        -1.5598
+      ],
+      "half_size": [
+        0.09062,
+        0.025,
+        0.54688
+      ],
+      "rotation": [
+        -10,
+        0,
+        0
+      ],
+      "frame": "turret",
+      "armor_mm": 50
+    },
+    {
+      "name": "leo2a6_50mm_armor_42",
+      "center": [
+        -1.09062,
+        2.45488,
+        -1.5598
+      ],
+      "half_size": [
+        0.10938,
+        0.025,
+        0.54688
+      ],
+      "rotation": [
+        -10,
+        0,
+        0
+      ],
+      "frame": "turret",
+      "armor_mm": 50
+    },
+    {
+      "name": "leo2a6_50mm_armor_43",
+      "center": [
+        0.00625,
+        2.31434,
+        -2.35688
+      ],
+      "half_size": [
+        0.525,
+        0.025,
+        0.13125
+      ],
+      "rotation": [
+        -10,
+        0,
+        0
+      ],
+      "frame": "turret",
+      "armor_mm": 50
+    },
+    {
+      "name": "leo2a6_50mm_armor_44",
+      "center": [
+        -0.96562,
+        2.54375,
+        0.33437
+      ],
+      "half_size": [
+        0.15937,
+        0.025,
+        1.34063
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "turret",
+      "armor_mm": 50
+    },
+    {
+      "name": "leo2a6_50mm_armor_45",
+      "center": [
+        -1.2,
+        2.54375,
+        -0.16563
+      ],
+      "half_size": [
+        0.0625,
+        0.025,
+        0.84063
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "turret",
+      "armor_mm": 50
+    },
+    {
+      "name": "leo2a6_50mm_armor_46",
+      "center": [
+        0.94063,
+        2.54375,
+        0.33437
+      ],
+      "half_size": [
+        0.13437,
+        0.025,
+        1.34063
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "turret",
+      "armor_mm": 50
+    },
+    {
+      "name": "leo2a6_50mm_armor_47",
+      "center": [
+        1.14375,
+        2.54375,
+        -0.16563
+      ],
+      "half_size": [
+        0.05625,
+        0.025,
+        0.84063
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "turret",
+      "armor_mm": 50
+    },
+    {
+      "name": "leo2a6_600mm_armor_48",
+      "center": [
+        -0.00938,
+        1.35223,
+        -3.52186
+      ],
+      "half_size": [
+        1.21563,
+        0.03125,
+        0.37812
+      ],
+      "rotation": [
+        -11,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 600
+    },
+    {
+      "name": "leo2a6_600mm_armor_49",
+      "center": [
+        0.01563,
+        1.04665,
+        -3.7148
+      ],
+      "half_size": [
+        0.97813,
+        0.03125,
+        0.3125
+      ],
+      "rotation": [
+        47,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 600
+    },
+    {
+      "name": "leo2a6_600mm_armor_50",
+      "center": [
+        -0.00313,
+        0.70597,
+        -3.29846
+      ],
+      "half_size": [
+        0.70313,
+        0.03125,
+        0.23438
+      ],
+      "rotation": [
+        31,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 600
+    },
+    {
+      "name": "leo2a6_50mm_armor_51",
+      "center": [
+        0.02812,
+        1.85625,
+        3.0875
+      ],
+      "half_size": [
+        1.25313,
+        0.025,
+        0.7125
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 50
+    },
+    {
+      "name": "leo2a6_50mm_armor_52",
+      "center": [
+        0.02812,
+        1.77165,
+        1.55491
+      ],
+      "half_size": [
+        1.25313,
+        0.025,
+        0.80937
+      ],
+      "rotation": [
+        -5,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 50
+    },
+    {
+      "name": "leo2a6_50mm_armor_53",
+      "center": [
+        -0.02813,
+        1.57864,
+        3.74776
+      ],
+      "half_size": [
+        1.05313,
+        0.025,
+        0.26875
+      ],
+      "rotation": [
+        -79,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 50
+    },
+    {
+      "name": "leo2a6_50mm_armor_54",
+      "center": [
+        -0.0125,
+        0.92525,
+        3.62075
+      ],
+      "half_size": [
+        0.925,
+        0.025,
+        0.39687
+      ],
+      "rotation": [
+        -79,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 50
+    },
+    {
+      "name": "leo2a6_60mm_armor_55",
+      "center": [
+        -0.95313,
+        1,
+        0.98438
+      ],
+      "half_size": [
+        0.02187,
+        0.30625,
+        2.58438
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 60
+    },
+    {
+      "name": "leo2a6_60mm_armor_56",
+      "center": [
+        -0.95313,
+        1.37187,
+        1.04375
+      ],
+      "half_size": [
+        0.02187,
+        0.05937,
+        2.6375
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 60
+    },
+    {
+      "name": "leo2a6_60mm_armor_57",
+      "center": [
+        -0.95313,
+        1.47812,
+        1.04688
+      ],
+      "half_size": [
+        0.02187,
+        0.03437,
+        2.64063
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 60
+    },
+    {
+      "name": "leo2a6_60mm_armor_58",
+      "center": [
+        -0.95313,
+        1.59688,
+        1.05625
+      ],
+      "half_size": [
+        0.02187,
+        0.07813,
+        2.65625
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 60
+    },
+    {
+      "name": "leo2a6_60mm_armor_59",
+      "center": [
+        -0.95313,
+        1.71562,
+        2.68438
+      ],
+      "half_size": [
+        0.02187,
+        0.03438,
+        1.06563
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 60
+    },
+    {
+      "name": "leo2a6_60mm_armor_60",
+      "center": [
+        -0.95313,
+        1.79062,
+        3.0375
+      ],
+      "half_size": [
+        0.02187,
+        0.02813,
+        0.7125
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 60
+    },
+    {
+      "name": "leo2a6_60mm_armor_61",
+      "center": [
+        0.92188,
+        1.12812,
+        -3.4125
+      ],
+      "half_size": [
+        0.02187,
+        0.17812,
+        0.20625
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 60
+    },
+    {
+      "name": "leo2a6_60mm_armor_62",
+      "center": [
+        0.92188,
+        0.88125,
+        -3.30938
+      ],
+      "half_size": [
+        0.02187,
+        0.05625,
+        0.10313
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 60
+    },
+    {
+      "name": "leo2a6_60mm_armor_63",
+      "center": [
+        0.92188,
+        1,
+        0.18437
+      ],
+      "half_size": [
+        0.02187,
+        0.30625,
+        3.38438
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 60
+    },
+    {
+      "name": "leo2a6_60mm_armor_64",
+      "center": [
+        0.92188,
+        1.37187,
+        0.40625
+      ],
+      "half_size": [
+        0.02187,
+        0.05937,
+        3.275
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 60
+    },
+    {
+      "name": "leo2a6_60mm_armor_65",
+      "center": [
+        0.92188,
+        1.47812,
+        0.60938
+      ],
+      "half_size": [
+        0.02187,
+        0.03437,
+        3.07813
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 60
+    },
+    {
+      "name": "leo2a6_60mm_armor_66",
+      "center": [
+        0.92188,
+        1.59688,
+        1.05
+      ],
+      "half_size": [
+        0.02187,
+        0.07813,
+        2.6625
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 60
+    },
+    {
+      "name": "leo2a6_60mm_armor_67",
+      "center": [
+        0.92188,
+        1.71562,
+        2.68438
+      ],
+      "half_size": [
+        0.02187,
+        0.03438,
+        1.06563
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 60
+    },
+    {
+      "name": "leo2a6_60mm_armor_68",
+      "center": [
+        0.92188,
+        1.79062,
+        3.0375
+      ],
+      "half_size": [
+        0.02187,
+        0.02813,
+        0.7125
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 60
+    },
+    {
+      "name": "leo2a6_50mm_armor_69",
+      "center": [
+        -0.0125,
+        0.72229,
+        0.2448
+      ],
+      "half_size": [
+        0.925,
+        0.025,
+        3.26563
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 50
+    },
+    {
+      "name": "leo2a6_225mm_armor_70",
+      "center": [
+        -1.85312,
+        1.13437,
+        -2.54688
+      ],
+      "half_size": [
+        0.03437,
+        0.30938,
+        0.92813
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 225
+    },
+    {
+      "name": "leo2a6_225mm_armor_71",
+      "center": [
+        -1.77728,
+        1.3,
+        -3.6108
+      ],
+      "half_size": [
+        0.03438,
+        0.1375,
+        0.15625
+      ],
+      "rotation": [
+        0,
+        -27,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 225
+    },
+    {
+      "name": "leo2a6_225mm_armor_72",
+      "center": [
+        -1.79431,
+        1.1125,
+        -3.57738
+      ],
+      "half_size": [
+        0.03438,
+        0.04375,
+        0.11875
+      ],
+      "rotation": [
+        0,
+        -27,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 225
+    },
+    {
+      "name": "leo2a6_225mm_armor_73",
+      "center": [
+        -1.82126,
+        0.99375,
+        -3.52448
+      ],
+      "half_size": [
+        0.03438,
+        0.075,
+        0.05938
+      ],
+      "rotation": [
+        0,
+        -27,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 225
+    },
+    {
+      "name": "leo2a6_225mm_armor_74",
+      "center": [
+        -1.78437,
+        1.55938,
+        -2.54688
+      ],
+      "half_size": [
+        0.03438,
+        0.10313,
+        0.92813
+      ],
+      "rotation": [
+        0,
+        0,
+        -36
+      ],
+      "frame": "hull",
+      "armor_mm": 225
+    },
+    {
+      "name": "leo2a6_225mm_armor_75",
+      "center": [
+        1.78437,
+        1.55938,
+        -2.54688
+      ],
+      "half_size": [
+        0.03438,
+        0.10313,
+        0.92813
+      ],
+      "rotation": [
+        0,
+        0,
+        36
+      ],
+      "frame": "hull",
+      "armor_mm": 225
+    },
+    {
+      "name": "leo2a6_225mm_armor_76",
+      "center": [
+        1.79431,
+        1.1125,
+        -3.57738
+      ],
+      "half_size": [
+        0.03438,
+        0.04375,
+        0.11875
+      ],
+      "rotation": [
+        0,
+        27,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 225
+    },
+    {
+      "name": "leo2a6_225mm_armor_77",
+      "center": [
+        1.77728,
+        1.3,
+        -3.6108
+      ],
+      "half_size": [
+        0.03438,
+        0.1375,
+        0.15625
+      ],
+      "rotation": [
+        0,
+        27,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 225
+    },
+    {
+      "name": "leo2a6_225mm_armor_78",
+      "center": [
+        1.85312,
+        1.13437,
+        -2.54688
+      ],
+      "half_size": [
+        0.03437,
+        0.30938,
+        0.92813
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 225
+    },
+    {
+      "name": "leo2a6_225mm_armor_79",
+      "center": [
+        1.82126,
+        0.99375,
+        -3.52448
+      ],
+      "half_size": [
+        0.03438,
+        0.075,
+        0.05938
+      ],
+      "rotation": [
+        0,
+        27,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 225
+    },
+    {
+      "name": "leo2a6_60mm_armor_80",
+      "center": [
+        -1.20938,
+        1.04375,
+        -1.46875
+      ],
+      "half_size": [
+        0.15937,
+        0.2625,
+        0.0375
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 60
+    },
+    {
+      "name": "leo2a6_60mm_armor_81",
+      "center": [
+        1.225,
+        1.04375,
+        -1.46875
+      ],
+      "half_size": [
+        0.175,
+        0.2625,
+        0.0375
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 60
+    },
+    {
+      "name": "leo2a6_100mm_armor_82",
+      "center": [
+        -0.00938,
+        1.50309,
+        -2.74576
+      ],
+      "half_size": [
+        1.21563,
+        0.03125,
+        0.4
+      ],
+      "rotation": [
+        -11,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 100
+    }
+  ],
+  "sensitive_internals": [],
+  "engines": [
+    {
+      "name": "engine_block_00",
+      "center": [
+        0.00625,
+        1.16562,
+        2.77188
+      ],
+      "half_size": [
+        0.46875,
+        0.41563,
+        0.58438
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull"
+    }
+  ],
+  "ammo_racks": [
+    {
+      "name": "ammo_rack_00",
+      "center": [
+        0.54375,
+        2.10938,
+        1.11875
+      ],
+      "half_size": [
+        0.3,
+        0.22812,
+        0.4125
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "turret",
+      "health": 10
+    }
+  ],
+  "tracks": [
+    {
+      "name": "right_track_00",
+      "center": [
+        -1.3375,
+        0.03125,
+        -0.09062
+      ],
+      "half_size": [
+        0.33125,
+        0.03125,
+        2.72813
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull"
+    },
+    {
+      "name": "right_track_01",
+      "center": [
+        -1.3375,
+        0.38268,
+        -3.32873
+      ],
+      "half_size": [
+        0.33125,
+        0.03125,
+        0.60937
+      ],
+      "rotation": [
+        36,
+        0,
+        0
+      ],
+      "frame": "hull"
+    },
+    {
+      "name": "right_track_02",
+      "center": [
+        -1.4875,
+        0.95738,
+        -3.84836
+      ],
+      "half_size": [
+        0.18125,
+        0.03125,
+        0.19375
+      ],
+      "rotation": [
+        84,
+        0,
+        0
+      ],
+      "frame": "hull"
+    },
+    {
+      "name": "right_track_03",
+      "center": [
+        -1.4875,
+        0.81363,
+        3.31711
+      ],
+      "half_size": [
+        0.18125,
+        0.03125,
+        0.19375
+      ],
+      "rotation": [
+        -84,
+        0,
+        0
+      ],
+      "frame": "hull"
+    },
+    {
+      "name": "right_track_04",
+      "center": [
+        -1.3375,
+        0.33459,
+        2.96162
+      ],
+      "half_size": [
+        0.33125,
+        0.03125,
+        0.42188
+      ],
+      "rotation": [
+        -44,
+        0,
+        0
+      ],
+      "frame": "hull"
+    },
+    {
+      "name": "left_track_05",
+      "center": [
+        1.4875,
+        0.95738,
+        -3.84836
+      ],
+      "half_size": [
+        0.18125,
+        0.03125,
+        0.19375
+      ],
+      "rotation": [
+        84,
+        0,
+        0
+      ],
+      "frame": "hull"
+    },
+    {
+      "name": "left_track_06",
+      "center": [
+        1.3375,
+        0.38268,
+        -3.32873
+      ],
+      "half_size": [
+        0.33125,
+        0.03125,
+        0.60937
+      ],
+      "rotation": [
+        36,
+        0,
+        0
+      ],
+      "frame": "hull"
+    },
+    {
+      "name": "left_track_07",
+      "center": [
+        1.3375,
+        0.03125,
+        -0.09062
+      ],
+      "half_size": [
+        0.33125,
+        0.03125,
+        2.72813
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull"
+    },
+    {
+      "name": "left_track_08",
+      "center": [
+        1.3375,
+        0.33459,
+        2.96162
+      ],
+      "half_size": [
+        0.33125,
+        0.03125,
+        0.42188
+      ],
+      "rotation": [
+        -44,
+        0,
+        0
+      ],
+      "frame": "hull"
+    },
+    {
+      "name": "left_track_09",
+      "center": [
+        1.4875,
+        0.81363,
+        3.31711
+      ],
+      "half_size": [
+        0.18125,
+        0.03125,
+        0.19375
+      ],
+      "rotation": [
+        -84,
+        0,
+        0
+      ],
+      "frame": "hull"
+    }
+  ],
+  "modules": [],
+  "explosive_reactive_armor": [],
+  "sbw_obb": []
+}

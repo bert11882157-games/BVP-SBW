@@ -1,0 +1,31 @@
+{
+  "ID": "berts_vehicle_pack:m1128",
+  "Model": {
+    "GeometryBackend": "berts_vehicle_pack:vehicle/m1128",
+    "Model": "berts_vehicle_pack:geo/native_fallback/m1128.geo.json",
+    "Texture": "berts_vehicle_pack:textures/entity/m1128.png",
+    "WreckTexture": "berts_vehicle_pack:textures/entity_dead/m1128.png"
+  },
+  "MouseSpeed": [
+    0.2,
+    0.2
+  ],
+  "RunningGear": {
+    "Type": "WHEELED",
+    "RoadWheelCount": 4,
+    "WheelBones": {
+      "Left": [
+        "wheelL0",
+        "wheelL1",
+        "wheelL2",
+        "wheelL3"
+      ],
+      "Right": [
+        "wheelR0",
+        "wheelR1",
+        "wheelR2",
+        "wheelR3"
+      ]
+    }
+  }
+}

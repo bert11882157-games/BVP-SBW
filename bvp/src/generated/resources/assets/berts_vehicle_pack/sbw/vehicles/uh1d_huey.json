@@ -1,0 +1,13 @@
+{
+  "ID": "berts_vehicle_pack:uh1d_huey",
+  "Model": {
+    "GeometryBackend": "berts_vehicle_pack:vehicle/uh1d_huey",
+    "Model": "berts_vehicle_pack:geo/native_fallback/uh1d_huey.geo.json",
+    "Texture": "berts_vehicle_pack:textures/entity/uh1d_huey.png",
+    "WreckTexture": "berts_vehicle_pack:textures/entity_dead/uh1d_huey.png"
+  },
+  "MouseSpeed": [
+    0.2,
+    0.2
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "ID": "berts_vehicle_pack:toyota_jihad_s5",
+  "Model": {
+    "GeometryBackend": "berts_vehicle_pack:vehicle/toyota_jihad_s5",
+    "Model": "berts_vehicle_pack:geo/native_fallback/toyota_jihad_s5.geo.json",
+    "Texture": "berts_vehicle_pack:textures/entity/toyota_jihad_s5.png",
+    "WreckTexture": "berts_vehicle_pack:textures/entity_dead/toyota_jihad_s5.png"
+  },
+  "MouseSpeed": [
+    0.2,
+    0.2
+  ],
+  "RunningGear": {
+    "Type": "WHEELED",
+    "RoadWheelCount": 2,
+    "WheelBones": {
+      "Left": [
+        "wheelL0",
+        "wheelL1"
+      ],
+      "Right": [
+        "wheelR0",
+        "wheelR1"
+      ]
+    }
+  }
+}

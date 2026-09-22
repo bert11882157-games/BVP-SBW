@@ -1,0 +1,89 @@
+{
+  "Combat": {
+    "WeaponId": "berts_vehicle_pack:mi24v/b13lrocket",
+    "RoundId": "berts_vehicle_pack:s13",
+    "MunitionType": "berts_vehicle_pack:rocket",
+    "DamageType": "berts_vehicle_pack:kinetic",
+    "CaliberMm": 122,
+    "DiameterMm": 122,
+    "HullDamageClass": "HE",
+    "HullDamage": 147,
+    "ModuleDamage": 37,
+    "AmmoRackDamage": 8,
+    "PenetrationMm": 50,
+    "RicochetCurve": {
+      "IncidenceAnglesDegrees": [
+        0,
+        79,
+        80,
+        81,
+        90
+      ],
+      "Probability": [
+        0,
+        0,
+        0.5,
+        1,
+        1
+      ]
+    },
+    "Tandem": false
+  },
+  "VisualProfile": "berts_vehicle_pack:medium_rocket",
+  "MotionSync": "NONE",
+  "Luminance": 12,
+  "TrailMode": "REPLACE",
+  "RenderScale": 1,
+  "Extensions": {
+    "berts_vehicle_pack:projectile_effect_v1": {
+      "Schema": 1,
+      "Trail": {
+        "Emitter": {
+          "Flame": "berts_vehicle_pack:rocket_flame",
+          "Smoke": "berts_vehicle_pack:rocket_smoke"
+        },
+        "Phases": [
+          {
+            "Name": "BOOST",
+            "StartTick": 0,
+            "EndTickExclusive": 30,
+            "Flame": true,
+            "Smoke": true,
+            "Scale": 0.525,
+            "Orbit": null
+          },
+          {
+            "Name": "COAST",
+            "StartTick": 30,
+            "EndTickExclusive": 2147483647,
+            "Flame": false,
+            "Smoke": true,
+            "Scale": 1,
+            "Orbit": null
+          }
+        ],
+        "SpacingBlocks": 0.25,
+        "RatePerTick": null,
+        "LifetimeTicks": {
+          "Flame": 6,
+          "Smoke": 20
+        },
+        "WidthBlocks": 0.1,
+        "AttachmentOffset": [
+          0,
+          0,
+          0
+        ],
+        "VelocityInheritance": 0,
+        "RandomScale": [
+          0.8,
+          1.3
+        ]
+      },
+      "Impact": {
+        "Explosion": "medium",
+        "WaterExplosion": "same"
+      }
+    }
+  }
+}

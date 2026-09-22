@@ -1,0 +1,554 @@
+{
+  "ID": "berts_vehicle_pack:zsu23_4",
+  "MaxHealth": 150,
+  "MaxEnergy": 7000000,
+  "AllowFreeCam": true,
+  "LightlyArmored": true,
+  "HasCCIP": true,
+  "OpticalZoomRange": [
+    3,
+    18
+  ],
+  "HasFCS": true,
+  "EngineSoundMode": "CUSTOM",
+  "TrackSoundMode": "NATIVE",
+  "CustomSoundProfileId": "berts_vehicle_pack:tap_engine_bmpdrive__bmp_engine",
+  "OBB": [
+    {
+      "Size": [
+        2.07053,
+        0.7606,
+        4.18331
+      ],
+      "Position": [
+        0,
+        0.97188,
+        0.04226
+      ]
+    },
+    {
+      "Part": "WheelLeft",
+      "Size": [
+        0.27044,
+        0.54932,
+        3.00016
+      ],
+      "Position": [
+        1.817,
+        0.60848,
+        -0.21128
+      ]
+    },
+    {
+      "Part": "WheelRight",
+      "Size": [
+        0.27044,
+        0.54932,
+        3.00016
+      ],
+      "Position": [
+        -1.817,
+        0.60848,
+        -0.21128
+      ]
+    },
+    {
+      "Part": "MainEngine",
+      "Size": [
+        0.97188,
+        0.54932,
+        0.65919
+      ],
+      "Position": [
+        0,
+        0.97188,
+        -3.39736
+      ]
+    },
+    {
+      "Part": "Turret",
+      "Size": [
+        1.30993,
+        0.59158,
+        1.56346
+      ],
+      "Position": [
+        0,
+        -0.04226,
+        0.16902
+      ],
+      "Transform": "Turret",
+      "Rotation": "Turret"
+    }
+  ],
+  "Seats": [
+    {
+      "HidePassenger": true,
+      "CameraPos": {
+        "Transform": "Turret",
+        "UseFixedCameraPos": true,
+        "Position": [
+          0.59961,
+          0.868,
+          -0.34185
+        ],
+        "Direction": "Barrel"
+      },
+      "Weapons": [
+        "Cannon"
+      ],
+      "Transform": "Turret",
+      "Position": [
+        0.42594,
+        -0.76905,
+        0.41411
+      ],
+      "CanRotateHead": false,
+      "MinPitch": -4,
+      "MaxPitch": 85,
+      "Sensitivity": [
+        0.45,
+        0.52,
+        0.8
+      ],
+      "DismountInfo": {
+        "Transform": "Vehicle",
+        "Position": [
+          0,
+          0.44368,
+          -5.9158
+        ]
+      },
+      "HasThermalImaging": true
+    },
+    {
+      "HidePassenger": true,
+      "BanHand": true,
+      "Transform": "Vehicle",
+      "Position": [
+        0.82821,
+        0.41411,
+        0.7099
+      ],
+      "CameraPos": {
+        "UseSimulate3P": true,
+        "Simulate3PPos": [
+          6,
+          1
+        ]
+      },
+      "DismountInfo": {
+        "Transform": "Vehicle",
+        "Position": [
+          0,
+          0.44368,
+          -5.9158
+        ]
+      }
+    },
+    {
+      "HidePassenger": true,
+      "BanHand": true,
+      "Transform": "Vehicle",
+      "Position": [
+        -0.82821,
+        0.41411,
+        0.7099
+      ],
+      "CameraPos": {
+        "UseSimulate3P": true,
+        "Simulate3PPos": [
+          6,
+          1
+        ]
+      },
+      "DismountInfo": {
+        "Transform": "Vehicle",
+        "Position": [
+          0,
+          0.44368,
+          -5.9158
+        ]
+      }
+    },
+    {
+      "HidePassenger": true,
+      "BanHand": true,
+      "Transform": "Vehicle",
+      "Position": [
+        0,
+        0.41411,
+        -1.30148
+      ],
+      "CameraPos": {
+        "UseSimulate3P": true,
+        "Simulate3PPos": [
+          6,
+          1
+        ]
+      },
+      "DismountInfo": {
+        "Transform": "Vehicle",
+        "Position": [
+          0,
+          0.44368,
+          -5.9158
+        ]
+      }
+    }
+  ],
+  "Weapons": {
+    "Cannon": {
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "DefaultZoom": 3,
+      "RPM": 850,
+      "Magazine": 500,
+      "NormalReloadTime": 100,
+      "EmptyReloadTime": 100,
+      "AmmoCostPerShoot": 1,
+      "Velocity": 18,
+      "Damage": 23,
+      "ExplosionDamage": 8,
+      "ExplosionRadius": 2,
+      "HeatPerShoot": 0.76,
+      "NaturalCooldown": 1,
+      "RecoilTime": 31,
+      "RecoilForce": 0.62,
+      "ShootAnimationTime": 3,
+      "Spread": 0.25,
+      "ProjectileLife": 40,
+      "Crosshair": "@VehicleRuApc",
+      "CrosshairColor": "0x66FF00",
+      "Name": "weapon.berts_vehicle_pack.4x_23_mm_autocannons",
+      "Projectile": {
+        "Type": "superbwarfare:small_cannon_shell",
+        "Profile": "berts_vehicle_pack:zsu23_4/cannon/default"
+      },
+      "SoundInfo": {
+        "Fire1PGain": 0.5,
+        "Fire3PGain": 0.5,
+        "Fire3PFarGain": 0.5,
+        "Fire3PVeryFarGain": 0.5,
+        "Fire1P": "berts_vehicle_pack:tap_zu23shoot",
+        "Fire3P": "berts_vehicle_pack:tap_zu23shoot",
+        "Fire3PFar": "berts_vehicle_pack:tap_zu23shoot",
+        "Fire3PVeryFar": "berts_vehicle_pack:tap_zu23shoot",
+        "Change": "superbwarfare:into_missile"
+      },
+      "SoundRadius": 24,
+      "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/cannon_25mm_ap.png",
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_ap",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:zsu23_4/cannon/ammo_00_23mm_apit"
+            },
+            "ShellType": "AP",
+            "ApDurability": 51,
+            "Damage": 23,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "AP Belt",
+            "ProjectileBelt": {
+              "Name": "AP Belt",
+              "Family": "ZU23",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "23mm_apit",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "GREEN"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:zsu23_4/cannon/ammo_00_23mm_apit",
+              "ProjectileLife": 40
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_he",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:zsu23_4/cannon/ammo_01_23mm_hei"
+            },
+            "ShellType": "HE",
+            "ApDurability": 6,
+            "Damage": 250,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 5,
+            "Name": "HE Belt",
+            "ProjectileBelt": {
+              "Name": "HE Belt",
+              "Family": "ZU23",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "23mm_hei",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "23mm_hei_2",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:zsu23_4/cannon/ammo_01_23mm_hei",
+              "ProjectileLife": 40
+            }
+          }
+        }
+      ],
+      "ShootPos": {
+        "Transform": "Barrel",
+        "Positions": [
+          [
+            0.0958,
+            0.19708,
+            2.10773
+          ],
+          [
+            -0.13413,
+            0.19708,
+            2.10773
+          ],
+          [
+            0.16423,
+            -0.1095,
+            2.4362
+          ],
+          [
+            -0.20256,
+            -0.1095,
+            2.4362
+          ]
+        ],
+        "Directions": [
+          "Barrel"
+        ],
+        "ViewPosition": [
+          0.08097,
+          0.16657,
+          1.78144
+        ]
+      },
+      "ProjectileBeltAmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_aa",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:zsu23_4/cannon/belt_ammo_00_23mm_hei_2"
+            },
+            "ShellType": "HE",
+            "ApDurability": 6,
+            "Damage": 250,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 5,
+            "Name": "HEF_I"
+          }
+        }
+      ],
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "superbwarfare:small_cannon_shell",
+        "ProjectileProfile": "berts_vehicle_pack:zsu23_4/cannon/default",
+        "ProjectileLife": 40
+      }
+    }
+  },
+  "HUDColor": "0x66FF00",
+  "InertiaRotateRate": 1.05,
+  "ParkingBrakeWhenUnoccupied": true,
+  "EngineType": "Track",
+  "EngineInfo": {
+    "Buoyancy": 0,
+    "EnergyCostRate": 120,
+    "WheelRotSpeed": 1.25,
+    "WheelDifferential": 0.75,
+    "TrackRotSpeed": 1.9,
+    "TrackDifferential": 0.6,
+    "MaxForwardSpeedRate": 0.6,
+    "MaxBackwardSpeedRate": 0.08399999999999999,
+    "Increment": 0.005142857142857143,
+    "Decrement": 0.0071428571428571435,
+    "SteeringSpeed": 0.058,
+    "EngineSoundVolume": 0.85
+  },
+  "TurretPos": [
+    -0.04927,
+    1.59399,
+    -0.22994
+  ],
+  "BarrelPos": [
+    0,
+    0.27374,
+    0.76645
+  ],
+  "TurretTurnSpeed": [
+    42,
+    49
+  ],
+  "TurretPitchRange": [
+    -4,
+    85
+  ],
+  "TurretYawRange": [
+    -180,
+    180
+  ],
+  "HasDecoy": false,
+  "UpStep": 1.5,
+  "RotateOffsetHeight": 3.07622,
+  "Mass": 44.5,
+  "DamageModifiers": [
+    "minecraft:arrow 0",
+    "minecraft:trident 0",
+    "minecraft:mob_attack 0",
+    "minecraft:mob_attack_no_aggro 0",
+    "minecraft:mob_projectile 0",
+    "minecraft:player_attack 0",
+    "#superbwarfare:projectile 0",
+    "All - 20",
+    "minecraft:lava + 20",
+    "minecraft:lava * 10",
+    "@minecraft:tnt * 4",
+    "@minecraft:tnt_minecart * 4",
+    "@#superbwarfare:aerial_bomb * 12",
+    "All * 0.23",
+    "superbwarfare:vehicle_strike * 2.5",
+    "minecraft:explosion * 2",
+    "superbwarfare:custom_explosion * 0.65",
+    "superbwarfare:projectile_explosion * 0.65",
+    "superbwarfare:mine * 0.5",
+    "superbwarfare:lunge_mine * 0.5",
+    "superbwarfare:projectile_hit * 1.3",
+    "#superbwarfare:projectile_absolute * 0.15",
+    "@#superbwarfare:aa_missile * 0.3",
+    "@superbwarfare:small_cannon_shell * 0.25",
+    "@superbwarfare:c4 * 4",
+    "@#superbwarfare:at_rocket * 1.1",
+    "@superbwarfare:gun_grenade * 1.25",
+    "@superbwarfare:mortar_shell * 1.25",
+    "@superbwarfare:tm_62 * 2.5"
+  ],
+  "DestroyInfo": {
+    "ParticleType": "Giant",
+    "ExplosionDamage": 160,
+    "ExplosionRadius": 13,
+    "SympatheticDetonation": true,
+    "SympatheticDetonationForce": 2,
+    "SympatheticDetonationChance": 0.55
+  },
+  "ThirdPersonCameraPos": [
+    0,
+    1.77474,
+    5.9158
+  ],
+  "VehicleIcon": "superbwarfare:textures/vehicle_icon/bmp_2_icon.png",
+  "ContainerIcon": "superbwarfare:textures/gui/vehicle/type/land.png",
+  "VehicleContainerType": "Medium",
+  "Type": "Tank",
+  "CollisionLevel": {
+    "Level": 4,
+    "PowerLimits": [
+      [
+        0,
+        0,
+        true
+      ],
+      [
+        0,
+        0,
+        true
+      ],
+      [
+        0.1,
+        0.05,
+        false
+      ],
+      [
+        1,
+        0.3,
+        false
+      ]
+    ]
+  },
+  "EngineSound": "berts_vehicle_pack:tank_engine_silent",
+  "HudType": "@Land",
+  "TerrainCompat": [
+    [
+      2.21251,
+      0,
+      3.83415
+    ],
+    [
+      -2.21251,
+      0,
+      3.83415
+    ],
+    [
+      2.21251,
+      0,
+      2.45458
+    ],
+    [
+      -2.21251,
+      0,
+      2.45458
+    ],
+    [
+      2.21251,
+      0,
+      1.14009
+    ],
+    [
+      -2.21251,
+      0,
+      1.14009
+    ],
+    [
+      2.21251,
+      0,
+      0.1783
+    ],
+    [
+      -2.21251,
+      0,
+      0.1783
+    ],
+    [
+      2.21251,
+      0,
+      -1.54095
+    ],
+    [
+      -2.21251,
+      0,
+      -1.54095
+    ],
+    [
+      2.21251,
+      0,
+      -2.87626
+    ],
+    [
+      -2.21251,
+      0,
+      -2.87626
+    ]
+  ]
+}

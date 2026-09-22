@@ -1,0 +1,29 @@
+{
+  "ID": "berts_vehicle_pack:amx_10rc",
+  "Model": {
+    "GeometryBackend": "berts_vehicle_pack:vehicle/amx_10rc",
+    "Model": "berts_vehicle_pack:geo/native_fallback/amx_10rc.geo.json",
+    "Texture": "berts_vehicle_pack:textures/entity/amx_10rc.png",
+    "WreckTexture": "berts_vehicle_pack:textures/entity_dead/amx_10rc.png"
+  },
+  "MouseSpeed": [
+    0.2,
+    0.2
+  ],
+  "RunningGear": {
+    "Type": "WHEELED",
+    "RoadWheelCount": 3,
+    "WheelBones": {
+      "Left": [
+        "wheelL0",
+        "wheelL1",
+        "wheelL2"
+      ],
+      "Right": [
+        "wheelR0",
+        "wheelR1",
+        "wheelR2"
+      ]
+    }
+  }
+}

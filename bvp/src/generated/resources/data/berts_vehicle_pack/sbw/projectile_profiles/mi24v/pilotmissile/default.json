@@ -1,0 +1,98 @@
+{
+  "Combat": {
+    "WeaponId": "berts_vehicle_pack:mi24v/pilotmissile",
+    "RoundId": "berts_vehicle_pack:9m114_shturm",
+    "MunitionType": "berts_vehicle_pack:atgm",
+    "DamageType": "berts_vehicle_pack:chemical",
+    "DiameterMm": 130,
+    "HullDamageClass": "ATGM",
+    "HullDamage": 125,
+    "ModuleDamage": 39,
+    "AmmoRackDamage": 8,
+    "PenetrationMm": 575,
+    "RicochetCurve": {
+      "IncidenceAnglesDegrees": [
+        0,
+        80,
+        82,
+        90
+      ],
+      "Probability": [
+        0,
+        0,
+        0.5,
+        1
+      ]
+    },
+    "Tandem": false
+  },
+  "VisualProfile": "berts_vehicle_pack:ataka_atgm",
+  "ImpactVisualProfile": "berts_vehicle_pack:atgm",
+  "MotionSync": "INHERIT",
+  "Luminance": 15,
+  "TrailMode": "REPLACE",
+  "RenderScale": 1,
+  "GuidedPropulsion": {
+    "InitialSpeed": 1.32,
+    "MaxSpeed": 3.3,
+    "AccelerationPerTick": 0.024749999999999998,
+    "ThrustDurationTicks": 80
+  },
+  "Extensions": {
+    "berts_vehicle_pack:projectile_effect_v1": {
+      "Schema": 1,
+      "Trail": {
+        "Emitter": {
+          "Flame": "berts_vehicle_pack:rocket_flame",
+          "Smoke": "berts_vehicle_pack:rocket_smoke"
+        },
+        "Phases": [
+          {
+            "Name": "BOOST",
+            "StartTick": 0,
+            "EndTickExclusive": 80,
+            "Flame": true,
+            "Smoke": true,
+            "Scale": 0.24,
+            "Orbit": {
+              "Count": 4,
+              "RadiusBlocks": 0.3,
+              "AngularSpeedRadiansPerTick": 0.942477796,
+              "Scale": 1.6
+            }
+          },
+          {
+            "Name": "COAST",
+            "StartTick": 80,
+            "EndTickExclusive": 2147483647,
+            "Flame": false,
+            "Smoke": true,
+            "Scale": 1.6,
+            "Orbit": null
+          }
+        ],
+        "SpacingBlocks": 0.25,
+        "RatePerTick": null,
+        "LifetimeTicks": {
+          "Flame": 6,
+          "Smoke": 20
+        },
+        "WidthBlocks": 0.1,
+        "AttachmentOffset": [
+          0,
+          0,
+          0
+        ],
+        "VelocityInheritance": 0,
+        "RandomScale": [
+          0.8,
+          1.3
+        ]
+      },
+      "Impact": {
+        "Explosion": "large",
+        "WaterExplosion": "same"
+      }
+    }
+  }
+}

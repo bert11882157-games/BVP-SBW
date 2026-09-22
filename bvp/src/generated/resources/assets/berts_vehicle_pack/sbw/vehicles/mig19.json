@@ -1,0 +1,35 @@
+{
+  "ID": "berts_vehicle_pack:mig19",
+  "Model": {
+    "GeometryBackend": "berts_vehicle_pack:vehicle/mig19",
+    "Model": "berts_vehicle_pack:geo/native_fallback/mig19.geo.json",
+    "Texture": "berts_vehicle_pack:textures/entity/mig19.png",
+    "WreckTexture": "berts_vehicle_pack:textures/entity_dead/mig19.png"
+  },
+  "MouseSpeed": [
+    0.2,
+    0.2
+  ],
+  "EngineExhaust": {
+    "Schema": "berts_vehicle_pack:engine_exhaust_origins/v1",
+    "Parent": "HULL",
+    "Origins": [
+      {
+        "Id": "engine_exhaust_000",
+        "Position": [
+          0.28047,
+          1.67664,
+          -6.45587
+        ]
+      },
+      {
+        "Id": "engine_exhaust_001",
+        "Position": [
+          -0.25727,
+          1.66043,
+          -6.01782
+        ]
+      }
+    ]
+  }
+}
