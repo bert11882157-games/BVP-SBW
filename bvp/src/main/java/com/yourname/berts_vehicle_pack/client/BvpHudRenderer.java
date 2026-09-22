@@ -262,8 +262,7 @@ public final class BvpHudRenderer {
         if (minecraft == null) {
             return;
         }
-        // The normalized Info1 panel is a ground-vehicle contract.  Helicopters retain their
-        // dedicated gauges and must not receive an unrelated hull/module wall.
+        // The normalized Info1 panel is for ground vehicles; helicopters use dedicated gauges.
         if (!"@Land".equals(vehicle.computed().getHudType())) {
             return;
         }
@@ -272,30 +271,10 @@ public final class BvpHudRenderer {
         int width = minecraft.m_91268_().m_85445_();
         int height = minecraft.m_91268_().m_85446_();
 
-        VehicleHudLayout.ScaledZone zone = VehicleHudLayout.scaled(width, height).element("info1");
-        // Info1 is intentionally inset from the upper-left edge so the semantic panel remains
-        // readable without changing the normalized authored zone.
-        int inset = Math.max(2, zone.width / 16);
-        int left = zone.left + inset;
-        int maxTextWidth = Math.max(1, zone.maxTextWidth - inset * 2);
-        int row = 0;
-        row = drawModuleHealth(graphics, font, "HULL", vehicle.getHealth(), vehicle.getMaxHealth(), false,
-                zone, row, left, maxTextWidth);
-        row = drawModuleHealth(graphics, font, "ENGINE", vehicle.getModuleHealth("engine"),
-                (float) VehicleModuleHealth.ENGINE_HP, vehicle.isEngineDisabled(), zone, row,
-                left, maxTextWidth);
-        if (vehicle.usesBvpTrackModuleRepair()) {
-            row = drawModuleHealth(graphics, font, "TRACK L", vehicle.getModuleHealth("lefttrack"),
-                    (float) VehicleModuleHealth.TRACK_HP, vehicle.isLeftTrackBroken(), zone, row,
-                    left, maxTextWidth);
-            row = drawModuleHealth(graphics, font, "TRACK R", vehicle.getModuleHealth("righttrack"),
-                    (float) VehicleModuleHealth.TRACK_HP, vehicle.isRightTrackBroken(), zone, row,
-                    left, maxTextWidth);
-        }
-
-        // Keep the repair affordance in the same authored Info1 region, below the status rows;
-        // Physics remains the sole owner of the 1/4 repair-rate behavior.  The immutable action
-        // snapshot makes the hold countdown visible without sending input or changing authority.
+        int left = 12;
+        int maxTextWidth = com.atsuishio.superbwarfare.client.overlay.GroundVehicleStatusHud.textWidth(width);
+        // Module icons are rendered once by SBW from VehicleModuleHudProvider. Repair state
+        // remains server-owned; the HUD only reads its accepted action snapshot.
         VehicleActionSnapshot repair = vehicle.getVehicleActionSnapshot(BvpFieldRepairAction.ACTION_ID);
         int repairMode = BvpFieldRepairAction.mode(repair);
         String repairText = "[" + BvpClientEvents.fieldRepairKeyLabel() + "] Field Repairs";
@@ -308,27 +287,10 @@ public final class BvpHudRenderer {
             int phaseTicks = Math.max(0, Math.min(repair.getPhaseTicks(), duration));
             float remainingSeconds = Math.max(0.0F, duration - phaseTicks) / 20.0F;
             int progress = Math.round(100.0F * phaseTicks / Math.max(1, duration));
-            repairText = String.format(Locale.ROOT, "[%s] Field Repairs %.1fs (%d%%)",
+            repairText = String.format(Locale.ROOT, "[%s] %.1fs %d%%",
                     BvpClientEvents.fieldRepairKeyLabel(), remainingSeconds, progress);
         }
-        drawBounded(graphics, font, repairText, left, zone.panelBaseline(6), maxTextWidth, 0xFFD8E4D8);
-    }
-
-    private static int drawModuleHealth(GuiGraphics graphics, Font font, String label, float health, float maximum,
-                                        boolean destroyed, VehicleHudLayout.ScaledZone zone, int row,
-                                        int left, int maxTextWidth) {
-        float safeMaximum = Float.isFinite(maximum) && maximum > 0.0F ? maximum : 1.0F;
-        float safeHealth = Float.isFinite(health) ? Math.max(0.0F, Math.min(health, safeMaximum)) : 0.0F;
-        float fraction = Math.max(0.0F, Math.min(1.0F, safeHealth / safeMaximum));
-        int percentage = Math.round(fraction * 100.0F);
-        String line = String.format(Locale.ROOT, "%s %d%%", label, percentage);
-        int color = destroyed || fraction <= 0.30F ? 0xFFFF3030 : 0xFFE6E6E6;
-        int textY = zone.panelBaseline(row);
-        // Keep every health/module line on its own authored row.  The old full-width green bars
-        // were decorative and competed with the readable status text; percentage color remains
-        // the compact health signal. Speed is rendered by the SBW overlay below this block.
-        drawBounded(graphics, font, line, left, textY, maxTextWidth, color);
-        return row + 1;
+        drawBounded(graphics, font, repairText, left, com.atsuishio.superbwarfare.client.overlay.GroundVehicleStatusHud.auxiliaryY(height, 2), maxTextWidth, 0xFFD8E4D8);
     }
 
     private static void drawBounded(GuiGraphics graphics, Font font, String text, int anchorX, int y,

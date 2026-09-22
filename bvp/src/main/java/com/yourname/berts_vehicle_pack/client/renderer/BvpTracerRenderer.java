@@ -10,6 +10,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.yourname.berts_vehicle_pack.effects.BvpTracerProfile;
+import com.yourname.berts_vehicle_pack.effects.TracerInterpolation;
+import com.atsuishio.superbwarfare.diagnostics.EliteDiagnostics;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -30,7 +32,7 @@ import java.util.UUID;
 /** Profile-driven additive beam renderer that replaces BVP's rectangular projectile bodies. */
 public final class BvpTracerRenderer {
     private static final double MIN_DIRECTION_SQR = 1.0E-8D;
-    private static final double MAX_RENDER_DISTANCE_SQR = 160.0D * 160.0D;
+    private static final double MAX_RENDER_DISTANCE_SQR = 16384.0D * 16384.0D;
     private static final int MAX_TRACKED_TRACERS = 1024;
     private static final int MAX_TRACER_CANDIDATES = 1024;
     private static final int MAX_STAGED_PROJECTILES = 2048;
@@ -40,7 +42,12 @@ public final class BvpTracerRenderer {
     private static final int MAX_ACCEPTED_IDENTITIES = 2048;
     private static final int MAX_RETIRED_SESSIONS = 8;
     private static final int LAUNCH_TTL_TICKS = 20;
-    private static final float VISUAL_DELAY_TICKS = 1.0F;
+    private static final TracerInterpolation.Cadence RENDER_CADENCE =
+            new TracerInterpolation.Cadence();
+    private static long retainedSampleTick = Long.MIN_VALUE;
+    private static int retainedSamplesThisTick;
+    private static long renderFrames;
+    private static double worldUnitsPerPixelPerDistance;
     private static final Vec3 WORLD_X = new Vec3(1.0D, 0.0D, 0.0D);
     private static final Vec3 WORLD_Y = new Vec3(0.0D, 1.0D, 0.0D);
     private static final Vec3 WORLD_Z = new Vec3(0.0D, 0.0D, 1.0D);
@@ -48,6 +55,7 @@ public final class BvpTracerRenderer {
     private static final Map<UUID, StagedProjectile> STAGED_PROJECTILES = new LinkedHashMap<>();
     private static final Map<UUID, TracerCandidate> TRACER_CANDIDATES = new LinkedHashMap<>();
     private static final Map<UUID, LiveBeam> LIVE_BEAMS = new LinkedHashMap<>();
+    private static final Map<UUID, Double> VISUAL_BIRTHS = new LinkedHashMap<>();
     private static final Map<UUID, LaunchAnchor> PENDING_LAUNCHES = new LinkedHashMap<>();
     private static final Map<UUID, IdentityStamp> ACCEPTED_IDENTITIES = new LinkedHashMap<>();
     private static final Map<UUID, Boolean> RETIRED_SESSIONS = new LinkedHashMap<>();
@@ -58,6 +66,22 @@ public final class BvpTracerRenderer {
     private static boolean activeSessionHasSequence;
 
     private BvpTracerRenderer() {
+    }
+
+    private static final BvpTracerProfile CLIENT_FRAGMENT_PROFILE = new BvpTracerProfile(
+            1.0F, 1.0F, 1.0F, 1, 4.0D, 0.025D, 1.0F, 14,
+            1.0D, 1.0F, 4.0D, 0.25F);
+
+    /** Shared client beam state; independent visuals own their simulation and buffer flush. */
+    public static RenderType clientFragmentRenderType() {
+        return TRACER_RENDER_TYPE;
+    }
+
+    public static void drawClientFragment(VertexConsumer vertices, Matrix4f matrix,
+                                          Vec3 camera, Vec3 position, Vec3 direction,
+                                          float scale) {
+        drawBeam(vertices, matrix, camera, position, direction,
+                CLIENT_FRAGMENT_PROFILE, 1.0F, scale);
     }
 
     /**
@@ -130,7 +154,13 @@ public final class BvpTracerRenderer {
 
     /** Resolves accepted projectile UUIDs to the same immutable observer-local frame as muzzle FX. */
     public static void resolveLaunch(FiredVisualRecord record, Vec3 position, float partialTick) {
-        if (record == null || !finite(position) || !finite(record.getDirection())) {
+        if (record != null) resolveLaunch(record, position, record.getDirection(), partialTick);
+    }
+
+    public static void resolveLaunch(FiredVisualRecord record, Vec3 position,
+                                     Vec3 direction, float partialTick) {
+        if (record == null || !finite(position) || !finite(direction)
+                || direction.m_82556_() <= MIN_DIRECTION_SQR || !Float.isFinite(partialTick)) {
             return;
         }
         Minecraft minecraft = Minecraft.m_91087_();
@@ -141,26 +171,45 @@ public final class BvpTracerRenderer {
         }
         long tick = level.m_46467_();
         ShotIdentity shotIdentity = new ShotIdentity(record.getServerSessionId(), record.getSequence());
-        if (!acceptShotIdentity(shotIdentity)) {
-            return;
-        }
         for (UUID projectileId : record.getSpawnedProjectileIds()) {
-            if (projectileId == null) {
-                continue;
+            if (projectileId != null) {
+                resolveAcceptedLaunch(projectileId, shotIdentity, position, direction,
+                        tick, tick + (double) partialTick);
             }
-            if (!acceptProjectileIdentity(projectileId, shotIdentity, tick)) {
-                continue;
-            }
-            LiveBeam liveBeam = LIVE_BEAMS.get(projectileId);
-            if (liveBeam != null) {
-                anchorBeam(projectileId, liveBeam, shotIdentity, position, record.getDirection(),
-                        tick + partialTick);
-                continue;
-            }
-            putPendingLaunch(projectileId,
-                    new LaunchAnchor(shotIdentity, position, record.getDirection(), tick,
-                            tick + partialTick, true));
         }
+    }
+
+    /** Completes an existing admission; never re-admits or advances the global shot sequence. */
+    private static boolean resolveAcceptedLaunch(UUID projectileId, ShotIdentity shotIdentity,
+                                                  Vec3 position, Vec3 direction,
+                                                  long tick, double presentationStartTick) {
+        if (shotIdentity.serverSessionId == null
+                || !shotIdentity.serverSessionId.equals(activeServerSession)
+                || RETIRED_SESSIONS.containsKey(shotIdentity.serverSessionId)) {
+            return false;
+        }
+        IdentityStamp accepted = ACCEPTED_IDENTITIES.get(projectileId);
+        if (accepted == null || !accepted.shotIdentity.equals(shotIdentity)) {
+            return false;
+        }
+        long age = tick - accepted.receivedTick;
+        if (age < 0L || age > LAUNCH_TTL_TICKS) {
+            return false;
+        }
+        LiveBeam liveBeam = LIVE_BEAMS.get(projectileId);
+        if (liveBeam != null) {
+            if (liveBeam.launchAccepted) return false;
+            anchorBeam(projectileId, liveBeam, shotIdentity, position, direction, presentationStartTick);
+            return true;
+        }
+        LaunchAnchor pending = PENDING_LAUNCHES.get(projectileId);
+        if (pending == null || pending.resolved || !pending.shotIdentity.equals(shotIdentity)
+                || tick < pending.receivedTick || tick - pending.receivedTick > LAUNCH_TTL_TICKS) {
+            return false;
+        }
+        putPendingLaunch(projectileId, new LaunchAnchor(shotIdentity, position, direction,
+                pending.receivedTick, presentationStartTick, true));
+        return true;
     }
 
     private static void acceptLaunch(FiredVisualRecord record, Vec3 position,
@@ -219,7 +268,6 @@ public final class BvpTracerRenderer {
         PENDING_LAUNCHES.values().removeIf(anchor -> tick - anchor.receivedTick > LAUNCH_TTL_TICKS);
         promoteStagedProjectiles(level);
         Vec3 viewerPosition = minecraft.f_91074_.m_20182_();
-        int samplesAdded = 0;
         Iterator<Map.Entry<UUID, TracerCandidate>> candidates =
                 TRACER_CANDIDATES.entrySet().iterator();
         while (candidates.hasNext()) {
@@ -240,7 +288,8 @@ public final class BvpTracerRenderer {
             }
             BvpTracerProfile profile = candidate.profile;
             Vec3 movement = entity.m_20184_();
-            if (movement.m_82556_() <= MIN_DIRECTION_SQR) {
+            if (movement.m_82556_() <= MIN_DIRECTION_SQR
+                    && com.atsuishio.superbwarfare.client.FarProjectilePlayback.pausedVelocity(entity) == null) {
                 continue;
             }
             candidatesAccepted++;
@@ -275,16 +324,16 @@ public final class BvpTracerRenderer {
                     waitForAcceptedLaunch(entityUuid, beam);
                 }
             }
-            // Impact fragments are server-created presentation projectiles rather than accepted
-            // fire records, so they never receive a launch anchor. Admit them through the same
-            // one-tick visual delay while retaining their live endpoint/chord rendering path.
+            // Compatibility for fragments already received from an older server. New impact
+            // visuals use the separate client pool and never enter the entity tracer path.
             if (!beam.launchAccepted && isImpactShrapnel(entity)) {
                 beam.acceptImpact(tick);
             }
-            if (beam.launchAccepted && beam.launchPosition == null
-                    && samplesAdded < MAX_SAMPLES_PER_TICK) {
-                addSample(new BeamSample(entityUuid, end, direction, profile, tick));
-                samplesAdded++;
+            // A distant observer may receive the real projectile after its muzzle event has
+            // left the native tracking range. Start from its current authoritative segment.
+            if (!beam.launchAccepted && launch == null &&
+                    entity.m_20182_().m_82557_(viewerPosition) > 160.0D * 160.0D) {
+                beam.acceptImpact(tick - 1);
             }
         }
         LIVE_BEAMS.values().removeIf(beam -> beam.lastSeenTick != tick);
@@ -350,9 +399,22 @@ public final class BvpTracerRenderer {
         int liveVisited = 0;
         int beamsDrawn = 0;
         float partialTick = event.getPartialTick();
-        float renderTick = level.m_46467_() + partialTick;
+        if (!Float.isFinite(partialTick)) return;
+        partialTick = Math.max(0.0F, Math.min(1.0F, partialTick));
+        double renderTick = level.m_46467_() + (double) partialTick;
+        long renderNanos = System.nanoTime();
+        renderFrames++;
+        boolean sampleFrame = RENDER_CADENCE.advance(renderNanos, renderTick);
+        if (retainedSampleTick != level.m_46467_()) {
+            retainedSampleTick = level.m_46467_();
+            retainedSamplesThisTick = 0;
+        }
         Camera camera = event.getCamera();
         Vec3 cameraPosition = camera.m_90583_();
+        double projectionY = Math.abs(event.getProjectionMatrix().m11());
+        int viewportHeight = minecraft.getWindow().getHeight();
+        worldUnitsPerPixelPerDistance = Double.isFinite(projectionY) && projectionY > 0 && viewportHeight > 0
+                ? 2.0D / (projectionY * viewportHeight) : 0.0D;
         MultiBufferSource.BufferSource bufferSource = minecraft.m_91269_().m_110104_();
         VertexConsumer consumer = bufferSource.m_6299_(TRACER_RENDER_TYPE);
         PoseStack poseStack = event.getPoseStack();
@@ -367,11 +429,11 @@ public final class BvpTracerRenderer {
             long currentTick = level.m_46467_();
             for (BeamSample sample : SAMPLES) {
                 retainedVisited++;
-                if (sample.spawnTick == currentTick && LIVE_BEAMS.containsKey(sample.entityUuid)) {
+                if (sample.spawnTick > currentTick - 1.0D && LIVE_BEAMS.containsKey(sample.entityUuid)) {
                     continue;
                 }
                 float remainingLife =
-                        1.0F - (renderTick - sample.spawnTick) / sample.profile.lifetimeTicks();
+                        (float) (1.0D - (renderTick - sample.spawnTick) / sample.profile.lifetimeTicks());
                 if (remainingLife <= 0.0F) {
                     continue;
                 }
@@ -379,27 +441,71 @@ public final class BvpTracerRenderer {
                     continue;
                 }
                 drawBeam(consumer, matrix, cameraPosition, sample.end, sample.direction,
-                        sample.profile, remainingLife);
+                        sample.profile, remainingLife, sample.scale);
                 beamsDrawn++;
             }
             for (LiveBeam beam : LIVE_BEAMS.values()) {
                 liveVisited++;
-                Vec3 end = beam.entity.m_20318_(partialTick);
-                if (!finite(end) || end.m_82557_(cameraPosition) > MAX_RENDER_DISTANCE_SQR) {
+                boolean residencyPaused = com.atsuishio.superbwarfare.client.FarProjectilePlayback.pausedVelocity(beam.entity) != null;
+                if (!beam.launchAccepted || beam.entity.m_213877_()
+                        || beam.entity.m_9236_() != level || !beam.visualReady(renderTick)) {
                     continue;
                 }
-                Vec3 direction = sampledTrajectoryDirection(beam.entity, beam.launchDirection);
-                if (direction == null) {
+                if (sampleFrame) {
+                    // Retain an already displayed point, never fabricate extra tick subdivisions.
+                    if (!residencyPaused && beam.presentation.end() != null && !beam.presentation.launchInterval()
+                            && beam.renderedNativeTick != beam.lastSeenTick
+                            && !isImpactShrapnel(beam.entity)
+                            && retainedSamplesThisTick < MAX_SAMPLES_PER_TICK) {
+                        addSample(new BeamSample(beam.entity.m_20148_(), beam.presentation.end(),
+                                beam.presentation.direction(), beam.profile, beam.renderedTime,
+                                flightScale((float) (beam.renderedTime - beam.visualBirthTick))));
+                        retainedSamplesThisTick++;
+                    }
+                    beam.presentation.sample(renderTick, beam.sampledDirection, beam.profile.lengthBlocks());
+                    beam.renderedNativeTick = beam.lastSeenTick;
+                    beam.renderedTime = renderTick;
+                }
+                Vec3 end = beam.presentation.end();
+                Vec3 direction = beam.presentation.direction();
+                if (!finite(end) || !finite(direction)
+                        || end.m_82557_(cameraPosition) > MAX_RENDER_DISTANCE_SQR) {
                     continue;
                 }
-                if (!beam.launchAccepted) {
-                    continue;
+                float scale = beam.entity instanceof ProjectileEntity fragment && fragment.isImpactShrapnel()
+                        ? TracerInterpolation.fragmentScale(Math.max(0, fragment.f_19797_ - 1 + partialTick),
+                                fragment.impactShrapnelLifetime())
+                        // Paused entity ticks must not restart or delay the half-second visual growth.
+                        : flightScale((float) (renderTick - beam.visualBirthTick));
+                if (isImpactShrapnel(beam.entity)) {
+                    drawBeam(consumer, matrix, cameraPosition, end, direction, beam.profile, 1.0F, scale);
+                } else {
+                    drawSegment(consumer, matrix, cameraPosition, beam.presentation.start(), end,
+                            direction, beam.profile, 1.0F, scale);
+                    drawFarHead(consumer, matrix, cameraPosition, end, beam.profile, scale);
                 }
-                if (!beam.visualReady(renderTick)) {
-                    continue;
+                if (EliteDiagnostics.isClientEnabled() && sampleFrame
+                        && (beam.presentation.initialSample() || renderTick - beam.lastDiagnostic >= 0.25D)) {
+                    beam.lastDiagnostic = renderTick;
+                    EliteDiagnostics.record(beam.entity, "tracer", "RENDER_SAMPLE",
+                            "render_tick", renderTick, "partial_tick", partialTick,
+                            "start", beam.interpolation.start(), "first", beam.interpolation.first(),
+                            "second", beam.interpolation.second(), "end", beam.interpolation.end(),
+                            "position", end, "scale", scale, "fragment", isImpactShrapnel(beam.entity),
+                            "residency_paused", residencyPaused,
+                            "sample_hz_cap", TracerInterpolation.MAX_SAMPLE_HZ,
+                            "render_frame", renderFrames, "sample_nanos", renderNanos,
+                            "sample_slot", RENDER_CADENCE.slot(), "sample_count", RENDER_CADENCE.samples(),
+                            "native_tick", beam.lastSeenTick,
+                            "source_tick", beam.presentation.sourceTick(),
+                            "source_alpha", beam.presentation.sourceAlpha(),
+                            "visual_delay_ticks", beam.presentation.delayTicks(),
+                            "initial_sample", beam.presentation.initialSample(),
+                            "launch_interval", beam.presentation.launchInterval(),
+                            "muzzle", beam.presentation.muzzle(),
+                            "beam_start", beam.presentation.start(),
+                            "muzzle_clearance", TracerInterpolation.MUZZLE_CLEARANCE_BLOCKS);
                 }
-                beam.releaseDelayedLaunch();
-                drawBeam(consumer, matrix, cameraPosition, end, direction, beam.profile, 1.0F);
                 beamsDrawn++;
             }
         } finally {
@@ -413,17 +519,24 @@ public final class BvpTracerRenderer {
     private static void drawBeam(VertexConsumer consumer, Matrix4f matrix, Vec3 cameraPosition,
                                  Vec3 end, Vec3 direction, BvpTracerProfile profile,
                                  float remainingLife) {
+        drawBeam(consumer, matrix, cameraPosition, end, direction, profile, remainingLife, 1.0F);
+    }
+
+    private static void drawBeam(VertexConsumer consumer, Matrix4f matrix, Vec3 cameraPosition,
+                                 Vec3 end, Vec3 direction, BvpTracerProfile profile,
+                                 float remainingLife, float scale) {
+        if (!(scale > 0)) return;
         if (!finite(direction) || direction.m_82556_() <= MIN_DIRECTION_SQR) {
             return;
         }
         Vec3 forward = direction.m_82541_();
-        Vec3 start = end.m_82549_(forward.m_82490_(-profile.lengthBlocks()));
-        drawSegment(consumer, matrix, cameraPosition, start, end, forward, profile, remainingLife);
+        Vec3 start = end.m_82549_(forward.m_82490_(-profile.lengthBlocks() * scale));
+        drawSegment(consumer, matrix, cameraPosition, start, end, forward, profile, remainingLife, scale);
     }
 
     private static void drawSegment(VertexConsumer consumer, Matrix4f matrix, Vec3 cameraPosition,
                                     Vec3 start, Vec3 end, Vec3 forward,
-                                    BvpTracerProfile profile, float remainingLife) {
+                                    BvpTracerProfile profile, float remainingLife, float scale) {
         Vec3 midpoint = start.m_82549_(end).m_82490_(0.5D);
         Vec3 side = forward.m_82537_(cameraPosition.m_82546_(midpoint));
         if (side.m_82556_() <= MIN_DIRECTION_SQR) {
@@ -439,8 +552,8 @@ public final class BvpTracerRenderer {
         float baseAlpha = profile.opacity() * remainingLife;
         float glowAlpha = baseAlpha * profile.glowOpacityScale();
         float coreAlpha = baseAlpha * profile.coreOpacityScale();
-        double glowHalfWidth = profile.widthBlocks() * profile.glowWidthScale() * 0.5D;
-        double coreHalfWidth = profile.widthBlocks() * profile.coreWidthScale() * 0.5D;
+        double glowHalfWidth = profile.widthBlocks() * profile.glowWidthScale() * 0.5D * scale;
+        double coreHalfWidth = profile.widthBlocks() * profile.coreWidthScale() * 0.5D * scale;
 
         quad(consumer, matrix, start, end, side, glowHalfWidth, profile, glowAlpha);
         quad(consumer, matrix, start, end, up, glowHalfWidth, profile, glowAlpha);
@@ -460,6 +573,25 @@ public final class BvpTracerRenderer {
         vertex(consumer, matrix, end.m_82546_(offset), profile, alpha);
         vertex(consumer, matrix, end.m_82549_(offset), profile, alpha);
         vertex(consumer, matrix, start.m_82549_(offset), profile, alpha);
+    }
+
+    /** A distant live tracer remains readable end-on; retained trails and collision size are unchanged. */
+    private static void drawFarHead(VertexConsumer consumer, Matrix4f matrix, Vec3 camera,
+                                    Vec3 point, BvpTracerProfile profile, float scale) {
+        Vec3 view = camera.m_82546_(point);
+        double distance = view.m_82553_();
+        if (!(distance > 160.0D) || !(worldUnitsPerPixelPerDistance > 0.0D)) return;
+        view = view.m_82490_(1.0D / distance);
+        Vec3 side = view.m_82537_(leastParallelAxis(view)).m_82541_();
+        Vec3 up = view.m_82537_(side).m_82541_();
+        float fade = (float) Math.min(1.0D, (distance - 160.0D) / 160.0D);
+        double pixel = distance * worldUnitsPerPixelPerDistance * scale;
+        double glow = Math.max(profile.widthBlocks() * profile.glowWidthScale() * scale * 0.5D, pixel);
+        double core = Math.max(profile.widthBlocks() * profile.coreWidthScale() * scale * 0.5D, pixel * 0.4D);
+        quad(consumer, matrix, point.m_82546_(side.m_82490_(glow)), point.m_82549_(side.m_82490_(glow)),
+                up, glow, profile, profile.opacity() * profile.glowOpacityScale() * fade);
+        quad(consumer, matrix, point.m_82546_(side.m_82490_(core)), point.m_82549_(side.m_82490_(core)),
+                up, core, profile, profile.opacity() * profile.coreOpacityScale() * fade);
     }
 
     private static void vertex(VertexConsumer consumer, Matrix4f matrix, Vec3 position,
@@ -488,7 +620,7 @@ public final class BvpTracerRenderer {
 
     private static void anchorBeam(UUID entityUuid, LiveBeam beam, ShotIdentity shotIdentity,
                                    Vec3 position, Vec3 direction,
-                                   float presentationStartTick) {
+                                   double presentationStartTick) {
         if (beam.launchAccepted && shotIdentity.equals(beam.shotIdentity)) {
             return;
         }
@@ -543,9 +675,11 @@ public final class BvpTracerRenderer {
             trimOldest(RETIRED_SESSIONS, MAX_RETIRED_SESSIONS);
         }
         LIVE_BEAMS.clear();
+        VISUAL_BIRTHS.clear();
         PENDING_LAUNCHES.clear();
         ACCEPTED_IDENTITIES.clear();
         SAMPLES.clear();
+        RENDER_CADENCE.reset();
         activeServerSession = serverSessionId;
         activeSessionLatestSequence = shotIdentity.sequence;
         activeSessionHasSequence = true;
@@ -560,9 +694,8 @@ public final class BvpTracerRenderer {
                 return false;
             }
             if (existing.shotIdentity.sequence == shotIdentity.sequence) {
-                ACCEPTED_IDENTITIES.remove(projectileId);
-                ACCEPTED_IDENTITIES.put(projectileId, new IdentityStamp(shotIdentity, receivedTick));
-                return true;
+                // An exact duplicate must not restart presentation or renew the receipt age.
+                return false;
             }
             if (!isNewerSequence(shotIdentity.sequence, existing.shotIdentity.sequence)) {
                 return false;
@@ -616,6 +749,10 @@ public final class BvpTracerRenderer {
         return entity instanceof ProjectileEntity fragment && fragment.isImpactShrapnel();
     }
 
+    public static float flightScale(float ageTicks) {
+        return Float.isFinite(ageTicks) ? 1F + 0.4F * Math.max(0F, Math.min(1F, ageTicks / 10F)) : 1F;
+    }
+
     /**
      * Uses the same previous/current position pair as Entity#getPosition(partialTick). The entity's
      * current delta movement already describes the next integration step after gravity/collision,
@@ -635,13 +772,17 @@ public final class BvpTracerRenderer {
         if (finite(movement) && movement.m_82556_() > MIN_DIRECTION_SQR) {
             return movement.m_82541_();
         }
+        Vec3 pausedMotion = com.atsuishio.superbwarfare.client.FarProjectilePlayback.pausedVelocity(entity);
+        if (finite(pausedMotion) && pausedMotion.m_82556_() > MIN_DIRECTION_SQR) {
+            return pausedMotion.m_82541_();
+        }
         return finite(acceptedFallback) && acceptedFallback.m_82556_() > MIN_DIRECTION_SQR
                 ? acceptedFallback.m_82541_() : null;
     }
 
     private static void trimExpiredSamples(long tick) {
         SAMPLES.removeIf(sample -> {
-            long age = tick - sample.spawnTick;
+            double age = tick - sample.spawnTick;
             return age < 0L || age >= sample.profile.lifetimeTicks();
         });
     }
@@ -658,6 +799,7 @@ public final class BvpTracerRenderer {
         STAGED_PROJECTILES.clear();
         TRACER_CANDIDATES.clear();
         LIVE_BEAMS.clear();
+        VISUAL_BIRTHS.clear();
         PENDING_LAUNCHES.clear();
         ACCEPTED_IDENTITIES.clear();
         RETIRED_SESSIONS.clear();
@@ -665,6 +807,10 @@ public final class BvpTracerRenderer {
         activeServerSession = null;
         activeSessionLatestSequence = 0L;
         activeSessionHasSequence = false;
+        RENDER_CADENCE.reset();
+        retainedSampleTick = Long.MIN_VALUE;
+        retainedSamplesThisTick = 0;
+        renderFrames = 0L;
     }
 
     private static boolean matchesEntity(Entity entity, int entityId,
@@ -713,13 +859,26 @@ public final class BvpTracerRenderer {
         Entity entity;
         BvpTracerProfile profile;
         long lastSeenTick;
-        Vec3 launchPosition;
         Vec3 launchDirection;
+        Vec3 sampledDirection;
+        final TracerInterpolation.Presentation presentation = new TracerInterpolation.Presentation();
+        long renderedNativeTick = Long.MIN_VALUE;
+        double renderedTime;
         ShotIdentity shotIdentity;
         boolean launchAccepted;
-        float presentationStartTick;
+        final double visualBirthTick;
+        double presentationStartTick;
+        double lastDiagnostic = Double.NEGATIVE_INFINITY;
+        TracerInterpolation interpolation;
 
         LiveBeam(Entity entity, BvpTracerProfile profile, long lastSeenTick) {
+            UUID id = entity.m_20148_();
+            if (!VISUAL_BIRTHS.containsKey(id) && VISUAL_BIRTHS.size() >= MAX_ACCEPTED_IDENTITIES) {
+                VISUAL_BIRTHS.remove(VISUAL_BIRTHS.keySet().iterator().next());
+            }
+            // Admission/pause transitions may recreate the beam or re-anchor its interpolation.
+            // Preserve one bounded visual clock for the projectile across those transitions.
+            this.visualBirthTick = VISUAL_BIRTHS.computeIfAbsent(id, ignored -> (double) lastSeenTick);
             update(entity, profile, lastSeenTick);
         }
 
@@ -727,31 +886,30 @@ public final class BvpTracerRenderer {
             this.entity = entity;
             this.profile = profile;
             this.lastSeenTick = lastSeenTick;
+            this.interpolation = TracerInterpolation.between(entity.m_20318_(0.0F), entity.m_20318_(1.0F));
+            this.sampledDirection = sampledTrajectoryDirection(entity, launchDirection);
+            this.presentation.update(interpolation, lastSeenTick);
         }
 
         void anchor(ShotIdentity shotIdentity, Vec3 position, Vec3 direction,
-                    float presentationStartTick) {
+                    double presentationStartTick) {
             this.launchAccepted = true;
             this.shotIdentity = shotIdentity;
-            this.launchPosition = position;
             this.launchDirection = direction.m_82541_();
+            this.presentation.anchor(position, direction);
             this.presentationStartTick = presentationStartTick;
         }
 
         void acceptImpact(long tick) {
             this.launchAccepted = true;
             this.shotIdentity = null;
-            this.launchPosition = null;
             this.launchDirection = null;
-            this.presentationStartTick = tick;
+            // Retain the old-server fragment delay; the independent client pool is unchanged.
+            this.presentationStartTick = tick + 1.0D;
         }
 
-        boolean visualReady(float renderTick) {
-            return renderTick - presentationStartTick >= VISUAL_DELAY_TICKS;
-        }
-
-        void releaseDelayedLaunch() {
-            launchPosition = null;
+        boolean visualReady(double renderTick) {
+            return Double.isFinite(renderTick) && renderTick >= presentationStartTick;
         }
     }
 
@@ -762,7 +920,7 @@ public final class BvpTracerRenderer {
     }
 
     private record LaunchAnchor(ShotIdentity shotIdentity, Vec3 position, Vec3 direction, long receivedTick,
-                                float presentationStartTick, boolean resolved) {
+                                double presentationStartTick, boolean resolved) {
     }
 
     private record BeamSample(
@@ -770,7 +928,7 @@ public final class BvpTracerRenderer {
             Vec3 end,
             Vec3 direction,
             BvpTracerProfile profile,
-            long spawnTick) {
+            double spawnTick, float scale) {
     }
 
     /** Accesses RenderType's protected state shards without leaking global render state. */

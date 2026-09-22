@@ -26,15 +26,35 @@ The source-owned resource overlay must be packaged together with generated resou
 particular, do not drop the vehicle item model, static icons, or reticle by packaging only the
 generated directory.
 
-Current BVP Java uses runtime/SRG identifiers. The retained MDK requests official mappings and
-local dependency JARs. Therefore `gradlew build` is **not yet a supported standalone BVP release
-recipe**. Production compilation currently uses the maintained runtime classpath/release process.
-Making that process independently reproducible is a follow-up build task, not a reason to publish
-the vehicle generator or authoring workspace.
+The source-build entry point requires Java 17 and Node.js 20 or newer:
 
-`bvp/libs/README.md` lists the inherited dependency expectations. Dependency JARs are intentionally
-not copied here. A release must use the matching SBW fork and dependency versions; an old upstream
-SBW binary is not a substitute for the changed fork APIs.
+```powershell
+node bvp/build-support/build-release.mjs --tree . --meshloader-manifest PATH_TO_DEPENDENCY_MANIFEST.json
+```
+
+See [the build contract](../bvp/build-support/README.md) for dependency input details. The
+meshloader is an external, separately source-built dependency, identified by version, exact size,
+and SHA-256. Its source and compiled JAR are not committed to this repository. Other dependencies
+come from the matching SBW project's resolved build graph. Dependency resolution may need network
+access, or a populated Gradle dependency cache.
+
+The entry point builds the sibling SBW source project and consumes its compiler API and mapping
+outputs. Canonical BVP Java keeps its runtime/SRG names; only disposable compilation sources are
+translated to the matching compiler names, and the output JAR is remapped for Forge runtime use.
+The vehicle generator, an installed game, and old patched mod JARs are not build inputs.
+
+BVP defaults to project-local `src/main/java`. Development can explicitly choose another canonical
+source root with `-PbvpSourceRoot=...`; publication does not rewrite its build file. Both resource
+directories are packaged, with the source-owned overlay taking precedence.
+
+Do not install a `*-mapped.jar`: it is an intermediate compiler artifact. Use only the final runtime
+artifact identified by the build proof. Direct BVP `gradlew build` is not the end-to-end runtime
+release entry point. The source-build command and its evidence, rather than a copied snapshot
+alone, establish which sources and dependencies produced each candidate.
+
+Runtime override validation is part of the release build. The remapper must receive the matching
+SBW and meshloader inheritance libraries; compilation alone cannot prove that vehicle save/sync,
+tick, and rendering overrides retain their required runtime names and descriptors.
 
 ## Validation before tagging
 

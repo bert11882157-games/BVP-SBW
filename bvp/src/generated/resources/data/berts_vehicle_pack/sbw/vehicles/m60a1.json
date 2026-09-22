@@ -20,32 +20,6 @@
       ]
     },
     {
-      "Part": "WheelLeft",
-      "Size": [
-        0.23288,
-        0.47305,
-        2.58356
-      ],
-      "Position": [
-        1.56469,
-        0.52399,
-        -0.18194
-      ]
-    },
-    {
-      "Part": "WheelRight",
-      "Size": [
-        0.23288,
-        0.47305,
-        2.58356
-      ],
-      "Position": [
-        -1.56469,
-        0.52399,
-        -0.18194
-      ]
-    },
-    {
       "Part": "MainEngine",
       "Size": [
         0.83693,
@@ -221,11 +195,6 @@
       "ExplosionRadius": 4,
       "RecoilTime": 42,
       "RecoilForce": 1,
-      "ShootShake": [
-        8,
-        10,
-        60
-      ],
       "Spread": 0.02,
       "ShootAnimationTime": 20,
       "Crosshair": "@VehicleRuApc",
@@ -250,7 +219,12 @@
             "Projectile": {
               "Type": "superbwarfare:cannon_shell",
               "Profile": "berts_vehicle_pack:m60a1/cannon/ammo_00_m728_apds"
-            }
+            },
+            "ShootShake": [
+              8,
+              10,
+              96
+            ]
           }
         },
         {
@@ -272,7 +246,12 @@
             "Projectile": {
               "Type": "superbwarfare:cannon_shell",
               "Profile": "berts_vehicle_pack:m60a1/cannon/ammo_01_m456_heat_fs"
-            }
+            },
+            "ShootShake": [
+              8,
+              10,
+              96
+            ]
           }
         }
       ],
@@ -285,10 +264,11 @@
         "Fire3P": "berts_vehicle_pack:tap_shoot_tnk_105mm",
         "Fire3PFar": "berts_vehicle_pack:tap_shoot_tnk_105mm",
         "Fire3PVeryFar": "berts_vehicle_pack:tap_shoot_tnk_105mm",
-        "VehicleReload": "superbwarfare:t_90a_reload",
         "Change": "superbwarfare:into_cannon",
+        "VehicleReload": "berts_vehicle_pack:m1_abrams_elite_m68a1_reload",
+        "VehicleReloadClipDurationTicks": 86,
         "CancellableSounds": [
-          "superbwarfare:t_90a_reload"
+          "berts_vehicle_pack:m1_abrams_elite_m68a1_reload"
         ]
       },
       "SoundRadius": 32,
@@ -333,7 +313,12 @@
         "ProjectileType": "superbwarfare:cannon_shell",
         "ProjectileProfile": "berts_vehicle_pack:m60a1/cannon/default",
         "ProjectileLife": 50
-      }
+      },
+      "ShootShake": [
+        8,
+        10,
+        96
+      ]
     },
     "MachineGun": {
       "DefaultFireMode": "Auto",
@@ -379,7 +364,12 @@
               "ProjectileType": "superbwarfare:projectile",
               "ProjectileProfile": "berts_vehicle_pack:m60a1/machinegun/ammo_00_western_762_ap",
               "ProjectileLife": 400
-            }
+            },
+            "ShootShake": [
+              0,
+              0,
+              0
+            ]
           }
         }
       ],
@@ -402,18 +392,18 @@
         "Transform": "Barrel",
         "Positions": [
           [
-            -0.02622,
-            0.05242,
-            -4.66574
+            0.43945,
+            -0.07622,
+            -0.49362
           ]
         ],
         "Directions": [
           "Barrel"
         ],
         "ViewPosition": [
-          -0.02573,
-          0.05145,
-          -4.57933
+          0.43131,
+          -0.07481,
+          -0.48448
         ],
         "MuzzleAttachments": [
           "coax_muzzle"
@@ -464,7 +454,12 @@
             "Damage": 9.5,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
-            "Name": "T"
+            "Name": "T",
+            "ShootShake": [
+              0,
+              0,
+              0
+            ]
           }
         }
       ],
@@ -473,7 +468,12 @@
         "ProjectileType": "superbwarfare:projectile",
         "ProjectileProfile": "berts_vehicle_pack:m60a1/machinegun/default",
         "ProjectileLife": 400
-      }
+      },
+      "ShootShake": [
+        0,
+        0,
+        0
+      ]
     },
     "PassengerMachineGun": {
       "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/gun_12_7mm.png",
@@ -545,7 +545,12 @@
               "ProjectileType": "superbwarfare:projectile",
               "ProjectileProfile": "berts_vehicle_pack:m60a1/passengermachinegun/ammo_00_western_127_m20_api_t_1",
               "ProjectileLife": 400
-            }
+            },
+            "ShootShake": [
+              8,
+              10,
+              6
+            ]
           }
         }
       ],
@@ -599,6 +604,9 @@
         "Change": "superbwarfare:missile_change"
       },
       "SoundRadius": 16,
+      "Magazine": 100,
+      "NormalReloadTime": 100,
+      "EmptyReloadTime": 100,
       "ProjectileBeltAmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
@@ -613,7 +621,12 @@
             "Damage": 40,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
-            "Name": "I"
+            "Name": "I",
+            "ShootShake": [
+              8,
+              10,
+              6
+            ]
           }
         },
         {
@@ -629,7 +642,12 @@
             "Damage": 40,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
-            "Name": "AP"
+            "Name": "AP",
+            "ShootShake": [
+              8,
+              10,
+              6
+            ]
           }
         },
         {
@@ -645,7 +663,12 @@
             "Damage": 40,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
-            "Name": "API_T"
+            "Name": "API_T",
+            "ShootShake": [
+              8,
+              10,
+              6
+            ]
           }
         }
       ],
@@ -654,7 +677,12 @@
         "ProjectileType": "superbwarfare:projectile",
         "ProjectileProfile": "berts_vehicle_pack:m60a1/passengermachinegun/default",
         "ProjectileLife": 400
-      }
+      },
+      "ShootShake": [
+        8,
+        10,
+        6
+      ]
     }
   },
   "HUDColor": "0xFFC700",
@@ -873,9 +901,9 @@
     "gunner1_camera": {
       "Parent": "Turret",
       "Position": [
-        0,
-        1.38924,
-        -0.52424
+        0.20969,
+        0.73393,
+        0.20335
       ],
       "Direction": [
         0,
@@ -886,9 +914,9 @@
     "gunner1_zoom": {
       "Parent": "Turret",
       "Position": [
-        0,
-        1.38924,
-        -0.52424
+        0.20969,
+        0.73393,
+        0.20335
       ],
       "Direction": [
         0,
@@ -925,9 +953,9 @@
     "coax_muzzle": {
       "Parent": "Barrel",
       "Position": [
-        -0.02622,
-        0.05242,
-        4.66574
+        0.43945,
+        -0.07622,
+        0.49362
       ],
       "Direction": [
         0,

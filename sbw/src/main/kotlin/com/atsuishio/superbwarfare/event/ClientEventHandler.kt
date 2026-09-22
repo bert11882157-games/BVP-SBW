@@ -10,7 +10,10 @@ import com.atsuishio.superbwarfare.client.VehicleHudScaleController
 import com.atsuishio.superbwarfare.client.sound.VehicleNativeLoopSoundLifecycle
 import com.atsuishio.superbwarfare.client.animation.AnimationCurves
 import com.atsuishio.superbwarfare.client.camera.VehicleFreeCameraController
+import com.atsuishio.superbwarfare.client.camera.ScreenShakeCameraEffect
 import com.atsuishio.superbwarfare.client.camera.VehicleOpticalZoomController
+import com.atsuishio.superbwarfare.client.input.VehicleControlBindings
+import com.atsuishio.superbwarfare.client.input.VehicleControlProfile
 import com.atsuishio.superbwarfare.client.overlay.CrossHairOverlay
 import com.atsuishio.superbwarfare.client.overlay.VehicleMainWeaponHudOverlay
 import com.atsuishio.superbwarfare.client.shader.ThermalShaderHandler
@@ -268,6 +271,9 @@ object ClientEventHandler {
     var holdFireVehicle: Boolean = false
 
     private var scheduledVehicleTriggerEntityId: Int = -1
+    private var scheduledVehicleTriggerSeatIndex: Int = -1
+    private var scheduledVehicleTriggerWeaponIndex: Int = -1
+    private var scheduledVehicleTriggerWeaponName: String? = null
     private var scheduledVehicleTriggerHeld: Boolean = false
     private var scheduledVehicleTargetUuid: UUID? = null
     private var scheduledVehicleTargetPos: Vec3? = null
@@ -335,9 +341,6 @@ object ClientEventHandler {
     var lockedEntity: Entity? = null
 
     @JvmField
-    var dismountCountdown: Int = 0
-
-    @JvmField
     var aimVillagerCountdown: Int = 0
 
     @JvmField
@@ -361,9 +364,6 @@ object ClientEventHandler {
 
     @JvmField
     var holdArtilleryIndicator: Int = 0
-
-    @JvmField
-    var holdToEjection: Int = 0
 
     @JvmField
     var isEditing: Boolean = false
@@ -423,6 +423,8 @@ object ClientEventHandler {
 
     @JvmField
     var keysCache: Short = 0
+    private var aimZoomCache = 1F
+    private var aimZoomVehicleId = -1
 
     @JvmField
     var tdmSavedData: TDMSavedData = TDMSavedData()
@@ -478,6 +480,7 @@ object ClientEventHandler {
     @SubscribeEvent
     fun handleClientTick(event: TickEvent.ClientTickEvent) {
         if (event.phase == TickEvent.Phase.START) return
+        com.atsuishio.superbwarfare.client.input.VehicleDismountInput.tick()
         VehicleCcipPresentation.tickClientEnd()
         VehicleHelicopterAtgmCameraRayClient.tickClientEnd()
         VehicleNativeLoopSoundLifecycle.tick()
@@ -652,6 +655,8 @@ object ClientEventHandler {
     fun handleControlVehicle(player: Player, stack: ItemStack) {
         var keys: Short = 0
         val vehicle = player.vehicle
+        val movementProfile = VehicleControlProfile.resolve(player)
+        val movement = movementProfile?.let(VehicleControlBindings::movementMappings)
         val weaponSeatSpaceOwned = if (vehicle is VehicleEntity) {
             val seatIndex = vehicle.getSeatIndex(player)
             seatIndex >= 0 && vehicle.hasWeapon(seatIndex)
@@ -685,52 +690,55 @@ object ClientEventHandler {
             VehicleActionInputClient.clear(VehicleWeaponActionIds.FIRE_SECONDARY)
         }
 
-        // 正在游戏内控制载具或无人机
-        if (!notInGame && (vehicle is VehicleEntity && vehicle.firstPassenger == player) ||
-            (stack.`is`(ModItems.MONITOR.get()) && stack.tag != null
-                    && stack.tag!!.getBoolean(MonitorItem.USING)
-                    && stack.tag!!.getBoolean(MonitorItem.LINKED))
-        ) {
-            if (ModKeyMappings.MOVE_LEFT.isDown) {
+        // All profiles translate independent bindings into the existing logical movement bits.
+        if (!notInGame && movement != null) {
+            if (movement.left.isDown) {
                 keys = keys or 0b000000001
             }
-            if (ModKeyMappings.MOVE_RIGHT.isDown) {
+            if (movement.right.isDown) {
                 keys = keys or 0b000000010
             }
-            if (ModKeyMappings.MOVE_FORWARD.isDown) {
+            if (movement.forward.isDown) {
                 keys = keys or 0b000000100
             }
-            if (ModKeyMappings.MOVE_BACKWARD.isDown) {
+            if (movement.backward.isDown) {
                 keys = keys or 0b000001000
             }
-            if (ModKeyMappings.MOVE_SHIFT.isDown) {
+            if (movement.down.isDown) {
                 keys = keys or 0b000100000
+            }
+            // Remote drones have no occupied weapon seat: Space must still reach native lift.
+            if (movementProfile == VehicleControlProfile.DRONE && !weaponSeatSpaceOwned &&
+                ModKeyMappings.DRONE_ASCEND.isDown) {
+                keys = keys or 0b000010000
             }
             if (ModKeyMappings.RELEASE_DECOY.isDown) {
                 keys = keys or 0b001000000
             }
+            if (ModKeyMappings.RELEASE_CHAFF.isDown) {
+                keys = keys or com.atsuishio.superbwarfare.api.aircraft.AircraftCountermeasures.CHAFF_INPUT_BIT.toShort()
+            }
             if (holdFireVehicle) {
                 keys = keys or 0b010000000
             }
-            if (ModKeyMappings.MOVE_CTRL.isDown) {
+            if (movement.auxiliary?.isDown == true) {
                 keys = keys or 0b100000000
             }
         }
 
-        if (keys != keysCache) {
-            sendPacketToServer(VehicleMovementMessage(keys))
+        val zoom = if (!notInGame && zoomVehicle && vehicle is VehicleEntity) {
+            com.atsuishio.superbwarfare.client.camera.VehicleOpticalZoomController.activeView(player)
+                ?.magnification?.toFloat() ?: vehicle.getDefaultZoom(player).toFloat()
+        } else 1F
+        val aimVehicleId = (vehicle as? VehicleEntity)?.id ?: -1
+        if (keys != keysCache || zoom != aimZoomCache || aimVehicleId != aimZoomVehicleId ||
+            (aimVehicleId != -1 && player.tickCount % 20 == 0)) {
+            sendPacketToServer(VehicleMovementMessage(keys, zoom))
             keysCache = keys
+            aimZoomCache = zoom
+            aimZoomVehicleId = aimVehicleId
         }
 
-        if (vehicle is VehicleEntity && vehicle.allowEjection(vehicle.getSeatIndex(player)) && ModKeyMappings.DISMOUNT.isDown()) {
-            holdToEjection = (holdToEjection + 1).coerceIn(0, 10)
-            if (holdToEjection >= 10) {
-                sendPacketToServer(PlayerStopRidingMessage(true))
-                stopVehicleReloadSound(player)
-            }
-        } else {
-            holdToEjection = 0
-        }
     }
 
     fun lockWeaponSeeking(player: Player, stack: ItemStack) {
@@ -1214,10 +1222,6 @@ object ClientEventHandler {
             if (holdingFireKeyTicks == 0) {
                 holdingFireKeyTicks0 = 0f
             }
-        }
-
-        if (dismountCountdown > 0) {
-            dismountCountdown--
         }
 
         if (aimVillagerCountdown > 0) {
@@ -1711,7 +1715,13 @@ object ClientEventHandler {
 
         val vehicle = player.vehicle
         if (vehicle is VehicleEntity && vehicle.hasWeapon(vehicle.getSeatIndex(player))) {
-            if (vehicle.getGunData(vehicle.getSeatIndex(player)) == null) return
+            val seatIndex = vehicle.getSeatIndex(player)
+            val weaponIndex = vehicle.getSelectedWeapon(seatIndex)
+            val weaponName = vehicle.getGunName(seatIndex, weaponIndex)
+            if (vehicle.getGunData(seatIndex, weaponIndex) == null) {
+                scheduledVehicleTriggerEntityId = -1
+                return
+            }
             // Fire input is intent only.  Ammo, reload, heat, cadence, and projectile
             // acceptance are authoritative in VehicleWeaponScheduler on the server.  A
             // client-side canShoot() check can observe a stale/empty local magazine and
@@ -1720,7 +1730,8 @@ object ClientEventHandler {
             val held = holdFireVehicle
             val targetUuid = lockingEntityVehicle?.uuid
             val targetPos = lockingPosVehicle
-            if (scheduledVehicleTriggerChanged(vehicle.id, held, targetUuid, targetPos)) {
+            if (scheduledVehicleTriggerChanged(vehicle.id, seatIndex, weaponIndex, weaponName,
+                    held, targetUuid, targetPos)) {
                 sendPacketToServer(
                     VehicleFireMessage(
                         targetUuid,
@@ -1729,12 +1740,18 @@ object ClientEventHandler {
                     )
                 )
                 scheduledVehicleTriggerEntityId = vehicle.id
+                scheduledVehicleTriggerSeatIndex = seatIndex
+                scheduledVehicleTriggerWeaponIndex = weaponIndex
+                scheduledVehicleTriggerWeaponName = weaponName
                 scheduledVehicleTriggerHeld = held
                 scheduledVehicleTargetUuid = targetUuid
                 scheduledVehicleTargetPos = targetPos
             }
         } else {
             scheduledVehicleTriggerEntityId = -1
+            scheduledVehicleTriggerSeatIndex = -1
+            scheduledVehicleTriggerWeaponIndex = -1
+            scheduledVehicleTriggerWeaponName = null
             scheduledVehicleTriggerHeld = false
             scheduledVehicleTargetUuid = null
             scheduledVehicleTargetPos = null
@@ -1749,6 +1766,9 @@ object ClientEventHandler {
 
     private fun scheduledVehicleTriggerChanged(
         vehicleId: Int,
+        seatIndex: Int,
+        weaponIndex: Int,
+        weaponName: String?,
         held: Boolean,
         targetUuid: UUID?,
         targetPos: Vec3?,
@@ -1756,6 +1776,9 @@ object ClientEventHandler {
         val targetChanged = scheduledVehicleTargetUuid != targetUuid
                 || scheduledVehicleTargetPos != targetPos
         return scheduledVehicleTriggerEntityId != vehicleId
+                || scheduledVehicleTriggerSeatIndex != seatIndex
+                || scheduledVehicleTriggerWeaponIndex != weaponIndex
+                || scheduledVehicleTriggerWeaponName != weaponName
                 || scheduledVehicleTriggerHeld != held
                 || (held && targetChanged)
     }
@@ -1830,10 +1853,6 @@ object ClientEventHandler {
             handleDroneCamera(event, entity)
         }
 
-        val yaw = event.yaw
-        val pitch = event.pitch
-        val roll = event.roll
-
         shakeTime = Mth.lerp(0.05 * getDelta(), shakeTime, 0.0)
 
         val vehicle = player.vehicle
@@ -1842,28 +1861,8 @@ object ClientEventHandler {
                 (1 - player.position().distanceTo(Vec3(shakePos[0], shakePos[1], shakePos[2])) / shakeRadius)
                     .toFloat().coerceIn(0f, 1f)
 
-            val onVehicle = vehicle != null
-            if (shakeType > 0) {
-                event.yaw =
-                    (yaw + (shakeTime * sin(0.5 * Math.PI * shakeTime) * shakeAmplitude * shakeRadiusAmplitude * shakeType *
-                            if (onVehicle) 0.1 else 1.0)).toFloat()
-                event.pitch =
-                    (pitch - (shakeTime * sin(0.5 * Math.PI * shakeTime) * shakeAmplitude * shakeRadiusAmplitude * shakeType *
-                            if (onVehicle) 0.1 else 1.0)).toFloat()
-                cameraRoll =
-                    (roll - (shakeTime * sin(0.5 * Math.PI * shakeTime) * shakeAmplitude * shakeRadiusAmplitude *
-                            if (onVehicle) 0.1 else 1.0)).toFloat()
-            } else {
-                event.yaw =
-                    (yaw - (shakeTime * sin(0.5 * Math.PI * shakeTime) * shakeAmplitude * shakeRadiusAmplitude * shakeType *
-                            if (onVehicle) 0.1 else 1.0)).toFloat()
-                event.pitch =
-                    (pitch + (shakeTime * sin(0.5 * Math.PI * shakeTime) * shakeAmplitude * shakeRadiusAmplitude * shakeType *
-                            if (onVehicle) 0.1 else 1.0)).toFloat()
-                cameraRoll =
-                    (roll + (shakeTime * sin(0.5 * Math.PI * shakeTime) * shakeAmplitude * shakeRadiusAmplitude *
-                            if (onVehicle) 0.1 else 1.0)).toFloat()
-            }
+            cameraRoll = ScreenShakeCameraEffect.apply(event, shakeTime, shakeAmplitude,
+                shakeRadiusAmplitude, shakeType, vehicle != null)
         }
 
         cameraPitch = event.pitch
@@ -2576,6 +2575,13 @@ object ClientEventHandler {
         val times = getDelta().coerceAtMost(1.6f)
 
         val vehicle = player.vehicle
+        if (vehicle is VehicleEntity) {
+            com.atsuishio.superbwarfare.client.aircraft.AircraftArmamentClient.podMagnification(vehicle)?.let {
+                event.fov = Math.toDegrees(2.0 * kotlin.math.atan(kotlin.math.tan(Math.toRadians(event.fov) / 2.0) / it))
+                currentFov = event.fov
+                return
+            }
+        }
         if (vehicle is VehicleEntity && vehicle.banHand(player) && zoomVehicle) {
             val heldOpticalZoom = VehicleOpticalZoomController.activeView(player)
             event.fov /= heldOpticalZoom?.magnification ?: vehicle.getDefaultZoom(player)
@@ -2706,7 +2712,11 @@ object ClientEventHandler {
     fun setPlayerInvisible(event: RenderPlayerEvent.Pre) {
         val otherPlayer = event.entity
         val vehicle = otherPlayer.vehicle
-        if (vehicle is VehicleEntity && vehicle.hidePassenger(otherPlayer)) {
+        val diagnosticPilot = vehicle is VehicleEntity && vehicle.isFixedWingFlightVehicle() &&
+            !mc.options.cameraType.isFirstPerson &&
+            com.atsuishio.superbwarfare.api.diagnostics.DebugFeaturePolicy
+                .isDiagnosticPropertyEnabled("bvp.diagnostics.showAircraftPilot")
+        if (vehicle is VehicleEntity && vehicle.hidePassenger(otherPlayer) && !diagnosticPilot) {
             event.isCanceled = true
         }
     }

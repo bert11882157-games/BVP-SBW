@@ -5,9 +5,9 @@ import com.atsuishio.superbwarfare.data.vehicle.DefaultVehicleData
 /**
  * Owns the fixed order of one vehicle tick without owning any gameplay state.
  *
- * [VehicleEntity] retains the phase implementations while they are extracted incrementally. This
- * coordinator is deliberately small: it makes ordering reviewable and keeps the vanilla
- * [VehicleEntity.baseTick] call as the single superclass boundary in the entity facade.
+ * [VehicleEntity] supplies the phase implementations. The pipeline makes their ordering explicit
+ * and keeps the vanilla [VehicleEntity.baseTick] call as the single superclass boundary
+ * in the entity facade.
  */
 internal class VehicleTickPipeline(private val vehicle: VehicleEntity) {
 

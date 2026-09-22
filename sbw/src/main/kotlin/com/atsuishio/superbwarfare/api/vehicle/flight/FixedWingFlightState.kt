@@ -38,6 +38,27 @@ data class FixedWingFlightState(
     val joystickDeadzone: Double = 0.0,
     val joystickSmoothingPerSecond: Double = 0.0,
     val joystickReturnPerSecond: Double = 0.0,
+    val quaternionX: Double = 0.0,
+    val quaternionY: Double = 0.0,
+    val quaternionZ: Double = 0.0,
+    val quaternionW: Double = 1.0,
+    val virtualPitchTarget: Double = 0.0,
+    val virtualRollTarget: Double = 0.0,
+    val airflowAuthority: Double = 0.0,
+    val sideslipDegrees: Double = 0.0,
+    val signedLiftAccelerationMps2: Double = 0.0,
+    val dragAccelerationMps2: Double = 0.0,
+    val sideDragAccelerationMps2: Double = 0.0,
+    val overspeedDragAccelerationMps2: Double = 0.0,
+    val thrustAccelerationMps2: Double = 0.0,
+    val preStepKineticEnergyPerKg: Double = 0.0,
+    val postStepKineticEnergyPerKg: Double = 0.0,
+    val stepThrustWorkPerKg: Double = 0.0,
+    val stepGravityWorkPerKg: Double = 0.0,
+    val stepDragWorkPerKg: Double = 0.0,
+    val stepSideWorkPerKg: Double = 0.0,
+    val stepLiftWorkPerKg: Double = 0.0,
+    val stepGroundResistanceWorkPerKg: Double = 0.0,
 ) {
     init {
         require(speedMps.isFinite() && speedMps >= 0.0) { "speedMps must be finite and nonnegative" }
@@ -73,6 +94,13 @@ data class FixedWingFlightState(
             joystickDeadzone,
             joystickSmoothingPerSecond,
             joystickReturnPerSecond,
+            quaternionX, quaternionY, quaternionZ, quaternionW,
+            virtualPitchTarget, virtualRollTarget, airflowAuthority, sideslipDegrees,
+            signedLiftAccelerationMps2, dragAccelerationMps2, sideDragAccelerationMps2,
+            overspeedDragAccelerationMps2, thrustAccelerationMps2,
+            preStepKineticEnergyPerKg, postStepKineticEnergyPerKg,
+            stepThrustWorkPerKg, stepGravityWorkPerKg, stepDragWorkPerKg,
+            stepSideWorkPerKg, stepLiftWorkPerKg, stepGroundResistanceWorkPerKg,
         )
         require(diagnosticValues.all(Double::isFinite)) { "fixed-wing diagnostics must be finite" }
         require(dynamicPressurePa >= 0.0 && liftForceNewtons.isFinite() && dragForceNewtons.isFinite()) {
@@ -81,6 +109,8 @@ data class FixedWingFlightState(
         require(controlEffectiveness >= 0.0 && controlEffectiveness <= 1.0) {
             "controlEffectiveness must be in [0,1]"
         }
+        require(virtualPitchTarget in -1.0..1.0 && virtualRollTarget in -1.0..1.0 &&
+            airflowAuthority in 0.0..1.0) { "virtual controls and airflow authority are out of range" }
         require(stallSeverity >= 0.0 && stallSeverity <= 1.0) {
             "stallSeverity must be in [0,1]"
         }

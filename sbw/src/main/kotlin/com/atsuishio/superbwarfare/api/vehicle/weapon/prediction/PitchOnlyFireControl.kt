@@ -62,7 +62,7 @@ data class PitchOnlyFireControlResult(
 
 /**
  * Pure, bounded inverse helper for a fixed local-yaw elevation family.  It intentionally has no
- * world, raycast, entity, packet, camera, or firing dependency: Physics supplies the already
+ * world, raycast, entity, packet, camera, or firing dependency: the caller supplies the already
  * authoritative first-BLOCK target and family, and consumes only a verified direction.
  */
 object PitchOnlyFireControl {

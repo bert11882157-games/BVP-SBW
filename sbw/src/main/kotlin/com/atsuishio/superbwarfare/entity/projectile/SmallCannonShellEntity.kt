@@ -28,6 +28,7 @@ import net.minecraft.world.phys.Vec3
 open class SmallCannonShellEntity(type: EntityType<out SmallCannonShellEntity>, level: Level) :
     FastThrowableProjectile(type, level) {
     private var aa = false
+    override fun farProjectileLookAheadTicks(): Int = if (aa) 1 else 0
 
     init {
         this.noCulling = true

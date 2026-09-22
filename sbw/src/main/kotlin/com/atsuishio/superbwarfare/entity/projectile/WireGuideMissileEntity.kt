@@ -2,6 +2,7 @@ package com.atsuishio.superbwarfare.entity.projectile
 
 import com.atsuishio.superbwarfare.api.projectile.GuidedPropulsionPhase
 import com.atsuishio.superbwarfare.api.projectile.GuidedPropulsionProfile
+import com.atsuishio.superbwarfare.api.projectile.GuidedPropulsionState
 import com.atsuishio.superbwarfare.api.projectile.GuidedMissileGuidance
 import com.atsuishio.superbwarfare.api.projectile.ProjectileProfiles
 import com.atsuishio.superbwarfare.api.vehicle.weapon.VehicleWeaponGuidanceContext
@@ -9,6 +10,7 @@ import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity
 import com.atsuishio.superbwarfare.init.ModItems
 import com.atsuishio.superbwarfare.init.ModSounds
 import com.atsuishio.superbwarfare.resource.BedrockModelLoader
+import com.atsuishio.superbwarfare.tools.EntityFindUtil
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.Tag
 import net.minecraft.network.syncher.EntityDataAccessor
@@ -33,11 +35,16 @@ open class WireGuideMissileEntity(type: EntityType<out WireGuideMissileEntity>, 
     private var launcherWeaponGuidanceContext: VehicleWeaponGuidanceContext? = null
 
     /** One flight path for all wire-guided missiles; native launchers use the explicit default. */
-    private var guidedPropulsionProfile: GuidedPropulsionProfile? = null
-    private var guidedPropulsionSpeed = 0.0
-    private var guidedPropulsionElapsedTicks = 0
+    private var propulsionState: GuidedPropulsionState? = null
+    private var propulsionInitialized = false
     private var inheritedPlatformMotion = Vec3.ZERO
     private var guidedPropulsionEnabled = false
+    private var latchedTopAttack: Boolean? = null
+
+    private fun usesLatchedTopAttack(): Boolean = latchedTopAttack ?: runCatching {
+        ProjectileProfiles.resolve(this)?.extension(ResourceLocation("superbwarfare", "guided_target_v1"))
+            ?.asJsonObject?.get("Mode")?.asString == "TOP_ATTACK"
+    }.getOrDefault(false).also { latchedTopAttack = it }
 
     init {
         this.noCulling = true
@@ -51,6 +58,7 @@ open class WireGuideMissileEntity(type: EntityType<out WireGuideMissileEntity>, 
         entityData.define(GUIDED_PROPULSION_INHERITED_X, 0f)
         entityData.define(GUIDED_PROPULSION_INHERITED_Y, 0f)
         entityData.define(GUIDED_PROPULSION_INHERITED_Z, 0f)
+        entityData.define(GUIDED_PROPULSION_TRAIL_ACTIVE, false)
     }
 
     /** True only after a valid typed guided profile was initialized at launch/load time. */
@@ -64,12 +72,17 @@ open class WireGuideMissileEntity(type: EntityType<out WireGuideMissileEntity>, 
     fun isGuidedPropulsionThrusting(): Boolean =
         hasGuidedPropulsion() && guidedPropulsionPhase() == GuidedPropulsionPhase.THRUST
 
+    /** The sixth ejection segment remains unpowered even when its endpoint reaches ignition. */
+    fun suppressesGuidedPropulsionTrail(): Boolean = hasGuidedPropulsion() &&
+        (guidedPropulsionPhase() == GuidedPropulsionPhase.EJECTION ||
+            (isGuidedPropulsionThrusting() && !entityData.get(GUIDED_PROPULSION_TRAIL_ACTIVE)))
+
     fun guidedPropulsionSpeed(): Double {
         val synchronized = entityData.get(GUIDED_PROPULSION_SPEED).toDouble()
         return if (level().isClientSide && synchronized.isFinite() && synchronized > 0.0) {
             synchronized
         } else {
-            guidedPropulsionSpeed
+            propulsionState?.speed ?: 0.0
         }
     }
 
@@ -87,28 +100,27 @@ open class WireGuideMissileEntity(type: EntityType<out WireGuideMissileEntity>, 
             disableGuidedPropulsion()
             return false
         }
-        guidedPropulsionProfile = profile
-        guidedPropulsionSpeed = profile.initialSpeed
-        guidedPropulsionElapsedTicks = 0
+        propulsionInitialized = true
+        propulsionState = GuidedPropulsionState.launch(profile)
         inheritedPlatformMotion = Vec3(inheritedMotion.x, inheritedMotion.y, inheritedMotion.z)
         guidedPropulsionEnabled = true
         entityData.set(GUIDED_PROPULSION_ENABLED, true)
-        entityData.set(GUIDED_PROPULSION_PHASE, GuidedPropulsionPhase.THRUST.code)
-        entityData.set(GUIDED_PROPULSION_SPEED, profile.initialSpeed.toFloat())
+        entityData.set(GUIDED_PROPULSION_PHASE, GuidedPropulsionPhase.EJECTION.code)
+        entityData.set(GUIDED_PROPULSION_SPEED, profile.launchSpeed().toFloat())
+        entityData.set(GUIDED_PROPULSION_TRAIL_ACTIVE, false)
         entityData.set(GUIDED_PROPULSION_INHERITED_X, inheritedMotion.x.toFloat())
         entityData.set(GUIDED_PROPULSION_INHERITED_Y, inheritedMotion.y.toFloat())
         entityData.set(GUIDED_PROPULSION_INHERITED_Z, inheritedMotion.z.toFloat())
         val direction = initialRelativeMotion.takeIf { it.lengthSqr() > 1.0e-12 }?.normalize()
             ?: lookAngle.takeIf { finite(it) && it.lengthSqr() > 1.0e-12 }?.normalize()
             ?: Vec3(0.0, 0.0, 1.0)
-        deltaMovement = direction.scale(profile.initialSpeed).add(inheritedMotion)
+        deltaMovement = direction.scale(profile.launchSpeed()).add(inheritedMotion)
         return true
     }
 
     private fun disableGuidedPropulsion() {
-        guidedPropulsionProfile = null
-        guidedPropulsionSpeed = 0.0
-        guidedPropulsionElapsedTicks = 0
+        propulsionInitialized = true
+        propulsionState = null
         inheritedPlatformMotion = Vec3.ZERO
         guidedPropulsionEnabled = false
         entityData.set(GUIDED_PROPULSION_ENABLED, false)
@@ -117,45 +129,90 @@ open class WireGuideMissileEntity(type: EntityType<out WireGuideMissileEntity>, 
         entityData.set(GUIDED_PROPULSION_INHERITED_X, 0f)
         entityData.set(GUIDED_PROPULSION_INHERITED_Y, 0f)
         entityData.set(GUIDED_PROPULSION_INHERITED_Z, 0f)
+        entityData.set(GUIDED_PROPULSION_TRAIL_ACTIVE, false)
     }
 
     override fun getDefaultItem(): Item {
         return ModItems.MEDIUM_ANTI_GROUND_MISSILE.get()
     }
 
+    /** Exact target actually receiving guidance this tick; never inferred from nearby aircraft. */
+    var actualGuidanceTargetUUID: UUID? = null
+        private set
+    private var laserSeekerDirection: Vec3? = null
+
     override fun tick() {
-        val guided = guidedPropulsionProfile ?: ProjectileProfiles.guidedPropulsion(this)
+        actualGuidanceTargetUUID = null
+        val maneuver = com.atsuishio.superbwarfare.api.projectile.GuidedManeuverPolicy.from(ProjectileProfiles.resolve(this))
+        val guided = propulsionState?.profile ?: ProjectileProfiles.guidedPropulsion(this)
             ?: GuidedPropulsionProfile.DEFAULT
-        if (!level().isClientSide && !hasGuidedPropulsion()) {
+        if (!level().isClientSide && !propulsionInitialized) {
             initializeGuidedPropulsion(guided, deltaMovement, Vec3.ZERO)
         }
+        val movementPhase = guidedPropulsionPhase()
         super.tick()
-
-        // Propulsion is launch-owned and must continue even if the launcher dismounts or dies;
-        // only guidance below depends on the current mounted controller.  The server advances
-        // the phase once, while clients consume the synchronized speed/phase for presentation.
-        val guidedInheritedMotion = effectiveInheritedMotion()
-        var transitionAfterStep = false
-        if (hasGuidedPropulsion()) {
-            if (!level().isClientSide) transitionAfterStep = advanceGuidedPropulsion(guided)
-            // Keep the terminal acceleration step in the THRUST phase.  The phase flips only
-            // after its new relative speed has been applied, so FUEL_OUT never erases that last
-            // propulsion update while still forbidding all later acceleration.
-            applyGuidedPropulsionMagnitude(guided)
-            if (transitionAfterStep) transitionToFuelOut()
+        if (isRemoved) return
+        if (!finite(deltaMovement)) {
+            discard()
+            return
         }
-        // Evaluate the phase after the authoritative boundary transition so a FUEL_OUT missile
-        // cannot emit one extra thrust/flame sample.  The provider falls through to the normal
-        // smoke-only trail once this call observes FUEL_OUT.
+
+        val guidedInheritedMotion = effectiveInheritedMotion()
+        if (!level().isClientSide) {
+            propulsionState?.let { state ->
+                val relativeSpeed = deltaMovement.subtract(guidedInheritedMotion).length()
+                if (!relativeSpeed.isFinite()) {
+                    discard()
+                    return
+                }
+                state.completeMovement(relativeSpeed)?.let(::applyGuidedPropulsionMagnitude)
+                entityData.set(GUIDED_PROPULSION_PHASE, state.phase.code)
+                entityData.set(GUIDED_PROPULSION_SPEED, state.speed.toFloat())
+                entityData.set(GUIDED_PROPULSION_TRAIL_ACTIVE,
+                    movementPhase == GuidedPropulsionPhase.THRUST &&
+                        state.phase == GuidedPropulsionPhase.THRUST)
+            }
+        } else if (isGuidedPropulsionThrusting()) {
+            applyGuidedPropulsionMagnitude(guidedPropulsionSpeed())
+        }
         mediumTrail()
 
         val owner = this.owner
         val vehicle = owner?.vehicle
-        if (!level().isClientSide && tickCount > 0 && owner != null && vehicle is VehicleEntity) {
+        val laserPointMode = persistentData.hasUUID("BvpLaserAircraft")
+        if (!level().isClientSide && hasGuidedPropulsion() && movementPhase != GuidedPropulsionPhase.EJECTION &&
+            tickCount > 0 && (laserPointMode || usesLatchedTopAttack() || owner != null && vehicle is VehicleEntity)) {
             var toVec = deltaMovement.subtract(guidedInheritedMotion)
             val relativeSpeed = toVec.length()
 
-            if (launcherVehicleUUID == vehicle.uuid) {
+            val topAttackTarget = if (!laserPointMode && usesLatchedTopAttack()) {
+                val tracked = if (targetUUID != "none") EntityFindUtil.findEntity(level(), targetUUID) else null
+                if (tracked != null && tracked.isAlive) {
+                    tracked.boundingBox.center.takeIf(::finite)?.let { targetPos = it }
+                }
+                targetPos?.takeIf(::finite)
+            } else null
+            if (laserPointMode) {
+                // Aircraft-owned point guidance remains valid without a mounted or loaded carrier.
+                // Explicit clear coasts; it must never fall through to manual ATGM camera guidance.
+                val point = com.atsuishio.superbwarfare.api.aircraft.AircraftArmamentManager.laserTarget(this)
+                val desired = GuidedMissileGuidance.pointDirection(position(), point)
+                if (desired != null && (maneuver == null || maneuver.captures(toVec, desired))) {
+                    toVec = if (maneuver == null) desired else GuidedMissileGuidance.steer(
+                        laserSeekerDirection ?: toVec.normalize(), Vec3.ZERO, desired, maneuver.seekerRateDegrees).normalize()
+                    laserSeekerDirection = toVec.normalize()
+                    // A point genuinely painted on a vehicle can trigger its receiver; nearby traffic cannot.
+                    if (point != null) actualGuidanceTargetUUID = level().getEntitiesOfClass(VehicleEntity::class.java,
+                        net.minecraft.world.phys.AABB(point, point).inflate(0.001)) {
+                        it.isAlive && !it.isWreck && it.boundingBox.contains(point)
+                    }.minByOrNull { it.id }?.uuid
+                } else laserSeekerDirection = null
+            } else if (topAttackTarget != null) {
+                GuidedMissileGuidance.topAttackDirection(position(), topAttackTarget)?.let {
+                    toVec = it
+                    if (!lost && !lostTarget && !distracted) actualGuidanceTargetUUID = runCatching { UUID.fromString(targetUUID) }.getOrNull()
+                }
+            } else if (vehicle is VehicleEntity && launcherVehicleUUID == vehicle.uuid) {
                 val launchContext = launcherWeaponGuidanceContext
                 val guidanceRay = if (launchContext != null) {
                     (owner as? LivingEntity)?.let {
@@ -171,47 +228,33 @@ open class WireGuideMissileEntity(type: EntityType<out WireGuideMissileEntity>, 
                 // Missing/stale ownership or camera input means coast, never barrel steering.
             }
 
-            deltaMovement = GuidedMissileGuidance.steer(deltaMovement, guidedInheritedMotion, toVec,
-                guided.maxTurnRateDegreesPerSecond)
+            deltaMovement = if (maneuver == null)
+                GuidedMissileGuidance.steer(deltaMovement, guidedInheritedMotion, toVec, guided.maxTurnRateDegreesPerSecond)
+            else GuidedMissileGuidance.steerManeuver(deltaMovement, guidedInheritedMotion, toVec,
+                guided.maxTurnRateDegreesPerSecond, maneuver)
             val relative = deltaMovement.subtract(guidedInheritedMotion)
             if (relative.lengthSqr() > 1.0e-12) {
                 yRot = Math.toDegrees(kotlin.math.atan2(-relative.x, relative.z)).toFloat()
                 xRot = Math.toDegrees(kotlin.math.atan2(-relative.y, relative.horizontalDistance())).toFloat()
             }
         }
-    }
-
-    /** Advances relative propulsion once on the authoritative server, then publishes phase/speed. */
-    private fun advanceGuidedPropulsion(profile: GuidedPropulsionProfile): Boolean {
-        if (!guidedPropulsionEnabled || guidedPropulsionPhase() != GuidedPropulsionPhase.THRUST) return false
-        if (guidedPropulsionElapsedTicks >= profile.thrustDurationTicks) {
-            transitionToFuelOut()
-            return false
+        if (!level().isClientSide && isGuidedPropulsionThrusting() && maneuver == null) {
+            deltaMovement = GuidedMissileGuidance.spinPerturbation(deltaMovement, guidedInheritedMotion, tickCount)
         }
-
-        guidedPropulsionSpeed = profile.speedAfter(guidedPropulsionElapsedTicks + 1)
-            .coerceIn(profile.initialSpeed, profile.maxSpeed)
-        guidedPropulsionElapsedTicks++
-        entityData.set(GUIDED_PROPULSION_SPEED, guidedPropulsionSpeed.toFloat())
-        // The caller applies this final speed while phase is still THRUST, then performs the
-        // one-way transition before trail presentation and the next tick's coast step.
-        return guidedPropulsionElapsedTicks >= profile.thrustDurationTicks
+        commitTickSynchronization()
     }
 
-    private fun transitionToFuelOut() {
-        if (entityData.get(GUIDED_PROPULSION_PHASE) == GuidedPropulsionPhase.FUEL_OUT.code) return
-        entityData.set(GUIDED_PROPULSION_PHASE, GuidedPropulsionPhase.FUEL_OUT.code)
-    }
+    override fun deferTickSynchronization(): Boolean = true
+
+    override fun isNoGravity(): Boolean = guidedPropulsionPhase() != GuidedPropulsionPhase.EJECTION
+
+    override fun getGravity(): Float = if (guidedPropulsionPhase() == GuidedPropulsionPhase.EJECTION)
+        (propulsionState?.profile ?: ProjectileProfiles.guidedPropulsion(this)
+            ?: GuidedPropulsionProfile.DEFAULT).ejectionGravityPerTick.toFloat() else 0f
 
     /** Applies the current missile-relative magnitude and adds the frozen platform vector once. */
-    private fun applyGuidedPropulsionMagnitude(profile: GuidedPropulsionProfile) {
-        // FUEL_OUT is a one-way terminal propulsion phase: keep only the normal throwable drag
-        // coast performed by super.tick(), with no further acceleration or magnitude reset.
-        if (guidedPropulsionPhase() != GuidedPropulsionPhase.THRUST) return
-        val speed = guidedPropulsionSpeed()
-            .takeIf { it.isFinite() && it > 0.0 }
-            ?.coerceIn(profile.initialSpeed, profile.maxSpeed)
-            ?: return
+    private fun applyGuidedPropulsionMagnitude(speed: Double) {
+        if (!speed.isFinite() || speed <= 0.0) return
         val inherited = effectiveInheritedMotion()
         val relative = deltaMovement.subtract(inherited)
         val relativeLengthSquared = relative.lengthSqr()
@@ -252,14 +295,13 @@ open class WireGuideMissileEntity(type: EntityType<out WireGuideMissileEntity>, 
 
     override fun addAdditionalSaveData(compound: CompoundTag) {
         super.addAdditionalSaveData(compound)
-        if (guidedPropulsionEnabled && guidedPropulsionProfile?.isValid() == true &&
-            guidedPropulsionSpeed.isFinite() && guidedPropulsionElapsedTicks in 0..GuidedPropulsionProfile.MAX_THRUST_DURATION_TICKS &&
-            finite(inheritedPlatformMotion)
-        ) {
-            compound.putBoolean("GuidedPropulsionEnabled", true)
-            compound.putByte("GuidedPropulsionPhase", guidedPropulsionPhase().code)
-            compound.putDouble("GuidedPropulsionSpeed", guidedPropulsionSpeed)
-            compound.putInt("GuidedPropulsionElapsed", guidedPropulsionElapsedTicks)
+        targetPos?.takeIf(::finite)?.let {
+            compound.putDouble("LatchedTargetX", it.x)
+            compound.putDouble("LatchedTargetY", it.y)
+            compound.putDouble("LatchedTargetZ", it.z)
+        }
+        if (guidedPropulsionEnabled && finite(inheritedPlatformMotion)) {
+            propulsionState?.writeTo(compound)
             compound.putDouble("GuidedPropulsionInheritedX", inheritedPlatformMotion.x)
             compound.putDouble("GuidedPropulsionInheritedY", inheritedPlatformMotion.y)
             compound.putDouble("GuidedPropulsionInheritedZ", inheritedPlatformMotion.z)
@@ -278,6 +320,13 @@ open class WireGuideMissileEntity(type: EntityType<out WireGuideMissileEntity>, 
 
     override fun readAdditionalSaveData(compound: CompoundTag) {
         super.readAdditionalSaveData(compound)
+        latchedTopAttack = null
+        targetPos = if (listOf("LatchedTargetX", "LatchedTargetY", "LatchedTargetZ")
+                .all { compound.contains(it, Tag.TAG_DOUBLE.toInt()) }) {
+            Vec3(compound.getDouble("LatchedTargetX"), compound.getDouble("LatchedTargetY"),
+                compound.getDouble("LatchedTargetZ")).takeIf(::finite)
+        } else null
+        disableGuidedPropulsion()
         if (compound.getBoolean("GuidedPropulsionEnabled") &&
             compound.contains("GuidedPropulsionPhase", Tag.TAG_BYTE.toInt()) &&
             compound.contains("GuidedPropulsionSpeed", Tag.TAG_DOUBLE.toInt()) &&
@@ -286,27 +335,22 @@ open class WireGuideMissileEntity(type: EntityType<out WireGuideMissileEntity>, 
             compound.contains("GuidedPropulsionInheritedY", Tag.TAG_DOUBLE.toInt()) &&
             compound.contains("GuidedPropulsionInheritedZ", Tag.TAG_DOUBLE.toInt())
         ) {
-            val profile = ProjectileProfiles.guidedPropulsion(this) ?: GuidedPropulsionProfile.DEFAULT
-            val phase = GuidedPropulsionPhase.fromCode(compound.getByte("GuidedPropulsionPhase"))
-            val speed = compound.getDouble("GuidedPropulsionSpeed")
-            val elapsed = compound.getInt("GuidedPropulsionElapsed")
+            val state = GuidedPropulsionState.restore(compound,
+                ProjectileProfiles.guidedPropulsion(this) ?: GuidedPropulsionProfile.DEFAULT)
             val inherited = Vec3(
                 compound.getDouble("GuidedPropulsionInheritedX"),
                 compound.getDouble("GuidedPropulsionInheritedY"),
                 compound.getDouble("GuidedPropulsionInheritedZ"),
             )
-            if (profile.isValid() && speed.isFinite() &&
-                speed in profile.initialSpeed..profile.maxSpeed &&
-                elapsed in 0..profile.thrustDurationTicks && finite(inherited)
-            ) {
-                guidedPropulsionProfile = profile
-                guidedPropulsionSpeed = speed
-                guidedPropulsionElapsedTicks = elapsed
+            if (state != null && finite(inherited) && finite(deltaMovement)) {
+                propulsionState = state
                 inheritedPlatformMotion = inherited
                 guidedPropulsionEnabled = true
                 entityData.set(GUIDED_PROPULSION_ENABLED, true)
-                entityData.set(GUIDED_PROPULSION_PHASE, phase.code)
-                entityData.set(GUIDED_PROPULSION_SPEED, speed.toFloat())
+                entityData.set(GUIDED_PROPULSION_PHASE, state.phase.code)
+                entityData.set(GUIDED_PROPULSION_SPEED, state.speed.toFloat())
+                entityData.set(GUIDED_PROPULSION_TRAIL_ACTIVE,
+                    state.phase == GuidedPropulsionPhase.THRUST && state.motorTicks > 0)
                 entityData.set(GUIDED_PROPULSION_INHERITED_X, inherited.x.toFloat())
                 entityData.set(GUIDED_PROPULSION_INHERITED_Y, inherited.y.toFloat())
                 entityData.set(GUIDED_PROPULSION_INHERITED_Z, inherited.z.toFloat())
@@ -384,6 +428,10 @@ open class WireGuideMissileEntity(type: EntityType<out WireGuideMissileEntity>, 
         @JvmField
         val GUIDED_PROPULSION_INHERITED_Z: EntityDataAccessor<Float> =
             SynchedEntityData.defineId(WireGuideMissileEntity::class.java, EntityDataSerializers.FLOAT)
+
+        @JvmField
+        val GUIDED_PROPULSION_TRAIL_ACTIVE: EntityDataAccessor<Boolean> =
+            SynchedEntityData.defineId(WireGuideMissileEntity::class.java, EntityDataSerializers.BOOLEAN)
 
         /**
          * Projectile-to-projectile interception is deliberately narrower than the legacy
@@ -470,6 +518,6 @@ open class WireGuideMissileEntity(type: EntityType<out WireGuideMissileEntity>, 
         ): Boolean = preciseInterceptionHitPoint(missile, start, end) != null
 
         private fun finite(vector: Vec3): Boolean =
-            vector.x.isFinite() && vector.y.isFinite() && vector.z.isFinite()
+            vector.x.isFinite() && vector.y.isFinite() && vector.z.isFinite() && vector.lengthSqr().isFinite()
     }
 }

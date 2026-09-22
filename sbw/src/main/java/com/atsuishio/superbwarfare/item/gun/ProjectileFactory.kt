@@ -65,6 +65,8 @@ object ProjectileFactory {
         configureLaunchableData(entity, parameters, projectileData, projectileInfo, projectileType)
         val requestedProfileId = projectileInfo.resolvedProfileId()
         ProjectileProfiles.assign(entity, requestedProfileId)
+        if (entity is Projectile) com.atsuishio.superbwarfare.api.projectile.ProjectileCalibers.capture(entity, projectileInfo.caliberMm)
+        com.atsuishio.superbwarfare.api.vehicle.weapon.VehicleWeaponDamagePolicy.capture(entity, parameters)
         if (requestedProfileId != null) {
             val assignedProfileId = ProjectileProfiles.profileId(entity)
             when {
@@ -91,9 +93,7 @@ object ProjectileFactory {
             velocity = flight.initialSpeed.toFloat()
         }
         applyPerks(entity, projectileData)
-        // PG-9/OG-9 remain non-tracer combat rounds, but their typed presentation contract
-        // requests the standard small white tracer.  Belt policies remain the final per-shot
-        // authority and can still suppress/replace this snapshot when explicitly authored.
+        // Addon round presentation precedes the selected belt's final per-shot override.
         ProjectileProfiles.assignTypedSmallWhiteTracerPresentation(entity)
         // The selected belt round is the final presentation authority.  Apply it after every
         // generic/perk projectile mutation so an authored tracer_v2/default fallback cannot
@@ -149,13 +149,10 @@ object ProjectileFactory {
         return inserted
     }
 
-    /**
-     * Spawns one bounded impact fragment through the same SBW projectile entity/trajectory path
-     * used by accepted fire. It has no GunData, ammo, RNG spread, explosion or scheduler state;
-     * the caller supplies only the already-authoritative impact direction and presentation
-     * template. A missing/invalid template fails closed before insertion.
-     */
+    /** Binary-compatible legacy entry point; impact shrapnel is now client-only presentation. */
     @JvmStatic
+    @Deprecated("Impact shrapnel is client-only presentation")
+    @Suppress("UNUSED_PARAMETER")
     fun spawnImpactShrapnel(
         level: ServerLevel,
         owner: Entity?,
@@ -168,28 +165,19 @@ object ProjectileFactory {
         presentationScale: Float,
         shotSequence: Long,
     ): Boolean {
-        if (!finite(position) || !finite(direction) || direction.lengthSqr() <= 1.0E-8
-            || !speed.isFinite() || speed <= 0f || lifetimeTicks !in 1..8
-            || !damage.isFinite() || damage < 0f
-            || !presentationScale.isFinite() || presentationScale <= 0f
-        ) return false
+        return false
+    }
 
-        val entity = ModEntities.PROJECTILE.get().create(level) ?: return false
-        if (!ProjectileProfiles.assignImpactTracerProfile(entity, templateProfileId, presentationScale)) {
-            return false
-        }
-        val projectile = entity.shooter(owner)
-            .damage(damage)
-            .velocity(speed)
-        projectile.setGravity(0.05f)
-        projectile.setExplosionDamage(0f)
-        projectile.setExplosionRadius(0f)
-        projectile.setLife(lifetimeTicks)
-        projectile.markImpactShrapnel()
-        ProjectileProfiles.assignShotSequence(projectile, shotSequence)
-        projectile.setPos(position)
-        projectile.shoot(null, direction.x, direction.y, direction.z, speed, 0f)
-        return level.addFreshEntity(projectile)
+    /** Never materializes a gameplay entity, even when a legacy addon supplies valid fragment data. */
+    @JvmStatic
+    @Deprecated("Impact shrapnel is client-only presentation")
+    @Suppress("UNUSED_PARAMETER")
+    fun spawnImpactShrapnel(
+        level: ServerLevel,
+        owner: Entity?,
+        spec: com.atsuishio.superbwarfare.api.projectile.ImpactFragmentSpawnSpec,
+    ): Boolean {
+        return false
     }
 
     private fun finite(value: Vec3): Boolean =

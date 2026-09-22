@@ -1,0 +1,180 @@
+{
+  "Schema": 1,
+  "Name": "Su-25",
+  "BuiltInWeapons": [
+    "Cannon"
+  ],
+  "SuspendedWeapons": [
+    "S8KOPylon1",
+    "S8KOPylon2",
+    "S8KOPylon3",
+    "S8KOPylon4",
+    "GSh23Pylon1Left",
+    "GSh23Pylon1Right",
+    "GSh23Pylon2Left",
+    "GSh23Pylon2Right",
+    "GSh23Pylon3Left",
+    "GSh23Pylon3Right",
+    "GSh23Pylon4Left",
+    "GSh23Pylon4Right"
+  ],
+  "Pairs": [
+    {
+      "Id": "pylon_1",
+      "Name": "Pylon 1",
+      "Left": [
+        -2.019375,
+        1.894722,
+        0.299167
+      ],
+      "Right": [
+        2.019375,
+        1.894722,
+        0.299167
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:kh29l",
+        "berts_vehicle_pack:su25_s8ko_pod",
+        "berts_vehicle_pack:gsh23_pod"
+      ],
+      "WeaponId": "S8KOPylon1",
+      "WeaponChannel": "S8KOPylon1",
+      "NativeWeaponIds": {
+        "berts_vehicle_pack:gsh23_pod": [
+          "GSh23Pylon1Left",
+          "GSh23Pylon1Right"
+        ]
+      }
+    },
+    {
+      "Id": "pylon_2",
+      "Name": "Pylon 2",
+      "Left": [
+        -2.767292,
+        1.894722,
+        0.099722
+      ],
+      "Right": [
+        2.767292,
+        1.894722,
+        0.099722
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:kh29l",
+        "berts_vehicle_pack:su25_s8ko_pod",
+        "berts_vehicle_pack:gsh23_pod"
+      ],
+      "WeaponId": "S8KOPylon2",
+      "WeaponChannel": "S8KOPylon2",
+      "NativeWeaponIds": {
+        "berts_vehicle_pack:gsh23_pod": [
+          "GSh23Pylon2Left",
+          "GSh23Pylon2Right"
+        ]
+      }
+    },
+    {
+      "Id": "pylon_3",
+      "Name": "Pylon 3",
+      "Left": [
+        -3.565069,
+        1.894722,
+        -0.149583
+      ],
+      "Right": [
+        3.565069,
+        1.894722,
+        -0.149583
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:kh29l",
+        "berts_vehicle_pack:su25_s8ko_pod",
+        "berts_vehicle_pack:gsh23_pod"
+      ],
+      "WeaponId": "S8KOPylon3",
+      "WeaponChannel": "S8KOPylon3",
+      "NativeWeaponIds": {
+        "berts_vehicle_pack:gsh23_pod": [
+          "GSh23Pylon3Left",
+          "GSh23Pylon3Right"
+        ]
+      }
+    },
+    {
+      "Id": "pylon_4",
+      "Name": "Pylon 4",
+      "Left": [
+        -4.312986,
+        1.844861,
+        -0.349028
+      ],
+      "Right": [
+        4.312986,
+        1.844861,
+        -0.349028
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:kh29l",
+        "berts_vehicle_pack:su25_s8ko_pod",
+        "berts_vehicle_pack:gsh23_pod"
+      ],
+      "WeaponId": "S8KOPylon4",
+      "WeaponChannel": "S8KOPylon4",
+      "NativeWeaponIds": {
+        "berts_vehicle_pack:gsh23_pod": [
+          "GSh23Pylon4Left",
+          "GSh23Pylon4Right"
+        ]
+      }
+    },
+    {
+      "Id": "pylon_5",
+      "Name": "Pylon 5",
+      "Left": [
+        -5.110764,
+        1.894722,
+        -0.8975
+      ],
+      "Right": [
+        5.110764,
+        1.894722,
+        -0.8975
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:r60"
+      ]
+    }
+  ],
+  "StoreGroups": {
+    "berts_vehicle_pack:modeled_store/su_25/249509779": [
+      "suspended_249509779_hull"
+    ],
+    "berts_vehicle_pack:modeled_store/su_25/retained_s8ko": [
+      "suspended_s8ko_right_1",
+      "suspended_s8ko_right_2",
+      "suspended_s8ko_left_2",
+      "suspended_s8ko_left_1"
+    ],
+    "berts_vehicle_pack:modeled_store/su_25/retained_missiles": [
+      "suspended_retained_missile_left",
+      "suspended_retained_missile_right"
+    ]
+  },
+  "Pod": {
+    "Position": [
+      0,
+      0.947361,
+      6.132917
+    ],
+    "Source": "Laser designation pod mounted 4 native pixels below source nose belly, supported by primitives15/182",
+    "YawLimit": 180,
+    "PitchMin": -10,
+    "PitchMax": 90,
+    "MaxZoom": 24,
+    "Range": 8192
+  },
+  "Radar": {
+    "Enabled": true,
+    "Range": 500
+  }
+}

@@ -17,6 +17,36 @@ final class ArmorImpactReporter {
     private ArmorImpactReporter() {
     }
 
+    static void reportVolumeSelection(ArmorTarget target, Entity projectile, ArmorHitResolver.ShotTrace trace,
+                                      ArmorProfiles.ArmorHit armor,
+                                      ArmorModuleResolver.ModuleHit track,
+                                      ArmorModuleResolver.ModuleHit module,
+                                      ArmorModuleResolver.ModuleHit selectedModule) {
+        if (!EliteDiagnostics.isEnabled(target.level())) return;
+        ArmorProfiles.ArmorHit selected = selectedModule == null ? armor : selectedModule.hit;
+        EliteDiagnostics.record(target.vehicle(), "armor", "volume_selection",
+                "profile", target.armorProfileId(),
+                "projectile", projectile.m_20148_(), "world_contact", trace.hitVec,
+                "local_ray_start", diagnosticVector(trace.rayStart), "local_direction", diagnosticVector(trace.hullShotDirection),
+                "local_contact", selected == null ? null : diagnosticVector(selected.hullImpact),
+                "vehicle_local_contact", selected == null ? null : target.armorLocalPointToVehicleLocal(selected.hullImpact),
+                "track_box", track == null ? null : track.hit.plate.name,
+                "track_candidate_side", track == null ? null : track.trackSide,
+                "kind", selected == null ? "NONE" : selected.kind,
+                "box", selected == null ? null : selected.plate.name,
+                "ray_distance", selected != null && selected.isRayHit() ? selected.distance : null,
+                "proximity_gap", selected == null ? null : selected.proximityGap,
+                "armor_ray_distance", armor != null && armor.isRayHit() ? armor.distance : null,
+                "track_ray_distance", track == null ? null : track.hit.distance,
+                "module_ray_distance", module == null ? null : module.hit.distance,
+                "module", selectedModule == null ? null : selectedModule.moduleId,
+                "track_side", selectedModule == null ? null : selectedModule.trackSide);
+    }
+
+    private static Vec3 diagnosticVector(ArmorProfiles.Vec vector) {
+        return new Vec3(vector.x, vector.y, vector.z);
+    }
+
     static void reportNoPlateHit(Level level, Entity owner, ArmorTarget target, Vec3 hitVec,
                                  ArmorHitResolver.NearBox nearestPlate, ArmorProfiles.Vec localImpact) {
         if (EliteDiagnostics.isEnabled(target.level())) {

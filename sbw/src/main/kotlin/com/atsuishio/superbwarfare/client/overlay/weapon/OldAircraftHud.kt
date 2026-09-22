@@ -62,6 +62,8 @@ object OldAircraftHud {
         val vehicle = player.vehicle
         if (vehicle !is VehicleEntity) return
         if (vehicle.computed().hudType != ID) return
+        if (vehicle.isFixedWingFlightVehicle() || vehicle.vehicleType ==
+            com.atsuishio.superbwarfare.data.vehicle.subdata.VehicleType.AIRPLANE) return
 
         val shootPos = vehicle.getShootPosForHud(player, 1f)
 
@@ -92,6 +94,11 @@ object OldAircraftHud {
         screenHeight: Int
     ) {
         if (player !== vehicle.getFirstPassenger()) return
+        if (vehicle.isFixedWingFlightVehicle() || vehicle.vehicleType ==
+            com.atsuishio.superbwarfare.data.vehicle.subdata.VehicleType.AIRPLANE) {
+            AircraftHud.render(vehicle, player, gui, guiGraphics, partialTick, screenWidth, screenHeight)
+            return
+        }
         val camera = mc.gameRenderer.mainCamera
         val cameraPos = camera.position
         val poseStack = guiGraphics.pose()

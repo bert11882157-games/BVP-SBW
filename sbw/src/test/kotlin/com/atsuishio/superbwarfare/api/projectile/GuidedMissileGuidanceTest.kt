@@ -7,18 +7,38 @@ import org.junit.jupiter.api.Test
 import kotlin.math.acos
 
 class GuidedMissileGuidanceTest {
+    @Test fun spinInstabilityStaysTinyWithoutChangingRelativeSpeed() {
+        val inherited = Vec3(1.0, -0.3, 0.4)
+        val initial = Vec3(0.0, 0.0, 6.0)
+        var velocity = initial.add(inherited)
+        for (age in 1..400) {
+            velocity = GuidedMissileGuidance.spinPerturbation(velocity, inherited, age)
+            val relative = velocity.subtract(inherited)
+            assertEquals(6.0, relative.length(), 1e-10)
+            assertTrue(angle(initial, relative) < 0.10)
+        }
+    }
     private val profile = GuidedPropulsionProfile(0.525, 2.1, 0.02625, 60, 24.0, 12)
     private fun angle(a: Vec3, b: Vec3): Double =
         Math.toDegrees(acos(a.normalize().dot(b.normalize()).coerceIn(-1.0, 1.0)))
 
     @Test
-    fun `native fallback reaches doubled top speed in one and a half seconds`() {
+    fun `native fallback ejects at two blocks per tick and accelerates in one second`() {
         val native = GuidedPropulsionProfile.DEFAULT
-        assertEquals(1.0, native.initialSpeed)
-        assertEquals(4.0, native.maxSpeed)
-        assertEquals(30, native.thrustDurationTicks)
-        assertEquals(4.0, native.speedAfter(30), 1.0e-12)
+        assertEquals(2.0, native.launchSpeed())
+        assertEquals(6, native.ignitionDelayTicks)
+        assertEquals(6.0, native.maxSpeed)
+        assertEquals(20, native.thrustDurationTicks)
+        assertEquals(4.0, native.speedAfterIgnition(2.0, 10), 1.0e-12)
+        assertEquals(6.0, native.speedAfterIgnition(2.0, 20), 1.0e-12)
         assertEquals(24.0, native.maxTurnRateDegreesPerSecond)
+    }
+
+    @Test
+    fun `ejection is independent of legacy initial speed but bounded by maximum`() {
+        val slowInitial = profile.copy(initialSpeed = 0.35, ejectionSpeed = 2.0)
+        assertEquals(2.0, slowInitial.launchSpeed())
+        assertEquals(1.5, slowInitial.copy(maxSpeed = 1.5).launchSpeed())
     }
 
     @Test

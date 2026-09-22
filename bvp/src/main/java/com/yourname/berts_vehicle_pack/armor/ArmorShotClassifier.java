@@ -24,7 +24,7 @@ import java.util.Set;
 
 final class ArmorShotClassifier {
     private static final float PROJECTILE_STAT_EPSILON = 0.001F;
-    // Generated BVP data currently fires superbwarfare:small_cannon_shell only from these 30 mm IFVs.
+    // Shooter profiles eligible for the legacy 30 mm small-cannon fallback.
     private static final Set<String> SMALL_CANNON_30MM_PROFILE_IDS = Set.of("bmp2", "btr80a", "bmpt");
     private static final Set<String> HELICOPTER_ROCKET_PROFILE_IDS = Set.of(ProjectileArmorEffects.MI24V_PROFILE_ID,
             ProjectileArmorEffects.MI28N_PROFILE_ID, ProjectileArmorEffects.KA50_PROFILE_ID);
@@ -41,6 +41,13 @@ final class ArmorShotClassifier {
      * callers that do not have an accepted collision context.
      */
     static ProjectileArmorEffect classify(Projectile projectile, Entity owner,
+                                          ArmorProfile targetProfile, Vec3 impactPosition) {
+        ProjectileArmorEffect raw = classifyUnscaled(projectile, owner, targetProfile, impactPosition);
+        return raw == null ? null : raw.withDirectDamageScale(
+                com.atsuishio.superbwarfare.api.vehicle.weapon.VehicleWeaponDamagePolicy.scale(projectile));
+    }
+
+    private static ProjectileArmorEffect classifyUnscaled(Projectile projectile, Entity owner,
                                           ArmorProfile targetProfile, Vec3 impactPosition) {
         ArmoredVehicleEntity shooterVehicle = shooterVehicleFor(owner, projectile);
         String shooterProfileId = shooterVehicle == null ? "" : shooterVehicle.getArmorProfileId();
@@ -108,7 +115,7 @@ final class ArmorShotClassifier {
     static ProjectileArmorEffect classifyBvpImpact(Projectile projectile, Entity owner,
                                                    Vec3 impactPosition) {
         ArmoredVehicleEntity shooterVehicle = shooterVehicleFor(owner, projectile);
-        if (shooterVehicle == null) {
+        if (shooterVehicle == null && !BvpHandheldAtPolicy.owns(projectile)) {
             return null;
         }
         ProjectileArmorEffect shot = classify(projectile, owner, null, impactPosition);
@@ -192,13 +199,20 @@ final class ArmorShotClassifier {
             if (caliber == null || !Double.isFinite(caliber) || caliber <= 0.0D) {
                 return null;
             }
-            if (Math.abs(caliber - 7.62D) <= PROJECTILE_STAT_EPSILON
+            if (Math.abs(caliber - 5.56D) <= PROJECTILE_STAT_EPSILON
+                    || Math.abs(caliber - 5.8D) <= PROJECTILE_STAT_EPSILON
+                    || Math.abs(caliber - 7.62D) <= PROJECTILE_STAT_EPSILON
                     || Math.abs(caliber - 7.92D) <= PROJECTILE_STAT_EPSILON
                     || Math.abs(caliber - 20.0D) <= PROJECTILE_STAT_EPSILON) {
                 return profiledLightGunBulletEffect(projectile, descriptor, damageType);
             }
         }
         String roundId = normalizedId(descriptor.getRoundId());
+        if (BvpHandheldAtPolicy.owns(projectile)
+                && isBvpId(descriptor.getMunitionType(), "rocket")
+                && damageType == ArmorDamageType.CHEMICAL) {
+            return ProjectileArmorEffects.HEAT_FS;
+        }
         ProjectileArmorEffect known = switch (roundId) {
             case "3bm42", "round_3bm42" -> ProjectileArmorEffects.ROUND_3BM42;
             case "3bm60", "round_3bm60" -> ProjectileArmorEffects.ROUND_3BM60;
@@ -286,7 +300,9 @@ final class ArmorShotClassifier {
         if (caliber == null || !Double.isFinite(caliber)) {
             return null;
         }
-        boolean smallArms = Math.abs(caliber - 7.62D) <= PROJECTILE_STAT_EPSILON
+        boolean smallArms = Math.abs(caliber - 5.56D) <= PROJECTILE_STAT_EPSILON
+                || Math.abs(caliber - 5.8D) <= PROJECTILE_STAT_EPSILON
+                || Math.abs(caliber - 7.62D) <= PROJECTILE_STAT_EPSILON
                 || Math.abs(caliber - 7.92D) <= PROJECTILE_STAT_EPSILON;
         boolean twenty = Math.abs(caliber - 20.0D) <= PROJECTILE_STAT_EPSILON;
         boolean kinetic = (smallArms || twenty)

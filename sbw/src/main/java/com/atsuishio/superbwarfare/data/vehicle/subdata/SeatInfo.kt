@@ -16,6 +16,11 @@ class SeatInfo {
     @ServerOnly
     var isEnclosed: Boolean? = null
 
+    /** Open operators take their own incoming damage instead of sharing it with the vehicle. */
+    @SerialName("ExposedToFire")
+    @ServerOnly
+    var exposedToFire: Boolean = false
+
     @JvmField
     @SerialName("Transform")
     var transform: String = "Default"
@@ -23,6 +28,10 @@ class SeatInfo {
     @JvmField
     @SerialName("Pose")
     var pose: String = "Default"
+
+    /** Optional client-only standing grip pose; body placement remains the seat's responsibility. */
+    @SerialName("OperatorPose")
+    var operatorPose: VehicleOperatorPoseInfo? = null
 
     @SerialName("Position")
     var position: SerializedVec3 = Vec3.ZERO
@@ -60,6 +69,11 @@ class SeatInfo {
     private var weapons: ObjectToList<String>? = ObjectToList()
 
     fun weapons() = weapons?.list ?: mutableListOf()
+
+    /** Exact fixed-gun channels fired together by PRIMARY; empty preserves native selection. */
+    @ServerOnly
+    @SerialName("FixedGunBank")
+    var fixedGunBank: List<String> = emptyList()
 
     @SerialName("CameraPos")
     var cameraPos: CameraPos? = null

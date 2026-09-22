@@ -1,0 +1,273 @@
+{
+  "ID": "berts_vehicle_pack:challenger_2",
+  "Model": {
+    "GeometryBackend": "berts_vehicle_pack:vehicle/challenger_2",
+    "Model": "berts_vehicle_pack:geo/native_fallback/challenger_2.geo.json",
+    "Texture": "berts_vehicle_pack:textures/entity/challenger_2.png",
+    "WreckTexture": "berts_vehicle_pack:textures/entity_dead/challenger_2.png"
+  },
+  "MouseSpeed": [
+    0.2,
+    0.2
+  ],
+  "RunningGear": {
+    "Type": "TRACKED",
+    "RoadWheelCount": 6,
+    "WheelBones": {
+      "Left": [
+        "wheelL5",
+        "wheelL4",
+        "wheelL3",
+        "wheelL2",
+        "wheelL1",
+        "wheelL0",
+        "wheelLRear",
+        "wheelLFront"
+      ],
+      "Right": [
+        "wheelR5",
+        "wheelR4",
+        "wheelR3",
+        "wheelR2",
+        "wheelR1",
+        "wheelR0",
+        "wheelRRear",
+        "wheelRFront"
+      ]
+    },
+    "TrackRender": {
+      "Mode": "LINKS",
+      "LinkFit": "RIGID_PATH",
+      "LinkCount": 122,
+      "PhaseDistance": 0.819672131147541,
+      "TravelScale": 1,
+      "LinkHalfThickness": 0.7426400000000015,
+      "EvaluationLayout": {
+        "YCenter": 11.97253,
+        "Radius": 10.88557,
+        "ZRear": -59.76224,
+        "ZFront": 63.03828
+      },
+      "Sides": [
+        {
+          "Side": "L",
+          "Direction": 1,
+          "XCenter": 22.80924,
+          "YCenter": 11.97253,
+          "Radius": 10.88557,
+          "YBottom": 1.08696,
+          "YTop": 22.8581,
+          "ZRear": -59.76224,
+          "ZFront": 63.03828,
+          "RoadCenters": [
+            -38.46264,
+            -22.362,
+            -6.26136,
+            9.83928,
+            25.93992,
+            42.04056
+          ],
+          "TrackBone": "TrackL",
+          "BrokenBone": "brokenTrackL",
+          "FallbackBone": "crudeTrackL",
+          "LinkMovePrefix": "trackMovL",
+          "LinkRotationPrefix": "trackRotL",
+          "LegacyFramePrefix": "trackBeltVisualL"
+        },
+        {
+          "Side": "R",
+          "Direction": 1,
+          "XCenter": -22.80924,
+          "YCenter": 11.97253,
+          "Radius": 10.88557,
+          "YBottom": 1.08696,
+          "YTop": 22.8581,
+          "ZRear": -59.76224,
+          "ZFront": 63.03828,
+          "RoadCenters": [
+            -38.46264,
+            -22.362,
+            -6.26136,
+            9.83928,
+            25.93992,
+            42.04056
+          ],
+          "TrackBone": "TrackR",
+          "BrokenBone": "brokenTrackR",
+          "FallbackBone": "crudeTrackR",
+          "LinkMovePrefix": "trackMovR",
+          "LinkRotationPrefix": "trackRotR",
+          "LegacyFramePrefix": "trackBeltVisualR"
+        }
+      ],
+      "Path": {
+        "SourceYMin": 1.08696,
+        "SourceYMax": 22.8581,
+        "SourceZMin": -59.76224,
+        "SourceZMax": 63.03828,
+        "MoveY": [
+          [
+            0,
+            16.54307
+          ],
+          [
+            1.41468233,
+            20.1247
+          ],
+          [
+            3.16157832,
+            22.8581
+          ],
+          [
+            24.31758295,
+            22.8581
+          ],
+          [
+            45.47358758,
+            22.8581
+          ],
+          [
+            47.23351968,
+            20.10431
+          ],
+          [
+            48.99345048,
+            15.64859
+          ],
+          [
+            50.75338128,
+            11.19287
+          ],
+          [
+            57.21202356,
+            1.08696
+          ],
+          [
+            74.10421024,
+            1.08696
+          ],
+          [
+            90.99639692,
+            1.08696
+          ],
+          [
+            98.58531767,
+            12.96144
+          ],
+          [
+            100,
+            16.54307
+          ]
+        ],
+        "MoveZ": [
+          [
+            0,
+            -59.76224
+          ],
+          [
+            1.41468233,
+            -58.59849
+          ],
+          [
+            3.16157832,
+            -54.83631
+          ],
+          [
+            24.31758295,
+            1.48197
+          ],
+          [
+            45.47358758,
+            57.80027
+          ],
+          [
+            47.23351968,
+            61.59053
+          ],
+          [
+            48.99345048,
+            63.03828
+          ],
+          [
+            50.75338128,
+            61.59053
+          ],
+          [
+            57.21202356,
+            47.68093
+          ],
+          [
+            74.10421024,
+            2.71313
+          ],
+          [
+            90.99639692,
+            -42.25468
+          ],
+          [
+            98.58531767,
+            -58.59849
+          ],
+          [
+            100,
+            -59.76224
+          ]
+        ],
+        "RotationX": [
+          [
+            0,
+            -270
+          ],
+          [
+            1.41468233,
+            -305.99996
+          ],
+          [
+            3.16157832,
+            -341.99995
+          ],
+          [
+            24.31758295,
+            -359.99999
+          ],
+          [
+            45.47358758,
+            -378.00003
+          ],
+          [
+            47.23351968,
+            -414.00002
+          ],
+          [
+            48.99345048,
+            -450
+          ],
+          [
+            50.75338128,
+            -486.00001
+          ],
+          [
+            57.21202356,
+            -522
+          ],
+          [
+            74.10421024,
+            -540
+          ],
+          [
+            90.99639692,
+            -558.00001
+          ],
+          [
+            98.58531767,
+            -593.99999
+          ],
+          [
+            100,
+            -630
+          ]
+        ]
+      }
+    }
+  }
+}

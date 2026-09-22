@@ -6,6 +6,8 @@ import com.atsuishio.superbwarfare.Mod.Companion.queueServerWork
 import com.atsuishio.superbwarfare.api.event.ProjectileHitEvent.HitBlock
 import com.atsuishio.superbwarfare.api.event.ProjectileHitEvent.HitEntity
 import com.atsuishio.superbwarfare.api.projectile.ProfiledProjectile
+import com.atsuishio.superbwarfare.api.projectile.FarProjectileAccess
+import com.atsuishio.superbwarfare.api.projectile.FarProjectileSimulation
 import com.atsuishio.superbwarfare.api.projectile.ProjectileProfiles
 import com.atsuishio.superbwarfare.api.projectile.ProjectileTrailKind
 import com.atsuishio.superbwarfare.api.projectile.ProjectileTrailProviders
@@ -54,7 +56,10 @@ import net.minecraftforge.network.NetworkHooks
 import java.util.function.Consumer
 
 abstract class FastThrowableProjectile : ThrowableItemProjectile, CustomSyncMotionEntity, IEntityAdditionalSpawnData,
-    ExplosiveProjectile, ProfiledProjectile, SequencedProjectile, ProjectileImpactDamagePolicy {
+    ExplosiveProjectile, ProfiledProjectile, SequencedProjectile, ProjectileImpactDamagePolicy, FarProjectileAccess {
+    override fun farProjectileExplosionRadius(): Double = explosionRadiusValue.toDouble()
+    override fun farProjectileLifetimeTicks(): Int = getLife().coerceIn(0, 2399) + 1
+    override fun farProjectileTerminatesNextTick(currentAge: Int): Boolean = currentAge >= getLife()
     /** Server-to-client correction policy for deterministic and guided projectiles. */
     enum class MotionSyncMode {
         NONE,
@@ -67,6 +72,8 @@ abstract class FastThrowableProjectile : ThrowableItemProjectile, CustomSyncMoti
     private var _projectileShotSequence = 0L
     private var _projectileDimensions: EntityDimensions? = null
     private var activeImpactResult: ProjectileImpactResult? = null
+    private var motionSyncPending = false
+    private var pendingMotionSyncTick = 0
 
     var damageValue: Float = 0f
     var explosionDamageValue: Float = 0f
@@ -79,6 +86,15 @@ abstract class FastThrowableProjectile : ThrowableItemProjectile, CustomSyncMoti
     private var isFastMoving = false
 
     var exploded: Boolean = false
+
+    /**
+     * Legacy addon bridge to the entity age in ticks, also used by projectile renderers.
+     * Mutates this entity only; callers must use its owning thread. Display addons should
+     * call this on their detached preview projectile, not a live projectile.
+     */
+    fun setSyncedTick(value: Int) {
+        tickCount = value
+    }
 
     constructor(pEntityType: EntityType<out ThrowableItemProjectile>, pLevel: Level) : super(pEntityType, pLevel)
 
@@ -173,6 +189,7 @@ abstract class FastThrowableProjectile : ThrowableItemProjectile, CustomSyncMoti
     }
 
     override fun tick() {
+        motionSyncPending = false
         com.atsuishio.superbwarfare.diagnostics.EliteVehicleDiagnostics.projectile(this)
         super.tick()
 
@@ -200,11 +217,18 @@ abstract class FastThrowableProjectile : ThrowableItemProjectile, CustomSyncMoti
         // 重新应用重力
 
         // 同步动量
-        this.syncMotion()
+        if (!isRemoved) {
+            if (deferTickSynchronization()) {
+                pendingMotionSyncTick = tickCount
+                motionSyncPending = true
+            } else {
+                this.syncMotion()
+            }
+        }
 
         // 更新区块加载位置
         if (level() is ServerLevel) {
-            if (forceLoadChunk() && ProjectileConfig.PROJECTILE_CHUNK_LOADING.get()) {
+            if (!FarProjectileSimulation.isSupplementalTick(this) && forceLoadChunk() && ProjectileConfig.PROJECTILE_CHUNK_LOADING.get()) {
                 this.keepChunkLoaded(this.position())
                 this.keepChunkLoaded(position().add(this.deltaMovement.normalize().scale(16.0)))
             }
@@ -229,6 +253,11 @@ abstract class FastThrowableProjectile : ThrowableItemProjectile, CustomSyncMoti
             this.yRotO,
             -(Mth.atan2(vec3.x, vec3.z) * (180f / Math.PI.toFloat()).toDouble()).toFloat()
         )
+    }
+
+    /** Carrier payloads enter the same event, armor, native continuation and disposal path. */
+    fun impactFromCarrier(result: EntityHitResult) {
+        if (!level().isClientSide && !isRemoved) onHit(result)
     }
 
     override fun onHit(result: HitResult) {
@@ -438,8 +467,22 @@ abstract class FastThrowableProjectile : ThrowableItemProjectile, CustomSyncMoti
         (level() as ServerLevel).chunkSource.addRegionTicket(TicketType.POST_TELEPORT, chunkPos, 3, this.id)
     }
 
+    /** Opt-in for subclasses whose tick commits motion/stage after the superclass returns. */
+    protected open fun deferTickSynchronization(): Boolean = false
+
+    /**
+     * Publishes only this tick's queued correction after the subclass has committed its state.
+     * Repeated calls, missing superclass ticks and removed projectiles cannot publish again.
+     */
+    protected open fun commitTickSynchronization() {
+        if (!motionSyncPending) return
+        motionSyncPending = false
+        if (pendingMotionSyncTick != tickCount || isRemoved) return
+        this.syncMotion()
+    }
+
     override fun syncMotion() {
-        if (this.level().isClientSide) return
+        if (this.level().isClientSide || isRemoved) return
         when (motionSyncMode()) {
             MotionSyncMode.NONE -> return
             MotionSyncMode.ENTITY_INTERVAL -> {

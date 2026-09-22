@@ -11,6 +11,8 @@ inline fun <T : ModConfigValue> buildClientConfig(block: ModConfigBuilder.() -> 
 val CLIENT_CONFIG = buildConfig(
     CLIENT_CONFIG_BUILDER,
 
+    PlaneControlConfig,
+    FarVehicleRenderConfig,
     ReloadConfig,
     KillMessageConfig,
     DisplayConfig,

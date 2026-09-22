@@ -27,8 +27,8 @@ object VehicleReloadSoundTiming {
             return legacyCountdown.coerceIn(1, boundedMax)
         }
         // A typed event without an explicit duration is conservatively treated as a full reload
-        // clip, so it starts immediately rather than at the final timer tick.  data maintainer should
-        // emit the measured duration for exact end-at-completion timing.
+        // clip, so it starts immediately rather than at the final timer tick. Author the measured
+        // duration to align the clip end exactly with reload completion.
         val clip = if (clipDurationTicks > 0) {
             clipDurationTicks.coerceAtMost(reloadDurationTicks)
         } else {

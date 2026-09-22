@@ -3,6 +3,7 @@ package com.atsuishio.superbwarfare.api.vehicle.aim
 /** Immutable per-seat/per-selected-weapon servo policy. Angles use VehicleEntity's native fields. */
 class VehicleAimProfile private constructor(builder: Builder) {
     val channel: VehicleAimChannel = builder.channel
+    val directionFrame: VehicleAimDirectionFrame = builder.directionFrame
     val yawRateDegreesPerSecond: Float = builder.yawRateDegreesPerSecond
     val pitchRateDegreesPerSecond: Float = builder.pitchRateDegreesPerSecond
     val minYaw: Float = builder.minYaw
@@ -31,9 +32,12 @@ class VehicleAimProfile private constructor(builder: Builder) {
         require(isSupportedGeometricZeroDistance(geometricZeroDistanceBlocks)) {
             "geometric zero must be 50, 100, or 200 blocks"
         }
+        require(directionFrame != VehicleAimDirectionFrame.PASSENGER_STATION_LOCAL ||
+                channel == VehicleAimChannel.PASSENGER_WEAPON)
     }
 
     class Builder internal constructor(internal val channel: VehicleAimChannel) {
+        internal var directionFrame = VehicleAimDirectionFrame.LEGACY_WORLD
         internal var yawRateDegreesPerSecond = 0F
         internal var pitchRateDegreesPerSecond = 0F
         internal var minYaw = -180F
@@ -72,6 +76,8 @@ class VehicleAimProfile private constructor(builder: Builder) {
         fun lockTolerance(degrees: Float) = apply { lockToleranceDegrees = degrees }
 
         fun defaultMode(mode: VehicleAimMode) = apply { defaultMode = mode }
+
+        fun directionFrame(frame: VehicleAimDirectionFrame) = apply { directionFrame = frame }
 
         fun snapToNeutralWhenInactive(yaw: Float, pitch: Float) = apply {
             snapToNeutralWhenInactive = true

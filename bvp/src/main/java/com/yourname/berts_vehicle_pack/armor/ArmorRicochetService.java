@@ -53,9 +53,8 @@ final class ArmorRicochetService {
         }
         // WT incidence is measured from the outward plate normal: 0° is a perpendicular
         // front-face hit and 90° is grazing.  A valid front-face contact approaches the
-        // outward normal, hence dot(direction, normal) must be strictly negative.  The old
-        // absolute-dot calculation treated back-face exits as equivalent front impacts and
-        // admitted false ricochets.
+        // outward normal, hence dot(direction, normal) must be strictly negative. Using the
+        // absolute dot product would also admit back-face exits as front impacts.
         double cosine = -localDirection.dot(normal);
         if (!Double.isFinite(cosine) || cosine <= EPSILON || cosine > 1.0D + EPSILON) {
             return Decision.NONE;

@@ -21,6 +21,7 @@ public final class ProjectileImpactContext {
     private final Entity owner;
     private final Projectile projectile;
     private final Vec3 hitVec;
+    private final Vec3 incomingVelocity;
     private final Entity target;
     private final BlockPos blockPos;
     private final BlockState blockState;
@@ -31,11 +32,12 @@ public final class ProjectileImpactContext {
     private ProjectileImpactContext(Kind kind, Entity owner, Projectile projectile, Vec3 hitVec,
                                     Entity target, BlockPos blockPos, BlockState blockState,
                                     Direction blockFace, DamageSource damageSource,
-                                    VehicleImpactVolumeResult vehicleImpactVolumes) {
+                                    VehicleImpactVolumeResult vehicleImpactVolumes, Vec3 incomingVelocity) {
         this.kind = Objects.requireNonNull(kind, "kind");
         this.owner = owner;
         this.projectile = Objects.requireNonNull(projectile, "projectile");
         this.hitVec = Objects.requireNonNull(hitVec, "hitVec");
+        this.incomingVelocity = Objects.requireNonNull(incomingVelocity, "incomingVelocity");
         this.target = target;
         this.blockPos = blockPos;
         this.blockState = blockState;
@@ -56,7 +58,7 @@ public final class ProjectileImpactContext {
         return new ProjectileImpactContext(Kind.ENTITY, owner, projectile, hitVec,
                 Objects.requireNonNull(target, "target"), null, null, null,
                 Objects.requireNonNull(damageSource, "damageSource"),
-                VehicleImpactVolumeResult.empty());
+                VehicleImpactVolumeResult.empty(), projectile.getDeltaMovement());
     }
 
     public static ProjectileImpactContext block(Entity owner, Projectile projectile, Vec3 hitVec,
@@ -66,12 +68,12 @@ public final class ProjectileImpactContext {
                 Objects.requireNonNull(blockPos, "blockPos"),
                 Objects.requireNonNull(blockState, "blockState"),
                 Objects.requireNonNull(blockFace, "blockFace"), null,
-                VehicleImpactVolumeResult.empty());
+                VehicleImpactVolumeResult.empty(), projectile.getDeltaMovement());
     }
 
     ProjectileImpactContext withVehicleImpactVolumes(VehicleImpactVolumeResult result) {
         return new ProjectileImpactContext(kind, owner, projectile, hitVec, target, blockPos, blockState,
-                blockFace, damageSource, result);
+                blockFace, damageSource, result, incomingVelocity);
     }
 
     public Kind getKind() {
@@ -88,6 +90,11 @@ public final class ProjectileImpactContext {
 
     public Vec3 getHitVec() {
         return hitVec;
+    }
+
+    /** World blocks per tick, captured before a resolver can reflect or consume the projectile. */
+    public Vec3 getIncomingVelocity() {
+        return incomingVelocity;
     }
 
     public Entity getTarget() {

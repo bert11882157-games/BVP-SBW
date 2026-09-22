@@ -2,7 +2,7 @@
   "id": "m1128",
   "model_scale": 0.7486526799794537,
   "ap_penetration_mm": 522,
-  "chemical_penetration_mm": 700,
+  "chemical_penetration_mm": 0,
   "fallback_incoming_penetration_mm": 500,
   "atgm_tandem": false,
   "impact_tolerance": 0.25,
@@ -1531,8 +1531,128 @@
     }
   ],
   "sensitive_internals": [],
-  "engines": [],
-  "ammo_racks": [],
+  "engines": [
+    {
+      "name": "engine_core_lower_00",
+      "center": [
+        -0.5,
+        1.3125,
+        -2.25
+      ],
+      "half_size": [
+        0.25,
+        0.1875,
+        0.6875
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull"
+    },
+    {
+      "name": "engine_core_upper_01",
+      "center": [
+        -0.71875,
+        1.65625,
+        -2.25
+      ],
+      "half_size": [
+        0.46875,
+        0.15625,
+        0.6875
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull"
+    }
+  ],
+  "ammo_racks": [
+    {
+      "name": "ready_left_lobe_00",
+      "center": [
+        0.21875,
+        1.46875,
+        0.15625
+      ],
+      "half_size": [
+        0.09375,
+        0.34375,
+        0.34375
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "turret",
+      "health": 10
+    },
+    {
+      "name": "ready_right_lobe_01",
+      "center": [
+        -0.21875,
+        1.46875,
+        0.15625
+      ],
+      "half_size": [
+        0.09375,
+        0.34375,
+        0.34375
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "turret",
+      "health": 10
+    },
+    {
+      "name": "replenisher_left_lobe_02",
+      "center": [
+        0.3125,
+        1.5,
+        1.84375
+      ],
+      "half_size": [
+        0.125,
+        0.375,
+        0.40625
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "health": 10
+    },
+    {
+      "name": "replenisher_right_lobe_03",
+      "center": [
+        -0.3125,
+        1.5,
+        1.84375
+      ],
+      "half_size": [
+        0.125,
+        0.375,
+        0.40625
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "health": 10
+    }
+  ],
   "tracks": [],
   "modules": [
     {

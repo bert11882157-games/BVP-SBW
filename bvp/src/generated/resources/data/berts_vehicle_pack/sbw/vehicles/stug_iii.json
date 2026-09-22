@@ -20,32 +20,6 @@
       ]
     },
     {
-      "Part": "WheelLeft",
-      "Size": [
-        0.23188,
-        0.47101,
-        2.57242
-      ],
-      "Position": [
-        1.55794,
-        0.52173,
-        -0.18116
-      ]
-    },
-    {
-      "Part": "WheelRight",
-      "Size": [
-        0.23188,
-        0.47101,
-        2.57242
-      ],
-      "Position": [
-        -1.55794,
-        0.52173,
-        -0.18116
-      ]
-    },
-    {
       "Part": "MainEngine",
       "Size": [
         0.83332,
@@ -173,11 +147,6 @@
       "ExplosionRadius": 4,
       "RecoilTime": 42,
       "RecoilForce": 1,
-      "ShootShake": [
-        8,
-        10,
-        60
-      ],
       "Spread": 0.02,
       "ShootAnimationTime": 20,
       "Crosshair": "@VehicleRuApc",
@@ -198,7 +167,12 @@
             "Projectile": {
               "Type": "superbwarfare:cannon_shell",
               "Profile": "berts_vehicle_pack:stug_iii/cannon/ammo_00_pzgr39_apcbc"
-            }
+            },
+            "ShootShake": [
+              8,
+              10,
+              60
+            ]
           }
         }
       ],
@@ -211,10 +185,11 @@
         "Fire3P": "berts_vehicle_pack:tap_shoot_75mmde",
         "Fire3PFar": "berts_vehicle_pack:tap_shoot_75mmde",
         "Fire3PVeryFar": "berts_vehicle_pack:tap_shoot_75mmde",
-        "VehicleReload": "superbwarfare:t_90a_reload",
         "Change": "superbwarfare:into_cannon",
+        "VehicleReload": "berts_vehicle_pack:m1_abrams_elite_m68a1_reload",
+        "VehicleReloadClipDurationTicks": 86,
         "CancellableSounds": [
-          "superbwarfare:t_90a_reload"
+          "berts_vehicle_pack:m1_abrams_elite_m68a1_reload"
         ]
       },
       "SoundRadius": 32,
@@ -223,8 +198,8 @@
         "Positions": [
           [
             0,
-            -0.15659,
-            -1.25275
+            -0.26099,
+            -3.03685
           ]
         ],
         "Directions": [
@@ -232,8 +207,8 @@
         ],
         "ViewPosition": [
           0,
-          -0.15436,
-          -1.23487
+          -0.25727,
+          -2.99352
         ],
         "MuzzleAttachments": [
           "main_muzzle"
@@ -259,7 +234,12 @@
         "ProjectileType": "superbwarfare:cannon_shell",
         "ProjectileProfile": "berts_vehicle_pack:stug_iii/cannon/default",
         "ProjectileLife": 50
-      }
+      },
+      "ShootShake": [
+        8,
+        10,
+        60
+      ]
     },
     "MachineGun": {
       "DefaultFireMode": "Auto",
@@ -340,7 +320,12 @@
         "ProjectileType": "superbwarfare:projectile",
         "ProjectileProfile": "berts_vehicle_pack:stug_iii/machinegun/default",
         "ProjectileLife": 400
-      }
+      },
+      "ShootShake": [
+        0,
+        0,
+        0
+      ]
     }
   },
   "HUDColor": "0xFFC700",
@@ -523,11 +508,11 @@
   "TurretControllerIndex": 0,
   "Attachments": {
     "gunner1_camera": {
-      "Parent": "Turret",
+      "Parent": "VehicleCustomPitch",
       "Position": [
-        0.13049,
-        1.92089,
-        -0.78297
+        0.78125,
+        2.21354,
+        -0.17331
       ],
       "Direction": [
         0,
@@ -536,11 +521,11 @@
       ]
     },
     "gunner1_zoom": {
-      "Parent": "Turret",
+      "Parent": "VehicleCustomPitch",
       "Position": [
-        0.13049,
-        1.92089,
-        -0.78297
+        0.78125,
+        2.21354,
+        -0.17331
       ],
       "Direction": [
         0,
@@ -552,8 +537,8 @@
       "Parent": "Barrel",
       "Position": [
         0,
-        -0.15659,
-        1.25275
+        -0.26099,
+        3.03685
       ],
       "Direction": [
         0,

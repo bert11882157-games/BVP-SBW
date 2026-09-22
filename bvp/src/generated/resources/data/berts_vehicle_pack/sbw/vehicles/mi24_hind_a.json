@@ -1,9 +1,8 @@
 {
   "ID": "berts_vehicle_pack:mi24_hind_a",
-  "MaxHealth": 100,
+  "MaxHealth": 150,
   "MaxEnergy": 10000000,
   "AllowFreeCam": true,
-  "LightlyArmored": true,
   "OBB": [
     {
       "Size": [
@@ -355,5 +354,32 @@
   ],
   "PassengerRenderScale": 0.75,
   "MouseSensitivity": 0.35,
-  "TerrainCompatRotateRate": 0.18
+  "TerrainCompatRotateRate": 0.18,
+  "AircraftTerrainContact": {
+    "Fuselage": {
+      "Min": [
+        -4.75,
+        1.5,
+        -11.044358
+      ],
+      "Max": [
+        4.75,
+        6.2,
+        1.330642
+      ]
+    },
+    "LandingGear": {
+      "Min": [
+        -4.37,
+        0.01,
+        -10.549358
+      ],
+      "Max": [
+        4.37,
+        1.55,
+        0.835642
+      ]
+    },
+    "RetractableGear": false
+  }
 }

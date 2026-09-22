@@ -63,6 +63,16 @@ final class ProjectileArmorEffect {
         return defaultModuleDamage;
     }
 
+    ProjectileArmorEffect withDirectDamageScale(double factor) {
+        if (factor == 1.0D) return this;
+        Map<String, Double> overrides = new HashMap<>();
+        moduleDamageById.forEach((id, damage) -> overrides.put(id, damage * factor));
+        return new ProjectileArmorEffect(damageType, penetrationMm, shell, atgm,
+                defaultModuleDamage * factor, overrides,
+                vehicleDamage < 0.0D ? vehicleDamage : vehicleDamage * factor,
+                tandemWarhead, impactVisual, true);
+    }
+
     double moduleDamage(String moduleId) {
         String normalized = normalizeModuleId(moduleId);
         Double override = moduleDamageById.get(normalized);

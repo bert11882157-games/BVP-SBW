@@ -5,6 +5,11 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import net.minecraft.world.phys.Vec3
 
+@Serializable
+enum class VehicleAttachmentRotationChannel {
+    TURRET_PITCH,
+}
+
 /** A data-authored local frame parented to either a native vehicle frame or another attachment. */
 @Serializable
 class VehicleAttachmentInfo {
@@ -13,6 +18,10 @@ class VehicleAttachmentInfo {
 
     @SerialName("Position")
     var position: SerializedVec3 = Vec3.ZERO
+
+    /** Optional actual-pitch articulation at Position, directly beneath the native Turret frame. */
+    @SerialName("RotationChannel")
+    var rotationChannel: VehicleAttachmentRotationChannel? = null
 
     /** Local forward direction. The resolved attachment frame maps +Z onto this vector. */
     @SerialName("Direction")

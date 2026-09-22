@@ -1,0 +1,207 @@
+{
+  "ID": "berts_vehicle_pack:il_10",
+  "Model": {
+    "GeometryBackend": "berts_vehicle_pack:vehicle/il_10",
+    "Model": "berts_vehicle_pack:geo/native_fallback/il_10.geo.json",
+    "Texture": "berts_vehicle_pack:textures/entity/il_10.png",
+    "WreckTexture": "berts_vehicle_pack:textures/entity_dead/il_10.png"
+  },
+  "MouseSpeed": [
+    0.2,
+    0.2
+  ],
+  "AircraftRig": {
+    "Schema": 2,
+    "Frame": "GENERATED_MODEL_PIXELS",
+    "Surfaces": [
+      {
+        "Bone": "rudder",
+        "Parent": "hull",
+        "Pivot": [
+          0,
+          48.46027,
+          98.38904
+        ],
+        "Axis": [
+          0,
+          -1,
+          0
+        ],
+        "ControlWeights": {
+          "ElevatorUp": 0,
+          "RightRoll": 0,
+          "RudderRight": -1
+        },
+        "MaxDeflectionDegrees": 25
+      },
+      {
+        "Bone": "elevator_left",
+        "Parent": "hull",
+        "Pivot": [
+          -16.15342,
+          32.67397,
+          96.92055
+        ],
+        "Axis": [
+          -1,
+          0,
+          0
+        ],
+        "ControlWeights": {
+          "ElevatorUp": 1,
+          "RightRoll": 0,
+          "RudderRight": 0
+        },
+        "MaxDeflectionDegrees": 20
+      },
+      {
+        "Bone": "elevator_right",
+        "Parent": "hull",
+        "Pivot": [
+          16.15342,
+          32.67397,
+          96.92055
+        ],
+        "Axis": [
+          -1,
+          0,
+          0
+        ],
+        "ControlWeights": {
+          "ElevatorUp": 1,
+          "RightRoll": 0,
+          "RudderRight": 0
+        },
+        "MaxDeflectionDegrees": 20
+      },
+      {
+        "Bone": "aileron_left",
+        "Parent": "hull",
+        "Pivot": [
+          -59.47397,
+          29.1863,
+          13.58356
+        ],
+        "Axis": [
+          -0.9981655582670306,
+          0.0591018256791313,
+          -0.013133639665399663
+        ],
+        "ControlWeights": {
+          "ElevatorUp": 0,
+          "RightRoll": -1,
+          "RudderRight": 0
+        },
+        "MaxDeflectionDegrees": 20
+      },
+      {
+        "Bone": "aileron_right",
+        "Parent": "hull",
+        "Pivot": [
+          59.47397,
+          29.1863,
+          13.58356
+        ],
+        "Axis": [
+          -0.9981655582670306,
+          -0.0591018256791313,
+          0.013133639665399663
+        ],
+        "ControlWeights": {
+          "ElevatorUp": 0,
+          "RightRoll": 1,
+          "RudderRight": 0
+        },
+        "MaxDeflectionDegrees": 20
+      }
+    ],
+    "Rotors": [
+      {
+        "Bone": "propeller_blades_0",
+        "Parent": "hull",
+        "Pivot": [
+          0,
+          30.83836,
+          -46.25753
+        ],
+        "Axis": [
+          0,
+          0,
+          1
+        ],
+        "SpeedChannel": "engineSpool",
+        "Direction": 1,
+        "DegreesPerTickAtFullSpeed": 75
+      }
+    ],
+    "Gear": [
+      {
+        "Bone": "landing_gear_13",
+        "Parent": "hull"
+      },
+      {
+        "Bone": "landing_gear_14",
+        "Parent": "hull"
+      },
+      {
+        "Bone": "landing_gear_15",
+        "Parent": "hull"
+      }
+    ],
+    "Sweeps": []
+  },
+  "DefensiveStationPresentation": {
+    "Schema": 1,
+    "Frame": "GENERATED_MODEL_PIXELS",
+    "Yaw": {
+      "Bone": "passengerWeaponStationYaw",
+      "Parent": "hull",
+      "Pivot": [
+        -1.46849,
+        40.56713,
+        30.10411
+      ],
+      "Axis": [
+        0,
+        -1,
+        0
+      ]
+    },
+    "Pitch": {
+      "Bone": "passengerWeaponStationPitch",
+      "Parent": "passengerWeaponStationYaw",
+      "Pivot": [
+        -1.4685,
+        41.85206,
+        30.10411
+      ],
+      "Axis": [
+        1,
+        0,
+        -1.2246467991473532e-16
+      ]
+    }
+  },
+  "EngineExhaust": {
+    "Schema": "berts_vehicle_pack:engine_exhaust_origins/v1",
+    "Parent": "HULL",
+    "Origins": [
+      {
+        "Id": "engine_exhaust_bank_0",
+        "Position": [
+          -0.46349,
+          1.9274,
+          -1.83562
+        ]
+      },
+      {
+        "Id": "engine_exhaust_bank_1",
+        "Position": [
+          0.46349,
+          1.9274,
+          -1.83562
+        ]
+      }
+    ]
+  }
+}

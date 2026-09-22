@@ -24,6 +24,9 @@ public final class RunningGearResource {
     @SerializedName("TrackRender")
     private TrackRender trackRender;
 
+    @SerializedName("Steering")
+    private SteeringRig steering;
+
     public String getType() {
         return type;
     }
@@ -38,6 +41,45 @@ public final class RunningGearResource {
 
     public @Nullable TrackRender getTrackRender() {
         return trackRender;
+    }
+
+    public @Nullable SteeringRig getSteering() {
+        return steering;
+    }
+
+    /** Optional yaw parents; the existing wheel bones remain the exclusive spin children. */
+    public static final class SteeringRig {
+        @SerializedName("Schema")
+        private Integer schema;
+
+        @SerializedName("Wheels")
+        private SteeringWheel[] wheels;
+
+        public @Nullable Integer getSchema() { return schema; }
+
+        public @Nullable SteeringWheel[] getWheels() { return wheels; }
+    }
+
+    public static final class SteeringWheel {
+        @SerializedName("SteeringBone")
+        private String steeringBone;
+
+        @SerializedName("WheelBone")
+        private String wheelBone;
+
+        @SerializedName("MaxAngleDegrees")
+        private Float maxAngleDegrees;
+
+        @SerializedName("Sign")
+        private Integer sign;
+
+        public @Nullable String getSteeringBone() { return steeringBone; }
+
+        public @Nullable String getWheelBone() { return wheelBone; }
+
+        public @Nullable Float getMaxAngleDegrees() { return maxAngleDegrees; }
+
+        public @Nullable Integer getSign() { return sign; }
     }
 
     public static final class WheelBones {
@@ -69,6 +111,12 @@ public final class RunningGearResource {
         @SerializedName("TravelScale")
         private float travelScale = 1.0F;
 
+        @SerializedName("LinkHalfThickness")
+        private float linkHalfThickness;
+
+        @SerializedName("LinkFit")
+        private String linkFit = "CONTACT_INTERVAL";
+
         @SerializedName("EvaluationLayout")
         private TrackBounds evaluationLayout;
 
@@ -92,6 +140,14 @@ public final class RunningGearResource {
 
         public float getTravelScale() {
             return travelScale;
+        }
+
+        public float getLinkHalfThickness() {
+            return linkHalfThickness;
+        }
+
+        public String getLinkFit() {
+            return linkFit;
         }
 
         public @Nullable TrackBounds getEvaluationLayout() {

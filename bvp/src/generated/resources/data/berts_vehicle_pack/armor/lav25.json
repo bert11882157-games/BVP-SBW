@@ -1,8 +1,8 @@
 {
   "id": "lav25",
   "model_scale": 0.699094047344,
-  "ap_penetration_mm": 500,
-  "chemical_penetration_mm": 700,
+  "ap_penetration_mm": 0,
+  "chemical_penetration_mm": 0,
   "fallback_incoming_penetration_mm": 500,
   "atgm_tandem": false,
   "impact_tolerance": 0.25,
@@ -2111,8 +2111,88 @@
     }
   ],
   "sensitive_internals": [],
-  "engines": [],
-  "ammo_racks": [],
+  "engines": [
+    {
+      "name": "engine_core_lower_00",
+      "center": [
+        -0.375,
+        1.09375,
+        -2.125
+      ],
+      "half_size": [
+        0.25,
+        0.15625,
+        0.5625
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull"
+    },
+    {
+      "name": "engine_core_upper_01",
+      "center": [
+        -0.5,
+        1.40625,
+        -2.125
+      ],
+      "half_size": [
+        0.375,
+        0.15625,
+        0.5625
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull"
+    }
+  ],
+  "ammo_racks": [
+    {
+      "name": "ap_ready_00",
+      "center": [
+        0.29688,
+        1.84375,
+        0.5
+      ],
+      "half_size": [
+        0.10938,
+        0.15625,
+        0.1875
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "turret",
+      "health": 10
+    },
+    {
+      "name": "he_ready_01",
+      "center": [
+        -0.125,
+        1.78125,
+        0.5625
+      ],
+      "half_size": [
+        0.25,
+        0.21875,
+        0.25
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "turret",
+      "health": 10
+    }
+  ],
   "tracks": [],
   "modules": [],
   "explosive_reactive_armor": [],

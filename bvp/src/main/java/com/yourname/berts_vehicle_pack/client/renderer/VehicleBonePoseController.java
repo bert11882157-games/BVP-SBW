@@ -9,6 +9,7 @@ import com.yourname.berts_vehicle_pack.entity.ArmoredVehicleEntity;
 import com.yourname.berts_vehicle_pack.entity.Bmp2Entity;
 import com.yourname.berts_vehicle_pack.entity.BmptEntity;
 import com.yourname.berts_vehicle_pack.entity.Btr80AEntity;
+import com.yourname.berts_vehicle_pack.entity.Mig19Entity;
 import com.yourname.berts_vehicle_pack.entity.ToyotaJihadDshkEntity;
 import com.yourname.berts_vehicle_pack.entity.ToyotaJihadSpg9Entity;
 import net.minecraft.util.Mth;
@@ -27,6 +28,17 @@ final class VehicleBonePoseController {
 
     static void apply(GeoVehicleEntity entity, float entityYaw, PolyMeshModel loadedModel, float partialTicks,
                       VehicleRenderPartSnapshot renderParts) {
+        if (AircraftRigAnimator.apply(entity, loadedModel, partialTicks, renderParts)) {
+            return;
+        }
+        if (entity instanceof Mig19Entity) {
+            var controls = entity.getVehicleFlightControlSurfaceSnapshot(partialTicks);
+            Mig19ControlSurfaceAnimator.apply(loadedModel,
+                    controls == null ? 0 : controls.getElevator(),
+                    controls == null ? 0 : controls.getAileron(),
+                    controls == null ? 0 : controls.getRudder());
+            return;
+        }
         BedrockBone turret = loadedModel.getBone("turret");
         BedrockBone barrel = loadedModel.getBone("barell");
         BedrockBone barrelRecoil = loadedModel.getBone("barrelRecoil");
@@ -39,7 +51,7 @@ final class VehicleBonePoseController {
         BedrockBone ags30Mount = loadedModel.getBone("ags30_mount");
         BedrockBone ags30Pitch = loadedModel.getBone("ags30_pitch");
         boolean ags30GraphPresent = ags30Mount != null && ags30Pitch != null;
-        // The accepted M1 roof M240 graph is already parented under turret.  Keep
+        // The M1 roof M240 graph is parented under turret. Keep
         // the mount untouched so it inherits turret yaw, and drive only its
         // authored pitch pivot from the same actual pitch used by the main barrel.
         BedrockBone roofCoaxMount = loadedModel.getBone("roofCoaxMount");
@@ -143,11 +155,11 @@ final class VehicleBonePoseController {
                     barrelRoll * RendererBones.DEG_TO_RAD);
             if (barrelRecoil != null) {
                 RendererBones.setPositionOffset(barrel, 0.0F, 0.0F, 0.0F);
-                RendererBones.setPositionOffset(barrelRecoil, 0.0F, 0.0F,
-                        -cannonRecoilOffset(entity, renderParts, partialTicks));
+                RendererBones.setBackwardRecoil(barrelRecoil,
+                        cannonRecoilOffset(entity, renderParts, partialTicks));
             } else {
-                RendererBones.setPositionOffset(barrel, 0.0F, 0.0F,
-                        -cannonRecoilOffset(entity, renderParts, partialTicks));
+                RendererBones.setBackwardRecoil(barrel,
+                        cannonRecoilOffset(entity, renderParts, partialTicks));
             }
         }
         if (passengerWeaponYaw != null && renderParts.getStationPresentationValid()) {
@@ -166,7 +178,7 @@ final class VehicleBonePoseController {
             RendererBones.setRotation(passengerWeaponPitch, passengerWeaponPitchRot * RendererBones.DEG_TO_RAD, 0.0F, 0.0F);
             float hmgRecoil = hmgRecoilOffset(armoredEntity, partialTicks);
             if (hmgRecoil > 0.0F) {
-                RendererBones.setPositionOffset(passengerWeaponPitch, 0.0F, 0.0F, -hmgRecoil);
+                RendererBones.setBackwardRecoil(passengerWeaponPitch, hmgRecoil);
             }
         }
     }

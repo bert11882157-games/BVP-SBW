@@ -43,9 +43,14 @@ final class ArmoredVehicleArmorTarget implements ArmorTarget {
 
     @Override
     public Vec3 armorLocalPointToWorld(Vec point) {
+        return vehicle.vehicleLocalToWorld(armorLocalPointToVehicleLocal(point), 1.0F);
+    }
+
+    @Override
+    public Vec3 armorLocalPointToVehicleLocal(Vec point) {
         Vec local = armorProfileLocalToVisualLocal(point);
         Vec sbwLocal = visualLocalToSbwVehicleLocal(local);
-        return vehicle.vehicleLocalToWorld(new Vec3(sbwLocal.x, sbwLocal.y, sbwLocal.z), 1.0F);
+        return new Vec3(sbwLocal.x, sbwLocal.y, sbwLocal.z);
     }
 
     @Override
@@ -57,7 +62,8 @@ final class ArmoredVehicleArmorTarget implements ArmorTarget {
 
     @Override
     public Vec turretPivot() {
-        Vec3 turretPos = vehicle.getTurretPos();
+        Vec3 turretPos = vehicle.isHullParentedPassengerWeaponStation()
+                ? vehicle.getPassengerWeaponStationPosition() : vehicle.getTurretPos();
         return turretPos == null
                 ? Vec.ZERO
                 : visualLocalToArmorProfileLocal(
@@ -66,6 +72,9 @@ final class ArmoredVehicleArmorTarget implements ArmorTarget {
 
     @Override
     public double turretFrameYaw() {
+        if (vehicle.isHullParentedPassengerWeaponStation()) {
+            return Mth.m_14177_(vehicle.getGunYRot() + vehicle.getPassengerWeaponStationBaseYawDegrees());
+        }
         double visualYaw = Mth.m_14177_(vehicle.m_146908_() - vehicle.getBarrelYRot(1.0F));
         return mirrorsArmorProfileX ? -visualYaw : visualYaw;
     }
@@ -74,11 +83,13 @@ final class ArmoredVehicleArmorTarget implements ArmorTarget {
     public ArmorCoordinateFrame.BarrelFrame barrelFrame() {
         if (!barrelFrameSampled) {
             barrelFrameSampled = true;
-            Vec3 turret = vehicle.getTurretPos();
-            Vec3 barrel = vehicle.getBarrelPosition();
+            boolean passengerStation = vehicle.isHullParentedPassengerWeaponStation();
+            Vec3 turret = passengerStation ? vehicle.getPassengerWeaponStationPosition() : vehicle.getTurretPos();
+            Vec3 barrel = passengerStation ? vehicle.getPassengerWeaponStationBarrelPosition() : vehicle.getBarrelPosition();
             if (turret != null && barrel != null) {
                 barrelFrame = ArmorCoordinateFrame.barrelFrame(vehicle.getVehicleTransform(1.0F),
-                        vehicle.getBarrelTransform(1.0F), turret, barrel, mirrorsArmorProfileX);
+                        passengerStation ? vehicle.getPassengerWeaponStationBarrelTransform(1.0F)
+                                : vehicle.getBarrelTransform(1.0F), turret, barrel, mirrorsArmorProfileX);
             }
         }
         return barrelFrame;

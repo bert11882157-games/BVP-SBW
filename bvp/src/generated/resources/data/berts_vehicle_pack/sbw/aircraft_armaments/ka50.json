@@ -1,0 +1,17 @@
+{
+  "Schema": 1,
+  "Name": "Ka-50 Black Shark",
+  "BuiltInWeapons": [
+    "Cannon"
+  ],
+  "SuspendedWeapons": [
+    "S8KORocket",
+    "PilotMissile"
+  ],
+  "Pairs": [],
+  "StoreGroups": {
+    "berts_vehicle_pack:modeled_store/ka50/suspended_equipment": [
+      "suspended_legacy_hull"
+    ]
+  }
+}

@@ -1,6 +1,7 @@
 package com.atsuishio.superbwarfare.command
 
 import com.atsuishio.superbwarfare.Mod
+import com.atsuishio.superbwarfare.api.diagnostics.DebugFeaturePolicy
 import com.mojang.brigadier.builder.LiteralArgumentBuilder
 import net.minecraft.commands.CommandSourceStack
 import net.minecraft.commands.Commands
@@ -17,7 +18,8 @@ object CommandRegister {
             add(TDM_COMMAND)
             add(RIDE_COMMAND)
             add(DISMOUNT_COMMAND)
-            add(ELITE_DIAGNOSTICS_COMMAND)
+            if (DebugFeaturePolicy.allowsDebugTools()) add(ELITE_DIAGNOSTICS_COMMAND)
+            if (DebugFeaturePolicy.allowsDebugTools()) add(AAM_TEST_COMMAND)
         }
 
         val result = event.dispatcher.register(command as LiteralArgumentBuilder<CommandSourceStack>)

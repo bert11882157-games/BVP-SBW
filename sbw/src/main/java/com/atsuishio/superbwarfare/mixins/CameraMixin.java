@@ -2,6 +2,7 @@ package com.atsuishio.superbwarfare.mixins;
 
 import com.atsuishio.superbwarfare.client.ICustomCamera;
 import com.atsuishio.superbwarfare.client.camera.VehicleFreeCameraController;
+import com.atsuishio.superbwarfare.client.camera.VehicleCameraFrameDiagnostic;
 import com.atsuishio.superbwarfare.entity.vehicle.DroneEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
@@ -97,6 +98,7 @@ public abstract class CameraMixin implements ICustomCamera {
                 boolean attachmentZoom = ClientEventHandler.zoomVehicle && firstPerson;
                 var rotation = vehicle.getCameraRotation(partialTicks, player, attachmentZoom, firstPerson);
                 if (rotation != null) {
+                    VehicleCameraFrameDiagnostic.requestedRotation(rotation.x, rotation.y);
                     setRotation(rotation.x, rotation.y);
                 }
                 var position = vehicle.getCameraPosition(partialTicks, player, attachmentZoom, firstPerson);
@@ -152,6 +154,7 @@ public abstract class CameraMixin implements ICustomCamera {
 
     @Inject(method = "setup", at = @At("TAIL"))
     public void superbWarfare$setup(BlockGetter area, Entity entity, boolean thirdPerson, boolean inverseView, float tickDelta, CallbackInfo ci) {
+        VehicleCameraFrameDiagnostic.setupTail();
         if (entity instanceof Player player && player.getVehicle() instanceof VehicleEntity vehicle) {
             var freeCameraRotation = VehicleFreeCameraController.rotationOverride(player, vehicle);
             if (freeCameraRotation != null) {
@@ -165,6 +168,7 @@ public abstract class CameraMixin implements ICustomCamera {
                 if (position != null) {
                     setPosition(position.x, position.y, position.z);
                 }
+                VehicleCameraFrameDiagnostic.requestedRotation(freeCameraRotation.x, freeCameraRotation.y);
                 setRotation(freeCameraRotation.x, freeCameraRotation.y);
                 if (position != null) return;
             }

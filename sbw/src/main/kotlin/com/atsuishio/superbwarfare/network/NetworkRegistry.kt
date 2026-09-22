@@ -178,7 +178,7 @@ private fun registerPayloads() {
     playToServer<MeleeAttackMessage>(serverSchema(38, PacketLimitProfiles.CONTROL, owner = "combat.melee", rate = 10))
     playToServer<MouseMoveMessage>(serverSchema(39, delivery = LATEST_SNAPSHOT, priority = P1, owner = "vehicle.input", rate = 40, burst = 80))
     playToServer<ParachuteMessage>(serverSchema(40, owner = "player.parachute", rate = 4))
-    playToServer<PlayerStopRidingMessage>(serverSchema(41, owner = "vehicle.seat", rate = 4))
+    playToServer<PlayerStopRidingMessage>(serverSchema(41, owner = "vehicle.seat", feature = "dismount_double_tap", since = 25, rate = 12, burst = 24))
     playToServer<RadarChangeModeMessage>(serverSchema(42, owner = "radar.control", rate = 10))
     playToServer<RadarSetPosMessage>(serverSchema(43, owner = "radar.control", rate = 10))
     playToServer<RadarSetTargetMessage>(serverSchema(44, owner = "radar.control", rate = 10))
@@ -214,4 +214,28 @@ private fun registerPayloads() {
         owner = "vehicle.audio", feature = "reload_cycle_audio", since = 15))
     playToClient<EliteDiagnosticsStateMessage>(clientSchema(69, delivery = RELIABLE_EDGE, priority = P1,
         owner = "diagnostics.elite", feature = "elite_diagnostics", since = 15))
+    playToClient<FarVehicleFrameMessage>(clientSchema(70, PacketLimitProfiles.FAR_RENDER, LATEST_SNAPSHOT, P3,
+        "vehicle.far_render", "far_vehicle_frame", 26))
+    playToServer<FixedWingPilotIntentMessage>(serverSchema(71, delivery = LATEST_SNAPSHOT, priority = P1,
+        owner = "vehicle.flight", feature = "fixed_wing_pilot_intent", since = 24, rate = 20, burst = 40))
+    playToClient<FixedWingPilotIntentStateMessage>(clientSchema(72, delivery = LATEST_SNAPSHOT, priority = P1,
+        owner = "vehicle.flight", feature = "fixed_wing_pilot_intent", since = 24))
+    playToServer<AircraftArmamentRequestMessage>(serverSchema(73, PacketLimitProfiles.AIRCRAFT_REQUEST,
+        delivery = RELIABLE_EDGE, priority = P1, owner = "vehicle.aircraft", feature = "aircraft_armament", since = 23,
+        rate = 20, burst = 40))
+    playToClient<AircraftArmamentStateMessage>(clientSchema(74, PacketLimitProfiles.AIRCRAFT_STATE,
+        delivery = RELIABLE_EDGE, priority = P1, owner = "vehicle.aircraft", feature = "aircraft_armament", since = 23))
+    playToServer<FarTerrainRequest>(serverSchema(75, PacketLimitProfiles.CONTROL,
+        owner = "vehicle.far_terrain", feature = "far_terrain", since = 31, rate = 20, burst = 40))
+    playToClient<FarTerrainPlan>(clientSchema(76, PacketLimitProfiles.FAR_TERRAIN, RELIABLE_EDGE, P3,
+        "vehicle.far_terrain", "far_terrain", 26))
+    playToClient<FarTerrainChunk>(clientSchema(77, PacketLimitProfiles.FAR_TERRAIN, BULK_STATE, P3,
+        "vehicle.far_terrain", "far_terrain", 26))
+    playToServer<FarTerrainAck>(serverSchema(78, PacketLimitProfiles.FAR_TERRAIN_CONTROL,
+        owner = "vehicle.far_terrain", feature = "far_terrain", since = 26, rate = 20, burst = 40))
+    playToClient<FarProjectileStateMessage>(clientSchema(79, delivery = RELIABLE_EDGE, priority = P1,
+        owner = "projectile.far_simulation", feature = "far_projectile_pause", since = 28))
+    playToClient<FriendlyVehicleStateMessage>(clientSchema(80, PacketLimitProfiles.CONTROL,
+        delivery = LATEST_SNAPSHOT, priority = P2, owner = "vehicle.friend_foe",
+        feature = "project_rose_occupied_vehicle", since = 36))
 }

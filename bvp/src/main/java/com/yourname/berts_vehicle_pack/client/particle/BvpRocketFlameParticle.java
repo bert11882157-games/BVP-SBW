@@ -18,6 +18,9 @@ public class BvpRocketFlameParticle extends BvpFullBrightAnimatedParticle {
     private static final float MIN_BLUE = 0.02F;
 
     private final float baseSize;
+    private final float tintRed;
+    private final float tintGreen;
+    private final float tintBlue;
 
     protected BvpRocketFlameParticle(ClientLevel level, double x, double y, double z,
                                      ProjectileEffectParticleOptions options, SpriteSet sprites) {
@@ -27,6 +30,12 @@ public class BvpRocketFlameParticle extends BvpFullBrightAnimatedParticle {
                 * Math.max(MIN_RANDOM_SCALE, options.randomScale())
                 * Math.max(0.1D, options.widthBlocks() * 10.0D));
         this.f_107663_ = this.baseSize;
+        this.tintRed = options.tintRed();
+        this.tintGreen = options.tintGreen();
+        this.tintBlue = options.tintBlue();
+        this.f_107227_ = tintRed;
+        this.f_107228_ = tintGreen;
+        this.f_107229_ = tintBlue;
     }
 
     @Override
@@ -34,9 +43,9 @@ public class BvpRocketFlameParticle extends BvpFullBrightAnimatedParticle {
         float t = this.f_107224_ / (float) this.f_107225_;
         this.f_107663_ = this.baseSize * Math.max(0.0F, 1.0F - t);
         this.f_107230_ = Math.max(0.0F, 1.0F - t);
-        this.f_107227_ = 1.0F;
-        this.f_107228_ = Math.max(MIN_GREEN, 1.0F - 0.65F * t);
-        this.f_107229_ = Math.max(MIN_BLUE, 1.0F - 0.95F * t);
+        this.f_107227_ = tintRed;
+        this.f_107228_ = Math.max(MIN_GREEN, 1.0F - 0.65F * t) * tintGreen;
+        this.f_107229_ = Math.max(MIN_BLUE, 1.0F - 0.95F * t) * tintBlue;
     }
 
     public static class Provider implements ParticleProvider<ProjectileEffectParticleOptions> {

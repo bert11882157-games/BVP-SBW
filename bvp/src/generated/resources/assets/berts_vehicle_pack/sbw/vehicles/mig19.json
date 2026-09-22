@@ -10,6 +10,106 @@
     0.2,
     0.2
   ],
+  "AfterburnerPresentation": {
+    "Schema": 2,
+    "Frame": "VEHICLE_LOCAL_BLOCKS",
+    "Outlets": [
+      {
+        "Id": "afterburner_left",
+        "Position": [
+          -0.3344421676,
+          2.339249666,
+          -8.31997
+        ],
+        "Direction": [
+          0,
+          0,
+          -1
+        ]
+      },
+      {
+        "Id": "afterburner_right",
+        "Position": [
+          0.3517421707,
+          2.3391518477,
+          -8.31997
+        ],
+        "Direction": [
+          0,
+          0,
+          -1
+        ]
+      }
+    ],
+    "Flame": {
+      "Scale": 0.5,
+      "WidthBlocks": 0.1,
+      "LengthBlocks": 4,
+      "ParticlesPerTick": 2,
+      "LifetimeTicks": 6,
+      "ColorRgb": [
+        1,
+        1,
+        1
+      ]
+    },
+    "Smoke": {
+      "Scale": 0.35,
+      "WidthBlocks": 0.1,
+      "LengthBlocks": 4,
+      "ParticlesPerTick": 0.5,
+      "LifetimeTicks": 12,
+      "ColorRgb": [
+        1,
+        1,
+        1
+      ]
+    },
+    "TapEmitters": [
+      {
+        "Outlet": "afterburner_left",
+        "Style": "FM_FLAME",
+        "Interval": 1,
+        "Offset": [
+          0,
+          0,
+          0
+        ],
+        "Extents": [
+          0.216103125,
+          0.216103125,
+          0.216103125
+        ],
+        "Velocity": [
+          0,
+          0,
+          0.1875
+        ]
+      },
+      {
+        "Outlet": "afterburner_right",
+        "Style": "FM_FLAME",
+        "Interval": 1,
+        "Offset": [
+          0,
+          0,
+          0
+        ],
+        "Extents": [
+          0.216103125,
+          0.216103125,
+          0.216103125
+        ],
+        "Velocity": [
+          0,
+          0,
+          0.1875
+        ]
+      }
+    ],
+    "TapSource": "planes/T2F MIG-19.txt#4F7398E5DDE09ABA76D4572F93125897467A51F54F1D0933FA0592A136A61CF4",
+    "TapVariant": "GENERIC_TAP_FMFLAME_AT_AUTHORED_NOZZLES"
+  },
   "EngineExhaust": {
     "Schema": "berts_vehicle_pack:engine_exhaust_origins/v1",
     "Parent": "HULL",

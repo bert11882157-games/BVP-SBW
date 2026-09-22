@@ -3411,153 +3411,18 @@
     }
   ],
   "sensitive_internals": [],
-  "engines": [],
-  "ammo_racks": [],
-  "tracks": [
+  "engines": [
     {
-      "name": "right_track_00",
+      "name": "engine_core_00",
       "center": [
-        1.4307,
-        0.05085,
-        0.03392
+        0,
+        1.09375,
+        2.0625
       ],
       "half_size": [
-        0.29797,
-        0.03247,
-        2.11536
-      ],
-      "rotation": [
-        0,
-        0,
-        0
-      ],
-      "frame": "hull"
-    },
-    {
-      "name": "right_track_01",
-      "center": [
-        1.4307,
-        0.3777,
-        -2.55691
-      ],
-      "half_size": [
-        0.29797,
-        0.03247,
-        0.54675
-      ],
-      "rotation": [
-        34,
-        0,
-        0
-      ],
-      "frame": "hull"
-    },
-    {
-      "name": "right_track_02",
-      "center": [
-        1.4307,
-        0.3777,
-        2.59402
-      ],
-      "half_size": [
-        0.29797,
-        0.03247,
-        0.54675
-      ],
-      "rotation": [
-        -34,
-        0,
-        0
-      ],
-      "frame": "hull"
-    },
-    {
-      "name": "right_track_03",
-      "center": [
-        1.5308,
-        0.90291,
-        -3.11956
-      ],
-      "half_size": [
-        0.19788,
-        0.03247,
-        0.20105
-      ],
-      "rotation": [
-        91,
-        0,
-        0
-      ],
-      "frame": "hull"
-    },
-    {
-      "name": "left_track_04",
-      "center": [
-        -1.4307,
-        0.3777,
-        -2.55691
-      ],
-      "half_size": [
-        0.29797,
-        0.03247,
-        0.54675
-      ],
-      "rotation": [
-        34,
-        0,
-        0
-      ],
-      "frame": "hull"
-    },
-    {
-      "name": "left_track_05",
-      "center": [
-        -1.5308,
-        0.90291,
-        -3.11956
-      ],
-      "half_size": [
-        0.19788,
-        0.03247,
-        0.20105
-      ],
-      "rotation": [
-        91,
-        0,
-        0
-      ],
-      "frame": "hull"
-    },
-    {
-      "name": "left_track_06",
-      "center": [
-        -1.4307,
-        0.3777,
-        2.59402
-      ],
-      "half_size": [
-        0.29797,
-        0.03247,
-        0.54675
-      ],
-      "rotation": [
-        -34,
-        0,
-        0
-      ],
-      "frame": "hull"
-    },
-    {
-      "name": "left_track_07",
-      "center": [
-        -1.4307,
-        0.05085,
-        0.03392
-      ],
-      "half_size": [
-        0.29797,
-        0.03247,
-        2.11536
+        0.8125,
+        0.40625,
+        0.5
       ],
       "rotation": [
         0,
@@ -3567,6 +3432,129 @@
       "frame": "hull"
     }
   ],
+  "ammo_racks": [
+    {
+      "name": "front_inner_rack_00",
+      "center": [
+        -0.34375,
+        1.125,
+        -1.5
+      ],
+      "half_size": [
+        0.21875,
+        0.25,
+        0.375
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "health": 10
+    },
+    {
+      "name": "front_outer_rack_01",
+      "center": [
+        -0.8125,
+        1.1875,
+        -1.5
+      ],
+      "half_size": [
+        0.125,
+        0.1875,
+        0.375
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "health": 10
+    },
+    {
+      "name": "rear_hull_rack_02",
+      "center": [
+        0,
+        1.03125,
+        1.15625
+      ],
+      "half_size": [
+        0.875,
+        0.28125,
+        0.28125
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "health": 10
+    },
+    {
+      "name": "turret_ready_pair_03",
+      "center": [
+        -0.875,
+        1.9375,
+        0.1875
+      ],
+      "half_size": [
+        0.125,
+        0.125,
+        0.375
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "turret",
+      "health": 10
+    },
+    {
+      "name": "gunner_floor_round_04",
+      "center": [
+        0.75,
+        0.75,
+        0
+      ],
+      "half_size": [
+        0.0625,
+        0.0625,
+        0.375
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "health": 10
+    },
+    {
+      "name": "loader_floor_round_05",
+      "center": [
+        -0.75,
+        0.75,
+        0
+      ],
+      "half_size": [
+        0.0625,
+        0.0625,
+        0.375
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "health": 10
+    }
+  ],
+  "tracks": [],
   "modules": [],
   "explosive_reactive_armor": [],
   "sbw_obb": []

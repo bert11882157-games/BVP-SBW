@@ -21,32 +21,6 @@
       ]
     },
     {
-      "Part": "WheelLeft",
-      "Size": [
-        0.22838,
-        0.46389,
-        2.53355
-      ],
-      "Position": [
-        1.53441,
-        0.51385,
-        -0.17842
-      ]
-    },
-    {
-      "Part": "WheelRight",
-      "Size": [
-        0.22838,
-        0.46389,
-        2.53355
-      ],
-      "Position": [
-        -1.53441,
-        0.51385,
-        -0.17842
-      ]
-    },
-    {
       "Part": "MainEngine",
       "Size": [
         0.82073,
@@ -334,7 +308,12 @@
             "Projectile": {
               "Type": "superbwarfare:cannon_shell",
               "Profile": "berts_vehicle_pack:bmp3m_elite/cannon/ammo_00_3of32_he"
-            }
+            },
+            "ShootShake": [
+              8,
+              10,
+              90
+            ]
           }
         },
         {
@@ -359,10 +338,10 @@
             "ShootAnimationTime": 20,
             "Name": "weapon.berts_vehicle_pack.9m117_bastion",
             "SoundInfo": {
-              "Fire1PGain": 0.5,
-              "Fire3PGain": 0.5,
-              "Fire3PFarGain": 0.5,
-              "Fire3PVeryFarGain": 0.5,
+              "Fire1PGain": 0.35,
+              "Fire3PGain": 0.35,
+              "Fire3PFarGain": 0.35,
+              "Fire3PVeryFarGain": 0.35,
               "Fire1P": "superbwarfare:bmp_2_missile_fire_1p",
               "Fire3P": "superbwarfare:bmp_2_missile_fire_3p",
               "Fire3PFar": "superbwarfare:t_90a_far",
@@ -374,8 +353,15 @@
               ]
             },
             "NominalBallistics": {
-              "Supported": false
-            }
+              "Supported": false,
+              "ProjectileType": "berts_vehicle_pack:ataka_missile",
+              "ProjectileProfile": "berts_vehicle_pack:bmp3m_elite/cannon/ammo_01_9m117_bastion"
+            },
+            "ShootShake": [
+              8,
+              10,
+              90
+            ]
           }
         }
       ],
@@ -423,7 +409,12 @@
         "ProjectileType": "superbwarfare:cannon_shell",
         "ProjectileProfile": "berts_vehicle_pack:bmp3m_elite/cannon/default",
         "ProjectileLife": 100
-      }
+      },
+      "ShootShake": [
+        8,
+        10,
+        90
+      ]
     },
     "MainMachineGun": {
       "DefaultFireMode": "Auto",
@@ -464,6 +455,11 @@
                 }
               ]
             },
+            "ShootShake": [
+              0,
+              0,
+              0
+            ],
             "NominalBallistics": {
               "Supported": true,
               "ProjectileType": "superbwarfare:projectile",
@@ -492,18 +488,18 @@
         "Transform": "Barrel",
         "Positions": [
           [
-            -0.02956,
-            0.07069,
-            -2.57047
+            0.15936,
+            0.01543,
+            -0.42322
           ]
         ],
         "Directions": [
           "Barrel"
         ],
         "ViewPosition": [
-          -0.02959,
-          0.07075,
-          -2.57266
+          0.1595,
+          0.01544,
+          -0.42358
         ],
         "MuzzleAttachments": [
           "coax_muzzle"
@@ -540,6 +536,17 @@
       "SoundRadius": 12,
       "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/gun_7_62mm.png",
       "HeatPerShoot": 0,
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "superbwarfare:projectile",
+        "ProjectileProfile": "berts_vehicle_pack:bmp3m_elite/mainmachinegun/default",
+        "ProjectileLife": 400
+      },
+      "ShootShake": [
+        0,
+        0,
+        0
+      ],
       "ProjectileBeltAmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
@@ -554,16 +561,15 @@
             "Damage": 9.5,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
-            "Name": "AP_T"
+            "Name": "AP_T",
+            "ShootShake": [
+              0,
+              0,
+              0
+            ]
           }
         }
-      ],
-      "NominalBallistics": {
-        "Supported": true,
-        "ProjectileType": "superbwarfare:projectile",
-        "ProjectileProfile": "berts_vehicle_pack:bmp3m_elite/mainmachinegun/default",
-        "ProjectileLife": 400
-      }
+      ]
     },
     "DualCannon": {
       "DefaultFireMode": "Auto",
@@ -632,6 +638,11 @@
                 }
               ]
             },
+            "ShootShake": [
+              8,
+              10,
+              12
+            ],
             "NominalBallistics": {
               "Supported": true,
               "ProjectileType": "superbwarfare:small_cannon_shell",
@@ -678,6 +689,11 @@
                 }
               ]
             },
+            "ShootShake": [
+              8,
+              10,
+              12
+            ],
             "NominalBallistics": {
               "Supported": true,
               "ProjectileType": "superbwarfare:small_cannon_shell",
@@ -691,18 +707,18 @@
         "Transform": "Barrel",
         "Positions": [
           [
-            0.2262,
-            0.00515,
-            -2.05638
+            -0.18507,
+            0.00257,
+            -2.11715
           ]
         ],
         "Directions": [
           "Barrel"
         ],
         "ViewPosition": [
-          0.22639,
-          0.00515,
-          -2.05813
+          -0.18523,
+          0.00257,
+          -2.11896
         ],
         "MuzzleAttachments": [
           "dual_cannon_muzzle"
@@ -723,6 +739,17 @@
           "dual_cannon_muzzle"
         ]
       },
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "superbwarfare:small_cannon_shell",
+        "ProjectileProfile": "berts_vehicle_pack:bmp3m_elite/dualcannon/default",
+        "ProjectileLife": 40
+      },
+      "ShootShake": [
+        8,
+        10,
+        12
+      ],
       "ProjectileBeltAmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_gs",
@@ -737,7 +764,12 @@
             "Damage": 65,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
-            "Name": "AP_T"
+            "Name": "AP_T",
+            "ShootShake": [
+              8,
+              10,
+              12
+            ]
           }
         },
         {
@@ -753,16 +785,15 @@
             "Damage": 250,
             "ExplosionDamage": 0,
             "ExplosionRadius": 5,
-            "Name": "HEF_I"
+            "Name": "HEF_I",
+            "ShootShake": [
+              8,
+              10,
+              12
+            ]
           }
         }
-      ],
-      "NominalBallistics": {
-        "Supported": true,
-        "ProjectileType": "superbwarfare:small_cannon_shell",
-        "ProjectileProfile": "berts_vehicle_pack:bmp3m_elite/dualcannon/default",
-        "ProjectileLife": 40
-      }
+      ]
     }
   },
   "HUDColor": "0x66FF00",
@@ -946,9 +977,9 @@
     "gunner1_camera": {
       "Parent": "Turret",
       "Position": [
-        0.00515,
-        1.36235,
-        0.1311
+        0.41504,
+        0.50848,
+        0.45921
       ],
       "Direction": [
         0,
@@ -959,9 +990,9 @@
     "gunner1_zoom": {
       "Parent": "Turret",
       "Position": [
-        0.00515,
-        1.36235,
-        0.1311
+        0.41504,
+        0.50848,
+        0.45921
       ],
       "Direction": [
         0,
@@ -985,9 +1016,9 @@
     "coax_muzzle": {
       "Parent": "Barrel",
       "Position": [
-        -0.02956,
-        0.07069,
-        2.57047
+        0.15936,
+        0.01543,
+        0.42322
       ],
       "Direction": [
         0,
@@ -998,9 +1029,9 @@
     "dual_cannon_muzzle": {
       "Parent": "Barrel",
       "Position": [
-        0.2262,
-        0.00515,
-        2.05638
+        -0.18507,
+        0.00257,
+        2.11715
       ],
       "Direction": [
         0,

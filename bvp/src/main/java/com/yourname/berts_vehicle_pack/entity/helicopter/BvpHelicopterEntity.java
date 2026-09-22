@@ -7,6 +7,8 @@ import com.atsuishio.superbwarfare.api.vehicle.flight.VehicleFlightStrategy;
 import com.atsuishio.superbwarfare.api.vehicle.flight.VehicleFlightStrategyProvider;
 import com.atsuishio.superbwarfare.api.vehicle.flight.VehicleFlightTickResult;
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity;
+import com.atsuishio.superbwarfare.data.vehicle.subdata.EngineInfo;
+import net.minecraft.world.entity.player.Player;
 import com.atsuishio.superbwarfare.entity.vehicle.utils.VehicleVecUtils;
 import com.mojang.logging.LogUtils;
 import com.yourname.berts_vehicle_pack.entity.ArmoredVehicleEntity;
@@ -37,6 +39,13 @@ public abstract class BvpHelicopterEntity extends ArmoredVehicleEntity implement
     private final HelicopterFlightController flightController;
     private final HelicopterForceModel forceModel;
     private final VehicleFlightStrategy nativeFlightStrategy;
+    private final HelicopterAttitudeController physicalAttitudeController;
+    private Entity physicalPilot;
+    private Level physicalControlLevel;
+    private long physicalControlEpoch = Long.MIN_VALUE;
+    private long physicalPreparedTick = Long.MIN_VALUE;
+    private boolean physicalHoverButton;
+
     private Vec3 lastHorizontalForward = new Vec3(0.0D, 0.0D, 1.0D);
     private Vec3 lastHorizontalRight = new Vec3(-1.0D, 0.0D, 0.0D);
     private double helicopterPhysicalCollective = PHYSICAL_COLLECTIVE_NEUTRAL;
@@ -70,10 +79,19 @@ public abstract class BvpHelicopterEntity extends ArmoredVehicleEntity implement
         this.flightProfile = profile;
         this.flightController = new HelicopterFlightController(profile);
         this.forceModel = new HelicopterForceModel(profile);
+        this.physicalAttitudeController = profile.physicalControls() != null
+                && profile.physicalControls().attitudeProfile() != null
+                ? new HelicopterAttitudeController() : null;
         this.nativeFlightStrategy = new VehicleFlightStrategy() {
             @Override
             public void prepareServer(VehicleEntity vehicle) {
-                vehicle.applyHelicopterControlLifecycleForFlightStrategy();
+                if (usesRotorCoupledHelicopterControls()) preparePhysicalHelicopterControls();
+                else vehicle.applyHelicopterControlLifecycleForFlightStrategy();
+            }
+
+            @Override
+            public void onDeactivated(VehicleEntity vehicle) {
+                if (usesRotorCoupledHelicopterControls()) resetPhysicalHelicopterControls();
             }
 
             @Override
@@ -111,8 +129,76 @@ public abstract class BvpHelicopterEntity extends ArmoredVehicleEntity implement
         return this.nativeFlightStrategy;
     }
 
+    private void resetPhysicalHelicopterControls() {
+        this.physicalPilot = null;
+        this.physicalControlLevel = null;
+        this.physicalControlEpoch = Long.MIN_VALUE;
+        this.physicalPreparedTick = Long.MIN_VALUE;
+        this.physicalHoverButton = false;
+        this.helicopterThrottleTarget = 0.0D;
+        this.helicopterPhysicalCollective = PHYSICAL_COLLECTIVE_NEUTRAL;
+        this.controlInput.capture((short) 0);
+        if (this.physicalAttitudeController != null) this.physicalAttitudeController.reset();
+    }
+
+    private void preparePhysicalHelicopterControls() {
+        Level level = m_9236_();
+        long tick = level.getGameTime();
+        long epoch = getRotorCoupledHelicopterControlEpoch();
+        Entity occupant = getNthEntity(0);
+        Entity pilot = occupant instanceof Player player && player.isAlive()
+                && !player.isSpectator() && player.getVehicle() == this
+                && getFirstPassenger() == player ? player : null;
+        boolean sameContext = this.physicalPilot == pilot && this.physicalControlLevel == level
+                && this.physicalControlEpoch == epoch;
+        if (sameContext && this.physicalPreparedTick == tick) return;
+        if (!sameContext || this.physicalPreparedTick != tick - 1L) {
+            resetPhysicalHelicopterControls();
+            setHoverMode(false);
+        }
+        this.physicalPilot = pilot;
+        this.physicalControlLevel = level;
+        this.physicalControlEpoch = epoch;
+        this.physicalPreparedTick = tick;
+        this.controlInput.capture(pilot == null ? (short) 0 : getVehicleFlightControlBits());
+
+        boolean driveAvailable = prepareRotorCoupledHelicopterDrive();
+        boolean controlled = pilot != null && !isWreck()
+                && getHealth() > 0.1F * getMaxHealth();
+        boolean hoverButton = controlled && this.controlInput.up();
+        if (onGround()) setHoverMode(false);
+        else if (hoverButton && !this.physicalHoverButton) setHoverMode(!getHoverMode());
+        this.physicalHoverButton = hoverButton;
+        tickPhysicalControlState(controlled, isWreck());
+        if (!driveAvailable) this.helicopterThrottleTarget = 0.0D;
+        this.helicopterRotorLiftPower = isWreck() ? 0.0D : nextPhysicalRotorPower(
+                this.helicopterRotorLiftPower, driveAvailable ? physicalRotorTarget() : 0.0D);
+
+        HelicopterPhysicalControls controls = this.flightProfile.physicalControls();
+        EngineInfo info = getEngineInfo();
+        if (this.physicalAttitudeController != null && controls != null
+                && info instanceof EngineInfo.Helicopter engine
+                && !(info instanceof EngineInfo.Aircraft)) {
+            boolean accepted = this.physicalAttitudeController.step(controls.attitudeProfile(), tick,
+                    m_146908_(), m_146909_(), getRoll(), this.helicopterRotorLiftPower,
+                    controlled, onGround(), getHoverMode(), getSubEngineDamaged(),
+                    controlled ? getMouseMoveSpeedX() : 0.0D,
+                    controlled ? getMouseMoveSpeedY() : 0.0D,
+                    this.controlInput.left(), this.controlInput.right(),
+                    engine.getPitchSpeed(), engine.getYawSpeed(), engine.getRollSpeed());
+            if (accepted) {
+                // Install the accepted pose before the one immutable force input is sampled.
+                applyVehicleFlightAttitude((float) this.physicalAttitudeController.yaw(),
+                        (float) this.physicalAttitudeController.pitch(),
+                        (float) this.physicalAttitudeController.roll());
+            }
+        }
+        applyRotorCoupledHelicopterPresentation(this.helicopterRotorLiftPower,
+                controlled && driveAvailable && this.helicopterThrottleTarget > 0.0D);
+    }
+
     private VehicleFlightTickResult runBvpFlightStrategy(VehicleFlightInputContext input) {
-        this.controlInput.capture(input.getRawInputBits());
+        if (!usesRotorCoupledHelicopterControls()) this.controlInput.capture(input.getRawInputBits());
         Vec3 motion = applyBvpHelicopterFlight(input);
         logHelicopterForceSample(input.getPreviousMotion(), input.getRequestedMotion(), motion);
         return new VehicleFlightTickResult(
@@ -148,14 +234,18 @@ public abstract class BvpHelicopterEntity extends ArmoredVehicleEntity implement
         Vec3 forward = resolveHorizontalForward(look);
         Vec3 right = this.lastHorizontalRight;
         Vec3 up = nativeInput.getUpDirection();
-        boolean occupied = nativeInput.getOccupied();
+        boolean rotorCoupled = usesRotorCoupledHelicopterControls();
+        boolean forceAuthority = rotorCoupled || FORCE_VECTOR_AUTHORITY;
+        boolean occupied = rotorCoupled ? this.physicalPilot != null : nativeInput.getOccupied();
         boolean wreck = nativeInput.getWreck();
         double inputRotorPower = this.helicopterRotorLiftPower;
         double inputEnginePower = clamp(nativeInput.getEnginePower(), 0.0D, 1.0D);
-        if (FORCE_VECTOR_AUTHORITY) {
-            tickPhysicalControlState(occupied, wreck);
+        if (forceAuthority) {
+            if (!rotorCoupled) {
+                tickPhysicalControlState(occupied, wreck);
+                inputRotorPower = nextPhysicalRotorPower(inputRotorPower, physicalRotorTarget());
+            }
             inputEnginePower = this.helicopterPhysicalCollective;
-            inputRotorPower = nextPhysicalRotorPower(inputRotorPower, physicalRotorTarget());
         }
         HelicopterFlightController.Input input = new HelicopterFlightController.Input(
                 previousMotion,
@@ -164,19 +254,19 @@ public abstract class BvpHelicopterEntity extends ArmoredVehicleEntity implement
                 forward,
                 right,
                 up,
-                dominantRollDegrees(),
+                rotorCoupled ? nativeInput.getBodyRollDegrees() : dominantRollDegrees(),
                 inputRotorPower,
                 inputEnginePower,
                 occupied,
                 wreck,
                 this.controlInput.collectiveUp(),
                 this.controlInput.collectiveDown(),
-                this.controlInput.steerLeft(),
-                this.controlInput.steerRight(),
+                (!rotorCoupled || !getSubEngineDamaged()) && this.controlInput.steerLeft(),
+                (!rotorCoupled || !getSubEngineDamaged()) && this.controlInput.steerRight(),
                 nativeInput.getHoverMode()
         );
         Vec3 finalMotion;
-        if (FORCE_VECTOR_AUTHORITY) {
+        if (forceAuthority) {
             this.helicopterLastForceModel = this.forceModel.evaluate(input, null);
             finalMotion = clampForceAuthorityMotion(this.helicopterLastForceModel.predictedMotion);
             applyPhysicalForceTelemetry(input, requestedMotion, finalMotion, forward, right);
@@ -195,12 +285,19 @@ public abstract class BvpHelicopterEntity extends ArmoredVehicleEntity implement
         return finalMotion;
     }
 
-    private static double nextPhysicalRotorPower(double current, double target) {
+    private double nextPhysicalRotorPower(double current, double target) {
+        HelicopterPhysicalControls controls = this.flightProfile.physicalControls();
+        if (controls != null) return controls.nextRotorPower(current, target);
         double step = target > current ? PHYSICAL_ROTOR_SPOOL_UP_PER_TICK : PHYSICAL_ROTOR_SPOOL_DOWN_PER_TICK;
         return approach(current, target, step);
     }
 
     private void tickPhysicalControlState(boolean occupied, boolean wreck) {
+        HelicopterPhysicalControls controls = this.flightProfile.physicalControls();
+        double throttleStep = controls == null ? PHYSICAL_THRUST_STEP_PER_TICK
+                : controls.throttlePerSecond() / HelicopterForceModel.TICKS_PER_SECOND;
+        double collectiveStep = controls == null ? PHYSICAL_COLLECTIVE_STEP_PER_TICK
+                : controls.collectivePerSecond() / HelicopterForceModel.TICKS_PER_SECOND;
         double collectiveTarget = PHYSICAL_COLLECTIVE_NEUTRAL;
         if (occupied && !wreck) {
             if (this.controlInput.collectiveUp() != this.controlInput.collectiveDown()) {
@@ -209,18 +306,20 @@ public abstract class BvpHelicopterEntity extends ArmoredVehicleEntity implement
             if (this.controlInput.thrustUp() != this.controlInput.thrustDown()) {
                 double direction = this.controlInput.thrustUp() ? 1.0D : -1.0D;
                 this.helicopterThrottleTarget = clamp(
-                        this.helicopterThrottleTarget + direction * PHYSICAL_THRUST_STEP_PER_TICK,
+                        this.helicopterThrottleTarget + direction * throttleStep,
                         0.0D, 1.0D);
             }
         } else {
             this.helicopterThrottleTarget = approach(this.helicopterThrottleTarget, 0.0D,
-                    PHYSICAL_THRUST_STEP_PER_TICK);
+                    throttleStep);
         }
         this.helicopterPhysicalCollective = approach(this.helicopterPhysicalCollective,
-                collectiveTarget, PHYSICAL_COLLECTIVE_STEP_PER_TICK);
+                collectiveTarget, collectiveStep);
     }
 
     private double physicalRotorTarget() {
+        HelicopterPhysicalControls controls = this.flightProfile.physicalControls();
+        if (controls != null) return controls.rotorTarget(this.helicopterThrottleTarget, getMainEngineDamaged());
         return clamp(this.helicopterThrottleTarget, 0.0D, 1.0D);
     }
 
@@ -229,7 +328,9 @@ public abstract class BvpHelicopterEntity extends ArmoredVehicleEntity implement
             return Vec3.f_82478_;
         }
         double horizontal = horizontalSpeed(motion);
-        double maxHorizontal = FORCE_AUTHORITY_MAX_HORIZONTAL_KMH / HelicopterFlightController.KMH_PER_BLOCK_PER_TICK;
+        HelicopterPhysicalControls controls = this.flightProfile.physicalControls();
+        double maxHorizontal = (controls == null ? FORCE_AUTHORITY_MAX_HORIZONTAL_KMH
+                : controls.maxHorizontalKmh()) / HelicopterFlightController.KMH_PER_BLOCK_PER_TICK;
         double x = motion.f_82479_;
         double z = motion.f_82481_;
         if (horizontal > maxHorizontal && horizontal > 1.0E-6D) {
@@ -330,6 +431,14 @@ public abstract class BvpHelicopterEntity extends ArmoredVehicleEntity implement
         this.helicopterRotorThrustMps2 = 0.0D;
         this.helicopterLastHoverHold = false;
         this.helicopterLastHoverAssist = 0.0D;
+    }
+
+    /** Physical rotor authority on the same immutable clock as the rendered body pose. */
+    public double getBvpRotorPresentationPower(float partialTicks) {
+        VehicleFlightInstrumentSnapshot snapshot = getVehicleFlightPresentationSnapshot(partialTicks);
+        double rotor = snapshot.getRotorLift();
+        return snapshot.getSequence() != 0 && Double.isFinite(rotor)
+                && rotor >= 0.0D && rotor <= 1.0D ? rotor : 0.0D;
     }
 
     public double getBvpRotorLiftPower() {

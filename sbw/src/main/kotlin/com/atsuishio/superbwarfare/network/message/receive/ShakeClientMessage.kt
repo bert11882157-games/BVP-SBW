@@ -50,9 +50,9 @@ data class ShakeClientMessage(
             shakeTime = time
             shakeRadius = radius
             shakeAmplitude = amplitude * DEG_TO_RAD * shakeStrength
-            shakePos[0] = x * shakeStrength
-            shakePos[1] = y * shakeStrength
-            shakePos[2] = z * shakeStrength
+            shakePos[0] = x
+            shakePos[1] = y
+            shakePos[2] = z
             shakeType = 2 * (Math.random() - 0.5)
         }
     }

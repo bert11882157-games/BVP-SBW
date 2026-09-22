@@ -30,32 +30,6 @@
       ]
     },
     {
-      "Part": "WheelLeft",
-      "Size": [
-        0.29167,
-        0.5,
-        3.25
-      ],
-      "Position": [
-        1.54167,
-        0.6,
-        -0.08333
-      ]
-    },
-    {
-      "Part": "WheelRight",
-      "Size": [
-        0.29167,
-        0.5,
-        3.25
-      ],
-      "Position": [
-        -1.54167,
-        0.6,
-        -0.08333
-      ]
-    },
-    {
       "Part": "MainEngine",
       "Size": [
         1,
@@ -561,6 +535,12 @@
       "SoundRadius": 12,
       "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/gun_7_62mm.png",
       "HeatPerShoot": 0,
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "superbwarfare:projectile",
+        "ProjectileProfile": "berts_vehicle_pack:bmp2/mainmachinegun/default",
+        "ProjectileLife": 400
+      },
       "ProjectileBeltAmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
@@ -578,13 +558,7 @@
             "Name": "AP_T"
           }
         }
-      ],
-      "NominalBallistics": {
-        "Supported": true,
-        "ProjectileType": "superbwarfare:projectile",
-        "ProjectileProfile": "berts_vehicle_pack:bmp2/mainmachinegun/default",
-        "ProjectileLife": 400
-      }
+      ]
     },
     "Missile": {
       "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_atgm.png",
@@ -613,10 +587,10 @@
       "Name": "weapon.berts_vehicle_pack.2a42_30_mm_autocannon_9m113_konkurs_atgm",
       "AmmoType": "superbwarfare:medium_anti_ground_missile",
       "SoundInfo": {
-        "Fire1PGain": 0.5,
-        "Fire3PGain": 0.5,
-        "Fire3PFarGain": 0.5,
-        "Fire3PVeryFarGain": 0.5,
+        "Fire1PGain": 0.35,
+        "Fire3PGain": 0.35,
+        "Fire3PFarGain": 0.35,
+        "Fire3PVeryFarGain": 0.35,
         "Fire1P": "berts_vehicle_pack:atgm_gun_launch",
         "Fire3P": "berts_vehicle_pack:atgm_gun_launch",
         "VehicleReload3p": "superbwarfare:medium_missile_reload",
@@ -653,6 +627,11 @@
         ],
         "ViewDirectionAttachment": "Barrel",
         "SeekAttachment": "missile_muzzle_01"
+      },
+      "NominalBallistics": {
+        "Supported": false,
+        "ProjectileType": "superbwarfare:wire_guide_missile",
+        "ProjectileProfile": "berts_vehicle_pack:bmp2/missile/default"
       }
     }
   },

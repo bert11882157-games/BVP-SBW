@@ -8,7 +8,6 @@ import com.atsuishio.superbwarfare.data.projectile.ProjectileTrailMode
 import com.atsuishio.superbwarfare.data.projectile.RicochetCurve
 import com.atsuishio.superbwarfare.data.gun.ProjectileBeltTracer
 import com.atsuishio.superbwarfare.entity.projectile.FastThrowableProjectile
-import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import net.minecraft.nbt.CompoundTag
@@ -31,17 +30,6 @@ object ProjectileProfiles {
     private const val PROFILE_SNAPSHOT_TAG = "SBWProjectileProfileSnapshot"
     private const val SHOT_SEQUENCE_TAG = "SBWProjectileShotSequence"
     private const val PROFILE_SNAPSHOT_VERSION = 1
-    private const val TRACER_V2_EXTENSION_ID = "berts_vehicle_pack:tracer_v2"
-    private const val PROJECTILE_EFFECT_V1_EXTENSION_ID = "berts_vehicle_pack:projectile_effect_v1"
-    /** Canonical BVP elite-green tracer colour used by generated tracer_v2 profiles. */
-    private const val ELITE_GREEN_TRACER_RED = 72
-    private const val ELITE_GREEN_TRACER_GREEN = 255
-    private const val ELITE_GREEN_TRACER_BLUE = 96
-    private val SMALL_WHITE_TRACER_ROUNDS = setOf(
-        ResourceLocation("berts_vehicle_pack", "pg9"),
-        ResourceLocation("berts_vehicle_pack", "og9"),
-    )
-
     private data class CachedProfile(val generation: Long, val profile: ResolvedProjectileProfile)
 
     /** In-memory adapter used to preserve a decoded immutable snapshot through the public copy API. */
@@ -75,144 +63,54 @@ object ProjectileProfiles {
         (entity as? ProfiledProjectile)?.setProjectileProfileId(id)
     }
 
-    /**
-     * Applies a per-shot belt presentation policy to the immutable profile snapshot.  The
-     * authored/global profile is never mutated; the snapshot is carried by normal SBW spawn data.
-     */
+    /** Optional immutable presentation patch; combat remains pinned to the selected profile. */
     @JvmStatic
     fun assignShotTracerPolicy(entity: Entity, policy: ProjectileBeltTracer?): Boolean {
         if (policy == null || policy == ProjectileBeltTracer.INHERIT) return true
         val target = entity as? ProfiledProjectile ?: return false
         val template = target.getResolvedProjectileProfile() ?: return false
-        val extensions = template.extensions()
-        // The BVP generator owns the v1 effect extension, while a belt policy is a per-shot
-        // override.  Do not require authoring to duplicate the tracer_v2 payload in every
-        // projectile profile: materialize a complete immutable tracer snapshot when GREEN is
-        // requested and the authored profile has no top-level tracer object.
-        val tracer = extensions.get(TRACER_V2_EXTENSION_ID)?.let {
-            if (it.isJsonObject) it.asJsonObject else null
-        }
-
-        val trailMode = when (policy) {
-            ProjectileBeltTracer.NONE, ProjectileBeltTracer.SUPPRESS -> {
-                tracer?.addProperty("Enabled", false)
-                ProjectileTrailMode.SUPPRESS
-            }
-            ProjectileBeltTracer.GREEN -> {
-                val effectiveTracer = tracer ?: defaultTracerExtension().also {
-                    extensions.add(TRACER_V2_EXTENSION_ID, it)
-                }
-                effectiveTracer.addProperty("Enabled", true)
-                effectiveTracer.add("ColorRgb", JsonArray().apply {
-                    // Keep belt GREEN identical to the existing generated BVP/elite tracer;
-                    // never fall back to the pure-green SBW/default presentation.
-                    add(ELITE_GREEN_TRACER_RED)
-                    add(ELITE_GREEN_TRACER_GREEN)
-                    add(ELITE_GREEN_TRACER_BLUE)
-                })
-                // GREEN is an explicit replacement policy, never an inherited DEFAULT.  This
-                // keeps an authored red tracer_v2/native fallback from winning over the belt
-                // round when a provider is available for the selected visual profile.
-                ProjectileTrailMode.REPLACE
-            }
-            ProjectileBeltTracer.RED -> {
-                val effectiveTracer = tracer ?: defaultTracerExtension().also {
-                    extensions.add(TRACER_V2_EXTENSION_ID, it)
-                }
-                effectiveTracer.addProperty("Enabled", true)
-                effectiveTracer.add("ColorRgb", JsonArray().apply {
-                    add(255)
-                    add(32)
-                    add(32)
-                })
-                // RED is an explicit replacement just like GREEN; NONE remains the only
-                // suppress-all policy and cannot fall through to an authored/default tracer.
-                ProjectileTrailMode.REPLACE
-            }
-            ProjectileBeltTracer.INHERIT -> template.trailMode
-        }
-
-        val snapshot = ResolvedProjectileProfile(
-            template.id,
-            template.combat,
-            template.visualProfileId,
-            template.impactVisualProfileId,
-            template.motionSync,
-            template.collision,
-            template.luminance,
-            trailMode,
-            template.renderScale,
-            extensions,
-            template.guidedPropulsion,
-        )
+        val snapshot = shotTracerProfile(template, policy)
         target.copyProjectileProfileFrom(SnapshotProfileSource(snapshot.id, snapshot))
         return true
     }
 
-    /**
-     * Applies the reusable typed small-white tracer presentation used by rounds which are
-     * logically non-tracer ammunition.  Combat metadata, light/luminance, penetration, and
-     * projectile motion remain untouched; only the immutable synchronized tracer extension is
-     * materialized.  The identity is the authored Combat.RoundId, never a display name or gun.
-     */
+    internal fun shotTracerProfile(template: ResolvedProjectileProfile, policy: ProjectileBeltTracer): ResolvedProjectileProfile {
+        if (policy == ProjectileBeltTracer.INHERIT) return template
+        val patch = ProjectileProfilePolicies.presentation(ProjectilePresentationInput(
+            template, ProjectilePresentationPurpose.SHOT_TRACER, policy, template.renderScale))
+        val suppressed = policy == ProjectileBeltTracer.NONE || policy == ProjectileBeltTracer.SUPPRESS
+        if (patch == null && !suppressed) return template
+        return presentationSnapshot(template, patch, template.trailMode, false,
+            if (suppressed) ProjectileTrailMode.SUPPRESS else null)
+    }
+
+    /** Addon round presentation runs before the final per-shot belt override. */
     @JvmStatic
     fun assignTypedSmallWhiteTracerPresentation(entity: Entity): Boolean {
         val target = entity as? ProfiledProjectile ?: return false
         val template = target.getResolvedProjectileProfile() ?: return false
-        if (!isSmallWhiteTracerRoundId(template.combat?.roundId)) return true
-
-        val extensions = template.extensions()
-        val tracer = extensions.get(TRACER_V2_EXTENSION_ID)?.let {
-            if (it.isJsonObject) it.asJsonObject else null
-        } ?: defaultTracerExtension().also {
-            extensions.add(TRACER_V2_EXTENSION_ID, it)
-        }
-        tracer.addProperty("Enabled", true)
-        tracer.add("ColorRgb", JsonArray().apply {
-            add(255)
-            add(255)
-            add(255)
-        })
-
-        val snapshot = ResolvedProjectileProfile(
-            template.id,
-            template.combat,
-            template.visualProfileId,
-            template.impactVisualProfileId,
-            template.motionSync,
-            template.collision,
-            template.luminance,
-            ProjectileTrailMode.REPLACE,
-            template.renderScale,
-            extensions,
-            template.guidedPropulsion,
-        )
+        val patch = ProjectileProfilePolicies.presentation(ProjectilePresentationInput(
+            template, ProjectilePresentationPurpose.SMALL_WHITE_TRACER, null, template.renderScale))
+            ?: return true
+        val snapshot = presentationSnapshot(template, patch, template.trailMode, false)
         target.copyProjectileProfileFrom(SnapshotProfileSource(snapshot.id, snapshot))
         return true
     }
 
-    /** Canonical dimensions for a typed tracer synthesized from a belt policy. */
-    private fun defaultTracerExtension(): JsonObject = JsonObject().apply {
-        addProperty("Enabled", true)
-        add("ColorRgb", JsonArray().apply {
-            add(255)
-            add(255)
-            add(255)
-        })
-        addProperty("EveryNthShot", 1)
-        addProperty("LengthBlocks", 4.0)
-        addProperty("WidthBlocks", 0.025)
-        addProperty("Opacity", 0.9)
-        addProperty("LifetimeTicks", 3)
-        add("Core", JsonObject().apply {
-            addProperty("WidthScale", 1.0)
-            addProperty("OpacityScale", 1.0)
-        })
-        add("Glow", JsonObject().apply {
-            addProperty("WidthScale", 4.0)
-            addProperty("OpacityScale", 0.25)
-        })
-    }
+    /** Presentation cannot change the authoritative combat/collision/motion tuple. */
+    internal fun presentationSnapshot(
+        template: ResolvedProjectileProfile,
+        patch: ProjectilePresentationPatch?,
+        fallbackTrail: ProjectileTrailMode,
+        fragment: Boolean,
+        forcedTrail: ProjectileTrailMode? = null,
+    ): ResolvedProjectileProfile = ResolvedProjectileProfile(
+        template.id, template.combat, template.visualProfileId,
+        if (fragment) null else template.impactVisualProfileId,
+        template.motionSync, template.collision, template.luminance,
+        forcedTrail ?: patch?.trailMode ?: fallbackTrail, patch?.renderScale ?: template.renderScale,
+        patch?.extensions() ?: template.extensions(), template.guidedPropulsion,
+    )
 
     @JvmStatic
     fun assignShotSequence(entity: Entity, sequence: Long) {
@@ -385,69 +283,30 @@ object ProjectileProfiles {
     }
 
     /**
-     * Assigns an immutable presentation clone of an existing bullet profile. Combat and collision
-     * stay on the template; the clone changes only render scale, clears impact classification, and
-     * rewrites the tracer extension to the fixed white impact presentation. This lets
-     * server-created fragments use the normal SBW/BVP tracer path without a generated profile.
+     * Compatibility adapter. Required gameplay metadata is resolved first; missing optional
+     * tracer data yields the same combat/collision snapshot with its trail suppressed.
      */
     @JvmStatic
-    fun assignImpactTracerProfile(
-        entity: Entity,
-        templateId: ResourceLocation?,
-        renderScale: Float,
-    ): Boolean {
+    fun assignImpactTracerProfile(entity: Entity, templateId: ResourceLocation?, renderScale: Float): Boolean {
+        val template = resolve(templateId) ?: return false
+        return assignImpactFragmentProfile(entity, template, renderScale)
+    }
+
+    @JvmStatic
+    fun assignImpactFragmentProfile(entity: Entity, template: ResolvedProjectileProfile, renderScale: Float): Boolean {
         val target = entity as? ProfiledProjectile ?: return false
-        val id = templateId ?: return false
-        if (!renderScale.isFinite() || renderScale <= 0f) return false
-        val template = resolve(id) ?: return false
-        val impactExtensions = impactTracerExtensions(template) ?: return false
-        val snapshot = ResolvedProjectileProfile(
-            template.id,
-            template.combat,
-            template.visualProfileId,
-            null,
-            template.motionSync,
-            template.collision,
-            template.luminance,
-            template.trailMode,
-            renderScale,
-            impactExtensions,
-            template.guidedPropulsion,
-        )
+        if (template.combat == null) return false
+        val snapshot = impactFragmentProfile(template, renderScale)
         target.copyProjectileProfileFrom(SnapshotProfileSource(snapshot.id, snapshot))
         return true
     }
 
-    /**
-     * Impact fragments use the normal immutable profile snapshot, but their presentation is
-     * intentionally independent of the source weapon's tracer color.  Only this impact-specific
-     * assignment rewrites the extension; ordinary projectiles retain their authored profiles.
-     * The existing snapshot encoder carries the result to the client without a wire/schema change.
-     */
-    private fun impactTracerExtensions(template: ResolvedProjectileProfile): JsonObject? {
-        val extensions = template.extensions()
-        val tracer = extensions.get(TRACER_V2_EXTENSION_ID)
-            ?.takeIf { it.isJsonObject }
-            ?.asJsonObject
-            ?: extensions.get(PROJECTILE_EFFECT_V1_EXTENSION_ID)
-                ?.takeIf { it.isJsonObject }
-                ?.asJsonObject
-                ?.get("Trail")
-                ?.takeIf { it.isJsonObject }
-                ?.asJsonObject
-                ?.get("Tracer")
-                ?.takeIf { it.isJsonObject }
-                ?.deepCopy()
-                ?.asJsonObject
-                ?.also { extensions.add(TRACER_V2_EXTENSION_ID, it) }
-            ?: return null
-        tracer.add("ColorRgb", JsonArray().apply {
-            add(255)
-            add(255)
-            add(255)
-        })
-        tracer.addProperty("Opacity", 1.0)
-        return extensions
+    internal fun impactFragmentProfile(template: ResolvedProjectileProfile, renderScale: Float): ResolvedProjectileProfile {
+        val patch = if (renderScale.isFinite() && renderScale > 0f) {
+            ProjectileProfilePolicies.presentation(ProjectilePresentationInput(
+                template, ProjectilePresentationPurpose.IMPACT_FRAGMENT, null, renderScale))
+        } else null
+        return presentationSnapshot(template, patch, ProjectileTrailMode.SUPPRESS, true)
     }
 
     @JvmStatic
@@ -455,52 +314,28 @@ object ProjectileProfiles {
         return resolve(entity)?.combat
     }
 
-    /**
-     * Returns true only for a typed BVP projectile fired by an entity mounted on an SBW vehicle.
-     * This is the single block-mutation gate used by the projectile/explosion paths.  A profile
-     * namespace is the stable domain marker; owner topology prevents player-fired BVP rounds
-     * outside a vehicle from being treated as vehicle ammunition.  Missing profile metadata does
-     * not opt an untyped SBW projectile into the BVP policy.
-     *
-     * Collision, impact FX, entity/armor damage, and explosion damage remain independent: callers
-     * use this predicate only to select KEEP instead of DESTROY for terrain blocks.
-     */
+    /** Terrain policy samples the current mounted-owner topology, independently of damage and FX. */
     @JvmStatic
     fun suppressesVehicleBlockDamage(entity: Entity): Boolean {
         val projectile = entity as? Projectile ?: return false
         val owner = projectile.owner ?: return false
-        if (owner.getRootVehicle() !is VehicleEntity) return false
-
         val profiled = entity as? ProfiledProjectile ?: return false
-        val id = profiled.getProjectileProfileId()
-        val combatWeaponId = profiled.getResolvedProjectileProfile()?.combat?.weaponId
-        return id?.namespace == "berts_vehicle_pack"
-            || combatWeaponId?.namespace == "berts_vehicle_pack"
+        return ProjectileProfilePolicies.terrain(ProjectileTerrainInput(
+            profiled.getProjectileProfileId(), profiled.getResolvedProjectileProfile()?.combat?.weaponId,
+            owner.getRootVehicle() is VehicleEntity)) == ProjectileTerrainDecision.KEEP
     }
 
-    /**
-     * Stable typed identity for the KPVT cyclic component rounds.  This is deliberately based
-     * on the authored Combat.RoundId namespace/prefix, never a display name, weapon path, or
-     * vehicle ID.  It also lets runtime impact presentation recognize older generated profiles
-     * whose belt Family field predates the KPVT enum.
-     */
+    /** Retained addon ABI; round membership is provided by the owning pack. */
     @JvmStatic
-    fun isKpvtRoundId(roundId: ResourceLocation?): Boolean {
-        return roundId != null
-                && roundId.namespace == "berts_vehicle_pack"
-                && roundId.path.lowercase().startsWith("kpvt_")
-    }
+    fun isKpvtRoundId(roundId: ResourceLocation?): Boolean =
+        ProjectileProfilePolicies.roundMatches(ProjectileRoundQuery.CYCLIC_145, roundId)
 
     @JvmStatic
-    fun isKpvtProjectile(entity: Entity): Boolean {
-        return isKpvtRoundId(combatDescriptor(entity)?.roundId)
-    }
+    fun isKpvtProjectile(entity: Entity): Boolean = isKpvtRoundId(combatDescriptor(entity)?.roundId)
 
-    /** Stable typed round identities whose non-tracer ammunition receives the small white cue. */
     @JvmStatic
-    fun isSmallWhiteTracerRoundId(roundId: ResourceLocation?): Boolean {
-        return roundId != null && SMALL_WHITE_TRACER_ROUNDS.contains(roundId)
-    }
+    fun isSmallWhiteTracerRoundId(roundId: ResourceLocation?): Boolean =
+        ProjectileProfilePolicies.roundMatches(ProjectileRoundQuery.SMALL_WHITE_TRACER, roundId)
 
     /** Authoritative impact-facing scalar/curve resolver at the projectile's finite travel range. */
     @JvmStatic
@@ -670,14 +505,7 @@ object ProjectileProfiles {
             putString("TrailMode", profile.trailMode.name)
             putFloat("RenderScale", profile.renderScale)
             profile.guidedPropulsion?.let { propulsion ->
-                put("GuidedPropulsion", CompoundTag().apply {
-                    putDouble("InitialSpeed", propulsion.initialSpeed)
-                    putDouble("MaxSpeed", propulsion.maxSpeed)
-                    putDouble("AccelerationPerTick", propulsion.accelerationPerTick)
-                    putInt("ThrustDurationTicks", propulsion.thrustDurationTicks)
-                    putDouble("MaxTurnRateDegreesPerSecond", propulsion.maxTurnRateDegreesPerSecond)
-                    putInt("GuidanceLookAheadTicks", propulsion.guidanceLookAheadTicks)
-                })
+                put("GuidedPropulsion", propulsion.toTag())
             }
             putString("Extensions", profile.extensions().toString())
         }
@@ -816,16 +644,7 @@ object ProjectileProfiles {
             !tag.contains("GuidedPropulsion", Tag.TAG_COMPOUND.toInt())
         ) return null
         val propulsion = tag.getCompound("GuidedPropulsion")
-        val initial = readFiniteDouble(propulsion, "InitialSpeed") ?: return null
-        val maximum = readFiniteDouble(propulsion, "MaxSpeed") ?: return null
-        val acceleration = readFiniteDouble(propulsion, "AccelerationPerTick") ?: return null
-        if (!propulsion.contains("ThrustDurationTicks", Tag.TAG_INT.toInt())) return null
-        val duration = propulsion.getInt("ThrustDurationTicks")
-        val turnRate = readFiniteDouble(propulsion, "MaxTurnRateDegreesPerSecond") ?: return null
-        if (!propulsion.contains("GuidanceLookAheadTicks", Tag.TAG_INT.toInt())) return null
-        val lookAhead = propulsion.getInt("GuidanceLookAheadTicks")
-        return GuidedPropulsionProfile(initial, maximum, acceleration, duration, turnRate, lookAhead)
-            .takeIf { it.isValid() }
+        return GuidedPropulsionProfile.fromTag(propulsion)
     }
 
     /** Minecraft NBT has no double-array tag; keep curve samples as an exact bounded TAG_DOUBLE list. */

@@ -3,6 +3,7 @@ package com.yourname.berts_vehicle_pack.armor;
 import com.atsuishio.superbwarfare.api.projectile.impact.ProjectileImpactContext;
 import com.atsuishio.superbwarfare.api.projectile.impact.ProjectileImpactPresentationOutcome;
 import com.atsuishio.superbwarfare.api.projectile.impact.ProjectileImpactResult;
+import com.atsuishio.superbwarfare.diagnostics.EliteDiagnostics;
 import com.yourname.berts_vehicle_pack.armor.ArmorHitResolver.ShotTrace;
 import com.yourname.berts_vehicle_pack.armor.ArmorModuleResolver.InternalModuleHits;
 import com.yourname.berts_vehicle_pack.armor.ArmorModuleResolver.ModuleHit;
@@ -17,7 +18,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
 final class ArmorImpactService {
-    private static final double LIGHT_ARMOR_NON_PENETRATION_DAMAGE_FRACTION = 0.15D;
+    private static final double LIGHT_ARMOR_NON_PENETRATION_DAMAGE_FRACTION = 0.02D;
 
     ProjectileImpactResult handle(ProjectileImpactContext context, BvpImpactVolumeQuery volumes) {
         ArmorTarget target = volumes.target();
@@ -32,7 +33,21 @@ final class ArmorImpactService {
             return ProjectileImpactResult.defaultResult();
         }
         Vec3 hitVec = context.getHitVec();
-        return handleImpact(context.getOwner(), volumes, projectile, damageSource, hitVec, volumes.initialTrace());
+        if (!EliteDiagnostics.isEnabled(level)) {
+            return handleImpact(context.getOwner(), volumes, projectile, damageSource, hitVec, volumes.initialTrace());
+        }
+        double leftBefore = target.vehicle().getModuleHealth("lefttrack");
+        double rightBefore = target.vehicle().getModuleHealth("righttrack");
+        double hullBefore = target.vehicle().getHealth();
+        ProjectileImpactResult result = handleImpact(context.getOwner(), volumes, projectile,
+                damageSource, hitVec, volumes.initialTrace());
+        EliteDiagnostics.record(target.vehicle(), "hitreg", "armor_commit",
+                "projectile", projectile.m_20148_(), "profile", target.armorProfileId(),
+                "left_before", leftBefore, "left_after", target.vehicle().getModuleHealth("lefttrack"),
+                "right_before", rightBefore, "right_after", target.vehicle().getModuleHealth("righttrack"),
+                "hull_before", hullBefore, "hull_after", target.vehicle().getHealth(),
+                "disposition", result.getDisposition(), "outcome", result.getPresentationOutcome());
+        return result;
     }
 
     private ProjectileImpactResult handleImpact(Entity owner, BvpImpactVolumeQuery volumes,
@@ -64,17 +79,12 @@ final class ArmorImpactService {
 
         ArmorHit armorHit = volumes.armorHit(trace);
         ModuleHit trackHit = volumes.directTrackHit(trace);
-        if (isExposedModuleHit(trackHit, armorHit)) {
-            return handleDirectModuleHit(owner, target, shot, trackHit, true, hitVec);
-        }
-
         ModuleHit moduleHit = volumes.directModuleHit(trace);
-        if (isExposedModuleHit(moduleHit, armorHit)) {
-            // A profile may expose a track through its generic module volume instead of the
-            // dedicated track list. Preserve track damage/reporting semantics by identity, not
-            // by which cache populated the ModuleHit.
-            return handleDirectModuleHit(owner, target, shot, moduleHit,
-                    ArmorModuleResolver.isTrack(moduleHit.moduleId), hitVec);
+        ModuleHit exposedHit = ArmorModuleResolver.nearestExposed(armorHit, trackHit, moduleHit);
+        ArmorImpactReporter.reportVolumeSelection(target, projectile, trace, armorHit, trackHit, moduleHit, exposedHit);
+        if (exposedHit != null) {
+            return handleDirectModuleHit(owner, target, shot, exposedHit,
+                    ArmorModuleResolver.isTrack(exposedHit.moduleId), hitVec);
         }
 
         ArmorBox plate = armorHit == null ? null : armorHit.plate;
@@ -109,7 +119,9 @@ final class ArmorImpactService {
 
         Result penetration = ArmorPenetrationService.evaluate(target, armorHit, trace, shot);
         if (!penetration.penetrated()) {
-            ArmorSoundService.play(level, hitVec, ArmorSoundService.METAL_HIT_SOUND, 1.0F, 0.75F);
+            if (!BvpMaterialImpactSounds.hasPresentation(projectile)) {
+                ArmorSoundService.play(level, hitVec, ArmorSoundService.METAL_HIT_SOUND, 1.0F, 0.75F);
+            }
             ArmorImpactReporter.reportArmorHit(level, owner, target, hitVec, plate,
                     penetration.impactCosine(), penetration.effectiveArmorMm(), penetration.penetrationMm(),
                     false, false, null, null, null, false, shot);
@@ -166,10 +178,6 @@ final class ArmorImpactService {
                 ProjectileArmorEffects.hasImpactVisual(shot), ProjectileImpactPresentationOutcome.NON_PENETRATION);
     }
 
-    private static boolean isExposedModuleHit(ModuleHit moduleHit, ArmorHit armorHit) {
-        return moduleHit != null && (armorHit == null || moduleHit.hit.distance < armorHit.distance - 1.0E-4D);
-    }
-
     private static ProjectileImpactResult handleSuperAmmoRackPenetration(Entity owner,
                                                                          ArmorTarget target,
                                                                          DamageSource damageSource, Vec3 hitVec,
@@ -209,7 +217,9 @@ final class ArmorImpactService {
                                                            ArmorHitResolver.NearBox nearestPlate,
                                                            ArmorProfiles.Vec localImpact) {
         if (!targetProfile.unboxedHitsPenetrate) {
-            ArmorSoundService.play(target.level(), hitVec, ArmorSoundService.METAL_HIT_SOUND, 1.0F, 0.75F);
+            if (!BvpMaterialImpactSounds.hasPresentation(damageSource.getDirectEntity())) {
+                ArmorSoundService.play(target.level(), hitVec, ArmorSoundService.METAL_HIT_SOUND, 1.0F, 0.75F);
+            }
             ArmorImpactReporter.reportNoPlateHit(target.level(), owner, target, hitVec,
                     nearestPlate, localImpact);
             return ProjectileArmorMutationService.blockImpact(

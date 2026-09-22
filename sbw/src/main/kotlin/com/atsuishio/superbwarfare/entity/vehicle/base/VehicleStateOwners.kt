@@ -6,10 +6,8 @@ import com.atsuishio.superbwarfare.api.vehicle.aim.VehicleAimProfile
 import com.atsuishio.superbwarfare.api.vehicle.pose.VehicleChassisPresentation
 import com.atsuishio.superbwarfare.api.vehicle.pose.VehicleChassisPresentationTimeline
 import com.atsuishio.superbwarfare.api.vehicle.pose.VehiclePoseSnapshot
-import com.atsuishio.superbwarfare.data.gun.GunData
 import com.atsuishio.superbwarfare.data.vehicle.DefaultVehicleData
 import com.atsuishio.superbwarfare.network.VehicleHelicopterAtgmCameraRayState
-import com.atsuishio.superbwarfare.tools.OBB
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.phys.Vec3
@@ -27,11 +25,6 @@ internal class VehiclePersistentStateOwner {
 
 internal class VehicleSynchronizedStateOwner {
     var vehicleInputBits: Short = 0
-    var resolvedGunDataRawOwner: Map<String, GunData>? = null
-    var resolvedGunDataConfigOwner: DefaultVehicleData? = null
-    var resolvedGunDataMap: Map<String, GunData> = emptyMap()
-    var weaponSlotNormalizationDataOwner: DefaultVehicleData? = null
-    var weaponSlotNormalizationFingerprint: Int = Int.MIN_VALUE
 }
 
 internal class VehicleKinematicStateOwner {
@@ -44,9 +37,7 @@ internal class VehicleKinematicStateOwner {
 internal class VehicleCombatStateOwner {
     val acceptedHelicopterAtgmCameraRays =
         LinkedHashMap<HelicopterAtgmCameraRayKey, VehicleHelicopterAtgmCameraRayState>()
-    val genericModuleStates = LinkedHashMap<ResourceLocation, StoredVehicleModuleState>()
-    var genericModuleSnapshotCache: String? = null
-    var obbCache: MutableList<OBB>? = null
+    val collisionBoxes = VehicleCollisionBoxes()
 }
 
 internal class VehicleSeatingStateOwner<T : Any>(
@@ -171,9 +162,3 @@ internal enum class AimPresentationAdmissionReason(val metricName: String) {
     REJECT_DIRECTION("presentation.aim.reject_direction"),
     REJECT_MUZZLE("presentation.aim.reject_muzzle"),
 }
-
-internal data class StoredVehicleModuleState(
-    val maxHealth: Float,
-    val health: Float,
-    val destroyed: Boolean,
-)

@@ -1,0 +1,26 @@
+{
+  "Schema": 1,
+  "Name": "F-100C",
+  "BuiltInWeapons": [
+    "CannonUpperLeft",
+    "CannonLowerLeft",
+    "CannonUpperRight",
+    "CannonLowerRight"
+  ],
+  "SuspendedWeapons": [],
+  "Pairs": [],
+  "StoreGroups": {
+    "berts_vehicle_pack:modeled_store/f_100c/assembly_0": [
+      "suspended_f_100c_0"
+    ],
+    "berts_vehicle_pack:modeled_store/f_100c/assembly_1": [
+      "suspended_f_100c_1"
+    ],
+    "berts_vehicle_pack:modeled_store/f_100c/assembly_2": [
+      "suspended_f_100c_2"
+    ],
+    "berts_vehicle_pack:modeled_store/f_100c/assembly_3": [
+      "suspended_f_100c_3"
+    ]
+  }
+}

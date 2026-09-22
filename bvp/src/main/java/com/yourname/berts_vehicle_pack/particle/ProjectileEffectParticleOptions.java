@@ -56,9 +56,20 @@ public final class ProjectileEffectParticleOptions implements ParticleOptions {
     private final float velocityX;
     private final float velocityY;
     private final float velocityZ;
+    private final float tintRed;
+    private final float tintGreen;
+    private final float tintBlue;
 
     public ProjectileEffectParticleOptions(boolean flame, float scale, float randomScale, int lifetimeTicks,
                                            float widthBlocks, float velocityX, float velocityY, float velocityZ) {
+        this(flame, scale, randomScale, lifetimeTicks, widthBlocks,
+                velocityX, velocityY, velocityZ, 1.0F, 1.0F, 1.0F);
+    }
+
+    /** Client-local tint; the existing serialized particle format retains identity tint. */
+    public ProjectileEffectParticleOptions(boolean flame, float scale, float randomScale, int lifetimeTicks,
+                                           float widthBlocks, float velocityX, float velocityY, float velocityZ,
+                                           float tintRed, float tintGreen, float tintBlue) {
         this.flame = flame;
         this.scale = finitePositive(scale, 0.005F, 64.0F, 1.0F);
         this.randomScale = finitePositive(randomScale, 0.01F, 8.0F, 1.0F);
@@ -67,6 +78,9 @@ public final class ProjectileEffectParticleOptions implements ParticleOptions {
         this.velocityX = finite(velocityX) ? velocityX : 0.0F;
         this.velocityY = finite(velocityY) ? velocityY : 0.0F;
         this.velocityZ = finite(velocityZ) ? velocityZ : 0.0F;
+        this.tintRed = tint(tintRed);
+        this.tintGreen = tint(tintGreen);
+        this.tintBlue = tint(tintBlue);
     }
 
     public boolean flame() { return flame; }
@@ -77,6 +91,13 @@ public final class ProjectileEffectParticleOptions implements ParticleOptions {
     public float velocityX() { return velocityX; }
     public float velocityY() { return velocityY; }
     public float velocityZ() { return velocityZ; }
+    public float tintRed() { return tintRed; }
+    public float tintGreen() { return tintGreen; }
+    public float tintBlue() { return tintBlue; }
+
+    private static float tint(float value) {
+        return Float.isFinite(value) ? Math.max(0, Math.min(1, value)) : 1.0F;
+    }
 
     @Override
     public ParticleType<?> m_6012_() {

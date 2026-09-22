@@ -32,6 +32,11 @@ class ProjectileInfo : IDBasedData<ProjectileInfo>, DeserializeFromString {
     @SerialName("Profile")
     var profile: SerializedResourceLocation? = null
 
+    /** Explicit diameter for legacy native rounds without a combat profile. Captured at launch. */
+    @SerializedName("CaliberMm")
+    @SerialName("CaliberMm")
+    var caliberMm: Double? = null
+
     override fun deserializeFromString(str: String) {
         this.itemId = str
     }

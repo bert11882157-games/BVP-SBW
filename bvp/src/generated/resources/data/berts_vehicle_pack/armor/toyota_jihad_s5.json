@@ -8,7 +8,268 @@
   "impact_tolerance": 0.25,
   "internal_ray_length": 10,
   "unboxed_hits_penetrate": true,
-  "plates": [],
+  "plates": [
+    {
+      "name": "common_technical_0_00",
+      "center": [
+        0.0125,
+        1.53215,
+        -4.6471
+      ],
+      "half_size": [
+        1.01875,
+        0.0375,
+        0.88437
+      ],
+      "rotation": [
+        -11,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 6
+    },
+    {
+      "name": "common_technical_1_01",
+      "center": [
+        0.0125,
+        0.96358,
+        -5.60713
+      ],
+      "half_size": [
+        1.01875,
+        0.0375,
+        0.39063
+      ],
+      "rotation": [
+        -81,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 6
+    },
+    {
+      "name": "common_technical_2_02",
+      "center": [
+        1.10858,
+        0.96875,
+        -4.68828
+      ],
+      "half_size": [
+        0.04063,
+        0.375,
+        0.86563
+      ],
+      "rotation": [
+        0,
+        7,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 6
+    },
+    {
+      "name": "common_technical_3_03",
+      "center": [
+        1.14933,
+        1.41562,
+        -4.3564
+      ],
+      "half_size": [
+        0.04063,
+        0.06562,
+        0.5375
+      ],
+      "rotation": [
+        0,
+        7,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 6
+    },
+    {
+      "name": "common_technical_4_04",
+      "center": [
+        1.19199,
+        1.55,
+        -4.00901
+      ],
+      "half_size": [
+        0.04063,
+        0.0625,
+        0.1875
+      ],
+      "rotation": [
+        0,
+        7,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 6
+    },
+    {
+      "name": "common_technical_5_05",
+      "center": [
+        1.20425,
+        1.10625,
+        -1.41077
+      ],
+      "half_size": [
+        0.04062,
+        0.5125,
+        2.39375
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 6
+    },
+    {
+      "name": "common_technical_6_06",
+      "center": [
+        0.01875,
+        1.08438,
+        1.05625
+      ],
+      "half_size": [
+        1.09375,
+        0.49688,
+        0.05625
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 6
+    },
+    {
+      "name": "common_technical_7_07",
+      "center": [
+        -0.0125,
+        0.54063,
+        -2.24375
+      ],
+      "half_size": [
+        1.01875,
+        0.04688,
+        3.3375
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 6
+    },
+    {
+      "name": "common_technical_8_08",
+      "center": [
+        -1.19199,
+        1.55,
+        -4.00901
+      ],
+      "half_size": [
+        0.04063,
+        0.0625,
+        0.1875
+      ],
+      "rotation": [
+        0,
+        -7,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 6
+    },
+    {
+      "name": "common_technical_9_09",
+      "center": [
+        -1.14933,
+        1.41562,
+        -4.3564
+      ],
+      "half_size": [
+        0.04063,
+        0.06562,
+        0.5375
+      ],
+      "rotation": [
+        0,
+        -7,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 6
+    },
+    {
+      "name": "common_technical_10_10",
+      "center": [
+        -1.10858,
+        0.96875,
+        -4.68828
+      ],
+      "half_size": [
+        0.04063,
+        0.375,
+        0.86563
+      ],
+      "rotation": [
+        0,
+        -7,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 6
+    },
+    {
+      "name": "common_technical_11_11",
+      "center": [
+        -1.20425,
+        1.10625,
+        -1.41077
+      ],
+      "half_size": [
+        0.04062,
+        0.5125,
+        2.39375
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 6
+    },
+    {
+      "name": "common_technical_12_12",
+      "center": [
+        0.0125,
+        1.56015,
+        -2.46859
+      ],
+      "half_size": [
+        1.01875,
+        0.0375,
+        1.20938
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 6
+    }
+  ],
   "sensitive_internals": [],
   "engines": [],
   "ammo_racks": [],

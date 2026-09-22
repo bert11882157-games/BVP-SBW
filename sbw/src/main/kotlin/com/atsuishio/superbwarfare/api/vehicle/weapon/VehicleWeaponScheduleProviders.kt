@@ -13,17 +13,13 @@ import net.minecraft.world.entity.LivingEntity
 object VehicleWeaponScheduleProviders {
     private const val LEGACY_DEFAULT_RPM = 240
     private const val ATGM_DEFAULT_RPM = 40
-    private const val KPVT_DEFAULT_RPM = 600
     private const val AUTOMATIC_RELEASE_GRACE_TICKS = 4
     private val nativeProviderId = Mod.loc("native_weapon_cadence")
     private val nativeProvider = object : VehicleWeaponScheduleProvider {
         override fun resolve(selection: VehicleWeaponSelection): VehicleWeaponScheduleProfile {
             val atgm = isAtgm(selection)
-            val kpvt = isKpvt(selection)
             val eventRpm = selection.gunData.get(GunProp.RPM).takeIf { it > 0 }
-                ?.let { authored -> if (kpvt) KPVT_DEFAULT_RPM else authored }
                 ?: when {
-                    kpvt -> KPVT_DEFAULT_RPM
                     atgm -> ATGM_DEFAULT_RPM
                     else -> LEGACY_DEFAULT_RPM
                 }
@@ -80,7 +76,7 @@ object VehicleWeaponScheduleProviders {
                     providerId,
                     provider,
                     selection,
-                    enforceKpvtCadence(selection, profile),
+                    applyCadencePolicy(selection, profile),
                 )
             } catch (exception: RuntimeException) {
                 Mod.LOGGER.warn(
@@ -97,7 +93,7 @@ object VehicleWeaponScheduleProviders {
             nativeProviderId,
             nativeProvider,
             selection,
-            enforceKpvtCadence(selection, nativeProvider.resolve(selection)),
+            applyCadencePolicy(selection, nativeProvider.resolve(selection)),
         )
     }
 
@@ -116,28 +112,26 @@ object VehicleWeaponScheduleProviders {
         return VehicleWeaponGuidance.isAtgm(selection.gunData)
     }
 
-    /**
-     * KPVT is an explicit typed family or resolved combat profile, never a display-name guess.
-     */
-    private fun isKpvt(selection: VehicleWeaponSelection): Boolean {
-        val belt = selection.gunData.get(GunProp.PROJECTILE_BELT)
-        if (belt?.isKpvtTyped() == true) return true
-        val projectile = selection.gunData.get(GunProp.PROJECTILE)
-        val profileId = projectile.profile
-            ?: CustomData.LAUNCHABLE_ENTITY[projectile.itemId.trim()]?.profile
-            ?: return false
-        return ProjectileProfiles.isKpvtRoundId(ProjectileProfiles.resolve(profileId)?.combat?.roundId)
-    }
-
-    private fun enforceKpvtCadence(
+    private fun applyCadencePolicy(
         selection: VehicleWeaponSelection,
         profile: VehicleWeaponScheduleProfile,
     ): VehicleWeaponScheduleProfile {
-        if (!isKpvt(selection)) return profile
-        return profile.copy(
-            bulletRpm = bulletRpm(KPVT_DEFAULT_RPM, profile.projectilesPerEvent),
-            eventRpm = KPVT_DEFAULT_RPM,
+        val belt = selection.gunData.get(GunProp.PROJECTILE_BELT)
+        val projectile = selection.gunData.get(GunProp.PROJECTILE)
+        val profileId = projectile.profile
+            ?: CustomData.LAUNCHABLE_ENTITY[projectile.itemId.trim()]?.profile
+        val cadence = VehicleWeaponCadencePolicies.apply(VehicleWeaponCadenceInput(
+            belt?.family, ProjectileProfiles.resolve(profileId)?.combat?.roundId), profile)
+        // High-rate single mounts need the same bounded event budget as fixed gun banks.
+        val resolved = cadence.copy(
+            maxCatchUpEvents = maxOf(cadence.maxCatchUpEvents,
+                VehicleFixedGunBanks.eventCapacity(cadence.eventRpm) ?: 2),
+            heatPolicy = cadence.heatPolicy.takeIf { selection.gunData.get(GunProp.OVERHEAT_ENABLED) },
         )
+        if (!isAtgm(selection)) return resolved
+        val rate = minOf(60, resolved.eventRpm)
+        return resolved.copy(eventRpm = rate, bulletRpm = bulletRpm(rate, resolved.projectilesPerEvent),
+            preserveAcceptedCadenceAcrossPresses = true, maxCatchUpEvents = 1)
     }
 }
 

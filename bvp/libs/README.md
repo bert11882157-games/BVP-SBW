@@ -1,16 +1,18 @@
 # BVP dependency boundary
 
-No dependency JARs are committed here. The inherited Gradle metadata currently names:
+No dependency JARs are committed here, and the build does not search this directory for a
+historical Superb Warfare filename.
 
-| Dependency | Existing declaration |
-| --- | --- |
-| Minecraft / Forge | 1.20.1 / 47.4.20 |
-| Superb Warfare | Legacy flat-directory name; release compilation needs the matching customized fork |
-| GeckoLib | 4.4.6 for Forge 1.20.1 |
-| SBW Mesh Loader | 0.1.1 |
-| Simple Bedrock Model | 2.3.3-forge-mc1.20.1 |
-| MAE | 1.1.2 |
+The sibling `sbw/` source build supplies its matching compiler API, Minecraft/Forge mappings,
+GeckoLib, Simple Bedrock Model, MAE, and other resolved compiler dependencies. Their actual
+versions and file hashes are retained with the source-build proof.
 
-The legacy MDK dependency name is retained for review, not asserted to reproduce the current
-production build. See [build status](../../docs/BUILDING.md) for the runtime/SRG classpath gap.
-Obtain dependencies through their supported distribution channels and applicable permissions.
+The separately source-built SBW Mesh Loader is an explicit external input. Obtain the compatible
+dependency artifact and its manifest from the release maintainer, subject to its distribution
+permissions. The manifest declares schema `1`, id `sbwmeshloader`, version, local JAR path, exact
+file size, and SHA-256. Relative paths resolve beside the manifest. There is no installed-game or
+legacy-library fallback.
+
+See [the build contract](../build-support/README.md) and [build instructions](../../docs/BUILDING.md).
+Release checkpoints retain exact dependency files privately; production records only their
+public identities. Meshloader source and dependency binaries remain outside this repository.

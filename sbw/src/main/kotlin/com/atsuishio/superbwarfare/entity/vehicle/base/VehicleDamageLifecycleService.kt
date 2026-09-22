@@ -1,11 +1,12 @@
 package com.atsuishio.superbwarfare.entity.vehicle.base
 
+import com.atsuishio.superbwarfare.api.aircraft.AircraftProjectileDamage
 import com.atsuishio.superbwarfare.api.projectile.impact.ProjectileImpactDamagePolicy
 import com.atsuishio.superbwarfare.diagnostics.EliteDiagnostics
-import com.atsuishio.superbwarfare.api.vehicle.damage.ResolvedVehicleDamageRejection
 import com.atsuishio.superbwarfare.api.vehicle.damage.ResolvedVehicleDamageRequest
 import com.atsuishio.superbwarfare.api.vehicle.damage.ResolvedVehicleDamageResult
 import com.atsuishio.superbwarfare.api.vehicle.damage.ResolvedVehicleModulePolicy
+import com.atsuishio.superbwarfare.api.vehicle.destruction.VehicleDestructionContext
 import com.atsuishio.superbwarfare.entity.mixin.OBBHitter
 import com.atsuishio.superbwarfare.init.ModDamageTypes
 import com.atsuishio.superbwarfare.init.ModTags
@@ -19,13 +20,44 @@ import com.atsuishio.superbwarfare.tools.SeekTool
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.projectile.Projectile
-import kotlin.math.max
-import kotlin.math.min
+import net.minecraft.tags.DamageTypeTags
+import com.atsuishio.superbwarfare.tools.OBB
 
-/** Owns damage admission and commit ordering behind VehicleEntity's compatibility facade. */
+/** Adapts source policy, native module damage, and world effects to the damage transaction. */
 internal class VehicleDamageLifecycleService(
     private val vehicle: VehicleEntity,
 ) {
+    private val transaction = VehicleDamageTransaction(object : VehicleDamageAccess<DamageSource, VehicleDestructionContext> {
+        override val isServerAuthority: Boolean get() = vehicle.level() is ServerLevel
+        override val isWreck: Boolean get() = vehicle.isWreck
+        override val isAlive: Boolean get() = vehicle.isAlive
+        override val health: Float get() = vehicle.health
+        override val maxHealth: Float get() = vehicle.getMaxHealth()
+
+        override fun acceptsSource(source: DamageSource): Boolean = vehicle.acceptsDamageSource(source)
+
+        override fun reportDebug(source: DamageSource, amount: Float) =
+            vehicle.reportDamageDebug(source, amount)
+
+        override fun computeAfterModifiers(source: DamageSource, amount: Float): Float =
+            vehicle.computeVehicleDamageAfterModifiers(source, amount)
+
+        override fun commit(
+            source: DamageSource,
+            amount: Float,
+            modulePolicy: ResolvedVehicleModulePolicy,
+            feedback: Boolean,
+        ) = this@VehicleDamageLifecycleService.commit(source, amount, modulePolicy, feedback)
+
+        override fun invokeVanillaHurt(source: DamageSource, amount: Float): Boolean =
+            vehicle.invokeVanillaHurt(source, amount)
+
+        override fun defaultDestructionContext(): VehicleDestructionContext =
+            vehicle.defaultDestructionContext()
+
+        override fun destroy(context: VehicleDestructionContext) = vehicle.destroy(context)
+    })
+
     fun acceptsSource(source: DamageSource): Boolean {
         if (source.`is`(ModTags.DamageTypes.VEHICLE_IMMUNE)) return false
 
@@ -45,51 +77,19 @@ internal class VehicleDamageLifecycleService(
         return true
     }
 
-    fun hurt(source: DamageSource, amount: Float): Boolean {
-        if (!vehicle.acceptsDamageSource(source)) return false
+    fun hurt(source: DamageSource, amount: Float): Boolean =
+        com.atsuishio.superbwarfare.api.vehicle.damage.LightPlatformProjectileDamage.handleNativeDamage(vehicle, source)
+            ?: AircraftProjectileDamage.handleNativeDamage(vehicle, source) ?: transaction.hurt(source, amount)
 
-        vehicle.reportDamageDebug(source, amount)
-
-        val computedAmount = vehicle.computeVehicleDamageAfterModifiers(source, amount)
-        commit(source, computedAmount, ResolvedVehicleModulePolicy.APPLY_NATIVE, true)
-        return vehicle.invokeVanillaHurt(source, computedAmount)
-    }
-
-    fun applyResolved(request: ResolvedVehicleDamageRequest): ResolvedVehicleDamageResult {
-        if (vehicle.level() !is ServerLevel) {
-            return ResolvedVehicleDamageResult.rejected(ResolvedVehicleDamageRejection.NOT_SERVER_AUTHORITY)
-        }
-        if (!request.amount.isFinite() || request.amount <= 0f) {
-            return ResolvedVehicleDamageResult.rejected(ResolvedVehicleDamageRejection.INVALID_AMOUNT)
-        }
-        if (vehicle.isWreck || vehicle.health <= 0f || !vehicle.isAlive) {
-            return ResolvedVehicleDamageResult.rejected(ResolvedVehicleDamageRejection.ALREADY_DESTROYED)
-        }
-        if (!vehicle.acceptsDamageSource(request.source)) {
-            return ResolvedVehicleDamageResult.rejected(ResolvedVehicleDamageRejection.SOURCE_REJECTED)
-        }
-
-        vehicle.reportDamageDebug(request.source, request.amount)
-
-        val requestedCommitAmount = if (request.lethal) max(request.amount, vehicle.health) else request.amount
-        val commitAmount = min(requestedCommitAmount, vehicle.getMaxHealth() + 1f)
-        val healthBefore = vehicle.health
-        commit(request.source, commitAmount, request.modulePolicy, request.feedback)
-        val appliedAmount = (healthBefore - vehicle.health).coerceAtLeast(0f)
-
-        var destroyed = false
-        if (vehicle.health <= 0f && !vehicle.isWreck) {
-            vehicle.destroy(request.destructionContext ?: vehicle.defaultDestructionContext())
-            destroyed = true
-        }
-
-        return ResolvedVehicleDamageResult(
-            accepted = true,
-            appliedDamage = appliedAmount,
-            destroyed = destroyed,
-            rejection = ResolvedVehicleDamageRejection.NONE,
+    fun applyResolved(request: ResolvedVehicleDamageRequest): ResolvedVehicleDamageResult =
+        transaction.applyResolved(
+            request.source,
+            request.amount,
+            request.lethal,
+            request.modulePolicy,
+            request.feedback,
+            request.destructionContext,
         )
-    }
 
     fun computeAfterModifiers(source: DamageSource, amount: Float): Float =
         if (source.`is`(ModTags.DamageTypes.BYPASSES_VEHICLE)) amount
@@ -110,11 +110,16 @@ internal class VehicleDamageLifecycleService(
         val projectile = source.directEntity
         val suppressNativeModuleDamage = projectile is ProjectileImpactDamagePolicy &&
             projectile.suppressesNativeVehicleModuleDamage()
+        var appliedPart = OBB.Part.EMPTY
+        val leftBefore = vehicle.leftWheelHealth
+        val rightBefore = vehicle.rightWheelHealth
         if (modulePolicy == ResolvedVehicleModulePolicy.APPLY_NATIVE &&
             !suppressNativeModuleDamage && projectile is Projectile
         ) {
             val accessor = OBBHitter.getInstance(projectile)
-            val part = accessor.`sbw$getCurrentHitPart`()
+            val part = accessor.`sbw$getProjectileContact`()?.partFor(
+                vehicle.uuid, vehicle.level().gameTime, source.`is`(DamageTypeTags.IS_EXPLOSION))
+            appliedPart = part ?: OBB.Part.EMPTY
 
             if (part != null) {
                 when (part) {
@@ -132,11 +137,15 @@ internal class VehicleDamageLifecycleService(
         vehicle.lastDamageStamp = vehicle.level().gameTime
         val healthBefore = vehicle.health
         vehicle.onHurt(amount, source.entity, feedback)
+        com.atsuishio.superbwarfare.api.vehicle.render.FarVehicleSimulationPolicy.wakeAfterDamage(vehicle, amount)
         if (EliteDiagnostics.isEnabled(vehicle.level())) {
             EliteDiagnostics.record(vehicle, "damage", "hull_commit",
                 "source", source.msgId, "owner", source.entity?.uuid,
                 "direct_entity", source.directEntity?.uuid, "requested_damage", amount,
                 "health_before", healthBefore, "health_after", vehicle.health,
+                "contact_part", appliedPart, "left_track_before", leftBefore,
+                "left_track_after", vehicle.leftWheelHealth, "right_track_before", rightBefore,
+                "right_track_after", vehicle.rightWheelHealth,
                 "module_policy", modulePolicy, "native_modules_suppressed", suppressNativeModuleDamage)
         }
     }

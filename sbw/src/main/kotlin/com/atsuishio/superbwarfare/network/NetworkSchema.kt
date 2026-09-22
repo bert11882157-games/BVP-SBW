@@ -34,6 +34,13 @@ data class PacketCodecLimits(
 )
 
 object PacketLimitProfiles {
+    @JvmField val FAR_TERRAIN = PacketCodecLimits(1024 * 1024, 2048, 256, 0, 0, 0)
+    @JvmField val FAR_TERRAIN_CONTROL = PacketCodecLimits(32 * 1024, 2048, 256, 0, 0, 0)
+    @JvmField val AIRCRAFT_REQUEST = PacketCodecLimits(16 * 1024, 32, 4096, 0, 0, 0)
+    @JvmField val AIRCRAFT_STATE = PacketCodecLimits(256 * 1024, 32, 65536, 0, 0, 0)
+    @JvmField
+    val FAR_RENDER = PacketCodecLimits(256 * 1024, 256, 8192, 0, 0, 0)
+
     @JvmField
     val TINY = PacketCodecLimits(8 * 1024, 64, 256, 0, 0, 0)
 
@@ -76,8 +83,8 @@ data class RegisteredPacketSchema(
  * duplicate types, direction mismatches, missing bounds, or an accidental discriminator gap.
  */
 object NetworkPacketManifest {
-    const val PROTOCOL_VERSION = 15
-    const val EXPECTED_PACKET_COUNT = 70
+    const val PROTOCOL_VERSION = 36
+    const val EXPECTED_PACKET_COUNT = 81
 
     private val byId = LinkedHashMap<Int, RegisteredPacketSchema>()
     private val byType = LinkedHashMap<Class<out PacketPayload>, RegisteredPacketSchema>()

@@ -24,6 +24,10 @@ class OBBInfo {
     @SerialName("Part")
     var part: OBB.Part = OBB.Part.BODY
 
+    /** Dedicated gear volume; absent from collision only when opted-in gear is fully retracted. */
+    @SerialName("LandingGear")
+    var landingGear: Boolean = false
+
     @Transient
     @kotlinx.serialization.Transient
     private var obb: OBB? = null

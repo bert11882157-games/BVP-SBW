@@ -62,6 +62,10 @@ class VehicleActionController(
 
         if (session == null) {
             val action = VehicleActionRegistry.create(vehicle, actionId) ?: return false
+            if (action.requiresUnlockedControls) {
+                val policy = controlPolicy()
+                if (!policy.allowsMovement || !policy.allowsFire) return false
+            }
             val journal = VehicleActionTransactionJournal()
             session = Session(
                 actionId,

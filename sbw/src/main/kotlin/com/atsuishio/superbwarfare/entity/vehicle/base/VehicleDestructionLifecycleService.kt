@@ -19,9 +19,20 @@ internal class VehicleDestructionLifecycleService(
     private val vehicle: VehicleEntity,
 ) {
     var activeContext: VehicleDestructionContext? = null
+    private var farDeathPublished = false
+    private val aircraft: Boolean get() = vehicle.vehicleType == VehicleType.AIRPLANE ||
+        vehicle.vehicleType == VehicleType.HELICOPTER
+
+    private fun publishFarDeath() {
+        if (farDeathPublished || vehicle.level().isClientSide) return
+        farDeathPublished = true
+        if (aircraft) com.atsuishio.superbwarfare.api.aircraft.AircraftCombatEffects.aircraftBreakup(vehicle)
+        else com.atsuishio.superbwarfare.network.message.receive.ExplosionBurstMessage.sendFarDeath(vehicle)
+    }
 
     fun tickAfterVanilla() {
         if (vehicle.level() is ServerLevel && vehicle.health <= 0 && !vehicle.isWreck) {
+            publishFarDeath()
             // Preserve the legacy pre-dispatch wreck marker for destroy() overrides.
             vehicle.isWreck = true
             vehicle.destroy()
@@ -31,7 +42,9 @@ internal class VehicleDestructionLifecycleService(
 
         val aircraft = vehicle.vehicleType == VehicleType.AIRPLANE ||
             vehicle.vehicleType == VehicleType.HELICOPTER
-        if (aircraft && (vehicle.onGround() || vehicle.isInFluidType) && !vehicle.sympatheticDetonated) {
+        val destructiveFixedWingContact = vehicle.hasRecentFixedWingWorldContact() && vehicle.crash
+        if (aircraft && (vehicle.onGround() || vehicle.isInFluidType || destructiveFixedWingContact)
+            && !vehicle.sympatheticDetonated) {
             vehicle.sympatheticDetonated = true
             val destroyInfo = vehicle.computed().destroyInfo
             if (destroyInfo.explodePassengers) {
@@ -45,7 +58,7 @@ internal class VehicleDestructionLifecycleService(
             vehicle.ejectPassengers()
         }
 
-        if (vehicle.health <= -vehicle.getMaxHealth()) {
+        if (vehicle.health <= -vehicle.getMaxHealth() && (!aircraft || vehicle.sympatheticDetonated)) {
             vehicle.discard()
             vehicle.createCustomExplosion()
                 .radius(0f)
@@ -68,6 +81,7 @@ internal class VehicleDestructionLifecycleService(
     }
 
     fun destroy(context: VehicleDestructionContext) {
+        publishFarDeath()
         activeContext = context
         // Keep the virtual zero-argument entry in the dispatch chain for native and addon
         // overrides; the wreck bit must be visible before their first instruction.
@@ -86,6 +100,7 @@ internal class VehicleDestructionLifecycleService(
     }
 
     private fun performDestruction(context: VehicleDestructionContext) {
+        publishFarDeath()
         vehicle.isWreck = true
         val destroyInfo = vehicle.computed().destroyInfo
 
@@ -110,7 +125,7 @@ internal class VehicleDestructionLifecycleService(
             spawnTurretWreck(destroyInfo, context)
         }
 
-        if (destroyInfo.noWreck) {
+        if (destroyInfo.noWreck && !aircraft) {
             vehicle.discard()
         }
     }
@@ -166,11 +181,10 @@ internal class VehicleDestructionLifecycleService(
                 .emitFx(context.emitExplosionFx())
                 .explosionCause(context.explosionCauseId())
                 .explosionProfile(context.explosionProfileId())
+                // Vehicle destruction never edits terrain, regardless of authored/global blast settings.
+                .keepBlock()
 
             context.particlePosition()?.let(explosion::particlePosition)
-            if (!destroyInfo.explodeBlocks) {
-                explosion.keepBlock()
-            }
             explosion.explode()
         }
     }

@@ -20,32 +20,6 @@
       ]
     },
     {
-      "Part": "WheelLeft",
-      "Size": [
-        0.27084,
-        0.55015,
-        3.00465
-      ],
-      "Position": [
-        1.81972,
-        0.60939,
-        -0.2116
-      ]
-    },
-    {
-      "Part": "WheelRight",
-      "Size": [
-        0.27084,
-        0.55015,
-        3.00465
-      ],
-      "Position": [
-        -1.81972,
-        0.60939,
-        -0.2116
-      ]
-    },
-    {
       "Part": "MainEngine",
       "Size": [
         0.97334,
@@ -174,11 +148,6 @@
       "ExplosionRadius": 4,
       "RecoilTime": 42,
       "RecoilForce": 1,
-      "ShootShake": [
-        8,
-        10,
-        60
-      ],
       "Spread": 0.02,
       "ShootAnimationTime": 20,
       "Crosshair": "@VehicleRuApc",
@@ -199,7 +168,12 @@
             "Projectile": {
               "Type": "superbwarfare:cannon_shell",
               "Profile": "berts_vehicle_pack:tiger_ii/cannon/ammo_00_pzgr39_43_apcbc"
-            }
+            },
+            "ShootShake": [
+              8,
+              10,
+              75.6
+            ]
           }
         }
       ],
@@ -212,10 +186,11 @@
         "Fire3P": "berts_vehicle_pack:tap_shoot_88mmlongde",
         "Fire3PFar": "berts_vehicle_pack:tap_shoot_88mmlongde",
         "Fire3PVeryFar": "berts_vehicle_pack:tap_shoot_88mmlongde",
-        "VehicleReload": "superbwarfare:t_90a_reload",
         "Change": "superbwarfare:into_cannon",
+        "VehicleReload": "berts_vehicle_pack:m1_abrams_elite_m68a1_reload",
+        "VehicleReloadClipDurationTicks": 86,
         "CancellableSounds": [
-          "superbwarfare:t_90a_reload"
+          "berts_vehicle_pack:m1_abrams_elite_m68a1_reload"
         ]
       },
       "SoundRadius": 32,
@@ -260,7 +235,12 @@
         "ProjectileType": "superbwarfare:cannon_shell",
         "ProjectileProfile": "berts_vehicle_pack:tiger_ii/cannon/default",
         "ProjectileLife": 50
-      }
+      },
+      "ShootShake": [
+        8,
+        10,
+        75.6
+      ]
     },
     "MachineGun": {
       "DefaultFireMode": "Auto",
@@ -302,17 +282,17 @@
                 }
               ]
             },
-            "ShootShake": [
-              8,
-              10,
-              12
-            ],
             "NominalBallistics": {
               "Supported": true,
               "ProjectileType": "superbwarfare:projectile",
               "ProjectileProfile": "berts_vehicle_pack:tiger_ii/machinegun/ammo_00_mg34_ap",
               "ProjectileLife": 400
-            }
+            },
+            "ShootShake": [
+              8,
+              10,
+              12
+            ]
           }
         }
       ],
@@ -335,18 +315,18 @@
         "Transform": "Barrel",
         "Positions": [
           [
-            0.06096,
+            -0.30766,
             0.03049,
-            -4.69458
+            -0.33778
           ]
         ],
         "Directions": [
           "Barrel"
         ],
         "ViewPosition": [
-          0.05145,
+          -0.25964,
           0.02573,
-          -3.96189
+          -0.28506
         ],
         "MuzzleAttachments": [
           "coax_muzzle"
@@ -383,12 +363,6 @@
       "SoundRadius": 12,
       "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/gun_7_62mm.png",
       "HeatPerShoot": 0,
-      "NominalBallistics": {
-        "Supported": true,
-        "ProjectileType": "superbwarfare:projectile",
-        "ProjectileProfile": "berts_vehicle_pack:tiger_ii/machinegun/default",
-        "ProjectileLife": 400
-      },
       "ProjectileBeltAmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
@@ -412,6 +386,12 @@
           }
         }
       ],
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "superbwarfare:projectile",
+        "ProjectileProfile": "berts_vehicle_pack:tiger_ii/machinegun/default",
+        "ProjectileLife": 400
+      },
       "ShootShake": [
         8,
         10,
@@ -640,9 +620,9 @@
     "coax_muzzle": {
       "Parent": "Barrel",
       "Position": [
-        0.06096,
+        -0.30766,
         0.03049,
-        4.69458
+        0.33778
       ],
       "Direction": [
         0,

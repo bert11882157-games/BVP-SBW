@@ -11,8 +11,7 @@ import java.util.concurrent.ThreadLocalRandom;
 /** A BVP-owned explosion animation that never replaces Minecraft's global particle atlas. */
 @OnlyIn(Dist.CLIENT)
 public final class BvpExplosionParticle extends BvpFullBrightAnimatedParticle {
-    /** A crisp impact flash; sustained smoke is a separate effect and is not owned here. */
-    /** Presentation-only flash: half the previous 10-tick lifetime; gameplay is untouched. */
+    /** Brief presentation-only impact flash; sustained smoke is a separate effect. */
     private static final int LIFETIME_TICKS = 5;
     private static final float MIN_SIZE = 1.5F;
     private static final float SIZE_VARIATION = 0.5F;

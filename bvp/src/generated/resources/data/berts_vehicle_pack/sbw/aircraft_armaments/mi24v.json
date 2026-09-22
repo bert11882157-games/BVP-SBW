@@ -1,0 +1,19 @@
+{
+  "Schema": 1,
+  "Name": "Mi-24V Hind",
+  "BuiltInWeapons": [
+    "Cannon"
+  ],
+  "SuspendedWeapons": [
+    "B13LRocket",
+    "S8KORocket",
+    "PilotMissile",
+    "PassengerMissile"
+  ],
+  "Pairs": [],
+  "StoreGroups": {
+    "berts_vehicle_pack:modeled_store/mi24v/suspended_equipment": [
+      "suspended_legacy_hull"
+    ]
+  }
+}

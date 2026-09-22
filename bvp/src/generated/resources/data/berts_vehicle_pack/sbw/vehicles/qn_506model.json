@@ -1,0 +1,1539 @@
+{
+  "ID": "berts_vehicle_pack:qn_506model",
+  "MaxHealth": 150,
+  "MaxEnergy": 10000000,
+  "AllowFreeCam": true,
+  "LightlyArmored": true,
+  "EngineType": "Track",
+  "EngineInfo": {
+    "Buoyancy": 0,
+    "EnergyCostRate": 120,
+    "WheelRotSpeed": 1.25,
+    "WheelDifferential": 0.75,
+    "TrackRotSpeed": 1.7,
+    "TrackDifferential": 0.6,
+    "MaxForwardSpeedRate": 0.6,
+    "MaxBackwardSpeedRate": 0.084,
+    "Increment": 0.0066,
+    "Decrement": 0.00917,
+    "SteeringSpeed": 0.065,
+    "EngineSoundVolume": 0.85
+  },
+  "TurretPos": [
+    0,
+    2.38039625,
+    0.18592875
+  ],
+  "BarrelPos": [
+    0.1239525,
+    0.34086937,
+    0.52679813
+  ],
+  "TurretControllerIndex": 0,
+  "TurretTurnSpeed": [
+    30,
+    30
+  ],
+  "TurretPitchRange": [
+    -5,
+    60
+  ],
+  "UpStep": 1.5,
+  "RotateOffsetHeight": 0,
+  "Mass": 30,
+  "TerrainCompat": [
+    [
+      1.37278,
+      0,
+      2.04522
+    ],
+    [
+      1.37278,
+      0,
+      0.92964
+    ],
+    [
+      1.37278,
+      0,
+      -0.01549
+    ],
+    [
+      1.37278,
+      0,
+      -0.96063
+    ],
+    [
+      1.37278,
+      0,
+      -1.90577
+    ],
+    [
+      -1.36813,
+      0,
+      2.04522
+    ],
+    [
+      -1.36813,
+      0,
+      0.92964
+    ],
+    [
+      -1.36813,
+      0,
+      -0.01549
+    ],
+    [
+      -1.36813,
+      0,
+      -0.96063
+    ],
+    [
+      -1.36813,
+      0,
+      -1.90577
+    ]
+  ],
+  "OBB": [
+    {
+      "Size": [
+        1.33093997,
+        0.74836322,
+        3.09106547
+      ],
+      "Position": [
+        0.32382563,
+        1.35314,
+        0.11620563
+      ]
+    },
+    {
+      "Part": "MainEngine",
+      "Transform": "Vehicle",
+      "Rotation": "Vehicle",
+      "Position": [
+        0,
+        1.2555275,
+        -2.231145
+      ],
+      "Size": [
+        0.793296,
+        0.446229,
+        0.594972
+      ]
+    },
+    {
+      "Part": "Turret",
+      "Transform": "Barrel",
+      "Rotation": "Barrel",
+      "Position": [
+        -0.09296437,
+        0,
+        0
+      ],
+      "Size": [
+        0.10845844,
+        0.03098812,
+        0.06197625
+      ]
+    }
+  ],
+  "Attachments": {
+    "fitted_pod_L": {
+      "Parent": "Turret",
+      "Position": [
+        0.91414969,
+        0.35016581,
+        -0.00309881
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ],
+      "RotationChannel": "TURRET_PITCH"
+    },
+    "fitted_pod_R": {
+      "Parent": "Turret",
+      "Position": [
+        -0.91414969,
+        0.35016581,
+        -0.00309881
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ],
+      "RotationChannel": "TURRET_PITCH"
+    },
+    "fitted_sight_pitch": {
+      "Parent": "Turret",
+      "Position": [
+        0.43383375,
+        0.68793638,
+        0.21691687
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ],
+      "RotationChannel": "TURRET_PITCH"
+    },
+    "gunnerCamera": {
+      "Parent": "fitted_sight_pitch",
+      "Position": [
+        0.03408694,
+        0.02169169,
+        0.11651535
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "driverCamera": {
+      "Parent": "Vehicle",
+      "Position": [
+        -0.54539125,
+        1.85154625,
+        2.09131625
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "driverSeat": {
+      "Parent": "Vehicle",
+      "Position": [
+        -0.6197625,
+        0.94564625,
+        1.98324
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "gunnerSeat": {
+      "Parent": "Turret",
+      "Position": [
+        0.49581,
+        -1.00091644,
+        0.30988125
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "turretPivot": {
+      "Parent": "Vehicle",
+      "Position": [
+        0,
+        2.38039625,
+        0.18592875
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "barrelPivot": {
+      "Parent": "Turret",
+      "Position": [
+        0.1239525,
+        0.34086937,
+        0.52679813
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "mainMuzzle": {
+      "Parent": "Barrel",
+      "Position": [
+        -0.11775487,
+        -0.01239525,
+        2.26213313
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "coaxMuzzle": {
+      "Parent": "Barrel",
+      "Position": [
+        0.07127269,
+        -0.01053596,
+        0.63835538
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "reserved_QN502CDD_pod_L_1": {
+      "Parent": "fitted_pod_L",
+      "Position": [
+        0.18592875,
+        -0.15494062,
+        0.69723281
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "reserved_QN502CDD_pod_L_2": {
+      "Parent": "fitted_pod_L",
+      "Position": [
+        0.45862425,
+        -0.15494062,
+        0.69723281
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "reserved_QN201DD_pod_L_3": {
+      "Parent": "fitted_pod_L",
+      "Position": [
+        0.099162,
+        0.17043469,
+        0.694134
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "reserved_QN201DD_pod_L_4": {
+      "Parent": "fitted_pod_L",
+      "Position": [
+        0.099162,
+        0.04028456,
+        0.694134
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "reserved_QN201DD_pod_L_5": {
+      "Parent": "fitted_pod_L",
+      "Position": [
+        0.21071925,
+        0.04028456,
+        0.694134
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "reserved_QN201DD_pod_L_6": {
+      "Parent": "fitted_pod_L",
+      "Position": [
+        0.21071925,
+        0.17043469,
+        0.694134
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "reserved_QN201DD_pod_L_7": {
+      "Parent": "fitted_pod_L",
+      "Position": [
+        0.31917769,
+        0.04028456,
+        0.694134
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "reserved_QN201DD_pod_L_8": {
+      "Parent": "fitted_pod_L",
+      "Position": [
+        0.31917769,
+        0.17043469,
+        0.694134
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "reserved_QN201DD_pod_L_9": {
+      "Parent": "fitted_pod_L",
+      "Position": [
+        0.43073494,
+        0.04028456,
+        0.694134
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "reserved_QN201DD_pod_L_10": {
+      "Parent": "fitted_pod_L",
+      "Position": [
+        0.43073494,
+        0.17043469,
+        0.694134
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "reserved_QN201DD_pod_L_11": {
+      "Parent": "fitted_pod_L",
+      "Position": [
+        0.54229219,
+        0.04028456,
+        0.694134
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "reserved_QN201DD_pod_L_12": {
+      "Parent": "fitted_pod_L",
+      "Position": [
+        0.54229219,
+        0.17043469,
+        0.694134
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "reserved_QN502CDD_pod_R_1": {
+      "Parent": "fitted_pod_R",
+      "Position": [
+        -0.45552544,
+        -0.15494062,
+        0.69723281
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "reserved_QN201DD_pod_R_2": {
+      "Parent": "fitted_pod_R",
+      "Position": [
+        -0.54229219,
+        0.04028456,
+        0.694134
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "reserved_QN201DD_pod_R_3": {
+      "Parent": "fitted_pod_R",
+      "Position": [
+        -0.43073494,
+        0.04028456,
+        0.694134
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "reserved_QN201DD_pod_R_4": {
+      "Parent": "fitted_pod_R",
+      "Position": [
+        -0.54229219,
+        0.17043469,
+        0.694134
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "reserved_QN201DD_pod_R_5": {
+      "Parent": "fitted_pod_R",
+      "Position": [
+        -0.43073494,
+        0.17043469,
+        0.694134
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "reserved_QN201DD_pod_R_6": {
+      "Parent": "fitted_pod_R",
+      "Position": [
+        -0.3222765,
+        0.17043469,
+        0.694134
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "reserved_QN201DD_pod_R_7": {
+      "Parent": "fitted_pod_R",
+      "Position": [
+        -0.21071925,
+        0.17043469,
+        0.694134
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "reserved_QN201DD_pod_R_8": {
+      "Parent": "fitted_pod_R",
+      "Position": [
+        -0.099162,
+        0.17043469,
+        0.694134
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "reserved_QN201DD_pod_R_9": {
+      "Parent": "fitted_pod_R",
+      "Position": [
+        -0.099162,
+        0.04028456,
+        0.694134
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "reserved_QN201DD_pod_R_10": {
+      "Parent": "fitted_pod_R",
+      "Position": [
+        -0.21071925,
+        0.04028456,
+        0.694134
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "reserved_QN201DD_pod_R_11": {
+      "Parent": "fitted_pod_R",
+      "Position": [
+        -0.3222765,
+        0.04028456,
+        0.694134
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "reserved_QN502CDD_pod_R_12": {
+      "Parent": "fitted_pod_R",
+      "Position": [
+        -0.18282994,
+        -0.15494062,
+        0.69723281
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    }
+  },
+  "Seats": [
+    {
+      "HidePassenger": true,
+      "IsEnclosed": true,
+      "Transform": "Turret",
+      "Position": [
+        0.49581,
+        -1.00091644,
+        0.30988125
+      ],
+      "BodyAttachment": "Turret",
+      "Weapons": [
+        "Cannon",
+        "MainMachineGun",
+        "Missile",
+        "MicroMissile"
+      ],
+      "CanRotateHead": false,
+      "CameraPos": {
+        "Transform": "fitted_sight_pitch",
+        "Position": [
+          0,
+          0,
+          0
+        ],
+        "ZoomPosition": [
+          0,
+          0,
+          0
+        ],
+        "Direction": [
+          0,
+          0,
+          1
+        ],
+        "UseFixedCameraPos": true,
+        "EyeAttachment": "gunnerCamera",
+        "ZoomEyeAttachment": "gunnerCamera",
+        "DirectionAttachment": "mainMuzzle",
+        "ZoomDirectionAttachment": "mainMuzzle"
+      },
+      "MinPitch": -5,
+      "MaxPitch": 60
+    }
+  ],
+  "Weapons": {
+    "Cannon": {
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "DefaultZoom": 3,
+      "RPM": 330,
+      "Magazine": 100,
+      "NormalReloadTime": 20,
+      "EmptyReloadTime": 20,
+      "AmmoCostPerShoot": 1,
+      "Velocity": 59.5,
+      "Damage": 65,
+      "ExplosionDamage": 0,
+      "ExplosionRadius": 0,
+      "HeatPerShoot": 8,
+      "NaturalCooldown": 1,
+      "RecoilTime": 31,
+      "RecoilForce": 0.62,
+      "ShootAnimationTime": 3,
+      "Spread": 0.45,
+      "ProjectileLife": 40,
+      "Crosshair": "@VehicleRuApc",
+      "CrosshairColor": "0x66FF00",
+      "Name": "weapon.berts_vehicle_pack.qn_506model_cannon",
+      "Projectile": {
+        "Type": "superbwarfare:small_cannon_shell",
+        "Profile": "berts_vehicle_pack:qn_506model/cannon/default"
+      },
+      "SoundInfo": {
+        "Fire1P": "superbwarfare:bmp_2_cannon_fire_1p",
+        "Fire3P": "superbwarfare:bmp_2_cannon_fire_3p",
+        "Fire3PFar": "superbwarfare:mi_28_cannon_far",
+        "Fire3PVeryFar": "superbwarfare:mi_28_cannon_veryfar",
+        "Change": "superbwarfare:into_missile"
+      },
+      "SoundRadius": 24,
+      "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/cannon_30mm_ap.png",
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_gs",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:qn_506model/cannon/ammo_00_dtc10_30_apfsds"
+            },
+            "ShellType": "AP",
+            "Velocity": 59.5,
+            "ApDurability": 102,
+            "Damage": 65,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "APFSDS Belt",
+            "ProjectileBelt": {
+              "Name": "APFSDS Belt",
+              "Rounds": [
+                {
+                  "Shots": 3,
+                  "Round": "dtc10_30_apfsds",
+                  "Ammo": "superbwarfare:small_shell_gs",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "ShootShake": [
+              8,
+              10,
+              12
+            ],
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:qn_506model/cannon/ammo_00_dtc10_30_apfsds",
+              "ProjectileLife": 40
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_he",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:qn_506model/cannon/ammo_01_dty02_30_hefi"
+            },
+            "ShellType": "HE",
+            "Velocity": 48,
+            "ApDurability": 8,
+            "Damage": 250,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 5,
+            "Name": "HE Belt",
+            "ProjectileBelt": {
+              "Name": "HE Belt",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "dty02_30_hefi",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "dtc04_30_apds",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 2,
+                  "Round": "dty02_30_hefi",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "ShootShake": [
+              8,
+              10,
+              12
+            ],
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:qn_506model/cannon/ammo_01_dty02_30_hefi",
+              "ProjectileLife": 40
+            }
+          }
+        }
+      ],
+      "ProjectileAmount": 1,
+      "ProjectileBeltAmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_ap",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:qn_506model/cannon/belt_ammo_00_dtc04_30_apds"
+            },
+            "ShellType": "AP",
+            "Velocity": 59,
+            "ApDurability": 85,
+            "Damage": 65,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "APDS",
+            "ShootShake": [
+              8,
+              10,
+              12
+            ]
+          }
+        }
+      ],
+      "ShellType": "AP",
+      "ApDurability": 102,
+      "ShootShake": [
+        8,
+        10,
+        12
+      ],
+      "ShootPos": {
+        "Transform": "Vehicle",
+        "Positions": [
+          [
+            0.0061975,
+            2.70887062,
+            2.97486
+          ]
+        ],
+        "Directions": [
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "ViewPosition": [
+          0.0061975,
+          2.70887062,
+          2.97486
+        ],
+        "MuzzleAttachments": [
+          "mainMuzzle"
+        ],
+        "MuzzleDirectionAttachments": [
+          "mainMuzzle"
+        ],
+        "EffectAttachments": [
+          "mainMuzzle"
+        ],
+        "EffectDirectionAttachments": [
+          "mainMuzzle"
+        ]
+      },
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "superbwarfare:small_cannon_shell",
+        "ProjectileProfile": "berts_vehicle_pack:qn_506model/cannon/default",
+        "ProjectileLife": 40
+      }
+    },
+    "MainMachineGun": {
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "DefaultZoom": 3,
+      "NaturalCooldown": 1,
+      "CrosshairColor": "0xFFC700",
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_ap",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:projectile",
+              "Profile": "berts_vehicle_pack:qn_506model/mainmachinegun/ammo_00_type86_ap_i"
+            },
+            "ShellType": "AP",
+            "Velocity": 40.875,
+            "ApDurability": 13,
+            "Damage": 9.5,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "AP Belt",
+            "ProjectileBelt": {
+              "Name": "AP Belt",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "type86_ap_i",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "NONE",
+                  "DisplayLabel": "AP-I"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "type86_api_t",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "GREEN",
+                  "DisplayLabel": "API-T"
+                }
+              ]
+            },
+            "ShootShake": [
+              0,
+              0,
+              0
+            ],
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:projectile",
+              "ProjectileProfile": "berts_vehicle_pack:qn_506model/mainmachinegun/ammo_00_type86_ap_i",
+              "ProjectileLife": 400
+            }
+          }
+        }
+      ],
+      "Projectile": {
+        "Type": "superbwarfare:projectile",
+        "Profile": "berts_vehicle_pack:qn_506model/mainmachinegun/default"
+      },
+      "Magazine": 250,
+      "NormalReloadTime": 160,
+      "EmptyReloadTime": 160,
+      "RPM": 700,
+      "Damage": 9.5,
+      "BypassesArmor": 0.3,
+      "Velocity": 40.875,
+      "ShootAnimationTime": 1,
+      "RecoilTime": 20,
+      "RecoilForce": 0.08,
+      "Spread": 0.5,
+      "Crosshair": "@VehicleCommonGun",
+      "Name": "weapon.berts_vehicle_pack.qn_506model_mainmachinegun",
+      "SoundInfo": {
+        "Fire1P": "superbwarfare:coax_fire_1p",
+        "Fire3P": "superbwarfare:m_60_fire_3p",
+        "Fire3PFar": "superbwarfare:m_60_far",
+        "Fire3PVeryFar": "superbwarfare:m_60_veryfar",
+        "Change": "superbwarfare:into_cannon"
+      },
+      "SoundRadius": 12,
+      "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/gun_7_62mm.png",
+      "HeatPerShoot": 0,
+      "ProjectileAmount": 1,
+      "AmmoCostPerShoot": 1,
+      "ProjectileBeltAmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_he",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:projectile",
+              "Profile": "berts_vehicle_pack:qn_506model/mainmachinegun/belt_ammo_00_type86_api_t"
+            },
+            "ShellType": "AP",
+            "Velocity": 43.25,
+            "ApDurability": 9,
+            "Damage": 9.5,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "API_T",
+            "ShootShake": [
+              0,
+              0,
+              0
+            ]
+          }
+        }
+      ],
+      "ShellType": "AP",
+      "ApDurability": 13,
+      "ExplosionDamage": 0,
+      "ExplosionRadius": 0,
+      "ShootShake": [
+        0,
+        0,
+        0
+      ],
+      "ShootPos": {
+        "Transform": "Vehicle",
+        "Positions": [
+          [
+            0.195225,
+            2.71073,
+            1.3510825
+          ]
+        ],
+        "Directions": [
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "ViewPosition": [
+          0.195225,
+          2.71073,
+          1.3510825
+        ],
+        "MuzzleAttachments": [
+          "coaxMuzzle"
+        ],
+        "MuzzleDirectionAttachments": [
+          "coaxMuzzle"
+        ],
+        "EffectAttachments": [
+          "coaxMuzzle"
+        ],
+        "EffectDirectionAttachments": [
+          "coaxMuzzle"
+        ]
+      },
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "superbwarfare:projectile",
+        "ProjectileProfile": "berts_vehicle_pack:qn_506model/mainmachinegun/default",
+        "ProjectileLife": 400
+      }
+    },
+    "Missile": {
+      "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_atgm.png",
+      "DefaultFireMode": "Semi",
+      "AvailableFireModes": "Semi",
+      "Projectile": {
+        "Type": "superbwarfare:wire_guide_missile",
+        "Profile": "berts_vehicle_pack:qn_506model/missile/default"
+      },
+      "DefaultZoom": 3,
+      "Magazine": 4,
+      "NormalReloadTime": 200,
+      "EmptyReloadTime": 200,
+      "Velocity": 3,
+      "ProjectileLife": 180,
+      "Gravity": 0,
+      "ApDurability": 900,
+      "Damage": 789,
+      "ExplosionDamage": 0,
+      "ExplosionRadius": 3.3,
+      "RecoilTime": 18,
+      "RecoilForce": 0.05,
+      "Spread": 0,
+      "ShootAnimationTime": 20,
+      "Crosshair": "@VehicleCommonMissile",
+      "CrosshairColor": "0x66FF00",
+      "Name": "weapon.berts_vehicle_pack.qn_506model_missile",
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:medium_anti_ground_missile",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:wire_guide_missile",
+              "Profile": "berts_vehicle_pack:qn_506model/missile/ammo_00_qn502cdd_atgm"
+            },
+            "ShootShake": [
+              8,
+              10,
+              210
+            ],
+            "NominalBallistics": {
+              "Supported": false,
+              "ProjectileType": "superbwarfare:wire_guide_missile",
+              "ProjectileProfile": "berts_vehicle_pack:qn_506model/missile/ammo_00_qn502cdd_atgm"
+            }
+          }
+        }
+      ],
+      "SoundInfo": {
+        "Fire1P": "berts_vehicle_pack:atgm_tube_launch",
+        "Fire3P": "berts_vehicle_pack:atgm_tube_launch",
+        "VehicleReload3p": "superbwarfare:medium_missile_reload",
+        "VehicleReloadSoundTime": 28,
+        "Change": "superbwarfare:into_missile",
+        "Fire3PFar": "berts_vehicle_pack:atgm_tube_launch",
+        "Fire3PVeryFar": "berts_vehicle_pack:atgm_tube_launch",
+        "Fire1PGain": 0.7,
+        "Fire3PGain": 0.7,
+        "Fire3PFarGain": 0.7,
+        "Fire3PVeryFarGain": 0.7
+      },
+      "SoundRadius": 24,
+      "RPM": 60,
+      "ProjectileAmount": 1,
+      "AmmoCostPerShoot": 1,
+      "ShootShake": [
+        8,
+        10,
+        210
+      ],
+      "ShootPos": {
+        "Transform": "Vehicle",
+        "Positions": [
+          [
+            1.10007813,
+            2.57562187,
+            0.8800625
+          ],
+          [
+            1.37277375,
+            2.57562187,
+            0.8800625
+          ],
+          [
+            -1.369675,
+            2.57562187,
+            0.8800625
+          ],
+          [
+            -1.09697938,
+            2.57562187,
+            0.8800625
+          ]
+        ],
+        "Directions": [
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "ViewPosition": [
+          1.10007813,
+          2.57562187,
+          0.8800625
+        ],
+        "MuzzleAttachments": [
+          "reserved_QN502CDD_pod_L_1",
+          "reserved_QN502CDD_pod_L_2",
+          "reserved_QN502CDD_pod_R_1",
+          "reserved_QN502CDD_pod_R_12"
+        ],
+        "MuzzleDirectionAttachments": [
+          "reserved_QN502CDD_pod_L_1",
+          "reserved_QN502CDD_pod_L_2",
+          "reserved_QN502CDD_pod_R_1",
+          "reserved_QN502CDD_pod_R_12"
+        ],
+        "EffectAttachments": [
+          "reserved_QN502CDD_pod_L_1",
+          "reserved_QN502CDD_pod_L_2",
+          "reserved_QN502CDD_pod_R_1",
+          "reserved_QN502CDD_pod_R_12"
+        ],
+        "EffectDirectionAttachments": [
+          "reserved_QN502CDD_pod_L_1",
+          "reserved_QN502CDD_pod_L_2",
+          "reserved_QN502CDD_pod_R_1",
+          "reserved_QN502CDD_pod_R_12"
+        ]
+      },
+      "NominalBallistics": {
+        "Supported": false,
+        "ProjectileType": "superbwarfare:wire_guide_missile",
+        "ProjectileProfile": "berts_vehicle_pack:qn_506model/missile/default"
+      }
+    },
+    "MicroMissile": {
+      "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_atgm.png",
+      "DefaultFireMode": "Semi",
+      "AvailableFireModes": "Semi",
+      "Projectile": {
+        "Type": "superbwarfare:wire_guide_missile",
+        "Profile": "berts_vehicle_pack:qn_506model/micromissile/default"
+      },
+      "DefaultZoom": 3,
+      "Magazine": 20,
+      "NormalReloadTime": 200,
+      "EmptyReloadTime": 200,
+      "Velocity": 3,
+      "ProjectileLife": 180,
+      "Gravity": 0,
+      "ApDurability": 200,
+      "Damage": 276,
+      "ExplosionDamage": 0,
+      "ExplosionRadius": 2.7,
+      "RecoilTime": 18,
+      "RecoilForce": 0.05,
+      "Spread": 0,
+      "ShootAnimationTime": 20,
+      "Crosshair": "@VehicleCommonMissile",
+      "CrosshairColor": "0x66FF00",
+      "Name": "weapon.berts_vehicle_pack.qn_506model_micromissile",
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:medium_anti_ground_missile",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:wire_guide_missile",
+              "Profile": "berts_vehicle_pack:qn_506model/micromissile/ammo_00_qn201dd_atgm"
+            },
+            "ShootShake": [
+              8,
+              10,
+              54
+            ],
+            "NominalBallistics": {
+              "Supported": false,
+              "ProjectileType": "superbwarfare:wire_guide_missile",
+              "ProjectileProfile": "berts_vehicle_pack:qn_506model/micromissile/ammo_00_qn201dd_atgm"
+            }
+          }
+        }
+      ],
+      "SoundInfo": {
+        "Fire1P": "berts_vehicle_pack:qn506_small_atgm_fire",
+        "Fire3P": "berts_vehicle_pack:qn506_small_atgm_fire",
+        "VehicleReload3p": "superbwarfare:medium_missile_reload",
+        "VehicleReloadSoundTime": 28,
+        "Change": "superbwarfare:into_missile",
+        "Fire3PFar": "berts_vehicle_pack:qn506_small_atgm_fire",
+        "Fire3PVeryFar": "berts_vehicle_pack:qn506_small_atgm_fire",
+        "Fire1PGain": 0.7,
+        "Fire3PGain": 0.7,
+        "Fire3PFarGain": 0.7,
+        "Fire3PVeryFarGain": 0.7
+      },
+      "SoundRadius": 24,
+      "RPM": 60,
+      "ProjectileAmount": 1,
+      "AmmoCostPerShoot": 1,
+      "ShootShake": [
+        8,
+        10,
+        54
+      ],
+      "ShootPos": {
+        "Transform": "Vehicle",
+        "Positions": [
+          [
+            1.01331188,
+            2.90099688,
+            0.87696375
+          ],
+          [
+            1.01331188,
+            2.77084688,
+            0.87696375
+          ],
+          [
+            1.12486875,
+            2.77084688,
+            0.87696375
+          ],
+          [
+            1.12486875,
+            2.90099688,
+            0.87696375
+          ],
+          [
+            1.2333275,
+            2.77084688,
+            0.87696375
+          ],
+          [
+            1.2333275,
+            2.90099688,
+            0.87696375
+          ],
+          [
+            1.34488437,
+            2.77084688,
+            0.87696375
+          ],
+          [
+            1.34488437,
+            2.90099688,
+            0.87696375
+          ],
+          [
+            1.45644188,
+            2.77084688,
+            0.87696375
+          ],
+          [
+            1.45644188,
+            2.90099688,
+            0.87696375
+          ],
+          [
+            -1.45644188,
+            2.77084688,
+            0.87696375
+          ],
+          [
+            -1.34488437,
+            2.77084688,
+            0.87696375
+          ],
+          [
+            -1.45644188,
+            2.90099688,
+            0.87696375
+          ],
+          [
+            -1.34488437,
+            2.90099688,
+            0.87696375
+          ],
+          [
+            -1.23642625,
+            2.90099688,
+            0.87696375
+          ],
+          [
+            -1.12486875,
+            2.90099688,
+            0.87696375
+          ],
+          [
+            -1.01331188,
+            2.90099688,
+            0.87696375
+          ],
+          [
+            -1.01331188,
+            2.77084688,
+            0.87696375
+          ],
+          [
+            -1.12486875,
+            2.77084688,
+            0.87696375
+          ],
+          [
+            -1.23642625,
+            2.77084688,
+            0.87696375
+          ]
+        ],
+        "Directions": [
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "ViewPosition": [
+          1.01331188,
+          2.90099688,
+          0.87696375
+        ],
+        "MuzzleAttachments": [
+          "reserved_QN201DD_pod_L_3",
+          "reserved_QN201DD_pod_L_4",
+          "reserved_QN201DD_pod_L_5",
+          "reserved_QN201DD_pod_L_6",
+          "reserved_QN201DD_pod_L_7",
+          "reserved_QN201DD_pod_L_8",
+          "reserved_QN201DD_pod_L_9",
+          "reserved_QN201DD_pod_L_10",
+          "reserved_QN201DD_pod_L_11",
+          "reserved_QN201DD_pod_L_12",
+          "reserved_QN201DD_pod_R_2",
+          "reserved_QN201DD_pod_R_3",
+          "reserved_QN201DD_pod_R_4",
+          "reserved_QN201DD_pod_R_5",
+          "reserved_QN201DD_pod_R_6",
+          "reserved_QN201DD_pod_R_7",
+          "reserved_QN201DD_pod_R_8",
+          "reserved_QN201DD_pod_R_9",
+          "reserved_QN201DD_pod_R_10",
+          "reserved_QN201DD_pod_R_11"
+        ],
+        "MuzzleDirectionAttachments": [
+          "reserved_QN201DD_pod_L_3",
+          "reserved_QN201DD_pod_L_4",
+          "reserved_QN201DD_pod_L_5",
+          "reserved_QN201DD_pod_L_6",
+          "reserved_QN201DD_pod_L_7",
+          "reserved_QN201DD_pod_L_8",
+          "reserved_QN201DD_pod_L_9",
+          "reserved_QN201DD_pod_L_10",
+          "reserved_QN201DD_pod_L_11",
+          "reserved_QN201DD_pod_L_12",
+          "reserved_QN201DD_pod_R_2",
+          "reserved_QN201DD_pod_R_3",
+          "reserved_QN201DD_pod_R_4",
+          "reserved_QN201DD_pod_R_5",
+          "reserved_QN201DD_pod_R_6",
+          "reserved_QN201DD_pod_R_7",
+          "reserved_QN201DD_pod_R_8",
+          "reserved_QN201DD_pod_R_9",
+          "reserved_QN201DD_pod_R_10",
+          "reserved_QN201DD_pod_R_11"
+        ],
+        "EffectAttachments": [
+          "reserved_QN201DD_pod_L_3",
+          "reserved_QN201DD_pod_L_4",
+          "reserved_QN201DD_pod_L_5",
+          "reserved_QN201DD_pod_L_6",
+          "reserved_QN201DD_pod_L_7",
+          "reserved_QN201DD_pod_L_8",
+          "reserved_QN201DD_pod_L_9",
+          "reserved_QN201DD_pod_L_10",
+          "reserved_QN201DD_pod_L_11",
+          "reserved_QN201DD_pod_L_12",
+          "reserved_QN201DD_pod_R_2",
+          "reserved_QN201DD_pod_R_3",
+          "reserved_QN201DD_pod_R_4",
+          "reserved_QN201DD_pod_R_5",
+          "reserved_QN201DD_pod_R_6",
+          "reserved_QN201DD_pod_R_7",
+          "reserved_QN201DD_pod_R_8",
+          "reserved_QN201DD_pod_R_9",
+          "reserved_QN201DD_pod_R_10",
+          "reserved_QN201DD_pod_R_11"
+        ],
+        "EffectDirectionAttachments": [
+          "reserved_QN201DD_pod_L_3",
+          "reserved_QN201DD_pod_L_4",
+          "reserved_QN201DD_pod_L_5",
+          "reserved_QN201DD_pod_L_6",
+          "reserved_QN201DD_pod_L_7",
+          "reserved_QN201DD_pod_L_8",
+          "reserved_QN201DD_pod_L_9",
+          "reserved_QN201DD_pod_L_10",
+          "reserved_QN201DD_pod_L_11",
+          "reserved_QN201DD_pod_L_12",
+          "reserved_QN201DD_pod_R_2",
+          "reserved_QN201DD_pod_R_3",
+          "reserved_QN201DD_pod_R_4",
+          "reserved_QN201DD_pod_R_5",
+          "reserved_QN201DD_pod_R_6",
+          "reserved_QN201DD_pod_R_7",
+          "reserved_QN201DD_pod_R_8",
+          "reserved_QN201DD_pod_R_9",
+          "reserved_QN201DD_pod_R_10",
+          "reserved_QN201DD_pod_R_11"
+        ]
+      },
+      "NominalBallistics": {
+        "Supported": false,
+        "ProjectileType": "superbwarfare:wire_guide_missile",
+        "ProjectileProfile": "berts_vehicle_pack:qn_506model/micromissile/default"
+      }
+    }
+  },
+  "HudType": "@Land",
+  "HUDColor": "0xFFC700",
+  "Type": "Tank",
+  "VehicleContainerType": "Medium",
+  "ContainerIcon": "superbwarfare:textures/gui/vehicle/type/land.png",
+  "VehicleIcon": "berts_vehicle_pack:textures/vehicle_icon/qn_506model.png",
+  "ThirdPersonCameraPos": [
+    0,
+    2,
+    6
+  ],
+  "HasDecoy": false
+}

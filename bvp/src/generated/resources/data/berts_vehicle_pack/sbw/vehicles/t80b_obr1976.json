@@ -33,32 +33,6 @@
       ]
     },
     {
-      "Part": "WheelLeft",
-      "Size": [
-        0.21189,
-        0.4304,
-        2.35063
-      ],
-      "Position": [
-        1.42362,
-        0.47675,
-        -0.16554
-      ]
-    },
-    {
-      "Part": "WheelRight",
-      "Size": [
-        0.21189,
-        0.4304,
-        2.35063
-      ],
-      "Position": [
-        -1.42362,
-        0.47675,
-        -0.16554
-      ]
-    },
-    {
       "Part": "MainEngine",
       "Size": [
         0.76147,
@@ -259,10 +233,10 @@
             "ShootAnimationTime": 20,
             "Name": "weapon.berts_vehicle_pack.2a46m_1_125_mm_smoothbore_9m112_kobra_gun_launched_atgm",
             "SoundInfo": {
-              "Fire1PGain": 0.5,
-              "Fire3PGain": 0.5,
-              "Fire3PFarGain": 0.5,
-              "Fire3PVeryFarGain": 0.5,
+              "Fire1PGain": 0.35,
+              "Fire3PGain": 0.35,
+              "Fire3PFarGain": 0.35,
+              "Fire3PVeryFarGain": 0.35,
               "Fire1P": "berts_vehicle_pack:atgm_gun_launch",
               "Fire3P": "berts_vehicle_pack:atgm_gun_launch",
               "Fire3PFar": "berts_vehicle_pack:atgm_gun_launch",
@@ -274,7 +248,9 @@
               ]
             },
             "NominalBallistics": {
-              "Supported": false
+              "Supported": false,
+              "ProjectileType": "berts_vehicle_pack:ataka_missile",
+              "ProjectileProfile": "berts_vehicle_pack:t80b_obr1976/cannon/ammo_02_9m112_kobra"
             }
           }
         }
@@ -453,6 +429,12 @@
       "SoundRadius": 12,
       "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/gun_7_62mm.png",
       "HeatPerShoot": 0,
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "superbwarfare:projectile",
+        "ProjectileProfile": "berts_vehicle_pack:t80b_obr1976/machinegun/default",
+        "ProjectileLife": 400
+      },
       "ProjectileBeltAmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
@@ -470,13 +452,7 @@
             "Name": "AP_T"
           }
         }
-      ],
-      "NominalBallistics": {
-        "Supported": true,
-        "ProjectileType": "superbwarfare:projectile",
-        "ProjectileProfile": "berts_vehicle_pack:t80b_obr1976/machinegun/default",
-        "ProjectileLife": 400
-      }
+      ]
     }
   },
   "HUDColor": "0xFFC700",

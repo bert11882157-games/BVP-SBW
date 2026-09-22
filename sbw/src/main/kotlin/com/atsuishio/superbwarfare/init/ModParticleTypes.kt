@@ -22,6 +22,8 @@ object ModParticleTypes {
     @JvmField
     val WHITE_STAR = registerSimpleParticle("white_star")
 
+    @JvmField val CHAFF_BURST = registerSimpleParticle("chaff_burst")
+
     @JvmField
     val RISING_SMOKE = registerSimpleParticle("rising_smoke")
 

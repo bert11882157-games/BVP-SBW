@@ -138,6 +138,9 @@ class GunProp<T, R>(
         ) { it.list.map { l -> l.value.also { consumer -> consumer.init() } } }
 
         @JvmField
+        val REQUIRES_RETRACTED_LANDING_GEAR = plainProp(DefaultGunData::requiresRetractedLandingGear)
+
+        @JvmField
         val NOMINAL_BALLISTICS = plainProp(DefaultGunData::nominalBallistics)
 
         @JvmField
@@ -197,6 +200,9 @@ class GunProp<T, R>(
         ) { it.list.map { l -> l.value.also { consumer -> consumer.init() } } }
 
         @JvmField
+        val BELT_FED = plainProp(DefaultGunData::beltFed)
+
+        @JvmField
         val NORMAL_RELOAD_TIME = plainProp(DefaultGunData::normalReloadTime)
 
         @JvmField
@@ -249,6 +255,12 @@ class GunProp<T, R>(
 
         @JvmField
         val SHOOT_DELAY = plainProp(DefaultGunData::shootDelay)
+
+        @JvmField
+        val OVERHEAT_ENABLED = plainProp(DefaultGunData::overheatEnabled)
+
+        @JvmField
+        val VEHICLE_DIRECT_DAMAGE_SCALE = plainProp(DefaultGunData::vehicleDirectDamageScale)
 
         @JvmField
         val HEAT_PER_SHOOT = plainProp(DefaultGunData::heatPerShoot)

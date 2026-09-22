@@ -28,6 +28,9 @@ public final class ModSounds {
     public static final RegistryObject<SoundEvent> ATGM_TUBE_LAUNCH = register("atgm_tube_launch");
     public static final RegistryObject<SoundEvent> ATGM_GUN_LAUNCH = register("atgm_gun_launch");
     public static final RegistryObject<SoundEvent> RICOCHET_NONPENETRATION = register("ricochet_nonpenetration");
+    public static final RegistryObject<SoundEvent> IMPACT_STONE = register("impact_stone");
+    public static final RegistryObject<SoundEvent> IMPACT_DIRT = register("impact_dirt");
+    public static final RegistryObject<SoundEvent> IMPACT_METAL = register("impact_metal");
     public static final RegistryObject<SoundEvent> EXPLOSION_MEDIUM = register("explosion_medium");
     public static final RegistryObject<SoundEvent> SHOOT_TNK_125MM = register("shoot_tnk_125mm");
     public static final RegistryObject<SoundEvent> SOVIET_125MM_AUTOLOADER = register("soviet_125mm_autoloader");

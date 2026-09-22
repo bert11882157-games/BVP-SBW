@@ -18,17 +18,19 @@ final class ArmorModuleResolver {
     }
 
     static ModuleHit findDirectTrackHit(ArmorTarget target, ArmorProfile profile, ShotTrace trace) {
-        ArmorHit hit = ArmorHitResolver.findBestBox(target, profile.trackBoxes, trace,
+        ArmorHit hit = ArmorHitResolver.findFirstBoxOnRay(target, profile.trackBoxes,
+                trace.rayStart, trace.hullShotDirection,
                 ArmorHitResolver.ARMOR_RAY_DISTANCE_BLOCKS, profile.impactTolerance);
         if (hit == null) {
             return null;
         }
-        String side = trackSide(hit.plate, hit.hullImpact);
+        String side = trackSide(target, hit.hullImpact);
         return new ModuleHit(hit, "right".equals(side) ? RIGHT_TRACK : LEFT_TRACK, side);
     }
 
     static ModuleHit findDirectModuleHit(ArmorTarget target, ArmorProfile profile, ShotTrace trace) {
-        ArmorHit hit = ArmorHitResolver.findBestBox(target, profile.moduleBoxes, trace,
+        ArmorHit hit = ArmorHitResolver.findFirstBoxOnRay(target, profile.moduleBoxes,
+                trace.rayStart, trace.hullShotDirection,
                 ArmorHitResolver.ARMOR_RAY_DISTANCE_BLOCKS, profile.impactTolerance);
         if (hit == null) {
             return null;
@@ -37,7 +39,8 @@ final class ArmorModuleResolver {
         if (moduleId.isEmpty()) {
             return null;
         }
-        return new ModuleHit(hit, moduleId, trackSideIfTrack(moduleId, hit.plate, hit.hullImpact));
+        String side = isTrack(moduleId) ? trackSide(target, hit.hullImpact) : "";
+        return new ModuleHit(hit, side.isEmpty() ? moduleId : trackModuleId(side), side);
     }
 
     static InternalModuleHits findInternalHits(ArmorTarget target, ArmorProfile profile, ArmorHit armorHit,
@@ -52,6 +55,9 @@ final class ArmorModuleResolver {
         ArmorHit moduleHit = ArmorHitResolver.findFirstBoxOnRay(target, profile.moduleBoxes,
                 rayOrigin, trace.hullShotDirection, profile.internalRayLength, profile.impactTolerance);
         String moduleId = moduleHit == null ? "" : moduleIdForBox(moduleHit.plate);
+        if (isTrack(moduleId)) {
+            moduleId = trackModuleId(trackSide(target, moduleHit.hullImpact));
+        }
         return new InternalModuleHits(sensitiveInternal, engineHit, ammoRackHit, moduleHit, moduleId);
     }
 
@@ -72,6 +78,8 @@ final class ArmorModuleResolver {
 
     static boolean isTrack(String moduleId) {
         String normalized = normalizeModuleId(moduleId);
+        int separator = normalized.indexOf(':');
+        if (separator >= 0) normalized = normalized.substring(0, separator);
         return TRACK.equals(normalized) || LEFT_TRACK.equals(normalized) || RIGHT_TRACK.equals(normalized);
     }
 
@@ -88,7 +96,7 @@ final class ArmorModuleResolver {
         return AMMO_RACK + ":" + boxId;
     }
 
-    private static String moduleIdForBox(ArmorBox box) {
+    static String moduleIdForBox(ArmorBox box) {
         String explicit = normalizeModuleId(box.module);
         String moduleId = explicit.isEmpty() ? normalizeModuleId(box.name) : explicit;
         if (moduleId.isEmpty() || box.unified || moduleId.contains(":")) {
@@ -98,19 +106,21 @@ final class ArmorModuleResolver {
         return boxId.isEmpty() ? moduleId : moduleId + ":" + boxId;
     }
 
-    private static String trackSideIfTrack(String moduleId, ArmorBox box, Vec localImpact) {
-        return isTrack(moduleId) ? trackSide(box, localImpact) : "";
+    private static String trackModuleId(String side) {
+        return "right".equals(side) ? RIGHT_TRACK : LEFT_TRACK;
     }
 
-    private static String trackSide(ArmorBox trackBox, Vec localImpact) {
-        String name = trackBox.name.toLowerCase(Locale.ROOT);
-        if (name.contains("right") || name.endsWith("_r") || name.contains("_r_")) {
-            return "right";
-        }
-        if (name.contains("left") || name.endsWith("_l") || name.contains("_l_")) {
-            return "left";
-        }
-        return localImpact.x < 0.0D ? "right" : "left";
+    private static String trackSide(ArmorTarget target, Vec localImpact) {
+        // Resolve the physical side after profile reflection, independent of inherited box labels.
+        return target.armorLocalPointToVehicleLocal(localImpact).f_82479_ > 0.0D ? "left" : "right";
+    }
+
+    static ModuleHit nearestExposed(ArmorHit armor, ModuleHit track, ModuleHit module) {
+        ModuleHit nearest = track;
+        if (nearest == null || (module != null && module.hit.distance < nearest.hit.distance)) nearest = module;
+        if (nearest == null || !nearest.hit.isRayHit()) return null;
+        return armor == null || !armor.isRayHit() || nearest.hit.distance < armor.distance - 1.0E-4D
+                ? nearest : null;
     }
 
     static final class ModuleHit {

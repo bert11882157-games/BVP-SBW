@@ -17,6 +17,8 @@ final class ProfileWheeledRunningGearAnimator {
     private RunningGearResource cachedResource;
     private RunningGearAnimationSupport.WheelLayout left;
     private RunningGearAnimationSupport.WheelLayout right;
+    private WheelSteeringPose steering;
+    private int warningsRemaining = 4;
 
     void apply(GeoVehicleEntity entity, PolyMeshModel model, float partialTicks) {
         EntityType<?> entityType = entity.m_6095_();
@@ -29,6 +31,22 @@ final class ProfileWheeledRunningGearAnimator {
         }
         RunningGearRenderState state = RunningGearRenderState.capture(entity, partialTicks);
         RunningGearAnimationSupport.applyWheelSpin(state, this.left, this.right);
+        if (this.steering != null) this.steering.apply(state);
+    }
+
+    void restoreSteering() {
+        if (this.steering != null) this.steering.restore();
+    }
+
+    void reset() {
+        restoreSteering();
+        this.cachedModel = null;
+        this.cachedEntityType = null;
+        this.cachedResource = null;
+        this.left = null;
+        this.right = null;
+        this.steering = null;
+        this.warningsRemaining = 4;
     }
 
     private void rebuild(
@@ -36,6 +54,8 @@ final class ProfileWheeledRunningGearAnimator {
             EntityType<?> entityType,
             GeoVehicleEntity entity,
             RunningGearResource resource) {
+        restoreSteering();
+        this.steering = null;
         this.cachedModel = model;
         this.cachedEntityType = entityType;
         this.cachedResource = resource;
@@ -50,6 +70,16 @@ final class ProfileWheeledRunningGearAnimator {
         if (this.left == null || this.right == null) {
             this.left = null;
             this.right = null;
+            return;
+        }
+        try {
+            this.steering = WheelSteeringPose.bind(model, profile);
+        } catch (IllegalArgumentException invalid) {
+            if (this.warningsRemaining > 0) {
+                this.warningsRemaining--;
+                com.mojang.logging.LogUtils.getLogger().warn("Wheel steering rig skipped for {}: {}",
+                        entityType, invalid.getMessage());
+            }
         }
     }
 

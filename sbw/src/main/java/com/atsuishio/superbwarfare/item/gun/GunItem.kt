@@ -433,8 +433,8 @@ abstract class GunItem(properties: Properties) : Item(properties.stacksTo(1)), I
      */
     open fun canShoot(data: GunData, shooter: Entity?): Boolean {
         return data.get(GunProp.PROJECTILE_AMOUNT) > 0
-                && !data.overHeat.get()
-                && data.get(GunProp.HEAT_PER_SHOOT) <= (100 + data.get(GunProp.HEAT_PER_SHOOT) - data.heat.get())
+                && (!data.get(GunProp.OVERHEAT_ENABLED) || (!data.overHeat.get()
+                && data.get(GunProp.HEAT_PER_SHOOT) <= (100 + data.get(GunProp.HEAT_PER_SHOOT) - data.heat.get())))
                 && !data.reloading()
                 && !data.charging()
                 && !data.bolt.needed.get()
@@ -621,8 +621,9 @@ abstract class GunItem(properties: Properties) : Item(properties.stacksTo(1)), I
 
         // 添加热量.  Tank-mounted HMGs are a typed heatless station role; keep their persisted
         // state canonical at zero so an old overheat flag cannot leak back into a later shot.
-        val heatlessTankHmg = (ammoSupplier as? VehicleEntity)?.isTankMountedHeavyMachineGun(data) == true
-        if (heatlessTankHmg) {
+        val heatless = !data.get(GunProp.OVERHEAT_ENABLED)
+                || (ammoSupplier as? VehicleEntity)?.isTankMountedHeavyMachineGun(data) == true
+        if (heatless) {
             data.heat.set(0.0)
             data.overHeat.set(false)
         } else {
@@ -637,7 +638,7 @@ abstract class GunItem(properties: Properties) : Item(properties.stacksTo(1)), I
         }
 
         // 过热
-        if (!heatlessTankHmg && data.heat.get() >= 100 && !data.overHeat.get()) {
+        if (!heatless && data.heat.get() >= 100 && !data.overHeat.get()) {
             data.overHeat.set(true)
             if (shooter is ServerPlayer) {
                 shooter.playLocalSound(ModSounds.OVERHEAT.get(), 2f, 1f)

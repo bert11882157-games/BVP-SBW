@@ -1,5 +1,7 @@
 package com.atsuishio.superbwarfare.client.overlay
 
+import com.atsuishio.superbwarfare.api.vehicle.aim.VehicleLaserRangefinder
+
 import com.atsuishio.superbwarfare.Mod.Companion.loc
 import com.atsuishio.superbwarfare.client.RenderHelper
 import com.atsuishio.superbwarfare.client.VehicleGeometricZeroDistanceClient
@@ -73,9 +75,7 @@ object VehicleHudOverlay : CommonOverlay("vehicle_hud") {
         )
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f)
 
-        // Ground vehicles receive the normalized Info1 module/status panel from the BVP
-        // renderer.  Keep the legacy icon bars for aircraft/native HUDs only so they cannot
-        // overdraw the authored ground layout with a duplicate lower-left block.
+        // Ground module state is drawn by GroundVehicleStatusHud, including BVP providers.
         if (entity.computed().hudType != LandVehicleHud.ID) {
             val compatHeight: Int = getArmorPlateCompatHeight(player)
 
@@ -177,7 +177,7 @@ object VehicleHudOverlay : CommonOverlay("vehicle_hud") {
         poseStack.popPose()
     }
 
-    /** Shared speed line: one fixed-scale label directly below the upper-left module block. */
+    /** Shared bottom-left module/alignment display and fixed-font speed line. */
     private fun renderGroundSpeed(
         guiGraphics: GuiGraphics,
         vehicle: VehicleEntity,
@@ -186,27 +186,11 @@ object VehicleHudOverlay : CommonOverlay("vehicle_hud") {
         screenHeight: Int,
     ) {
         if (vehicle.computed().hudType != LandVehicleHud.ID) return
-        val font = Minecraft.getInstance().font
-        val zone = VehicleHudLayout.scaled(screenWidth, screenHeight, font.lineHeight).element("info1")
-        // Info1 is the semantic upper-left anchor; keep it modestly inset from the screen edge
-        // while retaining the same authored zone and fixed text scale.
-        val inset = maxOf(2, zone.width / 16)
-        val speed = (Mth.lerp(partialTick.toDouble(), vehicle.absoluteSpeedO, vehicle.absoluteSpeed) * 72.0)
-            .coerceAtLeast(0.0)
-        drawBounded(
-            guiGraphics,
-            FormatTool.format1DZ(speed, " km/h"),
-            zone.left + inset,
-            zone.panelBaseline(4),
-            (zone.maxTextWidth - inset * 2).coerceAtLeast(1),
-            vehicle.hudColor,
-            HudTextAlign.LEFT,
-        )
+        GroundVehicleStatusHud.render(guiGraphics, vehicle, partialTick, screenWidth, screenHeight)
     }
 
     /**
-     * Geometric zero is an Info1 status line, not a separate lower/right numeric panel.  The
-     * value is read-only presentation state; the input/network owner remains the zero client.
+     * Read-only sight-zero status below the module display; the zero client owns input/networking.
      */
     private fun renderGroundZero(
         guiGraphics: GuiGraphics,
@@ -216,25 +200,28 @@ object VehicleHudOverlay : CommonOverlay("vehicle_hud") {
     ) {
         if (vehicle.computed().hudType != LandVehicleHud.ID) return
         val player = Minecraft.getInstance().player ?: return
-        val font = Minecraft.getInstance().font
-        val zone = VehicleHudLayout.scaled(screenWidth, screenHeight, font.lineHeight).element("info1")
-        val inset = maxOf(2, zone.width / 16)
         val key = ModKeyMappings.VEHICLE_CYCLE_SIGHT_ZERO.key.displayName.string
-        val text = if (vehicle.computed().hasFCS) {
-            val state = VehicleGeometricZeroDistanceClient.activeFcsState(player) ?: return
-            if (state.status != VehicleGeometricZeroWireStatus.SOLUTION) return
-            val distance = state.measuredRangeBlocks?.takeIf { it.isFinite() && it >= 0.0 } ?: return
-            "[$key] Zeroing: ${FormatTool.format1DZ(distance, " blocks")}"
+        val seat = vehicle.getSeatIndex(player)
+        val text = if (VehicleLaserRangefinder.enabled(vehicle, seat, vehicle.getSelectedWeapon(seat))) {
+            val state = VehicleGeometricZeroDistanceClient.activeFcsState(player)
+            if (state?.status == VehicleGeometricZeroWireStatus.SOLUTION) {
+                val distance = state.measuredRangeBlocks?.takeIf { it.isFinite() && it >= 0.0 } ?: return
+                "[$key] Zero ${FormatTool.format1DZ(distance)} m"
+            } else when (state?.status) {
+                VehicleGeometricZeroWireStatus.NO_BLOCK_HIT -> "[$key] LRF: no return"
+                VehicleGeometricZeroWireStatus.NO_SOLUTION -> "[$key] LRF: no ballistic solution"
+                else -> "[$key] Laser rangefinder"
+            }
         } else {
             val distance = VehicleGeometricZeroDistanceClient.activeDistance(player) ?: return
-            "[$key] Zeroing: $distance"
+            "[$key] Zero $distance"
         }
         drawBounded(
             guiGraphics,
             text,
-            zone.left + inset,
-            zone.panelBaseline(5),
-            (zone.maxTextWidth - inset * 2).coerceAtLeast(1),
+            12,
+            GroundVehicleStatusHud.auxiliaryY(screenHeight, 1),
+            GroundVehicleStatusHud.textWidth(screenWidth),
             vehicle.hudColor,
             HudTextAlign.LEFT,
         )
@@ -250,18 +237,12 @@ object VehicleHudOverlay : CommonOverlay("vehicle_hud") {
         val zoom = VehicleOpticalZoomController.activeView(player) ?: return
         val text = Component.literal("ZOOM ${FormatTool.format1DZ(zoom.magnification, "×")}")
         if (vehicle.computed().hudType == LandVehicleHud.ID) {
-            val minecraft = Minecraft.getInstance()
-            val layout = VehicleHudLayout.scaled(screenWidth, screenHeight, minecraft.font.lineHeight)
-            // Ground zoom belongs to the semantic Info1 panel, directly below the BVP
-            // Field Repairs row.  Keep the old lower/right placement out of the render path.
-            val zone = layout.element("info1")
-            val inset = maxOf(2, zone.width / 16)
             drawBounded(
                 guiGraphics,
                 text.string,
-                zone.left + inset,
-                zone.panelBaseline(7),
-                (zone.maxTextWidth - inset * 2).coerceAtLeast(1),
+                12,
+                GroundVehicleStatusHud.auxiliaryY(screenHeight, 3),
+                GroundVehicleStatusHud.textWidth(screenWidth),
                 vehicle.hudColor,
                 HudTextAlign.LEFT,
             )
@@ -352,7 +333,8 @@ object VehicleHudOverlay : CommonOverlay("vehicle_hud") {
         for ((index, i) in passengers.indices.reversed().withIndex()) {
             val passenger = passengers[i]
 
-            val y = h - 35 - index * 12
+            val ground = vehicle.computed().hudType == LandVehicleHud.ID
+            val y = if (ground) GroundHudLayout.passengerRowY(h, index) else h - 35 - index * 12
             var name = "---"
 
             if (passenger != null) {
@@ -369,7 +351,8 @@ object VehicleHudOverlay : CommonOverlay("vehicle_hud") {
                 }
             }
 
-            guiGraphics.drawString(font, name, 42, y, 0x66ff00, true)
+            guiGraphics.drawString(font, if(ground) font.plainSubstrByWidth(name,72) else name,
+                42, y, 0x66ff00, true)
 
             val num = "[" + (i + 1) + "]"
             guiGraphics.drawString(
@@ -406,80 +389,7 @@ object VehicleHudOverlay : CommonOverlay("vehicle_hud") {
         if (vehicle.computed().hudType != LandVehicleHud.ID) return
         if (!vehicle.banHand(player)) return
 
-        val seatIndex = vehicle.getSeatIndex(player)
-        val seat = vehicle.getSeat(seatIndex) ?: return
-        val ordered = seat.weapons().indices.filter { vehicle.getGunData(seatIndex, it) != null }
-        if (ordered.isEmpty()) return
-
-        val primaryIndex = vehicle.getPrimaryWeaponIndex(seatIndex).takeIf { it in ordered } ?: return
-        val secondaryIndex = vehicle.getSecondaryWeaponIndex(seatIndex)?.takeIf {
-            it in ordered && it != primaryIndex
-        }
-        val primaryData = vehicle.getGunData(seatIndex, primaryIndex) ?: return
-        val font = Minecraft.getInstance().font
-        val layout = VehicleHudLayout.scaled(w, h, font.lineHeight)
-        val info2Zone = layout.element("info2")
-        val color = vehicle.hudColor
-        // Info2 mirrors Info1: its ordered list begins slightly inward toward the screen center.
-        val inset = maxOf(2, info2Zone.width / 32)
-        val anchorX = info2Zone.left + inset
-        val maxTextWidth = (info2Zone.maxTextWidth - inset * 2).coerceAtLeast(1)
-        val primaryBind = ModKeyMappings.VEHICLE_SWITCH_PRIMARY.key.displayName.string
-        val secondaryBind = ModKeyMappings.VEHICLE_SWITCH_SECONDARY.key.displayName.string
-        val ammoBind = ModKeyMappings.VEHICLE_CYCLE_AMMO.key.displayName.string
-
-        // One ordered line per occupied-seat weapon.  Primary/secondary markers are annotations
-        // on the same list, so the retired duplicate selection wall cannot reappear below it.
-        var row = 0
-        for ((ordinal, index) in ordered.withIndex()) {
-            val data = vehicle.getGunData(seatIndex, index) ?: continue
-            val marker = when {
-                index == primaryIndex -> " (PRIMARY [$primaryBind ↓])"
-                secondaryIndex != null && index == secondaryIndex -> " (SECONDARY [$secondaryBind ↓])"
-                else -> ""
-            }
-            // Prefix each ordered weapon with its live loaded magazine value.  This is the
-            // in-gun ledger (not reserve ammunition), and is deliberately explicit even for
-            // one-round weapons so no translated name can leak an x1/count suffix.
-            val line = "(${ordinal + 1}) [${loadedAmmoLabel(data)}] ${displayWeaponLine(data)}$marker"
-            drawBounded(
-                guiGraphics,
-                line,
-                anchorX,
-                info2Zone.panelBaseline(row),
-                maxTextWidth,
-                color,
-                HudTextAlign.LEFT,
-            )
-            row++
-        }
-
-        val ammoSelections = primaryData.get(GunProp.AMMO_CONSUMER)
-        if (ammoSelections.size > 1) {
-            drawBounded(
-                guiGraphics,
-                "[$ammoBind] Switch ammo",
-                anchorX,
-                info2Zone.panelBaseline(row),
-                maxTextWidth,
-                color,
-                HudTextAlign.LEFT,
-            )
-            row++
-        }
-
-        if (primaryData.reloading()) {
-            val remainingSeconds = primaryData.reload.time().coerceAtLeast(0).toDouble() / 20.0
-            drawBounded(
-                guiGraphics,
-                FormatTool.format1DZ(remainingSeconds, "s"),
-                info2Zone.right - inset,
-                info2Zone.panelBaseline(row),
-                maxTextWidth,
-                color,
-                HudTextAlign.RIGHT,
-            )
-        }
+        VehicleSystemsHud.ground(guiGraphics, vehicle, player, w, h)
     }
 
     private fun displayAmmoName(data: GunData): String {
@@ -539,9 +449,12 @@ object VehicleHudOverlay : CommonOverlay("vehicle_hud") {
         return if (isGenericDescriptor(translated)) "unavailable" else translated
     }
 
-    private fun loadedAmmoLabel(data: GunData): String {
-        val loaded = data.ammo.get()
-        return if (loaded == Int.MAX_VALUE) "∞" else loaded.coerceAtLeast(0).toString()
+    private fun loadedAmmoLabel(vehicle: VehicleEntity, data: GunData): String {
+        val available = vehicle.getAmmo(data)
+        val count = if (available == Int.MAX_VALUE) "∞" else available.coerceAtLeast(0).toString()
+        if (data.reloading()) return "$count · RELOADING"
+        val cost = data.get(GunProp.AMMO_COST_PER_SHOOT)
+        return if (available < cost && data.backupAmmoCount.get() < cost) "$count · AMMO NEEDED" else count
     }
 
     /** KPVT is a 14.5 mm cannon belt, never the 7.62 mm coax family. */

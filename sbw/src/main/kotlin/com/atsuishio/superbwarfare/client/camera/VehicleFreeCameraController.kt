@@ -1,6 +1,7 @@
 package com.atsuishio.superbwarfare.client.camera
 
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity
+import com.atsuishio.superbwarfare.data.vehicle.subdata.VehicleType
 import com.atsuishio.superbwarfare.event.ClientMouseHandler
 import com.atsuishio.superbwarfare.init.ModKeyMappings
 import com.atsuishio.superbwarfare.tools.mc
@@ -35,7 +36,9 @@ object VehicleFreeCameraController {
         var yaw: Float,
         var pitch: Float,
         var clientTicks: Int = 0,
-    )
+    ) {
+        val pitchBand = VehicleFreeCameraPitchBand(entryPitch)
+    }
 
     private data class Restoration(
         val playerUuid: UUID,
@@ -52,6 +55,7 @@ object VehicleFreeCameraController {
     private var restoration: Restoration? = null
     private var restorationObserved = false
     private var mouseResetPending = false
+    private var releaseSequence = 0L
 
     /** Handles both keyboard and mouse edges. Repeats never toggle or restart the hold. */
     @JvmStatic
@@ -73,6 +77,7 @@ object VehicleFreeCameraController {
         if (seatIndex < 0 || !vehicle.allowFreeCam()) return
 
         val camera = mc.gameRenderer.mainCamera
+        if (!camera.yRot.isFinite() || !camera.xRot.isFinite()) return
         restoration = null
         restorationObserved = false
         session = Session(
@@ -89,7 +94,7 @@ object VehicleFreeCameraController {
             yaw = camera.yRot,
             pitch = camera.xRot,
         )
-        mouseResetPending = true
+        resetMouseAtEdge()
     }
 
     private fun release(input: InputConstants.Key) {
@@ -147,9 +152,17 @@ object VehicleFreeCameraController {
     private fun finish(active: Session, restoreEntryView: Boolean) {
         if (session !== active) return
         session = null
-        ClientMouseHandler.freeCameraYaw = active.entryOffsetYaw
-        ClientMouseHandler.freeCameraPitch = active.entryOffsetPitch
-        restoration = if (restoreEntryView) {
+        val bodyCamera = aircraftBodyReturn(active.vehicle.vehicleType)
+        ClientMouseHandler.freeCameraYaw = if (bodyCamera) 0.0 else active.entryOffsetYaw
+        ClientMouseHandler.freeCameraPitch = if (bodyCamera) 0.0 else active.entryOffsetPitch
+        if (bodyCamera) {
+            if (restoreEntryView) FixedWingDynamicCamera.onFreeCameraReleased(active.vehicle)
+            else FixedWingDynamicCamera.reset()
+            VehicleCameraResolver.updateFreeCameraSession(active.playerUuid, false)
+        }
+        // Aircraft resume their current body, never an entry-world view captured before a turn.
+        // Fixed-wing chase additionally waits for the release drag to finish; aim is untouched.
+        restoration = if (restoreEntryView && !bodyCamera) {
             Restoration(
                 active.playerUuid,
                 active.level,
@@ -163,15 +176,26 @@ object VehicleFreeCameraController {
             null
         }
         restorationObserved = false
+        releaseSequence++
+        resetMouseAtEdge()
+    }
+
+    private fun resetMouseAtEdge() {
+        // Key callbacks may run before a render with no intervening END tick. Clear the sampled
+        // inertia now as well as rebasing at END; neither side may replay the held gesture.
+        ClientMouseHandler.resetFreeCameraSampling()
         mouseResetPending = true
     }
+
+    /** Scalar-only opt-in probe seam; no event logging or per-frame diagnostic allocation. */
+    @JvmStatic fun getReleaseSequence(): Long = releaseSequence
 
     /** Adds presentation-only view rotation while retaining legacy free-camera transform offsets. */
     @JvmStatic
     fun applyMouseDelta(yawDegrees: Float, pitchDegrees: Float) {
         val active = session ?: return
         active.yaw = Mth.wrapDegrees(active.yaw + yawDegrees)
-        val acceptedPitch = Mth.clamp(active.pitch + pitchDegrees, -90.0f, 90.0f)
+        val acceptedPitch = active.pitchBand.clamp(active.pitch + pitchDegrees)
         val acceptedPitchDelta = acceptedPitch - active.pitch
         active.pitch = acceptedPitch
         ClientMouseHandler.freeCameraYaw = Mth.wrapDegrees(ClientMouseHandler.freeCameraYaw - yawDegrees)
@@ -215,3 +239,14 @@ object VehicleFreeCameraController {
         return pending
     }
 }
+
+/** Capture the visible Euler branch once; canonicalizing it would also flip camera-up. */
+internal class VehicleFreeCameraPitchBand(entryPitch: Float) {
+    private val center = if (kotlin.math.abs(entryPitch) <= 90f) 0f
+        else 180f * kotlin.math.round(entryPitch / 180f)
+
+    fun clamp(proposedPitch: Float): Float = proposedPitch.coerceIn(center - 90f, center + 90f)
+}
+
+internal fun aircraftBodyReturn(type: VehicleType?): Boolean =
+    type == VehicleType.AIRPLANE || type == VehicleType.HELICOPTER

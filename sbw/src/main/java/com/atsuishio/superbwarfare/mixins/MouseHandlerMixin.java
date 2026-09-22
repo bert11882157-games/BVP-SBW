@@ -43,6 +43,7 @@ public class MouseHandlerMixin {
         if (mc.options.getCameraType() != CameraType.FIRST_PERSON) return d;
 
         if (player.getVehicle() instanceof VehicleEntity vehicle) {
+            if (vehicle.isPassengerStationLocalAimController(player)) return d;
             sbw$x = d;
 
             double i = 0;
@@ -71,6 +72,7 @@ public class MouseHandlerMixin {
         if (mc.options.getCameraType() != CameraType.FIRST_PERSON) return d;
 
         if (player.getVehicle() instanceof VehicleEntity vehicle) {
+            if (vehicle.isPassengerStationLocalAimController(player)) return d;
             sbw$y = d;
             return (1 - (Mth.abs(vehicle.getRoll()) / 90)) * d + ((Mth.abs(vehicle.getRoll()) / 90)) * sbw$x * (vehicle.getRoll() < 0 ? -1 : 1);
         }

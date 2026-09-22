@@ -1,40 +1,24 @@
 package com.yourname.berts_vehicle_pack.effects;
 
 import com.atsuishio.superbwarfare.tools.ParticleTool;
-import com.atsuishio.superbwarfare.diagnostics.EliteDiagnostics;
 import com.atsuishio.superbwarfare.api.projectile.ProjectileProfiles;
-import com.atsuishio.superbwarfare.item.gun.ProjectileFactory;
 import com.atsuishio.superbwarfare.api.effect.TransientLights;
 import com.yourname.berts_vehicle_pack.init.ModParticles;
-import com.yourname.berts_vehicle_pack.BertsVehiclePack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
 
-import java.util.Random;
 
 public final class BvpLeanImpactEffects {
     private static final int ERA_LIGHT_LUMINANCE = 15;
     private static final int ERA_LIGHT_TICKS = 4;
-    private static final double MIN_DIRECTION_SQR = 1.0E-6D;
-    private static final double IMPACT_STREAK_MIN_SPEED = 0.85D;
-    private static final double IMPACT_STREAK_MAX_SPEED = 1.65D;
-    private static final int IMPACT_STREAK_MIN_LIFETIME = 5;
-    private static final int IMPACT_STREAK_MAX_LIFETIME_EXCLUSIVE = 8;
-    private static final float IMPACT_SHRAPNEL_DAMAGE = 1.0F;
     private static final int MAX_S8KO_PARTICLES_PER_TICK = 24;
-    /** Existing generated 7.62 mm bullet profile with a validated tracer_v2 payload. */
-    private static final ResourceLocation IMPACT_SHRAPNEL_PROFILE =
-            new ResourceLocation(BertsVehiclePack.MODID, "bmp2/mainmachinegun/belt_ammo_00_russian_762_ap_t");
-    private static final Vec3 WORLD_UP = new Vec3(0.0D, 1.0D, 0.0D);
-    private static final Vec3 WORLD_X = new Vec3(1.0D, 0.0D, 0.0D);
     private static final ParticleOptions LARGE_SMOKE = ParticleTypes.f_123755_;
     /** Short-lived impact puff; the long-lived large-smoke particle is reserved for sustained effects. */
     private static final ParticleOptions IMPACT_SMOKE = ParticleTypes.f_123759_;
@@ -53,6 +37,13 @@ public final class BvpLeanImpactEffects {
         spawnMediumExplosion(level, position, source);
     }
 
+    public static void spawnImpactSmoke(Level level, Vec3 position, Vec3 normal) {
+        if (!(level instanceof ServerLevel server) || position == null || normal == null) return;
+        Vec3 point = position.add(normal.scale(0.06D));
+        ParticleTool.sendParticle(server, IMPACT_SMOKE, point.x, point.y, point.z,
+                3, 0.09D, 0.06D, 0.09D, 0.012D, true);
+    }
+
     public static void spawnTinyExplosion(Level level, Vec3 position) {
         spawnTinyExplosion(level, position, null);
     }
@@ -61,6 +52,7 @@ public final class BvpLeanImpactEffects {
         if (!(level instanceof ServerLevel serverLevel) || position == null) {
             return;
         }
+        if (emitCaliberBurst(serverLevel, position, source)) return;
         ImpactBurstPolicy policy = ImpactBurstPolicy.forSource(source);
         int explosionCount = policy.s8ko() ? reserveS8koParticles(serverLevel.m_46467_(), 1) : 1;
         int smokeCount = policy.s8ko() ? reserveS8koParticles(serverLevel.m_46467_(), 3) : 3;
@@ -96,6 +88,7 @@ public final class BvpLeanImpactEffects {
         if (!(level instanceof ServerLevel serverLevel) || position == null) {
             return;
         }
+        if (emitCaliberBurst(serverLevel, position, source)) return;
         ImpactBurstPolicy policy = ImpactBurstPolicy.forSource(source);
         double scale = safePresentationScale(presentationScale);
 
@@ -153,83 +146,18 @@ public final class BvpLeanImpactEffects {
     }
 
     /**
-     * Emits the accepted-impact tracer fan.  The server chooses every direction from the
-     * immutable impact seed, so observers receive identical streak vectors.  Incidence is
-     * blended continuously: shallow hits retain a reflected forward fan while perpendicular
-     * hits become a tangent-plane pancake around the supplied surface normal.
+     * Legacy client-only visual adapter. Server calls are inert; accepted server impacts
+     * publish a compact recipe separately. The legacy seed does not synchronize client RNG.
      */
+    @Deprecated
     public static void spawnImpactShrapnel(Level level, Projectile source, Vec3 position, Vec3 incomingDirection,
-                                           Vec3 surfaceNormal, int count, float presentationScale,
-                                           long seed) {
-        if (!(level instanceof ServerLevel serverLevel) || source == null
-                || position == null || count <= 0) {
-            return;
-        }
-        if (!finite(incomingDirection) || incomingDirection.m_82556_() <= MIN_DIRECTION_SQR) {
-            return;
-        }
-
-        Vec3 incoming = normalized(incomingDirection);
-        Vec3 normal = normalized(surfaceNormal);
-        Vec3 reflected = incoming.m_82546_(normal.m_82490_(2.0D * incoming.m_82526_(normal)));
-        if (reflected.m_82526_(reflected) <= MIN_DIRECTION_SQR) {
-            reflected = normal;
-        } else {
-            reflected = reflected.m_82541_();
-        }
-
-        Vec3 tangentU = orthogonal(normal);
-        Vec3 tangentV = normal.m_82537_(tangentU).m_82541_();
-        double incidence = Math.abs(incoming.m_82526_(normal));
-        double pancakeWeight = smoothstep(0.25D, 0.92D, incidence);
-        double safeScale = Double.isFinite(presentationScale) && presentationScale > 0.0F
-                ? presentationScale : 0.1D;
-        Random random = new Random(seed);
-        Entity fragmentOwner = source.m_19749_() != null ? source.m_19749_() : source;
-
-        for (int index = 0; index < count; index++) {
-            double theta = random.nextDouble() * Math.PI * 2.0D;
-            double fanSpread = 0.25D + random.nextDouble() * 0.55D;
-            Vec3 fanDirection = reflected
-                    .m_82549_(tangentU.m_82490_(Math.cos(theta) * fanSpread))
-                    .m_82549_(tangentV.m_82490_(Math.sin(theta) * fanSpread))
-                    .m_82541_();
-            Vec3 pancakeDirection = tangentU.m_82490_(Math.cos(theta))
-                    .m_82549_(tangentV.m_82490_(Math.sin(theta)))
-                    .m_82549_(normal.m_82490_(0.06D))
-                    .m_82541_();
-            Vec3 direction = fanDirection.m_82490_(1.0D - pancakeWeight)
-                    .m_82549_(pancakeDirection.m_82490_(pancakeWeight))
-                    .m_82541_();
-            // Keep the presentation on the outward side without snapping the blended direction.
-            double outward = direction.m_82526_(normal);
-            if (outward < 0.02D) {
-                direction = direction.m_82549_(normal.m_82490_(0.02D - outward)).m_82541_();
-            }
-
-            double speed = IMPACT_STREAK_MIN_SPEED
-                    + random.nextDouble() * (IMPACT_STREAK_MAX_SPEED - IMPACT_STREAK_MIN_SPEED);
-            int lifetime = IMPACT_STREAK_MIN_LIFETIME
-                    + random.nextInt(IMPACT_STREAK_MAX_LIFETIME_EXCLUSIVE - IMPACT_STREAK_MIN_LIFETIME);
-            boolean spawned = ProjectileFactory.spawnImpactShrapnel(
-                    serverLevel,
-                    fragmentOwner,
-                    position,
-                    direction,
-                    (float) speed,
-                    lifetime,
-                    IMPACT_SHRAPNEL_DAMAGE,
-                    IMPACT_SHRAPNEL_PROFILE,
-                    (float) safeScale,
-                    seed ^ (0x9E3779B97F4A7C15L * (index + 1L)));
-            if (EliteDiagnostics.isEnabled(level)) {
-                EliteDiagnostics.record(source, "shrapnel", "spawn_result",
-                        "index", index, "count", count, "spawned", spawned,
-                        "profile", IMPACT_SHRAPNEL_PROFILE, "position", position,
-                        "direction", direction, "speed_blocks_per_tick", speed,
-                        "lifetime_ticks", lifetime, "scale", safeScale, "seed", seed);
-            }
-        }
+                                          Vec3 surfaceNormal, int count, float presentationScale, long seed) {
+        if (level == null || !level.f_46443_) return;
+        net.minecraftforge.fml.DistExecutor.unsafeRunWhenOn(
+                net.minecraftforge.api.distmarker.Dist.CLIENT,
+                () -> () -> com.yourname.berts_vehicle_pack.client.BvpClientImpactFragments
+                        .acceptLegacy(level, position, incomingDirection,
+                                surfaceNormal, count, presentationScale));
     }
 
     private static void spawnExplosionBurst(ServerLevel level, Vec3 position,
@@ -295,34 +223,28 @@ public final class BvpLeanImpactEffects {
         return granted;
     }
 
-    private static Vec3 normalized(Vec3 direction) {
-        return !finite(direction) || direction.m_82556_() <= MIN_DIRECTION_SQR
-                ? WORLD_UP
-                : direction.m_82541_();
-    }
-
-    private static boolean finite(Vec3 value) {
-        return value != null
-                && Double.isFinite(value.f_82479_)
-                && Double.isFinite(value.f_82480_)
-                && Double.isFinite(value.f_82481_);
-    }
-
-    private static Vec3 orthogonal(Vec3 direction) {
-        Vec3 reference = Math.abs(direction.f_82480_) < 0.95D ? WORLD_UP : WORLD_X;
-        Vec3 perpendicular = reference.m_82537_(direction);
-        return perpendicular.m_82556_() <= MIN_DIRECTION_SQR
-                ? WORLD_X
-                : perpendicular.m_82541_();
-    }
-
-    private static double smoothstep(double edge0, double edge1, double value) {
-        double t = Math.max(0.0D, Math.min(1.0D, (value - edge0) / (edge1 - edge0)));
-        return t * t * (3.0D - 2.0D * t);
-    }
-
     private static ParticleOptions explosionParticle() {
         return ModParticles.EXPLOSION.get();
+    }
+
+    /** Returns true for a handled shell/bullet, including intentionally suppressed sub-14.5mm FX. */
+    private static boolean emitCaliberBurst(ServerLevel level, Vec3 position, Entity source) {
+        if (source == null) return false;
+        var combat = ProjectileProfiles.combatDescriptor(source);
+        if (combat == null || combat.getCaliberMm() == null) return false;
+        String munition = combat.getMunitionType() == null ? "" : combat.getMunitionType().m_135815_();
+        if (combat.getHullDamageClass() == com.atsuishio.superbwarfare.api.projectile.ProjectileHullDamageClass.ATGM
+                || munition.contains("rocket") || munition.contains("missile") || munition.contains("atgm")
+                || munition.contains("bomb")) return false;
+        // VOG-30 is an explosive grenade, not the tiny same-caliber cannon impact.
+        float diameter = BvpProjectileEffectDefinition.isTypedAgs30Profile(ProjectileProfiles.resolve(source))
+                ? 1.3F : BvpCaliberExplosion.diameter(combat.getCaliberMm());
+        if (diameter <= 0F) return true;
+        ParticleTool.sendParticle(level,
+                new com.yourname.berts_vehicle_pack.particle.SizedExplosionParticleOptions(diameter),
+                position.f_82479_, position.f_82480_, position.f_82481_, 1, 0, 0, 0, 0, true);
+        // Tiny rounds do not create a full-size smoke cloud or a terrain light source.
+        return true;
     }
 
     private static boolean isWaterImpact(Level level, Vec3 position) {

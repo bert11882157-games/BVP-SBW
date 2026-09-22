@@ -91,6 +91,16 @@ public final class BvpProjectileTrailRenderer {
         updateLevel(clientLevel);
         if (clientLevel != null) {
             trimStaleStates(clientLevel.m_46467_());
+            // Server residency holds cancel the whole projectile tick, including native FX.
+            // Refresh an already registered exhaust at its held position without advancing flight.
+            for (TrailState state : TRAILS.values()) {
+                if (state.projectile instanceof WireGuideMissileEntity missile && state.guidedAtgm
+                        && !missile.m_213877_()
+                        && com.atsuishio.superbwarfare.client.FarProjectilePlayback.pausedVelocity(missile) != null) {
+                    var definition = BvpProjectileEffectDefinition.forEntity(missile);
+                    if (definition != null) emit(missile, definition, state.kind);
+                }
+            }
         }
     }
 
@@ -109,11 +119,17 @@ public final class BvpProjectileTrailRenderer {
         TrailState state = TRAILS.computeIfAbsent(entityUuid,
                 ignored -> new TrailState((((long) entityId) << 32) ^ entityUuid.getLeastSignificantBits()));
         state.projectile = entity;
+        state.kind = kind;
         state.guidedAtgm = definition.isGuidedAtgm();
         if (state.lastSpawnTick == tick) {
             return;
         }
         state.lastSpawnTick = tick;
+
+        if (definition.isGuidedAtgm() && entity instanceof WireGuideMissileEntity missile) {
+            emitGuidedExhaust(missile, definition, kind, tick);
+            return;
+        }
 
         double previousX = entity.f_19854_;
         double previousY = entity.f_19855_ + entity.m_20206_() * 0.5D;
@@ -195,6 +211,54 @@ public final class BvpProjectileTrailRenderer {
         Vec3 reference = Math.abs(forward.f_82480_) < 0.95D ? WORLD_UP : WORLD_X;
         Vec3 right = reference.m_82537_(forward).m_82541_();
         return new OrbitFrame(right, forward.m_82537_(right).m_82541_());
+    }
+
+    private static void emitGuidedExhaust(WireGuideMissileEntity missile,
+                                         BvpProjectileEffectDefinition definition, ProjectileTrailKind kind, long tick) {
+        if (missile.suppressesGuidedPropulsionTrail()) return;
+        var profile = com.atsuishio.superbwarfare.api.projectile.ProjectileProfiles.resolve(missile);
+        var shape = BvpMissileExhaustGeometry.forProfile(profile);
+        if (shape == null) return;
+        double exhaustRadius = shape.radius() * 1.4;
+        Vec3 motion = missile.m_20184_();
+        if (motion.m_82556_() < MIN_FLIGHT_DIRECTION_SQR) {
+            Vec3 pausedMotion = com.atsuishio.superbwarfare.client.FarProjectilePlayback.pausedVelocity(missile);
+            if (pausedMotion != null) motion = pausedMotion;
+        }
+        if (motion.m_82556_() < MIN_FLIGHT_DIRECTION_SQR) return;
+        Vec3 forward = motion.m_82541_();
+        OrbitFrame frame = orbitFrame(missile, motion.f_82479_, motion.f_82480_, motion.f_82481_);
+        if (frame == null) return;
+        boolean thrust = missile.isGuidedPropulsionThrusting();
+        double dx = missile.m_20185_() - missile.f_19854_;
+        double dy = missile.m_20186_() - missile.f_19855_;
+        double dz = missile.m_20189_() - missile.f_19856_;
+        int particlesPerSample = thrust ? 5 : 1;
+        int samples = Math.min(MAX_PARTICLES_PER_EMIT / particlesPerSample,
+                Math.max(3, Math.min(MAX_CENTER_SAMPLES_PER_EMIT * 3,
+                        definition.trail().sampleCount(Math.sqrt(dx * dx + dy * dy + dz * dz)) * 3)));
+        int emitted = 0;
+        // Triple the original sample rate while retaining per-missile and global FX ceilings.
+        for (int sample = 1; sample <= samples; sample++) {
+            if (!reserveGlobalParticleBudget(tick, particlesPerSample)) break;
+            double t = sample / (double) samples;
+            Vec3 center = new Vec3(missile.f_19854_ + (missile.m_20185_() - missile.f_19854_) * t,
+                    missile.f_19855_ + (missile.m_20186_() - missile.f_19855_) * t + missile.m_20206_() * 0.5,
+                    missile.f_19856_ + (missile.m_20189_() - missile.f_19856_) * t)
+                    .m_82546_(forward.m_82490_(shape.rear()));
+            BvpClientParticles.spawnMissileExhaust(thrust, center, (float) (exhaustRadius * (thrust ? 1.1 : 2.2)));
+            emitted++;
+            if (!thrust) continue;
+            for (int satellite = 0; satellite < 4; satellite++) {
+                double angle = (missile.f_19797_ - 1 + t) * 0.628318531 + satellite * Math.PI / 2;
+                Vec3 offset = frame.right().m_82490_(Math.cos(angle) * exhaustRadius * 0.35)
+                        .m_82549_(frame.up().m_82490_(Math.sin(angle) * exhaustRadius * 0.35));
+                BvpClientParticles.spawnMissileExhaust(true, center.m_82549_(offset), (float) (exhaustRadius * 0.8));
+            }
+        }
+        BvpTrailDiagnostics.recordBvpTrailSpawn(missile, definition, kind,
+                exhaustRadius, emitted, thrust ? emitted * 4 : 0,
+                thrust ? emitted * 5 : 0, thrust ? 0 : emitted, tick);
     }
 
     private static void emitOrbitingTrails(ClientLevel level, BvpProjectileEffectDefinition.Trail trail,
@@ -461,6 +525,7 @@ public final class BvpProjectileTrailRenderer {
     private static final class TrailState {
         final Random random;
         FastThrowableProjectile projectile;
+        ProjectileTrailKind kind = ProjectileTrailKind.SMALL;
         boolean guidedAtgm;
         long lastSpawnTick = -1L;
 

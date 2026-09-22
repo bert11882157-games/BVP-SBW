@@ -1,0 +1,23 @@
+{
+  "Schema": 1,
+  "SuspendedWeapons": [],
+  "Pairs": [],
+  "StoreGroups": {
+    "berts_vehicle_pack:modeled_store/rafale/external_tanks": [
+      "suspended_external_tanks_left",
+      "suspended_external_tanks_right"
+    ],
+    "berts_vehicle_pack:modeled_store/rafale/mica": [
+      "suspended_mica_left",
+      "suspended_mica_right"
+    ],
+    "berts_vehicle_pack:modeled_store/rafale/magic": [
+      "suspended_magic_left",
+      "suspended_magic_right"
+    ]
+  },
+  "Name": "Rafale",
+  "BuiltInWeapons": [
+    "Gun1"
+  ]
+}

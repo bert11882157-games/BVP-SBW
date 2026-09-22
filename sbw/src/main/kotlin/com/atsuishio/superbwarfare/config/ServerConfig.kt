@@ -11,6 +11,7 @@ inline fun <T : ModConfigValue> buildServerConfig(block: ModConfigBuilder.() -> 
 val SERVER_CONFIG = buildConfig(
     SERVER_CONFIG_BUILDER,
 
+    FarRenderConfig,
     SpawnConfig,
     ProjectileConfig,
     ExplosionConfig,

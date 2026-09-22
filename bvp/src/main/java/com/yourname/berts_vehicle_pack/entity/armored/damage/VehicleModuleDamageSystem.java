@@ -82,6 +82,9 @@ public final class VehicleModuleDamageSystem {
     }
 
     public void applyMobilityLimit() {
+        if (!vehicle.usesBvpGroundMobilityLimits()) {
+            return;
+        }
         if (vehicle.isEngineDisabled()) {
             stopAllMovementInput();
         }
@@ -323,6 +326,9 @@ public final class VehicleModuleDamageSystem {
     }
 
     private void disableEngineMobility() {
+        if (!vehicle.usesBvpGroundMobilityLimits()) {
+            return;
+        }
         vehicle.setPower(0.0F);
         vehicle.setTargetSpeed(0.0D);
     }

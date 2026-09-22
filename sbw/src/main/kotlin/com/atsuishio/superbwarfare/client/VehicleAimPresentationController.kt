@@ -64,6 +64,11 @@ object VehicleAimPresentationController {
             return
         }
         val selectedWeaponIndex = vehicle.getPrimaryWeaponIndex(seatIndex)
+        if (vehicle.isPassengerStationLocalAim(seatIndex, selectedWeaponIndex)) {
+            // Station-local aircraft aim is accepted server state, never a second client servo.
+            resetVehicle(vehicle)
+            return
+        }
         val channelStates = states.getOrPut(vehicle) {
             EnumMap(VehicleAimChannel::class.java)
         }

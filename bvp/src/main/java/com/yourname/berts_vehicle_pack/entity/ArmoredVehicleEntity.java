@@ -1,6 +1,15 @@
 package com.yourname.berts_vehicle_pack.entity;
 
 import com.atsuishio.superbwarfare.api.weapon.ReloadTransitionPolicy;
+import com.atsuishio.superbwarfare.api.projectile.ProjectileCollisionTarget;
+import com.atsuishio.superbwarfare.api.vehicle.render.FarVehicleCopies;
+import com.atsuishio.superbwarfare.api.vehicle.presentation.VehicleModuleHudProvider;
+import com.atsuishio.superbwarfare.api.vehicle.presentation.VehicleModuleHudLayoutProvider;
+import com.atsuishio.superbwarfare.api.vehicle.presentation.VehicleModuleHudMarker;
+import com.yourname.berts_vehicle_pack.armor.ArmorModuleHudLayout;
+import com.atsuishio.superbwarfare.api.vehicle.presentation.VehicleModuleHudState;
+import com.atsuishio.superbwarfare.api.vehicle.presentation.VehicleModuleHudHealth;
+import com.atsuishio.superbwarfare.api.vehicle.render.FarVehicleVisualExtension;
 import com.atsuishio.superbwarfare.diagnostics.EliteDiagnostics;
 import com.atsuishio.superbwarfare.api.vehicle.aim.VehicleAimChannel;
 import com.atsuishio.superbwarfare.api.vehicle.aim.VehicleAimMode;
@@ -17,6 +26,7 @@ import com.atsuishio.superbwarfare.data.vehicle.subdata.CameraPos;
 import com.atsuishio.superbwarfare.data.vehicle.subdata.SeatInfo;
 import com.atsuishio.superbwarfare.entity.vehicle.base.GeoVehicleEntity;
 import com.yourname.berts_vehicle_pack.armor.ArmorProfiles;
+import com.yourname.berts_vehicle_pack.armor.BvpProjectileCollision;
 import com.yourname.berts_vehicle_pack.armor.EraBrickIds;
 import com.yourname.berts_vehicle_pack.armor.VehicleModuleHealth;
 import com.yourname.berts_vehicle_pack.entity.armored.damage.BvpFieldRepairAction;
@@ -43,7 +53,7 @@ import java.util.Map;
 import java.util.StringJoiner;
 
 public abstract class ArmoredVehicleEntity extends GeoVehicleEntity implements VehicleAimProfileProvider,
-        VehicleAimReticleProfileProvider, VehicleSeatPoseProvider {
+        VehicleAimReticleProfileProvider, VehicleSeatPoseProvider, FarVehicleVisualExtension, ProjectileCollisionTarget, VehicleModuleHudProvider, VehicleModuleHudLayoutProvider {
     private static final double BVP_FIRST_PERSON_SENSITIVITY_MULTIPLIER = 0.85D;
     private static final VehicleAimReticleProfile BVP_AIM_RETICLE = new VehicleAimReticleProfile(
             0xF0FF4040, 0xF058E676, 5.0D, 14, 12, 5);
@@ -67,10 +77,28 @@ public abstract class ArmoredVehicleEntity extends GeoVehicleEntity implements V
         this.armorProfileId = armorProfileId;
     }
 
+    public boolean usesBvpArmorResolution() {
+        // Fragile platforms without authored armor take native projectile damage. Once the
+        // user authors their plates, normal BVP penetration applies below the lethal caliber.
+        return computed().getLethalDirectCaliberMm() == null
+                || !com.yourname.berts_vehicle_pack.armor.ArmorProfiles.get(armorProfileId).plates.isEmpty();
+    }
+
+    @Override
+    public boolean usesDetailedProjectileCollision() {
+        return super.usesDetailedProjectileCollision() || BvpProjectileCollision.supports(armorProfileId);
+    }
+
+    @Override
+    public ProjectileCollisionTarget.Hit clipProjectile(Vec3 start, Vec3 end) {
+        return super.usesDetailedProjectileCollision() ? super.clipProjectile(start, end)
+                : BvpProjectileCollision.clip(this, start, end);
+    }
+
     @Override
     public double getTargetSpeed() {
         double targetSpeed = super.getTargetSpeed();
-        if (this.bvpModuleDamage == null) {
+        if (this.bvpModuleDamage == null || !usesBvpGroundMobilityLimits()) {
             return targetSpeed;
         }
         return targetSpeed * this.bvpModuleDamage.engineMobilityMultiplier();
@@ -90,7 +118,9 @@ public abstract class ArmoredVehicleEntity extends GeoVehicleEntity implements V
     protected void afterVehicleTick() {
         super.afterVehicleTick();
         if (!this.m_9236_().f_46443_) {
-            bvpModuleDamage.applyMobilityLimit();
+            if (usesBvpGroundMobilityLimits()) {
+                bvpModuleDamage.applyMobilityLimit();
+            }
             if (usesBvpAmmoRackWarnings()) {
                 bvpAmmoRack.tickWarning();
             }
@@ -106,8 +136,8 @@ public abstract class ArmoredVehicleEntity extends GeoVehicleEntity implements V
     }
 
     /**
-     * Preserves the final pre-migration BVP clamp bypass directly instead of making 360-degree
-     * first-person look depend on a synchronized aim snapshot or a successfully resolved pose.
+     * Allows 360-degree first-person look for eligible seats without requiring a synchronized
+     * aim snapshot or a successfully resolved pose.
      */
     @Override
     public void m_7340_(Entity passenger) {
@@ -166,6 +196,11 @@ public abstract class ArmoredVehicleEntity extends GeoVehicleEntity implements V
         return true;
     }
 
+    /** Ground drive damage may stop translation; flight owners must retain glide momentum. */
+    public boolean usesBvpGroundMobilityLimits() {
+        return true;
+    }
+
     protected boolean usesBvpAmmoRackWarnings() {
         return true;
     }
@@ -194,12 +229,12 @@ public abstract class ArmoredVehicleEntity extends GeoVehicleEntity implements V
         return 0.35F;
     }
 
-    /** Legacy movable-camera profiles used their attachment direction even without ZoomDirection. */
+    /** Compatibility opt-in for attachment-directed zoom when ZoomDirection is absent. */
     protected boolean usesBvpAttachmentZoomDirection() {
         return false;
     }
 
-    /** Final pre-migration rig vehicles refreshed the controlling rider body on every turn callback. */
+    /** Compatibility opt-in to refresh the controlling rider's body on every unclamped turn. */
     protected boolean usesBvpPassengerTurnBodyRefresh() {
         return false;
     }
@@ -265,6 +300,13 @@ public abstract class ArmoredVehicleEntity extends GeoVehicleEntity implements V
 
     @Override
     public VehicleAimReticleRole getVehicleAimReticleRole(int seatIndex, int selectedWeaponIndex) {
+        SeatInfo opticSeat = getSeat(seatIndex);
+        if (opticSeat != null && opticSeat.getCameraPos() != null
+                && "operator_scope".equals(opticSeat.getCameraPos().getZoomEyeAttachment())) {
+            // The fitted emplacement scope is an explicit physical eye anchor. Tank gunner
+            // optics retain their existing FOV-only policy and never shift to a gun muzzle.
+            return VehicleAimReticleRole.EMPLACEMENT_OPTIC;
+        }
         if (hasPassengerWeaponStation() && seatIndex == getPassengerWeaponStationControllerIndex()) {
             return VehicleAimReticleRole.PASSENGER_HMG;
         }
@@ -459,6 +501,32 @@ public abstract class ArmoredVehicleEntity extends GeoVehicleEntity implements V
         return this.f_19804_.m_135370_(SPENT_ERA_BRICKS);
     }
 
+    @Override
+    public final Map<String, String> captureFarRenderVisuals() {
+        if (this instanceof com.yourname.berts_vehicle_pack.entity.helicopter.AuthoredHelicopter helicopter) {
+            return Map.of(BvpFarVehicleVisuals.SPENT_ERA, getBvpSpentEraBricks(),
+                    BvpFarVehicleVisuals.ROTOR_ACTIVE, Boolean.toString(BvpFarVehicleVisuals.rotorActive(this)),
+                    BvpFarVehicleVisuals.ROTOR_SPOOL, Double.toString(helicopter.getBvpRotorLiftPower()),
+                    BvpFarVehicleVisuals.LEFT_TRACK_BROKEN, Boolean.toString(isLeftTrackBroken()),
+                    BvpFarVehicleVisuals.RIGHT_TRACK_BROKEN, Boolean.toString(isRightTrackBroken()));
+        }
+        return Map.of(BvpFarVehicleVisuals.SPENT_ERA, getBvpSpentEraBricks(),
+                BvpFarVehicleVisuals.ROTOR_ACTIVE, Boolean.toString(BvpFarVehicleVisuals.rotorActive(this)),
+                BvpFarVehicleVisuals.LEFT_TRACK_BROKEN, Boolean.toString(isLeftTrackBroken()),
+                BvpFarVehicleVisuals.RIGHT_TRACK_BROKEN, Boolean.toString(isRightTrackBroken()));
+    }
+
+    @Override
+    public final void applyFarRenderVisuals(Map<String, String> values) {
+        if (!FarVehicleCopies.isCopy(this)) {
+            throw new IllegalStateException("Cosmetic far state requires a render copy");
+        }
+        String spent = values.getOrDefault(BvpFarVehicleVisuals.SPENT_ERA, "");
+        if (!getBvpSpentEraBricks().equals(spent)) {
+            this.f_19804_.m_135381_(SPENT_ERA_BRICKS, spent);
+        }
+    }
+
     public final String getLastArmorHitPlate() {
         return this.f_19804_.m_135370_(LAST_ARMOR_HIT_PLATE);
     }
@@ -522,6 +590,24 @@ public abstract class ArmoredVehicleEntity extends GeoVehicleEntity implements V
 
     public final boolean isBvpWeaponsModuleDestroyed() {
         return bvpModuleDamage.hasDestroyedWeaponsSystems();
+    }
+
+    @Override
+    public final List<VehicleModuleHudMarker> vehicleModuleHudLayout(float partialTick) {
+        return ArmorModuleHudLayout.sample(this, partialTick);
+    }
+
+    @Override
+    public final VehicleModuleHudState vehicleModuleHudState() {
+        return new VehicleModuleHudState(
+                new VehicleModuleHudHealth(getModuleHealth("engine"), (float) VehicleModuleHealth.ENGINE_HP,
+                        isEngineDisabled()),
+                usesBvpTrackModuleRepair() ? new VehicleModuleHudHealth(getModuleHealth("lefttrack"),
+                        (float) VehicleModuleHealth.TRACK_HP, isLeftTrackBroken()) : null,
+                usesBvpTrackModuleRepair() ? new VehicleModuleHudHealth(getModuleHealth("righttrack"),
+                        (float) VehicleModuleHealth.TRACK_HP, isRightTrackBroken()) : null,
+                hasBvpWeaponsSystemsModule() ? new VehicleModuleHudHealth(getBvpWeaponsSystemsHealth(),
+                        (float) VehicleModuleHealth.WEAPONS_SYSTEMS_HP, isBvpWeaponsModuleDestroyed()) : null);
     }
 
     public final boolean hasBvpAmmoRackModule() {

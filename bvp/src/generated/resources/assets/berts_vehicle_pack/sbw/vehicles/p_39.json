@@ -1,0 +1,175 @@
+{
+  "ID": "berts_vehicle_pack:p_39",
+  "Model": {
+    "GeometryBackend": "berts_vehicle_pack:vehicle/p_39",
+    "Model": "berts_vehicle_pack:geo/native_fallback/p_39.geo.json",
+    "Texture": "berts_vehicle_pack:textures/entity/p_39.png",
+    "WreckTexture": "berts_vehicle_pack:textures/entity_dead/p_39.png"
+  },
+  "MouseSpeed": [
+    0.2,
+    0.2
+  ],
+  "AircraftRig": {
+    "Schema": 2,
+    "Frame": "GENERATED_MODEL_PIXELS",
+    "Surfaces": [
+      {
+        "Bone": "left_aileron",
+        "Parent": "hull",
+        "Pivot": [
+          -63.06383,
+          22.34894,
+          8.62979
+        ],
+        "Axis": [
+          -0.9898909171385214,
+          0.1196571424793861,
+          -0.07614552134121079
+        ],
+        "ControlWeights": {
+          "ElevatorUp": 0,
+          "RightRoll": -1,
+          "RudderRight": 0
+        },
+        "MaxDeflectionDegrees": 25
+      },
+      {
+        "Bone": "right_aileron",
+        "Parent": "hull",
+        "Pivot": [
+          63.06383,
+          22.34894,
+          8.62979
+        ],
+        "Axis": [
+          -0.9898909171385214,
+          -0.1196571424793861,
+          0.07614552134121079
+        ],
+        "ControlWeights": {
+          "ElevatorUp": 0,
+          "RightRoll": 1,
+          "RudderRight": 0
+        },
+        "MaxDeflectionDegrees": 25
+      },
+      {
+        "Bone": "left_elevator",
+        "Parent": "hull",
+        "Pivot": [
+          -15.93192,
+          34.0766,
+          90.7234
+        ],
+        "Axis": [
+          -0.9965457560879608,
+          -1.5637570191723313e-7,
+          0.08304550573661382
+        ],
+        "ControlWeights": {
+          "ElevatorUp": 1,
+          "RightRoll": 0,
+          "RudderRight": 0
+        },
+        "MaxDeflectionDegrees": 25
+      },
+      {
+        "Bone": "right_elevator",
+        "Parent": "hull",
+        "Pivot": [
+          15.93192,
+          34.0766,
+          90.7234
+        ],
+        "Axis": [
+          -0.9965457560879608,
+          1.5637570191723313e-7,
+          -0.08304550573661382
+        ],
+        "ControlWeights": {
+          "ElevatorUp": 1,
+          "RightRoll": 0,
+          "RudderRight": 0
+        },
+        "MaxDeflectionDegrees": 25
+      },
+      {
+        "Bone": "rudder",
+        "Parent": "hull",
+        "Pivot": [
+          0,
+          46.46809,
+          89.39574
+        ],
+        "Axis": [
+          0,
+          -1,
+          0
+        ],
+        "ControlWeights": {
+          "ElevatorUp": 0,
+          "RightRoll": 0,
+          "RudderRight": -1
+        },
+        "MaxDeflectionDegrees": 25
+      }
+    ],
+    "Rotors": [
+      {
+        "Bone": "propeller_0",
+        "Parent": "hull",
+        "Pivot": [
+          0,
+          27.4383,
+          -63.72766
+        ],
+        "Axis": [
+          0,
+          0,
+          1
+        ],
+        "SpeedChannel": "engineSpool",
+        "Direction": 1,
+        "DegreesPerTickAtFullSpeed": 37
+      }
+    ],
+    "Gear": [
+      {
+        "Bone": "landing_gear_12",
+        "Parent": "hull"
+      },
+      {
+        "Bone": "landing_gear_14",
+        "Parent": "hull"
+      },
+      {
+        "Bone": "landing_gear_15",
+        "Parent": "hull"
+      }
+    ],
+    "Sweeps": []
+  },
+  "EngineExhaust": {
+    "Schema": "berts_vehicle_pack:engine_exhaust_origins/v1",
+    "Parent": "HULL",
+    "Origins": [
+      {
+        "Id": "left_bank",
+        "Position": [
+          -0.45085,
+          1.82553,
+          0.77447
+        ]
+      },
+      {
+        "Id": "right_bank",
+        "Position": [
+          0.45085,
+          1.82553,
+          0.77447
+        ]
+      }
+    ]
+  }
+}

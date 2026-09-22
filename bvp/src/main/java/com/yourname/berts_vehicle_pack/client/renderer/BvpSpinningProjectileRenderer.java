@@ -2,6 +2,7 @@ package com.yourname.berts_vehicle_pack.client.renderer;
 
 import com.atsuishio.superbwarfare.entity.projectile.BasicGeoProjectileEntity;
 import com.atsuishio.superbwarfare.client.ClientRenderHandler;
+import com.atsuishio.superbwarfare.diagnostics.EliteDiagnostics;
 import com.atsuishio.superbwarfare.entity.vehicle.utils.VehicleVecUtils;
 import com.example.sbwmeshloader.core.PolyMeshLoader;
 import com.example.sbwmeshloader.core.PolyMeshModel;
@@ -19,6 +20,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.WeakHashMap;
 
 public class BvpSpinningProjectileRenderer<T extends Entity> extends EntityRenderer<T> {
     private final ResourceLocation modelLocation;
@@ -27,6 +29,32 @@ public class BvpSpinningProjectileRenderer<T extends Entity> extends EntityRende
     private final float modelForwardYawDegrees;
     private final Map<ResourceLocation, PolyMeshModel> models = new HashMap<>();
     private final Set<ResourceLocation> failedModels = new HashSet<>();
+    private final Map<Entity, Double> diagnosticSamples = new WeakHashMap<>();
+    private static final ResourceLocation MESH_EXTENSION = new ResourceLocation("berts_vehicle_pack", "projectile_mesh_v1");
+    private final Map<com.atsuishio.superbwarfare.api.projectile.ResolvedProjectileProfile, MeshPresentation> presentations = new WeakHashMap<>();
+    private record MeshPresentation(ResourceLocation model, ResourceLocation texture, float yaw, float spin) { }
+
+    private MeshPresentation presentation(T entity) {
+        var profile = com.atsuishio.superbwarfare.api.projectile.ProjectileProfiles.resolve(entity);
+        if (profile == null) return null;
+        if (presentations.containsKey(profile)) return presentations.get(profile);
+        MeshPresentation result = null;
+        try {
+            var extension = profile.extension(MESH_EXTENSION);
+            if (extension != null && extension.isJsonObject()) {
+                var json = extension.getAsJsonObject();
+                var model = ResourceLocation.m_135820_(json.get("Model").getAsString());
+                var texture = ResourceLocation.m_135820_(json.get("Texture").getAsString());
+                float yaw = json.has("ForwardYaw") ? json.get("ForwardYaw").getAsFloat() : 0F;
+                float spin = json.has("SpinDegreesPerTick") ? json.get("SpinDegreesPerTick").getAsFloat() : 0F;
+                if (model != null && texture != null && Float.isFinite(yaw) && Math.abs(yaw) <= 360F
+                        && Float.isFinite(spin) && Math.abs(spin) <= 720F)
+                    result = new MeshPresentation(model, texture, yaw, spin);
+            }
+        } catch (RuntimeException invalid) { /* Invalid optional art retains the native renderer. */ }
+        presentations.put(profile, result);
+        return result;
+    }
 
     public BvpSpinningProjectileRenderer(EntityRendererProvider.Context context, ResourceLocation modelLocation,
                                          ResourceLocation textureLocation, float spinDegreesPerTick) {
@@ -90,23 +118,41 @@ public class BvpSpinningProjectileRenderer<T extends Entity> extends EntityRende
             poseStack.m_252880_(0.0F, entity.m_20206_() / 2.0F, 0.0F);
             poseStack.m_252781_(Axis.f_252436_.m_252977_((float) VehicleVecUtils.getYRotFromVector(look)));
             poseStack.m_252781_(Axis.f_252529_.m_252977_((float) -VehicleVecUtils.getXRotFromVector(look) + 180.0F));
-            poseStack.m_252781_(Axis.f_252403_.m_252977_((entity.f_19797_ + partialTicks) * this.spinDegreesPerTick));
-            if (this.modelForwardYawDegrees != 0.0F) {
-                poseStack.m_252781_(Axis.f_252436_.m_252977_(this.modelForwardYawDegrees));
+            MeshPresentation authored = presentation(entity);
+            float spin = authored == null ? spinDegreesPerTick : authored.spin;
+            float forwardYaw = authored == null ? modelForwardYawDegrees : authored.yaw;
+            poseStack.m_252781_(Axis.f_252403_.m_252977_((entity.f_19797_ + partialTicks) * spin));
+            if (forwardYaw != 0.0F) {
+                poseStack.m_252781_(Axis.f_252436_.m_252977_(forwardYaw));
             }
+            var profile = com.atsuishio.superbwarfare.api.projectile.ProjectileProfiles.resolve(entity);
+            float scale = profile == null ? 1.0F : profile.getRenderScale();
+            if (Float.isFinite(scale) && scale > 0.0F) poseStack.m_85841_(scale, scale, scale);
             loadedModel.renderWithTranslucentSplit(poseStack, bufferSource, renderTextureLocation, packedLight);
+            recordRendered(entity, partialTicks);
         } finally {
             poseStack.m_85849_();
         }
         return true;
     }
 
+    private void recordRendered(T entity, float partialTick) {
+        if (!Boolean.getBoolean("bvp.diagnostics.scenarios") || !EliteDiagnostics.isClientEnabled()) return;
+        double tick = entity.m_9236_().m_46467_() + (double) partialTick;
+        if (tick - diagnosticSamples.getOrDefault(entity, Double.NEGATIVE_INFINITY) < 0.25) return;
+        diagnosticSamples.put(entity, tick);
+        EliteDiagnostics.record(entity, "elite_flight", "PROJECTILE_RENDERED",
+                "render_tick", tick, "partial_tick", partialTick, "position", entity.m_20318_(partialTick));
+    }
+
     protected ResourceLocation modelLocation(T entity) {
-        return this.modelLocation;
+        MeshPresentation authored = presentation(entity);
+        return authored == null ? modelLocation : authored.model;
     }
 
     protected ResourceLocation textureLocation(T entity) {
-        return this.textureLocation;
+        MeshPresentation authored = presentation(entity);
+        return authored == null ? textureLocation : authored.texture;
     }
 
     protected ResourceLocation textureLocation(T entity, ResourceLocation resolvedModelLocation) {
@@ -121,6 +167,7 @@ public class BvpSpinningProjectileRenderer<T extends Entity> extends EntityRende
         if (cached != null || this.failedModels.contains(location)) {
             return cached;
         }
+        if (models.size() + failedModels.size() >= 64) return null;
         PolyMeshModel loaded = PolyMeshLoader.loadModel(location);
         if (loaded == null) {
             this.failedModels.add(location);

@@ -1,0 +1,214 @@
+{
+  "ID": "berts_vehicle_pack:f_86k",
+  "Model": {
+    "GeometryBackend": "berts_vehicle_pack:vehicle/f_86k",
+    "Model": "berts_vehicle_pack:geo/native_fallback/f_86k.geo.json",
+    "Texture": "berts_vehicle_pack:textures/entity/f_86k.png",
+    "WreckTexture": "berts_vehicle_pack:textures/entity_dead/f_86k.png"
+  },
+  "MouseSpeed": [
+    0.2,
+    0.2
+  ],
+  "AfterburnerPresentation": {
+    "Schema": 2,
+    "Frame": "VEHICLE_LOCAL_BLOCKS",
+    "Outlets": [
+      {
+        "Id": "afterburner_center",
+        "Position": [
+          0,
+          1.611173125,
+          -4.8883068750000005
+        ],
+        "Direction": [
+          0,
+          0,
+          -1
+        ]
+      }
+    ],
+    "Flame": {
+      "Scale": 0.9,
+      "WidthBlocks": 0.2,
+      "LengthBlocks": 7,
+      "ParticlesPerTick": 3,
+      "LifetimeTicks": 10,
+      "ColorRgb": [
+        1,
+        1,
+        1
+      ]
+    },
+    "Smoke": {
+      "Scale": 0.5,
+      "WidthBlocks": 0.18,
+      "LengthBlocks": 6,
+      "ParticlesPerTick": 0.5,
+      "LifetimeTicks": 14,
+      "ColorRgb": [
+        1,
+        1,
+        1
+      ]
+    },
+    "TapEmitters": [
+      {
+        "Outlet": "afterburner_center",
+        "Style": "FM_FLAME",
+        "Interval": 1,
+        "Offset": [
+          0,
+          0,
+          0
+        ],
+        "Extents": [
+          0.14872368421875,
+          0.14872368421875,
+          0.14872368421875
+        ],
+        "Velocity": [
+          0,
+          0,
+          0.1875
+        ]
+      }
+    ],
+    "TapSource": "GENERIC_TAP_FMFLAME",
+    "TapVariant": "GENERIC_TAP_FMFLAME_AT_AUTHORED_NOZZLES"
+  },
+  "AircraftRig": {
+    "Schema": 2,
+    "Frame": "GENERATED_MODEL_PIXELS",
+    "Surfaces": [
+      {
+        "Bone": "elevator",
+        "Parent": "hull",
+        "Pivot": [
+          0,
+          31.72772,
+          65.04183
+        ],
+        "Axis": [
+          -1,
+          0,
+          0
+        ],
+        "ControlWeights": {
+          "ElevatorUp": 1,
+          "RightRoll": 0,
+          "RudderRight": 0
+        },
+        "MaxDeflectionDegrees": 25
+      },
+      {
+        "Bone": "rudder",
+        "Parent": "hull",
+        "Pivot": [
+          0,
+          55.9201,
+          82.17479
+        ],
+        "Axis": [
+          0,
+          -0.871152285560546,
+          -0.49101292789766426
+        ],
+        "ControlWeights": {
+          "ElevatorUp": 0,
+          "RightRoll": 0,
+          "RudderRight": -1
+        },
+        "MaxDeflectionDegrees": 25
+      },
+      {
+        "Bone": "aileron_left",
+        "Parent": "hull",
+        "Pivot": [
+          -65.83501,
+          20.82132,
+          30.53793
+        ],
+        "Axis": [
+          -0.8926792964427916,
+          0.06248753949674457,
+          0.44633953567888773
+        ],
+        "ControlWeights": {
+          "ElevatorUp": 0,
+          "RightRoll": -1,
+          "RudderRight": 0
+        },
+        "MaxDeflectionDegrees": 18
+      },
+      {
+        "Bone": "aileron_right",
+        "Parent": "hull",
+        "Pivot": [
+          65.83501,
+          20.82132,
+          30.53793
+        ],
+        "Axis": [
+          -0.8926792964427916,
+          -0.06248753949674457,
+          -0.44633953567888773
+        ],
+        "ControlWeights": {
+          "ElevatorUp": 0,
+          "RightRoll": 1,
+          "RudderRight": 0
+        },
+        "MaxDeflectionDegrees": 18
+      }
+    ],
+    "Rotors": [],
+    "Gear": [
+      {
+        "Bone": "landing_gear_0",
+        "Parent": "hull"
+      },
+      {
+        "Bone": "landing_gear_1",
+        "Parent": "hull"
+      },
+      {
+        "Bone": "landing_gear_2",
+        "Parent": "hull"
+      }
+    ],
+    "GearDoors": [
+      {
+        "Bone": "gear_door_0",
+        "Parent": "hull",
+        "Pivot": [
+          -23.39919,
+          19.03663,
+          3.96596
+        ],
+        "Axis": [
+          0,
+          0,
+          1
+        ],
+        "ClosedAngleDegrees": 90
+      },
+      {
+        "Bone": "gear_door_1",
+        "Parent": "hull",
+        "Pivot": [
+          23.39919,
+          19.03663,
+          3.96596
+        ],
+        "Axis": [
+          0,
+          0,
+          1
+        ],
+        "ClosedAngleDegrees": -90
+      }
+    ],
+    "Sweeps": []
+  }
+}

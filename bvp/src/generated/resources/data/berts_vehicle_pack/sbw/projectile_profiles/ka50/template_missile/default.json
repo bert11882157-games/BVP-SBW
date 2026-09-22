@@ -33,10 +33,15 @@
   "TrailMode": "REPLACE",
   "RenderScale": 1,
   "GuidedPropulsion": {
-    "InitialSpeed": 1.74,
-    "MaxSpeed": 4.35,
-    "AccelerationPerTick": 0.032624999999999994,
-    "ThrustDurationTicks": 80
+    "InitialSpeed": 3.15,
+    "MaxSpeed": 9,
+    "AccelerationPerTick": 0.2925,
+    "ThrustDurationTicks": 120,
+    "MaxTurnRateDegreesPerSecond": 24,
+    "GuidanceLookAheadTicks": 12,
+    "IgnitionDelayTicks": 6,
+    "EjectionSpeed": 2,
+    "EjectionGravityPerTick": 0.0125
   },
   "Extensions": {
     "berts_vehicle_pack:projectile_effect_v1": {

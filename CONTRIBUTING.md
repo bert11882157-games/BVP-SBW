@@ -1,5 +1,8 @@
 # Contributing
 
+Follow the [engineering standards](docs/ENGINEERING.md) for source ownership, naming, maintenance
+comments, state transitions, tests, and compatibility. `.editorconfig` defines shared editor defaults.
+
 - Keep changes focused and explain observable behavior and compatibility.
 - Write comments about behavior, invariants, and maintenance. Keep development-session notes,
   personal tooling details, and temporary investigation narratives outside production mod code.

@@ -210,7 +210,6 @@ object VehicleReloadAudio {
         key.weaponIdentity, key.reloadRevision, sound.location, 0, cycle.localOnly, true,
     ))
 
-    @JvmStatic
     @SubscribeEvent
     fun unload(event: LevelEvent.Unload) {
         val iterator = vehicleReloadSoundCycles.entries.iterator()

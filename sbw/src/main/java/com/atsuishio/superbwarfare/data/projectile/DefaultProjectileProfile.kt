@@ -63,7 +63,7 @@ class DefaultProjectileProfile : IDBasedData<DefaultProjectileProfile> {
 
 /** Raw datapack representation; nullable values allow the resolver to fail closed on bad data. */
 @Serializable
-data class GuidedPropulsionData(
+data class GuidedPropulsionData @JvmOverloads constructor(
     @SerialName("InitialSpeed")
     var initialSpeed: Double? = null,
 
@@ -81,6 +81,15 @@ data class GuidedPropulsionData(
 
     @SerialName("GuidanceLookAheadTicks")
     var guidanceLookAheadTicks: Int? = null,
+
+    @SerialName("IgnitionDelayTicks")
+    var ignitionDelayTicks: Int? = null,
+
+    @SerialName("EjectionSpeed")
+    var ejectionSpeed: Double? = null,
+
+    @SerialName("EjectionGravityPerTick")
+    var ejectionGravityPerTick: Double? = null,
 )
 
 @Serializable
@@ -191,8 +200,8 @@ data class PenetrationCurve(
  * Bounded per-round ricochet probabilities.  Angles are incidence angles from the plate normal
  * (0 degrees is square-on and 90 degrees is grazing); probabilities are not inferred from
  * caliber or a shared gun default.  Malformed curves are intentionally ignored by the
- * authoritative consumer, which preserves the scalar penetration/non-ricochet fallback until
- * the data maintainer materializes a complete WT-derived round entry.
+ * authoritative consumer, which preserves the scalar penetration/non-ricochet fallback when
+ * a complete, valid per-round curve is unavailable in the WT-derived round data.
  */
 @Serializable
 data class RicochetCurve(

@@ -1,0 +1,114 @@
+import groovy.json.JsonOutput
+import groovy.json.JsonSlurper
+import java.security.MessageDigest
+
+// Loaded by the matching SBW wrapper with -I; no changes to SBW source/build files.
+gradle.projectsEvaluated {
+    def p = gradle.rootProject
+    if (p.findProperty('mod_id') != 'superbwarfare') throw new GradleException('Bridge requires matching Superb Warfare source project')
+    // Release identity comes from the frozen source pin, never a containing checkout's HEAD.
+    def pinnedVersion = "${p.property('mod_version')}-mc${p.property('minecraft_version')}-${p.property('source_commit')}".toString()
+    p.version = pinnedVersion
+    p.tasks.withType(AbstractArchiveTask).configureEach {
+        preserveFileTimestamps = false
+        reproducibleFileOrder = true
+    }
+    p.tasks.withType(Jar).configureEach {
+        // Override eagerly captured checkout metadata as well as lazy project.version users.
+        archiveVersion.set(pinnedVersion)
+        manifest.attributes.remove('Implementation-Timestamp')
+        manifest.attributes(['Implementation-Version': pinnedVersion])
+    }
+    def main = p.sourceSets.main
+    p.tasks.named('compileJava', JavaCompile).configure {
+        doFirst {
+            println 'SBW Java compiler class directories: ' + classpath.files.findAll { it.isDirectory() }
+            def kotlinRoot = p.layout.buildDirectory.dir('classes/kotlin/main').get().asFile
+            println 'SBW Kotlin Mod.class present: ' + new File(kotlinRoot, 'com/atsuishio/superbwarfare/Mod.class').isFile()
+        }
+    }
+    def identity = { File f, String id, String version ->
+        def digest = MessageDigest.getInstance('SHA-256')
+        f.withInputStream { stream ->
+            byte[] buffer = new byte[65536]
+            for (int n = stream.read(buffer); n != -1; n = stream.read(buffer)) digest.update(buffer, 0, n)
+        }
+        [id: id, version: version, path: f.absolutePath, size: f.length(), sha256: digest.digest().encodeHex().toString()]
+    }
+    def namedApi = p.tasks.register('bvpMappedApiJar', Jar) {
+        dependsOn(p.tasks.named('classes'))
+        from(main.output.classesDirs)
+        archiveFileName = 'superbwarfare-mapped-api.jar'
+        destinationDirectory = p.layout.buildDirectory.dir('bvp-bridge')
+        preserveFileTimestamps = false
+        reproducibleFileOrder = true
+    }
+    p.tasks.register('writeBvpBuildInputs') {
+        dependsOn(namedApi, p.tasks.named('reobfJarJar'), p.tasks.named('createMcpToSrg'), p.tasks.named('createSrgToMcp'))
+        doLast {
+            def artifactIds = [:]
+            p.configurations.compileClasspath.resolvedConfiguration.resolvedArtifacts.each { a ->
+                artifactIds[a.file.canonicalPath] = [id: a.moduleVersion.id.group + ':' + a.name, version: a.moduleVersion.id.version]
+            }
+            def cp = main.compileClasspath.files.sort { it.path }.collect { f ->
+                def module = artifactIds[f.canonicalPath]
+                identity(f, module?.id ?: f.name, module?.version ?: 'resolved')
+            }
+            def forge = p.configurations.minecraft.dependencies.find { it.group == 'net.minecraftforge' && it.name == 'forge' }
+            def remapper = p.tasks.named('reobfJar').get()
+            def buildTools = p.buildscript.configurations.classpath.resolvedConfiguration.resolvedArtifacts.collect { a ->
+                identity(a.file, 'build-tool:' + a.moduleVersion.id.group + ':' + a.name, a.moduleVersion.id.version)
+            }
+            def record = [
+                schema: 1, kind: 'sbw-source-compiler-inputs', minecraft: p.property('minecraft_version'),
+                forge: forge.version, createdAt: java.time.Instant.now().toString(),
+                mappedApi: identity(namedApi.get().archiveFile.get().asFile, 'sbw-mapped-api', p.version.toString()),
+                runtime: identity(p.tasks.named('jarJar', Jar).get().archiveFile.get().asFile, 'sbw', p.property('mod_version').toString()),
+                mappings: identity(p.tasks.named('createMcpToSrg').get().outputs.files.singleFile, 'named-to-srg', '1.20.1'),
+                reverseMappings: identity(p.tasks.named('createSrgToMcp').get().outputs.files.singleFile, 'srg-to-named', '1.20.1'),
+                remapper: identity(remapper.toolJar.get(), remapper.tool.get(), remapper.resolvedVersion),
+                buildTools: buildTools,
+                classpath: cp
+            ]
+            def output = p.layout.buildDirectory.file('bvp-bridge/inputs.json').get().asFile
+            output.parentFile.mkdirs()
+            output.text = JsonOutput.prettyPrint(JsonOutput.toJson(record)) + '\n'
+            println "PASS source-build compiler bridge: ${cp.size()} dependency files; ${output}"
+        }
+    }
+    if (p.hasProperty('sourceAddonJar')) {
+        def renameClass = p.tasks.named('reobfJar').get().class.classLoader.loadClass(
+            'net.minecraftforge.gradle.userdev.tasks.RenameJarInPlace')
+        p.tasks.register('remapSourceAddon', renameClass) {
+            def direction = p.findProperty('sourceAddonDirection') ?: 'runtime'
+            if (!(direction in ['runtime', 'named'])) throw new GradleException('Unknown addon mapping direction')
+            def mappingTask = p.tasks.named(direction == 'runtime' ? 'createMcpToSrg' : 'createSrgToMcp')
+            dependsOn(mappingTask)
+            mappings.set(mappingTask.get().outputs.files.singleFile)
+            input.set(p.file(p.property('sourceAddonJar')))
+            libraries.from(main.compileClasspath)
+            if (!p.hasProperty('sourceAddonLibraryManifest')) throw new GradleException('Missing exact addon inheritance library manifest')
+            def libraryManifest = p.file(p.property('sourceAddonLibraryManifest'))
+            def proof = new JsonSlurper().parse(libraryManifest)
+            if (proof.schema != 1 || proof.direction != direction || !proof.libraries) throw new GradleException('Invalid addon inheritance library manifest')
+            def extraLibraries = proof.libraries.collect { p.file(it.path) }
+            def suppliedPaths = p.property('sourceAddonLibraries').toString().split(java.util.regex.Pattern.quote(File.pathSeparator)).toList()
+            if (suppliedPaths != extraLibraries.collect { it.absolutePath }) throw new GradleException('Addon inheritance paths differ from manifest')
+            libraries.from(extraLibraries)
+            inputs.file(libraryManifest)
+            doFirst {
+                proof.libraries.each { row ->
+                    def f = p.file(row.path)
+                    if (!f.isFile() || f.length() != row.size || identity(f, row.id, row.version).sha256 != row.sha256) {
+                        throw new GradleException("Changed addon inheritance library: ${row.id}")
+                    }
+                }
+                println "PASS exact addon inheritance libraries: ${proof.libraries.collect { it.id + ':' + it.sha256 }.join(', ')}"
+            }
+            useArgsFile()
+            doLast {
+                println "PASS source addon remap: ${direction} ${input.get().asFile}"
+            }
+        }
+    }
+}

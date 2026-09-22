@@ -20,32 +20,6 @@
       ]
     },
     {
-      "Part": "WheelLeft",
-      "Size": [
-        0.24569,
-        0.49905,
-        2.72559
-      ],
-      "Position": [
-        1.65071,
-        0.5528,
-        -0.19194
-      ]
-    },
-    {
-      "Part": "WheelRight",
-      "Size": [
-        0.24569,
-        0.49905,
-        2.72559
-      ],
-      "Position": [
-        -1.65071,
-        0.5528,
-        -0.19194
-      ]
-    },
-    {
       "Part": "MainEngine",
       "Size": [
         0.88294,
@@ -221,11 +195,6 @@
       "ExplosionRadius": 4,
       "RecoilTime": 42,
       "RecoilForce": 1,
-      "ShootShake": [
-        8,
-        10,
-        60
-      ],
       "Spread": 0.02,
       "ShootAnimationTime": 20,
       "Crosshair": "@VehicleRuApc",
@@ -250,7 +219,12 @@
             "Projectile": {
               "Type": "superbwarfare:cannon_shell",
               "Profile": "berts_vehicle_pack:m48a3_elite/cannon/ammo_00_m332_apcr"
-            }
+            },
+            "ShootShake": [
+              8,
+              10,
+              78
+            ]
           }
         },
         {
@@ -271,7 +245,12 @@
             "Projectile": {
               "Type": "superbwarfare:cannon_shell",
               "Profile": "berts_vehicle_pack:m48a3_elite/cannon/ammo_01_m82_apcbc"
-            }
+            },
+            "ShootShake": [
+              8,
+              10,
+              78
+            ]
           }
         },
         {
@@ -293,7 +272,12 @@
             "Projectile": {
               "Type": "superbwarfare:cannon_shell",
               "Profile": "berts_vehicle_pack:m48a3_elite/cannon/ammo_02_m431_heat_fs"
-            }
+            },
+            "ShootShake": [
+              8,
+              10,
+              78
+            ]
           }
         },
         {
@@ -316,7 +300,12 @@
             "Projectile": {
               "Type": "superbwarfare:cannon_shell",
               "Profile": "berts_vehicle_pack:m48a3_elite/cannon/ammo_03_m71_he"
-            }
+            },
+            "ShootShake": [
+              8,
+              10,
+              78
+            ]
           }
         }
       ],
@@ -329,13 +318,12 @@
         "Fire3P": "berts_vehicle_pack:m48a3_elite_m41_90mm_fire",
         "Fire3PFar": "berts_vehicle_pack:m48a3_elite_m41_90mm_fire",
         "Fire3PVeryFar": "berts_vehicle_pack:m48a3_elite_m41_90mm_fire",
-        "VehicleReload": "berts_vehicle_pack:m1_abrams_elite_m68a1_reload",
         "Change": "superbwarfare:into_cannon",
+        "VehicleReload": "berts_vehicle_pack:m1_abrams_elite_m68a1_reload",
+        "VehicleReloadClipDurationTicks": 86,
         "CancellableSounds": [
           "berts_vehicle_pack:m1_abrams_elite_m68a1_reload"
-        ],
-        "VehicleReloadClipDurationTicks": 86,
-        "VehicleReloadSoundTime": 88
+        ]
       },
       "SoundRadius": 32,
       "ShootPos": {
@@ -379,7 +367,12 @@
         "ProjectileType": "superbwarfare:cannon_shell",
         "ProjectileProfile": "berts_vehicle_pack:m48a3_elite/cannon/default",
         "ProjectileLife": 50
-      }
+      },
+      "ShootShake": [
+        8,
+        10,
+        78
+      ]
     },
     "MachineGun": {
       "DefaultFireMode": "Auto",
@@ -425,7 +418,12 @@
               "ProjectileType": "superbwarfare:projectile",
               "ProjectileProfile": "berts_vehicle_pack:m48a3_elite/machinegun/ammo_00_western_762_ap",
               "ProjectileLife": 400
-            }
+            },
+            "ShootShake": [
+              0,
+              0,
+              0
+            ]
           }
         }
       ],
@@ -510,7 +508,12 @@
             "Damage": 9.5,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
-            "Name": "T"
+            "Name": "T",
+            "ShootShake": [
+              0,
+              0,
+              0
+            ]
           }
         }
       ],
@@ -519,7 +522,12 @@
         "ProjectileType": "superbwarfare:projectile",
         "ProjectileProfile": "berts_vehicle_pack:m48a3_elite/machinegun/default",
         "ProjectileLife": 400
-      }
+      },
+      "ShootShake": [
+        0,
+        0,
+        0
+      ]
     },
     "PassengerMachineGun": {
       "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/gun_12_7mm.png",
@@ -591,7 +599,12 @@
               "ProjectileType": "superbwarfare:projectile",
               "ProjectileProfile": "berts_vehicle_pack:m48a3_elite/passengermachinegun/ammo_00_western_127_m20_api_t_1",
               "ProjectileLife": 400
-            }
+            },
+            "ShootShake": [
+              8,
+              10,
+              6
+            ]
           }
         }
       ],
@@ -646,6 +659,8 @@
       },
       "SoundRadius": 16,
       "Magazine": 100,
+      "NormalReloadTime": 100,
+      "EmptyReloadTime": 100,
       "ProjectileBeltAmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
@@ -660,7 +675,12 @@
             "Damage": 40,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
-            "Name": "I"
+            "Name": "I",
+            "ShootShake": [
+              8,
+              10,
+              6
+            ]
           }
         },
         {
@@ -676,7 +696,12 @@
             "Damage": 40,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
-            "Name": "AP"
+            "Name": "AP",
+            "ShootShake": [
+              8,
+              10,
+              6
+            ]
           }
         },
         {
@@ -692,7 +717,12 @@
             "Damage": 40,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
-            "Name": "API_T"
+            "Name": "API_T",
+            "ShootShake": [
+              8,
+              10,
+              6
+            ]
           }
         }
       ],
@@ -701,7 +731,12 @@
         "ProjectileType": "superbwarfare:projectile",
         "ProjectileProfile": "berts_vehicle_pack:m48a3_elite/passengermachinegun/default",
         "ProjectileLife": 400
-      }
+      },
+      "ShootShake": [
+        8,
+        10,
+        6
+      ]
     }
   },
   "HUDColor": "0xFFC700",

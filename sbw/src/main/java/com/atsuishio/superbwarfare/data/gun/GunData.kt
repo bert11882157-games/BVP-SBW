@@ -169,6 +169,24 @@ class GunData private constructor(
         // limit
         GunProp.modifyProperty(pmc)
 
+        if (item is com.atsuishio.superbwarfare.item.gun.vehicle.VehicleGun) {
+            val installation = getDefault()
+            // A saved property override or selected belt round cannot restore obsolete heat or
+            // an infinite magazine. These are installation policies, not ammunition properties.
+            if (!installation.overheatEnabled) {
+                pmc[GunProp.OVERHEAT_ENABLED] = false
+                pmc[GunProp.HEAT_PER_SHOOT] = 0.0
+            }
+            if (installation.beltFed && installation.magazine > 0) {
+                pmc[GunProp.BELT_FED] = true
+                pmc[MAGAZINE] = installation.magazine
+                pmc[GunProp.NORMAL_RELOAD_TIME] = installation.normalReloadTime
+                pmc[GunProp.EMPTY_RELOAD_TIME] = installation.emptyReloadTime
+                pmc[AMMO_COST_PER_SHOOT] = installation.ammoCostPerShoot
+                pmc[PROJECTILE_AMOUNT] = installation.projectileAmount
+            }
+        }
+
         return pmc[prop]
     }
 

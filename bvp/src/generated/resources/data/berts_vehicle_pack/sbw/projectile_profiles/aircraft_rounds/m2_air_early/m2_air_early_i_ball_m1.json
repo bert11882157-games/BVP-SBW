@@ -1,0 +1,65 @@
+{
+  "Combat": {
+    "WeaponId": "berts_vehicle_pack:aircraft_guns/m2_air_early",
+    "RoundId": "berts_vehicle_pack:m2_air_early_i_ball_m1",
+    "MunitionType": "berts_vehicle_pack:bullet",
+    "DamageType": "berts_vehicle_pack:kinetic",
+    "CaliberMm": 12.7,
+    "DiameterMm": 12.7,
+    "HullDamageClass": "DEFAULT",
+    "HullDamage": 8,
+    "ModuleDamage": 4,
+    "AmmoRackDamage": 1,
+    "PenetrationMm": 7,
+    "PenetrationCurve": {
+      "DistancesMetres": [
+        10,
+        100,
+        500,
+        1000,
+        1500,
+        2000
+      ],
+      "PenetrationMm": [
+        7,
+        6.8163,
+        6,
+        5.2857,
+        0,
+        0
+      ]
+    },
+    "RicochetCurve": {
+      "IncidenceAnglesDegrees": [
+        0,
+        47,
+        49,
+        50,
+        60,
+        65,
+        90
+      ],
+      "Probability": [
+        0,
+        0,
+        0.005,
+        0.35,
+        0.6,
+        1,
+        1
+      ]
+    },
+    "Tandem": false
+  },
+  "VisualProfile": "berts_vehicle_pack:scaled_bullet",
+  "ImpactVisualProfile": "berts_vehicle_pack:hmg",
+  "MotionSync": "INHERIT",
+  "Collision": {
+    "Width": 0.1,
+    "Height": 0.1
+  },
+  "Luminance": 8,
+  "TrailMode": "DEFAULT",
+  "RenderScale": 1,
+  "Extensions": {}
+}

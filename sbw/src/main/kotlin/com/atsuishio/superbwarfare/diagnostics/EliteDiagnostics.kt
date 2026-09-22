@@ -1,6 +1,7 @@
 package com.atsuishio.superbwarfare.diagnostics
 
 import com.atsuishio.superbwarfare.Mod
+import com.atsuishio.superbwarfare.api.diagnostics.DebugFeaturePolicy
 import com.atsuishio.superbwarfare.api.performance.ClientRenderPerformanceDiagnostics
 import com.atsuishio.superbwarfare.network.NetworkTelemetry
 import com.atsuishio.superbwarfare.network.message.receive.EliteDiagnosticsStateMessage
@@ -22,20 +23,40 @@ import java.util.UUID
 object EliteDiagnostics {
     @Volatile private var serverSink: EliteDiagnosticSink? = null
     @Volatile private var clientSink: EliteDiagnosticSink? = null
+    @Volatile private var serverEntityScope: Set<UUID>? = null
     private var startedServerTick = 0
     private var lastOutcome = "Elite diagnostics disabled"
     private const val MAX_CAPTURE_TICKS = 20 * 300
 
-    @JvmStatic fun isServerEnabled(): Boolean = serverSink?.accepting == true
-    @JvmStatic fun isClientEnabled(): Boolean = clientSink?.accepting == true
+    @JvmStatic fun isServerEnabled(): Boolean = DebugFeaturePolicy.allowsDebugTools() && serverSink?.accepting == true
+    @JvmStatic fun isClientEnabled(): Boolean = DebugFeaturePolicy.allowsDebugTools() && clientSink?.accepting == true
     @JvmStatic fun clientSessionId(): UUID? = clientSink?.takeIf { it.accepting }?.session
     @JvmStatic fun isEnabled(level: Level): Boolean = if (level.isClientSide) isClientEnabled() else isServerEnabled()
 
-    fun start(server: MinecraftServer): String {
+    fun start(server: MinecraftServer): String = startWithScope(server, null)
+
+    /** A bounded server-only entity selection; client capture and process counters retain their scope. */
+    fun startForEntities(server: MinecraftServer, entityIds: Set<UUID>): String {
+        require(entityIds.isNotEmpty() && entityIds.size <= 256) { "Expected 1 to 256 diagnostic entities" }
+        return startWithScope(server, entityIds.toSet())
+    }
+
+    /** Add an owned fixture entity to an active selection before recording its lifecycle. */
+    @JvmStatic fun includeServerEntity(entityId: UUID) {
+        val scope = serverEntityScope ?: return
+        if (entityId in scope) return
+        require(scope.size < 256) { "Diagnostic entity selection is full" }
+        serverEntityScope = scope + entityId
+        serverSink?.offer(-1, "session", "entity_scope_added", mapOf("entity_uuid" to entityId.toString()))
+    }
+
+    private fun startWithScope(server: MinecraftServer, entityIds: Set<UUID>?): String {
+        if (!DebugFeaturePolicy.allowsDebugTools()) return "Elite diagnostics are disabled in this playtest artifact"
         stop(server)
         NetworkTelemetry.resetElite()
         val session = UUID.randomUUID()
-        serverSink = open(session, "server")
+        serverEntityScope = entityIds
+        serverSink = open(session, "server", entityIds)
         startedServerTick = server.tickCount
         server.playerList.players.forEach { sendPacketTo(it, EliteDiagnosticsStateMessage(session, true)) }
         return "Elite diagnostics enabled (all categories, maximum 5 minutes). Output: ${serverSink!!.path}"
@@ -45,6 +66,7 @@ object EliteDiagnostics {
         NetworkTelemetry.flushElite(force = true)
         val previous = serverSink
         serverSink = null
+        serverEntityScope = null
         previous?.close()
         server.playerList.players.forEach {
             sendPacketTo(it, EliteDiagnosticsStateMessage(previous?.session ?: UUID(0, 0), false))
@@ -62,6 +84,10 @@ object EliteDiagnostics {
 
     /** Called only by the server-owned diagnostics state packet; distinct sinks in integrated play. */
     @JvmStatic fun setClientSession(session: UUID, enabled: Boolean) {
+        if (!DebugFeaturePolicy.allowsDebugTools()) {
+            ClientRenderPerformanceDiagnostics.setEnabled(false)
+            return
+        }
         if (enabled && clientSink?.session == session && isClientEnabled()) return
         if (!isServerEnabled() && !isClientEnabled() && enabled) NetworkTelemetry.resetElite()
         if (!enabled) NetworkTelemetry.flushElite(force = true)
@@ -70,21 +96,24 @@ object EliteDiagnostics {
         ClientRenderPerformanceDiagnostics.setEnabled(enabled)
     }
 
-    private fun open(session: UUID, side: String): EliteDiagnosticSink {
-        val versions = ModList.get().mods.filter { it.modId == Mod.MODID || it.modId == "berts_vehicle_pack" }
+    private fun open(session: UUID, side: String, entityIds: Set<UUID>? = null): EliteDiagnosticSink {
+        val versions = ModList.get().mods.filter { it.modId in setOf(Mod.MODID, "berts_vehicle_pack", "tacz", "clowder_modern") }
             .associate { it.modId to it.version.toString() }
         val artifacts = versions.keys.associateWith { ModList.get().getModFileById(it).file.filePath.toString() }
         return EliteDiagnosticSink(FMLPaths.GAMEDIR.get().resolve("logs/elite-diagnostics/$session-$side.jsonl"),
             session, side, mapOf("mods" to versions, "code_source" to
                 EliteDiagnostics::class.java.protectionDomain.codeSource?.location?.toString(),
                 "artifacts" to artifacts, "max_seconds" to 300,
-                "scope" to "loaded vehicles and projectiles; no chat/input content"),
+                "scope" to if (entityIds == null) "loaded vehicles and projectiles; no chat/input content"
+                    else "selected server entities; process counters remain aggregate; no chat/input content",
+                "selected_entity_uuids" to entityIds?.map(UUID::toString)?.sorted()),
             onFailure = { Mod.LOGGER.error("Elite diagnostics {} writer failed: {}", side, it) })
     }
 
     /** Java-friendly pairs are snapshotted as scalar values; entities are never sent to the writer. */
     @JvmStatic fun record(entity: Entity, category: String, event: String, vararg fields: Any?) {
         if (!isEnabled(entity.level())) return
+        if (!entity.level().isClientSide && serverEntityScope?.contains(entity.uuid) == false) return
         val data = pairs(fields)
         data["entity_uuid"] = entity.uuid.toString()
         data["entity_id"] = entity.id
@@ -121,16 +150,16 @@ object EliteDiagnostics {
         return result
     }
 
-    @JvmStatic @SubscribeEvent fun login(event: PlayerEvent.PlayerLoggedInEvent) {
+    @SubscribeEvent fun login(event: PlayerEvent.PlayerLoggedInEvent) {
         val player = event.entity as? ServerPlayer ?: return
         val sink = serverSink?.takeIf { it.accepting } ?: return
         sendPacketTo(player, EliteDiagnosticsStateMessage(sink.session, true))
     }
 
-    @JvmStatic @SubscribeEvent fun tick(event: TickEvent.ServerTickEvent) {
+    @SubscribeEvent fun tick(event: TickEvent.ServerTickEvent) {
         if (event.phase != TickEvent.Phase.END || serverSink == null) return
         if (!isServerEnabled() || event.server.tickCount - startedServerTick >= MAX_CAPTURE_TICKS) stop(event.server)
     }
 
-    @JvmStatic @SubscribeEvent fun shutdown(event: ServerStoppingEvent) { stop(event.server) }
+    @SubscribeEvent fun shutdown(event: ServerStoppingEvent) { stop(event.server) }
 }

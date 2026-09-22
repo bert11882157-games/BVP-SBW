@@ -30,32 +30,6 @@
       ]
     },
     {
-      "Part": "WheelLeft",
-      "Size": [
-        0.29167,
-        0.5,
-        3.25
-      ],
-      "Position": [
-        1.54167,
-        0.6,
-        -0.08333
-      ]
-    },
-    {
-      "Part": "WheelRight",
-      "Size": [
-        0.29167,
-        0.5,
-        3.25
-      ],
-      "Position": [
-        -1.54167,
-        0.6,
-        -0.08333
-      ]
-    },
-    {
       "Part": "MainEngine",
       "Size": [
         1,
@@ -346,10 +320,16 @@
               "Family": "TWO_A42",
               "Rounds": [
                 {
-                  "Shots": 1,
+                  "Shots": 4,
                   "Round": "3ubr8_apds",
                   "Ammo": "superbwarfare:small_shell_ap",
                   "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "3uor6_hef_t",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "GREEN"
                 }
               ]
             },
@@ -653,10 +633,10 @@
       "Name": "weapon.berts_vehicle_pack.30_mm_2a42_9m133_kornet_atgm",
       "AmmoType": "superbwarfare:medium_anti_ground_missile",
       "SoundInfo": {
-        "Fire1PGain": 0.5,
-        "Fire3PGain": 0.5,
-        "Fire3PFarGain": 0.5,
-        "Fire3PVeryFarGain": 0.5,
+        "Fire1PGain": 0.35,
+        "Fire3PGain": 0.35,
+        "Fire3PFarGain": 0.35,
+        "Fire3PVeryFarGain": 0.35,
         "Fire1P": "berts_vehicle_pack:atgm_tube_launch",
         "Fire3P": "berts_vehicle_pack:atgm_tube_launch",
         "VehicleReload3p": "superbwarfare:medium_missile_reload",
@@ -727,6 +707,11 @@
           "missile_muzzle_03",
           "missile_muzzle_04"
         ]
+      },
+      "NominalBallistics": {
+        "Supported": false,
+        "ProjectileType": "superbwarfare:wire_guide_missile",
+        "ProjectileProfile": "berts_vehicle_pack:bmp2m/missile/default"
       }
     },
     "GrenadeLauncher": {
@@ -748,7 +733,7 @@
       "Velocity": 6,
       "Damage": 35,
       "ExplosionDamage": 45,
-      "ExplosionRadius": 2.25,
+      "ExplosionRadius": 3,
       "ProjectileLife": 100,
       "RecoilTime": 16,
       "RecoilForce": 0.08,
@@ -803,6 +788,11 @@
         "EffectDirectionAttachments": [
           "grenade_launcher_muzzle"
         ]
+      },
+      "NominalBallistics": {
+        "Supported": false,
+        "ProjectileType": "superbwarfare:gun_grenade",
+        "ProjectileProfile": "berts_vehicle_pack:bmp2m/grenadelauncher/default"
       }
     }
   },

@@ -1,0 +1,132 @@
+{
+  "ID": "berts_vehicle_pack:b_47e",
+  "Model": {
+    "GeometryBackend": "berts_vehicle_pack:vehicle/b_47e",
+    "Model": "berts_vehicle_pack:geo/native_fallback/b_47e.geo.json",
+    "Texture": "berts_vehicle_pack:textures/entity/b_47e.png",
+    "WreckTexture": "berts_vehicle_pack:textures/entity_dead/b_47e.png"
+  },
+  "MouseSpeed": [
+    0.2,
+    0.2
+  ],
+  "AircraftRig": {
+    "Schema": 2,
+    "Frame": "GENERATED_MODEL_PIXELS",
+    "Surfaces": [
+      {
+        "Bone": "elevator_left",
+        "Parent": "hull",
+        "Pivot": [
+          -40.75021,
+          58.32873,
+          212.54031
+        ],
+        "Axis": [
+          -0.9541047415757372,
+          -0.009353982975027045,
+          0.2993269869310127
+        ],
+        "ControlWeights": {
+          "ElevatorUp": 1,
+          "RightRoll": 0,
+          "RudderRight": 0
+        },
+        "MaxDeflectionDegrees": 25
+      },
+      {
+        "Bone": "elevator_right",
+        "Parent": "hull",
+        "Pivot": [
+          40.75021,
+          58.32873,
+          212.54031
+        ],
+        "Axis": [
+          -0.9541047415757372,
+          0.009353982975027045,
+          -0.2993269869310127
+        ],
+        "ControlWeights": {
+          "ElevatorUp": 1,
+          "RightRoll": 0,
+          "RudderRight": 0
+        },
+        "MaxDeflectionDegrees": 25
+      },
+      {
+        "Bone": "rudder",
+        "Parent": "hull",
+        "Pivot": [
+          0,
+          95.08382,
+          224.52567
+        ],
+        "Axis": [
+          0,
+          0.8557320028151775,
+          0.5174193070981454
+        ],
+        "ControlWeights": {
+          "ElevatorUp": 0,
+          "RightRoll": 0,
+          "RudderRight": 1
+        },
+        "MaxDeflectionDegrees": 25
+      }
+    ],
+    "Rotors": [],
+    "Gear": [
+      {
+        "Bone": "landing_gear_0",
+        "Parent": "hull"
+      },
+      {
+        "Bone": "landing_gear_1",
+        "Parent": "hull"
+      },
+      {
+        "Bone": "landing_gear_2",
+        "Parent": "hull"
+      },
+      {
+        "Bone": "landing_gear_3",
+        "Parent": "hull"
+      }
+    ],
+    "Flaps": [],
+    "Sweeps": []
+  },
+  "DefensiveStationPresentation": {
+    "Schema": 1,
+    "Frame": "GENERATED_MODEL_PIXELS",
+    "Yaw": {
+      "Bone": "passengerWeaponStationYaw",
+      "Parent": "hull",
+      "Pivot": [
+        0,
+        39.95119,
+        243.70223
+      ],
+      "Axis": [
+        0,
+        -1,
+        0
+      ]
+    },
+    "Pitch": {
+      "Bone": "passengerWeaponStationPitch",
+      "Parent": "passengerWeaponStationYaw",
+      "Pivot": [
+        0,
+        39.95119,
+        246.09931
+      ],
+      "Axis": [
+        1,
+        0,
+        -1.2246467991473532e-16
+      ]
+    }
+  }
+}

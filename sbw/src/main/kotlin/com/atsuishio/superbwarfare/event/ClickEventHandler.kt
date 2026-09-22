@@ -4,6 +4,8 @@ import com.atsuishio.superbwarfare.client.screens.WeaponEditScreen
 import com.atsuishio.superbwarfare.client.VehicleWeaponSlotCycleClient
 import com.atsuishio.superbwarfare.client.VehicleGeometricZeroDistanceClient
 import com.atsuishio.superbwarfare.client.input.VehicleControlBindings
+import com.atsuishio.superbwarfare.client.input.VehicleDismountInput
+import com.atsuishio.superbwarfare.client.input.VehicleWeaponSelectionInput
 import com.atsuishio.superbwarfare.client.camera.VehicleFreeCameraController
 import com.atsuishio.superbwarfare.client.camera.VehicleOpticalZoomController
 import com.atsuishio.superbwarfare.api.vehicle.weapon.VehicleWeaponSlot
@@ -128,6 +130,8 @@ object ClickEventHandler {
     }
 
     private fun handleChangeAmmoPress(player: Player, stack: ItemStack, add: Boolean) {
+        // Pod arrow controls own these keys; do not also change the aircraft's primary ammunition.
+        if (com.atsuishio.superbwarfare.client.aircraft.AircraftArmamentClient.isPodActive(player.vehicle as? VehicleEntity)) return
         val vehicleData = controlledVehicleGunData(player)
         if (vehicleData != null) {
             if (vehicleData.get(GunProp.AMMO_CONSUMER).size > 1) {
@@ -180,6 +184,7 @@ object ClickEventHandler {
         if (event.action != InputConstants.RELEASE) return
 
         val input = mouseInput(event.button)
+        VehicleDismountInput.handleInput(input, event.action)
         VehicleFreeCameraController.handleInput(input, event.action)
         VehicleOpticalZoomController.releaseHold(input)
         if (notInGame) return
@@ -216,9 +221,14 @@ object ClickEventHandler {
 
     @SubscribeEvent
     fun onButtonPressed(event: InputEvent.MouseButton.Pre) {
+        if (VehicleWeaponSelectionInput.handleInput(mouseInput(event.button), event.action)) {
+            event.isCanceled = true
+            return
+        }
         if (event.action != InputConstants.PRESS) return
 
         val input = mouseInput(event.button)
+        VehicleDismountInput.handleInput(input, event.action)
         VehicleFreeCameraController.handleInput(input, event.action)
         if (notInGame) return
 
@@ -289,7 +299,6 @@ object ClickEventHandler {
             }
         }
 
-        if (ModKeyMappings.DISMOUNT.isActiveAndMatches(input)) handleDismountPress(player)
         if (reloadMapping().isActiveAndMatches(input)) handleReloadPress()
         if (cycleAmmoMapping().isActiveAndMatches(input)) handleCycleAmmoPress(player, stack)
         if (changeAmmoForwardMapping().isActiveAndMatches(input)) {
@@ -388,6 +397,8 @@ object ClickEventHandler {
         if (key < 0) return
 
         val input = keyboardInput(event)
+        if (VehicleWeaponSelectionInput.handleInput(input, event.action)) return
+        VehicleDismountInput.handleInput(input, event.action)
         VehicleFreeCameraController.handleInput(input, event.action)
         if (event.action == GLFW.GLFW_RELEASE) {
             VehicleOpticalZoomController.releaseHold(input)
@@ -408,19 +419,12 @@ object ClickEventHandler {
             if (ModKeyMappings.VEHICLE_SWITCH_PRIMARY.isActiveAndMatches(input)) {
                 VehicleWeaponSlotCycleClient.request(VehicleWeaponSlot.PRIMARY)
             }
-            if (ModKeyMappings.VEHICLE_SWITCH_SECONDARY.isActiveAndMatches(input)) {
-                VehicleWeaponSlotCycleClient.request(VehicleWeaponSlot.SECONDARY)
-            }
             if (ModKeyMappings.VEHICLE_CYCLE_SIGHT_ZERO.isActiveAndMatches(input)) {
                 VehicleGeometricZeroDistanceClient.requestCycle(player)
             }
 
             if (thermalMapping().isActiveAndMatches(input)) {
                 handleThermalPress(player)
-            }
-
-            if (ModKeyMappings.DISMOUNT.isActiveAndMatches(input)) {
-                handleDismountPress(player)
             }
 
             if (ordinaryMappingMatches(Minecraft.getInstance().options.keyJump, input)) {
@@ -767,33 +771,6 @@ object ClickEventHandler {
                 Component.translatable("tips.superbwarfare.no_cloth_config").withStyle(ChatFormatting.RED), true
             )
         }
-    }
-
-    private fun handleDismountPress(player: Player) {
-        val vehicle = player.vehicle as? VehicleEntity ?: return
-
-        if ((!vehicle.onGround() || vehicle.deltaMovement.length() >= 0.1) && ClientEventHandler.dismountCountdown <= 0) {
-            if (vehicle.allowEjection(vehicle.getSeatIndex(player))) {
-                player.displayClientMessage(
-                    Component.translatable(
-                        "tips.superbwarfare.mount.onboard",
-                        ModKeyMappings.DISMOUNT.translatedKeyMessage
-                    ), true
-                )
-            } else {
-                player.displayClientMessage(
-                    Component.translatable(
-                        "mount.onboard",
-                        ModKeyMappings.DISMOUNT.translatedKeyMessage
-                    ), true
-                )
-            }
-
-            ClientEventHandler.dismountCountdown = 20
-            return
-        }
-        sendPacketToServer(PlayerStopRidingMessage(false))
-        ClientEventHandler.stopVehicleReloadSound(player)
     }
 
     fun droneLeftClick(stack: ItemStack, player: Player) {

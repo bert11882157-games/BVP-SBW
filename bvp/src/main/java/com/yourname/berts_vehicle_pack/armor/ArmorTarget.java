@@ -17,6 +17,10 @@ interface ArmorTarget {
 
     Vec3 armorLocalPointToWorld(Vec point);
 
+    default Vec3 armorLocalPointToVehicleLocal(Vec point) {
+        return vehicle().worldToVehicleLocal(armorLocalPointToWorld(point), 1.0F);
+    }
+
     Vec worldDirectionToArmorLocal(Vec3 direction);
 
     Vec turretPivot();

@@ -1,14 +1,22 @@
 package com.atsuishio.superbwarfare.api.vehicle.pose
 
+import com.atsuishio.superbwarfare.data.vehicle.subdata.VehicleAttachmentRotationChannel
 import org.joml.Matrix4d
 import java.util.LinkedHashMap
 import java.util.LinkedHashSet
 
-data class VehicleAttachmentNode(val name: String, val parentName: String? = null) {
+data class VehicleAttachmentNode @JvmOverloads constructor(
+    val name: String,
+    val parentName: String? = null,
+    val rotationChannel: VehicleAttachmentRotationChannel? = null,
+) {
     init {
         require(name.isNotBlank()) { "Attachment node name cannot be blank" }
         require(parentName == null || parentName.isNotBlank()) { "Attachment parent name cannot be blank" }
         require(parentName != name) { "Attachment node '$name' cannot parent itself" }
+        require(rotationChannel == null || parentName == "Turret") {
+            "Articulated attachment '$name' must parent the native Turret frame"
+        }
     }
 }
 
@@ -24,11 +32,13 @@ class VehicleAttachmentGraph(
         val name: String,
         val parentIndex: Int,
         val externalParentIndex: Int,
+        val rotationChannel: VehicleAttachmentRotationChannel?,
     )
 
     private val compiledNodes: List<CompiledNode>
     private val externalParentNames: List<String?>
     private val externalParents = externalParents.toSet()
+    private val turretPitchFrames = HashSet<String>()
     private var boundLocalTransforms: Map<String, Matrix4d>? = null
     private var orderedLocalTransforms: Array<Matrix4d> = emptyArray()
 
@@ -61,19 +71,28 @@ class VehicleAttachmentGraph(
             externalNames.lastIndex
         }
         compiledNodes = ordered.map { node ->
+            if (node.rotationChannel == VehicleAttachmentRotationChannel.TURRET_PITCH ||
+                node.parentName in turretPitchFrames
+            ) turretPitchFrames.add(node.name)
             val parentIndex = node.parentName?.let(nodeIndices::get) ?: -1
             CompiledNode(
                 node.name,
                 parentIndex,
                 if (parentIndex >= 0) -1 else externalIndex(node.parentName),
+                node.rotationChannel,
             )
         }
         externalParentNames = externalNames
     }
 
+    /** True for an opted-in pitch pivot and its authored descendants. */
+    fun followsTurretPitch(name: String): Boolean = name in turretPitchFrames
+
+    @JvmOverloads
     fun resolve(
         base: VehicleAttachmentSnapshot,
-        localTransforms: Map<String, Matrix4d>
+        localTransforms: Map<String, Matrix4d>,
+        turretPitchDegrees: Float? = null,
     ): VehicleAttachmentSnapshot {
         if (boundLocalTransforms !== localTransforms) {
             require(compiledNodes.all { localTransforms.containsKey(it.name) }) {
@@ -103,7 +122,13 @@ class VehicleAttachmentGraph(
                     snapshot?.matrix()?.also { externalMatrices[node.externalParentIndex] = it }
                 }
             } ?: continue
+            if (node.rotationChannel != null &&
+                (turretPitchDegrees == null || !turretPitchDegrees.isFinite())
+            ) continue
             val world = Matrix4d(parent).mul(orderedLocalTransforms[index])
+            if (node.rotationChannel == VehicleAttachmentRotationChannel.TURRET_PITCH) {
+                world.rotateX(Math.toRadians(turretPitchDegrees!!.toDouble()))
+            }
             worldMatrices[index] = world
             merged[node.name] = VehicleTransformSnapshot.fromOwnedMatrix(
                 node.name,

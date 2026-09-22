@@ -1,6 +1,7 @@
 package com.atsuishio.superbwarfare.network
 
 import com.atsuishio.superbwarfare.api.vehicle.aim.VehicleAimChannel
+import com.atsuishio.superbwarfare.api.vehicle.aim.VehicleLaserRangefinder
 import com.atsuishio.superbwarfare.api.vehicle.aim.VehicleAimMode
 import com.atsuishio.superbwarfare.api.vehicle.aim.VehicleAimProfile
 import com.atsuishio.superbwarfare.api.vehicle.aim.VehicleFcsZeroState
@@ -20,9 +21,10 @@ object VehicleGeometricZeroDistanceTransport {
     const val MAX_FCS_ZERO_ELEVATION_DEGREES = 180.0
 
     private val lastAcceptedSequence = WeakHashMap<Connection, Long>()
+    private val pending = WeakHashMap<Connection, Long>()
 
     /**
-     * Revalidates the complete live context before invoking the Physics setter exactly once.
+     * Revalidates the complete live context before invoking the vehicle's zero-selection API once.
      * Rejected requests never advance the connection watermark or emit an acknowledgement.
      */
     @Synchronized
@@ -58,7 +60,7 @@ object VehicleGeometricZeroDistanceTransport {
                     it.defaultMode == VehicleAimMode.PLAYER_LOOK_AIM
             } ?: return false
 
-        val hasFcs = vehicle.computed().hasFCS
+        val hasFcs = VehicleLaserRangefinder.enabled(vehicle, message.seatIndex, selectedWeaponIndex)
         // ID66 is a tagged union without a second discriminator: null is reserved for HasFCS G,
         // while the three integer values remain the legacy non-HasFCS manual cycle.
         if ((hasFcs && requestedDistance != null) || (!hasFcs && requestedDistance == null)) return false
@@ -66,16 +68,27 @@ object VehicleGeometricZeroDistanceTransport {
         val connection = player.connection.connection
         val previous = lastAcceptedSequence[connection]
         if (previous != null && message.requestSequence <= previous) return false
+        if (pending.containsKey(connection)) return false
 
-        val acknowledgement = if (hasFcs) {
-            val result = vehicle.requestVehicleFcsZero(player, message.requestSequence)
-            fcsAcknowledgement(player, vehicle, message, result) ?: return false
-        } else {
-            val distance = requestedDistance ?: return false
-            if (!vehicle.setVehicleGeometricZeroDistance(player, distance)) return false
-            manualAcknowledgement(player, vehicle, message, distance)
+        if (hasFcs) {
+            lastAcceptedSequence[connection] = message.requestSequence
+            pending[connection] = message.requestSequence
+            vehicle.requestVehicleFcsZeroAsync(player, message.requestSequence).whenComplete { result, error ->
+                player.server.execute {
+                    synchronized(this) { pending.remove(connection) }
+                    if (player.connection.connection === connection) {
+                        val completed = if (error == null && result != null) result else
+                            VehicleFcsZeroState.inactive(vehicle.uuid, 0L, 0L,
+                                vehicle.level().gameTime, message.requestSequence)
+                        fcsAcknowledgement(player, vehicle, message, completed)?.let { sendPacketTo(player, it) }
+                    }
+                }
+            }
+            return true
         }
-
+        val distance = requestedDistance ?: return false
+        if (!vehicle.setVehicleGeometricZeroDistance(player, distance)) return false
+        val acknowledgement = manualAcknowledgement(player, vehicle, message, distance)
         lastAcceptedSequence[connection] = message.requestSequence
         sendPacketTo(player, acknowledgement)
         return true
@@ -118,7 +131,7 @@ object VehicleGeometricZeroDistanceTransport {
             !wireSafe(state)
         ) return null
 
-        // Physics uses an unbound INACTIVE value for a genuine context clear.  The transport has
+        // The aim controller uses an unbound INACTIVE value when clearing context. The transport has
         // already revalidated this request, so bind that terminal result to the exact claimed
         // context instead of exposing a wildcard client state.
         val operatorUuid = state.operatorUuid ?: player.uuid

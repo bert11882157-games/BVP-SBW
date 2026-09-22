@@ -6,7 +6,8 @@ import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.blaze3d.vertex.VertexConsumer
 import com.mojang.math.Axis
 import net.minecraft.client.renderer.MultiBufferSource
-import net.minecraft.client.renderer.RenderType
+import com.atsuishio.superbwarfare.client.renderer.ModRenderTypes
+import net.minecraft.client.renderer.LightTexture
 import net.minecraft.client.renderer.entity.EntityRenderer
 import net.minecraft.client.renderer.entity.EntityRendererProvider
 import net.minecraft.client.renderer.texture.OverlayTexture
@@ -35,20 +36,21 @@ class FlareDecoyEntityRenderer(pContext: EntityRendererProvider.Context) :
         pMatrixStack.pushPose()
         pMatrixStack.mulPose(this.entityRenderDispatcher.cameraOrientation())
         pMatrixStack.mulPose(Axis.YP.rotationDegrees(180f))
+        pMatrixStack.scale(0.6f, 0.6f, 0.6f)
         val lastPose = pMatrixStack.last()
         val pose = lastPose.pose()
         val normal = lastPose.normal()
-        val consumer = pBuffer.getBuffer(RenderType.entityCutoutNoCull(getTextureLocation(pEntity)))
-        vertex(consumer, pose, normal, pPackedLight, 0f, 0f, 0, 1)
-        vertex(consumer, pose, normal, pPackedLight, 1f, 0f, 1, 1)
-        vertex(consumer, pose, normal, pPackedLight, 1f, 1f, 1, 0)
-        vertex(consumer, pose, normal, pPackedLight, 0f, 1f, 0, 0)
+        val consumer = pBuffer.getBuffer(ModRenderTypes.TAP_FLARE.apply(getTextureLocation(pEntity)))
+        vertex(consumer, pose, normal, LightTexture.FULL_BRIGHT, 0f, 0f, 0, 1)
+        vertex(consumer, pose, normal, LightTexture.FULL_BRIGHT, 1f, 0f, 1, 1)
+        vertex(consumer, pose, normal, LightTexture.FULL_BRIGHT, 1f, 1f, 1, 0)
+        vertex(consumer, pose, normal, LightTexture.FULL_BRIGHT, 0f, 1f, 0, 0)
         pMatrixStack.popPose()
         super.render(pEntity, pEntityYaw, pPartialTicks, pMatrixStack, pBuffer, pPackedLight)
     }
 
     override fun getTextureLocation(entity: FlareDecoyEntity): ResourceLocation {
-        return TEXTURES[entity.tickCount % 8]
+        return TEXTURE
     }
 
     companion object {
@@ -62,10 +64,10 @@ class FlareDecoyEntityRenderer(pContext: EntityRendererProvider.Context) :
             pU: Int,
             pV: Int
         ) {
-            pConsumer.vertex(pPose, pX - 0.5f, pY - 0.25f, 0f).color(255, 255, 255, 255).uv(pU.toFloat(), pV.toFloat())
+            pConsumer.vertex(pPose, pX - 0.5f, pY - 0.5f, 0f).color(255, 255, 255, 255).uv(pU.toFloat(), pV.toFloat())
                 .overlayCoords(OverlayTexture.NO_OVERLAY).uv2(pLightmapUV).normal(pNormal, 0f, 1f, 0f).endVertex()
         }
 
-        val TEXTURES: List<ResourceLocation> = ArrayList((0..7).map { loc("textures/particle/fire_star_$it.png") })
+        val TEXTURE: ResourceLocation = loc("textures/particle/tap_flare.png")
     }
 }

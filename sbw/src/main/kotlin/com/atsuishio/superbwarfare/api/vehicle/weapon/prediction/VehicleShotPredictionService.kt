@@ -221,10 +221,9 @@ object VehicleShotPredictionService {
     )
 
     /**
-     * Server-only consumer seam for the bounded fixed-yaw pitch solve.  Physics must supply the
-     * opaque HasFcsGAcquisition token; this forwarding method has no client, world, or firing
-     * authority and simply exposes the pure predictor-owned implementation under the stable
-     * VehicleShotPredictionService API.
+     * Server-only entry point for the bounded fixed-yaw pitch solve. The caller must supply the
+     * opaque HasFcsGAcquisition token. This method delegates to the pure predictor without
+     * acquiring client, world, or firing authority.
      */
     @JvmStatic
     fun solveFreeAirPitchOnly(

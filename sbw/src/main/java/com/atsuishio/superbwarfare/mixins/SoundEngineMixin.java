@@ -24,7 +24,7 @@ public abstract class SoundEngineMixin {
 
     @Inject(method = "play", at = @At("RETURN"))
     private void superbWarfare$resolvedSound(SoundInstance instance, CallbackInfo ci) {
-        EliteAudioPlayback.resolved(instance);
+        if (instance != null) EliteAudioPlayback.resolved(instance);
     }
 
     @Inject(method = "stop(Lnet/minecraft/client/resources/sounds/SoundInstance;)V", at = @At("HEAD"))

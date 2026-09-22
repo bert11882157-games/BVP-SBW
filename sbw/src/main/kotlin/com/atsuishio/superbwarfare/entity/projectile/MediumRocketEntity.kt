@@ -32,6 +32,11 @@ open class MediumRocketEntity : FastThrowableProjectile, BasicGeoProjectileEntit
     }
 
     private var type: Type? = Type.AP
+    override fun farProjectileLookAheadTicks(): Int = when (type) {
+        Type.CM -> 8
+        Type.AP -> 1
+        else -> 0
+    }
     private var fireProbability = 0f
     private var fireTime = 0
     private var spreadAmount = 50

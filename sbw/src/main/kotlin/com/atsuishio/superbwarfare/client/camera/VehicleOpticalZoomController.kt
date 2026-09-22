@@ -23,6 +23,7 @@ enum class VehicleOpticalZoomProfile(
     TANK_PASSENGER_HMG(2.0, 2.0, 4.0),
     HELICOPTER_PILOT(2.0, 2.0, 18.0),
     HELICOPTER_GUNNER(2.0, 2.0, 24.0),
+    FIXED_WING_PILOT(2.0, 2.0, 8.0),
 }
 
 private data class ZoomBounds(val min: Double, val max: Double)
@@ -40,7 +41,7 @@ data class VehicleOpticalZoomView(
  * Client-only held optical-zoom state.
  *
  * Magnification selections persist for this client process and across holds/world changes, but are
- * intentionally not written to disk. The four enum keys isolate seat roles from vehicle identity
+ * intentionally not written to disk. The enum keys isolate seat roles from vehicle identity
  * and weapon selection. No state in this controller is sent to the server or mutates vehicle aim.
  */
 object VehicleOpticalZoomController {
@@ -194,9 +195,12 @@ object VehicleOpticalZoomController {
         if (player.isSpectator || !player.isAlive || player.isRemoved) return null
         val vehicle = player.vehicle as? VehicleEntity ?: return null
         val seatIndex = vehicle.getSeatIndex(player)
-        if (seatIndex < 0 || !vehicle.banHand(player) || !vehicle.hasWeapon(seatIndex)) return null
+        if (seatIndex < 0 || !vehicle.banHand(player) ||
+            (!vehicle.hasWeapon(seatIndex) && !vehicle.isFixedWingFlightVehicle())) return null
 
-        val profile = if (vehicle.vehicleType == VehicleType.HELICOPTER) {
+        val profile = if (vehicle.isFixedWingFlightVehicle() && seatIndex == 0) {
+            VehicleOpticalZoomProfile.FIXED_WING_PILOT
+        } else if (vehicle.vehicleType == VehicleType.HELICOPTER) {
             if (seatIndex == 0) {
                 VehicleOpticalZoomProfile.HELICOPTER_PILOT
             } else {
@@ -236,5 +240,5 @@ object VehicleOpticalZoomController {
     }
 
     private const val ZOOM_STEP = 0.5
-    private val ARMORED_GROUND_TYPES = setOf(VehicleType.TANK, VehicleType.APC, VehicleType.AA)
+    private val ARMORED_GROUND_TYPES = setOf(VehicleType.TANK, VehicleType.APC, VehicleType.AA, VehicleType.DEFENSE)
 }

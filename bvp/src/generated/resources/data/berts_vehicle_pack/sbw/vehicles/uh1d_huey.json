@@ -3,7 +3,6 @@
   "MaxHealth": 100,
   "MaxEnergy": 10000000,
   "AllowFreeCam": true,
-  "LightlyArmored": true,
   "OBB": [
     {
       "Size": [
@@ -421,5 +420,32 @@
   ],
   "PassengerRenderScale": 0.75,
   "MouseSensitivity": 0.35,
-  "TerrainCompatRotateRate": 0.18
+  "TerrainCompatRotateRate": 0.18,
+  "AircraftTerrainContact": {
+    "Fuselage": {
+      "Min": [
+        -2.6875,
+        1.05,
+        -7.965987
+      ],
+      "Max": [
+        2.6875,
+        4.1,
+        0.909013
+      ]
+    },
+    "LandingGear": {
+      "Min": [
+        -2.4725,
+        -0.03,
+        -7.610987
+      ],
+      "Max": [
+        2.4725,
+        1.1,
+        0.554013
+      ]
+    },
+    "RetractableGear": false
+  }
 }

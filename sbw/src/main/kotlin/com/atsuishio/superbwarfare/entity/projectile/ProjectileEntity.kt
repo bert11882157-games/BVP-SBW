@@ -3,6 +3,8 @@ package com.atsuishio.superbwarfare.entity.projectile
 import com.atsuishio.superbwarfare.api.event.ProjectileHitEvent.HitBlock
 import com.atsuishio.superbwarfare.api.event.ProjectileHitEvent.HitEntity
 import com.atsuishio.superbwarfare.api.projectile.ProfiledProjectile
+import com.atsuishio.superbwarfare.api.projectile.FarProjectileAccess
+import com.atsuishio.superbwarfare.api.projectile.ProjectileCollisionTarget
 import com.atsuishio.superbwarfare.api.projectile.ProjectileProfiles
 import com.atsuishio.superbwarfare.api.projectile.ResolvedProjectileProfile
 import com.atsuishio.superbwarfare.api.projectile.SequencedProjectile
@@ -38,6 +40,11 @@ import com.atsuishio.superbwarfare.tools.HitboxHelper.getVelocity
 import com.atsuishio.superbwarfare.tools.VectorTool.isInLiquid
 import com.atsuishio.superbwarfare.world.phys.EntityResult
 import com.atsuishio.superbwarfare.world.phys.ExtendedEntityRayTraceResult
+import com.atsuishio.superbwarfare.world.phys.ProjectileHitSelection
+import com.atsuishio.superbwarfare.world.phys.ProjectileContact
+import com.atsuishio.superbwarfare.world.phys.ProjectileSweepTraversal
+import com.atsuishio.superbwarfare.diagnostics.ProjectileHitDiagnostics
+import com.atsuishio.superbwarfare.diagnostics.EliteDiagnostics
 import net.minecraft.core.BlockPos
 import net.minecraft.core.BlockPos.MutableBlockPos
 import net.minecraft.core.Direction
@@ -87,7 +94,6 @@ import java.util.*
 import java.util.function.BiFunction
 import java.util.function.Function
 import java.util.function.Predicate
-import java.util.function.ToDoubleFunction
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.ceil
@@ -96,7 +102,13 @@ import kotlin.math.max
 @Suppress("unused")
 open class ProjectileEntity(entityType: EntityType<out ProjectileEntity>, level: Level) : Projectile(entityType, level),
     CustomSyncMotionEntity, ExplosiveProjectile, IEntityAdditionalSpawnData, ProfiledProjectile, SequencedProjectile,
-    ProjectileImpactDamagePolicy {
+    ProjectileImpactDamagePolicy, FarProjectileAccess {
+    override fun farProjectileExplosionRadius(): Double = explosionRadius.toDouble()
+    // This entity uses findEntitiesOnPath's +1 query, not ProjectileUtilMixin's +8 query.
+    // Include the entity-section lookup's two-block neighbor margin as well.
+    override fun farProjectileCollisionPadding(): Double = 3.0
+    override fun farProjectileLifetimeTicks(): Int = (if (fireLevel > 0) 10 else life).coerceIn(0, 2399) + 1
+    override fun farProjectileTerminatesNextTick(currentAge: Int): Boolean = currentAge >= (if (fireLevel > 0) 10 else life)
     private var _projectileProfileId: net.minecraft.resources.ResourceLocation? = null
     private var _resolvedProjectileProfile: ResolvedProjectileProfile? = null
     private var _projectileShotSequence = 0L
@@ -104,7 +116,7 @@ open class ProjectileEntity(entityType: EntityType<out ProjectileEntity>, level:
     private var activeImpactResult: ProjectileImpactResult? = null
     private var lastImpactPassed = false
     private var lastImpactStopsTraversal = false
-    /** True only for the bounded, server-created impact-fragment generation. */
+    /** Legacy persisted provenance used to retire obsolete server-side impact fragments. */
     private var impactShrapnel = false
 
     // 子弹的发射者，可以为空
@@ -242,8 +254,10 @@ open class ProjectileEntity(entityType: EntityType<out ProjectileEntity>, level:
             impactShrapnel = getBoolean(it)
             entityData.set(IMPACT_SHRAPNEL, impactShrapnel)
         }
+        if (retireImpactShrapnel()) return
         projectileData.readIfPresent("Gravity", Tag.TAG_FLOAT.toInt()) { gravity = getFloat(it) }
         projectileData.readIfPresent("Life", Tag.TAG_INT.toInt()) { life = getInt(it) }
+        if (impactShrapnel) entityData.set(IMPACT_SHRAPNEL_LIFE, life.coerceIn(1, 16))
         projectileData.readIfPresent("Age", Tag.TAG_INT.toInt()) { tickCount = getInt(it).coerceAtLeast(0) }
         projectileData.readIfPresent("GunItemId", Tag.TAG_STRING.toInt()) { gunItemId = getString(it) }
         if (projectileData.contains("MobEffects", Tag.TAG_LIST.toInt())) {
@@ -313,10 +327,7 @@ open class ProjectileEntity(entityType: EntityType<out ProjectileEntity>, level:
     }
 
     protected fun findEntityOnPath(startVec: Vec3, endVec: Vec3): EntityResult? {
-        var hitVec: Vec3? = null
-        var hitEntity: Entity? = null
-        var headshot = false
-        var legShot = false
+        var nearest: EntityResult? = null
         val entities = this.level()
             .getEntities(
                 this,
@@ -340,14 +351,11 @@ open class ProjectileEntity(entityType: EntityType<out ProjectileEntity>, level:
 
             val distanceToHit = startVec.distanceTo(hitPos)
             if (distanceToHit < closestDistance) {
-                hitVec = hitPos
-                hitEntity = entity
+                nearest = result
                 closestDistance = distanceToHit
-                headshot = result.headshot
-                legShot = result.legShot
             }
         }
-        return if (hitEntity != null) EntityResult(hitEntity, hitVec!!, headshot, legShot) else null
+        return nearest
     }
 
     protected fun findEntitiesOnPath(startVec: Vec3, endVec: Vec3): MutableList<EntityResult> {
@@ -376,32 +384,22 @@ open class ProjectileEntity(entityType: EntityType<out ProjectileEntity>, level:
         val expandHeight = if (entity is Player && !entity.isCrouching) 0.0625 else 0.0
 
         var hitPos: Vec3? = null
+        var hitPart: OBB.Part? = null
         // Guided ATGMs have a dedicated, reduced interception volume.  Do not let the
         // projectile's normal moving-entity/AABB compensation turn a near miss into a strike;
         // other target types retain the existing hitbox semantics unchanged.
-        if (entity is WireGuideMissileEntity && this !is WireGuideMissileEntity) {
+        if (!level().isClientSide && entity is ProjectileCollisionTarget && entity.usesDetailedProjectileCollision()) {
+            val hit = ProjectileHitDiagnostics.query(this, entity, "bullet_detailed", startVec, endVec,
+                entity.clipProjectile(startVec, endVec)) ?: return null
+            hitPos = hit.point()
+            hitPart = hit.part()
+        } else if (entity is WireGuideMissileEntity && this !is WireGuideMissileEntity) {
             hitPos = WireGuideMissileEntity.preciseInterceptionHitPoint(entity, startVec, endVec)
         } else if (entity is OBBEntity && !entity.enableAABB()) {
-            for (obb in entity.getOBBs()) {
-                val obbVec = obb.clip(OBB.vec3ToVector3d(startVec), OBB.vec3ToVector3d(endVec)).orElse(null)
-                if (obbVec != null) {
-                    hitPos = OBB.vector3dToVec3(obbVec)
-                    val level = this.level()
-                    if (level is ServerLevel) {
-                        level.playSound(
-                            null,
-                            BlockPos.containing(hitPos),
-                            ModSounds.HIT.get(),
-                            SoundSource.PLAYERS,
-                            1f,
-                            1f
-                        )
-                    }
-
-                    val acc = OBBHitter.getInstance(this)
-                    acc.`sbw$setCurrentHitPart`(obb.part)
-                }
-            }
+            val hit = ProjectileHitDiagnostics.query(this, entity, "bullet_obb", startVec, endVec,
+                ProjectileHitSelection.nearestObb(entity.getOBBs(), startVec, endVec, 0.0)) ?: return null
+            hitPos = hit.point()
+            hitPart = hit.part()
         } else {
             var boundingBox = entity.boundingBox
             var velocity = Vec3(entity.x - entity.xOld, entity.y - entity.yOld, entity.z - entity.zOld)
@@ -457,7 +455,7 @@ open class ProjectileEntity(entityType: EntityType<out ProjectileEntity>, level:
             legShot = true
         }
 
-        return EntityResult(entity, hitPos, headshot, legShot)
+        return EntityResult(entity, hitPos, headshot, legShot, hitPart)
     }
 
     override fun defineSynchedData() {
@@ -465,9 +463,11 @@ open class ProjectileEntity(entityType: EntityType<out ProjectileEntity>, level:
         this.entityData.define(COLOR_G, DEFAULT_G)
         this.entityData.define(COLOR_B, DEFAULT_B)
         this.entityData.define(IMPACT_SHRAPNEL, false)
+        this.entityData.define(IMPACT_SHRAPNEL_LIFE, 0)
     }
 
     override fun tick() {
+        if (retireImpactShrapnel()) return
         super.tick()
         this.updateHeading()
 
@@ -498,52 +498,51 @@ open class ProjectileEntity(entityType: EntityType<out ProjectileEntity>, level:
                 endVec = result.getLocation()
             }
 
-            val entityResults: MutableList<EntityResult> = arrayListOf()
-            val temp = findEntitiesOnPath(startVec, endVec)
-            entityResults.addAll(temp)
+            val entityResults = findEntitiesOnPath(startVec, endVec)
+            ProjectileHitSelection.sortFromStart(entityResults, startVec) { it.hitVec }
 
-            if (this.shooter != null) {
-                entityResults.sortWith(Comparator.comparingDouble(ToDoubleFunction {
-                    it.hitVec.distanceTo(this.shooter!!.position())
-                }))
+            val blockResult = result
+            if (EliteDiagnostics.isEnabled(level)) {
+                EliteDiagnostics.record(this, "hitreg", "bullet_sweep", "start", startVec,
+                    "clipped_end", endVec, "block", blockResult?.type, "contacts", entityResults.size)
             }
-
-            for (entityResult in entityResults) {
-                result = ExtendedEntityRayTraceResult(entityResult)
-                val resEntity = result.entity
+            ProjectileSweepTraversal.visit(entityResults, { entityResult ->
+                var entityHit: ExtendedEntityRayTraceResult? = ExtendedEntityRayTraceResult(entityResult)
+                val resEntity = entityResult.entity
                 val shooter = this.shooter
                 if (resEntity is Player) {
                     if (shooter is Player && !shooter.canHarmPlayer(resEntity)) {
-                        result = null
+                        entityHit = null
                     }
                 }
                 var stopsTraversal = false
-                val passedImpact = if (result != null) {
-                    this.onHit(result)
+                val passedImpact = if (entityHit != null) {
+                    this.onHit(entityHit)
                     stopsTraversal = takeLastImpactStopsTraversal()
                     takeLastImpactPassed()
                 } else false
 
-                if (stopsTraversal) {
-                    break
+                if (stopsTraversal || isRemoved) {
+                    return@visit false
                 }
 
                 if (!this.beast && !passedImpact) {
                     this.bypassArmorRate -= 0.2f
                     if (this.bypassArmorRate < 0.8f) {
-                        if (result != null && !(resEntity is TargetEntity && resEntity.getEntityData()
+                        if (entityHit != null && !(resEntity is TargetEntity && resEntity.getEntityData()
                                 .get(TargetEntity.DOWN_TIME) > 0)
                             && !(resEntity is DPSGeneratorEntity && resEntity.getEntityData()
                                 .get(DPSGeneratorEntity.DOWN_TIME) > 0)
                         ) {
-                            break
+                            return@visit false
                         }
                     }
                 }
-            }
-            if (entityResults.isEmpty() && result != null) {
-                this.onHit(result)
-            }
+                true
+            }, {
+                // A passed entity must not erase the terrain endpoint from this same sweep.
+                if (!isRemoved && blockResult != null) this.onHit(blockResult)
+            })
 
             this.onHitWater(fluidResult.getLocation(), fluidResult)
             this.setPos(this.x + vec.x, this.y + vec.y, this.z + vec.z)
@@ -617,6 +616,7 @@ open class ProjectileEntity(entityType: EntityType<out ProjectileEntity>, level:
     override fun onHit(result: HitResult) {
         lastImpactPassed = false
         lastImpactStopsTraversal = false
+        if (retireImpactShrapnel()) return
         if (result.type == HitResult.Type.MISS) {
             return
         }
@@ -627,6 +627,14 @@ open class ProjectileEntity(entityType: EntityType<out ProjectileEntity>, level:
             ) {
                 return
             }
+            // Publish only the selected hit's metadata/effect, never a later broadphase candidate's.
+            OBBHitter.getInstance(this).`sbw$setProjectileContact`(ProjectileContact(
+                entity.uuid, level().gameTime, result.hitPart ?: OBB.Part.EMPTY))
+            if (result.hitPart != null && level() is ServerLevel) {
+                level().playSound(null, BlockPos.containing(result.location), ModSounds.HIT.get(), SoundSource.PLAYERS, 1f, 1f)
+            }
+        } else {
+            OBBHitter.getInstance(this).`sbw$setProjectileContact`(null)
         }
         val legacyEventCancelled = when (result) {
             is ExtendedEntityRayTraceResult -> postEvent(HitEntity(this.shooter, this, result))
@@ -672,9 +680,7 @@ open class ProjectileEntity(entityType: EntityType<out ProjectileEntity>, level:
 
         if (!resolution.continuesDefaultPipeline()) {
             lastImpactPassed = resolution.disposition == ProjectileImpactDisposition.PASS
-            lastImpactStopsTraversal = resolution.consumesProjectile()
-                || resolution.disposition == ProjectileImpactDisposition.BLOCK
-                || resolution.disposition == ProjectileImpactDisposition.CONSUME
+            lastImpactStopsTraversal = ProjectileSweepTraversal.stops(resolution)
             if (resolution.consumesProjectile()) {
                 this.discard()
             }
@@ -694,16 +700,18 @@ open class ProjectileEntity(entityType: EntityType<out ProjectileEntity>, level:
             val resultPos = result.blockPos
             val state = level.getBlockState(resultPos)
             val event = state.block.getSoundType(state, level, resultPos, this).breakSound
-            level.playSound(
-                null,
-                result.getLocation().x,
-                result.getLocation().y,
-                result.getLocation().z,
-                event,
-                SoundSource.AMBIENT,
-                1f,
-                1f
-            )
+            if (!resolution.suppressesDefaultVisuals()) {
+                level.playSound(
+                    null,
+                    result.getLocation().x,
+                    result.getLocation().y,
+                    result.getLocation().z,
+                    event,
+                    SoundSource.AMBIENT,
+                    1f,
+                    1f
+                )
+            }
             val hitVec = result.getLocation()
 
             this.onHitBlock(hitVec, result)
@@ -997,14 +1005,16 @@ open class ProjectileEntity(entityType: EntityType<out ProjectileEntity>, level:
 
                 this.discard()
             }
-            level.playSound(
-                null,
-                BlockPos(location.x.toInt(), location.y.toInt(), location.z.toInt()),
-                ModSounds.LAND.get(),
-                SoundSource.BLOCKS,
-                1f,
-                1f
-            )
+            if (activeImpactResult?.suppressesDefaultVisuals() != true) {
+                level.playSound(
+                    null,
+                    BlockPos(location.x.toInt(), location.y.toInt(), location.z.toInt()),
+                    ModSounds.LAND.get(),
+                    SoundSource.BLOCKS,
+                    1f,
+                    1f
+                )
+            }
         }
     }
 
@@ -1250,7 +1260,8 @@ open class ProjectileEntity(entityType: EntityType<out ProjectileEntity>, level:
             if (entity is VehicleEntity && this.bypassArmorRate > 1) {
                 entity.hurt(
                     causeGunFireAbsoluteDamage(this.level().registryAccess(), this, this.shooter),
-                    absoluteDamage * (this.bypassArmorRate - 1) * 0.5f
+                    (absoluteDamage * (this.bypassArmorRate - 1) * 0.5f *
+                        com.atsuishio.superbwarfare.api.vehicle.weapon.VehicleWeaponDamagePolicy.scale(this)).toFloat()
                 )
             }
         }
@@ -1359,19 +1370,30 @@ open class ProjectileEntity(entityType: EntityType<out ProjectileEntity>, level:
         return this
     }
 
-    /** Marks this projectile as one impact-fragment generation; it cannot emit a child fan. */
+    /** Preserves legacy identity while preventing its server-side gameplay lifecycle. */
     fun markImpactShrapnel(): ProjectileEntity {
         this.impactShrapnel = true
         this.entityData.set(IMPACT_SHRAPNEL, true)
+        this.entityData.set(IMPACT_SHRAPNEL_LIFE, life.coerceIn(1, 16))
+        retireImpactShrapnel()
         return this
+    }
+
+    private fun retireImpactShrapnel(): Boolean {
+        if (level().isClientSide || !isImpactShrapnel()) return false
+        discard()
+        return true
     }
 
     fun isImpactShrapnel(): Boolean {
         return this.impactShrapnel || this.entityData.get(IMPACT_SHRAPNEL)
     }
 
+    fun impactShrapnelLifetime(): Int = entityData.get(IMPACT_SHRAPNEL_LIFE)
+
     override fun setLife(life: Int) {
         this.life = life
+        if (isImpactShrapnel()) entityData.set(IMPACT_SHRAPNEL_LIFE, life.coerceIn(1, 16))
     }
 
     companion object {
@@ -1392,6 +1414,10 @@ open class ProjectileEntity(entityType: EntityType<out ProjectileEntity>, level:
         @JvmField
         val IMPACT_SHRAPNEL: EntityDataAccessor<Boolean> =
             SynchedEntityData.defineId(ProjectileEntity::class.java, EntityDataSerializers.BOOLEAN)
+
+        @JvmField
+        val IMPACT_SHRAPNEL_LIFE: EntityDataAccessor<Int> =
+            SynchedEntityData.defineId(ProjectileEntity::class.java, EntityDataSerializers.INT)
 
         private val PROJECTILE_TARGETS =
             Predicate { input: Entity? -> input != null && input.isPickable && !input.isSpectator && input.isAlive }

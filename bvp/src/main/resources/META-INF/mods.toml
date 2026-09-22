@@ -1,0 +1,66 @@
+modLoader = "javafml"
+loaderVersion = "[47,)"
+license = "All Rights Reserved"
+
+[[mods]]
+modId = "berts_vehicle_pack"
+version = "0.1.0"
+displayName = "Bert's Vehicle Pack"
+authors = "Bert"
+description = '''Superb Warfare vehicle pack generated from cleaned MTB vehicle models.'''
+
+[[dependencies."berts_vehicle_pack"]]
+modId = "forge"
+mandatory = true
+versionRange = "[47,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies."berts_vehicle_pack"]]
+modId = "minecraft"
+mandatory = true
+versionRange = "[1.20.1,1.21)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies."berts_vehicle_pack"]]
+modId = "superbwarfare"
+mandatory = true
+versionRange = "[0.8.9,)"
+ordering = "AFTER"
+side = "BOTH"
+
+[[dependencies."berts_vehicle_pack"]]
+modId = "sbwmeshloader"
+mandatory = true
+versionRange = "[0.1.1,)"
+ordering = "AFTER"
+side = "BOTH"
+
+[[dependencies."berts_vehicle_pack"]]
+modId = "komodo"
+mandatory = true
+versionRange = "[1.2.3,)"
+ordering = "AFTER"
+side = "CLIENT"
+
+[[dependencies."berts_vehicle_pack"]]
+modId = "flywheel"
+mandatory = true
+versionRange = "[1.0.5,)"
+ordering = "AFTER"
+side = "CLIENT"
+
+[[dependencies."berts_vehicle_pack"]]
+modId = "ballistics"
+mandatory = true
+versionRange = "[1.0.1,)"
+ordering = "AFTER"
+side = "BOTH"
+
+[[dependencies."berts_vehicle_pack"]]
+modId = "dominions"
+mandatory = true
+versionRange = "[1.0.11,)"
+ordering = "AFTER"
+side = "BOTH"

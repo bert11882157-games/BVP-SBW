@@ -8,10 +8,11 @@ import com.atsuishio.superbwarfare.tools.EntityFindUtil
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class VehicleMovementMessage(val keys: Short) : ServerPacketPayload() {
+data class VehicleMovementMessage(val keys: Short, val opticalZoom: Float = 1F) : ServerPacketPayload() {
     override fun PayloadContext.handler() {
         val player = sender()
         val entity = player.vehicle
+        if (entity is VehicleEntity) entity.acceptVehicleAimOpticalZoom(player, opticalZoom)
         val stack = player.mainHandItem
         val tag = stack.getOrCreateTag()
 

@@ -28,32 +28,6 @@
       ]
     },
     {
-      "Part": "WheelLeft",
-      "Size": [
-        0.22925,
-        0.46567,
-        2.54325
-      ],
-      "Position": [
-        1.54028,
-        0.51581,
-        -0.1791
-      ]
-    },
-    {
-      "Part": "WheelRight",
-      "Size": [
-        0.22925,
-        0.46567,
-        2.54325
-      ],
-      "Position": [
-        -1.54028,
-        0.51581,
-        -0.1791
-      ]
-    },
-    {
       "Part": "MainEngine",
       "Size": [
         0.82387,
@@ -253,11 +227,6 @@
       "ExplosionRadius": 4,
       "RecoilTime": 42,
       "RecoilForce": 1,
-      "ShootShake": [
-        8,
-        10,
-        60
-      ],
       "Spread": 0.02,
       "ShootAnimationTime": 20,
       "Crosshair": "berts_vehicle_pack:textures/overlay/vehicle/crosshair/sosna_u.png",
@@ -284,7 +253,12 @@
             "Projectile": {
               "Type": "superbwarfare:cannon_shell",
               "Profile": "berts_vehicle_pack:t90m/cannon/ammo_00_3bm60"
-            }
+            },
+            "ShootShake": [
+              8,
+              10,
+              120
+            ]
           }
         },
         {
@@ -306,7 +280,12 @@
             "Projectile": {
               "Type": "superbwarfare:cannon_shell",
               "Profile": "berts_vehicle_pack:t90m/cannon/ammo_01_3bk18m_heat_fs"
-            }
+            },
+            "ShootShake": [
+              8,
+              10,
+              120
+            ]
           }
         },
         {
@@ -329,7 +308,12 @@
             "Projectile": {
               "Type": "superbwarfare:cannon_shell",
               "Profile": "berts_vehicle_pack:t90m/cannon/ammo_02_3of26_he"
-            }
+            },
+            "ShootShake": [
+              8,
+              10,
+              120
+            ]
           }
         },
         {
@@ -354,10 +338,10 @@
             "ShootAnimationTime": 20,
             "Name": "weapon.berts_vehicle_pack.2a46m_5_125_mm_smoothbore_9m119m1_tandem_atgm",
             "SoundInfo": {
-              "Fire1PGain": 0.5,
-              "Fire3PGain": 0.5,
-              "Fire3PFarGain": 0.5,
-              "Fire3PVeryFarGain": 0.5,
+              "Fire1PGain": 0.35,
+              "Fire3PGain": 0.35,
+              "Fire3PFarGain": 0.35,
+              "Fire3PVeryFarGain": 0.35,
               "Fire1P": "berts_vehicle_pack:atgm_gun_launch",
               "Fire3P": "berts_vehicle_pack:atgm_gun_launch",
               "Fire3PFar": "berts_vehicle_pack:atgm_gun_launch",
@@ -369,8 +353,15 @@
               ]
             },
             "NominalBallistics": {
-              "Supported": false
-            }
+              "Supported": false,
+              "ProjectileType": "berts_vehicle_pack:ataka_missile",
+              "ProjectileProfile": "berts_vehicle_pack:t90m/cannon/ammo_03_9m119m1_tandem"
+            },
+            "ShootShake": [
+              8,
+              10,
+              120
+            ]
           }
         }
       ],
@@ -383,12 +374,12 @@
         "Fire3P": "berts_vehicle_pack:shoot_tnk_125mm",
         "Fire3PFar": "berts_vehicle_pack:shoot_tnk_125mm",
         "Fire3PVeryFar": "berts_vehicle_pack:shoot_tnk_125mm",
-        "VehicleReload": "berts_vehicle_pack:soviet_125mm_autoloader",
         "Change": "superbwarfare:into_cannon",
+        "VehicleReload": "berts_vehicle_pack:soviet_125mm_autoloader",
+        "VehicleReloadClipDurationTicks": 133,
         "CancellableSounds": [
           "berts_vehicle_pack:soviet_125mm_autoloader"
-        ],
-        "VehicleReloadClipDurationTicks": 133
+        ]
       },
       "SoundRadius": 32,
       "ShootPos": {
@@ -432,7 +423,12 @@
         "ProjectileType": "superbwarfare:cannon_shell",
         "ProjectileProfile": "berts_vehicle_pack:t90m/cannon/default",
         "ProjectileLife": 50
-      }
+      },
+      "ShootShake": [
+        8,
+        10,
+        120
+      ]
     },
     "MachineGun": {
       "DefaultFireMode": "Auto",
@@ -478,7 +474,12 @@
               "ProjectileType": "superbwarfare:projectile",
               "ProjectileProfile": "berts_vehicle_pack:t90m/machinegun/ammo_00_russian_762_ap_i",
               "ProjectileLife": 400
-            }
+            },
+            "ShootShake": [
+              0,
+              0,
+              0
+            ]
           }
         }
       ],
@@ -501,18 +502,18 @@
         "Transform": "Barrel",
         "Positions": [
           [
-            0.0129,
-            -1.77461,
-            6.44869
+            -0.42575,
+            -0.09033,
+            -0.93881
           ]
         ],
         "Directions": [
           "Barrel"
         ],
         "ViewPosition": [
-          0.01286,
-          -1.76935,
-          6.42958
+          -0.42449,
+          -0.09006,
+          -0.93603
         ],
         "MuzzleAttachments": [
           "coax_muzzle"
@@ -563,7 +564,12 @@
             "Damage": 9.5,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
-            "Name": "AP_T"
+            "Name": "AP_T",
+            "ShootShake": [
+              0,
+              0,
+              0
+            ]
           }
         }
       ],
@@ -572,7 +578,12 @@
         "ProjectileType": "superbwarfare:projectile",
         "ProjectileProfile": "berts_vehicle_pack:t90m/machinegun/default",
         "ProjectileLife": 400
-      }
+      },
+      "ShootShake": [
+        0,
+        0,
+        0
+      ]
     },
     "PassengerMachineGun": {
       "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/gun_12_7mm.png",
@@ -645,7 +656,12 @@
               "ProjectileType": "superbwarfare:projectile",
               "ProjectileProfile": "berts_vehicle_pack:t90m/passengermachinegun/ammo_00_russian_127_bzt44_api_t_1",
               "ProjectileLife": 400
-            }
+            },
+            "ShootShake": [
+              8,
+              10,
+              6
+            ]
           }
         }
       ],
@@ -700,6 +716,8 @@
       },
       "SoundRadius": 16,
       "Magazine": 300,
+      "NormalReloadTime": 100,
+      "EmptyReloadTime": 100,
       "ProjectileBeltAmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
@@ -714,7 +732,12 @@
             "Damage": 83.33333333333333,
             "ExplosionDamage": 0,
             "ExplosionRadius": 1.6666666666666665,
-            "Name": "IAI"
+            "Name": "IAI",
+            "ShootShake": [
+              8,
+              10,
+              6
+            ]
           }
         },
         {
@@ -730,7 +753,12 @@
             "Damage": 40,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
-            "Name": "API_T"
+            "Name": "API_T",
+            "ShootShake": [
+              8,
+              10,
+              6
+            ]
           }
         },
         {
@@ -746,7 +774,12 @@
             "Damage": 40,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
-            "Name": "AP_I_C"
+            "Name": "AP_I_C",
+            "ShootShake": [
+              8,
+              10,
+              6
+            ]
           }
         }
       ],
@@ -755,7 +788,12 @@
         "ProjectileType": "superbwarfare:projectile",
         "ProjectileProfile": "berts_vehicle_pack:t90m/passengermachinegun/default",
         "ProjectileLife": 400
-      }
+      },
+      "ShootShake": [
+        8,
+        10,
+        6
+      ]
     }
   },
   "HUDColor": "0xFFC700",
@@ -1027,9 +1065,9 @@
     "coax_muzzle": {
       "Parent": "Barrel",
       "Position": [
-        0.0129,
-        -1.77461,
-        -6.44869
+        -0.42575,
+        -0.09033,
+        0.93881
       ],
       "Direction": [
         0,

@@ -1,0 +1,22 @@
+{
+  "Combat": {
+    "WeaponId": "berts_vehicle_pack:handheld_at",
+    "RoundId": "berts_vehicle_pack:handheld_heat_110",
+    "MunitionType": "berts_vehicle_pack:rocket",
+    "DamageType": "berts_vehicle_pack:chemical",
+    "CaliberMm": 110,
+    "DiameterMm": 110,
+    "HullDamageClass": "ATGM",
+    "HullDamage": 106,
+    "ModuleDamage": 33,
+    "AmmoRackDamage": 7,
+    "PenetrationMm": 400,
+    "Tandem": false
+  },
+  "ImpactVisualProfile": "berts_vehicle_pack:heat_fs",
+  "MotionSync": "INHERIT",
+  "Luminance": 0,
+  "TrailMode": "DEFAULT",
+  "RenderScale": 1,
+  "Extensions": {}
+}

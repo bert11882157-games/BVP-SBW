@@ -1,6 +1,7 @@
 package com.atsuishio.superbwarfare.mixins;
 
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
+import com.atsuishio.superbwarfare.client.camera.VehicleCameraFrameDiagnostic;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Camera;
@@ -21,6 +22,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(LevelRenderer.class)
 public class LevelRendererMixin {
+
+    @Inject(method = "renderLevel", at = @At("HEAD"))
+    private void sbw$observeSubmittedCamera(PoseStack view, float partialTick, long limitTime,
+            boolean outline, Camera camera, GameRenderer renderer, LightTexture light,
+            Matrix4f projection, CallbackInfo ci) {
+        VehicleCameraFrameDiagnostic.submitted(camera, view, projection);
+    }
 
     @Shadow
     @Final

@@ -4,6 +4,7 @@ import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity
 import net.minecraft.util.Mth
 
 /** Immutable interpolated running-gear state for one rendered frame. */
+@kotlinx.serialization.Serializable
 data class RunningGearRenderState(
     val leftWheelRotation: Float,
     val rightWheelRotation: Float,
@@ -15,6 +16,9 @@ data class RunningGearRenderState(
     companion object {
         @JvmStatic
         fun capture(vehicle: VehicleEntity, partialTick: Float): RunningGearRenderState {
+            com.atsuishio.superbwarfare.api.vehicle.render.FarVehicleCopies.frame(vehicle)?.let {
+                return it.snapshot.runningGear
+            }
             return RunningGearRenderState(
                 leftWheelRotation = Mth.lerp(partialTick, vehicle.leftWheelRotO, vehicle.leftWheelRot),
                 rightWheelRotation = Mth.lerp(partialTick, vehicle.rightWheelRotO, vehicle.rightWheelRot),

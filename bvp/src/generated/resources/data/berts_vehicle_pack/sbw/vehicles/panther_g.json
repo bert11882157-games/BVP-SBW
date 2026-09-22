@@ -20,32 +20,6 @@
       ]
     },
     {
-      "Part": "WheelLeft",
-      "Size": [
-        0.22775,
-        0.46262,
-        2.52663
-      ],
-      "Position": [
-        1.53021,
-        0.51244,
-        -0.17793
-      ]
-    },
-    {
-      "Part": "WheelRight",
-      "Size": [
-        0.22775,
-        0.46262,
-        2.52663
-      ],
-      "Position": [
-        -1.53021,
-        0.51244,
-        -0.17793
-      ]
-    },
-    {
       "Part": "MainEngine",
       "Size": [
         0.81849,
@@ -196,11 +170,6 @@
       "ExplosionRadius": 4,
       "RecoilTime": 42,
       "RecoilForce": 1,
-      "ShootShake": [
-        8,
-        10,
-        60
-      ],
       "Spread": 0.02,
       "ShootAnimationTime": 20,
       "Crosshair": "@VehicleRuApc",
@@ -221,7 +190,12 @@
             "Projectile": {
               "Type": "superbwarfare:cannon_shell",
               "Profile": "berts_vehicle_pack:panther_g/cannon/ammo_00_pzgr39_42_apcbc"
-            }
+            },
+            "ShootShake": [
+              8,
+              10,
+              60
+            ]
           }
         }
       ],
@@ -234,10 +208,11 @@
         "Fire3P": "berts_vehicle_pack:tap_shoot_75mmlongde",
         "Fire3PFar": "berts_vehicle_pack:tap_shoot_75mmlongde",
         "Fire3PVeryFar": "berts_vehicle_pack:tap_shoot_75mmlongde",
-        "VehicleReload": "superbwarfare:t_90a_reload",
         "Change": "superbwarfare:into_cannon",
+        "VehicleReload": "berts_vehicle_pack:m1_abrams_elite_m68a1_reload",
+        "VehicleReloadClipDurationTicks": 86,
         "CancellableSounds": [
-          "superbwarfare:t_90a_reload"
+          "berts_vehicle_pack:m1_abrams_elite_m68a1_reload"
         ]
       },
       "SoundRadius": 32,
@@ -246,8 +221,8 @@
         "Positions": [
           [
             0,
-            -0.46527,
-            -0.53832
+            -0.06409,
+            -4.41849
           ]
         ],
         "Directions": [
@@ -255,8 +230,8 @@
         ],
         "ViewPosition": [
           0,
-          -0.46694,
-          -0.54026
+          -0.06432,
+          -4.43438
         ],
         "MuzzleAttachments": [
           "main_muzzle"
@@ -282,7 +257,12 @@
         "ProjectileType": "superbwarfare:cannon_shell",
         "ProjectileProfile": "berts_vehicle_pack:panther_g/cannon/default",
         "ProjectileLife": 50
-      }
+      },
+      "ShootShake": [
+        8,
+        10,
+        60
+      ]
     },
     "MachineGun": {
       "DefaultFireMode": "Auto",
@@ -324,17 +304,17 @@
                 }
               ]
             },
-            "ShootShake": [
-              8,
-              10,
-              12
-            ],
             "NominalBallistics": {
               "Supported": true,
               "ProjectileType": "superbwarfare:projectile",
               "ProjectileProfile": "berts_vehicle_pack:panther_g/machinegun/ammo_00_mg34_ap",
               "ProjectileLife": 400
-            }
+            },
+            "ShootShake": [
+              8,
+              10,
+              12
+            ]
           }
         }
       ],
@@ -357,18 +337,18 @@
         "Transform": "Barrel",
         "Positions": [
           [
-            0,
-            -0.46527,
-            -0.53832
+            -0.47423,
+            -0.06409,
+            -0.40671
           ]
         ],
         "Directions": [
           "Barrel"
         ],
         "ViewPosition": [
-          0,
-          -0.46694,
-          -0.54026
+          -0.47594,
+          -0.06432,
+          -0.40817
         ],
         "MuzzleAttachments": [
           "coax_muzzle"
@@ -405,12 +385,6 @@
       "SoundRadius": 12,
       "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/gun_7_62mm.png",
       "HeatPerShoot": 0,
-      "NominalBallistics": {
-        "Supported": true,
-        "ProjectileType": "superbwarfare:projectile",
-        "ProjectileProfile": "berts_vehicle_pack:panther_g/machinegun/default",
-        "ProjectileLife": 400
-      },
       "ProjectileBeltAmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
@@ -434,6 +408,12 @@
           }
         }
       ],
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "superbwarfare:projectile",
+        "ProjectileProfile": "berts_vehicle_pack:panther_g/machinegun/default",
+        "ProjectileLife": 400
+      },
       "ShootShake": [
         8,
         10,
@@ -621,11 +601,11 @@
   "TurretControllerIndex": 0,
   "Attachments": {
     "gunner1_camera": {
-      "Parent": "Turret",
+      "Parent": "Barrel",
       "Position": [
-        -0.02357,
-        1.43178,
-        -0.05864
+        0.40853,
+        -0.06358,
+        0.39389
       ],
       "Direction": [
         0,
@@ -634,11 +614,11 @@
       ]
     },
     "gunner1_zoom": {
-      "Parent": "Turret",
+      "Parent": "Barrel",
       "Position": [
-        -0.02357,
-        1.43178,
-        -0.05864
+        0.40853,
+        -0.06358,
+        0.39389
       ],
       "Direction": [
         0,
@@ -650,8 +630,8 @@
       "Parent": "Barrel",
       "Position": [
         0,
-        -0.46527,
-        0.53832
+        -0.06409,
+        4.41849
       ],
       "Direction": [
         0,
@@ -662,9 +642,9 @@
     "coax_muzzle": {
       "Parent": "Barrel",
       "Position": [
-        0,
-        -0.46527,
-        0.53832
+        -0.47423,
+        -0.06409,
+        0.40671
       ],
       "Direction": [
         0,

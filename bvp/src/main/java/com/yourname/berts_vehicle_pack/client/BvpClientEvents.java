@@ -1,5 +1,7 @@
 package com.yourname.berts_vehicle_pack.client;
 
+import com.atsuishio.superbwarfare.api.diagnostics.DebugFeaturePolicy;
+
 import com.atsuishio.superbwarfare.api.performance.ClientRenderPerformanceDiagnostics;
 import com.atsuishio.superbwarfare.client.VehicleActionInputClient;
 import com.atsuishio.superbwarfare.client.sound.VehicleLoopSoundProviderRegistry;
@@ -68,6 +70,7 @@ public final class BvpClientEvents {
         BvpHudRenderer.registerTargetCardRenderer();
         BvpProjectileTrailRenderer.registerProviders();
         BvpTankEngineSounds.registerProvider();
+        BvpAircraftEngineSounds.registerProvider();
     }
 
     public static void registerKeyMappings(RegisterKeyMappingsEvent event) {
@@ -124,11 +127,12 @@ public final class BvpClientEvents {
 
     @SubscribeEvent
     public void onRegisterClientCommands(RegisterClientCommandsEvent event) {
-        event.getDispatcher().register(muzzleDebugCommand());
+        if (DebugFeaturePolicy.allowsDebugTools()) event.getDispatcher().register(muzzleDebugCommand());
     }
 
     @SubscribeEvent
     public void onRegisterCommands(RegisterCommandsEvent event) {
+        if (!DebugFeaturePolicy.allowsDebugTools()) return;
         event.getDispatcher().register(Commands.m_82127_("bvp_armor_xray")
                 .executes(context -> {
                     boolean enabled = ArmorDebugRenderer.toggleCommandXray();
@@ -146,7 +150,9 @@ public final class BvpClientEvents {
                     return 1;
                 })));
 
-        event.getDispatcher().register(Commands.m_82127_("bvp").executes(context -> bvpStatus()));
+        if (DebugFeaturePolicy.allowsDebugTools()) {
+            event.getDispatcher().register(Commands.m_82127_("bvp").executes(context -> bvpStatus()));
+        }
     }
 
     @SubscribeEvent
@@ -157,6 +163,15 @@ public final class BvpClientEvents {
         }
 
         ResourceLocation entityTypeLocation = BvpVehicleItem.getEntityTypeId(stack).orElse(null);
+        if (!DebugFeaturePolicy.allowsDebugTools()) {
+            // This isolated playtest artifact intentionally exposes only the normal item name.
+            var tooltip = event.getToolTip();
+            if (tooltip.size() > 1) tooltip.subList(1, tooltip.size()).clear();
+            if (entityTypeLocation != null && entityTypeLocation.toString().equals("berts_vehicle_pack:t80b_obr1976")) {
+                tooltip.add(Component.m_237113_("Experimental - tracks defective!").m_130940_(ChatFormatting.YELLOW));
+            }
+            return;
+        }
         if (entityTypeLocation == null) {
             return;
         }

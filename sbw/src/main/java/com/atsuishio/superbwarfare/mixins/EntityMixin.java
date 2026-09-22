@@ -2,9 +2,11 @@ package com.atsuishio.superbwarfare.mixins;
 
 import com.atsuishio.superbwarfare.entity.mixin.OBBHitter;
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.base.AircraftEntityCollisionService;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.item.gun.launcher.SuperStarShooterItem;
 import com.atsuishio.superbwarfare.tools.OBB;
+import com.atsuishio.superbwarfare.world.phys.ProjectileContact;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
@@ -27,6 +29,13 @@ import javax.annotation.Nullable;
 @Mixin(Entity.class)
 public abstract class EntityMixin implements OBBHitter {
 
+    @Inject(method = "collide(Lnet/minecraft/world/phys/Vec3;)Lnet/minecraft/world/phys/Vec3;",
+            at = @At("HEAD"), cancellable = true)
+    private void sbw$collideAircraftParts(Vec3 requested, CallbackInfoReturnable<Vec3> cir) {
+        Vec3 admitted = AircraftEntityCollisionService.tryCollide((Entity) (Object) this, requested);
+        if (admitted != null) cir.setReturnValue(admitted);
+    }
+
     @Shadow
     @Nullable
     public abstract Entity getVehicle();
@@ -43,6 +52,8 @@ public abstract class EntityMixin implements OBBHitter {
     private Vec3 position;
     @Unique
     public OBB.Part sbw$currentHitPart;
+    @Unique
+    private ProjectileContact sbw$projectileContact;
 
     @Override
     public OBB.Part sbw$getCurrentHitPart() {
@@ -52,6 +63,18 @@ public abstract class EntityMixin implements OBBHitter {
     @Override
     public void sbw$setCurrentHitPart(OBB.Part part) {
         this.sbw$currentHitPart = part;
+        this.sbw$projectileContact = null;
+    }
+
+    @Override
+    public ProjectileContact sbw$getProjectileContact() {
+        return this.sbw$projectileContact;
+    }
+
+    @Override
+    public void sbw$setProjectileContact(ProjectileContact contact) {
+        this.sbw$projectileContact = contact;
+        this.sbw$currentHitPart = contact == null ? OBB.Part.EMPTY : contact.part();
     }
 
     @Inject(method = "turn(DD)V", at = @At("HEAD"), cancellable = true)

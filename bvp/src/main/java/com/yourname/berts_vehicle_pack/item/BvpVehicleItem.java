@@ -28,7 +28,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 /**
- * The real BVP vehicle item.  One item id carries a typed vehicle identity and, after crowbar
+ * One BVP item ID carries a typed vehicle identity and, after crowbar
  * recovery, a bounded durable-state envelope.  It never places SBW's container block.
  */
 public final class BvpVehicleItem extends Item {
@@ -133,7 +133,7 @@ public final class BvpVehicleItem extends Item {
         float yaw = player == null ? 0.0F : Mth.m_14177_(player.m_146908_());
         vehicle.m_7678_(
                 placement.m_123341_() + 0.5D,
-                placement.m_123342_(),
+                placement.m_123342_() + 0.5D,
                 placement.m_123343_() + 0.5D,
                 yaw,
                 0.0F
@@ -154,7 +154,7 @@ public final class BvpVehicleItem extends Item {
         // is the sole placement heading, including for a recovered vehicle.
         vehicle.m_7678_(
                 placement.m_123341_() + 0.5D,
-                placement.m_123342_(),
+                placement.m_123342_() + 0.5D,
                 placement.m_123343_() + 0.5D,
                 yaw,
                 0.0F

@@ -17,6 +17,11 @@ enum class TrackRenderMode {
     LINKS,
 }
 
+enum class TrackLinkFit {
+    CONTACT_INTERVAL,
+    RIGID_PATH,
+}
+
 enum class RunningGearSide {
     LEFT,
     RIGHT,
@@ -54,7 +59,7 @@ data class TrackPathProfile(
     val rotationX: List<TrackPathKeyframe>,
 )
 
-data class TrackRenderProfile(
+data class TrackRenderProfile @JvmOverloads constructor(
     val mode: TrackRenderMode,
     val linkCount: Int,
     val phaseDistance: Float,
@@ -62,6 +67,8 @@ data class TrackRenderProfile(
     val evaluationLayout: TrackBoundsProfile,
     val sides: Map<RunningGearSide, TrackSideProfile>,
     val path: TrackPathProfile,
+    val linkHalfThickness: Float = 0F,
+    val linkFit: TrackLinkFit = TrackLinkFit.CONTACT_INTERVAL,
 ) {
     fun side(side: RunningGearSide): TrackSideProfile = requireNotNull(sides[side])
 
@@ -69,10 +76,18 @@ data class TrackRenderProfile(
     fun path(side: RunningGearSide): TrackPathProfile = side(side).path ?: this.path
 }
 
-data class RunningGearProfile(
+data class WheelSteeringProfile(
+    val steeringBone: String,
+    val wheelBone: String,
+    val maxAngleDegrees: Float,
+    val sign: Int,
+)
+
+data class RunningGearProfile @JvmOverloads constructor(
     val leftWheelBones: List<String>,
     val rightWheelBones: List<String>,
     val trackRender: TrackRenderProfile?,
+    val wheelSteering: List<WheelSteeringProfile> = emptyList(),
 )
 
 /** Validates raw resource data once and exposes immutable renderer-facing profiles. */
@@ -128,20 +143,69 @@ object RunningGearProfiles {
             require((kind == RunningGearKind.TRACKED) == (track != null)) {
                 "TRACKED profiles require TrackRender and WHEELED profiles must omit it"
             }
+            val steering = raw.steering?.let {
+                require(kind == RunningGearKind.WHEELED) { "Steering requires WHEELED running gear" }
+                validateSteering(it, leftWheels, rightWheels)
+            } ?: emptyList()
             Cached(
-                RunningGearProfile(leftWheels, rightWheels, track),
+                RunningGearProfile(leftWheels, rightWheels, track, steering),
                 null,
             )
         } catch (exception: IllegalArgumentException) {
             Cached(null, exception.message ?: exception.javaClass.simpleName)
         }
 
+    private fun validateSteering(
+        raw: RunningGearResource.SteeringRig,
+        leftWheels: List<String>,
+        rightWheels: List<String>,
+    ): List<WheelSteeringProfile> {
+        require(raw.schema == 1) { "Steering.Schema must be 1" }
+        val wheels = requireNotNull(raw.wheels) { "Steering.Wheels is required" }
+        require(wheels.size in 1..16) { "Steering.Wheels must contain 1..16 entries" }
+        val wheelNames = (leftWheels + rightWheels).toSet()
+        require(wheelNames.size == leftWheels.size + rightWheels.size) {
+            "Steering requires distinct WheelBones identities"
+        }
+        val steeringNames = HashSet<String>()
+        val assignedWheels = HashSet<String>()
+        val profiles = wheels.map { entry ->
+            val wheel = requireNotNull(entry) { "Steering.Wheels cannot contain null" }
+            val steeringBone = requireName(wheel.steeringBone, "SteeringBone")
+            val wheelBone = requireName(wheel.wheelBone, "WheelBone")
+            require(steeringBone.length <= 96 && wheelBone.length <= 96) { "steering bone name too long" }
+            require(wheelBone in wheelNames && assignedWheels.add(wheelBone)) {
+                "Steering.WheelBone must identify one distinct declared spin bone"
+            }
+            require(steeringBone !in wheelNames && steeringNames.add(steeringBone)) {
+                "SteeringBone must be distinct from every spin bone and other steering parent"
+            }
+            val maximum = requireNotNull(wheel.maxAngleDegrees) { "MaxAngleDegrees is required" }
+            require(maximum.isFinite() && maximum > 0F && maximum <= 90F) {
+                "MaxAngleDegrees must be finite and in (0,90]"
+            }
+            val sign = requireNotNull(wheel.sign) { "Sign is required" }
+            require(sign == -1 || sign == 1) { "Sign must be -1 or 1" }
+            WheelSteeringProfile(steeringBone, wheelBone, maximum, sign)
+        }
+        return java.util.List.copyOf(profiles)
+    }
+
     private fun validateTrack(raw: RunningGearResource.TrackRender): TrackRenderProfile {
         val mode = enumValue<TrackRenderMode>(raw.mode, "TrackRender.Mode")
+        val linkFit = enumValue<TrackLinkFit>(raw.linkFit, "TrackRender.LinkFit")
         require(raw.linkCount > 0) { "TrackRender.LinkCount must be positive" }
         requireFinitePositive(raw.phaseDistance, "TrackRender.PhaseDistance")
         require(raw.travelScale.isFinite() && raw.travelScale >= 0.0F) {
             "TrackRender.TravelScale must be finite and non-negative"
+        }
+        require(raw.linkHalfThickness.isFinite() && raw.linkHalfThickness in 0F..64F) {
+            "TrackRender.LinkHalfThickness must be finite and between zero and 64 model units"
+        }
+        if (linkFit == TrackLinkFit.RIGID_PATH) {
+            require(raw.travelScale == 1F && kotlin.math.abs(raw.phaseDistance * raw.linkCount - 100F) < 0.001F) {
+                "Rigid track links require unit travel scale and one complete closed-path phase cycle"
+            }
         }
         val evaluationLayout = validateBounds(
             requireNotNull(raw.evaluationLayout) { "TrackRender.EvaluationLayout is required" },
@@ -166,6 +230,8 @@ object RunningGearProfiles {
             evaluationLayout,
             sides,
             path,
+            raw.linkHalfThickness,
+            linkFit,
         )
     }
 

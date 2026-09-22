@@ -1,9 +1,8 @@
 {
   "ID": "berts_vehicle_pack:ah1w_super_cobra",
-  "MaxHealth": 100,
+  "MaxHealth": 110,
   "MaxEnergy": 10000000,
   "AllowFreeCam": true,
-  "LightlyArmored": true,
   "OBB": [
     {
       "Size": [
@@ -267,5 +266,32 @@
   ],
   "PassengerRenderScale": 0.75,
   "MouseSensitivity": 0.35,
-  "TerrainCompatRotateRate": 0.18
+  "TerrainCompatRotateRate": 0.18,
+  "AircraftTerrainContact": {
+    "Fuselage": {
+      "Min": [
+        -2.5,
+        1.2,
+        -8.184155
+      ],
+      "Max": [
+        2.5,
+        4.3,
+        0.815845
+      ]
+    },
+    "LandingGear": {
+      "Min": [
+        -2.3,
+        0.01,
+        -7.824155
+      ],
+      "Max": [
+        2.3,
+        1.25,
+        0.455845
+      ]
+    },
+    "RetractableGear": false
+  }
 }

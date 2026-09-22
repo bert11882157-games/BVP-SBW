@@ -6,8 +6,8 @@
     "DamageType": "berts_vehicle_pack:chemical",
     "CaliberMm": 30,
     "DiameterMm": 30,
-    "HullDamageClass": "DEFAULT",
-    "HullDamage": 18,
+    "HullDamageClass": "HE",
+    "HullDamage": 36,
     "ModuleDamage": 9,
     "AmmoRackDamage": 2,
     "PenetrationMm": 0,
@@ -29,10 +29,72 @@
     },
     "Tandem": false
   },
+  "VisualProfile": "berts_vehicle_pack:scaled_small_cannon",
   "ImpactVisualProfile": "berts_vehicle_pack:autocannon_he",
   "MotionSync": "INHERIT",
   "Luminance": 0,
-  "TrailMode": "DEFAULT",
+  "TrailMode": "REPLACE",
   "RenderScale": 1,
-  "Extensions": {}
+  "Extensions": {
+    "berts_vehicle_pack:projectile_effect_v1": {
+      "Schema": 1,
+      "Trail": {
+        "Emitter": {
+          "Trail": "berts_vehicle_pack:tracer_v2"
+        },
+        "Phases": [
+          {
+            "Name": "SUSTAIN",
+            "StartTick": 0,
+            "EndTickExclusive": 2147483647,
+            "Flame": false,
+            "Smoke": false,
+            "Scale": 1,
+            "Orbit": null
+          }
+        ],
+        "SpacingBlocks": null,
+        "RatePerTick": 1,
+        "LifetimeTicks": {
+          "Trail": 3
+        },
+        "WidthBlocks": 0.1,
+        "AttachmentOffset": [
+          0,
+          0,
+          0
+        ],
+        "VelocityInheritance": 0,
+        "RandomScale": [
+          1,
+          1
+        ],
+        "Tracer": {
+          "Enabled": true,
+          "ColorRgb": [
+            72,
+            255,
+            96
+          ],
+          "EveryNthShot": 1,
+          "LengthBlocks": 4,
+          "WidthBlocks": 0.1,
+          "Opacity": 0.9,
+          "LifetimeTicks": 3,
+          "Core": {
+            "WidthScale": 1,
+            "OpacityScale": 1
+          },
+          "Glow": {
+            "WidthScale": 4,
+            "OpacityScale": 0.25
+          }
+        }
+      },
+      "Impact": {
+        "Explosion": "medium",
+        "WaterExplosion": "same"
+      }
+    }
+  }
 }

@@ -12,6 +12,31 @@ import org.junit.jupiter.api.Test
 import java.util.UUID
 
 class VehicleReloadAudioTest {
+    @Test fun `client playback requires exact active reload and cannot survive completion`() {
+        fun decide(revision: Int = 17, loading: Boolean = true, countdown: Int = 50,
+                   budget: Int = 48, source: Boolean = true) =
+            ReloadPlaybackWindow.evaluate(17, revision, loading, countdown, budget, source)
+        assertEquals(ReloadPlaybackWindow.Decision.WAIT, decide(revision = 16, loading = false))
+        assertEquals(ReloadPlaybackWindow.Decision.PLAY, decide())
+        assertEquals(ReloadPlaybackWindow.Decision.STOP, decide(countdown = 1))
+        assertEquals(ReloadPlaybackWindow.Decision.STOP, decide(countdown = 0))
+        assertEquals(ReloadPlaybackWindow.Decision.STOP, decide(loading = false))
+        assertEquals(ReloadPlaybackWindow.Decision.STOP, decide(revision = 18))
+        assertEquals(ReloadPlaybackWindow.Decision.STOP, decide(budget = 0))
+        assertEquals(ReloadPlaybackWindow.Decision.STOP, decide(source = false))
+    }
+
+    @Test fun `independent playback clock may retire entries during a tick snapshot`() {
+        val stopped = mutableListOf<String>()
+        val registry = AudioPlaybackRegistry<String>(stopped::add)
+        val ids = List(3) { UUID.randomUUID() }
+        ids.forEachIndexed { index, id -> registry.start(id) { index.toString() } }
+        registry.forEachActive { registry.stop(ids[it.toInt()]) }
+        assertEquals(listOf("0", "1", "2"), stopped)
+        assertEquals(0, registry.activeCount())
+        ids.forEach { assertFalse(registry.start(it) { "late buffer" }) }
+    }
+
     @Test fun `authoritative cycle can claim once and finished revision never restarts`() {
         val cycle = VehicleReloadAudio.VehicleReloadSoundCycle(10, lastRemainingTicks = 120)
         assertTrue(cycle.claim())

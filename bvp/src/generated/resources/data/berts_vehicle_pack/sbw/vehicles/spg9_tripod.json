@@ -1,0 +1,332 @@
+{
+  "ID": "berts_vehicle_pack:spg9_tripod",
+  "MaxHealth": 100,
+  "MaxEnergy": 0,
+  "AllowFreeCam": true,
+  "LightlyArmored": true,
+  "OBB": [
+    {
+      "Position": [
+        0.06584,
+        0.39428,
+        -1.38272
+      ],
+      "Size": [
+        0.49602,
+        0.3987,
+        0.85597
+      ],
+      "Transform": "Vehicle",
+      "Rotation": "Vehicle"
+    },
+    {
+      "Position": [
+        -0.02399,
+        0.13854,
+        0.36569
+      ],
+      "Size": [
+        0.2268,
+        0.14778,
+        1.33151
+      ],
+      "Transform": "Barrel",
+      "Rotation": "Barrel"
+    }
+  ],
+  "Seats": [
+    {
+      "HidePassenger": false,
+      "BanHand": true,
+      "Transform": "Turret",
+      "Position": [
+        0.17188,
+        -0.72813,
+        -0.19688
+      ],
+      "Weapons": [
+        "Cannon"
+      ],
+      "CanRotateHead": false,
+      "MinPitch": -10,
+      "MaxPitch": 30,
+      "CameraPos": {
+        "Transform": "Barrel",
+        "Position": [
+          0,
+          0,
+          0
+        ],
+        "EyeAttachment": "operator_camera",
+        "ZoomEyeAttachment": "operator_scope",
+        "DirectionAttachment": "main_muzzle",
+        "ZoomDirectionAttachment": "main_muzzle",
+        "ZoomPosition": [
+          0,
+          0,
+          0
+        ],
+        "Direction": "Barrel"
+      },
+      "DismountInfo": {
+        "Transform": "Vehicle",
+        "Position": [
+          0,
+          0.56875,
+          -1.70625
+        ]
+      },
+      "IsEnclosed": false,
+      "ExposedToFire": true,
+      "BodyAttachment": "Turret",
+      "CanRotateBody": false,
+      "Pose": "MountedLowSeated"
+    }
+  ],
+  "Weapons": {
+    "Cannon": {
+      "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_heatfs.png",
+      "DefaultFireMode": "Semi",
+      "AvailableFireModes": "Semi",
+      "Projectile": {
+        "Type": "superbwarfare:cannon_shell",
+        "Profile": "berts_vehicle_pack:spg9_tripod/cannon/default"
+      },
+      "ShellType": "AP",
+      "DefaultZoom": 2.5,
+      "Magazine": 1,
+      "EmptyReloadTime": 200,
+      "Velocity": 14,
+      "ProjectileLife": 160,
+      "Gravity": 0.045,
+      "ApDurability": 70,
+      "Damage": 360,
+      "ExplosionDamage": 85,
+      "ExplosionRadius": 4,
+      "RecoilTime": 34,
+      "RecoilForce": 0,
+      "Spread": 0.05,
+      "ShootAnimationTime": 12,
+      "Crosshair": "@VehicleCommonGun",
+      "CrosshairColor": "0xFFFFFF",
+      "Name": "weapon.berts_vehicle_pack.spg9_tripod",
+      "AmmoType": [
+        "superbwarfare:large_shell_ap",
+        {
+          "Ammo": "superbwarfare:large_shell_he",
+          "Override": {
+            "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_he.png",
+            "ShellType": "HE",
+            "Velocity": 12,
+            "Damage": 150,
+            "ExplosionDamage": 135,
+            "ExplosionRadius": 6,
+            "Name": "weapon.superbwarfare.cannon_he",
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:spg9_tripod/cannon/ammo_01_og9",
+              "ProjectileLife": 160
+            },
+            "Projectile": {
+              "Type": "superbwarfare:cannon_shell",
+              "Profile": "berts_vehicle_pack:spg9_tripod/cannon/ammo_01_og9"
+            },
+            "ShootShake": [
+              8,
+              10,
+              57.6
+            ]
+          }
+        }
+      ],
+      "SoundInfo": {
+        "Fire1PGain": 0.5,
+        "Fire3PGain": 0.5,
+        "Fire3PFarGain": 0.5,
+        "Fire3PVeryFarGain": 0.5,
+        "Fire1P": "superbwarfare:rpg_fire_3p",
+        "Fire3P": "superbwarfare:rpg_fire_3p",
+        "Fire3PFar": "superbwarfare:rpg_fire_3p",
+        "Fire3PVeryFar": "superbwarfare:rpg_fire_3p",
+        "Change": "superbwarfare:into_cannon"
+      },
+      "SoundRadius": 32,
+      "ShootPos": {
+        "Transform": "Barrel",
+        "Positions": [
+          [
+            -0.0196,
+            0.12244,
+            1.70012
+          ]
+        ],
+        "Directions": [
+          "Barrel"
+        ],
+        "ViewPosition": [
+          -0.01723,
+          0.10764,
+          1.49461
+        ],
+        "MuzzleAttachments": [
+          "main_muzzle"
+        ],
+        "MuzzleDirectionAttachments": [
+          "main_muzzle"
+        ],
+        "EffectAttachments": [
+          "main_muzzle"
+        ],
+        "EffectDirectionAttachments": [
+          "main_muzzle"
+        ]
+      },
+      "AutoReload": true,
+      "NormalReloadTime": 200,
+      "RPM": 6,
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "superbwarfare:cannon_shell",
+        "ProjectileProfile": "berts_vehicle_pack:spg9_tripod/cannon/default",
+        "ProjectileLife": 160
+      },
+      "ShootShake": [
+        8,
+        10,
+        57.6
+      ]
+    }
+  },
+  "HUDColor": "0xFFC700",
+  "InertiaRotateRate": 1.2,
+  "ParkingBrakeWhenUnoccupied": true,
+  "EngineType": "Fixed",
+  "EngineInfo": {
+    "MaxForwardSpeedRate": 0,
+    "MaxBackwardSpeedRate": 0,
+    "Increment": 0,
+    "Decrement": 0,
+    "SteeringSpeed": 0
+  },
+  "TurretPos": [
+    0.07812,
+    0.74077,
+    -1.2875
+  ],
+  "BarrelPos": [
+    0,
+    0,
+    0
+  ],
+  "TurretTurnSpeed": [
+    60,
+    90
+  ],
+  "TurretPitchRange": [
+    -10,
+    30
+  ],
+  "TurretYawRange": [
+    -180,
+    180
+  ],
+  "HasDecoy": false,
+  "UpStep": 0,
+  "RotateOffsetHeight": 2.9575,
+  "Mass": 44.5,
+  "DamageModifiers": [],
+  "DestroyInfo": {
+    "ParticleType": "Mini",
+    "ExplosionDamage": 6,
+    "ExplosionRadius": 0.75,
+    "ExplodeBlocks": false,
+    "ExplodePassengers": false,
+    "SympatheticDetonation": false,
+    "NoWreck": true
+  },
+  "ThirdPersonCameraPos": [
+    -0.98617,
+    1.70625,
+    5.6875
+  ],
+  "VehicleIcon": "berts_vehicle_pack:textures/vehicle_icon/spg9_tripod.png",
+  "ContainerIcon": "superbwarfare:textures/gui/vehicle/type/land.png",
+  "VehicleContainerType": "Small",
+  "Type": "Defense",
+  "CollisionLevel": {
+    "Level": 4,
+    "PowerLimits": [
+      [
+        0,
+        0,
+        true
+      ],
+      [
+        0,
+        0,
+        true
+      ],
+      [
+        0.1,
+        0.05,
+        false
+      ],
+      [
+        1,
+        0.3,
+        false
+      ]
+    ]
+  },
+  "HudType": "@Land",
+  "TerrainCompat": [],
+  "TurretControllerIndex": 0,
+  "OpticalZoomRange": [
+    2.5,
+    8
+  ],
+  "Attachments": {
+    "operator_scope": {
+      "Parent": "Barrel",
+      "Position": [
+        0.1004,
+        0.18515,
+        0.20547
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "operator_camera": {
+      "Parent": "Barrel",
+      "Position": [
+        -0.0196,
+        0.29986,
+        -0.4625
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "main_muzzle": {
+      "Parent": "Barrel",
+      "Position": [
+        -0.0196,
+        0.12244,
+        1.70012
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    }
+  },
+  "ApplyDefaultDamageModifiers": false,
+  "LethalDirectCaliberMm": 37
+}

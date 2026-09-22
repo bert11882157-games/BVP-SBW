@@ -27,32 +27,6 @@
       ]
     },
     {
-      "Part": "WheelLeft",
-      "Size": [
-        0.27044,
-        0.54932,
-        3.00016
-      ],
-      "Position": [
-        1.817,
-        0.60848,
-        -0.21128
-      ]
-    },
-    {
-      "Part": "WheelRight",
-      "Size": [
-        0.27044,
-        0.54932,
-        3.00016
-      ],
-      "Position": [
-        -1.817,
-        0.60848,
-        -0.21128
-      ]
-    },
-    {
       "Part": "MainEngine",
       "Size": [
         0.97188,
@@ -202,8 +176,8 @@
       "DefaultFireMode": "Auto",
       "AvailableFireModes": "Auto",
       "DefaultZoom": 3,
-      "RPM": 850,
-      "Magazine": 500,
+      "RPM": 3400,
+      "Magazine": 2000,
       "NormalReloadTime": 100,
       "EmptyReloadTime": 100,
       "AmmoCostPerShoot": 1,

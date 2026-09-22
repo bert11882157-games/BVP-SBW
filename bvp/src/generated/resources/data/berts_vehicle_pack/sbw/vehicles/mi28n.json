@@ -1,9 +1,8 @@
 {
   "ID": "berts_vehicle_pack:mi28n",
-  "MaxHealth": 100,
+  "MaxHealth": 150,
   "MaxEnergy": 10000000,
   "AllowFreeCam": true,
-  "LightlyArmored": true,
   "HasCCIP": true,
   "Fires": [
     "S-8KO rockets",
@@ -234,14 +233,14 @@
       },
       "AddShooterDeltaMovement": true,
       "DefaultZoom": 3,
-      "RPM": 546,
+      "RPM": 550,
       "ProjectileAmount": 1,
       "Magazine": 250,
-      "EmptyReloadTime": 100,
+      "EmptyReloadTime": 400,
       "Velocity": 30,
       "Damage": 27,
       "BypassesArmor": 0.55,
-      "HeatPerShoot": 3.3333333333333335,
+      "HeatPerShoot": 0,
       "NaturalCooldown": 1,
       "RecoilTime": 8,
       "RecoilForce": 0.16,
@@ -372,6 +371,17 @@
         "SeekAttachment": "cannon_muzzle_01",
         "ViewAttachment": "seat_2_camera"
       },
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "superbwarfare:projectile",
+        "ProjectileProfile": "berts_vehicle_pack:mi28n/cannon/default",
+        "ProjectileLife": 55
+      },
+      "BeltFed": true,
+      "NormalReloadTime": 400,
+      "AutoReload": true,
+      "OverheatEnabled": false,
+      "AmmoCostPerShoot": 1,
       "ProjectileBeltAmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_gs",
@@ -405,13 +415,7 @@
             "Name": "HEF_I"
           }
         }
-      ],
-      "NominalBallistics": {
-        "Supported": true,
-        "ProjectileType": "superbwarfare:projectile",
-        "ProjectileProfile": "berts_vehicle_pack:mi28n/cannon/default",
-        "ProjectileLife": 55
-      }
+      ]
     },
     "Rocket": {
       "AmmoType": "superbwarfare:small_rocket",
@@ -726,10 +730,10 @@
       "ApDurability": 800,
       "CrosshairColor": "0xFFC700",
       "SoundInfo": {
-        "Fire1PGain": 0.5,
-        "Fire3PGain": 0.5,
-        "Fire3PFarGain": 0.5,
-        "Fire3PVeryFarGain": 0.5,
+        "Fire1PGain": 0.35,
+        "Fire3PGain": 0.35,
+        "Fire3PFarGain": 0.35,
+        "Fire3PVeryFarGain": 0.35,
         "Fire1P": "berts_vehicle_pack:atgm_gun_launch",
         "Fire3P": "berts_vehicle_pack:atgm_gun_launch",
         "VehicleReload3p": "superbwarfare:bomb_reload",
@@ -888,6 +892,17 @@
       "Projectile": {
         "Type": "berts_vehicle_pack:ataka_missile",
         "Profile": "berts_vehicle_pack:mi28n/passengermissile/default"
+      },
+      "SoundInfo": {
+        "Fire1PGain": 0.7,
+        "Fire3PGain": 0.7,
+        "Fire3PFarGain": 0.7,
+        "Fire3PVeryFarGain": 0.7
+      },
+      "NominalBallistics": {
+        "Supported": false,
+        "ProjectileType": "berts_vehicle_pack:ataka_missile",
+        "ProjectileProfile": "berts_vehicle_pack:mi28n/passengermissile/default"
       }
     },
     "PilotMissile": {
@@ -1153,6 +1168,17 @@
       "Projectile": {
         "Type": "berts_vehicle_pack:ataka_missile",
         "Profile": "berts_vehicle_pack:mi28n/pilotmissile/default"
+      },
+      "SoundInfo": {
+        "Fire1PGain": 0.7,
+        "Fire3PGain": 0.7,
+        "Fire3PFarGain": 0.7,
+        "Fire3PVeryFarGain": 0.7
+      },
+      "NominalBallistics": {
+        "Supported": false,
+        "ProjectileType": "berts_vehicle_pack:ataka_missile",
+        "ProjectileProfile": "berts_vehicle_pack:mi28n/pilotmissile/default"
       }
     }
   },
@@ -2234,5 +2260,32 @@
       "Primary": "Cannon",
       "Secondary": "PassengerMissile"
     }
-  ]
+  ],
+  "AircraftTerrainContact": {
+    "Fuselage": {
+      "Min": [
+        -3.5,
+        1.25,
+        -9.86126
+      ],
+      "Max": [
+        3.5,
+        5.5,
+        0.38874
+      ]
+    },
+    "LandingGear": {
+      "Min": [
+        -3.22,
+        0.02,
+        -9.45126
+      ],
+      "Max": [
+        3.22,
+        1.3,
+        -0.02126
+      ]
+    },
+    "RetractableGear": false
+  }
 }

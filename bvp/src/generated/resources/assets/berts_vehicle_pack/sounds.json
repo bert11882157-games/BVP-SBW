@@ -809,6 +809,33 @@
       }
     ]
   },
+  "impact_stone": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:impact/stone",
+        "stream": false,
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "impact_dirt": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:impact/dirt",
+        "stream": false,
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "impact_metal": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:impact/metal",
+        "stream": false,
+        "attenuation_distance": 32
+      }
+    ]
+  },
   "ricochet_nonpenetration": {
     "sounds": [
       {
@@ -1028,6 +1055,1814 @@
         "name": "berts_vehicle_pack:gun/mig19/ns37_nr30_fire",
         "stream": false,
         "attenuation_distance": 64
+      }
+    ]
+  },
+  "yak_3_engine_start": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/yak_3/yak_3_engine_start",
+        "stream": false,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "yak_3_engine_loop": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/yak_3/yak_3_engine_loop",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "yak_9u_engine_start": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/yak_9u/yak_9u_engine_start",
+        "stream": false,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "yak_9u_engine_loop": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/yak_9u/yak_9u_engine_loop",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "j_26_engine_start": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/j_26/j_26_engine_start",
+        "stream": false,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "j_26_engine_loop": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/j_26/j_26_engine_loop",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "saab_105_engine_start": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/saab_105/saab_105_engine_start",
+        "stream": false,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "saab_105_engine_loop": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/saab_105/saab_105_engine_loop",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "supermarine_spitfire_griffon_engine_start": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/supermarine_spitfire_griffon/supermarine_spitfire_griffon_engine_start",
+        "stream": false,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "supermarine_spitfire_griffon_engine_loop": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/supermarine_spitfire_griffon/supermarine_spitfire_griffon_engine_loop",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "mig_9_engine_start": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/mig_9/mig_9_engine_start",
+        "stream": false,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "mig_9_engine_loop": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/mig_9/mig_9_engine_loop",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "mig_15bis_engine_start": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/mig_15bis/mig_15bis_engine_start",
+        "stream": false,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "mig_15bis_engine_loop": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/mig_15bis/mig_15bis_engine_loop",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "mig_21bis_engine_start": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/mig_21bis/mig_21bis_engine_start",
+        "stream": false,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "mig_21bis_engine_loop": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/mig_21bis/mig_21bis_engine_loop",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "su_25_engine_start": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/su_25/su_25_engine_start",
+        "stream": false,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "su_25_engine_loop": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/su_25/su_25_engine_loop",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "su_27_engine_start": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/su_27/su_27_engine_start",
+        "stream": false,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "su_27_engine_loop": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/su_27/su_27_engine_loop",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "mig_29_engine_start": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/mig_29/mig_29_engine_start",
+        "stream": false,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "mig_29_engine_loop": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/mig_29/mig_29_engine_loop",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "mig_19s_engine_start": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/mig_19s/mig_19s_engine_start",
+        "stream": false,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "mig_19s_engine_loop": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/mig_19s/mig_19s_engine_loop",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "saab_j_21a_1_engine_start": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/saab_j_21a_1/saab_j_21a_1_engine_start",
+        "stream": false,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "saab_j_21a_1_engine_loop": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/saab_j_21a_1/saab_j_21a_1_engine_loop",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "f_84f_engine_start": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/f_84f/f_84f_engine_start",
+        "stream": false,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "f_84f_engine_loop": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/f_84f/f_84f_engine_loop",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "f_86k_engine_start": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/f_86k/f_86k_engine_start",
+        "stream": false,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "f_86k_engine_loop": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/f_86k/f_86k_engine_loop",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "f_104g_engine_start": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/f_104g/f_104g_engine_start",
+        "stream": false,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "f_104g_engine_loop": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/f_104g/f_104g_engine_loop",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "fiat_g_91_engine_start": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/fiat_g_91/fiat_g_91_engine_start",
+        "stream": false,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "fiat_g_91_engine_loop": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/fiat_g_91/fiat_g_91_engine_loop",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "yak_15p_engine_start": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/yak_15p/yak_15p_engine_start",
+        "stream": false,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "yak_15p_engine_loop": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/yak_15p/yak_15p_engine_loop",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "su_9_engine_start": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/su_9/su_9_engine_start",
+        "stream": false,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "su_9_engine_loop": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/su_9/su_9_engine_loop",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "saab_29_tunnan_engine_start": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/saab_29_tunnan/saab_29_tunnan_engine_start",
+        "stream": false,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "saab_29_tunnan_engine_loop": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/saab_29_tunnan/saab_29_tunnan_engine_loop",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "saab_32_lansen_engine_start": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/saab_32_lansen/saab_32_lansen_engine_start",
+        "stream": false,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "saab_32_lansen_engine_loop": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/saab_32_lansen/saab_32_lansen_engine_loop",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "su_17_engine_start": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/su_17/su_17_engine_start",
+        "stream": false,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "su_17_engine_loop": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/su_17/su_17_engine_loop",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "mig_23mld_engine_start": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/mig_23mld/mig_23mld_engine_start",
+        "stream": false,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "mig_23mld_engine_loop": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/mig_23mld/mig_23mld_engine_loop",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "saab_35_draken_engine_start": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/saab_35_draken/saab_35_draken_engine_start",
+        "stream": false,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "saab_35_draken_engine_loop": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/saab_35_draken/saab_35_draken_engine_loop",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "saab_37_viggen_engine_start": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/saab_37_viggen/saab_37_viggen_engine_start",
+        "stream": false,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "saab_37_viggen_engine_loop": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/saab_37_viggen/saab_37_viggen_engine_loop",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "saab_jas_39_gripen_engine_start": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/saab_jas_39_gripen/saab_jas_39_gripen_engine_start",
+        "stream": false,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "saab_jas_39_gripen_engine_loop": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/saab_jas_39_gripen/saab_jas_39_gripen_engine_loop",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "panavia_tornado_ids_marineflieger_engine_start": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/panavia_tornado_ids_marineflieger/panavia_tornado_ids_marineflieger_engine_start",
+        "stream": false,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "panavia_tornado_ids_marineflieger_engine_loop": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/panavia_tornado_ids_marineflieger/panavia_tornado_ids_marineflieger_engine_loop",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "eurofighter_typhoon_engine_start": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/eurofighter_typhoon/eurofighter_typhoon_engine_start",
+        "stream": false,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "eurofighter_typhoon_engine_loop": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/eurofighter_typhoon/eurofighter_typhoon_engine_loop",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "an_12b_engine_start": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/an_12b/an_12b_engine_start",
+        "stream": false,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "an_12b_engine_loop": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/an_12b/an_12b_engine_loop",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "il_76m_engine_start": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/il_76m/il_76m_engine_start",
+        "stream": false,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "il_76m_engine_loop": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/il_76m/il_76m_engine_loop",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "m_50a_engine_start": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/m_50a/m_50a_engine_start",
+        "stream": false,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "m_50a_engine_loop": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/m_50a/m_50a_engine_loop",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "tu_22m_engine_start": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/tu_22m/tu_22m_engine_start",
+        "stream": false,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "tu_22m_engine_loop": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/tu_22m/tu_22m_engine_loop",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "tu_95ms_engine_start": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/tu_95ms/tu_95ms_engine_start",
+        "stream": false,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "tu_95ms_engine_loop": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/tu_95ms/tu_95ms_engine_loop",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "mi_24a_engine_start": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/mi_24a/mi_24a_engine_start",
+        "stream": false,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "mi_24a_engine_loop": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/mi_24a/mi_24a_engine_loop",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "mi_24d_engine_start": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/mi_24d/mi_24d_engine_start",
+        "stream": false,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "mi_24d_engine_loop": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/mi_24d/mi_24d_engine_loop",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "mi_26_engine_start": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/mi_26/mi_26_engine_start",
+        "stream": false,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "mi_26_engine_loop": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/mi_26/mi_26_engine_loop",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "ah_1f_engine_start": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/ah_1f/ah_1f_engine_start",
+        "stream": false,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "ah_1f_engine_loop": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/ah_1f/ah_1f_engine_loop",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "qn506_small_atgm_fire": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:qn506/small_atgm_fire",
+        "stream": false
+      }
+    ]
+  },
+  "mig_21bis_gun_gsh23shoot": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft_guns/mig_21bis/mig_21bis_gun_gsh23shoot",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "f_111f_engine_start": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/f_111f/f_111f_engine_start",
+        "stream": false,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "f_111f_engine_loop": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/f_111f/f_111f_engine_loop",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "f_111f_gun_jetshoot": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft_guns/f_111f/f_111f_gun_jetshoot",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "f_16c_engine_start": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/f_16c/f_16c_engine_start",
+        "stream": false,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "f_16c_engine_loop": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/f_16c/f_16c_engine_loop",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "f_16c_gun_jetshoot": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft_guns/f_16c/f_16c_gun_jetshoot",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "f_15c_engine_start": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/f_15c/f_15c_engine_start",
+        "stream": false,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "f_15c_engine_loop": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/f_15c/f_15c_engine_loop",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "f_15c_gun_jetshoot": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft_guns/f_15c/f_15c_gun_jetshoot",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "f9f_2_engine_start": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/f9f_2/f9f_2_engine_start",
+        "stream": false,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "f9f_2_engine_loop": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/f9f_2/f9f_2_engine_loop",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "f9f_2_gun_aacannon": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft_guns/f9f_2/f9f_2_gun_aacannon",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "f_5a_engine_start": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/f_5a/f_5a_engine_start",
+        "stream": false,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "f_5a_engine_loop": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/f_5a/f_5a_engine_loop",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "f_5a_gun_aacannon": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft_guns/f_5a/f_5a_gun_aacannon",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "f_4c_engine_start": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/f_4c/f_4c_engine_start",
+        "stream": false,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "f_4c_engine_loop": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/f_4c/f_4c_engine_loop",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "f_4c_gun_jetshoot": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft_guns/f_4c/f_4c_gun_jetshoot",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "b_47e_engine_start": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/b_47e/b_47e_engine_start",
+        "stream": false,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "b_47e_engine_loop": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/b_47e/b_47e_engine_loop",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "b_47e_gun_aacannon": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft_guns/b_47e/b_47e_gun_aacannon",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "a_7d_engine_start": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/a_7d/a_7d_engine_start",
+        "stream": false,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "a_7d_engine_loop": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/a_7d/a_7d_engine_loop",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "a_7d_gun_jetshoot": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft_guns/a_7d/a_7d_gun_jetshoot",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "f_100c_engine_start": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/f_100c/f_100c_engine_start",
+        "stream": false,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "f_100c_engine_loop": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/f_100c/f_100c_engine_loop",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "f_100c_gun_aacannon": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft_guns/f_100c/f_100c_gun_aacannon",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "su_57_engine_start": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/su_57/su_57_engine_start",
+        "stream": false,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "su_57_engine_loop": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/su_57/su_57_engine_loop",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "su_57_gun_gshshoot": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft_guns/su_57/su_57_gun_gshshoot",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "f_22a_engine_start": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/f_22a/f_22a_engine_start",
+        "stream": false,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "f_22a_engine_loop": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/f_22a/f_22a_engine_loop",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "f_22a_gun_jetshoot": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft_guns/f_22a/f_22a_gun_jetshoot",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "yak_3_gun_gshshoot": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft_guns/yak_3/yak_3_gun_gshshoot",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "yak_3_gun_m2hbshoot": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft_guns/yak_3/yak_3_gun_m2hbshoot",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "yak_9u_gun_gshshoot": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft_guns/yak_9u/yak_9u_gun_gshshoot",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "yak_9u_gun_m2hbshoot": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft_guns/yak_9u/yak_9u_gun_m2hbshoot",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "j_26_gun_usatwelvemm": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft_guns/j_26/j_26_gun_usatwelvemm",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "supermarine_spitfire_griffon_gun_aacannon": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft_guns/supermarine_spitfire_griffon/supermarine_spitfire_griffon_gun_aacannon",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "supermarine_spitfire_griffon_gun_30calshoot": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft_guns/supermarine_spitfire_griffon/supermarine_spitfire_griffon_gun_30calshoot",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "mig_9_gun_mig17fire": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft_guns/mig_9/mig_9_gun_mig17fire",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "mig_9_gun_aacannon": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft_guns/mig_9/mig_9_gun_aacannon",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "mig_15bis_gun_mig17fire": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft_guns/mig_15bis/mig_15bis_gun_mig17fire",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "su_25_gun_gshshoot": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft_guns/su_25/su_25_gun_gshshoot",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "su_27_gun_gshshoot": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft_guns/su_27/su_27_gun_gshshoot",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "mig_29_gun_gshshoot": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft_guns/mig_29/mig_29_gun_gshshoot",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "mig_19s_gun_ns37": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft_guns/mig_19s/mig_19s_gun_ns37",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "saab_j_21a_1_gun_aacannon": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft_guns/saab_j_21a_1/saab_j_21a_1_gun_aacannon",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "saab_j_21a_1_gun_m2hbshoot": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft_guns/saab_j_21a_1/saab_j_21a_1_gun_m2hbshoot",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "f_84f_gun_m2hbshoot": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft_guns/f_84f/f_84f_gun_m2hbshoot",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "f_104g_gun_jetshoot": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft_guns/f_104g/f_104g_gun_jetshoot",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "fiat_g_91_gun_warthunder30mm": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft_guns/fiat_g_91/fiat_g_91_gun_warthunder30mm",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "yak_15p_gun_aacannon": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft_guns/yak_15p/yak_15p_gun_aacannon",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "saab_29_tunnan_gun_aacannon": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft_guns/saab_29_tunnan/saab_29_tunnan_gun_aacannon",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "saab_32_lansen_gun_warthunder30mm": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft_guns/saab_32_lansen/saab_32_lansen_gun_warthunder30mm",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "su_17_gun_aacannon": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft_guns/su_17/su_17_gun_aacannon",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "mig_23mld_gun_gsh23shoot": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft_guns/mig_23mld/mig_23mld_gun_gsh23shoot",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "saab_35_draken_gun_warthunder30mm": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft_guns/saab_35_draken/saab_35_draken_gun_warthunder30mm",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "saab_37_viggen_gun_warthunder30mm": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft_guns/saab_37_viggen/saab_37_viggen_gun_warthunder30mm",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "saab_jas_39_gripen_gun_warthunder30mm": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft_guns/saab_jas_39_gripen/saab_jas_39_gripen_gun_warthunder30mm",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "panavia_tornado_ids_marineflieger_gun_jetshoot": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft_guns/panavia_tornado_ids_marineflieger/panavia_tornado_ids_marineflieger_gun_jetshoot",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "eurofighter_typhoon_gun_gshshoot": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft_guns/eurofighter_typhoon/eurofighter_typhoon_gun_gshshoot",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "an_12b_gun_gshshoot": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft_guns/an_12b/an_12b_gun_gshshoot",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "il_76m_gun_gshshoot": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft_guns/il_76m/il_76m_gun_gshshoot",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "tu_22m_gun_gshshoot": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft_guns/tu_22m/tu_22m_gun_gshshoot",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "tu_95ms_gun_gshshoot": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft_guns/tu_95ms/tu_95ms_gun_gshshoot",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "me_163_engine_start": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/me_163/me_163_engine_start",
+        "stream": false,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "me_163_engine_loop": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/me_163/me_163_engine_loop",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "me_163_gun_deutsche30mm": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft_guns/me_163/me_163_gun_deutsche30mm",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "do_335_b2_engine_start": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/do_335_b2/do_335_b2_engine_start",
+        "stream": false,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "do_335_b2_engine_loop": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/do_335_b2/do_335_b2_engine_loop",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "do_335_b2_gun_deutsche30mm": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft_guns/do_335_b2/do_335_b2_gun_deutsche30mm",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "hs_129_b3_engine_start": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/hs_129_b3/hs_129_b3_engine_start",
+        "stream": false,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "hs_129_b3_engine_loop": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/hs_129_b3/hs_129_b3_engine_loop",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "hs_129_b3_gun_duckfire": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft_guns/hs_129_b3/hs_129_b3_gun_duckfire",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "hs_129_b3_gun_planemgshoot": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft_guns/hs_129_b3/hs_129_b3_gun_planemgshoot",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "p_39_engine_start": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/p_39/p_39_engine_start",
+        "stream": false,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "p_39_engine_loop": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/p_39/p_39_engine_loop",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "p_39_gun_p39shoot": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft_guns/p_39/p_39_gun_p39shoot",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "ju_87_b2_engine_start": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/ju_87_b2/ju_87_b2_engine_start",
+        "stream": false,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "ju_87_b2_engine_loop": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/ju_87_b2/ju_87_b2_engine_loop",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "ju_87_b2_gun_planemgshoot": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft_guns/ju_87_b2/ju_87_b2_gun_planemgshoot",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "ho_229_engine_start": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/ho_229/ho_229_engine_start",
+        "stream": false,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "ho_229_engine_loop": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/ho_229/ho_229_engine_loop",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "ho_229_gun_deutsche30mm": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft_guns/ho_229/ho_229_gun_deutsche30mm",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "meteor_f_8_engine_start": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/meteor_f_8/meteor_f_8_engine_start",
+        "stream": false,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "meteor_f_8_engine_loop": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/meteor_f_8/meteor_f_8_engine_loop",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "meteor_f_8_gun_aacannon": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft_guns/meteor_f_8/meteor_f_8_gun_aacannon",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "sabre_mk_6_engine_start": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/sabre_mk_6/sabre_mk_6_engine_start",
+        "stream": false,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "sabre_mk_6_engine_loop": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/sabre_mk_6/sabre_mk_6_engine_loop",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "sabre_mk_6_gun_m2hbshoot": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft_guns/sabre_mk_6/sabre_mk_6_gun_m2hbshoot",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "md_450_ouragan_engine_start": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/md_450_ouragan/md_450_ouragan_engine_start",
+        "stream": false,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "md_450_ouragan_engine_loop": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/md_450_ouragan/md_450_ouragan_engine_loop",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "md_450_ouragan_gun_aacannon": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft_guns/md_450_ouragan/md_450_ouragan_gun_aacannon",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "mirage_5_engine_start": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/mirage_5/mirage_5_engine_start",
+        "stream": false,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "mirage_5_engine_loop": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/mirage_5/mirage_5_engine_loop",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "mirage_5_gun_warthunder30mm": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft_guns/mirage_5/mirage_5_gun_warthunder30mm",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "rafale_engine_start": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/rafale/rafale_engine_start",
+        "stream": false,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "rafale_engine_loop": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/rafale/rafale_engine_loop",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "rafale_gun_warthunder30mm": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft_guns/rafale/rafale_gun_warthunder30mm",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "super_mystere_engine_start": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/super_mystere/super_mystere_engine_start",
+        "stream": false,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "super_mystere_engine_loop": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/super_mystere/super_mystere_engine_loop",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "super_mystere_gun_warthunder30mm": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft_guns/super_mystere/super_mystere_gun_warthunder30mm",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "j_11a_engine_start": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/j_11a/j_11a_engine_start",
+        "stream": false,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "j_11a_engine_loop": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/j_11a/j_11a_engine_loop",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "j_11a_gun_gshshoot": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft_guns/j_11a/j_11a_gun_gshshoot",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "j_2_engine_start": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/j_2/j_2_engine_start",
+        "stream": false,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "j_2_engine_loop": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/j_2/j_2_engine_loop",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "j_2_gun_mig17fire": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft_guns/j_2/j_2_gun_mig17fire",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "j_5_engine_start": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/j_5/j_5_engine_start",
+        "stream": false,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "j_5_engine_loop": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/j_5/j_5_engine_loop",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "j_5_gun_mig17fire": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft_guns/j_5/j_5_gun_mig17fire",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "il_10_engine_start": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/il_10/il_10_engine_start",
+        "stream": false,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "il_10_engine_loop": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/il_10/il_10_engine_loop",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "il_10_gun_aacannon": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft_guns/il_10/il_10_gun_aacannon",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "il_10_gun_gshshoot": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft_guns/il_10/il_10_gun_gshshoot",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "p_51d_engine_start": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/p_51d/p_51d_engine_start",
+        "stream": false,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "p_51d_engine_loop": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/p_51d/p_51d_engine_loop",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "p_51d_gun_usatwelvemm": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft_guns/p_51d/p_51d_gun_usatwelvemm",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "f_8h_engine_start": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/f_8h/f_8h_engine_start",
+        "stream": false,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "f_8h_engine_loop": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/f_8h/f_8h_engine_loop",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "f_8h_gun_aacannon": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft_guns/f_8h/f_8h_gun_aacannon",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "f8f_1_engine_start": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/f8f_1/f8f_1_engine_start",
+        "stream": false,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "f8f_1_engine_loop": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/f8f_1/f8f_1_engine_loop",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "f8f_1_gun_usatwelvemm": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft_guns/f8f_1/f8f_1_gun_usatwelvemm",
+        "stream": false,
+        "attenuation_distance": 96
       }
     ]
   }

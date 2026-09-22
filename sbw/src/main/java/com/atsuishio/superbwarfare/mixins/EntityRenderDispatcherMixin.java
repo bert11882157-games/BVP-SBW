@@ -1,5 +1,7 @@
 package com.atsuishio.superbwarfare.mixins;
 
+import com.atsuishio.superbwarfare.client.renderer.special.AircraftCollisionDebugRenderer;
+import com.atsuishio.superbwarfare.api.diagnostics.DebugFeaturePolicy;
 import com.atsuishio.superbwarfare.client.renderer.special.OBBRenderer;
 import com.atsuishio.superbwarfare.config.server.MiscConfig;
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity;
@@ -19,7 +21,9 @@ public class EntityRenderDispatcherMixin {
     @Inject(method = "renderHitbox(Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;Lnet/minecraft/world/entity/Entity;F)V",
             at = @At("RETURN"))
     private static void renderHitbox(PoseStack pMatrixStack, VertexConsumer pBuffer, Entity pEntity, float pPartialTicks, CallbackInfo ci) {
-        if (pEntity instanceof VehicleEntity vehicle && !vehicle.enableAABB()) {
+        if (!DebugFeaturePolicy.allowsDebugTools()) return;
+        if (pEntity instanceof VehicleEntity vehicle && !vehicle.enableAABB()
+                && vehicle.getAircraftCollisionSnapshot(pPartialTicks) == null) {
             OBBRenderer.INSTANCE.render(vehicle, vehicle.getOBBs(), pMatrixStack, pBuffer, 0, 1, 0, 1, pPartialTicks);
         }
     }
@@ -29,6 +33,17 @@ public class EntityRenderDispatcherMixin {
     private static void onPreRenderHitbox(PoseStack pMatrixStack, VertexConsumer pBuffer, Entity pEntity, float pPartialTicks, CallbackInfo ci) {
         if (pEntity.getType().is(ModTags.EntityTypes.MINE) && MiscConfig.MINE_HITBOX_INVISIBLE.get()) {
             ci.cancel();
+            return;
+        }
+        // Leave vanilla F3+B drawing intact; omit only our replacement/extra physical boxes.
+        if (!DebugFeaturePolicy.allowsDebugTools()) return;
+        if (pEntity instanceof VehicleEntity vehicle) {
+            var snapshot = vehicle.getAircraftCollisionSnapshot(pPartialTicks);
+            if (snapshot != null) {
+                AircraftCollisionDebugRenderer.render(snapshot,
+                        vehicle.getLegacyInterpolatedPosition(pPartialTicks), pMatrixStack, pBuffer);
+                ci.cancel();
+            }
         }
     }
 }

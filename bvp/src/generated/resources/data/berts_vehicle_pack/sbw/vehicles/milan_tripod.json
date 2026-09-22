@@ -1,19 +1,48 @@
 {
   "ID": "berts_vehicle_pack:milan_tripod",
-  "MaxHealth": 150,
+  "MaxHealth": 100,
   "MaxEnergy": 0,
   "AllowFreeCam": true,
   "LightlyArmored": true,
-  "OBB": [],
+  "OBB": [
+    {
+      "Position": [
+        -0.00486,
+        0.53257,
+        0.1757
+      ],
+      "Size": [
+        0.704,
+        0.59334,
+        0.69049
+      ],
+      "Transform": "Vehicle",
+      "Rotation": "Vehicle"
+    },
+    {
+      "Position": [
+        0.09184,
+        0.25801,
+        0.16208
+      ],
+      "Size": [
+        0.34036,
+        0.36738,
+        1.02649
+      ],
+      "Transform": "Barrel",
+      "Rotation": "Barrel"
+    }
+  ],
   "Seats": [
     {
-      "HidePassenger": true,
+      "HidePassenger": false,
       "BanHand": true,
       "Transform": "Turret",
       "Position": [
-        0,
-        0.75505,
-        0
+        0.54999,
+        -1.15124,
+        -0.74999
       ],
       "Weapons": [
         "Cannon"
@@ -24,18 +53,18 @@
       "CameraPos": {
         "Transform": "Barrel",
         "Position": [
-          -0.86442,
-          -1.29793,
-          -1.51271
+          0,
+          0,
+          0
         ],
         "EyeAttachment": "operator_camera",
-        "ZoomEyeAttachment": "operator_camera",
+        "ZoomEyeAttachment": "operator_scope",
         "DirectionAttachment": "main_muzzle",
         "ZoomDirectionAttachment": "main_muzzle",
         "ZoomPosition": [
           0,
-          -0.75768,
-          -0.64831
+          0,
+          0
         ],
         "Direction": "Barrel"
       },
@@ -46,7 +75,12 @@
           1.05,
           -3.15
         ]
-      }
+      },
+      "IsEnclosed": false,
+      "ExposedToFire": true,
+      "BodyAttachment": "Turret",
+      "CanRotateBody": false,
+      "Pose": "MachineGunStand"
     }
   ],
   "Weapons": {
@@ -55,7 +89,10 @@
       "AvailableFireModes": "Semi",
       "DefaultZoom": 2,
       "Magazine": 1,
+      "AutoReload": true,
+      "NormalReloadTime": 240,
       "EmptyReloadTime": 240,
+      "RPM": 5,
       "Name": "weapon.berts_vehicle_pack.milan_tripod",
       "SoundInfo": {
         "Fire1PGain": 0.5,
@@ -75,7 +112,7 @@
           [
             0,
             -0.75768,
-            -0.64831
+            0.64831
           ]
         ],
         "Directions": [
@@ -84,7 +121,7 @@
         "ViewPosition": [
           0,
           -0.3608,
-          -0.30872
+          0.30872
         ],
         "MuzzleAttachments": [
           "main_muzzle"
@@ -114,16 +151,18 @@
       "Spread": 0,
       "RecoilTime": 0,
       "RecoilForce": 0,
-      "Crosshair": "@VehicleATGM",
+      "Crosshair": "@VehicleCommonMissile",
       "CrosshairColor": "0xFFFFFF",
       "AmmoType": [
         {
-          "Ammo": "berts_vehicle_pack:level_1_ap_shell",
+          "Ammo": "superbwarfare:medium_anti_ground_missile",
           "Override": {
             "ApDurability": 590,
             "Name": "weapon.berts_vehicle_pack.milan_atgm",
             "NominalBallistics": {
-              "Supported": false
+              "Supported": false,
+              "ProjectileType": "superbwarfare:wire_guide_missile",
+              "ProjectileProfile": "berts_vehicle_pack:milan_tripod/cannon/ammo_00_milan_atgm"
             },
             "Projectile": {
               "Type": "superbwarfare:wire_guide_missile",
@@ -137,12 +176,14 @@
           }
         },
         {
-          "Ammo": "berts_vehicle_pack:level_3_ap_shell",
+          "Ammo": "superbwarfare:medium_anti_ground_missile",
           "Override": {
             "ApDurability": 900,
             "Name": "weapon.berts_vehicle_pack.milan_3_atgm",
             "NominalBallistics": {
-              "Supported": false
+              "Supported": false,
+              "ProjectileType": "superbwarfare:wire_guide_missile",
+              "ProjectileProfile": "berts_vehicle_pack:milan_tripod/cannon/ammo_01_milan_3_atgm"
             },
             "Projectile": {
               "Type": "superbwarfare:wire_guide_missile",
@@ -156,6 +197,11 @@
           }
         }
       ],
+      "NominalBallistics": {
+        "Supported": false,
+        "ProjectileType": "superbwarfare:wire_guide_missile",
+        "ProjectileProfile": "berts_vehicle_pack:milan_tripod/cannon/default"
+      },
       "ShootShake": [
         8,
         10,
@@ -185,8 +231,8 @@
     0
   ],
   "TurretTurnSpeed": [
-    4,
-    4
+    60,
+    90
   ],
   "TurretPitchRange": [
     -10,
@@ -200,44 +246,15 @@
   "UpStep": 0,
   "RotateOffsetHeight": 5.46,
   "Mass": 44.5,
-  "DamageModifiers": [
-    "minecraft:arrow 0",
-    "minecraft:trident 0",
-    "minecraft:mob_attack 0",
-    "minecraft:mob_attack_no_aggro 0",
-    "minecraft:mob_projectile 0",
-    "minecraft:player_attack 0",
-    "#superbwarfare:projectile 0",
-    "All - 20",
-    "minecraft:lava + 20",
-    "minecraft:lava * 10",
-    "@minecraft:tnt * 4",
-    "@minecraft:tnt_minecart * 4",
-    "@#superbwarfare:aerial_bomb * 12",
-    "All * 0.23",
-    "superbwarfare:vehicle_strike * 2.5",
-    "minecraft:explosion * 2",
-    "superbwarfare:custom_explosion * 0.65",
-    "superbwarfare:projectile_explosion * 0.65",
-    "superbwarfare:mine * 0.5",
-    "superbwarfare:lunge_mine * 0.5",
-    "superbwarfare:projectile_hit * 1.3",
-    "#superbwarfare:projectile_absolute * 0.15",
-    "@#superbwarfare:aa_missile * 0.3",
-    "@superbwarfare:small_cannon_shell * 0.25",
-    "@superbwarfare:c4 * 4",
-    "@#superbwarfare:at_rocket * 1.1",
-    "@superbwarfare:gun_grenade * 1.25",
-    "@superbwarfare:mortar_shell * 1.25",
-    "@superbwarfare:tm_62 * 2.5"
-  ],
+  "DamageModifiers": [],
   "DestroyInfo": {
-    "ParticleType": "Giant",
-    "ExplosionDamage": 160,
-    "ExplosionRadius": 13,
-    "SympatheticDetonation": true,
-    "SympatheticDetonationForce": 2,
-    "SympatheticDetonationChance": 0.55
+    "ParticleType": "Mini",
+    "ExplosionDamage": 6,
+    "ExplosionRadius": 0.75,
+    "ExplodeBlocks": false,
+    "ExplodePassengers": false,
+    "SympatheticDetonation": false,
+    "NoWreck": true
   },
   "ThirdPersonCameraPos": [
     -1.82062,
@@ -276,13 +293,30 @@
   "HudType": "@Land",
   "TerrainCompat": [],
   "TurretControllerIndex": 0,
+  "OpticalZoomRange": [
+    2,
+    8
+  ],
   "Attachments": {
+    "operator_scope": {
+      "Parent": "Barrel",
+      "Position": [
+        0.35001,
+        0.38125,
+        0.425
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
     "operator_camera": {
       "Parent": "Barrel",
       "Position": [
-        -0.86442,
-        -1.29793,
-        -1.51271
+        0.54999,
+        0.4125,
+        -0.74999
       ],
       "Direction": [
         0,
@@ -295,7 +329,7 @@
       "Position": [
         0,
         -0.75768,
-        -0.64831
+        0.64831
       ],
       "Direction": [
         0,
@@ -303,5 +337,7 @@
         1
       ]
     }
-  }
+  },
+  "ApplyDefaultDamageModifiers": false,
+  "LethalDirectCaliberMm": 37
 }

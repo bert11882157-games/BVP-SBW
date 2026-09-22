@@ -1,0 +1,65 @@
+{
+  "Combat": {
+    "WeaponId": "berts_vehicle_pack:toyota_jihad_bmp1/pkt",
+    "RoundId": "berts_vehicle_pack:russian_762_ap_i",
+    "MunitionType": "berts_vehicle_pack:bullet",
+    "DamageType": "berts_vehicle_pack:kinetic",
+    "CaliberMm": 7.62,
+    "DiameterMm": 7.62,
+    "HullDamageClass": "DEFAULT",
+    "HullDamage": 5,
+    "ModuleDamage": 3,
+    "AmmoRackDamage": 1,
+    "PenetrationMm": 13,
+    "PenetrationCurve": {
+      "DistancesMetres": [
+        10,
+        100,
+        500,
+        1000,
+        1500,
+        2000
+      ],
+      "PenetrationMm": [
+        13,
+        12,
+        7,
+        3,
+        2,
+        0
+      ]
+    },
+    "RicochetCurve": {
+      "IncidenceAnglesDegrees": [
+        0,
+        47,
+        49,
+        50,
+        60,
+        65,
+        90
+      ],
+      "Probability": [
+        0,
+        0,
+        0.005,
+        0.35,
+        0.6,
+        1,
+        1
+      ]
+    },
+    "Tandem": false
+  },
+  "VisualProfile": "berts_vehicle_pack:scaled_bullet",
+  "ImpactVisualProfile": "berts_vehicle_pack:autocannon_ap",
+  "MotionSync": "INHERIT",
+  "Collision": {
+    "Width": 0.1,
+    "Height": 0.1
+  },
+  "Luminance": 8,
+  "TrailMode": "DEFAULT",
+  "RenderScale": 1,
+  "Extensions": {}
+}

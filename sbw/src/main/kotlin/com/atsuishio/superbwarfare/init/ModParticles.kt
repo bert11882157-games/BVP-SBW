@@ -15,6 +15,7 @@ object ModParticles {
         with(event) {
             registerSpriteSet(ModParticleTypes.FIRE_STAR.get()) { FireStarParticle.provider(it) }
             registerSpriteSet(ModParticleTypes.WHITE_STAR.get()) { WhiteStarParticle.provider(it) }
+            registerSpriteSet(ModParticleTypes.CHAFF_BURST.get()) { ChaffBurstParticle.Provider(it) }
             registerSpriteSet(ModParticleTypes.RISING_SMOKE.get()) { RisingSmokeParticle.provider(it) }
             registerSpecial(ModParticleTypes.BULLET_DECAL.get(), BulletDecalParticle.Provider())
             registerSpriteSet(ModParticleTypes.CUSTOM_CLOUD.get()) { CustomCloudParticle.Provider(it) }

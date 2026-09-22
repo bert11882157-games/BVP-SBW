@@ -6,7 +6,11 @@ import com.atsuishio.superbwarfare.init.ModMobEffects
 import com.atsuishio.superbwarfare.init.ModSounds
 import com.atsuishio.superbwarfare.network.PayloadContext
 import com.atsuishio.superbwarfare.network.ServerPacketPayload
+import com.atsuishio.superbwarfare.network.VehicleDismountEdge
+import com.atsuishio.superbwarfare.network.VehicleDismountServer
 import com.atsuishio.superbwarfare.network.message.receive.ClientSetMotionMessage
+import com.atsuishio.superbwarfare.serialization.kserializer.SerializedResourceLocation
+import com.atsuishio.superbwarfare.serialization.kserializer.SerializedUUID
 import com.atsuishio.superbwarfare.tools.ParticleTool
 import com.atsuishio.superbwarfare.tools.sendPacket
 import kotlinx.serialization.Serializable
@@ -16,11 +20,20 @@ import net.minecraft.sounds.SoundSource
 import net.minecraft.world.effect.MobEffectInstance
 
 @Serializable
-data class PlayerStopRidingMessage(val ejection: Boolean) : ServerPacketPayload() {
+data class PlayerStopRidingMessage(
+    val vehicleId: Int,
+    val vehicleUuid: SerializedUUID,
+    val dimension: SerializedResourceLocation,
+    val seatIndex: Int,
+    val edge: VehicleDismountEdge,
+    val sequence: Long,
+) : ServerPacketPayload() {
 
     override fun PayloadContext.handler() {
         val player = sender()
+        if (!VehicleDismountServer.admit(player, this@PlayerStopRidingMessage)) return
         val vehicle = player.vehicle as? VehicleEntity ?: return
+        val ejection = !vehicle.onGround() && vehicle.allowEjection(vehicle.getSeatIndex(player))
 
         if (ejection) {
             val vec = vehicle.getEjectionMovement(player, vehicle.getTagSeatIndex(player))
@@ -54,7 +67,9 @@ data class PlayerStopRidingMessage(val ejection: Boolean) : ServerPacketPayload(
             }
 
             queueServerWork(1) {
-                player.sendPacket(ClientSetMotionMessage(vec.toVector3f(), pos.toVector3f()))
+                if (player.isAlive && !player.isRemoved && player.level() === level && !player.isPassenger) {
+                    player.sendPacket(ClientSetMotionMessage(vec.toVector3f(), pos.toVector3f()))
+                }
             }
         }
 

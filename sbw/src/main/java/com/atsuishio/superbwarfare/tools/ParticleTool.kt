@@ -1,6 +1,8 @@
 package com.atsuishio.superbwarfare.tools
 
 import com.atsuishio.superbwarfare.Mod
+import com.atsuishio.superbwarfare.api.vehicle.render.VehicleDeathEffects
+import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity
 import com.atsuishio.superbwarfare.Mod.Companion.queueServerWork
 import com.atsuishio.superbwarfare.client.particle.CannonMuzzleFlareOption
 import com.atsuishio.superbwarfare.client.particle.CustomCloudOption
@@ -64,6 +66,7 @@ object ParticleTool {
         level: ServerLevel, particle: T, x: Double, y: Double, z: Double, count: Int,
         xOffset: Double, yOffset: Double, zOffset: Double, speed: Double, force: Boolean, viewer: ServerPlayer
     ) {
+        if (!VehicleDeathEffects.allowsFullFx(viewer.uuid)) return
         level.sendParticles(viewer, particle, force, x, y, z, count, xOffset, yOffset, zOffset, speed)
     }
 
@@ -88,6 +91,17 @@ object ParticleTool {
     @JvmStatic
     fun dispatchExplosionFx(level: Level, context: ExplosionFxContext) {
         if (!context.emitFx) return
+        val source = context.directSource as? VehicleEntity
+        val excluded = if (level is ServerLevel && source != null && (source.health <= 0 || source.isWreck))
+            VehicleDeathEffects.exclusionsFor(source) else null
+        VehicleDeathEffects.withRetainedAircraft(source) {
+            VehicleDeathEffects.withExclusions(excluded) { dispatchExplosionFxToAudience(level, context) }
+        }
+    }
+
+    private fun dispatchExplosionFxToAudience(level: Level, context: ExplosionFxContext) {
+        if (level is ServerLevel) com.atsuishio.superbwarfare.api.vehicle.render.FarTerrainServer.rememberEffect(
+            level, context.particlePosition, maxOf(8.0, context.radius * 2.0))
 
         val handlers = synchronized(explosionFxHandlers) {
             explosionFxHandlers.toList()

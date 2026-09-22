@@ -4,6 +4,8 @@ import com.atsuishio.superbwarfare.client.MouseMovementHandler
 import com.atsuishio.superbwarfare.client.VehicleAimPresentationController
 import com.atsuishio.superbwarfare.client.camera.VehicleFreeCameraController
 import com.atsuishio.superbwarfare.client.camera.VehicleOpticalZoomController
+import com.atsuishio.superbwarfare.client.input.FixedWingMouseAimInput
+import com.atsuishio.superbwarfare.client.input.AircraftMouseFilter
 import com.atsuishio.superbwarfare.config.client.ControlConfig
 import com.atsuishio.superbwarfare.data.gun.GunData
 import com.atsuishio.superbwarfare.data.vehicle.subdata.EngineType
@@ -26,6 +28,7 @@ import kotlin.math.abs
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE, value = [Dist.CLIENT])
 object ClientMouseHandler {
+    private var legacyPodOwner: VehicleEntity? = null
     @JvmField
     var posO: Vec2 = Vec2(0f, 0f)
 
@@ -72,6 +75,9 @@ object ClientMouseHandler {
         }
         val player = localPlayer
         if (player == null) {
+            legacyPodOwner = null
+            resetMouseSampling()
+            FixedWingMouseAimInput.clear()
             VehicleAimPresentationController.tick(null)
             return
         }
@@ -84,8 +90,29 @@ object ClientMouseHandler {
         val moveSpeedX = Mth.clamp(posN.x - posO.x, -speed, speed)
         val moveSpeedY = Mth.clamp(posN.y - posO.y, -speed, speed)
 
+        val podAircraft = player.vehicle as? VehicleEntity
+        val podActive = com.atsuishio.superbwarfare.client.aircraft.AircraftArmamentClient.isPodActive(podAircraft)
+        if (legacyPodOwner != null && (legacyPodOwner !== podAircraft || !podActive)) {
+            legacyPodOwner = null
+            resetMouseSampling()
+            // One neutral publisher on exit; do not also replay accumulated mouse movement this tick.
+            sendPacketToServer(MouseMoveMessage(0.0, 0.0))
+            return
+        }
+        if (podActive && podAircraft != null && !podAircraft.isFixedWingFlightVehicle()) {
+            legacyPodOwner = podAircraft
+            val axes = com.atsuishio.superbwarfare.client.aircraft.AircraftArmamentClient.legacyPodAxes(podAircraft)
+            speedX = 0.0; speedY = 0.0
+            lerpSpeedX = 0.0; lerpSpeedY = 0.0
+            mouseXMoveTick = 0.0; mouseYMoveTick = 0.0
+            // Helicopter keyboard arrows reuse native admitted axes; physical mouse belongs solely to the pod.
+            sendPacketToServer(MouseMoveMessage(axes.x.toDouble(), axes.y.toDouble()))
+            return
+        }
+
         val heldFreeCameraVehicle = player.vehicle as? VehicleEntity
         if (heldFreeCameraVehicle != null && VehicleFreeCameraController.isActive(player)) {
+            if (heldFreeCameraVehicle.isFixedWingFlightVehicle()) FixedWingMouseAimInput.clear(player)
             val isAircraftOperator = player == heldFreeCameraVehicle.firstPassenger &&
                     (heldFreeCameraVehicle.vehicleType == VehicleType.AIRPLANE ||
                             heldFreeCameraVehicle.vehicleType == VehicleType.HELICOPTER)
@@ -95,7 +122,7 @@ object ClientMouseHandler {
             speedY = invert * sensitivity * moveSpeedY * (if (ClientEventHandler.zoomVehicle) 0.4 else 1.0)
             lerpSpeedX = Mth.lerp(0.3, lerpSpeedX, speedX)
             lerpSpeedY = Mth.lerp(0.3, lerpSpeedY, speedY)
-            if (isAircraftOperator) {
+            if (isAircraftOperator && !heldFreeCameraVehicle.isFixedWingFlightVehicle()) {
                 sendPacketToServer(MouseMoveMessage(0.0, 0.0))
             }
             return
@@ -107,6 +134,7 @@ object ClientMouseHandler {
             && stack.getOrCreateTag().getBoolean("Linked")
         ) {
             val drone = EntityFindUtil.findDrone(player.level(), stack.getOrCreateTag().getString("LinkedDrone")) ?: return
+            FixedWingMouseAimInput.clear(player)
 
             speedX = (drone.mouseSensitivity / ClientEventHandler.droneFovLerp) * moveSpeedX
             speedY = (drone.mouseSensitivity / ClientEventHandler.droneFovLerp) * moveSpeedY
@@ -124,11 +152,22 @@ object ClientMouseHandler {
         }
 
         val vehicle = player.vehicle
+        if (vehicle is VehicleEntity && vehicle.isFixedWingFlightVehicle()) {
+            FixedWingMouseAimInput.tick(player, vehicle)
+            speedX = 0.0
+            speedY = 0.0
+            lerpSpeedX = 0.0
+            lerpSpeedY = 0.0
+            mouseXMoveTick = 0.0
+            mouseYMoveTick = 0.0
+            return
+        }
+        FixedWingMouseAimInput.clear()
         if (vehicle is VehicleEntity && player == vehicle.firstPassenger
             && (vehicle.vehicleType == VehicleType.AIRPLANE || vehicle.vehicleType == VehicleType.HELICOPTER)
         ) {
             var y = 1
-            if (ControlConfig.INVERT_AIRCRAFT_CONTROL.get()) {
+            if (!vehicle.isFixedWingFlightVehicle() && ControlConfig.INVERT_AIRCRAFT_CONTROL.get()) {
                 y = -1
             }
 
@@ -141,11 +180,11 @@ object ClientMouseHandler {
             mouseYMoveTick = Mth.lerp(0.1, mouseYMoveTick, speedY)
 
             if (vehicle.vehicleType == VehicleType.AIRPLANE) {
-                lerpSpeedX = Mth.lerp((0.006 * abs(mouseXMoveTick)).coerceAtLeast(0.12), lerpSpeedX, speedX)
-                lerpSpeedY = Mth.lerp((0.005 * abs(mouseYMoveTick)).coerceAtLeast(0.12), lerpSpeedY, speedY)
+                lerpSpeedX = AircraftMouseFilter.advance(lerpSpeedX, speedX, mouseXMoveTick, 0.006, 0.12)
+                lerpSpeedY = AircraftMouseFilter.advance(lerpSpeedY, speedY, mouseYMoveTick, 0.005, 0.12)
             } else {
-                lerpSpeedX = Mth.lerp((0.0045 * abs(mouseXMoveTick)).coerceAtLeast(0.1), lerpSpeedX, speedX * 0.5)
-                lerpSpeedY = Mth.lerp((0.0035 * abs(mouseYMoveTick)).coerceAtLeast(0.1), lerpSpeedY, speedY * 0.5)
+                lerpSpeedX = AircraftMouseFilter.advance(lerpSpeedX, speedX * 0.5, mouseXMoveTick, 0.0045, 0.1)
+                lerpSpeedY = AircraftMouseFilter.advance(lerpSpeedY, speedY * 0.5, mouseYMoveTick, 0.0035, 0.1)
             }
 
             var i = 0.0
@@ -163,11 +202,7 @@ object ClientMouseHandler {
                 sendPacketToServer(MouseMoveMessage(0.0, 0.0))
             } else {
                 if (!ClientEventHandler.isFreeCam(player)) {
-                    if (vehicle.isFixedWingFlightVehicle()) {
-                        // Fixed-wing controls are independent pilot axes.  Do not rotate or blend
-                        // them with the rendered bank angle: the server owns stick integration.
-                        sendPacketToServer(MouseMoveMessage(speedX, speedY))
-                    } else if (mc.options.cameraType == CameraType.FIRST_PERSON) {
+                    if (mc.options.cameraType == CameraType.FIRST_PERSON) {
                         if (vehicle.computed().engineType != EngineType.TOM6) {
                             sendPacketToServer(
                                 MouseMoveMessage(
@@ -250,6 +285,10 @@ object ClientMouseHandler {
         mouseXMoveTick = 0.0
         mouseYMoveTick = 0.0
     }
+
+    /** Synchronous input-edge barrier; END still rebases before publishing legacy mouse axes. */
+    @JvmStatic
+    fun resetFreeCameraSampling() = resetMouseSampling()
 
     @JvmStatic
     fun isLinkedDroneView(player: net.minecraft.world.entity.player.Player): Boolean {

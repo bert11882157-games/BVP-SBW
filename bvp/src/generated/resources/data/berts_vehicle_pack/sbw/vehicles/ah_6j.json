@@ -1,9 +1,8 @@
 {
   "ID": "berts_vehicle_pack:ah_6j",
-  "MaxHealth": 100,
+  "MaxHealth": 60,
   "MaxEnergy": 10000000,
   "AllowFreeCam": true,
-  "LightlyArmored": true,
   "EngineSoundMode": "CUSTOM",
   "TrackSoundMode": "NATIVE",
   "CustomSoundProfileId": "berts_vehicle_pack:tap_engine_engine_hel_lilbird",
@@ -180,13 +179,13 @@
         "Profile": "berts_vehicle_pack:ah_6j/cannon/default"
       },
       "DefaultZoom": 3,
-      "RPM": 1200,
-      "ProjectileAmount": 2,
-      "Magazine": 1000,
-      "EmptyReloadTime": 100,
+      "RPM": 8000,
+      "ProjectileAmount": 1,
+      "Magazine": 12000,
+      "EmptyReloadTime": 400,
       "Velocity": 30,
       "Damage": 22,
-      "HeatPerShoot": 0.45,
+      "HeatPerShoot": 0,
       "NaturalCooldown": 1,
       "RecoilTime": 8,
       "RecoilForce": 0.16,
@@ -310,7 +309,7 @@
             },
             "ShellType": "AP",
             "Velocity": 41.75,
-            "ApDurability": 4.947368421052632,
+            "ApDurability": 5,
             "Damage": 22,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
@@ -327,7 +326,12 @@
         0,
         0,
         0
-      ]
+      ],
+      "BeltFed": true,
+      "NormalReloadTime": 400,
+      "AutoReload": true,
+      "OverheatEnabled": false,
+      "AmmoCostPerShoot": 1
     },
     "Rocket": {
       "AmmoType": "superbwarfare:small_rocket",
@@ -688,5 +692,32 @@
         1
       ]
     }
+  },
+  "AircraftTerrainContact": {
+    "Fuselage": {
+      "Min": [
+        -1.6875,
+        0.85,
+        -3.544498
+      ],
+      "Max": [
+        1.6875,
+        3.1,
+        1.455502
+      ]
+    },
+    "LandingGear": {
+      "Min": [
+        -1.5525,
+        0.02,
+        -3.344498
+      ],
+      "Max": [
+        1.5525,
+        0.9,
+        1.255502
+      ]
+    },
+    "RetractableGear": false
   }
 }

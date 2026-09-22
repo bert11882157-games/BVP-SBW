@@ -27,32 +27,6 @@
       ]
     },
     {
-      "Part": "WheelLeft",
-      "Size": [
-        0.22925,
-        0.46567,
-        2.54325
-      ],
-      "Position": [
-        1.54028,
-        0.51581,
-        -0.1791
-      ]
-    },
-    {
-      "Part": "WheelRight",
-      "Size": [
-        0.22925,
-        0.46567,
-        2.54325
-      ],
-      "Position": [
-        -1.54028,
-        0.51581,
-        -0.1791
-      ]
-    },
-    {
       "Part": "MainEngine",
       "Size": [
         0.82387,
@@ -320,6 +294,12 @@
           2.72663
         ]
       },
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "superbwarfare:small_cannon_shell",
+        "ProjectileProfile": "berts_vehicle_pack:bmpt/cannon/default",
+        "ProjectileLife": 40
+      },
       "ProjectileBeltAmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_gs",
@@ -353,13 +333,7 @@
             "Name": "HEF_I"
           }
         }
-      ],
-      "NominalBallistics": {
-        "Supported": true,
-        "ProjectileType": "superbwarfare:small_cannon_shell",
-        "ProjectileProfile": "berts_vehicle_pack:bmpt/cannon/default",
-        "ProjectileLife": 40
-      }
+      ]
     },
     "DualCannon": {
       "DefaultFireMode": "Auto",
@@ -506,6 +480,12 @@
           2.72663
         ]
       },
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "superbwarfare:small_cannon_shell",
+        "ProjectileProfile": "berts_vehicle_pack:bmpt/dualcannon/default",
+        "ProjectileLife": 40
+      },
       "ProjectileBeltAmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_gs",
@@ -539,13 +519,7 @@
             "Name": "HEF_I"
           }
         }
-      ],
-      "NominalBallistics": {
-        "Supported": true,
-        "ProjectileType": "superbwarfare:small_cannon_shell",
-        "ProjectileProfile": "berts_vehicle_pack:bmpt/dualcannon/default",
-        "ProjectileLife": 40
-      }
+      ]
     },
     "Missile": {
       "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_atgm.png",
@@ -576,10 +550,10 @@
       "Name": "weapon.berts_vehicle_pack.1x_2a42_30_mm_autocannon_9m120_ataka_atgm",
       "AmmoType": "superbwarfare:medium_anti_ground_missile",
       "SoundInfo": {
-        "Fire1PGain": 0.5,
-        "Fire3PGain": 0.5,
-        "Fire3PFarGain": 0.5,
-        "Fire3PVeryFarGain": 0.5,
+        "Fire1PGain": 0.35,
+        "Fire3PGain": 0.35,
+        "Fire3PFarGain": 0.35,
+        "Fire3PVeryFarGain": 0.35,
         "Fire1P": "berts_vehicle_pack:atgm_tube_launch",
         "Fire3P": "berts_vehicle_pack:atgm_tube_launch",
         "VehicleReload3p": "superbwarfare:medium_missile_reload",
@@ -620,6 +594,11 @@
           "Barrel"
         ],
         "ViewDirection": "Barrel"
+      },
+      "NominalBallistics": {
+        "Supported": false,
+        "ProjectileType": "berts_vehicle_pack:ataka_missile",
+        "ProjectileProfile": "berts_vehicle_pack:bmpt/missile/default"
       }
     }
   },

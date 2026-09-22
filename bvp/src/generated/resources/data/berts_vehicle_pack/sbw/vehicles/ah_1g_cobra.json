@@ -1,9 +1,8 @@
 {
   "ID": "berts_vehicle_pack:ah_1g_cobra",
-  "MaxHealth": 100,
+  "MaxHealth": 90,
   "MaxEnergy": 10000000,
   "AllowFreeCam": true,
-  "LightlyArmored": true,
   "EngineSoundMode": "CUSTOM",
   "TrackSoundMode": "NATIVE",
   "CustomSoundProfileId": "berts_vehicle_pack:tap_engine_engine_hel_cobrahuey",
@@ -208,13 +207,13 @@
         "Profile": "berts_vehicle_pack:ah_1g_cobra/cannon/default"
       },
       "DefaultZoom": 3,
-      "RPM": 1200,
-      "ProjectileAmount": 2,
-      "Magazine": 1000,
-      "EmptyReloadTime": 100,
+      "RPM": 750,
+      "ProjectileAmount": 1,
+      "Magazine": 950,
+      "EmptyReloadTime": 400,
       "Velocity": 30,
       "Damage": 22,
-      "HeatPerShoot": 0.45,
+      "HeatPerShoot": 0,
       "NaturalCooldown": 1,
       "RecoilTime": 8,
       "RecoilForce": 0.16,
@@ -416,7 +415,12 @@
         8,
         10,
         12
-      ]
+      ],
+      "BeltFed": true,
+      "NormalReloadTime": 400,
+      "AutoReload": true,
+      "OverheatEnabled": false,
+      "AmmoCostPerShoot": 1
     },
     "Rocket": {
       "AmmoType": "superbwarfare:small_rocket",
@@ -830,5 +834,32 @@
         1
       ]
     }
+  },
+  "AircraftTerrainContact": {
+    "Fuselage": {
+      "Min": [
+        -2.125,
+        1.15,
+        -6.801927
+      ],
+      "Max": [
+        2.125,
+        3.65,
+        0.823073
+      ]
+    },
+    "LandingGear": {
+      "Min": [
+        -1.955,
+        0.06,
+        -6.496927
+      ],
+      "Max": [
+        1.955,
+        1.2,
+        0.518073
+      ]
+    },
+    "RetractableGear": false
   }
 }

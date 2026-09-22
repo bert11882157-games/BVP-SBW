@@ -2,6 +2,7 @@ package com.atsuishio.superbwarfare.client.renderer.projectile
 
 import com.atsuishio.superbwarfare.Mod.Companion.loc
 import com.atsuishio.superbwarfare.entity.projectile.BasicGeoProjectileEntity
+import com.atsuishio.superbwarfare.diagnostics.EliteDiagnostics
 import com.atsuishio.superbwarfare.entity.vehicle.utils.VehicleVecUtils
 import com.atsuishio.superbwarfare.resource.BedrockModelLoader
 import com.maydaymemory.mae.basic.ArrayPoseBuilder
@@ -17,10 +18,21 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider
 import net.minecraft.client.renderer.texture.OverlayTexture
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.entity.Entity
+import java.util.WeakHashMap
 
 open class BasicProjectileRenderer<T>(manager: EntityRendererProvider.Context) :
     EntityRenderer<T>(manager) where T : Entity, T : BasicGeoProjectileEntity {
     private val visualHost = ProjectileVisualRenderHost(manager)
+    private val diagnosticSamples = WeakHashMap<Entity, Double>()
+
+    private fun recordRendered(entity: T, partialTick: Float) {
+        if (!java.lang.Boolean.getBoolean("bvp.diagnostics.scenarios") || !EliteDiagnostics.isClientEnabled()) return
+        val renderTick = entity.level().gameTime.toDouble() + partialTick
+        if (renderTick - (diagnosticSamples[entity] ?: Double.NEGATIVE_INFINITY) < 0.25) return
+        diagnosticSamples[entity] = renderTick
+        EliteDiagnostics.record(entity, "elite_flight", "PROJECTILE_RENDERED",
+            "render_tick", renderTick, "partial_tick", partialTick, "position", entity.getPosition(partialTick))
+    }
     override fun getTextureLocation(entity: T): ResourceLocation {
         return loc("textures/bedrock/projectile/${entity.type.descriptionId.split(".")[2]}.png")
     }
@@ -37,7 +49,10 @@ open class BasicProjectileRenderer<T>(manager: EntityRendererProvider.Context) :
         buffer: MultiBufferSource,
         packedLight: Int
     ) {
-        if (visualHost.render(entity, yaw, partialTick, poseStack, buffer, packedLight)) return
+        if (visualHost.render(entity, yaw, partialTick, poseStack, buffer, packedLight)) {
+            recordRendered(entity, partialTick)
+            return
+        }
         if (entity.tickCount <= entity.getHiddenTicks()) return
         val model = BedrockModelLoader.getModel(entity.getModel()) ?: return
 
@@ -71,6 +86,7 @@ open class BasicProjectileRenderer<T>(manager: EntityRendererProvider.Context) :
             packedLight,
             OverlayTexture.NO_OVERLAY
         )
+        recordRendered(entity, partialTick)
 
         val texture = entity.getEmissiveTexture()
         if (texture != null) {

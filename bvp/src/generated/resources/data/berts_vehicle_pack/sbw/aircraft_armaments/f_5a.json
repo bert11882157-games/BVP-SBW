@@ -1,0 +1,24 @@
+{
+  "Schema": 1,
+  "Name": "F-5A",
+  "BuiltInWeapons": [
+    "CannonLeft",
+    "CannonRight"
+  ],
+  "SuspendedWeapons": [],
+  "Pairs": [],
+  "StoreGroups": {
+    "berts_vehicle_pack:modeled_store/f_5a/wingtip_left": [
+      "suspended_wingtip_left_hull"
+    ],
+    "berts_vehicle_pack:modeled_store/f_5a/wingtip_right": [
+      "suspended_wingtip_right_hull"
+    ],
+    "berts_vehicle_pack:modeled_store/f_5a/underwing_left": [
+      "suspended_underwing_left_hull"
+    ],
+    "berts_vehicle_pack:modeled_store/f_5a/underwing_right": [
+      "suspended_underwing_right_hull"
+    ]
+  }
+}

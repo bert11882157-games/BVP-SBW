@@ -20,9 +20,9 @@ public class BaseTrackedVehicleRenderer<T extends GeoVehicleEntity> extends Base
     }
 
     /**
-     * Profile-driven tracked backend for newly authored vehicles. It deliberately has no
-     * legacy geometry fallback: until a typed RunningGear profile is available the model stays
-     * intact/static instead of animating against guessed wheel, track, or link dimensions.
+     * Profile-driven tracked backend with no legacy geometry fallback. Without a typed
+     * RunningGear profile, running gear remains static; wheel, track, and link dimensions
+     * must come from the profile.
      */
     protected BaseTrackedVehicleRenderer(EntityRendererProvider.Context context,
                                          ResourceLocation modelLocation,

@@ -1,0 +1,111 @@
+{
+  "Crosshair": "@VehicleCommonGun",
+  "DefaultFireMode": "Auto",
+  "AvailableFireModes": "Auto",
+  "ProjectileAmount": 1,
+  "AmmoCostPerShoot": 1,
+  "NormalReloadTime": 200,
+  "EmptyReloadTime": 200,
+  "AutoReload": false,
+  "WithdrawAmmoWhenChangeSlot": false,
+  "Gravity": 0.05,
+  "ProjectileLife": 400,
+  "AddShooterDeltaMovement": true,
+  "HeatPerShoot": 0,
+  "Spread": 0.12,
+  "SoundRadius": 8,
+  "ExplosionDamage": 0,
+  "Name": "23 mm GSh-23L",
+  "RPM": 3396,
+  "Magazine": 200,
+  "Damage": 191.66666666666669,
+  "SoundInfo": {
+    "Fire1P": "berts_vehicle_pack:tap_jetshoot",
+    "Fire3P": "berts_vehicle_pack:tap_jetshoot",
+    "Fire3PFar": "berts_vehicle_pack:tap_jetshoot",
+    "Fire3PVeryFar": "berts_vehicle_pack:tap_jetshoot"
+  },
+  "Projectile": {
+    "Type": "superbwarfare:small_cannon_shell",
+    "Profile": "berts_vehicle_pack:aircraft_rounds/gsh23l/gsh23l_air_game"
+  },
+  "ShellType": "HE",
+  "Velocity": 44.6875,
+  "ApDurability": 4,
+  "ExplosionRadius": 3.8333333333333335,
+  "NominalBallistics": {
+    "Supported": true,
+    "ProjectileType": "superbwarfare:small_cannon_shell",
+    "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/gsh23l/gsh23l_air_game",
+    "ProjectileLife": 400
+  },
+  "AmmoType": [
+    {
+      "Ammo": "superbwarfare:small_shell_he",
+      "Override": {
+        "Projectile": {
+          "Type": "superbwarfare:small_cannon_shell",
+          "Profile": "berts_vehicle_pack:aircraft_rounds/gsh23l/gsh23l_air_game"
+        },
+        "ShellType": "HE",
+        "Velocity": 44.6875,
+        "ApDurability": 4,
+        "Damage": 191.66666666666669,
+        "ExplosionDamage": 0,
+        "ExplosionRadius": 3.8333333333333335,
+        "Name": "Air Belt",
+        "ProjectileBelt": {
+          "Name": "Air Belt",
+          "Rounds": [
+            {
+              "Shots": 1,
+              "Round": "gsh23l_air_game",
+              "Ammo": "superbwarfare:small_shell_he",
+              "Tracer": "GREEN"
+            }
+          ]
+        },
+        "NominalBallistics": {
+          "Supported": true,
+          "ProjectileType": "superbwarfare:small_cannon_shell",
+          "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/gsh23l/gsh23l_air_game",
+          "ProjectileLife": 400
+        }
+      }
+    },
+    {
+      "Ammo": "superbwarfare:small_shell_ap",
+      "Override": {
+        "Projectile": {
+          "Type": "superbwarfare:small_cannon_shell",
+          "Profile": "berts_vehicle_pack:aircraft_rounds/gsh23l/gsh23l_ground_game"
+        },
+        "ShellType": "AP",
+        "Velocity": 44.6875,
+        "ApDurability": 31,
+        "Damage": 45,
+        "ExplosionDamage": 0,
+        "ExplosionRadius": 0,
+        "Name": "Ground Belt",
+        "ProjectileBelt": {
+          "Name": "Ground Belt",
+          "Rounds": [
+            {
+              "Shots": 1,
+              "Round": "gsh23l_ground_game",
+              "Ammo": "superbwarfare:small_shell_ap",
+              "Tracer": "GREEN"
+            }
+          ]
+        },
+        "NominalBallistics": {
+          "Supported": true,
+          "ProjectileType": "superbwarfare:small_cannon_shell",
+          "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/gsh23l/gsh23l_ground_game",
+          "ProjectileLife": 400
+        }
+      }
+    }
+  ],
+  "ProjectileBeltAmmoType": []
+}

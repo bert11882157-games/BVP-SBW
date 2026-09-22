@@ -85,11 +85,12 @@
   ],
   "Weapons": {
     "MachineGun": {
+      "VehicleDirectDamageScale": 0.33,
       "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/gun_12_7mm.png",
       "DefaultFireMode": "Auto",
       "AvailableFireModes": "Auto",
       "Spread": 0.25,
-      "Projectile": "superbwarfare:projectile",
+      "Projectile": { "Type": "superbwarfare:projectile", "CaliberMm": 12.7 },
       "RPM": 450,
       "Damage": 40,
       "BypassesArmor": 0.6,

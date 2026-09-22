@@ -27,6 +27,19 @@ public class ModRenderTypes extends RenderType {
         return RenderType.create("laser", DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256, true, false, state);
     });
 
+    // TaP EntityFlare: premultiplied alpha, depth-tested glow without writing depth.
+    public static final Function<ResourceLocation, RenderType> TAP_FLARE = Util.memoize(location -> {
+        TransparencyStateShard blend = new TransparencyStateShard("tap_flare", () -> {
+            RenderSystem.enableBlend();
+            RenderSystem.blendFunc(GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+        }, () -> { RenderSystem.disableBlend(); RenderSystem.defaultBlendFunc(); });
+        return RenderType.create("tap_flare", DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256, false, true,
+                CompositeState.builder().setShaderState(RENDERTYPE_ENTITY_TRANSLUCENT_EMISSIVE_SHADER)
+                        .setTextureState(new TextureStateShard(location, false, false)).setTransparencyState(blend)
+                        .setCullState(NO_CULL).setOverlayState(OVERLAY).setWriteMaskState(COLOR_WRITE)
+                        .createCompositeState(false));
+    });
+
 
     public static final Function<ResourceLocation, RenderType> ILLUMINATED = Util.memoize((location) -> {
         TextureStateShard shard = new RenderStateShard.TextureStateShard(location, false, false);

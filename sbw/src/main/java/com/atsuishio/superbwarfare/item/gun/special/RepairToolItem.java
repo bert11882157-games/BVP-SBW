@@ -122,6 +122,8 @@ public class RepairToolItem extends GunGeoItem {
                 }
             } else if (!vehicle.isWreck()) {
                 vehicle.heal(0.5f + 0.0025f * vehicle.getMaxHealth());
+                com.atsuishio.superbwarfare.api.aircraft.AircraftSurfaceModules.repairOnGround(
+                        vehicle, 0.5f + 0.0025f * vehicle.getMaxHealth());
             } else {
                 vehicle.hurt(ModDamageTypes.causeRepairToolDamage(level.registryAccess(), shooter), 0.5f + 0.0025f * vehicle.getMaxHealth());
             }

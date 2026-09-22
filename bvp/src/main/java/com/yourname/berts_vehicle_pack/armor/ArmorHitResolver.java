@@ -46,7 +46,7 @@ final class ArmorHitResolver {
             if (frameImpact == null) continue;
             double distance = box.distanceOutside(frameImpact);
             if (distance <= impactTolerance && distance < bestDistance) {
-                best = new ArmorHit(box, frameImpact, hullImpact, 0.0D);
+                best = ArmorHit.proximity(box, frameImpact, hullImpact, distance);
                 bestDistance = distance;
             }
         }
@@ -80,7 +80,7 @@ final class ArmorHitResolver {
             }
         }
         ArmorHit fallbackHit = fallbackBox == null ? null
-                : new ArmorHit(fallbackBox, fallbackFrame, trace.hullImpactFallback, 0.0D);
+                : ArmorHit.proximity(fallbackBox, fallbackFrame, trace.hullImpactFallback, fallbackDistance);
         return new BoxQuery(fallbackHit, nearest);
     }
 
@@ -124,7 +124,7 @@ final class ArmorHitResolver {
         }
         ArmorHit hit = rayHit;
         if (hit == null && fallbackBox != null) {
-            hit = new ArmorHit(fallbackBox, fallbackFrame, trace.hullImpactFallback, 0.0D);
+            hit = ArmorHit.proximity(fallbackBox, fallbackFrame, trace.hullImpactFallback, fallbackDistance);
         }
         return new BoxQuery(hit, nearest);
     }

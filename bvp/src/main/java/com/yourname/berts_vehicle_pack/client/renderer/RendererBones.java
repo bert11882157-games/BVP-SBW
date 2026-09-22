@@ -34,6 +34,20 @@ final class RendererBones {
         setPositionOffset(bone, x, y, z, true);
     }
 
+    /** Model guns face local -Z. Bone translation precedes rotation, so rotate the +Z kick once. */
+    static void setBackwardRecoil(BedrockBone bone, float distance) {
+        if (bone == null) return;
+        float amount = Float.isFinite(distance) ? Math.max(0.0F, distance) : 0.0F;
+        float x = bone.rotation.x();
+        float y = bone.rotation.y();
+        float z = bone.rotation.z();
+        float w = bone.rotation.w();
+        setPositionOffset(bone,
+                amount * 2.0F * (x * z + w * y),
+                amount * 2.0F * (y * z - w * x),
+                amount * (1.0F - 2.0F * (x * x + y * y)));
+    }
+
     private static void setPositionOffset(BedrockBone bone, float x, float y, float z, boolean visible) {
         if (bone == null) {
             return;

@@ -5,8 +5,8 @@ import com.atsuishio.superbwarfare.api.projectile.impact.ProjectileImpactPresent
 import com.atsuishio.superbwarfare.api.projectile.impact.ProjectileImpactResolver;
 import com.atsuishio.superbwarfare.api.projectile.impact.ProjectileImpactResult;
 import com.atsuishio.superbwarfare.api.projectile.impact.VehicleImpactVolumes;
+import com.atsuishio.superbwarfare.api.projectile.ProjectileProfiles;
 import com.atsuishio.superbwarfare.entity.projectile.CannonShellEntity;
-import com.yourname.berts_vehicle_pack.effects.BvpProjectileEffectDefinition;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.projectile.Projectile;
 
@@ -23,11 +23,18 @@ public final class ArmorImpactHandler {
     }
 
     public static void register() {
+        BvpDroneRpgImpactBridge.register();
         VehicleImpactVolumes.register(VOLUME_PROVIDER_ID, BvpImpactVolumeQuery::create);
         ProjectileImpactResolver.register(RESOLVER_ID, INSTANCE::resolve);
     }
 
     private ProjectileImpactResult resolve(ProjectileImpactContext context) {
+        ProjectileImpactResult result = resolveArmor(context);
+        BvpImpactFragmentCommitter.commit(context, result);
+        return result;
+    }
+
+    private ProjectileImpactResult resolveArmor(ProjectileImpactContext context) {
         Projectile projectile = context.getProjectile();
         if (projectile.m_9236_().f_46443_) {
             return ProjectileImpactResult.defaultResult();
@@ -70,22 +77,13 @@ public final class ArmorImpactHandler {
         Projectile projectile = context.getProjectile();
         ProjectileArmorEffect shot = ArmorShotClassifier.classifyBvpImpact(
                 projectile, context.getOwner(), context.getHitVec());
-        // A typed BVP profile is itself sufficient admission for the accepted block-impact
-        // presentation.  PG-9/OG-9 intentionally have no ArmorEffect ImpactVisual enum value;
-        // their validated projectile_effect_v1 profile supplies the HE fallback in the
-        // presentation provider.  Requiring the enum here silently dropped those real block
-        // impacts and left the provider with no chance to spawn their intended shrapnel.
-        if (!ProjectileArmorEffects.hasImpactVisual(shot)
-                && BvpProjectileEffectDefinition.forEntity(projectile) == null) {
-            return ProjectileImpactResult.defaultResult();
-        }
-
-        // A typed projectile profile is not proof that classification succeeded.  In
-        // particular, an admitted AP/APFSDS shell can have no ArmourEffect when its
-        // round/profile mapping is absent or malformed.  Preserve the native safe impact
-        // result in that case; never dereference the nullable classification or invent a
-        // presentation/damage path.
-        if (shot == null) {
+        // Classification and required combat metadata admit gameplay. Optional effect data
+        // cannot veto a classified pack round. Legacy visual-only classification must not
+        // conceal a declared profile whose required combat metadata failed validation.
+        BvpBlockImpactAdmission.CombatState combat = BvpBlockImpactAdmission.combatState(
+                ProjectileProfiles.profileId(projectile), ProjectileProfiles.resolve(projectile));
+        if (!BvpBlockImpactAdmission.admits(shot != null,
+                ProjectileArmorEffects.hasImpactVisual(shot), combat)) {
             return ProjectileImpactResult.defaultResult();
         }
 

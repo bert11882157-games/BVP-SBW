@@ -98,14 +98,22 @@ object VehicleCrosshairOverlay : CommonOverlay("vehicle_crosshair") {
         val aimReticleProfile = reticleProvider?.getVehicleAimReticleProfile(index, weaponIndex)
         val reticleRole = reticleProvider?.getVehicleAimReticleRole(index, weaponIndex)
             ?: VehicleAimReticleRole.OTHER
-        val showCrosshairA = reticleRole.showsCameraCommandReticle
+        // Aircraft gun aiming uses only AircraftHud's body-forward circle. Steering intent
+        // remains independent, while ground vehicles retain their two physical aim cues.
+        val aircraft = entity.isFixedWingFlightVehicle() || entity.vehicleType == VehicleType.AIRPLANE
+        if (aircraft) {
+            resetScale()
+            ccipScreenSmoother.reset()
+            return
+        }
+        val showCrosshairA = reticleRole.showsCameraCommandReticle && !aircraft
         val cameraType = Minecraft.getInstance().options.cameraType
         // Crosshair B is the physical muzzle marker and remains independent of Crosshair A.
         // Keep the typed A suppression intact, but do not suppress B in either third-person
         // camera (including the magnified third-person path, which retains its camera type).
         val thirdPersonCamera = cameraType == CameraType.THIRD_PERSON_BACK ||
                 cameraType == CameraType.THIRD_PERSON_FRONT
-        val hasAimStateMarker = aimReticleProfile != null &&
+        val hasAimStateMarker = !aircraft && aimReticleProfile != null &&
                 (cameraType == CameraType.FIRST_PERSON || thirdPersonCamera || !showCrosshairA)
         val data = entity.getGunData(index)
         if (data == null) {
@@ -485,7 +493,20 @@ object VehicleCrosshairOverlay : CommonOverlay("vehicle_crosshair") {
         val cameraLook = Vec3(camera.lookVector)
         if (!finiteDirection(cameraLook)) return
         val cameraDirection = cameraLook.normalize()
-        val aimPoint = VehicleGeometricZeroDistanceClient.activeDistance(player)?.let { distance ->
+        val zero = VehicleGeometricZeroDistanceClient.activeFcsState(player)
+        val zeroRange = zero?.takeIf {
+            it.status == com.atsuishio.superbwarfare.network.VehicleGeometricZeroWireStatus.SOLUTION
+        }?.measuredRangeBlocks
+        val range = zeroRange ?: VehicleGeometricZeroDistanceClient.activeDistance(player)?.toDouble()
+        val impact = zeroRange?.let { distance ->
+            val capture = com.atsuishio.superbwarfare.api.vehicle.weapon.prediction.VehicleShotPredictionService
+                .captureClientNominalSnapshotIfFiredNow(entity, player, partialTick)
+            capture.snapshot?.takeIf { it.selectedWeaponIndex == weaponIndex }?.let { shot ->
+                com.atsuishio.superbwarfare.api.vehicle.weapon.prediction.VehicleRangeBallistics.atRangePlane(
+                    shot, cameraOrigin, cameraDirection, distance)
+            }
+        }
+        val aimPoint = range?.let { distance ->
             val cameraDepth = distance.toDouble() - origin.subtract(cameraOrigin).dot(cameraDirection)
             val rayPlaneCosine = actualDirection.dot(cameraDirection)
             if (!cameraDepth.isFinite() || !rayPlaneCosine.isFinite() ||
@@ -509,16 +530,27 @@ object VehicleCrosshairOverlay : CommonOverlay("vehicle_crosshair") {
         val directionAligned = commandDirection != null && aimProfile != null &&
                 java.lang.Math.toDegrees(acos(actualDirection.dot(commandDirection).coerceIn(-1.0, 1.0))) <=
                 aimProfile.lockToleranceDegrees
+        val impactProjection = impact?.takeIf { it.subtract(cameraOrigin).dot(cameraDirection) > 0 }
+            ?.worldToScreen()?.takeIf { it.x.isFinite() && it.y.isFinite() }
         val centerResidual = hypot(
-            projectedX - screenWidth / 2.0,
-            projectedY - screenHeight / 2.0,
+            (impactProjection?.x ?: projectedX) - screenWidth / 2.0,
+            (impactProjection?.y ?: projectedY) - screenHeight / 2.0,
         )
         val locked = frame != null && !frame.continuityReprojected && frame.aim.lockedDiagnostic &&
-                directionAligned && centerResidual <= profile.centerSnapPixels
+                (if (zeroRange != null) impactProjection != null else directionAligned) &&
+                centerResidual <= profile.centerSnapPixels
 
         val margin = profile.clampMarginPixels
         val x = projectedX.roundToInt().coerceIn(margin, (screenWidth - margin - 1).coerceAtLeast(margin))
         val y = projectedY.roundToInt().coerceIn(margin, (screenHeight - margin - 1).coerceAtLeast(margin))
+        if (impactProjection != null && projectedX in 0.0..screenWidth.toDouble() &&
+            projectedY in 0.0..screenHeight.toDouble()) {
+            val color = if (locked) 0xE080FF80.toInt() else 0xE0FFB860.toInt()
+            guiGraphics.enableScissor(0, 0, screenWidth, screenHeight)
+            drawFineLine(projectedX, projectedY, impactProjection.x, impactProjection.y, color)
+            drawFineCircle(impactProjection.x, impactProjection.y, 1.7, color, true)
+            guiGraphics.disableScissor()
+        }
         drawAimStateMarker(x, y, locked, entity)
     }
 
@@ -627,6 +659,11 @@ object VehicleCrosshairOverlay : CommonOverlay("vehicle_crosshair") {
         entity: VehicleEntity,
     ) {
         val texture = resolvePhysicalCrosshairTexture(entity, locked)
+        if (texture == CROSSHAIR_B_TEXTURE || texture.path == CROSSHAIR_B_TEXTURE.path.removeSuffix(".png") + "_locked.png") {
+            drawFineCircle(x.toDouble(), y.toDouble(), 3.2,
+                if (locked) 0xF080FF80.toInt() else 0xF0FFB860.toInt(), false)
+            return
+        }
         RenderHelper.blit(
             guiGraphics.pose(),
             texture,
@@ -640,6 +677,39 @@ object VehicleCrosshairOverlay : CommonOverlay("vehicle_crosshair") {
             CROSSHAIR_B_TEXTURE_SIZE.toFloat(),
             1f,
         )
+    }
+
+    /** Quarter-GUI-pixel geometry remains crisp at different GUI scales; no enlarged pixel sprite. */
+    private fun RenderContext.drawFineLine(x: Double, y: Double, endX: Double, endY: Double, color: Int) {
+        val length = hypot(endX - x, endY - y)
+        if (!length.isFinite() || length > 4.0 * (screenWidth + screenHeight)) return
+        val pose = guiGraphics.pose()
+        pose.pushPose()
+        pose.translate(x, y, 0.0)
+        pose.mulPose(com.mojang.math.Axis.ZP.rotation(kotlin.math.atan2(endY - y, endX - x).toFloat()))
+        pose.scale(0.25F, 0.25F, 1F)
+        guiGraphics.fill(0, -1, (length * 4).roundToInt().coerceAtLeast(1), 1, color)
+        pose.popPose()
+    }
+
+    private fun RenderContext.drawFineCircle(x: Double, y: Double, radius: Double, color: Int, filled: Boolean) {
+        if (filled) {
+            val pose = guiGraphics.pose()
+            pose.pushPose()
+            pose.translate(x, y, 0.0)
+            pose.scale(0.25F, 0.25F, 1F)
+            val r = radius * 4
+            for (row in -r.toInt()..r.toInt()) {
+                val half = kotlin.math.sqrt((r * r - row * row).coerceAtLeast(0.0)).roundToInt()
+                guiGraphics.fill(-half, row, half + 1, row + 1, color)
+            }
+            pose.popPose()
+        } else for (i in 0 until 40) {
+            val a = i * Math.PI / 20
+            val b = (i + 1) * Math.PI / 20
+            drawFineLine(x + kotlin.math.cos(a) * radius, y + kotlin.math.sin(a) * radius,
+                x + kotlin.math.cos(b) * radius, y + kotlin.math.sin(b) * radius, color)
+        }
     }
 
     private fun resolvePhysicalCrosshairTexture(entity: VehicleEntity, locked: Boolean): ResourceLocation {

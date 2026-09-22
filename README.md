@@ -6,10 +6,10 @@ Mod source code and runtime resources for Minecraft 1.20.1 / Forge.
 | --- | --- |
 | `bvp/` | Bert's Vehicle Pack Java code, committed runtime resources, and project metadata |
 | `sbw/` | The customized Superb Warfare fork, including Java/Kotlin sources and resources |
-| `docs/` | Build, release, and licensing notes |
+| `docs/` | Engineering standards, build, release, and licensing notes |
 
 This repository contains the mods, not the separate asset-authoring and vehicle-generation
-workspace. BVP's generated runtime resources are committed here alongside its handwritten Java
+workspace. BVP's generated runtime resources are committed here alongside its maintained Java
 sources. No external workspace path is needed to locate those sources.
 
 ## Current snapshot
@@ -20,9 +20,9 @@ There is no claim that creating this repository ran compilation or gameplay test
 
 ## Building
 
-Java 17 is required. Both projects retain their Gradle wrappers. See [build notes](docs/BUILDING.md)
-before attempting a build: SBW uses its Gradle project; BVP's existing runtime/SRG source mapping
-and release-classpath dependency requirements have not yet been converted into a standalone build.
+Java 17 and Node.js 20 or newer are required. Both projects retain their Gradle wrappers. Use
+[the source-build entry point](docs/BUILDING.md) to build BVP against the matching SBW sources,
+with an explicitly versioned and hash-checked external meshloader dependency.
 
 Runtime dependencies remain required. In particular, BVP requires the SBW fork and
 `sbwmeshloader`; the mesh-loader source and unrelated content packs are not part of this repository.
@@ -32,7 +32,8 @@ Textures and audio use Git LFS. After cloning, run `git lfs install` and `git lf
 
 ## Contributions and releases
 
-Read [CONTRIBUTING.md](CONTRIBUTING.md) and [release notes](docs/RELEASING.md).
+Read [CONTRIBUTING.md](CONTRIBUTING.md), [engineering standards](docs/ENGINEERING.md), and
+[release notes](docs/RELEASING.md).
 Preserve mod behavior, resource identifiers, and client/server compatibility when editing.
 
 ## Licensing and credits

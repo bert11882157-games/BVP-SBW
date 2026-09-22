@@ -17,6 +17,7 @@ import java.util.WeakHashMap
  * latter lets non-Gecko backends preserve their existing interpolation basis
  * without reconstructing the same formulas independently.
  */
+@kotlinx.serialization.Serializable
 data class VehicleRenderPartSnapshot(
     val interpolatedHullYawDegrees: Float,
     val hullPitchDegrees: Float,
@@ -71,13 +72,21 @@ data class VehicleRenderPartSnapshot(
             renderedHullYawDegrees: Float,
             partialTick: Float,
         ): VehicleRenderPartSnapshot {
+            com.atsuishio.superbwarfare.api.vehicle.render.FarVehicleCopies.frame(vehicle)?.let {
+                return it.snapshot.parts
+            }
             val turretSeat = vehicle.turretControllerIndex
             val turretWeapon = turretSeat.takeIf { it >= 0 }?.let(vehicle::getSelectedWeapon) ?: -1
             val stationSeat = vehicle.passengerWeaponStationControllerIndex
             val stationWeapon = stationSeat.takeIf { it >= 0 }?.let(vehicle::getSelectedWeapon) ?: -1
+            val localStation = vehicle.isPassengerStationLocalAim(stationSeat, stationWeapon)
+            val serverStation = if (localStation && !vehicle.level().isClientSide && !vehicle.isWreck) {
+                vehicle.getVehicleAimSnapshot(stationSeat, stationWeapon)
+                    ?.takeIf { it.channel == VehicleAimChannel.PASSENGER_WEAPON }
+            } else null
             val coherentBase = vehicle.level().isClientSide && !vehicle.isWreck &&
-                    vehicle.resolveVehicleFlightStrategy() == null
-            val coherentTurret = coherentBase && turretSeat >= 0 && turretWeapon >= 0 &&
+                    (vehicle.resolveVehicleFlightStrategy() == null || localStation)
+            val coherentTurret = coherentBase && !localStation && turretSeat >= 0 && turretWeapon >= 0 &&
                     vehicle.getNthEntity(turretSeat) is Player &&
                     vehicle.resolveVehicleAimProfile(turretSeat, turretWeapon) != null
             val coherentStation = coherentBase && stationSeat >= 0 && stationWeapon >= 0 &&
@@ -90,7 +99,7 @@ data class VehicleRenderPartSnapshot(
             // Passenger-station presentation is authored beneath the same physical turret.
             // Resolve its explicit passive TURRET parent even when the main seat is empty. Missing
             // motion authority falls through to the bounded/neutral topology-visible policy below.
-            val resolvedTurret = if (coherentTurret || coherentStation) {
+            val resolvedTurret = if (coherentTurret || (coherentStation && !vehicle.isHullParentedPassengerWeaponStation())) {
                 vehicle.resolveAimPresentationFrame(
                     VehicleAimChannel.TURRET,
                     turretSeat,
@@ -156,7 +165,7 @@ data class VehicleRenderPartSnapshot(
             // eligible coherent channel: those fields can be one hull-relative tick stale and
             // make the model follow the hull before snapping back when the frame returns.
             val aimPresentationValid = true
-            val stationPresentationValid = true
+            val stationPresentationValid = !localStation || stationFrame != null || serverStation != null
             val turretWorldYaw = if (coherentAimPresentation) {
                 turretFrame?.presentedTurretYaw?.takeIf(Float::isFinite)
                     ?: heldTurret?.yaw?.takeIf(Float::isFinite)
@@ -172,13 +181,17 @@ data class VehicleRenderPartSnapshot(
             val turretYawFromRenderedHull = if (coherentAimPresentation) turretWorldYaw else Mth.wrapDegrees(
                 renderedHullYawDegrees - vehicle.getBarrelYRot(partialTick)
             )
-            val stationWorldYaw = if (coherentStation) {
+            val stationWorldYaw = if (localStation) {
+                stationFrame?.presentedStationYaw ?: serverStation?.actualYaw ?: 0F
+            } else if (coherentStation) {
                 stationFrame?.presentedStationYaw?.takeIf(Float::isFinite)
                     ?: heldStation?.yaw?.takeIf(Float::isFinite)
                     ?: 0F
             } else
                 synchronizedStationYaw
-            val stationPitch = if (coherentStation) {
+            val stationPitch = if (localStation) {
+                -(stationFrame?.presentedStationPitch ?: serverStation?.actualPitch ?: 0F)
+            } else if (coherentStation) {
                 (stationFrame?.presentedStationPitch?.takeIf(Float::isFinite)
                     ?: heldStation?.pitch?.takeIf(Float::isFinite)
                     ?: 0F).let {
@@ -187,7 +200,9 @@ data class VehicleRenderPartSnapshot(
             } else {
                 Mth.clamp(-synchronizedStationPitch, vehicle.passengerWeaponMinPitch, vehicle.passengerWeaponMaxPitch)
             }
-            val stationYawRelativeToTurret = if (coherentStation) {
+            val stationYawRelativeToTurret = if (localStation) {
+                stationWorldYaw
+            } else if (coherentStation) {
                 stationWorldYaw?.let { Mth.wrapDegrees(it - turretWorldYaw) } ?: 0F
             } else {
                 Mth.wrapDegrees((stationWorldYaw ?: 0F) - turretWorldYaw)
@@ -248,7 +263,7 @@ data class VehicleRenderPartSnapshot(
                     vehicle.turretMaxPitch,
                 ),
                 stationYawRelativeToTurretDegrees = stationYawRelativeToTurret,
-                stationYawFromRenderedHullDegrees = if (coherentStation) stationYawRelativeToTurret else Mth.wrapDegrees(
+                stationYawFromRenderedHullDegrees = if (localStation) stationWorldYaw else if (coherentStation) stationYawRelativeToTurret else Mth.wrapDegrees(
                     renderedHullYawDegrees - vehicle.getGunYRot(partialTick) - turretYawFromRenderedHull
                 ),
                 stationPitchDegrees = stationPitch,

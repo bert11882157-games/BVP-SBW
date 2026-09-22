@@ -1,0 +1,21 @@
+{
+  "Schema": 1,
+  "Name": "R-60",
+  "Category": "AIR_TO_AIR",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/r60.geo.json",
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/r60.png",
+  "Capacity": 1,
+  "Scale": 1,
+  "LaunchOffset": [
+    0,
+    -0.05,
+    0
+  ],
+  "Guidance": {
+    "Mode": "INFRARED",
+    "LockTicks": 60,
+    "Range": 1024,
+    "ConeDegrees": 25,
+    "CountermeasureVulnerability": 1
+  }
+}

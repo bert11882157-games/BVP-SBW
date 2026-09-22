@@ -66,7 +66,7 @@ object EliteAudioPlayback {
         record(instance, playback, reason, Minecraft.getInstance().level?.gameTime ?: 0L)
     }
 
-    @JvmStatic @SubscribeEvent fun tick(event: TickEvent.ClientTickEvent) {
+    @SubscribeEvent fun tick(event: TickEvent.ClientTickEvent) {
         if (event.phase != TickEvent.Phase.END) return
         if (!EliteDiagnostics.isClientEnabled()) {
             playing.clear(); observedSession = null; seededSession = null; lastPerformanceTick = Long.MIN_VALUE
@@ -108,7 +108,7 @@ object EliteAudioPlayback {
         }
     }
 
-    @JvmStatic @SubscribeEvent fun logout(event: ClientPlayerNetworkEvent.LoggingOut) {
+    @SubscribeEvent fun logout(event: ClientPlayerNetworkEvent.LoggingOut) {
         playing.clear()
         EliteDiagnostics.setClientSession(UUID(0, 0), false)
     }

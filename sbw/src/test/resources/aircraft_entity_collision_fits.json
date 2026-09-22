@@ -1,0 +1,1382 @@
+{
+  "mi24v": {
+    "contact": {
+      "Fuselage": {
+        "Min": [
+          -3.161017,
+          1,
+          -6.958703
+        ],
+        "Max": [
+          3.088983,
+          4.4,
+          1.916297
+        ]
+      },
+      "LandingGear": {
+        "Min": [
+          -2.911017,
+          -0.18,
+          -6.603703
+        ],
+        "Max": [
+          2.838983,
+          1.05,
+          1.561297
+        ]
+      },
+      "RetractableGear": false
+    },
+    "rotateOffsetHeight": 1.35
+  },
+  "mi28n": {
+    "contact": {
+      "Fuselage": {
+        "Min": [
+          -3.5,
+          1.25,
+          -9.86126
+        ],
+        "Max": [
+          3.5,
+          5.5,
+          0.38874
+        ]
+      },
+      "LandingGear": {
+        "Min": [
+          -3.22,
+          0.02,
+          -9.45126
+        ],
+        "Max": [
+          3.22,
+          1.3,
+          -0.02126
+        ]
+      },
+      "RetractableGear": false
+    },
+    "rotateOffsetHeight": 1.35
+  },
+  "ka50": {
+    "contact": {
+      "Fuselage": {
+        "Min": [
+          -3.3125,
+          1,
+          -6.66578
+        ],
+        "Max": [
+          3.3125,
+          4.5,
+          2.45922
+        ]
+      },
+      "LandingGear": {
+        "Min": [
+          -3.0475,
+          0.02,
+          -6.30078
+        ],
+        "Max": [
+          3.0475,
+          1.05,
+          2.09422
+        ]
+      },
+      "RetractableGear": false
+    },
+    "rotateOffsetHeight": 1.35
+  },
+  "ah_6j": {
+    "contact": {
+      "Fuselage": {
+        "Min": [
+          -1.6875,
+          0.85,
+          -3.544498
+        ],
+        "Max": [
+          1.6875,
+          3.1,
+          1.455502
+        ]
+      },
+      "LandingGear": {
+        "Min": [
+          -1.5525,
+          0.02,
+          -3.344498
+        ],
+        "Max": [
+          1.5525,
+          0.9,
+          1.255502
+        ]
+      },
+      "RetractableGear": false
+    },
+    "rotateOffsetHeight": 1.89
+  },
+  "ah_1g_cobra": {
+    "contact": {
+      "Fuselage": {
+        "Min": [
+          -2.125,
+          1.15,
+          -6.801927
+        ],
+        "Max": [
+          2.125,
+          3.65,
+          0.823073
+        ]
+      },
+      "LandingGear": {
+        "Min": [
+          -1.955,
+          0.06,
+          -6.496927
+        ],
+        "Max": [
+          1.955,
+          1.2,
+          0.518073
+        ]
+      },
+      "RetractableGear": false
+    },
+    "rotateOffsetHeight": 1.89
+  },
+  "mi24_hind_a": {
+    "contact": {
+      "Fuselage": {
+        "Min": [
+          -4.75,
+          1.5,
+          -11.044358
+        ],
+        "Max": [
+          4.75,
+          6.2,
+          1.330642
+        ]
+      },
+      "LandingGear": {
+        "Min": [
+          -4.37,
+          0.01,
+          -10.549358
+        ],
+        "Max": [
+          4.37,
+          1.55,
+          0.835642
+        ]
+      },
+      "RetractableGear": false
+    },
+    "rotateOffsetHeight": 2.17832
+  },
+  "uh1d_huey": {
+    "contact": {
+      "Fuselage": {
+        "Min": [
+          -2.6875,
+          1.05,
+          -7.965987
+        ],
+        "Max": [
+          2.6875,
+          4.1,
+          0.909013
+        ]
+      },
+      "LandingGear": {
+        "Min": [
+          -2.4725,
+          -0.03,
+          -7.610987
+        ],
+        "Max": [
+          2.4725,
+          1.1,
+          0.554013
+        ]
+      },
+      "RetractableGear": false
+    },
+    "rotateOffsetHeight": 2.17832
+  },
+  "ah1w_super_cobra": {
+    "contact": {
+      "Fuselage": {
+        "Min": [
+          -2.5,
+          1.2,
+          -8.184155
+        ],
+        "Max": [
+          2.5,
+          4.3,
+          0.815845
+        ]
+      },
+      "LandingGear": {
+        "Min": [
+          -2.3,
+          0.01,
+          -7.824155
+        ],
+        "Max": [
+          2.3,
+          1.25,
+          0.455845
+        ]
+      },
+      "RetractableGear": false
+    },
+    "rotateOffsetHeight": 2.17832
+  },
+  "mig19": {
+    "contact": {
+      "Fuselage": {
+        "Min": [
+          -4.296822,
+          1.25,
+          -5.759604
+        ],
+        "Max": [
+          4.203178,
+          3.55,
+          3.865396
+        ]
+      },
+      "LandingGear": {
+        "Min": [
+          -3.956822,
+          -0.01,
+          -5.374604
+        ],
+        "Max": [
+          3.863178,
+          1.3,
+          3.480396
+        ]
+      },
+      "RetractableGear": false
+    },
+    "rotateOffsetHeight": 3.64
+  },
+  "yak_3": {
+    "contact": {
+      "Fuselage": {
+        "Min": [
+          -2.4375,
+          1.12,
+          -3.423577
+        ],
+        "Max": [
+          2.4375,
+          2.85,
+          1.451423
+        ]
+      },
+      "LandingGear": {
+        "Min": [
+          -2.2425,
+          0,
+          -3.228578
+        ],
+        "Max": [
+          2.2425,
+          1.16,
+          1.256423
+        ]
+      },
+      "RetractableGear": true
+    },
+    "rotateOffsetHeight": 1.72818
+  },
+  "yak_9u": {
+    "contact": {
+      "Fuselage": {
+        "Min": [
+          -2.375,
+          0.85,
+          -2.114474
+        ],
+        "Max": [
+          2.375,
+          2.45,
+          2.635526
+        ]
+      },
+      "LandingGear": {
+        "Min": [
+          -2.185,
+          0,
+          -1.924474
+        ],
+        "Max": [
+          2.185,
+          0.9,
+          2.445526
+        ]
+      },
+      "RetractableGear": true
+    },
+    "rotateOffsetHeight": 1.37059
+  },
+  "j_26": {
+    "contact": {
+      "Fuselage": {
+        "Min": [
+          -2.65,
+          1.15,
+          -2.789925
+        ],
+        "Max": [
+          2.65,
+          3.1,
+          2.085075
+        ]
+      },
+      "LandingGear": {
+        "Min": [
+          -2.438,
+          0,
+          -2.594925
+        ],
+        "Max": [
+          2.438,
+          1.2,
+          1.890075
+        ]
+      },
+      "RetractableGear": true
+    },
+    "rotateOffsetHeight": 2.03903
+  },
+  "saab_105": {
+    "contact": {
+      "Fuselage": {
+        "Min": [
+          -1.775,
+          0.72,
+          -2.647619
+        ],
+        "Max": [
+          1.775,
+          1.9,
+          2.602381
+        ]
+      },
+      "LandingGear": {
+        "Min": [
+          -1.633,
+          0,
+          -2.437619
+        ],
+        "Max": [
+          1.633,
+          0.75,
+          2.392381
+        ]
+      },
+      "RetractableGear": true
+    },
+    "rotateOffsetHeight": 1.35714
+  },
+  "supermarine_spitfire_griffon": {
+    "contact": {
+      "Fuselage": {
+        "Min": [
+          -1.8125,
+          1.05,
+          -3.853253
+        ],
+        "Max": [
+          1.8125,
+          2.6,
+          0.584247
+        ]
+      },
+      "LandingGear": {
+        "Min": [
+          -1.6675,
+          0,
+          -3.675753
+        ],
+        "Max": [
+          1.6675,
+          1.1,
+          0.406747
+        ]
+      },
+      "RetractableGear": true
+    },
+    "rotateOffsetHeight": 1.60214
+  },
+  "mig_9": {
+    "contact": {
+      "Fuselage": {
+        "Min": [
+          -1.5625,
+          0.7,
+          -2.451093
+        ],
+        "Max": [
+          1.5625,
+          2.4,
+          2.361407
+        ]
+      },
+      "LandingGear": {
+        "Min": [
+          -1.4375,
+          0,
+          -2.258593
+        ],
+        "Max": [
+          1.4375,
+          0.75,
+          2.168907
+        ]
+      },
+      "RetractableGear": true
+    },
+    "rotateOffsetHeight": 1.59193
+  },
+  "mig_15bis": {
+    "contact": {
+      "Fuselage": {
+        "Min": [
+          -3.0625,
+          0.8,
+          -2.633713
+        ],
+        "Max": [
+          3.0625,
+          2.4,
+          2.678787
+        ]
+      },
+      "LandingGear": {
+        "Min": [
+          -2.8175,
+          0,
+          -2.421213
+        ],
+        "Max": [
+          2.8175,
+          0.85,
+          2.466287
+        ]
+      },
+      "RetractableGear": true
+    },
+    "rotateOffsetHeight": 1.82548
+  },
+  "mig_21bis": {
+    "contact": {
+      "Fuselage": {
+        "Min": [
+          -2.4375,
+          0.95,
+          -3.48303
+        ],
+        "Max": [
+          2.4375,
+          2.7,
+          3.51697
+        ]
+      },
+      "LandingGear": {
+        "Min": [
+          -2.2425,
+          0,
+          -3.20303
+        ],
+        "Max": [
+          2.2425,
+          1,
+          3.23697
+        ]
+      },
+      "RetractableGear": true
+    },
+    "rotateOffsetHeight": 2.04205
+  },
+  "su_25": {
+    "contact": {
+      "Fuselage": {
+        "Min": [
+          -2.3125,
+          1.15,
+          -3.612361
+        ],
+        "Max": [
+          2.3125,
+          3.3,
+          3.512639
+        ]
+      },
+      "LandingGear": {
+        "Min": [
+          -2.1275,
+          0,
+          -3.327361
+        ],
+        "Max": [
+          2.1275,
+          1.2,
+          3.227639
+        ]
+      },
+      "RetractableGear": true
+    },
+    "rotateOffsetHeight": 2.74236
+  },
+  "su_27": {
+    "contact": {
+      "Fuselage": {
+        "Min": [
+          -3.3125,
+          1.1,
+          -4.731381
+        ],
+        "Max": [
+          3.3125,
+          3.8,
+          4.643619
+        ]
+      },
+      "LandingGear": {
+        "Min": [
+          -3.0475,
+          0,
+          -4.356381
+        ],
+        "Max": [
+          3.0475,
+          1.15,
+          4.268619
+        ]
+      },
+      "RetractableGear": true
+    },
+    "rotateOffsetHeight": 2.85224
+  },
+  "mig_29": {
+    "contact": {
+      "Fuselage": {
+        "Min": [
+          -2.5,
+          0.85,
+          -3.083468
+        ],
+        "Max": [
+          2.5,
+          3.4,
+          4.416532
+        ]
+      },
+      "LandingGear": {
+        "Min": [
+          -2.3,
+          0,
+          -2.783468
+        ],
+        "Max": [
+          2.3,
+          0.9,
+          4.116532
+        ]
+      },
+      "RetractableGear": true
+    },
+    "rotateOffsetHeight": 2.41331
+  },
+  "mig_19s": {
+    "contact": {
+      "Fuselage": {
+        "Min": [
+          -2.5,
+          0.75,
+          -3.1475
+        ],
+        "Max": [
+          2.5,
+          2.65,
+          3.1025
+        ]
+      },
+      "LandingGear": {
+        "Min": [
+          -2.3,
+          0,
+          -2.8975
+        ],
+        "Max": [
+          2.3,
+          0.8,
+          2.8525
+        ]
+      },
+      "RetractableGear": true
+    },
+    "rotateOffsetHeight": 1.9125
+  },
+  "saab_j_21a_1": {
+    "contact": {
+      "Fuselage": {
+        "Min": [
+          -2.8125,
+          0.9,
+          -2.897481
+        ],
+        "Max": [
+          2.8125,
+          3,
+          2.852519
+        ]
+      },
+      "LandingGear": {
+        "Min": [
+          -2.5875,
+          0,
+          -2.667481
+        ],
+        "Max": [
+          2.5875,
+          0.95,
+          2.622519
+        ]
+      },
+      "RetractableGear": true
+    },
+    "rotateOffsetHeight": 1.59612
+  },
+  "f_84f": {
+    "contact": {
+      "Fuselage": {
+        "Min": [
+          -3.25,
+          0.8,
+          -3.010003
+        ],
+        "Max": [
+          3.25,
+          2.8,
+          3.489997
+        ]
+      },
+      "LandingGear": {
+        "Min": [
+          -2.99,
+          0,
+          -2.750003
+        ],
+        "Max": [
+          2.99,
+          0.85,
+          3.229997
+        ]
+      },
+      "RetractableGear": true
+    },
+    "rotateOffsetHeight": 2.15262
+  },
+  "f_86k": {
+    "contact": {
+      "Fuselage": {
+        "Min": [
+          -2.0625,
+          0.75,
+          -2.632173
+        ],
+        "Max": [
+          2.0625,
+          2.65,
+          3.367827
+        ]
+      },
+      "LandingGear": {
+        "Min": [
+          -1.8975,
+          0,
+          -2.392173
+        ],
+        "Max": [
+          1.8975,
+          0.8,
+          3.127827
+        ]
+      },
+      "RetractableGear": true
+    },
+    "rotateOffsetHeight": 2.23086
+  },
+  "f_104g": {
+    "contact": {
+      "Fuselage": {
+        "Min": [
+          -2.1875,
+          0.85,
+          -3.581856
+        ],
+        "Max": [
+          2.1875,
+          2.4,
+          3.480644
+        ]
+      },
+      "LandingGear": {
+        "Min": [
+          -2.0125,
+          0,
+          -3.299356
+        ],
+        "Max": [
+          2.0125,
+          0.9,
+          3.198144
+        ]
+      },
+      "RetractableGear": true
+    },
+    "rotateOffsetHeight": 2.07485
+  },
+  "fiat_g_91": {
+    "contact": {
+      "Fuselage": {
+        "Min": [
+          -2.25,
+          0.85,
+          -2.817275
+        ],
+        "Max": [
+          2.25,
+          2.65,
+          2.682725
+        ]
+      },
+      "LandingGear": {
+        "Min": [
+          -2.07,
+          0,
+          -2.597275
+        ],
+        "Max": [
+          2.07,
+          0.9,
+          2.462725
+        ]
+      },
+      "RetractableGear": true
+    },
+    "rotateOffsetHeight": 1.99583
+  },
+  "yak_15p": {
+    "contact": {
+      "Fuselage": {
+        "Min": [
+          -1.8125,
+          0.8,
+          -2.453941
+        ],
+        "Max": [
+          1.8125,
+          2.5,
+          2.046059
+        ]
+      },
+      "LandingGear": {
+        "Min": [
+          -1.6675,
+          0,
+          -2.273941
+        ],
+        "Max": [
+          1.6675,
+          0.85,
+          1.866059
+        ]
+      },
+      "RetractableGear": true
+    },
+    "rotateOffsetHeight": 1.48424
+  },
+  "su_9": {
+    "contact": {
+      "Fuselage": {
+        "Min": [
+          -2.8125,
+          1.1,
+          -4.295941
+        ],
+        "Max": [
+          2.8125,
+          2.9,
+          3.704059
+        ]
+      },
+      "LandingGear": {
+        "Min": [
+          -2.5875,
+          0,
+          -3.975941
+        ],
+        "Max": [
+          2.5875,
+          1.15,
+          3.384059
+        ]
+      },
+      "RetractableGear": true
+    },
+    "rotateOffsetHeight": 2.43094
+  },
+  "saab_29_tunnan": {
+    "contact": {
+      "Fuselage": {
+        "Min": [
+          -1.875,
+          0.75,
+          -2.444672
+        ],
+        "Max": [
+          1.875,
+          2.55,
+          2.805328
+        ]
+      },
+      "LandingGear": {
+        "Min": [
+          -1.725,
+          0,
+          -2.234672
+        ],
+        "Max": [
+          1.725,
+          0.8,
+          2.595328
+        ]
+      },
+      "RetractableGear": true
+    },
+    "rotateOffsetHeight": 1.8709
+  },
+  "saab_32_lansen": {
+    "contact": {
+      "Fuselage": {
+        "Min": [
+          -2.4375,
+          1.1,
+          -3.454861
+        ],
+        "Max": [
+          2.4375,
+          3.25,
+          3.545139
+        ]
+      },
+      "LandingGear": {
+        "Min": [
+          -2.2425,
+          0,
+          -3.174861
+        ],
+        "Max": [
+          2.2425,
+          1.15,
+          3.265139
+        ]
+      },
+      "RetractableGear": true
+    },
+    "rotateOffsetHeight": 2.32465
+  },
+  "su_17": {
+    "contact": {
+      "Fuselage": {
+        "Min": [
+          -2.6875,
+          1.1,
+          -3.625497
+        ],
+        "Max": [
+          2.6875,
+          3.3,
+          4.124503
+        ]
+      },
+      "LandingGear": {
+        "Min": [
+          -2.4725,
+          0,
+          -3.315497
+        ],
+        "Max": [
+          2.4725,
+          1.15,
+          3.814503
+        ]
+      },
+      "RetractableGear": true
+    },
+    "rotateOffsetHeight": 2.56308
+  },
+  "mig_23mld": {
+    "contact": {
+      "Fuselage": {
+        "Min": [
+          -2.475,
+          1.15,
+          -3.750657
+        ],
+        "Max": [
+          2.475,
+          3,
+          3.749343
+        ]
+      },
+      "LandingGear": {
+        "Min": [
+          -2.277,
+          0,
+          -3.450657
+        ],
+        "Max": [
+          2.277,
+          1.2,
+          3.449343
+        ]
+      },
+      "RetractableGear": true
+    },
+    "rotateOffsetHeight": 2.55914
+  },
+  "saab_35_draken": {
+    "contact": {
+      "Fuselage": {
+        "Min": [
+          -2.15,
+          0.95,
+          -3.45625
+        ],
+        "Max": [
+          2.15,
+          2.7,
+          4.04375
+        ]
+      },
+      "LandingGear": {
+        "Min": [
+          -1.978,
+          0,
+          -3.15625
+        ],
+        "Max": [
+          1.978,
+          1,
+          3.74375
+        ]
+      },
+      "RetractableGear": true
+    },
+    "rotateOffsetHeight": 2.3274
+  },
+  "saab_37_viggen": {
+    "contact": {
+      "Fuselage": {
+        "Min": [
+          -3.375,
+          1.25,
+          -3.660124
+        ],
+        "Max": [
+          3.375,
+          3.35,
+          4.089876
+        ]
+      },
+      "LandingGear": {
+        "Min": [
+          -3.105,
+          0,
+          -3.350124
+        ],
+        "Max": [
+          3.105,
+          1.3,
+          3.779876
+        ]
+      },
+      "RetractableGear": true
+    },
+    "rotateOffsetHeight": 2.81488
+  },
+  "saab_jas_39_gripen": {
+    "contact": {
+      "Fuselage": {
+        "Min": [
+          -2.0625,
+          1.1,
+          -3.433333
+        ],
+        "Max": [
+          2.0625,
+          2.8,
+          3.316667
+        ]
+      },
+      "LandingGear": {
+        "Min": [
+          -1.8975,
+          0,
+          -3.163333
+        ],
+        "Max": [
+          1.8975,
+          1.15,
+          3.046667
+        ]
+      },
+      "RetractableGear": true
+    },
+    "rotateOffsetHeight": 2.31
+  },
+  "panavia_tornado_ids_marineflieger": {
+    "contact": {
+      "Fuselage": {
+        "Min": [
+          -2.233929,
+          1,
+          -3.689286
+        ],
+        "Max": [
+          2.233929,
+          3.1,
+          4.185714
+        ]
+      },
+      "LandingGear": {
+        "Min": [
+          -2.055215,
+          0,
+          -3.374286
+        ],
+        "Max": [
+          2.055215,
+          1.05,
+          3.870714
+        ]
+      },
+      "RetractableGear": true
+    },
+    "rotateOffsetHeight": 2.93344
+  },
+  "eurofighter_typhoon": {
+    "contact": {
+      "Fuselage": {
+        "Min": [
+          -3.1,
+          1.2,
+          -4.022624
+        ],
+        "Max": [
+          3.1,
+          3.4,
+          3.977376
+        ]
+      },
+      "LandingGear": {
+        "Min": [
+          -2.852,
+          0,
+          -3.702624
+        ],
+        "Max": [
+          2.852,
+          1.25,
+          3.657376
+        ]
+      },
+      "RetractableGear": true
+    },
+    "rotateOffsetHeight": 2.63569
+  },
+  "an_12b": {
+    "contact": {
+      "Fuselage": {
+        "Min": [
+          -3.375,
+          1.4,
+          -7.625
+        ],
+        "Max": [
+          3.375,
+          5.1,
+          7.625
+        ]
+      },
+      "LandingGear": {
+        "Min": [
+          -3.105,
+          0.08,
+          -7.015
+        ],
+        "Max": [
+          3.105,
+          1.45,
+          7.015
+        ]
+      },
+      "RetractableGear": true
+    },
+    "rotateOffsetHeight": 5.22007
+  },
+  "il_76m": {
+    "contact": {
+      "Fuselage": {
+        "Min": [
+          -4.6875,
+          1.2,
+          -10.625
+        ],
+        "Max": [
+          4.6875,
+          6.8,
+          10.875
+        ]
+      },
+      "LandingGear": {
+        "Min": [
+          -4.3125,
+          0.15,
+          -9.765
+        ],
+        "Max": [
+          4.3125,
+          1.25,
+          10.015
+        ]
+      },
+      "RetractableGear": true
+    },
+    "rotateOffsetHeight": 7.45084
+  },
+  "m_50a": {
+    "contact": {
+      "Fuselage": {
+        "Min": [
+          -2.5,
+          3.2,
+          -13.912892
+        ],
+        "Max": [
+          2.5,
+          6.3,
+          13.962108
+        ]
+      },
+      "LandingGear": {
+        "Min": [
+          -2.3,
+          0,
+          -12.797892
+        ],
+        "Max": [
+          2.3,
+          2.8,
+          12.847108
+        ]
+      },
+      "RetractableGear": true
+    },
+    "rotateOffsetHeight": 5.04461
+  },
+  "tu_22m": {
+    "contact": {
+      "Fuselage": {
+        "Min": [
+          -4.9375,
+          2.55,
+          -9.087704
+        ],
+        "Max": [
+          4.9375,
+          6.8,
+          9.787296
+        ]
+      },
+      "LandingGear": {
+        "Min": [
+          -4.5425,
+          0,
+          -8.332704
+        ],
+        "Max": [
+          4.5425,
+          2.6,
+          9.032296
+        ]
+      },
+      "RetractableGear": true
+    },
+    "rotateOffsetHeight": 6.02149
+  },
+  "tu_95ms": {
+    "contact": {
+      "Fuselage": {
+        "Min": [
+          -9.375,
+          2.85,
+          -11.52482
+        ],
+        "Max": [
+          9.375,
+          5.5,
+          11.97518
+        ]
+      },
+      "LandingGear": {
+        "Min": [
+          -8.625,
+          0,
+          -10.58482
+        ],
+        "Max": [
+          8.625,
+          1.4,
+          11.03518
+        ]
+      },
+      "RetractableGear": true
+    },
+    "rotateOffsetHeight": 6.33006
+  },
+  "mi_24a": {
+    "contact": {
+      "Fuselage": {
+        "Min": [
+          -3.375,
+          1.25,
+          -7.34375
+        ],
+        "Max": [
+          3.375,
+          5.5,
+          2.28125
+        ]
+      },
+      "LandingGear": {
+        "Min": [
+          -3.105,
+          0,
+          -6.95875
+        ],
+        "Max": [
+          3.105,
+          1.3,
+          1.89625
+        ]
+      },
+      "RetractableGear": false
+    },
+    "rotateOffsetHeight": 0
+  },
+  "mi_24d": {
+    "contact": {
+      "Fuselage": {
+        "Min": [
+          -3.375,
+          1.25,
+          -6.59375
+        ],
+        "Max": [
+          3.375,
+          5.5,
+          3.03125
+        ]
+      },
+      "LandingGear": {
+        "Min": [
+          -3.105,
+          0,
+          -6.20875
+        ],
+        "Max": [
+          3.105,
+          1.3,
+          2.64625
+        ]
+      },
+      "RetractableGear": false
+    },
+    "rotateOffsetHeight": 0
+  },
+  "mi_26": {
+    "contact": {
+      "Fuselage": {
+        "Min": [
+          -4.08375,
+          1.9,
+          -15.40625
+        ],
+        "Max": [
+          4.08375,
+          6.8,
+          2.46875
+        ]
+      },
+      "LandingGear": {
+        "Min": [
+          -3.75705,
+          0,
+          -14.69125
+        ],
+        "Max": [
+          3.75705,
+          1.95,
+          1.75375
+        ]
+      },
+      "RetractableGear": false
+    },
+    "rotateOffsetHeight": 0
+  },
+  "ah_1f": {
+    "contact": {
+      "Fuselage": {
+        "Min": [
+          -2,
+          1,
+          -5.8125
+        ],
+        "Max": [
+          2,
+          3.7,
+          2.5625
+        ]
+      },
+      "LandingGear": {
+        "Min": [
+          -1.84,
+          0,
+          -5.4775
+        ],
+        "Max": [
+          1.84,
+          1.05,
+          2.2275
+        ]
+      },
+      "RetractableGear": false
+    },
+    "rotateOffsetHeight": 0
+  }
+}

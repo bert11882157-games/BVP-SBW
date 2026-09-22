@@ -1,9 +1,8 @@
 {
   "ID": "berts_vehicle_pack:mi24v",
-  "MaxHealth": 100,
+  "MaxHealth": 150,
   "MaxEnergy": 10000000,
   "AllowFreeCam": true,
-  "LightlyArmored": true,
   "HasCCIP": true,
   "Fires": [
     "S-13",
@@ -225,12 +224,12 @@
       "AddShooterDeltaMovement": true,
       "DefaultZoom": 3,
       "RPM": 4500,
-      "ProjectileAmount": 2,
+      "ProjectileAmount": 1,
       "Magazine": 1470,
-      "EmptyReloadTime": 100,
+      "EmptyReloadTime": 400,
       "Velocity": 30,
       "Damage": 22,
-      "HeatPerShoot": 0.45,
+      "HeatPerShoot": 0,
       "NaturalCooldown": 1,
       "RecoilTime": 8,
       "RecoilForce": 0.16,
@@ -247,7 +246,7 @@
             },
             "ShellType": "HE",
             "Velocity": 43,
-            "ApDurability": 3.4894736842105263,
+            "ApDurability": 3,
             "Damage": 83.33333333333333,
             "ExplosionDamage": 0,
             "ExplosionRadius": 1.6666666666666665,
@@ -273,7 +272,7 @@
                   "Shots": 1,
                   "Round": "yakb_api_t",
                   "Ammo": "superbwarfare:small_shell_aa",
-                  "Tracer": "RED",
+                  "Tracer": "GREEN",
                   "DisplayLabel": "API-T"
                 },
                 {
@@ -307,7 +306,7 @@
             },
             "ShellType": "HE",
             "Velocity": 43,
-            "ApDurability": 3.4894736842105263,
+            "ApDurability": 3,
             "Damage": 83.33333333333333,
             "ExplosionDamage": 0,
             "ExplosionRadius": 1.6666666666666665,
@@ -326,7 +325,7 @@
                   "Shots": 1,
                   "Round": "yakb_api_t",
                   "Ammo": "superbwarfare:small_shell_aa",
-                  "Tracer": "RED",
+                  "Tracer": "GREEN",
                   "DisplayLabel": "API-T"
                 },
                 {
@@ -400,6 +399,16 @@
         "ProjectileProfile": "berts_vehicle_pack:mi24v/cannon/default",
         "ProjectileLife": 45
       },
+      "ShootShake": [
+        8,
+        10,
+        6
+      ],
+      "BeltFed": true,
+      "NormalReloadTime": 400,
+      "AutoReload": true,
+      "OverheatEnabled": false,
+      "AmmoCostPerShoot": 1,
       "ProjectileBeltAmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_gs",
@@ -443,11 +452,6 @@
             ]
           }
         }
-      ],
-      "ShootShake": [
-        8,
-        10,
-        6
       ]
     },
     "Rocket": {
@@ -766,10 +770,10 @@
       "ApDurability": 575,
       "CrosshairColor": "0xFFC700",
       "SoundInfo": {
-        "Fire1PGain": 0.5,
-        "Fire3PGain": 0.5,
-        "Fire3PFarGain": 0.5,
-        "Fire3PVeryFarGain": 0.5,
+        "Fire1PGain": 0.35,
+        "Fire3PGain": 0.35,
+        "Fire3PFarGain": 0.35,
+        "Fire3PVeryFarGain": 0.35,
         "Fire1P": "berts_vehicle_pack:atgm_tube_launch",
         "Fire3P": "berts_vehicle_pack:atgm_tube_launch",
         "VehicleReload3p": "superbwarfare:bomb_reload",
@@ -844,6 +848,17 @@
       "Projectile": {
         "Type": "berts_vehicle_pack:ataka_missile",
         "Profile": "berts_vehicle_pack:mi24v/passengermissile/default"
+      },
+      "SoundInfo": {
+        "Fire1PGain": 0.7,
+        "Fire3PGain": 0.7,
+        "Fire3PFarGain": 0.7,
+        "Fire3PVeryFarGain": 0.7
+      },
+      "NominalBallistics": {
+        "Supported": false,
+        "ProjectileType": "berts_vehicle_pack:ataka_missile",
+        "ProjectileProfile": "berts_vehicle_pack:mi24v/passengermissile/default"
       }
     },
     "PilotMissile": {
@@ -941,6 +956,17 @@
       "Projectile": {
         "Type": "berts_vehicle_pack:ataka_missile",
         "Profile": "berts_vehicle_pack:mi24v/pilotmissile/default"
+      },
+      "SoundInfo": {
+        "Fire1PGain": 0.7,
+        "Fire3PGain": 0.7,
+        "Fire3PFarGain": 0.7,
+        "Fire3PVeryFarGain": 0.7
+      },
+      "NominalBallistics": {
+        "Supported": false,
+        "ProjectileType": "berts_vehicle_pack:ataka_missile",
+        "ProjectileProfile": "berts_vehicle_pack:mi24v/pilotmissile/default"
       }
     }
   },
@@ -1554,5 +1580,32 @@
       "Primary": "Cannon",
       "Secondary": "PassengerMissile"
     }
-  ]
+  ],
+  "AircraftTerrainContact": {
+    "Fuselage": {
+      "Min": [
+        -3.161017,
+        1,
+        -6.958703
+      ],
+      "Max": [
+        3.088983,
+        4.4,
+        1.916297
+      ]
+    },
+    "LandingGear": {
+      "Min": [
+        -2.911017,
+        -0.18,
+        -6.603703
+      ],
+      "Max": [
+        2.838983,
+        1.05,
+        1.561297
+      ]
+    },
+    "RetractableGear": false
+  }
 }

@@ -1,16 +1,19 @@
 package com.atsuishio.superbwarfare.api.projectile
 
 import com.atsuishio.superbwarfare.data.projectile.GuidedPropulsionData
+import net.minecraft.nbt.CompoundTag
+import net.minecraft.nbt.Tag
 
-/** The two server-authoritative propulsion phases exposed to presentation providers. */
+/** Stable server-authoritative propulsion phase codes exposed to presentation providers. */
 enum class GuidedPropulsionPhase(val code: Byte) {
     THRUST(0),
-    FUEL_OUT(1);
+    FUEL_OUT(1),
+    EJECTION(2);
 
     companion object {
         @JvmStatic
         fun fromCode(code: Byte): GuidedPropulsionPhase =
-            if (code.toInt() == THRUST.code.toInt()) THRUST else FUEL_OUT
+            entries.firstOrNull { it.code == code } ?: FUEL_OUT
     }
 }
 
@@ -20,13 +23,16 @@ enum class GuidedPropulsionPhase(val code: Byte) {
  * motion is intentionally not part of this value: the launch seam carries it separately and
  * adds it exactly once to the relative propulsion vector.
  */
-data class GuidedPropulsionProfile(
+data class GuidedPropulsionProfile @JvmOverloads constructor(
     val initialSpeed: Double,
     val maxSpeed: Double,
     val accelerationPerTick: Double,
     val thrustDurationTicks: Int,
     val maxTurnRateDegreesPerSecond: Double,
     val guidanceLookAheadTicks: Int,
+    val ignitionDelayTicks: Int = 6,
+    val ejectionSpeed: Double = 0.5,
+    val ejectionGravityPerTick: Double = 0.0125,
 ) {
     fun isValid(): Boolean =
         initialSpeed.isFinite() && initialSpeed > 0.0 && initialSpeed <= MAX_SPEED_BLOCKS_PER_TICK &&
@@ -36,7 +42,32 @@ data class GuidedPropulsionProfile(
             thrustDurationTicks in 1..MAX_THRUST_DURATION_TICKS &&
             maxTurnRateDegreesPerSecond.isFinite() && maxTurnRateDegreesPerSecond > 0.0 &&
             maxTurnRateDegreesPerSecond <= MAX_TURN_RATE_DEGREES_PER_SECOND &&
-            guidanceLookAheadTicks in 1..MAX_GUIDANCE_LOOK_AHEAD_TICKS
+            guidanceLookAheadTicks in 1..MAX_GUIDANCE_LOOK_AHEAD_TICKS &&
+            ignitionDelayTicks in 1..60 &&
+            ejectionSpeed.isFinite() && ejectionSpeed > 0.0 && ejectionSpeed <= MAX_SPEED_BLOCKS_PER_TICK &&
+            ejectionGravityPerTick.isFinite() && ejectionGravityPerTick > 0.0 && ejectionGravityPerTick <= 0.1
+
+    fun launchSpeed(): Double = minOf(ejectionSpeed, maxSpeed)
+
+    /** A derived burn reaches the authored maximum after the authored number of motor updates. */
+    fun speedAfterIgnition(ignitionSpeed: Double, elapsedThrustTicks: Int): Double {
+        require(ignitionSpeed.isFinite() && ignitionSpeed > 0.0)
+        if (elapsedThrustTicks >= thrustDurationTicks) return maxSpeed
+        return ignitionSpeed + (maxSpeed - ignitionSpeed) *
+            elapsedThrustTicks.coerceAtLeast(0).toDouble() / thrustDurationTicks
+    }
+
+    fun toTag(): CompoundTag = CompoundTag().apply {
+        putDouble("InitialSpeed", initialSpeed)
+        putDouble("MaxSpeed", maxSpeed)
+        putDouble("AccelerationPerTick", accelerationPerTick)
+        putInt("ThrustDurationTicks", thrustDurationTicks)
+        putDouble("MaxTurnRateDegreesPerSecond", maxTurnRateDegreesPerSecond)
+        putInt("GuidanceLookAheadTicks", guidanceLookAheadTicks)
+        putInt("IgnitionDelayTicks", ignitionDelayTicks)
+        putDouble("EjectionSpeed", ejectionSpeed)
+        putDouble("EjectionGravityPerTick", ejectionGravityPerTick)
+    }
 
     /** Speed after [elapsedThrustTicks] completed acceleration steps, capped only relatively. */
     fun speedAfter(elapsedThrustTicks: Int): Double {
@@ -54,7 +85,8 @@ data class GuidedPropulsionProfile(
 
         /** Explicit gameplay default for native wire-guided launchers without a datapack profile. */
         @JvmField
-        val DEFAULT = GuidedPropulsionProfile(1.0, 4.0, 0.1, 30, 24.0, 12)
+        val DEFAULT = GuidedPropulsionProfile(2.0, 6.0, 4.0 / 20.0, 20, 24.0, 12,
+            ejectionSpeed = 2.0)
 
         @JvmStatic
         fun from(data: GuidedPropulsionData): GuidedPropulsionProfile? {
@@ -64,8 +96,32 @@ data class GuidedPropulsionProfile(
             val duration = data.thrustDurationTicks ?: return null
             val turnRate = data.maxTurnRateDegreesPerSecond ?: return null
             val lookAhead = data.guidanceLookAheadTicks ?: return null
-            val profile = GuidedPropulsionProfile(initial, maximum, acceleration, duration, turnRate, lookAhead)
+            val legacy = data.ignitionDelayTicks == null && data.ejectionSpeed == null &&
+                data.ejectionGravityPerTick == null
+            val profile = if (legacy) {
+                GuidedPropulsionProfile(initial, maximum, acceleration, duration, turnRate, lookAhead)
+            } else {
+                GuidedPropulsionProfile(initial, maximum, acceleration, duration, turnRate, lookAhead,
+                    data.ignitionDelayTicks ?: return null, data.ejectionSpeed ?: return null,
+                    data.ejectionGravityPerTick ?: return null)
+            }
             return profile.takeIf { it.isValid() }
+        }
+
+        @JvmStatic
+        fun fromTag(tag: CompoundTag): GuidedPropulsionProfile? {
+            fun double(key: String): Double? = if (tag.contains(key, Tag.TAG_DOUBLE.toInt()))
+                tag.getDouble(key) else null
+            fun integer(key: String): Int? = if (tag.contains(key, Tag.TAG_INT.toInt()))
+                tag.getInt(key) else null
+            val ejectionFields = listOf("IgnitionDelayTicks", "EjectionSpeed", "EjectionGravityPerTick")
+            if (ejectionFields.any(tag::contains) &&
+                (integer(ejectionFields[0]) == null || double(ejectionFields[1]) == null ||
+                    double(ejectionFields[2]) == null)) return null
+            return from(GuidedPropulsionData(double("InitialSpeed"), double("MaxSpeed"),
+                double("AccelerationPerTick"), integer("ThrustDurationTicks"),
+                double("MaxTurnRateDegreesPerSecond"), integer("GuidanceLookAheadTicks"),
+                integer("IgnitionDelayTicks"), double("EjectionSpeed"), double("EjectionGravityPerTick")))
         }
 
         @JvmStatic

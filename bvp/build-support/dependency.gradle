@@ -1,0 +1,26 @@
+import groovy.json.JsonSlurper
+
+plugins { id 'java' }
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+def root = file(providers.gradleProperty('dependencySourceRoot').get())
+def metadata = new Properties()
+new File(root, 'gradle.properties').withInputStream { metadata.load(it) }
+version = metadata.getProperty('mod_version')
+base.archivesName = 'sbwmeshloader'
+def bridge = new JsonSlurper().parse(file(providers.gradleProperty('sbwBuildInputs').get()))
+sourceSets.main {
+    java.setSrcDirs([new File(root, 'src/main/java')])
+    resources.setSrcDirs([new File(root, 'src/main/resources')])
+    compileClasspath = files((bridge.classpath + [bridge.mappedApi]).collect { it.path })
+}
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.release = 17
+    options.compilerArgs += ['-proc:none']
+}
+tasks.withType(ProcessResources).configureEach { exclude('META-INF/MANIFEST.MF') }
+tasks.withType(Jar).configureEach {
+    archiveClassifier = 'mapped'
+    preserveFileTimestamps = false
+    reproducibleFileOrder = true
+}

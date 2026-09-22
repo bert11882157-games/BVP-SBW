@@ -1,8 +1,8 @@
 {
   "id": "btr_60pb",
   "model_scale": 0.7768568491759228,
-  "ap_penetration_mm": 500,
-  "chemical_penetration_mm": 700,
+  "ap_penetration_mm": 0,
+  "chemical_penetration_mm": 0,
   "fallback_incoming_penetration_mm": 500,
   "atgm_tandem": false,
   "impact_tolerance": 0.25,
@@ -8051,8 +8051,88 @@
     }
   ],
   "sensitive_internals": [],
-  "engines": [],
-  "ammo_racks": [],
+  "engines": [
+    {
+      "name": "engine_core_left_00",
+      "center": [
+        0.5,
+        1.1875,
+        2.15625
+      ],
+      "half_size": [
+        0.3125,
+        0.375,
+        0.46875
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull"
+    },
+    {
+      "name": "engine_core_right_01",
+      "center": [
+        -0.5,
+        1.1875,
+        2.15625
+      ],
+      "half_size": [
+        0.3125,
+        0.375,
+        0.46875
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull"
+    }
+  ],
+  "ammo_racks": [
+    {
+      "name": "kpvt_ready_00",
+      "center": [
+        -0.23438,
+        2.07813,
+        -1.1875
+      ],
+      "half_size": [
+        0.10938,
+        0.10938,
+        0.125
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "barrel",
+      "health": 10
+    },
+    {
+      "name": "pkt_ready_01",
+      "center": [
+        -0.4375,
+        2.0625,
+        -1.0625
+      ],
+      "half_size": [
+        0.0625,
+        0.0625,
+        0.125
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "barrel",
+      "health": 10
+    }
+  ],
   "tracks": [],
   "modules": [],
   "explosive_reactive_armor": [],

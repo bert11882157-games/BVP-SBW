@@ -141,6 +141,7 @@
   ],
   "Weapons": {
     "Cannon": {
+      "VehicleDirectDamageScale": 0.5,
       "DefaultFireMode": "Auto",
       "AvailableFireModes": "Auto",
       "DefaultZoom": 3,
@@ -159,7 +160,7 @@
       "Crosshair": "@VehicleUsApc",
       "CrosshairColor": "0x66FF00",
       "Name": "weapon.superbwarfare.25mm_cannon_ap",
-      "Projectile": "superbwarfare:small_cannon_shell",
+      "Projectile": { "Type": "superbwarfare:small_cannon_shell", "CaliberMm": 25 },
       "SoundInfo": {
         "Fire1P": "superbwarfare:bradley_cannon_fire_1p",
         "Fire3P": "superbwarfare:bradley_cannon_fire_3p",
@@ -216,7 +217,7 @@
       "NaturalCooldown": 1,
       "CrosshairColor": "0x66FF00",
       "AmmoType": "@RifleAmmo",
-      "Projectile": "superbwarfare:projectile",
+      "Projectile": { "Type": "superbwarfare:projectile", "CaliberMm": 7.62 },
       "RPM": 600,
       "Damage": 9.5,
       "BypassesArmor": 0.3,

@@ -21,32 +21,6 @@
       ]
     },
     {
-      "Part": "WheelLeft",
-      "Size": [
-        0.25061,
-        0.50904,
-        2.78015
-      ],
-      "Position": [
-        1.68375,
-        0.56386,
-        -0.19579
-      ]
-    },
-    {
-      "Part": "WheelRight",
-      "Size": [
-        0.25061,
-        0.50904,
-        2.78015
-      ],
-      "Position": [
-        -1.68375,
-        0.56386,
-        -0.19579
-      ]
-    },
-    {
       "Part": "MainEngine",
       "Size": [
         0.90061,
@@ -268,7 +242,7 @@
       "DefaultFireMode": "Auto",
       "AvailableFireModes": "Auto",
       "DefaultZoom": 3,
-      "RPM": 250,
+      "RPM": 1000,
       "Velocity": 18,
       "Damage": 65,
       "ExplosionDamage": 8,
@@ -320,24 +294,30 @@
               "Family": "RH202",
               "Rounds": [
                 {
-                  "Shots": 1,
+                  "Shots": 3,
                   "Round": "dm63_apds",
                   "Ammo": "superbwarfare:small_shell_ap",
-                  "Tracer": "NONE"
+                  "Tracer": "RED"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "dm51a1_hefi_t_1",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "RED"
                 }
               ]
-            },
-            "NominalBallistics": {
-              "Supported": true,
-              "ProjectileType": "superbwarfare:small_cannon_shell",
-              "ProjectileProfile": "berts_vehicle_pack:marder_1a2/cannon/ammo_00_dm63_apds",
-              "ProjectileLife": 40
             },
             "ShootShake": [
               8,
               10,
               12
-            ]
+            ],
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:marder_1a2/cannon/ammo_00_dm63_apds",
+              "ProjectileLife": 40
+            }
           }
         },
         {
@@ -372,17 +352,17 @@
                 }
               ]
             },
+            "ShootShake": [
+              8,
+              10,
+              12
+            ],
             "NominalBallistics": {
               "Supported": true,
               "ProjectileType": "superbwarfare:small_cannon_shell",
               "ProjectileProfile": "berts_vehicle_pack:marder_1a2/cannon/ammo_01_dm51a1_hefi_t_1",
               "ProjectileLife": 40
-            },
-            "ShootShake": [
-              8,
-              10,
-              12
-            ]
+            }
           }
         }
       ],
@@ -422,6 +402,17 @@
           "main_muzzle"
         ]
       },
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "superbwarfare:small_cannon_shell",
+        "ProjectileProfile": "berts_vehicle_pack:marder_1a2/cannon/default",
+        "ProjectileLife": 40
+      },
+      "ShootShake": [
+        8,
+        10,
+        12
+      ],
       "ProjectileBeltAmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_aa",
@@ -444,17 +435,6 @@
             ]
           }
         }
-      ],
-      "NominalBallistics": {
-        "Supported": true,
-        "ProjectileType": "superbwarfare:small_cannon_shell",
-        "ProjectileProfile": "berts_vehicle_pack:marder_1a2/cannon/default",
-        "ProjectileLife": 40
-      },
-      "ShootShake": [
-        8,
-        10,
-        12
       ]
     },
     "Missile": {
@@ -486,10 +466,10 @@
       "Name": "weapon.berts_vehicle_pack.20_mm_rh202_bgm_71a_tow",
       "AmmoType": "superbwarfare:medium_anti_ground_missile",
       "SoundInfo": {
-        "Fire1PGain": 0.5,
-        "Fire3PGain": 0.5,
-        "Fire3PFarGain": 0.5,
-        "Fire3PVeryFarGain": 0.5,
+        "Fire1PGain": 0.7,
+        "Fire3PGain": 0.7,
+        "Fire3PFarGain": 0.7,
+        "Fire3PVeryFarGain": 0.7,
         "Fire1P": "berts_vehicle_pack:atgm_gun_launch",
         "Fire3P": "berts_vehicle_pack:atgm_gun_launch",
         "VehicleReload3p": "superbwarfare:medium_missile_reload",
@@ -531,6 +511,11 @@
           "tow_muzzle_01"
         ]
       },
+      "NominalBallistics": {
+        "Supported": false,
+        "ProjectileType": "superbwarfare:wire_guide_missile",
+        "ProjectileProfile": "berts_vehicle_pack:marder_1a2/missile/default"
+      },
       "ShootShake": [
         8,
         10,
@@ -549,11 +534,11 @@
     "WheelDifferential": 0.75,
     "TrackRotSpeed": 1.7,
     "TrackDifferential": 0.6,
-    "MaxForwardSpeedRate": 1.5,
-    "MaxBackwardSpeedRate": 0.5,
-    "Increment": 0.012,
-    "Decrement": 0.01,
-    "SteeringSpeed": 0.3,
+    "MaxForwardSpeedRate": 0.8999999999999999,
+    "MaxBackwardSpeedRate": 0.8999999999999999,
+    "Increment": 0.00780952380952381,
+    "Decrement": 0.010846560846560847,
+    "SteeringSpeed": 0.065,
     "EngineSoundVolume": 0.85
   },
   "TurretPos": [

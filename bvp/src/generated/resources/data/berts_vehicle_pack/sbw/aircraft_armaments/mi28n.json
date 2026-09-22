@@ -1,0 +1,17 @@
+{
+  "Schema": 1,
+  "Name": "Mi-28N Havoc",
+  "BuiltInWeapons": [
+    "Cannon"
+  ],
+  "SuspendedWeapons": [
+    "S8KORocket",
+    "PassengerMissile"
+  ],
+  "Pairs": [],
+  "StoreGroups": {
+    "berts_vehicle_pack:modeled_store/mi28n/suspended_equipment": [
+      "suspended_legacy_hull"
+    ]
+  }
+}

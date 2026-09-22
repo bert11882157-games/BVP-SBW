@@ -1,5 +1,7 @@
 package com.yourname.berts_vehicle_pack.client.renderer;
 
+import com.atsuishio.superbwarfare.api.diagnostics.DebugFeaturePolicy;
+
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexFormat;
@@ -30,21 +32,21 @@ public final class BvpMuzzleDebugRenderer {
     }
 
     public static boolean isEnabled() {
-        return enabled;
+        return enabled && DebugFeaturePolicy.allowsDebugTools();
     }
 
     public static boolean toggle() {
-        enabled = !enabled;
-        return enabled;
+        setEnabled(!enabled);
+        return isEnabled();
     }
 
     public static void setEnabled(boolean enabled) {
-        BvpMuzzleDebugRenderer.enabled = enabled;
+        BvpMuzzleDebugRenderer.enabled = enabled && DebugFeaturePolicy.allowsDebugTools();
     }
 
     public static void render(ArmoredVehicleEntity entity, float partialTicks,
                               PoseStack poseStack, MultiBufferSource bufferSource) {
-        if (!enabled) {
+        if (!isEnabled()) {
             return;
         }
 
@@ -85,7 +87,7 @@ public final class BvpMuzzleDebugRenderer {
     }
 
     public static void renderHud(RenderGuiEvent.Post event) {
-        if (!enabled) {
+        if (!isEnabled()) {
             return;
         }
 

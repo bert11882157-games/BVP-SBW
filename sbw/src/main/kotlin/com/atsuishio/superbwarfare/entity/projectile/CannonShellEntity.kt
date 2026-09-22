@@ -39,6 +39,11 @@ open class CannonShellEntity(type: EntityType<out CannonShellEntity>, level: Lev
     }
 
     private var type: Type? = Type.AP
+    override fun farProjectileLookAheadTicks(): Int = when (type) {
+        Type.CM, Type.WP -> 8
+        Type.AP -> 1 // Native AP also queries one velocity segment beyond the struck entity.
+        else -> 0
+    }
     private var spreadAmount = 50
     private var spreadAngle = 15
 

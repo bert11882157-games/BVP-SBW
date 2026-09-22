@@ -123,7 +123,7 @@ object LivingEventHandler {
                 if (!source.`is`(ModDamageTypes.VEHICLE_EXPLOSION) && !source.`is`(ModDamageTypes.AIR_CRASH)) {
                     event.isCanceled = true
                 }
-            } else {
+            } else if (!vehicle.exposesPassengerToFire(entity)) {
                 if (!source.`is`(ModTags.DamageTypes.VEHICLE_NOT_ABSORB)) {
                     vehicle.hurt(source, 0.7f * event.amount)
                 }
@@ -729,6 +729,10 @@ object LivingEventHandler {
         val iterator = event.affectedEntities.iterator()
         while (iterator.hasNext()) {
             val entity = iterator.next() as? VehicleEntity ?: continue
+
+            // A typed ground blast owns damage in CustomExplosion after all Forge listeners run.
+            // Do not consume its targets or apply the legacy armor-scaled hit here.
+            if (explosion.ownsGroundVehicleBlast(entity)) continue
 
             iterator.remove()
             val explosionPos = explosion.position

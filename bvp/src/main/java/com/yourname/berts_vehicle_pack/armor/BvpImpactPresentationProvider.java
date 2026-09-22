@@ -20,33 +20,21 @@ import net.minecraft.world.phys.Vec3;
 import java.util.Locale;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Random;
-import java.util.UUID;
 import java.util.WeakHashMap;
 
 /**
  * BVP's accepted-impact presentation boundary. The resolver has already committed the parent
- * gameplay result before this provider runs. The parent is never mutated; the only gameplay-like
- * work here is a bounded, marked child bullet fan whose own normal SBW damage is explicit and
- * cannot recurse into another impact fan.
+ * gameplay result before this provider runs. Client fragment recipes are dispatched separately.
+ * This callback owns only
+ * particles, lights, audio, and replacement-visual admission; it never inserts a projectile.
  */
 public final class BvpImpactPresentationProvider {
     private static final ResourceLocation PROVIDER_ID =
             new ResourceLocation(BertsVehiclePack.MODID, "impact_presentation");
-    private static final double BASE_CALIBER_MM = 125.0D;
-    // The existing 125 mm presentation is the preserved baseline after the previous
-    // one-third rebalance.  Every other caliber is derived from this one typed baseline.
-    private static final float BASE_SHRAPNEL_SCALE = 2.5F / 3.0F;
-    private static final int BASE_SHRAPNEL_MIN_COUNT = 4;
-    private static final int BASE_SHRAPNEL_MAX_COUNT = 6;
-    private static final double BELOW_STEP_FACTOR = 0.935D;
-    private static final double ABOVE_STEP_FACTOR = 1.065D;
-    private static final double MIN_BASELINE_FACTOR = 0.15D;
-    private static final float SMALL_CALIBER_SCALE = BASE_SHRAPNEL_SCALE * 0.15F;
     private static final float KPVT_HE_BASELINE_SCALE = 0.5F;
     private static final String TAP_RICOCHET_SOUND = "berts_vehicle_pack:ricochet_nonpenetration";
     private static final int MAX_IMPACT_KEYS = 256;
-    private static final double SAME_IMPACT_DISTANCE_SQR = 0.0625D;
+    private static final double SAME_IMPACT_DISTANCE_BLOCKS = 0.0625D;
     private static final Map<Projectile, ImpactKey> EMITTED_IMPACTS = new WeakHashMap<>();
 
     private BvpImpactPresentationProvider() {
@@ -93,7 +81,7 @@ public final class BvpImpactPresentationProvider {
         ResolvedProjectileProfile profile = ProjectileProfiles.resolve(projectile);
         BvpProjectileEffectDefinition.Impact impactOnly =
                 BvpProjectileEffectDefinition.impactOnly(profile);
-        if (definition == null && impactOnly == null) {
+        if (definition == null && impactOnly == null && !BvpMaterialImpactSounds.acceptsCombatProfile(profile)) {
             return false;
         }
         ProjectileArmorEffect.ImpactVisual visual = resolveImpactVisual(context);
@@ -103,18 +91,24 @@ public final class BvpImpactPresentationProvider {
         if (visual == null || visual == ProjectileArmorEffect.ImpactVisual.NONE) {
             return false;
         }
-        long seed = impactSeed(context);
-        ImpactStreakSpec streak = nonPenetration ? shrapnelSpec(projectile, visual, seed) : null;
         boolean explosion = emitsExplosion(visual);
+        // SBW may retain a detonated missile for three ticks to finish block destruction.
+        // Further block contacts are not additional explosions; preserve that gameplay latch
+        // for replacement FX as well instead of flashing again at every contact.
+        if (explosion && projectile instanceof com.atsuishio.superbwarfare.entity.projectile.FastThrowableProjectile shell
+                && shell.getExploded()) {
+            return true;
+        }
         boolean solidImpactBurst = penetration && emitsSolidImpactBurst(visual);
-        // Even a <=12.7 mm non-penetration has an authoritative TaP ricochet sound.  It may
-        // have no shrapnel by policy, but it still belongs to this once-only accepted event.
-        if (streak == null && !explosion && !nonPenetration && !solidImpactBurst) {
+        // Small-caliber impacts still own material audio even when their policy emits no fragments.
+        if (!explosion && !nonPenetration && !solidImpactBurst) {
             return false;
         }
         if (!claimImpact(projectile, context.getKind(), context.getHitVec())) {
             return true;
         }
+
+        BvpMaterialImpactSounds.play(context);
 
         if (EliteDiagnostics.isEnabled(projectile.m_9236_())) {
             EliteDiagnostics.record(projectile, "impact", "bvp_presentation",
@@ -122,27 +116,18 @@ public final class BvpImpactPresentationProvider {
                     "owner", context.getOwner() == null ? null : context.getOwner().m_20148_(),
                     "kind", context.getKind(), "outcome", result.getPresentationOutcome(),
                     "position", context.getHitVec(), "visual", visual,
-                    "shrapnel_requested", streak == null ? 0 : streak.count(),
-                    "shrapnel_scale", streak == null ? 0 : streak.scale(),
                     "explosion", explosion, "solid_impact_burst", solidImpactBurst,
-                    "nonpenetration_sound", nonPenetration ? TAP_RICOCHET_SOUND : null);
+                    "nonpenetration_sound", ricochet ? TAP_RICOCHET_SOUND : null);
         }
 
-        if (nonPenetration) {
-            // BVP owns the copied TaP non-penetration/ricochet event.
+        if (ricochet) {
+            // A true bounce may add its distinct ring to the surface impact.
             ArmorSoundService.play(projectile.m_9236_(), context.getHitVec(), TAP_RICOCHET_SOUND,
-                    1.0F, 1.0F);
-            if (streak != null) {
-                BvpLeanImpactEffects.spawnImpactShrapnel(
-                        projectile.m_9236_(),
-                        projectile,
-                        context.getHitVec(),
-                        projectile.m_20184_(),
-                        impactNormal(context, projectile.m_20184_()),
-                        streak.count(),
-                        streak.scale(),
-                        streak.seed());
-            }
+                    0.45F, 1.0F);
+        }
+        if (nonPenetration && !explosion) {
+            BvpLeanImpactEffects.spawnImpactSmoke(projectile.m_9236_(), context.getHitVec(),
+                    BvpImpactFragmentCommitter.impactNormal(context, context.getIncomingVelocity()));
         }
 
         if (solidImpactBurst) {
@@ -194,8 +179,7 @@ public final class BvpImpactPresentationProvider {
     private static ProjectileArmorEffect.ImpactVisual resolveImpactVisual(ProjectileImpactContext context) {
         Projectile projectile = context.getProjectile();
         ResolvedProjectileProfile profile = ProjectileProfiles.resolve(projectile);
-        if (BvpProjectileEffectDefinition.from(profile) == null
-                && BvpProjectileEffectDefinition.impactOnly(profile) == null) {
+        if (!BvpMaterialImpactSounds.acceptsCombatProfile(profile)) {
             return null;
         }
 
@@ -256,156 +240,10 @@ public final class BvpImpactPresentationProvider {
         }
     }
 
-    private static ImpactStreakSpec shrapnelSpec(Projectile projectile,
-                                                 ProjectileArmorEffect.ImpactVisual visual,
-                                                 long seed) {
-        if (ProjectileProfiles.isKpvtProjectile(projectile)) {
-            // KPVT kinetic components are explicitly spark-free.  Only typed IAI emits the
-            // half-sized/half-quantity explosive shrapnel fan.
-            if (!isKpvtIai(projectile)) {
-                return null;
-            }
-            ImpactStreakSpec thirtyMillimetre = genericCaliberSpec(30.0D, seed);
-            return new ImpactStreakSpec(
-                    Math.max(1, (int) Math.ceil(thirtyMillimetre.count() * KPVT_HE_BASELINE_SCALE)),
-                    thirtyMillimetre.scale() * KPVT_HE_BASELINE_SCALE,
-                    seed);
-        }
-        double caliber = caliberMm(projectile, visual);
-        int rocketCount = typedRocketCount(projectile);
-        if (rocketCount > 0) {
-            // Typed rocket effect classes replace only the generic caliber count. Their
-            // presentation scale, lifetime, speed, damage, and trajectory remain unchanged.
-            return new ImpactStreakSpec(rocketCount, shrapnelScale(caliber), seed);
-        }
-        if (!Double.isFinite(caliber) || caliber <= 12.7D) {
-            return null;
-        }
-        if (caliber <= 23.0D) {
-            long choice = mixImpactSeed(seed);
-            // Low two bits provide an unbiased quarter gate; the next bit chooses 1 or 2.
-            if ((choice & 3L) != 0L) {
-                return null;
-            }
-            int count = 1 + (int) ((choice >>> 2) & 1L);
-            return new ImpactStreakSpec(count, SMALL_CALIBER_SCALE, seed);
-        }
-        return genericCaliberSpec(caliber, seed);
-    }
-
-    private static ImpactStreakSpec genericCaliberSpec(double caliber, long seed) {
-        double factor = caliberFactor(caliber);
-        Random random = new Random(seed);
-        int baselineCount = BASE_SHRAPNEL_MIN_COUNT
-                + random.nextInt(BASE_SHRAPNEL_MAX_COUNT - BASE_SHRAPNEL_MIN_COUNT + 1);
-        int count = Math.max(1, (int) Math.ceil(baselineCount * factor));
-        return new ImpactStreakSpec(count, shrapnelScale(caliber), seed);
-    }
-
     private static boolean isKpvtIai(Projectile projectile) {
         var descriptor = ProjectileProfiles.combatDescriptor(projectile);
         return descriptor != null && ProjectileProfiles.isKpvtRoundId(descriptor.getRoundId())
                 && descriptor.getRoundId().m_135815_().equalsIgnoreCase("kpvt_iai");
-    }
-
-    private static int typedRocketCount(Projectile projectile) {
-        BvpProjectileEffectDefinition definition = BvpProjectileEffectDefinition.forEntity(projectile);
-        if (definition == null) {
-            return 0;
-        }
-        var descriptor = ProjectileProfiles.combatDescriptor(projectile);
-        String munition = descriptor == null || descriptor.getMunitionType() == null
-                ? "" : descriptor.getMunitionType().toString().toLowerCase(Locale.ROOT);
-        if (munition.endsWith(":atgm") || munition.equals("atgm")) return 24;
-        if (munition.endsWith(":rocket") || munition.equals("rocket")) {
-            double caliber = descriptor.getCaliberMm() == null ? 0.0D : descriptor.getCaliberMm();
-            return Double.isFinite(caliber) && caliber > 80.0D ? 18 : 12;
-        }
-        return 0;
-    }
-
-    private static float shrapnelScale(double caliber) {
-        if (!Double.isFinite(caliber)) {
-            return BASE_SHRAPNEL_SCALE * (float) MIN_BASELINE_FACTOR;
-        }
-        return (float) Math.max(
-                BASE_SHRAPNEL_SCALE * MIN_BASELINE_FACTOR,
-                BASE_SHRAPNEL_SCALE * caliberFactor(caliber));
-    }
-
-    private static double caliberFactor(double caliber) {
-        double steps = (caliber - BASE_CALIBER_MM) / 10.0D;
-        double raw = steps < 0.0D
-                ? Math.pow(BELOW_STEP_FACTOR, -steps)
-                : Math.pow(ABOVE_STEP_FACTOR, steps);
-        return Math.max(MIN_BASELINE_FACTOR, raw);
-    }
-
-    private static long mixImpactSeed(long seed) {
-        long value = seed ^ (seed >>> 30);
-        value *= 0xBF58476D1CE4E5B9L;
-        value ^= value >>> 27;
-        value *= 0x94D049BB133111EBL;
-        return value ^ (value >>> 31);
-    }
-
-    private static double caliberMm(Projectile projectile, ProjectileArmorEffect.ImpactVisual visual) {
-        var descriptor = ProjectileProfiles.combatDescriptor(projectile);
-        if (descriptor != null && descriptor.getCaliberMm() != null
-                && Double.isFinite(descriptor.getCaliberMm()) && descriptor.getCaliberMm() > 0.0D) {
-            return descriptor.getCaliberMm();
-        }
-        return switch (visual) {
-            case BULLET -> 7.62D;
-            case HMG -> 12.7D;
-            case AUTOCANNON_AP, AUTOCANNON_HE -> 30.0D;
-            case APFSDS, HEAT_FS, HE, ATGM -> 100.0D;
-            case NONE -> 0.0D;
-        };
-    }
-
-    private static Vec3 impactNormal(ProjectileImpactContext context, Vec3 incomingDirection) {
-        if (context.getBlockFace() != null) {
-            var normal = context.getBlockFace().m_122436_();
-            return new Vec3(normal.m_123341_(), normal.m_123342_(), normal.m_123343_());
-        }
-        BvpImpactVolumeQuery volumes = context.getVehicleImpactVolumes()
-                .get(ArmorImpactHandler.VOLUME_PROVIDER_ID, BvpImpactVolumeQuery.class);
-        if (volumes != null) {
-            ArmorProfiles.ArmorHit armorHit = volumes.armorHit(volumes.initialTrace());
-            if (armorHit != null && armorHit.plate != null && armorHit.localImpact != null) {
-                ArmorProfiles.Vec localNormal = armorHit.plate.normalAt(armorHit.localImpact);
-                if (armorHit.plate.isBarrelFrame() && volumes.target().barrelFrame() != null) {
-                    localNormal = volumes.target().barrelFrame().toHullDirection(localNormal);
-                } else if (armorHit.plate.isTurretFrame()) {
-                    localNormal = localNormal.rotateY(volumes.target().turretFrameYaw());
-                }
-                Vec3 origin = volumes.target().armorLocalPointToWorld(ArmorProfiles.Vec.ZERO);
-                Vec3 tip = volumes.target().armorLocalPointToWorld(localNormal);
-                Vec3 worldNormal = tip.m_82546_(origin);
-                if (finite(worldNormal) && worldNormal.m_82556_() > 1.0E-6D) {
-                    return worldNormal.m_82541_();
-                }
-            }
-        }
-        // Unboxed/entity fallback has no authored plate normal; use the accepted incoming
-        // direction as the deterministic outward normal rather than inventing a surface.
-        return finite(incomingDirection) && incomingDirection.m_82556_() > 1.0E-6D
-                ? incomingDirection.m_82490_(-1.0D).m_82541_()
-                : new Vec3(0.0D, 1.0D, 0.0D);
-    }
-
-    private static long impactSeed(ProjectileImpactContext context) {
-        UUID uuid = context.getProjectile().m_20148_();
-        Vec3 hit = context.getHitVec();
-        long seed = uuid.getMostSignificantBits() ^ Long.rotateLeft(uuid.getLeastSignificantBits(), 17);
-        seed ^= Double.doubleToLongBits(hit.f_82479_);
-        seed = Long.rotateLeft(seed, 21) ^ Double.doubleToLongBits(hit.f_82480_);
-        seed = Long.rotateLeft(seed, 21) ^ Double.doubleToLongBits(hit.f_82481_);
-        seed ^= context.getBlockFace() == null
-                ? 0L
-                : context.getBlockFace().ordinal() * 0x9E3779B97F4A7C15L;
-        return seed;
     }
 
     private static boolean finite(Vec3 value) {
@@ -440,7 +278,7 @@ public final class BvpImpactPresentationProvider {
             ImpactKey previous = EMITTED_IMPACTS.get(projectile);
             if (previous != null && previous.kind == kind && previous.level == level
                     && previous.gameTime == gameTime
-                    && previous.position.m_82554_(position) <= SAME_IMPACT_DISTANCE_SQR) {
+                    && previous.position.m_82554_(position) <= SAME_IMPACT_DISTANCE_BLOCKS) {
                 return false;
             }
             while (EMITTED_IMPACTS.size() >= MAX_IMPACT_KEYS) {
@@ -454,9 +292,6 @@ public final class BvpImpactPresentationProvider {
             EMITTED_IMPACTS.put(projectile, new ImpactKey(kind, level, gameTime, position));
             return true;
         }
-    }
-
-    private record ImpactStreakSpec(int count, float scale, long seed) {
     }
 
     private record ImpactKey(ProjectileImpactContext.Kind kind, Level level,

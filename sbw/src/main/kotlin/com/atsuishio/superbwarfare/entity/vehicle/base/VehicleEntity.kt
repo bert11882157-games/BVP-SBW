@@ -59,6 +59,7 @@ import com.atsuishio.superbwarfare.data.vehicle.subdata.*
 import com.atsuishio.superbwarfare.data.vehicle.subdata.EngineInfo.*
 import com.atsuishio.superbwarfare.diagnostics.VehicleWeaponAudioDiagnostics
 import com.atsuishio.superbwarfare.entity.OBBEntity
+import com.atsuishio.superbwarfare.api.vehicle.collision.AircraftCollisionSnapshot
 import com.atsuishio.superbwarfare.entity.getValue
 import com.atsuishio.superbwarfare.entity.setValue
 import com.atsuishio.superbwarfare.entity.vehicle.DroneEntity
@@ -89,6 +90,7 @@ import com.atsuishio.superbwarfare.network.VehicleHelicopterAtgmCameraRayState
 import com.atsuishio.superbwarfare.network.VehicleHelicopterAtgmCameraRayTransport
 import com.atsuishio.superbwarfare.tools.*
 import com.atsuishio.superbwarfare.tools.OBB.Part.*
+import com.atsuishio.superbwarfare.diagnostics.EliteDiagnostics
 import com.atsuishio.superbwarfare.tools.RangeTool.calculateFiringSolution
 import com.atsuishio.superbwarfare.tools.VectorTool.combineRotationsTurret
 import com.atsuishio.superbwarfare.tools.VectorTool.lerpGetEntityBoundingBoxCenter
@@ -150,6 +152,7 @@ import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.gameevent.GameEvent
 import net.minecraft.world.phys.HitResult
+import net.minecraft.world.phys.EntityHitResult
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec2
 import net.minecraft.world.phys.Vec3
@@ -175,19 +178,21 @@ import kotlin.math.*
 import kotlin.random.Random
 
 abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity(pEntityType, pLevel),
-    VehiclePropertyModifier, HasCustomInventoryScreen, OBBEntity {
+    VehiclePropertyModifier, HasCustomInventoryScreen, OBBEntity, com.atsuishio.superbwarfare.api.projectile.ProjectileCollisionTarget {
 
     private val persistentStateOwner = VehiclePersistentStateOwner()
     private val synchronizedStateOwner = VehicleSynchronizedStateOwner()
-    private val vehicleWeaponRuntime = VehicleWeaponRuntime(this, synchronizedStateOwner) {
+    private val vehicleWeaponRuntime = VehicleWeaponRuntime(this) {
         weaponScheduler.shouldEmitNativeSound()
     }
     private val kinematicStateOwner = VehicleKinematicStateOwner()
     private val combatStateOwner = VehicleCombatStateOwner()
-    private val vehicleModuleStateService = VehicleModuleStateService(this, combatStateOwner)
+    private val vehicleModuleStateService = VehicleModuleStateService(VehicleEntityModuleStateAccess(this))
     private val vehicleDestructionLifecycleService = VehicleDestructionLifecycleService(this)
     private val vehicleDamageLifecycleService = VehicleDamageLifecycleService(this)
     private val vehicleCollisionEnvironmentService = VehicleCollisionEnvironmentService(this)
+    private val aircraftTerrainCollisionService = AircraftTerrainCollisionService(this)
+    private val fixedWingGroundContactService = FixedWingGroundContactService(this)
     private val vehicleGroundMotionService = VehicleGroundMotionService(this)
     private val lifecycleStateOwner = VehicleLifecycleStateOwner()
     private val clientPresentationStateOwner = VehicleClientPresentationStateOwner()
@@ -200,6 +205,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
     private val weaponScheduler = VehicleWeaponScheduler(this)
     private val vehicleAimController = VehicleAimController(this)
     private val vehicleFlightController = VehicleFlightController(this)
+    private val aircraftCountermeasures = com.atsuishio.superbwarfare.api.aircraft.AircraftCountermeasures(this)
     private val vehicleTickPipeline = VehicleTickPipeline(this)
     private val vehicleActionController = VehicleActionController(this, Consumer(::publishVehicleActionSnapshots))
     /** One bounded launch-owner stream per occupied operator/seat; pilot and gunner never overwrite. */
@@ -210,7 +216,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         set(value) {
             synchronizedStateOwner.vehicleInputBits = value
         }
-     var gunDataMap: Map<String, GunData>
+    var gunDataMap: Map<String, GunData>
         get() {
             val rawMap = entityData.get(GUN_DATA_MAP)
             val config = computed()
@@ -257,10 +263,10 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
 
     internal fun invokeVanillaHurt(source: DamageSource, amount: Float): Boolean = super.hurt(source, amount)
 
-     fun getSeat(seatIndex: Int) =
+    fun getSeat(seatIndex: Int) =
         computed().seats().getOrNull(seatIndex)
 
-     fun getSeat(passenger: Entity?): SeatInfo? {
+    fun getSeat(passenger: Entity?): SeatInfo? {
         return getSeat(getSeatIndex(passenger))
     }
 
@@ -270,7 +276,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
      * @param seatIndex 座位号
      * @return 武器数据
      */
-     fun getGunData(seatIndex: Int): GunData? {
+    fun getGunData(seatIndex: Int): GunData? {
         val selectedIndex = getSelectedWeapon(seatIndex)
         if (selectedIndex < 0) return null
         return getGunData(seatIndex, selectedIndex)
@@ -283,10 +289,10 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
      * @param weaponIndex 武器号
      * @return 武器数据
      */
-     fun getGunData(seatIndex: Int, weaponIndex: Int): GunData? {
+    fun getGunData(seatIndex: Int, weaponIndex: Int): GunData? {
         val seat = getSeat(seatIndex) ?: return null
 
-        val name = seat.weapons().getOrNull(weaponIndex) ?: return null
+        val name = getWeaponIds(seatIndex).getOrNull(weaponIndex) ?: return null
 
         return getGunData(name)
     }
@@ -298,7 +304,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
      * @param weaponIndex 武器号
      * @return 武器数据
      */
-     fun getGunData(passenger: Entity?, weaponIndex: Int) = getGunData(getSeatIndex(passenger), weaponIndex)
+    fun getGunData(passenger: Entity?, weaponIndex: Int) = getGunData(getSeatIndex(passenger), weaponIndex)
 
     /**
      * 获取载具的乘客座位上选中的武器
@@ -306,7 +312,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
      * @param passenger 乘客
      * @return 武器数据
      */
-     fun getGunData(passenger: Entity?) =
+    fun getGunData(passenger: Entity?) =
         getGunData(passenger, this.getSelectedWeapon(this.getSeatIndex(passenger)))
 
     /**
@@ -315,35 +321,45 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
      * @param name 武器名称
      * @return 武器数据
      */
-     fun getGunData(name: String) = this.gunDataMap[name]
+    fun getGunData(name: String) = this.gunDataMap[name]
+        ?: com.atsuishio.superbwarfare.api.aircraft.AircraftStoreWeapons.data(this, name)
 
-     fun getGunName(seatIndex: Int): String? {
+    /** Stable native order plus authored mount channels; both weapon slots use this list. */
+    fun getWeaponIds(seatIndex: Int): List<String> =
+        com.atsuishio.superbwarfare.api.aircraft.AircraftStoreWeapons.ids(
+            this, seatIndex, getSeat(seatIndex)?.weapons() ?: emptyList())
+
+    fun getGunName(seatIndex: Int): String? {
         if (seatIndex < 0) return null
         val seat = getSeat(seatIndex) ?: return null
 
         val weaponIndex = getSelectedWeapon(seatIndex)
         if (weaponIndex < 0) return null
 
-        val weapons = seat.weapons()
+        val weapons = getWeaponIds(seatIndex)
         if (weaponIndex >= weapons.size) return null
 
         return getGunName(seatIndex, weaponIndex)
     }
 
-     fun getGunName(seatIndex: Int, weaponIndex: Int): String? {
-        return getSeat(seatIndex)?.weapons()?.getOrNull(weaponIndex)
+    fun getGunName(seatIndex: Int, weaponIndex: Int): String? {
+        return getWeaponIds(seatIndex).getOrNull(weaponIndex)
     }
 
-     fun modifyGunData(seatIndex: Int, weaponIndex: Int, consumer: Consumer<GunData>) {
+    fun modifyGunData(seatIndex: Int, weaponIndex: Int, consumer: Consumer<GunData>) {
         modifyGunData(getGunName(seatIndex, weaponIndex), consumer)
     }
 
-     fun modifyGunData(seatIndex: Int, consumer: Consumer<GunData>) {
+    fun modifyGunData(seatIndex: Int, consumer: Consumer<GunData>) {
         modifyGunData(getGunName(seatIndex), consumer)
     }
 
-     fun modifyGunData(name: String?, consumer: Consumer<GunData>) {
+    fun modifyGunData(name: String?, consumer: Consumer<GunData>) {
         if (name == null) return
+        if (name == com.atsuishio.superbwarfare.api.aircraft.AircraftGunPodGroups.GROUP) {
+            com.atsuishio.superbwarfare.api.aircraft.AircraftGunPodGroups.equipped(this).forEach { modifyGunData(it, consumer) }
+            return
+        }
 
         val map = this.gunDataMap.toMutableMap()
         var data = getGunData(name) ?: return
@@ -379,12 +395,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
     private val vehicleAimProfileCache
         get() = clientPresentationStateOwner.vehicleAimProfileCache
 
-    private var obbCache: MutableList<OBB>?
-        get() = combatStateOwner.obbCache
-        set(value) {
-            combatStateOwner.obbCache = value
-        }
-     var obb = listOf<OBBInfo>()
+    var obb = listOf<OBBInfo>()
         protected set
 
     private var vehiclePoseSequence: Int
@@ -489,7 +500,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         }
 
 
-     var engineInfo: EngineInfo? = null
+    var engineInfo: EngineInfo? = null
     private val vehicleEngineRuntime = VehicleEngineRuntime { error ->
         Mod.LOGGER.error("Failed to parse engine info for vehicle {}", this, error)
     }
@@ -499,33 +510,37 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
     protected var yO = 0.0
     protected var zO = 0.0
 
-     var roll = 0f
+    var roll = 0f
+        set(value) {
+            field = value
+            refreshPhysicalCollisionBounds()
+        }
 
-     var prevRoll = 0f
-     var repairCoolDown = maxRepairCoolDown()
+    var prevRoll = 0f
+    var repairCoolDown = maxRepairCoolDown()
 
-     var crash = false
+    var crash = false
 
     open var turretYRot = 0f
     open var turretXRot = 0f
     open var turretYRotO = 0f
     open var turretXRotO = 0f
-     var turretYRotLock = 0f
+    var turretYRotLock = 0f
 
-     var gunYRot = 0f
-     var gunXRot = 0f
-     var gunYRotO = 0f
-     var gunXRotO = 0f
+    var gunYRot = 0f
+    var gunXRot = 0f
+    var gunYRotO = 0f
+    var gunXRotO = 0f
 
     protected var noPassengerTime = 0
     protected var damageDebugResultReceiver: Player? = null
 
-     var decoyReloadCoolDown = 0
+    var decoyReloadCoolDown = 0
 
-     var lastTickSpeed = 0.0
+    var lastTickSpeed = 0.0
     protected var lastTickVerticalSpeed = 0.0
 
-     var collisionCoolDown = 0
+    var collisionCoolDown = 0
 
     private var wasEngineRunning: Boolean
         get() = lifecycleStateOwner.wasEngineRunning
@@ -562,56 +577,56 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
     open var targetSpeed = 0.0
         get() = if (vehicleActionController.allowsMovement()) field else 0.0
 
-     var rudderRot = 0f
-     var rudderRotO = 0f
-     var leftWheelRot = 0f
-     var rightWheelRot = 0f
-     var leftWheelRotO = 0f
-     var rightWheelRotO = 0f
+    var rudderRot = 0f
+    var rudderRotO = 0f
+    var leftWheelRot = 0f
+    var rightWheelRot = 0f
+    var leftWheelRotO = 0f
+    var rightWheelRotO = 0f
 
-     var leftTrackO = 0f
-     var rightTrackO = 0f
-     var leftTrack = 0f
-     var rightTrack = 0f
+    var leftTrackO = 0f
+    var rightTrackO = 0f
+    var leftTrack = 0f
+    var rightTrack = 0f
 
-     var propellerRot = 0f
-     var propellerRotO = 0f
+    var propellerRot = 0f
+    var propellerRotO = 0f
 
-     var recoilShake = 0.0
-     var recoilShakeO = 0.0
+    var recoilShake = 0.0
+    var recoilShakeO = 0.0
 
-     var flap1LRot = 0f
-     var flap1LRotO = 0f
-     var flap1RRot = 0f
-     var flap1RRotO = 0f
-     var flap1L2Rot = 0f
-     var flap1L2RotO = 0f
-     var flap1R2Rot = 0f
-     var flap1R2RotO = 0f
-     var flap2LRot = 0f
-     var flap2LRotO = 0f
-     var flap2RRot = 0f
-     var flap2RRotO = 0f
-     var flap3Rot = 0f
-     var flap3RotO = 0f
+    var flap1LRot = 0f
+    var flap1LRotO = 0f
+    var flap1RRot = 0f
+    var flap1RRotO = 0f
+    var flap1L2Rot = 0f
+    var flap1L2RotO = 0f
+    var flap1R2Rot = 0f
+    var flap1R2RotO = 0f
+    var flap2LRot = 0f
+    var flap2LRotO = 0f
+    var flap2RRot = 0f
+    var flap2RRotO = 0f
+    var flap3Rot = 0f
+    var flap3RotO = 0f
     private var gearRotO = 0f
 
-     var gearRot = 0f
+    var gearRot = 0f
 
-     var engineStart = false
-     var engineStartOver = false
-     var holdTick = 0
-     var holdPowerTick = 0
+    var engineStart = false
+    var engineStartOver = false
+    var holdTick = 0
+    var holdPowerTick = 0
 
-     var destroyRot = 0f
+    var destroyRot = 0f
 
-     var jumpCoolDown = 0
-     var deltaMovementO: Vec3 = deltaMovement
-     var positionO: Vec3 = Vec3.ZERO
+    var jumpCoolDown = 0
+    var deltaMovementO: Vec3 = deltaMovement
+    var positionO: Vec3 = Vec3.ZERO
 
-     var absoluteSpeed = 0.0
-     var absoluteSpeedO = 0.0
-     var absoluteSpeedLerp = 0.0
+    var absoluteSpeed = 0.0
+    var absoluteSpeedO = 0.0
+    var absoluteSpeedLerp = 0.0
 
     var pitchAngle = 0f
     var pitchVelocity = 0f
@@ -621,14 +636,14 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
     var prevRollAngle = 0f
     var prevMotion: Vec3? = null
 
-     var lastDamageSource: DamageSource? = null
+    var lastDamageSource: DamageSource? = null
         get() {
             if (this.level().gameTime - this.lastDamageStamp > 40L) {
                 this.lastDamageSource = null
             }
             return field
         }
-     var lastDamageStamp: Long = 0
+    var lastDamageStamp: Long = 0
 
     private fun initOBB() {
         this.obb = data().getDefault().copy().obb.toList()
@@ -661,14 +676,18 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
                 vehicleActionController.consumeClient(entityData.get(VEHICLE_ACTION_SNAPSHOT))
             }
         }
+        if (overrideChanged || poseChanged || dataValues.any { it.id() == SYNCHED_GEAR_ROT.id })
+            refreshPhysicalCollisionBounds()
     }
 
     override fun onSyncedDataUpdated(dataAccessor: EntityDataAccessor<*>) {
         super.onSyncedDataUpdated(dataAccessor)
         if (dataAccessor == OVERRIDE) invalidateVehicleData()
+        if (dataAccessor == OVERRIDE || dataAccessor == SYNCHED_GEAR_ROT)
+            refreshPhysicalCollisionBounds()
     }
 
-     fun processInput(keys: Short) {
+    fun processInput(keys: Short) {
         vehicleInputBits = keys
         leftInputDown =
             (keys.toInt() and 0b00000001) > 0
@@ -688,36 +707,47 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
             (keys.toInt() and 0b10000000) > 0
         sprintInputDown =
             (keys.toInt() and 256) > 0
+        if (!level().isClientSide) {
+            (this as? FixedWingFlightStrategyProvider)
+                ?.createFixedWingFlightStrategy(this)
+                ?.observePilotThrottleInput(this, currentFixedWingThrottleAxis())
+        }
+    }
+
+    private fun currentFixedWingThrottleAxis(): Double = when {
+        backInputDown -> -1.0
+        forwardInputDown -> 1.0
+        else -> 0.0
     }
 
     @get:JvmName("forwardInputDown")
-     var forwardInputDown by FORWARD_INPUT_DOWN
+    var forwardInputDown by FORWARD_INPUT_DOWN
 
     @get:JvmName("backInputDown")
-     var backInputDown by BACK_INPUT_DOWN
+    var backInputDown by BACK_INPUT_DOWN
 
     @get:JvmName("leftInputDown")
-     var leftInputDown by LEFT_INPUT_DOWN
+    var leftInputDown by LEFT_INPUT_DOWN
 
     @get:JvmName("rightInputDown")
-     var rightInputDown by RIGHT_INPUT_DOWN
+    var rightInputDown by RIGHT_INPUT_DOWN
 
     @get:JvmName("upInputDown")
-     var upInputDown by UP_INPUT_DOWN
+    var upInputDown by UP_INPUT_DOWN
 
     @get:JvmName("downInputDown")
-     var downInputDown by DOWN_INPUT_DOWN
+    var downInputDown by DOWN_INPUT_DOWN
 
     @get:JvmName("fireInputDown")
-     var fireInputDown by FIRE_INPUT_DOWN
+    var fireInputDown by FIRE_INPUT_DOWN
 
     @get:JvmName("decoyInputDown")
-     var decoyInputDown by DECOY_INPUT_DOWN
+    var decoyInputDown by DECOY_INPUT_DOWN
 
     @get:JvmName("sprintInputDown")
-     var sprintInputDown by SPRINT_INPUT_DOWN
+    var sprintInputDown by SPRINT_INPUT_DOWN
 
-     fun mouseInput(x: Double, y: Double) {
+    fun mouseInput(x: Double, y: Double) {
         if (!x.isFinite() || !y.isFinite()) return
         val finiteX = x.toFloat()
         val finiteY = y.toFloat()
@@ -726,10 +756,12 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         mouseMoveSpeedY = finiteY
     }
 
-    /** Accepts finite driver-only mouse motion without letting player-look weapon modes mutate chassis controls. */
-     fun acceptVehicleMouseInput(controller: Player, x: Double, y: Double) {
+    /** Flight input has pilot priority; weapon aim does not own an aircraft stick. */
+    fun acceptVehicleMouseInput(controller: Player, x: Double, y: Double) {
         if (controller.vehicle !== this || firstPassenger !== controller) return
         if (!x.isFinite() || !y.isFinite()) return
+        // Fixed-wing flight consumes epoch-bound world intent, never legacy mouse deltas.
+        if (isFixedWingFlightVehicle()) return
         if (vehicleAimController.capturesMouseInput(controller)) {
             mouseMoveSpeedX = 0F
             mouseMoveSpeedY = 0F
@@ -738,15 +770,44 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         mouseInput(x, y)
     }
 
-     var mouseMoveSpeedX by MOUSE_SPEED_X
-     var mouseMoveSpeedY by MOUSE_SPEED_Y
+    /** Pilot intent only: no camera, weapon, motion, or defensive-station authority. */
+    @JvmOverloads
+    fun acceptFixedWingPilotIntent(
+        controller: Player, controlEpoch: Long, sequence: Long,
+        worldX: Double, worldY: Double, worldZ: Double, manualMask: Int, centerAim: Boolean,
+        screenRollInput: Float? = null, firstPerson: Boolean = false,
+        inversionRequested: Boolean = false,
+    ): Boolean {
+        if (level().isClientSide) return false
+        val strategy = resolveVehicleFlightStrategy() as? FixedWingFlightStrategy ?: return false
+        return strategy.acceptPilotIntent(this, controller, controlEpoch, sequence,
+            worldX, worldY, worldZ, manualMask, centerAim, screenRollInput, firstPerson,
+            inversionRequested)
+    }
+
+    fun getFixedWingPilotIntentState(
+        controller: Player,
+    ): com.atsuishio.superbwarfare.api.vehicle.flight.FixedWingPilotIntentSnapshot? {
+        if (level().isClientSide) return null
+        val strategy = resolveVehicleFlightStrategy() as? FixedWingFlightStrategy ?: return null
+        return strategy.pilotIntentSnapshot(this, controller)
+    }
+
+    private fun clearFixedWingPilotControls() {
+        if (!isFixedWingFlightVehicle()) return
+        (this as FixedWingFlightStrategyProvider)
+            .createFixedWingFlightStrategy(this)?.clearPilotControls()
+    }
+
+    var mouseMoveSpeedX by MOUSE_SPEED_X
+    var mouseMoveSpeedY by MOUSE_SPEED_Y
 
     // container start
     private val inventoryEnergyService = VehicleInventoryEnergyService(this)
     val inventory: VehicleContainerHandler
         get() = inventoryEnergyService.inventory
 
-     fun getItems() = inventoryEnergyService.items()
+    fun getItems() = inventoryEnergyService.items()
 
     protected fun resizeItems() = inventoryEnergyService.resizeItems()
 
@@ -772,7 +833,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
 
     fun clearContent() = inventoryEnergyService.clear()
 
-     fun hasContainer() = this.getContainerSize() > 0
+    fun hasContainer() = this.getContainerSize() > 0
 
     open fun canPlaceItem(slot: Int, stack: ItemStack): Boolean =
         inventoryEnergyService.canPlaceItem(slot, stack)
@@ -780,6 +841,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
     fun canTakeItem(slot: Int): Boolean = inventoryEnergyService.canTakeItem(slot)
 
     override fun remove(reason: RemovalReason) {
+        clearFlightPilotControls()
         if (!this.level().isClientSide) {
             com.atsuishio.superbwarfare.api.weapon.VehicleReloadAudio.cancel(this, reason = "vehicle_removed")
         }
@@ -808,7 +870,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         }
     }
 
-     fun hasMenu() = computed().vehicleContainerType.hasMenu()
+    fun hasMenu() = computed().vehicleContainerType.hasMenu()
 
     open fun openMenu(player: Player) {
         if (player is ServerPlayer) {
@@ -870,13 +932,13 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
      *
      * @return 按顺序排列的成员列表
      */
-     fun getOrderedPassengers(): MutableList<Entity?> {
+    fun getOrderedPassengers(): MutableList<Entity?> {
         checkSeatsSize()
         return passengerSlots
     }
 
     // 仅在客户端存在的实体顺序获取，用于在客户端正确同步实体座位顺序
-     var entityIndexOverride: Function<Entity, Int>? = null
+    var entityIndexOverride: Function<Entity, Int>? = null
 
     override fun addPassenger(pPassenger: Entity) {
         check(pPassenger.vehicle === this) { "Use x.startRiding(y), not y.addPassenger(x)" }
@@ -890,6 +952,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         }
 
         pPassenger.persistentData.putInt(TAG_SEAT_INDEX, index)
+        if (index == 0) clearFlightPilotControls()
 
         this.passengers =
             ImmutableList.copyOf(passengerSlots.stream().filter { obj: Entity? -> Objects.nonNull(obj) }.toList())
@@ -930,6 +993,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         checkSeatsSize()
 
         val index = getSeatIndex(pPassenger)
+        if (index == 0) clearFlightPilotControls()
 
         if (!level().isClientSide) {
             com.atsuishio.superbwarfare.api.weapon.VehicleReloadAudio.detachListener(this, pPassenger.uuid, "passenger_dismounted")
@@ -982,7 +1046,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
      * @param index 目标座位
      * @return 目标座位的乘客
      */
-     fun getNthEntity(index: Int): Entity? {
+    fun getNthEntity(index: Int): Entity? {
         checkSeatsSize()
         return seatingStateOwner.at(index)
     }
@@ -994,7 +1058,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
      * @param index  目标座位
      * @return 是否切换成功
      */
-     fun changeSeat(entity: Entity, index: Int): Boolean {
+    fun changeSeat(entity: Entity, index: Int): Boolean {
         if (index < 0 || index >= this.maxPassengers) return false
         checkSeatsSize()
         if (seatingStateOwner.at(index) != null) return false
@@ -1005,6 +1069,10 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
             it.key.controllerUuid == entity.uuid && it.key.seatIndex == previousIndex
         }
         if (!seatingStateOwner.move(entity, index)) return false
+        if (!level().isClientSide) {
+            com.atsuishio.superbwarfare.network.VehicleDismountServer.invalidateDismountGesture(entity)
+        }
+        if (previousIndex == 0 || index == 0) clearFlightPilotControls()
 
         entity.persistentData.putInt(TAG_SEAT_INDEX, index)
         vehicleAimController.onControlContextChanged(entity)
@@ -1025,7 +1093,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
      * @param entity 乘客
      * @return 座位索引
      */
-     fun getSeatIndex(entity: Entity?): Int {
+    fun getSeatIndex(entity: Entity?): Int {
         checkSeatsSize()
         return seatingStateOwner.indexOf(entity)
     }
@@ -1037,23 +1105,32 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
      * @param entity 乘客
      * @return 座位索引
      */
-     fun getTagSeatIndex(entity: Entity) = entity.persistentData.getInt(TAG_SEAT_INDEX)
+    fun getTagSeatIndex(entity: Entity) = entity.persistentData.getInt(TAG_SEAT_INDEX)
 
-     val thirdPersonCameraPosition: Vec3
+    val thirdPersonCameraPosition: Vec3
         get() {
             val pos = computed().thirdPersonCameraPos
             return Vec3(pos.z + ClientMouseHandler.custom3pDistanceLerp, pos.y, pos.x)
         }
 
-     fun getRoll(tickDelta: Float) = Mth.lerp(tickDelta, prevRoll, roll)
-     fun getYaw(tickDelta: Float) = Mth.lerp(tickDelta, yRotO, yRot)
-    open fun getPitch(tickDelta: Float) = Mth.lerp(tickDelta, xRotO, xRot)
+    private val flightAttitudeCache = VehicleFlightAttitude.Cache()
 
-     fun setZRot(rot: Float) {
+    private fun interpolatedFlightAttitude(tickDelta: Float) = flightAttitudeCache.sample(
+        yRotO, xRotO, prevRoll, yRot, xRot, roll, tickDelta,
+    )
+
+    fun getRoll(tickDelta: Float) = if (isFixedWingFlightVehicle())
+        interpolatedFlightAttitude(tickDelta).roll else Mth.lerp(tickDelta, prevRoll, roll)
+    fun getYaw(tickDelta: Float) = if (isFixedWingFlightVehicle())
+        interpolatedFlightAttitude(tickDelta).yaw else Mth.lerp(tickDelta, yRotO, yRot)
+    open fun getPitch(tickDelta: Float) = if (isFixedWingFlightVehicle())
+        interpolatedFlightAttitude(tickDelta).pitch else Mth.lerp(tickDelta, xRotO, xRot)
+
+    fun setZRot(rot: Float) {
         roll = rot
     }
 
-     fun turretTurnSound(diffX: Float, diffY: Float, pitch: Float) {
+    fun turretTurnSound(diffX: Float, diffY: Float, pitch: Float) {
         if (this is MortarEntity) return
         if (level().isClientSide && (Math.abs(diffY) > 0.5 || Math.abs(diffX) > 0.5)) {
             level().playLocalSound(
@@ -1072,13 +1149,13 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
     /**
      * 受击时是否出现粒子效果
      */
-     fun shouldSendHitParticles() = computed().sendHitParticles
+    fun shouldSendHitParticles() = computed().sendHitParticles
 
     /** Whether armor non-penetrations may pass reduced direct damage to this vehicle. */
-     fun isLightlyArmored() = computed().lightlyArmored
+    fun isLightlyArmored() = computed().lightlyArmored
 
     /** Whether this vehicle's passenger weapon station is a client-visible remote weapon station. */
-     fun isRemoteWeaponStation() = computed().remoteWeaponStation
+    fun isRemoteWeaponStation() = computed().remoteWeaponStation
 
     /**
      * 受击时是否出现音效
@@ -1142,6 +1219,8 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
             define(VEHICLE_ACTION_SNAPSHOT, "")
             define(MODULE_STATE_SNAPSHOT, "")
             define(DECOY_READY, false)
+            define(AIRCRAFT_COUNTERMEASURE_LEVELS, 0)
+            define(AIRCRAFT_COUNTERMEASURE_TIMERS, 0)
             define(SYNCHED_GEAR_ROT, 0f)
             define(GEAR_UP, false)
             define(FORWARD_INPUT_DOWN, false)
@@ -1175,19 +1254,20 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
 
     // energy start
     /**
-     * Propulsion and control power is intentionally unlimited until an authored fuel system exists.
+     * Propulsion and control power is unlimited under the no-fuel policy.
      *
      * This is separate from the Forge energy capability below, which remains persistent and may be
-     * consumed by weapons whose configured ammo type is ENERGY. A future fuel policy should override
-     * this policy, check, and [consumeOperationalPowerOnServer] without replacing that stored-energy API.
+     * consumed by weapons whose configured ammo type is ENERGY. Fuel support must update this
+     * policy, its availability check, and [consumeOperationalPowerOnServer] together while preserving
+     * the stored-energy API.
      */
-     fun isOperationalPowerLimited(): Boolean = false
+    fun isOperationalPowerLimited(): Boolean = false
 
-     fun hasOperationalPower(amount: Int): Boolean = true
+    fun hasOperationalPower(amount: Int): Boolean = true
 
     /**
-     * Server-authoritative operational-power debit. The current no-fuel policy deliberately debits
-     * nothing; the protected hook is the replacement seam for a future authored fuel implementation.
+     * Server-authoritative operational-power debit. The no-fuel policy debits nothing;
+     * [consumeOperationalPowerOnServer] supplies the protected implementation hook.
      */
     fun consumeOperationalPower(amount: Int) {
         if (amount <= 0 || this.level() !is ServerLevel) return
@@ -1202,23 +1282,23 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
      *
      * @param amount stored energy to consume
      */
-     fun consumeEnergy(amount: Int) {
+    fun consumeEnergy(amount: Int) {
         inventoryEnergyService.consumeEnergy(amount)
     }
 
     protected fun canConsume(amount: Int): Boolean = inventoryEnergyService.canConsume(amount)
 
-     var energy: Int
+    var energy: Int
         get() = inventoryEnergyService.energy()
         set(pEnergy) = inventoryEnergyService.setEnergy(pEnergy)
 
-     fun getEnergyStorage(): IEnergyStorage? = inventoryEnergyService.getEnergyStorage()
+    fun getEnergyStorage(): IEnergyStorage? = inventoryEnergyService.getEnergyStorage()
 
-     val maxEnergy: Int
+    val maxEnergy: Int
         get() = inventoryEnergyService.maxEnergy()
 
 
-     fun hasEnergyStorage() = inventoryEnergyService.hasEnergyStorage()
+    fun hasEnergyStorage() = inventoryEnergyService.hasEnergyStorage()
 
     // energy end
     /**
@@ -1237,28 +1317,28 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
      *
      * @return 射速
      */
-     fun vehicleWeaponRpm(living: LivingEntity?): Int {
+    fun vehicleWeaponRpm(living: LivingEntity?): Int {
         val data = getGunData(getSeatIndex(living))
         if (data == null || data.get(GunProp.RPM) <= 0) return 60
         return data.get(GunProp.RPM)
     }
 
-     fun vehicleWeaponRpm(seatIndex: Int): Int {
+    fun vehicleWeaponRpm(seatIndex: Int): Int {
         val data = getGunData(seatIndex)
         if (data == null || data.get(GunProp.RPM) <= 0) return 60
         return data.get(GunProp.RPM)
     }
 
-     fun vehicleWeaponRpm(weaponName: String): Int {
+    fun vehicleWeaponRpm(weaponName: String): Int {
         val data = getGunData(weaponName) ?: return 1
         return data.get(GunProp.RPM).coerceAtLeast(1)
     }
 
-     fun hasScheduledWeapon(controller: LivingEntity?): Boolean {
+    fun hasScheduledWeapon(controller: LivingEntity?): Boolean {
         return controller != null && weaponScheduler.hasSchedule(controller)
     }
 
-     fun updateScheduledWeaponTrigger(
+    fun updateScheduledWeaponTrigger(
         controller: LivingEntity?,
         held: Boolean,
         targetEntityUuid: UUID?,
@@ -1282,7 +1362,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
      * mutates [selectedWeapon].  The server revalidates the occupied seat and current ordered
      * slot context on every edge; stale action sessions therefore cannot fire an ABA weapon.
      */
-     fun updateSecondaryWeaponTrigger(controller: LivingEntity?, held: Boolean): Boolean {
+    fun updateSecondaryWeaponTrigger(controller: LivingEntity?, held: Boolean): Boolean {
         if (controller == null) {
             VehicleWeaponShotDiagnostics.recordBoundary(
                 this,
@@ -1311,7 +1391,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         return weaponScheduler.updateSecondaryTrigger(controller, held)
     }
 
-     fun getWeaponScheduleSnapshot(
+    fun getWeaponScheduleSnapshot(
         seatIndex: Int,
         weaponIndex: Int,
     ): VehicleWeaponScheduleSnapshot? {
@@ -1329,32 +1409,32 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         publishTextSnapshot(WEAPON_SCHEDULER_SNAPSHOT, "vehicle_weapon_scheduler_snapshot", payload)
     }
 
-     fun getWeaponHeat(living: LivingEntity?): Int {
+    fun getWeaponHeat(living: LivingEntity?): Int {
         val gunData = getGunData(getSeatIndex(living)) ?: return 0
         return Math.round(gunData.heat.get()).toInt()
     }
 
-     fun getWeaponHeat(seatIndex: Int): Int {
+    fun getWeaponHeat(seatIndex: Int): Int {
         val gunData = getGunData(seatIndex) ?: return 0
         return Math.round(gunData.heat.get()).toInt()
     }
 
-     fun getWeaponHeat(weaponName: String): Int {
+    fun getWeaponHeat(weaponName: String): Int {
         val gunData = getGunData(weaponName) ?: return 0
         return Math.round(gunData.heat.get()).toInt()
     }
 
-     fun getWeaponHeat(seatIndex: Int, weaponIndex: Int): Int {
+    fun getWeaponHeat(seatIndex: Int, weaponIndex: Int): Int {
         val gunData = getGunData(seatIndex, weaponIndex) ?: return 0
         return Math.round(gunData.heat.get()).toInt()
     }
 
-     fun getShootAnimationTimer(weaponName: String): Int {
+    fun getShootAnimationTimer(weaponName: String): Int {
         val gunData = getGunData(weaponName) ?: return 0
         return gunData.shootAnimationTimer.get()
     }
 
-     fun getShootAnimationTimer(seatIndex: Int, weaponIndex: Int): Int {
+    fun getShootAnimationTimer(seatIndex: Int, weaponIndex: Int): Int {
         val gunData = getGunData(seatIndex, weaponIndex) ?: return 0
         return gunData.shootAnimationTimer.get()
     }
@@ -1492,21 +1572,21 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         }
     }
 
-     fun playShootSound3p(living: LivingEntity?, weaponName: String) {
+    fun playShootSound3p(living: LivingEntity?, weaponName: String) {
         val gunData = this.getGunData(weaponName) ?: return
         val pos = getShootPos(weaponName, 1f)
 
         playShootSound3p(living, gunData, pos)
     }
 
-     fun playShootSound3p(living: LivingEntity?, seatIndex: Int) {
+    fun playShootSound3p(living: LivingEntity?, seatIndex: Int) {
         val gunData = this.getGunData(seatIndex) ?: return
         val pos = getShootPos(living, 1f)
 
         playShootSound3p(living, gunData, pos)
     }
 
-     fun playShootSound3p(living: LivingEntity?, gunData: GunData?, pos: Vec3?) {
+    fun playShootSound3p(living: LivingEntity?, gunData: GunData?, pos: Vec3?) {
         val serverLevel = this.level() as? ServerLevel ?: return
 
         if (gunData == null) return
@@ -1607,7 +1687,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
      * @param seatIndex 槽位
      * @return 武器类型
      */
-     fun getWeaponIndex(seatIndex: Int) =
+    fun getWeaponIndex(seatIndex: Int) =
         getSelectedWeapon(seatIndex)
 
     /**
@@ -1615,7 +1695,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
      *
      * @return 是否有武器
      */
-     fun hasWeapon(): Boolean {
+    fun hasWeapon(): Boolean {
         return this.computed().seats().stream()
             .filter { seat: SeatInfo? -> seat!!.weapons().isNotEmpty() }
             .flatMap { seat: SeatInfo? -> seat!!.weapons().stream() }
@@ -1629,13 +1709,13 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
      * @param seatIndex 武器槽位
      * @return 武器是否可用
      */
-     fun hasWeapon(seatIndex: Int): Boolean {
+    fun hasWeapon(seatIndex: Int): Boolean {
         if (seatIndex < 0 || seatIndex >= this.maxPassengers) return false
         return this.getGunData(seatIndex) != null
     }
 
     /** Sets the primary slot for a seat. Explicit selection retains legacy pair semantics. */
-     fun setWeaponIndex(seatIndex: Int, selectedWeaponIndex: Int) {
+    fun setWeaponIndex(seatIndex: Int, selectedWeaponIndex: Int) {
         setWeaponSlotIndex(seatIndex, VehicleWeaponSlot.PRIMARY, selectedWeaponIndex)
     }
 
@@ -1643,14 +1723,14 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
      * Changes one independently selectable slot. Explicit selection of the other occupied slot
      * still swaps the pair; cycling below filters that slot instead of swapping it.
      */
-     fun setWeaponSlotIndex(
+    fun setWeaponSlotIndex(
         seatIndex: Int,
         slot: VehicleWeaponSlot,
         targetWeaponIndex: Int,
     ): Boolean = vehicleWeaponRuntime.setWeaponSlotIndex(seatIndex, slot, targetWeaponIndex)
 
     /** Advances one slot while never selecting the weapon currently occupying the other slot. */
-     fun cycleWeaponSlot(
+    fun cycleWeaponSlot(
         seatIndex: Int,
         slot: VehicleWeaponSlot,
         delta: Int = 1,
@@ -1663,7 +1743,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
      * @param value     数值（可能为-1~1之间的滚动，或绝对数值）
      * @param isScroll  是否是滚动事件
      */
-     fun changeWeapon(seatIndex: Int, value: Int, isScroll: Boolean) {
+    fun changeWeapon(seatIndex: Int, value: Int, isScroll: Boolean) {
         if (seatIndex < 0 || seatIndex >= this.maxPassengers) return
 
         val candidates = vehicleWeaponRuntime.validWeaponIndices(seatIndex)
@@ -1748,11 +1828,11 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
             this.getMaxHealth()
         }
 
-        turretHealth = compound.getFloat("TurretHealth")
-        leftWheelHealth = compound.getFloat("LeftWheelHealth")
-        rightWheelHealth = compound.getFloat("RightWheelHealth")
-        mainEngineHealth = compound.getFloat("MainEngineHealth")
-        subEngineHealth = compound.getFloat("SubEngineHealth")
+        turretHealth = componentHealthOrDefault(compound, "TurretHealth", "TurretDamaged", getTurretMaxHealth())
+        leftWheelHealth = componentHealthOrDefault(compound, "LeftWheelHealth", "LeftWheelDamaged", getWheelMaxHealth())
+        rightWheelHealth = componentHealthOrDefault(compound, "RightWheelHealth", "RightWheelDamaged", getWheelMaxHealth())
+        mainEngineHealth = componentHealthOrDefault(compound, "MainEngineHealth", "MainEngineDamaged", getEngineMaxHealth())
+        subEngineHealth = componentHealthOrDefault(compound, "SubEngineHealth", "SubEngineDamaged", getEngineMaxHealth())
 
         turretDamaged = compound.getBoolean("TurretDamaged")
         leftWheelDamaged = compound.getBoolean("LeftWheelDamaged")
@@ -1766,6 +1846,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
 
         power = compound.getFloat("Power")
         decoyReady = compound.getBoolean("DecoyReady")
+        aircraftCountermeasures.load(compound)
         synchedGearRot = compound.getFloat("GearRot")
         gearUp = compound.getBoolean("GearUp")
         synchedPropellerRot = compound.getFloat("PropellerRot")
@@ -1879,6 +1960,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
 
         compound.putFloat("Power", power)
         compound.putBoolean("DecoyReady", decoyReady)
+        aircraftCountermeasures.save(compound)
         compound.putFloat("GearRot", synchedGearRot)
         compound.putBoolean("GearUp", gearUp)
         compound.putFloat("PropellerRot", synchedPropellerRot)
@@ -2007,6 +2089,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
                 if (player.level() is ServerLevel) {
                     return if (player.startRiding(this)) InteractionResult.CONSUME else InteractionResult.PASS
                 }
+                return InteractionResult.SUCCESS
             } else if (this.getFirstPassenger() !is Player) {
                 if (player is FakePlayer) return InteractionResult.PASS
                 this.getFirstPassenger()!!.stopRiding()
@@ -2015,6 +2098,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
                 if (player.level() is ServerLevel) {
                     return if (player.startRiding(this)) InteractionResult.CONSUME else InteractionResult.PASS
                 }
+                return InteractionResult.SUCCESS
             }
             if (this.canAddPassenger(player)) {
                 if (player is FakePlayer) return InteractionResult.PASS
@@ -2022,19 +2106,20 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
                 if (player.level() is ServerLevel) {
                     return if (player.startRiding(this)) InteractionResult.CONSUME else InteractionResult.PASS
                 }
+                return InteractionResult.SUCCESS
             }
         }
         return InteractionResult.PASS
     }
 
-     val lastDriver: Entity?
+    val lastDriver: Entity?
         get() = EntityFindUtil.findEntity(level(), lastDriverUUID)
 
     /**
      * Canonical preflight for both legacy and already-resolved vehicle damage.
      * Addons must not bypass SBW immunity, self-fire, or friendly-fire policy.
      */
-     fun acceptsDamageSource(source: DamageSource): Boolean =
+    fun acceptsDamageSource(source: DamageSource): Boolean =
         vehicleDamageLifecycleService.acceptsSource(source)
 
     override fun hurt(source: DamageSource, amount: Float): Boolean =
@@ -2044,7 +2129,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
      * Commits damage whose armor and penetration math has already been resolved by the caller.
      * This path is server authoritative and intentionally skips [DamageModifier].
      */
-     fun applyResolvedDamage(request: ResolvedVehicleDamageRequest): ResolvedVehicleDamageResult =
+    fun applyResolvedDamage(request: ResolvedVehicleDamageRequest): ResolvedVehicleDamageResult =
         vehicleDamageLifecycleService.applyResolved(request)
 
     /**
@@ -2055,14 +2140,14 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
     open fun getDamageModifier(): DamageModifier = data().damageModifier()
 
     /** Computes the same direct-damage basis used by [hurt] without committing damage. */
-     fun computeVehicleDamageAfterModifiers(source: DamageSource, amount: Float): Float =
+    fun computeVehicleDamageAfterModifiers(source: DamageSource, amount: Float): Float =
         vehicleDamageLifecycleService.computeAfterModifiers(source, amount)
 
-     fun getSourceAngle(source: DamageSource, multiplier: Float): Float {
+    fun getSourceAngle(source: DamageSource, multiplier: Float): Float {
         return VehicleVecUtils.getDamageSourceAngle(this, source, multiplier)
     }
 
-     fun heal(pHealAmount: Float) {
+    fun heal(pHealAmount: Float) {
         if (this.level() is ServerLevel) {
             if (health > 0) {
                 this.health += pHealAmount
@@ -2070,7 +2155,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         }
     }
 
-     fun onHurt(pHealAmount: Float, attacker: Entity?, send: Boolean) {
+    fun onHurt(pHealAmount: Float, attacker: Entity?, send: Boolean) {
         if (this.level() is ServerLevel) {
             val holder = Holder.direct(ModSounds.INDICATION_VEHICLE.get())
             for (player in server!!.playerList.players) {
@@ -2116,13 +2201,13 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         }
     }
 
-     var health: Float
+    var health: Float
         get() = this.entityData.get(HEALTH)
         set(value) {
             this.entityData.set(HEALTH, value.coerceIn(-this.getMaxHealth() - 10, this.getMaxHealth()))
         }
 
-     fun getMaxHealth() = computed().maxHealth
+    fun getMaxHealth() = computed().maxHealth
 
     open fun getTurretMaxHealth() = 50f
     open fun getWheelMaxHealth() = 50f
@@ -2148,6 +2233,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
     }
 
     override fun canBeCollidedWith(): Boolean {
+        if (usesAircraftTerrainContact()) return false
         return this.enableAABB()
     }
 
@@ -2163,7 +2249,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         return this.getPassengers().size < this.maxPassengers
     }
 
-     val maxPassengers: Int
+    val maxPassengers: Int
         get() = computed().seats().size
 
     /**
@@ -2176,7 +2262,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
     /**
      * 呼吸回血回血量
      */
-     fun repairAmount(): Float {
+    fun repairAmount(): Float {
         return computed().repairAmount
     }
 
@@ -2283,34 +2369,43 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
             repairCoolDown = maxRepairCoolDown()
         }
 
-        val delta = Math.abs(yRot - yRotO)
-        while (yRot > 180f) {
-            yRot -= 360f
-            yRotO = yRot - delta
-        }
-        while (yRot <= -180f) {
-            yRot += 360f
-            yRotO = delta + yRot
-        }
+        if (isFixedWingFlightVehicle()) {
+            yRot = VehicleFlightAttitude.wrap(yRot)
+            xRot = VehicleFlightAttitude.wrap(xRot)
+            setZRot(VehicleFlightAttitude.wrap(roll))
+            yRotO = VehicleFlightAttitude.alignedPrevious(yRotO, yRot)
+            xRotO = VehicleFlightAttitude.alignedPrevious(xRotO, xRot)
+            prevRoll = VehicleFlightAttitude.alignedPrevious(prevRoll, roll)
+        } else {
+            val delta = Math.abs(yRot - yRotO)
+            while (yRot > 180f) {
+                yRot -= 360f
+                yRotO = yRot - delta
+            }
+            while (yRot <= -180f) {
+                yRot += 360f
+                yRotO = delta + yRot
+            }
 
-        val deltaX = Math.abs(xRot - xRotO)
-        while (xRot > 180f) {
-            xRot -= 360f
-            xRotO = xRot - deltaX
-        }
-        while (xRot <= -180f) {
-            xRot += 360f
-            xRotO = deltaX + xRot
-        }
+            val deltaX = Math.abs(xRot - xRotO)
+            while (xRot > 180f) {
+                xRot -= 360f
+                xRotO = xRot - deltaX
+            }
+            while (xRot <= -180f) {
+                xRot += 360f
+                xRotO = deltaX + xRot
+            }
 
-        val deltaZ = Math.abs(this.roll - prevRoll)
-        while (this.roll > 180f) {
-            setZRot(this.roll - 360f)
-            prevRoll = this.roll - deltaZ
-        }
-        while (this.roll <= -180f) {
-            setZRot(this.roll + 360f)
-            prevRoll = deltaZ + this.roll
+            val deltaZ = Math.abs(this.roll - prevRoll)
+            while (this.roll > 180f) {
+                setZRot(this.roll - 360f)
+                prevRoll = this.roll - deltaZ
+            }
+            while (this.roll <= -180f) {
+                setZRot(this.roll + 360f)
+                prevRoll = deltaZ + this.roll
+            }
         }
 
         this.handleClientSync()
@@ -2360,7 +2455,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
             vehicleActionController.consumeClient(entityData.get(VEHICLE_ACTION_SNAPSHOT))
         }
 
-        if (hasTurret()) {
+        if (!isFixedWingFlightVehicle() && hasTurret()) {
             val turretController = getNthEntity(this.turretControllerIndex)
             if (turretController is Player &&
                 !vehicleAimController.handles(turretController, VehicleAimChannel.TURRET)
@@ -2377,7 +2472,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
             }
         }
 
-        if (hasPassengerWeaponStation()) {
+        if (!isFixedWingFlightVehicle() && hasPassengerWeaponStation()) {
             val passengerWeaponStationController = getNthEntity(this.passengerWeaponStationControllerIndex)
             if ((passengerWeaponStationController is Player &&
                         !vehicleAimController.handles(
@@ -2484,6 +2579,8 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
     }
 
     internal fun tickPipelineMovement() {
+        // Authoritative flight clients present server snapshots and vanilla position interpolation.
+        if (level().isClientSide && flightStrategyOwnsAttitudeThisTick) return
         this.supportEntities()
         this.crushEntities()
         if (!vehicleFlightController.motionIncludesGravityThisTick) {
@@ -2508,7 +2605,8 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
 
         hornVolume *= 0.5f
 
-        if (hasDecoy()) {
+        aircraftCountermeasures.tick()
+        if (hasDecoy() && com.atsuishio.superbwarfare.api.aircraft.AircraftCountermeasures.definition(this) == null) {
             if (this.vehicleType == VehicleType.AIRPLANE || this.vehicleType == VehicleType.HELICOPTER) {
                 releaseDecoy()
             } else {
@@ -2517,7 +2615,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         }
 
         val terrainCompat = this.computed().terrainCompat
-        if (terrainCompat.isNotEmpty()) {
+        if (!isFixedWingFlightVehicle() && terrainCompat.isNotEmpty()) {
             if (!((vehicleType == VehicleType.AIRPLANE || vehicleType == VehicleType.HELICOPTER) && isWreck)) {
                 this.terrainCompact(terrainCompat)
             }
@@ -2611,17 +2709,35 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         // samples exactly this completed pose; flight strategies retain attitude ownership.
         updateVehiclePoseLifecycle()
 
+        if (!level().isClientSide && vehicleType == VehicleType.HELICOPTER &&
+            tickCount % 20 == 0 && EliteDiagnostics.isEnabled(level())) {
+            EliteDiagnostics.record(this, "helicopter_attitude", "SAMPLE",
+                "yaw", yRot, "pitch", xRot, "roll", roll,
+                "yaw_step", VehicleFlightAttitude.wrap(yRot - yRotO),
+                "pitch_step", VehicleFlightAttitude.wrap(xRot - xRotO),
+                "roll_step", VehicleFlightAttitude.wrap(roll - prevRoll),
+                "mouse_x", mouseMoveSpeedX, "mouse_y", mouseMoveSpeedY,
+                "rotor_coupled", usesRotorCoupledHelicopterControls(),
+                "grounded", onGround(), "pilot", firstPassenger?.uuid)
+        }
+
         lowHealthWarning()
         if (!this.enableAABB()) {
             this.handlePartDamaged(this)
             // 处理部件血量
             this.handlePartHealth()
             this.updateOBB()
+            // Refresh the physical envelope after rotation, including while stationary.
+            this.boundingBox = makeBoundingBox()
         }
 
         if (level() is ServerLevel && VehicleConfig.VEHICLE_CHUNK_LOADING.get() && computed().keepChunkLoaded) {
-            this.keepChunkLoaded(this.position())
-            this.keepChunkLoaded(position().add(deltaMovement.normalize().scale(16.0)))
+            if (com.atsuishio.superbwarfare.api.vehicle.render.FarVehicleSimulationPolicy.shouldRenewSimulationTicket(this)) {
+                this.keepChunkLoaded(this.position())
+                this.keepChunkLoaded(position().add(deltaMovement.normalize().scale(16.0)))
+            } else {
+                NetworkTelemetry.recordSystemWork("chunk_ticket.parked_aircraft_idle")
+            }
         }
     }
 
@@ -2754,7 +2870,12 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
             if (resolveVehiclePoseProvider() != null) {
                 obb.updateRotation(transform.getNormalizedRotation(Quaterniond()))
             } else {
-                obb.updateRotation(this.getRotationFromString(obbInfo.rotation))
+                // Fixed-wing centers and bases sample the same current physical attitude.
+                obb.updateRotation(if (isFixedWingFlightVehicle()) {
+                    this.getRotationFromString(obbInfo.rotation, 1f)
+                } else {
+                    this.getRotationFromString(obbInfo.rotation)
+                })
             }
         }
     }
@@ -2778,7 +2899,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         prevRoll = 0f
     }
 
-     val shootSoundInstance: SoundEvent?
+    val shootSoundInstance: SoundEvent?
         get() {
             // TODO why 0?
             val gunData = getGunData(0)
@@ -2791,13 +2912,13 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
             return SoundEvents.EMPTY
         }
 
-     fun getShootSoundInstance(weaponName: String): SoundEvent {
+    fun getShootSoundInstance(weaponName: String): SoundEvent {
         val gunData = getGunData(weaponName) ?: return SoundEvents.EMPTY
 
         return gunData.get(GunProp.SOUND_INFO).fireSoundInstances ?: SoundEvents.EMPTY
     }
 
-     val isFiring: Boolean
+    val isFiring: Boolean
         get() {
             val gunData = getGunData(0)
             return if (gunData != null) {
@@ -2812,7 +2933,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
             }
         }
 
-     fun shootingVolume(): Float {
+    fun shootingVolume(): Float {
         val gunData = getGunData(0)
         return if (gunData != null) {
             gunData.shootTimer.get() * 0.25f
@@ -2821,7 +2942,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         }
     }
 
-     fun shootingPitch(): Float {
+    fun shootingPitch(): Float {
         val gunData = getGunData(0)
         return if (gunData != null) {
             (0.98f + gunData.shootTimer.get() * 0.01f - (if (gunData.heat.get() > 80) (gunData.heat.get() - 80) * 0.01 else 0.0)).toFloat()
@@ -2831,19 +2952,12 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
     }
 
     protected fun updateBackupAmmoCount() {
-        for (i in 0..<this.maxPassengers) {
-            val currentData = getGunData(i) ?: continue
-
-            if (!currentData.useBackpackAmmo()) {
-                if (currentData.backupAmmoCount.get() != 0) {
-                    modifyGunData(i) { it.backupAmmoCount.reset() }
-                }
-                continue
-            }
-
+        // Every channel needs a current presentation count, including secondary weapons.
+        for (name in gunDataMap.keys.toList()) {
+            val currentData = getGunData(name) ?: continue
             val count = currentData.countBackupAmmo(this.ammoSupplier)
             if (currentData.backupAmmoCount.get() != count) {
-                modifyGunData(i) { it.backupAmmoCount.set(count) }
+                modifyGunData(name) { it.backupAmmoCount.set(count) }
             }
         }
     }
@@ -2855,34 +2969,34 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         get() = this
 
     /** Resolves an addon definition first, then the five stable native legacy adapters. */
-     fun getVehicleModuleDefinition(id: ResourceLocation): VehicleModuleDefinition? =
+    fun getVehicleModuleDefinition(id: ResourceLocation): VehicleModuleDefinition? =
         vehicleModuleStateService.getDefinition(id)
 
     /** Common-side immutable view; generic states are parsed from the synchronized server snapshot on clients. */
-     fun getVehicleModuleState(id: ResourceLocation): VehicleModuleState? =
+    fun getVehicleModuleState(id: ResourceLocation): VehicleModuleState? =
         vehicleModuleStateService.getState(id)
 
     /** Includes all native legacy modules and every generic module that has authoritative stored state. */
-     fun getVehicleModuleStates(): List<VehicleModuleState> =
+    fun getVehicleModuleStates(): List<VehicleModuleState> =
         vehicleModuleStateService.getStates()
 
-     fun damageVehicleModule(
+    fun damageVehicleModule(
         id: ResourceLocation,
         damage: Double,
     ): VehicleModuleState? = vehicleModuleStateService.damage(id, damage)
 
-     fun setVehicleModuleHealth(
+    fun setVehicleModuleHealth(
         id: ResourceLocation,
         health: Double,
     ): VehicleModuleState? = vehicleModuleStateService.setHealth(id, health)
 
-     fun setVehicleModuleState(
+    fun setVehicleModuleState(
         id: ResourceLocation,
         health: Double,
         destroyed: Boolean,
     ): VehicleModuleState? = vehicleModuleStateService.setState(id, health, destroyed)
 
-     fun handlePartDamaged(obbEntity: OBBEntity) {
+    fun handlePartDamaged(obbEntity: OBBEntity) {
         val obbList = obbEntity.getOBBs()
         for (obb in obbList) {
             val pos = obb.center.toVec3()
@@ -2922,7 +3036,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         }
     }
 
-     fun handlePartHealth() {
+    fun handlePartHealth() {
         val policy = VehicleRepairPolicies.resolve(this)
         val criticalHull = health < 0.05 * getMaxHealth()
         when (policy.criticalPartFailureMode) {
@@ -3014,7 +3128,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         }
     }
 
-     fun addRandomParticle(
+    fun addRandomParticle(
         particleOptions: ParticleOptions,
         pos: Vec3,
         randomPos: Float,
@@ -3038,7 +3152,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         }
     }
 
-     fun addRandomParticle(
+    fun addRandomParticle(
         particleOptions: ParticleOptions,
         pos: Vec3,
         randomPos: Float,
@@ -3062,22 +3176,22 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         }
     }
 
-     fun defaultPartDamageEffect(pos: Vec3) {
+    fun defaultPartDamageEffect(pos: Vec3) {
         if (level().isClientSide) {
             addRandomParticle(ModParticleTypes.FIRE_STAR.get(), pos, 0f, level(), 0.25f, 1)
             addRandomParticle(ParticleTypes.LARGE_SMOKE, pos, 0.5f, level(), 0.001f, 1)
         }
     }
 
-     fun onTurretDamaged(pos: Vec3) {
+    fun onTurretDamaged(pos: Vec3) {
         this.defaultPartDamageEffect(pos)
     }
 
-     fun onLeftWheelDamaged(pos: Vec3) {
+    fun onLeftWheelDamaged(pos: Vec3) {
         this.defaultPartDamageEffect(pos)
     }
 
-     fun onRightWheelDamaged(pos: Vec3) {
+    fun onRightWheelDamaged(pos: Vec3) {
         this.defaultPartDamageEffect(pos)
     }
 
@@ -3089,7 +3203,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         this.defaultPartDamageEffect(pos)
     }
 
-     fun clearArrow() {
+    fun clearArrow() {
         if (tickCount % 5 != 0) return
         this.level().getEntities(
             this,
@@ -3098,7 +3212,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
             .forEach { obj -> obj.discard() }
     }
 
-     fun lowHealthWarning() {
+    fun lowHealthWarning() {
         if (!data().compute().hasLowHealthWarning) return
         if (this.health <= 0.4 * this.getMaxHealth()) {
             addRandomParticle(
@@ -3259,7 +3373,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
 
     }
 
-     fun turretBurnEffectPos(): Vec3? {
+    fun turretBurnEffectPos(): Vec3? {
         val pos = turretPos
         val worldPosition = pos?.let {
             transformPosition(
@@ -3270,7 +3384,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         return worldPosition?.let { Vec3(it.x, worldPosition.y, worldPosition.z) }
     }
 
-     fun playLowHealthParticle() {
+    fun playLowHealthParticle() {
         if (level().isClientSide) {
             addRandomParticle(
                 ParticleTypes.LARGE_SMOKE,
@@ -3291,17 +3405,17 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         }
     }
 
-     fun adjustTurretAngle() {
+    fun adjustTurretAngle() {
         VehicleWeaponUtils.adjustTurretAngle(this)
     }
 
     /** Returns the current primary slot from the deterministic filtered seat order. */
-     fun getSelectedWeapon(seatIndex: Int): Int {
+    fun getSelectedWeapon(seatIndex: Int): Int {
         return vehicleWeaponRuntime.selectedWeaponIndex(seatIndex)
     }
 
     /** Captures the exact launch slot/id; this is metadata only and never changes selection. */
-     fun captureVehicleWeaponGuidanceContext(
+    fun captureVehicleWeaponGuidanceContext(
         controller: LivingEntity?,
         weaponName: String,
         data: GunData,
@@ -3342,7 +3456,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         return resolveHelicopterAtgmGuidanceRay(controller, launchContext)
     }
 
-     fun resolveHelicopterAtgmGuidanceRay(
+    fun resolveHelicopterAtgmGuidanceRay(
         controller: LivingEntity,
         launchContext: VehicleWeaponGuidanceContext,
     ): VehicleHudAimRay? {
@@ -3380,7 +3494,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
     }
 
     /** Called only by the server-validated ID 64 camera-ray transport. */
-     fun acceptHelicopterAtgmCameraRay(state: VehicleHelicopterAtgmCameraRayState) {
+    fun acceptHelicopterAtgmCameraRay(state: VehicleHelicopterAtgmCameraRayState) {
         if (level().isClientSide || state.vehicleId != id || state.vehicleUuid != uuid ||
             state.dimension != level().dimension().location()
         ) return
@@ -3397,7 +3511,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
     }
 
     /** Exact authored pair metadata; generated VehiclePairs is the canonical source. */
-     fun getVehicleWeaponPair(seatIndex: Int): VehicleWeaponPair? {
+    fun getVehicleWeaponPair(seatIndex: Int): VehicleWeaponPair? {
         if (seatIndex < 0) return null
         val authored = computed().weaponPairs.list.firstOrNull { it.seat == seatIndex }
         if (authored != null) {
@@ -3409,7 +3523,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
     }
 
     /** Resolves the current primary/secondary slots for HUD consumers. */
-     fun getActiveVehicleWeaponPair(seatIndex: Int): ActiveVehicleWeaponPair? {
+    fun getActiveVehicleWeaponPair(seatIndex: Int): ActiveVehicleWeaponPair? {
         val primaryIndex = getSelectedWeapon(seatIndex)
         val activeId = getGunName(seatIndex, primaryIndex) ?: return null
         val secondaryIndex = getSecondaryWeaponIndex(seatIndex)
@@ -3419,19 +3533,19 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         )
     }
 
-     fun getPrimaryWeaponIndex(seatIndex: Int): Int {
+    fun getPrimaryWeaponIndex(seatIndex: Int): Int {
         return getSelectedWeapon(seatIndex)
     }
 
-     fun getSecondaryWeaponIndex(seatIndex: Int): Int? {
+    fun getSecondaryWeaponIndex(seatIndex: Int): Int? {
         return vehicleWeaponRuntime.secondaryWeaponIndex(seatIndex)
     }
 
-     fun hasSecondaryWeapon(seatIndex: Int): Boolean =
+    fun hasSecondaryWeapon(seatIndex: Int): Boolean =
         getSecondaryWeaponIndex(seatIndex) != null
 
     /** Stable server action token for the exact vehicle/dimension/seat/list/slot context. */
-     fun secondaryWeaponContextToken(seatIndex: Int): String {
+    fun secondaryWeaponContextToken(seatIndex: Int): String {
         val ordered = vehicleWeaponRuntime.validWeaponIndices(seatIndex)
         val primary = vehicleWeaponRuntime.resolvedPrimaryIndex(seatIndex, ordered)
         val secondary = vehicleWeaponRuntime.resolvedSecondaryIndex(seatIndex, ordered, primary)
@@ -3445,7 +3559,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
     }
 
     /** Validates a held secondary action without consulting mutable client selection state. */
-     fun isSecondaryWeaponContextValid(
+    fun isSecondaryWeaponContextValid(
         controller: LivingEntity?,
         seatIndex: Int,
         token: String,
@@ -3474,6 +3588,14 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         if (vehicleAimProfileCache.containsKey(key)) return null
         return (this as? VehicleAimProfileProvider)
             ?.createVehicleAimProfile(seatIndex, selectedWeaponIndex)
+            .let { authored -> authored ?: if (this !is VehicleAimProfileProvider && hasTurret() &&
+                barrelPosition != null && seatIndex == turretControllerIndex &&
+                com.atsuishio.superbwarfare.api.vehicle.aim.VehicleLaserRangefinder.enabled(this, seatIndex, selectedWeaponIndex)) {
+                VehicleAimProfile.builder(VehicleAimChannel.TURRET)
+                    .rates(kotlin.math.abs(turretTurnYSpeed), kotlin.math.abs(turretTurnXSpeed))
+                    .yawRange(-turretMaxYaw, -turretMinYaw)
+                    .pitchRange(-turretMaxPitch, -turretMinPitch).build()
+            } else null }
             .also { vehicleAimProfileCache[key] = it }
     }
 
@@ -3481,7 +3603,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
      * Returns the validated live center-screen ray for an ordinary ground TURRET controller.
      * This is an input sample only; it never writes camera state or becomes projectile authority.
      */
-     fun resolveVehicleAimCameraRay(
+    fun resolveVehicleAimCameraRay(
         controller: Entity,
         channel: VehicleAimChannel,
         partialTicks: Float,
@@ -3502,8 +3624,8 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
 
     /**
      * Server-owned runtime geometric-zero selection.  The aim controller validates the exact
-     * mounted Player/TURRET context; this wrapper is the narrow seam for a future acknowledged
-     * transport and never mutates camera or weapon state itself.
+     * mounted Player/TURRET context. This wrapper delegates the selection without mutating
+     * camera or weapon state itself.
      */
     fun setVehicleGeometricZeroDistance(controller: Entity?, requestedDistanceBlocks: Int): Boolean =
         vehicleAimController.setGeometricZeroDistance(controller, requestedDistanceBlocks)
@@ -3520,7 +3642,13 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
     fun requestVehicleFcsZero(controller: Entity?, requestSequence: Long): VehicleFcsZeroState =
         vehicleAimController.requestFcsZero(controller, requestSequence)
 
+    fun requestVehicleFcsZeroAsync(controller: Entity?, requestSequence: Long): java.util.concurrent.CompletableFuture<VehicleFcsZeroState> =
+        vehicleAimController.requestFcsZeroAsync(controller, requestSequence)
+
     /** Immutable latest server FCS-zero result for a transport/diagnostic consumer. */
+    fun acceptVehicleAimOpticalZoom(controller: Entity, magnification: Float) =
+        vehicleAimController.acceptOpticalZoom(controller, magnification)
+
     fun getVehicleFcsZeroState(): VehicleFcsZeroState = vehicleAimController.fcsZeroState()
 
     /** Dynamic drive state is applied after authored profile rates, on both authority and prediction. */
@@ -3534,18 +3662,18 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         configuredRate: Float,
     ): Float = if (channel == VehicleAimChannel.TURRET && turretDamaged) configuredRate * 0.2F else configuredRate
 
-     fun resolveVehicleAimMinPitch(channel: VehicleAimChannel, authoredMinimum: Float): Float =
+    fun resolveVehicleAimMinPitch(channel: VehicleAimChannel, authoredMinimum: Float): Float =
         if (channel == VehicleAimChannel.TURRET) authoredMinimum + customTurretMaxPitch else authoredMinimum
 
-     fun resolveVehicleAimMaxPitch(channel: VehicleAimChannel, authoredMaximum: Float): Float =
+    fun resolveVehicleAimMaxPitch(channel: VehicleAimChannel, authoredMaximum: Float): Float =
         if (channel == VehicleAimChannel.TURRET) authoredMaximum - customTurretMinPitch else authoredMaximum
 
-     fun getVehicleAimSnapshot(seatIndex: Int, selectedWeaponIndex: Int): VehicleAimSnapshot? {
+    fun getVehicleAimSnapshot(seatIndex: Int, selectedWeaponIndex: Int): VehicleAimSnapshot? {
         refreshClientAimPresentationFromSyncedData()
         return vehicleAimController.snapshot(seatIndex, selectedWeaponIndex)
     }
 
-     fun getVehicleAimSnapshot(channel: VehicleAimChannel): VehicleAimSnapshot? {
+    fun getVehicleAimSnapshot(channel: VehicleAimChannel): VehicleAimSnapshot? {
         refreshClientAimPresentationFromSyncedData()
         return vehicleAimController.snapshot(channel)
     }
@@ -3604,7 +3732,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         publishTextSnapshot(VEHICLE_AIM_SNAPSHOT, "vehicle_aim_snapshot", payload)
     }
 
-     fun requestVehicleActionInput(
+    fun requestVehicleActionInput(
         player: Player,
         vehicleId: Int,
         actionId: ResourceLocation,
@@ -3618,7 +3746,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         held,
     )
 
-     fun getVehicleActionSnapshot(actionId: ResourceLocation): VehicleActionSnapshot? {
+    fun getVehicleActionSnapshot(actionId: ResourceLocation): VehicleActionSnapshot? {
         if (level().isClientSide) {
             vehicleActionController.consumeClient(entityData.get(VEHICLE_ACTION_SNAPSHOT))
         }
@@ -3629,11 +3757,11 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         publishTextSnapshot(VEHICLE_ACTION_SNAPSHOT, "vehicle_action_snapshot", payload)
     }
 
-     fun turretAutoAimFromVector(shootVec: Vec3?) {
+    fun turretAutoAimFromVector(shootVec: Vec3?) {
         VehicleWeaponUtils.turretAutoAimFromVector(this, shootVec)
     }
 
-     fun turretAutoAimFromUuid(uuid: String, pLiving: LivingEntity?) {
+    fun turretAutoAimFromUuid(uuid: String, pLiving: LivingEntity?) {
         VehicleWeaponUtils.turretAutoAimFromUuid(this, uuid, pLiving)
     }
 
@@ -3661,7 +3789,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
          */
         get() = 0f
 
-     val customTurretMaxPitch: Float
+    val customTurretMaxPitch: Float
         /**
          * @return 自定义炮塔最大仰角
          */
@@ -3709,7 +3837,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         }
     }
 
-     fun copyEntityData(entity: Entity) {
+    fun copyEntityData(entity: Entity) {
         entity.yRot += destroyRot
         val index = getSeatIndex(entity)
         val seat = computed().seats()[index]
@@ -3727,7 +3855,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         }
     }
 
-     fun getTransformDirection(ticks: Float, entity: Entity): Vec3 {
+    fun getTransformDirection(ticks: Float, entity: Entity): Vec3 {
         val index = getSeatIndex(entity)
         val seat = computed().seats()[index]
         val passengerRot = seat.orientation
@@ -3737,7 +3865,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         return Vec3(posO.x, posO.y, posO.z).vectorTo(Vec3(pos.x, pos.y, pos.z))
     }
 
-     fun getTransformDirectionNoOrientation(ticks: Float, entity: Entity): Vec3 {
+    fun getTransformDirectionNoOrientation(ticks: Float, entity: Entity): Vec3 {
         val index = getSeatIndex(entity)
         val seat = computed().seats()[index]
         val transform = getTransformFromString(seat.transform, ticks)
@@ -3746,7 +3874,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         return Vec3(posO.x, posO.y, posO.z).vectorTo(Vec3(pos.x, pos.y, pos.z))
     }
 
-     fun getTransformDirectionFromString(ticks: Float, entity: Entity, string: String): Vec3 {
+    fun getTransformDirectionFromString(ticks: Float, entity: Entity, string: String): Vec3 {
         val index = getSeatIndex(entity)
         val seat = computed().seats()[index]
         val passengerRot = seat.orientation
@@ -3757,7 +3885,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
     }
 
     /** One pose supplies rider body placement and both first-person camera anchors. */
-     fun resolveVehicleSeatPose(
+    fun resolveVehicleSeatPose(
         passenger: Entity,
         partialTicks: Float,
         zooming: Boolean,
@@ -3795,7 +3923,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         passengerPos(passenger, callback, seat.position, seat.transform)
     }
 
-     fun passengerPos(passenger: Entity, callback: MoveFunction, vec3: Vec3, string: String?) {
+    fun passengerPos(passenger: Entity, callback: MoveFunction, vec3: Vec3, string: String?) {
         val worldPosition = transformPosition(getTransformFromString(string), vec3.x, vec3.y, vec3.z)
         passenger.setPos(worldPosition.x, worldPosition.y, worldPosition.z)
         callback.accept(passenger, worldPosition.x, worldPosition.y, worldPosition.z)
@@ -3843,27 +3971,27 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         rotationTransform["Default"] = Function { tick -> VectorTool.combineRotations(tick, this) }
     }
 
-     fun getTransformFromString(string: String?): Matrix4d {
+    fun getTransformFromString(string: String?): Matrix4d {
         return getTransformFromString(string, 1f)
     }
 
-     fun getTransformFromString(string: String?, ticks: Float): Matrix4d {
+    fun getTransformFromString(string: String?, ticks: Float): Matrix4d {
         return positionTransform
             .getOrDefault(string, positionTransform["Default"])!!
             .apply(ticks)
     }
 
-     fun getVectorFromString(string: String?): Vec3 {
+    fun getVectorFromString(string: String?): Vec3 {
         return getVectorFromString(string, 0f)
     }
 
-     fun getVectorFromString(string: String?, ticks: Float): Vec3 {
+    fun getVectorFromString(string: String?, ticks: Float): Vec3 {
         return vectorTransform
             .getOrDefault(string, vectorTransform["Default"])!!
             .apply(ticks)
     }
 
-     fun getVectorFromString(string: String, ticks: Float, seatIndex: Int): Vec3 {
+    fun getVectorFromString(string: String, ticks: Float, seatIndex: Int): Vec3 {
         val entity = getNthEntity(seatIndex)
         return when (string) {
             "Bomb" -> bombHitPos(getNthEntity(seatIndex)).subtract(getShootPosForHud(getNthEntity(seatIndex), 1f))
@@ -3876,15 +4004,15 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         }
     }
 
-     fun cameraDirection(): Vec3 {
+    fun cameraDirection(): Vec3 {
         return Vec3(Minecraft.getInstance().gameRenderer.mainCamera.lookVector)
     }
 
-     fun getRotationFromString(string: String?): Quaterniond {
+    fun getRotationFromString(string: String?): Quaterniond {
         return getRotationFromString(string, 0f)
     }
 
-     fun getRotationFromString(string: String?, ticks: Float): Quaterniond {
+    fun getRotationFromString(string: String?, ticks: Float): Quaterniond {
         return rotationTransform
             .getOrDefault(string, rotationTransform["Default"])!!
             .apply(ticks)
@@ -3893,11 +4021,11 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
     /**
      * @return 炮弹发射位置
      */
-     fun getShootPos(seatIndex: Int, ticks: Float): Vec3 {
+    fun getShootPos(seatIndex: Int, ticks: Float): Vec3 {
         return getShootPos(getNthEntity(seatIndex), ticks)
     }
 
-     fun bombHitPos(entity: Entity?): Vec3 {
+    fun bombHitPos(entity: Entity?): Vec3 {
         val gunData = getGunData(entity)
         return if (gunData != null && level().isClientSide) {
             val baseVelocity = getShootVec(entity, 1f).normalize().scale(gunData.get(GunProp.VELOCITY))
@@ -3922,7 +4050,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
      * @param entity 操控载具的实体
      * @return 炮弹发射位置
      */
-     fun getShootPos(entity: Entity?, ticks: Float): Vec3 {
+    fun getShootPos(entity: Entity?, ticks: Float): Vec3 {
         val data = getGunData(getSeatIndex(entity))
         if (data != null) {
             attachmentPosition(data.firePositionAttachment(), ticks)?.let { return it }
@@ -3938,7 +4066,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         return getEyePosition(ticks)
     }
 
-     fun getShootPos(weaponName: String, ticks: Float): Vec3 {
+    fun getShootPos(weaponName: String, ticks: Float): Vec3 {
         val data = getGunData(weaponName)
         if (data != null) {
             attachmentPosition(data.firePositionAttachment(), ticks)?.let { return it }
@@ -3954,7 +4082,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         return getEyePosition(ticks)
     }
 
-     fun resolveMuzzleFrame(entity: Entity?, partialTicks: Float): VehicleMuzzleFrame? {
+    fun resolveMuzzleFrame(entity: Entity?, partialTicks: Float): VehicleMuzzleFrame? {
         val seatIndex = getSeatIndex(entity)
         val weaponIndex = getSelectedWeapon(seatIndex)
         val weaponName = getGunName(seatIndex, weaponIndex) ?: return null
@@ -3979,7 +4107,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         )
     }
 
-     fun resolveMuzzleFrame(weaponName: String, partialTicks: Float): VehicleMuzzleFrame? {
+    fun resolveMuzzleFrame(weaponName: String, partialTicks: Float): VehicleMuzzleFrame? {
         val data = getGunData(weaponName) ?: return null
         val position = getShootPos(weaponName, partialTicks)
         val direction = getShootVec(weaponName, partialTicks)
@@ -4019,7 +4147,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
      * @param entity 操控载具的实体
      * @return 所有炮弹发射位置的中心点，用于HUD瞄准
      */
-     fun getShootPosForHud(entity: Entity?, ticks: Float): Vec3 {
+    fun getShootPosForHud(entity: Entity?, ticks: Float): Vec3 {
         val data = getGunData(getSeatIndex(entity))
         if (data != null) {
             attachmentPosition(data.get(GunProp.SHOOT_POS).hudOriginAttachment, ticks)?.let { return it }
@@ -4039,7 +4167,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
      * @param entity 操控载具的实体
      * @return 所有炮弹发射位置的方向，用于HUD瞄准
      */
-     fun getShootDirectionForHud(entity: Entity, partialTicks: Float): Vec3 {
+    fun getShootDirectionForHud(entity: Entity, partialTicks: Float): Vec3 {
         val data = getGunData(getSeatIndex(entity)) ?: return getViewVector(partialTicks)
 
         attachmentDirection(data.get(GunProp.SHOOT_POS).hudDirectionAttachment, partialTicks)?.let { return it }
@@ -4070,72 +4198,72 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         }
     }
 
-     fun getShootVec(seatIndex: Int, ticks: Float): Vec3? {
+    fun getShootVec(seatIndex: Int, ticks: Float): Vec3? {
         return getShootVec(getNthEntity(seatIndex), ticks)
     }
 
-     fun getShootVec(entity: Entity?, partialTicks: Float): Vec3 {
+    fun getShootVec(entity: Entity?, partialTicks: Float): Vec3 {
         val data = getGunData(getSeatIndex(entity))
         attachmentDirection(data?.fireDirectionAttachment(), partialTicks)?.let { return it }
         return VehicleVecUtils.getShootVec(this, entity, partialTicks)
     }
 
-     fun getShootVec(weaponName: String, partialTicks: Float): Vec3 {
+    fun getShootVec(weaponName: String, partialTicks: Float): Vec3 {
         val data = getGunData(weaponName)
         attachmentDirection(data?.fireDirectionAttachment(), partialTicks)?.let { return it }
         return VehicleVecUtils.getShootVec(this, weaponName, partialTicks)
     }
 
-     fun getViewVec(entity: Entity, partialTicks: Float): Vec3 {
+    fun getViewVec(entity: Entity, partialTicks: Float): Vec3 {
         val data = getGunData(getSeatIndex(entity))
         attachmentDirection(data?.get(GunProp.SHOOT_POS)?.viewDirectionAttachment, partialTicks)?.let { return it }
         return VehicleVecUtils.getViewVec(this, entity, partialTicks)
     }
 
-     fun getViewPos(entity: Entity, partialTicks: Float): Vec3? {
+    fun getViewPos(entity: Entity, partialTicks: Float): Vec3? {
         val data = getGunData(getSeatIndex(entity))
         attachmentPosition(data?.get(GunProp.SHOOT_POS)?.viewAttachment, partialTicks)?.let { return it }
         return VehicleVecUtils.getViewPos(this, entity, partialTicks)
     }
 
-     fun getSeekVec(entity: Entity?, partialTicks: Float): Vec3? {
+    fun getSeekVec(entity: Entity?, partialTicks: Float): Vec3? {
         val data = getGunData(getSeatIndex(entity))
         attachmentDirection(data?.get(GunProp.SHOOT_POS)?.seekDirectionAttachment, partialTicks)?.let { return it }
         return VehicleVecUtils.getSeekVec(this, entity, partialTicks)
     }
 
-     fun getSeekVec(seatIndex: Int, partialTicks: Float): Vec3? {
+    fun getSeekVec(seatIndex: Int, partialTicks: Float): Vec3? {
         return getSeekVec(getNthEntity(seatIndex), partialTicks)
     }
 
     /** Presentation origin for a logical shot; defaults exactly to the selected ballistic muzzle. */
-     fun getShootEffectPos(entity: Entity?, partialTicks: Float): Vec3 {
+    fun getShootEffectPos(entity: Entity?, partialTicks: Float): Vec3 {
         val data = getGunData(getSeatIndex(entity))
         return attachmentPosition(data?.fireEffectAttachment(), partialTicks)
             ?: getShootPos(entity, partialTicks)
     }
 
-     fun getShootEffectPos(weaponName: String, partialTicks: Float): Vec3 {
+    fun getShootEffectPos(weaponName: String, partialTicks: Float): Vec3 {
         val data = getGunData(weaponName)
         return attachmentPosition(data?.fireEffectAttachment(), partialTicks)
             ?: getShootPos(weaponName, partialTicks)
     }
 
     /** Presentation direction for a logical shot; defaults exactly to the ballistic direction. */
-     fun getShootEffectVec(entity: Entity?, partialTicks: Float): Vec3 {
+    fun getShootEffectVec(entity: Entity?, partialTicks: Float): Vec3 {
         val data = getGunData(getSeatIndex(entity))
         return attachmentDirection(data?.fireEffectDirectionAttachment(), partialTicks)
             ?: getShootVec(entity, partialTicks)
     }
 
-     fun getShootEffectVec(weaponName: String, partialTicks: Float): Vec3 {
+    fun getShootEffectVec(weaponName: String, partialTicks: Float): Vec3 {
         val data = getGunData(weaponName)
         return attachmentDirection(data?.fireEffectDirectionAttachment(), partialTicks)
             ?: getShootVec(weaponName, partialTicks)
     }
 
     /** Optional native seek origin for consumers that need a trace start as well as a direction. */
-     fun getSeekPos(entity: Entity?, partialTicks: Float): Vec3? {
+    fun getSeekPos(entity: Entity?, partialTicks: Float): Vec3? {
         val data = getGunData(getSeatIndex(entity)) ?: return null
         return attachmentPosition(data.get(GunProp.SHOOT_POS).seekAttachment, partialTicks)
     }
@@ -4153,7 +4281,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         return direction.takeIf { it.lengthSqr() > 1.0E-12 }?.normalize()
     }
 
-     fun getPlayerLookAtEntityOnVehicle(shooter: Entity, entityReach: Double, partialTick: Float): Entity? {
+    fun getPlayerLookAtEntityOnVehicle(shooter: Entity, entityReach: Double, partialTick: Float): Entity? {
         val eye = getShootPosForHud(shooter, partialTick)
         val distance = entityReach * entityReach
         var hitResult = TraceTool.pickNew(eye, 512.0, this)
@@ -4189,19 +4317,19 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
      * @param entity 操控载具的实体
      * @return 炮弹发射时的初始速度
      */
-     fun getProjectileVelocity(entity: Entity?): Float {
+    fun getProjectileVelocity(entity: Entity?): Float {
         return getProjectileVelocity(getGunData(getSeatIndex(entity)))
     }
 
-     fun getProjectileVelocity(seatIndex: Int): Float {
+    fun getProjectileVelocity(seatIndex: Int): Float {
         return getProjectileVelocity(getGunData(seatIndex))
     }
 
-     fun getProjectileVelocity(weaponName: String): Float {
+    fun getProjectileVelocity(weaponName: String): Float {
         return getProjectileVelocity(getGunData(weaponName))
     }
 
-     fun getProjectileVelocity(gunData: GunData?): Float {
+    fun getProjectileVelocity(gunData: GunData?): Float {
         return gunData?.get(GunProp.VELOCITY)?.toFloat() ?: 25f
     }
 
@@ -4209,25 +4337,25 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
      * @param entity 操控载具的实体
      * @return 炮弹重力
      */
-     fun getProjectileGravity(entity: Entity?): Float {
+    fun getProjectileGravity(entity: Entity?): Float {
         val gunData = getGunData(getSeatIndex(entity)) ?: return 0f
 
         return gunData.get(GunProp.GRAVITY).toFloat()
     }
 
-     fun getProjectileGravity(seatIndex: Int): Float {
+    fun getProjectileGravity(seatIndex: Int): Float {
         val gunData = getGunData(seatIndex) ?: return 0f
 
         return gunData.get(GunProp.GRAVITY).toFloat()
     }
 
-     fun getProjectileGravity(weaponName: String): Float {
+    fun getProjectileGravity(weaponName: String): Float {
         val gunData = getGunData(weaponName) ?: return 0f
 
         return gunData.get(GunProp.GRAVITY).toFloat()
     }
 
-     fun getProjectileGravity(gunData: GunData?): Float {
+    fun getProjectileGravity(gunData: GunData?): Float {
         if (gunData == null) return 0f
         return gunData.get(GunProp.GRAVITY).toFloat()
     }
@@ -4236,25 +4364,25 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
      * @param entity 操控载具的实体
      * @return 炮弹发射时的散布
      */
-     fun getProjectileSpread(entity: Entity?): Float {
+    fun getProjectileSpread(entity: Entity?): Float {
         val gunData = getGunData(getSeatIndex(entity)) ?: return 0.5f
 
         return gunData.get(GunProp.SPREAD).toFloat()
     }
 
-     fun getProjectileSpread(seatIndex: Int): Float {
+    fun getProjectileSpread(seatIndex: Int): Float {
         val gunData = getGunData(seatIndex) ?: return 0.5f
 
         return gunData.get(GunProp.SPREAD).toFloat()
     }
 
-     fun getProjectileSpread(weaponName: String): Float {
+    fun getProjectileSpread(weaponName: String): Float {
         val gunData = getGunData(weaponName) ?: return 0.5f
 
         return gunData.get(GunProp.SPREAD).toFloat()
     }
 
-     fun getProjectileSpread(gunData: GunData?): Float {
+    fun getProjectileSpread(gunData: GunData?): Float {
         if (gunData == null) return 0.5f
         return gunData.get(GunProp.SPREAD).toFloat()
     }
@@ -4265,7 +4393,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
      * @param uuid    目标的UUID字符串
      * @param pLiving 操控载具的实体
      */
-     fun passengerWeaponAutoAimFormUuid(uuid: String?, pLiving: LivingEntity) {
+    fun passengerWeaponAutoAimFormUuid(uuid: String?, pLiving: LivingEntity) {
         var target = EntityFindUtil.findEntity(level(), uuid)
         if (target != null) {
             if (target.vehicle != null) {
@@ -4307,7 +4435,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
      *
      * @param shootVec 需要让武器站以这个角度发射的向量
      */
-     fun passengerWeaponAutoAimFormVector(shootVec: Vec3) {
+    fun passengerWeaponAutoAimFormVector(shootVec: Vec3) {
         val ySpeed = this.passengerWeaponYSpeed
         val xSpeed = this.passengerWeaponXSpeed
         val diffY = Mth.wrapDegrees(
@@ -4335,7 +4463,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         )
     }
 
-     fun adjustWeaponControllerAngle() {
+    fun adjustWeaponControllerAngle() {
         val entity = getNthEntity(this.passengerWeaponStationControllerIndex)
         val pos: Vec3? = passengerWeaponStationBarrelPosition
         if (entity != null && pos != null) {
@@ -4358,7 +4486,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
 
     fun destroy(context: VehicleDestructionContext) = vehicleDestructionLifecycleService.destroy(context)
 
-     fun defaultDestructionContext(): VehicleDestructionContext {
+    fun defaultDestructionContext(): VehicleDestructionContext {
         return VehicleDestructionContext.builder()
             .directSource(this)
             .attacker(lastAttacker)
@@ -4367,16 +4495,16 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
             .build()
     }
 
-     fun vehicleExplosion(destroyInfo: DestroyInfo) =
+    fun vehicleExplosion(destroyInfo: DestroyInfo) =
         vehicleDestructionLifecycleService.vehicleExplosion(destroyInfo)
 
-     fun vehicleExplosion(destroyInfo: DestroyInfo, context: VehicleDestructionContext) =
+    fun vehicleExplosion(destroyInfo: DestroyInfo, context: VehicleDestructionContext) =
         vehicleDestructionLifecycleService.vehicleExplosion(destroyInfo, context)
 
-     fun createCustomExplosion(): CustomExplosion.Builder = CustomExplosion.Builder(this)
+    fun createCustomExplosion(): CustomExplosion.Builder = CustomExplosion.Builder(this)
         .attacker(this.lastAttacker)
 
-     fun createCustomExplosion(context: VehicleDestructionContext): CustomExplosion.Builder {
+    fun createCustomExplosion(context: VehicleDestructionContext): CustomExplosion.Builder {
         val directSource = context.directSource() ?: this
         return CustomExplosion.Builder(directSource)
             .source(directSource)
@@ -4446,6 +4574,9 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         val hadEngineInfo = this.engineInfo != null
         val engineConfigurationChanged = vehicleEngineRuntime.bind(computed, engineType, computed.engineInfo, engineInfo)
         if (engineConfigurationChanged) engineInfo = vehicleEngineRuntime.engine
+        tickFixedWingLandingGear()
+        if (isWreck && (vehicleType == VehicleType.AIRPLANE || vehicleType == VehicleType.HELICOPTER) &&
+            vehicleFlightController.apply(null)) return
         // Fixed-wing providers are opt-in and must be checked before the legacy FIXED early
         // return.  Existing helicopter/native providers continue through their original decode
         // and lifecycle order below; they are not queried until after their engine is decoded.
@@ -4489,20 +4620,56 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
     }
 
     /** Opt-in strategy selection. A null result leaves the complete upstream EngineInfo path intact. */
-     fun resolveVehicleFlightStrategy(): VehicleFlightStrategy? =
+    fun resolveVehicleFlightStrategy(): VehicleFlightStrategy? =
         (this as? VehicleFlightStrategyProvider)?.createVehicleFlightStrategy(this)
             ?: (this as? FixedWingFlightStrategyProvider)?.createFixedWingFlightStrategy(this)
 
     /** Typed fixed-wing identity used by input/presentation consumers; no vehicle-name heuristic. */
-     fun isFixedWingFlightVehicle(): Boolean = this is FixedWingFlightStrategyProvider
+    fun isFixedWingFlightVehicle(): Boolean = this is FixedWingFlightStrategyProvider
+
+    /** Fixed-wing gear is an opt-in capability, independent of the legacy aircraft engine. */
+    fun hasFixedWingLandingGear(): Boolean {
+        if (!isFixedWingFlightVehicle()) return false
+        val value = computed().engineInfo.get("HasGear") ?: return false
+        return value.isJsonPrimitive && value.asJsonPrimitive.isBoolean && value.asBoolean
+    }
+
+    /** Logical-server pilot request; action locks and incomplete gear travel reject the edge. */
+    fun requestFixedWingLandingGearToggle(operator: Player): Boolean {
+        if (level().isClientSide || isWreck || !operator.isAlive || operator.vehicle !== this
+            || getSeatIndex(operator) != 0 || !hasFixedWingLandingGear()
+            || !vehicleActionController.allowsMovement() || !vehicleActionController.allowsFire()
+            || !FixedWingLandingGear.canToggle(synchedGearRot, onGround())) return false
+        gearUp = !gearUp
+        return true
+    }
+
+    private fun tickFixedWingLandingGear() {
+        if (!isFixedWingFlightVehicle()) return
+        val available = hasFixedWingLandingGear()
+        if (!level().isClientSide) {
+            val valid = synchedGearRot.isFinite() && synchedGearRot in 0F..1F
+            if (!available || !valid || onGround() || isWreck) gearUp = false
+            synchedGearRot = if (available) {
+                FixedWingLandingGear.nextFraction(synchedGearRot, gearUp, onGround())
+            } else 0F
+        }
+        // Fixed-wing presentation and far copies both consume the same normalized fraction.
+        gearRot = if (available && synchedGearRot.isFinite()) synchedGearRot.coerceIn(0F, 1F) else 0F
+    }
 
     /** Current authoritative instruments, interpolated only for client consumers. */
-     fun getVehicleFlightInstrumentSnapshot(partialTicks: Float): VehicleFlightInstrumentSnapshot =
+    fun getVehicleFlightInstrumentSnapshot(partialTicks: Float): VehicleFlightInstrumentSnapshot =
         vehicleFlightController.snapshot(partialTicks)
 
     /** Read-only flight instruments aligned to this entity's rendered previous/current pose. */
-     fun getVehicleFlightPresentationSnapshot(partialTicks: Float): VehicleFlightInstrumentSnapshot =
+    fun getVehicleFlightPresentationSnapshot(partialTicks: Float): VehicleFlightInstrumentSnapshot =
         vehicleFlightController.presentationSnapshot(partialTicks)
+
+    /** Accepted fixed-wing controls on the same clock as the rendered body; null is neutral. */
+    fun getVehicleFlightControlSurfaceSnapshot(partialTicks: Float):
+        com.atsuishio.superbwarfare.api.vehicle.flight.FixedWingControlSurfaceSnapshot? =
+        vehicleFlightController.controlSurfacePresentationSnapshot(partialTicks)
 
     /** Per-tick precedence flag: a selected strategy outranks terrain, inertia, and pose providers. */
     val flightStrategyOwnsAttitudeThisTick: Boolean
@@ -4516,6 +4683,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
 
     /** Applies final strategy motion without invoking any legacy engine or force model. */
     fun applyVehicleFlightMotion(motion: Vec3, clientTelemetry: Boolean) {
+        if (isFixedWingFlightVehicle() && !hasFiniteFixedWingMotion(motion)) return
         setDeltaMovement(motion)
         deltaMovementO = motion
         val horizontal = motion.horizontalDistance()
@@ -4539,6 +4707,92 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         yRot = yaw
         xRot = pitch
         setZRot(bodyRoll)
+        if (isFixedWingFlightVehicle() || vehicleType == VehicleType.HELICOPTER) {
+            yRot = VehicleFlightAttitude.wrap(yRot)
+            xRot = VehicleFlightAttitude.wrap(xRot)
+            setZRot(VehicleFlightAttitude.wrap(roll))
+            yRotO = VehicleFlightAttitude.alignedPrevious(yRotO, yRot)
+            xRotO = VehicleFlightAttitude.alignedPrevious(xRotO, xRot)
+            prevRoll = VehicleFlightAttitude.alignedPrevious(prevRoll, roll)
+        }
+    }
+
+    private var rotorCoupledHelicopterControlEpoch = 0L
+
+    /** Explicit provider opt-in; native helicopters keep their existing control lifecycle. */
+    open fun usesRotorCoupledHelicopterControls(): Boolean = false
+
+    fun getRotorCoupledHelicopterControlEpoch(): Long = rotorCoupledHelicopterControlEpoch
+
+    /** Existing server-validated control bits; this accessor does not acquire or retain input. */
+    fun getVehicleFlightControlBits(): Short = vehicleInputBits
+
+    private fun clearFlightPilotControls() {
+        clearFixedWingPilotControls()
+        if (level().isClientSide || !usesRotorCoupledHelicopterControls()) return
+        processInput(0)
+        mouseInput(0.0, 0.0)
+        hoverMode = false
+        rotorCoupledHelicopterControlEpoch =
+            if (rotorCoupledHelicopterControlEpoch == Long.MAX_VALUE) 0L
+            else rotorCoupledHelicopterControlEpoch + 1L
+    }
+
+    /**
+     * Server-only engine admission and submerged damage for a rotor-owned strategy.
+     * No native spool, attitude, lift, drag, gravity, or movement is executed here.
+     */
+    fun prepareRotorCoupledHelicopterDrive(): Boolean {
+        if (level().isClientSide || !usesRotorCoupledHelicopterControls()) return false
+        val info = engineInfo as? Helicopter ?: return false
+        if (info is Aircraft || !info.energyCostRate.isFinite() ||
+            info.energyCostRate < 0.0 || info.energyCostRate > Int.MAX_VALUE.toDouble() ||
+            !info.pitchSpeed.isFinite() || info.pitchSpeed !in 0F..1F ||
+            !info.yawSpeed.isFinite() || info.yawSpeed !in 0F..1F ||
+            !info.rollSpeed.isFinite() || info.rollSpeed !in 0F..1F
+        ) return false
+        if (isInFluidType && tickCount % 4 == 0 &&
+            VehicleVecUtils.getSubmergedHeight(this) > 0.5 * bbHeight
+        ) {
+            hurt(
+                com.atsuishio.superbwarfare.init.ModDamageTypes.causeVehicleStrikeDamage(
+                    level().registryAccess(), this, getNthEntity(0) ?: this
+                ),
+                6F + (20.0 * (lastTickSpeed - 0.4) * (lastTickSpeed - 0.4)).toFloat()
+            )
+            crash = true
+        }
+        return !isWreck && health > 0.1F * getMaxHealth() &&
+            hasOperationalPower(info.energyCostRate.toInt())
+    }
+
+    /**
+     * Publishes an already accepted physical rotor sample. The 0.12 conversion is the legacy
+     * visual/audio unit only, never another authority or spool. One energy debit is made while
+     * the engine drives; a coasting rotor remains visible after loss of drive.
+     */
+    fun applyRotorCoupledHelicopterPresentation(rotorPower: Double, engineDriving: Boolean): Boolean {
+        if (level().isClientSide || !usesRotorCoupledHelicopterControls() ||
+            !rotorPower.isFinite() || rotorPower !in 0.0..1.0
+        ) return false
+        val info = engineInfo as? Helicopter ?: return false
+        if (info is Aircraft || !info.energyCostRate.isFinite() ||
+            info.energyCostRate < 0.0 || info.energyCostRate > Int.MAX_VALUE.toDouble()
+        ) return false
+        if (engineDriving && !engineStart) {
+            val gain = info.engineSoundVolume.takeIf { it.isFinite() && it >= 0F } ?: 0F
+            val startVolume = (gain * 0.12F).coerceAtMost(1F)
+            if (startVolume > 0F) {
+                level().playSound(null, this, info.engineStartSound, soundSource, startVolume, 1F)
+            }
+        }
+        engineStart = engineDriving
+        engineStartOver = engineDriving && rotorPower > 0.0
+        power = (rotorPower * 0.12).toFloat()
+        synchedPropellerRot = power
+        propellerRot += 30F * synchedPropellerRot
+        if (engineDriving) consumeOperationalPower((info.energyCostRate * rotorPower).toInt())
+        return true
     }
 
     /** Reuses native helicopter engine/attitude state without applying its lift, drag, or motion. */
@@ -4549,59 +4803,68 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         return true
     }
 
-    fun createVehicleFlightInputContext(): VehicleFlightInputContext = VehicleFlightInputContext(
-        serverTick = level().gameTime,
-        rawInputBits = vehicleInputBits,
-        mouseInputX = mouseMoveSpeedX.toDouble(),
-        mouseInputY = mouseMoveSpeedY.toDouble(),
-        previousMotion = deltaMovementO,
-        requestedMotion = deltaMovement,
-        lookDirection = getViewVector(1F),
-        upDirection = getUpVec(1F),
-        enginePower = power.toDouble(),
-        occupied = passengers.isNotEmpty(),
-        wreck = isWreck,
-        hoverMode = hoverMode,
-        gravityPerTick = computed().gravity,
-        airVelocity = deltaMovement,
-        throttleInput = when {
-            forwardInputDown && !backInputDown -> 1.0
-            else -> 0.0
-        },
-        // Positive fixed-wing pitch input is the accepted nose-control direction; the legacy
-        // mouse channels remain untouched for every other engine/strategy.
-        pitchInput = -mouseMoveSpeedY.toDouble(),
-        rollInput = when {
-            rightInputDown && !leftInputDown -> 1.0
-            leftInputDown && !rightInputDown -> -1.0
-            else -> 0.0
-        },
-        yawInput = mouseMoveSpeedX.toDouble(),
-        afterburnerRequested = sprintInputDown,
-        brakeRequested = downInputDown || backInputDown,
-        onGround = onGround(),
-        inFluid = isInFluidType,
-        bodyYawDegrees = yRot.toDouble(),
-        bodyPitchDegrees = xRot.toDouble(),
-        bodyRollDegrees = roll.toDouble(),
-        fixedWingThrottleAxis = when {
-            forwardInputDown && !backInputDown -> 1.0
-            backInputDown && !forwardInputDown -> -1.0
-            else -> 0.0
-        },
-        fixedWingMousePitchDelta = -mouseMoveSpeedY.toDouble(),
-        fixedWingMouseRollDelta = mouseMoveSpeedX.toDouble(),
-        fixedWingRudderInput = when {
-            rightInputDown && !leftInputDown -> 1.0
-            leftInputDown && !rightInputDown -> -1.0
-            else -> 0.0
-        },
-        fixedWingAfterburnerRequested = sprintInputDown,
-        fixedWingAirbrakeRequested = downInputDown || backInputDown,
-    )
+    fun createVehicleFlightInputContext(): VehicleFlightInputContext {
+        val fixedWing = isFixedWingFlightVehicle()
+        return VehicleFlightInputContext(
+            serverTick = level().gameTime,
+            rawInputBits = vehicleInputBits,
+            mouseInputX = mouseMoveSpeedX.toDouble(),
+            mouseInputY = mouseMoveSpeedY.toDouble(),
+            previousMotion = deltaMovementO,
+            requestedMotion = deltaMovement,
+            lookDirection = getViewVector(1F),
+            upDirection = getUpVec(1F),
+            enginePower = power.toDouble(),
+            occupied = passengers.isNotEmpty(),
+            wreck = isWreck,
+            hoverMode = hoverMode,
+            gravityPerTick = computed().gravity,
+            airVelocity = deltaMovement,
+            throttleInput = when {
+                forwardInputDown && !backInputDown -> 1.0
+                else -> 0.0
+            },
+            // Positive fixed-wing pitch input is the accepted nose-control direction; the legacy
+            // mouse channels remain untouched for every other engine/strategy.
+            pitchInput = -mouseMoveSpeedY.toDouble(),
+            rollInput = when {
+                rightInputDown && !leftInputDown -> 1.0
+                leftInputDown && !rightInputDown -> -1.0
+                else -> 0.0
+            },
+            yawInput = mouseMoveSpeedX.toDouble(),
+            afterburnerRequested = sprintInputDown,
+            brakeRequested = downInputDown || backInputDown,
+            onGround = onGround(),
+            inFluid = isInFluidType,
+            bodyYawDegrees = yRot.toDouble(),
+            bodyPitchDegrees = xRot.toDouble(),
+            bodyRollDegrees = roll.toDouble(),
+            fixedWingThrottleAxis = currentFixedWingThrottleAxis(),
+            fixedWingMousePitchDelta = if (fixedWing) {
+                0.0
+            } else {
+                -mouseMoveSpeedY.toDouble()
+            },
+            fixedWingMouseRollDelta = if (fixedWing) {
+                0.0
+            } else {
+                mouseMoveSpeedX.toDouble()
+            },
+            fixedWingRudderInput = when {
+                rightInputDown && !leftInputDown -> 1.0
+                leftInputDown && !rightInputDown -> -1.0
+                else -> 0.0
+            },
+            fixedWingAfterburnerRequested = false,
+            fixedWingAirbrakeRequested = downInputDown,
+            fixedWingRecenterRequested = !fixedWing && upInputDown,
+        )
+    }
 
     /** Applies the opt-in server-authored parking policy without changing legacy vehicle defaults. */
     protected open fun applyUnoccupiedParkingBrake() {
+        if (isFixedWingFlightVehicle()) return
         if (level().isClientSide || isWreck || passengers.isNotEmpty()) return
         if (!computed().parkingBrakeWhenUnoccupied) return
         if (!onGround() || isInFluidType) return
@@ -4622,6 +4885,13 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
     open fun getEngineSoundVolume(): Float {
         val computed = computed()
 
+        if (isFixedWingFlightVehicle()) {
+            val gain = computed.engineInfo.get("EngineSoundVolume")
+                ?.takeIf { it.isJsonPrimitive && it.asJsonPrimitive.isNumber }
+                ?.asFloat?.takeIf { it.isFinite() && it >= 0F } ?: 0.4F
+            return fixedWingEngineSoundPower() * gain
+        }
+
         val engineType = computed.engineType
         if (engineType == EngineType.EMPTY || engineType == EngineType.FIXED) return 0f
 
@@ -4638,7 +4908,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         }
     }
 
-     fun getVehicleTransform(ticks: Float): Matrix4d {
+    fun getVehicleTransform(ticks: Float): Matrix4d {
         val transformV = this.getVehicleYOffsetTransform(ticks)
         val transform = Matrix4d()
         val worldPosition = transformPosition(transform, 0.0, -this.rotateOffsetHeight, 0.0)
@@ -4646,7 +4916,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         return applyVehiclePoseExtension(transformV, ticks)
     }
 
-     fun getVehicleTransformWithCustomPitch(ticks: Float): Matrix4d {
+    fun getVehicleTransformWithCustomPitch(ticks: Float): Matrix4d {
         val transformV = this.getVehicleYOffsetTransform(ticks)
         val transform = Matrix4d()
         val worldPosition = transformPosition(transform, 0.0, -this.rotateOffsetHeight, 0.0)
@@ -4656,7 +4926,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
     }
 
     // From Immersive_Aircraft
-     fun getVehicleYOffsetTransform(partialTicks: Float): Matrix4d {
+    fun getVehicleYOffsetTransform(partialTicks: Float): Matrix4d {
         if (flightStrategyOwnsAttitudeThisTick || resolveVehiclePoseProvider() == null) {
             return VehicleVecUtils.getVehicleYOffsetTransform(this, partialTicks)
         }
@@ -4668,14 +4938,14 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         )
     }
 
-     val rotateOffsetHeight: Double
+    val rotateOffsetHeight: Double
         get() = computed().rotateOffsetHeight.toDouble()
 
-     fun getVehicleFlatTransform(partialTicks: Float): Matrix4d {
+    fun getVehicleFlatTransform(partialTicks: Float): Matrix4d {
         return VehicleVecUtils.getVehicleFlatTransform(this, partialTicks)
     }
 
-     fun getClientVehicleTransform(partialTicks: Float): Matrix4d {
+    fun getClientVehicleTransform(partialTicks: Float): Matrix4d {
         if (flightStrategyOwnsAttitudeThisTick || resolveVehiclePoseProvider() == null) {
             return VehicleVecUtils.getClientVehicleTransform(this, partialTicks)
         }
@@ -4700,14 +4970,17 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
     }
 
     /** Override to select a provider per instance; the interface implementation is the default. */
-     fun resolveVehiclePoseProvider(): VehiclePoseProvider? = this as? VehiclePoseProvider
+    val terrainSupportPose = com.atsuishio.superbwarfare.entity.vehicle.utils.TerrainSupportPose(this)
+
+    fun resolveVehiclePoseProvider(): VehiclePoseProvider? = (this as? VehiclePoseProvider)
+        ?: if (computed().terrainCompatFitPlane) terrainSupportPose else null
 
     /** Current authority on the server and one immutable presentation sample on the client. */
-     fun getVehiclePoseSnapshot(partialTicks: Float): VehiclePoseSnapshot =
+    fun getVehiclePoseSnapshot(partialTicks: Float): VehiclePoseSnapshot =
         resolveChassisPresentation(partialTicks).pose
 
     /** Vanilla entity interpolation retained for null-provider and legacy-payload fallbacks. */
-     fun getLegacyInterpolatedPosition(partialTicks: Float): Vec3 = Vec3(
+    fun getLegacyInterpolatedPosition(partialTicks: Float): Vec3 = Vec3(
         Mth.lerp(partialTicks.toDouble(), xo, x),
         Mth.lerp(partialTicks.toDouble(), yo, y),
         Mth.lerp(partialTicks.toDouble(), zo, z),
@@ -4717,7 +4990,10 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
      * Resolves the sole immutable chassis presentation sample for this render time. Packet receipt
      * never clears this cache, so consumers cannot split across old/new samples within a frame.
      */
-     fun resolveChassisPresentation(partialTicks: Float): VehicleChassisPresentation {
+    fun resolveChassisPresentation(partialTicks: Float): VehicleChassisPresentation {
+        com.atsuishio.superbwarfare.api.vehicle.render.FarVehicleCopies.frame(this)?.let {
+            return it.chassis
+        }
         return vehicleClientPresentationService.resolveChassisPresentation(partialTicks)
     }
 
@@ -4725,14 +5001,14 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
      * Resolves one immutable actual-aim/chassis/attachment tuple. This is client presentation only:
      * it never writes entity axes, motion, collision, command, servo, scheduler, or ballistic state.
      */
-     fun resolveAimPresentationFrame(
+    fun resolveAimPresentationFrame(
         controller: Entity?,
         partialTicks: Float,
     ): VehicleAimPresentationFrame? {
         return vehicleClientPresentationService.resolveAimPresentationFrame(controller, partialTicks)
     }
 
-     fun resolveAimPresentationFrame(
+    fun resolveAimPresentationFrame(
         channel: VehicleAimChannel,
         seatIndex: Int,
         weaponIndex: Int,
@@ -4819,16 +5095,24 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
      * against the current coherent chassis sample. No mutable entity aim axis or client solver is
      * consulted, and lifecycle resets cannot cross the epoch guard.
      */
-     fun reprojectAimPresentationContinuity(
+    fun reprojectAimPresentationContinuity(
         previous: VehicleAimPresentationFrame,
         partialTicks: Float,
     ): VehicleAimPresentationFrame? {
+        // Local station axes already recompose through the accepted timeline. An old absolute
+        // ray must not be held against a newly rolled hull when the exact context is unavailable.
+        if (isPassengerStationLocalAim(previous.seatIndex, previous.selectedWeaponIndex)) return null
         if (!level().isClientSide || isWreck || resolveVehicleFlightStrategy() != null ||
             previous.vehicleUuid != uuid ||
             previous.presentationEpoch != getAimPresentationEpoch() ||
             getSelectedWeapon(previous.seatIndex) != previous.selectedWeaponIndex ||
             getGunName(previous.seatIndex, previous.selectedWeaponIndex) != previous.weaponName
         ) return null
+        val gunData = getGunData(previous.seatIndex, previous.selectedWeaponIndex) ?: return null
+        val directionFrameName = gunData.fireDirectionAttachment()?.takeIf { it.isNotBlank() }
+            ?: if (previous.channel == VehicleAimChannel.TURRET) "Barrel" else "WeaponStationBarrel"
+        // These child directions are authored offsets, not a second turret-axis command.
+        if (vehicleAttachmentResolver.followsTurretPitch(directionFrameName)) return null
 
         val partial = partialTicks.coerceIn(0F, 1F)
         val presentedChassis = resolveChassisPresentation(partial)
@@ -4870,9 +5154,6 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
             presentedStationYaw,
             presentedStationPitch,
         ) ?: return null
-        val gunData = getGunData(previous.seatIndex, previous.selectedWeaponIndex) ?: return null
-        val directionFrameName = gunData.fireDirectionAttachment()?.takeIf { it.isNotBlank() }
-            ?: if (previous.channel == VehicleAimChannel.TURRET) "Barrel" else "WeaponStationBarrel"
         val positionFrameName = gunData.firePositionAttachment()?.takeIf { it.isNotBlank() }
             ?: directionFrameName
         val muzzlePosition = presentedAttachments.point(positionFrameName, Vec3.ZERO) ?: return null
@@ -4955,7 +5236,9 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
             ?: return reject(AimPresentationAdmissionReason.REJECT_WEAPON)
         val gunData = getGunData(seatIndex, weaponIndex)
             ?: return reject(AimPresentationAdmissionReason.REJECT_WEAPON)
-        val providerBacked = resolveVehiclePoseProvider() != null
+        val hullStation = channel == VehicleAimChannel.PASSENGER_WEAPON && isHullParentedPassengerWeaponStation()
+        val stationLocal = hullStation && isPassengerStationLocalAim(seatIndex, weaponIndex)
+        val providerBacked = resolveVehiclePoseProvider() != null && !stationLocal
         val presentedChassis = resolveChassisPresentation(partialTicks)
         val local = isLocallyOwnedAimPresentation(channel, seatIndex)
         val exactAim = when {
@@ -5021,7 +5304,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
 
         val sourceTurretAim = when (channel) {
             VehicleAimChannel.TURRET -> aim
-            VehicleAimChannel.PASSENGER_WEAPON -> if (providerBacked) {
+            VehicleAimChannel.PASSENGER_WEAPON -> if (hullStation) aim else if (providerBacked) {
                 if (local) {
                     vehicleAimController.resolveLatestClientChannelPresentation(
                         VehicleAimChannel.TURRET,
@@ -5048,7 +5331,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
                 )
             }
         } ?: return reject(AimPresentationAdmissionReason.REJECT_PARENT)
-        if (channel == VehicleAimChannel.PASSENGER_WEAPON &&
+        if (channel == VehicleAimChannel.PASSENGER_WEAPON && !hullStation &&
             !heldAim && !sourceTurretAim.tailHeld && !sourceTurretAim.contextRebound &&
             kotlin.math.abs(sourceTurretAim.sourceServerTick - aim.sourceServerTick) >
             AIM_PRESENTATION_TIME_EPSILON
@@ -5057,11 +5340,13 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         if (providerBacked && eventBoundHeld) sourceChassis = presentedChassis
         val sourceStationYaw = aim.actualYaw.takeIf { channel == VehicleAimChannel.PASSENGER_WEAPON }
         val sourceStationPitch = aim.actualPitch.takeIf { channel == VehicleAimChannel.PASSENGER_WEAPON }
+        val sourceTurretYaw = if (hullStation) 0F else sourceTurretAim.actualYaw
+        val sourceTurretPitch = if (hullStation) 0F else sourceTurretAim.actualPitch
         val sourceAttachments = vehicleAttachmentResolver.resolveAimPresentation(
             this,
             sourceChassis,
-            sourceTurretAim.actualYaw,
-            sourceTurretAim.actualPitch,
+            sourceTurretYaw,
+            sourceTurretPitch,
             sourceStationYaw,
             sourceStationPitch,
         ) ?: return reject(AimPresentationAdmissionReason.REJECT_ATTACHMENTS)
@@ -5075,8 +5360,8 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
             vehicleAttachmentResolver.resolveAimPresentation(
                 this,
                 presentedChassis,
-                sourceTurretAim.actualYaw,
-                sourceTurretAim.actualPitch,
+                sourceTurretYaw,
+                sourceTurretPitch,
                 sourceStationYaw,
                 sourceStationPitch,
             ) ?: return reject(AimPresentationAdmissionReason.REJECT_ATTACHMENTS)
@@ -5091,8 +5376,8 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
             ?.takeIf { it.x.isFinite() && it.y.isFinite() && it.z.isFinite() && it.lengthSqr() > 1.0E-12 }
             ?.normalize() ?: return reject(AimPresentationAdmissionReason.REJECT_DIRECTION)
 
-        var presentedTurretYaw = sourceTurretAim.actualYaw
-        var presentedTurretPitch = sourceTurretAim.actualPitch
+        var presentedTurretYaw = sourceTurretYaw
+        var presentedTurretPitch = sourceTurretPitch
         var presentedStationYaw = sourceStationYaw
         var presentedStationPitch = sourceStationPitch
         val source = if (!providerBacked) {
@@ -5101,11 +5386,16 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
             val base = vehicleAttachmentResolver.resolveAimBaseTransform(this, presentedChassis)
                 ?: return reject(AimPresentationAdmissionReason.REJECT_ATTACHMENTS)
             if (channel == VehicleAimChannel.TURRET) {
-                val localDirection = base.worldDirectionToLocal(authoritativeDirection)
-                val angles = VehicleAimMath.directionAngles(localDirection.x, localDirection.y, localDirection.z)
-                presentedTurretYaw = angles.yaw
-                presentedTurretPitch = angles.pitch
-            } else {
+                // A fitted muzzle may have an authored local direction. Its current-chassis
+                // graph already contains the accepted axes; inferring them from that child ray
+                // would apply the authored direction twice.
+                if (!vehicleAttachmentResolver.followsTurretPitch(directionFrameName)) {
+                    val localDirection = base.worldDirectionToLocal(authoritativeDirection)
+                    val angles = VehicleAimMath.directionAngles(localDirection.x, localDirection.y, localDirection.z)
+                    presentedTurretYaw = angles.yaw
+                    presentedTurretPitch = angles.pitch
+                }
+            } else if (!hullStation) {
                 val turretWorldDirection = currentBasisAttachments
                     .direction("Barrel", Vec3(0.0, 0.0, 1.0))
                     ?.normalize() ?: return reject(AimPresentationAdmissionReason.REJECT_DIRECTION)
@@ -5118,13 +5408,16 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
                 presentedStationYaw = stationAngles.yaw
                 presentedStationPitch = stationAngles.pitch
             }
+            // Hull-mounted truck-bed weapons have no parent tank barrel. Their accepted local
+            // station axes were already composed with the current chassis above; requiring a
+            // nonexistent Barrel frame here stranded their rider/camera on the cold-start pose.
             if (local) VehicleAimPresentationFrame.Source.AUTHORITATIVE_LOCAL_REPROJECTED
             else VehicleAimPresentationFrame.Source.AUTHORITATIVE_REMOTE
         }
 
         val presentedAttachments = if (sourceChassis === presentedChassis &&
-            presentedTurretYaw == sourceTurretAim.actualYaw &&
-            presentedTurretPitch == sourceTurretAim.actualPitch &&
+            presentedTurretYaw == sourceTurretYaw &&
+            presentedTurretPitch == sourceTurretPitch &&
             presentedStationYaw == sourceStationYaw && presentedStationPitch == sourceStationPitch
         ) {
             sourceAttachments
@@ -5219,6 +5512,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         val previous = resolveVehicleAimProfile(seatIndex, previousWeaponIndex) ?: return false
         val selected = resolveVehicleAimProfile(seatIndex, selectedWeaponIndex) ?: return false
         return previous.channel == selected.channel &&
+            previous.directionFrame == selected.directionFrame &&
             previous.yawRateDegreesPerSecond == selected.yawRateDegreesPerSecond &&
             previous.pitchRateDegreesPerSecond == selected.pitchRateDegreesPerSecond &&
             previous.minYaw == selected.minYaw && previous.maxYaw == selected.maxYaw &&
@@ -5235,7 +5529,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
      * Consumers may capture this value and resolve TURRET/PASSENGER frames without resolution
      * advancing the epoch underneath their validation.
      */
-     fun getAimPresentationEpoch(): Int {
+    fun getAimPresentationEpoch(): Int {
         refreshClientAimPresentationFromSyncedData()
         prepareClientAimPresentationContext(VehicleAimChannel.TURRET, turretControllerIndex)
         if (hasPassengerWeaponStation()) {
@@ -5276,46 +5570,46 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
      * One client presentation anchor for hull rendering, cameras, riders, attachments, weapons,
      * and debug transforms. Server gameplay always uses the live authoritative entity position.
      */
-     fun getResolvedChassisPosition(partialTicks: Float): Vec3 =
+    fun getResolvedChassisPosition(partialTicks: Float): Vec3 =
         resolveChassisPresentation(partialTicks).anchor
 
     /** One provider-backed heading sample for hull and every dependent transform consumer. */
-     fun getResolvedChassisYaw(partialTicks: Float): Float =
+    fun getResolvedChassisYaw(partialTicks: Float): Float =
         resolveChassisPresentation(partialTicks).chassisYawDegrees
 
     /** Translation from the vanilla renderer entry position to the sequenced chassis anchor. */
-     fun getResolvedChassisRenderOffset(partialTicks: Float): Vec3 =
+    fun getResolvedChassisRenderOffset(partialTicks: Float): Vec3 =
         getResolvedChassisPosition(partialTicks).subtract(getLegacyInterpolatedPosition(partialTicks))
 
-     fun getResolvedChassisWorldY(partialTicks: Float): Double {
+    fun getResolvedChassisWorldY(partialTicks: Float): Double {
         val sample = resolveChassisPresentation(partialTicks)
         if (flightStrategyOwnsAttitudeThisTick || resolveVehiclePoseProvider() == null) return sample.anchor.y
         return sample.resolvedWorldY
     }
 
-     fun getVehiclePoseReceiptTick(): Int = vehiclePoseClientUpdateTick
+    fun getVehiclePoseReceiptTick(): Int = vehiclePoseClientUpdateTick
 
-     fun getVehiclePositionTarget(): Vec3 = Vec3(xO, yO, zO)
+    fun getVehiclePositionTarget(): Vec3 = Vec3(xO, yO, zO)
 
-     fun getVehiclePositionInterpolationSteps(): Int = interpolationSteps
+    fun getVehiclePositionInterpolationSteps(): Int = interpolationSteps
 
     /** Defensive immutable view of the complete chassis local-to-world matrix. */
-     fun getVehicleTransformSnapshot(partialTicks: Float): VehicleTransformSnapshot {
+    fun getVehicleTransformSnapshot(partialTicks: Float): VehicleTransformSnapshot {
         val pose = getVehiclePoseSnapshot(partialTicks)
         return VehicleTransformSnapshot("Vehicle", pose.sequence, pose.serverTick, getVehicleTransform(partialTicks))
     }
 
-     fun vehicleLocalToWorld(localPoint: Vec3, partialTicks: Float): Vec3 =
+    fun vehicleLocalToWorld(localPoint: Vec3, partialTicks: Float): Vec3 =
         getVehicleTransformSnapshot(partialTicks).localToWorld(localPoint)
 
-     fun worldToVehicleLocal(worldPoint: Vec3, partialTicks: Float): Vec3 =
+    fun worldToVehicleLocal(worldPoint: Vec3, partialTicks: Float): Vec3 =
         getVehicleTransformSnapshot(partialTicks).worldToLocal(worldPoint)
 
-     fun worldDirectionToVehicleLocal(worldDirection: Vec3, partialTicks: Float): Vec3 =
+    fun worldDirectionToVehicleLocal(worldDirection: Vec3, partialTicks: Float): Vec3 =
         getVehicleTransformSnapshot(partialTicks).worldDirectionToLocal(worldDirection)
 
     /** Exact pre-turret frame, including authored turretCustomPitch and provider/base pose. */
-     fun getTurretBaseTransformSnapshot(partialTicks: Float): VehicleTransformSnapshot {
+    fun getTurretBaseTransformSnapshot(partialTicks: Float): VehicleTransformSnapshot {
         val pose = getVehiclePoseSnapshot(partialTicks)
         return VehicleTransformSnapshot(
             "TurretBase",
@@ -5325,18 +5619,19 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         )
     }
 
-     fun worldDirectionToTurretBaseLocal(worldDirection: Vec3, partialTicks: Float): Vec3 =
+    fun worldDirectionToTurretBaseLocal(worldDirection: Vec3, partialTicks: Float): Vec3 =
         getTurretBaseTransformSnapshot(partialTicks).worldDirectionToLocal(worldDirection)
 
     /**
      * Immutable named-frame snapshot. The default set mirrors the legacy transform registry;
      * opt-in providers may atomically augment or replace it without changing old callers.
      */
-     fun getVehicleAttachmentSnapshot(partialTicks: Float): VehicleAttachmentSnapshot =
+    fun getVehicleAttachmentSnapshot(partialTicks: Float): VehicleAttachmentSnapshot =
         vehicleAttachmentResolver.resolve(this, partialTicks)
 
     private fun usesCoherentCameraAttachmentTimeline(controller: Entity): Boolean {
-        if (!level().isClientSide || resolveVehicleFlightStrategy() != null) return false
+        if (!level().isClientSide || (resolveVehicleFlightStrategy() != null &&
+            !isPassengerStationLocalAimController(controller))) return false
         if (resolveVehiclePoseProvider() != null) return true
         val player = controller as? Player ?: return false
         val seatIndex = getSeatIndex(player)
@@ -5351,7 +5646,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
      * only chassis-rooted attachments are exposed. Native/unprofiled, server, and flight paths
      * retain the established legacy snapshot.
      */
-     fun resolveCameraAttachmentSnapshot(
+    fun resolveCameraAttachmentSnapshot(
         controller: Entity,
         partialTicks: Float,
     ): VehicleAttachmentSnapshot? {
@@ -5372,7 +5667,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
      * profiled ground channels use their existing finite vanilla chassis presentation; no pose
      * provider or solver is introduced. The snapshot exposes no aim-bearing native frame.
      */
-     fun resolveChassisCameraAttachmentSnapshot(
+    fun resolveChassisCameraAttachmentSnapshot(
         controller: Entity,
         partialTicks: Float,
     ): VehicleAttachmentSnapshot? {
@@ -5383,54 +5678,54 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         )
     }
 
-     fun hasTurret() = this.turretPos != null
+    fun hasTurret() = this.turretPos != null
 
-     val turretPos: Vec3?
+    val turretPos: Vec3?
         get() = computed().turretPos
 
     open val turretControllerIndex: Int
         get() = computed().turretControllerIndex
 
-     val turretTurnXSpeed: Float
+    val turretTurnXSpeed: Float
         /**
          * @return 炮塔最大俯仰速度
          */
-        get() = computed().turretTurnSpeed.x
+        get() = computed().turretTurnSpeed.x * 1.15F
 
-     val turretTurnYSpeed: Float
+    val turretTurnYSpeed: Float
         /**
          * @return 炮塔最大偏航速度
          */
-        get() = computed().turretTurnSpeed.y
+        get() = computed().turretTurnSpeed.y * 1.15F
 
-     val turretMinYaw: Float
+    val turretMinYaw: Float
         /**
          * @return 炮塔最小偏航
          */
         get() = computed().turretYawRange.x
 
-     val turretMaxYaw: Float
+    val turretMaxYaw: Float
         /**
          * @return 炮塔最大偏航
          */
         get() = computed().turretYawRange.y
 
-     val turretMinPitch: Float
+    val turretMinPitch: Float
         /**
          * @return 炮塔最小俯角
          */
         get() = computed().turretPitchRange.x
 
-     val turretMaxPitch: Float
+    val turretMaxPitch: Float
         /**
          * @return 炮塔最大仰角
          */
         get() = computed().turretPitchRange.y
 
-     val barrelPosition: Vec3?
+    val barrelPosition: Vec3?
         get() = computed().barrelPos
 
-     fun hasPassengerWeaponStation(): Boolean {
+    fun hasPassengerWeaponStation(): Boolean {
         val data = computed()
         val binding = data.passengerWeaponStationBinding
         if (data.passengerWeaponStationPos == null) return false
@@ -5449,7 +5744,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
     }
 
     /** The authored parent of the active station; legacy data remains turret-relative. */
-     val passengerWeaponStationParent: PassengerWeaponStationParent
+    val passengerWeaponStationParent: PassengerWeaponStationParent
         get() = if (isHullParentedPassengerWeaponStation()) {
             PassengerWeaponStationParent.HULL
         } else {
@@ -5457,38 +5752,68 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         }
 
     /** Exact authored weapon identity for a typed station, or null for legacy data. */
-     val passengerWeaponStationWeaponId: String?
+    val passengerWeaponStationWeaponId: String?
         get() = computed().passengerWeaponStationBinding
             ?.takeIf { it.hasTypedIdentity() && hasPassengerWeaponStation() }
             ?.weaponId
 
-     val passengerWeaponStationWeaponKind: PassengerWeaponStationWeaponKind?
+    val passengerWeaponStationWeaponKind: PassengerWeaponStationWeaponKind?
         get() = computed().passengerWeaponStationBinding
             ?.takeIf { it.hasTypedIdentity() && hasPassengerWeaponStation() }
             ?.weaponKind
 
     /** HULL parent is enabled only after all required typed identity/marker checks pass. */
-     fun isHullParentedPassengerWeaponStation(): Boolean {
+    fun isHullParentedPassengerWeaponStation(): Boolean {
         val binding = computed().passengerWeaponStationBinding ?: return false
         return hasPassengerWeaponStation() && binding.parent == PassengerWeaponStationParent.HULL
+    }
+
+    val passengerWeaponStationBaseYawDegrees: Float
+        get() = computed().passengerWeaponStationBinding
+            ?.takeIf { it.hasTypedIdentity() && isHullParentedPassengerWeaponStation() }
+            ?.baseYawDegrees ?: 0F
+
+    /** Exact opt-in for a non-pilot, hull-local station; shared by camera and input consumers. */
+    fun isPassengerStationLocalAim(seatIndex: Int, weaponIndex: Int): Boolean {
+        if (seatIndex <= 0 || !isHullParentedPassengerWeaponStation() ||
+            !isPassengerWeaponStationWeapon(seatIndex, weaponIndex)
+        ) return false
+        val profile = resolveVehicleAimProfile(seatIndex, weaponIndex) ?: return false
+        return profile.channel == VehicleAimChannel.PASSENGER_WEAPON &&
+                profile.directionFrame == VehicleAimDirectionFrame.PASSENGER_STATION_LOCAL
+    }
+
+    fun isPassengerStationLocalAimController(controller: Entity?): Boolean {
+        if (controller == null || controller.vehicle !== this || isRemoved || isWreck ||
+            !controller.isAlive || controller.level() !== level()
+        ) return false
+        val seat = getSeatIndex(controller)
+        return seat >= 0 && isPassengerStationLocalAim(seat, getSelectedWeapon(seat))
+    }
+
+    fun getPassengerStationAimBase(partialTicks: Float): Matrix4d? {
+        if (!isHullParentedPassengerWeaponStation()) return null
+        val pivot = passengerWeaponStationPosition ?: return null
+        return VehiclePassengerStationFrame.base(getVehicleTransform(partialTicks), pivot,
+            passengerWeaponStationBaseYawDegrees)
     }
 
     /**
      * Exact station admission for a seat/weapon pair. Legacy stations retain the one historical
      * PassengerMachineGun id; typed stations never infer a role from display text or position.
      */
-     fun isPassengerWeaponStationWeapon(seatIndex: Int, weaponIndex: Int): Boolean {
+    fun isPassengerWeaponStationWeapon(seatIndex: Int, weaponIndex: Int): Boolean {
         if (!hasPassengerWeaponStation() || seatIndex != passengerWeaponStationControllerIndex) return false
         val weaponName = getGunName(seatIndex, weaponIndex) ?: return false
         val binding = computed().passengerWeaponStationBinding
         return if (binding == null) {
             weaponName == "PassengerMachineGun"
         } else {
-            binding.hasTypedIdentity() && binding.weaponId == weaponName
+            binding.containsWeapon(weaponName)
         }
     }
 
-     fun isPassengerWeaponStationHeavyMachineGun(seatIndex: Int, weaponIndex: Int): Boolean {
+    fun isPassengerWeaponStationHeavyMachineGun(seatIndex: Int, weaponIndex: Int): Boolean {
         if (!isPassengerWeaponStationWeapon(seatIndex, weaponIndex)) return false
         val binding = computed().passengerWeaponStationBinding
         return binding == null || binding.weaponKind == PassengerWeaponStationWeaponKind.HEAVY_MACHINE_GUN
@@ -5499,13 +5824,13 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
      * canonical legacy PassengerMachineGun identity) is the only role source; localized labels,
      * vehicle ids, and caliber/name heuristics are intentionally not consulted.
      */
-     fun isTankMountedHeavyMachineGun(seatIndex: Int, weaponIndex: Int): Boolean {
+    fun isTankMountedHeavyMachineGun(seatIndex: Int, weaponIndex: Int): Boolean {
         if (vehicleType != VehicleType.TANK) return false
         return isPassengerWeaponStationHeavyMachineGun(seatIndex, weaponIndex)
     }
 
     /** Resolves the same policy from a GunData copy used by the firing/tick paths. */
-     fun isTankMountedHeavyMachineGun(data: GunData): Boolean {
+    fun isTankMountedHeavyMachineGun(data: GunData): Boolean {
         if (vehicleType != VehicleType.TANK) return false
         val identity = data.vehicleWeaponIdentity?.takeIf { it.isNotBlank() } ?: return false
         val seats = computed().seats()
@@ -5518,84 +5843,84 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         return false
     }
 
-     val passengerWeaponStationPosition: Vec3?
+    val passengerWeaponStationPosition: Vec3?
         get() = computed().passengerWeaponStationPos
 
-     val passengerWeaponStationBarrelPosition: Vec3?
+    val passengerWeaponStationBarrelPosition: Vec3?
         get() = computed().passengerWeaponStationBarrelPos
 
-     val passengerWeaponStationControllerIndex: Int
+    val passengerWeaponStationControllerIndex: Int
         get() = computed().passengerWeaponStationControllerIndex
 
-     val passengerWeaponYSpeed: Float
+    val passengerWeaponYSpeed: Float
         /**
          * @return 乘客武器站最大偏航速度
          */
-        get() = computed().passengerWeaponStationTurnSpeed.y
+        get() = computed().passengerWeaponStationTurnSpeed.y * 1.15F
 
-     val passengerWeaponXSpeed: Float
+    val passengerWeaponXSpeed: Float
         /**
          * @return 乘客武器站最大俯仰速度
          */
-        get() = computed().passengerWeaponStationTurnSpeed.x
+        get() = computed().passengerWeaponStationTurnSpeed.x * 1.15F
 
-     val passengerWeaponMinPitch: Float
+    val passengerWeaponMinPitch: Float
         /**
          * @return 乘客武器站最小仰角
          */
         get() = computed().passengerWeaponStationPitchRange.x
 
-     val passengerWeaponMaxPitch: Float
+    val passengerWeaponMaxPitch: Float
         /**
          * @return 乘客武器站最大仰角
          */
         get() = computed().passengerWeaponStationPitchRange.y
 
-     val passengerWeaponMinYaw: Float
+    val passengerWeaponMinYaw: Float
         /**
          * @return 炮塔最小偏航
          */
         get() = computed().passengerWeaponStationYawRange.x
 
-     val passengerWeaponMaxYaw: Float
+    val passengerWeaponMaxYaw: Float
         /**
          * @return 炮塔最大偏航
          */
         get() = computed().passengerWeaponStationYawRange.y
 
 
-     val turretCustomPitch: Float
+    val turretCustomPitch: Float
         /**
          * @return 炮塔自定义俯仰
          */
         get() = computed().turretCustomPitch
 
 
-     fun getTurretTransform(partialTicks: Float): Matrix4d {
+    fun getTurretTransform(partialTicks: Float): Matrix4d {
         return VehicleVecUtils.getTurretTransform(this, partialTicks)
     }
 
-     fun getTurretVector(pPartialTicks: Float): Vec3 {
+    fun getTurretVector(pPartialTicks: Float): Vec3 {
         return VehicleVecUtils.getTurretVector(this, pPartialTicks)
     }
 
-     fun getBarrelTransform(partialTicks: Float): Matrix4d {
+    fun getBarrelTransform(partialTicks: Float): Matrix4d {
         return VehicleVecUtils.getBarrelTransform(this, partialTicks)
     }
 
-     fun getGunTransform(partialTicks: Float): Matrix4d {
+    fun getGunTransform(partialTicks: Float): Matrix4d {
         return VehicleVecUtils.getGunTransform(this, partialTicks)
     }
 
-     fun getPassengerWeaponStationBarrelTransform(partialTicks: Float): Matrix4d {
+    fun getPassengerWeaponStationBarrelTransform(partialTicks: Float): Matrix4d {
         return VehicleVecUtils.getPassengerWeaponStationBarrelTransform(this, partialTicks)
     }
 
-     fun getPassengerWeaponStationVector(partialTicks: Float): Vec3 {
+    fun getPassengerWeaponStationVector(partialTicks: Float): Vec3 {
         return VehicleVecUtils.getPassengerWeaponStationVector(this, partialTicks)
     }
 
-     fun transformPosition(transform: Matrix4d, x: Double, y: Double, z: Double): Vector4d {
+    fun transformPosition(transform: Matrix4d, x: Double, y: Double, z: Double): Vector4d {
         return transform.transform(Vector4d(x, y, z, 1.0))
     }
 
@@ -5755,7 +6080,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         invalidateAttachmentSnapshot()
     }
 
-     fun handleClientSync() {
+    fun handleClientSync() {
         if (level() is ServerLevel && tickCount % 2 == 0) {
             serverYaw = yRot
             serverPitch = xRot
@@ -5832,7 +6157,17 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         interpolationSteps: Int,
         teleport: Boolean
     ) {
-        if (teleport) {
+        val clientFlight = level().isClientSide && resolveVehicleFlightStrategy() != null
+        val smoothFlightAbsolute = teleport && clientFlight &&
+            vehicleFlightController.hasClientInstrumentSnapshot() &&
+            !com.atsuishio.superbwarfare.api.vehicle.flight.FlightPositionCorrection.shouldSnap(
+                position().distanceToSqr(Vec3(x, y, z)), deltaMovement.length(),
+            )
+        if (smoothFlightAbsolute) {
+            // Keep relative decoding authoritative even while the displayed entity catches up.
+            syncPacketPositionCodec(x, y, z)
+        }
+        if (teleport && !smoothFlightAbsolute) {
             val target = Vec3(x, y, z)
             val usesProviderTimeline = level().isClientSide &&
                 resolveVehiclePoseProvider() != null && resolveVehicleFlightStrategy() == null
@@ -5900,7 +6235,6 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         this.xO = x
         this.yO = y
         this.zO = z
-        val clientFlight = level().isClientSide && resolveVehicleFlightStrategy() != null
         this.interpolationSteps = if (level().isClientSide &&
             resolveVehiclePoseProvider() != null && !clientFlight
         ) {
@@ -5942,7 +6276,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
      * @param index     座位
      * @return 下车的位置
      */
-     fun getDismountLocationForIndex(passenger: LivingEntity, index: Int): Vec3 {
+    fun getDismountLocationForIndex(passenger: LivingEntity, index: Int): Vec3 {
         val seats = this.computed().seats()
         if (index >= seats.size) return dismount(passenger)
 
@@ -5963,7 +6297,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         }
     }
 
-     fun dismount(passenger: LivingEntity): Vec3 {
+    fun dismount(passenger: LivingEntity): Vec3 {
         val vec3d = VehicleMiscUtils.getDismountOffset(
             this,
             (bbWidth * Mth.SQRT_OF_TWO).toDouble(),
@@ -5994,7 +6328,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         return super.getDismountLocationForPassenger(passenger)
     }
 
-     fun getEjectionPosition(passenger: LivingEntity, index: Int): Vec3 {
+    fun getEjectionPosition(passenger: LivingEntity, index: Int): Vec3 {
         val seats = this.computed().seats()
         if (index >= seats.size) return passenger.position()
 
@@ -6011,14 +6345,14 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         return passenger.position()
     }
 
-     fun allowEjection(seatIndex: Int) =
+    fun allowEjection(seatIndex: Int) =
         computed().seats().getOrNull(seatIndex)?.dismountInfo?.canEject ?: false
 
-     fun removeSeatIndexTag(entity: Entity) {
+    fun removeSeatIndexTag(entity: Entity) {
         entity.persistentData.remove(TAG_SEAT_INDEX)
     }
 
-     fun getEjectionMovement(entity: LivingEntity?, index: Int): Vec3 {
+    fun getEjectionMovement(entity: LivingEntity?, index: Int): Vec3 {
         val dismountInfo = this.computed().seats().getOrNull(index)?.dismountInfo ?: return deltaMovement
 
         val force = dismountInfo.ejectForce
@@ -6056,19 +6390,19 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         }
     }
 
-     val vehicleIcon: ResourceLocation?
+    val vehicleIcon: ResourceLocation?
         get() = computed().vehicleIcon
 
-     fun allowFreeCam() = computed().allowFreeCam
+    fun allowFreeCam() = computed().allowFreeCam
 
-     fun getUpVec(ticks: Float): Vec3 {
+    fun getUpVec(ticks: Float): Vec3 {
         val transform = getVehicleTransform(ticks)
         val force0 = transformPosition(transform, 0.0, 0.0, 0.0)
         val force1 = transformPosition(transform, 0.0, 1.0, 0.0)
         return Vec3(force0.x, force0.y, force0.z).vectorTo(Vec3(force1.x, force1.y, force1.z))
     }
 
-     fun getRightVec(ticks: Float): Vec3 {
+    fun getRightVec(ticks: Float): Vec3 {
         val transform = getVehicleTransform(ticks)
         val force0 = transformPosition(transform, 0.0, 0.0, 0.0)
         val force1 = transformPosition(transform, -1.0, 0.0, 0.0)
@@ -6078,7 +6412,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
     // 本方法留空
     override fun push(pX: Double, pY: Double, pZ: Double) {}
 
-     fun getBarrelVector(pPartialTicks: Float): Vec3 {
+    fun getBarrelVector(pPartialTicks: Float): Vec3 {
         val transform = getBarrelTransform(pPartialTicks)
         val rootPosition = transformPosition(transform, 0.0, 0.0, 0.0)
         val targetPosition = transformPosition(transform, 0.0, 0.0, 1.0)
@@ -6091,45 +6425,45 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         )
     }
 
-     fun getBarrelXRot(pPartialTicks: Float): Float {
+    fun getBarrelXRot(pPartialTicks: Float): Float {
         return Mth.lerp(pPartialTicks, turretXRotO - this.xRotO, this.turretXRot - this.xRot)
     }
 
-     fun getBarrelYRot(pPartialTick: Float): Float {
+    fun getBarrelYRot(pPartialTick: Float): Float {
         return -Mth.wrapDegrees(
             Mth.rotLerp(pPartialTick, turretYRotO - this.yRotO, this.turretYRot - this.yRot)
         )
     }
 
-     fun getGunXRot(pPartialTicks: Float): Float {
+    fun getGunXRot(pPartialTicks: Float): Float {
         return Mth.lerp(pPartialTicks, gunXRotO - this.xRotO, this.gunXRot - this.xRot)
     }
 
-     fun getGunYRot(pPartialTick: Float): Float {
+    fun getGunYRot(pPartialTick: Float): Float {
         return -Mth.wrapDegrees(
             Mth.rotLerp(pPartialTick, gunYRotO - this.yRotO, this.gunYRot - this.yRot)
         )
     }
 
-     fun getTurretYaw(pPartialTick: Float): Float {
+    fun getTurretYaw(pPartialTick: Float): Float {
         return Mth.rotLerp(pPartialTick, turretYRotO, this.turretYRot)
     }
 
-     fun getTurretPitch(pPartialTick: Float): Float {
+    fun getTurretPitch(pPartialTick: Float): Float {
         return Mth.lerp(pPartialTick, turretXRotO, this.turretXRot)
     }
 
-     fun getCameraPos(entity: Entity, partialTicks: Float): Vec3 {
+    fun getCameraPos(entity: Entity, partialTicks: Float): Vec3 {
         resolveVehicleSeatPose(entity, partialTicks, false)?.let { return it.eyePosition }
         return VehicleVecUtils.getCameraPos(this, entity, partialTicks)
     }
 
-     fun cameraDirection(entity: Entity, partialTicks: Float): Vec3 {
+    fun cameraDirection(entity: Entity, partialTicks: Float): Vec3 {
         resolveVehicleSeatPose(entity, partialTicks, false)?.direction?.let { return it }
         return VehicleVecUtils.getCameraDirection(this, entity, partialTicks)
     }
 
-     fun getZoomPos(entity: Entity, partialTicks: Float): Vec3 {
+    fun getZoomPos(entity: Entity, partialTicks: Float): Vec3 {
         resolveVehicleSeatPose(entity, partialTicks, true)?.let { return it.eyePosition }
         return VehicleVecUtils.getZoomPos(this, entity, partialTicks)
     }
@@ -6142,15 +6476,28 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
     open val mouseSensitivity: Double
         get() = computed().mouseSensitivity
 
-     val passengerRenderScale: Float
+    val passengerRenderScale: Float
         get() = computed().passengerRenderScale
 
-     fun gearRot(tickDelta: Float) = Mth.lerp(tickDelta, gearRotO, this.gearRot)
+    fun gearRot(tickDelta: Float) =
+        com.atsuishio.superbwarfare.api.vehicle.render.FarVehicleCopies.frame(this)?.snapshot?.gear
+            ?: Mth.lerp(tickDelta, gearRotO, this.gearRot)
 
-     val mass: Float
+    val mass: Float
         get() = computed().mass
 
+    /** Motion is blocks/tick; its squared speed must remain finite after conversion to m/s. */
+    private fun hasFiniteFixedWingMotion(motion: Vec3): Boolean =
+        motion.x.isFinite() && motion.y.isFinite() && motion.z.isFinite() &&
+            (motion.lengthSqr() * 400.0).isFinite()
+
     override fun setDeltaMovement(pDeltaMovement: Vec3) {
+        if (isFixedWingFlightVehicle()) {
+            if (hasFiniteFixedWingMotion(pDeltaMovement)) {
+                super.setDeltaMovement(pDeltaMovement)
+            }
+            return
+        }
         val currentMomentum = this.deltaMovement
 
         // 计算当前速度和新速度的标量大小
@@ -6177,6 +6524,15 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
     }
 
     override fun addDeltaMovement(pAddend: Vec3) {
+        if (isFixedWingFlightVehicle()) {
+            if (hasFiniteFixedWingMotion(pAddend)) {
+                val motion = this.deltaMovement.add(pAddend)
+                if (hasFiniteFixedWingMotion(motion)) {
+                    super.setDeltaMovement(motion)
+                }
+            }
+            return
+        }
         var pAddend = pAddend
         val length = pAddend.length()
         if (length > 0.1) pAddend = pAddend.scale(0.1 / length)
@@ -6201,7 +6557,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         ) sensitivity.y * original else sensitivity.z * original
     }
 
-     val vehicleItemIcon: ResourceLocation?
+    val vehicleItemIcon: ResourceLocation?
         /**
          * 载具在集装箱物品上显示的贴图
          */
@@ -6213,7 +6569,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
      *
      * @param index 位置
      */
-     fun isEnclosed(index: Int): Boolean {
+    fun isEnclosed(index: Int): Boolean {
         val seats = computed().seats()
 
         val seat = seats.getOrNull(index) ?: return false
@@ -6224,16 +6580,19 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         return seat.isEnclosed!!
     }
 
-     fun isEnclosed(passenger: Entity?): Boolean {
+    fun isEnclosed(passenger: Entity?): Boolean {
         return isEnclosed(getSeatIndex(passenger))
     }
+
+    fun exposesPassengerToFire(passenger: Entity?): Boolean =
+        getSeat(passenger)?.exposedToFire == true && !isEnclosed(passenger)
 
     /**
      * 是否禁用玩家手臂
      *
      * @param entity 玩家
      */
-     fun banHand(entity: LivingEntity?): Boolean {
+    fun banHand(entity: LivingEntity?): Boolean {
         val index = getSeatIndex(entity)
 
         val gunData = getGunData(index)
@@ -6246,7 +6605,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
      *
      * @return 是否隐藏
      */
-     fun hidePassenger(index: Int): Boolean {
+    fun hidePassenger(index: Int): Boolean {
         val seats = computed().seats()
         if (index < 0 || index >= seats.size) return false
 
@@ -6254,24 +6613,24 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         return seat.hidePassenger
     }
 
-     fun hidePassenger(passenger: Entity?) = hidePassenger(getSeatIndex(passenger))
+    fun hidePassenger(passenger: Entity?) = hidePassenger(getSeatIndex(passenger))
 
-     fun getAmmoCount(living: LivingEntity?): Int {
+    fun getAmmoCount(living: LivingEntity?): Int {
         val data = getGunData(getSeatIndex(living)) ?: return 0
         return getAmmo(data)
     }
 
-     fun getAmmoCount(seatIndex: Int): Int {
+    fun getAmmoCount(seatIndex: Int): Int {
         val data = getGunData(seatIndex) ?: return 0
         return getAmmo(data)
     }
 
-     fun getAmmoCount(weaponName: String): Int {
+    fun getAmmoCount(weaponName: String): Int {
         val data = getGunData(weaponName) ?: return 0
         return getAmmo(data)
     }
 
-     fun getAmmo(data: GunData) = if (data.useBackpackAmmo()) data.backupAmmoCount.get() else data.ammo.get()
+    fun getAmmo(data: GunData) = if (data.useBackpackAmmo()) data.backupAmmoCount.get() else data.ammo.get()
 
     /**
      * Encodes the durable payload used by an add-on vehicle item.  This deliberately starts
@@ -6279,7 +6638,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
      * vehicle-owned fields below; UUID, position, passengers, motion, dimension, and authority
      * epochs therefore never enter an item.
      */
-     fun createVehicleItemState(): CompoundTag {
+    fun createVehicleItemState(): CompoundTag {
         val typeId = ForgeRegistries.ENTITY_TYPES.getKey(this.type) ?: return CompoundTag()
         val full = CompoundTag()
         addAdditionalSaveData(full)
@@ -6297,7 +6656,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
      * is completed before any entity state is touched; callers remain responsible for collision
      * checks, spawn, final placement orientation, and consuming the item only after spawn.
      */
-     fun restoreVehicleItemState(state: CompoundTag): Boolean {
+    fun restoreVehicleItemState(state: CompoundTag): Boolean {
         if (level().isClientSide || isRemoved || isWreck || passengers.isNotEmpty()) return false
         if (!isValidVehicleItemState(state)) return false
 
@@ -6430,7 +6789,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
      * 是否使用载具固定视角
      */
     @OnlyIn(Dist.CLIENT)
-     fun useFixedCameraPos(entity: Entity?): Boolean {
+    fun useFixedCameraPos(entity: Entity?): Boolean {
         return computed().seats().getOrNull(getSeatIndex(entity))?.cameraPos?.useFixedCameraPos ?: false
     }
 
@@ -6472,14 +6831,14 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
      *
      * @return 放大倍率
      */
-     fun getDefaultZoom(entity: Entity?): Double {
+    fun getDefaultZoom(entity: Entity?): Double {
         val gunData = getGunData(getSeatIndex(entity))
         return gunData?.get(GunProp.DEFAULT_ZOOM) ?: 1.0
     }
 
     open fun canCrushEntities() = true
 
-     fun fixedEngine() {
+    fun fixedEngine() {
         this.move(MoverType.SELF, Vec3(0.0, this.deltaMovement.y, 0.0))
         if (this.onGround()) {
             this.setDeltaMovement(Vec3.ZERO)
@@ -6488,23 +6847,41 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         }
     }
 
-     fun releaseSmokeDecoy(vec3: Vec3) = VehicleWeaponUtils.releaseSmokeDecoy(this, vec3)
+    fun releaseSmokeDecoy(vec3: Vec3) = VehicleWeaponUtils.releaseSmokeDecoy(this, vec3)
 
-     fun releaseDecoy() = VehicleWeaponUtils.releaseDecoy(this)
+    fun releaseDecoy() {
+        if (com.atsuishio.superbwarfare.api.aircraft.AircraftCountermeasures.definition(this) == null)
+            VehicleWeaponUtils.releaseDecoy(this)
+    }
 
-     fun terrainCompact(positions: MutableList<Vec3>) {
+    /** Accepted server countermeasure levels, also synchronized for cockpit/HUD consumers. */
+    fun getFlareLevel(): Int = entityData.get(AIRCRAFT_COUNTERMEASURE_LEVELS) and 255
+    fun getChaffLevel(): Int = (entityData.get(AIRCRAFT_COUNTERMEASURE_LEVELS) shr 8) and 15
+    fun getAircraftThreatLevel(): Int = (entityData.get(AIRCRAFT_COUNTERMEASURE_LEVELS) shr 12) and 3
+    fun isChaffEmitting(): Boolean = (entityData.get(AIRCRAFT_COUNTERMEASURE_LEVELS) and (1 shl 14)) != 0
+    fun getFlareCooldownTicks(): Int = entityData.get(AIRCRAFT_COUNTERMEASURE_TIMERS) and 511
+    fun getChaffCooldownTicks(): Int = (entityData.get(AIRCRAFT_COUNTERMEASURE_TIMERS) shr 9) and 511
+    internal fun publishAircraftCountermeasures(levels: Int, timers: Int) {
+        if (level().isClientSide) return
+        entityData.set(AIRCRAFT_COUNTERMEASURE_LEVELS, levels)
+        entityData.set(AIRCRAFT_COUNTERMEASURE_TIMERS, timers)
+    }
+
+    fun terrainCompact(positions: MutableList<Vec3>) {
         VehicleMotionUtils.terrainCompact(this, positions)
     }
 
-     fun getWheelsTransform(partialTicks: Float): Matrix4d {
+    fun getWheelsTransform(partialTicks: Float): Matrix4d {
         return VehicleMotionUtils.getWheelsTransform(this, partialTicks)
     }
 
-     fun moveOnDragonTeeth() {
+    fun moveOnDragonTeeth() {
+        if (usesAircraftTerrainContact()) return
         VehicleMotionUtils.handleVehicleMoveOnDragonTeeth(this)
     }
 
-     fun collideBlocks() {
+    fun collideBlocks() {
+        if (usesAircraftTerrainContact()) return
         if (tickCount % 4 != 0) return
         if (computed().engineType == EngineType.FIXED) return
         if (deltaMovement.lengthSqr() < 0.01) return
@@ -6512,8 +6889,91 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
     }
 
 
-     val lastAttacker: Entity?
+    val lastAttacker: Entity?
         get() = EntityFindUtil.findEntity(level(), lastAttackerUUID)
+
+    /** Fits the physical entity envelope; the default preserves native dimensions. */
+    open fun fitEntityCollisionBounds(nativeBounds: AABB): AABB = nativeBounds
+
+    override fun usesDetailedProjectileCollision(): Boolean = isInitialized && computed().aircraftSurfaceModules.isNotEmpty()
+
+    override fun clipProjectile(start: Vec3, end: Vec3): com.atsuishio.superbwarfare.api.projectile.ProjectileCollisionTarget.Hit? =
+        com.atsuishio.superbwarfare.api.aircraft.AircraftSurfaceModules.clipProjectile(this,start,end)
+
+    override fun makeBoundingBox(): AABB {
+        if (isInitialized && !level().isClientSide) AircraftSurfaceProjectileIndex.update(this)
+        if (level().isClientSide) {
+            com.atsuishio.superbwarfare.api.vehicle.render.FarVehicleCopies.visualBounds(this)?.let { return it }
+        }
+        val physical = getAircraftCollisionSnapshot(1F)
+        if (physical != null) {
+            AircraftCollisionIndex.update(this, physical.queryBounds)
+            return physical.queryBounds
+        }
+        if (isInitialized) AircraftCollisionIndex.remove(this)
+        return fitEntityCollisionBounds(super.makeBoundingBox())
+    }
+
+    /** Two physical parts sampled together; the returned AABB is discovery geometry only. */
+    fun getAircraftCollisionSnapshot(partialTicks: Float): AircraftCollisionSnapshot? {
+        if (!isInitialized || !usesAircraftTerrainContact()) return null
+        val definition = computed().aircraftTerrainContact ?: return null
+        return AircraftCollisionSnapshot.create(definition, getVehicleTransform(partialTicks), synchedGearRot)
+    }
+
+    /** UI selection uses physical parts while projectile/module routing keeps its authored API. */
+    @JvmOverloads
+    fun clipPhysicalCollision(start: Vec3, end: Vec3, partialTicks: Float = 1F): EntityHitResult? {
+        val point = getAircraftCollisionSnapshot(partialTicks)?.clip(start, end) ?: return null
+        return EntityHitResult(this, point)
+    }
+
+    internal fun entityCollisionObbs(): List<OBB> =
+        getAircraftCollisionSnapshot(1F)?.activeObbs() ?: getOBBs()
+
+    internal fun usesAircraftPhysicalCollision(): Boolean = isInitialized && usesAircraftTerrainContact()
+
+    private fun refreshPhysicalCollisionBounds() {
+        if (!isInitialized) return
+        if (!usesAircraftTerrainContact()) {
+            AircraftCollisionIndex.remove(this)
+            return
+        }
+        boundingBox = makeBoundingBox()
+    }
+
+    override fun setXRot(value: Float) {
+        super.setXRot(value)
+        refreshPhysicalCollisionBounds()
+    }
+
+    override fun setYRot(value: Float) {
+        super.setYRot(value)
+        refreshPhysicalCollisionBounds()
+    }
+
+    override fun onAddedToWorld() {
+        super.onAddedToWorld()
+        if (!level().isClientSide) AircraftSurfaceProjectileIndex.update(this)
+        refreshPhysicalCollisionBounds()
+        // FULL far-terrain tickets expose saved targets before their first simulation tick.
+        // Derived hit geometry must already match the restored position and orientation.
+        updateOBB()
+    }
+
+    override fun onRemovedFromWorld() {
+        AircraftSurfaceProjectileIndex.remove(this)
+        AircraftCollisionIndex.remove(this)
+        super.onRemovedFromWorld()
+    }
+
+    override fun isInObb(entity: Entity, movement: Vec3): Boolean =
+        if (usesAircraftPhysicalCollision() || entity is VehicleEntity && entity.usesAircraftPhysicalCollision())
+            VehicleEntityContacts.find(this, entity, movement) != null
+        else super<OBBEntity>.isInObb(entity, movement)
+
+    /** Movement and the public entity box use the same fitted envelope. */
+    open fun getMovementCollisionBounds(): AABB = makeBoundingBox()
 
     fun vCollide(pVec: Vec3): Vec3 = vehicleCollisionEnvironmentService.collide(pVec)
 
@@ -6534,10 +6994,41 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
     internal fun setOnGroundForCollision(collidedBelow: Boolean, resolvedMovement: Vec3) =
         setOnGroundWithKnownMovement(collidedBelow, resolvedMovement)
 
+    internal fun acceptWheelSupportPitch(pitch: Float) {
+        applyVehicleFlightAttitude(yRot, pitch, roll)
+        vehicleFlightController.acceptGroundContactPitch(pitch)
+    }
+
     internal fun getOnPositionForCollision(offset: Float): BlockPos = getOnPos(offset)
 
+    private fun usesAircraftTerrainContact(): Boolean =
+        (vehicleType == VehicleType.AIRPLANE || vehicleType == VehicleType.HELICOPTER) &&
+            computed().aircraftTerrainContact?.valid() == true
+
     override fun move(movementType: MoverType, movement: Vec3) {
-        vehicleCollisionEnvironmentService.move(movementType, movement, !level().isClientSide)
+        val aircraftTerrain = computed().aircraftTerrainContact
+        if (!level().isClientSide && aircraftTerrain != null && aircraftTerrain.valid() &&
+            (vehicleType == VehicleType.AIRPLANE || vehicleType == VehicleType.HELICOPTER)) {
+            aircraftTerrainCollisionService.move(movement)
+            return
+        }
+        val fixedWing = isFixedWingFlightVehicle()
+        val previousPosition = position()
+        val incomingVelocity = deltaMovement
+        if (fixedWing && !level().isClientSide) {
+            fixedWingGroundContactService.beginMove(movement)
+            vehicleCollisionEnvironmentService.move(movementType, movement, false) { nativeResolved ->
+                fixedWingGroundContactService.constrainMovement(nativeResolved) { supported ->
+                    vehicleCollisionEnvironmentService.collide(supported, false)
+                }
+            }
+        } else {
+            vehicleCollisionEnvironmentService.move(movementType, movement, !fixedWing && !level().isClientSide)
+        }
+        if (fixedWing) {
+            fixedWingGroundContactService.afterMove(movement, incomingVelocity, previousPosition)
+            return
+        }
 
         if (lastTickSpeed < 0.2 || collisionCoolDown > 0 || this is DroneEntity) return
         val driver = this.lastDriver
@@ -6626,134 +7117,147 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         VehicleMotionUtils.bounceHorizontal(this, direction)
     }
 
-     fun bounceVertical(direction: Direction) {
+    fun hasRecentFixedWingWorldContact(): Boolean = isFixedWingFlightVehicle() &&
+        (aircraftTerrainCollisionService.recentContact() || fixedWingGroundContactService.recentContact())
+
+    fun bounceVertical(direction: Direction) {
         VehicleMotionUtils.bounceVertical(this, direction)
     }
 
-     fun preventStacking() {
+    fun preventStacking() {
         VehicleMotionUtils.preventStacking(this)
     }
 
-     fun pushNew(pX: Double, pY: Double, pZ: Double) {
+    fun pushNew(pX: Double, pY: Double, pZ: Double) {
         this.setDeltaMovement(this.deltaMovement.add(pX, pY, pZ))
     }
 
-     fun supportEntities() {
+    fun supportEntities() {
         VehicleMotionUtils.supportEntities(this)
     }
 
     fun getRandom(): RandomSource = this.random
 
-     fun crushEntities() = VehicleMotionUtils.crushEntities(this)
+    fun crushEntities() = VehicleMotionUtils.crushEntities(this)
 
-     fun getForwardDirection(): Vector3f = Vector3f(
+    fun getForwardDirection(): Vector3f = Vector3f(
         Mth.sin(-yRot * (Math.PI.toFloat() / 180)),
         0.0f,
         Mth.cos(yRot * (Math.PI.toFloat() / 180))
     ).normalize()
 
-     fun getRightDirection(): Vector3f = Vector3f(
+    fun getRightDirection(): Vector3f = Vector3f(
         Mth.cos(-yRot * (Math.PI.toFloat() / 180)),
         0.0f,
         Mth.sin(yRot * (Math.PI.toFloat() / 180))
     ).normalize()
 
-     fun getEngineSound(): SoundEvent? = this.computed().engineSound
+    fun getEngineSound(): SoundEvent? = this.computed().engineSound
 
-     fun getAcceleration() = absoluteSpeed - absoluteSpeedO
+    fun getAcceleration() = absoluteSpeed - absoluteSpeedO
 
     open fun getTrackAnimationLength() = 100
 
-     fun hasDecoy() = computed().hasDecoy
+    fun hasDecoy() = computed().hasDecoy
 
-    open fun engineRunning() = Math.abs(power) > 0
+    open fun engineRunning(): Boolean = if (isFixedWingFlightVehicle()) {
+        !isWreck && fixedWingEngineSoundPower() > 0.001F
+    } else Math.abs(power) > 0
+
+    private fun fixedWingEngineSoundPower(): Float {
+        val flight = resolveVehicleFlightStrategy() as? FixedWingFlightStrategy ?: return 0F
+        val referenceThrust = flight.profile.massKg * flight.handling.dryAccelerationMps2
+        val thrust = getVehicleFlightInstrumentSnapshot(1F).thrust
+        if (!thrust.isFinite() || !referenceThrust.isFinite() || referenceThrust <= 0.0) return 0F
+        return (thrust / referenceThrust).coerceIn(0.0, 1.5).toFloat()
+    }
 
     /**
      * 撬棍shift+右键收回载具时返还的物品
      */
     open fun getRetrieveItems(): List<ItemStack> = listOf(ContainerBlockItem.createInstance(this))
 
-     val hudColor: Int
+    val hudColor: Int
         get() = computed().hudColor.get()
 
-     var power by POWER
-     var deltaRot by DELTA_ROT
-     var decoyReady by DECOY_READY
-     var synchedPropellerRot by SYNCHED_PROPELLER_ROT
-     var planeBreak by PLANE_BREAK
-     var synchedGearRot by SYNCHED_GEAR_ROT
-     var gearUp by GEAR_UP
+    var power by POWER
+    var deltaRot by DELTA_ROT
+    var decoyReady by DECOY_READY
+    var synchedPropellerRot by SYNCHED_PROPELLER_ROT
+    var planeBreak by PLANE_BREAK
+    var synchedGearRot by SYNCHED_GEAR_ROT
+    var gearUp by GEAR_UP
 
-     var subEngineDamaged by SUB_ENGINE_DAMAGED
-     var subEngineHealth by SUB_ENGINE_HEALTH
-     var mainEngineDamaged by MAIN_ENGINE_DAMAGED
-     var mainEngineHealth by MAIN_ENGINE_HEALTH
+    var subEngineDamaged by SUB_ENGINE_DAMAGED
+    var subEngineHealth by SUB_ENGINE_HEALTH
+    var mainEngineDamaged by MAIN_ENGINE_DAMAGED
+    var mainEngineHealth by MAIN_ENGINE_HEALTH
 
-     var leftWheelDamaged by L_WHEEL_DAMAGED
-     var leftWheelHealth by L_WHEEL_HEALTH
-     var rightWheelDamaged by R_WHEEL_DAMAGED
-     var rightWheelHealth by R_WHEEL_HEALTH
+    var leftWheelDamaged by L_WHEEL_DAMAGED
+    var leftWheelHealth by L_WHEEL_HEALTH
+    var rightWheelDamaged by R_WHEEL_DAMAGED
+    var rightWheelHealth by R_WHEEL_HEALTH
 
-     var turretDamaged by TURRET_DAMAGED
-     var turretHealth by TURRET_HEALTH
+    var turretDamaged by TURRET_DAMAGED
+    var turretHealth by TURRET_HEALTH
 
-     var selectedWeapon by SELECTED_WEAPON
+    var selectedWeapon by SELECTED_WEAPON
     /** Replicated per-seat secondary slot; paired seats never overwrite [selectedWeapon]. */
-     var secondaryWeapon by SECONDARY_WEAPON
-     var chargeProgress by CHARGE_PROGRESS
+    var secondaryWeapon by SECONDARY_WEAPON
+    var chargeProgress by CHARGE_PROGRESS
 
-     var laserScale by LASER_SCALE
-     var laserScaleO by LASER_SCALE_O
-     var laserLength by LASER_LENGTH
+    var laserScale by LASER_SCALE
+    var laserScaleO by LASER_SCALE_O
+    var laserLength by LASER_LENGTH
 
-     var serverYaw by SERVER_YAW
-     var serverPitch by SERVER_PITCH
-     var cannonRecoilTime by CANNON_RECOIL_TIME
-     var cannonRecoilForce by CANNON_RECOIL_FORCE
+    var serverYaw by SERVER_YAW
+    var serverPitch by SERVER_PITCH
+    var cannonRecoilTime by CANNON_RECOIL_TIME
+    var cannonRecoilForce by CANNON_RECOIL_FORCE
 
-     var override by OVERRIDE
-     var lastAttackerUUID by LAST_ATTACKER_UUID
-     var lastDriverUUID by LAST_DRIVER_UUID
-     var dogTagIcon by DOG_TAG_ICON
-     var aiTurretTargetUUID by AI_TURRET_TARGET_UUID
-     var aiPassengerWeaponTargetUUID by AI_PASSENGER_WEAPON_TARGET_UUID
+    var override by OVERRIDE
+    var lastAttackerUUID by LAST_ATTACKER_UUID
+    var lastDriverUUID by LAST_DRIVER_UUID
+    var dogTagIcon by DOG_TAG_ICON
+    var aiTurretTargetUUID by AI_TURRET_TARGET_UUID
+    var aiPassengerWeaponTargetUUID by AI_PASSENGER_WEAPON_TARGET_UUID
 
-     var yawWhileShoot by YAW_WHILE_SHOOT
-     var hornVolume by HORN_VOLUME
+    var yawWhileShoot by YAW_WHILE_SHOOT
+    var hornVolume by HORN_VOLUME
 
-     var isWreck by IS_WRECK
-     var sympatheticDetonated by SYMPATHETIC_DETONATED
-     var turretBurned by TURRET_BURNED
-     var turretBurnTimer by TURRET_BURN_TIMER
-     var hoverMode by HOVER_MODE
+    var isWreck by IS_WRECK
+    var sympatheticDetonated by SYMPATHETIC_DETONATED
+    var turretBurned by TURRET_BURNED
+    var turretBurnTimer by TURRET_BURN_TIMER
+    var hoverMode by HOVER_MODE
 
-     val hornSound: SoundEvent
+    val hornSound: SoundEvent
         get() = this.computed().hornSound
 
-     fun horn() {
+    fun horn() {
         hornVolume += 0.7f
     }
 
-     fun hornWorking() = Math.abs(this.hornVolume) > 0.05
+    fun hornWorking() = Math.abs(this.hornVolume) > 0.05
 
-     fun stuka() = xRot > 5 && xRot < 175 && deltaMovement.y < -0.4 && !onGround()
-     fun heliCrash() = vehicleType == VehicleType.HELICOPTER && health < getMaxHealth() * 0.1f && !onGround()
-     fun vehicleSkip() =
+    fun stuka() = xRot > 5 && xRot < 175 && deltaMovement.y < -0.4 && !onGround()
+    fun heliCrash() = vehicleType == VehicleType.HELICOPTER && health < getMaxHealth() * 0.1f && !onGround()
+    fun vehicleSkip() =
         engineInfo is Wheel && engineInfo !is WheelChair && (if (engineInfo is Track) drift() else upInputDown) && onGround() && deltaMovement.horizontalDistanceSqr() > (if (engineInfo is Track) 0.0004 else 0.01)
 
-     fun drift() = upInputDown && (rightInputDown || leftInputDown)
+    fun drift() = upInputDown && (rightInputDown || leftInputDown)
 
-     val vehicleType: VehicleType?
+    val vehicleType: VehicleType?
         get() = computed().type
 
     /**
      * @author YWZJ Ranpoes
      */
-     fun support(entity: Entity) {
+    fun support(entity: Entity) {
         VehicleMotionUtils.support(this, entity)
     }
 
-     val isAmphibious: Boolean
+    val isAmphibious: Boolean
         get() = VehicleMiscUtils.isAmphibious(this)
 
     @OnlyIn(Dist.CLIENT)
@@ -6766,20 +7270,17 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
     }
 
     @OnlyIn(Dist.CLIENT)
-     fun thirdPersonAmmoComponent(data: GunData, player: Player?): Component {
+    fun thirdPersonAmmoComponent(data: GunData, player: Player?): Component {
         return firstPersonAmmoComponent(data, player)
     }
 
-    override fun getOBBs(): MutableList<OBB> {
-        if (this.obbCache == null) {
-            this.obbCache = this.obb.asSequence().map { it.getOBB() }.toMutableList()
-        }
-        return this.obbCache!!
-    }
+    override fun getOBBs(): MutableList<OBB> = combatStateOwner.collisionBoxes.select(
+        obb, hasFixedWingLandingGear(), synchedGearRot, computed().engineType == EngineType.TRACK,
+    )
 
-     fun getEnergyDataAccessor() = ENERGY
+    fun getEnergyDataAccessor() = ENERGY
 
-     fun generateWreckageLoot() {
+    fun generateWreckageLoot() {
         val data = WreckageLootDataManager.getLootData(this.type) ?: return
         val pools = data.pools
         if (pools.isEmpty()) return
@@ -7130,5 +7631,10 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         // Map SeatIndex -> GunData
         protected val GUN_DATA_MAP: EntityDataAccessor<Map<String, GunData>> =
             SynchedEntityData.defineId(VehicleEntity::class.java, ModSerializers.VEHICLE_GUN_DATA_MAP_SERIALIZER.get())
+
+        private val AIRCRAFT_COUNTERMEASURE_LEVELS: EntityDataAccessor<Int> =
+            SynchedEntityData.defineId(VehicleEntity::class.java, EntityDataSerializers.INT)
+        private val AIRCRAFT_COUNTERMEASURE_TIMERS: EntityDataAccessor<Int> =
+            SynchedEntityData.defineId(VehicleEntity::class.java, EntityDataSerializers.INT)
     }
 }

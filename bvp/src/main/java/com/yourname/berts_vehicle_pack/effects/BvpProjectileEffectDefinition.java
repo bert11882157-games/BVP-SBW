@@ -25,7 +25,7 @@ public final class BvpProjectileEffectDefinition {
     public static final int SCHEMA = 1;
     public static final int TERMINAL_TICK = Integer.MAX_VALUE;
     /**
-     * The BMP-2M AGS-30 is a BVP-owned gun-grenade projectile whose generated profile carries
+     * The BMP-2M and BTR-90 AGS use a BVP-owned gun-grenade whose generated profile carries
      * the typed impact visual but intentionally omits the full trail/effect extension.  Keep the
      * fallback keyed to the immutable projectile profile tuple, never to a weapon/display name,
      * so ordinary SBW gun-grenade users remain on their native impact path.
@@ -149,7 +149,7 @@ public final class BvpProjectileEffectDefinition {
         return new Impact("medium");
     }
 
-    private static boolean isTypedAgs30Profile(ResolvedProjectileProfile profile) {
+    static boolean isTypedAgs30Profile(ResolvedProjectileProfile profile) {
         if (profile == null || profile.getId() == null
                 || !BertsVehiclePack.MODID.equals(profile.getId().m_135827_())) {
             return false;

@@ -486,9 +486,11 @@ object VehicleCcipPresentation {
         )
     }
 
-    /** CCIP is a flight-only presentation; ground vehicles never capture or present it. */
+    /** Aircraft use the single body-forward cue; retain CCIP for other flight strategies. */
     private fun ccipEligible(vehicle: VehicleEntity, seatIndex: Int, selectedWeaponIndex: Int): Boolean {
         return seatIndex >= 0 && selectedWeaponIndex >= 0 &&
+            !vehicle.isFixedWingFlightVehicle() && vehicle.vehicleType !=
+                com.atsuishio.superbwarfare.data.vehicle.subdata.VehicleType.AIRPLANE &&
             vehicle.resolveVehicleFlightStrategy() != null
     }
 

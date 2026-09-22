@@ -1,208 +1,110 @@
+import groovy.json.JsonSlurper
+import java.security.MessageDigest
+import java.util.zip.ZipFile
+
 plugins {
-    id 'eclipse'
-    id 'idea'
+    id 'java'
     id 'maven-publish'
-    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
 }
 
 version = mod_version
 group = mod_group_id
-
-base {
-    archivesName = mod_id
-}
-
-// Mojang ships Java 17 to end users in 1.18+, so your mod should target Java 17.
+base.archivesName = mod_id
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
-println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
-minecraft {
-    // The mappings can be changed at any time and must be in the following format.
-    // Channel:   Version:
-    // official   MCVersion             Official field/method names from Mojang mapping files
-    // parchment  YYYY.MM.DD-MCVersion  Open community-sourced parameter names and javadocs layered on top of official
-    //
-    // You must be aware of the Mojang license when using the 'official' or 'parchment' mappings.
-    // See more information here: https://github.com/MinecraftForge/MCPConfig/blob/master/Mojang.md
-    //
-    // Parchment is an unofficial project maintained by ParchmentMC, separate from MinecraftForge
-    // Additional setup is needed to use their mappings: https://parchmentmc.org/docs/getting-started
-    //
-    // Use non-default mappings at your own risk. They may not always work.
-    // Simply re-run your setup task after changing the mappings to update your workspace.
-    mappings channel: mapping_channel, version: mapping_version
-
-    // When true, this property will have all Eclipse/IntelliJ IDEA run configurations run the "prepareX" task for the given run configuration before launching the game.
-    // In most cases, it is not necessary to enable.
-    // enableEclipsePrepareRuns = true
-    // enableIdeaPrepareRuns = true
-
-    // This property allows configuring Gradle's ProcessResources task(s) to run on IDE output locations before launching the game.
-    // It is REQUIRED to be set to true for this template to function.
-    // See https://docs.gradle.org/current/dsl/org.gradle.language.jvm.tasks.ProcessResources.html
-    copyIdeResources = true
-
-    // When true, this property will add the folder name of all declared run configurations to generated IDE run configurations.
-    // The folder name can be set on a run configuration using the "folderName" property.
-    // By default, the folder name of a run configuration is the name of the Gradle project containing it.
-    // generateRunFolders = true
-
-    // This property enables access transformers for use in development.
-    // They will be applied to the Minecraft artifact.
-    // The access transformer file can be anywhere in the project.
-    // However, it must be at "META-INF/accesstransformer.cfg" in the final mod jar to be loaded by Forge.
-    // This default location is a best practice to automatically put the file in the right place in the final jar.
-    // See https://docs.minecraftforge.net/en/latest/advanced/accesstransformers/ for more information.
-    // accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
-
-    // Default run configurations.
-    // These can be tweaked, removed, or duplicated as needed.
-    runs {
-        // applies to all the run configs below
-        configureEach {
-            workingDirectory project.file('run')
-
-            // Recommended logging data for a userdev environment
-            // The markers can be added/remove as needed separated by commas.
-            // "SCAN": For mods scan.
-            // "REGISTRIES": For firing of registry events.
-            // "REGISTRYDUMP": For getting the contents of all registries.
-            property 'forge.logging.markers', 'REGISTRIES'
-
-            // Recommended logging level for the console
-            // You can set various levels here.
-            // Please read: https://stackoverflow.com/questions/2031163/when-to-use-the-different-log-levels
-            property 'forge.logging.console.level', 'debug'
-
-            mods {
-                "${mod_id}" {
-                    source sourceSets.main
-                }
-            }
+// The export uses local sources; development selects its canonical source root explicitly.
+def canonicalJava = file(providers.gradleProperty('bvpSourceRoot').getOrElse('src/main/java'))
+def inputsFile = file(providers.gradleProperty('sbwBuildInputs').getOrElse('build/source-build/inputs.json'))
+def namedJava = layout.buildDirectory.dir('generated/sources/named')
+def sha256 = { File f ->
+    def digest = MessageDigest.getInstance('SHA-256')
+    f.withInputStream { stream ->
+        byte[] buffer = new byte[65536]
+        for (int n = stream.read(buffer); n != -1; n = stream.read(buffer)) digest.update(buffer, 0, n)
+    }
+    digest.digest().encodeHex().toString()
+}
+def compilerFiles = providers.provider {
+    if (!inputsFile.isFile()) throw new GradleException(
+        'Missing matching SBW source-build inputs. Run node build-support/build-release.mjs --tree <export> --meshloader-manifest <JSON>.')
+    def data = new JsonSlurper().parse(inputsFile)
+    if (data.schema != 1 || data.kind != 'sbw-source-compiler-inputs') throw new GradleException('Unsupported SBW bridge schema')
+    if (data.minecraft != minecraft_version) throw new GradleException('SBW/BVP Minecraft versions differ')
+    (data.classpath + [data.mappedApi, data.meshloader]).collect { row ->
+        File f = new File(row.path)
+        if (!f.isFile() || f.length() != row.size || sha256(f) != row.sha256) {
+            throw new GradleException("Changed or missing source-build dependency: ${row.id}")
         }
-
-        client {
-            // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
-            property 'forge.enabledGameTestNamespaces', mod_id
-        }
-
-        server {
-            property 'forge.enabledGameTestNamespaces', mod_id
-            args '--nogui'
-        }
-
-        // This run config launches GameTestServer and runs all registered gametests, then exits.
-        // By default, the server will crash when no gametests are provided.
-        // The gametest system is also enabled by default for other run configs under the /test command.
-        gameTestServer {
-            property 'forge.enabledGameTestNamespaces', mod_id
-        }
-
-        data {
-            // example of overriding the workingDirectory set in configureEach above
-            workingDirectory project.file('run-data')
-
-            // Keep development datagen separate from the committed release resources.
-            args '--mod', mod_id, '--all', '--output', file('build/generated/datagen/'), '--existing', file('src/main/resources/')
-        }
+        f
     }
 }
 
-// Java sources use the standard project-local src/main/java directory.
-sourceSets.main.resources { srcDir 'src/generated/resources' }
-
-repositories {
-    // Put repositories for dependencies here
-    // ForgeGradle automatically adds the Forge maven and Maven Central for you
-
-    // Local mod jars in ./libs are resolved through this flat dir repo.
-    flatDir {
-        dirs 'libs'
-    }
+sourceSets.main {
+    java.setSrcDirs([namedJava])
+    // First wins: source-owned overlay overrides stale generated mirrors.
+    resources.setSrcDirs(['src/main/resources', 'src/generated/resources'])
+    compileClasspath = files(compilerFiles)
 }
-
-dependencies {
-    // Specify the version of Minecraft to use.
-    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
-
-    // SuperbWarfare base mod + GeckoLib, resolved from the libs/ flatDir repo above.
-    // fg.deobf() remaps the jar from SRG (intermediate) names to official names so
-    // method overrides (e.g. addAdditionalSaveData) actually line up.
-    // The "name:version" here is matched against the literal filename in libs/
-    // (group id "blank" is ignored by flatDir resolution).
-    implementation fg.deobf("blank:superbwarfare-0_8_9-final-mc1_20_1-6effe4385:all")
-    implementation fg.deobf("blank:geckolib-forge-1.20.1:4.4.6")
-    // SBW Mesh Loader - required for poly_mesh (mesh-based, non-cube) vehicle models.
-    implementation fg.deobf("blank:sbwmeshloader:0.1.1")
-    // PolyMeshModel extends BedrockModel from this library, which SBW jarjar-embeds
-    // at runtime - but the compiler still needs it on the classpath directly.
-    implementation fg.deobf("blank:simplebedrockmodel:2.3.3-forge-mc1.20.1")
-    // mae is jarjar-nested two levels deep (superbwarfare -> simplebedrockmodel -> mae),
-    // but BedrockBone/BedrockModel reference its Skeleton class, so it needs to be visible too.
-    implementation fg.deobf("blank:mae:1.1.2")
-
-    // For more info:
-    // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
-    // http://www.gradle.org/docs/current/userguide/dependency_management.html
+tasks.register('prepareNamedSources', Exec) {
+    inputs.dir(canonicalJava)
+    inputs.file(inputsFile)
+    inputs.file('build-support/remap-sources.mjs')
+    outputs.dir(namedJava)
+    commandLine providers.gradleProperty('nodeExecutable').getOrElse('node'),
+        file('build-support/remap-sources.mjs'), '--source', canonicalJava,
+        '--inputs', inputsFile, '--output', namedJava.get().asFile
 }
-
-// This block of code expands all declared replace properties in the specified resource targets.
-// A missing property will result in an error. Properties are expanded using ${} Groovy notation.
-// When "copyIdeResources" is enabled, this will also run before the game launches in IDE environments.
-// See https://docs.gradle.org/current/dsl/org.gradle.language.jvm.tasks.ProcessResources.html
-tasks.named('processResources', ProcessResources).configure {
-    var replaceProperties = [
-            minecraft_version: minecraft_version, minecraft_version_range: minecraft_version_range,
-            forge_version: forge_version, forge_version_range: forge_version_range,
-            loader_version_range: loader_version_range,
-            mod_id: mod_id, mod_name: mod_name, mod_license: mod_license, mod_version: mod_version,
-            mod_authors: mod_authors, mod_description: mod_description,
-    ]
-    inputs.properties replaceProperties
-
-    filesMatching(['META-INF/mods.toml', 'pack.mcmeta']) {
-        expand replaceProperties + [project: project]
-    }
-}
-
-// Example for how to get properties into the manifest for reading at runtime.
-tasks.named('jar', Jar).configure {
-    manifest {
-        attributes([
-                'MixinConfigs'            : 'berts_vehicle_pack.mixins.json',
-                'Specification-Title'     : mod_id,
-                'Specification-Vendor'    : mod_authors,
-                'Specification-Version'   : '1', // We are version 1 of ourselves
-                'Implementation-Title'    : project.name,
-                'Implementation-Version'  : project.jar.archiveVersion,
-                'Implementation-Vendor'   : mod_authors,
-                'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
-        ])
-    }
-
-    // This is the preferred method to reobfuscate your jar file
-    finalizedBy 'reobfJar'
-}
-
-// However if you are in a multi-project build, dev time needs unobfed jar files, so you can delay the obfuscation until publishing by doing:
-// tasks.named('publish').configure {
-//     dependsOn 'reobfJar'
-// }
-
-// Example configuration to allow publishing using the maven-publish plugin
-publishing {
-    publications {
-        register('mavenJava', MavenPublication) {
-            artifact jar
-        }
-    }
-    repositories {
-        maven {
-            url "file://${project.projectDir}/mcmodsrepo"
-        }
-    }
-}
-
+tasks.named('compileJava', JavaCompile) { dependsOn('prepareNamedSources') }
 tasks.withType(JavaCompile).configureEach {
-    options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
+    options.encoding = 'UTF-8'
+    options.release = 17
+    options.compilerArgs += ['-proc:none']
 }
+tasks.withType(ProcessResources).configureEach {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    exclude('META-INF/MANIFEST.MF', '.cache/**')
+}
+tasks.withType(AbstractArchiveTask).configureEach {
+    preserveFileTimestamps = false
+    reproducibleFileOrder = true
+}
+tasks.named('jar', Jar) {
+    archiveClassifier = 'mapped'
+    manifest.attributes([
+        'MixinConfigs': 'berts_vehicle_pack.mixins.json',
+        'Specification-Title': mod_id,
+        'Specification-Vendor': mod_authors,
+        'Specification-Version': '1',
+        'Implementation-Title': mod_id,
+        'Implementation-Version': mod_version,
+        'Implementation-Vendor': mod_authors
+    ])
+}
+tasks.register('verifyStaticResources') {
+    dependsOn('jar')
+    doLast {
+        def source = file('src/main/resources')
+        def resources = fileTree(source).files.sort { it.path }
+        if (resources.empty) throw new GradleException('Source-owned resource overlay is empty')
+        def candidate = providers.gradleProperty('staticJar').isPresent()
+            ? file(providers.gradleProperty('staticJar').get())
+            : tasks.named('jar', Jar).get().archiveFile.get().asFile
+        def archive = new ZipFile(candidate)
+        try {
+            resources.each { f ->
+                def name = source.toPath().relativize(f.toPath()).toString().replace('\\', '/')
+                def entry = archive.getEntry(name)
+                if (entry == null) throw new GradleException("Missing static resource: $name")
+                def digest = MessageDigest.getInstance('SHA-256')
+                archive.getInputStream(entry).withCloseable { stream ->
+                    byte[] buffer = new byte[65536]
+                    for (int n = stream.read(buffer); n != -1; n = stream.read(buffer)) digest.update(buffer, 0, n)
+                }
+                if (digest.digest().encodeHex().toString() != sha256(f)) throw new GradleException("Changed static resource: $name")
+            }
+        } finally { archive.close() }
+        println "PASS BVP source-owned static resources: ${resources.size()} exact files"
+    }
+}
+
+// *-mapped.jar is development-only. build-release.mjs remaps it to the runtime artifact.

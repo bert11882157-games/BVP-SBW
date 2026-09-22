@@ -20,32 +20,6 @@
       ]
     },
     {
-      "Part": "WheelLeft",
-      "Size": [
-        0.25089,
-        0.50963,
-        2.78336
-      ],
-      "Position": [
-        1.6857,
-        0.56451,
-        -0.19601
-      ]
-    },
-    {
-      "Part": "WheelRight",
-      "Size": [
-        0.25089,
-        0.50963,
-        2.78336
-      ],
-      "Position": [
-        -1.6857,
-        0.56451,
-        -0.19601
-      ]
-    },
-    {
       "Part": "MainEngine",
       "Size": [
         0.90165,
@@ -196,11 +170,6 @@
       "ExplosionRadius": 4,
       "RecoilTime": 42,
       "RecoilForce": 1,
-      "ShootShake": [
-        8,
-        10,
-        60
-      ],
       "Spread": 0.02,
       "ShootAnimationTime": 20,
       "Crosshair": "@VehicleRuApc",
@@ -221,7 +190,12 @@
             "Projectile": {
               "Type": "superbwarfare:cannon_shell",
               "Profile": "berts_vehicle_pack:tiger_1/cannon/ammo_00_pzgr39_88_apcbc"
-            }
+            },
+            "ShootShake": [
+              8,
+              10,
+              75.6
+            ]
           }
         }
       ],
@@ -234,10 +208,11 @@
         "Fire3P": "berts_vehicle_pack:tap_shoot_88mmde",
         "Fire3PFar": "berts_vehicle_pack:tap_shoot_88mmde",
         "Fire3PVeryFar": "berts_vehicle_pack:tap_shoot_88mmde",
-        "VehicleReload": "superbwarfare:t_90a_reload",
         "Change": "superbwarfare:into_cannon",
+        "VehicleReload": "berts_vehicle_pack:m1_abrams_elite_m68a1_reload",
+        "VehicleReloadClipDurationTicks": 86,
         "CancellableSounds": [
-          "superbwarfare:t_90a_reload"
+          "berts_vehicle_pack:m1_abrams_elite_m68a1_reload"
         ]
       },
       "SoundRadius": 32,
@@ -245,18 +220,18 @@
         "Transform": "Barrel",
         "Positions": [
           [
-            -0.45182,
-            -1.15215,
-            -2.03683
+            0,
+            0,
+            -3.45455
           ]
         ],
         "Directions": [
           "Barrel"
         ],
         "ViewPosition": [
-          -0.41162,
-          -1.04964,
-          -1.8556
+          0,
+          0,
+          -3.14718
         ],
         "MuzzleAttachments": [
           "main_muzzle"
@@ -282,7 +257,12 @@
         "ProjectileType": "superbwarfare:cannon_shell",
         "ProjectileProfile": "berts_vehicle_pack:tiger_1/cannon/default",
         "ProjectileLife": 50
-      }
+      },
+      "ShootShake": [
+        8,
+        10,
+        75.6
+      ]
     },
     "MachineGun": {
       "DefaultFireMode": "Auto",
@@ -324,17 +304,17 @@
                 }
               ]
             },
-            "ShootShake": [
-              8,
-              10,
-              12
-            ],
             "NominalBallistics": {
               "Supported": true,
               "ProjectileType": "superbwarfare:projectile",
               "ProjectileProfile": "berts_vehicle_pack:tiger_1/machinegun/ammo_00_mg34_ap",
               "ProjectileLife": 400
-            }
+            },
+            "ShootShake": [
+              8,
+              10,
+              12
+            ]
           }
         }
       ],
@@ -357,18 +337,18 @@
         "Transform": "Barrel",
         "Positions": [
           [
-            -0.45182,
-            -1.15215,
-            -2.03683
+            -0.37656,
+            0.08579,
+            -0.17881
           ]
         ],
         "Directions": [
           "Barrel"
         ],
         "ViewPosition": [
-          -0.41162,
-          -1.04964,
-          -1.8556
+          -0.34306,
+          0.07816,
+          -0.1629
         ],
         "MuzzleAttachments": [
           "coax_muzzle"
@@ -405,12 +385,6 @@
       "SoundRadius": 12,
       "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/gun_7_62mm.png",
       "HeatPerShoot": 0,
-      "NominalBallistics": {
-        "Supported": true,
-        "ProjectileType": "superbwarfare:projectile",
-        "ProjectileProfile": "berts_vehicle_pack:tiger_1/machinegun/default",
-        "ProjectileLife": 400
-      },
       "ProjectileBeltAmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
@@ -434,6 +408,12 @@
           }
         }
       ],
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "superbwarfare:projectile",
+        "ProjectileProfile": "berts_vehicle_pack:tiger_1/machinegun/default",
+        "ProjectileLife": 400
+      },
       "ShootShake": [
         8,
         10,
@@ -465,9 +445,9 @@
     0
   ],
   "BarrelPos": [
-    0.45182,
-    1.12956,
-    0.22591
+    0,
+    0.2824,
+    1.24252
   ],
   "TurretTurnSpeed": [
     2.8,
@@ -623,9 +603,9 @@
     "gunner1_camera": {
       "Parent": "Turret",
       "Position": [
-        -0.02177,
-        2.28737,
-        0.11677
+        -0.6495,
+        0.85922,
+        0.23528
       ],
       "Direction": [
         0,
@@ -636,9 +616,9 @@
     "gunner1_zoom": {
       "Parent": "Turret",
       "Position": [
-        -0.02177,
-        2.28737,
-        0.11677
+        -0.6495,
+        0.85922,
+        0.23528
       ],
       "Direction": [
         0,
@@ -649,9 +629,9 @@
     "main_muzzle": {
       "Parent": "Barrel",
       "Position": [
-        -0.45182,
-        -1.15215,
-        2.03683
+        0,
+        0,
+        3.45455
       ],
       "Direction": [
         0,
@@ -662,9 +642,9 @@
     "coax_muzzle": {
       "Parent": "Barrel",
       "Position": [
-        -0.45182,
-        -1.15215,
-        2.03683
+        -0.37656,
+        0.08579,
+        0.17881
       ],
       "Direction": [
         0,

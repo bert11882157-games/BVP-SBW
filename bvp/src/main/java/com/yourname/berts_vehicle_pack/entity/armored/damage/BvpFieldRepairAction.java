@@ -1,6 +1,7 @@
 package com.yourname.berts_vehicle_pack.entity.armored.damage;
 
 import com.atsuishio.superbwarfare.api.vehicle.action.VehicleAction;
+import com.atsuishio.superbwarfare.api.aircraft.AircraftSurfaceModules;
 import com.atsuishio.superbwarfare.api.vehicle.action.VehicleActionContext;
 import com.atsuishio.superbwarfare.api.vehicle.action.VehicleActionControlPolicy;
 import com.atsuishio.superbwarfare.api.vehicle.action.VehicleActionRegistry;
@@ -29,6 +30,8 @@ public final class BvpFieldRepairAction extends VehicleAction {
     public static final ResourceLocation TARGET_ENGINE = id("field_repair/target/engine");
     public static final ResourceLocation TARGET_TRACKS = id("field_repair/target/tracks");
     public static final ResourceLocation TARGET_HULL = id("field_repair/target/hull");
+    public static final ResourceLocation TARGET_AIRCRAFT = id("field_repair/target/aircraft_surfaces");
+    public static final int REPAIR_TARGET_AIRCRAFT = 6;
 
     public static final int MODE_IDLE = 0;
     public static final int MODE_NORMAL = 1;
@@ -37,7 +40,7 @@ public final class BvpFieldRepairAction extends VehicleAction {
 
     public static final int SEGMENT_DURATION_TICKS = 200;
     public static final int EMERGENCY_HOLD_TICKS = 50;
-    /** Field repair keeps its transaction/rollback cadence but takes exactly four times longer. */
+    /** Duration ratio for the repair-rate balance; transaction and rollback cadence is unchanged. */
     public static final float REPAIR_DURATION_SCALE = 4.0F;
     public static final float MODULE_REPAIR_PER_TICK = 0.025F;
     public static final float HULL_REPAIR_PER_TICK = 0.0625F;
@@ -165,12 +168,17 @@ public final class BvpFieldRepairAction extends VehicleAction {
         if (TARGET_HULL.equals(targetId)) {
             return VehicleModuleDamageSystem.REPAIR_TARGET_HULL;
         }
+        if (TARGET_AIRCRAFT.equals(targetId)) return REPAIR_TARGET_AIRCRAFT;
         return VehicleModuleDamageSystem.REPAIR_TARGET_NONE;
     }
 
     public static boolean hasRepairableDamage(ArmoredVehicleEntity vehicle) {
         if (vehicle == null) {
             return false;
+        }
+        for (ResourceLocation id : surfaceIds()) {
+            var state = vehicle.getVehicleModuleState(id);
+            if (state != null && (state.getDestroyed() || state.getHealth() < state.getMaxHealth() - HEALTH_EPSILON)) return true;
         }
         if (vehicle.getHealth() < vehicle.getMaxHealth() - HEALTH_EPSILON
                 || vehicle.getModuleHealth("engine") < VehicleModuleHealth.ENGINE_HP - HEALTH_EPSILON
@@ -210,7 +218,7 @@ public final class BvpFieldRepairAction extends VehicleAction {
             return VehicleActionUpdate.COMPLETE_COMMIT;
         }
 
-        int repairedTarget = modules.repairHighestPriorityGroup(
+        int repairedTarget = repairAircraftSurface(context) ? REPAIR_TARGET_AIRCRAFT : modules.repairHighestPriorityGroup(
                 MODULE_REPAIR_PER_TICK,
                 context.getJournal());
         if (repairedTarget == VehicleModuleDamageSystem.REPAIR_TARGET_NONE) {
@@ -269,12 +277,39 @@ public final class BvpFieldRepairAction extends VehicleAction {
     }
 
     private boolean canRepair() {
-        return !vehicle.isWreck() && vehicle.getHealth() > 0.0F;
+        return !vehicle.isWreck() && vehicle.getHealth() > 0.0F
+                && (!vehicle.isFixedWingFlightVehicle() || vehicle.m_20096_());
     }
 
     private boolean hasAnyRepairableDamage() {
         return modules.hasRepairableModuleDamage()
+                || hasAircraftSurfaceDamage()
                 || vehicle.getHealth() < vehicle.getMaxHealth() - HEALTH_EPSILON;
+    }
+
+    private boolean hasAircraftSurfaceDamage() {
+        for (ResourceLocation id : surfaceIds()) {
+            var state = vehicle.getVehicleModuleState(id);
+            if (state != null && (state.getDestroyed() || state.getHealth() < state.getMaxHealth() - HEALTH_EPSILON)) return true;
+        }
+        return false;
+    }
+
+    private boolean repairAircraftSurface(VehicleActionContext context) {
+        if (!vehicle.m_20096_()) return false;
+        for (ResourceLocation id : surfaceIds()) {
+            var state = vehicle.getVehicleModuleState(id);
+            if (state == null || (!state.getDestroyed() && state.getHealth() >= state.getMaxHealth() - HEALTH_EPSILON)) continue;
+            float repaired = Math.min(state.getMaxHealth(), state.getHealth() + state.getMaxHealth() / 400F);
+            vehicle.setVehicleModuleState(id, repaired, state.getDestroyed() && repaired < state.getMaxHealth() - HEALTH_EPSILON);
+            context.getJournal().recordModuleGain(id, repaired - state.getHealth(), state.getDestroyed());
+            return true;
+        }
+        return false;
+    }
+
+    private static java.util.List<ResourceLocation> surfaceIds() {
+        return AircraftSurfaceModules.ids;
     }
 
     private boolean isHullBelowHalf() {
@@ -296,6 +331,7 @@ public final class BvpFieldRepairAction extends VehicleAction {
             case VehicleModuleDamageSystem.REPAIR_TARGET_ENGINE -> TARGET_ENGINE;
             case VehicleModuleDamageSystem.REPAIR_TARGET_TRACKS -> TARGET_TRACKS;
             case VehicleModuleDamageSystem.REPAIR_TARGET_HULL -> TARGET_HULL;
+            case REPAIR_TARGET_AIRCRAFT -> TARGET_AIRCRAFT;
             default -> TARGET_NONE;
         };
     }

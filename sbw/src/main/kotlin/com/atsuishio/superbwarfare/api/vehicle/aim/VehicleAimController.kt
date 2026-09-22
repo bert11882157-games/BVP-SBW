@@ -2,6 +2,7 @@ package com.atsuishio.superbwarfare.api.vehicle.aim
 
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity
 import com.atsuishio.superbwarfare.entity.vehicle.utils.VehicleVecUtils
+import com.atsuishio.superbwarfare.api.vehicle.weapon.prediction.VehicleRangeBallistics
 import com.atsuishio.superbwarfare.api.vehicle.weapon.prediction.HasFcsGAcquisition
 import com.atsuishio.superbwarfare.api.vehicle.weapon.prediction.NominalBlockCollisionModel
 import com.atsuishio.superbwarfare.api.vehicle.weapon.prediction.NominalMotionModel
@@ -40,7 +41,16 @@ class VehicleAimController(private val vehicle: VehicleEntity) {
     private val clientPresentationTimeline = VehicleAimPresentationTimeline()
     private var snapshotSequence = 0
     private var clientPayload = ""
-    private val turretCloseAimState = CloseAimState()
+    private var zoomController: Entity? = null
+    private var zoomReceiptTick = -100L
+    private var opticalZoom = 1F
+
+    fun acceptOpticalZoom(player: Entity, magnification: Float) {
+        if (vehicle.level().isClientSide || controller(VehicleAimChannel.TURRET) !== player) return
+        zoomController = player
+        zoomReceiptTick = vehicle.level().gameTime
+        opticalZoom = if (magnification.isFinite()) magnification.coerceIn(1F, 24F) else 1F
+    }
     private var closeAimYawMultiplier = 1F
     private var closeAimPitchMultiplier = 1F
     private var turretGeometricZeroDistanceBlocks =
@@ -62,53 +72,6 @@ class VehicleAimController(private val vehicle: VehicleEntity) {
         val weaponIndex: Int,
         val profile: VehicleAimProfile,
     )
-
-    private class CloseAimState {
-        var outerExposureTicks = 0
-        var outerCooldownTicks = 0
-        var insideOuter = false
-        var insideInner = false
-        private var previousCommandX = 0.0
-        private var previousCommandY = 0.0
-        private var previousCommandZ = 0.0
-        private var hasPreviousCommand = false
-
-        /**
-         * Tracks the live command without retaining a direction or becoming an aim source.
-         * A material change releases the close envelope immediately; sub-half-degree input
-         * noise remains eligible so the bounded magnetism does not chatter at its edge.
-         */
-        fun observeCommand(x: Double, y: Double, z: Double): Boolean {
-            val lengthSqr = x * x + y * y + z * z
-            if (!lengthSqr.isFinite() || lengthSqr <= VehicleAimController.MIN_DIRECTION_LENGTH_SQR) {
-                hasPreviousCommand = false
-                return true
-            }
-            val inverseLength = 1.0 / sqrt(lengthSqr)
-            val normalizedX = x * inverseLength
-            val normalizedY = y * inverseLength
-            val normalizedZ = z * inverseLength
-            val changed = hasPreviousCommand &&
-                    normalizedX * previousCommandX + normalizedY * previousCommandY +
-                    normalizedZ * previousCommandZ < VehicleAimController.COMMAND_CONTINUITY_COSINE
-            previousCommandX = normalizedX
-            previousCommandY = normalizedY
-            previousCommandZ = normalizedZ
-            hasPreviousCommand = true
-            return changed
-        }
-
-        fun reset() {
-            outerExposureTicks = 0
-            outerCooldownTicks = 0
-            insideOuter = false
-            insideInner = false
-            previousCommandX = 0.0
-            previousCommandY = 0.0
-            previousCommandZ = 0.0
-            hasPreviousCommand = false
-        }
-    }
 
     fun profileFor(controller: Entity?, channel: VehicleAimChannel): VehicleAimProfile? {
         controller ?: return null
@@ -134,7 +97,6 @@ class VehicleAimController(private val vehicle: VehicleEntity) {
     fun tickServer() {
         if (vehicle.level().isClientSide) return
         if (vehicle.isWreck) {
-            turretCloseAimState.reset()
             resetTurretGeometricZeroState()
             clearFcsZeroState()
             snapshots.clear()
@@ -169,7 +131,6 @@ class VehicleAimController(private val vehicle: VehicleEntity) {
             snapshots[channel] = updateChannel(controller, seatIndex, weaponIndex, profile)
         }
         if (!turretContextSeen) {
-            turretCloseAimState.reset()
             resetTurretGeometricZeroState()
             clearFcsZeroState()
         }
@@ -185,7 +146,6 @@ class VehicleAimController(private val vehicle: VehicleEntity) {
             turretGeometricZeroController === passenger ||
             fcsZeroController === passenger
         ) {
-            turretCloseAimState.reset()
             resetTurretGeometricZeroState()
             clearFcsZeroState()
         }
@@ -197,7 +157,6 @@ class VehicleAimController(private val vehicle: VehicleEntity) {
             turretGeometricZeroController === controller ||
             fcsZeroController === controller
         ) {
-            turretCloseAimState.reset()
             resetTurretGeometricZeroState()
             clearFcsZeroState()
         }
@@ -220,13 +179,7 @@ class VehicleAimController(private val vehicle: VehicleEntity) {
         )
         // HasFCS profiles use the one-shot G acquisition below; the legacy 50/100/200 cycling
         // value is intentionally dormant and must never become an alternate pitch/aim authority.
-        if (vehicle.computed().hasFCS) return false
-        if (turretGeometricZeroDistanceBlocks != requestedDistanceBlocks) {
-            // Zero selection is a material command change.  Do not carry an unfinished outer
-            // exposure into a new camera/muzzle convergence target; the next live tick may
-            // re-enter the envelope normally under the same physical servo.
-            turretCloseAimState.reset()
-        }
+        if (VehicleLaserRangefinder.enabled(vehicle, context.seatIndex, context.weaponIndex)) return false
         turretGeometricZeroDistanceBlocks = requestedDistanceBlocks
         return true
     }
@@ -235,23 +188,31 @@ class VehicleAimController(private val vehicle: VehicleEntity) {
     fun geometricZeroDistanceBlocks(): Int = turretGeometricZeroDistanceBlocks
 
     /**
-     * Accepts one authoritative HasFCS G edge.  The caller must pass a monotonically increasing
+     * Accepts one authoritative laser-rangefinder G edge. The caller must pass a monotonically increasing
      * connection sequence; no client point, distance, or direction is trusted.  A valid edge
      * revokes the previous zero before any muzzle/raycast/solver operation, so a failed capture
      * can never leave the previous correction active.
      */
-    fun requestFcsZero(controller: Entity?, requestSequence: Long): VehicleFcsZeroState {
+    /** Compatibility synchronous query restricted to currently loaded terrain. */
+    fun requestFcsZero(controller: Entity?, requestSequence: Long): VehicleFcsZeroState =
+        beginFcsZero(controller, requestSequence, false).join()
+
+    fun requestFcsZeroAsync(controller: Entity?, requestSequence: Long): java.util.concurrent.CompletableFuture<VehicleFcsZeroState> =
+        beginFcsZero(controller, requestSequence, true)
+
+    private fun beginFcsZero(controller: Entity?, requestSequence: Long, savedTerrain: Boolean): java.util.concurrent.CompletableFuture<VehicleFcsZeroState> {
+        fun done(state: VehicleFcsZeroState) = java.util.concurrent.CompletableFuture.completedFuture(state)
         val context = resolveLiveTurretContext(controller)
         if (requestSequence < 0L || context == null) {
-            return VehicleFcsZeroState.inactive(
+            return done(VehicleFcsZeroState.inactive(
                 vehicle.uuid,
                 fcsZeroRevision,
                 fcsZeroContextEpoch,
                 vehicle.level().gameTime,
                 requestSequence,
-            )
+            ))
         }
-        if (requestSequence <= fcsZeroLastRequestSequence) return fcsZeroState()
+        if (requestSequence <= fcsZeroLastRequestSequence) return done(fcsZeroState())
 
         // Sequence admission and authority revocation happen before every fallible operation.
         fcsZeroLastRequestSequence = requestSequence
@@ -259,116 +220,77 @@ class VehicleAimController(private val vehicle: VehicleEntity) {
         fcsZeroController = context.controller
         fcsZeroProfile = context.profile
         fcsZeroLevel = vehicle.level()
-        if (!vehicle.computed().hasFCS) {
-            return publishFcsResult(context, VehicleFcsZeroStatus.UNSUPPORTED)
+        if (!VehicleLaserRangefinder.enabled(vehicle, context.seatIndex, context.weaponIndex)) {
+            return done(publishFcsResult(context, VehicleFcsZeroStatus.UNSUPPORTED))
         }
 
         val level = vehicle.level() as? ServerLevel
-            ?: return publishFcsResult(context, VehicleFcsZeroStatus.UNSUPPORTED)
+            ?: return done(publishFcsResult(context, VehicleFcsZeroStatus.UNSUPPORTED))
         val ray = vehicle.resolveVehicleAimCameraRay(
             context.controller,
             VehicleAimChannel.TURRET,
             1F,
-        ) ?: return publishFcsResult(context, VehicleFcsZeroStatus.UNSUPPORTED)
+        ) ?: return done(publishFcsResult(context, VehicleFcsZeroStatus.UNSUPPORTED))
         val muzzle = vehicle.resolveMuzzleFrame(context.controller, 1F)
             ?.takeIf { it.weaponName == vehicle.getGunName(context.seatIndex, context.weaponIndex) }
-            ?: return publishFcsResult(context, VehicleFcsZeroStatus.UNSUPPORTED)
+            ?: return done(publishFcsResult(context, VehicleFcsZeroStatus.UNSUPPORTED))
         if (!finite(muzzle.position) || !finite(muzzle.direction) ||
             muzzle.direction.lengthSqr() <= MIN_DIRECTION_LENGTH_SQR
-        ) return publishFcsResult(context, VehicleFcsZeroStatus.UNSUPPORTED)
-        if (!level.hasChunkAt(BlockPos.containing(ray.origin))) {
-            return publishFcsResult(context, VehicleFcsZeroStatus.NO_BLOCK_HIT)
+        ) return done(publishFcsResult(context, VehicleFcsZeroStatus.UNSUPPORTED))
+        // Bind a pending result so ordinary ticks preserve this request's context epoch.
+        publishFcsResult(context, VehicleFcsZeroStatus.INACTIVE)
+        val epoch = fcsZeroContextEpoch
+        val base = vehicle.getTurretBaseTransformSnapshot(1F)
+        val snapshot = buildFcsNominalSnapshot(context, muzzle, level)
+            ?: return done(publishFcsResult(context, VehicleFcsZeroStatus.UNSUPPORTED))
+        val measurement = if (savedTerrain) VehicleLaserRangefinder.measureAsync(level, vehicle,
+            muzzle.position, muzzle.direction, MAX_FCS_ZERO_RANGE_BLOCKS)
+        else java.util.concurrent.CompletableFuture.completedFuture(VehicleLaserRangefinder.measure(level,
+            vehicle, muzzle.position, muzzle.direction, MAX_FCS_ZERO_RANGE_BLOCKS))
+        val serverExecutor = java.util.concurrent.Executor { action ->
+            if (level.server.isSameThread) action.run() else level.server.execute(action)
         }
+        return measurement.thenApplyAsync({ measured ->
+            val live = resolveLiveTurretContext(controller)
+            if (epoch != fcsZeroContextEpoch || requestSequence != fcsZeroLastRequestSequence ||
+                live == null || live.controller !== context.controller || live.profile !== context.profile ||
+                live.seatIndex != context.seatIndex || live.weaponIndex != context.weaponIndex ||
+                vehicle.level() !== level) {
+                VehicleFcsZeroState.inactive(vehicle.uuid, fcsZeroRevision, fcsZeroContextEpoch,
+                    level.gameTime, requestSequence)
+            } else if (measured == null) publishFcsResult(context, VehicleFcsZeroStatus.NO_BLOCK_HIT)
+            else solveFcsRange(context, ray, muzzle, base, snapshot, measured)
+        }, serverExecutor)
+    }
 
-        // Exactly one physical center-ray query.  Only a loaded first BLOCK is retained as a
-        // scalar muzzle-to-hit range; the hit position/bearing never enters the stored state.
-        val rayEnd = ray.pointAt(MAX_FCS_ZERO_RANGE_BLOCKS)
-        val hit = runCatching {
-            level.clip(
-                ClipContext(
-                    ray.origin,
-                    rayEnd,
-                    ClipContext.Block.COLLIDER,
-                    ClipContext.Fluid.NONE,
-                    context.controller,
-                ),
-            )
-        }.getOrNull()
-        if (hit == null || hit.type != HitResult.Type.BLOCK ||
-            !level.hasChunkAt(BlockPos.containing(hit.location))
-        ) return publishFcsResult(context, VehicleFcsZeroStatus.NO_BLOCK_HIT)
-        val measuredRange = muzzle.position.distanceTo(hit.location)
+    private fun solveFcsRange(context: LiveTurretContext, ray: VehicleAimCameraRay,
+        muzzle: com.atsuishio.superbwarfare.api.vehicle.weapon.VehicleMuzzleFrame,
+        base: VehicleTransformSnapshot, snapshot: NominalShotSnapshot, measuredRange: Double): VehicleFcsZeroState {
         if (!measuredRange.isFinite() || measuredRange <= MIN_DIRECTION_LENGTH_SQR ||
             measuredRange > VehicleShotPredictionService.MAX_PREDICTION_PATH_BLOCKS
         ) return publishFcsResult(context, VehicleFcsZeroStatus.NO_SOLUTION, measuredRange)
 
-        val base = vehicle.getTurretBaseTransformSnapshot(1F)
-        val rawDirection = ray.direction.normalize()
-        val rawLocal = base.worldDirectionToLocal(rawDirection)
-        val rawAngles = VehicleAimMath.directionAngles(rawLocal.x, rawLocal.y, rawLocal.z)
-        if (!rawLocal.x.isFinite() || !rawLocal.y.isFinite() || !rawLocal.z.isFinite() ||
-            !rawAngles.yaw.isFinite() || !rawAngles.pitch.isFinite()
-        ) return publishFcsResult(context, VehicleFcsZeroStatus.UNSUPPORTED, measuredRange, source = base)
-
-        val snapshot = buildFcsNominalSnapshot(context, muzzle, level)
-            ?: return publishFcsResult(context, VehicleFcsZeroStatus.UNSUPPORTED, measuredRange, source = base)
-        val minimumPitch = vehicle.resolveVehicleAimMinPitch(
-            VehicleAimChannel.TURRET,
-            context.profile.minPitch,
-        )
-        val maximumPitch = vehicle.resolveVehicleAimMaxPitch(
-            VehicleAimChannel.TURRET,
-            context.profile.maxPitch,
-        )
-        val minimumElevation = -maximumPitch.toDouble()
-        val maximumElevation = -minimumPitch.toDouble()
-        val family = PitchOnlyDirectionFamily { elevationDegrees ->
-            if (!elevationDegrees.isFinite()) return@PitchOnlyDirectionFamily null
-            val candidate = directionFromAngles(rawAngles.yaw.toDouble(), -elevationDegrees)
-            base.localDirectionToWorld(candidate).takeIf(::finite)
-        }
-        // Solve against a transient point on the current raw bearing.  The ray hit supplies only
-        // the scalar range, while the family preserves the exact live local yaw.
-        val targetPoint = muzzle.position.add(rawDirection.scale(measuredRange))
-        val solution = VehicleShotPredictionService.solveFreeAirPitchOnly(
-            snapshot,
-            targetPoint,
-            measuredRange,
-            family,
-            minimumElevation,
-            maximumElevation,
-            HasFcsGAcquisition.INSTANCE,
-        )
-        if (solution.status != PitchOnlySolveStatus.SOLUTION ||
-            solution.correctedWorldDirection == null || solution.elevationDegrees == null ||
-            !finite(solution.correctedWorldDirection) ||
-            solution.correctedWorldDirection.lengthSqr() <= MIN_DIRECTION_LENGTH_SQR ||
-            !solution.elevationDegrees.isFinite()
-        ) return publishFcsResult(context, VehicleFcsZeroStatus.NO_SOLUTION, measuredRange, source = base)
-
-        val solvedLocal = base.worldDirectionToLocal(solution.correctedWorldDirection)
-        val solvedAngles = VehicleAimMath.directionAngles(solvedLocal.x, solvedLocal.y, solvedLocal.z)
-        val yawError = abs(Mth.wrapDegrees(solvedAngles.yaw - rawAngles.yaw).toDouble())
-        if (!yawError.isFinite() || yawError > LOCAL_YAW_TOLERANCE_DEGREES) {
-            return publishFcsResult(context, VehicleFcsZeroStatus.NO_SOLUTION, measuredRange, source = base)
-        }
-        val rawElevation = -rawAngles.pitch.toDouble()
-        val elevationOffset = solution.elevationDegrees - rawElevation
-        val correctedPitch = rawAngles.pitch - elevationOffset
-        if (!elevationOffset.isFinite() || !correctedPitch.isFinite() ||
-            correctedPitch < minimumPitch - PITCH_LIMIT_EPSILON ||
-            correctedPitch > maximumPitch + PITCH_LIMIT_EPSILON
-        ) return publishFcsResult(context, VehicleFcsZeroStatus.NO_SOLUTION, measuredRange, source = base)
-        return publishFcsResult(
-            context,
-            VehicleFcsZeroStatus.SOLUTION,
-            measuredRange,
-            elevationOffset,
-            base,
-        )
+        val target = ray.pointAt(measuredRange)
+        val solution = solveRangeDirection(context, snapshot, base, target)
+            ?: return publishFcsResult(context, VehicleFcsZeroStatus.NO_SOLUTION, measuredRange, source = base)
+        val raw = target.subtract(muzzle.position)
+        val rawPitch = VehicleAimMath.directionAngles(raw.x, raw.y, raw.z).pitch
+        val solvedPitch = VehicleAimMath.directionAngles(solution.x, solution.y, solution.z).pitch
+        return publishFcsResult(context, VehicleFcsZeroStatus.SOLUTION, measuredRange,
+            (rawPitch - solvedPitch).toDouble(), base)
     }
 
-    /** Immutable state/result handoff for Netcode and HUD consumers. */
+    private fun solveRangeDirection(context: LiveTurretContext, snapshot: NominalShotSnapshot,
+        base: VehicleTransformSnapshot, target: Vec3): Vec3? =
+        VehicleRangeBallistics.solve(snapshot, target) { direction ->
+            val local = base.worldDirectionToLocal(direction)
+            val angles = VehicleAimMath.directionAngles(local.x, local.y, local.z)
+            isCommandReachable(context.profile, angles.yaw, angles.pitch) &&
+                angles.pitch >= vehicle.resolveVehicleAimMinPitch(VehicleAimChannel.TURRET, context.profile.minPitch) &&
+                angles.pitch <= vehicle.resolveVehicleAimMaxPitch(VehicleAimChannel.TURRET, context.profile.maxPitch)
+        }?.direction
+
+    /** Immutable state/result snapshot for networking and HUD consumers. */
     fun fcsZeroState(): VehicleFcsZeroState = fcsZeroState ?: VehicleFcsZeroState.inactive(
         vehicle.uuid,
         fcsZeroRevision,
@@ -607,7 +529,6 @@ class VehicleAimController(private val vehicle: VehicleEntity) {
     ): VehicleAimSnapshot {
         val mode = profile.defaultMode
         if (mode == VehicleAimMode.INACTIVE) {
-            if (profile.channel == VehicleAimChannel.TURRET) turretCloseAimState.reset()
             if (profile.snapToNeutralWhenInactive) {
                 setInactiveNeutral(profile)
             }
@@ -633,7 +554,7 @@ class VehicleAimController(private val vehicle: VehicleEntity) {
 
         val rawDesired = controller.getViewVector(1F)
         val hasFcs = profile.channel == VehicleAimChannel.TURRET &&
-                vehicle.computed().hasFCS &&
+                VehicleLaserRangefinder.enabled(vehicle, seatIndex, weaponIndex) &&
                 vehicle.resolveVehicleFlightStrategy() == null
         // HasFCS uses only the latest live command plus the scalar vertical zero acquired by G.
         // The legacy geometric-zero target remains available for profiles without HasFCS.
@@ -646,6 +567,14 @@ class VehicleAimController(private val vehicle: VehicleEntity) {
         ) else null
         val zeroedDesired = if (!hasFcs) resolveGeometricZeroDirection(controller, profile) else null
         val desired = fcsDesired ?: zeroedDesired ?: rawDesired
+        val stationLocal = profile.directionFrame == VehicleAimDirectionFrame.PASSENGER_STATION_LOCAL
+        val stationAngles = if (stationLocal) vehicle.getPassengerStationAimBase(1F)
+            ?.let { VehiclePassengerStationFrame.angles(it, desired) } else null
+        if (stationLocal && stationAngles == null) {
+            val yaw = actualYaw(profile.channel)
+            val pitch = actualPitch(profile.channel)
+            return snapshot(profile.channel, seatIndex, weaponIndex, mode, yaw, pitch, yaw, pitch, false)
+        }
         val currentVector = when (profile.channel) {
             VehicleAimChannel.TURRET -> vehicle.getBarrelVector(1F)
             VehicleAimChannel.PASSENGER_WEAPON -> vehicle.getPassengerWeaponStationVector(1F)
@@ -655,42 +584,33 @@ class VehicleAimController(private val vehicle: VehicleEntity) {
         val previousWorldYaw = actualYaw(profile.channel)
         val previousYaw = toPassengerLocalYaw(previousWorldYaw, parentedToTurret, parentYaw)
         val previousPitch = actualPitch(profile.channel)
+        // Solve in the physical turret base. World Euler differences mix elevation and traverse
+        // on a rolled/pitched chassis, leaving a residual error even with a stationary command.
+        val turretBase = if (profile.channel == VehicleAimChannel.TURRET)
+            vehicle.getTurretBaseTransformSnapshot(1F) else null
+        fun turretAngles(direction: Vec3): VehicleAimMath.DirectionAngles? = turretBase?.let {
+            val local = it.worldDirectionToLocal(direction)
+            VehicleAimMath.directionAngles(local.x, local.y, local.z)
+        }
+        val turretDesiredAngles = turretAngles(desired)
         val worldYawDelta = Mth.wrapDegrees(
             -VehicleVecUtils.getYRotFromVector(desired) + VehicleVecUtils.getYRotFromVector(currentVector)
         ).toFloat()
-        val pitchDelta = Mth.wrapDegrees(
+        val pitchDelta = (turretDesiredAngles ?: stationAngles)?.let { it.pitch - previousPitch } ?: Mth.wrapDegrees(
             -VehicleVecUtils.getXRotFromVector(desired) + VehicleVecUtils.getXRotFromVector(currentVector)
         ).toFloat()
         val targetWorldYaw = previousWorldYaw - worldYawDelta
-        val targetYaw = toPassengerLocalYaw(targetWorldYaw, parentedToTurret, parentYaw)
+        val targetYaw = (turretDesiredAngles ?: stationAngles)?.yaw
+            ?: toPassengerLocalYaw(targetWorldYaw, parentedToTurret, parentYaw)
         val yawDelta = Mth.wrapDegrees(previousYaw - targetYaw)
         val pitchTarget = previousPitch + pitchDelta
-        // FCS only supplies a temporary pitch destination.  Keep the lock diagnostic tied to
-        // the live raw camera command so a ballistic offset cannot manufacture a green/locked
-        // presentation state (or change horizontal truth).
-        val rawWorldYawDelta = Mth.wrapDegrees(
-            -VehicleVecUtils.getYRotFromVector(rawDesired) + VehicleVecUtils.getYRotFromVector(currentVector)
-        ).toFloat()
-        val rawTargetWorldYaw = previousWorldYaw - rawWorldYawDelta
-        val rawTargetYaw = toPassengerLocalYaw(rawTargetWorldYaw, parentedToTurret, parentYaw)
-        val rawYawDelta = Mth.wrapDegrees(previousYaw - rawTargetYaw)
-        val rawPitchDelta = Mth.wrapDegrees(
-            -VehicleVecUtils.getXRotFromVector(rawDesired) + VehicleVecUtils.getXRotFromVector(currentVector)
-        ).toFloat()
-        val closeAimDesired = if (hasFcs) rawDesired else desired
-        val closeAimReachable = if (hasFcs) {
-            val rawLocal = vehicle.worldDirectionToTurretBaseLocal(rawDesired, 1F)
-            val rawAngles = VehicleAimMath.directionAngles(rawLocal.x, rawLocal.y, rawLocal.z)
-            isCommandReachable(profile, rawAngles.yaw, rawAngles.pitch)
-        } else {
-            (profile.channel != VehicleAimChannel.TURRET || zeroedDesired != null) &&
-                    isCommandReachable(profile, targetYaw, pitchTarget)
-        }
+        val closeAimDesired = desired
+        val closeAimReachable = isCommandReachable(profile, targetYaw, pitchTarget) &&
+            (!hasFcs || fcsZeroState?.hasSolution != true || fcsDesired != null)
         updateCloseAimState(
             profile,
             currentVector,
             closeAimDesired,
-            rawDesired,
             closeAimReachable,
         )
         val yawStep = vehicle.resolveVehicleAimYawRateDegreesPerSecond(
@@ -701,16 +621,20 @@ class VehicleAimController(private val vehicle: VehicleEntity) {
             profile.channel,
             profile.pitchRateDegreesPerSecond,
         ) * closeAimPitchMultiplier / TICKS_PER_SECOND
-        val appliedYaw = Mth.clamp(yawDelta, -yawStep, yawStep)
-        val appliedPitch = Mth.clamp(pitchDelta, -pitchStep, pitchStep)
-        val yawChange = VehicleAimMath.softenDeltaNearRange(
+        val zoom = if (zoomController === controller && vehicle.level().gameTime - zoomReceiptTick in 0..40)
+            opticalZoom else 1F
+        val snap = profile.channel == VehicleAimChannel.TURRET && closeAimReachable &&
+            yawStep > 0F && pitchStep > 0F && VehicleAimMath.shouldSnap(yawDelta, pitchDelta, zoom)
+        val appliedYaw = if (snap) yawDelta else Mth.clamp(yawDelta, -yawStep, yawStep)
+        val appliedPitch = if (snap) pitchDelta else Mth.clamp(pitchDelta, -pitchStep, pitchStep)
+        val yawChange = if (snap) -appliedYaw else VehicleAimMath.softenDeltaNearRange(
             previousYaw,
             -appliedYaw,
             profile.minYaw,
             profile.maxYaw,
             profile.softYawLimitDegrees,
         )
-        val pitchChange = VehicleAimMath.softenDeltaNearRange(
+        val pitchChange = if (snap) appliedPitch else VehicleAimMath.softenDeltaNearRange(
             previousPitch,
             appliedPitch,
             profile.minPitch,
@@ -721,8 +645,8 @@ class VehicleAimController(private val vehicle: VehicleEntity) {
         val nextPitch = Mth.clamp(previousPitch + pitchChange, profile.minPitch, profile.maxPitch)
         val actualAppliedYaw = actualAppliedYaw(previousYaw, nextYaw, profile.minYaw, profile.maxYaw)
         val actualAppliedPitch = nextPitch - previousPitch
-        val lockYawDelta = if (hasFcs) rawYawDelta else yawDelta
-        val lockPitchDelta = if (hasFcs) rawPitchDelta else pitchDelta
+        val lockYawDelta = yawDelta
+        val lockPitchDelta = pitchDelta
         val locked = abs(lockYawDelta - actualAppliedYaw) <= profile.lockToleranceDegrees &&
                 abs(lockPitchDelta - actualAppliedPitch) <= profile.lockToleranceDegrees
 
@@ -790,24 +714,15 @@ class VehicleAimController(private val vehicle: VehicleEntity) {
             state.selectedWeaponIndex != weaponIndex || state.weaponName != vehicle.getGunName(seatIndex, weaponIndex) ||
             state.status != VehicleFcsZeroStatus.SOLUTION
         ) return null
-        val offset = state.elevationOffsetDegrees ?: return null
-        if (!offset.isFinite() || !finite(rawDesired)) return null
-        val base = vehicle.getTurretBaseTransformSnapshot(1F)
-        val rawLocal = base.worldDirectionToLocal(rawDesired)
-        val rawAngles = VehicleAimMath.directionAngles(rawLocal.x, rawLocal.y, rawLocal.z)
-        if (!rawAngles.yaw.isFinite() || !rawAngles.pitch.isFinite()) return null
-        val correctedPitch = rawAngles.pitch - offset
-        val minimumPitch = vehicle.resolveVehicleAimMinPitch(VehicleAimChannel.TURRET, profile.minPitch)
-        val maximumPitch = vehicle.resolveVehicleAimMaxPitch(VehicleAimChannel.TURRET, profile.maxPitch)
-        if (!correctedPitch.isFinite() || correctedPitch < minimumPitch - PITCH_LIMIT_EPSILON ||
-            correctedPitch > maximumPitch + PITCH_LIMIT_EPSILON
-        ) return null
-        val corrected = base.localDirectionToWorld(
-            directionFromAngles(rawAngles.yaw.toDouble(), correctedPitch.toDouble()),
-        )
-        val lengthSqr = corrected.lengthSqr()
-        return corrected.takeIf { finite(it) && lengthSqr.isFinite() && lengthSqr > MIN_DIRECTION_LENGTH_SQR }
-            ?.normalize()
+        val range = state.measuredRangeBlocks ?: return null
+        val level = vehicle.level() as? ServerLevel ?: return null
+        val muzzle = vehicle.resolveMuzzleFrame(controller, 1F) ?: return null
+        val context = LiveTurretContext(controller, seatIndex, weaponIndex, profile)
+        val snapshot = buildFcsNominalSnapshot(context, muzzle, level) ?: return null
+        val ray = vehicle.resolveVehicleAimCameraRay(controller, profile.channel, 1F) ?: return null
+        // Recompute the firing direction for the retained range, not a retained world target.
+        // Both axes may change on a tilted hull; camera/muzzle parallax and vehicle motion count.
+        return solveRangeDirection(context, snapshot, vehicle.getTurretBaseTransformSnapshot(1F), ray.pointAt(range))
     }
 
     private data class FcsNominalModel(
@@ -942,7 +857,7 @@ class VehicleAimController(private val vehicle: VehicleEntity) {
                 profile.channel == VehicleAimChannel.TURRET &&
                 profile.defaultMode == VehicleAimMode.PLAYER_LOOK_AIM
         if (!contextMatches ||
-            (state.status != VehicleFcsZeroStatus.INACTIVE && !vehicle.computed().hasFCS)
+            (state.status != VehicleFcsZeroStatus.INACTIVE && !VehicleLaserRangefinder.enabled(vehicle, seatIndex, weaponIndex))
         ) {
             clearFcsZeroState()
         }
@@ -994,75 +909,23 @@ class VehicleAimController(private val vehicle: VehicleEntity) {
         profile: VehicleAimProfile,
         currentVector: net.minecraft.world.phys.Vec3,
         desired: net.minecraft.world.phys.Vec3,
-        rawCommand: net.minecraft.world.phys.Vec3,
         commandReachable: Boolean,
     ) {
         closeAimYawMultiplier = 1F
         closeAimPitchMultiplier = 1F
         if (profile.channel != VehicleAimChannel.TURRET) return
 
-        val cooldownWasActive = turretCloseAimState.outerCooldownTicks > 0
-        if (cooldownWasActive) {
-            turretCloseAimState.outerCooldownTicks -= 1
-            if (turretCloseAimState.outerCooldownTicks <= 0) {
-                turretCloseAimState.outerCooldownTicks = 0
-                turretCloseAimState.outerExposureTicks = 0
-            }
-        }
-        if (turretCloseAimState.observeCommand(rawCommand.x, rawCommand.y, rawCommand.z)) {
-            // Keep an already-active cooldown authoritative, but never carry an unfinished
-            // exposure or a boost through a material command change.
-            turretCloseAimState.insideOuter = false
-            turretCloseAimState.insideInner = false
-            if (!cooldownWasActive) turretCloseAimState.outerExposureTicks = 0
-            return
-        }
+        if (!commandReachable) return
         val currentLengthSqr = currentVector.lengthSqr()
         val desiredLengthSqr = desired.lengthSqr()
-        if (!commandReachable || !currentLengthSqr.isFinite() || !desiredLengthSqr.isFinite() ||
+        if (!currentLengthSqr.isFinite() || !desiredLengthSqr.isFinite() ||
             currentLengthSqr <= MIN_DIRECTION_LENGTH_SQR || desiredLengthSqr <= MIN_DIRECTION_LENGTH_SQR
-        ) {
-            turretCloseAimState.insideOuter = false
-            turretCloseAimState.insideInner = false
-            if (!cooldownWasActive) turretCloseAimState.outerExposureTicks = 0
-            return
-        }
-
-        val dot = currentVector.normalize().dot(desired.normalize()).coerceIn(-1.0, 1.0)
-        val errorDegrees = Math.toDegrees(acos(dot))
-        if (!errorDegrees.isFinite()) {
-            turretCloseAimState.insideOuter = false
-            turretCloseAimState.insideInner = false
-            if (!cooldownWasActive) turretCloseAimState.outerExposureTicks = 0
-            return
-        }
-        val outer = errorDegrees <= OUTER_ZONE_DEGREES ||
-                (turretCloseAimState.insideOuter && errorDegrees <= OUTER_EXIT_DEGREES)
-        if (!outer) {
-            turretCloseAimState.insideOuter = false
-            turretCloseAimState.insideInner = false
-            if (!cooldownWasActive) turretCloseAimState.outerExposureTicks = 0
-            return
-        }
-        turretCloseAimState.insideOuter = true
-        val inner = errorDegrees <= INNER_ZONE_DEGREES ||
-                (turretCloseAimState.insideInner && errorDegrees <= INNER_EXIT_DEGREES)
-        turretCloseAimState.insideInner = inner
-
-        closeAimYawMultiplier = if (inner) INNER_YAW_MULTIPLIER else OUTER_YAW_MULTIPLIER
-        closeAimPitchMultiplier = if (inner) INNER_PITCH_MULTIPLIER else OUTER_PITCH_MULTIPLIER
-        if (cooldownWasActive) {
-            if (!inner) closeAimYawMultiplier = 1F
-            if (!inner) closeAimPitchMultiplier = 1F
-            return
-        }
-
-        turretCloseAimState.outerExposureTicks =
-            (turretCloseAimState.outerExposureTicks + 1).coerceAtMost(OUTER_EXPOSURE_TICKS)
-        if (turretCloseAimState.outerExposureTicks >= OUTER_EXPOSURE_TICKS) {
-            // The current tick is the 50th boosted tick; the cooldown starts on the next tick.
-            turretCloseAimState.outerCooldownTicks = OUTER_COOLDOWN_TICKS
-        }
+        ) return
+        val dot = (currentVector.dot(desired) / sqrt(currentLengthSqr * desiredLengthSqr))
+            .coerceIn(-1.0, 1.0)
+        val gain = VehicleAimMath.closeAimMultiplier(Math.toDegrees(acos(dot)))
+        closeAimYawMultiplier = gain
+        closeAimPitchMultiplier = gain
     }
 
     private fun snapshot(
@@ -1225,6 +1088,7 @@ class VehicleAimController(private val vehicle: VehicleEntity) {
         previous: VehicleAimProfile,
         selected: VehicleAimProfile,
     ): Boolean = previous.channel == selected.channel &&
+            previous.directionFrame == selected.directionFrame &&
             previous.yawRateDegreesPerSecond == selected.yawRateDegreesPerSecond &&
             previous.pitchRateDegreesPerSecond == selected.pitchRateDegreesPerSecond &&
             previous.minYaw == selected.minYaw && previous.maxYaw == selected.maxYaw &&
@@ -1308,6 +1172,8 @@ class VehicleAimController(private val vehicle: VehicleEntity) {
 
     private fun resolveProfile(seatIndex: Int, weaponIndex: Int): VehicleAimProfile? =
         vehicle.resolveVehicleAimProfile(seatIndex, weaponIndex)
+            ?.takeIf { it.directionFrame != VehicleAimDirectionFrame.PASSENGER_STATION_LOCAL ||
+                vehicle.isPassengerStationLocalAim(seatIndex, weaponIndex) }
 
     private fun controller(channel: VehicleAimChannel): Entity? = when (channel) {
         VehicleAimChannel.TURRET -> vehicle.getNthEntity(vehicle.turretControllerIndex)
@@ -1321,18 +1187,6 @@ class VehicleAimController(private val vehicle: VehicleEntity) {
     companion object {
         private const val TICKS_PER_SECOND = 20F
         private const val MIN_DIRECTION_LENGTH_SQR = 1.0E-12
-        private const val INNER_ZONE_DEGREES = 1.0
-        private const val OUTER_ZONE_DEGREES = 2.0
-        private const val INNER_EXIT_DEGREES = 1.02
-        private const val OUTER_EXIT_DEGREES = 2.02
-        private const val OUTER_EXPOSURE_TICKS = 50
-        private const val OUTER_COOLDOWN_TICKS = 50
-        private const val OUTER_YAW_MULTIPLIER = 2F
-        private const val OUTER_PITCH_MULTIPLIER = 1.5F
-        private const val INNER_YAW_MULTIPLIER = 3F
-        private const val INNER_PITCH_MULTIPLIER = 2F
-        /** Material live-command change threshold: 0.5 degrees, below the 1-degree inner zone. */
-        private const val COMMAND_CONTINUITY_COSINE = 0.9999619230641713
         private const val MAX_FCS_ZERO_RANGE_BLOCKS = VehicleShotPredictionService.MAX_PREDICTION_PATH_BLOCKS
         private const val LOCAL_YAW_TOLERANCE_DEGREES = 1.0E-3
         private const val PITCH_LIMIT_EPSILON = 1.0E-4F

@@ -107,9 +107,10 @@
   ],
   "Weapons": {
     "Cannon": {
+      "VehicleDirectDamageScale": 0.5,
       "DefaultFireMode": "Auto",
       "AvailableFireModes": "Auto",
-      "Projectile": "superbwarfare:small_cannon_shell",
+      "Projectile": { "Type": "superbwarfare:small_cannon_shell", "CaliberMm": 20 },
       "DefaultZoom": 3,
       "RPM": 300,
       "Velocity": 18,
@@ -178,7 +179,7 @@
       "AvailableFireModes": "Auto",
       "Spread": 0.5,
       "CrosshairColor": "0x66FF00",
-      "Projectile": "superbwarfare:projectile",
+      "Projectile": { "Type": "superbwarfare:projectile", "CaliberMm": 7.62 },
       "RPM": 600,
       "Damage": 9.5,
       "BypassesArmor": 0.3,

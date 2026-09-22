@@ -5,11 +5,12 @@ import com.atsuishio.superbwarfare.data.gun.value.IntValue
 import com.atsuishio.superbwarfare.data.gun.value.ReloadState
 import com.atsuishio.superbwarfare.data.gun.value.Starter
 import com.atsuishio.superbwarfare.data.gun.value.Timer
+import net.minecraft.nbt.CompoundTag
 import kotlin.math.ceil
 import kotlin.math.max
 
-class Reload(data: GunData) {
-    private val data = data.data()
+class Reload(private val data: CompoundTag) {
+    constructor(data: GunData) : this(data.data())
 
     @JvmField
     val reloadTimer = Timer(this.data, "Reload")
@@ -85,6 +86,9 @@ class Reload(data: GunData) {
     fun reduce() {
         reloadTimer.reduce()
     }
+
+    /** Magazine reloads complete even when a short or credited timer reaches zero in one tick. */
+    fun countdownFinished() = state() != ReloadState.NOT_RELOADING && stage() == 0 && time() <= 1
 
     fun pendingProgressPercent() = pendingProgress.get().coerceIn(0, 99)
 

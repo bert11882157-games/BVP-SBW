@@ -9,14 +9,16 @@ final class ArmorTargetAdapters {
 
     static ArmorTarget resolve(Entity entity) {
         ArmoredVehicleEntity vehicle = vehicleFor(entity);
-        return vehicle == null ? null : new ArmoredVehicleArmorTarget(vehicle);
+        return vehicle == null || !vehicle.usesBvpArmorResolution()
+                ? null : new ArmoredVehicleArmorTarget(vehicle);
     }
 
     static ArmoredVehicleEntity vehicleFor(Entity entity) {
         if (entity instanceof ArmoredVehicleEntity armored) {
             return armored;
         }
-        if (entity != null && entity.m_20202_() instanceof ArmoredVehicleEntity vehicle) {
+        if (entity != null && entity.m_20202_() instanceof ArmoredVehicleEntity vehicle
+                && !vehicle.exposesPassengerToFire(entity)) {
             return vehicle;
         }
         return null;

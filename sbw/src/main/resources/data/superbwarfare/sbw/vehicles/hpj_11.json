@@ -31,10 +31,11 @@
   },
   "Weapons": {
     "Main": {
+      "VehicleDirectDamageScale": 0.5,
       "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/cannon_30mm_ap.png",
       "DefaultFireMode": "Auto",
       "AvailableFireModes": "Auto",
-      "Projectile": "superbwarfare:small_cannon_shell",
+      "Projectile": { "Type": "superbwarfare:small_cannon_shell", "CaliberMm": 30 },
       "ShellType": "AA",
       "DefaultZoom": 3,
       "RPM": 1200,

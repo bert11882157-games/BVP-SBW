@@ -1,0 +1,116 @@
+{
+  "ID": "berts_vehicle_pack:a_7d",
+  "Model": {
+    "GeometryBackend": "berts_vehicle_pack:vehicle/a_7d",
+    "Model": "berts_vehicle_pack:geo/native_fallback/a_7d.geo.json",
+    "Texture": "berts_vehicle_pack:textures/entity/a_7d.png",
+    "WreckTexture": "berts_vehicle_pack:textures/entity_dead/a_7d.png"
+  },
+  "MouseSpeed": [
+    0.2,
+    0.2
+  ],
+  "AircraftRig": {
+    "Schema": 2,
+    "Frame": "GENERATED_MODEL_PIXELS",
+    "Surfaces": [
+      {
+        "Bone": "elevator_0",
+        "Parent": "hull",
+        "Pivot": [
+          -25.6,
+          33.2,
+          93.6
+        ],
+        "Axis": [
+          -0.806559132617443,
+          0.07332355751067661,
+          0.5865884600854132
+        ],
+        "ControlWeights": {
+          "ElevatorUp": 1,
+          "RightRoll": 0,
+          "RudderRight": 0
+        },
+        "MaxDeflectionDegrees": 25
+      },
+      {
+        "Bone": "elevator_1",
+        "Parent": "hull",
+        "Pivot": [
+          25.6,
+          33.2,
+          93.6
+        ],
+        "Axis": [
+          -0.806559132617443,
+          -0.07332355751067661,
+          -0.5865884600854132
+        ],
+        "ControlWeights": {
+          "ElevatorUp": 1,
+          "RightRoll": 0,
+          "RudderRight": 0
+        },
+        "MaxDeflectionDegrees": 25
+      },
+      {
+        "Bone": "aileron_10",
+        "Parent": "hull",
+        "Pivot": [
+          -30.8,
+          39.6,
+          26
+        ],
+        "Axis": [
+          -0.9829763651312518,
+          -0.04834309992448776,
+          0.17725803305645516
+        ],
+        "ControlWeights": {
+          "ElevatorUp": 0,
+          "RightRoll": -1,
+          "RudderRight": 0
+        },
+        "MaxDeflectionDegrees": 25
+      },
+      {
+        "Bone": "aileron_11",
+        "Parent": "hull",
+        "Pivot": [
+          30.8,
+          39.6,
+          26
+        ],
+        "Axis": [
+          -0.9829763651312518,
+          0.04834309992448776,
+          -0.17725803305645516
+        ],
+        "ControlWeights": {
+          "ElevatorUp": 0,
+          "RightRoll": 1,
+          "RudderRight": 0
+        },
+        "MaxDeflectionDegrees": 25
+      }
+    ],
+    "Rotors": [],
+    "Gear": [
+      {
+        "Bone": "landing_gear_12",
+        "Parent": "hull"
+      },
+      {
+        "Bone": "landing_gear_14",
+        "Parent": "hull"
+      },
+      {
+        "Bone": "landing_gear_15",
+        "Parent": "hull"
+      }
+    ],
+    "Flaps": [],
+    "Sweeps": []
+  }
+}

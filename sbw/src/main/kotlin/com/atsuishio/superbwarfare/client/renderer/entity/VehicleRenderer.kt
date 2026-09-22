@@ -5,6 +5,7 @@ import com.atsuishio.superbwarfare.client.renderer.TextureBrightnessHandler
 import com.atsuishio.superbwarfare.client.ClientChassisPresentationTelemetry
 import com.atsuishio.superbwarfare.client.renderer.vehicle.VehicleRenderBackendContext
 import com.atsuishio.superbwarfare.client.renderer.vehicle.VehicleRenderBackendHost
+import com.atsuishio.superbwarfare.client.renderer.vehicle.VehicleLightSampling
 import com.atsuishio.superbwarfare.api.vehicle.pose.VehicleChassisPresentation
 import com.atsuishio.superbwarfare.data.vehicle.subdata.VehicleType
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity
@@ -17,6 +18,7 @@ import net.minecraft.client.renderer.MultiBufferSource
 import net.minecraft.client.renderer.RenderType
 import net.minecraft.client.renderer.culling.Frustum
 import net.minecraft.client.renderer.entity.EntityRendererProvider
+import net.minecraft.core.BlockPos
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.util.Mth
 import net.minecraft.world.phys.AABB
@@ -47,6 +49,23 @@ abstract class VehicleRenderer<T>(renderManager: EntityRendererProvider.Context,
         partialTick: Float
     ): RenderType? = RenderType.entityTranslucent(getTextureLocation(vehicle))
 
+    protected override fun getSkyLightLevel(vehicle: T, pos: BlockPos): Int {
+        val level = vehicle.level()
+        com.atsuishio.superbwarfare.client.FarTerrainClient.lightOverride(net.minecraft.world.level.LightLayer.SKY, pos)?.let { return it }
+        return VehicleLightSampling.skyLightOverride(
+            pos.y, level.minBuildHeight, level.maxBuildHeight, level.dimensionType().hasSkyLight(),
+        ) ?: super.getSkyLightLevel(vehicle, pos)
+    }
+
+    protected override fun getBlockLightLevel(vehicle: T, pos: BlockPos): Int {
+        val level = vehicle.level()
+        if (vehicle.isOnFire) return 15
+        com.atsuishio.superbwarfare.client.FarTerrainClient.lightOverride(net.minecraft.world.level.LightLayer.BLOCK, pos)?.let { return it }
+        return VehicleLightSampling.blockLightOverride(
+            pos.y, level.minBuildHeight, level.maxBuildHeight, vehicle.isOnFire,
+        ) ?: super.getBlockLightLevel(vehicle, pos)
+    }
+
     override fun render(
         entityIn: T,
         entityYaw: Float,
@@ -55,13 +74,18 @@ abstract class VehicleRenderer<T>(renderManager: EntityRendererProvider.Context,
         bufferIn: MultiBufferSource,
         packedLightIn: Int
     ) {
+        com.atsuishio.superbwarfare.client.renderer.FarVehicleRenderer.markDrawn(entityIn)
+        com.atsuishio.superbwarfare.client.renderer.AircraftSurfaceSmoke.observe(entityIn)
+        com.atsuishio.superbwarfare.client.renderer.AircraftWreckFire.observe(entityIn)
+        com.atsuishio.superbwarfare.client.renderer.AircraftCountermeasureEffects.observe(entityIn)
         val previousEntity = currentRenderEntity
         val previousFrame = currentRenderFrame
         val previousPresentation = currentChassisPresentation
         currentRenderEntity = entityIn
         val backendId = VehicleResource.getDefault(entityIn).model.geometryBackend
         poseStack.pushPose()
-        val presentation = entityIn.resolveChassisPresentation(partialTicks)
+        val presentation = com.atsuishio.superbwarfare.client.FarVehicleClient.renderPresentation(
+            entityIn, partialTicks, entityIn.resolveChassisPresentation(partialTicks))
         currentChassisPresentation = presentation
         val chassisOffset = presentation.anchor.subtract(entityIn.getLegacyInterpolatedPosition(partialTicks))
         val resolvedEntityYaw = presentation.chassisYawDegrees
@@ -78,8 +102,11 @@ abstract class VehicleRenderer<T>(renderManager: EntityRendererProvider.Context,
                 Matrix3f(entryPose.normal()),
             )
         }
+        val farFog = com.atsuishio.superbwarfare.client.renderer.FarVehicleRenderer.beginVehicleFog(entityIn, bufferIn)
         try {
             ClientChassisPresentationTelemetry.recordRender(entityIn, presentation, partialTicks)
+            com.atsuishio.superbwarfare.client.renderer.FriendlyVehicleMarker.render(entityIn, poseStack, bufferIn)
+            com.atsuishio.superbwarfare.api.vehicle.render.FarVehicleDiagnostics.lighting(entityIn, packedLightIn)
             vehicleAxis(entityIn, poseStack, resolvedEntityYaw, partialTicks)
             super.render(entityIn, resolvedEntityYaw, partialTicks, poseStack, bufferIn, packedLightIn)
         } finally {
@@ -87,6 +114,7 @@ abstract class VehicleRenderer<T>(renderManager: EntityRendererProvider.Context,
             currentRenderFrame = previousFrame
             currentChassisPresentation = previousPresentation
             currentRenderEntity = previousEntity
+            com.atsuishio.superbwarfare.client.renderer.FarVehicleRenderer.endVehicleFog(farFog)
         }
     }
 
@@ -323,7 +351,7 @@ abstract class VehicleRenderer<T>(renderManager: EntityRendererProvider.Context,
         )
         poseStack.rotateAround(
             Axis.XP.rotationDegrees(
-                layeredPose?.basePitchDegrees ?: Mth.lerp(partialTicks, entityIn.xRotO, entityIn.xRot)
+                layeredPose?.basePitchDegrees ?: entityIn.getPitch(partialTicks)
             ),
             root.x.toFloat(),
             root.y.toFloat(),
@@ -331,7 +359,7 @@ abstract class VehicleRenderer<T>(renderManager: EntityRendererProvider.Context,
         )
         poseStack.rotateAround(
             Axis.ZP.rotationDegrees(
-                layeredPose?.baseRollDegrees ?: Mth.lerp(partialTicks, entityIn.prevRoll, entityIn.roll)
+                layeredPose?.baseRollDegrees ?: entityIn.getRoll(partialTicks)
             ),
             root.x.toFloat(),
             root.y.toFloat(),
@@ -378,7 +406,8 @@ abstract class VehicleRenderer<T>(renderManager: EntityRendererProvider.Context,
     }
 
     override fun getTextureLocation(animatable: T): ResourceLocation {
-        val explicitWreckTexture = if (animatable.isWreck) {
+        val aircraft = animatable.vehicleType == VehicleType.AIRPLANE || animatable.vehicleType == VehicleType.HELICOPTER
+        val explicitWreckTexture = if (animatable.isWreck && !aircraft) {
             VehicleResource.getDefault(animatable).model.wreckTexture
         } else {
             null
@@ -386,7 +415,7 @@ abstract class VehicleRenderer<T>(renderManager: EntityRendererProvider.Context,
         val res = explicitWreckTexture ?: super.getTextureLocation(animatable)
         if (ClientEventHandler.activeThermalImaging) {
             return SmartTextureBrightener.getSmartBrightenedTexture(res, 3f)
-        } else if (animatable.isWreck && explicitWreckTexture == null) {
+        } else if (animatable.isWreck && !aircraft && explicitWreckTexture == null) {
             return if ((animatable.vehicleType == VehicleType.AIRPLANE || animatable.vehicleType == VehicleType.HELICOPTER)) {
                 if (animatable.sympatheticDetonated) {
                     TextureBrightnessHandler.getBrightenedTexture(res, 0.3f)

@@ -1,0 +1,35 @@
+{
+  "ID": "berts_vehicle_pack:f9f_2",
+  "Model": {
+    "GeometryBackend": "berts_vehicle_pack:vehicle/f9f_2",
+    "Model": "berts_vehicle_pack:geo/native_fallback/f9f_2.geo.json",
+    "Texture": "berts_vehicle_pack:textures/entity/f9f_2.png",
+    "WreckTexture": "berts_vehicle_pack:textures/entity_dead/f9f_2.png"
+  },
+  "MouseSpeed": [
+    0.2,
+    0.2
+  ],
+  "AircraftRig": {
+    "Schema": 2,
+    "Frame": "GENERATED_MODEL_PIXELS",
+    "Surfaces": [],
+    "Rotors": [],
+    "Gear": [
+      {
+        "Bone": "landing_gear_12",
+        "Parent": "hull"
+      },
+      {
+        "Bone": "landing_gear_14",
+        "Parent": "hull"
+      },
+      {
+        "Bone": "landing_gear_15",
+        "Parent": "hull"
+      }
+    ],
+    "Flaps": [],
+    "Sweeps": []
+  }
+}

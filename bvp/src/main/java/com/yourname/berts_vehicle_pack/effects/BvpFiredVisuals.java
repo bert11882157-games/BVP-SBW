@@ -62,6 +62,13 @@ public final class BvpFiredVisuals {
                 && "autocannon_shell".equals(munitionType.m_135815_())) {
             return VisualKind.AUTOCANNON;
         }
+        if (munitionType != null && BertsVehiclePack.MODID.equals(munitionType.m_135827_())
+                && "bullet".equals(munitionType.m_135815_())) {
+            // Mounted guns use authored names such as DShK, PKT and Cannon. Presentation
+            // follows the resolved round, not a small whitelist of weapon-channel names.
+            Double caliber = combat.getCaliberMm();
+            return caliber != null && caliber >= 12.0 ? VisualKind.PASSENGER_HMG : VisualKind.COAX;
+        }
         if (weaponId == null) {
             return VisualKind.NONE;
         }

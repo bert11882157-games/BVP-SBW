@@ -1,0 +1,736 @@
+{
+  "ID": "berts_vehicle_pack:m109a7_paladin",
+  "MaxHealth": 150,
+  "MaxEnergy": 10000000,
+  "HasAutoloader": false,
+  "AllowFreeCam": true,
+  "LightlyArmored": true,
+  "EngineType": "Track",
+  "EngineInfo": {
+    "Buoyancy": 0,
+    "EnergyCostRate": 120,
+    "WheelRotSpeed": 1.25,
+    "WheelDifferential": 0.75,
+    "TrackRotSpeed": 1.7,
+    "TrackDifferential": 0.6,
+    "MaxForwardSpeedRate": 0.732,
+    "MaxBackwardSpeedRate": 0.18,
+    "Increment": 0.00675,
+    "Decrement": 0.00937,
+    "SteeringSpeed": 0.065,
+    "EngineSoundVolume": 0.85
+  },
+  "TurretPos": [
+    0,
+    2.22914937,
+    0
+  ],
+  "BarrelPos": [
+    0,
+    0.52906656,
+    1.05813313
+  ],
+  "TurretControllerIndex": 0,
+  "TurretTurnSpeed": [
+    12,
+    12
+  ],
+  "TurretPitchRange": [
+    -3,
+    70
+  ],
+  "UpStep": 1.5,
+  "RotateOffsetHeight": 0,
+  "Mass": 38.101,
+  "TerrainCompat": [
+    [
+      1.55608,
+      0,
+      3.33002
+    ],
+    [
+      1.55608,
+      0,
+      2.45861
+    ],
+    [
+      1.55608,
+      0,
+      1.58721
+    ],
+    [
+      1.55608,
+      0,
+      0.7158
+    ],
+    [
+      1.55608,
+      0,
+      -0.15561
+    ],
+    [
+      1.55608,
+      0,
+      -1.02702
+    ],
+    [
+      -1.55608,
+      0,
+      3.33002
+    ],
+    [
+      -1.55608,
+      0,
+      2.45861
+    ],
+    [
+      -1.55608,
+      0,
+      1.58721
+    ],
+    [
+      -1.55608,
+      0,
+      0.7158
+    ],
+    [
+      -1.55608,
+      0,
+      -0.15561
+    ],
+    [
+      -1.55608,
+      0,
+      -1.02702
+    ]
+  ],
+  "OBB": [
+    {
+      "Size": [
+        1.83617219,
+        0.68467438,
+        3.485615
+      ],
+      "Position": [
+        0,
+        1.41998875,
+        1.08925438
+      ]
+    },
+    {
+      "Part": "MainEngine",
+      "Transform": "Vehicle",
+      "Rotation": "Vehicle",
+      "Position": [
+        0.7469175,
+        1.41998875,
+        3.11215625
+      ],
+      "Size": [
+        0.52284225,
+        0.39213169,
+        0.60998263
+      ]
+    },
+    {
+      "Part": "Turret",
+      "Transform": "Barrel",
+      "Rotation": "Barrel",
+      "Position": [
+        0.21785094,
+        -0.07780391,
+        0.77803906
+      ],
+      "Size": [
+        0.07780391,
+        0.19450977,
+        0.18672938
+      ]
+    }
+  ],
+  "Attachments": {
+    "gunnerCamera": {
+      "Parent": "Turret",
+      "Position": [
+        0.84028219,
+        1.2329417,
+        0.71803545
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "driverCamera": {
+      "Parent": "Vehicle",
+      "Position": [
+        -0.80916062,
+        2.12333625,
+        2.80094062
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "driverSeat": {
+      "Parent": "Vehicle",
+      "Position": [
+        -0.80916062,
+        1.10877312,
+        2.7386975
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "gunnerSeat": {
+      "Parent": "Turret",
+      "Position": [
+        -0.68467438,
+        -0.06224313,
+        0.31121562
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "turretPivot": {
+      "Parent": "Vehicle",
+      "Position": [
+        0,
+        2.22914937,
+        0
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "barrelPivot": {
+      "Parent": "Turret",
+      "Position": [
+        0,
+        0.52906656,
+        1.05813313
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "mainMuzzle": {
+      "Parent": "Barrel",
+      "Position": [
+        0,
+        -0.06224313,
+        6.85608022
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "hmgMuzzle": {
+      "Parent": "WeaponStationBarrel",
+      "Position": [
+        0,
+        0,
+        0.96165628
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "hmgSeat": {
+      "Parent": "Turret",
+      "Position": [
+        -0.99589,
+        0.56018813,
+        -0.497945
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "hmgCamera": {
+      "Parent": "WeaponStation",
+      "Position": [
+        0,
+        0.71579594,
+        -0.497945
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    }
+  },
+  "Seats": [
+    {
+      "HidePassenger": true,
+      "IsEnclosed": true,
+      "Transform": "Turret",
+      "Position": [
+        -0.68467438,
+        -0.06224313,
+        0.31121562
+      ],
+      "BodyAttachment": "Turret",
+      "Weapons": [
+        "Cannon"
+      ],
+      "CanRotateHead": false,
+      "CameraPos": {
+        "Transform": "Turret",
+        "Position": [
+          0,
+          0,
+          0
+        ],
+        "ZoomPosition": [
+          0,
+          0,
+          0
+        ],
+        "Direction": [
+          0,
+          0,
+          1
+        ],
+        "UseFixedCameraPos": true,
+        "EyeAttachment": "gunnerCamera",
+        "ZoomEyeAttachment": "gunnerCamera",
+        "DirectionAttachment": "mainMuzzle",
+        "ZoomDirectionAttachment": "mainMuzzle"
+      },
+      "MinPitch": -3,
+      "MaxPitch": 70
+    },
+    {
+      "HidePassenger": false,
+      "IsEnclosed": false,
+      "Pose": "MachineGunStand",
+      "Transform": "Turret",
+      "Position": [
+        -0.99589,
+        0.56018813,
+        -0.497945
+      ],
+      "BodyAttachment": "Turret",
+      "Weapons": [
+        "PassengerMachineGun"
+      ],
+      "CanRotateHead": false,
+      "CameraPos": {
+        "Transform": "WeaponStation",
+        "Position": [
+          0,
+          0,
+          0
+        ],
+        "ZoomPosition": [
+          0,
+          0,
+          0
+        ],
+        "Direction": [
+          0,
+          0,
+          1
+        ],
+        "UseFixedCameraPos": true,
+        "EyeAttachment": "hmgCamera",
+        "ZoomEyeAttachment": "hmgCamera",
+        "DirectionAttachment": "hmgMuzzle",
+        "ZoomDirectionAttachment": "hmgMuzzle"
+      },
+      "MinPitch": -10,
+      "MaxPitch": 60
+    }
+  ],
+  "Weapons": {
+    "Cannon": {
+      "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_he.png",
+      "DefaultFireMode": "Semi",
+      "AvailableFireModes": "Semi",
+      "Projectile": {
+        "Type": "superbwarfare:cannon_shell",
+        "Profile": "berts_vehicle_pack:m109a7_paladin/cannon/default"
+      },
+      "ShellType": "HE",
+      "DefaultZoom": 3,
+      "Velocity": 34.2,
+      "ProjectileLife": 50,
+      "Gravity": 0.03,
+      "ApDurability": 61,
+      "Damage": 230,
+      "ExplosionDamage": 115,
+      "ExplosionRadius": 9,
+      "RecoilTime": 42,
+      "RecoilForce": 1,
+      "Spread": 0.02,
+      "ShootAnimationTime": 20,
+      "Crosshair": "@VehicleCommonGun",
+      "CrosshairColor": "0xFFC700",
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:large_shell_he",
+          "Override": {
+            "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_he.png",
+            "ShellType": "HE",
+            "Velocity": 34.2,
+            "ApDurability": 61,
+            "Damage": 230,
+            "ExplosionDamage": 115,
+            "ExplosionRadius": 9,
+            "Name": "weapon.berts_vehicle_pack.m107_he",
+            "Projectile": {
+              "Type": "superbwarfare:cannon_shell",
+              "Profile": "berts_vehicle_pack:m109a7_paladin/cannon/ammo_00_m107_he"
+            },
+            "ShootShake": [
+              8,
+              10,
+              156
+            ],
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:m109a7_paladin/cannon/ammo_00_m107_he",
+              "ProjectileLife": 50
+            }
+          }
+        }
+      ],
+      "SoundInfo": {
+        "Fire1P": "superbwarfare:t_90a_fire_1p",
+        "Fire3P": "superbwarfare:t_90a_fire_3p",
+        "Fire3PFar": "superbwarfare:t_90a_far",
+        "Fire3PVeryFar": "superbwarfare:t_90a_veryfar",
+        "Change": "superbwarfare:into_cannon",
+        "VehicleReload": "berts_vehicle_pack:m1_abrams_elite_m68a1_reload",
+        "VehicleReloadClipDurationTicks": 86,
+        "CancellableSounds": [
+          "berts_vehicle_pack:m1_abrams_elite_m68a1_reload"
+        ]
+      },
+      "SoundRadius": 32,
+      "RPM": 60,
+      "Magazine": 1,
+      "NormalReloadTime": 300,
+      "EmptyReloadTime": 300,
+      "ProjectileAmount": 1,
+      "AmmoCostPerShoot": 1,
+      "Name": "weapon.berts_vehicle_pack.m109a7_paladin_cannon",
+      "ShootShake": [
+        8,
+        10,
+        156
+      ],
+      "ShootPos": {
+        "Transform": "Vehicle",
+        "Positions": [
+          [
+            0,
+            2.6959725,
+            7.91421312
+          ]
+        ],
+        "Directions": [
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "ViewPosition": [
+          0,
+          2.6959725,
+          7.91421312
+        ],
+        "MuzzleAttachments": [
+          "mainMuzzle"
+        ],
+        "MuzzleDirectionAttachments": [
+          "mainMuzzle"
+        ],
+        "EffectAttachments": [
+          "mainMuzzle"
+        ],
+        "EffectDirectionAttachments": [
+          "mainMuzzle"
+        ]
+      },
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "superbwarfare:cannon_shell",
+        "ProjectileProfile": "berts_vehicle_pack:m109a7_paladin/cannon/default",
+        "ProjectileLife": 50
+      }
+    },
+    "PassengerMachineGun": {
+      "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/gun_12_7mm.png",
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "Spread": 0.25,
+      "CrosshairColor": "0xFFC700",
+      "Projectile": {
+        "Type": "superbwarfare:projectile",
+        "Profile": "berts_vehicle_pack:m109a7_paladin/passengermachinegun/default"
+      },
+      "DefaultZoom": 3,
+      "RPM": 575,
+      "Damage": 40,
+      "BypassesArmor": 0.6,
+      "Velocity": 46.45,
+      "RecoilTime": 16,
+      "RecoilForce": 0.05,
+      "HeatPerShoot": 0,
+      "NaturalCooldown": 1,
+      "ShootAnimationTime": 1,
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_ap",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:projectile",
+              "Profile": "berts_vehicle_pack:m109a7_paladin/passengermachinegun/ammo_00_western_127_m20_api_t_1"
+            },
+            "ShellType": "AP",
+            "Velocity": 46.45,
+            "ApDurability": 29,
+            "Damage": 40,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "AP Belt",
+            "ProjectileBelt": {
+              "Name": "AP Belt",
+              "Family": "WESTERN_127",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "API_T_1",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "RED"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "I",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "AP",
+                  "Ammo": "superbwarfare:small_shell_gs",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "API_T_2",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "RED"
+                }
+              ]
+            },
+            "ShootShake": [
+              8,
+              10,
+              6
+            ],
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:projectile",
+              "ProjectileProfile": "berts_vehicle_pack:m109a7_paladin/passengermachinegun/ammo_00_western_127_m20_api_t_1",
+              "ProjectileLife": 400
+            }
+          }
+        }
+      ],
+      "Crosshair": "@VehicleCommonGun",
+      "Name": "weapon.berts_vehicle_pack.m109a7_paladin_passengermachinegun",
+      "SoundInfo": {
+        "Fire1P": "superbwarfare:m_2_hb_fire_1p",
+        "Fire3P": "superbwarfare:m_2_hb_fire_3p",
+        "Fire3PFar": "superbwarfare:m_2_hb_far",
+        "Fire3PVeryFar": "superbwarfare:m_2_hb_veryfar",
+        "Change": "superbwarfare:missile_change"
+      },
+      "SoundRadius": 16,
+      "Magazine": 200,
+      "NormalReloadTime": 160,
+      "EmptyReloadTime": 160,
+      "ProjectileAmount": 1,
+      "AmmoCostPerShoot": 1,
+      "ProjectileBeltAmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_he",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:projectile",
+              "Profile": "berts_vehicle_pack:m109a7_paladin/passengermachinegun/belt_ammo_00_western_127_m1_i"
+            },
+            "ShellType": "AP",
+            "Velocity": 47.2,
+            "ApDurability": 7,
+            "Damage": 40,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "I",
+            "ShootShake": [
+              8,
+              10,
+              6
+            ]
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_gs",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:projectile",
+              "Profile": "berts_vehicle_pack:m109a7_paladin/passengermachinegun/belt_ammo_01_western_127_m2_ap"
+            },
+            "ShellType": "AP",
+            "Velocity": 44.7,
+            "ApDurability": 31,
+            "Damage": 40,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "AP",
+            "ShootShake": [
+              8,
+              10,
+              6
+            ]
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_aa",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:projectile",
+              "Profile": "berts_vehicle_pack:m109a7_paladin/passengermachinegun/belt_ammo_02_western_127_m20_api_t_2"
+            },
+            "ShellType": "AP",
+            "Velocity": 46.45,
+            "ApDurability": 29,
+            "Damage": 40,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "API_T",
+            "ShootShake": [
+              8,
+              10,
+              6
+            ]
+          }
+        }
+      ],
+      "ShellType": "AP",
+      "ApDurability": 29,
+      "ExplosionDamage": 0,
+      "ExplosionRadius": 0,
+      "ShootShake": [
+        8,
+        10,
+        6
+      ],
+      "ShootPos": {
+        "Transform": "Vehicle",
+        "Positions": [
+          [
+            -0.99589,
+            3.84747063,
+            0.96165625
+          ]
+        ],
+        "Directions": [
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "ViewPosition": [
+          -0.99589,
+          3.84747063,
+          0.96165625
+        ],
+        "MuzzleAttachments": [
+          "hmgMuzzle"
+        ],
+        "MuzzleDirectionAttachments": [
+          "hmgMuzzle"
+        ],
+        "EffectAttachments": [
+          "hmgMuzzle"
+        ],
+        "EffectDirectionAttachments": [
+          "hmgMuzzle"
+        ]
+      },
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "superbwarfare:projectile",
+        "ProjectileProfile": "berts_vehicle_pack:m109a7_paladin/passengermachinegun/default",
+        "ProjectileLife": 400
+      }
+    }
+  },
+  "HudType": "@Land",
+  "HUDColor": "0xFFC700",
+  "Type": "Tank",
+  "VehicleContainerType": "Medium",
+  "ContainerIcon": "superbwarfare:textures/gui/vehicle/type/land.png",
+  "VehicleIcon": "berts_vehicle_pack:textures/vehicle_icon/m109a7_paladin.png",
+  "ThirdPersonCameraPos": [
+    0,
+    2,
+    6
+  ],
+  "HasDecoy": false,
+  "RemoteWeaponStation": false,
+  "PassengerWeaponStationPos": [
+    -0.99589,
+    1.05813313,
+    0
+  ],
+  "PassengerWeaponStationBarrelPos": [
+    0,
+    0.56018813,
+    0
+  ],
+  "PassengerWeaponStationControllerIndex": 1,
+  "PassengerWeaponStationPitchRange": [
+    -10,
+    60
+  ],
+  "PassengerWeaponStationTurnSpeed": [
+    90,
+    90
+  ],
+  "PassengerWeaponStationBinding": {
+    "Schema": "berts_vehicle_pack:passenger_bed_weapon_station/v1",
+    "Parent": "TURRET",
+    "WeaponId": "PassengerMachineGun",
+    "WeaponKind": "HEAVY_MACHINE_GUN",
+    "CameraAttachment": "hmgCamera",
+    "MuzzleAttachment": "hmgMuzzle"
+  }
+}

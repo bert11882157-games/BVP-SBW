@@ -1,9 +1,7 @@
 package com.atsuishio.superbwarfare.init
 
 import com.mojang.blaze3d.platform.InputConstants
-import com.atsuishio.superbwarfare.client.input.NonVehicleKeyConflictContext
-import com.atsuishio.superbwarfare.client.input.VehicleControlBindings
-import com.atsuishio.superbwarfare.client.input.VehicleKeyMapping
+import com.atsuishio.superbwarfare.client.input.*
 import net.minecraft.client.KeyMapping
 import net.minecraftforge.api.distmarker.Dist
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent
@@ -21,35 +19,147 @@ object ModKeyMappings {
     private val KEYS = mutableListOf<KeyMapping>()
 
     @JvmField
-    val MOVE_FORWARD = registerVehicleKey("move_forward", GLFW.GLFW_KEY_W)
+    val MOVE_FORWARD = registerVehicleKey("move_forward", GLFW.GLFW_KEY_W,
+        context = LandVehicleKeyConflictContext, category = VehicleControlBindings.LAND_CATEGORY)
 
     @JvmField
-    val MOVE_BACKWARD = registerVehicleKey("move_backward", GLFW.GLFW_KEY_S)
+    val MOVE_BACKWARD = registerVehicleKey("move_backward", GLFW.GLFW_KEY_S,
+        context = LandVehicleKeyConflictContext, category = VehicleControlBindings.LAND_CATEGORY)
 
     @JvmField
-    val MOVE_LEFT = registerVehicleKey("move_left", GLFW.GLFW_KEY_A)
+    val MOVE_LEFT = registerVehicleKey("move_left", GLFW.GLFW_KEY_A,
+        context = LandVehicleKeyConflictContext, category = VehicleControlBindings.LAND_CATEGORY)
 
     @JvmField
-    val MOVE_RIGHT = registerVehicleKey("move_right", GLFW.GLFW_KEY_D)
+    val MOVE_RIGHT = registerVehicleKey("move_right", GLFW.GLFW_KEY_D,
+        context = LandVehicleKeyConflictContext, category = VehicleControlBindings.LAND_CATEGORY)
 
     @JvmField
     /** Space is reserved for the server-owned secondary weapon trigger while mounted. */
     val VEHICLE_FIRE_SECONDARY = registerVehicleKey("vehicle_fire_secondary", GLFW.GLFW_KEY_SPACE)
 
     @JvmField
+    val FLIGHT_RECENTER = registerVehicleKey("flight_recenter", GLFW.GLFW_KEY_HOME,
+        context = FixedWingPilotKeyConflictContext, category = VehicleControlBindings.PLANE_CATEGORY)
+
+    @JvmField
+    val FLIGHT_THROTTLE_UP = registerVehicleKey(
+        "flight_throttle_up",
+        GLFW.GLFW_KEY_LEFT_SHIFT,
+        context = PlanePilotKeyConflictContext,
+        category = VehicleControlBindings.PLANE_CATEGORY,
+    )
+
+    @JvmField
+    val FLIGHT_THROTTLE_DOWN = registerVehicleKey(
+        "flight_throttle_down",
+        GLFW.GLFW_KEY_LEFT_CONTROL,
+        context = PlanePilotKeyConflictContext,
+        category = VehicleControlBindings.PLANE_CATEGORY,
+    )
+
+    @JvmField
+    val FLIGHT_AIRBRAKE = KeyMapping("key.superbwarfare.flight_airbrake", GLFW.GLFW_KEY_UNKNOWN, VehicleControlBindings.PLANE_CATEGORY)
+
+    @JvmField
+    val FLIGHT_RUDDER_LEFT = KeyMapping("key.superbwarfare.flight_rudder_left", GLFW.GLFW_KEY_UNKNOWN, VehicleControlBindings.PLANE_CATEGORY)
+
+    @JvmField
+    val FLIGHT_RUDDER_RIGHT = KeyMapping("key.superbwarfare.flight_rudder_right", GLFW.GLFW_KEY_UNKNOWN, VehicleControlBindings.PLANE_CATEGORY)
+
+    @JvmField
+    val FIXED_WING_PITCH_DOWN = registerVehicleKey("fixed_wing_pitch_down", GLFW.GLFW_KEY_W,
+        context = FixedWingPilotKeyConflictContext, category = VehicleControlBindings.PLANE_CATEGORY)
+
+    @JvmField
+    val FIXED_WING_PITCH_UP = registerVehicleKey("fixed_wing_pitch_up", GLFW.GLFW_KEY_S,
+        context = FixedWingPilotKeyConflictContext, category = VehicleControlBindings.PLANE_CATEGORY)
+
+    @JvmField
+    val FIXED_WING_ROLL_LEFT = registerVehicleKey("fixed_wing_roll_left", GLFW.GLFW_KEY_A,
+        context = FixedWingPilotKeyConflictContext, category = VehicleControlBindings.PLANE_CATEGORY)
+
+    @JvmField
+    val FIXED_WING_ROLL_RIGHT = registerVehicleKey("fixed_wing_roll_right", GLFW.GLFW_KEY_D,
+        context = FixedWingPilotKeyConflictContext, category = VehicleControlBindings.PLANE_CATEGORY)
+
+    @JvmField
+    // Airbrakes share the held throttle-down binding at zero thrust.
+    val FIXED_WING_AIRBRAKE = KeyMapping("key.superbwarfare.fixed_wing_airbrake", GLFW.GLFW_KEY_UNKNOWN,
+        VehicleControlBindings.PLANE_CATEGORY)
+
+    @JvmField
+    val FIXED_WING_LANDING_GEAR = registerVehicleKey("fixed_wing_landing_gear", GLFW.GLFW_KEY_G,
+        context = FixedWingLandingGearKeyConflictContext, category = VehicleControlBindings.PLANE_CATEGORY)
+
+    @JvmField
+    val FLIGHT_LEGACY_BOOST = KeyMapping("key.superbwarfare.flight_legacy_boost", GLFW.GLFW_KEY_UNKNOWN, VehicleControlBindings.PLANE_CATEGORY)
+
+    @JvmField
+    val HELICOPTER_COLLECTIVE_UP = registerVehicleKey("helicopter_collective_up", GLFW.GLFW_KEY_W,
+        context = HelicopterPilotKeyConflictContext, category = VehicleControlBindings.HELICOPTER_CATEGORY)
+
+    @JvmField
+    val HELICOPTER_COLLECTIVE_DOWN = registerVehicleKey("helicopter_collective_down", GLFW.GLFW_KEY_S,
+        context = HelicopterPilotKeyConflictContext, category = VehicleControlBindings.HELICOPTER_CATEGORY)
+
+    @JvmField
+    val HELICOPTER_ROLL_LEFT = registerVehicleKey("helicopter_roll_left", GLFW.GLFW_KEY_A,
+        context = HelicopterPilotKeyConflictContext, category = VehicleControlBindings.HELICOPTER_CATEGORY)
+
+    @JvmField
+    val HELICOPTER_ROLL_RIGHT = registerVehicleKey("helicopter_roll_right", GLFW.GLFW_KEY_D,
+        context = HelicopterPilotKeyConflictContext, category = VehicleControlBindings.HELICOPTER_CATEGORY)
+
+    @JvmField
+    val HELICOPTER_THRUST_UP = registerVehicleKey("helicopter_thrust_up", GLFW.GLFW_KEY_LEFT_SHIFT,
+        context = HelicopterPilotKeyConflictContext, category = VehicleControlBindings.HELICOPTER_CATEGORY)
+
+    @JvmField
+    val HELICOPTER_THRUST_DOWN = registerVehicleKey("helicopter_thrust_down", GLFW.GLFW_KEY_LEFT_CONTROL,
+        context = HelicopterPilotKeyConflictContext, category = VehicleControlBindings.HELICOPTER_CATEGORY)
+
+    @JvmField
+    val DRONE_FORWARD = registerVehicleKey("drone_forward", GLFW.GLFW_KEY_W,
+        context = DroneKeyConflictContext, category = VehicleControlBindings.DRONE_CATEGORY)
+
+    @JvmField
+    val DRONE_BACKWARD = registerVehicleKey("drone_backward", GLFW.GLFW_KEY_S,
+        context = DroneKeyConflictContext, category = VehicleControlBindings.DRONE_CATEGORY)
+
+    @JvmField
+    val DRONE_LEFT = registerVehicleKey("drone_left", GLFW.GLFW_KEY_A,
+        context = DroneKeyConflictContext, category = VehicleControlBindings.DRONE_CATEGORY)
+
+    @JvmField
+    val DRONE_RIGHT = registerVehicleKey("drone_right", GLFW.GLFW_KEY_D,
+        context = DroneKeyConflictContext, category = VehicleControlBindings.DRONE_CATEGORY)
+
+    @JvmField
+    val DRONE_ASCEND = registerVehicleKey("drone_ascend", GLFW.GLFW_KEY_SPACE,
+        context = DroneKeyConflictContext, category = VehicleControlBindings.DRONE_CATEGORY)
+
+    @JvmField
+    val DRONE_DESCEND = registerVehicleKey("drone_descend", GLFW.GLFW_KEY_LEFT_SHIFT,
+        context = DroneKeyConflictContext, category = VehicleControlBindings.DRONE_CATEGORY)
+
+    @JvmField
     val VEHICLE_SWITCH_PRIMARY = registerVehicleKey("vehicle_switch_primary", GLFW.GLFW_KEY_Z)
 
     @JvmField
-    val VEHICLE_SWITCH_SECONDARY = registerVehicleKey("vehicle_switch_secondary", GLFW.GLFW_KEY_Q)
+    val VEHICLE_SWITCH_SECONDARY = registerVehicleKey("vehicle_secondary_hold", GLFW.GLFW_KEY_2,
+        context = VehicleWeaponSelectionKeyContext)
 
     @JvmField
     val VEHICLE_CYCLE_SIGHT_ZERO = registerVehicleKey("vehicle_cycle_sight_zero", GLFW.GLFW_KEY_G)
 
     @JvmField
-    val MOVE_SHIFT = registerVehicleKey("move_shift", GLFW.GLFW_KEY_LEFT_SHIFT)
+    val MOVE_SHIFT = registerVehicleKey("move_shift", GLFW.GLFW_KEY_LEFT_SHIFT,
+        context = LandVehicleKeyConflictContext, category = VehicleControlBindings.LAND_CATEGORY)
 
     @JvmField
-    val MOVE_CTRL = registerVehicleKey("move_ctrl", GLFW.GLFW_KEY_LEFT_CONTROL)
+    val MOVE_CTRL = registerVehicleKey("move_ctrl", GLFW.GLFW_KEY_LEFT_CONTROL,
+        context = LandVehicleKeyConflictContext, category = VehicleControlBindings.LAND_CATEGORY)
 
     @JvmField
     val RELOAD = registerKey("reload", GLFW.GLFW_KEY_R, NonVehicleKeyConflictContext)
@@ -176,6 +286,9 @@ object ModKeyMappings {
     val RELEASE_DECOY = registerVehicleKey("release_decoy", GLFW.GLFW_KEY_V)
 
     @JvmField
+    val RELEASE_CHAFF = registerVehicleKey("release_chaff", GLFW.GLFW_KEY_B)
+
+    @JvmField
     val FREE_CAMERA = registerVehicleKey("free_camera", GLFW.GLFW_KEY_C)
 
     @JvmField
@@ -223,7 +336,9 @@ object ModKeyMappings {
         name: String,
         code: Int,
         modifier: KeyModifier = KeyModifier.NONE,
-        type: InputConstants.Type = InputConstants.Type.KEYSYM
+        type: InputConstants.Type = InputConstants.Type.KEYSYM,
+        context: IKeyConflictContext = VehicleKeyConflictContext,
+        category: String = VEHICLE_CATEGORY,
     ): VehicleKeyMapping {
         val key = VehicleControlBindings.register(
             VehicleKeyMapping(
@@ -231,7 +346,8 @@ object ModKeyMappings {
                 modifier,
                 type,
                 code,
-                VEHICLE_CATEGORY
+                category,
+                context,
             )
         )
         KEYS.add(key)

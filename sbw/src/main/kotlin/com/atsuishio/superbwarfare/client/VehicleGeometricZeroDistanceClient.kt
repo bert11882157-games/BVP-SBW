@@ -1,5 +1,7 @@
 package com.atsuishio.superbwarfare.client
 
+import com.atsuishio.superbwarfare.api.vehicle.aim.VehicleLaserRangefinder
+
 import com.atsuishio.superbwarfare.api.vehicle.aim.VehicleAimChannel
 import com.atsuishio.superbwarfare.api.vehicle.aim.VehicleAimMode
 import com.atsuishio.superbwarfare.api.vehicle.aim.VehicleAimProfile
@@ -88,6 +90,7 @@ object VehicleGeometricZeroDistanceClient {
         }
         observeConnection(connection)
         val current = ensureState(context) ?: return false
+        if (current.pendingFcsSequence != null) return false
         if (nextSequence == Long.MAX_VALUE) return false
         nextSequence += 1L
         current.lastSentSequence = nextSequence
@@ -262,7 +265,7 @@ object VehicleGeometricZeroDistanceClient {
             seatIndex,
             selectedWeaponIndex,
             profile,
-            vehicle.computed().hasFCS,
+            VehicleLaserRangefinder.enabled(vehicle, seatIndex, selectedWeaponIndex),
         )
     }
 

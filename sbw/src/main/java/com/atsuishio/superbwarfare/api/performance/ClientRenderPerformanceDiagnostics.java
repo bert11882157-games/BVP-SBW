@@ -1,5 +1,7 @@
 package com.atsuishio.superbwarfare.api.performance;
 
+import com.atsuishio.superbwarfare.api.diagnostics.DebugFeaturePolicy;
+
 /**
  * Opt-in, allocation-free counters for client render-path diagnosis.
  *
@@ -55,6 +57,7 @@ public final class ClientRenderPerformanceDiagnostics {
     }
 
     public static void setEnabled(boolean value) {
+        value = value && DebugFeaturePolicy.allowsDebugTools();
         if (value) {
             reset();
         }

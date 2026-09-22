@@ -4,7 +4,7 @@ import net.minecraft.util.Mth
 import net.minecraft.world.phys.Vec3
 
 /** Immutable synchronized flight instruments. Motion is the strategy's final server motion. */
-data class VehicleFlightInstrumentSnapshot(
+data class VehicleFlightInstrumentSnapshot @JvmOverloads constructor(
     val sequence: Int,
     val serverTick: Long,
     val rotorLift: Double,
@@ -16,11 +16,18 @@ data class VehicleFlightInstrumentSnapshot(
     val bodyPitch: Float,
     val bodyRoll: Float,
     val motionIncludesGravity: Boolean,
+    val controlSurfaces: FixedWingControlSurfaceSnapshot? = null,
+    val fixedWingSignedLiftG: Double? = null,
 ) {
+    init {
+        require(fixedWingSignedLiftG == null || fixedWingSignedLiftG.isFinite()) { "lift load must be finite" }
+    }
+
     fun isNewerThan(other: VehicleFlightInstrumentSnapshot): Boolean =
-        sequence != other.sequence && Integer.compareUnsigned(sequence, other.sequence) > 0
+        sequence - other.sequence > 0 && serverTick >= other.serverTick
 
     fun encode(): String = buildString(160) {
+        require(fixedWingSignedLiftG == null || controlSurfaces != null) { "Lift load requires fixed-wing controls" }
         append(sequence).append(';')
         append(serverTick).append(';')
         append(rotorLift).append(';')
@@ -34,17 +41,51 @@ data class VehicleFlightInstrumentSnapshot(
         append(bodyPitch).append(';')
         append(bodyRoll).append(';')
         append(if (motionIncludesGravity) 1 else 0)
+        controlSurfaces?.let { surfaces ->
+            require(surfaces.serverTick == serverTick) { "Flight controls must share the body tick" }
+            val schema = when {
+                surfaces.wheelBrakeActive -> WHEEL_BRAKE_SCHEMA
+                fixedWingSignedLiftG != null -> FIXED_WING_INSTRUMENT_SCHEMA
+                else -> CONTROL_SURFACE_SCHEMA
+            }
+            append(';').append(schema)
+            append(';').append(surfaces.elevator)
+            append(';').append(surfaces.aileron)
+            append(';').append(surfaces.rudder)
+            append(';').append(surfaces.airbrake)
+            append(';').append(surfaces.throttle)
+            append(';').append(if (surfaces.afterburnerActive) 1 else 0)
+            if (schema == WHEEL_BRAKE_SCHEMA) {
+                // Empty load preserves unavailable instruments rather than inventing zero lift.
+                append(';').append(fixedWingSignedLiftG?.toString().orEmpty())
+                append(';').append(if (surfaces.wheelBrakeActive) 1 else 0)
+            } else {
+                fixedWingSignedLiftG?.let { append(';').append(it) }
+            }
+        }
     }
 
     companion object {
+        private const val CONTROL_SURFACE_SCHEMA = 1
+        private const val FIXED_WING_INSTRUMENT_SCHEMA = 2
+        private const val WHEEL_BRAKE_SCHEMA = 3
+        private const val MAX_PAYLOAD_CHARS = 512
+
         @JvmField
         val EMPTY = VehicleFlightInstrumentSnapshot(
             0, 0L, 0.0, 0.0, 0.0, 0.0, Vec3.ZERO, 0F, 0F, 0F, true
         )
 
         @JvmStatic
-        fun fromResult(sequence: Int, serverTick: Long, result: VehicleFlightTickResult) =
-            VehicleFlightInstrumentSnapshot(
+        @JvmOverloads
+        fun fromResult(
+            sequence: Int,
+            serverTick: Long,
+            result: VehicleFlightTickResult,
+            controlSurfaces: FixedWingControlSurfaceSnapshot? = null,
+        ): VehicleFlightInstrumentSnapshot {
+            val acceptedControls = controlSurfaces?.takeIf { it.serverTick == serverTick }
+            return VehicleFlightInstrumentSnapshot(
                 sequence,
                 serverTick,
                 result.rotorLift,
@@ -56,11 +97,14 @@ data class VehicleFlightInstrumentSnapshot(
                 result.bodyPitch,
                 result.bodyRoll,
                 result.motionIncludesGravity,
+                acceptedControls,
+                result.fixedWingSignedLiftG?.takeIf { acceptedControls != null },
             )
+        }
 
         @JvmStatic
         fun decode(payload: String?): VehicleFlightInstrumentSnapshot? {
-            if (payload.isNullOrBlank()) return null
+            if (payload.isNullOrBlank() || payload.length > MAX_PAYLOAD_CHARS) return null
             // This payload is changed-only synchronized at the flight tick cadence and is read
             // from both gameplay and presentation boundaries.  Do not split it into a temporary
             // list of strings on every packet: that allocation burst was large enough to produce
@@ -75,6 +119,7 @@ data class VehicleFlightInstrumentSnapshot(
             val serverTickEnd = fieldEnd(payload, start, true)
             if (serverTickEnd < 0) return null
             val serverTick = parseLong(payload, start, serverTickEnd) ?: return null
+            if (serverTick < 0L) return null
             start = serverTickEnd + 1
 
             val rotorLiftEnd = fieldEnd(payload, start, true)
@@ -127,12 +172,65 @@ data class VehicleFlightInstrumentSnapshot(
             val bodyRoll = parseDouble(payload, start, bodyRollEnd)?.toFloat() ?: return null
             start = bodyRollEnd + 1
 
-            val gravityEnd = fieldEnd(payload, start, false)
-            if (gravityEnd != payload.length || gravityEnd <= start) return null
-            val motionIncludesGravity = when {
-                payload.regionMatches(start, "1", 0, 1) && gravityEnd == start + 1 -> true
-                payload.regionMatches(start, "0", 0, 1) && gravityEnd == start + 1 -> false
-                else -> return null
+            // Legacy helicopter payloads end at gravity. Only fixed-wing payloads append
+            // a versioned surface tuple; its source tick is the enclosing body tick.
+            val extensionStart = payload.indexOf(';', start)
+            val gravityEnd = if (extensionStart < 0) payload.length else extensionStart
+            val motionIncludesGravity = parseFlag(payload, start, gravityEnd) ?: return null
+            var controlSurfaces: FixedWingControlSurfaceSnapshot? = null
+            var fixedWingSignedLiftG: Double? = null
+            if (extensionStart >= 0) {
+                start = extensionStart + 1
+                val schemaEnd = fieldEnd(payload, start, true)
+                if (schemaEnd < 0) return null
+                val schema = parseLong(payload, start, schemaEnd) ?: return null
+                if (schema != CONTROL_SURFACE_SCHEMA.toLong() &&
+                    schema != FIXED_WING_INSTRUMENT_SCHEMA.toLong() &&
+                    schema != WHEEL_BRAKE_SCHEMA.toLong()) return null
+                start = schemaEnd + 1
+                val elevatorEnd = fieldEnd(payload, start, true)
+                if (elevatorEnd < 0) return null
+                val elevator = parseControl(payload, start, elevatorEnd, -1.0) ?: return null
+                start = elevatorEnd + 1
+                val aileronEnd = fieldEnd(payload, start, true)
+                if (aileronEnd < 0) return null
+                val aileron = parseControl(payload, start, aileronEnd, -1.0) ?: return null
+                start = aileronEnd + 1
+                val rudderEnd = fieldEnd(payload, start, true)
+                if (rudderEnd < 0) return null
+                val rudder = parseControl(payload, start, rudderEnd, -1.0) ?: return null
+                start = rudderEnd + 1
+                val airbrakeEnd = fieldEnd(payload, start, true)
+                if (airbrakeEnd < 0) return null
+                val airbrake = parseControl(payload, start, airbrakeEnd, 0.0) ?: return null
+                start = airbrakeEnd + 1
+                val throttleControlEnd = fieldEnd(payload, start, true)
+                if (throttleControlEnd < 0) return null
+                val throttleControl = parseControl(payload, start, throttleControlEnd, 0.0) ?: return null
+                start = throttleControlEnd + 1
+                val brakingSchema = schema == WHEEL_BRAKE_SCHEMA.toLong()
+                val extended = schema >= FIXED_WING_INSTRUMENT_SCHEMA
+                val afterburnerEnd = fieldEnd(payload, start, extended)
+                if (afterburnerEnd < 0) return null
+                val afterburner = parseFlag(payload, start, afterburnerEnd) ?: return null
+                var wheelBrakeActive = false
+                if (extended) {
+                    start = afterburnerEnd + 1
+                    val loadEnd = fieldEnd(payload, start, brakingSchema)
+                    if (loadEnd < 0) return null
+                    if (loadEnd != start || !brakingSchema) {
+                        fixedWingSignedLiftG = parseDouble(payload, start, loadEnd) ?: return null
+                    }
+                    if (brakingSchema) {
+                        start = loadEnd + 1
+                        val brakeEnd = fieldEnd(payload, start, false)
+                        if (brakeEnd != payload.length) return null
+                        wheelBrakeActive = parseFlag(payload, start, brakeEnd) ?: return null
+                    } else if (loadEnd != payload.length) return null
+                } else if (afterburnerEnd != payload.length) return null
+                controlSurfaces = FixedWingControlSurfaceSnapshot(
+                    serverTick, elevator, aileron, rudder, airbrake, throttleControl, afterburner, wheelBrakeActive,
+                )
             }
 
             val snapshot = VehicleFlightInstrumentSnapshot(
@@ -147,6 +245,8 @@ data class VehicleFlightInstrumentSnapshot(
                 bodyPitch,
                 bodyRoll,
                 motionIncludesGravity,
+                controlSurfaces,
+                fixedWingSignedLiftG,
             )
             return snapshot.takeIf {
                 it.rotorLift.isFinite() && it.collective.isFinite() &&
@@ -154,6 +254,20 @@ data class VehicleFlightInstrumentSnapshot(
                         it.motion.x.isFinite() && it.motion.y.isFinite() && it.motion.z.isFinite() &&
                         it.bodyYaw.isFinite() && it.bodyPitch.isFinite() && it.bodyRoll.isFinite()
             }
+        }
+
+        private fun parseFlag(payload: String, start: Int, end: Int): Boolean? {
+            if (end != start + 1) return null
+            return when (payload[start]) {
+                '1' -> true
+                '0' -> false
+                else -> null
+            }
+        }
+
+        private fun parseControl(payload: String, start: Int, end: Int, minimum: Double): Float? {
+            val value = parseDouble(payload, start, end) ?: return null
+            return value.takeIf { it in minimum..1.0 }?.toFloat()
         }
 
         /** End index for one delimited field; the final field must have no delimiter. */
@@ -243,11 +357,21 @@ data class VehicleFlightInstrumentSnapshot(
             current: VehicleFlightInstrumentSnapshot,
             alpha: Float,
         ): VehicleFlightInstrumentSnapshot {
+            if (!alpha.isFinite()) return current.copy(controlSurfaces = null, fixedWingSignedLiftG = null)
             val t = Mth.clamp(alpha, 0F, 1F).toDouble()
             // At the upper endpoint every value and provenance field is already exactly the
             // current immutable sample. Reusing it avoids a new Snapshot/Vec3 pair on every
             // settled render frame without changing interpolation or sequence semantics.
             if (t >= 1.0) return current
+            val previousLiftG = previous.fixedWingSignedLiftG
+            val currentLiftG = current.fixedWingSignedLiftG
+            val liftG = if (previousLiftG != null && currentLiftG != null)
+                ((1.0 - t) * previousLiftG + t * currentLiftG).takeIf(Double::isFinite)
+            else null
+            val attitude = if (previous.controlSurfaces != null && current.controlSurfaces != null)
+                VehicleFlightAttitude.interpolate(previous.bodyYaw, previous.bodyPitch, previous.bodyRoll,
+                    current.bodyYaw, current.bodyPitch, current.bodyRoll, t.toFloat())
+            else null
             return VehicleFlightInstrumentSnapshot(
                 current.sequence,
                 current.serverTick,
@@ -260,10 +384,32 @@ data class VehicleFlightInstrumentSnapshot(
                     Mth.lerp(t, previous.motion.y, current.motion.y),
                     Mth.lerp(t, previous.motion.z, current.motion.z),
                 ),
-                Mth.rotLerp(t.toFloat(), previous.bodyYaw, current.bodyYaw),
-                Mth.rotLerp(t.toFloat(), previous.bodyPitch, current.bodyPitch),
-                Mth.rotLerp(t.toFloat(), previous.bodyRoll, current.bodyRoll),
+                attitude?.yaw ?: Mth.rotLerp(t.toFloat(), previous.bodyYaw, current.bodyYaw),
+                attitude?.pitch ?: Mth.rotLerp(t.toFloat(), previous.bodyPitch, current.bodyPitch),
+                attitude?.roll ?: Mth.rotLerp(t.toFloat(), previous.bodyRoll, current.bodyRoll),
                 current.motionIncludesGravity,
+                interpolateControlSurfaces(previous.controlSurfaces, current.controlSurfaces, t),
+                liftG,
+            )
+        }
+
+        private fun interpolateControlSurfaces(
+            previous: FixedWingControlSurfaceSnapshot?,
+            current: FixedWingControlSurfaceSnapshot?,
+            alpha: Double,
+        ): FixedWingControlSurfaceSnapshot? {
+            if (current == null || previous == null) return current
+            return FixedWingControlSurfaceSnapshot(
+                current.serverTick,
+                Mth.lerp(alpha, previous.elevator.toDouble(), current.elevator.toDouble()).toFloat(),
+                Mth.lerp(alpha, previous.aileron.toDouble(), current.aileron.toDouble()).toFloat(),
+                Mth.lerp(alpha, previous.rudder.toDouble(), current.rudder.toDouble()).toFloat(),
+                Mth.lerp(alpha, previous.airbrake.toDouble(), current.airbrake.toDouble()).toFloat(),
+                Mth.lerp(alpha, previous.throttle.toDouble(), current.throttle.toDouble()).toFloat(),
+                // Discrete switches follow the accepted state. Rebased blends may never reach
+                // alpha=1 under continuous updates, so retaining the old flag can latch it forever.
+                current.afterburnerActive,
+                current.wheelBrakeActive,
             )
         }
     }

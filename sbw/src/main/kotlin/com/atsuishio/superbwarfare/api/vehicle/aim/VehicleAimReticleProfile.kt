@@ -45,5 +45,6 @@ enum class VehicleAimReticleRole(
     MAIN_CANNON(true, VehicleAimOpticalCameraPolicy.FOV_ONLY),
     COAX(false, VehicleAimOpticalCameraPolicy.FOV_ONLY),
     PASSENGER_HMG(false, VehicleAimOpticalCameraPolicy.SEAT_AUTHORED),
+    EMPLACEMENT_OPTIC(true, VehicleAimOpticalCameraPolicy.SEAT_AUTHORED),
     OTHER(true, VehicleAimOpticalCameraPolicy.WEAPON_ATTACHMENT),
 }

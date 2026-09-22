@@ -3,41 +3,17 @@ package com.atsuishio.superbwarfare.entity.vehicle.base
 import com.atsuishio.superbwarfare.client.particle.CustomCloudOption
 import com.atsuishio.superbwarfare.data.vehicle.subdata.EngineInfo
 import com.atsuishio.superbwarfare.entity.vehicle.utils.VehicleVecUtils
+import com.atsuishio.superbwarfare.entity.vehicle.utils.GroundRestPolicy
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.util.Mth
-import org.joml.Math
 
 /**
- * Owns the existing tracked and wheeled ground-propulsion steps.
- *
- * World, passenger, power, particle, and kinematic state remain on [VehicleEntity]; this
- * service only preserves the established ordered mutation sequence behind the entity facade.
+ * Samples environment and commits ground-drive results through the compatibility facade.
+ * GroundDriveCalculator owns controls/steering arithmetic over immutable phase inputs.
+ * World/FX stay here; virtual view vectors are sampled after steering and after yaw commit.
  */
 internal class VehicleGroundMotionService(private val vehicle: VehicleEntity) {
-    /**
-     * Limits only the ground-wheel steering component to the lateral acceleration
-     * already implied by the wheel branch's retained-speed damping.  The damping
-     * value is a per-tick velocity retention, so (1 - retention) * gravity is a
-     * bounded traction proxy; no new authored steering datum or force is added.
-     */
-    private fun limitGroundWheelYaw(
-        rawYawDegrees: Double,
-        speed: Double,
-        groundDamping: Double,
-        gravity: Double
-    ): Double {
-        if (!rawYawDegrees.isFinite() || !speed.isFinite() || speed <= 1.0E-4 ||
-            !groundDamping.isFinite() || !gravity.isFinite() || gravity <= 0.0
-        ) {
-            return rawYawDegrees
-        }
-
-        val lateralGrip = (1.0 - groundDamping).coerceIn(0.0, 1.0)
-        val yawLimit = java.lang.Math.toDegrees(java.lang.Math.atan2(lateralGrip * gravity, speed))
-        return if (yawLimit.isFinite()) rawYawDegrees.coerceIn(-yawLimit, yawLimit) else rawYawDegrees
-    }
-
     fun stepTrack(engineInfo: EngineInfo.Track) = with(vehicle) {
         val buoyancy = engineInfo.buoyancy
         val energyCost = (engineInfo.energyCostRate * Mth.abs(power)).toInt()
@@ -111,120 +87,70 @@ internal class VehicleGroundMotionService(private val vehicle: VehicleEntity) {
             }
         }
 
-        val passenger0 = getFirstPassenger()
-
-        if (!hasOperationalPower(energyCost)) {
-            forwardInputDown = false
-            backInputDown = false
-            leftInputDown = false
-            rightInputDown = false
-            power *= 0.95f
-        }
-
-        if (passenger0 == null) {
-            leftInputDown = false
-            rightInputDown = false
-            forwardInputDown = false
-            backInputDown = false
-            power = 0f
-        }
-
-        val maxPower = if (sprintInputDown) 1.25f else (if (power > 1) power - 0.002f else 1f)
-
-        if (forwardInputDown && !backInputDown) {
-            power = Math.min(power + (if (power < 0) powerAdd * 2f else powerAdd) * (maxPower - (Mth.abs(power) / 1.02f)), maxPower)
-        }
-
-        if (backInputDown) {
-            power = Math.max(power - (if (power > 0) powerReduce * 4f else powerReduce) * (maxPower - (Mth.abs(power) / 1.02f)), -1f)
-            if (rightInputDown) {
-                holdTick++
-                deltaRot += steeringSpeed * 0.12f * Math.min(holdTick, 10)
-            } else if (leftInputDown) {
-                holdTick++
-                deltaRot -= steeringSpeed * 0.12f * Math.min(holdTick, 10)
-            } else {
-                holdTick = 0
-            }
-        } else {
-            if (rightInputDown) {
-                holdTick++
-                deltaRot -= steeringSpeed * 0.12f * Math.min(holdTick, 10)
-            } else if (leftInputDown) {
-                holdTick++
-                deltaRot += steeringSpeed * 0.12f * Math.min(holdTick, 10)
-            } else {
-                holdTick = 0
-            }
-        }
-
-        targetSpeed = if (power > 0) {
-            (maxForwardSpeedRate * (1 + xRot / 40)).toDouble()
-        } else {
-            (maxBackwardSpeedRate * (1 - xRot / 40)).toDouble()
-        }
-
-        if (!forwardInputDown && !backInputDown) {
-            power *= 0.96f
-        }
-
-        if (upInputDown) {
-            power *= if (isInFluidType) 0.97f else (if (drift()) 0.96f else 0.6f)
-        }
-
-        if (rightInputDown || leftInputDown) {
-            power *= 0.995f
-        }
-
-        if (level() is ServerLevel) {
-            consumeOperationalPower(energyCost)
-        }
-
-        if (drift()) {
-            steeringSpeed *= 3.4f
-        }
-
-        deltaRot *= Math.max(0.76f - 0.1f * deltaMovement.horizontalDistance(), 0.3).toFloat()
-
-        val s0 = deltaMovement.dot(getViewVector(1f))
-
-        leftWheelRot = ((leftWheelRot - wheelRotSpeed * s0 * leftDrift) + Mth.clamp(
-            wheelDifferential * deltaRot * leftDrift, -5.0, 5.0
-        )).toFloat()
-        rightWheelRot = ((rightWheelRot - wheelRotSpeed * s0 * rightDrift) - Mth.clamp(
-            wheelDifferential * deltaRot * rightDrift, -5.0, 5.0
-        )).toFloat()
-
-        leftTrack = ((leftTrack - trackSpeed * java.lang.Math.PI * s0 * leftDrift) + Mth.clamp(
-            trackDifferential * java.lang.Math.PI * deltaRot * leftDrift, -5.0, 5.0
-        )).toFloat()
-        rightTrack = ((rightTrack - trackSpeed * java.lang.Math.PI * s0 * rightDrift) - Mth.clamp(
-            trackDifferential * java.lang.Math.PI * deltaRot * rightDrift, -5.0, 5.0
-        )).toFloat()
-
-        val i: Int
-        if (leftWheelDamaged && rightWheelDamaged) {
-            power *= 0.93f
-            i = 0
-        } else if (leftWheelDamaged) {
-            power *= 0.975f
-            i = 3
-        } else if (rightWheelDamaged) {
-            power *= 0.975f
-            i = -3
-        } else {
-            i = 0
-        }
-
-        if (mainEngineDamaged) {
-            power *= 0.96f
-        }
-
-        yRot = (yRot - (if (isInFluidType && !onGround()) 2.5 else 8.0) * deltaRot - i * s0).toFloat()
-
-        if (isInFluidType || onGround()) {
-            deltaMovement = deltaMovement.add(getViewVector(1f).scale((if (drift()) 0.03 else 0.15) * targetSpeed * power))
-        }
+        GroundDrivePhases.execute(
+            advanceControls = {
+                val passenger = getFirstPassenger()
+                val operationalPower = hasOperationalPower(energyCost)
+                GroundDriveCalculator.advanceTrackControls(GroundDriveControlInput(
+                    controls = GroundDriveControls(forwardInputDown, backInputDown, leftInputDown,
+                        rightInputDown, sprintInputDown, upInputDown),
+                    power = power, rotation = deltaRot, holdTicks = holdTick,
+                    pitchDegrees = xRot, inFluid = isInFluidType, occupied = passenger != null,
+                    operationalPower = operationalPower, increment = powerAdd, decrement = powerReduce,
+                    steeringSpeed = steeringSpeed, maxForwardSpeedRate = maxForwardSpeedRate,
+                    maxBackwardSpeedRate = maxBackwardSpeedRate))
+            },
+            commitControls = { next ->
+                forwardInputDown = next.controls.forward
+                backInputDown = next.controls.backward
+                leftInputDown = next.controls.left
+                rightInputDown = next.controls.right
+                power = next.power
+                deltaRot = next.rotation
+                holdTick = next.holdTicks
+                targetSpeed = next.targetSpeed
+            },
+            consumePower = { if (level() is ServerLevel) consumeOperationalPower(energyCost) },
+            prepareSteering = {
+                // Retain this legacy adjustment after control steering; it has no later consumer.
+                if (drift()) steeringSpeed *= 3.4f
+                GroundDriveCalculator.trackRotation(deltaRot, deltaMovement.horizontalDistance())
+            },
+            commitSteering = { deltaRot = GroundRestPolicy.settleSteering(it,
+                GroundRestPolicy.isAtRest(onGround(), isInFluidType,
+                    deltaMovement.horizontalDistanceSqr(), forwardInputDown || backInputDown ||
+                        leftInputDown || rightInputDown)) },
+            sampleLongitudinal = { deltaMovement.dot(getViewVector(1f)) },
+            finishDrive = { steering, longitudinal ->
+                GroundDriveCalculator.finishTrack(GroundDriveFinishInput(
+                    power = power, rotation = deltaRot, yawDegrees = yRot,
+                    leftWheelRot = leftWheelRot, rightWheelRot = rightWheelRot,
+                    leftTrack = leftTrack, rightTrack = rightTrack, rudderRot = rudderRot,
+                    wheelRotSpeed = wheelRotSpeed, wheelDifferential = wheelDifferential,
+                    trackSpeed = trackSpeed, trackDifferential = trackDifferential,
+                    leftDrift = leftDrift, rightDrift = rightDrift,
+                    longitudinalMotion = longitudinal, motionLength = deltaMovement.length(),
+                    horizontalSpeed = deltaMovement.horizontalDistance(),
+                    inFluid = isInFluidType, onGround = onGround(),
+                    leftDamaged = leftWheelDamaged, rightDamaged = rightWheelDamaged,
+                    engineDamaged = mainEngineDamaged, damageBias = 0,
+                    groundDamping = 0.0, gravity = 0.0))
+            },
+            commitDrive = { next ->
+                leftWheelRot = next.leftWheelRot
+                rightWheelRot = next.rightWheelRot
+                leftTrack = next.leftTrack
+                rightTrack = next.rightTrack
+                power = next.power
+                yRot = next.yawDegrees
+            },
+            applyThrust = {
+                if (isInFluidType || onGround()) {
+                    deltaMovement = deltaMovement.add(getViewVector(1f)
+                        .scale((if (drift()) 0.03 else 0.15) * targetSpeed * power))
+                }
+            },
+        )
     }
 
     fun stepWheel(engineInfo: EngineInfo.Wheel) = with(vehicle) {
@@ -314,127 +240,75 @@ internal class VehicleGroundMotionService(private val vehicle: VehicleEntity) {
             }
         }
 
-        val passenger0 = getFirstPassenger()
-
-        if (!hasOperationalPower(energyCost)) {
-            forwardInputDown = false
-            backInputDown = false
-            leftInputDown = false
-            rightInputDown = false
-            power *= 0.95f
-            deltaRot *= 0.5f
-        }
-
-        if (passenger0 == null) {
-            leftInputDown = false
-            rightInputDown = false
-            forwardInputDown = false
-            backInputDown = false
-            power = 0f
-        }
-
-        val maxPower = if (sprintInputDown) 1.3f else (if (power > 1) power - 0.002f else 1f)
-
-        if (forwardInputDown && !backInputDown) {
-            power = Math.min(power + (if (power < 0) powerAdd * 2f else powerAdd) * (maxPower - (Mth.abs(power) / 1.02f)), maxPower)
-        }
-
-        if (backInputDown) {
-            power = Math.max(
-                power - (if (power > 0) powerReduce * 4f else powerReduce) * (maxPower - (Mth.abs(power) / 1.02f)), -1f
-            )
-        }
-
-        targetSpeed = if (power > 0) {
-            (maxForwardSpeedRate * (1 + xRot / 40)).toDouble()
-        } else {
-            (maxBackwardSpeedRate * (1 - xRot / 40)).toDouble()
-        }
-
-        if (!forwardInputDown && !backInputDown) {
-            power *= 0.97f
-        }
-
-        if (upInputDown) {
-            power *= if (isInFluidType) 0.97f else (if (drift()) 0.93f else 0.6f)
-        }
-
-        if (rightInputDown || leftInputDown) {
-            power *= 0.995f
-        }
-
-        if (level is ServerLevel) {
-            consumeOperationalPower(energyCost)
-        }
-
-        val i: Int
-        if (leftWheelDamaged && rightWheelDamaged) {
-            power *= 0.93f
-            i = 0
-        } else if (leftWheelDamaged) {
-            power *= 0.975f
-            i = 3
-        } else if (rightWheelDamaged) {
-            power *= 0.975f
-            i = -3
-        } else {
-            i = 0
-        }
-
-        if (mainEngineDamaged) {
-            power *= 0.875f
-        }
-
-        if (drift()) {
-            steeringSpeed *= 1.5f
-        }
-
-        if (rightInputDown) {
-            holdTick++
-            deltaRot += steeringSpeed * 0.12f * Math.min(holdTick, 10)
-        } else if (leftInputDown) {
-            holdTick++
-            deltaRot -= steeringSpeed * 0.12f * Math.min(holdTick, 10)
-        } else {
-            holdTick = 0
-        }
-
-        deltaRot *= Math.max(0.78f - 0.25f * deltaMovement.horizontalDistance(), 0.1).toFloat()
-
-        val s0 = deltaMovement.dot(getViewVector(1f))
-
-        leftWheelRot = ((leftWheelRot - wheelRotSpeed * s0) - Mth.clamp(
-            wheelDifferential * deltaRot, -5.0, 5.0
-        ) * deltaMovement.length()).toFloat()
-        rightWheelRot = ((rightWheelRot - wheelRotSpeed * s0) + Mth.clamp(
-            wheelDifferential * deltaRot, -5.0, 5.0
-        ) * deltaMovement.length()).toFloat()
-
-        rudderRot = Mth.clamp(
-            rudderRot - deltaRot,
-            -0.8f,
-            0.8f
-        ) * 0.75f
-
-        var steeringYaw = Math.max(
-            (if (isInFluidType && !onGround()) 6 else 12) * deltaMovement
-                .horizontalDistance(), 0.0
-        ) * rudderRot * (if (power > 0) 1 else -1)
-        if (onGround() && !isInFluidType) {
-            steeringYaw = limitGroundWheelYaw(
-                steeringYaw,
-                deltaMovement.horizontalDistance(),
-                groundDamping,
-                computed().gravity
-            )
-        }
-
-        yRot = (yRot - steeringYaw - i * s0).toFloat()
-
-        if ((isInFluidType || onGround())) {
-            deltaMovement = deltaMovement.add(getViewVector(1f).scale((if (drift()) 0.02 else 0.15) * targetSpeed * power))
-        }
+        GroundDrivePhases.execute(
+            advanceControls = {
+                val passenger = getFirstPassenger()
+                val operationalPower = hasOperationalPower(energyCost)
+                GroundDriveCalculator.advanceWheelControls(GroundDriveControlInput(
+                    controls = GroundDriveControls(forwardInputDown, backInputDown, leftInputDown,
+                        rightInputDown, sprintInputDown, upInputDown),
+                    power = power, rotation = deltaRot, holdTicks = holdTick,
+                    pitchDegrees = xRot, inFluid = isInFluidType, occupied = passenger != null,
+                    operationalPower = operationalPower, increment = powerAdd, decrement = powerReduce,
+                    steeringSpeed = steeringSpeed, maxForwardSpeedRate = maxForwardSpeedRate,
+                    maxBackwardSpeedRate = maxBackwardSpeedRate))
+            },
+            commitControls = { next ->
+                forwardInputDown = next.controls.forward
+                backInputDown = next.controls.backward
+                leftInputDown = next.controls.left
+                rightInputDown = next.controls.right
+                power = next.power
+                deltaRot = next.rotation
+                holdTick = next.holdTicks
+                targetSpeed = next.targetSpeed
+            },
+            consumePower = { if (level is ServerLevel) consumeOperationalPower(energyCost) },
+            prepareSteering = {
+                GroundDriveCalculator.prepareWheelSteering(GroundDriveSteeringInput(
+                    controls = GroundDriveControls(forwardInputDown, backInputDown, leftInputDown,
+                        rightInputDown, sprintInputDown, upInputDown),
+                    power = power, rotation = deltaRot, holdTicks = holdTick, steeringSpeed = steeringSpeed,
+                    horizontalSpeed = deltaMovement.horizontalDistance(),
+                    leftDamaged = leftWheelDamaged, rightDamaged = rightWheelDamaged,
+                    engineDamaged = mainEngineDamaged))
+            },
+            commitSteering = { next ->
+                power = next.power
+                holdTick = next.holdTicks
+                deltaRot = GroundRestPolicy.settleSteering(next.rotation,
+                    GroundRestPolicy.isAtRest(onGround(), isInFluidType,
+                        deltaMovement.horizontalDistanceSqr(), forwardInputDown || backInputDown ||
+                            leftInputDown || rightInputDown))
+            },
+            sampleLongitudinal = { deltaMovement.dot(getViewVector(1f)) },
+            finishDrive = { steering, longitudinal ->
+                GroundDriveCalculator.finishWheel(GroundDriveFinishInput(
+                    power = power, rotation = deltaRot, yawDegrees = yRot,
+                    leftWheelRot = leftWheelRot, rightWheelRot = rightWheelRot,
+                    leftTrack = leftTrack, rightTrack = rightTrack, rudderRot = rudderRot,
+                    wheelRotSpeed = wheelRotSpeed, wheelDifferential = wheelDifferential,
+                    trackSpeed = 0.0, trackDifferential = 0.0,
+                    leftDrift = 1f, rightDrift = 1f,
+                    longitudinalMotion = longitudinal, motionLength = deltaMovement.length(),
+                    horizontalSpeed = deltaMovement.horizontalDistance(),
+                    inFluid = isInFluidType, onGround = onGround(),
+                    leftDamaged = leftWheelDamaged, rightDamaged = rightWheelDamaged,
+                    engineDamaged = mainEngineDamaged, damageBias = steering.damageBias,
+                    groundDamping = groundDamping, gravity = if (onGround() && !isInFluidType) computed().gravity else 0.0))
+            },
+            commitDrive = { next ->
+                leftWheelRot = next.leftWheelRot
+                rightWheelRot = next.rightWheelRot
+                rudderRot = next.rudderRot
+                yRot = next.yawDegrees
+            },
+            applyThrust = {
+                if (isInFluidType || onGround()) {
+                    deltaMovement = deltaMovement.add(getViewVector(1f)
+                        .scale((if (drift()) 0.02 else 0.15) * targetSpeed * power))
+                }
+            },
+        )
     }
-
 }
-

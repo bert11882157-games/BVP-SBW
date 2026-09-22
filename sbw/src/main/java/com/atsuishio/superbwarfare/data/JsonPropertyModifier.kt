@@ -1,8 +1,34 @@
 package com.atsuishio.superbwarfare.data
 
 import com.atsuishio.superbwarfare.Mod
-import com.atsuishio.superbwarfare.tools.toKxJson
+import com.google.gson.JsonArray
+import com.google.gson.JsonElement
+import com.google.gson.JsonNull
 import com.google.gson.JsonObject
+import com.google.gson.JsonPrimitive
+import kotlinx.serialization.json.JsonElement as KxElement
+import kotlinx.serialization.json.JsonObject as KxObject
+import kotlinx.serialization.json.JsonArray as KxArray
+import kotlinx.serialization.json.JsonNull as KxNull
+import kotlinx.serialization.json.JsonPrimitive as KxPrimitive
+
+/** Converts the current override tree directly, retaining mutable-input and numeric semantics. */
+private fun propertyJson(value: JsonElement): KxElement = when (value) {
+    is JsonNull -> KxNull
+    is JsonObject -> KxObject(buildMap(value.size()) {
+        for ((key, child) in value.entrySet()) {
+            // Match the existing Gson default: omit null object members.
+            if (!child.isJsonNull) put(key, propertyJson(child))
+        }
+    })
+    is JsonArray -> KxArray(List(value.size()) { propertyJson(value[it]) })
+    is JsonPrimitive -> when {
+        value.isString -> KxPrimitive(value.asString)
+        value.isBoolean -> KxPrimitive(value.asBoolean)
+        else -> KxPrimitive(value.asNumber)
+    }
+    else -> error("Unsupported JSON element")
+}
 
 // TODO 取代StringPropModifier
 class JsonPropertyModifier<DATA : DefaultDataSupplier<DEFAULT_DATA>, DEFAULT_DATA>(
@@ -44,7 +70,8 @@ class JsonPropertyModifier<DATA : DefaultDataSupplier<DEFAULT_DATA>, DEFAULT_DAT
     }
 
     override fun modifyProperty(modifier: PMC<DATA, DEFAULT_DATA>) {
-        val element = obj?.toKxJson() as? kotlinx.serialization.json.JsonObject ?: return
+        val source = obj ?: return
+        val element = propertyJson(source) as KxObject
 
         for ((key, value) in element) {
             val prop = propsMap[key] ?: continue

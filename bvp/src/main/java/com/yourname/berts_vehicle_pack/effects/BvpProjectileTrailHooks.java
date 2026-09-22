@@ -2,6 +2,7 @@ package com.yourname.berts_vehicle_pack.effects;
 
 import com.atsuishio.superbwarfare.tools.ExplosionFxContext;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
+import com.atsuishio.superbwarfare.api.projectile.ProjectileProfiles;
 import com.yourname.berts_vehicle_pack.init.ModSounds;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundSource;
@@ -62,8 +63,13 @@ public final class BvpProjectileTrailHooks {
         if (consumeDeferredExplosionPresentation(level, directSource, context.getParticlePosition())) {
             return true;
         }
-        BvpProjectileEffectDefinition definition = BvpProjectileEffectDefinition.forEntity(directSource);
-        if (definition == null || "none".equals(definition.impact().explosion())) {
+        var profile = directSource == null ? null : ProjectileProfiles.resolve(directSource);
+        BvpProjectileEffectDefinition definition = BvpProjectileEffectDefinition.from(profile);
+        // Gun grenades carry an impact-only profile, without the missile/tracer trail extension.
+        // The native explosion callback must honor it just like the armor-impact callback does.
+        BvpProjectileEffectDefinition.Impact impact = definition != null
+                ? definition.impact() : BvpProjectileEffectDefinition.impactOnly(profile);
+        if (impact == null || "none".equals(impact.explosion())) {
             return false;
         }
         BvpLeanImpactEffects.spawn(level, context.getParticlePosition(), directSource);

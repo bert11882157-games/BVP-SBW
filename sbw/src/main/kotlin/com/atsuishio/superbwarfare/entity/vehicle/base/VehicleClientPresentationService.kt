@@ -15,6 +15,8 @@ internal class VehicleClientPresentationService(
     private val state: VehicleClientPresentationStateOwner,
     private val aimController: VehicleAimController,
 ) {
+    private var chassisCacheStationLocal = false
+
     fun resolveChassisPresentation(partialTicks: Float): VehicleChassisPresentation = with(vehicle) {
         if (!level().isClientSide) {
             val anchor = state.vehiclePoseCurrent.anchor ?: position()
@@ -28,22 +30,37 @@ internal class VehicleClientPresentationService(
 
         val partial = partialTicks.coerceIn(0F, 1F)
         val partialBits = partial.toRawBits()
+        val stationSeat = passengerWeaponStationControllerIndex
+        val localStation = stationSeat >= 0 &&
+            isPassengerStationLocalAim(stationSeat, getSelectedWeapon(stationSeat))
         state.chassisPresentationCache?.let { cached ->
             if (state.chassisPresentationCacheTick == tickCount &&
-                state.chassisPresentationCachePartialBits == partialBits
+                state.chassisPresentationCachePartialBits == partialBits &&
+                chassisCacheStationLocal == localStation
             ) return@with cached
         }
 
         val legacyAnchor = getLegacyInterpolatedPosition(partial)
-        val legacyYaw = Mth.rotLerp(partial, yRotO, yRot)
+        val legacyYaw = if (isFixedWingFlightVehicle()) getYaw(partial)
+            else Mth.rotLerp(partial, yRotO, yRot)
         val result = when {
             flightStrategyOwnsAttitudeThisTick || resolveVehiclePoseProvider() == null -> {
-                val pose = VehiclePoseSnapshot.IDENTITY.withAuthority(
+                val legacyPose = VehiclePoseSnapshot.IDENTITY.withAuthority(
                     state.vehiclePoseCurrent.sequence,
                     state.vehiclePoseCurrent.serverTick,
                     legacyAnchor,
                     legacyYaw,
                 )
+                // Legacy ground renderers use this native attitude at the same partial. Keep
+                // authored eyes and other immutable attachments on that exact pitched hull.
+                // Flight may be selected before its first owned tick; retain its existing path.
+                val pose = if (localStation || (!flightStrategyOwnsAttitudeThisTick &&
+                    !isFixedWingFlightVehicle() && resolveVehicleFlightStrategy() == null)
+                ) {
+                    legacyPose.withBasePose(getPitch(partial), getRoll(partial))
+                } else {
+                    legacyPose
+                }
                 VehicleChassisPresentation(
                     pose, legacyAnchor, legacyYaw, level().gameTime + partial.toDouble(), partial,
                     pose.sequence, pose.sequence, 0, VehicleChassisPresentation.Mode.LEGACY,
@@ -87,6 +104,7 @@ internal class VehicleClientPresentationService(
         state.chassisPresentationCache = result
         state.chassisPresentationCacheTick = tickCount
         state.chassisPresentationCachePartialBits = partialBits
+        chassisCacheStationLocal = localStation
         result
     }
 
@@ -116,7 +134,8 @@ internal class VehicleClientPresentationService(
         partialTicks: Float,
     ): VehicleAimPresentationFrame? = with(vehicle) {
         refreshClientAimPresentationFromSyncedData(partialTicks)
-        if (!level().isClientSide || isWreck || resolveVehicleFlightStrategy() != null ||
+        if (!level().isClientSide || isWreck || (resolveVehicleFlightStrategy() != null &&
+            !isPassengerStationLocalAim(seatIndex, weaponIndex)) ||
             seatIndex < 0 || weaponIndex < 0
         ) {
             recordAimPresentationAdmission(

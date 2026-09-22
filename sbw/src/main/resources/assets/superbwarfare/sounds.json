@@ -1,4 +1,10 @@
 {
+  "aam_search": { "sounds": [{ "name": "superbwarfare:vehicle/aam_search", "stream": false }] },
+  "aam_acquire": { "sounds": [{ "name": "superbwarfare:vehicle/aam_acquire", "stream": false }] },
+  "aam_lock": { "sounds": [{ "name": "superbwarfare:vehicle/aam_lock", "stream": false }] },
+  "aircraft_tire_touchdown": {
+    "sounds": [{ "name": "superbwarfare:vehicle/aircraft_tire_touchdown", "stream": false }]
+  },
   "taser_fire_1p": {
     "sounds": [
       {
@@ -2702,6 +2708,9 @@
         "stream": false
       }
     ]
+  },
+  "aircraft_flare_release": {
+    "sounds": [{ "name": "superbwarfare:vehicle/common/tap_flare_deploy", "stream": false }]
   },
   "decoy_release": {
     "sounds": [

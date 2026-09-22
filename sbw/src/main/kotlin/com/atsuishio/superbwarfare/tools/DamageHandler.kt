@@ -29,7 +29,7 @@ fun Entity?.forceHurt(source: DamageSource, damage: Float): Boolean {
 object DamageHandler {
     @JvmStatic
     fun doDamage(entity: Entity, source: DamageSource, damage: Float): Boolean {
-        var damage = damage
+        var damage = com.atsuishio.superbwarfare.api.vehicle.weapon.VehicleWeaponDamagePolicy.damage(source, damage)
         if (entity.hurt(source, damage)) {
             return true
         } else if (entity is LivingEntity) {

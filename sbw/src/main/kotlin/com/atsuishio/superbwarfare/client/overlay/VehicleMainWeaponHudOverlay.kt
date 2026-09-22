@@ -94,7 +94,9 @@ object VehicleMainWeaponHudOverlay : CommonOverlay("vehicle_main_weapon_hud") {
         val type: String = vehicle.computed().hudType
         if (type == EMPTY) return
 
-        val gunData = vehicle.getGunData(player) ?: return
+        val gunData = vehicle.getGunData(player)
+        // Flight instruments belong to the aircraft, not to an optional selected weapon.
+        if (gunData == null && type != AircraftHud.ID) return
 
         val poseStack = guiGraphics.pose()
         poseStack.pushPose()
@@ -163,7 +165,7 @@ object VehicleMainWeaponHudOverlay : CommonOverlay("vehicle_main_weapon_hud") {
             )
         }
 
-        val seekInfo = gunData.get(GunProp.SEEK_WEAPON_INFO)
+        val seekInfo = gunData?.get(GunProp.SEEK_WEAPON_INFO)
         if (seekInfo == null) {
             poseStack.popPose()
             return

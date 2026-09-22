@@ -18,6 +18,9 @@ public class BvpRocketSmokeParticle extends BvpAnimatedParticle {
     private static final float SIZE_GROWTH = 2.4F;
 
     private final float baseSize;
+    private final float tintRed;
+    private final float tintGreen;
+    private final float tintBlue;
 
     protected BvpRocketSmokeParticle(ClientLevel level, double x, double y, double z,
                                      ProjectileEffectParticleOptions options, SpriteSet sprites) {
@@ -28,6 +31,12 @@ public class BvpRocketSmokeParticle extends BvpAnimatedParticle {
                 * Math.max(0.1D, options.widthBlocks() * 10.0D));
         this.f_107663_ = this.baseSize;
         this.f_107230_ = INITIAL_ALPHA;
+        this.tintRed = options.tintRed();
+        this.tintGreen = options.tintGreen();
+        this.tintBlue = options.tintBlue();
+        this.f_107227_ = tintRed;
+        this.f_107228_ = tintGreen;
+        this.f_107229_ = tintBlue;
     }
 
     @Override
@@ -40,9 +49,9 @@ public class BvpRocketSmokeParticle extends BvpAnimatedParticle {
         float t = this.f_107224_ / (float) this.f_107225_;
         this.f_107663_ = this.baseSize * (1.0F + SIZE_GROWTH * t);
         this.f_107230_ = Math.max(0.0F, INITIAL_ALPHA * (1.0F - t));
-        this.f_107227_ = 1.0F;
-        this.f_107228_ = 1.0F;
-        this.f_107229_ = 1.0F;
+        this.f_107227_ = tintRed;
+        this.f_107228_ = tintGreen;
+        this.f_107229_ = tintBlue;
     }
 
     public static class Provider implements ParticleProvider<ProjectileEffectParticleOptions> {

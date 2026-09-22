@@ -28,6 +28,9 @@ import net.minecraftforge.entity.IEntityAdditionalSpawnData
 import net.minecraftforge.registries.ForgeRegistries
 
 abstract class MissileProjectile : DestroyableProjectile, CustomSyncMotionEntity, IEntityAdditionalSpawnData {
+    private var friendlySyncPending = false
+    private var pendingFriendlySyncTick = 0
+
     @JvmField
     var targetPos: Vec3? = null
 
@@ -155,8 +158,27 @@ abstract class MissileProjectile : DestroyableProjectile, CustomSyncMotionEntity
 
 
     override fun tick() {
+        friendlySyncPending = false
         super.tick()
-        // 给队友同步友方导弹位置
+        if (isRemoved) return
+        if (deferTickSynchronization()) {
+            pendingFriendlySyncTick = tickCount
+            friendlySyncPending = true
+        } else {
+            syncFriendlyMissileState()
+        }
+    }
+
+    /** Commits motion first, then the existing friendly position/motion/NBT tuple exactly once. */
+    protected override fun commitTickSynchronization() {
+        val commitFriendly = friendlySyncPending && pendingFriendlySyncTick == tickCount
+        friendlySyncPending = false
+        super.commitTickSynchronization()
+        if (commitFriendly && !isRemoved) syncFriendlyMissileState()
+    }
+
+    private fun syncFriendlyMissileState() {
+        if (isRemoved) return
 
         val level = level()
         if (!MiscConfig.SYNC_ENTITY_OVER_RANGE.get()) return

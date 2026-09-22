@@ -44,6 +44,11 @@ class DefaultVehicleData : IDBasedData<DefaultVehicleData> {
     @SerialName("MaxHealth")
     var maxHealth: Float = 50f
 
+    /** Opt-in light-platform rule; only a direct projectile contact can trigger it. */
+    @ServerOnly
+    @SerialName("LethalDirectCaliberMm")
+    var lethalDirectCaliberMm: Double? = null
+
     @ServerOnly
     @SerialName("RepairCooldown")
     var repairCooldown: Int = getConfigOrDefault(VehicleConfig.REPAIR_COOLDOWN)
@@ -71,6 +76,15 @@ class DefaultVehicleData : IDBasedData<DefaultVehicleData> {
 
     @SerialName("OBB")
     var obb: MutableList<OBBInfo> = mutableListOf()
+
+    @SerialName("AircraftTerrainContact")
+    var aircraftTerrainContact: AircraftTerrainContact? = null
+
+    @SerialName("AircraftSurfaceModules")
+    var aircraftSurfaceModules: List<AircraftSurfaceModuleInfo> = emptyList()
+
+    @SerialName("AircraftSurfaceTransforms")
+    var aircraftSurfaceTransforms: Map<String, AircraftSurfaceTransform> = emptyMap()
 
     /** Validated named frames used by seats, cameras, weapons, HUDs, seekers, and fired visuals. */
     @SerialName("Attachments")
@@ -126,6 +140,9 @@ class DefaultVehicleData : IDBasedData<DefaultVehicleData> {
     @SerialName("HasDecoy")
     var hasDecoy: Boolean = false
 
+    @SerialName("Countermeasures")
+    var countermeasures: AircraftCountermeasureDefinition? = null
+
     @JvmField
     @ServerOnly
     @SerialName("ApplyDefaultDamageModifiers")
@@ -134,6 +151,9 @@ class DefaultVehicleData : IDBasedData<DefaultVehicleData> {
     @ServerOnly
     @SerialName("LightlyArmored")
     var lightlyArmored: Boolean = false
+
+    @SerialName("Afterburner")
+    var afterburner: Boolean = false
 
     @ServerOnly
     @SerialName("SendHitParticles")
@@ -259,6 +279,11 @@ class DefaultVehicleData : IDBasedData<DefaultVehicleData> {
                 )
                 continue
             }
+            // Ground vehicle stations have no heat mechanic, including alternate/template weapons.
+            if (type !in setOf(VehicleType.AIRPLANE, VehicleType.HELICOPTER, VehicleType.DRONE, VehicleType.BOAT)) {
+                decoded.overheatEnabled = false
+                decoded.heatPerShoot = 0.0
+            }
             map[entry.key] = decoded
         }
 
@@ -371,11 +396,17 @@ class DefaultVehicleData : IDBasedData<DefaultVehicleData> {
     @SerialName("TerrainCompatRotateRate")
     var terrainCompatRotateRate: Float = 1f
 
+    /** Fit a common support plane instead of applying independent contact torques. */
+    @SerialName("TerrainCompatFitPlane")
+    var terrainCompatFitPlane: Boolean = false
+
     // 受惯性影响的旋转幅度
     @SerialName("InertiaRotateRate")
     var inertiaRotateRate: Float = 0f
 
     override fun limit() {
+        com.atsuishio.superbwarfare.api.aircraft.AircraftSurfaceModules.validate(this)
+        require(aircraftTerrainContact?.valid() != false) { "AircraftTerrainContact requires two finite nonempty boxes" }
         this.maxHealth = max(this.maxHealth, 0f)
         this.repairCooldown = max(this.repairCooldown, 0)
         this.maxEnergy = max(this.maxEnergy, 0)

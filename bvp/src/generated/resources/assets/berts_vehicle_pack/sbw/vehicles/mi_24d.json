@@ -1,0 +1,86 @@
+{
+  "ID": "berts_vehicle_pack:mi_24d",
+  "Model": {
+    "GeometryBackend": "berts_vehicle_pack:vehicle/mi_24d",
+    "Model": "berts_vehicle_pack:geo/native_fallback/mi_24d.geo.json",
+    "Texture": "berts_vehicle_pack:textures/entity/mi_24d.png",
+    "WreckTexture": "berts_vehicle_pack:textures/entity_dead/mi_24d.png"
+  },
+  "MouseSpeed": [
+    0.2,
+    0.2
+  ],
+  "AircraftRig": {
+    "Schema": 1,
+    "Frame": "GENERATED_MODEL_PIXELS",
+    "Surfaces": [],
+    "Rotors": [
+      {
+        "Bone": "main_rotor",
+        "Parent": "hull",
+        "Pivot": [
+          0,
+          99,
+          -25
+        ],
+        "Axis": [
+          0,
+          -1,
+          0
+        ],
+        "SpeedChannel": "engineSpool",
+        "Direction": 1,
+        "DegreesPerTickAtFullSpeed": 98
+      },
+      {
+        "Bone": "tail_rotor",
+        "Parent": "hull",
+        "Pivot": [
+          -10,
+          110,
+          202
+        ],
+        "Axis": [
+          -1,
+          0,
+          0
+        ],
+        "SpeedChannel": "engineSpool",
+        "Direction": 1,
+        "DegreesPerTickAtFullSpeed": 392
+      }
+    ]
+  },
+  "DefensiveStationPresentation": {
+    "Schema": 1,
+    "Frame": "GENERATED_MODEL_PIXELS",
+    "Yaw": {
+      "Bone": "passengerWeaponStationYaw",
+      "Parent": "hull",
+      "Pivot": [
+        0,
+        14.25,
+        -133
+      ],
+      "Axis": [
+        0,
+        -1,
+        0
+      ]
+    },
+    "Pitch": {
+      "Bone": "passengerWeaponStationPitch",
+      "Parent": "passengerWeaponStationYaw",
+      "Pivot": [
+        0,
+        11.7,
+        -133
+      ],
+      "Axis": [
+        -1,
+        0,
+        0
+      ]
+    }
+  }
+}

@@ -48,6 +48,9 @@ class VehicleActionContext internal constructor(
  * cancellation, control locks, persistence rollback, and synchronized snapshot lifecycle.
  */
 abstract class VehicleAction {
+    /** Reject starting this action while any existing action locks movement or fire. */
+    open val requiresUnlockedControls: Boolean = false
+
     abstract fun handleInput(context: VehicleActionContext, held: Boolean): VehicleActionUpdate
 
     abstract fun tick(context: VehicleActionContext): VehicleActionUpdate

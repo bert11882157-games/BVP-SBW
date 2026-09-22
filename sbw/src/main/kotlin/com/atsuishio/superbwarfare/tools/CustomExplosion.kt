@@ -1,6 +1,9 @@
 package com.atsuishio.superbwarfare.tools
 
 import com.atsuishio.superbwarfare.api.projectile.ProjectileProfiles
+import com.atsuishio.superbwarfare.api.projectile.GroundVehicleBlastPolicy
+import com.atsuishio.superbwarfare.api.projectile.HeavyWarheadBlastPolicy
+import com.atsuishio.superbwarfare.diagnostics.EliteDiagnostics
 import com.atsuishio.superbwarfare.config.server.ExplosionConfig
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity
 import com.atsuishio.superbwarfare.init.ModDamageTypes
@@ -65,6 +68,12 @@ open class CustomExplosion(
     private val damageCalculator: ExplosionDamageCalculator
     private var fireTime = 0
     private var damageMultiplier = 1f
+    private var activeGroundVehicleBlast: GroundVehicleBlastPolicy? = null
+    private var activeHeavyWarheadBlast: HeavyWarheadBlastPolicy? = null
+
+    /** The Forge vehicle listener leaves these targets to this explosion's resolved damage pass. */
+    fun ownsGroundVehicleBlast(entity: VehicleEntity): Boolean =
+        activeHeavyWarheadBlast != null || activeGroundVehicleBlast?.appliesTo(entity.vehicleType) == true
 
     init {
         this.damageSource = source ?: level.damageSources().explosion(this)
@@ -190,24 +199,105 @@ open class CustomExplosion(
             this.toBlow.addAll(set)
         }
 
-        val diameter = this.radius * 2
-        val x0 = Mth.floor(this.x - diameter.toDouble() - 1)
-        val x1 = Mth.floor(this.x + diameter.toDouble() + 1)
-        val y0 = Mth.floor(this.y - diameter.toDouble() - 1)
-        val y1 = Mth.floor(this.y + diameter.toDouble() + 1)
-        val z0 = Mth.floor(this.z - diameter.toDouble() - 1)
-        val z1 = Mth.floor(this.z + diameter.toDouble() + 1)
+        val diagnosticSubject = pSource ?: damageSource.directEntity ?: damageSource.entity
+        val diagnostics = diagnosticSubject != null && EliteDiagnostics.isEnabled(level)
+        val blastProfile = pSource?.let(ProjectileProfiles::resolve)
+        var policyFailure: Throwable? = null
+        val vehicleBlast = if (diagnostics) runCatching { GroundVehicleBlastPolicy.parse(blastProfile) }
+            .onFailure { policyFailure = it }.getOrNull() else GroundVehicleBlastPolicy.from(blastProfile)
+        activeGroundVehicleBlast = vehicleBlast
+        val heavyBlast = HeavyWarheadBlastPolicy.from(blastProfile)
+        activeHeavyWarheadBlast = heavyBlast
+        if (diagnostics) EliteDiagnostics.record(diagnosticSubject!!, "ground_vehicle_blast", "POLICY",
+            "source_uuid", pSource?.uuid, "damage_direct_uuid", damageSource.directEntity?.uuid,
+            "attacker_uuid", damageSource.entity?.uuid, "profile", blastProfile?.id,
+            "extension", blastProfile?.extension(GroundVehicleBlastPolicy.ID)?.toString()?.take(1024),
+            "policy_resolved", vehicleBlast != null, "inner", vehicleBlast?.innerRadius,
+            "outer", vehicleBlast?.outerRadius, "edge_damage", vehicleBlast?.edgeDamage,
+            "parser_exception", policyFailure?.javaClass?.name,
+            "parser_message", policyFailure?.message?.take(512),
+            "raw_damage", damage, "raw_radius", radius, "position", Vec3(x, y, z))
+        val fragmentPolicy = com.atsuishio.superbwarfare.api.projectile.WarheadFragmentPolicy.from(blastProfile)
+        val diameter = maxOf(this.radius * 2, vehicleBlast?.outerRadius?.toFloat() ?: 0f, heavyBlast?.outerRadius?.toFloat() ?: 0f)
+        val queryRadius = maxOf(diameter.toDouble(), fragmentPolicy?.range ?: 0.0)
+        val x0 = Mth.floor(this.x - queryRadius - 1)
+        val x1 = Mth.floor(this.x + queryRadius + 1)
+        val y0 = Mth.floor(this.y - queryRadius - 1)
+        val y1 = Mth.floor(this.y + queryRadius + 1)
+        val z0 = Mth.floor(this.z - queryRadius - 1)
+        val z1 = Mth.floor(this.z + queryRadius + 1)
         val list = this.level.getEntities(
             this.pSource,
             AABB(x0.toDouble(), y0.toDouble(), z0.toDouble(), x1.toDouble(), y1.toDouble(), z1.toDouble())
         )
-        ForgeEventFactory.onExplosionDetonate(this.level, this, list, diameter.toDouble())
+        val candidatesBeforeEvent = if (diagnostics) list.size else 0
+        ForgeEventFactory.onExplosionDetonate(this.level, this, list, queryRadius)
         val position = Vec3(this.x, this.y, this.z)
+        if (diagnostics) EliteDiagnostics.record(diagnosticSubject!!, "ground_vehicle_blast", "QUERY",
+            "source_uuid", pSource?.uuid, "profile", blastProfile?.id, "query_radius", diameter,
+            "candidates_before_event", candidatesBeforeEvent, "candidates_after_event", list.size)
 
-        var hit = false
+        var hit = if (fragmentPolicy != null && level is net.minecraft.server.level.ServerLevel)
+            com.atsuishio.superbwarfare.api.projectile.WarheadFragments.apply(level, pSource, damageSource, position, list, fragmentPolicy) {
+                it is VehicleEntity && heavyBlast?.affects(sqrt(it.boundingBox.distanceToSqr(position))) == true
+            } else false
 
         for (entity in list) {
-            if (!entity.ignoreExplosion()) {
+            val ignoresExplosion = entity.ignoreExplosion()
+            if (diagnostics && entity is VehicleEntity) {
+                val bounds = entity.boundingBox
+                val nearest = Vec3(position.x.coerceIn(bounds.minX, bounds.maxX),
+                    position.y.coerceIn(bounds.minY, bounds.maxY), position.z.coerceIn(bounds.minZ, bounds.maxZ))
+                EliteDiagnostics.record(entity,
+                "ground_vehicle_blast", "TARGET_ROUTE", "source_uuid", pSource?.uuid,
+                "profile", blastProfile?.id, "policy_resolved", vehicleBlast != null,
+                "vehicle_type", entity.vehicleType, "bounds", bounds,
+                "nearest", nearest, "distance", nearest.distanceTo(position),
+                "route", when {
+                    ignoresExplosion -> "IGNORES_EXPLOSION"
+                    vehicleBlast == null -> "NATIVE_NO_POLICY"
+                    entity.vehicleType == com.atsuishio.superbwarfare.data.vehicle.subdata.VehicleType.AIRPLANE ||
+                        entity.vehicleType == com.atsuishio.superbwarfare.data.vehicle.subdata.VehicleType.HELICOPTER -> "NATIVE_AIRCRAFT"
+                    else -> "RESOLVED_GROUND"
+                })
+            }
+            if (!ignoresExplosion) {
+                if (heavyBlast != null && entity is VehicleEntity) {
+                    val distance = sqrt(entity.boundingBox.distanceToSqr(position))
+                    val resolved = heavyBlast.damage(distance, entity.vehicleType, entity.isLightlyArmored(), entity.health, entity.getMaxHealth())
+                    if (resolved > 0) {
+                        val result = entity.applyResolvedDamage(com.atsuishio.superbwarfare.api.vehicle.damage.ResolvedVehicleDamageRequest(
+                            damageSource, resolved, lethal = heavyBlast.lethal(distance, entity.vehicleType)))
+                        hit = hit || result.accepted
+                    }
+                    continue
+                }
+                if (vehicleBlast != null && entity is VehicleEntity && vehicleBlast.appliesTo(entity.vehicleType)) {
+                    val box = entity.boundingBox
+                    val nearest = Vec3(position.x.coerceIn(box.minX, box.maxX),
+                        position.y.coerceIn(box.minY, box.maxY), position.z.coerceIn(box.minZ, box.maxZ))
+                    val distance = nearest.distanceTo(position)
+                    val lethal = vehicleBlast.lethal(distance)
+                    val resolved = if (lethal) maxOf(entity.health, entity.getMaxHealth()) else vehicleBlast.damage(distance)
+                    if (resolved > 0) {
+                        val healthBefore = entity.health
+                        val result = entity.applyResolvedDamage(
+                            com.atsuishio.superbwarfare.api.vehicle.damage.ResolvedVehicleDamageRequest(
+                                damageSource, resolved, lethal = lethal))
+                        hit = hit || result.accepted
+                        if (diagnostics) EliteDiagnostics.record(entity, "ground_vehicle_blast", "RESOLVED_RESULT",
+                            "source_uuid", pSource?.uuid, "profile", blastProfile?.id, "nearest", nearest,
+                            "distance", distance, "lethal", lethal, "resolved_damage", resolved,
+                            "health_before", healthBefore, "health_after", entity.health,
+                            "accepted", result.accepted, "applied_damage", result.appliedDamage,
+                            "destroyed", result.destroyed, "rejection", result.rejection)
+                    } else if (diagnostics) {
+                        EliteDiagnostics.record(entity, "ground_vehicle_blast", "ZERO_OUTSIDE_RADIUS",
+                            "source_uuid", pSource?.uuid, "profile", blastProfile?.id,
+                            "nearest", nearest, "distance", distance, "resolved_damage", resolved)
+                    }
+                    continue
+                }
                 val distanceRate = sqrt(entity.distanceToSqr(position)) / diameter.toDouble()
                 if (distanceRate <= 1) {
                     val xDistance = entity.x - this.x
@@ -223,6 +313,10 @@ open class CustomExplosion(
                             )
                         val damagePercent = (1 - distanceRate) * seenPercent
                         val damageFinal = (damagePercent * damagePercent + damagePercent) / 2 * damage
+                        if (diagnostics && entity is VehicleEntity) EliteDiagnostics.record(entity,
+                            "ground_vehicle_blast", "NATIVE_DAMAGE", "source_uuid", pSource?.uuid,
+                            "profile", blastProfile?.id, "distance_rate", distanceRate,
+                            "seen_percent", seenPercent, "raw_damage", damage, "requested_damage", damageFinal)
 
                         if (entity is Monster) {
                             doDamage(

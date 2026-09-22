@@ -201,7 +201,8 @@ object GunEventHandler {
         // Tank-mounted HMGs have an explicit heatless station policy.  Normalize persisted
         // values before any ordinary cooldown/overheat transition so they can neither build heat
         // nor remain blocked by an old overheat flag.
-        if (shooter is VehicleEntity && shooter.isTankMountedHeavyMachineGun(data)) {
+        if (!data.get(GunProp.OVERHEAT_ENABLED)
+            || (shooter is VehicleEntity && shooter.isTankMountedHeavyMachineGun(data))) {
             data.heat.set(0.0)
             data.overHeat.set(false)
             return
@@ -294,7 +295,7 @@ object GunEventHandler {
             data.item.reloadTimeBehaviors[data.reload.time()]?.accept(data)
 
             // 换弹完成
-            if (data.reload.time() == 1) {
+            if (data.reload.countdownFinished()) {
                 if (vehicleShooter != null) {
                     VehicleWeaponAudioDiagnostics.recordServer(
                         vehicleShooter,

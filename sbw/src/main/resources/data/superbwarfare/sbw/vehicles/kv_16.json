@@ -1,4 +1,128 @@
 {
+  "AircraftSurfaceModules": [
+    {
+      "Id": "superbwarfare:wing_left",
+      "MaxHealthFraction": 0.2,
+      "Hitboxes": [
+        {
+          "Bone": "hull",
+          "Min": [
+            -0.83125,
+            1.115287,
+            0.21875
+          ],
+          "Max": [
+            -0.015,
+            1.180913,
+            0.65625
+          ]
+        },
+        {
+          "Bone": "hull",
+          "Min": [
+            -0.83125,
+            0.218413,
+            0.21875
+          ],
+          "Max": [
+            -0.015,
+            0.284037,
+            0.65625
+          ]
+        }
+      ]
+    },
+    {
+      "Id": "superbwarfare:wing_right",
+      "MaxHealthFraction": 0.2,
+      "Hitboxes": [
+        {
+          "Bone": "hull",
+          "Min": [
+            0.015,
+            1.115287,
+            0.21875
+          ],
+          "Max": [
+            0.83125,
+            1.180913,
+            0.65625
+          ]
+        },
+        {
+          "Bone": "hull",
+          "Min": [
+            0.015,
+            0.218413,
+            0.21875
+          ],
+          "Max": [
+            0.83125,
+            0.284037,
+            0.65625
+          ]
+        }
+      ]
+    },
+    {
+      "Id": "superbwarfare:elevator_left",
+      "MaxHealthFraction": 0.15,
+      "Hitboxes": [
+        {
+          "Bone": "hull",
+          "Min": [
+            -0.417221,
+            0.852914,
+            -0.692563
+          ],
+          "Max": [
+            -0.145814,
+            1.12432,
+            -0.352267
+          ]
+        }
+      ]
+    },
+    {
+      "Id": "superbwarfare:elevator_right",
+      "MaxHealthFraction": 0.15,
+      "Hitboxes": [
+        {
+          "Bone": "hull",
+          "Min": [
+            0.145814,
+            0.852914,
+            -0.692563
+          ],
+          "Max": [
+            0.417221,
+            1.12432,
+            -0.352267
+          ]
+        }
+      ]
+    },
+    {
+      "Id": "superbwarfare:rudder",
+      "MaxHealthFraction": 0.15,
+      "Hitboxes": [
+        {
+          "Bone": "hull",
+          "Min": [
+            -0.021875,
+            0.4125,
+            -0.91875
+          ],
+          "Max": [
+            0.021875,
+            1.2,
+            -0.65625
+          ]
+        }
+      ]
+    }
+  ],
+  "AircraftSurfaceTransforms": {},
   "MaxHealth": 100,
   "MaxEnergy": 500000,
   "MouseSensitivity": 0.25,
@@ -43,9 +167,18 @@
   "HUDColor": "0xFFC700",
   "Weapons": {
     "MachineGun": {
+      "VehicleDirectDamageScale": 0.33,
+      "Magazine": 400,
+      "BeltFed": true,
+      "NormalReloadTime": 400,
+      "EmptyReloadTime": 400,
+      "AutoReload": true,
+      "OverheatEnabled": false,
+      "ProjectileAmount": 1,
+      "AmmoCostPerShoot": 1,
       "DefaultFireMode": "Auto",
       "AvailableFireModes": "Auto",
-      "Projectile": "superbwarfare:projectile",
+      "Projectile": { "Type": "superbwarfare:projectile", "CaliberMm": 12.7 },
       "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/gun_12_7mm.png",
       "DefaultZoom": 2,
       "RPM": 600,

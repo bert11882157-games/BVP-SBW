@@ -3,279 +3,163 @@ package com.atsuishio.superbwarfare.entity.vehicle.base
 import com.atsuishio.superbwarfare.api.vehicle.module.VehicleModuleAdapter
 import com.atsuishio.superbwarfare.api.vehicle.module.VehicleModuleDefinition
 import com.atsuishio.superbwarfare.api.vehicle.module.VehicleModuleIds
-import com.atsuishio.superbwarfare.api.vehicle.module.VehicleModuleProviders
 import com.atsuishio.superbwarfare.api.vehicle.module.VehicleModuleState
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.resources.ResourceLocation
 
-/** Owns generic module adaptation, persistence and synchronization behind VehicleEntity's ABI. */
-internal class VehicleModuleStateService(
-    private val vehicle: VehicleEntity,
-    private val owner: VehicleCombatStateOwner,
-) {
+/**
+ * Sole owner of generic module health, persistence, and snapshot invalidation. Legacy storage
+ * and addon overrides are reached only through the module access contract, never the entity.
+ */
+internal class VehicleModuleStateService(private val access: VehicleModuleStateAccess) {
+    private val states = LinkedHashMap<ResourceLocation, StoredState>()
+    private var snapshotCache: String? = null
+
     fun getDefinition(id: ResourceLocation): VehicleModuleDefinition? {
-        VehicleModuleProviders.resolve(vehicle, id)?.let { return it }
-        return when (id) {
-            VehicleModuleIds.TURRET -> VehicleModuleDefinition(
-                id,
-                vehicle.getTurretMaxHealth().coerceAtLeast(1f),
-                VehicleModuleAdapter.LEGACY_TURRET,
-            )
-            VehicleModuleIds.RUNNING_GEAR_LEFT -> VehicleModuleDefinition(
-                id,
-                vehicle.getWheelMaxHealth().coerceAtLeast(1f),
-                VehicleModuleAdapter.LEGACY_RUNNING_GEAR_LEFT,
-            )
-            VehicleModuleIds.RUNNING_GEAR_RIGHT -> VehicleModuleDefinition(
-                id,
-                vehicle.getWheelMaxHealth().coerceAtLeast(1f),
-                VehicleModuleAdapter.LEGACY_RUNNING_GEAR_RIGHT,
-            )
-            VehicleModuleIds.ENGINE_MAIN -> VehicleModuleDefinition(
-                id,
-                vehicle.getEngineMaxHealth().coerceAtLeast(1f),
-                VehicleModuleAdapter.LEGACY_ENGINE_MAIN,
-            )
-            VehicleModuleIds.ENGINE_SUB -> VehicleModuleDefinition(
-                id,
-                vehicle.getEngineMaxHealth().coerceAtLeast(1f),
-                VehicleModuleAdapter.LEGACY_ENGINE_SUB,
-            )
-            else -> owner.genericModuleStates[id]?.let {
-                VehicleModuleDefinition(id, it.maxHealth.coerceAtLeast(1f))
-            }
+        access.providedDefinition(id)?.let { return it }
+        val adapter = LEGACY_MODULES[id]
+        if (adapter != null) {
+            return VehicleModuleDefinition(id, maximum(access.legacyMaximum(adapter)), adapter)
         }
+        return states[id]?.let { VehicleModuleDefinition(id, maximum(it.maxHealth)) }
     }
 
     fun getState(id: ResourceLocation): VehicleModuleState? {
         ensureClientSnapshot()
-        val definition = vehicle.getVehicleModuleDefinition(id) ?: return null
-        return when (definition.adapter) {
-            VehicleModuleAdapter.GENERIC -> {
-                val stored = owner.genericModuleStates[id]
-                if (stored == null) {
-                    VehicleModuleState(id, definition.maxHealth, definition.maxHealth, false)
-                } else {
-                    VehicleModuleState(
-                        id,
-                        stored.maxHealth,
-                        stored.health.coerceIn(0f, stored.maxHealth),
-                        stored.destroyed || stored.health <= 0f,
-                    )
-                }
-            }
-            else -> legacyState(definition)
+        val definition = access.definition(id) ?: return null
+        if (definition.adapter != VehicleModuleAdapter.GENERIC) return legacyState(definition)
+        val stored = states[id]
+        return if (stored == null) {
+            val maxHealth = definition.maxHealth
+            VehicleModuleState(id, maxHealth, maxHealth, false)
+        } else {
+            VehicleModuleState(id, stored.maxHealth, stored.health.coerceIn(0f, stored.maxHealth),
+                stored.destroyed || stored.health <= 0f)
         }
     }
 
     fun getStates(): List<VehicleModuleState> {
         ensureClientSnapshot()
-        val states = ArrayList<VehicleModuleState>(owner.genericModuleStates.size + LEGACY_MODULE_IDS.size)
-        LEGACY_MODULE_IDS.mapNotNullTo(states, vehicle::getVehicleModuleState)
-        owner.genericModuleStates.keys.mapNotNullTo(states, vehicle::getVehicleModuleState)
-        return states.toList()
+        val result = ArrayList<VehicleModuleState>(states.size + LEGACY_MODULES.size)
+        LEGACY_MODULES.keys.mapNotNullTo(result, access::state)
+        states.keys.mapNotNullTo(result, access::state)
+        return result.toList()
     }
 
     fun damage(id: ResourceLocation, damage: Double): VehicleModuleState? {
-        val previous = vehicle.getVehicleModuleState(id) ?: return null
-        if (vehicle.level().isClientSide || previous.destroyed) return previous
+        val previous = access.state(id) ?: return null
+        if (access.isClientSide || previous.destroyed) return previous
         val boundedDamage = if (damage.isFinite()) damage.coerceAtLeast(0.0) else Double.MAX_VALUE
         val nextHealth = (previous.health - boundedDamage).coerceAtLeast(0.0).toFloat()
-        return vehicle.setVehicleModuleState(id, nextHealth.toDouble(), previous.destroyed || nextHealth <= 0f)
+        return access.setState(id, nextHealth.toDouble(), previous.destroyed || nextHealth <= 0f)
     }
 
     fun setHealth(id: ResourceLocation, health: Double): VehicleModuleState? {
-        val previous = vehicle.getVehicleModuleState(id) ?: return null
-        val boundedHealth = if (health.isFinite()) {
-            health.coerceIn(0.0, previous.maxHealth.toDouble()).toFloat()
-        } else {
-            0f
-        }
-        val destroyed = if (boundedHealth >= previous.maxHealth) {
-            false
-        } else {
-            previous.destroyed || boundedHealth <= 0f
-        }
-        return vehicle.setVehicleModuleState(id, boundedHealth.toDouble(), destroyed)
+        val previous = access.state(id) ?: return null
+        val boundedHealth = boundedHealth(health,
+            previous.maxHealth.takeIf { it.isFinite() && it >= 0f } ?: 1f)
+        val destroyed = if (boundedHealth >= previous.maxHealth) false
+            else previous.destroyed || boundedHealth <= 0f
+        return access.setState(id, boundedHealth.toDouble(), destroyed)
     }
 
     fun setState(id: ResourceLocation, health: Double, destroyed: Boolean): VehicleModuleState? {
-        val definition = vehicle.getVehicleModuleDefinition(id) ?: return null
-        val previous = vehicle.getVehicleModuleState(id) ?: return null
-        if (vehicle.level().isClientSide) return previous
-        val maxHealth = previous.maxHealth.coerceAtLeast(1f)
-        val boundedHealth = if (health.isFinite()) {
-            health.coerceIn(0.0, maxHealth.toDouble()).toFloat()
+        val definition = access.definition(id) ?: return null
+        val previous = access.state(id) ?: return null
+        if (access.isClientSide) return previous
+        val maxHealth = maximum(previous.maxHealth)
+        val healthValue = boundedHealth(health, maxHealth)
+        val effectiveDestroyed = healthValue <= 0f || destroyed && healthValue < maxHealth
+        if (definition.adapter == VehicleModuleAdapter.GENERIC) {
+            states[id] = StoredState(maxHealth, healthValue, effectiveDestroyed)
+            syncGenericStates()
         } else {
-            0f
+            val rawMaximum = maximum(access.legacyMaximum(definition.adapter))
+            val rawHealth = (healthValue / maximum(definition.maxHealth) * rawMaximum)
+                .coerceIn(0f, rawMaximum)
+            access.writeLegacyState(definition.adapter, rawHealth, effectiveDestroyed)
         }
-        val effectiveDestroyed = boundedHealth <= 0f || destroyed && boundedHealth < maxHealth
-
-        when (definition.adapter) {
-            VehicleModuleAdapter.GENERIC -> {
-                owner.genericModuleStates[id] = StoredVehicleModuleState(maxHealth, boundedHealth, effectiveDestroyed)
-                syncGenericStates()
-            }
-            else -> writeLegacyState(definition, boundedHealth, effectiveDestroyed)
-        }
-
-        return vehicle.getVehicleModuleState(id)
+        return access.state(id)
     }
 
     fun invalidateClientSnapshot() {
-        owner.genericModuleSnapshotCache = null
+        snapshotCache = null
     }
 
     fun readAdditionalSaveData(compound: CompoundTag) {
-        owner.genericModuleStates.clear()
+        states.clear()
         if (compound.contains(MODULE_STATES_TAG)) {
-            val states = compound.getCompound(MODULE_STATES_TAG)
-            for (rawId in states.allKeys) {
+            val savedStates = compound.getCompound(MODULE_STATES_TAG)
+            for (rawId in savedStates.allKeys) {
                 val id = ResourceLocation.tryParse(rawId) ?: continue
-                val stateTag = states.getCompound(rawId)
-                val maxHealth = stateTag.getFloat(MODULE_MAX_HEALTH_TAG).takeIf { it.isFinite() && it > 0f }
-                    ?: vehicle.getVehicleModuleDefinition(id)?.maxHealth
-                    ?: 1f
-                val health = stateTag.getFloat(MODULE_HEALTH_TAG).coerceIn(0f, maxHealth)
-                val destroyed = stateTag.getBoolean(MODULE_DESTROYED_TAG) || health <= 0f
-                owner.genericModuleStates[id] = StoredVehicleModuleState(maxHealth, health, destroyed)
+                val tag = savedStates.getCompound(rawId)
+                val maxHealth = (tag.getFloat(MODULE_MAX_HEALTH_TAG)
+                    .takeIf { it.isFinite() && it > 0f }
+                    ?: access.definition(id)?.maxHealth ?: 1f).takeIf { it.isFinite() && it > 0f } ?: 1f
+                val healthValue = boundedHealth(tag.getFloat(MODULE_HEALTH_TAG).toDouble(), maxHealth)
+                states[id] = StoredState(maxHealth, healthValue,
+                    tag.getBoolean(MODULE_DESTROYED_TAG) || healthValue <= 0f)
             }
         }
         syncGenericStates()
     }
 
     fun writeAdditionalSaveData(compound: CompoundTag) {
-        if (owner.genericModuleStates.isEmpty()) return
-        val states = CompoundTag()
-        for ((id, state) in owner.genericModuleStates) {
+        if (states.isEmpty()) return
+        val savedStates = CompoundTag()
+        for ((id, state) in states) {
             if (state.health >= state.maxHealth && !state.destroyed) continue
-            val stateTag = CompoundTag()
-            stateTag.putFloat(MODULE_MAX_HEALTH_TAG, state.maxHealth)
-            stateTag.putFloat(MODULE_HEALTH_TAG, state.health)
-            stateTag.putBoolean(MODULE_DESTROYED_TAG, state.destroyed)
-            states.put(id.toString(), stateTag)
+            val tag = CompoundTag()
+            tag.putFloat(MODULE_MAX_HEALTH_TAG, state.maxHealth)
+            tag.putFloat(MODULE_HEALTH_TAG, state.health)
+            tag.putBoolean(MODULE_DESTROYED_TAG, state.destroyed)
+            savedStates.put(id.toString(), tag)
         }
-        if (!states.isEmpty) compound.put(MODULE_STATES_TAG, states)
+        if (!savedStates.isEmpty) compound.put(MODULE_STATES_TAG, savedStates)
     }
 
     private fun legacyState(definition: VehicleModuleDefinition): VehicleModuleState {
-        val (rawHealth, rawMaxHealth, destroyed) = when (definition.adapter) {
-            VehicleModuleAdapter.LEGACY_TURRET -> Triple(
-                vehicle.turretHealth,
-                vehicle.getTurretMaxHealth(),
-                vehicle.turretDamaged,
-            )
-            VehicleModuleAdapter.LEGACY_RUNNING_GEAR_LEFT -> Triple(
-                vehicle.leftWheelHealth,
-                vehicle.getWheelMaxHealth(),
-                vehicle.leftWheelDamaged,
-            )
-            VehicleModuleAdapter.LEGACY_RUNNING_GEAR_RIGHT -> Triple(
-                vehicle.rightWheelHealth,
-                vehicle.getWheelMaxHealth(),
-                vehicle.rightWheelDamaged,
-            )
-            VehicleModuleAdapter.LEGACY_ENGINE_MAIN -> Triple(
-                vehicle.mainEngineHealth,
-                vehicle.getEngineMaxHealth(),
-                vehicle.mainEngineDamaged,
-            )
-            VehicleModuleAdapter.LEGACY_ENGINE_SUB -> Triple(
-                vehicle.subEngineHealth,
-                vehicle.getEngineMaxHealth(),
-                vehicle.subEngineDamaged,
-            )
-            VehicleModuleAdapter.GENERIC -> Triple(definition.maxHealth, definition.maxHealth, false)
-        }
-        val boundedRawMax = rawMaxHealth.coerceAtLeast(1f)
-        val logicalHealth = (rawHealth.coerceIn(0f, boundedRawMax) / boundedRawMax * definition.maxHealth)
-            .coerceIn(0f, definition.maxHealth)
-        return VehicleModuleState(
-            definition.id,
-            definition.maxHealth,
-            logicalHealth,
-            destroyed || logicalHealth <= 0f,
-        )
-    }
-
-    private fun writeLegacyState(
-        definition: VehicleModuleDefinition,
-        logicalHealth: Float,
-        destroyed: Boolean,
-    ) {
-        val rawMaxHealth = when (definition.adapter) {
-            VehicleModuleAdapter.LEGACY_TURRET -> vehicle.getTurretMaxHealth()
-            VehicleModuleAdapter.LEGACY_RUNNING_GEAR_LEFT,
-            VehicleModuleAdapter.LEGACY_RUNNING_GEAR_RIGHT -> vehicle.getWheelMaxHealth()
-            VehicleModuleAdapter.LEGACY_ENGINE_MAIN,
-            VehicleModuleAdapter.LEGACY_ENGINE_SUB -> vehicle.getEngineMaxHealth()
-            VehicleModuleAdapter.GENERIC -> definition.maxHealth
-        }.coerceAtLeast(1f)
-        val rawHealth = (logicalHealth / definition.maxHealth.coerceAtLeast(1f) * rawMaxHealth)
-            .coerceIn(0f, rawMaxHealth)
-        when (definition.adapter) {
-            VehicleModuleAdapter.LEGACY_TURRET -> {
-                vehicle.turretHealth = rawHealth
-                vehicle.turretDamaged = destroyed
-            }
-            VehicleModuleAdapter.LEGACY_RUNNING_GEAR_LEFT -> {
-                vehicle.leftWheelHealth = rawHealth
-                vehicle.leftWheelDamaged = destroyed
-            }
-            VehicleModuleAdapter.LEGACY_RUNNING_GEAR_RIGHT -> {
-                vehicle.rightWheelHealth = rawHealth
-                vehicle.rightWheelDamaged = destroyed
-            }
-            VehicleModuleAdapter.LEGACY_ENGINE_MAIN -> {
-                vehicle.mainEngineHealth = rawHealth
-                vehicle.mainEngineDamaged = destroyed
-            }
-            VehicleModuleAdapter.LEGACY_ENGINE_SUB -> {
-                vehicle.subEngineHealth = rawHealth
-                vehicle.subEngineDamaged = destroyed
-            }
-            VehicleModuleAdapter.GENERIC -> Unit
-        }
+        val raw = access.legacyState(definition.adapter)
+        val rawMaximum = maximum(access.legacyMaximum(definition.adapter))
+        val logicalMaximum = definition.maxHealth
+        val logicalHealth = (boundedHealth(raw.health.toDouble(), rawMaximum) / rawMaximum * logicalMaximum)
+            .coerceIn(0f, logicalMaximum)
+        return VehicleModuleState(definition.id, logicalMaximum, logicalHealth,
+            raw.destroyed || logicalHealth <= 0f)
     }
 
     private fun ensureClientSnapshot() {
-        if (!vehicle.level().isClientSide) return
-        val payload = vehicle.entityData.get(VehicleEntity.MODULE_STATE_SNAPSHOT)
-        if (owner.genericModuleSnapshotCache == payload) return
-        owner.genericModuleStates.clear()
-        decodeSnapshot(payload, owner.genericModuleStates)
-        owner.genericModuleSnapshotCache = payload
-    }
-
-    private fun syncGenericStates() {
-        if (vehicle.level().isClientSide) return
-        val payload = encodeSnapshot(owner.genericModuleStates)
-        owner.genericModuleSnapshotCache = payload
-        vehicle.publishModuleStateSnapshot(payload)
-    }
-
-    private fun encodeSnapshot(states: Map<ResourceLocation, StoredVehicleModuleState>): String =
-        states.entries
-            .sortedBy { it.key.toString() }
-            .joinToString(";") { (id, state) ->
-                "$id,${state.maxHealth},${state.health},${if (state.destroyed) 1 else 0}"
-            }
-
-    private fun decodeSnapshot(
-        payload: String,
-        target: MutableMap<ResourceLocation, StoredVehicleModuleState>,
-    ) {
-        if (payload.isBlank()) return
-        for (encoded in payload.split(';')) {
+        if (!access.isClientSide) return
+        val payload = access.snapshot()
+        if (snapshotCache == payload) return
+        states.clear()
+        if (payload.isNotBlank()) for (encoded in payload.split(';')) {
             val fields = encoded.split(',', limit = 4)
             if (fields.size != 4) continue
             val id = ResourceLocation.tryParse(fields[0]) ?: continue
             val maxHealth = fields[1].toFloatOrNull()?.takeIf { it.isFinite() && it > 0f } ?: continue
-            val health = fields[2].toFloatOrNull()?.takeIf { it.isFinite() }?.coerceIn(0f, maxHealth) ?: continue
-            val destroyed = fields[3] == "1" || health <= 0f
-            target[id] = StoredVehicleModuleState(maxHealth, health, destroyed)
+            val healthValue = fields[2].toFloatOrNull()?.takeIf { it.isFinite() }
+                ?.coerceIn(0f, maxHealth) ?: continue
+            states[id] = StoredState(maxHealth, healthValue, fields[3] == "1" || healthValue <= 0f)
         }
+        snapshotCache = payload
     }
+
+    private fun syncGenericStates() {
+        if (access.isClientSide) return
+        val payload = states.entries.sortedBy { it.key.toString() }.joinToString(";") { (id, state) ->
+            "$id,${state.maxHealth},${state.health},${if (state.destroyed) 1 else 0}"
+        }
+        snapshotCache = payload
+        access.publishSnapshot(payload)
+    }
+
+    private fun maximum(value: Float): Float = if (value.isFinite()) value.coerceAtLeast(1f) else 1f
+
+    private fun boundedHealth(value: Double, maximum: Float): Float =
+        if (value.isFinite()) value.coerceIn(0.0, maximum.toDouble()).toFloat() else 0f
+
+    private data class StoredState(val maxHealth: Float, val health: Float, val destroyed: Boolean)
 
     companion object {
         const val MODULE_STATES_TAG = "SBWModuleStates"
@@ -283,12 +167,12 @@ internal class VehicleModuleStateService(
         const val MODULE_HEALTH_TAG = "Health"
         const val MODULE_DESTROYED_TAG = "Destroyed"
 
-        private val LEGACY_MODULE_IDS = listOf(
-            VehicleModuleIds.TURRET,
-            VehicleModuleIds.RUNNING_GEAR_LEFT,
-            VehicleModuleIds.RUNNING_GEAR_RIGHT,
-            VehicleModuleIds.ENGINE_MAIN,
-            VehicleModuleIds.ENGINE_SUB,
+        private val LEGACY_MODULES = linkedMapOf(
+            VehicleModuleIds.TURRET to VehicleModuleAdapter.LEGACY_TURRET,
+            VehicleModuleIds.RUNNING_GEAR_LEFT to VehicleModuleAdapter.LEGACY_RUNNING_GEAR_LEFT,
+            VehicleModuleIds.RUNNING_GEAR_RIGHT to VehicleModuleAdapter.LEGACY_RUNNING_GEAR_RIGHT,
+            VehicleModuleIds.ENGINE_MAIN to VehicleModuleAdapter.LEGACY_ENGINE_MAIN,
+            VehicleModuleIds.ENGINE_SUB to VehicleModuleAdapter.LEGACY_ENGINE_SUB,
         )
     }
 }

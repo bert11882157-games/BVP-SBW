@@ -1,7 +1,12 @@
 package com.atsuishio.superbwarfare.client.overlay.weapon
 
 import com.atsuishio.superbwarfare.Mod.Companion.loc
+import com.atsuishio.superbwarfare.api.vehicle.flight.VehicleFlightInstrumentSnapshot
+import com.atsuishio.superbwarfare.api.vehicle.flight.FixedWingFlightStrategy
 import com.atsuishio.superbwarfare.client.RenderHelper
+import com.atsuishio.superbwarfare.client.FixedWingPilotIntentClient
+import com.atsuishio.superbwarfare.client.input.FixedWingMouseAimMath
+import com.atsuishio.superbwarfare.api.vehicle.flight.FixedWingPilotIntent
 import com.atsuishio.superbwarfare.client.overlay.VehicleHudOverlay.renderKillIndicatorDynamic
 import com.atsuishio.superbwarfare.client.overlay.VehicleMainWeaponHudOverlay
 import com.atsuishio.superbwarfare.data.gun.GunProp
@@ -19,6 +24,7 @@ import net.minecraft.client.CameraType
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.renderer.GameRenderer
+import net.minecraft.client.renderer.RenderType
 import net.minecraft.network.chat.Component
 import net.minecraft.util.Mth
 import net.minecraft.world.entity.player.Player
@@ -76,6 +82,10 @@ object AircraftHud {
         val vehicle = player.vehicle
         if (vehicle !is VehicleEntity) return
         if (vehicle.computed().hudType != ID) return
+        // The minimal aircraft cue follows the body, so it needs no muzzle raycast.
+        if (vehicle.isFixedWingFlightVehicle() ||
+            vehicle.vehicleType == com.atsuishio.superbwarfare.data.vehicle.subdata.VehicleType.AIRPLANE) return
+        if (vehicle.getGunData(player) == null) return
 
         val shootPos = vehicle.getShootPosForHud(player, 1f)
 
@@ -109,11 +119,52 @@ object AircraftHud {
         val camera = mc.gameRenderer.mainCamera
         val cameraPos = camera.position
         val poseStack = guiGraphics.pose()
-        val gunData = vehicle.getGunData(player) ?: return
+        val fixedWing = vehicle.isFixedWingFlightVehicle()
+        val gunData = vehicle.getGunData(player)
+        if (gunData == null && !fixedWing) return
+        val fixedWingStrategy = if (fixedWing) {
+            vehicle.resolveVehicleFlightStrategy() as? FixedWingFlightStrategy
+        } else null
+        val flightPresentation = if (fixedWingStrategy != null && partialTick.isFinite()) {
+            FixedWingHudMetrics.acceptedSnapshot(vehicle.getVehicleFlightPresentationSnapshot(partialTick))
+        } else null
+        // One wrapped attitude tuple drives all HUD layers and their body projection.
+        val bodyYaw = flightPresentation?.bodyYaw
+            ?: FixedWingHudMetrics.angle(vehicle.yRotO, vehicle.yRot, partialTick) ?: return
+        val bodyPitch = flightPresentation?.bodyPitch
+            ?: FixedWingHudMetrics.angle(vehicle.xRotO, vehicle.xRot, partialTick) ?: return
+        val bodyRoll = flightPresentation?.bodyRoll
+            ?: FixedWingHudMetrics.angle(vehicle.prevRoll, vehicle.roll, partialTick) ?: return
+        if (!bodyYaw.isFinite() || !bodyPitch.isFinite() || !bodyRoll.isFinite()) return
+
+        if (fixedWing || vehicle.vehicleType ==
+            com.atsuishio.superbwarfare.data.vehicle.subdata.VehicleType.AIRPLANE) {
+            // The forward cue follows body direction in both camera modes, independently of
+            // the muzzle, aim command and flight-path vector. Hide it when looking away.
+            val renderedForward = vehicle.getVehicleTransform(partialTick).transformDirection(org.joml.Vector3d(0.0, 0.0, 1.0)).normalize()
+            val forward = cameraPos.add(Vec3(renderedForward.x, renderedForward.y, renderedForward.z).scale(512.0))
+                .worldToScreen()
+            if (FixedWingHudMetrics.visibleProjection(forward, screenWidth, screenHeight)) {
+                RenderSystem.enableBlend()
+                RenderSystem.defaultBlendFunc()
+                RenderSystem.setShaderColor(1F, 1F, 1F, 1F)
+                RenderHelper.blit(poseStack, HelicopterHud.RING,
+                    forward.x.toFloat() - 2F, forward.y.toFloat() - 2F,
+                    0F, 0F, 4F, 4F, 4F, 4F, vehicle.hudColor)
+            }
+            if (fixedWing) renderFlightAim(player, guiGraphics, flightPresentation, screenWidth, screenHeight)
+            com.atsuishio.superbwarfare.client.overlay.VehicleSystemsHud.aircraft(
+                guiGraphics, vehicle, player, screenWidth,
+                if (fixedWing) flightPresentation?.throttle?.toDouble() else vehicle.power.toDouble(),
+                if (fixedWing) FixedWingHudMetrics.speedKmh(flightPresentation) else vehicle.absoluteSpeed * 72)
+            com.atsuishio.superbwarfare.client.overlay.VehicleSystemsHud.ground(
+                guiGraphics, vehicle, player, screenWidth, screenHeight, true)
+            return
+        }
 
         poseStack.pushPose()
 
-        val bomb = gunData.get(GunProp.CROSSHAIR) == "@AirBomb"
+        val bomb = gunData?.get(GunProp.CROSSHAIR) == "@AirBomb"
 
         val color = vehicle.hudColor
         RenderSystem.disableDepthTest()
@@ -130,14 +181,15 @@ object AircraftHud {
 
         lerpVy = Mth.lerp((0.021f * partialTick).toDouble(), lerpVy.toDouble(), vehicle.deltaMovement.y() * 20)
             .toFloat()
-        diffY = Mth.lerp(partialTick.toDouble(), diffY.toDouble(), ClientMouseHandler.lerpSpeedX).toFloat()
-        diffX = Mth.lerp(partialTick.toDouble(), diffX.toDouble(), ClientMouseHandler.lerpSpeedY).toFloat()
-        val speed = vehicle.absoluteSpeed * 72
+        diffY = if (fixedWing) 0F else Mth.lerp(partialTick.toDouble(), diffY.toDouble(), ClientMouseHandler.lerpSpeedX).toFloat()
+        diffX = if (fixedWing) 0F else Mth.lerp(partialTick.toDouble(), diffX.toDouble(), ClientMouseHandler.lerpSpeedY).toFloat()
+        val speed = if (fixedWing) FixedWingHudMetrics.speedKmh(flightPresentation) ?: 0.0
+            else vehicle.absoluteSpeed * 72
 
-        val shootPos = vehicle.getShootPosForHud(player, partialTick)
-
-        val pos = cameraPos.add(vehicle.getViewVector(partialTick).scale(512.0))
-        var posCross = shootPos.add(vehicle.getShootDirectionForHud(player, partialTick).scale(dis))
+        val pos = cameraPos.add(Vec3.directionFromRotation(bodyPitch, bodyYaw).scale(512.0))
+        // The unarmed attitude ladder is anchored to the body, without synthesizing a muzzle/gun.
+        var posCross = if (gunData != null) vehicle.getShootPosForHud(player, partialTick)
+            .add(vehicle.getShootDirectionForHud(player, partialTick).scale(dis)) else pos
 
         if (bomb) {
             val bombHitPosO = ClientEventHandler.bombHitPosO
@@ -150,10 +202,12 @@ object AircraftHud {
 
         val p = pos.worldToScreen()
         val pCross = posCross.worldToScreen()
+        val bodyVisible = FixedWingHudMetrics.visibleProjection(p, screenWidth, screenHeight)
+        val crossVisible = FixedWingHudMetrics.visibleProjection(pCross, screenWidth, screenHeight)
 
         // 投弹准星
-        if (bomb && ClientEventHandler.zoomVehicle) {
-            if (posCross.canBeSeen()) {
+        if (bomb && ClientEventHandler.zoomVehicle && mc.options.cameraType == CameraType.FIRST_PERSON) {
+            if (crossVisible) {
                 val f = Math.min(screenWidth, screenHeight).toFloat()
                 val f1 = Math.min(screenWidth.toFloat() / f, screenHeight.toFloat() / f)
                 val i = Mth.floor(f * f1)
@@ -182,12 +236,12 @@ object AircraftHud {
                 )
 
                 poseStack.pushPose()
-                poseStack.rotateAround(Axis.ZP.rotationDegrees(vehicle.getRoll(partialTick)), x, y, 0f)
+                poseStack.rotateAround(Axis.ZP.rotationDegrees(bodyRoll), x, y, 0f)
                 RenderHelper.preciseBlit(
                     guiGraphics,
                     BOMB_SCOPE_PITCH,
                     x - 1.5f * i,
-                    y - 1.5f * j - 4 * vehicle.getPitch(partialTick),
+                    y - 1.5f * j - 4 * bodyPitch,
                     0f,
                     0f,
                     (3 * i).toFloat(),
@@ -201,13 +255,13 @@ object AircraftHud {
                     y - 7.5f + (2 * (Math.random() - 0.5f)).toFloat()
                 )
                 poseStack.popPose()
+                poseStack.popPose()
+                if (fixedWing) renderFlightAim(player, guiGraphics, flightPresentation, screenWidth, screenHeight)
                 return
             }
         }
 
-        poseStack.pushPose()
-
-        if ((mc.options.cameraType == CameraType.FIRST_PERSON || ClientEventHandler.zoomVehicle) && pos.canBeSeen()) {
+        if ((mc.options.cameraType == CameraType.FIRST_PERSON) && bodyVisible) {
             val x = p.x.toFloat()
             val y = p.y.toFloat()
 
@@ -223,7 +277,7 @@ object AircraftHud {
             )
             RenderSystem.setShaderColor(1f, 1f, 1f, 1f)
 
-            if (gunData.get(GunProp.CROSSHAIR) == "@AirCraftMissile") {
+            if (gunData?.get(GunProp.CROSSHAIR) == "@AirCraftMissile") {
                 RenderHelper.blit(poseStack, HUD_BASE_MISSILE, x - 160, y - 160, 0f, 0f, 320f, 320f, 320f, 320f, color)
             } else {
                 RenderHelper.blit(poseStack, HUD_BASE, x - 160, y - 160, 0f, 0f, 320f, 320f, 320f, 320f, color)
@@ -235,7 +289,7 @@ object AircraftHud {
                 COMPASS,
                 x - 128,
                 y - 122,
-                128 + (64f / 45 * vehicle.getYaw(partialTick)),
+                128 + (64f / 45 * bodyYaw),
                 0f,
                 256f,
                 16f,
@@ -247,11 +301,13 @@ object AircraftHud {
 
             //滚转指示
             poseStack.pushPose()
-            poseStack.rotateAround(Axis.ZP.rotationDegrees(vehicle.getRoll(partialTick)), x, y + 48, 0f)
+            poseStack.rotateAround(Axis.ZP.rotationDegrees(bodyRoll), x, y + 48, 0f)
             RenderHelper.blit(poseStack, HELICOPTER_ROLL_IND, x - 4, y + 144, 0f, 0f, 8f, 8f, 8f, 8f, color)
             poseStack.popPose()
 
-            val power = vehicle.power
+            val power = if (fixedWing) {
+                flightPresentation?.throttle?.toFloat() ?: 0F
+            } else vehicle.power
             lerpPower = Mth.lerp(0.5f * partialTick, lerpPower, power)
 
             RenderHelper.blit(
@@ -323,20 +379,33 @@ object AircraftHud {
                 color,
                 false
             )
-            //加速度
-            lerpG =
-                Mth.lerp((0.25f * partialTick).toDouble(), lerpG.toDouble(), (400 * vehicle.getAcceleration()) / 9.8).toFloat()
-            guiGraphics.drawString(mc.font, Component.literal("M"), -105, 70, color, false)
-            guiGraphics.drawString(mc.font, Component.literal("0.2"), -96, 70, color, false)
-            guiGraphics.drawString(mc.font, Component.literal("G"), -105, 78, color, false)
-            guiGraphics.drawString(
-                mc.font,
-                Component.literal(FormatTool.DECIMAL_FORMAT_1ZZ.format(lerpG.toDouble())),
-                -96,
-                78,
-                color,
-                false
-            )
+            if (fixedWing) {
+                val presentedVehicleY = Mth.lerp(partialTick.toDouble(), vehicle.yo, vehicle.y)
+                val mach = FixedWingHudMetrics.mach(
+                    flightPresentation, presentedVehicleY, vehicle.level().seaLevel.toDouble(),
+                    fixedWingStrategy?.handling?.simulationLengthScale ?: Double.NaN,
+                )
+                val liftG = FixedWingHudMetrics.signedLiftG(flightPresentation)
+                val machText = mach?.let { FormatTool.DECIMAL_FORMAT_1ZZ.format(it) } ?: "—"
+                val liftGText = liftG?.let { FormatTool.DECIMAL_FORMAT_1ZZ.format(it) } ?: "—"
+                guiGraphics.drawString(mc.font, Component.literal("M $machText"), -105, 70, color, false)
+                guiGraphics.drawString(mc.font, Component.literal("AERO G $liftGText"), -105, 78, color, false)
+            } else {
+                // Preserve native non-fixed-wing instrument behavior.
+                lerpG =
+                    Mth.lerp((0.25f * partialTick).toDouble(), lerpG.toDouble(), (400 * vehicle.getAcceleration()) / 9.8).toFloat()
+                guiGraphics.drawString(mc.font, Component.literal("M"), -105, 70, color, false)
+                guiGraphics.drawString(mc.font, Component.literal("0.2"), -96, 70, color, false)
+                guiGraphics.drawString(mc.font, Component.literal("G"), -105, 78, color, false)
+                guiGraphics.drawString(
+                    mc.font,
+                    Component.literal(FormatTool.DECIMAL_FORMAT_1ZZ.format(lerpG.toDouble())),
+                    -96,
+                    78,
+                    color,
+                    false
+                )
+            }
 
             // 热诱弹
             if (vehicle.hasDecoy()) {
@@ -367,13 +436,14 @@ object AircraftHud {
             guiGraphics.drawString(mc.font, Component.literal("TGT"), 76, 78, color, false)
 
             // 武器名
-            val heat = vehicle.getWeaponHeat(player)
-            val component = vehicle.firstPersonAmmoComponent(gunData, player)
-
-            guiGraphics.drawString(
-                mc.font, component, -mc.font.width(component) / 2, 91,
-                getGradientColor(color, 0xFF0000, heat, 2), false
-            )
+            if (gunData != null) {
+                val heat = vehicle.getWeaponHeat(player)
+                val component = vehicle.firstPersonAmmoComponent(gunData, player)
+                guiGraphics.drawString(
+                    mc.font, component, -mc.font.width(component) / 2, 91,
+                    getGradientColor(color, 0xFF0000, heat, 2), false
+                )
+            }
 
             // 能量警告
             if (vehicle.isOperationalPowerLimited() && vehicle.hasEnergyStorage()) {
@@ -423,8 +493,8 @@ object AircraftHud {
             )
             RenderSystem.setShaderColor(1f, 1f, 1f, 1f)
 
-            poseStack.rotateAround(Axis.ZP.rotationDegrees(-vehicle.getRoll(partialTick)), x, y, 0f)
-            val pitch = vehicle.getPitch(partialTick)
+            poseStack.rotateAround(Axis.ZP.rotationDegrees(-bodyRoll), x, y, 0f)
+            val pitch = bodyPitch
             RenderHelper.blit(
                 poseStack,
                 HUD_LINE,
@@ -450,13 +520,13 @@ object AircraftHud {
 
         poseStack.pushPose()
 
-        if (pos.canBeSeen()) {
+        if (crossVisible) {
             var x = pCross.x.toFloat()
             var y = pCross.y.toFloat()
             val xCross = x
             val yCross = y
 
-            if ((mc.options.cameraType == CameraType.FIRST_PERSON || ClientEventHandler.zoomVehicle) && (gunData.get(
+            if (gunData != null && (mc.options.cameraType == CameraType.FIRST_PERSON) && (gunData.get(
                     GunProp.CROSSHAIR
                 ) != "@AirBomb") && (gunData.get(GunProp.CROSSHAIR) != "@AirCraftMissile")
             ) {
@@ -484,8 +554,8 @@ object AircraftHud {
                     144f,
                     color
                 )
-            } else if (mc.options.cameraType != CameraType.FIRST_PERSON && !ClientEventHandler.zoomVehicle) {
-                if (gunData.get(GunProp.CROSSHAIR) == "@AirBomb") {
+            } else if (mc.options.cameraType != CameraType.FIRST_PERSON) {
+                if (gunData?.get(GunProp.CROSSHAIR) == "@AirBomb") {
                     bombHitPosX = Mth.lerp(0.25 * partialTick.toDouble(), bombHitPosX, xCross.toDouble())
                     bombHitPosY = Mth.lerp(0.25 * partialTick.toDouble(), bombHitPosY, yCross.toDouble())
 
@@ -501,12 +571,14 @@ object AircraftHud {
                         24f,
                         24f
                     )
-                    x = p.x.toFloat()
-                    y = p.y.toFloat()
+                    if (bodyVisible) {
+                        x = p.x.toFloat()
+                        y = p.y.toFloat()
+                    }
                 }
 
-                mouseX = Mth.lerp(0.1f * partialTick, mouseX, ClientMouseHandler.lerpSpeedX.toFloat())
-                mouseY = Mth.lerp(0.1f * partialTick, mouseY, ClientMouseHandler.lerpSpeedY.toFloat())
+                mouseX = if (fixedWing) 0F else Mth.lerp(0.1f * partialTick, mouseX, ClientMouseHandler.lerpSpeedX.toFloat())
+                mouseY = if (fixedWing) 0F else Mth.lerp(0.1f * partialTick, mouseY, ClientMouseHandler.lerpSpeedY.toFloat())
                 RenderHelper.preciseBlit(guiGraphics,
                     HelicopterHud.RING, x - 2 + mouseX, y - 2 + mouseY, 0f, 0f, 4f, 4f, 4f, 4f)
 
@@ -534,7 +606,7 @@ object AircraftHud {
                     i += 3
                 }
 
-                val pitch = vehicle.getPitch(partialTick)
+                val pitch = bodyPitch
                 RenderHelper.blit(
                     poseStack,
                     HUD_LINE_3P,
@@ -564,7 +636,7 @@ object AircraftHud {
                 )
 
                 poseStack.pushPose()
-                poseStack.rotateAround(Axis.ZP.rotationDegrees(vehicle.getRoll(partialTick)), x, y, 0f)
+                poseStack.rotateAround(Axis.ZP.rotationDegrees(bodyRoll), x, y, 0f)
                 RenderHelper.preciseBlit(guiGraphics,
                     HelicopterHud.CROSSHAIR_3P, x - 34, y - 8.5f, 0f, 0f, 68f, 17f, 68f, 17f)
                 renderKillIndicatorDynamic(
@@ -579,7 +651,7 @@ object AircraftHud {
                 poseStack.scale(0.75f, 0.75f, 1f)
                 guiGraphics.drawString(
                     Minecraft.getInstance().font,
-                    Component.translatable(format0D(vehicle.getRoll(partialTick).toDouble()) + "°"),
+                    Component.translatable(format0D(bodyRoll.toDouble()) + "°"),
                     -42,
                     -9,
                     -1,
@@ -623,7 +695,9 @@ object AircraftHud {
                 poseStack.translate(x, y + 50, 0f)
                 poseStack.scale(0.75f, 0.75f, 1f)
 
-                VehicleMainWeaponHudOverlay.renderWeaponInfoThirdAir(guiGraphics, vehicle, player, gunData, font)
+                if (gunData != null && !fixedWing) {
+                    VehicleMainWeaponHudOverlay.renderWeaponInfoThirdAir(guiGraphics, vehicle, player, gunData, font)
+                }
 
                 if (vehicle.hasDecoy()) {
                     if (vehicle.decoyReady) {
@@ -662,5 +736,48 @@ object AircraftHud {
         }
         poseStack.popPose()
         poseStack.popPose()
+        if (fixedWing) {
+            renderFlightAim(player, guiGraphics, flightPresentation, screenWidth, screenHeight)
+            com.atsuishio.superbwarfare.client.overlay.VehicleSystemsHud.aircraft(
+                guiGraphics, vehicle, player, screenWidth, flightPresentation?.throttle?.toDouble(),
+                FixedWingHudMetrics.speedKmh(flightPresentation))
+        }
+    }
+
+    private fun renderFlightAim(
+        player: Player,
+        graphics: GuiGraphics,
+        flight: VehicleFlightInstrumentSnapshot?,
+        width: Int,
+        height: Int,
+    ) {
+        if (flight?.controlSurfaces?.wheelBrakeActive == true) {
+            val braking = Component.literal("BRAKING")
+            graphics.drawString(mc.font, braking, width - mc.font.width(braking) - 12,
+                height - 122, 0xFFFFAD40.toInt(), false)
+        }
+        if ((flight?.controlSurfaces?.airbrake ?: 0F) > 0.01F) {
+            val label = Component.literal("AIRBRAKE")
+            graphics.drawString(mc.font, label, width - mc.font.width(label) - 12,
+                height - 134, 0xFFFFAD40.toInt(), false)
+        }
+        val view = FixedWingPilotIntentClient.activeView(player) ?: return
+        val target = FixedWingPilotIntent.normalized(view.directionX, view.directionY, view.directionZ, 0) ?: return
+        val matrix = ClientEventHandler.modelViewMatrix ?: return
+        val projection = ClientEventHandler.projectionMatrix ?: return
+        val marker = FixedWingMouseAimMath.project(target.directionX, target.directionY, target.directionZ,
+            matrix, projection, width, height) ?: return
+        val color = 0xFFFFAD40.toInt()
+        val pose = graphics.pose()
+        pose.pushPose()
+        pose.translate(marker.x, marker.y, 0f)
+        FixedWingJoystickRing.emit(pose.last().pose(), graphics.bufferSource().getBuffer(RenderType.gui()), color)
+        graphics.flush()
+        pose.popPose()
+        if (flight?.controlSurfaces?.afterburnerActive == true) {
+            val boost = Component.translatable("hud.superbwarfare.afterburner")
+            graphics.drawString(mc.font, boost, width - mc.font.width(boost) - 12,
+                height - 109, 0xFFFFAD40.toInt(), false)
+        }
     }
 }

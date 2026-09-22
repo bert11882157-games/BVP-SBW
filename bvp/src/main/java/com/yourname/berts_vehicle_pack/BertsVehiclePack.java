@@ -5,6 +5,7 @@ import com.atsuishio.superbwarfare.api.vehicle.weapon.prediction.NominalProjecti
 import com.atsuishio.superbwarfare.api.vehicle.lifecycle.VehicleItemLifecycleProviders;
 import com.yourname.berts_vehicle_pack.armor.ArmorImpactHandler;
 import com.yourname.berts_vehicle_pack.armor.BvpImpactPresentationProvider;
+import com.yourname.berts_vehicle_pack.armor.BvpTaczImpactBridge;
 import com.yourname.berts_vehicle_pack.armor.TurretWreckImpactHandler;
 import com.yourname.berts_vehicle_pack.client.BvpClientEvents;
 import com.yourname.berts_vehicle_pack.effects.BvpProjectileTrailHooks;
@@ -21,12 +22,14 @@ import com.yourname.berts_vehicle_pack.init.ModTabs;
 import com.yourname.berts_vehicle_pack.item.BvpVehicleItem;
 import com.yourname.berts_vehicle_pack.item.BvpVehicleItemLifecycleProvider;
 import com.yourname.berts_vehicle_pack.network.BvpNetwork;
+import com.yourname.berts_vehicle_pack.projectile.BvpProjectilePolicies;
 import com.yourname.berts_vehicle_pack.client.BvpClientParticles;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
@@ -45,15 +48,17 @@ public class BertsVehiclePack {
                 BvpVehicleItem.LIFECYCLE_PROVIDER_ID,
                 new BvpVehicleItemLifecycleProvider());
         BvpNetwork.register();
+        BvpProjectilePolicies.register();
         BvpFiredVisuals.register();
         BvpVehicleModules.register();
-        // Proven live gameplay: keep the action, F-key input, HUD and save bridge together.
+        // Register the repair action used by key input, HUD snapshots, and saved vehicle state.
         BvpFieldRepairAction.register();
         BvpAutocannonSchedules.register();
         registerNominalProjectileModels();
         BvpProjectileTrailHooks.registerExplosionFxHandler();
         ArmorImpactHandler.register();
         BvpImpactPresentationProvider.register();
+        if (ModList.get().isLoaded("tacz")) BvpTaczImpactBridge.register();
         TurretWreckImpactHandler.register();
         if (FMLEnvironment.dist == Dist.CLIENT) {
             modEventBus.addListener(ModEntityRenderers::registerEntityRenderers);

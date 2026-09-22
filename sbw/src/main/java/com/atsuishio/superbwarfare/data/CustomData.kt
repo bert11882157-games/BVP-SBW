@@ -10,6 +10,7 @@ import com.atsuishio.superbwarfare.data.mob_guns.MobGunData
 import com.atsuishio.superbwarfare.data.projectile.DefaultProjectileProfile
 import com.atsuishio.superbwarfare.data.vehicle.DefaultVehicleData
 import com.atsuishio.superbwarfare.data.vehicle.VehicleData
+import com.atsuishio.superbwarfare.data.vehicle.WeaponSystemMetadata
 import com.atsuishio.superbwarfare.resource.gun.DefaultGunResource
 import com.atsuishio.superbwarfare.resource.gun.GunResource
 import com.atsuishio.superbwarfare.resource.vehicle.DefaultVehicleResource
@@ -31,6 +32,11 @@ object CustomData {
     val VEHICLE_DATA = DataLoader.createData(
         "sbw/vehicles", DefaultVehicleData::class.java, true, isKtData = true
     ) { _ -> VehicleData.invalidateAll() }
+
+    @JvmField
+    val WEAPON_SYSTEM_METADATA = DataLoader.createData(
+        "sbw/weapon_system_metadata", WeaponSystemMetadata::class.java, true, isKtData = true
+    )
 
     @JvmField
     val GUN_DATA = DataLoader.createData(

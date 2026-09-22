@@ -193,7 +193,7 @@
       "HeatPerShoot": 4,
       "NaturalCooldown": 1,
       "AmmoType": "@RifleAmmo",
-      "Projectile": "superbwarfare:projectile",
+      "Projectile": { "Type": "superbwarfare:projectile", "CaliberMm": 5.8 },
       "RPM": 600,
       "Damage": 9.5,
       "BypassesArmor": 0.3,
@@ -221,12 +221,13 @@
       "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/gun_5_8mm.png"
     },
     "PassengerMachineGun": {
+      "VehicleDirectDamageScale": 0.33,
       "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/gun_12_7mm.png",
       "DefaultFireMode": "Auto",
       "AvailableFireModes": "Auto",
       "Spread": 0.25,
       "CrosshairColor": "0xFFC700",
-      "Projectile": "superbwarfare:projectile",
+      "Projectile": { "Type": "superbwarfare:projectile", "CaliberMm": 12.7 },
       "DefaultZoom": 3,
       "RPM": 450,
       "Damage": 40,

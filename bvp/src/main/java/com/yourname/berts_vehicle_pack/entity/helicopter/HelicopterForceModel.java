@@ -326,28 +326,11 @@ public final class HelicopterForceModel {
     }
 
     private static Vec3 collisionAwareBaseMotion(Vec3 previousMotion, Vec3 requestedMotion) {
-        if (previousMotion == null) {
-            return requestedMotion == null ? ZERO : requestedMotion;
-        }
-        if (requestedMotion == null) {
-            return previousMotion;
-        }
-        double x = collisionAwareComponent(previousMotion.f_82479_, requestedMotion.f_82479_);
-        double y = collisionAwareComponent(previousMotion.f_82480_, requestedMotion.f_82480_);
-        double z = collisionAwareComponent(previousMotion.f_82481_, requestedMotion.f_82481_);
-        if (x == previousMotion.f_82479_ && y == previousMotion.f_82480_ && z == previousMotion.f_82481_) {
-            return previousMotion;
-        }
-        if (x == requestedMotion.f_82479_ && y == requestedMotion.f_82480_ && z == requestedMotion.f_82481_) {
-            return requestedMotion;
-        }
-        return new Vec3(x, y, z);
-    }
-
-    private static double collisionAwareComponent(double previous, double requested) {
-        boolean collisionDamped = Math.abs(previous - requested) > 0.05D
-                && Math.abs(requested) < Math.abs(previous);
-        return collisionDamped ? requested : previous;
+        // The flight strategy samples current deltaMovement after the vanilla lifecycle and
+        // runs no legacy movement forces before this evaluation. Collision response and any
+        // intervening external impulse belong to the current sample, at every magnitude.
+        // The older sample is a fallback for callers without a current sample, not a filter.
+        return requestedMotion != null ? requestedMotion : previousMotion != null ? previousMotion : ZERO;
     }
 
     private static Vec3 blocksPerTickToMetersPerSecond(Vec3 motion) {

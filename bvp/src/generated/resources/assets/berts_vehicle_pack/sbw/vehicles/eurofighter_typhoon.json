@@ -1,0 +1,355 @@
+{
+  "ID": "berts_vehicle_pack:eurofighter_typhoon",
+  "Model": {
+    "GeometryBackend": "berts_vehicle_pack:vehicle/eurofighter_typhoon",
+    "Model": "berts_vehicle_pack:geo/native_fallback/eurofighter_typhoon.geo.json",
+    "Texture": "berts_vehicle_pack:textures/entity/eurofighter_typhoon.png",
+    "WreckTexture": "berts_vehicle_pack:textures/entity_dead/eurofighter_typhoon.png"
+  },
+  "MouseSpeed": [
+    0.2,
+    0.2
+  ],
+  "AfterburnerPresentation": {
+    "Schema": 2,
+    "Frame": "VEHICLE_LOCAL_BLOCKS",
+    "Outlets": [
+      {
+        "Id": "afterburner_left",
+        "Position": [
+          -0.475103125,
+          1.71942125,
+          -6.81719
+        ],
+        "Direction": [
+          0,
+          0,
+          -1
+        ]
+      },
+      {
+        "Id": "afterburner_right",
+        "Position": [
+          0.475103125,
+          1.71942125,
+          -6.81719
+        ],
+        "Direction": [
+          0,
+          0,
+          -1
+        ]
+      }
+    ],
+    "Flame": {
+      "Scale": 0.9,
+      "WidthBlocks": 0.2,
+      "LengthBlocks": 7,
+      "ParticlesPerTick": 3,
+      "LifetimeTicks": 10,
+      "ColorRgb": [
+        1,
+        1,
+        1
+      ]
+    },
+    "Smoke": {
+      "Scale": 0.5,
+      "WidthBlocks": 0.18,
+      "LengthBlocks": 6,
+      "ParticlesPerTick": 0.5,
+      "LifetimeTicks": 14,
+      "ColorRgb": [
+        1,
+        1,
+        1
+      ]
+    },
+    "TapEmitters": [
+      {
+        "Outlet": "afterburner_left",
+        "Style": "FM_FLAME",
+        "Interval": 1,
+        "Offset": [
+          0,
+          0,
+          0
+        ],
+        "Extents": [
+          0.13574380164375,
+          0.13574380164375,
+          0.13574380164375
+        ],
+        "Velocity": [
+          0,
+          0,
+          0.1875
+        ]
+      },
+      {
+        "Outlet": "afterburner_left",
+        "Style": "FM_FLAME",
+        "Interval": 1,
+        "Offset": [
+          0,
+          0,
+          0
+        ],
+        "Extents": [
+          0.13574380164375,
+          0.13574380164375,
+          0.13574380164375
+        ],
+        "Velocity": [
+          0,
+          0,
+          0.1875
+        ]
+      },
+      {
+        "Outlet": "afterburner_left",
+        "Style": "FM_FLAME",
+        "Interval": 1,
+        "Offset": [
+          0,
+          0,
+          0
+        ],
+        "Extents": [
+          0.13574380164375,
+          0.13574380164375,
+          0.13574380164375
+        ],
+        "Velocity": [
+          0,
+          0,
+          0.1875
+        ]
+      },
+      {
+        "Outlet": "afterburner_right",
+        "Style": "FM_FLAME",
+        "Interval": 1,
+        "Offset": [
+          0,
+          0,
+          0
+        ],
+        "Extents": [
+          0.13574380164375,
+          0.13574380164375,
+          0.13574380164375
+        ],
+        "Velocity": [
+          0,
+          0,
+          0.1875
+        ]
+      },
+      {
+        "Outlet": "afterburner_right",
+        "Style": "FM_FLAME",
+        "Interval": 1,
+        "Offset": [
+          0,
+          0,
+          0
+        ],
+        "Extents": [
+          0.13574380164375,
+          0.13574380164375,
+          0.13574380164375
+        ],
+        "Velocity": [
+          0,
+          0,
+          0.1875
+        ]
+      },
+      {
+        "Outlet": "afterburner_right",
+        "Style": "FM_FLAME",
+        "Interval": 1,
+        "Offset": [
+          0,
+          0,
+          0
+        ],
+        "Extents": [
+          0.13574380164375,
+          0.13574380164375,
+          0.13574380164375
+        ],
+        "Velocity": [
+          0,
+          0,
+          0.1875
+        ]
+      }
+    ],
+    "TapSource": "planes/T4F EurofighterTyphoon.txt#B6E8E69350F8DE8DD3AB265B301ACDE708D96D02CF248B6921E87CA6133B9ED3",
+    "TapVariant": "MATCHED_TAP_AIRCRAFT"
+  },
+  "AircraftRig": {
+    "Schema": 2,
+    "Frame": "GENERATED_MODEL_PIXELS",
+    "Surfaces": [
+      {
+        "Bone": "elevon_left_inner",
+        "Parent": "hull",
+        "Pivot": [
+          -32.21653,
+          24.43388,
+          66.60496
+        ],
+        "Axis": [
+          -0.999958681035682,
+          0.009090446709550644,
+          0
+        ],
+        "ControlWeights": {
+          "ElevatorUp": 1,
+          "RightRoll": -1,
+          "RudderRight": 0
+        },
+        "MaxDeflectionDegrees": 20
+      },
+      {
+        "Bone": "elevon_left_outer",
+        "Parent": "hull",
+        "Pivot": [
+          -68.0529,
+          24.61487,
+          66.60496
+        ],
+        "Axis": [
+          -1,
+          1.1152923770075235e-16,
+          0
+        ],
+        "ControlWeights": {
+          "ElevatorUp": 1,
+          "RightRoll": -1,
+          "RudderRight": 0
+        },
+        "MaxDeflectionDegrees": 20
+      },
+      {
+        "Bone": "elevon_right_inner",
+        "Parent": "hull",
+        "Pivot": [
+          32.21653,
+          24.43388,
+          66.60496
+        ],
+        "Axis": [
+          -0.999958681035682,
+          -0.009090446709550644,
+          0
+        ],
+        "ControlWeights": {
+          "ElevatorUp": 1,
+          "RightRoll": 1,
+          "RudderRight": 0
+        },
+        "MaxDeflectionDegrees": 20
+      },
+      {
+        "Bone": "elevon_right_outer",
+        "Parent": "hull",
+        "Pivot": [
+          68.0529,
+          24.61487,
+          66.60496
+        ],
+        "Axis": [
+          -1,
+          -1.1152923770075235e-16,
+          0
+        ],
+        "ControlWeights": {
+          "ElevatorUp": 1,
+          "RightRoll": 1,
+          "RudderRight": 0
+        },
+        "MaxDeflectionDegrees": 20
+      },
+      {
+        "Bone": "canard_left",
+        "Parent": "hull",
+        "Pivot": [
+          -19.81859,
+          36.37934,
+          -69.68182
+        ],
+        "Axis": [
+          -0.8787063887498103,
+          -0.19526808638884638,
+          0.4355978154310526
+        ],
+        "ControlWeights": {
+          "ElevatorUp": -1,
+          "RightRoll": 0,
+          "RudderRight": 0
+        },
+        "MaxDeflectionDegrees": 20
+      },
+      {
+        "Bone": "canard_right",
+        "Parent": "hull",
+        "Pivot": [
+          19.81859,
+          36.37934,
+          -69.68182
+        ],
+        "Axis": [
+          -0.8787063887498103,
+          0.19526808638884638,
+          -0.4355978154310526
+        ],
+        "ControlWeights": {
+          "ElevatorUp": -1,
+          "RightRoll": 0,
+          "RudderRight": 0
+        },
+        "MaxDeflectionDegrees": 20
+      },
+      {
+        "Bone": "rudder",
+        "Parent": "hull",
+        "Pivot": [
+          0,
+          57.91736,
+          103.75134
+        ],
+        "Axis": [
+          0,
+          -0.8629144577860496,
+          -0.5053500158739567
+        ],
+        "ControlWeights": {
+          "ElevatorUp": 0,
+          "RightRoll": 0,
+          "RudderRight": -1
+        },
+        "MaxDeflectionDegrees": 20
+      }
+    ],
+    "Rotors": [],
+    "Gear": [
+      {
+        "Bone": "landing_gear_0",
+        "Parent": "hull"
+      },
+      {
+        "Bone": "landing_gear_1",
+        "Parent": "hull"
+      },
+      {
+        "Bone": "landing_gear_2",
+        "Parent": "hull"
+      }
+    ],
+    "Sweeps": []
+  }
+}

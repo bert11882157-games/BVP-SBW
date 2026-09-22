@@ -84,7 +84,9 @@ internal class VehicleAttachmentResolver {
 
         val matrices = nativeMatrices(vehicle, partialTicks)
         val base = VehicleAttachmentSnapshot.fromOwnedMatrices(pose.sequence, pose.serverTick, matrices)
-        val resolved = resolveDataAttachments(base, data)
+        val resolved = resolveDataAttachments(
+            base, data, Mth.lerp(partialTicks, vehicle.turretXRotO, vehicle.turretXRot),
+        )
         cachedSnapshot = resolved
         cachedTick = vehicle.tickCount
         cachedPartialBits = partialBits
@@ -183,7 +185,7 @@ internal class VehicleAttachmentResolver {
                     }
                     val station = Matrix4d(stationParent)
                         .translate(position.x, position.y, position.z)
-                        .rotateY(Math.toRadians(stationYawOffset.toDouble()))
+                        .rotateY(Math.toRadians((stationYawOffset + vehicle.passengerWeaponStationBaseYawDegrees).toDouble()))
                     matrices["WeaponStation"] = Matrix4d(station)
                     vehicle.passengerWeaponStationBarrelPosition?.let { barrelPosition ->
                         matrices["WeaponStationBarrel"] = Matrix4d(station)
@@ -198,7 +200,7 @@ internal class VehicleAttachmentResolver {
             pose.serverTick,
             matrices,
         )
-        return resolveDataAttachments(base, data)
+        return resolveDataAttachments(base, data, turretPitch)
     }
 
     /** Only the pre-turret frame is needed to reproject a world aim ray onto the rendered hull. */
@@ -291,6 +293,8 @@ internal class VehicleAttachmentResolver {
         cachedChassisDataOwner = null
     }
 
+    fun followsTurretPitch(name: String): Boolean = graph?.followsTurretPitch(name) == true
+
     private fun nativeMatrices(vehicle: VehicleEntity, partialTicks: Float): LinkedHashMap<String, Matrix4d> {
         val data = vehicle.computed()
         val matrices = LinkedHashMap<String, Matrix4d>()
@@ -354,6 +358,7 @@ internal class VehicleAttachmentResolver {
     private fun resolveDataAttachments(
         base: VehicleAttachmentSnapshot,
         data: DefaultVehicleData,
+        turretPitchDegrees: Float? = null,
     ): VehicleAttachmentSnapshot {
         if (data.attachments.isEmpty()) return base
         if (graphOwner !== data) {
@@ -361,7 +366,7 @@ internal class VehicleAttachmentResolver {
             val nodes = ArrayList<VehicleAttachmentNode>(data.attachments.size)
             val transforms = LinkedHashMap<String, Matrix4d>(data.attachments.size)
             for ((name, info) in data.attachments) {
-                nodes.add(VehicleAttachmentNode(name, info.parent))
+                nodes.add(VehicleAttachmentNode(name, info.parent, info.rotationChannel))
                 val direction = info.direction.normalize()
                 val horizontal = sqrt(direction.x * direction.x + direction.z * direction.z)
                 transforms[name] = Matrix4d()
@@ -372,6 +377,6 @@ internal class VehicleAttachmentResolver {
             graph = VehicleAttachmentGraph(nodes, VehicleAttachmentGraph.NATIVE_BASE_FRAMES)
             localTransforms = transforms
         }
-        return graph?.resolve(base, localTransforms) ?: base
+        return graph?.resolve(base, localTransforms, turretPitchDegrees) ?: base
     }
 }

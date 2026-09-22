@@ -22,32 +22,6 @@
       ]
     },
     {
-      "Part": "WheelLeft",
-      "Size": [
-        0.26667,
-        0.54167,
-        2.95833
-      ],
-      "Position": [
-        1.79167,
-        0.6,
-        -0.20833
-      ]
-    },
-    {
-      "Part": "WheelRight",
-      "Size": [
-        0.26667,
-        0.54167,
-        2.95833
-      ],
-      "Position": [
-        -1.79167,
-        0.6,
-        -0.20833
-      ]
-    },
-    {
       "Part": "MainEngine",
       "Size": [
         0.95833,
@@ -556,6 +530,12 @@
       "SoundRadius": 12,
       "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/gun_7_62mm.png",
       "HeatPerShoot": 0,
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "superbwarfare:projectile",
+        "ProjectileProfile": "berts_vehicle_pack:bmp_1am/mainmachinegun/default",
+        "ProjectileLife": 400
+      },
       "ProjectileBeltAmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
@@ -573,13 +553,7 @@
             "Name": "AP_T"
           }
         }
-      ],
-      "NominalBallistics": {
-        "Supported": true,
-        "ProjectileType": "superbwarfare:projectile",
-        "ProjectileProfile": "berts_vehicle_pack:bmp_1am/mainmachinegun/default",
-        "ProjectileLife": 400
-      }
+      ]
     },
     "Missile": {
       "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_atgm.png",
@@ -608,10 +582,10 @@
       "Name": "weapon.berts_vehicle_pack.73_mm_2a28_grom_9m14_atgm",
       "AmmoType": "superbwarfare:medium_anti_ground_missile",
       "SoundInfo": {
-        "Fire1PGain": 0.5,
-        "Fire3PGain": 0.5,
-        "Fire3PFarGain": 0.5,
-        "Fire3PVeryFarGain": 0.5,
+        "Fire1PGain": 0.35,
+        "Fire3PGain": 0.35,
+        "Fire3PFarGain": 0.35,
+        "Fire3PVeryFarGain": 0.35,
         "Fire1P": "berts_vehicle_pack:tap_missileshoot",
         "Fire3P": "berts_vehicle_pack:tap_missileshoot",
         "VehicleReload3p": "superbwarfare:medium_missile_reload",
@@ -652,6 +626,11 @@
         "EffectDirectionAttachments": [
           "missile_launch_location"
         ]
+      },
+      "NominalBallistics": {
+        "Supported": false,
+        "ProjectileType": "superbwarfare:wire_guide_missile",
+        "ProjectileProfile": "berts_vehicle_pack:bmp_1am/missile/default"
       }
     }
   },

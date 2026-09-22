@@ -20,32 +20,6 @@
       ]
     },
     {
-      "Part": "WheelLeft",
-      "Size": [
-        0.25644,
-        0.52088,
-        2.84483
-      ],
-      "Position": [
-        1.72292,
-        0.57698,
-        -0.20034
-      ]
-    },
-    {
-      "Part": "WheelRight",
-      "Size": [
-        0.25644,
-        0.52088,
-        2.84483
-      ],
-      "Position": [
-        -1.72292,
-        0.57698,
-        -0.20034
-      ]
-    },
-    {
       "Part": "MainEngine",
       "Size": [
         0.92156,
@@ -221,11 +195,6 @@
       "ExplosionRadius": 4,
       "RecoilTime": 42,
       "RecoilForce": 1,
-      "ShootShake": [
-        8,
-        10,
-        60
-      ],
       "Spread": 0.02,
       "ShootAnimationTime": 20,
       "Crosshair": "@VehicleRuApc",
@@ -250,7 +219,12 @@
             "Projectile": {
               "Type": "superbwarfare:cannon_shell",
               "Profile": "berts_vehicle_pack:t55a_2_0/cannon/ammo_00_3bm25_apfsds"
-            }
+            },
+            "ShootShake": [
+              8,
+              10,
+              90
+            ]
           }
         },
         {
@@ -271,7 +245,12 @@
             "Projectile": {
               "Type": "superbwarfare:cannon_shell",
               "Profile": "berts_vehicle_pack:t55a_2_0/cannon/ammo_01_br_412d_apcbc"
-            }
+            },
+            "ShootShake": [
+              8,
+              10,
+              90
+            ]
           }
         },
         {
@@ -293,7 +272,12 @@
             "Projectile": {
               "Type": "superbwarfare:cannon_shell",
               "Profile": "berts_vehicle_pack:t55a_2_0/cannon/ammo_02_3bk17m_heat_fs"
-            }
+            },
+            "ShootShake": [
+              8,
+              10,
+              90
+            ]
           }
         },
         {
@@ -316,7 +300,12 @@
             "Projectile": {
               "Type": "superbwarfare:cannon_shell",
               "Profile": "berts_vehicle_pack:t55a_2_0/cannon/ammo_03_of_412_he"
-            }
+            },
+            "ShootShake": [
+              8,
+              10,
+              90
+            ]
           }
         }
       ],
@@ -329,13 +318,12 @@
         "Fire3P": "berts_vehicle_pack:t55a_2_0_d10t2s_fire",
         "Fire3PFar": "berts_vehicle_pack:t55a_2_0_d10t2s_fire",
         "Fire3PVeryFar": "berts_vehicle_pack:t55a_2_0_d10t2s_fire",
-        "VehicleReload": "berts_vehicle_pack:m1_abrams_elite_m68a1_reload",
         "Change": "superbwarfare:into_cannon",
+        "VehicleReload": "berts_vehicle_pack:m1_abrams_elite_m68a1_reload",
+        "VehicleReloadClipDurationTicks": 86,
         "CancellableSounds": [
           "berts_vehicle_pack:m1_abrams_elite_m68a1_reload"
-        ],
-        "VehicleReloadClipDurationTicks": 86,
-        "VehicleReloadSoundTime": 88
+        ]
       },
       "SoundRadius": 32,
       "ShootPos": {
@@ -379,7 +367,12 @@
         "ProjectileType": "superbwarfare:cannon_shell",
         "ProjectileProfile": "berts_vehicle_pack:t55a_2_0/cannon/default",
         "ProjectileLife": 50
-      }
+      },
+      "ShootShake": [
+        8,
+        10,
+        90
+      ]
     },
     "MachineGun": {
       "DefaultFireMode": "Auto",
@@ -425,7 +418,12 @@
               "ProjectileType": "superbwarfare:projectile",
               "ProjectileProfile": "berts_vehicle_pack:t55a_2_0/machinegun/ammo_00_russian_762_ap_i",
               "ProjectileLife": 400
-            }
+            },
+            "ShootShake": [
+              0,
+              0,
+              0
+            ]
           }
         }
       ],
@@ -510,7 +508,12 @@
             "Damage": 9.5,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
-            "Name": "AP_T"
+            "Name": "AP_T",
+            "ShootShake": [
+              0,
+              0,
+              0
+            ]
           }
         }
       ],
@@ -519,7 +522,12 @@
         "ProjectileType": "superbwarfare:projectile",
         "ProjectileProfile": "berts_vehicle_pack:t55a_2_0/machinegun/default",
         "ProjectileLife": 400
-      }
+      },
+      "ShootShake": [
+        0,
+        0,
+        0
+      ]
     },
     "PassengerMachineGun": {
       "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/gun_12_7mm.png",
@@ -592,7 +600,12 @@
               "ProjectileType": "superbwarfare:projectile",
               "ProjectileProfile": "berts_vehicle_pack:t55a_2_0/passengermachinegun/ammo_00_russian_127_bzt44_api_t_1",
               "ProjectileLife": 400
-            }
+            },
+            "ShootShake": [
+              8,
+              10,
+              6
+            ]
           }
         }
       ],
@@ -646,6 +659,9 @@
         "Change": "superbwarfare:missile_change"
       },
       "SoundRadius": 16,
+      "Magazine": 100,
+      "NormalReloadTime": 100,
+      "EmptyReloadTime": 100,
       "ProjectileBeltAmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
@@ -660,7 +676,12 @@
             "Damage": 83.33333333333333,
             "ExplosionDamage": 0,
             "ExplosionRadius": 1.6666666666666665,
-            "Name": "IAI"
+            "Name": "IAI",
+            "ShootShake": [
+              8,
+              10,
+              6
+            ]
           }
         },
         {
@@ -676,7 +697,12 @@
             "Damage": 40,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
-            "Name": "API_T"
+            "Name": "API_T",
+            "ShootShake": [
+              8,
+              10,
+              6
+            ]
           }
         },
         {
@@ -692,7 +718,12 @@
             "Damage": 40,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
-            "Name": "AP_I_C"
+            "Name": "AP_I_C",
+            "ShootShake": [
+              8,
+              10,
+              6
+            ]
           }
         }
       ],
@@ -701,7 +732,12 @@
         "ProjectileType": "superbwarfare:projectile",
         "ProjectileProfile": "berts_vehicle_pack:t55a_2_0/passengermachinegun/default",
         "ProjectileLife": 400
-      }
+      },
+      "ShootShake": [
+        8,
+        10,
+        6
+      ]
     }
   },
   "HUDColor": "0xFFC700",

@@ -66,6 +66,35 @@ public final class HelicopterFlightProfile {
             0.055D, 0.0080D,
             4.0D, 7.0D);
 
+    private static final HelicopterFlightProfile MI24A = new HelicopterFlightProfile(
+            75.375D, 83.75D, 10320.0D, 130000.0D / 163300.0D, 0.20D,
+            HelicopterHandlingProfile.of(0.95D, 0.90D, 0.75D, 0.90D, 0.72D, 1.15D),
+            0.030D, 0.0007007756330102947D, 0.135D, 0.0125D,
+            0.055D, 0.0080D, 2.38D, 2.80D,
+            new HelicopterPhysicalControls(.25D, 1.00D, .30D, .22D, 83.75D, true,
+                    new HelicopterAttitudeProfile(18.0D, 16.0D, 28.0D, 3.0D, 60.0D, 75.0D, 8.0D)));
+    private static final HelicopterFlightProfile MI24D = new HelicopterFlightProfile(
+            75.375D, 83.75D, 10690.0D, 130000.0D / 163300.0D, 0.20D,
+            HelicopterHandlingProfile.of(0.97D, 0.92D, 0.78D, 0.92D, 0.76D, 1.18D),
+            0.030D, 0.0007727918703541040D, 0.145D, 0.0130D,
+            0.060D, 0.0090D, 2.38D, 2.80D,
+            new HelicopterPhysicalControls(.24D, .95D, .28D, .20D, 83.75D, true,
+                    new HelicopterAttitudeProfile(20.0D, 18.0D, 30.0D, 3.2D, 60.0D, 75.0D, 8.0D)));
+    private static final HelicopterFlightProfile AH1F = new HelicopterFlightProfile(
+            62.325D, 69.25D, 3990.0D, 52000.0D / 163300.0D, 0.12D,
+            HelicopterHandlingProfile.of(1.05D, 1.05D, 0.98D, 1.04D, 1.08D, 0.98D),
+            0.040D, 0.004229106199018914D, 0.130D, 0.0110D,
+            0.050D, 0.0075D, 1.7425D, 2.05D,
+            new HelicopterPhysicalControls(.33D, 1.10D, .40D, .32D, 69.25D, true,
+                    new HelicopterAttitudeProfile(28.0D, 28.0D, 42.0D, 4.0D, 65.0D, 80.0D, 8.0D)));
+    private static final HelicopterFlightProfile MI26 = new HelicopterFlightProfile(
+            63.75D, 67.50D, 56000.0D, 650000.0D / 163300.0D, 0.0D,
+            HelicopterHandlingProfile.of(0.65D, 0.82D, 0.62D, 0.68D, 0.55D, 1.85D),
+            0.015D, 0.001130561929995938D, 0.120D, 0.0160D,
+            0.070D, 0.0120D, 1.25D, 1.75D,
+            new HelicopterPhysicalControls(.12D, .40D, .10D, .08D, 67.50D, true,
+                    new HelicopterAttitudeProfile(8.0D, 8.0D, 12.0D, 1.5D, 35.0D, 50.0D, 8.0D)));
+
     final double maxForwardKmh;
     final double maxBoostForwardKmh;
     final double massKg;
@@ -84,6 +113,7 @@ public final class HelicopterFlightProfile {
     final double sideQuadraticDrag;
     final double verticalLinearDrag;
     final double verticalQuadraticDrag;
+    private final HelicopterPhysicalControls physicalControls;
 
     private HelicopterFlightProfile(double maxForwardKmh, double maxBoostForwardKmh,
                                     double massKg, double enginePowerScale,
@@ -93,6 +123,21 @@ public final class HelicopterFlightProfile {
                                     double sideQuadraticDrag, double verticalLinearDrag,
                                     double verticalQuadraticDrag,
                                     double climbSoftCapMps, double climbHardCapMps) {
+        this(maxForwardKmh, maxBoostForwardKmh, massKg, enginePowerScale, wingLiftCoefficient,
+                handlingProfile, forwardLinearDrag, forwardQuadraticDrag, sideLinearDrag,
+                sideQuadraticDrag, verticalLinearDrag, verticalQuadraticDrag,
+                climbSoftCapMps, climbHardCapMps, null);
+    }
+
+    private HelicopterFlightProfile(double maxForwardKmh, double maxBoostForwardKmh,
+                                    double massKg, double enginePowerScale,
+                                    double wingLiftCoefficient, HelicopterHandlingProfile handlingProfile,
+                                    double forwardLinearDrag,
+                                    double forwardQuadraticDrag, double sideLinearDrag,
+                                    double sideQuadraticDrag, double verticalLinearDrag,
+                                    double verticalQuadraticDrag,
+                                    double climbSoftCapMps, double climbHardCapMps,
+                                    HelicopterPhysicalControls physicalControls) {
         double safeMassKg = Math.max(1000.0D, massKg);
         double safeEnginePowerScale = Math.max(0.05D, enginePowerScale);
         this.maxForwardKmh = maxForwardKmh;
@@ -113,6 +158,12 @@ public final class HelicopterFlightProfile {
         this.sideQuadraticDrag = sideQuadraticDrag;
         this.verticalLinearDrag = verticalLinearDrag;
         this.verticalQuadraticDrag = verticalQuadraticDrag;
+        this.physicalControls = physicalControls;
+    }
+
+    /** Null preserves the legacy per-tick constants without a rate conversion. */
+    public HelicopterPhysicalControls physicalControls() {
+        return physicalControls;
     }
 
     public static HelicopterFlightProfile mi24v() {
@@ -133,6 +184,22 @@ public final class HelicopterFlightProfile {
 
     public static HelicopterFlightProfile ah1gCobra() {
         return AH1G_COBRA;
+    }
+
+    public static HelicopterFlightProfile mi24a() {
+        return MI24A;
+    }
+
+    public static HelicopterFlightProfile mi24d() {
+        return MI24D;
+    }
+
+    public static HelicopterFlightProfile ah1f() {
+        return AH1F;
+    }
+
+    public static HelicopterFlightProfile mi26() {
+        return MI26;
     }
 
     public double maxForwardKmh() {

@@ -84,7 +84,7 @@ public record BvpTracerProfile(
         scale = Math.min(scale, 64.0D);
         return new BvpTracerProfile(1.0F, 1.0F, 1.0F, 1,
                 4.0D * scale, 0.025D * scale, 0.9F, 3,
-                1.0D * scale, 1.0F, 4.0D * scale, 0.25F);
+                1.0D, 1.0F, 4.0D, 0.25F);
     }
 
     private static boolean isTankShell(ResourceLocation id) {

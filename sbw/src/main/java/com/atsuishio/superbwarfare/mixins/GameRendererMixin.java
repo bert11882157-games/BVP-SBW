@@ -1,6 +1,10 @@
 package com.atsuishio.superbwarfare.mixins;
 
 import com.atsuishio.superbwarfare.config.client.DisplayConfig;
+import com.atsuishio.superbwarfare.client.camera.FixedWingCockpitCamera;
+import com.atsuishio.superbwarfare.client.camera.VehicleCameraFrameDiagnostic;
+import com.atsuishio.superbwarfare.client.aircraft.AircraftArmamentClient;
+import com.atsuishio.superbwarfare.client.input.AircraftCollisionPicking;
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModMobEffects;
@@ -23,13 +27,44 @@ import org.joml.Vector3f;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(GameRenderer.class)
 public class GameRendererMixin {
+
+    @Inject(method = "renderLevel", at = @At("HEAD"))
+    private void sbw$beginCameraFrameDiagnostic(float partialTick, long limitTime, PoseStack view, CallbackInfo ci) {
+        com.atsuishio.superbwarfare.client.camera.VehiclePassengerCamera.enforce();
+        VehicleCameraFrameDiagnostic.beginFrame(partialTick);
+    }
+
+    @ModifyArg(method = "renderLevel", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/client/renderer/GameRenderer;bobHurt(Lcom/mojang/blaze3d/vertex/PoseStack;F)V"), index = 0)
+    private PoseStack sbw$observeProjectionBeforeEffects(PoseStack projection) {
+        return VehicleCameraFrameDiagnostic.beforeProjectionEffects(projection);
+    }
+
+    @Inject(method = "renderLevel", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/client/renderer/GameRenderer;bobHurt(Lcom/mojang/blaze3d/vertex/PoseStack;F)V",
+            shift = At.Shift.AFTER))
+    private void sbw$observeProjectionAfterEffects(float partialTick, long limitTime, PoseStack view, CallbackInfo ci) {
+        VehicleCameraFrameDiagnostic.afterProjectionEffects();
+    }
+
+    @Inject(method = "pick(F)V", at = @At("HEAD"))
+    private void sbw$beginPhysicalUiPick(float partialTicks, CallbackInfo ci) {
+        AircraftCollisionPicking.beginUiPick(partialTicks);
+    }
+
+    @Inject(method = "pick(F)V", at = @At("RETURN"))
+    private void sbw$endPhysicalUiPick(float partialTicks, CallbackInfo ci) {
+        AircraftCollisionPicking.endUiPick();
+    }
 
     @Inject(method = "bobView(Lcom/mojang/blaze3d/vertex/PoseStack;F)V", at = @At("HEAD"), cancellable = true)
     public void bobView(PoseStack p_109139_, float p_109140_, CallbackInfo ci) {
@@ -48,9 +83,15 @@ public class GameRendererMixin {
     @Final
     private Camera mainCamera;
 
+    @Unique
+    private FixedWingCockpitCamera.Frame sbw$authoredFixedWingCamera;
+
     @SuppressWarnings("ConstantValue")
     @Inject(method = "renderLevel", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Camera;setup(Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/world/entity/Entity;ZZF)V"))
     public void superbWarfare$renderWorld(float tickDelta, long limitTime, PoseStack matrices, CallbackInfo ci) {
+        Minecraft minecraft = Minecraft.getInstance();
+        sbw$authoredFixedWingCamera = FixedWingCockpitCamera.capture(minecraft.getCameraEntity(),
+                minecraft.options.getCameraType() == CameraType.FIRST_PERSON, tickDelta);
         Entity entity = mainCamera.getEntity();
 
         matrices.mulPose(Axis.ZP.rotationDegrees(ClientEventHandler.cameraRoll));
@@ -61,7 +102,40 @@ public class GameRendererMixin {
             matrices.mulPose(Axis.ZP.rotationDegrees((float) Mth.nextDouble(RandomSource.create(), 8, 12) * shakeStrength));
         }
 
-        if (entity != null && entity.getRootVehicle() instanceof VehicleEntity vehicle && !mainCamera.isDetached()) {
+    }
+
+    @Inject(method = "renderLevel", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/client/Camera;setup(Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/world/entity/Entity;ZZF)V",
+            shift = At.Shift.AFTER))
+    private void sbw$applyCurrentVehicleBank(float tickDelta, long limitTime,
+                                             PoseStack matrices, CallbackInfo ci) {
+        VehicleCameraFrameDiagnostic.afterCameraSetup(mainCamera, matrices);
+        try {
+            sbw$applyVehicleBank(tickDelta, matrices);
+        } finally {
+            VehicleCameraFrameDiagnostic.afterVehicleBank(matrices);
+        }
+    }
+
+    @Unique
+    private void sbw$applyVehicleBank(float tickDelta, PoseStack matrices) {
+        var frame = sbw$authoredFixedWingCamera;
+        sbw$authoredFixedWingCamera = null;
+        if (frame != null && mainCamera.getEntity() == frame.passenger() && !mainCamera.isDetached()) {
+            // Camera.setup already placed the authored eye. Rotate around it; never translate it again.
+            matrices.mulPose(Axis.ZP.rotationDegrees(FixedWingCockpitCamera.rollDegrees(
+                    mainCamera.getYRot(), mainCamera.getXRot(), frame.bodyYaw(), frame.bodyPitch(), frame.bodyRoll())));
+            return;
+        }
+        Minecraft minecraft = Minecraft.getInstance();
+        Entity entity = mainCamera.getEntity();
+        // Legacy cockpit banking must also use this frame's completed camera. Before setup it
+        // read the previous held view on release, mixing old freelook angles with current body axes.
+        if (frame == null && entity != null
+                && minecraft.options.getCameraType().isFirstPerson()
+                && entity.getRootVehicle() instanceof VehicleEntity vehicle && !mainCamera.isDetached()
+                && !AircraftArmamentClient.isPodActive(vehicle)
+                && !vehicle.isPassengerStationLocalAimController(entity)) {
             // rotate camera
             float a = Mth.wrapDegrees(mainCamera.getYRot() - Mth.lerp(tickDelta, vehicle.yRotO, vehicle.getYRot()));
 

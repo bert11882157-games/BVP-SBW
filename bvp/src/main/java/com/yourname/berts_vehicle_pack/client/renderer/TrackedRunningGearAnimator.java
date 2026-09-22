@@ -20,7 +20,7 @@ final class TrackedRunningGearAnimator {
                 roadWheelCount, trackYCenter, trackRadius, trackZRear, trackZFront, trackLinkCount);
     }
 
-    /** Profile-only mode: no guessed legacy path is permitted for pending authoring. */
+    /** Profile-only mode: missing profiles leave running gear static, with no legacy fallback. */
     TrackedRunningGearAnimator() {
         this.legacyAnimator = null;
     }

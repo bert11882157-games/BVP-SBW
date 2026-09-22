@@ -1,6 +1,7 @@
 package com.atsuishio.superbwarfare.mixins;
 
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity;
+import com.atsuishio.superbwarfare.client.renderer.vehicle.VehicleOperatorPose;
 import com.atsuishio.superbwarfare.item.curio.ParachuteItem;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import net.minecraft.client.model.HumanoidModel;
@@ -11,6 +12,7 @@ import net.minecraft.world.entity.Pose;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -35,6 +37,25 @@ public abstract class HumanoidModelMixin {
     @Shadow @Final public ModelPart head;
 
     @Shadow @Final public ModelPart hat;
+
+    @Unique
+    private final VehicleOperatorPose.State superbwarfare$operatorPose = new VehicleOperatorPose.State();
+
+    @Unique
+    private boolean superbwarfare$lowMountedPose;
+
+    @Inject(method = "setupAnim(Lnet/minecraft/world/entity/LivingEntity;FFFFF)V", at = @At("HEAD"))
+    private void restoreOperatorPose(LivingEntity entity, float limbSwing, float limbSwingAmount,
+                                     float ageInTicks, float headYaw, float headPitch, CallbackInfo ci) {
+        superbwarfare$operatorPose.restore(body, head, hat, leftArm, rightArm);
+        // Humanoid models are reused for other players: undo only our previous offset.
+        if (superbwarfare$lowMountedPose) {
+            body.y -= 10; head.y -= 10; hat.y -= 10;
+            leftArm.y -= 10; rightArm.y -= 10;
+            leftLeg.y -= 10; rightLeg.y -= 10;
+            superbwarfare$lowMountedPose = false;
+        }
+    }
 
     @Inject(
             method = "setupAnim(Lnet/minecraft/world/entity/LivingEntity;FFFFF)V",
@@ -96,6 +117,20 @@ public abstract class HumanoidModelMixin {
             }
 
             // 站姿
+            if (seat.pose.equals("MountedLowSeated")) {
+                // Ground-mounted low guns have no chair. Keep the entity root at ground
+                // level and lower the seated mesh until its legs/bottom meet that ground.
+                body.y += 10; head.y += 10; hat.y += 10;
+                leftArm.y += 10; rightArm.y += 10;
+                leftLeg.y += 10; rightLeg.y += 10;
+                superbwarfare$lowMountedPose = true;
+                leftLeg.xRot = rightLeg.xRot = -Mth.HALF_PI;
+                leftLeg.yRot = 0.12F; rightLeg.yRot = -0.12F;
+                leftLeg.zRot = rightLeg.zRot = 0;
+                leftArm.xRot = rightArm.xRot = -60 * Mth.DEG_TO_RAD;
+                leftArm.yRot = rightArm.yRot = leftArm.zRot = rightArm.zRot = 0;
+            }
+
             if (seat.pose.equals("Stand")) {
                 this.leftLeg.xRot = 0 * Mth.DEG_TO_RAD;
                 this.leftLeg.yRot = 0 * Mth.DEG_TO_RAD;
@@ -125,6 +160,10 @@ public abstract class HumanoidModelMixin {
                 this.rightLeg.xRot = 0 * Mth.DEG_TO_RAD;
                 this.rightLeg.yRot = 0 * Mth.DEG_TO_RAD;
                 this.rightLeg.zRot = 0 * Mth.DEG_TO_RAD;
+
+                VehicleOperatorPose.apply(livingEntity, vehicle, seat,
+                        ageInTicks - livingEntity.tickCount, body, head, hat, leftArm, rightArm,
+                        superbwarfare$operatorPose);
             }
         }
 

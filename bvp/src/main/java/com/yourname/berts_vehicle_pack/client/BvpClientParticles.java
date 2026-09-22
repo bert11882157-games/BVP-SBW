@@ -2,6 +2,8 @@ package com.yourname.berts_vehicle_pack.client;
 
 import com.yourname.berts_vehicle_pack.client.particle.BvpImpactSparkParticle;
 import com.yourname.berts_vehicle_pack.client.particle.BvpExplosionParticle;
+import com.yourname.berts_vehicle_pack.client.particle.BvpSizedExplosionParticle;
+import com.yourname.berts_vehicle_pack.client.particle.BvpAfterburnerParticle;
 import com.yourname.berts_vehicle_pack.client.particle.BvpRocketFlameParticle;
 import com.yourname.berts_vehicle_pack.client.particle.BvpRocketSmokeParticle;
 import com.yourname.berts_vehicle_pack.effects.BvpProjectileEffectDefinition;
@@ -16,11 +18,29 @@ public final class BvpClientParticles {
     private BvpClientParticles() {
     }
 
+    /** Reuses the aircraft afterburner material, texture and fades at the missile's body size. */
+    public static void spawnMissileExhaust(boolean flame, Vec3 position, float diameter) {
+        var engine = net.minecraft.client.Minecraft.m_91087_().f_91061_;
+        var particle = engine.m_107370_(flame ? ModParticles.TAP_EXHAUST_FLAME.get()
+                        : ModParticles.TAP_EXHAUST_SMOKE.get(),
+                position.f_82479_, position.f_82480_, position.f_82481_, 0, 0, 0);
+        if (particle instanceof com.yourname.berts_vehicle_pack.client.particle.BvpTapFlameParticle afterburner)
+            afterburner.setDiameter(diameter);
+        if (particle instanceof com.yourname.berts_vehicle_pack.client.particle.BvpTapSmokeParticle smoke)
+            smoke.setDiameter(diameter);
+    }
+
     public static void registerParticleProviders(RegisterParticleProvidersEvent event) {
         event.registerSpriteSet(ModParticles.ROCKET_FLAME.get(), BvpRocketFlameParticle.Provider::new);
         event.registerSpriteSet(ModParticles.ROCKET_SMOKE.get(), BvpRocketSmokeParticle.Provider::new);
         event.registerSpriteSet(ModParticles.IMPACT_SPARK.get(), BvpImpactSparkParticle.Provider::new);
         event.registerSpriteSet(ModParticles.EXPLOSION.get(), BvpExplosionParticle.Provider::new);
+        event.registerSpriteSet(ModParticles.SIZED_EXPLOSION.get(), BvpSizedExplosionParticle.Provider::new);
+        event.registerSpriteSet(ModParticles.AFTERBURNER.get(), BvpAfterburnerParticle.Provider::new);
+        event.registerSpriteSet(ModParticles.TAP_EXHAUST_FLAME.get(),
+                com.yourname.berts_vehicle_pack.client.particle.BvpTapFlameParticle.Provider::new);
+        event.registerSpriteSet(ModParticles.TAP_EXHAUST_SMOKE.get(),
+                com.yourname.berts_vehicle_pack.client.particle.BvpTapSmokeParticle.Provider::new);
     }
 
     public static void spawnProjectileTrail(ClientLevel level, BvpProjectileEffectDefinition.Trail trail,
@@ -70,9 +90,8 @@ public final class BvpClientParticles {
                                            double sizeScale, double randomScale, double width,
                                            double velocityX, double velocityY, double velocityZ,
                                            int lifetime) {
-        // Trail visibility was historically guaranteed by override-limiter particle types.
-        // Keep that contract local to the renderer's bounded trail budget instead of forcing
-        // every use of the shared flame and smoke particle types.
+        // Force trail visibility within the renderer's bounded budget. Shared flame and smoke
+        // particle types retain their normal limiter behavior outside this path.
         ProjectileEffectParticleOptions options = new ProjectileEffectParticleOptions(flame,
                 (float) sizeScale, (float) randomScale, lifetime, (float) width,
                 (float) velocityX, (float) velocityY, (float) velocityZ);

@@ -1,0 +1,30 @@
+{
+  "AmmoType": "superbwarfare:small_rocket",
+  "Magazine": 40,
+  "EmptyReloadTime": 200,
+  "DefaultFireMode": "Auto",
+  "AvailableFireModes": "Auto",
+  "RPM": 450,
+  "Name": "S-8KO rockets",
+  "Projectile": {
+    "Type": "berts_vehicle_pack:s8ko_rocket",
+    "Profile": "berts_vehicle_pack:aircraft_rockets/s8ko"
+  },
+  "AddShooterDeltaMovement": true,
+  "Spread": 0.25,
+  "Damage": 100,
+  "ExplosionDamage": 0,
+  "ExplosionRadius": 6,
+  "Gravity": 0.02,
+  "Velocity": 9,
+  "ProjectileLife": 100,
+  "ApDurability": 400,
+  "ShellType": "HEAT",
+  "Crosshair": "@Empty",
+  "SoundRadius": 12,
+  "SoundInfo": {
+    "Fire1P": "superbwarfare:small_rocket_fire_1p",
+    "Fire3P": "superbwarfare:small_rocket_fire_3p",
+    "Change": "superbwarfare:into_missile"
+  }
+}

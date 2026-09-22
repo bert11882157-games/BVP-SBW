@@ -6,6 +6,21 @@ internal object VehicleAimMath {
     private const val FULL_YAW_RANGE_DEGREES = 360F
     private const val FULL_YAW_EPSILON_DEGREES = 1.0E-4F
 
+    /** Continuous physical capture: no timer can drop assistance while tracking a close aim. */
+    fun closeAimMultiplier(errorDegrees: Double): Float {
+        if (!errorDegrees.isFinite() || errorDegrees < 0.0) return 1F
+        val blend = ((3.0 - errorDegrees) / 2.0).coerceIn(0.0, 1.0)
+        return (1.0 + 2.0 * blend * blend * (3.0 - 2.0 * blend)).toFloat()
+    }
+
+    /** At high zoom the capture occupies more screen space, with a bounded world angle. */
+    fun shouldSnap(yawError: Float, pitchError: Float, zoom: Float): Boolean {
+        if (!yawError.isFinite() || !pitchError.isFinite()) return false
+        val magnification = if (zoom.isFinite()) zoom.coerceIn(1F, 24F) else 1F
+        val radius = (0.2 + 0.055 * (magnification - 1)).coerceAtMost(0.8)
+        return kotlin.math.hypot(yawError.toDouble(), pitchError.toDouble()) <= radius
+    }
+
     data class DirectionAngles(
         val yaw: Float,
         val pitch: Float,

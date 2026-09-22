@@ -42,6 +42,7 @@ open class MortarShellEntity : FastThrowableProjectile, BasicGeoProjectileEntity
     }
 
     private var type: Type? = Type.NORMAL
+    override fun farProjectileLookAheadTicks(): Int = if (type == Type.WP) 8 else 0
     private var potion: Potion = Potions.EMPTY
     private val effects: MutableSet<MobEffectInstance> = hashSetOf()
 

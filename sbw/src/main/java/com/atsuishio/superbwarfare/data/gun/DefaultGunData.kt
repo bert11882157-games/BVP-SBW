@@ -138,6 +138,10 @@ class DefaultGunData : IDBasedData<DefaultGunData> {
         return projectile.value
     }
 
+    /** Vehicle firing interlock; non-opted-in weapons ignore landing-gear state. */
+    @SerialName("RequiresRetractedLandingGear")
+    var requiresRetractedLandingGear = false
+
     /** Explicitly client-safe mirror used only by the nominal CCIP predictor. */
     @SerialName("NominalBallistics")
     var nominalBallistics: NominalBallisticsDescriptor? = null
@@ -236,6 +240,10 @@ class DefaultGunData : IDBasedData<DefaultGunData> {
             return this.fireModesCache!!
         }
 
+    /** Vehicle belts use the native open-bolt reload cycle without a chambered extra round. */
+    @SerialName("BeltFed")
+    var beltFed = false
+
     @SerialName("NormalReloadTime")
     var normalReloadTime = 0
 
@@ -295,6 +303,14 @@ class DefaultGunData : IDBasedData<DefaultGunData> {
 
     @SerialName("ShootDelay")
     var shootDelay = 0
+
+    /** Explicit opt-out also clears heat persisted by an older weapon definition. */
+    @SerialName("OverheatEnabled")
+    var overheatEnabled = true
+
+    /** Native vehicle installations without typed projectile Combat metadata. Never changes infantry guns. */
+    @SerialName("VehicleDirectDamageScale")
+    var vehicleDirectDamageScale = 1.0
 
     @ServerOnly
     @SerialName("HeatPerShoot")

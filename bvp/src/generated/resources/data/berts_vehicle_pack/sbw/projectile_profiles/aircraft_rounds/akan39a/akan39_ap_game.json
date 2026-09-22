@@ -1,0 +1,65 @@
+{
+  "Combat": {
+    "WeaponId": "berts_vehicle_pack:aircraft_guns/akan39a",
+    "RoundId": "berts_vehicle_pack:akan39_ap_game",
+    "MunitionType": "berts_vehicle_pack:bullet",
+    "DamageType": "berts_vehicle_pack:kinetic",
+    "CaliberMm": 13.2,
+    "DiameterMm": 13.2,
+    "HullDamageClass": "DEFAULT",
+    "HullDamage": 8,
+    "ModuleDamage": 4,
+    "AmmoRackDamage": 1,
+    "PenetrationMm": 28,
+    "PenetrationCurve": {
+      "DistancesMetres": [
+        10,
+        100,
+        500,
+        1000,
+        1500,
+        2000
+      ],
+      "PenetrationMm": [
+        28,
+        26,
+        19,
+        12,
+        8,
+        5
+      ]
+    },
+    "RicochetCurve": {
+      "IncidenceAnglesDegrees": [
+        0,
+        47,
+        49,
+        50,
+        60,
+        65,
+        90
+      ],
+      "Probability": [
+        0,
+        0,
+        0.005,
+        0.35,
+        0.6,
+        1,
+        1
+      ]
+    },
+    "Tandem": false
+  },
+  "VisualProfile": "berts_vehicle_pack:scaled_bullet",
+  "ImpactVisualProfile": "berts_vehicle_pack:hmg",
+  "MotionSync": "INHERIT",
+  "Collision": {
+    "Width": 0.006,
+    "Height": 0.006
+  },
+  "Luminance": 8,
+  "TrailMode": "DEFAULT",
+  "RenderScale": 1,
+  "Extensions": {}
+}

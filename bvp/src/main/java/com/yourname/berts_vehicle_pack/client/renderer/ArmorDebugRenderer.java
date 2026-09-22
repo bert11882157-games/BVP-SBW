@@ -1,6 +1,7 @@
 package com.yourname.berts_vehicle_pack.client.renderer;
 
 import com.atsuishio.superbwarfare.api.vehicle.pose.VehiclePoseSnapshot;
+import com.atsuishio.superbwarfare.api.diagnostics.DebugFeaturePolicy;
 import com.atsuishio.superbwarfare.client.renderer.vehicle.VehicleRenderPartSnapshot;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -42,16 +43,16 @@ public final class ArmorDebugRenderer {
     }
 
     public static boolean shouldRender() {
-        return commandXrayEnabled;
+        return commandXrayEnabled && DebugFeaturePolicy.allowsDebugTools();
     }
 
     public static boolean toggleCommandXray() {
-        commandXrayEnabled = !commandXrayEnabled;
+        commandXrayEnabled = DebugFeaturePolicy.allowsDebugTools() && !commandXrayEnabled;
         return commandXrayEnabled;
     }
 
     public static void setCommandXrayEnabled(boolean enabled) {
-        commandXrayEnabled = enabled;
+        commandXrayEnabled = enabled && DebugFeaturePolicy.allowsDebugTools();
     }
 
     /**
@@ -87,13 +88,19 @@ public final class ArmorDebugRenderer {
         RenderType lineType = ARMOR_XRAY_LINE;
         VertexConsumer fill = bufferSource.m_6299_(fillType);
         VertexConsumer lines = bufferSource.m_6299_(lineType);
+        boolean passengerStation = entity.isHullParentedPassengerWeaponStation();
         float turretFrameYaw = renderParts == null
                 ? 0.0F
-                : renderParts.getTurretYawFromRenderedHullDegrees();
+                : passengerStation ? renderParts.getStationYawRelativeToTurretDegrees()
+                        + entity.getPassengerWeaponStationBaseYawDegrees()
+                        : renderParts.getTurretYawFromRenderedHullDegrees();
         String profileId = entity.getArmorProfileId();
         ArmorCoordinateFrame.BarrelFrame barrelFrame = renderParts == null ? null
-                : ArmorCoordinateFrame.renderedBarrelFrame(entity.getTurretPos(), entity.getBarrelPosition(),
-                        turretFrameYaw, renderParts.getBarrelPitchDegrees(),
+                : ArmorCoordinateFrame.renderedBarrelFrame(
+                        passengerStation ? entity.getPassengerWeaponStationPosition() : entity.getTurretPos(),
+                        passengerStation ? entity.getPassengerWeaponStationBarrelPosition() : entity.getBarrelPosition(),
+                        turretFrameYaw, passengerStation ? renderParts.getStationPitchDegrees()
+                                : renderParts.getBarrelPitchDegrees(),
                         "t72a".equals(profileId) || "t72b".equals(profileId));
         Set<String> spentEra = EraBrickIds.parseStateIds(entity.getBvpSpentEraBricks());
 
@@ -244,7 +251,8 @@ public final class ArmorDebugRenderer {
     }
 
     private static DebugVec turretPivot(ArmoredVehicleEntity entity) {
-        Vec3 pivot = entity.getTurretPos();
+        Vec3 pivot = entity.isHullParentedPassengerWeaponStation()
+                ? entity.getPassengerWeaponStationPosition() : entity.getTurretPos();
         return pivot == null
                 ? new DebugVec(0.0D, 0.0D, 0.0D)
                 : fromArmorVec(ArmorCoordinateFrame.sbwVehicleLocalToVisualLocal(pivot));

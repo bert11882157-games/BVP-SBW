@@ -7551,8 +7551,69 @@
     }
   ],
   "sensitive_internals": [],
-  "engines": [],
-  "ammo_racks": [],
+  "engines": [
+    {
+      "name": "engine_core_00",
+      "center": [
+        0,
+        1.375,
+        2.53125
+      ],
+      "half_size": [
+        0.5,
+        0.3125,
+        0.53125
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull"
+    }
+  ],
+  "ammo_racks": [
+    {
+      "name": "external_left_feed_00",
+      "center": [
+        0.28125,
+        2.28125,
+        -0.9375
+      ],
+      "half_size": [
+        0.15625,
+        0.09375,
+        0.25
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "turret",
+      "health": 10
+    },
+    {
+      "name": "external_right_feed_01",
+      "center": [
+        -0.23438,
+        2.28125,
+        -0.96875
+      ],
+      "half_size": [
+        0.10938,
+        0.09375,
+        0.21875
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "turret",
+      "health": 10
+    }
+  ],
   "tracks": [],
   "modules": [],
   "explosive_reactive_armor": [],

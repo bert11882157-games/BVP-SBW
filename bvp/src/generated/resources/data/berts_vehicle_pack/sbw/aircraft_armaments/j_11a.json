@@ -1,0 +1,24 @@
+{
+  "Schema": 1,
+  "SuspendedWeapons": [],
+  "Pairs": [],
+  "StoreGroups": {
+    "berts_vehicle_pack:modeled_store/j_11a/wing_inboard_missiles": [
+      "suspended_wing_inboard_missiles_left",
+      "suspended_wing_inboard_missiles_right"
+    ],
+    "berts_vehicle_pack:modeled_store/j_11a/wing_outboard_missiles": [
+      "suspended_wing_outboard_missiles_left",
+      "suspended_wing_outboard_missiles_right"
+    ],
+    "berts_vehicle_pack:modeled_store/j_11a/underbody_missiles": [
+      "suspended_underbody_missiles_left",
+      "suspended_underbody_missiles_center",
+      "suspended_underbody_missiles_right"
+    ]
+  },
+  "Name": "J-11A",
+  "BuiltInWeapons": [
+    "Gun1"
+  ]
+}

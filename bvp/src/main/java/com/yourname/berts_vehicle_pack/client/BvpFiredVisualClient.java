@@ -67,10 +67,8 @@ public final class BvpFiredVisualClient {
 
         UUID sourceUuid = record.getSourceEntityUuid();
         LaunchPresentation presentation = new LaunchPresentation(record);
-        if (kind == VisualKind.TANK_CANNON) {
-            BvpTracerRenderer.acceptLaunch(record);
-        } else {
-            BvpTracerRenderer.acceptUnresolvedLaunch(record);
+        BvpTracerRenderer.acceptUnresolvedLaunch(record);
+        if (kind != VisualKind.TANK_CANNON) {
             for (UUID projectileId : record.getSpawnedProjectileIds()) {
                 if (projectileId != null) {
                     ClientRenderHandler.registerBulletRenderOrigin(
@@ -168,6 +166,15 @@ public final class BvpFiredVisualClient {
 
     private static boolean matchesWeapon(
             FiredVisualRecord record, ArmoredVehicleEntity vehicle, String weaponName) {
+        if (weaponName == null || vehicle.getGunData(weaponName) == null) {
+            return false;
+        }
+        FiredVisualFrameReference reference = record.getFrameReference();
+        if (reference != null) {
+            // The accepted shot names the exact vehicle channel. Projectile weapon IDs can
+            // be shared by several aircraft and even by distinct mounts on one aircraft.
+            return weaponName.equals(reference.getWeaponName());
+        }
         ResourceLocation recordWeaponId = record.getWeaponId();
         ResourceLocation vehicleTypeId = ForgeRegistries.ENTITY_TYPES.getKey(vehicle.m_6095_());
         String weaponPath = generatedWeaponPath(weaponName);
@@ -201,6 +208,14 @@ public final class BvpFiredVisualClient {
                 || direction.m_82556_() <= MIN_MUZZLE_DIRECTION_SQR) {
             return fallback;
         }
+        if (vehicle.isFixedWingFlightVehicle() && EliteDiagnostics.isClientEnabled()) {
+            EliteDiagnostics.recordClient(level.m_46467_(), "effects", "muzzle_attachment",
+                    "source_entity", sourceUuid, "weapon", record.getWeaponId(),
+                    "sequence", record.getSequence(), "partial_tick", partialTick,
+                    "position_attachment", positionAttachment, "position", position,
+                    "direction", direction, "aircraft_matrix",
+                    java.util.Arrays.toString(vehicle.getVehicleTransform(partialTick).get(new double[16])));
+        }
         return new EffectFrame(position, direction.m_82541_());
     }
 
@@ -213,6 +228,19 @@ public final class BvpFiredVisualClient {
         long visualSeed = visualSeed(record);
         boolean suppressForwardSpray = shouldSuppressLocalForwardSpray(
                 minecraft, record, position, partialTick);
+        BvpMuzzleFlashRenderer.FlashAnchor flashAnchor = null;
+        if (record.getFrameReference() != null
+                && level.m_6815_(record.getSourceEntityId()) instanceof ArmoredVehicleEntity source
+                && source.isFixedWingFlightVehicle()) {
+            flashAnchor = new BvpMuzzleFlashRenderer.FlashAnchor() {
+                @Override public Vec3 resolve(float framePartial) {
+                    return resolveEffectFrame(level, record, framePartial).position;
+                }
+                @Override public String shotIdentity() {
+                    return record.getSourceEntityUuid() + ":" + record.getWeaponId() + ":" + record.getSequence();
+                }
+            };
+        }
         if (EliteDiagnostics.isClientEnabled()) {
             EliteDiagnostics.recordClient(level.m_46467_(), "effects", "firing_dispatch",
                     "source_entity", record.getSourceEntityUuid(), "weapon", record.getWeaponId(),
@@ -230,11 +258,11 @@ public final class BvpFiredVisualClient {
                 }
             }
             case AUTOCANNON -> BvpMuzzleFlashRenderer.enqueueAutocannonBurst(
-                    position, direction, visualSeed, suppressForwardSpray);
+                    position, direction, visualSeed, suppressForwardSpray, flashAnchor);
             case PASSENGER_HMG -> BvpMuzzleFlashRenderer.enqueuePassengerHmgBurst(
-                    position, direction, visualSeed, suppressForwardSpray);
+                    position, direction, visualSeed, suppressForwardSpray, flashAnchor);
             case COAX -> BvpMuzzleFlashRenderer.enqueueCoaxBurst(
-                    position, direction, visualSeed, suppressForwardSpray);
+                    position, direction, visualSeed, suppressForwardSpray, flashAnchor);
             default -> {
             }
         }
@@ -242,9 +270,7 @@ public final class BvpFiredVisualClient {
 
     private static void resolveTracerLaunch(PendingVisual pending, EffectFrame effect,
                                             float partialTick) {
-        if (pending.kind != VisualKind.TANK_CANNON) {
-            BvpTracerRenderer.resolveLaunch(pending.record, effect.position, partialTick);
-        }
+        BvpTracerRenderer.resolveLaunch(pending.record, effect.position, effect.direction, partialTick);
     }
 
     private static boolean validAttachmentName(String value) {

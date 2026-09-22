@@ -32,16 +32,18 @@ data class VehicleFlightInputContext(
     val bodyYawDegrees: Double = 0.0,
     val bodyPitchDegrees: Double = 0.0,
     val bodyRollDegrees: Double = 0.0,
-    /** Signed held W/S throttle axis for fixed-wing vehicles; neutral preserves the current spool. */
+    /** Signed held fixed-wing throttle axis; neutral preserves the current spool. */
     val fixedWingThrottleAxis: Double = 0.0,
     /** Per-sample pilot mouse pitch delta; fixed-wing strategy integrates it into a bounded stick. */
     val fixedWingMousePitchDelta: Double = 0.0,
     /** Per-sample pilot mouse roll delta; fixed-wing strategy integrates it into a bounded stick. */
     val fixedWingMouseRollDelta: Double = 0.0,
-    /** Signed held A/D rudder axis for fixed-wing vehicles. */
+    /** Signed held A/D taxi-rudder axis; airborne roll consumes [rollInput] instead. */
     val fixedWingRudderInput: Double = 0.0,
     val fixedWingAfterburnerRequested: Boolean = false,
     val fixedWingAirbrakeRequested: Boolean = false,
+    /** Explicitly centers the fixed-wing virtual stick faster than its automatic return. */
+    val fixedWingRecenterRequested: Boolean = false,
 ) {
     init {
         require(mouseInputX.isFinite()) { "mouseInputX must be finite" }

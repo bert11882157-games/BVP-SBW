@@ -28,7 +28,7 @@ data class VehicleWeaponScheduleProfile(
     val soundIntervalProjectiles: Int,
     val heatPolicy: VehicleWeaponHeatPolicy? = null,
     val repeatWhileHeld: Boolean = true,
-    /** Accepted events retain their cadence across release/repress and weapon switching. */
+    /** Compatibility field; server cadence now always survives release/repress and selection. */
     val preserveAcceptedCadenceAcrossPresses: Boolean = false,
     val releaseGraceTicks: Int = 4,
     val maxCatchUpEvents: Int = 2,

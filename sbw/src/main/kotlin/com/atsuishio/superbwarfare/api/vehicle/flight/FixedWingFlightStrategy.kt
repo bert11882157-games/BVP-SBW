@@ -1,559 +1,379 @@
 package com.atsuishio.superbwarfare.api.vehicle.flight
 
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity
+import net.minecraft.world.entity.player.Player
 import net.minecraft.world.phys.Vec3
-import kotlin.math.PI
-import kotlin.math.abs
-import kotlin.math.atan2
-import kotlin.math.cos
-import kotlin.math.exp
+import java.util.UUID
 import kotlin.math.max
 import kotlin.math.min
-import kotlin.math.sin
-import kotlin.math.sqrt
 
 /**
- * Deterministic fixed-wing/jet flight owner.  It is deliberately independent of the helicopter
- * force model: one server tick samples air-relative motion, integrates bounded aerodynamic and
- * engine forces, and returns the final motion/attitude for VehicleEntity's existing single move.
- * No world queries, entity scans, or client-side authority occur here.
+ * Server integration adapter for the independent aircraft model.
+ * Reference aircraft specifications remain separate from the game-scale handling profile.
  */
-open class FixedWingFlightStrategy(
+open class FixedWingFlightStrategy @JvmOverloads constructor(
     val profile: FixedWingFlightProfile,
+    val handling: FixedWingHandlingProfile = FixedWingHandlingProfile.GAME_JET,
 ) : VehicleFlightStrategy() {
-    override val strategyKind: VehicleFlightStrategyKind = VehicleFlightStrategyKind.FIXED_WING
+    override val strategyKind = VehicleFlightStrategyKind.FIXED_WING
 
+    private val model = FixedWingFlightModel(handling)
+    private val mouseAim = FixedWingMouseAimController(handling)
+    private val pilotIntent = FixedWingPilotIntentState()
     private var initialized = false
     private var lastServerTick = Long.MIN_VALUE
-    private var throttle = 0.0
-    private var afterburnerRemaining: Double? = null
-    private var yawDegrees = 0.0
-    private var pitchDegrees = 0.0
-    private var rollDegrees = 0.0
-    private var yawRate = 0.0
-    private var pitchRate = 0.0
-    private var rollRate = 0.0
-    /** Mouse commands are integrated as bounded pilot stick positions, not body-axis snaps. */
-    private var pitchStick = 0.0
-    private var rollStick = 0.0
-    private var stallActive = false
-    private var stallRecoveryTicks = 0
-    private var wingDropSign = 1.0
-    private var lastSpeedMps = 0.0
-    private var lastAngleOfAttackDegrees = 0.0
-    private var lastAfterburnerActive = false
-    private var lastForwardVelocityMps = 0.0
-    private var lastLateralVelocityMps = 0.0
-    private var lastVerticalVelocityMps = 0.0
-    private var lastDynamicPressurePa = 0.0
-    private var lastLiftCoefficient = 0.0
-    private var lastDragCoefficient = 0.0
-    private var lastLiftForceNewtons = 0.0
-    private var lastDragForceNewtons = 0.0
-    private var lastThrustForceNewtons = 0.0
-    private var lastGravityAccelerationMps2 = 0.0
-    private var lastControlEffectiveness = 0.0
-    private var lastStallSeverity = 0.0
+    private var controllerUuid: UUID? = null
+    private var afterburnerRemaining = profile.afterburnerFuelSeconds ?: 0.0
+    private val limitedAfterburner = profile.afterburnerFuelSeconds != null
+    private var surfaceSnapshot: FixedWingControlSurfaceSnapshot? = null
+    private val afterburnerControl = FixedWingAfterburnerControl()
+    private val sonicCrossing = FixedWingSonicCrossing()
+    private val afterburnerFuelCostPerTick =
+        profile.afterburnerConsumptionPerSecond * FixedWingFlightModel.DT
+
+    /** Observes admitted edges without advancing dynamics, including two edges in one tick. */
+    fun observePilotThrottleInput(vehicle: VehicleEntity, throttleAxis: Double) {
+        if (vehicle.level().isClientSide) return
+        val pilot = vehicle.getNthEntity(0) as? Player
+        val controlsEnabled = pilot != null && pilot.vehicle === vehicle &&
+            pilot.isAlive && !pilot.isSpectator && pilot.uuid == controllerUuid
+        afterburnerControl.update(
+            model.throttle,
+            throttleAxis,
+            afterburnerEligible(vehicle, controlsEnabled, engineAvailability(vehicle)),
+        )
+    }
+
+    private fun afterburnerEligible(
+        vehicle: VehicleEntity,
+        controlsEnabled: Boolean,
+        engineAvailability: Double,
+    ): Boolean =
+        controlsEnabled && !vehicle.isWreck && !vehicle.isInFluidType &&
+            profile.afterburnerEnabled && vehicle.computed().afterburner && engineAvailability > 0.0 &&
+            vehicle.hasOperationalPower(handling.afterburnerOperationalEnergyPerTick) &&
+            (!limitedAfterburner ||
+                (afterburnerRemaining > 0.0 && afterburnerRemaining >= afterburnerFuelCostPerTick))
 
     override fun onActivated(vehicle: VehicleEntity) {
-        reset(vehicle, null)
+        resetFromPhysicalPose(vehicle)
+        afterburnerRemaining = profile.afterburnerFuelSeconds ?: 0.0
     }
 
     override fun onDeactivated(vehicle: VehicleEntity) {
+        sonicCrossing.reset()
+        clearPilotControls()
         initialized = false
         lastServerTick = Long.MIN_VALUE
-        throttle = 0.0
-        pitchStick = 0.0
-        rollStick = 0.0
-        yawRate = 0.0
-        pitchRate = 0.0
-        rollRate = 0.0
-        stallActive = false
-        stallRecoveryTicks = 0
+    }
+
+    /** May be called immediately on an accepted pilot lifecycle transition. */
+    fun clearPilotControls() {
+        controllerUuid = null
+        pilotIntent.clear()
+        mouseAim.reset()
+        model.resetControls(preserveThrottle = true)
+        afterburnerControl.reset()
+        surfaceSnapshot = null
     }
 
     override fun tickServer(
         vehicle: VehicleEntity,
         input: VehicleFlightInputContext,
     ): VehicleFlightTickResult {
+        check(!vehicle.level().isClientSide) { "Fixed-wing dynamics are server-authoritative" }
         if (!initialized ||
             (lastServerTick != Long.MIN_VALUE && input.serverTick - lastServerTick != 1L) ||
-            hasExternalAttitudeDiscontinuity(vehicle)
+            attitudeDiscontinuous(input)
         ) {
-            reset(vehicle, input)
+            resetFromPhysicalPose(vehicle)
         }
-        initialized = true
-        lastServerTick = input.serverTick
 
-        // The movement sample is the post-collision velocity from the preceding transaction.
-        // Keeping it as the integration seed preserves momentum and lets collision response feed
-        // back into the next authoritative tick without a second move or a velocity snap.
-        val vx = finiteOrZero(input.airVelocity.x)
-        val vy = finiteOrZero(input.airVelocity.y)
-        val vz = finiteOrZero(input.airVelocity.z)
-        val speedBlocksPerTick = sqrt(vx * vx + vy * vy + vz * vz)
-        val speedMps = speedBlocksPerTick * TICKS_PER_SECOND
-        lastSpeedMps = speedMps
+        val pilot = synchronizePilot(vehicle)
+        val controlsEnabled = pilot != null && input.occupied && !input.wreck
 
-        val yawRad = yawDegrees * DEG_TO_RAD
-        val pitchRad = pitchDegrees * DEG_TO_RAD
-        val rollRad = rollDegrees * DEG_TO_RAD
-        val sinYaw = sin(yawRad)
-        val cosYaw = cos(yawRad)
-        val sinPitch = sin(pitchRad)
-        val cosPitch = cos(pitchRad)
+        val energyCost = handling.operationalEnergyPerTick
+        val propulsionAvailable = !input.wreck && !input.inFluid &&
+            vehicle.hasOperationalPower(energyCost)
+        val engineAvailability = if (propulsionAvailable) engineAvailability(vehicle) else 0.0
+        val requestedAfterburner = afterburnerControl.update(
+            model.throttle,
+            input.fixedWingThrottleAxis,
+            afterburnerEligible(vehicle, controlsEnabled, engineAvailability),
+        )
 
-        // Minecraft's forward convention is -sin(yaw), -sin(pitch), cos(yaw).
-        val forwardX = -sinYaw * cosPitch
-        val forwardY = -sinPitch
-        val forwardZ = cosYaw * cosPitch
-        val rightBaseX = cosYaw
-        val rightBaseZ = sinYaw
-        val upBaseX = forwardY * rightBaseZ
-        val upBaseY = forwardZ * rightBaseX - forwardX * rightBaseZ
-        val upBaseZ = -forwardY * rightBaseX
-        val cosRoll = cos(rollRad)
-        val sinRoll = sin(rollRad)
-        val rightX = rightBaseX * cosRoll + upBaseX * sinRoll
-        val rightY = upBaseY * sinRoll
-        val rightZ = rightBaseZ * cosRoll + upBaseZ * sinRoll
-        val upX = upBaseX * cosRoll - rightBaseX * sinRoll
-        val upY = upBaseY * cosRoll
-        val upZ = upBaseZ * cosRoll - rightBaseZ * sinRoll
-
-        val forwardVelocity = vx * forwardX + vy * forwardY + vz * forwardZ
-        val rightVelocity = vx * rightX + vy * rightY + vz * rightZ
-        val upVelocity = vx * upX + vy * upY + vz * upZ
-        lastForwardVelocityMps = forwardVelocity * TICKS_PER_SECOND
-        lastLateralVelocityMps = rightVelocity * TICKS_PER_SECOND
-        lastVerticalVelocityMps = upVelocity * TICKS_PER_SECOND
-        val aoaDegrees = if (speedBlocksPerTick > EPSILON) {
-            clamp(
-                atan2(-upVelocity, max(forwardVelocity, EPSILON)) * RAD_TO_DEG,
-                -profile.maximumAoADegrees,
-                profile.maximumAoADegrees,
+        val referenceAltitude =
+            (vehicle.y - vehicle.level().seaLevel) / handling.simulationLengthScale
+        val density = FixedWingAtmosphere.densityRatio(referenceAltitude)
+        val temperature = FixedWingAtmosphere.temperatureKelvin(referenceAltitude)
+        val vx = input.airVelocity.x * TICKS_PER_SECOND
+        val vy = input.airVelocity.y * TICKS_PER_SECOND
+        val vz = input.airVelocity.z * TICKS_PER_SECOND
+        mouseAim.update(model, pilotIntent.sample(input.serverTick), controlsEnabled,
+            input.onGround, vx, vy, vz, density)
+        val validStep = model.step(
+            serverTick = input.serverTick,
+            inputVelocityX = vx,
+            inputVelocityY = vy,
+            inputVelocityZ = vz,
+            grounded = input.onGround,
+            controlsEnabled = controlsEnabled,
+            throttleAxis = input.fixedWingThrottleAxis,
+            airbrakeRequested = input.fixedWingAirbrakeRequested,
+            afterburnerRequested = requestedAfterburner,
+            engineAvailability = engineAvailability,
+            airDensityRatio = density,
+            airTemperatureKelvin = temperature,
+            surfaces = mouseAim,
+            surfaceDamage = FixedWingSurfaceDamage.from(vehicle),
+            gearDeployment = if (vehicle.hasFixedWingLandingGear()) 1.0 - vehicle.synchedGearRot else 0.0,
+            // Fixed tyres also support runway acceleration; retractable-gear drag stays separate.
+            wheelsDeployed = vehicle.computed().aircraftTerrainContact?.let {
+                it.validWheelContacts() && it.gearDeployed(vehicle.synchedGearRot)
+            } == true,
+        )
+        if (!validStep) afterburnerControl.reset()
+        if (input.serverTick % 2L == 0L && pilot != null &&
+            com.atsuishio.superbwarfare.diagnostics.EliteDiagnostics.isServerEnabled()) {
+            com.atsuishio.superbwarfare.diagnostics.EliteDiagnostics.record(vehicle, "fixed_wing", "SPEED_STEP",
+                "input_kmh", input.airVelocity.length() * 72.0, "output_kmh", model.speedMps * 3.6,
+                "grounded", input.onGround, "throttle", model.throttle, "engine", engineAvailability,
+                "afterburner", model.afterburnerActive, "thrust", model.thrustAccelerationMps2,
+                "wheel_contact_admitted", model.runwayContactAdmitted,
+                "runway_launch_multiplier", model.runwayLaunchMultiplier,
+                "runway_base_horizontal_thrust_mps2", model.runwayBaseHorizontalThrustMps2,
+                "drag", model.dragAccelerationMps2, "maneuver_drag", model.maneuverDragAccelerationMps2,
+                "valid", validStep)
+        }
+        if (!validStep || input.onGround || input.wreck) sonicCrossing.reset()
+        else if (sonicCrossing.update(model.speedMps * 3.6, input.serverTick)) {
+            FixedWingSonicBoom.emit(vehicle)
+            com.atsuishio.superbwarfare.diagnostics.EliteDiagnostics.record(vehicle, "fixed_wing", "SONIC_BOOM",
+                "speed_kmh", model.speedMps * 3.6, "threshold_kmh", 350)
+        }
+        if (model.thrustAccelerationMps2 > 0.0) {
+            vehicle.consumeOperationalPower(
+                if (model.afterburnerActive) handling.afterburnerOperationalEnergyPerTick else energyCost,
             )
-        } else {
-            0.0
         }
-        lastAngleOfAttackDegrees = aoaDegrees
-
-        updateStallState(input, speedMps, aoaDegrees)
-        val stallSeverity = if (stallActive) {
-            clamp(
-                (abs(aoaDegrees) - profile.stallAoADegrees) /
-                    max(profile.maximumAoADegrees - profile.stallAoADegrees, EPSILON),
-                0.0,
-                1.0,
-            )
-        } else {
-            0.0
-        }
-        lastStallSeverity = stallSeverity
-        val liftFactor = if (stallActive) max(0.18, 1.0 - 0.75 * stallSeverity) else 1.0
-        val controlDynamicPressure = 0.5 * AIR_DENSITY * speedMps * speedMps
-        val controlFactor =
-            clamp(
-                controlDynamicPressure / profile.controlEffectivenessDynamicPressurePa,
-                profile.lowSpeedControlFraction,
-                1.0,
-            ) *
-                (if (stallActive) profile.stallControlFraction else 1.0)
-        lastControlEffectiveness = controlFactor
-
-        val angleOfAttackRadians = aoaDegrees * DEG_TO_RAD
-        val liftCoefficient = clamp(
-            profile.liftSlopePerRadian * angleOfAttackRadians,
-            -profile.maxLiftCoefficient,
-            profile.maxLiftCoefficient,
-        ) * liftFactor
-        val dragCoefficient = profile.zeroLiftDragCoefficient +
-            profile.inducedDragFactor * liftCoefficient * liftCoefficient +
-            profile.stallDragCoefficient * stallSeverity
-        lastLiftCoefficient = liftCoefficient
-        lastDragCoefficient = dragCoefficient
-
-        var nextVx = vx
-        var nextVy = vy
-        var nextVz = vz
-        var liftRight = 0.0
-        if (speedBlocksPerTick > EPSILON) {
-            val velocityX = vx / speedBlocksPerTick
-            val velocityY = vy / speedBlocksPerTick
-            val velocityZ = vz / speedBlocksPerTick
-            val upDotVelocity = upX * velocityX + upY * velocityY + upZ * velocityZ
-            var liftX = upX - upDotVelocity * velocityX
-            var liftY = upY - upDotVelocity * velocityY
-            var liftZ = upZ - upDotVelocity * velocityZ
-            val liftLength = sqrt(liftX * liftX + liftY * liftY + liftZ * liftZ)
-            if (liftLength > EPSILON) {
-                liftX /= liftLength
-                liftY /= liftLength
-                liftZ /= liftLength
-                liftRight = liftX * rightX + liftY * rightY + liftZ * rightZ
-            }
-
-            val dynamicPressure = 0.5 * AIR_DENSITY * speedMps * speedMps
-            lastDynamicPressurePa = dynamicPressure
-            lastLiftForceNewtons = dynamicPressure * profile.referenceWingAreaM2 * liftCoefficient
-            lastDragForceNewtons = dynamicPressure * profile.referenceWingAreaM2 * dragCoefficient
-            val liftAcceleration = lastLiftForceNewtons /
-                profile.massKg / ACCELERATION_TO_TICK_DELTA
-            val dragAcceleration = lastDragForceNewtons /
-                profile.massKg / ACCELERATION_TO_TICK_DELTA
-            nextVx += liftX * liftAcceleration - velocityX * dragAcceleration
-            nextVy += liftY * liftAcceleration - velocityY * dragAcceleration
-            nextVz += liftZ * liftAcceleration - velocityZ * dragAcceleration
-        } else {
-            lastDynamicPressurePa = 0.0
-            lastLiftForceNewtons = 0.0
-            lastDragForceNewtons = 0.0
-        }
-
-        val occupiedControls = input.occupied && !input.wreck
-        val throttleAxis = if (occupiedControls) {
-            clamp(input.fixedWingThrottleAxis, -1.0, 1.0)
-        } else {
-            0.0
-        }
-        // W/S is a persistent spool command: releasing both keys holds the current throttle,
-        // while S winds it down.  No tank engine-power sample can seed a fixed-wing throttle.
-        if (abs(throttleAxis) > profile.joystickDeadzone) {
-            val spoolRate = if (throttleAxis > 0.0) {
-                profile.throttleSpoolUpPerSecond
-            } else {
-                profile.throttleSpoolDownPerSecond
-            }
-            throttle = clamp(
-                throttle + throttleAxis * spoolRate * SECONDS_PER_TICK,
-                0.0,
-                1.0,
-            )
-        } else if (!occupiedControls) {
-            throttle = 0.0
-        }
-
-        val afterburnerActive = occupiedControls && profile.afterburnerEnabled &&
-            input.fixedWingAfterburnerRequested &&
-            (afterburnerRemaining == null || afterburnerRemaining!! > 0.0)
-        lastAfterburnerActive = afterburnerActive
-        if (afterburnerActive && afterburnerRemaining != null && profile.afterburnerConsumptionPerSecond > 0.0) {
+        if (model.afterburnerActive && limitedAfterburner) {
             afterburnerRemaining = max(
                 0.0,
-                afterburnerRemaining!! - profile.afterburnerConsumptionPerSecond * SECONDS_PER_TICK,
+                afterburnerRemaining -
+                    afterburnerFuelCostPerTick,
             )
         }
-        val thrustMultiplier = if (afterburnerActive) profile.afterburnerMultiplier else 1.0
-        lastThrustForceNewtons = profile.dryThrustNewtons * throttle * thrustMultiplier
-        val thrustAcceleration = lastThrustForceNewtons /
-            profile.massKg / ACCELERATION_TO_TICK_DELTA
-        nextVx += forwardX * thrustAcceleration
-        nextVy += forwardY * thrustAcceleration
-        nextVz += forwardZ * thrustAcceleration
-
-        // Gravity is accounted for here and marked in the result; VehicleEntity therefore skips
-        // its generic gravity addition for this transaction.  Ground contact only arrests the
-        // downward component after gravity has been evaluated, preserving takeoff lift.
-        lastGravityAccelerationMps2 = -abs(input.gravityPerTick) * ACCELERATION_TO_TICK_DELTA
-        nextVy -= abs(input.gravityPerTick)
-
-        if (input.onGround) {
-            val groundLongitudinal = nextVx * forwardX + nextVz * forwardZ
-            val groundLateral = nextVx * rightX + nextVz * rightZ
-            val lateralDamping = clamp(profile.groundFrictionPerSecond * SECONDS_PER_TICK, 0.0, 0.95)
-            // Rolling resistance is a coasting/braking term, not a hard speed governor. The
-            // previous fixed damping multiplied every powered tick and settled the 5730 kg
-            // MiG-19 at roughly 6 m/s, so it could never reach its stall/takeoff speed. Let
-            // propulsion overcome the passive term smoothly as throttle spools up; reverse or
-            // unpowered motion still receives the authored ground friction response.
-            val propulsionGroundComponent = thrustAcceleration * (forwardX * forwardX + forwardZ * forwardZ)
-            val rollingRate = profile.groundFrictionPerSecond * 0.25 * SECONDS_PER_TICK
-            val rollingDamping = if (
-                !input.fixedWingAirbrakeRequested &&
-                    propulsionGroundComponent > EPSILON &&
-                    groundLongitudinal * propulsionGroundComponent >= 0.0
-            ) {
-                clamp(rollingRate * (1.0 - throttle), 0.0, 0.8)
-            } else {
-                clamp(rollingRate, 0.0, 0.8)
-            }
-            val brakeDamping = if (input.fixedWingAirbrakeRequested) {
-                clamp(profile.groundBrakingPerSecond * SECONDS_PER_TICK, 0.0, 0.95)
-            } else {
-                0.0
-            }
-            val dampedLateral = groundLateral * (1.0 - lateralDamping)
-            val dampedLongitudinal = groundLongitudinal * (1.0 - max(rollingDamping, brakeDamping))
-            nextVx += rightX * (dampedLateral - groundLateral) + forwardX * (dampedLongitudinal - groundLongitudinal)
-            nextVz += rightZ * (dampedLateral - groundLateral) + forwardZ * (dampedLongitudinal - groundLongitudinal)
-            if (nextVy < 0.0) nextVy = 0.0
-
-            val groundSpeed = sqrt(nextVx * nextVx + nextVz * nextVz)
-            val groundLimit = profile.groundSpeedLimitMps / TICKS_PER_SECOND
-            if (groundSpeed > groundLimit && groundSpeed > EPSILON) {
-                val scale = groundLimit / groundSpeed
-                nextVx *= scale
-                nextVz *= scale
-            }
-        }
-
-        if (input.inFluid) {
-            // Do not query fluid blocks or add a second movement path; this is a bounded drag
-            // response for a collision result already supplied by the host vehicle.
-            nextVx *= 0.82
-            nextVy *= 0.82
-            nextVz *= 0.82
-        }
-
-        if (occupiedControls) {
-            pitchStick = updateJoystick(input.fixedWingMousePitchDelta, pitchStick)
-            rollStick = updateJoystick(input.fixedWingMouseRollDelta, rollStick)
-        } else {
-            pitchStick = 0.0
-            rollStick = 0.0
-        }
-        val angularControl = if (occupiedControls) controlFactor else 0.0
-        val commandedPitchRate = pitchStick *
-            profile.pitchAuthorityDegPerSecondSquared * angularControl
-        val commandedRollRate = rollStick *
-            profile.rollAuthorityDegPerSecondSquared * angularControl
-        val commandedYawRate = clamp(input.fixedWingRudderInput, -1.0, 1.0) *
-            profile.yawAuthorityDegPerSecondSquared * angularControl
-        pitchRate += commandedPitchRate * SECONDS_PER_TICK
-        rollRate += commandedRollRate * SECONDS_PER_TICK
-        yawRate += commandedYawRate * SECONDS_PER_TICK
-        yawRate += liftRight * profile.bankTurnAuthorityDegPerSecondSquared * angularControl * SECONDS_PER_TICK
-        if (speedBlocksPerTick > EPSILON) {
-            val slip = clamp(rightVelocity / speedBlocksPerTick, -1.0, 1.0)
-            yawRate -= slip * profile.yawSlipStabilityPerSecond * angularControl * SECONDS_PER_TICK
-        }
-        pitchRate *= dampingFactor(profile.pitchDampingPerSecond)
-        rollRate *= dampingFactor(profile.rollDampingPerSecond)
-        yawRate *= dampingFactor(profile.yawDampingPerSecond)
-        if (stallActive) {
-            rollRate += wingDropSign * profile.wingDropRateDegPerSecondSquared *
-                (0.35 + 0.65 * stallSeverity) * SECONDS_PER_TICK
-        }
-
-        pitchDegrees = clamp(pitchDegrees + pitchRate * SECONDS_PER_TICK, -89.0, 89.0)
-        rollDegrees = clamp(rollDegrees + rollRate * SECONDS_PER_TICK, -89.0, 89.0)
-        yawDegrees = wrapDegrees(yawDegrees + yawRate * SECONDS_PER_TICK)
-
-        var speedAfterForces = sqrt(nextVx * nextVx + nextVy * nextVy + nextVz * nextVz)
-        val envelopeBlocksPerTick = profile.worldSpeedEnvelopeMps / TICKS_PER_SECOND
-        if (envelopeBlocksPerTick > EPSILON && speedAfterForces > envelopeBlocksPerTick) {
-            val excessFraction = clamp(
-                (speedAfterForces - envelopeBlocksPerTick) / envelopeBlocksPerTick,
-                0.0,
-                1.0,
-            )
-            val envelopeDamping = clamp(
-                excessFraction * profile.worldSpeedEnvelopeResponsePerSecond * SECONDS_PER_TICK,
-                0.0,
-                0.75,
-            )
-            val envelopeScale = 1.0 - envelopeDamping
-            nextVx *= envelopeScale
-            nextVy *= envelopeScale
-            nextVz *= envelopeScale
-            speedAfterForces = sqrt(nextVx * nextVx + nextVy * nextVy + nextVz * nextVz)
-        }
-        val maximumSpeedBlocksPerTick = min(profile.maxStructuralSpeedMps, profile.maxEngineSpeedMps) /
-            TICKS_PER_SECOND
-        if (speedAfterForces > maximumSpeedBlocksPerTick && speedAfterForces > EPSILON) {
-            val scale = maximumSpeedBlocksPerTick / speedAfterForces
-            nextVx *= scale
-            nextVy *= scale
-            nextVz *= scale
-        }
-
-        if (!finiteState(nextVx, nextVy, nextVz, yawDegrees, pitchDegrees, rollDegrees)) {
-            reset(vehicle, input)
-            return safeResult(input)
-        }
-
-        return VehicleFlightTickResult(
-            motion = Vec3(nextVx, nextVy, nextVz),
-            // Existing instrument channels are retained as generic fixed-wing telemetry.  The
-            // wire schema is unchanged; no client channel is used to authorize flight motion.
-            rotorLift = liftCoefficient,
-            collective = aoaDegrees,
-            thrust = profile.dryThrustNewtons * throttle * thrustMultiplier,
-            throttle = throttle,
-            bodyYaw = yawDegrees.toFloat(),
-            bodyPitch = pitchDegrees.toFloat(),
-            bodyRoll = rollDegrees.toFloat(),
-            motionIncludesGravity = true,
-        )
-    }
-
-    /** Returns an immutable state object on demand; no state object is allocated during a tick. */
-    fun stateSnapshot(): FixedWingFlightState = FixedWingFlightState(
-        serverTick = lastServerTick,
-        speedMps = lastSpeedMps,
-        angleOfAttackDegrees = lastAngleOfAttackDegrees,
-        throttle = throttle,
-        afterburnerActive = lastAfterburnerActive,
-        stallActive = stallActive,
-        bodyYawDegrees = yawDegrees,
-        bodyPitchDegrees = pitchDegrees,
-        bodyRollDegrees = rollDegrees,
-        forwardVelocityMps = lastForwardVelocityMps,
-        lateralVelocityMps = lastLateralVelocityMps,
-        verticalVelocityMps = lastVerticalVelocityMps,
-        dynamicPressurePa = lastDynamicPressurePa,
-        liftCoefficient = lastLiftCoefficient,
-        dragCoefficient = lastDragCoefficient,
-        liftForceNewtons = lastLiftForceNewtons,
-        dragForceNewtons = lastDragForceNewtons,
-        thrustForceNewtons = lastThrustForceNewtons,
-        gravityAccelerationMps2 = lastGravityAccelerationMps2,
-        controlEffectiveness = lastControlEffectiveness,
-        stallSeverity = lastStallSeverity,
-        yawRateDegPerSecond = yawRate,
-        pitchRateDegPerSecond = pitchRate,
-        rollRateDegPerSecond = rollRate,
-        profileId = profile.id,
-        massKg = profile.massKg,
-        maxStructuralSpeedMps = profile.maxStructuralSpeedMps,
-        maxEngineSpeedMps = profile.maxEngineSpeedMps,
-        stallSpeedMps = profile.stallSpeedMps,
-        stallAoADegrees = profile.stallAoADegrees,
-        worldSpeedEnvelopeMps = profile.worldSpeedEnvelopeMps,
-        worldSpeedEnvelopeResponsePerSecond = profile.worldSpeedEnvelopeResponsePerSecond,
-        joystickSensitivity = profile.joystickSensitivity,
-        joystickDeadzone = profile.joystickDeadzone,
-        joystickSmoothingPerSecond = profile.joystickSmoothingPerSecond,
-        joystickReturnPerSecond = profile.joystickReturnPerSecond,
-    )
-
-    private fun updateStallState(input: VehicleFlightInputContext, speedMps: Double, aoaDegrees: Double) {
-        if (!stallActive && speedMps <= profile.stallSpeedMps && abs(aoaDegrees) >= profile.stallAoADegrees) {
-            stallActive = true
-            stallRecoveryTicks = 0
-            // A latched sign gives a repeatable wing drop without an unseeded random source.
-            wingDropSign = if ((input.serverTick and 1L) == 0L) 1.0 else -1.0
-        } else if (stallActive) {
-            if (speedMps >= profile.stallRecoverySpeedMps && abs(aoaDegrees) <= profile.stallRecoveryAoADegrees) {
-                stallRecoveryTicks++
-                if (stallRecoveryTicks >= profile.stallRecoveryTicks) {
-                    stallActive = false
-                    stallRecoveryTicks = 0
-                }
-            } else {
-                stallRecoveryTicks = 0
-            }
-        }
-    }
-
-    private fun reset(vehicle: VehicleEntity, input: VehicleFlightInputContext?) {
-        // Do not assign the motion back to the entity here; only seed the next result.
+        lastServerTick = input.serverTick
         initialized = true
-        lastServerTick = input?.serverTick ?: Long.MIN_VALUE
-        // Fixed-wing throttle is owned by its W/S spool state; never seed it from a tank/legacy
-        // engine-power sample when the strategy is activated or re-seeded after a discontinuity.
-        throttle = 0.0
-        afterburnerRemaining = profile.afterburnerFuelSeconds
-        yawDegrees = finiteOrZero(input?.bodyYawDegrees ?: vehicle.yRot.toDouble())
-        pitchDegrees = clamp(finiteOrZero(input?.bodyPitchDegrees ?: vehicle.xRot.toDouble()), -89.0, 89.0)
-        rollDegrees = clamp(finiteOrZero(input?.bodyRollDegrees ?: vehicle.roll.toDouble()), -89.0, 89.0)
-        yawRate = 0.0
-        pitchRate = 0.0
-        rollRate = 0.0
-        pitchStick = 0.0
-        rollStick = 0.0
-        stallActive = false
-        stallRecoveryTicks = 0
-        wingDropSign = 1.0
-        lastSpeedMps = 0.0
-        lastAngleOfAttackDegrees = 0.0
-        lastAfterburnerActive = false
-        lastForwardVelocityMps = 0.0
-        lastLateralVelocityMps = 0.0
-        lastVerticalVelocityMps = 0.0
-        lastDynamicPressurePa = 0.0
-        lastLiftCoefficient = 0.0
-        lastDragCoefficient = 0.0
-        lastLiftForceNewtons = 0.0
-        lastDragForceNewtons = 0.0
-        lastThrustForceNewtons = 0.0
-        lastGravityAccelerationMps2 = 0.0
-        lastControlEffectiveness = 0.0
-        lastStallSeverity = 0.0
-    }
+        surfaceSnapshot = null
 
-    private fun hasExternalAttitudeDiscontinuity(vehicle: VehicleEntity): Boolean {
-        val yawDelta = abs(wrapDegrees(vehicle.yRot.toDouble() - yawDegrees))
-        val pitchDelta = abs(vehicle.xRot.toDouble() - pitchDegrees)
-        val rollDelta = abs(vehicle.roll.toDouble() - rollDegrees)
-        return yawDelta > ATTITUDE_RESET_DEGREES ||
-            pitchDelta > ATTITUDE_RESET_DEGREES ||
-            rollDelta > ATTITUDE_RESET_DEGREES
-    }
-
-    private fun safeResult(input: VehicleFlightInputContext): VehicleFlightTickResult {
-        val x = finiteOrZero(input.airVelocity.x)
-        val y = finiteOrZero(input.airVelocity.y)
-        val z = finiteOrZero(input.airVelocity.z)
         return VehicleFlightTickResult(
-            Vec3(x, y, z),
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            yawDegrees.toFloat(),
-            pitchDegrees.toFloat(),
-            rollDegrees.toFloat(),
-            true,
+            motion = Vec3(
+                model.velocityX / TICKS_PER_SECOND,
+                model.velocityY / TICKS_PER_SECOND,
+                model.velocityZ / TICKS_PER_SECOND,
+            ),
+            rotorLift = model.normalizedLift,
+            collective = model.angleOfAttackDegrees,
+            thrust = model.thrustAccelerationMps2 * profile.massKg,
+            throttle = model.throttle,
+            bodyYaw = model.yawDegrees.toFloat(),
+            bodyPitch = model.pitchDegrees.toFloat(),
+            bodyRoll = model.rollDegrees.toFloat(),
+            motionIncludesGravity = true,
+            fixedWingSignedLiftG = if (validStep)
+                (model.liftAccelerationMps2 / handling.gravityMps2).takeIf(Double::isFinite)
+            else null,
         )
     }
 
-    private fun dampingFactor(perSecond: Double): Double =
-        1.0 - clamp(perSecond * SECONDS_PER_TICK, 0.0, 1.0)
+    /**
+     * On-demand authoritative deflections. A client must use the synchronized counterpart,
+     * never run this model or infer a control surface from camera/player view.
+     */
+    fun controlSurfaceSnapshot(): FixedWingControlSurfaceSnapshot? {
+        if (lastServerTick == Long.MIN_VALUE) return null
+        surfaceSnapshot?.let { return it }
+        return FixedWingControlSurfaceSnapshot(
+            serverTick = lastServerTick,
+            elevator = model.elevator.toFloat(),
+            aileron = model.aileron.toFloat(),
+            rudder = model.rudder.toFloat(),
+            airbrake = model.airbrake.toFloat(),
+            throttle = model.throttle.toFloat(),
+            afterburnerActive = model.afterburnerActive,
+            wheelBrakeActive = model.wheelBrakeActive,
+        ).also { surfaceSnapshot = it }
+    }
 
-    private fun updateJoystick(rawDelta: Double, current: Double): Double {
-        val boundedDelta = clamp(finiteOrZero(rawDelta), -MAX_MOUSE_DELTA, MAX_MOUSE_DELTA)
-        val commandDelta = boundedDelta * profile.joystickSensitivity
-        if (abs(commandDelta) <= profile.joystickDeadzone) {
-            val returnResponse = 1.0 - exp(-profile.joystickReturnPerSecond * SECONDS_PER_TICK)
-            return clamp(current + (0.0 - current) * returnResponse, -1.0, 1.0)
+    fun stateSnapshot(): FixedWingFlightState {
+        val referenceSpeed = model.speedMps / handling.simulationLengthScale
+        val dynamicPressure = 0.5 * AIR_DENSITY_KG_PER_M3 *
+            model.sampledDensityRatio * referenceSpeed * referenceSpeed
+        val referenceForce = dynamicPressure * profile.referenceWingAreaM2
+        val liftForce = model.liftAccelerationMps2 / handling.simulationLengthScale * profile.massKg
+        val dragForce = model.dragAccelerationMps2 / handling.simulationLengthScale * profile.massKg
+        return FixedWingFlightState(
+            serverTick = if (lastServerTick == Long.MIN_VALUE) 0L else lastServerTick,
+            speedMps = model.speedMps,
+            angleOfAttackDegrees = model.angleOfAttackDegrees,
+            throttle = model.throttle,
+            afterburnerActive = model.afterburnerActive,
+            stallActive = model.stallActive,
+            bodyYawDegrees = model.yawDegrees,
+            bodyPitchDegrees = model.pitchDegrees,
+            bodyRollDegrees = model.rollDegrees,
+            forwardVelocityMps = model.forwardVelocityMps,
+            lateralVelocityMps = model.lateralVelocityMps,
+            verticalVelocityMps = model.verticalVelocityMps,
+            dynamicPressurePa = dynamicPressure,
+            liftCoefficient = if (referenceForce > 1.0E-9) liftForce / referenceForce else 0.0,
+            dragCoefficient = if (referenceForce > 1.0E-9) dragForce / referenceForce else 0.0,
+            liftForceNewtons = liftForce,
+            dragForceNewtons = dragForce,
+            thrustForceNewtons =
+                model.thrustAccelerationMps2 / handling.simulationLengthScale * profile.massKg,
+            gravityAccelerationMps2 = handling.gravityMps2,
+            controlEffectiveness = model.controlEffectiveness,
+            stallSeverity = model.stallSeverity,
+            yawRateDegPerSecond = model.yawRateDegreesPerSecond,
+            pitchRateDegPerSecond = model.pitchRateDegreesPerSecond,
+            rollRateDegPerSecond = model.rollRateDegreesPerSecond,
+            profileId = profile.id,
+            massKg = profile.massKg,
+            maxStructuralSpeedMps = handling.maximumIndicatedSpeedMps,
+            maxEngineSpeedMps = handling.maximumSpeedMps,
+            stallSpeedMps = handling.liftReferenceSpeedMps,
+            stallAoADegrees = handling.stallAngleDegrees,
+            worldSpeedEnvelopeMps = handling.maximumSpeedMps,
+            worldSpeedEnvelopeResponsePerSecond = 0.0,
+            joystickSensitivity = handling.stickSensitivity,
+            joystickDeadzone = handling.stickDeadzone,
+            joystickSmoothingPerSecond = handling.stickResponsePerSecond,
+            joystickReturnPerSecond = handling.automaticReturnPerSecond,
+            quaternionX = model.quaternionX,
+            quaternionY = model.quaternionY,
+            quaternionZ = model.quaternionZ,
+            quaternionW = model.quaternionW,
+            virtualPitchTarget = model.virtualPitchTarget,
+            virtualRollTarget = model.virtualRollTarget,
+            airflowAuthority = model.airflowAuthority,
+            sideslipDegrees = model.sideslipDegrees,
+            signedLiftAccelerationMps2 = model.liftAccelerationMps2,
+            dragAccelerationMps2 = model.dragAccelerationMps2,
+            sideDragAccelerationMps2 = model.sideDragAccelerationMps2,
+            overspeedDragAccelerationMps2 = model.overspeedDragAccelerationMps2,
+            thrustAccelerationMps2 = model.thrustAccelerationMps2,
+            preStepKineticEnergyPerKg = model.preStepKineticEnergyPerKg,
+            postStepKineticEnergyPerKg = model.postStepKineticEnergyPerKg,
+            stepThrustWorkPerKg = model.stepThrustWorkPerKg,
+            stepGravityWorkPerKg = model.stepGravityWorkPerKg,
+            stepDragWorkPerKg = model.stepDragWorkPerKg,
+            stepSideWorkPerKg = model.stepSideWorkPerKg,
+            stepLiftWorkPerKg = model.stepLiftWorkPerKg,
+            stepGroundResistanceWorkPerKg = model.stepGroundResistanceWorkPerKg,
+        )
+    }
+
+    /** Server-only direction intent; the current seat-0 pilot is the sole admission authority. */
+    @JvmOverloads
+    fun acceptPilotIntent(
+        vehicle: VehicleEntity, controller: Player, controlEpoch: Long, sequence: Long,
+        worldX: Double, worldY: Double, worldZ: Double, manualMask: Int, centerAim: Boolean,
+        screenRollInput: Float? = null, firstPerson: Boolean = false,
+        inversionRequested: Boolean = false,
+    ): Boolean {
+        val directionSquared = worldX * worldX + worldY * worldY + worldZ * worldZ
+        if (!directionSquared.isFinite() || directionSquared !in 0.998001..1.002001 ||
+            (manualMask and FixedWingPilotIntent.VALID_MASK) != manualMask) return false
+        if (screenRollInput != null && (!screenRollInput.isFinite() || screenRollInput !in -1f..1f)) return false
+        if (inversionRequested && screenRollInput == null) return false
+        if (vehicle.level().isClientSide || controller.vehicle !== vehicle ||
+            controller.level() !== vehicle.level() || vehicle.getNthEntity(0) !== controller ||
+            !controller.isAlive || controller.isSpectator || vehicle.isWreck) return false
+        if (synchronizePilot(vehicle) !== controller) return false
+        val qx = model.quaternionX
+        val qy = model.quaternionY
+        val qz = model.quaternionZ
+        val qw = model.quaternionW
+        val accepted = pilotIntent.offer(controller.uuid, controlEpoch, sequence, vehicle.level().gameTime,
+            if (centerAim) 2.0 * (qx * qz + qy * qw) else worldX,
+            if (centerAim) 2.0 * (qy * qz - qx * qw) else worldY,
+            if (centerAim) 1.0 - 2.0 * (qx * qx + qy * qy) else worldZ,
+            manualMask, if (centerAim) null else screenRollInput, firstPerson,
+            !centerAim && inversionRequested)
+        if (accepted && centerAim) mouseAim.resetGuidance()
+        return accepted
+    }
+
+    /** Returns a lease/accepted target for the mounted pilot; clients never call the model. */
+    fun pilotIntentSnapshot(vehicle: VehicleEntity, controller: Player): FixedWingPilotIntentSnapshot? {
+        if (vehicle.level().isClientSide || controller.vehicle !== vehicle ||
+            controller.level() !== vehicle.level() || vehicle.getNthEntity(0) !== controller ||
+            !controller.isAlive || controller.isSpectator || vehicle.isWreck) return null
+        if (synchronizePilot(vehicle) !== controller) return null
+        return pilotIntent.snapshot(vehicle.level().gameTime)
+    }
+
+    private fun synchronizePilot(vehicle: VehicleEntity): Player? {
+        if (!initialized) resetFromPhysicalPose(vehicle)
+        val pilot = (vehicle.getNthEntity(0) as? Player)?.takeIf {
+            it.vehicle === vehicle && it.isAlive && !it.isSpectator && !vehicle.isWreck
         }
-        val target = clamp(current + commandDelta, -1.0, 1.0)
-        val response = 1.0 - exp(-profile.joystickSmoothingPerSecond * SECONDS_PER_TICK)
-        return clamp(current + (target - current) * response, -1.0, 1.0)
+        if (pilot?.uuid != controllerUuid) {
+            model.resetControls(preserveThrottle = true)
+            mouseAim.reset()
+            afterburnerControl.reset()
+            controllerUuid = pilot?.uuid
+            val qx = model.quaternionX
+            val qy = model.quaternionY
+            val qz = model.quaternionZ
+            val qw = model.quaternionW
+            pilotIntent.bind(controllerUuid, 2.0 * (qx * qz + qy * qw),
+                2.0 * (qy * qz - qx * qw), 1.0 - 2.0 * (qx * qx + qy * qy))
+        }
+        return pilot
     }
 
-    private fun finiteOrZero(value: Double): Double = if (value.isFinite()) value else 0.0
-
-    private fun wrapDegrees(value: Double): Double {
-        var wrapped = value % 360.0
-        if (wrapped > 180.0) wrapped -= 360.0
-        if (wrapped <= -180.0) wrapped += 360.0
-        return wrapped
+    private fun engineAvailability(vehicle: VehicleEntity): Double {
+        if (vehicle.mainEngineDamaged || vehicle.subEngineDamaged) return 0.0
+        val maximum = vehicle.getEngineMaxHealth().toDouble()
+        val main = vehicle.mainEngineHealth.toDouble()
+        val sub = vehicle.subEngineHealth.toDouble()
+        if (!maximum.isFinite() || maximum <= 0.0 || !main.isFinite() || !sub.isFinite()) {
+            return 0.0
+        }
+        return (min(main, sub) / maximum).coerceIn(0.0, 1.0)
     }
 
-    private fun clamp(value: Double, minimum: Double, maximum: Double): Double =
-        value.coerceIn(minimum, maximum)
+    private fun resetFromPhysicalPose(vehicle: VehicleEntity) {
+        sonicCrossing.reset()
+        model.reset(vehicle.yRot.toDouble(), vehicle.xRot.toDouble(), vehicle.roll.toDouble())
+        pilotIntent.clear()
+        mouseAim.reset()
+        afterburnerControl.reset()
+        controllerUuid = null
+        surfaceSnapshot = null
+        initialized = true
+        lastServerTick = Long.MIN_VALUE
+    }
 
-    private fun finiteState(
-        velocityX: Double,
-        velocityY: Double,
-        velocityZ: Double,
-        yaw: Double,
-        pitch: Double,
-        bodyRoll: Double,
-    ): Boolean = velocityX.isFinite() && velocityY.isFinite() && velocityZ.isFinite() &&
-        yaw.isFinite() && pitch.isFinite() && bodyRoll.isFinite()
+    internal fun groundGearSettleWeight(speedMps: Double): Double {
+        val reference = handling.takeoffHandling?.referenceSpeedMps ?: handling.liftReferenceSpeedMps
+        val progress = ((speedMps / reference - 0.35) / 0.30).coerceIn(0.0, 1.0)
+        return 1.0 - progress * progress * (3.0 - 2.0 * progress)
+    }
+
+    internal fun acceptGroundPitch(pitchDegrees: Double) = model.acceptGroundPitch(pitchDegrees)
+
+    private fun attitudeDiscontinuous(input: VehicleFlightInputContext): Boolean =
+        VehicleFlightAttitude.separationDegrees(
+            input.bodyYawDegrees.toFloat(), input.bodyPitchDegrees.toFloat(), input.bodyRollDegrees.toFloat(),
+            model.yawDegrees.toFloat(), model.pitchDegrees.toFloat(), model.rollDegrees.toFloat(),
+        ) > 45.0
 
     companion object {
         private const val TICKS_PER_SECOND = 20.0
-        private const val SECONDS_PER_TICK = 1.0 / TICKS_PER_SECOND
-        private const val ACCELERATION_TO_TICK_DELTA = TICKS_PER_SECOND * TICKS_PER_SECOND
-        private const val AIR_DENSITY = 1.225
-        private const val EPSILON = 1.0E-9
-        private const val DEG_TO_RAD = PI / 180.0
-        private const val RAD_TO_DEG = 180.0 / PI
-        private const val ATTITUDE_RESET_DEGREES = 45.0
-        private const val MAX_MOUSE_DELTA = 512.0
+        private const val AIR_DENSITY_KG_PER_M3 = 1.225
     }
 }

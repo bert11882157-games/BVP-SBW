@@ -21,7 +21,7 @@ object VehicleWeaponShotDiagnostics {
     private const val REPEAT_INTERVAL_TICKS = 20L
 
     /**
-     * The production-boundary stage which rejected (or could not prove) one vehicle shot.
+     * The firing stage that rejected a vehicle shot or could not validate its requirements.
      * These values are diagnostic labels only: they never participate in admission or fallback
      * selection.  Keep the set small so a live opt-in trace remains actionable and bounded.
      */
@@ -58,7 +58,7 @@ object VehicleWeaponShotDiagnostics {
     fun isEnabled(): Boolean = enabled
 
     /**
-     * Emits one exact production-boundary subreason when Elite diagnostics is enabled. The
+     * Emits one firing-stage detail when Elite diagnostics is enabled. The
      * identity key is the same bounded vehicle/controller/seat/weapon scope as [record], while
      * the stage/detail code is debounced independently through the stored reason.
      */

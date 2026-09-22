@@ -18,6 +18,7 @@ object VehicleModuleProviders {
 
     @JvmStatic
     fun resolve(vehicle: VehicleEntity, id: ResourceLocation): VehicleModuleDefinition? {
+        com.atsuishio.superbwarfare.api.aircraft.AircraftSurfaceModules.definition(vehicle, id)?.let { return it }
         for ((providerId, provider) in definitionProviders.snapshot()) {
             try {
                 provider.resolve(vehicle, id)?.let { return it.sanitized() }

@@ -14,7 +14,7 @@ import java.util.function.Supplier;
 
 public class NetworkRegistry {
 
-    private static final String PROTOCOL_VERSION = "15";
+    private static final String PROTOCOL_VERSION = "35";
     public static final SimpleChannel PACKET_HANDLER = net.minecraftforge.network.NetworkRegistry.newSimpleChannel(new ResourceLocation(Mod.MODID, Mod.MODID), () -> PROTOCOL_VERSION, PROTOCOL_VERSION::equals, PROTOCOL_VERSION::equals);
 
     public static void register() {

@@ -1,0 +1,203 @@
+{
+  "ID": "berts_vehicle_pack:f_100c",
+  "Model": {
+    "GeometryBackend": "berts_vehicle_pack:vehicle/f_100c",
+    "Model": "berts_vehicle_pack:geo/native_fallback/f_100c.geo.json",
+    "Texture": "berts_vehicle_pack:textures/entity/f_100c.png",
+    "WreckTexture": "berts_vehicle_pack:textures/entity_dead/f_100c.png"
+  },
+  "MouseSpeed": [
+    0.2,
+    0.2
+  ],
+  "AfterburnerPresentation": {
+    "Schema": 2,
+    "Frame": "VEHICLE_LOCAL_BLOCKS",
+    "Outlets": [
+      {
+        "Id": "afterburner_0",
+        "Position": [
+          0,
+          1.7497775,
+          -6.17015375
+        ],
+        "Direction": [
+          0,
+          0,
+          -1
+        ]
+      }
+    ],
+    "Flame": {
+      "Scale": 0.9,
+      "WidthBlocks": 0.2,
+      "LengthBlocks": 7,
+      "ParticlesPerTick": 3,
+      "LifetimeTicks": 10,
+      "ColorRgb": [
+        1,
+        1,
+        1
+      ]
+    },
+    "Smoke": {
+      "Scale": 0.5,
+      "WidthBlocks": 0.18,
+      "LengthBlocks": 6,
+      "ParticlesPerTick": 0.5,
+      "LifetimeTicks": 14,
+      "ColorRgb": [
+        1,
+        1,
+        1
+      ]
+    },
+    "TapEmitters": [
+      {
+        "Outlet": "afterburner_0",
+        "Style": "FM_FLAME",
+        "Interval": 1,
+        "Offset": [
+          0,
+          0,
+          0
+        ],
+        "Extents": [
+          0.13123333333125,
+          0.13123333333125,
+          0.13123333333125
+        ],
+        "Velocity": [
+          0,
+          0,
+          0.1875
+        ]
+      }
+    ],
+    "TapSource": "GENERIC_TAP_FMFLAME",
+    "TapVariant": "GENERIC_TAP_FMFLAME_AT_AUTHORED_NOZZLES"
+  },
+  "AircraftRig": {
+    "Schema": 2,
+    "Frame": "GENERATED_MODEL_PIXELS",
+    "Surfaces": [
+      {
+        "Bone": "elevator_0",
+        "Parent": "hull",
+        "Pivot": [
+          -25.89671,
+          18.54764,
+          69.99111
+        ],
+        "Axis": [
+          -0.706561806509276,
+          0.03925337138000917,
+          0.706561806509276
+        ],
+        "ControlWeights": {
+          "ElevatorUp": 1,
+          "RightRoll": 0,
+          "RudderRight": 0
+        },
+        "MaxDeflectionDegrees": 25
+      },
+      {
+        "Bone": "elevator_1",
+        "Parent": "hull",
+        "Pivot": [
+          25.89671,
+          18.54764,
+          69.99111
+        ],
+        "Axis": [
+          -0.706561806509276,
+          -0.03925337138000917,
+          -0.706561806509276
+        ],
+        "ControlWeights": {
+          "ElevatorUp": 1,
+          "RightRoll": 0,
+          "RudderRight": 0
+        },
+        "MaxDeflectionDegrees": 25
+      },
+      {
+        "Bone": "aileron_10",
+        "Parent": "hull",
+        "Pivot": [
+          -53.19324,
+          24.14693,
+          39.89494
+        ],
+        "Axis": [
+          -0.8602915890947023,
+          0,
+          0.5098022967120802
+        ],
+        "ControlWeights": {
+          "ElevatorUp": 0,
+          "RightRoll": -1,
+          "RudderRight": 0
+        },
+        "MaxDeflectionDegrees": 25
+      },
+      {
+        "Bone": "aileron_11",
+        "Parent": "hull",
+        "Pivot": [
+          53.19324,
+          24.14693,
+          39.89494
+        ],
+        "Axis": [
+          -0.8602915890947023,
+          0,
+          -0.5098022967120802
+        ],
+        "ControlWeights": {
+          "ElevatorUp": 0,
+          "RightRoll": 1,
+          "RudderRight": 0
+        },
+        "MaxDeflectionDegrees": 25
+      },
+      {
+        "Bone": "rudder_0",
+        "Parent": "hull",
+        "Pivot": [
+          0,
+          65.44169,
+          97.98756
+        ],
+        "Axis": [
+          0,
+          1,
+          0
+        ],
+        "ControlWeights": {
+          "ElevatorUp": 0,
+          "RightRoll": 0,
+          "RudderRight": 1
+        },
+        "MaxDeflectionDegrees": 25
+      }
+    ],
+    "Rotors": [],
+    "Gear": [
+      {
+        "Bone": "landing_gear_12",
+        "Parent": "hull"
+      },
+      {
+        "Bone": "landing_gear_14",
+        "Parent": "hull"
+      },
+      {
+        "Bone": "landing_gear_15",
+        "Parent": "hull"
+      }
+    ],
+    "Flaps": [],
+    "Sweeps": []
+  }
+}

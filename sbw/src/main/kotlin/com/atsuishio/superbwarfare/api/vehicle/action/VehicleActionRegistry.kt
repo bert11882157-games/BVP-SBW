@@ -3,6 +3,7 @@ package com.atsuishio.superbwarfare.api.vehicle.action
 import com.atsuishio.superbwarfare.Mod
 import com.atsuishio.superbwarfare.api.vehicle.weapon.VehicleSecondaryFireAction
 import com.atsuishio.superbwarfare.api.vehicle.weapon.VehicleWeaponActionIds
+import com.atsuishio.superbwarfare.api.vehicle.flight.VehicleFlightActionIds
 import com.atsuishio.superbwarfare.api.internal.OrderedProviderRegistry
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity
 import net.minecraft.resources.ResourceLocation
@@ -16,6 +17,9 @@ object VehicleActionRegistry {
         // ordered slot candidates from the seat weapon list; pair metadata remains optional.
         register(VehicleWeaponActionIds.FIRE_SECONDARY) { vehicle ->
             VehicleSecondaryFireAction(vehicle)
+        }
+        register(VehicleFlightActionIds.LANDING_GEAR) { vehicle ->
+            if (vehicle.hasFixedWingLandingGear()) FixedWingLandingGearAction() else null
         }
     }
 

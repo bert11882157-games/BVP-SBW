@@ -54,6 +54,7 @@ object ProjectileTrailProviders {
 
     @JvmStatic
     fun emit(projectile: FastThrowableProjectile, kind: ProjectileTrailKind): Boolean {
+        if (projectile is WireGuideMissileEntity && projectile.suppressesGuidedPropulsionTrail()) return true
         // A typed wire-guided missile owns its propulsion phase.  Once fuel is exhausted, do
         // not invoke a replacement provider that could emit a thrust/flame trail; returning
         // false deliberately falls through to FastThrowable's native smoke-only trail.  Legacy
@@ -79,6 +80,7 @@ object ProjectileTrailProviders {
 
     @JvmStatic
     fun suppressesNativeLaunchFx(entity: Entity): Boolean {
+        if (entity is WireGuideMissileEntity && entity.suppressesGuidedPropulsionTrail()) return true
         return when (ProjectileProfiles.resolve(entity)?.trailMode ?: ProjectileTrailMode.DEFAULT) {
             ProjectileTrailMode.DEFAULT -> false
             ProjectileTrailMode.REPLACE, ProjectileTrailMode.SUPPRESS -> true

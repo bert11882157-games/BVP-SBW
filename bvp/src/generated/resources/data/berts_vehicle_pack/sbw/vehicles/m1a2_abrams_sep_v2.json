@@ -20,32 +20,6 @@
       ]
     },
     {
-      "Part": "WheelLeft",
-      "Size": [
-        0.23419,
-        0.4757,
-        2.59807
-      ],
-      "Position": [
-        1.57348,
-        0.52693,
-        -0.18296
-      ]
-    },
-    {
-      "Part": "WheelRight",
-      "Size": [
-        0.23419,
-        0.4757,
-        2.59807
-      ],
-      "Position": [
-        -1.57348,
-        0.52693,
-        -0.18296
-      ]
-    },
-    {
       "Part": "MainEngine",
       "Size": [
         0.84163,
@@ -61,14 +35,14 @@
     {
       "Part": "Turret",
       "Size": [
-        1.13437,
-        0.5123,
-        1.35392
+        1.70625,
+        0.4125,
+        2.36875
       ],
       "Position": [
         0,
-        -0.03659,
-        0.14637
+        0.15054,
+        -0.38125
       ],
       "Transform": "Turret",
       "Rotation": "Turret"
@@ -657,6 +631,9 @@
         "Change": "superbwarfare:missile_change"
       },
       "SoundRadius": 16,
+      "Magazine": 100,
+      "NormalReloadTime": 100,
+      "EmptyReloadTime": 100,
       "ProjectileBeltAmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",

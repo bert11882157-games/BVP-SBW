@@ -1,5 +1,8 @@
 package com.atsuishio.superbwarfare.api.projectile.impact;
 
+import com.atsuishio.superbwarfare.api.aircraft.AircraftProjectileDamage;
+import com.atsuishio.superbwarfare.diagnostics.EliteDiagnostics;
+import com.atsuishio.superbwarfare.entity.mixin.OBBHitter;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.Map;
@@ -28,6 +31,23 @@ public final class ProjectileImpactResolver {
         Objects.requireNonNull(context, "context");
         if (context.getProjectile().level().isClientSide()) {
             return ProjectileImpactResult.defaultResult();
+        }
+        if (EliteDiagnostics.isEnabled(context.getProjectile().level())) {
+            var projectile = context.getProjectile();
+            var subject = context.getTarget() == null ? projectile : context.getTarget();
+            EliteDiagnostics.record(subject, "hitreg", "impact_dispatch",
+                    "projectile", projectile.getUUID(), "owner", context.getOwner() == null ? null : context.getOwner().getUUID(),
+                    "kind", context.getKind(), "point", context.getHitVec(), "incoming_velocity", context.getIncomingVelocity(),
+                    "contact", OBBHitter.getInstance(projectile).sbw$getProjectileContact(),
+                    "block", context.getBlockPos());
+        }
+        ProjectileImpactResult lightPlatform = com.atsuishio.superbwarfare.api.vehicle.damage.LightPlatformProjectileDamage.resolve(context);
+        if (lightPlatform != null) return lightPlatform;
+        ProjectileImpactResult aircraft = AircraftProjectileDamage.resolve(context);
+        if (aircraft != null) {
+            // Aircraft HP is resolved before armor volume queries or pack penetration handlers.
+            // Native effects/disposal remain active; the struck aircraft rejects duplicate damage.
+            return aircraft;
         }
         ProjectileImpactContext resolvedContext = VehicleImpactVolumes.attach(context);
         ProjectileImpactResult resolvedResult = ProjectileImpactResult.defaultResult();

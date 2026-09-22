@@ -37,6 +37,8 @@ open class VehicleGun : GunItem(Properties()) {
 
     override fun enableShootTimer() = true
 
+    override fun isOpenBolt(data: GunData) = data.get(GunProp.BELT_FED)
+
     override fun canShoot(data: GunData, shooter: Entity?): Boolean {
         if (shooter !is VehicleEntity) return false
         if (!shooter.isVehicleActionFireAllowed()) return false
@@ -44,15 +46,15 @@ open class VehicleGun : GunItem(Properties()) {
         // Tank-mounted heavy machine guns are an explicit station role.  They use the normal
         // cadence/ammo/reload gates but are heatless: stale persisted heat must never block the
         // accepted shot path or make a roof/passenger HMG overheat.
-        val heatlessTankHmg = shooter.isTankMountedHeavyMachineGun(data)
+        val heatless = !data.get(GunProp.OVERHEAT_ENABLED) || shooter.isTankMountedHeavyMachineGun(data)
 
         return data.get(GunProp.PROJECTILE_AMOUNT) > 0
-                && (heatlessTankHmg || (!data.overHeat.get()
+                && (heatless || (!data.overHeat.get()
                 && data.get(GunProp.HEAT_PER_SHOOT) <= (100 + data.get(GunProp.HEAT_PER_SHOOT) - data.heat.get())))
                 && !data.reloading()
                 && !data.charging()
                 && !data.bolt.needed.get()
-                && shooter.getAmmo(data) >= data.get(GunProp.AMMO_COST_PER_SHOOT)
+                && data.currentAvailableAmmo(shooter.ammoSupplier) >= data.get(GunProp.AMMO_COST_PER_SHOOT)
     }
 
     override fun getEnergyProvider(data: GunData, ammoSupplier: Entity?): LazyOptional<IEnergyStorage> {

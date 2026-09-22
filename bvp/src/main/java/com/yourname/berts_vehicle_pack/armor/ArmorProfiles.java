@@ -238,16 +238,36 @@ public final class ArmorProfiles {
     }
 
     public static final class ArmorHit {
+        public enum Kind { RAY, PROXIMITY }
+
         public final ArmorBox plate;
         public final Vec localImpact;
         public final Vec hullImpact;
+        /** Distance from the shared ray origin; proximity matches have no ray distance. */
         public final double distance;
+        public final Kind kind;
+        public final double proximityGap;
 
         public ArmorHit(ArmorBox plate, Vec localImpact, Vec hullImpact, double distance) {
+            this(plate, localImpact, hullImpact, distance, Kind.RAY, 0.0D);
+        }
+
+        private ArmorHit(ArmorBox plate, Vec localImpact, Vec hullImpact, double distance,
+                         Kind kind, double proximityGap) {
             this.plate = plate;
             this.localImpact = localImpact;
             this.hullImpact = hullImpact;
             this.distance = distance;
+            this.kind = kind;
+            this.proximityGap = proximityGap;
+        }
+
+        static ArmorHit proximity(ArmorBox plate, Vec localImpact, Vec hullImpact, double gap) {
+            return new ArmorHit(plate, localImpact, hullImpact, Double.POSITIVE_INFINITY, Kind.PROXIMITY, gap);
+        }
+
+        public boolean isRayHit() {
+            return kind == Kind.RAY && Double.isFinite(distance) && distance >= 0.0D;
         }
     }
 

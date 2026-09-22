@@ -1911,7 +1911,27 @@
     }
   ],
   "sensitive_internals": [],
-  "engines": [],
+  "engines": [
+    {
+      "name": "engine_core_00",
+      "center": [
+        0,
+        0.78125,
+        1.8125
+      ],
+      "half_size": [
+        0.875,
+        0.28125,
+        0.4375
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull"
+    }
+  ],
   "ammo_racks": [
     {
       "name": "ammo_rack_00",
@@ -1994,236 +2014,7 @@
       "health": 10
     }
   ],
-  "tracks": [
-    {
-      "name": "right_track_00",
-      "center": [
-        1.36569,
-        0.67863,
-        2.89484
-      ],
-      "half_size": [
-        0.19081,
-        0.03131,
-        0.17506
-      ],
-      "rotation": [
-        -90,
-        0,
-        0
-      ],
-      "frame": "hull"
-    },
-    {
-      "name": "right_track_01",
-      "center": [
-        1.36597,
-        0.31632,
-        2.66379
-      ],
-      "half_size": [
-        0.19053,
-        0.03131,
-        0.30519
-      ],
-      "rotation": [
-        -41,
-        0,
-        0
-      ],
-      "frame": "hull"
-    },
-    {
-      "name": "right_track_02",
-      "center": [
-        1.36588,
-        0.12986,
-        -0.2235
-      ],
-      "half_size": [
-        0.19063,
-        0.06971,
-        2.65578
-      ],
-      "rotation": [
-        0,
-        0,
-        0
-      ],
-      "frame": "hull"
-    },
-    {
-      "name": "right_track_03",
-      "center": [
-        1.36459,
-        0.40186,
-        -3.12194
-      ],
-      "half_size": [
-        0.19192,
-        0.03002,
-        0.36992
-      ],
-      "rotation": [
-        47,
-        0,
-        0
-      ],
-      "frame": "hull"
-    },
-    {
-      "name": "right_track_04",
-      "center": [
-        1.36403,
-        0.80498,
-        -3.38118
-      ],
-      "half_size": [
-        0.19247,
-        0.03638,
-        0.14937
-      ],
-      "rotation": [
-        86,
-        0,
-        0
-      ],
-      "frame": "hull"
-    },
-    {
-      "name": "right_track_05",
-      "center": [
-        1.36486,
-        0.91027,
-        2.8467
-      ],
-      "half_size": [
-        0.19164,
-        0.03131,
-        0.08527
-      ],
-      "rotation": [
-        -125,
-        0,
-        0
-      ],
-      "frame": "hull"
-    },
-    {
-      "name": "left_track_06",
-      "center": [
-        -1.40916,
-        0.67863,
-        2.89484
-      ],
-      "half_size": [
-        0.19081,
-        0.03131,
-        0.17506
-      ],
-      "rotation": [
-        -90,
-        0,
-        0
-      ],
-      "frame": "hull"
-    },
-    {
-      "name": "left_track_07",
-      "center": [
-        -1.40999,
-        0.91027,
-        2.8467
-      ],
-      "half_size": [
-        0.19164,
-        0.03131,
-        0.08527
-      ],
-      "rotation": [
-        -125,
-        0,
-        0
-      ],
-      "frame": "hull"
-    },
-    {
-      "name": "left_track_08",
-      "center": [
-        -1.41026,
-        0.3991,
-        -3.12491
-      ],
-      "half_size": [
-        0.19192,
-        0.02597,
-        0.36992
-      ],
-      "rotation": [
-        47,
-        0,
-        0
-      ],
-      "frame": "hull"
-    },
-    {
-      "name": "left_track_09",
-      "center": [
-        -1.41082,
-        0.80516,
-        -3.37852
-      ],
-      "half_size": [
-        0.19247,
-        0.03905,
-        0.14937
-      ],
-      "rotation": [
-        86,
-        0,
-        0
-      ],
-      "frame": "hull"
-    },
-    {
-      "name": "left_track_10",
-      "center": [
-        -1.40897,
-        0.12443,
-        -0.2235
-      ],
-      "half_size": [
-        0.19063,
-        0.07515,
-        2.65578
-      ],
-      "rotation": [
-        0,
-        0,
-        0
-      ],
-      "frame": "hull"
-    },
-    {
-      "name": "left_track_11",
-      "center": [
-        -1.40888,
-        0.31632,
-        2.66379
-      ],
-      "half_size": [
-        0.19053,
-        0.03131,
-        0.30519
-      ],
-      "rotation": [
-        -41,
-        0,
-        0
-      ],
-      "frame": "hull"
-    }
-  ],
+  "tracks": [],
   "modules": [],
   "explosive_reactive_armor": [
     {

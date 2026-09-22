@@ -18,6 +18,25 @@ object ExplosionBurstClient {
     fun spawn(message: ExplosionBurstMessage) {
         val level = clientLevel ?: return
         val position = message.position
+        if (message.recipe == ExplosionBurstMessage.Recipe.AIR_MISSILE ||
+            message.recipe == ExplosionBurstMessage.Recipe.AIRCRAFT_BREAKUP) {
+            AircraftCombatParticles.burst(message)
+            return
+        }
+        if (message.recipe == ExplosionBurstMessage.Recipe.FAR_VEHICLE) {
+            // A native entity already owns its normal destruction effects. Proxies never enter
+            // ClientLevel, so their event remains visible without relying on a final snapshot.
+            if (level.entitiesForRendering().any { it.stringUUID == message.vehicleUuid }) return
+            val distance = net.minecraft.client.Minecraft.getInstance().gameRenderer.mainCamera.position.distanceTo(position)
+            // Keep the compact flash readable across extreme range without increasing particle count.
+            val scale = if (distance.isFinite()) (distance / 256.0).coerceIn(1.0, 64.0) else 1.0
+            spawnBatch(level, CustomCloudOption(1f, 0.45f, 0.08f, 22, 4f * scale.toFloat(), 0f, true, true),
+                position, 5, 0.65 * scale, 0.65 * scale, 0.65 * scale, 0.02)
+            spawnBatch(level, ModParticleTypes.FIRE_STAR.get(), position, 8, 0.0, 0.0, 0.0, 0.4)
+            spawnBatch(level, CustomCloudOption(0.24f, 0.22f, 0.20f, 45, 3f * scale.toFloat(), 0f, false, true),
+                position, 4, 0.8 * scale, 0.8 * scale, 0.8 * scale, 0.03)
+            return
+        }
         if (message.underwater) spawnHeavyUnderwaterBurst(level, position)
 
         val phaseRandom = Random(message.seed)
@@ -25,6 +44,8 @@ object ExplosionBurstClient {
             ExplosionBurstMessage.Recipe.LARGE -> spawnLarge(level, position, phaseRandom)
             ExplosionBurstMessage.Recipe.HUGE -> spawnHuge(level, position, phaseRandom)
             ExplosionBurstMessage.Recipe.GIANT -> spawnGiant(level, position, phaseRandom)
+            ExplosionBurstMessage.Recipe.FAR_VEHICLE -> Unit
+            ExplosionBurstMessage.Recipe.AIR_MISSILE, ExplosionBurstMessage.Recipe.AIRCRAFT_BREAKUP -> Unit
         }
     }
 
@@ -102,22 +123,14 @@ object ExplosionBurstClient {
     private fun spawnBatch(level: ClientLevel, particle: ParticleOptions, center: Vec3, count: Int,
                            xOffset: Double, yOffset: Double, zOffset: Double, speed: Double) {
         if (count == 0) {
-            level.addParticle(particle, true, center.x, center.y, center.z,
-                xOffset * speed, yOffset * speed, zOffset * speed)
+            AircraftCombatParticles.emit(particle, center, Vec3(xOffset * speed, yOffset * speed, zOffset * speed))
             return
         }
         val random = ThreadLocalRandom.current()
         repeat(count) {
-            level.addParticle(
-                particle,
-                true,
-                center.x + random.nextGaussian() * xOffset,
-                center.y + random.nextGaussian() * yOffset,
-                center.z + random.nextGaussian() * zOffset,
-                random.nextGaussian() * speed,
-                random.nextGaussian() * speed,
-                random.nextGaussian() * speed,
-            )
+            AircraftCombatParticles.emit(particle,
+                center.add(random.nextGaussian() * xOffset, random.nextGaussian() * yOffset, random.nextGaussian() * zOffset),
+                Vec3(random.nextGaussian() * speed, random.nextGaussian() * speed, random.nextGaussian() * speed))
         }
     }
 
@@ -126,8 +139,7 @@ object ExplosionBurstClient {
         val phase = phaseRandom.nextDouble() * Math.PI * 2
         repeat(count) { index ->
             val angle = phase + 2 * Math.PI * index / count
-            level.addParticle(particle, true, center.x, center.y, center.z,
-                cos(angle) * speed, 0.0, -sin(angle) * speed)
+            AircraftCombatParticles.emit(particle, center, Vec3(cos(angle) * speed, 0.0, -sin(angle) * speed))
         }
     }
 }

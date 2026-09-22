@@ -1,0 +1,20 @@
+{
+  "Schema": 1,
+  "SuspendedWeapons": [],
+  "Pairs": [],
+  "StoreGroups": {
+    "berts_vehicle_pack:modeled_store/mirage_5/external_tanks": [
+      "suspended_external_tanks_left",
+      "suspended_external_tanks_right"
+    ],
+    "berts_vehicle_pack:modeled_store/mirage_5/bombs": [
+      "suspended_bombs_left",
+      "suspended_bombs_right"
+    ]
+  },
+  "Name": "Mirage 5",
+  "BuiltInWeapons": [
+    "Gun1",
+    "Gun2"
+  ]
+}

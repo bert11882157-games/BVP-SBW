@@ -1,0 +1,7 @@
+# TaP flare presentation and sound attribution
+
+The flare core texture textures/particle/tap_flare.png is copied without modification from assets/flansmod/gui/flare.png in the user-supplied Flan's Mod Khrisna Mk5.jar, retained in the Tyrants and Plebeians reference pack. EntityFlare.java (com/flansmod/client/particle) supplies the full-bright billboard, blended non-depth-writing core and five FMFlame trail samples per movement tick. Existing BVP TaP FMFlame/FMSmoke sprites and behavior supply the trail; SBW cloud fallback remains available without BVP. Minecraft 1.20.1 rendering APIs replace the original immediate-mode OpenGL. Existing SBW server flare motion and two-second equipment lifetime are preserved.
+
+sounds/vehicle/common/tap_flare_deploy.ogg derives from assets/flansmod/sounds/Flare.ogg in Tyrants and Plebeians Hero Shooter Update Final. Aircraft configs specify FlareSound Flare. The first 0.32 seconds are converted to mono at 80% gain with a 0.09-second fade beginning at 0.23 seconds, making one ejection thump per accepted pair rather than overlapping the entire 2.76-second recording. Original audio metadata attributes Battlefield 2 / Digital Illusions CE AB. Original authorship and applicable rights remain with the respective authors; no new ownership is claimed.
+
+The silver foil chaff bloom is a new procedural presentation, not a TaP asset. It consumes synchronized server chaff state without changing countermeasure effectiveness or spawning new gameplay entities.

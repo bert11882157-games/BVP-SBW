@@ -1,0 +1,288 @@
+{
+  "ID": "berts_vehicle_pack:marder_1a5",
+  "Model": {
+    "GeometryBackend": "berts_vehicle_pack:vehicle/marder_1a5",
+    "Model": "berts_vehicle_pack:geo/native_fallback/marder_1a5.geo.json",
+    "Texture": "berts_vehicle_pack:textures/entity/marder_1a5.png",
+    "WreckTexture": "berts_vehicle_pack:textures/entity_dead/marder_1a5.png"
+  },
+  "MouseSpeed": [
+    0.2,
+    0.2
+  ],
+  "FittedGroundRig": {
+    "Schema": 1,
+    "Frame": "RUNTIME_MODEL_PIXELS",
+    "PitchBones": [
+      {
+        "Bone": "milan_pitch",
+        "Parent": "milan_yaw",
+        "Pivot": [
+          -13.19663,
+          44.38007,
+          -3.09988
+        ]
+      }
+    ]
+  },
+  "RunningGear": {
+    "Type": "TRACKED",
+    "RoadWheelCount": 6,
+    "WheelBones": {
+      "Left": [
+        "wheelL0",
+        "wheelLFront",
+        "wheelLRear",
+        "wheelL1",
+        "wheelL2",
+        "wheelL3",
+        "wheelL4",
+        "wheelL5"
+      ],
+      "Right": [
+        "wheelRFront",
+        "wheelR0",
+        "wheelR1",
+        "wheelR2",
+        "wheelR3",
+        "wheelR4",
+        "wheelR5",
+        "wheelRRear"
+      ]
+    },
+    "TrackRender": {
+      "Mode": "LINKS",
+      "LinkFit": "RIGID_PATH",
+      "LinkCount": 96,
+      "PhaseDistance": 1.0416666666666667,
+      "TravelScale": 1,
+      "LinkHalfThickness": 0.4134100000000007,
+      "EvaluationLayout": {
+        "YCenter": 11.48457,
+        "Radius": 10.44839,
+        "ZRear": -52.74177,
+        "ZFront": 52.29893
+      },
+      "Sides": [
+        {
+          "Side": "L",
+          "Direction": 1,
+          "XCenter": 21.25632,
+          "YCenter": 11.48457,
+          "Radius": 10.44839,
+          "YBottom": 1.03618,
+          "YTop": 21.93296,
+          "ZRear": -52.74177,
+          "ZFront": 52.29893,
+          "RoadCenters": [
+            -34.98436,
+            -21.69916,
+            -8.41396,
+            4.4284,
+            18.15644,
+            31.44164
+          ],
+          "TrackBone": "TrackL",
+          "BrokenBone": "brokenTrackL",
+          "FallbackBone": "crudeTrackL",
+          "LinkMovePrefix": "trackMovL",
+          "LinkRotationPrefix": "trackRotL",
+          "LegacyFramePrefix": "trackBeltVisualL"
+        },
+        {
+          "Side": "R",
+          "Direction": 1,
+          "XCenter": -21.25632,
+          "YCenter": 11.48457,
+          "Radius": 10.44839,
+          "YBottom": 1.03618,
+          "YTop": 21.93296,
+          "ZRear": -52.74177,
+          "ZFront": 52.29893,
+          "RoadCenters": [
+            -34.98436,
+            -21.69916,
+            -8.41396,
+            4.4284,
+            18.15644,
+            31.44164
+          ],
+          "TrackBone": "TrackR",
+          "BrokenBone": "brokenTrackR",
+          "FallbackBone": "crudeTrackR",
+          "LinkMovePrefix": "trackMovR",
+          "LinkRotationPrefix": "trackRotR",
+          "LegacyFramePrefix": "trackBeltVisualR"
+        }
+      ],
+      "Path": {
+        "SourceYMin": 1.03618,
+        "SourceYMax": 21.93296,
+        "SourceZMin": -52.74177,
+        "SourceZMax": 52.29893,
+        "MoveY": [
+          [
+            0,
+            14.26695
+          ],
+          [
+            1.9124377,
+            18.45742
+          ],
+          [
+            4.47889543,
+            21.93296
+          ],
+          [
+            24.87216062,
+            21.93296
+          ],
+          [
+            45.26542582,
+            21.93296
+          ],
+          [
+            47.17786722,
+            19.3431
+          ],
+          [
+            49.09030491,
+            15.15263
+          ],
+          [
+            51.00274261,
+            10.96216
+          ],
+          [
+            58.33242508,
+            1.03618
+          ],
+          [
+            74.87216063,
+            1.03618
+          ],
+          [
+            91.41189617,
+            1.03618
+          ],
+          [
+            98.0875623,
+            10.07648
+          ],
+          [
+            100,
+            14.26695
+          ]
+        ],
+        "MoveZ": [
+          [
+            0,
+            -52.74177
+          ],
+          [
+            1.9124377,
+            -51.38021
+          ],
+          [
+            4.47889543,
+            -46.59655
+          ],
+          [
+            24.87216062,
+            0.3881
+          ],
+          [
+            45.26542582,
+            47.37274
+          ],
+          [
+            47.17786722,
+            50.93737
+          ],
+          [
+            49.09030491,
+            52.29893
+          ],
+          [
+            51.00274261,
+            50.93737
+          ],
+          [
+            58.33242508,
+            37.27545
+          ],
+          [
+            74.87216063,
+            -0.83094
+          ],
+          [
+            91.41189617,
+            -38.93732
+          ],
+          [
+            98.0875623,
+            -51.38021
+          ],
+          [
+            100,
+            -52.74177
+          ]
+        ],
+        "RotationX": [
+          [
+            0,
+            -270
+          ],
+          [
+            1.9124377,
+            -305.99997
+          ],
+          [
+            4.47889543,
+            -341.99998
+          ],
+          [
+            24.87216062,
+            -360
+          ],
+          [
+            45.26542582,
+            -378.00002
+          ],
+          [
+            47.17786722,
+            -414.00004
+          ],
+          [
+            49.09030491,
+            -450
+          ],
+          [
+            51.00274261,
+            -485.99998
+          ],
+          [
+            58.33242508,
+            -521.99999
+          ],
+          [
+            74.87216063,
+            -540
+          ],
+          [
+            91.41189617,
+            -558.00001
+          ],
+          [
+            98.0875623,
+            -594.00002
+          ],
+          [
+            100,
+            -630
+          ]
+        ]
+      }
+    }
+  }
+}

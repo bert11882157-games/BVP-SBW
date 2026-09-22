@@ -278,17 +278,17 @@
                 }
               ]
             },
+            "ShootShake": [
+              8,
+              10,
+              12
+            ],
             "NominalBallistics": {
               "Supported": true,
               "ProjectileType": "superbwarfare:small_cannon_shell",
               "ProjectileProfile": "berts_vehicle_pack:lav25/cannon/ammo_00_m919_apfsds",
               "ProjectileLife": 40
-            },
-            "ShootShake": [
-              8,
-              10,
-              12
-            ]
+            }
           }
         },
         {
@@ -313,7 +313,7 @@
                   "Shots": 3,
                   "Round": "m792_hei_t_1",
                   "Ammo": "superbwarfare:small_shell_aa",
-                  "Tracer": "INHERIT",
+                  "Tracer": "RED",
                   "DisplayLabel": "M792 HEI-T"
                 },
                 {
@@ -325,17 +325,17 @@
                 }
               ]
             },
+            "ShootShake": [
+              8,
+              10,
+              12
+            ],
             "NominalBallistics": {
               "Supported": true,
               "ProjectileType": "superbwarfare:small_cannon_shell",
               "ProjectileProfile": "berts_vehicle_pack:lav25/cannon/ammo_01_m792_hei_t_1",
               "ProjectileLife": 40
-            },
-            "ShootShake": [
-              8,
-              10,
-              12
-            ]
+            }
           }
         }
       ],
@@ -375,6 +375,17 @@
           "main_muzzle"
         ]
       },
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "superbwarfare:small_cannon_shell",
+        "ProjectileProfile": "berts_vehicle_pack:lav25/cannon/default",
+        "ProjectileLife": 40
+      },
+      "ShootShake": [
+        8,
+        10,
+        12
+      ],
       "ProjectileBeltAmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_gs",
@@ -418,17 +429,6 @@
             ]
           }
         }
-      ],
-      "NominalBallistics": {
-        "Supported": true,
-        "ProjectileType": "superbwarfare:small_cannon_shell",
-        "ProjectileProfile": "berts_vehicle_pack:lav25/cannon/default",
-        "ProjectileLife": 40
-      },
-      "ShootShake": [
-        8,
-        10,
-        12
       ]
     },
     "MainMachineGun": {
@@ -470,17 +470,17 @@
                 }
               ]
             },
+            "ShootShake": [
+              0,
+              0,
+              0
+            ],
             "NominalBallistics": {
               "Supported": true,
               "ProjectileType": "superbwarfare:projectile",
               "ProjectileProfile": "berts_vehicle_pack:lav25/mainmachinegun/ammo_00_western_762_ap",
               "ProjectileLife": 400
-            },
-            "ShootShake": [
-              0,
-              0,
-              0
-            ]
+            }
           }
         }
       ],
@@ -551,6 +551,17 @@
       "SoundRadius": 12,
       "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/gun_7_62mm.png",
       "HeatPerShoot": 0,
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "superbwarfare:projectile",
+        "ProjectileProfile": "berts_vehicle_pack:lav25/mainmachinegun/default",
+        "ProjectileLife": 400
+      },
+      "ShootShake": [
+        0,
+        0,
+        0
+      ],
       "ProjectileBeltAmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
@@ -573,17 +584,6 @@
             ]
           }
         }
-      ],
-      "NominalBallistics": {
-        "Supported": true,
-        "ProjectileType": "superbwarfare:projectile",
-        "ProjectileProfile": "berts_vehicle_pack:lav25/mainmachinegun/default",
-        "ProjectileLife": 400
-      },
-      "ShootShake": [
-        0,
-        0,
-        0
       ]
     }
   },

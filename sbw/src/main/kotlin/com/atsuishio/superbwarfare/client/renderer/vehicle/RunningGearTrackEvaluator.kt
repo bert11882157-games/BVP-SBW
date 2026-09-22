@@ -99,6 +99,8 @@ object RunningGearTrackEvaluator {
             profile.evaluationLayout,
             profile.phaseDistance,
             profile.travelScale,
+            profile.linkHalfThickness,
+            profile.linkFit,
             linkIndex,
             trackPhase,
             output,
@@ -120,6 +122,8 @@ object RunningGearTrackEvaluator {
             profile.evaluationLayout,
             profile.phaseDistance,
             profile.travelScale,
+            profile.linkHalfThickness,
+            profile.linkFit,
             linkIndex,
             trackPhase,
             output,
@@ -128,15 +132,17 @@ object RunningGearTrackEvaluator {
     }
 
     /**
-     * Evaluates a link as the chord between two shared path boundaries. Adjacent links therefore
-     * use the exact same contact point while moving around a wheel. The fourth component fits the
-     * authored link's local Z span to that chord without changing its width or thickness.
+     * Evaluates shared path boundaries, then covers the outside of each bend using the authored
+     * tread thickness. Centerline-only chords leave a wedge between thick links around a wheel.
+     * The fourth component changes local Z span without changing width or thickness.
      */
     private fun linkPoseInto(
         path: TrackPathProfile,
         bounds: TrackBoundsProfile,
         phaseDistance: Float,
         travelScale: Float,
+        halfThickness: Float,
+        linkFit: TrackLinkFit,
         linkIndex: Int,
         trackPhase: Float,
         output: FloatArray,
@@ -146,6 +152,15 @@ object RunningGearTrackEvaluator {
         val halfPhase = phaseDistance * 0.5F
         val basePhase = phaseDistance * linkIndex
         val currentPhase = wrap(trackPhase + basePhase, 100.0F)
+
+        if (linkFit == TrackLinkFit.RIGID_PATH) {
+            // Geometry is centered on its authored phase-zero sample and retains its source length.
+            output[offset] = sampleY(path, bounds, currentPhase) - sampleY(path, bounds, basePhase)
+            output[offset + 1] = sampleZ(path, bounds, currentPhase) - sampleZ(path, bounds, basePhase)
+            output[offset + 2] = sampleRotation(path, currentPhase)
+            output[offset + 3] = 1F
+            return
+        }
 
         val baseStartY = sampleY(path, bounds, basePhase - halfPhase)
         val baseStartZ = sampleZ(path, bounds, basePhase - halfPhase)
@@ -165,15 +180,36 @@ object RunningGearTrackEvaluator {
         val currentLength = Math.hypot(currentDeltaY.toDouble(), currentDeltaZ.toDouble()).toFloat()
         val currentRotation = chordRotationDegrees(currentDeltaY, currentDeltaZ)
 
+        var startExtension = 0F
+        var endExtension = 0F
+        if (halfThickness > 0F && currentLength > 1.0E-6F) {
+            val previousY = sampleY(path, bounds, currentPhase - 3F * halfPhase)
+            val previousZ = sampleZ(path, bounds, currentPhase - 3F * halfPhase)
+            val nextY = sampleY(path, bounds, currentPhase + 3F * halfPhase)
+            val nextZ = sampleZ(path, bounds, currentPhase + 3F * halfPhase)
+            val previousRotation = chordRotationDegrees(currentStartY - previousY, currentStartZ - previousZ)
+            val nextRotation = chordRotationDegrees(nextY - currentEndY, nextZ - currentEndZ)
+            startExtension = jointExtension(previousRotation, currentRotation, halfThickness)
+            endExtension = jointExtension(currentRotation, nextRotation, halfThickness)
+        }
+
         val baseMidY = (baseStartY + baseEndY) * 0.5F
         val baseMidZ = (baseStartZ + baseEndZ) * 0.5F
-        val currentMidY = (currentStartY + currentEndY) * 0.5F
-        val currentMidZ = (currentStartZ + currentEndZ) * 0.5F
+        val centerShift = if (currentLength > 1.0E-6F) (endExtension - startExtension) / (2F * currentLength) else 0F
+        val currentMidY = (currentStartY + currentEndY) * 0.5F + currentDeltaY * centerShift
+        val currentMidZ = (currentStartZ + currentEndZ) * 0.5F + currentDeltaZ * centerShift
         output[offset] = (currentMidY - baseMidY) * travelScale
         output[offset + 1] = (currentMidZ - baseMidZ) * travelScale
         output[offset + 2] = baseRotation + Mth.wrapDegrees(currentRotation - baseRotation) * travelScale
-        val fittedScale = if (baseLength > 1.0E-6F) currentLength / baseLength else 1.0F
+        val fittedScale = if (baseLength > 1.0E-6F)
+            (currentLength + startExtension + endExtension) / baseLength else 1.0F
         output[offset + 3] = Mth.lerp(travelScale, 1.0F, fittedScale)
+    }
+
+    private fun jointExtension(fromDegrees: Float, toDegrees: Float, halfThickness: Float): Float {
+        val halfAngle = Math.toRadians(kotlin.math.abs(Mth.wrapDegrees(toDegrees - fromDegrees)).toDouble() * 0.5)
+        // A cusp cannot have a finite miter. Bound pathological profiles while preserving ordinary wheel bends.
+        return (halfThickness * kotlin.math.tan(halfAngle).coerceAtMost(4.0)).toFloat()
     }
 
     private fun chordRotationDegrees(deltaY: Float, deltaZ: Float): Float =

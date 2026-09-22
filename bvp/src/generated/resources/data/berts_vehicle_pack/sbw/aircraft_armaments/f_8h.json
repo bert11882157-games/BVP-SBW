@@ -1,0 +1,22 @@
+{
+  "Schema": 1,
+  "SuspendedWeapons": [],
+  "Pairs": [],
+  "StoreGroups": {
+    "berts_vehicle_pack:modeled_store/f_8h/side_missiles": [
+      "suspended_side_missiles_left",
+      "suspended_side_missiles_right"
+    ],
+    "berts_vehicle_pack:modeled_store/f_8h/bombs": [
+      "suspended_bombs_left",
+      "suspended_bombs_right"
+    ]
+  },
+  "Name": "F-8H",
+  "BuiltInWeapons": [
+    "Gun1",
+    "Gun2",
+    "Gun3",
+    "Gun4"
+  ]
+}

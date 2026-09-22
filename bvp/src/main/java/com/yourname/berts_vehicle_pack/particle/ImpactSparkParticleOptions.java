@@ -11,8 +11,8 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.registries.ForgeRegistries;
 
 /**
- * Networked diagnostic payload for one direct client particle probe. Accepted-impact shrapnel
- * uses real SBW projectile entities instead of this decorative particle.
+ * Networked diagnostic payload for one direct client particle probe. Accepted-impact fragments
+ * use the separate bounded client visual pool rather than this diagnostic particle.
  * The release runtime exposes the ParticleOptions writeToNetwork hook as m_7711_.
  */
 public final class ImpactSparkParticleOptions implements ParticleOptions {

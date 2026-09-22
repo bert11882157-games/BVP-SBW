@@ -222,8 +222,9 @@ final class ProjectileArmorEffects {
                 || !validPrecomputedDamage(ammoRackDamage)) {
             return null;
         }
-        return effect.withArmorDamage((double) moduleDamage, (double) ammoRackDamage,
-                (double) hullDamage);
+        double multiplier = BvpHandheldAtPolicy.damageMultiplier(descriptor);
+        return effect.withArmorDamage(moduleDamage * multiplier, ammoRackDamage * multiplier,
+                hullDamage * multiplier);
     }
 
     private static boolean validPrecomputedDamage(int value) {

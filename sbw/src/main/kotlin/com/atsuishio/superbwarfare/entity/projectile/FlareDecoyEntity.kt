@@ -1,7 +1,6 @@
 package com.atsuishio.superbwarfare.entity.projectile
 
 import com.atsuishio.superbwarfare.init.ModEntities
-import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.protocol.Packet
 import net.minecraft.network.protocol.game.ClientGamePacketListener
@@ -14,6 +13,8 @@ import net.minecraft.world.phys.Vec3
 import net.minecraftforge.network.NetworkHooks
 
 open class FlareDecoyEntity : Entity {
+    /** Aircraft equipment uses 40 ticks; legacy flare producers keep their original lifetime. */
+    var countermeasureLifetimeTicks: Int = 200
     constructor(type: EntityType<out FlareDecoyEntity>, world: Level) : super(type, world)
 
     constructor(level: Level) : super(ModEntities.FLARE_DECOY.get(), level)
@@ -37,10 +38,9 @@ open class FlareDecoyEntity : Entity {
         this.move(MoverType.SELF, this.deltaMovement)
 
         if (level().isClientSide()) {
-            level().addAlwaysVisibleParticle(ParticleTypes.END_ROD, true, this.xo, this.yo, this.zo, 0.0, 0.0, 0.0)
-            level().addAlwaysVisibleParticle(ParticleTypes.CLOUD, true, this.xo, this.yo, this.zo, 0.0, 0.0, 0.0)
+            com.atsuishio.superbwarfare.client.renderer.AircraftCountermeasureEffects.flareTrail(this)
         }
-        if (this.tickCount > 200 || this.isInWater || this.onGround()) {
+        if (this.tickCount >= countermeasureLifetimeTicks.coerceIn(1, 200) || this.isInWater || this.onGround()) {
             this.discard()
         }
     }

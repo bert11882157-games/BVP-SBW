@@ -60,8 +60,12 @@ object VehicleAttachmentDataValidator {
             require(info.direction.lengthSqr() > 1.0E-12) {
                 "$vehicleId attachment '$id' has a zero Direction"
             }
+            require(info.rotationChannel == null ||
+                    (info.direction.x == 0.0 && info.direction.y == 0.0 && info.direction.z == 1.0)) {
+                "$vehicleId attachment '$id' pitch frame must have neutral Direction; orient its children"
+            }
             validFrames += id
-            nodes += VehicleAttachmentNode(id, info.parent)
+            nodes += VehicleAttachmentNode(id, info.parent, info.rotationChannel)
         }
 
         // The graph constructor proves parent existence and acyclicity.

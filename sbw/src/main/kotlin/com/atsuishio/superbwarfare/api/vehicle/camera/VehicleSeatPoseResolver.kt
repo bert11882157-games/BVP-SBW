@@ -60,7 +60,8 @@ internal object VehicleSeatPoseResolver {
         if (seatIndex < 0) return null
         val selectedWeaponIndex = vehicle.getSelectedWeapon(seatIndex)
         val coherentClientAim = vehicle.level().isClientSide &&
-                vehicle.resolveVehicleFlightStrategy() == null && passenger is Player &&
+                (vehicle.resolveVehicleFlightStrategy() == null ||
+                    vehicle.isPassengerStationLocalAimController(passenger)) && passenger is Player &&
                 vehicle.resolveVehicleAimProfile(seatIndex, selectedWeaponIndex) != null
         if (!coherentClientAim) {
             (vehicle as? VehicleSeatPoseProvider)?.createVehicleSeatPose(

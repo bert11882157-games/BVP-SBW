@@ -441,8 +441,8 @@ object VehicleVecUtils {
     // From Immersive_Aircraft
     fun getVehicleYOffsetTransform(vehicle: VehicleEntity, partialTicks: Float): Matrix4d {
         val transform = getVehicleYawOffsetTransform(vehicle, partialTicks)
-        transform.rotate(Axis.XP.rotationDegrees(Mth.lerp(partialTicks, vehicle.xRotO, vehicle.xRot)))
-        transform.rotate(Axis.ZP.rotationDegrees(Mth.lerp(partialTicks, vehicle.prevRoll, vehicle.roll)))
+        transform.rotate(Axis.XP.rotationDegrees(vehicle.getPitch(partialTicks)))
+        transform.rotate(Axis.ZP.rotationDegrees(vehicle.getRoll(partialTicks)))
         return transform
     }
 
@@ -474,11 +474,7 @@ object VehicleVecUtils {
         val transform = getClientVehicleYawOffsetTransform(vehicle, partialTicks)
         transform.rotate(
             Axis.XP.rotationDegrees(
-                (Mth.lerp(
-                    partialTicks,
-                    vehicle.xRotO,
-                    vehicle.xRot
-                ) + ClientMouseHandler.freeCameraPitch).toFloat()
+                (vehicle.getPitch(partialTicks) + ClientMouseHandler.freeCameraPitch).toFloat()
             )
         )
         return transform
@@ -571,7 +567,9 @@ object VehicleVecUtils {
         } else {
             stationYaw - Mth.rotLerp(partialTicks, vehicle.turretYRotO, vehicle.turretYRot)
         }
-        transformT.rotate(Axis.YP.rotationDegrees(Mth.wrapDegrees(relativeYaw)))
+        transformT.rotate(Axis.YP.rotationDegrees(
+            Mth.wrapDegrees(relativeYaw + vehicle.passengerWeaponStationBaseYawDegrees),
+        ))
         return transformT
     }
 

@@ -1,0 +1,2464 @@
+{
+  "mig19": {
+    "Fuselage": {
+      "Min": [
+        -4.296822,
+        1.25,
+        -5.759604
+      ],
+      "Max": [
+        4.203178,
+        3.55,
+        3.865396
+      ]
+    },
+    "LandingGear": {
+      "Min": [
+        -3.956822,
+        -0.01,
+        -5.374604
+      ],
+      "Max": [
+        3.863178,
+        1.3,
+        3.480396
+      ]
+    },
+    "RetractableGear": false,
+    "WheelContacts": [
+      {
+        "Id": "legacy_tyre_210",
+        "Group": "NOSE",
+        "Position": [
+          -0.0540259375,
+          -0.00863,
+          6.5191109375
+        ]
+      },
+      {
+        "Id": "legacy_tyre_220",
+        "Group": "MAIN",
+        "Position": [
+          2.6112459375,
+          0.063404375,
+          -0.5402578124999999
+        ]
+      },
+      {
+        "Id": "legacy_tyre_232",
+        "Group": "MAIN",
+        "Position": [
+          -2.6472634375,
+          0.063404375,
+          -0.5402578124999999
+        ]
+      }
+    ]
+  },
+  "yak_3": {
+    "Fuselage": {
+      "Min": [
+        -2.4375,
+        1.12,
+        -3.423577
+      ],
+      "Max": [
+        2.4375,
+        2.85,
+        1.451423
+      ]
+    },
+    "LandingGear": {
+      "Min": [
+        -2.2425,
+        0,
+        -3.228578
+      ],
+      "Max": [
+        2.2425,
+        1.16,
+        1.256423
+      ]
+    },
+    "RetractableGear": true,
+    "WheelContacts": [
+      {
+        "Id": "landing_gear_0_0",
+        "Group": "MAIN",
+        "Position": [
+          -1.65193375,
+          0,
+          0.7116021875
+        ]
+      },
+      {
+        "Id": "landing_gear_1_0",
+        "Group": "MAIN",
+        "Position": [
+          1.65193375,
+          0,
+          0.7116021875
+        ]
+      },
+      {
+        "Id": "fixed_tail_tyre_0",
+        "Group": "TAIL",
+        "Position": [
+          0,
+          1.169060625,
+          -4.4983425
+        ]
+      }
+    ]
+  },
+  "yak_9u": {
+    "Fuselage": {
+      "Min": [
+        -2.375,
+        0.85,
+        -2.114474
+      ],
+      "Max": [
+        2.375,
+        2.45,
+        2.635526
+      ]
+    },
+    "LandingGear": {
+      "Min": [
+        -2.185,
+        0,
+        -1.924474
+      ],
+      "Max": [
+        2.185,
+        0.9,
+        2.445526
+      ]
+    },
+    "RetractableGear": true,
+    "WheelContacts": [
+      {
+        "Id": "landing_gear_0_0",
+        "Group": "MAIN",
+        "Position": [
+          -1.6084649999999998,
+          0,
+          1.8576640625
+        ]
+      },
+      {
+        "Id": "landing_gear_1_0",
+        "Group": "MAIN",
+        "Position": [
+          1.608465,
+          0,
+          1.8576640625
+        ]
+      },
+      {
+        "Id": "fixed_tail_tyre_0",
+        "Group": "TAIL",
+        "Position": [
+          0,
+          0.770250625,
+          -3.2848934375
+        ]
+      }
+    ]
+  },
+  "j_26": {
+    "Fuselage": {
+      "Min": [
+        -2.65,
+        1.15,
+        -2.789925
+      ],
+      "Max": [
+        2.65,
+        3.1,
+        2.085075
+      ]
+    },
+    "LandingGear": {
+      "Min": [
+        -2.438,
+        0,
+        -2.594925
+      ],
+      "Max": [
+        2.438,
+        1.2,
+        1.890075
+      ]
+    },
+    "RetractableGear": true,
+    "WheelContacts": [
+      {
+        "Id": "landing_gear_0_0",
+        "Group": "MAIN",
+        "Position": [
+          -1.8124715624999999,
+          0,
+          2.2655893750000002
+        ]
+      },
+      {
+        "Id": "landing_gear_1_0",
+        "Group": "MAIN",
+        "Position": [
+          1.8124715625,
+          0,
+          2.2655893750000002
+        ]
+      },
+      {
+        "Id": "fixed_tail_tyre_0",
+        "Group": "TAIL",
+        "Position": [
+          0,
+          1.10762125,
+          -2.7942265625
+        ]
+      }
+    ]
+  },
+  "saab_105": {
+    "Fuselage": {
+      "Min": [
+        -1.775,
+        0.72,
+        -2.647619
+      ],
+      "Max": [
+        1.775,
+        1.9,
+        2.602381
+      ]
+    },
+    "LandingGear": {
+      "Min": [
+        -1.633,
+        0,
+        -2.437619
+      ],
+      "Max": [
+        1.633,
+        0.75,
+        2.392381
+      ]
+    },
+    "RetractableGear": true,
+    "WheelContacts": [
+      {
+        "Id": "landing_gear_12_0",
+        "Group": "NOSE",
+        "Position": [
+          0,
+          0,
+          4.048809375
+        ]
+      },
+      {
+        "Id": "landing_gear_14_0",
+        "Group": "MAIN",
+        "Position": [
+          -1.04047625,
+          0,
+          0.09047625
+        ]
+      },
+      {
+        "Id": "landing_gear_15_0",
+        "Group": "MAIN",
+        "Position": [
+          1.04047625,
+          0,
+          0.09047625
+        ]
+      }
+    ]
+  },
+  "supermarine_spitfire_griffon": {
+    "Fuselage": {
+      "Min": [
+        -1.8125,
+        1.05,
+        -3.853253
+      ],
+      "Max": [
+        1.8125,
+        2.6,
+        0.584247
+      ]
+    },
+    "LandingGear": {
+      "Min": [
+        -1.6675,
+        0,
+        -3.675753
+      ],
+      "Max": [
+        1.6675,
+        1.1,
+        0.406747
+      ]
+    },
+    "RetractableGear": true,
+    "WheelContacts": [
+      {
+        "Id": "landing_gear_0_0",
+        "Group": "MAIN",
+        "Position": [
+          -1.043231875,
+          0,
+          0.622073125
+        ]
+      },
+      {
+        "Id": "landing_gear_1_0",
+        "Group": "MAIN",
+        "Position": [
+          1.043231875,
+          0,
+          0.622073125
+        ]
+      },
+      {
+        "Id": "fixed_tail_tyre_0",
+        "Group": "TAIL",
+        "Position": [
+          0,
+          1.28133875,
+          -5.84575375
+        ]
+      },
+      {
+        "Id": "fixed_tail_tyre_1",
+        "Group": "TAIL",
+        "Position": [
+          0,
+          1.28133875,
+          -5.84575375
+        ]
+      }
+    ]
+  },
+  "mig_9": {
+    "Fuselage": {
+      "Min": [
+        -1.5625,
+        0.7,
+        -2.451093
+      ],
+      "Max": [
+        1.5625,
+        2.4,
+        2.361407
+      ]
+    },
+    "LandingGear": {
+      "Min": [
+        -1.4375,
+        0,
+        -2.258593
+      ],
+      "Max": [
+        1.4375,
+        0.75,
+        2.168907
+      ]
+    },
+    "RetractableGear": true,
+    "WheelContacts": [
+      {
+        "Id": "landing_gear_0_0",
+        "Group": "MAIN",
+        "Position": [
+          -0.8968609375000001,
+          0,
+          0.7399103125
+        ]
+      },
+      {
+        "Id": "landing_gear_1_0",
+        "Group": "MAIN",
+        "Position": [
+          0.8968609375000001,
+          0,
+          0.7399103125
+        ]
+      },
+      {
+        "Id": "landing_gear_2_0",
+        "Group": "NOSE",
+        "Position": [
+          0,
+          0,
+          3.408071875
+        ]
+      }
+    ]
+  },
+  "mig_15bis": {
+    "Fuselage": {
+      "Min": [
+        -3.0625,
+        0.8,
+        -2.633713
+      ],
+      "Max": [
+        3.0625,
+        2.4,
+        2.678787
+      ]
+    },
+    "LandingGear": {
+      "Min": [
+        -2.8175,
+        0,
+        -2.421213
+      ],
+      "Max": [
+        2.8175,
+        0.85,
+        2.466287
+      ]
+    },
+    "RetractableGear": true,
+    "WheelContacts": [
+      {
+        "Id": "landing_gear_12_0",
+        "Group": "NOSE",
+        "Position": [
+          0,
+          0,
+          3.6735034375
+        ]
+      },
+      {
+        "Id": "landing_gear_14_0",
+        "Group": "MAIN",
+        "Position": [
+          -2.0283146875,
+          0,
+          0.676105
+        ]
+      },
+      {
+        "Id": "landing_gear_15_0",
+        "Group": "MAIN",
+        "Position": [
+          2.0283146875,
+          0,
+          0.676105
+        ]
+      }
+    ]
+  },
+  "mig_21bis": {
+    "Fuselage": {
+      "Min": [
+        -2.4375,
+        0.95,
+        -3.48303
+      ],
+      "Max": [
+        2.4375,
+        2.7,
+        3.51697
+      ]
+    },
+    "LandingGear": {
+      "Min": [
+        -2.2425,
+        0,
+        -3.20303
+      ],
+      "Max": [
+        2.2425,
+        1,
+        3.23697
+      ]
+    },
+    "RetractableGear": true,
+    "WheelContacts": [
+      {
+        "Id": "landing_gear_0_0",
+        "Group": "MAIN",
+        "Position": [
+          -1.4254746875,
+          0,
+          -1.2218356250000002
+        ]
+      },
+      {
+        "Id": "landing_gear_1_0",
+        "Group": "MAIN",
+        "Position": [
+          1.4254746875,
+          0,
+          -1.2218356250000002
+        ]
+      },
+      {
+        "Id": "landing_gear_2_0",
+        "Group": "NOSE",
+        "Position": [
+          0,
+          0,
+          3.5206962500000003
+        ]
+      }
+    ]
+  },
+  "su_25": {
+    "Fuselage": {
+      "Min": [
+        -2.3125,
+        1.15,
+        -3.612361
+      ],
+      "Max": [
+        2.3125,
+        3.3,
+        3.512639
+      ]
+    },
+    "LandingGear": {
+      "Min": [
+        -2.1275,
+        0,
+        -3.327361
+      ],
+      "Max": [
+        2.1275,
+        1.2,
+        3.227639
+      ]
+    },
+    "RetractableGear": true,
+    "WheelContacts": [
+      {
+        "Id": "landing_gear_12_0",
+        "Group": "NOSE",
+        "Position": [
+          0,
+          0,
+          2.7922221874999997
+        ]
+      },
+      {
+        "Id": "landing_gear_14_0",
+        "Group": "MAIN",
+        "Position": [
+          -1.371180625,
+          0,
+          -0.5484721875
+        ]
+      },
+      {
+        "Id": "landing_gear_15_0",
+        "Group": "MAIN",
+        "Position": [
+          1.371180625,
+          0,
+          -0.5484721875
+        ]
+      }
+    ]
+  },
+  "su_27": {
+    "Fuselage": {
+      "Min": [
+        -3.3125,
+        1.1,
+        -4.731381
+      ],
+      "Max": [
+        3.3125,
+        3.8,
+        4.643619
+      ]
+    },
+    "LandingGear": {
+      "Min": [
+        -3.0475,
+        0,
+        -4.356381
+      ],
+      "Max": [
+        3.0475,
+        1.15,
+        4.268619
+      ]
+    },
+    "RetractableGear": true,
+    "WheelContacts": [
+      {
+        "Id": "landing_gear_0_0",
+        "Group": "MAIN",
+        "Position": [
+          -2.10626875,
+          0,
+          -2.8961193750000005
+        ]
+      },
+      {
+        "Id": "landing_gear_1_0",
+        "Group": "MAIN",
+        "Position": [
+          2.10626875,
+          0,
+          -2.8961193750000005
+        ]
+      },
+      {
+        "Id": "landing_gear_2_0",
+        "Group": "NOSE",
+        "Position": [
+          0,
+          0,
+          2.47925375
+        ]
+      }
+    ]
+  },
+  "mig_29": {
+    "Fuselage": {
+      "Min": [
+        -2.5,
+        0.85,
+        -3.083468
+      ],
+      "Max": [
+        2.5,
+        3.4,
+        4.416532
+      ]
+    },
+    "LandingGear": {
+      "Min": [
+        -2.3,
+        0,
+        -2.783468
+      ],
+      "Max": [
+        2.3,
+        0.9,
+        4.116532
+      ]
+    },
+    "RetractableGear": true,
+    "WheelContacts": [
+      {
+        "Id": "landing_gear_0_0",
+        "Group": "MAIN",
+        "Position": [
+          -1.5169356250000001,
+          0,
+          -2.2524193749999997
+        ]
+      },
+      {
+        "Id": "landing_gear_1_0",
+        "Group": "MAIN",
+        "Position": [
+          1.516935625,
+          0,
+          -2.2524193749999997
+        ]
+      },
+      {
+        "Id": "landing_gear_2_0",
+        "Group": "NOSE",
+        "Position": [
+          -0.1608871875,
+          0,
+          1.40201625
+        ]
+      },
+      {
+        "Id": "landing_gear_2_1",
+        "Group": "NOSE",
+        "Position": [
+          0.1608871875,
+          0,
+          1.40201625
+        ]
+      }
+    ]
+  },
+  "mig_19s": {
+    "Fuselage": {
+      "Min": [
+        -2.5,
+        0.75,
+        -3.1475
+      ],
+      "Max": [
+        2.5,
+        2.65,
+        3.1025
+      ]
+    },
+    "LandingGear": {
+      "Min": [
+        -2.3,
+        0,
+        -2.8975
+      ],
+      "Max": [
+        2.3,
+        0.8,
+        2.8525
+      ]
+    },
+    "RetractableGear": true,
+    "WheelContacts": [
+      {
+        "Id": "landing_gear_0_0",
+        "Group": "MAIN",
+        "Position": [
+          -1.6537499999999998,
+          0.0225,
+          -0.3375
+        ]
+      },
+      {
+        "Id": "landing_gear_1_0",
+        "Group": "MAIN",
+        "Position": [
+          1.63125,
+          0.0225,
+          -0.3375
+        ]
+      },
+      {
+        "Id": "landing_gear_2_0",
+        "Group": "NOSE",
+        "Position": [
+          -0.03375,
+          0,
+          3.0375000000000005
+        ]
+      }
+    ]
+  },
+  "saab_j_21a_1": {
+    "Fuselage": {
+      "Min": [
+        -2.8125,
+        0.9,
+        -2.897481
+      ],
+      "Max": [
+        2.8125,
+        3,
+        2.852519
+      ]
+    },
+    "LandingGear": {
+      "Min": [
+        -2.5875,
+        0,
+        -2.667481
+      ],
+      "Max": [
+        2.5875,
+        0.95,
+        2.622519
+      ]
+    },
+    "RetractableGear": true,
+    "WheelContacts": [
+      {
+        "Id": "landing_gear_0_0",
+        "Group": "MAIN",
+        "Position": [
+          -1.8209300000000002,
+          0,
+          0.5170543750000001
+        ]
+      },
+      {
+        "Id": "landing_gear_1_0",
+        "Group": "MAIN",
+        "Position": [
+          1.82093,
+          0,
+          0.5170543750000001
+        ]
+      },
+      {
+        "Id": "landing_gear_2_0",
+        "Group": "NOSE",
+        "Position": [
+          0,
+          0,
+          4.85581375
+        ]
+      }
+    ]
+  },
+  "f_84f": {
+    "Fuselage": {
+      "Min": [
+        -3.25,
+        0.8,
+        -3.010003
+      ],
+      "Max": [
+        3.25,
+        2.8,
+        3.489997
+      ]
+    },
+    "LandingGear": {
+      "Min": [
+        -2.99,
+        0,
+        -2.750003
+      ],
+      "Max": [
+        2.99,
+        0.85,
+        3.229997
+      ]
+    },
+    "RetractableGear": true,
+    "WheelContacts": [
+      {
+        "Id": "landing_gear_0_0",
+        "Group": "MAIN",
+        "Position": [
+          -2.2511099999999997,
+          0.0562775,
+          1.0411384375000001
+        ]
+      },
+      {
+        "Id": "landing_gear_1_0",
+        "Group": "MAIN",
+        "Position": [
+          2.2511099999999997,
+          0.0562775,
+          1.0411384375000001
+        ]
+      },
+      {
+        "Id": "landing_gear_2_0",
+        "Group": "NOSE",
+        "Position": [
+          0,
+          0,
+          6.2749690625
+        ]
+      }
+    ]
+  },
+  "f_86k": {
+    "Fuselage": {
+      "Min": [
+        -2.0625,
+        0.75,
+        -2.632173
+      ],
+      "Max": [
+        2.0625,
+        2.65,
+        3.367827
+      ]
+    },
+    "LandingGear": {
+      "Min": [
+        -1.8975,
+        0,
+        -2.392173
+      ],
+      "Max": [
+        1.8975,
+        0.8,
+        3.127827
+      ]
+    },
+    "RetractableGear": true,
+    "WheelContacts": [
+      {
+        "Id": "landing_gear_0_0",
+        "Group": "MAIN",
+        "Position": [
+          -1.2889384375,
+          0,
+          -0.074361875
+        ]
+      },
+      {
+        "Id": "landing_gear_1_0",
+        "Group": "MAIN",
+        "Position": [
+          1.2889384375,
+          0,
+          -0.074361875
+        ]
+      },
+      {
+        "Id": "landing_gear_2_0",
+        "Group": "NOSE",
+        "Position": [
+          0,
+          0,
+          5.130966875
+        ]
+      }
+    ]
+  },
+  "f_104g": {
+    "Fuselage": {
+      "Min": [
+        -2.1875,
+        0.85,
+        -3.581856
+      ],
+      "Max": [
+        2.1875,
+        2.4,
+        3.480644
+      ]
+    },
+    "LandingGear": {
+      "Min": [
+        -2.0125,
+        0,
+        -3.299356
+      ],
+      "Max": [
+        2.0125,
+        0.9,
+        3.198144
+      ]
+    },
+    "RetractableGear": true,
+    "WheelContacts": [
+      {
+        "Id": "landing_gear_0_0",
+        "Group": "MAIN",
+        "Position": [
+          -1.3157575,
+          0,
+          -2.2772728124999997
+        ]
+      },
+      {
+        "Id": "landing_gear_1_0",
+        "Group": "MAIN",
+        "Position": [
+          1.3157575000000001,
+          0,
+          -2.2772728124999997
+        ]
+      },
+      {
+        "Id": "landing_gear_2_0",
+        "Group": "NOSE",
+        "Position": [
+          0,
+          0,
+          2.1001515625
+        ]
+      }
+    ]
+  },
+  "fiat_g_91": {
+    "Fuselage": {
+      "Min": [
+        -2.25,
+        0.85,
+        -2.817275
+      ],
+      "Max": [
+        2.25,
+        2.65,
+        2.682725
+      ]
+    },
+    "LandingGear": {
+      "Min": [
+        -2.07,
+        0,
+        -2.597275
+      ],
+      "Max": [
+        2.07,
+        0.9,
+        2.462725
+      ]
+    },
+    "RetractableGear": true,
+    "WheelContacts": [
+      {
+        "Id": "landing_gear_0_0",
+        "Group": "MAIN",
+        "Position": [
+          -1.3679271875,
+          0,
+          -0.2691003125
+        ]
+      },
+      {
+        "Id": "landing_gear_1_0",
+        "Group": "MAIN",
+        "Position": [
+          1.3679271874999999,
+          0,
+          -0.2691003125
+        ]
+      },
+      {
+        "Id": "landing_gear_2_0",
+        "Group": "NOSE",
+        "Position": [
+          -0.112125,
+          0,
+          2.7134287500000003
+        ]
+      },
+      {
+        "Id": "landing_gear_2_1",
+        "Group": "NOSE",
+        "Position": [
+          0.112125,
+          0,
+          2.7134287500000003
+        ]
+      }
+    ]
+  },
+  "yak_15p": {
+    "Fuselage": {
+      "Min": [
+        -1.8125,
+        0.8,
+        -2.453941
+      ],
+      "Max": [
+        1.8125,
+        2.5,
+        2.046059
+      ]
+    },
+    "LandingGear": {
+      "Min": [
+        -1.6675,
+        0,
+        -2.273941
+      ],
+      "Max": [
+        1.6675,
+        0.85,
+        1.866059
+      ]
+    },
+    "RetractableGear": true,
+    "WheelContacts": [
+      {
+        "Id": "landing_gear_0_0",
+        "Group": "MAIN",
+        "Position": [
+          -1.1103446875,
+          0,
+          0.453201875
+        ]
+      },
+      {
+        "Id": "landing_gear_1_0",
+        "Group": "MAIN",
+        "Position": [
+          1.1103446875,
+          0,
+          0.453201875
+        ]
+      },
+      {
+        "Id": "landing_gear_2_0",
+        "Group": "NOSE",
+        "Position": [
+          0,
+          0,
+          3.2403940625
+        ]
+      }
+    ]
+  },
+  "su_9": {
+    "Fuselage": {
+      "Min": [
+        -2.8125,
+        1.1,
+        -4.295941
+      ],
+      "Max": [
+        2.8125,
+        2.9,
+        3.704059
+      ]
+    },
+    "LandingGear": {
+      "Min": [
+        -2.5875,
+        0,
+        -3.975941
+      ],
+      "Max": [
+        2.5875,
+        1.15,
+        3.384059
+      ]
+    },
+    "RetractableGear": true,
+    "WheelContacts": [
+      {
+        "Id": "landing_gear_0_0",
+        "Group": "MAIN",
+        "Position": [
+          -1.8813368750000001,
+          0,
+          -3.2342081250000003
+        ]
+      },
+      {
+        "Id": "landing_gear_1_0",
+        "Group": "MAIN",
+        "Position": [
+          1.881336875,
+          0,
+          -3.2342081250000003
+        ]
+      },
+      {
+        "Id": "landing_gear_2_0",
+        "Group": "NOSE",
+        "Position": [
+          0,
+          0,
+          3.4667325
+        ]
+      }
+    ]
+  },
+  "saab_29_tunnan": {
+    "Fuselage": {
+      "Min": [
+        -1.875,
+        0.75,
+        -2.444672
+      ],
+      "Max": [
+        1.875,
+        2.55,
+        2.805328
+      ]
+    },
+    "LandingGear": {
+      "Min": [
+        -1.725,
+        0,
+        -2.234672
+      ],
+      "Max": [
+        1.725,
+        0.8,
+        2.595328
+      ]
+    },
+    "RetractableGear": true,
+    "WheelContacts": [
+      {
+        "Id": "landing_gear_12_0",
+        "Group": "NOSE",
+        "Position": [
+          0,
+          0,
+          4.4180328125
+        ]
+      },
+      {
+        "Id": "landing_gear_14_0",
+        "Group": "MAIN",
+        "Position": [
+          -1.14959,
+          0,
+          0.6762296875
+        ]
+      },
+      {
+        "Id": "landing_gear_15_0",
+        "Group": "MAIN",
+        "Position": [
+          1.14959,
+          0,
+          0.6762296875
+        ]
+      }
+    ]
+  },
+  "saab_32_lansen": {
+    "Fuselage": {
+      "Min": [
+        -2.4375,
+        1.1,
+        -3.454861
+      ],
+      "Max": [
+        2.4375,
+        3.25,
+        3.545139
+      ]
+    },
+    "LandingGear": {
+      "Min": [
+        -2.2425,
+        0,
+        -3.174861
+      ],
+      "Max": [
+        2.2425,
+        1.15,
+        3.265139
+      ]
+    },
+    "RetractableGear": true,
+    "WheelContacts": [
+      {
+        "Id": "landing_gear_0_0",
+        "Group": "MAIN",
+        "Position": [
+          -1.5121528125,
+          0,
+          -0.1128471875
+        ]
+      },
+      {
+        "Id": "landing_gear_1_0",
+        "Group": "MAIN",
+        "Position": [
+          1.5121528125,
+          0,
+          -0.1128471875
+        ]
+      },
+      {
+        "Id": "landing_gear_2_0",
+        "Group": "NOSE",
+        "Position": [
+          0,
+          0,
+          4.0625
+        ]
+      }
+    ]
+  },
+  "su_17": {
+    "Fuselage": {
+      "Min": [
+        -2.6875,
+        1.1,
+        -3.625497
+      ],
+      "Max": [
+        2.6875,
+        3.3,
+        4.124503
+      ]
+    },
+    "LandingGear": {
+      "Min": [
+        -2.4725,
+        0,
+        -3.315497
+      ],
+      "Max": [
+        2.4725,
+        1.15,
+        3.814503
+      ]
+    },
+    "RetractableGear": true,
+    "WheelContacts": [
+      {
+        "Id": "landing_gear_0_0",
+        "Group": "MAIN",
+        "Position": [
+          -1.7238409375000001,
+          0.09072875,
+          -1.5877484375
+        ]
+      },
+      {
+        "Id": "landing_gear_1_0",
+        "Group": "MAIN",
+        "Position": [
+          1.7238409375,
+          0.09072875,
+          -1.5877484375
+        ]
+      },
+      {
+        "Id": "landing_gear_2_0",
+        "Group": "NOSE",
+        "Position": [
+          0,
+          0,
+          3.8332781249999996
+        ]
+      }
+    ]
+  },
+  "mig_23mld": {
+    "Fuselage": {
+      "Min": [
+        -2.475,
+        1.15,
+        -3.750657
+      ],
+      "Max": [
+        2.475,
+        3,
+        3.749343
+      ]
+    },
+    "LandingGear": {
+      "Min": [
+        -2.277,
+        0,
+        -3.450657
+      ],
+      "Max": [
+        2.277,
+        1.2,
+        3.449343
+      ]
+    },
+    "RetractableGear": true,
+    "WheelContacts": [
+      {
+        "Id": "gear_body_0",
+        "Group": "NOSE",
+        "Position": [
+          -0.1505378125,
+          0,
+          3.788530625
+        ]
+      },
+      {
+        "Id": "gear_body_1",
+        "Group": "NOSE",
+        "Position": [
+          0.15053781249999998,
+          0,
+          3.788530625
+        ]
+      },
+      {
+        "Id": "gear_left_0",
+        "Group": "MAIN",
+        "Position": [
+          -1.3799284375,
+          0,
+          -2.433691875
+        ]
+      },
+      {
+        "Id": "gear_right_0",
+        "Group": "MAIN",
+        "Position": [
+          1.3799284375,
+          0,
+          -2.433691875
+        ]
+      }
+    ]
+  },
+  "saab_35_draken": {
+    "Fuselage": {
+      "Min": [
+        -2.15,
+        0.95,
+        -3.45625
+      ],
+      "Max": [
+        2.15,
+        2.7,
+        4.04375
+      ]
+    },
+    "LandingGear": {
+      "Min": [
+        -1.978,
+        0,
+        -3.15625
+      ],
+      "Max": [
+        1.978,
+        1,
+        3.74375
+      ]
+    },
+    "RetractableGear": true,
+    "WheelContacts": [
+      {
+        "Id": "landing_gear_12_0",
+        "Group": "NOSE",
+        "Position": [
+          0,
+          0,
+          2.1240384375000003
+        ]
+      },
+      {
+        "Id": "landing_gear_13_0",
+        "Group": "TAIL",
+        "Position": [
+          -0.0903846875,
+          0.768269375,
+          -5.739423125
+        ]
+      },
+      {
+        "Id": "landing_gear_13_1",
+        "Group": "TAIL",
+        "Position": [
+          0.0903846875,
+          0.768269375,
+          -5.739423125
+        ]
+      },
+      {
+        "Id": "landing_gear_14_0",
+        "Group": "MAIN",
+        "Position": [
+          -1.310576875,
+          0,
+          -1.9432690625000002
+        ]
+      },
+      {
+        "Id": "landing_gear_15_0",
+        "Group": "MAIN",
+        "Position": [
+          1.310576875,
+          0,
+          -1.9432690625000002
+        ]
+      }
+    ]
+  },
+  "saab_37_viggen": {
+    "Fuselage": {
+      "Min": [
+        -3.375,
+        1.25,
+        -3.660124
+      ],
+      "Max": [
+        3.375,
+        3.35,
+        4.089876
+      ]
+    },
+    "LandingGear": {
+      "Min": [
+        -3.105,
+        0,
+        -3.350124
+      ],
+      "Max": [
+        3.105,
+        1.3,
+        3.779876
+      ]
+    },
+    "RetractableGear": true,
+    "WheelContacts": [
+      {
+        "Id": "gear_body_0",
+        "Group": "NOSE",
+        "Position": [
+          -0.15041343749999997,
+          0,
+          3.1586778124999997
+        ]
+      },
+      {
+        "Id": "gear_body_1",
+        "Group": "NOSE",
+        "Position": [
+          0.1504134375,
+          0,
+          3.1586778124999997
+        ]
+      },
+      {
+        "Id": "gear_left_0",
+        "Group": "MAIN",
+        "Position": [
+          -2.0413225,
+          0,
+          -2.0842975
+        ]
+      },
+      {
+        "Id": "gear_left_1",
+        "Group": "MAIN",
+        "Position": [
+          -2.0413225,
+          0,
+          -2.9008262499999997
+        ]
+      },
+      {
+        "Id": "gear_right_0",
+        "Group": "MAIN",
+        "Position": [
+          2.0413225,
+          0,
+          -2.0842975
+        ]
+      },
+      {
+        "Id": "gear_right_1",
+        "Group": "MAIN",
+        "Position": [
+          2.0413225,
+          0,
+          -2.9008262499999997
+        ]
+      }
+    ]
+  },
+  "saab_jas_39_gripen": {
+    "Fuselage": {
+      "Min": [
+        -2.0625,
+        1.1,
+        -3.433333
+      ],
+      "Max": [
+        2.0625,
+        2.8,
+        3.316667
+      ]
+    },
+    "LandingGear": {
+      "Min": [
+        -1.8975,
+        0,
+        -3.163333
+      ],
+      "Max": [
+        1.8975,
+        1.15,
+        3.046667
+      ]
+    },
+    "RetractableGear": true,
+    "WheelContacts": [
+      {
+        "Id": "landing_gear_0_0",
+        "Group": "MAIN",
+        "Position": [
+          -1.2366665625,
+          0,
+          -2.24
+        ]
+      },
+      {
+        "Id": "landing_gear_1_0",
+        "Group": "MAIN",
+        "Position": [
+          1.2366665625,
+          0,
+          -2.24
+        ]
+      },
+      {
+        "Id": "landing_gear_2_0",
+        "Group": "NOSE",
+        "Position": [
+          -0.186666875,
+          0,
+          2.9166668749999998
+        ]
+      },
+      {
+        "Id": "landing_gear_2_1",
+        "Group": "NOSE",
+        "Position": [
+          0.186666875,
+          0,
+          2.9166668749999998
+        ]
+      }
+    ]
+  },
+  "panavia_tornado_ids_marineflieger": {
+    "Fuselage": {
+      "Min": [
+        -2.233929,
+        1,
+        -3.689286
+      ],
+      "Max": [
+        2.233929,
+        3.1,
+        4.185714
+      ]
+    },
+    "LandingGear": {
+      "Min": [
+        -2.055215,
+        0,
+        -3.374286
+      ],
+      "Max": [
+        2.055215,
+        1.05,
+        3.870714
+      ]
+    },
+    "RetractableGear": true,
+    "WheelContacts": [
+      {
+        "Id": "landing_gear_0_0",
+        "Group": "MAIN",
+        "Position": [
+          -1.4892859375,
+          0,
+          -0.8574678125
+        ]
+      },
+      {
+        "Id": "landing_gear_1_0",
+        "Group": "MAIN",
+        "Position": [
+          1.4892859375,
+          0,
+          -0.8574678125
+        ]
+      },
+      {
+        "Id": "landing_gear_2_0",
+        "Group": "NOSE",
+        "Position": [
+          -0.225649375,
+          0,
+          4.1519481250000005
+        ]
+      },
+      {
+        "Id": "landing_gear_2_1",
+        "Group": "NOSE",
+        "Position": [
+          0.22564937499999999,
+          0,
+          4.1519481250000005
+        ]
+      }
+    ]
+  },
+  "eurofighter_typhoon": {
+    "Fuselage": {
+      "Min": [
+        -3.1,
+        1.2,
+        -4.022624
+      ],
+      "Max": [
+        3.1,
+        3.4,
+        3.977376
+      ]
+    },
+    "LandingGear": {
+      "Min": [
+        -2.852,
+        0,
+        -3.702624
+      ],
+      "Max": [
+        2.852,
+        1.25,
+        3.657376
+      ]
+    },
+    "RetractableGear": true,
+    "WheelContacts": [
+      {
+        "Id": "landing_gear_0_0",
+        "Group": "MAIN",
+        "Position": [
+          -2.0135328125,
+          0,
+          -1.42531
+        ]
+      },
+      {
+        "Id": "landing_gear_1_0",
+        "Group": "MAIN",
+        "Position": [
+          2.0135328125000003,
+          0,
+          -1.42531
+        ]
+      },
+      {
+        "Id": "landing_gear_2_0",
+        "Group": "NOSE",
+        "Position": [
+          0,
+          0,
+          2.692251875
+        ]
+      }
+    ]
+  },
+  "an_12b": {
+    "Fuselage": {
+      "Min": [
+        -3.375,
+        1.4,
+        -7.625
+      ],
+      "Max": [
+        3.375,
+        5.1,
+        7.625
+      ]
+    },
+    "LandingGear": {
+      "Min": [
+        -3.105,
+        0.08,
+        -7.015
+      ],
+      "Max": [
+        3.105,
+        1.45,
+        7.015
+      ]
+    },
+    "RetractableGear": true,
+    "WheelContacts": [
+      {
+        "Id": "landing_gear_0_0",
+        "Group": "MAIN",
+        "Position": [
+          -1.8259603125,
+          0.08468375,
+          2.0510790625
+        ]
+      },
+      {
+        "Id": "landing_gear_0_1",
+        "Group": "MAIN",
+        "Position": [
+          -1.8259603125,
+          0.08468375,
+          1.1506053125
+        ]
+      },
+      {
+        "Id": "landing_gear_0_2",
+        "Group": "MAIN",
+        "Position": [
+          -1.3256971875000003,
+          0.08468375,
+          1.1506053125
+        ]
+      },
+      {
+        "Id": "landing_gear_0_3",
+        "Group": "MAIN",
+        "Position": [
+          -1.3256971875000003,
+          0.08468375,
+          2.0510790625
+        ]
+      },
+      {
+        "Id": "landing_gear_1_0",
+        "Group": "MAIN",
+        "Position": [
+          1.8259603125,
+          0.08468375,
+          2.0510790625
+        ]
+      },
+      {
+        "Id": "landing_gear_1_1",
+        "Group": "MAIN",
+        "Position": [
+          1.8259603125,
+          0.08468375,
+          1.1506053125
+        ]
+      },
+      {
+        "Id": "landing_gear_1_2",
+        "Group": "MAIN",
+        "Position": [
+          1.3256971875,
+          0.08468375,
+          1.1506053125
+        ]
+      },
+      {
+        "Id": "landing_gear_1_3",
+        "Group": "MAIN",
+        "Position": [
+          1.3256971875,
+          0.08468375,
+          2.0510790625
+        ]
+      },
+      {
+        "Id": "landing_gear_2_0",
+        "Group": "NOSE",
+        "Position": [
+          -0.22511843750000002,
+          0.08468375,
+          11.35597375
+        ]
+      },
+      {
+        "Id": "landing_gear_2_1",
+        "Group": "NOSE",
+        "Position": [
+          0.2251184375,
+          0.08468375,
+          11.35597375
+        ]
+      }
+    ]
+  },
+  "il_76m": {
+    "Fuselage": {
+      "Min": [
+        -4.6875,
+        1.2,
+        -10.625
+      ],
+      "Max": [
+        4.6875,
+        6.8,
+        10.875
+      ]
+    },
+    "LandingGear": {
+      "Min": [
+        -4.3125,
+        0.15,
+        -9.765
+      ],
+      "Max": [
+        4.3125,
+        1.25,
+        10.015
+      ]
+    },
+    "RetractableGear": true,
+    "WheelContacts": [
+      {
+        "Id": "landing_gear_12_0",
+        "Group": "NOSE",
+        "Position": [
+          -0.8,
+          0.15167875,
+          14.774999999999999
+        ]
+      },
+      {
+        "Id": "landing_gear_12_1",
+        "Group": "NOSE",
+        "Position": [
+          -0.30000000000000004,
+          0.15167875,
+          14.774999999999999
+        ]
+      },
+      {
+        "Id": "landing_gear_12_2",
+        "Group": "NOSE",
+        "Position": [
+          0.8,
+          0.15167875,
+          14.774999999999999
+        ]
+      },
+      {
+        "Id": "landing_gear_12_3",
+        "Group": "NOSE",
+        "Position": [
+          0.3,
+          0.15167875,
+          14.774999999999999
+        ]
+      },
+      {
+        "Id": "landing_gear_14_0",
+        "Group": "MAIN",
+        "Position": [
+          -1.4000000000000001,
+          0.15167875,
+          3.325
+        ]
+      },
+      {
+        "Id": "landing_gear_14_1",
+        "Group": "MAIN",
+        "Position": [
+          -1.9000000000000001,
+          0.15167875,
+          3.325
+        ]
+      },
+      {
+        "Id": "landing_gear_14_2",
+        "Group": "MAIN",
+        "Position": [
+          -2.5,
+          0.15167875,
+          3.325
+        ]
+      },
+      {
+        "Id": "landing_gear_14_3",
+        "Group": "MAIN",
+        "Position": [
+          -3,
+          0.15167875,
+          3.325
+        ]
+      },
+      {
+        "Id": "landing_gear_14_4",
+        "Group": "MAIN",
+        "Position": [
+          -1.4000000000000001,
+          0.15167875,
+          1.9249999999999998
+        ]
+      },
+      {
+        "Id": "landing_gear_14_5",
+        "Group": "MAIN",
+        "Position": [
+          -1.9000000000000001,
+          0.15167875,
+          1.9249999999999998
+        ]
+      },
+      {
+        "Id": "landing_gear_14_6",
+        "Group": "MAIN",
+        "Position": [
+          -2.5,
+          0.15167875,
+          1.9249999999999998
+        ]
+      },
+      {
+        "Id": "landing_gear_14_7",
+        "Group": "MAIN",
+        "Position": [
+          -3,
+          0.15167875,
+          1.9249999999999998
+        ]
+      },
+      {
+        "Id": "landing_gear_15_0",
+        "Group": "MAIN",
+        "Position": [
+          1.4,
+          0.15167875,
+          3.325
+        ]
+      },
+      {
+        "Id": "landing_gear_15_1",
+        "Group": "MAIN",
+        "Position": [
+          1.9,
+          0.15167875,
+          3.325
+        ]
+      },
+      {
+        "Id": "landing_gear_15_2",
+        "Group": "MAIN",
+        "Position": [
+          2.5,
+          0.15167875,
+          3.325
+        ]
+      },
+      {
+        "Id": "landing_gear_15_3",
+        "Group": "MAIN",
+        "Position": [
+          3,
+          0.15167875,
+          3.325
+        ]
+      },
+      {
+        "Id": "landing_gear_15_4",
+        "Group": "MAIN",
+        "Position": [
+          1.4,
+          0.15167875,
+          1.9249999999999998
+        ]
+      },
+      {
+        "Id": "landing_gear_15_5",
+        "Group": "MAIN",
+        "Position": [
+          1.9,
+          0.15167875,
+          1.9249999999999998
+        ]
+      },
+      {
+        "Id": "landing_gear_15_6",
+        "Group": "MAIN",
+        "Position": [
+          2.5,
+          0.15167875,
+          1.9249999999999998
+        ]
+      },
+      {
+        "Id": "landing_gear_15_7",
+        "Group": "MAIN",
+        "Position": [
+          3,
+          0.15167875,
+          1.9249999999999998
+        ]
+      }
+    ]
+  },
+  "m_50a": {
+    "Fuselage": {
+      "Min": [
+        -2.5,
+        3.2,
+        -13.912892
+      ],
+      "Max": [
+        2.5,
+        6.3,
+        13.962108
+      ]
+    },
+    "LandingGear": {
+      "Min": [
+        -2.3,
+        0,
+        -12.797892
+      ],
+      "Max": [
+        2.3,
+        2.8,
+        12.847108
+      ]
+    },
+    "RetractableGear": true,
+    "WheelContacts": [
+      {
+        "Id": "landing_gear_12_0",
+        "Group": "NOSE",
+        "Position": [
+          -0.319901875,
+          0,
+          6.8901959375
+        ]
+      },
+      {
+        "Id": "landing_gear_12_1",
+        "Group": "NOSE",
+        "Position": [
+          -0.319901875,
+          0,
+          5.4629409375
+        ]
+      },
+      {
+        "Id": "landing_gear_12_2",
+        "Group": "NOSE",
+        "Position": [
+          0.319901875,
+          0,
+          6.8901959375
+        ]
+      },
+      {
+        "Id": "landing_gear_12_3",
+        "Group": "NOSE",
+        "Position": [
+          0.319901875,
+          0,
+          5.4629409375
+        ]
+      },
+      {
+        "Id": "landing_gear_13_0",
+        "Group": "MAIN",
+        "Position": [
+          0.319901875,
+          0.8858825,
+          -11.3688234375
+        ]
+      },
+      {
+        "Id": "landing_gear_13_1",
+        "Group": "MAIN",
+        "Position": [
+          0.319901875,
+          0.8858825,
+          -12.7960784375
+        ]
+      },
+      {
+        "Id": "landing_gear_13_2",
+        "Group": "MAIN",
+        "Position": [
+          -0.319901875,
+          0.8858825,
+          -11.3688234375
+        ]
+      },
+      {
+        "Id": "landing_gear_13_3",
+        "Group": "MAIN",
+        "Position": [
+          -0.319901875,
+          0.8858825,
+          -12.7960784375
+        ]
+      },
+      {
+        "Id": "landing_gear_14_0",
+        "Group": "MAIN",
+        "Position": [
+          -10.5567646875,
+          0.689019375,
+          -7.1854903125
+        ]
+      },
+      {
+        "Id": "landing_gear_14_1",
+        "Group": "MAIN",
+        "Position": [
+          -10.31068625,
+          0.689019375,
+          -7.1854903125
+        ]
+      },
+      {
+        "Id": "landing_gear_15_0",
+        "Group": "MAIN",
+        "Position": [
+          10.5567646875,
+          0.689019375,
+          -7.1854903125
+        ]
+      },
+      {
+        "Id": "landing_gear_15_1",
+        "Group": "MAIN",
+        "Position": [
+          10.31068625,
+          0.689019375,
+          -7.1854903125
+        ]
+      }
+    ]
+  },
+  "tu_22m": {
+    "Fuselage": {
+      "Min": [
+        -4.9375,
+        2.55,
+        -9.087704
+      ],
+      "Max": [
+        4.9375,
+        6.8,
+        9.787296
+      ]
+    },
+    "LandingGear": {
+      "Min": [
+        -4.5425,
+        0,
+        -8.332704
+      ],
+      "Max": [
+        4.5425,
+        2.6,
+        9.032296
+      ]
+    },
+    "RetractableGear": true,
+    "WheelContacts": [
+      {
+        "Id": "landing_gear_0_0",
+        "Group": "MAIN",
+        "Position": [
+          -3.2980759375,
+          0,
+          -3.5979009375
+        ]
+      },
+      {
+        "Id": "landing_gear_0_1",
+        "Group": "MAIN",
+        "Position": [
+          -2.698425625,
+          0,
+          -3.5979009375
+        ]
+      },
+      {
+        "Id": "landing_gear_0_2",
+        "Group": "MAIN",
+        "Position": [
+          -3.2980759375,
+          0,
+          -4.6472887499999995
+        ]
+      },
+      {
+        "Id": "landing_gear_0_3",
+        "Group": "MAIN",
+        "Position": [
+          -2.698425625,
+          0,
+          -4.6472887499999995
+        ]
+      },
+      {
+        "Id": "landing_gear_0_4",
+        "Group": "MAIN",
+        "Position": [
+          -2.698425625,
+          0,
+          -5.69667625
+        ]
+      },
+      {
+        "Id": "landing_gear_0_5",
+        "Group": "MAIN",
+        "Position": [
+          -3.2980759375,
+          0,
+          -5.69667625
+        ]
+      },
+      {
+        "Id": "landing_gear_1_0",
+        "Group": "MAIN",
+        "Position": [
+          3.2980759375,
+          0,
+          -3.5979009375
+        ]
+      },
+      {
+        "Id": "landing_gear_1_1",
+        "Group": "MAIN",
+        "Position": [
+          2.6984256249999996,
+          0,
+          -3.5979009375
+        ]
+      },
+      {
+        "Id": "landing_gear_1_2",
+        "Group": "MAIN",
+        "Position": [
+          3.2980759375,
+          0,
+          -4.6472887499999995
+        ]
+      },
+      {
+        "Id": "landing_gear_1_3",
+        "Group": "MAIN",
+        "Position": [
+          2.6984256249999996,
+          0,
+          -4.6472887499999995
+        ]
+      },
+      {
+        "Id": "landing_gear_1_4",
+        "Group": "MAIN",
+        "Position": [
+          2.6984256249999996,
+          0,
+          -5.69667625
+        ]
+      },
+      {
+        "Id": "landing_gear_1_5",
+        "Group": "MAIN",
+        "Position": [
+          3.2980759375,
+          0,
+          -5.69667625
+        ]
+      },
+      {
+        "Id": "landing_gear_2_0",
+        "Group": "NOSE",
+        "Position": [
+          0.2998253125,
+          0.099941875,
+          9.2446065625
+        ]
+      },
+      {
+        "Id": "landing_gear_2_1",
+        "Group": "NOSE",
+        "Position": [
+          -0.2998253125,
+          0.099941875,
+          9.2446065625
+        ]
+      }
+    ]
+  },
+  "tu_95ms": {
+    "Fuselage": {
+      "Min": [
+        -9.375,
+        2.85,
+        -11.52482
+      ],
+      "Max": [
+        9.375,
+        5.5,
+        11.97518
+      ]
+    },
+    "LandingGear": {
+      "Min": [
+        -8.625,
+        0,
+        -10.58482
+      ],
+      "Max": [
+        8.625,
+        1.4,
+        11.03518
+      ]
+    },
+    "RetractableGear": true,
+    "WheelContacts": [
+      {
+        "Id": "landing_gear_0_0",
+        "Group": "MAIN",
+        "Position": [
+          -6.655320000000001,
+          0,
+          3.9531600000000005
+        ]
+      },
+      {
+        "Id": "landing_gear_0_1",
+        "Group": "MAIN",
+        "Position": [
+          -5.65452,
+          0,
+          3.9531600000000005
+        ]
+      },
+      {
+        "Id": "landing_gear_0_2",
+        "Group": "MAIN",
+        "Position": [
+          -5.65452,
+          0,
+          2.10168
+        ]
+      },
+      {
+        "Id": "landing_gear_0_3",
+        "Group": "MAIN",
+        "Position": [
+          -6.655320000000001,
+          0,
+          2.10168
+        ]
+      },
+      {
+        "Id": "landing_gear_1_0",
+        "Group": "MAIN",
+        "Position": [
+          6.65532,
+          0,
+          3.9531600000000005
+        ]
+      },
+      {
+        "Id": "landing_gear_1_1",
+        "Group": "MAIN",
+        "Position": [
+          5.654520000000001,
+          0,
+          3.9531600000000005
+        ]
+      },
+      {
+        "Id": "landing_gear_1_2",
+        "Group": "MAIN",
+        "Position": [
+          5.654520000000001,
+          0,
+          2.10168
+        ]
+      },
+      {
+        "Id": "landing_gear_1_3",
+        "Group": "MAIN",
+        "Position": [
+          6.65532,
+          0,
+          2.10168
+        ]
+      },
+      {
+        "Id": "landing_gear_2_0",
+        "Group": "NOSE",
+        "Position": [
+          -0.42534000000000005,
+          0,
+          18.58986
+        ]
+      },
+      {
+        "Id": "landing_gear_2_1",
+        "Group": "NOSE",
+        "Position": [
+          0.42534,
+          0,
+          18.58986
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "Schema": 1,
+  "Name": "F-111F",
+  "BuiltInWeapons": [],
+  "SuspendedWeapons": [
+    "BayVulcan"
+  ],
+  "Pairs": [],
+  "StoreGroups": {
+    "berts_vehicle_pack:modeled_store/f_111f/assembly_0": [
+      "suspended_f_111f_0"
+    ],
+    "berts_vehicle_pack:modeled_store/f_111f/assembly_1": [
+      "suspended_f_111f_1"
+    ],
+    "berts_vehicle_pack:modeled_store/f_111f/assembly_2": [
+      "suspended_f_111f_2"
+    ],
+    "berts_vehicle_pack:modeled_store/f_111f/assembly_3": [
+      "suspended_f_111f_3"
+    ],
+    "berts_vehicle_pack:gun_pod/f111_m61_bay": [
+      "suspended_f_111f_4"
+    ]
+  },
+  "Singles": [
+    {
+      "Id": "bay_gun",
+      "Name": "Bay gun",
+      "Position": [
+        -0.58694300519625,
+        0.9600000000243751,
+        4.081243523419687
+      ],
+      "WeaponId": "BayVulcan",
+      "AllowedStores": [
+        "berts_vehicle_pack:gun_pod/f111_m61_bay"
+      ]
+    }
+  ]
+}

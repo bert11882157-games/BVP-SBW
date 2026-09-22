@@ -21,32 +21,6 @@
       ]
     },
     {
-      "Part": "WheelLeft",
-      "Size": [
-        0.22023,
-        0.44734,
-        2.44317
-      ],
-      "Position": [
-        1.47966,
-        0.49552,
-        -0.17205
-      ]
-    },
-    {
-      "Part": "WheelRight",
-      "Size": [
-        0.22023,
-        0.44734,
-        2.44317
-      ],
-      "Position": [
-        -1.47966,
-        0.49552,
-        -0.17205
-      ]
-    },
-    {
       "Part": "MainEngine",
       "Size": [
         0.79145,
@@ -280,7 +254,7 @@
       "DefaultFireMode": "Auto",
       "AvailableFireModes": "Auto",
       "DefaultZoom": 3,
-      "RPM": 200,
+      "RPM": 201,
       "Magazine": 300,
       "NormalReloadTime": 4,
       "EmptyReloadTime": 4,
@@ -346,7 +320,7 @@
                   "Shots": 1,
                   "Round": "m792_hei_t_1",
                   "Ammo": "superbwarfare:small_shell_aa",
-                  "Tracer": "INHERIT",
+                  "Tracer": "RED",
                   "DisplayLabel": "M792 HEI-T"
                 }
               ]
@@ -386,7 +360,7 @@
                   "Shots": 3,
                   "Round": "m792_hei_t_1",
                   "Ammo": "superbwarfare:small_shell_aa",
-                  "Tracer": "INHERIT",
+                  "Tracer": "RED",
                   "DisplayLabel": "M792 HEI-T"
                 },
                 {
@@ -416,18 +390,18 @@
         "Transform": "Barrel",
         "Positions": [
           [
-            0.00496,
-            -0.2107,
-            -2.40935
+            0.07996,
+            0.0018,
+            -2.2156
           ]
         ],
         "Directions": [
           "Barrel"
         ],
         "ViewPosition": [
-          0.00515,
-          -0.21868,
-          -2.50062
+          0.08299,
+          0.00187,
+          -2.29953
         ],
         "MuzzleAttachments": [
           "main_muzzle"
@@ -448,6 +422,17 @@
           "main_muzzle"
         ]
       },
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "superbwarfare:small_cannon_shell",
+        "ProjectileProfile": "berts_vehicle_pack:m2_bradley/cannon/default",
+        "ProjectileLife": 40
+      },
+      "ShootShake": [
+        8,
+        10,
+        12
+      ],
       "ProjectileBeltAmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_gs",
@@ -491,17 +476,6 @@
             ]
           }
         }
-      ],
-      "NominalBallistics": {
-        "Supported": true,
-        "ProjectileType": "superbwarfare:small_cannon_shell",
-        "ProjectileProfile": "berts_vehicle_pack:m2_bradley/cannon/default",
-        "ProjectileLife": 40
-      },
-      "ShootShake": [
-        8,
-        10,
-        12
       ]
     },
     "MainMachineGun": {
@@ -543,6 +517,11 @@
                 }
               ]
             },
+            "ShootShake": [
+              0,
+              0,
+              0
+            ],
             "NominalBallistics": {
               "Supported": true,
               "ProjectileType": "superbwarfare:projectile",
@@ -571,18 +550,18 @@
         "Transform": "Barrel",
         "Positions": [
           [
-            0,
-            -0.02479,
-            -2.20362
+            -0.26875,
+            0.09396,
+            -0.80362
           ]
         ],
         "Directions": [
           "Barrel"
         ],
         "ViewPosition": [
-          0,
-          -0.02573,
-          -2.28709
+          -0.27893,
+          0.09752,
+          -0.83406
         ],
         "MuzzleAttachments": [
           "coax_muzzle"
@@ -619,6 +598,17 @@
       "SoundRadius": 12,
       "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/gun_7_62mm.png",
       "HeatPerShoot": 0,
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "superbwarfare:projectile",
+        "ProjectileProfile": "berts_vehicle_pack:m2_bradley/mainmachinegun/default",
+        "ProjectileLife": 400
+      },
+      "ShootShake": [
+        0,
+        0,
+        0
+      ],
       "ProjectileBeltAmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
@@ -633,16 +623,15 @@
             "Damage": 9.5,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
-            "Name": "T"
+            "Name": "T",
+            "ShootShake": [
+              0,
+              0,
+              0
+            ]
           }
         }
-      ],
-      "NominalBallistics": {
-        "Supported": true,
-        "ProjectileType": "superbwarfare:projectile",
-        "ProjectileProfile": "berts_vehicle_pack:m2_bradley/mainmachinegun/default",
-        "ProjectileLife": 400
-      }
+      ]
     },
     "Missile": {
       "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_atgm.png",
@@ -673,10 +662,10 @@
       "Name": "weapon.berts_vehicle_pack.25_mm_m242_bgm_71a_tow",
       "AmmoType": "superbwarfare:medium_anti_ground_missile",
       "SoundInfo": {
-        "Fire1PGain": 0.5,
-        "Fire3PGain": 0.5,
-        "Fire3PFarGain": 0.5,
-        "Fire3PVeryFarGain": 0.5,
+        "Fire1PGain": 0.35,
+        "Fire3PGain": 0.35,
+        "Fire3PFarGain": 0.35,
+        "Fire3PVeryFarGain": 0.35,
         "Fire1P": "berts_vehicle_pack:atgm_tube_launch",
         "Fire3P": "berts_vehicle_pack:atgm_tube_launch",
         "VehicleReload3p": "superbwarfare:medium_missile_reload",
@@ -690,14 +679,14 @@
         "Transform": "Turret",
         "Positions": [
           [
-            -0.94193,
-            0.61969,
-            0.1983
+            1.02057,
+            0.81344,
+            -0.7642
           ],
           [
-            -1.23938,
-            0.61969,
-            0.1983
+            1.31687,
+            0.83844,
+            -0.80795
           ]
         ],
         "Directions": [
@@ -727,6 +716,16 @@
           "tow_muzzle_01",
           "tow_muzzle_02"
         ]
+      },
+      "ShootShake": [
+        8,
+        10,
+        122.4
+      ],
+      "NominalBallistics": {
+        "Supported": false,
+        "ProjectileType": "superbwarfare:wire_guide_missile",
+        "ProjectileProfile": "berts_vehicle_pack:m2_bradley/missile/default"
       }
     }
   },
@@ -911,9 +910,9 @@
     "gunner1_camera": {
       "Parent": "Turret",
       "Position": [
-        0.10535,
-        2.52834,
-        -0.17599
+        0.45535,
+        0.80958,
+        0.58651
       ],
       "Direction": [
         0,
@@ -924,9 +923,9 @@
     "gunner1_zoom": {
       "Parent": "Turret",
       "Position": [
-        0.10535,
-        2.52834,
-        -0.17599
+        0.45535,
+        0.80958,
+        0.58651
       ],
       "Direction": [
         0,
@@ -937,9 +936,9 @@
     "main_muzzle": {
       "Parent": "Barrel",
       "Position": [
-        0.00496,
-        -0.2107,
-        2.40935
+        0.07996,
+        0.0018,
+        2.2156
       ],
       "Direction": [
         0,
@@ -950,9 +949,9 @@
     "coax_muzzle": {
       "Parent": "Barrel",
       "Position": [
-        0,
-        -0.02479,
-        2.20362
+        -0.26875,
+        0.09396,
+        0.80362
       ],
       "Direction": [
         0,
@@ -963,9 +962,9 @@
     "tow_muzzle_01": {
       "Parent": "Turret",
       "Position": [
-        -0.94193,
-        0.61969,
-        -0.1983
+        1.02057,
+        0.81344,
+        0.7642
       ],
       "Direction": [
         0,
@@ -976,9 +975,9 @@
     "tow_muzzle_02": {
       "Parent": "Turret",
       "Position": [
-        -1.23938,
-        0.61969,
-        -0.1983
+        1.31687,
+        0.83844,
+        0.80795
       ],
       "Direction": [
         0,

@@ -5,6 +5,26 @@ import org.junit.jupiter.api.Test
 import java.util.function.Function
 
 class VehicleSeatTransactionTest {
+    @Test fun `occupied IFV fills passenger seats without replacing driver and rejects overflow`() {
+        val owner = VehicleSeatingStateOwner(mutableListOf<String?>("driver", null, null))
+        assertEquals(1, owner.insert("passenger A", null))
+        assertEquals(2, owner.insert("passenger B", null))
+        assertEquals(-1, owner.insert("overflow", null))
+        assertEquals("driver", owner.first())
+        owner.remove("passenger A")
+        assertEquals(1, owner.insert("replacement", null))
+        assertEquals("passenger B", owner.at(2))
+    }
+
+    @Test fun `occupied tank admits HMG operator and keeps driver seat empty when driver leaves`() {
+        val owner = VehicleSeatingStateOwner(mutableListOf<String?>("driver", null))
+        assertEquals(1, owner.insert("HMG operator", null))
+        owner.remove("driver")
+        assertNull(owner.first())
+        assertEquals(0, owner.insert("new driver", null))
+        assertEquals("HMG operator", owner.at(1))
+    }
+
     @Test fun `seat shrink detaches in the old frame and supports reentrant queries`() {
         val owner = VehicleSeatingStateOwner(mutableListOf<String?>("driver", "gunner", "passenger"))
         val detached = mutableListOf<String>()

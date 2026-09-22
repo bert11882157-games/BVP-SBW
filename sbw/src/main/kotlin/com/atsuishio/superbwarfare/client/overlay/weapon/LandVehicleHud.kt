@@ -7,7 +7,6 @@ import com.atsuishio.superbwarfare.client.overlay.VehicleHudLayout
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity
 import com.atsuishio.superbwarfare.event.ClientEventHandler
 import com.atsuishio.superbwarfare.init.ModKeyMappings
-import com.atsuishio.superbwarfare.tools.MathTool.getGradientColor
 import com.mojang.blaze3d.platform.GlStateManager
 import com.mojang.blaze3d.systems.RenderSystem
 import com.mojang.math.Axis
@@ -22,7 +21,6 @@ import net.minecraftforge.api.distmarker.Dist
 import net.minecraftforge.api.distmarker.OnlyIn
 import net.minecraftforge.client.gui.overlay.ForgeGui
 import org.joml.Math
-import kotlin.math.roundToInt
 
 @OnlyIn(Dist.CLIENT)
 object LandVehicleHud {
@@ -33,19 +31,6 @@ object LandVehicleHud {
 
     // 地面载具车身显示
     private val FRAME = loc("textures/overlay/vehicle/land/tv_frame.png")
-    private val LINE = loc("textures/overlay/vehicle/land/line.png")
-    private val BARREL = loc("textures/overlay/vehicle/land/line.png")
-    private val BODY = loc("textures/overlay/vehicle/land/body.png")
-    private val LEFT_WHEEL = loc("textures/overlay/vehicle/land/left_wheel.png")
-    private val RIGHT_WHEEL = loc("textures/overlay/vehicle/land/right_wheel.png")
-    private val ENGINE = loc("textures/overlay/vehicle/land/engine.png")
-
-    // The authored orientation resources are 64x64 (the legacy SBW glyph was a 32-unit
-    // destination).  Always sample the complete image explicitly so a resized destination can
-    // never wrap UVs and produce the former tiled/lattice appearance.
-    private const val ORIENTATION_TEXTURE_SIZE = 64f
-    private const val ORIENTATION_VERTICAL_OFFSET_LINES = 0.65f
-
     var lerpRecoil: Float = 0f
 
     fun render(
@@ -110,20 +95,6 @@ object LandVehicleHud {
                 (screenWidth + addW).toFloat(),
                 (screenHeight + addH).toFloat()
             )
-            RenderHelper.blit(
-                poseStack,
-                LINE,
-                screenWidth / 2f - 64,
-                (screenHeight - 56).toFloat(),
-                0f,
-                0f,
-                128f,
-                1f,
-                128f,
-                1f,
-                color
-            )
-
             // 指南针
             RenderHelper.blit(
                 poseStack,
@@ -141,119 +112,7 @@ object LandVehicleHud {
             RenderHelper.blit(poseStack, ROLL_IND, screenWidth / 2f - 8, 30f, 0f, 0f, 16f, 16f, 16f, 16f, color)
 
             val layout = VehicleHudLayout.scaled(screenWidth, screenHeight, mc.font.lineHeight)
-            val orientationZone = layout.element("orientation")
             val decoyZone = layout.element("decoy")
-            val indicatorSize = minOf(
-                orientationZone.width,
-                orientationZone.height,
-                (minOf(orientationZone.width, orientationZone.height) * 0.30f).toInt(),
-            ).coerceAtLeast(1)
-            val indicatorCenterX = orientationZone.centerX
-            // Keep the compact glyph immediately below the compass in the authored upper-center
-            // cell, with a small line-height offset so it does not crowd the compass.
-            val indicatorCenterY = (
-                orientationZone.top + indicatorSize / 2 +
-                    (orientationZone.lineHeight.toFloat() * ORIENTATION_VERTICAL_OFFSET_LINES).roundToInt()
-            ).coerceAtMost(orientationZone.bottom - indicatorSize / 2)
-            val indicatorLeft = indicatorCenterX - indicatorSize / 2
-            val indicatorTop = indicatorCenterY - indicatorSize / 2
-
-            // Reuse the original SBW tank indicator relationship: BARREL is the fixed forward
-            // reference and the complete body/wheel/engine stack rotates by turret bearing.
-            // This is presentation only; no aim frame is read here.
-            val turretHeading = Mth.rotLerp(partialTick, vehicle.turretYRotO, vehicle.turretYRot)
-                .takeIf(Float::isFinite) ?: 0f
-            val lineWidth = (indicatorSize / 32f).coerceAtLeast(1f)
-            val lineHeight = (indicatorSize / 2f).coerceAtLeast(1f)
-            val turretHeal = (100 - (100 * vehicle.turretHealth / vehicle.getTurretMaxHealth())).toInt()
-
-            // Fixed forward reference line from the original SBW orientation indicator.
-            RenderHelper.blit(
-                poseStack,
-                BARREL,
-                indicatorCenterX.toFloat() - lineWidth / 2f,
-                indicatorCenterY.toFloat() - lineHeight,
-                lineWidth,
-                lineHeight,
-                0f,
-                0f,
-                1f,
-                1f,
-                1f,
-                1f,
-                getGradientColor(color, 0xFF0000, turretHeal, 2)
-            )
-
-            poseStack.pushPose()
-            poseStack.rotateAround(
-                Axis.ZP.rotationDegrees(turretHeading),
-                indicatorCenterX.toFloat(), indicatorCenterY.toFloat(), 0f
-            )
-            val bodyHeal = (100 - (100 * vehicle.health / vehicle.getMaxHealth())).toInt()
-            RenderHelper.blit(
-                poseStack,
-                BODY,
-                indicatorLeft.toFloat(),
-                indicatorTop.toFloat(),
-                indicatorSize.toFloat(),
-                indicatorSize.toFloat(),
-                0f,
-                0f,
-                ORIENTATION_TEXTURE_SIZE,
-                ORIENTATION_TEXTURE_SIZE,
-                ORIENTATION_TEXTURE_SIZE,
-                ORIENTATION_TEXTURE_SIZE,
-                getGradientColor(color, 0xFF0000, bodyHeal, 2)
-            )
-            val leftWheelHeal = (100 - (100 * vehicle.leftWheelHealth / vehicle.getWheelMaxHealth())).toInt()
-            RenderHelper.blit(
-                poseStack,
-                LEFT_WHEEL,
-                indicatorLeft.toFloat(),
-                indicatorTop.toFloat(),
-                indicatorSize.toFloat(),
-                indicatorSize.toFloat(),
-                0f,
-                0f,
-                ORIENTATION_TEXTURE_SIZE,
-                ORIENTATION_TEXTURE_SIZE,
-                ORIENTATION_TEXTURE_SIZE,
-                ORIENTATION_TEXTURE_SIZE,
-                getGradientColor(color, 0xFF0000, leftWheelHeal, 2)
-            )
-            val rightWheelHeal = (100 - (100 * vehicle.rightWheelHealth / vehicle.getWheelMaxHealth())).toInt()
-            RenderHelper.blit(
-                poseStack,
-                RIGHT_WHEEL,
-                indicatorLeft.toFloat(),
-                indicatorTop.toFloat(),
-                indicatorSize.toFloat(),
-                indicatorSize.toFloat(),
-                0f,
-                0f,
-                ORIENTATION_TEXTURE_SIZE,
-                ORIENTATION_TEXTURE_SIZE,
-                ORIENTATION_TEXTURE_SIZE,
-                ORIENTATION_TEXTURE_SIZE,
-                getGradientColor(color, 0xFF0000, rightWheelHeal, 2)
-            )
-            val engineHeal = (100 - (100 * vehicle.mainEngineHealth / vehicle.getEngineMaxHealth())).toInt()
-            RenderHelper.blit(
-                poseStack,
-                ENGINE,
-                indicatorLeft.toFloat(),
-                indicatorTop.toFloat(),
-                indicatorSize.toFloat(),
-                indicatorSize.toFloat(),
-                0f,
-                0f,
-                ORIENTATION_TEXTURE_SIZE,
-                ORIENTATION_TEXTURE_SIZE,
-                ORIENTATION_TEXTURE_SIZE,
-                ORIENTATION_TEXTURE_SIZE,
-                getGradientColor(color, 0xFF0000, engineHeal, 2)
-            )
-            poseStack.popPose()
 
             // 低电量警告
             renderEnergyInfo(vehicle, guiGraphics, screenWidth, screenHeight, mc.font)

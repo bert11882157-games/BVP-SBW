@@ -10,20 +10,26 @@ internal class VehicleCollisionEnvironmentService(
 ) {
     fun collide(requestedMovement: Vec3, allowAirborneStep: Boolean = false): Vec3 {
         if (requestedMovement.lengthSqr() == 0.0) return requestedMovement
-        val bounds = vehicle.boundingBox
+        val bounds = vehicle.getMovementCollisionBounds()
+        AircraftEntityCollisionService.tryCollide(vehicle, requestedMovement, bounds,
+            allowAirborneStep || vehicle.onGround(), vehicle.stepHeight.toDouble())?.let { return it }
         val collisions = vehicle.level().getEntityCollisions(vehicle, bounds.expandTowards(requestedMovement))
         return VehicleCollisionSolver.collide(
             requestedMovement, bounds, allowAirborneStep || vehicle.onGround(), vehicle.stepHeight.toDouble(),
         ) { movement, box -> vehicle.resolveCollisionBoundingBox(movement, box, collisions) }
     }
 
-    fun move(movementType: MoverType, requestedMovement: Vec3, allowAirborneStep: Boolean = false) {
+    fun move(
+        movementType: MoverType, requestedMovement: Vec3, allowAirborneStep: Boolean = false,
+        constrainResolved: ((Vec3) -> Vec3)? = null,
+    ) {
         val profiler = vehicle.level().profiler
         profiler.push("move")
         try {
     
             val backedOffMovement = vehicle.backOffFromEdgeForCollision(requestedMovement, movementType)
-            val resolved = collide(backedOffMovement, allowAirborneStep)
+            val nativeResolved = collide(backedOffMovement, allowAirborneStep)
+            val resolved = constrainResolved?.invoke(nativeResolved) ?: nativeResolved
             if (resolved.lengthSqr() > 1.0E-7) {
                 vehicle.setPos(vehicle.x + resolved.x, vehicle.y + resolved.y, vehicle.z + resolved.z)
             }

@@ -50,6 +50,10 @@
   "VisualProfile": "berts_vehicle_pack:scaled_small_cannon",
   "ImpactVisualProfile": "berts_vehicle_pack:autocannon_he",
   "MotionSync": "INHERIT",
+  "Collision": {
+    "Width": 0.1,
+    "Height": 0.1
+  },
   "Luminance": 0,
   "TrailMode": "REPLACE",
   "RenderScale": 1,

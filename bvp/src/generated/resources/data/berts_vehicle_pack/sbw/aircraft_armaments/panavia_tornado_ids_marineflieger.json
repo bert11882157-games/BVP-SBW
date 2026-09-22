@@ -1,0 +1,21 @@
+{
+  "Schema": 1,
+  "Name": "Tornado IDS Marineflieger",
+  "BuiltInWeapons": [
+    "CannonLeft",
+    "CannonRight"
+  ],
+  "SuspendedWeapons": [],
+  "Pairs": [],
+  "StoreGroups": {
+    "berts_vehicle_pack:modeled_store/panavia_tornado_ids_marineflieger/570313542": [
+      "suspended_570313542_pylon_left",
+      "suspended_570313542_pylon_right"
+    ],
+    "berts_vehicle_pack:modeled_store/panavia_tornado_ids_marineflieger/607985650": [
+      "suspended_607985650_hull",
+      "suspended_607985650_pylon_left",
+      "suspended_607985650_pylon_right"
+    ]
+  }
+}

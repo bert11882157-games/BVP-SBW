@@ -79,7 +79,7 @@ abstract class BvpFullBrightAnimatedParticle extends BvpAnimatedParticle {
     }
 
     @Override
-    public final ParticleRenderType m_7556_() {
+    public ParticleRenderType m_7556_() {
         return ParticleRenderType.f_107432_;
     }
 }

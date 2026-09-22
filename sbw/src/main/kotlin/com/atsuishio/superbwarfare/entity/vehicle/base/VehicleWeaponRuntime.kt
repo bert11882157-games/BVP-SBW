@@ -17,6 +17,10 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.phys.Vec3
 import java.util.UUID
 
+/** Pure server-shot interlock over the current commanded state and normalized retraction fraction. */
+internal fun permitsLandingGearShot(required: Boolean, gearUp: Boolean, retraction: Float): Boolean =
+    !required || (gearUp && retraction.isFinite() && retraction == 1F)
+
 /**
  * Owns vehicle GunData, deterministic slot policy, and the accepted-shot transaction.
  *
@@ -26,9 +30,11 @@ import java.util.UUID
  */
 internal class VehicleWeaponRuntime(
     private val vehicle: VehicleEntity,
-    private val stateOwner: VehicleSynchronizedStateOwner,
     private val shouldEmitNativeSound: () -> Boolean,
 ) {
+    private val weaponState = VehicleWeaponStateCache<GunData>()
+    private var normalizationDataOwner: DefaultVehicleData? = null
+    private var normalizationFingerprint = Int.MIN_VALUE
     /** Null [weaponName] resolves the occupied seat's primary; a name is an explicit channel. */
     fun fire(
         living: LivingEntity?,
@@ -38,6 +44,18 @@ internal class VehicleWeaponRuntime(
         permitsSelectedAttempt: () -> Boolean,
     ): ShotResult {
         val serverLevel = vehicle.level() as? ServerLevel
+        val selectedName = weaponName ?: vehicle.getGunName(vehicle.getSeatIndex(living))
+        if (selectedName != null && com.atsuishio.superbwarfare.api.aircraft.AircraftStoreWeapons.mountId(selectedName) != null) {
+            val rejected = when {
+                vehicle.isWreck -> ShotRejectionReason.WRECKED
+                serverLevel == null -> ShotRejectionReason.NOT_SERVER_AUTHORITY
+                !vehicle.isVehicleActionFireAllowed() || weaponName == null && !permitsSelectedAttempt() -> ShotRejectionReason.ACTION_BLOCKED
+                else -> null
+            }
+            if (rejected != null) return ShotResult.rejected(rejected, selectedName)
+            return com.atsuishio.superbwarfare.api.aircraft.AircraftArmamentManager.tryFireStore(vehicle, living, selectedName)
+                ?: ShotResult.rejected(ShotRejectionReason.NO_WEAPON, selectedName)
+        }
         return VehicleShotTransaction.execute(
             weaponName, vehicle.isWreck, serverLevel != null,
             allowsFire = {
@@ -69,6 +87,26 @@ internal class VehicleWeaponRuntime(
         living: LivingEntity?, serverLevel: ServerLevel, data: GunData,
         muzzle: VehicleMuzzleFrame, targetEntityUuid: UUID?, targetPos: Vec3?,
     ): ShotResult {
+        if (!com.atsuishio.superbwarfare.api.aircraft.AircraftArmamentManager.allowsWeapon(vehicle, muzzle.weaponName)) {
+            return ShotResult.rejected(ShotRejectionReason.CANNOT_SHOOT, muzzle.weaponName)
+        }
+        val station = vehicle.computed().passengerWeaponStationBinding
+        if (station != null && (muzzle.weaponName == station.weaponId || muzzle.weaponName in station.weaponIds) &&
+            !station.permitsFire(-vehicle.gunYRot, -vehicle.gunXRot)) {
+            VehicleWeaponShotDiagnostics.recordBoundary(vehicle, living, muzzle.weaponName,
+                VehicleWeaponShotDiagnostics.Boundary.CAN_SHOOT, "STATION_FIRE_EXCLUSION")
+            return ShotResult.rejected(ShotRejectionReason.CANNOT_SHOOT, muzzle.weaponName)
+        }
+        if (!permitsLandingGearShot(
+                data.get(GunProp.REQUIRES_RETRACTED_LANDING_GEAR),
+                vehicle.gearUp, vehicle.synchedGearRot,
+            )) {
+            VehicleWeaponShotDiagnostics.recordBoundary(
+                vehicle, living, muzzle.weaponName, VehicleWeaponShotDiagnostics.Boundary.CAN_SHOOT,
+                "LANDING_GEAR_NOT_RETRACTED",
+            )
+            return ShotResult.rejected(ShotRejectionReason.CANNOT_SHOOT, muzzle.weaponName)
+        }
         val belt = data.resolveProjectileBelt()
         if (belt.status == ProjectileBeltResolutionStatus.INVALID) {
             VehicleWeaponShotDiagnostics.recordBoundary(
@@ -96,60 +134,59 @@ internal class VehicleWeaponRuntime(
         val live = vehicle.gunDataMap
         val published = vehicle.publishedGunDataSnapshot()
         for ((name, data) in live) {
+            if (com.atsuishio.superbwarfare.api.aircraft.AircraftGunPodGroups.isPod(vehicle, name) &&
+                name !in com.atsuishio.superbwarfare.api.aircraft.AircraftGunPodGroups.equipped(vehicle)) continue
             data.vehicleWeaponIdentity = name
+            if (data.get(GunProp.BELT_FED)) {
+                val capacity = data.get(GunProp.MAGAZINE)
+                if (capacity > 0 && data.ammo.get() !in 0..capacity) {
+                    data.ammo.set(data.ammo.get().coerceIn(0, capacity))
+                }
+            }
             data.tick(vehicle, true)
         }
         val snapshot = WeaponSnapshotPublisher.changedSnapshot(live, published, GunData::copy) ?: return
         vehicle.publishWeaponRuntimeSnapshot(snapshot)
-        // Keep the live owner warm after our own publication. External packets/assignments
-        // still fail the owner identity check and rebuild from their authoritative snapshot.
-        stateOwner.resolvedGunDataRawOwner = snapshot
+        // Associate the live cache with the published snapshot. External packets/assignments
+        // fail the owner identity check and rebuild from their authoritative snapshot.
+        weaponState.published(snapshot)
     }
 
     fun resolveGunDataMap(
         rawMap: Map<String, GunData>,
         config: DefaultVehicleData,
     ): Map<String, GunData> {
-        if (stateOwner.resolvedGunDataRawOwner === rawMap &&
-            stateOwner.resolvedGunDataConfigOwner === config
-        ) {
-            return stateOwner.resolvedGunDataMap
+        return weaponState.resolve(rawMap, config) {
+            val newMap = LinkedHashMap<String, GunData>(config.weapons().size)
+            for (kv in config.weapons().entries) {
+                val oldData = rawMap[kv.key]
+                val stack = oldData?.stack?.copy() ?: ItemStack(ModItems.VEHICLE_GUN.get())
+                val data = GunData.from(stack) { kv.value }
+                // The generic vehicle_gun stack is shared by every channel. Preserve the authored
+                // identity so per-weapon heat, reload, diagnostics, and presentation never collide.
+                data.vehicleWeaponIdentity = kv.key
+                newMap[kv.key] = data
+            }
+            newMap
         }
-        val newMap = LinkedHashMap<String, GunData>(config.weapons().size)
-
-        for (kv in config.weapons().entries) {
-            val oldData = rawMap[kv.key]
-            val stack = oldData?.stack?.copy() ?: ItemStack(ModItems.VEHICLE_GUN.get())
-            val data = GunData.from(stack) { kv.value }
-            // The generic vehicle_gun stack is shared by every channel. Preserve the authored
-            // identity so per-weapon heat, reload, diagnostics, and presentation never collide.
-            data.vehicleWeaponIdentity = kv.key
-            newMap[kv.key] = data
-        }
-
-        stateOwner.resolvedGunDataRawOwner = rawMap
-        stateOwner.resolvedGunDataConfigOwner = config
-        stateOwner.resolvedGunDataMap = newMap
-        return newMap
     }
 
     fun invalidateResolvedGunData() {
-        stateOwner.resolvedGunDataRawOwner = null
-        stateOwner.resolvedGunDataConfigOwner = null
-        stateOwner.resolvedGunDataMap = emptyMap()
+        weaponState.clear()
     }
 
     fun invalidateConfiguration() {
-        stateOwner.resolvedGunDataConfigOwner = null
-        stateOwner.weaponSlotNormalizationDataOwner = null
-        stateOwner.weaponSlotNormalizationFingerprint = Int.MIN_VALUE
+        weaponState.invalidateConfiguration()
+        normalizationDataOwner = null
+        normalizationFingerprint = Int.MIN_VALUE
     }
 
     fun validWeaponIndices(seatIndex: Int): List<Int> {
-        val weapons = vehicle.getSeat(seatIndex)?.weapons() ?: return emptyList()
+        val weapons = vehicle.getWeaponIds(seatIndex)
         return weapons.indices.filter { index ->
             val name = weapons.getOrNull(index)
-            !name.isNullOrBlank() && vehicle.getGunData(name) != null
+            !name.isNullOrBlank() && vehicle.getGunData(name) != null &&
+                com.atsuishio.superbwarfare.api.aircraft.AircraftArmamentManager.selectableWeapon(vehicle, name)
         }
     }
 
@@ -278,8 +315,8 @@ internal class VehicleWeaponRuntime(
         if (vehicle.level().isClientSide) return
         val data = vehicle.computed()
         val fingerprint = weaponSlotNormalizationFingerprint(data)
-        if (stateOwner.weaponSlotNormalizationDataOwner === data &&
-            stateOwner.weaponSlotNormalizationFingerprint == fingerprint
+        if (normalizationDataOwner === data &&
+            normalizationFingerprint == fingerprint
         ) return
 
         val oldPrimary = vehicle.selectedWeapon
@@ -292,12 +329,13 @@ internal class VehicleWeaponRuntime(
             val previous = oldPrimary.getOrNull(seat) ?: -1
             if (previous != next.primary[seat]) vehicle.notifyWeaponContextChanged(seat, previous, next.primary[seat])
         }
-        stateOwner.weaponSlotNormalizationDataOwner = data
-        stateOwner.weaponSlotNormalizationFingerprint = weaponSlotNormalizationFingerprint(data)
+        normalizationDataOwner = data
+        normalizationFingerprint = weaponSlotNormalizationFingerprint(data)
     }
 
     private fun weaponSlotNormalizationFingerprint(data: DefaultVehicleData): Int {
         var result = System.identityHashCode(data)
+        result = 31 * result + com.atsuishio.superbwarfare.api.aircraft.AircraftArmamentManager.weaponSelectionRevision(vehicle)
         result = 31 * result + vehicle.selectedWeapon.hashCode()
         result = 31 * result + vehicle.secondaryWeapon.hashCode()
         return result

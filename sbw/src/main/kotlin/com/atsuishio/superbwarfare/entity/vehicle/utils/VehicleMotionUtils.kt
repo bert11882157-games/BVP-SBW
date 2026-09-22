@@ -8,6 +8,7 @@ import com.atsuishio.superbwarfare.entity.vehicle.DroneEntity
 import com.atsuishio.superbwarfare.entity.vehicle.TurretWreckEntity
 import com.atsuishio.superbwarfare.entity.vehicle.Type63Entity
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity
+import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntityContacts
 import com.atsuishio.superbwarfare.entity.vehicle.utils.VehicleEngineUtils.lerpAngle
 import com.atsuishio.superbwarfare.entity.vehicle.utils.VehicleVecUtils.transformPosition
 import com.atsuishio.superbwarfare.init.*
@@ -60,6 +61,8 @@ object VehicleMotionUtils {
 
         for (entity in entities) {
             if (entity.boundingBox.intersects(vehicle.boundingBox)) {
+                if ((vehicle.usesAircraftPhysicalCollision() || entity.usesAircraftPhysicalCollision()) &&
+                    VehicleEntityContacts.find(vehicle, entity, Vec3.ZERO) == null) continue
                 val toVec = vehicle.position()
                     .add(Vec3(1.0, 1.0, 1.0).scale((vehicle.getRandom().nextFloat() * 0.01f + 1f).toDouble()))
                     .vectorTo(entity.position())
@@ -87,7 +90,7 @@ object VehicleMotionUtils {
      */
     fun supportEntities(vehicle: VehicleEntity) {
         if (vehicle.isRemoved) return
-        if (vehicle.enableAABB() || vehicle is Type63Entity) {
+        if ((vehicle.enableAABB() && !vehicle.usesAircraftPhysicalCollision()) || vehicle is Type63Entity) {
             return
         }
 
@@ -123,7 +126,7 @@ object VehicleMotionUtils {
     fun support(vehicle: VehicleEntity, entity: Entity) {
         if (entity is DroneEntity) return
 
-        if (vehicle.enableAABB()) return
+        if (vehicle.enableAABB() && !vehicle.usesAircraftPhysicalCollision()) return
         if (entity.noPhysics || vehicle.noPhysics) {
             return
         }
@@ -137,7 +140,7 @@ object VehicleMotionUtils {
         val midPos = feetPos.add(0.0, (entity.eyeHeight / 2).toDouble(), 0.0)
         val eyePos = feetPos.add(0.0, entity.eyeHeight.toDouble(), 0.0)
 
-        for (obb in vehicle.getOBBs()) {
+        for (obb in vehicle.entityCollisionObbs()) {
             if (obb.contains(feetPos)) {
                 if (!entity.noPhysics && !vehicle.noPhysics) {
                     val gravity = Math.max(entity.deltaMovement.y, 0.0)
@@ -222,8 +225,9 @@ object VehicleMotionUtils {
         val vec3 = vehicle.deltaMovement
 
         val entities: MutableList<Entity>?
-        if (!vehicle.enableAABB()) {
-            val frontBox = calculateCombinedAABBOptimized(vehicle)
+        if (!vehicle.enableAABB() || vehicle.usesAircraftPhysicalCollision()) {
+            val currentBox = calculateCombinedAABBOptimized(vehicle)
+            val frontBox = if (vehicle.usesAircraftPhysicalCollision()) currentBox.expandTowards(vec3) else currentBox
             entities = vehicle.level().getEntities(
                 EntityTypeTest.forClass(Entity::class.java), frontBox
             ) { entity -> entity !== vehicle && entity !== vehicle.getFirstPassenger() && entity!!.vehicle == null }
@@ -255,6 +259,9 @@ object VehicleMotionUtils {
 
         // TODO 继续优化这个逆天碰撞
         for (entity in entities) {
+            val physicalContact = if (vehicle.usesAircraftPhysicalCollision() ||
+                entity is VehicleEntity && entity.usesAircraftPhysicalCollision())
+                VehicleEntityContacts.find(vehicle, entity, vec3) ?: continue else null
             val entitySize = entity.boundingBox.getSize()
             val thisSize = vehicle.boundingBox.getSize()
             val f: Double
@@ -296,7 +303,7 @@ object VehicleMotionUtils {
                     ),
                     (f1 * 80 * (Mth.abs(length) - 0.3) * (Mth.abs(length) - 0.3)).toFloat()
                 )
-            } else {
+            } else if (physicalContact?.otherBody != false) {
                 entity.hurt(
                     ModDamageTypes.causeVehicleStrikeDamage(
                         vehicle.level().registryAccess(),
@@ -311,7 +318,7 @@ object VehicleMotionUtils {
             }
 
             if (entity is VehicleEntity) {
-                vehicle.hurt(
+                if (physicalContact?.ownBody != false) vehicle.hurt(
                     ModDamageTypes.causeVehicleStrikeDamage(
                         vehicle.level().registryAccess(),
                         entity,
@@ -319,14 +326,14 @@ object VehicleMotionUtils {
                     ), (f * 40 * (Mth.abs(length) - 0.3) * (Mth.abs(length) - 0.3)).toFloat()
                 )
 
-                if (!vehicle.enableAABB()) {
+                if (!vehicle.enableAABB() || vehicle.usesAircraftPhysicalCollision()) {
                     if (vehicle.isInObb(entity, Vec3.ZERO)) {
                         var thisPos = vehicle.position()
                         var otherPos = entity.position()
 
-                        for (obb in vehicle.getOBBs()) {
-                            if (!entity.enableAABB()) {
-                                val obbList2 = entity.getOBBs()
+                        for (obb in vehicle.entityCollisionObbs()) {
+                            if (!entity.enableAABB() || entity.usesAircraftPhysicalCollision()) {
+                                val obbList2 = entity.entityCollisionObbs()
                                 for (obb2 in obbList2) {
                                     if (OBB.isColliding(obb, obb2)) {
                                         thisPos = OBB.vector3dToVec3(obb.center)
@@ -361,6 +368,7 @@ object VehicleMotionUtils {
 
     // TODO 实现正确的AABB包围箱
     fun calculateCombinedAABBOptimized(vehicle: VehicleEntity): AABB {
+        vehicle.getAircraftCollisionSnapshot(1F)?.let { return it.queryBounds }
         if (vehicle.enableAABB()) {
             return vehicle.boundingBox
         }
@@ -457,6 +465,8 @@ object VehicleMotionUtils {
      * @param vehicle 载具
      */
     fun handleVehicleMoveOnDragonTeeth(vehicle: VehicleEntity) {
+        // Flight retains the ordinary block collision response without a second driving impulse.
+        if (vehicle.isFixedWingFlightVehicle()) return
         val aabb = vehicle.boundingBox
         val aabb1 = AABB(aabb.minX, aabb.minY - 1.0E-6, aabb.minZ, aabb.maxX, aabb.minY, aabb.maxZ)
         val pos = vehicle.level().findSupportingBlock(vehicle, aabb1).orElse(null) ?: return
@@ -497,6 +507,23 @@ object VehicleMotionUtils {
         // both sides, while non-composing providers and flight strategies suppress mutation.
         if (!vehicle.level().isClientSide && !mutatesLegacyPose) return
 
+        val previousPitch = vehicle.xRot
+        val previousRoll = vehicle.roll
+        fun settleGroundAttitude() {
+            if (!mutatesLegacyPose) return
+            val atRest = GroundRestPolicy.isAtRest(vehicle.onGround(), vehicle.isInFluidType,
+                vehicle.deltaMovement.horizontalDistanceSqr(), vehicle.forwardInputDown ||
+                    vehicle.backInputDown || vehicle.leftInputDown || vehicle.rightInputDown)
+            vehicle.xRot = GroundRestPolicy.settleAngle(previousPitch, vehicle.xRot, atRest)
+            vehicle.setZRot(GroundRestPolicy.settleAngle(previousRoll, vehicle.roll, atRest))
+        }
+
+        if (vehicle.computed().terrainCompatFitPlane && vehicle.onGround()) {
+            fitTerrainSupportPlane(vehicle, positions, mutatesLegacyPose)
+            settleGroundAttitude()
+            return
+        }
+
         if (vehicle.onGround()) {
             val transform = vehicle.getWheelsTransform(1f)
             for (vec3 in positions) {
@@ -536,6 +563,30 @@ object VehicleMotionUtils {
             vehicle.xRot *= 0.9f
             vehicle.setZRot(vehicle.roll * 0.9f)
         }
+        settleGroundAttitude()
+    }
+
+    private fun fitTerrainSupportPlane(vehicle: VehicleEntity, positions: List<Vec3>, mutate: Boolean) {
+        val transform = vehicle.getWheelsTransform(1f)
+        val contacts = ArrayList<Pair<Vec3, Double>>(positions.size.coerceAtMost(16))
+        val samples = positions.take(16).mapNotNull { local ->
+            val world = transformPosition(transform, local.x, local.y, local.z)
+            val point = Vec3(world.x, world.y, world.z)
+            val level = vehicle.level()
+            val hit = level.clip(ClipContext(point.add(0.0, 1.5, 0.0), point.add(0.0, -3.0, 0.0),
+                ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, vehicle))
+            if (hit.type != HitResult.Type.BLOCK) null else {
+                emitTerrainContactEffects(vehicle, hit.location, level.getBlockState(hit.blockPos))
+                contacts.add(local to (hit.location.y - vehicle.y))
+                Vec3(local.x, hit.location.y - vehicle.y - local.y, local.z)
+            }
+        }
+        if (!mutate) return
+        vehicle.terrainSupportPose.contacts = contacts
+        val slope = TerrainSupportPlane.fit(samples) ?: return
+        // Native +Z is forward; positive chassis pitch lowers the nose.
+        vehicle.xRot = lerpAngle(vehicle.xRot, (-Math.toDegrees(Math.atan2(slope.z, 1.0))).toFloat().coerceIn(-40f, 40f), 0.15f)
+        vehicle.setZRot(lerpAngle(vehicle.roll, Math.toDegrees(Math.atan2(slope.x, 1.0)).toFloat().coerceIn(-40f, 40f), 0.15f))
     }
 
     /**
@@ -590,13 +641,9 @@ object VehicleMotionUtils {
     }
 
     private fun updateTerrainCompact(entity: VehicleEntity, landingTarget: Vec3, heightY: Double) {
-        var currentPos = entity.position()
-        val aabb = entity.boundingBox
-        val aabb1 = AABB(aabb.minX, aabb.minY - 1.0E-6, aabb.minZ, aabb.maxX, aabb.minY, aabb.maxZ)
-        val optional = entity.level().findSupportingBlock(entity, aabb1)
-        if (optional.isPresent) {
-            currentPos = currentPos.add(currentPos.vectorTo(optional.get().center).scale(0.6))
-        }
+        // A supporting block's center can jump across adjacent blocks while the chassis barely
+        // moves. Contact leverage belongs to the fixed chassis origin, not that arbitrary block.
+        val currentPos = entity.position()
         val horizontalOffset = Vec3(
             landingTarget.x - currentPos.x,
             0.0,
@@ -629,9 +676,9 @@ object VehicleMotionUtils {
     fun getWheelsTransform(vehicle: VehicleEntity, partialTicks: Float): Matrix4d {
         val transform = Matrix4d()
         transform.translate(
-            Mth.lerp(partialTicks.toDouble(), vehicle.xo, vehicle.x).toFloat().toDouble(),
-            Mth.lerp(partialTicks.toDouble(), vehicle.yo, vehicle.y).toFloat().toDouble(),
-            Mth.lerp(partialTicks.toDouble(), vehicle.zo, vehicle.z).toFloat().toDouble()
+            Mth.lerp(partialTicks.toDouble(), vehicle.xo, vehicle.x),
+            Mth.lerp(partialTicks.toDouble(), vehicle.yo, vehicle.y),
+            Mth.lerp(partialTicks.toDouble(), vehicle.zo, vehicle.z)
         )
         transform.rotate(Axis.YP.rotationDegrees(-Mth.lerp(partialTicks, vehicle.yRotO, vehicle.yRot)))
         return transform

@@ -1,0 +1,279 @@
+{
+  "ID": "berts_vehicle_pack:su_17",
+  "Model": {
+    "GeometryBackend": "berts_vehicle_pack:vehicle/su_17",
+    "Model": "berts_vehicle_pack:geo/native_fallback/su_17.geo.json",
+    "Texture": "berts_vehicle_pack:textures/entity/su_17.png",
+    "WreckTexture": "berts_vehicle_pack:textures/entity_dead/su_17.png"
+  },
+  "MouseSpeed": [
+    0.2,
+    0.2
+  ],
+  "AfterburnerPresentation": {
+    "Schema": 2,
+    "Frame": "VEHICLE_LOCAL_BLOCKS",
+    "Outlets": [
+      {
+        "Id": "afterburner_center",
+        "Position": [
+          0,
+          1.7125,
+          -8.01410625
+        ],
+        "Direction": [
+          0,
+          0,
+          -1
+        ]
+      }
+    ],
+    "Flame": {
+      "Scale": 0.9,
+      "WidthBlocks": 0.2,
+      "LengthBlocks": 7,
+      "ParticlesPerTick": 3,
+      "LifetimeTicks": 10,
+      "ColorRgb": [
+        1,
+        1,
+        1
+      ]
+    },
+    "Smoke": {
+      "Scale": 0.5,
+      "WidthBlocks": 0.18,
+      "LengthBlocks": 6,
+      "ParticlesPerTick": 0.5,
+      "LifetimeTicks": 14,
+      "ColorRgb": [
+        1,
+        1,
+        1
+      ]
+    },
+    "TapEmitters": [
+      {
+        "Outlet": "afterburner_center",
+        "Style": "FM_FLAME",
+        "Interval": 1,
+        "Offset": [
+          0,
+          0,
+          0
+        ],
+        "Extents": [
+          0.1360927152375,
+          0.1360927152375,
+          0.1360927152375
+        ],
+        "Velocity": [
+          0,
+          0,
+          0.1875
+        ]
+      }
+    ],
+    "TapSource": "GENERIC_TAP_FMFLAME",
+    "TapVariant": "GENERIC_TAP_FMFLAME_AT_AUTHORED_NOZZLES"
+  },
+  "AircraftRig": {
+    "Schema": 2,
+    "Frame": "GENERATED_MODEL_PIXELS",
+    "Surfaces": [
+      {
+        "Bone": "aileron_left",
+        "Parent": "sweep_left",
+        "Pivot": [
+          -81.29272,
+          26.1298,
+          58.42914
+        ],
+        "Axis": [
+          -0.9840878707031516,
+          0,
+          0.17768247728725803
+        ],
+        "ControlWeights": {
+          "ElevatorUp": 0,
+          "RightRoll": -1,
+          "RudderRight": 0
+        },
+        "MaxDeflectionDegrees": 20
+      },
+      {
+        "Bone": "aileron_right",
+        "Parent": "sweep_right",
+        "Pivot": [
+          81.29272,
+          26.1298,
+          58.42914
+        ],
+        "Axis": [
+          -0.9840878707031516,
+          0,
+          -0.17768247728725803
+        ],
+        "ControlWeights": {
+          "ElevatorUp": 0,
+          "RightRoll": 1,
+          "RudderRight": 0
+        },
+        "MaxDeflectionDegrees": 20
+      },
+      {
+        "Bone": "elevator_left",
+        "Parent": "hull",
+        "Pivot": [
+          -19.59736,
+          27.21854,
+          119.48941
+        ],
+        "Axis": [
+          -0.6988694873316473,
+          0,
+          0.715249215082967
+        ],
+        "ControlWeights": {
+          "ElevatorUp": 1,
+          "RightRoll": 0,
+          "RudderRight": 0
+        },
+        "MaxDeflectionDegrees": 20
+      },
+      {
+        "Bone": "elevator_right",
+        "Parent": "hull",
+        "Pivot": [
+          19.59736,
+          27.21854,
+          119.48941
+        ],
+        "Axis": [
+          -0.6988694873316473,
+          0,
+          -0.715249215082967
+        ],
+        "ControlWeights": {
+          "ElevatorUp": 1,
+          "RightRoll": 0,
+          "RudderRight": 0
+        },
+        "MaxDeflectionDegrees": 20
+      },
+      {
+        "Bone": "rudder",
+        "Parent": "hull",
+        "Pivot": [
+          0,
+          64.23576,
+          128.47152
+        ],
+        "Axis": [
+          0,
+          -0.7440486202641812,
+          -0.6681254752536893
+        ],
+        "ControlWeights": {
+          "ElevatorUp": 0,
+          "RightRoll": 0,
+          "RudderRight": -1
+        },
+        "MaxDeflectionDegrees": 20
+      }
+    ],
+    "Rotors": [],
+    "Gear": [
+      {
+        "Bone": "landing_gear_0",
+        "Parent": "hull"
+      },
+      {
+        "Bone": "landing_gear_1",
+        "Parent": "hull"
+      },
+      {
+        "Bone": "landing_gear_2",
+        "Parent": "hull"
+      }
+    ],
+    "Sweeps": [
+      {
+        "Bone": "sweep_left",
+        "Parent": "hull",
+        "Pivot": [
+          -42.09801,
+          26.49271,
+          36.29139
+        ],
+        "Axis": [
+          0,
+          -1,
+          0
+        ],
+        "AngleSign": -1,
+        "MaxDeflectionDegrees": 34,
+        "Schedule": {
+          "Input": "PRESENTED_SPEED_BLOCKS_PER_TICK",
+          "Interpolation": "LINEAR_CLAMPED",
+          "Points": [
+            [
+              0,
+              0
+            ],
+            [
+              1.5,
+              0
+            ],
+            [
+              2.5,
+              0.5
+            ],
+            [
+              3.5,
+              1
+            ]
+          ]
+        }
+      },
+      {
+        "Bone": "sweep_right",
+        "Parent": "hull",
+        "Pivot": [
+          42.09801,
+          26.49271,
+          36.29139
+        ],
+        "Axis": [
+          0,
+          -1,
+          0
+        ],
+        "AngleSign": 1,
+        "MaxDeflectionDegrees": 34,
+        "Schedule": {
+          "Input": "PRESENTED_SPEED_BLOCKS_PER_TICK",
+          "Interpolation": "LINEAR_CLAMPED",
+          "Points": [
+            [
+              0,
+              0
+            ],
+            [
+              1.5,
+              0
+            ],
+            [
+              2.5,
+              0.5
+            ],
+            [
+              3.5,
+              1
+            ]
+          ]
+        }
+      }
+    ]
+  }
+}

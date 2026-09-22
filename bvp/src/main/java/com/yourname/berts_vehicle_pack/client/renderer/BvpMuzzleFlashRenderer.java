@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.yourname.berts_vehicle_pack.BertsVehiclePack;
+import com.atsuishio.superbwarfare.diagnostics.EliteDiagnostics;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -51,12 +52,20 @@ public final class BvpMuzzleFlashRenderer {
                     new ResourceLocation(BertsVehiclePack.MODID, "textures/particle/fm_flame.png"));
     private static final List<MuzzleBurst> BURSTS = new ArrayList<>();
     private static ClientLevel activeLevel;
+    private static long nextBurstId;
 
     private BvpMuzzleFlashRenderer() {
     }
 
+    @FunctionalInterface
+    public interface FlashAnchor {
+        Vec3 resolve(float partialTick);
+        default String shotIdentity() { return ""; }
+    }
+
     public static void tick(Minecraft minecraft) {
         syncLevel(minecraft == null ? null : minecraft.f_91073_);
+        if (activeLevel != null) ClientVisualClock.advance();
     }
 
     public static void enqueueTankCannonBurst(
@@ -69,9 +78,19 @@ public final class BvpMuzzleFlashRenderer {
         enqueue(position, direction, seed, AUTOCANNON, suppressForwardSpray);
     }
 
+    public static void enqueueAutocannonBurst(Vec3 position, Vec3 direction, long seed,
+                                              boolean suppressForwardSpray, FlashAnchor anchor) {
+        enqueue(position, direction, seed, AUTOCANNON, suppressForwardSpray, anchor);
+    }
+
     public static void enqueuePassengerHmgBurst(
             Vec3 position, Vec3 direction, long seed, boolean suppressForwardSpray) {
         enqueue(position, direction, seed, PASSENGER_HMG, suppressForwardSpray);
+    }
+
+    public static void enqueuePassengerHmgBurst(Vec3 position, Vec3 direction, long seed,
+                                                boolean suppressForwardSpray, FlashAnchor anchor) {
+        enqueue(position, direction, seed, PASSENGER_HMG, suppressForwardSpray, anchor);
     }
 
     public static void enqueueCoaxBurst(
@@ -79,8 +98,18 @@ public final class BvpMuzzleFlashRenderer {
         enqueue(position, direction, seed, COAX, suppressForwardSpray);
     }
 
+    public static void enqueueCoaxBurst(Vec3 position, Vec3 direction, long seed,
+                                       boolean suppressForwardSpray, FlashAnchor anchor) {
+        enqueue(position, direction, seed, COAX, suppressForwardSpray, anchor);
+    }
+
     private static void enqueue(Vec3 position, Vec3 direction, long seed, BurstProfile profile,
                                 boolean suppressForwardSpray) {
+        enqueue(position, direction, seed, profile, suppressForwardSpray, null);
+    }
+
+    private static void enqueue(Vec3 position, Vec3 direction, long seed, BurstProfile profile,
+                                boolean suppressForwardSpray, FlashAnchor anchor) {
         Minecraft minecraft = Minecraft.m_91087_();
         if (minecraft == null || minecraft.f_91073_ == null || position == null
                 || direction == null || direction.m_82556_() <= 1.0E-8D) {
@@ -103,13 +132,17 @@ public final class BvpMuzzleFlashRenderer {
                 sparks.add(new Spark(origin, velocity, halfSize));
             }
         }
-        BURSTS.add(new MuzzleBurst(
+        MuzzleBurst burst = new MuzzleBurst(
+                ++nextBurstId,
                 origin,
-                minecraft.f_91073_.m_46467_(),
+                ClientVisualClock.now(),
+                ClientVisualClock.partial(minecraft.m_91296_()),
                 random.nextInt(FLASH_RENDER_TYPES.length),
                 random.nextInt(FLASH_RENDER_TYPES.length),
                 profile,
-                sparks));
+                sparks, anchor);
+        BURSTS.add(burst);
+        record("FLASH_CREATED", burst, 0.0D);
     }
 
     public static void render(RenderLevelStageEvent event) {
@@ -123,7 +156,7 @@ public final class BvpMuzzleFlashRenderer {
             return;
         }
 
-        float renderTick = level.m_46467_() + event.getPartialTick();
+        long renderTick = ClientVisualClock.now();
         Camera camera = event.getCamera();
         Vec3 cameraPosition = camera.m_90583_();
         Vector3f right = camera.m_252775_();
@@ -141,20 +174,22 @@ public final class BvpMuzzleFlashRenderer {
             Iterator<MuzzleBurst> iterator = BURSTS.iterator();
             while (iterator.hasNext()) {
                 MuzzleBurst burst = iterator.next();
-                float age = renderTick - burst.spawnTick;
-                if (age < 0.0F) {
-                    continue;
-                }
+                float age = (float) ClientVisualClock.elapsed(
+                        renderTick, burst.spawnTick, burst.spawnPartial, event.getPartialTick());
 
                 boolean flashVisible = age < FLASH_TICKS || !burst.flashRendered;
                 if (flashVisible) {
+                    // Only the attached flash follows the weapon. Emitted sparks and projectile
+                    // launch origins retain their original world-space trajectories.
+                    burst.resolveFlashPosition(event.getPartialTick());
+                    record("FLASH_DRAW", burst, age);
                     float flashLife = !burst.flashRendered
                             ? 1.0F
                             : 1.0F - age / FLASH_TICKS;
                     texturedQuad(
                             bufferSource.m_6299_(FLASH_RENDER_TYPES[burst.bloomFrame]),
                             pose,
-                            burst.position,
+                            burst.flashPosition,
                             right,
                             up,
                             burst.profile.bloomHalfSize,
@@ -162,12 +197,15 @@ public final class BvpMuzzleFlashRenderer {
                     texturedQuad(
                             bufferSource.m_6299_(FLASH_RENDER_TYPES[burst.coreFrame]),
                             pose,
-                            burst.position,
+                            burst.flashPosition,
                             right,
                             up,
                             burst.profile.coreHalfSize,
                             flashLife);
                     burst.flashRendered = true;
+                } else if (!burst.flashExpired) {
+                    burst.flashExpired = true;
+                    record("FLASH_EXPIRED", burst, age);
                 }
 
                 if (age < SPARK_TICKS) {
@@ -185,6 +223,7 @@ public final class BvpMuzzleFlashRenderer {
                                 remaining);
                     }
                 } else if (burst.flashRendered) {
+                    record("BURST_EXPIRED", burst, age);
                     iterator.remove();
                 }
             }
@@ -220,7 +259,19 @@ public final class BvpMuzzleFlashRenderer {
             return;
         }
         BURSTS.clear();
+        ClientVisualClock.reset();
         activeLevel = level;
+    }
+
+    private static void record(String event, MuzzleBurst burst, double ageTicks) {
+        if (activeLevel == null || !EliteDiagnostics.isClientEnabled()) return;
+        EliteDiagnostics.recordClient(activeLevel.m_46467_(), "muzzle_lifecycle", event,
+                "effect_id", burst.id, "age_ticks", ageTicks, "client_tick", ClientVisualClock.now(),
+                "spawn_client_tick", burst.spawnTick, "flash_ticks", FLASH_TICKS,
+                "spark_ticks", SPARK_TICKS, "position", burst.flashPosition,
+                "launch_position", burst.position, "attached", burst.anchor != null,
+                "shot", burst.anchor == null ? null : burst.anchor.shotIdentity(),
+                "bloom_half_size", burst.profile.bloomHalfSize, "first_draw", !burst.flashRendered);
     }
 
     private static void texturedQuad(VertexConsumer consumer, PoseStack.Pose pose, Vec3 center,
@@ -274,22 +325,40 @@ public final class BvpMuzzleFlashRenderer {
     }
 
     private static final class MuzzleBurst {
+        final long id;
         final Vec3 position;
-        final float spawnTick;
+        final long spawnTick;
+        final float spawnPartial;
         final int bloomFrame;
         final int coreFrame;
         final BurstProfile profile;
         final List<Spark> sparks;
+        final FlashAnchor anchor;
+        Vec3 flashPosition;
         boolean flashRendered;
+        boolean flashExpired;
 
-        MuzzleBurst(Vec3 position, float spawnTick, int bloomFrame, int coreFrame,
-                    BurstProfile profile, List<Spark> sparks) {
+        MuzzleBurst(long id, Vec3 position, long spawnTick, float spawnPartial, int bloomFrame, int coreFrame,
+                    BurstProfile profile, List<Spark> sparks, FlashAnchor anchor) {
+            this.id = id;
             this.position = position;
             this.spawnTick = spawnTick;
+            this.spawnPartial = spawnPartial;
             this.bloomFrame = bloomFrame;
             this.coreFrame = coreFrame;
             this.profile = profile;
             this.sparks = sparks;
+            this.anchor = anchor;
+            this.flashPosition = position;
+        }
+
+        void resolveFlashPosition(float partialTick) {
+            if (anchor == null) return;
+            Vec3 resolved = anchor.resolve(partialTick);
+            if (resolved != null && Double.isFinite(resolved.f_82479_)
+                    && Double.isFinite(resolved.f_82480_) && Double.isFinite(resolved.f_82481_)) {
+                flashPosition = resolved;
+            }
         }
     }
 

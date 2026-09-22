@@ -1,19 +1,48 @@
 {
   "ID": "berts_vehicle_pack:kord_tripod",
-  "MaxHealth": 150,
+  "MaxHealth": 100,
   "MaxEnergy": 0,
   "AllowFreeCam": true,
   "LightlyArmored": true,
-  "OBB": [],
+  "OBB": [
+    {
+      "Position": [
+        0.01698,
+        0.52758,
+        -0.18615
+      ],
+      "Size": [
+        0.60221,
+        0.53998,
+        1.2196
+      ],
+      "Transform": "Vehicle",
+      "Rotation": "Vehicle"
+    },
+    {
+      "Position": [
+        -0.15127,
+        0.04808,
+        0.33847
+      ],
+      "Size": [
+        0.38196,
+        0.37251,
+        1.77934
+      ],
+      "Transform": "Barrel",
+      "Rotation": "Barrel"
+    }
+  ],
   "Seats": [
     {
-      "HidePassenger": true,
+      "HidePassenger": false,
       "BanHand": true,
       "Transform": "Turret",
       "Position": [
-        -0.16249,
-        0.32211,
-        1.43031
+        0.03125,
+        -0.97626,
+        -1.12501
       ],
       "Weapons": [
         "Cannon"
@@ -24,18 +53,18 @@
       "CameraPos": {
         "Transform": "Barrel",
         "Position": [
-          -0.16249,
-          0.30335,
-          0.80531
+          0,
+          0,
+          0
         ],
         "EyeAttachment": "operator_camera",
-        "ZoomEyeAttachment": "operator_camera",
-        "DirectionAttachment": "main_muzzle",
+        "ZoomEyeAttachment": "operator_scope",
+        "DirectionAttachment": "operator_sight_direction",
         "ZoomDirectionAttachment": "main_muzzle",
         "ZoomPosition": [
-          0.03125,
-          0.15949,
-          -2.1375
+          0,
+          0,
+          0
         ],
         "Direction": "Barrel"
       },
@@ -46,7 +75,12 @@
           0.735,
           -2.205
         ]
-      }
+      },
+      "IsEnclosed": false,
+      "ExposedToFire": true,
+      "BodyAttachment": "Turret",
+      "CanRotateBody": false,
+      "Pose": "MountedLowSeated"
     }
   ],
   "Weapons": {
@@ -54,8 +88,11 @@
       "DefaultFireMode": "Auto",
       "AvailableFireModes": "Auto",
       "DefaultZoom": 2,
-      "Magazine": 100,
+      "Magazine": 50,
+      "AutoReload": true,
+      "NormalReloadTime": 100,
       "EmptyReloadTime": 100,
+      "RPM": 700,
       "Name": "weapon.berts_vehicle_pack.kord_tripod",
       "SoundInfo": {
         "Fire1PGain": 0.5,
@@ -75,7 +112,7 @@
           [
             0.03125,
             0.15949,
-            -2.1375
+            2.1375
           ]
         ],
         "Directions": [
@@ -84,7 +121,7 @@
         "ViewPosition": [
           0.02126,
           0.1085,
-          -1.45408
+          1.45408
         ],
         "MuzzleAttachments": [
           "main_muzzle"
@@ -105,7 +142,6 @@
         "Profile": "berts_vehicle_pack:kord_tripod/cannon/default"
       },
       "ShellType": "AP",
-      "RPM": 600,
       "Velocity": 40,
       "Damage": 65,
       "BypassesArmor": 0.6,
@@ -131,7 +167,6 @@
             "Name": "AP Belt",
             "ProjectileBelt": {
               "Name": "AP Belt",
-              "Family": "RUSSIAN_127",
               "Rounds": [
                 {
                   "Shots": 1,
@@ -276,8 +311,8 @@
     0
   ],
   "TurretTurnSpeed": [
-    2,
-    4
+    60,
+    90
   ],
   "TurretPitchRange": [
     -15,
@@ -291,44 +326,15 @@
   "UpStep": 0,
   "RotateOffsetHeight": 3.822,
   "Mass": 44.5,
-  "DamageModifiers": [
-    "minecraft:arrow 0",
-    "minecraft:trident 0",
-    "minecraft:mob_attack 0",
-    "minecraft:mob_attack_no_aggro 0",
-    "minecraft:mob_projectile 0",
-    "minecraft:player_attack 0",
-    "#superbwarfare:projectile 0",
-    "All - 20",
-    "minecraft:lava + 20",
-    "minecraft:lava * 10",
-    "@minecraft:tnt * 4",
-    "@minecraft:tnt_minecart * 4",
-    "@#superbwarfare:aerial_bomb * 12",
-    "All * 0.23",
-    "superbwarfare:vehicle_strike * 2.5",
-    "minecraft:explosion * 2",
-    "superbwarfare:custom_explosion * 0.65",
-    "superbwarfare:projectile_explosion * 0.65",
-    "superbwarfare:mine * 0.5",
-    "superbwarfare:lunge_mine * 0.5",
-    "superbwarfare:projectile_hit * 1.3",
-    "#superbwarfare:projectile_absolute * 0.15",
-    "@#superbwarfare:aa_missile * 0.3",
-    "@superbwarfare:small_cannon_shell * 0.25",
-    "@superbwarfare:c4 * 4",
-    "@#superbwarfare:at_rocket * 1.1",
-    "@superbwarfare:gun_grenade * 1.25",
-    "@superbwarfare:mortar_shell * 1.25",
-    "@superbwarfare:tm_62 * 2.5"
-  ],
+  "DamageModifiers": [],
   "DestroyInfo": {
-    "ParticleType": "Giant",
-    "ExplosionDamage": 160,
-    "ExplosionRadius": 13,
-    "SympatheticDetonation": true,
-    "SympatheticDetonationForce": 2,
-    "SympatheticDetonationChance": 0.55
+    "ParticleType": "Mini",
+    "ExplosionDamage": 6,
+    "ExplosionRadius": 0.75,
+    "ExplodeBlocks": false,
+    "ExplodePassengers": false,
+    "SympatheticDetonation": false,
+    "NoWreck": true
   },
   "ThirdPersonCameraPos": [
     -1.27443,
@@ -367,13 +373,43 @@
   "HudType": "@Land",
   "TerrainCompat": [],
   "TurretControllerIndex": 0,
+  "OpticalZoomRange": [
+    1.5,
+    6
+  ],
   "Attachments": {
+    "operator_sight_direction": {
+      "Parent": "Barrel",
+      "Position": [
+        0.0227,
+        0.27743,
+        -0.78125
+      ],
+      "Direction": [
+        0,
+        0.0127775,
+        1
+      ]
+    },
+    "operator_scope": {
+      "Parent": "Barrel",
+      "Position": [
+        0.15506,
+        0.32755,
+        -0.58875
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
     "operator_camera": {
       "Parent": "Barrel",
       "Position": [
-        -0.16249,
-        0.30335,
-        0.80531
+        0.0227,
+        0.27743,
+        -0.78125
       ],
       "Direction": [
         0,
@@ -386,7 +422,7 @@
       "Position": [
         0.03125,
         0.15949,
-        -2.1375
+        2.1375
       ],
       "Direction": [
         0,
@@ -394,5 +430,7 @@
         1
       ]
     }
-  }
+  },
+  "ApplyDefaultDamageModifiers": false,
+  "LethalDirectCaliberMm": 37
 }

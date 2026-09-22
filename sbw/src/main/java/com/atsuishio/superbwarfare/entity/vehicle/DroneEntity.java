@@ -59,6 +59,7 @@ import static com.atsuishio.superbwarfare.event.ClientMouseHandler.freeCameraPit
 import static com.atsuishio.superbwarfare.event.ClientMouseHandler.freeCameraYaw;
 
 public class DroneEntity extends GeoVehicleEntity {
+    private boolean payloadImpactResolved;
 
     public static final EntityDataAccessor<Boolean> LINKED = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<String> CONTROLLER = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.STRING);
@@ -540,17 +541,25 @@ public class DroneEntity extends GeoVehicleEntity {
     }
 
     public void hitEntityCrash(Player player, Entity target) {
+        if (payloadImpactResolved) return;
         if (lastTickSpeed > 0.05) {
             var attachedEntity = this.entityData.get(DISPLAY_ENTITY);
             if (!attachedEntity.isEmpty() && 50 * lastTickSpeed > this.getHealth()) {
                 var data = CustomData.DRONE_ATTACHMENT.get(getItemId(this.currentItem));
                 if (data != null) {
                     if (data.isKamikaze) {
-                        EntityType.byString(attachedEntity).ifPresent(entityType -> {
-                            var bomb = entityType.create(this.level());
-                            DamageHandler.doDamage(target, ModDamageTypes.causeCustomExplosionDamage(this.level().registryAccess(), bomb, player), data.hitDamage);
-                            target.invulnerableTime = 0;
-                        });
+                        var bomb = EntityType.byString(attachedEntity)
+                                .map(entityType -> entityType.create(this.level())).orElse(null);
+                        if (bomb != null) {
+                            var decision = com.atsuishio.superbwarfare.api.projectile.impact.DronePayloadImpacts
+                                    .resolve(this, bomb, player, target, getEyePosition(), getDeltaMovement());
+                            if (decision == com.atsuishio.superbwarfare.api.projectile.impact.DronePayloadImpacts.Decision.MISS) return;
+                            payloadImpactResolved = decision == com.atsuishio.superbwarfare.api.projectile.impact.DronePayloadImpacts.Decision.CONSUMED;
+                            if (!payloadImpactResolved) {
+                                DamageHandler.doDamage(target, ModDamageTypes.causeCustomExplosionDamage(this.level().registryAccess(), bomb, player), data.hitDamage);
+                                target.invulnerableTime = 0;
+                            }
+                        }
                     } else {
                         DamageHandler.doDamage(target, ModDamageTypes.causeDroneHitDamage(this.level().registryAccess(), this, player), (float) (5 * lastTickSpeed));
                     }
@@ -667,6 +676,8 @@ public class DroneEntity extends GeoVehicleEntity {
     }
 
     private void kamikazeExplosion() {
+        // A typed payload impact has already committed its armor transaction and presentation.
+        if (payloadImpactResolved) return;
         Entity attacker = EntityFindUtil.findEntity(this.level(), getLastAttackerUUID());
         Player controller = EntityFindUtil.findPlayer(this.level(), this.entityData.get(CONTROLLER));
 

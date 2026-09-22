@@ -1,6 +1,7 @@
 package com.atsuishio.superbwarfare.diagnostics
 
 import com.atsuishio.superbwarfare.Mod
+import com.atsuishio.superbwarfare.data.gun.GunProp
 import com.atsuishio.superbwarfare.api.projectile.ProjectileProfiles
 import com.atsuishio.superbwarfare.api.vehicle.flight.FixedWingFlightStrategy
 import com.atsuishio.superbwarfare.entity.projectile.FastThrowableProjectile
@@ -16,14 +17,14 @@ import net.minecraftforge.eventbus.api.SubscribeEvent
 object EliteVehicleDiagnostics {
     private fun relevant(entity: Entity) = entity is VehicleEntity || entity is FastThrowableProjectile
 
-    @JvmStatic @SubscribeEvent fun loaded(event: EntityJoinLevelEvent) {
+    @SubscribeEvent fun loaded(event: EntityJoinLevelEvent) {
         val entity = event.entity
         if (!EliteDiagnostics.isEnabled(entity.level()) || !relevant(entity)) return
         EliteDiagnostics.record(entity, "lifecycle", "loaded", "position", entity.position(),
             "motion", entity.deltaMovement, "from_disk", event.loadedFromDisk())
     }
 
-    @JvmStatic @SubscribeEvent fun unloaded(event: EntityLeaveLevelEvent) {
+    @SubscribeEvent fun unloaded(event: EntityLeaveLevelEvent) {
         val entity = event.entity
         if (!EliteDiagnostics.isEnabled(entity.level()) || !relevant(entity)) return
         EliteDiagnostics.record(entity, "lifecycle", "unloaded", "reason", entity.removalReason,
@@ -32,6 +33,16 @@ object EliteVehicleDiagnostics {
 
     @JvmStatic fun vehicle(vehicle: VehicleEntity) {
         if (!EliteDiagnostics.isEnabled(vehicle.level())) return
+        if ((vehicle.tickCount + vehicle.id) % 20 == 0) {
+            for ((name, data) in vehicle.gunDataMap) {
+                if (!data.get(GunProp.BELT_FED)) continue
+                EliteDiagnostics.record(vehicle, "aircraft_belt", "state_sample",
+                    "weapon", name, "loaded", data.ammo.get(), "capacity", data.get(GunProp.MAGAZINE),
+                    "reserve_synced", data.backupAmmoCount.get(), "remaining_ticks", data.reload.time(),
+                    "reload_state", data.reload.state().name, "reload_revision", data.reload.soundCycleRevision(),
+                    "belt_phase", data.projectileBeltPhase.get())
+            }
+        }
         val flight = vehicle.resolveVehicleFlightStrategy()
         if (flight == null && (vehicle.tickCount + vehicle.id) % 5 != 0) return
         EliteDiagnostics.record(vehicle, "vehicle", "movement_health", "position", vehicle.position(),

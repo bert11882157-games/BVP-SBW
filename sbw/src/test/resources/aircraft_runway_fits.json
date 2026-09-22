@@ -1,0 +1,92 @@
+{
+  "mig_19s": {
+    "contact": {
+      "Fuselage": {
+        "Min": [
+          -2.5,
+          0.75,
+          -3.1475
+        ],
+        "Max": [
+          2.5,
+          2.65,
+          3.1025
+        ]
+      },
+      "LandingGear": {
+        "Min": [
+          -2.3,
+          0,
+          -2.8975
+        ],
+        "Max": [
+          2.3,
+          0.8,
+          2.8525
+        ]
+      },
+      "RetractableGear": true
+    },
+    "rotateOffsetHeight": 1.9125
+  },
+  "mi_24d": {
+    "contact": {
+      "Fuselage": {
+        "Min": [
+          -3.375,
+          1.25,
+          -6.59375
+        ],
+        "Max": [
+          3.375,
+          5.5,
+          3.03125
+        ]
+      },
+      "LandingGear": {
+        "Min": [
+          -3.105,
+          0,
+          -6.20875
+        ],
+        "Max": [
+          3.105,
+          1.3,
+          2.64625
+        ]
+      },
+      "RetractableGear": false
+    },
+    "rotateOffsetHeight": 0
+  },
+  "mi_26": {
+    "contact": {
+      "Fuselage": {
+        "Min": [
+          -4.08375,
+          1.9,
+          -15.40625
+        ],
+        "Max": [
+          4.08375,
+          6.8,
+          2.46875
+        ]
+      },
+      "LandingGear": {
+        "Min": [
+          -3.75705,
+          0,
+          -14.69125
+        ],
+        "Max": [
+          3.75705,
+          1.95,
+          1.75375
+        ]
+      },
+      "RetractableGear": false
+    },
+    "rotateOffsetHeight": 0
+  }
+}

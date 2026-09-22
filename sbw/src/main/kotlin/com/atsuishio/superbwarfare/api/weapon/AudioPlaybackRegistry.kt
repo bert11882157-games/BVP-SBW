@@ -29,6 +29,9 @@ class AudioPlaybackRegistry<T>(private val stopInstance: (T) -> Unit) {
         active.filterValues(predicate).keys.toList().forEach(::stop)
     }
 
+    /** Callbacks may retire entries without invalidating the traversal. */
+    fun forEachActive(action: (T) -> Unit) = active.values.toList().forEach(action)
+
     fun clear() {
         active.values.forEach(stopInstance)
         active.clear()

@@ -69,8 +69,11 @@ public class KeymappingMixin {
             KeyMapping other,
             CallbackInfoReturnable<Boolean> cir
     ) {
-        if (VehicleControlBindings.shouldSuppressConflict((KeyMapping) (Object) this, other)) {
+        KeyMapping self = (KeyMapping) (Object) this;
+        if (VehicleControlBindings.shouldSuppressConflict(self, other)) {
             cir.setReturnValue(false);
+        } else if (VehicleControlBindings.hasSameGroupKeyConflict(self, other)) {
+            cir.setReturnValue(true);
         }
     }
 
@@ -97,8 +100,8 @@ public class KeymappingMixin {
 
     /**
      * Forge implements this as an interface default, so the controls screen bypasses the same()
-     * check for modifier conflicts. A concrete target method keeps SBW/BVP bindings out of the
-     * warning system without changing runtime input arbitration or unrelated mod conflicts.
+     * check for modifier conflicts. A concrete target method applies the same per-category
+     * warning policy without changing runtime input arbitration or unrelated mod conflicts.
      */
     public boolean hasKeyModifierConflict(KeyMapping other) {
         KeyMapping self = (KeyMapping) (Object) this;
@@ -108,7 +111,8 @@ public class KeymappingMixin {
 
         IKeyConflictContext selfContext = self.getKeyConflictContext();
         IKeyConflictContext otherContext = other.getKeyConflictContext();
-        if (selfContext.conflicts(otherContext) || otherContext.conflicts(selfContext)) {
+        if (VehicleControlBindings.isSameManagedCategory(self, other)
+                || selfContext.conflicts(otherContext) || otherContext.conflicts(selfContext)) {
             return self.getKeyModifier().matches(other.getKey())
                     || other.getKeyModifier().matches(self.getKey());
         }
@@ -117,6 +121,11 @@ public class KeymappingMixin {
 
     private static boolean isManagedCategory(String category) {
         return VehicleControlBindings.BVP_CATEGORY.equals(category)
+                || VehicleControlBindings.LAND_CATEGORY.equals(category)
+                || VehicleControlBindings.PLANE_CATEGORY.equals(category)
+                || VehicleControlBindings.HELICOPTER_CATEGORY.equals(category)
+                || VehicleControlBindings.DRONE_CATEGORY.equals(category)
+                || VehicleControlBindings.WATERCRAFT_CATEGORY.equals(category)
                 || VehicleControlBindings.TACZ_CATEGORY.equals(category);
     }
 
@@ -126,12 +135,17 @@ public class KeymappingMixin {
             case KeyMapping.CATEGORY_GAMEPLAY -> 2;
             case KeyMapping.CATEGORY_INVENTORY -> 3;
             case VehicleControlBindings.BVP_CATEGORY -> 4;
-            case VehicleControlBindings.TACZ_CATEGORY -> 5;
-            case KeyMapping.CATEGORY_CREATIVE -> 6;
-            case KeyMapping.CATEGORY_MULTIPLAYER -> 7;
-            case KeyMapping.CATEGORY_INTERFACE -> 8;
-            case KeyMapping.CATEGORY_MISC -> 9;
-            default -> 10;
+            case VehicleControlBindings.LAND_CATEGORY -> 5;
+            case VehicleControlBindings.PLANE_CATEGORY -> 6;
+            case VehicleControlBindings.HELICOPTER_CATEGORY -> 7;
+            case VehicleControlBindings.DRONE_CATEGORY -> 8;
+            case VehicleControlBindings.WATERCRAFT_CATEGORY -> 9;
+            case VehicleControlBindings.TACZ_CATEGORY -> 10;
+            case KeyMapping.CATEGORY_CREATIVE -> 11;
+            case KeyMapping.CATEGORY_MULTIPLAYER -> 12;
+            case KeyMapping.CATEGORY_INTERFACE -> 13;
+            case KeyMapping.CATEGORY_MISC -> 14;
+            default -> 15;
         };
     }
 }

@@ -3,6 +3,8 @@ package com.atsuishio.superbwarfare.world.phys
 import net.minecraft.world.phys.EntityHitResult
 
 class ExtendedEntityRayTraceResult(result: EntityResult) : EntityHitResult(result.entity, result.hitVec) {
+    val hitPart = result.hitPart
+
     @get:JvmName("isHeadshot")
     val headshot: Boolean = result.headshot
 

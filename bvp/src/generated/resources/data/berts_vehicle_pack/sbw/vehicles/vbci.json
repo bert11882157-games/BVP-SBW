@@ -219,9 +219,11 @@
       "DefaultFireMode": "Auto",
       "AvailableFireModes": "Auto",
       "DefaultZoom": 3,
-      "RPM": 250,
-      "NormalReloadTime": 100,
-      "EmptyReloadTime": 100,
+      "RPM": 400,
+      "Magazine": 100,
+      "NormalReloadTime": 160,
+      "EmptyReloadTime": 160,
+      "AmmoCostPerShoot": 1,
       "Velocity": 18,
       "Damage": 65,
       "ExplosionDamage": 8,
@@ -259,7 +261,46 @@
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
-              "Profile": "berts_vehicle_pack:vbci/cannon/ammo_00_m811_m791_apds"
+              "Profile": "berts_vehicle_pack:vbci/cannon/ammo_00_m811_pmb090_apfsds"
+            },
+            "ShellType": "AP",
+            "Velocity": 69.25,
+            "ApDurability": 92,
+            "Damage": 65,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "APFSDS Belt",
+            "ProjectileBelt": {
+              "Name": "APFSDS Belt",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "m811_pmb090_apfsds",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "RED",
+                  "DisplayLabel": "PMB 090 APFSDS"
+                }
+              ]
+            },
+            "ShootShake": [
+              8,
+              10,
+              12
+            ],
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:vbci/cannon/ammo_00_m811_pmb090_apfsds",
+              "ProjectileLife": 40
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_gs",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:vbci/cannon/ammo_01_m811_m791_apds"
             },
             "ShellType": "AP",
             "Velocity": 66.75,
@@ -275,7 +316,7 @@
                   "Shots": 3,
                   "Round": "m811_m791_apds",
                   "Ammo": "superbwarfare:small_shell_gs",
-                  "Tracer": "INHERIT",
+                  "Tracer": "RED",
                   "DisplayLabel": "APDS"
                 }
               ]
@@ -288,7 +329,7 @@
             "NominalBallistics": {
               "Supported": true,
               "ProjectileType": "superbwarfare:small_cannon_shell",
-              "ProjectileProfile": "berts_vehicle_pack:vbci/cannon/ammo_00_m811_m791_apds",
+              "ProjectileProfile": "berts_vehicle_pack:vbci/cannon/ammo_01_m811_m791_apds",
               "ProjectileLife": 40
             }
           }
@@ -298,7 +339,7 @@
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
-              "Profile": "berts_vehicle_pack:vbci/cannon/ammo_01_m811_m792_hei_t"
+              "Profile": "berts_vehicle_pack:vbci/cannon/ammo_02_m811_m792_hei_t"
             },
             "ShellType": "HE",
             "Velocity": 55,
@@ -327,7 +368,7 @@
             "NominalBallistics": {
               "Supported": true,
               "ProjectileType": "superbwarfare:small_cannon_shell",
-              "ProjectileProfile": "berts_vehicle_pack:vbci/cannon/ammo_01_m811_m792_hei_t",
+              "ProjectileProfile": "berts_vehicle_pack:vbci/cannon/ammo_02_m811_m792_hei_t",
               "ProjectileLife": 40
             }
           }
@@ -339,7 +380,7 @@
           [
             -0.02478,
             -0.02478,
-            -2.18573
+            2.18573
           ]
         ],
         "Directions": [
@@ -366,34 +407,18 @@
         "ProjectileProfile": "berts_vehicle_pack:vbci/cannon/default",
         "ProjectileLife": 40
       },
+      "ShootShake": [
+        8,
+        10,
+        12
+      ],
       "ProjectileBeltAmmoType": [
-        {
-          "Ammo": "superbwarfare:small_shell_gs",
-          "Override": {
-            "Projectile": {
-              "Type": "superbwarfare:small_cannon_shell",
-              "Profile": "berts_vehicle_pack:vbci/cannon/belt_ammo_00_m811_m791_apds"
-            },
-            "ShellType": "AP",
-            "Velocity": 66.75,
-            "ApDurability": 80,
-            "Damage": 65,
-            "ExplosionDamage": 0,
-            "ExplosionRadius": 0,
-            "Name": "APDS",
-            "ShootShake": [
-              8,
-              10,
-              12
-            ]
-          }
-        },
         {
           "Ammo": "superbwarfare:small_shell_aa",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
-              "Profile": "berts_vehicle_pack:vbci/cannon/belt_ammo_01_m811_m792_hei_t"
+              "Profile": "berts_vehicle_pack:vbci/cannon/belt_ammo_00_m811_m792_hei_t"
             },
             "ShellType": "HE",
             "Velocity": 55,
@@ -409,11 +434,6 @@
             ]
           }
         }
-      ],
-      "ShootShake": [
-        8,
-        10,
-        12
       ]
     },
     "MainMachineGun": {
@@ -455,6 +475,11 @@
                 }
               ]
             },
+            "ShootShake": [
+              0,
+              0,
+              0
+            ],
             "NominalBallistics": {
               "Supported": true,
               "ProjectileType": "superbwarfare:projectile",
@@ -468,10 +493,10 @@
         "Type": "superbwarfare:projectile",
         "Profile": "berts_vehicle_pack:vbci/mainmachinegun/default"
       },
-      "Magazine": 250,
+      "Magazine": 200,
       "NormalReloadTime": 160,
       "EmptyReloadTime": 160,
-      "RPM": 600,
+      "RPM": 900,
       "Damage": 9.5,
       "BypassesArmor": 0.3,
       "Velocity": 30,
@@ -483,18 +508,18 @@
         "Transform": "Barrel",
         "Positions": [
           [
-            -0.17339,
-            0.17339,
-            0.43347
+            -0.91692,
+            -0.02478,
+            0.30233
           ]
         ],
         "Directions": [
           "Barrel"
         ],
         "ViewPosition": [
-          -0.18,
-          0.18,
-          0.45
+          -0.95188,
+          -0.02573,
+          0.31386
         ],
         "MuzzleAttachments": [
           "mainmachinegun_muzzle_01"
@@ -512,7 +537,7 @@
         "SeekAttachment": "mainmachinegun_muzzle_01"
       },
       "Crosshair": "@VehicleCommonGun",
-      "Name": "weapon.superbwarfare.7_62mm_coax",
+      "Name": "weapon.berts_vehicle_pack.aa_nf1",
       "SoundInfo": {
         "Fire1PGain": 0.5,
         "Fire3PGain": 0.5,
@@ -527,6 +552,17 @@
       "SoundRadius": 12,
       "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/gun_7_62mm.png",
       "HeatPerShoot": 0,
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "superbwarfare:projectile",
+        "ProjectileProfile": "berts_vehicle_pack:vbci/mainmachinegun/default",
+        "ProjectileLife": 400
+      },
+      "ShootShake": [
+        0,
+        0,
+        0
+      ],
       "ProjectileBeltAmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
@@ -541,16 +577,15 @@
             "Damage": 9.5,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
-            "Name": "T"
+            "Name": "T",
+            "ShootShake": [
+              0,
+              0,
+              0
+            ]
           }
         }
-      ],
-      "NominalBallistics": {
-        "Supported": true,
-        "ProjectileType": "superbwarfare:projectile",
-        "ProjectileProfile": "berts_vehicle_pack:vbci/mainmachinegun/default",
-        "ProjectileLife": 400
-      }
+      ]
     }
   },
   "HUDColor": "0x66FF00",
@@ -574,12 +609,12 @@
   "TurretPos": [
     -0.17347,
     2.65192,
-    0.64432
+    -0.64432
   ],
   "BarrelPos": [
     0.14869,
     -0.19825,
-    -0.78805
+    0.78805
   ],
   "TurretTurnSpeed": [
     42,
@@ -717,7 +752,7 @@
       "Position": [
         -0.02478,
         -0.02478,
-        -2.18573
+        2.18573
       ],
       "Direction": [
         0,
@@ -728,9 +763,9 @@
     "mainmachinegun_muzzle_01": {
       "Parent": "Barrel",
       "Position": [
-        -0.17339,
-        0.17339,
-        0.43347
+        -0.91692,
+        -0.02478,
+        0.30233
       ],
       "Direction": [
         0,
@@ -741,9 +776,9 @@
     "mainmachinegun_view_origin": {
       "Parent": "Barrel",
       "Position": [
-        -0.18,
-        0.18,
-        0.45
+        -0.95188,
+        -0.02573,
+        0.31386
       ],
       "Direction": [
         0,
@@ -756,7 +791,7 @@
       "Position": [
         -0.14869,
         0.59476,
-        0.78805
+        0.01251
       ],
       "Direction": [
         0,

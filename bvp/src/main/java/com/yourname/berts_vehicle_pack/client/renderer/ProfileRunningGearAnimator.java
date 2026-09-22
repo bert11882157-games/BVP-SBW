@@ -1,6 +1,7 @@
 package com.yourname.berts_vehicle_pack.client.renderer;
 
 import com.atsuishio.superbwarfare.api.performance.ClientRenderPerformanceDiagnostics;
+import com.atsuishio.superbwarfare.diagnostics.EliteDiagnostics;
 import com.atsuishio.superbwarfare.client.renderer.vehicle.RunningGearProfile;
 import com.atsuishio.superbwarfare.client.renderer.vehicle.RunningGearRenderState;
 import com.atsuishio.superbwarfare.client.renderer.vehicle.RunningGearSide;
@@ -14,11 +15,13 @@ import com.example.sbwmeshloader.core.PolyMeshModel;
 import com.github.mcmodderanchor.simplebedrockmodel.v1.common.model.BedrockBone;
 import com.yourname.berts_vehicle_pack.client.renderer.RunningGearAnimationSupport.WheelLayout;
 import com.yourname.berts_vehicle_pack.entity.ArmoredVehicleEntity;
+import com.yourname.berts_vehicle_pack.entity.BvpFarVehicleVisuals;
 
 final class ProfileRunningGearAnimator {
     private PolyMeshModel cachedModel;
     private RunningGearProfile cachedProfile;
     private RuntimeLayout cachedLayout;
+    private final java.util.Map<GeoVehicleEntity, Long> diagnosticTicks = new java.util.WeakHashMap<>();
 
     void apply(GeoVehicleEntity entity, PolyMeshModel model, RunningGearRenderState state,
                RunningGearProfile runningGearProfile, TrackRenderProfile trackProfile) {
@@ -33,6 +36,23 @@ final class ProfileRunningGearAnimator {
         animate(layout.left, trackProfile, leftPhase);
         animate(layout.right, trackProfile, rightPhase);
         applyVisibility(entity, layout);
+        recordVisibility(entity, layout);
+    }
+
+    private void recordVisibility(GeoVehicleEntity entity, RuntimeLayout layout) {
+        if (!EliteDiagnostics.isEnabled(entity.m_9236_())) return;
+        long tick = entity.m_9236_().m_46467_();
+        Long previous = diagnosticTicks.get(entity);
+        if (previous != null && tick >= previous && tick - previous < 20) return;
+        diagnosticTicks.put(entity, tick);
+        for (SideLayout side : new SideLayout[]{layout.left, layout.right}) {
+            EliteDiagnostics.record(entity, "running_gear", "TRACK_VISIBILITY",
+                    "side", side.profile.getSide(), "state", side.lastVisualState,
+                    "intact_visible", side.trackParent != null && side.trackParent.visible,
+                    "broken_visible", side.brokenTrack != null && side.brokenTrack.visible,
+                    "fallback_visible", side.fallbackTrack != null && side.fallbackTrack.visible,
+                    "links", side.links.length);
+        }
     }
 
     private RuntimeLayout layout(PolyMeshModel model, RunningGearProfile profile, TrackRenderProfile trackProfile) {
@@ -113,8 +133,8 @@ final class ProfileRunningGearAnimator {
     private static void applyVisibility(GeoVehicleEntity entity, RuntimeLayout layout) {
         ArmoredVehicleEntity armored = entity instanceof ArmoredVehicleEntity value ? value : null;
         boolean canShowBroken = armored != null && !armored.isWreck();
-        applyVisibility(layout.left, canShowBroken && armored.isLeftTrackBroken());
-        applyVisibility(layout.right, canShowBroken && armored.isRightTrackBroken());
+        applyVisibility(layout.left, canShowBroken && BvpFarVehicleVisuals.trackBroken(armored, true));
+        applyVisibility(layout.right, canShowBroken && BvpFarVehicleVisuals.trackBroken(armored, false));
     }
 
     private static void applyVisibility(SideLayout side, boolean brokenRequested) {

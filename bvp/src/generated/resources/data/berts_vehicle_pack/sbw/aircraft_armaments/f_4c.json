@@ -1,0 +1,41 @@
+{
+  "Schema": 1,
+  "Name": "F-4C",
+  "BuiltInWeapons": [],
+  "SuspendedWeapons": [
+    "CenterlineGAU4"
+  ],
+  "Pairs": [],
+  "StoreGroups": {
+    "berts_vehicle_pack:modeled_store/f_4c/assembly_0": [
+      "suspended_f_4c_0"
+    ],
+    "berts_vehicle_pack:modeled_store/f_4c/assembly_1": [
+      "suspended_f_4c_1"
+    ],
+    "berts_vehicle_pack:modeled_store/f_4c/assembly_2": [
+      "suspended_f_4c_2"
+    ],
+    "berts_vehicle_pack:modeled_store/f_4c/assembly_3": [
+      "suspended_f_4c_3"
+    ],
+    "berts_vehicle_pack:gun_pod/f4c_gau4": [
+      "suspended_f_4c_4"
+    ]
+  },
+  "Singles": [
+    {
+      "Id": "centerline",
+      "Name": "Centerline gun pod",
+      "Position": [
+        0,
+        0.8,
+        1.9775
+      ],
+      "WeaponId": "CenterlineGAU4",
+      "AllowedStores": [
+        "berts_vehicle_pack:gun_pod/f4c_gau4"
+      ]
+    }
+  ]
+}

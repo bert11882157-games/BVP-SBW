@@ -43,6 +43,7 @@ object ModSounds {
     @JvmField val STEEL_COIL_MOVE = register("steel_coil_move")
 
     @JvmField val LAND = register("land")
+    @JvmField val AIRCRAFT_TIRE_TOUCHDOWN = register("aircraft_tire_touchdown")
     @JvmField val HIT_WATER = register("hit_water")
     @JvmField val HEADSHOT = register("headshot")
 
@@ -139,6 +140,7 @@ object ModSounds {
 
     @JvmField val SMALL_ROCKET_FIRE_3P = register("small_rocket_fire_3p")
     @JvmField val DECOY_RELEASE = register("decoy_release")
+    @JvmField val AIRCRAFT_FLARE_RELEASE = register("aircraft_flare_release")
     @JvmField val DECOY_RELEASE_FIRST = register("decoy_release_first")
     @JvmField val DECOY_RELOAD = register("decoy_reload")
 

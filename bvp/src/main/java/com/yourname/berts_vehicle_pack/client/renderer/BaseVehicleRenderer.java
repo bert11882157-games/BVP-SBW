@@ -1,10 +1,15 @@
 package com.yourname.berts_vehicle_pack.client.renderer;
 
+import com.atsuishio.superbwarfare.api.diagnostics.DebugFeaturePolicy;
+
 import com.atsuishio.superbwarfare.client.renderer.vehicle.VehicleRenderBackend;
 import com.atsuishio.superbwarfare.client.renderer.vehicle.VehicleRenderBackendContext;
 import com.atsuishio.superbwarfare.api.performance.ClientRenderPerformanceDiagnostics;
+import com.atsuishio.superbwarfare.diagnostics.EliteDiagnostics;
 import com.atsuishio.superbwarfare.entity.vehicle.base.GeoVehicleEntity;
 import com.atsuishio.superbwarfare.api.vehicle.pose.VehiclePoseSnapshot;
+import com.atsuishio.superbwarfare.api.vehicle.render.FarVehicleDiagnostics;
+import com.atsuishio.superbwarfare.client.FarVehicleClient;
 import com.atsuishio.superbwarfare.client.renderer.vehicle.VehicleRenderPartSnapshot;
 import com.example.sbwmeshloader.core.PolyMeshLoader;
 import com.example.sbwmeshloader.core.PolyMeshModel;
@@ -24,6 +29,8 @@ import org.slf4j.Logger;
 import java.util.ArrayDeque;
 import java.util.Collections;
 import java.util.Map;
+import java.util.LinkedHashMap;
+import java.util.UUID;
 import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.concurrent.CompletableFuture;
@@ -33,8 +40,11 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class BaseVehicleRenderer<T extends GeoVehicleEntity> implements VehicleRenderBackend {
+    private final BvpSuspendedStoreRenderer suspendedStores = new BvpSuspendedStoreRenderer();
+
+    protected static long currentResourceGeneration() { return RESOURCE_GENERATION; }
     private static final Logger LOGGER = LogUtils.getLogger();
-    private static final boolean DEBUG_MODEL_LOADING = Boolean.getBoolean("bvp.debug.modelLoading");
+    private static final boolean DEBUG_MODEL_LOADING = DebugFeaturePolicy.isDiagnosticPropertyEnabled("bvp.debug.modelLoading");
     private static final int PREWARM_QUEUE_CAPACITY = 8;
     private static final int PREWARM_PACKED_LIGHT = 0x00F000F0;
     private static final int PREWARM_UPLOAD_MESHES_PER_TICK = 8;
@@ -78,8 +88,8 @@ public class BaseVehicleRenderer<T extends GeoVehicleEntity> implements VehicleR
     private VehicleRenderPartSnapshot activeRenderParts;
     private final ProfileWheeledRunningGearAnimator profileWheeledRunningGearAnimator =
             new ProfileWheeledRunningGearAnimator();
-    /** Weak per-entity presentation state keeps shared renderer instances independent and bounded. */
-    private final Map<GeoVehicleEntity, FadeState> fadeStates = new WeakHashMap<>();
+    /** Bounded UUID state preserves visibility when vanilla tracking exchanges an entity for a far copy. */
+    private final Map<UUID, FadeState> fadeStates = new LinkedHashMap<>(16, 0.75F, true);
 
     private enum ModelLoadState {
         IDLE,
@@ -203,7 +213,7 @@ public class BaseVehicleRenderer<T extends GeoVehicleEntity> implements VehicleR
         invalidateAllModels();
     }
 
-    /** Entity lifecycle boundary: a retracked entity must not inherit a prior fade timer. */
+    /** Retain a visible vehicle's fade while its server-owned far snapshot remains present. */
     public static void onEntityRemoved(GeoVehicleEntity entity) {
         if (entity == null) {
             return;
@@ -218,6 +228,8 @@ public class BaseVehicleRenderer<T extends GeoVehicleEntity> implements VehicleR
     }
 
     private static void invalidateAllModels() {
+        BvpKomodoBridge.reset();
+        AircraftRigAnimator.clear();
         final long generation;
         final BaseVehicleRenderer<?>[] renderers;
         synchronized (PREWARM_QUEUE) {
@@ -352,6 +364,7 @@ public class BaseVehicleRenderer<T extends GeoVehicleEntity> implements VehicleR
     }
 
     private synchronized void discardLoadingState(long generation) {
+        this.suspendedStores.clear();
         if (this.modelLoadFuture != null) {
             this.modelLoadFuture.cancel(true);
             this.modelLoadFuture = null;
@@ -368,6 +381,7 @@ public class BaseVehicleRenderer<T extends GeoVehicleEntity> implements VehicleR
     }
 
     private synchronized void resetForGeneration(long generation) {
+        this.profileWheeledRunningGearAnimator.reset();
         discardLoadingState(generation);
         this.fadeStates.clear();
         PublishedModel previous = this.publishedModel;
@@ -378,7 +392,10 @@ public class BaseVehicleRenderer<T extends GeoVehicleEntity> implements VehicleR
     }
 
     private synchronized void clearFadeState(GeoVehicleEntity entity) {
-        this.fadeStates.remove(entity);
+        var entry = FarVehicleClient.INSTANCE.getStore().get(entity.getId());
+        if (entry == null || !entry.getCurrent().getUuid().equals(entity.getUUID().toString())) {
+            this.fadeStates.remove(entity.getUUID());
+        }
     }
 
     private synchronized void failModelLoad() {
@@ -389,32 +406,29 @@ public class BaseVehicleRenderer<T extends GeoVehicleEntity> implements VehicleR
     }
 
     /**
-     * A queued/in-flight candidate has no complete fallback mesh to publish.  Returning true
-     * deliberately suppresses native cubes for that brief interval; failed/unsupported loads
-     * return false so the complete native renderer remains the fallback.
+     * Pending models, including those waiting for queue capacity, have no complete mesh to
+     * publish. Only a failed load may expose the native fallback geometry.
      */
     private synchronized boolean suppressNativeFallbackDuringLoad() {
         return this.modelLoadGeneration == RESOURCE_GENERATION
-                && this.modelLoadAttempted
                 && !this.modelLoadFailed
                 && this.modelLoadState != ModelLoadState.READY;
     }
 
     /**
-     * Starts one fade per entity only after its complete published holder is visible.  The weak
-     * map avoids retaining removed vehicles; generation changes reset every state explicitly.
+     * Starts one fade per vehicle only after its complete published holder is visible.
+     * The cache is bounded and resource/world generation changes reset every state explicitly.
      */
     private float modelFadeAlpha(GeoVehicleEntity entity, long generation, float partialTicks) {
-        float partial = Float.isFinite(partialTicks)
-                ? Math.max(0.0f, Math.min(1.0f, partialTicks))
-                : 0.0f;
-        long tick = entity.m_9236_() == null ? 0L : entity.m_9236_().m_46467_();
-        FadeState state = this.fadeStates.get(entity);
+        float partial = ClientVisualClock.partial(partialTicks);
+        long tick = ClientVisualClock.now();
+        FadeState state = this.fadeStates.get(entity.getUUID());
         if (state == null || state.generation != generation) {
-            this.fadeStates.put(entity, new FadeState(generation, tick, partial));
+            this.fadeStates.put(entity.getUUID(), new FadeState(generation, tick, partial));
+            if (this.fadeStates.size() > 256) this.fadeStates.remove(this.fadeStates.keySet().iterator().next());
             return 0.0f;
         }
-        double age = (double) (tick - state.startTick) + (double) (partial - state.startPartial);
+        double age = ClientVisualClock.elapsed(tick, state.startTick, state.startPartial, partial);
         if (!(age > 0.0D)) {
             return 0.0f;
         }
@@ -434,6 +448,8 @@ public class BaseVehicleRenderer<T extends GeoVehicleEntity> implements VehicleR
     @Override
     @SuppressWarnings("unchecked")
     public synchronized boolean render(VehicleRenderBackendContext context) {
+        com.atsuishio.superbwarfare.client.overlay.GroundVehicleHullHud.registerModel(
+                context.getBackendId(), this.modelLocation);
         if (!(context.getVehicle() instanceof GeoVehicleEntity)) {
             return false;
         }
@@ -442,7 +458,10 @@ public class BaseVehicleRenderer<T extends GeoVehicleEntity> implements VehicleR
         PolyMeshModel loadedModel = getOrLoadModel();
         if (loadedModel == null) {
             ClientRenderPerformanceDiagnostics.recordVehicleRender(performanceStarted);
-            return suppressNativeFallbackDuringLoad();
+            boolean suppressFallback = suppressNativeFallbackDuringLoad();
+            recordGeometry(entity, context.getPartialTick(),
+                    suppressFallback ? "PENDING_HIDDEN" : "NATIVE_FALLBACK", 0.0F);
+            return suppressFallback;
         }
 
         float entityYaw = context.getEntityYaw();
@@ -459,6 +478,7 @@ public class BaseVehicleRenderer<T extends GeoVehicleEntity> implements VehicleR
         this.activeRenderParts = VehicleRenderPartSnapshot.capture(entity, entityYaw, partialTicks);
         try {
             applyModelAnimations(entity, entityYaw, loadedModel, partialTicks);
+            this.suspendedStores.apply(entity, loadedModel);
             ResourceLocation resolvedTexture = m_5478_(entity);
 
             // The backend enters after SBW's native vehicleAxis. Restore the
@@ -470,12 +490,23 @@ public class BaseVehicleRenderer<T extends GeoVehicleEntity> implements VehicleR
                 applyAdditionalVehicleTransform(entity, partialTicks, poseStack);
                 applyVehicleRenderAxis(entity, entityYaw, partialTicks, poseStack,
                         context.getChassisPresentation().getPose());
-                loadedModel.renderCutoutOnly(poseStack, bufferSource, resolvedTexture, packedLight,
-                        fadeAlpha);
+                boolean instanced = BvpKomodoBridge.submit(context, loadedModel,
+                        poseStack.m_85850_().m_252922_(), resolvedTexture, packedLight, fadeAlpha);
+                if (!instanced) {
+                    loadedModel.renderCutoutOnly(poseStack, bufferSource, resolvedTexture, packedLight,
+                            fadeAlpha);
+                }
                 renderModelSpaceCutout(entity, entityYaw, loadedModel, partialTicks, poseStack,
                         bufferSource, packedLight);
                 loadedModel.renderTranslucentOnly(poseStack, bufferSource, resolvedTexture, packedLight,
                         fadeAlpha);
+                this.suspendedStores.render(entity, poseStack, bufferSource, packedLight, fadeAlpha);
+                recordGeometry(entity, partialTicks, "FULL_MODEL", fadeAlpha);
+                if (fadeAlpha > 0.0F) {
+                    FarVehicleDiagnostics.modelRendered(entity, partialTicks,
+                            context.getChassisPresentation().getAnchor(), fadeAlpha);
+                }
+                BvpAircraftAfterburnerRenderer.observe(entity);
                 renderModelSpaceEffects(entity, entityYaw, loadedModel, partialTicks, poseStack,
                         bufferSource, packedLight);
             } finally {
@@ -486,10 +517,24 @@ public class BaseVehicleRenderer<T extends GeoVehicleEntity> implements VehicleR
                     context.getChassisPresentation().getPose());
             return true;
         } finally {
+            this.suspendedStores.restore();
+            AircraftRigAnimator.restore(loadedModel);
+            this.profileWheeledRunningGearAnimator.restoreSteering();
             this.activeRenderParts = null;
             this.activeTextureLocation = previousTexture;
             ClientRenderPerformanceDiagnostics.recordVehicleRender(performanceStarted);
         }
+    }
+
+    private void recordGeometry(T entity, float partialTick, String path, float alpha) {
+        if (!EliteDiagnostics.isClientEnabled()) return;
+        com.yourname.berts_vehicle_pack.diagnostics.BvpVehicleDataDiagnostic.record(entity);
+        if (entity.tickCount > 100 && entity.tickCount % 20 != 0) return;
+        EliteDiagnostics.recordClient(entity.m_9236_().m_46467_(), "model_lifecycle", "GEOMETRY_DRAW",
+                "vehicle", entity.getUUID(), "entity_id", entity.getId(), "entity_age", entity.tickCount,
+                "client_tick", ClientVisualClock.now(), "partial_tick", partialTick,
+                "path", path, "alpha", alpha, "load_state", this.modelLoadState,
+                "resource_generation", RESOURCE_GENERATION, "model", this.modelLocation);
     }
 
     private static void restorePreVehicleAxis(VehicleRenderBackendContext context) {
