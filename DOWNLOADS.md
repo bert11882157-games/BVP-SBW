@@ -13,7 +13,26 @@ No stable release is currently published in this repository. See [all releases](
 for the complete release history.
 The `0.9.19beta` source tag currently has no GitHub Release or compiled download assets.
 
-## Latest published testing build: Tu-95 KH-55 test 2
+## Latest published testing build: Tu-95 KH-55 test 3
+
+[BVP / SBW — consolidated HUD and pylon performance](https://github.com/bert11882157-games/BVP-SBW/releases/tag/v0.1.1-kh55-test.3)
+is a published testing prerelease, not a stable release.
+
+| Component | Version | Mod JAR | Checksum |
+| --- | --- | --- | --- |
+| Bert's Vehicle Pack | `0.1.1-kh55-test.3` | [JAR](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.1.1-kh55-test.3/berts_vehicle_pack-0.1.1-kh55-test.3.jar) | [SHA-256](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.1.1-kh55-test.3/berts_vehicle_pack-0.1.1-kh55-test.3.jar.sha256) |
+| Superb Warfare fork | `0.8.9-bvp.4` | [JAR](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.1.1-kh55-test.3/superbwarfare-0.8.9-bvp.4-mc1.20.1-6effe43-all.jar) | [SHA-256](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.1.1-kh55-test.3/superbwarfare-0.8.9-bvp.4-mc1.20.1-6effe43-all.jar.sha256) |
+
+Use with **Fire From Above `1.0.5-bvp.4`** on clients and the server. This build removes
+duplicate missile HUD entries, caches unchanged fitted-pylon weapon data, and reduces KH-55
+range to **1,500 blocks**. It retains the earlier bomb-bay, per-target and vehicle-jitter changes.
+See the release notes for measured code-path costs and remaining in-game performance checks.
+
+Keep meshloader 0.1.1, Dominions 1.0.11+, and the usual pack dependencies.
+[FFA downloads](https://github.com/xenoperk/Fire-From-Above/blob/main/DOWNLOADS.md) ·
+[Dominions downloads](https://github.com/xenoperk/Dominions/blob/main/DOWNLOADS.md).
+
+## Earlier published testing build: Tu-95 KH-55 test 2
 
 [BVP / SBW — Tu-95 KH-55 and jitter testing build 2](https://github.com/bert11882157-games/BVP-SBW/releases/tag/v0.1.1-kh55-test.2)
 was published as a testing prerelease on 2026-09-22 (UTC). It has not
