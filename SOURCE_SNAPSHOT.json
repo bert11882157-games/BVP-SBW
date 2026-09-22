@@ -1,10 +1,10 @@
 {
   "schema": 1,
   "policyVersion": 4,
-  "label": "tu95-kh55-20260922-review-r2",
+  "label": "tu95-kh55-jitter-20260922-review",
   "status": "review",
-  "createdAt": "2026-09-22T05:25:43.649Z",
-  "treeSha256": "f16cf12ea14455b29021175622c1be28aff736db3b965383c714b981a5cc8a03",
+  "createdAt": "2026-09-22T06:01:23.947Z",
+  "treeSha256": "7eb611e7c4d473a620c0ecfa52c7f1e2f0586c3a3cbde30ca65552b1299398dc",
   "files": [
     {
       "path": ".editorconfig",
@@ -109,7 +109,7 @@
     {
       "path": "bvp/gradle.properties",
       "size": 3424,
-      "sha256": "50483ff111b57ee97374f08dc50d736dea903a128cba07c7035da545bb5f275a"
+      "sha256": "12394ab97ecbf9388371d4abe6bfefc780fb838a18ce8eb7b49d71cceac6f3d6"
     },
     {
       "path": "bvp/gradle/wrapper/gradle-wrapper.jar",
@@ -15239,7 +15239,7 @@
     {
       "path": "bvp/src/main/resources/META-INF/mods.toml",
       "size": 1389,
-      "sha256": "2a1c67c7a6b744a93cbdfa17707352d22ae6030f1138c2932cafc375ffdab395"
+      "sha256": "703328a9e651b0c6624157e5999b7ff82e695b85cafcc1ec0b8d311cf9d7b469"
     },
     {
       "path": "bvp/src/main/resources/THIRD_PARTY_AFTERBURNER.md",
@@ -15932,6 +15932,11 @@
       "sha256": "2144184774ce66c3775281624bf700accc74c6b3591dded43a5e1f4d8ee95464"
     },
     {
+      "path": "docs/releases/0.1.1-kh55-test.2.md",
+      "size": 2338,
+      "sha256": "e53232ab9997a8b0f7546ba76687b1a412ab6c634859e63aa5f44b2acce58762"
+    },
+    {
       "path": "sbw/LICENSE",
       "size": 35147,
       "sha256": "8ceb4b9ee5adedde47b31e975c1d90c73ad27b6b165a1dcd80c7c545eb65b903"
@@ -15954,7 +15959,7 @@
     {
       "path": "sbw/gradle.properties",
       "size": 565,
-      "sha256": "6a42210f30a18297076c8e01b458233e39458302a44c079cd401e9363f714557"
+      "sha256": "eae8015790b65ff3401cc49e4a84616a9ef4e12564a4d9547d701cc5bd02bb61"
     },
     {
       "path": "sbw/gradle/wrapper/gradle-wrapper.jar",
@@ -29672,6 +29677,11 @@
       "sha256": "8b8c31c4f1a98fadd2e295b0237119ffdddb4935cf2e46e86a34ead0cbebf5d3"
     },
     {
+      "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/base/GroundRotationRefresh.kt",
+      "size": 865,
+      "sha256": "fb379040c5dacbbad071613cf94e90c50e62b15a26dbf4b4f1c1c162b4f739c6"
+    },
+    {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/base/PhysicalBoundsIndex.kt",
       "size": 2697,
       "sha256": "d8f0ff4c90d1f9c880d505bac29541d743178929b80fc4d417e3ee1d38afa575"
@@ -29728,8 +29738,8 @@
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/base/VehicleEntity.kt",
-      "size": 318627,
-      "sha256": "eb494fdf5bbff2a318087a544017c599f112592e5f2307f5c23e979853f3ef65"
+      "size": 319280,
+      "sha256": "a11638dee64cce68f1fdc15ea2068ba9e7b632a6e41e7fe73465a398d70be9ca"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/base/VehicleEntityContacts.kt",
@@ -43625,6 +43635,11 @@
       "path": "sbw/src/test/kotlin/com/atsuishio/superbwarfare/entity/vehicle/base/GroundDriveCalculatorTest.kt",
       "size": 9693,
       "sha256": "7e06b262b0f8106295e42a407aad67173bf197d0c3e45985bfb7b4b51ad04972"
+    },
+    {
+      "path": "sbw/src/test/kotlin/com/atsuishio/superbwarfare/entity/vehicle/base/GroundRotationRefreshTest.kt",
+      "size": 1827,
+      "sha256": "226985f17f197abb05daa5f3ee7aab435de510b365d27d49e35a08562480ca9a"
     },
     {
       "path": "sbw/src/test/kotlin/com/atsuishio/superbwarfare/entity/vehicle/base/LegacyGroundDriveReference.kt",
