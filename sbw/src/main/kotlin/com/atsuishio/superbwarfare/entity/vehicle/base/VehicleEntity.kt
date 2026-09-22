@@ -6220,15 +6220,22 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
                 vehiclePoseAbsolutePending = null
             }
 
-            // Hard provider discontinuities and legacy/flight/null-provider paths retain vanilla's
-            // immediate raw entity, old-position, and old-rotation mutation contract.
+            // A periodic absolute refresh encodes angles in 1.40625-degree steps. Stationary
+            // legacy ground vehicles already have exact SERVER_YAW/PITCH values; snapping to
+            // the byte angle here makes the hull and attached sights jump, then creep back.
+            // Moving corrections, mismatched angle buckets and other attitude owners stay native.
+            val stationaryGroundRefresh = level().isClientSide && !clientFlight &&
+                !usesProviderTimeline && (engineInfo is Track || engineInfo is Wheel) &&
+                position().distanceToSqr(target) < 1.0E-6
+            val refreshYaw = GroundRotationRefresh.angle(yaw, serverYaw, stationaryGroundRefresh)
+            val refreshPitch = GroundRotationRefresh.angle(pitch, serverPitch, stationaryGroundRefresh)
             this.xO = x
             this.yO = y
             this.zO = z
             setPos(x, y, z)
-            setRot(yaw, pitch)
-            yRotO = yaw
-            xRotO = pitch
+            setRot(refreshYaw, refreshPitch)
+            yRotO = refreshYaw
+            xRotO = refreshPitch
             invalidateChassisPresentationCache()
             return
         }

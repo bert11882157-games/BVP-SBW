@@ -1,10 +1,10 @@
 {
   "schema": 1,
   "policyVersion": 4,
-  "label": "countermeasure-fx-20260921-candidate-r1",
+  "label": "ground-yaw-jitter-20260922-candidate-r1",
   "status": "release-candidate",
-  "createdAt": "2026-09-22T00:18:30.641Z",
-  "treeSha256": "e19aad40c262271f5e6695a5f0950f50ad7bb71bafdf3545ae98a631536cb2a0",
+  "createdAt": "2026-09-22T04:48:03.804Z",
+  "treeSha256": "b0075a4147f95b0c878ac88188a13a7e69b5afc4fc87ee6ac85cfb917d941c54",
   "files": [
     {
       "path": ".editorconfig",
@@ -29627,6 +29627,11 @@
       "sha256": "8b8c31c4f1a98fadd2e295b0237119ffdddb4935cf2e46e86a34ead0cbebf5d3"
     },
     {
+      "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/base/GroundRotationRefresh.kt",
+      "size": 865,
+      "sha256": "fb379040c5dacbbad071613cf94e90c50e62b15a26dbf4b4f1c1c162b4f739c6"
+    },
+    {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/base/PhysicalBoundsIndex.kt",
       "size": 2697,
       "sha256": "d8f0ff4c90d1f9c880d505bac29541d743178929b80fc4d417e3ee1d38afa575"
@@ -29683,8 +29688,8 @@
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/base/VehicleEntity.kt",
-      "size": 318627,
-      "sha256": "eb494fdf5bbff2a318087a544017c599f112592e5f2307f5c23e979853f3ef65"
+      "size": 319280,
+      "sha256": "a11638dee64cce68f1fdc15ea2068ba9e7b632a6e41e7fe73465a398d70be9ca"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/base/VehicleEntityContacts.kt",
@@ -43572,6 +43577,11 @@
       "sha256": "7e06b262b0f8106295e42a407aad67173bf197d0c3e45985bfb7b4b51ad04972"
     },
     {
+      "path": "sbw/src/test/kotlin/com/atsuishio/superbwarfare/entity/vehicle/base/GroundRotationRefreshTest.kt",
+      "size": 1827,
+      "sha256": "226985f17f197abb05daa5f3ee7aab435de510b365d27d49e35a08562480ca9a"
+    },
+    {
       "path": "sbw/src/test/kotlin/com/atsuishio/superbwarfare/entity/vehicle/base/LegacyGroundDriveReference.kt",
       "size": 13062,
       "sha256": "1962cabab327a8830394270e9326cf521a6b1d02c69392723fcc9872062ca06f"
@@ -43699,7 +43709,7 @@
   ],
   "release": {
     "schema": 1,
-    "buildRecordSha256": "a40d0c7bb6487e4195d30bb5dec7cbbd6e74594b8b4775ffb3e02ec21ba71a6e",
+    "buildRecordSha256": "b6d8809c2f876c936a6cc506275632ccc0889984bece368e59117e00c4271ef1",
     "artifacts": [
       {
         "id": "bvp",
@@ -43712,8 +43722,8 @@
         "id": "sbw",
         "version": "0.8.9-bvp.1",
         "filename": "sbw_candidate.jar",
-        "size": 35692837,
-        "sha256": "0bea43ca44e3bf628bbbcbb40f12725fec49afc0075ed60dd20b2250aea71b44"
+        "size": 35694184,
+        "sha256": "81bf3458edfb21655940089e563195152ffa27b6233c4c99c2fd35aa0f3d6bc4"
       }
     ],
     "dependencies": [
@@ -45100,8 +45110,8 @@
         "id": "sbw-mapped-api",
         "version": "0.8.9-bvp.1-mc1.20.1-6effe43",
         "filename": "superbwarfare-mapped-api.jar",
-        "size": 8659596,
-        "sha256": "3ad6d2bc4230274bbcc993f151fa9bd4436e1a58ab12942fcdc72a522e39cf9d"
+        "size": 8660869,
+        "sha256": "fc441f04f20db6edcf7960357bb2be8f775013b636e7487cd837f6bc1f98510b"
       },
       {
         "id": "sbwmeshloader-mapped",
