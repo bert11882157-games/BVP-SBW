@@ -24,7 +24,8 @@ object AircraftStoreWeapons {
     fun available(vehicle: VehicleEntity, weapon: String): Boolean {
         val mount = mountId(weapon) ?: return false
         val store = AircraftArmamentManager.equippedStore(vehicle, mount) ?: return false
-        return (store["Category"]?.asString == "LASER_GUIDED" ||
+        return (AircraftCoordinateLauncher.isCoordinate(store["Category"]?.asString) ||
+            store["Category"]?.asString == "LASER_GUIDED" ||
             store["Category"]?.asString == "AIR_TO_AIR" && store.has("Guidance")) &&
             AircraftArmamentManager.mountRemaining(vehicle, mount) > 0
     }
@@ -34,12 +35,16 @@ object AircraftStoreWeapons {
         if (!available(vehicle, weapon)) return null
         val store = AircraftArmamentManager.equippedStore(vehicle, mount) ?: return null
         val capacity = AircraftArmamentManager.mountCapacity(vehicle, mount)
-        val signature = store.toString() + "|" + capacity
+        val definition = AircraftArmamentManager.definition(vehicle) ?: return null
+        val mountDefinition = AircraftArmamentRegistry.mounts(definition)
+            .firstOrNull { it["Id"].asString == mount } ?: return null
+        val name = AircraftArmamentRegistry.storeWeaponName(mountDefinition, store)
+        val signature = store.toString() + "|" + capacity + "|" + name
         val entries = cache.getOrPut(vehicle) { mutableMapOf() }
         var cached = entries[weapon]
         if (cached?.signature != signature) {
             val profile = DefaultGunData().apply {
-                name = store["Name"].asString; magazine = capacity; rpm = 120
+                this.name = name; magazine = capacity; rpm = 120
                 projectileAmount = 1; defaultFireMode = "Semi"
             }
             cached = Cached(signature, GunData.from(ItemStack(ModItems.VEHICLE_GUN.get())) { profile })

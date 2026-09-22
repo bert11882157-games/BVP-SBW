@@ -1,0 +1,62 @@
+{
+  "Schema": 1,
+  "Name": "Tu-95MS (KH-55 test frame)",
+  "BuiltInWeapons": ["tail_gun_1", "tail_gun_2"],
+  "SuspendedWeapons": [],
+  "Pairs": [],
+  "Singles": [
+    {
+      "Id": "belly_1",
+      "Name": "Belly 1",
+      "Position": [-0.65, 2.05, 8],
+      "AllowedStores": ["berts_vehicle_pack:kh55"]
+    },
+    {
+      "Id": "belly_2",
+      "Name": "Belly 2",
+      "Position": [0.65, 2.05, 8],
+      "AllowedStores": ["berts_vehicle_pack:kh55"]
+    },
+    {
+      "Id": "belly_3",
+      "Name": "Belly 3",
+      "Position": [-0.65, 2.05, 3.5],
+      "AllowedStores": ["berts_vehicle_pack:kh55"]
+    },
+    {
+      "Id": "belly_4",
+      "Name": "Belly 4",
+      "Position": [0.65, 2.05, 3.5],
+      "AllowedStores": ["berts_vehicle_pack:kh55"]
+    },
+    {
+      "Id": "belly_5",
+      "Name": "Belly 5",
+      "Position": [-0.65, 2.05, -1],
+      "AllowedStores": ["berts_vehicle_pack:kh55"]
+    },
+    {
+      "Id": "belly_6",
+      "Name": "Belly 6",
+      "Position": [0.65, 2.05, -1],
+      "AllowedStores": ["berts_vehicle_pack:kh55"]
+    },
+    {
+      "Id": "belly_7",
+      "Name": "Belly 7",
+      "Position": [-0.65, 2.05, -5.5],
+      "AllowedStores": ["berts_vehicle_pack:kh55"]
+    },
+    {
+      "Id": "belly_8",
+      "Name": "Belly 8",
+      "Position": [0.65, 2.05, -5.5],
+      "AllowedStores": ["berts_vehicle_pack:kh55"]
+    }
+  ],
+  "StoreGroups": {},
+  "Radar": {
+    "Enabled": true,
+    "Range": 500
+  }
+}

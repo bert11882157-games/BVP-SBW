@@ -16,7 +16,8 @@ object AircraftArmamentRegistry {
     var aircraft: Map<ResourceLocation, JsonObject> = emptyMap(); private set
     var stores: Map<ResourceLocation, JsonObject> = emptyMap(); private set
     var revision: Long = 0; private set
-    val categories = setOf("LASER_GUIDED", "GUN_POD", "BOMB", "AIR_TO_AIR", "ROCKET_POD", "VISUAL_ONLY")
+    val categories = setOf("LASER_GUIDED", "GUN_POD", "BOMB", "AIR_TO_AIR", "ROCKET_POD", "VISUAL_ONLY",
+        "CRUISE_MISSILE", "COORDINATE_MISSILE")
 
     internal fun installDiagnosticFixture(id: ResourceLocation, definition: JsonObject,
         fixtureStores: Map<ResourceLocation, JsonObject>): () -> Unit {
@@ -53,6 +54,12 @@ object AircraftArmamentRegistry {
         return perPosition * mountPositions(mount).size
     }
 
+    /** Coordinate assignments belong to a mount, so identical missiles must expose its label. */
+    fun storeWeaponName(mount: JsonObject, store: JsonObject): String =
+        if (AircraftCoordinateLauncher.isCoordinate(store["Category"]?.asString))
+            "${mount["Name"].asString}: ${store["Name"].asString}"
+        else store["Name"].asString
+
     fun launchPosition(mount: JsonObject, fired: Int): net.minecraft.world.phys.Vec3 {
         require(fired >= 0)
         val positions = mountPositions(mount)
@@ -64,6 +71,9 @@ object AircraftArmamentRegistry {
         require(json["Name"]?.asString?.length in 1..64)
         if (store) {
             require(json["Category"]?.asString in categories)
+            if (AircraftCoordinateLauncher.isCoordinate(json["Category"]?.asString)) {
+                requireNotNull(AircraftCoordinateLauncher.profile(json)) { "Coordinate missiles require CoordinateProfile." }
+            } else require(!json.has("CoordinateProfile")) { "CoordinateProfile requires a coordinate missile category." }
             for (key in listOf("Item", "Model", "Texture", "ProjectileProfile", "LaunchGunProfile", "GunProfile")) {
                 json[key]?.let { require(it.asString.length <= 128 && ResourceLocation.tryParse(it.asString) != null) }
             }
@@ -74,6 +84,10 @@ object AircraftArmamentRegistry {
             json["Capacity"]?.let { require(it.asInt in 1..10000) }
             json["Scale"]?.let { require(it.asDouble.isFinite() && it.asDouble in 0.001..32.0) }
             json["LaunchOffset"]?.let { require(vector(it)?.length()?.let { length -> length <= 8.0 } == true) }
+            json["LaunchDirection"]?.let {
+                require(AircraftCoordinateLauncher.isCoordinate(json["Category"]?.asString))
+                require(vector(it)?.length()?.let { length -> length in 0.000001..128.0 } == true)
+            }
             return
         }
         fun names(key: String) {

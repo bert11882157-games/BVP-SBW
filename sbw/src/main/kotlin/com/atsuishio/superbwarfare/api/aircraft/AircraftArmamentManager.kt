@@ -89,6 +89,8 @@ object AircraftArmamentManager {
         return if (vehicle.level().isClientSide) AircraftArmamentClient.getState(vehicle.uuid)?.getAsJsonObject("Stores")?.getAsJsonObject(id)
             else AircraftArmamentRegistry.stores[ResourceLocation.tryParse(id)]
     }
+    internal fun equippedStoreId(vehicle: VehicleEntity, mount: String): String? =
+        selection(vehicle)[mount]?.asString
     internal fun mountCapacity(vehicle: VehicleEntity, mount: String): Int {
         val pair = definition(vehicle)?.let(::mounts)?.firstOrNull { it["Id"].asString == mount } ?: return 0
         val store = equippedStore(vehicle, mount) ?: return 0
@@ -126,10 +128,12 @@ object AircraftArmamentManager {
         val key = pair["Id"].asString
         val store = equippedStore(vehicle, key) ?: return null
         val category = when (store["Category"]?.asString) {
+            "CRUISE_MISSILE", "COORDINATE_MISSILE" -> "MSL"
             "ROCKET_POD" -> "RKT"; "GUN_POD" -> "CNN"; "LASER_GUIDED" -> "AGM"; "AIR_TO_AIR" -> "AAM"; else -> return null
         }
         val ammo = if (category in setOf("RKT", "CNN")) vehicle.getGunData(weaponId)?.ammo?.get() ?: 0 else mountRemaining(vehicle, key)
-        return AircraftWeaponPresentation(category, store["Name"].asString, ammo, mountCapacity(vehicle, key))
+        return AircraftWeaponPresentation(category, AircraftArmamentRegistry.storeWeaponName(pair, store),
+            ammo, mountCapacity(vehicle, key))
     }
     @JvmStatic fun onDesignationAccepted(vehicle: VehicleEntity) {
         if (vehicle.level().isClientSide) return
@@ -190,7 +194,7 @@ object AircraftArmamentManager {
                 val actualProjectile = vehicle.getGunData(weaponName)
                     ?.get(com.atsuishio.superbwarfare.data.gun.GunProp.PROJECTILE)?.resolvedProfileId()
                 compatible && store != null && store["Category"]?.asString !in
-                    setOf("LASER_GUIDED", "AIR_TO_AIR", "VISUAL_ONLY") &&
+                    setOf("LASER_GUIDED", "AIR_TO_AIR", "VISUAL_ONLY", "CRUISE_MISSILE", "COORDINATE_MISSILE") &&
                     (vehicle.level().isClientSide || gunProfile == null || actualProjectile != null && actualProjectile in expectedProjectiles)
             } == true }
     }
@@ -381,9 +385,10 @@ object AircraftArmamentManager {
         require(id != null && allowed(pair, id)) { "No store equipped." }
         val store = AircraftArmamentRegistry.stores[ResourceLocation(id)]!!
         val airToAir = store["Category"].asString == "AIR_TO_AIR" && store.has("Guidance")
+        val coordinate = AircraftCoordinateLauncher.isCoordinate(store["Category"].asString)
         require(store["Category"].asString != "VISUAL_ONLY" && (store["Category"].asString != "AIR_TO_AIR" || airToAir)) { "This store is visual only in this version." }
         val weapon = nativeWeapons(pair, id).singleOrNull()
-        if (store["Category"].asString != "LASER_GUIDED" && !airToAir) {
+        if (store["Category"].asString != "LASER_GUIDED" && !airToAir && !coordinate) {
             require(weapon != null) { "This store has no firing implementation yet." }
             require(vehicle.vehicleShootResult(player, weapon).isAccepted()) { "Weapon cannot fire now." }
             return
@@ -398,17 +403,22 @@ object AircraftArmamentManager {
         }
         val state = equipment(vehicle); val key = pair["Id"].asString
         val fired = state.getCompound("Fired"); val used = fired.getInt(key)
-        require(used >= 0 && used < AircraftArmamentRegistry.mountCapacity(pair, store["Capacity"]?.asInt ?: 1)) {
-            "Hardpoint is empty; refit on the ground."
-        }
         val times = state.getCompound("LastFire"); val now = player.serverLevel().gameTime
-        require(!times.contains(key) || now - times.getLong(key) >= 10) { "Launcher is cycling." }
-        val mount = AircraftArmamentRegistry.launchPosition(pair, used)
-        if (airToAir) require(AircraftMissileLauncher.launch(vehicle, player, AircraftStoreWeapons.PREFIX + key, mount, store)) { "Missile lock or launch conditions changed." }
-        else require(AircraftLaserLauncher.launch(vehicle, player, mount, store)) { "Invalid laser-munition profile." }
-        fired.putInt(key, used + 1); state.put("Fired", fired); times.putLong(key, now); state.put("LastFire", times)
-        state.putLong("Revision", state.getLong("Revision") + 1)
-        if (!airToAir) selectGuns(vehicle)
+        AircraftStoreLaunchTransaction.execute(used,
+            AircraftArmamentRegistry.mountCapacity(pair, store["Capacity"]?.asInt ?: 1),
+            if (times.contains(key)) times.getLong(key) else null, now, launch = {
+                val mount = AircraftArmamentRegistry.launchPosition(pair, used)
+                if (coordinate) require(AircraftCoordinateLauncher.launch(vehicle, player, key, mount, store)) {
+                    "Coordinate missile cannot launch: assign a valid target to this weapon in the vehicle terminal and check missile range and FFA support."
+                }
+                else if (airToAir) require(AircraftMissileLauncher.launch(vehicle, player, AircraftStoreWeapons.PREFIX + key, mount, store)) { "Missile lock or launch conditions changed." }
+                else require(AircraftLaserLauncher.launch(vehicle, player, mount, store)) { "Invalid laser-munition profile." }
+            }, commit = {
+                fired.putInt(key, used + 1); state.put("Fired", fired)
+                times.putLong(key, now); state.put("LastFire", times)
+                state.putLong("Revision", state.getLong("Revision") + 1)
+            })
+        if (!airToAir && !coordinate) selectGuns(vehicle)
     }
 
     private fun designateAsync(player: ServerPlayer, vehicle: VehicleEntity, lease: Lease, body: JsonObject) {
