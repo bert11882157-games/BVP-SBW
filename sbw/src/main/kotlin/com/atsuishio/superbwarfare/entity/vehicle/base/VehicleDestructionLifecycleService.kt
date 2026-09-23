@@ -40,20 +40,14 @@ internal class VehicleDestructionLifecycleService(
         }
 
         if (!vehicle.isWreck) return
-        if (vehicle.aircraftWreckImpactTime >= 0 && !vehicle.level().isClientSide &&
-            vehicle.level().gameTime - vehicle.aircraftWreckImpactTime >=
-            com.atsuishio.superbwarfare.api.vehicle.flight.AircraftFuselageWreck.LIFETIME_TICKS) {
-            vehicle.discard()
-            return
-        }
         if (aircraft && !vehicle.level().isClientSide && vehicle.aircraftWreckStart < 0L)
             vehicle.aircraftWreckStart = vehicle.level().gameTime
-        if (aircraft) com.atsuishio.superbwarfare.api.vehicle.flight.AircraftWreckBreakup.update(vehicle)
 
         val aircraft = vehicle.vehicleType == VehicleType.AIRPLANE ||
             vehicle.vehicleType == VehicleType.HELICOPTER
-        val destructiveFixedWingContact = vehicle.hasRecentFixedWingWorldContact() && vehicle.crash
-        if (aircraft && (vehicle.onGround() || vehicle.isInFluidType || destructiveFixedWingContact || vehicle.aircraftWreckImpactTime >= 0)
+        // An airborne wreck hitting a wall must detonate too, even without a ground flag.
+        val wreckTerrainContact = vehicle.hasRecentFixedWingWorldContact()
+        if (aircraft && (vehicle.onGround() || vehicle.isInFluidType || wreckTerrainContact)
             && !vehicle.sympatheticDetonated) {
             vehicle.sympatheticDetonated = true
             val destroyInfo = vehicle.computed().destroyInfo

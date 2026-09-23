@@ -75,33 +75,29 @@ class AircraftLoadoutScreen(private var state: AircraftArmamentSnapshot) : Scree
             val options = listOf<String?>(null) + mount.allowed.filter { state.stores.containsKey(it) }
             val current = draft[mount.id]
             val store = current?.let { state.stores[it] }
-            val count = quantities[mount.id] ?: 1
-            val name = store?.let { "${it.name} (${(it.massKg * (it.capacity ?: 1) * mount.positions.size * count).toInt()} kg)" } ?: "Empty"
-            val maximum = store?.let { state.maxCopies(mount, it) } ?: 1
-            val quantity = button("×${count * (store?.capacity ?: 1)}", left + 12, top + 56 + index * 26, 42, true) {
-                val step = if (hasShiftDown()) -1 else 1
-                val next = (1..maximum).asSequence().map { Math.floorMod(count - 1 + step * it, maximum) + 1 }
-                    .firstOrNull { candidate -> state.payloadKg(draft, quantities + (mount.id to candidate)) <= state.definition.maxPayloadKg + 1e-6 }
-                if (next != null) quantities[mount.id] = next
-                rebuild()
-            }
-            quantity.tooltip = Tooltip.create(Component.literal(
-                "${if (mount.internal) "Internal stores" else "Weapons per pylon"} · ${mount.maxPylonMassKg.toInt()} kg limit · click to increase, Shift-click to decrease"))
-            if (store == null || maximum == 1) unavailableButtons += quantity
+            val count = quantities[mount.id] ?: store?.fixedRackCount ?: 1
+            val amount = count * (store?.capacity ?: 1)
+            val name = store?.let { "${it.name}${if (amount > 1) " ×$amount" else ""} (${(it.massKg * amount * mount.positions.size).toInt()} kg)" } ?: "Empty"
             val label = if (mount.allowed.isEmpty()) "${mount.name} · unavailable" else
                 "${mount.name} · $name${if (mount.positions.size == 2) " · both wings" else ""}"
-            val choice = button(label, left + 58, top + 56 + index * 26, columnWidth - 46, true) {
+            val choice = button(label, left + 12, top + 56 + index * 26, columnWidth, true) {
                 val start = options.indexOf(current).coerceAtLeast(0)
                 val next = (1..options.size).asSequence().map { options[(start + it) % options.size] }
                     .firstOrNull { candidate ->
                         val proposed = LinkedHashMap(draft)
                         if (candidate == null) proposed.remove(mount.id) else proposed[mount.id] = candidate
                         val proposedStore = state.stores[candidate]
-                        (proposedStore == null || proposedStore.massKg * (proposedStore.capacity ?: 1) <= mount.maxPylonMassKg + 1e-6) &&
+                        (proposedStore == null ||
+                            proposedStore.fixedRackCount?.let { it <= state.maxCopies(mount, proposedStore) } != false &&
+                            proposedStore.massKg * (proposedStore.capacity ?: 1) *
+                            (proposedStore.fixedRackCount ?: 1) <= mount.maxPylonMassKg + 1e-6) &&
                             state.payloadKg(proposed, quantities - mount.id) <= state.definition.maxPayloadKg + 1.0e-6
                     }
                 if (next == null) draft.remove(mount.id) else draft[mount.id] = next
                 quantities.remove(mount.id)
+                if (next != null && next == state.selections[mount.id]) {
+                    state.counts[mount.id]?.let { quantities[mount.id] = it }
+                }
                 rebuild()
             }
             if (mount.allowed.isEmpty()) unavailableButtons += choice
@@ -149,7 +145,6 @@ class AircraftLoadoutScreen(private var state: AircraftArmamentSnapshot) : Scree
             if (name != null) addProperty("Name", name)
             if (operation == "APPLY" || operation == "SAVE_PRESET") {
                 add("Selections", JsonObject().apply { draft.forEach { (pair, store) -> addProperty(pair, store) } })
-                add("Counts", JsonObject().apply { draft.keys.forEach { addProperty(it, quantities[it] ?: 1) } })
             }
         }
         pending = AircraftArmamentClient.request(operation, payload)
@@ -183,7 +178,7 @@ class AircraftLoadoutScreen(private var state: AircraftArmamentSnapshot) : Scree
             Minecraft.getInstance().player?.vehicle?.onGround() != true -> "GROUND ONLY · Land before changing equipment"
             state.message.isNotBlank() -> state.message
             draft != state.selections || quantities != state.counts -> "UNAPPLIED DRAFT · Apply to equip this loadout"
-            else -> "Click a pylon to choose equipment; × sets rack count; Apply to fit"
+            else -> "Click a pylon to choose equipment; Apply to fit"
         }
         graphics.drawString(font, font.plainSubstrByWidth(status, panelWidth - 24), left + 12, top + 28,
             0xFFE2B66D.toInt(), false)

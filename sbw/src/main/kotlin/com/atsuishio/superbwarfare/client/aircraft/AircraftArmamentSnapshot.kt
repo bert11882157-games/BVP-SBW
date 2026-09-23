@@ -16,6 +16,7 @@ data class AircraftStoreView(
     val scale: Double, val capacity: Int?, val guidedAirToAir: Boolean = false,
     val massKg: Double = 0.0, val maxPerPylon: Int = 1,
     val rackSpacing: Vec3 = Vec3(0.6, 0.4, 0.0),
+    val fixedRackCount: Int? = null,
 ) {
     val visualOnly: Boolean get() = (category in setOf("AIR_TO_AIR", "AIR_TO_GROUND", "ANTI_RADIATION") && !guidedAirToAir) || category == "VISUAL_ONLY"
     val categoryLabel: String get() = when (category) {
@@ -94,7 +95,8 @@ data class AircraftArmamentSnapshot(
 ) {
     fun payloadKg(choices: Map<String, String> = selections, quantities: Map<String, Int> = counts): Double = definition.mounts.sumOf { mount ->
         val store = stores[choices[mount.id]] ?: return@sumOf 0.0
-        store.massKg * (store.capacity ?: 1) * mount.positions.size * (quantities[mount.id] ?: 1)
+        store.massKg * (store.capacity ?: 1) * mount.positions.size *
+            (quantities[mount.id] ?: store.fixedRackCount ?: 1)
     }
     fun maxCopies(mount: AircraftMountView, store: AircraftStoreView): Int = AircraftPylonRacks.maxCopies(
         definition.maxWeaponsPerPylon, mount.maxWeaponsPerPylon, store.maxPerPylon,
@@ -190,7 +192,8 @@ data class AircraftArmamentSnapshot(
                     store.get("Capacity")?.let { integer(store, "Capacity", 1, 100000) },
                     category in setOf("AIR_TO_AIR", "AIR_TO_GROUND", "ANTI_RADIATION") && store.has("Guidance"),
                     number(store, "MassKg", 0.0, 0.0, 50000.0), optionalInteger(store, "MaxPerPylon", 1),
-                    store["RackSpacing"]?.let { vector(it, 8.0) } ?: Vec3(0.6, 0.4, 0.0))
+                    store["RackSpacing"]?.let { vector(it, 8.0) } ?: Vec3(0.6, 0.4, 0.0),
+                    store["FixedRackCount"]?.let { integer(store, "FixedRackCount", 2, AircraftPylonRacks.MAX_COPIES) })
             }
             val selections = selections(json.getAsJsonObject("Selections"), definition)
             val rawCounts = json.getAsJsonObject("Counts") ?: JsonObject()

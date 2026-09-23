@@ -18,14 +18,13 @@ class AircraftWreckFlightStrategy : VehicleFlightStrategy() {
         }
         val fixedWing = vehicle.resolveVehicleFlightStrategy() as? FixedWingFlightStrategy
         val gravity = gravityPerTick(fixedWing?.handling?.gravityMps2, input.gravityPerTick)
-        AircraftFuselageWreck.step(vehicle, input, gravity)?.let { return it }
         return step(input.copy(gravityPerTick = gravity), ticks++, if (vehicle.uuid.leastSignificantBits and 1L == 0L) 1 else -1,
-            vehicle.sympatheticDetonated, initialPitch, initialRoll, vehicle.uuid.leastSignificantBits,
-            AircraftWreckBreakup.mask(vehicle))
+            vehicle.sympatheticDetonated, initialPitch, initialRoll, vehicle.uuid.leastSignificantBits)
     }
 
     companion object {
-        internal const val MOMENTUM_RETENTION = 0.9985
+        // About 90.5% of horizontal momentum remains after ten seconds at 20 TPS.
+        internal const val MOMENTUM_RETENTION = 0.9995
         internal fun gravityPerTick(fixedWingGravityMps2: Double?, legacyPerTick: Double): Double =
             (fixedWingGravityMps2?.div(20.0 * 20.0) ?: legacyPerTick).coerceAtLeast(0.0)
         private fun smooth(value: Double): Double = value.coerceIn(0.0, 1.0).let { it * it * (3 - 2 * it) }
@@ -36,19 +35,15 @@ class AircraftWreckFlightStrategy : VehicleFlightStrategy() {
 
         internal fun step(input: VehicleFlightInputContext, ticks: Int, direction: Int, impacted: Boolean,
                           initialPitch: Double = input.bodyPitchDegrees, initialRoll: Double = input.bodyRollDegrees,
-                          seed: Long = 0L, detachedWings: Int = 0): VehicleFlightTickResult {
-            // A living, sheared aircraft must still slide/roll into its fuselage contact.
-            // A wheel touching first is not an impact event and cannot erase its inertia.
+                          seed: Long = 0L): VehicleFlightTickResult {
             val grounded = impacted || input.inFluid || (input.onGround && input.wreck)
             // Decay world-space momentum continuously; spinning does not steer the wreck in circles.
             val motion = if (grounded) Vec3.ZERO else input.previousMotion.scale(MOMENTUM_RETENTION)
                 .add(0.0, -input.gravityPerTick.coerceAtLeast(0.0), 0.0)
             // Coast for 1.5 seconds, lose control progressively, then enter the dive over 4.25 seconds.
             // UUID phases vary each wreck without client randomness or abrupt per-tick impulses.
-            val instability = smooth((ticks - if (detachedWings != 0) 3.0 else 30.0) / 45.0)
-            val dive = if (detachedWings == 3) smooth((ticks - 10.0) / 65.0)
-                else if (detachedWings != 0) smooth((ticks - 30.0) / 85.0)
-                else smooth((ticks - 95.0) / 85.0)
+            val instability = smooth((ticks - 30.0) / 45.0)
+            val dive = smooth((ticks - 95.0) / 85.0)
             val phase = (seed and 65535L).toDouble() / 65536.0 * Math.PI * 2
             val secondPhase = ((seed ushr 16) and 65535L).toDouble() / 65536.0 * Math.PI * 2
             val handedness = direction.coerceIn(-1, 1)
@@ -62,15 +57,7 @@ class AircraftWreckFlightStrategy : VehicleFlightStrategy() {
             val wanderingRoll = initialRoll + sin(ticks * .039 + phase) * 60.0 +
                 sin(ticks * .071 + secondPhase) * 38.0
             val flatRock = Mth.wrapDegrees(wanderingRoll - input.bodyRollDegrees).coerceIn(-3.0, 3.0) * instability
-            val wingRoll = when (detachedWings) {
-                // Hull negative X is left; positive logical Z rotation lowers that side.
-                AircraftWreckBreakup.LEFT -> 1.0
-                AircraftWreckBreakup.RIGHT -> -1.0
-                else -> 0.0
-            }
-            val rollStep = if (wingRoll != 0.0) wingRoll *
-                (1.0 + 5.0 * smooth(ticks / 25.0)) + sin(ticks * .17 + phase) * .4
-                else flatRock * (1 - dive) + handedness * 2.5 * dive
+            val rollStep = flatRock * (1 - dive) + handedness * 2.5 * dive
             val roll = if (grounded) input.bodyRollDegrees else Mth.wrapDegrees(input.bodyRollDegrees + rollStep)
             return VehicleFlightTickResult(motion, 0.0, 0.0, 0.0, 0.0,
                 Mth.wrapDegrees(input.bodyYawDegrees + if (grounded) 0.0 else spin).toFloat(),

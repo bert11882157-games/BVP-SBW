@@ -247,13 +247,19 @@ public final class BvpLeanImpactEffects {
         float diameter = BvpProjectileEffectDefinition.isTypedAgs30Profile(ProjectileProfiles.resolve(source))
                 ? 1.3F : BvpCaliberExplosion.diameter(combat.getCaliberMm());
         if (diameter <= 0F) return true;
-        if (diameter > 2F && com.atsuishio.superbwarfare.api.effect.MissilePresentation.effect(
-                level, position, diameter * .5F, false)) return true;
+        spawnCaliberVisual(level, position, diameter);
+        return true;
+    }
+
+    /** Shared compact fireball at any caliber, including HE-T; no gameplay detonation. */
+    public static void spawnCaliberVisual(ServerLevel level, Vec3 position, float diameter) {
+        if (!Float.isFinite(diameter) || diameter <= 0) return;
+        if (com.atsuishio.superbwarfare.api.effect.MissilePresentation.effect(
+                level, position, diameter * .5F, false)) return;
         ParticleTool.sendParticle(level,
                 new com.yourname.berts_vehicle_pack.particle.SizedExplosionParticleOptions(diameter),
                 position.f_82479_, position.f_82480_, position.f_82481_, 1, 0, 0, 0, 0, true);
-        // Tiny rounds do not create a full-size smoke cloud or a terrain light source.
-        return true;
+        // Fallback when FFA presentation is unavailable. Damage remains with the projectile.
     }
 
     private static boolean isWaterImpact(Level level, Vec3 position) {

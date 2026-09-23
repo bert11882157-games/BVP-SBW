@@ -20,6 +20,9 @@ import kotlin.math.min
 
 open class AerialBombEntity(type: EntityType<out AerialBombEntity>, level: Level) : DestroyableProjectile(type, level) {
     override fun farProjectileMaximumLifetimeTicks(): Int = 2400
+    override fun farProjectileExplosionRadius(): Double =
+        if (com.atsuishio.superbwarfare.api.aircraft.AircraftClusterBomb.configured(this)) 0.0
+        else super.farProjectileExplosionRadius()
 
     fun hasGuidedFlight(): Boolean = persistentData.getString("BvpBombMode") in setOf("LASER", "GPS")
 
@@ -41,6 +44,7 @@ open class AerialBombEntity(type: EntityType<out AerialBombEntity>, level: Level
     override fun tick() {
         super.tick()
         if (isRemoved || level().isClientSide) return
+        if (com.atsuishio.superbwarfare.api.aircraft.AircraftClusterBomb.tick(this)) return
         val data = persistentData
         if (!data.contains("BvpBombMode")) return
         var velocity = deltaMovement
@@ -101,6 +105,7 @@ open class AerialBombEntity(type: EntityType<out AerialBombEntity>, level: Level
         val entity = result.entity
         val owner = this.owner
         if (entity == owner || (owner != null && entity == owner.vehicle) || entity is AerialBombEntity) return
+        if (com.atsuishio.superbwarfare.api.aircraft.AircraftClusterBomb.release(this, result.location)) return
         AircraftMunitionDebug.log(this, "bomb entity impact")
         super.onHitEntity(result)
         if (this.level() is ServerLevel) {
@@ -125,6 +130,7 @@ open class AerialBombEntity(type: EntityType<out AerialBombEntity>, level: Level
     }
 
     override fun onHitBlock(blockHitResult: BlockHitResult) {
+        if (com.atsuishio.superbwarfare.api.aircraft.AircraftClusterBomb.release(this, blockHitResult.location)) return
         AircraftMunitionDebug.log(this, "bomb block impact")
         super.onHitBlock(blockHitResult)
         if (this.level() is ServerLevel) {
@@ -146,5 +152,9 @@ open class AerialBombEntity(type: EntityType<out AerialBombEntity>, level: Level
             causeExplode(blockHitResult.getLocation())
             this.discard()
         }
+    }
+
+    override fun causeExplode(vec3: Vec3) {
+        if (!com.atsuishio.superbwarfare.api.aircraft.AircraftClusterBomb.release(this, vec3)) super.causeExplode(vec3)
     }
 }

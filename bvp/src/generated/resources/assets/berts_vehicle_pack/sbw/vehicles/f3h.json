@@ -85,14 +85,14 @@
         "Bone": "stabilator_left",
         "Parent": "hull",
         "Pivot": [
-          -36.8,
-          48.8,
-          124
+          -18.4,
+          50.4,
+          103.6
         ],
         "Axis": [
+          -0.6697687702776067,
           0,
-          1,
-          0
+          0.7425697235686509
         ],
         "ControlWeights": {
           "ElevatorUp": 1,
@@ -105,14 +105,14 @@
         "Bone": "stabilator_right",
         "Parent": "hull",
         "Pivot": [
-          0,
-          48.8,
-          83.2
+          18.4,
+          50.4,
+          103.6
         ],
         "Axis": [
+          -0.6697687702776067,
           0,
-          1,
-          0
+          -0.7425697235686509
         ],
         "ControlWeights": {
           "ElevatorUp": 1,

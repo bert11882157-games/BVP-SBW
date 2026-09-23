@@ -1,0 +1,27 @@
+{
+  "Schema": 1,
+  "Name": "FAB-100 · two-bomb rack",
+  "Category": "BOMB",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/fab_100.geo.json",
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/fab_100.png",
+  "Scale": 1,
+  "Capacity": 1,
+  "MassKg": 100,
+  "Bomb": {
+    "Mode": "DUMB",
+    "Gravity": 0.08,
+    "DragMultiplier": 1,
+    "TurnDegreesPerTick": 0,
+    "BlastRadius": 14.736125994561547,
+    "BlastDamage": 200
+  },
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_bombs/fab_100",
+  "AmmoItem": "superbwarfare:extra_small_freefall_bomb",
+  "MaxPerPylon": 2,
+  "FixedRackCount": 2,
+  "RackSpacing": [
+    0.7,
+    0.45,
+    0.45
+  ]
+}

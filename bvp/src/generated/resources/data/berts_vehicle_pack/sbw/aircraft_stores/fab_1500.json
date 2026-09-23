@@ -1,0 +1,21 @@
+{
+  "Schema": 1,
+  "Name": "FAB-1500 · 1500 kg HE",
+  "Category": "BOMB",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/fab_1500.geo.json",
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/fab_1500.png",
+  "Scale": 1,
+  "Capacity": 1,
+  "MassKg": 1500,
+  "Bomb": {
+    "Mode": "DUMB",
+    "Gravity": 0.08,
+    "DragMultiplier": 1,
+    "TurnDegreesPerTick": 0,
+    "BlastRadius": 36,
+    "BlastDamage": 1200
+  },
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_bombs/fab_1500",
+  "AmmoItem": "superbwarfare:large_freefall_bomb",
+  "MaxPerPylon": 1
+}

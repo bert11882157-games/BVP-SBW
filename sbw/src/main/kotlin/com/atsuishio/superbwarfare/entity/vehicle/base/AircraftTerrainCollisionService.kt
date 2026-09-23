@@ -22,7 +22,6 @@ internal class AircraftTerrainCollisionService(private val vehicle: VehicleEntit
 
     fun move(requested: Vec3) {
         val snapshot = vehicle.getAircraftCollisionSnapshot(1F) ?: return
-        val incoming = vehicle.deltaMovement
         val gearDown = snapshot.parts.any { it.role == AircraftCollisionRole.LANDING_GEAR && it.active }
         val sources = wheelSupport.prepare(snapshot, requested)
         var cells = 0
@@ -46,33 +45,6 @@ internal class AircraftTerrainCollisionService(private val vehicle: VehicleEntit
         val gearContact = motion.gearContact
         val complete = motion.complete
         val normalSpeedSquared = motion.normalSpeedSquared
-        // Only a confirmed wing-only strike is survivable. Re-sweep without the sheared
-        // parts so the now-missing wing cannot stop the fuselage or consume its momentum.
-        if (bodyContact && complete && !vehicle.isWreck) {
-            val core = snapshot.parts.filter { it.active && it.wingSide == 0 &&
-                it.role != AircraftCollisionRole.LANDING_GEAR }.map { it.toTerrainInfo() }
-            val coreHit = probe.sample(requested, Vec3.ZERO, terrainBoxes = core)
-            if (coreHit.complete && coreHit.contact == null && !coreHit.bodyOverlap) {
-                var sheared = 0
-                for (side in 1..2) {
-                    val wing = snapshot.parts.filter { it.active && it.wingSide == side }.map { it.toTerrainInfo() }
-                    if (wing.isEmpty()) continue
-                    val hit = probe.sample(requested, Vec3.ZERO, terrainBoxes = wing)
-                    if (hit.complete && (hit.contact != null || hit.bodyOverlap)) sheared = sheared or side
-                }
-                if (sheared != 0) {
-                    val breakup = com.atsuishio.superbwarfare.api.vehicle.flight.AircraftWreckBreakup
-                    val before = breakup.mask(vehicle)
-                    breakup.detach(vehicle, sheared, incoming)
-                    if (breakup.mask(vehicle) != before) {
-                        EliteDiagnostics.record(vehicle, "aircraft_terrain_contact", "WING_SHEAR",
-                            "sides", sheared, "health", vehicle.health, "incoming_speed", incoming.length())
-                        move(requested)
-                        return
-                    }
-                }
-            }
-        }
         if (bodyContact || gearContact) lastContactTick = vehicle.tickCount
         lastGearSupportTick = if (complete && motion.gearGroundContact) vehicle.tickCount else null
         if (lastGearSupportTick == null) gearTravelDirection = Vec3.ZERO
@@ -92,10 +64,7 @@ internal class AircraftTerrainCollisionService(private val vehicle: VehicleEntit
         var appliedDamage = 0F
         var destructive = false
         if ((bodyContact || gearContact) && !vehicle.isWreck) {
-            val damage = com.atsuishio.superbwarfare.api.vehicle.flight.FixedWingImpactModel.afterWingLoss(
-                com.atsuishio.superbwarfare.api.vehicle.flight.AircraftWreckBreakup.mask(vehicle),
-                complete, bodyContact, motion.gearImpactSpeedBlocksPerTick,
-                incoming.lengthSqr() * 400.0, motion.damage)
+            val damage = motion.damage
             destructive = damage.destructive
             if (damage.healthFraction > 0.0 && (destructive || vehicle.collisionCoolDown == 0)) {
                 val source = ModDamageTypes.causeVehicleStrikeDamage(vehicle.level().registryAccess(),
@@ -105,13 +74,9 @@ internal class AircraftTerrainCollisionService(private val vehicle: VehicleEntit
                     modulePolicy = ResolvedVehicleModulePolicy.SKIP_NATIVE, lethal = destructive))
                 if (result.accepted) {
                     appliedDamage = result.appliedDamage; vehicle.collisionCoolDown = 4
-                    if (vehicle.health <= 0F) com.atsuishio.superbwarfare.api.vehicle.flight.AircraftWreckBreakup
-                        .detach(vehicle, 3, incoming)
                 }
             }
         }
-        if (complete && (bodyContact || motion.gearGroundContact))
-            com.atsuishio.superbwarfare.api.vehicle.flight.AircraftFuselageWreck.contact(vehicle, incoming, motion.below)
         if (EliteDiagnostics.isEnabled(vehicle.level()) &&
             (bodyContact || gearContact || !complete || vehicle.tickCount % 20 == 0)) {
             EliteDiagnostics.record(vehicle, "aircraft_terrain_contact", "MOVE",

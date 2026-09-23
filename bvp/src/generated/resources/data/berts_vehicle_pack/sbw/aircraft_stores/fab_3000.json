@@ -1,0 +1,21 @@
+{
+  "Schema": 1,
+  "Name": "FAB-3000 · 3000 kg HE",
+  "Category": "BOMB",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/fab_3000.geo.json",
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/fab_3000.png",
+  "Scale": 1,
+  "Capacity": 1,
+  "MassKg": 3000,
+  "Bomb": {
+    "Mode": "DUMB",
+    "Gravity": 0.08,
+    "DragMultiplier": 1.2,
+    "TurnDegreesPerTick": 0,
+    "BlastRadius": 42,
+    "BlastDamage": 1800
+  },
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_bombs/fab_3000",
+  "AmmoItem": "superbwarfare:huge_freefall_bomb",
+  "MaxPerPylon": 1
+}

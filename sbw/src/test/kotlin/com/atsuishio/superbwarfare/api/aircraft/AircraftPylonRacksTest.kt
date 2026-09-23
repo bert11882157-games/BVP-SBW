@@ -6,6 +6,23 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
 class AircraftPylonRacksTest {
+    @Test fun loadoutEditsKeepExistingCopiesButCannotChooseMore() {
+        assertEquals(3, AircraftPylonRacks.fixedSelectionCopies("bomb", "bomb", 3, null))
+        assertEquals(3, AircraftPylonRacks.fixedSelectionCopies("bomb", "bomb", 3, 3))
+        assertEquals(1, AircraftPylonRacks.fixedSelectionCopies("bomb", "missile", 3, null))
+        assertEquals(2, AircraftPylonRacks.fixedSelectionCopies("bomb", "bomb_pair", 3, null, 2))
+        assertEquals(3, AircraftPylonRacks.fixedSelectionCopies(null, "bomb_triple", 1, null, 3))
+        assertThrows(IllegalArgumentException::class.java) {
+            AircraftPylonRacks.fixedSelectionCopies("bomb", "bomb", 3, 4)
+        }
+        assertThrows(IllegalArgumentException::class.java) {
+            AircraftPylonRacks.fixedSelectionCopies("bomb", "missile", 3, 3)
+        }
+        assertThrows(IllegalArgumentException::class.java) {
+            AircraftPylonRacks.fixedSelectionCopies("bomb", "bomb_pair", 3, 3, 2)
+        }
+    }
+
     @Test fun pylonMassAndWholeAircraftBudgetAreIndependentAndBayUsesOneReleasePoint() {
         assertEquals(4, AircraftPylonRacks.maxCopies(12,12,12,"BOMB",1,250.0,1000.0))
         assertEquals(10, AircraftPylonRacks.maxCopies(12,12,12,"BOMB",1,100.0,1000.0))
@@ -45,5 +62,27 @@ class AircraftPylonRacksTest {
         val definition = JsonParser.parseString("""{"Pairs":[${mount}]}""").asJsonObject
         assertEquals(2000.0, AircraftArmamentRegistry.loadoutMassKg(definition, mapOf("pair" to store), mapOf("pair" to 4)))
         assertEquals(Vec3.ZERO, AircraftPylonRacks.offset(0, 1, Vec3(0.6, 0.4, 0.0)))
+    }
+
+    @Test fun fixedBombChoicesAndZeroBlastClusterHaveDistinctValidatedContracts() {
+        val rack = JsonParser.parseString("""{"Schema":1,"Name":"FAB-100 x2","Category":"BOMB",
+            "Capacity":1,"MassKg":100,"MaxPerPylon":2,"FixedRackCount":2,"Bomb":{
+            "Mode":"DUMB","Gravity":0.08,"DragMultiplier":1,"TurnDegreesPerTick":0,
+            "BlastRadius":14,"BlastDamage":200}}""").asJsonObject
+        assertDoesNotThrow { AircraftArmamentRegistry.validate(rack, true) }
+        assertThrows(IllegalArgumentException::class.java) {
+            AircraftArmamentRegistry.validate(rack.deepCopy().apply { addProperty("MaxPerPylon", 1) }, true)
+        }
+        val cluster = JsonParser.parseString("""{"Schema":1,"Name":"RBK-250","Category":"BOMB",
+            "Capacity":1,"MassKg":250,"Bomb":{"Mode":"DUMB","Gravity":0.08,
+            "DragMultiplier":1,"TurnDegreesPerTick":0,"BlastRadius":0,"BlastDamage":0,
+            "Cluster":{"Count":12,"ReleaseHeight":12,"SpreadSpeed":0.35,
+            "BombletDamage":80,"BombletRadius":1.5,"LifetimeTicks":100}}}""").asJsonObject
+        assertDoesNotThrow { AircraftArmamentRegistry.validate(cluster, true) }
+        assertThrows(IllegalArgumentException::class.java) {
+            AircraftArmamentRegistry.validate(cluster.deepCopy().apply {
+                getAsJsonObject("Bomb").addProperty("BlastDamage", 500)
+            }, true)
+        }
     }
 }

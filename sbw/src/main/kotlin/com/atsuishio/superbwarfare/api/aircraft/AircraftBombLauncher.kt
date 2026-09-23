@@ -1,11 +1,13 @@
 package com.atsuishio.superbwarfare.api.aircraft
 
 import com.atsuishio.superbwarfare.entity.projectile.AerialBombEntity
+import com.atsuishio.superbwarfare.api.projectile.ProjectileProfiles
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity
 import com.atsuishio.superbwarfare.init.ModEntities
 import com.google.gson.JsonObject
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
+import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.phys.Vec3
 import org.joml.Vector3d
 
@@ -35,6 +37,10 @@ object AircraftBombLauncher {
             config["DragMultiplier"].asDouble, config["TurnDegreesPerTick"].asDouble,
             config["BlastDamage"].asFloat, config["BlastRadius"].asFloat,
             AircraftBombTargeting.gpsTarget(vehicle))
+        config.getAsJsonObject("Cluster")?.let { AircraftClusterBomb.configure(entity, it) }
+        store["ProjectileProfile"]?.asString?.let {
+            ProjectileProfiles.assign(entity, ResourceLocation(it))
+        }
         val accepted = level.addFreshEntity(entity)
         if (accepted) AircraftMunitionDebug.log(entity, "bomb release mode=${config["Mode"].asString} massKg=$mass")
         return accepted

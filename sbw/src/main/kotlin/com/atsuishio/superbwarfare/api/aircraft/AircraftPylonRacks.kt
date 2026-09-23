@@ -8,6 +8,14 @@ import kotlin.math.min
 object AircraftPylonRacks {
     const val MAX_COPIES = 12
     const val MAX_BAY_COPIES = 512
+    /** Client loadout edits may retain fitted copies, but cannot choose a new copy count. */
+    fun fixedSelectionCopies(currentStore: String?, chosenStore: String, currentCopies: Int,
+                             requestedCopies: Int?, authoredCopies: Int? = null): Int {
+        require(authoredCopies == null || authoredCopies in 1..MAX_COPIES)
+        val copies = authoredCopies ?: if (currentStore == chosenStore) currentCopies.coerceAtLeast(1) else 1
+        require(requestedCopies == null || requestedCopies == copies) { "Rack quantity cannot be edited." }
+        return copies
+    }
     @JvmOverloads
     fun maxCopies(aircraftLimit: Int, mountLimit: Int, storeLimit: Int, category: String,
                   capacity: Int, massKg: Double, maxPylonMassKg: Double, internal: Boolean = false): Int {
