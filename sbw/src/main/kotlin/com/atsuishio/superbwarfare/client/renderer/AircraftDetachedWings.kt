@@ -33,10 +33,12 @@ object AircraftDetachedWings {
     private val observed = LinkedHashMap<Key, Long>()
     private var world: Any? = null
     private var clock = 0L
+    private var lastRenderDiagnostic = Long.MIN_VALUE
     private val random = java.util.Random()
 
     @JvmStatic fun clear() {
         pieces.clear(); observed.clear(); world = Minecraft.getInstance().level; clock = 0
+        lastRenderDiagnostic = Long.MIN_VALUE
         com.atsuishio.superbwarfare.compat.voxy.ClientDebrisTerrain.clear()
     }
     private fun syncWorld() { if (world !== Minecraft.getInstance().level) clear() }
@@ -85,9 +87,15 @@ object AircraftDetachedWings {
         val terrain = com.atsuishio.superbwarfare.compat.voxy.ClientDebrisTerrain
         terrain.tick()
         var emissions = 0
-        pieces.entries.removeIf { (key, part) -> part.motion.age >= 1200 || part.motion.position.y < level.minBuildHeight - 32 ||
-            (part.fuselage && level.gameTime - key.started >= 200) }
-        for (part in pieces.values) {
+        val diagnostics = com.atsuishio.superbwarfare.diagnostics.EliteDiagnostics.isClientEnabled()
+        pieces.entries.removeIf { (key, part) ->
+            val remove = part.motion.age >= 1200 || part.motion.position.y < level.minBuildHeight - 32 ||
+                (part.fuselage && level.gameTime - key.started >= 200)
+            if (remove && diagnostics) com.atsuishio.superbwarfare.diagnostics.EliteDiagnostics.recordClient(
+                level.gameTime,"aircraft_debris","REMOVE","vehicle",key.id,"part",key.side,"age",part.motion.age)
+            remove
+        }
+        for ((key, part) in pieces) {
             val motion = part.motion
             if (!motion.grounded) {
                 terrain.prefetch(motion.position)
@@ -97,10 +105,24 @@ object AircraftDetachedWings {
                 part.corners.mapNotNull { local ->
                     val rotated = motion.orientation.transform(org.joml.Vector3f(local.x.toFloat(), local.y.toFloat(), local.z.toFloat()))
                     val offset = Vec3(rotated.x.toDouble(), rotated.y.toDouble(), rotated.z.toDouble())
-                    val hit = terrain.clip(ClipContext(from.add(offset), to.add(offset), ClipContext.Block.COLLIDER,
-                        ClipContext.Fluid.ANY, mc.player))
-                    hit.location.subtract(offset).takeIf { hit.type != HitResult.Type.MISS }
-                }.minByOrNull { it.distanceToSqr(from) }
+                    AircraftDebrisContact.sweep(from.add(offset), to.add(offset)) { start, end ->
+                        terrain.clip(ClipContext(start, end, ClipContext.Block.COLLIDER,
+                            ClipContext.Fluid.ANY, mc.player)).takeUnless { it.type == HitResult.Type.MISS }
+                    }?.let { AircraftDebrisMotion.Contact(it.position.subtract(offset), it.normal) }
+                }.minByOrNull { it.position.distanceToSqr(from) }
+            }
+            if (diagnostics && clock % 4L == 0L)
+                com.atsuishio.superbwarfare.diagnostics.EliteDiagnostics.recordClient(level.gameTime,
+                    "aircraft_debris", "STEP", "vehicle", key.id, "part", key.side,
+                    "age", motion.age, "x", motion.position.x, "y", motion.position.y, "z", motion.position.z,
+                    "vx", motion.velocity.x, "vy", motion.velocity.y, "vz", motion.velocity.z,
+                    "grounded", motion.grounded, "impacted", motion.impacted, "bounces", motion.bounces)
+            if (part.fuselage && motion.grounded && motion.velocity.horizontalDistanceSqr() > .0004 && emissions < 64) {
+                val low = part.corners.minOf { local ->
+                    motion.orientation.transform(org.joml.Vector3f(local.x.toFloat(),local.y.toFloat(),local.z.toFloat())).y.toDouble()
+                }
+                AircraftCombatParticles.grindingSmoke(motion.position.add(0.0, low + .08, 0.0), motion.velocity.horizontalDistance())
+                emissions++
             }
             if (!motion.grounded && emissions < 64 &&
                 motion.position.distanceToSqr(mc.gameRenderer.mainCamera.position) < 16384.0 * 16384) {
@@ -144,7 +166,11 @@ object AircraftDetachedWings {
                 }
             }
         }
-        pieces.entries.removeIf { it.value.motion.expired }
+        pieces.entries.removeIf { (key, part) ->
+            if (part.motion.expired && diagnostics) com.atsuishio.superbwarfare.diagnostics.EliteDiagnostics.recordClient(
+                level.gameTime,"aircraft_debris","REMOVE","vehicle",key.id,"part",key.side,"age",part.motion.age)
+            part.motion.expired
+        }
     }
 
     @SubscribeEvent fun render(event: RenderLevelStageEvent) {
@@ -155,12 +181,21 @@ object AircraftDetachedWings {
         val pose = event.poseStack
         val oldStart = RenderSystem.getShaderFogStart()
         val oldEnd = RenderSystem.getShaderFogEnd()
-        val frustum = net.minecraft.client.renderer.culling.Frustum(event.poseStack.last().pose(), RenderSystem.getProjectionMatrix())
+        // A fog change alone cannot bypass the native camera's short far clipping plane.
+        val originalProjection = org.joml.Matrix4f(RenderSystem.getProjectionMatrix())
+        val projection = org.joml.Matrix4f(originalProjection)
+        val near = originalProjection.m32() / (originalProjection.m22() - 1)
+        val far = 20000f
+        projection.m22(-(far + near) / (far - near)).m32(-2 * far * near / (far - near))
+        val frustum = net.minecraft.client.renderer.culling.Frustum(event.poseStack.last().pose(), projection)
         frustum.prepare(camera.x, camera.y, camera.z)
         buffers.endBatch()
+        var drawn = 0
+        var distant = 0
         try {
-            RenderSystem.setShaderFogStart(maxOf(oldStart, FarTerrainClient.renderRadius().toFloat()))
-            RenderSystem.setShaderFogEnd(maxOf(oldEnd, FarTerrainClient.renderRadius() + 512f))
+            RenderSystem.setProjectionMatrix(projection, com.mojang.blaze3d.vertex.VertexSorting.DISTANCE_TO_ORIGIN)
+            RenderSystem.setShaderFogStart(18000f)
+            RenderSystem.setShaderFogEnd(far)
             for (part in pieces.values) {
                 val motion = part.motion
                 val position = motion.previousPosition.lerp(motion.position, event.partialTick.toDouble())
@@ -171,12 +206,24 @@ object AircraftDetachedWings {
                 try {
                     pose.translate(position.x - camera.x, position.y - camera.y, position.z - camera.z)
                     pose.mulPose(Quaternionf(motion.previousOrientation).slerp(motion.orientation, event.partialTick))
-                    part.visual.render(pose, buffers, motion.grounded)
+                    part.visual.render(pose, buffers, motion.impacted)
+                    drawn++
+                    val normalRange = mc.options.effectiveRenderDistance * 16.0
+                    if (position.distanceToSqr(camera) > normalRange * normalRange) distant++
                 } finally { pose.popPose() }
             }
             buffers.endBatch()
         } finally {
+            RenderSystem.setProjectionMatrix(originalProjection, com.mojang.blaze3d.vertex.VertexSorting.DISTANCE_TO_ORIGIN)
             RenderSystem.setShaderFogStart(oldStart); RenderSystem.setShaderFogEnd(oldEnd)
+        }
+        val gameTime = mc.level?.gameTime ?: return
+        if (gameTime != lastRenderDiagnostic && gameTime % 20L == 0L &&
+            com.atsuishio.superbwarfare.diagnostics.EliteDiagnostics.isClientEnabled()) {
+            lastRenderDiagnostic = gameTime
+            com.atsuishio.superbwarfare.diagnostics.EliteDiagnostics.recordClient(gameTime,
+                "aircraft_debris", "RENDER", "retained", pieces.size, "drawn", drawn,
+                "beyond_view_range", distant)
         }
     }
 }

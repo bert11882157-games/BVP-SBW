@@ -1,0 +1,95 @@
+{
+  "ID": "berts_vehicle_pack:su_39",
+  "Model": {
+    "GeometryBackend": "berts_vehicle_pack:vehicle/su_39",
+    "Model": "berts_vehicle_pack:geo/native_fallback/su_39.geo.json",
+    "Texture": "berts_vehicle_pack:textures/entity/su_39.png",
+    "WreckTexture": "berts_vehicle_pack:textures/entity_dead/su_39.png"
+  },
+  "MouseSpeed": [
+    0.2,
+    0.2
+  ],
+  "AircraftRig": {
+    "Schema": 2,
+    "Frame": "GENERATED_MODEL_PIXELS",
+    "Surfaces": [
+      {
+        "Bone": "elevator_left",
+        "Parent": "hull",
+        "Pivot": [
+          -22.8,
+          45.2,
+          81.2
+        ],
+        "Axis": [
+          -0.9421581745779994,
+          0.06573196566823249,
+          0.3286598283411626
+        ],
+        "ControlWeights": {
+          "ElevatorUp": 1,
+          "RightRoll": -1,
+          "RudderRight": 0
+        },
+        "MaxDeflectionDegrees": 25
+      },
+      {
+        "Bone": "elevator_right",
+        "Parent": "hull",
+        "Pivot": [
+          22.8,
+          45.2,
+          81.2
+        ],
+        "Axis": [
+          -0.9421581745779994,
+          -0.06573196566823249,
+          -0.3286598283411626
+        ],
+        "ControlWeights": {
+          "ElevatorUp": 1,
+          "RightRoll": 1,
+          "RudderRight": 0
+        },
+        "MaxDeflectionDegrees": 25
+      },
+      {
+        "Bone": "rudder",
+        "Parent": "hull",
+        "Pivot": [
+          -1.6,
+          76.4,
+          91.2
+        ],
+        "Axis": [
+          0,
+          1,
+          0
+        ],
+        "ControlWeights": {
+          "ElevatorUp": 0,
+          "RightRoll": 0,
+          "RudderRight": 1
+        },
+        "MaxDeflectionDegrees": 25
+      }
+    ],
+    "Rotors": [],
+    "Gear": [
+      {
+        "Bone": "landing_gear_0",
+        "Parent": "hull"
+      },
+      {
+        "Bone": "landing_gear_1",
+        "Parent": "hull"
+      },
+      {
+        "Bone": "landing_gear_2",
+        "Parent": "hull"
+      }
+    ],
+    "Sweeps": []
+  }
+}

@@ -1,0 +1,128 @@
+{
+  "Schema": 1,
+  "Name": "A-10 Thunderbolt II",
+  "BuiltInWeapons": [
+    "Avenger"
+  ],
+  "SuspendedWeapons": [],
+  "Pairs": [
+    {
+      "Id": "wingtip",
+      "Name": "Wingtip rail",
+      "Left": [
+        -7.246133,
+        1.872093,
+        -0.120769
+      ],
+      "Right": [
+        7.246133,
+        1.872093,
+        -0.120769
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:reference/aim9l"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 1000
+    },
+    {
+      "Id": "outer",
+      "Name": "Outer wing",
+      "Left": [
+        -6.038444,
+        1.872093,
+        -0.120769
+      ],
+      "Right": [
+        6.038444,
+        1.872093,
+        -0.120769
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:reference/dumb_bomb_250kg"
+      ],
+      "MaxWeaponsPerPylon": 3,
+      "MaxPylonMassKg": 1000
+    },
+    {
+      "Id": "marked_mid",
+      "Name": "Marked mid wing",
+      "Left": [
+        -4.709986,
+        1.389018,
+        1.509611
+      ],
+      "Right": [
+        4.709986,
+        1.389018,
+        1.509611
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:reference/dumb_bomb_250kg",
+        "berts_vehicle_pack:fa18e/agm65"
+      ],
+      "MaxWeaponsPerPylon": 3,
+      "MaxPylonMassKg": 1000
+    },
+    {
+      "Id": "inner",
+      "Name": "Inner wing",
+      "Left": [
+        -2.7173,
+        1.389018,
+        -0.422691
+      ],
+      "Right": [
+        2.7173,
+        1.389018,
+        -0.422691
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:reference/dumb_bomb_250kg",
+        "berts_vehicle_pack:fa18e/agm65"
+      ],
+      "MaxWeaponsPerPylon": 3,
+      "MaxPylonMassKg": 1000
+    },
+    {
+      "Id": "root",
+      "Name": "Wing root",
+      "Left": [
+        -1.509611,
+        1.389018,
+        -0.422691
+      ],
+      "Right": [
+        1.509611,
+        1.389018,
+        -0.422691
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:reference/dumb_bomb_250kg"
+      ],
+      "MaxWeaponsPerPylon": 3,
+      "MaxPylonMassKg": 1000
+    }
+  ],
+  "Singles": [
+    {
+      "Id": "centerline",
+      "Name": "Centerline",
+      "Position": [
+        0,
+        1.207864,
+        -0.422691
+      ],
+      "Internal": false,
+      "AllowedStores": [
+        "berts_vehicle_pack:reference/dumb_bomb_250kg"
+      ],
+      "MaxWeaponsPerPylon": 3,
+      "MaxPylonMassKg": 1000
+    }
+  ],
+  "StoreGroups": {},
+  "MaxPayloadKg": 7257,
+  "MaxPylonMassKg": 1000,
+  "MaxWeaponsPerPylon": 3
+}

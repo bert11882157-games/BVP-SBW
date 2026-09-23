@@ -45,10 +45,12 @@ class AircraftWheelContact {
 
 @Serializable
 class AircraftTerrainBox {
+    @SerialName("Bone") var bone: String = "hull"
     @SerialName("Min") var minimum: SerializedVec3 = Vec3.ZERO
     @SerialName("Max") var maximum: SerializedVec3 = Vec3.ZERO
 
-    fun valid(): Boolean = minimum.x.isFinite() && minimum.y.isFinite() && minimum.z.isFinite() &&
+    fun valid(): Boolean = bone.isNotBlank() && bone.length <= 96 &&
+        minimum.x.isFinite() && minimum.y.isFinite() && minimum.z.isFinite() &&
         maximum.x.isFinite() && maximum.y.isFinite() && maximum.z.isFinite() &&
         minimum.x < maximum.x && minimum.y < maximum.y && minimum.z < maximum.z
 }

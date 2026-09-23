@@ -18,6 +18,10 @@ import com.yourname.berts_vehicle_pack.BertsVehiclePack;
 import com.yourname.berts_vehicle_pack.entity.ArmoredVehicleEntity;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import net.minecraft.commands.Commands;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import com.atsuishio.superbwarfare.api.vehicle.flight.AircraftWreckBreakup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -181,6 +185,10 @@ public final class BvpFixedWingScenario {
         boolean worldAim;
         boolean horizontalInitialVelocity;
         boolean preparePoseOnClientArm;
+        Boolean initialGearUp;
+        int wingStrikeSide;
+        int postDestructionTicks = 5;
+        int observerDistanceAfterWingShear;
         double altitude = 0;
         double speed = 0;
         double pitch = 0;
@@ -202,6 +210,14 @@ public final class BvpFixedWingScenario {
             bounded(altitude, 0, 5000); bounded(speed, 0, 250);
             bounded(pitch, -80, 80); bounded(roll, -180, 180);
             bounded(yaw, -180, 180);
+            if (wingStrikeSide < 0 || wingStrikeSide > 2 || postDestructionTicks < 5 || postDestructionTicks > 400)
+                throw new IllegalArgumentException("Invalid wing-strike side or destruction observation duration");
+            if (observerDistanceAfterWingShear != 0 && (wingStrikeSide == 0
+                    || observerDistanceAfterWingShear < 512 || observerDistanceAfterWingShear > 4096))
+                throw new IllegalArgumentException("Far wing observer requires a wing strike and distance512..4096");
+            if (wingStrikeSide != 0 && (clientInput || yaw != 0 || pitch != 0 || roll != 0
+                    || altitude < 20 || speed < 20 || speed > 60 || initialGearUp == null))
+                throw new IllegalArgumentException("Wing strike requires a level server-input start, altitude>=20, speed20..60 and explicit gear state");
             if (preparePoseOnClientArm && !clientInput)
                 throw new IllegalArgumentException("Deferred initial pose requires a client-input plan");
             if (Math.abs(mousePitchSign) != 1 || Math.abs(mouseRollSign) != 1)
@@ -223,6 +239,8 @@ public final class BvpFixedWingScenario {
                 if (stages.get(i).expectDestruction && (clientInput || i != stages.size() - 1))
                     throw new IllegalArgumentException("Destruction must be the final server-input stage");
             }
+            if (wingStrikeSide != 0 && (stages.size() != 1 || !stages.get(0).expectDestruction))
+                throw new IllegalArgumentException("Wing strike requires one final destruction-observation stage");
             if (ticks > 4600) throw new IllegalArgumentException("Plan exceeds 230 seconds");
             if (stages.stream().allMatch(stage -> stage.expect.isEmpty() && !stage.expectDestruction))
                 throw new IllegalArgumentException("Plan has no acceptance assertions");
@@ -358,12 +376,20 @@ public final class BvpFixedWingScenario {
         int afterburnerPulsePhase;
         boolean stallRecoveryCaptured;
         int destructionTicks;
+        int postShearTicks;
         boolean physicalContactSeen;
         long lastMeasuredFlightTick = Long.MIN_VALUE;
         int startupSamplesSkipped;
         Vec3 previousMeasuredPosition;
         double previousMeasuredKineticEnergyPerKg;
         double integratedBodyRollDegrees;
+        final Map<BlockPos, BlockState> strikeTerrain = new LinkedHashMap<>();
+        Integer firstDetachedMask;
+        Float firstDetachedHealth;
+        Float firstDetachedGear;
+        Vec3 strikePost;
+        boolean remoteObserver;
+        Vec3 remoteObserverPosition;
 
         Run(ServerPlayer player, String label, Plan plan) throws IOException {
             this.player = player; this.label = label; this.plan = plan;
@@ -398,7 +424,12 @@ public final class BvpFixedWingScenario {
                 throw new IllegalStateException("Fixed-wing aircraft unavailable: " + plan.vehicleId);
             vehicle = aircraft;
             strategy = selected;
-            vehicle.load(new CompoundTag());
+            CompoundTag initialData = new CompoundTag();
+            if (plan.initialGearUp != null) {
+                initialData.putBoolean("GearUp", plan.initialGearUp);
+                initialData.putFloat("GearRot", plan.initialGearUp ? 1F : 0F);
+            }
+            vehicle.load(initialData);
             vehicle.moveTo(origin.x, groundY + plan.altitude, origin.z, (float) plan.yaw, (float) plan.pitch);
             vehicle.setZRot((float) plan.roll);
             float velocityPitch = plan.horizontalInitialVelocity ? 0 : (float) plan.pitch;
@@ -419,6 +450,7 @@ public final class BvpFixedWingScenario {
                 vehicle.modifyGunData(name, data -> { data.resetStatus(); data.ammo.set(0); data.virtualAmmo.set(0); });
             }
             if (!level.addFreshEntity(vehicle)) throw new IllegalStateException("Aircraft insertion failed");
+            if (plan.wingStrikeSide != 0) prepareWingStrike();
             player.teleportTo(level, origin.x, groundY + plan.altitude + 3, origin.z, 0, 0);
             player.getAbilities().flying = false; player.onUpdateAbilities();
             if (!player.startRiding(vehicle, true) || vehicle.getFirstPassenger() != player)
@@ -438,6 +470,39 @@ public final class BvpFixedWingScenario {
         }
 
         Stage stage() { return plan.stages.get(stageIndex); }
+
+        void prepareWingStrike() {
+            var snapshot = vehicle.getAircraftCollisionSnapshot(1F);
+            if (snapshot == null) throw new IllegalStateException("Missing authored wing contact volumes");
+            Integer selectedX = null;
+            double bestDistance = -1;
+            // Pick a block column intersecting only the requested wing's swept X footprint.
+            // The aircraft then reaches real terrain under its ordinary flight simulation.
+            for (var part : snapshot.getParts()) {
+                if (!part.getActive() || part.getWingSide() != plan.wingStrikeSide) continue;
+                var bounds = part.getWorldBounds();
+                for (int x = (int)Math.floor(bounds.minX); x < bounds.maxX; x++) {
+                    if (Math.min(x + 1, bounds.maxX) - Math.max(x, bounds.minX) < .2) continue;
+                    final int probeX = x;
+                    boolean shared = snapshot.getParts().stream().anyMatch(other -> other.getActive()
+                            && other.getWingSide() != plan.wingStrikeSide
+                            && other.getWorldBounds().maxX > probeX - .2
+                            && other.getWorldBounds().minX < probeX + 1.2);
+                    double distance = Math.abs(x + .5 - vehicle.getX());
+                    if (!shared && distance > bestDistance) { selectedX = x; bestDistance = distance; }
+                }
+            }
+            if (selectedX == null) throw new IllegalStateException("No isolated full-block wing strike corridor");
+            int z = (int)Math.ceil(snapshot.getQueryBounds().maxZ) + 12;
+            strikePost = new Vec3(selectedX + .5, vehicle.getY(), z + .5);
+            for (int y = (int)groundY; y <= Math.ceil(snapshot.getQueryBounds().maxY) + 4; y++) {
+                BlockPos pos = new BlockPos(selectedX, y, z);
+                level.getChunk(pos.getX() >> 4, pos.getZ() >> 4);
+                if (level.getBlockEntity(pos) != null) throw new IllegalStateException("Wing strike overlaps block entity");
+                strikeTerrain.put(pos, level.getBlockState(pos));
+                level.setBlock(pos, Blocks.BEDROCK.defaultBlockState(), 3);
+            }
+        }
 
         /** Retain the final 128 tick pairs without changing tickets, input admission or sampling gates. */
         void observeTick(String phase) {
@@ -510,7 +575,7 @@ public final class BvpFixedWingScenario {
                     || (!stage().expectDestruction && (vehicle.isRemoved() || vehicle.isWreck()))
                     || !EliteDiagnostics.isServerEnabled())
                 throw new IllegalStateException("Flight fixture context lost");
-            if (!stage().dismount && !destroyed()
+            if (!stage().dismount && !destroyed() && !remoteObserver
                     && (player.getVehicle() != vehicle || vehicle.getFirstPassenger() != player))
                 throw new IllegalStateException("Pilot context changed");
             if (System.nanoTime() - startedNanos > 270_000_000_000L)
@@ -523,7 +588,7 @@ public final class BvpFixedWingScenario {
 
         void controls() {
             context();
-            if (destroyed()) return;
+            if (destroyed() || remoteObserver || firstDetachedMask != null) return;
             BvpVehicleDataDiagnostic.record(vehicle);
             if (plan.clientInput) {
                 startupNeutralInput = false;
@@ -703,15 +768,61 @@ public final class BvpFixedWingScenario {
 
         void sample() {
             context();
+            int detached = AircraftWreckBreakup.mask(vehicle);
+            if (firstDetachedMask == null && detached != 0) {
+                firstDetachedMask = detached;
+                firstDetachedHealth = vehicle.getHealth();
+                firstDetachedGear = vehicle.getSynchedGearRot();
+                EliteDiagnostics.record(vehicle, "aircraft_wing_fixture", "FIRST_DETACH",
+                        "vehicle", vehicle.getUUID(), "mask", detached, "health", firstDetachedHealth,
+                        "gear", firstDetachedGear, "wreck", vehicle.isWreck());
+                // A physical shear switches from piloted flight to the damaged-wing
+                // strategy, invalidating its input epoch and flight surface snapshots.
+                // Observe that real handoff without reasserting pilot controls.
+                if (inputReservation != null) {
+                    FixedWingPilotIntentTransport.releaseServerInput(player, inputReservation);
+                    inputReservation = null;
+                }
+                vehicle.processInput((short) 0);
+                vehicle.mouseInput(0, 0);
+                if (plan.observerDistanceAfterWingShear != 0) {
+                    remoteObserver = true;
+                    if (inputReservation != null) {
+                        FixedWingPilotIntentTransport.releaseServerInput(player, inputReservation);
+                        inputReservation = null;
+                    }
+                    vehicle.processInput((short) 0);
+                    vehicle.mouseInput(0, 0);
+                    player.stopRiding();
+                    remoteObserverPosition = vehicle.position().add(plan.observerDistanceAfterWingShear, 40, 0);
+                    player.teleportTo(level, remoteObserverPosition.x, remoteObserverPosition.y,
+                            remoteObserverPosition.z, 90F,
+                            (float)Math.toDegrees(Math.atan2(40, plan.observerDistanceAfterWingShear)));
+                    player.getAbilities().flying = true;
+                    player.onUpdateAbilities();
+                    EliteDiagnostics.record(vehicle, "aircraft_wing_fixture", "REMOTE_OBSERVER",
+                            "vehicle", vehicle.getUUID(), "position", remoteObserverPosition,
+                            "distance", plan.observerDistanceAfterWingShear, "forced_chunk_tickets", false);
+                }
+            }
             physicalContactSeen |= vehicle.onGround() || vehicle.horizontalCollision || vehicle.verticalCollision
                     || vehicle.hasRecentFixedWingWorldContact();
             if (destroyed()) {
                 // Destruction queues its real explosion for the next server tick. Observe that
                 // lifecycle before releasing the fixture; never create a diagnostic explosion.
-                if (++destructionTicks < 5) return;
+                if (++destructionTicks < plan.postDestructionTicks) return;
                 List<String> errors = new ArrayList<>();
                 if (!physicalContactSeen) errors.add("No physical contact observed");
                 if (!vehicle.getCrash()) errors.add("Destruction was not marked as a collision");
+                if (plan.wingStrikeSide != 0) {
+                    if (firstDetachedMask == null || firstDetachedMask != plan.wingStrikeSide)
+                        errors.add("First detached side differs from isolated terrain strike: " + firstDetachedMask);
+                    if (firstDetachedHealth == null || firstDetachedHealth <= 0)
+                        errors.add("Wing-only strike did not leave the aircraft initially alive");
+                    float requestedGear = Boolean.TRUE.equals(plan.initialGearUp) ? 1F : 0F;
+                    if (firstDetachedGear == null || Math.abs(firstDetachedGear - requestedGear) > .01F)
+                        errors.add("Gear state drifted before wing strike: " + firstDetachedGear);
+                }
                 if (vehicle.getHealth() > 0) errors.add("Destruction without exhausted health");
                 if (explosions.size() != 1) errors.add("Expected one source-matched aircraft explosion, got " + explosions.size());
                 Map<String, Double> measures = stats.measures(vehicle, strategy.stateSnapshot(), groundY);
@@ -721,6 +832,18 @@ public final class BvpFixedWingScenario {
                         "health", vehicle.getHealth(), "contactObserved", physicalContactSeen,
                         "explosionCount", explosions.size(), "measurements", measures, "failures", errors));
                 finish(failures == 0 ? "PASS" : "FAIL", null);
+                return;
+            }
+            if (firstDetachedMask != null && stage().expectDestruction) {
+                postShearTicks++;
+                EliteDiagnostics.record(vehicle, "aircraft_wing_fixture", "POST_SHEAR",
+                        "tick", postShearTicks, "position", vehicle.position(),
+                        "motion", vehicle.getDeltaMovement(), "health", vehicle.getHealth(),
+                        "mask", detached, "grounded", vehicle.onGround());
+                if (stageTicks + postShearTicks >= stage().ticks) {
+                    failures++;
+                    finish("FAIL", "Aircraft survived the declared impact deadline after wing shear");
+                }
                 return;
             }
             if (!plan.clientInput && !startupNeutralInput && !stage().dismount) {
@@ -935,6 +1058,12 @@ public final class BvpFixedWingScenario {
             report.put("stages", results); report.put("samples", samples);
             report.put("sourceMatchedExplosions", explosions);
             report.put("physicalContactSeen", physicalContactSeen);
+            report.put("wingStrikePost", strikePost);
+            report.put("firstDetachedMask", firstDetachedMask);
+            report.put("firstDetachedHealth", firstDetachedHealth);
+            report.put("firstDetachedGear", firstDetachedGear);
+            report.put("remoteObserverPosition", remoteObserverPosition);
+            report.put("farVisibilityRequiresClientEvidence", remoteObserver);
             report.put("tickObservationHistory", new ArrayList<>(tickObservations));
             report.put("chunkReadinessDiagnostics", chunkReadiness.report());
             try {
@@ -944,6 +1073,8 @@ public final class BvpFixedWingScenario {
             } catch (IOException failure) {
                 player.sendSystemMessage(Component.literal("Flight report write failed: " + failure));
             } finally {
+                strikeTerrain.forEach((pos, state) -> level.setBlock(pos, state, 3));
+                strikeTerrain.clear();
                 if (inputReservation != null) {
                     FixedWingPilotIntentTransport.releaseServerInput(player, inputReservation);
                     inputReservation = null;

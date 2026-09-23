@@ -1,0 +1,59 @@
+{
+  "ID": "berts_vehicle_pack:aml_90",
+  "Model": {
+    "GeometryBackend": "berts_vehicle_pack:vehicle/aml_90",
+    "Model": "berts_vehicle_pack:geo/native_fallback/aml_90.geo.json",
+    "Texture": "berts_vehicle_pack:textures/entity/aml_90.png",
+    "WreckTexture": "berts_vehicle_pack:textures/entity_dead/aml_90.png"
+  },
+  "MouseSpeed": [
+    0.2,
+    0.2
+  ],
+  "FittedGroundRig": {
+    "Schema": 1,
+    "Frame": "RUNTIME_MODEL_PIXELS",
+    "PitchBones": [
+      {
+        "Bone": "roof_gun",
+        "Parent": "turret",
+        "Pivot": [
+          -4.30022,
+          35.50756,
+          -1.53579
+        ]
+      }
+    ]
+  },
+  "RunningGear": {
+    "Type": "WHEELED",
+    "RoadWheelCount": 2,
+    "WheelBones": {
+      "Left": [
+        "wheelLFront",
+        "wheelLRear"
+      ],
+      "Right": [
+        "wheelRFront",
+        "wheelRRear"
+      ]
+    },
+    "Steering": {
+      "Schema": 1,
+      "Wheels": [
+        {
+          "SteeringBone": "steer_wheelLFront",
+          "WheelBone": "wheelLFront",
+          "MaxAngleDegrees": 28,
+          "Sign": 1
+        },
+        {
+          "SteeringBone": "steer_wheelRFront",
+          "WheelBone": "wheelRFront",
+          "MaxAngleDegrees": 28,
+          "Sign": 1
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "Schema": 1,
+  "Name": "AH-64D Apache Longbow",
+  "BuiltInWeapons": [
+    "M230"
+  ],
+  "SuspendedWeapons": [],
+  "Pairs": [
+    {
+      "Id": "inner",
+      "Name": "Inner wing",
+      "Left": [
+        -1.72425,
+        1.254,
+        0
+      ],
+      "Right": [
+        1.72425,
+        1.254,
+        0
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:ah_64d/agm114_proxy"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 100
+    },
+    {
+      "Id": "outer",
+      "Name": "Outer wing",
+      "Left": [
+        -2.66475,
+        1.20175,
+        1.20175
+      ],
+      "Right": [
+        2.66475,
+        1.20175,
+        1.20175
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:ah_64d/agm114_proxy"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 100
+    }
+  ],
+  "Singles": [],
+  "StoreGroups": {},
+  "MaxPayloadKg": 1000,
+  "Radar": {
+    "Enabled": true,
+    "Range": 1000
+  },
+  "MaxPylonMassKg": 100,
+  "MaxWeaponsPerPylon": 1
+}

@@ -162,7 +162,8 @@ class FarVehicleStoreTest {
     }
 
     @Test fun `maximum cosmetic payload round trips below wire ceiling without NBT`() {
-        val values = (1..16).map { snapshot(it).copy(aircraftWreckStart = 234L, aircraftWreckImpactTime = 456L,
+        val values = (1..16).map { snapshot(it).copy(aircraftWreckStart = 234L, aircraftWreckImpactTime = 456L, grounded = it % 2 == 0,
+            selectedWeapons = List(128) { if (it % 2 == 0) -1 else 1024 },
             aircraftWreckWings = it % 4, aircraftWreckMotionX = 1.25F, aircraftWreckMotionY = -.2F,
             aircraftWreckMotionZ = 2.5F, overrideData = "", visualData =
             mapOf("bvp.spent_era" to "x".repeat(8192 - "bvp.spent_era".length))) }

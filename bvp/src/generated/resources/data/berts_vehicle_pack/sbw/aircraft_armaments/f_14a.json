@@ -1,0 +1,97 @@
+{
+  "Schema": 1,
+  "Name": "F-14A Tomcat",
+  "BuiltInWeapons": [
+    "Vulcan"
+  ],
+  "SuspendedWeapons": [],
+  "Pairs": [
+    {
+      "Id": "glove_outer",
+      "Name": "glove outer",
+      "Left": [
+        -2.868812,
+        1.891685,
+        -1.128713
+      ],
+      "Right": [
+        2.868812,
+        1.891685,
+        -1.128713
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:reference/aim9l"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 500
+    },
+    {
+      "Id": "glove_inner",
+      "Name": "glove inner",
+      "Left": [
+        -2.210396,
+        1.750596,
+        0.846535
+      ],
+      "Right": [
+        2.210396,
+        1.750596,
+        0.846535
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:reference/aim7f"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 500
+    },
+    {
+      "Id": "tunnel_forward",
+      "Name": "tunnel forward",
+      "Left": [
+        -1.034653,
+        1.09218,
+        2.633663
+      ],
+      "Right": [
+        1.034653,
+        1.09218,
+        2.633663
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:reference/aim54a",
+        "berts_vehicle_pack:reference/aim7f"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 500
+    },
+    {
+      "Id": "tunnel_aft",
+      "Name": "tunnel aft",
+      "Left": [
+        -1.034653,
+        1.09218,
+        -1.693069
+      ],
+      "Right": [
+        1.034653,
+        1.09218,
+        -1.693069
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:reference/aim54a",
+        "berts_vehicle_pack:reference/aim7f"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 500
+    }
+  ],
+  "Singles": [],
+  "StoreGroups": {},
+  "MaxPayloadKg": 6580,
+  "Radar": {
+    "Enabled": true,
+    "Range": 1500
+  },
+  "MaxPylonMassKg": 500,
+  "MaxWeaponsPerPylon": 1
+}

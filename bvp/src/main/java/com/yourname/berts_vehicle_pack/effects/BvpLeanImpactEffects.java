@@ -21,7 +21,7 @@ public final class BvpLeanImpactEffects {
     private static final int MAX_S8KO_PARTICLES_PER_TICK = 24;
     private static final ParticleOptions LARGE_SMOKE = ParticleTypes.f_123755_;
     /** Short-lived impact puff; the long-lived large-smoke particle is reserved for sustained effects. */
-    private static final ParticleOptions IMPACT_SMOKE = ParticleTypes.f_123759_;
+    private static ParticleOptions impactSmoke() { return ModParticles.IMPACT_SMOKE.get(); }
     private static final ParticleOptions SHORT_SPARK = ParticleTypes.f_175830_;
     private static long s8koParticleBudgetTick = Long.MIN_VALUE;
     private static int s8koParticlesUsed;
@@ -40,7 +40,7 @@ public final class BvpLeanImpactEffects {
     public static void spawnImpactSmoke(Level level, Vec3 position, Vec3 normal) {
         if (!(level instanceof ServerLevel server) || position == null || normal == null) return;
         Vec3 point = position.add(normal.scale(0.06D));
-        ParticleTool.sendParticle(server, IMPACT_SMOKE, point.x, point.y, point.z,
+        ParticleTool.sendParticle(server, impactSmoke(), point.x, point.y, point.z,
                 3, 0.09D, 0.06D, 0.09D, 0.012D, true);
     }
 
@@ -62,7 +62,7 @@ public final class BvpLeanImpactEffects {
                     position.f_82481_, explosionCount, 0.04D, 0.04D, 0.04D, 0.0D, true);
         }
         if (smokeCount > 0) {
-            ParticleTool.sendParticle(serverLevel, IMPACT_SMOKE, position.f_82479_, position.f_82480_,
+            ParticleTool.sendParticle(serverLevel, impactSmoke(), position.f_82479_, position.f_82480_,
                     position.f_82481_, smokeCount, 0.12D, 0.12D, 0.12D, 0.01D, true);
         }
         TransientLights.spawn(level, position, ERA_LIGHT_LUMINANCE, ERA_LIGHT_TICKS);
@@ -197,7 +197,7 @@ public final class BvpLeanImpactEffects {
                     explosionSpread * scale, scale, true);
         }
         if (smokeCount > 0) {
-            ParticleTool.sendParticle(level, IMPACT_SMOKE, position.f_82479_, position.f_82480_, position.f_82481_,
+            ParticleTool.sendParticle(level, impactSmoke(), position.f_82479_, position.f_82480_, position.f_82481_,
                     smokeCount, smokeSpread * scale, smokeVerticalSpread * scale,
                     smokeSpread * scale, smokeSpeed * scale, true);
         }

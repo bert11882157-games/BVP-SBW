@@ -27,6 +27,9 @@ object EliteDiagnostics {
     private var startedServerTick = 0
     private var lastOutcome = "Elite diagnostics disabled"
     private const val MAX_CAPTURE_TICKS = 20 * 300
+    /** Sustained render benchmarks need counters without per-entity trace traffic. */
+    private val clientCountersOnly = java.lang.Boolean.getBoolean("bvp.diagnostics.countersOnly")
+    private fun clientCategoryEnabled(category: String) = !clientCountersOnly || category == "performance"
 
     @JvmStatic fun isServerEnabled(): Boolean = DebugFeaturePolicy.allowsDebugTools() && serverSink?.accepting == true
     @JvmStatic fun isClientEnabled(): Boolean = DebugFeaturePolicy.allowsDebugTools() && clientSink?.accepting == true
@@ -97,13 +100,14 @@ object EliteDiagnostics {
     }
 
     private fun open(session: UUID, side: String, entityIds: Set<UUID>? = null): EliteDiagnosticSink {
-        val versions = ModList.get().mods.filter { it.modId in setOf(Mod.MODID, "berts_vehicle_pack", "tacz", "clowder_modern") }
+        val versions = ModList.get().mods.filter { it.modId in setOf(Mod.MODID, "berts_vehicle_pack", "ballistics", "tacz", "clowder_modern") }
             .associate { it.modId to it.version.toString() }
         val artifacts = versions.keys.associateWith { ModList.get().getModFileById(it).file.filePath.toString() }
         return EliteDiagnosticSink(FMLPaths.GAMEDIR.get().resolve("logs/elite-diagnostics/$session-$side.jsonl"),
             session, side, mapOf("mods" to versions, "code_source" to
                 EliteDiagnostics::class.java.protectionDomain.codeSource?.location?.toString(),
                 "artifacts" to artifacts, "max_seconds" to 300,
+                "client_probe_mode" to if (side == "client" && clientCountersOnly) "performance_counters_only" else "full",
                 "scope" to if (entityIds == null) "loaded vehicles and projectiles; no chat/input content"
                     else "selected server entities; process counters remain aggregate; no chat/input content",
                 "selected_entity_uuids" to entityIds?.map(UUID::toString)?.sorted()),
@@ -113,6 +117,7 @@ object EliteDiagnostics {
     /** Java-friendly pairs are snapshotted as scalar values; entities are never sent to the writer. */
     @JvmStatic fun record(entity: Entity, category: String, event: String, vararg fields: Any?) {
         if (!isEnabled(entity.level())) return
+        if (entity.level().isClientSide && !clientCategoryEnabled(category)) return
         if (!entity.level().isClientSide && serverEntityScope?.contains(entity.uuid) == false) return
         val data = pairs(fields)
         data["entity_uuid"] = entity.uuid.toString()
@@ -123,13 +128,14 @@ object EliteDiagnostics {
     }
 
     @JvmStatic fun recordClient(tick: Long, category: String, event: String, vararg fields: Any?) {
-        if (!isClientEnabled()) return
+        if (!isClientEnabled() || !clientCategoryEnabled(category)) return
         emit(true, tick, category, event, pairs(fields))
     }
 
     /** Process-wide counters include Netty and both sides of an integrated server, explicitly. */
     internal fun recordProcess(category: String, event: String, vararg fields: Pair<String, Any?>) {
         val sink = serverSink?.takeIf { it.accepting } ?: clientSink?.takeIf { it.accepting } ?: return
+        if (sink === clientSink && !clientCategoryEnabled(category)) return
         sink.offer(-1, category, event, fields.toMap() + ("scope" to "process_aggregate"))
     }
 

@@ -9,6 +9,23 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
 class AircraftWingCollisionTest {
+    @Test fun sweptWingUsesPosedVolumeWithoutMovingHullAndKeepsDetachmentSide() {
+        val wing = box(2.0, 5.0).apply { bone = "sweep_right"; minimum = Vec3(2.0,1.0,-.2); maximum = Vec3(5.0,2.0,.2) }
+        val definition = AircraftTerrainContact().apply {
+            fuselage = box(-.6,.6); landingGear = box(-.5,.5,0.0,.9)
+            bodyParts = listOf(fuselage, wing)
+        }
+        val swept = AircraftCollisionSnapshot.create(definition, Matrix4d(), 0F,
+            bonePose = { Matrix4d().rotateY(Math.PI / 2) })
+        assertNull(swept.clip(Vec3(4.0,3.0,0.0),Vec3(4.0,0.0,0.0)), "Old spread position must be empty")
+        assertNotNull(swept.clip(Vec3(0.0,3.0,-4.0),Vec3(0.0,0.0,-4.0)), "Swept wing must collide")
+        assertEquals(2,swept.parts[1].wingSide)
+        assertNotNull(swept.clip(Vec3(0.0,3.0,2.0),Vec3(0.0,0.0,2.0)), "Hull remains in place")
+        val detached = AircraftCollisionSnapshot.create(definition, Matrix4d(), 0F, 2,
+            bonePose = { Matrix4d().rotateY(Math.PI / 2) })
+        assertNull(detached.clip(Vec3(0.0,3.0,-4.0),Vec3(0.0,0.0,-4.0)))
+        assertThrows(IllegalArgumentException::class.java) { AircraftCollisionSnapshot.create(definition,Matrix4d(),0F) }
+    }
     private fun box(x1: Double, x2: Double, y1: Double = 1.0, y2: Double = 2.0) = AircraftTerrainBox().apply {
         minimum = Vec3(x1, y1, -3.0); maximum = Vec3(x2, y2, 4.0)
     }

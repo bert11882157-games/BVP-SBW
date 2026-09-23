@@ -25,6 +25,14 @@ public final class BvpSizedExplosionParticle extends BvpFullBrightAnimatedPartic
         public Provider(SpriteSet sprites) { this.sprites = sprites; }
         @Override public Particle m_6966_(SizedExplosionParticleOptions options, ClientLevel level,
                                           double x, double y, double z, double vx, double vy, double vz) {
+            // One proportionate soft puff per impact, emitted client-side rather than
+            // adding a second server packet for every autocannon projectile.
+            Particle smoke = net.minecraft.client.Minecraft.m_91087_().f_91061_.m_107370_(
+                    com.yourname.berts_vehicle_pack.init.ModParticles.IMPACT_SMOKE.get(),x,y,z,0,.008,0);
+            if (smoke instanceof BvpImpactSmokeParticle puff) {
+                puff.setDiameter(options.diameter() * .6f);
+                com.atsuishio.superbwarfare.client.FarEffectsClient.INSTANCE.retainParticle(puff);
+            }
             return new BvpSizedExplosionParticle(level, x, y, z, options.diameter(), sprites);
         }
     }

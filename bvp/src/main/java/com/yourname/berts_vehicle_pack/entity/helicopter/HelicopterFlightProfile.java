@@ -95,6 +95,27 @@ public final class HelicopterFlightProfile {
             new HelicopterPhysicalControls(.12D, .40D, .10D, .08D, 67.50D, true,
                     new HelicopterAttitudeProfile(8.0D, 8.0D, 12.0D, 1.5D, 35.0D, 50.0D, 8.0D)));
 
+    // Reference speed uses the fleet's quarter-distance convention. Force, drag and
+    // response are engineering fits: agile light attack / steadier attack / heavy tandem transport.
+    private static final HelicopterFlightProfile TIGER = new HelicopterFlightProfile(
+            65.25D, 72.50D, 4730.0D, 64000.0D / DEFAULT_MAIN_ROTOR_FORCE_N, .10D,
+            HelicopterHandlingProfile.of(1.10D,1.12D,1.10D,1.12D,1.10D,.90D),
+            .035D,.0038D,.130D,.0110D,.055D,.0080D,2.40D,2.65D,
+            new HelicopterPhysicalControls(.32D,1.10D,.36D,.28D,72.50D,true,
+                    new HelicopterAttitudeProfile(29D,30D,40D,4D,65D,80D,8D)));
+    private static final HelicopterFlightProfile AH64D = new HelicopterFlightProfile(
+            66.375D, 73.75D, 6650.0D, 90000.0D / DEFAULT_MAIN_ROTOR_FORCE_N, .12D,
+            HelicopterHandlingProfile.of(1.02D,1.02D,1.00D,1.02D,.98D,1.10D),
+            .038D,.0035D,.140D,.0120D,.058D,.0085D,3.20D,3.55D,
+            new HelicopterPhysicalControls(.28D,1.00D,.30D,.24D,73.75D,true,
+                    new HelicopterAttitudeProfile(25D,25D,35D,3.6D,60D,75D,8D)));
+    private static final HelicopterFlightProfile CH46E = new HelicopterFlightProfile(
+            59.76D,66.40D,9500.0D,120000.0D / DEFAULT_MAIN_ROTOR_FORCE_N,0D,
+            HelicopterHandlingProfile.of(.75D,.80D,.68D,.72D,.65D,1.50D),
+            .040D,.0045D,.145D,.0140D,.065D,.0100D,2.00D,2.70D,
+            new HelicopterPhysicalControls(.18D,.65D,.18D,.13D,66.40D,true,
+                    new HelicopterAttitudeProfile(13D,12D,20D,2D,40D,55D,8D)));
+
     final double maxForwardKmh;
     final double maxBoostForwardKmh;
     final double massKg;
@@ -201,6 +222,9 @@ public final class HelicopterFlightProfile {
     public static HelicopterFlightProfile mi26() {
         return MI26;
     }
+    public static HelicopterFlightProfile eurocopterTiger() { return TIGER; }
+    public static HelicopterFlightProfile ah64d() { return AH64D; }
+    public static HelicopterFlightProfile ch46e() { return CH46E; }
 
     public double maxForwardKmh() {
         return maxForwardKmh;

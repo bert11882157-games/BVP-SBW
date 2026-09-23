@@ -17,6 +17,9 @@ public final class ModSounds {
     public static final RegistryObject<SoundEvent> MI24V_S8_FIRE = register("mi24v_s8_fire");
     public static final RegistryObject<SoundEvent> MI24V_S13_FIRE = register("mi24v_s13_fire");
     public static final RegistryObject<SoundEvent> MI28N_2A42_FIRE = register("mi28n_2a42_fire");
+    public static final RegistryObject<SoundEvent> AH_64D_M230_FIRE = register("ah_64d_m230_fire");
+    public static final RegistryObject<SoundEvent> MIRAGE_F1_DEFA_FIRE = register("mirage_f1_defa_fire");
+    public static final RegistryObject<SoundEvent> A_10_GAU8_FIRE = register("a_10_gau8_fire");
     public static final RegistryObject<SoundEvent> BMPT_2A42_FIRE = register("bmpt_2a42_fire");
     public static final RegistryObject<SoundEvent> BMP2_2A42_FIRE = register("bmp2_2a42_fire");
     public static final RegistryObject<SoundEvent> BMP2_ENGINE_IDLE = register("bmp2_engine_idle");

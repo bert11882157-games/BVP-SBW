@@ -1,0 +1,54 @@
+{
+  "ID": "berts_vehicle_pack:eurocopter_tiger",
+  "Model": {
+    "GeometryBackend": "berts_vehicle_pack:vehicle/eurocopter_tiger",
+    "Model": "berts_vehicle_pack:geo/native_fallback/eurocopter_tiger.geo.json",
+    "Texture": "berts_vehicle_pack:textures/entity/eurocopter_tiger.png",
+    "WreckTexture": "berts_vehicle_pack:textures/entity_dead/eurocopter_tiger.png"
+  },
+  "MouseSpeed": [
+    0.2,
+    0.2
+  ],
+  "AircraftRig": {
+    "Schema": 1,
+    "Frame": "GENERATED_MODEL_PIXELS",
+    "Surfaces": [],
+    "Rotors": [
+      {
+        "Bone": "main_rotor",
+        "Parent": "hull",
+        "Pivot": [
+          0,
+          83.38463,
+          -0.28122
+        ],
+        "Axis": [
+          0,
+          -1,
+          0
+        ],
+        "SpeedChannel": "engineSpool",
+        "Direction": 1,
+        "DegreesPerTickAtFullSpeed": 98
+      },
+      {
+        "Bone": "tail_rotor",
+        "Parent": "hull",
+        "Pivot": [
+          -6.74929,
+          76.77596,
+          172.38805
+        ],
+        "Axis": [
+          -1,
+          0,
+          0
+        ],
+        "SpeedChannel": "engineSpool",
+        "Direction": 1,
+        "DegreesPerTickAtFullSpeed": 392
+      }
+    ]
+  }
+}

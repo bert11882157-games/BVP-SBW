@@ -521,6 +521,7 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_aa",
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -568,11 +569,11 @@
               "ProjectileProfile": "berts_vehicle_pack:tunguska/cannon/ammo_00_3uor6_hef_t",
               "ProjectileLife": 40
             }
-          },
-          "ConsumptionItem": "superbwarfare:medium_autocannon_shell"
+          }
         },
         {
           "Ammo": "superbwarfare:small_shell_gs",
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -614,14 +615,14 @@
               "ProjectileProfile": "berts_vehicle_pack:tunguska/cannon/ammo_01_3ubr6_ap_t",
               "ProjectileLife": 40
             }
-          },
-          "ConsumptionItem": "superbwarfare:medium_autocannon_shell"
+          }
         }
       ],
       "ProjectileAmount": 1,
       "ProjectileBeltAmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",

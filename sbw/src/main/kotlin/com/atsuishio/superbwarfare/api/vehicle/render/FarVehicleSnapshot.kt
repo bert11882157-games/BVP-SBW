@@ -45,6 +45,7 @@ data class FarVehicleSnapshot(
     val aircraftWreckMotionY: Float = 0F,
     val aircraftWreckMotionZ: Float = 0F,
     val aircraftWreckImpactTime: Long = -1L,
+    val grounded: Boolean = false,
 
 ) {
     fun sameIdentity(other: FarVehicleSnapshot): Boolean =
@@ -62,7 +63,9 @@ data class FarVehicleSnapshot(
         if (!listOf(x, y, z).all { it.isFinite() && abs(it) <= 30_000_000.0 }) return false
         if (!listOf(motionX, motionY, motionZ, targetSpeed).all { it.isFinite() && abs(it) <= 100_000 }) return false
         if (!listOf(yaw, pitch, roll, power, propeller, gear, health).all(Float::isFinite)) return false
-        if (selectedWeapons.size > 16 || selectedWeapons.any { it !in -1..1024 }) return false
+        // Match the authored seat ceiling: transport aircraft may have more than
+        // sixteen passengers, each of which has a (usually unarmed) selected slot.
+        if (selectedWeapons.size > 128 || selectedWeapons.any { it !in -1..1024 }) return false
         if (flaps.size != 7 || flaps.any { !it.isFinite() }) return false
         if (pose.length > 1024 || VehiclePoseSnapshot.decode(pose) == null) return false
         if (visualData.size > 8 || visualData.keys.any { !VISUAL_KEY.matches(it) }) return false

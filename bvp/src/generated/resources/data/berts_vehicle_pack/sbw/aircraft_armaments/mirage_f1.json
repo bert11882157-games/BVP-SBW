@@ -1,0 +1,98 @@
+{
+  "Schema": 1,
+  "Name": "Mirage F1C",
+  "BuiltInWeapons": [
+    "Gun1",
+    "Gun2"
+  ],
+  "SuspendedWeapons": [],
+  "Pairs": [
+    {
+      "Id": "wingtip",
+      "Name": "wingtip",
+      "Left": [
+        -3.680858,
+        1.400924,
+        -1.043825
+      ],
+      "Right": [
+        3.680858,
+        1.400924,
+        -1.043825
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:reference/matra_magic1"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 150
+    },
+    {
+      "Id": "outer",
+      "Name": "outer",
+      "Left": [
+        -2.856785,
+        1.400924,
+        -0.824073
+      ],
+      "Right": [
+        2.856785,
+        1.400924,
+        -0.824073
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:reference/matra_magic1",
+        "berts_vehicle_pack:reference/matra_super530f",
+        "berts_vehicle_pack:reference/dumb_bomb_250kg"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 900
+    },
+    {
+      "Id": "inner",
+      "Name": "inner",
+      "Left": [
+        -1.703083,
+        1.345985,
+        -0.494444
+      ],
+      "Right": [
+        1.703083,
+        1.345985,
+        -0.494444
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:reference/matra_magic1",
+        "berts_vehicle_pack:reference/matra_super530f",
+        "berts_vehicle_pack:reference/dumb_bomb_250kg"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 900
+    }
+  ],
+  "Singles": [
+    {
+      "Id": "centerline",
+      "Name": "Centerline",
+      "Position": [
+        0,
+        0.851542,
+        -0.714196
+      ],
+      "Internal": false,
+      "AllowedStores": [
+        "berts_vehicle_pack:reference/matra_super530f",
+        "berts_vehicle_pack:reference/dumb_bomb_250kg"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 900
+    }
+  ],
+  "StoreGroups": {},
+  "MaxPayloadKg": 3000,
+  "MaxPylonMassKg": 900,
+  "MaxWeaponsPerPylon": 1,
+  "Radar": {
+    "Enabled": true,
+    "Range": 1250
+  }
+}

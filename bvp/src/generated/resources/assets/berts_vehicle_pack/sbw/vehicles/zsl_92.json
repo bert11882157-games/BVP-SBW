@@ -1,0 +1,58 @@
+{
+  "ID": "berts_vehicle_pack:zsl_92",
+  "Model": {
+    "GeometryBackend": "berts_vehicle_pack:vehicle/zsl_92",
+    "Model": "berts_vehicle_pack:geo/native_fallback/zsl_92.geo.json",
+    "Texture": "berts_vehicle_pack:textures/entity/zsl_92.png",
+    "WreckTexture": "berts_vehicle_pack:textures/entity_dead/zsl_92.png"
+  },
+  "MouseSpeed": [
+    0.2,
+    0.2
+  ],
+  "RunningGear": {
+    "Type": "WHEELED",
+    "RoadWheelCount": 3,
+    "WheelBones": {
+      "Left": [
+        "wheelL1",
+        "wheelL0",
+        "wheelL2"
+      ],
+      "Right": [
+        "wheelR1",
+        "wheelR2",
+        "wheelR0"
+      ]
+    },
+    "Steering": {
+      "Schema": 1,
+      "Wheels": [
+        {
+          "SteeringBone": "steer_wheelR1",
+          "WheelBone": "wheelR1",
+          "MaxAngleDegrees": 18,
+          "Sign": 1
+        },
+        {
+          "SteeringBone": "steer_wheelL1",
+          "WheelBone": "wheelL1",
+          "MaxAngleDegrees": 18,
+          "Sign": 1
+        },
+        {
+          "SteeringBone": "steer_wheelL0",
+          "WheelBone": "wheelL0",
+          "MaxAngleDegrees": 28,
+          "Sign": 1
+        },
+        {
+          "SteeringBone": "steer_wheelR0",
+          "WheelBone": "wheelR0",
+          "MaxAngleDegrees": 28,
+          "Sign": 1
+        }
+      ]
+    }
+  }
+}

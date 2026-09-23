@@ -1,0 +1,29 @@
+{
+  "Schema": 1,
+  "Name": "AIM-9L Sidewinder · infrared",
+  "Category": "AIR_TO_AIR",
+  "Capacity": 1,
+  "MassKg": 84.5,
+  "Guidance": {
+    "Mode": "INFRARED",
+    "LockTicks": 60,
+    "Range": 500,
+    "ConeDegrees": 25,
+    "CountermeasureVulnerability": 1
+  },
+  "Flight": {
+    "InitialSpeed": 0.5,
+    "MaxSpeed": 5,
+    "AccelerationPerTick": 0.1,
+    "TurnDegreesPerSecond": 80,
+    "Damage": 40,
+    "BlastRadius": 3
+  },
+  "AmmoItem": "superbwarfare:small_air_to_air_missile",
+  "MaxPerPylon": 1,
+  "RackSpacing": [
+    0.55,
+    0.3,
+    0
+  ]
+}

@@ -177,6 +177,12 @@ public final class BvpExpansionWeaponScenario {
                     LinkedHashSet<String> bound = new LinkedHashSet<>();
                     for (var seat : vehicle.computed().seats()) bound.addAll(seat.weapons());
                     weapons = List.copyOf(bound);
+                    LinkedHashSet<String> unbound = new LinkedHashSet<>(vehicle.getGunDataMap().keySet());
+                    unbound.removeAll(bound);
+                    record("WEAPON_CENSUS", "declared", List.copyOf(vehicle.getGunDataMap().keySet()),
+                            "seat_bound", weapons, "unbound", List.copyOf(unbound),
+                            "excluded_paths", "countermeasures_and_pylon_launchers_require_separate_checks");
+                    check("all_declared_guns_have_seat_binding", unbound.isEmpty());
                     check("bound_weapon_count", weapons.size() == expectedWeapons);
                     for (String name : weapons) check("bound_weapon_exists_" + name, vehicle.getGunData(name) != null);
                     if (failures > 0 || weapons.isEmpty()) { finish(failures == 0 ? "PASS" : "FAIL", "Weapon census"); return; }

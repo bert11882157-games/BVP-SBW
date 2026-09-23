@@ -1,0 +1,654 @@
+{
+  "ID": "berts_vehicle_pack:ah_64d",
+  "Gravity": 0.024516625,
+  "Mass": 6.65,
+  "UpStep": 0,
+  "InertiaRotateRate": 0,
+  "RotateOffsetHeight": 3.135,
+  "MaxHealth": 150,
+  "MaxEnergy": 10000000,
+  "AllowFreeCam": true,
+  "HasCCIP": true,
+  "HasNVD": true,
+  "HasTVD": true,
+  "OBB": [
+    {
+      "Size": [
+        0.3135,
+        0.418,
+        2.95213
+      ],
+      "Position": [
+        0,
+        2.4035,
+        -7.13213
+      ]
+    },
+    {
+      "Size": [
+        0.78375,
+        0.88825,
+        3.39625
+      ],
+      "Position": [
+        0,
+        2.1945,
+        -0.78375
+      ]
+    },
+    {
+      "Size": [
+        0.836,
+        0.9405,
+        1.045
+      ],
+      "Position": [
+        0,
+        2.299,
+        3.6575
+      ]
+    },
+    {
+      "Size": [
+        0.1045,
+        0.36575,
+        0.36575
+      ],
+      "Position": [
+        -1.20175,
+        0.36575,
+        0.47025
+      ],
+      "LandingGear": true
+    },
+    {
+      "Size": [
+        0.1045,
+        0.36575,
+        0.36575
+      ],
+      "Position": [
+        1.20175,
+        0.36575,
+        0.47025
+      ],
+      "LandingGear": true
+    },
+    {
+      "Size": [
+        0.07838,
+        0.15675,
+        0.15675
+      ],
+      "Position": [
+        0,
+        1.254,
+        -10.68512
+      ],
+      "LandingGear": true
+    }
+  ],
+  "Seats": [
+    {
+      "HidePassenger": false,
+      "BanHand": true,
+      "Transform": "Vehicle",
+      "BodyAttachment": "Vehicle",
+      "Position": [
+        0,
+        1.93325,
+        0.99275
+      ],
+      "Weapons": [],
+      "CanRotateHead": true,
+      "CameraPos": {
+        "Transform": "Vehicle",
+        "Position": [
+          0,
+          0,
+          0
+        ],
+        "ZoomPosition": [
+          0,
+          0,
+          0
+        ],
+        "CameraMode": "AIRCRAFT_FREELOOK",
+        "AimCameraMode": "AIRCRAFT_FREELOOK",
+        "UseAircraftCamera": true,
+        "AircraftCameraPos": [
+          0,
+          3.5,
+          -9
+        ],
+        "EyeAttachment": "pilot_eye",
+        "ZoomEyeAttachment": "pilot_eye",
+        "DirectionAttachment": "pilot_eye",
+        "ZoomDirectionAttachment": "pilot_eye"
+      },
+      "DismountInfo": {
+        "Transform": "Vehicle",
+        "Position": [
+          3,
+          0.2,
+          0.9927499999999999
+        ]
+      }
+    },
+    {
+      "HidePassenger": false,
+      "BanHand": true,
+      "Transform": "Vehicle",
+      "BodyAttachment": "Vehicle",
+      "Position": [
+        0,
+        1.5675,
+        2.4035
+      ],
+      "Weapons": [
+        "M230"
+      ],
+      "CanRotateHead": true,
+      "CameraPos": {
+        "Transform": "Vehicle",
+        "Position": [
+          0,
+          0,
+          0
+        ],
+        "ZoomPosition": [
+          0,
+          0,
+          0
+        ],
+        "CameraMode": "PLAYER_LOOK_AIM",
+        "AimCameraMode": "PLAYER_LOOK_AIM",
+        "UseAircraftCamera": false,
+        "EyeAttachment": "gunner_eye",
+        "ZoomEyeAttachment": "gunner_optic",
+        "DirectionAttachment": "gunner_eye",
+        "ZoomDirectionAttachment": "gunner_optic"
+      },
+      "DismountInfo": {
+        "Transform": "Vehicle",
+        "Position": [
+          3,
+          0.2,
+          2.4034999999999997
+        ]
+      },
+      "FixedGunBank": [
+        "M230"
+      ]
+    }
+  ],
+  "Weapons": {
+    "M230": {
+      "Crosshair": "@VehicleCommonGun",
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "ProjectileAmount": 1,
+      "AmmoCostPerShoot": 1,
+      "NormalReloadTime": 400,
+      "EmptyReloadTime": 400,
+      "AutoReload": true,
+      "WithdrawAmmoWhenChangeSlot": false,
+      "Gravity": 0.05,
+      "ProjectileLife": 400,
+      "AddShooterDeltaMovement": true,
+      "HeatPerShoot": 0,
+      "Spread": 0.12,
+      "SoundRadius": 8,
+      "ExplosionDamage": 0,
+      "Name": "30 mm M230E-1",
+      "RPM": 625,
+      "Magazine": 1200,
+      "Damage": 78.33457777777778,
+      "SoundInfo": {
+        "Fire1PGain": 0.5,
+        "Fire3PGain": 0.5,
+        "Fire3PFarGain": 0.5,
+        "Fire3PVeryFarGain": 0.5,
+        "Fire1P": "berts_vehicle_pack:ah_64d_m230_fire",
+        "Fire3P": "berts_vehicle_pack:ah_64d_m230_fire",
+        "Fire3PFar": "berts_vehicle_pack:ah_64d_m230_fire",
+        "Fire3PVeryFar": "berts_vehicle_pack:ah_64d_m230_fire"
+      },
+      "Projectile": {
+        "Type": "superbwarfare:small_cannon_shell",
+        "Profile": "berts_vehicle_pack:aircraft_rounds/m230e1/m230e1_hedp"
+      },
+      "ShellType": "HE",
+      "Velocity": 50.3125,
+      "ApDurability": 51,
+      "ExplosionRadius": 1.5666915555555554,
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "superbwarfare:small_cannon_shell",
+        "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/m230e1/m230e1_hedp",
+        "ProjectileLife": 400
+      },
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/m230e1/m230e1_hedp"
+            },
+            "ShellType": "HE",
+            "Velocity": 50.3125,
+            "ApDurability": 51,
+            "Damage": 78.33457777777778,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 1.5666915555555554,
+            "Name": "Air Belt",
+            "ProjectileBelt": {
+              "Name": "Air Belt",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "m230e1_hedp",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "m230e1_hedp",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "m230e1_hedp",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "m230e1_hedp_t",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "INHERIT"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/m230e1/m230e1_hedp",
+              "ProjectileLife": 400
+            }
+          }
+        }
+      ],
+      "ProjectileBeltAmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/m230e1/m230e1_hedp_t"
+            },
+            "ShellType": "HE",
+            "Velocity": 50.3125,
+            "ApDurability": 51,
+            "Damage": 78.33457777777778,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 1.5666915555555554,
+            "Name": "HEDP_T",
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/m230e1/m230e1_hedp_t",
+              "ProjectileLife": 400
+            }
+          }
+        }
+      ],
+      "BeltFed": true,
+      "OverheatEnabled": false,
+      "ShootPos": {
+        "Transform": "WeaponStationBarrel",
+        "Positions": [
+          [
+            0,
+            -0.4179999999999999,
+            1.8574874999999995
+          ]
+        ],
+        "Directions": [
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "ViewPosition": [
+          0,
+          -0.4179999999999999,
+          1.8574874999999995
+        ],
+        "MuzzleAttachments": [
+          "m230_muzzle"
+        ],
+        "MuzzleDirectionAttachments": [
+          "m230_muzzle"
+        ],
+        "EffectAttachments": [
+          "m230_muzzle"
+        ],
+        "EffectDirectionAttachments": [
+          "m230_muzzle"
+        ]
+      }
+    }
+  },
+  "HUDColor": "0xFFC700",
+  "HudType": "@Aircraft",
+  "EngineType": "Helicopter",
+  "EngineInfo": {
+    "EnergyCostRate": 320,
+    "Buoyancy": 0,
+    "Increment": 0,
+    "Decrement": 0,
+    "EngineSoundVolume": 1.5,
+    "PitchSpeed": 1,
+    "YawSpeed": 1,
+    "RollSpeed": 1,
+    "LiftSpeed": 1,
+    "Speed": 1,
+    "EngineStartSound": "berts_vehicle_pack:ah_64d_engine_start"
+  },
+  "HasDecoy": false,
+  "DamageModifiers": [
+    "minecraft:arrow 0",
+    "minecraft:trident 0",
+    "minecraft:mob_attack 0",
+    "minecraft:mob_attack_no_aggro 0",
+    "minecraft:mob_projectile 0",
+    "minecraft:player_attack 0",
+    "#superbwarfare:projectile 0",
+    "All - 20",
+    "minecraft:lava + 20",
+    "minecraft:lava * 10",
+    "@minecraft:tnt * 4",
+    "@minecraft:tnt_minecart * 4",
+    "@#superbwarfare:aerial_bomb * 12",
+    "All * 0.23",
+    "superbwarfare:vehicle_strike * 2.5",
+    "minecraft:explosion * 2",
+    "superbwarfare:custom_explosion * 0.65",
+    "superbwarfare:projectile_explosion * 0.65",
+    "superbwarfare:mine * 0.5",
+    "superbwarfare:lunge_mine * 0.5",
+    "superbwarfare:projectile_hit * 1.3",
+    "#superbwarfare:projectile_absolute * 0.15",
+    "@#superbwarfare:aa_missile * 0.3",
+    "@superbwarfare:small_cannon_shell * 0.25",
+    "@superbwarfare:c4 * 4",
+    "@#superbwarfare:at_rocket * 1.1",
+    "@superbwarfare:gun_grenade * 1.25",
+    "@superbwarfare:mortar_shell * 1.25",
+    "@superbwarfare:tm_62 * 2.5"
+  ],
+  "DestroyInfo": {
+    "ParticleType": "Giant",
+    "ExplosionDamage": 160,
+    "ExplosionRadius": 13,
+    "SympatheticDetonation": true,
+    "SympatheticDetonationForce": 2,
+    "SympatheticDetonationChance": 0.55
+  },
+  "ThirdPersonCameraPos": [
+    -0.86696,
+    1.5,
+    5
+  ],
+  "VehicleIcon": "berts_vehicle_pack:textures/vehicle_icon/ah_64d.png",
+  "ContainerIcon": "superbwarfare:textures/gui/vehicle/type/aircraft.png",
+  "VehicleContainerType": "Large",
+  "Type": "Helicopter",
+  "Afterburner": false,
+  "TerrainCompat": [],
+  "Attachments": {
+    "m230_muzzle": {
+      "Parent": "WeaponStationBarrel",
+      "Position": [
+        0,
+        -0.4179999999999999,
+        1.8574874999999995
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "pilot_eye": {
+      "Parent": "Vehicle",
+      "Position": [
+        0,
+        2.45575,
+        0.99275
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "gunner_eye": {
+      "Parent": "Vehicle",
+      "Position": [
+        0,
+        2.09,
+        2.4035
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "gunner_optic": {
+      "Parent": "WeaponStationBarrel",
+      "Position": [
+        0,
+        -0.20899999999999996,
+        1.8287499999999994
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    }
+  },
+  "PassengerWeaponStationPos": [
+    0,
+    1.20175,
+    3.91875
+  ],
+  "PassengerWeaponStationBarrelPos": [
+    0,
+    -0.15675000000000017,
+    0
+  ],
+  "PassengerWeaponStationControllerIndex": 1,
+  "PassengerWeaponStationTurnSpeed": [
+    45,
+    60
+  ],
+  "PassengerWeaponStationYawRange": [
+    -60,
+    60
+  ],
+  "PassengerWeaponStationPitchRange": [
+    -10,
+    40
+  ],
+  "RemoteWeaponStation": true,
+  "PassengerWeaponStationBinding": {
+    "Schema": "berts_vehicle_pack:passenger_bed_weapon_station/v1",
+    "Parent": "HULL",
+    "BaseYawDegrees": 0,
+    "WeaponId": "M230",
+    "WeaponIds": [
+      "M230"
+    ],
+    "WeaponKind": "AUTOCANNON",
+    "CameraAttachment": "gunner_optic",
+    "MuzzleAttachment": "m230_muzzle"
+  },
+  "EngineSound": "berts_vehicle_pack:ah_64d_engine_loop",
+  "Countermeasures": {
+    "Flares": true,
+    "Chaff": true,
+    "RadarWarningReceiver": true,
+    "FlaresPerSecond": 4,
+    "FlaresPerBurst": 12,
+    "FlareLeftPos": [
+      -1.30625,
+      2.03775,
+      -6.27
+    ],
+    "FlareRightPos": [
+      1.30625,
+      2.03775,
+      -6.27
+    ],
+    "FlareEjectionSpeed": 0.7
+  },
+  "AircraftTerrainContact": {
+    "Fuselage": {
+      "Min": [
+        -0.836,
+        1.30625,
+        -10.08425
+      ],
+      "Max": [
+        0.836,
+        3.2395,
+        4.7025
+      ]
+    },
+    "LandingGear": {
+      "Min": [
+        -1.30625,
+        0,
+        -10.841875
+      ],
+      "Max": [
+        1.30625,
+        1.41075,
+        0.836
+      ]
+    },
+    "RetractableGear": false,
+    "BodyParts": [
+      {
+        "Min": [
+          -0.3135,
+          1.9855,
+          -10.08425
+        ],
+        "Max": [
+          0.3135,
+          2.8215,
+          -4.18
+        ]
+      },
+      {
+        "Min": [
+          -0.78375,
+          1.30625,
+          -4.18
+        ],
+        "Max": [
+          0.78375,
+          3.08275,
+          2.6125
+        ]
+      },
+      {
+        "Min": [
+          -0.836,
+          1.3585,
+          2.6125
+        ],
+        "Max": [
+          0.836,
+          3.2395,
+          4.7025
+        ]
+      }
+    ],
+    "WheelContacts": [
+      {
+        "Id": "main_left",
+        "Group": "MAIN",
+        "Position": [
+          -1.20175,
+          0,
+          0.47025
+        ],
+        "Bounds": {
+          "Min": [
+            -1.30625,
+            0,
+            0.1045
+          ],
+          "Max": [
+            -1.09725,
+            0.7315,
+            0.836
+          ]
+        }
+      },
+      {
+        "Id": "main_right",
+        "Group": "MAIN",
+        "Position": [
+          1.20175,
+          0,
+          0.47025
+        ],
+        "Bounds": {
+          "Min": [
+            1.09725,
+            0,
+            0.1045
+          ],
+          "Max": [
+            1.30625,
+            0.7315,
+            0.836
+          ]
+        }
+      },
+      {
+        "Id": "tail",
+        "Group": "TAIL",
+        "Position": [
+          0,
+          1.09725,
+          -10.685125
+        ],
+        "Bounds": {
+          "Min": [
+            -0.078375,
+            1.09725,
+            -10.841875
+          ],
+          "Max": [
+            0.078375,
+            1.41075,
+            -10.528375
+          ]
+        }
+      }
+    ]
+  }
+}

@@ -126,7 +126,7 @@ object FarVehicleCopies {
             vehicle.sympatheticDetonated, vehicle.turretBurned, vehicle.passengers.isNotEmpty(),
             vehicle.override, visuals.toMap(), vehicle.aircraftWreckStart, vehicle.aircraftWreckWings,
             vehicle.aircraftWreckMotionX, vehicle.aircraftWreckMotionY, vehicle.aircraftWreckMotionZ,
-            vehicle.aircraftWreckImpactTime,
+            vehicle.aircraftWreckImpactTime, vehicle.onGround(),
         )
     }
 
@@ -208,6 +208,7 @@ object FarVehicleCopies {
         vehicle.aircraftWreckMotionY = s.aircraftWreckMotionY
         vehicle.aircraftWreckMotionZ = s.aircraftWreckMotionZ
         vehicle.aircraftWreckImpactTime = s.aircraftWreckImpactTime
+        vehicle.setOnGround(s.grounded)
 
         vehicle.sympatheticDetonated = s.turretEjected
         vehicle.turretBurned = s.turretBurned

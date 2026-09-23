@@ -489,6 +489,70 @@ public class ModEntities {
                     (type, level) -> new AuthoredFixedWingAircraft(type, level, "fa_18e"),
                     13.83017241f, 4.89051724f, "fa_18e"));
 
+    public static final RegistryObject<EntityType<AuthoredFixedWingAircraft>> F_16A =
+            ENTITIES.register("f_16a", () -> vehicle(
+                    (type, level) -> new AuthoredFixedWingAircraft(type, level, "f_16a"),
+                    9.40000000f, 4.51200000f, "f_16a"));
+    public static final RegistryObject<EntityType<AuthoredFixedWingAircraft>> A_10 =
+            ENTITIES.register("a_10", () -> vehicle(
+                    (type, level) -> new AuthoredFixedWingAircraft(type, level, "a_10"),
+                    17.42000000f, 4.58939300f, "a_10"));
+
+    public static final RegistryObject<EntityType<AuthoredFixedWingAircraft>> F_14A =
+            ENTITIES.register("f_14a", () -> vehicle(
+                    (type, level) -> new AuthoredFixedWingAircraft(type, level, "f_14a"),
+                    19.00000000f, 5.32485300f, "f_14a"));
+
+    public static final RegistryObject<EntityType<AuthoredFixedWingAircraft>> F_14D =
+            ENTITIES.register("f_14d", () -> vehicle(
+                    (type, level) -> new AuthoredFixedWingAircraft(type, level, "f_14d"),
+                    19.00000000f, 5.32485300f, "f_14d"));
+
+    public static final RegistryObject<EntityType<AuthoredHelicopter>> CH_46E =
+            ENTITIES.register("ch_46e", () -> vehicle(
+                    (type, level) -> new AuthoredHelicopter(type, level, "ch_46e"),
+                    15.24000000f, 5.58915600f, "ch_46e"));
+
+    public static final RegistryObject<EntityType<AuthoredHelicopter>> EUROCOPTER_TIGER =
+            ENTITIES.register("eurocopter_tiger", () -> vehicle(
+                    (type, level) -> new AuthoredHelicopter(type, level, "eurocopter_tiger"),
+                    13.00000000f, 7.29432700f, "eurocopter_tiger"));
+
+    public static final RegistryObject<EntityType<AuthoredHelicopter>> AH_64D =
+            ENTITIES.register("ah_64d", () -> vehicle(
+                    (type, level) -> new AuthoredHelicopter(type, level, "ah_64d"),
+                    14.63000000f, 6.27000000f, "ah_64d"));
+
+    public static final RegistryObject<EntityType<AuthoredFixedWingAircraft>> F3H =
+            ENTITIES.register("f3h", () -> vehicle(
+                    (type, level) -> new AuthoredFixedWingAircraft(type, level, "f3h"),
+                    10.80000000f, 5.65000000f, "f3h"));
+
+    public static final RegistryObject<EntityType<AuthoredFixedWingAircraft>> F2H_2 =
+            ENTITIES.register("f2h_2", () -> vehicle(
+                    (type, level) -> new AuthoredFixedWingAircraft(type, level, "f2h_2"),
+                    12.60000000f, 4.34428800f, "f2h_2"));
+
+    public static final RegistryObject<EntityType<AuthoredFixedWingAircraft>> SU_35 =
+            ENTITIES.register("su_35", () -> vehicle(
+                    (type, level) -> new AuthoredFixedWingAircraft(type, level, "su_35"),
+                    14.70000000f, 5.86196300f, "su_35"));
+
+    public static final RegistryObject<EntityType<AuthoredFixedWingAircraft>> SU_39 =
+            ENTITIES.register("su_39", () -> vehicle(
+                    (type, level) -> new AuthoredFixedWingAircraft(type, level, "su_39"),
+                    14.40000000f, 6.35000000f, "su_39"));
+
+    public static final RegistryObject<EntityType<AuthoredFixedWingAircraft>> MIRAGE_F1 =
+            ENTITIES.register("mirage_f1", () -> vehicle(
+                    (type, level) -> new AuthoredFixedWingAircraft(type, level, "mirage_f1"),
+                    8.40000000f, 4.24397400f, "mirage_f1"));
+
+    public static final RegistryObject<EntityType<AuthoredFixedWingAircraft>> B_1B =
+            ENTITIES.register("b_1b", () -> vehicle(
+                    (type, level) -> new AuthoredFixedWingAircraft(type, level, "b_1b"),
+                    41.80000000f, 10.35697300f, "b_1b"));
+
     public static final RegistryObject<EntityType<FittedGroundVehicleEntity>> CHALLENGER_2 =
             ENTITIES.register("challenger_2", () -> vehicle(
                     (type, level) -> new FittedGroundVehicleEntity(type, level, "challenger_2"),
@@ -505,6 +569,42 @@ public class ModEntities {
             ENTITIES.register("mbt_70", () -> vehicle(
                     (type, level) -> new FittedGroundVehicleEntity(type, level, "mbt_70"),
                     9.15977f, 3.53857f, "mbt_70"));
+    public static final RegistryObject<EntityType<FittedGroundVehicleEntity>> AML_90 =
+            ENTITIES.register("aml_90", () -> vehicle(
+                    (type, level) -> new FittedGroundVehicleEntity(type, level, "aml_90"),
+                    2.03492700f, 2.38816000f, "aml_90"));
+    public static final RegistryObject<EntityType<FittedGroundVehicleEntity>> ZSL_92 =
+            ENTITIES.register("zsl_92", () -> vehicle(
+                    (type, level) -> new FittedGroundVehicleEntity(type, level, "zsl_92"),
+                    2.96688300f, 2.36095000f, "zsl_92"));
+    public static final RegistryObject<EntityType<FittedGroundVehicleEntity>> FV721_FOX =
+            ENTITIES.register("fv721_fox", () -> vehicle(
+                    (type, level) -> new FittedGroundVehicleEntity(type, level, "fv721_fox"),
+                    2.18051600f, 1.69310700f, "fv721_fox"));
+    public static final RegistryObject<EntityType<FittedGroundVehicleEntity>> GAZ_3937_VODNIK_AA =
+            ENTITIES.register("gaz_3937_vodnik_aa", () -> vehicle(
+                    (type, level) -> new FittedGroundVehicleEntity(type, level, "gaz_3937_vodnik_aa"),
+                    2.79907200f, 3.67378200f, "gaz_3937_vodnik_aa"));
+    public static final RegistryObject<EntityType<FittedGroundVehicleEntity>> BMD_1 =
+            ENTITIES.register("bmd_1", () -> vehicle(
+                    (type, level) -> new FittedGroundVehicleEntity(type, level, "bmd_1"),
+                    2.61633800f, 1.96880100f, "bmd_1"));
+    public static final RegistryObject<EntityType<FittedGroundVehicleEntity>> BTR_ZD =
+            ENTITIES.register("btr_zd", () -> vehicle(
+                    (type, level) -> new FittedGroundVehicleEntity(type, level, "btr_zd"),
+                    2.47680000f, 2.93419800f, "btr_zd"));
+    public static final RegistryObject<EntityType<FittedGroundVehicleEntity>> WARRIOR =
+            ENTITIES.register("warrior", () -> vehicle(
+                    (type, level) -> new FittedGroundVehicleEntity(type, level, "warrior"),
+                    2.95699600f, 1.90781100f, "warrior"));
+    public static final RegistryObject<EntityType<FittedGroundVehicleEntity>> BEGLEITPANZER =
+            ENTITIES.register("begleitpanzer", () -> vehicle(
+                    (type, level) -> new FittedGroundVehicleEntity(type, level, "begleitpanzer"),
+                    3.10325400f, 1.84414700f, "begleitpanzer"));
+    public static final RegistryObject<EntityType<FittedGroundVehicleEntity>> TYPE_89_IFV =
+            ENTITIES.register("type_89_ifv", () -> vehicle(
+                    (type, level) -> new FittedGroundVehicleEntity(type, level, "type_89_ifv"),
+                    3.40000000f, 1.95680000f, "type_89_ifv"));
     public static final RegistryObject<EntityType<FittedGroundVehicleEntity>> BTR_90 =
             ENTITIES.register("btr_90", () -> vehicle(
                     (type, level) -> new FittedGroundVehicleEntity(type, level, "btr_90"),

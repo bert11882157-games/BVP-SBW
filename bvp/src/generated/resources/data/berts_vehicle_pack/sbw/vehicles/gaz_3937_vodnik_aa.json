@@ -1,0 +1,554 @@
+{
+  "ID": "berts_vehicle_pack:gaz_3937_vodnik_aa",
+  "MaxHealth": 150,
+  "MaxEnergy": 10000000,
+  "AllowFreeCam": true,
+  "LightlyArmored": true,
+  "EngineType": "Wheel",
+  "EngineSound": "berts_vehicle_pack:gaz_3937_vodnik_aa_engine_loop",
+  "EngineInfo": {
+    "Buoyancy": 0,
+    "EnergyCostRate": 120,
+    "WheelRotSpeed": 1.25,
+    "WheelDifferential": 0.75,
+    "MaxForwardSpeedRate": 1.411764705882353,
+    "MaxBackwardSpeedRate": 0.23529411764705882,
+    "Increment": 0.008,
+    "Decrement": 0.011,
+    "SteeringSpeed": 0.065,
+    "EngineSoundVolume": 0.85
+  },
+  "TurretPos": [
+    0,
+    2.87981438,
+    -1.29187937
+  ],
+  "BarrelPos": [
+    0,
+    0.32296984,
+    0
+  ],
+  "TurretControllerIndex": 0,
+  "TurretTurnSpeed": [
+    35,
+    35
+  ],
+  "TurretPitchRange": [
+    -5,
+    75
+  ],
+  "UpStep": 1.5,
+  "RotateOffsetHeight": 0,
+  "Mass": 7.5,
+  "TerrainCompat": [
+    [
+      1.1909512761020882,
+      0,
+      1.2649651972157772
+    ],
+    [
+      -1.1842227378190255,
+      0,
+      1.2649651972157772
+    ],
+    [
+      -1.1842227378190255,
+      0,
+      -1.587935034802784
+    ],
+    [
+      1.1909512761020882,
+      0,
+      -1.587935034802784
+    ]
+  ],
+  "OBB": [
+    {
+      "Size": [
+        1.39953596,
+        1.13039443,
+        2.9
+      ],
+      "Position": [
+        0,
+        1.587935,
+        0.00672875
+      ]
+    },
+    {
+      "Part": "WheelLeft",
+      "Position": [
+        1.19095125,
+        0.59211125,
+        -0.161485
+      ],
+      "Size": [
+        0.19512761,
+        0.59211137,
+        2.01856148
+      ]
+    },
+    {
+      "Part": "WheelRight",
+      "Position": [
+        -1.1842225,
+        0.59211125,
+        -0.161485
+      ],
+      "Size": [
+        0.18839907,
+        0.59211137,
+        2.01856148
+      ]
+    }
+  ],
+  "Attachments": {
+    "driverCamera": {
+      "Parent": "Vehicle",
+      "Position": [
+        0,
+        2.12621812,
+        1.9916475
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "gunnerCamera": {
+      "Parent": "Turret",
+      "Position": [
+        0,
+        0.64593968,
+        0
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "gunnerSeat": {
+      "Parent": "Turret",
+      "Position": [
+        0,
+        -0.26914153,
+        -0.05382831
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "passengerSeat_1": {
+      "Parent": "Vehicle",
+      "Position": [
+        0.53828312,
+        1.53410687,
+        1.5071925
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "turretPivot": {
+      "Parent": "Vehicle",
+      "Position": [
+        0,
+        2.87981438,
+        -1.29187937
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "barrelPivot": {
+      "Parent": "Turret",
+      "Position": [
+        0,
+        0.32296984,
+        0
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "mainMuzzle": {
+      "Parent": "Barrel",
+      "Position": [
+        1.11693735,
+        0.05382831,
+        0.98236659
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "missileMuzzle_2": {
+      "Parent": "Barrel",
+      "Position": [
+        0.79396752,
+        0.05382831,
+        0.98236659
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "missileMuzzle_3": {
+      "Parent": "Barrel",
+      "Position": [
+        -0.79396752,
+        0.05382831,
+        0.98236659
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "missileMuzzle_4": {
+      "Parent": "Barrel",
+      "Position": [
+        -1.11693735,
+        0.05382831,
+        0.98236659
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "missileMuzzle_5": {
+      "Parent": "Barrel",
+      "Position": [
+        1.11693735,
+        -0.16148492,
+        0.98236659
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "missileMuzzle_6": {
+      "Parent": "Barrel",
+      "Position": [
+        0.79396752,
+        -0.16148492,
+        0.98236659
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "missileMuzzle_7": {
+      "Parent": "Barrel",
+      "Position": [
+        -0.79396752,
+        -0.16148492,
+        0.98236659
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "missileMuzzle_8": {
+      "Parent": "Barrel",
+      "Position": [
+        -1.11693735,
+        -0.16148492,
+        0.98236659
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    }
+  },
+  "Seats": [
+    {
+      "HidePassenger": true,
+      "IsEnclosed": true,
+      "Transform": "Turret",
+      "Position": [
+        0,
+        -0.26914153,
+        -0.05382831
+      ],
+      "BodyAttachment": "Turret",
+      "Weapons": [
+        "Missile"
+      ],
+      "CanRotateHead": false,
+      "CameraPos": {
+        "Transform": "Turret",
+        "Position": [
+          0,
+          0,
+          0
+        ],
+        "ZoomPosition": [
+          0,
+          0,
+          0
+        ],
+        "Direction": [
+          0,
+          0,
+          1
+        ],
+        "UseFixedCameraPos": true,
+        "EyeAttachment": "gunnerCamera",
+        "ZoomEyeAttachment": "gunnerCamera",
+        "DirectionAttachment": "mainMuzzle",
+        "ZoomDirectionAttachment": "mainMuzzle"
+      },
+      "MinPitch": -5,
+      "MaxPitch": 75
+    },
+    {
+      "HidePassenger": true,
+      "IsEnclosed": true,
+      "Transform": "Vehicle",
+      "Position": [
+        0.53828312,
+        1.53410687,
+        1.5071925
+      ],
+      "BodyAttachment": "Vehicle",
+      "Weapons": [],
+      "CanRotateHead": true
+    }
+  ],
+  "Weapons": {
+    "Missile": {
+      "Name": "Short-range IR SAM (model-based proxy)",
+      "RPM": 30,
+      "Magazine": 8,
+      "NormalReloadTime": 260,
+      "EmptyReloadTime": 260,
+      "ProjectileAmount": 1,
+      "AmmoCostPerShoot": 1,
+      "DefaultFireMode": "Semi",
+      "AvailableFireModes": "Semi",
+      "DefaultZoom": 3,
+      "Crosshair": "@VehicleCommonMissile",
+      "CrosshairColor": "0xFFFFFF",
+      "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/fim_92.png",
+      "SoundRadius": 48,
+      "Velocity": 3,
+      "Gravity": 0,
+      "Spread": 0,
+      "ProjectileLife": 160,
+      "Damage": 260,
+      "ExplosionDamage": 90,
+      "ExplosionRadius": 6,
+      "Projectile": {
+        "Type": "superbwarfare:ru_9m336_missile",
+        "Profile": "berts_vehicle_pack:gaz_3937_vodnik_aa/vodnik_aa_ir_proxy"
+      },
+      "SeekWeaponInfo": {
+        "SeekDirection": "Barrel",
+        "CanGuidedByRadar": false,
+        "AffectedByStealthTarget": false,
+        "SeekRange": 384,
+        "SeekAngle": 20,
+        "SeekTime": 10,
+        "MinTargetHeight": 16,
+        "OnlyLockEntity": true
+      },
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:medium_anti_air_missile",
+          "ConsumptionItem": "superbwarfare:medium_surface_to_air_missile",
+          "Override": {
+            "NominalBallistics": {
+              "Supported": false,
+              "ProjectileType": "superbwarfare:ru_9m336_missile",
+              "ProjectileProfile": "berts_vehicle_pack:gaz_3937_vodnik_aa/vodnik_aa_ir_proxy"
+            }
+          }
+        }
+      ],
+      "SoundInfo": {
+        "Fire1P": "berts_vehicle_pack:gaz_3937_vodnik_aa_missile_fire",
+        "Fire3P": "berts_vehicle_pack:gaz_3937_vodnik_aa_missile_fire",
+        "Fire3PFar": "berts_vehicle_pack:gaz_3937_vodnik_aa_missile_fire",
+        "Fire3PVeryFar": "berts_vehicle_pack:gaz_3937_vodnik_aa_missile_fire",
+        "Locking": "superbwarfare:javelin_locking",
+        "Locked": "superbwarfare:javelin_locked"
+      },
+      "ShootPos": {
+        "Transform": "Vehicle",
+        "Positions": [
+          [
+            1.1169375,
+            3.2566125,
+            -0.3095125
+          ],
+          [
+            0.7939675,
+            3.2566125,
+            -0.3095125
+          ],
+          [
+            -0.7939675,
+            3.2566125,
+            -0.3095125
+          ],
+          [
+            -1.1169375,
+            3.2566125,
+            -0.3095125
+          ],
+          [
+            1.1169375,
+            3.04129937,
+            -0.3095125
+          ],
+          [
+            0.7939675,
+            3.04129937,
+            -0.3095125
+          ],
+          [
+            -0.7939675,
+            3.04129937,
+            -0.3095125
+          ],
+          [
+            -1.1169375,
+            3.04129937,
+            -0.3095125
+          ]
+        ],
+        "Directions": [
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "ViewPosition": [
+          1.1169375,
+          3.2566125,
+          -0.3095125
+        ],
+        "MuzzleAttachments": [
+          "mainMuzzle",
+          "missileMuzzle_2",
+          "missileMuzzle_3",
+          "missileMuzzle_4",
+          "missileMuzzle_5",
+          "missileMuzzle_6",
+          "missileMuzzle_7",
+          "missileMuzzle_8"
+        ],
+        "MuzzleDirectionAttachments": [
+          "mainMuzzle",
+          "missileMuzzle_2",
+          "missileMuzzle_3",
+          "missileMuzzle_4",
+          "missileMuzzle_5",
+          "missileMuzzle_6",
+          "missileMuzzle_7",
+          "missileMuzzle_8"
+        ],
+        "EffectAttachments": [
+          "mainMuzzle",
+          "missileMuzzle_2",
+          "missileMuzzle_3",
+          "missileMuzzle_4",
+          "missileMuzzle_5",
+          "missileMuzzle_6",
+          "missileMuzzle_7",
+          "missileMuzzle_8"
+        ],
+        "EffectDirectionAttachments": [
+          "mainMuzzle",
+          "missileMuzzle_2",
+          "missileMuzzle_3",
+          "missileMuzzle_4",
+          "missileMuzzle_5",
+          "missileMuzzle_6",
+          "missileMuzzle_7",
+          "missileMuzzle_8"
+        ],
+        "BoundUpWithAmmoAmount": true
+      },
+      "NominalBallistics": {
+        "Supported": false,
+        "ProjectileType": "superbwarfare:ru_9m336_missile",
+        "ProjectileProfile": "berts_vehicle_pack:gaz_3937_vodnik_aa/vodnik_aa_ir_proxy"
+      }
+    }
+  },
+  "HudType": "@Land",
+  "HUDColor": "0xFFC700",
+  "Type": "Tank",
+  "VehicleContainerType": "Medium",
+  "ContainerIcon": "superbwarfare:textures/gui/vehicle/type/land.png",
+  "VehicleIcon": "berts_vehicle_pack:textures/vehicle_icon/gaz_3937_vodnik_aa.png",
+  "ThirdPersonCameraPos": [
+    0,
+    2,
+    6
+  ],
+  "HasDecoy": false
+}

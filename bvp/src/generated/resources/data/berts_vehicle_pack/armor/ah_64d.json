@@ -1,0 +1,96 @@
+{
+  "id": "ah_64d",
+  "model_scale": 1,
+  "ap_penetration_mm": 500,
+  "chemical_penetration_mm": 700,
+  "fallback_incoming_penetration_mm": 500,
+  "atgm_tandem": false,
+  "impact_tolerance": 0.25,
+  "internal_ray_length": 10,
+  "unboxed_hits_penetrate": true,
+  "plates": [],
+  "sensitive_internals": [],
+  "engines": [],
+  "ammo_racks": [],
+  "tracks": [],
+  "modules": [],
+  "explosive_reactive_armor": [],
+  "sbw_obb": [
+    {
+      "Position": [
+        0,
+        2.4035,
+        -7.132125
+      ],
+      "Size": [
+        0.3135,
+        0.418,
+        2.952125
+      ]
+    },
+    {
+      "Position": [
+        0,
+        2.1945,
+        -0.78375
+      ],
+      "Size": [
+        0.78375,
+        0.88825,
+        3.39625
+      ]
+    },
+    {
+      "Position": [
+        0,
+        2.299,
+        3.6575
+      ],
+      "Size": [
+        0.836,
+        0.9405,
+        1.045
+      ]
+    },
+    {
+      "Position": [
+        -1.20175,
+        0.36575,
+        0.47025
+      ],
+      "Size": [
+        0.1045,
+        0.36575,
+        0.36575
+      ],
+      "LandingGear": true
+    },
+    {
+      "Position": [
+        1.20175,
+        0.36575,
+        0.47025
+      ],
+      "Size": [
+        0.1045,
+        0.36575,
+        0.36575
+      ],
+      "LandingGear": true
+    },
+    {
+      "Position": [
+        0,
+        1.254,
+        -10.685125
+      ],
+      "Size": [
+        0.078375,
+        0.15675,
+        0.15675
+      ],
+      "LandingGear": true
+    }
+  ],
+  "schema": "berts_vehicle_pack:armor_profile/v1"
+}
