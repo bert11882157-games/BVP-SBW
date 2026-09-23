@@ -289,7 +289,8 @@
               "ProjectileProfile": "berts_vehicle_pack:lav25/cannon/ammo_00_m919_apfsds",
               "ProjectileLife": 40
             }
-          }
+          },
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell"
         },
         {
           "Ammo": "superbwarfare:small_shell_he",
@@ -336,7 +337,8 @@
               "ProjectileProfile": "berts_vehicle_pack:lav25/cannon/ammo_01_m792_hei_t_1",
               "ProjectileLife": 40
             }
-          }
+          },
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell"
         }
       ],
       "ShootPos": {
@@ -481,7 +483,8 @@
               "ProjectileProfile": "berts_vehicle_pack:lav25/mainmachinegun/ammo_00_western_762_ap",
               "ProjectileLife": 400
             }
-          }
+          },
+          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition"
         }
       ],
       "Projectile": {

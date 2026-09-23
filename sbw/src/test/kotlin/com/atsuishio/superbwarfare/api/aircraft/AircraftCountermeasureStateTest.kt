@@ -62,13 +62,18 @@ class AircraftCountermeasureStateTest {
 
     @Test fun `chaff ramps one two three per half second then decays for three seconds`() {
         val state = AircraftCountermeasureState()
-        assertEquals(0, state.sample(0, chaff = true).chaffLevel)
+        val first = state.sample(0, chaff = true)
+        assertTrue(first.chaffStarted)
+        assertEquals(0, first.chaffLevel)
+        assertFalse(state.sample(1, chaff = true).chaffStarted)
         val ramp = listOf(1, 2, 4, 6, 9, 12)
         for (i in 1..6) assertEquals(ramp[i - 1], state.sample(i * 10L).chaffLevel)
         assertEquals(6, state.sample(90).chaffLevel)
         assertEquals(0, state.sample(120).chaffLevel)
         assertFalse(state.sample(459, chaff = true).chaffEmitting)
-        assertTrue(state.sample(460, chaff = true).chaffEmitting)
+        val second = state.sample(460, chaff = true)
+        assertTrue(second.chaffStarted)
+        assertTrue(second.chaffEmitting)
         assertEquals(1, state.sample(470, chaff = true).chaffLevel)
     }
 
@@ -95,6 +100,20 @@ class AircraftCountermeasureStateTest {
         assertEquals(0, result.flareLevel)
         assertEquals(0, result.flareCooldown)
         assertEquals(0, state.burstExpenditure())
+    }
+
+    @Test fun `rejecting a flare pair leaves same-tick chaff deployment accepted`() {
+        val state = AircraftCountermeasureState()
+        val first = state.tick(0, true, true, true, true, 4, 12)
+        assertEquals(1, first.flarePairs)
+        assertTrue(first.chaffStarted)
+        state.abortPair()
+        val after = state.tick(0, false, false, true, true, 4, 12)
+        assertEquals(0, after.flarePairs)
+        assertFalse(after.chaffStarted)
+        assertTrue(after.chaffEmitting)
+        assertEquals(0, after.flareLevel)
+        assertEquals(400, after.chaffCooldown)
     }
 
     @Test fun `disabled equipment never emits despite held input`() {

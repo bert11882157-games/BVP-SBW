@@ -684,6 +684,7 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -717,6 +718,7 @@
         },
         {
           "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -932,42 +934,131 @@
       ]
     },
     "RetractableGear": true,
-    "WheelContacts": [
+    "BodyParts": [
       {
-        "Id": "gear_body_0",
-        "Group": "NOSE",
-        "Position": [
-          -0.1505378125,
-          0,
-          3.788530625
+        "Min": [
+          -0.607168,
+          1.25448,
+          -2.810036
+        ],
+        "Max": [
+          0.607168,
+          2.860215,
+          4.365591
         ]
       },
       {
-        "Id": "gear_body_1",
+        "Min": [
+          -0.607168,
+          1.25448,
+          4.365591
+        ],
+        "Max": [
+          0.607168,
+          2.358423,
+          7.426523
+        ]
+      },
+      {
+        "Min": [
+          -0.607168,
+          1.304659,
+          -5.909104
+        ],
+        "Max": [
+          0.607168,
+          2.759857,
+          -2.810036
+        ]
+      },
+      {
+        "Min": [
+          -4.636559,
+          2.328423,
+          -3.191291
+        ],
+        "Max": [
+          -0.546452,
+          2.58914,
+          -2.127706
+        ]
+      },
+      {
+        "Min": [
+          0.546452,
+          2.328423,
+          -3.191291
+        ],
+        "Max": [
+          4.636559,
+          2.58914,
+          -2.127706
+        ]
+      }
+    ],
+    "WheelContacts": [
+      {
+        "Id": "gear_group12_nose_bogie",
         "Group": "NOSE",
         "Position": [
-          0.15053781249999998,
           0,
-          3.788530625
-        ]
+          0,
+          3.788531
+        ],
+        "Bounds": {
+          "Min": [
+            -0.250896,
+            0,
+            3.562724
+          ],
+          "Max": [
+            0.250896,
+            0.150537,
+            4.014337
+          ]
+        }
       },
       {
         "Id": "gear_left_0",
         "Group": "MAIN",
         "Position": [
-          -1.3799284375,
+          -1.379928,
           0,
-          -2.433691875
-        ]
+          -2.433692
+        ],
+        "Bounds": {
+          "Min": [
+            -1.555556,
+            0,
+            -2.810036
+          ],
+          "Max": [
+            -1.204301,
+            0.250896,
+            -2.057348
+          ]
+        }
       },
       {
         "Id": "gear_right_0",
         "Group": "MAIN",
         "Position": [
-          1.3799284375,
+          1.379928,
           0,
-          -2.433691875
-        ]
+          -2.433692
+        ],
+        "Bounds": {
+          "Min": [
+            1.204301,
+            0,
+            -2.810036
+          ],
+          "Max": [
+            1.555556,
+            0.250896,
+            -2.057348
+          ]
+        }
       }
     ]
   },

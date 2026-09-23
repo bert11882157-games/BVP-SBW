@@ -336,7 +336,8 @@
               "ProjectileProfile": "berts_vehicle_pack:m2_bradley/cannon/ammo_00_m791_apds",
               "ProjectileLife": 40
             }
-          }
+          },
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell"
         },
         {
           "Ammo": "superbwarfare:small_shell_he",
@@ -383,7 +384,8 @@
               "ProjectileProfile": "berts_vehicle_pack:m2_bradley/cannon/ammo_01_m792_hei_t_1",
               "ProjectileLife": 40
             }
-          }
+          },
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell"
         }
       ],
       "ShootPos": {
@@ -528,7 +530,8 @@
               "ProjectileProfile": "berts_vehicle_pack:m2_bradley/mainmachinegun/ammo_00_western_762_ap",
               "ProjectileLife": 400
             }
-          }
+          },
+          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition"
         }
       ],
       "Projectile": {
@@ -660,7 +663,13 @@
       "Crosshair": "@VehicleCommonMissile",
       "CrosshairColor": "0x66FF00",
       "Name": "weapon.berts_vehicle_pack.25_mm_m242_bgm_71a_tow",
-      "AmmoType": "superbwarfare:medium_anti_ground_missile",
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:medium_anti_ground_missile",
+          "ConsumptionItem": "superbwarfare:medium_atgm",
+          "Override": {}
+        }
+      ],
       "SoundInfo": {
         "Fire1PGain": 0.35,
         "Fire3PGain": 0.35,

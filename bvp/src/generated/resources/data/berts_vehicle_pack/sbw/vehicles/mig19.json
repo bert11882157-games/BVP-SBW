@@ -844,6 +844,7 @@
       "Crosshair": "@VehicleCommonGun",
       "CrosshairColor": "0xFFFFFF",
       "Name": "weapon.berts_vehicle_pack.mig19_nr30",
+      "SoundRadius": 8,
       "SoundInfo": {
         "Fire1PGain": 0.5,
         "Fire3PGain": 0.5,
@@ -857,6 +858,7 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -899,17 +901,17 @@
                 }
               ]
             },
-            "ShootShake": [
-              8,
-              10,
-              12
-            ],
             "NominalBallistics": {
               "Supported": true,
               "ProjectileType": "superbwarfare:small_cannon_shell",
               "ProjectileProfile": "berts_vehicle_pack:mig19/cannon/ammo_00_nr30_aphe",
               "ProjectileLife": 400
-            }
+            },
+            "ShootShake": [
+              8,
+              10,
+              12
+            ]
           }
         }
       ],
@@ -943,27 +945,10 @@
           "nr30_muzzle_001"
         ]
       },
-      "NominalBallistics": {
-        "Supported": true,
-        "ProjectileType": "superbwarfare:small_cannon_shell",
-        "ProjectileProfile": "berts_vehicle_pack:mig19/cannon/default",
-        "ProjectileLife": 400
-      },
-      "ShootShake": [
-        8,
-        10,
-        12
-      ],
-      "SoundRadius": 8,
-      "BeltFed": true,
-      "NormalReloadTime": 400,
-      "AutoReload": true,
-      "OverheatEnabled": false,
-      "ProjectileAmount": 1,
-      "AmmoCostPerShoot": 1,
       "ProjectileBeltAmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -985,6 +970,7 @@
         },
         {
           "Ammo": "superbwarfare:small_shell_aa",
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -1004,6 +990,23 @@
             ]
           }
         }
+      ],
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "superbwarfare:small_cannon_shell",
+        "ProjectileProfile": "berts_vehicle_pack:mig19/cannon/default",
+        "ProjectileLife": 400
+      },
+      "BeltFed": true,
+      "NormalReloadTime": 400,
+      "AutoReload": true,
+      "OverheatEnabled": false,
+      "ProjectileAmount": 1,
+      "AmmoCostPerShoot": 1,
+      "ShootShake": [
+        8,
+        10,
+        12
       ]
     },
     "Cannon2": {
@@ -1028,6 +1031,7 @@
       "Crosshair": "@VehicleCommonGun",
       "CrosshairColor": "0xFFFFFF",
       "Name": "weapon.berts_vehicle_pack.mig19_nr30",
+      "SoundRadius": 8,
       "SoundInfo": {
         "Fire1PGain": 0.5,
         "Fire3PGain": 0.5,
@@ -1041,6 +1045,7 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -1083,17 +1088,17 @@
                 }
               ]
             },
-            "ShootShake": [
-              8,
-              10,
-              12
-            ],
             "NominalBallistics": {
               "Supported": true,
               "ProjectileType": "superbwarfare:small_cannon_shell",
               "ProjectileProfile": "berts_vehicle_pack:mig19/cannon2/ammo_00_nr30_aphe",
               "ProjectileLife": 400
-            }
+            },
+            "ShootShake": [
+              8,
+              10,
+              12
+            ]
           }
         }
       ],
@@ -1127,27 +1132,10 @@
           "nr30_muzzle_002"
         ]
       },
-      "NominalBallistics": {
-        "Supported": true,
-        "ProjectileType": "superbwarfare:small_cannon_shell",
-        "ProjectileProfile": "berts_vehicle_pack:mig19/cannon2/default",
-        "ProjectileLife": 400
-      },
-      "ShootShake": [
-        8,
-        10,
-        12
-      ],
-      "SoundRadius": 8,
-      "BeltFed": true,
-      "NormalReloadTime": 400,
-      "AutoReload": true,
-      "OverheatEnabled": false,
-      "ProjectileAmount": 1,
-      "AmmoCostPerShoot": 1,
       "ProjectileBeltAmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -1169,6 +1157,7 @@
         },
         {
           "Ammo": "superbwarfare:small_shell_aa",
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -1188,6 +1177,23 @@
             ]
           }
         }
+      ],
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "superbwarfare:small_cannon_shell",
+        "ProjectileProfile": "berts_vehicle_pack:mig19/cannon2/default",
+        "ProjectileLife": 400
+      },
+      "BeltFed": true,
+      "NormalReloadTime": 400,
+      "AutoReload": true,
+      "OverheatEnabled": false,
+      "ProjectileAmount": 1,
+      "AmmoCostPerShoot": 1,
+      "ShootShake": [
+        8,
+        10,
+        12
       ]
     },
     "Cannon3": {
@@ -1212,6 +1218,7 @@
       "Crosshair": "@VehicleCommonGun",
       "CrosshairColor": "0xFFFFFF",
       "Name": "weapon.berts_vehicle_pack.mig19_nr30",
+      "SoundRadius": 8,
       "SoundInfo": {
         "Fire1PGain": 0.5,
         "Fire3PGain": 0.5,
@@ -1225,6 +1232,7 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -1267,17 +1275,17 @@
                 }
               ]
             },
-            "ShootShake": [
-              8,
-              10,
-              12
-            ],
             "NominalBallistics": {
               "Supported": true,
               "ProjectileType": "superbwarfare:small_cannon_shell",
               "ProjectileProfile": "berts_vehicle_pack:mig19/cannon3/ammo_00_nr30_aphe",
               "ProjectileLife": 400
-            }
+            },
+            "ShootShake": [
+              8,
+              10,
+              12
+            ]
           }
         }
       ],
@@ -1311,27 +1319,10 @@
           "nr30_muzzle_003"
         ]
       },
-      "NominalBallistics": {
-        "Supported": true,
-        "ProjectileType": "superbwarfare:small_cannon_shell",
-        "ProjectileProfile": "berts_vehicle_pack:mig19/cannon3/default",
-        "ProjectileLife": 400
-      },
-      "ShootShake": [
-        8,
-        10,
-        12
-      ],
-      "SoundRadius": 8,
-      "BeltFed": true,
-      "NormalReloadTime": 400,
-      "AutoReload": true,
-      "OverheatEnabled": false,
-      "ProjectileAmount": 1,
-      "AmmoCostPerShoot": 1,
       "ProjectileBeltAmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -1353,6 +1344,7 @@
         },
         {
           "Ammo": "superbwarfare:small_shell_aa",
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -1372,6 +1364,23 @@
             ]
           }
         }
+      ],
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "superbwarfare:small_cannon_shell",
+        "ProjectileProfile": "berts_vehicle_pack:mig19/cannon3/default",
+        "ProjectileLife": 400
+      },
+      "BeltFed": true,
+      "NormalReloadTime": 400,
+      "AutoReload": true,
+      "OverheatEnabled": false,
+      "ProjectileAmount": 1,
+      "AmmoCostPerShoot": 1,
+      "ShootShake": [
+        8,
+        10,
+        12
       ]
     }
   },
@@ -1514,33 +1523,119 @@
       ]
     },
     "RetractableGear": false,
+    "BodyParts": [
+      {
+        "Min": [
+          -1.002359,
+          1.259176,
+          -7.400486
+        ],
+        "Max": [
+          1.002359,
+          3.452622,
+          7.707678
+        ]
+      },
+      {
+        "Min": [
+          -1.002359,
+          1.331209,
+          7.599627
+        ],
+        "Max": [
+          1.002359,
+          3.17529,
+          9.112348
+        ]
+      },
+      {
+        "Min": [
+          -4.000717,
+          1.193158,
+          -4.424097
+        ],
+        "Max": [
+          -0.902123,
+          2.740668,
+          6.441059
+        ]
+      },
+      {
+        "Min": [
+          0.902123,
+          1.193158,
+          -4.424097
+        ],
+        "Max": [
+          4.000717,
+          2.740668,
+          6.441059
+        ]
+      }
+    ],
     "WheelContacts": [
       {
         "Id": "legacy_tyre_210",
         "Group": "NOSE",
         "Position": [
-          -0.0540259375,
+          -0.054026,
           -0.00863,
-          6.5191109375
-        ]
+          6.519111
+        ],
+        "Bounds": {
+          "Min": [
+            -0.162078,
+            -0.00863,
+            6.393051
+          ],
+          "Max": [
+            0.054026,
+            0.783749,
+            6.645171
+          ]
+        }
       },
       {
         "Id": "legacy_tyre_220",
         "Group": "MAIN",
         "Position": [
-          2.6112459375,
-          0.063404375,
-          -0.5402578124999999
-        ]
+          2.611246,
+          0.063404,
+          -0.540258
+        ],
+        "Bounds": {
+          "Min": [
+            2.503194,
+            0.063404,
+            -0.666318
+          ],
+          "Max": [
+            2.719298,
+            0.855783,
+            -0.414197
+          ]
+        }
       },
       {
         "Id": "legacy_tyre_232",
         "Group": "MAIN",
         "Position": [
-          -2.6472634375,
-          0.063404375,
-          -0.5402578124999999
-        ]
+          -2.647263,
+          0.063404,
+          -0.540258
+        ],
+        "Bounds": {
+          "Min": [
+            -2.755315,
+            0.063404,
+            -0.666318
+          ],
+          "Max": [
+            -2.539212,
+            0.855783,
+            -0.414197
+          ]
+        }
       }
     ]
   },

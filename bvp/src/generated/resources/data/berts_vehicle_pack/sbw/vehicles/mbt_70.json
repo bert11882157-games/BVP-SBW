@@ -426,7 +426,8 @@
               "ProjectileProfile": "berts_vehicle_pack:mbt_70/cannon/ammo_00_xm578e1_apfsds",
               "ProjectileLife": 50
             }
-          }
+          },
+          "ConsumptionItem": "superbwarfare:tier_1_armor_piercing_shell"
         },
         {
           "Ammo": "berts_vehicle_pack:level_2_ap_shell",
@@ -454,7 +455,8 @@
               "ProjectileProfile": "berts_vehicle_pack:mbt_70/cannon/ammo_01_m409a1_heat",
               "ProjectileLife": 50
             }
-          }
+          },
+          "ConsumptionItem": "superbwarfare:tier_1_heat_shell"
         },
         {
           "Ammo": "superbwarfare:medium_anti_ground_missile",
@@ -502,7 +504,8 @@
               "ProjectileType": "berts_vehicle_pack:ataka_missile",
               "ProjectileProfile": "berts_vehicle_pack:mbt_70/cannon/ammo_02_mgm51c_atgm"
             }
-          }
+          },
+          "ConsumptionItem": "superbwarfare:large_atgm"
         }
       ],
       "SoundInfo": {
@@ -621,7 +624,8 @@
               "ProjectileProfile": "berts_vehicle_pack:mbt_70/machinegun/ammo_00_western_762_ap",
               "ProjectileLife": 400
             }
-          }
+          },
+          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition"
         }
       ],
       "Projectile": {
@@ -805,7 +809,8 @@
               "ProjectileProfile": "berts_vehicle_pack:mbt_70/passengermachinegun/ammo_00_dm51a1_hefi_t_1",
               "ProjectileLife": 40
             }
-          }
+          },
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell"
         }
       ],
       "ProjectileAmount": 1,

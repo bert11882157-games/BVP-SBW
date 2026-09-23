@@ -735,6 +735,7 @@ object LivingEventHandler {
             if (explosion.ownsGroundVehicleBlast(entity)) continue
 
             iterator.remove()
+            if (!explosion.hasLegacyVehicleBlastDamage()) continue
             val explosionPos = explosion.position
             val explosionRadius = (explosion as ExplosionAccess).`superbwarfare$getRadius`() * 2.0F
             if (!entity.ignoreExplosion()) {

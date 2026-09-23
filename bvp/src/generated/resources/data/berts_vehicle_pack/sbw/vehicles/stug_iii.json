@@ -173,7 +173,8 @@
               10,
               60
             ]
-          }
+          },
+          "ConsumptionItem": "superbwarfare:tier_1_armor_piercing_shell"
         }
       ],
       "SoundInfo": {
@@ -247,7 +248,13 @@
       "DefaultZoom": 3,
       "NaturalCooldown": 1,
       "CrosshairColor": "0xFFC700",
-      "AmmoType": "@RifleAmmo",
+      "AmmoType": [
+        {
+          "Ammo": "@RifleAmmo",
+          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition",
+          "Override": {}
+        }
+      ],
       "Projectile": {
         "Type": "superbwarfare:projectile",
         "Profile": "berts_vehicle_pack:stug_iii/machinegun/default"

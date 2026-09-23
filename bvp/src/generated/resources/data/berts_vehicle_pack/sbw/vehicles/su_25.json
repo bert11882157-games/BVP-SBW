@@ -535,6 +535,7 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -568,6 +569,7 @@
         },
         {
           "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -653,7 +655,20 @@
       "OverheatEnabled": false
     },
     "S8KOPylon1": {
-      "AmmoType": "superbwarfare:small_rocket",
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_rocket",
+          "ConsumptionItem": "superbwarfare:small_unguided_rocket",
+          "Override": {
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "berts_vehicle_pack:s8ko_rocket",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rockets/s8ko",
+              "ProjectileLife": 100
+            }
+          }
+        }
+      ],
       "Magazine": 40,
       "EmptyReloadTime": 200,
       "DefaultFireMode": "Auto",
@@ -694,12 +709,27 @@
             1.4709725
           ],
           [
+            2.119097187,
+            1.819930625,
+            1.4709725
+          ],
+          [
             -2.168958125,
             1.74513875,
             1.4709725
           ],
           [
+            2.168958125,
+            1.74513875,
+            1.4709725
+          ],
+          [
             -2.218819375,
+            1.670347187,
+            1.4709725
+          ],
+          [
+            2.218819375,
             1.670347187,
             1.4709725
           ],
@@ -709,7 +739,17 @@
             1.4709725
           ],
           [
+            2.019375,
+            1.819930625,
+            1.4709725
+          ],
+          [
             -1.919652812,
+            1.819930625,
+            1.4709725
+          ],
+          [
+            1.919652812,
             1.819930625,
             1.4709725
           ],
@@ -719,7 +759,17 @@
             1.4709725
           ],
           [
+            1.869791875,
+            1.74513875,
+            1.4709725
+          ],
+          [
             -1.819930625,
+            1.670347187,
+            1.4709725
+          ],
+          [
+            1.819930625,
             1.670347187,
             1.4709725
           ],
@@ -729,7 +779,17 @@
             1.4709725
           ],
           [
+            2.218819375,
+            1.570625,
+            1.4709725
+          ],
+          [
             -1.819930625,
+            1.570625,
+            1.4709725
+          ],
+          [
+            1.819930625,
             1.570625,
             1.4709725
           ],
@@ -739,7 +799,17 @@
             1.4709725
           ],
           [
+            1.869791875,
+            1.495833125,
+            1.4709725
+          ],
+          [
             -2.168958125,
+            1.495833125,
+            1.4709725
+          ],
+          [
+            2.168958125,
             1.495833125,
             1.4709725
           ],
@@ -749,12 +819,27 @@
             1.4709725
           ],
           [
+            1.919652812,
+            1.421041875,
+            1.4709725
+          ],
+          [
             -2.019375,
+            1.421041875,
+            1.4709725
+          ],
+          [
+            2.019375,
             1.421041875,
             1.4709725
           ],
           [
             -2.119097187,
+            1.421041875,
+            1.4709725
+          ],
+          [
+            2.119097187,
             1.421041875,
             1.4709725
           ],
@@ -764,103 +849,33 @@
             1.77013875
           ],
           [
+            2.019375,
+            1.720208125,
+            1.77013875
+          ],
+          [
             -2.119097187,
             1.62048625,
             1.77013875
           ],
           [
+            2.119097187,
+            1.62048625,
+            1.77013875
+          ],
+          [
             -1.919652812,
+            1.62048625,
+            1.77013875
+          ],
+          [
+            1.919652812,
             1.62048625,
             1.77013875
           ],
           [
             -2.019375,
             1.52076375,
-            1.77013875
-          ],
-          [
-            2.119097187,
-            1.819930625,
-            1.4709725
-          ],
-          [
-            2.168958125,
-            1.74513875,
-            1.4709725
-          ],
-          [
-            2.218819375,
-            1.670347187,
-            1.4709725
-          ],
-          [
-            2.019375,
-            1.819930625,
-            1.4709725
-          ],
-          [
-            1.919652812,
-            1.819930625,
-            1.4709725
-          ],
-          [
-            1.869791875,
-            1.74513875,
-            1.4709725
-          ],
-          [
-            1.819930625,
-            1.670347187,
-            1.4709725
-          ],
-          [
-            2.218819375,
-            1.570625,
-            1.4709725
-          ],
-          [
-            1.819930625,
-            1.570625,
-            1.4709725
-          ],
-          [
-            1.869791875,
-            1.495833125,
-            1.4709725
-          ],
-          [
-            2.168958125,
-            1.495833125,
-            1.4709725
-          ],
-          [
-            1.919652812,
-            1.421041875,
-            1.4709725
-          ],
-          [
-            2.019375,
-            1.421041875,
-            1.4709725
-          ],
-          [
-            2.119097187,
-            1.421041875,
-            1.4709725
-          ],
-          [
-            2.019375,
-            1.720208125,
-            1.77013875
-          ],
-          [
-            2.119097187,
-            1.62048625,
-            1.77013875
-          ],
-          [
-            1.919652812,
-            1.62048625,
             1.77013875
           ],
           [
@@ -1058,154 +1073,154 @@
         ],
         "MuzzleAttachments": [
           "S8KOPylon1_left_0",
-          "S8KOPylon1_left_1",
-          "S8KOPylon1_left_2",
-          "S8KOPylon1_left_3",
-          "S8KOPylon1_left_4",
-          "S8KOPylon1_left_5",
-          "S8KOPylon1_left_6",
-          "S8KOPylon1_left_7",
-          "S8KOPylon1_left_8",
-          "S8KOPylon1_left_9",
-          "S8KOPylon1_left_10",
-          "S8KOPylon1_left_11",
-          "S8KOPylon1_left_12",
-          "S8KOPylon1_left_13",
-          "S8KOPylon1_left_14",
-          "S8KOPylon1_left_15",
-          "S8KOPylon1_left_16",
-          "S8KOPylon1_left_17",
           "S8KOPylon1_right_0",
+          "S8KOPylon1_left_1",
           "S8KOPylon1_right_1",
+          "S8KOPylon1_left_2",
           "S8KOPylon1_right_2",
+          "S8KOPylon1_left_3",
           "S8KOPylon1_right_3",
+          "S8KOPylon1_left_4",
           "S8KOPylon1_right_4",
+          "S8KOPylon1_left_5",
           "S8KOPylon1_right_5",
+          "S8KOPylon1_left_6",
           "S8KOPylon1_right_6",
+          "S8KOPylon1_left_7",
           "S8KOPylon1_right_7",
+          "S8KOPylon1_left_8",
           "S8KOPylon1_right_8",
+          "S8KOPylon1_left_9",
           "S8KOPylon1_right_9",
+          "S8KOPylon1_left_10",
           "S8KOPylon1_right_10",
+          "S8KOPylon1_left_11",
           "S8KOPylon1_right_11",
+          "S8KOPylon1_left_12",
           "S8KOPylon1_right_12",
+          "S8KOPylon1_left_13",
           "S8KOPylon1_right_13",
+          "S8KOPylon1_left_14",
           "S8KOPylon1_right_14",
+          "S8KOPylon1_left_15",
           "S8KOPylon1_right_15",
+          "S8KOPylon1_left_16",
           "S8KOPylon1_right_16",
+          "S8KOPylon1_left_17",
           "S8KOPylon1_right_17"
         ],
         "MuzzleDirectionAttachments": [
           "S8KOPylon1_left_0",
-          "S8KOPylon1_left_1",
-          "S8KOPylon1_left_2",
-          "S8KOPylon1_left_3",
-          "S8KOPylon1_left_4",
-          "S8KOPylon1_left_5",
-          "S8KOPylon1_left_6",
-          "S8KOPylon1_left_7",
-          "S8KOPylon1_left_8",
-          "S8KOPylon1_left_9",
-          "S8KOPylon1_left_10",
-          "S8KOPylon1_left_11",
-          "S8KOPylon1_left_12",
-          "S8KOPylon1_left_13",
-          "S8KOPylon1_left_14",
-          "S8KOPylon1_left_15",
-          "S8KOPylon1_left_16",
-          "S8KOPylon1_left_17",
           "S8KOPylon1_right_0",
+          "S8KOPylon1_left_1",
           "S8KOPylon1_right_1",
+          "S8KOPylon1_left_2",
           "S8KOPylon1_right_2",
+          "S8KOPylon1_left_3",
           "S8KOPylon1_right_3",
+          "S8KOPylon1_left_4",
           "S8KOPylon1_right_4",
+          "S8KOPylon1_left_5",
           "S8KOPylon1_right_5",
+          "S8KOPylon1_left_6",
           "S8KOPylon1_right_6",
+          "S8KOPylon1_left_7",
           "S8KOPylon1_right_7",
+          "S8KOPylon1_left_8",
           "S8KOPylon1_right_8",
+          "S8KOPylon1_left_9",
           "S8KOPylon1_right_9",
+          "S8KOPylon1_left_10",
           "S8KOPylon1_right_10",
+          "S8KOPylon1_left_11",
           "S8KOPylon1_right_11",
+          "S8KOPylon1_left_12",
           "S8KOPylon1_right_12",
+          "S8KOPylon1_left_13",
           "S8KOPylon1_right_13",
+          "S8KOPylon1_left_14",
           "S8KOPylon1_right_14",
+          "S8KOPylon1_left_15",
           "S8KOPylon1_right_15",
+          "S8KOPylon1_left_16",
           "S8KOPylon1_right_16",
+          "S8KOPylon1_left_17",
           "S8KOPylon1_right_17"
         ],
         "EffectAttachments": [
           "S8KOPylon1_left_0",
-          "S8KOPylon1_left_1",
-          "S8KOPylon1_left_2",
-          "S8KOPylon1_left_3",
-          "S8KOPylon1_left_4",
-          "S8KOPylon1_left_5",
-          "S8KOPylon1_left_6",
-          "S8KOPylon1_left_7",
-          "S8KOPylon1_left_8",
-          "S8KOPylon1_left_9",
-          "S8KOPylon1_left_10",
-          "S8KOPylon1_left_11",
-          "S8KOPylon1_left_12",
-          "S8KOPylon1_left_13",
-          "S8KOPylon1_left_14",
-          "S8KOPylon1_left_15",
-          "S8KOPylon1_left_16",
-          "S8KOPylon1_left_17",
           "S8KOPylon1_right_0",
+          "S8KOPylon1_left_1",
           "S8KOPylon1_right_1",
+          "S8KOPylon1_left_2",
           "S8KOPylon1_right_2",
+          "S8KOPylon1_left_3",
           "S8KOPylon1_right_3",
+          "S8KOPylon1_left_4",
           "S8KOPylon1_right_4",
+          "S8KOPylon1_left_5",
           "S8KOPylon1_right_5",
+          "S8KOPylon1_left_6",
           "S8KOPylon1_right_6",
+          "S8KOPylon1_left_7",
           "S8KOPylon1_right_7",
+          "S8KOPylon1_left_8",
           "S8KOPylon1_right_8",
+          "S8KOPylon1_left_9",
           "S8KOPylon1_right_9",
+          "S8KOPylon1_left_10",
           "S8KOPylon1_right_10",
+          "S8KOPylon1_left_11",
           "S8KOPylon1_right_11",
+          "S8KOPylon1_left_12",
           "S8KOPylon1_right_12",
+          "S8KOPylon1_left_13",
           "S8KOPylon1_right_13",
+          "S8KOPylon1_left_14",
           "S8KOPylon1_right_14",
+          "S8KOPylon1_left_15",
           "S8KOPylon1_right_15",
+          "S8KOPylon1_left_16",
           "S8KOPylon1_right_16",
+          "S8KOPylon1_left_17",
           "S8KOPylon1_right_17"
         ],
         "EffectDirectionAttachments": [
           "S8KOPylon1_left_0",
-          "S8KOPylon1_left_1",
-          "S8KOPylon1_left_2",
-          "S8KOPylon1_left_3",
-          "S8KOPylon1_left_4",
-          "S8KOPylon1_left_5",
-          "S8KOPylon1_left_6",
-          "S8KOPylon1_left_7",
-          "S8KOPylon1_left_8",
-          "S8KOPylon1_left_9",
-          "S8KOPylon1_left_10",
-          "S8KOPylon1_left_11",
-          "S8KOPylon1_left_12",
-          "S8KOPylon1_left_13",
-          "S8KOPylon1_left_14",
-          "S8KOPylon1_left_15",
-          "S8KOPylon1_left_16",
-          "S8KOPylon1_left_17",
           "S8KOPylon1_right_0",
+          "S8KOPylon1_left_1",
           "S8KOPylon1_right_1",
+          "S8KOPylon1_left_2",
           "S8KOPylon1_right_2",
+          "S8KOPylon1_left_3",
           "S8KOPylon1_right_3",
+          "S8KOPylon1_left_4",
           "S8KOPylon1_right_4",
+          "S8KOPylon1_left_5",
           "S8KOPylon1_right_5",
+          "S8KOPylon1_left_6",
           "S8KOPylon1_right_6",
+          "S8KOPylon1_left_7",
           "S8KOPylon1_right_7",
+          "S8KOPylon1_left_8",
           "S8KOPylon1_right_8",
+          "S8KOPylon1_left_9",
           "S8KOPylon1_right_9",
+          "S8KOPylon1_left_10",
           "S8KOPylon1_right_10",
+          "S8KOPylon1_left_11",
           "S8KOPylon1_right_11",
+          "S8KOPylon1_left_12",
           "S8KOPylon1_right_12",
+          "S8KOPylon1_left_13",
           "S8KOPylon1_right_13",
+          "S8KOPylon1_left_14",
           "S8KOPylon1_right_14",
+          "S8KOPylon1_left_15",
           "S8KOPylon1_right_15",
+          "S8KOPylon1_left_16",
           "S8KOPylon1_right_16",
+          "S8KOPylon1_left_17",
           "S8KOPylon1_right_17"
         ]
       },
@@ -1217,7 +1232,20 @@
       }
     },
     "S8KOPylon2": {
-      "AmmoType": "superbwarfare:small_rocket",
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_rocket",
+          "ConsumptionItem": "superbwarfare:small_unguided_rocket",
+          "Override": {
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "berts_vehicle_pack:s8ko_rocket",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rockets/s8ko",
+              "ProjectileLife": 100
+            }
+          }
+        }
+      ],
       "Magazine": 40,
       "EmptyReloadTime": 200,
       "DefaultFireMode": "Auto",
@@ -1258,12 +1286,27 @@
             1.2715275
           ],
           [
+            2.867014187,
+            1.819930625,
+            1.2715275
+          ],
+          [
             -2.916875125,
             1.74513875,
             1.2715275
           ],
           [
+            2.916875125,
+            1.74513875,
+            1.2715275
+          ],
+          [
             -2.966736375,
+            1.670347187,
+            1.2715275
+          ],
+          [
+            2.966736375,
             1.670347187,
             1.2715275
           ],
@@ -1273,7 +1316,17 @@
             1.2715275
           ],
           [
+            2.767292,
+            1.819930625,
+            1.2715275
+          ],
+          [
             -2.667569813,
+            1.819930625,
+            1.2715275
+          ],
+          [
+            2.667569813,
             1.819930625,
             1.2715275
           ],
@@ -1283,7 +1336,17 @@
             1.2715275
           ],
           [
+            2.617708875,
+            1.74513875,
+            1.2715275
+          ],
+          [
             -2.567847625,
+            1.670347187,
+            1.2715275
+          ],
+          [
+            2.567847625,
             1.670347187,
             1.2715275
           ],
@@ -1293,7 +1356,17 @@
             1.2715275
           ],
           [
+            2.966736375,
+            1.570625,
+            1.2715275
+          ],
+          [
             -2.567847625,
+            1.570625,
+            1.2715275
+          ],
+          [
+            2.567847625,
             1.570625,
             1.2715275
           ],
@@ -1303,7 +1376,17 @@
             1.2715275
           ],
           [
+            2.617708875,
+            1.495833125,
+            1.2715275
+          ],
+          [
             -2.916875125,
+            1.495833125,
+            1.2715275
+          ],
+          [
+            2.916875125,
             1.495833125,
             1.2715275
           ],
@@ -1313,12 +1396,27 @@
             1.2715275
           ],
           [
+            2.667569813,
+            1.421041875,
+            1.2715275
+          ],
+          [
             -2.767292,
+            1.421041875,
+            1.2715275
+          ],
+          [
+            2.767292,
             1.421041875,
             1.2715275
           ],
           [
             -2.867014187,
+            1.421041875,
+            1.2715275
+          ],
+          [
+            2.867014187,
             1.421041875,
             1.2715275
           ],
@@ -1328,103 +1426,33 @@
             1.57069375
           ],
           [
+            2.767292,
+            1.720208125,
+            1.57069375
+          ],
+          [
             -2.867014187,
             1.62048625,
             1.57069375
           ],
           [
+            2.867014187,
+            1.62048625,
+            1.57069375
+          ],
+          [
             -2.667569813,
+            1.62048625,
+            1.57069375
+          ],
+          [
+            2.667569813,
             1.62048625,
             1.57069375
           ],
           [
             -2.767292,
             1.52076375,
-            1.57069375
-          ],
-          [
-            2.867014187,
-            1.819930625,
-            1.2715275
-          ],
-          [
-            2.916875125,
-            1.74513875,
-            1.2715275
-          ],
-          [
-            2.966736375,
-            1.670347187,
-            1.2715275
-          ],
-          [
-            2.767292,
-            1.819930625,
-            1.2715275
-          ],
-          [
-            2.667569813,
-            1.819930625,
-            1.2715275
-          ],
-          [
-            2.617708875,
-            1.74513875,
-            1.2715275
-          ],
-          [
-            2.567847625,
-            1.670347187,
-            1.2715275
-          ],
-          [
-            2.966736375,
-            1.570625,
-            1.2715275
-          ],
-          [
-            2.567847625,
-            1.570625,
-            1.2715275
-          ],
-          [
-            2.617708875,
-            1.495833125,
-            1.2715275
-          ],
-          [
-            2.916875125,
-            1.495833125,
-            1.2715275
-          ],
-          [
-            2.667569813,
-            1.421041875,
-            1.2715275
-          ],
-          [
-            2.767292,
-            1.421041875,
-            1.2715275
-          ],
-          [
-            2.867014187,
-            1.421041875,
-            1.2715275
-          ],
-          [
-            2.767292,
-            1.720208125,
-            1.57069375
-          ],
-          [
-            2.867014187,
-            1.62048625,
-            1.57069375
-          ],
-          [
-            2.667569813,
-            1.62048625,
             1.57069375
           ],
           [
@@ -1622,154 +1650,154 @@
         ],
         "MuzzleAttachments": [
           "S8KOPylon2_left_0",
-          "S8KOPylon2_left_1",
-          "S8KOPylon2_left_2",
-          "S8KOPylon2_left_3",
-          "S8KOPylon2_left_4",
-          "S8KOPylon2_left_5",
-          "S8KOPylon2_left_6",
-          "S8KOPylon2_left_7",
-          "S8KOPylon2_left_8",
-          "S8KOPylon2_left_9",
-          "S8KOPylon2_left_10",
-          "S8KOPylon2_left_11",
-          "S8KOPylon2_left_12",
-          "S8KOPylon2_left_13",
-          "S8KOPylon2_left_14",
-          "S8KOPylon2_left_15",
-          "S8KOPylon2_left_16",
-          "S8KOPylon2_left_17",
           "S8KOPylon2_right_0",
+          "S8KOPylon2_left_1",
           "S8KOPylon2_right_1",
+          "S8KOPylon2_left_2",
           "S8KOPylon2_right_2",
+          "S8KOPylon2_left_3",
           "S8KOPylon2_right_3",
+          "S8KOPylon2_left_4",
           "S8KOPylon2_right_4",
+          "S8KOPylon2_left_5",
           "S8KOPylon2_right_5",
+          "S8KOPylon2_left_6",
           "S8KOPylon2_right_6",
+          "S8KOPylon2_left_7",
           "S8KOPylon2_right_7",
+          "S8KOPylon2_left_8",
           "S8KOPylon2_right_8",
+          "S8KOPylon2_left_9",
           "S8KOPylon2_right_9",
+          "S8KOPylon2_left_10",
           "S8KOPylon2_right_10",
+          "S8KOPylon2_left_11",
           "S8KOPylon2_right_11",
+          "S8KOPylon2_left_12",
           "S8KOPylon2_right_12",
+          "S8KOPylon2_left_13",
           "S8KOPylon2_right_13",
+          "S8KOPylon2_left_14",
           "S8KOPylon2_right_14",
+          "S8KOPylon2_left_15",
           "S8KOPylon2_right_15",
+          "S8KOPylon2_left_16",
           "S8KOPylon2_right_16",
+          "S8KOPylon2_left_17",
           "S8KOPylon2_right_17"
         ],
         "MuzzleDirectionAttachments": [
           "S8KOPylon2_left_0",
-          "S8KOPylon2_left_1",
-          "S8KOPylon2_left_2",
-          "S8KOPylon2_left_3",
-          "S8KOPylon2_left_4",
-          "S8KOPylon2_left_5",
-          "S8KOPylon2_left_6",
-          "S8KOPylon2_left_7",
-          "S8KOPylon2_left_8",
-          "S8KOPylon2_left_9",
-          "S8KOPylon2_left_10",
-          "S8KOPylon2_left_11",
-          "S8KOPylon2_left_12",
-          "S8KOPylon2_left_13",
-          "S8KOPylon2_left_14",
-          "S8KOPylon2_left_15",
-          "S8KOPylon2_left_16",
-          "S8KOPylon2_left_17",
           "S8KOPylon2_right_0",
+          "S8KOPylon2_left_1",
           "S8KOPylon2_right_1",
+          "S8KOPylon2_left_2",
           "S8KOPylon2_right_2",
+          "S8KOPylon2_left_3",
           "S8KOPylon2_right_3",
+          "S8KOPylon2_left_4",
           "S8KOPylon2_right_4",
+          "S8KOPylon2_left_5",
           "S8KOPylon2_right_5",
+          "S8KOPylon2_left_6",
           "S8KOPylon2_right_6",
+          "S8KOPylon2_left_7",
           "S8KOPylon2_right_7",
+          "S8KOPylon2_left_8",
           "S8KOPylon2_right_8",
+          "S8KOPylon2_left_9",
           "S8KOPylon2_right_9",
+          "S8KOPylon2_left_10",
           "S8KOPylon2_right_10",
+          "S8KOPylon2_left_11",
           "S8KOPylon2_right_11",
+          "S8KOPylon2_left_12",
           "S8KOPylon2_right_12",
+          "S8KOPylon2_left_13",
           "S8KOPylon2_right_13",
+          "S8KOPylon2_left_14",
           "S8KOPylon2_right_14",
+          "S8KOPylon2_left_15",
           "S8KOPylon2_right_15",
+          "S8KOPylon2_left_16",
           "S8KOPylon2_right_16",
+          "S8KOPylon2_left_17",
           "S8KOPylon2_right_17"
         ],
         "EffectAttachments": [
           "S8KOPylon2_left_0",
-          "S8KOPylon2_left_1",
-          "S8KOPylon2_left_2",
-          "S8KOPylon2_left_3",
-          "S8KOPylon2_left_4",
-          "S8KOPylon2_left_5",
-          "S8KOPylon2_left_6",
-          "S8KOPylon2_left_7",
-          "S8KOPylon2_left_8",
-          "S8KOPylon2_left_9",
-          "S8KOPylon2_left_10",
-          "S8KOPylon2_left_11",
-          "S8KOPylon2_left_12",
-          "S8KOPylon2_left_13",
-          "S8KOPylon2_left_14",
-          "S8KOPylon2_left_15",
-          "S8KOPylon2_left_16",
-          "S8KOPylon2_left_17",
           "S8KOPylon2_right_0",
+          "S8KOPylon2_left_1",
           "S8KOPylon2_right_1",
+          "S8KOPylon2_left_2",
           "S8KOPylon2_right_2",
+          "S8KOPylon2_left_3",
           "S8KOPylon2_right_3",
+          "S8KOPylon2_left_4",
           "S8KOPylon2_right_4",
+          "S8KOPylon2_left_5",
           "S8KOPylon2_right_5",
+          "S8KOPylon2_left_6",
           "S8KOPylon2_right_6",
+          "S8KOPylon2_left_7",
           "S8KOPylon2_right_7",
+          "S8KOPylon2_left_8",
           "S8KOPylon2_right_8",
+          "S8KOPylon2_left_9",
           "S8KOPylon2_right_9",
+          "S8KOPylon2_left_10",
           "S8KOPylon2_right_10",
+          "S8KOPylon2_left_11",
           "S8KOPylon2_right_11",
+          "S8KOPylon2_left_12",
           "S8KOPylon2_right_12",
+          "S8KOPylon2_left_13",
           "S8KOPylon2_right_13",
+          "S8KOPylon2_left_14",
           "S8KOPylon2_right_14",
+          "S8KOPylon2_left_15",
           "S8KOPylon2_right_15",
+          "S8KOPylon2_left_16",
           "S8KOPylon2_right_16",
+          "S8KOPylon2_left_17",
           "S8KOPylon2_right_17"
         ],
         "EffectDirectionAttachments": [
           "S8KOPylon2_left_0",
-          "S8KOPylon2_left_1",
-          "S8KOPylon2_left_2",
-          "S8KOPylon2_left_3",
-          "S8KOPylon2_left_4",
-          "S8KOPylon2_left_5",
-          "S8KOPylon2_left_6",
-          "S8KOPylon2_left_7",
-          "S8KOPylon2_left_8",
-          "S8KOPylon2_left_9",
-          "S8KOPylon2_left_10",
-          "S8KOPylon2_left_11",
-          "S8KOPylon2_left_12",
-          "S8KOPylon2_left_13",
-          "S8KOPylon2_left_14",
-          "S8KOPylon2_left_15",
-          "S8KOPylon2_left_16",
-          "S8KOPylon2_left_17",
           "S8KOPylon2_right_0",
+          "S8KOPylon2_left_1",
           "S8KOPylon2_right_1",
+          "S8KOPylon2_left_2",
           "S8KOPylon2_right_2",
+          "S8KOPylon2_left_3",
           "S8KOPylon2_right_3",
+          "S8KOPylon2_left_4",
           "S8KOPylon2_right_4",
+          "S8KOPylon2_left_5",
           "S8KOPylon2_right_5",
+          "S8KOPylon2_left_6",
           "S8KOPylon2_right_6",
+          "S8KOPylon2_left_7",
           "S8KOPylon2_right_7",
+          "S8KOPylon2_left_8",
           "S8KOPylon2_right_8",
+          "S8KOPylon2_left_9",
           "S8KOPylon2_right_9",
+          "S8KOPylon2_left_10",
           "S8KOPylon2_right_10",
+          "S8KOPylon2_left_11",
           "S8KOPylon2_right_11",
+          "S8KOPylon2_left_12",
           "S8KOPylon2_right_12",
+          "S8KOPylon2_left_13",
           "S8KOPylon2_right_13",
+          "S8KOPylon2_left_14",
           "S8KOPylon2_right_14",
+          "S8KOPylon2_left_15",
           "S8KOPylon2_right_15",
+          "S8KOPylon2_left_16",
           "S8KOPylon2_right_16",
+          "S8KOPylon2_left_17",
           "S8KOPylon2_right_17"
         ]
       },
@@ -1781,7 +1809,20 @@
       }
     },
     "S8KOPylon3": {
-      "AmmoType": "superbwarfare:small_rocket",
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_rocket",
+          "ConsumptionItem": "superbwarfare:small_unguided_rocket",
+          "Override": {
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "berts_vehicle_pack:s8ko_rocket",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rockets/s8ko",
+              "ProjectileLife": 100
+            }
+          }
+        }
+      ],
       "Magazine": 40,
       "EmptyReloadTime": 200,
       "DefaultFireMode": "Auto",
@@ -1822,12 +1863,27 @@
             1.0222225
           ],
           [
+            3.664791187,
+            1.819930625,
+            1.0222225
+          ],
+          [
             -3.714652125,
             1.74513875,
             1.0222225
           ],
           [
+            3.714652125,
+            1.74513875,
+            1.0222225
+          ],
+          [
             -3.764513375,
+            1.670347187,
+            1.0222225
+          ],
+          [
+            3.764513375,
             1.670347187,
             1.0222225
           ],
@@ -1837,7 +1893,17 @@
             1.0222225
           ],
           [
+            3.565069,
+            1.819930625,
+            1.0222225
+          ],
+          [
             -3.465346812,
+            1.819930625,
+            1.0222225
+          ],
+          [
+            3.465346812,
             1.819930625,
             1.0222225
           ],
@@ -1847,7 +1913,17 @@
             1.0222225
           ],
           [
+            3.415485875,
+            1.74513875,
+            1.0222225
+          ],
+          [
             -3.365624625,
+            1.670347187,
+            1.0222225
+          ],
+          [
+            3.365624625,
             1.670347187,
             1.0222225
           ],
@@ -1857,7 +1933,17 @@
             1.0222225
           ],
           [
+            3.764513375,
+            1.570625,
+            1.0222225
+          ],
+          [
             -3.365624625,
+            1.570625,
+            1.0222225
+          ],
+          [
+            3.365624625,
             1.570625,
             1.0222225
           ],
@@ -1867,7 +1953,17 @@
             1.0222225
           ],
           [
+            3.415485875,
+            1.495833125,
+            1.0222225
+          ],
+          [
             -3.714652125,
+            1.495833125,
+            1.0222225
+          ],
+          [
+            3.714652125,
             1.495833125,
             1.0222225
           ],
@@ -1877,12 +1973,27 @@
             1.0222225
           ],
           [
+            3.465346812,
+            1.421041875,
+            1.0222225
+          ],
+          [
             -3.565069,
+            1.421041875,
+            1.0222225
+          ],
+          [
+            3.565069,
             1.421041875,
             1.0222225
           ],
           [
             -3.664791187,
+            1.421041875,
+            1.0222225
+          ],
+          [
+            3.664791187,
             1.421041875,
             1.0222225
           ],
@@ -1892,103 +2003,33 @@
             1.32138875
           ],
           [
+            3.565069,
+            1.720208125,
+            1.32138875
+          ],
+          [
             -3.664791187,
             1.62048625,
             1.32138875
           ],
           [
+            3.664791187,
+            1.62048625,
+            1.32138875
+          ],
+          [
             -3.465346812,
+            1.62048625,
+            1.32138875
+          ],
+          [
+            3.465346812,
             1.62048625,
             1.32138875
           ],
           [
             -3.565069,
             1.52076375,
-            1.32138875
-          ],
-          [
-            3.664791187,
-            1.819930625,
-            1.0222225
-          ],
-          [
-            3.714652125,
-            1.74513875,
-            1.0222225
-          ],
-          [
-            3.764513375,
-            1.670347187,
-            1.0222225
-          ],
-          [
-            3.565069,
-            1.819930625,
-            1.0222225
-          ],
-          [
-            3.465346812,
-            1.819930625,
-            1.0222225
-          ],
-          [
-            3.415485875,
-            1.74513875,
-            1.0222225
-          ],
-          [
-            3.365624625,
-            1.670347187,
-            1.0222225
-          ],
-          [
-            3.764513375,
-            1.570625,
-            1.0222225
-          ],
-          [
-            3.365624625,
-            1.570625,
-            1.0222225
-          ],
-          [
-            3.415485875,
-            1.495833125,
-            1.0222225
-          ],
-          [
-            3.714652125,
-            1.495833125,
-            1.0222225
-          ],
-          [
-            3.465346812,
-            1.421041875,
-            1.0222225
-          ],
-          [
-            3.565069,
-            1.421041875,
-            1.0222225
-          ],
-          [
-            3.664791187,
-            1.421041875,
-            1.0222225
-          ],
-          [
-            3.565069,
-            1.720208125,
-            1.32138875
-          ],
-          [
-            3.664791187,
-            1.62048625,
-            1.32138875
-          ],
-          [
-            3.465346812,
-            1.62048625,
             1.32138875
           ],
           [
@@ -2186,154 +2227,154 @@
         ],
         "MuzzleAttachments": [
           "S8KOPylon3_left_0",
-          "S8KOPylon3_left_1",
-          "S8KOPylon3_left_2",
-          "S8KOPylon3_left_3",
-          "S8KOPylon3_left_4",
-          "S8KOPylon3_left_5",
-          "S8KOPylon3_left_6",
-          "S8KOPylon3_left_7",
-          "S8KOPylon3_left_8",
-          "S8KOPylon3_left_9",
-          "S8KOPylon3_left_10",
-          "S8KOPylon3_left_11",
-          "S8KOPylon3_left_12",
-          "S8KOPylon3_left_13",
-          "S8KOPylon3_left_14",
-          "S8KOPylon3_left_15",
-          "S8KOPylon3_left_16",
-          "S8KOPylon3_left_17",
           "S8KOPylon3_right_0",
+          "S8KOPylon3_left_1",
           "S8KOPylon3_right_1",
+          "S8KOPylon3_left_2",
           "S8KOPylon3_right_2",
+          "S8KOPylon3_left_3",
           "S8KOPylon3_right_3",
+          "S8KOPylon3_left_4",
           "S8KOPylon3_right_4",
+          "S8KOPylon3_left_5",
           "S8KOPylon3_right_5",
+          "S8KOPylon3_left_6",
           "S8KOPylon3_right_6",
+          "S8KOPylon3_left_7",
           "S8KOPylon3_right_7",
+          "S8KOPylon3_left_8",
           "S8KOPylon3_right_8",
+          "S8KOPylon3_left_9",
           "S8KOPylon3_right_9",
+          "S8KOPylon3_left_10",
           "S8KOPylon3_right_10",
+          "S8KOPylon3_left_11",
           "S8KOPylon3_right_11",
+          "S8KOPylon3_left_12",
           "S8KOPylon3_right_12",
+          "S8KOPylon3_left_13",
           "S8KOPylon3_right_13",
+          "S8KOPylon3_left_14",
           "S8KOPylon3_right_14",
+          "S8KOPylon3_left_15",
           "S8KOPylon3_right_15",
+          "S8KOPylon3_left_16",
           "S8KOPylon3_right_16",
+          "S8KOPylon3_left_17",
           "S8KOPylon3_right_17"
         ],
         "MuzzleDirectionAttachments": [
           "S8KOPylon3_left_0",
-          "S8KOPylon3_left_1",
-          "S8KOPylon3_left_2",
-          "S8KOPylon3_left_3",
-          "S8KOPylon3_left_4",
-          "S8KOPylon3_left_5",
-          "S8KOPylon3_left_6",
-          "S8KOPylon3_left_7",
-          "S8KOPylon3_left_8",
-          "S8KOPylon3_left_9",
-          "S8KOPylon3_left_10",
-          "S8KOPylon3_left_11",
-          "S8KOPylon3_left_12",
-          "S8KOPylon3_left_13",
-          "S8KOPylon3_left_14",
-          "S8KOPylon3_left_15",
-          "S8KOPylon3_left_16",
-          "S8KOPylon3_left_17",
           "S8KOPylon3_right_0",
+          "S8KOPylon3_left_1",
           "S8KOPylon3_right_1",
+          "S8KOPylon3_left_2",
           "S8KOPylon3_right_2",
+          "S8KOPylon3_left_3",
           "S8KOPylon3_right_3",
+          "S8KOPylon3_left_4",
           "S8KOPylon3_right_4",
+          "S8KOPylon3_left_5",
           "S8KOPylon3_right_5",
+          "S8KOPylon3_left_6",
           "S8KOPylon3_right_6",
+          "S8KOPylon3_left_7",
           "S8KOPylon3_right_7",
+          "S8KOPylon3_left_8",
           "S8KOPylon3_right_8",
+          "S8KOPylon3_left_9",
           "S8KOPylon3_right_9",
+          "S8KOPylon3_left_10",
           "S8KOPylon3_right_10",
+          "S8KOPylon3_left_11",
           "S8KOPylon3_right_11",
+          "S8KOPylon3_left_12",
           "S8KOPylon3_right_12",
+          "S8KOPylon3_left_13",
           "S8KOPylon3_right_13",
+          "S8KOPylon3_left_14",
           "S8KOPylon3_right_14",
+          "S8KOPylon3_left_15",
           "S8KOPylon3_right_15",
+          "S8KOPylon3_left_16",
           "S8KOPylon3_right_16",
+          "S8KOPylon3_left_17",
           "S8KOPylon3_right_17"
         ],
         "EffectAttachments": [
           "S8KOPylon3_left_0",
-          "S8KOPylon3_left_1",
-          "S8KOPylon3_left_2",
-          "S8KOPylon3_left_3",
-          "S8KOPylon3_left_4",
-          "S8KOPylon3_left_5",
-          "S8KOPylon3_left_6",
-          "S8KOPylon3_left_7",
-          "S8KOPylon3_left_8",
-          "S8KOPylon3_left_9",
-          "S8KOPylon3_left_10",
-          "S8KOPylon3_left_11",
-          "S8KOPylon3_left_12",
-          "S8KOPylon3_left_13",
-          "S8KOPylon3_left_14",
-          "S8KOPylon3_left_15",
-          "S8KOPylon3_left_16",
-          "S8KOPylon3_left_17",
           "S8KOPylon3_right_0",
+          "S8KOPylon3_left_1",
           "S8KOPylon3_right_1",
+          "S8KOPylon3_left_2",
           "S8KOPylon3_right_2",
+          "S8KOPylon3_left_3",
           "S8KOPylon3_right_3",
+          "S8KOPylon3_left_4",
           "S8KOPylon3_right_4",
+          "S8KOPylon3_left_5",
           "S8KOPylon3_right_5",
+          "S8KOPylon3_left_6",
           "S8KOPylon3_right_6",
+          "S8KOPylon3_left_7",
           "S8KOPylon3_right_7",
+          "S8KOPylon3_left_8",
           "S8KOPylon3_right_8",
+          "S8KOPylon3_left_9",
           "S8KOPylon3_right_9",
+          "S8KOPylon3_left_10",
           "S8KOPylon3_right_10",
+          "S8KOPylon3_left_11",
           "S8KOPylon3_right_11",
+          "S8KOPylon3_left_12",
           "S8KOPylon3_right_12",
+          "S8KOPylon3_left_13",
           "S8KOPylon3_right_13",
+          "S8KOPylon3_left_14",
           "S8KOPylon3_right_14",
+          "S8KOPylon3_left_15",
           "S8KOPylon3_right_15",
+          "S8KOPylon3_left_16",
           "S8KOPylon3_right_16",
+          "S8KOPylon3_left_17",
           "S8KOPylon3_right_17"
         ],
         "EffectDirectionAttachments": [
           "S8KOPylon3_left_0",
-          "S8KOPylon3_left_1",
-          "S8KOPylon3_left_2",
-          "S8KOPylon3_left_3",
-          "S8KOPylon3_left_4",
-          "S8KOPylon3_left_5",
-          "S8KOPylon3_left_6",
-          "S8KOPylon3_left_7",
-          "S8KOPylon3_left_8",
-          "S8KOPylon3_left_9",
-          "S8KOPylon3_left_10",
-          "S8KOPylon3_left_11",
-          "S8KOPylon3_left_12",
-          "S8KOPylon3_left_13",
-          "S8KOPylon3_left_14",
-          "S8KOPylon3_left_15",
-          "S8KOPylon3_left_16",
-          "S8KOPylon3_left_17",
           "S8KOPylon3_right_0",
+          "S8KOPylon3_left_1",
           "S8KOPylon3_right_1",
+          "S8KOPylon3_left_2",
           "S8KOPylon3_right_2",
+          "S8KOPylon3_left_3",
           "S8KOPylon3_right_3",
+          "S8KOPylon3_left_4",
           "S8KOPylon3_right_4",
+          "S8KOPylon3_left_5",
           "S8KOPylon3_right_5",
+          "S8KOPylon3_left_6",
           "S8KOPylon3_right_6",
+          "S8KOPylon3_left_7",
           "S8KOPylon3_right_7",
+          "S8KOPylon3_left_8",
           "S8KOPylon3_right_8",
+          "S8KOPylon3_left_9",
           "S8KOPylon3_right_9",
+          "S8KOPylon3_left_10",
           "S8KOPylon3_right_10",
+          "S8KOPylon3_left_11",
           "S8KOPylon3_right_11",
+          "S8KOPylon3_left_12",
           "S8KOPylon3_right_12",
+          "S8KOPylon3_left_13",
           "S8KOPylon3_right_13",
+          "S8KOPylon3_left_14",
           "S8KOPylon3_right_14",
+          "S8KOPylon3_left_15",
           "S8KOPylon3_right_15",
+          "S8KOPylon3_left_16",
           "S8KOPylon3_right_16",
+          "S8KOPylon3_left_17",
           "S8KOPylon3_right_17"
         ]
       },
@@ -2345,7 +2386,20 @@
       }
     },
     "S8KOPylon4": {
-      "AmmoType": "superbwarfare:small_rocket",
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_rocket",
+          "ConsumptionItem": "superbwarfare:small_unguided_rocket",
+          "Override": {
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "berts_vehicle_pack:s8ko_rocket",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rockets/s8ko",
+              "ProjectileLife": 100
+            }
+          }
+        }
+      ],
       "Magazine": 40,
       "EmptyReloadTime": 200,
       "DefaultFireMode": "Auto",
@@ -2386,12 +2440,27 @@
             0.8227775
           ],
           [
+            4.412708187,
+            1.770069625,
+            0.8227775
+          ],
+          [
             -4.462569125,
             1.69527775,
             0.8227775
           ],
           [
+            4.462569125,
+            1.69527775,
+            0.8227775
+          ],
+          [
             -4.512430375,
+            1.620486187,
+            0.8227775
+          ],
+          [
+            4.512430375,
             1.620486187,
             0.8227775
           ],
@@ -2401,7 +2470,17 @@
             0.8227775
           ],
           [
+            4.312986,
+            1.770069625,
+            0.8227775
+          ],
+          [
             -4.213263813,
+            1.770069625,
+            0.8227775
+          ],
+          [
+            4.213263813,
             1.770069625,
             0.8227775
           ],
@@ -2411,7 +2490,17 @@
             0.8227775
           ],
           [
+            4.163402875,
+            1.69527775,
+            0.8227775
+          ],
+          [
             -4.113541625,
+            1.620486187,
+            0.8227775
+          ],
+          [
+            4.113541625,
             1.620486187,
             0.8227775
           ],
@@ -2421,7 +2510,17 @@
             0.8227775
           ],
           [
+            4.512430375,
+            1.520764,
+            0.8227775
+          ],
+          [
             -4.113541625,
+            1.520764,
+            0.8227775
+          ],
+          [
+            4.113541625,
             1.520764,
             0.8227775
           ],
@@ -2431,7 +2530,17 @@
             0.8227775
           ],
           [
+            4.163402875,
+            1.445972125,
+            0.8227775
+          ],
+          [
             -4.462569125,
+            1.445972125,
+            0.8227775
+          ],
+          [
+            4.462569125,
             1.445972125,
             0.8227775
           ],
@@ -2441,12 +2550,27 @@
             0.8227775
           ],
           [
+            4.213263813,
+            1.371180875,
+            0.8227775
+          ],
+          [
             -4.312986,
+            1.371180875,
+            0.8227775
+          ],
+          [
+            4.312986,
             1.371180875,
             0.8227775
           ],
           [
             -4.412708187,
+            1.371180875,
+            0.8227775
+          ],
+          [
+            4.412708187,
             1.371180875,
             0.8227775
           ],
@@ -2456,103 +2580,33 @@
             1.12194375
           ],
           [
+            4.312986,
+            1.670347125,
+            1.12194375
+          ],
+          [
             -4.412708187,
             1.57062525,
             1.12194375
           ],
           [
+            4.412708187,
+            1.57062525,
+            1.12194375
+          ],
+          [
             -4.213263813,
+            1.57062525,
+            1.12194375
+          ],
+          [
+            4.213263813,
             1.57062525,
             1.12194375
           ],
           [
             -4.312986,
             1.47090275,
-            1.12194375
-          ],
-          [
-            4.412708187,
-            1.770069625,
-            0.8227775
-          ],
-          [
-            4.462569125,
-            1.69527775,
-            0.8227775
-          ],
-          [
-            4.512430375,
-            1.620486187,
-            0.8227775
-          ],
-          [
-            4.312986,
-            1.770069625,
-            0.8227775
-          ],
-          [
-            4.213263813,
-            1.770069625,
-            0.8227775
-          ],
-          [
-            4.163402875,
-            1.69527775,
-            0.8227775
-          ],
-          [
-            4.113541625,
-            1.620486187,
-            0.8227775
-          ],
-          [
-            4.512430375,
-            1.520764,
-            0.8227775
-          ],
-          [
-            4.113541625,
-            1.520764,
-            0.8227775
-          ],
-          [
-            4.163402875,
-            1.445972125,
-            0.8227775
-          ],
-          [
-            4.462569125,
-            1.445972125,
-            0.8227775
-          ],
-          [
-            4.213263813,
-            1.371180875,
-            0.8227775
-          ],
-          [
-            4.312986,
-            1.371180875,
-            0.8227775
-          ],
-          [
-            4.412708187,
-            1.371180875,
-            0.8227775
-          ],
-          [
-            4.312986,
-            1.670347125,
-            1.12194375
-          ],
-          [
-            4.412708187,
-            1.57062525,
-            1.12194375
-          ],
-          [
-            4.213263813,
-            1.57062525,
             1.12194375
           ],
           [
@@ -2750,154 +2804,154 @@
         ],
         "MuzzleAttachments": [
           "S8KOPylon4_left_0",
-          "S8KOPylon4_left_1",
-          "S8KOPylon4_left_2",
-          "S8KOPylon4_left_3",
-          "S8KOPylon4_left_4",
-          "S8KOPylon4_left_5",
-          "S8KOPylon4_left_6",
-          "S8KOPylon4_left_7",
-          "S8KOPylon4_left_8",
-          "S8KOPylon4_left_9",
-          "S8KOPylon4_left_10",
-          "S8KOPylon4_left_11",
-          "S8KOPylon4_left_12",
-          "S8KOPylon4_left_13",
-          "S8KOPylon4_left_14",
-          "S8KOPylon4_left_15",
-          "S8KOPylon4_left_16",
-          "S8KOPylon4_left_17",
           "S8KOPylon4_right_0",
+          "S8KOPylon4_left_1",
           "S8KOPylon4_right_1",
+          "S8KOPylon4_left_2",
           "S8KOPylon4_right_2",
+          "S8KOPylon4_left_3",
           "S8KOPylon4_right_3",
+          "S8KOPylon4_left_4",
           "S8KOPylon4_right_4",
+          "S8KOPylon4_left_5",
           "S8KOPylon4_right_5",
+          "S8KOPylon4_left_6",
           "S8KOPylon4_right_6",
+          "S8KOPylon4_left_7",
           "S8KOPylon4_right_7",
+          "S8KOPylon4_left_8",
           "S8KOPylon4_right_8",
+          "S8KOPylon4_left_9",
           "S8KOPylon4_right_9",
+          "S8KOPylon4_left_10",
           "S8KOPylon4_right_10",
+          "S8KOPylon4_left_11",
           "S8KOPylon4_right_11",
+          "S8KOPylon4_left_12",
           "S8KOPylon4_right_12",
+          "S8KOPylon4_left_13",
           "S8KOPylon4_right_13",
+          "S8KOPylon4_left_14",
           "S8KOPylon4_right_14",
+          "S8KOPylon4_left_15",
           "S8KOPylon4_right_15",
+          "S8KOPylon4_left_16",
           "S8KOPylon4_right_16",
+          "S8KOPylon4_left_17",
           "S8KOPylon4_right_17"
         ],
         "MuzzleDirectionAttachments": [
           "S8KOPylon4_left_0",
-          "S8KOPylon4_left_1",
-          "S8KOPylon4_left_2",
-          "S8KOPylon4_left_3",
-          "S8KOPylon4_left_4",
-          "S8KOPylon4_left_5",
-          "S8KOPylon4_left_6",
-          "S8KOPylon4_left_7",
-          "S8KOPylon4_left_8",
-          "S8KOPylon4_left_9",
-          "S8KOPylon4_left_10",
-          "S8KOPylon4_left_11",
-          "S8KOPylon4_left_12",
-          "S8KOPylon4_left_13",
-          "S8KOPylon4_left_14",
-          "S8KOPylon4_left_15",
-          "S8KOPylon4_left_16",
-          "S8KOPylon4_left_17",
           "S8KOPylon4_right_0",
+          "S8KOPylon4_left_1",
           "S8KOPylon4_right_1",
+          "S8KOPylon4_left_2",
           "S8KOPylon4_right_2",
+          "S8KOPylon4_left_3",
           "S8KOPylon4_right_3",
+          "S8KOPylon4_left_4",
           "S8KOPylon4_right_4",
+          "S8KOPylon4_left_5",
           "S8KOPylon4_right_5",
+          "S8KOPylon4_left_6",
           "S8KOPylon4_right_6",
+          "S8KOPylon4_left_7",
           "S8KOPylon4_right_7",
+          "S8KOPylon4_left_8",
           "S8KOPylon4_right_8",
+          "S8KOPylon4_left_9",
           "S8KOPylon4_right_9",
+          "S8KOPylon4_left_10",
           "S8KOPylon4_right_10",
+          "S8KOPylon4_left_11",
           "S8KOPylon4_right_11",
+          "S8KOPylon4_left_12",
           "S8KOPylon4_right_12",
+          "S8KOPylon4_left_13",
           "S8KOPylon4_right_13",
+          "S8KOPylon4_left_14",
           "S8KOPylon4_right_14",
+          "S8KOPylon4_left_15",
           "S8KOPylon4_right_15",
+          "S8KOPylon4_left_16",
           "S8KOPylon4_right_16",
+          "S8KOPylon4_left_17",
           "S8KOPylon4_right_17"
         ],
         "EffectAttachments": [
           "S8KOPylon4_left_0",
-          "S8KOPylon4_left_1",
-          "S8KOPylon4_left_2",
-          "S8KOPylon4_left_3",
-          "S8KOPylon4_left_4",
-          "S8KOPylon4_left_5",
-          "S8KOPylon4_left_6",
-          "S8KOPylon4_left_7",
-          "S8KOPylon4_left_8",
-          "S8KOPylon4_left_9",
-          "S8KOPylon4_left_10",
-          "S8KOPylon4_left_11",
-          "S8KOPylon4_left_12",
-          "S8KOPylon4_left_13",
-          "S8KOPylon4_left_14",
-          "S8KOPylon4_left_15",
-          "S8KOPylon4_left_16",
-          "S8KOPylon4_left_17",
           "S8KOPylon4_right_0",
+          "S8KOPylon4_left_1",
           "S8KOPylon4_right_1",
+          "S8KOPylon4_left_2",
           "S8KOPylon4_right_2",
+          "S8KOPylon4_left_3",
           "S8KOPylon4_right_3",
+          "S8KOPylon4_left_4",
           "S8KOPylon4_right_4",
+          "S8KOPylon4_left_5",
           "S8KOPylon4_right_5",
+          "S8KOPylon4_left_6",
           "S8KOPylon4_right_6",
+          "S8KOPylon4_left_7",
           "S8KOPylon4_right_7",
+          "S8KOPylon4_left_8",
           "S8KOPylon4_right_8",
+          "S8KOPylon4_left_9",
           "S8KOPylon4_right_9",
+          "S8KOPylon4_left_10",
           "S8KOPylon4_right_10",
+          "S8KOPylon4_left_11",
           "S8KOPylon4_right_11",
+          "S8KOPylon4_left_12",
           "S8KOPylon4_right_12",
+          "S8KOPylon4_left_13",
           "S8KOPylon4_right_13",
+          "S8KOPylon4_left_14",
           "S8KOPylon4_right_14",
+          "S8KOPylon4_left_15",
           "S8KOPylon4_right_15",
+          "S8KOPylon4_left_16",
           "S8KOPylon4_right_16",
+          "S8KOPylon4_left_17",
           "S8KOPylon4_right_17"
         ],
         "EffectDirectionAttachments": [
           "S8KOPylon4_left_0",
-          "S8KOPylon4_left_1",
-          "S8KOPylon4_left_2",
-          "S8KOPylon4_left_3",
-          "S8KOPylon4_left_4",
-          "S8KOPylon4_left_5",
-          "S8KOPylon4_left_6",
-          "S8KOPylon4_left_7",
-          "S8KOPylon4_left_8",
-          "S8KOPylon4_left_9",
-          "S8KOPylon4_left_10",
-          "S8KOPylon4_left_11",
-          "S8KOPylon4_left_12",
-          "S8KOPylon4_left_13",
-          "S8KOPylon4_left_14",
-          "S8KOPylon4_left_15",
-          "S8KOPylon4_left_16",
-          "S8KOPylon4_left_17",
           "S8KOPylon4_right_0",
+          "S8KOPylon4_left_1",
           "S8KOPylon4_right_1",
+          "S8KOPylon4_left_2",
           "S8KOPylon4_right_2",
+          "S8KOPylon4_left_3",
           "S8KOPylon4_right_3",
+          "S8KOPylon4_left_4",
           "S8KOPylon4_right_4",
+          "S8KOPylon4_left_5",
           "S8KOPylon4_right_5",
+          "S8KOPylon4_left_6",
           "S8KOPylon4_right_6",
+          "S8KOPylon4_left_7",
           "S8KOPylon4_right_7",
+          "S8KOPylon4_left_8",
           "S8KOPylon4_right_8",
+          "S8KOPylon4_left_9",
           "S8KOPylon4_right_9",
+          "S8KOPylon4_left_10",
           "S8KOPylon4_right_10",
+          "S8KOPylon4_left_11",
           "S8KOPylon4_right_11",
+          "S8KOPylon4_left_12",
           "S8KOPylon4_right_12",
+          "S8KOPylon4_left_13",
           "S8KOPylon4_right_13",
+          "S8KOPylon4_left_14",
           "S8KOPylon4_right_14",
+          "S8KOPylon4_left_15",
           "S8KOPylon4_right_15",
+          "S8KOPylon4_left_16",
           "S8KOPylon4_right_16",
+          "S8KOPylon4_left_17",
           "S8KOPylon4_right_17"
         ]
       },
@@ -2956,6 +3010,7 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -2989,6 +3044,7 @@
         },
         {
           "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -3121,6 +3177,7 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -3154,6 +3211,7 @@
         },
         {
           "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -3286,6 +3344,7 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -3319,6 +3378,7 @@
         },
         {
           "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -3451,6 +3511,7 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -3484,6 +3545,7 @@
         },
         {
           "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -3616,6 +3678,7 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -3649,6 +3712,7 @@
         },
         {
           "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -3781,6 +3845,7 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -3814,6 +3879,7 @@
         },
         {
           "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -3946,6 +4012,7 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -3979,6 +4046,7 @@
         },
         {
           "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -4111,6 +4179,7 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -4144,6 +4213,7 @@
         },
         {
           "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -4328,10 +4398,36 @@
         1
       ]
     },
+    "S8KOPylon1_right_0": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.119097187,
+        1.819930625,
+        1.4709725
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
     "S8KOPylon1_left_1": {
       "Parent": "Vehicle",
       "Position": [
         -2.168958125,
+        1.74513875,
+        1.4709725
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S8KOPylon1_right_1": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.168958125,
         1.74513875,
         1.4709725
       ],
@@ -4354,10 +4450,36 @@
         1
       ]
     },
+    "S8KOPylon1_right_2": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.218819375,
+        1.670347187,
+        1.4709725
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
     "S8KOPylon1_left_3": {
       "Parent": "Vehicle",
       "Position": [
         -2.019375,
+        1.819930625,
+        1.4709725
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S8KOPylon1_right_3": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.019375,
         1.819930625,
         1.4709725
       ],
@@ -4380,10 +4502,36 @@
         1
       ]
     },
+    "S8KOPylon1_right_4": {
+      "Parent": "Vehicle",
+      "Position": [
+        1.919652812,
+        1.819930625,
+        1.4709725
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
     "S8KOPylon1_left_5": {
       "Parent": "Vehicle",
       "Position": [
         -1.869791875,
+        1.74513875,
+        1.4709725
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S8KOPylon1_right_5": {
+      "Parent": "Vehicle",
+      "Position": [
+        1.869791875,
         1.74513875,
         1.4709725
       ],
@@ -4406,10 +4554,36 @@
         1
       ]
     },
+    "S8KOPylon1_right_6": {
+      "Parent": "Vehicle",
+      "Position": [
+        1.819930625,
+        1.670347187,
+        1.4709725
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
     "S8KOPylon1_left_7": {
       "Parent": "Vehicle",
       "Position": [
         -2.218819375,
+        1.570625,
+        1.4709725
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S8KOPylon1_right_7": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.218819375,
         1.570625,
         1.4709725
       ],
@@ -4432,10 +4606,36 @@
         1
       ]
     },
+    "S8KOPylon1_right_8": {
+      "Parent": "Vehicle",
+      "Position": [
+        1.819930625,
+        1.570625,
+        1.4709725
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
     "S8KOPylon1_left_9": {
       "Parent": "Vehicle",
       "Position": [
         -1.869791875,
+        1.495833125,
+        1.4709725
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S8KOPylon1_right_9": {
+      "Parent": "Vehicle",
+      "Position": [
+        1.869791875,
         1.495833125,
         1.4709725
       ],
@@ -4458,10 +4658,36 @@
         1
       ]
     },
+    "S8KOPylon1_right_10": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.168958125,
+        1.495833125,
+        1.4709725
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
     "S8KOPylon1_left_11": {
       "Parent": "Vehicle",
       "Position": [
         -1.919652812,
+        1.421041875,
+        1.4709725
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S8KOPylon1_right_11": {
+      "Parent": "Vehicle",
+      "Position": [
+        1.919652812,
         1.421041875,
         1.4709725
       ],
@@ -4484,231 +4710,23 @@
         1
       ]
     },
-    "S8KOPylon1_left_13": {
-      "Parent": "Vehicle",
-      "Position": [
-        -2.119097187,
-        1.421041875,
-        1.4709725
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
-    "S8KOPylon1_left_14": {
-      "Parent": "Vehicle",
-      "Position": [
-        -2.019375,
-        1.720208125,
-        1.77013875
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
-    "S8KOPylon1_left_15": {
-      "Parent": "Vehicle",
-      "Position": [
-        -2.119097187,
-        1.62048625,
-        1.77013875
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
-    "S8KOPylon1_left_16": {
-      "Parent": "Vehicle",
-      "Position": [
-        -1.919652812,
-        1.62048625,
-        1.77013875
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
-    "S8KOPylon1_left_17": {
-      "Parent": "Vehicle",
-      "Position": [
-        -2.019375,
-        1.52076375,
-        1.77013875
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
-    "S8KOPylon1_right_0": {
-      "Parent": "Vehicle",
-      "Position": [
-        2.119097187,
-        1.819930625,
-        1.4709725
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
-    "S8KOPylon1_right_1": {
-      "Parent": "Vehicle",
-      "Position": [
-        2.168958125,
-        1.74513875,
-        1.4709725
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
-    "S8KOPylon1_right_2": {
-      "Parent": "Vehicle",
-      "Position": [
-        2.218819375,
-        1.670347187,
-        1.4709725
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
-    "S8KOPylon1_right_3": {
-      "Parent": "Vehicle",
-      "Position": [
-        2.019375,
-        1.819930625,
-        1.4709725
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
-    "S8KOPylon1_right_4": {
-      "Parent": "Vehicle",
-      "Position": [
-        1.919652812,
-        1.819930625,
-        1.4709725
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
-    "S8KOPylon1_right_5": {
-      "Parent": "Vehicle",
-      "Position": [
-        1.869791875,
-        1.74513875,
-        1.4709725
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
-    "S8KOPylon1_right_6": {
-      "Parent": "Vehicle",
-      "Position": [
-        1.819930625,
-        1.670347187,
-        1.4709725
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
-    "S8KOPylon1_right_7": {
-      "Parent": "Vehicle",
-      "Position": [
-        2.218819375,
-        1.570625,
-        1.4709725
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
-    "S8KOPylon1_right_8": {
-      "Parent": "Vehicle",
-      "Position": [
-        1.819930625,
-        1.570625,
-        1.4709725
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
-    "S8KOPylon1_right_9": {
-      "Parent": "Vehicle",
-      "Position": [
-        1.869791875,
-        1.495833125,
-        1.4709725
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
-    "S8KOPylon1_right_10": {
-      "Parent": "Vehicle",
-      "Position": [
-        2.168958125,
-        1.495833125,
-        1.4709725
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
-    "S8KOPylon1_right_11": {
-      "Parent": "Vehicle",
-      "Position": [
-        1.919652812,
-        1.421041875,
-        1.4709725
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
     "S8KOPylon1_right_12": {
       "Parent": "Vehicle",
       "Position": [
         2.019375,
+        1.421041875,
+        1.4709725
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S8KOPylon1_left_13": {
+      "Parent": "Vehicle",
+      "Position": [
+        -2.119097187,
         1.421041875,
         1.4709725
       ],
@@ -4731,11 +4749,37 @@
         1
       ]
     },
+    "S8KOPylon1_left_14": {
+      "Parent": "Vehicle",
+      "Position": [
+        -2.019375,
+        1.720208125,
+        1.77013875
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
     "S8KOPylon1_right_14": {
       "Parent": "Vehicle",
       "Position": [
         2.019375,
         1.720208125,
+        1.77013875
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S8KOPylon1_left_15": {
+      "Parent": "Vehicle",
+      "Position": [
+        -2.119097187,
+        1.62048625,
         1.77013875
       ],
       "Direction": [
@@ -4757,11 +4801,37 @@
         1
       ]
     },
+    "S8KOPylon1_left_16": {
+      "Parent": "Vehicle",
+      "Position": [
+        -1.919652812,
+        1.62048625,
+        1.77013875
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
     "S8KOPylon1_right_16": {
       "Parent": "Vehicle",
       "Position": [
         1.919652812,
         1.62048625,
+        1.77013875
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S8KOPylon1_left_17": {
+      "Parent": "Vehicle",
+      "Position": [
+        -2.019375,
+        1.52076375,
         1.77013875
       ],
       "Direction": [
@@ -4796,10 +4866,36 @@
         1
       ]
     },
+    "S8KOPylon2_right_0": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.867014187,
+        1.819930625,
+        1.2715275
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
     "S8KOPylon2_left_1": {
       "Parent": "Vehicle",
       "Position": [
         -2.916875125,
+        1.74513875,
+        1.2715275
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S8KOPylon2_right_1": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.916875125,
         1.74513875,
         1.2715275
       ],
@@ -4822,10 +4918,36 @@
         1
       ]
     },
+    "S8KOPylon2_right_2": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.966736375,
+        1.670347187,
+        1.2715275
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
     "S8KOPylon2_left_3": {
       "Parent": "Vehicle",
       "Position": [
         -2.767292,
+        1.819930625,
+        1.2715275
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S8KOPylon2_right_3": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.767292,
         1.819930625,
         1.2715275
       ],
@@ -4848,10 +4970,36 @@
         1
       ]
     },
+    "S8KOPylon2_right_4": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.667569813,
+        1.819930625,
+        1.2715275
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
     "S8KOPylon2_left_5": {
       "Parent": "Vehicle",
       "Position": [
         -2.617708875,
+        1.74513875,
+        1.2715275
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S8KOPylon2_right_5": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.617708875,
         1.74513875,
         1.2715275
       ],
@@ -4874,10 +5022,36 @@
         1
       ]
     },
+    "S8KOPylon2_right_6": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.567847625,
+        1.670347187,
+        1.2715275
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
     "S8KOPylon2_left_7": {
       "Parent": "Vehicle",
       "Position": [
         -2.966736375,
+        1.570625,
+        1.2715275
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S8KOPylon2_right_7": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.966736375,
         1.570625,
         1.2715275
       ],
@@ -4900,10 +5074,36 @@
         1
       ]
     },
+    "S8KOPylon2_right_8": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.567847625,
+        1.570625,
+        1.2715275
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
     "S8KOPylon2_left_9": {
       "Parent": "Vehicle",
       "Position": [
         -2.617708875,
+        1.495833125,
+        1.2715275
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S8KOPylon2_right_9": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.617708875,
         1.495833125,
         1.2715275
       ],
@@ -4926,10 +5126,36 @@
         1
       ]
     },
+    "S8KOPylon2_right_10": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.916875125,
+        1.495833125,
+        1.2715275
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
     "S8KOPylon2_left_11": {
       "Parent": "Vehicle",
       "Position": [
         -2.667569813,
+        1.421041875,
+        1.2715275
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S8KOPylon2_right_11": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.667569813,
         1.421041875,
         1.2715275
       ],
@@ -4952,231 +5178,23 @@
         1
       ]
     },
-    "S8KOPylon2_left_13": {
-      "Parent": "Vehicle",
-      "Position": [
-        -2.867014187,
-        1.421041875,
-        1.2715275
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
-    "S8KOPylon2_left_14": {
-      "Parent": "Vehicle",
-      "Position": [
-        -2.767292,
-        1.720208125,
-        1.57069375
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
-    "S8KOPylon2_left_15": {
-      "Parent": "Vehicle",
-      "Position": [
-        -2.867014187,
-        1.62048625,
-        1.57069375
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
-    "S8KOPylon2_left_16": {
-      "Parent": "Vehicle",
-      "Position": [
-        -2.667569813,
-        1.62048625,
-        1.57069375
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
-    "S8KOPylon2_left_17": {
-      "Parent": "Vehicle",
-      "Position": [
-        -2.767292,
-        1.52076375,
-        1.57069375
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
-    "S8KOPylon2_right_0": {
-      "Parent": "Vehicle",
-      "Position": [
-        2.867014187,
-        1.819930625,
-        1.2715275
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
-    "S8KOPylon2_right_1": {
-      "Parent": "Vehicle",
-      "Position": [
-        2.916875125,
-        1.74513875,
-        1.2715275
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
-    "S8KOPylon2_right_2": {
-      "Parent": "Vehicle",
-      "Position": [
-        2.966736375,
-        1.670347187,
-        1.2715275
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
-    "S8KOPylon2_right_3": {
-      "Parent": "Vehicle",
-      "Position": [
-        2.767292,
-        1.819930625,
-        1.2715275
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
-    "S8KOPylon2_right_4": {
-      "Parent": "Vehicle",
-      "Position": [
-        2.667569813,
-        1.819930625,
-        1.2715275
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
-    "S8KOPylon2_right_5": {
-      "Parent": "Vehicle",
-      "Position": [
-        2.617708875,
-        1.74513875,
-        1.2715275
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
-    "S8KOPylon2_right_6": {
-      "Parent": "Vehicle",
-      "Position": [
-        2.567847625,
-        1.670347187,
-        1.2715275
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
-    "S8KOPylon2_right_7": {
-      "Parent": "Vehicle",
-      "Position": [
-        2.966736375,
-        1.570625,
-        1.2715275
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
-    "S8KOPylon2_right_8": {
-      "Parent": "Vehicle",
-      "Position": [
-        2.567847625,
-        1.570625,
-        1.2715275
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
-    "S8KOPylon2_right_9": {
-      "Parent": "Vehicle",
-      "Position": [
-        2.617708875,
-        1.495833125,
-        1.2715275
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
-    "S8KOPylon2_right_10": {
-      "Parent": "Vehicle",
-      "Position": [
-        2.916875125,
-        1.495833125,
-        1.2715275
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
-    "S8KOPylon2_right_11": {
-      "Parent": "Vehicle",
-      "Position": [
-        2.667569813,
-        1.421041875,
-        1.2715275
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
     "S8KOPylon2_right_12": {
       "Parent": "Vehicle",
       "Position": [
         2.767292,
+        1.421041875,
+        1.2715275
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S8KOPylon2_left_13": {
+      "Parent": "Vehicle",
+      "Position": [
+        -2.867014187,
         1.421041875,
         1.2715275
       ],
@@ -5199,11 +5217,37 @@
         1
       ]
     },
+    "S8KOPylon2_left_14": {
+      "Parent": "Vehicle",
+      "Position": [
+        -2.767292,
+        1.720208125,
+        1.57069375
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
     "S8KOPylon2_right_14": {
       "Parent": "Vehicle",
       "Position": [
         2.767292,
         1.720208125,
+        1.57069375
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S8KOPylon2_left_15": {
+      "Parent": "Vehicle",
+      "Position": [
+        -2.867014187,
+        1.62048625,
         1.57069375
       ],
       "Direction": [
@@ -5225,11 +5269,37 @@
         1
       ]
     },
+    "S8KOPylon2_left_16": {
+      "Parent": "Vehicle",
+      "Position": [
+        -2.667569813,
+        1.62048625,
+        1.57069375
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
     "S8KOPylon2_right_16": {
       "Parent": "Vehicle",
       "Position": [
         2.667569813,
         1.62048625,
+        1.57069375
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S8KOPylon2_left_17": {
+      "Parent": "Vehicle",
+      "Position": [
+        -2.767292,
+        1.52076375,
         1.57069375
       ],
       "Direction": [
@@ -5264,10 +5334,36 @@
         1
       ]
     },
+    "S8KOPylon3_right_0": {
+      "Parent": "Vehicle",
+      "Position": [
+        3.664791187,
+        1.819930625,
+        1.0222225
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
     "S8KOPylon3_left_1": {
       "Parent": "Vehicle",
       "Position": [
         -3.714652125,
+        1.74513875,
+        1.0222225
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S8KOPylon3_right_1": {
+      "Parent": "Vehicle",
+      "Position": [
+        3.714652125,
         1.74513875,
         1.0222225
       ],
@@ -5290,10 +5386,36 @@
         1
       ]
     },
+    "S8KOPylon3_right_2": {
+      "Parent": "Vehicle",
+      "Position": [
+        3.764513375,
+        1.670347187,
+        1.0222225
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
     "S8KOPylon3_left_3": {
       "Parent": "Vehicle",
       "Position": [
         -3.565069,
+        1.819930625,
+        1.0222225
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S8KOPylon3_right_3": {
+      "Parent": "Vehicle",
+      "Position": [
+        3.565069,
         1.819930625,
         1.0222225
       ],
@@ -5316,10 +5438,36 @@
         1
       ]
     },
+    "S8KOPylon3_right_4": {
+      "Parent": "Vehicle",
+      "Position": [
+        3.465346812,
+        1.819930625,
+        1.0222225
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
     "S8KOPylon3_left_5": {
       "Parent": "Vehicle",
       "Position": [
         -3.415485875,
+        1.74513875,
+        1.0222225
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S8KOPylon3_right_5": {
+      "Parent": "Vehicle",
+      "Position": [
+        3.415485875,
         1.74513875,
         1.0222225
       ],
@@ -5342,10 +5490,36 @@
         1
       ]
     },
+    "S8KOPylon3_right_6": {
+      "Parent": "Vehicle",
+      "Position": [
+        3.365624625,
+        1.670347187,
+        1.0222225
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
     "S8KOPylon3_left_7": {
       "Parent": "Vehicle",
       "Position": [
         -3.764513375,
+        1.570625,
+        1.0222225
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S8KOPylon3_right_7": {
+      "Parent": "Vehicle",
+      "Position": [
+        3.764513375,
         1.570625,
         1.0222225
       ],
@@ -5368,10 +5542,36 @@
         1
       ]
     },
+    "S8KOPylon3_right_8": {
+      "Parent": "Vehicle",
+      "Position": [
+        3.365624625,
+        1.570625,
+        1.0222225
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
     "S8KOPylon3_left_9": {
       "Parent": "Vehicle",
       "Position": [
         -3.415485875,
+        1.495833125,
+        1.0222225
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S8KOPylon3_right_9": {
+      "Parent": "Vehicle",
+      "Position": [
+        3.415485875,
         1.495833125,
         1.0222225
       ],
@@ -5394,10 +5594,36 @@
         1
       ]
     },
+    "S8KOPylon3_right_10": {
+      "Parent": "Vehicle",
+      "Position": [
+        3.714652125,
+        1.495833125,
+        1.0222225
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
     "S8KOPylon3_left_11": {
       "Parent": "Vehicle",
       "Position": [
         -3.465346812,
+        1.421041875,
+        1.0222225
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S8KOPylon3_right_11": {
+      "Parent": "Vehicle",
+      "Position": [
+        3.465346812,
         1.421041875,
         1.0222225
       ],
@@ -5420,231 +5646,23 @@
         1
       ]
     },
-    "S8KOPylon3_left_13": {
-      "Parent": "Vehicle",
-      "Position": [
-        -3.664791187,
-        1.421041875,
-        1.0222225
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
-    "S8KOPylon3_left_14": {
-      "Parent": "Vehicle",
-      "Position": [
-        -3.565069,
-        1.720208125,
-        1.32138875
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
-    "S8KOPylon3_left_15": {
-      "Parent": "Vehicle",
-      "Position": [
-        -3.664791187,
-        1.62048625,
-        1.32138875
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
-    "S8KOPylon3_left_16": {
-      "Parent": "Vehicle",
-      "Position": [
-        -3.465346812,
-        1.62048625,
-        1.32138875
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
-    "S8KOPylon3_left_17": {
-      "Parent": "Vehicle",
-      "Position": [
-        -3.565069,
-        1.52076375,
-        1.32138875
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
-    "S8KOPylon3_right_0": {
-      "Parent": "Vehicle",
-      "Position": [
-        3.664791187,
-        1.819930625,
-        1.0222225
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
-    "S8KOPylon3_right_1": {
-      "Parent": "Vehicle",
-      "Position": [
-        3.714652125,
-        1.74513875,
-        1.0222225
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
-    "S8KOPylon3_right_2": {
-      "Parent": "Vehicle",
-      "Position": [
-        3.764513375,
-        1.670347187,
-        1.0222225
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
-    "S8KOPylon3_right_3": {
-      "Parent": "Vehicle",
-      "Position": [
-        3.565069,
-        1.819930625,
-        1.0222225
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
-    "S8KOPylon3_right_4": {
-      "Parent": "Vehicle",
-      "Position": [
-        3.465346812,
-        1.819930625,
-        1.0222225
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
-    "S8KOPylon3_right_5": {
-      "Parent": "Vehicle",
-      "Position": [
-        3.415485875,
-        1.74513875,
-        1.0222225
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
-    "S8KOPylon3_right_6": {
-      "Parent": "Vehicle",
-      "Position": [
-        3.365624625,
-        1.670347187,
-        1.0222225
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
-    "S8KOPylon3_right_7": {
-      "Parent": "Vehicle",
-      "Position": [
-        3.764513375,
-        1.570625,
-        1.0222225
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
-    "S8KOPylon3_right_8": {
-      "Parent": "Vehicle",
-      "Position": [
-        3.365624625,
-        1.570625,
-        1.0222225
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
-    "S8KOPylon3_right_9": {
-      "Parent": "Vehicle",
-      "Position": [
-        3.415485875,
-        1.495833125,
-        1.0222225
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
-    "S8KOPylon3_right_10": {
-      "Parent": "Vehicle",
-      "Position": [
-        3.714652125,
-        1.495833125,
-        1.0222225
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
-    "S8KOPylon3_right_11": {
-      "Parent": "Vehicle",
-      "Position": [
-        3.465346812,
-        1.421041875,
-        1.0222225
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
     "S8KOPylon3_right_12": {
       "Parent": "Vehicle",
       "Position": [
         3.565069,
+        1.421041875,
+        1.0222225
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S8KOPylon3_left_13": {
+      "Parent": "Vehicle",
+      "Position": [
+        -3.664791187,
         1.421041875,
         1.0222225
       ],
@@ -5667,11 +5685,37 @@
         1
       ]
     },
+    "S8KOPylon3_left_14": {
+      "Parent": "Vehicle",
+      "Position": [
+        -3.565069,
+        1.720208125,
+        1.32138875
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
     "S8KOPylon3_right_14": {
       "Parent": "Vehicle",
       "Position": [
         3.565069,
         1.720208125,
+        1.32138875
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S8KOPylon3_left_15": {
+      "Parent": "Vehicle",
+      "Position": [
+        -3.664791187,
+        1.62048625,
         1.32138875
       ],
       "Direction": [
@@ -5693,11 +5737,37 @@
         1
       ]
     },
+    "S8KOPylon3_left_16": {
+      "Parent": "Vehicle",
+      "Position": [
+        -3.465346812,
+        1.62048625,
+        1.32138875
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
     "S8KOPylon3_right_16": {
       "Parent": "Vehicle",
       "Position": [
         3.465346812,
         1.62048625,
+        1.32138875
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S8KOPylon3_left_17": {
+      "Parent": "Vehicle",
+      "Position": [
+        -3.565069,
+        1.52076375,
         1.32138875
       ],
       "Direction": [
@@ -5732,10 +5802,36 @@
         1
       ]
     },
+    "S8KOPylon4_right_0": {
+      "Parent": "Vehicle",
+      "Position": [
+        4.412708187,
+        1.770069625,
+        0.8227775
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
     "S8KOPylon4_left_1": {
       "Parent": "Vehicle",
       "Position": [
         -4.462569125,
+        1.69527775,
+        0.8227775
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S8KOPylon4_right_1": {
+      "Parent": "Vehicle",
+      "Position": [
+        4.462569125,
         1.69527775,
         0.8227775
       ],
@@ -5758,10 +5854,36 @@
         1
       ]
     },
+    "S8KOPylon4_right_2": {
+      "Parent": "Vehicle",
+      "Position": [
+        4.512430375,
+        1.620486187,
+        0.8227775
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
     "S8KOPylon4_left_3": {
       "Parent": "Vehicle",
       "Position": [
         -4.312986,
+        1.770069625,
+        0.8227775
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S8KOPylon4_right_3": {
+      "Parent": "Vehicle",
+      "Position": [
+        4.312986,
         1.770069625,
         0.8227775
       ],
@@ -5784,10 +5906,36 @@
         1
       ]
     },
+    "S8KOPylon4_right_4": {
+      "Parent": "Vehicle",
+      "Position": [
+        4.213263813,
+        1.770069625,
+        0.8227775
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
     "S8KOPylon4_left_5": {
       "Parent": "Vehicle",
       "Position": [
         -4.163402875,
+        1.69527775,
+        0.8227775
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S8KOPylon4_right_5": {
+      "Parent": "Vehicle",
+      "Position": [
+        4.163402875,
         1.69527775,
         0.8227775
       ],
@@ -5810,10 +5958,36 @@
         1
       ]
     },
+    "S8KOPylon4_right_6": {
+      "Parent": "Vehicle",
+      "Position": [
+        4.113541625,
+        1.620486187,
+        0.8227775
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
     "S8KOPylon4_left_7": {
       "Parent": "Vehicle",
       "Position": [
         -4.512430375,
+        1.520764,
+        0.8227775
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S8KOPylon4_right_7": {
+      "Parent": "Vehicle",
+      "Position": [
+        4.512430375,
         1.520764,
         0.8227775
       ],
@@ -5836,10 +6010,36 @@
         1
       ]
     },
+    "S8KOPylon4_right_8": {
+      "Parent": "Vehicle",
+      "Position": [
+        4.113541625,
+        1.520764,
+        0.8227775
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
     "S8KOPylon4_left_9": {
       "Parent": "Vehicle",
       "Position": [
         -4.163402875,
+        1.445972125,
+        0.8227775
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S8KOPylon4_right_9": {
+      "Parent": "Vehicle",
+      "Position": [
+        4.163402875,
         1.445972125,
         0.8227775
       ],
@@ -5862,10 +6062,36 @@
         1
       ]
     },
+    "S8KOPylon4_right_10": {
+      "Parent": "Vehicle",
+      "Position": [
+        4.462569125,
+        1.445972125,
+        0.8227775
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
     "S8KOPylon4_left_11": {
       "Parent": "Vehicle",
       "Position": [
         -4.213263813,
+        1.371180875,
+        0.8227775
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S8KOPylon4_right_11": {
+      "Parent": "Vehicle",
+      "Position": [
+        4.213263813,
         1.371180875,
         0.8227775
       ],
@@ -5888,231 +6114,23 @@
         1
       ]
     },
-    "S8KOPylon4_left_13": {
-      "Parent": "Vehicle",
-      "Position": [
-        -4.412708187,
-        1.371180875,
-        0.8227775
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
-    "S8KOPylon4_left_14": {
-      "Parent": "Vehicle",
-      "Position": [
-        -4.312986,
-        1.670347125,
-        1.12194375
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
-    "S8KOPylon4_left_15": {
-      "Parent": "Vehicle",
-      "Position": [
-        -4.412708187,
-        1.57062525,
-        1.12194375
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
-    "S8KOPylon4_left_16": {
-      "Parent": "Vehicle",
-      "Position": [
-        -4.213263813,
-        1.57062525,
-        1.12194375
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
-    "S8KOPylon4_left_17": {
-      "Parent": "Vehicle",
-      "Position": [
-        -4.312986,
-        1.47090275,
-        1.12194375
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
-    "S8KOPylon4_right_0": {
-      "Parent": "Vehicle",
-      "Position": [
-        4.412708187,
-        1.770069625,
-        0.8227775
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
-    "S8KOPylon4_right_1": {
-      "Parent": "Vehicle",
-      "Position": [
-        4.462569125,
-        1.69527775,
-        0.8227775
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
-    "S8KOPylon4_right_2": {
-      "Parent": "Vehicle",
-      "Position": [
-        4.512430375,
-        1.620486187,
-        0.8227775
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
-    "S8KOPylon4_right_3": {
-      "Parent": "Vehicle",
-      "Position": [
-        4.312986,
-        1.770069625,
-        0.8227775
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
-    "S8KOPylon4_right_4": {
-      "Parent": "Vehicle",
-      "Position": [
-        4.213263813,
-        1.770069625,
-        0.8227775
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
-    "S8KOPylon4_right_5": {
-      "Parent": "Vehicle",
-      "Position": [
-        4.163402875,
-        1.69527775,
-        0.8227775
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
-    "S8KOPylon4_right_6": {
-      "Parent": "Vehicle",
-      "Position": [
-        4.113541625,
-        1.620486187,
-        0.8227775
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
-    "S8KOPylon4_right_7": {
-      "Parent": "Vehicle",
-      "Position": [
-        4.512430375,
-        1.520764,
-        0.8227775
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
-    "S8KOPylon4_right_8": {
-      "Parent": "Vehicle",
-      "Position": [
-        4.113541625,
-        1.520764,
-        0.8227775
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
-    "S8KOPylon4_right_9": {
-      "Parent": "Vehicle",
-      "Position": [
-        4.163402875,
-        1.445972125,
-        0.8227775
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
-    "S8KOPylon4_right_10": {
-      "Parent": "Vehicle",
-      "Position": [
-        4.462569125,
-        1.445972125,
-        0.8227775
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
-    "S8KOPylon4_right_11": {
-      "Parent": "Vehicle",
-      "Position": [
-        4.213263813,
-        1.371180875,
-        0.8227775
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
     "S8KOPylon4_right_12": {
       "Parent": "Vehicle",
       "Position": [
         4.312986,
+        1.371180875,
+        0.8227775
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S8KOPylon4_left_13": {
+      "Parent": "Vehicle",
+      "Position": [
+        -4.412708187,
         1.371180875,
         0.8227775
       ],
@@ -6135,11 +6153,37 @@
         1
       ]
     },
+    "S8KOPylon4_left_14": {
+      "Parent": "Vehicle",
+      "Position": [
+        -4.312986,
+        1.670347125,
+        1.12194375
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
     "S8KOPylon4_right_14": {
       "Parent": "Vehicle",
       "Position": [
         4.312986,
         1.670347125,
+        1.12194375
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S8KOPylon4_left_15": {
+      "Parent": "Vehicle",
+      "Position": [
+        -4.412708187,
+        1.57062525,
         1.12194375
       ],
       "Direction": [
@@ -6161,11 +6205,37 @@
         1
       ]
     },
+    "S8KOPylon4_left_16": {
+      "Parent": "Vehicle",
+      "Position": [
+        -4.213263813,
+        1.57062525,
+        1.12194375
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
     "S8KOPylon4_right_16": {
       "Parent": "Vehicle",
       "Position": [
         4.213263813,
         1.57062525,
+        1.12194375
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S8KOPylon4_left_17": {
+      "Parent": "Vehicle",
+      "Position": [
+        -4.312986,
+        1.47090275,
         1.12194375
       ],
       "Direction": [
@@ -6456,6 +6526,68 @@
       ]
     },
     "RetractableGear": true,
+    "BodyParts": [
+      {
+        "Min": [
+          -0.60332,
+          1.15,
+          -3.091389
+        ],
+        "Max": [
+          0.60332,
+          2.991667,
+          4.93625
+        ]
+      },
+      {
+        "Min": [
+          -0.60332,
+          1.15,
+          4.686944
+        ],
+        "Max": [
+          0.60332,
+          2.293611,
+          6.880833
+        ]
+      },
+      {
+        "Min": [
+          -0.60332,
+          1.445973,
+          -5.580456
+        ],
+        "Max": [
+          0.60332,
+          2.941806,
+          -3.091389
+        ]
+      },
+      {
+        "Min": [
+          -4.7388,
+          1.31625,
+          -2.27375
+        ],
+        "Max": [
+          -0.542988,
+          2.7225,
+          1.874861
+        ]
+      },
+      {
+        "Min": [
+          0.542988,
+          1.31625,
+          -2.27375
+        ],
+        "Max": [
+          4.7388,
+          2.7225,
+          1.874861
+        ]
+      }
+    ],
     "WheelContacts": [
       {
         "Id": "landing_gear_12_0",
@@ -6463,26 +6595,62 @@
         "Position": [
           0,
           0,
-          2.7922221874999997
-        ]
+          2.792222
+        ],
+        "Bounds": {
+          "Min": [
+            -0.099723,
+            0,
+            2.493056
+          ],
+          "Max": [
+            0.099723,
+            0.199444,
+            3.091389
+          ]
+        }
       },
       {
         "Id": "landing_gear_14_0",
         "Group": "MAIN",
         "Position": [
-          -1.371180625,
+          -1.371181,
           0,
-          -0.5484721875
-        ]
+          -0.548472
+        ],
+        "Bounds": {
+          "Min": [
+            -1.545694,
+            0,
+            -0.997223
+          ],
+          "Max": [
+            -1.196667,
+            0.299167,
+            -0.099723
+          ]
+        }
       },
       {
         "Id": "landing_gear_15_0",
         "Group": "MAIN",
         "Position": [
-          1.371180625,
+          1.371181,
           0,
-          -0.5484721875
-        ]
+          -0.548472
+        ],
+        "Bounds": {
+          "Min": [
+            1.196667,
+            0,
+            -0.997223
+          ],
+          "Max": [
+            1.545694,
+            0.299167,
+            -0.099723
+          ]
+        }
       }
     ]
   },

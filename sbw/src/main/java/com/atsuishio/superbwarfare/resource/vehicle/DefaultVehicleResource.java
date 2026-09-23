@@ -82,6 +82,7 @@ public class DefaultVehicleResource implements IDBasedData<DefaultVehicleResourc
         public static final class Gear {
             @SerializedName("Bone") public String bone;
             @SerializedName("Parent") public String parent;
+            @SerializedName("VisibleWhen") public String visibleWhen;
         }
 
         public static class Part {

@@ -12,6 +12,7 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
 import org.joml.Matrix4d
+import org.joml.Quaterniond
 import org.joml.Vector3d
 
 /** Independent generic modules backed by existing authoritative persistence and synchronization. */
@@ -218,6 +219,21 @@ object AircraftSurfaceModules {
             com.atsuishio.superbwarfare.diagnostics.EliteDiagnostics.record(vehicle,"aircraft_surface","CONTACT",
                 "surface",id,"start",start,"hit",hit,"damage",damage,
                 "health_before",before,"health_after",id?.let { state(vehicle,it)?.health })
+        }
+    }
+
+    /** Read-only presentation of the same articulated volumes used by projectile collision. */
+    @JvmStatic fun debugHitboxes(vehicle: VehicleEntity, partialTick: Float): List<OBB> {
+        val modules = vehicle.computed().aircraftSurfaceModules
+        if (modules.isEmpty()) return emptyList()
+        val frame = Matrix4d(vehicle.getVehicleTransform(partialTick))
+        val poses = boneMatrices(vehicle, partialTick)
+        return modules.flatMap { it.hitboxes }.map { box ->
+            val transform = Matrix4d(frame).mul(poses(box.bone))
+            val center = box.min.add(box.max).scale(.5)
+            val half = box.max.subtract(box.min).scale(.5)
+            OBB(transform.transformPosition(Vector3d(center.x, center.y, center.z)),
+                Vector3d(half.x, half.y, half.z), transform.getNormalizedRotation(Quaterniond()), OBB.Part.BODY)
         }
     }
 

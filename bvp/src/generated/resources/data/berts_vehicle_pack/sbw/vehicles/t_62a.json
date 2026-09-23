@@ -152,7 +152,8 @@
               "Type": "superbwarfare:cannon_shell",
               "Profile": "berts_vehicle_pack:t_62a/cannon/ammo_00_3bm4_apfsds"
             }
-          }
+          },
+          "ConsumptionItem": "superbwarfare:tier_1_armor_piercing_shell"
         }
       ],
       "SoundInfo": {
@@ -261,7 +262,8 @@
               "ProjectileProfile": "berts_vehicle_pack:t_62a/machinegun/ammo_00_russian_762_ap_i",
               "ProjectileLife": 400
             }
-          }
+          },
+          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition"
         }
       ],
       "Projectile": {

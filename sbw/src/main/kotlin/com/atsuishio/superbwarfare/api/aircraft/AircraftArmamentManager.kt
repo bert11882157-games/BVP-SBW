@@ -45,6 +45,9 @@ object AircraftArmamentManager {
     private data class VisualReceipt(val entityId: Int, val dimension: ResourceLocation,
         val catalogue: Long, val revision: Long)
     private val farReceipts = WeakHashMap<ServerPlayer, LinkedHashMap<UUID, VisualReceipt>>()
+    private data class GroupCache(val tick: Int, val revision: Long, val catalogue: Long,
+                                  val definition: JsonObject, val groups: List<AircraftWeaponGroups.Group>)
+    private val groupCache = WeakHashMap<VehicleEntity, GroupCache>()
     private var nextEpoch = 1L
     private var nextSeekRevision = 1L
 
@@ -105,32 +108,91 @@ object AircraftArmamentManager {
         return if (mapped?.isJsonArray == true) mapped.asJsonArray.map { it.asString }
             else listOfNotNull(mapped?.asString ?: pair["WeaponId"]?.asString)
     }
+    private fun fittedGroups(vehicle: VehicleEntity): List<AircraftWeaponGroups.Group> {
+        val def = definition(vehicle) ?: return emptyList()
+        val revision = if (vehicle.level().isClientSide)
+            AircraftArmamentClient.getState(vehicle.uuid)?.get("Revision")?.asLong ?: 0L
+            else equipment(vehicle).getLong("Revision")
+        val previous = groupCache[vehicle]
+        if (previous?.tick == vehicle.tickCount && previous.revision == revision &&
+            previous.catalogue == AircraftArmamentRegistry.revision && previous.definition === def)
+            return previous.groups
+        val chosen = selection(vehicle)
+        val clientStores = if (vehicle.level().isClientSide)
+            AircraftArmamentClient.getState(vehicle.uuid)?.getAsJsonObject("Stores") else null
+        val fitted = mounts(def).mapNotNull { mount ->
+            val key = mount["Id"].asString
+            val storeId = chosen[key]?.asString ?: return@mapNotNull null
+            val store = (if (vehicle.level().isClientSide) clientStores?.getAsJsonObject(storeId)
+                else AircraftArmamentRegistry.stores[ResourceLocation.tryParse(storeId)])
+                ?: return@mapNotNull null
+            val category = store.get("Category")?.asString ?: return@mapNotNull null
+            if (category in setOf("AIR_TO_AIR", "ANTI_RADIATION", "LASER_GUIDED", "CRUISE", "BOMB") &&
+                !AircraftStoreWeapons.launchable(store)) return@mapNotNull null
+            AircraftWeaponGroups.Mount(key, storeId, category, nativeWeapons(mount, storeId))
+        }
+        val result = AircraftWeaponGroups.groups(fitted)
+        groupCache[vehicle] = GroupCache(vehicle.tickCount, revision,
+            AircraftArmamentRegistry.revision, def, result)
+        return result
+    }
+    internal fun groupFor(vehicle: VehicleEntity, weapon: String): AircraftWeaponGroups.Group? =
+        fittedGroups(vehicle).firstOrNull { weapon == it.representative || weapon in it.members }
+
+    /** Physical feeds/mounts behind a selectable aircraft row; null means an ordinary native gun. */
+    @JvmStatic fun groupMembers(vehicle: VehicleEntity, representative: String): List<String>? =
+        fittedGroups(vehicle).firstOrNull { it.representative == representative }?.members
+
+    internal fun gunPodAliases(vehicle: VehicleEntity): List<String> = fittedGroups(vehicle)
+        .filter { it.category == "GUN_POD" }.map { it.representative }
     internal fun gunPodChannels(vehicle: VehicleEntity, equippedOnly: Boolean): List<String> {
         val def = definition(vehicle) ?: return emptyList()
+        val chosen = if (equippedOnly) selection(vehicle) else null
+        val clientStores = if (vehicle.level().isClientSide)
+            AircraftArmamentClient.getState(vehicle.uuid)?.getAsJsonObject("Stores") else null
         return mounts(def).flatMap { mount ->
-            val ids = if (equippedOnly) listOfNotNull(selection(vehicle)[mount["Id"].asString]?.asString)
+            val ids = if (equippedOnly) listOfNotNull(chosen?.get(mount["Id"].asString)?.asString)
                 else mount.getAsJsonArray("AllowedStores")?.map { it.asString } ?: emptyList()
             ids.filter { id ->
-                val store = if (vehicle.level().isClientSide) AircraftArmamentClient.getState(vehicle.uuid)?.getAsJsonObject("Stores")?.getAsJsonObject(id)
+                val store = if (vehicle.level().isClientSide) clientStores?.getAsJsonObject(id)
                     else AircraftArmamentRegistry.stores[ResourceLocation.tryParse(id)]
                 store?.get("Category")?.asString == "GUN_POD"
             }.flatMap { nativeWeapons(mount, it) }
         }.distinct()
     }
-    @JvmStatic fun selectableWeapon(vehicle: VehicleEntity, weapon: String): Boolean =
-        weapon !in gunPodChannels(vehicle, false) && allowsWeapon(vehicle, weapon)
+    internal fun rocketPodChannels(vehicle: VehicleEntity): List<String> {
+        val def = definition(vehicle) ?: return emptyList()
+        val chosen = selection(vehicle)
+        return mounts(def).flatMap { mount ->
+            val id = chosen[mount["Id"].asString]?.asString ?: return@flatMap emptyList()
+            val store = if (vehicle.level().isClientSide)
+                AircraftArmamentClient.getState(vehicle.uuid)?.getAsJsonObject("Stores")?.getAsJsonObject(id)
+            else AircraftArmamentRegistry.stores[ResourceLocation.tryParse(id)]
+            if (store?.get("Category")?.asString == "ROCKET_POD") nativeWeapons(mount, id)
+            else emptyList()
+        }.distinct()
+    }
+    @JvmStatic fun selectableWeapon(vehicle: VehicleEntity, weapon: String): Boolean {
+        if (definition(vehicle) == null) return allowsWeapon(vehicle, weapon)
+        val group = groupFor(vehicle, weapon)
+        if (group != null) return group.representative == weapon
+        if (AircraftGunPodGroups.isAlias(weapon) || AircraftStoreWeapons.mountId(weapon) != null) return false
+        return allowsWeapon(vehicle, weapon)
+    }
     @JvmStatic fun weaponPresentation(vehicle: VehicleEntity, weaponId: String): AircraftWeaponPresentation? {
-        if (weaponId == AircraftGunPodGroups.GROUP) return AircraftGunPodGroups.presentation(vehicle)
-        val def = definition(vehicle) ?: return null
-        val pair = mounts(def).firstOrNull { AircraftStoreWeapons.PREFIX + it["Id"].asString == weaponId || weaponId in nativeWeapons(it, selection(vehicle)[it["Id"].asString]?.asString) } ?: return null
-        val key = pair["Id"].asString
+        val group = fittedGroups(vehicle).firstOrNull { it.representative == weaponId } ?: return null
+        if (group.category == "GUN_POD") return AircraftGunPodGroups.presentation(vehicle, weaponId)
+        val key = group.mounts.first()
         val store = equippedStore(vehicle, key) ?: return null
         val category = when (store["Category"]?.asString) {
             "ROCKET_POD" -> "RKT"; "GUN_POD" -> "CNN"; "LASER_GUIDED", "ANTI_RADIATION" -> "AGM"
             "AIR_TO_AIR" -> "AAM"; "BOMB" -> "BMB"; "CRUISE" -> "AGM"; else -> return null
         }
-        val ammo = if (category in setOf("RKT", "CNN")) vehicle.getGunData(weaponId)?.ammo?.get() ?: 0 else mountRemaining(vehicle, key)
-        return AircraftWeaponPresentation(category, store["Name"].asString, ammo, mountCapacity(vehicle, key))
+        val ammo = if (category == "RKT") group.members.sumOf { vehicle.gunDataMap[it]?.ammo?.get() ?: 0 }
+            else group.mounts.sumOf { mountRemaining(vehicle, it) }
+        val capacity = if (category == "RKT") group.members.sumOf { vehicle.gunDataMap[it]?.get(com.atsuishio.superbwarfare.data.gun.GunProp.MAGAZINE) ?: 0 }
+            else group.mounts.sumOf { mountCapacity(vehicle, it) }
+        return AircraftWeaponPresentation(category, store["Name"].asString, ammo, capacity)
     }
     private fun selectGuns(vehicle: VehicleEntity) {
         val builtIn = definition(vehicle)?.getAsJsonArray("BuiltInWeapons")?.map { it.asString } ?: return
@@ -142,22 +204,38 @@ object AircraftArmamentManager {
         val player = controller as? ServerPlayer
         if (player == null || !pilot(player, vehicle) || !vehicle.isVehicleActionFireAllowed())
             return com.atsuishio.superbwarfare.api.weapon.ShotResult.rejected(com.atsuishio.superbwarfare.api.weapon.ShotRejectionReason.ACTION_BLOCKED, weaponId)
-        return try {
-            fire(player, vehicle, JsonObject().apply { addProperty("Pair", key) })
-            publish(vehicle)
-            com.atsuishio.superbwarfare.api.weapon.ShotResult(com.atsuishio.superbwarfare.api.weapon.ShotStatus.ACCEPTED,
-                com.atsuishio.superbwarfare.api.weapon.ShotRejectionReason.NONE, weaponId, null, null, null, emptyList())
-        } catch (_: IllegalArgumentException) {
-            com.atsuishio.superbwarfare.api.weapon.ShotResult.rejected(com.atsuishio.superbwarfare.api.weapon.ShotRejectionReason.CANNOT_SHOOT, weaponId)
+        val group = groupFor(vehicle, weaponId)?.takeIf { it.representative == weaponId }
+        val mounts = group?.mounts ?: listOf(key)
+        val cursors = equipment(vehicle).getCompound("GroupCursor")
+        val live = AircraftWeaponGroups.orderedLiveMounts(mounts, cursors.getInt(weaponId)) {
+            mountRemaining(vehicle, it)
         }
+        for (mount in live) {
+            try {
+                fire(player, vehicle, JsonObject().apply { addProperty("Pair", mount) })
+                if (group != null) {
+                    cursors.putInt(weaponId, (mounts.indexOf(mount) + 1) % mounts.size)
+                    equipment(vehicle).put("GroupCursor", cursors)
+                }
+                publish(vehicle)
+                return com.atsuishio.superbwarfare.api.weapon.ShotResult(com.atsuishio.superbwarfare.api.weapon.ShotStatus.ACCEPTED,
+                    com.atsuishio.superbwarfare.api.weapon.ShotRejectionReason.NONE, weaponId, null, null, null, emptyList())
+            } catch (_: IllegalArgumentException) {
+                // A cooling or exhausted physical mount cannot consume the group's accepted shot.
+            }
+        }
+        return com.atsuishio.superbwarfare.api.weapon.ShotResult.rejected(com.atsuishio.superbwarfare.api.weapon.ShotRejectionReason.CANNOT_SHOOT, weaponId)
     }
     private fun allowed(pair: JsonObject, id: String) =
         pair.getAsJsonArray("AllowedStores")?.any { it.asString == id } == true &&
             AircraftArmamentRegistry.stores.containsKey(ResourceLocation.tryParse(id))
 
     @JvmStatic fun allowsWeapon(vehicle: VehicleEntity, weaponName: String): Boolean {
-        if (weaponName == AircraftGunPodGroups.GROUP) return AircraftGunPodGroups.loaded(vehicle).isNotEmpty()
-        if (AircraftStoreWeapons.mountId(weaponName) != null) return AircraftStoreWeapons.available(vehicle, weaponName)
+        if (AircraftGunPodGroups.isAlias(weaponName)) return AircraftGunPodGroups.loaded(vehicle, weaponName).isNotEmpty()
+        if (AircraftStoreWeapons.mountId(weaponName) != null) {
+            val members = groupMembers(vehicle, weaponName) ?: return false
+            return members.any { AircraftStoreWeapons.available(vehicle, it) }
+        }
         val def = definition(vehicle) ?: return true
         if (def.getAsJsonArray("SuspendedWeapons")?.none { it.asString == weaponName } != false) return true
         val chosen = selection(vehicle)
@@ -376,7 +454,8 @@ object AircraftArmamentManager {
         require(body["Revision"]?.asLong == state.getLong("Revision")) { "Loadout changed; reopen the editor." }
         val choices = validateSelections(vehicle, body.getAsJsonObject("Selections"))
         state.put("Selections", choices); state.putLong("Revision", state.getLong("Revision") + 1)
-        state.remove("Fired"); state.remove("LastFire"); AircraftMissileLauncher.clear(vehicle); selectGuns(vehicle)
+        state.remove("Fired"); state.remove("LastFire"); state.remove("GroupCursor"); AircraftMissileLauncher.clear(vehicle)
+        AircraftRocketPodOrder.clear(vehicle); selectGuns(vehicle)
     }
     private fun fire(player: ServerPlayer, vehicle: VehicleEntity, body: JsonObject) {
         val pair = mounts(definition(vehicle)!!).firstOrNull { it["Id"].asString == body["Pair"]?.asString }
@@ -397,9 +476,10 @@ object AircraftArmamentManager {
         }
         val weaponId = AircraftStoreWeapons.PREFIX + pair["Id"].asString
         val equipped = listOfNotNull(vehicle.getGunName(0), vehicle.getSecondaryWeaponIndex(0)?.let { vehicle.getGunName(0, it) })
-        require(weaponId in equipped) { "Select this store in a weapon slot first." }
+        val selectedGroup = groupFor(vehicle, weaponId)?.representative ?: weaponId
+        require(selectedGroup in equipped) { "Select this store in a weapon slot first." }
         if (guidedMissile) {
-            val lock = AircraftMissileLauncher.update(vehicle, player, weaponId, store)
+            val lock = AircraftMissileLauncher.update(vehicle, player, selectedGroup, store)
             require(lock >= 0) { "Compatible Fire From Above missile support is unavailable." }
             require(lock == 2) { "Hold the target in the seeker cone until locked." }
         }
@@ -411,10 +491,22 @@ object AircraftArmamentManager {
         val times = state.getCompound("LastFire"); val now = player.serverLevel().gameTime
         require(!times.contains(key) || now - times.getLong(key) >= 10) { "Launcher is cycling." }
         val mount = AircraftArmamentRegistry.launchPosition(pair, used)
-        if (guidedMissile) require(AircraftMissileLauncher.launch(vehicle, player, AircraftStoreWeapons.PREFIX + key, mount, store)) { "Missile lock or launch conditions changed." }
-        else if (bomb) require(AircraftBombLauncher.launch(vehicle, player, mount, store)) { "Bomb release failed." }
-        else if (cruise) require(AircraftCruiseLauncher.launch(vehicle, player, mount, store)) { "Cruise missile launch failed." }
-        else require(AircraftLaserLauncher.launch(vehicle, player, mount, store)) { "Invalid laser-munition profile." }
+        val ammoItem = store["AmmoItem"]?.asString?.let { value ->
+            val itemId = ResourceLocation.tryParse(value)
+            require(itemId != null && ForgeRegistries.ITEMS.containsKey(itemId)) { "Unknown store ammunition: $value" }
+            requireNotNull(ForgeRegistries.ITEMS.getValue(itemId)).also {
+                require(it != net.minecraft.world.item.Items.AIR) { "Store ammunition cannot be empty." }
+            }
+        }
+        require(AircraftStoreAmmunition.fire(vehicle.inventory, ammoItem, player.isCreative,
+            { vehicle.spawnAtLocation(it) }) {
+            when {
+                guidedMissile -> AircraftMissileLauncher.launch(vehicle, player, selectedGroup, mount, store)
+                bomb -> AircraftBombLauncher.launch(vehicle, player, mount, store)
+                cruise -> AircraftCruiseLauncher.launch(vehicle, player, mount, store)
+                else -> AircraftLaserLauncher.launch(vehicle, player, mount, store)
+            }
+        }) { "Munition release failed or launch conditions changed." }
         fired.putInt(key, used + 1); state.put("Fired", fired); times.putLong(key, now); state.put("LastFire", times)
         state.putLong("Revision", state.getLong("Revision") + 1)
         if (!guidedMissile && !bomb && !cruise) selectGuns(vehicle)
@@ -514,7 +606,8 @@ object AircraftArmamentManager {
         val active = equipped.mapNotNull { weapon ->
             val mount = AircraftStoreWeapons.mountId(weapon) ?: return@mapNotNull null
             val store = equippedStore(vehicle, mount) ?: return@mapNotNull null
-            if (!store.has("Guidance") || mountRemaining(vehicle, mount) <= 0) return@mapNotNull null
+            val members = groupFor(vehicle, weapon)?.takeIf { it.representative == weapon }?.mounts ?: listOf(mount)
+            if (!store.has("Guidance") || members.none { mountRemaining(vehicle, it) > 0 }) return@mapNotNull null
             weapon to store
         }
         val channels = active.map { it.first }.toSet()

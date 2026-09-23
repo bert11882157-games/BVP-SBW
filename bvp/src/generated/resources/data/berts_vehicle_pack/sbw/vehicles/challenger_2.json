@@ -427,7 +427,8 @@
               "ProjectileProfile": "berts_vehicle_pack:challenger_2/cannon/ammo_00_l27a1_apfsds",
               "ProjectileLife": 50
             }
-          }
+          },
+          "ConsumptionItem": "superbwarfare:tier_3_armor_piercing_shell"
         },
         {
           "Ammo": "superbwarfare:large_shell_ap",
@@ -454,7 +455,8 @@
               "ProjectileProfile": "berts_vehicle_pack:challenger_2/cannon/ammo_01_l26_apfsds",
               "ProjectileLife": 50
             }
-          }
+          },
+          "ConsumptionItem": "superbwarfare:tier_3_armor_piercing_shell"
         },
         {
           "Ammo": "superbwarfare:large_shell_ap",
@@ -481,7 +483,8 @@
               "ProjectileProfile": "berts_vehicle_pack:challenger_2/cannon/ammo_02_l23a1_apfsds",
               "ProjectileLife": 50
             }
-          }
+          },
+          "ConsumptionItem": "superbwarfare:tier_2_armor_piercing_shell"
         },
         {
           "Ammo": "superbwarfare:large_shell_he",
@@ -509,7 +512,8 @@
               "ProjectileProfile": "berts_vehicle_pack:challenger_2/cannon/ammo_03_l31a7_hesh",
               "ProjectileLife": 50
             }
-          }
+          },
+          "ConsumptionItem": "superbwarfare:large_he_shell"
         }
       ],
       "SoundInfo": {
@@ -627,7 +631,8 @@
               "ProjectileProfile": "berts_vehicle_pack:challenger_2/machinegun/ammo_00_western_762_ap",
               "ProjectileLife": 400
             }
-          }
+          },
+          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition"
         }
       ],
       "Projectile": {
@@ -781,7 +786,8 @@
               "ProjectileProfile": "berts_vehicle_pack:challenger_2/passengermachinegun/ammo_00_western_762_ap",
               "ProjectileLife": 400
             }
-          }
+          },
+          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition"
         }
       ],
       "Projectile": {

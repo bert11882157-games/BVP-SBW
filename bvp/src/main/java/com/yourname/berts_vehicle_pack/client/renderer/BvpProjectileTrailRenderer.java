@@ -11,6 +11,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.yourname.berts_vehicle_pack.client.BvpClientParticles;
 import com.yourname.berts_vehicle_pack.effects.BvpProjectileEffectDefinition;
+import com.yourname.berts_vehicle_pack.effects.BvpMissileExhaustGeometry;
 import com.yourname.berts_vehicle_pack.effects.BvpTrailDiagnostics;
 import com.yourname.berts_vehicle_pack.effects.BvpTracerProfile;
 import net.minecraft.client.Camera;
@@ -567,3 +568,4 @@ public final class BvpProjectileTrailRenderer {
         }
     }
 }
+

@@ -658,6 +658,7 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -691,6 +692,7 @@
         },
         {
           "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -809,6 +811,7 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:projectile",
@@ -842,6 +845,7 @@
         },
         {
           "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:projectile",
@@ -960,6 +964,7 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:projectile",
@@ -993,6 +998,7 @@
         },
         {
           "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:projectile",
@@ -1206,15 +1212,89 @@
       ]
     },
     "RetractableGear": true,
+    "BodyParts": [
+      {
+        "Min": [
+          -0.498398,
+          0.85,
+          -0.724942
+        ],
+        "Max": [
+          0.498398,
+          1.970936,
+          2.491988
+        ]
+      },
+      {
+        "Min": [
+          -0.498398,
+          0.85,
+          2.491988
+        ],
+        "Max": [
+          0.498398,
+          1.902972,
+          3.62471
+        ]
+      },
+      {
+        "Min": [
+          -0.498398,
+          0.85,
+          -2.834523
+        ],
+        "Max": [
+          0.498398,
+          1.902972,
+          -0.589016
+        ]
+      },
+      {
+        "Min": [
+          -3.214664,
+          0.944141,
+          0.830869
+        ],
+        "Max": [
+          -0.448558,
+          1.230685,
+          1.978282
+        ]
+      },
+      {
+        "Min": [
+          0.448558,
+          0.944141,
+          0.830869
+        ],
+        "Max": [
+          3.214664,
+          1.230685,
+          1.978282
+        ]
+      }
+    ],
     "WheelContacts": [
       {
         "Id": "landing_gear_0_0",
         "Group": "MAIN",
         "Position": [
-          -1.6084649999999998,
+          -1.608465,
           0,
-          1.8576640625
-        ]
+          1.857664
+        ],
+        "Bounds": {
+          "Min": [
+            -1.676428,
+            0,
+            1.585811
+          ],
+          "Max": [
+            -1.540502,
+            0.135927,
+            2.129517
+          ]
+        }
       },
       {
         "Id": "landing_gear_1_0",
@@ -1222,17 +1302,41 @@
         "Position": [
           1.608465,
           0,
-          1.8576640625
-        ]
+          1.857664
+        ],
+        "Bounds": {
+          "Min": [
+            1.540502,
+            0,
+            1.585811
+          ],
+          "Max": [
+            1.676428,
+            0.135927,
+            2.129517
+          ]
+        }
       },
       {
         "Id": "fixed_tail_tyre_0",
         "Group": "TAIL",
         "Position": [
           0,
-          0.770250625,
-          -3.2848934375
-        ]
+          0.770251,
+          -3.284893
+        ],
+        "Bounds": {
+          "Min": [
+            -0.022654,
+            0.770251,
+            -3.398166
+          ],
+          "Max": [
+            0.022654,
+            0.81556,
+            -3.171621
+          ]
+        }
       }
     ]
   },

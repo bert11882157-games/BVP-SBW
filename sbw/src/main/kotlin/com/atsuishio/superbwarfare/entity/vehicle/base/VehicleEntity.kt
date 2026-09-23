@@ -356,8 +356,8 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
 
     fun modifyGunData(name: String?, consumer: Consumer<GunData>) {
         if (name == null) return
-        if (name == com.atsuishio.superbwarfare.api.aircraft.AircraftGunPodGroups.GROUP) {
-            com.atsuishio.superbwarfare.api.aircraft.AircraftGunPodGroups.equipped(this).forEach { modifyGunData(it, consumer) }
+        if (com.atsuishio.superbwarfare.api.aircraft.AircraftGunPodGroups.isAlias(name)) {
+            com.atsuishio.superbwarfare.api.aircraft.AircraftGunPodGroups.members(this, name).forEach { modifyGunData(it, consumer) }
             return
         }
 
@@ -1759,9 +1759,12 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         }
 
         val currentIndex = vehicleWeaponRuntime.resolvedPrimaryIndex(seatIndex, candidates)
-        val typeIndex = candidates.firstOrNull { it == value }
+        val typeIndex = if (seatIndex == 0 &&
+            com.atsuishio.superbwarfare.api.aircraft.AircraftArmamentManager.definition(this) != null)
+            candidates.getOrNull(value.coerceIn(0, candidates.lastIndex))
+        else candidates.firstOrNull { it == value }
             ?: candidates.getOrNull(value.coerceIn(0, candidates.lastIndex))
-            ?: return
+        if (typeIndex == null) return
         if (typeIndex == currentIndex) return
 
         val weapon = getGunData(seatIndex, typeIndex) ?: return

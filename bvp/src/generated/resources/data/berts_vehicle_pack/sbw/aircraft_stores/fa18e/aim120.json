@@ -1,0 +1,23 @@
+{
+  "Schema": 1,
+  "Name": "AIM-120 · active radar",
+  "Category": "AIR_TO_AIR",
+  "Capacity": 1,
+  "MassKg": 180,
+  "Guidance": {
+    "Mode": "ACTIVE_RADAR",
+    "LockTicks": 60,
+    "Range": 2000,
+    "ConeDegrees": 25,
+    "CountermeasureVulnerability": 1.15
+  },
+  "Flight": {
+    "InitialSpeed": 0.5,
+    "MaxSpeed": 14,
+    "AccelerationPerTick": 0.1,
+    "TurnDegreesPerSecond": 50,
+    "Damage": 80,
+    "BlastRadius": 5
+  },
+  "AmmoItem": "superbwarfare:medium_air_to_air_missile"
+}

@@ -1,0 +1,16 @@
+{
+  "Schema": 1,
+  "Name": "500 kg GPS JDAM · twin rack",
+  "Category": "BOMB",
+  "Capacity": 2,
+  "MassKg": 500,
+  "Bomb": {
+    "Mode": "GPS",
+    "Gravity": 0.08,
+    "DragMultiplier": 1,
+    "TurnDegreesPerTick": 2,
+    "BlastRadius": 28,
+    "BlastDamage": 800
+  },
+  "AmmoItem": "superbwarfare:medium_guided_bomb"
+}

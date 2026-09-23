@@ -65,13 +65,13 @@ internal class AircraftWheelSupportKernel(
         // Multiple main bogies need the support edge which leaves every other supported tyre above ground.
         // Test that cheap exact constraint before any swept world queries.
         for (main in mains) {
-            val anchor = main.wheel.definition.position
-            val delta = AircraftWheelGeometry.settleDelta(frame, anchor, secondary.definition.position,
+            val anchor = main.wheel.localSupport
+            val delta = AircraftWheelGeometry.settleDelta(frame, anchor, secondary.localSupport,
                 target.point.y, roll, weight)
             if (abs(delta) <= 1e-7) continue
             val next = AircraftWheelGeometry.pitchAround(frame, anchor, roll, delta)
-            if (support.rows.any { AircraftWheelGeometry.transform(next, it.wheel.definition.position).y <
-                    it.point.y - 1e-6 }) continue
+            val nextWheels = AircraftWheelGeometry.sample(data, next).associateBy { it.id }
+            if (support.rows.any { nextWheels.getValue(it.wheel.id).world.y < it.point.y - 1e-6 }) continue
             if (!clearSettlingPath(data, frame, next, samples, anchor, roll, delta)) continue
             val settledContacts = contacts(AircraftWheelGeometry.sample(data, next))
             if (!settledContacts.complete) return unchanged
@@ -84,19 +84,32 @@ internal class AircraftWheelSupportKernel(
                                   samples: List<AircraftWheelGeometry.Wheel>, anchor: Vec3,
                                   roll: Double, delta: Double): Boolean {
         val midpoint = AircraftWheelGeometry.pitchAround(frame, anchor, roll, delta * 0.5)
-        val body = AircraftCollisionSnapshot.create(data, midpoint, 0F).terrainInfos().first()
-        val localCenter = data.fuselage.minimum.add(data.fuselage.maximum).scale(0.5)
-        val radius = localCenter.distanceTo(anchor) + data.fuselage.maximum.subtract(data.fuselage.minimum).length() * 0.5
-        val margin = 2.0 * radius * sin(Math.toRadians(abs(delta)) * 0.25)
-        // Conservatively contains the complete rotating fuselage arc, including its interior.
-        body.getOBB().extents.add(margin, margin, margin)
-        val clearance = query(listOf(body), Vec3.ZERO, Vec3.ZERO)
+        val bodies = AircraftCollisionSnapshot.create(data, midpoint, 0F).terrainInfos().filterNot { it.landingGear }
+        for ((body, volume) in bodies.zip(data.bodyVolumes())) {
+            val localCenter = volume.minimum.add(volume.maximum).scale(0.5)
+            val radius = localCenter.distanceTo(anchor) + volume.maximum.subtract(volume.minimum).length() * 0.5
+            val margin = 2.0 * radius * sin(Math.toRadians(abs(delta)) * 0.25)
+            // Includes each body's complete rotating arc, without filling the spaces between wings.
+            body.getOBB().extents.add(margin, margin, margin)
+        }
+        val clearance = query(bodies, Vec3.ZERO, Vec3.ZERO)
         if (!clearance.complete || clearance.bodyOverlap || clearance.contact != null) return false
         val end = AircraftWheelGeometry.sample(data, next).associateBy { it.id }
+        if (data.hasWheelVolumes()) {
+            // Rotating about a tyre contact also moves its box center. Sweeping the old box
+            // with that center translation falsely drives its frozen lower face into the floor.
+            // Validate the intermediate/end solids, then sweep the actual support points.
+            for (pose in listOf(midpoint, next)) {
+                val gearClearance = query(AircraftWheelGeometry.sample(data, pose).map { it.terrainInfo() },
+                    Vec3.ZERO, Vec3.ZERO)
+                if (!gearClearance.complete || gearClearance.bodyOverlap ||
+                    gearClearance.contact?.let { it.penetrationDepth > 1e-6 } == true) return false
+            }
+        }
         for (wheel in samples) {
             val movement = end.getValue(wheel.id).world.subtract(wheel.world)
             if (movement.lengthSqr() <= 1e-14) continue
-            val hit = query(listOf(wheel.terrainInfo()), movement, Vec3.ZERO)
+            val hit = query(listOf(AircraftWheelGeometry.pointInfo(wheel.world, wheel.orientation)), movement, Vec3.ZERO)
             if (!hit.complete || hit.contact?.let { it.fraction < 1.0 - 1e-6 || it.penetrationDepth > 1e-6 } == true)
                 return false
         }

@@ -651,6 +651,7 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:large_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -684,6 +685,7 @@
         },
         {
           "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:large_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -802,6 +804,7 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -835,6 +838,7 @@
         },
         {
           "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -953,6 +957,7 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -986,6 +991,7 @@
         },
         {
           "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -1199,6 +1205,68 @@
       ]
     },
     "RetractableGear": true,
+    "BodyParts": [
+      {
+        "Min": [
+          -0.842878,
+          0.8,
+          0.045074
+        ],
+        "Max": [
+          0.842878,
+          2.028315,
+          3.741114
+        ]
+      },
+      {
+        "Min": [
+          -0.842878,
+          0.8,
+          3.741114
+        ],
+        "Max": [
+          0.842878,
+          1.983241,
+          4.958102
+        ]
+      },
+      {
+        "Min": [
+          -0.842878,
+          0.8,
+          -1.507263
+        ],
+        "Max": [
+          0.842878,
+          1.938168,
+          0.045074
+        ]
+      },
+      {
+        "Min": [
+          -3.331845,
+          1.006694,
+          -0.570884
+        ],
+        "Max": [
+          -0.75859,
+          1.427284,
+          1.472357
+        ]
+      },
+      {
+        "Min": [
+          0.75859,
+          1.006694,
+          -0.570884
+        ],
+        "Max": [
+          3.331845,
+          1.427284,
+          1.472357
+        ]
+      }
+    ],
     "WheelContacts": [
       {
         "Id": "landing_gear_12_0",
@@ -1206,26 +1274,62 @@
         "Position": [
           0,
           0,
-          3.6735034375
-        ]
+          3.673503
+        ],
+        "Bounds": {
+          "Min": [
+            -0.090148,
+            0,
+            3.470672
+          ],
+          "Max": [
+            0.090148,
+            0.135221,
+            3.876335
+          ]
+        }
       },
       {
         "Id": "landing_gear_14_0",
         "Group": "MAIN",
         "Position": [
-          -2.0283146875,
+          -2.028315,
           0,
           0.676105
-        ]
+        ],
+        "Bounds": {
+          "Min": [
+            -2.118462,
+            0,
+            0.405663
+          ],
+          "Max": [
+            -1.938168,
+            0.180294,
+            0.946547
+          ]
+        }
       },
       {
         "Id": "landing_gear_15_0",
         "Group": "MAIN",
         "Position": [
-          2.0283146875,
+          2.028315,
           0,
           0.676105
-        ]
+        ],
+        "Bounds": {
+          "Min": [
+            1.938168,
+            0,
+            0.405663
+          ],
+          "Max": [
+            2.118462,
+            0.180294,
+            0.946547
+          ]
+        }
       }
     ]
   },

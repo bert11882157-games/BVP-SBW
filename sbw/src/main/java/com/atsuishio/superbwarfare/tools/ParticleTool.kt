@@ -116,6 +116,9 @@ object ParticleTool {
             }
         }
 
+        if (context.radius > 0 && com.atsuishio.superbwarfare.api.effect.MissilePresentation.effect(
+                level, context.particlePosition, context.radius, false)) return
+
         // Ammunition-rack providers explicitly own the mushroom presentation. Ordinary vehicle
         // destruction must not inherit the giant mushroom recipe from its blast radius.
         val vehicle = context.directSource as? VehicleEntity

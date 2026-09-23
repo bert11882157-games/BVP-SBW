@@ -1,0 +1,193 @@
+{
+  "Schema": 1,
+  "Name": "F/A-18E",
+  "BuiltInWeapons": [
+    "Vulcan"
+  ],
+  "SuspendedWeapons": [],
+  "Pairs": [
+    {
+      "Id": "wingtip",
+      "Name": "Wingtip",
+      "Left": [
+        -6.7,
+        1.95,
+        -1.55
+      ],
+      "Right": [
+        6.7,
+        1.95,
+        -1.55
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:fa18e/aim9m",
+        "berts_vehicle_pack:fa18e/aim120"
+      ],
+      "StoreGroups": {
+        "berts_vehicle_pack:fa18e/aim9m": [
+          "suspended_fa18e_wingtip_left",
+          "suspended_fa18e_wingtip_right"
+        ]
+      }
+    },
+    {
+      "Id": "outer",
+      "Name": "Outer wing",
+      "Left": [
+        -5.7,
+        1.85,
+        -1.4
+      ],
+      "Right": [
+        5.7,
+        1.85,
+        -1.4
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:fa18e/aim9m",
+        "berts_vehicle_pack:fa18e/aim120",
+        "berts_vehicle_pack:fa18e/aim174b",
+        "berts_vehicle_pack:fa18e/agm65"
+      ]
+    },
+    {
+      "Id": "mid",
+      "Name": "Mid wing",
+      "Left": [
+        -4.5,
+        1.76,
+        -1.1
+      ],
+      "Right": [
+        4.5,
+        1.76,
+        -1.1
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:fa18e/aim9m",
+        "berts_vehicle_pack:fa18e/aim120",
+        "berts_vehicle_pack:fa18e/aim174b",
+        "berts_vehicle_pack:fa18e/agm65",
+        "berts_vehicle_pack:fa18e/agm88",
+        "berts_vehicle_pack:fa18e/bomb_500kg_dumb_1",
+        "berts_vehicle_pack:fa18e/bomb_500kg_dumb_2",
+        "berts_vehicle_pack:fa18e/bomb_500kg_laser_1",
+        "berts_vehicle_pack:fa18e/bomb_500kg_laser_2",
+        "berts_vehicle_pack:fa18e/bomb_500kg_gps_1",
+        "berts_vehicle_pack:fa18e/bomb_500kg_gps_2"
+      ],
+      "StoreGroups": {
+        "berts_vehicle_pack:fa18e/aim120": [
+          "suspended_fa18e_inner_aam_left",
+          "suspended_fa18e_inner_aam_right"
+        ]
+      }
+    },
+    {
+      "Id": "inner",
+      "Name": "Inner wing",
+      "Left": [
+        -3.35,
+        1.6,
+        -0.85
+      ],
+      "Right": [
+        3.35,
+        1.6,
+        -0.85
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:fa18e/aim9m",
+        "berts_vehicle_pack:fa18e/aim120",
+        "berts_vehicle_pack:fa18e/aim174b",
+        "berts_vehicle_pack:fa18e/agm65",
+        "berts_vehicle_pack:fa18e/agm88",
+        "berts_vehicle_pack:fa18e/agm84e",
+        "berts_vehicle_pack:fa18e/bomb_500kg_dumb_1",
+        "berts_vehicle_pack:fa18e/bomb_500kg_dumb_2",
+        "berts_vehicle_pack:fa18e/bomb_500kg_laser_1",
+        "berts_vehicle_pack:fa18e/bomb_500kg_laser_2",
+        "berts_vehicle_pack:fa18e/bomb_500kg_gps_1",
+        "berts_vehicle_pack:fa18e/bomb_500kg_gps_2"
+      ]
+    },
+    {
+      "Id": "root",
+      "Name": "Wing root",
+      "Left": [
+        -2.25,
+        1.45,
+        -0.65
+      ],
+      "Right": [
+        2.25,
+        1.45,
+        -0.65
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:fa18e/aim9m",
+        "berts_vehicle_pack:fa18e/aim120",
+        "berts_vehicle_pack:fa18e/aim174b",
+        "berts_vehicle_pack:fa18e/agm65",
+        "berts_vehicle_pack:fa18e/agm88",
+        "berts_vehicle_pack:fa18e/agm84e",
+        "berts_vehicle_pack:fa18e/bomb_500kg_dumb_1",
+        "berts_vehicle_pack:fa18e/bomb_500kg_dumb_2",
+        "berts_vehicle_pack:fa18e/bomb_500kg_laser_1",
+        "berts_vehicle_pack:fa18e/bomb_500kg_laser_2",
+        "berts_vehicle_pack:fa18e/bomb_500kg_gps_1",
+        "berts_vehicle_pack:fa18e/bomb_500kg_gps_2"
+      ]
+    }
+  ],
+  "Singles": [
+    {
+      "Id": "centerline",
+      "Name": "Centerline",
+      "Position": [
+        0,
+        1.25,
+        -0.5
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:fa18e/agm84e",
+        "berts_vehicle_pack:fa18e/agm88",
+        "berts_vehicle_pack:fa18e/agm65",
+        "berts_vehicle_pack:fa18e/bomb_500kg_dumb_1",
+        "berts_vehicle_pack:fa18e/bomb_500kg_dumb_2",
+        "berts_vehicle_pack:fa18e/bomb_500kg_laser_1",
+        "berts_vehicle_pack:fa18e/bomb_500kg_laser_2",
+        "berts_vehicle_pack:fa18e/bomb_500kg_gps_1",
+        "berts_vehicle_pack:fa18e/bomb_500kg_gps_2"
+      ]
+    }
+  ],
+  "StoreGroups": {
+    "berts_vehicle_pack:fa18e/aim9m": [
+      "suspended_fa18e_wingtip_left",
+      "suspended_fa18e_wingtip_right"
+    ],
+    "berts_vehicle_pack:fa18e/aim120": [
+      "suspended_fa18e_inner_aam_left",
+      "suspended_fa18e_inner_aam_right"
+    ]
+  },
+  "MaxPayloadKg": 6000,
+  "Radar": {
+    "Enabled": true,
+    "Range": 1500
+  },
+  "Pod": {
+    "Position": [
+      0,
+      1,
+      6.3
+    ],
+    "Source": "Calibrated nose-belly designator point on retained source hull; not a distinct modeled sensor pod.",
+    "YawLimit": 180,
+    "PitchMin": -10,
+    "PitchMax": 90,
+    "MaxZoom": 24,
+    "Range": 8192
+  }
+}

@@ -7,6 +7,14 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
 class VehicleWeaponHudMetadataTest {
+    @Test fun `group reload stays hidden while another feed is ready`() {
+        assertEquals(0, VehicleWeaponHudMetadata.groupReloadTicks(listOf(0 to 300, 25 to 0)))
+        assertEquals(80, VehicleWeaponHudMetadata.groupReloadTicks(listOf(0 to 300, 0 to 80)))
+        assertEquals(80, VehicleWeaponHudMetadata.groupReloadTicks(listOf(25 to 80, 0 to 0)))
+        assertEquals(0, VehicleWeaponHudMetadata.groupReloadTicks(listOf(0 to 0)))
+        assertEquals(0, VehicleWeaponHudMetadata.groupReloadTicks(emptyList()))
+    }
+
     @Test fun `all authored kinds propagate without consulting names ammunition or station guesses`() {
         for (kind in WeaponSystemKind.entries) {
             assertEquals(kind.name, VehicleWeaponHudMetadata.kind(

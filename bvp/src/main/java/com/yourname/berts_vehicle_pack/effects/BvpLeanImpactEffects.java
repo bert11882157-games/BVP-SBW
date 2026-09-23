@@ -247,6 +247,8 @@ public final class BvpLeanImpactEffects {
         float diameter = BvpProjectileEffectDefinition.isTypedAgs30Profile(ProjectileProfiles.resolve(source))
                 ? 1.3F : BvpCaliberExplosion.diameter(combat.getCaliberMm());
         if (diameter <= 0F) return true;
+        if (diameter > 2F && com.atsuishio.superbwarfare.api.effect.MissilePresentation.effect(
+                level, position, diameter * .5F, false)) return true;
         ParticleTool.sendParticle(level,
                 new com.yourname.berts_vehicle_pack.particle.SizedExplosionParticleOptions(diameter),
                 position.f_82479_, position.f_82480_, position.f_82481_, 1, 0, 0, 0, 0, true);

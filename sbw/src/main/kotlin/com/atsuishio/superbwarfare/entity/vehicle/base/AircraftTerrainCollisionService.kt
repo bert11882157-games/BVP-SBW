@@ -78,7 +78,7 @@ internal class AircraftTerrainCollisionService(private val vehicle: VehicleEntit
         if (EliteDiagnostics.isEnabled(vehicle.level()) &&
             (bodyContact || gearContact || !complete || vehicle.tickCount % 20 == 0)) {
             EliteDiagnostics.record(vehicle, "aircraft_terrain_contact", "MOVE",
-                "defined_boxes", 2, "active_boxes", snapshot.parts.count { it.active },
+                "defined_boxes", snapshot.parts.size, "active_boxes", snapshot.parts.count { it.active },
                 "terrain_samples", sources.size, "gear_deployed", gearDown,
                 "fuselage_contact", bodyContact, "gear_contact", gearContact,
                 "gear_ground_contact", motion.gearGroundContact,

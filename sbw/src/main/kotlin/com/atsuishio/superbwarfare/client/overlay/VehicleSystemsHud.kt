@@ -53,7 +53,7 @@ object VehicleSystemsHud {
                 VehicleWeaponHudKind.GRENADE_LAUNCHER->"GRN"
                 else->"WPN"
             }
-            g.drawCenteredString(font,"${system.slotIndex+1} $label",x+20,y+4,color)
+            g.drawCenteredString(font,"${system.displayNumber} $label",x+20,y+4,color)
             val countText=ammo(system)
             val shown=font.plainSubstrByWidth(countText,34)
             g.drawString(font,shown,x+37-font.width(shown),y+16,WHITE,true)

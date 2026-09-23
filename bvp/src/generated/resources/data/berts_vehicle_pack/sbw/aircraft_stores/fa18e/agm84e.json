@@ -1,0 +1,17 @@
+{
+  "Schema": 1,
+  "Name": "AGM-84E · cruise",
+  "Category": "CRUISE",
+  "Capacity": 1,
+  "MassKg": 700,
+  "Flight": {
+    "InitialSpeed": 0.3,
+    "MaxSpeed": 2.5,
+    "AccelerationPerTick": 0.025,
+    "TurnDegreesPerSecond": 36,
+    "Damage": 100,
+    "BlastRadius": 7,
+    "Range": 1000
+  },
+  "AmmoItem": "superbwarfare:cruise_missile"
+}

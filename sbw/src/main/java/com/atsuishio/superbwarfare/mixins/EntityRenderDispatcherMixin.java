@@ -1,6 +1,7 @@
 package com.atsuishio.superbwarfare.mixins;
 
 import com.atsuishio.superbwarfare.client.renderer.special.AircraftCollisionDebugRenderer;
+import com.atsuishio.superbwarfare.api.aircraft.AircraftSurfaceModules;
 import com.atsuishio.superbwarfare.api.diagnostics.DebugFeaturePolicy;
 import com.atsuishio.superbwarfare.client.renderer.special.OBBRenderer;
 import com.atsuishio.superbwarfare.config.server.MiscConfig;
@@ -42,6 +43,18 @@ public class EntityRenderDispatcherMixin {
             if (snapshot != null) {
                 AircraftCollisionDebugRenderer.render(snapshot,
                         vehicle.getLegacyInterpolatedPosition(pPartialTicks), pMatrixStack, pBuffer);
+                // The physical footprint excludes wing tips and tail fins; show their real
+                // projectile volumes separately instead of hiding them with vanilla's AABB.
+                OBBRenderer.INSTANCE.render(vehicle, vehicle.getOBBs(), pMatrixStack, pBuffer,
+                        1F, 0.65F, 0F, 1F, pPartialTicks);
+                var origin = vehicle.getLegacyInterpolatedPosition(pPartialTicks);
+                for (var box : AircraftSurfaceModules.debugHitboxes(vehicle, pPartialTicks)) {
+                    var center = box.center;
+                    var half = box.extents();
+                    OBBRenderer.INSTANCE.renderOBB(pMatrixStack, pBuffer,
+                            center.x - origin.x, center.y - origin.y, center.z - origin.z,
+                            box.rotation(), half.x, half.y, half.z, 1F, 0.25F, 0.25F, 1F);
+                }
                 ci.cancel();
             }
         }

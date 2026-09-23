@@ -36,7 +36,7 @@ internal class AircraftWheelSupportService(private val vehicle: VehicleEntity,
         wheels = AircraftWheelGeometry.sample(selected, vehicle.getVehicleTransform(1F))
         if (previousTick != vehicle.tickCount - 1) previousPoints = emptyMap()
         expectedPoints = wheels.associate { it.id to it.world.add(requested) }
-        return listOf(snapshot.terrainInfos().first()) + wheels.map { it.terrainInfo() }
+        return snapshot.terrainInfos().filterNot { it.landingGear } + wheels.map { it.terrainInfo() }
     }
 
     fun gearEnvelope() = AircraftWheelGeometry.envelope(wheels)

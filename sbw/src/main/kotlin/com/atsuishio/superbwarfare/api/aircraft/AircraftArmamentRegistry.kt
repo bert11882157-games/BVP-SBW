@@ -71,7 +71,7 @@ object AircraftArmamentRegistry {
         require(json["Name"]?.asString?.length in 1..64)
         if (store) {
             require(json["Category"]?.asString in categories)
-            for (key in listOf("Item", "Model", "Texture", "ProjectileProfile", "LaunchGunProfile", "GunProfile")) {
+            for (key in listOf("Item", "AmmoItem", "Model", "Texture", "ProjectileProfile", "LaunchGunProfile", "GunProfile")) {
                 json[key]?.let { require(it.asString.length <= 128 && ResourceLocation.tryParse(it.asString) != null) }
             }
             json["Guidance"]?.let {

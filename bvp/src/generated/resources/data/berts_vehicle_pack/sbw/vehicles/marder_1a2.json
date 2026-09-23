@@ -318,7 +318,8 @@
               "ProjectileProfile": "berts_vehicle_pack:marder_1a2/cannon/ammo_00_dm63_apds",
               "ProjectileLife": 40
             }
-          }
+          },
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell"
         },
         {
           "Ammo": "superbwarfare:small_shell_he",
@@ -363,7 +364,8 @@
               "ProjectileProfile": "berts_vehicle_pack:marder_1a2/cannon/ammo_01_dm51a1_hefi_t_1",
               "ProjectileLife": 40
             }
-          }
+          },
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell"
         }
       ],
       "ShootPos": {
@@ -464,7 +466,13 @@
       "Crosshair": "@VehicleCommonMissile",
       "CrosshairColor": "0x66FF00",
       "Name": "weapon.berts_vehicle_pack.20_mm_rh202_bgm_71a_tow",
-      "AmmoType": "superbwarfare:medium_anti_ground_missile",
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:medium_anti_ground_missile",
+          "ConsumptionItem": "superbwarfare:medium_atgm",
+          "Override": {}
+        }
+      ],
       "SoundInfo": {
         "Fire1PGain": 0.7,
         "Fire3PGain": 0.7,

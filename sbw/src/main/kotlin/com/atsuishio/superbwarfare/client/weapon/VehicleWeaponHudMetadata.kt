@@ -49,6 +49,12 @@ object VehicleWeaponHudMetadata {
         names.indices.filter { names[it].isNotBlank() && available(names[it]) }
 
     fun supportsAmmoCycle(selectableAmmoCount: Int): Boolean = selectableAmmoCount > 1
+
+    /** A bank is usable while any feed is loaded; otherwise show the next feed to finish. */
+    fun groupReloadTicks(feeds: List<Pair<Int, Int>>): Int {
+        if (feeds.any { (ammo, reload) -> ammo > 0 && reload <= 0 }) return 0
+        return feeds.map { it.second }.filter { it > 0 }.minOrNull() ?: 0
+    }
 }
 
 data class VehicleWeaponHudAmmo(val loaded: Int?, val reserve: Int?, val infinite: Boolean) {

@@ -823,6 +823,7 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -870,6 +871,7 @@
       "ProjectileBeltAmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -892,6 +894,7 @@
         },
         {
           "Ammo": "superbwarfare:small_shell_gs",
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -998,6 +1001,7 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -1045,6 +1049,7 @@
       "ProjectileBeltAmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -1067,6 +1072,7 @@
         },
         {
           "Ammo": "superbwarfare:small_shell_gs",
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -1255,6 +1261,68 @@
       ]
     },
     "RetractableGear": true,
+    "BodyParts": [
+      {
+        "Min": [
+          -0.991209,
+          1.171429,
+          -1.937363
+        ],
+        "Max": [
+          0.991209,
+          2.613187,
+          4.460439
+        ]
+      },
+      {
+        "Min": [
+          -0.991209,
+          1.306593,
+          4.460439
+        ],
+        "Max": [
+          0.991209,
+          1.892308,
+          5.496703
+        ]
+      },
+      {
+        "Min": [
+          -0.991209,
+          1.171429,
+          -5.089407
+        ],
+        "Max": [
+          0.991209,
+          2.613187,
+          -1.937363
+        ]
+      },
+      {
+        "Min": [
+          -2.706,
+          0.375494,
+          -5.526703
+        ],
+        "Max": [
+          -0.892088,
+          1.606923,
+          0.976154
+        ]
+      },
+      {
+        "Min": [
+          0.892088,
+          0.375494,
+          -5.526703
+        ],
+        "Max": [
+          2.706,
+          1.606923,
+          0.976154
+        ]
+      }
+    ],
     "WheelContacts": [
       {
         "Id": "landing_gear_12",
@@ -1262,26 +1330,62 @@
         "Position": [
           0,
           0,
-          2.815934375
-        ]
+          2.815934
+        ],
+        "Bounds": {
+          "Min": [
+            -0.067583,
+            0,
+            2.613187
+          ],
+          "Max": [
+            0.067583,
+            0.135165,
+            3.018681
+          ]
+        }
       },
       {
         "Id": "landing_gear_14",
         "Group": "MAIN",
         "Position": [
-          -1.441758125,
+          -1.441758,
           0,
-          -2.455494375
-        ]
+          -2.455494
+        ],
+        "Bounds": {
+          "Min": [
+            -1.531868,
+            0,
+            -2.793407
+          ],
+          "Max": [
+            -1.351648,
+            0.225275,
+            -2.117583
+          ]
+        }
       },
       {
         "Id": "landing_gear_15",
         "Group": "MAIN",
         "Position": [
-          1.441758125,
+          1.441758,
           0,
-          -2.455494375
-        ]
+          -2.455494
+        ],
+        "Bounds": {
+          "Min": [
+            1.351648,
+            0,
+            -2.793407
+          ],
+          "Max": [
+            1.531868,
+            0.225275,
+            -2.117583
+          ]
+        }
       }
     ]
   },

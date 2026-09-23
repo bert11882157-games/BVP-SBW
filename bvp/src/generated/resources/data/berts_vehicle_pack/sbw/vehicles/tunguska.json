@@ -568,7 +568,8 @@
               "ProjectileProfile": "berts_vehicle_pack:tunguska/cannon/ammo_00_3uor6_hef_t",
               "ProjectileLife": 40
             }
-          }
+          },
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell"
         },
         {
           "Ammo": "superbwarfare:small_shell_gs",
@@ -613,7 +614,8 @@
               "ProjectileProfile": "berts_vehicle_pack:tunguska/cannon/ammo_01_3ubr6_ap_t",
               "ProjectileLife": 40
             }
-          }
+          },
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell"
         }
       ],
       "ProjectileAmount": 1,
@@ -774,7 +776,8 @@
               "ProjectileType": "superbwarfare:wire_guide_missile",
               "ProjectileProfile": "berts_vehicle_pack:tunguska/missile/ammo_00_9m311_sam"
             }
-          }
+          },
+          "ConsumptionItem": "superbwarfare:medium_atgm"
         }
       ],
       "SoundInfo": {

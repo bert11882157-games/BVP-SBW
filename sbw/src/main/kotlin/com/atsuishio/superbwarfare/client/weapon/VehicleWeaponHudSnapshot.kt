@@ -27,6 +27,7 @@ data class VehicleWeaponHudSystem(
     val supportsAmmoCycle: Boolean,
     val reloadRemainingTicks: Int = 0,
     val categoryLabel: String? = null,
+    val displayNumber: Int = slotIndex + 1,
 )
 
 /** A read-only view of the occupied seat's systems, never a row for each ammunition choice. */
@@ -47,21 +48,28 @@ data class VehicleWeaponHudSnapshot(
                 player.isRemoved || vehicle.isRemoved || vehicle.isWreck || seat < 0 ||
                 vehicle.getNthEntity(seat) !== player) return null
             val names = vehicle.getWeaponIds(seat)
+            val groupedAircraft = AircraftArmamentManager.definition(vehicle) != null
             val indices = VehicleWeaponHudMetadata.equippedIndices(names) { name ->
-                vehicle.getGunData(name) != null && AircraftArmamentManager.allowsWeapon(vehicle, name)
+                vehicle.getGunData(name) != null && AircraftArmamentManager.selectableWeapon(vehicle, name)
             }
             val primary = vehicle.getPrimaryWeaponIndex(seat)
             val secondary = vehicle.getSecondaryWeaponIndex(seat)
             val station = vehicle.computed().passengerWeaponStationBinding
             val vehicleTypeId = ForgeRegistries.ENTITY_TYPES.getKey(vehicle.type)?.toString()
-            val rows = indices.mapNotNull { index ->
+            val rows = indices.mapIndexedNotNull { ordinal, index ->
                 val name = names[index]
-                val gun = vehicle.getGunData(name) ?: return@mapNotNull null
+                val gun = vehicle.getGunData(name) ?: return@mapIndexedNotNull null
+                val displayNumber = if (groupedAircraft) ordinal + 1 else index + 1
                 val store = AircraftArmamentManager.weaponPresentation(vehicle, name)
-                if (store != null) return@mapNotNull VehicleWeaponHudSystem(
+                val reloadTicks = AircraftArmamentManager.groupMembers(vehicle, name)?.let { members ->
+                    VehicleWeaponHudMetadata.groupReloadTicks(members.mapNotNull { member ->
+                        vehicle.getGunData(member)?.let { it.ammo.get() to it.reload.time() }
+                    })
+                } ?: gun.reload.time().coerceAtLeast(0)
+                if (store != null) return@mapIndexedNotNull VehicleWeaponHudSystem(
                     index, name, Component.literal(store.name), VehicleWeaponHudKind.UNKNOWN,
                     store.ammo, null, false, index == primary, index == secondary, false,
-                    gun.reload.time().coerceAtLeast(0), store.category)
+                    reloadTicks, store.category, displayNumber)
                 val base = gun.getDefault()
                 // Use the base system descriptor, so selecting an ATGM round in a tank cannon
                 // cannot turn that cannon row into a separate missile launcher or change its name.
@@ -82,7 +90,7 @@ data class VehicleWeaponHudSnapshot(
                         nominal?.projectileType, authoredKind, combat?.caliberMm),
                     ammo.loaded, ammo.reserve, ammo.infinite, index == primary, index == secondary,
                     VehicleWeaponHudMetadata.supportsAmmoCycle(gun.get(GunProp.AMMO_CONSUMER).size),
-                    gun.reload.time().coerceAtLeast(0),
+                    reloadTicks, displayNumber = displayNumber,
                 )
             }
             return VehicleWeaponHudSnapshot(seat, rows,

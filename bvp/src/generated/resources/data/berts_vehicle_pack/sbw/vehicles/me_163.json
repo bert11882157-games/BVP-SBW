@@ -499,6 +499,7 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -540,6 +541,7 @@
       "ProjectileBeltAmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -646,6 +648,7 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -687,6 +690,7 @@
       "ProjectileBeltAmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -874,7 +878,45 @@
         1.9995
       ]
     },
-    "RetractableGear": true
+    "RetractableGear": true,
+    "BodyParts": [
+      {
+        "Min": [
+          -0.3069,
+          0.1395,
+          -2.24502
+        ],
+        "Max": [
+          0.3069,
+          1.767,
+          3.1155
+        ]
+      },
+      {
+        "Min": [
+          -3.069,
+          0.8535,
+          -0.588
+        ],
+        "Max": [
+          -0.27621,
+          1.1925,
+          1.5645
+        ]
+      },
+      {
+        "Min": [
+          0.27621,
+          0.8535,
+          -0.588
+        ],
+        "Max": [
+          3.069,
+          1.1925,
+          1.5645
+        ]
+      }
+    ]
   },
   "AircraftSurfaceModules": [
     {

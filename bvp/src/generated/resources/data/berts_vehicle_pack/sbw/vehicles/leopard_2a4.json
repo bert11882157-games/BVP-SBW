@@ -437,7 +437,8 @@
               "ProjectileProfile": "berts_vehicle_pack:leopard_2a4/cannon/ammo_00_dm13_apfsds",
               "ProjectileLife": 50
             }
-          }
+          },
+          "ConsumptionItem": "superbwarfare:tier_2_armor_piercing_shell"
         },
         {
           "Ammo": "berts_vehicle_pack:level_3_ap_shell",
@@ -464,7 +465,8 @@
               "ProjectileProfile": "berts_vehicle_pack:leopard_2a4/cannon/ammo_01_dm23_apfsds",
               "ProjectileLife": 50
             }
-          }
+          },
+          "ConsumptionItem": "superbwarfare:tier_2_armor_piercing_shell"
         },
         {
           "Ammo": "berts_vehicle_pack:level_2_ap_shell",
@@ -492,7 +494,8 @@
               "ProjectileProfile": "berts_vehicle_pack:leopard_2a4/cannon/ammo_02_dm12_heat_fs",
               "ProjectileLife": 50
             }
-          }
+          },
+          "ConsumptionItem": "superbwarfare:tier_2_heat_shell"
         }
       ],
       "SoundInfo": {
@@ -611,7 +614,8 @@
               "ProjectileProfile": "berts_vehicle_pack:leopard_2a4/machinegun/ammo_00_western_762_ap",
               "ProjectileLife": 400
             }
-          }
+          },
+          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition"
         }
       ],
       "Projectile": {
@@ -766,7 +770,8 @@
               "ProjectileProfile": "berts_vehicle_pack:leopard_2a4/passengermachinegun/ammo_00_western_762_ap",
               "ProjectileLife": 400
             }
-          }
+          },
+          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition"
         }
       ],
       "Projectile": {

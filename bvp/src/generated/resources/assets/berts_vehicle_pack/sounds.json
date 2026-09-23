@@ -2865,5 +2865,41 @@
         "attenuation_distance": 96
       }
     ]
+  },
+  "su_25_gun_gsh23shoot": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft_guns/su_25/su_25_gun_gsh23shoot",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "fa_18e_engine_start": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/fa_18e/fa_18e_engine_start",
+        "stream": false,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "fa_18e_engine_loop": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/fa_18e/fa_18e_engine_loop",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "fa_18e_gun_jetshoot": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft_guns/fa_18e/fa_18e_gun_jetshoot",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
   }
 }

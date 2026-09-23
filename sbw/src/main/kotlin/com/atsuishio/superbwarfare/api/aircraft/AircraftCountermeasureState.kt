@@ -6,7 +6,8 @@ import kotlin.math.ceil
 /** Server tick state machine; one emission is always a left/right pair. No entity or mod linkage. */
 class AircraftCountermeasureState {
     data class Output(val flarePairs: Int, val flareLevel: Int, val chaffLevel: Int,
-        val chaffEmitting: Boolean, val flareCooldown: Int, val chaffCooldown: Int)
+        val chaffEmitting: Boolean, val flareCooldown: Int, val chaffCooldown: Int,
+        val chaffStarted: Boolean)
 
     private val flareExpiries = ArrayDeque<Long>()
     private var burstUsed = 0
@@ -40,7 +41,8 @@ class AircraftCountermeasureState {
                 flareReadyAt = now + COOLDOWN_TICKS
             }
         }
-        if (chaffEnabled && chaffHeld && now >= chaffReadyAt) {
+        val chaffStarted = chaffEnabled && chaffHeld && now >= chaffReadyAt
+        if (chaffStarted) {
             chaffStartedAt = now
             chaffProgramTicks = chaffReleaseTicks
             chaffReadyAt = now + chaffProgramTicks + COOLDOWN_TICKS
@@ -51,7 +53,7 @@ class AircraftCountermeasureState {
         return Output(pairs, flareExpiries.size, chaffLevel,
             chaffEnabled && elapsed != null && elapsed in 0..chaffProgramTicks.toLong(),
             (flareReadyAt - now).coerceIn(0, COOLDOWN_TICKS.toLong()).toInt(),
-            (chaffReadyAt - now).coerceIn(0, COOLDOWN_TICKS.toLong()).toInt())
+            (chaffReadyAt - now).coerceIn(0, COOLDOWN_TICKS.toLong()).toInt(), chaffStarted)
     }
 
     /** Temporary clouds/decoys do not survive unload; cooldowns and partial burst expenditure do. */

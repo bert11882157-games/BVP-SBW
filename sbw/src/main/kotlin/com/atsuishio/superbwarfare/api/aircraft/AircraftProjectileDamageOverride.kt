@@ -8,5 +8,5 @@ package com.atsuishio.superbwarfare.api.aircraft
  * This does not change ground damage, collision, or projectile effects and disposal.
  */
 fun interface AircraftProjectileDamageOverride {
-    fun aircraftDirectHitDamage(): Float
+    fun aircraftDirectHitDamage(targetMaxHealth: Float): Float
 }

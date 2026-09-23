@@ -28,6 +28,14 @@ public final class BvpProjectileTrailHooks {
     }
 
     public static void registerExplosionFxHandler() {
+        com.atsuishio.superbwarfare.api.effect.MissilePresentation.setNozzleResolver(entity -> {
+            var profile = ProjectileProfiles.resolve(entity);
+            var definition = BvpProjectileEffectDefinition.from(profile);
+            if (definition == null || !definition.isGuidedAtgm()) return null;
+            var shape = BvpMissileExhaustGeometry.forProfile(profile);
+            return shape == null ? null : new com.atsuishio.superbwarfare.api.effect.MissilePresentation.NozzleOffset(
+                    entity.m_20206_() * .5, shape.rear());
+        });
         ParticleTool.registerExplosionFxHandler(EXPLOSION_FX_HANDLER_ID,
                 BvpProjectileTrailHooks::replaceSbwExplosionFx);
     }

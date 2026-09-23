@@ -13,6 +13,7 @@ import com.yourname.berts_vehicle_pack.armor.EraBrickIds;
 import com.yourname.berts_vehicle_pack.armor.ArmorCoordinateFrame;
 import com.yourname.berts_vehicle_pack.entity.ArmoredVehicleEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.world.phys.Vec3;
 import org.lwjgl.opengl.GL11;
@@ -43,7 +44,8 @@ public final class ArmorDebugRenderer {
     }
 
     public static boolean shouldRender() {
-        return commandXrayEnabled && DebugFeaturePolicy.allowsDebugTools();
+        return DebugFeaturePolicy.allowsDebugTools() && (commandXrayEnabled
+                || Minecraft.m_91087_().m_91290_().m_114377_());
     }
 
     public static boolean toggleCommandXray() {
@@ -86,7 +88,9 @@ public final class ArmorDebugRenderer {
         String hitPlate = entity.getLastArmorHitAge() <= HIT_HIGHLIGHT_TICKS ? entity.getLastArmorHitPlate() : "";
         RenderType fillType = ARMOR_XRAY_FILL;
         RenderType lineType = ARMOR_XRAY_LINE;
-        VertexConsumer fill = bufferSource.m_6299_(fillType);
+        // F3+B adds wireframes for the real damage volumes; the explicit X-ray command
+        // retains its filled armor view. Both consume the model's same pose snapshot.
+        VertexConsumer fill = commandXrayEnabled ? bufferSource.m_6299_(fillType) : null;
         VertexConsumer lines = bufferSource.m_6299_(lineType);
         boolean passengerStation = entity.isHullParentedPassengerWeaponStation();
         float turretFrameYaw = renderParts == null
@@ -158,18 +162,19 @@ public final class ArmorDebugRenderer {
             poseStack.m_85849_();
             RenderSystem.disableDepthTest();
             RenderSystem.depthFunc(GL11.GL_ALWAYS);
-            flushXrayBuffers(bufferSource, fillType, lineType);
+            flushXrayBuffers(bufferSource, fillType, lineType, fill != null);
             RenderSystem.depthFunc(GL11.GL_LEQUAL);
             RenderSystem.depthMask(true);
             RenderSystem.enableDepthTest();
         }
     }
 
-    private static void flushXrayBuffers(MultiBufferSource bufferSource, RenderType fillType, RenderType lineType) {
+    private static void flushXrayBuffers(MultiBufferSource bufferSource, RenderType fillType, RenderType lineType,
+                                         boolean filled) {
         if (bufferSource instanceof MultiBufferSource.BufferSource immediate) {
             RenderSystem.disableDepthTest();
             RenderSystem.depthFunc(GL11.GL_ALWAYS);
-            immediate.m_109912_(fillType);
+            if (filled) immediate.m_109912_(fillType);
             RenderSystem.disableDepthTest();
             RenderSystem.depthFunc(GL11.GL_ALWAYS);
             immediate.m_109912_(lineType);
@@ -199,7 +204,7 @@ public final class ArmorDebugRenderer {
                                   float red, float green, float blue, float fillAlpha, float lineAlpha) {
         if (box.isBarrelFrame() && barrelFrame == null) return;
         DebugVec[] corners = corners(entity, box, turretFrameYaw, barrelFrame);
-        filledBox(fill, poseStack, corners, red, green, blue, fillAlpha);
+        if (fill != null) filledBox(fill, poseStack, corners, red, green, blue, fillAlpha);
         lineBox(lines, poseStack, corners, red, green, blue, lineAlpha);
     }
 

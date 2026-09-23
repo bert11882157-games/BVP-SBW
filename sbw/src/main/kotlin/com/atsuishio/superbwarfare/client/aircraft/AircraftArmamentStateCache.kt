@@ -51,7 +51,7 @@ internal class AircraftArmamentStateCache {
                 if (json.has("Seek")) {
                     val seek = AircraftArmamentSnapshot.decodeSeek(json.getAsJsonObject("Seek"))
                     if (seek.revision <= (previous.snapshot.seek?.revision ?: -1L)) return null
-                    val merged = previous.json.deepCopy()
+                    val merged = copyHeader(previous.json)
                     merged.add("Seek", json.get("Seek").deepCopy())
                     val result = previous.copy(snapshot = previous.snapshot.copy(seek = seek), json = merged)
                     entries[id] = result
@@ -65,7 +65,7 @@ internal class AircraftArmamentStateCache {
                 } ?: false
                 if (!clear && !json.has("Point")) return null
                 val point = if (clear) null else AircraftArmamentSnapshot.vector(json.get("Point"), 30_000_000.0)
-                val merged = previous.json.deepCopy()
+                val merged = copyHeader(previous.json)
                 if (clear) merged.remove("Point") else merged.add("Point", json.get("Point").deepCopy())
                 merged.addProperty("PointRevision", pointRevision)
                 previous.copy(snapshot = previous.snapshot.copy(point = point), json = merged, pointRevision = pointRevision)
@@ -74,6 +74,13 @@ internal class AircraftArmamentStateCache {
             while (entries.size > MAX_ENTRIES) entries.remove(entries.keys.first())
             result
         } catch (_: RuntimeException) { null }
+    }
+
+    /** Full receipts own immutable catalogue subtrees. Thin updates replace root fields only:
+     * copying every pylon/store definition at seeker frequency wastes CPU and invalidates
+     * store identity caches even though no equipment changed. */
+    private fun copyHeader(source: JsonObject) = JsonObject().also { copy ->
+        for ((key, value) in source.entrySet()) copy.add(key, value)
     }
 
     private fun revision(json: JsonObject, key: String): Long? = json.get(key)?.let {

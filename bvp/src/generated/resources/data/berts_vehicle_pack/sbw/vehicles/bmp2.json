@@ -332,7 +332,8 @@
               "Type": "superbwarfare:small_cannon_shell",
               "Profile": "berts_vehicle_pack:bmp2/cannon/ammo_00_3ubr8_apds"
             }
-          }
+          },
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell"
         },
         {
           "Ammo": "superbwarfare:small_shell_aa",
@@ -367,7 +368,8 @@
               "Type": "superbwarfare:small_cannon_shell",
               "Profile": "berts_vehicle_pack:bmp2/cannon/ammo_01_3uor6_hef_t"
             }
-          }
+          },
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell"
         }
       ],
       "ShootPos": {
@@ -469,7 +471,8 @@
               "ProjectileProfile": "berts_vehicle_pack:bmp2/mainmachinegun/ammo_00_russian_762_ap_i",
               "ProjectileLife": 400
             }
-          }
+          },
+          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition"
         }
       ],
       "Projectile": {
@@ -585,7 +588,13 @@
       "Crosshair": "@VehicleCommonMissile",
       "CrosshairColor": "0x66FF00",
       "Name": "weapon.berts_vehicle_pack.2a42_30_mm_autocannon_9m113_konkurs_atgm",
-      "AmmoType": "superbwarfare:medium_anti_ground_missile",
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:medium_anti_ground_missile",
+          "ConsumptionItem": "superbwarfare:medium_atgm",
+          "Override": {}
+        }
+      ],
       "SoundInfo": {
         "Fire1PGain": 0.35,
         "Fire3PGain": 0.35,
