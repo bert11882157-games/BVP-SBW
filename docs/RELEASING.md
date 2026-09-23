@@ -10,10 +10,6 @@ This is the production mod-source repository. Development takes place in a separ
    of this repository. Do not substitute later development changes.
 5. Review and commit the resulting changes. Tag the tested version and push that commit/tag.
 6. Publish matching compiled mod artifacts separately, with their SHA-256 hashes.
-7. Update [the download list](../DOWNLOADS.md) with the release page, exact versioned JAR and
-   checksum links, matching companion builds and required dependencies. Keep previous entries.
-   Label drafts and prereleases accurately, explain draft access, and update temporary draft
-   links when publishing. Retain the prominent download link in the root README.
 
 `SOURCE_SNAPSHOT.json` inventories managed source files with SHA-256 hashes. For a recorded release
 candidate, it also contains the private build-record hash and matching artifact/dependency

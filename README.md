@@ -2,14 +2,6 @@
 
 Mod source code and runtime resources for Minecraft 1.20.1 / Forge.
 
-## Downloads
-
-Use the [download list](DOWNLOADS.md) for matching BVP/SBW JARs, checksums and companion mods.
-Latest published testing set: **BVP/SBW 0.10.0beta**, paired with
-**Fire From Above 1.0.5-bvp.6**. The list also retains earlier drafts and their access requirements.
-
-## Source layout
-
 | Directory | Contents |
 | --- | --- |
 | `bvp/` | Bert's Vehicle Pack Java code, committed runtime resources, and project metadata |
