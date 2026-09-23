@@ -7,6 +7,16 @@ import java.util.UUID
 object AircraftWreckBreakup {
     const val LEFT = 1
     const val RIGHT = 2
+    @JvmStatic fun detachedAt(vehicle: VehicleEntity, point: net.minecraft.world.phys.Vec3): Boolean {
+        val missing = mask(vehicle)
+        if (missing == 0) return false
+        val side = if (point.x < 0) LEFT else RIGHT
+        if (missing and side == 0) return false
+        val id = if (side == LEFT) "superbwarfare:wing_left" else "superbwarfare:wing_right"
+        val boxes = vehicle.computed().aircraftSurfaceModules.firstOrNull { it.id == id }?.hitboxes ?: return false
+        if (boxes.isEmpty()) return false
+        return point.x >= boxes.minOf { it.min.x } - .15 && point.x <= boxes.maxOf { it.max.x } + .15
+    }
     @JvmStatic fun mask(id: UUID): Int = outcome(Math.floorMod(id.hashCode(), 100))
     @JvmStatic fun delayTicks(id: UUID): Int = 40 + Math.floorMod(id.mostSignificantBits xor
         (id.leastSignificantBits ushr 17), 161L).toInt()
@@ -35,6 +45,13 @@ object AircraftWreckBreakup {
             vehicle.aircraftWreckMotionY = momentum.y.toFloat()
             vehicle.aircraftWreckMotionZ = momentum.z.toFloat()
             vehicle.aircraftWreckWings = next
+            if (next != previous) {
+                val level = vehicle.level() as? net.minecraft.server.level.ServerLevel
+                if (level != null) com.atsuishio.superbwarfare.tools.SoundTool.playDistantSound(
+                    level, com.atsuishio.superbwarfare.init.ModSounds.STEEL_PIPE_HIT.get(),
+                    vehicle.boundingBox.center, 10f, .55f, vehicle, vehicle,
+                    channel = "aircraft_wing_shear")
+            }
         }
     }
     internal fun outcome(percentile: Int): Int = when (percentile) {

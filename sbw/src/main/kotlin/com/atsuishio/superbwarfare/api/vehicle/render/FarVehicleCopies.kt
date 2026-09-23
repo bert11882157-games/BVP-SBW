@@ -38,10 +38,12 @@ internal class FarVehicleCopyRegistry<K : Any, V : Any>(private val capacity: In
 
     @Synchronized fun remove(key: K) { entries.remove(key) }
     @Synchronized fun clear() { entries.clear() }
+    @Synchronized fun find(predicate: (K) -> Boolean): K? = entries.keys.firstOrNull(predicate)
 }
 
 /** Explicit membership separates cosmetic copies from live client/server entities. */
 object FarVehicleCopies {
+    fun find(id: java.util.UUID): VehicleEntity? = copies.find { it.uuid == id }
     const val SURFACE_DAMAGE_KEY = "sbw_surface_damage"
     // Entity equality uses numeric IDs, which a copy deliberately shares with its live entity.
     private val copies = FarVehicleCopyRegistry<VehicleEntity, FarVehiclePresentation>(FarVehicleStore.MAX_VEHICLES)
@@ -124,6 +126,7 @@ object FarVehicleCopies {
             vehicle.sympatheticDetonated, vehicle.turretBurned, vehicle.passengers.isNotEmpty(),
             vehicle.override, visuals.toMap(), vehicle.aircraftWreckStart, vehicle.aircraftWreckWings,
             vehicle.aircraftWreckMotionX, vehicle.aircraftWreckMotionY, vehicle.aircraftWreckMotionZ,
+            vehicle.aircraftWreckImpactTime,
         )
     }
 
@@ -204,6 +207,7 @@ object FarVehicleCopies {
         vehicle.aircraftWreckMotionX = s.aircraftWreckMotionX
         vehicle.aircraftWreckMotionY = s.aircraftWreckMotionY
         vehicle.aircraftWreckMotionZ = s.aircraftWreckMotionZ
+        vehicle.aircraftWreckImpactTime = s.aircraftWreckImpactTime
 
         vehicle.sympatheticDetonated = s.turretEjected
         vehicle.turretBurned = s.turretBurned

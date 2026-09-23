@@ -6,6 +6,16 @@ import kotlin.math.max
 object FixedWingImpactModel {
     data class Damage(val healthFraction: Double, val destructive: Boolean)
 
+    /** Missing lift is survivable in flight, but an uncontrolled hull strike is not a landing. */
+    fun afterWingLoss(detachedWings: Int, complete: Boolean, bodyContact: Boolean,
+                      gearImpactSpeed: Double, totalSpeedSquared: Double, ordinary: Damage): Damage {
+        if (detachedWings == 0 || !complete) return ordinary
+        // Retain harmless rest/slow placement and gentle wheel contact. Evaluate before
+        // the sweep removes incoming motion, including gear-first crashes.
+        return if ((bodyContact && totalSpeedSquared >= 4.0) || gearImpactSpeed >= 0.1)
+            Damage(1.0, true) else ordinary
+    }
+
     fun evaluate(normalSpeedSquared: Double, totalSpeedSquared: Double, safeGearContact: Boolean): Damage {
         require(normalSpeedSquared.isFinite() && normalSpeedSquared >= 0.0)
         require(totalSpeedSquared.isFinite() && totalSpeedSquared >= normalSpeedSquared)

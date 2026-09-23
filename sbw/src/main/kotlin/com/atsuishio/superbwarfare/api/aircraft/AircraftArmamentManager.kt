@@ -249,6 +249,8 @@ object AircraftArmamentManager {
         if (def.getAsJsonArray("SuspendedWeapons")?.none { it.asString == weaponName } != false) return true
         val chosen = selection(vehicle)
         return mounts(def).any { pair -> weaponName in nativeWeapons(pair, chosen[pair["Id"].asString]?.asString) &&
+            AircraftArmamentRegistry.mountPositions(pair).none {
+                com.atsuishio.superbwarfare.api.vehicle.flight.AircraftWreckBreakup.detachedAt(vehicle, it) } &&
             chosen[pair["Id"].asString]?.asString?.let { id ->
                 val store = if (vehicle.level().isClientSide) AircraftArmamentClient.getState(vehicle.uuid)
                     ?.getAsJsonObject("Stores")?.getAsJsonObject(id)
@@ -463,7 +465,8 @@ object AircraftArmamentManager {
             } ?: 1
             require(count in 1..AircraftPylonRacks.maxCopies(definition, available.getValue(key), store)) { "Rack limit exceeded on $key." }
             val pylonMass = (store["MassKg"]?.asDouble ?: 0.0) * (store["Capacity"]?.asInt ?: 1) * count
-            require(pylonMass <= (available.getValue(key)["MaxPylonMassKg"]?.asDouble ?: Double.POSITIVE_INFINITY) + 1e-6) {
+            require(pylonMass <= (available.getValue(key)["MaxPylonMassKg"]?.asDouble ?:
+                definition["MaxPylonMassKg"]?.asDouble ?: Double.POSITIVE_INFINITY) + 1e-6) {
                 "Pylon mass limit exceeded on $key."
             }
             counts.putInt(key, count)
@@ -518,13 +521,19 @@ object AircraftArmamentManager {
             require(lock == 2) { "Hold the target in the seeker cone until locked." }
         }
         val state = equipment(vehicle); val key = pair["Id"].asString
-        val fired = state.getCompound("Fired"); val used = fired.getInt(key)
+        val fired = state.getCompound("Fired"); var used = fired.getInt(key)
+        while (used >= 0 && used < mountCapacity(vehicle, key) &&
+            com.atsuishio.superbwarfare.api.vehicle.flight.AircraftWreckBreakup.detachedAt(vehicle,
+                AircraftPylonRacks.launchPosition(pair, store, rackCount(vehicle, key), used))) used++
         require(used >= 0 && used < mountCapacity(vehicle, key)) {
             "Hardpoint is empty; refit on the ground."
         }
         val times = state.getCompound("LastFire"); val now = player.serverLevel().gameTime
         require(!times.contains(key) || now - times.getLong(key) >= 10) { "Launcher is cycling." }
         val mount = AircraftPylonRacks.launchPosition(pair, store, rackCount(vehicle, key), used)
+        require(!com.atsuishio.superbwarfare.api.vehicle.flight.AircraftWreckBreakup.detachedAt(vehicle, mount)) {
+            "This weapon station was detached with the wing."
+        }
         val ammoItem = store["AmmoItem"]?.asString?.let { value ->
             val itemId = ResourceLocation.tryParse(value)
             require(itemId != null && ForgeRegistries.ITEMS.containsKey(itemId)) { "Unknown store ammunition: $value" }

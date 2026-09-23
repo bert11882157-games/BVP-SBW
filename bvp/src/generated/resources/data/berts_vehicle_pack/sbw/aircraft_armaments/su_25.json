@@ -41,7 +41,8 @@
         "berts_vehicle_pack:reference/gps_bomb_250kg",
         "berts_vehicle_pack:reference/arm",
         "berts_vehicle_pack:reference/kh29l_laser",
-        "berts_vehicle_pack:kh25l"
+        "berts_vehicle_pack:kh25l",
+        "berts_vehicle_pack:reference/dumb_bomb_100kg"
       ],
       "WeaponId": "S8KOPylon1",
       "WeaponChannel": "S8KOPylon1",
@@ -50,7 +51,8 @@
           "GSh23Pylon1Left",
           "GSh23Pylon1Right"
         ]
-      }
+      },
+      "MaxPylonMassKg": 1000
     },
     {
       "Id": "pylon_2",
@@ -74,7 +76,8 @@
         "berts_vehicle_pack:reference/gps_bomb_250kg",
         "berts_vehicle_pack:reference/arm",
         "berts_vehicle_pack:reference/kh29l_laser",
-        "berts_vehicle_pack:kh25l"
+        "berts_vehicle_pack:kh25l",
+        "berts_vehicle_pack:reference/dumb_bomb_100kg"
       ],
       "WeaponId": "S8KOPylon2",
       "WeaponChannel": "S8KOPylon2",
@@ -83,7 +86,8 @@
           "GSh23Pylon2Left",
           "GSh23Pylon2Right"
         ]
-      }
+      },
+      "MaxPylonMassKg": 1000
     },
     {
       "Id": "pylon_3",
@@ -106,7 +110,8 @@
         "berts_vehicle_pack:reference/laser_bomb_250kg",
         "berts_vehicle_pack:reference/gps_bomb_250kg",
         "berts_vehicle_pack:reference/arm",
-        "berts_vehicle_pack:reference/kh29l_laser"
+        "berts_vehicle_pack:reference/kh29l_laser",
+        "berts_vehicle_pack:reference/dumb_bomb_100kg"
       ],
       "WeaponId": "S8KOPylon3",
       "WeaponChannel": "S8KOPylon3",
@@ -115,7 +120,8 @@
           "GSh23Pylon3Left",
           "GSh23Pylon3Right"
         ]
-      }
+      },
+      "MaxPylonMassKg": 1000
     },
     {
       "Id": "pylon_4",
@@ -138,7 +144,8 @@
         "berts_vehicle_pack:reference/laser_bomb_250kg",
         "berts_vehicle_pack:reference/gps_bomb_250kg",
         "berts_vehicle_pack:reference/arm",
-        "berts_vehicle_pack:reference/kh29l_laser"
+        "berts_vehicle_pack:reference/kh29l_laser",
+        "berts_vehicle_pack:reference/dumb_bomb_100kg"
       ],
       "WeaponId": "S8KOPylon4",
       "WeaponChannel": "S8KOPylon4",
@@ -147,7 +154,8 @@
           "GSh23Pylon4Left",
           "GSh23Pylon4Right"
         ]
-      }
+      },
+      "MaxPylonMassKg": 1000
     },
     {
       "Id": "pylon_5",
@@ -167,7 +175,8 @@
         "berts_vehicle_pack:reference/ir_aam",
         "berts_vehicle_pack:reference/sarh_aam",
         "berts_vehicle_pack:reference/arh_aam"
-      ]
+      ],
+      "MaxPylonMassKg": 1000
     }
   ],
   "StoreGroups": {
@@ -202,5 +211,7 @@
     "Enabled": true,
     "Range": 500
   },
-  "MaxPayloadKg": 4536
+  "MaxPayloadKg": 4536,
+  "MaxPylonMassKg": 1000,
+  "MaxWeaponsPerPylon": 12
 }

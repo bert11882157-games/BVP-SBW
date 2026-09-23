@@ -68,7 +68,7 @@ class AircraftCollisionSnapshot private constructor(parts: List<AircraftCollisio
         @JvmStatic
         @JvmOverloads
         fun create(definition: AircraftTerrainContact, frame: Matrix4d,
-                   gearFraction: Float, detachedWings: Int = 0): AircraftCollisionSnapshot {
+                   gearFraction: Float, detachedWings: Int = 0, fragmented: Boolean = false): AircraftCollisionSnapshot {
             require(definition.valid())
             val orientation = frame.getNormalizedRotation(Quaterniond())
             fun part(role: AircraftCollisionRole, source: AircraftTerrainBox, active: Boolean, side: Int = 0): AircraftCollisionPart {
@@ -77,6 +77,8 @@ class AircraftCollisionSnapshot private constructor(parts: List<AircraftCollisio
                 return AircraftCollisionPart(role, active, Vec3(world.x, world.y, world.z),
                     source.maximum.subtract(source.minimum).scale(0.5), orientation, side)
             }
+            if (fragmented && definition.wreckSections.size == 4)
+                return AircraftCollisionSnapshot(listOf(part(AircraftCollisionRole.FUSELAGE, definition.wreckSections[1], true)))
             val bodies = definition.bodyVolumes().map {
                 val side = when {
                     it.maximum.x <= 0.0 -> 1

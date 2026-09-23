@@ -483,7 +483,7 @@ public class BaseVehicleRenderer<T extends GeoVehicleEntity> implements VehicleR
             this.suspendedStores.apply(entity, loadedModel);
             ResourceLocation resolvedTexture = m_5478_(entity);
             detachedWings = BvpAircraftBreakupRenderer.apply(context, loadedModel, this.textureLocation,
-                    this.deadTextureLocation);
+                    this.deadTextureLocation, this.suspendedStores);
 
             // The backend enters after SBW's native vehicleAxis. Restore the
             // renderer-entry matrices so BVP's world-space recoil remains

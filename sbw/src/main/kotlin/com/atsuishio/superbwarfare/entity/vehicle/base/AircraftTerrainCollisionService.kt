@@ -91,8 +91,11 @@ internal class AircraftTerrainCollisionService(private val vehicle: VehicleEntit
         }
         var appliedDamage = 0F
         var destructive = false
-        if (bodyContact && !vehicle.isWreck) {
-            val damage = motion.damage
+        if ((bodyContact || gearContact) && !vehicle.isWreck) {
+            val damage = com.atsuishio.superbwarfare.api.vehicle.flight.FixedWingImpactModel.afterWingLoss(
+                com.atsuishio.superbwarfare.api.vehicle.flight.AircraftWreckBreakup.mask(vehicle),
+                complete, bodyContact, motion.gearImpactSpeedBlocksPerTick,
+                incoming.lengthSqr() * 400.0, motion.damage)
             destructive = damage.destructive
             if (damage.healthFraction > 0.0 && (destructive || vehicle.collisionCoolDown == 0)) {
                 val source = ModDamageTypes.causeVehicleStrikeDamage(vehicle.level().registryAccess(),
@@ -107,6 +110,8 @@ internal class AircraftTerrainCollisionService(private val vehicle: VehicleEntit
                 }
             }
         }
+        if (complete && (bodyContact || motion.gearGroundContact))
+            com.atsuishio.superbwarfare.api.vehicle.flight.AircraftFuselageWreck.contact(vehicle, incoming, motion.below)
         if (EliteDiagnostics.isEnabled(vehicle.level()) &&
             (bodyContact || gearContact || !complete || vehicle.tickCount % 20 == 0)) {
             EliteDiagnostics.record(vehicle, "aircraft_terrain_contact", "MOVE",

@@ -31,5 +31,33 @@
   "Radar": {
     "Enabled": true,
     "Range": 1000
-  }
+  },
+  "MaxPylonMassKg": 1000,
+  "MaxWeaponsPerPylon": 12,
+  "Singles": [
+    {
+      "Id": "internal_bay",
+      "Name": "Bomb bay / internal stores",
+      "Position": [
+        0,
+        0.85,
+        0.997264
+      ],
+      "Internal": true,
+      "MaxPylonMassKg": 6500,
+      "AllowedStores": [
+        "berts_vehicle_pack:reference/dumb_bomb_250kg",
+        "berts_vehicle_pack:reference/laser_bomb_250kg",
+        "berts_vehicle_pack:reference/gps_bomb_250kg",
+        "berts_vehicle_pack:reference/dumb_bomb_5000kg",
+        "berts_vehicle_pack:fa18e/bomb_500kg_dumb_1",
+        "berts_vehicle_pack:fa18e/bomb_500kg_dumb_2",
+        "berts_vehicle_pack:fa18e/bomb_500kg_laser_1",
+        "berts_vehicle_pack:fa18e/bomb_500kg_laser_2",
+        "berts_vehicle_pack:fa18e/bomb_500kg_gps_1",
+        "berts_vehicle_pack:fa18e/bomb_500kg_gps_2",
+        "berts_vehicle_pack:reference/dumb_bomb_100kg"
+      ]
+    }
+  ]
 }

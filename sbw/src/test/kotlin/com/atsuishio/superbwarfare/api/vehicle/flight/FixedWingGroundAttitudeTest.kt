@@ -5,6 +5,24 @@ import org.junit.jupiter.api.Test
 import kotlin.math.abs
 
 class FixedWingGroundAttitudeTest {
+    @Test fun pushingDownCannotRaiseTheRearWheelsAtRunwaySpeed() {
+        val surfaces = object : FixedWingSurfaceInput {
+            override val elevatorCommand = -1.0
+            override val aileronCommand = 0.0
+            override val rudderCommand = 0.0
+            override val groundRollAuthority = 0.0
+            override val groundYaw = true
+        }
+        for (speed in listOf(15.0, 40.0, 80.0)) {
+            val model = FixedWingFlightModel()
+            model.reset(0.0, 0.0, 0.0)
+            repeat(40) { tick ->
+                assertTrue(model.step(tick.toLong(), 0.0, 0.0, speed, true, true,
+                    surfaces = surfaces, gearDeployment = 1.0))
+                assertEquals(0.0, model.pitchDegrees, 1e-8)
+            }
+        }
+    }
     @Test fun lowSpeedSupportResistsPilotPitchButDoesNotPinAirborneOrTakeoffControls() {
         val surfaces = object : FixedWingSurfaceInput {
             override val elevatorCommand = 1.0

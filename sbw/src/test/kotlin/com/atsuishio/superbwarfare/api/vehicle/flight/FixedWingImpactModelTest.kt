@@ -4,6 +4,17 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
 class FixedWingImpactModelTest {
+    @Test fun wingLossCrashesUseIncomingSpeedBeforeContactErasesIt() {
+        val ordinary = FixedWingImpactModel.Damage(.01, false)
+        for (side in 1..3) {
+            assertTrue(FixedWingImpactModel.afterWingLoss(side, true, true, 0.0, 400.0, ordinary).destructive)
+            assertTrue(FixedWingImpactModel.afterWingLoss(side, true, false, .2, 400.0, ordinary).destructive)
+            assertEquals(ordinary, FixedWingImpactModel.afterWingLoss(side, true, false, .02, 400.0, ordinary))
+            assertEquals(ordinary, FixedWingImpactModel.afterWingLoss(side, true, true, 0.0, 0.0, ordinary))
+            assertEquals(ordinary, FixedWingImpactModel.afterWingLoss(side, false, true, .2, 400.0, ordinary))
+        }
+        assertEquals(ordinary, FixedWingImpactModel.afterWingLoss(0, true, true, .2, 400.0, ordinary))
+    }
     @Test fun gentleGearLandingsAreSafeAtEveryForwardSpeed() {
         for (forward in listOf(0.0, 8.0, 25.0, 70.0, 165.0)) {
             for (sink in listOf(0.0, 0.2, 0.5, 1.0, 1.59, 2.0)) {

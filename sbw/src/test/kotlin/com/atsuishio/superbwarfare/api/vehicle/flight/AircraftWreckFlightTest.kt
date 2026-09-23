@@ -5,6 +5,16 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
 class AircraftWreckFlightTest {
+    @Test fun retainedFuselageHasTwoShallowBouncesThenStops() {
+        var velocity = Vec3(3.0,-4.0,1.0)
+        repeat(2) { bounce ->
+            val next=AircraftFuselageWreck.bounce(velocity,bounce)
+            assertTrue(next.y in .08.. .26)
+            assertTrue(next.horizontalDistance() < velocity.horizontalDistance())
+            velocity=Vec3(next.x,-next.y,next.z)
+        }
+        assertEquals(Vec3.ZERO,AircraftFuselageWreck.bounce(velocity,2))
+    }
     @Test fun delayedWingLossIsBoundedSingleSidedAndDoesNotRestartAfterImpact() {
         for (seed in 0L..1000L) {
             val id = java.util.UUID(seed, seed * 193)
@@ -30,8 +40,8 @@ class AircraftWreckFlightTest {
         val state = input()
         val left = AircraftWreckFlightStrategy.step(state, 45, 1, false, detachedWings = 1)
         val right = AircraftWreckFlightStrategy.step(state, 45, 1, false, detachedWings = 2)
-        assertTrue(net.minecraft.util.Mth.wrapDegrees(left.bodyRoll - state.bodyRollDegrees) < -5)
-        assertTrue(net.minecraft.util.Mth.wrapDegrees(right.bodyRoll - state.bodyRollDegrees) > 5)
+        assertTrue(net.minecraft.util.Mth.wrapDegrees(left.bodyRoll - state.bodyRollDegrees) > 5)
+        assertTrue(net.minecraft.util.Mth.wrapDegrees(right.bodyRoll - state.bodyRollDegrees) < -5)
         assertEquals(left.motion, right.motion, "roll cannot erase world-space inertia")
         var both = state
         repeat(120) { tick ->
@@ -41,6 +51,20 @@ class AircraftWreckFlightTest {
         }
         assertTrue(both.bodyPitchDegrees > 75)
         assertTrue(both.previousMotion.y < -5)
+    }
+    @Test fun detachedSideDropsInTheActualHullFrameAndLiveWheelContactRetainsMomentum() {
+        for (yaw in listOf(-175.0, 0.0, 90.0)) for (side in 1..2) {
+            val state = input().copy(wreck = false, bodyYawDegrees = yaw,
+                bodyPitchDegrees = 0.0, bodyRollDegrees = 0.0, onGround = true)
+            val result = AircraftWreckFlightStrategy.step(state, 45, 1, false, detachedWings = side)
+            val pose = com.atsuishio.superbwarfare.api.vehicle.pose.VehiclePoseSnapshot(
+                0, 0, yaw.toFloat(), result.bodyPitch, result.bodyRoll, 0f, 0f, 0.0, 0.0, 0.0, null)
+            val frame = pose.applyBaseAttitude(org.joml.Matrix4d().rotateY(Math.toRadians(-yaw)))
+            val lost = frame.transformPosition(org.joml.Vector3d(if (side == 1) -3.0 else 3.0, 0.0, 0.0))
+            val kept = frame.transformPosition(org.joml.Vector3d(if (side == 1) 3.0 else -3.0, 0.0, 0.0))
+            assertTrue(lost.y < kept.y, "missing wing must fall in hull coordinates")
+            assertTrue(result.motion.horizontalDistance() > 2.0, "first wheel contact must not stop a live crash")
+        }
     }
     private fun input(motion: Vec3 = Vec3(1.5, 0.6, 2.0)) = VehicleFlightInputContext(
         0L, 0, 0.0, 0.0, motion, motion, Vec3(0.0, 0.0, 1.0), Vec3(0.0, 1.0, 0.0),

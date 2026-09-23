@@ -7,6 +7,8 @@ import com.atsuishio.superbwarfare.client.aircraft.AircraftMountView;
 import com.atsuishio.superbwarfare.client.aircraft.AircraftStoreView;
 import com.atsuishio.superbwarfare.client.aircraft.AircraftStoreItemRenderer;
 import com.atsuishio.superbwarfare.entity.vehicle.base.GeoVehicleEntity;
+import com.atsuishio.superbwarfare.api.vehicle.flight.AircraftWreckBreakup;
+import com.atsuishio.superbwarfare.client.renderer.AircraftDetachedWings;
 import com.example.sbwmeshloader.core.PolyMeshModel;
 import com.github.mcmodderanchor.simplebedrockmodel.v1.common.model.BedrockBone;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -17,6 +19,8 @@ import net.minecraft.world.phys.Vec3;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 /** Exact authored groups and static external stores; no entity/weapon/effect renderer is invoked. */
 final class BvpSuspendedStoreRenderer {
@@ -31,6 +35,62 @@ final class BvpSuspendedStoreRenderer {
     private final Map<String, Map<String, int[]>> groups = new HashMap<>();
     private final Map<String, StoreAsset> modelBindings = new HashMap<>();
     private boolean applied;
+    private record CapturedStore(Vec3 point, AircraftStoreView store, StoreAsset asset) {}
+
+    private static boolean onWing(GeoVehicleEntity entity, Vec3 point, int side) {
+        String id = side == 1 ? "superbwarfare:wing_left" : "superbwarfare:wing_right";
+        var module = entity.computed().getAircraftSurfaceModules().stream()
+                .filter(entry -> entry.getId().equals(id)).findFirst().orElse(null);
+        if (module == null || module.getHitboxes().isEmpty()) return false;
+        double minX = Double.POSITIVE_INFINITY, maxX = Double.NEGATIVE_INFINITY;
+        for (var box : module.getHitboxes()) {
+            minX = Math.min(minX, box.getMin().f_82479_);
+            maxX = Math.max(maxX, box.getMax().f_82479_);
+        }
+        return point.f_82479_ >= minX - .15 && point.f_82479_ <= maxX + .15;
+    }
+
+    private StoreAsset asset(AircraftStoreView store) {
+        if (store.getModel() == null || store.getTexture() == null) return null;
+        if (!modelBindings.containsKey(store.getId())) {
+            String key = store.getModel() + "|" + store.getTexture();
+            StoreAsset candidate = ASSETS.get(key);
+            if (candidate == null && ASSETS.size() < MAX_EXTERNAL_MODELS) {
+                candidate = new StoreAsset(store.getModel(), store.getTexture());
+                ASSETS.put(key, candidate);
+            }
+            modelBindings.put(store.getId(), candidate);
+        }
+        return modelBindings.get(store.getId());
+    }
+
+    /** Freeze loaded stores at separation; later firing or loadout edits cannot change debris. */
+    AircraftDetachedWings.Visual captureWing(GeoVehicleEntity entity, int side, int light) {
+        AircraftArmamentSnapshot state = AircraftArmamentClient.getVehicleSnapshot(entity);
+        if (state == null) return null;
+        var captured = new ArrayList<CapturedStore>();
+        for (AircraftMountView pair : state.getDefinition().getMounts()) {
+            if (pair.getInternal()) continue;
+            String selected = state.getSelections().get(pair.getId());
+            AircraftStoreView store = state.getStores().get(selected);
+            if (store == null || pair.getGroups().containsKey(selected)) continue;
+            var positions = state.rackPositions(pair);
+            for (int index = 0; index < positions.size(); index++) {
+                Vec3 point = positions.get(index);
+                if (state.storePresent(pair, index) && onWing(entity, point, side))
+                    captured.add(new CapturedStore(point, store, asset(store)));
+            }
+        }
+        if (captured.isEmpty()) return null;
+        var frozen = List.copyOf(captured);
+        return (pose, buffers, impacted) -> {
+            for (CapturedStore store : frozen) {
+                PolyMeshModel mesh = store.asset == null ? null : store.asset.ready();
+                if (mesh != null || (store.store.getModel() == null && store.store.getItem() != null))
+                    mount(store.point, store.store, store.asset, mesh, pose, buffers, light, 1f);
+            }
+        };
+    }
 
     void apply(GeoVehicleEntity entity, PolyMeshModel current) {
         restore();
@@ -104,29 +164,22 @@ final class BvpSuspendedStoreRenderer {
 
     void render(GeoVehicleEntity entity, PoseStack pose, MultiBufferSource buffers, int light, float alpha) {
         AircraftArmamentSnapshot state = AircraftArmamentClient.getVehicleSnapshot(entity);
-        if (state == null || alpha <= 0) return;
+        if (state == null || alpha <= 0 || entity.getAircraftWreckImpactTime() >= 0) return;
         for (AircraftMountView pair : state.getDefinition().getMounts()) {
+            if (pair.getInternal()) continue;
             String selected = state.getSelections().get(pair.getId());
             AircraftStoreView store = state.getStores().get(selected);
             if (store == null || pair.getGroups().containsKey(selected)) continue;
-            StoreAsset asset = null;
-            if (store.getModel() != null && store.getTexture() != null) {
-                if (!modelBindings.containsKey(store.getId())) {
-                    String key = store.getModel() + "|" + store.getTexture();
-                    StoreAsset candidate = ASSETS.get(key);
-                    if (candidate == null && ASSETS.size() < MAX_EXTERNAL_MODELS) {
-                        candidate = new StoreAsset(store.getModel(), store.getTexture());
-                        ASSETS.put(key, candidate);
-                    }
-                    modelBindings.put(store.getId(), candidate);
-                }
-                asset = modelBindings.get(store.getId());
-            }
+            StoreAsset asset = asset(store);
             PolyMeshModel mesh = asset == null ? null : asset.ready();
             if (mesh == null && (store.getModel() != null || store.getItem() == null)) continue;
             var positions = state.rackPositions(pair);
+            int missing = AircraftWreckBreakup.mask(entity);
             for (int index = 0; index < positions.size(); index++) {
-                if (state.storePresent(pair, index))
+                Vec3 point = positions.get(index);
+                boolean detached = ((missing & 1) != 0 && onWing(entity, point, 1)) ||
+                        ((missing & 2) != 0 && onWing(entity, point, 2));
+                if (!detached && state.storePresent(pair, index))
                     mount(positions.get(index), store, asset, mesh, pose, buffers, light, alpha);
             }
         }

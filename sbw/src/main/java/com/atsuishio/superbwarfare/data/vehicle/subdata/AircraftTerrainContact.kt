@@ -14,9 +14,11 @@ class AircraftTerrainContact {
     @SerialName("RetractableGear") var retractableGear: Boolean = false
     @SerialName("WheelContacts") var wheelContacts: List<AircraftWheelContact> = emptyList()
     @SerialName("BodyParts") var bodyParts: List<AircraftTerrainBox> = emptyList()
+    @SerialName("WreckSections") var wreckSections: List<AircraftTerrainBox> = emptyList()
 
     fun valid(): Boolean = fuselage.valid() && landingGear.valid() &&
         bodyParts.size <= 16 && bodyParts.all { it.valid() } &&
+        (wreckSections.isEmpty() || wreckSections.size == 4 && wreckSections.all { it.valid() }) &&
         (wheelContacts.isEmpty() || validWheelContacts())
     fun bodyVolumes(): List<AircraftTerrainBox> = bodyParts.ifEmpty { listOf(fuselage) }
     fun hasWheelVolumes(): Boolean = validWheelContacts() && wheelContacts.all { it.bounds != null }

@@ -146,6 +146,19 @@ class AircraftWheelSupportTest {
         error("No clear main-supported test attitude")
     }
 
+    @Test fun fleetNoseFirstTouchdownBringsMainsDownAtRest() {
+        val scene = Scene(listOf(floor))
+        for ((id, data) in fits.filterValues { it.wheelContacts.any { wheel -> wheel.group == nose } }) {
+            val rotation = Matrix4d().rotateX(Math.toRadians(2.0))
+            val lowest = AircraftWheelGeometry.sample(data, rotation).minOf { it.world.y }
+            var frame = Matrix4d().translate(0.0, -lowest, 0.0).mul(rotation)
+            if (AircraftCollisionSnapshot.create(data, frame, 0F).parts.filter { it.role == com.atsuishio.superbwarfare.api.vehicle.collision.AircraftCollisionRole.FUSELAGE }.any { it.worldBounds.minY < .02 }) continue
+            repeat(180) { frame = scene.kernel.plan(data, frame, 0.0, 1.0).frame }
+            val contacts = scene.kernel.contacts(AircraftWheelGeometry.sample(data, frame))
+            assertTrue(contacts.rows.any { it.wheel.group == main }, "$id: main gear remained airborne after nose-first touchdown")
+        }
+    }
+
     @Test fun allReviewedFleetLayoutsReachRealSecondarySupportGradually() {
         assertEquals(34, fits.size)
         assertEquals(164, fits.values.sumOf { it.wheelContacts.size })

@@ -78,7 +78,8 @@
         "berts_vehicle_pack:fa18e/bomb_500kg_laser_1",
         "berts_vehicle_pack:fa18e/bomb_500kg_laser_2",
         "berts_vehicle_pack:fa18e/bomb_500kg_gps_1",
-        "berts_vehicle_pack:fa18e/bomb_500kg_gps_2"
+        "berts_vehicle_pack:fa18e/bomb_500kg_gps_2",
+        "berts_vehicle_pack:reference/dumb_bomb_100kg"
       ],
       "StoreGroups": {
         "berts_vehicle_pack:fa18e/aim120": [
@@ -114,7 +115,8 @@
         "berts_vehicle_pack:fa18e/bomb_500kg_laser_1",
         "berts_vehicle_pack:fa18e/bomb_500kg_laser_2",
         "berts_vehicle_pack:fa18e/bomb_500kg_gps_1",
-        "berts_vehicle_pack:fa18e/bomb_500kg_gps_2"
+        "berts_vehicle_pack:fa18e/bomb_500kg_gps_2",
+        "berts_vehicle_pack:reference/dumb_bomb_100kg"
       ],
       "MaxWeaponsPerPylon": 4,
       "MaxPylonMassKg": 2000
@@ -144,7 +146,8 @@
         "berts_vehicle_pack:fa18e/bomb_500kg_laser_1",
         "berts_vehicle_pack:fa18e/bomb_500kg_laser_2",
         "berts_vehicle_pack:fa18e/bomb_500kg_gps_1",
-        "berts_vehicle_pack:fa18e/bomb_500kg_gps_2"
+        "berts_vehicle_pack:fa18e/bomb_500kg_gps_2",
+        "berts_vehicle_pack:reference/dumb_bomb_100kg"
       ],
       "MaxWeaponsPerPylon": 4,
       "MaxPylonMassKg": 2000
@@ -168,7 +171,8 @@
         "berts_vehicle_pack:fa18e/bomb_500kg_laser_1",
         "berts_vehicle_pack:fa18e/bomb_500kg_laser_2",
         "berts_vehicle_pack:fa18e/bomb_500kg_gps_1",
-        "berts_vehicle_pack:fa18e/bomb_500kg_gps_2"
+        "berts_vehicle_pack:fa18e/bomb_500kg_gps_2",
+        "berts_vehicle_pack:reference/dumb_bomb_100kg"
       ],
       "MaxWeaponsPerPylon": 2,
       "MaxPylonMassKg": 2000
@@ -202,5 +206,6 @@
     "MaxZoom": 24,
     "Range": 8192
   },
-  "MaxWeaponsPerPylon": 4
+  "MaxWeaponsPerPylon": 4,
+  "MaxPylonMassKg": 1000
 }

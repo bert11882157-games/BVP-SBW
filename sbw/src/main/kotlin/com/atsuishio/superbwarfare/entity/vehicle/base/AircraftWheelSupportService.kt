@@ -26,7 +26,7 @@ internal class AircraftWheelSupportService(private val vehicle: VehicleEntity,
 
     fun prepare(snapshot: AircraftCollisionSnapshot, requested: Vec3): List<OBBInfo> {
         val data = vehicle.computed().aircraftTerrainContact
-        definition = data?.takeIf { vehicle.isFixedWingFlightVehicle() && it.validWheelContacts() &&
+        definition = data?.takeIf { vehicle.aircraftWreckImpactTime < 0 && vehicle.isFixedWingFlightVehicle() && it.validWheelContacts() &&
             it.gearDeployed(vehicle.synchedGearRot) }
         val selected = definition ?: run {
             events.sample(vehicle.level().gameTime, false, emptyMap(), emptyMap())

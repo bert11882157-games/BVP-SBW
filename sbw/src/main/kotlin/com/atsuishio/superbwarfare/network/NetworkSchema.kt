@@ -83,7 +83,7 @@ data class RegisteredPacketSchema(
  * duplicate types, direction mismatches, missing bounds, or an accidental discriminator gap.
  */
 object NetworkPacketManifest {
-    const val PROTOCOL_VERSION = 38
+    const val PROTOCOL_VERSION = 39
     const val EXPECTED_PACKET_COUNT = 81
 
     private val byId = LinkedHashMap<Int, RegisteredPacketSchema>()

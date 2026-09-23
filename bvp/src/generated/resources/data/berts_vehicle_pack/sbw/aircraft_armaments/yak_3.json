@@ -9,5 +9,23 @@
   "SuspendedWeapons": [],
   "Pairs": [],
   "StoreGroups": {},
-  "MaxPayloadKg": 200
+  "MaxPayloadKg": 200,
+  "MaxPylonMassKg": 1000,
+  "MaxWeaponsPerPylon": 12,
+  "Singles": [
+    {
+      "Id": "internal_bay",
+      "Name": "Bomb bay / internal stores",
+      "Position": [
+        0,
+        0.77,
+        -0.796995
+      ],
+      "Internal": true,
+      "MaxPylonMassKg": 200,
+      "AllowedStores": [
+        "berts_vehicle_pack:reference/dumb_bomb_100kg"
+      ]
+    }
+  ]
 }
