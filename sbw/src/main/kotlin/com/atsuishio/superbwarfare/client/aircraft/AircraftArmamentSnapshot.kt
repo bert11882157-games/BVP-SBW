@@ -17,10 +17,11 @@ data class AircraftStoreView(
     val massKg: Double = 0.0, val maxPerPylon: Int = 1,
     val rackSpacing: Vec3 = Vec3(0.6, 0.4, 0.0),
 ) {
-    val visualOnly: Boolean get() = (category in setOf("AIR_TO_AIR", "ANTI_RADIATION") && !guidedAirToAir) || category == "VISUAL_ONLY"
+    val visualOnly: Boolean get() = (category in setOf("AIR_TO_AIR", "AIR_TO_GROUND", "ANTI_RADIATION") && !guidedAirToAir) || category == "VISUAL_ONLY"
     val categoryLabel: String get() = when (category) {
         "AIR_TO_AIR" -> if (guidedAirToAir) "Air-to-air guided missile" else "Air-to-air · visual only"
         "ANTI_RADIATION" -> "Anti-radiation missile"
+        "AIR_TO_GROUND" -> "Ground-seeking missile"
         "CRUISE" -> "Cruise missile"
         "VISUAL_ONLY" -> "Visual only"
         "LASER_GUIDED" -> "Laser guided"
@@ -69,8 +70,8 @@ data class AircraftSeekView(val revision: Long, val weaponId: String, val target
                             val status: String, val category: String = "", val guidanceMode: String = "",
                             val coneDegrees: Double = 0.0, val range: Double = 0.0,
                             val lockTicks: Int = 0, val slot: String = "") {
-    val activeAam: Boolean get() = category in setOf("AIR_TO_AIR", "ANTI_RADIATION") && weaponId.isNotBlank() &&
-        guidanceMode in setOf("INFRARED", "ACTIVE_RADAR", "SEMI_ACTIVE_RADAR", "ANTI_RADIATION") &&
+    val activeAam: Boolean get() = category in setOf("AIR_TO_AIR", "AIR_TO_GROUND", "ANTI_RADIATION") && weaponId.isNotBlank() &&
+        guidanceMode in setOf("INFRARED", "ACTIVE_RADAR", "SEMI_ACTIVE_RADAR", "ANTI_RADIATION", "GROUND_INFRARED") &&
         coneDegrees in 1.0..60.0 && range in 16.0..4096.0 && status != "UNAVAILABLE"
 }
 
@@ -128,7 +129,7 @@ data class AircraftArmamentSnapshot(
     })
 
     companion object {
-        private val categories = setOf("LASER_GUIDED", "GUN_POD", "BOMB", "AIR_TO_AIR", "ANTI_RADIATION", "CRUISE", "ROCKET_POD", "VISUAL_ONLY")
+        private val categories = setOf("LASER_GUIDED", "GUN_POD", "BOMB", "AIR_TO_AIR", "AIR_TO_GROUND", "ANTI_RADIATION", "CRUISE", "ROCKET_POD", "VISUAL_ONLY")
 
         fun decode(json: JsonObject): AircraftArmamentSnapshot? = try {
             val vehicle = UUID.fromString(string(json, "Vehicle", 36))
@@ -187,7 +188,7 @@ data class AircraftArmamentSnapshot(
                     optionalResource(store, "Item"), optionalResource(store, "Model"),
                     optionalResource(store, "Texture"), number(store, "Scale", 1.0, 0.001, 64.0),
                     store.get("Capacity")?.let { integer(store, "Capacity", 1, 100000) },
-                    category in setOf("AIR_TO_AIR", "ANTI_RADIATION") && store.has("Guidance"),
+                    category in setOf("AIR_TO_AIR", "AIR_TO_GROUND", "ANTI_RADIATION") && store.has("Guidance"),
                     number(store, "MassKg", 0.0, 0.0, 50000.0), optionalInteger(store, "MaxPerPylon", 1),
                     store["RackSpacing"]?.let { vector(it, 8.0) } ?: Vec3(0.6, 0.4, 0.0))
             }
@@ -254,7 +255,7 @@ data class AircraftArmamentSnapshot(
             val mode = optionalString("GuidanceMode")
             val slot = optionalString("Slot")
             require(category.isEmpty() || category in categories)
-            require(mode in setOf("", "INFRARED", "ACTIVE_RADAR", "SEMI_ACTIVE_RADAR", "ANTI_RADIATION"))
+            require(mode in setOf("", "INFRARED", "ACTIVE_RADAR", "SEMI_ACTIVE_RADAR", "ANTI_RADIATION", "GROUND_INFRARED"))
             require(slot in setOf("", "PRIMARY", "SECONDARY"))
             return AircraftSeekView(revision, weapon, target,
                 position, progress, ready, status, category, mode,

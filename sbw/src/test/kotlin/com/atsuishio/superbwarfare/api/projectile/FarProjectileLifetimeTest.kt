@@ -5,6 +5,19 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
 class FarProjectileLifetimeTest {
+    @Test fun `bomb keeps authored flight beyond seven seconds without renewing at a handoff`() {
+        val data = CompoundTag()
+        fun bomb(tag: CompoundTag, now: Long, age: Int = 0) =
+            FarProjectileLifetime.expired(tag, now, "minecraft:overworld", 601, age, 2400)
+        assertFalse(bomb(data, 100))
+        assertFalse(bomb(data, 240, 140))
+        val saved = data.copy()
+        assertFalse(bomb(saved, 700, 600))
+        assertTrue(bomb(saved, 701))
+        assertTrue(bomb(data.copy(), 701))
+        assertTrue(FarProjectileLifetime.expired(CompoundTag(), 100, "minecraft:overworld", 601, 0, 2401))
+    }
+
     private fun expired(tag: CompoundTag, now: Long, life: Int = 2400, age: Int = 0, dimension: String = "minecraft:overworld") =
         FarProjectileLifetime.expired(tag, now, dimension, life, age)
 

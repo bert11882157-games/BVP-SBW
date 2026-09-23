@@ -1,5 +1,5 @@
 {
-  "Name": "Kh-29ML · laser",
+  "Name": "Kh-25L",
   "AmmoType": "superbwarfare:medium_anti_ground_missile",
   "DefaultFireMode": "Semi",
   "AvailableFireModes": "Semi",
@@ -8,7 +8,7 @@
   "RPM": 30,
   "Projectile": {
     "Type": "superbwarfare:wire_guide_missile",
-    "Profile": "berts_vehicle_pack:aircraft_stores/kh29l"
+    "Profile": "berts_vehicle_pack:aircraft_stores/kh25l"
   },
   "ProjectileAmount": 1,
   "AddShooterDeltaMovement": true,
@@ -16,9 +16,9 @@
   "Gravity": 0.0125,
   "ProjectileLife": 800,
   "Spread": 0,
-  "Damage": 3200,
-  "ExplosionDamage": 3200,
-  "ExplosionRadius": 1.25,
+  "Damage": 1600,
+  "ExplosionDamage": 1600,
+  "ExplosionRadius": 0.625,
   "ShellType": "HE",
   "ApDurability": 0,
   "Crosshair": "@Empty",

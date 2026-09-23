@@ -19,9 +19,9 @@ object AircraftMissileLauncher {
         val range = raw["Range"].asDouble
         val cone = raw["ConeDegrees"].asDouble
         val vulnerability = raw["CountermeasureVulnerability"].asDouble
-        require(mode in setOf("ACTIVE_RADAR", "SEMI_ACTIVE_RADAR", "INFRARED", "ANTI_RADIATION"))
+        require(mode in setOf("ACTIVE_RADAR", "SEMI_ACTIVE_RADAR", "INFRARED", "ANTI_RADIATION", "GROUND_INFRARED"))
         require(ticks.isFinite() && ticks == kotlin.math.floor(ticks) && ticks in 0.0..200.0)
-        require(mode != "INFRARED" || ticks >= 1)
+        require(mode !in setOf("INFRARED", "GROUND_INFRARED") || ticks >= 1)
         require(range.isFinite() && range in 16.0..4096.0 && cone.isFinite() && cone in 1.0..60.0)
         require(vulnerability.isFinite() && vulnerability in 0.0..2.0)
         return Guidance(mode, ticks.toInt(), range, cone, vulnerability)

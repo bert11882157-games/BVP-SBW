@@ -18,7 +18,7 @@ object AircraftStoreWeapons {
     fun mountId(weapon: String): String? = weapon.takeIf { it.startsWith(PREFIX) }?.removePrefix(PREFIX)
     internal fun launchable(store: JsonObject): Boolean = when (store["Category"]?.asString) {
         "LASER_GUIDED" -> true
-        "AIR_TO_AIR", "ANTI_RADIATION" -> store.has("Guidance")
+        "AIR_TO_AIR", "AIR_TO_GROUND", "ANTI_RADIATION" -> store.has("Guidance")
         "BOMB" -> store.has("Bomb")
         "CRUISE" -> store.has("Flight")
         else -> false

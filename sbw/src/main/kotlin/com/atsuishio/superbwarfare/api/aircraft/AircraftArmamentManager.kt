@@ -136,7 +136,7 @@ object AircraftArmamentManager {
                 else AircraftArmamentRegistry.stores[ResourceLocation.tryParse(storeId)])
                 ?: return@mapNotNull null
             val category = store.get("Category")?.asString ?: return@mapNotNull null
-            if (category in setOf("AIR_TO_AIR", "ANTI_RADIATION", "LASER_GUIDED", "CRUISE", "BOMB") &&
+            if (category in setOf("AIR_TO_AIR", "AIR_TO_GROUND", "ANTI_RADIATION", "LASER_GUIDED", "CRUISE", "BOMB") &&
                 !AircraftStoreWeapons.launchable(store)) return@mapNotNull null
             AircraftWeaponGroups.Mount(key, storeId, category, nativeWeapons(mount, storeId))
         }
@@ -194,7 +194,7 @@ object AircraftArmamentManager {
         val key = group.mounts.first()
         val store = equippedStore(vehicle, key) ?: return null
         val category = when (store["Category"]?.asString) {
-            "ROCKET_POD" -> "RKT"; "GUN_POD" -> "CNN"; "LASER_GUIDED", "ANTI_RADIATION" -> "AGM"
+            "ROCKET_POD" -> "RKT"; "GUN_POD" -> "CNN"; "LASER_GUIDED", "AIR_TO_GROUND", "ANTI_RADIATION" -> "AGM"
             "AIR_TO_AIR" -> "AAM"; "BOMB" -> "BMB"; "CRUISE" -> "AGM"; else -> return null
         }
         val ammo = if (category == "RKT") group.members.sumOf { vehicle.gunDataMap[it]?.ammo?.get() ?: 0 }
@@ -271,7 +271,7 @@ object AircraftArmamentManager {
                 val actualProjectile = vehicle.getGunData(weaponName)
                     ?.get(com.atsuishio.superbwarfare.data.gun.GunProp.PROJECTILE)?.resolvedProfileId()
                 compatible && store != null && store["Category"]?.asString !in
-                    setOf("LASER_GUIDED", "AIR_TO_AIR", "ANTI_RADIATION", "BOMB", "CRUISE", "VISUAL_ONLY") &&
+                    setOf("LASER_GUIDED", "AIR_TO_AIR", "AIR_TO_GROUND", "ANTI_RADIATION", "BOMB", "CRUISE", "VISUAL_ONLY") &&
                     (vehicle.level().isClientSide || gunProfile == null || actualProjectile != null && actualProjectile in expectedProjectiles)
             } == true }
     }
@@ -501,10 +501,10 @@ object AircraftArmamentManager {
         require(id != null && allowed(pair, id)) { "No store equipped." }
         val store = AircraftArmamentRegistry.stores[ResourceLocation(id)]!!
         val category = store["Category"].asString
-        val guidedMissile = category in setOf("AIR_TO_AIR", "ANTI_RADIATION") && store.has("Guidance")
+        val guidedMissile = category in setOf("AIR_TO_AIR", "AIR_TO_GROUND", "ANTI_RADIATION") && store.has("Guidance")
         val bomb = category == "BOMB" && store.has("Bomb")
         val cruise = category == "CRUISE" && store.has("Flight")
-        require(category != "VISUAL_ONLY" && (category !in setOf("AIR_TO_AIR", "ANTI_RADIATION", "BOMB", "CRUISE") || guidedMissile || bomb || cruise)) { "This store is visual only in this version." }
+        require(category != "VISUAL_ONLY" && (category !in setOf("AIR_TO_AIR", "AIR_TO_GROUND", "ANTI_RADIATION", "BOMB", "CRUISE") || guidedMissile || bomb || cruise)) { "This store is visual only in this version." }
         val weapon = nativeWeapons(pair, id).singleOrNull()
         if (category != "LASER_GUIDED" && !guidedMissile && !bomb && !cruise) {
             require(weapon != null) { "This store has no firing implementation yet." }

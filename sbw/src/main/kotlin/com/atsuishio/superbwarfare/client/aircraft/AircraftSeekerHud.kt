@@ -34,7 +34,7 @@ object AircraftSeekerHud {
         var previous: Vec3? = null
         graphics.enableScissor(0, 0, width, height)
         try {
-            if (seek.guidanceMode == "ANTI_RADIATION") {
+            if (seek.guidanceMode in setOf("ANTI_RADIATION", "GROUND_INFRARED")) {
                 val r = circle.radius
                 val points = listOf(Vec3(circle.x-r,circle.y-r,1.0), Vec3(circle.x+r,circle.y-r,1.0),
                     Vec3(circle.x+r,circle.y+r,1.0), Vec3(circle.x-r,circle.y+r,1.0))

@@ -1,6 +1,6 @@
 {
-  "Name": "Kh-29ML · laser",
-  "AmmoType": "superbwarfare:medium_anti_ground_missile",
+  "Name": "AGM-114K Hellfire II",
+  "AmmoType": "superbwarfare:small_atgm",
   "DefaultFireMode": "Semi",
   "AvailableFireModes": "Semi",
   "Magazine": 1,
@@ -8,17 +8,17 @@
   "RPM": 30,
   "Projectile": {
     "Type": "superbwarfare:wire_guide_missile",
-    "Profile": "berts_vehicle_pack:aircraft_stores/kh29l"
+    "Profile": "berts_vehicle_pack:aircraft_stores/agm114k_ah64d"
   },
   "ProjectileAmount": 1,
   "AddShooterDeltaMovement": true,
-  "Velocity": 2,
+  "Velocity": 1.5,
   "Gravity": 0.0125,
-  "ProjectileLife": 800,
+  "ProjectileLife": 1000,
   "Spread": 0,
-  "Damage": 3200,
-  "ExplosionDamage": 3200,
-  "ExplosionRadius": 1.25,
+  "Damage": 700,
+  "ExplosionDamage": 90,
+  "ExplosionRadius": 0.5,
   "ShellType": "HE",
   "ApDurability": 0,
   "Crosshair": "@Empty",

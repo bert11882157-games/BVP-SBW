@@ -1,35 +1,35 @@
 {
   "Combat": {
-    "WeaponId": "berts_vehicle_pack:aircraft_stores/kh29l",
-    "RoundId": "berts_vehicle_pack:kh29l",
+    "WeaponId": "berts_vehicle_pack:aircraft_stores/agm114k_ah64d",
+    "RoundId": "berts_vehicle_pack:ah_64d/agm114_proxy",
     "MunitionType": "berts_vehicle_pack:atgm",
     "DamageType": "berts_vehicle_pack:chemical",
-    "CaliberMm": 380,
-    "DiameterMm": 380,
+    "CaliberMm": 178,
+    "DiameterMm": 178,
     "HullDamageClass": "HE",
-    "HullDamage": 3200,
-    "ModuleDamage": 1920,
-    "AmmoRackDamage": 384,
-    "PenetrationMm": 0,
-    "Tandem": false
+    "HullDamage": 700,
+    "ModuleDamage": 420,
+    "AmmoRackDamage": 84,
+    "PenetrationMm": 1200,
+    "Tandem": true
   },
   "VisualProfile": "berts_vehicle_pack:authored_missile",
   "ImpactVisualProfile": "berts_vehicle_pack:atgm",
   "MotionSync": "INHERIT",
   "Collision": {
-    "Width": 0.38,
-    "Height": 0.38
+    "Width": 0.16,
+    "Height": 0.16
   },
   "Luminance": 9,
   "TrailMode": "REPLACE",
-  "RenderScale": 1,
+  "RenderScale": 0.45,
   "GuidedPropulsion": {
     "InitialSpeed": 2,
-    "MaxSpeed": 10,
-    "AccelerationPerTick": 0.2,
-    "ThrustDurationTicks": 40,
-    "MaxTurnRateDegreesPerSecond": 180,
-    "GuidanceLookAheadTicks": 12,
+    "MaxSpeed": 8,
+    "AccelerationPerTick": 0.12,
+    "ThrustDurationTicks": 90,
+    "MaxTurnRateDegreesPerSecond": 90,
+    "GuidanceLookAheadTicks": 10,
     "IgnitionDelayTicks": 6,
     "EjectionSpeed": 2,
     "EjectionGravityPerTick": 0.0125
@@ -42,22 +42,22 @@
       "SpinDegreesPerTick": 0
     },
     "superbwarfare:guided_maneuver_v1": {
-      "MaxLoadFactorG": 15,
+      "MaxLoadFactorG": 12,
       "SeekerConeDegrees": 30,
-      "SeekerRateDegreesPerSecond": 24,
-      "BodyTurnLimitScale": 3
+      "SeekerRateDegreesPerSecond": 32,
+      "BodyTurnLimitScale": 2
     },
     "superbwarfare:warhead_fragments_v1": {
-      "Count": 192,
-      "Range": 2.5,
-      "Damage": 8,
-      "MaxHitsPerTarget": 4
+      "Count": 32,
+      "Range": 1,
+      "Damage": 4,
+      "MaxHitsPerTarget": 2
     },
     "superbwarfare:heavy_warhead_blast_v1": {
-      "InnerRadius": 1.25,
-      "OuterRadius": 2.5,
-      "HeavyDamageFraction": 0.5,
-      "LightDamageFraction": 0.6666666666666666
+      "InnerRadius": 0.5,
+      "OuterRadius": 1,
+      "HeavyDamageFraction": 0.1,
+      "LightDamageFraction": 0.2
     },
     "berts_vehicle_pack:projectile_effect_v1": {
       "Schema": 1,
