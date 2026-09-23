@@ -6,6 +6,22 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
 class AircraftPylonRacksTest {
+    @Test fun pylonMassAndWholeAircraftBudgetAreIndependentAndBayUsesOneReleasePoint() {
+        assertEquals(4, AircraftPylonRacks.maxCopies(12,12,12,"BOMB",1,250.0,1000.0))
+        assertEquals(10, AircraftPylonRacks.maxCopies(12,12,12,"BOMB",1,100.0,1000.0))
+        assertEquals(1, AircraftPylonRacks.maxCopies(12,12,12,"BOMB",1,1000.0,1000.0))
+        val mounts = (1..6).joinToString(",") { """{"Id":"p$it","Position":[0,0,$it]}""" }
+        val definition = JsonParser.parseString("""{"Singles":[$mounts],"MaxPayloadKg":4000}""").asJsonObject
+        val bomb = JsonParser.parseString("""{"Category":"BOMB","MassKg":250,"Capacity":1}""").asJsonObject
+        val four = (1..4).associate { "p$it" to bomb }
+        assertEquals(4000.0, AircraftArmamentRegistry.loadoutMassKg(definition, four, four.keys.associateWith { 4 }))
+        assertTrue(AircraftArmamentRegistry.loadoutMassKg(definition, four + ("p5" to bomb),
+            four.keys.associateWith { 4 }) > definition["MaxPayloadKg"].asDouble)
+        val bay = JsonParser.parseString("""{"Id":"bay","Position":[0,-1,0],"Internal":true,"MaxPylonMassKg":15000}""").asJsonObject
+        val count = AircraftPylonRacks.maxCopies(definition, bay, bomb)
+        assertEquals(60, count)
+        assertEquals(1, (0 until count).map { AircraftPylonRacks.launchPosition(bay,bomb,count,it) }.toSet().size)
+    }
     @Test fun physicalLimitsAndMassPreventOversizedRacks() {
         fun limit(category: String = "BOMB", capacity: Int = 1, store: Int = 12, mass: Double = 250.0) =
             AircraftPylonRacks.maxCopies(12, 4, store, category, capacity, mass, 1000.0)

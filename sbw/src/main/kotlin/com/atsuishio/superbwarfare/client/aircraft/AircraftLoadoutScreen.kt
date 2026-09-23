@@ -85,7 +85,8 @@ class AircraftLoadoutScreen(private var state: AircraftArmamentSnapshot) : Scree
                 if (next != null) quantities[mount.id] = next
                 rebuild()
             }
-            quantity.tooltip = Tooltip.create(Component.literal("Weapons per pylon · click to increase, Shift-click to decrease"))
+            quantity.tooltip = Tooltip.create(Component.literal(
+                "${if (mount.internal) "Internal stores" else "Weapons per pylon"} · ${mount.maxPylonMassKg.toInt()} kg limit · click to increase, Shift-click to decrease"))
             if (store == null || maximum == 1) unavailableButtons += quantity
             val label = if (mount.allowed.isEmpty()) "${mount.name} · unavailable" else
                 "${mount.name} · $name${if (mount.positions.size == 2) " · both wings" else ""}"
@@ -95,7 +96,9 @@ class AircraftLoadoutScreen(private var state: AircraftArmamentSnapshot) : Scree
                     .firstOrNull { candidate ->
                         val proposed = LinkedHashMap(draft)
                         if (candidate == null) proposed.remove(mount.id) else proposed[mount.id] = candidate
-                        state.payloadKg(proposed, quantities - mount.id) <= state.definition.maxPayloadKg + 1.0e-6
+                        val proposedStore = state.stores[candidate]
+                        (proposedStore == null || proposedStore.massKg * (proposedStore.capacity ?: 1) <= mount.maxPylonMassKg + 1e-6) &&
+                            state.payloadKg(proposed, quantities - mount.id) <= state.definition.maxPayloadKg + 1.0e-6
                     }
                 if (next == null) draft.remove(mount.id) else draft[mount.id] = next
                 quantities.remove(mount.id)

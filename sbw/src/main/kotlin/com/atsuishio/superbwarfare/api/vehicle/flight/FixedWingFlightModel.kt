@@ -458,7 +458,7 @@ class FixedWingFlightModel(
         )
         if (grounded) {
             pitchRateDegreesPerSecond =
-                boundedRate(-pitchDegrees, pitchRateDegreesPerSecond, -10.0, 18.0) * groundRotationAuthority
+                boundedRate(-pitchDegrees, pitchRateDegreesPerSecond, 0.0, 18.0) * groundRotationAuthority
             rollRateDegreesPerSecond =
                 boundedRate(-rollDegrees, rollRateDegreesPerSecond, -8.0, 8.0)
         }

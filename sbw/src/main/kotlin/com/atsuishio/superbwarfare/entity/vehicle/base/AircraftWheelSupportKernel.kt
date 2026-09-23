@@ -75,8 +75,13 @@ internal class AircraftWheelSupportKernel(
         // Tandem main bogies have no nose/tail wheel. Settle toward an unsupported main
         // contact while preserving every existing support point, using the same swept path.
         val supportedIds = support.rows.map { it.wheel.id }.toSet()
+        // After a nose-first landing, settle the missing main group before another
+        // wheel on the same nose bogie. Otherwise the nose contacts can alternate
+        // forever while the main gear remains suspended.
+        val targetGroup = if (support.rows.any { it.wheel.group == AircraftWheelContactGroup.MAIN })
+            secondaryGroup else AircraftWheelContactGroup.MAIN
         val secondary = samples.filter { it.id !in supportedIds }
-            .minWithOrNull(compareBy<AircraftWheelGeometry.Wheel> { if (it.group == secondaryGroup) 0 else 1 }
+            .minWithOrNull(compareBy<AircraftWheelGeometry.Wheel> { if (it.group == targetGroup) 0 else 1 }
                 .thenBy { it.world.y })
             ?: return unchanged
         val target = floor(secondary, (abs(secondary.world.y - mains.first().point.y) + 1.0).coerceAtMost(16.0))

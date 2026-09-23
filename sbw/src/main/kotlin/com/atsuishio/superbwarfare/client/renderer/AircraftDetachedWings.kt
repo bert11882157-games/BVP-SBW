@@ -28,7 +28,7 @@ object AircraftDetachedWings {
     }
     private data class Key(val id: UUID, val side: Int, val started: Long)
     private data class Part(val motion: AircraftDebrisMotion, val visual: Visual, val radius: Double,
-                            val corners: List<Vec3>)
+                            val corners: List<Vec3>, val halfExtents: Vec3, val owner: UUID, val fuselage: Boolean)
     private val pieces = LinkedHashMap<Key, Part>()
     private val observed = LinkedHashMap<Key, Long>()
     private var world: Any? = null
@@ -42,6 +42,9 @@ object AircraftDetachedWings {
     private fun syncWorld() { if (world !== Minecraft.getInstance().level) clear() }
     @JvmStatic fun needsCapture(vehicle: VehicleEntity, side: Int): Boolean {
         syncWorld()
+        if (side >= 4) return vehicle.aircraftWreckImpactTime >= 0 &&
+            vehicle.level().gameTime - vehicle.aircraftWreckImpactTime < 200 &&
+            Key(vehicle.uuid, side, vehicle.aircraftWreckImpactTime) !in observed
         return vehicle.aircraftWreckStart >= 0 && vehicle.aircraftWreckWings >= 0 &&
             AircraftWreckBreakup.mask(vehicle) and side != 0 &&
             Key(vehicle.uuid, side, vehicle.aircraftWreckStart) !in observed
@@ -51,7 +54,8 @@ object AircraftDetachedWings {
     @JvmStatic fun capture(vehicle: VehicleEntity, side: Int, center: Vec3, orientation: Quaternionf,
                            halfExtents: Vec3, visual: Visual) {
         if (!needsCapture(vehicle, side)) return
-        val key = Key(vehicle.uuid, side, vehicle.aircraftWreckStart)
+        val fuselage = side >= 4
+        val key = Key(vehicle.uuid, side, if (fuselage) vehicle.aircraftWreckImpactTime else vehicle.aircraftWreckStart)
         observed[key] = clock
         if (observed.size > 512) observed.remove(observed.keys.first())
         if (pieces.size >= 64) pieces.remove(pieces.keys.first())
@@ -64,11 +68,11 @@ object AircraftDetachedWings {
         val spin = Vec3(random.nextDouble() * .06 - .03, random.nextDouble() * .04 - .02,
             (if (side == AircraftWreckBreakup.LEFT) -1 else 1) * (.025 + random.nextDouble() * .045))
         pieces[key] = Part(AircraftDebrisMotion(center, motion, orientation, spin,
-            random.nextDouble() * Math.PI * 2, gravity), visual, halfExtents.length().coerceIn(.25, 24.0),
+            random.nextDouble() * Math.PI * 2, gravity, if (fuselage) 2 else 0), visual, halfExtents.length().coerceIn(.25, 48.0),
             listOf(Vec3.ZERO) + (0..7).map { bits -> Vec3(
                 halfExtents.x * if (bits and 1 == 0) -1 else 1,
                 halfExtents.y * if (bits and 2 == 0) -1 else 1,
-                halfExtents.z * if (bits and 4 == 0) -1 else 1) })
+                halfExtents.z * if (bits and 4 == 0) -1 else 1) }, halfExtents, vehicle.uuid, fuselage)
     }
 
     @SubscribeEvent fun tick(event: TickEvent.ClientTickEvent) {
@@ -81,7 +85,8 @@ object AircraftDetachedWings {
         val terrain = com.atsuishio.superbwarfare.compat.voxy.ClientDebrisTerrain
         terrain.tick()
         var emissions = 0
-        pieces.entries.removeIf { (_, part) -> part.motion.age >= 1200 || part.motion.position.y < level.minBuildHeight - 32 }
+        pieces.entries.removeIf { (key, part) -> part.motion.age >= 1200 || part.motion.position.y < level.minBuildHeight - 32 ||
+            (part.fuselage && level.gameTime - key.started >= 200) }
         for (part in pieces.values) {
             val motion = part.motion
             if (!motion.grounded) {
@@ -104,6 +109,42 @@ object AircraftDetachedWings {
                 emissions += 2
             }
         }
+        // Resolve sibling solids and the server wreck as an immovable obstacle. The
+        // client never changes server motion or allocates physical debris entities.
+        val fragments = pieces.values.filter { it.fuselage }
+        val owners = if (fragments.isEmpty()) emptyMap() else {
+            val ids = fragments.map { it.owner }.toSet()
+            val native = level.entitiesForRendering().filterIsInstance<VehicleEntity>().filter { it.uuid in ids }.associateBy { it.uuid }
+            ids.associateWith { native[it] ?: com.atsuishio.superbwarfare.api.vehicle.render.FarVehicleCopies.find(it) }
+        }
+        repeat(4) {
+            for (i in fragments.indices) {
+                val a = fragments[i]
+                for (j in 0 until i) {
+                    val b = fragments[j]
+                    if (a.owner != b.owner) continue
+                    val correction = AircraftDebrisContact.separation(a.motion.position, a.motion.orientation, a.halfExtents,
+                        b.motion.position, b.motion.orientation, b.halfExtents) ?: continue
+                    val normal = correction.normalize()
+                    a.motion.separate(correction.scale(.5), normal)
+                    b.motion.separate(correction.scale(-.5), normal.scale(-1.0))
+                }
+                val vehicle = owners[a.owner]
+                if (vehicle != null && vehicle.aircraftWreckImpactTime >= 0) {
+                    val section = vehicle.computed().aircraftTerrainContact?.wreckSections?.getOrNull(1)
+                    if (section != null) {
+                        val frame = vehicle.getVehicleTransform(1f)
+                        val local = section.minimum.add(section.maximum).scale(.5)
+                        val point = frame.transformPosition(org.joml.Vector3d(local.x, local.y, local.z))
+                        val correction = AircraftDebrisContact.separation(a.motion.position, a.motion.orientation, a.halfExtents,
+                            Vec3(point.x, point.y, point.z), org.joml.Quaternionf(frame.getNormalizedRotation(org.joml.Quaterniond())),
+                            section.maximum.subtract(section.minimum).scale(.5))
+                        if (correction != null) a.motion.separate(correction, correction.normalize())
+                    }
+                }
+            }
+        }
+        pieces.entries.removeIf { it.value.motion.expired }
     }
 
     @SubscribeEvent fun render(event: RenderLevelStageEvent) {

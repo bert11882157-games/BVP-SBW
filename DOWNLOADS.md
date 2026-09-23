@@ -13,7 +13,24 @@ No stable release is currently published in this repository. See [all releases](
 for the complete release history.
 The `0.9.19beta` source tag currently has no GitHub Release or compiled download assets.
 
-## Latest published testing build: 0.10.1beta
+## Latest published testing build: 0.10.2beta
+
+[Aircraft ground support and breakup release](https://github.com/bert11882157-games/BVP-SBW/releases/tag/v0.10.2beta).
+Full development roster. Install both matching JARs:
+
+| Component | Mod JAR | Checksum |
+| --- | --- | --- |
+| BVP 0.10.2beta | [JAR](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.10.2beta/bvp-main-v0.10.2beta.jar) | [SHA-256](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.10.2beta/bvp-main-v0.10.2beta.jar.sha256) |
+| SBW 0.10.2beta | [JAR](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.10.2beta/bvp_superbwarfare-v0.10.2beta.jar) | [SHA-256](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.10.2beta/bvp_superbwarfare-v0.10.2beta.jar.sha256) |
+
+Keep [Fire From Above 1.0.6-bvp.2](https://github.com/xenoperk/Fire-From-Above/releases/tag/v1.0.6-bvp.2),
+Dominions, meshloader and other pack dependencies. SBW protocol 39 requires matching client/server JARs.
+This release fixes ground pitch and gear settling, wing breakup, F/A-18E spawning and pylon mass limits,
+and adds four-section fuselage breakup on terrain impact. Source/build/package checks passed;
+gameplay testing is pending. Restart Minecraft after installation.
+The version tag identifies the exact sealed source; later download-documentation changes do not alter the JARs.
+
+## Earlier published testing build: 0.10.1beta
 
 [Aircraft breakup, radar and guidance release](https://github.com/bert11882157-games/BVP-SBW/releases/tag/v0.10.1beta).
 This is the full development roster, including the registered F/A-18E. Install the matching set:

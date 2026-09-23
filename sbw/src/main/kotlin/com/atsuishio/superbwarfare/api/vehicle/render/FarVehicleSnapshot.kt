@@ -44,6 +44,7 @@ data class FarVehicleSnapshot(
     val aircraftWreckMotionX: Float = 0F,
     val aircraftWreckMotionY: Float = 0F,
     val aircraftWreckMotionZ: Float = 0F,
+    val aircraftWreckImpactTime: Long = -1L,
 
 ) {
     fun sameIdentity(other: FarVehicleSnapshot): Boolean =
@@ -55,6 +56,7 @@ data class FarVehicleSnapshot(
     fun valid(): Boolean {
         if (id < 0 || age < 0 || aircraftWreckStart < -1L || uuid.length != 36 || !RESOURCE_ID.matches(type)) return false
         if (aircraftWreckWings !in -1..3) return false
+        if (aircraftWreckImpactTime < -1L) return false
         if (!listOf(aircraftWreckMotionX, aircraftWreckMotionY, aircraftWreckMotionZ).all { it.isFinite() && abs(it) < 100F }) return false
         if (runCatching { UUID.fromString(uuid).toString() }.getOrNull() != uuid) return false
         if (!listOf(x, y, z).all { it.isFinite() && abs(it) <= 30_000_000.0 }) return false

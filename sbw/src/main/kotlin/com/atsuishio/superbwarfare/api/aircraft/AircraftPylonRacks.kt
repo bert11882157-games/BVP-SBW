@@ -7,8 +7,13 @@ import kotlin.math.min
 /** Counts complete fitted stores; bomb Capacity contributes to the physical weapon limit. */
 object AircraftPylonRacks {
     const val MAX_COPIES = 12
+    const val MAX_BAY_COPIES = 512
+    @JvmOverloads
     fun maxCopies(aircraftLimit: Int, mountLimit: Int, storeLimit: Int, category: String,
-                  capacity: Int, massKg: Double, maxPylonMassKg: Double): Int {
+                  capacity: Int, massKg: Double, maxPylonMassKg: Double, internal: Boolean = false): Int {
+        if (internal && category in setOf("BOMB", "CRUISE", "AIR_TO_AIR", "LASER_GUIDED", "ANTI_RADIATION"))
+            return if (massKg > 0.0 && maxPylonMassKg.isFinite())
+                (maxPylonMassKg / (massKg * capacity.coerceAtLeast(1))).toInt().coerceIn(1, MAX_BAY_COPIES) else 1
         if (category !in setOf("BOMB", "AIR_TO_AIR")) return 1
         val rounds = capacity.coerceAtLeast(1)
         val weaponLimit = min(aircraftLimit, min(mountLimit, storeLimit)).coerceIn(1, MAX_COPIES)
@@ -22,7 +27,8 @@ object AircraftPylonRacks {
         mount["MaxWeaponsPerPylon"]?.asInt ?: MAX_COPIES,
         store["MaxPerPylon"]?.asInt ?: 1, store["Category"].asString,
         store["Capacity"]?.asInt ?: 1, store["MassKg"]?.asDouble ?: 0.0,
-        mount["MaxPylonMassKg"]?.asDouble ?: Double.POSITIVE_INFINITY)
+        mount["MaxPylonMassKg"]?.asDouble ?: definition["MaxPylonMassKg"]?.asDouble ?: Double.POSITIVE_INFINITY,
+        mount["Internal"]?.asBoolean == true)
 
     /** Lateral columns, then rows below/aft in hull-local blocks. No frame-dependent allocation. */
     fun offset(copy: Int, copies: Int, spacing: Vec3): Vec3 {
@@ -41,6 +47,7 @@ object AircraftPylonRacks {
         val positions = AircraftArmamentRegistry.mountPositions(mount)
         val capacity = store["Capacity"]?.asInt ?: 1
         require(fired in 0 until capacity * positions.size * copies)
+        if (mount["Internal"]?.asBoolean == true) return positions[fired % positions.size]
         val copy = (fired / positions.size) % copies
         return positions[fired % positions.size].add(offset(copy, copies, spacing(store)))
     }

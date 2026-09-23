@@ -18,6 +18,7 @@ class AircraftWreckFlightStrategy : VehicleFlightStrategy() {
         }
         val fixedWing = vehicle.resolveVehicleFlightStrategy() as? FixedWingFlightStrategy
         val gravity = gravityPerTick(fixedWing?.handling?.gravityMps2, input.gravityPerTick)
+        AircraftFuselageWreck.step(vehicle, input, gravity)?.let { return it }
         return step(input.copy(gravityPerTick = gravity), ticks++, if (vehicle.uuid.leastSignificantBits and 1L == 0L) 1 else -1,
             vehicle.sympatheticDetonated, initialPitch, initialRoll, vehicle.uuid.leastSignificantBits,
             AircraftWreckBreakup.mask(vehicle))
@@ -36,7 +37,9 @@ class AircraftWreckFlightStrategy : VehicleFlightStrategy() {
         internal fun step(input: VehicleFlightInputContext, ticks: Int, direction: Int, impacted: Boolean,
                           initialPitch: Double = input.bodyPitchDegrees, initialRoll: Double = input.bodyRollDegrees,
                           seed: Long = 0L, detachedWings: Int = 0): VehicleFlightTickResult {
-            val grounded = impacted || input.onGround || input.inFluid
+            // A living, sheared aircraft must still slide/roll into its fuselage contact.
+            // A wheel touching first is not an impact event and cannot erase its inertia.
+            val grounded = impacted || input.inFluid || (input.onGround && input.wreck)
             // Decay world-space momentum continuously; spinning does not steer the wreck in circles.
             val motion = if (grounded) Vec3.ZERO else input.previousMotion.scale(MOMENTUM_RETENTION)
                 .add(0.0, -input.gravityPerTick.coerceAtLeast(0.0), 0.0)
@@ -60,8 +63,9 @@ class AircraftWreckFlightStrategy : VehicleFlightStrategy() {
                 sin(ticks * .071 + secondPhase) * 38.0
             val flatRock = Mth.wrapDegrees(wanderingRoll - input.bodyRollDegrees).coerceIn(-3.0, 3.0) * instability
             val wingRoll = when (detachedWings) {
-                AircraftWreckBreakup.LEFT -> -1.0
-                AircraftWreckBreakup.RIGHT -> 1.0
+                // Hull negative X is left; positive logical Z rotation lowers that side.
+                AircraftWreckBreakup.LEFT -> 1.0
+                AircraftWreckBreakup.RIGHT -> -1.0
                 else -> 0.0
             }
             val rollStep = if (wingRoll != 0.0) wingRoll *

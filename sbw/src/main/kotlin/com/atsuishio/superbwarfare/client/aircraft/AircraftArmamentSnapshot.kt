@@ -38,6 +38,7 @@ interface AircraftMountView {
     val groups: Map<String, List<String>>
     val maxWeaponsPerPylon: Int
     val maxPylonMassKg: Double
+    val internal: Boolean get() = false
 }
 
 data class AircraftPairView(
@@ -54,6 +55,7 @@ data class AircraftSingleView(
     override val allowed: List<String>, override val groups: Map<String, List<String>>,
     override val maxWeaponsPerPylon: Int = AircraftPylonRacks.MAX_COPIES,
     override val maxPylonMassKg: Double = Double.POSITIVE_INFINITY,
+    override val internal: Boolean = false,
 ) : AircraftMountView {
     override val positions: List<Vec3> = Collections.singletonList(position)
 }
@@ -95,7 +97,7 @@ data class AircraftArmamentSnapshot(
     }
     fun maxCopies(mount: AircraftMountView, store: AircraftStoreView): Int = AircraftPylonRacks.maxCopies(
         definition.maxWeaponsPerPylon, mount.maxWeaponsPerPylon, store.maxPerPylon,
-        store.category, store.capacity ?: 1, store.massKg, mount.maxPylonMassKg)
+        store.category, store.capacity ?: 1, store.massKg, mount.maxPylonMassKg, mount.internal)
 
     /** Physical rack positions are shared by near/far presentation and server launch ordering. */
     private val rackLayout: Map<String, List<Vec3>> by lazy {
@@ -103,7 +105,7 @@ data class AircraftArmamentSnapshot(
             val store = stores[selections[mount.id]]
             val copies = if (store == null) 1 else (counts[mount.id] ?: 1).coerceIn(1, maxCopies(mount, store))
             mount.id to if (store == null) emptyList() else (0 until copies).flatMap { copy ->
-                mount.positions.map { it.add(AircraftPylonRacks.offset(copy, copies, store.rackSpacing)) }
+                mount.positions.map { if (mount.internal) it else it.add(AircraftPylonRacks.offset(copy, copies, store.rackSpacing)) }
             }
         }
     }
@@ -145,7 +147,7 @@ data class AircraftArmamentSnapshot(
                 AircraftPairView(string(pair, "Id", 64), string(pair, "Name", 96),
                     vector(pair.get("Left"), 4096.0), vector(pair.get("Right"), 4096.0),
                     allowed, groups, optionalInteger(pair, "MaxWeaponsPerPylon", 12),
-                    number(pair, "MaxPylonMassKg", Double.POSITIVE_INFINITY, 0.1, 100000.0))
+                    number(pair, "MaxPylonMassKg", number(raw, "MaxPylonMassKg", Double.POSITIVE_INFINITY, 0.1, 100000.0), 0.1, 100000.0))
             }.also { require(it.map(AircraftPairView::id).distinct().size == it.size) }
             val singles = array(raw, "Singles", 16).map { element ->
                 val mount = element.asJsonObject
@@ -156,7 +158,8 @@ data class AircraftArmamentSnapshot(
                 AircraftSingleView(string(mount, "Id", 64), string(mount, "Name", 96),
                     vector(mount.get("Position"), 128.0), allowed, groups,
                     optionalInteger(mount, "MaxWeaponsPerPylon", 12),
-                    number(mount, "MaxPylonMassKg", Double.POSITIVE_INFINITY, 0.1, 100000.0))
+                    number(mount, "MaxPylonMassKg", number(raw, "MaxPylonMassKg", Double.POSITIVE_INFINITY, 0.1, 100000.0), 0.1, 100000.0),
+                    mount["Internal"]?.asBoolean == true)
             }
             require(pairs.size + singles.size <= 16)
             require((pairs.map { it.id } + singles.map { it.id }).distinct().size == pairs.size + singles.size)
@@ -195,7 +198,7 @@ data class AircraftArmamentSnapshot(
                 val mount = definition.mounts.firstOrNull { it.id == key } ?: error("unknown rack")
                 val store = stores[selections[key]] ?: error("empty rack")
                 val maximum = AircraftPylonRacks.maxCopies(definition.maxWeaponsPerPylon, mount.maxWeaponsPerPylon,
-                    store.maxPerPylon, store.category, store.capacity ?: 1, store.massKg, mount.maxPylonMassKg)
+                    store.maxPerPylon, store.category, store.capacity ?: 1, store.massKg, mount.maxPylonMassKg, mount.internal)
                 key to integer(rawCounts, key, 1, maximum)
             }
             val rawFired = json.getAsJsonObject("Fired") ?: JsonObject()

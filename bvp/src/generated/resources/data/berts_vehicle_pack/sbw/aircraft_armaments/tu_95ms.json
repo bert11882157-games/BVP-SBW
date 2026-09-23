@@ -23,8 +23,10 @@
         "berts_vehicle_pack:reference/laser_bomb_250kg",
         "berts_vehicle_pack:reference/gps_bomb_250kg",
         "berts_vehicle_pack:reference/dumb_bomb_5000kg",
-        "berts_vehicle_pack:reference/kh55_cruise"
-      ]
+        "berts_vehicle_pack:reference/kh55_cruise",
+        "berts_vehicle_pack:reference/dumb_bomb_100kg"
+      ],
+      "MaxPylonMassKg": 1000
     },
     {
       "Id": "wing_2",
@@ -39,8 +41,10 @@
         "berts_vehicle_pack:reference/laser_bomb_250kg",
         "berts_vehicle_pack:reference/gps_bomb_250kg",
         "berts_vehicle_pack:reference/dumb_bomb_5000kg",
-        "berts_vehicle_pack:reference/kh55_cruise"
-      ]
+        "berts_vehicle_pack:reference/kh55_cruise",
+        "berts_vehicle_pack:reference/dumb_bomb_100kg"
+      ],
+      "MaxPylonMassKg": 1000
     },
     {
       "Id": "wing_3",
@@ -55,8 +59,10 @@
         "berts_vehicle_pack:reference/laser_bomb_250kg",
         "berts_vehicle_pack:reference/gps_bomb_250kg",
         "berts_vehicle_pack:reference/dumb_bomb_5000kg",
-        "berts_vehicle_pack:reference/kh55_cruise"
-      ]
+        "berts_vehicle_pack:reference/kh55_cruise",
+        "berts_vehicle_pack:reference/dumb_bomb_100kg"
+      ],
+      "MaxPylonMassKg": 1000
     },
     {
       "Id": "wing_4",
@@ -71,8 +77,10 @@
         "berts_vehicle_pack:reference/laser_bomb_250kg",
         "berts_vehicle_pack:reference/gps_bomb_250kg",
         "berts_vehicle_pack:reference/dumb_bomb_5000kg",
-        "berts_vehicle_pack:reference/kh55_cruise"
-      ]
+        "berts_vehicle_pack:reference/kh55_cruise",
+        "berts_vehicle_pack:reference/dumb_bomb_100kg"
+      ],
+      "MaxPylonMassKg": 1000
     },
     {
       "Id": "wing_5",
@@ -87,8 +95,10 @@
         "berts_vehicle_pack:reference/laser_bomb_250kg",
         "berts_vehicle_pack:reference/gps_bomb_250kg",
         "berts_vehicle_pack:reference/dumb_bomb_5000kg",
-        "berts_vehicle_pack:reference/kh55_cruise"
-      ]
+        "berts_vehicle_pack:reference/kh55_cruise",
+        "berts_vehicle_pack:reference/dumb_bomb_100kg"
+      ],
+      "MaxPylonMassKg": 1000
     },
     {
       "Id": "wing_6",
@@ -103,8 +113,10 @@
         "berts_vehicle_pack:reference/laser_bomb_250kg",
         "berts_vehicle_pack:reference/gps_bomb_250kg",
         "berts_vehicle_pack:reference/dumb_bomb_5000kg",
-        "berts_vehicle_pack:reference/kh55_cruise"
-      ]
+        "berts_vehicle_pack:reference/kh55_cruise",
+        "berts_vehicle_pack:reference/dumb_bomb_100kg"
+      ],
+      "MaxPylonMassKg": 1000
     },
     {
       "Id": "wing_7",
@@ -119,8 +131,10 @@
         "berts_vehicle_pack:reference/laser_bomb_250kg",
         "berts_vehicle_pack:reference/gps_bomb_250kg",
         "berts_vehicle_pack:reference/dumb_bomb_5000kg",
-        "berts_vehicle_pack:reference/kh55_cruise"
-      ]
+        "berts_vehicle_pack:reference/kh55_cruise",
+        "berts_vehicle_pack:reference/dumb_bomb_100kg"
+      ],
+      "MaxPylonMassKg": 1000
     },
     {
       "Id": "wing_8",
@@ -135,7 +149,28 @@
         "berts_vehicle_pack:reference/laser_bomb_250kg",
         "berts_vehicle_pack:reference/gps_bomb_250kg",
         "berts_vehicle_pack:reference/dumb_bomb_5000kg",
-        "berts_vehicle_pack:reference/kh55_cruise"
+        "berts_vehicle_pack:reference/kh55_cruise",
+        "berts_vehicle_pack:reference/dumb_bomb_100kg"
+      ],
+      "MaxPylonMassKg": 1000
+    },
+    {
+      "Id": "internal_bay",
+      "Name": "Bomb bay / internal stores",
+      "Internal": true,
+      "Position": [
+        0,
+        2.5,
+        8.60688
+      ],
+      "MaxPylonMassKg": 5000,
+      "AllowedStores": [
+        "berts_vehicle_pack:reference/dumb_bomb_5000kg",
+        "berts_vehicle_pack:reference/dumb_bomb_250kg",
+        "berts_vehicle_pack:reference/laser_bomb_250kg",
+        "berts_vehicle_pack:reference/gps_bomb_250kg",
+        "berts_vehicle_pack:reference/kh55_cruise",
+        "berts_vehicle_pack:reference/dumb_bomb_100kg"
       ]
     }
   ],
@@ -143,5 +178,6 @@
   "Radar": {
     "Enabled": true,
     "Range": 1000
-  }
+  },
+  "MaxPylonMassKg": 1000
 }

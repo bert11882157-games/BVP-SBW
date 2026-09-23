@@ -1250,6 +1250,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
             define(AIRCRAFT_WRECK_MOTION_Y, 0F)
             define(AIRCRAFT_WRECK_MOTION_Z, 0F)
             define(AIRCRAFT_WRECK_WINGS, -1)
+            define(AIRCRAFT_WRECK_IMPACT_TIME, -1L)
             define(SYMPATHETIC_DETONATED, false)
             define(TURRET_BURNED, false)
             define(HOVER_MODE, false)
@@ -1884,6 +1885,8 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         aircraftWreckMotionY = compound.getFloat("AircraftWreckMotionY").takeIf { it.isFinite() && kotlin.math.abs(it) < 100F } ?: 0F
         aircraftWreckMotionZ = compound.getFloat("AircraftWreckMotionZ").takeIf { it.isFinite() && kotlin.math.abs(it) < 100F } ?: 0F
         aircraftWreckWings = if (compound.contains("AircraftWreckWings")) compound.getInt("AircraftWreckWings").coerceIn(-1, 3) else -1
+        aircraftWreckImpactTime = if (compound.contains("AircraftWreckImpactTime")) compound.getLong("AircraftWreckImpactTime").coerceAtLeast(-1L) else -1L
+        aircraftWreckBounces = compound.getInt("AircraftWreckBounces").coerceIn(0, 3)
         sympatheticDetonated = compound.getBoolean("SympatheticDetonated")
         turretBurned = compound.getBoolean("TurretBurned")
         turretBurnTimer = compound.getInt("TurretBurnTimer")
@@ -1995,6 +1998,8 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         compound.putFloat("AircraftWreckMotionY", aircraftWreckMotionY)
         compound.putFloat("AircraftWreckMotionZ", aircraftWreckMotionZ)
         compound.putInt("AircraftWreckWings", aircraftWreckWings)
+        compound.putLong("AircraftWreckImpactTime", aircraftWreckImpactTime)
+        compound.putInt("AircraftWreckBounces", aircraftWreckBounces)
         compound.putBoolean("SympatheticDetonated", sympatheticDetonated)
         compound.putBoolean("TurretBurned", turretBurned)
         compound.putInt("TurretBurnTimer", turretBurnTimer)
@@ -6700,6 +6705,8 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
             aircraftWreckMotionY = 0F
             aircraftWreckMotionZ = 0F
             aircraftWreckWings = -1
+            aircraftWreckImpactTime = -1L
+            aircraftWreckBounces = 0
             sympatheticDetonated = false
             turretBurned = false
             turretBurnTimer = 0
@@ -6949,7 +6956,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         if (!isInitialized || !usesAircraftTerrainContact()) return null
         val definition = computed().aircraftTerrainContact ?: return null
         return AircraftCollisionSnapshot.create(definition, getVehicleTransform(partialTicks), synchedGearRot,
-            com.atsuishio.superbwarfare.api.vehicle.flight.AircraftWreckBreakup.mask(this))
+            com.atsuishio.superbwarfare.api.vehicle.flight.AircraftWreckBreakup.mask(this), aircraftWreckImpactTime >= 0)
     }
 
     /** UI selection uses physical parts while projectile/module routing keeps its authored API. */
@@ -7262,6 +7269,9 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
     var aircraftWreckMotionY by AIRCRAFT_WRECK_MOTION_Y
     var aircraftWreckMotionZ by AIRCRAFT_WRECK_MOTION_Z
     var aircraftWreckWings by AIRCRAFT_WRECK_WINGS
+    var aircraftWreckImpactTime by AIRCRAFT_WRECK_IMPACT_TIME
+    internal var aircraftWreckBounces = 0
+    internal var aircraftLastWreckBounce = Long.MIN_VALUE
     var sympatheticDetonated by SYMPATHETIC_DETONATED
     var turretBurned by TURRET_BURNED
     var turretBurnTimer by TURRET_BURN_TIMER
@@ -7682,5 +7692,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
             SynchedEntityData.defineId(VehicleEntity::class.java, EntityDataSerializers.FLOAT)
         private val AIRCRAFT_WRECK_WINGS: EntityDataAccessor<Int> =
             SynchedEntityData.defineId(VehicleEntity::class.java, EntityDataSerializers.INT)
+        private val AIRCRAFT_WRECK_IMPACT_TIME: EntityDataAccessor<Long> =
+            SynchedEntityData.defineId(VehicleEntity::class.java, EntityDataSerializers.LONG)
     }
 }
