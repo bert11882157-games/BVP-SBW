@@ -1,10 +1,10 @@
 {
   "schema": 1,
   "policyVersion": 4,
-  "label": "aircraft-fixes-20260923-r3",
+  "label": "atgm-wire-sag-20260923-r1",
   "status": "release-candidate",
-  "createdAt": "2026-09-23T21:10:12.833Z",
-  "treeSha256": "db9af7c6be6bc7f4374deb313d3e28f4a83b03d2455bc7bddd4bbf84b1e3442a",
+  "createdAt": "2026-09-23T22:49:09.485Z",
+  "treeSha256": "f98e34918c5b33ef75faf8494f0ff385dba453d1f05464327d9cccd72527e14b",
   "files": [
     {
       "path": ".editorconfig",
@@ -12163,8 +12163,8 @@
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/aircraft_stores/hot3_uht.json",
-      "size": 3085,
-      "sha256": "33e3c828aed798e6625777b972fca8e8851afedb0a4d929078ceb6d6bc90d88a"
+      "size": 3178,
+      "sha256": "8b4e1ad3b3d4bbb6ad3c638795560f8b33711234f8de3c9509338be6190fe9af"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/aircraft_stores/kh25l.json",
@@ -12208,8 +12208,8 @@
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/begleitpanzer/bgm71a_tow.json",
-      "size": 2719,
-      "sha256": "368f069b1698ea1cb2895fed9c640a90530f3cc93c431369ed069249d7f544e1"
+      "size": 2812,
+      "sha256": "82c98b838133d736feb3bd46f6257d23397e26546a728a42cd7bec7e76013c74"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/begleitpanzer/bofors_57_ap_t.json",
@@ -12238,8 +12238,8 @@
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/bmd_1/9m14.json",
-      "size": 2716,
-      "sha256": "a70d77d3e68208f8d1fd3213d27c083712be6da3586602a7b2ed4222283ac73b"
+      "size": 2809,
+      "sha256": "1c06dd81782929404881cfcad2dab1f181cd3d0b101b24caeb7e0b3fd2537ca1"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/bmd_1/og9.json",
@@ -12288,8 +12288,8 @@
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/bmp2/missile/default.json",
-      "size": 2434,
-      "sha256": "e336d39ed49599e5092d6df0a40cc7180f17acde4d581ddbe544ebf32c78ab66"
+      "size": 2527,
+      "sha256": "6475cc7b1cc5d646a95a2fed70f3d52cfce81abe317cc2b9e42b10ba2b830780"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/bmp2m/cannon/ammo_00_3ubr8_apds.json",
@@ -12428,8 +12428,8 @@
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/bmp_1am/missile/default.json",
-      "size": 2696,
-      "sha256": "e3790f1f03031d93bc48156e3ed3c9385418d1dea7d2592fd7063f07fe8b8fb4"
+      "size": 2789,
+      "sha256": "124e198ac1cbd410157a8454d1ba28e80fda19e15f52bbfb5b73535f84cfd4ac"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/bmpt/cannon/ammo_00_3ubr8_apds.json",
@@ -13503,8 +13503,8 @@
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/m2_bradley/missile/default.json",
-      "size": 2691,
-      "sha256": "c30254384511d60a1238b45d0c06f795153e1ee3044fc03b7c0f75d21daac359"
+      "size": 2784,
+      "sha256": "32806d1432d9e746b9c47ba8681bf155341ad53e7d5980ea9adb4628ffc547af"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/m41/cannon/ammo_00_m331a2_apds.json",
@@ -13718,8 +13718,8 @@
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/marder_1a2/missile/default.json",
-      "size": 2691,
-      "sha256": "4fbd13eabd54403132a3017d3d2734e7468697e95214e590dff2243c23aad539"
+      "size": 2784,
+      "sha256": "d10685f323247a5e870aa38011b09735691fa48eac39a8d12853d20307766cd1"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/marder_1a5/cannon/ammo_00_dm63_apds.json",
@@ -13758,13 +13758,13 @@
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/marder_1a5/missile/ammo_00_milan_atgm.json",
-      "size": 2742,
-      "sha256": "f06a2cccdf8f1cd21ed928c9aba1db13b5eadb337ea1d9e94a8e8c7cff07dd53"
+      "size": 2835,
+      "sha256": "7f506dff60e74c3028fbe6dd1449609b99315de44cb4a586db8f54a1634f30bd"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/marder_1a5/missile/default.json",
-      "size": 2742,
-      "sha256": "f06a2cccdf8f1cd21ed928c9aba1db13b5eadb337ea1d9e94a8e8c7cff07dd53"
+      "size": 2835,
+      "sha256": "7f506dff60e74c3028fbe6dd1449609b99315de44cb4a586db8f54a1634f30bd"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/mbt_70/cannon/ammo_00_xm578e1_apfsds.json",
@@ -13988,18 +13988,18 @@
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/milan_tripod/cannon/ammo_00_milan_atgm.json",
-      "size": 2463,
-      "sha256": "f4c7762701b20cef2b7a260c67058e67693e216ee4a9f8c0c5e6b3995d67de1a"
+      "size": 2556,
+      "sha256": "c8e99fc437bca62256f1c104d7a917c45df56ffd1a8b5141befbc24039886ab2"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/milan_tripod/cannon/ammo_01_milan_3_atgm.json",
-      "size": 2465,
-      "sha256": "01fe4b646634d3870dd61bca1150a238ff3bb57214400c27bb6a084588843b23"
+      "size": 2558,
+      "sha256": "54b1a627ae85923b770e10ea05dd8d551e998b36d5dc226a689bb737ba69970d"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/milan_tripod/cannon/default.json",
-      "size": 2463,
-      "sha256": "f4c7762701b20cef2b7a260c67058e67693e216ee4a9f8c0c5e6b3995d67de1a"
+      "size": 2556,
+      "sha256": "c8e99fc437bca62256f1c104d7a917c45df56ffd1a8b5141befbc24039886ab2"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/panther_g/cannon/ammo_00_pzgr39_42_apcbc.json",
@@ -14778,18 +14778,18 @@
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/tow_tripod/cannon/ammo_00_bgm71a_tow.json",
-      "size": 2690,
-      "sha256": "41b25dd20712f489021a720aba089cb9b355ea095fb5edebbda38ade58540f71"
+      "size": 2783,
+      "sha256": "c0780a199ffb998dc513f7f966dac2ef89f47e99d06c037d918359fa49a8ba72"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/tow_tripod/cannon/ammo_01_bgm71e_tow.json",
-      "size": 2445,
-      "sha256": "396234752f8c23bc3633c0c4794690ab1aeec13fd7d696396058f0bcf44f1bd8"
+      "size": 2538,
+      "sha256": "1d830d67b117eb99f3860f5962720c604a4df6abc5d3cbebe79a66635359ae36"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/tow_tripod/cannon/default.json",
-      "size": 2690,
-      "sha256": "41b25dd20712f489021a720aba089cb9b355ea095fb5edebbda38ade58540f71"
+      "size": 2783,
+      "sha256": "c0780a199ffb998dc513f7f966dac2ef89f47e99d06c037d918359fa49a8ba72"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/toyota_jihad_bmp1/bmp1cannon/ammo_00_pg9.json",
@@ -14903,8 +14903,8 @@
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/type_89_ifv/type79_atgm.json",
-      "size": 2718,
-      "sha256": "75a77800f031dffee312e4584356d458cdd4c4f195eb7497adf6d88190c27cdf"
+      "size": 2811,
+      "sha256": "c76884894e2ee8fb2bbb528b7798c467de22f9189c59c5ee06c51e8ee132398a"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/type_89_ifv/type_89_type74_762_ap_t.json",
@@ -16398,8 +16398,8 @@
     },
     {
       "path": "bvp/src/main/java/com/yourname/berts_vehicle_pack/client/particle/BvpImpactSmokeParticle.java",
-      "size": 2357,
-      "sha256": "e2f8a88045d09d0b1d0b56cbe4635daab668b5552c371576342fccc1aed155df"
+      "size": 2683,
+      "sha256": "c23fee626655fcfb3be5c0d6c9528488968ee76c27bdca2e5718cbdd69465e95"
     },
     {
       "path": "bvp/src/main/java/com/yourname/berts_vehicle_pack/client/particle/BvpImpactSparkParticle.java",
@@ -16508,8 +16508,8 @@
     },
     {
       "path": "bvp/src/main/java/com/yourname/berts_vehicle_pack/client/renderer/BvpProjectileTrailRenderer.java",
-      "size": 30218,
-      "sha256": "920f0e5d1f19a11b95a663de9245b87df820936b705a327843e53dc60c61584d"
+      "size": 30333,
+      "sha256": "a3f9462d0067e214e355640a46e1f867049ea7277338929f306ffe11cfb54f74"
     },
     {
       "path": "bvp/src/main/java/com/yourname/berts_vehicle_pack/client/renderer/BvpSpinningProjectileRenderer.java",
@@ -28178,8 +28178,8 @@
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/api/effect/MissilePresentation.kt",
-      "size": 6147,
-      "sha256": "f80125e7f91bce88e9e9efd5bed0c79a6e3536600fd1814e042f71fb0b298c6f"
+      "size": 7910,
+      "sha256": "7232affc8bdcc923ca0818e850d9ab51968ab545fcc72c04d4fca1d0baf60b09"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/api/event/LoadingDataEvent.kt",
@@ -28258,8 +28258,8 @@
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/api/projectile/GuidedMissileGuidance.kt",
-      "size": 6098,
-      "sha256": "3c55117c9b298cf55377b1b0a29df8e7d8cb2c84c5dedbfcebc601dcfdff2650"
+      "size": 6738,
+      "sha256": "c037433fa2966d706ad18e2e66b387b357b0a4f2304ec2287c8013255c794289"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/api/projectile/GuidedPropulsionProfile.kt",
@@ -30153,8 +30153,8 @@
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/client/particle/CustomCloudParticle.kt",
-      "size": 3198,
-      "sha256": "b9357a3da1f5533dfc947170951fd2f52fc2dc0338049e57bc3dc9b0a8a68ea4"
+      "size": 3063,
+      "sha256": "beb27ba6a348fdcd4ec8428cbb209f24ccc4d9bb7556a38be12857e3a863561d"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/client/particle/CustomSmokeOption.kt",
@@ -30165,6 +30165,11 @@
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/client/particle/CustomSmokeParticle.kt",
       "size": 2252,
       "sha256": "5f0cb1b13d533644d53e1710edde52b1b773bc07d1a0003b2792cd5056c89d5b"
+    },
+    {
+      "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/client/particle/DistantParticleLight.kt",
+      "size": 866,
+      "sha256": "f082c4c500e4a9b580ee3714c4a7a4bab8dc07d4b6e1083c35295832d0aebe80"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/client/particle/ExplosionBurstClient.kt",
@@ -31723,8 +31728,8 @@
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/entity/projectile/WireGuideMissileEntity.kt",
-      "size": 25942,
-      "sha256": "cc8330953cfa80a64b95adc574896bfd1cdf23da3b93ce39537872785fe76864"
+      "size": 26880,
+      "sha256": "bda46b423ae2e426d8c7d2c6a7271448c6c540025c916822a213defa9fef8974"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/A10Entity.kt",
@@ -45897,6 +45902,11 @@
       "sha256": "f21984a0c40feb9e0d88007e395251d8a1477b1ba9b7da6714dfd39f9da715e3"
     },
     {
+      "path": "sbw/src/test/kotlin/com/atsuishio/superbwarfare/api/effect/MissileWirePolicyTest.kt",
+      "size": 783,
+      "sha256": "38a8d16e1373e33f223efd160024cba687c8efea5fb00136ecbc2afacc421087"
+    },
+    {
       "path": "sbw/src/test/kotlin/com/atsuishio/superbwarfare/api/projectile/AircraftWarheadPolicyTest.kt",
       "size": 2747,
       "sha256": "56baef3ccee6c68b7acb91fb6954277791fcb6e5c056f7f1084b6c766319b8ec"
@@ -45938,8 +45948,8 @@
     },
     {
       "path": "sbw/src/test/kotlin/com/atsuishio/superbwarfare/api/projectile/GuidedMissileGuidanceTest.kt",
-      "size": 6208,
-      "sha256": "57b041821915b1a5712bc07482e4a055991d2fc4ffc5ad34fb3d17ee81d08b83"
+      "size": 7200,
+      "sha256": "8ccaae0519bc1a29bcc11a75b3a83f5cf44f303bfe9022f516dc3311620e4e7a"
     },
     {
       "path": "sbw/src/test/kotlin/com/atsuishio/superbwarfare/api/projectile/GuidedPropulsionAcceptance.kt",
@@ -46669,21 +46679,21 @@
   ],
   "release": {
     "schema": 1,
-    "buildRecordSha256": "fc5aa2174b371e6103edf3a166fad56fc44a45f25cf8c5e4f343f02b37ea6e8c",
+    "buildRecordSha256": "85f976fd5a16a87ac5035a334b63aafb82c9b70da9badbc0a651dfb90b2d1662",
     "artifacts": [
       {
         "id": "bvp",
         "version": "0.1.0",
         "filename": "berts_vehicle_pack-0.1.0.jar",
-        "size": 233810669,
-        "sha256": "c62c1f8d6ce035646b2b7651cd1dc6f54635fa0ff7db61fcf48b447615358f37"
+        "size": 233811282,
+        "sha256": "e35dd4dc4ebcda853fd859fcb2041c77042e5a41fc9c4771a8f44f56e8522640"
       },
       {
         "id": "sbw",
         "version": "0.8.9-bvp.1",
         "filename": "superbwarfare-0.8.9-bvp.1-mc1.20.1-6effe43-all.jar",
-        "size": 36034348,
-        "sha256": "3a59335a63b5ce51c83b418b97cd26a8feed3d1367664f3ea71e970b5971221b"
+        "size": 36037934,
+        "sha256": "1f02b0b380522780164603494109dc54aa72e23ede303077a1e38393bede1fa3"
       }
     ],
     "dependencies": [
@@ -47577,11 +47587,11 @@
         "sha256": "ed24dc77caa01a715021b0f47217ba46296949ea6b92046986c1be0573f0a93a"
       },
       {
-        "id": "net.minecraftforge:forge:1.20.1-47.2.0_mapped_parchment_2023.08.13-1.20.1_at_9416a54543054a131d42d6dab91b05f8d420bf85:777d4982606f",
+        "id": "net.minecraftforge:forge:1.20.1-47.2.0_mapped_parchment_2023.08.13-1.20.1_at_9416a54543054a131d42d6dab91b05f8d420bf85:4ba75e2eeacb",
         "version": "1.20.1-47.2.0_mapped_parchment_2023.08.13-1.20.1_at_9416a54543054a131d42d6dab91b05f8d420bf85",
         "filename": "forge-1.20.1-47.2.0_mapped_parchment_2023.08.13-1.20.1.jar",
         "size": 19157980,
-        "sha256": "777d4982606fe6f2de14e00de6a3897130e1ebc4cb8415fa6640d5dfc16bc33c"
+        "sha256": "4ba75e2eeacb0d415d006c31a3ac6ccdce4ced6d294f7b01fecbfe897f37f9e5"
       },
       {
         "id": "net.minecraftforge:forgespi:7.0.1:2298eaba25d0",
@@ -48116,11 +48126,11 @@
         "sha256": "ca15a907e4d1f6b38cefed51d7df96a83347dcfb0bc8ced53111519e991d887d"
       },
       {
-        "id": "sbw-mapped-api:0.8.9-bvp.1-mc1.20.1-6effe43:bf2755f82a8e",
+        "id": "sbw-mapped-api:0.8.9-bvp.1-mc1.20.1-6effe43:1138c97d4ce9",
         "version": "0.8.9-bvp.1-mc1.20.1-6effe43",
         "filename": "superbwarfare-mapped-api.jar",
-        "size": 8888343,
-        "sha256": "bf2755f82a8e56ac2e672d5fd432c2fb667dabaccd83383faabd9575578471f2"
+        "size": 8891877,
+        "sha256": "1138c97d4ce949136808ea338a6ded359d49495658f719d3ffcb2ae8f87d2d12"
       },
       {
         "id": "sbwmeshloader-mapped:0.1.1:4dc9ededeb7e",

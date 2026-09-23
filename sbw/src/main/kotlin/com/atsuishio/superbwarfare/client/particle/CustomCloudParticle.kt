@@ -2,8 +2,6 @@ package com.atsuishio.superbwarfare.client.particle
 
 import net.minecraft.client.multiplayer.ClientLevel
 import net.minecraft.client.particle.*
-import net.minecraft.client.renderer.LevelRenderer
-import net.minecraft.core.BlockPos
 import net.minecraftforge.api.distmarker.Dist
 import net.minecraftforge.api.distmarker.OnlyIn
 import kotlin.math.max
@@ -30,6 +28,7 @@ open class CustomCloudParticle protected constructor(
 ) : TextureSheetParticle(world, x, y, z) {
     protected var cooldown: Boolean
     protected var light: Boolean
+    private val distantLight = DistantParticleLight()
 
     @OnlyIn(Dist.CLIENT)
     class Provider(private val spriteSet: SpriteSet) : ParticleProvider<CustomCloudOption> {
@@ -82,8 +81,7 @@ open class CustomCloudParticle protected constructor(
     }
 
     public override fun getLightColor(partialTick: Float): Int {
-        val blockpos = BlockPos.containing(this.x, this.y + 1, this.z)
-        val lightLevel = if (this.level.isLoaded(blockpos)) LevelRenderer.getLightColor(this.level, blockpos) else 0
+        val lightLevel = distantLight.sample(this.level, this.x, this.y + 1, this.z)
         return if (light) 15728880 else lightLevel
     }
 

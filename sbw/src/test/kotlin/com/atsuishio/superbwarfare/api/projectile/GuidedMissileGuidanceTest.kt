@@ -7,16 +7,33 @@ import org.junit.jupiter.api.Test
 import kotlin.math.acos
 
 class GuidedMissileGuidanceTest {
-    @Test fun spinInstabilityStaysTinyWithoutChangingRelativeSpeed() {
+    @Test fun speedDependentWobbleCannotAccumulateHeadingOrChangeRelativeSpeed() {
         val inherited = Vec3(1.0, -0.3, 0.4)
-        val initial = Vec3(0.0, 0.0, 6.0)
-        var velocity = initial.add(inherited)
-        for (age in 1..400) {
-            velocity = GuidedMissileGuidance.spinPerturbation(velocity, inherited, age)
-            val relative = velocity.subtract(inherited)
-            assertEquals(6.0, relative.length(), 1e-10)
-            assertTrue(angle(initial, relative) < 0.10)
+        val peaks = mutableListOf<Double>()
+        for (speed in listOf(2.0, 4.0, 6.0)) {
+            val initial = Vec3(0.0, 0.0, speed)
+            var velocity = initial.add(inherited)
+            var offset = Vec3.ZERO
+            var position = Vec3.ZERO
+            var peak = 0.0
+            for (age in 1..680) {
+                val clean = GuidedMissileGuidance.removeSpinPerturbation(velocity, inherited, offset)
+                assertEquals(0.0, clean.subtract(inherited).subtract(initial).length(), 1e-9)
+                velocity = GuidedMissileGuidance.spinPerturbation(clean, inherited, age)
+                offset = velocity.subtract(clean)
+                val relative = velocity.subtract(inherited)
+                position = position.add(relative)
+                assertEquals(speed, relative.length(), 1e-10)
+                peak = maxOf(peak, angle(initial, relative))
+                assertTrue(peak < 1.0, "wobble must remain aimable")
+                assertTrue(position.horizontalDistance() > 0)
+                assertTrue(kotlin.math.abs(position.x) < 0.3 && kotlin.math.abs(position.y) < 0.4,
+                    "oscillation must not walk away from the firing line")
+            }
+            peaks.add(peak)
         }
+        assertTrue(peaks[0] > peaks[1] && peaks[1] > peaks[2])
+        assertTrue(peaks[0] > 0.7 && peaks[2] < 0.31)
     }
     private val profile = GuidedPropulsionProfile(0.525, 2.1, 0.02625, 60, 24.0, 12)
     private fun angle(a: Vec3, b: Vec3): Double =

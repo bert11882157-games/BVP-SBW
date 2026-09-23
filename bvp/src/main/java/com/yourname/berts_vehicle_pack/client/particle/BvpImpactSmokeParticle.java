@@ -18,6 +18,11 @@ public final class BvpImpactSmokeParticle extends BvpAnimatedParticle {
     }
     private float diameter = 1.0f;
     private final boolean wreck;
+    private final com.atsuishio.superbwarfare.client.particle.DistantParticleLight distantLight =
+            new com.atsuishio.superbwarfare.client.particle.DistantParticleLight();
+    @Override public int m_6355_(float partialTick) {
+        return distantLight.sample(f_107208_, f_107212_, f_107213_ + 1, f_107214_);
+    }
     public void setDiameter(float diameter) { this.diameter = Math.max(.01f, diameter); updateParticle(); }
     private BvpImpactSmokeParticle(ClientLevel level, double x, double y, double z,
             double vx, double vy, double vz, SpriteSet sprites, boolean wreck) {
