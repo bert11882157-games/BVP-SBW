@@ -413,7 +413,7 @@ object AircraftArmamentManager {
                         for (k in c.allKeys) j.addProperty(k, c.getInt(k)) }
                     val applyBody = JsonObject().also { it.addProperty("Revision", equipment(vehicle).getLong("Revision"))
                         it.add("Selections", choices); it.add("Counts", counts) }
-                    apply(vehicle, applyBody); publish(vehicle); reply(player, lease, message = "Preset equipped.")
+                    apply(vehicle, applyBody, savedPreset = true); publish(vehicle); reply(player, lease, message = "Preset equipped.")
                 }
                 "DELETE_PRESET" -> { presets(player, vehicle).remove(presetName(body)); reply(player, lease, message = "Preset deleted.") }
                 "POD" -> {
@@ -443,7 +443,8 @@ object AircraftArmamentManager {
         require(name.length in 1..32 && name.none { it.isISOControl() }) { "Use a preset name of 1–32 characters." }
         return name
     }
-    private fun validateSelections(vehicle: VehicleEntity, choices: JsonObject?, rawCounts: JsonObject?): CompoundTag {
+    private fun validateSelections(vehicle: VehicleEntity, choices: JsonObject?, rawCounts: JsonObject?,
+                                   savedPreset: Boolean = false): CompoundTag {
         require(choices != null && choices.size() <= 16) { "Invalid loadout." }
         val available = mounts(definition(vehicle)!!).associateBy { it["Id"].asString }
         val nbt = CompoundTag()
@@ -455,14 +456,20 @@ object AircraftArmamentManager {
             nbt.putString(key, id)
         }
         val definition = definition(vehicle)!!
+        val currentlySelected = selection(vehicle)
         val counts = CompoundTag()
         require(rawCounts == null || rawCounts.entrySet().all { it.key in nbt.allKeys }) { "Count without equipped store." }
         for (key in nbt.allKeys) {
             val store = AircraftArmamentRegistry.stores[ResourceLocation(nbt.getString(key))]!!
-            val count = rawCounts?.get(key)?.let {
+            val requestedCount = rawCounts?.get(key)?.let {
                 require(it.isJsonPrimitive && it.asJsonPrimitive.isNumber) { "Invalid rack quantity." }
                 it.asBigDecimal.intValueExact()
-            } ?: 1
+            }
+            val authoredCount = store["FixedRackCount"]?.asInt
+            val count = if (savedPreset) (requestedCount ?: authoredCount ?: 1).also {
+                require(authoredCount == null || it == authoredCount) { "Saved rack no longer matches its fixed store." }
+            } else AircraftPylonRacks.fixedSelectionCopies(currentlySelected[key]?.asString,
+                nbt.getString(key), rackCount(vehicle, key), requestedCount, authoredCount)
             require(count in 1..AircraftPylonRacks.maxCopies(definition, available.getValue(key), store)) { "Rack limit exceeded on $key." }
             val pylonMass = (store["MassKg"]?.asDouble ?: 0.0) * (store["Capacity"]?.asInt ?: 1) * count
             require(pylonMass <= (available.getValue(key)["MaxPylonMassKg"]?.asDouble ?:
@@ -485,11 +492,11 @@ object AircraftArmamentManager {
         require(mass <= limit + 1.0e-6) { "Payload ${mass.toInt()} kg exceeds maximum ${limit.toInt()} kg." }
         return validated
     }
-    private fun apply(vehicle: VehicleEntity, body: JsonObject) {
+    private fun apply(vehicle: VehicleEntity, body: JsonObject, savedPreset: Boolean = false) {
         require(vehicle.onGround() && vehicle.deltaMovement.lengthSqr() <= 0.0025) { "Stop the aircraft on the ground before fitting weapons." }
         val state = equipment(vehicle)
         require(body["Revision"]?.asLong == state.getLong("Revision")) { "Loadout changed; reopen the editor." }
-        val choices = validateSelections(vehicle, body.getAsJsonObject("Selections"), body.getAsJsonObject("Counts"))
+        val choices = validateSelections(vehicle, body.getAsJsonObject("Selections"), body.getAsJsonObject("Counts"), savedPreset)
         state.put("Selections", choices.getCompound("Selections")); state.put("Counts", choices.getCompound("Counts")); state.putLong("Revision", state.getLong("Revision") + 1)
         state.remove("Fired"); state.remove("LastFire"); state.remove("GroupCursor"); AircraftMissileLauncher.clear(vehicle)
         AircraftRocketPodOrder.clear(vehicle); selectGuns(vehicle)

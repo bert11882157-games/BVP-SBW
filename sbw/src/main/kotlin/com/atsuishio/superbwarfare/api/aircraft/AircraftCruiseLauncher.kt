@@ -25,6 +25,8 @@ object AircraftCruiseLauncher {
         val profile = CompoundTag()
         for (key in listOf("InitialSpeed", "MaxSpeed", "AccelerationPerTick", "TurnDegreesPerSecond", "Damage", "BlastRadius", "Range"))
             profile.putDouble(key, flight[key].asDouble)
+        if (store["Model"]?.asString == "berts_vehicle_pack:custom_geo/aircraft_stores/agm84k_slam_er.geo.json")
+            profile.putString("VisualModel", "agm84k_slam_er")
         val gps = AircraftBombTargeting.gpsTarget(vehicle)?.let { BlockPos.containing(it) }
         launchMethod?.invoke(null, vehicle, player, Vec3(origin.x, origin.y, origin.z),
             Vec3(heading.x, heading.y, heading.z), gps, profile) == true

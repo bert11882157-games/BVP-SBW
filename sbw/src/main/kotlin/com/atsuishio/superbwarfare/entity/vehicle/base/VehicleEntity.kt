@@ -1884,8 +1884,9 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         aircraftWreckMotionX = compound.getFloat("AircraftWreckMotionX").takeIf { it.isFinite() && kotlin.math.abs(it) < 100F } ?: 0F
         aircraftWreckMotionY = compound.getFloat("AircraftWreckMotionY").takeIf { it.isFinite() && kotlin.math.abs(it) < 100F } ?: 0F
         aircraftWreckMotionZ = compound.getFloat("AircraftWreckMotionZ").takeIf { it.isFinite() && kotlin.math.abs(it) < 100F } ?: 0F
-        aircraftWreckWings = if (compound.contains("AircraftWreckWings")) compound.getInt("AircraftWreckWings").coerceIn(-1, 3) else -1
-        aircraftWreckImpactTime = if (compound.contains("AircraftWreckImpactTime")) compound.getLong("AircraftWreckImpactTime").coerceAtLeast(-1L) else -1L
+        // Retired breakup state must not hide wings or shrink collision on existing saves.
+        aircraftWreckWings = 0
+        aircraftWreckImpactTime = -1L
         aircraftWreckBounces = compound.getInt("AircraftWreckBounces").coerceIn(0, 3)
         sympatheticDetonated = compound.getBoolean("SympatheticDetonated")
         turretBurned = compound.getBoolean("TurretBurned")
@@ -6956,7 +6957,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         if (!isInitialized || !usesAircraftTerrainContact()) return null
         val definition = computed().aircraftTerrainContact ?: return null
         return AircraftCollisionSnapshot.create(definition, getVehicleTransform(partialTicks), synchedGearRot,
-            com.atsuishio.superbwarfare.api.vehicle.flight.AircraftWreckBreakup.mask(this), aircraftWreckImpactTime >= 0,
+            0, false,
             if (definition.bodyVolumes().any { it.bone != "hull" })
                 com.atsuishio.superbwarfare.api.aircraft.AircraftSurfaceModules.boneMatrices(this, partialTicks) else null)
     }

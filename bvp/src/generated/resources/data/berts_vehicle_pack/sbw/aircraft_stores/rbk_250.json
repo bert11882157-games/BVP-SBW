@@ -1,0 +1,29 @@
+{
+  "Schema": 1,
+  "Name": "RBK-250 · cluster bomb",
+  "Category": "BOMB",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/rbk_250.geo.json",
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/rbk_250.png",
+  "Scale": 1,
+  "Capacity": 1,
+  "MassKg": 250,
+  "Bomb": {
+    "Mode": "DUMB",
+    "Gravity": 0.08,
+    "DragMultiplier": 1,
+    "TurnDegreesPerTick": 0,
+    "BlastRadius": 0,
+    "BlastDamage": 0,
+    "Cluster": {
+      "Count": 12,
+      "ReleaseHeight": 12,
+      "SpreadSpeed": 0.35,
+      "BombletDamage": 80,
+      "BombletRadius": 1.5,
+      "LifetimeTicks": 100
+    }
+  },
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_bombs/rbk_250",
+  "AmmoItem": "superbwarfare:small_freefall_bomb",
+  "MaxPerPylon": 1
+}

@@ -1,6 +1,6 @@
 {
   "Schema": 1,
-  "Name": "AGM-84E · cruise",
+  "Name": "AGM-84K SLAM-ER · cruise",
   "Category": "CRUISE",
   "Capacity": 1,
   "MassKg": 700,
@@ -13,5 +13,8 @@
     "BlastRadius": 7,
     "Range": 1000
   },
-  "AmmoItem": "superbwarfare:cruise_missile"
+  "AmmoItem": "superbwarfare:cruise_missile",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/agm84k_slam_er.geo.json",
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/agm84k_slam_er.png",
+  "Scale": 1
 }

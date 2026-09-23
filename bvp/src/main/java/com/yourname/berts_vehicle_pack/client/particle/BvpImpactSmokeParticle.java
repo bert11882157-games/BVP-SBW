@@ -16,12 +16,12 @@ public final class BvpImpactSmokeParticle extends BvpAnimatedParticle {
         if(wreck ? wreckCount++>=24 : impactCount++>=64)return null;
         return new BvpImpactSmokeParticle(level,x,y,z,vx,vy,vz,sprites,wreck);
     }
-    private float diameter = .55f;
+    private float diameter = 1.0f;
     private final boolean wreck;
     public void setDiameter(float diameter) { this.diameter = Math.max(.01f, diameter); updateParticle(); }
     private BvpImpactSmokeParticle(ClientLevel level, double x, double y, double z,
             double vx, double vy, double vz, SpriteSet sprites, boolean wreck) {
-        super(level, x, y, z, vx, vy, vz, wreck ? 50 : 18, sprites);
+        super(level, x, y, z, vx, vy, vz, wreck ? 50 : 28, sprites);
         this.wreck = wreck;
         f_172258_ = .96f;
         f_107226_ = wreck ? -.025f : -.008f;
@@ -31,7 +31,7 @@ public final class BvpImpactSmokeParticle extends BvpAnimatedParticle {
         float t = Math.min(1, f_107224_ / (float) f_107225_);
         f_107663_ = diameter * .5f * (.65f + t * 1.25f);
         f_107227_ = f_107228_ = f_107229_ = wreck ? .23f : .48f;
-        f_107230_ = (wreck ? .64f : .48f) * (1 - t) * (1 - t);
+        f_107230_ = (wreck ? .64f : .60f) * (1 - t) * (1 - t);
     }
     @Override public ParticleRenderType m_7556_() { return ParticleRenderType.f_107431_; }
     public static final class Provider extends BvpAnimatedParticle.Provider {

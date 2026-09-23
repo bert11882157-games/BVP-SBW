@@ -5,68 +5,25 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
 class AircraftWreckFlightTest {
-    @Test fun retainedFuselageHasTwoShallowBouncesThenKeepsSlidingMomentum() {
-        var velocity = Vec3(3.0,-4.0,1.0)
-        repeat(2) { bounce ->
-            val next=AircraftFuselageWreck.bounce(velocity,bounce)
-            assertTrue(next.y in .08.. .26)
-            assertTrue(next.horizontalDistance() < velocity.horizontalDistance())
-            velocity=Vec3(next.x,-next.y,next.z)
-        }
-        val slide=AircraftFuselageWreck.bounce(velocity,2)
-        assertEquals(0.0,slide.y)
-        assertTrue(slide.horizontalDistance()>.5)
-        assertTrue(slide.horizontalDistance()<velocity.horizontalDistance())
-    }
-    @Test fun delayedWingLossIsBoundedSingleSidedAndDoesNotRestartAfterImpact() {
+    @Test fun breakupIsDisabledForEveryWreckIdentity() {
         for (seed in 0L..1000L) {
-            val id = java.util.UUID(seed, seed * 193)
-            val delay = AircraftWreckBreakup.delayTicks(id)
-            assertTrue(delay in 40..200)
-            if (AircraftWreckBreakup.mask(id) != 0) continue
-            assertEquals(0, AircraftWreckBreakup.timedMask(id, delay - 1L, false))
-            assertTrue(AircraftWreckBreakup.timedMask(id, delay.toLong(), false) in 1..2)
-            assertEquals(0, AircraftWreckBreakup.timedMask(id, delay + 20L, true))
+            assertEquals(0, AircraftWreckBreakup.mask(java.util.UUID(seed, seed * 193)))
         }
     }
-    @Test fun survivingWingLossIgnoresPilotButKeepsAircraftHealthOutsideFlightOwnership() {
-        val live = input().copy(wreck = false)
-        val a = AircraftWreckFlightStrategy.step(live, 40, 1, false, detachedWings = 1)
-        val b = AircraftWreckFlightStrategy.step(live.copy(pitchInput = 0.0, rollInput = 0.0,
-            throttleInput = 0.0, occupied = false), 40, 1, false, detachedWings = 1)
-        assertEquals(a, b)
-        assertTrue(a.motion.horizontalDistance() > 2.0)
-    }
-    @Test fun wingLossDistributionAndServerRollAgree() {
-        val distribution = (0..99).map(AircraftWreckBreakup::outcome).groupingBy { it }.eachCount()
-        assertEquals(mapOf(1 to 25, 2 to 25, 3 to 20, 0 to 30), distribution)
-        val state = input()
-        val left = AircraftWreckFlightStrategy.step(state, 45, 1, false, detachedWings = 1)
-        val right = AircraftWreckFlightStrategy.step(state, 45, 1, false, detachedWings = 2)
-        assertTrue(net.minecraft.util.Mth.wrapDegrees(left.bodyRoll - state.bodyRollDegrees) > 5)
-        assertTrue(net.minecraft.util.Mth.wrapDegrees(right.bodyRoll - state.bodyRollDegrees) < -5)
-        assertEquals(left.motion, right.motion, "roll cannot erase world-space inertia")
-        var both = state
-        repeat(120) { tick ->
-            val result = AircraftWreckFlightStrategy.step(both, tick, 1, false, detachedWings = 3)
-            both = both.copy(previousMotion = result.motion, bodyPitchDegrees = result.bodyPitch.toDouble(),
-                bodyRollDegrees = result.bodyRoll.toDouble(), bodyYawDegrees = result.bodyYaw.toDouble())
-        }
-        assertTrue(both.bodyPitchDegrees > 75)
-        assertTrue(both.previousMotion.y < -5)
-    }
-    @Test fun detachedSideDropsInTheActualHullFrameAndLiveWheelContactRetainsMomentum() {
-        for (yaw in listOf(-175.0, 0.0, 90.0)) for (side in 1..2) {
-            val state = input().copy(wreck = false, bodyYawDegrees = yaw,
-                bodyPitchDegrees = 0.0, bodyRollDegrees = 0.0, onGround = true)
-            val result = AircraftWreckFlightStrategy.step(state, 45, 1, false, detachedWings = side)
-            val pose = com.atsuishio.superbwarfare.api.vehicle.pose.VehiclePoseSnapshot(
-                0, 0, yaw.toFloat(), result.bodyPitch, result.bodyRoll, 0f, 0f, 0.0, 0.0, 0.0, null)
-            val frame = pose.applyBaseAttitude(org.joml.Matrix4d().rotateY(Math.toRadians(-yaw)))
-            val lost = frame.transformPosition(org.joml.Vector3d(if (side == 1) -3.0 else 3.0, 0.0, 0.0))
-            val kept = frame.transformPosition(org.joml.Vector3d(if (side == 1) 3.0 else -3.0, 0.0, 0.0))
-            assertTrue(lost.y < kept.y, "missing wing must fall in hull coordinates")
-            assertTrue(result.motion.horizontalDistance() > 2.0, "first wheel contact must not stop a live crash")
+    @Test fun wreckRetainsAtLeastNinetyPercentForwardMomentumForTenSecondsAtDifferentSpeeds() {
+        for (speed in listOf(0.1, 1.0, 5.5)) {
+            var state = input(Vec3(speed, 0.0, -speed))
+            val initial = state.previousMotion
+            repeat(200) { tick ->
+                val result = AircraftWreckFlightStrategy.step(state, tick, -1, false)
+                state = state.copy(previousMotion = result.motion, bodyYawDegrees = result.bodyYaw.toDouble(),
+                    bodyPitchDegrees = result.bodyPitch.toDouble(), bodyRollDegrees = result.bodyRoll.toDouble())
+            }
+            val retained = state.previousMotion.horizontalDistance() / initial.horizontalDistance()
+            assertTrue(retained in 0.90..0.92, "airborne death must coast, with gentle drag")
+            assertEquals(-1.0, state.previousMotion.z / state.previousMotion.x, 1e-10,
+                "the visual spin must not redirect forward momentum")
+            assertTrue(state.previousMotion.y < 0.0, "gravity must continue during the coast")
         }
     }
     private fun input(motion: Vec3 = Vec3(1.5, 0.6, 2.0)) = VehicleFlightInputContext(
@@ -103,7 +60,7 @@ class AircraftWreckFlightTest {
                 bodyPitchDegrees = result.bodyPitch.toDouble(), bodyRollDegrees = result.bodyRoll.toDouble())
         }
         assertTrue(state.previousMotion.y < 0)
-        assertTrue(state.previousMotion.horizontalDistance() in 1.8..1.9)
+        assertTrue(state.previousMotion.horizontalDistance() in 2.25..2.27)
         assertEquals(82.0, state.bodyPitchDegrees, 0.001)
         assertEquals(0.0, AircraftWreckFlightStrategy.noseDownIntensity(12.0))
         assertTrue(AircraftWreckFlightStrategy.noseDownIntensity(45.0) in 0.1..0.9)

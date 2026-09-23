@@ -477,13 +477,10 @@ public class BaseVehicleRenderer<T extends GeoVehicleEntity> implements VehicleR
         ResourceLocation previousTexture = this.activeTextureLocation;
         this.activeTextureLocation = context.getResolvedTexture();
         this.activeRenderParts = VehicleRenderPartSnapshot.capture(entity, entityYaw, partialTicks);
-        BvpAircraftBreakupRenderer.Hidden detachedWings = null;
         try {
             applyModelAnimations(entity, entityYaw, loadedModel, partialTicks);
             this.suspendedStores.apply(entity, loadedModel);
             ResourceLocation resolvedTexture = m_5478_(entity);
-            detachedWings = BvpAircraftBreakupRenderer.apply(context, loadedModel, this.textureLocation,
-                    this.deadTextureLocation, this.suspendedStores);
 
             // The backend enters after SBW's native vehicleAxis. Restore the
             // renderer-entry matrices so BVP's world-space recoil remains
@@ -521,7 +518,6 @@ public class BaseVehicleRenderer<T extends GeoVehicleEntity> implements VehicleR
                     context.getChassisPresentation().getPose());
             return true;
         } finally {
-            if (detachedWings != null) detachedWings.restore();
             this.suspendedStores.restore();
             AircraftRigAnimator.restore(loadedModel);
             this.profileWheeledRunningGearAnimator.restoreSteering();

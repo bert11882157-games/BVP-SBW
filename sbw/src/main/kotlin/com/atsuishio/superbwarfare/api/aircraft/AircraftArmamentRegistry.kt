@@ -99,14 +99,35 @@ object AircraftArmamentRegistry {
             json.getAsJsonObject("Bomb")?.let { bomb ->
                 require(json["Category"]?.asString == "BOMB")
                 require(bomb["Mode"]?.asString in setOf("DUMB", "LASER", "GPS"))
+                val cluster = bomb.getAsJsonObject("Cluster")
+                if (cluster != null) {
+                    require(bomb["Mode"].asString == "DUMB")
+                    require(bomb["BlastRadius"]?.asDouble == 0.0 && bomb["BlastDamage"]?.asDouble == 0.0)
+                    require(cluster.entrySet().map { it.key }.toSet() == setOf("Count", "ReleaseHeight",
+                        "SpreadSpeed", "BombletDamage", "BombletRadius", "LifetimeTicks"))
+                    require(cluster["Count"].asBigDecimal.intValueExact() in 1..24)
+                    require(cluster["LifetimeTicks"].asBigDecimal.intValueExact() in 20..200)
+                    for ((key, range) in mapOf("ReleaseHeight" to (2.0..32.0), "SpreadSpeed" to (0.0..1.0),
+                        "BombletDamage" to (0.0..2000.0), "BombletRadius" to (0.1..8.0))) {
+                        val value = cluster[key].asDouble
+                        require(value.isFinite() && value in range)
+                    }
+                }
                 for ((key, range) in mapOf("Gravity" to (0.01..1.0), "DragMultiplier" to (0.0..20.0),
-                    "TurnDegreesPerTick" to (0.0..15.0), "BlastRadius" to (1.0..64.0), "BlastDamage" to (1.0..5000.0))) {
+                    "TurnDegreesPerTick" to (0.0..15.0), "BlastRadius" to (if (cluster == null) 1.0..64.0 else 0.0..0.0),
+                    "BlastDamage" to (if (cluster == null) 1.0..5000.0 else 0.0..0.0))) {
                     val n = bomb[key]?.asDouble ?: error("Missing bomb $key")
                     require(n.isFinite() && n in range)
                 }
             }
             json["Capacity"]?.let { require(it.asInt in 1..10000) }
             json["MaxPerPylon"]?.let { require(it.asBigDecimal.intValueExact() in 1..AircraftPylonRacks.MAX_COPIES) }
+            json["FixedRackCount"]?.let {
+                val copies = it.asBigDecimal.intValueExact()
+                require(json["Category"]?.asString == "BOMB" && json["Capacity"]?.asInt == 1)
+                require(copies in 2..AircraftPylonRacks.MAX_COPIES &&
+                    copies <= (json["MaxPerPylon"]?.asInt ?: 1))
+            }
             json["RackSpacing"]?.let {
                 val spacing = requireNotNull(vector(it))
                 require(spacing.x in 0.1..4.0 && spacing.y in 0.0..4.0 && spacing.z in 0.0..8.0)

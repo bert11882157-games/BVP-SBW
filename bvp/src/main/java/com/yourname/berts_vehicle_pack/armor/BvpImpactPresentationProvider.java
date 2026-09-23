@@ -125,12 +125,15 @@ public final class BvpImpactPresentationProvider {
             ArmorSoundService.play(projectile.m_9236_(), context.getHitVec(), TAP_RICOCHET_SOUND,
                     0.45F, 1.0F);
         }
-        if (nonPenetration && !explosion) {
-            BvpLeanImpactEffects.spawnImpactSmoke(projectile.m_9236_(), context.getHitVec(),
-                    BvpImpactFragmentCommitter.impactNormal(context, context.getIncomingVelocity()));
-        }
+        com.yourname.berts_vehicle_pack.effects.BvpBallisticImpactEffects.impact(context,
+                BvpImpactFragmentCommitter.impactNormal(context, context.getIncomingVelocity()),
+                visual == ProjectileArmorEffect.ImpactVisual.HE
+                        || visual == ProjectileArmorEffect.ImpactVisual.AUTOCANNON_HE);
 
-        if (solidImpactBurst) {
+        var combat = ProjectileProfiles.combatDescriptor(projectile);
+        boolean heavyKinetic = !explosion && combat != null && combat.getCaliberMm() != null
+                && combat.getCaliberMm() > 80;
+        if (solidImpactBurst || heavyKinetic) {
             // Kinetic penetration gets only a tiny presentation burst.  This is particles/light,
             // not an explosive gameplay event, and never creates shrapnel.
             BvpLeanImpactEffects.spawnTinyExplosion(

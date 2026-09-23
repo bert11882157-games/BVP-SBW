@@ -8,6 +8,7 @@ import com.atsuishio.superbwarfare.client.renderer.entity.ResourceVehicleRendere
 import com.atsuishio.superbwarfare.client.renderer.vehicle.VehicleRenderBackendProvider;
 import com.atsuishio.superbwarfare.client.renderer.vehicle.VehicleRenderBackends;
 import com.atsuishio.superbwarfare.entity.projectile.CannonShellEntity;
+import com.atsuishio.superbwarfare.entity.projectile.AerialBombEntity;
 import com.atsuishio.superbwarfare.entity.projectile.MediumRocketEntity;
 import com.atsuishio.superbwarfare.entity.projectile.SmallRocketEntity;
 import com.atsuishio.superbwarfare.entity.projectile.WireGuideMissileEntity;
@@ -488,6 +489,8 @@ public class ModEntityRenderers {
 
     private static void registerProjectileVisualProviders() {
         registerVisual("authored_missile", context -> adapt(WireGuideMissileEntity.class,
+                new BvpSpinningProjectileRenderer<>(context, null, null, 0F)));
+        registerVisual("authored_bomb", context -> adapt(AerialBombEntity.class,
                 new BvpSpinningProjectileRenderer<>(context, null, null, 0F)));
         registerTracerVisual("scaled_bullet");
         registerTracerVisual("scaled_small_cannon");
