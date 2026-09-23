@@ -20,19 +20,24 @@ class TaczAircraftDamageTest {
     @Test
     fun `all explicit installed fifty caliber identities use three HP`() {
         for (id in fiftyCalibreIds) {
-            assertEquals(3f, TaczAircraftDamage.damageForAmmo(ResourceLocation(id)), id)
+            assertEquals(3f, TaczAircraftDamage.damageForAmmo(ResourceLocation(id), 130f), id)
         }
     }
 
     @Test
-    fun `every other TacZ projectile uses point two without identifier heuristics`() {
-        for (id in listOf("tacz:9mm", "tacz:556x45", "tacz:762x39", "tacz:12g", "tacz:40mm",
-            "sbw_flans:23x75_buckshot", "maxstuff:12g_fl", "maxstuff:12g_db", "tacz:rpg_rocket",
-            "sbw_flans:pg7v", "ea:145x114", "suffuse:120mm", "other:50bmg", "tacz:50bmg_extra",
-            "tacz:unknown", "sbw_flans:762x54r_tracer")) {
-            assertEquals(0.2f, TaczAircraftDamage.damageForAmmo(ResourceLocation(id)), id)
+    fun `RPG rounds have aircraft direct damage without changing other TacZ ammunition`() {
+        for (id in listOf("tacz:rpg_rocket", "sbw_flans:pg7v")) {
+            assertEquals(87.1f, TaczAircraftDamage.damageForAmmo(ResourceLocation(id), 130f), 0.0001f, id)
         }
-        assertEquals(0.2f, TaczAircraftDamage.damageForAmmo(null))
+        for (id in listOf("tacz:9mm", "tacz:556x45", "tacz:762x39", "tacz:12g", "tacz:40mm",
+            "sbw_flans:23x75_buckshot", "maxstuff:12g_fl", "maxstuff:12g_db",
+            "ea:145x114", "suffuse:120mm", "other:50bmg", "tacz:50bmg_extra",
+            "tacz:unknown", "sbw_flans:762x54r_tracer")) {
+            assertEquals(0.2f, TaczAircraftDamage.damageForAmmo(ResourceLocation(id), 130f), id)
+        }
+        assertEquals(0.2f, TaczAircraftDamage.damageForAmmo(null, 130f))
+        assertEquals(42.9f, 130f - TaczAircraftDamage.damageForAmmo(ResourceLocation("tacz:rpg_rocket"), 130f), 0.0001f)
+        assertEquals(110f, TaczAircraftDamage.damageForAmmo(ResourceLocation("tacz:rpg_rocket"), 400f))
     }
 
     @Test
@@ -40,6 +45,7 @@ class TaczAircraftDamageTest {
         for (caliber in listOf(null, Double.NaN, 7.62, 12.7, 30.0, 125.0)) {
             assertEquals(0.2f, AircraftProjectileHitPolicy.resolveDamage(caliber, 0.2f))
             assertEquals(3f, AircraftProjectileHitPolicy.resolveDamage(caliber, 3f))
+            assertEquals(87.1f, AircraftProjectileHitPolicy.resolveDamage(caliber, 87.1f))
         }
         assertEquals(2.5f, AircraftProjectileHitPolicy.resolveDamage(12.7, null))
         assertEquals(9f, AircraftProjectileHitPolicy.resolveDamage(30.0, null))
@@ -53,13 +59,13 @@ class TaczAircraftDamageTest {
     fun `individual pellets and profiled bullets share once only direct and blast receipts`() {
         val target = UUID(80, 1)
         for ((id, count, expected) in listOf(Triple("tacz:12g", 8, 1.6f),
-            Triple("tacz:50bmg", 2, 6f), Triple("sbw_flans:pg7v", 1, 0.2f))) {
+            Triple("tacz:50bmg", 2, 6f), Triple("sbw_flans:pg7v", 1, 87.1f))) {
             var applied = 0f
             repeat(count) {
                 val projectile = CompoundTag()
                 assertTrue(AircraftProjectileHitReceipts.claim(projectile, target))
                 applied += AircraftProjectileHitPolicy.resolveDamage(125.0,
-                    TaczAircraftDamage.damageForAmmo(ResourceLocation(id)))!!
+                    TaczAircraftDamage.damageForAmmo(ResourceLocation(id), 130f))!!
                 for (explosion in listOf(false, true, true)) {
                     assertEquals(AircraftProjectileDamageRoute.DUPLICATE,
                         AircraftProjectileHitPolicy.nativeRoute(
@@ -85,8 +91,9 @@ class TaczAircraftDamageTest {
         assertEquals(135, ids.size, "Installed source census changed; review exact ammo identities")
         assertTrue(ids.containsAll(fiftyCalibreIds))
         for (id in ids) {
-            assertEquals(if (id in fiftyCalibreIds) 3f else 0.2f,
-                TaczAircraftDamage.damageForAmmo(ResourceLocation(id)), id)
+            assertEquals(if (id in setOf("tacz:rpg_rocket", "sbw_flans:pg7v")) 87.1f
+                else if (id in fiftyCalibreIds) 3f else 0.2f,
+                TaczAircraftDamage.damageForAmmo(ResourceLocation(id), 130f), 0.0001f, id)
         }
     }
 }

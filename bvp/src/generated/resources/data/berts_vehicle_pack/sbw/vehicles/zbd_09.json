@@ -585,7 +585,8 @@
               "ProjectileProfile": "berts_vehicle_pack:zbd_09/cannon/ammo_00_dtc04_30_apds",
               "ProjectileLife": 40
             }
-          }
+          },
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell"
         },
         {
           "Ammo": "superbwarfare:small_shell_he",
@@ -635,7 +636,8 @@
               "ProjectileProfile": "berts_vehicle_pack:zbd_09/cannon/ammo_01_dty02_30_hefi",
               "ProjectileLife": 40
             }
-          }
+          },
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell"
         }
       ],
       "ProjectileAmount": 1,
@@ -739,7 +741,8 @@
               "ProjectileProfile": "berts_vehicle_pack:zbd_09/mainmachinegun/ammo_00_type86_ap_i",
               "ProjectileLife": 400
             }
-          }
+          },
+          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition"
         }
       ],
       "Projectile": {
@@ -888,7 +891,8 @@
               "ProjectileType": "superbwarfare:wire_guide_missile",
               "ProjectileProfile": "berts_vehicle_pack:zbd_09/missile/ammo_00_hj73e_tandem_atgm"
             }
-          }
+          },
+          "ConsumptionItem": "superbwarfare:medium_atgm"
         }
       ],
       "SoundInfo": {

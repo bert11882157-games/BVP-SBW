@@ -5,6 +5,17 @@ import net.minecraft.world.entity.player.Player
 
 /** Same authored radar capability on both sides; seat0 is the aircraft operating station. */
 object AircraftTerminalAccess {
+    @JvmStatic fun canOpen(player: Player, entity: Entity): Boolean {
+        val vehicle = entity as? VehicleEntity ?: return false
+        if (player.vehicle !== vehicle || vehicle.getSeatIndex(player) != 0 || vehicle.isWreck || vehicle.health <= 0) return false
+        if (radarRange(player, entity) > 0) return true
+        val definition = AircraftArmamentManager.definition(vehicle) ?: return false
+        return AircraftArmamentRegistry.mounts(definition).any { mount ->
+            val store = AircraftArmamentManager.equippedStore(vehicle, mount["Id"].asString)
+            store?.getAsJsonObject("Bomb")?.get("Mode")?.asString == "GPS" ||
+                store?.get("Category")?.asString == "CRUISE"
+        }
+    }
     @JvmStatic fun radarRange(player: Player, entity: Entity): Int {
         val vehicle = entity as? VehicleEntity ?: return 0
         if (player.vehicle !== vehicle || vehicle.getSeatIndex(player) != 0 || vehicle.isWreck || vehicle.health <= 0) return 0

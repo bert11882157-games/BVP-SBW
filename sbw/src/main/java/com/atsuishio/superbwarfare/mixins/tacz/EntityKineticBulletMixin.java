@@ -51,8 +51,8 @@ public abstract class EntityKineticBulletMixin extends Projectile
 
     protected EntityKineticBulletMixin(EntityType<? extends Projectile> type, Level level) { super(type, level); }
 
-    @Override public float aircraftDirectHitDamage() {
-        return TaczAircraftDamage.damageForAmmo(getAmmoId());
+    @Override public float aircraftDirectHitDamage(float targetMaxHealth) {
+        return TaczAircraftDamage.damageForAmmo(getAmmoId(), targetMaxHealth);
     }
 
     @Override public ResourceLocation getProjectileProfileId() { return sbw$profileId; }

@@ -407,7 +407,8 @@ abstract class VehicleRenderer<T>(renderManager: EntityRendererProvider.Context,
 
     override fun getTextureLocation(animatable: T): ResourceLocation {
         val aircraft = animatable.vehicleType == VehicleType.AIRPLANE || animatable.vehicleType == VehicleType.HELICOPTER
-        val explicitWreckTexture = if (animatable.isWreck && !aircraft) {
+        val darkWreck = animatable.isWreck && (!aircraft || animatable.sympatheticDetonated)
+        val explicitWreckTexture = if (darkWreck) {
             VehicleResource.getDefault(animatable).model.wreckTexture
         } else {
             null
@@ -415,7 +416,7 @@ abstract class VehicleRenderer<T>(renderManager: EntityRendererProvider.Context,
         val res = explicitWreckTexture ?: super.getTextureLocation(animatable)
         if (ClientEventHandler.activeThermalImaging) {
             return SmartTextureBrightener.getSmartBrightenedTexture(res, 3f)
-        } else if (animatable.isWreck && !aircraft && explicitWreckTexture == null) {
+        } else if (darkWreck && explicitWreckTexture == null) {
             return if ((animatable.vehicleType == VehicleType.AIRPLANE || animatable.vehicleType == VehicleType.HELICOPTER)) {
                 if (animatable.sympatheticDetonated) {
                     TextureBrightnessHandler.getBrightenedTexture(res, 0.3f)

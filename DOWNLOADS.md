@@ -13,7 +13,38 @@ No stable release is currently published in this repository. See [all releases](
 for the complete release history.
 The `0.9.19beta` source tag currently has no GitHub Release or compiled download assets.
 
-## Latest published testing build: Tu-95 KH-55 test 3
+## Latest published testing build: 0.10.1beta
+
+[Aircraft breakup, radar and guidance release](https://github.com/bert11882157-games/BVP-SBW/releases/tag/v0.10.1beta).
+This is the full development roster, including the registered F/A-18E. Install the matching set:
+
+| Component | Mod JAR | Checksum |
+| --- | --- | --- |
+| BVP 0.10.1beta | [JAR](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.10.1beta/bvp-main-v0.10.1beta.jar) | [SHA-256](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.10.1beta/bvp-main-v0.10.1beta.jar.sha256) |
+| SBW 0.10.1beta | [JAR](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.10.1beta/bvp_superbwarfare-v0.10.1beta.jar) | [SHA-256](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.10.1beta/bvp_superbwarfare-v0.10.1beta.jar.sha256) |
+| FFA 1.0.6-bvp.2 | [JAR](https://github.com/xenoperk/Fire-From-Above/releases/download/v1.0.6-bvp.2/fire-from-above-1.0.6-bvp.2.jar) | [SHA-256](https://github.com/xenoperk/Fire-From-Above/releases/download/v1.0.6-bvp.2/fire-from-above-1.0.6-bvp.2.jar.sha256) |
+
+Keep existing Dominions, meshloader and other pack dependencies. SBW protocol is 38 and FFA protocol is 19;
+clients and server need matching versions. Restart the game after replacing the old active JARs.
+Source compilation, focused checks, sealed packaging and installation passed. Gameplay testing is pending.
+The version tag identifies exact sealed sources; later download-documentation commits do not alter the JARs.
+
+## Earlier published testing build: 0.10.0beta
+
+[F/A-18E, ammunition and effects release](https://github.com/bert11882157-games/BVP-SBW/releases/tag/v0.10.0beta).
+Install this matched set on clients and the server:
+
+| Component | Mod JAR | Checksum |
+| --- | --- | --- |
+| BVP 0.10.0beta | [JAR](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.10.0beta/bvp-main-v0.10.0beta.jar) | [SHA-256](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.10.0beta/bvp-main-v0.10.0beta.jar.sha256) |
+| SBW 0.10.0beta | [JAR](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.10.0beta/bvp_superbwarfare-v0.10.0beta.jar) | [SHA-256](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.10.0beta/bvp_superbwarfare-v0.10.0beta.jar.sha256) |
+| FFA 1.0.5-bvp.6 | [JAR](https://github.com/xenoperk/Fire-From-Above/releases/download/v1.0.5-bvp.6/fire-from-above-1.0.5-bvp.6.jar) | [SHA-256](https://github.com/xenoperk/Fire-From-Above/releases/download/v1.0.5-bvp.6/fire-from-above-1.0.5-bvp.6.jar.sha256) |
+
+Keep Dominions, meshloader and the other pack dependencies. FFA protocol18 requires the matching update.
+Build, source checks, package checks and installation passed; gameplay testing is pending.
+The release tag identifies the sealed source. Later download-documentation commits do not change the JARs.
+
+## Earlier published testing build: Tu-95 KH-55 test 3
 
 [BVP / SBW — consolidated HUD and pylon performance](https://github.com/bert11882157-games/BVP-SBW/releases/tag/v0.1.1-kh55-test.3)
 is a published testing prerelease, not a stable release.

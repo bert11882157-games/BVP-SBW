@@ -75,6 +75,9 @@ open class CustomExplosion(
     fun ownsGroundVehicleBlast(entity: VehicleEntity): Boolean =
         activeHeavyWarheadBlast != null || activeGroundVehicleBlast?.appliesTo(entity.vehicleType) == true
 
+    /** The legacy Forge vehicle listener must not turn a visual-only blast radius into damage. */
+    fun hasLegacyVehicleBlastDamage(): Boolean = damage.isFinite() && damage > 0f
+
     init {
         this.damageSource = source ?: level.damageSources().explosion(this)
         this.damageCalculator = pDamageCalculator ?: ExplosionDamageCalculator()

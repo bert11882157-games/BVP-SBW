@@ -354,8 +354,10 @@ object ClickEventHandler {
             && vehicle.banHand(player)
         ) {
             if (ClientEventHandler.switchVehicleWeaponCooldown <= 0) {
-                val index = vehicle.getSeatIndex(player)
-                sendPacketToServer(SwitchVehicleWeaponMessage(index, -scroll, true))
+                if (scroll == 0.0) return
+                com.atsuishio.superbwarfare.client.VehicleWeaponSlotCycleClient.request(
+                    com.atsuishio.superbwarfare.api.vehicle.weapon.VehicleWeaponSlot.SECONDARY,
+                    if (scroll > 0.0) -1 else 1)
                 ClientEventHandler.switchVehicleWeaponCooldown = 3
             }
             event.isCanceled = true

@@ -101,8 +101,7 @@ open class Agm65Entity(type: EntityType<out Agm65Entity>, level: Level) : Missil
         }
 
         if (this.tickCount > 8) {
-            this.deltaMovement = this.deltaMovement.scale(0.05).add(lookAngle.scale(8.0))
-            this.deltaMovement = this.deltaMovement.multiply(0.85, 0.85, 0.85)
+            this.deltaMovement = NativeMissileThrust.step(deltaMovement, lookAngle, tickCount, 6.8, 0.18)
             val lostTarget = lookAngle.angleTo(toVec) > 170
             if (!lostTarget) {
                 turn(toVec, ((tickCount - 8) * 0.5f).coerceIn(0f, 15f))

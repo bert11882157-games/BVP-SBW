@@ -11,6 +11,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.yourname.berts_vehicle_pack.client.BvpClientParticles;
 import com.yourname.berts_vehicle_pack.effects.BvpProjectileEffectDefinition;
+import com.yourname.berts_vehicle_pack.effects.BvpMissileExhaustGeometry;
 import com.yourname.berts_vehicle_pack.effects.BvpTrailDiagnostics;
 import com.yourname.berts_vehicle_pack.effects.BvpTracerProfile;
 import net.minecraft.client.Camera;
@@ -106,6 +107,7 @@ public final class BvpProjectileTrailRenderer {
 
     private static void emit(FastThrowableProjectile entity, BvpProjectileEffectDefinition definition,
                              ProjectileTrailKind kind) {
+        if (entity != null && com.atsuishio.superbwarfare.api.effect.MissilePresentation.hasSharedVisual(entity)) return;
         if (entity == null || entity.m_9236_() == null || !entity.m_9236_().f_46443_) {
             return;
         }
@@ -566,3 +568,4 @@ public final class BvpProjectileTrailRenderer {
         }
     }
 }
+

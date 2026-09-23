@@ -28,6 +28,14 @@ public final class BvpProjectileTrailHooks {
     }
 
     public static void registerExplosionFxHandler() {
+        com.atsuishio.superbwarfare.api.effect.MissilePresentation.setNozzleResolver(entity -> {
+            var profile = ProjectileProfiles.resolve(entity);
+            var definition = BvpProjectileEffectDefinition.from(profile);
+            if (definition == null || !definition.isGuidedAtgm()) return null;
+            var shape = BvpMissileExhaustGeometry.forProfile(profile);
+            return shape == null ? null : new com.atsuishio.superbwarfare.api.effect.MissilePresentation.NozzleOffset(
+                    entity.m_20206_() * .5, shape.rear());
+        });
         ParticleTool.registerExplosionFxHandler(EXPLOSION_FX_HANDLER_ID,
                 BvpProjectileTrailHooks::replaceSbwExplosionFx);
     }
@@ -50,6 +58,8 @@ public final class BvpProjectileTrailHooks {
 
     private static boolean replaceSbwExplosionFx(Level level, ExplosionFxContext context) {
         if (AMMO_RACK_EXPLOSION_PROFILE_ID.equals(context.getProfileId())) {
+            if (com.atsuishio.superbwarfare.api.effect.MissilePresentation.effect(
+                    level, context.getParticlePosition(), 6F, true)) return true;
             BvpLeanImpactEffects.spawnAmmoRackExplosion(level, context.getParticlePosition());
             level.m_6263_(null,
                     context.getParticlePosition().f_82479_,

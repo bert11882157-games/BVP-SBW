@@ -124,9 +124,10 @@ final class BvpSuspendedStoreRenderer {
             }
             PolyMeshModel mesh = asset == null ? null : asset.ready();
             if (mesh == null && (store.getModel() != null || store.getItem() == null)) continue;
-            for (int index = 0; index < pair.getPositions().size(); index++) {
+            var positions = state.rackPositions(pair);
+            for (int index = 0; index < positions.size(); index++) {
                 if (state.storePresent(pair, index))
-                    mount(pair.getPositions().get(index), store, asset, mesh, pose, buffers, light, alpha);
+                    mount(positions.get(index), store, asset, mesh, pose, buffers, light, alpha);
             }
         }
     }

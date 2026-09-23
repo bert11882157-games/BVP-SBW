@@ -502,6 +502,7 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:large_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -620,6 +621,7 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:projectile",
@@ -667,6 +669,7 @@
       "ProjectileBeltAmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:projectile",
@@ -689,6 +692,7 @@
         },
         {
           "Ammo": "superbwarfare:small_shell_gs",
+          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:projectile",
@@ -795,6 +799,7 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:projectile",
@@ -842,6 +847,7 @@
       "ProjectileBeltAmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:projectile",
@@ -864,6 +870,7 @@
         },
         {
           "Ammo": "superbwarfare:small_shell_gs",
+          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:projectile",
@@ -1065,33 +1072,107 @@
       ]
     },
     "RetractableGear": true,
+    "BodyParts": [
+      {
+        "Min": [
+          -0.593165,
+          0.842563,
+          -5.946025
+        ],
+        "Max": [
+          0.593165,
+          2.684968,
+          3.505063
+        ]
+      },
+      {
+        "Min": [
+          -4.686,
+          1.216994,
+          1.318101
+        ],
+        "Max": [
+          -0.533848,
+          2.040917,
+          2.456582
+        ]
+      },
+      {
+        "Min": [
+          0.533848,
+          1.216994,
+          1.318101
+        ],
+        "Max": [
+          4.686,
+          2.040917,
+          2.456582
+        ]
+      }
+    ],
     "WheelContacts": [
       {
         "Id": "LeftMain",
         "Group": "MAIN",
         "Position": [
-          -1.954746875,
+          -1.954747,
           0,
-          1.2132909375
-        ]
+          1.213291
+        ],
+        "Bounds": {
+          "Min": [
+            -2.022152,
+            0,
+            1.056013
+          ],
+          "Max": [
+            -1.887342,
+            0.033703,
+            1.370569
+          ]
+        }
       },
       {
         "Id": "RightMain",
         "Group": "MAIN",
         "Position": [
-          1.954746875,
+          1.954747,
           0,
-          1.2132909375
-        ]
+          1.213291
+        ],
+        "Bounds": {
+          "Min": [
+            1.887342,
+            0,
+            1.056013
+          ],
+          "Max": [
+            2.022152,
+            0.033703,
+            1.370569
+          ]
+        }
       },
       {
         "Id": "Tail",
         "Group": "TAIL",
         "Position": [
-          -0.0224684375,
+          -0.022468,
           1.02231,
-          -6.2686709375
-        ]
+          -6.268671
+        ],
+        "Bounds": {
+          "Min": [
+            -0.044937,
+            1.02231,
+            -6.425949
+          ],
+          "Max": [
+            0,
+            1.112184,
+            -6.111393
+          ]
+        }
       }
     ]
   },

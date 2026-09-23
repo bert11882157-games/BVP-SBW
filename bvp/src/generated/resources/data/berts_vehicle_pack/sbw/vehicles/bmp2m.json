@@ -339,7 +339,8 @@
               "ProjectileProfile": "berts_vehicle_pack:bmp2m/cannon/ammo_00_3ubr8_apds",
               "ProjectileLife": 40
             }
-          }
+          },
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell"
         },
         {
           "Ammo": "superbwarfare:small_shell_aa",
@@ -385,7 +386,8 @@
               "ProjectileProfile": "berts_vehicle_pack:bmp2m/cannon/ammo_01_3uor6_hef_t",
               "ProjectileLife": 40
             }
-          }
+          },
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell"
         }
       ],
       "ShootPos": {
@@ -510,7 +512,8 @@
               "ProjectileProfile": "berts_vehicle_pack:bmp2m/mainmachinegun/ammo_00_russian_762_ap_i",
               "ProjectileLife": 400
             }
-          }
+          },
+          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition"
         }
       ],
       "Projectile": {
@@ -631,7 +634,13 @@
       "Crosshair": "@VehicleCommonMissile",
       "CrosshairColor": "0x66FF00",
       "Name": "weapon.berts_vehicle_pack.30_mm_2a42_9m133_kornet_atgm",
-      "AmmoType": "superbwarfare:medium_anti_ground_missile",
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:medium_anti_ground_missile",
+          "ConsumptionItem": "superbwarfare:medium_atgm",
+          "Override": {}
+        }
+      ],
       "SoundInfo": {
         "Fire1PGain": 0.35,
         "Fire3PGain": 0.35,
@@ -728,7 +737,13 @@
         "Type": "superbwarfare:gun_grenade",
         "Profile": "berts_vehicle_pack:bmp2m/grenadelauncher/default"
       },
-      "AmmoType": "superbwarfare:grenade_40mm",
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:grenade_40mm",
+          "ConsumptionItem": "superbwarfare:grenade_ammunition",
+          "Override": {}
+        }
+      ],
       "ShellType": "HE",
       "Velocity": 6,
       "Damage": 35,

@@ -1,0 +1,23 @@
+{
+  "Schema": 1,
+  "Name": "AGM-88 · anti-radiation",
+  "Category": "ANTI_RADIATION",
+  "Capacity": 1,
+  "MassKg": 650,
+  "Guidance": {
+    "Mode": "ANTI_RADIATION",
+    "LockTicks": 60,
+    "Range": 2000,
+    "ConeDegrees": 35,
+    "CountermeasureVulnerability": 1
+  },
+  "Flight": {
+    "InitialSpeed": 0.5,
+    "MaxSpeed": 10,
+    "AccelerationPerTick": 0.18,
+    "TurnDegreesPerSecond": 35,
+    "Damage": 85,
+    "BlastRadius": 8
+  },
+  "AmmoItem": "superbwarfare:large_air_to_ground_missile"
+}

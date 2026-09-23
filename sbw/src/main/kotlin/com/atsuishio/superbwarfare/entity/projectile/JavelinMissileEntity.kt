@@ -150,7 +150,6 @@ open class JavelinMissileEntity : MissileProjectile, BasicGeoProjectileEntity {
                             val lostTarget = this.y < entity.y
                             if (!lostTarget) {
                                 turn(toVec, 180f)
-                                this.deltaMovement = this.deltaMovement.scale(0.1).add(lookAngle.scale(8.0))
                             }
                         }
                     } else {
@@ -178,7 +177,6 @@ open class JavelinMissileEntity : MissileProjectile, BasicGeoProjectileEntity {
                         val lostTarget = this.y < targetPos!!.y
                         if (!lostTarget) {
                             turn(toVec, 180f)
-                            this.deltaMovement = this.deltaMovement.scale(0.1).add(lookAngle.scale(8.0))
                         }
                     }
                 } else {
@@ -190,11 +188,9 @@ open class JavelinMissileEntity : MissileProjectile, BasicGeoProjectileEntity {
             }
         }
 
-        if (this.tickCount > 3) {
-            this.deltaMovement = this.deltaMovement.add(lookAngle)
-        }
-
-        this.deltaMovement = this.deltaMovement.multiply(0.8, 0.8, 0.8)
+        this.deltaMovement = if (tickCount > 3)
+            NativeMissileThrust.step(deltaMovement, lookAngle, tickCount - 3, 6.4, 0.16)
+        else deltaMovement.multiply(0.8, 0.8, 0.8)
     }
 
     override fun getSound(): SoundEvent {

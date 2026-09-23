@@ -427,7 +427,8 @@
               "ProjectileProfile": "berts_vehicle_pack:k2a1_black_panther/cannon/ammo_00_k279_apfsds",
               "ProjectileLife": 50
             }
-          }
+          },
+          "ConsumptionItem": "superbwarfare:tier_4_armor_piercing_shell"
         },
         {
           "Ammo": "berts_vehicle_pack:level_2_ap_shell",
@@ -455,7 +456,8 @@
               "ProjectileProfile": "berts_vehicle_pack:k2a1_black_panther/cannon/ammo_01_dm12a1_heat_fs",
               "ProjectileLife": 50
             }
-          }
+          },
+          "ConsumptionItem": "superbwarfare:tier_2_heat_shell"
         }
       ],
       "SoundInfo": {
@@ -574,7 +576,8 @@
               "ProjectileProfile": "berts_vehicle_pack:k2a1_black_panther/machinegun/ammo_00_western_762_ap",
               "ProjectileLife": 400
             }
-          }
+          },
+          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition"
         }
       ],
       "Projectile": {
@@ -755,7 +758,8 @@
               "ProjectileProfile": "berts_vehicle_pack:k2a1_black_panther/passengermachinegun/ammo_00_western_127_m20_api_t_1",
               "ProjectileLife": 400
             }
-          }
+          },
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition"
         }
       ],
       "Crosshair": "@VehicleCommonGun",

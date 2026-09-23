@@ -20,11 +20,13 @@ object AircraftWreckFire {
     private val seen = LinkedHashMap<UUID, Seen>()
     private var level: Any? = null
     private var tick = 0L
+    private fun broken(vehicle: VehicleEntity) = vehicle.isWreck ||
+        com.atsuishio.superbwarfare.api.vehicle.flight.AircraftWreckBreakup.mask(vehicle) != 0
 
     fun observe(vehicle: VehicleEntity) {
         val mc = Minecraft.getInstance()
         if (level !== mc.level) { seen.clear(); level = mc.level; tick = 0 }
-        if (vehicle.level() !== mc.level || !vehicle.isWreck || vehicle.sympatheticDetonated ||
+        if (vehicle.level() !== mc.level || !broken(vehicle) || vehicle.sympatheticDetonated ||
             (vehicle.vehicleType != VehicleType.AIRPLANE && vehicle.vehicleType != VehicleType.HELICOPTER)) return
         val old = seen[vehicle.uuid]
         if (old != null) { old.vehicle = vehicle; old.observed = tick; return }
@@ -38,7 +40,7 @@ object AircraftWreckFire {
         if (level !== mc.level) { seen.clear(); level = mc.level; tick = 0 }
         if (mc.level == null || mc.isPaused) return
         tick++
-        seen.entries.removeIf { (_, value) -> value.vehicle.isRemoved || !value.vehicle.isWreck ||
+        seen.entries.removeIf { (_, value) -> value.vehicle.isRemoved || !broken(value.vehicle) ||
             value.vehicle.sympatheticDetonated || tick - value.observed > 4 }
         var budget = 96
         for ((uuid, value) in seen) {
@@ -47,7 +49,7 @@ object AircraftWreckFire {
                 .noseDownIntensity(vehicle.xRot.toDouble())
             val flameScale = (1 + intensity * 0.8).toFloat()
             val segments = 4 + (intensity * 2).toInt()
-            val points = engines(vehicle)
+            val points = if (vehicle.isWreck) engines(vehicle) else emptyList()
             for ((index, point) in points.withIndex()) {
                 val previous = value.previous.getOrNull(index)?.takeIf { it.distanceToSqr(point) < 256.0 } ?: point
                 repeat(segments) { segment ->
@@ -62,7 +64,10 @@ object AircraftWreckFire {
             }
             value.previous = points
             val phase = (tick + (uuid.leastSignificantBits and 15L)) % 16
-            if (phase < 7 + (intensity * 7).toInt()) for (id in listOf(AircraftSurfaceModules.WING_LEFT, AircraftSurfaceModules.WING_RIGHT)) {
+            val detached = com.atsuishio.superbwarfare.api.vehicle.flight.AircraftWreckBreakup.mask(vehicle)
+            for ((index, id) in listOf(AircraftSurfaceModules.WING_LEFT, AircraftSurfaceModules.WING_RIGHT).withIndex()) {
+                if (!vehicle.isWreck && detached and (1 shl index) == 0) continue
+                if (detached and (1 shl index) == 0 && phase >= 7 + (intensity * 7).toInt()) continue
                 val point = AircraftSurfaceModules.wreckFirePosition(vehicle, id, 1f) ?: continue
                 if (budget > 1) {
                     AircraftCombatParticles.fire(point, 2.1f * flameScale, false)

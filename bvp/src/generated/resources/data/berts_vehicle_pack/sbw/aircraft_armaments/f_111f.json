@@ -37,5 +37,10 @@
         "berts_vehicle_pack:gun_pod/f111_m61_bay"
       ]
     }
-  ]
+  ],
+  "MaxPayloadKg": 14742,
+  "Radar": {
+    "Enabled": true,
+    "Range": 1000
+  }
 }

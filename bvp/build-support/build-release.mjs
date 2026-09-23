@@ -12,6 +12,8 @@ const support = path.dirname(fileURLToPath(import.meta.url));
 const args = process.argv.slice(2);
 const options = parseOptions(args);
 const option = (name, fallback) => options.get(name) ?? fallback;
+const compilerExtrasManifest = option('--compiler-extras-manifest');
+if (!compilerExtrasManifest) throw new Error('Provide --compiler-extras-manifest for Komodo and Flywheel');
 const tree = path.resolve(option('--tree', path.join(support, '../..')));
 const bvp = path.join(tree, 'bvp');
 const sbw = path.join(tree, 'sbw');
@@ -85,6 +87,23 @@ try {
     path.join(support, 'remap-addon.test.mjs'), path.join(support, 'runtime-abi.test.mjs')], tree));
   checks.push(await gradle('sbw-build', sbw, ['-I', bridgeScript, 'writeBvpBuildInputs']));
   const bridge = JSON.parse(await fs.readFile(path.join(sbw, 'build/bvp-bridge/inputs.json'), 'utf8'));
+  const extrasFile = path.resolve(compilerExtrasManifest);
+  const extras = JSON.parse(await fs.readFile(extrasFile, 'utf8'));
+  if (extras.schema !== 1 || extras.kind !== 'bvp-compiler-extras'
+      || !Array.isArray(extras.dependencies) || extras.dependencies.length !== 2) {
+    throw new Error('Expected pinned Komodo and Flywheel compiler dependencies');
+  }
+  const expectedExtras = new Map([['komodo', '1.2.3'], ['flywheel', '1.0.5']]);
+  const compilerExtras = [];
+  for (const row of extras.dependencies) {
+    if (expectedExtras.get(row.id) !== row.version) {
+      throw new Error(`Unexpected compiler dependency: ${row.id}:${row.version}`);
+    }
+    expectedExtras.delete(row.id);
+    compilerExtras.push(await verify(row, path.dirname(extrasFile)));
+  }
+  if (expectedExtras.size) throw new Error('Missing Komodo or Flywheel compiler dependency');
+  bridge.classpath.push(...compilerExtras);
   const runtime = await verify(bridge.runtime);
   const mappedApi = await verify(bridge.mappedApi);
   const mappings = await verify(bridge.mappings);
@@ -139,7 +158,7 @@ try {
   if (jars.length !== 1) throw new Error('Expected exactly one BVP mapped candidate');
   const candidate = path.join(output, jars[0].replace('-mapped.jar', '.jar'));
   await fs.copyFile(path.join(bvp, 'build/libs', jars[0]), candidate);
-  await remap('bvp-runtime-map', candidate, 'runtime', [mappedApi, bridge.meshloader]);
+  await remap('bvp-runtime-map', candidate, 'runtime', [mappedApi, bridge.meshloader, ...compilerExtras]);
   checks.push(await run('bvp-runtime-abi', process.execPath, [path.join(support, 'runtime-abi.mjs'),
     '--named', path.join(bvp, 'build/libs', jars[0]), '--runtime', candidate,
     '--inputs', inputPath], tree));

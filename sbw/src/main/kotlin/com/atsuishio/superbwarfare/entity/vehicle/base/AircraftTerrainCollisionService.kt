@@ -22,6 +22,7 @@ internal class AircraftTerrainCollisionService(private val vehicle: VehicleEntit
 
     fun move(requested: Vec3) {
         val snapshot = vehicle.getAircraftCollisionSnapshot(1F) ?: return
+        val incoming = vehicle.deltaMovement
         val gearDown = snapshot.parts.any { it.role == AircraftCollisionRole.LANDING_GEAR && it.active }
         val sources = wheelSupport.prepare(snapshot, requested)
         var cells = 0
@@ -45,6 +46,33 @@ internal class AircraftTerrainCollisionService(private val vehicle: VehicleEntit
         val gearContact = motion.gearContact
         val complete = motion.complete
         val normalSpeedSquared = motion.normalSpeedSquared
+        // Only a confirmed wing-only strike is survivable. Re-sweep without the sheared
+        // parts so the now-missing wing cannot stop the fuselage or consume its momentum.
+        if (bodyContact && complete && !vehicle.isWreck) {
+            val core = snapshot.parts.filter { it.active && it.wingSide == 0 &&
+                it.role != AircraftCollisionRole.LANDING_GEAR }.map { it.toTerrainInfo() }
+            val coreHit = probe.sample(requested, Vec3.ZERO, terrainBoxes = core)
+            if (coreHit.complete && coreHit.contact == null && !coreHit.bodyOverlap) {
+                var sheared = 0
+                for (side in 1..2) {
+                    val wing = snapshot.parts.filter { it.active && it.wingSide == side }.map { it.toTerrainInfo() }
+                    if (wing.isEmpty()) continue
+                    val hit = probe.sample(requested, Vec3.ZERO, terrainBoxes = wing)
+                    if (hit.complete && (hit.contact != null || hit.bodyOverlap)) sheared = sheared or side
+                }
+                if (sheared != 0) {
+                    val breakup = com.atsuishio.superbwarfare.api.vehicle.flight.AircraftWreckBreakup
+                    val before = breakup.mask(vehicle)
+                    breakup.detach(vehicle, sheared, incoming)
+                    if (breakup.mask(vehicle) != before) {
+                        EliteDiagnostics.record(vehicle, "aircraft_terrain_contact", "WING_SHEAR",
+                            "sides", sheared, "health", vehicle.health, "incoming_speed", incoming.length())
+                        move(requested)
+                        return
+                    }
+                }
+            }
+        }
         if (bodyContact || gearContact) lastContactTick = vehicle.tickCount
         lastGearSupportTick = if (complete && motion.gearGroundContact) vehicle.tickCount else null
         if (lastGearSupportTick == null) gearTravelDirection = Vec3.ZERO
@@ -72,13 +100,17 @@ internal class AircraftTerrainCollisionService(private val vehicle: VehicleEntit
                 val result = vehicle.applyResolvedDamage(ResolvedVehicleDamageRequest(source,
                     (vehicle.getMaxHealth() * damage.healthFraction).toFloat(),
                     modulePolicy = ResolvedVehicleModulePolicy.SKIP_NATIVE, lethal = destructive))
-                if (result.accepted) { appliedDamage = result.appliedDamage; vehicle.collisionCoolDown = 4 }
+                if (result.accepted) {
+                    appliedDamage = result.appliedDamage; vehicle.collisionCoolDown = 4
+                    if (vehicle.health <= 0F) com.atsuishio.superbwarfare.api.vehicle.flight.AircraftWreckBreakup
+                        .detach(vehicle, 3, incoming)
+                }
             }
         }
         if (EliteDiagnostics.isEnabled(vehicle.level()) &&
             (bodyContact || gearContact || !complete || vehicle.tickCount % 20 == 0)) {
             EliteDiagnostics.record(vehicle, "aircraft_terrain_contact", "MOVE",
-                "defined_boxes", 2, "active_boxes", snapshot.parts.count { it.active },
+                "defined_boxes", snapshot.parts.size, "active_boxes", snapshot.parts.count { it.active },
                 "terrain_samples", sources.size, "gear_deployed", gearDown,
                 "fuselage_contact", bodyContact, "gear_contact", gearContact,
                 "gear_ground_contact", motion.gearGroundContact,

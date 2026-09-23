@@ -35,7 +35,13 @@
       "AllowedStores": [
         "berts_vehicle_pack:kh29l",
         "berts_vehicle_pack:su25_s8ko_pod",
-        "berts_vehicle_pack:gsh23_pod"
+        "berts_vehicle_pack:gsh23_pod",
+        "berts_vehicle_pack:reference/dumb_bomb_250kg",
+        "berts_vehicle_pack:reference/laser_bomb_250kg",
+        "berts_vehicle_pack:reference/gps_bomb_250kg",
+        "berts_vehicle_pack:reference/arm",
+        "berts_vehicle_pack:reference/kh29l_laser",
+        "berts_vehicle_pack:kh25l"
       ],
       "WeaponId": "S8KOPylon1",
       "WeaponChannel": "S8KOPylon1",
@@ -62,7 +68,13 @@
       "AllowedStores": [
         "berts_vehicle_pack:kh29l",
         "berts_vehicle_pack:su25_s8ko_pod",
-        "berts_vehicle_pack:gsh23_pod"
+        "berts_vehicle_pack:gsh23_pod",
+        "berts_vehicle_pack:reference/dumb_bomb_250kg",
+        "berts_vehicle_pack:reference/laser_bomb_250kg",
+        "berts_vehicle_pack:reference/gps_bomb_250kg",
+        "berts_vehicle_pack:reference/arm",
+        "berts_vehicle_pack:reference/kh29l_laser",
+        "berts_vehicle_pack:kh25l"
       ],
       "WeaponId": "S8KOPylon2",
       "WeaponChannel": "S8KOPylon2",
@@ -89,7 +101,12 @@
       "AllowedStores": [
         "berts_vehicle_pack:kh29l",
         "berts_vehicle_pack:su25_s8ko_pod",
-        "berts_vehicle_pack:gsh23_pod"
+        "berts_vehicle_pack:gsh23_pod",
+        "berts_vehicle_pack:reference/dumb_bomb_250kg",
+        "berts_vehicle_pack:reference/laser_bomb_250kg",
+        "berts_vehicle_pack:reference/gps_bomb_250kg",
+        "berts_vehicle_pack:reference/arm",
+        "berts_vehicle_pack:reference/kh29l_laser"
       ],
       "WeaponId": "S8KOPylon3",
       "WeaponChannel": "S8KOPylon3",
@@ -116,7 +133,12 @@
       "AllowedStores": [
         "berts_vehicle_pack:kh29l",
         "berts_vehicle_pack:su25_s8ko_pod",
-        "berts_vehicle_pack:gsh23_pod"
+        "berts_vehicle_pack:gsh23_pod",
+        "berts_vehicle_pack:reference/dumb_bomb_250kg",
+        "berts_vehicle_pack:reference/laser_bomb_250kg",
+        "berts_vehicle_pack:reference/gps_bomb_250kg",
+        "berts_vehicle_pack:reference/arm",
+        "berts_vehicle_pack:reference/kh29l_laser"
       ],
       "WeaponId": "S8KOPylon4",
       "WeaponChannel": "S8KOPylon4",
@@ -141,7 +163,10 @@
         -0.8975
       ],
       "AllowedStores": [
-        "berts_vehicle_pack:r60"
+        "berts_vehicle_pack:r60",
+        "berts_vehicle_pack:reference/ir_aam",
+        "berts_vehicle_pack:reference/sarh_aam",
+        "berts_vehicle_pack:reference/arh_aam"
       ]
     }
   ],
@@ -176,5 +201,6 @@
   "Radar": {
     "Enabled": true,
     "Range": 500
-  }
+  },
+  "MaxPayloadKg": 4536
 }

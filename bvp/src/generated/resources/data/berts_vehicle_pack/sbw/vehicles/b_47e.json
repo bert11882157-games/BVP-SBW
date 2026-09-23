@@ -832,6 +832,7 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -865,6 +866,7 @@
         },
         {
           "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -983,6 +985,7 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -1016,6 +1019,7 @@
         },
         {
           "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -1292,60 +1296,152 @@
       ]
     },
     "RetractableGear": true,
+    "BodyParts": [
+      {
+        "Min": [
+          -1.483188,
+          1.248475,
+          0.948841
+        ],
+        "Max": [
+          1.483188,
+          5.193654,
+          14.981695
+        ]
+      },
+      {
+        "Min": [
+          -1.483188,
+          3.096217,
+          14.981695
+        ],
+        "Max": [
+          1.483188,
+          4.894021,
+          15.980474
+        ]
+      },
+      {
+        "Min": [
+          -1.483188,
+          1.248475,
+          -12.781939
+        ],
+        "Max": [
+          1.483188,
+          4.444569,
+          0.948841
+        ]
+      },
+      {
+        "Min": [
+          -11.667744,
+          2.167315,
+          -0.878962
+        ],
+        "Max": [
+          -1.334869,
+          4.124997,
+          7.470909
+        ]
+      },
+      {
+        "Min": [
+          1.334869,
+          2.167315,
+          -0.878962
+        ],
+        "Max": [
+          11.667744,
+          4.124997,
+          7.470909
+        ]
+      }
+    ],
     "WheelContacts": [
       {
-        "Id": "gear_group12_tyre212",
+        "Id": "gear_group12_main_bogie",
         "Group": "MAIN",
         "Position": [
-          0.37454237287500003,
           0,
-          7.8404203388500004
-        ]
+          0,
+          7.84042
+        ],
+        "Bounds": {
+          "Min": [
+            -0.574298,
+            0,
+            7.091336
+          ],
+          "Max": [
+            0.574298,
+            0.49939,
+            8.589505
+          ]
+        }
       },
       {
-        "Id": "gear_group12_tyre215",
+        "Id": "gear_group13_main_bogie",
         "Group": "MAIN",
         "Position": [
-          -0.37454237287500003,
           0,
-          7.8404203388500004
-        ]
-      },
-      {
-        "Id": "gear_group13_tyre206",
-        "Group": "MAIN",
-        "Position": [
-          -0.37454237287500003,
           0,
-          -2.54688813555
-        ]
-      },
-      {
-        "Id": "gear_group13_tyre209",
-        "Group": "MAIN",
-        "Position": [
-          0.37454237287500003,
-          0,
-          -2.54688813555
-        ]
+          -2.546888
+        ],
+        "Bounds": {
+          "Min": [
+            -0.574298,
+            0,
+            -3.295973
+          ],
+          "Max": [
+            0.574298,
+            0.49939,
+            -1.797803
+          ]
+        }
       },
       {
         "Id": "gear_group14_tyre177",
         "Group": "MAIN",
         "Position": [
-          -6.741762711750001,
+          -6.741763,
           0,
-          3.9202101694250002
-        ]
+          3.92021
+        ],
+        "Bounds": {
+          "Min": [
+            -6.86661,
+            0,
+            3.620576
+          ],
+          "Max": [
+            -6.616915,
+            0.199756,
+            4.219844
+          ]
+        }
       },
       {
         "Id": "gear_group15_tyre187",
         "Group": "MAIN",
         "Position": [
-          6.741762711750001,
+          6.741763,
           0,
-          3.9202101694250002
-        ]
+          3.92021
+        ],
+        "Bounds": {
+          "Min": [
+            6.616915,
+            0,
+            3.620576
+          ],
+          "Max": [
+            6.86661,
+            0.199756,
+            4.219844
+          ]
+        }
       }
     ]
   },

@@ -6,5 +6,10 @@
   ],
   "SuspendedWeapons": [],
   "Pairs": [],
-  "StoreGroups": {}
+  "StoreGroups": {},
+  "MaxPayloadKg": 3000,
+  "Radar": {
+    "Enabled": true,
+    "Range": 1000
+  }
 }

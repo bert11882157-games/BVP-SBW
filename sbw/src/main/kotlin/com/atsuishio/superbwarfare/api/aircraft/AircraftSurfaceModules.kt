@@ -12,6 +12,7 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
 import org.joml.Matrix4d
+import org.joml.Quaterniond
 import org.joml.Vector3d
 
 /** Independent generic modules backed by existing authoritative persistence and synchronization. */
@@ -25,6 +26,14 @@ object AircraftSurfaceModules {
     private val fractions = ids.associate { it.toString() to if (it == WING_LEFT || it == WING_RIGHT) .20 else .15 }
 
     @JvmStatic fun ids(): List<ResourceLocation> = ids
+
+    private fun presentModules(vehicle: VehicleEntity): List<AircraftSurfaceModuleInfo> {
+        val detached = com.atsuishio.superbwarfare.api.vehicle.flight.AircraftWreckBreakup.mask(vehicle)
+        val modules = vehicle.computed().aircraftSurfaceModules
+        if (detached == 0) return modules
+        return modules.filterNot { (it.id == WING_LEFT.toString() && detached and 1 != 0) ||
+            (it.id == WING_RIGHT.toString() && detached and 2 != 0) }
+    }
 
     @JvmStatic fun state(vehicle: VehicleEntity, id: ResourceLocation) = vehicle.getVehicleModuleState(id)
     @JvmStatic fun damaged(vehicle: VehicleEntity, id: ResourceLocation) = state(vehicle, id)?.destroyed == true
@@ -129,7 +138,7 @@ object AircraftSurfaceModules {
         // Terrain-contact volumes are intentionally coarse and can cover empty space above wings.
         // Ballistics must keep the authored projectile hull, then add the fitted surface modules.
         val hull=ProjectileHitSelection.nearestObb(vehicle.getOBBs(),start,end,0.0)
-        return clipGeometry(vehicle.computed().aircraftSurfaceModules,Matrix4d(vehicle.getVehicleTransform(1f)),
+        return clipGeometry(presentModules(vehicle),Matrix4d(vehicle.getVehicleTransform(1f)),
             boneMatrices(vehicle,1f),hull,start,end)
     }
 
@@ -221,6 +230,21 @@ object AircraftSurfaceModules {
         }
     }
 
+    /** Read-only presentation of the same articulated volumes used by projectile collision. */
+    @JvmStatic fun debugHitboxes(vehicle: VehicleEntity, partialTick: Float): List<OBB> {
+        val modules = presentModules(vehicle)
+        if (modules.isEmpty()) return emptyList()
+        val frame = Matrix4d(vehicle.getVehicleTransform(partialTick))
+        val poses = boneMatrices(vehicle, partialTick)
+        return modules.flatMap { it.hitboxes }.map { box ->
+            val transform = Matrix4d(frame).mul(poses(box.bone))
+            val center = box.min.add(box.max).scale(.5)
+            val half = box.max.subtract(box.min).scale(.5)
+            OBB(transform.transformPosition(Vector3d(center.x, center.y, center.z)),
+                Vector3d(half.x, half.y, half.z), transform.getNormalizedRotation(Quaterniond()), OBB.Part.BODY)
+        }
+    }
+
     /** Resolve only the accepted contact segment; a surface behind a nearer hull is not a hit. */
     fun contactModule(vehicle: VehicleEntity, start: Vec3, hit: Vec3, incoming: Vec3): ResourceLocation? {
         if (!finite(start) || !finite(hit) || !finite(incoming)) return null
@@ -232,6 +256,6 @@ object AircraftSurfaceModules {
         val from=local(start); val to=local(hit.add(incoming.normalize().scale(.05)))
         val matrix=boneMatrices(vehicle,1f)
         val inverse=hashMapOf<String,Matrix4d>()
-        return nearest(data.aircraftSurfaceModules,from,to) { bone -> inverse.getOrPut(bone) { matrix(bone).invert(Matrix4d()) } }
+        return nearest(presentModules(vehicle),from,to) { bone -> inverse.getOrPut(bone) { matrix(bone).invert(Matrix4d()) } }
     }
 }

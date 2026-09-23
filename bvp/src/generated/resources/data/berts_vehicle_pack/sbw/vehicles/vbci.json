@@ -293,7 +293,8 @@
               "ProjectileProfile": "berts_vehicle_pack:vbci/cannon/ammo_00_m811_pmb090_apfsds",
               "ProjectileLife": 40
             }
-          }
+          },
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell"
         },
         {
           "Ammo": "superbwarfare:small_shell_gs",
@@ -332,7 +333,8 @@
               "ProjectileProfile": "berts_vehicle_pack:vbci/cannon/ammo_01_m811_m791_apds",
               "ProjectileLife": 40
             }
-          }
+          },
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell"
         },
         {
           "Ammo": "superbwarfare:small_shell_he",
@@ -371,7 +373,8 @@
               "ProjectileProfile": "berts_vehicle_pack:vbci/cannon/ammo_02_m811_m792_hei_t",
               "ProjectileLife": 40
             }
-          }
+          },
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell"
         }
       ],
       "ShootPos": {
@@ -486,7 +489,8 @@
               "ProjectileProfile": "berts_vehicle_pack:vbci/mainmachinegun/ammo_00_western_762_ap",
               "ProjectileLife": 400
             }
-          }
+          },
+          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition"
         }
       ],
       "Projectile": {

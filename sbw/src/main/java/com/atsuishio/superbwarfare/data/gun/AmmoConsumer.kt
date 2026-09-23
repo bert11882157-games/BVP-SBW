@@ -33,6 +33,11 @@ class AmmoConsumer : DeserializeFromString, PropertyModifier<GunData, DefaultGun
     @SerialName("Ammo")
     var ammo: String? = null
 
+    /** Physical inventory item; Ammo remains the unique projectile/belt selector identity. */
+    @SerializedName("ConsumptionItem")
+    @SerialName("ConsumptionItem")
+    var consumptionItem: String? = null
+
     @SerializedName("AmmoSlot")
     @SerialName("AmmoSlot")
     var ammoSlot: String = "Default"
@@ -375,6 +380,24 @@ class AmmoConsumer : DeserializeFromString, PropertyModifier<GunData, DefaultGun
                 }
             }
 
+            this.type = AmmoConsumeType.ITEM
+        }
+
+        val physicalName = consumptionItem
+        if (physicalName != null) {
+            if (type != AmmoConsumeType.ITEM && type != AmmoConsumeType.PLAYER_AMMO) {
+                Mod.LOGGER.warn("ConsumptionItem requires item or player-ammo selector: {}", ammo)
+                return
+            }
+            val physicalId = ResourceLocation.tryParse(physicalName)
+            val physicalItem = physicalId?.let(ForgeRegistries.ITEMS::getValue)
+            if (physicalId == null || physicalItem == null || physicalItem === Items.AIR) {
+                Mod.LOGGER.warn("invalid consumption item: {}", physicalName)
+                return
+            }
+            this.stack = ItemStack(physicalItem)
+            // Preserve the unique Ammo selector for belt/component lookup, while all inventory
+            // operations use the registered physical item rather than a player-ammo pool.
             this.type = AmmoConsumeType.ITEM
         }
 

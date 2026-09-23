@@ -12,12 +12,18 @@ import org.joml.Vector3d
 import kotlin.math.abs
 import kotlin.math.max
 
-/** Exact authored tyre samples; the broad physical gear box remains entity discovery/contact geometry. */
+/** Per-wheel/bogie solids and their current lowest support point; legacy points remain supported. */
 internal object AircraftWheelGeometry {
-    data class Wheel(val definition: AircraftWheelContact, val world: Vec3, val orientation: Quaterniond) {
+    data class Wheel(val definition: AircraftWheelContact, val world: Vec3, val orientation: Quaterniond,
+                     val localSupport: Vec3 = definition.position, val center: Vec3 = world) {
         val id get() = definition.id
         val group get() = definition.group
-        fun terrainInfo() = pointInfo(world, orientation)
+        fun terrainInfo() = pointInfo(center, orientation).apply {
+            definition.bounds?.let {
+                size = it.maximum.subtract(it.minimum).scale(0.5)
+                getOBB().extents.set(size.x, size.y, size.z)
+            }
+        }
     }
 
     fun pointInfo(point: Vec3, orientation: Quaterniond = Quaterniond()) = OBBInfo().apply {
@@ -27,13 +33,30 @@ internal object AircraftWheelGeometry {
         getOBB().updateRotation(orientation)
     }
 
-    fun sample(definition: AircraftTerrainContact, frame: Matrix4d): List<Wheel> =
-        definition.wheelContacts.map { Wheel(it, transform(frame, it.position), frame.getNormalizedRotation(Quaterniond())) }
+    fun sample(definition: AircraftTerrainContact, frame: Matrix4d): List<Wheel> {
+        val orientation = frame.getNormalizedRotation(Quaterniond())
+        return definition.wheelContacts.map { wheel ->
+            val bounds = wheel.bounds
+            if (bounds == null) Wheel(wheel, transform(frame, wheel.position), orientation)
+            else {
+                val corners = (0..7).map { bits -> Vec3(
+                    if (bits and 1 == 0) bounds.minimum.x else bounds.maximum.x,
+                    if (bits and 2 == 0) bounds.minimum.y else bounds.maximum.y,
+                    if (bits and 4 == 0) bounds.minimum.z else bounds.maximum.z) }
+                val lowest = corners.minOf { transform(frame, it).y }
+                val supports = corners.filter { transform(frame, it).y <= lowest + 1e-8 }
+                val local = supports.reduce(Vec3::add).scale(1.0 / supports.size)
+                Wheel(wheel, transform(frame, local), orientation, local,
+                    transform(frame, bounds.minimum.add(bounds.maximum).scale(0.5)))
+            }
+        }
+    }
 
     /** Used only for step lookahead; no solid support spans the gaps between tyres. */
     fun envelope(wheels: List<Wheel>): OBB {
-        val min = Vec3(wheels.minOf { it.world.x }, wheels.minOf { it.world.y }, wheels.minOf { it.world.z })
-        val max = Vec3(wheels.maxOf { it.world.x }, wheels.maxOf { it.world.y }, wheels.maxOf { it.world.z })
+        val boxes = wheels.map { com.atsuishio.superbwarfare.api.vehicle.flight.FixedWingContactSweep.Body(it.terrainInfo().getOBB()).bounds }
+        val min = Vec3(boxes.minOf { it.minX }, boxes.minOf { it.minY }, boxes.minOf { it.minZ })
+        val max = Vec3(boxes.maxOf { it.maxX }, boxes.maxOf { it.maxY }, boxes.maxOf { it.maxZ })
         val center = min.add(max).scale(0.5)
         val half = max.subtract(min).scale(0.5)
         return OBB(Vector3d(center.x, center.y, center.z), Vector3d(half.x, half.y, half.z), Quaterniond(), OBB.Part.BODY)

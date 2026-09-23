@@ -853,6 +853,7 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -886,6 +887,7 @@
         },
         {
           "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -1004,6 +1006,7 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -1037,6 +1040,7 @@
         },
         {
           "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -1155,6 +1159,7 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -1188,6 +1193,7 @@
         },
         {
           "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -1306,6 +1312,7 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -1339,6 +1346,7 @@
         },
         {
           "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -1565,6 +1573,68 @@
       ]
     },
     "RetractableGear": true,
+    "BodyParts": [
+      {
+        "Min": [
+          -0.892623,
+          0.75,
+          -0.135246
+        ],
+        "Max": [
+          0.892623,
+          2.163934,
+          4.643442
+        ]
+      },
+      {
+        "Min": [
+          -0.892623,
+          0.75,
+          4.643442
+        ],
+        "Max": [
+          0.892623,
+          1.622951,
+          5.049181
+        ]
+      },
+      {
+        "Min": [
+          -0.892623,
+          0.75,
+          -3.480327
+        ],
+        "Max": [
+          0.892623,
+          2.209016,
+          -0.135246
+        ]
+      },
+      {
+        "Min": [
+          -3.63,
+          0.781476,
+          -1.111967
+        ],
+        "Max": [
+          -0.803361,
+          1.743115,
+          2.374262
+        ]
+      },
+      {
+        "Min": [
+          0.803361,
+          0.781476,
+          -1.111967
+        ],
+        "Max": [
+          3.63,
+          1.743115,
+          2.374262
+        ]
+      }
+    ],
     "WheelContacts": [
       {
         "Id": "landing_gear_12_0",
@@ -1572,8 +1642,20 @@
         "Position": [
           0,
           0,
-          4.4180328125
-        ]
+          4.418033
+        ],
+        "Bounds": {
+          "Min": [
+            -0.067623,
+            0,
+            4.215164
+          ],
+          "Max": [
+            0.067623,
+            0.135246,
+            4.620902
+          ]
+        }
       },
       {
         "Id": "landing_gear_14_0",
@@ -1581,8 +1663,20 @@
         "Position": [
           -1.14959,
           0,
-          0.6762296875
-        ]
+          0.67623
+        ],
+        "Bounds": {
+          "Min": [
+            -1.262295,
+            0,
+            0.405737
+          ],
+          "Max": [
+            -1.036885,
+            0.180328,
+            0.946721
+          ]
+        }
       },
       {
         "Id": "landing_gear_15_0",
@@ -1590,8 +1684,20 @@
         "Position": [
           1.14959,
           0,
-          0.6762296875
-        ]
+          0.67623
+        ],
+        "Bounds": {
+          "Min": [
+            1.036885,
+            0,
+            0.405737
+          ],
+          "Max": [
+            1.262295,
+            0.180328,
+            0.946721
+          ]
+        }
       }
     ]
   },

@@ -29,7 +29,7 @@ final class AircraftRigAnimator {
     private static final int MAX_SURFACES = 32;
     private static final int MAX_ROTORS = 16;
     private static final int MAX_SWEEPS = 16;
-    private static final int MAX_GEAR = 16;
+    private static final int MAX_GEAR = 32;
     private static final int MAX_FLAPS = 16;
     private static final Map<PolyMeshModel, Entry> BINDINGS = new LinkedHashMap<>();
     private static final Map<UUID, Phase> PHASES = new LinkedHashMap<>(16, 0.75F, true);
@@ -281,7 +281,9 @@ final class AircraftRigAnimator {
             BedrockBone bone = bones.apply(source.bone);
             BedrockBone parent = bones.apply(source.parent);
             require(bone != null && parent != null && bone.parent == parent, "missing gear bone/parent");
-            gear[index] = new Gear(bone);
+            require(source.visibleWhen == null || "DEPLOYED".equals(source.visibleWhen)
+                    || "RETRACTED".equals(source.visibleWhen), "gear visibility state");
+            gear[index] = new Gear(bone, "RETRACTED".equals(source.visibleWhen));
         }
         for (int index = 0; index < flaps.length; index++) {
             var source = data.flaps[index];
@@ -497,17 +499,19 @@ final class AircraftRigAnimator {
     /** Restores the exact incoming visibility; shared models cannot retain another entity's gear. */
     static final class Gear {
         final BedrockBone bone;
+        final boolean showRetracted;
         private boolean captured;
         private boolean visibleBefore;
 
-        Gear(BedrockBone bone) { this.bone = bone; }
+        Gear(BedrockBone bone) { this(bone, false); }
+        Gear(BedrockBone bone, boolean showRetracted) { this.bone = bone; this.showRetracted = showRetracted; }
 
         void apply(boolean retracted) {
             if (!captured) {
                 visibleBefore = bone.visible;
                 captured = true;
             }
-            bone.visible = visibleBefore && !retracted;
+            bone.visible = visibleBefore && (retracted == showRetracted);
         }
 
         void restore() {

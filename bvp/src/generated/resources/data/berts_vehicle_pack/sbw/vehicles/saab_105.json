@@ -742,7 +742,20 @@
   ],
   "Weapons": {
     "Rockets": {
-      "AmmoType": "superbwarfare:small_rocket",
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_rocket",
+          "ConsumptionItem": "superbwarfare:medium_unguided_rocket",
+          "Override": {
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "berts_vehicle_pack:s8ko_rocket",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rockets/zuni",
+              "ProjectileLife": 100
+            }
+          }
+        }
+      ],
       "Magazine": 12,
       "EmptyReloadTime": 200,
       "DefaultFireMode": "Auto",
@@ -1242,6 +1255,68 @@
       ]
     },
     "RetractableGear": true,
+    "BodyParts": [
+      {
+        "Min": [
+          -0.79619,
+          0.72,
+          -0.316667
+        ],
+        "Max": [
+          0.79619,
+          1.628571,
+          4.523809
+        ]
+      },
+      {
+        "Min": [
+          -0.79619,
+          0.72,
+          4.523809
+        ],
+        "Max": [
+          0.79619,
+          1.040476,
+          5.338095
+        ]
+      },
+      {
+        "Min": [
+          -0.79619,
+          0.72,
+          -3.698667
+        ],
+        "Max": [
+          0.79619,
+          1.538095,
+          -0.316667
+        ]
+      },
+      {
+        "Min": [
+          -3.135,
+          0.512857,
+          -1.025238
+        ],
+        "Max": [
+          -0.716571,
+          1.522857,
+          1.613333
+        ]
+      },
+      {
+        "Min": [
+          0.716571,
+          0.512857,
+          -1.025238
+        ],
+        "Max": [
+          3.135,
+          1.522857,
+          1.613333
+        ]
+      }
+    ],
     "WheelContacts": [
       {
         "Id": "landing_gear_12_0",
@@ -1249,26 +1324,62 @@
         "Position": [
           0,
           0,
-          4.048809375
-        ]
+          4.048809
+        ],
+        "Bounds": {
+          "Min": [
+            -0.067857,
+            0,
+            3.867857
+          ],
+          "Max": [
+            0.067857,
+            0.090476,
+            4.229762
+          ]
+        }
       },
       {
         "Id": "landing_gear_14_0",
         "Group": "MAIN",
         "Position": [
-          -1.04047625,
+          -1.040476,
           0,
-          0.09047625
-        ]
+          0.090476
+        ],
+        "Bounds": {
+          "Min": [
+            -1.176191,
+            0,
+            -0.180952
+          ],
+          "Max": [
+            -0.904762,
+            0.180952,
+            0.361905
+          ]
+        }
       },
       {
         "Id": "landing_gear_15_0",
         "Group": "MAIN",
         "Position": [
-          1.04047625,
+          1.040476,
           0,
-          0.09047625
-        ]
+          0.090476
+        ],
+        "Bounds": {
+          "Min": [
+            0.904762,
+            0,
+            -0.180952
+          ],
+          "Max": [
+            1.176191,
+            0.180952,
+            0.361905
+          ]
+        }
       }
     ]
   },

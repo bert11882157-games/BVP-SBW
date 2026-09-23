@@ -74,20 +74,31 @@ object ClientRenderHandler {
 
     @JvmStatic
     fun transformVirtualRenderPosition(stack: PoseStack, projectile: Projectile, partialTick: Float) {
+        val offset = virtualRenderOffset(projectile, partialTick)
+        stack.translate(offset.x, offset.y, offset.z)
+    }
+
+    @JvmStatic
+    fun virtualRenderOffset(projectile: Projectile, partialTick: Float): Vec3 {
         val projectileId = projectile.uuid
-        val entry = bulletRenderOrigins[projectileId] ?: return
+        val entry = bulletRenderOrigins[projectileId] ?: return Vec3.ZERO
         val projectileAge = projectile.tickCount + partialTick.toDouble()
-        val firstVisibleAge = entry.firstVisibleAge ?: return
+        val firstVisibleAge = entry.firstVisibleAge ?: return Vec3.ZERO
         val age = max(0.0, projectileAge - firstVisibleAge)
         if (age >= BULLET_ORIGIN_EASE_TICKS) {
             bulletRenderOrigins.remove(projectileId)
-            return
+            return Vec3.ZERO
         }
         val origin = entry.resolvedOrigin ?: entry.resolve(partialTick).also { entry.resolvedOrigin = it }
         val rate = 1 - AnimationCurves.EASE_OUT_CIRC.apply(min(1.0, age / BULLET_ORIGIN_EASE_TICKS))
-        val offset = origin.subtract(projectile.getPosition(partialTick)).multiply(rate, rate, rate)
-        stack.translate(offset.x, offset.y, offset.z)
+        return origin.subtract(projectile.getPosition(partialTick)).multiply(rate, rate, rate)
     }
+
+    /** Shared missile effects use the same interpolated attachment and muzzle easing as the mesh. */
+    @JvmStatic fun missileNozzlePosition(entity: net.minecraft.world.entity.Entity, partial: Float): Vec3 =
+        com.atsuishio.superbwarfare.api.effect.MissilePresentation.nozzlePosition(entity, partial).let {
+            if (entity is Projectile) it.add(virtualRenderOffset(entity, partial)) else it
+        }
 
     fun interface BulletRenderOriginResolver {
         fun resolve(partialTick: Float): Vec3?

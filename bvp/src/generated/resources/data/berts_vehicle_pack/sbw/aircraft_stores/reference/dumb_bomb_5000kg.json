@@ -1,0 +1,16 @@
+{
+  "Schema": 1,
+  "Name": "Reference · heavy dumb bomb 5000 kg",
+  "Category": "BOMB",
+  "Capacity": 1,
+  "MassKg": 5000,
+  "Bomb": {
+    "Mode": "DUMB",
+    "Gravity": 0.1,
+    "DragMultiplier": 1.4,
+    "TurnDegreesPerTick": 0,
+    "BlastRadius": 48,
+    "BlastDamage": 2400
+  },
+  "AmmoItem": "superbwarfare:massive_freefall_bomb"
+}

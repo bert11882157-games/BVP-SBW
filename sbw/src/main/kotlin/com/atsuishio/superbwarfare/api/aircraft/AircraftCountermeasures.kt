@@ -5,12 +5,14 @@ import com.atsuishio.superbwarfare.data.vehicle.subdata.AircraftCountermeasureDe
 import com.atsuishio.superbwarfare.data.vehicle.subdata.VehicleType
 import com.atsuishio.superbwarfare.entity.projectile.FlareDecoyEntity
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity
+import com.atsuishio.superbwarfare.init.ModItems
 import com.atsuishio.superbwarfare.init.ModSounds
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.sounds.SoundSource
+import net.minecraft.world.item.Item
 import net.minecraft.world.phys.Vec3
 import org.joml.Vector3d
 
@@ -33,14 +35,24 @@ class AircraftCountermeasures(private val vehicle: VehicleEntity) {
         }
         val pilot = vehicle.getNthEntity(0) as? ServerPlayer
         val controlled = pilot?.isAlive == true && !pilot.isSpectator && pilot.vehicle === vehicle
-        var output = state.tick(now, controlled && vehicle.decoyInputDown,
-            controlled && (vehicle.getVehicleFlightControlBits().toInt() and CHAFF_INPUT_BIT) != 0,
-            definition.flares, definition.chaff, definition.flaresPerSecond, definition.flaresPerBurst)
-        if (output.flarePairs > 0 && !launchPair(level, definition)) {
-            state.abortPair()
-            output = state.tick(now, false, false, definition.flares, definition.chaff,
-                definition.flaresPerSecond, definition.flaresPerBurst)
+        val flareItem = ModItems.FLARE_AMMUNITION.get()
+        val chaffItem = ModItems.CHAFF_AMMUNITION.get()
+        var output = state.tick(now, controlled && vehicle.decoyInputDown && countItem(flareItem) >= 2,
+            controlled && (vehicle.getVehicleFlightControlBits().toInt() and CHAFF_INPUT_BIT) != 0
+                && countItem(chaffItem) >= 1,
+            definition.flares, definition.chaff, definition.flaresPerSecond, definition.flaresPerBurst,
+            definition.chaffReleaseTicks)
+        // A failed flare spawn rolls back only that pair. Chaff may have started in the same tick.
+        val chaffStarted = output.chaffStarted
+        if (output.flarePairs > 0) {
+            if (launchPair(level, definition)) consumeItem(flareItem, 2)
+            else {
+                state.abortPair()
+                output = state.tick(now, false, false, definition.flares, definition.chaff,
+                    definition.flaresPerSecond, definition.flaresPerBurst, definition.chaffReleaseTicks)
+            }
         }
+        if (chaffStarted) consumeItem(chaffItem, 1)
         // Chaff presentation consumes the synchronized accepted state on the client.
         val levels = output.flareLevel or (output.chaffLevel shl 8)
         if (sentLevels != levels) {
@@ -60,10 +72,10 @@ class AircraftCountermeasures(private val vehicle: VehicleEntity) {
             nextWarningAt = now + if (threat == 2) 6 else 24
         }
         if (threat == 0) nextWarningAt = now
-        vehicle.publishAircraftCountermeasures(levels or (threat shl 12) or
-            (if (output.chaffEmitting) 1 shl 14 else 0),
+        vehicle.publishAircraftCountermeasures(AircraftCountermeasureWire.pack(
+            output.flareLevel, output.chaffLevel, threat, output.chaffEmitting),
             output.flareCooldown or (output.chaffCooldown shl 9))
-        vehicle.decoyReady = definition.flares && output.flareCooldown == 0
+        vehicle.decoyReady = definition.flares && output.flareCooldown == 0 && countItem(flareItem) >= 2
         vehicle.decoyReloadCoolDown = output.flareCooldown
     }
 
@@ -87,6 +99,28 @@ class AircraftCountermeasures(private val vehicle: VehicleEntity) {
         launched.forEach(AircraftFfaBridge::registerFlare)
         level.playSound(null, vehicle, ModSounds.AIRCRAFT_FLARE_RELEASE.get(), vehicle.soundSource, 1.0F, 1.0F)
         return true
+    }
+
+    /** Only the vehicle magazine supplies countermeasures; one release uses one chaff item or two flares. */
+    private fun countItem(item: Item): Int {
+        var total = 0
+        for (slot in 0 until vehicle.inventory.slots) {
+            val stack = vehicle.inventory.getStackInSlot(slot)
+            if (stack.`is`(item)) total += stack.count
+        }
+        return total
+    }
+
+    private fun consumeItem(item: Item, amount: Int) {
+        require(countItem(item) >= amount)
+        var remaining = amount
+        for (slot in 0 until vehicle.inventory.slots) {
+            val stack = vehicle.inventory.getStackInSlot(slot)
+            if (!stack.`is`(item)) continue
+            remaining -= vehicle.inventory.extractItem(slot, remaining, false).count
+            if (remaining == 0) break
+        }
+        check(remaining == 0)
     }
 
     fun save(tag: CompoundTag) {

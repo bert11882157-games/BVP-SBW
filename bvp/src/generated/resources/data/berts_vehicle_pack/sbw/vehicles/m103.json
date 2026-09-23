@@ -450,7 +450,8 @@
               "ProjectileProfile": "berts_vehicle_pack:m103/cannon/ammo_00_m358_apbc",
               "ProjectileLife": 50
             }
-          }
+          },
+          "ConsumptionItem": "superbwarfare:tier_2_armor_piercing_shell"
         },
         {
           "Ammo": "berts_vehicle_pack:level_2_ap_shell",
@@ -478,7 +479,8 @@
               "ProjectileProfile": "berts_vehicle_pack:m103/cannon/ammo_01_m469_heat_fs",
               "ProjectileLife": 50
             }
-          }
+          },
+          "ConsumptionItem": "superbwarfare:tier_1_heat_shell"
         },
         {
           "Ammo": "superbwarfare:large_shell_he",
@@ -506,7 +508,8 @@
               "ProjectileProfile": "berts_vehicle_pack:m103/cannon/ammo_02_m356_he",
               "ProjectileLife": 50
             }
-          }
+          },
+          "ConsumptionItem": "superbwarfare:large_he_shell"
         }
       ],
       "SoundInfo": {
@@ -625,7 +628,8 @@
               "ProjectileProfile": "berts_vehicle_pack:m103/machinegun/ammo_00_western_762_ap",
               "ProjectileLife": 400
             }
-          }
+          },
+          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition"
         }
       ],
       "Projectile": {
@@ -820,7 +824,8 @@
               "ProjectileProfile": "berts_vehicle_pack:m103/passengermachinegun/ammo_00_western_127_m20_api_t_1",
               "ProjectileLife": 400
             }
-          }
+          },
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition"
         }
       ],
       "Crosshair": "@VehicleCommonGun",

@@ -509,6 +509,7 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -556,6 +557,7 @@
       "ProjectileBeltAmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -578,6 +580,7 @@
         },
         {
           "Ammo": "superbwarfare:small_shell_gs",
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -684,6 +687,7 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -731,6 +735,7 @@
       "ProjectileBeltAmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -753,6 +758,7 @@
         },
         {
           "Ammo": "superbwarfare:small_shell_gs",
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -859,6 +865,7 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -906,6 +913,7 @@
       "ProjectileBeltAmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -928,6 +936,7 @@
         },
         {
           "Ammo": "superbwarfare:small_shell_gs",
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -1034,6 +1043,7 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -1087,6 +1097,7 @@
       "ProjectileBeltAmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -1109,6 +1120,7 @@
         },
         {
           "Ammo": "superbwarfare:small_shell_gs",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -1215,6 +1227,7 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -1268,6 +1281,7 @@
       "ProjectileBeltAmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -1290,6 +1304,7 @@
         },
         {
           "Ammo": "superbwarfare:small_shell_gs",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -1517,6 +1532,44 @@
       ]
     },
     "RetractableGear": true,
+    "BodyParts": [
+      {
+        "Min": [
+          -0.634534,
+          1.841479,
+          -2.53991
+        ],
+        "Max": [
+          0.634534,
+          3.838264,
+          6.167846
+        ]
+      },
+      {
+        "Min": [
+          -4.554,
+          2.277396,
+          1.878039
+        ],
+        "Max": [
+          -0.57108,
+          2.559261,
+          3.357974
+        ]
+      },
+      {
+        "Min": [
+          0.57108,
+          2.277396,
+          1.878039
+        ],
+        "Max": [
+          4.554,
+          2.559261,
+          3.357974
+        ]
+      }
+    ],
     "WheelContacts": [
       {
         "Id": "Nose",
@@ -1524,26 +1577,62 @@
         "Position": [
           0,
           0,
-          4.5482315625
-        ]
+          4.548232
+        ],
+        "Bounds": {
+          "Min": [
+            -0.133119,
+            0,
+            4.370739
+          ],
+          "Max": [
+            0.133119,
+            0.066559,
+            4.725724
+          ]
+        }
       },
       {
         "Id": "LeftMain",
         "Group": "MAIN",
         "Position": [
-          -2.6845659375000004,
-          0.044373125,
+          -2.684566,
+          0.044373,
           0.665595
-        ]
+        ],
+        "Bounds": {
+          "Min": [
+            -2.884244,
+            0.044373,
+            0.488103
+          ],
+          "Max": [
+            -2.484888,
+            0.066559,
+            0.843087
+          ]
+        }
       },
       {
         "Id": "RightMain",
         "Group": "MAIN",
         "Position": [
-          2.6845659375000004,
-          0.044373125,
+          2.684566,
+          0.044373,
           0.665595
-        ]
+        ],
+        "Bounds": {
+          "Min": [
+            2.484888,
+            0.044373,
+            0.488103
+          ],
+          "Max": [
+            2.884244,
+            0.066559,
+            0.843087
+          ]
+        }
       }
     ]
   },

@@ -356,8 +356,8 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
 
     fun modifyGunData(name: String?, consumer: Consumer<GunData>) {
         if (name == null) return
-        if (name == com.atsuishio.superbwarfare.api.aircraft.AircraftGunPodGroups.GROUP) {
-            com.atsuishio.superbwarfare.api.aircraft.AircraftGunPodGroups.equipped(this).forEach { modifyGunData(it, consumer) }
+        if (com.atsuishio.superbwarfare.api.aircraft.AircraftGunPodGroups.isAlias(name)) {
+            com.atsuishio.superbwarfare.api.aircraft.AircraftGunPodGroups.members(this, name).forEach { modifyGunData(it, consumer) }
             return
         }
 
@@ -1245,6 +1245,11 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
             define(LASER_SCALE_O, 0f)
             define(CHARGE_PROGRESS, 0f)
             define(IS_WRECK, false)
+            define(AIRCRAFT_WRECK_START, -1L)
+            define(AIRCRAFT_WRECK_MOTION_X, 0F)
+            define(AIRCRAFT_WRECK_MOTION_Y, 0F)
+            define(AIRCRAFT_WRECK_MOTION_Z, 0F)
+            define(AIRCRAFT_WRECK_WINGS, -1)
             define(SYMPATHETIC_DETONATED, false)
             define(TURRET_BURNED, false)
             define(HOVER_MODE, false)
@@ -1759,9 +1764,12 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         }
 
         val currentIndex = vehicleWeaponRuntime.resolvedPrimaryIndex(seatIndex, candidates)
-        val typeIndex = candidates.firstOrNull { it == value }
+        val typeIndex = if (seatIndex == 0 &&
+            com.atsuishio.superbwarfare.api.aircraft.AircraftArmamentManager.definition(this) != null)
+            candidates.getOrNull(value.coerceIn(0, candidates.lastIndex))
+        else candidates.firstOrNull { it == value }
             ?: candidates.getOrNull(value.coerceIn(0, candidates.lastIndex))
-            ?: return
+        if (typeIndex == null) return
         if (typeIndex == currentIndex) return
 
         val weapon = getGunData(seatIndex, typeIndex) ?: return
@@ -1871,6 +1879,11 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         serverPitch = compound.getFloat("ServerPitch")
 
         isWreck = compound.getBoolean("IsWreck")
+        aircraftWreckStart = if (compound.contains("AircraftWreckStart")) compound.getLong("AircraftWreckStart").coerceAtLeast(-1L) else -1L
+        aircraftWreckMotionX = compound.getFloat("AircraftWreckMotionX").takeIf { it.isFinite() && kotlin.math.abs(it) < 100F } ?: 0F
+        aircraftWreckMotionY = compound.getFloat("AircraftWreckMotionY").takeIf { it.isFinite() && kotlin.math.abs(it) < 100F } ?: 0F
+        aircraftWreckMotionZ = compound.getFloat("AircraftWreckMotionZ").takeIf { it.isFinite() && kotlin.math.abs(it) < 100F } ?: 0F
+        aircraftWreckWings = if (compound.contains("AircraftWreckWings")) compound.getInt("AircraftWreckWings").coerceIn(-1, 3) else -1
         sympatheticDetonated = compound.getBoolean("SympatheticDetonated")
         turretBurned = compound.getBoolean("TurretBurned")
         turretBurnTimer = compound.getInt("TurretBurnTimer")
@@ -1977,6 +1990,11 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         inventoryEnergyService.writeEnergy(compound)
 
         compound.putBoolean("IsWreck", isWreck)
+        compound.putLong("AircraftWreckStart", aircraftWreckStart)
+        compound.putFloat("AircraftWreckMotionX", aircraftWreckMotionX)
+        compound.putFloat("AircraftWreckMotionY", aircraftWreckMotionY)
+        compound.putFloat("AircraftWreckMotionZ", aircraftWreckMotionZ)
+        compound.putInt("AircraftWreckWings", aircraftWreckWings)
         compound.putBoolean("SympatheticDetonated", sympatheticDetonated)
         compound.putBoolean("TurretBurned", turretBurned)
         compound.putInt("TurretBurnTimer", turretBurnTimer)
@@ -6677,6 +6695,11 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
             // after the shared hull/weapon state has been loaded.
             readAdditionalSaveData(durable)
             isWreck = false
+            aircraftWreckStart = -1L
+            aircraftWreckMotionX = 0F
+            aircraftWreckMotionY = 0F
+            aircraftWreckMotionZ = 0F
+            aircraftWreckWings = -1
             sympatheticDetonated = false
             turretBurned = false
             turretBurnTimer = 0
@@ -6863,9 +6886,9 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
 
     /** Accepted server countermeasure levels, also synchronized for cockpit/HUD consumers. */
     fun getFlareLevel(): Int = entityData.get(AIRCRAFT_COUNTERMEASURE_LEVELS) and 255
-    fun getChaffLevel(): Int = (entityData.get(AIRCRAFT_COUNTERMEASURE_LEVELS) shr 8) and 15
-    fun getAircraftThreatLevel(): Int = (entityData.get(AIRCRAFT_COUNTERMEASURE_LEVELS) shr 12) and 3
-    fun isChaffEmitting(): Boolean = (entityData.get(AIRCRAFT_COUNTERMEASURE_LEVELS) and (1 shl 14)) != 0
+    fun getChaffLevel(): Int = com.atsuishio.superbwarfare.api.aircraft.AircraftCountermeasureWire.chaff(entityData.get(AIRCRAFT_COUNTERMEASURE_LEVELS))
+    fun getAircraftThreatLevel(): Int = com.atsuishio.superbwarfare.api.aircraft.AircraftCountermeasureWire.threat(entityData.get(AIRCRAFT_COUNTERMEASURE_LEVELS))
+    fun isChaffEmitting(): Boolean = com.atsuishio.superbwarfare.api.aircraft.AircraftCountermeasureWire.emitting(entityData.get(AIRCRAFT_COUNTERMEASURE_LEVELS))
     fun getFlareCooldownTicks(): Int = entityData.get(AIRCRAFT_COUNTERMEASURE_TIMERS) and 511
     fun getChaffCooldownTicks(): Int = (entityData.get(AIRCRAFT_COUNTERMEASURE_TIMERS) shr 9) and 511
     internal fun publishAircraftCountermeasures(levels: Int, timers: Int) {
@@ -6925,7 +6948,8 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
     fun getAircraftCollisionSnapshot(partialTicks: Float): AircraftCollisionSnapshot? {
         if (!isInitialized || !usesAircraftTerrainContact()) return null
         val definition = computed().aircraftTerrainContact ?: return null
-        return AircraftCollisionSnapshot.create(definition, getVehicleTransform(partialTicks), synchedGearRot)
+        return AircraftCollisionSnapshot.create(definition, getVehicleTransform(partialTicks), synchedGearRot,
+            com.atsuishio.superbwarfare.api.vehicle.flight.AircraftWreckBreakup.mask(this))
     }
 
     /** UI selection uses physical parts while projectile/module routing keeps its authored API. */
@@ -7233,6 +7257,11 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
     var hornVolume by HORN_VOLUME
 
     var isWreck by IS_WRECK
+    var aircraftWreckStart by AIRCRAFT_WRECK_START
+    var aircraftWreckMotionX by AIRCRAFT_WRECK_MOTION_X
+    var aircraftWreckMotionY by AIRCRAFT_WRECK_MOTION_Y
+    var aircraftWreckMotionZ by AIRCRAFT_WRECK_MOTION_Z
+    var aircraftWreckWings by AIRCRAFT_WRECK_WINGS
     var sympatheticDetonated by SYMPATHETIC_DETONATED
     var turretBurned by TURRET_BURNED
     var turretBurnTimer by TURRET_BURN_TIMER
@@ -7642,6 +7671,16 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         private val AIRCRAFT_COUNTERMEASURE_LEVELS: EntityDataAccessor<Int> =
             SynchedEntityData.defineId(VehicleEntity::class.java, EntityDataSerializers.INT)
         private val AIRCRAFT_COUNTERMEASURE_TIMERS: EntityDataAccessor<Int> =
+            SynchedEntityData.defineId(VehicleEntity::class.java, EntityDataSerializers.INT)
+        private val AIRCRAFT_WRECK_START: EntityDataAccessor<Long> =
+            SynchedEntityData.defineId(VehicleEntity::class.java, EntityDataSerializers.LONG)
+        private val AIRCRAFT_WRECK_MOTION_X: EntityDataAccessor<Float> =
+            SynchedEntityData.defineId(VehicleEntity::class.java, EntityDataSerializers.FLOAT)
+        private val AIRCRAFT_WRECK_MOTION_Y: EntityDataAccessor<Float> =
+            SynchedEntityData.defineId(VehicleEntity::class.java, EntityDataSerializers.FLOAT)
+        private val AIRCRAFT_WRECK_MOTION_Z: EntityDataAccessor<Float> =
+            SynchedEntityData.defineId(VehicleEntity::class.java, EntityDataSerializers.FLOAT)
+        private val AIRCRAFT_WRECK_WINGS: EntityDataAccessor<Int> =
             SynchedEntityData.defineId(VehicleEntity::class.java, EntityDataSerializers.INT)
     }
 }

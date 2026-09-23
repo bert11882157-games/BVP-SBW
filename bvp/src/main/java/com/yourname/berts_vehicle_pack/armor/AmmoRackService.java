@@ -20,6 +20,16 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 final class AmmoRackService {
     private static final float SUPER_AMMO_RACK_EXPLOSION_RADIUS = 10.0F;
+    // Presentation only: small platforms and nearly empty racks do not make a mushroom cloud.
+    private static boolean substantialAmmoRack(ArmoredVehicleEntity vehicle) {
+        if (vehicle.computed().getLethalDirectCaliberMm() != null) return false;
+        int shells = 0;
+        for (var stack : vehicle.getItems()) {
+            if (BvpTankShells.isCannonShell(stack)) shells += stack.m_41613_();
+            if (shells >= 10) return true;
+        }
+        return false;
+    }
     private static final ResourceLocation AMMO_RACK_DESTRUCTION_CAUSE =
             new ResourceLocation("berts_vehicle_pack", "ammo_rack");
 
@@ -91,7 +101,8 @@ final class AmmoRackService {
                 .turretImpulse(launch)
                 .turretCrushPolicy(TurretWreckImpactHandler.AMMO_RACK_CRUSH_POLICY_ID)
                 .explosionCause(AMMO_RACK_DESTRUCTION_CAUSE)
-                .explosionProfile(BvpProjectileTrailHooks.AMMO_RACK_EXPLOSION_PROFILE_ID)
+                .explosionProfile(substantialAmmoRack(vehicle)
+                        ? BvpProjectileTrailHooks.AMMO_RACK_EXPLOSION_PROFILE_ID : null)
                 .wreckVisual(vehicleId)
                 .particlePosition(hitVec)
                 .build();

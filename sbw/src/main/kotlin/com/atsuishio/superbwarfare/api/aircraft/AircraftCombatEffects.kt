@@ -18,7 +18,13 @@ object AircraftCombatEffects {
 
     private fun burst(source: Entity, retained: VehicleEntity?, recipe: ExplosionBurstMessage.Recipe): Boolean {
         val level = source.level() as? ServerLevel ?: return false
-        val point = source.boundingBox.center
+        val fuselage = if (recipe == ExplosionBurstMessage.Recipe.AIRCRAFT_BREAKUP)
+            retained?.computed()?.aircraftTerrainContact?.fuselage else null
+        val point = if (fuselage != null && retained != null) {
+            val local = fuselage.minimum.add(fuselage.maximum).scale(.5)
+            val world = retained.getVehicleTransform(1f).transformPosition(org.joml.Vector3d(local.x, local.y, local.z))
+            net.minecraft.world.phys.Vec3(world.x, world.y, world.z)
+        } else source.boundingBox.center
         if (!point.x.isFinite() || !point.y.isFinite() || !point.z.isFinite()) return false
         val message = ExplosionBurstMessage(recipe, point, false, level.random.nextLong(), source.stringUUID)
         // These are event recipients, not chunk tickets. Retained targets can be outside acquisition range.

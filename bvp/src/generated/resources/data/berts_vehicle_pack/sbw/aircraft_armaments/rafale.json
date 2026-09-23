@@ -19,5 +19,10 @@
   "Name": "Rafale",
   "BuiltInWeapons": [
     "Gun1"
-  ]
+  ],
+  "MaxPayloadKg": 9500,
+  "Radar": {
+    "Enabled": true,
+    "Range": 1000
+  }
 }

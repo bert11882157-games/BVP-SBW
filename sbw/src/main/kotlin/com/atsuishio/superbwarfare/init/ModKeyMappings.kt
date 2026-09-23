@@ -147,7 +147,7 @@ object ModKeyMappings {
     val VEHICLE_SWITCH_PRIMARY = registerVehicleKey("vehicle_switch_primary", GLFW.GLFW_KEY_Z)
 
     @JvmField
-    val VEHICLE_SWITCH_SECONDARY = registerVehicleKey("vehicle_secondary_hold", GLFW.GLFW_KEY_2,
+    val VEHICLE_SWITCH_SECONDARY = registerVehicleKey("vehicle_cycle_secondary", GLFW.GLFW_KEY_UNKNOWN,
         context = VehicleWeaponSelectionKeyContext)
 
     @JvmField

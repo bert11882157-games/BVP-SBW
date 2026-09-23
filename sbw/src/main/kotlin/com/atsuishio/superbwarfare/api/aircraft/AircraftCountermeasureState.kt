@@ -6,7 +6,8 @@ import kotlin.math.ceil
 /** Server tick state machine; one emission is always a left/right pair. No entity or mod linkage. */
 class AircraftCountermeasureState {
     data class Output(val flarePairs: Int, val flareLevel: Int, val chaffLevel: Int,
-        val chaffEmitting: Boolean, val flareCooldown: Int, val chaffCooldown: Int)
+        val chaffEmitting: Boolean, val flareCooldown: Int, val chaffCooldown: Int,
+        val chaffStarted: Boolean)
 
     private val flareExpiries = ArrayDeque<Long>()
     private var burstUsed = 0
@@ -16,10 +17,13 @@ class AircraftCountermeasureState {
     var chaffReadyAt = 0L
         private set
     private var chaffStartedAt: Long? = null
+    private var chaffProgramTicks = CHAFF_RELEASE_TICKS
     private var pairRollback: Pair<Int, Long>? = null
 
     fun tick(now: Long, flareHeld: Boolean, chaffHeld: Boolean, flaresEnabled: Boolean,
-        chaffEnabled: Boolean, flaresPerSecond: Int, flaresPerBurst: Int): Output {
+        chaffEnabled: Boolean, flaresPerSecond: Int, flaresPerBurst: Int,
+        chaffReleaseTicks: Int = CHAFF_RELEASE_TICKS): Output {
+        require(chaffReleaseTicks in 10..MAX_CHAFF_RELEASE_TICKS && chaffReleaseTicks % 10 == 0)
         while (flareExpiries.isNotEmpty() && flareExpiries.first <= now) flareExpiries.removeFirst()
         pairRollback = null
         var pairs = 0
@@ -37,24 +41,26 @@ class AircraftCountermeasureState {
                 flareReadyAt = now + COOLDOWN_TICKS
             }
         }
-        if (chaffEnabled && chaffHeld && now >= chaffReadyAt) {
+        val chaffStarted = chaffEnabled && chaffHeld && now >= chaffReadyAt
+        if (chaffStarted) {
             chaffStartedAt = now
-            chaffReadyAt = now + CHAFF_RELEASE_TICKS + COOLDOWN_TICKS
+            chaffProgramTicks = chaffReleaseTicks
+            chaffReadyAt = now + chaffProgramTicks + COOLDOWN_TICKS
         }
         val elapsed = chaffStartedAt?.let { now - it }
-        val chaffLevel = if (chaffEnabled && elapsed != null) chaffLevelAt(elapsed) else 0
-        if (elapsed != null && elapsed >= 120) chaffStartedAt = null
+        val chaffLevel = if (chaffEnabled && elapsed != null) chaffLevelAt(elapsed, chaffProgramTicks) else 0
+        if (elapsed != null && elapsed >= chaffProgramTicks + CHAFF_DECAY_TICKS) chaffStartedAt = null
         return Output(pairs, flareExpiries.size, chaffLevel,
-            chaffEnabled && elapsed != null && elapsed in 0..60,
+            chaffEnabled && elapsed != null && elapsed in 0..chaffProgramTicks.toLong(),
             (flareReadyAt - now).coerceIn(0, COOLDOWN_TICKS.toLong()).toInt(),
-            (chaffReadyAt - now).coerceIn(0, COOLDOWN_TICKS.toLong()).toInt())
+            (chaffReadyAt - now).coerceIn(0, COOLDOWN_TICKS.toLong()).toInt(), chaffStarted)
     }
 
     /** Temporary clouds/decoys do not survive unload; cooldowns and partial burst expenditure do. */
     fun restore(now: Long, flareReady: Long, chaffReady: Long, used: Int) {
         flareExpiries.clear(); chaffStartedAt = null
         flareReadyAt = flareReady.coerceIn(now, now + COOLDOWN_TICKS)
-        chaffReadyAt = chaffReady.coerceIn(now, now + CHAFF_RELEASE_TICKS + COOLDOWN_TICKS)
+        chaffReadyAt = chaffReady.coerceIn(now, now + MAX_CHAFF_RELEASE_TICKS + COOLDOWN_TICKS)
         burstUsed = used.coerceIn(0, 126)
         nextPairTick = now + 1.0
     }
@@ -73,11 +79,20 @@ class AircraftCountermeasureState {
     companion object {
         const val FLARE_LIFETIME_TICKS = 40
         const val CHAFF_RELEASE_TICKS = 60
+        const val MAX_CHAFF_RELEASE_TICKS = 1200
+        const val CHAFF_DECAY_TICKS = 60
         const val COOLDOWN_TICKS = 400
-        fun chaffLevelAt(elapsed: Long): Int = when {
-            elapsed < 0 || elapsed >= 120 -> 0
-            elapsed <= 60 -> (1..minOf(6, (elapsed / 10).toInt())).sumOf { (it + 1) / 2 }
-            else -> ceil(12.0 * (120 - elapsed) / 60.0).toInt()
+        fun chaffLevelAt(elapsed: Long, releaseTicks: Int = CHAFF_RELEASE_TICKS): Int {
+            require(releaseTicks in 10..MAX_CHAFF_RELEASE_TICKS && releaseTicks % 10 == 0)
+            if (elapsed < 0 || elapsed >= releaseTicks + CHAFF_DECAY_TICKS) return 0
+            fun accumulated(ticks: Long): Int {
+                val steps = (ticks / 10).toInt()
+                return minOf(steps, 2) + (steps - 2).coerceIn(0, 2) * 2 +
+                    (steps - 4).coerceAtLeast(0) * 3
+            }
+            return if (elapsed <= releaseTicks) accumulated(elapsed) else
+                ceil(accumulated(releaseTicks.toLong()) *
+                    (releaseTicks + CHAFF_DECAY_TICKS - elapsed).toDouble() / CHAFF_DECAY_TICKS).toInt()
         }
     }
 }

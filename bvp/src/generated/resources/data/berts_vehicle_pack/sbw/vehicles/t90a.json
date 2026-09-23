@@ -234,7 +234,8 @@
               10,
               120
             ]
-          }
+          },
+          "ConsumptionItem": "superbwarfare:tier_3_armor_piercing_shell"
         },
         {
           "Ammo": "berts_vehicle_pack:level_2_ap_shell",
@@ -261,7 +262,8 @@
               10,
               120
             ]
-          }
+          },
+          "ConsumptionItem": "superbwarfare:tier_2_heat_shell"
         },
         {
           "Ammo": "berts_vehicle_pack:3of26_he_shell",
@@ -289,7 +291,8 @@
               10,
               120
             ]
-          }
+          },
+          "ConsumptionItem": "superbwarfare:large_he_shell"
         },
         {
           "Ammo": "superbwarfare:medium_anti_ground_missile",
@@ -337,7 +340,8 @@
               10,
               120
             ]
-          }
+          },
+          "ConsumptionItem": "superbwarfare:medium_atgm"
         }
       ],
       "SoundInfo": {
@@ -455,7 +459,8 @@
               "ProjectileProfile": "berts_vehicle_pack:t90a/machinegun/ammo_00_russian_762_ap_i",
               "ProjectileLife": 400
             }
-          }
+          },
+          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition"
         }
       ],
       "Projectile": {
@@ -637,7 +642,8 @@
               "ProjectileProfile": "berts_vehicle_pack:t90a/passengermachinegun/ammo_00_russian_127_bzt44_api_t_1",
               "ProjectileLife": 400
             }
-          }
+          },
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition"
         }
       ],
       "ShootPos": {

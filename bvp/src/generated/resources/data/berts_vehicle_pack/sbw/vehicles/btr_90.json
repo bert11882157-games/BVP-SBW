@@ -639,7 +639,8 @@
               "ProjectileProfile": "berts_vehicle_pack:btr_90/cannon/ammo_00_3ubr8_apds",
               "ProjectileLife": 40
             }
-          }
+          },
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell"
         },
         {
           "Ammo": "superbwarfare:small_shell_aa",
@@ -689,7 +690,8 @@
               "ProjectileProfile": "berts_vehicle_pack:btr_90/cannon/ammo_01_3uor6_hef_t",
               "ProjectileLife": 40
             }
-          }
+          },
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell"
         }
       ],
       "ProjectileAmount": 1,
@@ -835,7 +837,8 @@
               "ProjectileProfile": "berts_vehicle_pack:btr_90/mainmachinegun/ammo_00_russian_762_ap_i",
               "ProjectileLife": 400
             }
-          }
+          },
+          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition"
         }
       ],
       "Projectile": {
@@ -984,7 +987,8 @@
               "ProjectileType": "superbwarfare:wire_guide_missile",
               "ProjectileProfile": "berts_vehicle_pack:btr_90/missile/ammo_00_9m133_kornet"
             }
-          }
+          },
+          "ConsumptionItem": "superbwarfare:medium_atgm"
         }
       ],
       "SoundInfo": {
@@ -1123,7 +1127,8 @@
               "ProjectileType": "superbwarfare:gun_grenade",
               "ProjectileProfile": "berts_vehicle_pack:btr_90/grenadelauncher/ammo_00_30mm_vog_30"
             }
-          }
+          },
+          "ConsumptionItem": "superbwarfare:grenade_ammunition"
         }
       ],
       "ShellType": "HE",

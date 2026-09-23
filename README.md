@@ -5,8 +5,7 @@ Mod source code and runtime resources for Minecraft 1.20.1 / Forge.
 ## Downloads
 
 Use the [download list](DOWNLOADS.md) for matching BVP/SBW JARs, checksums and companion mods.
-Latest published testing set: **BVP 0.1.1-kh55-test.3 / SBW 0.8.9-bvp.4**, paired with
-**Fire From Above 1.0.5-bvp.4**. The list also retains earlier drafts and their access requirements.
+The list identifies the current matching testing set and retains earlier releases and their access requirements.
 
 ## Source layout
 

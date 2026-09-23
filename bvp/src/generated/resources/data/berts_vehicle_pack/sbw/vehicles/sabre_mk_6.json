@@ -870,6 +870,7 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:projectile",
@@ -903,6 +904,7 @@
         },
         {
           "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:projectile",
@@ -1021,6 +1023,7 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:projectile",
@@ -1054,6 +1057,7 @@
         },
         {
           "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:projectile",
@@ -1172,6 +1176,7 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:projectile",
@@ -1205,6 +1210,7 @@
         },
         {
           "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:projectile",
@@ -1323,6 +1329,7 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:projectile",
@@ -1356,6 +1363,7 @@
         },
         {
           "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:projectile",
@@ -1474,6 +1482,7 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:projectile",
@@ -1507,6 +1516,7 @@
         },
         {
           "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:projectile",
@@ -1625,6 +1635,7 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:projectile",
@@ -1658,6 +1669,7 @@
         },
         {
           "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:projectile",
@@ -1910,6 +1922,68 @@
       ]
     },
     "RetractableGear": true,
+    "BodyParts": [
+      {
+        "Min": [
+          -0.926798,
+          0.743421,
+          -1.239035
+        ],
+        "Max": [
+          0.926798,
+          2.428509,
+          4.460526
+        ]
+      },
+      {
+        "Min": [
+          -0.926798,
+          0.892105,
+          4.460526
+        ],
+        "Max": [
+          0.926798,
+          2.279824,
+          5.451754
+        ]
+      },
+      {
+        "Min": [
+          -0.926798,
+          0.842544,
+          -3.663579
+        ],
+        "Max": [
+          0.926798,
+          2.230263,
+          -1.239035
+        ]
+      },
+      {
+        "Min": [
+          -3.729,
+          0.118684,
+          -1.269035
+        ],
+        "Max": [
+          -0.834118,
+          1.169913,
+          2.607193
+        ]
+      },
+      {
+        "Min": [
+          0.834118,
+          0.118684,
+          -1.269035
+        ],
+        "Max": [
+          3.729,
+          1.169913,
+          2.607193
+        ]
+      }
+    ],
     "WheelContacts": [
       {
         "Id": "landing_gear_12",
@@ -1918,25 +1992,61 @@
           0,
           0,
           5.129605
-        ]
+        ],
+        "Bounds": {
+          "Min": [
+            -0.099123,
+            0,
+            4.906579
+          ],
+          "Max": [
+            0.099123,
+            0.148684,
+            5.352632
+          ]
+        }
       },
       {
         "Id": "landing_gear_14",
         "Group": "MAIN",
         "Position": [
-          -1.28859625,
+          -1.288596,
           0,
-          0.66907875
-        ]
+          0.669079
+        ],
+        "Bounds": {
+          "Min": [
+            -1.387719,
+            0,
+            0.446053
+          ],
+          "Max": [
+            -1.189474,
+            0.148684,
+            0.892105
+          ]
+        }
       },
       {
         "Id": "landing_gear_15",
         "Group": "MAIN",
         "Position": [
-          1.28859625,
+          1.288596,
           0,
-          0.66907875
-        ]
+          0.669079
+        ],
+        "Bounds": {
+          "Min": [
+            1.189474,
+            0,
+            0.446053
+          ],
+          "Max": [
+            1.387719,
+            0.148684,
+            0.892105
+          ]
+        }
       }
     ]
   },

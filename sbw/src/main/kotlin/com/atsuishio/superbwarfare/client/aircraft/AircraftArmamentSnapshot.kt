@@ -1,5 +1,6 @@
 package com.atsuishio.superbwarfare.client.aircraft
 
+import com.atsuishio.superbwarfare.api.aircraft.AircraftPylonRacks
 import com.google.gson.JsonArray
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
@@ -13,10 +14,14 @@ data class AircraftStoreView(
     val id: String, val name: String, val category: String,
     val item: ResourceLocation?, val model: ResourceLocation?, val texture: ResourceLocation?,
     val scale: Double, val capacity: Int?, val guidedAirToAir: Boolean = false,
+    val massKg: Double = 0.0, val maxPerPylon: Int = 1,
+    val rackSpacing: Vec3 = Vec3(0.6, 0.4, 0.0),
 ) {
-    val visualOnly: Boolean get() = (category == "AIR_TO_AIR" && !guidedAirToAir) || category == "VISUAL_ONLY"
+    val visualOnly: Boolean get() = (category in setOf("AIR_TO_AIR", "ANTI_RADIATION") && !guidedAirToAir) || category == "VISUAL_ONLY"
     val categoryLabel: String get() = when (category) {
         "AIR_TO_AIR" -> if (guidedAirToAir) "Air-to-air guided missile" else "Air-to-air · visual only"
+        "ANTI_RADIATION" -> "Anti-radiation missile"
+        "CRUISE" -> "Cruise missile"
         "VISUAL_ONLY" -> "Visual only"
         "LASER_GUIDED" -> "Laser guided"
         "GUN_POD" -> "Gun pod"
@@ -31,11 +36,15 @@ interface AircraftMountView {
     val positions: List<Vec3>
     val allowed: List<String>
     val groups: Map<String, List<String>>
+    val maxWeaponsPerPylon: Int
+    val maxPylonMassKg: Double
 }
 
 data class AircraftPairView(
     override val id: String, override val name: String, val left: Vec3, val right: Vec3,
     override val allowed: List<String>, override val groups: Map<String, List<String>>,
+    override val maxWeaponsPerPylon: Int = AircraftPylonRacks.MAX_COPIES,
+    override val maxPylonMassKg: Double = Double.POSITIVE_INFINITY,
 ) : AircraftMountView {
     override val positions: List<Vec3> = Collections.unmodifiableList(listOf(left, right))
 }
@@ -43,6 +52,8 @@ data class AircraftPairView(
 data class AircraftSingleView(
     override val id: String, override val name: String, val position: Vec3,
     override val allowed: List<String>, override val groups: Map<String, List<String>>,
+    override val maxWeaponsPerPylon: Int = AircraftPylonRacks.MAX_COPIES,
+    override val maxPylonMassKg: Double = Double.POSITIVE_INFINITY,
 ) : AircraftMountView {
     override val positions: List<Vec3> = Collections.singletonList(position)
 }
@@ -56,8 +67,8 @@ data class AircraftSeekView(val revision: Long, val weaponId: String, val target
                             val status: String, val category: String = "", val guidanceMode: String = "",
                             val coneDegrees: Double = 0.0, val range: Double = 0.0,
                             val lockTicks: Int = 0, val slot: String = "") {
-    val activeAam: Boolean get() = category == "AIR_TO_AIR" && weaponId.isNotBlank() &&
-        guidanceMode in setOf("INFRARED", "ACTIVE_RADAR", "SEMI_ACTIVE_RADAR") &&
+    val activeAam: Boolean get() = category in setOf("AIR_TO_AIR", "ANTI_RADIATION") && weaponId.isNotBlank() &&
+        guidanceMode in setOf("INFRARED", "ACTIVE_RADAR", "SEMI_ACTIVE_RADAR", "ANTI_RADIATION") &&
         coneDegrees in 1.0..60.0 && range in 16.0..4096.0 && status != "UNAVAILABLE"
 }
 
@@ -65,6 +76,7 @@ data class AircraftDefinitionView @JvmOverloads constructor(
     val name: String, val builtIn: List<String>, val pairs: List<AircraftPairView>,
     val pod: AircraftPodView?, val neutralGroups: Map<String, List<String>>,
     val singles: List<AircraftSingleView> = emptyList(),
+    val maxPayloadKg: Double = 0.0, val maxWeaponsPerPylon: Int = 1,
 ) {
     val mounts: List<AircraftMountView> = Collections.unmodifiableList(pairs + singles)
 }
@@ -75,14 +87,33 @@ data class AircraftArmamentSnapshot(
     val selections: Map<String, String>, val presets: Map<String, Map<String, String>>,
     val point: Vec3?, val podActive: Boolean, val message: String,
     val fired: Map<String, Int> = emptyMap(), val seekPair: String = "", val seekStatus: Int = 0,
-    val seek: AircraftSeekView? = null,
+    val seek: AircraftSeekView? = null, val counts: Map<String, Int> = emptyMap(),
 ) {
+    fun payloadKg(choices: Map<String, String> = selections, quantities: Map<String, Int> = counts): Double = definition.mounts.sumOf { mount ->
+        val store = stores[choices[mount.id]] ?: return@sumOf 0.0
+        store.massKg * (store.capacity ?: 1) * mount.positions.size * (quantities[mount.id] ?: 1)
+    }
+    fun maxCopies(mount: AircraftMountView, store: AircraftStoreView): Int = AircraftPylonRacks.maxCopies(
+        definition.maxWeaponsPerPylon, mount.maxWeaponsPerPylon, store.maxPerPylon,
+        store.category, store.capacity ?: 1, store.massKg, mount.maxPylonMassKg)
+
+    /** Physical rack positions are shared by near/far presentation and server launch ordering. */
+    private val rackLayout: Map<String, List<Vec3>> by lazy {
+        definition.mounts.associate { mount ->
+            val store = stores[selections[mount.id]]
+            val copies = if (store == null) 1 else (counts[mount.id] ?: 1).coerceIn(1, maxCopies(mount, store))
+            mount.id to if (store == null) emptyList() else (0 until copies).flatMap { copy ->
+                mount.positions.map { it.add(AircraftPylonRacks.offset(copy, copies, store.rackSpacing)) }
+            }
+        }
+    }
+    fun rackPositions(mount: AircraftMountView): List<Vec3> = rackLayout[mount.id] ?: emptyList()
     /** Launches alternate across the mount's physical positions. Pods stay after firing. */
     fun storePresent(mount: AircraftMountView, position: Int): Boolean {
         val store = stores[selections[mount.id]] ?: return false
-        if (store.category != "LASER_GUIDED" && store.category != "BOMB" && !store.guidedAirToAir) return true
+        if (store.category !in setOf("LASER_GUIDED", "BOMB", "CRUISE") && !store.guidedAirToAir) return true
         val capacity = store.capacity ?: 1
-        return (fired[mount.id] ?: 0) < (capacity - 1) * mount.positions.size + position + 1
+        return (fired[mount.id] ?: 0) < (capacity - 1) * mount.positions.size * (counts[mount.id] ?: 1) + position + 1
     }
     /** Global inventory never activates a store on a different pair. */
     fun visibleBones(): Set<String> = Collections.unmodifiableSet(buildSet {
@@ -95,7 +126,7 @@ data class AircraftArmamentSnapshot(
     })
 
     companion object {
-        private val categories = setOf("LASER_GUIDED", "GUN_POD", "BOMB", "AIR_TO_AIR", "ROCKET_POD", "VISUAL_ONLY")
+        private val categories = setOf("LASER_GUIDED", "GUN_POD", "BOMB", "AIR_TO_AIR", "ANTI_RADIATION", "CRUISE", "ROCKET_POD", "VISUAL_ONLY")
 
         fun decode(json: JsonObject): AircraftArmamentSnapshot? = try {
             val vehicle = UUID.fromString(string(json, "Vehicle", 36))
@@ -113,7 +144,8 @@ data class AircraftArmamentSnapshot(
                 require(groups.keys.all { it in allowed })
                 AircraftPairView(string(pair, "Id", 64), string(pair, "Name", 96),
                     vector(pair.get("Left"), 4096.0), vector(pair.get("Right"), 4096.0),
-                    allowed, groups)
+                    allowed, groups, optionalInteger(pair, "MaxWeaponsPerPylon", 12),
+                    number(pair, "MaxPylonMassKg", Double.POSITIVE_INFINITY, 0.1, 100000.0))
             }.also { require(it.map(AircraftPairView::id).distinct().size == it.size) }
             val singles = array(raw, "Singles", 16).map { element ->
                 val mount = element.asJsonObject
@@ -122,7 +154,9 @@ data class AircraftArmamentSnapshot(
                 val groups = groups(mount, "StoreGroups")
                 require(groups.keys.all { it in allowed })
                 AircraftSingleView(string(mount, "Id", 64), string(mount, "Name", 96),
-                    vector(mount.get("Position"), 128.0), allowed, groups)
+                    vector(mount.get("Position"), 128.0), allowed, groups,
+                    optionalInteger(mount, "MaxWeaponsPerPylon", 12),
+                    number(mount, "MaxPylonMassKg", Double.POSITIVE_INFINITY, 0.1, 100000.0))
             }
             require(pairs.size + singles.size <= 16)
             require((pairs.map { it.id } + singles.map { it.id }).distinct().size == pairs.size + singles.size)
@@ -137,7 +171,8 @@ data class AircraftArmamentSnapshot(
             }
             val definition = AircraftDefinitionView(string(raw, "Name", 96),
                 strings(raw, "BuiltInWeapons", 32), Collections.unmodifiableList(pairs), pod,
-                groups(raw, "StoreGroups"), Collections.unmodifiableList(singles))
+                groups(raw, "StoreGroups"), Collections.unmodifiableList(singles),
+                number(raw, "MaxPayloadKg", 0.0, 0.0, 100000.0), optionalInteger(raw, "MaxWeaponsPerPylon", 1))
             val rawStores = json.getAsJsonObject("Stores") ?: error("stores")
             require(rawStores.size() <= 256)
             val stores = rawStores.entrySet().associate { (id, value) ->
@@ -149,9 +184,20 @@ data class AircraftArmamentSnapshot(
                     optionalResource(store, "Item"), optionalResource(store, "Model"),
                     optionalResource(store, "Texture"), number(store, "Scale", 1.0, 0.001, 64.0),
                     store.get("Capacity")?.let { integer(store, "Capacity", 1, 100000) },
-                    category == "AIR_TO_AIR" && store.has("Guidance"))
+                    category in setOf("AIR_TO_AIR", "ANTI_RADIATION") && store.has("Guidance"),
+                    number(store, "MassKg", 0.0, 0.0, 50000.0), optionalInteger(store, "MaxPerPylon", 1),
+                    store["RackSpacing"]?.let { vector(it, 8.0) } ?: Vec3(0.6, 0.4, 0.0))
             }
             val selections = selections(json.getAsJsonObject("Selections"), definition)
+            val rawCounts = json.getAsJsonObject("Counts") ?: JsonObject()
+            require(rawCounts.size() <= selections.size)
+            val counts = rawCounts.entrySet().associate { (key, _) ->
+                val mount = definition.mounts.firstOrNull { it.id == key } ?: error("unknown rack")
+                val store = stores[selections[key]] ?: error("empty rack")
+                val maximum = AircraftPylonRacks.maxCopies(definition.maxWeaponsPerPylon, mount.maxWeaponsPerPylon,
+                    store.maxPerPylon, store.category, store.capacity ?: 1, store.massKg, mount.maxPylonMassKg)
+                key to integer(rawCounts, key, 1, maximum)
+            }
             val rawFired = json.getAsJsonObject("Fired") ?: JsonObject()
             require(rawFired.size() <= definition.mounts.size)
             val fired = rawFired.entrySet().associate { (key, _) ->
@@ -172,8 +218,11 @@ data class AircraftArmamentSnapshot(
                 Collections.unmodifiableMap(fired),
                 json.get("SeekPair")?.let { string(json, "SeekPair", 48, true) } ?: "",
                 json.get("SeekStatus")?.let { integer(json, "SeekStatus", -1, 2) } ?: 0,
-                json.getAsJsonObject("Seek")?.let(::decodeSeek))
+                json.getAsJsonObject("Seek")?.let(::decodeSeek), Collections.unmodifiableMap(counts))
         } catch (_: RuntimeException) { null }
+
+        private fun optionalInteger(json: JsonObject, key: String, default: Int): Int =
+            if (json.has(key)) integer(json, key, 1, AircraftPylonRacks.MAX_COPIES) else default
 
         fun decodeSeek(json: JsonObject): AircraftSeekView {
             val rawRevision = json.get("Revision") ?: error("seek revision")
@@ -191,16 +240,18 @@ data class AircraftArmamentSnapshot(
             val ready = boolean(json, "Ready", false)
             val progress = number(json, "Progress", 0.0, 0.0, 1.0)
             val weapon = string(json, "WeaponId", 128, true)
-            require((target == null) == (position == null))
-            require(target == null || weapon.isNotBlank())
+            val block = json.get("TargetType")?.asString == "BLOCK"
+            require(position == null || target != null || block)
+            require(target == null || position != null)
+            require((target == null && !block) || weapon.isNotBlank())
             require((status == "READY") == ready)
-            require(!ready || (target != null && status == "READY" && progress == 1.0))
+            require(!ready || (position != null && status == "READY" && progress == 1.0))
             fun optionalString(key: String) = if (json.has(key)) string(json, key, 32, true) else ""
             val category = optionalString("Category")
             val mode = optionalString("GuidanceMode")
             val slot = optionalString("Slot")
             require(category.isEmpty() || category in categories)
-            require(mode in setOf("", "INFRARED", "ACTIVE_RADAR", "SEMI_ACTIVE_RADAR"))
+            require(mode in setOf("", "INFRARED", "ACTIVE_RADAR", "SEMI_ACTIVE_RADAR", "ANTI_RADIATION"))
             require(slot in setOf("", "PRIMARY", "SECONDARY"))
             return AircraftSeekView(revision, weapon, target,
                 position, progress, ready, status, category, mode,

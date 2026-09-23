@@ -5,6 +5,7 @@ import com.atsuishio.superbwarfare.api.vehicle.collision.AircraftWheelContactGro
 import com.atsuishio.superbwarfare.api.vehicle.flight.*
 import com.atsuishio.superbwarfare.data.vehicle.subdata.AircraftTerrainContact
 import com.atsuishio.superbwarfare.data.vehicle.subdata.AircraftWheelContact
+import com.atsuishio.superbwarfare.data.vehicle.subdata.AircraftTerrainBox
 import com.atsuishio.superbwarfare.data.vehicle.subdata.OBBInfo
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonObject
@@ -55,13 +56,80 @@ class AircraftWheelSupportTest {
         }
         fun move(data: AircraftTerrainContact, frame: Matrix4d, velocity: Vec3, supported: Boolean): AircraftTerrainMotionSolver.Result {
             val points = AircraftWheelGeometry.sample(data, frame)
-            val boxes = listOf(AircraftCollisionSnapshot.create(data, frame, 0F).terrainInfos().first()) + points.map { it.terrainInfo() }
+            val boxes = AircraftCollisionSnapshot.create(data, frame, 0F).terrainInfos().filterNot { it.landingGear } + points.map { it.terrainInfo() }
             val envelope = AircraftWheelGeometry.envelope(points)
             val reach = AircraftTerrainMotionSolver.gearSupportReach(boxes.first().getOBB(), envelope, velocity)
             return AircraftTerrainMotionSolver.resolve(velocity, velocity, supported, reach) { movement, offset ->
                 query(boxes, movement, offset).first
             }
         }
+    }
+
+    private fun solidWheelAircraft() = AircraftTerrainContact().apply {
+        fun box(min: Vec3, max: Vec3) = AircraftTerrainBox().apply { minimum = min; maximum = max }
+        fuselage = box(Vec3(-1.0, 1.3, -4.0), Vec3(1.0, 2.5, 4.0))
+        landingGear = box(Vec3(-2.4, 0.0, -2.0), Vec3(2.4, 0.6, 3.0))
+        bodyParts = listOf(fuselage,
+            box(Vec3(-4.0, 1.4, -1.0), Vec3(-1.0, 1.7, 1.0)),
+            box(Vec3(1.0, 1.4, -1.0), Vec3(4.0, 1.7, 1.0)))
+        retractableGear = true
+        wheelContacts = listOf(Vec3(-2.0, 0.0, -1.0), Vec3(2.0, 0.0, -1.0), Vec3(0.0, 0.0, 2.5))
+            .mapIndexed { index, point -> AircraftWheelContact().apply {
+                id = "wheel_$index"; group = if (index == 2) nose else main; position = point
+                bounds = box(point.add(-0.25, 0.0, -0.4), point.add(0.25, 0.6, 0.4))
+            } }
+    }
+
+    @Test fun partitionedBodiesKeepWingTipsAndGearGapsNonSolid() {
+        val data = solidWheelAircraft()
+        val snapshot = AircraftCollisionSnapshot.create(data, Matrix4d(), 0F)
+        assertEquals(6, snapshot.parts.size)
+        assertNull(snapshot.clip(Vec3(5.0, 3.0, 0.0), Vec3(5.0, 0.0, 0.0)), "outer third of wing is not crash geometry")
+        assertNotNull(snapshot.clip(Vec3(3.0, 3.0, 0.0), Vec3(3.0, 0.0, 0.0)), "inner wing is solid")
+        assertNull(snapshot.clip(Vec3(0.0, 0.2, -3.0), Vec3(0.0, 0.2, 1.0)), "no aggregate solid between main wheels")
+        assertEquals(3, AircraftCollisionSnapshot.create(data, Matrix4d(), 1F).parts.count { it.active })
+        val scene = Scene(listOf(AABB(2.9, 0.0, -0.2, 3.1, 1.0, 0.2)))
+        assertTrue(scene.move(data, Matrix4d(), Vec3(0.0, -1.0, 0.0), false).bodyContact,
+            "terrain movement must include wings, not just the first body")
+    }
+
+    @Test fun wheelVolumesSupportTheirWidthAndSettleWithoutFloatingOrPenetrating() {
+        val data = solidWheelAircraft()
+        val wheel = AircraftWheelGeometry.sample(data, Matrix4d()).first()
+        val edge = Scene(listOf(AABB(-2.24, -1.0, -1.3, -2.05, 0.0, -0.7)))
+        assertEquals(1, edge.kernel.contacts(listOf(wheel)).rows.size, "tyre edge supports even with its center over a gap")
+        val scene = Scene(listOf(floor))
+        var frame = mainSupported(data)
+        repeat(160) {
+            frame = scene.kernel.plan(data, frame, 0.0, 1.0).frame
+            assertTrue(AircraftWheelGeometry.sample(data, frame).all { it.world.y >= -1e-6 }, "bogie penetrated runway")
+        }
+        assertEquals(3, scene.kernel.contacts(AircraftWheelGeometry.sample(data, frame)).rows.size,
+            "all authored gear groups must finish on the runway")
+        val rolled = AircraftWheelGeometry.sample(data, Matrix4d().rotateZ(0.2)).first()
+        val physical = AircraftCollisionSnapshot.create(data, Matrix4d().rotateZ(0.2), 0F).parts[3]
+        assertEquals(physical.worldBounds.minY, rolled.world.y, 1e-8, "support and green debug box share the same rotated bottom")
+    }
+
+    @Test fun noseFirstSupportSettlesMainWheelsAndSmallStationaryGapsClose() {
+        val data = solidWheelAircraft()
+        val scene = Scene(listOf(floor))
+        val tilted = Matrix4d().rotateX(Math.toRadians(6.0))
+        val lowest = AircraftWheelGeometry.sample(data, tilted).minOf { it.world.y }
+        var frame = Matrix4d().translate(0.0, -lowest, 0.0).mul(tilted)
+        assertEquals(listOf(nose), scene.kernel.contacts(AircraftWheelGeometry.sample(data, frame)).rows.map { it.wheel.group })
+        repeat(160) {
+            frame = scene.kernel.plan(data, frame, 0.0, 1.0).frame
+            assertTrue(AircraftWheelGeometry.sample(data, frame).all { it.world.y >= -1e-6 })
+        }
+        assertEquals(3, scene.kernel.contacts(AircraftWheelGeometry.sample(data, frame)).rows.size)
+        val smallGap = Matrix4d().translate(0.0, 0.08, 0.0)
+        assertEquals(smallGap, scene.kernel.plan(data, smallGap, 0.0, 1.0).frame)
+        val captured = scene.kernel.plan(data, smallGap, 0.0, 1.0, 0.12)
+        assertEquals(3, captured.contacts.rows.size)
+        val airborne = Matrix4d().translate(0.0, 0.4, 0.0)
+        assertEquals(airborne, scene.kernel.plan(data, airborne, 0.0, 1.0, 0.12).frame)
+        assertEquals(smallGap, scene.kernel.plan(data, smallGap, 0.0, 0.0, 0.12).frame)
     }
 
     private fun mainSupported(data: AircraftTerrainContact, pitch: Double = -6.0): Matrix4d {

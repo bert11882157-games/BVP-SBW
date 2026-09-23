@@ -343,7 +343,8 @@
               "Type": "superbwarfare:cannon_shell",
               "Profile": "berts_vehicle_pack:bmp_1am/cannon/ammo_00_pg9"
             }
-          }
+          },
+          "ConsumptionItem": "superbwarfare:tier_1_heat_shell"
         },
         {
           "Ammo": "superbwarfare:large_shell_he",
@@ -366,7 +367,8 @@
               "Type": "superbwarfare:cannon_shell",
               "Profile": "berts_vehicle_pack:bmp_1am/cannon/ammo_01_og9"
             }
-          }
+          },
+          "ConsumptionItem": "superbwarfare:small_he_shell"
         }
       ],
       "ShootPos": {
@@ -460,7 +462,8 @@
               "ProjectileProfile": "berts_vehicle_pack:bmp_1am/mainmachinegun/ammo_00_russian_762_ap_i",
               "ProjectileLife": 400
             }
-          }
+          },
+          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition"
         }
       ],
       "Projectile": {
@@ -580,7 +583,13 @@
       "Crosshair": "@VehicleCommonMissile",
       "CrosshairColor": "0x66FF00",
       "Name": "weapon.berts_vehicle_pack.73_mm_2a28_grom_9m14_atgm",
-      "AmmoType": "superbwarfare:medium_anti_ground_missile",
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:medium_anti_ground_missile",
+          "ConsumptionItem": "superbwarfare:medium_atgm",
+          "Override": {}
+        }
+      ],
       "SoundInfo": {
         "Fire1PGain": 0.35,
         "Fire3PGain": 0.35,

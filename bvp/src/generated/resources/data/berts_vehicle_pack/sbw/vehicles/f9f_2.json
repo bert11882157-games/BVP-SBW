@@ -1225,6 +1225,7 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -1258,6 +1259,7 @@
         },
         {
           "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -1376,6 +1378,7 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -1409,6 +1412,7 @@
         },
         {
           "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -1527,6 +1531,7 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -1560,6 +1565,7 @@
         },
         {
           "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -1678,6 +1684,7 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -1711,6 +1718,7 @@
         },
         {
           "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -1937,6 +1945,56 @@
       ]
     },
     "RetractableGear": true,
+    "BodyParts": [
+      {
+        "Min": [
+          -0.935,
+          0.691937,
+          -1.98
+        ],
+        "Max": [
+          0.935,
+          2.141937,
+          3.4
+        ]
+      },
+      {
+        "Min": [
+          -0.935,
+          0.791937,
+          3.4
+        ],
+        "Max": [
+          0.935,
+          1.991937,
+          5.5
+        ]
+      },
+      {
+        "Min": [
+          -3.828,
+          0.536937,
+          -1.73
+        ],
+        "Max": [
+          -0.8415,
+          1.646937,
+          1.38
+        ]
+      },
+      {
+        "Min": [
+          0.8415,
+          0.536937,
+          -1.73
+        ],
+        "Max": [
+          3.828,
+          1.646937,
+          1.38
+        ]
+      }
+    ],
     "WheelContacts": [
       {
         "Id": "gear_group12_tyre384",
@@ -1944,8 +2002,20 @@
         "Position": [
           0,
           0.041937,
-          3.5250000000000004
-        ]
+          3.525
+        ],
+        "Bounds": {
+          "Min": [
+            -0.075,
+            0.041937,
+            3.3
+          ],
+          "Max": [
+            0.075,
+            0.191937,
+            3.75
+          ]
+        }
       },
       {
         "Id": "gear_group14_tyre387",
@@ -1954,7 +2024,19 @@
           -1.225,
           0.041937,
           0.05
-        ]
+        ],
+        "Bounds": {
+          "Min": [
+            -1.325,
+            0.041937,
+            -0.25
+          ],
+          "Max": [
+            -1.125,
+            0.241937,
+            0.35
+          ]
+        }
       },
       {
         "Id": "gear_group15_tyre393",
@@ -1963,7 +2045,19 @@
           1.225,
           0.041937,
           0.05
-        ]
+        ],
+        "Bounds": {
+          "Min": [
+            1.125,
+            0.041937,
+            -0.25
+          ],
+          "Max": [
+            1.325,
+            0.241937,
+            0.35
+          ]
+        }
       }
     ]
   },

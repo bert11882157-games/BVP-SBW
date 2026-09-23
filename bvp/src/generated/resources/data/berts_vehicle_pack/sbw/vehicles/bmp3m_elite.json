@@ -314,7 +314,8 @@
               10,
               90
             ]
-          }
+          },
+          "ConsumptionItem": "superbwarfare:medium_he_shell"
         },
         {
           "Ammo": "superbwarfare:medium_anti_ground_missile",
@@ -362,7 +363,8 @@
               10,
               90
             ]
-          }
+          },
+          "ConsumptionItem": "superbwarfare:small_atgm"
         }
       ],
       "ShootPos": {
@@ -466,7 +468,8 @@
               "ProjectileProfile": "berts_vehicle_pack:bmp3m_elite/mainmachinegun/ammo_00_russian_762_ap_i",
               "ProjectileLife": 400
             }
-          }
+          },
+          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition"
         }
       ],
       "Projectile": {
@@ -649,7 +652,8 @@
               "ProjectileProfile": "berts_vehicle_pack:bmp3m_elite/dualcannon/ammo_00_3ubr8_apds",
               "ProjectileLife": 40
             }
-          }
+          },
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell"
         },
         {
           "Ammo": "superbwarfare:small_shell_aa",
@@ -700,7 +704,8 @@
               "ProjectileProfile": "berts_vehicle_pack:bmp3m_elite/dualcannon/ammo_01_3uor6_hef_t",
               "ProjectileLife": 40
             }
-          }
+          },
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell"
         }
       ],
       "ShootPos": {

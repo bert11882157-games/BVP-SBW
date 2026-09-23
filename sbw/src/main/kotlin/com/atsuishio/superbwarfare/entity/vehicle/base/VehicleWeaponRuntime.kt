@@ -35,6 +35,10 @@ internal class VehicleWeaponRuntime(
     private val weaponState = VehicleWeaponStateCache<GunData>()
     private var normalizationDataOwner: DefaultVehicleData? = null
     private var normalizationFingerprint = Int.MIN_VALUE
+    private data class SelectionCache(val tick: Int, val revision: Int, val owner: DefaultVehicleData,
+                                     val nativeAmmo: List<Pair<String, Int>>, val weapons: List<String>,
+                                     val indices: List<Int>)
+    private val selectionCache = mutableMapOf<Int, SelectionCache>()
     /** Null [weaponName] resolves the occupied seat's primary; a name is an explicit channel. */
     fun fire(
         living: LivingEntity?,
@@ -42,9 +46,31 @@ internal class VehicleWeaponRuntime(
         targetEntityUuid: UUID?,
         targetPos: Vec3?,
         permitsSelectedAttempt: () -> Boolean,
+    ): ShotResult = fireInternal(living, weaponName, targetEntityUuid, targetPos, permitsSelectedAttempt, true)
+
+    private fun fireInternal(
+        living: LivingEntity?, weaponName: String?, targetEntityUuid: UUID?, targetPos: Vec3?,
+        permitsSelectedAttempt: () -> Boolean, routeRocketPods: Boolean,
     ): ShotResult {
         val serverLevel = vehicle.level() as? ServerLevel
         val selectedName = weaponName ?: vehicle.getGunName(vehicle.getSeatIndex(living))
+        val rocketCandidates = if (routeRocketPods && selectedName != null)
+            com.atsuishio.superbwarfare.api.aircraft.AircraftRocketPodOrder.candidates(vehicle, selectedName)
+        else null
+        if (rocketCandidates != null) {
+            if (weaponName == null && !permitsSelectedAttempt())
+                return ShotResult.rejected(ShotRejectionReason.ACTION_BLOCKED, selectedName)
+            var rejected = ShotResult.rejected(ShotRejectionReason.CANNOT_SHOOT, selectedName)
+            for (candidate in rocketCandidates) {
+                val result = fireInternal(living, candidate.name, targetEntityUuid, targetPos, permitsSelectedAttempt, false)
+                if (result.isAccepted()) {
+                    com.atsuishio.superbwarfare.api.aircraft.AircraftRocketPodOrder.accepted(vehicle, candidate.name, candidate.side)
+                    return result
+                }
+                rejected = result
+            }
+            return rejected
+        }
         if (selectedName != null && com.atsuishio.superbwarfare.api.aircraft.AircraftStoreWeapons.mountId(selectedName) != null) {
             val rejected = when {
                 vehicle.isWreck -> ShotRejectionReason.WRECKED
@@ -173,21 +199,33 @@ internal class VehicleWeaponRuntime(
 
     fun invalidateResolvedGunData() {
         weaponState.clear()
+        selectionCache.clear()
     }
 
     fun invalidateConfiguration() {
         weaponState.invalidateConfiguration()
+        selectionCache.clear()
         normalizationDataOwner = null
         normalizationFingerprint = Int.MIN_VALUE
     }
 
     fun validWeaponIndices(seatIndex: Int): List<Int> {
         val weapons = vehicle.getWeaponIds(seatIndex)
-        return weapons.indices.filter { index ->
+        val aircraft = com.atsuishio.superbwarfare.api.aircraft.AircraftArmamentManager.definition(vehicle) != null
+        val revision = if (aircraft) com.atsuishio.superbwarfare.api.aircraft.AircraftArmamentManager.weaponSelectionRevision(vehicle) else 0
+        val ammo = if (aircraft) vehicle.gunDataMap.map { (id, gun) -> id to gun.ammo.get() } else emptyList()
+        val owner = vehicle.computed()
+        val previous = selectionCache[seatIndex]
+        if (aircraft && previous != null && previous.tick == vehicle.tickCount && previous.revision == revision &&
+            previous.owner === owner && previous.nativeAmmo == ammo && previous.weapons == weapons) return previous.indices
+        val indices = weapons.indices.filter { index ->
             val name = weapons.getOrNull(index)
             !name.isNullOrBlank() && vehicle.getGunData(name) != null &&
                 com.atsuishio.superbwarfare.api.aircraft.AircraftArmamentManager.selectableWeapon(vehicle, name)
         }
+        if (aircraft && seatIndex in 0 until vehicle.maxPassengers)
+            selectionCache[seatIndex] = SelectionCache(vehicle.tickCount, revision, owner, ammo, weapons, indices)
+        return indices
     }
 
     fun resolvedPrimaryIndex(seatIndex: Int, ordered: List<Int>): Int {

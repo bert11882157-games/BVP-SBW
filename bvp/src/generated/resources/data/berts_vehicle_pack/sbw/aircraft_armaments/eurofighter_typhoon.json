@@ -20,9 +20,16 @@
       1.016941875,
       3.462603125
     ],
-    "YawLimit": 170,
-    "PitchMin": -20,
+    "YawLimit": 180,
+    "PitchMin": -10,
     "PitchMax": 90,
-    "Source": "Approximate virtual optical origin; pod mesh pending. Eurofighter Litening support: https://www.eurofighter.com/news/future ; UK MoD Litening III centreline station 13: https://assets.publishing.service.gov.uk/media/5a7f2898e5274a2e87db4261/20160301-Typhoon_ZJ943_BOI-final.pdf"
+    "Source": "Approximate virtual optical origin; pod mesh pending. Eurofighter Litening support: https://www.eurofighter.com/news/future ; UK MoD Litening III centreline station 13: https://assets.publishing.service.gov.uk/media/5a7f2898e5274a2e87db4261/20160301-Typhoon_ZJ943_BOI-final.pdf",
+    "MaxZoom": 24,
+    "Range": 8192
+  },
+  "MaxPayloadKg": 6500,
+  "Radar": {
+    "Enabled": true,
+    "Range": 1000
   }
 }

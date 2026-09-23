@@ -52,6 +52,7 @@ public final class BvpLeanImpactEffects {
         if (!(level instanceof ServerLevel serverLevel) || position == null) {
             return;
         }
+        if (com.atsuishio.superbwarfare.api.effect.MissilePresentation.impact(level, position, source, missileRadius(source))) return;
         if (emitCaliberBurst(serverLevel, position, source)) return;
         ImpactBurstPolicy policy = ImpactBurstPolicy.forSource(source);
         int explosionCount = policy.s8ko() ? reserveS8koParticles(serverLevel.m_46467_(), 1) : 1;
@@ -88,6 +89,7 @@ public final class BvpLeanImpactEffects {
         if (!(level instanceof ServerLevel serverLevel) || position == null) {
             return;
         }
+        if (com.atsuishio.superbwarfare.api.effect.MissilePresentation.impact(level, position, source, missileRadius(source))) return;
         if (emitCaliberBurst(serverLevel, position, source)) return;
         ImpactBurstPolicy policy = ImpactBurstPolicy.forSource(source);
         double scale = safePresentationScale(presentationScale);
@@ -113,10 +115,15 @@ public final class BvpLeanImpactEffects {
         spawnLargeExplosion(level, position, null);
     }
 
+    private static float missileRadius(Entity source) {
+        return source != null && source.getBbWidth() >= .3F ? 6F : 3F;
+    }
+
     public static void spawnLargeExplosion(Level level, Vec3 position, Entity source) {
         if (!(level instanceof ServerLevel serverLevel) || position == null) {
             return;
         }
+        if (com.atsuishio.superbwarfare.api.effect.MissilePresentation.impact(level, position, source, missileRadius(source))) return;
         ImpactBurstPolicy policy = ImpactBurstPolicy.forSource(source);
         if (isWaterImpact(level, position)) {
             int waterParticles = policy.s8ko()
@@ -240,6 +247,8 @@ public final class BvpLeanImpactEffects {
         float diameter = BvpProjectileEffectDefinition.isTypedAgs30Profile(ProjectileProfiles.resolve(source))
                 ? 1.3F : BvpCaliberExplosion.diameter(combat.getCaliberMm());
         if (diameter <= 0F) return true;
+        if (diameter > 2F && com.atsuishio.superbwarfare.api.effect.MissilePresentation.effect(
+                level, position, diameter * .5F, false)) return true;
         ParticleTool.sendParticle(level,
                 new com.yourname.berts_vehicle_pack.particle.SizedExplosionParticleOptions(diameter),
                 position.f_82479_, position.f_82480_, position.f_82481_, 1, 0, 0, 0, 0, true);

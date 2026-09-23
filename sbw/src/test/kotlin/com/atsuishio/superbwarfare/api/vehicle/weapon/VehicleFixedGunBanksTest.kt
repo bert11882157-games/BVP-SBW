@@ -49,14 +49,14 @@ class VehicleFixedGunBanksTest {
         assertNull(VehicleFixedGunBanks.eventCapacity(Int.MAX_VALUE))
     }
 
-    @Test fun `dynamic pod group accepts eight physical feeds plus main cannon without weakening fixed bank bound`() {
+    @Test fun `dynamic pod group keeps eight feeds separate from main cannon without weakening fixed bank bound`() {
         val all = listOf("Cannon") + (1..4).flatMap { listOf("Pod${it}Left", "Pod${it}Right") }
         assertNull(VehicleFixedGunBanks.memberIndices(all, all))
         assertArrayEquals(IntArray(9) { it }, VehicleFixedGunBanks.memberIndices(all, all, 16))
         assertNull(VehicleFixedGunBanks.memberIndices(List(17) { "Pod$it" }, List(17) { "Pod$it" }, 16))
     }
 
-    @Test fun `group and main trigger resolve same physical schedules for one through four paired fittings`() {
+    @Test fun `group and main trigger resolve disjoint physical schedules for one through four paired fittings`() {
         val groups = com.atsuishio.superbwarfare.api.aircraft.AircraftGunPodGroups
         for (count in 1..4) {
             val pods = (1..count).flatMap { listOf("Pod${it}Left", "Pod${it}Right") }
@@ -64,7 +64,7 @@ class VehicleFixedGunBanksTest {
                 val group = groups.members(groups.GROUP, listOf("Cannon"), loaded)!!
                 val main = groups.members("Cannon", listOf("Cannon"), loaded)!!
                 assertEquals(loaded, group)
-                assertEquals(listOf("Cannon") + loaded, main)
+                assertEquals(listOf("Cannon"), main)
                 val active = linkedMapOf<String, VehicleWeaponScheduler.RuntimeState>()
                 for (name in main + group) active.putIfAbsent(name, state(3400))
                 assertEquals(loaded.size + 1, active.size)

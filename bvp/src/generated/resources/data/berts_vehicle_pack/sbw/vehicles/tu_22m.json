@@ -634,6 +634,7 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -667,6 +668,7 @@
         },
         {
           "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -969,132 +971,131 @@
       ]
     },
     "RetractableGear": true,
+    "BodyParts": [
+      {
+        "Min": [
+          -1.154326,
+          2.748396,
+          -10.543848
+        ],
+        "Max": [
+          1.154326,
+          5.846589,
+          15.191137
+        ]
+      },
+      {
+        "Min": [
+          -1.154326,
+          2.998251,
+          15.191137
+        ],
+        "Max": [
+          1.154326,
+          5.047056,
+          20.987755
+        ]
+      },
+      {
+        "Min": [
+          -1.154326,
+          2.748396,
+          -15.839592
+        ],
+        "Max": [
+          1.154326,
+          5.696676,
+          -10.543848
+        ]
+      },
+      {
+        "Min": [
+          -11.3124,
+          3.268076,
+          -8.425102
+        ],
+        "Max": [
+          -1.038894,
+          3.627901,
+          -3.667843
+        ]
+      },
+      {
+        "Min": [
+          1.038894,
+          3.268076,
+          -8.425102
+        ],
+        "Max": [
+          11.3124,
+          3.627901,
+          -3.667843
+        ]
+      }
+    ],
     "WheelContacts": [
       {
-        "Id": "landing_gear_0_0",
+        "Id": "gear_group14_main_bogie",
         "Group": "MAIN",
         "Position": [
-          -3.2980759375,
+          -2.998251,
           0,
-          -3.5979009375
-        ]
+          -4.647289
+        ],
+        "Bounds": {
+          "Min": [
+            -3.497959,
+            0,
+            -6.196385
+          ],
+          "Max": [
+            -2.498543,
+            0.999417,
+            -3.098193
+          ]
+        }
       },
       {
-        "Id": "landing_gear_0_1",
+        "Id": "gear_group15_main_bogie",
         "Group": "MAIN",
         "Position": [
-          -2.698425625,
+          2.998251,
           0,
-          -3.5979009375
-        ]
+          -4.647289
+        ],
+        "Bounds": {
+          "Min": [
+            2.498543,
+            0,
+            -6.196385
+          ],
+          "Max": [
+            3.497959,
+            0.999417,
+            -3.098193
+          ]
+        }
       },
       {
-        "Id": "landing_gear_0_2",
-        "Group": "MAIN",
-        "Position": [
-          -3.2980759375,
-          0,
-          -4.6472887499999995
-        ]
-      },
-      {
-        "Id": "landing_gear_0_3",
-        "Group": "MAIN",
-        "Position": [
-          -2.698425625,
-          0,
-          -4.6472887499999995
-        ]
-      },
-      {
-        "Id": "landing_gear_0_4",
-        "Group": "MAIN",
-        "Position": [
-          -2.698425625,
-          0,
-          -5.69667625
-        ]
-      },
-      {
-        "Id": "landing_gear_0_5",
-        "Group": "MAIN",
-        "Position": [
-          -3.2980759375,
-          0,
-          -5.69667625
-        ]
-      },
-      {
-        "Id": "landing_gear_1_0",
-        "Group": "MAIN",
-        "Position": [
-          3.2980759375,
-          0,
-          -3.5979009375
-        ]
-      },
-      {
-        "Id": "landing_gear_1_1",
-        "Group": "MAIN",
-        "Position": [
-          2.6984256249999996,
-          0,
-          -3.5979009375
-        ]
-      },
-      {
-        "Id": "landing_gear_1_2",
-        "Group": "MAIN",
-        "Position": [
-          3.2980759375,
-          0,
-          -4.6472887499999995
-        ]
-      },
-      {
-        "Id": "landing_gear_1_3",
-        "Group": "MAIN",
-        "Position": [
-          2.6984256249999996,
-          0,
-          -4.6472887499999995
-        ]
-      },
-      {
-        "Id": "landing_gear_1_4",
-        "Group": "MAIN",
-        "Position": [
-          2.6984256249999996,
-          0,
-          -5.69667625
-        ]
-      },
-      {
-        "Id": "landing_gear_1_5",
-        "Group": "MAIN",
-        "Position": [
-          3.2980759375,
-          0,
-          -5.69667625
-        ]
-      },
-      {
-        "Id": "landing_gear_2_0",
+        "Id": "gear_group12_nose_bogie",
         "Group": "NOSE",
         "Position": [
-          0.2998253125,
-          0.099941875,
-          9.2446065625
-        ]
-      },
-      {
-        "Id": "landing_gear_2_1",
-        "Group": "NOSE",
-        "Position": [
-          -0.2998253125,
-          0.099941875,
-          9.2446065625
-        ]
+          0,
+          0.099942,
+          9.244607
+        ],
+        "Bounds": {
+          "Min": [
+            -0.499709,
+            0.099942,
+            8.794869
+          ],
+          "Max": [
+            0.499709,
+            0.999417,
+            9.694344
+          ]
+        }
       }
     ]
   },

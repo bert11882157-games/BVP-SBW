@@ -840,6 +840,7 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -873,6 +874,7 @@
         },
         {
           "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -991,6 +993,7 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -1024,6 +1027,7 @@
         },
         {
           "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -1142,6 +1146,7 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -1175,6 +1180,7 @@
         },
         {
           "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -1293,6 +1299,7 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -1326,6 +1333,7 @@
         },
         {
           "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -1552,6 +1560,44 @@
       ]
     },
     "RetractableGear": true,
+    "BodyParts": [
+      {
+        "Min": [
+          -0.733334,
+          0.533333,
+          -4.144
+        ],
+        "Max": [
+          0.733334,
+          2.311111,
+          6.533333
+        ]
+      },
+      {
+        "Min": [
+          -3.696,
+          0.725556,
+          -6.118889
+        ],
+        "Max": [
+          -0.66,
+          3.052222,
+          3.541111
+        ]
+      },
+      {
+        "Min": [
+          0.66,
+          0.725556,
+          -6.118889
+        ],
+        "Max": [
+          3.696,
+          3.052222,
+          3.541111
+        ]
+      }
+    ],
     "WheelContacts": [
       {
         "Id": "landing_gear_12",
@@ -1559,26 +1605,62 @@
         "Position": [
           0,
           0,
-          6.133333125
-        ]
+          6.133333
+        ],
+        "Bounds": {
+          "Min": [
+            -0.111111,
+            0,
+            5.866667
+          ],
+          "Max": [
+            0.111111,
+            0.177778,
+            6.4
+          ]
+        }
       },
       {
         "Id": "landing_gear_14",
         "Group": "MAIN",
         "Position": [
-          -1.3777775,
+          -1.377778,
           0,
-          1.733333125
-        ]
+          1.733333
+        ],
+        "Bounds": {
+          "Min": [
+            -1.488889,
+            0,
+            1.466667
+          ],
+          "Max": [
+            -1.266667,
+            0.177778,
+            2
+          ]
+        }
       },
       {
         "Id": "landing_gear_15",
         "Group": "MAIN",
         "Position": [
-          1.3777775,
+          1.377778,
           0,
-          1.733333125
-        ]
+          1.733333
+        ],
+        "Bounds": {
+          "Min": [
+            1.266667,
+            0,
+            1.466667
+          ],
+          "Max": [
+            1.488889,
+            0.177778,
+            2
+          ]
+        }
       }
     ]
   },

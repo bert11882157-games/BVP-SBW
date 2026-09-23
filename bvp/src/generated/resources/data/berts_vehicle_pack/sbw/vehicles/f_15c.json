@@ -1519,6 +1519,7 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -1552,6 +1553,7 @@
         },
         {
           "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -1739,6 +1741,68 @@
       ]
     },
     "RetractableGear": true,
+    "BodyParts": [
+      {
+        "Min": [
+          -0.693815,
+          1.018889,
+          -3.250741
+        ],
+        "Max": [
+          0.693815,
+          3.202222,
+          6.307408
+        ]
+      },
+      {
+        "Min": [
+          -0.693815,
+          1.261481,
+          6.307408
+        ],
+        "Max": [
+          0.693815,
+          2.668519,
+          9.412593
+        ]
+      },
+      {
+        "Min": [
+          -0.693815,
+          1.212963,
+          -4.890667
+        ],
+        "Max": [
+          0.693815,
+          2.377407,
+          -1.746667
+        ]
+      },
+      {
+        "Min": [
+          -4.323,
+          0.600741,
+          -5.367037
+        ],
+        "Max": [
+          -0.624433,
+          2.358889,
+          0.660741
+        ]
+      },
+      {
+        "Min": [
+          0.624433,
+          0.600741,
+          -5.367037
+        ],
+        "Max": [
+          4.323,
+          2.358889,
+          0.660741
+        ]
+      }
+    ],
     "WheelContacts": [
       {
         "Id": "gear_group12_tyre589",
@@ -1746,26 +1810,62 @@
         "Position": [
           0,
           0,
-          3.15370370371875
-        ]
+          3.153704
+        ],
+        "Bounds": {
+          "Min": [
+            -0.097037,
+            0,
+            2.862592
+          ],
+          "Max": [
+            0.097037,
+            0.194074,
+            3.444815
+          ]
+        }
       },
       {
         "Id": "gear_group14_tyre718",
         "Group": "MAIN",
         "Position": [
-          -1.69814814815625,
+          -1.698148,
           0,
-          -2.838333333346875
-        ]
+          -2.838333
+        ],
+        "Bounds": {
+          "Min": [
+            -1.795185,
+            0,
+            -3.202222
+          ],
+          "Max": [
+            -1.601111,
+            0.242592,
+            -2.474444
+          ]
+        }
       },
       {
         "Id": "gear_group15_tyre712",
         "Group": "MAIN",
         "Position": [
-          1.69814814815625,
+          1.698148,
           0,
-          -2.838333333346875
-        ]
+          -2.838333
+        ],
+        "Bounds": {
+          "Min": [
+            1.601111,
+            0,
+            -3.202222
+          ],
+          "Max": [
+            1.795185,
+            0.242592,
+            -2.474444
+          ]
+        }
       }
     ]
   },

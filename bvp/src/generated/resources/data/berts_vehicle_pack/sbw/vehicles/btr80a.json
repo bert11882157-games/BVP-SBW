@@ -409,7 +409,8 @@
               "Type": "superbwarfare:small_cannon_shell",
               "Profile": "berts_vehicle_pack:btr80a/cannon/ammo_00_3ubr8_apds"
             }
-          }
+          },
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell"
         },
         {
           "Ammo": "superbwarfare:small_shell_aa",
@@ -444,7 +445,8 @@
               "Type": "superbwarfare:small_cannon_shell",
               "Profile": "berts_vehicle_pack:btr80a/cannon/ammo_01_3uor6_hef_t"
             }
-          }
+          },
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell"
         }
       ],
       "ShootPos": {
@@ -546,7 +548,8 @@
               "ProjectileProfile": "berts_vehicle_pack:btr80a/mainmachinegun/ammo_00_russian_762_ap_i",
               "ProjectileLife": 400
             }
-          }
+          },
+          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition"
         }
       ],
       "Projectile": {

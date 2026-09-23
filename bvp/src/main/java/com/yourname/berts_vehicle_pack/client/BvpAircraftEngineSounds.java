@@ -14,6 +14,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.WeakHashMap;
 
 /** Aircraft-only owner of TaP idle/start samples and continuously spooled running loops. */
 final class BvpAircraftEngineSounds {
@@ -21,7 +22,9 @@ final class BvpAircraftEngineSounds {
     private static final ResourceLocation OWNER = new ResourceLocation(BertsVehiclePack.MODID, "aircraft_engine");
     private static final int MAX_ENGINES = 32;
     private static final double RANGE_SQUARED = 64 * 64;
+    private static final int SHUTDOWN_GRACE_TICKS = 40;
     private static final Map<UUID, Engine> ACTIVE = new LinkedHashMap<>();
+    private static final Map<VehicleEntity, Boolean> STARTED = new WeakHashMap<>();
 
     private BvpAircraftEngineSounds() { }
 
@@ -34,7 +37,7 @@ final class BvpAircraftEngineSounds {
     private static boolean audible(Minecraft client, VehicleEntity vehicle) {
         return client.level != null && client.player != null && vehicle.level() == client.level
                 && !vehicle.isRemoved() && !vehicle.isWreck() && vehicle.getHealth() > 0F
-                && vehicle.engineRunning() && vehicle.isFixedWingFlightVehicle()
+                && vehicle.isFixedWingFlightVehicle()
                 && client.options.getSoundSourceVolume(SoundSource.MASTER) > 0F
                 && client.options.getSoundSourceVolume(SoundSource.AMBIENT) > 0F
                 && client.gameRenderer.getMainCamera().getPosition().distanceToSqr(vehicle.position()) <= RANGE_SQUARED;
@@ -43,7 +46,7 @@ final class BvpAircraftEngineSounds {
     private static void update(VehicleEntity vehicle, VehicleLoopSoundChannel channel, ResourceLocation profile) {
         if (channel != VehicleLoopSoundChannel.ENGINE || !vehicle.isFixedWingFlightVehicle()) return;
         Minecraft client = Minecraft.getInstance();
-        if (!audible(client, vehicle)) return;
+        if (!audible(client, vehicle) || !vehicle.engineRunning()) return;
         Engine engine = ACTIVE.get(vehicle.getUUID());
         if (engine != null && (engine.vehicle != vehicle || !engine.profile.equals(profile))) {
             stop(client, engine);
@@ -70,15 +73,16 @@ final class BvpAircraftEngineSounds {
             client.getSoundManager().play(engine.run);
             SoundEvent lowPower = SoundEvent.createVariableRangeEvent(
                     new ResourceLocation(BertsVehiclePack.MODID, parts[1] + "_engine_start"));
-            if (parts[2].equals("idle")) {
-                engine.low = new Layer(engine, lowPower, true, false);
-                client.getSoundManager().play(engine.low);
-            } else if (parts[2].equals("startup") && engine.throttle() < 0.25F
+            // TaP low-power clips include a throttle/spool transient. Repeating that recording
+            // at idle audibly restarts the engine every sample. The steady run loop owns idle.
+            if (parts[2].equals("startup") && engine.throttle() < 0.25F && !STARTED.containsKey(vehicle)
                     && client.player.getVehicle() == vehicle) {
                 // Entering range of an already flying aircraft must not replay its starter.
                 engine.low = new Layer(engine, lowPower, true, true);
                 client.getSoundManager().play(engine.low);
             }
+            // Range changes, resource reloads and low-throttle signal loss are not engine starts.
+            STARTED.put(vehicle, true);
         }
         if (engine.lastSample != time) {
             engine.envelope.tick(engine.throttle());
@@ -93,12 +97,6 @@ final class BvpAircraftEngineSounds {
                 engine.run = new Layer(engine, vehicle.getEngineSound(), false, false);
                 client.getSoundManager().play(engine.run);
             }
-            if (engine.mode.equals("idle") && !client.getSoundManager().isActive(engine.low)) {
-                SoundEvent event = engine.low.event;
-                client.getSoundManager().stop(engine.low);
-                engine.low = new Layer(engine, event, true, false);
-                client.getSoundManager().play(engine.low);
-            }
         }
     }
 
@@ -106,9 +104,14 @@ final class BvpAircraftEngineSounds {
         Iterator<Engine> iterator = ACTIVE.values().iterator();
         while (iterator.hasNext()) {
             Engine engine = iterator.next();
-            if (!audible(client, engine.vehicle) || client.level.getGameTime() - engine.lastSeen > 2) {
+            // Thrust is the native engine-running signal and can briefly cross zero at idle.
+            // Do not recreate sound layers (or replay a starter) on those crossings.
+            if (!audible(client, engine.vehicle) || client.level.getGameTime() - engine.lastSeen > SHUTDOWN_GRACE_TICKS) {
                 stop(client, engine);
                 iterator.remove();
+            } else if (engine.lastSample != client.level.getGameTime()) {
+                engine.envelope.tick(0F);
+                engine.lastSample = client.level.getGameTime();
             }
         }
     }
@@ -171,7 +174,7 @@ final class BvpAircraftEngineSounds {
         @Override public boolean canStartSilent() { return true; }
 
         @Override protected boolean canPlay(VehicleEntity vehicle) {
-            return vehicle.engineRunning() && !vehicle.isWreck();
+            return !vehicle.isWreck() && vehicle.level().getGameTime() - engine.lastSeen <= SHUTDOWN_GRACE_TICKS;
         }
 
         @Override protected float getPitch(VehicleEntity vehicle) {
@@ -181,7 +184,7 @@ final class BvpAircraftEngineSounds {
 
         @Override protected float getVolume(VehicleEntity vehicle) {
             return engine.gain() * (startup ? 0.55F : lowPower ? engine.envelope.idleGain()
-                    : engine.envelope.runningGain(engine.mode.equals("idle"), engine.afterburner()));
+                    : engine.envelope.runningGain(false, engine.afterburner()));
         }
     }
 }

@@ -74,7 +74,8 @@ object AircraftProjectileDamage {
         // Native projectile handlers reject their launcher's mounted topology before direct damage.
         // This resolver runs earlier, so preserve that guard without changing nearby blast rules.
         if (source.entity?.rootVehicle === vehicle || projectile.owner?.rootVehicle === vehicle) return false
-        val directOverride = (projectile as? AircraftProjectileDamageOverride)?.aircraftDirectHitDamage()
+        val directOverride = (projectile as? AircraftProjectileDamageOverride)
+            ?.aircraftDirectHitDamage(vehicle.getMaxHealth())
         val caliber = if (directOverride == null) ProjectileCalibers.resolveMillimetres(projectile) else null
         val damage = AircraftProjectileHitPolicy.resolveDamage(caliber, directOverride)
         if (damage == null) {

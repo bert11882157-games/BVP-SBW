@@ -23,7 +23,7 @@ object AircraftSeekerSounds {
         }
         if (confirmation.update(seek, mc.level?.gameTime ?: 0L)) {
             playing?.cancel()
-            playing = ToneSound().also { mc.soundManager.play(it) }
+            playing = ToneSound(seek?.guidanceMode == "ANTI_RADIATION").also { mc.soundManager.play(it) }
         }
     }
     fun reset() { playing?.cancel(); playing = null; confirmation.reset() }
@@ -31,8 +31,8 @@ object AircraftSeekerSounds {
         val tone = event.sound as? ToneSound ?: return
         if (tone.cancelled) event.channel.stop()
     }
-    private class ToneSound : AbstractTickableSoundInstance(
-        SoundEvent.createVariableRangeEvent(ResourceLocation(Mod.MODID, "aam_lock")),
+    private class ToneSound(antiRadiation: Boolean) : AbstractTickableSoundInstance(
+        SoundEvent.createVariableRangeEvent(ResourceLocation(Mod.MODID, if (antiRadiation) "arm_lock" else "aam_lock")),
         SoundSource.PLAYERS, RandomSource.create()) {
         @Volatile var cancelled = false; private set
         init { looping = false; delay = 0; volume = 0.35F; pitch = 1F; relative = true; attenuation = SoundInstance.Attenuation.NONE }

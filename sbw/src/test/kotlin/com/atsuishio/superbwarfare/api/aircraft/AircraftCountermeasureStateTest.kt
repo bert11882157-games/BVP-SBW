@@ -4,6 +4,30 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
 class AircraftCountermeasureStateTest {
+    @Test fun `extended chaff continues at three per half second with independent decay and cooldown`() {
+        val state = AircraftCountermeasureState()
+        state.tick(0, false, true, false, true, 4, 12, 100)
+        assertEquals(12, state.tick(60, false, false, false, true, 4, 12, 60).chaffLevel)
+        assertEquals(24, state.tick(100, false, false, false, true, 4, 12, 60).chaffLevel)
+        assertEquals(12, state.tick(130, false, false, false, true, 4, 12, 60).chaffLevel)
+        assertEquals(0, state.tick(160, false, false, false, true, 4, 12, 60).chaffLevel)
+        assertFalse(state.tick(499, false, true, false, true, 4, 12, 60).chaffEmitting)
+        assertTrue(state.tick(500, false, true, false, true, 4, 12, 60).chaffEmitting)
+    }
+
+    @Test fun `long chaff levels do not overwrite threat or emission bits`() {
+        val maximum = AircraftCountermeasureState.chaffLevelAt(1200, 1200)
+        assertEquals(354, maximum)
+        for (threat in 0..2) for (emitting in listOf(false, true)) {
+            val packed = AircraftCountermeasureWire.pack(128, maximum, threat, emitting)
+            assertEquals(128, AircraftCountermeasureWire.flares(packed))
+            assertEquals(maximum, AircraftCountermeasureWire.chaff(packed))
+            assertEquals(threat, AircraftCountermeasureWire.threat(packed))
+            assertEquals(emitting, AircraftCountermeasureWire.emitting(packed))
+        }
+        assertThrows(IllegalArgumentException::class.java) { AircraftCountermeasureState.chaffLevelAt(0, 61) }
+    }
+
     private fun AircraftCountermeasureState.sample(t: Long, flares: Boolean = false,
         chaff: Boolean = false, rate: Int = 4, burst: Int = 12) =
         tick(t, flares, chaff, true, true, rate, burst)
@@ -38,13 +62,18 @@ class AircraftCountermeasureStateTest {
 
     @Test fun `chaff ramps one two three per half second then decays for three seconds`() {
         val state = AircraftCountermeasureState()
-        assertEquals(0, state.sample(0, chaff = true).chaffLevel)
+        val first = state.sample(0, chaff = true)
+        assertTrue(first.chaffStarted)
+        assertEquals(0, first.chaffLevel)
+        assertFalse(state.sample(1, chaff = true).chaffStarted)
         val ramp = listOf(1, 2, 4, 6, 9, 12)
         for (i in 1..6) assertEquals(ramp[i - 1], state.sample(i * 10L).chaffLevel)
         assertEquals(6, state.sample(90).chaffLevel)
         assertEquals(0, state.sample(120).chaffLevel)
         assertFalse(state.sample(459, chaff = true).chaffEmitting)
-        assertTrue(state.sample(460, chaff = true).chaffEmitting)
+        val second = state.sample(460, chaff = true)
+        assertTrue(second.chaffStarted)
+        assertTrue(second.chaffEmitting)
         assertEquals(1, state.sample(470, chaff = true).chaffLevel)
     }
 
@@ -71,6 +100,20 @@ class AircraftCountermeasureStateTest {
         assertEquals(0, result.flareLevel)
         assertEquals(0, result.flareCooldown)
         assertEquals(0, state.burstExpenditure())
+    }
+
+    @Test fun `rejecting a flare pair leaves same-tick chaff deployment accepted`() {
+        val state = AircraftCountermeasureState()
+        val first = state.tick(0, true, true, true, true, 4, 12)
+        assertEquals(1, first.flarePairs)
+        assertTrue(first.chaffStarted)
+        state.abortPair()
+        val after = state.tick(0, false, false, true, true, 4, 12)
+        assertEquals(0, after.flarePairs)
+        assertFalse(after.chaffStarted)
+        assertTrue(after.chaffEmitting)
+        assertEquals(0, after.flareLevel)
+        assertEquals(400, after.chaffCooldown)
     }
 
     @Test fun `disabled equipment never emits despite held input`() {

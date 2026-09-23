@@ -251,7 +251,13 @@
   ],
   "Weapons": {
     "S5RocketPod": {
-      "AmmoType": "superbwarfare:small_rocket",
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_rocket",
+          "ConsumptionItem": "superbwarfare:small_unguided_rocket",
+          "Override": {}
+        }
+      ],
       "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_small_rocket.png",
       "DefaultZoom": 2,
       "DefaultFireMode": "Auto",

@@ -187,7 +187,8 @@
               "Type": "superbwarfare:cannon_shell",
               "Profile": "berts_vehicle_pack:t80b_obr1976/cannon/ammo_00_3bm42"
             }
-          }
+          },
+          "ConsumptionItem": "superbwarfare:tier_3_armor_piercing_shell"
         },
         {
           "Ammo": "berts_vehicle_pack:level_2_ap_shell",
@@ -209,7 +210,8 @@
               "Type": "superbwarfare:cannon_shell",
               "Profile": "berts_vehicle_pack:t80b_obr1976/cannon/ammo_01_3bk18m_heat_fs"
             }
-          }
+          },
+          "ConsumptionItem": "superbwarfare:tier_2_heat_shell"
         },
         {
           "Ammo": "superbwarfare:medium_anti_ground_missile",
@@ -252,7 +254,8 @@
               "ProjectileType": "berts_vehicle_pack:ataka_missile",
               "ProjectileProfile": "berts_vehicle_pack:t80b_obr1976/cannon/ammo_02_9m112_kobra"
             }
-          }
+          },
+          "ConsumptionItem": "superbwarfare:medium_atgm"
         }
       ],
       "SoundInfo": {
@@ -359,7 +362,8 @@
               "ProjectileProfile": "berts_vehicle_pack:t80b_obr1976/machinegun/ammo_00_russian_762_ap_i",
               "ProjectileLife": 400
             }
-          }
+          },
+          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition"
         }
       ],
       "Projectile": {

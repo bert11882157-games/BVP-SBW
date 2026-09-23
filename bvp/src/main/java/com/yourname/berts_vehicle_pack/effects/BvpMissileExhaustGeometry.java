@@ -1,4 +1,4 @@
-package com.yourname.berts_vehicle_pack.client.renderer;
+package com.yourname.berts_vehicle_pack.effects;
 
 import com.atsuishio.superbwarfare.api.projectile.ResolvedProjectileProfile;
 import com.google.gson.JsonParser;
@@ -6,10 +6,10 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 
 /** Packaged projectile mesh bounds in blocks; profile render scaling is applied exactly once. */
-final class BvpMissileExhaustGeometry {
+public final class BvpMissileExhaustGeometry {
     private static final Shape ATAKA = read("mi24v_atgm_projectile");
 
-    static Shape forProfile(ResolvedProjectileProfile profile) {
+    public static Shape forProfile(ResolvedProjectileProfile profile) {
         if (profile == null) return null;
         // Both ATGM visual registrations use this packaged mesh.
         Shape shape = ATAKA;
@@ -42,5 +42,6 @@ final class BvpMissileExhaustGeometry {
         }
     }
 
-    record Shape(double radius, double rear) {}
+    public record Shape(double radius, double rear) {}
 }
+

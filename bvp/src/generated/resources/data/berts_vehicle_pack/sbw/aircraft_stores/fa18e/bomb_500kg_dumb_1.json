@@ -1,0 +1,22 @@
+{
+  "Schema": 1,
+  "Name": "500 kg HE freefall",
+  "Category": "BOMB",
+  "Capacity": 1,
+  "MassKg": 500,
+  "Bomb": {
+    "Mode": "DUMB",
+    "Gravity": 0.08,
+    "DragMultiplier": 1,
+    "TurnDegreesPerTick": 0,
+    "BlastRadius": 28,
+    "BlastDamage": 800
+  },
+  "AmmoItem": "superbwarfare:medium_freefall_bomb",
+  "MaxPerPylon": 4,
+  "RackSpacing": [
+    0.8,
+    0.5,
+    0.5
+  ]
+}

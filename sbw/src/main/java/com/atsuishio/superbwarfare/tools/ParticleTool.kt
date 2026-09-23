@@ -100,6 +100,8 @@ object ParticleTool {
     }
 
     private fun dispatchExplosionFxToAudience(level: Level, context: ExplosionFxContext) {
+        if (com.atsuishio.superbwarfare.api.effect.MissilePresentation.impact(
+                level, context.particlePosition, context.directSource, context.radius)) return
         if (level is ServerLevel) com.atsuishio.superbwarfare.api.vehicle.render.FarTerrainServer.rememberEffect(
             level, context.particlePosition, maxOf(8.0, context.radius * 2.0))
 
@@ -114,7 +116,15 @@ object ParticleTool {
             }
         }
 
-        when (context.particleType) {
+        if (context.radius > 0 && com.atsuishio.superbwarfare.api.effect.MissilePresentation.effect(
+                level, context.particlePosition, context.radius, false)) return
+
+        // Ammunition-rack providers explicitly own the mushroom presentation. Ordinary vehicle
+        // destruction must not inherit the giant mushroom recipe from its blast radius.
+        val vehicle = context.directSource as? VehicleEntity
+        val type = if (vehicle != null && (vehicle.health <= 0 || vehicle.isWreck) &&
+            context.particleType in setOf(ParticleType.HUGE, ParticleType.GIANT)) ParticleType.LARGE else context.particleType
+        when (type) {
             ParticleType.MINI -> spawnMiniExplosionParticles(level, context.particlePosition)
             ParticleType.SMALL -> spawnSmallExplosionParticles(level, context.particlePosition)
             ParticleType.MEDIUM -> spawnMediumExplosionParticles(level, context.particlePosition)

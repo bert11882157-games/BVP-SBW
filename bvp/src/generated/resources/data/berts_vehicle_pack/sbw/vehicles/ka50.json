@@ -198,7 +198,8 @@
               "ProjectileProfile": "berts_vehicle_pack:ka50/cannon/ammo_00_3ubr8_apds",
               "ProjectileLife": 55
             }
-          }
+          },
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell"
         },
         {
           "Ammo": "superbwarfare:small_shell_aa",
@@ -244,7 +245,8 @@
               "ProjectileProfile": "berts_vehicle_pack:ka50/cannon/ammo_01_3uor6_hef_t",
               "ProjectileLife": 55
             }
-          }
+          },
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell"
         }
       ],
       "SoundInfo": {
@@ -341,7 +343,13 @@
       ]
     },
     "Rocket": {
-      "AmmoType": "superbwarfare:small_rocket",
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_rocket",
+          "ConsumptionItem": "superbwarfare:small_unguided_rocket",
+          "Override": {}
+        }
+      ],
       "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_small_rocket.png",
       "DefaultZoom": 2,
       "DefaultFireMode": "Auto",
@@ -438,7 +446,13 @@
       }
     },
     "B13LRocket": {
-      "AmmoType": "superbwarfare:small_rocket",
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_rocket",
+          "ConsumptionItem": "superbwarfare:small_unguided_rocket",
+          "Override": {}
+        }
+      ],
       "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_small_rocket.png",
       "DefaultZoom": 2,
       "DefaultFireMode": "Auto",
@@ -535,7 +549,13 @@
       }
     },
     "S8KORocket": {
-      "AmmoType": "superbwarfare:small_rocket",
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_rocket",
+          "ConsumptionItem": "superbwarfare:small_unguided_rocket",
+          "Override": {}
+        }
+      ],
       "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_small_rocket.png",
       "DefaultZoom": 2,
       "DefaultFireMode": "Auto",
@@ -640,7 +660,13 @@
       "AvailableFireModes": "Semi",
       "RPM": 50,
       "EmptyReloadTime": 900,
-      "AmmoType": "superbwarfare:medium_anti_ground_missile",
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:medium_anti_ground_missile",
+          "ConsumptionItem": "superbwarfare:medium_atgm",
+          "Override": {}
+        }
+      ],
       "Projectile": {
         "Type": "berts_vehicle_pack:ataka_missile",
         "Profile": "berts_vehicle_pack:ka50/template_missile/default"
