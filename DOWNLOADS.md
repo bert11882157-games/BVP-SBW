@@ -13,7 +13,28 @@ No stable release is currently published in this repository. See [all releases](
 for the complete release history.
 The `0.9.19beta` source tag currently has no GitHub Release or compiled download assets.
 
-## Latest published testing build: 0.10.2beta
+## Latest published testing build: 0.11.9beta
+
+[ATGM flight, physical wires and distant smoke release](https://github.com/bert11882157-games/BVP-SBW/releases/tag/v0.11.9beta).
+Full development roster. Install all three matching JARs on clients and servers:
+
+| Component | Mod JAR | Checksum |
+| --- | --- | --- |
+| BVP 0.11.9beta | [JAR](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.11.9beta/bvp-main-v0.11.9beta.jar) | [SHA-256](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.11.9beta/bvp-main-v0.11.9beta.jar.sha256) |
+| SBW 0.11.9beta | [JAR](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.11.9beta/bvp_superbwarfare-v0.11.9beta.jar) | [SHA-256](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.11.9beta/bvp_superbwarfare-v0.11.9beta.jar.sha256) |
+| FFA 1.0.6-bvp.7 | [JAR](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.11.9beta/fire-from-above-1.0.6-bvp.7.jar) | [SHA-256](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.11.9beta/fire-from-above-1.0.6-bvp.7.jar.sha256) |
+
+ATGMs have bounded bob/corkscrew that settles with speed. Physical cable appears only on confirmed
+wire-guided ammunition and sags with paid-out distance. Distant smoke preserves lighting when terrain
+is unavailable. Keep existing Dominions, meshloader and other dependencies; remove superseded copies
+of these three mods before installation. Builds and focused source/package checks passed; gameplay
+testing remains pending. Uploaded JAR/checksum sizes and SHA-256 hashes were verified.
+
+The release tag records the exact sealed runtime source. Later download-documentation updates do
+not alter the binaries. See [all releases](https://github.com/bert11882157-games/BVP-SBW/releases)
+for intermediate versions not listed below.
+
+## Earlier published testing build: 0.10.2beta
 
 [Aircraft ground support and breakup release](https://github.com/bert11882157-games/BVP-SBW/releases/tag/v0.10.2beta).
 Full development roster. Install both matching JARs:
