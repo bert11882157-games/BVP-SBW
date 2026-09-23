@@ -32,10 +32,17 @@ object AircraftCombatParticles {
     }
 
     fun fire(point: Vec3, diameter: Float, smoke: Boolean) {
-        val options: ParticleOptions = packParticle(if (smoke) "tap_exhaust_smoke" else "tap_exhaust_flame") ?:
+        val options: ParticleOptions = packParticle(if (smoke) "wreck_smoke" else "tap_exhaust_flame") ?:
             CustomCloudOption(if (smoke) 0.16f else 1f, if (smoke) 0.14f else 0.35f,
                 if (smoke) 0.12f else 0.03f, if (smoke) 35 else 8, diameter, 0f, !smoke, true)
         emit(options, point, Vec3(0.0, if (smoke) 0.045 else 0.015, 0.0), diameter)
+    }
+
+    fun grindingSmoke(point: Vec3, speed: Double) {
+        val intensity = (speed / .8).coerceIn(0.0, 1.0).toFloat()
+        val options: ParticleOptions = packParticle("impact_smoke") ?:
+            CustomCloudOption(.4f,.38f,.35f,18,1.2f,0f,false,false)
+        emit(options, point, Vec3(0.0, .015, 0.0), .6f + intensity * 1.8f)
     }
 
     fun burst(message: ExplosionBurstMessage) {

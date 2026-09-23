@@ -583,6 +583,7 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:projectile",
@@ -624,8 +625,7 @@
               "ProjectileProfile": "berts_vehicle_pack:mbt_70/machinegun/ammo_00_western_762_ap",
               "ProjectileLife": 400
             }
-          },
-          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition"
+          }
         }
       ],
       "Projectile": {
@@ -660,6 +660,7 @@
       "ProjectileBeltAmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:projectile",
@@ -769,6 +770,7 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -809,14 +811,14 @@
               "ProjectileProfile": "berts_vehicle_pack:mbt_70/passengermachinegun/ammo_00_dm51a1_hefi_t_1",
               "ProjectileLife": 40
             }
-          },
-          "ConsumptionItem": "superbwarfare:small_autocannon_shell"
+          }
         }
       ],
       "ProjectileAmount": 1,
       "ProjectileBeltAmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",

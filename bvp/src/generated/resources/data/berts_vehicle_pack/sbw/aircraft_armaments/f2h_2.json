@@ -1,0 +1,98 @@
+{
+  "Schema": 1,
+  "Name": "F2H-2 Banshee",
+  "BuiltInWeapons": [
+    "Gun1",
+    "Gun2",
+    "Gun3",
+    "Gun4"
+  ],
+  "SuspendedWeapons": [],
+  "Pairs": [
+    {
+      "Id": "underwing_1",
+      "Name": "underwing 1",
+      "Left": [
+        -1.308462,
+        1.048903,
+        -0.096923
+      ],
+      "Right": [
+        1.308462,
+        1.048903,
+        -0.096923
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:reference/an_m57_250lb",
+        "berts_vehicle_pack:reference/an_m64_500lb"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 450
+    },
+    {
+      "Id": "underwing_2",
+      "Name": "underwing 2",
+      "Left": [
+        -2.083846,
+        1.048903,
+        -0.096923
+      ],
+      "Right": [
+        2.083846,
+        1.048903,
+        -0.096923
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:reference/an_m57_250lb",
+        "berts_vehicle_pack:reference/an_m64_500lb"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 450
+    },
+    {
+      "Id": "underwing_3",
+      "Name": "underwing 3",
+      "Left": [
+        -3.004615,
+        1.048903,
+        0
+      ],
+      "Right": [
+        3.004615,
+        1.048903,
+        0
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:reference/an_m57_250lb",
+        "berts_vehicle_pack:reference/an_m64_500lb"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 450
+    },
+    {
+      "Id": "underwing_4",
+      "Name": "underwing 4",
+      "Left": [
+        -4.361538,
+        1.048903,
+        0
+      ],
+      "Right": [
+        4.361538,
+        1.048903,
+        0
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:reference/an_m57_250lb",
+        "berts_vehicle_pack:reference/an_m64_500lb"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 450
+    }
+  ],
+  "Singles": [],
+  "StoreGroups": {},
+  "MaxPayloadKg": 907,
+  "MaxPylonMassKg": 450,
+  "MaxWeaponsPerPylon": 1
+}

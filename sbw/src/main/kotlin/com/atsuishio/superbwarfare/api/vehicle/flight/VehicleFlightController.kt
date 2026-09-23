@@ -88,11 +88,11 @@ class VehicleFlightController(private val vehicle: VehicleEntity) {
     /** Replace the pre-movement receipt with the accepted terrain pose in the same server tick. */
     fun acceptGroundContactPitch(pitch: Float) {
         if (vehicle.level().isClientSide || !hasSnapshot) return
-        val strategy = activeStrategy as? FixedWingFlightStrategy ?: return
-        strategy.acceptGroundPitch(pitch.toDouble())
+        val strategy = activeStrategy ?: return
+        (strategy as? FixedWingFlightStrategy)?.acceptGroundPitch(pitch.toDouble())
         sequence += 1
         val serverTick = vehicle.level().gameTime
-        val surfaces = strategy.controlSurfaceSnapshot()?.takeIf { it.serverTick == serverTick }
+        val surfaces = (strategy as? FixedWingFlightStrategy)?.controlSurfaceSnapshot()?.takeIf { it.serverTick == serverTick }
         current = current.copy(sequence = sequence, serverTick = serverTick, bodyPitch = pitch,
             motion = vehicle.deltaMovement, controlSurfaces = surfaces,
             fixedWingSignedLiftG = current.fixedWingSignedLiftG.takeIf { surfaces != null })

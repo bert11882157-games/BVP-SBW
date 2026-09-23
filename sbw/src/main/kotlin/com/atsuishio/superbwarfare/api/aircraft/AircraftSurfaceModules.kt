@@ -195,7 +195,7 @@ object AircraftSurfaceModules {
         return points.last()[1]
     }
 
-    private fun boneMatrices(vehicle: VehicleEntity, partialTick: Float): (String) -> Matrix4d {
+    internal fun boneMatrices(vehicle: VehicleEntity, partialTick: Float): (String) -> Matrix4d {
         val data = vehicle.computed()
         val flight=vehicle.getVehicleFlightPresentationSnapshot(partialTick)
         val c=flight.controlSurfaces

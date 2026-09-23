@@ -1,0 +1,54 @@
+{
+  "ID": "berts_vehicle_pack:ch_46e",
+  "Model": {
+    "GeometryBackend": "berts_vehicle_pack:vehicle/ch_46e",
+    "Model": "berts_vehicle_pack:geo/native_fallback/ch_46e.geo.json",
+    "Texture": "berts_vehicle_pack:textures/entity/ch_46e.png",
+    "WreckTexture": "berts_vehicle_pack:textures/entity_dead/ch_46e.png"
+  },
+  "MouseSpeed": [
+    0.2,
+    0.2
+  ],
+  "AircraftRig": {
+    "Schema": 1,
+    "Frame": "GENERATED_MODEL_PIXELS",
+    "Surfaces": [],
+    "Rotors": [
+      {
+        "Bone": "front_rotor",
+        "Parent": "hull",
+        "Pivot": [
+          0,
+          61.27371,
+          -63.75778
+        ],
+        "Axis": [
+          0,
+          -1,
+          -4.2905978201094667e-16
+        ],
+        "SpeedChannel": "engineSpool",
+        "Direction": 1,
+        "DegreesPerTickAtFullSpeed": 98
+      },
+      {
+        "Bone": "rear_rotor",
+        "Parent": "hull",
+        "Pivot": [
+          0,
+          81.14626,
+          128.34358
+        ],
+        "Axis": [
+          0,
+          -1,
+          0
+        ],
+        "SpeedChannel": "engineSpool",
+        "Direction": -1,
+        "DegreesPerTickAtFullSpeed": 98
+      }
+    ]
+  }
+}

@@ -612,6 +612,7 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:projectile",
@@ -654,8 +655,7 @@
               "ProjectileProfile": "berts_vehicle_pack:vt_4a1/machinegun/ammo_00_type86_ap_i",
               "ProjectileLife": 400
             }
-          },
-          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition"
+          }
         }
       ],
       "Projectile": {
@@ -690,6 +690,7 @@
       "ProjectileBeltAmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:projectile",
@@ -783,6 +784,7 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:projectile",
@@ -839,8 +841,7 @@
               "ProjectileProfile": "berts_vehicle_pack:vt_4a1/passengermachinegun/ammo_00_qjc88a_bzt44_api_t",
               "ProjectileLife": 400
             }
-          },
-          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition"
+          }
         }
       ],
       "Crosshair": "@VehicleCommonGun",
@@ -861,6 +862,7 @@
       "ProjectileBeltAmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:projectile",
@@ -882,6 +884,7 @@
         },
         {
           "Ammo": "superbwarfare:small_shell_gs",
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:projectile",

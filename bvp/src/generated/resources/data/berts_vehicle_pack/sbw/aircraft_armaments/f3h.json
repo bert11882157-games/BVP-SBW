@@ -1,0 +1,61 @@
+{
+  "Schema": 1,
+  "Name": "F3H-2 Demon",
+  "BuiltInWeapons": [
+    "Gun1",
+    "Gun2"
+  ],
+  "SuspendedWeapons": [],
+  "Pairs": [
+    {
+      "Id": "outer_missile",
+      "Name": "outer missile",
+      "Left": [
+        -3.15,
+        0.55,
+        3
+      ],
+      "Right": [
+        3.15,
+        0.55,
+        3
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:reference/aim9b",
+        "berts_vehicle_pack:reference/aim7c"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 500
+    },
+    {
+      "Id": "inner_multirole",
+      "Name": "inner multirole",
+      "Left": [
+        -1.5,
+        0.6,
+        4.75
+      ],
+      "Right": [
+        1.5,
+        0.6,
+        4.75
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:reference/aim9b",
+        "berts_vehicle_pack:reference/aim7c",
+        "berts_vehicle_pack:reference/an_m64_500lb"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 500
+    }
+  ],
+  "Singles": [],
+  "StoreGroups": {},
+  "MaxPayloadKg": 1850,
+  "MaxPylonMassKg": 500,
+  "MaxWeaponsPerPylon": 1,
+  "Radar": {
+    "Enabled": true,
+    "Range": 800
+  }
+}

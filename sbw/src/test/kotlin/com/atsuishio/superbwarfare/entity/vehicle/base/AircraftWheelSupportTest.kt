@@ -93,6 +93,26 @@ class AircraftWheelSupportTest {
             "terrain movement must include wings, not just the first body")
     }
 
+    @Test fun expansionSourceWheelSetsSettleFromLevelAndNoseFirstWithoutSuspendedMains() {
+        val authored = Json.parseToJsonElement(javaClass.getResourceAsStream("/aircraft_expansion_wheel_contact_fits.json")!!
+            .bufferedReader().use { it.readText() }).jsonObject
+        assertEquals(13, authored.size)
+        val scene = Scene(listOf(floor))
+        val spread: (String) -> Matrix4d = { Matrix4d() }
+        for ((id, json) in authored) for (pitch in listOf(0.0,2.0)) {
+            val data = Json.decodeFromString(AircraftTerrainContact.serializer(), json.toString())
+            val rotation = Matrix4d().rotateX(Math.toRadians(pitch))
+            val low = AircraftWheelGeometry.sample(data,rotation).minOf { it.world.y }
+            var frame = Matrix4d().translation(0.0,-low,0.0).mul(rotation)
+            repeat(240) {
+                frame = scene.kernel.plan(data,frame,0.0,1.0,bonePose=spread).frame
+                assertTrue(AircraftWheelGeometry.sample(data,frame).all { it.world.y >= -1e-6 }, "$id/$pitch penetrated runway")
+            }
+            val contacts = scene.kernel.contacts(AircraftWheelGeometry.sample(data,frame))
+            assertEquals(data.wheelContacts.size,contacts.rows.size,"$id/$pitch has floating wheel sets")
+        }
+    }
+
     @Test fun wheelVolumesSupportTheirWidthAndSettleWithoutFloatingOrPenetrating() {
         val data = solidWheelAircraft()
         val wheel = AircraftWheelGeometry.sample(data, Matrix4d()).first()

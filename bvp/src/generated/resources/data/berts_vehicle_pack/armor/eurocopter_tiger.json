@@ -1,0 +1,96 @@
+{
+  "id": "eurocopter_tiger",
+  "model_scale": 1,
+  "ap_penetration_mm": 500,
+  "chemical_penetration_mm": 700,
+  "fallback_incoming_penetration_mm": 500,
+  "atgm_tandem": false,
+  "impact_tolerance": 0.25,
+  "internal_ray_length": 10,
+  "unboxed_hits_penetrate": true,
+  "plates": [],
+  "sensitive_internals": [],
+  "engines": [],
+  "ammo_racks": [],
+  "tracks": [],
+  "modules": [],
+  "explosive_reactive_armor": [],
+  "sbw_obb": [
+    {
+      "Position": [
+        0,
+        2.794803,
+        -7.206271
+      ],
+      "Size": [
+        0.351525,
+        0.56244,
+        3.339491
+      ]
+    },
+    {
+      "Position": [
+        0,
+        2.75965,
+        0.105457
+      ],
+      "Size": [
+        0.843661,
+        1.511559,
+        3.972237
+      ]
+    },
+    {
+      "Position": [
+        0,
+        2.513582,
+        5.483796
+      ],
+      "Size": [
+        0.562441,
+        0.984271,
+        1.406102
+      ]
+    },
+    {
+      "Position": [
+        -1.652169,
+        0.422006,
+        2.074
+      ],
+      "Size": [
+        0.14061,
+        0.422006,
+        0.422006
+      ],
+      "LandingGear": true
+    },
+    {
+      "Position": [
+        1.652169,
+        0.422006,
+        2.074
+      ],
+      "Size": [
+        0.14061,
+        0.422006,
+        0.422006
+      ],
+      "LandingGear": true
+    },
+    {
+      "Position": [
+        0.087882,
+        0.597769,
+        -9.051779
+      ],
+      "Size": [
+        0.087882,
+        0.228586,
+        0.228586
+      ],
+      "LandingGear": true
+    }
+  ],
+  "schema": "berts_vehicle_pack:armor_profile/v1"
+}

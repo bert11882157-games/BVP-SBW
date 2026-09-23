@@ -1,0 +1,424 @@
+{
+  "ID": "berts_vehicle_pack:eurocopter_tiger",
+  "Gravity": 0.024516625,
+  "Mass": 4.73,
+  "UpStep": 0,
+  "InertiaRotateRate": 0,
+  "RotateOffsetHeight": 3.64716,
+  "MaxHealth": 110,
+  "MaxEnergy": 10000000,
+  "AllowFreeCam": true,
+  "HasNVD": true,
+  "HasTVD": true,
+  "OBB": [
+    {
+      "Size": [
+        0.35152,
+        0.56244,
+        3.33949
+      ],
+      "Position": [
+        0,
+        2.7948,
+        -7.20627
+      ]
+    },
+    {
+      "Size": [
+        0.84366,
+        1.51156,
+        3.97224
+      ],
+      "Position": [
+        0,
+        2.75965,
+        0.10546
+      ]
+    },
+    {
+      "Size": [
+        0.56244,
+        0.98427,
+        1.4061
+      ],
+      "Position": [
+        0,
+        2.51358,
+        5.4838
+      ]
+    },
+    {
+      "Size": [
+        0.14061,
+        0.42201,
+        0.42201
+      ],
+      "Position": [
+        -1.65217,
+        0.42201,
+        2.074
+      ],
+      "LandingGear": true
+    },
+    {
+      "Size": [
+        0.14061,
+        0.42201,
+        0.42201
+      ],
+      "Position": [
+        1.65217,
+        0.42201,
+        2.074
+      ],
+      "LandingGear": true
+    },
+    {
+      "Size": [
+        0.08788,
+        0.22859,
+        0.22859
+      ],
+      "Position": [
+        0.08788,
+        0.59777,
+        -9.05178
+      ],
+      "LandingGear": true
+    }
+  ],
+  "Seats": [
+    {
+      "HidePassenger": false,
+      "BanHand": true,
+      "Transform": "Vehicle",
+      "BodyAttachment": "Vehicle",
+      "Position": [
+        0,
+        2.4432775,
+        1.546711875
+      ],
+      "Weapons": [],
+      "CanRotateHead": true,
+      "CameraPos": {
+        "Transform": "Vehicle",
+        "Position": [
+          0,
+          0,
+          0
+        ],
+        "ZoomPosition": [
+          0,
+          0,
+          0
+        ],
+        "CameraMode": "AIRCRAFT_FREELOOK",
+        "AimCameraMode": "AIRCRAFT_FREELOOK",
+        "UseAircraftCamera": true,
+        "AircraftCameraPos": [
+          0,
+          3.5,
+          -9
+        ],
+        "EyeAttachment": "pilot_eye",
+        "ZoomEyeAttachment": "pilot_eye",
+        "DirectionAttachment": "pilot_eye",
+        "ZoomDirectionAttachment": "pilot_eye"
+      },
+      "DismountInfo": {
+        "Transform": "Vehicle",
+        "Position": [
+          3,
+          0.2,
+          1.5467116935875
+        ]
+      }
+    },
+    {
+      "HidePassenger": false,
+      "BanHand": true,
+      "Transform": "Vehicle",
+      "BodyAttachment": "Vehicle",
+      "Position": [
+        0,
+        1.66992125,
+        3.58555875
+      ],
+      "Weapons": [],
+      "CanRotateHead": true,
+      "CameraPos": {
+        "Transform": "Vehicle",
+        "Position": [
+          0,
+          0,
+          0
+        ],
+        "ZoomPosition": [
+          0,
+          0,
+          0
+        ],
+        "CameraMode": "AIRCRAFT_FREELOOK",
+        "AimCameraMode": "AIRCRAFT_FREELOOK",
+        "UseAircraftCamera": false,
+        "EyeAttachment": "gunner_eye",
+        "ZoomEyeAttachment": "gunner_eye",
+        "DirectionAttachment": "gunner_eye",
+        "ZoomDirectionAttachment": "gunner_eye"
+      },
+      "DismountInfo": {
+        "Transform": "Vehicle",
+        "Position": [
+          3,
+          0.2,
+          3.5855589260437504
+        ]
+      }
+    }
+  ],
+  "Weapons": {},
+  "HUDColor": "0xFFC700",
+  "HudType": "@Aircraft",
+  "EngineType": "Helicopter",
+  "EngineInfo": {
+    "EnergyCostRate": 320,
+    "Buoyancy": 0,
+    "Increment": 0,
+    "Decrement": 0,
+    "EngineSoundVolume": 1.5,
+    "PitchSpeed": 1,
+    "YawSpeed": 1,
+    "RollSpeed": 1,
+    "LiftSpeed": 1,
+    "Speed": 1,
+    "EngineStartSound": "berts_vehicle_pack:eurocopter_tiger_engine_start"
+  },
+  "HasDecoy": false,
+  "DamageModifiers": [
+    "minecraft:arrow 0",
+    "minecraft:trident 0",
+    "minecraft:mob_attack 0",
+    "minecraft:mob_attack_no_aggro 0",
+    "minecraft:mob_projectile 0",
+    "minecraft:player_attack 0",
+    "#superbwarfare:projectile 0",
+    "All - 20",
+    "minecraft:lava + 20",
+    "minecraft:lava * 10",
+    "@minecraft:tnt * 4",
+    "@minecraft:tnt_minecart * 4",
+    "@#superbwarfare:aerial_bomb * 12",
+    "All * 0.23",
+    "superbwarfare:vehicle_strike * 2.5",
+    "minecraft:explosion * 2",
+    "superbwarfare:custom_explosion * 0.65",
+    "superbwarfare:projectile_explosion * 0.65",
+    "superbwarfare:mine * 0.5",
+    "superbwarfare:lunge_mine * 0.5",
+    "superbwarfare:projectile_hit * 1.3",
+    "#superbwarfare:projectile_absolute * 0.15",
+    "@#superbwarfare:aa_missile * 0.3",
+    "@superbwarfare:small_cannon_shell * 0.25",
+    "@superbwarfare:c4 * 4",
+    "@#superbwarfare:at_rocket * 1.1",
+    "@superbwarfare:gun_grenade * 1.25",
+    "@superbwarfare:mortar_shell * 1.25",
+    "@superbwarfare:tm_62 * 2.5"
+  ],
+  "DestroyInfo": {
+    "ParticleType": "Giant",
+    "ExplosionDamage": 160,
+    "ExplosionRadius": 13,
+    "SympatheticDetonation": true,
+    "SympatheticDetonationForce": 2,
+    "SympatheticDetonationChance": 0.55
+  },
+  "ThirdPersonCameraPos": [
+    -0.86696,
+    1.5,
+    5
+  ],
+  "VehicleIcon": "berts_vehicle_pack:textures/vehicle_icon/eurocopter_tiger.png",
+  "ContainerIcon": "superbwarfare:textures/gui/vehicle/type/aircraft.png",
+  "VehicleContainerType": "Large",
+  "Type": "Helicopter",
+  "Afterburner": false,
+  "TerrainCompat": [],
+  "Attachments": {
+    "pilot_eye": {
+      "Parent": "Vehicle",
+      "Position": [
+        0,
+        3.146328125,
+        1.546711875
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "gunner_eye": {
+      "Parent": "Vehicle",
+      "Position": [
+        0,
+        2.372971875,
+        3.58555875
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    }
+  },
+  "EngineSound": "berts_vehicle_pack:eurocopter_tiger_engine_loop",
+  "Countermeasures": {
+    "Flares": true,
+    "Chaff": true,
+    "RadarWarningReceiver": true,
+    "FlaresPerSecond": 4,
+    "FlaresPerBurst": 12,
+    "FlareLeftPos": [
+      -1.265491,
+      2.654192,
+      -6.327457
+    ],
+    "FlareRightPos": [
+      1.265491,
+      2.654192,
+      -6.327457
+    ],
+    "FlareEjectionSpeed": 0.7
+  },
+  "AircraftTerrainContact": {
+    "Fuselage": {
+      "Min": [
+        -0.843661,
+        1.248091,
+        -10.545762
+      ],
+      "Max": [
+        0.843661,
+        4.271209,
+        6.889898
+      ]
+    },
+    "LandingGear": {
+      "Min": [
+        -1.792779,
+        0,
+        -9.280365
+      ],
+      "Max": [
+        1.792779,
+        0.844012,
+        2.496006
+      ]
+    },
+    "RetractableGear": false,
+    "BodyParts": [
+      {
+        "Min": [
+          -0.351525,
+          2.232362,
+          -10.545762
+        ],
+        "Max": [
+          0.351525,
+          3.357243,
+          -3.866779
+        ]
+      },
+      {
+        "Min": [
+          -0.843661,
+          1.248091,
+          -3.866779
+        ],
+        "Max": [
+          0.843661,
+          4.271209,
+          4.077694
+        ]
+      },
+      {
+        "Min": [
+          -0.562441,
+          1.529311,
+          4.077694
+        ],
+        "Max": [
+          0.562441,
+          3.497853,
+          6.889898
+        ]
+      }
+    ],
+    "WheelContacts": [
+      {
+        "Id": "main_left",
+        "Group": "MAIN",
+        "Position": [
+          -1.652169,
+          0,
+          2.074
+        ],
+        "Bounds": {
+          "Min": [
+            -1.792779,
+            0,
+            1.651994
+          ],
+          "Max": [
+            -1.511559,
+            0.844012,
+            2.496006
+          ]
+        }
+      },
+      {
+        "Id": "main_right",
+        "Group": "MAIN",
+        "Position": [
+          1.652169,
+          0,
+          2.074
+        ],
+        "Bounds": {
+          "Min": [
+            1.511559,
+            0,
+            1.651994
+          ],
+          "Max": [
+            1.792779,
+            0.844012,
+            2.496006
+          ]
+        }
+      },
+      {
+        "Id": "tail",
+        "Group": "TAIL",
+        "Position": [
+          0.087882,
+          0.369183,
+          -9.051779
+        ],
+        "Bounds": {
+          "Min": [
+            0,
+            0.369183,
+            -9.280365
+          ],
+          "Max": [
+            0.175763,
+            0.826355,
+            -8.823192
+          ]
+        }
+      }
+    ]
+  }
+}

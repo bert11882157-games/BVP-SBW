@@ -26,7 +26,7 @@ object AircraftWreckFire {
     fun observe(vehicle: VehicleEntity) {
         val mc = Minecraft.getInstance()
         if (level !== mc.level) { seen.clear(); level = mc.level; tick = 0 }
-        if (vehicle.level() !== mc.level || !broken(vehicle) || vehicle.sympatheticDetonated ||
+        if (vehicle.level() !== mc.level || !broken(vehicle) || (vehicle.sympatheticDetonated && vehicle.aircraftWreckImpactTime < 0) ||
             (vehicle.vehicleType != VehicleType.AIRPLANE && vehicle.vehicleType != VehicleType.HELICOPTER)) return
         val old = seen[vehicle.uuid]
         if (old != null) { old.vehicle = vehicle; old.observed = tick; return }
@@ -41,10 +41,22 @@ object AircraftWreckFire {
         if (mc.level == null || mc.isPaused) return
         tick++
         seen.entries.removeIf { (_, value) -> value.vehicle.isRemoved || !broken(value.vehicle) ||
-            value.vehicle.sympatheticDetonated || tick - value.observed > 4 }
+            (value.vehicle.sympatheticDetonated && value.vehicle.aircraftWreckImpactTime < 0) || tick - value.observed > 4 }
         var budget = 96
         for ((uuid, value) in seen) {
             val vehicle = value.vehicle
+            if (vehicle.aircraftWreckImpactTime >= 0) {
+                val speed = vehicle.deltaMovement.horizontalDistance()
+                if (vehicle.onGround() && speed > .02 && budget > 0) {
+                    val section = vehicle.computed().aircraftTerrainContact?.wreckSections?.getOrNull(1)
+                    if (section != null) {
+                        val local = section.minimum.add(section.maximum).scale(.5)
+                        val point = vehicle.getVehicleTransform(1f).transformPosition(org.joml.Vector3d(local.x,section.minimum.y,local.z))
+                        AircraftCombatParticles.grindingSmoke(Vec3(point.x,point.y+.08,point.z),speed); budget--
+                    }
+                }
+                continue
+            }
             val intensity = com.atsuishio.superbwarfare.api.vehicle.flight.AircraftWreckFlightStrategy
                 .noseDownIntensity(vehicle.xRot.toDouble())
             val flameScale = (1 + intensity * 0.8).toFloat()
@@ -58,8 +70,8 @@ object AircraftWreckFire {
                         budget--
                     }
                 }
-                if (budget > 0 && tick % 2L == 0L) {
-                    AircraftCombatParticles.fire(point, 3.7f * (1 + intensity * 0.25).toFloat(), true); budget--
+                if (budget > 0) {
+                    AircraftCombatParticles.fire(point, 4.6f * (1 + intensity * 0.25).toFloat(), true); budget--
                 }
             }
             value.previous = points

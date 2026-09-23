@@ -47,6 +47,10 @@ public final class ModParticles {
             PARTICLE_TYPES.register("tap_exhaust_flame", () -> new SimpleParticleType(false) {});
     public static final RegistryObject<SimpleParticleType> TAP_EXHAUST_SMOKE =
             PARTICLE_TYPES.register("tap_exhaust_smoke", () -> new SimpleParticleType(false) {});
+    public static final RegistryObject<SimpleParticleType> IMPACT_SMOKE =
+            PARTICLE_TYPES.register("impact_smoke", () -> new SimpleParticleType(false) {});
+    public static final RegistryObject<SimpleParticleType> WRECK_SMOKE =
+            PARTICLE_TYPES.register("wreck_smoke", () -> new SimpleParticleType(false) {});
     public static final RegistryObject<ParticleType<SizedExplosionParticleOptions>> SIZED_EXPLOSION =
             PARTICLE_TYPES.register("sized_explosion", () -> new ParticleType<SizedExplosionParticleOptions>(
                     false, SizedExplosionParticleOptions.DESERIALIZER) {

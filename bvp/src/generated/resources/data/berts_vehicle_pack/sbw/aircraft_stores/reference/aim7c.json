@@ -1,0 +1,29 @@
+{
+  "Schema": 1,
+  "Name": "AIM-7C Sparrow · semi-active flight proxy",
+  "Category": "AIR_TO_AIR",
+  "Capacity": 1,
+  "MassKg": 176.4,
+  "Guidance": {
+    "Mode": "SEMI_ACTIVE_RADAR",
+    "LockTicks": 0,
+    "Range": 1000,
+    "ConeDegrees": 25,
+    "CountermeasureVulnerability": 0.75
+  },
+  "Flight": {
+    "InitialSpeed": 0.5,
+    "MaxSpeed": 8,
+    "AccelerationPerTick": 0.1,
+    "TurnDegreesPerSecond": 65,
+    "Damage": 60,
+    "BlastRadius": 4
+  },
+  "AmmoItem": "superbwarfare:medium_air_to_air_missile",
+  "MaxPerPylon": 1,
+  "RackSpacing": [
+    0.55,
+    0.3,
+    0
+  ]
+}

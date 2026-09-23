@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
 class AircraftWreckFlightTest {
-    @Test fun retainedFuselageHasTwoShallowBouncesThenStops() {
+    @Test fun retainedFuselageHasTwoShallowBouncesThenKeepsSlidingMomentum() {
         var velocity = Vec3(3.0,-4.0,1.0)
         repeat(2) { bounce ->
             val next=AircraftFuselageWreck.bounce(velocity,bounce)
@@ -13,7 +13,10 @@ class AircraftWreckFlightTest {
             assertTrue(next.horizontalDistance() < velocity.horizontalDistance())
             velocity=Vec3(next.x,-next.y,next.z)
         }
-        assertEquals(Vec3.ZERO,AircraftFuselageWreck.bounce(velocity,2))
+        val slide=AircraftFuselageWreck.bounce(velocity,2)
+        assertEquals(0.0,slide.y)
+        assertTrue(slide.horizontalDistance()>.5)
+        assertTrue(slide.horizontalDistance()<velocity.horizontalDistance())
     }
     @Test fun delayedWingLossIsBoundedSingleSidedAndDoesNotRestartAfterImpact() {
         for (seed in 0L..1000L) {

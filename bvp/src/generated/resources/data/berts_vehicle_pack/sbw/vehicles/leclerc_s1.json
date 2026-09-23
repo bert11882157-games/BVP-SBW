@@ -526,6 +526,7 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:projectile",
@@ -579,8 +580,7 @@
               "ProjectileProfile": "berts_vehicle_pack:leclerc_s1/machinegun/ammo_00_western_127_m20_api_t_1",
               "ProjectileLife": 400
             }
-          },
-          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition"
+          }
         }
       ],
       "Crosshair": "@VehicleCommonGun",
@@ -601,6 +601,7 @@
       "ProjectileBeltAmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:projectile",
@@ -622,6 +623,7 @@
         },
         {
           "Ammo": "superbwarfare:small_shell_gs",
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:projectile",
@@ -643,6 +645,7 @@
         },
         {
           "Ammo": "superbwarfare:small_shell_aa",
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:projectile",

@@ -68,14 +68,18 @@ class AircraftCollisionSnapshot private constructor(parts: List<AircraftCollisio
         @JvmStatic
         @JvmOverloads
         fun create(definition: AircraftTerrainContact, frame: Matrix4d,
-                   gearFraction: Float, detachedWings: Int = 0, fragmented: Boolean = false): AircraftCollisionSnapshot {
+                   gearFraction: Float, detachedWings: Int = 0, fragmented: Boolean = false,
+                   bonePose: ((String) -> Matrix4d)? = null): AircraftCollisionSnapshot {
             require(definition.valid())
             val orientation = frame.getNormalizedRotation(Quaterniond())
             fun part(role: AircraftCollisionRole, source: AircraftTerrainBox, active: Boolean, side: Int = 0): AircraftCollisionPart {
+                val partFrame = if (source.bone == "hull") frame else
+                    Matrix4d(frame).mul(requireNotNull(bonePose) { "Missing physical bone pose: ${source.bone}" }(source.bone))
                 val localCenter = source.minimum.add(source.maximum).scale(0.5)
-                val world = frame.transformPosition(Vector3d(localCenter.x, localCenter.y, localCenter.z))
+                val world = partFrame.transformPosition(Vector3d(localCenter.x, localCenter.y, localCenter.z))
                 return AircraftCollisionPart(role, active, Vec3(world.x, world.y, world.z),
-                    source.maximum.subtract(source.minimum).scale(0.5), orientation, side)
+                    source.maximum.subtract(source.minimum).scale(0.5),
+                    if (partFrame === frame) orientation else partFrame.getNormalizedRotation(Quaterniond()), side)
             }
             if (fragmented && definition.wreckSections.size == 4)
                 return AircraftCollisionSnapshot(listOf(part(AircraftCollisionRole.FUSELAGE, definition.wreckSections[1], true)))

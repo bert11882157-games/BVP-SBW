@@ -7,6 +7,7 @@ import net.minecraft.world.level.BlockGetter
 import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.state.BlockState
+import net.minecraft.world.level.chunk.ChunkStatus
 import net.minecraft.world.phys.Vec3
 import java.lang.reflect.Method
 import java.util.concurrent.ArrayBlockingQueue
@@ -78,7 +79,10 @@ object ClientDebrisTerrain : BlockGetter {
     }
     private fun request(pos: BlockPos) {
         val level = Minecraft.getInstance().level ?: return
-        if (level.hasChunk(pos.x shr 4, pos.z shr 4) || FarTerrainClient.contains(net.minecraft.world.level.ChunkPos.asLong(pos))) return
+        // ClientLevel.hasChunk always returns true, including outside native view.
+        // A non-creating chunk lookup is required before bypassing the Voxy cache.
+        if (level.chunkSource.getChunk(pos.x shr 4, pos.z shr 4, ChunkStatus.FULL, false) != null ||
+            FarTerrainClient.contains(net.minecraft.world.level.ChunkPos.asLong(pos))) return
         val key = Key(pos.x shr 5, pos.y shr 5, pos.z shr 5)
         if (key in cache || key in pending || pending.size >= 4) return
         val bridge = resolve() ?: return
@@ -104,7 +108,9 @@ object ClientDebrisTerrain : BlockGetter {
     }
     override fun getBlockState(pos: BlockPos): BlockState {
         val level = Minecraft.getInstance().level ?: return Blocks.AIR.defaultBlockState()
-        if (level.hasChunk(pos.x shr 4, pos.z shr 4) || FarTerrainClient.contains(net.minecraft.world.level.ChunkPos.asLong(pos)))
+        val native = level.chunkSource.getChunk(pos.x shr 4, pos.z shr 4, ChunkStatus.FULL, false)
+        if (native != null) return native.getBlockState(pos)
+        if (FarTerrainClient.contains(net.minecraft.world.level.ChunkPos.asLong(pos)))
             return FarTerrainClient.getBlockState(pos)
         val key = Key(pos.x shr 5, pos.y shr 5, pos.z shr 5)
         val data = cache[key]?.states

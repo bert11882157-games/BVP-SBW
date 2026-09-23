@@ -87,7 +87,7 @@ public final class BvpHelicopterScenario {
     }
 
     private enum Phase {
-        OFF(60), SPOOL(160), TAKEOFF(300), HOVER(120), FORWARD(160), BRAKE(180),
+        SETTLE(100), OFF(60), SPOOL(160), TAKEOFF(300), HOVER(120), FORWARD(160), BRAKE(180),
         BANK_LEFT(80), BANK_RIGHT(120), YAW(160), LAND(600), SHUTDOWN(180);
         final int ticks;
         Phase(int ticks) { this.ticks = ticks; }
@@ -104,7 +104,7 @@ public final class BvpHelicopterScenario {
         final long startedNanos = System.nanoTime();
         BvpHelicopterEntity vehicle;
         HelicopterPhysicalControls physicalControls;
-        Phase phase = Phase.OFF;
+        Phase phase = Phase.SETTLE;
         Stats stats;
         double groundY, startHealth, pitchRate, rollRate;
         double previousPitch, previousRoll, targetYaw, brakeStartSpeed;
@@ -124,6 +124,9 @@ public final class BvpHelicopterScenario {
                 case "mi_24d" -> HelicopterFlightProfile.mi24d().physicalControls();
                 case "ah_1f" -> HelicopterFlightProfile.ah1f().physicalControls();
                 case "mi_26" -> HelicopterFlightProfile.mi26().physicalControls();
+                case "ch_46e" -> HelicopterFlightProfile.ch46e().physicalControls();
+                case "eurocopter_tiger" -> HelicopterFlightProfile.eurocopterTiger().physicalControls();
+                case "ah_64d" -> HelicopterFlightProfile.ah64d().physicalControls();
                 default -> throw new IllegalArgumentException("No helicopter trajectory profile: " + id);
             };
             int x = 3072, z = 3072;
@@ -171,7 +174,7 @@ public final class BvpHelicopterScenario {
 
         void controls() {
             context();
-            double throttle = phase == Phase.OFF || phase == Phase.SHUTDOWN ? 0 : 1;
+            double throttle = phase == Phase.SETTLE || phase == Phase.OFF || phase == Phase.SHUTDOWN ? 0 : 1;
             inputBits = vehicle.getBvpThrottleTarget() < throttle - 0.01 ? 32
                     : vehicle.getBvpThrottleTarget() > throttle + 0.01 ? 256 : 0;
             // Braking uses an active cyclic flare; the gentler landing correction only holds position.
@@ -186,6 +189,7 @@ public final class BvpHelicopterScenario {
             if (rollDemand < -1.5) inputBits |= 1;
             else if (rollDemand > 1.5) inputBits |= 2;
             if (phase == Phase.OFF) { mouseX = 4; mouseY = 4; inputBits |= 2; }
+            if (phase == Phase.SETTLE) { mouseX = mouseY = 0; inputBits &= ~(1 | 2); }
             if (phase.ordinal() >= Phase.TAKEOFF.ordinal() && phase != Phase.SHUTDOWN) {
                 double altitude = vehicle.getY() - groundY;
                 double desiredVertical = phase == Phase.LAND
@@ -245,10 +249,12 @@ public final class BvpHelicopterScenario {
             check("health_preserved", vehicle.getHealth() >= startHealth - 0.01);
             check("bounded_horizontal_speed", stats.maxHorizontalMps < 75);
             switch (phase) {
+                case SETTLE -> check("settled_before_rotor_off_input", vehicle.onGround()
+                        && vehicle.getDeltaMovement().lengthSqr() < 0.0001);
                 case OFF -> {
                     check("rotor_off", stats.maxRotor < 0.001);
-                    check("no_attitude_authority_without_rotor", stats.maxAbsPitch < 0.1
-                            && stats.maxAbsRoll < 0.1 && Math.abs(vehicle.getYRot()) < 0.1);
+                    check("no_attitude_authority_without_rotor", stats.maxPitchChange < 0.1
+                            && stats.maxRollChange < 0.1 && stats.maxYawChange < 0.1);
                 }
                 case SPOOL -> {
                     check("rotor_spooled", vehicle.getBvpRotorLiftPower() > 0.95);
@@ -304,16 +310,22 @@ public final class BvpHelicopterScenario {
 
     private static final class Stats {
         final Vec3 start;
+        final float startPitch, startRoll, startYaw;
+        double maxPitchChange, maxRollChange, maxYawChange;
         double minAltitude, maxAltitude, maxAbsPitch, maxAbsRoll, maxPitch, minRoll, maxRoll;
         double maxRotor, maxHorizontalMps, maxAbsVerticalMps, maxForwardKmh;
         int intermediateRotorTicks;
 
         Stats(BvpHelicopterEntity vehicle, double groundY) {
             start = vehicle.position(); minAltitude = maxAltitude = vehicle.getY() - groundY;
+            startPitch = vehicle.getXRot(); startRoll = vehicle.getRoll(); startYaw = vehicle.getYRot();
             minRoll = maxRoll = vehicle.getRoll();
         }
 
         void sample(BvpHelicopterEntity vehicle, double groundY) {
+            maxPitchChange = Math.max(maxPitchChange, Math.abs(Mth.wrapDegrees(vehicle.getXRot() - startPitch)));
+            maxRollChange = Math.max(maxRollChange, Math.abs(Mth.wrapDegrees(vehicle.getRoll() - startRoll)));
+            maxYawChange = Math.max(maxYawChange, Math.abs(Mth.wrapDegrees(vehicle.getYRot() - startYaw)));
             minAltitude = Math.min(minAltitude, vehicle.getY() - groundY);
             maxAltitude = Math.max(maxAltitude, vehicle.getY() - groundY);
             maxAbsPitch = Math.max(maxAbsPitch, Math.abs(vehicle.getXRot()));

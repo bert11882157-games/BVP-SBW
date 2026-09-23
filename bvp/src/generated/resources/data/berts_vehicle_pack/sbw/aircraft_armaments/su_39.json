@@ -1,0 +1,118 @@
+{
+  "Schema": 1,
+  "Name": "Su-39 Frogfoot",
+  "BuiltInWeapons": [
+    "Cannon"
+  ],
+  "SuspendedWeapons": [],
+  "Pairs": [
+    {
+      "Id": "wingtip",
+      "Name": "wingtip",
+      "Left": [
+        -6.25,
+        1.5,
+        -0.3
+      ],
+      "Right": [
+        6.25,
+        1.5,
+        -0.3
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:reference/r73"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 200
+    },
+    {
+      "Id": "outer",
+      "Name": "outer",
+      "Left": [
+        -5.25,
+        1.45,
+        -0.25
+      ],
+      "Right": [
+        5.25,
+        1.45,
+        -0.25
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:reference/dumb_bomb_250kg",
+        "berts_vehicle_pack:reference/kh29l_laser"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 900
+    },
+    {
+      "Id": "middle",
+      "Name": "middle",
+      "Left": [
+        -4.2,
+        1.4,
+        -0.2
+      ],
+      "Right": [
+        4.2,
+        1.4,
+        -0.2
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:reference/dumb_bomb_250kg",
+        "berts_vehicle_pack:reference/kh29l_laser"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 900
+    },
+    {
+      "Id": "inner",
+      "Name": "inner",
+      "Left": [
+        -3.1,
+        1.4,
+        -0.15
+      ],
+      "Right": [
+        3.1,
+        1.4,
+        -0.15
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:reference/dumb_bomb_250kg",
+        "berts_vehicle_pack:reference/kh29l_laser"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 900
+    },
+    {
+      "Id": "root",
+      "Name": "root",
+      "Left": [
+        -2.1,
+        1.4,
+        0
+      ],
+      "Right": [
+        2.1,
+        1.4,
+        0
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:reference/dumb_bomb_250kg",
+        "berts_vehicle_pack:reference/kh29l_laser"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 900
+    }
+  ],
+  "Singles": [],
+  "StoreGroups": {},
+  "MaxPayloadKg": 4420,
+  "MaxPylonMassKg": 900,
+  "MaxWeaponsPerPylon": 1,
+  "Radar": {
+    "Enabled": true,
+    "Range": 2000
+  }
+}

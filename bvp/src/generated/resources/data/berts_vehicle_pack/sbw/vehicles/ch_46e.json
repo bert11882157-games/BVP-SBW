@@ -1,0 +1,1394 @@
+{
+  "ID": "berts_vehicle_pack:ch_46e",
+  "Gravity": 0.024516625,
+  "Mass": 9.5,
+  "UpStep": 0,
+  "InertiaRotateRate": 0,
+  "RotateOffsetHeight": 2.79458,
+  "MaxHealth": 180,
+  "MaxEnergy": 10000000,
+  "AllowFreeCam": true,
+  "OBB": [
+    {
+      "Size": [
+        1.03503,
+        1.21616,
+        4.14012
+      ],
+      "Position": [
+        0,
+        2.09593,
+        -1.03503
+      ]
+    },
+    {
+      "Size": [
+        0.93153,
+        0.80215,
+        1.37141
+      ],
+      "Position": [
+        0,
+        1.83718,
+        4.4765
+      ]
+    },
+    {
+      "Size": [
+        0.82802,
+        1.60429,
+        2.32882
+      ],
+      "Position": [
+        0,
+        2.63932,
+        -7.50396
+      ]
+    },
+    {
+      "Size": [
+        0.41401,
+        0.23288,
+        0.23288
+      ],
+      "Position": [
+        0,
+        0.23288,
+        3.98486
+      ],
+      "LandingGear": true
+    },
+    {
+      "Size": [
+        0.41401,
+        0.23288,
+        0.23288
+      ],
+      "Position": [
+        -2.01831,
+        0.49164,
+        -5.01989
+      ],
+      "LandingGear": true
+    },
+    {
+      "Size": [
+        0.41401,
+        0.23288,
+        0.23288
+      ],
+      "Position": [
+        2.01831,
+        0.49164,
+        -5.01989
+      ],
+      "LandingGear": true
+    }
+  ],
+  "Seats": [
+    {
+      "HidePassenger": false,
+      "BanHand": true,
+      "Transform": "Vehicle",
+      "BodyAttachment": "Vehicle",
+      "Position": [
+        0.517514375,
+        1.29378625,
+        4.0366125
+      ],
+      "Weapons": [],
+      "CanRotateHead": true,
+      "CameraPos": {
+        "Transform": "Vehicle",
+        "Position": [
+          0,
+          0,
+          0
+        ],
+        "ZoomPosition": [
+          0,
+          0,
+          0
+        ],
+        "CameraMode": "AIRCRAFT_FREELOOK",
+        "AimCameraMode": "AIRCRAFT_FREELOOK",
+        "UseAircraftCamera": true,
+        "AircraftCameraPos": [
+          0,
+          3.5,
+          -9
+        ],
+        "EyeAttachment": "pilot_eye",
+        "ZoomEyeAttachment": "pilot_eye",
+        "DirectionAttachment": "pilot_eye",
+        "ZoomDirectionAttachment": "pilot_eye"
+      },
+      "DismountInfo": {
+        "Transform": "Vehicle",
+        "Position": [
+          3,
+          0.2,
+          4.036612584225
+        ]
+      }
+    },
+    {
+      "HidePassenger": false,
+      "BanHand": true,
+      "Transform": "Vehicle",
+      "BodyAttachment": "Vehicle",
+      "Position": [
+        -0.517514375,
+        1.29378625,
+        4.0366125
+      ],
+      "Weapons": [],
+      "CanRotateHead": true,
+      "CameraPos": {
+        "Transform": "Vehicle",
+        "Position": [
+          0,
+          0,
+          0
+        ],
+        "ZoomPosition": [
+          0,
+          0,
+          0
+        ],
+        "CameraMode": "AIRCRAFT_FREELOOK",
+        "AimCameraMode": "AIRCRAFT_FREELOOK",
+        "UseAircraftCamera": false,
+        "EyeAttachment": "copilot_eye",
+        "ZoomEyeAttachment": "copilot_eye",
+        "DirectionAttachment": "copilot_eye",
+        "ZoomDirectionAttachment": "copilot_eye"
+      },
+      "DismountInfo": {
+        "Transform": "Vehicle",
+        "Position": [
+          -3,
+          0.2,
+          4.036612584225
+        ]
+      }
+    },
+    {
+      "HidePassenger": false,
+      "BanHand": true,
+      "Transform": "Vehicle",
+      "BodyAttachment": "Vehicle",
+      "Position": [
+        -0.2587575,
+        1.29378625,
+        2.432318125
+      ],
+      "Weapons": [],
+      "CanRotateHead": true,
+      "CameraPos": {
+        "Transform": "Vehicle",
+        "Position": [
+          0,
+          0,
+          0
+        ],
+        "ZoomPosition": [
+          0,
+          0,
+          0
+        ],
+        "CameraMode": "AIRCRAFT_FREELOOK",
+        "AimCameraMode": "AIRCRAFT_FREELOOK",
+        "UseAircraftCamera": false,
+        "EyeAttachment": "crew_chief_eye",
+        "ZoomEyeAttachment": "crew_chief_eye",
+        "DirectionAttachment": "crew_chief_eye",
+        "ZoomDirectionAttachment": "crew_chief_eye"
+      },
+      "DismountInfo": {
+        "Transform": "Vehicle",
+        "Position": [
+          -3,
+          0.2,
+          2.4323178392124998
+        ]
+      }
+    },
+    {
+      "HidePassenger": false,
+      "BanHand": true,
+      "Transform": "Vehicle",
+      "BodyAttachment": "Vehicle",
+      "Position": [
+        -0.67276875,
+        1.242034375,
+        0.776271875
+      ],
+      "Weapons": [],
+      "CanRotateHead": true,
+      "CameraPos": {
+        "Transform": "Vehicle",
+        "Position": [
+          0,
+          0,
+          0
+        ],
+        "ZoomPosition": [
+          0,
+          0,
+          0
+        ],
+        "CameraMode": "AIRCRAFT_FREELOOK",
+        "AimCameraMode": "AIRCRAFT_FREELOOK",
+        "UseAircraftCamera": false,
+        "EyeAttachment": "passenger_4_eye",
+        "ZoomEyeAttachment": "passenger_4_eye",
+        "DirectionAttachment": "passenger_4_eye",
+        "ZoomDirectionAttachment": "passenger_4_eye"
+      },
+      "DismountInfo": {
+        "Transform": "Vehicle",
+        "Position": [
+          -3,
+          0.2,
+          0.7762716508124999
+        ]
+      }
+    },
+    {
+      "HidePassenger": false,
+      "BanHand": true,
+      "Transform": "Vehicle",
+      "BodyAttachment": "Vehicle",
+      "Position": [
+        -0.67276875,
+        1.242034375,
+        0.31050875
+      ],
+      "Weapons": [],
+      "CanRotateHead": true,
+      "CameraPos": {
+        "Transform": "Vehicle",
+        "Position": [
+          0,
+          0,
+          0
+        ],
+        "ZoomPosition": [
+          0,
+          0,
+          0
+        ],
+        "CameraMode": "AIRCRAFT_FREELOOK",
+        "AimCameraMode": "AIRCRAFT_FREELOOK",
+        "UseAircraftCamera": false,
+        "EyeAttachment": "passenger_5_eye",
+        "ZoomEyeAttachment": "passenger_5_eye",
+        "DirectionAttachment": "passenger_5_eye",
+        "ZoomDirectionAttachment": "passenger_5_eye"
+      },
+      "DismountInfo": {
+        "Transform": "Vehicle",
+        "Position": [
+          -3,
+          0.2,
+          0.310508660325
+        ]
+      }
+    },
+    {
+      "HidePassenger": false,
+      "BanHand": true,
+      "Transform": "Vehicle",
+      "BodyAttachment": "Vehicle",
+      "Position": [
+        -0.67276875,
+        1.242034375,
+        -0.31050875
+      ],
+      "Weapons": [],
+      "CanRotateHead": true,
+      "CameraPos": {
+        "Transform": "Vehicle",
+        "Position": [
+          0,
+          0,
+          0
+        ],
+        "ZoomPosition": [
+          0,
+          0,
+          0
+        ],
+        "CameraMode": "AIRCRAFT_FREELOOK",
+        "AimCameraMode": "AIRCRAFT_FREELOOK",
+        "UseAircraftCamera": false,
+        "EyeAttachment": "passenger_6_eye",
+        "ZoomEyeAttachment": "passenger_6_eye",
+        "DirectionAttachment": "passenger_6_eye",
+        "ZoomDirectionAttachment": "passenger_6_eye"
+      },
+      "DismountInfo": {
+        "Transform": "Vehicle",
+        "Position": [
+          -3,
+          0.2,
+          -0.310508660325
+        ]
+      }
+    },
+    {
+      "HidePassenger": false,
+      "BanHand": true,
+      "Transform": "Vehicle",
+      "BodyAttachment": "Vehicle",
+      "Position": [
+        -0.67276875,
+        1.242034375,
+        -0.828023125
+      ],
+      "Weapons": [],
+      "CanRotateHead": true,
+      "CameraPos": {
+        "Transform": "Vehicle",
+        "Position": [
+          0,
+          0,
+          0
+        ],
+        "ZoomPosition": [
+          0,
+          0,
+          0
+        ],
+        "CameraMode": "AIRCRAFT_FREELOOK",
+        "AimCameraMode": "AIRCRAFT_FREELOOK",
+        "UseAircraftCamera": false,
+        "EyeAttachment": "passenger_7_eye",
+        "ZoomEyeAttachment": "passenger_7_eye",
+        "DirectionAttachment": "passenger_7_eye",
+        "ZoomDirectionAttachment": "passenger_7_eye"
+      },
+      "DismountInfo": {
+        "Transform": "Vehicle",
+        "Position": [
+          -3,
+          0.2,
+          -0.8280230942
+        ]
+      }
+    },
+    {
+      "HidePassenger": false,
+      "BanHand": true,
+      "Transform": "Vehicle",
+      "BodyAttachment": "Vehicle",
+      "Position": [
+        -0.67276875,
+        1.242034375,
+        -1.3455375
+      ],
+      "Weapons": [],
+      "CanRotateHead": true,
+      "CameraPos": {
+        "Transform": "Vehicle",
+        "Position": [
+          0,
+          0,
+          0
+        ],
+        "ZoomPosition": [
+          0,
+          0,
+          0
+        ],
+        "CameraMode": "AIRCRAFT_FREELOOK",
+        "AimCameraMode": "AIRCRAFT_FREELOOK",
+        "UseAircraftCamera": false,
+        "EyeAttachment": "passenger_8_eye",
+        "ZoomEyeAttachment": "passenger_8_eye",
+        "DirectionAttachment": "passenger_8_eye",
+        "ZoomDirectionAttachment": "passenger_8_eye"
+      },
+      "DismountInfo": {
+        "Transform": "Vehicle",
+        "Position": [
+          -3,
+          0.2,
+          -1.345537528075
+        ]
+      }
+    },
+    {
+      "HidePassenger": false,
+      "BanHand": true,
+      "Transform": "Vehicle",
+      "BodyAttachment": "Vehicle",
+      "Position": [
+        -0.67276875,
+        1.242034375,
+        -1.914803125
+      ],
+      "Weapons": [],
+      "CanRotateHead": true,
+      "CameraPos": {
+        "Transform": "Vehicle",
+        "Position": [
+          0,
+          0,
+          0
+        ],
+        "ZoomPosition": [
+          0,
+          0,
+          0
+        ],
+        "CameraMode": "AIRCRAFT_FREELOOK",
+        "AimCameraMode": "AIRCRAFT_FREELOOK",
+        "UseAircraftCamera": false,
+        "EyeAttachment": "passenger_9_eye",
+        "ZoomEyeAttachment": "passenger_9_eye",
+        "DirectionAttachment": "passenger_9_eye",
+        "ZoomDirectionAttachment": "passenger_9_eye"
+      },
+      "DismountInfo": {
+        "Transform": "Vehicle",
+        "Position": [
+          -3,
+          0.2,
+          -1.9148034053375
+        ]
+      }
+    },
+    {
+      "HidePassenger": false,
+      "BanHand": true,
+      "Transform": "Vehicle",
+      "BodyAttachment": "Vehicle",
+      "Position": [
+        -0.67276875,
+        1.242034375,
+        -2.432318125
+      ],
+      "Weapons": [],
+      "CanRotateHead": true,
+      "CameraPos": {
+        "Transform": "Vehicle",
+        "Position": [
+          0,
+          0,
+          0
+        ],
+        "ZoomPosition": [
+          0,
+          0,
+          0
+        ],
+        "CameraMode": "AIRCRAFT_FREELOOK",
+        "AimCameraMode": "AIRCRAFT_FREELOOK",
+        "UseAircraftCamera": false,
+        "EyeAttachment": "passenger_10_eye",
+        "ZoomEyeAttachment": "passenger_10_eye",
+        "DirectionAttachment": "passenger_10_eye",
+        "ZoomDirectionAttachment": "passenger_10_eye"
+      },
+      "DismountInfo": {
+        "Transform": "Vehicle",
+        "Position": [
+          -3,
+          0.2,
+          -2.4323178392124998
+        ]
+      }
+    },
+    {
+      "HidePassenger": false,
+      "BanHand": true,
+      "Transform": "Vehicle",
+      "BodyAttachment": "Vehicle",
+      "Position": [
+        -0.67276875,
+        1.242034375,
+        -3.053335
+      ],
+      "Weapons": [],
+      "CanRotateHead": true,
+      "CameraPos": {
+        "Transform": "Vehicle",
+        "Position": [
+          0,
+          0,
+          0
+        ],
+        "ZoomPosition": [
+          0,
+          0,
+          0
+        ],
+        "CameraMode": "AIRCRAFT_FREELOOK",
+        "AimCameraMode": "AIRCRAFT_FREELOOK",
+        "UseAircraftCamera": false,
+        "EyeAttachment": "passenger_11_eye",
+        "ZoomEyeAttachment": "passenger_11_eye",
+        "DirectionAttachment": "passenger_11_eye",
+        "ZoomDirectionAttachment": "passenger_11_eye"
+      },
+      "DismountInfo": {
+        "Transform": "Vehicle",
+        "Position": [
+          -3,
+          0.2,
+          -3.0533351598625
+        ]
+      }
+    },
+    {
+      "HidePassenger": false,
+      "BanHand": true,
+      "Transform": "Vehicle",
+      "BodyAttachment": "Vehicle",
+      "Position": [
+        -0.67276875,
+        1.242034375,
+        -3.570849375
+      ],
+      "Weapons": [],
+      "CanRotateHead": true,
+      "CameraPos": {
+        "Transform": "Vehicle",
+        "Position": [
+          0,
+          0,
+          0
+        ],
+        "ZoomPosition": [
+          0,
+          0,
+          0
+        ],
+        "CameraMode": "AIRCRAFT_FREELOOK",
+        "AimCameraMode": "AIRCRAFT_FREELOOK",
+        "UseAircraftCamera": false,
+        "EyeAttachment": "passenger_12_eye",
+        "ZoomEyeAttachment": "passenger_12_eye",
+        "DirectionAttachment": "passenger_12_eye",
+        "ZoomDirectionAttachment": "passenger_12_eye"
+      },
+      "DismountInfo": {
+        "Transform": "Vehicle",
+        "Position": [
+          -3,
+          0.2,
+          -3.5708495937375
+        ]
+      }
+    },
+    {
+      "HidePassenger": false,
+      "BanHand": true,
+      "Transform": "Vehicle",
+      "BodyAttachment": "Vehicle",
+      "Position": [
+        0.67276875,
+        1.242034375,
+        -3.570849375
+      ],
+      "Weapons": [],
+      "CanRotateHead": true,
+      "CameraPos": {
+        "Transform": "Vehicle",
+        "Position": [
+          0,
+          0,
+          0
+        ],
+        "ZoomPosition": [
+          0,
+          0,
+          0
+        ],
+        "CameraMode": "AIRCRAFT_FREELOOK",
+        "AimCameraMode": "AIRCRAFT_FREELOOK",
+        "UseAircraftCamera": false,
+        "EyeAttachment": "passenger_13_eye",
+        "ZoomEyeAttachment": "passenger_13_eye",
+        "DirectionAttachment": "passenger_13_eye",
+        "ZoomDirectionAttachment": "passenger_13_eye"
+      },
+      "DismountInfo": {
+        "Transform": "Vehicle",
+        "Position": [
+          3,
+          0.2,
+          -3.5708495937375
+        ]
+      }
+    },
+    {
+      "HidePassenger": false,
+      "BanHand": true,
+      "Transform": "Vehicle",
+      "BodyAttachment": "Vehicle",
+      "Position": [
+        0.67276875,
+        1.242034375,
+        -3.053335
+      ],
+      "Weapons": [],
+      "CanRotateHead": true,
+      "CameraPos": {
+        "Transform": "Vehicle",
+        "Position": [
+          0,
+          0,
+          0
+        ],
+        "ZoomPosition": [
+          0,
+          0,
+          0
+        ],
+        "CameraMode": "AIRCRAFT_FREELOOK",
+        "AimCameraMode": "AIRCRAFT_FREELOOK",
+        "UseAircraftCamera": false,
+        "EyeAttachment": "passenger_14_eye",
+        "ZoomEyeAttachment": "passenger_14_eye",
+        "DirectionAttachment": "passenger_14_eye",
+        "ZoomDirectionAttachment": "passenger_14_eye"
+      },
+      "DismountInfo": {
+        "Transform": "Vehicle",
+        "Position": [
+          3,
+          0.2,
+          -3.0533351598625
+        ]
+      }
+    },
+    {
+      "HidePassenger": false,
+      "BanHand": true,
+      "Transform": "Vehicle",
+      "BodyAttachment": "Vehicle",
+      "Position": [
+        0.67276875,
+        1.242034375,
+        -2.432318125
+      ],
+      "Weapons": [],
+      "CanRotateHead": true,
+      "CameraPos": {
+        "Transform": "Vehicle",
+        "Position": [
+          0,
+          0,
+          0
+        ],
+        "ZoomPosition": [
+          0,
+          0,
+          0
+        ],
+        "CameraMode": "AIRCRAFT_FREELOOK",
+        "AimCameraMode": "AIRCRAFT_FREELOOK",
+        "UseAircraftCamera": false,
+        "EyeAttachment": "passenger_15_eye",
+        "ZoomEyeAttachment": "passenger_15_eye",
+        "DirectionAttachment": "passenger_15_eye",
+        "ZoomDirectionAttachment": "passenger_15_eye"
+      },
+      "DismountInfo": {
+        "Transform": "Vehicle",
+        "Position": [
+          3,
+          0.2,
+          -2.4323178392124998
+        ]
+      }
+    },
+    {
+      "HidePassenger": false,
+      "BanHand": true,
+      "Transform": "Vehicle",
+      "BodyAttachment": "Vehicle",
+      "Position": [
+        0.67276875,
+        1.242034375,
+        -1.914803125
+      ],
+      "Weapons": [],
+      "CanRotateHead": true,
+      "CameraPos": {
+        "Transform": "Vehicle",
+        "Position": [
+          0,
+          0,
+          0
+        ],
+        "ZoomPosition": [
+          0,
+          0,
+          0
+        ],
+        "CameraMode": "AIRCRAFT_FREELOOK",
+        "AimCameraMode": "AIRCRAFT_FREELOOK",
+        "UseAircraftCamera": false,
+        "EyeAttachment": "passenger_16_eye",
+        "ZoomEyeAttachment": "passenger_16_eye",
+        "DirectionAttachment": "passenger_16_eye",
+        "ZoomDirectionAttachment": "passenger_16_eye"
+      },
+      "DismountInfo": {
+        "Transform": "Vehicle",
+        "Position": [
+          3,
+          0.2,
+          -1.9148034053375
+        ]
+      }
+    },
+    {
+      "HidePassenger": false,
+      "BanHand": true,
+      "Transform": "Vehicle",
+      "BodyAttachment": "Vehicle",
+      "Position": [
+        0.67276875,
+        1.242034375,
+        -1.3455375
+      ],
+      "Weapons": [],
+      "CanRotateHead": true,
+      "CameraPos": {
+        "Transform": "Vehicle",
+        "Position": [
+          0,
+          0,
+          0
+        ],
+        "ZoomPosition": [
+          0,
+          0,
+          0
+        ],
+        "CameraMode": "AIRCRAFT_FREELOOK",
+        "AimCameraMode": "AIRCRAFT_FREELOOK",
+        "UseAircraftCamera": false,
+        "EyeAttachment": "passenger_17_eye",
+        "ZoomEyeAttachment": "passenger_17_eye",
+        "DirectionAttachment": "passenger_17_eye",
+        "ZoomDirectionAttachment": "passenger_17_eye"
+      },
+      "DismountInfo": {
+        "Transform": "Vehicle",
+        "Position": [
+          3,
+          0.2,
+          -1.345537528075
+        ]
+      }
+    },
+    {
+      "HidePassenger": false,
+      "BanHand": true,
+      "Transform": "Vehicle",
+      "BodyAttachment": "Vehicle",
+      "Position": [
+        0.67276875,
+        1.242034375,
+        -0.31050875
+      ],
+      "Weapons": [],
+      "CanRotateHead": true,
+      "CameraPos": {
+        "Transform": "Vehicle",
+        "Position": [
+          0,
+          0,
+          0
+        ],
+        "ZoomPosition": [
+          0,
+          0,
+          0
+        ],
+        "CameraMode": "AIRCRAFT_FREELOOK",
+        "AimCameraMode": "AIRCRAFT_FREELOOK",
+        "UseAircraftCamera": false,
+        "EyeAttachment": "passenger_18_eye",
+        "ZoomEyeAttachment": "passenger_18_eye",
+        "DirectionAttachment": "passenger_18_eye",
+        "ZoomDirectionAttachment": "passenger_18_eye"
+      },
+      "DismountInfo": {
+        "Transform": "Vehicle",
+        "Position": [
+          3,
+          0.2,
+          -0.310508660325
+        ]
+      }
+    },
+    {
+      "HidePassenger": false,
+      "BanHand": true,
+      "Transform": "Vehicle",
+      "BodyAttachment": "Vehicle",
+      "Position": [
+        0.67276875,
+        1.242034375,
+        0.31050875
+      ],
+      "Weapons": [],
+      "CanRotateHead": true,
+      "CameraPos": {
+        "Transform": "Vehicle",
+        "Position": [
+          0,
+          0,
+          0
+        ],
+        "ZoomPosition": [
+          0,
+          0,
+          0
+        ],
+        "CameraMode": "AIRCRAFT_FREELOOK",
+        "AimCameraMode": "AIRCRAFT_FREELOOK",
+        "UseAircraftCamera": false,
+        "EyeAttachment": "passenger_19_eye",
+        "ZoomEyeAttachment": "passenger_19_eye",
+        "DirectionAttachment": "passenger_19_eye",
+        "ZoomDirectionAttachment": "passenger_19_eye"
+      },
+      "DismountInfo": {
+        "Transform": "Vehicle",
+        "Position": [
+          3,
+          0.2,
+          0.310508660325
+        ]
+      }
+    },
+    {
+      "HidePassenger": false,
+      "BanHand": true,
+      "Transform": "Vehicle",
+      "BodyAttachment": "Vehicle",
+      "Position": [
+        0.67276875,
+        1.242034375,
+        0.776271875
+      ],
+      "Weapons": [],
+      "CanRotateHead": true,
+      "CameraPos": {
+        "Transform": "Vehicle",
+        "Position": [
+          0,
+          0,
+          0
+        ],
+        "ZoomPosition": [
+          0,
+          0,
+          0
+        ],
+        "CameraMode": "AIRCRAFT_FREELOOK",
+        "AimCameraMode": "AIRCRAFT_FREELOOK",
+        "UseAircraftCamera": false,
+        "EyeAttachment": "passenger_20_eye",
+        "ZoomEyeAttachment": "passenger_20_eye",
+        "DirectionAttachment": "passenger_20_eye",
+        "ZoomDirectionAttachment": "passenger_20_eye"
+      },
+      "DismountInfo": {
+        "Transform": "Vehicle",
+        "Position": [
+          3,
+          0.2,
+          0.7762716508124999
+        ]
+      }
+    }
+  ],
+  "Weapons": {},
+  "HUDColor": "0xFFC700",
+  "HudType": "@Aircraft",
+  "EngineType": "Helicopter",
+  "EngineInfo": {
+    "EnergyCostRate": 320,
+    "Buoyancy": 0,
+    "Increment": 0,
+    "Decrement": 0,
+    "EngineSoundVolume": 1.5,
+    "PitchSpeed": 1,
+    "YawSpeed": 1,
+    "RollSpeed": 1,
+    "LiftSpeed": 1,
+    "Speed": 1,
+    "EngineStartSound": "berts_vehicle_pack:ch_46e_engine_start"
+  },
+  "HasDecoy": false,
+  "DamageModifiers": [
+    "minecraft:arrow 0",
+    "minecraft:trident 0",
+    "minecraft:mob_attack 0",
+    "minecraft:mob_attack_no_aggro 0",
+    "minecraft:mob_projectile 0",
+    "minecraft:player_attack 0",
+    "#superbwarfare:projectile 0",
+    "All - 20",
+    "minecraft:lava + 20",
+    "minecraft:lava * 10",
+    "@minecraft:tnt * 4",
+    "@minecraft:tnt_minecart * 4",
+    "@#superbwarfare:aerial_bomb * 12",
+    "All * 0.23",
+    "superbwarfare:vehicle_strike * 2.5",
+    "minecraft:explosion * 2",
+    "superbwarfare:custom_explosion * 0.65",
+    "superbwarfare:projectile_explosion * 0.65",
+    "superbwarfare:mine * 0.5",
+    "superbwarfare:lunge_mine * 0.5",
+    "superbwarfare:projectile_hit * 1.3",
+    "#superbwarfare:projectile_absolute * 0.15",
+    "@#superbwarfare:aa_missile * 0.3",
+    "@superbwarfare:small_cannon_shell * 0.25",
+    "@superbwarfare:c4 * 4",
+    "@#superbwarfare:at_rocket * 1.1",
+    "@superbwarfare:gun_grenade * 1.25",
+    "@superbwarfare:mortar_shell * 1.25",
+    "@superbwarfare:tm_62 * 2.5"
+  ],
+  "DestroyInfo": {
+    "ParticleType": "Giant",
+    "ExplosionDamage": 160,
+    "ExplosionRadius": 13,
+    "SympatheticDetonation": true,
+    "SympatheticDetonationForce": 2,
+    "SympatheticDetonationChance": 0.55
+  },
+  "ThirdPersonCameraPos": [
+    -0.86696,
+    1.5,
+    5
+  ],
+  "VehicleIcon": "berts_vehicle_pack:textures/vehicle_icon/ch_46e.png",
+  "ContainerIcon": "superbwarfare:textures/gui/vehicle/type/aircraft.png",
+  "VehicleContainerType": "Large",
+  "Type": "Helicopter",
+  "Afterburner": false,
+  "TerrainCompat": [],
+  "Attachments": {
+    "pilot_eye": {
+      "Parent": "Vehicle",
+      "Position": [
+        0.517514375,
+        1.7077975,
+        4.0366125
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "copilot_eye": {
+      "Parent": "Vehicle",
+      "Position": [
+        -0.517514375,
+        1.7077975,
+        4.0366125
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "crew_chief_eye": {
+      "Parent": "Vehicle",
+      "Position": [
+        -0.2587575,
+        1.7077975,
+        2.432318125
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "passenger_4_eye": {
+      "Parent": "Vehicle",
+      "Position": [
+        -0.67276875,
+        1.65604625,
+        0.776271875
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "passenger_5_eye": {
+      "Parent": "Vehicle",
+      "Position": [
+        -0.67276875,
+        1.65604625,
+        0.31050875
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "passenger_6_eye": {
+      "Parent": "Vehicle",
+      "Position": [
+        -0.67276875,
+        1.65604625,
+        -0.31050875
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "passenger_7_eye": {
+      "Parent": "Vehicle",
+      "Position": [
+        -0.67276875,
+        1.65604625,
+        -0.828023125
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "passenger_8_eye": {
+      "Parent": "Vehicle",
+      "Position": [
+        -0.67276875,
+        1.65604625,
+        -1.3455375
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "passenger_9_eye": {
+      "Parent": "Vehicle",
+      "Position": [
+        -0.67276875,
+        1.65604625,
+        -1.914803125
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "passenger_10_eye": {
+      "Parent": "Vehicle",
+      "Position": [
+        -0.67276875,
+        1.65604625,
+        -2.432318125
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "passenger_11_eye": {
+      "Parent": "Vehicle",
+      "Position": [
+        -0.67276875,
+        1.65604625,
+        -3.053335
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "passenger_12_eye": {
+      "Parent": "Vehicle",
+      "Position": [
+        -0.67276875,
+        1.65604625,
+        -3.570849375
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "passenger_13_eye": {
+      "Parent": "Vehicle",
+      "Position": [
+        0.67276875,
+        1.65604625,
+        -3.570849375
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "passenger_14_eye": {
+      "Parent": "Vehicle",
+      "Position": [
+        0.67276875,
+        1.65604625,
+        -3.053335
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "passenger_15_eye": {
+      "Parent": "Vehicle",
+      "Position": [
+        0.67276875,
+        1.65604625,
+        -2.432318125
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "passenger_16_eye": {
+      "Parent": "Vehicle",
+      "Position": [
+        0.67276875,
+        1.65604625,
+        -1.914803125
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "passenger_17_eye": {
+      "Parent": "Vehicle",
+      "Position": [
+        0.67276875,
+        1.65604625,
+        -1.3455375
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "passenger_18_eye": {
+      "Parent": "Vehicle",
+      "Position": [
+        0.67276875,
+        1.65604625,
+        -0.31050875
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "passenger_19_eye": {
+      "Parent": "Vehicle",
+      "Position": [
+        0.67276875,
+        1.65604625,
+        0.31050875
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "passenger_20_eye": {
+      "Parent": "Vehicle",
+      "Position": [
+        0.67276875,
+        1.65604625,
+        0.776271875
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    }
+  },
+  "EngineSound": "berts_vehicle_pack:ch_46e_engine_loop",
+  "Countermeasures": {
+    "Flares": true,
+    "Chaff": true,
+    "RadarWarningReceiver": true,
+    "FlaresPerSecond": 4,
+    "FlaresPerBurst": 12,
+    "FlareLeftPos": [
+      -1.44904,
+      1.811301,
+      -6.727688
+    ],
+    "FlareRightPos": [
+      1.44904,
+      1.811301,
+      -6.727688
+    ],
+    "FlareEjectionSpeed": 0.7
+  },
+  "AircraftTerrainContact": {
+    "Fuselage": {
+      "Min": [
+        -1.035029,
+        0.879775,
+        -9.832774
+      ],
+      "Max": [
+        1.035029,
+        4.243618,
+        5.847913
+      ]
+    },
+    "LandingGear": {
+      "Min": [
+        -2.432318,
+        0,
+        -5.252772
+      ],
+      "Max": [
+        2.432318,
+        0.72452,
+        4.217743
+      ]
+    },
+    "RetractableGear": false,
+    "BodyParts": [
+      {
+        "Min": [
+          -1.035029,
+          0.879775,
+          -5.175144
+        ],
+        "Max": [
+          1.035029,
+          3.312092,
+          3.105087
+        ]
+      },
+      {
+        "Min": [
+          -0.931526,
+          1.035029,
+          3.105087
+        ],
+        "Max": [
+          0.931526,
+          2.639324,
+          5.847913
+        ]
+      },
+      {
+        "Min": [
+          -0.828023,
+          1.035029,
+          -9.832774
+        ],
+        "Max": [
+          0.828023,
+          4.243618,
+          -5.175144
+        ]
+      }
+    ],
+    "WheelContacts": [
+      {
+        "Id": "nose",
+        "Group": "NOSE",
+        "Position": [
+          0,
+          0,
+          3.984862
+        ],
+        "Bounds": {
+          "Min": [
+            -0.414012,
+            0,
+            3.75198
+          ],
+          "Max": [
+            0.414012,
+            0.465763,
+            4.217743
+          ]
+        }
+      },
+      {
+        "Id": "main_left",
+        "Group": "MAIN",
+        "Position": [
+          -2.018307,
+          0.258757,
+          -5.019891
+        ],
+        "Bounds": {
+          "Min": [
+            -2.432318,
+            0.258757,
+            -5.252772
+          ],
+          "Max": [
+            -1.604295,
+            0.72452,
+            -4.787009
+          ]
+        }
+      },
+      {
+        "Id": "main_right",
+        "Group": "MAIN",
+        "Position": [
+          2.018307,
+          0.258757,
+          -5.019891
+        ],
+        "Bounds": {
+          "Min": [
+            1.604295,
+            0.258757,
+            -5.252772
+          ],
+          "Max": [
+            2.432318,
+            0.72452,
+            -4.787009
+          ]
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,680 @@
+{
+  "ID": "berts_vehicle_pack:begleitpanzer",
+  "MaxHealth": 150,
+  "MaxEnergy": 10000000,
+  "AllowFreeCam": true,
+  "LightlyArmored": true,
+  "EngineType": "Track",
+  "EngineSound": "berts_vehicle_pack:begleitpanzer_engine_loop",
+  "EngineInfo": {
+    "Buoyancy": 0,
+    "EnergyCostRate": 120,
+    "WheelRotSpeed": 1.25,
+    "WheelDifferential": 0.75,
+    "TrackRotSpeed": 1.7,
+    "TrackDifferential": 0.6,
+    "MaxForwardSpeedRate": 1,
+    "MaxBackwardSpeedRate": 0.2,
+    "Increment": 0.007,
+    "Decrement": 0.01,
+    "SteeringSpeed": 0.065,
+    "EngineSoundVolume": 0.85
+  },
+  "TurretPos": [
+    0,
+    1.88230188,
+    -0.55960312
+  ],
+  "BarrelPos": [
+    0,
+    0.25436508,
+    1.06833333
+  ],
+  "TurretControllerIndex": 0,
+  "TurretTurnSpeed": [
+    30,
+    35
+  ],
+  "TurretPitchRange": [
+    -8,
+    45
+  ],
+  "UpStep": 1.5,
+  "RotateOffsetHeight": 0,
+  "Mass": 28.5,
+  "TerrainCompat": [
+    [
+      1.220952380952381,
+      0,
+      2.0094841269841273
+    ],
+    [
+      1.0174603174603174,
+      0,
+      2.6199603174603174
+    ],
+    [
+      1.0174603174603174,
+      0,
+      -2.5945238095238095
+    ],
+    [
+      1.220952380952381,
+      0,
+      1.246388888888889
+    ],
+    [
+      1.220952380952381,
+      0,
+      0.48329365079365083
+    ],
+    [
+      1.220952380952381,
+      0,
+      -0.25436507936507935
+    ],
+    [
+      1.220952380952381,
+      0,
+      -1.0428968253968254
+    ],
+    [
+      1.220952380952381,
+      0,
+      -1.8059920634920636
+    ],
+    [
+      -1.0174603174603174,
+      0,
+      2.6199603174603174
+    ],
+    [
+      -1.220952380952381,
+      0,
+      2.0094841269841273
+    ],
+    [
+      -1.220952380952381,
+      0,
+      1.246388888888889
+    ],
+    [
+      -1.220952380952381,
+      0,
+      0.48329365079365083
+    ],
+    [
+      -1.220952380952381,
+      0,
+      -0.25436507936507935
+    ],
+    [
+      -1.220952380952381,
+      0,
+      -1.0428968253968254
+    ],
+    [
+      -1.220952380952381,
+      0,
+      -1.8059920634920636
+    ],
+    [
+      -1.0174603174603174,
+      0,
+      -2.5945238095238095
+    ]
+  ],
+  "OBB": [
+    {
+      "Size": [
+        1.55162698,
+        0.81835783,
+        3.205
+      ],
+      "Position": [
+        0,
+        1.02578875,
+        0
+      ]
+    }
+  ],
+  "Attachments": {
+    "gunnerCamera": {
+      "Parent": "Turret",
+      "Position": [
+        0,
+        0.71222222,
+        0.71222222
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "driverCamera": {
+      "Parent": "Vehicle",
+      "Position": [
+        0.55960312,
+        1.57706375,
+        2.34015875
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "gunnerSeat": {
+      "Parent": "Turret",
+      "Position": [
+        0,
+        -0.05087302,
+        0
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "driverSeat": {
+      "Parent": "Vehicle",
+      "Position": [
+        0.55960312,
+        1.06833313,
+        2.03492062
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "turretPivot": {
+      "Parent": "Vehicle",
+      "Position": [
+        0,
+        1.88230188,
+        -0.55960312
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "barrelPivot": {
+      "Parent": "Turret",
+      "Position": [
+        0,
+        0.25436508,
+        1.06833333
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "mainMuzzle": {
+      "Parent": "Barrel",
+      "Position": [
+        0.05087302,
+        0,
+        3.63742063
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "missileMuzzle": {
+      "Parent": "Turret",
+      "Position": [
+        -0.58503968,
+        0.35611111,
+        0.20349206
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "coaxMuzzle": {
+      "Parent": "Barrel",
+      "Position": [
+        -0.3052381,
+        0,
+        -0.05087302
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    }
+  },
+  "Seats": [
+    {
+      "HidePassenger": true,
+      "IsEnclosed": true,
+      "Transform": "Turret",
+      "Position": [
+        0,
+        -0.05087302,
+        0
+      ],
+      "BodyAttachment": "Turret",
+      "Weapons": [
+        "Cannon",
+        "Missile",
+        "MachineGun"
+      ],
+      "CanRotateHead": false,
+      "CameraPos": {
+        "Transform": "Turret",
+        "Position": [
+          0,
+          0,
+          0
+        ],
+        "ZoomPosition": [
+          0,
+          0,
+          0
+        ],
+        "Direction": [
+          0,
+          0,
+          1
+        ],
+        "UseFixedCameraPos": true,
+        "EyeAttachment": "gunnerCamera",
+        "ZoomEyeAttachment": "gunnerCamera",
+        "DirectionAttachment": "mainMuzzle",
+        "ZoomDirectionAttachment": "mainMuzzle"
+      },
+      "MinPitch": -8,
+      "MaxPitch": 45
+    },
+    {
+      "HidePassenger": true,
+      "IsEnclosed": true,
+      "Transform": "Vehicle",
+      "Position": [
+        0.55960312,
+        1.06833313,
+        2.03492062
+      ],
+      "BodyAttachment": "Vehicle",
+      "Weapons": [],
+      "CanRotateHead": true
+    }
+  ],
+  "Weapons": {
+    "Cannon": {
+      "Name": "57 mm Bofors L/70 Mk.1",
+      "RPM": 200,
+      "Magazine": 1,
+      "NormalReloadTime": 6,
+      "EmptyReloadTime": 6,
+      "ProjectileAmount": 1,
+      "AmmoCostPerShoot": 1,
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "DefaultZoom": 3,
+      "Crosshair": "@VehicleCommonGun",
+      "CrosshairColor": "0xFFC700",
+      "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/cannon_57mm.png",
+      "SoundInfo": {
+        "Fire1P": "berts_vehicle_pack:begleitpanzer_cannon_fire",
+        "Fire3P": "berts_vehicle_pack:begleitpanzer_cannon_fire",
+        "Fire3PFar": "berts_vehicle_pack:begleitpanzer_cannon_fire",
+        "Fire3PVeryFar": "berts_vehicle_pack:begleitpanzer_cannon_fire"
+      },
+      "SoundRadius": 32,
+      "Velocity": 48,
+      "Gravity": 0.03,
+      "Spread": 0.07,
+      "ProjectileLife": 50,
+      "ShellType": "DEFAULT",
+      "ApDurability": 137,
+      "Damage": 110,
+      "ExplosionDamage": 0,
+      "ExplosionRadius": 0,
+      "Projectile": {
+        "Type": "superbwarfare:small_cannon_shell",
+        "Profile": "berts_vehicle_pack:begleitpanzer/bofors_57_ap_t"
+      },
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
+          "Override": {
+            "Name": "bofors_57_ap_t",
+            "ShellType": "DEFAULT",
+            "Velocity": 48,
+            "Gravity": 0.03,
+            "Spread": 0.07,
+            "ApDurability": 137,
+            "Damage": 110,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:begleitpanzer/bofors_57_ap_t"
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:begleitpanzer/bofors_57_ap_t",
+              "ProjectileLife": 50
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_gs",
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
+          "Override": {
+            "Name": "bofors_57_saphei",
+            "ShellType": "APHE",
+            "Velocity": 48,
+            "Gravity": 0.03,
+            "Spread": 0.07,
+            "ApDurability": 47,
+            "Damage": 90,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:begleitpanzer/bofors_57_saphei"
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:begleitpanzer/bofors_57_saphei",
+              "ProjectileLife": 50
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
+          "Override": {
+            "Name": "bofors_57_he_t",
+            "ShellType": "HE",
+            "Velocity": 48,
+            "Gravity": 0.03,
+            "Spread": 0.07,
+            "ApDurability": 16,
+            "Damage": 120,
+            "ExplosionDamage": 65,
+            "ExplosionRadius": 2,
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:begleitpanzer/bofors_57_he_t"
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:begleitpanzer/bofors_57_he_t",
+              "ProjectileLife": 50
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_aa",
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
+          "Override": {
+            "Name": "bofors_57_he_vt",
+            "ShellType": "HE",
+            "Velocity": 48,
+            "Gravity": 0.03,
+            "Spread": 0.07,
+            "ApDurability": 16,
+            "Damage": 120,
+            "ExplosionDamage": 65,
+            "ExplosionRadius": 2,
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:begleitpanzer/bofors_57_he_vt"
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:begleitpanzer/bofors_57_he_vt",
+              "ProjectileLife": 50
+            }
+          }
+        }
+      ],
+      "ShootPos": {
+        "Transform": "Vehicle",
+        "Positions": [
+          [
+            0.05087312,
+            2.13666687,
+            4.14615062
+          ]
+        ],
+        "Directions": [
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "ViewPosition": [
+          0.05087312,
+          2.13666687,
+          4.14615062
+        ],
+        "MuzzleAttachments": [
+          "mainMuzzle"
+        ],
+        "MuzzleDirectionAttachments": [
+          "mainMuzzle"
+        ],
+        "EffectAttachments": [
+          "mainMuzzle"
+        ],
+        "EffectDirectionAttachments": [
+          "mainMuzzle"
+        ]
+      },
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "superbwarfare:small_cannon_shell",
+        "ProjectileProfile": "berts_vehicle_pack:begleitpanzer/bofors_57_ap_t",
+        "ProjectileLife": 50
+      }
+    },
+    "Missile": {
+      "Name": "BGM-71A TOW",
+      "RPM": 6,
+      "Magazine": 1,
+      "NormalReloadTime": 120,
+      "EmptyReloadTime": 120,
+      "ProjectileAmount": 1,
+      "AmmoCostPerShoot": 1,
+      "DefaultFireMode": "Semi",
+      "AvailableFireModes": "Semi",
+      "DefaultZoom": 3,
+      "Crosshair": "@VehicleCommonMissile",
+      "CrosshairColor": "0xFFC700",
+      "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_atgm.png",
+      "SoundInfo": {
+        "Fire1P": "berts_vehicle_pack:begleitpanzer_missile_fire",
+        "Fire3P": "berts_vehicle_pack:begleitpanzer_missile_fire",
+        "Fire3PFar": "berts_vehicle_pack:begleitpanzer_missile_fire",
+        "Fire3PVeryFar": "berts_vehicle_pack:begleitpanzer_missile_fire"
+      },
+      "SoundRadius": 24,
+      "Velocity": 2.6,
+      "Gravity": 0,
+      "Spread": 0,
+      "ProjectileLife": 180,
+      "Damage": 650,
+      "ApDurability": 430,
+      "ExplosionDamage": 0,
+      "ExplosionRadius": 5,
+      "Projectile": {
+        "Type": "superbwarfare:wire_guide_missile",
+        "Profile": "berts_vehicle_pack:begleitpanzer/bgm71a_tow"
+      },
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:medium_anti_ground_missile",
+          "ConsumptionItem": "superbwarfare:medium_atgm",
+          "Override": {
+            "NominalBallistics": {
+              "Supported": false,
+              "ProjectileType": "superbwarfare:wire_guide_missile",
+              "ProjectileProfile": "berts_vehicle_pack:begleitpanzer/bgm71a_tow"
+            }
+          }
+        }
+      ],
+      "ShootPos": {
+        "Transform": "Vehicle",
+        "Positions": [
+          [
+            -0.58503938,
+            2.2384125,
+            -0.35611125
+          ]
+        ],
+        "Directions": [
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "ViewPosition": [
+          -0.58503938,
+          2.2384125,
+          -0.35611125
+        ],
+        "MuzzleAttachments": [
+          "missileMuzzle"
+        ],
+        "MuzzleDirectionAttachments": [
+          "missileMuzzle"
+        ],
+        "EffectAttachments": [
+          "missileMuzzle"
+        ],
+        "EffectDirectionAttachments": [
+          "missileMuzzle"
+        ]
+      },
+      "NominalBallistics": {
+        "Supported": false,
+        "ProjectileType": "superbwarfare:wire_guide_missile",
+        "ProjectileProfile": "berts_vehicle_pack:begleitpanzer/bgm71a_tow"
+      }
+    },
+    "MachineGun": {
+      "Name": "7.62 mm MG3A1",
+      "RPM": 1200,
+      "Magazine": 100,
+      "NormalReloadTime": 150,
+      "EmptyReloadTime": 150,
+      "ProjectileAmount": 1,
+      "AmmoCostPerShoot": 1,
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "DefaultZoom": 3,
+      "Crosshair": "@VehicleCommonGun",
+      "CrosshairColor": "0xFFC700",
+      "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/gun_7_62mm.png",
+      "SoundInfo": {
+        "Fire1P": "berts_vehicle_pack:begleitpanzer_machine_gun_fire",
+        "Fire3P": "berts_vehicle_pack:begleitpanzer_machine_gun_fire",
+        "Fire3PFar": "berts_vehicle_pack:begleitpanzer_machine_gun_fire",
+        "Fire3PVeryFar": "berts_vehicle_pack:begleitpanzer_machine_gun_fire"
+      },
+      "SoundRadius": 12,
+      "Velocity": 40.5,
+      "Gravity": 0.01,
+      "Spread": 0.04,
+      "ProjectileLife": 50,
+      "Damage": 10,
+      "ApDurability": 13,
+      "Projectile": {
+        "Type": "superbwarfare:projectile",
+        "Profile": "berts_vehicle_pack:begleitpanzer/begleitpanzer_mg3a1_762_ap_t"
+      },
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:rifle_ammo",
+          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition",
+          "Override": {
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:projectile",
+              "ProjectileProfile": "berts_vehicle_pack:begleitpanzer/begleitpanzer_mg3a1_762_ap_t",
+              "ProjectileLife": 50
+            }
+          }
+        }
+      ],
+      "ShootPos": {
+        "Transform": "Vehicle",
+        "Positions": [
+          [
+            -0.30523813,
+            2.13666687,
+            0.45785687
+          ]
+        ],
+        "Directions": [
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "ViewPosition": [
+          -0.30523813,
+          2.13666687,
+          0.45785687
+        ],
+        "MuzzleAttachments": [
+          "coaxMuzzle"
+        ],
+        "MuzzleDirectionAttachments": [
+          "coaxMuzzle"
+        ],
+        "EffectAttachments": [
+          "coaxMuzzle"
+        ],
+        "EffectDirectionAttachments": [
+          "coaxMuzzle"
+        ]
+      },
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "superbwarfare:projectile",
+        "ProjectileProfile": "berts_vehicle_pack:begleitpanzer/begleitpanzer_mg3a1_762_ap_t",
+        "ProjectileLife": 50
+      }
+    }
+  },
+  "HudType": "@Land",
+  "HUDColor": "0xFFC700",
+  "Type": "Tank",
+  "VehicleContainerType": "Medium",
+  "ContainerIcon": "superbwarfare:textures/gui/vehicle/type/land.png",
+  "VehicleIcon": "berts_vehicle_pack:textures/vehicle_icon/begleitpanzer.png",
+  "ThirdPersonCameraPos": [
+    0,
+    2,
+    6
+  ],
+  "HasDecoy": false
+}

@@ -481,6 +481,7 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -522,11 +523,11 @@
               "ProjectileProfile": "berts_vehicle_pack:marder_1a5/cannon/ammo_00_dm63_apds",
               "ProjectileLife": 40
             }
-          },
-          "ConsumptionItem": "superbwarfare:small_autocannon_shell"
+          }
         },
         {
           "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -568,14 +569,14 @@
               "ProjectileProfile": "berts_vehicle_pack:marder_1a5/cannon/ammo_01_dm51a1_hefi_t_1",
               "ProjectileLife": 40
             }
-          },
-          "ConsumptionItem": "superbwarfare:small_autocannon_shell"
+          }
         }
       ],
       "ProjectileAmount": 1,
       "ProjectileBeltAmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_aa",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -653,6 +654,7 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:projectile",
@@ -694,8 +696,7 @@
               "ProjectileProfile": "berts_vehicle_pack:marder_1a5/mainmachinegun/ammo_00_western_762_ap",
               "ProjectileLife": 400
             }
-          },
-          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition"
+          }
         }
       ],
       "Projectile": {
@@ -730,6 +731,7 @@
       "ProjectileBeltAmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:projectile",

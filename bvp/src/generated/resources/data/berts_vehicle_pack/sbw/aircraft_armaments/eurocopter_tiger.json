@@ -1,0 +1,52 @@
+{
+  "Schema": 1,
+  "Name": "EC-665 Tiger UHT",
+  "BuiltInWeapons": [],
+  "SuspendedWeapons": [],
+  "Pairs": [
+    {
+      "Id": "inner",
+      "Name": "Inner wing",
+      "Left": [
+        -1.687322,
+        1.107481,
+        0.773356
+      ],
+      "Right": [
+        1.687322,
+        1.107481,
+        0.773356
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:eurocopter_tiger/hot3_proxy"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 100
+    },
+    {
+      "Id": "outer",
+      "Name": "Outer wing",
+      "Left": [
+        -2.671593,
+        1.107481,
+        0.210915
+      ],
+      "Right": [
+        2.671593,
+        1.107481,
+        0.210915
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:eurocopter_tiger/hot3_proxy",
+        "berts_vehicle_pack:eurocopter_tiger/aim92"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 100
+    }
+  ],
+  "Singles": [],
+  "StoreGroups": {},
+  "MaxPayloadKg": 1000,
+  "MaxPylonMassKg": 100,
+  "MaxWeaponsPerPylon": 1
+}

@@ -1,0 +1,163 @@
+{
+  "Schema": 1,
+  "Name": "Su-35S Flanker-E",
+  "BuiltInWeapons": [
+    "Cannon"
+  ],
+  "SuspendedWeapons": [],
+  "Pairs": [
+    {
+      "Id": "wingtip",
+      "Name": "wingtip",
+      "Left": [
+        -6.44816,
+        2.209509,
+        -3.201534
+      ],
+      "Right": [
+        6.44816,
+        2.209509,
+        -3.201534
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:reference/r73"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 200
+    },
+    {
+      "Id": "outer",
+      "Name": "outer",
+      "Left": [
+        -5.907055,
+        2.209509,
+        -3.201534
+      ],
+      "Right": [
+        5.907055,
+        2.209509,
+        -3.201534
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:reference/r73",
+        "berts_vehicle_pack:reference/r27er",
+        "berts_vehicle_pack:reference/r77",
+        "berts_vehicle_pack:reference/kh29l_laser",
+        "berts_vehicle_pack:reference/dumb_bomb_250kg"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 1000
+    },
+    {
+      "Id": "middle",
+      "Name": "middle",
+      "Left": [
+        -4.960123,
+        2.029141,
+        -1.172393
+      ],
+      "Right": [
+        4.960123,
+        2.029141,
+        -1.172393
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:reference/r73",
+        "berts_vehicle_pack:reference/r27er",
+        "berts_vehicle_pack:reference/r77",
+        "berts_vehicle_pack:reference/kh29l_laser",
+        "berts_vehicle_pack:reference/dumb_bomb_250kg"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 1000
+    },
+    {
+      "Id": "inner",
+      "Name": "inner",
+      "Left": [
+        -4.328834,
+        2.029141,
+        -1.172393
+      ],
+      "Right": [
+        4.328834,
+        2.029141,
+        -1.172393
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:reference/r73",
+        "berts_vehicle_pack:reference/r27er",
+        "berts_vehicle_pack:reference/r77",
+        "berts_vehicle_pack:reference/kh29l_laser",
+        "berts_vehicle_pack:reference/dumb_bomb_250kg"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 1000
+    },
+    {
+      "Id": "tunnel",
+      "Name": "tunnel",
+      "Left": [
+        -1.127301,
+        0.856748,
+        0.315644
+      ],
+      "Right": [
+        1.127301,
+        0.856748,
+        0.315644
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:reference/r73",
+        "berts_vehicle_pack:reference/r27er",
+        "berts_vehicle_pack:reference/r77",
+        "berts_vehicle_pack:reference/kh29l_laser",
+        "berts_vehicle_pack:reference/dumb_bomb_250kg"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 1000
+    }
+  ],
+  "Singles": [
+    {
+      "Id": "centerline_1",
+      "Name": "Centerline 1",
+      "Position": [
+        0,
+        1.623313,
+        1.803681
+      ],
+      "Internal": false,
+      "AllowedStores": [
+        "berts_vehicle_pack:reference/dumb_bomb_250kg",
+        "berts_vehicle_pack:reference/kh29l_laser"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 1000
+    },
+    {
+      "Id": "centerline_2",
+      "Name": "Centerline 2",
+      "Position": [
+        0,
+        1.623313,
+        -3.56227
+      ],
+      "Internal": false,
+      "AllowedStores": [
+        "berts_vehicle_pack:reference/dumb_bomb_250kg",
+        "berts_vehicle_pack:reference/kh29l_laser"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 1000
+    }
+  ],
+  "StoreGroups": {},
+  "MaxPayloadKg": 8000,
+  "MaxPylonMassKg": 1000,
+  "MaxWeaponsPerPylon": 1,
+  "Radar": {
+    "Enabled": true,
+    "Range": 2000
+  }
+}

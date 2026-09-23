@@ -31,6 +31,8 @@ public final class BvpClientParticles {
     }
 
     public static void registerParticleProviders(RegisterParticleProvidersEvent event) {
+        event.registerSpriteSet(ModParticles.IMPACT_SMOKE.get(), com.yourname.berts_vehicle_pack.client.particle.BvpImpactSmokeParticle.Provider::new);
+        event.registerSpriteSet(ModParticles.WRECK_SMOKE.get(), com.yourname.berts_vehicle_pack.client.particle.BvpImpactSmokeParticle.WreckProvider::new);
         event.registerSpriteSet(ModParticles.ROCKET_FLAME.get(), BvpRocketFlameParticle.Provider::new);
         event.registerSpriteSet(ModParticles.ROCKET_SMOKE.get(), BvpRocketSmokeParticle.Provider::new);
         event.registerSpriteSet(ModParticles.IMPACT_SPARK.get(), BvpImpactSparkParticle.Provider::new);

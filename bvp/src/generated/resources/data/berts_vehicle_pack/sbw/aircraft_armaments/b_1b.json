@@ -1,0 +1,68 @@
+{
+  "Schema": 1,
+  "Name": "B-1B Lancer",
+  "BuiltInWeapons": [],
+  "SuspendedWeapons": [],
+  "Pairs": [],
+  "Singles": [
+    {
+      "Id": "forward_bay",
+      "Name": "forward internal bay",
+      "Position": [
+        0,
+        2.728783,
+        2.108605
+      ],
+      "Internal": true,
+      "AllowedStores": [
+        "berts_vehicle_pack:reference/dumb_bomb_250kg",
+        "berts_vehicle_pack:fa18e/bomb_500kg_dumb_1",
+        "berts_vehicle_pack:reference/dumb_bomb_5000kg"
+      ],
+      "MaxWeaponsPerPylon": 12,
+      "MaxPylonMassKg": 11340
+    },
+    {
+      "Id": "middle_bay",
+      "Name": "middle internal bay",
+      "Position": [
+        0,
+        2.728783,
+        -2.666766
+      ],
+      "Internal": true,
+      "AllowedStores": [
+        "berts_vehicle_pack:reference/dumb_bomb_250kg",
+        "berts_vehicle_pack:fa18e/bomb_500kg_dumb_1",
+        "berts_vehicle_pack:reference/dumb_bomb_5000kg"
+      ],
+      "MaxWeaponsPerPylon": 12,
+      "MaxPylonMassKg": 11340
+    },
+    {
+      "Id": "aft_bay",
+      "Name": "aft internal bay",
+      "Position": [
+        0,
+        2.728783,
+        -8.806528
+      ],
+      "Internal": true,
+      "AllowedStores": [
+        "berts_vehicle_pack:reference/dumb_bomb_250kg",
+        "berts_vehicle_pack:fa18e/bomb_500kg_dumb_1",
+        "berts_vehicle_pack:reference/dumb_bomb_5000kg"
+      ],
+      "MaxWeaponsPerPylon": 12,
+      "MaxPylonMassKg": 11340
+    }
+  ],
+  "StoreGroups": {},
+  "MaxPayloadKg": 34019,
+  "MaxPylonMassKg": 11340,
+  "MaxWeaponsPerPylon": 12,
+  "Radar": {
+    "Enabled": true,
+    "Range": 2000
+  }
+}

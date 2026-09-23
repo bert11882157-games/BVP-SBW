@@ -1,12 +1,29 @@
 package com.atsuishio.superbwarfare.client.renderer
 
 import net.minecraft.world.phys.Vec3
+import net.minecraft.world.phys.BlockHitResult
+import net.minecraft.core.Direction
 import org.joml.Quaternionf
 import org.joml.Vector3f
 import kotlin.math.abs
 
 /** Minimum separating translation for two oriented debris boxes, including edge axes. */
 internal object AircraftDebrisContact {
+    /** Rotating a corner can put it slightly inside the floor between sweeps.
+     * Minecraft's inside-hit normal opposes travel, not the actual floor surface;
+     * treating it as a wall incorrectly deletes all horizontal momentum. Recover
+     * only shallow, upward-facing penetration with an independent vertical ray.
+     */
+    fun sweep(from: Vec3, to: Vec3, clip: (Vec3, Vec3) -> BlockHitResult?): AircraftDebrisMotion.Contact? {
+        val hit = clip(from, to) ?: return null
+        if (hit.isInside) {
+            val support = clip(from.add(0.0, .5, 0.0), from.add(0.0, -.003, 0.0))
+            if (support != null && !support.isInside && support.direction == Direction.UP)
+                return AircraftDebrisMotion.Contact(support.location, Vec3(0.0, 1.0, 0.0))
+        }
+        return AircraftDebrisMotion.Contact(hit.location, Vec3.atLowerCornerOf(hit.direction.normal))
+    }
+
     fun separation(a: Vec3, aq: Quaternionf, ah: Vec3, b: Vec3, bq: Quaternionf, bh: Vec3): Vec3? {
         if (a.distanceToSqr(b) > (ah.length() + bh.length()).let { it * it }) return null
         fun axes(q: Quaternionf) = listOf(Vector3f(1f,0f,0f),Vector3f(0f,1f,0f),Vector3f(0f,0f,1f))

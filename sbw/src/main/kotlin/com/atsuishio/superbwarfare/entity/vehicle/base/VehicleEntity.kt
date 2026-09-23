@@ -6956,7 +6956,9 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         if (!isInitialized || !usesAircraftTerrainContact()) return null
         val definition = computed().aircraftTerrainContact ?: return null
         return AircraftCollisionSnapshot.create(definition, getVehicleTransform(partialTicks), synchedGearRot,
-            com.atsuishio.superbwarfare.api.vehicle.flight.AircraftWreckBreakup.mask(this), aircraftWreckImpactTime >= 0)
+            com.atsuishio.superbwarfare.api.vehicle.flight.AircraftWreckBreakup.mask(this), aircraftWreckImpactTime >= 0,
+            if (definition.bodyVolumes().any { it.bone != "hull" })
+                com.atsuishio.superbwarfare.api.aircraft.AircraftSurfaceModules.boneMatrices(this, partialTicks) else null)
     }
 
     /** UI selection uses physical parts while projectile/module routing keeps its authored API. */

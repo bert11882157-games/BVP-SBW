@@ -79,7 +79,10 @@ object EliteAudioPlayback {
         if (now % 20L == 0L && lastPerformanceTick != now) {
             lastPerformanceTick = now
             val s = ClientRenderPerformanceDiagnostics.snapshot()
+            val runtime = Runtime.getRuntime()
             EliteDiagnostics.recordClient(now, "performance", "render_cumulative",
+                "heap_used_bytes", runtime.totalMemory() - runtime.freeMemory(),
+                "heap_committed_bytes", runtime.totalMemory(),
                 "frames", s.frameIntervals(), "frame_ns", s.frameIntervalNanos(),
                 "max_frame_ns", s.maxFrameIntervalNanos(), "vehicle_renders", s.vehicleRenders(),
                 "vehicle_render_ns", s.vehicleRenderNanos(), "model_loads", s.vehicleModelLoads(),

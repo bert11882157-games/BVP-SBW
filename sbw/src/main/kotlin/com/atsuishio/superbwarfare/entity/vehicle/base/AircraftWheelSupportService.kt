@@ -6,6 +6,7 @@ import com.atsuishio.superbwarfare.api.vehicle.flight.FixedWingFlightStrategy
 import com.atsuishio.superbwarfare.api.vehicle.presentation.VehicleLandingImpactPresentation
 import com.atsuishio.superbwarfare.data.vehicle.subdata.AircraftTerrainContact
 import com.atsuishio.superbwarfare.data.vehicle.subdata.OBBInfo
+import com.atsuishio.superbwarfare.data.vehicle.subdata.VehicleType
 import com.atsuishio.superbwarfare.diagnostics.EliteDiagnostics
 import net.minecraft.world.phys.Vec3
 
@@ -26,7 +27,8 @@ internal class AircraftWheelSupportService(private val vehicle: VehicleEntity,
 
     fun prepare(snapshot: AircraftCollisionSnapshot, requested: Vec3): List<OBBInfo> {
         val data = vehicle.computed().aircraftTerrainContact
-        definition = data?.takeIf { vehicle.aircraftWreckImpactTime < 0 && vehicle.isFixedWingFlightVehicle() && it.validWheelContacts() &&
+        definition = data?.takeIf { vehicle.aircraftWreckImpactTime < 0 &&
+            (vehicle.isFixedWingFlightVehicle() || vehicle.vehicleType == VehicleType.HELICOPTER && it.hasWheelVolumes()) && it.validWheelContacts() &&
             it.gearDeployed(vehicle.synchedGearRot) }
         val selected = definition ?: run {
             events.sample(vehicle.level().gameTime, false, emptyMap(), emptyMap())
@@ -48,9 +50,13 @@ internal class AircraftWheelSupportService(private val vehicle: VehicleEntity,
         val strategy = vehicle.resolveVehicleFlightStrategy() as? FixedWingFlightStrategy
         val weight = if (motion.complete && !motion.bodyContact && !vehicle.isWreck &&
             com.atsuishio.superbwarfare.api.vehicle.flight.AircraftWreckBreakup.mask(vehicle) == 0)
-            strategy?.groundGearSettleWeight(vehicle.deltaMovement.length() * 20.0) ?: 0.0 else 0.0
-        val capture = if (weight > 0.5 && kotlin.math.abs(vehicle.deltaMovement.y) <= 0.03) 0.12 else 0.0
-        val plan = kernel.plan(data, frame, vehicle.roll.toDouble(), weight, capture)
+            strategy?.groundGearSettleWeight(vehicle.deltaMovement.length() * 20.0) ?:
+                if (motion.gearGroundContact && vehicle.deltaMovement.y <= .001 &&
+                    vehicle.deltaMovement.horizontalDistanceSqr() < .0625) 1.0 else 0.0 else 0.0
+        val capture = if (strategy != null && weight > 0.5 && kotlin.math.abs(vehicle.deltaMovement.y) <= 0.03) 0.12 else 0.0
+        val poses = if (data.bodyVolumes().any { it.bone != "hull" })
+            com.atsuishio.superbwarfare.api.aircraft.AircraftSurfaceModules.boneMatrices(vehicle, 1F) else null
+        val plan = kernel.plan(data, frame, vehicle.roll.toDouble(), weight, capture, poses)
         var support = plan.contacts
         if (plan.deltaPitch != 0.0 || plan.frame != frame) {
             val correction = AircraftWheelGeometry.originCorrection(frame, plan.frame,
