@@ -19,6 +19,8 @@ import kotlin.math.acos
 import kotlin.math.min
 
 open class AerialBombEntity(type: EntityType<out AerialBombEntity>, level: Level) : DestroyableProjectile(type, level) {
+    override fun farProjectileMaximumLifetimeTicks(): Int = 2400
+
     fun hasGuidedFlight(): Boolean = persistentData.getString("BvpBombMode") in setOf("LASER", "GPS")
 
     /** The same server-authored values drive the live trajectory and the HUD's nominal prediction. */

@@ -27,12 +27,13 @@ object FarProjectileSimulation {
 
     /** Request only a short rolling path before it is needed; never block a loaded current step
      * on an unloaded future step. The shared residency owner still caps total chunks/tickets. */
-    private fun guidedBomb(entity: Entity): Boolean =
-        (entity as? com.atsuishio.superbwarfare.entity.projectile.AerialBombEntity)?.hasGuidedFlight() == true &&
+    private fun autonomousMunition(entity: Entity): Boolean =
+        (entity is com.atsuishio.superbwarfare.entity.projectile.AerialBombEntity ||
+            entity is com.atsuishio.superbwarfare.entity.projectile.MissileProjectile) &&
             com.atsuishio.superbwarfare.config.server.ProjectileConfig.PROJECTILE_CHUNK_LOADING.get()
 
     private fun prefetch(projectile: Projectile, level: ServerLevel) {
-        if (!guidedBomb(projectile) && !FarTerrainServer.hasProjectileCorridors(level)) return
+        if (!autonomousMunition(projectile) && !FarTerrainServer.hasProjectileCorridors(level)) return
         val tick = level.server.tickCount.toLong()
         if (prefetchTick != tick) { prefetchTick = tick; prefetchChecks = 0; prefetchedPaths.clear() }
         val access = projectile as FarProjectileAccess
@@ -47,7 +48,7 @@ object FarProjectileSimulation {
             if (prefetchChecks + chunks.size > 512) break
             prefetchChecks += chunks.size
             prefetchedPaths.add(path)
-            val admission = FarTerrainServer.requestProjectileSweep(level, from, to, chunks, imminent = false, guidedBomb = guidedBomb(projectile))
+            val admission = FarTerrainServer.requestProjectileSweep(level, from, to, chunks, imminent = false, guidedBomb = autonomousMunition(projectile))
             if (admission == FarTerrainServer.ProjectileAdmission.CAPACITY ||
                 admission == FarTerrainServer.ProjectileAdmission.OUTSIDE_POLICY) break
         }
@@ -63,7 +64,8 @@ object FarProjectileSimulation {
         if (projectile.isRemoved) return true
         val access = projectile as FarProjectileAccess
         if (!FarProjectileLifetime.expired(projectile.persistentData, level.gameTime,
-                level.dimension().location().toString(), access.farProjectileLifetimeTicks(), projectile.tickCount)) return false
+                level.dimension().location().toString(), access.farProjectileLifetimeTicks(), projectile.tickCount,
+                access.farProjectileMaximumLifetimeTicks())) return false
         // A resident admitted/native final tick keeps its existing end-of-life explosion. Any deferred
         // entity that cannot actually run that tick is discarded by the unconditional end sweep.
         if (allowNativeTerminalTick && access.farProjectileTerminatesNextTick(projectile.tickCount)) return false
@@ -109,10 +111,10 @@ object FarProjectileSimulation {
         if (supplemental === entity) return true
         val gate = register(entity, allowNativeTerminalTick = true)
         if (gate != null && entity is Projectile && entity is FarProjectileAccess &&
-            (guidedBomb(entity) || FarTerrainServer.hasProjectileCorridors(level))) {
+            (autonomousMunition(entity) || FarTerrainServer.hasProjectileCorridors(level))) {
             val path = FarProjectilePolicy.chunks(entity.boundingBox, entity.deltaMovement,
                 entity.farProjectileExplosionRadius(), entity.farProjectileLookAheadTicks(), entity.farProjectileCollisionPadding())
-            val ready = if (guidedBomb(entity) && path != null) {
+            val ready = if (autonomousMunition(entity) && path != null) {
                 FarTerrainServer.requestProjectileSweep(level, entity.position(), entity.position().add(entity.deltaMovement),
                     path, guidedBomb = true) == FarTerrainServer.ProjectileAdmission.READY &&
                     FarTerrainServer.projectilePathLoaded(level, path)
@@ -124,7 +126,7 @@ object FarProjectileSimulation {
             if (path != null && !ready) {
                 if (level.gameTime % 20L == 0L && EliteDiagnostics.isServerEnabled())
                     deferred(entity, level, "NATIVE_PATH_" + FarTerrainServer.requestProjectileSweep(level,
-                        entity.position(), entity.position().add(entity.deltaMovement), path, guidedBomb = guidedBomb(entity)).name)
+                        entity.position(), entity.position().add(entity.deltaMovement), path, guidedBomb = autonomousMunition(entity)).name)
                 FarProjectileTracking.pause(entity, true)
                 return false
             }
@@ -173,7 +175,7 @@ object FarProjectileSimulation {
                     access.farProjectileExplosionRadius(), access.farProjectileLookAheadTicks(), access.farProjectileCollisionPadding())
                 if (chunks == null) { deferred(projectile, level, "INVALID_SWEEP"); denied++; break }
                 val from = projectile.position(); val to = from.add(projectile.deltaMovement)
-                val admission = FarTerrainServer.requestProjectileSweep(level, from, to, chunks, guidedBomb = guidedBomb(projectile))
+                val admission = FarTerrainServer.requestProjectileSweep(level, from, to, chunks, guidedBomb = autonomousMunition(projectile))
                 prefetch(projectile, level)
                 if (admission != FarTerrainServer.ProjectileAdmission.READY) {
                     deferred(projectile, level, admission.name); denied++; break

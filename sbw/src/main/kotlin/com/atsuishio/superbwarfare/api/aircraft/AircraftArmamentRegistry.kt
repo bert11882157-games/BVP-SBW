@@ -16,7 +16,7 @@ object AircraftArmamentRegistry {
     var aircraft: Map<ResourceLocation, JsonObject> = emptyMap(); private set
     var stores: Map<ResourceLocation, JsonObject> = emptyMap(); private set
     var revision: Long = 0; private set
-    val categories = setOf("LASER_GUIDED", "GUN_POD", "BOMB", "AIR_TO_AIR", "ANTI_RADIATION", "CRUISE", "ROCKET_POD", "VISUAL_ONLY")
+    val categories = setOf("LASER_GUIDED", "GUN_POD", "BOMB", "AIR_TO_AIR", "AIR_TO_GROUND", "ANTI_RADIATION", "CRUISE", "ROCKET_POD", "VISUAL_ONLY")
 
     /** Mass is per physical round or pod; a paired station contains two complete loads. */
     fun loadoutMassKg(definition: JsonObject, choices: Map<String, JsonObject>, counts: Map<String, Int> = emptyMap()): Double =
@@ -76,9 +76,10 @@ object AircraftArmamentRegistry {
                 json[key]?.let { require(it.asString.length <= 128 && ResourceLocation.tryParse(it.asString) != null) }
             }
             json["Guidance"]?.let {
-                require(json["Category"]?.asString in setOf("AIR_TO_AIR", "ANTI_RADIATION"))
+                require(json["Category"]?.asString in setOf("AIR_TO_AIR", "AIR_TO_GROUND", "ANTI_RADIATION"))
                 val guidance = requireNotNull(AircraftMissileLauncher.guidance(json))
                 require((json["Category"].asString == "ANTI_RADIATION") == (guidance.mode == "ANTI_RADIATION"))
+                require((json["Category"].asString == "AIR_TO_GROUND") == (guidance.mode == "GROUND_INFRARED"))
             }
             json.getAsJsonObject("Flight")?.let { flight ->
                 require(json.has("Guidance") || json["Category"]?.asString == "CRUISE")

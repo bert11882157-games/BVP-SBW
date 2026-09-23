@@ -1,8 +1,8 @@
 {
   "Schema": 1,
-  "Name": "500 kg HE freefall · twin rack",
+  "Name": "500 kg HE freefall · configurable twin rack",
   "Category": "BOMB",
-  "Capacity": 2,
+  "Capacity": 1,
   "MassKg": 500,
   "Bomb": {
     "Mode": "DUMB",
@@ -13,7 +13,7 @@
     "BlastDamage": 800
   },
   "AmmoItem": "superbwarfare:medium_freefall_bomb",
-  "MaxPerPylon": 12,
+  "MaxPerPylon": 2,
   "RackSpacing": [
     0.8,
     0.5,

@@ -9,13 +9,14 @@ internal object FarProjectileLifetime {
     const val RESIDENCY_GRACE_TICKS = 0
     private const val KEY = "sbwFarProjectileLifetime"
 
-    fun expired(data: CompoundTag, now: Long, dimension: String, nativeLifetime: Int, age: Int): Boolean {
-        if (now < 0) return true
+    fun expired(data: CompoundTag, now: Long, dimension: String, nativeLifetime: Int, age: Int,
+                maximumTicks: Int = MAX_TICKS): Boolean {
+        if (now < 0 || maximumTicks !in 1..2400) return true
         if (!data.contains(KEY)) {
-            val nativeRemaining = (nativeLifetime.coerceIn(1, MAX_TICKS).toLong() - age.coerceAtLeast(0)).coerceAtLeast(0)
+            val nativeRemaining = (nativeLifetime.coerceIn(1, maximumTicks).toLong() - age.coerceAtLeast(0)).coerceAtLeast(0)
             if (nativeRemaining == 0L) return true
-            // Seven seconds includes residency waits; no extra lifetime on near/far handoff.
-            val remaining = (nativeRemaining + RESIDENCY_GRACE_TICKS).coerceAtMost(MAX_TICKS.toLong())
+            // Residency waits count against the authored flight; handoffs never restart its clock.
+            val remaining = (nativeRemaining + RESIDENCY_GRACE_TICKS).coerceAtMost(maximumTicks.toLong())
             if (now > Long.MAX_VALUE - remaining) return true
             data.put(KEY, CompoundTag().also {
                 it.putInt("Version", 1); it.putLong("Born", now); it.putLong("Last", now)
@@ -28,7 +29,7 @@ internal object FarProjectileLifetime {
             !state.contains("Born", Tag.TAG_LONG.toInt()) || !state.contains("Last", Tag.TAG_LONG.toInt()) ||
             !state.contains("Deadline", Tag.TAG_LONG.toInt()) || !state.contains("Dimension", Tag.TAG_STRING.toInt())) return true
         val born = state.getLong("Born"); val last = state.getLong("Last"); val deadline = state.getLong("Deadline")
-        if (born < 0 || last < born || now < last || deadline <= born || deadline - born > MAX_TICKS ||
+        if (born < 0 || last < born || now < last || deadline <= born || deadline - born > maximumTicks ||
             state.getString("Dimension") != dimension || now >= deadline) return true
         state.putLong("Last", now)
         return false

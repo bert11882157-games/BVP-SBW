@@ -28,6 +28,15 @@ import net.minecraftforge.entity.IEntityAdditionalSpawnData
 import net.minecraftforge.registries.ForgeRegistries
 
 abstract class MissileProjectile : DestroyableProjectile, CustomSyncMotionEntity, IEntityAdditionalSpawnData {
+    // Missile profiles deliberately outlive gun tracers. Keep their authored lifetime, bounded at two minutes.
+    override fun farProjectileMaximumLifetimeTicks(): Int = 2400
+
+    override fun canHitEntity(target: Entity): Boolean {
+        val launcher = owner
+        if (target === launcher || (launcher != null && target === launcher.vehicle)) return false
+        if (persistentData.hasUUID("BvpLaserAircraft") && target.uuid == persistentData.getUUID("BvpLaserAircraft")) return false
+        return super.canHitEntity(target)
+    }
     private var friendlySyncPending = false
     private var pendingFriendlySyncTick = 0
 
@@ -97,10 +106,10 @@ abstract class MissileProjectile : DestroyableProjectile, CustomSyncMotionEntity
     }
 
     override fun onHitEntity(result: EntityHitResult) {
-        super.onHitEntity(result)
         val entity = result.entity
         val owner = this.owner
-        if (owner != null && owner.vehicle != null && entity == owner.vehicle) return
+        if (!canHitEntity(entity)) return
+        super.onHitEntity(result)
         if (this.level() is ServerLevel) {
             entity.forceHurt(
                 causeProjectileHitDamage(this.level().registryAccess(), this, owner),

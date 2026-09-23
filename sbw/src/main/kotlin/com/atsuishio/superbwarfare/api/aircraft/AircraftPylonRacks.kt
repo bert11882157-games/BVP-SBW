@@ -11,7 +11,7 @@ object AircraftPylonRacks {
     @JvmOverloads
     fun maxCopies(aircraftLimit: Int, mountLimit: Int, storeLimit: Int, category: String,
                   capacity: Int, massKg: Double, maxPylonMassKg: Double, internal: Boolean = false): Int {
-        if (internal && category in setOf("BOMB", "CRUISE", "AIR_TO_AIR", "LASER_GUIDED", "ANTI_RADIATION"))
+        if (internal && category in setOf("BOMB", "CRUISE", "AIR_TO_AIR", "AIR_TO_GROUND", "LASER_GUIDED", "ANTI_RADIATION"))
             return if (massKg > 0.0 && maxPylonMassKg.isFinite())
                 (maxPylonMassKg / (massKg * capacity.coerceAtLeast(1))).toInt().coerceIn(1, MAX_BAY_COPIES) else 1
         if (category !in setOf("BOMB", "AIR_TO_AIR")) return 1

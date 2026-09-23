@@ -1,15 +1,15 @@
 {
   "Combat": {
-    "WeaponId": "berts_vehicle_pack:aircraft_stores/kh29l",
-    "RoundId": "berts_vehicle_pack:kh29l",
+    "WeaponId": "berts_vehicle_pack:aircraft_stores/agm65",
+    "RoundId": "berts_vehicle_pack:fa18e/agm65",
     "MunitionType": "berts_vehicle_pack:atgm",
     "DamageType": "berts_vehicle_pack:chemical",
     "CaliberMm": 380,
     "DiameterMm": 380,
     "HullDamageClass": "HE",
-    "HullDamage": 3200,
-    "ModuleDamage": 1920,
-    "AmmoRackDamage": 384,
+    "HullDamage": 1600,
+    "ModuleDamage": 960,
+    "AmmoRackDamage": 192,
     "PenetrationMm": 0,
     "Tandem": false
   },
@@ -22,7 +22,7 @@
   },
   "Luminance": 9,
   "TrailMode": "REPLACE",
-  "RenderScale": 1,
+  "RenderScale": 0.8,
   "GuidedPropulsion": {
     "InitialSpeed": 2,
     "MaxSpeed": 10,
@@ -42,22 +42,22 @@
       "SpinDegreesPerTick": 0
     },
     "superbwarfare:guided_maneuver_v1": {
-      "MaxLoadFactorG": 15,
+      "MaxLoadFactorG": 25,
       "SeekerConeDegrees": 30,
-      "SeekerRateDegreesPerSecond": 24,
+      "SeekerRateDegreesPerSecond": 48,
       "BodyTurnLimitScale": 3
     },
     "superbwarfare:warhead_fragments_v1": {
       "Count": 192,
-      "Range": 2.5,
+      "Range": 1.25,
       "Damage": 8,
       "MaxHitsPerTarget": 4
     },
     "superbwarfare:heavy_warhead_blast_v1": {
-      "InnerRadius": 1.25,
-      "OuterRadius": 2.5,
-      "HeavyDamageFraction": 0.5,
-      "LightDamageFraction": 0.6666666666666666
+      "InnerRadius": 0.625,
+      "OuterRadius": 1.25,
+      "HeavyDamageFraction": 0.25,
+      "LightDamageFraction": 0.3333333333333333
     },
     "berts_vehicle_pack:projectile_effect_v1": {
       "Schema": 1,

@@ -1,0 +1,31 @@
+{
+  "Schema": 1,
+  "Name": "Kh-29D · ground fire-and-forget",
+  "Category": "AIR_TO_GROUND",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/kh29l.geo.json",
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/kh29l.png",
+  "Capacity": 1,
+  "Scale": 1,
+  "Guidance": {
+    "Mode": "GROUND_INFRARED",
+    "LockTicks": 60,
+    "Range": 600,
+    "ConeDegrees": 25,
+    "CountermeasureVulnerability": 1
+  },
+  "Flight": {
+    "InitialSpeed": 2,
+    "MaxSpeed": 10,
+    "AccelerationPerTick": 0.2,
+    "TurnDegreesPerSecond": 180,
+    "Damage": 3200,
+    "BlastRadius": 2.5
+  },
+  "LaunchOffset": [
+    0,
+    -0.2108108125,
+    0
+  ],
+  "MassKg": 660,
+  "AmmoItem": "superbwarfare:large_air_to_ground_missile"
+}

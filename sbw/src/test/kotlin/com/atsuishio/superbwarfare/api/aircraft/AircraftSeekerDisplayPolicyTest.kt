@@ -24,4 +24,11 @@ class AircraftSeekerDisplayPolicyTest {
         assertSame(ground, AircraftSeekerDisplayPolicy.choose(listOf(ground)))
         assertNull(AircraftSeekerDisplayPolicy.choose(emptyList()))
     }
+    @Test fun `selected ground seeker owns the square HUD even with infrared AAM in secondary`() {
+        val ground = channel("Kh29D", "AIR_TO_GROUND", "GROUND_INFRARED", "PRIMARY")
+        val air = channel("R60", "AIR_TO_AIR", "INFRARED", "SECONDARY")
+        assertSame(ground, AircraftSeekerDisplayPolicy.choose(listOf(ground, air)))
+        assertSame(air, AircraftSeekerDisplayPolicy.choose(listOf(air,
+            channel("Kh29DSecondary", "AIR_TO_GROUND", "GROUND_INFRARED", "SECONDARY"))))
+    }
 }

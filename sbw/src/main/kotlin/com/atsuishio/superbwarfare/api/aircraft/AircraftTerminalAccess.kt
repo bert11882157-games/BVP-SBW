@@ -9,6 +9,10 @@ object AircraftTerminalAccess {
         val vehicle = entity as? VehicleEntity ?: return false
         if (player.vehicle !== vehicle || vehicle.getSeatIndex(player) != 0 || vehicle.isWreck || vehicle.health <= 0) return false
         if (radarRange(player, entity) > 0) return true
+        return gpsCapable(entity)
+    }
+    @JvmStatic fun gpsCapable(entity: Entity): Boolean {
+        val vehicle = entity as? VehicleEntity ?: return false
         val definition = AircraftArmamentManager.definition(vehicle) ?: return false
         return AircraftArmamentRegistry.mounts(definition).any { mount ->
             val store = AircraftArmamentManager.equippedStore(vehicle, mount["Id"].asString)
