@@ -19,10 +19,11 @@ object AircraftArmamentRegistry {
     val categories = setOf("LASER_GUIDED", "GUN_POD", "BOMB", "AIR_TO_AIR", "ANTI_RADIATION", "CRUISE", "ROCKET_POD", "VISUAL_ONLY")
 
     /** Mass is per physical round or pod; a paired station contains two complete loads. */
-    fun loadoutMassKg(definition: JsonObject, choices: Map<String, JsonObject>): Double =
+    fun loadoutMassKg(definition: JsonObject, choices: Map<String, JsonObject>, counts: Map<String, Int> = emptyMap()): Double =
         mounts(definition).sumOf { mount ->
             val store = choices[mount["Id"].asString] ?: return@sumOf 0.0
-            (store["MassKg"]?.asDouble ?: 0.0) * mountCapacity(mount, store["Capacity"]?.asInt ?: 1)
+            (store["MassKg"]?.asDouble ?: 0.0) * mountCapacity(mount, store["Capacity"]?.asInt ?: 1) *
+                (counts[mount["Id"].asString] ?: 1)
         }
 
     internal fun installDiagnosticFixture(id: ResourceLocation, definition: JsonObject,
@@ -104,6 +105,11 @@ object AircraftArmamentRegistry {
                 }
             }
             json["Capacity"]?.let { require(it.asInt in 1..10000) }
+            json["MaxPerPylon"]?.let { require(it.asBigDecimal.intValueExact() in 1..AircraftPylonRacks.MAX_COPIES) }
+            json["RackSpacing"]?.let {
+                val spacing = requireNotNull(vector(it))
+                require(spacing.x in 0.1..4.0 && spacing.y in 0.0..4.0 && spacing.z in 0.0..8.0)
+            }
             json["Scale"]?.let { require(it.asDouble.isFinite() && it.asDouble in 0.001..32.0) }
             json["LaunchOffset"]?.let { require(vector(it)?.length()?.let { length -> length <= 8.0 } == true) }
             return
@@ -114,6 +120,7 @@ object AircraftArmamentRegistry {
         }
         names("BuiltInWeapons"); names("SuspendedWeapons")
         json["MaxPayloadKg"]?.let { require(it.asDouble.isFinite() && it.asDouble in 0.0..100000.0) }
+        json["MaxWeaponsPerPylon"]?.let { require(it.asBigDecimal.intValueExact() in 1..AircraftPylonRacks.MAX_COPIES) }
         val pairs = json.getAsJsonArray("Pairs") ?: JsonArray()
         val singles = json.getAsJsonArray("Singles") ?: JsonArray()
         require(pairs.size() + singles.size() <= 16)
@@ -126,6 +133,8 @@ object AircraftArmamentRegistry {
             require(id.matches(Regex("[a-zA-Z0-9_.-]{1,48}")) && ids.add(id))
             require(pair["Name"]?.asString?.isNotBlank() == true && pair["Name"].asString.length <= 64)
             mountPositions(pair)
+            pair["MaxWeaponsPerPylon"]?.let { require(it.asBigDecimal.intValueExact() in 1..AircraftPylonRacks.MAX_COPIES) }
+            pair["MaxPylonMassKg"]?.let { require(it.asDouble.isFinite() && it.asDouble in 0.1..100000.0) }
             val allowed = pair.getAsJsonArray("AllowedStores") ?: JsonArray()
             require(allowed.size() <= 32 && allowed.all { it.asString.length <= 128 && ResourceLocation.tryParse(it.asString) != null })
             pair["WeaponId"]?.let { require(it.asString.length in 1..128) }

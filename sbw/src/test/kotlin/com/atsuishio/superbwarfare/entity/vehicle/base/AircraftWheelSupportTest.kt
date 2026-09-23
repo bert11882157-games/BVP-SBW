@@ -111,6 +111,27 @@ class AircraftWheelSupportTest {
         assertEquals(physical.worldBounds.minY, rolled.world.y, 1e-8, "support and green debug box share the same rotated bottom")
     }
 
+    @Test fun noseFirstSupportSettlesMainWheelsAndSmallStationaryGapsClose() {
+        val data = solidWheelAircraft()
+        val scene = Scene(listOf(floor))
+        val tilted = Matrix4d().rotateX(Math.toRadians(6.0))
+        val lowest = AircraftWheelGeometry.sample(data, tilted).minOf { it.world.y }
+        var frame = Matrix4d().translate(0.0, -lowest, 0.0).mul(tilted)
+        assertEquals(listOf(nose), scene.kernel.contacts(AircraftWheelGeometry.sample(data, frame)).rows.map { it.wheel.group })
+        repeat(160) {
+            frame = scene.kernel.plan(data, frame, 0.0, 1.0).frame
+            assertTrue(AircraftWheelGeometry.sample(data, frame).all { it.world.y >= -1e-6 })
+        }
+        assertEquals(3, scene.kernel.contacts(AircraftWheelGeometry.sample(data, frame)).rows.size)
+        val smallGap = Matrix4d().translate(0.0, 0.08, 0.0)
+        assertEquals(smallGap, scene.kernel.plan(data, smallGap, 0.0, 1.0).frame)
+        val captured = scene.kernel.plan(data, smallGap, 0.0, 1.0, 0.12)
+        assertEquals(3, captured.contacts.rows.size)
+        val airborne = Matrix4d().translate(0.0, 0.4, 0.0)
+        assertEquals(airborne, scene.kernel.plan(data, airborne, 0.0, 1.0, 0.12).frame)
+        assertEquals(smallGap, scene.kernel.plan(data, smallGap, 0.0, 0.0, 0.12).frame)
+    }
+
     private fun mainSupported(data: AircraftTerrainContact, pitch: Double = -6.0): Matrix4d {
         var attitude = pitch
         repeat(8) {

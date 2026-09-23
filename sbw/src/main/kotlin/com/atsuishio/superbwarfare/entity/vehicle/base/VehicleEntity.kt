@@ -1245,6 +1245,11 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
             define(LASER_SCALE_O, 0f)
             define(CHARGE_PROGRESS, 0f)
             define(IS_WRECK, false)
+            define(AIRCRAFT_WRECK_START, -1L)
+            define(AIRCRAFT_WRECK_MOTION_X, 0F)
+            define(AIRCRAFT_WRECK_MOTION_Y, 0F)
+            define(AIRCRAFT_WRECK_MOTION_Z, 0F)
+            define(AIRCRAFT_WRECK_WINGS, -1)
             define(SYMPATHETIC_DETONATED, false)
             define(TURRET_BURNED, false)
             define(HOVER_MODE, false)
@@ -1874,6 +1879,11 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         serverPitch = compound.getFloat("ServerPitch")
 
         isWreck = compound.getBoolean("IsWreck")
+        aircraftWreckStart = if (compound.contains("AircraftWreckStart")) compound.getLong("AircraftWreckStart").coerceAtLeast(-1L) else -1L
+        aircraftWreckMotionX = compound.getFloat("AircraftWreckMotionX").takeIf { it.isFinite() && kotlin.math.abs(it) < 100F } ?: 0F
+        aircraftWreckMotionY = compound.getFloat("AircraftWreckMotionY").takeIf { it.isFinite() && kotlin.math.abs(it) < 100F } ?: 0F
+        aircraftWreckMotionZ = compound.getFloat("AircraftWreckMotionZ").takeIf { it.isFinite() && kotlin.math.abs(it) < 100F } ?: 0F
+        aircraftWreckWings = if (compound.contains("AircraftWreckWings")) compound.getInt("AircraftWreckWings").coerceIn(-1, 3) else -1
         sympatheticDetonated = compound.getBoolean("SympatheticDetonated")
         turretBurned = compound.getBoolean("TurretBurned")
         turretBurnTimer = compound.getInt("TurretBurnTimer")
@@ -1980,6 +1990,11 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         inventoryEnergyService.writeEnergy(compound)
 
         compound.putBoolean("IsWreck", isWreck)
+        compound.putLong("AircraftWreckStart", aircraftWreckStart)
+        compound.putFloat("AircraftWreckMotionX", aircraftWreckMotionX)
+        compound.putFloat("AircraftWreckMotionY", aircraftWreckMotionY)
+        compound.putFloat("AircraftWreckMotionZ", aircraftWreckMotionZ)
+        compound.putInt("AircraftWreckWings", aircraftWreckWings)
         compound.putBoolean("SympatheticDetonated", sympatheticDetonated)
         compound.putBoolean("TurretBurned", turretBurned)
         compound.putInt("TurretBurnTimer", turretBurnTimer)
@@ -6680,6 +6695,11 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
             // after the shared hull/weapon state has been loaded.
             readAdditionalSaveData(durable)
             isWreck = false
+            aircraftWreckStart = -1L
+            aircraftWreckMotionX = 0F
+            aircraftWreckMotionY = 0F
+            aircraftWreckMotionZ = 0F
+            aircraftWreckWings = -1
             sympatheticDetonated = false
             turretBurned = false
             turretBurnTimer = 0
@@ -6928,7 +6948,8 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
     fun getAircraftCollisionSnapshot(partialTicks: Float): AircraftCollisionSnapshot? {
         if (!isInitialized || !usesAircraftTerrainContact()) return null
         val definition = computed().aircraftTerrainContact ?: return null
-        return AircraftCollisionSnapshot.create(definition, getVehicleTransform(partialTicks), synchedGearRot)
+        return AircraftCollisionSnapshot.create(definition, getVehicleTransform(partialTicks), synchedGearRot,
+            com.atsuishio.superbwarfare.api.vehicle.flight.AircraftWreckBreakup.mask(this))
     }
 
     /** UI selection uses physical parts while projectile/module routing keeps its authored API. */
@@ -7236,6 +7257,11 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
     var hornVolume by HORN_VOLUME
 
     var isWreck by IS_WRECK
+    var aircraftWreckStart by AIRCRAFT_WRECK_START
+    var aircraftWreckMotionX by AIRCRAFT_WRECK_MOTION_X
+    var aircraftWreckMotionY by AIRCRAFT_WRECK_MOTION_Y
+    var aircraftWreckMotionZ by AIRCRAFT_WRECK_MOTION_Z
+    var aircraftWreckWings by AIRCRAFT_WRECK_WINGS
     var sympatheticDetonated by SYMPATHETIC_DETONATED
     var turretBurned by TURRET_BURNED
     var turretBurnTimer by TURRET_BURN_TIMER
@@ -7645,6 +7671,16 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         private val AIRCRAFT_COUNTERMEASURE_LEVELS: EntityDataAccessor<Int> =
             SynchedEntityData.defineId(VehicleEntity::class.java, EntityDataSerializers.INT)
         private val AIRCRAFT_COUNTERMEASURE_TIMERS: EntityDataAccessor<Int> =
+            SynchedEntityData.defineId(VehicleEntity::class.java, EntityDataSerializers.INT)
+        private val AIRCRAFT_WRECK_START: EntityDataAccessor<Long> =
+            SynchedEntityData.defineId(VehicleEntity::class.java, EntityDataSerializers.LONG)
+        private val AIRCRAFT_WRECK_MOTION_X: EntityDataAccessor<Float> =
+            SynchedEntityData.defineId(VehicleEntity::class.java, EntityDataSerializers.FLOAT)
+        private val AIRCRAFT_WRECK_MOTION_Y: EntityDataAccessor<Float> =
+            SynchedEntityData.defineId(VehicleEntity::class.java, EntityDataSerializers.FLOAT)
+        private val AIRCRAFT_WRECK_MOTION_Z: EntityDataAccessor<Float> =
+            SynchedEntityData.defineId(VehicleEntity::class.java, EntityDataSerializers.FLOAT)
+        private val AIRCRAFT_WRECK_WINGS: EntityDataAccessor<Int> =
             SynchedEntityData.defineId(VehicleEntity::class.java, EntityDataSerializers.INT)
     }
 }

@@ -5,6 +5,7 @@ import com.atsuishio.superbwarfare.init.ModKeyMappings
 import com.mojang.blaze3d.platform.InputConstants
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity
 import net.minecraft.client.Minecraft
+import org.lwjgl.glfw.GLFW
 
 /** Registry and runtime priority policy for the dedicated in-vehicle control profile. */
 object VehicleControlBindings {
@@ -27,6 +28,20 @@ object VehicleControlBindings {
 
     @JvmStatic
     fun isActive(): Boolean = VehicleKeyConflictContext.isActive()
+
+    /** Poll held vehicle actions by their saved binding even when another mapping shares the key. */
+    @JvmStatic
+    fun isPhysicallyHeld(mapping: VehicleKeyMapping): Boolean {
+        if (!mapping.isConflictContextAndModifierActive()) return false
+        val key = mapping.key
+        if (key == InputConstants.UNKNOWN) return false
+        val window = Minecraft.getInstance().window.window
+        return when (key.type) {
+            InputConstants.Type.KEYSYM -> InputConstants.isKeyDown(window, key.value)
+            InputConstants.Type.MOUSE -> GLFW.glfwGetMouseButton(window, key.value) == GLFW.GLFW_PRESS
+            else -> mapping.isDown
+        }
+    }
 
     @JvmStatic
     fun isVehicleMapping(mapping: KeyMapping): Boolean = mapping is VehicleKeyMapping

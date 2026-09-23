@@ -39,6 +39,12 @@ data class FarVehicleSnapshot(
     val occupied: Boolean,
     val overrideData: String,
     val visualData: Map<String, String>,
+    val aircraftWreckStart: Long = -1L,
+    val aircraftWreckWings: Int = -1,
+    val aircraftWreckMotionX: Float = 0F,
+    val aircraftWreckMotionY: Float = 0F,
+    val aircraftWreckMotionZ: Float = 0F,
+
 ) {
     fun sameIdentity(other: FarVehicleSnapshot): Boolean =
         id == other.id && uuid == other.uuid && type == other.type && overrideData == other.overrideData
@@ -47,7 +53,9 @@ data class FarVehicleSnapshot(
         (x - px) * (x - px) + (y - py) * (y - py) + (z - pz) * (z - pz)
 
     fun valid(): Boolean {
-        if (id < 0 || age < 0 || uuid.length != 36 || !RESOURCE_ID.matches(type)) return false
+        if (id < 0 || age < 0 || aircraftWreckStart < -1L || uuid.length != 36 || !RESOURCE_ID.matches(type)) return false
+        if (aircraftWreckWings !in -1..3) return false
+        if (!listOf(aircraftWreckMotionX, aircraftWreckMotionY, aircraftWreckMotionZ).all { it.isFinite() && abs(it) < 100F }) return false
         if (runCatching { UUID.fromString(uuid).toString() }.getOrNull() != uuid) return false
         if (!listOf(x, y, z).all { it.isFinite() && abs(it) <= 30_000_000.0 }) return false
         if (!listOf(motionX, motionY, motionZ, targetSpeed).all { it.isFinite() && abs(it) <= 100_000 }) return false

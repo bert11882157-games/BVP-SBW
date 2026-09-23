@@ -17,7 +17,9 @@ object VehicleWeaponSlotCycleClient {
 
     /** Sends one authenticated cycle request for the mounted player's current vehicle seat. */
     @JvmStatic
-    fun request(slot: VehicleWeaponSlot): Boolean {
+    @JvmOverloads
+    fun request(slot: VehicleWeaponSlot, direction: Int = 1): Boolean {
+        if (direction != -1 && direction != 1) return false
         val minecraft = Minecraft.getInstance()
         val player = minecraft.player ?: return false
         val vehicle = player.vehicle as? VehicleEntity ?: return false
@@ -42,6 +44,7 @@ object VehicleWeaponSlotCycleClient {
                 seatIndex,
                 slot,
                 nextSequence,
+                direction,
             )
         )
         return true

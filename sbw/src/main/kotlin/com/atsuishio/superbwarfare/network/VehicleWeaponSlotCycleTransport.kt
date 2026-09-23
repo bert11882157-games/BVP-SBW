@@ -24,7 +24,8 @@ object VehicleWeaponSlotCycleTransport {
     @JvmStatic
     fun admit(player: ServerPlayer, message: CycleVehicleWeaponSlotMessage): Boolean {
         if (!player.isAlive || player.isSpectator || player.isRemoved) return false
-        if (message.vehicleId < 0 || message.seatIndex !in 0..MAX_SEAT_INDEX || message.sequence <= 0L) {
+        if (message.vehicleId < 0 || message.seatIndex !in 0..MAX_SEAT_INDEX || message.sequence <= 0L ||
+            message.direction !in setOf(-1, 1)) {
             return false
         }
 
@@ -45,6 +46,6 @@ object VehicleWeaponSlotCycleTransport {
         // Consume the connection-local edge before the sole mutator call. A no-op cycle still
         // consumes its sequence so retries cannot replay an admitted request.
         lastAcceptedSequence[connection] = message.sequence
-        return vehicle.cycleWeaponSlot(message.seatIndex, message.slot, 1)
+        return vehicle.cycleWeaponSlot(message.seatIndex, message.slot, message.direction)
     }
 }

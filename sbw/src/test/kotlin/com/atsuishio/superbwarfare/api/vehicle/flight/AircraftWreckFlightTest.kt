@@ -5,6 +5,43 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
 class AircraftWreckFlightTest {
+    @Test fun delayedWingLossIsBoundedSingleSidedAndDoesNotRestartAfterImpact() {
+        for (seed in 0L..1000L) {
+            val id = java.util.UUID(seed, seed * 193)
+            val delay = AircraftWreckBreakup.delayTicks(id)
+            assertTrue(delay in 40..200)
+            if (AircraftWreckBreakup.mask(id) != 0) continue
+            assertEquals(0, AircraftWreckBreakup.timedMask(id, delay - 1L, false))
+            assertTrue(AircraftWreckBreakup.timedMask(id, delay.toLong(), false) in 1..2)
+            assertEquals(0, AircraftWreckBreakup.timedMask(id, delay + 20L, true))
+        }
+    }
+    @Test fun survivingWingLossIgnoresPilotButKeepsAircraftHealthOutsideFlightOwnership() {
+        val live = input().copy(wreck = false)
+        val a = AircraftWreckFlightStrategy.step(live, 40, 1, false, detachedWings = 1)
+        val b = AircraftWreckFlightStrategy.step(live.copy(pitchInput = 0.0, rollInput = 0.0,
+            throttleInput = 0.0, occupied = false), 40, 1, false, detachedWings = 1)
+        assertEquals(a, b)
+        assertTrue(a.motion.horizontalDistance() > 2.0)
+    }
+    @Test fun wingLossDistributionAndServerRollAgree() {
+        val distribution = (0..99).map(AircraftWreckBreakup::outcome).groupingBy { it }.eachCount()
+        assertEquals(mapOf(1 to 25, 2 to 25, 3 to 20, 0 to 30), distribution)
+        val state = input()
+        val left = AircraftWreckFlightStrategy.step(state, 45, 1, false, detachedWings = 1)
+        val right = AircraftWreckFlightStrategy.step(state, 45, 1, false, detachedWings = 2)
+        assertTrue(net.minecraft.util.Mth.wrapDegrees(left.bodyRoll - state.bodyRollDegrees) < -5)
+        assertTrue(net.minecraft.util.Mth.wrapDegrees(right.bodyRoll - state.bodyRollDegrees) > 5)
+        assertEquals(left.motion, right.motion, "roll cannot erase world-space inertia")
+        var both = state
+        repeat(120) { tick ->
+            val result = AircraftWreckFlightStrategy.step(both, tick, 1, false, detachedWings = 3)
+            both = both.copy(previousMotion = result.motion, bodyPitchDegrees = result.bodyPitch.toDouble(),
+                bodyRollDegrees = result.bodyRoll.toDouble(), bodyYawDegrees = result.bodyYaw.toDouble())
+        }
+        assertTrue(both.bodyPitchDegrees > 75)
+        assertTrue(both.previousMotion.y < -5)
+    }
     private fun input(motion: Vec3 = Vec3(1.5, 0.6, 2.0)) = VehicleFlightInputContext(
         0L, 0, 0.0, 0.0, motion, motion, Vec3(0.0, 0.0, 1.0), Vec3(0.0, 1.0, 0.0),
         1.0, true, true, false, 0.08, bodyYawDegrees = 175.0, bodyPitchDegrees = -35.0,

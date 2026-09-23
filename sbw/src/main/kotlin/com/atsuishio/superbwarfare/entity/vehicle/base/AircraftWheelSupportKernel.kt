@@ -40,25 +40,44 @@ internal class AircraftWheelSupportKernel(
         return Contacts(rows, complete)
     }
 
-    fun plan(data: AircraftTerrainContact, frame: Matrix4d, roll: Double, weight: Double): Plan {
+    fun plan(data: AircraftTerrainContact, frame: Matrix4d, roll: Double, weight: Double,
+             captureGap: Double = 0.0): Plan {
         val samples = AircraftWheelGeometry.sample(data, frame)
         val support = contacts(samples)
         val unchanged = Plan(frame, 0.0, support)
         if (!support.complete || weight <= 0.0 || abs(roll) > 15.0) return unchanged
+        if (support.rows.isEmpty() && captureGap > 0.0) {
+            val floors = samples.map { it to floor(it, captureGap.coerceIn(0.0, 0.15)) }
+            if (floors.any { !it.second.complete }) return unchanged
+            val gap = floors.mapNotNull { (wheel, floor) -> floor.point?.let { wheel.world.y - it.y } }
+                .filter { it in 0.0..captureGap.coerceAtMost(0.15) }.minOrNull() ?: return unchanged
+            val movement = Vec3(0.0, -gap, 0.0)
+            val bodies = AircraftCollisionSnapshot.create(data, frame, 0F).terrainInfos()
+            val clearance = query(bodies, movement, Vec3.ZERO)
+            if (!clearance.complete || clearance.bodyOverlap || clearance.contact?.let {
+                    it.fraction < 1.0 - 1e-6 || it.penetrationDepth > 1e-6 } == true) return unchanged
+            val lowered = Matrix4d().translation(0.0, -gap, 0.0).mul(frame)
+            return plan(data, lowered, roll, weight)
+        }
         val mains = support.rows.filter { it.wheel.group == AircraftWheelContactGroup.MAIN }
+            .ifEmpty { support.rows }
         val secondaryGroup = when {
             samples.any { it.group == AircraftWheelContactGroup.NOSE } -> AircraftWheelContactGroup.NOSE
             samples.any { it.group == AircraftWheelContactGroup.TAIL } -> AircraftWheelContactGroup.TAIL
             else -> AircraftWheelContactGroup.MAIN
         }
         if (mains.isEmpty()) return unchanged
+        // Once both longitudinal support groups touch, further pitch changes would lift one
+        // of them again on authored multi-bogie layouts. Roll is handled by the ground solver.
+        if (secondaryGroup != AircraftWheelContactGroup.MAIN &&
+            support.rows.any { it.wheel.group == AircraftWheelContactGroup.MAIN } &&
+            support.rows.any { it.wheel.group == secondaryGroup }) return unchanged
         // Tandem main bogies have no nose/tail wheel. Settle toward an unsupported main
         // contact while preserving every existing support point, using the same swept path.
-        val tandem = secondaryGroup == AircraftWheelContactGroup.MAIN
-        if (!tandem && support.rows.any { it.wheel.group == secondaryGroup }) return unchanged
         val supportedIds = support.rows.map { it.wheel.id }.toSet()
-        val secondary = samples.filter { it.group == secondaryGroup && (!tandem || it.id !in supportedIds) }
-            .minByOrNull { it.world.y }
+        val secondary = samples.filter { it.id !in supportedIds }
+            .minWithOrNull(compareBy<AircraftWheelGeometry.Wheel> { if (it.group == secondaryGroup) 0 else 1 }
+                .thenBy { it.world.y })
             ?: return unchanged
         val target = floor(secondary, (abs(secondary.world.y - mains.first().point.y) + 1.0).coerceAtMost(16.0))
         if (!target.complete || target.point == null) return unchanged

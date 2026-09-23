@@ -27,5 +27,9 @@
     "MaxZoom": 24,
     "Range": 8192
   },
-  "MaxPayloadKg": 6500
+  "MaxPayloadKg": 6500,
+  "Radar": {
+    "Enabled": true,
+    "Range": 1000
+  }
 }

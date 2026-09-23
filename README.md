@@ -2,6 +2,13 @@
 
 Mod source code and runtime resources for Minecraft 1.20.1 / Forge.
 
+## Downloads
+
+Use the [download list](DOWNLOADS.md) for matching BVP/SBW JARs, checksums and companion mods.
+The list identifies the current matching testing set and retains earlier releases and their access requirements.
+
+## Source layout
+
 | Directory | Contents |
 | --- | --- |
 | `bvp/` | Bert's Vehicle Pack Java code, committed runtime resources, and project metadata |

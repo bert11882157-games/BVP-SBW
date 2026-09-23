@@ -46,11 +46,13 @@ internal class AircraftWheelSupportService(private val vehicle: VehicleEntity,
         val frame = vehicle.getVehicleTransform(1F)
         var samples = AircraftWheelGeometry.sample(data, frame)
         val strategy = vehicle.resolveVehicleFlightStrategy() as? FixedWingFlightStrategy
-        val weight = if (motion.complete && !motion.bodyContact && !vehicle.isWreck)
+        val weight = if (motion.complete && !motion.bodyContact && !vehicle.isWreck &&
+            com.atsuishio.superbwarfare.api.vehicle.flight.AircraftWreckBreakup.mask(vehicle) == 0)
             strategy?.groundGearSettleWeight(vehicle.deltaMovement.length() * 20.0) ?: 0.0 else 0.0
-        val plan = kernel.plan(data, frame, vehicle.roll.toDouble(), weight)
+        val capture = if (weight > 0.5 && kotlin.math.abs(vehicle.deltaMovement.y) <= 0.03) 0.12 else 0.0
+        val plan = kernel.plan(data, frame, vehicle.roll.toDouble(), weight, capture)
         var support = plan.contacts
-        if (plan.deltaPitch != 0.0) {
+        if (plan.deltaPitch != 0.0 || plan.frame != frame) {
             val correction = AircraftWheelGeometry.originCorrection(frame, plan.frame,
                 vehicle.rotateOffsetHeight, vehicle.roll.toDouble(), plan.deltaPitch)
             vehicle.setPos(vehicle.x + correction.x, vehicle.y + correction.y, vehicle.z + correction.z)
@@ -59,6 +61,12 @@ internal class AircraftWheelSupportService(private val vehicle: VehicleEntity,
             expectedPoints = AircraftWheelGeometry.addRotation(expectedPoints, samples, changed)
             samples = changed
             support = kernel.contacts(samples)
+        }
+        if (motion.complete && support.complete && support.rows.isNotEmpty() && !motion.bodyContact &&
+            vehicle.deltaMovement.y <= 0.0) {
+            vehicle.setOnGroundForCollision(true, motion.movement)
+            vehicle.verticalCollisionBelow = true
+            vehicle.setDeltaMovement(vehicle.deltaMovement.x, 0.0, vehicle.deltaMovement.z)
         }
         val grouped = support.rows.groupBy { it.wheel.group }
         val speeds = AircraftWheelGeometry.closingSpeeds(support.rows, previousPoints,

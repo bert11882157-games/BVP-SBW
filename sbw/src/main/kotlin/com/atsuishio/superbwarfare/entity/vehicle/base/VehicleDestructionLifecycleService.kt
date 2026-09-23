@@ -26,6 +26,7 @@ internal class VehicleDestructionLifecycleService(
     private fun publishFarDeath() {
         if (farDeathPublished || vehicle.level().isClientSide) return
         farDeathPublished = true
+        if (aircraft && vehicle.aircraftWreckStart < 0L) vehicle.aircraftWreckStart = vehicle.level().gameTime
         if (aircraft) com.atsuishio.superbwarfare.api.aircraft.AircraftCombatEffects.aircraftBreakup(vehicle)
         else com.atsuishio.superbwarfare.network.message.receive.ExplosionBurstMessage.sendFarDeath(vehicle)
     }
@@ -39,6 +40,9 @@ internal class VehicleDestructionLifecycleService(
         }
 
         if (!vehicle.isWreck) return
+        if (aircraft && !vehicle.level().isClientSide && vehicle.aircraftWreckStart < 0L)
+            vehicle.aircraftWreckStart = vehicle.level().gameTime
+        if (aircraft) com.atsuishio.superbwarfare.api.vehicle.flight.AircraftWreckBreakup.update(vehicle)
 
         val aircraft = vehicle.vehicleType == VehicleType.AIRPLANE ||
             vehicle.vehicleType == VehicleType.HELICOPTER

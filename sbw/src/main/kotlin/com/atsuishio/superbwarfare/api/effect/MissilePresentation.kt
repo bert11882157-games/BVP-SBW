@@ -48,7 +48,7 @@ object MissilePresentation {
     private val attachedBridge by lazy { runCatching {
         Class.forName("dev.ballistics.MissileVisualHooks").getMethod("registerAttached", Entity::class.java,
             Double::class.javaPrimitiveType, String::class.java, Double::class.javaPrimitiveType,
-            Double::class.javaPrimitiveType)
+            Double::class.javaPrimitiveType, Boolean::class.javaPrimitiveType)
     }.getOrNull() }
     @JvmStatic fun isMissile(entity: Entity?): Boolean = entity is MissileProjectile ||
         entity is SmallRocketEntity || entity is MediumRocketEntity ||
@@ -68,7 +68,8 @@ object MissilePresentation {
                 if (entity.bbWidth >= .3f) "external_large" else "external_small"
             val offset = nozzleOffset(entity)
             if (attachedBridge != null) attachedBridge!!.invoke(null, entity, entity.bbWidth.toDouble(),
-                kind + if (airborne) "_air" else "_ground", offset.centerHeight, offset.rear)
+                kind + if (airborne) "_air" else "_ground", offset.centerHeight, offset.rear,
+                entity is MissileProjectile)
             else bridge?.first?.invoke(null, entity, entity.bbWidth.toDouble())
         }
             .onFailure { Mod.LOGGER.debug("Missile visual registration unavailable", it) }

@@ -162,7 +162,9 @@ class FarVehicleStoreTest {
     }
 
     @Test fun `maximum cosmetic payload round trips below wire ceiling without NBT`() {
-        val values = (1..16).map { snapshot(it).copy(overrideData = "", visualData =
+        val values = (1..16).map { snapshot(it).copy(aircraftWreckStart = 234L,
+            aircraftWreckWings = it % 4, aircraftWreckMotionX = 1.25F, aircraftWreckMotionY = -.2F,
+            aircraftWreckMotionZ = 2.5F, overrideData = "", visualData =
             mapOf("bvp.spent_era" to "x".repeat(8192 - "bvp.spent_era".length))) }
         assertTrue(values.all { it.valid() })
         val message = FarVehicleFrameMessage(session, "minecraft:overworld", 1, 1, 3, 2048, 0, 1, values)

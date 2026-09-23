@@ -122,7 +122,8 @@ object FarVehicleCopies {
                 vehicle.flap2LRot, vehicle.flap2RRot, vehicle.flap3Rot),
             vehicle.selectedWeapon.toList(), vehicle.health, vehicle.isWreck,
             vehicle.sympatheticDetonated, vehicle.turretBurned, vehicle.passengers.isNotEmpty(),
-            vehicle.override, visuals.toMap(),
+            vehicle.override, visuals.toMap(), vehicle.aircraftWreckStart, vehicle.aircraftWreckWings,
+            vehicle.aircraftWreckMotionX, vehicle.aircraftWreckMotionY, vehicle.aircraftWreckMotionZ,
         )
     }
 
@@ -198,6 +199,12 @@ object FarVehicleCopies {
         if (vehicle.selectedWeapon != s.selectedWeapons) vehicle.selectedWeapon = s.selectedWeapons
         vehicle.health = s.health
         vehicle.isWreck = s.wreck
+        vehicle.aircraftWreckStart = s.aircraftWreckStart
+        vehicle.aircraftWreckWings = s.aircraftWreckWings
+        vehicle.aircraftWreckMotionX = s.aircraftWreckMotionX
+        vehicle.aircraftWreckMotionY = s.aircraftWreckMotionY
+        vehicle.aircraftWreckMotionZ = s.aircraftWreckMotionZ
+
         vehicle.sympatheticDetonated = s.turretEjected
         vehicle.turretBurned = s.turretBurned
         (vehicle as? FarVehicleVisualExtension)?.applyFarRenderVisuals(s.visualData)

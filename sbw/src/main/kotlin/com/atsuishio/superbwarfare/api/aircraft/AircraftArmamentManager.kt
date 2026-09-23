@@ -92,10 +92,19 @@ object AircraftArmamentManager {
         return if (vehicle.level().isClientSide) AircraftArmamentClient.getState(vehicle.uuid)?.getAsJsonObject("Stores")?.getAsJsonObject(id)
             else AircraftArmamentRegistry.stores[ResourceLocation.tryParse(id)]
     }
+    private fun rackCount(vehicle: VehicleEntity, mount: String): Int {
+        val def = definition(vehicle) ?: return 1
+        val hardpoint = mounts(def).firstOrNull { it["Id"].asString == mount } ?: return 1
+        val store = equippedStore(vehicle, mount) ?: return 1
+        val count = if (vehicle.level().isClientSide) AircraftArmamentClient.getState(vehicle.uuid)
+            ?.getAsJsonObject("Counts")?.get(mount)?.asInt ?: 1
+        else equipment(vehicle).getCompound("Counts").getInt(mount).coerceAtLeast(1)
+        return count.coerceIn(1, AircraftPylonRacks.maxCopies(def, hardpoint, store))
+    }
     internal fun mountCapacity(vehicle: VehicleEntity, mount: String): Int {
         val pair = definition(vehicle)?.let(::mounts)?.firstOrNull { it["Id"].asString == mount } ?: return 0
         val store = equippedStore(vehicle, mount) ?: return 0
-        return AircraftArmamentRegistry.mountCapacity(pair, store["Capacity"]?.asInt ?: 1)
+        return AircraftArmamentRegistry.mountCapacity(pair, store["Capacity"]?.asInt ?: 1) * rackCount(vehicle, mount)
     }
     internal fun mountRemaining(vehicle: VehicleEntity, mount: String): Int {
         val used = if (vehicle.level().isClientSide)
@@ -278,6 +287,9 @@ object AircraftArmamentManager {
         out.addProperty("Revision", equipment(vehicle).getLong("Revision"))
         out.addProperty("CatalogueRevision", AircraftArmamentRegistry.revision)
         out.add("Selections", selection(vehicle)); out.add("Definition", definition(vehicle)?.deepCopy() ?: JsonObject())
+        out.add("Counts", JsonObject().also { counts ->
+            for ((key, _) in selection(vehicle).entrySet()) counts.addProperty(key, rackCount(vehicle, key))
+        })
         val used = equipment(vehicle).getCompound("Fired")
         out.add("Fired", JsonObject().also { counts ->
             definition(vehicle)?.let { def -> mounts(def).forEach { mount ->
@@ -315,7 +327,8 @@ object AircraftArmamentManager {
         val saved = JsonObject()
         val nbt = presets(player, lease.vehicle)
         for (name in nbt.allKeys) {
-            val choices = nbt.getCompound(name)
+            val preset = nbt.getCompound(name)
+            val choices = if (preset.contains("Selections", 10)) preset.getCompound("Selections") else preset
             saved.add(name, JsonObject().also { for (pair in choices.allKeys) it.addProperty(pair, choices.getString(pair)) })
         }
         out.add("Presets", saved)
@@ -382,7 +395,7 @@ object AircraftArmamentManager {
             when (request.operation) {
                 "APPLY" -> { apply(vehicle, body); publish(vehicle); reply(player, lease, message = "Armament equipped.") }
                 "SAVE_PRESET" -> {
-                    val name = presetName(body); val choices = validateSelections(vehicle, body.getAsJsonObject("Selections"))
+                    val name = presetName(body); val choices = validateSelections(vehicle, body.getAsJsonObject("Selections"), body.getAsJsonObject("Counts"))
                     val saved = presets(player, vehicle); require(saved.contains(name) || saved.allKeys.size < 16) { "Preset limit reached (16)." }
                     val proposed = saved.copy(); proposed.put(name, choices)
                     require(proposed.toString().length <= 8192) { "Preset storage is full; delete an unused preset." }
@@ -391,8 +404,13 @@ object AircraftArmamentManager {
                 "LOAD_PRESET" -> {
                     val name = presetName(body); val saved = presets(player, vehicle)
                     require(saved.contains(name, 10)) { "Preset not found." }
-                    val choices = JsonObject().also { j -> val n = saved.getCompound(name); for (k in n.allKeys) j.addProperty(k, n.getString(k)) }
-                    val applyBody = JsonObject().also { it.addProperty("Revision", equipment(vehicle).getLong("Revision")); it.add("Selections", choices) }
+                    val stored = saved.getCompound(name)
+                    val n = if (stored.contains("Selections", 10)) stored.getCompound("Selections") else stored
+                    val choices = JsonObject().also { j -> for (k in n.allKeys) j.addProperty(k, n.getString(k)) }
+                    val counts = JsonObject().also { j -> val c = stored.getCompound("Counts")
+                        for (k in c.allKeys) j.addProperty(k, c.getInt(k)) }
+                    val applyBody = JsonObject().also { it.addProperty("Revision", equipment(vehicle).getLong("Revision"))
+                        it.add("Selections", choices); it.add("Counts", counts) }
                     apply(vehicle, applyBody); publish(vehicle); reply(player, lease, message = "Preset equipped.")
                 }
                 "DELETE_PRESET" -> { presets(player, vehicle).remove(presetName(body)); reply(player, lease, message = "Preset deleted.") }
@@ -423,7 +441,7 @@ object AircraftArmamentManager {
         require(name.length in 1..32 && name.none { it.isISOControl() }) { "Use a preset name of 1–32 characters." }
         return name
     }
-    private fun validateSelections(vehicle: VehicleEntity, choices: JsonObject?): CompoundTag {
+    private fun validateSelections(vehicle: VehicleEntity, choices: JsonObject?, rawCounts: JsonObject?): CompoundTag {
         require(choices != null && choices.size() <= 16) { "Invalid loadout." }
         val available = mounts(definition(vehicle)!!).associateBy { it["Id"].asString }
         val nbt = CompoundTag()
@@ -435,7 +453,23 @@ object AircraftArmamentManager {
             nbt.putString(key, id)
         }
         val definition = definition(vehicle)!!
-        if (available.isEmpty()) return nbt
+        val counts = CompoundTag()
+        require(rawCounts == null || rawCounts.entrySet().all { it.key in nbt.allKeys }) { "Count without equipped store." }
+        for (key in nbt.allKeys) {
+            val store = AircraftArmamentRegistry.stores[ResourceLocation(nbt.getString(key))]!!
+            val count = rawCounts?.get(key)?.let {
+                require(it.isJsonPrimitive && it.asJsonPrimitive.isNumber) { "Invalid rack quantity." }
+                it.asBigDecimal.intValueExact()
+            } ?: 1
+            require(count in 1..AircraftPylonRacks.maxCopies(definition, available.getValue(key), store)) { "Rack limit exceeded on $key." }
+            val pylonMass = (store["MassKg"]?.asDouble ?: 0.0) * (store["Capacity"]?.asInt ?: 1) * count
+            require(pylonMass <= (available.getValue(key)["MaxPylonMassKg"]?.asDouble ?: Double.POSITIVE_INFINITY) + 1e-6) {
+                "Pylon mass limit exceeded on $key."
+            }
+            counts.putInt(key, count)
+        }
+        val validated = CompoundTag().also { it.put("Selections", nbt); it.put("Counts", counts) }
+        if (available.isEmpty()) return validated
         val limit = definition["MaxPayloadKg"]?.asDouble
         require(limit != null && limit > 0.0) { "Aircraft payload limit is not authored." }
         val selected = nbt.allKeys.associateWith { key ->
@@ -444,16 +478,16 @@ object AircraftArmamentManager {
         require(selected.values.all { it["MassKg"]?.asDouble?.let { mass -> mass > 0.0 && mass.isFinite() } == true }) {
             "Store mass is not authored."
         }
-        val mass = AircraftArmamentRegistry.loadoutMassKg(definition, selected)
+        val mass = AircraftArmamentRegistry.loadoutMassKg(definition, selected, counts.allKeys.associateWith(counts::getInt))
         require(mass <= limit + 1.0e-6) { "Payload ${mass.toInt()} kg exceeds maximum ${limit.toInt()} kg." }
-        return nbt
+        return validated
     }
     private fun apply(vehicle: VehicleEntity, body: JsonObject) {
         require(vehicle.onGround() && vehicle.deltaMovement.lengthSqr() <= 0.0025) { "Stop the aircraft on the ground before fitting weapons." }
         val state = equipment(vehicle)
         require(body["Revision"]?.asLong == state.getLong("Revision")) { "Loadout changed; reopen the editor." }
-        val choices = validateSelections(vehicle, body.getAsJsonObject("Selections"))
-        state.put("Selections", choices); state.putLong("Revision", state.getLong("Revision") + 1)
+        val choices = validateSelections(vehicle, body.getAsJsonObject("Selections"), body.getAsJsonObject("Counts"))
+        state.put("Selections", choices.getCompound("Selections")); state.put("Counts", choices.getCompound("Counts")); state.putLong("Revision", state.getLong("Revision") + 1)
         state.remove("Fired"); state.remove("LastFire"); state.remove("GroupCursor"); AircraftMissileLauncher.clear(vehicle)
         AircraftRocketPodOrder.clear(vehicle); selectGuns(vehicle)
     }
@@ -485,12 +519,12 @@ object AircraftArmamentManager {
         }
         val state = equipment(vehicle); val key = pair["Id"].asString
         val fired = state.getCompound("Fired"); val used = fired.getInt(key)
-        require(used >= 0 && used < AircraftArmamentRegistry.mountCapacity(pair, store["Capacity"]?.asInt ?: 1)) {
+        require(used >= 0 && used < mountCapacity(vehicle, key)) {
             "Hardpoint is empty; refit on the ground."
         }
         val times = state.getCompound("LastFire"); val now = player.serverLevel().gameTime
         require(!times.contains(key) || now - times.getLong(key) >= 10) { "Launcher is cycling." }
-        val mount = AircraftArmamentRegistry.launchPosition(pair, used)
+        val mount = AircraftPylonRacks.launchPosition(pair, store, rackCount(vehicle, key), used)
         val ammoItem = store["AmmoItem"]?.asString?.let { value ->
             val itemId = ResourceLocation.tryParse(value)
             require(itemId != null && ForgeRegistries.ITEMS.containsKey(itemId)) { "Unknown store ammunition: $value" }

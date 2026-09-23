@@ -19,5 +19,11 @@
     "Damage": 40,
     "BlastRadius": 3
   },
-  "AmmoItem": "superbwarfare:small_air_to_air_missile"
+  "AmmoItem": "superbwarfare:small_air_to_air_missile",
+  "MaxPerPylon": 2,
+  "RackSpacing": [
+    0.55,
+    0.3,
+    0
+  ]
 }

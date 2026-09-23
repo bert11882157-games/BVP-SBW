@@ -712,10 +712,10 @@ object ClientEventHandler {
                 ModKeyMappings.DRONE_ASCEND.isDown) {
                 keys = keys or 0b000010000
             }
-            if (ModKeyMappings.RELEASE_DECOY.isDown) {
+            if (VehicleControlBindings.isPhysicallyHeld(ModKeyMappings.RELEASE_DECOY)) {
                 keys = keys or 0b001000000
             }
-            if (ModKeyMappings.RELEASE_CHAFF.isDown) {
+            if (VehicleControlBindings.isPhysicallyHeld(ModKeyMappings.RELEASE_CHAFF)) {
                 keys = keys or com.atsuishio.superbwarfare.api.aircraft.AircraftCountermeasures.CHAFF_INPUT_BIT.toShort()
             }
             if (holdFireVehicle) {

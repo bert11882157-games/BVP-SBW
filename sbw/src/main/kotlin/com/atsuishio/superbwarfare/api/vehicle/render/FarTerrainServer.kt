@@ -36,6 +36,7 @@ object FarTerrainServer {
     private val projectileResidency = FarProjectileResidency<ProjectileChunk>(
         FarTerrainResidency.PROJECTILE_CHUNKS, holdTicks = FarTerrainResidency.PROJECTILE_HOLD_TICKS)
     private val projectileReadiness = FarProjectileReadiness<ProjectileChunk>()
+    private val guidedBombLeaseExpiry = HashMap<ProjectileChunk, Long>()
     private val nativeProjectileResidency = FarProjectileReadiness<ProjectileChunk>()
     private var clock = 0L
 
@@ -126,8 +127,11 @@ object FarTerrainServer {
     }
 
     @JvmStatic @JvmOverloads fun requestProjectileSweep(level: ServerLevel, from: net.minecraft.world.phys.Vec3,
-                                          to: net.minecraft.world.phys.Vec3, chunks: Set<Long>, imminent: Boolean = true): ProjectileAdmission {
-        if (!admitsProjectileSweep(level, from, to, chunks)) return ProjectileAdmission.OUTSIDE_POLICY
+                                          to: net.minecraft.world.phys.Vec3, chunks: Set<Long>, imminent: Boolean = true,
+                                          guidedBomb: Boolean = false): ProjectileAdmission {
+        val autonomous = guidedBomb && com.atsuishio.superbwarfare.config.server.ProjectileConfig.PROJECTILE_CHUNK_LOADING.get() &&
+            chunks.isNotEmpty() && chunks.size <= FarTerrainResidency.PROJECTILE_CHUNKS
+        if (!autonomous && !admitsProjectileSweep(level, from, to, chunks)) return ProjectileAdmission.OUTSIDE_POLICY
         nativeProjectileResidency.begin(level.server.tickCount.toLong(), clock)
         // Player simulation already retains its chunks. Do not spend the limited far loading
         // queue on those chunks ahead of the projectile's genuinely cold forward corridor.
@@ -138,6 +142,7 @@ object FarTerrainServer {
             }
         }
         val reserved = remote.isEmpty() || projectileResidency.reserve(remote, clock, imminent)
+        if (autonomous && reserved) for (key in remote) guidedBombLeaseExpiry[key] = clock + FarTerrainResidency.PROJECTILE_HOLD_TICKS
         // Already loaded sweeps run immediately, but also retain their own lease: player movement
         // must not withdraw the chunk under a projectile at the near/far handoff.
         if (imminent && projectilePathLoaded(level, chunks)) return ProjectileAdmission.READY
@@ -264,7 +269,9 @@ object FarTerrainServer {
         // Current collision sweeps must not queue behind speculative path extensions.
         // Admission and the total/per-tick ticket budgets remain unchanged.
         projectileResidency.expire(clock)
-        projectileResidency.removeIf { !hasProjectileCorridors(it.level) }
+        val reservedKeys = projectileResidency.keys()
+        guidedBombLeaseExpiry.entries.removeIf { it.value < clock || it.key !in reservedKeys }
+        projectileResidency.removeIf { !hasProjectileCorridors(it.level) && it !in guidedBombLeaseExpiry }
         val projectileChunks = projectileResidency.keys()
         for (key in projectileChunks) {
             if (projectileResidency.required(key, clock))
@@ -317,6 +324,6 @@ object FarTerrainServer {
     fun clear() {
         for ((level, chunks) in leased) for (key in chunks) level.chunkSource.removeRegionTicket(ticket, ChunkPos(key), 0, key)
         leased.clear(); sessions.clear(); discoveries.clear(); projectileResidency.clear(); projectileReadiness.clear()
-        nativeProjectileResidency.clear(); clock = 0
+        nativeProjectileResidency.clear(); guidedBombLeaseExpiry.clear(); clock = 0
     }
 }

@@ -19,6 +19,8 @@ import kotlin.math.acos
 import kotlin.math.min
 
 open class AerialBombEntity(type: EntityType<out AerialBombEntity>, level: Level) : DestroyableProjectile(type, level) {
+    fun hasGuidedFlight(): Boolean = persistentData.getString("BvpBombMode") in setOf("LASER", "GPS")
+
     /** The same server-authored values drive the live trajectory and the HUD's nominal prediction. */
     fun configure(mode: String, aircraft: java.util.UUID, gravity: Float, drag: Double,
         turnDegrees: Double, damage: Float, radius: Float, gps: Vec3?) {

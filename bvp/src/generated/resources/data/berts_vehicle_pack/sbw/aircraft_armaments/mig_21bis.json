@@ -11,5 +11,9 @@
       "suspended_r60mk_hull"
     ]
   },
-  "MaxPayloadKg": 1500
+  "MaxPayloadKg": 1500,
+  "Radar": {
+    "Enabled": true,
+    "Range": 1000
+  }
 }

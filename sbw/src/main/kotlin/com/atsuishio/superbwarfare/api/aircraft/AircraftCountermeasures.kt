@@ -75,7 +75,7 @@ class AircraftCountermeasures(private val vehicle: VehicleEntity) {
         vehicle.publishAircraftCountermeasures(AircraftCountermeasureWire.pack(
             output.flareLevel, output.chaffLevel, threat, output.chaffEmitting),
             output.flareCooldown or (output.chaffCooldown shl 9))
-        vehicle.decoyReady = definition.flares && output.flareCooldown == 0
+        vehicle.decoyReady = definition.flares && output.flareCooldown == 0 && countItem(flareItem) >= 2
         vehicle.decoyReloadCoolDown = output.flareCooldown
     }
 

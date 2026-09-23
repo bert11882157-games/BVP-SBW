@@ -138,5 +138,10 @@
         "berts_vehicle_pack:reference/kh55_cruise"
       ]
     }
-  ]
+  ],
+  "MaxWeaponsPerPylon": 12,
+  "Radar": {
+    "Enabled": true,
+    "Range": 1000
+  }
 }

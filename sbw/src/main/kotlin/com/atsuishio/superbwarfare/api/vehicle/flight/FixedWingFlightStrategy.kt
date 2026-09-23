@@ -360,8 +360,7 @@ open class FixedWingFlightStrategy @JvmOverloads constructor(
 
     internal fun groundGearSettleWeight(speedMps: Double): Double {
         val reference = handling.takeoffHandling?.referenceSpeedMps ?: handling.liftReferenceSpeedMps
-        val progress = ((speedMps / reference - 0.35) / 0.30).coerceIn(0.0, 1.0)
-        return 1.0 - progress * progress * (3.0 - 2.0 * progress)
+        return FixedWingGroundAttitude.settleWeight(speedMps, reference)
     }
 
     internal fun acceptGroundPitch(pitchDegrees: Double) = model.acceptGroundPitch(pitchDegrees)

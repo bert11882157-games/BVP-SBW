@@ -17,6 +17,7 @@ data class CycleVehicleWeaponSlotMessage(
     val seatIndex: Int,
     val slot: VehicleWeaponSlot,
     val sequence: Long,
+    val direction: Int = 1,
 ) : ServerPacketPayload() {
     override fun PayloadContext.handler() {
         VehicleWeaponSlotCycleTransport.admit(sender(), this@CycleVehicleWeaponSlotMessage)

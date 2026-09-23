@@ -3,9 +3,11 @@ package com.atsuishio.superbwarfare.client.overlay
 import com.atsuishio.superbwarfare.client.weapon.*
 import com.atsuishio.superbwarfare.client.input.VehicleWeaponSelectionGesture
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity
+import com.atsuishio.superbwarfare.init.ModItems
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.world.entity.player.Player
+import net.minecraft.world.item.Item
 import kotlin.math.ceil
 
 object VehicleSystemsHud {
@@ -18,6 +20,11 @@ object VehicleSystemsHud {
         s.infiniteAmmo -> "∞"
         else -> s.reserveAmmo?.toString() ?: "—"
     }
+
+    private fun stock(vehicle: VehicleEntity, item: Item): Int =
+        (0 until vehicle.inventory.slots).sumOf { slot ->
+            vehicle.inventory.getStackInSlot(slot).takeIf { it.`is`(item) }?.count ?: 0
+        }
 
     fun ground(g:GuiGraphics,v:VehicleEntity,p:Player,w:Int,h:Int,aircraft:Boolean=false) {
         val snapshot=VehicleWeaponHudSnapshot.capture(v,p) ?: return
@@ -91,13 +98,15 @@ object VehicleSystemsHud {
             fun status(cooldown:Int)=if(cooldown>0) "CD ${ceil(cooldown/20.0).toInt()}s" else "READY"
             if(equipment.flares) {
                 val key=com.atsuishio.superbwarfare.init.ModKeyMappings.RELEASE_DECOY.key.displayName.string
-                line("FLR",v.getFlareLevel().toString(),"[$key] ${status(v.getFlareCooldownTicks())}",y)
+                val count=stock(v,ModItems.FLARE_AMMUNITION.get())
+                line("FLR",count.toString(),"[$key] ${if(count<2) "LOAD 2" else status(v.getFlareCooldownTicks())}",y)
                 y+=12
             }
             if(equipment.chaff) {
                 val key=com.atsuishio.superbwarfare.init.ModKeyMappings.RELEASE_CHAFF.key.displayName.string
-                line("CHF",v.getChaffLevel().toString(),
-                    "[$key] ${if(v.isChaffEmitting()) "ACTIVE" else status(v.getChaffCooldownTicks())}",y)
+                val count=stock(v,ModItems.CHAFF_AMMUNITION.get())
+                line("CHF",count.toString(),
+                    "[$key] ${if(v.isChaffEmitting()) "ACTIVE" else if(count<1) "LOAD 1" else status(v.getChaffCooldownTicks())}",y)
                 y+=12
             }
             if(v.getAircraftThreatLevel()>0) line("RWR","",

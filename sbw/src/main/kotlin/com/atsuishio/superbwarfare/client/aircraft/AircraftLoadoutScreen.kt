@@ -14,6 +14,7 @@ import net.minecraft.network.chat.Component
 /** A revisioned draft editor. Mirrored controls edit the same pair key, never two independent sides. */
 class AircraftLoadoutScreen(private var state: AircraftArmamentSnapshot) : Screen(Component.literal("Aircraft loadout")) {
     private val draft = LinkedHashMap(state.selections)
+    private val quantities = LinkedHashMap(state.counts)
     private var pairPage = 0
     private var showPresets = false
     private var presetIndex = 0
@@ -37,7 +38,9 @@ class AircraftLoadoutScreen(private var state: AircraftArmamentSnapshot) : Scree
     fun accept(next: AircraftArmamentSnapshot) {
         if (previewOnly) return
         if (next.vehicle != state.vehicle) return
-        if (next.revision != state.revision) { draft.clear(); draft.putAll(next.selections) }
+        if (next.revision != state.revision) {
+            draft.clear(); draft.putAll(next.selections); quantities.clear(); quantities.putAll(next.counts)
+        }
         state = next
         pending = false
         rebuild()
@@ -72,18 +75,30 @@ class AircraftLoadoutScreen(private var state: AircraftArmamentSnapshot) : Scree
             val options = listOf<String?>(null) + mount.allowed.filter { state.stores.containsKey(it) }
             val current = draft[mount.id]
             val store = current?.let { state.stores[it] }
-            val name = store?.let { "${it.name} (${(it.massKg * (it.capacity ?: 1) * mount.positions.size).toInt()} kg)" } ?: "Empty"
+            val count = quantities[mount.id] ?: 1
+            val name = store?.let { "${it.name} (${(it.massKg * (it.capacity ?: 1) * mount.positions.size * count).toInt()} kg)" } ?: "Empty"
+            val maximum = store?.let { state.maxCopies(mount, it) } ?: 1
+            val quantity = button("×${count * (store?.capacity ?: 1)}", left + 12, top + 56 + index * 26, 42, true) {
+                val step = if (hasShiftDown()) -1 else 1
+                val next = (1..maximum).asSequence().map { Math.floorMod(count - 1 + step * it, maximum) + 1 }
+                    .firstOrNull { candidate -> state.payloadKg(draft, quantities + (mount.id to candidate)) <= state.definition.maxPayloadKg + 1e-6 }
+                if (next != null) quantities[mount.id] = next
+                rebuild()
+            }
+            quantity.tooltip = Tooltip.create(Component.literal("Weapons per pylon · click to increase, Shift-click to decrease"))
+            if (store == null || maximum == 1) unavailableButtons += quantity
             val label = if (mount.allowed.isEmpty()) "${mount.name} · unavailable" else
                 "${mount.name} · $name${if (mount.positions.size == 2) " · both wings" else ""}"
-            val choice = button(label, left + 12, top + 56 + index * 26, columnWidth, true) {
+            val choice = button(label, left + 58, top + 56 + index * 26, columnWidth - 46, true) {
                 val start = options.indexOf(current).coerceAtLeast(0)
                 val next = (1..options.size).asSequence().map { options[(start + it) % options.size] }
                     .firstOrNull { candidate ->
                         val proposed = LinkedHashMap(draft)
                         if (candidate == null) proposed.remove(mount.id) else proposed[mount.id] = candidate
-                        state.payloadKg(proposed) <= state.definition.maxPayloadKg + 1.0e-6
+                        state.payloadKg(proposed, quantities - mount.id) <= state.definition.maxPayloadKg + 1.0e-6
                     }
                 if (next == null) draft.remove(mount.id) else draft[mount.id] = next
+                quantities.remove(mount.id)
                 rebuild()
             }
             if (mount.allowed.isEmpty()) unavailableButtons += choice
@@ -93,7 +108,7 @@ class AircraftLoadoutScreen(private var state: AircraftArmamentSnapshot) : Scree
             button("<", left + 12, navigationY, 24) { pairPage--; rebuild() }
             button(">", left + 40, navigationY, 24) { pairPage++; rebuild() }
         }
-        if (!showPresets) button("Clear all", left + panelWidth - 92, navigationY, 80, true) { draft.clear(); rebuild() }
+        if (!showPresets) button("Clear all", left + panelWidth - 92, navigationY, 80, true) { draft.clear(); quantities.clear(); rebuild() }
         if (showPresets) {
             val y = top + panelHeight - 81
             val half = (columnWidth - 4) / 2
@@ -131,6 +146,7 @@ class AircraftLoadoutScreen(private var state: AircraftArmamentSnapshot) : Scree
             if (name != null) addProperty("Name", name)
             if (operation == "APPLY" || operation == "SAVE_PRESET") {
                 add("Selections", JsonObject().apply { draft.forEach { (pair, store) -> addProperty(pair, store) } })
+                add("Counts", JsonObject().apply { draft.keys.forEach { addProperty(it, quantities[it] ?: 1) } })
             }
         }
         pending = AircraftArmamentClient.request(operation, payload)
@@ -154,7 +170,7 @@ class AircraftLoadoutScreen(private var state: AircraftArmamentSnapshot) : Scree
         graphics.fill(left, top, left + panelWidth, top + 3, 0xFFE2B66D.toInt())
         val headerWidth = if (diagnosticPreviewEnabled && !previewOnly)
             panelWidth - 148 else panelWidth - 24
-        val mass = "${state.payloadKg(draft).toInt()} / ${state.definition.maxPayloadKg.toInt()} kg"
+        val mass = "${state.payloadKg(draft, quantities).toInt()} / ${state.definition.maxPayloadKg.toInt()} kg"
         graphics.drawString(font, mass, left + panelWidth - 12 - font.width(mass), top + 12, 0xFFF1E8D8.toInt(), false)
         graphics.drawString(font, font.plainSubstrByWidth(state.definition.name, headerWidth - font.width(mass) - 8),
             left + 12, top + 12, 0xFFF1E8D8.toInt(), false)
@@ -163,8 +179,8 @@ class AircraftLoadoutScreen(private var state: AircraftArmamentSnapshot) : Scree
             pending -> "Awaiting authoritative result…"
             Minecraft.getInstance().player?.vehicle?.onGround() != true -> "GROUND ONLY · Land before changing equipment"
             state.message.isNotBlank() -> state.message
-            draft != state.selections -> "UNAPPLIED DRAFT · Apply to equip this loadout"
-            else -> "Click a pylon to cycle its equipment; Apply to fit"
+            draft != state.selections || quantities != state.counts -> "UNAPPLIED DRAFT · Apply to equip this loadout"
+            else -> "Click a pylon to choose equipment; × sets rack count; Apply to fit"
         }
         graphics.drawString(font, font.plainSubstrByWidth(status, panelWidth - 24), left + 12, top + 28,
             0xFFE2B66D.toInt(), false)

@@ -6,7 +6,7 @@
   "MassKg": 180,
   "Guidance": {
     "Mode": "ACTIVE_RADAR",
-    "LockTicks": 60,
+    "LockTicks": 0,
     "Range": 2000,
     "ConeDegrees": 25,
     "CountermeasureVulnerability": 1.15
@@ -19,5 +19,11 @@
     "Damage": 80,
     "BlastRadius": 5
   },
-  "AmmoItem": "superbwarfare:medium_air_to_air_missile"
+  "AmmoItem": "superbwarfare:medium_air_to_air_missile",
+  "MaxPerPylon": 2,
+  "RackSpacing": [
+    0.55,
+    0.3,
+    0
+  ]
 }

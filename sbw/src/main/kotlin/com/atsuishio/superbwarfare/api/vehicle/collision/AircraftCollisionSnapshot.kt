@@ -20,6 +20,7 @@ class AircraftCollisionPart internal constructor(
     private val center: Vec3,
     private val halfExtents: Vec3,
     rotation: Quaterniond,
+    val wingSide: Int = 0,
 ) {
     private val orientation = Quaterniond(rotation)
     val worldVertices: List<Vec3> = Collections.unmodifiableList((0..7).map { bits ->
@@ -65,17 +66,25 @@ class AircraftCollisionSnapshot private constructor(parts: List<AircraftCollisio
 
     companion object {
         @JvmStatic
+        @JvmOverloads
         fun create(definition: AircraftTerrainContact, frame: Matrix4d,
-                   gearFraction: Float): AircraftCollisionSnapshot {
+                   gearFraction: Float, detachedWings: Int = 0): AircraftCollisionSnapshot {
             require(definition.valid())
             val orientation = frame.getNormalizedRotation(Quaterniond())
-            fun part(role: AircraftCollisionRole, source: AircraftTerrainBox, active: Boolean): AircraftCollisionPart {
+            fun part(role: AircraftCollisionRole, source: AircraftTerrainBox, active: Boolean, side: Int = 0): AircraftCollisionPart {
                 val localCenter = source.minimum.add(source.maximum).scale(0.5)
                 val world = frame.transformPosition(Vector3d(localCenter.x, localCenter.y, localCenter.z))
                 return AircraftCollisionPart(role, active, Vec3(world.x, world.y, world.z),
-                    source.maximum.subtract(source.minimum).scale(0.5), orientation)
+                    source.maximum.subtract(source.minimum).scale(0.5), orientation, side)
             }
-            val bodies = definition.bodyVolumes().map { part(AircraftCollisionRole.FUSELAGE, it, true) }
+            val bodies = definition.bodyVolumes().map {
+                val side = when {
+                    it.maximum.x <= 0.0 -> 1
+                    it.minimum.x >= 0.0 -> 2
+                    else -> 0
+                }
+                part(AircraftCollisionRole.FUSELAGE, it, detachedWings and side == 0, side)
+            }
             val gear = if (definition.hasWheelVolumes()) definition.wheelContacts.map { it.bounds!! }
                 else listOf(definition.landingGear)
             return AircraftCollisionSnapshot(bodies + gear.map {
