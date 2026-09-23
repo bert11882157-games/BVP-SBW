@@ -12,6 +12,28 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber
 /** FFA supplies a shared near/far presentation; projectile simulation and damage stay with SBW. */
 @EventBusSubscriber(modid = Mod.MODID)
 object MissilePresentation {
+    private val physicalWireId = net.minecraft.resources.ResourceLocation("berts_vehicle_pack", "physical_wire_v1")
+    /** Projectile implementation class and exhaust shape do not imply a physical guidance wire. */
+    @JvmStatic fun hasPhysicalWire(entity: Entity): Boolean = runCatching {
+        val profile = com.atsuishio.superbwarfare.api.projectile.ProjectileProfiles.resolve(entity)
+            ?: return nativePhysicalWire(entity)
+        val data = profile.extension(physicalWireId)?.asJsonObject ?: return false
+        val schema = data.get("Schema")?.takeIf { it.isJsonPrimitive && it.asJsonPrimitive.isNumber } ?: return false
+        val enabled = data.get("Enabled")?.takeIf { it.isJsonPrimitive && it.asJsonPrimitive.isBoolean } ?: return false
+        data.keySet() == setOf("Schema", "Enabled") && schema.asDouble == 1.0 && enabled.asBoolean
+    }.getOrDefault(false)
+    private fun nativePhysicalWire(entity: Entity): Boolean {
+        val context = (entity as? WireGuideMissileEntity)?.launcherGuidanceContext() ?: return false
+        val level = entity.level() as? net.minecraft.server.level.ServerLevel ?: return false
+        val launcher = level.getEntity(context.launcherVehicleUUID) ?: return false
+        val type = net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getKey(launcher.type).toString()
+        return nativePhysicalWire(type, context.weaponName)
+    }
+    internal fun nativePhysicalWire(type: String, weapon: String): Boolean = when (weapon) {
+        "Missile" -> type in setOf("superbwarfare:tow", "superbwarfare:sodayo_pick_up_tow",
+            "superbwarfare:bradley", "superbwarfare:lav_25", "superbwarfare:bmp_2")
+        else -> false
+    }
     data class NozzleOffset(val centerHeight: Double, val rear: Double)
     private var nozzleResolver: java.util.function.Function<Entity, NozzleOffset?>? = null
     /** Optional model attachment; offsets are presentation only and never move the entity. */
@@ -48,7 +70,7 @@ object MissilePresentation {
     private val attachedBridge by lazy { runCatching {
         Class.forName("dev.ballistics.MissileVisualHooks").getMethod("registerAttached", Entity::class.java,
             Double::class.javaPrimitiveType, String::class.java, Double::class.javaPrimitiveType,
-            Double::class.javaPrimitiveType, Boolean::class.javaPrimitiveType)
+            Double::class.javaPrimitiveType, Boolean::class.javaPrimitiveType, Boolean::class.javaPrimitiveType)
     }.getOrNull() }
     @JvmStatic fun isMissile(entity: Entity?): Boolean = entity is MissileProjectile ||
         entity is SmallRocketEntity || entity is MediumRocketEntity ||
@@ -69,7 +91,7 @@ object MissilePresentation {
             val offset = nozzleOffset(entity)
             if (attachedBridge != null) attachedBridge!!.invoke(null, entity, entity.bbWidth.toDouble(),
                 kind + if (airborne) "_air" else "_ground", offset.centerHeight, offset.rear,
-                entity is MissileProjectile)
+                entity is MissileProjectile, hasPhysicalWire(entity))
             else bridge?.first?.invoke(null, entity, entity.bbWidth.toDouble())
         }
             .onFailure { Mod.LOGGER.debug("Missile visual registration unavailable", it) }

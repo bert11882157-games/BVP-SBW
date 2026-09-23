@@ -321,6 +321,7 @@ public final class BvpProjectileTrailRenderer {
                 FastThrowableProjectile projectile = state.projectile;
                 if (rendered >= MAX_WIRES_PER_FRAME
                         || !state.guidedAtgm
+                        || !com.atsuishio.superbwarfare.api.effect.MissilePresentation.hasPhysicalWire(projectile)
                         || !(projectile instanceof WireGuideMissileEntity)
                         || projectile.m_213877_()
                         || !projectile.m_6084_()

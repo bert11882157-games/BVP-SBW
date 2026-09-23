@@ -33,6 +33,7 @@ open class WireGuideMissileEntity(type: EntityType<out WireGuideMissileEntity>, 
 
     var launcherVehicleUUID: UUID? = null
     private var launcherWeaponGuidanceContext: VehicleWeaponGuidanceContext? = null
+    fun launcherGuidanceContext(): VehicleWeaponGuidanceContext? = launcherWeaponGuidanceContext
 
     /** One flight path for all wire-guided missiles; native launchers use the explicit default. */
     private var propulsionState: GuidedPropulsionState? = null
@@ -140,6 +141,7 @@ open class WireGuideMissileEntity(type: EntityType<out WireGuideMissileEntity>, 
     var actualGuidanceTargetUUID: UUID? = null
         private set
     private var laserSeekerDirection: Vec3? = null
+    private var previousFlightWobble = Vec3.ZERO
 
     override fun tick() {
         actualGuidanceTargetUUID = null
@@ -159,6 +161,10 @@ open class WireGuideMissileEntity(type: EntityType<out WireGuideMissileEntity>, 
 
         val guidedInheritedMotion = effectiveInheritedMotion()
         if (!level().isClientSide) {
+            // super.tick moved and collided along the actual wobbled flight segment. Guidance
+            // starts from the underlying course, so oscillation cannot accumulate into a turn.
+            deltaMovement = GuidedMissileGuidance.removeSpinPerturbation(deltaMovement, guidedInheritedMotion, previousFlightWobble)
+            previousFlightWobble = Vec3.ZERO
             propulsionState?.let { state ->
                 val relativeSpeed = deltaMovement.subtract(guidedInheritedMotion).length()
                 if (!relativeSpeed.isFinite()) {
@@ -238,8 +244,13 @@ open class WireGuideMissileEntity(type: EntityType<out WireGuideMissileEntity>, 
                 xRot = Math.toDegrees(kotlin.math.atan2(-relative.y, relative.horizontalDistance())).toFloat()
             }
         }
-        if (!level().isClientSide && isGuidedPropulsionThrusting() && maneuver == null) {
-            deltaMovement = GuidedMissileGuidance.spinPerturbation(deltaMovement, guidedInheritedMotion, tickCount)
+        if (!level().isClientSide && hasGuidedPropulsion() && movementPhase != GuidedPropulsionPhase.EJECTION && maneuver == null) {
+            val clean = deltaMovement
+            deltaMovement = GuidedMissileGuidance.spinPerturbation(clean, guidedInheritedMotion, tickCount, guided.maxSpeed)
+            previousFlightWobble = deltaMovement.subtract(clean)
+            val relative = deltaMovement.subtract(guidedInheritedMotion)
+            yRot = Math.toDegrees(kotlin.math.atan2(-relative.x, relative.z)).toFloat()
+            xRot = Math.toDegrees(kotlin.math.atan2(-relative.y, relative.horizontalDistance())).toFloat()
         }
         commitTickSynchronization()
     }
