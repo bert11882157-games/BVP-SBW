@@ -1,0 +1,26 @@
+{
+  "Schema": 1,
+  "Name": "GBU-12 Paveway II · 500 lb laser · two-bomb rack",
+  "Category": "BOMB",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/gbu12.geo.json",
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/gbu12.png",
+  "Capacity": 1,
+  "MassKg": 227,
+  "Bomb": {
+    "Mode": "LASER",
+    "Gravity": 0.08,
+    "DragMultiplier": 1,
+    "TurnDegreesPerTick": 2,
+    "BlastRadius": 7,
+    "BlastDamage": 450
+  },
+  "AmmoItem": "superbwarfare:small_guided_bomb",
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_bombs/gbu12",
+  "MaxPerPylon": 2,
+  "FixedRackCount": 2,
+  "RackSpacing": [
+    0.36,
+    0.4,
+    0
+  ]
+}

@@ -3,6 +3,9 @@ package com.atsuishio.superbwarfare.entity.projectile
 import com.atsuishio.superbwarfare.config.server.ExplosionConfig
 import com.atsuishio.superbwarfare.api.aircraft.AircraftDesignationData
 import com.atsuishio.superbwarfare.api.aircraft.AircraftMunitionDebug
+import com.atsuishio.superbwarfare.api.aircraft.AircraftClusterBomb
+import com.atsuishio.superbwarfare.api.aircraft.AircraftBombPenetrator
+import com.atsuishio.superbwarfare.api.aircraft.AircraftBombFlight
 import com.atsuishio.superbwarfare.init.ModItems
 import com.atsuishio.superbwarfare.init.ModSounds
 import net.minecraft.core.BlockPos
@@ -14,6 +17,7 @@ import net.minecraft.world.level.Level
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.EntityHitResult
+import net.minecraft.world.phys.HitResult
 import net.minecraft.world.phys.Vec3
 import kotlin.math.acos
 import kotlin.math.min
@@ -21,15 +25,17 @@ import kotlin.math.min
 open class AerialBombEntity(type: EntityType<out AerialBombEntity>, level: Level) : DestroyableProjectile(type, level) {
     override fun farProjectileMaximumLifetimeTicks(): Int = 2400
     override fun farProjectileExplosionRadius(): Double =
-        if (com.atsuishio.superbwarfare.api.aircraft.AircraftClusterBomb.configured(this)) 0.0
+        if (AircraftClusterBomb.configured(this) || AircraftClusterBomb.isTypedChild(this) ||
+            AircraftClusterBomb.isSensorDispenser(this)) 0.0
         else super.farProjectileExplosionRadius()
 
-    fun hasGuidedFlight(): Boolean = persistentData.getString("BvpBombMode") in setOf("LASER", "GPS")
+    fun hasGuidedFlight(): Boolean = persistentData.getString("BvpBombMode") in setOf("LASER", "GPS", "TV")
 
     /** The same server-authored values drive the live trajectory and the HUD's nominal prediction. */
-    fun configure(mode: String, aircraft: java.util.UUID, gravity: Float, drag: Double,
-        turnDegrees: Double, damage: Float, radius: Float, gps: Vec3?) {
-        require(!level().isClientSide && mode in setOf("DUMB", "LASER", "GPS"))
+    @JvmOverloads fun configure(mode: String, aircraft: java.util.UUID, gravity: Float, drag: Double,
+        turnDegrees: Double, damage: Float, radius: Float, gps: Vec3?, target: java.util.UUID? = null) {
+        require(!level().isClientSide && mode in setOf("DUMB", "LASER", "GPS", "TV"))
+        require(mode != "TV" || target != null)
         setGravity(gravity)
         explosionDamageValue = damage
         explosionRadiusValue = radius
@@ -37,6 +43,7 @@ open class AerialBombEntity(type: EntityType<out AerialBombEntity>, level: Level
         persistentData.putUUID("BvpBombAircraft", aircraft)
         persistentData.putDouble("BvpBombDrag", drag)
         persistentData.putDouble("BvpBombTurn", turnDegrees)
+        target?.let { persistentData.putUUID("BvpBombTarget", it) }
         gps?.let { persistentData.putDouble("BvpBombGpsX", it.x); persistentData.putDouble("BvpBombGpsY", it.y)
             persistentData.putDouble("BvpBombGpsZ", it.z) }
     }
@@ -44,13 +51,12 @@ open class AerialBombEntity(type: EntityType<out AerialBombEntity>, level: Level
     override fun tick() {
         super.tick()
         if (isRemoved || level().isClientSide) return
-        if (com.atsuishio.superbwarfare.api.aircraft.AircraftClusterBomb.tick(this)) return
+        if (AircraftBombPenetrator.tick(this)) return
+        if (AircraftClusterBomb.tick(this)) return
         val data = persistentData
         if (!data.contains("BvpBombMode")) return
         var velocity = deltaMovement
-        val drag = data.getDouble("BvpBombDrag").coerceIn(0.0, 20.0)
-        val horizontal = (1.0 - 0.01 * drag).coerceIn(0.8, 1.0)
-        velocity = Vec3(velocity.x * horizontal, velocity.y, velocity.z * horizontal)
+        velocity = AircraftBombFlight.applyHorizontalDrag(velocity, data.getDouble("BvpBombDrag"))
         val target = when (data.getString("BvpBombMode")) {
             "LASER" -> (level() as? ServerLevel)?.let { server ->
                 if (data.hasUUID("BvpBombAircraft")) AircraftDesignationData.get(server)
@@ -58,6 +64,13 @@ open class AerialBombEntity(type: EntityType<out AerialBombEntity>, level: Level
             }
             "GPS" -> if (data.contains("BvpBombGpsX")) Vec3(data.getDouble("BvpBombGpsX"),
                 data.getDouble("BvpBombGpsY"), data.getDouble("BvpBombGpsZ")) else null
+            "TV" -> if (data.hasUUID("BvpBombTarget")) {
+                val entity = (level() as? ServerLevel)?.getEntity(data.getUUID("BvpBombTarget"))
+                if (entity != null && (!entity.isAlive || entity.isRemoved ||
+                        (entity as? com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity)?.isWreck == true)) {
+                    data.remove("BvpBombTarget"); null
+                } else entity?.boundingBox?.center
+            } else null
             else -> null
         }
         if (data.getString("BvpBombMode") != "DUMB") {
@@ -101,11 +114,19 @@ open class AerialBombEntity(type: EntityType<out AerialBombEntity>, level: Level
         return 0.7f
     }
 
+    override fun onHit(result: HitResult) {
+        if (AircraftBombPenetrator.isFuzing(this)) return
+        super.onHit(result)
+    }
+
     override fun onHitEntity(result: EntityHitResult) {
         val entity = result.entity
         val owner = this.owner
         if (entity == owner || (owner != null && entity == owner.vehicle) || entity is AerialBombEntity) return
-        if (com.atsuishio.superbwarfare.api.aircraft.AircraftClusterBomb.release(this, result.location)) return
+        if (AircraftClusterBomb.isTypedChild(this) || AircraftClusterBomb.consumeSensorImpact(this)) {
+            discard(); return
+        }
+        if (AircraftClusterBomb.release(this, result.location)) return
         AircraftMunitionDebug.log(this, "bomb entity impact")
         super.onHitEntity(result)
         if (this.level() is ServerLevel) {
@@ -130,7 +151,11 @@ open class AerialBombEntity(type: EntityType<out AerialBombEntity>, level: Level
     }
 
     override fun onHitBlock(blockHitResult: BlockHitResult) {
-        if (com.atsuishio.superbwarfare.api.aircraft.AircraftClusterBomb.release(this, blockHitResult.location)) return
+        if (AircraftClusterBomb.isTypedChild(this) || AircraftClusterBomb.consumeSensorImpact(this)) {
+            discard(); return
+        }
+        if (AircraftClusterBomb.release(this, blockHitResult.location)) return
+        if (AircraftBombPenetrator.begin(this, blockHitResult)) return
         AircraftMunitionDebug.log(this, "bomb block impact")
         super.onHitBlock(blockHitResult)
         if (this.level() is ServerLevel) {
@@ -155,6 +180,9 @@ open class AerialBombEntity(type: EntityType<out AerialBombEntity>, level: Level
     }
 
     override fun causeExplode(vec3: Vec3) {
-        if (!com.atsuishio.superbwarfare.api.aircraft.AircraftClusterBomb.release(this, vec3)) super.causeExplode(vec3)
+        if (AircraftClusterBomb.isTypedChild(this) || AircraftClusterBomb.consumeSensorImpact(this)) {
+            discard(); return
+        }
+        if (!AircraftClusterBomb.release(this, vec3)) super.causeExplode(vec3)
     }
 }

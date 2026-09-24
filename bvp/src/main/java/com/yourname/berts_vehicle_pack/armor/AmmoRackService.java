@@ -18,7 +18,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import java.util.Set;
+
 final class AmmoRackService {
+    private static final Set<String> ABRAMS_PROFILES = Set.of(
+            "m1_abrams_elite", "m1a1_abrams", "m1a2_abrams_sep_v2");
     private static final float SUPER_AMMO_RACK_EXPLOSION_RADIUS = 10.0F;
     // Presentation only: small platforms and nearly empty racks do not make a mushroom cloud.
     private static boolean substantialAmmoRack(ArmoredVehicleEntity vehicle) {
@@ -97,7 +101,8 @@ final class AmmoRackService {
         return VehicleDestructionContext.builder()
                 .directSource(vehicle)
                 .attacker(source.m_7639_())
-                .turretPolicy(TurretEjectionPolicy.FORCE_EJECT)
+                .turretPolicy(ABRAMS_PROFILES.contains(vehicle.getArmorProfileId())
+                        ? TurretEjectionPolicy.KEEP_ATTACHED : TurretEjectionPolicy.FORCE_EJECT)
                 .turretImpulse(launch)
                 .turretCrushPolicy(TurretWreckImpactHandler.AMMO_RACK_CRUSH_POLICY_ID)
                 .explosionCause(AMMO_RACK_DESTRUCTION_CAUSE)

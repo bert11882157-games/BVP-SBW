@@ -19,7 +19,7 @@ object AircraftMissileLauncher {
         val range = raw["Range"].asDouble
         val cone = raw["ConeDegrees"].asDouble
         val vulnerability = raw["CountermeasureVulnerability"].asDouble
-        require(mode in setOf("ACTIVE_RADAR", "SEMI_ACTIVE_RADAR", "INFRARED", "ANTI_RADIATION", "GROUND_INFRARED"))
+        require(mode in setOf("ACTIVE_RADAR", "SEMI_ACTIVE_RADAR", "INFRARED", "ANTI_RADIATION", "GROUND_INFRARED", "ACTIVE_SURFACE_RADAR"))
         require(ticks.isFinite() && ticks == kotlin.math.floor(ticks) && ticks in 0.0..200.0)
         require(mode !in setOf("INFRARED", "GROUND_INFRARED") || ticks >= 1)
         require(range.isFinite() && range in 16.0..4096.0 && cone.isFinite() && cone in 1.0..60.0)
@@ -45,6 +45,11 @@ object AircraftMissileLauncher {
                 cls.getMethod("getLockState", Entity::class.java, String::class.java))
         }.getOrNull()
     }
+    internal fun visualModel(store: JsonObject): String? {
+        val path = store["Model"]?.asString ?: return null
+        return Regex("berts_vehicle_pack:custom_geo/aircraft_stores/([a-z0-9_]+)\\.geo\\.json")
+            .matchEntire(path)?.groupValues?.get(1)
+    }
     private fun forward(vehicle: VehicleEntity): Vec3 {
         val d = vehicle.getVehicleTransform(1f).transformDirection(Vector3d(0.0, 0.0, 1.0)).normalize()
         return Vec3(d.x, d.y, d.z)
@@ -66,8 +71,10 @@ object AircraftMissileLauncher {
         val position = vehicle.getVehicleTransform(1f).transformPosition(Vector3d(local.x, local.y, local.z))
         val flight = store.getAsJsonObject("Flight")
         val profile = CompoundTag()
-        for (key in listOf("InitialSpeed", "MaxSpeed", "AccelerationPerTick", "TurnDegreesPerSecond", "Damage", "BlastRadius"))
+        for (key in listOf("InitialSpeed", "MaxSpeed", "AccelerationPerTick", "TurnDegreesPerSecond", "Damage", "BlastRadius",
+            "MaxLoadFactorG", "BodyTurnLimitScale"))
             flight?.get(key)?.let { profile.putDouble(key, it.asDouble) }
+        visualModel(store)?.let { profile.putString("VisualModel", it) }
         val method = if (profile.isEmpty) api?.launch else api?.launchProfile
         val args = arrayOf(vehicle, player, channel, Vec3(position.x, position.y, position.z), forward(vehicle),
             p.mode, p.lockTicks, p.range, p.cone, p.vulnerability)

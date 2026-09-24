@@ -1,0 +1,38 @@
+{
+  "Combat": {
+    "WeaponId": "berts_vehicle_pack:ags_30/cannon",
+    "RoundId": "berts_vehicle_pack:30mm_vog_30",
+    "MunitionType": "berts_vehicle_pack:autocannon_shell",
+    "DamageType": "berts_vehicle_pack:chemical",
+    "CaliberMm": 30,
+    "DiameterMm": 30,
+    "HullDamageClass": "HE",
+    "HullDamage": 36,
+    "ModuleDamage": 9,
+    "AmmoRackDamage": 2,
+    "PenetrationMm": 0,
+    "RicochetCurve": {
+      "IncidenceAnglesDegrees": [
+        0,
+        79,
+        80,
+        81,
+        90
+      ],
+      "Probability": [
+        0,
+        0,
+        0.5,
+        1,
+        1
+      ]
+    },
+    "Tandem": false
+  },
+  "ImpactVisualProfile": "berts_vehicle_pack:autocannon_he",
+  "MotionSync": "INHERIT",
+  "Luminance": 0,
+  "TrailMode": "DEFAULT",
+  "RenderScale": 1,
+  "Extensions": {}
+}

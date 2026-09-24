@@ -10,28 +10,140 @@
   "MaxWeaponsPerPylon": 12,
   "Singles": [
     {
-      "Id": "internal_bay",
-      "Name": "Bomb bay / internal stores",
+      "Id": "internal_bay_1",
+      "Name": "Internal bay station 1",
       "Position": [
-        0,
+        -0.6,
         2.85,
-        -0.205784
+        0.7692160000000001
       ],
       "Internal": true,
       "MaxPylonMassKg": 5000,
       "AllowedStores": [
-        "berts_vehicle_pack:reference/dumb_bomb_250kg",
-        "berts_vehicle_pack:reference/laser_bomb_250kg",
-        "berts_vehicle_pack:reference/gps_bomb_250kg",
-        "berts_vehicle_pack:reference/dumb_bomb_5000kg",
         "berts_vehicle_pack:fa18e/bomb_500kg_dumb_1",
-        "berts_vehicle_pack:fa18e/bomb_500kg_dumb_2",
         "berts_vehicle_pack:fa18e/bomb_500kg_laser_1",
-        "berts_vehicle_pack:fa18e/bomb_500kg_laser_2",
-        "berts_vehicle_pack:fa18e/bomb_500kg_gps_1",
-        "berts_vehicle_pack:fa18e/bomb_500kg_gps_2",
-        "berts_vehicle_pack:reference/dumb_bomb_100kg"
-      ]
+        "berts_vehicle_pack:fa18e/bomb_500kg_gps_1"
+      ],
+      "QuantitySelectable": true
+    },
+    {
+      "Id": "internal_bay_2",
+      "Name": "Internal bay station 2",
+      "Position": [
+        0.6,
+        2.85,
+        0.7692160000000001
+      ],
+      "Internal": true,
+      "MaxPylonMassKg": 5000,
+      "AllowedStores": [
+        "berts_vehicle_pack:fa18e/bomb_500kg_dumb_1",
+        "berts_vehicle_pack:fa18e/bomb_500kg_laser_1",
+        "berts_vehicle_pack:fa18e/bomb_500kg_gps_1"
+      ],
+      "QuantitySelectable": true
+    },
+    {
+      "Id": "internal_bay_3",
+      "Name": "Internal bay station 3",
+      "Position": [
+        -0.6,
+        2.85,
+        0.11921600000000002
+      ],
+      "Internal": true,
+      "MaxPylonMassKg": 5000,
+      "AllowedStores": [
+        "berts_vehicle_pack:fa18e/bomb_500kg_dumb_1",
+        "berts_vehicle_pack:fa18e/bomb_500kg_laser_1",
+        "berts_vehicle_pack:fa18e/bomb_500kg_gps_1"
+      ],
+      "QuantitySelectable": true
+    },
+    {
+      "Id": "internal_bay_4",
+      "Name": "Internal bay station 4",
+      "Position": [
+        0.6,
+        2.85,
+        0.11921600000000002
+      ],
+      "Internal": true,
+      "MaxPylonMassKg": 5000,
+      "AllowedStores": [
+        "berts_vehicle_pack:fa18e/bomb_500kg_dumb_1",
+        "berts_vehicle_pack:fa18e/bomb_500kg_laser_1",
+        "berts_vehicle_pack:fa18e/bomb_500kg_gps_1"
+      ],
+      "QuantitySelectable": true
+    },
+    {
+      "Id": "internal_bay_5",
+      "Name": "Internal bay station 5",
+      "Position": [
+        -0.6,
+        2.85,
+        -0.530784
+      ],
+      "Internal": true,
+      "MaxPylonMassKg": 5000,
+      "AllowedStores": [
+        "berts_vehicle_pack:fa18e/bomb_500kg_dumb_1",
+        "berts_vehicle_pack:fa18e/bomb_500kg_laser_1",
+        "berts_vehicle_pack:fa18e/bomb_500kg_gps_1"
+      ],
+      "QuantitySelectable": true
+    },
+    {
+      "Id": "internal_bay_6",
+      "Name": "Internal bay station 6",
+      "Position": [
+        0.6,
+        2.85,
+        -0.530784
+      ],
+      "Internal": true,
+      "MaxPylonMassKg": 5000,
+      "AllowedStores": [
+        "berts_vehicle_pack:fa18e/bomb_500kg_dumb_1",
+        "berts_vehicle_pack:fa18e/bomb_500kg_laser_1",
+        "berts_vehicle_pack:fa18e/bomb_500kg_gps_1"
+      ],
+      "QuantitySelectable": true
+    },
+    {
+      "Id": "internal_bay_7",
+      "Name": "Internal bay station 7",
+      "Position": [
+        -0.6,
+        2.85,
+        -1.180784
+      ],
+      "Internal": true,
+      "MaxPylonMassKg": 5000,
+      "AllowedStores": [
+        "berts_vehicle_pack:fa18e/bomb_500kg_dumb_1",
+        "berts_vehicle_pack:fa18e/bomb_500kg_laser_1",
+        "berts_vehicle_pack:fa18e/bomb_500kg_gps_1"
+      ],
+      "QuantitySelectable": true
+    },
+    {
+      "Id": "internal_bay_8",
+      "Name": "Internal bay station 8",
+      "Position": [
+        0.6,
+        2.85,
+        -1.180784
+      ],
+      "Internal": true,
+      "MaxPylonMassKg": 5000,
+      "AllowedStores": [
+        "berts_vehicle_pack:fa18e/bomb_500kg_dumb_1",
+        "berts_vehicle_pack:fa18e/bomb_500kg_laser_1",
+        "berts_vehicle_pack:fa18e/bomb_500kg_gps_1"
+      ],
+      "QuantitySelectable": true
     }
   ]
 }

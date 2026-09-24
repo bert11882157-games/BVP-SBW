@@ -338,6 +338,7 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:projectile",
@@ -379,8 +380,7 @@
               0,
               0
             ]
-          },
-          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition"
+          }
         }
       ],
       "Projectile": {
@@ -453,6 +453,7 @@
       "ProjectileBeltAmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:projectile",
@@ -508,6 +509,7 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:projectile",
@@ -562,8 +564,7 @@
               10,
               6
             ]
-          },
-          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition"
+          }
         }
       ],
       "ShootPos": {
@@ -622,6 +623,7 @@
       "ProjectileBeltAmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:projectile",
@@ -643,6 +645,7 @@
         },
         {
           "Ammo": "superbwarfare:small_shell_aa",
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:projectile",
@@ -664,6 +667,7 @@
         },
         {
           "Ammo": "superbwarfare:small_shell_gs",
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:projectile",

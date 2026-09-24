@@ -1,0 +1,26 @@
+{
+  "Schema": 1,
+  "Name": "Kh-32 · active-radar surface strike",
+  "Category": "CRUISE",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/kh32.geo.json",
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/kh32.png",
+  "Capacity": 1,
+  "MassKg": 5800,
+  "Guidance": {
+    "Mode": "ACTIVE_SURFACE_RADAR",
+    "LockTicks": 80,
+    "Range": 2500,
+    "ConeDegrees": 30,
+    "CountermeasureVulnerability": 0.25
+  },
+  "Flight": {
+    "InitialSpeed": 1,
+    "MaxSpeed": 14,
+    "AccelerationPerTick": 0.24,
+    "TurnDegreesPerSecond": 18,
+    "Damage": 2200,
+    "BlastRadius": 16,
+    "Range": 2500
+  },
+  "AmmoItem": "superbwarfare:large_cruise_missile"
+}

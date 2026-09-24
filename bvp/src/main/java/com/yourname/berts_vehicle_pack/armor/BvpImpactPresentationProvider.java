@@ -12,6 +12,7 @@ import com.yourname.berts_vehicle_pack.BertsVehiclePack;
 import com.yourname.berts_vehicle_pack.effects.BvpLeanImpactEffects;
 import com.yourname.berts_vehicle_pack.effects.BvpProjectileTrailHooks;
 import com.yourname.berts_vehicle_pack.effects.BvpProjectileEffectDefinition;
+import com.yourname.berts_vehicle_pack.effects.BvpVehicleHitEffects;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
@@ -108,6 +109,7 @@ public final class BvpImpactPresentationProvider {
             return true;
         }
 
+        BvpVehicleHitEffects.impact(context, result);
         BvpMaterialImpactSounds.play(context);
 
         if (EliteDiagnostics.isEnabled(projectile.m_9236_())) {

@@ -16,6 +16,7 @@ import com.tacz.guns.entity.EntityKineticBullet;
 import com.yourname.berts_vehicle_pack.BertsVehiclePack;
 import com.yourname.berts_vehicle_pack.diagnostics.BvpFireTrafficControl;
 import com.yourname.berts_vehicle_pack.entity.ArmoredVehicleEntity;
+import com.yourname.berts_vehicle_pack.armor.ArmorProfiles.Vec;
 import net.minecraft.commands.Commands;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -70,6 +71,13 @@ public final class BvpHitRegistrationScenario {
                 && BvpFireTrafficControl.loopback(player.connection.connection.getRemoteAddress(), false);
     }
 
+    static Vec3 turretOutwardVehicleLocal(ArmorTarget coordinates, Vec hullPoint, boolean front) {
+        Vec armorOutward = new Vec(0, 0, front ? -1 : 1);
+        Vec hullOutward = armorOutward.rotateY(coordinates.turretFrameYaw());
+        return coordinates.armorLocalPointToVehicleLocal(hullPoint.add(hullOutward))
+                .subtract(coordinates.armorLocalPointToVehicleLocal(hullPoint)).normalize();
+    }
+
     @SubscribeEvent public static void commands(RegisterCommandsEvent event) {
         if (!DebugFeaturePolicy.isDiagnosticPropertyEnabled("bvp.diagnostics.scenarios")) return;
         event.getDispatcher().register(Commands.literal("bvp_hitreg").requires(s -> s.hasPermission(2))
@@ -82,12 +90,18 @@ public final class BvpHitRegistrationScenario {
                     if (active != null || !admitted(player) || EliteDiagnostics.isServerEnabled()) return 0;
                     String[] args = StringArgumentType.getString(c, "case").trim().split("\\s+");
                     if (args.length != 6 || !Set.of("leo2a6", "t72b", "m48a3_elite", "native_t90").contains(args[0])
-                            || !Set.of("shell", "bullet", "tacz", "rpg").contains(args[1])
-                            || !Set.of("left", "right", "front", "rear", "oblique_left", "oblique_right", "hull", "miss", "gap").contains(args[2])
+                            || !Set.of("shell", "bullet", "tacz", "rpg", "tow", "rocket").contains(args[1])
+                            || !Set.of("left", "right", "front", "rear", "oblique_left", "oblique_right", "hull", "miss", "gap", "turret_front", "turret_rear").contains(args[2])
                             || !Set.of("12", "80").contains(args[3])
                             || !Set.of("stationary", "moving").contains(args[4])
                             || !Set.of("clear", "wall", "splash").contains(args[5])) {
-                        player.sendSystemMessage(Component.literal("Usage: bvp_hitreg <leo2a6|t72b|m48a3_elite|native_t90> <shell|bullet|tacz|rpg> <left|right|front|rear|oblique_left|oblique_right|hull|miss|gap> <12|80> <stationary|moving> <clear|wall|splash>"));
+                        player.sendSystemMessage(Component.literal("Usage: bvp_hitreg <leo2a6|t72b|m48a3_elite|native_t90> <shell|bullet|tacz|rpg|tow|rocket> <left|right|front|rear|oblique_left|oblique_right|hull|miss|gap|turret_front|turret_rear> <12|80> <stationary|moving> <clear|wall|splash>"));
+                        return 0;
+                    }
+                    if (args[2].startsWith("turret_") && !(args[0].equals("t72b")
+                            && Set.of("rpg", "tow", "rocket").contains(args[1]) && args[3].equals("12")
+                            && args[4].equals("stationary") && args[5].equals("clear"))) {
+                        player.sendSystemMessage(Component.literal("Turret ERA acceptance requires t72b rpg|tow|rocket turret_front|turret_rear 12 stationary clear."));
                         return 0;
                     }
                     if (args[5].equals("splash") && !(args[0].equals("native_t90")
@@ -141,6 +155,7 @@ public final class BvpHitRegistrationScenario {
         VehicleEntity target, weapon, neighbor;
         Vec3 muzzle, aim;
         double leftBefore, rightBefore, hullBefore;
+        int turretEraBefore;
         double neighborLeftBefore, neighborRightBefore, neighborHullBefore;
         Vec3 targetPositionBefore;
         int ticks, shots, failures;
@@ -170,7 +185,9 @@ public final class BvpHitRegistrationScenario {
                     throw new IllegalStateException("Moving fixture driver boarding failed");
                 target.setEnergy(target.getMaxEnergy());
             }
-            weapon = spawn("leo2a6", origin.add(0, 0, 25));
+            weapon = spawn(args[1].equals("tow") ? "tow_tripod"
+                    : args[1].equals("rocket") ? "bm_21_grad" : "leo2a6",
+                    origin.add(0, 0, 25));
             // A smaller native vehicle gives a separated, unoccluded witness inside the RPG's
             // three-block origin-distance radius. Both vehicles keep their authored geometry.
             if (args[5].equals("splash")) neighbor = spawn("native_lav150",
@@ -198,6 +215,15 @@ public final class BvpHitRegistrationScenario {
                         "hull_before", hullBefore, "hull_after", target.getHealth(),
                         "target_position", target.position());
                 check("one_projectile_created", shots == 1);
+                if (args[2].startsWith("turret_")) {
+                    int after = spentTurretEra();
+                    record("ERA_RESULT", "target", target.getUUID(), "front_turret_spent_before",
+                            turretEraBefore, "front_turret_spent_after", after);
+                    check(args[2].equals("turret_rear") ? "rear_did_not_spend_front_turret_era"
+                            : "front_spent_local_turret_era",
+                            args[2].equals("turret_rear") ? after == turretEraBefore
+                                    : after - turretEraBefore >= 2);
+                }
                 if (args[5].equals("wall") || Set.of("miss", "gap").contains(args[2])) {
                     check("occluded_or_missed_target_unchanged", target.getHealth() == hullBefore
                             && trackHealth(target, true) == leftBefore
@@ -241,6 +267,7 @@ public final class BvpHitRegistrationScenario {
             ArmorTarget coordinates = ArmorTargetAdapters.resolve(target);
             boolean right = args[2].contains("right");
             String boxName;
+            Vec3 turretOutward = null;
             if (coordinates == null) {
                 var box = target.getOBBs().stream().filter(b -> b.part == (args[2].equals("hull") ? OBB.Part.BODY
                         : right ? OBB.Part.WHEEL_RIGHT : OBB.Part.WHEEL_LEFT)).findFirst().orElseThrow();
@@ -248,6 +275,20 @@ public final class BvpHitRegistrationScenario {
                 boxName = box.part.name();
             } else {
             var profile = ArmorProfiles.get(args[0]);
+            if (args[2].startsWith("turret_")) {
+                Vec turretPoint = args[2].equals("turret_front")
+                        ? profile.eraBoxes.stream().filter(b -> b.isTurretFrame()
+                                && b.name.equals("newera_76")).findFirst().orElseThrow().center
+                        : new Vec(0.35425D, 2.07241D, 1.6D);
+                Vec pivot = coordinates.turretPivot();
+                Vec hullPoint = pivot.add(turretPoint.subtract(pivot).rotateY(coordinates.turretFrameYaw()));
+                aim = coordinates.armorLocalPointToWorld(hullPoint);
+                // The armor source may mirror Z relative to vehicle-local space.
+                // Derive the approach side in the same frame as the authored box.
+                turretOutward = turretOutwardVehicleLocal(coordinates, hullPoint,
+                        args[2].equals("turret_front"));
+                boxName = args[2].equals("turret_front") ? "newera_76" : "rear_turret_clear_of_front_era";
+            } else {
             // Side is vehicle-local +X left / -X right, independent of profile mirroring or labels.
             var box = profile.trackBoxes.stream().filter(b ->
                     (coordinates.armorLocalPointToVehicleLocal(b.center).x > 0) != right)
@@ -263,6 +304,7 @@ public final class BvpHitRegistrationScenario {
                 boxName = plate.name;
             }
             }
+            }
             Vec3 localAim = target.worldToVehicleLocal(aim, 1);
             if (neighbor != null) {
                 // Approach the front end of the requested track outside the hull's lateral
@@ -274,6 +316,7 @@ public final class BvpHitRegistrationScenario {
             if (neighbor != null) outward = new Vec3(0, 0, -1);
             if (args[2].equals("front")) outward = new Vec3(0, 0, -1);
             if (args[2].equals("rear")) outward = new Vec3(0, 0, 1);
+            if (turretOutward != null) outward = turretOutward;
             if (args[2].startsWith("oblique")) outward = new Vec3(right ? -1 : 1, 0, -1).normalize();
             if (args[2].equals("miss")) {
                 // A clear geometric control. Non-detailed OBB envelope-gap witnesses need trace review.
@@ -308,6 +351,7 @@ public final class BvpHitRegistrationScenario {
         void fire() {
             leftBefore = trackHealth(target, true); rightBefore = trackHealth(target, false);
             hullBefore = target.getHealth();
+            if (args[2].startsWith("turret_")) turretEraBefore = spentTurretEra();
             if (args[4].equals("moving")) {
                 double moved = target.position().distanceToSqr(targetPositionBefore);
                 double speed = target.getDeltaMovement().horizontalDistance();
@@ -341,7 +385,8 @@ public final class BvpHitRegistrationScenario {
                 for (Entity entity : level.getAllEntities()) if (entity instanceof EntityKineticBullet
                         && !before.contains(entity.getUUID())) shot(entity);
             } else {
-                String name = args[1].equals("shell") ? "Cannon" : "MachineGun";
+                String name = Set.of("shell", "tow").contains(args[1]) ? "Cannon"
+                        : args[1].equals("rocket") ? "Rocket" : "MachineGun";
                 weapon.modifyGunData(name, data -> {
                     data.resetStatus(); data.reload.setPendingProgressPercent(0); data.ammo.set(10);
                     data.selectedAmmoType.set(0); data.projectileBeltPhase.set(0);
@@ -357,6 +402,12 @@ public final class BvpHitRegistrationScenario {
                     if (entity instanceof Projectile) shot(entity);
                 }
             }
+        }
+
+        int spentTurretEra() {
+            if (!(target instanceof ArmoredVehicleEntity armored)) return -1;
+            return (int) ArmorProfiles.get("t72b").eraBoxes.stream().filter(box -> box.isTurretFrame()
+                    && armored.isBvpEraBrickSpent(box.name)).count();
         }
 
         void shot(Entity entity) {

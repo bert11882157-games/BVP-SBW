@@ -21,6 +21,17 @@ public final class BvpCoordinateMissileRenderer {
     private static final MissileAsset KH55 = new MissileAsset(KH55_MODEL, KH55_TEXTURE, "KH-55");
     private static final MissileAsset SLAM_ER = new MissileAsset(SLAM_ER_MODEL, SLAM_ER_TEXTURE, "AGM-84K SLAM-ER");
 
+    private static final java.util.Map<String, MissileAsset> EXPANSION = java.util.Map.ofEntries(
+        flight("aim9m"), flight("kh31"), flight("kh32"), flight("kh38"),
+        flight("kh47m2"), flight("kh58"), flight("lmur"), flight("r13m1"),
+        flight("r3r"), flight("r27"), flight("r27t"), flight("r73"), flight("r77"), flight("kh25ml"),
+        flight("aim9b"), flight("aim9l"), flight("aim9x"), flight("aim7e"),
+        flight("aim54"), flight("agm45a"), flight("pars3"));
+    private static java.util.Map.Entry<String, MissileAsset> flight(String id) {
+        return java.util.Map.entry(id, new MissileAsset(
+            new ResourceLocation("berts_vehicle_pack", "custom_geo/aircraft_stores/" + id + "_flight.geo.json"),
+            new ResourceLocation("berts_vehicle_pack", "textures/aircraft_stores/" + id + ".png"), id));
+    }
     private BvpCoordinateMissileRenderer() { }
 
     /**
@@ -31,7 +42,7 @@ public final class BvpCoordinateMissileRenderer {
         MissileAsset asset = switch (model) {
             case "kh55" -> KH55;
             case "agm84k_slam_er" -> SLAM_ER;
-            default -> null;
+            default -> EXPANSION.get(model);
         };
         if (asset == null) return false;
         PolyMeshModel mesh = asset.ready();

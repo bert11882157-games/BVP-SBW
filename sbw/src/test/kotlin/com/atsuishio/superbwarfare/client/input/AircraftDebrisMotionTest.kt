@@ -22,7 +22,7 @@ class AircraftDebrisMotionTest {
         assertEquals(Vec3(0.0,1.0,0.0), contact.normal)
         assertEquals(0.0, contact.position.y, 1e-9)
         val part=AircraftDebrisMotion(from,Vec3(.8,-.03,0.0),Quaternionf(),Vec3.ZERO,0.0)
-        part.tick { a,b -> AircraftDebrisContact.sweep(a,b) { c,d -> floor.clip(c,d,BlockPos.ZERO) } }
+        part.tick { a,b -> AircraftDebrisContact.relaxedSweep(a,b) { c,d -> floor.clip(c,d,BlockPos.ZERO) } }
         assertTrue(part.velocity.x > .7, "Floor recovery preserves tangential inertia")
         assertTrue(part.position.x > .5, "Fragment continues across the surface")
         val wall = Shapes.box(.5, -8.0, -8.0, 1.5, 8.0, 8.0)
@@ -35,21 +35,23 @@ class AircraftDebrisMotionTest {
     }
 
     private fun ground(from: Vec3, to: Vec3): AircraftDebrisMotion.Contact? =
-        if (to.y <= 0 && from.y >= 0) AircraftDebrisMotion.Contact(
-            from.lerp(to, from.y / (from.y - to.y)), Vec3(0.0,1.0,0.0)) else null
+        AircraftDebrisContact.relaxedSweep(from,to) { a,b ->
+            Shapes.box(-100.0,-1.0,-100.0,100.0,0.0,100.0).clip(a,b,BlockPos.ZERO)
+        }
 
-    @Test fun fragmentsBounceTwiceThenSlideWithoutLosingAllMomentumOnContact() {
+    @Test fun fragmentsDeflectThenScrapeWithInertiaAndExpireTenSecondsAfterContact() {
         val part=AircraftDebrisMotion(Vec3(0.0,2.0,0.0),Vec3(.8,-.5,0.0),Quaternionf(),Vec3.ZERO,0.0,9.80665/400.0,2)
         while(!part.grounded && part.age<100) part.tick(::ground)
-        assertEquals(2,part.bounces)
+        assertEquals(0,part.bounces)
         assertTrue(part.grounded)
         val impactX=part.position.x
         val impactSpeed=part.velocity.x
-        assertTrue(impactSpeed>.1,"tangential momentum survives the two shallow bounces")
-        repeat(15) { part.tick(::ground); assertTrue(part.position.y >= 0) }
+        assertTrue(impactSpeed>.5,"tangential momentum survives initial contact")
+        repeat(15) { part.tick(::ground); assertTrue(part.position.y >= -.04 && part.position.y <= .01) }
         assertTrue(part.position.x>impactX+1,"wreck grinds along the surface")
         assertTrue(part.velocity.x in 0.0..impactSpeed)
-        while(part.age<199)part.tick(::ground)
+        assertTrue(part.velocity.x > impactSpeed * .5, "Repeated support contacts must not multiply impact friction every tick")
+        while(part.groundedTicks<199)part.tick(::ground)
         assertFalse(part.expired)
         part.tick(::ground);assertTrue(part.expired)
     }
@@ -64,14 +66,14 @@ class AircraftDebrisMotionTest {
         assertTrue(part.position.z>z+1)
     }
 
-    @Test fun slidingOffALedgeResumesGravityAndWingExpiresTwoSecondsAfterImpact() {
+    @Test fun slidingOffALedgeResumesGravityAndWingExpiresTenSecondsAfterImpact() {
         val part=AircraftDebrisMotion(Vec3(0.0,.1,0.0),Vec3(.7,-.2,0.0),Quaternionf(),Vec3.ZERO,0.0)
         part.tick(::ground)
         assertTrue(part.impacted);assertFalse(part.expired)
         val y=part.position.y
         repeat(10){part.tick { _,_->null }}
         assertFalse(part.grounded);assertTrue(part.position.y<y-1)
-        repeat(29){part.tick { _,_->null }}
+        repeat(189){part.tick { _,_->null }}
         assertFalse(part.expired)
         part.tick { _,_->null };assertTrue(part.expired)
     }

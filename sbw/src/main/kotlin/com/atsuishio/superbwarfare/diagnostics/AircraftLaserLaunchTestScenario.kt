@@ -18,6 +18,7 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
+import net.minecraft.world.level.GameType
 import net.minecraft.world.level.storage.LevelResource
 import net.minecraft.world.phys.Vec3
 import net.minecraftforge.event.RegisterCommandsEvent
@@ -62,7 +63,23 @@ object AircraftLaserLaunchTestScenario {
                 try { run.prepare(); 1 } catch (error: Exception) {
                     run.finish("PREPARE_FAILED: ${error.message}"); active = null; 0
                 }
-            })
+            }.then(Commands.literal("trajectory").executes { context ->
+                val player = context.source.playerOrException
+                if (!allowed(player) || active != null || EliteDiagnostics.isServerEnabled()) return@executes 0
+                val run = Run(player, true)
+                active = run
+                try { run.prepare(); 1 } catch (error: Exception) {
+                    run.finish("PREPARE_FAILED: ${error.message}"); active = null; 0
+                }
+            }).then(Commands.literal("trajectory_kh29ml").executes { context ->
+                val player = context.source.playerOrException
+                if (!allowed(player) || active != null || EliteDiagnostics.isServerEnabled()) return@executes 0
+                val run = Run(player, true, true)
+                active = run
+                try { run.prepare(); 1 } catch (error: Exception) {
+                    run.finish("PREPARE_FAILED: ${error.message}"); active = null; 0
+                }
+            }))
         event.dispatcher.register(Commands.literal("sbw_aircraft_laser_launch_cancel")
             .requires { it.hasPermission(2) }
             .executes { context ->
@@ -87,12 +104,14 @@ object AircraftLaserLaunchTestScenario {
         active = null
     }
 
-    private class Run(val player: ServerPlayer) {
+    private class Run(val player: ServerPlayer, private val trajectory: Boolean = false, kh29Only: Boolean = false) {
+        private val runCases = if (kh29Only) cases.take(1) else if (trajectory) cases.take(2) else cases
         private val level = player.serverLevel()
         private val oldPosition = player.position()
         private val oldYaw = player.yRot
         private val oldPitch = player.xRot
         private val oldVehicle = player.vehicle
+        private val oldGameType = player.gameMode.gameModeForPlayer
         private val oldInstabuild = player.abilities.instabuild
         private val oldFlying = player.abilities.flying
         private val oldPresets = player.persistentData.getCompound("BvpAircraftPresets").copy()
@@ -103,14 +122,21 @@ object AircraftLaserLaunchTestScenario {
         private var missile: WireGuideMissileEntity? = null
         private var row: JsonObject? = null
         private var finished = false
+        private var paintedPoint: Vec3? = null
+        private var previousMissilePoint: Vec3? = null
+        private var closestApproach = Double.POSITIVE_INFINITY
+        private var setupDelay = 5
 
         fun prepare() {
+            level.getChunk(4380 shr 4, 7460 shr 4)
             player.teleportTo(level, 4380.5, 260.0, 7460.5, 0f, 0f)
+            player.setGameMode(GameType.SURVIVAL)
             player.abilities.instabuild = false
             player.abilities.flying = false
             player.onUpdateAbilities()
             check(!player.isCreative) { "Ammunition consumption requires non-creative admission" }
-            begin()
+            // The teleported player's chunk ticket must become entity-visible before
+            // exercising the normal request handler's server-level UUID lookup.
         }
 
         private fun ammoCount(vehicle: VehicleEntity, item: net.minecraft.world.item.Item): Int =
@@ -119,9 +145,10 @@ object AircraftLaserLaunchTestScenario {
             }
 
         private fun begin() {
-            if (index >= cases.size) return
-            val case = cases[index]
+            if (index >= runCases.size) return
+            val case = runCases[index]
             age = 0
+            paintedPoint = null; previousMissilePoint = null; closestApproach = Double.POSITIVE_INFINITY
             val result = JsonObject().also {
                 it.addProperty("Aircraft", case.aircraft)
                 it.addProperty("Store", case.store)
@@ -150,6 +177,7 @@ object AircraftLaserLaunchTestScenario {
                 vehicle.setNoGravity(true)
                 vehicle.addTag("sbw_aircraft_laser_launch_test")
                 check(level.addFreshEntity(vehicle)) { "Aircraft insertion failed" }
+                check(level.getEntity(vehicle.uuid) === vehicle) { "Fixture chunk is not entity-visible yet" }
                 check(AircraftArmamentManager.definition(vehicle) != null) { "Authored aircraft definition unavailable" }
                 check(player.startRiding(vehicle, true)) { "Pilot seat unavailable" }
                 vehicle.deltaMovement = Vec3.ZERO
@@ -187,6 +215,7 @@ object AircraftLaserLaunchTestScenario {
                 check(vehicle.getGunName(0) == weapon) { "Store command slot not selected" }
                 vehicle.setPos(vehicle.x, vehicle.y + 60.0, vehicle.z)
                 vehicle.setOnGround(false)
+                if (trajectory) vehicle.deltaMovement = Vec3(2.5, 0.0, 0.0)
                 result.addProperty("NoDesignationAtLaunch",
                     AircraftDesignationData.get(level).get(vehicle.uuid)?.position == null)
                 val fire = JsonObject().also { it.addProperty("Pair", case.mount) }
@@ -208,21 +237,54 @@ object AircraftLaserLaunchTestScenario {
         }
 
         fun tick(): Boolean {
-            if (index >= cases.size) return true
+            if (index >= runCases.size) return true
+            if (setupDelay > 0) {
+                if (--setupDelay == 0) begin()
+                return false
+            }
             val result = row ?: return true
             age++
+            if (trajectory) {
+                val source = aircraft
+                val projectile = missile
+                if (age == 5 && source != null && projectile != null) {
+                    val targetX = 4380
+                    val targetZ = 8060
+                    val height = level.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, targetX,targetZ)
+                    paintedPoint = Vec3(targetX+.5,height.toDouble(),targetZ+.5)
+                    AircraftDesignationData.get(level).put(source.uuid, paintedPoint!!)
+                    val saved = net.minecraft.nbt.CompoundTag()
+                    projectile.addAdditionalSaveData(saved)
+                    result.addProperty("InheritedSidewaysSpeed", saved.getDouble("GuidedPropulsionInheritedX"))
+                }
+                if (projectile != null) {
+                    val next = projectile.position()
+                    val previous = previousMissilePoint ?: next
+                    paintedPoint?.let { target ->
+                        val segment = next.subtract(previous)
+                        val fraction = if(segment.lengthSqr()>1e-12) target.subtract(previous).dot(segment).div(segment.lengthSqr()).coerceIn(0.0,1.0) else 0.0
+                        closestApproach = minOf(closestApproach,previous.add(segment.scale(fraction)).distanceTo(target))
+                    }
+                    previousMissilePoint = next
+                }
+            }
             if (age == 2 || age == 5) {
                 val present = missile?.let { level.getEntity(it.uuid)?.isAlive == true } == true
                 result.addProperty(if (age == 2) "AliveAfterTwoTicks" else "AliveAfterFiveTicks", present)
             }
-            if (age < 5) return false
+            if (age < if (trajectory) 260 else 5) return false
             result.addProperty("Pass", listOf("LoadoutApplied", "NoDesignationAtLaunch", "MissileSpawned",
                 "ProfileMatched", "ShotAccepted", "AliveAfterTwoTicks", "AliveAfterFiveTicks")
                 .all { result[it]?.asBoolean == true })
+            if (trajectory) {
+                result.addProperty("ClosestApproachBlocks", if(closestApproach.isFinite()) closestApproach else -1)
+                result.addProperty("Pass", result["Pass"].asBoolean && closestApproach < 2.5 &&
+                    (result["InheritedSidewaysSpeed"]?.asDouble ?: 0.0) > 2.0)
+            }
             cleanupCase()
             index++
-            if (index < cases.size) begin()
-            return index >= cases.size
+            if (index < runCases.size) setupDelay = 5
+            return index >= runCases.size
         }
 
         private fun cleanupCase() {
@@ -241,11 +303,12 @@ object AircraftLaserLaunchTestScenario {
                 player.persistentData.put("BvpAircraftPresets", oldPresets)
                 player.teleportTo(level, oldPosition.x, oldPosition.y, oldPosition.z, oldYaw, oldPitch)
                 if (oldVehicle?.isAlive == true) player.startRiding(oldVehicle, true)
+                player.setGameMode(oldGameType)
                 player.abilities.instabuild = oldInstabuild
                 player.abilities.flying = oldFlying
                 player.onUpdateAbilities()
             } finally {
-                val passed = reason == null && output.size() == cases.size &&
+                val passed = reason == null && output.size() == runCases.size &&
                     output.all { it.asJsonObject["Pass"]?.asBoolean == true }
                 val report = JsonObject().also {
                     it.addProperty("Status", if (passed) "PASS" else "FAIL")

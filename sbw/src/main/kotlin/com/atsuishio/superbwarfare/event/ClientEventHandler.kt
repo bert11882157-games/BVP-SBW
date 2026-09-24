@@ -2572,6 +2572,11 @@ object ClientEventHandler {
     @SubscribeEvent
     fun onFovUpdate(event: ComputeFov) {
         val player = localPlayer ?: return
+        if (mc.screen is com.atsuishio.superbwarfare.client.aircraft.AircraftLoadoutScreen) {
+            event.fov = mc.options.fov().get().toDouble()
+            currentFov = event.fov
+            return
+        }
         val times = getDelta().coerceAtMost(1.6f)
 
         val vehicle = player.vehicle

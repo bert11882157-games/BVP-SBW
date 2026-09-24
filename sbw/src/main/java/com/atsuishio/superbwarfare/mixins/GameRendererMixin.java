@@ -163,7 +163,13 @@ public class GameRendererMixin {
 
             matrices.mulPose(Axis.ZP.rotationDegrees(-r * vehicle.getRoll(tickDelta) - r2 * vehicle.getViewXRot(tickDelta)));
 
-            if (!vehicle.useFixedCameraPos(entity)) {
+            // The attachment resolver already places an authored eye in the rotated vehicle
+            // frame. Applying the legacy player-eye offset again moves the effective view
+            // into cockpit geometry (especially on nose-low helicopters).
+            var camera = seat.getCameraPos();
+            boolean authoredEye = camera != null && camera.getEyeAttachment() != null
+                    && !camera.getEyeAttachment().isBlank();
+            if (!vehicle.useFixedCameraPos(entity) && !authoredEye) {
                 // fetch eye offset
                 float eye = entity.getEyeHeight();
 

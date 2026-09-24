@@ -4,13 +4,18 @@ import com.yourname.berts_vehicle_pack.armor.ArmorProfiles.ArmorBox;
 import com.yourname.berts_vehicle_pack.armor.ArmorProfiles.ArmorProfile;
 import com.yourname.berts_vehicle_pack.armor.ArmorProfiles.Vec;
 import com.yourname.berts_vehicle_pack.entity.ArmoredVehicleEntity;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+
 /**
- * Server-only typed rocket-to-ERA impact seam.  It is deliberately independent of the normal
+ * Server-only rocket-to-ERA impact seam.  It is deliberately independent of the normal
  * first ERA penetration query: one accepted rocket impact can spend every active brick whose
  * transformed OBB intersects the fixed impact sphere, including bricks on nearby vehicles.
  */
@@ -20,18 +25,36 @@ final class RocketEraImpactService {
     private RocketEraImpactService() {
     }
 
-    static int apply(Level level, Vec3 impactPoint, Projectile projectile, ProjectileArmorEffect shot) {
+    static int apply(Level level, Entity directTarget, Vec3 impactPoint,
+                     Projectile projectile, ProjectileArmorEffect shot) {
         if (level == null || level.f_46443_ || !finite(impactPoint) ||
-                !ArmorShotClassifier.isTypedBvpRocket(projectile, shot)) {
+                !ArmorShotClassifier.isEraActivatingRocket(projectile, shot)) {
             return 0;
         }
+        return applyAtAcceptedImpact(level, directTarget, impactPoint);
+    }
+
+    /** FFA's own accepted collision callback can share this exact local ERA rule. */
+    static int applyExternal(Level level, Entity directTarget, Vec3 impactPoint) {
+        if (level == null || level.f_46443_ || !finite(impactPoint)) {
+            return 0;
+        }
+        return applyAtAcceptedImpact(level, directTarget, impactPoint);
+    }
+
+    private static int applyAtAcceptedImpact(Level level, Entity directTarget, Vec3 impactPoint) {
         double radius = IMPACT_RADIUS_BLOCKS;
         AABB bounds = new AABB(
                 impactPoint.f_82479_ - radius, impactPoint.f_82480_ - radius,
                 impactPoint.f_82481_ - radius, impactPoint.f_82479_ + radius,
                 impactPoint.f_82480_ + radius, impactPoint.f_82481_ + radius);
         int spent = 0;
-        for (ArmoredVehicleEntity vehicle : level.m_45976_(ArmoredVehicleEntity.class, bounds)) {
+        LinkedHashSet<ArmoredVehicleEntity> candidates = new LinkedHashSet<>(
+                level.m_45976_(ArmoredVehicleEntity.class, bounds));
+        if (directTarget instanceof ArmoredVehicleEntity vehicle) {
+            candidates.add(vehicle);
+        }
+        for (ArmoredVehicleEntity vehicle : candidates) {
             if (vehicle.m_213877_() || !vehicle.m_6084_() || vehicle.m_9236_() != level) {
                 continue;
             }
@@ -41,18 +64,27 @@ final class RocketEraImpactService {
             }
             ArmorTarget target = new ArmoredVehicleArmorTarget(vehicle);
             Vec localImpact = target.worldPointToArmorLocal(impactPoint);
-            for (ArmorBox era : profile.eraBoxes) {
+            for (ArmorBox era : nearbyEraBoxes(target, profile.eraBoxes, localImpact, radius)) {
                 if (vehicle.isBvpEraBrickSpent(era.name)) {
                     continue;
                 }
-                Vec boxFrameImpact = ArmorHitResolver.pointToBoxFrame(target, era, localImpact);
-                if (boxFrameImpact != null && era.distanceOutside(boxFrameImpact) <= radius) {
-                    vehicle.bvpDetonateEraBrick(era.name);
-                    spent++;
-                }
+                vehicle.bvpDetonateEraBrick(era.name);
+                spent++;
             }
         }
         return spent;
+    }
+
+    static List<ArmorBox> nearbyEraBoxes(ArmorTarget target, List<ArmorBox> boxes,
+                                         Vec localImpact, double radius) {
+        List<ArmorBox> nearby = new ArrayList<>();
+        for (ArmorBox era : boxes) {
+            Vec boxFrameImpact = ArmorHitResolver.pointToBoxFrame(target, era, localImpact);
+            if (boxFrameImpact != null && era.distanceOutside(boxFrameImpact) <= radius) {
+                nearby.add(era);
+            }
+        }
+        return nearby;
     }
 
     private static boolean finite(Vec3 value) {

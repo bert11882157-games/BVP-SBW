@@ -5,6 +5,7 @@
   "UpStep": 0,
   "InertiaRotateRate": 0,
   "RotateOffsetHeight": 3.175,
+  "PassengerRenderScale": 0.9,
   "MaxHealth": 150,
   "MaxEnergy": 10000000,
   "AllowFreeCam": true,
@@ -251,7 +252,7 @@
       "BodyAttachment": "Vehicle",
       "Position": [
         0,
-        1.85,
+        1.175,
         3.2
       ],
       "Weapons": [
@@ -555,7 +556,7 @@
       "Parent": "Vehicle",
       "Position": [
         0,
-        2.35,
+        2.925,
         3.2
       ],
       "Direction": [

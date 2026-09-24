@@ -6,6 +6,7 @@ import com.atsuishio.superbwarfare.client.aircraft.AircraftDefinitionView;
 import com.atsuishio.superbwarfare.client.aircraft.AircraftMountView;
 import com.atsuishio.superbwarfare.client.aircraft.AircraftStoreView;
 import com.atsuishio.superbwarfare.client.aircraft.AircraftStoreItemRenderer;
+import com.atsuishio.superbwarfare.client.aircraft.AircraftMountPresentation;
 import com.atsuishio.superbwarfare.entity.vehicle.base.GeoVehicleEntity;
 import com.atsuishio.superbwarfare.api.vehicle.flight.AircraftWreckBreakup;
 import com.atsuishio.superbwarfare.client.renderer.AircraftDetachedWings;
@@ -65,7 +66,7 @@ final class BvpSuspendedStoreRenderer {
     }
 
     /** Freeze loaded stores at separation; later firing or loadout edits cannot change debris. */
-    AircraftDetachedWings.Visual captureWing(GeoVehicleEntity entity, int side, int light) {
+    AircraftDetachedWings.Visual captureWing(GeoVehicleEntity entity, int side, int light, float partialTick) {
         AircraftArmamentSnapshot state = AircraftArmamentClient.getVehicleSnapshot(entity);
         if (state == null) return null;
         var captured = new ArrayList<CapturedStore>();
@@ -74,7 +75,7 @@ final class BvpSuspendedStoreRenderer {
             String selected = state.getSelections().get(pair.getId());
             AircraftStoreView store = state.getStores().get(selected);
             if (store == null || pair.getGroups().containsKey(selected)) continue;
-            var positions = state.rackPositions(pair);
+            var positions = state.rackPositions(pair, AircraftMountPresentation.speed(entity, partialTick));
             for (int index = 0; index < positions.size(); index++) {
                 Vec3 point = positions.get(index);
                 if (state.storePresent(pair, index) && onWing(entity, point, side))
@@ -162,7 +163,7 @@ final class BvpSuspendedStoreRenderer {
         groups.clear(); modelBindings.clear();
     }
 
-    void render(GeoVehicleEntity entity, PoseStack pose, MultiBufferSource buffers, int light, float alpha) {
+    void render(GeoVehicleEntity entity, PoseStack pose, MultiBufferSource buffers, int light, float alpha, float partialTick) {
         AircraftArmamentSnapshot state = AircraftArmamentClient.getVehicleSnapshot(entity);
         if (state == null || alpha <= 0 || entity.getAircraftWreckImpactTime() >= 0) return;
         for (AircraftMountView pair : state.getDefinition().getMounts()) {
@@ -173,7 +174,7 @@ final class BvpSuspendedStoreRenderer {
             StoreAsset asset = asset(store);
             PolyMeshModel mesh = asset == null ? null : asset.ready();
             if (mesh == null && (store.getModel() != null || store.getItem() == null)) continue;
-            var positions = state.rackPositions(pair);
+            var positions = state.rackPositions(pair, AircraftMountPresentation.speed(entity, partialTick));
             int missing = AircraftWreckBreakup.mask(entity);
             for (int index = 0; index < positions.size(); index++) {
                 Vec3 point = positions.get(index);

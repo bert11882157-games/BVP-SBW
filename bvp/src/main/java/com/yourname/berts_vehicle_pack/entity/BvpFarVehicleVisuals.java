@@ -13,6 +13,20 @@ public final class BvpFarVehicleVisuals {
     public static final String SPENT_ERA = "bvp.spent_era";
     public static final String LEFT_TRACK_BROKEN = "bvp.left_track_broken";
     public static final String RIGHT_TRACK_BROKEN = "bvp.right_track_broken";
+    public static final String ENGINE_DISABLED = "bvp.engine_disabled";
+    public static final String ENGINE_RUNNING = "bvp.engine_running";
+
+    public static boolean engineDisabled(ArmoredVehicleEntity entity) {
+        FarVehiclePresentation far = FarVehicleCopies.frame(entity);
+        return far == null ? entity.isEngineDisabled()
+                : "true".equals(far.getSnapshot().getVisualData().get(ENGINE_DISABLED));
+    }
+
+    public static boolean engineRunning(ArmoredVehicleEntity entity) {
+        FarVehiclePresentation far = FarVehicleCopies.frame(entity);
+        return far == null ? entity.engineRunning()
+                : "true".equals(far.getSnapshot().getVisualData().get(ENGINE_RUNNING));
+    }
 
     private BvpFarVehicleVisuals() {
     }

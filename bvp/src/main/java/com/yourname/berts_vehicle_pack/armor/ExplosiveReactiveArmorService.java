@@ -38,7 +38,7 @@ final class ExplosiveReactiveArmorService {
 
         Vec3 eraImpact = target.armorLocalPointToWorld(eraHit.hullImpact);
         target.vehicle().bvpDetonateEraBrick(era.name);
-        BvpLeanImpactEffects.spawnTinyExplosion(target.level(), eraImpact);
+        BvpLeanImpactEffects.spawnEraExplosion(target.level(), eraImpact);
         ArmorSoundService.play(target.level(), eraImpact, ArmorSoundService.PENETRATION_SOUND, 0.55F, 1.35F);
 
         return new Result(true, era, eraImpact, reducedTrace, shot, reducedShot, appliedProtectionMm);

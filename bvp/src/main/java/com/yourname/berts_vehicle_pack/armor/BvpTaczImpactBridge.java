@@ -1,9 +1,13 @@
 package com.yourname.berts_vehicle_pack.armor;
 
 import com.atsuishio.superbwarfare.api.projectile.ProjectileProfiles;
+import com.atsuishio.superbwarfare.api.projectile.ProjectileCalibers;
+import com.atsuishio.superbwarfare.api.projectile.NativeVehicleHitFeedback;
 import com.atsuishio.superbwarfare.diagnostics.EliteDiagnostics;
+import com.yourname.berts_vehicle_pack.effects.BvpVehicleHitEffects;
 import com.tacz.guns.api.TimelessAPI;
 import com.tacz.guns.entity.EntityKineticBullet;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 
@@ -12,6 +16,11 @@ public final class BvpTaczImpactBridge {
     private BvpTaczImpactBridge() { }
 
     public static void register() {
+        ProjectileCalibers.register(new ResourceLocation("berts_vehicle_pack", "tacz_ammo_calibers"),
+                projectile -> projectile instanceof EntityKineticBullet bullet
+                        ? BvpTaczCalibers.forAmmo(bullet.getAmmoId()) : null);
+        NativeVehicleHitFeedback.register(new ResourceLocation("berts_vehicle_pack", "vehicle_hit_feedback"),
+                BvpVehicleHitEffects::acceptedHit);
         MinecraftForge.EVENT_BUS.addListener(BvpTaczImpactBridge::join);
         BvpTaczAtScenarios.register();
     }

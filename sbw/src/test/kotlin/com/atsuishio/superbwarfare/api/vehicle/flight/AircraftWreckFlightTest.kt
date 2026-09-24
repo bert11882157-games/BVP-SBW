@@ -5,9 +5,80 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
 class AircraftWreckFlightTest {
-    @Test fun breakupIsDisabledForEveryWreckIdentity() {
+    @Test fun tornWingsBleedForwardSpeedWithoutDeletingInitialMomentumOrSlowingTheFall() {
+        for(side in 1..3) {
+            var state=input(Vec3(4.0,0.0,2.0)).copy(wreck=false)
+            val speed=state.previousMotion.horizontalDistance()
+            repeat(100) { tick ->
+                val next=AircraftWreckFlightStrategy.step(state,tick,1,false,detachedWings=side)
+                if(tick==0) assertTrue(next.motion.horizontalDistance()>speed*.98)
+                assertTrue(next.motion.horizontalDistance()<state.previousMotion.horizontalDistance())
+                assertEquals(0.0,next.thrust); assertEquals(0.0,next.throttle)
+                state=state.copy(previousMotion=next.motion)
+            }
+            assertTrue(state.previousMotion.horizontalDistance()/speed in .35.. .46,
+                "five seconds of wing-loss drag must visibly reduce speed")
+            assertTrue(state.previousMotion.y < -1,"lost lift still accelerates the fall")
+        }
+    }
+    @Test fun retainedFuselageDeflectsGlancingImpactsWithoutLaunchingVerticalCrashesUpward() {
+        val direct=AircraftFuselageWreck.bounce(Vec3(0.0,-8.0,0.0),0)
+        assertEquals(Vec3.ZERO,direct)
+        val velocity=Vec3(3.0,-.5,1.0)
+        val slide=AircraftFuselageWreck.bounce(velocity,0)
+        assertTrue(slide.y in 0.0.. .035)
+        assertTrue(slide.horizontalDistance()>velocity.horizontalDistance()*.9)
+        assertTrue(slide.lengthSqr()<velocity.lengthSqr())
+    }
+    @Test fun delayedWingLossIsBoundedSingleSidedAndDoesNotRestartAfterImpact() {
         for (seed in 0L..1000L) {
-            assertEquals(0, AircraftWreckBreakup.mask(java.util.UUID(seed, seed * 193)))
+            val id = java.util.UUID(seed, seed * 193)
+            val delay = AircraftWreckBreakup.delayTicks(id)
+            assertTrue(delay in 40..200)
+            if (AircraftWreckBreakup.mask(id) != 0) continue
+            assertEquals(0, AircraftWreckBreakup.timedMask(id, delay - 1L, false))
+            assertTrue(AircraftWreckBreakup.timedMask(id, delay.toLong(), false) in 1..2)
+            assertEquals(0, AircraftWreckBreakup.timedMask(id, delay + 20L, true))
+        }
+    }
+    @Test fun survivingWingLossIgnoresPilotButKeepsAircraftHealthOutsideFlightOwnership() {
+        val live = input().copy(wreck = false)
+        val a = AircraftWreckFlightStrategy.step(live, 40, 1, false, detachedWings = 1)
+        val b = AircraftWreckFlightStrategy.step(live.copy(pitchInput = 0.0, rollInput = 0.0,
+            throttleInput = 0.0, occupied = false), 40, 1, false, detachedWings = 1)
+        assertEquals(a, b)
+        assertTrue(a.motion.horizontalDistance() > 2.0)
+    }
+    @Test fun wingLossDistributionAndServerRollAgree() {
+        val distribution = (0..99).map(AircraftWreckBreakup::outcome).groupingBy { it }.eachCount()
+        assertEquals(mapOf(1 to 25, 2 to 25, 3 to 20, 0 to 30), distribution)
+        val state = input()
+        val left = AircraftWreckFlightStrategy.step(state, 45, 1, false, detachedWings = 1)
+        val right = AircraftWreckFlightStrategy.step(state, 45, 1, false, detachedWings = 2)
+        assertTrue(net.minecraft.util.Mth.wrapDegrees(left.bodyRoll - state.bodyRollDegrees) > 5)
+        assertTrue(net.minecraft.util.Mth.wrapDegrees(right.bodyRoll - state.bodyRollDegrees) < -5)
+        assertEquals(left.motion, right.motion, "roll cannot erase world-space inertia")
+        var both = state
+        repeat(120) { tick ->
+            val result = AircraftWreckFlightStrategy.step(both, tick, 1, false, detachedWings = 3)
+            both = both.copy(previousMotion = result.motion, bodyPitchDegrees = result.bodyPitch.toDouble(),
+                bodyRollDegrees = result.bodyRoll.toDouble(), bodyYawDegrees = result.bodyYaw.toDouble())
+        }
+        assertTrue(both.bodyPitchDegrees > 75)
+        assertTrue(both.previousMotion.y < -5)
+    }
+    @Test fun detachedSideDropsInTheActualHullFrameAndLiveWheelContactRetainsMomentum() {
+        for (yaw in listOf(-175.0, 0.0, 90.0)) for (side in 1..2) {
+            val state = input().copy(wreck = false, bodyYawDegrees = yaw,
+                bodyPitchDegrees = 0.0, bodyRollDegrees = 0.0, onGround = true)
+            val result = AircraftWreckFlightStrategy.step(state, 45, 1, false, detachedWings = side)
+            val pose = com.atsuishio.superbwarfare.api.vehicle.pose.VehiclePoseSnapshot(
+                0, 0, yaw.toFloat(), result.bodyPitch, result.bodyRoll, 0f, 0f, 0.0, 0.0, 0.0, null)
+            val frame = pose.applyBaseAttitude(org.joml.Matrix4d().rotateY(Math.toRadians(-yaw)))
+            val lost = frame.transformPosition(org.joml.Vector3d(if (side == 1) -3.0 else 3.0, 0.0, 0.0))
+            val kept = frame.transformPosition(org.joml.Vector3d(if (side == 1) 3.0 else -3.0, 0.0, 0.0))
+            assertTrue(lost.y < kept.y, "missing wing must fall in hull coordinates")
+            assertTrue(result.motion.horizontalDistance() > 2.0, "first wheel contact must not stop a live crash")
         }
     }
     @Test fun wreckRetainsAtLeastNinetyPercentForwardMomentumForTenSecondsAtDifferentSpeeds() {
@@ -91,11 +162,14 @@ class AircraftWreckFlightTest {
         val falling = sample.copy(previousMotion = Vec3(2.0, 0.0, 0.0), gravityPerTick =
             AircraftWreckFlightStrategy.gravityPerTick(1.2, 0.06))
         assertEquals(-0.003, AircraftWreckFlightStrategy.step(falling, 20, 1, false).motion.y)
-        for (contact in listOf(sample.copy(onGround = true), sample.copy(inFluid = true))) {
+        for (contact in listOf(sample.copy(onGround = true))) {
             val result = AircraftWreckFlightStrategy.step(contact, 50, -1, false)
             assertEquals(Vec3.ZERO, result.motion)
             assertEquals(175f, result.bodyYaw)
         }
+        val water=AircraftWreckFlightStrategy.step(sample.copy(inFluid=true,previousMotion=Vec3(2.0,0.0,0.0)),50,-1,false,detachedWings=1)
+        assertTrue(water.motion.y<0,"lost wing must not freeze the wreck at water level")
+        assertTrue(water.motion.horizontalDistance()>0)
         assertEquals(Vec3.ZERO, AircraftWreckFlightStrategy.step(sample, 50, -1, true).motion)
     }
 }

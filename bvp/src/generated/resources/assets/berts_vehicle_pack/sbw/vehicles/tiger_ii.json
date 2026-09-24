@@ -280,5 +280,27 @@
         ]
       }
     }
+  },
+  "EngineExhaust": {
+    "Schema": "berts_vehicle_pack:engine_exhaust_origins/v1",
+    "Parent": "HULL",
+    "Origins": [
+      {
+        "Id": "engine_exhaust_000",
+        "Position": [
+          -0.30872,
+          1.7949,
+          3.0417
+        ]
+      },
+      {
+        "Id": "engine_exhaust_001",
+        "Position": [
+          0.30872,
+          1.7949,
+          3.0417
+        ]
+      }
+    ]
   }
 }

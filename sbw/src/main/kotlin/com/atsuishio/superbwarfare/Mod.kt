@@ -108,6 +108,7 @@ class Mod {
 
     private fun onCommonSetup(event: FMLCommonSetupEvent) {
         NetworkRegistry.register()
+        com.atsuishio.superbwarfare.compat.SoundBarrierCompat.commonSetup()
         MOD_BUS.post(RegisterContainersEvent())
         event.enqueueWork { ModGameRules.bootstrap() }
     }

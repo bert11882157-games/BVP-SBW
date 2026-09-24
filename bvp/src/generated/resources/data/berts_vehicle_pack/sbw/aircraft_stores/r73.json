@@ -1,0 +1,26 @@
+{
+  "Schema": 1,
+  "Name": "R-73 · infrared",
+  "Category": "AIR_TO_AIR",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/r73.geo.json",
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/r73.png",
+  "Capacity": 1,
+  "MassKg": 105,
+  "Guidance": {
+    "Mode": "INFRARED",
+    "LockTicks": 45,
+    "Range": 550,
+    "ConeDegrees": 40,
+    "CountermeasureVulnerability": 0.75
+  },
+  "Flight": {
+    "InitialSpeed": 0.5,
+    "MaxSpeed": 5.5,
+    "AccelerationPerTick": 0.1,
+    "TurnDegreesPerSecond": 95,
+    "Damage": 45,
+    "BlastRadius": 3
+  },
+  "AmmoItem": "superbwarfare:small_air_to_air_missile",
+  "MaxPerPylon": 1
+}

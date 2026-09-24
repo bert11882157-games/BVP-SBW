@@ -5,7 +5,70 @@
     "Cannon"
   ],
   "SuspendedWeapons": [],
-  "Pairs": [],
+  "Pairs": [
+    {
+      "Id": "inner",
+      "Name": "Inner wing rail",
+      "Left": [
+        -1.95,
+        1.31,
+        -0.8
+      ],
+      "Right": [
+        1.95,
+        1.31,
+        -0.8
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/r13m1",
+        "berts_vehicle_pack:r3r",
+        "berts_vehicle_pack:r60"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 150
+    },
+    {
+      "Id": "middle",
+      "Name": "Middle wing rail",
+      "Left": [
+        -2.76,
+        1.06,
+        -1.6
+      ],
+      "Right": [
+        2.76,
+        1.06,
+        -1.6
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/r13m1",
+        "berts_vehicle_pack:r3r",
+        "berts_vehicle_pack:r60"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 150
+    },
+    {
+      "Id": "outer",
+      "Name": "Outer wing rail",
+      "Left": [
+        -3.08,
+        1.29,
+        -1.6
+      ],
+      "Right": [
+        3.08,
+        1.29,
+        -1.6
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/r13m1",
+        "berts_vehicle_pack:r60"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 150
+    }
+  ],
   "StoreGroups": {
     "berts_vehicle_pack:modeled_store/mig_21bis/r60mk": [
       "suspended_r60mk_hull"
@@ -21,7 +84,7 @@
   "Singles": [
     {
       "Id": "internal_bay",
-      "Name": "Bomb bay / internal stores",
+      "Name": "Armament",
       "Position": [
         0,
         0.6,
@@ -30,17 +93,11 @@
       "Internal": true,
       "MaxPylonMassKg": 1500,
       "AllowedStores": [
-        "berts_vehicle_pack:reference/dumb_bomb_250kg",
-        "berts_vehicle_pack:reference/laser_bomb_250kg",
-        "berts_vehicle_pack:reference/gps_bomb_250kg",
         "berts_vehicle_pack:fa18e/bomb_500kg_dumb_1",
-        "berts_vehicle_pack:fa18e/bomb_500kg_dumb_2",
         "berts_vehicle_pack:fa18e/bomb_500kg_laser_1",
-        "berts_vehicle_pack:fa18e/bomb_500kg_laser_2",
-        "berts_vehicle_pack:fa18e/bomb_500kg_gps_1",
-        "berts_vehicle_pack:fa18e/bomb_500kg_gps_2",
-        "berts_vehicle_pack:reference/dumb_bomb_100kg"
-      ]
+        "berts_vehicle_pack:fa18e/bomb_500kg_gps_1"
+      ],
+      "QuantitySelectable": false
     }
   ]
 }

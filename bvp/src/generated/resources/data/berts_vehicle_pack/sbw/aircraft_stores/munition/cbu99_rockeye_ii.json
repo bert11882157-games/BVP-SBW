@@ -1,0 +1,29 @@
+{
+  "Schema": 1,
+  "Name": "CBU-99 Rockeye II · anti-armor bomblets",
+  "Category": "BOMB",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/cbu99.geo.json",
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/cbu99.png",
+  "Capacity": 1,
+  "MassKg": 230,
+  "Bomb": {
+    "Mode": "DUMB",
+    "Gravity": 0.08,
+    "DragMultiplier": 1,
+    "TurnDegreesPerTick": 0,
+    "BlastRadius": 0,
+    "BlastDamage": 0,
+    "Cluster": {
+      "Count": 24,
+      "ReleaseHeight": 12,
+      "SpreadSpeed": 0.45,
+      "BombletDamage": 0,
+      "BombletRadius": 1,
+      "LifetimeTicks": 100,
+      "Mode": "HEAT",
+      "BombletProfile": "berts_vehicle_pack:aircraft_bombs/cbu99_heat"
+    }
+  },
+  "AmmoItem": "superbwarfare:small_freefall_bomb",
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_bombs/cbu99_rockeye_ii"
+}

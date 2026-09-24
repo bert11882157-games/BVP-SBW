@@ -20,7 +20,7 @@
         -0.094
       ],
       "AllowedStores": [
-        "berts_vehicle_pack:reference/aim9l"
+        "berts_vehicle_pack:munition/aim9l"
       ],
       "MaxWeaponsPerPylon": 1,
       "MaxPylonMassKg": 250
@@ -39,8 +39,10 @@
         -0.705
       ],
       "AllowedStores": [
-        "berts_vehicle_pack:reference/aim9l",
-        "berts_vehicle_pack:reference/dumb_bomb_250kg"
+        "berts_vehicle_pack:munition/mk82",
+        "berts_vehicle_pack:munition/mk82_x2",
+        "berts_vehicle_pack:munition/mk82_snakeeye",
+        "berts_vehicle_pack:munition/mk82_snakeeye_x2"
       ],
       "MaxWeaponsPerPylon": 3,
       "MaxPylonMassKg": 1000
@@ -59,8 +61,10 @@
         0.282
       ],
       "AllowedStores": [
-        "berts_vehicle_pack:reference/aim9l",
-        "berts_vehicle_pack:reference/dumb_bomb_250kg"
+        "berts_vehicle_pack:munition/mk82",
+        "berts_vehicle_pack:munition/mk82_x2",
+        "berts_vehicle_pack:munition/mk82_snakeeye",
+        "berts_vehicle_pack:munition/mk82_snakeeye_x2"
       ],
       "MaxWeaponsPerPylon": 3,
       "MaxPylonMassKg": 1000
@@ -77,7 +81,10 @@
       ],
       "Internal": false,
       "AllowedStores": [
-        "berts_vehicle_pack:reference/dumb_bomb_250kg"
+        "berts_vehicle_pack:munition/mk82",
+        "berts_vehicle_pack:munition/mk82_x2",
+        "berts_vehicle_pack:munition/mk82_snakeeye",
+        "berts_vehicle_pack:munition/mk82_snakeeye_x2"
       ],
       "MaxWeaponsPerPylon": 3,
       "MaxPylonMassKg": 1000

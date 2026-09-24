@@ -1,0 +1,69 @@
+{
+  "id": "me_262_50mm",
+  "model_scale": 1,
+  "ap_penetration_mm": 500,
+  "chemical_penetration_mm": 700,
+  "fallback_incoming_penetration_mm": 500,
+  "atgm_tandem": false,
+  "impact_tolerance": 0.25,
+  "internal_ray_length": 10,
+  "unboxed_hits_penetrate": true,
+  "plates": [],
+  "sensitive_internals": [],
+  "engines": [],
+  "ammo_racks": [],
+  "tracks": [],
+  "modules": [],
+  "explosive_reactive_armor": [],
+  "sbw_obb": [
+    {
+      "Position": [
+        0,
+        1.612636,
+        0.53078
+      ],
+      "Size": [
+        0.44648,
+        0.772754,
+        3.902799
+      ]
+    },
+    {
+      "Position": [
+        0,
+        1.620442,
+        -3.885938
+      ],
+      "Size": [
+        0.44648,
+        0.296613,
+        0.51392
+      ]
+    },
+    {
+      "Position": [
+        -2.25129,
+        0.839882,
+        1.04595
+      ],
+      "Size": [
+        1.849458,
+        0.607614,
+        2.012621
+      ]
+    },
+    {
+      "Position": [
+        2.25129,
+        0.839882,
+        1.04595
+      ],
+      "Size": [
+        1.849458,
+        0.607614,
+        2.012621
+      ]
+    }
+  ],
+  "schema": "berts_vehicle_pack:armor_profile/v1"
+}

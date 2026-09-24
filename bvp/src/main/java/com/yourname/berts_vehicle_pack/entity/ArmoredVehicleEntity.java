@@ -85,6 +85,11 @@ public abstract class ArmoredVehicleEntity extends GeoVehicleEntity implements V
     }
 
     @Override
+    public boolean allowsTurretEjection() {
+        return !com.yourname.berts_vehicle_pack.effects.BvpAbramsCookoff.applies(this);
+    }
+
+    @Override
     public boolean usesDetailedProjectileCollision() {
         return super.usesDetailedProjectileCollision() || BvpProjectileCollision.supports(armorProfileId);
     }
@@ -505,12 +510,16 @@ public abstract class ArmoredVehicleEntity extends GeoVehicleEntity implements V
     public final Map<String, String> captureFarRenderVisuals() {
         if (this instanceof com.yourname.berts_vehicle_pack.entity.helicopter.AuthoredHelicopter helicopter) {
             return Map.of(BvpFarVehicleVisuals.SPENT_ERA, getBvpSpentEraBricks(),
+                    BvpFarVehicleVisuals.ENGINE_DISABLED, Boolean.toString(isEngineDisabled()),
+                    BvpFarVehicleVisuals.ENGINE_RUNNING, Boolean.toString(engineRunning()),
                     BvpFarVehicleVisuals.ROTOR_ACTIVE, Boolean.toString(BvpFarVehicleVisuals.rotorActive(this)),
                     BvpFarVehicleVisuals.ROTOR_SPOOL, Double.toString(helicopter.getBvpRotorLiftPower()),
                     BvpFarVehicleVisuals.LEFT_TRACK_BROKEN, Boolean.toString(isLeftTrackBroken()),
                     BvpFarVehicleVisuals.RIGHT_TRACK_BROKEN, Boolean.toString(isRightTrackBroken()));
         }
         return Map.of(BvpFarVehicleVisuals.SPENT_ERA, getBvpSpentEraBricks(),
+                BvpFarVehicleVisuals.ENGINE_DISABLED, Boolean.toString(isEngineDisabled()),
+                BvpFarVehicleVisuals.ENGINE_RUNNING, Boolean.toString(engineRunning()),
                 BvpFarVehicleVisuals.ROTOR_ACTIVE, Boolean.toString(BvpFarVehicleVisuals.rotorActive(this)),
                 BvpFarVehicleVisuals.LEFT_TRACK_BROKEN, Boolean.toString(isLeftTrackBroken()),
                 BvpFarVehicleVisuals.RIGHT_TRACK_BROKEN, Boolean.toString(isRightTrackBroken()));
@@ -735,6 +744,22 @@ public abstract class ArmoredVehicleEntity extends GeoVehicleEntity implements V
 
     public final void bvpOnEngine1Damaged(Vec3 hitVec) {
         this.onEngine1Damaged(hitVec);
+    }
+
+    @Override
+    public void onEngine1Damaged(Vec3 hitVec) {
+        // Ground engine smoke and intermittent flame originate at the authored exhaust outlets.
+        // The native module effect would add an unrelated vanilla smoke/spark plume in the hull.
+        if (!usesBvpGroundMobilityLimits()) {
+            super.onEngine1Damaged(hitVec);
+        }
+    }
+
+    @Override
+    public void onEngine2Damaged(Vec3 hitVec) {
+        if (!usesBvpGroundMobilityLimits()) {
+            super.onEngine2Damaged(hitVec);
+        }
     }
 
     public final void bvpOnEngine2Damaged(Vec3 hitVec) {

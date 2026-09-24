@@ -310,10 +310,10 @@
             "Name": "weapon.berts_vehicle_pack.9m119m1_tandem",
             "Crosshair": "@VehicleCommonMissile",
             "SoundInfo": {
-              "Fire1PGain": 0.35,
-              "Fire3PGain": 0.35,
-              "Fire3PFarGain": 0.35,
-              "Fire3PVeryFarGain": 0.35,
+              "Fire1PGain": 0.7,
+              "Fire3PGain": 0.7,
+              "Fire3PFarGain": 0.7,
+              "Fire3PVeryFarGain": 0.7,
               "Fire1P": "superbwarfare:bmp_2_missile_fire_1p",
               "Fire3P": "superbwarfare:bmp_2_missile_fire_3p",
               "Fire3PFar": "superbwarfare:t_90a_far",
@@ -412,6 +412,7 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:projectile",
@@ -442,19 +443,18 @@
                 }
               ]
             },
-            "ShootShake": [
-              0,
-              0,
-              0
-            ],
             "NominalBallistics": {
               "Supported": true,
               "ProjectileType": "superbwarfare:projectile",
               "ProjectileProfile": "berts_vehicle_pack:t72b3_ubh_cope/machinegun/ammo_00_russian_762_ap_i",
               "ProjectileLife": 400
-            }
-          },
-          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition"
+            },
+            "ShootShake": [
+              0,
+              0,
+              0
+            ]
+          }
         }
       ],
       "Projectile": {
@@ -524,20 +524,10 @@
       "SoundRadius": 12,
       "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/gun_7_62mm.png",
       "HeatPerShoot": 0,
-      "NominalBallistics": {
-        "Supported": true,
-        "ProjectileType": "superbwarfare:projectile",
-        "ProjectileProfile": "berts_vehicle_pack:t72b3_ubh_cope/machinegun/default",
-        "ProjectileLife": 400
-      },
-      "ShootShake": [
-        0,
-        0,
-        0
-      ],
       "ProjectileBeltAmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:projectile",
@@ -557,6 +547,17 @@
             ]
           }
         }
+      ],
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "superbwarfare:projectile",
+        "ProjectileProfile": "berts_vehicle_pack:t72b3_ubh_cope/machinegun/default",
+        "ProjectileLife": 400
+      },
+      "ShootShake": [
+        0,
+        0,
+        0
       ]
     },
     "PassengerMachineGun": {
@@ -582,6 +583,7 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:projectile",
@@ -625,19 +627,18 @@
                 }
               ]
             },
-            "ShootShake": [
-              8,
-              10,
-              6
-            ],
             "NominalBallistics": {
               "Supported": true,
               "ProjectileType": "superbwarfare:projectile",
               "ProjectileProfile": "berts_vehicle_pack:t72b3_ubh_cope/passengermachinegun/ammo_00_russian_127_bzt44_api_t_1",
               "ProjectileLife": 400
-            }
-          },
-          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition"
+            },
+            "ShootShake": [
+              8,
+              10,
+              6
+            ]
+          }
         }
       ],
       "ShootPos": {
@@ -693,20 +694,10 @@
       "Magazine": 100,
       "NormalReloadTime": 100,
       "EmptyReloadTime": 100,
-      "NominalBallistics": {
-        "Supported": true,
-        "ProjectileType": "superbwarfare:projectile",
-        "ProjectileProfile": "berts_vehicle_pack:t72b3_ubh_cope/passengermachinegun/default",
-        "ProjectileLife": 400
-      },
-      "ShootShake": [
-        8,
-        10,
-        6
-      ],
       "ProjectileBeltAmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:projectile",
@@ -728,6 +719,7 @@
         },
         {
           "Ammo": "superbwarfare:small_shell_aa",
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:projectile",
@@ -749,6 +741,7 @@
         },
         {
           "Ammo": "superbwarfare:small_shell_gs",
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:projectile",
@@ -768,6 +761,17 @@
             ]
           }
         }
+      ],
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "superbwarfare:projectile",
+        "ProjectileProfile": "berts_vehicle_pack:t72b3_ubh_cope/passengermachinegun/default",
+        "ProjectileLife": 400
+      },
+      "ShootShake": [
+        8,
+        10,
+        6
       ]
     }
   },

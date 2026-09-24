@@ -4,6 +4,7 @@ import com.atsuishio.superbwarfare.api.aircraft.AircraftProjectileDamage;
 import com.atsuishio.superbwarfare.api.aircraft.AircraftProjectileDamageOverride;
 import com.atsuishio.superbwarfare.api.projectile.ProfiledProjectile;
 import com.atsuishio.superbwarfare.api.projectile.FarProjectileAccess;
+import com.atsuishio.superbwarfare.api.projectile.NativeVehicleHitFeedback;
 import com.atsuishio.superbwarfare.api.projectile.ProjectileProfiles;
 import com.atsuishio.superbwarfare.api.projectile.ResolvedProjectileProfile;
 import com.atsuishio.superbwarfare.api.projectile.impact.ProjectileImpactContext;
@@ -13,6 +14,7 @@ import com.atsuishio.superbwarfare.compat.tacz.TaczAircraftDamage;
 import com.atsuishio.superbwarfare.diagnostics.EliteDiagnostics;
 import com.atsuishio.superbwarfare.api.projectile.ProjectileCollisionTarget;
 import com.atsuishio.superbwarfare.entity.OBBEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity;
 import com.atsuishio.superbwarfare.entity.mixin.OBBHitter;
 import com.atsuishio.superbwarfare.tools.OBB;
 import com.atsuishio.superbwarfare.world.phys.ProjectileContact;
@@ -83,6 +85,9 @@ public abstract class EntityKineticBulletMixin extends Projectile
             EliteDiagnostics.record(hit.getEntity(), "hitreg", "tacz_dispatch", "projectile", getUUID(),
                     "point", hit.getLocation(), "start", start, "end", end,
                     "part", contact == null ? OBB.Part.EMPTY : contact.part(), "profile", sbw$profileId);
+        }
+        if (sbw$profileId == null && !isRemoved() && hit.getEntity() instanceof VehicleEntity vehicle) {
+            NativeVehicleHitFeedback.accepted(this, vehicle);
         }
         if (AircraftProjectileDamage.isAircraft(hit.getEntity())) {
             if (isRemoved()) { callback.cancel(); return; }

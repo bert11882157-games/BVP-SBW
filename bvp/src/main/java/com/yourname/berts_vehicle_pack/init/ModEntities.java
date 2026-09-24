@@ -1,6 +1,7 @@
 package com.yourname.berts_vehicle_pack.init;
 
 import com.yourname.berts_vehicle_pack.BertsVehiclePack;
+import com.yourname.berts_vehicle_pack.entity.Ags30Entity;
 import com.yourname.berts_vehicle_pack.entity.Amx10rcEntity;
 import com.yourname.berts_vehicle_pack.entity.Bm21GradEntity;
 import com.yourname.berts_vehicle_pack.entity.Bmp2Entity;
@@ -207,6 +208,8 @@ public class ModEntities {
             ENTITIES.register("ah_1g_cobra", () -> vehicle(Ah1gCobraEntity::new, 2.6f, 2.15f, "ah_1g_cobra"));
 
     // Fixed mounted platforms and the fixed-wing MiG-19S.
+    public static final RegistryObject<EntityType<Ags30Entity>> AGS_30 =
+            ENTITIES.register("ags_30", () -> vehicle(Ags30Entity::new, 1.2f, 1.4f, "ags_30"));
     public static final RegistryObject<EntityType<Spg9TripodEntity>> SPG9_TRIPOD =
             ENTITIES.register("spg9_tripod", () -> vehicle(Spg9TripodEntity::new, 2.4f, 1.5f, "spg9_tripod"));
     public static final RegistryObject<EntityType<KordTripodEntity>> KORD_TRIPOD =
@@ -553,6 +556,15 @@ public class ModEntities {
                     (type, level) -> new AuthoredFixedWingAircraft(type, level, "b_1b"),
                     41.80000000f, 10.35697300f, "b_1b"));
 
+    public static final RegistryObject<EntityType<AuthoredFixedWingAircraft>> ME_262_ELITE =
+            ENTITIES.register("me_262_elite", () -> vehicle(
+                    (type, level) -> new AuthoredFixedWingAircraft(type, level, "me_262_elite"),
+                    12.5f, 3.7f, "me_262_elite"));
+    public static final RegistryObject<EntityType<AuthoredFixedWingAircraft>> ME_262_50MM =
+            ENTITIES.register("me_262_50mm", () -> vehicle(
+                    (type, level) -> new AuthoredFixedWingAircraft(type, level, "me_262_50mm"),
+                    12.5f, 3.7f, "me_262_50mm"));
+
     public static final RegistryObject<EntityType<FittedGroundVehicleEntity>> CHALLENGER_2 =
             ENTITIES.register("challenger_2", () -> vehicle(
                     (type, level) -> new FittedGroundVehicleEntity(type, level, "challenger_2"),
@@ -569,6 +581,14 @@ public class ModEntities {
             ENTITIES.register("mbt_70", () -> vehicle(
                     (type, level) -> new FittedGroundVehicleEntity(type, level, "mbt_70"),
                     9.15977f, 3.53857f, "mbt_70"));
+    public static final RegistryObject<EntityType<FittedGroundVehicleEntity>> NINE_P_148 =
+            ENTITIES.register("9p148", () -> vehicle(
+                    (type, level) -> new FittedGroundVehicleEntity(type, level, "9p148"),
+                    2.5f, 2.5f, "9p148"));
+    public static final RegistryObject<EntityType<FittedGroundVehicleEntity>> GEPARD =
+            ENTITIES.register("gepard", () -> vehicle(
+                    (type, level) -> new FittedGroundVehicleEntity(type, level, "gepard"),
+                    3.4f, 3.5f, "gepard"));
     public static final RegistryObject<EntityType<FittedGroundVehicleEntity>> AML_90 =
             ENTITIES.register("aml_90", () -> vehicle(
                     (type, level) -> new FittedGroundVehicleEntity(type, level, "aml_90"),

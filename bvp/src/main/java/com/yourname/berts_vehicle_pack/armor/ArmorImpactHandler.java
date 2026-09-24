@@ -8,7 +8,10 @@ import com.atsuishio.superbwarfare.api.projectile.impact.VehicleImpactVolumes;
 import com.atsuishio.superbwarfare.api.projectile.ProjectileProfiles;
 import com.atsuishio.superbwarfare.entity.projectile.CannonShellEntity;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 
 public final class ArmorImpactHandler {
     private static final ResourceLocation RESOLVER_ID =
@@ -26,6 +29,11 @@ public final class ArmorImpactHandler {
         BvpDroneRpgImpactBridge.register();
         VehicleImpactVolumes.register(VOLUME_PROVIDER_ID, BvpImpactVolumeQuery::create);
         ProjectileImpactResolver.register(RESOLVER_ID, INSTANCE::resolve);
+    }
+
+    /** Call only after an external rocket system accepts a server-side collision. */
+    public static int applyExternalRocketEra(Level level, Entity directTarget, Vec3 acceptedPoint) {
+        return RocketEraImpactService.applyExternal(level, directTarget, acceptedPoint);
     }
 
     private ProjectileImpactResult resolve(ProjectileImpactContext context) {
@@ -70,7 +78,8 @@ public final class ArmorImpactHandler {
         Projectile projectile = context.getProjectile();
         ProjectileArmorEffect shot = ArmorShotClassifier.classifyBvpImpact(
                 projectile, context.getOwner(), context.getHitVec());
-        RocketEraImpactService.apply(projectile.m_9236_(), context.getHitVec(), projectile, shot);
+        RocketEraImpactService.apply(projectile.m_9236_(), context.getTarget(),
+                context.getHitVec(), projectile, shot);
     }
 
     private static ProjectileImpactResult resolveBlockImpact(ProjectileImpactContext context) {

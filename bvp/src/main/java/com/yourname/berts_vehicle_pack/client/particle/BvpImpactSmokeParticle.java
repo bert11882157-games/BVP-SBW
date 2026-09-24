@@ -26,10 +26,10 @@ public final class BvpImpactSmokeParticle extends BvpAnimatedParticle {
     public void setDiameter(float diameter) { this.diameter = Math.max(.01f, diameter); updateParticle(); }
     private BvpImpactSmokeParticle(ClientLevel level, double x, double y, double z,
             double vx, double vy, double vz, SpriteSet sprites, boolean wreck) {
-        super(level, x, y, z, vx, vy, vz, wreck ? 50 : 28, sprites);
+        super(level, x, y, z, vx, vy, vz, wreck ? 64 : 28, sprites);
         this.wreck = wreck;
-        f_172258_ = .96f;
-        f_107226_ = wreck ? -.025f : -.008f;
+        f_172258_ = wreck ? .975f : .96f;
+        f_107226_ = wreck ? -.06f : -.008f;
         updateParticle();
     }
     @Override protected void updateParticle() {

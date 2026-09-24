@@ -1,0 +1,107 @@
+# Protocol=41
+# Protocol 41 adds ID81 compact sonic-boom cone and supports independent pod STABILIZE requests.
+# Protocol 40 adds the authoritative grounded flag to ID70 snapshots for far-render wreck contact smoke.
+# Protocol 39 adds the authoritative fuselage-impact time to ID70 snapshots and native aircraft state; WreckSections definitions describe four fuselage fragments.
+# Protocol 38 adds cycle direction to ID65; pylon Counts in ID73/74 JSON; ID70 snapshots and native entity state carry aircraft wing-loss mask, start tick and inherited momentum. Packet IDs unchanged.
+# Protocol 36 adds ID80: bounded Project Rose friendly occupied vehicle UUID snapshots; ID63 adds AIR_MISSILE and AIRCRAFT_BREAKUP recipes.
+# Protocol 35 adds aircraft countermeasure definition data, movement chaff bit512 and optional opticalZoom, two synchronized vehicle INTs, and configured AAM guidance/lock state. Packet IDs remain unchanged.
+# Superb Warfare packet/schema manifest. Protocol=41. Discriminators are exact for this protocol.
+# Protocol 34 adds FAR_VEHICLE and vehicleUuid to ID63; ID74 snapshots include bounded fired-store counts, and ID2 definitions include authored gear-door hinges, launch offsets and station fire exclusions. Packet IDs are unchanged.
+# Protocol 33 adds aircraft surface module geometry and native articulation channels to vehicle definitions.
+# Protocol 32 removes forced cover streaming and terrain draw gates; IDs75-78 retain their layouts with empty terrain plans. Normal terrain depth provides occlusion.
+# Protocol 31 adds bounded visible-vehicle priorities and camera offsets to ID75; vehicle membership and chunk selection remain server-owned.
+# Protocol 30 uses five-times-distance acquisition with retained membership and raises terrain collections to 2048 chunks; packet IDs and field layouts are unchanged.
+# Protocol 29 adds optional single aircraft mounts to ID74 armament definition snapshots; paired mounts and packet IDs are unchanged.
+# Protocol 27 acknowledges received terrain for snapshot delivery; camera-specific section meshes guard every far draw.
+# Protocol 26 scopes ID70 to terrain token/revision and adds bounded terrain request/plan/chunk/readiness IDs75-78.
+# Protocol 25 replaces ID41 hold-to-dismount with authenticated double-tap physical edges.
+# Protocol 24 appends gesture-qualified inversion request metadata to pilot intent IDs 71/72.
+# Protocol 21 adds accepted wheel braking to fixed-wing entity-data instruments (schema 3).
+# limits: TINY=8192/64/256/0/0/0; CONTROL=32768/512/512/0/0/0; PRESENTATION=131072/2048/2048/0/0/0; NBT_STATE=524288/2048/512/262144/0/0; CONTACT_STATE=1048576/2048/512/131072/0/0; DATASET=1048576/4096/512/0/1048576/8388608
+# Aircraft limits: AIRCRAFT_REQUEST=16384/32/4096/0/0/0; AIRCRAFT_STATE=262144/32/65536/0/0/0
+# Far vehicle limits: FAR_RENDER=262144/256/8192/0/0/0; FAR_TERRAIN=1048576/2048/256/0/0/0; FAR_TERRAIN_CONTROL=32768/2048/256/0/0/0
+# limits columns are maxWireBytes/maxCollectionElements/maxStringChars/maxNbtBytes/maxCompressedBytes/maxDecompressedBytes.
+# FiredVisualMessage frame-reference names are additionally capped at 128 characters and slot indexes at 2047.
+id	direction	type	since	deprecated	limits	delivery	priority	ratePerSecond	burst	handlerOwner	feature
+0	PLAY_TO_CLIENT	ClientIndicatorMessage	1	-	TINY	REPLACEABLE_PRESENTATION	P2	0	0	combat.feedback	legacy
+1	PLAY_TO_CLIENT	ClientSetMotionMessage	1	-	TINY	EXACT_EVENT	P0	0	0	player.motion	legacy
+2	PLAY_TO_CLIENT	DataSyncMessage	1	-	DATASET	BULK_STATE	P0	0	0	data.reload	dataset_sync
+3	PLAY_TO_CLIENT	ClientMotionSyncMessage	1	-	TINY	LATEST_SNAPSHOT	P1	0	0	projectile.motion	legacy
+4	PLAY_TO_CLIENT	ClientPhosphorusFireMessage	1	-	TINY	RELIABLE_EDGE	P1	0	0	combat.effect	legacy
+5	PLAY_TO_CLIENT	ContainerDataMessage	1	-	CONTROL	LATEST_SNAPSHOT	P2	0	0	menu.energy	legacy
+6	PLAY_TO_CLIENT	DrawClientMessage	1	-	TINY	RELIABLE_EDGE	P2	0	0	gun.presentation	legacy
+7	PLAY_TO_CLIENT	FinishAssemblingVehicleMessage	1	-	TINY	EXACT_EVENT	P1	0	0	vehicle.assembly	legacy
+8	PLAY_TO_CLIENT	FiredVisualMessage	5	-	PRESENTATION	EXACT_EVENT	P1	0	0	weapon.fired_visual	fired_visual
+9	PLAY_TO_CLIENT	LivingGunKillMessage	1	-	TINY	REPLACEABLE_PRESENTATION	P2	0	0	combat.kill_feed	legacy
+10	PLAY_TO_CLIENT	PlayerVariablesSyncMessage	1	-	CONTROL	LATEST_SNAPSHOT	P1	0	0	player.capability	legacy
+11	PLAY_TO_CLIENT	RadarMenuCloseMessage	1	-	TINY	RELIABLE_EDGE	P2	0	0	radar.menu	legacy
+12	PLAY_TO_CLIENT	RadarMenuOpenMessage	1	-	TINY	RELIABLE_EDGE	P2	0	0	radar.menu	legacy
+13	PLAY_TO_CLIENT	ResetCameraTypeMessage	1	-	TINY	RELIABLE_EDGE	P1	0	0	camera	legacy
+14	PLAY_TO_CLIENT	ShakeClientMessage	1	-	TINY	REPLACEABLE_PRESENTATION	P2	0	0	fx.shake	legacy
+15	PLAY_TO_CLIENT	ShootClientMessage	1	-	TINY	EXACT_EVENT	P2	0	0	gun.presentation	legacy
+16	PLAY_TO_CLIENT	SoundClientMessage	1	-	PRESENTATION	REPLACEABLE_PRESENTATION	P2	0	0	fx.sound	legacy
+17	PLAY_TO_CLIENT	TDMSyncMessage	1	-	PRESENTATION	LATEST_SNAPSHOT	P2	0	0	team.sync	legacy
+18	PLAY_TO_CLIENT	EntitySyncMessage	1	-	CONTACT_STATE	LATEST_SNAPSHOT	P3	0	0	contact.legacy	legacy_contact
+19	PLAY_TO_CLIENT	PlayerInfoSyncMessage	1	-	PRESENTATION	LATEST_SNAPSHOT	P3	0	0	contact.player	legacy_contact
+20	PLAY_TO_CLIENT	ClientVehicleItemMessage	1	-	NBT_STATE	LATEST_SNAPSHOT	P1	0	0	vehicle.inventory	legacy
+21	PLAY_TO_SERVER	AdjustMortarAngleMessage	1	-	TINY	RELIABLE_EDGE	P0	20	40	network.server	legacy
+22	PLAY_TO_SERVER	AdjustZoomFovMessage	1	-	TINY	RELIABLE_EDGE	P0	20	40	network.server	legacy
+23	PLAY_TO_SERVER	AimVillagerMessage	1	-	TINY	RELIABLE_EDGE	P0	10	20	npc.aim	legacy
+24	PLAY_TO_SERVER	AssembleVehicleMessage	1	-	TINY	RELIABLE_EDGE	P0	4	8	vehicle.assembly	legacy
+25	PLAY_TO_SERVER	ChangeVehicleSeatMessage	1	-	TINY	RELIABLE_EDGE	P0	10	20	vehicle.seat	legacy
+26	PLAY_TO_SERVER	ActiveThermalImagingMessage	1	-	TINY	RELIABLE_EDGE	P0	10	20	player.thermal	legacy
+27	PLAY_TO_SERVER	ArtilleryIndicatorFireMessage	1	-	TINY	RELIABLE_EDGE	P0	4	8	weapon.artillery	legacy
+28	PLAY_TO_SERVER	DogTagFinishEditMessage	1	-	CONTROL	RELIABLE_EDGE	P0	4	8	item.dog_tag	legacy
+29	PLAY_TO_SERVER	DoubleJumpMessage	1	-	TINY	RELIABLE_EDGE	P0	4	8	player.movement	legacy
+30	PLAY_TO_SERVER	DroneFireMessage	1	-	TINY	RELIABLE_EDGE	P0	10	20	vehicle.drone	legacy
+31	PLAY_TO_SERVER	EditMessage	1	-	TINY	RELIABLE_EDGE	P0	10	20	gun.edit	legacy
+32	PLAY_TO_SERVER	FireKeyMessage	1	-	TINY	RELIABLE_EDGE	P0	80	160	gun.input	legacy
+33	PLAY_TO_SERVER	FireModeMessage	1	-	TINY	RELIABLE_EDGE	P0	10	20	gun.mode	legacy
+34	PLAY_TO_SERVER	FiringParametersEditMessage	1	-	TINY	RELIABLE_EDGE	P0	10	20	weapon.artillery	legacy
+35	PLAY_TO_SERVER	GunReforgeMessage	1	-	TINY	RELIABLE_EDGE	P0	4	8	gun.reforge	legacy
+36	PLAY_TO_SERVER	InteractMessage	1	-	TINY	RELIABLE_EDGE	P0	20	40	player.interact	legacy
+37	PLAY_TO_SERVER	LungeMineAttackMessage	1	-	TINY	RELIABLE_EDGE	P0	4	8	combat.lunge	legacy
+38	PLAY_TO_SERVER	MeleeAttackMessage	1	-	CONTROL	RELIABLE_EDGE	P0	10	20	combat.melee	legacy
+39	PLAY_TO_SERVER	MouseMoveMessage	1	-	TINY	LATEST_SNAPSHOT	P1	40	80	vehicle.input	legacy
+40	PLAY_TO_SERVER	ParachuteMessage	1	-	TINY	RELIABLE_EDGE	P0	4	8	player.parachute	legacy
+41	PLAY_TO_SERVER	PlayerStopRidingMessage	25	-	TINY	RELIABLE_EDGE	P0	12	24	vehicle.seat	dismount_double_tap
+42	PLAY_TO_SERVER	RadarChangeModeMessage	1	-	TINY	RELIABLE_EDGE	P0	10	20	radar.control	legacy
+43	PLAY_TO_SERVER	RadarSetPosMessage	1	-	TINY	RELIABLE_EDGE	P0	10	20	radar.control	legacy
+44	PLAY_TO_SERVER	RadarSetTargetMessage	1	-	TINY	RELIABLE_EDGE	P0	10	20	radar.control	legacy
+45	PLAY_TO_SERVER	RadarSetParametersMessage	1	-	TINY	RELIABLE_EDGE	P0	10	20	radar.control	legacy
+46	PLAY_TO_SERVER	ReloadMessage	1	-	TINY	RELIABLE_EDGE	P0	10	20	gun.reload	legacy
+47	PLAY_TO_SERVER	SeekingWeaponWarningMessage	1	-	TINY	REPLACEABLE_PRESENTATION	P2	10	20	weapon.seeker	legacy
+48	PLAY_TO_SERVER	SensitivityMessage	1	-	TINY	RELIABLE_EDGE	P0	10	20	gun.settings	legacy
+49	PLAY_TO_SERVER	SetFiringParametersMessage	1	-	TINY	RELIABLE_EDGE	P0	4	8	weapon.artillery	legacy
+50	PLAY_TO_SERVER	SetPerkLevelMessage	1	-	TINY	RELIABLE_EDGE	P0	10	20	gun.reforge	legacy
+51	PLAY_TO_SERVER	ShootMessage	1	-	TINY	EXACT_EVENT	P0	512	1024	gun.fire	legacy
+52	PLAY_TO_SERVER	ShowChargingRangeMessage	1	-	TINY	RELIABLE_EDGE	P0	10	20	menu.charging	legacy
+53	PLAY_TO_SERVER	SwitchScopeMessage	1	-	TINY	RELIABLE_EDGE	P0	10	20	gun.scope	legacy
+54	PLAY_TO_SERVER	SwitchVehicleWeaponMessage	1	-	TINY	RELIABLE_EDGE	P0	20	40	vehicle.weapon	legacy
+55	PLAY_TO_SERVER	UnloadMessage	1	-	TINY	RELIABLE_EDGE	P0	4	8	gun.reload	legacy
+56	PLAY_TO_SERVER	VehicleActionInputMessage	3	-	CONTROL	RELIABLE_EDGE	P0	40	80	vehicle.action	vehicle_action
+57	PLAY_TO_SERVER	VehicleFireMessage	1	-	TINY	RELIABLE_EDGE	P0	40	80	vehicle.weapon	legacy
+58	PLAY_TO_SERVER	VehicleMovementMessage	1	-	TINY	LATEST_SNAPSHOT	P1	40	80	vehicle.input	legacy
+59	PLAY_TO_SERVER	WeaponZoomingMessage	1	-	TINY	LATEST_SNAPSHOT	P1	40	80	gun.input	legacy
+60	PLAY_TO_SERVER	ZoomMessage	1	-	TINY	RELIABLE_EDGE	P0	10	20	vehicle.zoom	legacy
+61	PLAY_TO_SERVER	BlueprintCraftMessage	1	-	TINY	RELIABLE_EDGE	P0	4	8	blueprint.craft	legacy
+62	PLAY_TO_SERVER	BlueprintSetIndexMessage	1	-	TINY	RELIABLE_EDGE	P0	10	20	blueprint.menu	legacy
+63	PLAY_TO_CLIENT	ExplosionBurstMessage	3	-	PRESENTATION	REPLACEABLE_PRESENTATION	P2	0	0	fx.explosion	explosion_burst
+64	PLAY_TO_SERVER	VehicleHelicopterAtgmCameraRayMessage	9	-	TINY	LATEST_SNAPSHOT	P1	20	40	vehicle.atgm_camera_ray	vehicle_atgm_camera_ray
+65	PLAY_TO_SERVER	CycleVehicleWeaponSlotMessage	12	-	TINY	RELIABLE_EDGE	P0	10	20	vehicle.weapon	weapon_slot_cycle
+66	PLAY_TO_SERVER	SetVehicleGeometricZeroDistanceMessage	14	-	TINY	RELIABLE_EDGE	P0	10	20	vehicle.aim	geometric_zero_fcs
+67	PLAY_TO_CLIENT	VehicleGeometricZeroDistanceAckMessage	14	-	TINY	RELIABLE_EDGE	P1	0	0	vehicle.aim	geometric_zero_fcs
+68	PLAY_TO_CLIENT	VehicleReloadSoundMessage	15	-	TINY	EXACT_EVENT	P1	0	0	vehicle.audio	reload_cycle_audio
+69	PLAY_TO_CLIENT	EliteDiagnosticsStateMessage	15	-	TINY	RELIABLE_EDGE	P1	0	0	diagnostics.elite	elite_diagnostics
+70	PLAY_TO_CLIENT	FarVehicleFrameMessage	26	-	FAR_RENDER	LATEST_SNAPSHOT	P3	0	0	vehicle.far_render	far_vehicle_frame
+71	PLAY_TO_SERVER	FixedWingPilotIntentMessage	24	-	TINY	LATEST_SNAPSHOT	P1	20	40	vehicle.flight	fixed_wing_pilot_intent
+72	PLAY_TO_CLIENT	FixedWingPilotIntentStateMessage	24	-	TINY	LATEST_SNAPSHOT	P1	0	0	vehicle.flight	fixed_wing_pilot_intent
+73	PLAY_TO_SERVER	AircraftArmamentRequestMessage	23	-	AIRCRAFT_REQUEST	RELIABLE_EDGE	P1	20	40	vehicle.aircraft	aircraft_armament
+74	PLAY_TO_CLIENT	AircraftArmamentStateMessage	23	-	AIRCRAFT_STATE	RELIABLE_EDGE	P1	0	0	vehicle.aircraft	aircraft_armament
+75	PLAY_TO_SERVER	FarTerrainRequest	31	-	CONTROL	RELIABLE_EDGE	P0	20	40	vehicle.far_terrain	far_terrain
+76	PLAY_TO_CLIENT	FarTerrainPlan	26	-	FAR_TERRAIN	RELIABLE_EDGE	P3	0	0	vehicle.far_terrain	far_terrain
+77	PLAY_TO_CLIENT	FarTerrainChunk	26	-	FAR_TERRAIN	BULK_STATE	P3	0	0	vehicle.far_terrain	far_terrain
+78	PLAY_TO_SERVER	FarTerrainAck	26	-	FAR_TERRAIN_CONTROL	RELIABLE_EDGE	P0	20	40	vehicle.far_terrain	far_terrain
+79	PLAY_TO_CLIENT	FarProjectileStateMessage	28	-	TINY	RELIABLE_EDGE	P1	0	0	projectile.far_simulation	far_projectile_pause
+80	PLAY_TO_CLIENT	FriendlyVehicleStateMessage	36	-	CONTROL	LATEST_SNAPSHOT	P2	0	0	vehicle.friend_foe	project_rose_occupied_vehicle
+81	PLAY_TO_CLIENT	SonicBoomMessage	41	-	PRESENTATION	REPLACEABLE_PRESENTATION	P2	0	0	fx.sonic_boom	sonic_boom

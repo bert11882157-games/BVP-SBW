@@ -121,8 +121,8 @@ object VehicleHelicopterAtgmCameraRayTransport {
      * authored secondary; selection is intentionally absent from ID 64.
      */
     private fun VehicleEntity.hasAtgmCapableSeat(seatIndex: Int): Boolean {
-        val seat = getSeat(seatIndex) ?: return false
-        return seat.weapons().any { weaponName ->
+        getSeat(seatIndex) ?: return false
+        return getWeaponIds(seatIndex).any { weaponName ->
             getGunData(weaponName)?.let { VehicleWeaponGuidance.isAtgm(it) } == true
         }
     }

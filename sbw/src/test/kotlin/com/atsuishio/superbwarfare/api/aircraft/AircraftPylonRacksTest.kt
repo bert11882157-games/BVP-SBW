@@ -6,6 +6,27 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
 class AircraftPylonRacksTest {
+    @Test fun fixedMissileRacksUseTwoRowsAndConsumeOnlyTheLaunchedPosition() {
+        val mount = JsonParser.parseString("""{"Id":"pair","Left":[-4,0,0],"Right":[4,0,0]}""").asJsonObject
+        val store = JsonParser.parseString("""{"Category":"AIR_TO_GROUND","Capacity":1,"MassKg":49,
+            "MaxPerPylon":4,"FixedRackCount":4,"RackColumns":2,"RackSpacing":[0.25,0.25,0]}""").asJsonObject
+        val points = (0..7).map { AircraftPylonRacks.launchPosition(mount, store, 4, it) }
+        assertEquals(8, points.toSet().size)
+        assertEquals(listOf(0.0,0.0,0.0,0.0,-0.25,-0.25,-0.25,-0.25), points.map { it.y })
+        points.chunked(2).forEach { assertEquals(8.0, it[1].x - it[0].x, 1e-9) }
+        assertEquals(4, AircraftPylonRacks.maxCopies(4,4,4,"AIR_TO_GROUND",1,49.0,196.0))
+        assertEquals(2, AircraftPylonRacks.maxCopies(4,2,4,"AIR_TO_GROUND",1,49.0,196.0))
+        assertEquals(3, AircraftPylonRacks.maxCopies(4,4,4,"AIR_TO_GROUND",1,49.0,195.0))
+        val def = JsonParser.parseString("""{"Pairs":[$mount]}""").asJsonObject
+        assertEquals(392.0, AircraftArmamentRegistry.loadoutMassKg(def,mapOf("pair" to store),mapOf("pair" to 4)))
+        store.addProperty("RackMassKg",36.0)
+        assertEquals(464.0, AircraftArmamentRegistry.loadoutMassKg(def,mapOf("pair" to store),mapOf("pair" to 4)))
+        assertEquals(4, AircraftPylonRacks.maxCopies(4,4,4,"AIR_TO_GROUND",1,49.0,232.0,false,36.0))
+        assertEquals(3, AircraftPylonRacks.maxCopies(4,4,4,"AIR_TO_GROUND",1,49.0,231.0,false,36.0))
+        assertThrows(IllegalArgumentException::class.java) {
+            AircraftPylonRacks.selectionCopies(null,"pars3_x4",1,3,4)
+        }
+    }
     @Test fun loadoutEditsKeepExistingCopiesButCannotChooseMore() {
         assertEquals(3, AircraftPylonRacks.fixedSelectionCopies("bomb", "bomb", 3, null))
         assertEquals(3, AircraftPylonRacks.fixedSelectionCopies("bomb", "bomb", 3, 3))
@@ -38,6 +59,8 @@ class AircraftPylonRacksTest {
         val count = AircraftPylonRacks.maxCopies(definition, bay, bomb)
         assertEquals(60, count)
         assertEquals(1, (0 until count).map { AircraftPylonRacks.launchPosition(bay,bomb,count,it) }.toSet().size)
+        assertEquals(5, AircraftPylonRacks.maxCopies(12,12,12,"BOMB",1,250.0,1250.0,true))
+        assertEquals(7, AircraftPylonRacks.maxCopies(12,12,12,"BOMB",2,100.0,1500.0,true))
     }
     @Test fun physicalLimitsAndMassPreventOversizedRacks() {
         fun limit(category: String = "BOMB", capacity: Int = 1, store: Int = 12, mass: Double = 250.0) =
@@ -62,6 +85,14 @@ class AircraftPylonRacksTest {
         val definition = JsonParser.parseString("""{"Pairs":[${mount}]}""").asJsonObject
         assertEquals(2000.0, AircraftArmamentRegistry.loadoutMassKg(definition, mapOf("pair" to store), mapOf("pair" to 4)))
         assertEquals(Vec3.ZERO, AircraftPylonRacks.offset(0, 1, Vec3(0.6, 0.4, 0.0)))
+        val triangle = (0..2).map { AircraftPylonRacks.offset(it, 3, Vec3(0.38, 0.38, 0.0)) }
+        assertEquals(listOf(Vec3(-0.19,0.0,0.0), Vec3(0.19,0.0,0.0),
+            Vec3(0.0,-0.38,0.0)), triangle)
+        assertEquals(3, AircraftPylonRacks.selectionCopies("bomb", "bomb", 2, 3,
+            internal = true))
+        assertThrows(IllegalArgumentException::class.java) {
+            AircraftPylonRacks.selectionCopies("bomb", "bomb", 2, 3)
+        }
     }
 
     @Test fun fixedBombChoicesAndZeroBlastClusterHaveDistinctValidatedContracts() {

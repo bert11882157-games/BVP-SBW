@@ -36,12 +36,14 @@ object AircraftBombPredictor {
         val totalCapacity = AircraftArmamentManager.mountCapacity(vehicle, key)
         val remaining = AircraftArmamentManager.mountRemaining(vehicle, key)
         if (remaining <= 0) return null
-        val local = nextLaunchPosition(mount, store, totalCapacity, remaining) ?: return null
-        val position = vehicle.getVehicleTransform(1f).transformPosition(Vector3d(local.x, local.y, local.z))
-        var point = Vec3(position.x, position.y, position.z)
-        var motion = vehicle.deltaMovement.add(0.0, -0.04, 0.0)
+        val neutral = nextLaunchPosition(mount, store, totalCapacity, remaining) ?: return null
+        val local = AircraftMountSweep.position(mount,
+            (totalCapacity - remaining) % AircraftArmamentRegistry.mountPositions(mount).size,
+            neutral, vehicle.getVehicleFlightPresentationSnapshot(1f).motion.length())
+        var point = AircraftBombFlight.launchOrigin(vehicle, local)
+        var motion = AircraftBombFlight.initialMotion(vehicle.deltaMovement)
         val gravity = bomb["Gravity"].asDouble
-        val horizontal = (1.0 - 0.01 * bomb["DragMultiplier"].asDouble).coerceIn(0.8, 1.0)
+        val drag = bomb["DragMultiplier"].asDouble
         if (!point.x.isFinite() || !point.y.isFinite() || !point.z.isFinite() ||
             !motion.x.isFinite() || !motion.y.isFinite() || !motion.z.isFinite()) return null
         val level = vehicle.level()
@@ -52,8 +54,7 @@ object AircraftBombPredictor {
             if (hit.type == HitResult.Type.BLOCK) return hit.location
             point = next
             if (point.y < level.minBuildHeight) return null
-            motion = NominalProjectileMotion.afterFastThrowableAirStep(motion, gravity)
-            motion = Vec3(motion.x * horizontal, motion.y, motion.z * horizontal)
+            motion = AircraftBombFlight.afterPredictedAirStep(motion, gravity, drag)
         }
         return null
     }

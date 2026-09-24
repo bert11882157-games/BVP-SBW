@@ -3495,5 +3495,41 @@
         "attenuation_distance": 48
       }
     ]
+  },
+  "me_262_elite_engine_start": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/me_262_elite/me_262_elite_engine_start",
+        "stream": false,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "me_262_elite_engine_loop": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/me_262_elite/me_262_elite_engine_loop",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "me_262_50mm_engine_start": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/me_262_50mm/me_262_50mm_engine_start",
+        "stream": false,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "me_262_50mm_engine_loop": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft/me_262_50mm/me_262_50mm_engine_loop",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
   }
 }

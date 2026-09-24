@@ -1,6 +1,7 @@
 package com.atsuishio.superbwarfare.api.aircraft
 
 import com.atsuishio.superbwarfare.api.projectile.ProjectileCalibers
+import com.atsuishio.superbwarfare.api.projectile.NativeVehicleHitFeedback
 import com.atsuishio.superbwarfare.api.projectile.impact.ProjectileImpactContext
 import com.atsuishio.superbwarfare.api.projectile.impact.ProjectileImpactDisposition
 import com.atsuishio.superbwarfare.api.projectile.impact.ProjectileImpactResult
@@ -94,6 +95,8 @@ object AircraftProjectileDamage {
             modulePolicy = ResolvedVehicleModulePolicy.SKIP_NATIVE,
         ))
         if (result.accepted) {
+            // Aircraft resolve before addon armor presentation, so notify accepted-hit effects here.
+            NativeVehicleHitFeedback.accepted(projectile, vehicle)
             if (context != null) {
                 AircraftSurfaceModules.applyAcceptedHit(vehicle, projectile.position(), context.hitVec,
                     context.incomingVelocity, result.appliedDamage)

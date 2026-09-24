@@ -54,9 +54,10 @@ final class BvpImpactVolumeQuery implements VehicleImpactVolumeView {
     ArmorHit eraHit(ShotTrace trace, double impactTolerance) {
         TraceVolumes volumes = volumes(trace);
         if (!volumes.eraResolved || Double.compare(volumes.eraTolerance, impactTolerance) != 0) {
-            ArmorHitResolver.BoxQuery query = ArmorHitResolver.findBestAndNearestBox(
-                    target, profile.eraBoxes, trace,
-                    ArmorHitResolver.ARMOR_RAY_DISTANCE_BLOCKS, impactTolerance);
+            // ERA is a surface contact at the accepted collision point. A long backtrace can
+            // cross front bricks before a projectile whose actual hit is on the rear turret.
+            ArmorHitResolver.BoxQuery query = ArmorHitResolver.findNearestBoxAtImpact(
+                    target, profile.eraBoxes, trace.hullImpactFallback, impactTolerance);
             volumes.eraHit = query.hit();
             volumes.nearestEra = query.nearest();
             volumes.eraTolerance = impactTolerance;
@@ -84,6 +85,17 @@ final class BvpImpactVolumeQuery implements VehicleImpactVolumeView {
             volumes.armorResolved = true;
         }
         return volumes.armorHit;
+    }
+
+    /** Previously resolved contact only; presentation must not start another armor ray. */
+    ArmorHit resolvedImpactBox() {
+        if (secondaryVolumes != null && secondaryVolumes.armorResolved) {
+            return secondaryVolumes.armorHit;
+        }
+        if (initialVolumes.armorResolved) {
+            return initialVolumes.armorHit;
+        }
+        return initialVolumes.eraResolved ? initialVolumes.eraHit : null;
     }
 
     NearBox nearestArmorToImpact(ShotTrace trace) {

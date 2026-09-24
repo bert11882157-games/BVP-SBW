@@ -87,12 +87,15 @@ final class BvpAircraftBreakupRenderer {
                     }
                     if (!meshes.isEmpty()) {
                         int light = context.getPackedLight();
-                        var attachedStores = side < 4 ? stores.captureWing((com.atsuishio.superbwarfare.entity.vehicle.base.GeoVehicleEntity) vehicle, side, light) : null;
+                        var attachedStores = side < 4 ? stores.captureWing((com.atsuishio.superbwarfare.entity.vehicle.base.GeoVehicleEntity) vehicle, side, light, context.getPartialTick()) : null;
                         AircraftDetachedWings.capture(vehicle, side, position,
                                 transform.getNormalizedRotation(new Quaternionf()),
                                 new Vec3((maxX - minX) / 2, (maxY - minY) / 2, (maxZ - minZ) / 2),
                                 (pose, buffers, impacted) -> {
-                                    RenderType type = RenderType.m_110458_(side >= 4 || impacted ? blackened : texture);
+                                    ResourceLocation fragmentTexture = impacted
+                                            ? com.atsuishio.superbwarfare.client.renderer.TextureBrightnessHandler.INSTANCE
+                                                .getBrightenedTexture(texture, 0.7F) : texture;
+                                    RenderType type = RenderType.m_110458_(fragmentTexture);
                                     type.m_110185_();
                                     try {
                                         for (Mesh mesh : meshes) mesh.mesh.drawVBO(

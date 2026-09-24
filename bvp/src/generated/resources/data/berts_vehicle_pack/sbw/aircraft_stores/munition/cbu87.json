@@ -1,0 +1,33 @@
+{
+  "Schema": 1,
+  "Name": "CBU-87 Combined Effects · cluster",
+  "Category": "BOMB",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/cbu87.geo.json",
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/cbu87.png",
+  "Capacity": 1,
+  "MassKg": 430,
+  "Bomb": {
+    "Mode": "DUMB",
+    "Gravity": 0.08,
+    "DragMultiplier": 1,
+    "TurnDegreesPerTick": 0,
+    "BlastRadius": 0,
+    "BlastDamage": 0,
+    "Cluster": {
+      "Count": 24,
+      "ReleaseHeight": 12,
+      "SpreadSpeed": 0.55,
+      "BombletDamage": 55,
+      "BombletRadius": 1.5,
+      "LifetimeTicks": 100,
+      "Mode": "HE"
+    }
+  },
+  "AmmoItem": "superbwarfare:small_freefall_bomb",
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_bombs/cbu87",
+  "LaunchOffset": [
+    0,
+    0,
+    -1.17
+  ]
+}

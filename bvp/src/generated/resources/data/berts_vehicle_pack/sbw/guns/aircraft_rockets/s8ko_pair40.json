@@ -1,5 +1,11 @@
 {
-  "AmmoType": "superbwarfare:small_rocket",
+  "AmmoType": [
+    {
+      "Ammo": "superbwarfare:small_rocket",
+      "ConsumptionItem": "superbwarfare:small_unguided_rocket",
+      "Override": {}
+    }
+  ],
   "Magazine": 40,
   "EmptyReloadTime": 200,
   "DefaultFireMode": "Auto",

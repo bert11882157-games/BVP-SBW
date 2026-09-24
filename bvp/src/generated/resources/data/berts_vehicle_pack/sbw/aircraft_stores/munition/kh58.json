@@ -1,0 +1,25 @@
+{
+  "Schema": 1,
+  "Name": "Kh-58 · anti-radiation",
+  "Category": "ANTI_RADIATION",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/kh58.geo.json",
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/kh58.png",
+  "Capacity": 1,
+  "MassKg": 650,
+  "Guidance": {
+    "Mode": "ANTI_RADIATION",
+    "LockTicks": 60,
+    "Range": 2000,
+    "ConeDegrees": 30,
+    "CountermeasureVulnerability": 0.3
+  },
+  "Flight": {
+    "InitialSpeed": 0.6,
+    "MaxSpeed": 10,
+    "AccelerationPerTick": 0.18,
+    "TurnDegreesPerSecond": 30,
+    "Damage": 120,
+    "BlastRadius": 7
+  },
+  "AmmoItem": "superbwarfare:large_air_to_ground_missile"
+}

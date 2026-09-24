@@ -1,0 +1,27 @@
+{
+  "Combat": {
+    "WeaponId": "berts_vehicle_pack:munition/cbu97_efp",
+    "RoundId": "berts_vehicle_pack:cbu97_efp",
+    "MunitionType": "berts_vehicle_pack:cluster_bomblet",
+    "DamageType": "berts_vehicle_pack:kinetic",
+    "DiameterMm": 40,
+    "HullDamageClass": "DEFAULT",
+    "HullDamage": 45,
+    "ModuleDamage": 25,
+    "AmmoRackDamage": 5,
+    "PenetrationMm": 160,
+    "Tandem": false
+  },
+  "VisualProfile": "berts_vehicle_pack:authored_bomb",
+  "MotionSync": "INHERIT",
+  "TrailMode": "SUPPRESS",
+  "RenderScale": 0.08,
+  "Extensions": {
+    "berts_vehicle_pack:projectile_mesh_v1": {
+      "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/fab_100.geo.json",
+      "Texture": "berts_vehicle_pack:textures/aircraft_stores/fab_100.png",
+      "ForwardYaw": 180,
+      "SpinDegreesPerTick": 0
+    }
+  }
+}

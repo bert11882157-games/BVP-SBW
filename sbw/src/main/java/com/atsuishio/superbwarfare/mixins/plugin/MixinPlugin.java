@@ -21,6 +21,9 @@ public class MixinPlugin implements IMixinConfigPlugin {
 
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
+        if (mixinClassName.contains(".compat.SoundBarrier")) {
+            return getClass().getClassLoader().getResource(targetClassName.replace('.', '/') + ".class") != null;
+        }
         if (mixinClassName.contains("tacz")) return getClass("com.tacz.guns.GunMod");
         if (mixinClassName.endsWith(".compat.CameraOverhaulCameraSystemMixin")) {
             // Probe bytes without loading the optional target before Mixin transforms it.

@@ -5,9 +5,29 @@
     "PassengerGun1"
   ],
   "SuspendedWeapons": [],
-  "Pairs": [],
+  "Pairs": [
+    {
+      "Id": "outer_atgm",
+      "Name": "Outer wing ATGM rail",
+      "Left": [
+        -5.1,
+        1.42,
+        0.32
+      ],
+      "Right": [
+        5.1,
+        1.42,
+        0.32
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/falanga_9m17m"
+      ],
+      "MaxPylonMassKg": 100
+    }
+  ],
   "StoreGroups": {},
-  "MaxPayloadKg": 1500,
+  "MaxPayloadKg": 3017,
   "MaxPylonMassKg": 1000,
-  "MaxWeaponsPerPylon": 12
+  "MaxWeaponsPerPylon": 12,
+  "Singles": []
 }

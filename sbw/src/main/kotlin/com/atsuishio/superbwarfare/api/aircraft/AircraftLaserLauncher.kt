@@ -19,8 +19,8 @@ import org.joml.Vector3d
 
 /** Mount positions are vehicle-local blocks; called only after server equipment/capacity admission. */
 object AircraftLaserLauncher {
-    @JvmStatic fun launch(vehicle: VehicleEntity, player: ServerPlayer, localMount: Vec3,
-        store: JsonObject): Boolean {
+    @JvmStatic @JvmOverloads fun launch(vehicle: VehicleEntity, player: ServerPlayer, localMount: Vec3,
+        store: JsonObject, channel: String? = null): Boolean {
         if (vehicle.level().isClientSide || player.level() !== vehicle.level() || !vehicle.isAlive) return false
         val launchId = store["LaunchGunProfile"]?.asString ?: return false
         val rawGun = CustomData.GUN_DATA[launchId] ?: return false
@@ -40,14 +40,27 @@ object AircraftLaserLauncher {
         val forward = Vec3(direction.x, direction.y, direction.z)
         if (!origin.x.isFinite() || !origin.y.isFinite() || !origin.z.isFinite() ||
             !forward.x.isFinite() || !forward.y.isFinite() || !forward.z.isFinite()) return false
+        val commandMode = store.getAsJsonObject("CommandGuidance")?.get("Mode")?.asString
+        val guidanceContext = if (commandMode != null) {
+            if (commandMode !in setOf("MCLOS","SACLOS") || channel == null) return false
+            vehicle.captureVehicleWeaponGuidanceContext(player,channel,data) ?: return false
+        } else null
         val parameters = ShootParameters(vehicle, player, player.serverLevel(), origin, forward, data,
-            0.0, false, null, null, emitNativeSound = false)
+            0.0, false, null, null, emitNativeSound = false, weaponGuidanceContext = guidanceContext)
         val prepared = ProjectileFactory.prepare(parameters) ?: return false
         val missile = prepared.entity as? WireGuideMissileEntity ?: return false
         if (ProjectileProfiles.profileId(missile) != profileId || ProjectileProfiles.guidedPropulsion(missile) == null) return false
-        missile.persistentData.putUUID("BvpLaserAircraft", vehicle.uuid)
-        missile.persistentData.putString("BvpLaserDimension", vehicle.level().dimension().location().toString())
-        AircraftArmamentManager.laserTarget(missile)
+        if (commandMode != null) {
+            missile.persistentData.putString("BvpCommandMode",commandMode)
+            val up = transform.transformDirection(Vector3d(0.0,1.0,0.0)).normalize()
+            missile.persistentData.putDouble("BvpCommandUpX",up.x)
+            missile.persistentData.putDouble("BvpCommandUpY",up.y)
+            missile.persistentData.putDouble("BvpCommandUpZ",up.z)
+        } else {
+            missile.persistentData.putUUID("BvpLaserAircraft", vehicle.uuid)
+            missile.persistentData.putString("BvpLaserDimension", vehicle.level().dimension().location().toString())
+            AircraftArmamentManager.laserTarget(missile)
+        }
         return ProjectileFactory.spawn(prepared, parameters)
     }
 }

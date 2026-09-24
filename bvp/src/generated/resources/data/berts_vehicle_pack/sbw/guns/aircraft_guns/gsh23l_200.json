@@ -42,6 +42,7 @@
   "AmmoType": [
     {
       "Ammo": "superbwarfare:small_shell_he",
+      "ConsumptionItem": "superbwarfare:small_autocannon_shell",
       "Override": {
         "Projectile": {
           "Type": "superbwarfare:small_cannon_shell",
@@ -75,6 +76,7 @@
     },
     {
       "Ammo": "superbwarfare:small_shell_ap",
+      "ConsumptionItem": "superbwarfare:small_autocannon_shell",
       "Override": {
         "Projectile": {
           "Type": "superbwarfare:small_cannon_shell",

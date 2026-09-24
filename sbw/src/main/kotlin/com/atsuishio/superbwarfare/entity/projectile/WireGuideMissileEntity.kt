@@ -140,7 +140,6 @@ open class WireGuideMissileEntity(type: EntityType<out WireGuideMissileEntity>, 
     /** Exact target actually receiving guidance this tick; never inferred from nearby aircraft. */
     var actualGuidanceTargetUUID: UUID? = null
         private set
-    private var laserSeekerDirection: Vec3? = null
     private var previousFlightWobble = Vec3.ZERO
 
     override fun tick() {
@@ -198,21 +197,33 @@ open class WireGuideMissileEntity(type: EntityType<out WireGuideMissileEntity>, 
                 }
                 targetPos?.takeIf(::finite)
             } else null
-            if (laserPointMode) {
+            if (persistentData.getString("BvpCommandMode") == "MCLOS") {
+                val context = launcherWeaponGuidanceContext
+                if (vehicle is VehicleEntity && owner is net.minecraft.server.level.ServerPlayer &&
+                    launcherVehicleUUID == vehicle.uuid && context?.launcherControllerUUID == owner.uuid &&
+                    vehicle.getSeatIndex(owner) == context.seatIndex &&
+                    vehicle.getGunName(context.seatIndex,context.weaponIndex) == context.weaponName) {
+                    val up = Vec3(persistentData.getDouble("BvpCommandUpX"),
+                        persistentData.getDouble("BvpCommandUpY"),persistentData.getDouble("BvpCommandUpZ"))
+                    toVec = com.atsuishio.superbwarfare.api.aircraft.AircraftManualCommand.direction(
+                        vehicle,owner,toVec,up,guided.maxTurnRateDegreesPerSecond)
+                }
+            } else if (laserPointMode) {
                 // Aircraft-owned point guidance remains valid without a mounted or loaded carrier.
                 // Explicit clear coasts; it must never fall through to manual ATGM camera guidance.
                 val point = com.atsuishio.superbwarfare.api.aircraft.AircraftArmamentManager.laserTarget(this)
-                val desired = GuidedMissileGuidance.pointDirection(position(), point)
-                if (desired != null && (maneuver == null || maneuver.captures(toVec, desired))) {
-                    toVec = if (maneuver == null) desired else GuidedMissileGuidance.steer(
-                        laserSeekerDirection ?: toVec.normalize(), Vec3.ZERO, desired, maneuver.seekerRateDegrees).normalize()
-                    laserSeekerDirection = toVec.normalize()
+                val desired = GuidedMissileGuidance.laserSeekerDirection(position(), lookAngle, point,
+                    relativeSpeed, guidedInheritedMotion)
+                if (desired != null) {
+                    // Out-of-cone or cleared points coast without a steering command or RWR target.
+                    // A visible designation can be acquired again; body G/turn limits still apply.
+                    toVec = desired
                     // A point genuinely painted on a vehicle can trigger its receiver; nearby traffic cannot.
                     if (point != null) actualGuidanceTargetUUID = level().getEntitiesOfClass(VehicleEntity::class.java,
                         net.minecraft.world.phys.AABB(point, point).inflate(0.001)) {
                         it.isAlive && !it.isWreck && it.boundingBox.contains(point)
                     }.minByOrNull { it.id }?.uuid
-                } else laserSeekerDirection = null
+                }
             } else if (topAttackTarget != null) {
                 GuidedMissileGuidance.topAttackDirection(position(), topAttackTarget)?.let {
                     toVec = it

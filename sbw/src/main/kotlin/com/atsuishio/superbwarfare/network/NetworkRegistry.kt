@@ -238,4 +238,7 @@ private fun registerPayloads() {
     playToClient<FriendlyVehicleStateMessage>(clientSchema(80, PacketLimitProfiles.CONTROL,
         delivery = LATEST_SNAPSHOT, priority = P2, owner = "vehicle.friend_foe",
         feature = "project_rose_occupied_vehicle", since = 36))
+    playToClient<SonicBoomMessage>(clientSchema(81, PacketLimitProfiles.PRESENTATION,
+        delivery = REPLACEABLE_PRESENTATION, priority = P2, owner = "fx.sonic_boom",
+        feature = "sonic_boom", since = 41))
 }

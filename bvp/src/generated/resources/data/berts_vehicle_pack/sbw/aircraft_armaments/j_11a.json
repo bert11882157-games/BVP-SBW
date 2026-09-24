@@ -1,7 +1,70 @@
 {
   "Schema": 1,
   "SuspendedWeapons": [],
-  "Pairs": [],
+  "Pairs": [
+    {
+      "Id": "underbody",
+      "Name": "Underbody missile stations",
+      "Left": [
+        -0.9,
+        1.2,
+        -2.45
+      ],
+      "Right": [
+        0.9,
+        1.2,
+        -2.45
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:r27r",
+        "berts_vehicle_pack:r27t"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 1000
+    },
+    {
+      "Id": "inboard",
+      "Name": "Inboard wing stations",
+      "Left": [
+        -3.85,
+        1.82,
+        -1.25
+      ],
+      "Right": [
+        3.85,
+        1.82,
+        -1.25
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:r27r",
+        "berts_vehicle_pack:r27t",
+        "berts_vehicle_pack:fa18e/bomb_500kg_dumb_1",
+        "berts_vehicle_pack:fa18e/bomb_500kg_laser_1",
+        "berts_vehicle_pack:fa18e/bomb_500kg_gps_1"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 1000
+    },
+    {
+      "Id": "outboard",
+      "Name": "Outboard wing stations",
+      "Left": [
+        -6.475,
+        2.05,
+        -3.25
+      ],
+      "Right": [
+        6.475,
+        2.05,
+        -3.25
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:r73"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 250
+    }
+  ],
   "StoreGroups": {
     "berts_vehicle_pack:modeled_store/j_11a/wing_inboard_missiles": [
       "suspended_wing_inboard_missiles_left",
@@ -30,28 +93,19 @@
   "MaxWeaponsPerPylon": 12,
   "Singles": [
     {
-      "Id": "internal_bay",
-      "Name": "Bomb bay / internal stores",
+      "Id": "underbody_center",
+      "Name": "Centerline missile station",
       "Position": [
         0,
-        1.345,
-        0.8
+        1.5,
+        -2.25
       ],
-      "Internal": true,
-      "MaxPylonMassKg": 6000,
       "AllowedStores": [
-        "berts_vehicle_pack:reference/dumb_bomb_250kg",
-        "berts_vehicle_pack:reference/laser_bomb_250kg",
-        "berts_vehicle_pack:reference/gps_bomb_250kg",
-        "berts_vehicle_pack:reference/dumb_bomb_5000kg",
-        "berts_vehicle_pack:fa18e/bomb_500kg_dumb_1",
-        "berts_vehicle_pack:fa18e/bomb_500kg_dumb_2",
-        "berts_vehicle_pack:fa18e/bomb_500kg_laser_1",
-        "berts_vehicle_pack:fa18e/bomb_500kg_laser_2",
-        "berts_vehicle_pack:fa18e/bomb_500kg_gps_1",
-        "berts_vehicle_pack:fa18e/bomb_500kg_gps_2",
-        "berts_vehicle_pack:reference/dumb_bomb_100kg"
-      ]
+        "berts_vehicle_pack:r27r",
+        "berts_vehicle_pack:r27t"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 1000
     }
   ]
 }

@@ -5,7 +5,66 @@
     "Cannon"
   ],
   "SuspendedWeapons": [],
-  "Pairs": [],
+  "Pairs": [
+    {
+      "Id": "inner",
+      "Name": "Inner wing rail",
+      "Left": [
+        -2.39,
+        1.54,
+        -1.7
+      ],
+      "Right": [
+        2.39,
+        1.54,
+        -1.7
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:r27r",
+        "berts_vehicle_pack:r27t"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 1000
+    },
+    {
+      "Id": "middle",
+      "Name": "Middle wing rail",
+      "Left": [
+        -3.17,
+        1.49,
+        -2.6
+      ],
+      "Right": [
+        3.17,
+        1.49,
+        -2.6
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:r73"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 250
+    },
+    {
+      "Id": "outer",
+      "Name": "Outer wing rail",
+      "Left": [
+        -3.86,
+        1.4,
+        -2.8
+      ],
+      "Right": [
+        3.86,
+        1.4,
+        -2.8
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:r73"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 250
+    }
+  ],
   "StoreGroups": {
     "berts_vehicle_pack:modeled_store/mig_29/1855504466": [
       "suspended_1855504466_hull"
@@ -21,29 +80,5 @@
   },
   "MaxPylonMassKg": 1000,
   "MaxWeaponsPerPylon": 12,
-  "Singles": [
-    {
-      "Id": "internal_bay",
-      "Name": "Bomb bay / internal stores",
-      "Position": [
-        0,
-        0.937097,
-        1.298129
-      ],
-      "Internal": true,
-      "MaxPylonMassKg": 2200,
-      "AllowedStores": [
-        "berts_vehicle_pack:reference/dumb_bomb_250kg",
-        "berts_vehicle_pack:reference/laser_bomb_250kg",
-        "berts_vehicle_pack:reference/gps_bomb_250kg",
-        "berts_vehicle_pack:fa18e/bomb_500kg_dumb_1",
-        "berts_vehicle_pack:fa18e/bomb_500kg_dumb_2",
-        "berts_vehicle_pack:fa18e/bomb_500kg_laser_1",
-        "berts_vehicle_pack:fa18e/bomb_500kg_laser_2",
-        "berts_vehicle_pack:fa18e/bomb_500kg_gps_1",
-        "berts_vehicle_pack:fa18e/bomb_500kg_gps_2",
-        "berts_vehicle_pack:reference/dumb_bomb_100kg"
-      ]
-    }
-  ]
+  "Singles": []
 }

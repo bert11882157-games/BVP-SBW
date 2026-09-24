@@ -28,6 +28,7 @@ data class VehicleWeaponHudSystem(
     val reloadRemainingTicks: Int = 0,
     val categoryLabel: String? = null,
     val displayNumber: Int = slotIndex + 1,
+    val guidance: String = "",
 )
 
 /** A read-only view of the occupied seat's systems, never a row for each ammunition choice. */
@@ -69,7 +70,7 @@ data class VehicleWeaponHudSnapshot(
                 if (store != null) return@mapIndexedNotNull VehicleWeaponHudSystem(
                     index, name, Component.literal(store.name), VehicleWeaponHudKind.UNKNOWN,
                     store.ammo, null, false, index == primary, index == secondary, false,
-                    reloadTicks, store.category, displayNumber)
+                    reloadTicks, store.category, displayNumber, store.guidance)
                 val base = gun.getDefault()
                 // Use the base system descriptor, so selecting an ATGM round in a tank cannon
                 // cannot turn that cannon row into a separate missile launcher or change its name.

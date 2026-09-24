@@ -1,6 +1,7 @@
 package com.atsuishio.superbwarfare.client.aircraft
 
 import com.atsuishio.superbwarfare.api.aircraft.AircraftPylonRacks
+import com.atsuishio.superbwarfare.api.aircraft.AircraftMountSweep
 import com.google.gson.JsonArray
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
@@ -17,17 +18,21 @@ data class AircraftStoreView(
     val massKg: Double = 0.0, val maxPerPylon: Int = 1,
     val rackSpacing: Vec3 = Vec3(0.6, 0.4, 0.0),
     val fixedRackCount: Int? = null,
+    val guidanceMode: String = "",
+    val ammoItem: ResourceLocation? = null,
+    val rackColumns: Int? = null,
+    val rackMassKg: Double = 0.0,
 ) {
     val visualOnly: Boolean get() = (category in setOf("AIR_TO_AIR", "AIR_TO_GROUND", "ANTI_RADIATION") && !guidedAirToAir) || category == "VISUAL_ONLY"
     val categoryLabel: String get() = when (category) {
         "AIR_TO_AIR" -> if (guidedAirToAir) "Air-to-air guided missile" else "Air-to-air · visual only"
         "ANTI_RADIATION" -> "Anti-radiation missile"
-        "AIR_TO_GROUND" -> "Ground-seeking missile"
+        "AIR_TO_GROUND" -> "Guided air-to-ground munition"
         "CRUISE" -> "Cruise missile"
         "VISUAL_ONLY" -> "Visual only"
-        "LASER_GUIDED" -> "Laser guided"
+        "LASER_GUIDED", "COMMAND_GUIDED" -> "Guided air-to-ground munition"
         "GUN_POD" -> "Gun pod"
-        "ROCKET_POD" -> "Rocket pod"
+        "ROCKET_POD" -> "Unguided rocket pod"
         else -> "Bomb"
     }
 }
@@ -41,6 +46,9 @@ interface AircraftMountView {
     val maxWeaponsPerPylon: Int
     val maxPylonMassKg: Double
     val internal: Boolean get() = false
+    val quantitySelectable: Boolean get() = internal
+    val sweepFrames: List<AircraftMountSweep> get() = emptyList()
+    fun position(index: Int, speed: Double): Vec3 = sweepFrames.getOrNull(index)?.position(positions[index],speed) ?: positions[index]
 }
 
 data class AircraftPairView(
@@ -48,6 +56,7 @@ data class AircraftPairView(
     override val allowed: List<String>, override val groups: Map<String, List<String>>,
     override val maxWeaponsPerPylon: Int = AircraftPylonRacks.MAX_COPIES,
     override val maxPylonMassKg: Double = Double.POSITIVE_INFINITY,
+    override val sweepFrames: List<AircraftMountSweep> = emptyList(),
 ) : AircraftMountView {
     override val positions: List<Vec3> = Collections.unmodifiableList(listOf(left, right))
 }
@@ -58,6 +67,8 @@ data class AircraftSingleView(
     override val maxWeaponsPerPylon: Int = AircraftPylonRacks.MAX_COPIES,
     override val maxPylonMassKg: Double = Double.POSITIVE_INFINITY,
     override val internal: Boolean = false,
+    override val quantitySelectable: Boolean = internal,
+    override val sweepFrames: List<AircraftMountSweep> = emptyList(),
 ) : AircraftMountView {
     override val positions: List<Vec3> = Collections.singletonList(position)
 }
@@ -71,7 +82,7 @@ data class AircraftSeekView(val revision: Long, val weaponId: String, val target
                             val status: String, val category: String = "", val guidanceMode: String = "",
                             val coneDegrees: Double = 0.0, val range: Double = 0.0,
                             val lockTicks: Int = 0, val slot: String = "") {
-    val activeAam: Boolean get() = category in setOf("AIR_TO_AIR", "AIR_TO_GROUND", "ANTI_RADIATION") && weaponId.isNotBlank() &&
+    val activeAam: Boolean get() = category in setOf("AIR_TO_AIR", "AIR_TO_GROUND", "ANTI_RADIATION", "BOMB") && weaponId.isNotBlank() &&
         guidanceMode in setOf("INFRARED", "ACTIVE_RADAR", "SEMI_ACTIVE_RADAR", "ANTI_RADIATION", "GROUND_INFRARED") &&
         coneDegrees in 1.0..60.0 && range in 16.0..4096.0 && status != "UNAVAILABLE"
 }
@@ -95,12 +106,12 @@ data class AircraftArmamentSnapshot(
 ) {
     fun payloadKg(choices: Map<String, String> = selections, quantities: Map<String, Int> = counts): Double = definition.mounts.sumOf { mount ->
         val store = stores[choices[mount.id]] ?: return@sumOf 0.0
-        store.massKg * (store.capacity ?: 1) * mount.positions.size *
-            (quantities[mount.id] ?: store.fixedRackCount ?: 1)
+        (store.massKg * (store.capacity ?: 1) * (quantities[mount.id] ?: store.fixedRackCount ?: 1) +
+            store.rackMassKg) * mount.positions.size
     }
     fun maxCopies(mount: AircraftMountView, store: AircraftStoreView): Int = AircraftPylonRacks.maxCopies(
         definition.maxWeaponsPerPylon, mount.maxWeaponsPerPylon, store.maxPerPylon,
-        store.category, store.capacity ?: 1, store.massKg, mount.maxPylonMassKg, mount.internal)
+        store.category, store.capacity ?: 1, store.massKg, mount.maxPylonMassKg, mount.internal, store.rackMassKg)
 
     /** Physical rack positions are shared by near/far presentation and server launch ordering. */
     private val rackLayout: Map<String, List<Vec3>> by lazy {
@@ -108,15 +119,21 @@ data class AircraftArmamentSnapshot(
             val store = stores[selections[mount.id]]
             val copies = if (store == null) 1 else (counts[mount.id] ?: 1).coerceIn(1, maxCopies(mount, store))
             mount.id to if (store == null) emptyList() else (0 until copies).flatMap { copy ->
-                mount.positions.map { if (mount.internal) it else it.add(AircraftPylonRacks.offset(copy, copies, store.rackSpacing)) }
+                mount.positions.map { if (mount.internal) it else it.add(AircraftPylonRacks.offset(copy, copies, store.rackSpacing, store.rackColumns)) }
             }
         }
     }
     fun rackPositions(mount: AircraftMountView): List<Vec3> = rackLayout[mount.id] ?: emptyList()
+    fun rackPositions(mount: AircraftMountView, speed: Double): List<Vec3> {
+        val neutral = rackPositions(mount)
+        if (mount.sweepFrames.isEmpty()) return neutral
+        val offsets = mount.positions.indices.map { mount.position(it,speed).subtract(mount.positions[it]) }
+        return neutral.mapIndexed { index, point -> point.add(offsets[index % offsets.size]) }
+    }
     /** Launches alternate across the mount's physical positions. Pods stay after firing. */
     fun storePresent(mount: AircraftMountView, position: Int): Boolean {
         val store = stores[selections[mount.id]] ?: return false
-        if (store.category !in setOf("LASER_GUIDED", "BOMB", "CRUISE") && !store.guidedAirToAir) return true
+        if (store.category !in setOf("LASER_GUIDED", "COMMAND_GUIDED", "BOMB", "CRUISE") && !store.guidedAirToAir) return true
         val capacity = store.capacity ?: 1
         return (fired[mount.id] ?: 0) < (capacity - 1) * mount.positions.size * (counts[mount.id] ?: 1) + position + 1
     }
@@ -131,7 +148,7 @@ data class AircraftArmamentSnapshot(
     })
 
     companion object {
-        private val categories = setOf("LASER_GUIDED", "GUN_POD", "BOMB", "AIR_TO_AIR", "AIR_TO_GROUND", "ANTI_RADIATION", "CRUISE", "ROCKET_POD", "VISUAL_ONLY")
+        private val categories = setOf("COMMAND_GUIDED", "LASER_GUIDED", "GUN_POD", "BOMB", "AIR_TO_AIR", "AIR_TO_GROUND", "ANTI_RADIATION", "CRUISE", "ROCKET_POD", "VISUAL_ONLY")
 
         fun decode(json: JsonObject): AircraftArmamentSnapshot? = try {
             val vehicle = UUID.fromString(string(json, "Vehicle", 36))
@@ -150,7 +167,8 @@ data class AircraftArmamentSnapshot(
                 AircraftPairView(string(pair, "Id", 64), string(pair, "Name", 96),
                     vector(pair.get("Left"), 4096.0), vector(pair.get("Right"), 4096.0),
                     allowed, groups, optionalInteger(pair, "MaxWeaponsPerPylon", 12),
-                    number(pair, "MaxPylonMassKg", number(raw, "MaxPylonMassKg", Double.POSITIVE_INFINITY, 0.1, 100000.0), 0.1, 100000.0))
+                    number(pair, "MaxPylonMassKg", number(raw, "MaxPylonMassKg", Double.POSITIVE_INFINITY, 0.1, 100000.0), 0.1, 100000.0),
+                    AircraftMountSweep.decode(pair,2))
             }.also { require(it.map(AircraftPairView::id).distinct().size == it.size) }
             val singles = array(raw, "Singles", 16).map { element ->
                 val mount = element.asJsonObject
@@ -162,7 +180,9 @@ data class AircraftArmamentSnapshot(
                     vector(mount.get("Position"), 128.0), allowed, groups,
                     optionalInteger(mount, "MaxWeaponsPerPylon", 12),
                     number(mount, "MaxPylonMassKg", number(raw, "MaxPylonMassKg", Double.POSITIVE_INFINITY, 0.1, 100000.0), 0.1, 100000.0),
-                    mount["Internal"]?.asBoolean == true)
+                    mount["Internal"]?.asBoolean == true,
+                    mount["QuantitySelectable"]?.asBoolean ?: (mount["Internal"]?.asBoolean == true),
+                    AircraftMountSweep.decode(mount,1))
             }
             require(pairs.size + singles.size <= 16)
             require((pairs.map { it.id } + singles.map { it.id }).distinct().size == pairs.size + singles.size)
@@ -193,7 +213,10 @@ data class AircraftArmamentSnapshot(
                     category in setOf("AIR_TO_AIR", "AIR_TO_GROUND", "ANTI_RADIATION") && store.has("Guidance"),
                     number(store, "MassKg", 0.0, 0.0, 50000.0), optionalInteger(store, "MaxPerPylon", 1),
                     store["RackSpacing"]?.let { vector(it, 8.0) } ?: Vec3(0.6, 0.4, 0.0),
-                    store["FixedRackCount"]?.let { integer(store, "FixedRackCount", 2, AircraftPylonRacks.MAX_COPIES) })
+                    store["FixedRackCount"]?.let { integer(store, "FixedRackCount", 2, AircraftPylonRacks.MAX_COPIES) },
+                    com.atsuishio.superbwarfare.api.aircraft.AircraftGuidanceLabels.mode(store), optionalResource(store, "AmmoItem"),
+                    store["RackColumns"]?.let { integer(store, "RackColumns", 1, AircraftPylonRacks.MAX_COPIES) },
+                    number(store,"RackMassKg",0.0,0.0,2000.0))
             }
             val selections = selections(json.getAsJsonObject("Selections"), definition)
             val rawCounts = json.getAsJsonObject("Counts") ?: JsonObject()
@@ -202,7 +225,7 @@ data class AircraftArmamentSnapshot(
                 val mount = definition.mounts.firstOrNull { it.id == key } ?: error("unknown rack")
                 val store = stores[selections[key]] ?: error("empty rack")
                 val maximum = AircraftPylonRacks.maxCopies(definition.maxWeaponsPerPylon, mount.maxWeaponsPerPylon,
-                    store.maxPerPylon, store.category, store.capacity ?: 1, store.massKg, mount.maxPylonMassKg, mount.internal)
+                    store.maxPerPylon, store.category, store.capacity ?: 1, store.massKg, mount.maxPylonMassKg, mount.internal, store.rackMassKg)
                 key to integer(rawCounts, key, 1, maximum)
             }
             val rawFired = json.getAsJsonObject("Fired") ?: JsonObject()

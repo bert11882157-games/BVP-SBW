@@ -1,0 +1,25 @@
+{
+  "Schema": 1,
+  "Name": "Kh-55 cruise missile",
+  "Category": "CRUISE",
+  "Capacity": 1,
+  "MassKg": 1700,
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/kh55.geo.json",
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/kh55.png",
+  "Scale": 1,
+  "LaunchOffset": [
+    0,
+    -2.75,
+    -2.975
+  ],
+  "Flight": {
+    "InitialSpeed": 0.3,
+    "MaxSpeed": 2.5,
+    "AccelerationPerTick": 0.025,
+    "TurnDegreesPerSecond": 24,
+    "Damage": 100,
+    "BlastRadius": 10,
+    "Range": 2000
+  },
+  "AmmoItem": "superbwarfare:large_cruise_missile"
+}
