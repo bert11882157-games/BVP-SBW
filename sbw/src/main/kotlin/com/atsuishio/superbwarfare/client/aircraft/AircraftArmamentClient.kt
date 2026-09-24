@@ -303,7 +303,7 @@ object AircraftArmamentClient {
     }
 
     @JvmStatic fun cameraRotation(vehicle: VehicleEntity, partial: Float): Vec2? {
-        (Minecraft.getInstance().screen as? AircraftLoadoutScreen)?.cameraRotation(vehicle)?.let { return it }
+        (Minecraft.getInstance().screen as? AircraftLoadoutScreen)?.cameraRotation(vehicle, partial)?.let { return it }
         val direction = podDirection(vehicle, partial) ?: return null
         return Vec2(Math.toDegrees(atan2(-direction.x, direction.z)).toFloat(),
             Math.toDegrees(atan2(-direction.y, hypot(direction.x, direction.z))).toFloat())

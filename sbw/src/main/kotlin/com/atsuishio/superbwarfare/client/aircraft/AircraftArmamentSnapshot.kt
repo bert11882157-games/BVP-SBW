@@ -2,6 +2,7 @@ package com.atsuishio.superbwarfare.client.aircraft
 
 import com.atsuishio.superbwarfare.api.aircraft.AircraftPylonRacks
 import com.atsuishio.superbwarfare.api.aircraft.AircraftMountSweep
+import com.atsuishio.superbwarfare.api.aircraft.AircraftStoreModelForward
 import com.google.gson.JsonArray
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
@@ -22,7 +23,11 @@ data class AircraftStoreView(
     val ammoItem: ResourceLocation? = null,
     val rackColumns: Int? = null,
     val rackMassKg: Double = 0.0,
+    /** Model-file end that is the store's nose; see [AircraftStoreModelForward]. */
+    val modelForward: String = AircraftStoreModelForward.DEFAULT,
 ) {
+    /** Degrees about the vertical axis through the mount point that put the nose forward. */
+    val mountYawDegrees: Float get() = AircraftStoreModelForward.mountYawDegrees(modelForward)
     val visualOnly: Boolean get() = (category in setOf("AIR_TO_AIR", "AIR_TO_GROUND", "ANTI_RADIATION") && !guidedAirToAir) || category == "VISUAL_ONLY"
     val categoryLabel: String get() = when (category) {
         "AIR_TO_AIR" -> if (guidedAirToAir) "Air-to-air guided missile" else "Air-to-air · visual only"
@@ -216,7 +221,10 @@ data class AircraftArmamentSnapshot(
                     store["FixedRackCount"]?.let { integer(store, "FixedRackCount", 2, AircraftPylonRacks.MAX_COPIES) },
                     com.atsuishio.superbwarfare.api.aircraft.AircraftGuidanceLabels.mode(store), optionalResource(store, "AmmoItem"),
                     store["RackColumns"]?.let { integer(store, "RackColumns", 1, AircraftPylonRacks.MAX_COPIES) },
-                    number(store,"RackMassKg",0.0,0.0,2000.0))
+                    number(store,"RackMassKg",0.0,0.0,2000.0),
+                    store[AircraftStoreModelForward.KEY]?.asString?.also {
+                        require(it in AircraftStoreModelForward.values)
+                    } ?: AircraftStoreModelForward.DEFAULT)
             }
             val selections = selections(json.getAsJsonObject("Selections"), definition)
             val rawCounts = json.getAsJsonObject("Counts") ?: JsonObject()

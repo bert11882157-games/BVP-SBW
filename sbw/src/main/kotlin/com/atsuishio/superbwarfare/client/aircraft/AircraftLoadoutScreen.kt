@@ -11,7 +11,9 @@ import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.EditBox
 import net.minecraft.client.gui.screens.Screen
+import net.minecraft.core.BlockPos
 import net.minecraft.network.chat.Component
+import net.minecraft.util.Mth
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import net.minecraft.world.phys.Vec2
@@ -52,9 +54,17 @@ class AircraftLoadoutScreen(private var state: AircraftArmamentSnapshot) : Scree
         if(next.vehicle!=state.vehicle) return
         state=next; pending=false
     }
-    fun cameraRotation(vehicle: VehicleEntity): Vec2? = if(vehicle.uuid==state.vehicle) Vec2(heading,AircraftLoadoutFraming.PITCH) else null
-    fun cameraPosition(vehicle: VehicleEntity, partial: Float): Vec3? {
-        if(vehicle.uuid!=state.vehicle) return null
+    fun cameraRotation(vehicle: VehicleEntity, partial: Float): Vec2? =
+        cameraFit(vehicle,partial)?.let { Vec2(heading,it.pitch) }
+    fun cameraPosition(vehicle: VehicleEntity, partial: Float): Vec3? = cameraFit(vehicle,partial)?.position
+    // Position and rotation are read separately per frame; both must come from one fit.
+    private var cachedFit: AircraftLoadoutFraming.Fit? = null
+    private var cachedFitKey: List<Any>? = null
+    private fun cameraFit(vehicle: VehicleEntity, partial: Float): AircraftLoadoutFraming.Fit? {
+        if(vehicle.uuid!=state.vehicle || !partial.isFinite()) return null
+        val fov=Minecraft.getInstance().options.fov().get().toDouble()
+        val key=listOf(vehicle.tickCount,partial,width,height,fov,state.revision)
+        if(key==cachedFitKey) return cachedFit
         val speed=AircraftMountPresentation.speed(vehicle,partial)
         val points=state.definition.mounts.filterNot { it.internal }.flatMap { mount -> mount.positions.indices.map { mount.position(it,speed) } } + vehicle.computed().aircraftTerrainContact
             ?.bodyVolumes().orEmpty().flatMap { box -> (0..7).map { bits -> Vec3(
@@ -63,8 +73,35 @@ class AircraftLoadoutScreen(private var state: AircraftArmamentSnapshot) : Scree
                 if(bits and 4==0) box.minimum.z else box.maximum.z) } }
         val transform=vehicle.getVehicleTransform(partial)
         val world=points.map { local -> transform.transformPosition(Vector3d(local.x,local.y,local.z)).let { Vec3(it.x,it.y,it.z) } }
-        return AircraftLoadoutFraming.fit(AircraftCameraPivot.center(vehicle,partial),world,heading,width,height,
-            Minecraft.getInstance().options.fov().get().toDouble(),(state.definition.mounts.count { it.internal }+3)/4).position
+        val center=AircraftCameraPivot.center(vehicle,partial)
+        val bayRows=(state.definition.mounts.count { it.internal }+3)/4
+        // Equipment is only editable on the ground, so the entity's feet are the ground plane.
+        var groundY=Mth.lerp(partial.toDouble(),vehicle.yo,vehicle.y)
+        var fit=AircraftLoadoutFraming.fitFromGround(center,world,heading,width,height,fov,bayRows,groundY)
+        // Rising terrain around the aircraft lifts the eye onto the obstructing surface.
+        for(lift in 1..MAX_TERRAIN_LIFTS) {
+            groundY=obstructionTop(vehicle,fit.position) ?: break
+            fit=AircraftLoadoutFraming.fitFromGround(center,world,heading,width,height,fov,bayRows,groundY)
+        }
+        cachedFit=fit; cachedFitKey=key
+        return fit
+    }
+    /** World Y of the first open block above a solid block containing [eye], or null when open. */
+    private fun obstructionTop(vehicle: VehicleEntity, eye: Vec3): Double? {
+        val level=vehicle.level()
+        fun solid(pos: BlockPos)=!level.getBlockState(pos).getCollisionShape(level,pos).isEmpty
+        var pos=BlockPos.containing(eye.x,eye.y,eye.z)
+        if(!solid(pos)) return null
+        var climbed=0
+        while(climbed++<MAX_TERRAIN_CLIMB_BLOCKS && solid(pos)) pos=pos.above()
+        return pos.y.toDouble()
+    }
+    private companion object {
+        const val MAX_TERRAIN_LIFTS = 3
+        const val MAX_TERRAIN_CLIMB_BLOCKS = 8
+        val BUTTON_TEXT = 0xFFEDE7DC.toInt()
+        /** Matches the green of the store tooltip lines (ChatFormatting.GREEN). */
+        val OCCUPIED_STATION_TEXT = 0xFF55FF55.toInt()
     }
     private fun editable(): Boolean {
         val vehicle=Minecraft.getInstance().player?.vehicle as? VehicleEntity ?: return false
@@ -134,11 +171,11 @@ class AircraftLoadoutScreen(private var state: AircraftArmamentSnapshot) : Scree
         nameInput?.tick()
     }
     private fun button(g: GuiGraphics,text: String,x: Int,y: Int,w: Int,mx: Int,my: Int,
-                       enabled: Boolean=true,action: ()->Unit) {
+                       enabled: Boolean=true,textColor: Int=BUTTON_TEXT,action: ()->Unit) {
         val over=mx in x until x+w && my in y until y+20
         g.fill(x,y,x+w,y+20,if(over && enabled) 0xDD465E6E.toInt() else 0xCC17212B.toInt())
         g.drawCenteredString(font,font.plainSubstrByWidth(text,w-4),x+w/2,y+6,
-            if(enabled) 0xFFEDE7DC.toInt() else 0xFF77818B.toInt())
+            if(enabled) textColor else 0xFF77818B.toInt())
         if(enabled) hits+=Hit(x,y,w,20,action)
     }
     private fun inventoryPanel(g: GuiGraphics,x: Int,y: Int,w: Int,h: Int) {
@@ -167,6 +204,8 @@ class AircraftLoadoutScreen(private var state: AircraftArmamentSnapshot) : Scree
         g.drawCenteredString(font,font.plainSubstrByWidth(status,width-16),width/2,height-13,0xFFE2B66D.toInt())
         var bay=0; val transform=vehicle.getVehicleTransform(partial)
         val stations=stations()
+        // Station numbers whose physical position currently carries a store (fired rounds excluded).
+        val occupiedStations=stations.filter { state.storePresent(it.mount,it.index) }.mapTo(HashSet()) { it.number.toString() }
         val anchors=ArrayList<AircraftLoadoutLayout.Anchor>()
         // Modal pickers suppress the projected controls visually as well as their click targets.
         if(selectedMount==null && !presetsOpen && nameInput==null) {
@@ -189,7 +228,8 @@ class AircraftLoadoutScreen(private var state: AircraftArmamentSnapshot) : Scree
             g.vLine(anchor.x,min(anchor.y,y),max(anchor.y,y),0x997EB3C5.toInt())
             val center=x+AircraftLoadoutLayout.BUTTON_WIDTH/2
             g.hLine(min(anchor.x,center),max(anchor.x,center),y,0x997EB3C5.toInt())
-            button(g,anchor.name,x,y,AircraftLoadoutLayout.BUTTON_WIDTH,mx,my) { selectedMount=anchor.id; page=0; presetsOpen=false }
+            button(g,anchor.name,x,y,AircraftLoadoutLayout.BUTTON_WIDTH,mx,my,
+                textColor=if(anchor.name in occupiedStations) OCCUPIED_STATION_TEXT else BUTTON_TEXT) { selectedMount=anchor.id; page=0; presetsOpen=false }
         }
         }
         if(presetsOpen) {

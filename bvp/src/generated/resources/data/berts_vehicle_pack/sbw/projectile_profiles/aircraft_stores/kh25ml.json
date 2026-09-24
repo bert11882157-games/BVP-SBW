@@ -39,7 +39,9 @@
       "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/kh25ml_flight.geo.json",
       "Texture": "berts_vehicle_pack:textures/aircraft_stores/kh25ml.png",
       "ForwardYaw": 0,
-      "SpinDegreesPerTick": 0
+      "SpinDegreesPerTick": 0,
+      "ForwardAxis": "Y",
+      "Origin": "TAIL"
     },
     "superbwarfare:guided_maneuver_v1": {
       "MaxLoadFactorG": 15,

@@ -13,6 +13,7 @@ import com.atsuishio.superbwarfare.client.renderer.AircraftDetachedWings;
 import com.example.sbwmeshloader.core.PolyMeshModel;
 import com.github.mcmodderanchor.simplebedrockmodel.v1.common.model.BedrockBone;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
@@ -192,6 +193,9 @@ final class BvpSuspendedStoreRenderer {
         try {
             // Native HULL blocks to BVP's already-rotated model frame, matching live root offsets.
             pose.m_85837_(-point.f_82479_, point.f_82480_, -point.f_82481_);
+            // Turn about the mount point so a store authored nose-at-+Z faces the aircraft's -Z nose.
+            float mountYaw = store.getMountYawDegrees();
+            if (mountYaw != 0.0F) pose.m_252781_(Axis.f_252436_.m_252977_(mountYaw));
             float scale = (float) store.getScale();
             pose.m_85841_(scale, scale, scale);
             if (mesh != null) {

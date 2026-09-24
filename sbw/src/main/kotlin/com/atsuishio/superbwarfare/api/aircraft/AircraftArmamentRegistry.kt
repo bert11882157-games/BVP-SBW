@@ -203,6 +203,10 @@ object AircraftArmamentRegistry {
                 require(json.has("FixedRackCount") && it.asDouble.isFinite() && it.asDouble in 0.0..2000.0)
             }
             json["Scale"]?.let { require(it.asDouble.isFinite() && it.asDouble in 0.001..32.0) }
+            json[AircraftStoreModelForward.KEY]?.let {
+                require(json.has("Model") && it.isJsonPrimitive && it.asJsonPrimitive.isString &&
+                    it.asString in AircraftStoreModelForward.values) { "ModelForward must be -Z or +Z for a modeled store" }
+            }
             json["LaunchOffset"]?.let { require(vector(it)?.length()?.let { length -> length <= 8.0 } == true) }
             return
         }
