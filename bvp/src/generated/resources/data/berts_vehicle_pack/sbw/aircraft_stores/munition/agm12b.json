@@ -1,0 +1,20 @@
+{
+  "Schema": 1,
+  "Name": "AGM-12B Bullpup · manual command",
+  "Category": "COMMAND_GUIDED",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/agm12b.geo.json",
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/agm12b.png",
+  "Capacity": 1,
+  "MassKg": 259,
+  "CommandGuidance": {
+    "Mode": "MCLOS"
+  },
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_stores/agm12b",
+  "LaunchGunProfile": "berts_vehicle_pack:aircraft_stores/agm12b",
+  "LaunchOffset": [
+    0,
+    0,
+    -1.6
+  ],
+  "AmmoItem": "superbwarfare:medium_air_to_ground_missile"
+}

@@ -264,5 +264,19 @@
       },
       "LinkHalfThickness": 1.729689999999998
     }
+  },
+  "EngineExhaust": {
+    "Schema": "berts_vehicle_pack:engine_exhaust_origins/v1",
+    "Parent": "HULL",
+    "Origins": [
+      {
+        "Id": "engine_exhaust_group_origin_000",
+        "Position": [
+          1.67223,
+          1.46331,
+          2.57266
+        ]
+      }
+    ]
   }
 }

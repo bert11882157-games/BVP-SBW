@@ -1,0 +1,25 @@
+{
+  "Schema": 1,
+  "Name": "Kh-31P · anti-radiation",
+  "Category": "ANTI_RADIATION",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/kh31.geo.json",
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/kh31.png",
+  "Capacity": 1,
+  "MassKg": 586,
+  "Guidance": {
+    "Mode": "ANTI_RADIATION",
+    "LockTicks": 50,
+    "Range": 1600,
+    "ConeDegrees": 30,
+    "CountermeasureVulnerability": 0.3
+  },
+  "Flight": {
+    "InitialSpeed": 0.7,
+    "MaxSpeed": 9,
+    "AccelerationPerTick": 0.2,
+    "TurnDegreesPerSecond": 32,
+    "Damage": 130,
+    "BlastRadius": 7
+  },
+  "AmmoItem": "superbwarfare:large_air_to_ground_missile"
+}

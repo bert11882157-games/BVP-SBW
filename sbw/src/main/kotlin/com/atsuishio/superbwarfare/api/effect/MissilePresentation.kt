@@ -14,25 +14,34 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber
 object MissilePresentation {
     private val physicalWireId = net.minecraft.resources.ResourceLocation("berts_vehicle_pack", "physical_wire_v1")
     /** Projectile implementation class and exhaust shape do not imply a physical guidance wire. */
-    @JvmStatic fun hasPhysicalWire(entity: Entity): Boolean = runCatching {
+    @JvmStatic fun hasPhysicalWire(entity: Entity): Boolean = physicalWireCount(entity) > 0
+    @JvmStatic fun physicalWireCount(entity: Entity): Int = runCatching {
         val profile = com.atsuishio.superbwarfare.api.projectile.ProjectileProfiles.resolve(entity)
-            ?: return nativePhysicalWire(entity)
-        val data = profile.extension(physicalWireId)?.asJsonObject ?: return false
-        val schema = data.get("Schema")?.takeIf { it.isJsonPrimitive && it.asJsonPrimitive.isNumber } ?: return false
-        val enabled = data.get("Enabled")?.takeIf { it.isJsonPrimitive && it.asJsonPrimitive.isBoolean } ?: return false
-        data.keySet() == setOf("Schema", "Enabled") && schema.asDouble == 1.0 && enabled.asBoolean
-    }.getOrDefault(false)
-    private fun nativePhysicalWire(entity: Entity): Boolean {
-        val context = (entity as? WireGuideMissileEntity)?.launcherGuidanceContext() ?: return false
-        val level = entity.level() as? net.minecraft.server.level.ServerLevel ?: return false
-        val launcher = level.getEntity(context.launcherVehicleUUID) ?: return false
+            ?: return nativePhysicalWireCount(entity)
+        val data = profile.extension(physicalWireId)?.asJsonObject ?: return 0
+        val schema = data.get("Schema")?.takeIf { it.isJsonPrimitive && it.asJsonPrimitive.isNumber } ?: return 0
+        val enabled = data.get("Enabled")?.takeIf { it.isJsonPrimitive && it.asJsonPrimitive.isBoolean } ?: return 0
+        if (schema.asDouble != 1.0 || data.keySet().any { it !in setOf("Schema", "Enabled", "WireCount") }) return 0
+        val count = data.get("WireCount")
+        if (count == null) return if (enabled.asBoolean) 1 else 0 // Existing v1 resource compatibility.
+        if (!count.isJsonPrimitive || !count.asJsonPrimitive.isNumber) return 0
+        val value = count.asDouble
+        if (!enabled.asBoolean || value !in setOf(1.0, 2.0)) 0 else value.toInt()
+    }.getOrDefault(0)
+    private fun nativePhysicalWireCount(entity: Entity): Int {
+        val context = (entity as? WireGuideMissileEntity)?.launcherGuidanceContext() ?: return 0
+        val level = entity.level() as? net.minecraft.server.level.ServerLevel ?: return 0
+        val launcher = level.getEntity(context.launcherVehicleUUID) ?: return 0
         val type = net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getKey(launcher.type).toString()
-        return nativePhysicalWire(type, context.weaponName)
+        return nativePhysicalWireCount(type, context.weaponName)
     }
-    internal fun nativePhysicalWire(type: String, weapon: String): Boolean = when (weapon) {
-        "Missile" -> type in setOf("superbwarfare:tow", "superbwarfare:sodayo_pick_up_tow",
-            "superbwarfare:bradley", "superbwarfare:lav_25", "superbwarfare:bmp_2")
-        else -> false
+    internal fun nativePhysicalWire(type: String, weapon: String): Boolean = nativePhysicalWireCount(type, weapon) > 0
+    internal fun nativePhysicalWireCount(type: String, weapon: String): Int = when {
+        weapon != "Missile" -> 0
+        type in setOf("superbwarfare:tow", "superbwarfare:sodayo_pick_up_tow",
+            "superbwarfare:bradley", "superbwarfare:lav_25") -> 2
+        type == "superbwarfare:bmp_2" -> 1
+        else -> 0
     }
     data class NozzleOffset(val centerHeight: Double, val rear: Double)
     private var nozzleResolver: java.util.function.Function<Entity, NozzleOffset?>? = null
@@ -70,7 +79,7 @@ object MissilePresentation {
     private val attachedBridge by lazy { runCatching {
         Class.forName("dev.ballistics.MissileVisualHooks").getMethod("registerAttached", Entity::class.java,
             Double::class.javaPrimitiveType, String::class.java, Double::class.javaPrimitiveType,
-            Double::class.javaPrimitiveType, Boolean::class.javaPrimitiveType, Boolean::class.javaPrimitiveType)
+            Double::class.javaPrimitiveType, Boolean::class.javaPrimitiveType, Int::class.javaPrimitiveType)
     }.getOrNull() }
     @JvmStatic fun isMissile(entity: Entity?): Boolean = entity is MissileProjectile ||
         entity is SmallRocketEntity || entity is MediumRocketEntity ||
@@ -91,7 +100,7 @@ object MissilePresentation {
             val offset = nozzleOffset(entity)
             if (attachedBridge != null) attachedBridge!!.invoke(null, entity, entity.bbWidth.toDouble(),
                 kind + if (airborne) "_air" else "_ground", offset.centerHeight, offset.rear,
-                entity is MissileProjectile, hasPhysicalWire(entity))
+                entity is MissileProjectile, physicalWireCount(entity))
             else bridge?.first?.invoke(null, entity, entity.bbWidth.toDouble())
         }
             .onFailure { Mod.LOGGER.debug("Missile visual registration unavailable", it) }

@@ -26,12 +26,23 @@ internal class VehicleDestructionLifecycleService(
     private fun publishFarDeath() {
         if (farDeathPublished || vehicle.level().isClientSide) return
         farDeathPublished = true
-        if (aircraft && vehicle.aircraftWreckStart < 0L) vehicle.aircraftWreckStart = vehicle.level().gameTime
+        if (vehicle.aircraftWreckStart < 0L) vehicle.aircraftWreckStart = vehicle.level().gameTime
         if (aircraft) com.atsuishio.superbwarfare.api.aircraft.AircraftCombatEffects.aircraftBreakup(vehicle)
         else com.atsuishio.superbwarfare.network.message.receive.ExplosionBurstMessage.sendFarDeath(vehicle)
     }
 
     fun tickAfterVanilla() {
+        if (!vehicle.level().isClientSide && !vehicle.isWreck &&
+            com.atsuishio.superbwarfare.api.vehicle.flight.AircraftWreckBreakup.mask(vehicle) != 0 &&
+            (vehicle.isInFluidType || (vehicle.hasRecentFixedWingWorldContact() &&
+                vehicle.level().gameTime - vehicle.aircraftWreckStart >= 10))) {
+            vehicle.crash = true
+            val source = com.atsuishio.superbwarfare.init.ModDamageTypes.causeVehicleStrikeDamage(
+                vehicle.level().registryAccess(), vehicle, vehicle.lastDriver ?: vehicle)
+            vehicle.applyResolvedDamage(com.atsuishio.superbwarfare.api.vehicle.damage.ResolvedVehicleDamageRequest(
+                source, vehicle.getMaxHealth(), modulePolicy =
+                    com.atsuishio.superbwarfare.api.vehicle.damage.ResolvedVehicleModulePolicy.SKIP_NATIVE, lethal = true))
+        }
         if (vehicle.level() is ServerLevel && vehicle.health <= 0 && !vehicle.isWreck) {
             publishFarDeath()
             // Preserve the legacy pre-dispatch wreck marker for destroy() overrides.
@@ -40,14 +51,21 @@ internal class VehicleDestructionLifecycleService(
         }
 
         if (!vehicle.isWreck) return
-        if (aircraft && !vehicle.level().isClientSide && vehicle.aircraftWreckStart < 0L)
+        if (!vehicle.level().isClientSide && vehicle.aircraftWreckStart < 0L)
             vehicle.aircraftWreckStart = vehicle.level().gameTime
+        if (!vehicle.level().isClientSide && vehicle.level().gameTime - vehicle.aircraftWreckStart >=
+            com.atsuishio.superbwarfare.api.vehicle.flight.WreckDebrisPhysics.WRECK_LIFETIME_TICKS) {
+            vehicle.discard()
+            vehicle.generateWreckageLoot()
+            return
+        }
+        if (aircraft) com.atsuishio.superbwarfare.api.vehicle.flight.AircraftWreckBreakup.update(vehicle)
 
         val aircraft = vehicle.vehicleType == VehicleType.AIRPLANE ||
             vehicle.vehicleType == VehicleType.HELICOPTER
-        // An airborne wreck hitting a wall must detonate too, even without a ground flag.
-        val wreckTerrainContact = vehicle.hasRecentFixedWingWorldContact()
-        if (aircraft && (vehicle.onGround() || vehicle.isInFluidType || wreckTerrainContact)
+        // Keep the later fix: an airborne wreck hitting a wall must also detonate.
+        val destructiveFixedWingContact = vehicle.hasRecentFixedWingWorldContact()
+        if (aircraft && (vehicle.onGround() || vehicle.isInFluidType || destructiveFixedWingContact || vehicle.aircraftWreckImpactTime >= 0)
             && !vehicle.sympatheticDetonated) {
             vehicle.sympatheticDetonated = true
             val destroyInfo = vehicle.computed().destroyInfo
@@ -125,7 +143,7 @@ internal class VehicleDestructionLifecycleService(
             TurretEjectionPolicy.KEEP_ATTACHED -> false
             TurretEjectionPolicy.FORCE_EJECT -> true
         }
-        if (vehicle.hasTurret() && ejectTurret && !vehicle.sympatheticDetonated) {
+        if (vehicle.hasTurret() && vehicle.allowsTurretEjection() && ejectTurret && !vehicle.sympatheticDetonated) {
             spawnTurretWreck(destroyInfo, context)
         }
 

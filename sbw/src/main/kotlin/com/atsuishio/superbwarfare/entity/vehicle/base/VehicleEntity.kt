@@ -1884,9 +1884,8 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         aircraftWreckMotionX = compound.getFloat("AircraftWreckMotionX").takeIf { it.isFinite() && kotlin.math.abs(it) < 100F } ?: 0F
         aircraftWreckMotionY = compound.getFloat("AircraftWreckMotionY").takeIf { it.isFinite() && kotlin.math.abs(it) < 100F } ?: 0F
         aircraftWreckMotionZ = compound.getFloat("AircraftWreckMotionZ").takeIf { it.isFinite() && kotlin.math.abs(it) < 100F } ?: 0F
-        // Retired breakup state must not hide wings or shrink collision on existing saves.
-        aircraftWreckWings = 0
-        aircraftWreckImpactTime = -1L
+        aircraftWreckWings = if (compound.contains("AircraftWreckWings")) compound.getInt("AircraftWreckWings").coerceIn(-1, 3) else -1
+        aircraftWreckImpactTime = if (compound.contains("AircraftWreckImpactTime")) compound.getLong("AircraftWreckImpactTime").coerceAtLeast(-1L) else -1L
         aircraftWreckBounces = compound.getInt("AircraftWreckBounces").coerceIn(0, 3)
         sympatheticDetonated = compound.getBoolean("SympatheticDetonated")
         turretBurned = compound.getBoolean("TurretBurned")
@@ -3237,6 +3236,8 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
     }
 
     fun lowHealthWarning() {
+        // Destroyed vehicles use the bounded near/far wreck fire sequence, not live damage clouds.
+        if (isWreck) return
         if (!data().compute().hasLowHealthWarning) return
         if (this.health <= 0.4 * this.getMaxHealth()) {
             addRandomParticle(
@@ -3445,7 +3446,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         data: GunData,
     ): VehicleWeaponGuidanceContext? {
         val seatIndex = getSeatIndex(controller)
-        val weaponIndex = getSeat(seatIndex)?.weapons()?.indexOf(weaponName) ?: -1
+        val weaponIndex = if (seatIndex < 0) -1 else getWeaponIds(seatIndex).indexOf(weaponName)
         if (seatIndex < 0 || weaponIndex < 0 || getGunName(seatIndex, weaponIndex) != weaponName) return null
         val roundId = VehicleWeaponGuidance.atgmRoundId(data)
         return VehicleWeaponGuidanceContext(
@@ -4507,6 +4508,9 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
 
     /** Native destruction entry point. Addons can use the context overload for one explicit cause. */
     open fun destroy() = vehicleDestructionLifecycleService.destroyBase()
+
+    /** Vehicles with blowout compartments can retain their turret for every destruction cause. */
+    open fun allowsTurretEjection(): Boolean = true
 
     fun destroy(context: VehicleDestructionContext) = vehicleDestructionLifecycleService.destroy(context)
 
@@ -6957,7 +6961,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         if (!isInitialized || !usesAircraftTerrainContact()) return null
         val definition = computed().aircraftTerrainContact ?: return null
         return AircraftCollisionSnapshot.create(definition, getVehicleTransform(partialTicks), synchedGearRot,
-            0, false,
+            com.atsuishio.superbwarfare.api.vehicle.flight.AircraftWreckBreakup.mask(this), aircraftWreckImpactTime >= 0,
             if (definition.bodyVolumes().any { it.bone != "hull" })
                 com.atsuishio.superbwarfare.api.aircraft.AircraftSurfaceModules.boneMatrices(this, partialTicks) else null)
     }

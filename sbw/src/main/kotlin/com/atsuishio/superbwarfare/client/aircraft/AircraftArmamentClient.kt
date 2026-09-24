@@ -38,6 +38,8 @@ object AircraftArmamentClient {
     private var exitPending: UUID? = null
     private val aim = AircraftPodStabilizer()
     private var podZoom = 1.0
+    private var podStabilized = false
+    private var stabilizeRequest = 0L
     private var lockTargetEntity: net.minecraft.world.entity.Entity? = null
     private var selectedPair: String? = null
     private var selectedOwner: UUID? = null
@@ -73,6 +75,14 @@ object AircraftArmamentClient {
         }
         if (mc.level == null) return
         syncLevel()
+        if (json.has("StabilizePoint")) {
+            val vehicle = pilot() ?: return
+            if (!isPodActive(vehicle) || json["Vehicle"]?.asString != vehicle.uuid.toString() ||
+                json["EntityId"]?.asInt != vehicle.id || json["StabilizeRequest"]?.asLong != stabilizeRequest) return
+            val point = com.atsuishio.superbwarfare.api.aircraft.AircraftArmamentRegistry.vector(json["StabilizePoint"]) ?: return
+            aim.designate(point); podStabilized = true
+            return
+        }
         val open = try {
             json.get("Open")?.let { require(it.isJsonPrimitive && it.asJsonPrimitive.isBoolean); it.asBoolean } ?: false
         } catch (_: RuntimeException) { return }
@@ -87,13 +97,15 @@ object AircraftArmamentClient {
         val seek = state.seek
         if (lockTargetEntity?.uuid != seek?.target || lockTargetEntity?.isRemoved == true)
             lockTargetEntity = seek?.target?.let { id -> mc.level?.entitiesForRendering()?.firstOrNull { it.uuid == id } }
-        if (entry.pointRevision > previousPointRevision && state.point != null && isPodActive(vehicle)) aim.designate(state.point)
+        if (entry.pointRevision > previousPointRevision && state.point != null && isPodActive(vehicle)) {
+            aim.designate(state.point); podStabilized = true; stabilizeRequest++
+        }
         if (selectedOwner != state.vehicle) { selectedOwner = state.vehicle; selectedPair = null }
         if (state.definition.mounts.none { it.id == selectedPair }) selectedPair = state.definition.mounts.firstOrNull()?.id
         if (!state.podActive) { if (exitPending == state.vehicle) exitPending = null; leavePod() }
         if (json.has("Definition")) (mc.screen as? AircraftLoadoutScreen)?.accept(state)
         if (open) {
-            if (mc.screen !is AircraftLoadoutScreen) mc.setScreen(AircraftLoadoutScreen(state))
+            if (mc.screen !is AircraftLoadoutScreen) { leavePod(); mc.setScreen(AircraftLoadoutScreen(state)) }
         } else if (state.message.isNotBlank() && json.has("Definition")) {
             mc.player?.displayClientMessage(Component.literal(state.message), true)
         }
@@ -134,7 +146,7 @@ object AircraftArmamentClient {
             previousView?.let(mc.options::setCameraType)
         }
         podVehicle = null; previousView = null
-        aim.reset(); podZoom = 1.0
+        aim.reset(); podZoom = 1.0; podStabilized = false; stabilizeRequest++
         if (leavingActivePod) FixedWingDynamicCamera.reset()
     }
 
@@ -148,12 +160,30 @@ object AircraftArmamentClient {
         }
     }
 
+    private var commandWasActive = false
+    private fun manualCommand(vehicle: VehicleEntity?, state: AircraftArmamentSnapshot?) {
+        val mc = Minecraft.getInstance()
+        if (vehicle == null || state == null || !controlsActive() || mc.isPaused ||
+            state.selections.values.none { state.stores[it]?.guidanceMode == "MCLOS" }) {
+            commandWasActive = false; return
+        }
+        if (vehicle.level().gameTime % 2L != 0L) return
+        fun held(key: com.atsuishio.superbwarfare.client.input.VehicleKeyMapping) =
+            if (key.isDown && key.isConflictContextAndModifierActive) 1 else 0
+        val yaw = held(AircraftArmamentKeys.COMMAND_RIGHT) - held(AircraftArmamentKeys.COMMAND_LEFT)
+        val pitch = held(AircraftArmamentKeys.COMMAND_UP) - held(AircraftArmamentKeys.COMMAND_DOWN)
+        if (yaw != 0 || pitch != 0 || commandWasActive) request("COMMAND",JsonObject().apply {
+            addProperty("Yaw",yaw); addProperty("Pitch",pitch)
+        })
+        commandWasActive = yaw != 0 || pitch != 0
+    }
     @SubscribeEvent fun tick(event: TickEvent.ClientTickEvent) {
         if (event.phase != TickEvent.Phase.END) return
         syncLevel()
         val mc = Minecraft.getInstance()
         val vehicle = pilot()
         val state = vehicle?.let(::getVehicleSnapshot)
+        manualCommand(vehicle,state)
         if (vehicle == null) { lockTargetEntity = null }
         AircraftSeekerSounds.update(if (vehicle != null && mc.screen == null && mc.isWindowActive) state?.seek else null)
         if (vehicle != null && state?.podActive == true && exitPending != vehicle.uuid &&
@@ -174,7 +204,7 @@ object AircraftArmamentClient {
             val pod = state.definition.pod
             val origin = cameraPosition(vehicle, 1F) ?: vehicle.position()
             aim.begin(pod, vehicle.getVehicleTransform(1F), origin)
-            state.point?.let(aim::designate)
+            state.point?.let { aim.designate(it); podStabilized = true }
         } else if (mc.options.cameraType != CameraType.FIRST_PERSON) {
             // A manual F5 change wins; restoration must not overwrite that user's new choice.
             exitPending = vehicle.uuid
@@ -217,6 +247,21 @@ object AircraftArmamentClient {
                     add("Direction", JsonArray().apply { add(direction.x); add(direction.y); add(direction.z) })
                 }
             })
+            AircraftArmamentKeys.STABILIZE.isActiveAndMatches(key) && isPodActive(vehicle) -> {
+                stabilizeRequest++
+                if (podStabilized) {
+                    podStabilized = false
+                    val origin = cameraPosition(vehicle, mc.frameTime)
+                    val direction = podDirection(vehicle, mc.frameTime)
+                    val range = getVehicleSnapshot(vehicle)?.definition?.pod?.range
+                    if (origin != null && direction != null && range != null) aim.designate(origin.add(direction.scale(range)))
+                } else request("STABILIZE", JsonObject().apply {
+                    addProperty("Pod", true); addProperty("StabilizeRequest", stabilizeRequest)
+                    podDirection(vehicle, mc.frameTime)?.let { direction ->
+                        add("Direction", JsonArray().apply { add(direction.x); add(direction.y); add(direction.z) })
+                    }
+                })
+            }
             AircraftArmamentKeys.CLEAR.isActiveAndMatches(key) -> request("CLEAR_POINT")
             AircraftArmamentKeys.CYCLE.isActiveAndMatches(key) -> {
                 val pairs = getVehicleSnapshot(vehicle)?.definition?.mounts.orEmpty()
@@ -249,6 +294,7 @@ object AircraftArmamentClient {
         if (isPodActive(vehicle)) podZoom else null
 
     @JvmStatic fun cameraPosition(vehicle: VehicleEntity, partial: Float): Vec3? {
+        (Minecraft.getInstance().screen as? AircraftLoadoutScreen)?.cameraPosition(vehicle, partial)?.let { return it }
         if (!isPodActive(vehicle) || !partial.isFinite()) return null
         val point = getVehicleSnapshot(vehicle)?.definition?.pod?.position ?: return null
         // Pod.Position is a native HULL point, exactly like the server designation ray, not an orbit-camera offset.
@@ -257,6 +303,7 @@ object AircraftArmamentClient {
     }
 
     @JvmStatic fun cameraRotation(vehicle: VehicleEntity, partial: Float): Vec2? {
+        (Minecraft.getInstance().screen as? AircraftLoadoutScreen)?.cameraRotation(vehicle)?.let { return it }
         val direction = podDirection(vehicle, partial) ?: return null
         return Vec2(Math.toDegrees(atan2(-direction.x, direction.z)).toFloat(),
             Math.toDegrees(atan2(-direction.y, hypot(direction.x, direction.z))).toFloat())
@@ -270,7 +317,7 @@ object AircraftArmamentClient {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     fun cameraRoll(event: ViewportEvent.ComputeCameraAngles) {
-        if (isPodActive(podVehicle)) event.roll = 0F
+        if (isPodActive(podVehicle) || Minecraft.getInstance().screen is AircraftLoadoutScreen) event.roll = 0F
     }
 
     fun renderHud(graphics: GuiGraphics, partial: Float, width: Int, height: Int) {
@@ -293,6 +340,8 @@ object AircraftArmamentClient {
         if (isPodActive(vehicle)) {
             val zoom = String.format(java.util.Locale.ROOT, "%.1fx", podZoom)
             graphics.drawCenteredString(mc.font, "TARGETING POD  $zoom  |  [${AircraftArmamentKeys.DESIGNATE.translatedKeyMessage.string}] Designate", width / 2, 24, color)
+            graphics.drawCenteredString(mc.font, if (podStabilized) "STAB  [${AircraftArmamentKeys.STABILIZE.translatedKeyMessage.string}]"
+                else "[${AircraftArmamentKeys.STABILIZE.translatedKeyMessage.string}] Stabilize", width / 2, 36, color)
             graphics.fill(width / 2 - 5, height / 2, width / 2 + 6, height / 2 + 1, color)
             graphics.fill(width / 2, height / 2 - 5, width / 2 + 1, height / 2 + 6, color)
         }

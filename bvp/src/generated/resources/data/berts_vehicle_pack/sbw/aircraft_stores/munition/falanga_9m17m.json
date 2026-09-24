@@ -1,0 +1,20 @@
+{
+  "Schema": 1,
+  "Name": "9M17M Falanga · manual command",
+  "Category": "COMMAND_GUIDED",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/falanga.geo.json",
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/falanga.png",
+  "Capacity": 1,
+  "MassKg": 31.5,
+  "CommandGuidance": {
+    "Mode": "MCLOS"
+  },
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_stores/falanga_9m17m",
+  "LaunchGunProfile": "berts_vehicle_pack:aircraft_stores/falanga_9m17m",
+  "LaunchOffset": [
+    0,
+    0,
+    -0.58
+  ],
+  "AmmoItem": "superbwarfare:large_atgm"
+}

@@ -6,25 +6,92 @@
   "Pairs": [],
   "Singles": [
     {
-      "Id": "forward_bay",
-      "Name": "forward internal bay",
+      "Id": "forward_bay_1",
+      "Name": "Forward Bay station 1",
       "Position": [
-        0,
+        -0.65,
         2.728783,
-        2.108605
+        2.458605
       ],
       "Internal": true,
       "AllowedStores": [
-        "berts_vehicle_pack:reference/dumb_bomb_250kg",
         "berts_vehicle_pack:fa18e/bomb_500kg_dumb_1",
-        "berts_vehicle_pack:reference/dumb_bomb_5000kg"
+        "berts_vehicle_pack:munition/blu109_jdam",
+        "berts_vehicle_pack:munition/mk82",
+        "berts_vehicle_pack:munition/mk83",
+        "berts_vehicle_pack:munition/mk84",
+        "berts_vehicle_pack:munition/cbu97"
       ],
       "MaxWeaponsPerPylon": 12,
-      "MaxPylonMassKg": 11340
+      "MaxPylonMassKg": 11340,
+      "QuantitySelectable": true
     },
     {
-      "Id": "middle_bay",
-      "Name": "middle internal bay",
+      "Id": "forward_bay_2",
+      "Name": "Forward Bay station 2",
+      "Position": [
+        0,
+        2.728783,
+        2.458605
+      ],
+      "Internal": true,
+      "AllowedStores": [
+        "berts_vehicle_pack:fa18e/bomb_500kg_dumb_1",
+        "berts_vehicle_pack:munition/blu109_jdam",
+        "berts_vehicle_pack:munition/mk82",
+        "berts_vehicle_pack:munition/mk83",
+        "berts_vehicle_pack:munition/mk84",
+        "berts_vehicle_pack:munition/cbu97"
+      ],
+      "MaxWeaponsPerPylon": 12,
+      "MaxPylonMassKg": 11340,
+      "QuantitySelectable": true
+    },
+    {
+      "Id": "forward_bay_3",
+      "Name": "Forward Bay station 3",
+      "Position": [
+        0.65,
+        2.728783,
+        2.458605
+      ],
+      "Internal": true,
+      "AllowedStores": [
+        "berts_vehicle_pack:fa18e/bomb_500kg_dumb_1",
+        "berts_vehicle_pack:munition/blu109_jdam",
+        "berts_vehicle_pack:munition/mk82",
+        "berts_vehicle_pack:munition/mk83",
+        "berts_vehicle_pack:munition/mk84",
+        "berts_vehicle_pack:munition/cbu97"
+      ],
+      "MaxWeaponsPerPylon": 12,
+      "MaxPylonMassKg": 11340,
+      "QuantitySelectable": true
+    },
+    {
+      "Id": "middle_bay_1",
+      "Name": "Middle Bay station 1",
+      "Position": [
+        -0.65,
+        2.728783,
+        -2.666766
+      ],
+      "Internal": true,
+      "AllowedStores": [
+        "berts_vehicle_pack:fa18e/bomb_500kg_dumb_1",
+        "berts_vehicle_pack:munition/blu109_jdam",
+        "berts_vehicle_pack:munition/mk82",
+        "berts_vehicle_pack:munition/mk83",
+        "berts_vehicle_pack:munition/mk84",
+        "berts_vehicle_pack:munition/cbu97"
+      ],
+      "MaxWeaponsPerPylon": 12,
+      "MaxPylonMassKg": 11340,
+      "QuantitySelectable": true
+    },
+    {
+      "Id": "middle_bay_2",
+      "Name": "Middle Bay station 2",
       "Position": [
         0,
         2.728783,
@@ -32,29 +99,79 @@
       ],
       "Internal": true,
       "AllowedStores": [
-        "berts_vehicle_pack:reference/dumb_bomb_250kg",
         "berts_vehicle_pack:fa18e/bomb_500kg_dumb_1",
-        "berts_vehicle_pack:reference/dumb_bomb_5000kg"
+        "berts_vehicle_pack:munition/blu109_jdam",
+        "berts_vehicle_pack:munition/mk82",
+        "berts_vehicle_pack:munition/mk83",
+        "berts_vehicle_pack:munition/mk84",
+        "berts_vehicle_pack:munition/cbu97"
       ],
       "MaxWeaponsPerPylon": 12,
-      "MaxPylonMassKg": 11340
+      "MaxPylonMassKg": 11340,
+      "QuantitySelectable": true
     },
     {
-      "Id": "aft_bay",
-      "Name": "aft internal bay",
+      "Id": "middle_bay_3",
+      "Name": "Middle Bay station 3",
       "Position": [
-        0,
+        0.65,
         2.728783,
-        -8.806528
+        -2.666766
       ],
       "Internal": true,
       "AllowedStores": [
-        "berts_vehicle_pack:reference/dumb_bomb_250kg",
         "berts_vehicle_pack:fa18e/bomb_500kg_dumb_1",
-        "berts_vehicle_pack:reference/dumb_bomb_5000kg"
+        "berts_vehicle_pack:munition/blu109_jdam",
+        "berts_vehicle_pack:munition/mk82",
+        "berts_vehicle_pack:munition/mk83",
+        "berts_vehicle_pack:munition/mk84",
+        "berts_vehicle_pack:munition/cbu97"
       ],
       "MaxWeaponsPerPylon": 12,
-      "MaxPylonMassKg": 11340
+      "MaxPylonMassKg": 11340,
+      "QuantitySelectable": true
+    },
+    {
+      "Id": "aft_bay_1",
+      "Name": "Aft Bay station 1",
+      "Position": [
+        -0.5,
+        2.728783,
+        -9.156528
+      ],
+      "Internal": true,
+      "AllowedStores": [
+        "berts_vehicle_pack:fa18e/bomb_500kg_dumb_1",
+        "berts_vehicle_pack:munition/blu109_jdam",
+        "berts_vehicle_pack:munition/mk82",
+        "berts_vehicle_pack:munition/mk83",
+        "berts_vehicle_pack:munition/mk84",
+        "berts_vehicle_pack:munition/cbu97"
+      ],
+      "MaxWeaponsPerPylon": 12,
+      "MaxPylonMassKg": 11340,
+      "QuantitySelectable": true
+    },
+    {
+      "Id": "aft_bay_2",
+      "Name": "Aft Bay station 2",
+      "Position": [
+        0.5,
+        2.728783,
+        -9.156528
+      ],
+      "Internal": true,
+      "AllowedStores": [
+        "berts_vehicle_pack:fa18e/bomb_500kg_dumb_1",
+        "berts_vehicle_pack:munition/blu109_jdam",
+        "berts_vehicle_pack:munition/mk82",
+        "berts_vehicle_pack:munition/mk83",
+        "berts_vehicle_pack:munition/mk84",
+        "berts_vehicle_pack:munition/cbu97"
+      ],
+      "MaxWeaponsPerPylon": 12,
+      "MaxPylonMassKg": 11340,
+      "QuantitySelectable": true
     }
   ],
   "StoreGroups": {},

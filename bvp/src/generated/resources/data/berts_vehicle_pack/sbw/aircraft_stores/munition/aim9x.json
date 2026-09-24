@@ -1,0 +1,31 @@
+{
+  "Schema": 1,
+  "Name": "AIM-9X Sidewinder · infrared",
+  "Category": "AIR_TO_AIR",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/aim9x.geo.json",
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/aim9x.png",
+  "Capacity": 1,
+  "MassKg": 85.3,
+  "Guidance": {
+    "Mode": "INFRARED",
+    "LockTicks": 30,
+    "Range": 600,
+    "ConeDegrees": 50,
+    "CountermeasureVulnerability": 0.7
+  },
+  "Flight": {
+    "InitialSpeed": 0.5,
+    "MaxSpeed": 5.5,
+    "AccelerationPerTick": 0.1,
+    "TurnDegreesPerSecond": 130,
+    "Damage": 45,
+    "BlastRadius": 3
+  },
+  "AmmoItem": "superbwarfare:small_air_to_air_missile",
+  "MaxPerPylon": 1,
+  "LaunchOffset": [
+    0,
+    0,
+    -1.51
+  ]
+}

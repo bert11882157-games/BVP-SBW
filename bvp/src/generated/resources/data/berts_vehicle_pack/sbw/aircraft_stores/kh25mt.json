@@ -1,0 +1,34 @@
+{
+  "Schema": 1,
+  "Name": "Kh-25MT · ground fire and forget",
+  "Category": "AIR_TO_GROUND",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/kh25ml.geo.json",
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/kh25ml.png",
+  "Capacity": 1,
+  "Scale": 1,
+  "LaunchOffset": [
+    0,
+    -0.2108108125,
+    0
+  ],
+  "MassKg": 320,
+  "AmmoItem": "superbwarfare:medium_air_to_ground_missile",
+  "Flight": {
+    "InitialSpeed": 2,
+    "MaxSpeed": 10,
+    "AccelerationPerTick": 0.2,
+    "TurnDegreesPerSecond": 180,
+    "Damage": 1600,
+    "BlastRadius": 1.25,
+    "MaxLoadFactorG": 15,
+    "BodyTurnLimitScale": 3
+  },
+  "Guidance": {
+    "Mode": "GROUND_INFRARED",
+    "Presentation": "FIRE_AND_FORGET",
+    "LockTicks": 60,
+    "Range": 600,
+    "ConeDegrees": 25,
+    "CountermeasureVulnerability": 1
+  }
+}

@@ -10,6 +10,8 @@ import com.atsuishio.superbwarfare.entity.projectile.MissileProjectile;
 import com.atsuishio.superbwarfare.entity.projectile.ProjectileEntity;
 import com.atsuishio.superbwarfare.entity.projectile.SmallCannonShellEntity;
 import com.atsuishio.superbwarfare.entity.projectile.SmallRocketEntity;
+import com.atsuishio.superbwarfare.entity.projectile.RpgRocketStandardEntity;
+import com.atsuishio.superbwarfare.entity.projectile.RpgRocketTBGEntity;
 import com.yourname.berts_vehicle_pack.BertsVehiclePack;
 import com.yourname.berts_vehicle_pack.armor.ArmorProfiles.ArmorProfile;
 import com.yourname.berts_vehicle_pack.entity.ArmoredVehicleEntity;
@@ -122,14 +124,31 @@ final class ArmorShotClassifier {
         return shot == null ? visualOnlyBullet(projectile, shooterVehicle) : shot;
     }
 
-    /** Typed BVP rocket/missile admission for impact-wide ERA spending. */
-    static boolean isTypedBvpRocket(Projectile projectile, ProjectileArmorEffect shot) {
-        if (projectile == null || shot == null) {
+    /** Exact rocket/missile families eligible for a bounded, accepted-point ERA activation. */
+    static boolean isEraActivatingRocket(Projectile projectile, ProjectileArmorEffect shot) {
+        if (projectile == null) {
             return false;
         }
-        return shot.atgm || projectile instanceof SmallRocketEntity
+        // A declared but unresolved profile must not recover through a legacy class fallback.
+        ProjectileCombatDescriptor descriptor = ProjectileProfiles.combatDescriptor(projectile);
+        if (ProjectileProfiles.profileId(projectile) != null && descriptor == null) {
+            return false;
+        }
+        // TacZ RPG rounds use EntityKineticBullet even though their exact, resolved
+        // BVP combat tuple is a chemical ATGM-class rocket. Admit only that typed
+        // handheld round to the same local ERA radius as native rocket entities.
+        boolean handheldRpg = BvpHandheldAtPolicy.owns(projectile)
+                && descriptor != null
+                && isBvpId(descriptor.getWeaponId(), "handheld_at")
+                && isBvpId(descriptor.getRoundId(), "handheld_heat_110")
+                && isBvpId(descriptor.getMunitionType(), "rocket")
+                && isBvpId(descriptor.getDamageType(), "chemical")
+                && descriptor.getHullDamageClass() == ProjectileHullDamageClass.ATGM;
+        return (shot != null && shot.atgm) || projectile instanceof SmallRocketEntity
                 || projectile instanceof MediumRocketEntity
-                || projectile instanceof MissileProjectile;
+                || projectile instanceof MissileProjectile
+                || projectile instanceof RpgRocketStandardEntity
+                || projectile instanceof RpgRocketTBGEntity || handheldRpg;
     }
 
     static ProjectileArmorEffect classifyUnmodeledBvpImpact(Projectile projectile, Entity owner) {

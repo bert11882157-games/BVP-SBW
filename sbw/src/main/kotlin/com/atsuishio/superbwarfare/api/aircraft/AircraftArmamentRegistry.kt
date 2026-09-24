@@ -16,14 +16,15 @@ object AircraftArmamentRegistry {
     var aircraft: Map<ResourceLocation, JsonObject> = emptyMap(); private set
     var stores: Map<ResourceLocation, JsonObject> = emptyMap(); private set
     var revision: Long = 0; private set
-    val categories = setOf("LASER_GUIDED", "GUN_POD", "BOMB", "AIR_TO_AIR", "AIR_TO_GROUND", "ANTI_RADIATION", "CRUISE", "ROCKET_POD", "VISUAL_ONLY")
+    val categories = setOf("COMMAND_GUIDED", "LASER_GUIDED", "GUN_POD", "BOMB", "AIR_TO_AIR", "AIR_TO_GROUND", "ANTI_RADIATION", "CRUISE", "ROCKET_POD", "VISUAL_ONLY")
 
     /** Mass is per physical round or pod; a paired station contains two complete loads. */
     fun loadoutMassKg(definition: JsonObject, choices: Map<String, JsonObject>, counts: Map<String, Int> = emptyMap()): Double =
         mounts(definition).sumOf { mount ->
             val store = choices[mount["Id"].asString] ?: return@sumOf 0.0
             (store["MassKg"]?.asDouble ?: 0.0) * mountCapacity(mount, store["Capacity"]?.asInt ?: 1) *
-                (counts[mount["Id"].asString] ?: 1)
+                (counts[mount["Id"].asString] ?: 1) +
+                (store["RackMassKg"]?.asDouble ?: 0.0) * mountPositions(mount).size
         }
 
     internal fun installDiagnosticFixture(id: ResourceLocation, definition: JsonObject,
@@ -46,6 +47,18 @@ object AircraftArmamentRegistry {
     /** Equipment keys are shared by paired wings and independent single stations. */
     fun mounts(definition: JsonObject): List<JsonObject> = listOf("Pairs", "Singles").flatMap { key ->
         definition.getAsJsonArray(key)?.map { it.asJsonObject } ?: emptyList()
+    }
+
+    /** A recessed ventral store may physically occupy the same volume as an internal bay. */
+    fun validateMountConflicts(definition: JsonObject, selectedMounts: Set<String>) {
+        for (mount in mounts(definition)) {
+            val id = mount["Id"].asString
+            if (id !in selectedMounts) continue
+            for (other in mount.getAsJsonArray("ExclusiveWith") ?: JsonArray())
+                require(other.asString !in selectedMounts) {
+                    "${mount["Name"].asString} and ${other.asString} cannot be fitted together."
+                }
+        }
     }
 
     fun mountPositions(mount: JsonObject): List<net.minecraft.world.phys.Vec3> {
@@ -72,16 +85,29 @@ object AircraftArmamentRegistry {
         require(json["Name"]?.asString?.length in 1..64)
         if (store) {
             require(json["Category"]?.asString in categories)
+            require((json["Category"]?.asString == "COMMAND_GUIDED") == json.has("CommandGuidance"))
+            json.getAsJsonObject("CommandGuidance")?.let {
+                require(it["Mode"]?.asString in setOf("MCLOS", "SACLOS"))
+                require(json.has("LaunchGunProfile") && json.has("ProjectileProfile") &&
+                    !json.has("Guidance") && !json.has("Flight") && !json.has("Bomb"))
+            }
             for (key in listOf("Item", "AmmoItem", "Model", "Texture", "ProjectileProfile", "LaunchGunProfile", "GunProfile")) {
                 json[key]?.let { require(it.asString.length <= 128 && ResourceLocation.tryParse(it.asString) != null) }
             }
             json["Guidance"]?.let {
-                require(json["Category"]?.asString in setOf("AIR_TO_AIR", "AIR_TO_GROUND", "ANTI_RADIATION"))
+                require(json["Category"]?.asString in setOf("AIR_TO_AIR", "AIR_TO_GROUND", "ANTI_RADIATION", "CRUISE", "BOMB"))
                 val guidance = requireNotNull(AircraftMissileLauncher.guidance(json))
+                it.asJsonObject["Presentation"]?.let { presentation ->
+                    require(presentation.isJsonPrimitive && presentation.asJsonPrimitive.isString &&
+                        presentation.asString in setOf("FIRE_AND_FORGET", "TV") && guidance.mode == "GROUND_INFRARED")
+                }
                 require((json["Category"].asString == "ANTI_RADIATION") == (guidance.mode == "ANTI_RADIATION"))
-                require((json["Category"].asString == "AIR_TO_GROUND") == (guidance.mode == "GROUND_INFRARED"))
+                require((json["Category"].asString in setOf("AIR_TO_GROUND", "BOMB")) == (guidance.mode == "GROUND_INFRARED"))
+                require((json["Category"].asString == "CRUISE") == (guidance.mode == "ACTIVE_SURFACE_RADAR"))
+                if (json["Category"].asString == "BOMB") require(json.getAsJsonObject("Bomb")?.get("Mode")?.asString == "TV")
             }
             json.getAsJsonObject("Flight")?.let { flight ->
+                require(json["Category"]?.asString != "BOMB") { "Bombs cannot use powered missile flight" }
                 require(json.has("Guidance") || json["Category"]?.asString == "CRUISE")
                 for ((key, limits) in mapOf("InitialSpeed" to (0.01..20.0), "MaxSpeed" to (0.1..30.0),
                     "AccelerationPerTick" to (0.001..2.0), "TurnDegreesPerSecond" to (0.1..360.0),
@@ -90,21 +116,58 @@ object AircraftArmamentRegistry {
                     require(n.isFinite() && n in limits)
                 }
                 require(flight["InitialSpeed"].asDouble <= flight["MaxSpeed"].asDouble)
+                flight["MaxLoadFactorG"]?.asDouble?.let { require(it.isFinite() && it in 0.1..50.0) }
+                flight["BodyTurnLimitScale"]?.asDouble?.let {
+                    require(flight.has("MaxLoadFactorG") && it.isFinite() && it in 1.0..3.0)
+                }
                 if (json["Category"]?.asString == "CRUISE") {
                     val range = flight["Range"]?.asDouble ?: error("Missing cruise Range")
                     require(range.isFinite() && range in 16.0..4096.0)
+                    flight["Trajectory"]?.let {
+                        require(it.asString == "BALLISTIC" && !json.has("Guidance"))
+                        val loft = flight["LoftHeight"]?.asDouble ?: error("Missing ballistic LoftHeight")
+                        require(loft.isFinite() && loft in 16.0..256.0)
+                    }
                 }
             }
             json["MassKg"]?.let { require(it.asDouble.isFinite() && it.asDouble in 0.1..50000.0) }
             json.getAsJsonObject("Bomb")?.let { bomb ->
                 require(json["Category"]?.asString == "BOMB")
-                require(bomb["Mode"]?.asString in setOf("DUMB", "LASER", "GPS"))
+                require(bomb["Mode"]?.asString in setOf("DUMB", "LASER", "GPS", "TV"))
+                require((bomb["Mode"].asString == "TV") == json.has("Guidance"))
+                if (bomb["Mode"].asString == "TV") require(json.getAsJsonObject("Guidance")["Presentation"]?.asString == "TV")
+                bomb.getAsJsonObject("Penetrator")?.let { penetrator ->
+                    require(penetrator.entrySet().map { it.key }.toSet() ==
+                        setOf("MaxDepthBlocks", "MaxBlockHardness", "FuzeDelayTicks"))
+                    require(penetrator["MaxDepthBlocks"].asBigDecimal.intValueExact() in 1..8)
+                    require(penetrator["FuzeDelayTicks"].asBigDecimal.intValueExact() in 1..20)
+                    val hardness = penetrator["MaxBlockHardness"].asDouble
+                    require(hardness.isFinite() && hardness in 0.1..50.0)
+                }
                 val cluster = bomb.getAsJsonObject("Cluster")
                 if (cluster != null) {
                     require(bomb["Mode"].asString == "DUMB")
                     require(bomb["BlastRadius"]?.asDouble == 0.0 && bomb["BlastDamage"]?.asDouble == 0.0)
-                    require(cluster.entrySet().map { it.key }.toSet() == setOf("Count", "ReleaseHeight",
-                        "SpreadSpeed", "BombletDamage", "BombletRadius", "LifetimeTicks"))
+                    val required = setOf("Count", "ReleaseHeight", "SpreadSpeed", "BombletDamage",
+                        "BombletRadius", "LifetimeTicks")
+                    val optional = setOf("Mode", "BombletProfile", "SensorRadius", "SensorShots",
+                        "SensorProjectileProfile")
+                    val keys = cluster.entrySet().map { it.key }.toSet()
+                    require(keys.containsAll(required) && keys.all { it in required || it in optional })
+                    val mode = cluster["Mode"]?.asString ?: "HE"
+                    require(mode in setOf("HE", "HEAT", "SENSOR_FUZED"))
+                    require((mode == "HEAT") == cluster.has("BombletProfile"))
+                    require((mode == "SENSOR_FUZED") == cluster.has("SensorProjectileProfile"))
+                    require((mode == "SENSOR_FUZED") ==
+                        (cluster.has("SensorRadius") && cluster.has("SensorShots")))
+                    for (key in listOf("BombletProfile", "SensorProjectileProfile"))
+                        cluster[key]?.let { require(ResourceLocation.tryParse(it.asString) != null) }
+                    if (mode == "SENSOR_FUZED") {
+                        val sensorRadius = cluster["SensorRadius"].asDouble
+                        require(sensorRadius.isFinite() && sensorRadius in 2.0..16.0)
+                        require(cluster["SensorShots"].asBigDecimal.intValueExact() in 1..4)
+                    }
+                    if (mode != "HE") require(cluster["BombletDamage"].asDouble == 0.0)
                     require(cluster["Count"].asBigDecimal.intValueExact() in 1..24)
                     require(cluster["LifetimeTicks"].asBigDecimal.intValueExact() in 20..200)
                     for ((key, range) in mapOf("ReleaseHeight" to (2.0..32.0), "SpreadSpeed" to (0.0..1.0),
@@ -124,13 +187,20 @@ object AircraftArmamentRegistry {
             json["MaxPerPylon"]?.let { require(it.asBigDecimal.intValueExact() in 1..AircraftPylonRacks.MAX_COPIES) }
             json["FixedRackCount"]?.let {
                 val copies = it.asBigDecimal.intValueExact()
-                require(json["Category"]?.asString == "BOMB" && json["Capacity"]?.asInt == 1)
+                require(json["Category"]?.asString in setOf("BOMB", "AIR_TO_GROUND", "AIR_TO_AIR") && json["Capacity"]?.asInt == 1)
                 require(copies in 2..AircraftPylonRacks.MAX_COPIES &&
                     copies <= (json["MaxPerPylon"]?.asInt ?: 1))
             }
             json["RackSpacing"]?.let {
                 val spacing = requireNotNull(vector(it))
                 require(spacing.x in 0.1..4.0 && spacing.y in 0.0..4.0 && spacing.z in 0.0..8.0)
+            }
+            json["RackColumns"]?.let {
+                require(json.has("FixedRackCount"))
+                require(it.asBigDecimal.intValueExact() in 1..json["FixedRackCount"].asInt)
+            }
+            json["RackMassKg"]?.let {
+                require(json.has("FixedRackCount") && it.asDouble.isFinite() && it.asDouble in 0.0..2000.0)
             }
             json["Scale"]?.let { require(it.asDouble.isFinite() && it.asDouble in 0.001..32.0) }
             json["LaunchOffset"]?.let { require(vector(it)?.length()?.let { length -> length <= 8.0 } == true) }
@@ -156,9 +226,14 @@ object AircraftArmamentRegistry {
             require(id.matches(Regex("[a-zA-Z0-9_.-]{1,48}")) && ids.add(id))
             require(pair["Name"]?.asString?.isNotBlank() == true && pair["Name"].asString.length <= 64)
             mountPositions(pair)
+            AircraftMountSweep.decode(pair, mountPositions(pair).size)
             pair["Internal"]?.let {
                 require(it.isJsonPrimitive && it.asJsonPrimitive.isBoolean && pair.has("Position"))
                 if (it.asBoolean) require(pair["MaxPylonMassKg"]?.asDouble?.isFinite() == true)
+            }
+            pair["QuantitySelectable"]?.let {
+                require(it.isJsonPrimitive && it.asJsonPrimitive.isBoolean)
+                require(!it.asBoolean || pair["Internal"]?.asBoolean == true)
             }
             pair["MaxWeaponsPerPylon"]?.let { require(it.asBigDecimal.intValueExact() in 1..AircraftPylonRacks.MAX_COPIES) }
             pair["MaxPylonMassKg"]?.let { require(it.asDouble.isFinite() && it.asDouble in 0.1..100000.0) }
@@ -177,6 +252,10 @@ object AircraftArmamentRegistry {
                     }
                 }
             }
+        }
+        for (mount in mounts(json)) mount.getAsJsonArray("ExclusiveWith")?.let { excluded ->
+            require(excluded.size() <= 15 && excluded.map { it.asString }.distinct().size == excluded.size())
+            require(excluded.all { it.asString in ids && it.asString != mount["Id"].asString })
         }
         json.getAsJsonObject("Radar")?.let { radar ->
             require(radar["Enabled"]?.isJsonPrimitive == true && radar["Enabled"].asJsonPrimitive.isBoolean)

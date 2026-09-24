@@ -1,0 +1,14 @@
+{
+  "VisualProfile": "berts_vehicle_pack:authored_bomb",
+  "MotionSync": "INHERIT",
+  "TrailMode": "SUPPRESS",
+  "RenderScale": 1,
+  "Extensions": {
+    "berts_vehicle_pack:projectile_mesh_v1": {
+      "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/blu109.geo.json",
+      "Texture": "berts_vehicle_pack:textures/aircraft_stores/blu109.png",
+      "ForwardYaw": 0,
+      "SpinDegreesPerTick": 0
+    }
+  }
+}

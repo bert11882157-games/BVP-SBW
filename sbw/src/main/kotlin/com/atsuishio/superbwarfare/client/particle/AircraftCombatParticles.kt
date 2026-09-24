@@ -45,6 +45,18 @@ object AircraftCombatParticles {
         emit(options, point, Vec3(0.0, .015, 0.0), .6f + intensity * 1.8f)
     }
 
+    fun wreckSmoke(point: Vec3, diameter: Float) {
+        val options: ParticleOptions = packParticle("wreck_smoke") ?:
+            CustomCloudOption(.23f,.23f,.23f,64,diameter,0f,false,true)
+        emit(options, point, Vec3(0.0, .14, 0.0), diameter)
+    }
+
+    /** Reuse the authored transparent afterburner flame for small exposed wreck fires. */
+    fun wreckFlame(point: Vec3, strength: Float) {
+        if (strength <= .01f) return
+        fire(point, 1.1f * strength.coerceIn(0f, 1f), false)
+    }
+
     fun burst(message: ExplosionBurstMessage) {
         val mc = Minecraft.getInstance()
         val level = mc.level ?: return

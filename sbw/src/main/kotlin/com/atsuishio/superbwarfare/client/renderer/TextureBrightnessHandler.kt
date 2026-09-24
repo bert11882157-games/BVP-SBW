@@ -8,13 +8,12 @@ import kotlin.math.min
 
 object TextureBrightnessHandler {
     // 缓存处理过的纹理，避免重复处理
-    private val BRIGHTENED_TEXTURES: MutableMap<ResourceLocation, ResourceLocation> = hashMapOf()
+    private val BRIGHTENED_TEXTURES: MutableMap<Pair<ResourceLocation, Int>, ResourceLocation> = hashMapOf()
 
     fun getBrightenedTexture(originalTextureLoc: ResourceLocation, brightnessMultiplier: Float): ResourceLocation {
         // 检查是否已缓存
-        if (BRIGHTENED_TEXTURES.containsKey(originalTextureLoc)) {
-            return BRIGHTENED_TEXTURES[originalTextureLoc]!!
-        }
+        val key = originalTextureLoc to brightnessMultiplier.toBits()
+        BRIGHTENED_TEXTURES[key]?.let { return it }
 
         try {
             // 1. 获取原始纹理
@@ -22,13 +21,14 @@ object TextureBrightnessHandler {
             val resource = resourceManager.getResource(originalTextureLoc).orElseThrow()
 
             // 2. 读取图像
-            val originalImage = NativeImage.read(resource.open())
-            val brightenedImage = brightenImage(originalImage, brightnessMultiplier)
+            val brightenedImage = resource.open().use { stream ->
+                NativeImage.read(stream).use { original -> brightenImage(original, brightnessMultiplier) }
+            }
 
             // 3. 创建新的纹理资源
             val newTextureLoc = ResourceLocation(
                 originalTextureLoc.namespace,
-                originalTextureLoc.path.replace(".png", "_bright.png")
+                originalTextureLoc.path.replace(".png", "_bright_${key.second}.png")
             )
 
             // 4. 注册到纹理管理器
@@ -38,7 +38,7 @@ object TextureBrightnessHandler {
             )
 
             // 5. 缓存并返回
-            BRIGHTENED_TEXTURES[originalTextureLoc] = newTextureLoc
+            BRIGHTENED_TEXTURES[key] = newTextureLoc
             return newTextureLoc
         } catch (e: Exception) {
             // 出错时返回原始纹理

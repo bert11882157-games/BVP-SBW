@@ -1,0 +1,21 @@
+{
+  "Schema": 1,
+  "Name": "Kh-47M2 Kinzhal · ballistic strike",
+  "Category": "CRUISE",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/kh47m2.geo.json",
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/kh47m2.png",
+  "Capacity": 1,
+  "MassKg": 4300,
+  "Flight": {
+    "InitialSpeed": 4,
+    "MaxSpeed": 25,
+    "AccelerationPerTick": 0.5,
+    "TurnDegreesPerSecond": 15,
+    "Damage": 2500,
+    "BlastRadius": 16,
+    "Range": 2500,
+    "Trajectory": "BALLISTIC",
+    "LoftHeight": 160
+  },
+  "AmmoItem": "superbwarfare:large_air_to_ground_missile"
+}

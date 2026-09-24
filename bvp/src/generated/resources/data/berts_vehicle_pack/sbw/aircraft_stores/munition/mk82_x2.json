@@ -1,0 +1,26 @@
+{
+  "Schema": 1,
+  "Name": "Mk 82 · 500 lb freefall · two-bomb rack",
+  "Category": "BOMB",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/mk82.geo.json",
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/mk82.png",
+  "Capacity": 1,
+  "MassKg": 227,
+  "Bomb": {
+    "Mode": "DUMB",
+    "Gravity": 0.08,
+    "DragMultiplier": 1,
+    "TurnDegreesPerTick": 0,
+    "BlastRadius": 7,
+    "BlastDamage": 450
+  },
+  "AmmoItem": "superbwarfare:small_freefall_bomb",
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_bombs/mk82",
+  "MaxPerPylon": 2,
+  "FixedRackCount": 2,
+  "RackSpacing": [
+    0.47,
+    0.4,
+    0
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "Schema": 1,
+  "Name": "R-77 · active radar",
+  "Category": "AIR_TO_AIR",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/r77.geo.json",
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/r77.png",
+  "Capacity": 1,
+  "MassKg": 175,
+  "Guidance": {
+    "Mode": "ACTIVE_RADAR",
+    "LockTicks": 0,
+    "Range": 1500,
+    "ConeDegrees": 25,
+    "CountermeasureVulnerability": 1.1
+  },
+  "Flight": {
+    "InitialSpeed": 0.5,
+    "MaxSpeed": 9,
+    "AccelerationPerTick": 0.1,
+    "TurnDegreesPerSecond": 70,
+    "Damage": 65,
+    "BlastRadius": 4
+  },
+  "AmmoItem": "superbwarfare:medium_air_to_air_missile",
+  "MaxPerPylon": 1
+}

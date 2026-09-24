@@ -7,6 +7,32 @@ import org.junit.jupiter.api.Test
 import kotlin.math.acos
 
 class GuidedMissileGuidanceTest {
+    @Test fun `laser seeker uses a circular 45 degree body cone including its boundary`() {
+        val position = Vec3(240.0, 120.0, -600.0)
+        val facing = Vec3(1.0, 0.0, 0.0)
+        for (axis in listOf(Vec3(0.0, 1.0, 0.0), Vec3(0.0, 0.0, 1.0), Vec3(0.0, 1.0, 1.0).normalize())) {
+            for (degrees in listOf(0.0, 44.999, 45.0, 45.001, 90.0, 180.0)) {
+                val radians = Math.toRadians(degrees)
+                val target = position.add(facing.scale(1000 * kotlin.math.cos(radians)))
+                    .add(axis.scale(1000 * kotlin.math.sin(radians)))
+                val result = GuidedMissileGuidance.laserSeekerDirection(position, facing, target, 4.0, Vec3.ZERO)
+                assertEquals(degrees <= 45.0, result != null, "angle=$degrees axis=$axis")
+            }
+        }
+    }
+
+    @Test fun `laser loss coasts and reacquisition does not follow the carrier velocity`() {
+        val position = Vec3.ZERO
+        val facing = Vec3(0.0, 0.0, 1.0)
+        val inherited = Vec3(3.0, 0.0, 0.0)
+        assertNull(GuidedMissileGuidance.laserSeekerDirection(position, facing, Vec3(100.0, 0.0, 1.0), 4.0, inherited))
+        assertNull(GuidedMissileGuidance.laserSeekerDirection(position, facing, null, 4.0, inherited))
+        assertNull(GuidedMissileGuidance.laserSeekerDirection(position, Vec3.ZERO, Vec3(0.0, 0.0, 100.0), 4.0, inherited))
+        val visible = Vec3(0.0, 0.0, 100.0)
+        assertEquals(GuidedMissileGuidance.laserInterceptDirection(position, visible, 4.0, inherited),
+            GuidedMissileGuidance.laserSeekerDirection(position, facing, visible, 4.0, inherited))
+    }
+
     @Test fun speedDependentWobbleCannotAccumulateHeadingOrChangeRelativeSpeed() {
         val inherited = Vec3(1.0, -0.3, 0.4)
         val peaks = mutableListOf<Double>()

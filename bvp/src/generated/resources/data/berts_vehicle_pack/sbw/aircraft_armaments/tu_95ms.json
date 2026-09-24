@@ -8,170 +8,127 @@
   "SuspendedWeapons": [],
   "Pairs": [],
   "StoreGroups": {},
-  "MaxPayloadKg": 5000,
+  "MaxPayloadKg": 20000,
   "Singles": [
     {
-      "Id": "wing_1",
-      "Name": "Wing station 1",
-      "Position": [
-        -12,
-        2.5,
-        0
-      ],
-      "AllowedStores": [
-        "berts_vehicle_pack:reference/dumb_bomb_250kg",
-        "berts_vehicle_pack:reference/laser_bomb_250kg",
-        "berts_vehicle_pack:reference/gps_bomb_250kg",
-        "berts_vehicle_pack:reference/dumb_bomb_5000kg",
-        "berts_vehicle_pack:reference/kh55_cruise",
-        "berts_vehicle_pack:reference/dumb_bomb_100kg"
-      ],
-      "MaxPylonMassKg": 1000
-    },
-    {
-      "Id": "wing_2",
-      "Name": "Wing station 2",
-      "Position": [
-        -19,
-        2.5,
-        -1.5
-      ],
-      "AllowedStores": [
-        "berts_vehicle_pack:reference/dumb_bomb_250kg",
-        "berts_vehicle_pack:reference/laser_bomb_250kg",
-        "berts_vehicle_pack:reference/gps_bomb_250kg",
-        "berts_vehicle_pack:reference/dumb_bomb_5000kg",
-        "berts_vehicle_pack:reference/kh55_cruise",
-        "berts_vehicle_pack:reference/dumb_bomb_100kg"
-      ],
-      "MaxPylonMassKg": 1000
-    },
-    {
-      "Id": "wing_3",
-      "Name": "Wing station 3",
-      "Position": [
-        -26,
-        2.5,
-        -3
-      ],
-      "AllowedStores": [
-        "berts_vehicle_pack:reference/dumb_bomb_250kg",
-        "berts_vehicle_pack:reference/laser_bomb_250kg",
-        "berts_vehicle_pack:reference/gps_bomb_250kg",
-        "berts_vehicle_pack:reference/dumb_bomb_5000kg",
-        "berts_vehicle_pack:reference/kh55_cruise",
-        "berts_vehicle_pack:reference/dumb_bomb_100kg"
-      ],
-      "MaxPylonMassKg": 1000
-    },
-    {
-      "Id": "wing_4",
-      "Name": "Wing station 4",
-      "Position": [
-        -33,
-        2.5,
-        -4.5
-      ],
-      "AllowedStores": [
-        "berts_vehicle_pack:reference/dumb_bomb_250kg",
-        "berts_vehicle_pack:reference/laser_bomb_250kg",
-        "berts_vehicle_pack:reference/gps_bomb_250kg",
-        "berts_vehicle_pack:reference/dumb_bomb_5000kg",
-        "berts_vehicle_pack:reference/kh55_cruise",
-        "berts_vehicle_pack:reference/dumb_bomb_100kg"
-      ],
-      "MaxPylonMassKg": 1000
-    },
-    {
-      "Id": "wing_5",
-      "Name": "Wing station 5",
-      "Position": [
-        12,
-        2.5,
-        0
-      ],
-      "AllowedStores": [
-        "berts_vehicle_pack:reference/dumb_bomb_250kg",
-        "berts_vehicle_pack:reference/laser_bomb_250kg",
-        "berts_vehicle_pack:reference/gps_bomb_250kg",
-        "berts_vehicle_pack:reference/dumb_bomb_5000kg",
-        "berts_vehicle_pack:reference/kh55_cruise",
-        "berts_vehicle_pack:reference/dumb_bomb_100kg"
-      ],
-      "MaxPylonMassKg": 1000
-    },
-    {
-      "Id": "wing_6",
-      "Name": "Wing station 6",
-      "Position": [
-        19,
-        2.5,
-        -1.5
-      ],
-      "AllowedStores": [
-        "berts_vehicle_pack:reference/dumb_bomb_250kg",
-        "berts_vehicle_pack:reference/laser_bomb_250kg",
-        "berts_vehicle_pack:reference/gps_bomb_250kg",
-        "berts_vehicle_pack:reference/dumb_bomb_5000kg",
-        "berts_vehicle_pack:reference/kh55_cruise",
-        "berts_vehicle_pack:reference/dumb_bomb_100kg"
-      ],
-      "MaxPylonMassKg": 1000
-    },
-    {
-      "Id": "wing_7",
-      "Name": "Wing station 7",
-      "Position": [
-        26,
-        2.5,
-        -3
-      ],
-      "AllowedStores": [
-        "berts_vehicle_pack:reference/dumb_bomb_250kg",
-        "berts_vehicle_pack:reference/laser_bomb_250kg",
-        "berts_vehicle_pack:reference/gps_bomb_250kg",
-        "berts_vehicle_pack:reference/dumb_bomb_5000kg",
-        "berts_vehicle_pack:reference/kh55_cruise",
-        "berts_vehicle_pack:reference/dumb_bomb_100kg"
-      ],
-      "MaxPylonMassKg": 1000
-    },
-    {
-      "Id": "wing_8",
-      "Name": "Wing station 8",
-      "Position": [
-        33,
-        2.5,
-        -4.5
-      ],
-      "AllowedStores": [
-        "berts_vehicle_pack:reference/dumb_bomb_250kg",
-        "berts_vehicle_pack:reference/laser_bomb_250kg",
-        "berts_vehicle_pack:reference/gps_bomb_250kg",
-        "berts_vehicle_pack:reference/dumb_bomb_5000kg",
-        "berts_vehicle_pack:reference/kh55_cruise",
-        "berts_vehicle_pack:reference/dumb_bomb_100kg"
-      ],
-      "MaxPylonMassKg": 1000
-    },
-    {
-      "Id": "internal_bay",
-      "Name": "Bomb bay / internal stores",
+      "Id": "internal_bay_1",
+      "Name": "Internal bay station 1",
       "Internal": true,
       "Position": [
-        0,
+        -0.6,
         2.5,
-        8.60688
+        9.95688
       ],
       "MaxPylonMassKg": 5000,
       "AllowedStores": [
-        "berts_vehicle_pack:reference/dumb_bomb_5000kg",
-        "berts_vehicle_pack:reference/dumb_bomb_250kg",
-        "berts_vehicle_pack:reference/laser_bomb_250kg",
-        "berts_vehicle_pack:reference/gps_bomb_250kg",
-        "berts_vehicle_pack:reference/kh55_cruise",
-        "berts_vehicle_pack:reference/dumb_bomb_100kg"
-      ]
+        "berts_vehicle_pack:kh55"
+      ],
+      "QuantitySelectable": true
+    },
+    {
+      "Id": "internal_bay_2",
+      "Name": "Internal bay station 2",
+      "Internal": true,
+      "Position": [
+        0.6,
+        2.5,
+        9.95688
+      ],
+      "MaxPylonMassKg": 5000,
+      "AllowedStores": [
+        "berts_vehicle_pack:kh55"
+      ],
+      "QuantitySelectable": true
+    },
+    {
+      "Id": "internal_bay_3",
+      "Name": "Internal bay station 3",
+      "Internal": true,
+      "Position": [
+        -0.6,
+        2.5,
+        9.05688
+      ],
+      "MaxPylonMassKg": 5000,
+      "AllowedStores": [
+        "berts_vehicle_pack:kh55"
+      ],
+      "QuantitySelectable": true
+    },
+    {
+      "Id": "internal_bay_4",
+      "Name": "Internal bay station 4",
+      "Internal": true,
+      "Position": [
+        0.6,
+        2.5,
+        9.05688
+      ],
+      "MaxPylonMassKg": 5000,
+      "AllowedStores": [
+        "berts_vehicle_pack:kh55"
+      ],
+      "QuantitySelectable": true
+    },
+    {
+      "Id": "internal_bay_5",
+      "Name": "Internal bay station 5",
+      "Internal": true,
+      "Position": [
+        -0.6,
+        2.5,
+        8.156880000000001
+      ],
+      "MaxPylonMassKg": 5000,
+      "AllowedStores": [
+        "berts_vehicle_pack:kh55"
+      ],
+      "QuantitySelectable": true
+    },
+    {
+      "Id": "internal_bay_6",
+      "Name": "Internal bay station 6",
+      "Internal": true,
+      "Position": [
+        0.6,
+        2.5,
+        8.156880000000001
+      ],
+      "MaxPylonMassKg": 5000,
+      "AllowedStores": [
+        "berts_vehicle_pack:kh55"
+      ],
+      "QuantitySelectable": true
+    },
+    {
+      "Id": "internal_bay_7",
+      "Name": "Internal bay station 7",
+      "Internal": true,
+      "Position": [
+        -0.6,
+        2.5,
+        7.256880000000001
+      ],
+      "MaxPylonMassKg": 5000,
+      "AllowedStores": [
+        "berts_vehicle_pack:kh55"
+      ],
+      "QuantitySelectable": true
+    },
+    {
+      "Id": "internal_bay_8",
+      "Name": "Internal bay station 8",
+      "Internal": true,
+      "Position": [
+        0.6,
+        2.5,
+        7.256880000000001
+      ],
+      "MaxPylonMassKg": 5000,
+      "AllowedStores": [
+        "berts_vehicle_pack:kh55"
+      ],
+      "QuantitySelectable": true
     }
   ],
   "MaxWeaponsPerPylon": 12,

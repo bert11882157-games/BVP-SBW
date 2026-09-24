@@ -1,0 +1,25 @@
+{
+  "Schema": 1,
+  "Name": "Kh-38MTE · thermal ground lock",
+  "Category": "AIR_TO_GROUND",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/kh38.geo.json",
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/kh38.png",
+  "Capacity": 1,
+  "MassKg": 520,
+  "Guidance": {
+    "Mode": "GROUND_INFRARED",
+    "LockTicks": 65,
+    "Range": 850,
+    "ConeDegrees": 25,
+    "CountermeasureVulnerability": 0.5
+  },
+  "Flight": {
+    "InitialSpeed": 0.5,
+    "MaxSpeed": 6,
+    "AccelerationPerTick": 0.12,
+    "TurnDegreesPerSecond": 64,
+    "Damage": 520,
+    "BlastRadius": 6
+  },
+  "AmmoItem": "superbwarfare:large_air_to_ground_missile"
+}

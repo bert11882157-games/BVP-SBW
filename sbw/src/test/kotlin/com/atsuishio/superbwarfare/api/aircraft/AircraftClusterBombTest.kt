@@ -1,5 +1,6 @@
 package com.atsuishio.superbwarfare.api.aircraft
 
+import net.minecraft.resources.ResourceLocation
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
@@ -21,5 +22,23 @@ class AircraftClusterBombTest {
         assertThrows(IllegalArgumentException::class.java) { config(life = 201) }
         assertThrows(IllegalArgumentException::class.java) { config(spread = Double.NaN) }
         assertThrows(IllegalArgumentException::class.java) { AircraftClusterBomb.spread(10000, .35, 0.0) }
+    }
+    @Test fun typedArmorChildrenCannotAlsoInheritLegacyRadiusDamage() {
+        val heat = ResourceLocation("berts_vehicle_pack", "aircraft_bombs/cbu99_heat")
+        val efp = ResourceLocation("berts_vehicle_pack", "aircraft_bombs/cbu97_efp")
+        assertEquals("HEAT", AircraftClusterBomb.Configuration(24, 12.0, .45, 0f, 1f, 100,
+            "HEAT", bombletProfile = heat).mode)
+        assertEquals(4, AircraftClusterBomb.Configuration(10, 16.0, .35, 0f, 1f, 120,
+            "SENSOR_FUZED", sensorRadius = 8.0, sensorShots = 4,
+            sensorProjectileProfile = efp).sensorShots)
+        assertThrows(IllegalArgumentException::class.java) {
+            AircraftClusterBomb.Configuration(24, 12.0, .45, 80f, 1f, 100,
+                "HEAT", bombletProfile = heat)
+        }
+        assertThrows(IllegalArgumentException::class.java) {
+            AircraftClusterBomb.Configuration(10, 16.0, .35, 0f, 1f, 120,
+                "SENSOR_FUZED", sensorRadius = 17.0, sensorShots = 4,
+                sensorProjectileProfile = efp)
+        }
     }
 }

@@ -5,7 +5,182 @@
   "SuspendedWeapons": [
     "BayVulcan"
   ],
-  "Pairs": [],
+  "Pairs": [
+    {
+      "Id": "wing_inboard",
+      "Name": "Inboard swivel pylon",
+      "Left": [
+        -4.2,
+        2.07,
+        -2.15
+      ],
+      "Right": [
+        4.2,
+        2.07,
+        -2.15
+      ],
+      "SweepFrames": [
+        {
+          "Pivot": [
+            -2.18860125,
+            2.362694375,
+            -0.248704375
+          ],
+          "Axis": [
+            0,
+            1,
+            0
+          ],
+          "MaxDegrees": -56,
+          "Points": [
+            [
+              0,
+              0
+            ],
+            [
+              1.5,
+              0
+            ],
+            [
+              2.5,
+              0.5
+            ],
+            [
+              3.5,
+              1
+            ]
+          ]
+        },
+        {
+          "Pivot": [
+            2.18860125,
+            2.362694375,
+            -0.248704375
+          ],
+          "Axis": [
+            0,
+            1,
+            0
+          ],
+          "MaxDegrees": 56,
+          "Points": [
+            [
+              0,
+              0
+            ],
+            [
+              1.5,
+              0
+            ],
+            [
+              2.5,
+              0.5
+            ],
+            [
+              3.5,
+              1
+            ]
+          ]
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/aim9l",
+        "berts_vehicle_pack:munition/mk82",
+        "berts_vehicle_pack:munition/mk84",
+        "berts_vehicle_pack:munition/gbu12",
+        "berts_vehicle_pack:munition/gbu10",
+        "berts_vehicle_pack:fa18e/agm65d"
+      ],
+      "MaxPylonMassKg": 2000
+    },
+    {
+      "Id": "wing_outboard",
+      "Name": "Outboard swivel pylon",
+      "Left": [
+        -6.5,
+        2.07,
+        -3.15
+      ],
+      "Right": [
+        6.5,
+        2.07,
+        -3.15
+      ],
+      "SweepFrames": [
+        {
+          "Pivot": [
+            -2.18860125,
+            2.362694375,
+            -0.248704375
+          ],
+          "Axis": [
+            0,
+            1,
+            0
+          ],
+          "MaxDegrees": -56,
+          "Points": [
+            [
+              0,
+              0
+            ],
+            [
+              1.5,
+              0
+            ],
+            [
+              2.5,
+              0.5
+            ],
+            [
+              3.5,
+              1
+            ]
+          ]
+        },
+        {
+          "Pivot": [
+            2.18860125,
+            2.362694375,
+            -0.248704375
+          ],
+          "Axis": [
+            0,
+            1,
+            0
+          ],
+          "MaxDegrees": 56,
+          "Points": [
+            [
+              0,
+              0
+            ],
+            [
+              1.5,
+              0
+            ],
+            [
+              2.5,
+              0.5
+            ],
+            [
+              3.5,
+              1
+            ]
+          ]
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/aim9l",
+        "berts_vehicle_pack:munition/mk82",
+        "berts_vehicle_pack:munition/mk84",
+        "berts_vehicle_pack:munition/gbu12",
+        "berts_vehicle_pack:munition/gbu10",
+        "berts_vehicle_pack:munition/gbu15_v2b"
+      ],
+      "MaxPylonMassKg": 2000
+    }
+  ],
   "StoreGroups": {
     "berts_vehicle_pack:modeled_store/f_111f/assembly_0": [
       "suspended_f_111f_0"
@@ -37,33 +212,9 @@
         "berts_vehicle_pack:gun_pod/f111_m61_bay"
       ],
       "MaxPylonMassKg": 1000
-    },
-    {
-      "Id": "internal_bay",
-      "Name": "Bomb bay / internal stores",
-      "Position": [
-        0,
-        0.595078,
-        1.373057
-      ],
-      "Internal": true,
-      "MaxPylonMassKg": 13742,
-      "AllowedStores": [
-        "berts_vehicle_pack:reference/dumb_bomb_250kg",
-        "berts_vehicle_pack:reference/laser_bomb_250kg",
-        "berts_vehicle_pack:reference/gps_bomb_250kg",
-        "berts_vehicle_pack:reference/dumb_bomb_5000kg",
-        "berts_vehicle_pack:fa18e/bomb_500kg_dumb_1",
-        "berts_vehicle_pack:fa18e/bomb_500kg_dumb_2",
-        "berts_vehicle_pack:fa18e/bomb_500kg_laser_1",
-        "berts_vehicle_pack:fa18e/bomb_500kg_laser_2",
-        "berts_vehicle_pack:fa18e/bomb_500kg_gps_1",
-        "berts_vehicle_pack:fa18e/bomb_500kg_gps_2",
-        "berts_vehicle_pack:reference/dumb_bomb_100kg"
-      ]
     }
   ],
-  "MaxPayloadKg": 14742,
+  "MaxPayloadKg": 18125,
   "Radar": {
     "Enabled": true,
     "Range": 1000

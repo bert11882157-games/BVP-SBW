@@ -5,8 +5,6 @@ import com.atsuishio.superbwarfare.api.diagnostics.DebugFeaturePolicy;
 import com.atsuishio.superbwarfare.api.performance.ClientRenderPerformanceDiagnostics;
 import com.atsuishio.superbwarfare.client.VehicleActionInputClient;
 import com.atsuishio.superbwarfare.client.sound.VehicleLoopSoundProviderRegistry;
-import com.atsuishio.superbwarfare.data.vehicle.DefaultVehicleData;
-import com.atsuishio.superbwarfare.data.vehicle.VehicleData;
 import com.atsuishio.superbwarfare.entity.vehicle.base.GeoVehicleEntity;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
@@ -29,7 +27,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.event.RenderGuiEvent;
@@ -45,7 +42,6 @@ import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.Map;
@@ -185,47 +181,6 @@ public final class BvpClientEvents {
             ).m_130940_(ChatFormatting.GRAY));
         }
 
-        EntityType<?> entityType = ForgeRegistries.ENTITY_TYPES.getValue(entityTypeLocation);
-        if (entityType == null) {
-            return;
-        }
-        DefaultVehicleData vehicleData = VehicleData.getDefault(entityType);
-        addTechnologyTooltip(event.getToolTip(), vehicleData);
-    }
-
-    private static void addTechnologyTooltip(java.util.List<Component> tooltip, DefaultVehicleData data) {
-        if (data.getHasCCIP()) {
-            tooltip.add(Component.m_237115_("tooltip.berts_vehicle_pack.has_ccip")
-                    .m_130940_(ChatFormatting.GRAY));
-        }
-        if (data.getHasFCS()) {
-            tooltip.add(Component.m_237115_("tooltip.berts_vehicle_pack.has_fcs")
-                    .m_130940_(ChatFormatting.GRAY));
-        }
-        if (data.getRemoteWeaponStation()) {
-            tooltip.add(Component.m_237115_("tooltip.berts_vehicle_pack.has_rws")
-                    .m_130940_(ChatFormatting.GRAY));
-        }
-        if (data.getHasERA()) {
-            tooltip.add(Component.m_237115_("tooltip.berts_vehicle_pack.has_era")
-                    .m_130940_(ChatFormatting.GRAY));
-        }
-        if (data.getHasNVD()) {
-            tooltip.add(Component.m_237113_("NVD").m_130940_(ChatFormatting.GRAY));
-        }
-        if (data.getHasTVD()) {
-            tooltip.add(Component.m_237113_("TVD").m_130940_(ChatFormatting.GRAY));
-        }
-        if (data.getHasAutoloader()) {
-            tooltip.add(Component.m_237113_("Autoloader").m_130940_(ChatFormatting.GRAY));
-        }
-        List<String> fires = data.getFires();
-        if (fires != null && !fires.isEmpty()) {
-            tooltip.add(Component.m_237110_(
-                    "tooltip.berts_vehicle_pack.fires",
-                    Component.m_237113_(String.join(", ", fires))
-            ).m_130940_(ChatFormatting.GRAY));
-        }
     }
 
     @SubscribeEvent

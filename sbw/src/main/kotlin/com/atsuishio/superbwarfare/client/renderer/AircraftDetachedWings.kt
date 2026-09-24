@@ -66,11 +66,11 @@ object AircraftDetachedWings {
             .takeIf { it.x.isFinite() && it.y.isFinite() && it.z.isFinite() && it.lengthSqr() < 10000 }
             ?: vehicle.deltaMovement
         val gravity = (vehicle.resolveVehicleFlightStrategy() as? FixedWingFlightStrategy)
-            ?.handling?.gravityMps2?.div(400.0) ?: (9.80665 / 400.0)
+            ?.handling?.gravityMps2?.div(400.0)?.coerceAtLeast(9.80665 / 400.0) ?: (9.80665 / 400.0)
         val spin = Vec3(random.nextDouble() * .06 - .03, random.nextDouble() * .04 - .02,
             (if (side == AircraftWreckBreakup.LEFT) -1 else 1) * (.025 + random.nextDouble() * .045))
         pieces[key] = Part(AircraftDebrisMotion(center, motion, orientation, spin,
-            random.nextDouble() * Math.PI * 2, gravity, if (fuselage) 2 else 0), visual, halfExtents.length().coerceIn(.25, 48.0),
+            random.nextDouble() * Math.PI * 2, gravity, 0, halfExtents), visual, halfExtents.length().coerceIn(.25, 48.0),
             listOf(Vec3.ZERO) + (0..7).map { bits -> Vec3(
                 halfExtents.x * if (bits and 1 == 0) -1 else 1,
                 halfExtents.y * if (bits and 2 == 0) -1 else 1,
@@ -89,8 +89,7 @@ object AircraftDetachedWings {
         var emissions = 0
         val diagnostics = com.atsuishio.superbwarfare.diagnostics.EliteDiagnostics.isClientEnabled()
         pieces.entries.removeIf { (key, part) ->
-            val remove = part.motion.age >= 1200 || part.motion.position.y < level.minBuildHeight - 32 ||
-                (part.fuselage && level.gameTime - key.started >= 200)
+            val remove = part.motion.expired || part.motion.position.y < level.minBuildHeight - 32
             if (remove && diagnostics) com.atsuishio.superbwarfare.diagnostics.EliteDiagnostics.recordClient(
                 level.gameTime,"aircraft_debris","REMOVE","vehicle",key.id,"part",key.side,"age",part.motion.age)
             remove
@@ -105,11 +104,20 @@ object AircraftDetachedWings {
                 part.corners.mapNotNull { local ->
                     val rotated = motion.orientation.transform(org.joml.Vector3f(local.x.toFloat(), local.y.toFloat(), local.z.toFloat()))
                     val offset = Vec3(rotated.x.toDouble(), rotated.y.toDouble(), rotated.z.toDouble())
-                    AircraftDebrisContact.sweep(from.add(offset), to.add(offset)) { start, end ->
+                    // Lift the sampling rays above the relaxed ground overlap. Otherwise a horizontal
+                    // scrape starts inside a block and repeats a zero-distance contact forever.
+                    AircraftDebrisContact.relaxedSweep(from.add(offset), to.add(offset)) { start, end ->
                         terrain.clip(ClipContext(start, end, ClipContext.Block.COLLIDER,
                             ClipContext.Fluid.ANY, mc.player)).takeUnless { it.type == HitResult.Type.MISS }
                     }?.let { AircraftDebrisMotion.Contact(it.position.subtract(offset), it.normal) }
                 }.minByOrNull { it.position.distanceToSqr(from) }
+            }
+            if (motion.grounded) {
+                fun lowest(rotation: Quaternionf) = part.corners.minOf { local ->
+                    rotation.transform(org.joml.Vector3f(local.x.toFloat(),local.y.toFloat(),local.z.toFloat())).y.toDouble()
+                }
+                val rise = lowest(motion.previousOrientation) - lowest(motion.orientation)
+                motion.separate(Vec3(0.0,rise,0.0),Vec3(0.0,1.0,0.0))
             }
             if (diagnostics && clock % 4L == 0L)
                 com.atsuishio.superbwarfare.diagnostics.EliteDiagnostics.recordClient(level.gameTime,
@@ -124,11 +132,27 @@ object AircraftDetachedWings {
                 AircraftCombatParticles.grindingSmoke(motion.position.add(0.0, low + .08, 0.0), motion.velocity.horizontalDistance())
                 emissions++
             }
-            if (!motion.grounded && emissions < 64 &&
+            if (emissions < 62 &&
                 motion.position.distanceToSqr(mc.gameRenderer.mainCamera.position) < 16384.0 * 16384) {
-                AircraftCombatParticles.fire(motion.position, 2.2f, false)
-                if (clock % 2L == 0L) AircraftCombatParticles.fire(motion.position, 3.2f, true)
-                emissions += 2
+                val fire = com.atsuishio.superbwarfare.api.vehicle.flight.WreckDebrisPhysics.flameStrength(
+                    motion.groundedTicks.toLong(), key.id.hashCode().toLong())
+                // Upper exposed face, not the opaque mesh center. Keep points on the moving
+                // piece and above the supporting terrain after it settles.
+                val up = motion.orientation.conjugate(Quaternionf()).transform(org.joml.Vector3f(0f, 1f, 0f))
+                val extents = part.halfExtents
+                val direction = Vec3(up.x.toDouble(), up.y.toDouble(), up.z.toDouble())
+                val reach = minOf(
+                    if (kotlin.math.abs(direction.x) > 1e-6) extents.x / kotlin.math.abs(direction.x) else Double.POSITIVE_INFINITY,
+                    if (kotlin.math.abs(direction.y) > 1e-6) extents.y / kotlin.math.abs(direction.y) else Double.POSITIVE_INFINITY,
+                    if (kotlin.math.abs(direction.z) > 1e-6) extents.z / kotlin.math.abs(direction.z) else Double.POSITIVE_INFINITY)
+                val surface = motion.position.add(0.0, reach.coerceAtLeast(0.0) + .08, 0.0)
+                if (clock % 3L == 0L && fire > 0) {
+                    AircraftCombatParticles.wreckFlame(surface, fire)
+                    emissions++
+                }
+                if (clock % 2L == 0L) {
+                    AircraftCombatParticles.wreckSmoke(surface.add(0.0,.12,0.0), if(motion.grounded) 1.5f else 2.2f); emissions++
+                }
             }
         }
         // Resolve sibling solids and the server wreck as an immovable obstacle. The

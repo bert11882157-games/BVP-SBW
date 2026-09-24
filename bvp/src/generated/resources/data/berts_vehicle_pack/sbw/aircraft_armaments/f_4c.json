@@ -5,7 +5,49 @@
   "SuspendedWeapons": [
     "CenterlineGAU4"
   ],
-  "Pairs": [],
+  "Pairs": [
+    {
+      "Id": "inner",
+      "Name": "Inner wing pylons",
+      "Left": [
+        -2.28,
+        0.97,
+        1.67
+      ],
+      "Right": [
+        2.28,
+        0.97,
+        1.67
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/mk82",
+        "berts_vehicle_pack:munition/aim9b",
+        "berts_vehicle_pack:munition/agm12b"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 1000
+    },
+    {
+      "Id": "outer",
+      "Name": "Outer wing pylons",
+      "Left": [
+        -3.5,
+        1.2,
+        -0.52
+      ],
+      "Right": [
+        3.5,
+        1.2,
+        -0.52
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/mk82",
+        "berts_vehicle_pack:munition/agm12b"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 1000
+    }
+  ],
   "StoreGroups": {
     "berts_vehicle_pack:modeled_store/f_4c/assembly_0": [
       "suspended_f_4c_0"
@@ -37,30 +79,6 @@
         "berts_vehicle_pack:gun_pod/f4c_gau4"
       ],
       "MaxPylonMassKg": 1000
-    },
-    {
-      "Id": "internal_bay",
-      "Name": "Bomb bay / internal stores",
-      "Position": [
-        0,
-        0.65,
-        1.2
-      ],
-      "Internal": true,
-      "MaxPylonMassKg": 6257,
-      "AllowedStores": [
-        "berts_vehicle_pack:reference/dumb_bomb_250kg",
-        "berts_vehicle_pack:reference/laser_bomb_250kg",
-        "berts_vehicle_pack:reference/gps_bomb_250kg",
-        "berts_vehicle_pack:reference/dumb_bomb_5000kg",
-        "berts_vehicle_pack:fa18e/bomb_500kg_dumb_1",
-        "berts_vehicle_pack:fa18e/bomb_500kg_dumb_2",
-        "berts_vehicle_pack:fa18e/bomb_500kg_laser_1",
-        "berts_vehicle_pack:fa18e/bomb_500kg_laser_2",
-        "berts_vehicle_pack:fa18e/bomb_500kg_gps_1",
-        "berts_vehicle_pack:fa18e/bomb_500kg_gps_2",
-        "berts_vehicle_pack:reference/dumb_bomb_100kg"
-      ]
     }
   ],
   "MaxPayloadKg": 7257,

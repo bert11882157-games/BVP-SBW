@@ -25,5 +25,19 @@
         "wheelR2"
       ]
     }
+  },
+  "EngineExhaust": {
+    "Schema": "berts_vehicle_pack:engine_exhaust_origins/v1",
+    "Parent": "HULL",
+    "Origins": [
+      {
+        "Id": "engine_exhaust_group_origin_000",
+        "Position": [
+          -1.18342,
+          1.04661,
+          -1.44069
+        ]
+      }
+    ]
   }
 }

@@ -19,23 +19,5 @@
   },
   "MaxPylonMassKg": 1000,
   "MaxWeaponsPerPylon": 12,
-  "Singles": [
-    {
-      "Id": "internal_bay",
-      "Name": "Bomb bay / internal stores",
-      "Position": [
-        0,
-        0.6,
-        0.395885
-      ],
-      "Internal": true,
-      "MaxPylonMassKg": 342,
-      "AllowedStores": [
-        "berts_vehicle_pack:reference/dumb_bomb_250kg",
-        "berts_vehicle_pack:reference/laser_bomb_250kg",
-        "berts_vehicle_pack:reference/gps_bomb_250kg",
-        "berts_vehicle_pack:reference/dumb_bomb_100kg"
-      ]
-    }
-  ]
+  "Singles": []
 }

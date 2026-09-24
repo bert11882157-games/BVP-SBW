@@ -6,7 +6,46 @@
     "CannonRight"
   ],
   "SuspendedWeapons": [],
-  "Pairs": [],
+  "Pairs": [
+    {
+      "Id": "underwing",
+      "Name": "Underwing pylons",
+      "Left": [
+        -2.92,
+        1.05,
+        -1.88
+      ],
+      "Right": [
+        2.92,
+        1.05,
+        -1.88
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/mk82"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 1000
+    },
+    {
+      "Id": "wingtip",
+      "Name": "Wingtip rails",
+      "Left": [
+        -4.04,
+        1.66,
+        -2.05
+      ],
+      "Right": [
+        4.04,
+        1.66,
+        -2.05
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:fa18e/aim9m"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 250
+    }
+  ],
   "StoreGroups": {
     "berts_vehicle_pack:modeled_store/f_5a/wingtip_left": [
       "suspended_wingtip_left_hull"
@@ -27,7 +66,7 @@
   "Singles": [
     {
       "Id": "internal_bay",
-      "Name": "Bomb bay / internal stores",
+      "Name": "Armament",
       "Position": [
         0,
         0.74321,
@@ -36,17 +75,11 @@
       "Internal": true,
       "MaxPylonMassKg": 2495,
       "AllowedStores": [
-        "berts_vehicle_pack:reference/dumb_bomb_250kg",
-        "berts_vehicle_pack:reference/laser_bomb_250kg",
-        "berts_vehicle_pack:reference/gps_bomb_250kg",
         "berts_vehicle_pack:fa18e/bomb_500kg_dumb_1",
-        "berts_vehicle_pack:fa18e/bomb_500kg_dumb_2",
         "berts_vehicle_pack:fa18e/bomb_500kg_laser_1",
-        "berts_vehicle_pack:fa18e/bomb_500kg_laser_2",
-        "berts_vehicle_pack:fa18e/bomb_500kg_gps_1",
-        "berts_vehicle_pack:fa18e/bomb_500kg_gps_2",
-        "berts_vehicle_pack:reference/dumb_bomb_100kg"
-      ]
+        "berts_vehicle_pack:fa18e/bomb_500kg_gps_1"
+      ],
+      "QuantitySelectable": false
     }
   ]
 }

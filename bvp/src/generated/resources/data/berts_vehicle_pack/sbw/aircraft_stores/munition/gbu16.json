@@ -1,0 +1,19 @@
+{
+  "Schema": 1,
+  "Name": "GBU-16 Paveway II · 1,000 lb laser",
+  "Category": "BOMB",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/gbu16.geo.json",
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/gbu16.png",
+  "Capacity": 1,
+  "MassKg": 454,
+  "Bomb": {
+    "Mode": "LASER",
+    "Gravity": 0.08,
+    "DragMultiplier": 1,
+    "TurnDegreesPerTick": 2,
+    "BlastRadius": 10,
+    "BlastDamage": 650
+  },
+  "AmmoItem": "superbwarfare:medium_guided_bomb",
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_bombs/gbu16"
+}

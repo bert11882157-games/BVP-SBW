@@ -5,7 +5,73 @@
     "Vulcan"
   ],
   "SuspendedWeapons": [],
-  "Pairs": [],
+  "Pairs": [
+    {
+      "Id": "inner",
+      "Name": "Inner wing",
+      "Left": [
+        -3.06,
+        1.63,
+        -1.53
+      ],
+      "Right": [
+        3.06,
+        1.63,
+        -1.53
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:fa18e/aim9m",
+        "berts_vehicle_pack:fa18e/aim120",
+        "berts_vehicle_pack:munition/mk82",
+        "berts_vehicle_pack:munition/gbu12",
+        "berts_vehicle_pack:fa18e/agm88"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 1200
+    },
+    {
+      "Id": "middle",
+      "Name": "Middle wing",
+      "Left": [
+        -4.15,
+        1.53,
+        -2.22
+      ],
+      "Right": [
+        4.15,
+        1.53,
+        -2.22
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:fa18e/aim9m",
+        "berts_vehicle_pack:fa18e/aim120",
+        "berts_vehicle_pack:munition/mk82",
+        "berts_vehicle_pack:munition/gbu12"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 1000
+    },
+    {
+      "Id": "outer",
+      "Name": "Outer wing",
+      "Left": [
+        -5.1,
+        2,
+        -1.93
+      ],
+      "Right": [
+        5.1,
+        2,
+        -1.93
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:fa18e/aim9m",
+        "berts_vehicle_pack:fa18e/aim120"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 250
+    }
+  ],
   "StoreGroups": {
     "berts_vehicle_pack:modeled_store/f_16c/assembly_0": [
       "suspended_f_16c_0"
@@ -39,7 +105,7 @@
   "Singles": [
     {
       "Id": "internal_bay",
-      "Name": "Bomb bay / internal stores",
+      "Name": "Armament",
       "Position": [
         0,
         0.441579,
@@ -48,18 +114,26 @@
       "Internal": true,
       "MaxPylonMassKg": 5443,
       "AllowedStores": [
-        "berts_vehicle_pack:reference/dumb_bomb_250kg",
-        "berts_vehicle_pack:reference/laser_bomb_250kg",
-        "berts_vehicle_pack:reference/gps_bomb_250kg",
-        "berts_vehicle_pack:reference/dumb_bomb_5000kg",
         "berts_vehicle_pack:fa18e/bomb_500kg_dumb_1",
-        "berts_vehicle_pack:fa18e/bomb_500kg_dumb_2",
         "berts_vehicle_pack:fa18e/bomb_500kg_laser_1",
-        "berts_vehicle_pack:fa18e/bomb_500kg_laser_2",
-        "berts_vehicle_pack:fa18e/bomb_500kg_gps_1",
-        "berts_vehicle_pack:fa18e/bomb_500kg_gps_2",
-        "berts_vehicle_pack:reference/dumb_bomb_100kg"
-      ]
+        "berts_vehicle_pack:fa18e/bomb_500kg_gps_1"
+      ],
+      "QuantitySelectable": false
+    },
+    {
+      "Id": "centerline",
+      "Name": "Centerline",
+      "Position": [
+        0,
+        1.09,
+        -1.51
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/mk82",
+        "berts_vehicle_pack:munition/gbu12"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 1000
     }
   ]
 }

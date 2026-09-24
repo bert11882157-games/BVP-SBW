@@ -1,0 +1,32 @@
+{
+  "Schema": 1,
+  "Name": "GBU-15(V)2/B · television glide bomb",
+  "Category": "BOMB",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/gbu15.geo.json",
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/gbu15.png",
+  "Capacity": 1,
+  "MassKg": 1140.8,
+  "Bomb": {
+    "Mode": "TV",
+    "Gravity": 0.08,
+    "DragMultiplier": 1,
+    "TurnDegreesPerTick": 2,
+    "BlastRadius": 14,
+    "BlastDamage": 900
+  },
+  "Guidance": {
+    "Mode": "GROUND_INFRARED",
+    "Presentation": "TV",
+    "LockTicks": 60,
+    "Range": 900,
+    "ConeDegrees": 25,
+    "CountermeasureVulnerability": 0
+  },
+  "AmmoItem": "superbwarfare:large_guided_bomb",
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_bombs/gbu15",
+  "LaunchOffset": [
+    0,
+    0,
+    -1.96
+  ]
+}

@@ -74,7 +74,7 @@ object DistantBombDiagnostics {
             check(pass) { name }
         }
         fun prepare() {
-            val store = AircraftArmamentRegistry.stores[ResourceLocation("berts_vehicle_pack:reference/dumb_bomb_250kg")]
+            val store = AircraftArmamentRegistry.stores[ResourceLocation("berts_vehicle_pack:fab_250")]
                 ?: error("Real authored bomb missing")
             player.teleportTo(level, origin.x, origin.y, origin.z, 0f, 85f)
             val plane = ForgeRegistries.ENTITY_TYPES.getValue(ResourceLocation("berts_vehicle_pack:su_25"))?.create(level)

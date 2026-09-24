@@ -27,18 +27,24 @@ object AircraftArmamentKeys {
 
     @JvmField val OPEN = key("loadout", GLFW.GLFW_KEY_I)
     @JvmField val POD = key("pod", GLFW.GLFW_KEY_P)
+    @JvmField val STABILIZE = key("pod_stabilize", GLFW.GLFW_KEY_O)
     @JvmField val DESIGNATE = VehicleControlBindings.register(VehicleKeyMapping(
         "key.superbwarfare.aircraft_designate", KeyModifier.NONE, InputConstants.Type.MOUSE,
         GLFW.GLFW_MOUSE_BUTTON_MIDDLE, VehicleControlBindings.PLANE_CATEGORY, context))
     @JvmField val CLEAR = key("clear_designation", GLFW.GLFW_KEY_U)
     @JvmField val FIRE = key("fire_store", GLFW.GLFW_KEY_L)
     @JvmField val CYCLE = key("cycle_store", GLFW.GLFW_KEY_RIGHT_BRACKET)
+    @JvmField val COMMAND_LEFT = key("command_left", GLFW.GLFW_KEY_LEFT)
+    @JvmField val COMMAND_RIGHT = key("command_right", GLFW.GLFW_KEY_RIGHT)
+    @JvmField val COMMAND_UP = key("command_up", GLFW.GLFW_KEY_UP)
+    @JvmField val COMMAND_DOWN = key("command_down", GLFW.GLFW_KEY_DOWN)
     @JvmField val POD_PITCH_DOWN = ModKeyMappings.FIXED_WING_PITCH_DOWN
     @JvmField val POD_PITCH_UP = ModKeyMappings.FIXED_WING_PITCH_UP
     @JvmField val POD_ROLL_LEFT = ModKeyMappings.FIXED_WING_ROLL_LEFT
     @JvmField val POD_ROLL_RIGHT = ModKeyMappings.FIXED_WING_ROLL_RIGHT
     @JvmField val flightMappings = arrayOf(POD_PITCH_DOWN, POD_PITCH_UP, POD_ROLL_LEFT, POD_ROLL_RIGHT)
-    private val all = arrayOf(OPEN, POD, DESIGNATE, CLEAR, FIRE, CYCLE)
+    private val all = arrayOf(OPEN, POD, STABILIZE, DESIGNATE, CLEAR, FIRE, CYCLE,
+        COMMAND_LEFT, COMMAND_RIGHT, COMMAND_UP, COMMAND_DOWN)
 
     @SubscribeEvent fun register(event: RegisterKeyMappingsEvent) = all.forEach(event::register)
     @SubscribeEvent fun reload(event: RegisterClientReloadListenersEvent) {

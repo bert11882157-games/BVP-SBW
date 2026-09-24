@@ -1,0 +1,31 @@
+{
+  "Schema": 1,
+  "Name": "AIM-9B Sidewinder · rear-aspect infrared",
+  "Category": "AIR_TO_AIR",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/aim9b.geo.json",
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/aim9b.png",
+  "Capacity": 1,
+  "MassKg": 74.4,
+  "Guidance": {
+    "Mode": "INFRARED",
+    "LockTicks": 75,
+    "Range": 350,
+    "ConeDegrees": 18,
+    "CountermeasureVulnerability": 1.4
+  },
+  "Flight": {
+    "InitialSpeed": 0.5,
+    "MaxSpeed": 4.5,
+    "AccelerationPerTick": 0.1,
+    "TurnDegreesPerSecond": 42,
+    "Damage": 32,
+    "BlastRadius": 2.5
+  },
+  "AmmoItem": "superbwarfare:small_air_to_air_missile",
+  "MaxPerPylon": 1,
+  "LaunchOffset": [
+    0,
+    0,
+    -1.435
+  ]
+}

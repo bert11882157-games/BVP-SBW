@@ -1,0 +1,25 @@
+{
+  "Schema": 1,
+  "Name": "305E / LMUR · thermal ground lock",
+  "Category": "AIR_TO_GROUND",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/lmur.geo.json",
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/lmur.png",
+  "Capacity": 1,
+  "MassKg": 105,
+  "Guidance": {
+    "Mode": "GROUND_INFRARED",
+    "LockTicks": 70,
+    "Range": 750,
+    "ConeDegrees": 25,
+    "CountermeasureVulnerability": 0.5
+  },
+  "Flight": {
+    "InitialSpeed": 0.35,
+    "MaxSpeed": 4,
+    "AccelerationPerTick": 0.07,
+    "TurnDegreesPerSecond": 80,
+    "Damage": 350,
+    "BlastRadius": 3
+  },
+  "AmmoItem": "superbwarfare:medium_air_to_ground_missile"
+}

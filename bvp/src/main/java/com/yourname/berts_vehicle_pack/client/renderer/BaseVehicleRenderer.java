@@ -477,10 +477,15 @@ public class BaseVehicleRenderer<T extends GeoVehicleEntity> implements VehicleR
         ResourceLocation previousTexture = this.activeTextureLocation;
         this.activeTextureLocation = context.getResolvedTexture();
         this.activeRenderParts = VehicleRenderPartSnapshot.capture(entity, entityYaw, partialTicks);
+        BvpAircraftBreakupRenderer.Hidden detachedWings = null;
+        BvpCockpitVisibility.Hidden cockpitOccluder = null;
         try {
             applyModelAnimations(entity, entityYaw, loadedModel, partialTicks);
             this.suspendedStores.apply(entity, loadedModel);
             ResourceLocation resolvedTexture = m_5478_(entity);
+            detachedWings = BvpAircraftBreakupRenderer.apply(context, loadedModel, this.textureLocation,
+                    this.deadTextureLocation, this.suspendedStores);
+            cockpitOccluder = BvpCockpitVisibility.apply(entity, loadedModel);
 
             // The backend enters after SBW's native vehicleAxis. Restore the
             // renderer-entry matrices so BVP's world-space recoil remains
@@ -501,7 +506,7 @@ public class BaseVehicleRenderer<T extends GeoVehicleEntity> implements VehicleR
                         bufferSource, packedLight);
                 loadedModel.renderTranslucentOnly(poseStack, bufferSource, resolvedTexture, packedLight,
                         fadeAlpha);
-                this.suspendedStores.render(entity, poseStack, bufferSource, packedLight, fadeAlpha);
+                this.suspendedStores.render(entity, poseStack, bufferSource, packedLight, fadeAlpha, partialTicks);
                 recordGeometry(entity, partialTicks, "FULL_MODEL", fadeAlpha);
                 if (fadeAlpha > 0.0F) {
                     FarVehicleDiagnostics.modelRendered(entity, partialTicks,
@@ -518,6 +523,8 @@ public class BaseVehicleRenderer<T extends GeoVehicleEntity> implements VehicleR
                     context.getChassisPresentation().getPose());
             return true;
         } finally {
+            if (cockpitOccluder != null) cockpitOccluder.restore();
+            if (detachedWings != null) detachedWings.restore();
             this.suspendedStores.restore();
             AircraftRigAnimator.restore(loadedModel);
             this.profileWheeledRunningGearAnimator.restoreSteering();
@@ -558,6 +565,7 @@ public class BaseVehicleRenderer<T extends GeoVehicleEntity> implements VehicleR
                                            PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
         if (entity instanceof ArmoredVehicleEntity armoredEntity) {
             BvpEngineExhaustRenderer.emit(armoredEntity, partialTicks);
+            BvpAbramsCookoffRenderer.emit(armoredEntity);
         }
     }
 

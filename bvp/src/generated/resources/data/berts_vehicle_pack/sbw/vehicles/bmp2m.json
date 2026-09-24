@@ -269,11 +269,11 @@
       "NormalReloadTime": 100,
       "EmptyReloadTime": 100,
       "AmmoCostPerShoot": 1,
-      "Velocity": 18,
+      "Velocity": 56,
       "Damage": 65,
-      "ExplosionDamage": 8,
-      "ExplosionRadius": 2,
-      "HeatPerShoot": 1.6,
+      "ExplosionDamage": 0,
+      "ExplosionRadius": 0,
+      "HeatPerShoot": 8,
       "NaturalCooldown": 1,
       "RecoilTime": 31,
       "RecoilForce": 0.62,
@@ -303,6 +303,7 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -338,12 +339,17 @@
               "ProjectileType": "superbwarfare:small_cannon_shell",
               "ProjectileProfile": "berts_vehicle_pack:bmp2m/cannon/ammo_00_3ubr8_apds",
               "ProjectileLife": 40
-            }
-          },
-          "ConsumptionItem": "superbwarfare:medium_autocannon_shell"
+            },
+            "ShootShake": [
+              8,
+              10,
+              12
+            ]
+          }
         },
         {
           "Ammo": "superbwarfare:small_shell_aa",
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -385,9 +391,13 @@
               "ProjectileType": "superbwarfare:small_cannon_shell",
               "ProjectileProfile": "berts_vehicle_pack:bmp2m/cannon/ammo_01_3uor6_hef_t",
               "ProjectileLife": 40
-            }
-          },
-          "ConsumptionItem": "superbwarfare:medium_autocannon_shell"
+            },
+            "ShootShake": [
+              8,
+              10,
+              12
+            ]
+          }
         }
       ],
       "ShootPos": {
@@ -429,6 +439,7 @@
       "ProjectileBeltAmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_gs",
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -440,11 +451,17 @@
             "Damage": 65,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
-            "Name": "AP_T"
+            "Name": "AP_T",
+            "ShootShake": [
+              8,
+              10,
+              12
+            ]
           }
         },
         {
           "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
@@ -456,7 +473,12 @@
             "Damage": 250,
             "ExplosionDamage": 0,
             "ExplosionRadius": 5,
-            "Name": "HEF_I"
+            "Name": "HEF_I",
+            "ShootShake": [
+              8,
+              10,
+              12
+            ]
           }
         }
       ],
@@ -465,7 +487,12 @@
         "ProjectileType": "superbwarfare:small_cannon_shell",
         "ProjectileProfile": "berts_vehicle_pack:bmp2m/cannon/default",
         "ProjectileLife": 40
-      }
+      },
+      "ShootShake": [
+        8,
+        10,
+        12
+      ]
     },
     "MainMachineGun": {
       "DefaultFireMode": "Auto",
@@ -476,6 +503,7 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:projectile",
@@ -511,9 +539,13 @@
               "ProjectileType": "superbwarfare:projectile",
               "ProjectileProfile": "berts_vehicle_pack:bmp2m/mainmachinegun/ammo_00_russian_762_ap_i",
               "ProjectileLife": 400
-            }
-          },
-          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition"
+            },
+            "ShootShake": [
+              0,
+              0,
+              0
+            ]
+          }
         }
       ],
       "Projectile": {
@@ -521,12 +553,15 @@
         "Profile": "berts_vehicle_pack:bmp2m/mainmachinegun/default"
       },
       "Magazine": 250,
-      "NormalReloadTime": 160,
-      "EmptyReloadTime": 160,
+      "NormalReloadTime": 100,
+      "EmptyReloadTime": 100,
       "RPM": 600,
       "Damage": 9.5,
       "BypassesArmor": 0.3,
-      "Velocity": 30,
+      "Velocity": 42.75,
+      "ExplosionDamage": 0,
+      "ExplosionRadius": 0,
+      "AmmoCostPerShoot": 1,
       "ShootAnimationTime": 1,
       "RecoilTime": 20,
       "RecoilForce": 0.08,
@@ -586,6 +621,7 @@
       "ProjectileBeltAmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:projectile",
@@ -597,7 +633,12 @@
             "Damage": 9.5,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
-            "Name": "AP_T"
+            "Name": "AP_T",
+            "ShootShake": [
+              0,
+              0,
+              0
+            ]
           }
         }
       ],
@@ -606,16 +647,23 @@
         "ProjectileType": "superbwarfare:projectile",
         "ProjectileProfile": "berts_vehicle_pack:bmp2m/mainmachinegun/default",
         "ProjectileLife": 400
-      }
+      },
+      "ShootShake": [
+        0,
+        0,
+        0
+      ]
     },
     "Missile": {
       "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_atgm.png",
       "DefaultFireMode": "Semi",
       "AvailableFireModes": "Semi",
+      "RPM": 40,
       "Projectile": {
         "Type": "superbwarfare:wire_guide_missile",
         "Profile": "berts_vehicle_pack:bmp2m/missile/default"
       },
+      "AmmoCostPerShoot": 1,
       "DefaultZoom": 3,
       "Magazine": 4,
       "NormalReloadTime": 120,
@@ -638,14 +686,29 @@
         {
           "Ammo": "superbwarfare:medium_anti_ground_missile",
           "ConsumptionItem": "superbwarfare:medium_atgm",
-          "Override": {}
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:wire_guide_missile",
+              "Profile": "berts_vehicle_pack:bmp2m/missile/ammo_00_9m133_kornet"
+            },
+            "ShootShake": [
+              8,
+              10,
+              152.4
+            ],
+            "NominalBallistics": {
+              "Supported": false,
+              "ProjectileType": "superbwarfare:wire_guide_missile",
+              "ProjectileProfile": "berts_vehicle_pack:bmp2m/missile/ammo_00_9m133_kornet"
+            }
+          }
         }
       ],
       "SoundInfo": {
-        "Fire1PGain": 0.35,
-        "Fire3PGain": 0.35,
-        "Fire3PFarGain": 0.35,
-        "Fire3PVeryFarGain": 0.35,
+        "Fire1PGain": 0.7,
+        "Fire3PGain": 0.7,
+        "Fire3PFarGain": 0.7,
+        "Fire3PVeryFarGain": 0.7,
         "Fire1P": "berts_vehicle_pack:atgm_tube_launch",
         "Fire3P": "berts_vehicle_pack:atgm_tube_launch",
         "VehicleReload3p": "superbwarfare:medium_missile_reload",
@@ -721,7 +784,12 @@
         "Supported": false,
         "ProjectileType": "superbwarfare:wire_guide_missile",
         "ProjectileProfile": "berts_vehicle_pack:bmp2m/missile/default"
-      }
+      },
+      "ShootShake": [
+        8,
+        10,
+        152.4
+      ]
     },
     "GrenadeLauncher": {
       "Icon": "superbwarfare:textures/gun_icon/m_79_icon.png",
@@ -741,14 +809,29 @@
         {
           "Ammo": "superbwarfare:grenade_40mm",
           "ConsumptionItem": "superbwarfare:grenade_ammunition",
-          "Override": {}
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:gun_grenade",
+              "Profile": "berts_vehicle_pack:bmp2m/grenadelauncher/ammo_00_30mm_vog_30"
+            },
+            "ShootShake": [
+              8,
+              10,
+              12
+            ],
+            "NominalBallistics": {
+              "Supported": false,
+              "ProjectileType": "superbwarfare:gun_grenade",
+              "ProjectileProfile": "berts_vehicle_pack:bmp2m/grenadelauncher/ammo_00_30mm_vog_30"
+            }
+          }
         }
       ],
       "ShellType": "HE",
       "Velocity": 6,
       "Damage": 35,
       "ExplosionDamage": 45,
-      "ExplosionRadius": 3,
+      "ExplosionRadius": 6,
       "ProjectileLife": 100,
       "RecoilTime": 16,
       "RecoilForce": 0.08,
@@ -808,7 +891,12 @@
         "Supported": false,
         "ProjectileType": "superbwarfare:gun_grenade",
         "ProjectileProfile": "berts_vehicle_pack:bmp2m/grenadelauncher/default"
-      }
+      },
+      "ShootShake": [
+        8,
+        10,
+        12
+      ]
     }
   },
   "HUDColor": "0x66FF00",

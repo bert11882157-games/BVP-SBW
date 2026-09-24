@@ -1,0 +1,19 @@
+{
+  "Schema": 1,
+  "Name": "Mk 83 · 1,000 lb freefall",
+  "Category": "BOMB",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/mk83.geo.json",
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/mk83.png",
+  "Capacity": 1,
+  "MassKg": 454,
+  "Bomb": {
+    "Mode": "DUMB",
+    "Gravity": 0.08,
+    "DragMultiplier": 1,
+    "TurnDegreesPerTick": 0,
+    "BlastRadius": 10,
+    "BlastDamage": 650
+  },
+  "AmmoItem": "superbwarfare:medium_freefall_bomb",
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_bombs/mk83"
+}

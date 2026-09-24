@@ -148,8 +148,8 @@ object VehicleHelicopterAtgmCameraRayClient {
 
     /** Eligibility is seat/pair scoped; current primary selection must not starve an ATGM launch. */
     private fun hasAtgmCapableSeat(vehicle: VehicleEntity, seatIndex: Int): Boolean {
-        val seat = vehicle.getSeat(seatIndex) ?: return false
-        return seat.weapons().any { weaponName ->
+        vehicle.getSeat(seatIndex) ?: return false
+        return vehicle.getWeaponIds(seatIndex).any { weaponName ->
             vehicle.getGunData(weaponName)?.let { VehicleWeaponGuidance.isAtgm(it) } == true
         }
     }

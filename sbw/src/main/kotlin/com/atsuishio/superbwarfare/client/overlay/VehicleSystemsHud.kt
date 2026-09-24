@@ -68,6 +68,8 @@ object VehicleSystemsHud {
                 val reload=String.format(java.util.Locale.ROOT,"%.1fs",system.reloadRemainingTicks/20.0)
                 g.drawCenteredString(font,reload,x+20,y+27,SECONDARY)
             }
+            if(system.guidance.isNotBlank())
+                g.drawCenteredString(font,system.guidance,x+20,y+layout.slotHeight+3,WHITE)
             if(system.primary && system.supportsAmmoCycle) {
                 val key="[${snapshot.ammoCycleKeyLabel.string}]"
                 val shownKey=font.plainSubstrByWidth(key,40)

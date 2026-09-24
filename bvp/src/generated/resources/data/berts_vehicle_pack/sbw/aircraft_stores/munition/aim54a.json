@@ -1,0 +1,31 @@
+{
+  "Schema": 1,
+  "Name": "AIM-54A Phoenix · active terminal radar",
+  "Category": "AIR_TO_AIR",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/aim54.geo.json",
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/aim54.png",
+  "Capacity": 1,
+  "MassKg": 446.6,
+  "Guidance": {
+    "Mode": "ACTIVE_RADAR",
+    "LockTicks": 0,
+    "Range": 2000,
+    "ConeDegrees": 35,
+    "CountermeasureVulnerability": 0.9
+  },
+  "Flight": {
+    "InitialSpeed": 0.5,
+    "MaxSpeed": 10,
+    "AccelerationPerTick": 0.1,
+    "TurnDegreesPerSecond": 28,
+    "Damage": 100,
+    "BlastRadius": 6
+  },
+  "AmmoItem": "superbwarfare:large_air_to_air_missile",
+  "MaxPerPylon": 1,
+  "LaunchOffset": [
+    0,
+    0,
+    -2
+  ]
+}

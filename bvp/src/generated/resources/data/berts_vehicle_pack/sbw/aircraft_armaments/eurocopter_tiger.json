@@ -18,10 +18,11 @@
         0.773356
       ],
       "AllowedStores": [
-        "berts_vehicle_pack:eurocopter_tiger/hot3_proxy"
+        "berts_vehicle_pack:eurocopter_tiger/hot3_proxy",
+        "berts_vehicle_pack:munition/pars3_lr"
       ],
-      "MaxWeaponsPerPylon": 1,
-      "MaxPylonMassKg": 100
+      "MaxWeaponsPerPylon": 4,
+      "MaxPylonMassKg": 250
     },
     {
       "Id": "outer",
@@ -38,15 +39,16 @@
       ],
       "AllowedStores": [
         "berts_vehicle_pack:eurocopter_tiger/hot3_proxy",
-        "berts_vehicle_pack:eurocopter_tiger/aim92"
+        "berts_vehicle_pack:eurocopter_tiger/aim92",
+        "berts_vehicle_pack:munition/pars3_lr_dual"
       ],
-      "MaxWeaponsPerPylon": 1,
-      "MaxPylonMassKg": 100
+      "MaxWeaponsPerPylon": 2,
+      "MaxPylonMassKg": 160
     }
   ],
   "Singles": [],
   "StoreGroups": {},
   "MaxPayloadKg": 1000,
-  "MaxPylonMassKg": 100,
-  "MaxWeaponsPerPylon": 1
+  "MaxPylonMassKg": 500,
+  "MaxWeaponsPerPylon": 4
 }

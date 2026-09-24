@@ -341,10 +341,10 @@
             "ShootAnimationTime": 20,
             "Name": "weapon.berts_vehicle_pack.2a46m_5_125_mm_smoothbore_9m119m1_tandem_atgm",
             "SoundInfo": {
-              "Fire1PGain": 0.35,
-              "Fire3PGain": 0.35,
-              "Fire3PFarGain": 0.35,
-              "Fire3PVeryFarGain": 0.35,
+              "Fire1PGain": 0.7,
+              "Fire3PGain": 0.7,
+              "Fire3PFarGain": 0.7,
+              "Fire3PVeryFarGain": 0.7,
               "Fire1P": "berts_vehicle_pack:atgm_gun_launch",
               "Fire3P": "berts_vehicle_pack:atgm_gun_launch",
               "Fire3PFar": "berts_vehicle_pack:atgm_gun_launch",
@@ -443,6 +443,7 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:projectile",
@@ -484,8 +485,7 @@
               0,
               0
             ]
-          },
-          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition"
+          }
         }
       ],
       "Projectile": {
@@ -558,6 +558,7 @@
       "ProjectileBeltAmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:projectile",
@@ -613,6 +614,7 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:projectile",
@@ -667,8 +669,7 @@
               10,
               6
             ]
-          },
-          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition"
+          }
         }
       ],
       "ShootPos": {
@@ -727,6 +728,7 @@
       "ProjectileBeltAmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:projectile",
@@ -748,6 +750,7 @@
         },
         {
           "Ammo": "superbwarfare:small_shell_aa",
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:projectile",
@@ -769,6 +772,7 @@
         },
         {
           "Ammo": "superbwarfare:small_shell_gs",
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:projectile",

@@ -1,0 +1,40 @@
+{
+  "Schema": 1,
+  "Name": "PARS 3 LR · four-missile rack",
+  "Category": "AIR_TO_GROUND",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/pars3.geo.json",
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/pars3.png",
+  "Capacity": 1,
+  "MassKg": 49,
+  "Guidance": {
+    "Mode": "GROUND_INFRARED",
+    "Presentation": "FIRE_AND_FORGET",
+    "LockTicks": 60,
+    "Range": 900,
+    "ConeDegrees": 30,
+    "CountermeasureVulnerability": 0.7
+  },
+  "Flight": {
+    "InitialSpeed": 0.5,
+    "MaxSpeed": 5.5,
+    "AccelerationPerTick": 0.1,
+    "TurnDegreesPerSecond": 75,
+    "Damage": 750,
+    "BlastRadius": 1.25
+  },
+  "AmmoItem": "superbwarfare:large_atgm",
+  "MaxPerPylon": 4,
+  "FixedRackCount": 4,
+  "RackMassKg": 36,
+  "RackColumns": 2,
+  "RackSpacing": [
+    0.38,
+    0.32,
+    0
+  ],
+  "LaunchOffset": [
+    0,
+    0,
+    -0.815
+  ]
+}

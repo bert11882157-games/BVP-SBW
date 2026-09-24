@@ -48,6 +48,13 @@ public final class BvpLeanImpactEffects {
         spawnTinyExplosion(level, position, null);
     }
 
+    /** ERA is a small local surface charge, not the projectile's main warhead. */
+    public static void spawnEraExplosion(Level level, Vec3 position) {
+        if (!(level instanceof ServerLevel server) || position == null) return;
+        // The legacy sprite was 3–4 blocks across. Keep this about one third as wide.
+        spawnCaliberVisual(server, position, 1.1F);
+    }
+
     public static void spawnTinyExplosion(Level level, Vec3 position, Entity source) {
         if (!(level instanceof ServerLevel serverLevel) || position == null) {
             return;

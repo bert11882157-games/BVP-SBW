@@ -15,7 +15,7 @@ internal object AircraftWeaponGroups {
         if (sameStore.any { it.category != first.category }) return@mapNotNull null
         val members = when (first.category) {
             "ROCKET_POD", "GUN_POD" -> sameStore.flatMap { it.channels }.distinct()
-            "AIR_TO_AIR", "AIR_TO_GROUND", "ANTI_RADIATION", "LASER_GUIDED", "CRUISE", "BOMB" ->
+            "AIR_TO_AIR", "AIR_TO_GROUND", "ANTI_RADIATION", "LASER_GUIDED", "COMMAND_GUIDED", "CRUISE", "BOMB" ->
                 sameStore.map { AircraftStoreWeapons.PREFIX + it.id }
             else -> emptyList()
         }

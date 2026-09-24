@@ -84,47 +84,23 @@ final class ArmorHitResolver {
         return new BoxQuery(fallbackHit, nearest);
     }
 
-    /** Resolves the ray/fallback hit and nearest coarse-impact volume in one stable-order traversal. */
-    static BoxQuery findBestAndNearestBox(ArmorTarget target, List<ArmorBox> boxes, ShotTrace trace,
-                                          double maxDistance, double impactTolerance) {
-        Vec direction = trace.hullShotDirection.normalize();
-        boolean hasDirection = direction.length() >= 1.0E-6D;
-        double inflation = Math.min(0.03D, Math.max(0.005D, impactTolerance * 0.1D));
-        ArmorHit rayHit = null;
-        ArmorBox fallbackBox = null;
-        Vec fallbackFrame = null;
-        double fallbackDistance = Double.MAX_VALUE;
+    /** ERA contact is selected only around the accepted point, never on an earlier ray crossing. */
+    static BoxQuery findNearestBoxAtImpact(ArmorTarget target, List<ArmorBox> boxes, Vec hullImpact,
+                                           double impactTolerance) {
+        ArmorHit hit = null;
+        double bestDistance = Double.MAX_VALUE;
         NearBox nearest = null;
-
         for (ArmorBox box : boxes) {
-            Vec frameFallback = pointToBoxFrame(target, box, trace.hullImpactFallback);
-            if (frameFallback == null) continue;
-            double distanceOutside = box.distanceOutside(frameFallback);
+            Vec frameImpact = pointToBoxFrame(target, box, hullImpact);
+            if (frameImpact == null) continue;
+            double distanceOutside = box.distanceOutside(frameImpact);
             if (nearest == null || distanceOutside < nearest.distance) {
                 nearest = new NearBox(box, distanceOutside);
             }
-            if (distanceOutside <= impactTolerance && distanceOutside < fallbackDistance) {
-                fallbackBox = box;
-                fallbackFrame = frameFallback;
-                fallbackDistance = distanceOutside;
+            if (distanceOutside <= impactTolerance && distanceOutside < bestDistance) {
+                hit = ArmorHit.proximity(box, frameImpact, hullImpact, distanceOutside);
+                bestDistance = distanceOutside;
             }
-
-            if (!hasDirection) {
-                continue;
-            }
-            Vec frameStart = pointToBoxFrame(target, box, trace.rayStart);
-            Vec frameDirection = directionToBoxFrame(target, box, direction).normalize();
-            double distance = box.rayHitDistance(frameStart, frameDirection, maxDistance, inflation);
-            if (Double.isFinite(distance) && distance >= 0.0D
-                    && (rayHit == null || distance < rayHit.distance)) {
-                Vec frameImpact = frameStart.add(frameDirection.scale(distance));
-                Vec hullImpact = pointToHullFrame(target, box, frameImpact);
-                rayHit = new ArmorHit(box, frameImpact, hullImpact, distance);
-            }
-        }
-        ArmorHit hit = rayHit;
-        if (hit == null && fallbackBox != null) {
-            hit = ArmorHit.proximity(fallbackBox, fallbackFrame, trace.hullImpactFallback, fallbackDistance);
         }
         return new BoxQuery(hit, nearest);
     }

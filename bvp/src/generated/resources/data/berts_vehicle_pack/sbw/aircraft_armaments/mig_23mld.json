@@ -5,7 +5,48 @@
     "GSh23L"
   ],
   "SuspendedWeapons": [],
-  "Pairs": [],
+  "Pairs": [
+    {
+      "Id": "inner",
+      "Name": "Inner wing pylons",
+      "Left": [
+        -3.3,
+        1.1,
+        0.7
+      ],
+      "Right": [
+        3.3,
+        1.1,
+        0.7
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:r60",
+        "berts_vehicle_pack:fab_100",
+        "berts_vehicle_pack:fab_250"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 500
+    },
+    {
+      "Id": "outer",
+      "Name": "Outer wing pylons",
+      "Left": [
+        -5.6,
+        1.12,
+        0.65
+      ],
+      "Right": [
+        5.6,
+        1.12,
+        0.65
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:r60"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 150
+    }
+  ],
   "StoreGroups": {},
   "MaxPayloadKg": 3000,
   "Radar": {
@@ -17,7 +58,7 @@
   "Singles": [
     {
       "Id": "internal_bay",
-      "Name": "Bomb bay / internal stores",
+      "Name": "Armament",
       "Position": [
         0,
         0.90448,
@@ -26,17 +67,11 @@
       "Internal": true,
       "MaxPylonMassKg": 3000,
       "AllowedStores": [
-        "berts_vehicle_pack:reference/dumb_bomb_250kg",
-        "berts_vehicle_pack:reference/laser_bomb_250kg",
-        "berts_vehicle_pack:reference/gps_bomb_250kg",
         "berts_vehicle_pack:fa18e/bomb_500kg_dumb_1",
-        "berts_vehicle_pack:fa18e/bomb_500kg_dumb_2",
         "berts_vehicle_pack:fa18e/bomb_500kg_laser_1",
-        "berts_vehicle_pack:fa18e/bomb_500kg_laser_2",
-        "berts_vehicle_pack:fa18e/bomb_500kg_gps_1",
-        "berts_vehicle_pack:fa18e/bomb_500kg_gps_2",
-        "berts_vehicle_pack:reference/dumb_bomb_100kg"
-      ]
+        "berts_vehicle_pack:fa18e/bomb_500kg_gps_1"
+      ],
+      "QuantitySelectable": false
     }
   ]
 }

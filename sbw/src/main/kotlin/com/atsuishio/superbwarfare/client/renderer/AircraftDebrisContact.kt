@@ -9,6 +9,12 @@ import kotlin.math.abs
 
 /** Minimum separating translation for two oriented debris boxes, including edge axes. */
 internal object AircraftDebrisContact {
+    /** Support probes tolerate the deliberate small floor overlap without snagging a slide. */
+    fun relaxedSweep(from: Vec3, to: Vec3, clip: (Vec3, Vec3) -> BlockHitResult?): AircraftDebrisMotion.Contact? {
+        val lift = Vec3(0.0, com.atsuishio.superbwarfare.api.vehicle.flight.WreckDebrisPhysics.CONTACT_SLOP + .005, 0.0)
+        val hit = sweep(from.add(lift), to.add(lift), clip) ?: return null
+        return if(hit.normal.y > .5) hit else hit.copy(position = hit.position.subtract(lift))
+    }
     /** Rotating a corner can put it slightly inside the floor between sweeps.
      * Minecraft's inside-hit normal opposes travel, not the actual floor surface;
      * treating it as a wall incorrectly deletes all horizontal momentum. Recover

@@ -1,37 +1,42 @@
 package com.atsuishio.superbwarfare.api.vehicle.flight
 
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity
+import com.atsuishio.superbwarfare.compat.SoundBarrierCompat
 import com.atsuishio.superbwarfare.init.ModSounds
-import net.minecraft.core.particles.ParticleTypes
+import com.atsuishio.superbwarfare.network.message.receive.SonicBoomMessage
+import com.atsuishio.superbwarfare.network.message.receive.SoundClientMessage
+import com.atsuishio.superbwarfare.tools.SoundTool
+import com.atsuishio.superbwarfare.tools.sendPacketTo
 import net.minecraft.server.level.ServerLevel
-import net.minecraft.sounds.SoundSource
 import net.minecraft.world.phys.Vec3
-import kotlin.math.cos
-import kotlin.math.sin
+import net.minecraft.resources.ResourceLocation
+import net.minecraftforge.registries.ForgeRegistries
+import java.util.UUID
 
-/** Server crossing produces one shared, non-damaging sound and vapor cone. */
+/** One authoritative speed crossing, independent of native entity tracking distance. */
 internal object FixedWingSonicBoom {
     fun emit(vehicle: VehicleEntity) {
         val level = vehicle.level() as? ServerLevel ?: return
-        level.playSound(null, vehicle.x, vehicle.y, vehicle.z, ModSounds.EXPLOSION_AIR.get(),
-            SoundSource.NEUTRAL, 8f, 0.85f)
-        val forward = Vec3.directionFromRotation(vehicle.xRot, vehicle.yRot)
-        val side = if (kotlin.math.abs(forward.y) < 0.95) forward.cross(Vec3(0.0, 1.0, 0.0)).normalize()
-            else Vec3(1.0, 0.0, 0.0)
-        val up = side.cross(forward).normalize()
-        val size = (vehicle.bbWidth * 0.65).coerceIn(1.5, 8.0)
-        val center = vehicle.position().add(0.0, vehicle.bbHeight * 0.5, 0.0)
-        val viewers = level.players().filter { it.distanceToSqr(vehicle) <= 192.0 * 192.0 }
-        // A denser, slightly wider shell stays visible between the individual cloud sprites.
-        // The burst remains bounded to one crossing; rings share the same axial extent.
-        for (ring in 1..6) for (i in 0 until 96) {
-            val depth = ring * 4.0 / 6.0
-            val angle = (i + (ring % 2) * 0.5) * 2.0 * Math.PI / 96
-            val radial = side.scale(cos(angle)).add(up.scale(sin(angle)))
-            val point = center.add(forward.scale(-depth * size * 0.35))
-                .add(radial.scale(size * depth * 0.45))
-            for (player in viewers) level.sendParticles(player, ParticleTypes.CLOUD, true,
-                point.x, point.y, point.z, 0, radial.x, radial.y, radial.z, 0.18)
+        val center = vehicle.position().add(0.0, vehicle.bbHeight * .5, 0.0)
+        val nativeBursts = SoundBarrierCompat.particles(vehicle)
+        com.atsuishio.superbwarfare.diagnostics.EliteDiagnostics.record(vehicle, "fixed_wing", "SONIC_EFFECT",
+            "provider", if (nativeBursts.isEmpty()) "sbw_fallback" else "supersonic",
+            "bursts", nativeBursts.size, "particles", nativeBursts.sumOf { maxOf(1, it.count) },
+            "threshold_kmh", 350)
+        if (nativeBursts.isEmpty()) SoundTool.playDistantSound(level, ModSounds.EXPLOSION_AIR.get(), center,
+            128f, .85f, null, vehicle, null, "SONIC_BOOM")
+        val message = SonicBoomMessage(center, Vec3.directionFromRotation(vehicle.xRot, vehicle.yRot),
+            (vehicle.bbWidth * .65f).coerceIn(1.5f,8f), nativeBursts)
+        for (player in level.players()) if (player.distanceToSqr(center) <= 2048.0 * 2048.0) {
+            sendPacketTo(player, message)
+            if (nativeBursts.isNotEmpty()) {
+                val distance = player.distanceToSqr(center)
+                val variant = if (distance < 200.0 * 200.0) "close" else if (distance <= 700.0 * 700.0) "medium" else "far"
+                val sound = ForgeRegistries.SOUND_EVENTS.getValue(ResourceLocation("supersonic", "sonic_boom_$variant"))
+                    ?: ModSounds.EXPLOSION_AIR.get()
+                sendPacketTo(player, SoundClientMessage(sound.location, center.x, center.y, center.z,
+                    128f, 1f, UUID.randomUUID(), vehicle.uuid, null, "SONIC_BOOM"))
+            }
         }
     }
 }

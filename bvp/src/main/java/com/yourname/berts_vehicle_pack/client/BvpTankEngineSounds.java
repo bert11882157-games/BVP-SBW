@@ -50,6 +50,8 @@ final class BvpTankEngineSounds {
     }
 
     static void registerProvider() {
+        com.atsuishio.superbwarfare.client.sound.DistantVehicleAudio.registerEngineProvider(
+                BertsVehiclePack.MODID, BvpTankEngineSounds::distantEngine);
         VehicleLoopSoundProviderRegistry.register(PROFILE_ID, BvpTankEngineSounds::tickLegacyTankLoop);
         VehicleLoopSoundProviderRegistry.register(BMP2_PROFILE_ID,
                 (vehicle, channel, profileId) -> tickConfiguredEngineLoop(
@@ -67,6 +69,21 @@ final class BvpTankEngineSounds {
                 BertsVehiclePack.MODID, TAP_ENGINE_PREFIX, BvpTankEngineSounds::tickTapEngineLoop);
         // One cleanup hook owns every exact and prefix-routed BVP profile.
         VehicleLoopSoundProviderRegistry.registerMaintenance(PROFILE_ID, BvpTankEngineSounds::tick);
+    }
+
+    private static SoundEvent distantEngine(VehicleEntity vehicle) {
+        if (!isSupportedVehicle(vehicle)) return null;
+        ResourceLocation profile = vehicle.computed().getCustomSoundProfileId();
+        if (M1_PROFILE_ID.equals(profile)) return ModSounds.M1_ABRAMS_ELITE_ENGINE_DRIVE.get();
+        if (BMP2_PROFILE_ID.equals(profile)) return ModSounds.BMP2_ENGINE_DRIVE.get();
+        if (M48_PROFILE_ID.equals(profile)) return M48_ENGINE;
+        if (PROFILE_ID.equals(profile)) {
+            if (vehicle instanceof T90AEntity) return ModSounds.T90A_ENGINE_RUN.get();
+            if (vehicle instanceof T72BEntity || vehicle instanceof BmptEntity || vehicle instanceof Zsu23_4Entity)
+                return ModSounds.T72B_ENGINE.get();
+        }
+        ConfiguredEngine configured = configuredProfile(profile);
+        return configured == null ? null : configured.driveEvent;
     }
 
     private static void tickLegacyTankLoop(VehicleEntity vehicle, VehicleLoopSoundChannel channel,

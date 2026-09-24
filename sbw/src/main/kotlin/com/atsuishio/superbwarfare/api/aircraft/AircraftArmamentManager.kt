@@ -136,7 +136,7 @@ object AircraftArmamentManager {
                 else AircraftArmamentRegistry.stores[ResourceLocation.tryParse(storeId)])
                 ?: return@mapNotNull null
             val category = store.get("Category")?.asString ?: return@mapNotNull null
-            if (category in setOf("AIR_TO_AIR", "AIR_TO_GROUND", "ANTI_RADIATION", "LASER_GUIDED", "CRUISE", "BOMB") &&
+            if (category in setOf("AIR_TO_AIR", "AIR_TO_GROUND", "ANTI_RADIATION", "LASER_GUIDED", "COMMAND_GUIDED", "CRUISE", "BOMB") &&
                 !AircraftStoreWeapons.launchable(store)) return@mapNotNull null
             AircraftWeaponGroups.Mount(key, storeId, category, nativeWeapons(mount, storeId))
         }
@@ -194,14 +194,15 @@ object AircraftArmamentManager {
         val key = group.mounts.first()
         val store = equippedStore(vehicle, key) ?: return null
         val category = when (store["Category"]?.asString) {
-            "ROCKET_POD" -> "RKT"; "GUN_POD" -> "CNN"; "LASER_GUIDED", "AIR_TO_GROUND", "ANTI_RADIATION" -> "AGM"
+            "ROCKET_POD" -> "RKT"; "GUN_POD" -> "CNN"; "LASER_GUIDED", "COMMAND_GUIDED", "AIR_TO_GROUND", "ANTI_RADIATION" -> "AGM"
             "AIR_TO_AIR" -> "AAM"; "BOMB" -> "BMB"; "CRUISE" -> "AGM"; else -> return null
         }
         val ammo = if (category == "RKT") group.members.sumOf { vehicle.gunDataMap[it]?.ammo?.get() ?: 0 }
             else group.mounts.sumOf { mountRemaining(vehicle, it) }
         val capacity = if (category == "RKT") group.members.sumOf { vehicle.gunDataMap[it]?.get(com.atsuishio.superbwarfare.data.gun.GunProp.MAGAZINE) ?: 0 }
             else group.mounts.sumOf { mountCapacity(vehicle, it) }
-        return AircraftWeaponPresentation(category, store["Name"].asString, ammo, capacity)
+        return AircraftWeaponPresentation(category, store["Name"].asString, ammo, capacity,
+            AircraftGuidanceLabels.short(AircraftGuidanceLabels.mode(store)))
     }
     private fun selectGuns(vehicle: VehicleEntity) {
         val builtIn = definition(vehicle)?.getAsJsonArray("BuiltInWeapons")?.map { it.asString } ?: return
@@ -271,7 +272,7 @@ object AircraftArmamentManager {
                 val actualProjectile = vehicle.getGunData(weaponName)
                     ?.get(com.atsuishio.superbwarfare.data.gun.GunProp.PROJECTILE)?.resolvedProfileId()
                 compatible && store != null && store["Category"]?.asString !in
-                    setOf("LASER_GUIDED", "AIR_TO_AIR", "AIR_TO_GROUND", "ANTI_RADIATION", "BOMB", "CRUISE", "VISUAL_ONLY") &&
+                    setOf("LASER_GUIDED", "COMMAND_GUIDED", "AIR_TO_AIR", "AIR_TO_GROUND", "ANTI_RADIATION", "BOMB", "CRUISE", "VISUAL_ONLY") &&
                     (vehicle.level().isClientSide || gunProfile == null || actualProjectile != null && actualProjectile in expectedProjectiles)
             } == true }
     }
@@ -328,11 +329,20 @@ object AircraftArmamentManager {
         out.add("Seek", lease.seek.deepCopy())
         val saved = JsonObject()
         val nbt = presets(player, lease.vehicle)
+        val available = definition(lease.vehicle)?.let(::mounts)?.associateBy { it["Id"].asString }.orEmpty()
+        var oldPreset = false
         for (name in nbt.allKeys) {
             val preset = nbt.getCompound(name)
             val choices = if (preset.contains("Selections", 10)) preset.getCompound("Selections") else preset
-            saved.add(name, JsonObject().also { for (pair in choices.allKeys) it.addProperty(pair, choices.getString(pair)) })
+            saved.add(name, JsonObject().also { preview -> for (pair in choices.allKeys) {
+                val mount = available[pair]
+                if (mount != null && allowed(mount, choices.getString(pair))) preview.addProperty(pair, choices.getString(pair))
+                else oldPreset = true
+            } })
         }
+        // A stored preset from an older station layout must not invalidate the entire client
+        // snapshot. Keep its saved bytes; LOAD still validates them before changing equipment.
+        if (oldPreset && message.isBlank()) out.addProperty("Message", "Some saved presets need refitting after station changes.")
         out.add("Presets", saved)
         AircraftArmamentNetwork.send(player, out)
     }
@@ -380,13 +390,14 @@ object AircraftArmamentManager {
         if (request.operation == "OPEN") {
             val now = player.serverLevel().gameTime
             if (now - (lease.last["open"] ?: Long.MIN_VALUE / 2) >= 10) {
+                lease.pod = false
                 lease.last["open"] = now; reply(player, lease, true)
             }
             return
         }
         if (request.epoch != lease.epoch) { reply(player, lease, message = "Controls refreshed; try again."); return }
         val now = player.serverLevel().gameTime
-        val bucket = when(request.operation) { "DESIGNATE", "CLEAR_POINT" -> "point"; "FIRE" -> "fire"; "SEEK" -> "seek"; else -> "edit" }
+        val bucket = when(request.operation) { "DESIGNATE", "STABILIZE", "CLEAR_POINT" -> "point"; "FIRE" -> "fire"; "SEEK" -> "seek"; "COMMAND" -> "command"; else -> "edit" }
         val interval = if (bucket == "edit") 5L else 2L
         if (now - (lease.last[bucket] ?: Long.MIN_VALUE / 2) < interval) {
             if (bucket == "edit") reply(player, lease, message = "Please wait briefly before another change.")
@@ -395,6 +406,7 @@ object AircraftArmamentManager {
         lease.last[bucket] = now
         try {
             when (request.operation) {
+                "COMMAND" -> AircraftManualCommand.accept(vehicle,player,body,now)
                 "APPLY" -> { apply(vehicle, body); publish(vehicle); reply(player, lease, message = "Armament equipped.") }
                 "SAVE_PRESET" -> {
                     val name = presetName(body); val choices = validateSelections(vehicle, body.getAsJsonObject("Selections"), body.getAsJsonObject("Counts"))
@@ -424,6 +436,10 @@ object AircraftArmamentManager {
                 "DESIGNATE" -> {
                     designateAsync(player, vehicle, lease, body)
                 }
+                "STABILIZE" -> {
+                    require(lease.pod && body["Pod"]?.asBoolean == true) { "Activate the targeting pod first." }
+                    designateAsync(player, vehicle, lease, body, stabilizeOnly = true)
+                }
                 "CLEAR_POINT" -> {
                     lease.designationGeneration++
                     require(AircraftDesignationData.get(player.serverLevel()).put(vehicle.uuid, null)) { "Designation storage is full." }
@@ -440,7 +456,7 @@ object AircraftArmamentManager {
 
     private fun presetName(body: JsonObject): String {
         val name = body["Name"]?.asString?.trim() ?: ""
-        require(name.length in 1..32 && name.none { it.isISOControl() }) { "Use a preset name of 1–32 characters." }
+        require(name.length in 1..32 && name.none { it.isISOControl() }) { "Use a preset name of 1â€“32 characters." }
         return name
     }
     private fun validateSelections(vehicle: VehicleEntity, choices: JsonObject?, rawCounts: JsonObject?,
@@ -457,6 +473,7 @@ object AircraftArmamentManager {
         }
         val definition = definition(vehicle)!!
         val currentlySelected = selection(vehicle)
+        AircraftArmamentRegistry.validateMountConflicts(definition, nbt.allKeys)
         val counts = CompoundTag()
         require(rawCounts == null || rawCounts.entrySet().all { it.key in nbt.allKeys }) { "Count without equipped store." }
         for (key in nbt.allKeys) {
@@ -465,13 +482,18 @@ object AircraftArmamentManager {
                 require(it.isJsonPrimitive && it.asJsonPrimitive.isNumber) { "Invalid rack quantity." }
                 it.asBigDecimal.intValueExact()
             }
-            val authoredCount = store["FixedRackCount"]?.asInt
+            val authoredCount = store["FixedRackCount"]?.asInt?.takeUnless {
+                available.getValue(key)["Internal"]?.asBoolean == true
+            }
             val count = if (savedPreset) (requestedCount ?: authoredCount ?: 1).also {
                 require(authoredCount == null || it == authoredCount) { "Saved rack no longer matches its fixed store." }
-            } else AircraftPylonRacks.fixedSelectionCopies(currentlySelected[key]?.asString,
-                nbt.getString(key), rackCount(vehicle, key), requestedCount, authoredCount)
+            } else AircraftPylonRacks.selectionCopies(currentlySelected[key]?.asString,
+                nbt.getString(key), rackCount(vehicle, key), requestedCount, authoredCount,
+                available.getValue(key)["Internal"]?.asBoolean == true &&
+                    available.getValue(key)["QuantitySelectable"]?.asBoolean != false)
             require(count in 1..AircraftPylonRacks.maxCopies(definition, available.getValue(key), store)) { "Rack limit exceeded on $key." }
-            val pylonMass = (store["MassKg"]?.asDouble ?: 0.0) * (store["Capacity"]?.asInt ?: 1) * count
+            val pylonMass = (store["MassKg"]?.asDouble ?: 0.0) * (store["Capacity"]?.asInt ?: 1) * count +
+                (store["RackMassKg"]?.asDouble ?: 0.0)
             require(pylonMass <= (available.getValue(key)["MaxPylonMassKg"]?.asDouble ?:
                 definition["MaxPylonMassKg"]?.asDouble ?: Double.POSITIVE_INFINITY) + 1e-6) {
                 "Pylon mass limit exceeded on $key."
@@ -508,12 +530,13 @@ object AircraftArmamentManager {
         require(id != null && allowed(pair, id)) { "No store equipped." }
         val store = AircraftArmamentRegistry.stores[ResourceLocation(id)]!!
         val category = store["Category"].asString
-        val guidedMissile = category in setOf("AIR_TO_AIR", "AIR_TO_GROUND", "ANTI_RADIATION") && store.has("Guidance")
+        val guidedMissile = category in setOf("AIR_TO_AIR", "AIR_TO_GROUND", "ANTI_RADIATION", "CRUISE") && store.has("Guidance")
         val bomb = category == "BOMB" && store.has("Bomb")
+        val seekingBomb = bomb && store.getAsJsonObject("Bomb")["Mode"]?.asString == "TV"
         val cruise = category == "CRUISE" && store.has("Flight")
         require(category != "VISUAL_ONLY" && (category !in setOf("AIR_TO_AIR", "AIR_TO_GROUND", "ANTI_RADIATION", "BOMB", "CRUISE") || guidedMissile || bomb || cruise)) { "This store is visual only in this version." }
         val weapon = nativeWeapons(pair, id).singleOrNull()
-        if (category != "LASER_GUIDED" && !guidedMissile && !bomb && !cruise) {
+        if (category !in setOf("LASER_GUIDED", "COMMAND_GUIDED") && !guidedMissile && !bomb && !cruise) {
             require(weapon != null) { "This store has no firing implementation yet." }
             require(vehicle.vehicleShootResult(player, weapon).isAccepted()) { "Weapon cannot fire now." }
             return
@@ -522,7 +545,7 @@ object AircraftArmamentManager {
         val equipped = listOfNotNull(vehicle.getGunName(0), vehicle.getSecondaryWeaponIndex(0)?.let { vehicle.getGunName(0, it) })
         val selectedGroup = groupFor(vehicle, weaponId)?.representative ?: weaponId
         require(selectedGroup in equipped) { "Select this store in a weapon slot first." }
-        if (guidedMissile) {
+        if (guidedMissile || seekingBomb) {
             val lock = AircraftMissileLauncher.update(vehicle, player, selectedGroup, store)
             require(lock >= 0) { "Compatible Fire From Above missile support is unavailable." }
             require(lock == 2) { "Hold the target in the seeker cone until locked." }
@@ -537,7 +560,8 @@ object AircraftArmamentManager {
         }
         val times = state.getCompound("LastFire"); val now = player.serverLevel().gameTime
         require(!times.contains(key) || now - times.getLong(key) >= 10) { "Launcher is cycling." }
-        val mount = AircraftPylonRacks.launchPosition(pair, store, rackCount(vehicle, key), used)
+        val mount = AircraftMountSweep.position(pair, used % AircraftArmamentRegistry.mountPositions(pair).size,
+            AircraftPylonRacks.launchPosition(pair, store, rackCount(vehicle, key), used), vehicle.deltaMovement.length())
         require(!com.atsuishio.superbwarfare.api.vehicle.flight.AircraftWreckBreakup.detachedAt(vehicle, mount)) {
             "This weapon station was detached with the wing."
         }
@@ -552,9 +576,9 @@ object AircraftArmamentManager {
             { vehicle.spawnAtLocation(it) }) {
             when {
                 guidedMissile -> AircraftMissileLauncher.launch(vehicle, player, selectedGroup, mount, store)
-                bomb -> AircraftBombLauncher.launch(vehicle, player, mount, store)
+                bomb -> AircraftBombLauncher.launch(vehicle, player, mount, store, selectedGroup)
                 cruise -> AircraftCruiseLauncher.launch(vehicle, player, mount, store)
-                else -> AircraftLaserLauncher.launch(vehicle, player, mount, store)
+                else -> AircraftLaserLauncher.launch(vehicle, player, mount, store, selectedGroup)
             }
         }) { "Munition release failed or launch conditions changed." }
         fired.putInt(key, used + 1); state.put("Fired", fired); times.putLong(key, now); state.put("LastFire", times)
@@ -562,8 +586,11 @@ object AircraftArmamentManager {
         if (!guidedMissile && !bomb && !cruise) selectGuns(vehicle)
     }
 
-    private fun designateAsync(player: ServerPlayer, vehicle: VehicleEntity, lease: Lease, body: JsonObject) {
+    private fun designateAsync(player: ServerPlayer, vehicle: VehicleEntity, lease: Lease, body: JsonObject, stabilizeOnly: Boolean = false) {
         require(!lease.designating) { "Laser is measuring terrain; please wait." }
+        val stabilizeRequest = if (stabilizeOnly) requireNotNull(body["StabilizeRequest"]) {
+            "Missing stabilization request."
+        }.asLong else -1L
         val podMode = body["Pod"]?.asBoolean == true
         val transform = vehicle.getVehicleTransform(1f)
         val localPosition: Vec3
@@ -613,6 +640,13 @@ object AircraftArmamentManager {
                     return@execute
                 }
                 val point = origin.add(direction.scale(distance))
+                if (stabilizeOnly) {
+                    AircraftArmamentNetwork.send(player, base(vehicle).also {
+                        it.add("StabilizePoint", pointJson(point))
+                        it.addProperty("StabilizeRequest", stabilizeRequest)
+                    })
+                    return@execute
+                }
                 if (!AircraftDesignationData.get(level).put(vehicle.uuid, point)) {
                     reply(player, lease, message = "Designation storage is full.")
                     return@execute

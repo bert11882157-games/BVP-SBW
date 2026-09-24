@@ -6,10 +6,10 @@ import net.minecraft.world.phys.Vec3
 
 /** The retained fuselage section remains server-owned; other sections are cosmetic. */
 object AircraftFuselageWreck {
-    const val LIFETIME_TICKS = 200
-    internal fun bounce(incoming: Vec3, completed: Int): Vec3 = if (completed >= 2)
-        Vec3(incoming.x * .94, 0.0, incoming.z * .94) else
-        Vec3(incoming.x * .82, (kotlin.math.abs(incoming.y) * .16).coerceIn(.08, .26), incoming.z * .82)
+    const val LIFETIME_TICKS = WreckDebrisPhysics.WRECK_LIFETIME_TICKS
+    internal fun bounce(incoming: Vec3, completed: Int): Vec3 =
+        if (completed == 0) WreckDebrisPhysics.deflect(incoming, Vec3(0.0, 1.0, 0.0))
+        else Vec3(incoming.x, 0.0, incoming.z)
 
     fun contact(vehicle: VehicleEntity, incoming: Vec3, below: Boolean) {
         if (vehicle.level().isClientSide || !vehicle.isWreck || vehicle.computed().aircraftTerrainContact?.wreckSections?.size != 4) return
@@ -33,15 +33,22 @@ object AircraftFuselageWreck {
 
     internal fun step(vehicle: VehicleEntity, input: VehicleFlightInputContext, gravity: Double): VehicleFlightTickResult? {
         if (vehicle.aircraftWreckImpactTime < 0L) return null
-        val resting = vehicle.onGround() || input.inFluid
-        val drag = if (resting) .94 else .996
+        val resting = vehicle.onGround() && !input.inFluid
+        val drag = if (input.inFluid) .92 else if (resting) WreckDebrisPhysics.GROUND_DRAG else WreckDebrisPhysics.AIR_DRAG
         val horizontal = input.previousMotion.scale(drag)
         val motion = if (resting && horizontal.horizontalDistanceSqr() < .000025)
             Vec3(0.0, -gravity, 0.0) else horizontal.add(0.0, -gravity, 0.0)
         val sign = if (vehicle.uuid.leastSignificantBits and 1L == 0L) 1 else -1
+        fun settled(angle: Double, offset: Double = 0.0): Float {
+            val target = offset + kotlin.math.round((angle - offset) / 180.0) * 180.0
+            return Mth.wrapDegrees(angle + Mth.wrapDegrees(target - angle) * .16).toFloat()
+        }
+        val section = vehicle.computed().aircraftTerrainContact?.wreckSections?.getOrNull(1)
+        val size = section?.maximum?.subtract(section.minimum)
+        val restingRoll = if (size != null && size.x < size.y * .87) 90.0 else 0.0
         return VehicleFlightTickResult(motion, 0.0, 0.0, 0.0, 0.0,
             Mth.wrapDegrees(input.bodyYawDegrees + if (resting) 0.0 else sign * .6).toFloat(),
-            Mth.wrapDegrees(input.bodyPitchDegrees + if (resting) 0.0 else .7).toFloat(),
-            Mth.wrapDegrees(input.bodyRollDegrees + if (resting) 0.0 else sign * 1.0).toFloat(), true)
+            if (resting) settled(input.bodyPitchDegrees) else Mth.wrapDegrees(input.bodyPitchDegrees + .7).toFloat(),
+            if (resting) settled(input.bodyRollDegrees, restingRoll) else Mth.wrapDegrees(input.bodyRollDegrees + sign * 1.0).toFloat(), true)
     }
 }

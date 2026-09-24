@@ -8,7 +8,8 @@ import com.google.gson.JsonObject
 import net.minecraft.world.item.ItemStack
 import java.util.WeakHashMap
 
-data class AircraftWeaponPresentation(val category: String, val name: String, val ammo: Int, val capacity: Int)
+data class AircraftWeaponPresentation(val category: String, val name: String, val ammo: Int, val capacity: Int,
+                                      val guidance: String = "")
 
 /** Stable virtual channels use the native slot/scheduler; equipment owns their ammunition. */
 object AircraftStoreWeapons {
@@ -17,7 +18,7 @@ object AircraftStoreWeapons {
     private val cache = WeakHashMap<VehicleEntity, MutableMap<String, Cached>>()
     fun mountId(weapon: String): String? = weapon.takeIf { it.startsWith(PREFIX) }?.removePrefix(PREFIX)
     internal fun launchable(store: JsonObject): Boolean = when (store["Category"]?.asString) {
-        "LASER_GUIDED" -> true
+        "LASER_GUIDED", "COMMAND_GUIDED" -> true
         "AIR_TO_AIR", "AIR_TO_GROUND", "ANTI_RADIATION" -> store.has("Guidance")
         "BOMB" -> store.has("Bomb")
         "CRUISE" -> store.has("Flight")
@@ -43,7 +44,9 @@ object AircraftStoreWeapons {
         val entries = cache.getOrPut(vehicle) { mutableMapOf() }
         var cached = entries[weapon]
         if (cached?.store !== store || cached?.capacity != capacity) {
-            val profile = DefaultGunData().apply {
+            val profile = if (store["Category"]?.asString == "COMMAND_GUIDED") {
+                com.atsuishio.superbwarfare.data.CustomData.GUN_DATA[store["LaunchGunProfile"]?.asString] ?: return null
+            } else DefaultGunData().apply {
                 name = store["Name"].asString; magazine = capacity; rpm = 120
                 projectileAmount = 1; defaultFireMode = "Semi"
             }

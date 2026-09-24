@@ -1,0 +1,44 @@
+{
+  "ID": "berts_vehicle_pack:9p148",
+  "Model": {
+    "GeometryBackend": "berts_vehicle_pack:vehicle/9p148",
+    "Model": "berts_vehicle_pack:geo/native_fallback/9p148.geo.json",
+    "Texture": "berts_vehicle_pack:textures/entity/9p148.png",
+    "WreckTexture": "berts_vehicle_pack:textures/entity_dead/9p148.png"
+  },
+  "MouseSpeed": [
+    0.2,
+    0.2
+  ],
+  "RunningGear": {
+    "Type": "WHEELED",
+    "RoadWheelCount": 0,
+    "WheelBones": {
+      "Left": [
+        "wheelLFront",
+        "wheelLRear"
+      ],
+      "Right": [
+        "wheelRFront",
+        "wheelRRear"
+      ]
+    },
+    "Steering": {
+      "Schema": 1,
+      "Wheels": [
+        {
+          "SteeringBone": "steer_wheelLFront",
+          "WheelBone": "wheelLFront",
+          "MaxAngleDegrees": 28,
+          "Sign": 1
+        },
+        {
+          "SteeringBone": "steer_wheelRFront",
+          "WheelBone": "wheelRFront",
+          "MaxAngleDegrees": 28,
+          "Sign": 1
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "Schema": 1,
+  "Name": "GBU-27 Paveway III · hard-target laser",
+  "Category": "BOMB",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/gbu27.geo.json",
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/gbu27.png",
+  "Capacity": 1,
+  "MassKg": 991,
+  "Bomb": {
+    "Mode": "LASER",
+    "Gravity": 0.08,
+    "DragMultiplier": 1,
+    "TurnDegreesPerTick": 2,
+    "BlastRadius": 11,
+    "BlastDamage": 900,
+    "Penetrator": {
+      "MaxDepthBlocks": 4,
+      "MaxBlockHardness": 12,
+      "FuzeDelayTicks": 6
+    }
+  },
+  "AmmoItem": "superbwarfare:medium_guided_bomb",
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_bombs/gbu27",
+  "LaunchOffset": [
+    0,
+    0,
+    -2.055
+  ]
+}

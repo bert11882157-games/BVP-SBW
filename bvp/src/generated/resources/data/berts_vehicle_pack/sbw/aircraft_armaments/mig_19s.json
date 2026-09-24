@@ -7,28 +7,38 @@
     "CannonChin"
   ],
   "SuspendedWeapons": [],
-  "Pairs": [],
-  "StoreGroups": {},
+  "Pairs": [
+    {
+      "Id": "wing",
+      "Name": "Underwing pylons",
+      "Left": [
+        -2.56,
+        1.13,
+        -0.7
+      ],
+      "Right": [
+        2.56,
+        1.13,
+        -0.7
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:fab_100",
+        "berts_vehicle_pack:fab_250"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 499
+    }
+  ],
+  "StoreGroups": {
+    "berts_vehicle_pack:modeled_store/mig_19s/drop_tank_left": [
+      "suspended_mig_19s_drop_tank_left"
+    ],
+    "berts_vehicle_pack:modeled_store/mig_19s/drop_tank_right": [
+      "suspended_mig_19s_drop_tank_right"
+    ]
+  },
   "MaxPayloadKg": 499,
   "MaxPylonMassKg": 1000,
   "MaxWeaponsPerPylon": 12,
-  "Singles": [
-    {
-      "Id": "internal_bay",
-      "Name": "Bomb bay / internal stores",
-      "Position": [
-        0,
-        0.4,
-        0.5256
-      ],
-      "Internal": true,
-      "MaxPylonMassKg": 499,
-      "AllowedStores": [
-        "berts_vehicle_pack:reference/dumb_bomb_250kg",
-        "berts_vehicle_pack:reference/laser_bomb_250kg",
-        "berts_vehicle_pack:reference/gps_bomb_250kg",
-        "berts_vehicle_pack:reference/dumb_bomb_100kg"
-      ]
-    }
-  ]
+  "Singles": []
 }

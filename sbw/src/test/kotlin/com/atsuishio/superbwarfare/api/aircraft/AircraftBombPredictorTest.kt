@@ -25,10 +25,10 @@ class AircraftBombPredictorTest {
         val paired = json("""{"Id":"outer","Left":[-2,-1,0],"Right":[2,-1,0]}""")
         val bomb = json("""{"Category":"BOMB","Capacity":1,
             "RackSpacing":[1,0.4,0.25],"LaunchOffset":[0,0,-0.2]}""")
-        val expected = listOf(-3.0, 1.0, -2.0, 2.0, -1.0, 3.0)
+        val expected = listOf(-2.5, 1.5, -1.5, 2.5, -2.0, 2.0)
         for (fired in expected.indices) {
             val next = AircraftBombPredictor.nextLaunchPosition(paired, bomb, 6, 6 - fired)
-            assertEquals(Vec3(expected[fired], -1.0, -0.2), next)
+            assertEquals(Vec3(expected[fired], if(fired<4) -1.0 else -1.4, -0.2), next)
             assertEquals(AircraftPylonRacks.launchPosition(paired, bomb, 3, fired).add(0.0, 0.0, -0.2), next)
         }
     }

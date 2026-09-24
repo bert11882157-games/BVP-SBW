@@ -22,6 +22,7 @@ import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.Level
 import net.minecraft.world.phys.Vec2
 import net.minecraft.world.phys.Vec3
+import org.joml.Vector3d
 import java.util.LinkedHashMap
 import java.util.UUID
 
@@ -213,15 +214,23 @@ internal object VehicleCameraResolver {
         if (!vehicle.useAircraftCamera(seatIndex)) return null
 
         val transform = vehicle.getClientVehicleTransform(partialTicks)
-        thirdPersonFlight?.applyOrbitRotation(transform,
-            ClientMouseHandler.freeCameraYaw, ClientMouseHandler.freeCameraPitch)
+        val heldView = VehicleFreeCameraController.rotationOverride(player, vehicle)
+        if (heldView != null) {
+            // Reuse the normal chase pivot and authored above/behind offset. Freelook only
+            // changes the view rotation; never rebuild an orbit around the fuselage center.
+            transform.setRotationYXZ(Math.toRadians(-heldView.x.toDouble()),
+                Math.toRadians(heldView.y.toDouble()), 0.0)
+        } else {
+            thirdPersonFlight?.applyOrbitRotation(transform,
+                ClientMouseHandler.freeCameraYaw, ClientMouseHandler.freeCameraPitch)
+        }
         val maxCameraPosition = vehicle.transformPosition(
             transform,
             data.aircraftCameraPos.x,
             data.aircraftCameraPos.y + 0.1 * ClientMouseHandler.custom3pDistanceLerp,
             data.aircraftCameraPos.z - ClientMouseHandler.custom3pDistanceLerp,
         )
-        if (vehicle.isFixedWingFlightVehicle()) {
+        if (vehicle.isFixedWingFlightVehicle() && heldView == null) {
             val offset = FixedWingDynamicCamera.offset(vehicle, partialTicks)
             val pitchOffset = FixedWingCameraOrbit.pitchOffsetForBranch(vehicle.getResolvedChassisYaw(partialTicks),
                 thirdPersonFlight?.yaw() ?: vehicle.getResolvedChassisYaw(partialTicks), offset.y)

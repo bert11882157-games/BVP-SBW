@@ -1,0 +1,19 @@
+{
+  "Schema": 1,
+  "Name": "GBU-10 Paveway II · 2,000 lb laser",
+  "Category": "BOMB",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/gbu10.geo.json",
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/gbu10.png",
+  "Capacity": 1,
+  "MassKg": 934,
+  "Bomb": {
+    "Mode": "LASER",
+    "Gravity": 0.08,
+    "DragMultiplier": 1,
+    "TurnDegreesPerTick": 2,
+    "BlastRadius": 14,
+    "BlastDamage": 900
+  },
+  "AmmoItem": "superbwarfare:large_guided_bomb",
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_bombs/gbu10"
+}

@@ -1,0 +1,24 @@
+{
+  "Schema": 1,
+  "Name": "BLU-109 · hard-target penetrator",
+  "Category": "BOMB",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/blu109.geo.json",
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/blu109.png",
+  "Capacity": 1,
+  "MassKg": 907,
+  "Bomb": {
+    "Mode": "DUMB",
+    "Gravity": 0.08,
+    "DragMultiplier": 1,
+    "TurnDegreesPerTick": 0,
+    "BlastRadius": 11,
+    "BlastDamage": 900,
+    "Penetrator": {
+      "MaxDepthBlocks": 4,
+      "MaxBlockHardness": 12,
+      "FuzeDelayTicks": 6
+    }
+  },
+  "AmmoItem": "superbwarfare:large_freefall_bomb",
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_bombs/blu109"
+}

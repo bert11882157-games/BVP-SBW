@@ -11,6 +11,7 @@ object GuidedMissileGuidance {
     const val TICKS_PER_SECOND = 20.0
     private const val MIN_VECTOR_LENGTH_SQUARED = 1.0e-16
     private const val MIN_LOOK_AHEAD_BLOCKS = 2.0
+    private val LASER_SEEKER_COSINE = cos(Math.toRadians(45.0))
 
     /** Remove last tick's wobble before guidance, without undoing propulsion/drag's speed change. */
     fun removeSpinPerturbation(velocity: Vec3, inherited: Vec3, previousOffset: Vec3): Vec3 {
@@ -41,6 +42,28 @@ object GuidedMissileGuidance {
     fun pointDirection(position: Vec3, target: Vec3?): Vec3? {
         if (target == null || !finite(position) || !finite(target)) return null
         return target.subtract(position).takeIf { it.lengthSqr() > MIN_VECTOR_LENGTH_SQUARED }
+    }
+
+    /** Aim the total trajectory at the painted point, including momentum inherited at release. */
+    fun laserInterceptDirection(position: Vec3, target: Vec3?, relativeSpeed: Double, inherited: Vec3): Vec3? {
+        val line = pointDirection(position, target)?.normalize() ?: return null
+        if (!finite(inherited) || !relativeSpeed.isFinite() || relativeSpeed <= 1e-8) return null
+        val along = inherited.dot(line)
+        val crossSquared = (inherited.lengthSqr() - along * along).coerceAtLeast(0.0)
+        val available = relativeSpeed * relativeSpeed - crossSquared
+        // Low-speed ejection may not yet have enough lateral thrust to cancel carrier momentum.
+        val closing = (along + kotlin.math.sqrt(available.coerceAtLeast(0.0))).coerceAtLeast(relativeSpeed * 0.1)
+        return line.scale(closing).subtract(inherited).takeIf { finite(it) && it.lengthSqr() > 1e-12 }
+    }
+
+    /** The seeker sees a 45-degree cone about the missile body, independent of carrier motion. */
+    fun laserSeekerDirection(position: Vec3, facing: Vec3, target: Vec3?,
+        relativeSpeed: Double, inherited: Vec3): Vec3? {
+        val line = pointDirection(position, target) ?: return null
+        if (!finite(facing) || !facing.lengthSqr().isFinite() ||
+            facing.lengthSqr() <= MIN_VECTOR_LENGTH_SQUARED || !line.lengthSqr().isFinite()) return null
+        if (facing.normalize().dot(line.normalize()) + 1e-12 < LASER_SEEKER_COSINE) return null
+        return laserInterceptDirection(position, target, relativeSpeed, inherited)
     }
 
     /** A bounded loft, tapering continuously into the stored target rather than chasing the operator. */

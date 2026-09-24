@@ -1,0 +1,31 @@
+{
+  "Schema": 1,
+  "Name": "CBU-97 · sensor-fuzed anti-armor",
+  "Category": "BOMB",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/cbu97.geo.json",
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/cbu97.png",
+  "Capacity": 1,
+  "MassKg": 420,
+  "Bomb": {
+    "Mode": "DUMB",
+    "Gravity": 0.08,
+    "DragMultiplier": 1,
+    "TurnDegreesPerTick": 0,
+    "BlastRadius": 0,
+    "BlastDamage": 0,
+    "Cluster": {
+      "Count": 10,
+      "ReleaseHeight": 16,
+      "SpreadSpeed": 0.35,
+      "BombletDamage": 0,
+      "BombletRadius": 1,
+      "LifetimeTicks": 120,
+      "Mode": "SENSOR_FUZED",
+      "SensorRadius": 8,
+      "SensorShots": 4,
+      "SensorProjectileProfile": "berts_vehicle_pack:aircraft_bombs/cbu97_efp"
+    }
+  },
+  "AmmoItem": "superbwarfare:medium_freefall_bomb",
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_bombs/cbu97"
+}

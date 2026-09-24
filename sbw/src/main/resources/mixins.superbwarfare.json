@@ -5,6 +5,8 @@
   "refmap": "mixins.superbwarfare.refmap.json",
   "plugin": "com.atsuishio.superbwarfare.mixins.plugin.MixinPlugin",
   "mixins": [
+    "compat.SoundBarrierEventsMixin",
+    "compat.SoundBarrierSoundMixin",
     "AnimationProcessorAccessor",
     "BeastMixin",
     "BlockStateMixin",
@@ -34,6 +36,7 @@
     "tacz.EntityKineticBulletMixin"
   ],
   "client": [
+    "compat.SoundBarrierHudMixin",
     "AircraftUiPickingMixin",
     "CameraMixin",
     "compat.CameraOverhaulCameraSystemMixin",
