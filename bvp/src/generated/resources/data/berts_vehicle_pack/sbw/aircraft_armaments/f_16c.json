@@ -8,63 +8,75 @@
   "Pairs": [
     {
       "Id": "inner",
-      "Name": "Inner wing",
+      "Name": "Inner wing pylon",
       "Left": [
-        -3.06,
-        1.63,
-        -1.53
+        -1.9294,
+        1.3606,
+        -1.7069
       ],
       "Right": [
-        3.06,
-        1.63,
-        -1.53
+        1.9294,
+        1.3606,
+        -1.7069
       ],
       "AllowedStores": [
-        "berts_vehicle_pack:fa18e/aim9m",
-        "berts_vehicle_pack:fa18e/aim120",
+        "berts_vehicle_pack:fa18e/agm65d",
+        "berts_vehicle_pack:fa18e/agm88",
         "berts_vehicle_pack:munition/mk82",
+        "berts_vehicle_pack:munition/mk82_snakeeye",
+        "berts_vehicle_pack:munition/mk84",
         "berts_vehicle_pack:munition/gbu12",
-        "berts_vehicle_pack:fa18e/agm88"
+        "berts_vehicle_pack:munition/gbu27",
+        "berts_vehicle_pack:munition/blu109_jdam"
       ],
       "MaxWeaponsPerPylon": 1,
-      "MaxPylonMassKg": 1200
+      "MaxPylonMassKg": 1100
     },
     {
       "Id": "middle",
-      "Name": "Middle wing",
+      "Name": "Middle wing pylon",
       "Left": [
-        -4.15,
-        1.53,
-        -2.22
+        -3.0675,
+        1.3113,
+        -2.1272
       ],
       "Right": [
-        4.15,
-        1.53,
-        -2.22
+        3.0675,
+        1.3113,
+        -2.1272
       ],
       "AllowedStores": [
+        "berts_vehicle_pack:munition/aim9l",
         "berts_vehicle_pack:fa18e/aim9m",
         "berts_vehicle_pack:fa18e/aim120",
+        "berts_vehicle_pack:munition/aim7e",
+        "berts_vehicle_pack:fa18e/agm65d",
+        "berts_vehicle_pack:fa18e/agm88",
         "berts_vehicle_pack:munition/mk82",
-        "berts_vehicle_pack:munition/gbu12"
+        "berts_vehicle_pack:munition/mk82_snakeeye",
+        "berts_vehicle_pack:munition/mk84",
+        "berts_vehicle_pack:munition/gbu12",
+        "berts_vehicle_pack:munition/gbu27",
+        "berts_vehicle_pack:munition/blu109_jdam"
       ],
       "MaxWeaponsPerPylon": 1,
-      "MaxPylonMassKg": 1000
+      "MaxPylonMassKg": 1100
     },
     {
       "Id": "outer",
-      "Name": "Outer wing",
+      "Name": "Outer wing pylon",
       "Left": [
-        -5.1,
-        2,
-        -1.93
+        -4.1556,
+        1.3113,
+        -2.7703
       ],
       "Right": [
-        5.1,
-        2,
-        -1.93
+        4.1556,
+        1.3113,
+        -2.7703
       ],
       "AllowedStores": [
+        "berts_vehicle_pack:munition/aim9l",
         "berts_vehicle_pack:fa18e/aim9m",
         "berts_vehicle_pack:fa18e/aim120"
       ],
@@ -119,21 +131,6 @@
         "berts_vehicle_pack:fa18e/bomb_500kg_gps_1"
       ],
       "QuantitySelectable": false
-    },
-    {
-      "Id": "centerline",
-      "Name": "Centerline",
-      "Position": [
-        0,
-        1.09,
-        -1.51
-      ],
-      "AllowedStores": [
-        "berts_vehicle_pack:munition/mk82",
-        "berts_vehicle_pack:munition/gbu12"
-      ],
-      "MaxWeaponsPerPylon": 1,
-      "MaxPylonMassKg": 1000
     }
   ]
 }

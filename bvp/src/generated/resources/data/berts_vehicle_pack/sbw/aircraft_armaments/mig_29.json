@@ -8,61 +8,71 @@
   "Pairs": [
     {
       "Id": "inner",
-      "Name": "Inner wing rail",
+      "Name": "Inner wing pylon",
       "Left": [
-        -2.39,
+        -2.3903,
         1.54,
-        -1.7
+        -2.2294
       ],
       "Right": [
-        2.39,
+        2.3903,
         1.54,
-        -1.7
+        -2.2294
       ],
       "AllowedStores": [
+        "berts_vehicle_pack:r60",
+        "berts_vehicle_pack:r73",
         "berts_vehicle_pack:r27r",
-        "berts_vehicle_pack:r27t"
+        "berts_vehicle_pack:r27t",
+        "berts_vehicle_pack:fab_250",
+        "berts_vehicle_pack:fab_500",
+        "berts_vehicle_pack:su25_s8ko_pod"
       ],
       "MaxWeaponsPerPylon": 1,
       "MaxPylonMassKg": 1000
     },
     {
       "Id": "middle",
-      "Name": "Middle wing rail",
+      "Name": "Middle wing pylon",
       "Left": [
-        -3.17,
-        1.49,
-        -2.6
+        -3.1716,
+        1.4937,
+        -2.8963
       ],
       "Right": [
-        3.17,
-        1.49,
-        -2.6
+        3.1716,
+        1.4937,
+        -2.8963
       ],
       "AllowedStores": [
-        "berts_vehicle_pack:r73"
+        "berts_vehicle_pack:r60",
+        "berts_vehicle_pack:r73",
+        "berts_vehicle_pack:fab_250",
+        "berts_vehicle_pack:fab_500",
+        "berts_vehicle_pack:su25_s8ko_pod"
       ],
       "MaxWeaponsPerPylon": 1,
-      "MaxPylonMassKg": 250
+      "MaxPylonMassKg": 600
     },
     {
       "Id": "outer",
-      "Name": "Outer wing rail",
+      "Name": "Outer wing pylon",
       "Left": [
-        -3.86,
-        1.4,
-        -2.8
+        -3.8616,
+        1.4019,
+        -3.2409
       ],
       "Right": [
-        3.86,
-        1.4,
-        -2.8
+        3.8616,
+        1.4019,
+        -3.2409
       ],
       "AllowedStores": [
+        "berts_vehicle_pack:r60",
         "berts_vehicle_pack:r73"
       ],
       "MaxWeaponsPerPylon": 1,
-      "MaxPylonMassKg": 250
+      "MaxPylonMassKg": 150
     }
   ],
   "StoreGroups": {
@@ -73,7 +83,7 @@
       "suspended_1967824589_hull"
     ]
   },
-  "MaxPayloadKg": 2200,
+  "MaxPayloadKg": 3000,
   "Radar": {
     "Enabled": true,
     "Range": 1000

@@ -4,6 +4,11 @@
   "Category": "BOMB",
   "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/fab_250.geo.json",
   "ModelForward": "+Z",
+  "MountAnchor": [
+    0,
+    0.0563,
+    0.1971
+  ],
   "Texture": "berts_vehicle_pack:textures/aircraft_stores/fab_250.png",
   "Scale": 1,
   "Capacity": 1,
@@ -18,5 +23,10 @@
   },
   "ProjectileProfile": "berts_vehicle_pack:aircraft_bombs/fab_250",
   "AmmoItem": "superbwarfare:small_freefall_bomb",
-  "MaxPerPylon": 1
+  "MaxPerPylon": 1,
+  "LaunchOffset": [
+    0,
+    -0.0563,
+    -0.1971
+  ]
 }

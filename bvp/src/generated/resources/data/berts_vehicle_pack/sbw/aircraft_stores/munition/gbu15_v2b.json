@@ -4,6 +4,11 @@
   "Category": "BOMB",
   "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/gbu15.geo.json",
   "ModelForward": "+Z",
+  "MountAnchor": [
+    0,
+    0.2119,
+    0.0
+  ],
   "Texture": "berts_vehicle_pack:textures/aircraft_stores/gbu15.png",
   "Capacity": 1,
   "MassKg": 1140.8,
@@ -27,7 +32,7 @@
   "ProjectileProfile": "berts_vehicle_pack:aircraft_bombs/gbu15",
   "LaunchOffset": [
     0,
-    0,
+    -0.2119,
     -1.96
   ]
 }

@@ -4,6 +4,11 @@
   "Category": "ANTI_RADIATION",
   "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/agm45a.geo.json",
   "ModelForward": "+Z",
+  "MountAnchor": [
+    0,
+    0.093,
+    -0.427
+  ],
   "Texture": "berts_vehicle_pack:textures/aircraft_stores/agm45a.png",
   "Capacity": 1,
   "MassKg": 177,
@@ -25,7 +30,7 @@
   "AmmoItem": "superbwarfare:small_air_to_ground_missile",
   "LaunchOffset": [
     0,
-    0,
-    -1.525
+    -0.093,
+    -1.098
   ]
 }

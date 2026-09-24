@@ -4,6 +4,11 @@
   "Category": "CRUISE",
   "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/kh32.geo.json",
   "ModelForward": "-Z",
+  "MountAnchor": [
+    0,
+    -0.1916,
+    1.2457
+  ],
   "Texture": "berts_vehicle_pack:textures/aircraft_stores/kh32.png",
   "Capacity": 1,
   "MassKg": 5800,
@@ -23,5 +28,10 @@
     "BlastRadius": 16,
     "Range": 2500
   },
-  "AmmoItem": "superbwarfare:large_cruise_missile"
+  "AmmoItem": "superbwarfare:large_cruise_missile",
+  "LaunchOffset": [
+    0,
+    0.1916,
+    1.2457
+  ]
 }

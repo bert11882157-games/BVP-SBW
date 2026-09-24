@@ -4,6 +4,11 @@
   "Category": "BOMB",
   "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/mk82_snakeeye.geo.json",
   "ModelForward": "-Z",
+  "MountAnchor": [
+    0,
+    0.0,
+    0.0
+  ],
   "Texture": "berts_vehicle_pack:textures/aircraft_stores/mk82_snakeeye.png",
   "Capacity": 1,
   "MassKg": 227,
@@ -23,5 +28,10 @@
     0.43,
     0.4,
     0
+  ],
+  "LaunchOffset": [
+    0,
+    0.0,
+    0.0
   ]
 }

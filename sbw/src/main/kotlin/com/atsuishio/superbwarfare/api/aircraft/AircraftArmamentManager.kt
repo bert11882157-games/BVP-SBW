@@ -535,6 +535,10 @@ object AircraftArmamentManager {
         val seekingBomb = bomb && store.getAsJsonObject("Bomb")["Mode"]?.asString == "TV"
         val cruise = category == "CRUISE" && store.has("Flight")
         require(category != "VISUAL_ONLY" && (category !in setOf("AIR_TO_AIR", "AIR_TO_GROUND", "ANTI_RADIATION", "BOMB", "CRUISE") || guidedMissile || bomb || cruise)) { "This store is visual only in this version." }
+        require(com.atsuishio.superbwarfare.entity.vehicle.base.permitsLandingGearShot(
+            AircraftMountGearInterlock.required(pair), vehicle.gearUp, vehicle.synchedGearRot)) {
+            "Retract the landing gear to release from ${pair["Name"].asString}."
+        }
         val weapon = nativeWeapons(pair, id).singleOrNull()
         if (category !in setOf("LASER_GUIDED", "COMMAND_GUIDED") && !guidedMissile && !bomb && !cruise) {
             require(weapon != null) { "This store has no firing implementation yet." }

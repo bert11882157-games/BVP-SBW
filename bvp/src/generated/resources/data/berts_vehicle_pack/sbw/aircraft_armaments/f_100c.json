@@ -11,41 +11,70 @@
   "Pairs": [
     {
       "Id": "inner",
-      "Name": "Inner wing",
+      "Name": "Inner wing pylon (double)",
       "Left": [
-        -1.38,
-        1.27,
-        1.31
+        -1.3781,
+        0.9844,
+        1.2031
       ],
       "Right": [
-        1.38,
-        1.27,
-        1.31
+        1.3781,
+        0.9844,
+        1.2031
       ],
       "AllowedStores": [
-        "berts_vehicle_pack:munition/mk82"
+        "berts_vehicle_pack:munition/aim9b",
+        "berts_vehicle_pack:munition/aim9b_x2",
+        "berts_vehicle_pack:munition/agm12b",
+        "berts_vehicle_pack:munition/mk82",
+        "berts_vehicle_pack:munition/mk82_x3",
+        "berts_vehicle_pack:munition/mk82_snakeeye",
+        "berts_vehicle_pack:munition/mk82_snakeeye_x3",
+        "berts_vehicle_pack:munition/mk83"
+      ],
+      "MaxWeaponsPerPylon": 3,
+      "MaxPylonMassKg": 900
+    },
+    {
+      "Id": "middle",
+      "Name": "Middle wing pylon",
+      "Left": [
+        -2.7338,
+        1.1594,
+        -0.8969
+      ],
+      "Right": [
+        2.7338,
+        1.1594,
+        -0.8969
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/mk82",
+        "berts_vehicle_pack:munition/mk82_snakeeye",
+        "berts_vehicle_pack:munition/mk83"
       ],
       "MaxWeaponsPerPylon": 1,
-      "MaxPylonMassKg": 1000
+      "MaxPylonMassKg": 500
     },
     {
       "Id": "outer",
-      "Name": "Outer wing",
+      "Name": "Outer wing pylon",
       "Left": [
-        -3.87,
-        1.18,
-        -1.71
+        -3.8712,
+        1.1594,
+        -1.7063
       ],
       "Right": [
-        3.87,
-        1.18,
-        -1.71
+        3.8712,
+        1.1594,
+        -1.7063
       ],
       "AllowedStores": [
-        "berts_vehicle_pack:munition/mk82"
+        "berts_vehicle_pack:munition/mk82",
+        "berts_vehicle_pack:munition/mk82_snakeeye"
       ],
       "MaxWeaponsPerPylon": 1,
-      "MaxPylonMassKg": 1000
+      "MaxPylonMassKg": 300
     }
   ],
   "StoreGroups": {
@@ -62,7 +91,7 @@
       "suspended_f_100c_3"
     ]
   },
-  "MaxPayloadKg": 3193,
+  "MaxPayloadKg": 3220,
   "MaxPylonMassKg": 1000,
   "MaxWeaponsPerPylon": 12,
   "Singles": [

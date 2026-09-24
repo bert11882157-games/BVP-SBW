@@ -10,23 +10,23 @@
   "Pairs": [
     {
       "Id": "wing",
-      "Name": "Underwing pylons",
+      "Name": "Underwing pylon",
       "Left": [
-        -2.56,
-        1.13,
-        -0.7
+        -2.565,
+        0.7875,
+        -0.54
       ],
       "Right": [
-        2.56,
-        1.13,
-        -0.7
+        2.565,
+        0.7875,
+        -0.54
       ],
       "AllowedStores": [
         "berts_vehicle_pack:fab_100",
         "berts_vehicle_pack:fab_250"
       ],
       "MaxWeaponsPerPylon": 1,
-      "MaxPylonMassKg": 499
+      "MaxPylonMassKg": 250
     }
   ],
   "StoreGroups": {
@@ -37,7 +37,7 @@
       "suspended_mig_19s_drop_tank_right"
     ]
   },
-  "MaxPayloadKg": 499,
+  "MaxPayloadKg": 500,
   "MaxPylonMassKg": 1000,
   "MaxWeaponsPerPylon": 12,
   "Singles": []

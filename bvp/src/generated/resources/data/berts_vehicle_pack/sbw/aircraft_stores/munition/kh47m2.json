@@ -4,6 +4,11 @@
   "Category": "CRUISE",
   "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/kh47m2.geo.json",
   "ModelForward": "-Z",
+  "MountAnchor": [
+    0,
+    0.0,
+    0.7453
+  ],
   "Texture": "berts_vehicle_pack:textures/aircraft_stores/kh47m2.png",
   "Capacity": 1,
   "MassKg": 4300,
@@ -18,5 +23,10 @@
     "Trajectory": "BALLISTIC",
     "LoftHeight": 160
   },
-  "AmmoItem": "superbwarfare:large_air_to_ground_missile"
+  "AmmoItem": "superbwarfare:large_air_to_ground_missile",
+  "LaunchOffset": [
+    0,
+    0.0,
+    0.7453
+  ]
 }

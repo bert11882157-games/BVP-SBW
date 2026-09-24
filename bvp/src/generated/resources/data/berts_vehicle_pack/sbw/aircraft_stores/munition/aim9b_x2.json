@@ -1,0 +1,43 @@
+{
+  "Schema": 1,
+  "Name": "AIM-9B Sidewinder · rear-aspect infrared · twin-rail launcher",
+  "Category": "AIR_TO_AIR",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/aim9b.geo.json",
+  "ModelForward": "+Z",
+  "MountAnchor": [
+    0,
+    0.0673,
+    -0.4018
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/aim9b.png",
+  "Capacity": 1,
+  "MassKg": 74.4,
+  "Guidance": {
+    "Mode": "INFRARED",
+    "LockTicks": 75,
+    "Range": 350,
+    "ConeDegrees": 18,
+    "CountermeasureVulnerability": 1.4
+  },
+  "Flight": {
+    "InitialSpeed": 0.5,
+    "MaxSpeed": 4.5,
+    "AccelerationPerTick": 0.1,
+    "TurnDegreesPerSecond": 42,
+    "Damage": 32,
+    "BlastRadius": 2.5
+  },
+  "AmmoItem": "superbwarfare:small_air_to_air_missile",
+  "MaxPerPylon": 2,
+  "LaunchOffset": [
+    0,
+    -0.0673,
+    -1.0332
+  ],
+  "FixedRackCount": 2,
+  "RackSpacing": [
+    0.66,
+    0.35,
+    0
+  ]
+}

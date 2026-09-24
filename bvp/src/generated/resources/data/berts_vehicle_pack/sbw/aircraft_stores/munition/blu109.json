@@ -4,6 +4,11 @@
   "Category": "BOMB",
   "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/blu109.geo.json",
   "ModelForward": "-Z",
+  "MountAnchor": [
+    0,
+    0.0271,
+    -0.0271
+  ],
   "Texture": "berts_vehicle_pack:textures/aircraft_stores/blu109.png",
   "Capacity": 1,
   "MassKg": 907,
@@ -21,5 +26,10 @@
     }
   },
   "AmmoItem": "superbwarfare:large_freefall_bomb",
-  "ProjectileProfile": "berts_vehicle_pack:aircraft_bombs/blu109"
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_bombs/blu109",
+  "LaunchOffset": [
+    0,
+    -0.0271,
+    -0.0271
+  ]
 }

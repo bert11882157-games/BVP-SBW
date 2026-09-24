@@ -1,0 +1,43 @@
+{
+  "Schema": 1,
+  "Name": "R-27T · infrared · twin-rail launcher",
+  "Category": "AIR_TO_AIR",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/r27t.geo.json",
+  "ModelForward": "+Z",
+  "MountAnchor": [
+    0,
+    0.2085,
+    -0.532
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/r27t.png",
+  "Capacity": 1,
+  "MassKg": 254,
+  "Guidance": {
+    "Mode": "INFRARED",
+    "LockTicks": 65,
+    "Range": 750,
+    "ConeDegrees": 30,
+    "CountermeasureVulnerability": 1
+  },
+  "Flight": {
+    "InitialSpeed": 0.5,
+    "MaxSpeed": 7.2,
+    "AccelerationPerTick": 0.1,
+    "TurnDegreesPerSecond": 65,
+    "Damage": 60,
+    "BlastRadius": 4
+  },
+  "AmmoItem": "superbwarfare:medium_air_to_air_missile",
+  "MaxPerPylon": 2,
+  "FixedRackCount": 2,
+  "RackSpacing": [
+    0.68,
+    0.4,
+    0
+  ],
+  "LaunchOffset": [
+    0,
+    -0.2085,
+    0.532
+  ]
+}

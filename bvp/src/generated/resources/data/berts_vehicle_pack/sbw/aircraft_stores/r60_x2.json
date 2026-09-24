@@ -1,0 +1,36 @@
+{
+  "Schema": 1,
+  "Name": "R-60 · twin-rail launcher",
+  "Category": "AIR_TO_AIR",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/r60.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0,
+    0.0,
+    0.308
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/r60.png",
+  "Capacity": 1,
+  "Scale": 1,
+  "LaunchOffset": [
+    0,
+    -0.05,
+    0.308
+  ],
+  "Guidance": {
+    "Mode": "INFRARED",
+    "LockTicks": 60,
+    "Range": 1024,
+    "ConeDegrees": 25,
+    "CountermeasureVulnerability": 1
+  },
+  "MassKg": 44,
+  "AmmoItem": "superbwarfare:small_air_to_air_missile",
+  "MaxPerPylon": 2,
+  "RackSpacing": [
+    0.32,
+    0.3,
+    0
+  ],
+  "FixedRackCount": 2
+}

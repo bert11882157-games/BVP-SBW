@@ -3,6 +3,7 @@ package com.atsuishio.superbwarfare.client.aircraft
 import com.atsuishio.superbwarfare.api.aircraft.AircraftPylonRacks
 import com.atsuishio.superbwarfare.api.aircraft.AircraftMountSweep
 import com.atsuishio.superbwarfare.api.aircraft.AircraftStoreModelForward
+import com.atsuishio.superbwarfare.api.aircraft.AircraftStoreMountAnchor
 import com.google.gson.JsonArray
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
@@ -25,6 +26,8 @@ data class AircraftStoreView(
     val rackMassKg: Double = 0.0,
     /** Model-file end that is the store's nose; see [AircraftStoreModelForward]. */
     val modelForward: String = AircraftStoreModelForward.DEFAULT,
+    /** Model-file point, in blocks, placed on the mount; see [AircraftStoreMountAnchor]. */
+    val mountAnchor: Vec3 = Vec3.ZERO,
 ) {
     /** Degrees about the vertical axis through the mount point that put the nose forward. */
     val mountYawDegrees: Float get() = AircraftStoreModelForward.mountYawDegrees(modelForward)
@@ -224,7 +227,10 @@ data class AircraftArmamentSnapshot(
                     number(store,"RackMassKg",0.0,0.0,2000.0),
                     store[AircraftStoreModelForward.KEY]?.asString?.also {
                         require(it in AircraftStoreModelForward.values)
-                    } ?: AircraftStoreModelForward.DEFAULT)
+                    } ?: AircraftStoreModelForward.DEFAULT,
+                    store[AircraftStoreMountAnchor.KEY]?.let {
+                        vector(it, AircraftStoreMountAnchor.MAX_LENGTH_BLOCKS)
+                    } ?: Vec3.ZERO)
             }
             val selections = selections(json.getAsJsonObject("Selections"), definition)
             val rawCounts = json.getAsJsonObject("Counts") ?: JsonObject()

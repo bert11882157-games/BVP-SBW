@@ -6,12 +6,17 @@
   "MassKg": 1700,
   "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/kh55.geo.json",
   "ModelForward": "-Z",
+  "MountAnchor": [
+    0,
+    0.5,
+    0.833
+  ],
   "Texture": "berts_vehicle_pack:textures/aircraft_stores/kh55.png",
   "Scale": 1,
   "LaunchOffset": [
     0,
-    -2.75,
-    -2.975
+    -3.25,
+    -2.142
   ],
   "Flight": {
     "InitialSpeed": 0.3,

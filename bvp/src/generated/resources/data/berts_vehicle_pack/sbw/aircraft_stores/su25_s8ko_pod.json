@@ -4,11 +4,21 @@
   "Category": "ROCKET_POD",
   "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/su25_s8ko_pod.geo.json",
   "ModelForward": "-Z",
+  "MountAnchor": [
+    0,
+    0.0,
+    -0.3241
+  ],
   "Texture": "berts_vehicle_pack:textures/aircraft_stores/su25_s8ko_pod.png",
   "LaunchGunProfile": "berts_vehicle_pack:aircraft_rockets/s8ko_pair40",
   "Capacity": 20,
   "Scale": 1,
   "GunProfile": "berts_vehicle_pack:aircraft_rockets/s8ko_pair40",
   "MassKg": 16.5,
-  "AmmoItem": "superbwarfare:small_unguided_rocket"
+  "AmmoItem": "superbwarfare:small_unguided_rocket",
+  "LaunchOffset": [
+    0,
+    0.0,
+    -0.3241
+  ]
 }

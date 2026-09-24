@@ -4,6 +4,11 @@
   "Category": "COMMAND_GUIDED",
   "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/agm12b.geo.json",
   "ModelForward": "+Z",
+  "MountAnchor": [
+    0,
+    0.1534,
+    -0.448
+  ],
   "Texture": "berts_vehicle_pack:textures/aircraft_stores/agm12b.png",
   "Capacity": 1,
   "MassKg": 259,
@@ -14,8 +19,8 @@
   "LaunchGunProfile": "berts_vehicle_pack:aircraft_stores/agm12b",
   "LaunchOffset": [
     0,
-    0,
-    -1.6
+    -0.1534,
+    -1.152
   ],
   "AmmoItem": "superbwarfare:medium_air_to_ground_missile"
 }

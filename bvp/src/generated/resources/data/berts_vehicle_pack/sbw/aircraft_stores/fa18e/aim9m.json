@@ -28,5 +28,15 @@
   ],
   "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/aim9m.geo.json",
   "ModelForward": "-Z",
-  "Texture": "berts_vehicle_pack:textures/aircraft_stores/aim9m.png"
+  "MountAnchor": [
+    0,
+    0.0,
+    0.4018
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/aim9m.png",
+  "LaunchOffset": [
+    0,
+    0.0,
+    0.4018
+  ]
 }

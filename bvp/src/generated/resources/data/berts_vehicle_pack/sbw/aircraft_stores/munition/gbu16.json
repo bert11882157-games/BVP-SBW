@@ -4,6 +4,11 @@
   "Category": "BOMB",
   "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/gbu16.geo.json",
   "ModelForward": "-Z",
+  "MountAnchor": [
+    0,
+    0.0,
+    0.0
+  ],
   "Texture": "berts_vehicle_pack:textures/aircraft_stores/gbu16.png",
   "Capacity": 1,
   "MassKg": 454,
@@ -16,5 +21,10 @@
     "BlastDamage": 650
   },
   "AmmoItem": "superbwarfare:medium_guided_bomb",
-  "ProjectileProfile": "berts_vehicle_pack:aircraft_bombs/gbu16"
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_bombs/gbu16",
+  "LaunchOffset": [
+    0,
+    0.0,
+    0.0
+  ]
 }

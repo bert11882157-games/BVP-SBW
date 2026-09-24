@@ -3,7 +3,27 @@
   "Name": "F-86D Sabre Dog",
   "BuiltInWeapons": [],
   "SuspendedWeapons": [],
-  "Pairs": [],
+  "Pairs": [
+    {
+      "Id": "wing",
+      "Name": "Underwing pylon",
+      "Left": [
+        -2.925,
+        0.8675,
+        0.0991
+      ],
+      "Right": [
+        2.925,
+        0.8675,
+        0.0991
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/aim9b"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 150
+    }
+  ],
   "StoreGroups": {},
   "MaxPayloadKg": 907,
   "Radar": {

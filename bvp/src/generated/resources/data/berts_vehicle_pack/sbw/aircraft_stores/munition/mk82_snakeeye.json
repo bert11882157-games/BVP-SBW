@@ -4,6 +4,11 @@
   "Category": "BOMB",
   "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/mk82_snakeeye.geo.json",
   "ModelForward": "-Z",
+  "MountAnchor": [
+    0,
+    0.0,
+    0.0
+  ],
   "Texture": "berts_vehicle_pack:textures/aircraft_stores/mk82_snakeeye.png",
   "Capacity": 1,
   "MassKg": 227,
@@ -16,5 +21,10 @@
     "BlastDamage": 450
   },
   "AmmoItem": "superbwarfare:small_freefall_bomb",
-  "ProjectileProfile": "berts_vehicle_pack:aircraft_bombs/mk82_snakeeye"
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_bombs/mk82_snakeeye",
+  "LaunchOffset": [
+    0,
+    0.0,
+    0.0
+  ]
 }

@@ -4,13 +4,18 @@
   "Category": "AIR_TO_GROUND",
   "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/kh25ml.geo.json",
   "ModelForward": "-Z",
+  "MountAnchor": [
+    0,
+    0.1633,
+    0.5187
+  ],
   "Texture": "berts_vehicle_pack:textures/aircraft_stores/kh25ml.png",
   "Capacity": 1,
   "Scale": 1,
   "LaunchOffset": [
     0,
-    -0.2108108125,
-    0
+    -0.3741,
+    0.5187
   ],
   "MassKg": 320,
   "AmmoItem": "superbwarfare:medium_air_to_ground_missile",

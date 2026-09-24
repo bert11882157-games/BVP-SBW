@@ -203,6 +203,7 @@ object AircraftArmamentRegistry {
                 require(json.has("FixedRackCount") && it.asDouble.isFinite() && it.asDouble in 0.0..2000.0)
             }
             json["Scale"]?.let { require(it.asDouble.isFinite() && it.asDouble in 0.001..32.0) }
+            AircraftStoreMountAnchor.validate(json)
             json[AircraftStoreModelForward.KEY]?.let {
                 require(json.has("Model") && it.isJsonPrimitive && it.asJsonPrimitive.isString &&
                     it.asString in AircraftStoreModelForward.values) { "ModelForward must be -Z or +Z for a modeled store" }
@@ -234,6 +235,11 @@ object AircraftArmamentRegistry {
             pair["Internal"]?.let {
                 require(it.isJsonPrimitive && it.asJsonPrimitive.isBoolean && pair.has("Position"))
                 if (it.asBoolean) require(pair["MaxPylonMassKg"]?.asDouble?.isFinite() == true)
+            }
+            pair[AircraftMountGearInterlock.KEY]?.let {
+                require(it.isJsonPrimitive && it.asJsonPrimitive.isBoolean) {
+                    "${AircraftMountGearInterlock.KEY} must be true or false"
+                }
             }
             pair["QuantitySelectable"]?.let {
                 require(it.isJsonPrimitive && it.asJsonPrimitive.isBoolean)

@@ -198,6 +198,9 @@ final class BvpSuspendedStoreRenderer {
             if (mountYaw != 0.0F) pose.m_252781_(Axis.f_252436_.m_252977_(mountYaw));
             float scale = (float) store.getScale();
             pose.m_85841_(scale, scale, scale);
+            // Hang the store from its authored body-top anchor rather than its model origin.
+            Vec3 anchor = store.getMountAnchor();
+            pose.m_85837_(-anchor.f_82479_, -anchor.f_82480_, -anchor.f_82481_);
             if (mesh != null) {
                 mesh.renderCutoutOnly(pose, buffers, asset.texture, light, alpha);
                 mesh.renderTranslucentOnly(pose, buffers, asset.texture, light, alpha);

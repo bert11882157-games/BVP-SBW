@@ -8,182 +8,117 @@
   "Pairs": [
     {
       "Id": "wingtip",
-      "Name": "wingtip",
+      "Name": "Wingtip rail",
       "Left": [
-        -6.44816,
-        2.209509,
-        -3.201534
+        -7.2825,
+        2.435,
+        -4.5319
       ],
       "Right": [
-        6.44816,
-        2.209509,
-        -3.201534
+        7.2825,
+        2.435,
+        -4.5319
       ],
       "AllowedStores": [
         "berts_vehicle_pack:r73"
       ],
       "MaxWeaponsPerPylon": 1,
-      "MaxPylonMassKg": 200
+      "MaxPylonMassKg": 150
     },
     {
       "Id": "outer",
-      "Name": "outer",
+      "Name": "Outer wing pylon (double)",
       "Left": [
-        -5.907055,
-        2.209509,
-        -3.201534
+        -6.1775,
+        2.1869,
+        -4.3741
       ],
       "Right": [
-        5.907055,
-        2.209509,
-        -3.201534
+        6.1775,
+        2.1869,
+        -4.3741
       ],
       "AllowedStores": [
         "berts_vehicle_pack:r73",
-        "berts_vehicle_pack:r27r",
-        "berts_vehicle_pack:r27t",
+        "berts_vehicle_pack:r73_x2",
         "berts_vehicle_pack:r77",
-        "berts_vehicle_pack:fab_100",
-        "berts_vehicle_pack:fab_250",
-        "berts_vehicle_pack:fab_500",
-        "berts_vehicle_pack:munition/kh31p",
-        "berts_vehicle_pack:munition/kh38mt",
-        "berts_vehicle_pack:munition/kh58"
-      ],
-      "MaxWeaponsPerPylon": 1,
-      "MaxPylonMassKg": 1000
-    },
-    {
-      "Id": "middle",
-      "Name": "middle",
-      "Left": [
-        -4.960123,
-        2.029141,
-        -1.172393
-      ],
-      "Right": [
-        4.960123,
-        2.029141,
-        -1.172393
-      ],
-      "AllowedStores": [
-        "berts_vehicle_pack:r73",
         "berts_vehicle_pack:r27r",
-        "berts_vehicle_pack:r27t",
-        "berts_vehicle_pack:r77",
-        "berts_vehicle_pack:fab_100",
-        "berts_vehicle_pack:fab_250",
-        "berts_vehicle_pack:fab_500",
-        "berts_vehicle_pack:munition/kh31p",
-        "berts_vehicle_pack:munition/kh38mt",
-        "berts_vehicle_pack:munition/kh58"
+        "berts_vehicle_pack:fab_100_x3",
+        "berts_vehicle_pack:fab_250"
       ],
-      "MaxWeaponsPerPylon": 1,
-      "MaxPylonMassKg": 1000
+      "MaxWeaponsPerPylon": 3,
+      "MaxPylonMassKg": 600
     },
     {
       "Id": "inner",
-      "Name": "inner",
+      "Name": "Inner wing pylon (double)",
       "Left": [
-        -4.328834,
-        2.029141,
-        -1.172393
+        -4.6444,
+        2.0069,
+        -3.1787
       ],
       "Right": [
-        4.328834,
-        2.029141,
-        -1.172393
+        4.6444,
+        2.0069,
+        -3.1787
       ],
       "AllowedStores": [
         "berts_vehicle_pack:r73",
+        "berts_vehicle_pack:r73_x2",
         "berts_vehicle_pack:r27r",
         "berts_vehicle_pack:r27t",
         "berts_vehicle_pack:r77",
-        "berts_vehicle_pack:fab_100",
-        "berts_vehicle_pack:fab_250",
-        "berts_vehicle_pack:fab_500",
+        "berts_vehicle_pack:r27r_x2",
+        "berts_vehicle_pack:r27t_x2",
+        "berts_vehicle_pack:r77_x2",
+        "berts_vehicle_pack:kh29l",
+        "berts_vehicle_pack:kh29d",
         "berts_vehicle_pack:munition/kh31p",
         "berts_vehicle_pack:munition/kh38mt",
-        "berts_vehicle_pack:munition/kh58"
+        "berts_vehicle_pack:munition/kh58",
+        "berts_vehicle_pack:fab_100_x3",
+        "berts_vehicle_pack:fab_250",
+        "berts_vehicle_pack:fab_250_x2",
+        "berts_vehicle_pack:fab_500",
+        "berts_vehicle_pack:su25_s8ko_pod"
       ],
-      "MaxWeaponsPerPylon": 1,
-      "MaxPylonMassKg": 1000
+      "MaxWeaponsPerPylon": 3,
+      "MaxPylonMassKg": 1500
     },
     {
-      "Id": "tunnel",
-      "Name": "tunnel",
+      "Id": "intake",
+      "Name": "Intake pylon",
       "Left": [
-        -1.127301,
-        0.856748,
-        0.315644
+        -1.1275,
+        0.9694,
+        -1.9163
       ],
       "Right": [
-        1.127301,
-        0.856748,
-        0.315644
+        1.1275,
+        0.9694,
+        -1.9163
       ],
       "AllowedStores": [
-        "berts_vehicle_pack:r73",
         "berts_vehicle_pack:r27r",
-        "berts_vehicle_pack:r27t",
         "berts_vehicle_pack:r77",
-        "berts_vehicle_pack:fab_100",
-        "berts_vehicle_pack:fab_250",
-        "berts_vehicle_pack:fab_500",
+        "berts_vehicle_pack:kh29l",
+        "berts_vehicle_pack:kh29d",
         "berts_vehicle_pack:munition/kh31p",
         "berts_vehicle_pack:munition/kh38mt",
-        "berts_vehicle_pack:munition/kh58"
+        "berts_vehicle_pack:munition/kh58",
+        "berts_vehicle_pack:fab_250",
+        "berts_vehicle_pack:fab_500",
+        "berts_vehicle_pack:fab_1500"
       ],
       "MaxWeaponsPerPylon": 1,
-      "MaxPylonMassKg": 1000
+      "MaxPylonMassKg": 1600
     }
   ],
-  "Singles": [
-    {
-      "Id": "centerline_1",
-      "Name": "Centerline 1",
-      "Position": [
-        0,
-        1.623313,
-        1.803681
-      ],
-      "Internal": false,
-      "AllowedStores": [
-        "berts_vehicle_pack:fab_100",
-        "berts_vehicle_pack:fab_250",
-        "berts_vehicle_pack:fab_500",
-        "berts_vehicle_pack:munition/kh31p",
-        "berts_vehicle_pack:munition/kh38mt",
-        "berts_vehicle_pack:munition/kh58"
-      ],
-      "MaxWeaponsPerPylon": 1,
-      "MaxPylonMassKg": 1000
-    },
-    {
-      "Id": "centerline_2",
-      "Name": "Centerline 2",
-      "Position": [
-        0,
-        1.623313,
-        -3.56227
-      ],
-      "Internal": false,
-      "AllowedStores": [
-        "berts_vehicle_pack:fab_100",
-        "berts_vehicle_pack:fab_250",
-        "berts_vehicle_pack:fab_500",
-        "berts_vehicle_pack:munition/kh31p",
-        "berts_vehicle_pack:munition/kh38mt",
-        "berts_vehicle_pack:munition/kh58"
-      ],
-      "MaxWeaponsPerPylon": 1,
-      "MaxPylonMassKg": 1000
-    }
-  ],
+  "Singles": [],
   "StoreGroups": {},
   "MaxPayloadKg": 8000,
   "MaxPylonMassKg": 1000,
-  "MaxWeaponsPerPylon": 1,
+  "MaxWeaponsPerPylon": 3,
   "Radar": {
     "Enabled": true,
     "Range": 2000

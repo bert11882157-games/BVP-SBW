@@ -4,6 +4,11 @@
   "Category": "COMMAND_GUIDED",
   "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/falanga.geo.json",
   "ModelForward": "+Z",
+  "MountAnchor": [
+    0,
+    0.1055,
+    -0.1624
+  ],
   "Texture": "berts_vehicle_pack:textures/aircraft_stores/falanga.png",
   "Capacity": 1,
   "MassKg": 31.5,
@@ -14,8 +19,8 @@
   "LaunchGunProfile": "berts_vehicle_pack:aircraft_stores/falanga_9m17m",
   "LaunchOffset": [
     0,
-    0,
-    -0.58
+    -0.1055,
+    -0.4176
   ],
   "AmmoItem": "superbwarfare:large_atgm"
 }

@@ -4,6 +4,11 @@
   "Category": "BOMB",
   "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/blu109_jdam.geo.json",
   "ModelForward": "-Z",
+  "MountAnchor": [
+    0,
+    0.0365,
+    0.2313
+  ],
   "Texture": "berts_vehicle_pack:textures/aircraft_stores/blu109_jdam.png",
   "Capacity": 1,
   "MassKg": 961,
@@ -21,5 +26,10 @@
     }
   },
   "AmmoItem": "superbwarfare:large_guided_bomb",
-  "ProjectileProfile": "berts_vehicle_pack:aircraft_bombs/blu109_jdam"
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_bombs/blu109_jdam",
+  "LaunchOffset": [
+    0,
+    -0.0365,
+    0.2313
+  ]
 }

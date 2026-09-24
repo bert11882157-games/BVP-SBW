@@ -4,6 +4,11 @@
   "Category": "BOMB",
   "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/cbu99.geo.json",
   "ModelForward": "-Z",
+  "MountAnchor": [
+    0,
+    0.0,
+    0.0
+  ],
   "Texture": "berts_vehicle_pack:textures/aircraft_stores/cbu99.png",
   "Capacity": 1,
   "MassKg": 230,
@@ -26,5 +31,10 @@
     }
   },
   "AmmoItem": "superbwarfare:small_freefall_bomb",
-  "ProjectileProfile": "berts_vehicle_pack:aircraft_bombs/cbu99_rockeye_ii"
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_bombs/cbu99_rockeye_ii",
+  "LaunchOffset": [
+    0,
+    0.0,
+    0.0
+  ]
 }

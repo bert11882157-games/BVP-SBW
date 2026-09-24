@@ -4,6 +4,11 @@
   "Category": "LASER_GUIDED",
   "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/kh29l.geo.json",
   "ModelForward": "-Z",
+  "MountAnchor": [
+    0,
+    0.0,
+    0.546
+  ],
   "Texture": "berts_vehicle_pack:textures/aircraft_stores/kh29l.png",
   "Capacity": 1,
   "Scale": 0.8,
@@ -11,8 +16,8 @@
   "LaunchGunProfile": "berts_vehicle_pack:aircraft_stores/agm65",
   "LaunchOffset": [
     0,
-    -0.2108108125,
-    0
+    -0.2108,
+    0.4368
   ],
   "MassKg": 300,
   "AmmoItem": "superbwarfare:medium_air_to_ground_missile"

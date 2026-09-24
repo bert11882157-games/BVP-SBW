@@ -4,6 +4,11 @@
   "Category": "BOMB",
   "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/cbu97.geo.json",
   "ModelForward": "-Z",
+  "MountAnchor": [
+    0,
+    0.0,
+    0.0
+  ],
   "Texture": "berts_vehicle_pack:textures/aircraft_stores/cbu97.png",
   "Capacity": 1,
   "MassKg": 420,
@@ -28,5 +33,10 @@
     }
   },
   "AmmoItem": "superbwarfare:medium_freefall_bomb",
-  "ProjectileProfile": "berts_vehicle_pack:aircraft_bombs/cbu97"
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_bombs/cbu97",
+  "LaunchOffset": [
+    0,
+    0.0,
+    0.0
+  ]
 }

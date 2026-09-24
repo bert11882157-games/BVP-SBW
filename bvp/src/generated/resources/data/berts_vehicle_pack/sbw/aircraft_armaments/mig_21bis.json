@@ -8,65 +8,51 @@
   "Pairs": [
     {
       "Id": "inner",
-      "Name": "Inner wing rail",
+      "Name": "Inner wing pylon",
       "Left": [
-        -1.95,
-        1.31,
-        -0.8
+        -1.9459,
+        1.3125,
+        -0.8144
       ],
       "Right": [
-        1.95,
-        1.31,
-        -0.8
+        1.9459,
+        1.3125,
+        -0.8144
       ],
       "AllowedStores": [
-        "berts_vehicle_pack:munition/r13m1",
         "berts_vehicle_pack:r3r",
-        "berts_vehicle_pack:r60"
+        "berts_vehicle_pack:munition/r13m1",
+        "berts_vehicle_pack:r60",
+        "berts_vehicle_pack:fab_250",
+        "berts_vehicle_pack:fab_500"
       ],
       "MaxWeaponsPerPylon": 1,
-      "MaxPylonMassKg": 150
-    },
-    {
-      "Id": "middle",
-      "Name": "Middle wing rail",
-      "Left": [
-        -2.76,
-        1.06,
-        -1.6
-      ],
-      "Right": [
-        2.76,
-        1.06,
-        -1.6
-      ],
-      "AllowedStores": [
-        "berts_vehicle_pack:munition/r13m1",
-        "berts_vehicle_pack:r3r",
-        "berts_vehicle_pack:r60"
-      ],
-      "MaxWeaponsPerPylon": 1,
-      "MaxPylonMassKg": 150
+      "MaxPylonMassKg": 650
     },
     {
       "Id": "outer",
-      "Name": "Outer wing rail",
+      "Name": "Outer wing pylon (double)",
       "Left": [
-        -3.08,
-        1.29,
-        -1.6
+        -2.7606,
+        1.0637,
+        -2.0812
       ],
       "Right": [
-        3.08,
-        1.29,
-        -1.6
+        2.7606,
+        1.0637,
+        -2.0812
       ],
       "AllowedStores": [
+        "berts_vehicle_pack:r3r",
         "berts_vehicle_pack:munition/r13m1",
-        "berts_vehicle_pack:r60"
+        "berts_vehicle_pack:r60",
+        "berts_vehicle_pack:r60_x2",
+        "berts_vehicle_pack:fab_100",
+        "berts_vehicle_pack:fab_100_x3",
+        "berts_vehicle_pack:fab_250"
       ],
-      "MaxWeaponsPerPylon": 1,
-      "MaxPylonMassKg": 150
+      "MaxWeaponsPerPylon": 3,
+      "MaxPylonMassKg": 350
     }
   ],
   "StoreGroups": {
@@ -74,7 +60,7 @@
       "suspended_r60mk_hull"
     ]
   },
-  "MaxPayloadKg": 1500,
+  "MaxPayloadKg": 1300,
   "Radar": {
     "Enabled": true,
     "Range": 1000

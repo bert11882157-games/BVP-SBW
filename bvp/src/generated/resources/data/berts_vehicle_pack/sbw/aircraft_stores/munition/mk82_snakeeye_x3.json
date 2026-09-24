@@ -1,0 +1,37 @@
+{
+  "Schema": 1,
+  "Name": "Mk 82 Snake Eye · 500 lb retarded · triple ejector rack",
+  "Category": "BOMB",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/mk82_snakeeye.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0,
+    0.0,
+    0.0
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/mk82_snakeeye.png",
+  "Capacity": 1,
+  "MassKg": 227,
+  "Bomb": {
+    "Mode": "DUMB",
+    "Gravity": 0.08,
+    "DragMultiplier": 5,
+    "TurnDegreesPerTick": 0,
+    "BlastRadius": 7,
+    "BlastDamage": 450
+  },
+  "AmmoItem": "superbwarfare:small_freefall_bomb",
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_bombs/mk82_snakeeye",
+  "MaxPerPylon": 3,
+  "FixedRackCount": 3,
+  "RackSpacing": [
+    0.42,
+    0.42,
+    0
+  ],
+  "LaunchOffset": [
+    0,
+    0.0,
+    0.0
+  ]
+}

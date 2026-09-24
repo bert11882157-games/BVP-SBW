@@ -7,48 +7,54 @@
   "SuspendedWeapons": [],
   "Pairs": [
     {
-      "Id": "inner",
-      "Name": "Inner wing pylons",
+      "Id": "glove",
+      "Name": "Wing glove pylon",
       "Left": [
-        -3.3,
-        1.1,
-        0.7
+        -1.3313,
+        2.1063,
+        0.025
       ],
       "Right": [
-        3.3,
-        1.1,
-        0.7
+        1.3313,
+        2.1063,
+        0.025
       ],
       "AllowedStores": [
+        "berts_vehicle_pack:munition/r13m1",
         "berts_vehicle_pack:r60",
-        "berts_vehicle_pack:fab_100",
-        "berts_vehicle_pack:fab_250"
+        "berts_vehicle_pack:fab_250",
+        "berts_vehicle_pack:fab_500",
+        "berts_vehicle_pack:su25_s8ko_pod",
+        "berts_vehicle_pack:gsh23_pod"
       ],
       "MaxWeaponsPerPylon": 1,
-      "MaxPylonMassKg": 500
+      "MaxPylonMassKg": 550
     },
     {
-      "Id": "outer",
-      "Name": "Outer wing pylons",
+      "Id": "belly",
+      "Name": "Intake belly pylon",
       "Left": [
-        -5.6,
-        1.12,
-        0.65
+        -0.6094,
+        1.4062,
+        0.5281
       ],
       "Right": [
-        5.6,
-        1.12,
-        0.65
+        0.6094,
+        1.4062,
+        0.5281
       ],
       "AllowedStores": [
-        "berts_vehicle_pack:r60"
+        "berts_vehicle_pack:munition/r13m1",
+        "berts_vehicle_pack:r60",
+        "berts_vehicle_pack:fab_250",
+        "berts_vehicle_pack:fab_500"
       ],
       "MaxWeaponsPerPylon": 1,
-      "MaxPylonMassKg": 150
+      "MaxPylonMassKg": 550
     }
   ],
   "StoreGroups": {},
-  "MaxPayloadKg": 3000,
+  "MaxPayloadKg": 2100,
   "Radar": {
     "Enabled": true,
     "Range": 1000

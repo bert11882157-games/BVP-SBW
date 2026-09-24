@@ -1,0 +1,43 @@
+{
+  "Schema": 1,
+  "Name": "AIM-9M · infrared · shoulder rails",
+  "Category": "AIR_TO_AIR",
+  "Capacity": 1,
+  "MassKg": 44,
+  "Guidance": {
+    "Mode": "INFRARED",
+    "LockTicks": 60,
+    "Range": 500,
+    "ConeDegrees": 25,
+    "CountermeasureVulnerability": 1
+  },
+  "Flight": {
+    "InitialSpeed": 0.5,
+    "MaxSpeed": 5,
+    "AccelerationPerTick": 0.1,
+    "TurnDegreesPerSecond": 96,
+    "Damage": 40,
+    "BlastRadius": 3
+  },
+  "AmmoItem": "superbwarfare:small_air_to_air_missile",
+  "MaxPerPylon": 2,
+  "RackSpacing": [
+    0.63,
+    0.35,
+    0
+  ],
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/aim9m.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0,
+    0.0,
+    0.4018
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/aim9m.png",
+  "FixedRackCount": 2,
+  "LaunchOffset": [
+    0,
+    0.0,
+    0.4018
+  ]
+}

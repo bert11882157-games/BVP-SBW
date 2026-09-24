@@ -4,6 +4,11 @@
   "Category": "BOMB",
   "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/cbu99.geo.json",
   "ModelForward": "-Z",
+  "MountAnchor": [
+    0,
+    0.0,
+    0.0
+  ],
   "Texture": "berts_vehicle_pack:textures/aircraft_stores/cbu99.png",
   "Capacity": 1,
   "MassKg": 230,
@@ -33,5 +38,10 @@
     0.66,
     0.4,
     0
+  ],
+  "LaunchOffset": [
+    0,
+    0.0,
+    0.0
   ]
 }

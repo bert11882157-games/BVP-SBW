@@ -4,6 +4,11 @@
   "Category": "AIR_TO_GROUND",
   "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/pars3.geo.json",
   "ModelForward": "+Z",
+  "MountAnchor": [
+    0,
+    0.0849,
+    -0.2282
+  ],
   "Texture": "berts_vehicle_pack:textures/aircraft_stores/pars3.png",
   "Capacity": 1,
   "MassKg": 49,
@@ -35,7 +40,7 @@
   ],
   "LaunchOffset": [
     0,
-    0,
-    -0.815
+    -0.0849,
+    -0.5868
   ]
 }
