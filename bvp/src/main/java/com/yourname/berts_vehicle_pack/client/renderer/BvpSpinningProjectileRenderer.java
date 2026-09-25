@@ -14,6 +14,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.HashMap;
@@ -106,7 +107,12 @@ public class BvpSpinningProjectileRenderer<T extends Entity> extends EntityRende
             return false;
         }
 
-        Vec3 look = entity.m_20154_();
+        // Heading blended between ticks (wrap-aware yaw), so guided rounds turn smoothly instead of once per tick.
+        Vec3 look = Vec3.m_82498_(Mth.m_14179_(partialTicks, entity.f_19860_, entity.m_146909_()),
+                Mth.m_14189_(partialTicks, entity.f_19859_, entity.m_146908_()));
+        if (look.m_82556_() < 1.0E-6D) {
+            look = entity.m_20154_();
+        }
         if (look.m_82556_() < 1.0E-6D) {
             look = entity.m_20184_();
         }

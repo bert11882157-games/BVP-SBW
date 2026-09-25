@@ -496,7 +496,14 @@ public class BaseVehicleRenderer<T extends GeoVehicleEntity> implements VehicleR
                 applyAdditionalVehicleTransform(entity, partialTicks, poseStack);
                 applyVehicleRenderAxis(entity, entityYaw, partialTicks, poseStack,
                         context.getChassisPresentation().getPose());
-                boolean instanced = BvpKomodoBridge.submit(context, loadedModel,
+                // Instances are drawn later under vanilla fog: beyond vanilla fog start keep the normal draw,
+                // which uses the extended vehicle fog, or the hull turns fog-coloured (black at night).
+                float vanillaFogStart = com.atsuishio.superbwarfare.client.renderer.FarVehicleRenderer
+                        .vanillaFogStartForVehicle();
+                boolean inVanillaFog = !Float.isNaN(vanillaFogStart)
+                        && entity.m_20182_().m_82554_(Minecraft.m_91087_().f_91063_.m_109153_().m_90583_())
+                        + entity.m_20205_() > vanillaFogStart;
+                boolean instanced = !inVanillaFog && BvpKomodoBridge.submit(context, loadedModel,
                         poseStack.m_85850_().m_252922_(), resolvedTexture, packedLight, fadeAlpha);
                 if (!instanced) {
                     loadedModel.renderCutoutOnly(poseStack, bufferSource, resolvedTexture, packedLight,

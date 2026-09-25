@@ -104,6 +104,8 @@ object VehicleCrosshairOverlay : CommonOverlay("vehicle_crosshair") {
         if (aircraft) {
             resetScale()
             ccipScreenSmoother.reset()
+            // AircraftHud draws no crosshair indicators for fixed-wing flight: hit/kill markers go at screen centre.
+            renderKillIndicator(guiGraphics, screenWidth.toFloat(), screenHeight.toFloat())
             return
         }
         val showCrosshairA = reticleRole.showsCameraCommandReticle && !aircraft
@@ -119,6 +121,7 @@ object VehicleCrosshairOverlay : CommonOverlay("vehicle_crosshair") {
         if (data == null) {
             renderCcipIndicator(entity)
             if (hasAimStateMarker) renderAimStateMarker(entity, index)
+            renderKillIndicator(guiGraphics, screenWidth.toFloat(), screenHeight.toFloat())
             resetScale()
             return
         }
@@ -134,6 +137,7 @@ object VehicleCrosshairOverlay : CommonOverlay("vehicle_crosshair") {
         if (!hasBaseCrosshair) {
             renderCcipIndicator(entity)
             if (hasAimStateMarker) renderAimStateMarker(entity, index)
+            renderKillIndicator(guiGraphics, screenWidth.toFloat(), screenHeight.toFloat())
             resetScale()
             return
         }

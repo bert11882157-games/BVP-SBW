@@ -137,6 +137,9 @@ internal class VehicleDamageLifecycleService(
         vehicle.lastDamageStamp = vehicle.level().gameTime
         val healthBefore = vehicle.health
         vehicle.onHurt(amount, source.entity, feedback)
+        if (feedback && healthBefore > 0f && !vehicle.isWreck) {
+            vehicle.sendHitFeedback(source, healthBefore - vehicle.health, healthBefore > 0f && vehicle.health <= 0f)
+        }
         com.atsuishio.superbwarfare.api.vehicle.render.FarVehicleSimulationPolicy.wakeAfterDamage(vehicle, amount)
         if (EliteDiagnostics.isEnabled(vehicle.level())) {
             EliteDiagnostics.record(vehicle, "damage", "hull_commit",

@@ -2188,23 +2188,6 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
     fun onHurt(pHealAmount: Float, attacker: Entity?, send: Boolean) {
         if (this.level() is ServerLevel) {
             val holder = Holder.direct(ModSounds.INDICATION_VEHICLE.get())
-            for (player in server!!.playerList.players) {
-                if (player == attacker && pHealAmount > 0 && this.health > 0 && send && (this !is DroneEntity)) {
-                    player.connection.send(
-                        ClientboundSoundPacket(
-                            holder,
-                            SoundSource.PLAYERS,
-                            player.x,
-                            player.eyeY,
-                            player.z,
-                            0.25f + (2.75f * pHealAmount / this.getMaxHealth()),
-                            random.nextFloat() * 0.1f + 0.9f,
-                            player.level().random.nextLong()
-                        )
-                    )
-                    player.sendPacket(ClientIndicatorMessage(3, 5))
-                }
-            }
 
             if (pHealAmount > 0 && send) {
                 repairCoolDown = maxRepairCoolDown()
@@ -2228,6 +2211,39 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
             }
 
             this.health -= Math.min(pHealAmount, getMaxHealth() + 1)
+        }
+    }
+
+    /**
+     * Hit feedback for whoever caused committed hull damage: the regular hitmarker (and the vehicle hit sound) for a
+     * hit, the red kill marker when this damage destroyed the vehicle. The responsible players are resolved through
+     * projectile owners and firing vehicles (every player crewing the vehicle that fired), so shells, missiles, bombs,
+     * blasts and armor-resolved hits all report, not only damage whose source entity is the player itself.
+     */
+    fun sendHitFeedback(source: DamageSource, amount: Float, killed: Boolean) {
+        if (this.level() !is ServerLevel || this is DroneEntity || !(amount > 0f)) return
+        val players = LinkedHashSet<ServerPlayer>()
+        fun collect(entity: Entity?, depth: Int) {
+            if (entity == null || depth > 4) return
+            when (entity) {
+                is ServerPlayer -> players.add(entity)
+                is VehicleEntity -> entity.passengers.forEach { collect(it, depth + 1) }
+                is Projectile -> collect(entity.owner, depth + 1)
+            }
+        }
+        collect(source.entity, 0)
+        if (players.isEmpty()) collect(source.directEntity, 0)
+        val holder = Holder.direct(ModSounds.INDICATION_VEHICLE.get())
+        for (player in players) {
+            if (player.vehicle === this) continue // own vehicle: crashes, self-inflicted blasts
+            player.connection.send(
+                ClientboundSoundPacket(
+                    holder, SoundSource.PLAYERS, player.x, player.eyeY, player.z,
+                    0.25f + (2.75f * amount / this.getMaxHealth()).coerceAtMost(2.75f),
+                    random.nextFloat() * 0.1f + 0.9f, player.level().random.nextLong()
+                )
+            )
+            player.sendPacket(ClientIndicatorMessage(if (killed) 2 else 0, if (killed) 8 else 5))
         }
     }
 

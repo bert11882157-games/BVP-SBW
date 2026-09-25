@@ -61,8 +61,13 @@ open class BasicProjectileRenderer<T>(manager: EntityRendererProvider.Context) :
         poseStack.translate(0f, entity.bbHeight / 2, 0f)
 
         //十分鬼畜而神秘的写法，直接用yaw的话会导致弹体在+-180°偏航时抽搐，遂采用这种脱裤子放屁的写法
-        poseStack.mulPose(Axis.YP.rotationDegrees(VehicleVecUtils.getYRotFromVector(entity.lookAngle).toFloat()))
-        poseStack.mulPose(Axis.XP.rotationDegrees(-VehicleVecUtils.getXRotFromVector(entity.lookAngle).toFloat() + 180f))
+        // Heading blended between ticks (wrap-aware yaw), so guided rounds turn smoothly instead of once per tick.
+        val look = net.minecraft.world.phys.Vec3.directionFromRotation(
+            net.minecraft.util.Mth.lerp(partialTick, entity.xRotO, entity.xRot),
+            net.minecraft.util.Mth.rotLerp(partialTick, entity.yRotO, entity.yRot))
+            .takeIf { it.lengthSqr() > 1.0e-6 } ?: entity.lookAngle
+        poseStack.mulPose(Axis.YP.rotationDegrees(VehicleVecUtils.getYRotFromVector(look).toFloat()))
+        poseStack.mulPose(Axis.XP.rotationDegrees(-VehicleVecUtils.getXRotFromVector(look).toFloat() + 180f))
 
         val renderType = RenderType.entityTranslucent(getTextureLocation(entity))
         val vertexConsumer = buffer.getBuffer(renderType)

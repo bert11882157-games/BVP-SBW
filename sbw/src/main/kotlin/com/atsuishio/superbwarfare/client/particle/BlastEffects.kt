@@ -591,7 +591,7 @@ object BlastEffects {
                 }
             }
 
-            // Central smoke: rises out of the burnt-out fireball and lingers.
+            // Central smoke: rises out of the burnt-out fireball, thins and clears.
             val smokeLife = BlastVisuals.smokeTicks(kg)
             run {
                 val count = smoke.size / 8
@@ -601,8 +601,8 @@ object BlastEffects {
                     if (t <= 0.0 || t >= smokeLife) continue
                     val p = t / smokeLife
                     val fadeIn = smoothstep(0.0, 12.0, t)
-                    val fadeOut = 1.0 - smoothstep(0.55, 1.0, p)
-                    val alpha = 0.72 * fadeIn * fadeOut
+                    val fadeOut = 1.0 - smoothstep(0.35, 1.0, p)
+                    val alpha = 0.6 * fadeIn * fadeOut
                     if (alpha <= 0.01) continue
                     val seconds = t / 20.0
                     val riseSpeed = (0.35 + 0.06 * radius) * smoke[o + 6]
@@ -611,7 +611,8 @@ object BlastEffects {
                     val py = oy + smoke[o + 1] * radius + riseSpeed * seconds * (1.0 - 0.4 * p)
                     val pz = oz + smoke[o + 2] * radius * drift
                     val half = smoke[o + 3] * radius * (0.9 + 0.9 * (1.0 - exp(-seconds / 4.0)))
-                    val grey = 0.16 + 0.16 * p
+                    // Light, slightly warm grey that bleaches further as it thins (not soot).
+                    val grey = 0.52 + 0.14 * p
                     val lit = alpha
                     out.add(px, py, pz, half, smoke[o + 5] + 0.02 * seconds, grey * lit, grey * 0.95 * lit,
                         grey * 0.9 * lit, alpha, sprites.smoke[smoke[o + 7].toInt()], light)
@@ -665,7 +666,7 @@ object BlastEffects {
                         val half = minor * (0.8 + 0.25 * cap[o + 2])
                         val top = 0.5 + 0.5 * sin(theta)
                         val alpha = 0.8 * fadeIn * fadeOut
-                        val grey = (0.14 + 0.14 * top) * alpha
+                        val grey = (0.42 + 0.18 * top) * alpha
                         fireColor(1.0 + (1.0 - glow), glow * 0.9, color)
                         out.add(px, py, pz, half, cap[o + 3] + 0.01 * t, grey + color[0] * 0.6, grey * 0.93 + color[1] * 0.6,
                             grey * 0.86 + color[2] * 0.6, alpha, sprites.smoke[cap[o + 4].toInt()], light)

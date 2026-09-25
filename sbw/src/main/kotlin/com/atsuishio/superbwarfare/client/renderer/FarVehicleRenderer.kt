@@ -36,6 +36,16 @@ object FarVehicleRenderer {
                           val buffers: net.minecraft.client.renderer.MultiBufferSource.BufferSource)
 
     /** Both sides of the tracking boundary use the same vehicle fog; other entities retain theirs. */
+    /**
+     * Vanilla fog start while the current vehicle is drawn under the extended vehicle fog, else NaN. Geometry drawn
+     * later by other passes (Flywheel/Komodo instances) gets vanilla fog instead, so it must not be used for a
+     * vehicle beyond this distance or the vehicle turns fog-coloured (black at night) until it comes closer.
+     */
+    @JvmStatic
+    fun vanillaFogStartForVehicle(): Float = activeVanillaFogStart
+
+    private var activeVanillaFogStart = Float.NaN
+
     fun beginVehicleFog(vehicle: VehicleEntity, source: net.minecraft.client.renderer.MultiBufferSource): VehicleFog? {
         if (rendering || !FarVehicleRenderConfig.ENABLED.get() || !FarTerrainClient.ready()) return null
         val mc = Minecraft.getInstance()
@@ -48,11 +58,13 @@ object FarVehicleRenderer {
         val range = FarTerrainClient.renderRadius()
         RenderSystem.setShaderFogStart(maxOf(old.start, range.toFloat()))
         RenderSystem.setShaderFogEnd(maxOf(old.end, range + 512F))
+        activeVanillaFogStart = old.start
         return old
     }
 
     fun endVehicleFog(state: VehicleFog?) {
         if (state == null) return
+        activeVanillaFogStart = Float.NaN
         try { state.buffers.endBatch() }
         finally {
             RenderSystem.setShaderFogStart(state.start)

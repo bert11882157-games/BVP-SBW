@@ -13,7 +13,8 @@ import kotlin.math.sqrt
  * - The fireball starts at the impact point and expands to its radius in [expansionTicks]: one tick (instant)
  *   for small charges, about 0.4 s for multi-ton bombs, always decelerating (ease-out).
  * - It then holds briefly and burns out over [fireFadeTicks]; bigger charges burn longer.
- * - Smoke concentrated in the central region outlasts the fire ([smokeTicks]).
+ * - Light grey smoke in the central region outlasts the fire briefly and thins out ([smokeTicks]: about 4 s for a
+ *   Mk 82, 8 s for a FAB-3000).
  * - Charges of [MUSHROOM_KG] and more also raise a mushroom cloud.
  * - Ground bursts throw terrain chunks: bigger charges throw larger AND more chunks, faster.
  */
@@ -61,16 +62,16 @@ object BlastVisuals {
     fun flashTicks(kg: Double): Double = 2.0 + 0.4 * scale(kg)
 
     @JvmStatic
-    fun smokeTicks(kg: Double): Double = 60.0 + 22.0 * scale(kg)
+    fun smokeTicks(kg: Double): Double = 36.0 + 10.0 * scale(kg)
 
     @JvmStatic
-    fun dustTicks(kg: Double): Double = 40.0 + 10.0 * scale(kg)
+    fun dustTicks(kg: Double): Double = 30.0 + 7.0 * scale(kg)
 
     @JvmStatic
     fun producesMushroom(kg: Double): Boolean = kg.isFinite() && kg >= MUSHROOM_KG
 
     @JvmStatic
-    fun mushroomTicks(kg: Double): Double = (22.0 + 0.9 * scale(kg)) * 20.0
+    fun mushroomTicks(kg: Double): Double = (12.0 + 0.5 * scale(kg)) * 20.0
 
     /** Rise time constant of the mushroom cap, in ticks. */
     @JvmStatic

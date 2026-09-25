@@ -6,6 +6,7 @@
   "mixins": [],
   "client": [
     "BvpPolyMeshPerformanceMixin",
+    "BvpPolyMeshLightingMixin",
     "BvpPolyMeshModelPrewarmAccessor",
     "BvpPolyMeshVertexAccessor",
     "BvpKomodoNativeModelMixin",

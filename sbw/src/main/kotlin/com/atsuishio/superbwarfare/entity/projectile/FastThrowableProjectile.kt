@@ -525,7 +525,15 @@ abstract class FastThrowableProjectile : ThrowableItemProjectile, CustomSyncMoti
 
     override fun syncMotion() {
         if (this.level().isClientSide || isRemoved) return
-        when (motionSyncMode()) {
+        val mode = motionSyncMode()
+        if (mode == MotionSyncMode.EVERY_TICK && smoothsBallisticFlight()) {
+            // Smoothed clients only accept step-aligned states; a legacy motion message would be ignored.
+            ballisticStartPosition = null
+            NetworkTelemetry.recordSystemWork("projectile.motion_correction")
+            sendPacketToTrackingThis(ClientMotionSyncMessage.ballistic(this))
+            return
+        }
+        when (mode) {
             MotionSyncMode.NONE -> return
             MotionSyncMode.ENTITY_INTERVAL -> {
                 if (smoothsBallisticFlight()) {
