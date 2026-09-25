@@ -25,6 +25,9 @@ object ModParticles {
             registerSpriteSet(ModParticleTypes.CUSTOM_CLOUD.get()) { CustomCloudParticle.Provider(it) }
             registerSpriteSet(ModParticleTypes.CUSTOM_SMOKE.get()) { CustomSmokeParticle.Provider(it) }
             registerSpriteSet(ModParticleTypes.CANNON_MUZZLE_FLARE.get()) { CannonMuzzleFlareParticle.Provider(it) }
+            registerSpriteSet(ModParticleTypes.BLAST_FIREBALL.get()) { BlastSprites.fireball(it) }
+            registerSpriteSet(ModParticleTypes.BLAST_SOOT.get()) { BlastSprites.soot(it) }
+            registerSpriteSet(ModParticleTypes.BLAST_SHOCKWAVE.get()) { BlastSprites.shockwave(it) }
         }
     }
 }

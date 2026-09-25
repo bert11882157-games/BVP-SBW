@@ -134,20 +134,26 @@ class BlastModelTest {
         assertTrue(BlastModel.queryRadius(BlastModel.radii(1000.0, p), p, cylinder) >= cylinder.length)
     }
 
-    @Test fun `block force and visual tier scale with the charge`() {
+    @Test fun `block force and presentation tier scale with the charge`() {
         val rf = BlastModel.radii(100.0, p).fireball
         assertEquals(0.0, BlastModel.blockForce(100.0, rf, rf, 0.5, p), 1e-9)
         assertEquals(0.0, BlastModel.blockForce(100.0, rf + 0.1, rf, 0.5, p), 1e-9)
         assertEquals(8.0 * Math.cbrt(100.0), BlastModel.blockForce(100.0, 0.0, rf, 0.5, p), 1e-9)
         assertTrue(BlastModel.blockForce(1.0, 0.0, 0.5, 0.0, p) > 1.5, "a 1 kg charge breaks stone at its centre")
         assertEquals(8.0 * Math.cbrt(1000.0), BlastModel.cylinderBlockForce(1000.0, p), 1e-9)
-        assertEquals(0, BlastModel.fireballTier(0.2))
-        assertEquals(1, BlastModel.fireballTier(1.2))
-        assertEquals(2, BlastModel.fireballTier(BlastModel.radii(100.0, p).fireball))
-        assertEquals(3, BlastModel.fireballTier(BlastModel.radii(500.0, p).fireball))
-        assertEquals(4, BlastModel.fireballTier(BlastModel.radii(1000.0, p).fireball))
-        assertEquals(5, BlastModel.fireballTier(10.0))
-        assertEquals(0, BlastModel.fireballTier(Double.NaN))
+        assertEquals(0, BlastModel.presentationTier(0.47))
+        assertEquals(1, BlastModel.presentationTier(3.1))
+        assertEquals(2, BlastModel.presentationTier(5.0))
+        assertEquals(3, BlastModel.presentationTier(BlastModel.radii(117.6, p).severe))
+        assertEquals(4, BlastModel.presentationTier(BlastModel.radii(340.8, p).severe))
+        assertEquals(5, BlastModel.presentationTier(BlastModel.radii(2219.2, p).severe))
+        assertEquals(0, BlastModel.presentationTier(Double.NaN))
+        // Never smaller than the authored radius: a 125 mm HE shell (5.24 kg, authored 9) keeps its 9 m presentation,
+        // a FAB-5000 (authored 48) keeps 48, and a heavy charge with a small authored radius grows to its reach.
+        assertEquals(9.0, BlastModel.presentationRadius(9.0, BlastModel.radii(5.24, p)), 1e-9)
+        assertEquals(48.0, BlastModel.presentationRadius(48.0, BlastModel.radii(3310.5, p)), 1e-9)
+        assertEquals(BlastModel.radii(119.04, p).severe, BlastModel.presentationRadius(1.25, BlastModel.radii(119.04, p)), 1e-9)
+        assertEquals(BlastModel.radii(1.0, p).severe, BlastModel.presentationRadius(Double.NaN, BlastModel.radii(1.0, p)), 1e-9)
     }
 
     @Test fun `visible fireball never extends past the fireball radius`() {

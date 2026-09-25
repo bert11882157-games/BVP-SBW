@@ -789,6 +789,10 @@ open class CustomExplosion(
             customExplosion.finalizeExplosion(false)
 
             val fireball = plan?.radii?.fireball?.toFloat() ?: 0f
+            // The dust, flash and sound recipe covers the damaging reach (never less than the authored radius);
+            // the fireball itself is sent separately below at exactly R = k * W^(1/3).
+            val presentationRadius = if (plan != null)
+                BlastModel.presentationRadius(radius.toDouble(), plan.radii).toFloat() else radius
             ParticleTool.dispatchExplosionFx(
                 directSource.level(),
                 ExplosionFxContext(
@@ -796,10 +800,10 @@ open class CustomExplosion(
                     attacker = attackerEntity,
                     gameplayPosition = position,
                     particlePosition = particlePosition ?: position,
-                    // The visible blast is the fireball: size presentation and recipe from it.
-                    radius = if (plan != null) fireball else radius,
+                    radius = presentationRadius,
                     emitFx = emitFx,
-                    particleType = if (plan != null) TntBlast.particleType(plan.radii.fireball) else particleType,
+                    particleType = if (plan != null)
+                        TntBlast.particleType(particleType, presentationRadius.toDouble()) else particleType,
                     causeId = explosionCauseId,
                     profileId = explosionProfileId,
                     fireballRadius = fireball,

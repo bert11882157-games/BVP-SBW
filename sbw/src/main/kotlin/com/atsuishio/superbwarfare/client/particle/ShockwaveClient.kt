@@ -4,7 +4,6 @@ import com.atsuishio.superbwarfare.network.message.receive.ShockwaveMessage
 import com.atsuishio.superbwarfare.tools.blast.BlastModel
 import net.minecraft.client.Minecraft
 import net.minecraft.client.ParticleStatus
-import net.minecraft.resources.ResourceLocation
 import net.minecraftforge.api.distmarker.Dist
 import net.minecraftforge.api.distmarker.OnlyIn
 import java.util.Random
@@ -17,8 +16,6 @@ import java.util.Random
 @OnlyIn(Dist.CLIENT)
 object ShockwaveClient {
     private const val GLOBAL_BUDGET = 3000
-    private val SPRITE = ResourceLocation("minecraft", "generic_7")
-    private val PARTICLE_ATLAS = ResourceLocation("minecraft", "textures/atlas/particles.png")
 
     private var trackedLevel: Any? = null
     /** Parallel arrays of (expiry game tick, particle count) for shockwaves still expanding. */
@@ -58,7 +55,7 @@ object ShockwaveClient {
         val count = BlastModel.shockwaveParticleCount(message.toRadius.toDouble(), budget)
         if (count <= 0) return
 
-        val sprite = mc.getTextureAtlas(PARTICLE_ATLAS).apply(SPRITE)
+        val sprite = BlastSprites.shockwaveSprite() ?: return
         val phase = Random(message.seed).nextDouble() * Math.PI * 2.0
         val direction = DoubleArray(3)
         val center = message.position
@@ -71,5 +68,7 @@ object ShockwaveClient {
         activeExpiry[activeSize] = now + message.durationTicks + 1
         activeCount[activeSize] = count
         activeSize++
+        com.atsuishio.superbwarfare.Mod.LOGGER.info("TNT shockwave presented: {} -> {} m, {} particles, {} ticks",
+            "%.1f".format(message.fromRadius), "%.1f".format(message.toRadius), count, message.durationTicks)
     }
 }

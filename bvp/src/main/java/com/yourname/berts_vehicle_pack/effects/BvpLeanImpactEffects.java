@@ -244,11 +244,6 @@ public final class BvpLeanImpactEffects {
     /** Returns true for a handled shell/bullet, including intentionally suppressed sub-14.5mm FX. */
     private static boolean emitCaliberBurst(ServerLevel level, Vec3 position, Entity source) {
         if (source == null) return false;
-        // A TNT-equivalent charge is presented by SBW itself: every detonation sends its own fireball
-        // (edge = R_fireball) and bigger charges keep SBW's sound/dust recipe. Nothing to add here.
-        if (com.atsuishio.superbwarfare.tools.blast.TntBlast.fireballDiameter(source) > 0F) {
-            return true;
-        }
         var combat = ProjectileProfiles.combatDescriptor(source);
         if (combat == null || combat.getCaliberMm() == null) return false;
         String munition = combat.getMunitionType() == null ? "" : combat.getMunitionType().m_135815_();

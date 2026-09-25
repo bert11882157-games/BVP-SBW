@@ -153,8 +153,11 @@ data class BlastCylinder(
  * visibility fractions and random numbers so every rule is deterministic and unit-testable.
  */
 object BlastModel {
-    /** Fireball radius thresholds (m) between the six native explosion recipes, MINI..GIANT. */
-    private val FIREBALL_TIER_LIMITS = doubleArrayOf(1.0, 1.6, 3.0, 5.0, 9.0)
+    /**
+     * Presentation radius thresholds (m) between the six native explosion recipes, MINI..GIANT. These are the
+     * legacy authored-radius thresholds, so a TNT blast never looks smaller than the munition did before.
+     */
+    private val PRESENTATION_TIER_LIMITS = doubleArrayOf(2.0, 4.0, 7.0, 10.0, 20.0)
     private const val SHOCKWAVE_PARTICLES_PER_SQUARE_METRE = 0.5
     private const val SHOCKWAVE_MIN_PARTICLES = 64
     private val GOLDEN_ANGLE = PI * (3.0 - sqrt(5.0))
@@ -304,11 +307,22 @@ object BlastModel {
 
     /** 0..5 = MINI, SMALL, MEDIUM, LARGE, HUGE, GIANT native recipes, chosen by visible fireball size. */
     @JvmStatic
-    fun fireballTier(fireballRadius: Double): Int {
-        if (!fireballRadius.isFinite() || fireballRadius <= 0.0) return 0
+    fun presentationTier(radius: Double): Int {
+        if (!radius.isFinite() || radius <= 0.0) return 0
         var tier = 0
-        for (limit in FIREBALL_TIER_LIMITS) if (fireballRadius >= limit) tier++
+        for (limit in PRESENTATION_TIER_LIMITS) if (radius >= limit) tier++
         return tier
+    }
+
+    /**
+     * Radius (m) the explosion presentation (dust, flash, sound layers) is sized to: the damaging reach of the charge
+     * (severe collapse radius), never less than the munition's authored legacy radius. The fireball itself is drawn
+     * separately at exactly its own radius.
+     */
+    @JvmStatic
+    fun presentationRadius(authoredRadius: Double, radii: BlastRadii): Double {
+        val authored = if (authoredRadius.isFinite() && authoredRadius > 0.0) authoredRadius else 0.0
+        return max(authored, radii.severe)
     }
 
     /** Particle count for an expanding shell reaching [moderateRadius], capped by [budget]. */

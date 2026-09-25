@@ -4,9 +4,7 @@ import com.atsuishio.superbwarfare.network.message.receive.FireballMessage
 import com.atsuishio.superbwarfare.tools.blast.BlastModel
 import net.minecraft.client.Minecraft
 import net.minecraft.client.ParticleStatus
-import net.minecraft.client.renderer.texture.TextureAtlasSprite
 import net.minecraft.core.BlockPos
-import net.minecraft.resources.ResourceLocation
 import net.minecraftforge.api.distmarker.Dist
 import net.minecraftforge.api.distmarker.OnlyIn
 import java.util.Random
@@ -22,9 +20,8 @@ import kotlin.math.sqrt
 object FireballClient {
     private const val GLOBAL_BUDGET = 1600
     private const val SOOT_MIN_RADIUS = 0.45
-    private val FIRE_FRAMES = Array(16) { ResourceLocation("minecraft", "explosion_$it") }
-    private val SOOT_FRAMES = Array(12) { ResourceLocation("minecraft", "big_smoke_$it") }
-    private val PARTICLE_ATLAS = ResourceLocation("minecraft", "textures/atlas/particles.png")
+    private const val LOG_INTERVAL_MS = 5000L
+    private var lastLogAt = 0L
 
     private var trackedLevel: Any? = null
     private val activeExpiry = LongArray(256)
@@ -51,9 +48,8 @@ object FireballClient {
         if (fire <= 0) return
         val soot = if (radius >= SOOT_MIN_RADIUS) (fire / 2).coerceAtMost(available - fire).coerceAtLeast(0) else 0
 
-        val atlas = mc.getTextureAtlas(PARTICLE_ATLAS)
-        val fireFrames = Array<TextureAtlasSprite>(FIRE_FRAMES.size) { atlas.apply(FIRE_FRAMES[it]) }
-        val sootFrames = Array<TextureAtlasSprite>(SOOT_FRAMES.size) { atlas.apply(SOOT_FRAMES[it]) }
+        val fireFrames = BlastSprites.fireballFrames() ?: return
+        val sootFrames = BlastSprites.sootFrames() ?: fireFrames
 
         val center = message.position
         val groundBurst = solidBelow(level, center.x, center.y, center.z)
@@ -87,6 +83,12 @@ object FireballClient {
         activeExpiry[activeSize] = now + longest + 1
         activeCount[activeSize] = fire + soot
         activeSize++
+        val clock = System.currentTimeMillis()
+        if (clock - lastLogAt >= LOG_INTERVAL_MS) {
+            lastLogAt = clock
+            com.atsuishio.superbwarfare.Mod.LOGGER.info("TNT fireball presented: radius {} m, {} fire + {} soot puffs, {} ticks{}",
+                "%.2f".format(radius), fire, soot, longest, if (groundBurst) ", ground burst" else "")
+        }
     }
 
     /** Compacts expired entries and returns the particles still alive. */

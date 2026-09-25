@@ -91,14 +91,22 @@ object TntBlast {
         return BlastModel.queryRadius(BlastModel.radii(kg, parameters), parameters) * 0.5
     }
 
-    /** Native explosion recipe whose visible fireball best matches [fireballRadius]. */
+    /**
+     * Native explosion recipe for a TNT blast presented out to [presentationRadius]: the larger of the munition's
+     * authored recipe and the recipe of that radius, so the TNT model never shrinks an explosion.
+     */
     @JvmStatic
-    fun particleType(fireballRadius: Double): ParticleTool.ParticleType = when (BlastModel.fireballTier(fireballRadius)) {
-        0 -> ParticleTool.ParticleType.MINI
-        1 -> ParticleTool.ParticleType.SMALL
-        2 -> ParticleTool.ParticleType.MEDIUM
-        3 -> ParticleTool.ParticleType.LARGE
-        4 -> ParticleTool.ParticleType.HUGE
-        else -> ParticleTool.ParticleType.GIANT
+    fun particleType(authored: ParticleTool.ParticleType, presentationRadius: Double): ParticleTool.ParticleType {
+        val types = ParticleTool.ParticleType.values()
+        val byRadius = types[BlastModel.presentationTier(presentationRadius).coerceIn(0, types.size - 1)]
+        return if (byRadius.ordinal > authored.ordinal) byRadius else authored
+    }
+
+    /** Presentation radius (m) of the charge [entity] carries (severe collapse radius), or 0 for a legacy blast. */
+    @JvmStatic
+    fun presentationRadius(entity: Entity?): Double {
+        val kg = TntEquivalents.resolve(entity ?: return 0.0)
+        if (!active(kg)) return 0.0
+        return BlastModel.radii(kg, BlastConfig.parameters()).severe
     }
 }

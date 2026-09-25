@@ -27,6 +27,11 @@ object ModParticleTypes {
     @JvmField
     val RISING_SMOKE = registerSimpleParticle("rising_smoke")
 
+    /** Sprite holders for the TNT blast presentation (fireball, soot, shockwave); never spawned directly. */
+    @JvmField val BLAST_FIREBALL = registerSimpleParticle("blast_fireball")
+    @JvmField val BLAST_SOOT = registerSimpleParticle("blast_soot")
+    @JvmField val BLAST_SHOCKWAVE = registerSimpleParticle("blast_shockwave")
+
     @JvmField
     val BULLET_DECAL: RegistryObject<ParticleType<BulletDecalOption>> =
         REGISTRY.register("bullet_decal") {
