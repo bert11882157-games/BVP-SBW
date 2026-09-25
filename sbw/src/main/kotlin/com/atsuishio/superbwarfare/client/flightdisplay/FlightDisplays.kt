@@ -27,7 +27,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent
 import org.joml.Matrix4f
 import org.joml.Vector3f
 import org.lwjgl.opengl.GL11
-import org.slf4j.LoggerFactory
 
 /**
  * Glass-cockpit primary flight displays.
@@ -41,7 +40,8 @@ import org.slf4j.LoggerFactory
  */
 @net.minecraftforge.fml.common.Mod.EventBusSubscriber(modid = Mod.MODID, value = [Dist.CLIENT])
 object FlightDisplays {
-    private val LOGGER = LoggerFactory.getLogger("SBW FlightDisplays")
+    private val LOGGER = Mod.LOGGER
+    private var loggedRender = 0
     private val LIVE_TEXTURE = Mod.loc("dynamic/flight_display_live")
     private val STILL_TEXTURE = Mod.loc("dynamic/flight_display_still")
     private val HOUSING_TEXTURE = Mod.loc("textures/misc/flight_display_housing.png")
@@ -56,12 +56,15 @@ object FlightDisplays {
     private var liveVehicleId = -1
     private var failed = false
     private var loggedFirstLive = false
+    private var paintsLogged = 0
+    private var tickLogged = false
 
     /** Redraw the live display for the aircraft the local player rides, before the world uses it this frame. */
     @SubscribeEvent
     @JvmStatic
     fun onRenderTick(event: TickEvent.RenderTickEvent) {
         if (event.phase != TickEvent.Phase.START || failed) return
+        if (!tickLogged) { tickLogged = true; LOGGER.info("Flight displays: render tick hook active") }
         if (stillRequested && !stillPainted) {
             try {
                 val target = still ?: create(STILL_TEXTURE).also { still = it }
@@ -114,8 +117,13 @@ object FlightDisplays {
         val pose = poseStack.last()
         for (display in list) {
             val quad = Quad.of(display) ?: continue
-            housing(buffers.getBuffer(RenderType.entitySolid(HOUSING_TEXTURE)), pose, quad, packedLight)
+            housing(buffers.getBuffer(RenderType.entityCutoutNoCull(HOUSING_TEXTURE)), pose, quad, packedLight)
             if (texture != null) screen(buffers.getBuffer(RenderType.text(texture)), pose.pose(), quad)
+        }
+        if (loggedRender < 4 && (loggedRender == 0 || isLive)) {
+            loggedRender++
+            LOGGER.info("Flight display drawn: vehicle {} live {} texture {} displays {} poseDet {}",
+                VehicleResource.getDefault(vehicle).id, isLive, texture, list.size, pose.pose().determinant())
         }
     }
 
@@ -157,11 +165,15 @@ object FlightDisplays {
         val corners = arrayOf(
             floatArrayOf(-h, h, 0f, 1f), floatArrayOf(-h, -h, 0f, 0f),
             floatArrayOf(h, -h, 1f, 0f), floatArrayOf(h, h, 1f, 1f))
-        for (c in corners) {
-            val p = q.point(c[0], c[1], -lift)
-            consumer.vertex(matrix, p.x, p.y, p.z).color(255, 255, 255, 255).uv(c[2], c[3])
-                .uv2(LightTexture.FULL_BRIGHT).endVertex()
-        }
+        for (c in corners) emit(consumer, matrix, q, c, lift)
+        // Also the reverse winding (faces into the housing, hidden), so no cull setting can lose the screen.
+        for (c in corners.reversedArray()) emit(consumer, matrix, q, c, lift)
+    }
+
+    private fun emit(consumer: VertexConsumer, matrix: Matrix4f, q: Quad, c: FloatArray, lift: Float) {
+        val p = q.point(c[0], c[1], -lift)
+        consumer.vertex(matrix, p.x, p.y, p.z).color(255, 255, 255, 255).uv(c[2], c[3])
+            .uv2(LightTexture.FULL_BRIGHT).endVertex()
     }
 
     private fun housing(consumer: VertexConsumer, pose: PoseStack.Pose, q: Quad, light: Int) {
@@ -230,6 +242,14 @@ object FlightDisplays {
             if (SUPERSAMPLE != 1) graphics.pose().scale(SUPERSAMPLE.toFloat(), SUPERSAMPLE.toFloat(), 1f)
             PrimaryFlightDisplayPainter.paint(graphics, state, SUPERSAMPLE)
             graphics.flush()
+            if (paintsLogged < 3) {
+                paintsLogged++
+                val px = org.lwjgl.BufferUtils.createByteBuffer(4)
+                GL11.glReadPixels(PrimaryFlightDisplayPainter.SIZE / 2, PrimaryFlightDisplayPainter.SIZE * 3 / 4, 1, 1,
+                    GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, px)
+                LOGGER.info("Flight display painted: texture id {} centre-top pixel rgba {} {} {} {}", target.colorTextureId,
+                    px.get(0).toInt() and 255, px.get(1).toInt() and 255, px.get(2).toInt() and 255, px.get(3).toInt() and 255)
+            }
         } finally {
             RenderSystem.disableScissor()
             if (previousScissor) GL11.glEnable(GL11.GL_SCISSOR_TEST)

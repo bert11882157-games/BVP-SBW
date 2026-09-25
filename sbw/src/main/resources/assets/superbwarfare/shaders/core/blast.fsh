@@ -17,7 +17,12 @@ in vec4 vertexColor;
 out vec4 fragColor;
 
 void main() {
-    vec4 color = texture(Sampler0, texCoord0) * vertexColor * ColorModulator;
+    vec4 tex = texture(Sampler0, texCoord0);
+    // Premultiplied sprites never have rgb above alpha. Sodium-family renderers refill fully transparent texels
+    // with the sprite's average colour (harmless for straight alpha, but added in full by this blend, which drew
+    // every quad's square outline): clamping restores the authored transparency.
+    tex.rgb = min(tex.rgb, vec3(tex.a));
+    vec4 color = tex * vertexColor * ColorModulator;
     if (color.r + color.g + color.b + color.a < 0.002) {
         discard;
     }
