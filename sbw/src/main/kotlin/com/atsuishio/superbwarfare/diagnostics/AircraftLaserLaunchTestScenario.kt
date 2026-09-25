@@ -9,6 +9,8 @@ import com.atsuishio.superbwarfare.api.projectile.ProjectileProfiles
 import com.atsuishio.superbwarfare.data.CustomData
 import com.atsuishio.superbwarfare.entity.projectile.WireGuideMissileEntity
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity
+import com.atsuishio.superbwarfare.init.ModItems
+import com.atsuishio.superbwarfare.tools.InventoryTool
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
@@ -126,6 +128,9 @@ object AircraftLaserLaunchTestScenario {
         private var previousMissilePoint: Vec3? = null
         private var closestApproach = Double.POSITIVE_INFINITY
         private var setupDelay = 5
+        /** Pilot inventory slots holding this case's ammunition or a creative ammo box, restored after the case. */
+        private val stash = mutableListOf<Pair<Int, ItemStack>>()
+        private var caseAmmo: net.minecraft.world.item.Item? = null
 
         fun prepare() {
             level.getChunk(4380 shr 4, 7460 shr 4)
@@ -143,6 +148,38 @@ object AircraftLaserLaunchTestScenario {
             (0 until vehicle.inventory.slots).sumOf { slot ->
                 vehicle.inventory.getStackInSlot(slot).takeIf { it.`is`(item) }?.count ?: 0
             }
+
+        private fun pilotCount(item: net.minecraft.world.item.Item): Int =
+            (0 until player.inventory.containerSize).sumOf { slot ->
+                player.inventory.getItem(slot).takeIf { it.`is`(item) }?.count ?: 0
+            }
+
+        /** Munitions are bought from the pilot when fitted: start the case owning exactly [count] and no creative box. */
+        private fun supplyPilot(item: net.minecraft.world.item.Item, count: Int) {
+            caseAmmo = item
+            for (slot in 0 until player.inventory.containerSize) {
+                val stack = player.inventory.getItem(slot)
+                if (stack.`is`(item) || stack.`is`(ModItems.CREATIVE_AMMO_BOX.get())) {
+                    stash += slot to stack.copy(); player.inventory.setItem(slot, ItemStack.EMPTY)
+                }
+            }
+            check(player.inventory.add(ItemStack(item, count)) && pilotCount(item) == count) {
+                "Pilot inventory rejected authored ammunition"
+            }
+        }
+
+        private fun restorePilot() {
+            caseAmmo?.let { item ->
+                for (slot in 0 until player.inventory.containerSize)
+                    if (player.inventory.getItem(slot).`is`(item)) player.inventory.setItem(slot, ItemStack.EMPTY)
+            }
+            caseAmmo = null
+            for ((slot, stack) in stash) {
+                if (player.inventory.getItem(slot).isEmpty) player.inventory.setItem(slot, stack)
+                else player.inventory.placeItemBackInInventory(stack)
+            }
+            stash.clear()
+        }
 
         private fun begin() {
             if (index >= runCases.size) return
@@ -185,17 +222,14 @@ object AircraftLaserLaunchTestScenario {
                 val ammoId = ResourceLocation.tryParse(store["AmmoItem"]?.asString ?: "")
                     ?: error("No authored ammunition item")
                 val ammo = ForgeRegistries.ITEMS.getValue(ammoId) ?: error("Authored ammunition item unavailable")
-                var remaining = ItemStack(ammo, 1)
-                for (slotIndex in 0 until vehicle.inventory.slots) {
-                    if (remaining.isEmpty) break
-                    remaining = vehicle.inventory.insertItem(slotIndex, remaining, false)
-                }
-                check(remaining.isEmpty) {
-                    "Aircraft inventory rejected authored ammunition"
-                }
-                val before = ammoCount(vehicle, ammo)
-                result.addProperty("AmmoBefore", before)
-                check(before >= 1) { "Aircraft ammunition inventory did not contain one round" }
+                val pair = AircraftArmamentRegistry.mounts(requireNotNull(AircraftArmamentManager.definition(vehicle)))
+                    .firstOrNull { it["Id"].asString == case.mount } ?: error("Authored hardpoint unavailable")
+                // Fitting one rack costs one munition per launch position; firing costs nothing more.
+                val required = AircraftArmamentRegistry.mountCapacity(pair, store["Capacity"]?.asInt ?: 1)
+                supplyPilot(ammo, required)
+                check(!InventoryTool.hasCreativeAmmoBoxForVehicle(vehicle)) { "Fresh aircraft carries a creative ammo box" }
+                result.addProperty("AmmoRequired", required)
+                result.addProperty("AmmoBefore", pilotCount(ammo))
 
                 AircraftArmamentManager.diagnosticRequest(player, vehicle, "OPEN", JsonObject())
                 val apply = JsonObject().also { body ->
@@ -207,6 +241,8 @@ object AircraftLaserLaunchTestScenario {
                 val selected = AircraftArmamentManager.snapshot(vehicle)
                     .getAsJsonObject("Selections")?.get(case.mount)?.asString == case.store
                 result.addProperty("LoadoutApplied", selected)
+                result.addProperty("AmmoAfterFit", pilotCount(ammo))
+                result.addProperty("AmmoCharged", pilotCount(ammo) == 0 && ammoCount(vehicle, ammo) == 0)
                 check(selected) { "Real authored APPLY did not equip the store" }
                 val weapon = "AircraftStore:${case.mount}"
                 val slot = vehicle.getWeaponIds(0).indexOf(weapon)
@@ -223,14 +259,15 @@ object AircraftLaserLaunchTestScenario {
                 val after = AircraftArmamentManager.snapshot(vehicle)
                 val fired = after.getAsJsonObject("Fired")?.get(case.mount)?.asInt ?: 0
                 result.addProperty("FiredAfter", fired)
-                result.addProperty("AmmoAfter", ammoCount(vehicle, ammo))
+                result.addProperty("AmmoAfterShot", pilotCount(ammo))
                 missile = level.allEntities.filterIsInstance<WireGuideMissileEntity>().firstOrNull {
                     it.persistentData.hasUUID("BvpLaserAircraft") &&
                         it.persistentData.getUUID("BvpLaserAircraft") == vehicle.uuid
                 }
                 result.addProperty("MissileSpawned", missile != null)
                 result.addProperty("ProfileMatched", missile?.let { ProjectileProfiles.profileId(it) == profileId } == true)
-                result.addProperty("ShotAccepted", fired == 1 && ammoCount(vehicle, ammo) == before - 1)
+                // The fitted munition is simply spent: neither the pilot nor the aircraft inventory pays again.
+                result.addProperty("ShotAccepted", fired == 1 && pilotCount(ammo) == 0 && ammoCount(vehicle, ammo) == 0)
             } catch (error: Exception) {
                 result.addProperty("Error", error.message ?: error.javaClass.simpleName)
             }
@@ -273,7 +310,7 @@ object AircraftLaserLaunchTestScenario {
                 result.addProperty(if (age == 2) "AliveAfterTwoTicks" else "AliveAfterFiveTicks", present)
             }
             if (age < if (trajectory) 260 else 5) return false
-            result.addProperty("Pass", listOf("LoadoutApplied", "NoDesignationAtLaunch", "MissileSpawned",
+            result.addProperty("Pass", listOf("LoadoutApplied", "AmmoCharged", "NoDesignationAtLaunch", "MissileSpawned",
                 "ProfileMatched", "ShotAccepted", "AliveAfterTwoTicks", "AliveAfterFiveTicks")
                 .all { result[it]?.asBoolean == true })
             if (trajectory) {
@@ -288,6 +325,7 @@ object AircraftLaserLaunchTestScenario {
         }
 
         private fun cleanupCase() {
+            restorePilot()
             if (player.vehicle === aircraft) player.stopRiding()
             missile?.discard()
             aircraft?.discard()

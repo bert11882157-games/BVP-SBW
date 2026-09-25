@@ -87,6 +87,8 @@ object AircraftArmamentDiagnostics {
         }
         fun prepare() {
             val id = ResourceLocation("berts_vehicle_pack:eurofighter_typhoon")
+            // Fixture stores declare no AmmoItem, so fitting them is free (AircraftLoadoutCost) and these
+            // cases exercise admission only; paid fitting is covered by AircraftLaserLaunchTestScenario.
             val stores = mapOf(
                 ResourceLocation("bvp_diagnostics:aam") to json("""{"Schema":1,"Name":"TEST AAM — visual only","Category":"AIR_TO_AIR","Item":"minecraft:firework_rocket","Scale":0.5}"""),
                 ResourceLocation("bvp_diagnostics:laser") to json("""{"Schema":1,"Name":"TEST laser missile","Category":"LASER_GUIDED","Item":"minecraft:arrow","Capacity":2,"ProjectileProfile":"berts_vehicle_pack:qn_506model/micromissile/ammo_00_qn201dd_atgm"}"""))

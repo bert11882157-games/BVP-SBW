@@ -1,8 +1,10 @@
 package com.atsuishio.superbwarfare.client.aircraft
 
 import com.atsuishio.superbwarfare.api.aircraft.AircraftGuidanceLabels
+import com.atsuishio.superbwarfare.api.aircraft.AircraftLoadoutCost
 import com.atsuishio.superbwarfare.client.camera.AircraftCameraPivot
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity
+import com.atsuishio.superbwarfare.tools.InventoryTool
 import com.atsuishio.superbwarfare.tools.worldToScreen
 import com.google.gson.JsonObject
 import net.minecraft.ChatFormatting
@@ -11,8 +13,10 @@ import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.EditBox
 import net.minecraft.client.gui.screens.Screen
+import net.minecraft.client.renderer.RenderType
 import net.minecraft.core.BlockPos
 import net.minecraft.network.chat.Component
+import net.minecraft.resources.ResourceLocation
 import net.minecraft.util.Mth
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
@@ -38,6 +42,9 @@ class AircraftLoadoutScreen(private var state: AircraftArmamentSnapshot) : Scree
     private var pending = false
     private var pendingTicks = 0
     private var hovered: List<Component>? = null
+    /** Price of the change under the cursor, shown on the status line (one frame behind). */
+    private var hoverStatus: String? = null
+    private var nextHoverStatus: String? = null
     private data class Station(val mount: AircraftMountView, val position: Vec3, val number: Int, val index: Int)
     private fun stations(): List<Station> = state.definition.mounts.filterNot { it.internal }
         .flatMap { mount -> mount.positions.map { mount to it } }
@@ -53,6 +60,7 @@ class AircraftLoadoutScreen(private var state: AircraftArmamentSnapshot) : Scree
     fun accept(next: AircraftArmamentSnapshot) {
         if(next.vehicle!=state.vehicle) return
         state=next; pending=false
+        frameFitted=null; frameExempt=null; frameOwned.clear()
     }
     fun cameraRotation(vehicle: VehicleEntity, partial: Float): Vec2? =
         cameraFit(vehicle,partial)?.let { Vec2(heading,it.pitch) }
@@ -123,6 +131,87 @@ class AircraftLoadoutScreen(private var state: AircraftArmamentSnapshot) : Scree
                      choices: Map<String,String>, counts: Map<String,Int>): Boolean =
         count in 1..state.maxCopies(mount,store) && store.massKg*(store.capacity?:1)*count+store.rackMassKg<=mount.maxPylonMassKg+1e-6 &&
             state.payloadKg(choices,counts)<=state.definition.maxPayloadKg+1e-6
+    // Loadout ammunition estimate. The server prices and settles every edit (AircraftLoadoutCost);
+    // this only blocks what the pilot plainly cannot afford and shows what a change would cost.
+    private data class Quote(val plan: AircraftLoadoutCost.Plan, val missing: List<AircraftLoadoutCost.Shortfall>,
+                             val exempt: Boolean) {
+        val affordable: Boolean get() = exempt || missing.isEmpty()
+    }
+    private var frameFitted: Map<String, AircraftLoadoutCost.Rack>? = null
+    private var frameExempt: Boolean? = null
+    private val frameOwned = HashMap<String, Int>()
+    private fun raw(): JsonObject? = AircraftArmamentClient.getState(state.vehicle)
+    private fun ammoOf(storeId: String?): String? = storeId?.let { id ->
+        runCatching { raw()?.getAsJsonObject("Stores")?.getAsJsonObject(id)?.let(AircraftLoadoutCost::ammoId) }.getOrNull()
+    }
+    private fun ammoItem(ammo: String) = ResourceLocation.tryParse(ammo)?.let { ForgeRegistries.ITEMS.getValue(it) }
+        ?.takeIf { it != Items.AIR }
+    private fun ammoName(ammo: String): String = ammoItem(ammo)?.description?.string ?: ammo
+    /** Main inventory and offhand, as the server counts them. */
+    private fun owned(ammo: String): Int = frameOwned.getOrPut(ammo) {
+        val inventory = Minecraft.getInstance().player?.inventory ?: return@getOrPut 0
+        val item = ammoItem(ammo) ?: return@getOrPut 0
+        (inventory.items + inventory.offhand).sumOf { if (it.`is`(item)) it.count else 0 }
+    }
+    private fun ammoExempt(): Boolean = frameExempt ?: run {
+        val player = Minecraft.getInstance().player
+        (runCatching { raw()?.get("AmmoExempt")?.asBoolean }.getOrNull() == true ||
+            player != null && (player.isCreative || InventoryTool.hasCreativeAmmoBox(player))).also { frameExempt = it }
+    }
+    private fun rack(mount: AircraftMountView, storeId: String?, copies: Int, fired: Int = 0,
+                     paid: Int? = null): AircraftLoadoutCost.Rack? {
+        val store = state.stores[storeId ?: return null] ?: return null
+        val capacity = AircraftLoadoutCost.rounds(store.capacity ?: 1, mount.positions.size,
+            copies.coerceIn(1, state.maxCopies(mount, store)))
+        val rounds = (capacity - fired).coerceIn(0, capacity)
+        return AircraftLoadoutCost.Rack(store.id, ammoOf(store.id), rounds, (paid ?: rounds).coerceIn(0, rounds))
+    }
+    private fun fittedRacks(): Map<String, AircraftLoadoutCost.Rack> = frameFitted ?: run {
+        val paid = raw()?.getAsJsonObject("Paid")
+        state.definition.mounts.mapNotNull { mount ->
+            rack(mount, state.selections[mount.id], state.counts[mount.id] ?: 1, state.fired[mount.id] ?: 0,
+                runCatching { paid?.get(mount.id)?.asInt }.getOrNull() ?: 0)?.let { mount.id to it }
+        }.toMap().also { frameFitted = it }
+    }
+    /** Every hardpoint is refitted full by an edit, so fired stations are part of its price. */
+    private fun quote(choices: Map<String,String>, counts: Map<String,Int>): Quote {
+        val next = state.definition.mounts.mapNotNull { mount ->
+            rack(mount, choices[mount.id], counts[mount.id] ?: 1)?.let { mount.id to it }
+        }.toMap()
+        val plan = AircraftLoadoutCost.plan(fittedRacks(), next, false)
+        return Quote(plan, AircraftLoadoutCost.shortfalls(plan.net, ::owned), ammoExempt())
+    }
+    /** Server-priced preset (null when unpriced: exempt, or a preset the server will refuse anyway). */
+    private fun presetQuote(name: String): Quote? {
+        val net = runCatching { raw()?.getAsJsonObject("PresetCosts")?.getAsJsonObject(name)
+            ?.entrySet()?.associate { it.key to it.value.asInt } }.getOrNull() ?: return null
+        return Quote(AircraftLoadoutCost.Plan(emptyMap(), net), AircraftLoadoutCost.shortfalls(net, ::owned), ammoExempt())
+    }
+    private fun quoteLines(quote: Quote): List<Component> = when {
+        quote.plan.net.isEmpty() -> listOf(Component.literal("No ammunition change").withStyle(ChatFormatting.GRAY))
+        quote.exempt -> listOf(Component.literal("Creative supply: no ammunition cost").withStyle(ChatFormatting.AQUA))
+        else -> buildList {
+            quote.plan.charges.takeIf { it.isNotEmpty() }?.let {
+                add(Component.literal("Cost: ${AircraftLoadoutCost.list(it, ::ammoName)}").withStyle(ChatFormatting.YELLOW))
+            }
+            quote.plan.refunds.takeIf { it.isNotEmpty() }?.let {
+                add(Component.literal("Refund: ${AircraftLoadoutCost.list(it, ::ammoName)}").withStyle(ChatFormatting.AQUA))
+            }
+            if (quote.missing.isNotEmpty())
+                add(Component.literal(AircraftLoadoutCost.describe(quote.missing, ::ammoName)).withStyle(ChatFormatting.RED))
+        }
+    }
+    private fun quoteStatus(quote: Quote): String = when {
+        quote.plan.net.isEmpty() -> "No ammunition change"
+        quote.exempt -> "Creative supply: no ammunition cost"
+        quote.missing.isNotEmpty() -> AircraftLoadoutCost.describe(quote.missing, ::ammoName)
+        else -> AircraftLoadoutCost.summary(quote.plan.net, ::ammoName)
+    }
+    private fun hover(mx: Int, my: Int, x: Int, y: Int, w: Int, h: Int, quote: Quote?, title: String) {
+        if (quote == null || mx !in x until x+w || my !in y until y+h) return
+        hovered = listOf(Component.literal(title)) + quoteLines(quote)
+        nextHoverStatus = quoteStatus(quote)
+    }
     private fun choose(mount: AircraftMountView, store: AircraftStoreView?) {
         val choices=state.selections.toMutableMap(); val counts=state.counts.toMutableMap()
         if(store==null) { choices.remove(mount.id); counts.remove(mount.id) }
@@ -136,7 +225,7 @@ class AircraftLoadoutScreen(private var state: AircraftArmamentSnapshot) : Scree
         if(!mount.internal || !mount.quantitySelectable) return
         val store=state.stores[state.selections[mount.id]]?:return
         val count=(state.counts[mount.id]?:1)+delta; val counts=state.counts+(mount.id to count)
-        if(fits(mount,store,count,state.selections,counts)) submit("APPLY",counts=counts)
+        if(fits(mount,store,count,state.selections,counts) && quote(state.selections,counts).affordable) submit("APPLY",counts=counts)
     }
     private fun savePrompt() {
         presetsOpen=false; selectedMount=null
@@ -191,6 +280,8 @@ class AircraftLoadoutScreen(private var state: AircraftArmamentSnapshot) : Scree
     }
     override fun render(g: GuiGraphics,mx: Int,my: Int,partial: Float) {
         hits.clear(); hovered=null
+        frameFitted=null; frameExempt=null; frameOwned.clear()
+        hoverStatus=nextHoverStatus; nextHoverStatus=null
         val vehicle=Minecraft.getInstance().player?.vehicle as? VehicleEntity?:return
         g.fill(0,0,width,48,0xA5101923.toInt())
         g.drawString(font,state.definition.name,10,7,0xFFE2B66D.toInt())
@@ -200,7 +291,10 @@ class AircraftLoadoutScreen(private var state: AircraftArmamentSnapshot) : Scree
         button(g,"Load preset",104,23,90,mx,my,!pending) { presetsOpen=!presetsOpen; selectedMount=null }
         button(g,"Close",width-60,23,50,mx,my) { onClose() }
         val status=when { pending->"Fitting equipment…"; !editable()->"Stop on the ground to change equipment"
-            state.message.isNotEmpty()->state.message; else->"Select a station · Equipment is fitted immediately" }
+            hoverStatus!=null->hoverStatus!!
+            state.message.isNotEmpty()->state.message
+            ammoExempt()->"Select a station · Creative supply: munitions are fitted free"
+            else->"Select a station · Munitions are taken from your inventory when fitted" }
         g.drawCenteredString(font,font.plainSubstrByWidth(status,width-16),width/2,height-13,0xFFE2B66D.toInt())
         var bay=0; val transform=vehicle.getVehicleTransform(partial)
         val stations=stations()
@@ -239,7 +333,9 @@ class AircraftLoadoutScreen(private var state: AircraftArmamentSnapshot) : Scree
             val visible=((height-90)/21).coerceAtLeast(1)
             page=page.coerceIn(0,(names.size-1).coerceAtLeast(0)/visible)
             names.drop(page*visible).take(visible).forEachIndexed { i,name ->
-                button(g,name,104.coerceAtMost(width-160),50+i*21,150,mx,my,editable()) { submit("LOAD_PRESET",name=name); presetsOpen=false }
+                val px=104.coerceAtMost(width-160); val py=50+i*21; val quote=presetQuote(name)
+                button(g,name,px,py,150,mx,my,editable() && quote?.affordable!=false) { submit("LOAD_PRESET",name=name); presetsOpen=false }
+                hover(mx,my,px,py,150,20,quote,"Preset $name")
             }
             button(g,"<",104.coerceAtMost(width-160),height-35,25,mx,my,page>0) { page-- }
             button(g,">",134.coerceAtMost(width-130),height-35,25,mx,my,(page+1)*visible<names.size) { page++ }
@@ -260,35 +356,53 @@ class AircraftLoadoutScreen(private var state: AircraftArmamentSnapshot) : Scree
             options.drop(page*perPage).take(perPage).forEachIndexed { i,store ->
                 val ix=x+7+(i%columns)*18; val iy=y+19+(i/columns)*18
                 val count=selectionCount(mount,store)
-                val fits=fits(mount,store,count,state.selections+(mount.id to store.id),state.counts+(mount.id to count))
+                val choices=state.selections+(mount.id to store.id); val counts=state.counts+(mount.id to count)
+                val fits=fits(mount,store,count,choices,counts)
+                val ammo=ammoOf(store.id); val quote=quote(choices,counts)
+                val rounds=AircraftLoadoutCost.rounds(store.capacity?:1,mount.positions.size,count)
                 inventorySlot(g,ix,iy,state.selections[mount.id]==store.id)
                 val podAmmo = if(store.id in setOf("berts_vehicle_pack:gsh23_pod",
                     "berts_vehicle_pack:gun_pod/f111_m61_bay", "berts_vehicle_pack:gun_pod/f4c_gau4"))
                     net.minecraft.resources.ResourceLocation("superbwarfare:small_autocannon_shell") else null
                 val item=(store.ammoItem ?: podAmmo ?: store.item)?.let { ForgeRegistries.ITEMS.getValue(it) }?:Items.PAPER
                 g.renderItem(ItemStack(item),ix+1,iy+1)
-                if(!fits) g.fill(ix+1,iy+1,ix+17,iy+17,0x99202020.toInt())
+                // Overlay render type: drawn above the item model, so the grey-out is actually visible.
+                if(!fits || !quote.affordable) g.fill(RenderType.guiOverlay(),ix+1,iy+1,ix+17,iy+17,0x99202020.toInt())
+                // Munitions this option puts on the station, red when the pilot cannot pay for the change.
+                if(ammo!=null) g.renderItemDecorations(font,ItemStack(item),ix+1,iy+1,
+                    (if(quote.affordable) "" else "\u00a7c")+rounds)
                 if(mx in ix until ix+18 && my in iy until iy+18) {
-                    g.fill(ix+1,iy+1,ix+17,iy+17,0x60FFFFFF)
+                    g.fill(RenderType.guiOverlay(),ix+1,iy+1,ix+17,iy+17,0x60FFFFFF)
                     hovered=listOf(Component.literal(store.name),
                     Component.literal(store.categoryLabel).withStyle(ChatFormatting.GREEN),
                     Component.literal(AircraftGuidanceLabels.description(store.guidanceMode)).withStyle(ChatFormatting.GREEN),
                     Component.literal("${(store.massKg*(store.capacity?:1)*count+store.rackMassKg).toInt()} kg${if(count>1) " · $count munitions" else ""}").withStyle(ChatFormatting.GREEN)) +
-                    if(fits) emptyList() else listOf(Component.literal("Payload or station limit exceeded").withStyle(ChatFormatting.RED))
+                    (if(fits) emptyList() else listOf(Component.literal("Payload or station limit exceeded").withStyle(ChatFormatting.RED))) +
+                    (if(ammo!=null) listOf(Component.literal("Munitions: $rounds × ${ammoName(ammo)} · you have ${owned(ammo)}").withStyle(ChatFormatting.GRAY))
+                    else if(store.category=="GUN_POD" || store.category=="ROCKET_POD")
+                        listOf(Component.literal("Pod ammunition reloads from the aircraft inventory").withStyle(ChatFormatting.GRAY))
+                    else emptyList()) + quoteLines(quote)
+                    nextHoverStatus=quoteStatus(quote)
                 }
-                if(editable() && fits) hits+=Hit(ix,iy,18,18) { choose(mount,store) }
+                if(editable() && fits && quote.affordable) hits+=Hit(ix,iy,18,18) { choose(mount,store) }
             }
             val bottom=y+18*rows+25
-            button(g,"Empty",x+6,bottom,48,mx,my,editable()) { choose(mount,null) }
+            val emptyQuote=quote(state.selections-mount.id,state.counts-mount.id)
+            button(g,"Empty",x+6,bottom,48,mx,my,editable() && emptyQuote.affordable) { choose(mount,null) }
+            hover(mx,my,x+6,bottom,48,20,emptyQuote,"Empty this station")
             button(g,"<",x+58,bottom,20,mx,my,page>0) { page-- }
             button(g,">",x+82,bottom,20,mx,my,(page+1)*perPage<options.size) { page++ }
             button(g,"Done",x+pw-48,bottom,42,mx,my) { selectedMount=null }
             if(mount.internal && mount.quantitySelectable) {
                 val store=state.stores[state.selections[mount.id]]; val count=state.counts[mount.id]?:1
-                button(g,"−",x+6,bottom+24,20,mx,my,editable() && store!=null && count>1) { changeBayCount(mount,-1) }
+                val less=if(store!=null && count>1) quote(state.selections,state.counts+(mount.id to count-1)) else null
+                val more=if(store!=null) quote(state.selections,state.counts+(mount.id to count+1)) else null
+                button(g,"−",x+6,bottom+24,20,mx,my,editable() && less?.affordable==true) { changeBayCount(mount,-1) }
+                hover(mx,my,x+6,bottom+24,20,20,less,"One fewer in the bay")
                 g.drawString(font,"${if(store==null) 0 else count*(store.capacity?:1)} in bay slot",x+31,bottom+30,0xFF404040.toInt(),false)
-                button(g,"+",x+pw-26,bottom+24,20,mx,my,editable() && store!=null &&
+                button(g,"+",x+pw-26,bottom+24,20,mx,my,editable() && store!=null && more?.affordable==true &&
                     fits(mount,store,count+1,state.selections,state.counts+(mount.id to count+1))) { changeBayCount(mount,1) }
+                hover(mx,my,x+pw-26,bottom+24,20,20,more,"One more in the bay")
             }
         }
         nameInput?.let {
