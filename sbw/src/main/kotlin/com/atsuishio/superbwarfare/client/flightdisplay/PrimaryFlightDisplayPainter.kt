@@ -35,7 +35,7 @@ internal object PrimaryFlightDisplayPainter {
     private const val SPD_L = 22; private const val SPD_R = 112
     private const val ALT_L = 400; private const val ALT_R = 470
     private const val VSI_L = 478; private const val VSI_R = 506
-    private const val HDG_T = 440; private const val HDG_B = 500
+    private const val HDG_T = 448; private const val HDG_B = 504
     private const val SPD_PX = 2.4      // per km/h
     private const val ALT_PX = 1.6      // per metre
     private const val HDG_PX = 4.0      // per degree
@@ -225,9 +225,10 @@ internal object PrimaryFlightDisplayPainter {
         // Lubber line and readout.
         triangle(g, ADI_CX - 8f, HDG_T - 12f, ADI_CX + 8f, HDG_T - 12f, ADI_CX.toFloat(), HDG_T + 2f, WHITE)
         val hdg = (h.roundToInt() % 360).let { if (it == 0) 360 else it }
-        g.fill(ADI_CX - 30, HDG_T - 32, ADI_CX + 30, HDG_T - 10, BLACK)
-        outline(g, ADI_CX - 30, HDG_T - 32, ADI_CX + 30, HDG_T - 10, 2, WHITE)
-        text(g, font, hdg.toString().padStart(3, '0'), ADI_CX.toFloat(), HDG_T - 21f, 1.8f, WHITE, Align.CENTER)
+        // Readout box sits between the Mach line (just under the attitude indicator) and the tape.
+        g.fill(ADI_CX - 30, HDG_T - 30, ADI_CX + 30, HDG_T - 10, BLACK)
+        outline(g, ADI_CX - 30, HDG_T - 30, ADI_CX + 30, HDG_T - 10, 2, WHITE)
+        text(g, font, hdg.toString().padStart(3, '0'), ADI_CX.toFloat(), HDG_T - 20f, 1.7f, WHITE, Align.CENTER)
         outline(g, ADI_L, HDG_T, ADI_R, HDG_B, 2, 0xFF9AA3AD.toInt())
     }
 
@@ -238,8 +239,8 @@ internal object PrimaryFlightDisplayPainter {
             mach < 1.0 -> "." + (mach * 1000).roundToInt().coerceIn(0, 999).toString().padStart(3, '0')
             else -> String.format("%.2f", mach)
         }
-        text(g, font, machText, ADI_CX.toFloat(), ADI_B + 16f, 2.2f, GREEN, Align.CENTER)
-        text(g, font, "M", ADI_CX - 46f, ADI_B + 17f, 1.4f, GREEN, Align.RIGHT)
+        text(g, font, machText, ADI_CX.toFloat(), ADI_B + 13f, 2.0f, GREEN, Align.CENTER)
+        text(g, font, "M", ADI_CX - 40f, ADI_B + 14f, 1.4f, GREEN, Align.RIGHT)
         s.throttle?.let {
             text(g, font, "THR " + (it * 100).roundToInt().coerceIn(0, 999) + "%", SPD_L.toFloat(), 24f, 1.5f, CYAN, Align.LEFT)
         }
