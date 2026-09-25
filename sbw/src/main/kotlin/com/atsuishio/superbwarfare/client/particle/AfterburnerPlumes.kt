@@ -145,10 +145,10 @@ object AfterburnerPlumes {
             for (k in 0 until segments) {
                 val phase = ((k.toDouble() / segments) + flow) % 1.0
                 val s0 = phase * length
-                val segLength = length / segments * 2.6
+                val segLength = length / segments * 2.6 * BlastSprites.PUFF_FILL
                 val t = phase
                 val fade = (1.0 - t).pow(1.25) * min(1.0, phase * 8.0)
-                val width = r * (1.05 - 0.5 * t) * (1.0 + 0.07 * sin(time * 1.9 + k * 2.3 + p.seed))
+                val width = r * BlastSprites.PUFF_FILL * (1.05 - 0.5 * t) * (1.0 + 0.07 * sin(time * 1.9 + k * 2.3 + p.seed))
                 val warm = 1.0 - t
                 val k0 = 0.55 * i * fade * side
                 val rr = k0 * 1.0; val gg = k0 * (0.36 + 0.34 * warm); val bb = k0 * (0.1 + 0.22 * warm)

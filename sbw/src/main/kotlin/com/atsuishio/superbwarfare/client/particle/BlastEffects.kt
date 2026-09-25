@@ -152,6 +152,7 @@ object BlastEffects {
         val glow = BlastSprites.glowSprites() ?: return
         val sprites = Sprites(fire, smoke, glow[0], glow[1])
         quads.clear()
+        quads.puffs = sprites.puffs
         for (blast in blasts) blast.emit(quads, sprites, level, time, cam.x, cam.y, cam.z)
         for (wave in shockwaves) wave.emit(quads, sprites, time, cam.x, cam.y, cam.z)
         if (quads.size == 0) return
@@ -256,7 +257,10 @@ object BlastEffects {
     // ---------------------------------------------------------------- data
 
     class Sprites(val fire: Array<TextureAtlasSprite>, val smoke: Array<TextureAtlasSprite>,
-                  val flash: TextureAtlasSprite, val ring: TextureAtlasSprite)
+                  val flash: TextureAtlasSprite, val ring: TextureAtlasSprite) {
+        val puffs: Set<TextureAtlasSprite> = java.util.Collections.newSetFromMap(java.util.IdentityHashMap<TextureAtlasSprite, Boolean>())
+            .also { it.addAll(fire); it.addAll(smoke) }
+    }
 
     /** Camera-relative billboards: centre, half size, roll, premultiplied colour, sprite UVs, light. */
     class QuadList(private val capacity: Int) {
@@ -266,6 +270,8 @@ object BlastEffects {
         private val depth = DoubleArray(capacity)
         var size = 0
             private set
+        /** Fire and smoke sprites: their puff body ends well inside the square, so their quads are drawn larger. */
+        var puffs: Set<TextureAtlasSprite> = emptySet()
 
         fun clear() { size = 0 }
 
@@ -276,7 +282,8 @@ object BlastEffects {
             val a = cover.coerceIn(0.0, 1.0)
             if (r + g + b + a < 0.004) return
             val o = size * STRIDE
-            data[o] = x; data[o + 1] = y; data[o + 2] = z; data[o + 3] = half; data[o + 4] = roll
+            data[o] = x; data[o + 1] = y; data[o + 2] = z; data[o + 4] = roll
+            data[o + 3] = if (sprite in puffs) half * BlastSprites.PUFF_FILL else half
             data[o + 5] = max(0.0, r); data[o + 6] = max(0.0, g); data[o + 7] = max(0.0, b); data[o + 8] = a
             data[o + 9] = sprite.u0.toDouble(); data[o + 10] = sprite.u1.toDouble()
             data[o + 11] = sprite.v0.toDouble(); data[o + 12] = sprite.v1.toDouble()

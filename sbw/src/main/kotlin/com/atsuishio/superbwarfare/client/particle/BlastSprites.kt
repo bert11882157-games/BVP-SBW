@@ -18,6 +18,12 @@ import kotlin.math.max
 object BlastSprites {
     const val FIREBALL_FRAMES = 8
     const val SOOT_FRAMES = 6
+    /**
+     * Fire and smoke textures fade to exact transparency at 86% of the half width (so no quad outline can show),
+     * which leaves the visible puff at about 72% of the square: quads using them are scaled by this factor so a puff
+     * still covers the size the effect asks for.
+     */
+    const val PUFF_FILL = 1.35
 
     @Volatile private var fireballSet: SpriteSet? = null
     @Volatile private var sootSet: SpriteSet? = null
