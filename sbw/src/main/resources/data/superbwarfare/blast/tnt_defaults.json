@@ -1,4 +1,29 @@
 {
   "_comment": "TNT-equivalent kg for munitions spawned without GunData, keyed by munition inventory row id (entity type id, config-backed munition, item or special key). Written by tools/tnt/apply_tnt.py. A missing, null or 0 entry keeps the legacy ExplosionDamage/ExplosionRadius blast.",
-  "entries": {}
+  "entries": {
+    "berts_vehicle_pack:s13_rocket": 2.772,
+    "berts_vehicle_pack:s8ko_rocket": 1.375,
+    "superbwarfare:agm_65": 51.1948,
+    "superbwarfare:blu_43": 0.0099,
+    "superbwarfare:c4": 0.7598,
+    "superbwarfare:cannon_shell#cm_submunition": 0.0432,
+    "superbwarfare:claymore": 0.9112,
+    "superbwarfare:edd": 0.25,
+    "superbwarfare:hand_grenade": 0.2358,
+    "superbwarfare:kh_39": 19.2,
+    "superbwarfare:lunge_mine": 3.0,
+    "superbwarfare:medium_rocket_he": 1.3,
+    "superbwarfare:melon_bomb": 10.0,
+    "superbwarfare:mk_82": 117.585,
+    "superbwarfare:mortar_shell": 0.4,
+    "superbwarfare:ptkm_projectile": 2.8,
+    "superbwarfare:rgo_grenade": 0.1125,
+    "superbwarfare:rpg_rocket_standard": 0.4,
+    "superbwarfare:rpg_rocket_tbg": 2.7825,
+    "superbwarfare:sc_250": 125.0,
+    "superbwarfare:sc_50": 25.0,
+    "superbwarfare:small_rocket": 1.3667,
+    "superbwarfare:swarm_drone": 0.5,
+    "superbwarfare:tm_62": 7.5
+  }
 }

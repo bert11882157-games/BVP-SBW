@@ -255,7 +255,7 @@
         {
           "Ammo": "superbwarfare:small_rocket",
           "ConsumptionItem": "superbwarfare:small_unguided_rocket",
-          "Override": {}
+          "Override": {"TntEquivalentKg": 0.465}
         }
       ],
       "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_small_rocket.png",
@@ -274,6 +274,7 @@
       "Damage": 100,
       "ExplosionDamage": 0,
       "ExplosionRadius": 6,
+      "TntEquivalentKg": 0.465,
       "Gravity": 0.02,
       "Velocity": 9,
       "ProjectileLife": 60,

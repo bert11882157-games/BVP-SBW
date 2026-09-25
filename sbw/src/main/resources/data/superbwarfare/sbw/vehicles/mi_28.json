@@ -150,6 +150,7 @@
             "Damage": 15,
             "ExplosionDamage": 18,
             "ExplosionRadius": 5,
+            "TntEquivalentKg": 0.0755,
             "Name": "weapon.superbwarfare.30mm_2a42_he"
           }
         }
@@ -175,6 +176,7 @@
       "Damage": 85,
       "ExplosionDamage": 42,
       "ExplosionRadius": 6,
+      "TntEquivalentKg": 1.375,
       "Gravity": 0.02,
       "Velocity": 9,
       "ProjectileLife": 60,
@@ -207,6 +209,7 @@
       "Damage": 650,
       "ExplosionDamage": 80,
       "ExplosionRadius": 8,
+      "TntEquivalentKg": 4.5684,
       "Velocity": 3,
       "CrosshairColor": "0xFFC700",
       "SoundInfo": {
@@ -262,7 +265,8 @@
               "MaxTargetHeight": 32,
               "MinTargetSize": 0.9,
               "OnlyLockBlock": true
-            }
+            },
+            "TntEquivalentKg": 19.2
           }
         }
       ],
@@ -276,6 +280,7 @@
       "Damage": 1100,
       "ExplosionDamage": 180,
       "ExplosionRadius": 12,
+      "TntEquivalentKg": 19.2,
       "ProjectileLife": 1200,
       "Velocity": 3,
       "SeekWeaponInfo": {
@@ -324,6 +329,7 @@
       "Damage": 260,
       "ExplosionDamage": 90,
       "ExplosionRadius": 6,
+      "TntEquivalentKg": 0.9234,
       "Velocity": 3,
       "SeekWeaponInfo": {
         "SeekDirection": "Default",

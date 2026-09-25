@@ -752,7 +752,8 @@
               "ProjectileType": "berts_vehicle_pack:s8ko_rocket",
               "ProjectileProfile": "berts_vehicle_pack:aircraft_rockets/zuni",
               "ProjectileLife": 100
-            }
+            },
+            "TntEquivalentKg": 8.9131
           }
         }
       ],
@@ -771,6 +772,7 @@
       "Damage": 158.75,
       "ExplosionDamage": 0,
       "ExplosionRadius": 5,
+      "TntEquivalentKg": 8.9131,
       "Gravity": 0.02,
       "Velocity": 9,
       "ProjectileLife": 100,

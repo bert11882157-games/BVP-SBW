@@ -539,6 +539,7 @@
             "Damage": 250,
             "ExplosionDamage": 0,
             "ExplosionRadius": 5,
+            "TntEquivalentKg": 0.011,
             "Name": "HE Belt",
             "ProjectileBelt": {
               "Name": "HE Belt",
@@ -588,6 +589,7 @@
             "Damage": 250,
             "ExplosionDamage": 0,
             "ExplosionRadius": 5,
+            "TntEquivalentKg": 0.011,
             "Name": "HEFI_T",
             "ShootShake": [
               8,
@@ -821,6 +823,7 @@
       "Damage": 600,
       "ExplosionDamage": 0,
       "ExplosionRadius": 5,
+      "TntEquivalentKg": 1.834,
       "RecoilTime": 18,
       "RecoilForce": 0.05,
       "Spread": 0,
@@ -845,7 +848,8 @@
               "Supported": false,
               "ProjectileType": "superbwarfare:wire_guide_missile",
               "ProjectileProfile": "berts_vehicle_pack:marder_1a5/missile/ammo_00_milan_atgm"
-            }
+            },
+            "TntEquivalentKg": 1.834
           },
           "ConsumptionItem": "superbwarfare:medium_atgm"
         }

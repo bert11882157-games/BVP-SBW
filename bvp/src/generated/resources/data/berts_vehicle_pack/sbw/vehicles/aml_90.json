@@ -339,6 +339,7 @@
       "Damage": 180,
       "ExplosionDamage": 0,
       "ExplosionRadius": 0,
+      "TntEquivalentKg": 0.8777,
       "AmmoType": [
         {
           "Ammo": "superbwarfare:large_shell_ap",
@@ -353,6 +354,7 @@
             "Damage": 180,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
+            "TntEquivalentKg": 0.8777,
             "Projectile": {
               "Type": "superbwarfare:cannon_shell",
               "Profile": "berts_vehicle_pack:aml_90/occ90_62_heat_fs"
@@ -378,6 +380,7 @@
             "Damage": 220,
             "ExplosionDamage": 220,
             "ExplosionRadius": 3,
+            "TntEquivalentKg": 0.945,
             "Projectile": {
               "Type": "superbwarfare:cannon_shell",
               "Profile": "berts_vehicle_pack:aml_90/oe90_f1_he"

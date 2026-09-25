@@ -36,6 +36,7 @@
       "Damage": 470,
       "ExplosionDamage": 125,
       "ExplosionRadius": 3.7,
+      "TntEquivalentKg": 2.2053,
       "RecoilTime": 42,
       "RecoilForce": 1.1,
       "ShootShake": [12, 14, 80],
@@ -65,6 +66,7 @@
             "Damage": 250,
             "ExplosionDamage": 160,
             "ExplosionRadius": 11,
+            "TntEquivalentKg": 3.8346,
             "Name": "weapon.superbwarfare.cannon_he"
           }
         },
@@ -78,6 +80,7 @@
             "Damage": 360,
             "ExplosionDamage": 220,
             "ExplosionRadius": 7,
+            "TntEquivalentKg": 0.0,
             "Name": "weapon.superbwarfare.cannon_cm"
           }
         },
@@ -91,6 +94,7 @@
             "Damage": 200,
             "ExplosionDamage": 40,
             "ExplosionRadius": 8,
+            "TntEquivalentKg": 0.05,
             "Name": "weapon.superbwarfare.cannon_wp"
           }
         }

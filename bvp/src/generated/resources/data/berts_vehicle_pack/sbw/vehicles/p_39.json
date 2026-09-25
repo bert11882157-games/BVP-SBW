@@ -503,6 +503,7 @@
       "Velocity": 38.1,
       "ApDurability": 4,
       "ExplosionRadius": 5,
+      "TntEquivalentKg": 0.0658,
       "NominalBallistics": {
         "Supported": true,
         "ProjectileType": "superbwarfare:small_cannon_shell",
@@ -524,6 +525,7 @@
             "Damage": 250,
             "ExplosionDamage": 0,
             "ExplosionRadius": 5,
+            "TntEquivalentKg": 0.0658,
             "Name": "Air Belt",
             "ProjectileBelt": {
               "Name": "Air Belt",
@@ -566,6 +568,7 @@
             "Damage": 45,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
+            "TntEquivalentKg": 0.0,
             "Name": "AP_T",
             "NominalBallistics": {
               "Supported": true,

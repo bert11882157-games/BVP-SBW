@@ -343,6 +343,7 @@
             "Damage": 250,
             "ExplosionDamage": 0,
             "ExplosionRadius": 5,
+            "TntEquivalentKg": 0.0179,
             "Name": "weapon.berts_vehicle_pack.30mm_he",
             "ProjectileBelt": {
               "Rounds": [
@@ -421,7 +422,8 @@
             "Velocity": 15,
             "Damage": 250,
             "ExplosionDamage": 0,
-            "ExplosionRadius": 5
+            "ExplosionRadius": 5,
+            "TntEquivalentKg": 0.0179
           }
         }
       ]
@@ -581,6 +583,7 @@
       "Damage": 180,
       "ExplosionDamage": 0,
       "ExplosionRadius": 5,
+      "TntEquivalentKg": 4.455,
       "RecoilTime": 18,
       "RecoilForce": 0.05,
       "Spread": 0,
@@ -592,7 +595,7 @@
         {
           "Ammo": "superbwarfare:medium_anti_ground_missile",
           "ConsumptionItem": "superbwarfare:medium_atgm",
-          "Override": {}
+          "Override": {"TntEquivalentKg": 4.455}
         }
       ],
       "SoundInfo": {

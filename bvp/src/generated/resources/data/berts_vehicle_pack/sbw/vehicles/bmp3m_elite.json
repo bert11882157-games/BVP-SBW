@@ -262,6 +262,7 @@
       "Damage": 100,
       "ExplosionDamage": 115,
       "ExplosionRadius": 9,
+      "TntEquivalentKg": 2.6026,
       "RecoilTime": 42,
       "RecoilForce": 1,
       "ShootAnimationTime": 20,
@@ -298,6 +299,7 @@
             "Damage": 100,
             "ExplosionDamage": 0,
             "ExplosionRadius": 9,
+            "TntEquivalentKg": 2.6026,
             "Name": "weapon.berts_vehicle_pack.3of32_he",
             "NominalBallistics": {
               "Supported": true,
@@ -333,6 +335,7 @@
             "Damage": 331,
             "ExplosionDamage": 0,
             "ExplosionRadius": 5,
+            "TntEquivalentKg": 4.86,
             "RecoilTime": 24,
             "RecoilForce": 0.35,
             "Spread": 0,
@@ -668,6 +671,7 @@
             "Damage": 250,
             "ExplosionDamage": 0,
             "ExplosionRadius": 5,
+            "TntEquivalentKg": 0.0179,
             "Name": "HE Belt",
             "ProjectileBelt": {
               "Name": "HE Belt",
@@ -790,6 +794,7 @@
             "Damage": 250,
             "ExplosionDamage": 0,
             "ExplosionRadius": 5,
+            "TntEquivalentKg": 0.0755,
             "Name": "HEF_I",
             "ShootShake": [
               8,

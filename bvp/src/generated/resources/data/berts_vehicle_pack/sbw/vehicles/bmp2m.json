@@ -361,6 +361,7 @@
             "Damage": 250,
             "ExplosionDamage": 0,
             "ExplosionRadius": 5,
+            "TntEquivalentKg": 0.0179,
             "Name": "HE Belt",
             "ProjectileBelt": {
               "Name": "HE Belt",
@@ -473,6 +474,7 @@
             "Damage": 250,
             "ExplosionDamage": 0,
             "ExplosionRadius": 5,
+            "TntEquivalentKg": 0.0755,
             "Name": "HEF_I",
             "ShootShake": [
               8,
@@ -675,6 +677,7 @@
       "Damage": 225,
       "ExplosionDamage": 0,
       "ExplosionRadius": 5,
+      "TntEquivalentKg": 6.48,
       "RecoilTime": 18,
       "RecoilForce": 0.05,
       "Spread": 0,
@@ -700,7 +703,8 @@
               "Supported": false,
               "ProjectileType": "superbwarfare:wire_guide_missile",
               "ProjectileProfile": "berts_vehicle_pack:bmp2m/missile/ammo_00_9m133_kornet"
-            }
+            },
+            "TntEquivalentKg": 6.48
           }
         }
       ],
@@ -823,7 +827,8 @@
               "Supported": false,
               "ProjectileType": "superbwarfare:gun_grenade",
               "ProjectileProfile": "berts_vehicle_pack:bmp2m/grenadelauncher/ammo_00_30mm_vog_30"
-            }
+            },
+            "TntEquivalentKg": 0.0647
           }
         }
       ],
@@ -832,6 +837,7 @@
       "Damage": 35,
       "ExplosionDamage": 45,
       "ExplosionRadius": 6,
+      "TntEquivalentKg": 0.0647,
       "ProjectileLife": 100,
       "RecoilTime": 16,
       "RecoilForce": 0.08,

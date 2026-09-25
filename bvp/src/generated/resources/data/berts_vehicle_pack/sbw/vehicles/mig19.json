@@ -870,6 +870,7 @@
             "Damage": 45,
             "ExplosionDamage": 0,
             "ExplosionRadius": 5,
+            "TntEquivalentKg": 0.0225,
             "Name": "Air Belt",
             "ProjectileBelt": {
               "Name": "Air Belt",
@@ -960,6 +961,7 @@
             "Damage": 250,
             "ExplosionDamage": 0,
             "ExplosionRadius": 5,
+            "TntEquivalentKg": 0.0671,
             "Name": "HEF_I",
             "ShootShake": [
               8,
@@ -982,6 +984,7 @@
             "Damage": 250,
             "ExplosionDamage": 0,
             "ExplosionRadius": 5,
+            "TntEquivalentKg": 0.0671,
             "Name": "HEFI_T",
             "ShootShake": [
               8,
@@ -1007,7 +1010,8 @@
         8,
         10,
         12
-      ]
+      ],
+      "TntEquivalentKg": 0.0225
     },
     "Cannon2": {
       "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/gun_30mm.png",
@@ -1057,6 +1061,7 @@
             "Damage": 45,
             "ExplosionDamage": 0,
             "ExplosionRadius": 5,
+            "TntEquivalentKg": 0.0225,
             "Name": "Air Belt",
             "ProjectileBelt": {
               "Name": "Air Belt",
@@ -1147,6 +1152,7 @@
             "Damage": 250,
             "ExplosionDamage": 0,
             "ExplosionRadius": 5,
+            "TntEquivalentKg": 0.0671,
             "Name": "HEF_I",
             "ShootShake": [
               8,
@@ -1169,6 +1175,7 @@
             "Damage": 250,
             "ExplosionDamage": 0,
             "ExplosionRadius": 5,
+            "TntEquivalentKg": 0.0671,
             "Name": "HEFI_T",
             "ShootShake": [
               8,
@@ -1194,7 +1201,8 @@
         8,
         10,
         12
-      ]
+      ],
+      "TntEquivalentKg": 0.0225
     },
     "Cannon3": {
       "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/gun_30mm.png",
@@ -1244,6 +1252,7 @@
             "Damage": 45,
             "ExplosionDamage": 0,
             "ExplosionRadius": 5,
+            "TntEquivalentKg": 0.0225,
             "Name": "Air Belt",
             "ProjectileBelt": {
               "Name": "Air Belt",
@@ -1334,6 +1343,7 @@
             "Damage": 250,
             "ExplosionDamage": 0,
             "ExplosionRadius": 5,
+            "TntEquivalentKg": 0.0671,
             "Name": "HEF_I",
             "ShootShake": [
               8,
@@ -1356,6 +1366,7 @@
             "Damage": 250,
             "ExplosionDamage": 0,
             "ExplosionRadius": 5,
+            "TntEquivalentKg": 0.0671,
             "Name": "HEFI_T",
             "ShootShake": [
               8,
@@ -1381,7 +1392,8 @@
         8,
         10,
         12
-      ]
+      ],
+      "TntEquivalentKg": 0.0225
     }
   },
   "HUDColor": "0xFFC700",

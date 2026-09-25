@@ -243,6 +243,7 @@
             "Damage": 250,
             "ExplosionDamage": 0,
             "ExplosionRadius": 5,
+            "TntEquivalentKg": 0.0179,
             "Name": "HE Belt",
             "ProjectileBelt": {
               "Name": "HE Belt",
@@ -332,6 +333,7 @@
             "Damage": 250,
             "ExplosionDamage": 0,
             "ExplosionRadius": 5,
+            "TntEquivalentKg": 0.0755,
             "Name": "HEF_I"
           }
         }
@@ -426,6 +428,7 @@
             "Damage": 250,
             "ExplosionDamage": 0,
             "ExplosionRadius": 5,
+            "TntEquivalentKg": 0.0179,
             "Name": "HE Belt",
             "ProjectileBelt": {
               "Name": "HE Belt",
@@ -520,6 +523,7 @@
             "Damage": 250,
             "ExplosionDamage": 0,
             "ExplosionRadius": 5,
+            "TntEquivalentKg": 0.0755,
             "Name": "HEF_I"
           }
         }
@@ -545,6 +549,7 @@
       "Damage": 225,
       "ExplosionDamage": 0,
       "ExplosionRadius": 5,
+      "TntEquivalentKg": 4.5684,
       "RecoilTime": 18,
       "RecoilForce": 0.05,
       "Spread": 0,
@@ -556,7 +561,7 @@
         {
           "Ammo": "superbwarfare:medium_anti_ground_missile",
           "ConsumptionItem": "superbwarfare:medium_atgm",
-          "Override": {}
+          "Override": {"TntEquivalentKg": 4.5684}
         }
       ],
       "SoundInfo": {

@@ -601,6 +601,7 @@
             "Damage": 250,
             "ExplosionDamage": 0,
             "ExplosionRadius": 5,
+            "TntEquivalentKg": 0.0755,
             "Name": "HE Belt",
             "ProjectileBelt": {
               "Name": "HE Belt",
@@ -866,6 +867,7 @@
       "Damage": 600,
       "ExplosionDamage": 0,
       "ExplosionRadius": 5,
+      "TntEquivalentKg": 1.834,
       "RecoilTime": 18,
       "RecoilForce": 0.05,
       "Spread": 0,
@@ -890,7 +892,8 @@
               "Supported": false,
               "ProjectileType": "superbwarfare:wire_guide_missile",
               "ProjectileProfile": "berts_vehicle_pack:zbd_09/missile/ammo_00_hj73e_tandem_atgm"
-            }
+            },
+            "TntEquivalentKg": 1.834
           },
           "ConsumptionItem": "superbwarfare:medium_atgm"
         }

@@ -281,6 +281,7 @@
             "Damage": 250,
             "ExplosionDamage": 0,
             "ExplosionRadius": 5,
+            "TntEquivalentKg": 0.0117,
             "Name": "HE Belt",
             "ProjectileBelt": {
               "Name": "HE Belt",
@@ -404,6 +405,7 @@
             "Damage": 250,
             "ExplosionDamage": 0,
             "ExplosionRadius": 5,
+            "TntEquivalentKg": 0.0117,
             "Name": "HEF_I",
             "ShootShake": [
               8,
@@ -429,7 +431,7 @@
         {
           "Ammo": "superbwarfare:small_rocket",
           "ConsumptionItem": "superbwarfare:small_unguided_rocket",
-          "Override": {}
+          "Override": {"TntEquivalentKg": 1.1921}
         }
       ],
       "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_small_rocket.png",
@@ -448,6 +450,7 @@
       "Damage": 100,
       "ExplosionDamage": 0,
       "ExplosionRadius": 6,
+      "TntEquivalentKg": 1.1921,
       "Gravity": 0.02,
       "Velocity": 9,
       "ProjectileLife": 60,

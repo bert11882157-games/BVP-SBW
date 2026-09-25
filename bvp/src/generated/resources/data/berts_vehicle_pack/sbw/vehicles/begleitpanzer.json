@@ -388,6 +388,7 @@
             "Damage": 90,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
+            "TntEquivalentKg": 0.51,
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
               "Profile": "berts_vehicle_pack:begleitpanzer/bofors_57_saphei"
@@ -413,6 +414,7 @@
             "Damage": 120,
             "ExplosionDamage": 65,
             "ExplosionRadius": 2,
+            "TntEquivalentKg": 0.765,
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
               "Profile": "berts_vehicle_pack:begleitpanzer/bofors_57_he_t"
@@ -438,6 +440,7 @@
             "Damage": 120,
             "ExplosionDamage": 65,
             "ExplosionRadius": 2,
+            "TntEquivalentKg": 0.765,
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
               "Profile": "berts_vehicle_pack:begleitpanzer/bofors_57_he_vt"
@@ -521,6 +524,7 @@
       "ApDurability": 430,
       "ExplosionDamage": 0,
       "ExplosionRadius": 5,
+      "TntEquivalentKg": 3.7524,
       "Projectile": {
         "Type": "superbwarfare:wire_guide_missile",
         "Profile": "berts_vehicle_pack:begleitpanzer/bgm71a_tow"
@@ -534,7 +538,8 @@
               "Supported": false,
               "ProjectileType": "superbwarfare:wire_guide_missile",
               "ProjectileProfile": "berts_vehicle_pack:begleitpanzer/bgm71a_tow"
-            }
+            },
+            "TntEquivalentKg": 3.7524
           }
         }
       ],

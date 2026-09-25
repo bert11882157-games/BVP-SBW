@@ -270,6 +270,7 @@
             "Damage": 140,
             "ExplosionDamage": 0,
             "ExplosionRadius": 9,
+            "TntEquivalentKg": 2.8415,
             "Name": "weapon.berts_vehicle_pack.3bk18m_heat_fs",
             "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_he.png",
             "NominalBallistics": {
@@ -300,6 +301,7 @@
             "Damage": 1000,
             "ExplosionDamage": 0,
             "ExplosionRadius": 9,
+            "TntEquivalentKg": 5.2391,
             "Name": "weapon.berts_vehicle_pack.3of26_he",
             "NominalBallistics": {
               "Supported": true,
@@ -335,6 +337,7 @@
             "Damage": 225,
             "ExplosionDamage": 0,
             "ExplosionRadius": 5,
+            "TntEquivalentKg": 5.832,
             "RecoilTime": 24,
             "RecoilForce": 0.35,
             "Spread": 0,
@@ -740,6 +743,7 @@
             "Damage": 83.33333333333333,
             "ExplosionDamage": 0,
             "ExplosionRadius": 1.6666666666666665,
+            "TntEquivalentKg": 0.0032,
             "Name": "IAI",
             "ShootShake": [
               8,

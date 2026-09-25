@@ -361,6 +361,7 @@
       "ShellType": "HEAT_FS",
       "ExplosionDamage": 0,
       "ExplosionRadius": 0,
+      "TntEquivalentKg": 0.4025,
       "Projectile": {
         "Type": "superbwarfare:cannon_shell",
         "Profile": "berts_vehicle_pack:bmd_1/pg9"
@@ -379,6 +380,7 @@
             "ApDurability": 300,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
+            "TntEquivalentKg": 0.4025,
             "Projectile": {
               "Type": "superbwarfare:cannon_shell",
               "Profile": "berts_vehicle_pack:bmd_1/pg9"
@@ -404,6 +406,7 @@
             "ApDurability": 11,
             "ExplosionDamage": 115,
             "ExplosionRadius": 9,
+            "TntEquivalentKg": 0.735,
             "Projectile": {
               "Type": "superbwarfare:cannon_shell",
               "Profile": "berts_vehicle_pack:bmd_1/og9"
@@ -487,6 +490,7 @@
       "ApDurability": 400,
       "ExplosionDamage": 0,
       "ExplosionRadius": 5,
+      "TntEquivalentKg": 3.25,
       "Projectile": {
         "Type": "superbwarfare:wire_guide_missile",
         "Profile": "berts_vehicle_pack:bmd_1/9m14"
@@ -500,7 +504,8 @@
               "Supported": false,
               "ProjectileType": "superbwarfare:wire_guide_missile",
               "ProjectileProfile": "berts_vehicle_pack:bmd_1/9m14"
-            }
+            },
+            "TntEquivalentKg": 3.25
           }
         }
       ],

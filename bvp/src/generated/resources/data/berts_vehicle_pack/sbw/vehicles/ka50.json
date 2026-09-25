@@ -214,6 +214,7 @@
             "Damage": 250,
             "ExplosionDamage": 0,
             "ExplosionRadius": 5,
+            "TntEquivalentKg": 0.0179,
             "Name": "HE Belt",
             "ProjectileBelt": {
               "Name": "HE Belt",
@@ -337,6 +338,7 @@
             "Damage": 250,
             "ExplosionDamage": 0,
             "ExplosionRadius": 5,
+            "TntEquivalentKg": 0.0755,
             "Name": "HEF_I"
           }
         }
@@ -347,7 +349,7 @@
         {
           "Ammo": "superbwarfare:small_rocket",
           "ConsumptionItem": "superbwarfare:small_unguided_rocket",
-          "Override": {}
+          "Override": {"TntEquivalentKg": 1.375}
         }
       ],
       "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_small_rocket.png",
@@ -367,6 +369,7 @@
       "Damage": 100,
       "ExplosionDamage": 0,
       "ExplosionRadius": 6,
+      "TntEquivalentKg": 1.375,
       "Gravity": 0.02,
       "Velocity": 9,
       "ProjectileLife": 60,
@@ -450,7 +453,7 @@
         {
           "Ammo": "superbwarfare:small_rocket",
           "ConsumptionItem": "superbwarfare:small_unguided_rocket",
-          "Override": {}
+          "Override": {"TntEquivalentKg": 1.375}
         }
       ],
       "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_small_rocket.png",
@@ -470,6 +473,7 @@
       "Damage": 100,
       "ExplosionDamage": 0,
       "ExplosionRadius": 6,
+      "TntEquivalentKg": 1.375,
       "Gravity": 0.02,
       "Velocity": 9,
       "ProjectileLife": 60,
@@ -553,7 +557,7 @@
         {
           "Ammo": "superbwarfare:small_rocket",
           "ConsumptionItem": "superbwarfare:small_unguided_rocket",
-          "Override": {}
+          "Override": {"TntEquivalentKg": 1.375}
         }
       ],
       "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_small_rocket.png",
@@ -573,6 +577,7 @@
       "Damage": 100,
       "ExplosionDamage": 0,
       "ExplosionRadius": 6,
+      "TntEquivalentKg": 1.375,
       "Gravity": 0.02,
       "Velocity": 9,
       "ProjectileLife": 60,
@@ -664,7 +669,7 @@
         {
           "Ammo": "superbwarfare:medium_anti_ground_missile",
           "ConsumptionItem": "superbwarfare:medium_atgm",
-          "Override": {}
+          "Override": {"TntEquivalentKg": 6.8714}
         }
       ],
       "Projectile": {
@@ -675,6 +680,7 @@
       "Damage": 205,
       "ExplosionDamage": 0,
       "ExplosionRadius": 8,
+      "TntEquivalentKg": 6.8714,
       "Velocity": 4.35,
       "ApDurability": 800,
       "CrosshairColor": "0xFFC700",
@@ -852,7 +858,8 @@
         "Supported": false,
         "ProjectileType": "berts_vehicle_pack:ataka_missile",
         "ProjectileProfile": "berts_vehicle_pack:ka50/passengermissile/default"
-      }
+      },
+      "TntEquivalentKg": 6.8714
     },
     "PilotMissile": {
       "Name": "weapon.berts_vehicle_pack.9k127_vikhr_atgm",
@@ -1128,7 +1135,8 @@
         "Supported": false,
         "ProjectileType": "berts_vehicle_pack:ataka_missile",
         "ProjectileProfile": "berts_vehicle_pack:ka50/pilotmissile/default"
-      }
+      },
+      "TntEquivalentKg": 6.8714
     }
   },
   "HUDColor": "0xFFC700",

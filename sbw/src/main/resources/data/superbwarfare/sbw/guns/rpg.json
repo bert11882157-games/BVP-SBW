@@ -6,6 +6,7 @@
   "Projectile": "superbwarfare:rpg_rocket_tbg",
   "ExplosionDamage": 150,
   "ExplosionRadius": 11,
+  "TntEquivalentKg": 2.7825,
   "ZoomReload": false,
   "Headshot": 0,
   "Velocity": 4,
@@ -26,6 +27,7 @@
         "Damage": 450,
         "ExplosionDamage": 40,
         "ExplosionRadius": 5,
+        "TntEquivalentKg": 0.4,
         "Velocity": 6,
         "Gravity": 0.015,
         "Icon": "superbwarfare:textures/gun_icon/rpg_standard_icon.png"

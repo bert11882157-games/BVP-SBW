@@ -155,6 +155,7 @@
             "Damage": 750,
             "ExplosionDamage": 200,
             "ExplosionRadius": 11,
+            "TntEquivalentKg": 5.24,
             "Name": "weapon.superbwarfare.cannon_he"
           }
         },
@@ -266,6 +267,7 @@
             "Damage": 25,
             "ExplosionDamage": 18,
             "ExplosionRadius": 4.5,
+            "TntEquivalentKg": 0.0755,
             "Name": "weapon.superbwarfare.30mm_cannon_he"
           }
         },
@@ -306,6 +308,7 @@
       "RPM": 600,
       "ExplosionDamage": 150,
       "ExplosionRadius": 5,
+      "TntEquivalentKg": 0.5,
       "Velocity": 2,
       "ShootPos": {
         "Transform": "Turret",
@@ -354,7 +357,8 @@
               "SeekAngle": 20,
               "SeekTime": 10,
               "OnlyLockBlock": true
-            }
+            },
+            "TntEquivalentKg": 0.5
           }
         }
       ],

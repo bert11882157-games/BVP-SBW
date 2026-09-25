@@ -160,6 +160,7 @@
       "Damage": 35,
       "ExplosionDamage": 45,
       "ExplosionRadius": 6,
+      "TntEquivalentKg": 0.0647,
       "ProjectileLife": 100,
       "RecoilTime": 16,
       "RecoilForce": 0.08,
@@ -184,7 +185,8 @@
               "Supported": false,
               "ProjectileType": "superbwarfare:gun_grenade",
               "ProjectileProfile": "berts_vehicle_pack:ags_30/cannon/ammo_00_30mm_vog_30"
-            }
+            },
+            "TntEquivalentKg": 0.0647
           }
         }
       ],

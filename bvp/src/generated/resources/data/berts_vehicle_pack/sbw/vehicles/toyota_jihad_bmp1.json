@@ -314,6 +314,7 @@
       "Damage": 140,
       "ExplosionDamage": 0,
       "ExplosionRadius": 3,
+      "TntEquivalentKg": 0.4025,
       "Spread": 0.05,
       "ShootAnimationTime": 12,
       "Crosshair": "@VehicleCommonGun",
@@ -329,6 +330,7 @@
             "ApDurability": 300,
             "Damage": 140,
             "ExplosionDamage": 0,
+            "TntEquivalentKg": 0.4025,
             "NominalBallistics": {
               "Supported": true,
               "ProjectileType": "superbwarfare:cannon_shell",
@@ -358,6 +360,7 @@
             "Damage": 150,
             "ExplosionDamage": 135,
             "ExplosionRadius": 3,
+            "TntEquivalentKg": 0.735,
             "NominalBallistics": {
               "Supported": true,
               "ProjectileType": "superbwarfare:cannon_shell",

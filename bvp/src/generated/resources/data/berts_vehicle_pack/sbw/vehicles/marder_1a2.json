@@ -334,6 +334,7 @@
             "Damage": 250,
             "ExplosionDamage": 0,
             "ExplosionRadius": 5,
+            "TntEquivalentKg": 0.011,
             "Name": "HE Belt",
             "ProjectileBelt": {
               "Name": "HE Belt",
@@ -429,6 +430,7 @@
             "Damage": 250,
             "ExplosionDamage": 0,
             "ExplosionRadius": 5,
+            "TntEquivalentKg": 0.011,
             "Name": "HEFI_T",
             "ShootShake": [
               8,
@@ -459,6 +461,7 @@
       "Damage": 172,
       "ExplosionDamage": 0,
       "ExplosionRadius": 5,
+      "TntEquivalentKg": 3.7524,
       "RecoilTime": 18,
       "RecoilForce": 0.05,
       "Spread": 0,
@@ -470,7 +473,7 @@
         {
           "Ammo": "superbwarfare:medium_anti_ground_missile",
           "ConsumptionItem": "superbwarfare:medium_atgm",
-          "Override": {}
+          "Override": {"TntEquivalentKg": 3.7524}
         }
       ],
       "SoundInfo": {

@@ -495,6 +495,7 @@
       "Damage": 250,
       "ExplosionDamage": 0,
       "ExplosionRadius": 5,
+      "TntEquivalentKg": 0.0179,
       "HeatPerShoot": 8,
       "NaturalCooldown": 1,
       "RecoilTime": 31,
@@ -533,6 +534,7 @@
             "Damage": 250,
             "ExplosionDamage": 0,
             "ExplosionRadius": 5,
+            "TntEquivalentKg": 0.0179,
             "Name": "HE Belt",
             "ProjectileBelt": {
               "Name": "HE Belt",
@@ -585,6 +587,7 @@
             "Damage": 65,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
+            "TntEquivalentKg": 0.0,
             "Name": "AP Belt",
             "ProjectileBelt": {
               "Name": "AP Belt",
@@ -634,6 +637,7 @@
             "Damage": 250,
             "ExplosionDamage": 0,
             "ExplosionRadius": 5,
+            "TntEquivalentKg": 0.0755,
             "Name": "HEF_I",
             "ShootShake": [
               8,
@@ -752,6 +756,7 @@
       "Damage": 600,
       "ExplosionDamage": 0,
       "ExplosionRadius": 4,
+      "TntEquivalentKg": 4.62,
       "RecoilTime": 18,
       "RecoilForce": 0.05,
       "Spread": 0,
@@ -776,7 +781,8 @@
               "Supported": false,
               "ProjectileType": "superbwarfare:wire_guide_missile",
               "ProjectileProfile": "berts_vehicle_pack:tunguska/missile/ammo_00_9m311_sam"
-            }
+            },
+            "TntEquivalentKg": 4.62
           },
           "ConsumptionItem": "superbwarfare:medium_atgm"
         }

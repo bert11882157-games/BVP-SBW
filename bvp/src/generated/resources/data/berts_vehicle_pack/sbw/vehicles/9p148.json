@@ -321,6 +321,7 @@
       "Damage": 600,
       "ExplosionDamage": 0,
       "ExplosionRadius": 5,
+      "TntEquivalentKg": 4.455,
       "RecoilTime": 18,
       "RecoilForce": 0.05,
       "Spread": 0,
@@ -346,7 +347,8 @@
               "Supported": false,
               "ProjectileType": "superbwarfare:wire_guide_missile",
               "ProjectileProfile": "berts_vehicle_pack:9p148/missile/ammo_00_9m113_konkurs"
-            }
+            },
+            "TntEquivalentKg": 4.455
           }
         }
       ],

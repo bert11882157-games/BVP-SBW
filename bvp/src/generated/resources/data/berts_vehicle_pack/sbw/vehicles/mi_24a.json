@@ -853,6 +853,7 @@
       "Velocity": 53.75,
       "ApDurability": 3,
       "ExplosionRadius": 1.6666666666666665,
+      "TntEquivalentKg": 0.0032,
       "NominalBallistics": {
         "Supported": true,
         "ProjectileType": "superbwarfare:projectile",
@@ -873,6 +874,7 @@
             "Damage": 83.33333333333333,
             "ExplosionDamage": 0,
             "ExplosionRadius": 1.6666666666666665,
+            "TntEquivalentKg": 0.0032,
             "Name": "Air Belt",
             "ProjectileBelt": {
               "Name": "Air Belt",
@@ -907,6 +909,7 @@
             "Damage": 8,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
+            "TntEquivalentKg": 0.0,
             "Name": "Ground Belt",
             "ProjectileBelt": {
               "Name": "Ground Belt",

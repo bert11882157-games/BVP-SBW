@@ -708,6 +708,7 @@
       "Damage": 35,
       "ExplosionDamage": 10,
       "ExplosionRadius": 4,
+      "TntEquivalentKg": 0.0928,
       "HeatPerShoot": 1.5,
       "NaturalCooldown": 0.5,
       "Spread": 0.5,
@@ -740,6 +741,7 @@
       "Damage": 80,
       "ExplosionDamage": 40,
       "ExplosionRadius": 5,
+      "TntEquivalentKg": 1.3667,
       "Gravity": 0.02,
       "ProjectileLife": 60,
       "Velocity": 11,
@@ -775,6 +777,7 @@
       "Name": "weapon.superbwarfare.mk_82_bomb",
       "ExplosionDamage": 650,
       "ExplosionRadius": 22,
+      "TntEquivalentKg": 117.585,
       "AddShooterDeltaMovement": true,
       "Velocity": 0.95,
       "ShootPos": {
@@ -810,6 +813,7 @@
       "Damage": 1100,
       "ExplosionDamage": 180,
       "ExplosionRadius": 12,
+      "TntEquivalentKg": 51.1948,
       "AddShooterDeltaMovement": true,
       "Velocity": 1.05,
       "ProjectileLife": 1200,
@@ -841,7 +845,8 @@
               "MaxTargetHeight": 32,
               "MinTargetSize": 0.9,
               "OnlyLockBlock": true
-            }
+            },
+            "TntEquivalentKg": 51.1948
           }
         }
       ],

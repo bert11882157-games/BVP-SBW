@@ -162,6 +162,7 @@
       "Damage": 420,
       "ExplosionDamage": 80,
       "ExplosionRadius": 5,
+      "TntEquivalentKg": 3.7524,
       "Spread": 0,
       "RecoilTime": 0,
       "RecoilForce": 0,
@@ -186,7 +187,8 @@
               8,
               10,
               122.4
-            ]
+            ],
+            "TntEquivalentKg": 3.7524
           },
           "ConsumptionItem": "superbwarfare:medium_atgm"
         },
@@ -208,7 +210,8 @@
               8,
               10,
               122.4
-            ]
+            ],
+            "TntEquivalentKg": 4.8363
           },
           "ConsumptionItem": "superbwarfare:medium_atgm"
         }

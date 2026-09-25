@@ -364,6 +364,7 @@
       "Damage": 260,
       "ExplosionDamage": 90,
       "ExplosionRadius": 6,
+      "TntEquivalentKg": 0.53,
       "Projectile": {
         "Type": "superbwarfare:ru_9m336_missile",
         "Profile": "berts_vehicle_pack:gaz_3937_vodnik_aa/vodnik_aa_ir_proxy"
@@ -387,7 +388,8 @@
               "Supported": false,
               "ProjectileType": "superbwarfare:ru_9m336_missile",
               "ProjectileProfile": "berts_vehicle_pack:gaz_3937_vodnik_aa/vodnik_aa_ir_proxy"
-            }
+            },
+            "TntEquivalentKg": 0.53
           }
         }
       ],

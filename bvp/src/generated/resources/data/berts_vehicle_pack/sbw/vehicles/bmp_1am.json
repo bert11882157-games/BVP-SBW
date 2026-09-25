@@ -296,6 +296,7 @@
       "Damage": 620,
       "ExplosionDamage": 80,
       "ExplosionRadius": 4,
+      "TntEquivalentKg": 0.4025,
       "RecoilTime": 42,
       "RecoilForce": 1,
       "ShootAnimationTime": 20,
@@ -332,6 +333,7 @@
             "Damage": 140,
             "ExplosionDamage": 0,
             "ExplosionRadius": 9,
+            "TntEquivalentKg": 0.4025,
             "Name": "weapon.berts_vehicle_pack.pg9",
             "NominalBallistics": {
               "Supported": true,
@@ -356,6 +358,7 @@
             "Damage": 230,
             "ExplosionDamage": 115,
             "ExplosionRadius": 9,
+            "TntEquivalentKg": 0.735,
             "Name": "weapon.berts_vehicle_pack.og9",
             "NominalBallistics": {
               "Supported": true,
@@ -576,6 +579,7 @@
       "Damage": 600,
       "ExplosionDamage": 0,
       "ExplosionRadius": 5,
+      "TntEquivalentKg": 3.25,
       "RecoilTime": 18,
       "RecoilForce": 0.05,
       "Spread": 0,
@@ -587,7 +591,7 @@
         {
           "Ammo": "superbwarfare:medium_anti_ground_missile",
           "ConsumptionItem": "superbwarfare:medium_atgm",
-          "Override": {}
+          "Override": {"TntEquivalentKg": 3.25}
         }
       ],
       "SoundInfo": {

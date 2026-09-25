@@ -348,6 +348,7 @@
       "Damage": 250,
       "ExplosionDamage": 0,
       "ExplosionRadius": 5,
+      "TntEquivalentKg": 0.204,
       "HeatPerShoot": 8,
       "NaturalCooldown": 1,
       "RecoilTime": 31,
@@ -386,6 +387,7 @@
             "Damage": 250,
             "ExplosionDamage": 0,
             "ExplosionRadius": 5,
+            "TntEquivalentKg": 0.204,
             "Name": "Air Belt",
             "ProjectileBelt": {
               "Name": "Air Belt",
@@ -431,6 +433,7 @@
             "Damage": 65,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
+            "TntEquivalentKg": 0.0,
             "Name": "Ground Belt",
             "ProjectileBelt": {
               "Name": "Ground Belt",
@@ -476,6 +479,7 @@
             "Damage": 65,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
+            "TntEquivalentKg": 0.0,
             "Name": "APDS Belt",
             "ProjectileBelt": {
               "Name": "APDS Belt",

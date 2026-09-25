@@ -403,6 +403,7 @@
       "Damage": 360,
       "ExplosionDamage": 85,
       "ExplosionRadius": 4,
+      "TntEquivalentKg": 0.4025,
       "RecoilTime": 34,
       "RecoilForce": 0.72,
       "Spread": 0.05,
@@ -413,7 +414,7 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:large_shell_ap",
-          "Override": {},
+          "Override": {"TntEquivalentKg": 0.4025},
           "ConsumptionItem": "superbwarfare:tier_1_armor_piercing_shell"
         },
         {
@@ -425,6 +426,7 @@
             "Damage": 150,
             "ExplosionDamage": 135,
             "ExplosionRadius": 6,
+            "TntEquivalentKg": 0.735,
             "Name": "weapon.superbwarfare.cannon_he",
             "NominalBallistics": {
               "Supported": true,

@@ -439,6 +439,7 @@
             "Damage": 140,
             "ExplosionDamage": 0,
             "ExplosionRadius": 9,
+            "TntEquivalentKg": 3.7335,
             "Name": "weapon.berts_vehicle_pack.m409a1_heat",
             "Projectile": {
               "Type": "superbwarfare:cannon_shell",
@@ -474,6 +475,7 @@
             "Damage": 650,
             "ExplosionDamage": 0,
             "ExplosionRadius": 5,
+            "TntEquivalentKg": 5.724,
             "RecoilTime": 24,
             "RecoilForce": 0.35,
             "Spread": 0,
@@ -744,6 +746,7 @@
       "Damage": 250,
       "ExplosionDamage": 0,
       "ExplosionRadius": 5,
+      "TntEquivalentKg": 0.011,
       "HeatPerShoot": 8,
       "NaturalCooldown": 1,
       "RecoilTime": 31,
@@ -782,6 +785,7 @@
             "Damage": 250,
             "ExplosionDamage": 0,
             "ExplosionRadius": 5,
+            "TntEquivalentKg": 0.011,
             "Name": "Ground Belt",
             "ProjectileBelt": {
               "Name": "Ground Belt",
@@ -830,6 +834,7 @@
             "Damage": 65,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
+            "TntEquivalentKg": 0.0,
             "Name": "HVAP_T",
             "ShootShake": [
               8,

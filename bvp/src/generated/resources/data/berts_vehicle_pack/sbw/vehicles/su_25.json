@@ -526,6 +526,7 @@
       "Velocity": 54.375,
       "ApDurability": 7,
       "ExplosionRadius": 5,
+      "TntEquivalentKg": 0.0747,
       "NominalBallistics": {
         "Supported": true,
         "ProjectileType": "superbwarfare:small_cannon_shell",
@@ -547,6 +548,7 @@
             "Damage": 250,
             "ExplosionDamage": 0,
             "ExplosionRadius": 5,
+            "TntEquivalentKg": 0.0747,
             "Name": "Air Belt",
             "ProjectileBelt": {
               "Name": "Air Belt",
@@ -581,6 +583,7 @@
             "Damage": 45,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
+            "TntEquivalentKg": 0.0,
             "Name": "Ground Belt",
             "ProjectileBelt": {
               "Name": "Ground Belt",
@@ -665,7 +668,8 @@
               "ProjectileType": "berts_vehicle_pack:s8ko_rocket",
               "ProjectileProfile": "berts_vehicle_pack:aircraft_rockets/s8ko",
               "ProjectileLife": 100
-            }
+            },
+            "TntEquivalentKg": 1.375
           }
         }
       ],
@@ -684,6 +688,7 @@
       "Damage": 100,
       "ExplosionDamage": 0,
       "ExplosionRadius": 6,
+      "TntEquivalentKg": 1.375,
       "Gravity": 0.02,
       "Velocity": 9,
       "ProjectileLife": 100,
@@ -1242,7 +1247,8 @@
               "ProjectileType": "berts_vehicle_pack:s8ko_rocket",
               "ProjectileProfile": "berts_vehicle_pack:aircraft_rockets/s8ko",
               "ProjectileLife": 100
-            }
+            },
+            "TntEquivalentKg": 1.375
           }
         }
       ],
@@ -1261,6 +1267,7 @@
       "Damage": 100,
       "ExplosionDamage": 0,
       "ExplosionRadius": 6,
+      "TntEquivalentKg": 1.375,
       "Gravity": 0.02,
       "Velocity": 9,
       "ProjectileLife": 100,
@@ -1819,7 +1826,8 @@
               "ProjectileType": "berts_vehicle_pack:s8ko_rocket",
               "ProjectileProfile": "berts_vehicle_pack:aircraft_rockets/s8ko",
               "ProjectileLife": 100
-            }
+            },
+            "TntEquivalentKg": 1.375
           }
         }
       ],
@@ -1838,6 +1846,7 @@
       "Damage": 100,
       "ExplosionDamage": 0,
       "ExplosionRadius": 6,
+      "TntEquivalentKg": 1.375,
       "Gravity": 0.02,
       "Velocity": 9,
       "ProjectileLife": 100,
@@ -2396,7 +2405,8 @@
               "ProjectileType": "berts_vehicle_pack:s8ko_rocket",
               "ProjectileProfile": "berts_vehicle_pack:aircraft_rockets/s8ko",
               "ProjectileLife": 100
-            }
+            },
+            "TntEquivalentKg": 1.375
           }
         }
       ],
@@ -2415,6 +2425,7 @@
       "Damage": 100,
       "ExplosionDamage": 0,
       "ExplosionRadius": 6,
+      "TntEquivalentKg": 1.375,
       "Gravity": 0.02,
       "Velocity": 9,
       "ProjectileLife": 100,
@@ -3001,6 +3012,7 @@
       "Velocity": 44.6875,
       "ApDurability": 4,
       "ExplosionRadius": 3.8333333333333335,
+      "TntEquivalentKg": 0.0279,
       "NominalBallistics": {
         "Supported": true,
         "ProjectileType": "superbwarfare:small_cannon_shell",
@@ -3022,6 +3034,7 @@
             "Damage": 191.66666666666669,
             "ExplosionDamage": 0,
             "ExplosionRadius": 3.8333333333333335,
+            "TntEquivalentKg": 0.0279,
             "Name": "Air Belt",
             "ProjectileBelt": {
               "Name": "Air Belt",
@@ -3056,6 +3069,7 @@
             "Damage": 45,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
+            "TntEquivalentKg": 0.0,
             "Name": "Ground Belt",
             "ProjectileBelt": {
               "Name": "Ground Belt",
@@ -3168,6 +3182,7 @@
       "Velocity": 44.6875,
       "ApDurability": 4,
       "ExplosionRadius": 3.8333333333333335,
+      "TntEquivalentKg": 0.0279,
       "NominalBallistics": {
         "Supported": true,
         "ProjectileType": "superbwarfare:small_cannon_shell",
@@ -3189,6 +3204,7 @@
             "Damage": 191.66666666666669,
             "ExplosionDamage": 0,
             "ExplosionRadius": 3.8333333333333335,
+            "TntEquivalentKg": 0.0279,
             "Name": "Air Belt",
             "ProjectileBelt": {
               "Name": "Air Belt",
@@ -3223,6 +3239,7 @@
             "Damage": 45,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
+            "TntEquivalentKg": 0.0,
             "Name": "Ground Belt",
             "ProjectileBelt": {
               "Name": "Ground Belt",
@@ -3335,6 +3352,7 @@
       "Velocity": 44.6875,
       "ApDurability": 4,
       "ExplosionRadius": 3.8333333333333335,
+      "TntEquivalentKg": 0.0279,
       "NominalBallistics": {
         "Supported": true,
         "ProjectileType": "superbwarfare:small_cannon_shell",
@@ -3356,6 +3374,7 @@
             "Damage": 191.66666666666669,
             "ExplosionDamage": 0,
             "ExplosionRadius": 3.8333333333333335,
+            "TntEquivalentKg": 0.0279,
             "Name": "Air Belt",
             "ProjectileBelt": {
               "Name": "Air Belt",
@@ -3390,6 +3409,7 @@
             "Damage": 45,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
+            "TntEquivalentKg": 0.0,
             "Name": "Ground Belt",
             "ProjectileBelt": {
               "Name": "Ground Belt",
@@ -3502,6 +3522,7 @@
       "Velocity": 44.6875,
       "ApDurability": 4,
       "ExplosionRadius": 3.8333333333333335,
+      "TntEquivalentKg": 0.0279,
       "NominalBallistics": {
         "Supported": true,
         "ProjectileType": "superbwarfare:small_cannon_shell",
@@ -3523,6 +3544,7 @@
             "Damage": 191.66666666666669,
             "ExplosionDamage": 0,
             "ExplosionRadius": 3.8333333333333335,
+            "TntEquivalentKg": 0.0279,
             "Name": "Air Belt",
             "ProjectileBelt": {
               "Name": "Air Belt",
@@ -3557,6 +3579,7 @@
             "Damage": 45,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
+            "TntEquivalentKg": 0.0,
             "Name": "Ground Belt",
             "ProjectileBelt": {
               "Name": "Ground Belt",
@@ -3669,6 +3692,7 @@
       "Velocity": 44.6875,
       "ApDurability": 4,
       "ExplosionRadius": 3.8333333333333335,
+      "TntEquivalentKg": 0.0279,
       "NominalBallistics": {
         "Supported": true,
         "ProjectileType": "superbwarfare:small_cannon_shell",
@@ -3690,6 +3714,7 @@
             "Damage": 191.66666666666669,
             "ExplosionDamage": 0,
             "ExplosionRadius": 3.8333333333333335,
+            "TntEquivalentKg": 0.0279,
             "Name": "Air Belt",
             "ProjectileBelt": {
               "Name": "Air Belt",
@@ -3724,6 +3749,7 @@
             "Damage": 45,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
+            "TntEquivalentKg": 0.0,
             "Name": "Ground Belt",
             "ProjectileBelt": {
               "Name": "Ground Belt",
@@ -3836,6 +3862,7 @@
       "Velocity": 44.6875,
       "ApDurability": 4,
       "ExplosionRadius": 3.8333333333333335,
+      "TntEquivalentKg": 0.0279,
       "NominalBallistics": {
         "Supported": true,
         "ProjectileType": "superbwarfare:small_cannon_shell",
@@ -3857,6 +3884,7 @@
             "Damage": 191.66666666666669,
             "ExplosionDamage": 0,
             "ExplosionRadius": 3.8333333333333335,
+            "TntEquivalentKg": 0.0279,
             "Name": "Air Belt",
             "ProjectileBelt": {
               "Name": "Air Belt",
@@ -3891,6 +3919,7 @@
             "Damage": 45,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
+            "TntEquivalentKg": 0.0,
             "Name": "Ground Belt",
             "ProjectileBelt": {
               "Name": "Ground Belt",
@@ -4003,6 +4032,7 @@
       "Velocity": 44.6875,
       "ApDurability": 4,
       "ExplosionRadius": 3.8333333333333335,
+      "TntEquivalentKg": 0.0279,
       "NominalBallistics": {
         "Supported": true,
         "ProjectileType": "superbwarfare:small_cannon_shell",
@@ -4024,6 +4054,7 @@
             "Damage": 191.66666666666669,
             "ExplosionDamage": 0,
             "ExplosionRadius": 3.8333333333333335,
+            "TntEquivalentKg": 0.0279,
             "Name": "Air Belt",
             "ProjectileBelt": {
               "Name": "Air Belt",
@@ -4058,6 +4089,7 @@
             "Damage": 45,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
+            "TntEquivalentKg": 0.0,
             "Name": "Ground Belt",
             "ProjectileBelt": {
               "Name": "Ground Belt",
@@ -4170,6 +4202,7 @@
       "Velocity": 44.6875,
       "ApDurability": 4,
       "ExplosionRadius": 3.8333333333333335,
+      "TntEquivalentKg": 0.0279,
       "NominalBallistics": {
         "Supported": true,
         "ProjectileType": "superbwarfare:small_cannon_shell",
@@ -4191,6 +4224,7 @@
             "Damage": 191.66666666666669,
             "ExplosionDamage": 0,
             "ExplosionRadius": 3.8333333333333335,
+            "TntEquivalentKg": 0.0279,
             "Name": "Air Belt",
             "ProjectileBelt": {
               "Name": "Air Belt",
@@ -4225,6 +4259,7 @@
             "Damage": 45,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
+            "TntEquivalentKg": 0.0,
             "Name": "Ground Belt",
             "ProjectileBelt": {
               "Name": "Ground Belt",

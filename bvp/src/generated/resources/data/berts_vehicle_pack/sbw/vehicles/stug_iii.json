@@ -145,6 +145,7 @@
       "Damage": 620,
       "ExplosionDamage": 80,
       "ExplosionRadius": 4,
+      "TntEquivalentKg": 0.0289,
       "RecoilTime": 42,
       "RecoilForce": 1,
       "Spread": 0.02,
@@ -172,7 +173,8 @@
               8,
               10,
               60
-            ]
+            ],
+            "TntEquivalentKg": 0.0289
           },
           "ConsumptionItem": "superbwarfare:tier_1_armor_piercing_shell"
         }

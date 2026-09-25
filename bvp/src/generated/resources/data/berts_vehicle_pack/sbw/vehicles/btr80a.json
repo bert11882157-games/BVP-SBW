@@ -420,6 +420,7 @@
             "Damage": 250,
             "ExplosionDamage": 0,
             "ExplosionRadius": 5,
+            "TntEquivalentKg": 0.0179,
             "Name": "weapon.berts_vehicle_pack.30mm_he",
             "ProjectileBelt": {
               "Rounds": [
@@ -498,7 +499,8 @@
             "Velocity": 15,
             "Damage": 250,
             "ExplosionDamage": 0,
-            "ExplosionRadius": 5
+            "ExplosionRadius": 5,
+            "TntEquivalentKg": 0.0179
           }
         }
       ]

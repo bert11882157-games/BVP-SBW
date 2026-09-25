@@ -9,6 +9,7 @@
   "MeleeRange": 1,
   "ExplosionDamage": 50,
   "ExplosionRadius": 5,
+  "TntEquivalentKg": 0.041,
   "Headshot": 0,
   "Velocity": 3.75,
   "Magazine": 8,
@@ -36,6 +37,7 @@
         "Headshot": 1.75,
         "BypassesArmor": 0.2,
         "ExplosionDamage": 0,
+        "TntEquivalentKg": 0.0,
         "ProjectileAmount": 6,
         "Velocity": 10,
         "RecoilX": 0.006,
@@ -48,7 +50,8 @@
       "Override": {
         "ProjectileAmount": 0,
         "MeleeDuration": 15,
-        "Crosshair": "@GunDefault"
+        "Crosshair": "@GunDefault",
+        "TntEquivalentKg": 0.0
       }
     }
   ],
