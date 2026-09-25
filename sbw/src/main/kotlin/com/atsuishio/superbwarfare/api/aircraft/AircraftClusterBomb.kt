@@ -21,6 +21,8 @@ object AircraftClusterBomb {
     private const val KEY = "BvpCluster"
     private const val SENSOR_KEY = "BvpClusterSensor"
     private const val TYPED_CHILD_KEY = "BvpClusterTypedChild"
+    private const val TNT_KEY = "TntKg"
+    const val BOMBLET_TNT_JSON_KEY = "BombletTntEquivalentKg"
     private val CHILD_PROFILE = ResourceLocation("berts_vehicle_pack", "cluster_bomblet")
     fun configured(bomb: AerialBombEntity): Boolean = bomb.persistentData.contains(KEY)
     fun isTypedChild(bomb: AerialBombEntity): Boolean = bomb.persistentData.getBoolean(TYPED_CHILD_KEY)
@@ -64,10 +66,12 @@ object AircraftClusterBomb {
             tag.putDouble("SensorRadius", config.sensorRadius)
             tag.putInt("SensorShots", config.sensorShots)
         }
+        tag.putDouble(TNT_KEY, com.atsuishio.superbwarfare.tools.blast.TntEquivalents.sanitize(json[BOMBLET_TNT_JSON_KEY]?.asDouble ?: 0.0))
         bomb.persistentData.put(KEY, tag)
         // Only the released bomblets deliver blast damage, including when the casing is shot.
         bomb.explosionDamageValue = 0f
         bomb.explosionRadiusValue = 0f
+        com.atsuishio.superbwarfare.tools.blast.TntEquivalents.set(bomb, 0.0)
     }
     fun tick(bomb: AerialBombEntity): Boolean {
         val level = bomb.level() as? ServerLevel ?: return false
@@ -119,6 +123,7 @@ object AircraftClusterBomb {
             ?.getUUID("BvpBombAircraft") ?: dispenser.uuid
         child.configure("DUMB", aircraft, 0.01f, 0.0, 0.0, 0f, 0f, null)
         child.persistentData.putBoolean(TYPED_CHILD_KEY, true)
+        com.atsuishio.superbwarfare.tools.blast.TntEquivalents.set(child, tag.getDouble(TNT_KEY))
         ProjectileProfiles.assign(child, profile)
         if (level.addFreshEntity(child)) {
             tag.putInt("Shots", remaining - 1)
@@ -169,11 +174,14 @@ object AircraftClusterBomb {
             val sensor = config.mode == "SENSOR_FUZED"
             child.configure("DUMB", aircraft, if (sensor) 0.025f else bomb.gravityValue,
                 1.0, 0.0, if (sensor) 0f else config.damage, if (sensor) 0f else config.radius, null)
+            // A sensor dispenser is inert; its fired skeets carry the bomblet charge.
+            com.atsuishio.superbwarfare.tools.blast.TntEquivalents.set(child, if (sensor) 0.0 else tag.getDouble(TNT_KEY))
             if (sensor) {
                 val sensorTag = CompoundTag()
                 sensorTag.putDouble("Radius", config.sensorRadius)
                 sensorTag.putInt("Shots", config.sensorShots)
                 sensorTag.putString("Profile", profile.toString())
+                sensorTag.putDouble(TNT_KEY, tag.getDouble(TNT_KEY))
                 child.persistentData.put(SENSOR_KEY, sensorTag)
                 ProjectileProfiles.assign(child, CHILD_PROFILE)
             } else {

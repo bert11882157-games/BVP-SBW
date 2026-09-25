@@ -88,6 +88,7 @@ open class HandGrenade : Item(Properties().rarity(Rarity.UNCOMMON)), DispenserLa
                 .radius(ExplosionConfig.M67_GRENADE_EXPLOSION_RADIUS.get().toFloat())
                 .damageMultiplier(1.25f)
                 .withParticleType(ParticleTool.ParticleType.MEDIUM)
+                .tntEquivalent(com.atsuishio.superbwarfare.tools.blast.TntBlast.configuredCharge(null, com.atsuishio.superbwarfare.config.server.ExplosionConfig.M67_GRENADE_TNT_EQUIVALENT_KG, com.atsuishio.superbwarfare.tools.blast.TntBlast.HAND_GRENADE_KEY))
                 .explode()
 
             if (pLivingEntity is Player) {

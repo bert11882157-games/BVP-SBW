@@ -80,6 +80,13 @@ object AircraftArmamentRegistry {
         return positions[fired % positions.size]
     }
 
+    private fun requireTntEquivalent(value: com.google.gson.JsonElement?) {
+        if (value == null || value.isJsonNull) return
+        require(value.isJsonPrimitive && value.asJsonPrimitive.isNumber) { "TntEquivalentKg must be a number" }
+        val kg = value.asDouble
+        require(kg.isFinite() && kg in 0.0..100000.0) { "TntEquivalentKg must be within 0..100000 kg" }
+    }
+
     fun validate(json: JsonObject, store: Boolean) {
         require(json.toString().length <= 12000 && json["Schema"]?.asInt == 1)
         require(json["Name"]?.asString?.length in 1..64)
@@ -131,8 +138,12 @@ object AircraftArmamentRegistry {
                 }
             }
             json["MassKg"]?.let { require(it.asDouble.isFinite() && it.asDouble in 0.1..50000.0) }
+            // TNT-equivalent charge (kg) for the Hopkinson-Cranz blast model; absent/0 keeps the legacy blast.
+            requireTntEquivalent(json["TntEquivalentKg"])
+            json.getAsJsonObject("Flight")?.let { requireTntEquivalent(it["TntEquivalentKg"]) }
             json.getAsJsonObject("Bomb")?.let { bomb ->
                 require(json["Category"]?.asString == "BOMB")
+                requireTntEquivalent(bomb["TntEquivalentKg"])
                 require(bomb["Mode"]?.asString in setOf("DUMB", "LASER", "GPS", "TV"))
                 require((bomb["Mode"].asString == "TV") == json.has("Guidance"))
                 if (bomb["Mode"].asString == "TV") require(json.getAsJsonObject("Guidance")["Presentation"]?.asString == "TV")
@@ -151,7 +162,7 @@ object AircraftArmamentRegistry {
                     val required = setOf("Count", "ReleaseHeight", "SpreadSpeed", "BombletDamage",
                         "BombletRadius", "LifetimeTicks")
                     val optional = setOf("Mode", "BombletProfile", "SensorRadius", "SensorShots",
-                        "SensorProjectileProfile")
+                        "SensorProjectileProfile", AircraftClusterBomb.BOMBLET_TNT_JSON_KEY)
                     val keys = cluster.entrySet().map { it.key }.toSet()
                     require(keys.containsAll(required) && keys.all { it in required || it in optional })
                     val mode = cluster["Mode"]?.asString ?: "HE"
@@ -168,6 +179,7 @@ object AircraftArmamentRegistry {
                         require(cluster["SensorShots"].asBigDecimal.intValueExact() in 1..4)
                     }
                     if (mode != "HE") require(cluster["BombletDamage"].asDouble == 0.0)
+                    requireTntEquivalent(cluster[AircraftClusterBomb.BOMBLET_TNT_JSON_KEY])
                     require(cluster["Count"].asBigDecimal.intValueExact() in 1..24)
                     require(cluster["LifetimeTicks"].asBigDecimal.intValueExact() in 20..200)
                     for ((key, range) in mapOf("ReleaseHeight" to (2.0..32.0), "SpreadSpeed" to (0.0..1.0),

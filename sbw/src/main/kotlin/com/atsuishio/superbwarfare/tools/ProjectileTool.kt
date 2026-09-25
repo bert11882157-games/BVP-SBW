@@ -65,7 +65,7 @@ object ProjectileTool {
 
         val pos = projectile.position().add(projectile.deltaMovement.scale(0.5))
 
-        if (projectile.level() is ServerLevel) {
+        if (projectile.level() is ServerLevel && !com.atsuishio.superbwarfare.tools.blast.TntBlast.active(projectile)) {
             projectile.level().explode(
                 source?.entity,
                 pos.x,

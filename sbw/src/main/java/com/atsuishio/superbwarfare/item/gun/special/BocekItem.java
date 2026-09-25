@@ -206,6 +206,7 @@ public class BocekItem extends GunGeoItem {
 
         projectile.setExplosionDamage(explosionDamage);
         projectile.setExplosionRadius(explosionRadius);
+        com.atsuishio.superbwarfare.tools.blast.TntEquivalents.stamp(projectile, data);
 
         for (Perk.Type type : Perk.Type.getEntries()) {
             var instance = data.perk.getInstances(type);

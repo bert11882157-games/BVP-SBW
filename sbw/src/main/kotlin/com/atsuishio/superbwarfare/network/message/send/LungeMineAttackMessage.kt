@@ -50,6 +50,7 @@ data class LungeMineAttackMessage(
                     .radius(ExplosionConfig.LUNGE_MINE_EXPLOSION_RADIUS.get().toFloat())
                     .withParticleType(ParticleTool.ParticleType.MEDIUM)
                     .position(pos)
+                    .tntEquivalent(com.atsuishio.superbwarfare.tools.blast.TntBlast.configuredCharge(null, com.atsuishio.superbwarfare.config.server.ExplosionConfig.LUNGE_MINE_TNT_EQUIVALENT_KG, com.atsuishio.superbwarfare.tools.blast.TntBlast.LUNGE_MINE_KEY))
                     .explode()
             }
             player.swing(InteractionHand.MAIN_HAND)
@@ -62,6 +63,7 @@ data class LungeMineAttackMessage(
             .radius(ExplosionConfig.LUNGE_MINE_EXPLOSION_RADIUS.get().toFloat())
             .attacker(attacker)
             .withParticleType(ParticleTool.ParticleType.MEDIUM)
+            .tntEquivalent(com.atsuishio.superbwarfare.tools.blast.TntBlast.configuredCharge(null, com.atsuishio.superbwarfare.config.server.ExplosionConfig.LUNGE_MINE_TNT_EQUIVALENT_KG, com.atsuishio.superbwarfare.tools.blast.TntBlast.LUNGE_MINE_KEY))
             .explode()
     }
 }

@@ -75,10 +75,14 @@ object AircraftMissileLauncher {
             "MaxLoadFactorG", "BodyTurnLimitScale"))
             flight?.get(key)?.let { profile.putDouble(key, it.asDouble) }
         visualModel(store)?.let { profile.putString("VisualModel", it) }
+        // FFA simulates the missile; SBW stamps the TNT charge on the entity it spawns (see ExternalMunitionBlasts).
+        val tnt = com.atsuishio.superbwarfare.tools.blast.ExternalMunitionBlasts.storeCharge(store)
         val method = if (profile.isEmpty) api?.launch else api?.launchProfile
         val args = arrayOf(vehicle, player, channel, Vec3(position.x, position.y, position.z), forward(vehicle),
             p.mode, p.lockTicks, p.range, p.cone, p.vulnerability)
-        if (method == api?.launchProfile) method?.invoke(null, *args, profile) == true
-        else method?.invoke(null, *args) == true
+        com.atsuishio.superbwarfare.tools.blast.ExternalMunitionBlasts.launch(vehicle.level(), tnt) {
+            if (method == api?.launchProfile) method?.invoke(null, *args, profile) == true
+            else method?.invoke(null, *args) == true
+        }
     }.getOrDefault(false)
 }

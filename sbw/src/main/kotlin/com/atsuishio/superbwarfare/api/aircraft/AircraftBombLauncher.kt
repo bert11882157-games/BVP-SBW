@@ -53,6 +53,7 @@ object AircraftBombLauncher {
             config["DragMultiplier"].asDouble, config["TurnDegreesPerTick"].asDouble,
             config["BlastDamage"].asFloat, config["BlastRadius"].asFloat,
             AircraftBombTargeting.gpsTarget(vehicle), target?.uuid)
+        com.atsuishio.superbwarfare.tools.blast.TntEquivalents.set(entity, config["TntEquivalentKg"]?.asDouble ?: 0.0)
         config.getAsJsonObject("Cluster")?.let { AircraftClusterBomb.configure(entity, it) }
         config.getAsJsonObject("Penetrator")?.let { AircraftBombPenetrator.configure(entity, it) }
         store["ProjectileProfile"]?.asString?.let {

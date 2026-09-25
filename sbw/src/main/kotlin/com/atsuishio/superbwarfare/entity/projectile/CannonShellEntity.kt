@@ -257,6 +257,9 @@ open class CannonShellEntity(type: EntityType<out CannonShellEntity>, level: Lev
                     explosionRadiusValue / 2
                 )
 
+                // Submunitions carry their own (data-table) charge, never the parent's or the gun grenade default.
+                com.atsuishio.superbwarfare.tools.blast.TntEquivalents.set(gunGrenadeEntity,
+                    com.atsuishio.superbwarfare.tools.blast.TntDefaults.get(com.atsuishio.superbwarfare.tools.blast.TntBlast.CM_SUBMUNITION_KEY) ?: 0.0)
                 gunGrenadeEntity.setPos(position().x, position().y, position().z)
                 gunGrenadeEntity.shoot(
                     deltaMovement.x,

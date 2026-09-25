@@ -17,6 +17,25 @@ import net.minecraftforge.event.level.ExplosionEvent
 object AircraftBombPenetrator {
     private const val KEY = "BvpBombPenetrator"
     private const val FUZING_KEY = "BvpBombFuzing"
+    private const val DIRECTION_X = "DirX"
+    private const val DIRECTION_Y = "DirY"
+    private const val DIRECTION_Z = "DirZ"
+
+    /**
+     * Travel direction of a penetrator-fuzed bomb for its TNT fireball cylinder: recorded at impact, else the
+     * current velocity, else straight down. Null for bombs without a Penetrator fuze.
+     */
+    fun direction(bomb: AerialBombEntity): Vec3? {
+        val data = bomb.persistentData
+        if (!data.contains(KEY)) return null
+        val tag = data.getCompound(KEY)
+        if (tag.contains(DIRECTION_X)) {
+            val stored = Vec3(tag.getDouble(DIRECTION_X), tag.getDouble(DIRECTION_Y), tag.getDouble(DIRECTION_Z))
+            if (stored.lengthSqr() > 1.0e-6) return stored.normalize()
+        }
+        val velocity = bomb.deltaMovement
+        return if (velocity.lengthSqr() > 1.0e-6) velocity.normalize() else Vec3(0.0, -1.0, 0.0)
+    }
     fun isFuzing(bomb: AerialBombEntity): Boolean = bomb.persistentData.contains(FUZING_KEY)
     // FFA/Dominions is a runtime dependency, but SBW has no compile-time dependency on it.
     // A missing or failing bridge denies penetration instead of bypassing a protected claim.
@@ -90,6 +109,9 @@ object AircraftBombPenetrator {
             detonation = point
             if (crossed >= config.maxDepthBlocks) break
         }
+        tag.putDouble(DIRECTION_X, direction.x)
+        tag.putDouble(DIRECTION_Y, direction.y)
+        tag.putDouble(DIRECTION_Z, direction.z)
         bomb.persistentData.putInt(FUZING_KEY, config.fuzeDelayTicks)
         bomb.noPhysics = true
         bomb.setGravity(0f)

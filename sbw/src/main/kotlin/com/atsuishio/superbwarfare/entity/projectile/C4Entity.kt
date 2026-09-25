@@ -414,6 +414,7 @@ open class C4Entity : Entity, OwnableEntity {
             .radius(ExplosionConfig.C4_EXPLOSION_RADIUS.get().toFloat())
             .position(pos)
             .withParticleType(ParticleTool.ParticleType.HUGE)
+            .tntEquivalent(com.atsuishio.superbwarfare.tools.blast.TntBlast.configuredCharge(this, com.atsuishio.superbwarfare.config.server.ExplosionConfig.C4_TNT_EQUIVALENT_KG, com.atsuishio.superbwarfare.tools.blast.TntBlast.C4_KEY))
             .explode()
 
         this.discard()

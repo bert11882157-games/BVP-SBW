@@ -493,6 +493,7 @@ open class AutoAimableEntity(type: EntityType<*>, world: Level) : GeoVehicleEnti
             .attacker(living)
             .position(vec3)
             .withParticleType(particleType)
+            .tntEquivalent(gunData.get(GunProp.TNT_EQUIVALENT_KG))
             .explode()
     }
 
@@ -504,6 +505,8 @@ open class AutoAimableEntity(type: EntityType<*>, world: Level) : GeoVehicleEnti
             .attacker(owner)
             .position(vec3)
             .withParticleType(ParticleTool.ParticleType.MEDIUM)
+            .tntEquivalent(com.atsuishio.superbwarfare.tools.blast.TntBlast.tableCharge(
+                com.atsuishio.superbwarfare.tools.blast.TntBlast.AIR_BURST_KEY))
             .explode()
     }
 

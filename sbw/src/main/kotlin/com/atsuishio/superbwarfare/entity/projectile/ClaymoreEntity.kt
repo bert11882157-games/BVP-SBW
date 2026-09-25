@@ -230,6 +230,7 @@ open class ClaymoreEntity(type: EntityType<ClaymoreEntity>, level: Level) : Enti
                 .radius(ExplosionConfig.CLAYMORE_EXPLOSION_RADIUS.get().toFloat())
                 .position(this.position())
                 .withParticleType(ParticleTool.ParticleType.MEDIUM)
+                .tntEquivalent(com.atsuishio.superbwarfare.tools.blast.TntBlast.configuredCharge(this, com.atsuishio.superbwarfare.config.server.ExplosionConfig.CLAYMORE_TNT_EQUIVALENT_KG, com.atsuishio.superbwarfare.tools.blast.TntBlast.CLAYMORE_KEY) * 0.2)
                 .explode()
 
             this.discard()
@@ -242,6 +243,7 @@ open class ClaymoreEntity(type: EntityType<ClaymoreEntity>, level: Level) : Enti
             .damage(ExplosionConfig.CLAYMORE_EXPLOSION_DAMAGE.get().toFloat())
             .radius(ExplosionConfig.CLAYMORE_EXPLOSION_RADIUS.get().toFloat())
             .withParticleType(ParticleTool.ParticleType.MEDIUM)
+            .tntEquivalent(com.atsuishio.superbwarfare.tools.blast.TntBlast.configuredCharge(this, com.atsuishio.superbwarfare.config.server.ExplosionConfig.CLAYMORE_TNT_EQUIVALENT_KG, com.atsuishio.superbwarfare.tools.blast.TntBlast.CLAYMORE_KEY))
             .explode()
     }
 

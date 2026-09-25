@@ -1,6 +1,7 @@
 package com.atsuishio.superbwarfare.init
 
 import com.atsuishio.superbwarfare.api.effect.ExplosionBurstPresentations
+import com.atsuishio.superbwarfare.api.effect.ShockwavePresentations
 import com.atsuishio.superbwarfare.client.particle.*
 import net.minecraftforge.api.distmarker.Dist
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent
@@ -12,6 +13,7 @@ object ModParticles {
     @SubscribeEvent
     fun registerParticles(event: RegisterParticleProvidersEvent) {
         ExplosionBurstPresentations.registerClientEmitter(ExplosionBurstClient::spawn)
+        ShockwavePresentations.registerClientEmitter(ShockwaveClient::emit)
         with(event) {
             registerSpriteSet(ModParticleTypes.FIRE_STAR.get()) { FireStarParticle.provider(it) }
             registerSpriteSet(ModParticleTypes.WHITE_STAR.get()) { WhiteStarParticle.provider(it) }

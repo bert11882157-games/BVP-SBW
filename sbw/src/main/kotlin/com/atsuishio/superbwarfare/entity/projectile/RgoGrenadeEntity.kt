@@ -47,6 +47,17 @@ open class RgoGrenadeEntity : FastThrowableProjectile, BasicGeoProjectileEntity 
         this.lifeValue = life
     }
 
+    /** Stamps the config/table charge (unless a weapon or drone attachment already stamped one). */
+    private fun stampConfiguredCharge() {
+        com.atsuishio.superbwarfare.tools.blast.TntEquivalents.set(this, com.atsuishio.superbwarfare.tools.blast.TntBlast.configuredCharge(this,
+            ExplosionConfig.RGO_GRENADE_TNT_EQUIVALENT_KG, com.atsuishio.superbwarfare.tools.blast.TntBlast.RGO_GRENADE_KEY))
+    }
+
+    override fun buildExplosion(vec3: net.minecraft.world.phys.Vec3): com.atsuishio.superbwarfare.tools.CustomExplosion.Builder {
+        stampConfiguredCharge()
+        return super.buildExplosion(vec3)
+    }
+
     override fun getDefaultItem(): Item {
         return ModItems.RGO_GRENADE.get()
     }
@@ -62,6 +73,7 @@ open class RgoGrenadeEntity : FastThrowableProjectile, BasicGeoProjectileEntity 
                     if (block is BellBlock) {
                         block.attemptToRing(this.level(), resultPos, blockResult.direction)
                     }
+                    stampConfiguredCharge()
                     this.customExplode(this.explosionDamageValue, this.explosionRadiusValue, 1.2f)
                 }
 
@@ -70,6 +82,7 @@ open class RgoGrenadeEntity : FastThrowableProjectile, BasicGeoProjectileEntity 
                     val entity = entityResult.entity
                     if (this.owner != null && this.owner!!.vehicle != null && entity === this.owner!!.vehicle) return
                     if (entity !is DroneEntity) {
+                        stampConfiguredCharge()
                         this.customExplode(this.explosionDamageValue, this.explosionRadiusValue, 1.2f)
                     }
                 }

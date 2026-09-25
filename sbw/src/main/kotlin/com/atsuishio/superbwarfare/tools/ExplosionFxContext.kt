@@ -13,5 +13,7 @@ data class ExplosionFxContext(
     val emitFx: Boolean,
     val particleType: ParticleTool.ParticleType,
     val causeId: ResourceLocation?,
-    val profileId: ResourceLocation?
+    val profileId: ResourceLocation?,
+    /** Visible fireball radius (m) of a TNT-equivalent blast; 0 for a legacy blast. */
+    val fireballRadius: Float = 0f,
 )

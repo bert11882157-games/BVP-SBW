@@ -430,6 +430,7 @@ class AmmoConsumer : DeserializeFromString, PropertyModifier<GunData, DefaultGun
             "ApDurability",
             "ExplosionDamage",
             "ExplosionRadius",
+            "TntEquivalentKg",
             "BypassesArmor",
             "Spread",
             "SpreadAmount",

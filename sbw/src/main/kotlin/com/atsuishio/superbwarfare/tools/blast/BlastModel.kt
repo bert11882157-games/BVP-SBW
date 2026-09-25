@@ -1,0 +1,327 @@
+package com.atsuishio.superbwarfare.tools.blast
+
+import kotlin.math.PI
+import kotlin.math.abs
+import kotlin.math.cbrt
+import kotlin.math.ceil
+import kotlin.math.cos
+import kotlin.math.max
+import kotlin.math.min
+import kotlin.math.sin
+import kotlin.math.sqrt
+
+/**
+ * Tunables of the Hopkinson-Cranz TNT-equivalent blast model. All distances are metres (1 block = 1 m),
+ * charges are TNT-equivalent kilograms. Pure data; the server config builds one per explosion.
+ */
+data class BlastParameters(
+    /** R = k * W^(1/3) for the visible fireball. */
+    val fireballK: Double = 0.5,
+    /** Severe collapse radius; used as the infantry / soft-vehicle damage zone. */
+    val severeK: Double = 1.8,
+    /** Moderate damage radius; only the visible shockwave travels this far. */
+    val moderateK: Double = 3.5,
+    /** Vehicles within this multiple of the fireball radius take true damage (charges >= [vehicleMinKg]). */
+    val vehicleRadiusFactor: Double = 1.4,
+    /** True damage per kilogram of TNT equivalent. */
+    val vehicleDamagePerKg: Double = 3.0,
+    /** Smallest charge that deals area damage to vehicles with armor hitboxes. */
+    val vehicleMinKg: Double = 25.0,
+    /** Smallest charge that produces a visible shockwave. */
+    val shockwaveMinKg: Double = 1000.0,
+    /** Damage to an unshielded infantry target inside the fireball. */
+    val infantryCentreDamage: Double = 40.0,
+    /** Fraction of the damage that still arrives behind complete cover. */
+    val exposureFloor: Double = 0.1,
+    /** Falloff damage magnitude for vehicles without armor hitboxes (aircraft, helicopters, trucks). */
+    val softVehicleCentreDamage: Double = 40.0,
+    /** Penetrator cylinder radius as a fraction of the fireball radius. */
+    val penetratorRadiusFactor: Double = 0.5,
+    /** Block-breaking force at the centre per cube-root kilogram, compared with block hardness. */
+    val blockForcePerCbrtKg: Double = 8.0,
+) {
+    init {
+        require(listOf(fireballK, severeK, moderateK, vehicleRadiusFactor, penetratorRadiusFactor)
+            .all { it.isFinite() && it > 0.0 }) { "Blast radius factors must be finite and positive" }
+        require(fireballK <= severeK && severeK <= moderateK) { "Blast radii must be ordered fireball <= severe <= moderate" }
+        require(listOf(vehicleDamagePerKg, vehicleMinKg, shockwaveMinKg, infantryCentreDamage,
+            softVehicleCentreDamage, blockForcePerCbrtKg).all { it.isFinite() && it >= 0.0 }) {
+            "Blast damage parameters must be finite and non-negative"
+        }
+        require(exposureFloor.isFinite() && exposureFloor in 0.0..1.0) { "Exposure floor must be within 0..1" }
+    }
+
+    companion object {
+        @JvmField
+        val DEFAULT = BlastParameters()
+    }
+}
+
+/** Radial classification of a point around a detonation. */
+enum class BlastZone { FIREBALL, SEVERE, MODERATE, OUTSIDE }
+
+data class BlastRadii(val fireball: Double, val severe: Double, val moderate: Double)
+
+/**
+ * A penetrator's fireball volume moved forward along its travel direction: a right circular cylinder
+ * that starts at the detonation point ([ox], [oy], [oz]) and extends [length] along the unit axis.
+ */
+data class BlastCylinder(
+    val ox: Double, val oy: Double, val oz: Double,
+    val dx: Double, val dy: Double, val dz: Double,
+    val radius: Double, val length: Double,
+) {
+    init {
+        require(listOf(ox, oy, oz, dx, dy, dz, radius, length).all { it.isFinite() })
+        require(radius > 0.0 && length > 0.0)
+        require(abs(dx * dx + dy * dy + dz * dz - 1.0) < 1e-6) { "Cylinder axis must be a unit vector" }
+    }
+
+    val volume: Double get() = PI * radius * radius * length
+
+    /** Axial parameter of the point's projection; not clamped. */
+    fun axial(x: Double, y: Double, z: Double): Double = (x - ox) * dx + (y - oy) * dy + (z - oz) * dz
+
+    fun contains(x: Double, y: Double, z: Double): Boolean {
+        if (!x.isFinite() || !y.isFinite() || !z.isFinite()) return false
+        val t = axial(x, y, z)
+        if (t < 0.0 || t > length) return false
+        val px = x - ox - dx * t
+        val py = y - oy - dy * t
+        val pz = z - oz - dz * t
+        return px * px + py * py + pz * pz <= radius * radius
+    }
+
+    /** Smallest distance between the axis segment and an axis-aligned box (0 when they overlap). */
+    fun axisDistanceToBox(minX: Double, minY: Double, minZ: Double, maxX: Double, maxY: Double, maxZ: Double): Double {
+        // The distance from a point moving linearly to a convex set is convex in the parameter.
+        var lo = 0.0
+        var hi = length
+        repeat(60) {
+            val m1 = lo + (hi - lo) / 3.0
+            val m2 = hi - (hi - lo) / 3.0
+            if (pointBoxDistance(m1, minX, minY, minZ, maxX, maxY, maxZ) <=
+                pointBoxDistance(m2, minX, minY, minZ, maxX, maxY, maxZ)) hi = m2 else lo = m1
+        }
+        return pointBoxDistance((lo + hi) * 0.5, minX, minY, minZ, maxX, maxY, maxZ)
+    }
+
+    /**
+     * Conservative box test: the box's axial extent must overlap the flat-capped segment and the box must
+     * come within [radius] of the axis segment. Near the cap rims this can include a box a capsule would.
+     */
+    fun intersectsBox(minX: Double, minY: Double, minZ: Double, maxX: Double, maxY: Double, maxZ: Double): Boolean {
+        if (!listOf(minX, minY, minZ, maxX, maxY, maxZ).all { it.isFinite() }) return false
+        // Axial extent of the box: the projection of an AABB onto a direction is centre +/- half-extent.
+        val centre = axial((minX + maxX) * 0.5, (minY + maxY) * 0.5, (minZ + maxZ) * 0.5)
+        val half = abs(dx) * (maxX - minX) * 0.5 + abs(dy) * (maxY - minY) * 0.5 + abs(dz) * (maxZ - minZ) * 0.5
+        if (centre + half < 0.0 || centre - half > length) return false
+        return axisDistanceToBox(minX, minY, minZ, maxX, maxY, maxZ) <= radius
+    }
+
+    /** Axis-aligned bounds of the whole cylinder: [minX, minY, minZ, maxX, maxY, maxZ]. */
+    fun bounds(): DoubleArray {
+        val ex = radius * sqrt(max(0.0, 1.0 - dx * dx))
+        val ey = radius * sqrt(max(0.0, 1.0 - dy * dy))
+        val ez = radius * sqrt(max(0.0, 1.0 - dz * dz))
+        val endX = ox + dx * length
+        val endY = oy + dy * length
+        val endZ = oz + dz * length
+        return doubleArrayOf(
+            min(ox, endX) - ex, min(oy, endY) - ey, min(oz, endZ) - ez,
+            max(ox, endX) + ex, max(oy, endY) + ey, max(oz, endZ) + ez,
+        )
+    }
+
+    /** Farthest distance from the detonation point that any part of the cylinder reaches. */
+    val reach: Double get() = sqrt(length * length + radius * radius)
+
+    private fun pointBoxDistance(t: Double, minX: Double, minY: Double, minZ: Double,
+                                 maxX: Double, maxY: Double, maxZ: Double): Double {
+        val x = ox + dx * t
+        val y = oy + dy * t
+        val z = oz + dz * t
+        val cx = x.coerceIn(minX, maxX) - x
+        val cy = y.coerceIn(minY, maxY) - y
+        val cz = z.coerceIn(minZ, maxZ) - z
+        return sqrt(cx * cx + cy * cy + cz * cz)
+    }
+}
+
+/**
+ * Hopkinson-Cranz scaled distance: R = k * W^(1/3). Pure functions only; callers supply distances,
+ * visibility fractions and random numbers so every rule is deterministic and unit-testable.
+ */
+object BlastModel {
+    /** Fireball radius thresholds (m) between the six native explosion recipes, MINI..GIANT. */
+    private val FIREBALL_TIER_LIMITS = doubleArrayOf(1.0, 1.6, 3.0, 5.0, 9.0)
+    private const val SHOCKWAVE_PARTICLES_PER_SQUARE_METRE = 0.5
+    private const val SHOCKWAVE_MIN_PARTICLES = 64
+    private val GOLDEN_ANGLE = PI * (3.0 - sqrt(5.0))
+
+    @JvmStatic
+    fun valid(kg: Double): Boolean = kg.isFinite() && kg > 0.0
+
+    @JvmStatic
+    fun radius(k: Double, kg: Double): Double = if (valid(kg) && k.isFinite() && k > 0.0) k * cbrt(kg) else 0.0
+
+    @JvmStatic
+    fun radii(kg: Double, parameters: BlastParameters = BlastParameters.DEFAULT): BlastRadii = BlastRadii(
+        radius(parameters.fireballK, kg), radius(parameters.severeK, kg), radius(parameters.moderateK, kg))
+
+    @JvmStatic
+    fun classify(distance: Double, radii: BlastRadii): BlastZone = when {
+        !distance.isFinite() || distance < 0.0 -> BlastZone.OUTSIDE
+        distance <= radii.fireball -> BlastZone.FIREBALL
+        distance <= radii.severe -> BlastZone.SEVERE
+        distance <= radii.moderate -> BlastZone.MODERATE
+        else -> BlastZone.OUTSIDE
+    }
+
+    /**
+     * 1 inside the fireball, falling to 0 at the severe-collapse edge. Uses SBW's legacy
+     * (p^2 + p) / 2 curve so damage stays heavy near the centre and light near the edge.
+     */
+    @JvmStatic
+    fun severeFalloff(distance: Double, radii: BlastRadii): Double {
+        if (!distance.isFinite() || distance < 0.0 || radii.severe <= 0.0) return 0.0
+        if (distance <= radii.fireball) return 1.0
+        if (distance >= radii.severe) return 0.0
+        val span = radii.severe - radii.fireball
+        if (span <= 0.0) return 0.0
+        val p = 1.0 - (distance - radii.fireball) / span
+        return (p * p + p) * 0.5
+    }
+
+    /** Visible fraction with a floor: complete cover still lets [floor] of the blast through. */
+    @JvmStatic
+    fun exposure(seenFraction: Double, floor: Double): Double {
+        val boundedFloor = if (floor.isFinite()) floor.coerceIn(0.0, 1.0) else 0.0
+        val seen = if (seenFraction.isFinite()) seenFraction.coerceIn(0.0, 1.0) else 0.0
+        return max(seen, boundedFloor)
+    }
+
+    @JvmStatic
+    fun infantryDamage(distance: Double, seenFraction: Double, radii: BlastRadii,
+                       parameters: BlastParameters = BlastParameters.DEFAULT): Double =
+        parameters.infantryCentreDamage * severeFalloff(distance, radii) * exposure(seenFraction, parameters.exposureFloor)
+
+    @JvmStatic
+    fun softVehicleDamage(distance: Double, seenFraction: Double, radii: BlastRadii,
+                          parameters: BlastParameters = BlastParameters.DEFAULT): Double =
+        parameters.softVehicleCentreDamage * severeFalloff(distance, radii) * exposure(seenFraction, parameters.exposureFloor)
+
+    /** Radius of the vehicle true-damage sphere (1.4 x fireball by default). */
+    @JvmStatic
+    fun vehicleTrueDamageRadius(radii: BlastRadii, parameters: BlastParameters = BlastParameters.DEFAULT): Double =
+        parameters.vehicleRadiusFactor * radii.fireball
+
+    /** Whether this charge is large enough to deal area damage to vehicles, including armored ones. */
+    @JvmStatic
+    fun damagesVehicles(kg: Double, parameters: BlastParameters = BlastParameters.DEFAULT): Boolean =
+        valid(kg) && kg >= parameters.vehicleMinKg
+
+    /** True damage (bypassing armor and damage modifiers) for a vehicle at [distance] from the centre. */
+    @JvmStatic
+    fun vehicleTrueDamage(kg: Double, distance: Double, radii: BlastRadii,
+                          parameters: BlastParameters = BlastParameters.DEFAULT): Double {
+        if (!damagesVehicles(kg, parameters) || !distance.isFinite() || distance < 0.0) return 0.0
+        return if (distance <= vehicleTrueDamageRadius(radii, parameters)) parameters.vehicleDamagePerKg * kg else 0.0
+    }
+
+    /** True damage for a vehicle inside a penetrator cylinder (no occlusion, no distance falloff). */
+    @JvmStatic
+    fun vehicleTrueDamageInCylinder(kg: Double, parameters: BlastParameters = BlastParameters.DEFAULT): Double =
+        if (damagesVehicles(kg, parameters)) parameters.vehicleDamagePerKg * kg else 0.0
+
+    @JvmStatic
+    fun producesShockwave(kg: Double, parameters: BlastParameters = BlastParameters.DEFAULT): Boolean =
+        valid(kg) && kg >= parameters.shockwaveMinKg
+
+    @JvmStatic
+    fun sphereVolume(radius: Double): Double = 4.0 / 3.0 * PI * radius * radius * radius
+
+    /**
+     * The penetrator cylinder holding the fireball's volume: radius r = factor * R_f and
+     * length L = (4/3 pi R_f^3) / (pi r^2) (about 5.33 R_f for the default factor 0.5).
+     * Returns null when the direction or fireball is degenerate.
+     */
+    @JvmStatic
+    fun penetratorCylinder(ox: Double, oy: Double, oz: Double, dirX: Double, dirY: Double, dirZ: Double,
+                           fireballRadius: Double,
+                           parameters: BlastParameters = BlastParameters.DEFAULT): BlastCylinder? {
+        val lengthSquared = dirX * dirX + dirY * dirY + dirZ * dirZ
+        if (!lengthSquared.isFinite() || lengthSquared < 1e-12 || !fireballRadius.isFinite() || fireballRadius <= 0.0) return null
+        if (!ox.isFinite() || !oy.isFinite() || !oz.isFinite()) return null
+        val inverse = 1.0 / sqrt(lengthSquared)
+        val radius = parameters.penetratorRadiusFactor * fireballRadius
+        val length = sphereVolume(fireballRadius) / (PI * radius * radius)
+        return BlastCylinder(ox, oy, oz, dirX * inverse, dirY * inverse, dirZ * inverse, radius, length)
+    }
+
+    /**
+     * Block-breaking force at [distance], compared with a block's hardness (metal hardness x3).
+     * [randomUnit] in 0..1 adds the legacy +/-15% jitter; force is zero at the fireball edge.
+     */
+    @JvmStatic
+    fun blockForce(kg: Double, distance: Double, fireballRadius: Double, randomUnit: Double,
+                   parameters: BlastParameters = BlastParameters.DEFAULT): Double {
+        if (!valid(kg) || !distance.isFinite() || distance < 0.0 || fireballRadius <= 0.0 || distance > fireballRadius) return 0.0
+        val jitter = 0.85 + 0.3 * (if (randomUnit.isFinite()) randomUnit.coerceIn(0.0, 1.0) else 0.5)
+        val ratio = distance / fireballRadius
+        return parameters.blockForcePerCbrtKg * cbrt(kg) * jitter * (1.0 - ratio * ratio)
+    }
+
+    /** Uniform (unattenuated) block-breaking force inside a penetrator cylinder. */
+    @JvmStatic
+    fun cylinderBlockForce(kg: Double, parameters: BlastParameters = BlastParameters.DEFAULT): Double =
+        if (valid(kg)) parameters.blockForcePerCbrtKg * cbrt(kg) else 0.0
+
+    /** Entity query reach around the detonation point for every damaging rule. */
+    @JvmStatic
+    fun queryRadius(radii: BlastRadii, parameters: BlastParameters = BlastParameters.DEFAULT,
+                    cylinder: BlastCylinder? = null): Double =
+        max(max(radii.severe, vehicleTrueDamageRadius(radii, parameters)), cylinder?.reach ?: 0.0)
+
+    /** 0..5 = MINI, SMALL, MEDIUM, LARGE, HUGE, GIANT native recipes, chosen by visible fireball size. */
+    @JvmStatic
+    fun fireballTier(fireballRadius: Double): Int {
+        if (!fireballRadius.isFinite() || fireballRadius <= 0.0) return 0
+        var tier = 0
+        for (limit in FIREBALL_TIER_LIMITS) if (fireballRadius >= limit) tier++
+        return tier
+    }
+
+    /** Particle count for an expanding shell reaching [moderateRadius], capped by [budget]. */
+    @JvmStatic
+    fun shockwaveParticleCount(moderateRadius: Double, budget: Int): Int {
+        if (budget <= 0 || !moderateRadius.isFinite() || moderateRadius <= 0.0) return 0
+        val area = 2.0 * PI * moderateRadius * moderateRadius
+        val wanted = ceil(area * SHOCKWAVE_PARTICLES_PER_SQUARE_METRE)
+        val floor = min(SHOCKWAVE_MIN_PARTICLES, budget)
+        return wanted.coerceIn(floor.toDouble(), budget.toDouble()).toInt()
+    }
+
+    /** Front radius at [progress] (0..1): fast at first, decelerating as it approaches [to]. */
+    @JvmStatic
+    fun shockwaveRadiusAt(progress: Double, from: Double, to: Double): Double {
+        val t = if (progress.isFinite()) progress.coerceIn(0.0, 1.0) else 1.0
+        val eased = 1.0 - (1.0 - t) * (1.0 - t)
+        return from + (to - from) * eased
+    }
+
+    /**
+     * Unit direction [index] of [count] spread evenly over the upper hemisphere (y >= 0), rotated by [phase].
+     * Writes x, y, z into [out] to avoid per-particle allocation.
+     */
+    @JvmStatic
+    fun hemisphereDirection(index: Int, count: Int, phase: Double, out: DoubleArray) {
+        require(count > 0 && index in 0 until count && out.size >= 3)
+        val y = (index + 0.5) / count
+        val horizontal = sqrt(max(0.0, 1.0 - y * y))
+        val angle = phase + GOLDEN_ANGLE * index
+        out[0] = horizontal * cos(angle)
+        out[1] = y
+        out[2] = horizontal * sin(angle)
+    }
+}

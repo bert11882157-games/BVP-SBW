@@ -107,6 +107,7 @@ open class SmallCannonShellEntity(type: EntityType<out SmallCannonShellEntity>, 
             .destroyBlock { if (hitEntity) Explosion.BlockInteraction.KEEP else (if (ExplosionConfig.EXPLOSION_DESTROY.get()) Explosion.BlockInteraction.DESTROY else Explosion.BlockInteraction.KEEP) }
             .damageMultiplier(1.25f)
             .emitFx(shouldEmitDefaultImpactFx())
+            .tntEquivalent(com.atsuishio.superbwarfare.tools.blast.TntEquivalents.resolve(this))
             .explode()
     }
 

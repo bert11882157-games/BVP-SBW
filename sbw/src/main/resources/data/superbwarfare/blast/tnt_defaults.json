@@ -1,0 +1,4 @@
+{
+  "_comment": "TNT-equivalent kg for munitions spawned without GunData, keyed by munition inventory row id (entity type id, config-backed munition, item or special key). Written by tools/tnt/apply_tnt.py. A missing, null or 0 entry keeps the legacy ExplosionDamage/ExplosionRadius blast.",
+  "entries": {}
+}

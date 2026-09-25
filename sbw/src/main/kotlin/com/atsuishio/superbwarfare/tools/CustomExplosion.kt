@@ -11,6 +11,12 @@ import com.atsuishio.superbwarfare.init.ModSounds
 import com.atsuishio.superbwarfare.network.message.receive.ClientIndicatorMessage
 import com.atsuishio.superbwarfare.network.message.receive.ShakeClientMessage.Companion.sendToNearbyPlayers
 import com.atsuishio.superbwarfare.tools.DamageHandler.doDamage
+import com.atsuishio.superbwarfare.network.message.receive.ShockwaveMessage
+import com.atsuishio.superbwarfare.tools.blast.BlastCylinder
+import com.atsuishio.superbwarfare.tools.blast.BlastExposure
+import com.atsuishio.superbwarfare.tools.blast.BlastModel
+import com.atsuishio.superbwarfare.tools.blast.TntBlast
+import com.atsuishio.superbwarfare.tools.blast.TntEquivalents
 import com.mojang.datafixers.util.Pair
 import it.unimi.dsi.fastutil.objects.ObjectArrayList
 import net.minecraft.core.BlockPos
@@ -70,10 +76,23 @@ open class CustomExplosion(
     private var damageMultiplier = 1f
     private var activeGroundVehicleBlast: GroundVehicleBlastPolicy? = null
     private var activeHeavyWarheadBlast: HeavyWarheadBlastPolicy? = null
+    /** Non-null selects the Hopkinson-Cranz TNT-equivalent model for this explosion. */
+    private var tntPlan: TntBlast.Plan? = null
 
     /** The Forge vehicle listener leaves these targets to this explosion's resolved damage pass. */
     fun ownsGroundVehicleBlast(entity: VehicleEntity): Boolean =
-        activeHeavyWarheadBlast != null || activeGroundVehicleBlast?.appliesTo(entity.vehicleType) == true
+        tntPlan != null || activeHeavyWarheadBlast != null || activeGroundVehicleBlast?.appliesTo(entity.vehicleType) == true
+
+    /** True when this explosion uses the TNT-equivalent model; the legacy vehicle listener then stays out. */
+    fun usesTntModel(): Boolean = tntPlan != null
+
+    /** TNT equivalent (kg) of this explosion, 0 for a legacy blast. */
+    fun tntEquivalentKg(): Double = tntPlan?.kg ?: 0.0
+
+    fun setTntPlan(plan: TntBlast.Plan?): CustomExplosion {
+        this.tntPlan = plan
+        return this
+    }
 
     /** The legacy Forge vehicle listener must not turn a visual-only blast radius into damage. */
     fun hasLegacyVehicleBlastDamage(): Boolean = damage.isFinite() && damage > 0f
@@ -140,6 +159,10 @@ open class CustomExplosion(
     }
 
     override fun explode() {
+        tntPlan?.let {
+            explodeTnt(it)
+            return
+        }
         if (ExplosionConfig.EXPLOSION_DESTROY.get()) {
             this.level.gameEvent(this.pSource, GameEvent.EXPLODE, Vec3(this.x, this.y, this.z))
             val set = hashSetOf<BlockPos>()
@@ -365,6 +388,197 @@ open class CustomExplosion(
         }
     }
 
+    /**
+     * Hopkinson-Cranz TNT-equivalent blast. The severe-collapse sphere is the infantry (and soft-vehicle)
+     * damage zone with occlusion; vehicles near the fireball take true damage for charges >= 25 kg; blocks
+     * break inside the fireball. Penetrator bombs push the fireball volume forward as a cylinder that ignores
+     * occlusion and breaks every breakable block it covers. Warhead fragments are unchanged; the legacy
+     * vehicle listener and the heavy-warhead / ground-vehicle policies do not run.
+     */
+    private fun explodeTnt(plan: TntBlast.Plan) {
+        val center = Vec3(this.x, this.y, this.z)
+        val parameters = plan.parameters
+        val radii = plan.radii
+        val cylinder = plan.penetratorDirection?.let {
+            BlastModel.penetratorCylinder(x, y, z, it.x, it.y, it.z, radii.fireball, parameters)
+        }
+
+        if (ExplosionConfig.EXPLOSION_DESTROY.get()) {
+            this.level.gameEvent(this.pSource, GameEvent.EXPLODE, center)
+            if (cylinder != null) collectCylinderBlocks(cylinder, plan) else collectFireballBlocks(plan)
+        }
+
+        val diagnosticSubject = pSource ?: damageSource.directEntity ?: damageSource.entity
+        val diagnostics = diagnosticSubject != null && EliteDiagnostics.isEnabled(level)
+        val blastProfile = pSource?.let(ProjectileProfiles::resolve)
+        val fragmentPolicy = com.atsuishio.superbwarfare.api.projectile.WarheadFragmentPolicy.from(blastProfile)
+        val reach = maxOf(BlastModel.queryRadius(radii, parameters, cylinder), fragmentPolicy?.range ?: 0.0)
+        val list = this.level.getEntities(
+            this.pSource,
+            AABB(x - reach - 1, y - reach - 1, z - reach - 1, x + reach + 1, y + reach + 1, z + reach + 1)
+        )
+        ForgeEventFactory.onExplosionDetonate(this.level, this, list, reach)
+        if (diagnostics) EliteDiagnostics.record(diagnosticSubject!!, "tnt_blast", "PLAN",
+            "source_uuid", pSource?.uuid, "profile", blastProfile?.id, "tnt_kg", plan.kg,
+            "fireball", radii.fireball, "severe", radii.severe, "moderate", radii.moderate,
+            "penetrator", cylinder != null, "cylinder_length", cylinder?.length, "position", center,
+            "candidates", list.size, "blocks", toBlow.size)
+
+        var hit = if (fragmentPolicy != null && level is ServerLevel)
+            com.atsuishio.superbwarfare.api.projectile.WarheadFragments.apply(
+                level, pSource, damageSource, center, list, fragmentPolicy) else false
+
+        for (entity in list) {
+            if (entity.ignoreExplosion()) continue
+            val box = entity.boundingBox
+            val distance = sqrt(box.distanceToSqr(center))
+            val inCylinder = cylinder?.intersectsBox(box.minX, box.minY, box.minZ, box.maxX, box.maxY, box.maxZ) == true
+            if (entity is VehicleEntity) {
+                hit = applyTntToVehicle(entity, plan, center, distance, cylinder, inCylinder, diagnostics) || hit
+                continue
+            }
+            // Enclosed crew is shielded by the hull: the vehicle rules above own that damage (enclosed-seat
+            // damage would otherwise be redirected into the hull and bypass the armored-vehicle threshold).
+            val mount = entity.vehicle
+            if (mount is VehicleEntity && mount.isEnclosed(entity)) continue
+            val damage = when {
+                // Inside the penetrator cylinder the fireball itself reaches the target: no occlusion.
+                inCylinder -> parameters.infantryCentreDamage
+                distance < radii.severe ->
+                    BlastModel.infantryDamage(distance, BlastExposure.seenFraction(level, center, entity), radii, parameters)
+                else -> 0.0
+            }
+            if (damage <= 0.0) continue
+            applyBlastDamage(entity, center, damage)
+            if (entity is LivingEntity) hit = true
+        }
+
+        if (hit) {
+            val player = this.damageSource.entity
+            if (player is ServerPlayer) {
+                SoundTool.playLocalSound(player, ModSounds.INDICATION.get())
+                player.sendPacket(ClientIndicatorMessage(0, 5))
+            }
+        }
+    }
+
+    /** True damage near the fireball (>= 25 kg) plus infantry-style falloff for vehicles without armor hitboxes. */
+    private fun applyTntToVehicle(
+        vehicle: VehicleEntity, plan: TntBlast.Plan, center: Vec3, distance: Double,
+        cylinder: BlastCylinder?, inCylinder: Boolean, diagnostics: Boolean,
+    ): Boolean {
+        val parameters = plan.parameters
+        val radii = plan.radii
+        var hit = false
+        val trueDamage = if (cylinder != null) {
+            if (inCylinder) BlastModel.vehicleTrueDamageInCylinder(plan.kg, parameters) else 0.0
+        } else BlastModel.vehicleTrueDamage(plan.kg, distance, radii, parameters)
+        val healthBefore = vehicle.health
+        if (trueDamage > 0.0) {
+            val result = vehicle.applyResolvedDamage(
+                com.atsuishio.superbwarfare.api.vehicle.damage.ResolvedVehicleDamageRequest(
+                    damageSource, trueDamage.toFloat(),
+                    com.atsuishio.superbwarfare.api.vehicle.damage.ResolvedVehicleModulePolicy.SKIP_NATIVE
+                )
+            )
+            hit = result.accepted
+        }
+        val armored = vehicle.hasArmorHitboxes()
+        var softDamage = 0.0
+        if (!armored && vehicle.isAlive) {
+            softDamage = when {
+                inCylinder -> parameters.softVehicleCentreDamage
+                distance < radii.severe -> BlastModel.softVehicleDamage(
+                    distance, BlastExposure.seenFraction(level, center, vehicle), radii, parameters)
+                else -> 0.0
+            }
+            // Ordinary hurt: the vehicle's own damage modifiers and aircraft hit rules still apply.
+            if (softDamage > 0.0 && vehicle.hurt(damageSource, softDamage.toFloat())) hit = true
+        }
+        if (diagnostics && (trueDamage > 0.0 || softDamage > 0.0)) EliteDiagnostics.record(vehicle,
+            "tnt_blast", "VEHICLE", "source_uuid", pSource?.uuid, "tnt_kg", plan.kg, "distance", distance,
+            "in_cylinder", inCylinder, "armor_hitboxes", armored, "true_damage", trueDamage,
+            "soft_damage", softDamage, "health_before", healthBefore, "health_after", vehicle.health)
+        return hit
+    }
+
+    /** Legacy damage application (monster bonus, knockback, fire) for a non-vehicle blast target. */
+    private fun applyBlastDamage(entity: Entity, center: Vec3, damage: Double) {
+        if (entity is Monster) {
+            doDamage(entity, this.damageSource, damage.toFloat() * (1 + 0.2f * this.damageMultiplier))
+        } else {
+            doDamage(entity, this.damageSource, damage.toFloat())
+        }
+        if (entity is LivingEntity) {
+            var force = damage * 0.015
+            force = ProtectionEnchantment.getExplosionKnockbackAfterDampener(entity, force)
+            val direction = center.vectorTo(entity.boundingBox.center)
+            if (direction.lengthSqr() > 1.0e-8) {
+                entity.deltaMovement = entity.deltaMovement.add(direction.normalize().scale(force))
+            }
+        }
+        entity.invulnerableTime = 1
+        if (fireTime > 0) {
+            entity.setSecondsOnFire(fireTime)
+        }
+    }
+
+    /** Blocks whose centres lie inside the fireball; the force falls to zero at its edge (hardness rules kept). */
+    private fun collectFireballBlocks(plan: TntBlast.Plan) {
+        val fireball = plan.radii.fireball
+        if (fireball <= 0.0) return
+        val random = level.random
+        val limit = fireball * fireball
+        val cursor = BlockPos.MutableBlockPos()
+        val set = LinkedHashSet<BlockPos>()
+        for (bx in Mth.floor(x - fireball)..Mth.floor(x + fireball)) {
+            for (by in Mth.floor(y - fireball)..Mth.floor(y + fireball)) {
+                for (bz in Mth.floor(z - fireball)..Mth.floor(z + fireball)) {
+                    val dx = bx + 0.5 - x
+                    val dy = by + 0.5 - y
+                    val dz = bz + 0.5 - z
+                    val distanceSqr = dx * dx + dy * dy + dz * dz
+                    if (distanceSqr > limit) continue
+                    cursor.set(bx, by, bz)
+                    if (!level.isInWorldBounds(cursor)) continue
+                    val state = level.getBlockState(cursor)
+                    if (state.isAir) continue
+                    var resistance = state.block.defaultDestroyTime()
+                    if (resistance < 0f) continue
+                    if (state.soundType === SoundType.METAL || state.soundType === SoundType.COPPER ||
+                        state.soundType === SoundType.NETHERITE_BLOCK) resistance *= 3f
+                    val force = BlastModel.blockForce(plan.kg, sqrt(distanceSqr), fireball, random.nextDouble(), plan.parameters)
+                    if (force > resistance &&
+                        damageCalculator.shouldBlockExplode(this, level, cursor, state, force.toFloat())) {
+                        set.add(cursor.immutable())
+                    }
+                }
+            }
+        }
+        this.toBlow.addAll(set)
+    }
+
+    /** Every breakable block whose centre lies inside the penetrator cylinder. */
+    private fun collectCylinderBlocks(cylinder: BlastCylinder, plan: TntBlast.Plan) {
+        val bounds = cylinder.bounds()
+        val force = BlastModel.cylinderBlockForce(plan.kg, plan.parameters).toFloat()
+        val cursor = BlockPos.MutableBlockPos()
+        val set = LinkedHashSet<BlockPos>()
+        for (bx in Mth.floor(bounds[0])..Mth.floor(bounds[3])) {
+            for (by in Mth.floor(bounds[1])..Mth.floor(bounds[4])) {
+                for (bz in Mth.floor(bounds[2])..Mth.floor(bounds[5])) {
+                    if (!cylinder.contains(bx + 0.5, by + 0.5, bz + 0.5)) continue
+                    cursor.set(bx, by, bz)
+                    if (!level.isInWorldBounds(cursor)) continue
+                    val state = level.getBlockState(cursor)
+                    if (state.isAir || state.block.defaultDestroyTime() < 0f) continue
+                    if (damageCalculator.shouldBlockExplode(this, level, cursor, state, force)) set.add(cursor.immutable())
+                }
+            }
+        }
+        this.toBlow.addAll(set)
+    }
+
     override fun finalizeExplosion(pSpawnParticles: Boolean) {
         if (this.level.isClientSide) {
             this.level.playLocalSound(
@@ -441,6 +655,8 @@ open class CustomExplosion(
         private var emitFx = true
         private var explosionCauseId: ResourceLocation? = null
         private var explosionProfileId: ResourceLocation? = null
+        private var tntEquivalentKg: Double? = null
+        private var penetratorDirection: Vec3? = null
         var position: Vec3
 
         init {
@@ -524,6 +740,22 @@ open class CustomExplosion(
             return this
         }
 
+        /**
+         * TNT-equivalent charge in kg. > 0 (with the model enabled) replaces the legacy damage/radius blast;
+         * 0 forces the legacy blast. Unset: the direct source's stamped/default charge is used, except for
+         * vehicles (whose death explosions stay on the legacy path).
+         */
+        fun tntEquivalent(kg: Double): Builder {
+            this.tntEquivalentKg = kg
+            return this
+        }
+
+        /** Penetrator bomb travel direction: the fireball volume becomes a forward cylinder. */
+        fun penetrator(direction: Vec3?): Builder {
+            this.penetratorDirection = direction
+            return this
+        }
+
         fun explode() {
             if (level.isClientSide) return
 
@@ -539,17 +771,23 @@ open class CustomExplosion(
             } else {
                 destroyBlock.get()
             }
+            val kg = tntEquivalentKg ?: if (directSource is VehicleEntity) 0.0 else TntEquivalents.resolve(directSource)
+            val plan = TntBlast.plan(kg, penetratorDirection)
+            // The Explosion radius drives camera shake and loot survival; a TNT blast reaches its moderate radius.
+            val explosionRadius = if (plan != null) maxOf(radius, plan.radii.moderate.toFloat()) else radius
             val customExplosion = CustomExplosion(
                 level, directSource,
                 source, damage,
-                position.x, position.y, position.z, radius, blockInteraction
+                position.x, position.y, position.z, explosionRadius, blockInteraction
             )
                 .setFireTime(fireTime)
                 .setDamageMultiplier(damageMultiplier)
+                .setTntPlan(plan)
             customExplosion.explode()
             ForgeEventFactory.onExplosionStart(directSource.level(), customExplosion)
             customExplosion.finalizeExplosion(false)
 
+            val fireball = plan?.radii?.fireball?.toFloat() ?: 0f
             ParticleTool.dispatchExplosionFx(
                 directSource.level(),
                 ExplosionFxContext(
@@ -557,13 +795,19 @@ open class CustomExplosion(
                     attacker = attackerEntity,
                     gameplayPosition = position,
                     particlePosition = particlePosition ?: position,
-                    radius = radius,
+                    // The visible blast is the fireball: size presentation and recipe from it.
+                    radius = if (plan != null) fireball else radius,
                     emitFx = emitFx,
-                    particleType = particleType,
+                    particleType = if (plan != null) TntBlast.particleType(plan.radii.fireball) else particleType,
                     causeId = explosionCauseId,
-                    profileId = explosionProfileId
+                    profileId = explosionProfileId,
+                    fireballRadius = fireball,
                 )
             )
+            if (plan != null && plan.producesShockwave) {
+                // A separate phenomenon from the fireball: sent even when the impact presentation was replaced.
+                (level as? ServerLevel)?.let { ShockwaveMessage.send(it, particlePosition ?: position, plan) }
+            }
         }
     }
 

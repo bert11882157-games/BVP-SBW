@@ -166,6 +166,7 @@ open class PtkmProjectileEntity : FastThrowableProjectile, BasicGeoProjectileEnt
             .position(pos)
             .withParticleType(ParticleTool.ParticleType.MEDIUM)
             .particlePosition(pos)
+            .tntEquivalent(com.atsuishio.superbwarfare.tools.blast.TntBlast.configuredCharge(this, com.atsuishio.superbwarfare.config.server.ExplosionConfig.PTKM_1R_PROJECTILE_TNT_EQUIVALENT_KG, com.atsuishio.superbwarfare.tools.blast.TntBlast.PTKM_PROJECTILE_KEY))
             .explode()
     }
 

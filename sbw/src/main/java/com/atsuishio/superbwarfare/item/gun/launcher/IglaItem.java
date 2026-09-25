@@ -72,6 +72,7 @@ public class IglaItem extends GunGeoItem {
                     data.get(GunProp.EXPLOSION_RADIUS).floatValue()
             );
 
+            com.atsuishio.superbwarfare.tools.blast.TntEquivalents.stamp(iglaMissileEntity, data);
             for (Perk.Type type : Perk.Type.getEntries()) {
                 var instance = data.perk.getInstances(type);
                 instance.forEach(perk -> perk.perk().modifyProjectile(data, perk, iglaMissileEntity));

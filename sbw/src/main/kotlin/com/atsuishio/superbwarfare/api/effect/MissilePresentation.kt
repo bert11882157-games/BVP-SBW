@@ -112,7 +112,10 @@ object MissilePresentation {
         val previous = emitted[source]
         if (previous?.tick == level.gameTime && previous.point.distanceToSqr(position) < 0.0625) return true
         val profile = com.atsuishio.superbwarfare.api.projectile.ProjectileProfiles.resolve(source)
-        val authoredRadius = com.atsuishio.superbwarfare.api.projectile.HeavyWarheadBlastPolicy.from(profile)
+        // A TNT-equivalent warhead presents its visible fireball, not the legacy blast radius.
+        val authoredRadius = com.atsuishio.superbwarfare.tools.blast.TntBlast.fireballRadius(source).toFloat()
+            .takeIf { it > 0f }
+            ?: com.atsuishio.superbwarfare.api.projectile.HeavyWarheadBlastPolicy.from(profile)
             ?.outerRadius?.toFloat()
             ?: (source as? FastThrowableProjectile)?.explosionRadiusValue?.takeIf { it > 0 } ?: radius
         val accepted = effect(level, position, authoredRadius.coerceIn(.05f, 24f), false)

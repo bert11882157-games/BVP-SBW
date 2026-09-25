@@ -286,6 +286,9 @@ public class DroneEntity extends GeoVehicleEntity {
             };
         });
         dropEntity.load(tag);
+        if (data.tntEquivalentKg > 0) {
+            com.atsuishio.superbwarfare.tools.blast.TntEquivalents.set(dropEntity, data.tntEquivalentKg);
+        }
 
         var dropPos = data.dropPosition();
         dropEntity.setPos(this.getX() + dropPos[0], this.getY() + dropPos[1], this.getZ() + dropPos[2]);
@@ -677,7 +680,8 @@ public class DroneEntity extends GeoVehicleEntity {
 
     private void kamikazeExplosion() {
         // A typed payload impact has already committed its armor transaction and presentation.
-        if (payloadImpactResolved) return;
+        // A TNT-equivalent payload still detonates for everything around the impact point.
+        if (payloadImpactResolved && !payloadTntActive()) return;
         Entity attacker = EntityFindUtil.findEntity(this.level(), getLastAttackerUUID());
         Player controller = EntityFindUtil.findPlayer(this.level(), this.entityData.get(CONTROLLER));
 
@@ -714,6 +718,8 @@ public class DroneEntity extends GeoVehicleEntity {
                 .damage(data.explosionDamage)
                 .radius(radius)
                 .withParticleType(particleType)
+                .tntEquivalent(data.tntEquivalentKg)
+                .emitFx(!payloadImpactResolved)
                 .explode();
 
         // TODO 药水迫击炮炮弹
@@ -724,6 +730,11 @@ public class DroneEntity extends GeoVehicleEntity {
 //                this.createAreaCloud(this.currentItem.get(DataComponents.POTION_CONTENTS), this.level(), ExplosionConfig.DRONE_KAMIKAZE_EXPLOSION_DAMAGE.get(), ExplosionConfig.DRONE_KAMIKAZE_EXPLOSION_RADIUS.get());
 //            }
 //        }
+    }
+
+    private boolean payloadTntActive() {
+        var data = CustomData.DRONE_ATTACHMENT.get(getItemId(this.currentItem));
+        return data != null && com.atsuishio.superbwarfare.tools.blast.TntBlast.active((double) data.tntEquivalentKg);
     }
 
     private void createAreaCloud(Potion potion, Level level, int duration, float radius) {

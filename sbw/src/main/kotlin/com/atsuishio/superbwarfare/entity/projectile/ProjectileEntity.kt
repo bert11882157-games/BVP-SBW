@@ -37,6 +37,8 @@ import com.atsuishio.superbwarfare.network.message.receive.ClientIndicatorMessag
 import com.atsuishio.superbwarfare.network.message.receive.ClientMotionSyncMessage
 import com.atsuishio.superbwarfare.network.NetworkTelemetry
 import com.atsuishio.superbwarfare.tools.*
+import com.atsuishio.superbwarfare.tools.blast.TntBlast
+import com.atsuishio.superbwarfare.tools.blast.TntEquivalents
 import com.atsuishio.superbwarfare.tools.FormatTool.format1D
 import com.atsuishio.superbwarfare.tools.HitboxHelper.getBoundingBox
 import com.atsuishio.superbwarfare.tools.HitboxHelper.getVelocity
@@ -106,7 +108,8 @@ import kotlin.math.max
 open class ProjectileEntity(entityType: EntityType<out ProjectileEntity>, level: Level) : Projectile(entityType, level),
     CustomSyncMotionEntity, ExplosiveProjectile, IEntityAdditionalSpawnData, ProfiledProjectile, SequencedProjectile,
     ProjectileImpactDamagePolicy, FarProjectileAccess, SmoothedBallisticProjectile {
-    override fun farProjectileExplosionRadius(): Double = explosionRadius.toDouble()
+    override fun farProjectileExplosionRadius(): Double =
+        maxOf(explosionRadius.toDouble(), TntBlast.farQueryRadius(this))
     // This entity uses findEntitiesOnPath's +1 query, not ProjectileUtilMixin's +8 query.
     // Include the entity-section lookup's two-block neighbor margin as well.
     override fun farProjectileCollisionPadding(): Double = 3.0
@@ -119,6 +122,8 @@ open class ProjectileEntity(entityType: EntityType<out ProjectileEntity>, level:
     private var activeImpactResult: ProjectileImpactResult? = null
     private var lastImpactPassed = false
     private var lastImpactStopsTraversal = false
+    /** A TNT-equivalent charge detonates once, even for a round that penetrates several targets. */
+    private var tntDetonated = false
     /** Legacy persisted provenance used to retire obsolete server-side impact fragments. */
     private var impactShrapnel = false
     /** Server: state at the start of the current step, compared with the clients' prediction. */
@@ -763,6 +768,15 @@ open class ProjectileEntity(entityType: EntityType<out ProjectileEntity>, level:
             lastImpactPassed = resolution.disposition == ProjectileImpactDisposition.PASS
             lastImpactStopsTraversal = ProjectileSweepTraversal.stops(resolution)
             if (resolution.consumesProjectile()) {
+                // Armor owns the direct hit; a TNT-equivalent charge still detonates at the impact point.
+                if (!tntDetonated && TntBlast.active(this)) {
+                    activeImpactResult = resolution
+                    try {
+                        explosionBullet(this, result.location)
+                    } finally {
+                        activeImpactResult = null
+                    }
+                }
                 this.discard()
             }
             return
@@ -796,7 +810,7 @@ open class ProjectileEntity(entityType: EntityType<out ProjectileEntity>, level:
             val hitVec = result.getLocation()
 
             this.onHitBlock(hitVec, result)
-            if (this.explosionDamage > 0 && !resolution.suppressesDefaultExplosion()) {
+            if (shouldExplode(resolution)) {
                 explosionBullet(this, hitVec)
             }
             if (fireLevel > 0 && level is ServerLevel && !resolution.suppressesDefaultVisuals()) {
@@ -810,7 +824,7 @@ open class ProjectileEntity(entityType: EntityType<out ProjectileEntity>, level:
         if (result is ExtendedEntityRayTraceResult) {
             val entity = result.entity
             emitDefaultEntityImpactParticles(entity, result.location)
-            if (this.explosionDamage > 0 && !resolution.suppressesDefaultExplosion()) {
+            if (shouldExplode(resolution)) {
                 explosionBullet(this, result.location)
             }
             this.onHitEntity(entity, result)
@@ -1269,13 +1283,25 @@ open class ProjectileEntity(entityType: EntityType<out ProjectileEntity>, level:
         }
     }
 
+    /** Legacy: explosion damage and no resolver suppression. TNT: once per round, even when armor owns the hit. */
+    private fun shouldExplode(resolution: ProjectileImpactResult): Boolean {
+        if (TntBlast.active(this)) return !tntDetonated
+        return this.explosionDamage > 0 && !resolution.suppressesDefaultExplosion()
+    }
+
     protected fun explosionBullet(projectile: Entity, hitVec: Vec3) {
+        val kg = TntEquivalents.resolve(projectile)
+        if (TntBlast.active(kg)) {
+            if (tntDetonated) return
+            tntDetonated = true
+        }
         CustomExplosion.Builder(projectile)
             .attacker(this.shooter)
             .damage(this.explosionDamage)
             .radius(this.explosionRadius)
             .position(hitVec)
             .emitFx(activeImpactResult?.suppressesDefaultVisuals() != true)
+            .tntEquivalent(kg)
             .explode()
     }
 

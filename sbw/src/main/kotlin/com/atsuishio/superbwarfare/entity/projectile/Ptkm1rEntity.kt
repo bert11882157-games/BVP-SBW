@@ -254,6 +254,8 @@ open class Ptkm1rEntity : Entity, OwnableEntity {
             ptkmProjectile.setDamage(ExplosionConfig.PTKM_1R_PROJECTILE_HIT_DAMAGE.get().toFloat())
             ptkmProjectile.setExplosionDamage(ExplosionConfig.PTKM_1R_PROJECTILE_EXPLOSION_DAMAGE.get().toFloat())
             ptkmProjectile.setExplosionRadius(ExplosionConfig.PTKM_1R_PROJECTILE_EXPLOSION_RADIUS.get().toFloat())
+            com.atsuishio.superbwarfare.tools.blast.TntEquivalents.set(ptkmProjectile,
+                com.atsuishio.superbwarfare.tools.blast.TntBlast.configuredCharge(null, com.atsuishio.superbwarfare.config.server.ExplosionConfig.PTKM_1R_PROJECTILE_TNT_EQUIVALENT_KG, com.atsuishio.superbwarfare.tools.blast.TntBlast.PTKM_PROJECTILE_KEY))
             ptkmProjectile.setTarget(entity)
             ptkmProjectile.setShootTime((0.5f * distance).toInt())
             ptkmProjectile.setPos(position().x, eyePosition.y, position().z)
@@ -294,6 +296,7 @@ open class Ptkm1rEntity : Entity, OwnableEntity {
             .radius(ExplosionConfig.PTKM_1R_EXPLOSION_RADIUS.get().toFloat())
             .attacker(this.owner)
             .withParticleType(ParticleTool.ParticleType.HUGE)
+            .tntEquivalent(com.atsuishio.superbwarfare.tools.blast.TntBlast.configuredCharge(this, com.atsuishio.superbwarfare.config.server.ExplosionConfig.PTKM_1R_TNT_EQUIVALENT_KG, com.atsuishio.superbwarfare.tools.blast.TntBlast.PTKM_1R_KEY))
             .explode()
 
         this.discard()

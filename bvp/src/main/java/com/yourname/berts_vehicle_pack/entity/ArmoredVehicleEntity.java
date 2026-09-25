@@ -89,6 +89,12 @@ public abstract class ArmoredVehicleEntity extends GeoVehicleEntity implements V
         return !com.yourname.berts_vehicle_pack.effects.BvpAbramsCookoff.applies(this);
     }
 
+    /** Authored armor plates resolve direct hits; small TNT-equivalent charges leave this hull to them. */
+    @Override
+    public boolean hasArmorHitboxes() {
+        return !ArmorProfiles.get(armorProfileId).plates.isEmpty();
+    }
+
     @Override
     public boolean usesDetailedProjectileCollision() {
         return super.usesDetailedProjectileCollision() || BvpProjectileCollision.supports(armorProfileId);
