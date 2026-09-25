@@ -195,7 +195,7 @@ public final class BvpUnderHullDiagnosticScenarios {
             check("real_belly_blocks_coax_damage", tank.getHealth() == hullBefore);
 
             float tracksBefore = tank.getModuleHealth("lefttrack") + tank.getModuleHealth("righttrack");
-            double trackX = -ArmorProfiles.get(vehicleId).trackBoxes.get(0).center.x;
+            double trackX = -ArmorProfiles.get(vehicleId).trackBoxes.get(0).centroid().x;
             fire(new Vec3(trackX, .05, -8), new Vec3(trackX, .05, 8));
             check("real_track_hit_retained", tankImpacts == 1);
             check("real_track_takes_module_damage", tank.getModuleHealth("lefttrack")

@@ -91,15 +91,18 @@ final class BvpImpactVolumeQuery implements VehicleImpactVolumeView {
     /** Previously resolved contact only; presentation must not start another armor ray. */
     ArmorHit resolvedImpactBox() {
         if (secondaryVolumes != null && secondaryVolumes.armorResolved) {
-            return secondaryVolumes.resolvedContact();
+            return secondaryVolumes.armorHit;
         }
         if (initialVolumes.armorResolved) {
-            return initialVolumes.resolvedContact();
+            return initialVolumes.armorHit;
         }
         return initialVolumes.eraResolved ? initialVolumes.eraHit : null;
     }
 
-    /** Nearest plate to a shot whose ray crossed no plate; evaluated once per trace. */
+    /**
+     * Plate the shell ray passed closest to, for the "Shot missed!" report only: a miss is never
+     * resolved against it. Evaluated once per trace.
+     */
     RaySnap nearestPlateToRay(ShotTrace trace, double maxGap) {
         TraceVolumes volumes = volumes(trace);
         if (!volumes.snapResolved || Double.compare(volumes.snapMaxGap, maxGap) != 0) {
@@ -178,12 +181,5 @@ final class BvpImpactVolumeQuery implements VehicleImpactVolumeView {
         private boolean snapResolved;
         private double snapMaxGap;
         private RaySnap snap;
-
-        private ArmorHit resolvedContact() {
-            if (armorHit != null) {
-                return armorHit;
-            }
-            return snap == null ? null : snap.hit();
-        }
     }
 }

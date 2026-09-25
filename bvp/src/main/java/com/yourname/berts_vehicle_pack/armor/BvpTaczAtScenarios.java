@@ -143,10 +143,13 @@ public final class BvpTaczAtScenarios {
                 String plateId = index == 1 ? "leo2a6_85mm_armor_26" : "leo2a6_1000mm_armor_00";
                 var plate = ArmorProfiles.get("leo2a6").plates.stream().filter(p -> p.name.equals(plateId)).findFirst().orElseThrow();
                 var coordinates = ArmorTargetAdapters.resolve(target);
-                aim = coordinates.armorLocalPointToWorld(plate.center);
-                var normal = index == 1 ? new ArmorProfiles.Vec(-1, 0, 0)
-                        : new ArmorProfiles.Vec(0, 0, -1).rotateX(plate.rotationDeg.x);
-                Vec3 eye = coordinates.armorLocalPointToWorld(plate.center.add(normal.scale(12)));
+                aim = coordinates.armorLocalPointToWorld(plate.centroid());
+                // Approach along the plate's armor face (its largest face pointing along the hint),
+                // which works for box and mesh volumes alike.
+                var hint = index == 1 ? new ArmorProfiles.Vec(-1, 0, 0) : new ArmorProfiles.Vec(0, 0, -1);
+                var face = plate.volume.dominantFaceNormal(hint);
+                var normal = face == null ? hint : face;
+                Vec3 eye = coordinates.armorLocalPointToWorld(plate.centroid().add(normal.scale(12)));
                 positionPlayer(eye, aim);
                 record("ARMOR_FIXTURE", "case", caseId, "plate", plateId, "target", target.getUUID(), "aim", aim);
             } else {

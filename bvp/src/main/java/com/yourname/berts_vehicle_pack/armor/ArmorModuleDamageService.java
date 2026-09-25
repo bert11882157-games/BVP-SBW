@@ -111,9 +111,21 @@ final class ArmorModuleDamageService {
         if (!source.frame.equals(candidate.frame)) {
             return false;
         }
-        return axisAlignedGap(source, candidate) <= AMMO_RACK_NEIGHBOR_GAP;
+        double gap = source.isMesh() || candidate.isMesh()
+                ? boundsGap(source.volume.bounds(), candidate.volume.bounds())
+                : axisAlignedGap(source, candidate);
+        return gap <= AMMO_RACK_NEIGHBOR_GAP;
     }
 
+    /** Gap between the frame-aligned bounds of two volumes (mesh racks). */
+    private static double boundsGap(double[] first, double[] second) {
+        double dx = Math.max(0.0D, Math.max(first[0] - second[3], second[0] - first[3]));
+        double dy = Math.max(0.0D, Math.max(first[1] - second[4], second[1] - first[4]));
+        double dz = Math.max(0.0D, Math.max(first[2] - second[5], second[2] - first[5]));
+        return Math.sqrt(dx * dx + dy * dy + dz * dz);
+    }
+
+    /** Legacy box rule, kept exactly for box profiles: centers and unrotated half extents. */
     private static double axisAlignedGap(ArmorBox first, ArmorBox second) {
         double dx = Math.max(0.0D, Math.abs(first.center.x - second.center.x)
                 - (first.halfSize.x + second.halfSize.x));

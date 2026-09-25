@@ -75,6 +75,9 @@ public abstract class ArmoredVehicleEntity extends GeoVehicleEntity implements V
     protected ArmoredVehicleEntity(EntityType<?> type, Level world, String armorProfileId) {
         super(type, world);
         this.armorProfileId = armorProfileId;
+        // Armor meshes are parsed once per profile; start that off the game and render threads so
+        // hasArmorHitboxes()/usesBvpArmorResolution() never parse a mesh on first use.
+        ArmorProfiles.prefetch(armorProfileId);
     }
 
     public boolean usesBvpArmorResolution() {

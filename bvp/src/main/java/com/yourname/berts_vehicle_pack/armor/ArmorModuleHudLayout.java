@@ -20,7 +20,7 @@ public final class ArmorModuleHudLayout {
         var profile = ArmorProfiles.get(vehicle.getArmorProfileId());
         var result = new LinkedHashMap<String, LocatedModule>();
         var target = new ArmoredVehicleArmorTarget(vehicle);
-        boolean mirror = "t72a".equals(profile.id) || "t72b".equals(profile.id);
+        boolean mirror = ArmorProfiles.mirrorsProfileX(profile.id);
         var turret = ArmorCoordinateFrame.barrelFrame(vehicle.getVehicleTransform(partial),
                 vehicle.getTurretTransform(partial), vehicle.getTurretPos(), Vec3.f_82478_, mirror);
         var barrel = ArmorCoordinateFrame.barrelFrame(vehicle.getVehicleTransform(partial),
@@ -32,7 +32,7 @@ public final class ArmorModuleHudLayout {
         }
         for (var box : profile.trackBoxes) {
             if (!tracked || !vehicle.usesBvpTrackModuleRepair()) continue;
-            String id = target.armorLocalPointToVehicleLocal(box.center).f_82479_ > 0
+            String id = target.armorLocalPointToVehicleLocal(box.centroid()).f_82479_ > 0
                     ? "lefttrack" : "righttrack";
             add(result, vehicle, box, id, VehicleModuleHudKind.TRACK,
                     VehicleModuleHealth.TRACK_HP, turret, barrel, mirror);
@@ -44,7 +44,7 @@ public final class ArmorModuleHudLayout {
             double maximum;
             if (ArmorModuleResolver.isTrack(id)) {
                 if (!tracked || !vehicle.usesBvpTrackModuleRepair()) continue;
-                id = target.armorLocalPointToVehicleLocal(box.center).f_82479_ > 0
+                id = target.armorLocalPointToVehicleLocal(box.centroid()).f_82479_ > 0
                         ? "lefttrack" : "righttrack";
                 kind = VehicleModuleHudKind.TRACK;
                 maximum = VehicleModuleHealth.TRACK_HP;
@@ -76,7 +76,7 @@ public final class ArmorModuleHudLayout {
                             ArmorProfiles.ArmorBox box, String id, VehicleModuleHudKind kind,
                             double maximum, ArmorCoordinateFrame.BarrelFrame turret,
                             ArmorCoordinateFrame.BarrelFrame barrel, boolean mirror) {
-        var point = box.center;
+        var point = box.centroid();
         if (box.isBarrelFrame()) {
             if (barrel == null) return;
             point = barrel.toHullPoint(point);
@@ -88,17 +88,17 @@ public final class ArmorModuleHudLayout {
         var marker = new VehicleModuleHudMarker(id, kind, (mirror ? point.x : -point.x) * 16,
                 point.z * 16, new VehicleModuleHudHealth(vehicle.getModuleHealth(id),
                 (float) maximum, vehicle.isModuleDestroyed(id)));
-        double volume = box.halfSize.x * box.halfSize.y * box.halfSize.z;
+        // Solid volume weights the marker (relative weights: a box's 8*hx*hy*hz keeps the old ratios);
+        // an open mesh has no volume but still counts a little.
+        double volume = Math.max(box.volume.volume(), 1.0E-9D);
         var located = result.computeIfAbsent(kind + ":" + id, key -> new LocatedModule(marker));
         located.add(marker, volume);
         if (kind == VehicleModuleHudKind.TRACK) {
-            // Project all eight rotated corners, then union sections belonging to the same track.
-            for (int corner = 0; corner < 8; corner++) {
-                var p = new ArmorProfiles.Vec((corner & 1) == 0 ? -box.halfSize.x : box.halfSize.x,
-                        (corner & 2) == 0 ? -box.halfSize.y : box.halfSize.y,
-                        (corner & 4) == 0 ? -box.halfSize.z : box.halfSize.z)
-                        .rotateX(box.rotationDeg.x).rotateY(box.rotationDeg.y).rotateZ(box.rotationDeg.z)
-                        .add(box.center);
+            // Project every vertex (a box's eight rotated corners), then union sections of one track.
+            double[] vertex = new double[3];
+            for (int index = 0; index < box.volume.vertexCount(); index++) {
+                box.volume.vertex(index, vertex);
+                var p = new ArmorProfiles.Vec(vertex[0], vertex[1], vertex[2]);
                 if (box.isBarrelFrame()) p = barrel.toHullPoint(p);
                 else if (box.isTurretFrame()) p = turret.toHullPoint(p);
                 located.minZ = Math.min(located.minZ, p.z * 16);

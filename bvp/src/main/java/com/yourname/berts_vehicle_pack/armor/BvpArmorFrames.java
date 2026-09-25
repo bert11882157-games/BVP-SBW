@@ -77,7 +77,7 @@ public final class BvpArmorFrames {
                 .filter(box -> box.isTurretFrame() && "ammo_rack_00".equals(box.name))
                 .findFirst().orElse(null);
         Vec center = rack == null ? "m1a1_abrams".equals(profileId)
-                ? M1A1_REAR_BUSTLE_VISUAL : null : rack.center;
+                ? M1A1_REAR_BUSTLE_VISUAL : null : rack.centroid();
         if (center == null) return null;
         ArmorTarget target = new ArmoredVehicleArmorTarget(vehicle);
         Vec pivot = target.turretPivot();

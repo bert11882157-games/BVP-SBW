@@ -8,9 +8,17 @@ import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
 
+/**
+ * Armor volume queries shared by every armor consumer. Volumes may be boxes or meshes
+ * ({@link ArmorVolume}); each query transforms the shot into the hull, turret and barrel frames once,
+ * culls volumes by their bounds and only then runs the exact test. Culling never changes a result:
+ * the bounds grown by {@link ArmorVolume#skinPad} contain the grown volume.
+ */
 final class ArmorHitResolver {
     static final double ARMOR_RAY_BACKTRACE_BLOCKS = 4.0D;
     static final double ARMOR_RAY_DISTANCE_BLOCKS = 12.0D;
+    /** Rounding margin for culling comparisons; far below any gameplay distance. */
+    private static final double CULL_MARGIN = 1.0E-9D;
 
     private ArmorHitResolver() {
     }
@@ -41,9 +49,11 @@ final class ArmorHitResolver {
                                       Vec hullImpact, double impactTolerance) {
         ArmorHit best = null;
         double bestDistance = Double.MAX_VALUE;
+        FramePoints points = new FramePoints(target, hullImpact);
         for (ArmorBox box : boxes) {
-            Vec frameImpact = pointToBoxFrame(target, box, hullImpact);
+            Vec frameImpact = points.point(box);
             if (frameImpact == null) continue;
+            if (cannotBeWithin(box, frameImpact, Math.min(impactTolerance, bestDistance))) continue;
             double distance = box.distanceOutside(frameImpact);
             if (distance <= impactTolerance && distance < bestDistance) {
                 best = ArmorHit.proximity(box, frameImpact, hullImpact, distance);
@@ -66,9 +76,12 @@ final class ArmorHitResolver {
         Vec fallbackFrame = null;
         double fallbackDistance = Double.MAX_VALUE;
         NearBox nearest = null;
+        FramePoints points = new FramePoints(target, trace.hullImpactFallback);
         for (ArmorBox box : boxes) {
-            Vec frameImpact = pointToBoxFrame(target, box, trace.hullImpactFallback);
+            Vec frameImpact = points.point(box);
             if (frameImpact == null) continue;
+            // A box farther than the nearest so far can be neither the nearest nor the fallback.
+            if (nearest != null && cannotBeWithin(box, frameImpact, nearest.distance())) continue;
             double distance = box.distanceOutside(frameImpact);
             if (nearest == null || distance < nearest.distance) {
                 nearest = new NearBox(box, distance);
@@ -90,9 +103,11 @@ final class ArmorHitResolver {
         ArmorHit hit = null;
         double bestDistance = Double.MAX_VALUE;
         NearBox nearest = null;
+        FramePoints points = new FramePoints(target, hullImpact);
         for (ArmorBox box : boxes) {
-            Vec frameImpact = pointToBoxFrame(target, box, hullImpact);
+            Vec frameImpact = points.point(box);
             if (frameImpact == null) continue;
+            if (nearest != null && cannotBeWithin(box, frameImpact, nearest.distance())) continue;
             double distanceOutside = box.distanceOutside(frameImpact);
             if (nearest == null || distanceOutside < nearest.distance) {
                 nearest = new NearBox(box, distanceOutside);
@@ -106,10 +121,9 @@ final class ArmorHitResolver {
     }
 
     /**
-     * Nearest box to the shot segment {@code hullStart + hullDirection * [0, length]} when the ray
-     * itself crossed none. The returned hit carries the entered face of that box, so penetration
-     * uses the incidence the shot would have had against it. Null when every box is further than
-     * {@code maxGap} or the profile has none.
+     * Nearest volume to the shot segment {@code hullStart + hullDirection * [0, length]}: the gap
+     * (0 when the segment touches it), the segment parameter and a surface point. Null when every
+     * volume is further than {@code maxGap} or there are none. Used for the "Shot missed!" report.
      */
     static RaySnap findNearestBoxToRay(ArmorTarget target, List<ArmorBox> boxes, Vec hullStart,
                                        Vec hullDirection, double length, double maxGap) {
@@ -117,12 +131,14 @@ final class ArmorHitResolver {
         if (direction.length() < 1.0E-6D || boxes.isEmpty()) {
             return null;
         }
+        FrameRays rays = new FrameRays(target, hullStart, direction);
         ArmorBox bestBox = null;
         ArmorProfiles.SegmentApproach best = null;
         for (ArmorBox box : boxes) {
-            Vec frameStart = pointToBoxFrame(target, box, hullStart);
+            int frame = FrameRays.frameIndex(box);
+            Vec frameStart = rays.start(frame);
             if (frameStart == null) continue;
-            Vec frameDirection = directionToBoxFrame(target, box, direction).normalize();
+            Vec frameDirection = rays.direction(frame);
             ArmorProfiles.SegmentApproach approach = box.closestApproach(frameStart, frameDirection, length);
             if (approach == null || !Double.isFinite(approach.gap())) continue;
             if (best == null || approach.gap() < best.gap() - 1.0E-6D
@@ -148,43 +164,76 @@ final class ArmorHitResolver {
         if (direction.length() < 1.0E-6D) {
             return null;
         }
-        ArmorHit best = null;
         double inflation = Math.min(0.03D, Math.max(0.005D, impactTolerance * 0.1D));
+        FrameRays rays = new FrameRays(target, hullStart, direction);
+        ArmorBox bestBox = null;
+        int bestFrame = 0;
+        double best = Double.POSITIVE_INFINITY;
         for (ArmorBox box : boxes) {
-            Vec frameStart = pointToBoxFrame(target, box, hullStart);
+            int frame = FrameRays.frameIndex(box);
+            Vec frameStart = rays.start(frame);
             if (frameStart == null) continue;
-            Vec frameDirection = directionToBoxFrame(target, box, direction).normalize();
+            Vec frameDirection = rays.direction(frame);
+            double boundsEntry = box.boundsEntry(frameStart, frameDirection, maxDistance, inflation);
+            // Missing the grown bounds, or entering them beyond the best hit, rules the volume out.
+            if (!(boundsEntry <= best + CULL_MARGIN)) continue;
             double distance = box.rayHitDistance(frameStart, frameDirection, maxDistance, inflation);
-            if (Double.isFinite(distance) && distance >= 0.0D && (best == null || distance < best.distance)) {
-                Vec frameImpact = frameStart.add(frameDirection.scale(distance));
-                Vec hullImpact = pointToHullFrame(target, box, frameImpact);
-                best = new ArmorHit(box, frameImpact, hullImpact, distance);
+            if (Double.isFinite(distance) && distance >= 0.0D && (bestBox == null || distance < best)) {
+                bestBox = box;
+                bestFrame = frame;
+                best = distance;
             }
         }
-        return best;
+        if (bestBox == null) {
+            return null;
+        }
+        Vec frameStart = rays.start(bestFrame);
+        Vec frameDirection = rays.direction(bestFrame);
+        Vec frameImpact = frameStart.add(frameDirection.scale(best));
+        Vec hullImpact = pointToHullFrame(target, bestBox, frameImpact);
+        // Mesh hits carry the true normal of the entered triangle; box hits keep the legacy lookup.
+        Vec normal = bestBox.isMesh()
+                ? bestBox.volume.rayEntryNormal(frameStart, frameDirection, maxDistance, inflation)
+                : null;
+        return new ArmorHit(bestBox, frameImpact, hullImpact, best, normal);
+    }
+
+    private static boolean cannotBeWithin(ArmorBox box, Vec framePoint, double limit) {
+        if (!(limit < Double.MAX_VALUE)) return false;
+        double reach = limit + CULL_MARGIN;
+        return box.boundsDistanceSquared(framePoint) > reach * reach;
     }
 
     static Vec directionToBoxFrame(ArmorTarget target, ArmorBox box, Vec hullDirection) {
-        if (box.isBarrelFrame()) {
-            ArmorCoordinateFrame.BarrelFrame frame = target.barrelFrame();
-            return frame == null ? Vec.ZERO : frame.toBarrelDirection(hullDirection);
-        }
-        return box.isTurretFrame() ? hullDirection.rotateY(-target.turretFrameYaw()) : hullDirection;
+        return directionToFrame(target, FrameRays.frameIndex(box), hullDirection);
     }
 
     static Vec pointToBoxFrame(ArmorTarget target, ArmorBox box, Vec hullPoint) {
-        if (box.isBarrelFrame()) {
-            ArmorCoordinateFrame.BarrelFrame frame = target.barrelFrame();
-            return frame == null ? null : frame.toBarrelPoint(hullPoint);
+        return pointToFrame(target, FrameRays.frameIndex(box), hullPoint);
+    }
+
+    /** Frame 0 = hull, 1 = turret, 2 = barrel. */
+    private static Vec directionToFrame(ArmorTarget target, int frame, Vec hullDirection) {
+        if (frame == 2) {
+            ArmorCoordinateFrame.BarrelFrame barrel = target.barrelFrame();
+            return barrel == null ? Vec.ZERO : barrel.toBarrelDirection(hullDirection);
         }
-        if (!box.isTurretFrame()) {
+        return frame == 1 ? hullDirection.rotateY(-target.turretFrameYaw()) : hullDirection;
+    }
+
+    private static Vec pointToFrame(ArmorTarget target, int frame, Vec hullPoint) {
+        if (frame == 2) {
+            ArmorCoordinateFrame.BarrelFrame barrel = target.barrelFrame();
+            return barrel == null ? null : barrel.toBarrelPoint(hullPoint);
+        }
+        if (frame == 0) {
             return hullPoint;
         }
         Vec pivot = target.turretPivot();
         return pivot.add(hullPoint.subtract(pivot).rotateY(-target.turretFrameYaw()));
     }
 
-    private static Vec pointToHullFrame(ArmorTarget target, ArmorBox box, Vec framePoint) {
+    static Vec pointToHullFrame(ArmorTarget target, ArmorBox box, Vec framePoint) {
         if (box.isBarrelFrame()) {
             ArmorCoordinateFrame.BarrelFrame frame = target.barrelFrame();
             return frame == null ? null : frame.toHullPoint(framePoint);
@@ -194,6 +243,16 @@ final class ArmorHitResolver {
         }
         Vec pivot = target.turretPivot();
         return pivot.add(framePoint.subtract(pivot).rotateY(target.turretFrameYaw()));
+    }
+
+    /** Frame-local normal rotated back into hull (armor-local) coordinates; null when unavailable. */
+    static Vec normalToHullFrame(ArmorTarget target, ArmorBox box, Vec frameNormal) {
+        if (frameNormal == null) return null;
+        if (box.isBarrelFrame()) {
+            ArmorCoordinateFrame.BarrelFrame frame = target.barrelFrame();
+            return frame == null ? null : frame.toHullDirection(frameNormal);
+        }
+        return box.isTurretFrame() ? frameNormal.rotateY(target.turretFrameYaw()) : frameNormal;
     }
 
     static Vec3 shotDirection(Projectile projectile, Vec3 hitVec) {
@@ -221,6 +280,65 @@ final class ArmorHitResolver {
         return new Vec3(value.f_82479_ / length, value.f_82480_ / length, value.f_82481_ / length);
     }
 
+    /** One shot ray expressed in the hull, turret and barrel frames, each computed at most once. */
+    private static final class FrameRays {
+        private final ArmorTarget target;
+        private final Vec hullStart;
+        private final Vec hullDirection;
+        private final Vec[] starts = new Vec[3];
+        private final Vec[] directions = new Vec[3];
+        private final boolean[] resolved = new boolean[3];
+
+        FrameRays(ArmorTarget target, Vec hullStart, Vec hullDirection) {
+            this.target = target;
+            this.hullStart = hullStart;
+            this.hullDirection = hullDirection;
+        }
+
+        static int frameIndex(ArmorBox box) {
+            return box.isBarrelFrame() ? 2 : box.isTurretFrame() ? 1 : 0;
+        }
+
+        Vec start(int frame) {
+            resolve(frame);
+            return starts[frame];
+        }
+
+        Vec direction(int frame) {
+            resolve(frame);
+            return directions[frame];
+        }
+
+        private void resolve(int frame) {
+            if (resolved[frame]) return;
+            resolved[frame] = true;
+            starts[frame] = pointToFrame(target, frame, hullStart);
+            directions[frame] = directionToFrame(target, frame, hullDirection).normalize();
+        }
+    }
+
+    /** One impact point expressed in the hull, turret and barrel frames, each computed at most once. */
+    private static final class FramePoints {
+        private final ArmorTarget target;
+        private final Vec hullPoint;
+        private final Vec[] points = new Vec[3];
+        private final boolean[] resolved = new boolean[3];
+
+        FramePoints(ArmorTarget target, Vec hullPoint) {
+            this.target = target;
+            this.hullPoint = hullPoint;
+        }
+
+        Vec point(ArmorBox box) {
+            int frame = FrameRays.frameIndex(box);
+            if (!resolved[frame]) {
+                resolved[frame] = true;
+                points[frame] = pointToFrame(target, frame, hullPoint);
+            }
+            return points[frame];
+        }
+    }
+
     static final class ShotTrace {
         final Vec3 hitVec;
         final Vec hullShotDirection;
@@ -241,7 +359,7 @@ final class ArmorHitResolver {
     record BoxQuery(ArmorHit hit, NearBox nearest) {
     }
 
-    /** A plate the shot passed close to, resolved as if the shot had struck its entered face. */
+    /** The volume the shot passed closest to, with the gap and the nearest surface point. */
     record RaySnap(ArmorHit hit, double gap) {
     }
 }
