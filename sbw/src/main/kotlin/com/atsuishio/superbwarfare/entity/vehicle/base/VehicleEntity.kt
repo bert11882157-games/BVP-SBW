@@ -2233,6 +2233,10 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         }
         collect(source.entity, 0)
         if (players.isEmpty()) collect(source.directEntity, 0)
+        if (java.lang.Boolean.getBoolean("bvp.diagnostics.scenarios")) {
+            Mod.LOGGER.info("Vehicle hit feedback: {} took {} ({}) from {} -> {}", this.type.descriptionId, amount,
+                if (killed) "kill" else "hit", source.msgId, players.map { it.gameProfile.name })
+        }
         val holder = Holder.direct(ModSounds.INDICATION_VEHICLE.get())
         for (player in players) {
             if (player.vehicle === this) continue // own vehicle: crashes, self-inflicted blasts

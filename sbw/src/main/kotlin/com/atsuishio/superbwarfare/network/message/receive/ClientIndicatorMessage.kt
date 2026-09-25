@@ -12,6 +12,10 @@ data class ClientIndicatorMessage(
 ) : ClientPacketPayload() {
 
     override fun PayloadContext.handler() {
+        if (java.lang.Boolean.getBoolean("bvp.diagnostics.scenarios")) {
+            com.atsuishio.superbwarfare.Mod.LOGGER.info("Hit indicator received: type {} ({}) for {} ticks", type,
+                when (type) { 1 -> "headshot"; 2 -> "kill"; 3 -> "vehicle"; else -> "hit" }, value)
+        }
         when (type) {
             1 -> CrossHairOverlay.headIndicator = value
             2 -> CrossHairOverlay.killIndicator = value
