@@ -298,6 +298,10 @@ class DefaultGunData : IDBasedData<DefaultGunData> {
     @SerialName("ExplosionRadius")
     var explosionRadius = 0.0
 
+    /** TNT-equivalent charge in kg; > 0 selects the Hopkinson-Cranz blast model, 0 keeps the legacy blast. */
+    @SerialName("TntEquivalentKg")
+    var tntEquivalentKg = 0.0
+
     @SerialName("Gravity")
     var gravity = 0.05
 

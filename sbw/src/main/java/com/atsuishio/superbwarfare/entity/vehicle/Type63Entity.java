@@ -291,6 +291,7 @@ public class Type63Entity extends GeoVehicleEntity {
                 gunData.get(GunProp.DAMAGE).floatValue(), gunData.get(GunProp.EXPLOSION_RADIUS).floatValue(), gunData.get(GunProp.EXPLOSION_DAMAGE).floatValue(),
                 0, 0, rocketItem.type, gunData.get(GunProp.SPREAD_AMOUNT), gunData.get(GunProp.SPREAD_ANGLE));
         entityToSpawn.durability(gunData.get(GunProp.AP_DURABILITY));
+        com.atsuishio.superbwarfare.tools.blast.TntEquivalents.stamp(entityToSpawn, gunData);
         entityToSpawn.setGravity(shootGravity);
         entityToSpawn.setOwner(player);
 

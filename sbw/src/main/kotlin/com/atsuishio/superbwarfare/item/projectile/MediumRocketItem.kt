@@ -39,7 +39,12 @@ class MediumRocketItem(
             type,
             spreadAmount,
             15
-        )
+        ).also {
+            // Dispensed rockets have no GunData: their charge comes from the data table, keyed by this ammo item.
+            if (!level.isClientSide) com.atsuishio.superbwarfare.tools.blast.TntEquivalents.set(it,
+                com.atsuishio.superbwarfare.tools.blast.TntBlast.tableCharge(
+                    "superbwarfare:medium_rocket_" + type.name.lowercase(java.util.Locale.ROOT)))
+        }
     }
 
     override fun getLaunchBehavior(): AbstractProjectileDispenseBehavior {

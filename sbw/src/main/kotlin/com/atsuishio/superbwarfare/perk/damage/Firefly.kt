@@ -36,6 +36,7 @@ object Firefly : Perk("firefly", Type.DAMAGE) {
             .keepBlock()
             .fireTime(3 + instance.level / 3)
             .withParticleType(ParticleTool.ParticleType.SMALL)
+            .tntEquivalent(com.atsuishio.superbwarfare.tools.blast.TntBlast.tableCharge(com.atsuishio.superbwarfare.tools.blast.TntBlast.FIREFLY_KEY))
             .explode()
     }
 }

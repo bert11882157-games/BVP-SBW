@@ -4,6 +4,9 @@ import com.atsuishio.superbwarfare.api.projectile.HeavyWarheadBlastPolicy
 import com.atsuishio.superbwarfare.entity.vehicle.M1A2Entity
 import com.atsuishio.superbwarfare.init.ModSerializers
 import com.atsuishio.superbwarfare.tools.CustomExplosion
+import com.atsuishio.superbwarfare.tools.blast.BlastModel
+import com.atsuishio.superbwarfare.tools.blast.BlastParameters
+import com.atsuishio.superbwarfare.tools.blast.TntBlast
 import net.minecraft.SharedConstants
 import net.minecraft.server.Bootstrap
 import net.minecraft.server.level.ServerLevel
@@ -64,5 +67,20 @@ class ZeroDamageVehicleExplosionTest {
         assertEquals(1, targets.size)
         assertSame(vehicle, targets.single(), "The typed blast pass must still receive its vehicle")
         assertTrue(blast(40f).hasLegacyVehicleBlastDamage(), "Positive legacy blast admission is preserved")
+    }
+
+    @Test fun `TNT-equivalent blasts keep every vehicle target for their own pass`() {
+        val explosion = blast(200f)
+        assertFalse(explosion.usesTntModel(), "An unconfigured explosion stays on the legacy path")
+        explosion.setTntPlan(TntBlast.Plan(100.0, BlastParameters.DEFAULT, BlastModel.radii(100.0), null))
+        assertTrue(explosion.usesTntModel())
+        assertEquals(100.0, explosion.tntEquivalentKg())
+        // Unconstructed world/vehicle fixtures trip if the legacy armor-scaled pass touches them.
+        val vehicle = unconstructed(M1A2Entity::class.java)
+        val targets = mutableListOf<Entity>(vehicle)
+        assertDoesNotThrow { LivingEventHandler.onExplosionDetonate(ExplosionEvent.Detonate(
+            unconstructed(ServerLevel::class.java), explosion, targets)) }
+        assertSame(vehicle, targets.single(), "The TNT model applies vehicle rules itself")
+        assertTrue(explosion.ownsGroundVehicleBlast(vehicle))
     }
 }

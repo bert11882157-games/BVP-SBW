@@ -63,6 +63,9 @@ object ProjectileFactory {
         configureTyped(entity, projectileData)
         configureGuidance(entity, parameters)
         configureLaunchableData(entity, parameters, projectileData, projectileInfo, projectileType)
+        // After launchable NBT (which may replace persistent data): always stamp, 0 = the weapon has no TNT charge,
+        // so an entity-type default never overrides an authored weapon.
+        com.atsuishio.superbwarfare.tools.blast.TntEquivalents.stamp(entity, projectileData)
         val requestedProfileId = projectileInfo.resolvedProfileId()
         ProjectileProfiles.assign(entity, requestedProfileId)
         if (entity is Projectile) com.atsuishio.superbwarfare.api.projectile.ProjectileCalibers.capture(entity, projectileInfo.caliberMm)

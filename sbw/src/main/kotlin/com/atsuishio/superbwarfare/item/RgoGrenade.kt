@@ -88,6 +88,7 @@ open class RgoGrenade : Item(Properties().rarity(Rarity.UNCOMMON)), DispenserLau
                 .radius(ExplosionConfig.RGO_GRENADE_EXPLOSION_RADIUS.get().toFloat())
                 .damageMultiplier(1.25f)
                 .withParticleType(ParticleTool.ParticleType.MEDIUM)
+                .tntEquivalent(com.atsuishio.superbwarfare.tools.blast.TntBlast.configuredCharge(null, com.atsuishio.superbwarfare.config.server.ExplosionConfig.RGO_GRENADE_TNT_EQUIVALENT_KG, com.atsuishio.superbwarfare.tools.blast.TntBlast.RGO_GRENADE_KEY))
                 .explode()
 
             if (pLivingEntity is Player) {

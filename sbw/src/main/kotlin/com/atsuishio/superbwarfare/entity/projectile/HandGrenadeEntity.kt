@@ -154,4 +154,8 @@ open class HandGrenadeEntity : FastThrowableProjectile, BasicGeoProjectileEntity
     override fun isFastMoving(): Boolean {
         return false
     }
+
+    override fun buildExplosion(vec3: net.minecraft.world.phys.Vec3): com.atsuishio.superbwarfare.tools.CustomExplosion.Builder =
+        super.buildExplosion(vec3).tntEquivalent(com.atsuishio.superbwarfare.tools.blast.TntBlast.configuredCharge(this,
+            ExplosionConfig.M67_GRENADE_TNT_EQUIVALENT_KG, com.atsuishio.superbwarfare.tools.blast.TntBlast.HAND_GRENADE_KEY))
 }

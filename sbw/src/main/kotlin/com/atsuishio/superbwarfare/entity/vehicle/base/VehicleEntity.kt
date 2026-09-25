@@ -1154,6 +1154,13 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
     /** Whether armor non-penetrations may pass reduced direct damage to this vehicle. */
     fun isLightlyArmored() = computed().lightlyArmored
 
+    /**
+     * Whether an addon armor-hitbox system resolves direct hits on this vehicle. Such vehicles take no area
+     * damage from TNT-equivalent charges below the vehicle threshold (25 kg by default); vehicles without
+     * armor hitboxes (aircraft, helicopters, trucks) still take infantry-style blast falloff.
+     */
+    open fun hasArmorHitboxes(): Boolean = false
+
     /** Whether this vehicle's passenger weapon station is a client-visible remote weapon station. */
     fun isRemoteWeaponStation() = computed().remoteWeaponStation
 
@@ -4529,7 +4536,8 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
     fun vehicleExplosion(destroyInfo: DestroyInfo, context: VehicleDestructionContext) =
         vehicleDestructionLifecycleService.vehicleExplosion(destroyInfo, context)
 
-    fun createCustomExplosion(): CustomExplosion.Builder = CustomExplosion.Builder(this)
+    /** Vehicle-owned blasts (death, overkill, cook-off) are not munitions: legacy blast unless a caller sets a charge. */
+    fun createCustomExplosion(): CustomExplosion.Builder = CustomExplosion.Builder(this).tntEquivalent(0.0)
         .attacker(this.lastAttacker)
 
     fun createCustomExplosion(context: VehicleDestructionContext): CustomExplosion.Builder {
@@ -4538,6 +4546,8 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
             .source(directSource)
             .attacker(context.attacker())
             .position(context.gameplayPosition() ?: Vec3(this.x, this.eyeY, this.z))
+            // The destruction context may name the killing projectile; its charge already detonated.
+            .tntEquivalent(0.0)
     }
 
     protected fun crashPassengers() {

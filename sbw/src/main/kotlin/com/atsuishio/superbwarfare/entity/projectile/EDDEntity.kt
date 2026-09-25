@@ -303,6 +303,7 @@ open class EDDEntity : HangingEntity, OwnableEntity {
             .radius(ExplosionConfig.EDD_EXPLOSION_RADIUS.get().toFloat())
             .keepBlock()
             .withParticleType(ParticleTool.ParticleType.MINI)
+            .tntEquivalent(com.atsuishio.superbwarfare.tools.blast.TntBlast.configuredCharge(this, com.atsuishio.superbwarfare.config.server.ExplosionConfig.EDD_TNT_EQUIVALENT_KG, com.atsuishio.superbwarfare.tools.blast.TntBlast.EDD_KEY))
             .explode()
 
         this.discard()

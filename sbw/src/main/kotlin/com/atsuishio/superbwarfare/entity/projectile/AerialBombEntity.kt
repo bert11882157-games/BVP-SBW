@@ -8,6 +8,7 @@ import com.atsuishio.superbwarfare.api.aircraft.AircraftBombPenetrator
 import com.atsuishio.superbwarfare.api.aircraft.AircraftBombFlight
 import com.atsuishio.superbwarfare.init.ModItems
 import com.atsuishio.superbwarfare.init.ModSounds
+import com.atsuishio.superbwarfare.tools.blast.TntBlast
 import net.minecraft.core.BlockPos
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvent
@@ -124,13 +125,13 @@ open class AerialBombEntity(type: EntityType<out AerialBombEntity>, level: Level
         val owner = this.owner
         if (entity == owner || (owner != null && entity == owner.vehicle) || entity is AerialBombEntity) return
         if (AircraftClusterBomb.isTypedChild(this) || AircraftClusterBomb.consumeSensorImpact(this)) {
-            discard(); return
+            detonateTypedChild(result.location); discard(); return
         }
         if (AircraftClusterBomb.release(this, result.location)) return
         AircraftMunitionDebug.log(this, "bomb entity impact")
         super.onHitEntity(result)
         if (this.level() is ServerLevel) {
-            if (ExplosionConfig.EXPLOSION_DESTROY.get() && ExplosionConfig.EXTRA_EXPLOSION_EFFECT.get()) {
+            if (extraCraterEnabled()) {
                 val aabb = AABB(result.getLocation(), result.getLocation()).inflate(5.0)
                 BlockPos.betweenClosedStream(aabb).forEach {
                     val hard = this.level().getBlockState(it).block.defaultDestroyTime()
@@ -152,14 +153,14 @@ open class AerialBombEntity(type: EntityType<out AerialBombEntity>, level: Level
 
     override fun onHitBlock(blockHitResult: BlockHitResult) {
         if (AircraftClusterBomb.isTypedChild(this) || AircraftClusterBomb.consumeSensorImpact(this)) {
-            discard(); return
+            detonateTypedChild(blockHitResult.location); discard(); return
         }
         if (AircraftClusterBomb.release(this, blockHitResult.location)) return
         if (AircraftBombPenetrator.begin(this, blockHitResult)) return
         AircraftMunitionDebug.log(this, "bomb block impact")
         super.onHitBlock(blockHitResult)
         if (this.level() is ServerLevel) {
-            if (ExplosionConfig.EXPLOSION_DESTROY.get() && ExplosionConfig.EXTRA_EXPLOSION_EFFECT.get()) {
+            if (extraCraterEnabled()) {
                 val aabb = AABB(blockHitResult.getLocation(), blockHitResult.getLocation()).inflate(5.0)
                 BlockPos.betweenClosedStream(aabb).forEach {
                     val hard = this.level().getBlockState(it).block.defaultDestroyTime()
@@ -181,8 +182,27 @@ open class AerialBombEntity(type: EntityType<out AerialBombEntity>, level: Level
 
     override fun causeExplode(vec3: Vec3) {
         if (AircraftClusterBomb.isTypedChild(this) || AircraftClusterBomb.consumeSensorImpact(this)) {
-            discard(); return
+            detonateTypedChild(vec3); discard(); return
         }
         if (!AircraftClusterBomb.release(this, vec3)) super.causeExplode(vec3)
     }
+
+    /** Penetrator fuzes push the TNT fireball forward along the bomb's travel direction. */
+    override fun buildExplosion(vec3: Vec3): com.atsuishio.superbwarfare.tools.CustomExplosion.Builder =
+        super.buildExplosion(vec3).penetrator(AircraftBombPenetrator.direction(this))
+
+    /**
+     * Typed children (HEAT bomblets, sensor skeets) leave direct hits to their armor profile and never used the
+     * legacy blast. A TNT-equivalent bomblet charge still detonates once where it lands. The (inert) sensor
+     * dispenser carries no charge, so this is a no-op for it.
+     */
+    private fun detonateTypedChild(at: Vec3) {
+        if (exploded || level() !is ServerLevel || !TntBlast.active(this)) return
+        exploded = true
+        buildExplosion(at).explode()
+    }
+
+    /** The legacy 3-block crater is replaced by the fireball's own block rule for TNT-equivalent bombs. */
+    private fun extraCraterEnabled(): Boolean = ExplosionConfig.EXPLOSION_DESTROY.get() &&
+        ExplosionConfig.EXTRA_EXPLOSION_EFFECT.get() && !TntBlast.active(this)
 }

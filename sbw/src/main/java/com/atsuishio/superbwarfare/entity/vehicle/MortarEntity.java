@@ -206,6 +206,7 @@ public class MortarEntity extends ArtilleryEntity {
             var gunData = getGunData("Main");
             if (level instanceof ServerLevel server && gunData != null) {
                 MortarShellEntity entityToSpawn = MortarShellItem.createShell(shooter, level, this.getItems().get(0), getProjectileGravity("Main"), gunData.get(GunProp.DAMAGE).floatValue(), gunData.get(GunProp.EXPLOSION_DAMAGE).floatValue(), gunData.get(GunProp.EXPLOSION_RADIUS).floatValue());
+                com.atsuishio.superbwarfare.tools.blast.TntEquivalents.stamp(entityToSpawn, gunData);
                 entityToSpawn.setPos(this.getX(), this.getEyeY(), this.getZ());
                 entityToSpawn.shoot(this.getLookAngle().x, this.getLookAngle().y, this.getLookAngle().z, getProjectileVelocity("Main"), getProjectileSpread("Main"));
                 entityToSpawn.setLife(gunData.get(GunProp.PROJECTILE_LIFE));

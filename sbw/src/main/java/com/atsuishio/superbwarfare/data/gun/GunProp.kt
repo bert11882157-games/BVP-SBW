@@ -251,6 +251,9 @@ class GunProp<T, R>(
         val EXPLOSION_RADIUS = plainProp(DefaultGunData::explosionRadius)
 
         @JvmField
+        val TNT_EQUIVALENT_KG = plainProp(DefaultGunData::tntEquivalentKg)
+
+        @JvmField
         val GRAVITY = plainProp(DefaultGunData::gravity)
 
         @JvmField

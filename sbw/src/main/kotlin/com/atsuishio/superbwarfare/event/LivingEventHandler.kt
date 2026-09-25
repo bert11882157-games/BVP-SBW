@@ -725,6 +725,8 @@ object LivingEventHandler {
     @SubscribeEvent
     fun onExplosionDetonate(event: ExplosionEvent.Detonate) {
         val explosion = event.explosion as? CustomExplosion ?: return
+        // The TNT-equivalent model owns every vehicle rule (true damage, soft-vehicle falloff) itself.
+        if (explosion.usesTntModel()) return
 
         val iterator = event.affectedEntities.iterator()
         while (iterator.hasNext()) {

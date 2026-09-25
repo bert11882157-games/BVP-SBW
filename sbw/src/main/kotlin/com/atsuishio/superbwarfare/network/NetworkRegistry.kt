@@ -241,4 +241,7 @@ private fun registerPayloads() {
     playToClient<SonicBoomMessage>(clientSchema(81, PacketLimitProfiles.PRESENTATION,
         delivery = REPLACEABLE_PRESENTATION, priority = P2, owner = "fx.sonic_boom",
         feature = "sonic_boom", since = 41))
+    playToClient<ShockwaveMessage>(clientSchema(82, PacketLimitProfiles.PRESENTATION,
+        delivery = REPLACEABLE_PRESENTATION, priority = P2, owner = "fx.shockwave",
+        feature = "tnt_shockwave", since = 43))
 }

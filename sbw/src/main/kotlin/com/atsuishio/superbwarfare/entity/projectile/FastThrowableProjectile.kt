@@ -28,6 +28,8 @@ import com.atsuishio.superbwarfare.network.message.receive.ClientMotionSyncMessa
 import com.atsuishio.superbwarfare.network.NetworkTelemetry
 import com.atsuishio.superbwarfare.tools.CustomExplosion
 import com.atsuishio.superbwarfare.tools.ParticleTool
+import com.atsuishio.superbwarfare.tools.blast.TntBlast
+import com.atsuishio.superbwarfare.tools.blast.TntEquivalents
 import com.atsuishio.superbwarfare.tools.postEvent
 import com.atsuishio.superbwarfare.tools.sendPacketToTrackingThis
 import net.minecraft.core.BlockPos
@@ -61,7 +63,8 @@ import java.util.function.Consumer
 abstract class FastThrowableProjectile : ThrowableItemProjectile, CustomSyncMotionEntity, IEntityAdditionalSpawnData,
     ExplosiveProjectile, ProfiledProjectile, SequencedProjectile, ProjectileImpactDamagePolicy, FarProjectileAccess,
     SmoothedBallisticProjectile {
-    override fun farProjectileExplosionRadius(): Double = explosionRadiusValue.toDouble()
+    override fun farProjectileExplosionRadius(): Double =
+        maxOf(explosionRadiusValue.toDouble(), TntBlast.farQueryRadius(this))
     override fun farProjectileLifetimeTicks(): Int = getLife().coerceIn(0, 2399) + 1
     override fun farProjectileTerminatesNextTick(currentAge: Int): Boolean = currentAge >= getLife()
     /** Server-to-client correction policy for deterministic and guided projectiles. */
@@ -330,6 +333,9 @@ abstract class FastThrowableProjectile : ThrowableItemProjectile, CustomSyncMoti
 
         if (!resolution.continuesDefaultPipeline()) {
             if (resolution.consumesProjectile()) {
+                // An addon armor resolver owns the direct hit; a TNT-equivalent charge still detonates at the
+                // impact point for nearby infantry and vehicles (including the struck hull for >= 25 kg).
+                detonateResolvedImpact(result.location, resolution)
                 this.discard()
             }
             return
@@ -411,6 +417,18 @@ abstract class FastThrowableProjectile : ThrowableItemProjectile, CustomSyncMoti
         return resistance
     }
 
+    /** TNT-equivalent blast for a direct hit whose resolver consumed the projectile; legacy rounds stay silent. */
+    private fun detonateResolvedImpact(location: Vec3, resolution: ProjectileImpactResult) {
+        if (exploded || !TntBlast.active(this)) return
+        exploded = true
+        activeImpactResult = resolution
+        try {
+            buildExplosion(location).explode()
+        } finally {
+            activeImpactResult = null
+        }
+    }
+
     protected fun <T : FastThrowableProjectile> inheritPenetrationState(
         target: T,
         resistance: Double,
@@ -425,6 +443,8 @@ abstract class FastThrowableProjectile : ThrowableItemProjectile, CustomSyncMoti
         target.setExplosionDamage((explosionDamageValue * resistance).toFloat())
         target.setExplosionRadius((explosionRadiusValue * resistance).toFloat())
         ProjectileProfiles.copy(this, target)
+        // The charge itself is not consumed by block penetration.
+        TntEquivalents.copy(this, target)
         return target
     }
 
@@ -438,12 +458,14 @@ abstract class FastThrowableProjectile : ThrowableItemProjectile, CustomSyncMoti
             .position(vec3)
             .withParticleType(explosionParticleType(resolvedExplosionRadius))
             .emitFx(shouldEmitDefaultImpactFx())
+            .tntEquivalent(TntEquivalents.resolve(this))
     }
 
     open fun causeExplode(vec3: Vec3) {
         if (!exploded) {
             exploded = true
-            if (activeImpactResult?.suppressesDefaultExplosion() != true) {
+            // A resolver may suppress the legacy blast (armor owns the hit); a TNT-equivalent charge still detonates.
+            if (activeImpactResult?.suppressesDefaultExplosion() != true || TntBlast.active(this)) {
                 buildExplosion(vec3).explode()
             }
         }

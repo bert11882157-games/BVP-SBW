@@ -254,6 +254,7 @@ open class Blu43Entity : Entity, OwnableEntity {
             .radius(ExplosionConfig.BLU_43_EXPLOSION_RADIUS.get().toFloat())
             .keepBlock()
             .withParticleType(ParticleTool.ParticleType.SMALL)
+            .tntEquivalent(com.atsuishio.superbwarfare.tools.blast.TntBlast.configuredCharge(this, com.atsuishio.superbwarfare.config.server.ExplosionConfig.BLU_43_TNT_EQUIVALENT_KG, com.atsuishio.superbwarfare.tools.blast.TntBlast.BLU_43_KEY))
             .explode()
 
         this.discard()

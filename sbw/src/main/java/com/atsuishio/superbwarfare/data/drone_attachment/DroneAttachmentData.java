@@ -97,6 +97,10 @@ public class DroneAttachmentData implements IDBasedData<DroneAttachmentData> {
     @SerializedName("ExplosionRadius")
     public float explosionRadius = 0;
 
+    /** TNT-equivalent kg of the payload; > 0 selects the TNT blast model (kamikaze blast and dropped payloads). */
+    @SerializedName("TntEquivalentKg")
+    public float tntEquivalentKg = 0;
+
     // display settings
 
     @SerializedName("Scale")

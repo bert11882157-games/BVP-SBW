@@ -232,6 +232,7 @@ open class Tm62Entity : Entity, OwnableEntity {
             .damage(ExplosionConfig.TM_62_EXPLOSION_DAMAGE.get().toFloat())
             .radius(ExplosionConfig.TM_62_EXPLOSION_RADIUS.get().toFloat())
             .withParticleType(ParticleTool.ParticleType.HUGE)
+            .tntEquivalent(com.atsuishio.superbwarfare.tools.blast.TntBlast.configuredCharge(this, com.atsuishio.superbwarfare.config.server.ExplosionConfig.TM_62_TNT_EQUIVALENT_KG, com.atsuishio.superbwarfare.tools.blast.TntBlast.TM_62_KEY))
             .explode()
 
         this.discard()

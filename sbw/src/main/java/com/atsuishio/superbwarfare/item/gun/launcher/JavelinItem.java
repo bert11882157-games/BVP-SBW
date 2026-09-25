@@ -75,6 +75,7 @@ public class JavelinItem extends GunGeoItem {
                     guideType,
                     targetPos);
 
+            com.atsuishio.superbwarfare.tools.blast.TntEquivalents.stamp(missileEntity, data);
             for (Perk.Type type : Perk.Type.getEntries()) {
                 var instance = data.perk.getInstances(type);
                 instance.forEach(perk -> perk.perk().modifyProjectile(data, perk, missileEntity));
