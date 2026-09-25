@@ -31,10 +31,96 @@
         1.872093,
         -0.120769
       ],
+      "LeftStations": [
+        {
+          "Point": [
+            -6.0846,
+            1.6909,
+            0.4302
+          ],
+          "Face": "bottom",
+          "Copies": [
+            1
+          ]
+        },
+        {
+          "Point": [
+            -6.2931,
+            1.9694,
+            -0.634
+          ],
+          "Face": "left",
+          "Copies": [
+            2
+          ],
+          "ExceptStores": [
+            "berts_vehicle_pack:munition/mk82_snakeeye_x2",
+            "berts_vehicle_pack:munition/mk82_x2"
+          ]
+        },
+        {
+          "Point": [
+            -5.3007,
+            1.9694,
+            -0.634
+          ],
+          "Face": "right",
+          "Copies": [
+            2
+          ],
+          "ExceptStores": [
+            "berts_vehicle_pack:munition/mk82_snakeeye_x2",
+            "berts_vehicle_pack:munition/mk82_x2"
+          ]
+        }
+      ],
       "Right": [
         6.038444,
         1.872093,
         -0.120769
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            6.0846,
+            1.6909,
+            0.4302
+          ],
+          "Face": "bottom",
+          "Copies": [
+            1
+          ]
+        },
+        {
+          "Point": [
+            6.2931,
+            1.9694,
+            -0.634
+          ],
+          "Face": "right",
+          "Copies": [
+            2
+          ],
+          "ExceptStores": [
+            "berts_vehicle_pack:munition/mk82_snakeeye_x2",
+            "berts_vehicle_pack:munition/mk82_x2"
+          ]
+        },
+        {
+          "Point": [
+            5.3007,
+            1.9694,
+            -0.634
+          ],
+          "Face": "left",
+          "Copies": [
+            2
+          ],
+          "ExceptStores": [
+            "berts_vehicle_pack:munition/mk82_snakeeye_x2",
+            "berts_vehicle_pack:munition/mk82_x2"
+          ]
+        }
       ],
       "AllowedStores": [
         "berts_vehicle_pack:munition/mk82",
@@ -53,10 +139,30 @@
         1.389018,
         1.509611
       ],
+      "LeftStations": [
+        {
+          "Point": [
+            -4.71,
+            1.3588,
+            1.4945
+          ],
+          "Face": "bottom"
+        }
+      ],
       "Right": [
         4.709986,
         1.389018,
         1.509611
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            4.71,
+            1.3588,
+            1.4945
+          ],
+          "Face": "bottom"
+        }
       ],
       "AllowedStores": [
         "berts_vehicle_pack:fa18e/agm65e",
@@ -77,10 +183,96 @@
         1.389018,
         -0.422691
       ],
+      "LeftStations": [
+        {
+          "Point": [
+            -2.4967,
+            1.2079,
+            0.9801
+          ],
+          "Face": "bottom",
+          "Copies": [
+            1
+          ]
+        },
+        {
+          "Point": [
+            -2.8381,
+            1.5098,
+            0.9801
+          ],
+          "Face": "left",
+          "Copies": [
+            2
+          ],
+          "ExceptStores": [
+            "berts_vehicle_pack:munition/mk82_snakeeye_x2",
+            "berts_vehicle_pack:munition/mk82_x2"
+          ]
+        },
+        {
+          "Point": [
+            -2.1738,
+            1.5098,
+            0.9801
+          ],
+          "Face": "right",
+          "Copies": [
+            2
+          ],
+          "ExceptStores": [
+            "berts_vehicle_pack:munition/mk82_snakeeye_x2",
+            "berts_vehicle_pack:munition/mk82_x2"
+          ]
+        }
+      ],
       "Right": [
         2.7173,
         1.389018,
         -0.422691
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            2.4967,
+            1.2079,
+            0.9801
+          ],
+          "Face": "bottom",
+          "Copies": [
+            1
+          ]
+        },
+        {
+          "Point": [
+            2.8381,
+            1.5098,
+            0.9801
+          ],
+          "Face": "right",
+          "Copies": [
+            2
+          ],
+          "ExceptStores": [
+            "berts_vehicle_pack:munition/mk82_snakeeye_x2",
+            "berts_vehicle_pack:munition/mk82_x2"
+          ]
+        },
+        {
+          "Point": [
+            2.1738,
+            1.5098,
+            0.9801
+          ],
+          "Face": "left",
+          "Copies": [
+            2
+          ],
+          "ExceptStores": [
+            "berts_vehicle_pack:munition/mk82_snakeeye_x2",
+            "berts_vehicle_pack:munition/mk82_x2"
+          ]
+        }
       ],
       "AllowedStores": [
         "berts_vehicle_pack:fa18e/agm65e",
@@ -101,10 +293,30 @@
         1.389018,
         -0.422691
       ],
+      "LeftStations": [
+        {
+          "Point": [
+            -1.5096,
+            1.6909,
+            -0.4227
+          ],
+          "Face": "bottom"
+        }
+      ],
       "Right": [
         1.509611,
         1.389018,
         -0.422691
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            1.5096,
+            1.6909,
+            -0.4227
+          ],
+          "Face": "bottom"
+        }
       ],
       "AllowedStores": [
         "berts_vehicle_pack:munition/mk82",
@@ -124,6 +336,16 @@
         0,
         1.207864,
         -0.422691
+      ],
+      "Stations": [
+        {
+          "Point": [
+            0.0,
+            1.5641,
+            -0.4227
+          ],
+          "Face": "bottom"
+        }
       ],
       "Internal": false,
       "AllowedStores": [

@@ -51,6 +51,33 @@
   "AmmoItem": "superbwarfare:small_freefall_bomb",
   "MaxPerPylon": 2,
   "FixedRackCount": 2,
+  "RackAdapter": {
+    "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/rack_rbk_250_x2.geo.json",
+    "Texture": "berts_vehicle_pack:textures/aircraft_stores/rbk_250.png",
+    "MountAnchor": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "Stations": [
+      {
+        "Point": [
+          -0.1193,
+          -0.2925,
+          0.0
+        ],
+        "Face": "left"
+      },
+      {
+        "Point": [
+          0.1193,
+          -0.2925,
+          0.0
+        ],
+        "Face": "right"
+      }
+    ]
+  },
   "RackSpacing": [
     0.34,
     0.4,

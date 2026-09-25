@@ -12,10 +12,30 @@
         1.107481,
         0.773356
       ],
+      "LeftStations": [
+        {
+          "Point": [
+            -1.617,
+            1.2129,
+            0.2109
+          ],
+          "Face": "bottom"
+        }
+      ],
       "Right": [
         1.687322,
         1.107481,
         0.773356
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            1.617,
+            1.2129,
+            0.2109
+          ],
+          "Face": "bottom"
+        }
       ],
       "AllowedStores": [
         "berts_vehicle_pack:eurocopter_tiger/hot3_proxy",
@@ -32,10 +52,92 @@
         1.107481,
         0.210915
       ],
+      "LeftStations": [
+        {
+          "Point": [
+            -2.8122,
+            1.6699,
+            0.2461
+          ],
+          "Face": "bottom",
+          "Copies": [
+            1
+          ]
+        },
+        {
+          "Point": [
+            -3.0934,
+            1.9511,
+            0.2461
+          ],
+          "Face": "left",
+          "Copies": [
+            2
+          ],
+          "ExceptStores": [
+            "berts_vehicle_pack:munition/pars3_lr_dual"
+          ]
+        },
+        {
+          "Point": [
+            -2.531,
+            1.9511,
+            0.2461
+          ],
+          "Face": "right",
+          "Copies": [
+            2
+          ],
+          "ExceptStores": [
+            "berts_vehicle_pack:munition/pars3_lr_dual"
+          ]
+        }
+      ],
       "Right": [
         2.671593,
         1.107481,
         0.210915
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            2.8122,
+            1.6699,
+            0.2461
+          ],
+          "Face": "bottom",
+          "Copies": [
+            1
+          ]
+        },
+        {
+          "Point": [
+            3.0934,
+            1.9511,
+            0.2461
+          ],
+          "Face": "right",
+          "Copies": [
+            2
+          ],
+          "ExceptStores": [
+            "berts_vehicle_pack:munition/pars3_lr_dual"
+          ]
+        },
+        {
+          "Point": [
+            2.531,
+            1.9511,
+            0.2461
+          ],
+          "Face": "left",
+          "Copies": [
+            2
+          ],
+          "ExceptStores": [
+            "berts_vehicle_pack:munition/pars3_lr_dual"
+          ]
+        }
       ],
       "AllowedStores": [
         "berts_vehicle_pack:eurocopter_tiger/hot3_proxy",

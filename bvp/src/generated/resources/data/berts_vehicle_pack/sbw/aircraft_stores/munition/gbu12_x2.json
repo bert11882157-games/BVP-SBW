@@ -42,6 +42,33 @@
   "ProjectileProfile": "berts_vehicle_pack:aircraft_bombs/gbu12",
   "MaxPerPylon": 2,
   "FixedRackCount": 2,
+  "RackAdapter": {
+    "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/rack_gbu12_x2.geo.json",
+    "Texture": "berts_vehicle_pack:textures/aircraft_stores/gbu12.png",
+    "MountAnchor": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "Stations": [
+      {
+        "Point": [
+          -0.0511,
+          -0.6225,
+          0.0
+        ],
+        "Face": "left"
+      },
+      {
+        "Point": [
+          0.0511,
+          -0.6225,
+          0.0
+        ],
+        "Face": "right"
+      }
+    ]
+  },
   "RackSpacing": [
     0.36,
     0.4,

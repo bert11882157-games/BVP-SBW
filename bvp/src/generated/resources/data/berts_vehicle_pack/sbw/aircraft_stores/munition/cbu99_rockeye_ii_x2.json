@@ -52,6 +52,33 @@
   "ProjectileProfile": "berts_vehicle_pack:aircraft_bombs/cbu99_rockeye_ii",
   "MaxPerPylon": 2,
   "FixedRackCount": 2,
+  "RackAdapter": {
+    "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/rack_cbu99_rockeye_ii_x2.geo.json",
+    "Texture": "berts_vehicle_pack:textures/aircraft_stores/cbu99.png",
+    "MountAnchor": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "Stations": [
+      {
+        "Point": [
+          -0.0511,
+          -0.6225,
+          0.0
+        ],
+        "Face": "left"
+      },
+      {
+        "Point": [
+          0.0511,
+          -0.6225,
+          0.0
+        ],
+        "Face": "right"
+      }
+    ]
+  },
   "RackSpacing": [
     0.66,
     0.4,
