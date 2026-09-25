@@ -18,26 +18,6 @@
         "Bone": "aileron_left",
         "Parent": "hull",
         "Pivot": [
-          -295.83648,
-          61.84944,
-          47.63808
-        ],
-        "Axis": [
-          -0.839789163995588,
-          -0.019007573670682034,
-          0.5425798302358326
-        ],
-        "ControlWeights": {
-          "ElevatorUp": 0,
-          "RightRoll": -1,
-          "RudderRight": 0
-        },
-        "MaxDeflectionDegrees": 20
-      },
-      {
-        "Bone": "aileron_right",
-        "Parent": "hull",
-        "Pivot": [
           295.83648,
           61.84944,
           47.63808
@@ -55,27 +35,27 @@
         "MaxDeflectionDegrees": 20
       },
       {
-        "Bone": "elevator_left",
+        "Bone": "aileron_right",
         "Parent": "hull",
         "Pivot": [
-          -59.24736,
-          99.27936,
-          370.69632
+          -295.83648,
+          61.84944,
+          47.63808
         ],
         "Axis": [
-          -0.8247288518459778,
-          0,
-          0.5655283555515278
+          -0.839789163995588,
+          -0.019007573670682034,
+          0.5425798302358326
         ],
         "ControlWeights": {
-          "ElevatorUp": 1,
-          "RightRoll": 0,
+          "ElevatorUp": 0,
+          "RightRoll": -1,
           "RudderRight": 0
         },
         "MaxDeflectionDegrees": 20
       },
       {
-        "Bone": "elevator_right",
+        "Bone": "elevator_left",
         "Parent": "hull",
         "Pivot": [
           59.24736,
@@ -95,6 +75,26 @@
         "MaxDeflectionDegrees": 20
       },
       {
+        "Bone": "elevator_right",
+        "Parent": "hull",
+        "Pivot": [
+          -59.24736,
+          99.27936,
+          370.69632
+        ],
+        "Axis": [
+          -0.8247288518459778,
+          0,
+          0.5655283555515278
+        ],
+        "ControlWeights": {
+          "ElevatorUp": 1,
+          "RightRoll": 0,
+          "RudderRight": 0
+        },
+        "MaxDeflectionDegrees": 20
+      },
+      {
         "Bone": "rudder",
         "Parent": "hull",
         "Pivot": [
@@ -104,13 +104,13 @@
         ],
         "Axis": [
           0,
-          -0.8448190755542284,
-          -0.5350520811843447
+          0.8448190755542284,
+          0.5350520811843447
         ],
         "ControlWeights": {
           "ElevatorUp": 0,
           "RightRoll": 0,
-          "RudderRight": -1
+          "RudderRight": 1
         },
         "MaxDeflectionDegrees": 25
       }
@@ -120,7 +120,7 @@
         "Bone": "engine_rotor_0",
         "Parent": "hull",
         "Pivot": [
-          -101.68128,
+          101.68128,
           59.24736,
           -236.98944
         ],
@@ -137,7 +137,7 @@
         "Bone": "engine_rotor_1",
         "Parent": "hull",
         "Pivot": [
-          -101.68128,
+          101.68128,
           59.24736,
           -232.1856
         ],
@@ -154,7 +154,7 @@
         "Bone": "engine_rotor_2",
         "Parent": "hull",
         "Pivot": [
-          -198.55872,
+          198.55872,
           55.24416,
           -167.33376
         ],
@@ -171,7 +171,7 @@
         "Bone": "engine_rotor_3",
         "Parent": "hull",
         "Pivot": [
-          -198.55872,
+          198.55872,
           55.24416,
           -162.52992
         ],
@@ -188,7 +188,7 @@
         "Bone": "engine_rotor_4",
         "Parent": "hull",
         "Pivot": [
-          101.68128,
+          -101.68128,
           59.24736,
           -236.98944
         ],
@@ -205,7 +205,7 @@
         "Bone": "engine_rotor_5",
         "Parent": "hull",
         "Pivot": [
-          101.68128,
+          -101.68128,
           59.24736,
           -232.1856
         ],
@@ -222,7 +222,7 @@
         "Bone": "engine_rotor_6",
         "Parent": "hull",
         "Pivot": [
-          198.55872,
+          -198.55872,
           55.24416,
           -167.33376
         ],
@@ -239,7 +239,7 @@
         "Bone": "engine_rotor_7",
         "Parent": "hull",
         "Pivot": [
-          198.55872,
+          -198.55872,
           55.24416,
           -162.52992
         ],
@@ -297,7 +297,7 @@
       "Axis": [
         1,
         0,
-        -1.2246467991473532e-16
+        1.2246467991473532e-16
       ]
     }
   }

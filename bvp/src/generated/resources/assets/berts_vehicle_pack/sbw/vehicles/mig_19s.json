@@ -17,7 +17,7 @@
       {
         "Id": "afterburner_left",
         "Position": [
-          -0.315,
+          0.315,
           1.485,
           -4.62
         ],
@@ -31,7 +31,7 @@
       {
         "Id": "afterburner_right",
         "Position": [
-          0.315,
+          -0.315,
           1.485,
           -4.62
         ],
@@ -120,26 +120,6 @@
         "Bone": "aileron_left",
         "Parent": "hull",
         "Pivot": [
-          -54.72,
-          18,
-          39.96
-        ],
-        "Axis": [
-          -0.7323477534514637,
-          -0.034873702545307736,
-          0.680037199633502
-        ],
-        "ControlWeights": {
-          "ElevatorUp": 0,
-          "RightRoll": -1,
-          "RudderRight": 0
-        },
-        "MaxDeflectionDegrees": 18
-      },
-      {
-        "Bone": "aileron_right",
-        "Parent": "hull",
-        "Pivot": [
           54.72,
           18,
           39.96
@@ -152,6 +132,26 @@
         "ControlWeights": {
           "ElevatorUp": 0,
           "RightRoll": 1,
+          "RudderRight": 0
+        },
+        "MaxDeflectionDegrees": 18
+      },
+      {
+        "Bone": "aileron_right",
+        "Parent": "hull",
+        "Pivot": [
+          -54.72,
+          18,
+          39.96
+        ],
+        "Axis": [
+          -0.7323477534514637,
+          -0.034873702545307736,
+          0.680037199633502
+        ],
+        "ControlWeights": {
+          "ElevatorUp": 0,
+          "RightRoll": -1,
           "RudderRight": 0
         },
         "MaxDeflectionDegrees": 18
@@ -180,19 +180,19 @@
         "Bone": "rudder",
         "Parent": "hull",
         "Pivot": [
-          -0.72,
+          0.72,
           46.44,
           84.24
         ],
         "Axis": [
           0,
-          -0.7661915431257926,
-          -0.6426122619764711
+          0.7661915431257926,
+          0.6426122619764711
         ],
         "ControlWeights": {
           "ElevatorUp": 0,
           "RightRoll": 0,
-          "RudderRight": -1
+          "RudderRight": 1
         },
         "MaxDeflectionDegrees": 25
       }

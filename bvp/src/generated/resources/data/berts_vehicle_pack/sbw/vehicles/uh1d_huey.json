@@ -99,28 +99,6 @@
       "BanHand": true,
       "Transform": "Vehicle",
       "Position": [
-        -0.8125,
-        0.5,
-        -3.125
-      ],
-      "MinPitch": -60,
-      "MaxPitch": 60,
-      "MinYaw": -95,
-      "MaxYaw": 95,
-      "CameraPos": {
-        "UseSimulate3P": true,
-        "Simulate3PPos": [
-          6,
-          1
-        ]
-      }
-    },
-    {
-      "IsEnclosed": true,
-      "HidePassenger": true,
-      "BanHand": true,
-      "Transform": "Vehicle",
-      "Position": [
         0.8125,
         0.5,
         -3.125
@@ -143,9 +121,9 @@
       "BanHand": true,
       "Transform": "Vehicle",
       "Position": [
-        0.87501,
+        -0.8125,
         0.5,
-        -1.93749
+        -3.125
       ],
       "MinPitch": -60,
       "MaxPitch": 60,
@@ -187,9 +165,9 @@
       "BanHand": true,
       "Transform": "Vehicle",
       "Position": [
-        0.99999,
+        0.87501,
         0.5,
-        -0.625
+        -1.93749
       ],
       "MinPitch": -60,
       "MaxPitch": 60,
@@ -231,7 +209,29 @@
       "BanHand": true,
       "Transform": "Vehicle",
       "Position": [
-        1.18751,
+        0.99999,
+        0.5,
+        -0.625
+      ],
+      "MinPitch": -60,
+      "MaxPitch": 60,
+      "MinYaw": -95,
+      "MaxYaw": 95,
+      "CameraPos": {
+        "UseSimulate3P": true,
+        "Simulate3PPos": [
+          6,
+          1
+        ]
+      }
+    },
+    {
+      "IsEnclosed": true,
+      "HidePassenger": true,
+      "BanHand": true,
+      "Transform": "Vehicle",
+      "Position": [
+        -1.18751,
         0.5,
         0.06249
       ],
@@ -253,7 +253,7 @@
       "BanHand": true,
       "Transform": "Vehicle",
       "Position": [
-        -1.18751,
+        1.18751,
         0.5,
         0.06249
       ],
@@ -367,7 +367,7 @@
     "ExplosionRadius": 10
   },
   "ThirdPersonCameraPos": [
-    3.26748,
+    -3.26748,
     4.84071,
     14.52213
   ],
@@ -394,22 +394,22 @@
   "HudType": "@Helicopter",
   "TerrainCompat": [
     [
-      1.45221,
-      0,
-      3.54985
-    ],
-    [
       -1.45221,
       0,
       3.54985
     ],
     [
       1.45221,
+      0,
+      3.54985
+    ],
+    [
+      -1.45221,
       0,
       -3.54985
     ],
     [
-      -1.45221,
+      1.45221,
       0,
       -3.54985
     ]

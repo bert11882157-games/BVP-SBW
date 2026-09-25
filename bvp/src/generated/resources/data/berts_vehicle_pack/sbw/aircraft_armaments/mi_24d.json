@@ -10,43 +10,11 @@
       "Id": "outer_atgm",
       "Name": "Outer wing ATGM rail",
       "Left": [
-        -5.1,
-        1.42,
-        0.32
-      ],
-      "LeftStations": [
-        {
-          "Point": [
-            -4.5938,
-            1.375,
-            0.2812
-          ],
-          "Face": "bottom",
-          "ExceptStores": [
-            "berts_vehicle_pack:munition/falanga_9m17m"
-          ]
-        },
-        {
-          "Point": [
-            -5.4375,
-            1.6875,
-            -0.75
-          ],
-          "Face": "left",
-          "Copies": [
-            1
-          ],
-          "Stores": [
-            "berts_vehicle_pack:munition/falanga_9m17m"
-          ]
-        }
-      ],
-      "Right": [
         5.1,
         1.42,
         0.32
       ],
-      "RightStations": [
+      "LeftStations": [
         {
           "Point": [
             4.5938,
@@ -61,6 +29,38 @@
         {
           "Point": [
             5.4375,
+            1.6875,
+            -0.75
+          ],
+          "Face": "left",
+          "Copies": [
+            1
+          ],
+          "Stores": [
+            "berts_vehicle_pack:munition/falanga_9m17m"
+          ]
+        }
+      ],
+      "Right": [
+        -5.1,
+        1.42,
+        0.32
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -4.5938,
+            1.375,
+            0.2812
+          ],
+          "Face": "bottom",
+          "ExceptStores": [
+            "berts_vehicle_pack:munition/falanga_9m17m"
+          ]
+        },
+        {
+          "Point": [
+            -5.4375,
             1.6875,
             -0.75
           ],

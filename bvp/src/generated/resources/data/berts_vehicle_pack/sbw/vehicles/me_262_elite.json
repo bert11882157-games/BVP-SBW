@@ -40,7 +40,7 @@
         2.01262
       ],
       "Position": [
-        -2.25129,
+        2.25129,
         0.83988,
         1.04595
       ]
@@ -52,7 +52,7 @@
         2.01262
       ],
       "Position": [
-        2.25129,
+        -2.25129,
         0.83988,
         1.04595
       ]
@@ -110,7 +110,7 @@
       "DismountInfo": {
         "Transform": "Vehicle",
         "Position": [
-          2.1,
+          -2.1,
           0.2,
           0
         ]
@@ -119,462 +119,6 @@
   ],
   "Weapons": {
     "Cannon1": {
-      "Crosshair": "@VehicleCommonGun",
-      "DefaultFireMode": "Auto",
-      "AvailableFireModes": "Auto",
-      "ProjectileAmount": 1,
-      "AmmoCostPerShoot": 1,
-      "NormalReloadTime": 400,
-      "EmptyReloadTime": 400,
-      "AutoReload": true,
-      "WithdrawAmmoWhenChangeSlot": false,
-      "Gravity": 0.05,
-      "ProjectileLife": 400,
-      "AddShooterDeltaMovement": true,
-      "HeatPerShoot": 0,
-      "Spread": 0.12,
-      "SoundRadius": 8,
-      "ExplosionDamage": 0,
-      "Name": "30 mm MK 108",
-      "RPM": 600,
-      "Magazine": 90,
-      "Damage": 250,
-      "SoundInfo": {
-        "Fire1PGain": 0.5,
-        "Fire3PGain": 0.5,
-        "Fire3PFarGain": 0.5,
-        "Fire3PVeryFarGain": 0.5,
-        "Fire1P": "berts_vehicle_pack:tap_jetshoot",
-        "Fire3P": "berts_vehicle_pack:tap_jetshoot",
-        "Fire3PFar": "berts_vehicle_pack:tap_jetshoot",
-        "Fire3PVeryFar": "berts_vehicle_pack:tap_jetshoot"
-      },
-      "Projectile": {
-        "Type": "superbwarfare:small_cannon_shell",
-        "Profile": "berts_vehicle_pack:aircraft_rounds/mk108/mk108_hei_t"
-      },
-      "ShellType": "HE",
-      "Velocity": 31.25,
-      "ApDurability": 4,
-      "ExplosionRadius": 5,
-      "TntEquivalentKg": 0.09,
-      "NominalBallistics": {
-        "Supported": true,
-        "ProjectileType": "superbwarfare:small_cannon_shell",
-        "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/mk108/mk108_hei_t",
-        "ProjectileLife": 400
-      },
-      "AmmoType": [
-        {
-          "Ammo": "superbwarfare:small_shell_ap",
-          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
-          "Override": {
-            "Projectile": {
-              "Type": "superbwarfare:small_cannon_shell",
-              "Profile": "berts_vehicle_pack:aircraft_rounds/mk108/mk108_hei_t"
-            },
-            "ShellType": "HE",
-            "Velocity": 31.25,
-            "ApDurability": 4,
-            "Damage": 250,
-            "ExplosionDamage": 0,
-            "ExplosionRadius": 5,
-            "TntEquivalentKg": 0.09,
-            "Name": "Air Belt",
-            "ProjectileBelt": {
-              "Name": "Air Belt",
-              "Rounds": [
-                {
-                  "Shots": 1,
-                  "Round": "mk108_hei_t",
-                  "Ammo": "superbwarfare:small_shell_ap",
-                  "Tracer": "INHERIT"
-                },
-                {
-                  "Shots": 1,
-                  "Round": "mk108_incendiary",
-                  "Ammo": "superbwarfare:small_shell_he",
-                  "Tracer": "NONE"
-                }
-              ]
-            },
-            "NominalBallistics": {
-              "Supported": true,
-              "ProjectileType": "superbwarfare:small_cannon_shell",
-              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/mk108/mk108_hei_t",
-              "ProjectileLife": 400
-            }
-          }
-        }
-      ],
-      "ProjectileBeltAmmoType": [
-        {
-          "Ammo": "superbwarfare:small_shell_he",
-          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
-          "Override": {
-            "Projectile": {
-              "Type": "superbwarfare:small_cannon_shell",
-              "Profile": "berts_vehicle_pack:aircraft_rounds/mk108/mk108_incendiary"
-            },
-            "ShellType": "AP",
-            "Velocity": 31.25,
-            "ApDurability": 8,
-            "Damage": 45,
-            "ExplosionDamage": 0,
-            "ExplosionRadius": 0,
-            "TntEquivalentKg": 0.0,
-            "Name": "I",
-            "NominalBallistics": {
-              "Supported": true,
-              "ProjectileType": "superbwarfare:small_cannon_shell",
-              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/mk108/mk108_incendiary",
-              "ProjectileLife": 400
-            }
-          }
-        }
-      ],
-      "BeltFed": true,
-      "OverheatEnabled": false,
-      "ShootPos": {
-        "Transform": "Vehicle",
-        "Positions": [
-          [
-            0.31222375,
-            1.72972,
-            3.80913125
-          ]
-        ],
-        "Directions": [
-          [
-            0,
-            0,
-            1
-          ]
-        ],
-        "ViewPosition": [
-          0.31222375,
-          1.72972,
-          3.80913125
-        ],
-        "MuzzleAttachments": [
-          "cannon1_muzzle"
-        ],
-        "MuzzleDirectionAttachments": [
-          "cannon1_muzzle"
-        ],
-        "EffectAttachments": [
-          "cannon1_muzzle"
-        ],
-        "EffectDirectionAttachments": [
-          "cannon1_muzzle"
-        ]
-      }
-    },
-    "Cannon2": {
-      "Crosshair": "@VehicleCommonGun",
-      "DefaultFireMode": "Auto",
-      "AvailableFireModes": "Auto",
-      "ProjectileAmount": 1,
-      "AmmoCostPerShoot": 1,
-      "NormalReloadTime": 400,
-      "EmptyReloadTime": 400,
-      "AutoReload": true,
-      "WithdrawAmmoWhenChangeSlot": false,
-      "Gravity": 0.05,
-      "ProjectileLife": 400,
-      "AddShooterDeltaMovement": true,
-      "HeatPerShoot": 0,
-      "Spread": 0.12,
-      "SoundRadius": 8,
-      "ExplosionDamage": 0,
-      "Name": "30 mm MK 108",
-      "RPM": 600,
-      "Magazine": 90,
-      "Damage": 250,
-      "SoundInfo": {
-        "Fire1PGain": 0.5,
-        "Fire3PGain": 0.5,
-        "Fire3PFarGain": 0.5,
-        "Fire3PVeryFarGain": 0.5,
-        "Fire1P": "berts_vehicle_pack:tap_jetshoot",
-        "Fire3P": "berts_vehicle_pack:tap_jetshoot",
-        "Fire3PFar": "berts_vehicle_pack:tap_jetshoot",
-        "Fire3PVeryFar": "berts_vehicle_pack:tap_jetshoot"
-      },
-      "Projectile": {
-        "Type": "superbwarfare:small_cannon_shell",
-        "Profile": "berts_vehicle_pack:aircraft_rounds/mk108/mk108_hei_t"
-      },
-      "ShellType": "HE",
-      "Velocity": 31.25,
-      "ApDurability": 4,
-      "ExplosionRadius": 5,
-      "TntEquivalentKg": 0.09,
-      "NominalBallistics": {
-        "Supported": true,
-        "ProjectileType": "superbwarfare:small_cannon_shell",
-        "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/mk108/mk108_hei_t",
-        "ProjectileLife": 400
-      },
-      "AmmoType": [
-        {
-          "Ammo": "superbwarfare:small_shell_ap",
-          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
-          "Override": {
-            "Projectile": {
-              "Type": "superbwarfare:small_cannon_shell",
-              "Profile": "berts_vehicle_pack:aircraft_rounds/mk108/mk108_hei_t"
-            },
-            "ShellType": "HE",
-            "Velocity": 31.25,
-            "ApDurability": 4,
-            "Damage": 250,
-            "ExplosionDamage": 0,
-            "ExplosionRadius": 5,
-            "TntEquivalentKg": 0.09,
-            "Name": "Air Belt",
-            "ProjectileBelt": {
-              "Name": "Air Belt",
-              "Rounds": [
-                {
-                  "Shots": 1,
-                  "Round": "mk108_hei_t",
-                  "Ammo": "superbwarfare:small_shell_ap",
-                  "Tracer": "INHERIT"
-                },
-                {
-                  "Shots": 1,
-                  "Round": "mk108_incendiary",
-                  "Ammo": "superbwarfare:small_shell_he",
-                  "Tracer": "NONE"
-                }
-              ]
-            },
-            "NominalBallistics": {
-              "Supported": true,
-              "ProjectileType": "superbwarfare:small_cannon_shell",
-              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/mk108/mk108_hei_t",
-              "ProjectileLife": 400
-            }
-          }
-        }
-      ],
-      "ProjectileBeltAmmoType": [
-        {
-          "Ammo": "superbwarfare:small_shell_he",
-          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
-          "Override": {
-            "Projectile": {
-              "Type": "superbwarfare:small_cannon_shell",
-              "Profile": "berts_vehicle_pack:aircraft_rounds/mk108/mk108_incendiary"
-            },
-            "ShellType": "AP",
-            "Velocity": 31.25,
-            "ApDurability": 8,
-            "Damage": 45,
-            "ExplosionDamage": 0,
-            "ExplosionRadius": 0,
-            "TntEquivalentKg": 0.0,
-            "Name": "I",
-            "NominalBallistics": {
-              "Supported": true,
-              "ProjectileType": "superbwarfare:small_cannon_shell",
-              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/mk108/mk108_incendiary",
-              "ProjectileLife": 400
-            }
-          }
-        }
-      ],
-      "BeltFed": true,
-      "OverheatEnabled": false,
-      "ShootPos": {
-        "Transform": "Vehicle",
-        "Positions": [
-          [
-            0.124889375,
-            1.85461,
-            3.80913125
-          ]
-        ],
-        "Directions": [
-          [
-            0,
-            0,
-            1
-          ]
-        ],
-        "ViewPosition": [
-          0.124889375,
-          1.85461,
-          3.80913125
-        ],
-        "MuzzleAttachments": [
-          "cannon2_muzzle"
-        ],
-        "MuzzleDirectionAttachments": [
-          "cannon2_muzzle"
-        ],
-        "EffectAttachments": [
-          "cannon2_muzzle"
-        ],
-        "EffectDirectionAttachments": [
-          "cannon2_muzzle"
-        ]
-      }
-    },
-    "Cannon3": {
-      "Crosshair": "@VehicleCommonGun",
-      "DefaultFireMode": "Auto",
-      "AvailableFireModes": "Auto",
-      "ProjectileAmount": 1,
-      "AmmoCostPerShoot": 1,
-      "NormalReloadTime": 400,
-      "EmptyReloadTime": 400,
-      "AutoReload": true,
-      "WithdrawAmmoWhenChangeSlot": false,
-      "Gravity": 0.05,
-      "ProjectileLife": 400,
-      "AddShooterDeltaMovement": true,
-      "HeatPerShoot": 0,
-      "Spread": 0.12,
-      "SoundRadius": 8,
-      "ExplosionDamage": 0,
-      "Name": "30 mm MK 108",
-      "RPM": 600,
-      "Magazine": 90,
-      "Damage": 250,
-      "SoundInfo": {
-        "Fire1PGain": 0.5,
-        "Fire3PGain": 0.5,
-        "Fire3PFarGain": 0.5,
-        "Fire3PVeryFarGain": 0.5,
-        "Fire1P": "berts_vehicle_pack:tap_jetshoot",
-        "Fire3P": "berts_vehicle_pack:tap_jetshoot",
-        "Fire3PFar": "berts_vehicle_pack:tap_jetshoot",
-        "Fire3PVeryFar": "berts_vehicle_pack:tap_jetshoot"
-      },
-      "Projectile": {
-        "Type": "superbwarfare:small_cannon_shell",
-        "Profile": "berts_vehicle_pack:aircraft_rounds/mk108/mk108_hei_t"
-      },
-      "ShellType": "HE",
-      "Velocity": 31.25,
-      "ApDurability": 4,
-      "ExplosionRadius": 5,
-      "TntEquivalentKg": 0.09,
-      "NominalBallistics": {
-        "Supported": true,
-        "ProjectileType": "superbwarfare:small_cannon_shell",
-        "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/mk108/mk108_hei_t",
-        "ProjectileLife": 400
-      },
-      "AmmoType": [
-        {
-          "Ammo": "superbwarfare:small_shell_ap",
-          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
-          "Override": {
-            "Projectile": {
-              "Type": "superbwarfare:small_cannon_shell",
-              "Profile": "berts_vehicle_pack:aircraft_rounds/mk108/mk108_hei_t"
-            },
-            "ShellType": "HE",
-            "Velocity": 31.25,
-            "ApDurability": 4,
-            "Damage": 250,
-            "ExplosionDamage": 0,
-            "ExplosionRadius": 5,
-            "TntEquivalentKg": 0.09,
-            "Name": "Air Belt",
-            "ProjectileBelt": {
-              "Name": "Air Belt",
-              "Rounds": [
-                {
-                  "Shots": 1,
-                  "Round": "mk108_hei_t",
-                  "Ammo": "superbwarfare:small_shell_ap",
-                  "Tracer": "INHERIT"
-                },
-                {
-                  "Shots": 1,
-                  "Round": "mk108_incendiary",
-                  "Ammo": "superbwarfare:small_shell_he",
-                  "Tracer": "NONE"
-                }
-              ]
-            },
-            "NominalBallistics": {
-              "Supported": true,
-              "ProjectileType": "superbwarfare:small_cannon_shell",
-              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/mk108/mk108_hei_t",
-              "ProjectileLife": 400
-            }
-          }
-        }
-      ],
-      "ProjectileBeltAmmoType": [
-        {
-          "Ammo": "superbwarfare:small_shell_he",
-          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
-          "Override": {
-            "Projectile": {
-              "Type": "superbwarfare:small_cannon_shell",
-              "Profile": "berts_vehicle_pack:aircraft_rounds/mk108/mk108_incendiary"
-            },
-            "ShellType": "AP",
-            "Velocity": 31.25,
-            "ApDurability": 8,
-            "Damage": 45,
-            "ExplosionDamage": 0,
-            "ExplosionRadius": 0,
-            "TntEquivalentKg": 0.0,
-            "Name": "I",
-            "NominalBallistics": {
-              "Supported": true,
-              "ProjectileType": "superbwarfare:small_cannon_shell",
-              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/mk108/mk108_incendiary",
-              "ProjectileLife": 400
-            }
-          }
-        }
-      ],
-      "BeltFed": true,
-      "OverheatEnabled": false,
-      "ShootPos": {
-        "Transform": "Vehicle",
-        "Positions": [
-          [
-            -0.124889375,
-            1.85461,
-            3.80913125
-          ]
-        ],
-        "Directions": [
-          [
-            0,
-            0,
-            1
-          ]
-        ],
-        "ViewPosition": [
-          -0.124889375,
-          1.85461,
-          3.80913125
-        ],
-        "MuzzleAttachments": [
-          "cannon3_muzzle"
-        ],
-        "MuzzleDirectionAttachments": [
-          "cannon3_muzzle"
-        ],
-        "EffectAttachments": [
-          "cannon3_muzzle"
-        ],
-        "EffectDirectionAttachments": [
-          "cannon3_muzzle"
-        ]
-      }
-    },
-    "Cannon4": {
       "Crosshair": "@VehicleCommonGun",
       "DefaultFireMode": "Auto",
       "AvailableFireModes": "Auto",
@@ -713,6 +257,462 @@
           3.80913125
         ],
         "MuzzleAttachments": [
+          "cannon1_muzzle"
+        ],
+        "MuzzleDirectionAttachments": [
+          "cannon1_muzzle"
+        ],
+        "EffectAttachments": [
+          "cannon1_muzzle"
+        ],
+        "EffectDirectionAttachments": [
+          "cannon1_muzzle"
+        ]
+      }
+    },
+    "Cannon2": {
+      "Crosshair": "@VehicleCommonGun",
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "ProjectileAmount": 1,
+      "AmmoCostPerShoot": 1,
+      "NormalReloadTime": 400,
+      "EmptyReloadTime": 400,
+      "AutoReload": true,
+      "WithdrawAmmoWhenChangeSlot": false,
+      "Gravity": 0.05,
+      "ProjectileLife": 400,
+      "AddShooterDeltaMovement": true,
+      "HeatPerShoot": 0,
+      "Spread": 0.12,
+      "SoundRadius": 8,
+      "ExplosionDamage": 0,
+      "Name": "30 mm MK 108",
+      "RPM": 600,
+      "Magazine": 90,
+      "Damage": 250,
+      "SoundInfo": {
+        "Fire1PGain": 0.5,
+        "Fire3PGain": 0.5,
+        "Fire3PFarGain": 0.5,
+        "Fire3PVeryFarGain": 0.5,
+        "Fire1P": "berts_vehicle_pack:tap_jetshoot",
+        "Fire3P": "berts_vehicle_pack:tap_jetshoot",
+        "Fire3PFar": "berts_vehicle_pack:tap_jetshoot",
+        "Fire3PVeryFar": "berts_vehicle_pack:tap_jetshoot"
+      },
+      "Projectile": {
+        "Type": "superbwarfare:small_cannon_shell",
+        "Profile": "berts_vehicle_pack:aircraft_rounds/mk108/mk108_hei_t"
+      },
+      "ShellType": "HE",
+      "Velocity": 31.25,
+      "ApDurability": 4,
+      "ExplosionRadius": 5,
+      "TntEquivalentKg": 0.09,
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "superbwarfare:small_cannon_shell",
+        "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/mk108/mk108_hei_t",
+        "ProjectileLife": 400
+      },
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/mk108/mk108_hei_t"
+            },
+            "ShellType": "HE",
+            "Velocity": 31.25,
+            "ApDurability": 4,
+            "Damage": 250,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 5,
+            "TntEquivalentKg": 0.09,
+            "Name": "Air Belt",
+            "ProjectileBelt": {
+              "Name": "Air Belt",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "mk108_hei_t",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "INHERIT"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "mk108_incendiary",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/mk108/mk108_hei_t",
+              "ProjectileLife": 400
+            }
+          }
+        }
+      ],
+      "ProjectileBeltAmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/mk108/mk108_incendiary"
+            },
+            "ShellType": "AP",
+            "Velocity": 31.25,
+            "ApDurability": 8,
+            "Damage": 45,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "TntEquivalentKg": 0.0,
+            "Name": "I",
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/mk108/mk108_incendiary",
+              "ProjectileLife": 400
+            }
+          }
+        }
+      ],
+      "BeltFed": true,
+      "OverheatEnabled": false,
+      "ShootPos": {
+        "Transform": "Vehicle",
+        "Positions": [
+          [
+            -0.124889375,
+            1.85461,
+            3.80913125
+          ]
+        ],
+        "Directions": [
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "ViewPosition": [
+          -0.124889375,
+          1.85461,
+          3.80913125
+        ],
+        "MuzzleAttachments": [
+          "cannon2_muzzle"
+        ],
+        "MuzzleDirectionAttachments": [
+          "cannon2_muzzle"
+        ],
+        "EffectAttachments": [
+          "cannon2_muzzle"
+        ],
+        "EffectDirectionAttachments": [
+          "cannon2_muzzle"
+        ]
+      }
+    },
+    "Cannon3": {
+      "Crosshair": "@VehicleCommonGun",
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "ProjectileAmount": 1,
+      "AmmoCostPerShoot": 1,
+      "NormalReloadTime": 400,
+      "EmptyReloadTime": 400,
+      "AutoReload": true,
+      "WithdrawAmmoWhenChangeSlot": false,
+      "Gravity": 0.05,
+      "ProjectileLife": 400,
+      "AddShooterDeltaMovement": true,
+      "HeatPerShoot": 0,
+      "Spread": 0.12,
+      "SoundRadius": 8,
+      "ExplosionDamage": 0,
+      "Name": "30 mm MK 108",
+      "RPM": 600,
+      "Magazine": 90,
+      "Damage": 250,
+      "SoundInfo": {
+        "Fire1PGain": 0.5,
+        "Fire3PGain": 0.5,
+        "Fire3PFarGain": 0.5,
+        "Fire3PVeryFarGain": 0.5,
+        "Fire1P": "berts_vehicle_pack:tap_jetshoot",
+        "Fire3P": "berts_vehicle_pack:tap_jetshoot",
+        "Fire3PFar": "berts_vehicle_pack:tap_jetshoot",
+        "Fire3PVeryFar": "berts_vehicle_pack:tap_jetshoot"
+      },
+      "Projectile": {
+        "Type": "superbwarfare:small_cannon_shell",
+        "Profile": "berts_vehicle_pack:aircraft_rounds/mk108/mk108_hei_t"
+      },
+      "ShellType": "HE",
+      "Velocity": 31.25,
+      "ApDurability": 4,
+      "ExplosionRadius": 5,
+      "TntEquivalentKg": 0.09,
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "superbwarfare:small_cannon_shell",
+        "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/mk108/mk108_hei_t",
+        "ProjectileLife": 400
+      },
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/mk108/mk108_hei_t"
+            },
+            "ShellType": "HE",
+            "Velocity": 31.25,
+            "ApDurability": 4,
+            "Damage": 250,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 5,
+            "TntEquivalentKg": 0.09,
+            "Name": "Air Belt",
+            "ProjectileBelt": {
+              "Name": "Air Belt",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "mk108_hei_t",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "INHERIT"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "mk108_incendiary",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/mk108/mk108_hei_t",
+              "ProjectileLife": 400
+            }
+          }
+        }
+      ],
+      "ProjectileBeltAmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/mk108/mk108_incendiary"
+            },
+            "ShellType": "AP",
+            "Velocity": 31.25,
+            "ApDurability": 8,
+            "Damage": 45,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "TntEquivalentKg": 0.0,
+            "Name": "I",
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/mk108/mk108_incendiary",
+              "ProjectileLife": 400
+            }
+          }
+        }
+      ],
+      "BeltFed": true,
+      "OverheatEnabled": false,
+      "ShootPos": {
+        "Transform": "Vehicle",
+        "Positions": [
+          [
+            0.124889375,
+            1.85461,
+            3.80913125
+          ]
+        ],
+        "Directions": [
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "ViewPosition": [
+          0.124889375,
+          1.85461,
+          3.80913125
+        ],
+        "MuzzleAttachments": [
+          "cannon3_muzzle"
+        ],
+        "MuzzleDirectionAttachments": [
+          "cannon3_muzzle"
+        ],
+        "EffectAttachments": [
+          "cannon3_muzzle"
+        ],
+        "EffectDirectionAttachments": [
+          "cannon3_muzzle"
+        ]
+      }
+    },
+    "Cannon4": {
+      "Crosshair": "@VehicleCommonGun",
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "ProjectileAmount": 1,
+      "AmmoCostPerShoot": 1,
+      "NormalReloadTime": 400,
+      "EmptyReloadTime": 400,
+      "AutoReload": true,
+      "WithdrawAmmoWhenChangeSlot": false,
+      "Gravity": 0.05,
+      "ProjectileLife": 400,
+      "AddShooterDeltaMovement": true,
+      "HeatPerShoot": 0,
+      "Spread": 0.12,
+      "SoundRadius": 8,
+      "ExplosionDamage": 0,
+      "Name": "30 mm MK 108",
+      "RPM": 600,
+      "Magazine": 90,
+      "Damage": 250,
+      "SoundInfo": {
+        "Fire1PGain": 0.5,
+        "Fire3PGain": 0.5,
+        "Fire3PFarGain": 0.5,
+        "Fire3PVeryFarGain": 0.5,
+        "Fire1P": "berts_vehicle_pack:tap_jetshoot",
+        "Fire3P": "berts_vehicle_pack:tap_jetshoot",
+        "Fire3PFar": "berts_vehicle_pack:tap_jetshoot",
+        "Fire3PVeryFar": "berts_vehicle_pack:tap_jetshoot"
+      },
+      "Projectile": {
+        "Type": "superbwarfare:small_cannon_shell",
+        "Profile": "berts_vehicle_pack:aircraft_rounds/mk108/mk108_hei_t"
+      },
+      "ShellType": "HE",
+      "Velocity": 31.25,
+      "ApDurability": 4,
+      "ExplosionRadius": 5,
+      "TntEquivalentKg": 0.09,
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "superbwarfare:small_cannon_shell",
+        "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/mk108/mk108_hei_t",
+        "ProjectileLife": 400
+      },
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/mk108/mk108_hei_t"
+            },
+            "ShellType": "HE",
+            "Velocity": 31.25,
+            "ApDurability": 4,
+            "Damage": 250,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 5,
+            "TntEquivalentKg": 0.09,
+            "Name": "Air Belt",
+            "ProjectileBelt": {
+              "Name": "Air Belt",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "mk108_hei_t",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "INHERIT"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "mk108_incendiary",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/mk108/mk108_hei_t",
+              "ProjectileLife": 400
+            }
+          }
+        }
+      ],
+      "ProjectileBeltAmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/mk108/mk108_incendiary"
+            },
+            "ShellType": "AP",
+            "Velocity": 31.25,
+            "ApDurability": 8,
+            "Damage": 45,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "TntEquivalentKg": 0.0,
+            "Name": "I",
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/mk108/mk108_incendiary",
+              "ProjectileLife": 400
+            }
+          }
+        }
+      ],
+      "BeltFed": true,
+      "OverheatEnabled": false,
+      "ShootPos": {
+        "Transform": "Vehicle",
+        "Positions": [
+          [
+            0.31222375,
+            1.72972,
+            3.80913125
+          ]
+        ],
+        "Directions": [
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "ViewPosition": [
+          0.31222375,
+          1.72972,
+          3.80913125
+        ],
+        "MuzzleAttachments": [
           "cannon4_muzzle"
         ],
         "MuzzleDirectionAttachments": [
@@ -776,7 +776,7 @@
     "SympatheticDetonationChance": 0.55
   },
   "ThirdPersonCameraPos": [
-    -0.86696,
+    0.86696,
     1.5,
     5
   ],
@@ -790,7 +790,7 @@
     "cannon1_muzzle": {
       "Parent": "Vehicle",
       "Position": [
-        0.31222375,
+        -0.31222375,
         1.72972,
         3.80913125
       ],
@@ -803,7 +803,7 @@
     "cannon2_muzzle": {
       "Parent": "Vehicle",
       "Position": [
-        0.124889375,
+        -0.124889375,
         1.85461,
         3.80913125
       ],
@@ -816,7 +816,7 @@
     "cannon3_muzzle": {
       "Parent": "Vehicle",
       "Position": [
-        -0.124889375,
+        0.124889375,
         1.85461,
         3.80913125
       ],
@@ -829,7 +829,7 @@
     "cannon4_muzzle": {
       "Parent": "Vehicle",
       "Position": [
-        -0.31222375,
+        0.31222375,
         1.72972,
         3.80913125
       ],
@@ -909,24 +909,24 @@
       },
       {
         "Min": [
-          -4.100748,
-          0.232268,
-          -0.966672
-        ],
-        "Max": [
-          -0.401832,
-          1.447496,
-          3.058571
-        ]
-      },
-      {
-        "Min": [
           0.401832,
           0.232268,
           -0.966672
         ],
         "Max": [
           4.100748,
+          1.447496,
+          3.058571
+        ]
+      },
+      {
+        "Min": [
+          -4.100748,
+          0.232268,
+          -0.966672
+        ],
+        "Max": [
+          -0.401832,
           1.447496,
           3.058571
         ]

@@ -10,12 +10,12 @@
       "Id": "wingtip",
       "Name": "Wingtip rail",
       "Left": [
-        -7.246133,
+        7.246133,
         1.872093,
         -0.120769
       ],
       "Right": [
-        7.246133,
+        -7.246133,
         1.872093,
         -0.120769
       ],
@@ -27,59 +27,11 @@
       "Id": "outer",
       "Name": "Outer wing",
       "Left": [
-        -6.038444,
-        1.872093,
-        -0.120769
-      ],
-      "LeftStations": [
-        {
-          "Point": [
-            -6.0846,
-            1.6909,
-            0.4302
-          ],
-          "Face": "bottom",
-          "Copies": [
-            1
-          ]
-        },
-        {
-          "Point": [
-            -6.2931,
-            1.9694,
-            -0.634
-          ],
-          "Face": "left",
-          "Copies": [
-            2
-          ],
-          "ExceptStores": [
-            "berts_vehicle_pack:munition/mk82_snakeeye_x2",
-            "berts_vehicle_pack:munition/mk82_x2"
-          ]
-        },
-        {
-          "Point": [
-            -5.3007,
-            1.9694,
-            -0.634
-          ],
-          "Face": "right",
-          "Copies": [
-            2
-          ],
-          "ExceptStores": [
-            "berts_vehicle_pack:munition/mk82_snakeeye_x2",
-            "berts_vehicle_pack:munition/mk82_x2"
-          ]
-        }
-      ],
-      "Right": [
         6.038444,
         1.872093,
         -0.120769
       ],
-      "RightStations": [
+      "LeftStations": [
         {
           "Point": [
             6.0846,
@@ -97,7 +49,7 @@
             1.9694,
             -0.634
           ],
-          "Face": "right",
+          "Face": "left",
           "Copies": [
             2
           ],
@@ -109,6 +61,54 @@
         {
           "Point": [
             5.3007,
+            1.9694,
+            -0.634
+          ],
+          "Face": "right",
+          "Copies": [
+            2
+          ],
+          "ExceptStores": [
+            "berts_vehicle_pack:munition/mk82_snakeeye_x2",
+            "berts_vehicle_pack:munition/mk82_x2"
+          ]
+        }
+      ],
+      "Right": [
+        -6.038444,
+        1.872093,
+        -0.120769
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -6.0846,
+            1.6909,
+            0.4302
+          ],
+          "Face": "bottom",
+          "Copies": [
+            1
+          ]
+        },
+        {
+          "Point": [
+            -6.2931,
+            1.9694,
+            -0.634
+          ],
+          "Face": "right",
+          "Copies": [
+            2
+          ],
+          "ExceptStores": [
+            "berts_vehicle_pack:munition/mk82_snakeeye_x2",
+            "berts_vehicle_pack:munition/mk82_x2"
+          ]
+        },
+        {
+          "Point": [
+            -5.3007,
             1.9694,
             -0.634
           ],
@@ -135,14 +135,14 @@
       "Id": "marked_mid",
       "Name": "Marked mid wing",
       "Left": [
-        -4.709986,
+        4.709986,
         1.389018,
         1.509611
       ],
       "LeftStations": [
         {
           "Point": [
-            -4.71,
+            4.71,
             1.3588,
             1.4945
           ],
@@ -150,14 +150,14 @@
         }
       ],
       "Right": [
-        4.709986,
+        -4.709986,
         1.389018,
         1.509611
       ],
       "RightStations": [
         {
           "Point": [
-            4.71,
+            -4.71,
             1.3588,
             1.4945
           ],
@@ -179,59 +179,11 @@
       "Id": "inner",
       "Name": "Inner wing",
       "Left": [
-        -2.7173,
-        1.389018,
-        -0.422691
-      ],
-      "LeftStations": [
-        {
-          "Point": [
-            -2.4967,
-            1.2079,
-            0.9801
-          ],
-          "Face": "bottom",
-          "Copies": [
-            1
-          ]
-        },
-        {
-          "Point": [
-            -2.8381,
-            1.5098,
-            0.9801
-          ],
-          "Face": "left",
-          "Copies": [
-            2
-          ],
-          "ExceptStores": [
-            "berts_vehicle_pack:munition/mk82_snakeeye_x2",
-            "berts_vehicle_pack:munition/mk82_x2"
-          ]
-        },
-        {
-          "Point": [
-            -2.1738,
-            1.5098,
-            0.9801
-          ],
-          "Face": "right",
-          "Copies": [
-            2
-          ],
-          "ExceptStores": [
-            "berts_vehicle_pack:munition/mk82_snakeeye_x2",
-            "berts_vehicle_pack:munition/mk82_x2"
-          ]
-        }
-      ],
-      "Right": [
         2.7173,
         1.389018,
         -0.422691
       ],
-      "RightStations": [
+      "LeftStations": [
         {
           "Point": [
             2.4967,
@@ -249,7 +201,7 @@
             1.5098,
             0.9801
           ],
-          "Face": "right",
+          "Face": "left",
           "Copies": [
             2
           ],
@@ -261,6 +213,54 @@
         {
           "Point": [
             2.1738,
+            1.5098,
+            0.9801
+          ],
+          "Face": "right",
+          "Copies": [
+            2
+          ],
+          "ExceptStores": [
+            "berts_vehicle_pack:munition/mk82_snakeeye_x2",
+            "berts_vehicle_pack:munition/mk82_x2"
+          ]
+        }
+      ],
+      "Right": [
+        -2.7173,
+        1.389018,
+        -0.422691
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -2.4967,
+            1.2079,
+            0.9801
+          ],
+          "Face": "bottom",
+          "Copies": [
+            1
+          ]
+        },
+        {
+          "Point": [
+            -2.8381,
+            1.5098,
+            0.9801
+          ],
+          "Face": "right",
+          "Copies": [
+            2
+          ],
+          "ExceptStores": [
+            "berts_vehicle_pack:munition/mk82_snakeeye_x2",
+            "berts_vehicle_pack:munition/mk82_x2"
+          ]
+        },
+        {
+          "Point": [
+            -2.1738,
             1.5098,
             0.9801
           ],
@@ -289,14 +289,14 @@
       "Id": "root",
       "Name": "Wing root",
       "Left": [
-        -1.509611,
+        1.509611,
         1.389018,
         -0.422691
       ],
       "LeftStations": [
         {
           "Point": [
-            -1.5096,
+            1.5096,
             1.6909,
             -0.4227
           ],
@@ -304,14 +304,14 @@
         }
       ],
       "Right": [
-        1.509611,
+        -1.509611,
         1.389018,
         -0.422691
       ],
       "RightStations": [
         {
           "Point": [
-            1.5096,
+            -1.5096,
             1.6909,
             -0.4227
           ],
@@ -340,7 +340,7 @@
       "Stations": [
         {
           "Point": [
-            0.0,
+            0,
             1.5641,
             -0.4227
           ],

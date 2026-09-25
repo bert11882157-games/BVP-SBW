@@ -100,7 +100,7 @@
       "IsEnclosed": true,
       "Transform": "Vehicle",
       "Position": [
-        0.4375,
+        -0.4375,
         0.74999,
         -2.125
       ],
@@ -120,7 +120,7 @@
         "UseFixedCameraPos": true,
         "UseAircraftCamera": true,
         "AircraftCameraPos": [
-          -2.85,
+          2.85,
           2.625,
           -11.25
         ],
@@ -139,7 +139,7 @@
       "DismountInfo": {
         "Transform": "Vehicle",
         "Position": [
-          -2.625,
+          2.625,
           0.525,
           2.625
         ]
@@ -153,7 +153,7 @@
       "BanHand": true,
       "Transform": "Vehicle",
       "Position": [
-        -0.4375,
+        0.4375,
         0.74999,
         -2.125
       ],
@@ -260,12 +260,12 @@
         "Transform": "Barrel",
         "Positions": [
           [
-            -1.575,
+            1.575,
             0.2625,
             -3.2375
           ],
           [
-            1.575,
+            -1.575,
             0.2625,
             -3.2375
           ]
@@ -274,7 +274,7 @@
           "Barrel"
         ],
         "ViewPosition": [
-          -1.125,
+          1.125,
           0.1875,
           -2.3125
         ],
@@ -339,7 +339,9 @@
         {
           "Ammo": "superbwarfare:small_rocket",
           "ConsumptionItem": "superbwarfare:small_unguided_rocket",
-          "Override": {"TntEquivalentKg": 1.1921}
+          "Override": {
+            "TntEquivalentKg": 1.1921
+          }
         }
       ],
       "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_small_rocket.png",
@@ -376,24 +378,24 @@
         ],
         "Positions": [
           [
-            -2.625,
+            2.625,
             0.2625,
             -3.675
           ],
           [
-            2.625,
+            -2.625,
             0.2625,
             -3.675
           ]
         ],
         "Directions": [
           [
-            0.003,
+            -0.003,
             0.025,
             1
           ],
           [
-            -0.003,
+            0.003,
             0.025,
             1
           ]
@@ -514,7 +516,7 @@
     "ExplosionRadius": 10
   },
   "ThirdPersonCameraPos": [
-    2.835,
+    -2.835,
     4.2,
     12.6
   ],
@@ -541,22 +543,22 @@
   "HudType": "@Helicopter",
   "TerrainCompat": [
     [
-      1.26,
-      0,
-      3.08
-    ],
-    [
       -1.26,
       0,
       3.08
     ],
     [
       1.26,
+      0,
+      3.08
+    ],
+    [
+      -1.26,
       0,
       -3.08
     ],
     [
-      -1.26,
+      1.26,
       0,
       -3.08
     ]
@@ -573,7 +575,7 @@
     "cannon_muzzle_01": {
       "Parent": "Barrel",
       "Position": [
-        -1.575,
+        1.575,
         0.2625,
         -3.2375
       ],
@@ -586,7 +588,7 @@
     "cannon_muzzle_02": {
       "Parent": "Barrel",
       "Position": [
-        1.575,
+        -1.575,
         0.2625,
         -3.2375
       ],
@@ -599,7 +601,7 @@
     "cannon_view_origin": {
       "Parent": "Barrel",
       "Position": [
-        -1.125,
+        1.125,
         0.1875,
         -2.3125
       ],
@@ -612,7 +614,7 @@
     "rocket_muzzle_01": {
       "Parent": "Vehicle",
       "Position": [
-        -2.625,
+        2.625,
         0.2625,
         -3.675
       ],
@@ -625,7 +627,7 @@
     "rocket_muzzle_02": {
       "Parent": "Vehicle",
       "Position": [
-        2.625,
+        -2.625,
         0.2625,
         -3.675
       ],
@@ -643,7 +645,7 @@
         0
       ],
       "Direction": [
-        0.003,
+        -0.003,
         0.025,
         1
       ]
@@ -656,7 +658,7 @@
         0
       ],
       "Direction": [
-        -0.003,
+        0.003,
         0.025,
         1
       ]

@@ -10,12 +10,12 @@
       "Id": "wingtip",
       "Name": "wingtip",
       "Left": [
-        -6.25,
+        6.25,
         1.5,
         -0.3
       ],
       "Right": [
-        6.25,
+        -6.25,
         1.5,
         -0.3
       ],
@@ -29,14 +29,14 @@
       "Id": "outer",
       "Name": "outer",
       "Left": [
-        -5.25,
+        5.25,
         1.45,
         -0.25
       ],
       "LeftStations": [
         {
           "Point": [
-            -5.2,
+            5.2,
             1.9,
             -0.25
           ],
@@ -44,14 +44,14 @@
         }
       ],
       "Right": [
-        5.25,
+        -5.25,
         1.45,
         -0.25
       ],
       "RightStations": [
         {
           "Point": [
-            5.2,
+            -5.2,
             1.9,
             -0.25
           ],
@@ -75,14 +75,14 @@
       "Id": "middle",
       "Name": "middle",
       "Left": [
-        -4.2,
+        4.2,
         1.4,
         -0.2
       ],
       "LeftStations": [
         {
           "Point": [
-            -4.3293,
+            4.3293,
             1.5,
             -0.62
           ],
@@ -90,14 +90,14 @@
         }
       ],
       "Right": [
-        4.2,
+        -4.2,
         1.4,
         -0.2
       ],
       "RightStations": [
         {
           "Point": [
-            4.3293,
+            -4.3293,
             1.5,
             -0.62
           ],
@@ -121,14 +121,14 @@
       "Id": "inner",
       "Name": "inner",
       "Left": [
-        -3.1,
+        3.1,
         1.4,
         -0.15
       ],
       "LeftStations": [
         {
           "Point": [
-            -3.1,
+            3.1,
             1.45,
             0.15
           ],
@@ -136,14 +136,14 @@
         }
       ],
       "Right": [
-        3.1,
+        -3.1,
         1.4,
         -0.15
       ],
       "RightStations": [
         {
           "Point": [
-            3.1,
+            -3.1,
             1.45,
             0.15
           ],
@@ -167,69 +167,11 @@
       "Id": "root",
       "Name": "root",
       "Left": [
-        -2.1,
-        1.4,
-        0
-      ],
-      "LeftStations": [
-        {
-          "Point": [
-            -2.025,
-            1.675,
-            0.2957
-          ],
-          "Face": "bottom",
-          "Copies": [
-            1,
-            3
-          ],
-          "ExceptStores": [
-            "berts_vehicle_pack:fab_100_x3"
-          ]
-        },
-        {
-          "Point": [
-            -2.25,
-            1.9,
-            0.2957
-          ],
-          "Face": "left",
-          "Copies": [
-            2,
-            3
-          ],
-          "ExceptStores": [
-            "berts_vehicle_pack:fab_100_x2",
-            "berts_vehicle_pack:fab_100_x3",
-            "berts_vehicle_pack:fab_250_x2",
-            "berts_vehicle_pack:rbk_250_x2"
-          ]
-        },
-        {
-          "Point": [
-            -1.8,
-            1.9,
-            0.2957
-          ],
-          "Face": "right",
-          "Copies": [
-            2,
-            3
-          ],
-          "ExceptStores": [
-            "berts_vehicle_pack:fab_100_x2",
-            "berts_vehicle_pack:fab_100_x3",
-            "berts_vehicle_pack:fab_250_x2",
-            "berts_vehicle_pack:rbk_250_x2"
-          ]
-        }
-      ],
-      "Right": [
         2.1,
         1.4,
         0
       ],
-      "RightStations": [
+      "LeftStations": [
         {
           "Point": [
             2.025,
@@ -251,7 +193,7 @@
             1.9,
             0.2957
           ],
-          "Face": "right",
+          "Face": "left",
           "Copies": [
             2,
             3
@@ -266,6 +208,64 @@
         {
           "Point": [
             1.8,
+            1.9,
+            0.2957
+          ],
+          "Face": "right",
+          "Copies": [
+            2,
+            3
+          ],
+          "ExceptStores": [
+            "berts_vehicle_pack:fab_100_x2",
+            "berts_vehicle_pack:fab_100_x3",
+            "berts_vehicle_pack:fab_250_x2",
+            "berts_vehicle_pack:rbk_250_x2"
+          ]
+        }
+      ],
+      "Right": [
+        -2.1,
+        1.4,
+        0
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -2.025,
+            1.675,
+            0.2957
+          ],
+          "Face": "bottom",
+          "Copies": [
+            1,
+            3
+          ],
+          "ExceptStores": [
+            "berts_vehicle_pack:fab_100_x3"
+          ]
+        },
+        {
+          "Point": [
+            -2.25,
+            1.9,
+            0.2957
+          ],
+          "Face": "right",
+          "Copies": [
+            2,
+            3
+          ],
+          "ExceptStores": [
+            "berts_vehicle_pack:fab_100_x2",
+            "berts_vehicle_pack:fab_100_x3",
+            "berts_vehicle_pack:fab_250_x2",
+            "berts_vehicle_pack:rbk_250_x2"
+          ]
+        },
+        {
+          "Point": [
+            -1.8,
             1.9,
             0.2957
           ],

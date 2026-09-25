@@ -112,38 +112,18 @@
         ],
         "Axis": [
           0,
-          -0.871152285560546,
-          -0.49101292789766426
+          0.871152285560546,
+          0.49101292789766426
         ],
         "ControlWeights": {
           "ElevatorUp": 0,
           "RightRoll": 0,
-          "RudderRight": -1
+          "RudderRight": 1
         },
         "MaxDeflectionDegrees": 25
       },
       {
         "Bone": "aileron_left",
-        "Parent": "hull",
-        "Pivot": [
-          -65.83501,
-          20.82132,
-          30.53793
-        ],
-        "Axis": [
-          -0.8926792964427916,
-          0.06248753949674457,
-          0.44633953567888773
-        ],
-        "ControlWeights": {
-          "ElevatorUp": 0,
-          "RightRoll": -1,
-          "RudderRight": 0
-        },
-        "MaxDeflectionDegrees": 18
-      },
-      {
-        "Bone": "aileron_right",
         "Parent": "hull",
         "Pivot": [
           65.83501,
@@ -158,6 +138,26 @@
         "ControlWeights": {
           "ElevatorUp": 0,
           "RightRoll": 1,
+          "RudderRight": 0
+        },
+        "MaxDeflectionDegrees": 18
+      },
+      {
+        "Bone": "aileron_right",
+        "Parent": "hull",
+        "Pivot": [
+          -65.83501,
+          20.82132,
+          30.53793
+        ],
+        "Axis": [
+          -0.8926792964427916,
+          0.06248753949674457,
+          0.44633953567888773
+        ],
+        "ControlWeights": {
+          "ElevatorUp": 0,
+          "RightRoll": -1,
           "RudderRight": 0
         },
         "MaxDeflectionDegrees": 18
@@ -183,21 +183,6 @@
         "Bone": "gear_door_0",
         "Parent": "hull",
         "Pivot": [
-          -23.39919,
-          19.03663,
-          3.96596
-        ],
-        "Axis": [
-          0,
-          0,
-          1
-        ],
-        "ClosedAngleDegrees": 90
-      },
-      {
-        "Bone": "gear_door_1",
-        "Parent": "hull",
-        "Pivot": [
           23.39919,
           19.03663,
           3.96596
@@ -205,7 +190,22 @@
         "Axis": [
           0,
           0,
-          1
+          -1
+        ],
+        "ClosedAngleDegrees": 90
+      },
+      {
+        "Bone": "gear_door_1",
+        "Parent": "hull",
+        "Pivot": [
+          -23.39919,
+          19.03663,
+          3.96596
+        ],
+        "Axis": [
+          0,
+          0,
+          -1
         ],
         "ClosedAngleDegrees": -90
       }

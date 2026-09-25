@@ -6,14 +6,14 @@
       "Id": "underbody",
       "Name": "Underbody missile stations",
       "Left": [
-        -0.9,
+        0.9,
         1.2,
         -2.45
       ],
       "LeftStations": [
         {
           "Point": [
-            -0.9,
+            0.9,
             1.3572,
             -2.45
           ],
@@ -21,14 +21,14 @@
         }
       ],
       "Right": [
-        0.9,
+        -0.9,
         1.2,
         -2.45
       ],
       "RightStations": [
         {
           "Point": [
-            0.9,
+            -0.9,
             1.3572,
             -2.45
           ],
@@ -46,14 +46,14 @@
       "Id": "inboard",
       "Name": "Inboard wing stations",
       "Left": [
-        -3.85,
+        3.85,
         1.82,
         -1.25
       ],
       "LeftStations": [
         {
           "Point": [
-            -3.85,
+            3.85,
             2.5,
             -1.25
           ],
@@ -61,14 +61,14 @@
         }
       ],
       "Right": [
-        3.85,
+        -3.85,
         1.82,
         -1.25
       ],
       "RightStations": [
         {
           "Point": [
-            3.85,
+            -3.85,
             2.5,
             -1.25
           ],
@@ -89,12 +89,12 @@
       "Id": "outboard",
       "Name": "Outboard wing stations",
       "Left": [
-        -6.475,
+        6.475,
         2.05,
         -3.25
       ],
       "Right": [
-        6.475,
+        -6.475,
         2.05,
         -3.25
       ],
@@ -143,7 +143,7 @@
       "Stations": [
         {
           "Point": [
-            0.0,
+            0,
             2.0908,
             -2.25
           ],

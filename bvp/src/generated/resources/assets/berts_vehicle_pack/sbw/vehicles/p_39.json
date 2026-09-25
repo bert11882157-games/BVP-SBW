@@ -18,26 +18,6 @@
         "Bone": "left_aileron",
         "Parent": "hull",
         "Pivot": [
-          -63.06383,
-          22.34894,
-          8.62979
-        ],
-        "Axis": [
-          -0.9898909171385214,
-          0.1196571424793861,
-          -0.07614552134121079
-        ],
-        "ControlWeights": {
-          "ElevatorUp": 0,
-          "RightRoll": -1,
-          "RudderRight": 0
-        },
-        "MaxDeflectionDegrees": 25
-      },
-      {
-        "Bone": "right_aileron",
-        "Parent": "hull",
-        "Pivot": [
           63.06383,
           22.34894,
           8.62979
@@ -55,17 +35,37 @@
         "MaxDeflectionDegrees": 25
       },
       {
+        "Bone": "right_aileron",
+        "Parent": "hull",
+        "Pivot": [
+          -63.06383,
+          22.34894,
+          8.62979
+        ],
+        "Axis": [
+          -0.9898909171385214,
+          0.1196571424793861,
+          -0.07614552134121079
+        ],
+        "ControlWeights": {
+          "ElevatorUp": 0,
+          "RightRoll": -1,
+          "RudderRight": 0
+        },
+        "MaxDeflectionDegrees": 25
+      },
+      {
         "Bone": "left_elevator",
         "Parent": "hull",
         "Pivot": [
-          -15.93192,
+          15.93192,
           34.0766,
           90.7234
         ],
         "Axis": [
           -0.9965457560879608,
-          -1.5637570191723313e-7,
-          0.08304550573661382
+          1.5637570191723313e-07,
+          -0.08304550573661382
         ],
         "ControlWeights": {
           "ElevatorUp": 1,
@@ -78,14 +78,14 @@
         "Bone": "right_elevator",
         "Parent": "hull",
         "Pivot": [
-          15.93192,
+          -15.93192,
           34.0766,
           90.7234
         ],
         "Axis": [
           -0.9965457560879608,
-          1.5637570191723313e-7,
-          -0.08304550573661382
+          -1.5637570191723313e-07,
+          0.08304550573661382
         ],
         "ControlWeights": {
           "ElevatorUp": 1,
@@ -104,13 +104,13 @@
         ],
         "Axis": [
           0,
-          -1,
+          1,
           0
         ],
         "ControlWeights": {
           "ElevatorUp": 0,
           "RightRoll": 0,
-          "RudderRight": -1
+          "RudderRight": 1
         },
         "MaxDeflectionDegrees": 25
       }
@@ -157,7 +157,7 @@
       {
         "Id": "left_bank",
         "Position": [
-          -0.45085,
+          0.45085,
           1.82553,
           0.77447
         ]
@@ -165,7 +165,7 @@
       {
         "Id": "right_bank",
         "Position": [
-          0.45085,
+          -0.45085,
           1.82553,
           0.77447
         ]

@@ -10,43 +10,11 @@
       "Id": "inner",
       "Name": "Inner wing",
       "Left": [
-        -1.72425,
-        1.254,
-        0
-      ],
-      "LeftStations": [
-        {
-          "Point": [
-            -1.7373,
-            1.254,
-            0.2351
-          ],
-          "Face": "bottom",
-          "ExceptStores": [
-            "berts_vehicle_pack:ah_64d/agm114_proxy"
-          ]
-        },
-        {
-          "Point": [
-            -2.2179,
-            1.2718,
-            -0.3135
-          ],
-          "Face": "left",
-          "Copies": [
-            1
-          ],
-          "Stores": [
-            "berts_vehicle_pack:ah_64d/agm114_proxy"
-          ]
-        }
-      ],
-      "Right": [
         1.72425,
         1.254,
         0
       ],
-      "RightStations": [
+      "LeftStations": [
         {
           "Point": [
             1.7373,
@@ -61,6 +29,38 @@
         {
           "Point": [
             2.2179,
+            1.2718,
+            -0.3135
+          ],
+          "Face": "left",
+          "Copies": [
+            1
+          ],
+          "Stores": [
+            "berts_vehicle_pack:ah_64d/agm114_proxy"
+          ]
+        }
+      ],
+      "Right": [
+        -1.72425,
+        1.254,
+        0
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -1.7373,
+            1.254,
+            0.2351
+          ],
+          "Face": "bottom",
+          "ExceptStores": [
+            "berts_vehicle_pack:ah_64d/agm114_proxy"
+          ]
+        },
+        {
+          "Point": [
+            -2.2179,
             1.2718,
             -0.3135
           ],
@@ -83,12 +83,12 @@
       "Id": "outer",
       "Name": "Outer wing",
       "Left": [
-        -2.66475,
+        2.66475,
         1.20175,
         1.20175
       ],
       "Right": [
-        2.66475,
+        -2.66475,
         1.20175,
         1.20175
       ],

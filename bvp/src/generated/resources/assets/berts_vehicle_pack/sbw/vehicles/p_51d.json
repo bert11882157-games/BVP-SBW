@@ -24,38 +24,18 @@
         ],
         "Axis": [
           0,
-          -1,
+          1,
           0
         ],
         "ControlWeights": {
           "ElevatorUp": 0,
           "RightRoll": 0,
-          "RudderRight": -1
+          "RudderRight": 1
         },
         "MaxDeflectionDegrees": 25
       },
       {
         "Bone": "elevator_left",
-        "Parent": "hull",
-        "Pivot": [
-          -15.33572,
-          39.55,
-          61.34286
-        ],
-        "Axis": [
-          -1,
-          0,
-          0
-        ],
-        "ControlWeights": {
-          "ElevatorUp": 1,
-          "RightRoll": 0,
-          "RudderRight": 0
-        },
-        "MaxDeflectionDegrees": 20
-      },
-      {
-        "Bone": "elevator_right",
         "Parent": "hull",
         "Pivot": [
           15.33572,
@@ -75,27 +55,27 @@
         "MaxDeflectionDegrees": 20
       },
       {
-        "Bone": "aileron_left",
+        "Bone": "elevator_right",
         "Parent": "hull",
         "Pivot": [
-          -56.90357,
-          30.06607,
-          -12.10714
+          -15.33572,
+          39.55,
+          61.34286
         ],
         "Axis": [
-          -0.9887041957757561,
-          0.10914260278359922,
-          -0.10272246839439204
+          -1,
+          0,
+          0
         ],
         "ControlWeights": {
-          "ElevatorUp": 0,
-          "RightRoll": -1,
+          "ElevatorUp": 1,
+          "RightRoll": 0,
           "RudderRight": 0
         },
         "MaxDeflectionDegrees": 20
       },
       {
-        "Bone": "aileron_right",
+        "Bone": "aileron_left",
         "Parent": "hull",
         "Pivot": [
           56.90357,
@@ -110,6 +90,26 @@
         "ControlWeights": {
           "ElevatorUp": 0,
           "RightRoll": 1,
+          "RudderRight": 0
+        },
+        "MaxDeflectionDegrees": 20
+      },
+      {
+        "Bone": "aileron_right",
+        "Parent": "hull",
+        "Pivot": [
+          -56.90357,
+          30.06607,
+          -12.10714
+        ],
+        "Axis": [
+          -0.9887041957757561,
+          0.10914260278359922,
+          -0.10272246839439204
+        ],
+        "ControlWeights": {
+          "ElevatorUp": 0,
+          "RightRoll": -1,
           "RudderRight": 0
         },
         "MaxDeflectionDegrees": 20
@@ -153,21 +153,6 @@
         "Bone": "gear_door_0",
         "Parent": "hull",
         "Pivot": [
-          -30.10643,
-          26.63571,
-          -31.075
-        ],
-        "Axis": [
-          0,
-          0,
-          1
-        ],
-        "ClosedAngleDegrees": 96.613471
-      },
-      {
-        "Bone": "gear_door_1",
-        "Parent": "hull",
-        "Pivot": [
           30.10643,
           26.63571,
           -31.075
@@ -175,27 +160,27 @@
         "Axis": [
           0,
           0,
-          1
+          -1
+        ],
+        "ClosedAngleDegrees": 96.613471
+      },
+      {
+        "Bone": "gear_door_1",
+        "Parent": "hull",
+        "Pivot": [
+          -30.10643,
+          26.63571,
+          -31.075
+        ],
+        "Axis": [
+          0,
+          0,
+          -1
         ],
         "ClosedAngleDegrees": -96.613471
       },
       {
         "Bone": "gear_door_2",
-        "Parent": "hull",
-        "Pivot": [
-          -1.45286,
-          26.87472,
-          41.47496
-        ],
-        "Axis": [
-          0,
-          0.139173061575084,
-          0.9902680742767678
-        ],
-        "ClosedAngleDegrees": 90
-      },
-      {
-        "Bone": "gear_door_3",
         "Parent": "hull",
         "Pivot": [
           1.45286,
@@ -204,8 +189,23 @@
         ],
         "Axis": [
           0,
-          0.139173061575084,
-          0.9902680742767678
+          -0.139173061575084,
+          -0.9902680742767678
+        ],
+        "ClosedAngleDegrees": 90
+      },
+      {
+        "Bone": "gear_door_3",
+        "Parent": "hull",
+        "Pivot": [
+          -1.45286,
+          26.87472,
+          41.47496
+        ],
+        "Axis": [
+          0,
+          -0.139173061575084,
+          -0.9902680742767678
         ],
         "ClosedAngleDegrees": -90
       }
@@ -219,7 +219,7 @@
       {
         "Id": "engine_exhaust_bank_0",
         "Position": [
-          -0.52212,
+          0.52212,
           2.32054,
           -3.32946
         ]
@@ -227,7 +227,7 @@
       {
         "Id": "engine_exhaust_bank_1",
         "Position": [
-          0.52212,
+          -0.52212,
           2.32054,
           -3.32946
         ]

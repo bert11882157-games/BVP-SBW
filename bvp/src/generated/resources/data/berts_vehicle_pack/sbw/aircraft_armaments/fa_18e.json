@@ -10,12 +10,12 @@
       "Id": "wingtip",
       "Name": "Wingtip",
       "Left": [
-        -6.7,
+        6.7,
         1.95,
         -1.55
       ],
       "Right": [
-        6.7,
+        -6.7,
         1.95,
         -1.55
       ],
@@ -36,12 +36,12 @@
       "Id": "outer",
       "Name": "Outer wing",
       "Left": [
-        -5.7,
+        5.7,
         1.85,
         -1.4
       ],
       "Right": [
-        5.7,
+        -5.7,
         1.85,
         -1.4
       ],
@@ -69,12 +69,12 @@
       "Id": "mid",
       "Name": "Mid wing",
       "Left": [
-        -4.5,
+        4.5,
         1.76,
         -1.1
       ],
       "Right": [
-        4.5,
+        -4.5,
         1.76,
         -1.1
       ],
@@ -119,12 +119,12 @@
       "Id": "inner",
       "Name": "Inner wing",
       "Left": [
-        -3.35,
+        3.35,
         1.6,
         -0.85
       ],
       "Right": [
-        3.35,
+        -3.35,
         1.6,
         -0.85
       ],
@@ -164,63 +164,11 @@
       "Id": "root",
       "Name": "Wing root",
       "Left": [
-        -2.25,
-        1.45,
-        -0.65
-      ],
-      "LeftStations": [
-        {
-          "Point": [
-            -2.4355,
-            0.8558,
-            -1.4391
-          ],
-          "Face": "bottom",
-          "Copies": [
-            1
-          ]
-        },
-        {
-          "Point": [
-            -2.8397,
-            1.1043,
-            -1.4391
-          ],
-          "Face": "left",
-          "Copies": [
-            2
-          ],
-          "ExceptStores": [
-            "berts_vehicle_pack:munition/cbu99_rockeye_ii_x2",
-            "berts_vehicle_pack:munition/gbu12_x2",
-            "berts_vehicle_pack:munition/mk82_snakeeye_x2",
-            "berts_vehicle_pack:munition/mk82_x2"
-          ]
-        },
-        {
-          "Point": [
-            -2.1034,
-            1.1043,
-            -1.4391
-          ],
-          "Face": "right",
-          "Copies": [
-            2
-          ],
-          "ExceptStores": [
-            "berts_vehicle_pack:munition/cbu99_rockeye_ii_x2",
-            "berts_vehicle_pack:munition/gbu12_x2",
-            "berts_vehicle_pack:munition/mk82_snakeeye_x2",
-            "berts_vehicle_pack:munition/mk82_x2"
-          ]
-        }
-      ],
-      "Right": [
         2.25,
         1.45,
         -0.65
       ],
-      "RightStations": [
+      "LeftStations": [
         {
           "Point": [
             2.4355,
@@ -238,7 +186,7 @@
             1.1043,
             -1.4391
           ],
-          "Face": "right",
+          "Face": "left",
           "Copies": [
             2
           ],
@@ -252,6 +200,58 @@
         {
           "Point": [
             2.1034,
+            1.1043,
+            -1.4391
+          ],
+          "Face": "right",
+          "Copies": [
+            2
+          ],
+          "ExceptStores": [
+            "berts_vehicle_pack:munition/cbu99_rockeye_ii_x2",
+            "berts_vehicle_pack:munition/gbu12_x2",
+            "berts_vehicle_pack:munition/mk82_snakeeye_x2",
+            "berts_vehicle_pack:munition/mk82_x2"
+          ]
+        }
+      ],
+      "Right": [
+        -2.25,
+        1.45,
+        -0.65
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -2.4355,
+            0.8558,
+            -1.4391
+          ],
+          "Face": "bottom",
+          "Copies": [
+            1
+          ]
+        },
+        {
+          "Point": [
+            -2.8397,
+            1.1043,
+            -1.4391
+          ],
+          "Face": "right",
+          "Copies": [
+            2
+          ],
+          "ExceptStores": [
+            "berts_vehicle_pack:munition/cbu99_rockeye_ii_x2",
+            "berts_vehicle_pack:munition/gbu12_x2",
+            "berts_vehicle_pack:munition/mk82_snakeeye_x2",
+            "berts_vehicle_pack:munition/mk82_x2"
+          ]
+        },
+        {
+          "Point": [
+            -2.1034,
             1.1043,
             -1.4391
           ],
@@ -312,7 +312,7 @@
       "Stations": [
         {
           "Point": [
-            0.0,
+            0,
             1.9907,
             -0.5
           ],

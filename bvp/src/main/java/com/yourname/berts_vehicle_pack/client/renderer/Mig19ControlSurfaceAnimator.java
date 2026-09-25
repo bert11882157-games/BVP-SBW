@@ -15,12 +15,14 @@ final class Mig19ControlSurfaceAnimator {
         float elevator = normalized(elevatorUp) * 20.0F * DEG_TO_RAD;
         float aileron = normalized(rightRoll) * 20.0F * DEG_TO_RAD;
         float rudder = normalized(rudderRight) * 25.0F * DEG_TO_RAD;
-        // Axis components include the exporter's Z mirror and the mesh loader's X reversal.
-        rotate(model.getBone("aileron_left"), aileron, 0.64140920F, -0.04170297F, 0.76606468F);
-        rotate(model.getBone("aileron_right"), aileron, -0.64142131F, -0.04125043F, 0.76607905F);
-        rotate(model.getBone("elevator_right"), elevator, -0.69100467F, -0.03117314F, 0.72217781F);
-        rotate(model.getBone("elevator_left"), -elevator, 0.69100462F, -0.03117314F, 0.72217785F);
-        rotate(model.getBone("rudder"), -rudder, -0.00576332F, 0.75384805F, 0.65702352F);
+        // Axis components include the exporter's Z mirror and the mesh loader's X reversal. The model was un-mirrored
+        // (tools/aircraft_unmirror): hinge axes reflected as axial vectors, roll and yaw deflections negated so every
+        // surface still moves the same way in the world for the same input.
+        rotate(model.getBone("aileron_left"), -aileron, 0.64140920F, 0.04170297F, -0.76606468F);
+        rotate(model.getBone("aileron_right"), -aileron, -0.64142131F, 0.04125043F, -0.76607905F);
+        rotate(model.getBone("elevator_right"), elevator, -0.69100467F, 0.03117314F, -0.72217781F);
+        rotate(model.getBone("elevator_left"), -elevator, 0.69100462F, 0.03117314F, -0.72217785F);
+        rotate(model.getBone("rudder"), rudder, -0.00576332F, -0.75384805F, -0.65702352F);
     }
 
     private static float normalized(double control) {

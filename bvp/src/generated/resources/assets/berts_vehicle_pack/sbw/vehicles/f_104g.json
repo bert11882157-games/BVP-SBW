@@ -112,38 +112,18 @@
         ],
         "Axis": [
           0,
-          -1,
+          1,
           0
         ],
         "ControlWeights": {
           "ElevatorUp": 0,
           "RightRoll": 0,
-          "RudderRight": -1
+          "RudderRight": 1
         },
         "MaxDeflectionDegrees": 25
       },
       {
         "Bone": "aileron_left",
-        "Parent": "hull",
-        "Pivot": [
-          -44.53333,
-          16.52838,
-          51.01091
-        ],
-        "Axis": [
-          -0.985211757731759,
-          -0.17134115800676097,
-          0
-        ],
-        "ControlWeights": {
-          "ElevatorUp": 0,
-          "RightRoll": -1,
-          "RudderRight": 0
-        },
-        "MaxDeflectionDegrees": 18
-      },
-      {
-        "Bone": "aileron_right",
         "Parent": "hull",
         "Pivot": [
           44.53333,
@@ -158,6 +138,26 @@
         "ControlWeights": {
           "ElevatorUp": 0,
           "RightRoll": 1,
+          "RudderRight": 0
+        },
+        "MaxDeflectionDegrees": 18
+      },
+      {
+        "Bone": "aileron_right",
+        "Parent": "hull",
+        "Pivot": [
+          -44.53333,
+          16.52838,
+          51.01091
+        ],
+        "Axis": [
+          -0.985211757731759,
+          -0.17134115800676097,
+          0
+        ],
+        "ControlWeights": {
+          "ElevatorUp": 0,
+          "RightRoll": -1,
           "RudderRight": 0
         },
         "MaxDeflectionDegrees": 18

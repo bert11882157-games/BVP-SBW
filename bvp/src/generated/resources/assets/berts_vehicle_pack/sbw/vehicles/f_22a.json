@@ -17,7 +17,7 @@
       {
         "Id": "afterburner_0",
         "Position": [
-          -0.85,
+          0.85,
           2,
           -7.4025
         ],
@@ -31,7 +31,7 @@
       {
         "Id": "afterburner_1",
         "Position": [
-          0.85,
+          -0.85,
           2,
           -7.4025
         ],
@@ -93,7 +93,7 @@
         "Style": "FM_FLAME",
         "Interval": 1,
         "Offset": [
-          -0.5,
+          0.5,
           0.1,
           -4
         ],
@@ -113,7 +113,7 @@
         "Style": "FM_FLAME",
         "Interval": 1,
         "Offset": [
-          -0.5,
+          0.5,
           0.1,
           -4
         ],
@@ -133,7 +133,7 @@
         "Style": "FM_FLAME",
         "Interval": 1,
         "Offset": [
-          -0.5,
+          0.5,
           0.1,
           -4
         ],
@@ -173,7 +173,7 @@
         "Style": "FM_FLAME",
         "Interval": 1,
         "Offset": [
-          0.5,
+          -0.5,
           0.1,
           -4
         ],
@@ -193,7 +193,7 @@
         "Style": "FM_FLAME",
         "Interval": 1,
         "Offset": [
-          0.5,
+          -0.5,
           0.1,
           -4
         ],
@@ -213,7 +213,7 @@
         "Style": "FM_FLAME",
         "Interval": 1,
         "Offset": [
-          0.5,
+          -0.5,
           0.1,
           -4
         ],
@@ -240,26 +240,6 @@
         "Bone": "elevator_0",
         "Parent": "hull",
         "Pivot": [
-          -50,
-          31,
-          136
-        ],
-        "Axis": [
-          -0.950078031307191,
-          -0.025911219035650652,
-          0.3109346284278075
-        ],
-        "ControlWeights": {
-          "ElevatorUp": 1,
-          "RightRoll": 0,
-          "RudderRight": 0
-        },
-        "MaxDeflectionDegrees": 25
-      },
-      {
-        "Bone": "elevator_1",
-        "Parent": "hull",
-        "Pivot": [
           50,
           31,
           136
@@ -277,27 +257,27 @@
         "MaxDeflectionDegrees": 25
       },
       {
-        "Bone": "aileron_10",
+        "Bone": "elevator_1",
         "Parent": "hull",
         "Pivot": [
-          -61.2,
-          30.2,
-          81.2
+          -50,
+          31,
+          136
         ],
         "Axis": [
-          -0.9832128941174154,
-          -0.0414607846916983,
-          -0.1776890772501353
+          -0.950078031307191,
+          -0.025911219035650652,
+          0.3109346284278075
         ],
         "ControlWeights": {
-          "ElevatorUp": 0,
-          "RightRoll": -1,
+          "ElevatorUp": 1,
+          "RightRoll": 0,
           "RudderRight": 0
         },
         "MaxDeflectionDegrees": 25
       },
       {
-        "Bone": "aileron_11",
+        "Bone": "aileron_10",
         "Parent": "hull",
         "Pivot": [
           61.2,
@@ -317,27 +297,27 @@
         "MaxDeflectionDegrees": 25
       },
       {
-        "Bone": "rudder_0",
+        "Bone": "aileron_11",
         "Parent": "hull",
         "Pivot": [
-          -36.8,
-          60.8,
-          102.4
+          -61.2,
+          30.2,
+          81.2
         ],
         "Axis": [
-          -0.40273861426601687,
-          0.9153150324227656,
-          0
+          -0.9832128941174154,
+          -0.0414607846916983,
+          -0.1776890772501353
         ],
         "ControlWeights": {
           "ElevatorUp": 0,
-          "RightRoll": 0,
-          "RudderRight": 1
+          "RightRoll": -1,
+          "RudderRight": 0
         },
         "MaxDeflectionDegrees": 25
       },
       {
-        "Bone": "rudder_1",
+        "Bone": "rudder_0",
         "Parent": "hull",
         "Pivot": [
           36.8,
@@ -345,14 +325,34 @@
           102.4
         ],
         "Axis": [
-          0.40273861426601687,
-          0.9153150324227656,
+          -0.40273861426601687,
+          -0.9153150324227656,
           0
         ],
         "ControlWeights": {
           "ElevatorUp": 0,
           "RightRoll": 0,
-          "RudderRight": 1
+          "RudderRight": -1
+        },
+        "MaxDeflectionDegrees": 25
+      },
+      {
+        "Bone": "rudder_1",
+        "Parent": "hull",
+        "Pivot": [
+          -36.8,
+          60.8,
+          102.4
+        ],
+        "Axis": [
+          0.40273861426601687,
+          -0.9153150324227656,
+          0
+        ],
+        "ControlWeights": {
+          "ElevatorUp": 0,
+          "RightRoll": 0,
+          "RudderRight": -1
         },
         "MaxDeflectionDegrees": 25
       }

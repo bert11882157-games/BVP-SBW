@@ -86,26 +86,6 @@
         "Bone": "elevon_left",
         "Parent": "hull",
         "Pivot": [
-          -46.75702,
-          26.12893,
-          101.07769
-        ],
-        "Axis": [
-          -1,
-          0,
-          0
-        ],
-        "ControlWeights": {
-          "ElevatorUp": 1,
-          "RightRoll": -1,
-          "RudderRight": 0
-        },
-        "MaxDeflectionDegrees": 20
-      },
-      {
-        "Bone": "elevon_right",
-        "Parent": "hull",
-        "Pivot": [
           46.75702,
           26.12893,
           101.07769
@@ -123,6 +103,26 @@
         "MaxDeflectionDegrees": 20
       },
       {
+        "Bone": "elevon_right",
+        "Parent": "hull",
+        "Pivot": [
+          -46.75702,
+          26.12893,
+          101.07769
+        ],
+        "Axis": [
+          -1,
+          0,
+          0
+        ],
+        "ControlWeights": {
+          "ElevatorUp": 1,
+          "RightRoll": -1,
+          "RudderRight": 0
+        },
+        "MaxDeflectionDegrees": 20
+      },
+      {
         "Bone": "rudder",
         "Parent": "hull",
         "Pivot": [
@@ -132,13 +132,13 @@
         ],
         "Axis": [
           0,
-          -1,
+          1,
           0
         ],
         "ControlWeights": {
           "ElevatorUp": 0,
           "RightRoll": 0,
-          "RudderRight": -1
+          "RudderRight": 1
         },
         "MaxDeflectionDegrees": 20
       }
@@ -163,13 +163,13 @@
         "Bone": "landing_flap_left",
         "Parent": "hull",
         "Pivot": [
-          -28.53554,
+          28.53554,
           34.20827,
           -0.6876
         ],
         "Axis": [
           -0.9955557217283895,
-          -0.09417433267013545,
+          0.09417433267013545,
           0
         ],
         "Input": "PRESENTED_LANDING_GEAR_EXTENSION",
@@ -180,13 +180,13 @@
         "Bone": "landing_flap_right",
         "Parent": "hull",
         "Pivot": [
-          28.53554,
+          -28.53554,
           34.20827,
           -0.6876
         ],
         "Axis": [
           -0.9955557217283895,
-          0.09417433267013545,
+          -0.09417433267013545,
           0
         ],
         "Input": "PRESENTED_LANDING_GEAR_EXTENSION",

@@ -17,7 +17,7 @@
       {
         "Id": "afterburner_1",
         "Position": [
-          -1.149329375,
+          1.149329375,
           4.19755125,
           -18.26934125
         ],
@@ -31,7 +31,7 @@
       {
         "Id": "afterburner_2",
         "Position": [
-          1.149329375,
+          -1.149329375,
           4.19755125,
           -18.26934125
         ],
@@ -120,26 +120,6 @@
         "Bone": "elevator_left",
         "Parent": "hull",
         "Pivot": [
-          -62.76338,
-          53.96852,
-          236.66192
-        ],
-        "Axis": [
-          -0.5299577332787019,
-          -0.01246961665962539,
-          0.8479323732459226
-        ],
-        "ControlWeights": {
-          "ElevatorUp": 1,
-          "RightRoll": -1,
-          "RudderRight": 0
-        },
-        "MaxDeflectionDegrees": 20
-      },
-      {
-        "Bone": "elevator_right",
-        "Parent": "hull",
-        "Pivot": [
           62.76338,
           53.96852,
           236.66192
@@ -157,6 +137,26 @@
         "MaxDeflectionDegrees": 20
       },
       {
+        "Bone": "elevator_right",
+        "Parent": "hull",
+        "Pivot": [
+          -62.76338,
+          53.96852,
+          236.66192
+        ],
+        "Axis": [
+          -0.5299577332787019,
+          -0.01246961665962539,
+          0.8479323732459226
+        ],
+        "ControlWeights": {
+          "ElevatorUp": 1,
+          "RightRoll": -1,
+          "RudderRight": 0
+        },
+        "MaxDeflectionDegrees": 20
+      },
+      {
         "Bone": "rudder",
         "Parent": "hull",
         "Pivot": [
@@ -166,13 +166,13 @@
         ],
         "Axis": [
           0,
-          -0.901340311659543,
-          -0.43311158213268564
+          0.901340311659543,
+          0.43311158213268564
         ],
         "ControlWeights": {
           "ElevatorUp": 0,
           "RightRoll": 0,
-          "RudderRight": -1
+          "RudderRight": 1
         },
         "MaxDeflectionDegrees": 25
       }
@@ -197,13 +197,13 @@
         "Bone": "wing_sweep_left",
         "Parent": "hull",
         "Pivot": [
-          -82.35195,
+          82.35195,
           55.16781,
           95.94403
         ],
         "Axis": [
           0,
-          -1,
+          1,
           0
         ],
         "AngleSign": -1,
@@ -235,13 +235,13 @@
         "Bone": "wing_sweep_right",
         "Parent": "hull",
         "Pivot": [
-          82.35195,
+          -82.35195,
           55.16781,
           95.94403
         ],
         "Axis": [
           0,
-          -1,
+          1,
           0
         ],
         "AngleSign": 1,
@@ -299,7 +299,7 @@
       "Axis": [
         1,
         0,
-        -1.2246467991473532e-16
+        1.2246467991473532e-16
       ]
     }
   }

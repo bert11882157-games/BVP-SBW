@@ -18,7 +18,7 @@
         "Bone": "left_elevator",
         "Parent": "hull",
         "Pivot": [
-          -21.10776,
+          21.10776,
           43.49479,
           108.1613
         ],
@@ -38,7 +38,7 @@
         "Bone": "right_elevator",
         "Parent": "hull",
         "Pivot": [
-          21.10776,
+          -21.10776,
           43.49479,
           108.1613
         ],
@@ -58,19 +58,19 @@
         "Bone": "rudder",
         "Parent": "hull",
         "Pivot": [
-          -0.55968,
+          0.55968,
           47.33256,
           110.97566
         ],
         "Axis": [
           0.005207221012656883,
-          -0.9997695014370216,
-          0.020828558416144734
+          0.9997695014370216,
+          -0.020828558416144734
         ],
         "ControlWeights": {
           "ElevatorUp": 0,
           "RightRoll": 0,
-          "RudderRight": -1
+          "RudderRight": 1
         },
         "MaxDeflectionDegrees": 25
       },
@@ -78,54 +78,14 @@
         "Bone": "left_aileron_inner",
         "Parent": "hull",
         "Pivot": [
-          -45.92538,
+          45.92538,
           27.90382,
           27.50406
         ],
         "Axis": [
           -0.9675405411607364,
-          0.15162947431504323,
-          -0.20217270767671028
-        ],
-        "ControlWeights": {
-          "ElevatorUp": 0,
-          "RightRoll": -1,
-          "RudderRight": 0
-        },
-        "MaxDeflectionDegrees": 25
-      },
-      {
-        "Bone": "left_aileron_outer",
-        "Parent": "hull",
-        "Pivot": [
-          -88.97242,
-          34.77984,
-          15.03129
-        ],
-        "Axis": [
-          -0.9278746087837368,
-          0.138488800900297,
-          -0.3462218398651728
-        ],
-        "ControlWeights": {
-          "ElevatorUp": 0,
-          "RightRoll": -1,
-          "RudderRight": 0
-        },
-        "MaxDeflectionDegrees": 25
-      },
-      {
-        "Bone": "right_aileron_inner",
-        "Parent": "hull",
-        "Pivot": [
-          45.92538,
-          28.06373,
-          27.50406
-        ],
-        "Axis": [
-          -0.9664578427259013,
-          -0.15867217976817308,
-          0.2019464721187611
+          -0.15162947431504323,
+          0.20217270767671028
         ],
         "ControlWeights": {
           "ElevatorUp": 0,
@@ -135,7 +95,7 @@
         "MaxDeflectionDegrees": 25
       },
       {
-        "Bone": "right_aileron_outer",
+        "Bone": "left_aileron_outer",
         "Parent": "hull",
         "Pivot": [
           88.97242,
@@ -150,6 +110,46 @@
         "ControlWeights": {
           "ElevatorUp": 0,
           "RightRoll": 1,
+          "RudderRight": 0
+        },
+        "MaxDeflectionDegrees": 25
+      },
+      {
+        "Bone": "right_aileron_inner",
+        "Parent": "hull",
+        "Pivot": [
+          -45.92538,
+          28.06373,
+          27.50406
+        ],
+        "Axis": [
+          -0.9664578427259013,
+          0.15867217976817308,
+          -0.2019464721187611
+        ],
+        "ControlWeights": {
+          "ElevatorUp": 0,
+          "RightRoll": -1,
+          "RudderRight": 0
+        },
+        "MaxDeflectionDegrees": 25
+      },
+      {
+        "Bone": "right_aileron_outer",
+        "Parent": "hull",
+        "Pivot": [
+          -88.97242,
+          34.77984,
+          15.03129
+        ],
+        "Axis": [
+          -0.9278746087837368,
+          0.138488800900297,
+          -0.3462218398651728
+        ],
+        "ControlWeights": {
+          "ElevatorUp": 0,
+          "RightRoll": -1,
           "RudderRight": 0
         },
         "MaxDeflectionDegrees": 25
@@ -205,7 +205,7 @@
       "Axis": [
         1,
         0,
-        -1.2246467991473532e-16
+        1.2246467991473532e-16
       ]
     }
   },
@@ -216,7 +216,7 @@
       {
         "Id": "left_bank",
         "Position": [
-          -0.42575,
+          0.42575,
           1.99884,
           -1.79896
         ]
@@ -224,7 +224,7 @@
       {
         "Id": "right_bank",
         "Position": [
-          0.42575,
+          -0.42575,
           1.99884,
           -1.79896
         ]

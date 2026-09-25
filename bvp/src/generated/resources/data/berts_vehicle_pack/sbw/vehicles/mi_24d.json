@@ -16,7 +16,7 @@
         1.88
       ],
       "Position": [
-        -0.09375,
+        0.09375,
         5.78125,
         -11.9375
       ],
@@ -72,7 +72,7 @@
         2.6925
       ],
       "Position": [
-        -0.03125,
+        0.03125,
         5.25,
         -4.1875
       ],
@@ -156,7 +156,7 @@
         1.66125
       ],
       "Position": [
-        -2.75,
+        2.75,
         2.42188,
         0.21875
       ],
@@ -184,23 +184,9 @@
         1.66125
       ],
       "Position": [
-        2.75,
+        -2.75,
         2.42188,
         0.21875
-      ],
-      "Transform": "Vehicle",
-      "Rotation": "Vehicle"
-    },
-    {
-      "Size": [
-        0.84875,
-        0.72375,
-        1.36437
-      ],
-      "Position": [
-        -4.59375,
-        2.09375,
-        0.07813
       ],
       "Transform": "Vehicle",
       "Rotation": "Vehicle"
@@ -221,12 +207,26 @@
     },
     {
       "Size": [
+        0.84875,
+        0.72375,
+        1.36437
+      ],
+      "Position": [
+        -4.59375,
+        2.09375,
+        0.07813
+      ],
+      "Transform": "Vehicle",
+      "Rotation": "Vehicle"
+    },
+    {
+      "Size": [
         1.84875,
         0.78625,
         0.84875
       ],
       "Position": [
-        -2.90625,
+        2.90625,
         3.09375,
         -0.03125
       ],
@@ -240,7 +240,7 @@
         0.84875
       ],
       "Position": [
-        2.875,
+        -2.875,
         3.09375,
         -0.03125
       ],
@@ -310,7 +310,7 @@
         1.84875
       ],
       "Position": [
-        -1.0625,
+        1.0625,
         2.84375,
         2.34375
       ],
@@ -324,7 +324,7 @@
         1.84875
       ],
       "Position": [
-        1.0625,
+        -1.0625,
         3.21875,
         2.34375
       ],
@@ -422,7 +422,7 @@
         1.23937
       ],
       "Position": [
-        0.09375,
+        -0.09375,
         1,
         7.20313
       ],
@@ -450,7 +450,7 @@
         0.97375
       ],
       "Position": [
-        0.28125,
+        -0.28125,
         2.78125,
         9.28125
       ],
@@ -478,7 +478,7 @@
         0.0675
       ],
       "Position": [
-        -0.3125,
+        0.3125,
         -0.07969,
         0
       ],
@@ -492,7 +492,7 @@
         0.0675
       ],
       "Position": [
-        0.3125,
+        -0.3125,
         -0.07969,
         0
       ],
@@ -597,7 +597,7 @@
       "DismountInfo": {
         "Transform": "Vehicle",
         "Position": [
-          -3.0625,
+          3.0625,
           0.2,
           5.625
         ]
@@ -640,7 +640,7 @@
       "DismountInfo": {
         "Transform": "Vehicle",
         "Position": [
-          -3.0625,
+          3.0625,
           0.2,
           7.75
         ]
@@ -655,7 +655,7 @@
       "Transform": "Vehicle",
       "BodyAttachment": "Vehicle",
       "Position": [
-        0.3125,
+        -0.3125,
         1.6459375,
         0.875
       ],
@@ -684,6 +684,88 @@
       "DismountInfo": {
         "Transform": "Vehicle",
         "Position": [
+          -3.0625,
+          0.2,
+          0.875
+        ]
+      }
+    },
+    {
+      "HidePassenger": false,
+      "BanHand": true,
+      "Transform": "Vehicle",
+      "BodyAttachment": "Vehicle",
+      "Position": [
+        -0.3125,
+        1.6459375,
+        1.625
+      ],
+      "Weapons": [],
+      "CanRotateHead": true,
+      "CameraPos": {
+        "Transform": "Vehicle",
+        "Position": [
+          0,
+          0,
+          0
+        ],
+        "ZoomPosition": [
+          0,
+          0,
+          0
+        ],
+        "CameraMode": "AIRCRAFT_FREELOOK",
+        "AimCameraMode": "AIRCRAFT_FREELOOK",
+        "UseAircraftCamera": false,
+        "EyeAttachment": "cargo_right_b_eye",
+        "ZoomEyeAttachment": "cargo_right_b_eye",
+        "DirectionAttachment": "cargo_right_b_eye",
+        "ZoomDirectionAttachment": "cargo_right_b_eye"
+      },
+      "DismountInfo": {
+        "Transform": "Vehicle",
+        "Position": [
+          -3.0625,
+          0.2,
+          1.625
+        ]
+      }
+    },
+    {
+      "HidePassenger": false,
+      "BanHand": true,
+      "Transform": "Vehicle",
+      "BodyAttachment": "Vehicle",
+      "Position": [
+        0.3125,
+        1.6459375,
+        0.875
+      ],
+      "Weapons": [],
+      "CanRotateHead": true,
+      "CameraPos": {
+        "Transform": "Vehicle",
+        "Position": [
+          0,
+          0,
+          0
+        ],
+        "ZoomPosition": [
+          0,
+          0,
+          0
+        ],
+        "CameraMode": "AIRCRAFT_FREELOOK",
+        "AimCameraMode": "AIRCRAFT_FREELOOK",
+        "UseAircraftCamera": false,
+        "EyeAttachment": "cargo_left_a_eye",
+        "ZoomEyeAttachment": "cargo_left_a_eye",
+        "DirectionAttachment": "cargo_left_a_eye",
+        "ZoomDirectionAttachment": "cargo_left_a_eye"
+      },
+      "DismountInfo": {
+        "Transform": "Vehicle",
+        "Position": [
           3.0625,
           0.2,
           0.875
@@ -717,88 +799,6 @@
         "CameraMode": "AIRCRAFT_FREELOOK",
         "AimCameraMode": "AIRCRAFT_FREELOOK",
         "UseAircraftCamera": false,
-        "EyeAttachment": "cargo_right_b_eye",
-        "ZoomEyeAttachment": "cargo_right_b_eye",
-        "DirectionAttachment": "cargo_right_b_eye",
-        "ZoomDirectionAttachment": "cargo_right_b_eye"
-      },
-      "DismountInfo": {
-        "Transform": "Vehicle",
-        "Position": [
-          3.0625,
-          0.2,
-          1.625
-        ]
-      }
-    },
-    {
-      "HidePassenger": false,
-      "BanHand": true,
-      "Transform": "Vehicle",
-      "BodyAttachment": "Vehicle",
-      "Position": [
-        -0.3125,
-        1.6459375,
-        0.875
-      ],
-      "Weapons": [],
-      "CanRotateHead": true,
-      "CameraPos": {
-        "Transform": "Vehicle",
-        "Position": [
-          0,
-          0,
-          0
-        ],
-        "ZoomPosition": [
-          0,
-          0,
-          0
-        ],
-        "CameraMode": "AIRCRAFT_FREELOOK",
-        "AimCameraMode": "AIRCRAFT_FREELOOK",
-        "UseAircraftCamera": false,
-        "EyeAttachment": "cargo_left_a_eye",
-        "ZoomEyeAttachment": "cargo_left_a_eye",
-        "DirectionAttachment": "cargo_left_a_eye",
-        "ZoomDirectionAttachment": "cargo_left_a_eye"
-      },
-      "DismountInfo": {
-        "Transform": "Vehicle",
-        "Position": [
-          -3.0625,
-          0.2,
-          0.875
-        ]
-      }
-    },
-    {
-      "HidePassenger": false,
-      "BanHand": true,
-      "Transform": "Vehicle",
-      "BodyAttachment": "Vehicle",
-      "Position": [
-        -0.3125,
-        1.6459375,
-        1.625
-      ],
-      "Weapons": [],
-      "CanRotateHead": true,
-      "CameraPos": {
-        "Transform": "Vehicle",
-        "Position": [
-          0,
-          0,
-          0
-        ],
-        "ZoomPosition": [
-          0,
-          0,
-          0
-        ],
-        "CameraMode": "AIRCRAFT_FREELOOK",
-        "AimCameraMode": "AIRCRAFT_FREELOOK",
-        "UseAircraftCamera": false,
         "EyeAttachment": "cargo_left_b_eye",
         "ZoomEyeAttachment": "cargo_left_b_eye",
         "DirectionAttachment": "cargo_left_b_eye",
@@ -807,7 +807,7 @@
       "DismountInfo": {
         "Transform": "Vehicle",
         "Position": [
-          -3.0625,
+          3.0625,
           0.2,
           1.625
         ]
@@ -937,22 +937,22 @@
         "Transform": "WeaponStationBarrel",
         "Positions": [
           [
+            0.028125,
+            0.028125000000000067,
+            0.8149999999999995
+          ],
+          [
             -0.028125,
             0.028125000000000067,
             0.8149999999999995
           ],
           [
-            0.028125,
-            0.028125000000000067,
-            0.8149999999999995
-          ],
-          [
-            0.028125,
+            -0.028125,
             -0.028124999999999956,
             0.8149999999999995
           ],
           [
-            -0.028125,
+            0.028125,
             -0.028124999999999956,
             0.8149999999999995
           ]
@@ -980,7 +980,7 @@
           ]
         ],
         "ViewPosition": [
-          -0.028125,
+          0.028125,
           0.028125000000000067,
           0.8149999999999995
         ],
@@ -1071,7 +1071,7 @@
     "SympatheticDetonationChance": 0.55
   },
   "ThirdPersonCameraPos": [
-    -0.86696,
+    0.86696,
     1.5,
     5
   ],
@@ -1085,7 +1085,7 @@
     "gunner_muzzle_1": {
       "Parent": "WeaponStationBarrel",
       "Position": [
-        -0.028125,
+        0.028125,
         0.028125000000000067,
         0.8149999999999995
       ],
@@ -1098,7 +1098,7 @@
     "gunner_muzzle_2": {
       "Parent": "WeaponStationBarrel",
       "Position": [
-        0.028125,
+        -0.028125,
         0.028125000000000067,
         0.8149999999999995
       ],
@@ -1111,7 +1111,7 @@
     "gunner_muzzle_3": {
       "Parent": "WeaponStationBarrel",
       "Position": [
-        0.028125,
+        -0.028125,
         -0.028124999999999956,
         0.8149999999999995
       ],
@@ -1124,7 +1124,7 @@
     "gunner_muzzle_4": {
       "Parent": "WeaponStationBarrel",
       "Position": [
-        -0.028125,
+        0.028125,
         -0.028124999999999956,
         0.8149999999999995
       ],
@@ -1137,7 +1137,7 @@
     "pilot_eye": {
       "Parent": "Vehicle",
       "Position": [
-        -0.1875,
+        0.1875,
         3.625,
         5.75
       ],
@@ -1163,12 +1163,12 @@
     "cargo_right_a_eye": {
       "Parent": "Vehicle",
       "Position": [
-        0.3125,
+        -0.3125,
         3.396875,
         0.875
       ],
       "Direction": [
-        -1,
+        1,
         0,
         0
       ]
@@ -1176,12 +1176,12 @@
     "cargo_right_b_eye": {
       "Parent": "Vehicle",
       "Position": [
-        0.3125,
+        -0.3125,
         3.396875,
         1.625
       ],
       "Direction": [
-        -1,
+        1,
         0,
         0
       ]
@@ -1189,12 +1189,12 @@
     "cargo_left_a_eye": {
       "Parent": "Vehicle",
       "Position": [
-        -0.3125,
+        0.3125,
         3.396875,
         0.875
       ],
       "Direction": [
-        1,
+        -1,
         0,
         0
       ]
@@ -1202,12 +1202,12 @@
     "cargo_left_b_eye": {
       "Parent": "Vehicle",
       "Position": [
-        -0.3125,
+        0.3125,
         3.396875,
         1.625
       ],
       "Direction": [
-        1,
+        -1,
         0,
         0
       ]

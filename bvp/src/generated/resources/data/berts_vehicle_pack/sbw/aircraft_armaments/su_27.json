@@ -10,14 +10,14 @@
       "Id": "wingtip",
       "Name": "Wingtip rail",
       "Left": [
-        -7.0866,
+        7.0866,
         2.3694,
         -4.41
       ],
       "LeftStations": [
         {
           "Point": [
-            -7.0867,
+            7.0867,
             2.3696,
             -4.3533
           ],
@@ -25,14 +25,14 @@
         }
       ],
       "Right": [
-        7.0866,
+        -7.0866,
         2.3694,
         -4.41
       ],
       "RightStations": [
         {
           "Point": [
-            7.0867,
+            -7.0867,
             2.3696,
             -4.3533
           ],
@@ -49,54 +49,11 @@
       "Id": "outer",
       "Name": "Outer wing pylon (double)",
       "Left": [
-        -6.0116,
-        2.1281,
-        -4.2566
-      ],
-      "LeftStations": [
-        {
-          "Point": [
-            -6.0116,
-            2.1282,
-            -4.2564
-          ],
-          "Face": "bottom",
-          "Copies": [
-            1,
-            3
-          ]
-        },
-        {
-          "Point": [
-            -6.1652,
-            2.1501,
-            -4.2564
-          ],
-          "Face": "left",
-          "Copies": [
-            2,
-            3
-          ]
-        },
-        {
-          "Point": [
-            -5.8581,
-            2.1501,
-            -4.2564
-          ],
-          "Face": "right",
-          "Copies": [
-            2,
-            3
-          ]
-        }
-      ],
-      "Right": [
         6.0116,
         2.1281,
         -4.2566
       ],
-      "RightStations": [
+      "LeftStations": [
         {
           "Point": [
             6.0116,
@@ -115,7 +72,7 @@
             2.1501,
             -4.2564
           ],
-          "Face": "right",
+          "Face": "left",
           "Copies": [
             2,
             3
@@ -124,6 +81,49 @@
         {
           "Point": [
             5.8581,
+            2.1501,
+            -4.2564
+          ],
+          "Face": "right",
+          "Copies": [
+            2,
+            3
+          ]
+        }
+      ],
+      "Right": [
+        -6.0116,
+        2.1281,
+        -4.2566
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -6.0116,
+            2.1282,
+            -4.2564
+          ],
+          "Face": "bottom",
+          "Copies": [
+            1,
+            3
+          ]
+        },
+        {
+          "Point": [
+            -6.1652,
+            2.1501,
+            -4.2564
+          ],
+          "Face": "right",
+          "Copies": [
+            2,
+            3
+          ]
+        },
+        {
+          "Point": [
+            -5.8581,
             2.1501,
             -4.2564
           ],
@@ -148,116 +148,11 @@
       "Id": "inner",
       "Name": "Inner wing pylon (double)",
       "Left": [
-        -4.5197,
-        1.9525,
-        -3.0934
-      ],
-      "LeftStations": [
-        {
-          "Point": [
-            -4.5197,
-            1.9527,
-            -3.0936
-          ],
-          "Face": "bottom",
-          "Copies": [
-            1,
-            3
-          ],
-          "ExceptStores": [
-            "berts_vehicle_pack:r27r",
-            "berts_vehicle_pack:r27t",
-            "berts_vehicle_pack:r73",
-            "berts_vehicle_pack:su25_s8ko_pod"
-          ]
-        },
-        {
-          "Point": [
-            -4.761,
-            1.9746,
-            -3.0936
-          ],
-          "Face": "left",
-          "Copies": [
-            2,
-            3
-          ]
-        },
-        {
-          "Point": [
-            -4.2784,
-            1.9746,
-            -3.0936
-          ],
-          "Face": "right",
-          "Copies": [
-            2,
-            3
-          ]
-        },
-        {
-          "Point": [
-            -4.761,
-            1.9746,
-            -3.0936
-          ],
-          "Face": "left",
-          "Copies": [
-            1
-          ],
-          "Stores": [
-            "berts_vehicle_pack:r73"
-          ]
-        },
-        {
-          "Point": [
-            -4.761,
-            1.9746,
-            -3.0936
-          ],
-          "Face": "left",
-          "Copies": [
-            1
-          ],
-          "Stores": [
-            "berts_vehicle_pack:r27r"
-          ]
-        },
-        {
-          "Point": [
-            -4.761,
-            1.9746,
-            -3.0936
-          ],
-          "Face": "left",
-          "Copies": [
-            1
-          ],
-          "Stores": [
-            "berts_vehicle_pack:r27t"
-          ]
-        },
-        {
-          "Point": [
-            -4.761,
-            1.9746,
-            -3.0936
-          ],
-          "Face": "left",
-          "Copies": [
-            1
-          ],
-          "Stores": [
-            "berts_vehicle_pack:su25_s8ko_pod"
-          ]
-        }
-      ],
-      "Right": [
         4.5197,
         1.9525,
         -3.0934
       ],
-      "RightStations": [
+      "LeftStations": [
         {
           "Point": [
             4.5197,
@@ -282,7 +177,7 @@
             1.9746,
             -3.0936
           ],
-          "Face": "right",
+          "Face": "left",
           "Copies": [
             2,
             3
@@ -294,7 +189,7 @@
             1.9746,
             -3.0936
           ],
-          "Face": "left",
+          "Face": "right",
           "Copies": [
             2,
             3
@@ -306,7 +201,7 @@
             1.9746,
             -3.0936
           ],
-          "Face": "right",
+          "Face": "left",
           "Copies": [
             1
           ],
@@ -320,7 +215,7 @@
             1.9746,
             -3.0936
           ],
-          "Face": "right",
+          "Face": "left",
           "Copies": [
             1
           ],
@@ -334,7 +229,7 @@
             1.9746,
             -3.0936
           ],
-          "Face": "right",
+          "Face": "left",
           "Copies": [
             1
           ],
@@ -345,6 +240,111 @@
         {
           "Point": [
             4.761,
+            1.9746,
+            -3.0936
+          ],
+          "Face": "left",
+          "Copies": [
+            1
+          ],
+          "Stores": [
+            "berts_vehicle_pack:su25_s8ko_pod"
+          ]
+        }
+      ],
+      "Right": [
+        -4.5197,
+        1.9525,
+        -3.0934
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -4.5197,
+            1.9527,
+            -3.0936
+          ],
+          "Face": "bottom",
+          "Copies": [
+            1,
+            3
+          ],
+          "ExceptStores": [
+            "berts_vehicle_pack:r27r",
+            "berts_vehicle_pack:r27t",
+            "berts_vehicle_pack:r73",
+            "berts_vehicle_pack:su25_s8ko_pod"
+          ]
+        },
+        {
+          "Point": [
+            -4.761,
+            1.9746,
+            -3.0936
+          ],
+          "Face": "right",
+          "Copies": [
+            2,
+            3
+          ]
+        },
+        {
+          "Point": [
+            -4.2784,
+            1.9746,
+            -3.0936
+          ],
+          "Face": "left",
+          "Copies": [
+            2,
+            3
+          ]
+        },
+        {
+          "Point": [
+            -4.761,
+            1.9746,
+            -3.0936
+          ],
+          "Face": "right",
+          "Copies": [
+            1
+          ],
+          "Stores": [
+            "berts_vehicle_pack:r73"
+          ]
+        },
+        {
+          "Point": [
+            -4.761,
+            1.9746,
+            -3.0936
+          ],
+          "Face": "right",
+          "Copies": [
+            1
+          ],
+          "Stores": [
+            "berts_vehicle_pack:r27r"
+          ]
+        },
+        {
+          "Point": [
+            -4.761,
+            1.9746,
+            -3.0936
+          ],
+          "Face": "right",
+          "Copies": [
+            1
+          ],
+          "Stores": [
+            "berts_vehicle_pack:r27t"
+          ]
+        },
+        {
+          "Point": [
+            -4.761,
             1.9746,
             -3.0936
           ],
@@ -377,14 +377,14 @@
       "Id": "intake",
       "Name": "Intake pylon",
       "Left": [
-        -1.0969,
+        1.0969,
         0.9431,
         -1.865
       ],
       "LeftStations": [
         {
           "Point": [
-            -1.097,
+            1.097,
             0.9434,
             -1.8649
           ],
@@ -392,14 +392,14 @@
         }
       ],
       "Right": [
-        1.0969,
+        -1.0969,
         0.9431,
         -1.865
       ],
       "RightStations": [
         {
           "Point": [
-            1.097,
+            -1.097,
             0.9434,
             -1.8649
           ],
