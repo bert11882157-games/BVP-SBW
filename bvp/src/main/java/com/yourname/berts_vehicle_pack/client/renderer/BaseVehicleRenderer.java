@@ -507,6 +507,9 @@ public class BaseVehicleRenderer<T extends GeoVehicleEntity> implements VehicleR
                 loadedModel.renderTranslucentOnly(poseStack, bufferSource, resolvedTexture, packedLight,
                         fadeAlpha);
                 this.suspendedStores.render(entity, poseStack, bufferSource, packedLight, fadeAlpha, partialTicks);
+                // Glass-cockpit primary flight displays, in the same model frame as the hull.
+                com.atsuishio.superbwarfare.client.flightdisplay.FlightDisplays.render(entity, poseStack,
+                        bufferSource, packedLight);
                 recordGeometry(entity, partialTicks, "FULL_MODEL", fadeAlpha);
                 if (fadeAlpha > 0.0F) {
                     FarVehicleDiagnostics.modelRendered(entity, partialTicks,

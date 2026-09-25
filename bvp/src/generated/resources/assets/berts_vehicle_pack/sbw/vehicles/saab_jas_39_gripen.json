@@ -239,5 +239,31 @@
       }
     ],
     "Sweeps": []
+  },
+  "FlightDisplays": {
+    "Schema": 1,
+    "Frame": "VEHICLE_LOCAL_BLOCKS",
+    "Displays": [
+      {
+        "Seat": 0,
+        "Center": [
+          0.0,
+          2.14492,
+          3.22807
+        ],
+        "Normal": [
+          0.0,
+          -0.44721,
+          -0.89443
+        ],
+        "Up": [
+          0.0,
+          0.89443,
+          -0.44721
+        ],
+        "Width": 0.1401,
+        "Depth": 0.035
+      }
+    ]
   }
 }

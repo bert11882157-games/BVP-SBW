@@ -50,5 +50,51 @@
         "DegreesPerTickAtFullSpeed": 392
       }
     ]
+  },
+  "FlightDisplays": {
+    "Schema": 1,
+    "Frame": "VEHICLE_LOCAL_BLOCKS",
+    "Displays": [
+      {
+        "Seat": 0,
+        "Center": [
+          0.0,
+          3.4727,
+          2.70512
+        ],
+        "Normal": [
+          0.0,
+          0.24254,
+          -0.97014
+        ],
+        "Up": [
+          0.0,
+          0.97014,
+          0.24254
+        ],
+        "Width": 0.3218,
+        "Depth": 0.035
+      },
+      {
+        "Seat": 1,
+        "Center": [
+          0.0,
+          2.26632,
+          4.34805
+        ],
+        "Normal": [
+          0.0,
+          0.26312,
+          -0.96476
+        ],
+        "Up": [
+          0.0,
+          0.96476,
+          0.26312
+        ],
+        "Width": 0.2038,
+        "Depth": 0.035
+      }
+    ]
   }
 }

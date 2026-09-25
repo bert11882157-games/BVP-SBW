@@ -179,6 +179,35 @@ public class DefaultVehicleResource implements IDBasedData<DefaultVehicleResourc
         }
     }
 
+    @SerializedName("FlightDisplays")
+    private FlightDisplaysResource flightDisplays;
+
+    /** Glass-cockpit primary flight displays mounted on the instrument panel; null for steam-gauge cockpits. */
+    public @Nullable FlightDisplaysResource getFlightDisplays() {
+        return flightDisplays;
+    }
+
+    /** VEHICLE_LOCAL_BLOCKS (+X left, +Y up, +Z forward) screen placements, one per crew station with a panel. */
+    public static final class FlightDisplaysResource {
+        @SerializedName("Schema") public int schema;
+        @SerializedName("Frame") public String frame;
+        @SerializedName("Displays") public Display[] displays;
+
+        public static final class Display {
+            @SerializedName("Seat") public int seat;
+            /** Centre of the screen surface. */
+            @SerializedName("Center") public double[] center;
+            /** Unit normal of the screen, pointing at the crew member. */
+            @SerializedName("Normal") public double[] normal;
+            /** Unit screen-up direction, perpendicular to the normal. */
+            @SerializedName("Up") public double[] up;
+            /** Edge length of the square screen, blocks. */
+            @SerializedName("Width") public double width;
+            /** Depth of the display housing behind the screen, blocks. */
+            @SerializedName("Depth") public double depth;
+        }
+    }
+
     @SerializedName("EngineExhaust")
     private EngineExhaustResource engineExhaust;
 
