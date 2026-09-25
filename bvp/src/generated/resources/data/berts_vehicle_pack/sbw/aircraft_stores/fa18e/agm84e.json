@@ -18,15 +18,32 @@
   "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/agm84k_slam_er.geo.json",
   "ModelForward": "+Z",
   "MountAnchor": [
-    0,
+    0.0063,
     0.0756,
+    -0.6161
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      -0.1481,
+      -0.0788,
+      -0.6161
+    ],
+    "Right": [
+      0.1606,
+      -0.0788,
+      -0.6161
+    ]
+  },
+  "MountAxis": [
+    0.0063,
+    -0.0788,
     -0.6161
   ],
   "Texture": "berts_vehicle_pack:textures/aircraft_stores/agm84k_slam_er.png",
   "Scale": 1,
   "LaunchOffset": [
-    0,
-    -0.0756,
-    0.6161
+    0.0,
+    -0.1544,
+    0.0
   ]
 }

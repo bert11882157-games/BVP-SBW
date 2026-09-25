@@ -9,6 +9,23 @@
     0.0,
     0.0
   ],
+  "SideMountAnchors": {
+    "Left": [
+      0.16,
+      -0.176,
+      0.0
+    ],
+    "Right": [
+      -0.16,
+      -0.176,
+      0.0
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    -0.176,
+    0.0
+  ],
   "Texture": "berts_vehicle_pack:textures/aircraft_stores/gbu16.png",
   "Capacity": 1,
   "MassKg": 454,
@@ -24,8 +41,8 @@
   "AmmoItem": "superbwarfare:medium_guided_bomb",
   "ProjectileProfile": "berts_vehicle_pack:aircraft_bombs/gbu16",
   "LaunchOffset": [
-    0,
     0.0,
+    -0.176,
     0.0
   ]
 }

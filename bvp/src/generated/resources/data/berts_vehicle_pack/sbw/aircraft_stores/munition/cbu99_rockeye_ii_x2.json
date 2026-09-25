@@ -5,8 +5,25 @@
   "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/cbu99.geo.json",
   "ModelForward": "-Z",
   "MountAnchor": [
-    0,
+    0.0101,
     0.0,
+    0.0
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.2244,
+      -0.2559,
+      0.0
+    ],
+    "Right": [
+      -0.2041,
+      -0.2559,
+      0.0
+    ]
+  },
+  "MountAxis": [
+    0.0101,
+    -0.2559,
     0.0
   ],
   "Texture": "berts_vehicle_pack:textures/aircraft_stores/cbu99.png",
@@ -41,8 +58,8 @@
     0
   ],
   "LaunchOffset": [
-    0,
     0.0,
+    -0.2559,
     0.0
   ]
 }

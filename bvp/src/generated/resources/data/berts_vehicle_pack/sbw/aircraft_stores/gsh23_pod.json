@@ -5,8 +5,25 @@
   "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/gsh23_pod.geo.json",
   "ModelForward": "-Z",
   "MountAnchor": [
-    0,
-    -0.0214,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.2098,
+      -0.3339,
+      0.0
+    ],
+    "Right": [
+      -0.2098,
+      -0.3339,
+      0.0
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    -0.3339,
     0.0
   ],
   "Texture": "berts_vehicle_pack:textures/aircraft_stores/gsh23_pod.png",
@@ -15,8 +32,8 @@
   "Capacity": 200,
   "MassKg": 2.25,
   "LaunchOffset": [
-    0,
-    0.0214,
+    0.0,
+    -0.3339,
     0.0
   ]
 }

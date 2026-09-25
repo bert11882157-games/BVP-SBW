@@ -7,10 +7,10 @@ import net.minecraft.world.phys.Vec3
  * The point of a store's authored model that touches its pylon, in model-file blocks
  * (model pixels / 16), before [AircraftStoreModelForward] turning and before `Scale`.
  *
- * Pack generators place it on top of the store body (suspension lugs included) at the body's
- * lengthwise centre, so every store hangs from its mount point instead of straddling it.
- * Mount points are therefore authored at the pylon's lower attachment surface. The key only
- * moves presentation; launch positions follow `LaunchOffset`, which packs author to match.
+ * It is the store's top anchor: the suspension lug top (the midpoint of the lug tops for several
+ * lugs) or, for a lugless store, the top of its body at the station it hangs from. A bottom pylon
+ * station (or the mount point) receives it; side stations receive the side anchors instead, and
+ * `MountAxis` derives the launch point from the same placement. See [AircraftStoreAttachment].
  */
 object AircraftStoreMountAnchor {
     const val KEY = "MountAnchor"

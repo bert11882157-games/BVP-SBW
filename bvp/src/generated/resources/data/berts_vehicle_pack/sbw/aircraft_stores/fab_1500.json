@@ -5,8 +5,25 @@
   "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/fab_1500.geo.json",
   "ModelForward": "+Z",
   "MountAnchor": [
-    0,
-    0.22,
+    0.0,
+    0.2161,
+    0.3047
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      -0.2784,
+      -0.1203,
+      0.3047
+    ],
+    "Right": [
+      0.2784,
+      -0.1203,
+      0.3047
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    -0.1203,
     0.3047
   ],
   "Texture": "berts_vehicle_pack:textures/aircraft_stores/fab_1500.png",
@@ -26,8 +43,8 @@
   "AmmoItem": "superbwarfare:large_freefall_bomb",
   "MaxPerPylon": 1,
   "LaunchOffset": [
-    0,
-    -0.22,
-    -0.3047
+    0.0,
+    -0.3364,
+    0.0
   ]
 }

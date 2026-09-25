@@ -2,6 +2,7 @@ package com.atsuishio.superbwarfare.client.aircraft
 
 import com.atsuishio.superbwarfare.api.aircraft.AircraftPylonRacks
 import com.atsuishio.superbwarfare.api.aircraft.AircraftMountSweep
+import com.atsuishio.superbwarfare.api.aircraft.AircraftStoreAttachment
 import com.atsuishio.superbwarfare.api.aircraft.AircraftStoreModelForward
 import com.atsuishio.superbwarfare.api.aircraft.AircraftStoreMountAnchor
 import com.google.gson.JsonArray
@@ -28,6 +29,10 @@ data class AircraftStoreView(
     val modelForward: String = AircraftStoreModelForward.DEFAULT,
     /** Model-file point, in blocks, placed on the mount; see [AircraftStoreMountAnchor]. */
     val mountAnchor: Vec3 = Vec3.ZERO,
+    /** Top/side anchors, body axis and launch offset; see [AircraftStoreAttachment]. */
+    val anchors: AircraftStoreAttachment.Anchors = AircraftStoreAttachment.Anchors(mountAnchor, modelForward = modelForward, scale = scale),
+    /** Generated rack drawn with a fixed rack store where the pylon offers too few stations. */
+    val rackAdapter: AircraftStoreAttachment.RackAdapter? = null,
 ) {
     /** Degrees about the vertical axis through the mount point that put the nose forward. */
     val mountYawDegrees: Float get() = AircraftStoreModelForward.mountYawDegrees(modelForward)
@@ -56,6 +61,8 @@ interface AircraftMountView {
     val internal: Boolean get() = false
     val quantitySelectable: Boolean get() = internal
     val sweepFrames: List<AircraftMountSweep> get() = emptyList()
+    /** Pylon stations per physical position (Left/Right for a pair); see [AircraftStoreAttachment]. */
+    val stations: List<List<AircraftStoreAttachment.Station>> get() = emptyList()
     fun position(index: Int, speed: Double): Vec3 = sweepFrames.getOrNull(index)?.position(positions[index],speed) ?: positions[index]
 }
 
@@ -65,6 +72,7 @@ data class AircraftPairView(
     override val maxWeaponsPerPylon: Int = AircraftPylonRacks.MAX_COPIES,
     override val maxPylonMassKg: Double = Double.POSITIVE_INFINITY,
     override val sweepFrames: List<AircraftMountSweep> = emptyList(),
+    override val stations: List<List<AircraftStoreAttachment.Station>> = emptyList(),
 ) : AircraftMountView {
     override val positions: List<Vec3> = Collections.unmodifiableList(listOf(left, right))
 }
@@ -77,6 +85,7 @@ data class AircraftSingleView(
     override val internal: Boolean = false,
     override val quantitySelectable: Boolean = internal,
     override val sweepFrames: List<AircraftMountSweep> = emptyList(),
+    override val stations: List<List<AircraftStoreAttachment.Station>> = emptyList(),
 ) : AircraftMountView {
     override val positions: List<Vec3> = Collections.singletonList(position)
 }
@@ -121,22 +130,34 @@ data class AircraftArmamentSnapshot(
         definition.maxWeaponsPerPylon, mount.maxWeaponsPerPylon, store.maxPerPylon,
         store.category, store.capacity ?: 1, store.massKg, mount.maxPylonMassKg, mount.internal, store.rackMassKg)
 
-    /** Physical rack positions are shared by near/far presentation and server launch ordering. */
-    private val rackLayout: Map<String, List<Vec3>> by lazy {
+    /** Physical rack placements are shared by near/far presentation and server launch ordering. */
+    private val rackLayout: Map<String, AircraftStoreAttachment.Layout> by lazy {
         definition.mounts.associate { mount ->
             val store = stores[selections[mount.id]]
             val copies = if (store == null) 1 else (counts[mount.id] ?: 1).coerceIn(1, maxCopies(mount, store))
-            mount.id to if (store == null) emptyList() else (0 until copies).flatMap { copy ->
-                mount.positions.map { if (mount.internal) it else it.add(AircraftPylonRacks.offset(copy, copies, store.rackSpacing, store.rackColumns)) }
-            }
+            mount.id to if (store == null) AircraftStoreAttachment.Layout(emptyList(), emptyList())
+                else AircraftStoreAttachment.layout(mount.positions, mount.stations, mount is AircraftPairView,
+                    mount.internal, store.anchors, store.rackAdapter, copies, store.rackSpacing, store.rackColumns, store.id)
         }
     }
-    fun rackPositions(mount: AircraftMountView): List<Vec3> = rackLayout[mount.id] ?: emptyList()
-    fun rackPositions(mount: AircraftMountView, speed: Double): List<Vec3> {
-        val neutral = rackPositions(mount)
-        if (mount.sweepFrames.isEmpty()) return neutral
-        val offsets = mount.positions.indices.map { mount.position(it,speed).subtract(mount.positions[it]) }
-        return neutral.mapIndexed { index, point -> point.add(offsets[index % offsets.size]) }
+    private fun sweepOffsets(mount: AircraftMountView, speed: Double): List<Vec3>? =
+        if (mount.sweepFrames.isEmpty()) null
+        else mount.positions.indices.map { mount.position(it, speed).subtract(mount.positions[it]) }
+    /** Where each copy's attachment point is drawn, in fired order (copy-major, then position). */
+    fun rackPositions(mount: AircraftMountView): List<Vec3> = rackLayout[mount.id]?.points ?: emptyList()
+    fun rackPositions(mount: AircraftMountView, speed: Double): List<Vec3> = rackPlacements(mount, speed).map { it.point }
+    fun rackPlacements(mount: AircraftMountView): List<AircraftStoreAttachment.Placement> =
+        rackLayout[mount.id]?.placements ?: emptyList()
+    fun rackPlacements(mount: AircraftMountView, speed: Double): List<AircraftStoreAttachment.Placement> {
+        val neutral = rackPlacements(mount)
+        val offsets = sweepOffsets(mount, speed) ?: return neutral
+        return neutral.mapIndexed { index, placement -> placement.translated(offsets[index % offsets.size]) }
+    }
+    /** Generated rack adapters drawn with the selected rack store (at most one per physical position). */
+    fun rackAdapters(mount: AircraftMountView, speed: Double): List<AircraftStoreAttachment.AdapterPlacement> {
+        val neutral = rackLayout[mount.id]?.adapters ?: emptyList()
+        val offsets = sweepOffsets(mount, speed) ?: return neutral
+        return neutral.map { it.translated(offsets[it.position]) }
     }
     /** Launches alternate across the mount's physical positions. Pods stay after firing. */
     fun storePresent(mount: AircraftMountView, position: Int): Boolean {
@@ -176,7 +197,7 @@ data class AircraftArmamentSnapshot(
                     vector(pair.get("Left"), 4096.0), vector(pair.get("Right"), 4096.0),
                     allowed, groups, optionalInteger(pair, "MaxWeaponsPerPylon", 12),
                     number(pair, "MaxPylonMassKg", number(raw, "MaxPylonMassKg", Double.POSITIVE_INFINITY, 0.1, 100000.0), 0.1, 100000.0),
-                    AircraftMountSweep.decode(pair,2))
+                    AircraftMountSweep.decode(pair,2), stations(pair))
             }.also { require(it.map(AircraftPairView::id).distinct().size == it.size) }
             val singles = array(raw, "Singles", 16).map { element ->
                 val mount = element.asJsonObject
@@ -190,7 +211,7 @@ data class AircraftArmamentSnapshot(
                     number(mount, "MaxPylonMassKg", number(raw, "MaxPylonMassKg", Double.POSITIVE_INFINITY, 0.1, 100000.0), 0.1, 100000.0),
                     mount["Internal"]?.asBoolean == true,
                     mount["QuantitySelectable"]?.asBoolean ?: (mount["Internal"]?.asBoolean == true),
-                    AircraftMountSweep.decode(mount,1))
+                    AircraftMountSweep.decode(mount,1), stations(mount))
             }
             require(pairs.size + singles.size <= 16)
             require((pairs.map { it.id } + singles.map { it.id }).distinct().size == pairs.size + singles.size)
@@ -213,6 +234,7 @@ data class AircraftArmamentSnapshot(
                 resource(id)
                 val store = value.asJsonObject
                 require(integer(store, "Schema", 1, 1) == 1)
+                AircraftStoreAttachment.validateStore(store)
                 val category = string(store, "Category", 32).also { require(it in categories) }
                 id to AircraftStoreView(id, string(store, "Name", 96), category,
                     optionalResource(store, "Item"), optionalResource(store, "Model"),
@@ -230,7 +252,11 @@ data class AircraftArmamentSnapshot(
                     } ?: AircraftStoreModelForward.DEFAULT,
                     store[AircraftStoreMountAnchor.KEY]?.let {
                         vector(it, AircraftStoreMountAnchor.MAX_LENGTH_BLOCKS)
-                    } ?: Vec3.ZERO)
+                    } ?: Vec3.ZERO,
+                    AircraftStoreAttachment.anchors(store).also {
+                        require(it.scale in 0.001..64.0 && it.launchOffset.length() <= 8.0)
+                    },
+                    AircraftStoreAttachment.adapter(store))
             }
             val selections = selections(json.getAsJsonObject("Selections"), definition)
             val rawCounts = json.getAsJsonObject("Counts") ?: JsonObject()
@@ -264,6 +290,12 @@ data class AircraftArmamentSnapshot(
                 json.get("SeekStatus")?.let { integer(json, "SeekStatus", -1, 2) } ?: 0,
                 json.getAsJsonObject("Seek")?.let(::decodeSeek), Collections.unmodifiableMap(counts))
         } catch (_: RuntimeException) { null }
+
+        /** Station lists per position; the definition already passed the registry's validation. */
+        private fun stations(mount: JsonObject): List<List<AircraftStoreAttachment.Station>> {
+            AircraftStoreAttachment.validateMount(mount)
+            return AircraftStoreAttachment.stations(mount).map { Collections.unmodifiableList(it) }
+        }
 
         private fun optionalInteger(json: JsonObject, key: String, default: Int): Int =
             if (json.has(key)) integer(json, key, 1, AircraftPylonRacks.MAX_COPIES) else default

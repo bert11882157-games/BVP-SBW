@@ -9,6 +9,23 @@
     0.1055,
     -0.1624
   ],
+  "SideMountAnchors": {
+    "Left": [
+      -0.1055,
+      0.0,
+      -0.1624
+    ],
+    "Right": [
+      0.1055,
+      0.0,
+      -0.1624
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    -0.1624
+  ],
   "Texture": "berts_vehicle_pack:textures/aircraft_stores/falanga.png",
   "Capacity": 1,
   "MassKg": 31.5,
@@ -18,9 +35,9 @@
   "ProjectileProfile": "berts_vehicle_pack:aircraft_stores/falanga_9m17m",
   "LaunchGunProfile": "berts_vehicle_pack:aircraft_stores/falanga_9m17m",
   "LaunchOffset": [
-    0,
+    0.0,
     -0.1055,
-    -0.4176
+    0.0
   ],
   "AmmoItem": "superbwarfare:large_atgm"
 }

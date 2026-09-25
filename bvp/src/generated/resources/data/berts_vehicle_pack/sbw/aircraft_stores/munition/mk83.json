@@ -9,6 +9,23 @@
     0.0,
     0.0
   ],
+  "SideMountAnchors": {
+    "Left": [
+      0.2581,
+      -0.329,
+      0.0
+    ],
+    "Right": [
+      -0.2581,
+      -0.329,
+      0.0
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    -0.329,
+    0.0
+  ],
   "Texture": "berts_vehicle_pack:textures/aircraft_stores/mk83.png",
   "Capacity": 1,
   "MassKg": 454,
@@ -24,8 +41,8 @@
   "AmmoItem": "superbwarfare:medium_freefall_bomb",
   "ProjectileProfile": "berts_vehicle_pack:aircraft_bombs/mk83",
   "LaunchOffset": [
-    0,
     0.0,
+    -0.329,
     0.0
   ]
 }

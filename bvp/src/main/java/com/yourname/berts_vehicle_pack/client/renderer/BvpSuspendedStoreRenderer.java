@@ -7,6 +7,7 @@ import com.atsuishio.superbwarfare.client.aircraft.AircraftMountView;
 import com.atsuishio.superbwarfare.client.aircraft.AircraftStoreView;
 import com.atsuishio.superbwarfare.client.aircraft.AircraftStoreItemRenderer;
 import com.atsuishio.superbwarfare.client.aircraft.AircraftMountPresentation;
+import com.atsuishio.superbwarfare.api.aircraft.AircraftStoreAttachment;
 import com.atsuishio.superbwarfare.entity.vehicle.base.GeoVehicleEntity;
 import com.atsuishio.superbwarfare.api.vehicle.flight.AircraftWreckBreakup;
 import com.atsuishio.superbwarfare.client.renderer.AircraftDetachedWings;
@@ -37,7 +38,8 @@ final class BvpSuspendedStoreRenderer {
     private final Map<String, Map<String, int[]>> groups = new HashMap<>();
     private final Map<String, StoreAsset> modelBindings = new HashMap<>();
     private boolean applied;
-    private record CapturedStore(Vec3 point, AircraftStoreView store, StoreAsset asset) {}
+    private record CapturedStore(Vec3 point, Vec3 anchor, AircraftStoreView store, StoreAsset asset) {}
+    private record CapturedAdapter(Vec3 point, AircraftStoreAttachment.RackAdapter adapter, StoreAsset asset) {}
 
     private static boolean onWing(GeoVehicleEntity entity, Vec3 point, int side) {
         String id = side == 1 ? "superbwarfare:wing_left" : "superbwarfare:wing_right";
@@ -66,31 +68,51 @@ final class BvpSuspendedStoreRenderer {
         return modelBindings.get(store.getId());
     }
 
+    /** Generated rack adapters share the bounded asset table with authored stores. */
+    private static StoreAsset adapterAsset(AircraftStoreAttachment.RackAdapter adapter) {
+        String key = adapter.getModel() + "|" + adapter.getTexture();
+        StoreAsset candidate = ASSETS.get(key);
+        if (candidate == null && ASSETS.size() < MAX_EXTERNAL_MODELS) {
+            candidate = new StoreAsset(adapter.getModel(), adapter.getTexture());
+            ASSETS.put(key, candidate);
+        }
+        return candidate;
+    }
+
     /** Freeze loaded stores at separation; later firing or loadout edits cannot change debris. */
     AircraftDetachedWings.Visual captureWing(GeoVehicleEntity entity, int side, int light, float partialTick) {
         AircraftArmamentSnapshot state = AircraftArmamentClient.getVehicleSnapshot(entity);
         if (state == null) return null;
         var captured = new ArrayList<CapturedStore>();
+        var adapters = new ArrayList<CapturedAdapter>();
         for (AircraftMountView pair : state.getDefinition().getMounts()) {
             if (pair.getInternal()) continue;
             String selected = state.getSelections().get(pair.getId());
             AircraftStoreView store = state.getStores().get(selected);
             if (store == null || pair.getGroups().containsKey(selected)) continue;
-            var positions = state.rackPositions(pair, AircraftMountPresentation.speed(entity, partialTick));
-            for (int index = 0; index < positions.size(); index++) {
-                Vec3 point = positions.get(index);
-                if (state.storePresent(pair, index) && onWing(entity, point, side))
-                    captured.add(new CapturedStore(point, store, asset(store)));
+            double speed = AircraftMountPresentation.speed(entity, partialTick);
+            var placements = state.rackPlacements(pair, speed);
+            for (int index = 0; index < placements.size(); index++) {
+                var placement = placements.get(index);
+                if (state.storePresent(pair, index) && onWing(entity, placement.getPoint(), side))
+                    captured.add(new CapturedStore(placement.getPoint(), placement.getAnchor(), store, asset(store)));
+            }
+            for (var adapter : state.rackAdapters(pair, speed)) {
+                if (onWing(entity, adapter.getPoint(), side))
+                    adapters.add(new CapturedAdapter(adapter.getPoint(), adapter.getAdapter(), adapterAsset(adapter.getAdapter())));
             }
         }
-        if (captured.isEmpty()) return null;
+        if (captured.isEmpty() && adapters.isEmpty()) return null;
         var frozen = List.copyOf(captured);
+        var frozenAdapters = List.copyOf(adapters);
         return (pose, buffers, impacted) -> {
             for (CapturedStore store : frozen) {
                 PolyMeshModel mesh = store.asset == null ? null : store.asset.ready();
                 if (mesh != null || (store.store.getModel() == null && store.store.getItem() != null))
-                    mount(store.point, store.store, store.asset, mesh, pose, buffers, light, 1f);
+                    mount(store.point, store.anchor, store.store, store.asset, mesh, pose, buffers, light, 1f);
             }
+            for (CapturedAdapter adapter : frozenAdapters) mountAdapter(adapter.point, adapter.adapter, adapter.asset,
+                    pose, buffers, light, 1f);
         };
     }
 
@@ -175,19 +197,45 @@ final class BvpSuspendedStoreRenderer {
             StoreAsset asset = asset(store);
             PolyMeshModel mesh = asset == null ? null : asset.ready();
             if (mesh == null && (store.getModel() != null || store.getItem() == null)) continue;
-            var positions = state.rackPositions(pair, AircraftMountPresentation.speed(entity, partialTick));
+            double speed = AircraftMountPresentation.speed(entity, partialTick);
+            var placements = state.rackPlacements(pair, speed);
             int missing = AircraftWreckBreakup.mask(entity);
-            for (int index = 0; index < positions.size(); index++) {
-                Vec3 point = positions.get(index);
+            for (int index = 0; index < placements.size(); index++) {
+                var placement = placements.get(index);
+                Vec3 point = placement.getPoint();
                 boolean detached = ((missing & 1) != 0 && onWing(entity, point, 1)) ||
                         ((missing & 2) != 0 && onWing(entity, point, 2));
                 if (!detached && state.storePresent(pair, index))
-                    mount(positions.get(index), store, asset, mesh, pose, buffers, light, alpha);
+                    mount(point, placement.getAnchor(), store, asset, mesh, pose, buffers, light, alpha);
+            }
+            // A generated rack stays on its pylon until the pylon itself is lost.
+            for (var adapter : state.rackAdapters(pair, speed)) {
+                Vec3 point = adapter.getPoint();
+                boolean detached = ((missing & 1) != 0 && onWing(entity, point, 1)) ||
+                        ((missing & 2) != 0 && onWing(entity, point, 2));
+                if (!detached) mountAdapter(point, adapter.getAdapter(), adapterAsset(adapter.getAdapter()),
+                        pose, buffers, light, alpha);
             }
         }
     }
 
-    private static void mount(Vec3 point, AircraftStoreView store, StoreAsset asset, PolyMeshModel mesh,
+    private static void mountAdapter(Vec3 point, AircraftStoreAttachment.RackAdapter adapter, StoreAsset asset,
+                                     PoseStack pose, MultiBufferSource buffers, int light, float alpha) {
+        PolyMeshModel mesh = asset == null ? null : asset.ready();
+        if (mesh == null) return;
+        pose.m_85836_();
+        try {
+            // Same frame as a nose-at--Z store at scale 1: its top anchor sits on the pylon station.
+            pose.m_85837_(-point.f_82479_, point.f_82480_, -point.f_82481_);
+            Vec3 anchor = adapter.getAnchor();
+            pose.m_85837_(-anchor.f_82479_, -anchor.f_82480_, -anchor.f_82481_);
+            mesh.renderCutoutOnly(pose, buffers, asset.texture, light, alpha);
+            mesh.renderTranslucentOnly(pose, buffers, asset.texture, light, alpha);
+        } finally { pose.m_85849_(); }
+    }
+
+    /** Draws the store with its model point {@code anchor} (MountAnchor frame) on hull point {@code point}. */
+    private static void mount(Vec3 point, Vec3 anchor, AircraftStoreView store, StoreAsset asset, PolyMeshModel mesh,
                               PoseStack pose, MultiBufferSource buffers, int light, float alpha) {
         pose.m_85836_();
         try {
@@ -198,8 +246,7 @@ final class BvpSuspendedStoreRenderer {
             if (mountYaw != 0.0F) pose.m_252781_(Axis.f_252436_.m_252977_(mountYaw));
             float scale = (float) store.getScale();
             pose.m_85841_(scale, scale, scale);
-            // Hang the store from its authored body-top anchor rather than its model origin.
-            Vec3 anchor = store.getMountAnchor();
+            // Hang the store from the anchor its station uses (top, or a side) rather than its model origin.
             pose.m_85837_(-anchor.f_82479_, -anchor.f_82480_, -anchor.f_82481_);
             if (mesh != null) {
                 mesh.renderCutoutOnly(pose, buffers, asset.texture, light, alpha);

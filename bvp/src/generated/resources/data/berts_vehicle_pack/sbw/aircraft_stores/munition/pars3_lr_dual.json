@@ -9,6 +9,23 @@
     0.0849,
     -0.2282
   ],
+  "SideMountAnchors": {
+    "Left": [
+      -0.0849,
+      0.0,
+      -0.2282
+    ],
+    "Right": [
+      0.0849,
+      0.0,
+      -0.2282
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    -0.2282
+  ],
   "Texture": "berts_vehicle_pack:textures/aircraft_stores/pars3.png",
   "Capacity": 1,
   "MassKg": 49,
@@ -40,8 +57,8 @@
     0
   ],
   "LaunchOffset": [
-    0,
+    0.0,
     -0.0849,
-    -0.5868
+    0.0
   ]
 }

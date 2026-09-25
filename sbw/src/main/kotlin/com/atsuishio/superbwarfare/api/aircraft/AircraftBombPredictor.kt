@@ -12,7 +12,7 @@ import org.joml.Vector3d
 object AircraftBombPredictor {
     /** Match the server's copy-aware rack slot for the next accepted bomb release. */
     internal fun nextLaunchPosition(mount: JsonObject, store: JsonObject,
-                                    totalCapacity: Int, remaining: Int): Vec3? {
+                                    totalCapacity: Int, remaining: Int, storeId: String? = null): Vec3? {
         val perRack = AircraftArmamentRegistry.mountCapacity(mount, store["Capacity"]?.asInt ?: 1)
         if (totalCapacity <= 0 || totalCapacity % perRack != 0) return null
         val copies = totalCapacity / perRack
@@ -22,8 +22,7 @@ object AircraftBombPredictor {
         // An invalid interval has no advisory impact point; it is never reindexed.
         if (remaining !in 1..totalCapacity) return null
         val fired = totalCapacity - remaining
-        val offset = AircraftArmamentRegistry.vector(store["LaunchOffset"]) ?: Vec3.ZERO
-        return AircraftPylonRacks.launchPosition(mount, store, copies, fired).add(offset)
+        return AircraftPylonRacks.launchPoint(mount, store, copies, fired, storeId)
     }
 
     @JvmStatic fun predictImpact(vehicle: VehicleEntity, weaponId: String): Vec3? {
@@ -36,7 +35,8 @@ object AircraftBombPredictor {
         val totalCapacity = AircraftArmamentManager.mountCapacity(vehicle, key)
         val remaining = AircraftArmamentManager.mountRemaining(vehicle, key)
         if (remaining <= 0) return null
-        val neutral = nextLaunchPosition(mount, store, totalCapacity, remaining) ?: return null
+        val neutral = nextLaunchPosition(mount, store, totalCapacity, remaining,
+            AircraftArmamentManager.equippedStoreId(vehicle, key)) ?: return null
         val local = AircraftMountSweep.position(mount,
             (totalCapacity - remaining) % AircraftArmamentRegistry.mountPositions(mount).size,
             neutral, vehicle.getVehicleFlightPresentationSnapshot(1f).motion.length())

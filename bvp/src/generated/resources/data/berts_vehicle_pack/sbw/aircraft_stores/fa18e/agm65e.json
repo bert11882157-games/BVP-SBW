@@ -9,15 +9,32 @@
     0.0,
     0.546
   ],
+  "SideMountAnchors": {
+    "Left": [
+      0.2108,
+      -0.2108,
+      0.546
+    ],
+    "Right": [
+      -0.2108,
+      -0.2108,
+      0.546
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    -0.2108,
+    0.546
+  ],
   "Texture": "berts_vehicle_pack:textures/aircraft_stores/kh29l.png",
   "Capacity": 1,
   "Scale": 0.8,
   "ProjectileProfile": "berts_vehicle_pack:aircraft_stores/agm65e",
   "LaunchGunProfile": "berts_vehicle_pack:aircraft_stores/agm65e",
   "LaunchOffset": [
-    0,
-    -0.2108,
-    0.4368
+    0.0,
+    -0.1686,
+    0.0
   ],
   "MassKg": 300,
   "AmmoItem": "superbwarfare:medium_air_to_ground_missile"

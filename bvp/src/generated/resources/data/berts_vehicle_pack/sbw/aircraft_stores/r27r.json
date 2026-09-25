@@ -9,6 +9,23 @@
     0.1493,
     -0.5712
   ],
+  "SideMountAnchors": {
+    "Left": [
+      -0.1493,
+      0.0,
+      -0.5712
+    ],
+    "Right": [
+      0.1493,
+      0.0,
+      -0.5712
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    -0.5712
+  ],
   "Texture": "berts_vehicle_pack:textures/aircraft_stores/r27.png",
   "Capacity": 1,
   "MassKg": 253,
@@ -31,8 +48,8 @@
   "AmmoItem": "superbwarfare:medium_air_to_air_missile",
   "MaxPerPylon": 1,
   "LaunchOffset": [
-    0,
+    0.0,
     -0.1493,
-    0.5712
+    0.0
   ]
 }

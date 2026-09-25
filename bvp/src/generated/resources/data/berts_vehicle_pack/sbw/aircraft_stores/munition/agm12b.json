@@ -9,6 +9,23 @@
     0.1534,
     -0.448
   ],
+  "SideMountAnchors": {
+    "Left": [
+      -0.1534,
+      0.0,
+      -0.448
+    ],
+    "Right": [
+      0.1534,
+      0.0,
+      -0.448
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    -0.448
+  ],
   "Texture": "berts_vehicle_pack:textures/aircraft_stores/agm12b.png",
   "Capacity": 1,
   "MassKg": 259,
@@ -18,9 +35,9 @@
   "ProjectileProfile": "berts_vehicle_pack:aircraft_stores/agm12b",
   "LaunchGunProfile": "berts_vehicle_pack:aircraft_stores/agm12b",
   "LaunchOffset": [
-    0,
+    0.0,
     -0.1534,
-    -1.152
+    0.0
   ],
   "AmmoItem": "superbwarfare:medium_air_to_ground_missile"
 }

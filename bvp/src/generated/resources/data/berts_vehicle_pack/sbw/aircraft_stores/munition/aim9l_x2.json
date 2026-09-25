@@ -9,6 +9,23 @@
     0.0673,
     -0.4018
   ],
+  "SideMountAnchors": {
+    "Left": [
+      -0.0673,
+      0.0,
+      -0.4018
+    ],
+    "Right": [
+      0.0673,
+      0.0,
+      -0.4018
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    -0.4018
+  ],
   "Texture": "berts_vehicle_pack:textures/aircraft_stores/aim9l.png",
   "Capacity": 1,
   "MassKg": 84.5,
@@ -31,9 +48,9 @@
   "AmmoItem": "superbwarfare:small_air_to_air_missile",
   "MaxPerPylon": 2,
   "LaunchOffset": [
-    0,
+    0.0,
     -0.0673,
-    -1.0332
+    0.0
   ],
   "FixedRackCount": 2,
   "RackSpacing": [

@@ -9,6 +9,23 @@
     0.25,
     -0.56
   ],
+  "SideMountAnchors": {
+    "Left": [
+      -0.25,
+      0.0,
+      -0.56
+    ],
+    "Right": [
+      0.25,
+      0.0,
+      -0.56
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    -0.56
+  ],
   "Texture": "berts_vehicle_pack:textures/aircraft_stores/aim54.png",
   "Capacity": 1,
   "MassKg": 446.6,
@@ -31,8 +48,8 @@
   "AmmoItem": "superbwarfare:large_air_to_air_missile",
   "MaxPerPylon": 1,
   "LaunchOffset": [
-    0,
+    0.0,
     -0.25,
-    -1.44
+    0.0
   ]
 }

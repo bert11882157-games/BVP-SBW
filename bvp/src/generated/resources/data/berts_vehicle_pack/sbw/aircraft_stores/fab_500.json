@@ -9,6 +9,23 @@
     0.0851,
     0.3988
   ],
+  "SideMountAnchors": {
+    "Left": [
+      -0.1711,
+      -0.1168,
+      0.3988
+    ],
+    "Right": [
+      0.1711,
+      -0.1168,
+      0.3988
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    -0.1168,
+    0.3988
+  ],
   "Texture": "berts_vehicle_pack:textures/aircraft_stores/fab_500.png",
   "Scale": 1,
   "Capacity": 1,
@@ -26,8 +43,8 @@
   "AmmoItem": "superbwarfare:medium_freefall_bomb",
   "MaxPerPylon": 1,
   "LaunchOffset": [
-    0,
-    -0.0851,
-    -0.3988
+    0.0,
+    -0.2019,
+    0.0
   ]
 }

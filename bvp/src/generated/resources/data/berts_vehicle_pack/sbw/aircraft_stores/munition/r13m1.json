@@ -5,9 +5,26 @@
   "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/r13m1.geo.json",
   "ModelForward": "-Z",
   "MountAnchor": [
-    0,
+    -0.0003,
     0.0,
-    0.3962
+    0.0
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.0668,
+      -0.0851,
+      0.0
+    ],
+    "Right": [
+      -0.0675,
+      -0.0851,
+      0.0
+    ]
+  },
+  "MountAxis": [
+    -0.0003,
+    -0.0851,
+    0.0
   ],
   "Texture": "berts_vehicle_pack:textures/aircraft_stores/r13m1.png",
   "Capacity": 1,
@@ -30,8 +47,8 @@
   },
   "AmmoItem": "superbwarfare:small_air_to_air_missile",
   "LaunchOffset": [
-    0,
     0.0,
-    0.3962
+    -0.0851,
+    0.0
   ]
 }

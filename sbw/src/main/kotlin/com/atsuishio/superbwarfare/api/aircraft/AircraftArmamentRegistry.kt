@@ -216,6 +216,7 @@ object AircraftArmamentRegistry {
             }
             json["Scale"]?.let { require(it.asDouble.isFinite() && it.asDouble in 0.001..32.0) }
             AircraftStoreMountAnchor.validate(json)
+            AircraftStoreAttachment.validateStore(json)
             json[AircraftStoreModelForward.KEY]?.let {
                 require(json.has("Model") && it.isJsonPrimitive && it.asJsonPrimitive.isString &&
                     it.asString in AircraftStoreModelForward.values) { "ModelForward must be -Z or +Z for a modeled store" }
@@ -244,6 +245,7 @@ object AircraftArmamentRegistry {
             require(pair["Name"]?.asString?.isNotBlank() == true && pair["Name"].asString.length <= 64)
             mountPositions(pair)
             AircraftMountSweep.decode(pair, mountPositions(pair).size)
+            AircraftStoreAttachment.validateMount(pair)
             pair["Internal"]?.let {
                 require(it.isJsonPrimitive && it.asJsonPrimitive.isBoolean && pair.has("Position"))
                 if (it.asBoolean) require(pair["MaxPylonMassKg"]?.asDouble?.isFinite() == true)

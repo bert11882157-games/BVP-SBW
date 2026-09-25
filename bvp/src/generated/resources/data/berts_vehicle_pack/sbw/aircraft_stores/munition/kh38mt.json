@@ -9,6 +9,23 @@
     0.0349,
     0.5735
   ],
+  "SideMountAnchors": {
+    "Left": [
+      0.2324,
+      -0.1975,
+      0.5735
+    ],
+    "Right": [
+      -0.2324,
+      -0.1975,
+      0.5735
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    -0.1975,
+    0.5735
+  ],
   "Texture": "berts_vehicle_pack:textures/aircraft_stores/kh38.png",
   "Capacity": 1,
   "MassKg": 520,
@@ -30,8 +47,8 @@
   },
   "AmmoItem": "superbwarfare:large_air_to_ground_missile",
   "LaunchOffset": [
-    0,
-    -0.0349,
-    0.5735
+    0.0,
+    -0.2324,
+    0.0
   ]
 }

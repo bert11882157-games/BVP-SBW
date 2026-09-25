@@ -9,13 +9,30 @@
     0.0,
     0.308
   ],
+  "SideMountAnchors": {
+    "Left": [
+      0.05,
+      -0.05,
+      0.308
+    ],
+    "Right": [
+      -0.05,
+      -0.05,
+      0.308
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    -0.05,
+    0.308
+  ],
   "Texture": "berts_vehicle_pack:textures/aircraft_stores/r60.png",
   "Capacity": 1,
   "Scale": 1,
   "LaunchOffset": [
-    0,
+    0.0,
     -0.05,
-    0.308
+    0.0
   ],
   "Guidance": {
     "Mode": "INFRARED",
