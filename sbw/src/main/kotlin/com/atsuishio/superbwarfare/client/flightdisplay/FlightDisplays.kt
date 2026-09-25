@@ -60,8 +60,8 @@ object FlightDisplays {
     private var tickLogged = false
 
     /** Redraw the live display for the aircraft the local player rides, before the world uses it this frame. */
+    // No @JvmStatic: Kotlin-for-Forge registers this object instance, which only sees instance methods.
     @SubscribeEvent
-    @JvmStatic
     fun onRenderTick(event: TickEvent.RenderTickEvent) {
         if (event.phase != TickEvent.Phase.START || failed) return
         if (!tickLogged) { tickLogged = true; LOGGER.info("Flight displays: render tick hook active") }
