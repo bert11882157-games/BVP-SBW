@@ -278,7 +278,7 @@ public final class BvpHitRegistrationScenario {
             if (args[2].startsWith("turret_")) {
                 Vec turretPoint = args[2].equals("turret_front")
                         ? profile.eraBoxes.stream().filter(b -> b.isTurretFrame()
-                                && b.name.equals("newera_76")).findFirst().orElseThrow().center
+                                && b.name.equals("newera_76")).findFirst().orElseThrow().centroid()
                         : new Vec(0.35425D, 2.07241D, 1.6D);
                 Vec pivot = coordinates.turretPivot();
                 Vec hullPoint = pivot.add(turretPoint.subtract(pivot).rotateY(coordinates.turretFrameYaw()));
@@ -291,16 +291,16 @@ public final class BvpHitRegistrationScenario {
             } else {
             // Side is vehicle-local +X left / -X right, independent of profile mirroring or labels.
             var box = profile.trackBoxes.stream().filter(b ->
-                    (coordinates.armorLocalPointToVehicleLocal(b.center).x > 0) != right)
-                    .min(Comparator.comparingDouble(b -> Math.abs(coordinates.armorLocalPointToVehicleLocal(b.center).z)))
+                    (coordinates.armorLocalPointToVehicleLocal(b.centroid()).x > 0) != right)
+                    .min(Comparator.comparingDouble(b -> Math.abs(coordinates.armorLocalPointToVehicleLocal(b.centroid()).z)))
                     .orElseThrow(() -> new IllegalStateException("No authored track for requested side"));
-            aim = coordinates.armorLocalPointToWorld(box.center);
+            aim = coordinates.armorLocalPointToWorld(box.centroid());
             boxName = box.name;
             if (args[2].equals("hull")) {
                 var plate = profile.plates.stream().filter(b -> !b.isTurretFrame() && !b.isBarrelFrame())
-                        .min(Comparator.comparingDouble(b -> Math.abs(coordinates.armorLocalPointToVehicleLocal(b.center).z)))
+                        .min(Comparator.comparingDouble(b -> Math.abs(coordinates.armorLocalPointToVehicleLocal(b.centroid()).z)))
                         .orElseThrow();
-                aim = coordinates.armorLocalPointToWorld(plate.center);
+                aim = coordinates.armorLocalPointToWorld(plate.centroid());
                 boxName = plate.name;
             }
             }

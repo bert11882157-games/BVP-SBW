@@ -12,7 +12,8 @@ final class ArmorPenetrationService {
     static Result evaluate(ArmorTarget target, ArmorHit armorHit, ShotTrace trace, ProjectileArmorEffect shot) {
         ArmorBox plate = armorHit.plate;
         Vec localShotDirection = ArmorHitResolver.directionToBoxFrame(target, plate, trace.hullShotDirection).normalize();
-        Vec plateNormal = plate.normalAt(armorHit.localImpact);
+        // The entered face's normal: the true triangle normal for a mesh volume.
+        Vec plateNormal = armorHit.frameNormal();
         double rawImpactCosine = Math.abs(localShotDirection.dot(plateNormal));
         double impactCosine = Math.max(0.05D, rawImpactCosine);
         double effectiveArmorMm = plate.armorMm / impactCosine;

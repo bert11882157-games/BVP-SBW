@@ -77,9 +77,11 @@ public final class BvpDroneRpgScenario {
                 String plateId=index==0?"leo2a6_85mm_armor_26":"leo2a6_1000mm_armor_00";
                 var plate=ArmorProfiles.get("leo2a6").plates.stream().filter(p->p.name.equals(plateId)).findFirst().orElseThrow();
                 var coordinates=ArmorTargetAdapters.resolve(armored);
-                var localNormal=index==0?new ArmorProfiles.Vec(-1,0,0):new ArmorProfiles.Vec(0,0,-1).rotateX(plate.rotationDeg.x);
-                aim=coordinates.armorLocalPointToWorld(plate.center);
-                normal=coordinates.armorLocalPointToWorld(plate.center.add(localNormal)).subtract(aim).normalize();
+                var hint=index==0?new ArmorProfiles.Vec(-1,0,0):new ArmorProfiles.Vec(0,0,-1);
+                var face=plate.volume.dominantFaceNormal(hint);
+                var localNormal=face==null?hint:face;
+                aim=coordinates.armorLocalPointToWorld(plate.centroid());
+                normal=coordinates.armorLocalPointToWorld(plate.centroid().add(localNormal)).subtract(aim).normalize();
                 record("PLATE","case",caseId,"plate",plateId,"aim",aim);
             }else{
                 aim=targetPosition.add(0,1.3,0);normal=new Vec3(1,0,0);

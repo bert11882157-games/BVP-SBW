@@ -46,7 +46,7 @@ final class ArmorRicochetService {
         }
         Vec localDirection = ArmorHitResolver.directionToBoxFrame(
                 target, armorHit.plate, trace.hullShotDirection).normalize();
-        Vec normal = armorHit.plate.normalAt(armorHit.localImpact).normalize();
+        Vec normal = armorHit.frameNormal().normalize();
         if (!finite(localDirection) || !finite(normal)
                 || localDirection.length() < EPSILON || normal.length() < EPSILON) {
             return Decision.NONE;
@@ -83,12 +83,11 @@ final class ArmorRicochetService {
                 || !finite(armorHit.localImpact)) {
             return false;
         }
-        Vec localNormal = armorHit.plate.normalAt(armorHit.localImpact).normalize();
-        if (armorHit.plate.isBarrelFrame()) {
-            ArmorCoordinateFrame.BarrelFrame frame = target.barrelFrame();
-            if (frame == null) return false;
-            localNormal = frame.toHullDirection(localNormal);
-        }
+        // Frame-local normal (turret volumes are authored at the rest pose) back into hull
+        // coordinates: barrel volumes through the barrel frame, turret volumes by the turret yaw.
+        Vec localNormal = ArmorHitResolver.normalToHullFrame(target, armorHit.plate,
+                armorHit.frameNormal().normalize());
+        if (localNormal == null) return false;
         Vec3 origin = target.armorLocalPointToWorld(ArmorProfiles.Vec.ZERO);
         Vec3 tip = target.armorLocalPointToWorld(localNormal);
         Vec3 normal = tip.m_82546_(origin);

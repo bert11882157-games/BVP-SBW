@@ -6,7 +6,6 @@ import com.atsuishio.superbwarfare.api.projectile.impact.ProjectileImpactResult;
 import com.atsuishio.superbwarfare.diagnostics.EliteDiagnostics;
 import com.atsuishio.superbwarfare.tools.OBB;
 import com.atsuishio.superbwarfare.world.phys.ProjectileHitSelection;
-import com.yourname.berts_vehicle_pack.armor.ArmorHitResolver.RaySnap;
 import com.yourname.berts_vehicle_pack.armor.ArmorHitResolver.ShotTrace;
 import com.yourname.berts_vehicle_pack.armor.ArmorImpactStats.Outcome;
 import com.yourname.berts_vehicle_pack.armor.ArmorModuleResolver.InternalModuleHits;
@@ -23,13 +22,10 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
 
 final class ArmorImpactService {
     private static final double LIGHT_ARMOR_NON_PENETRATION_DAMAGE_FRACTION = 0.02D;
-    /** Strict profiles resolve a plate-free contact against a plate at most this far from the shot ray. */
-    static final double NEAREST_PLATE_MAX_GAP_BLOCKS = 1.5D;
     private static final double CREW_CONTACT_BACKTRACE_BLOCKS = 1.0D;
     private static final double CREW_CONTACT_FORWARD_BLOCKS = 8.0D;
 
@@ -114,19 +110,15 @@ final class ArmorImpactService {
                     volumes, trace);
         }
         return resolvePlateHit(owner, target, targetProfile, projectile, shot, damageSource, hitVec,
-                volumes, trace, armorHit, armorHit);
+                volumes, trace, armorHit);
     }
 
-    /**
-     * Resolves ricochet, penetration and internal damage against one plate. {@code internalOrigin}
-     * is the contact internal module rays start from; null starts them at the accepted contact.
-     */
+    /** Resolves ricochet, penetration and internal damage against the plate on the shell ray. */
     private static ProjectileImpactResult resolvePlateHit(Entity owner, ArmorTarget target,
                                                           ArmorProfile targetProfile, Projectile projectile,
                                                           ProjectileArmorEffect shot, DamageSource damageSource,
                                                           Vec3 hitVec, BvpImpactVolumeQuery volumes,
-                                                          ShotTrace trace, ArmorHit armorHit,
-                                                          ArmorHit internalOrigin) {
+                                                          ShotTrace trace, ArmorHit armorHit) {
         Level level = target.level();
         ArmorBox plate = armorHit.plate;
         target.vehicle().markArmorPlateHit(plate.name);
@@ -176,7 +168,7 @@ final class ArmorImpactService {
                     null, shot, replacementVisual);
         }
 
-        InternalModuleHits internalHits = volumes.internalHits(trace, internalOrigin);
+        InternalModuleHits internalHits = volumes.internalHits(trace, armorHit);
         ArmorBox engineBox = internalHits.engineBox();
         ArmorBox ammoRack = internalHits.ammoRackBox();
         ArmorModuleDamageService.InternalModuleDamageResult moduleDamage =
@@ -262,84 +254,20 @@ final class ArmorImpactService {
         if (targetProfile.unboxedHitsPenetrate) {
             return resolveUnboxedHit(owner, target, targetProfile, shot, damageSource, hitVec, volumes, trace);
         }
-        // The projectile is already inside a vehicle OBB. Strict profiles must never turn that
-        // accepted contact into a silent miss: resolve it against the plate the shell passed
-        // closest to, or as an unboxed hull hit when no plate is near the ray at all.
-        RaySnap snap = volumes.nearestPlateToRay(trace, NEAREST_PLATE_MAX_GAP_BLOCKS);
-        RunningGearHit runningGear = damageRunningGear(target, targetProfile, shot, trace, snap, hitVec);
-        ProjectileImpactResult result;
-        if (snap != null) {
-            ArmorImpactStats.record(Outcome.FALLBACK_NEAREST_PLATE);
-            if (EliteDiagnostics.isEnabled(target.level())) {
-                ArmorImpactReporter.logArmorEvent(owner, target, hitVec, String.format(Locale.ROOT,
-                        "[BVP Armor] No plate on the shell ray; resolved against nearest plate %s (%s frame, %.2f blocks from the ray).",
-                        snap.hit().plate.name, snap.hit().plate.frame, snap.gap()));
-            }
-            result = resolvePlateHit(owner, target, targetProfile, projectile, shot, damageSource, hitVec,
-                    volumes, trace, snap.hit(), null);
-        } else {
-            if (EliteDiagnostics.isEnabled(target.level())) {
-                ArmorHitResolver.NearBox nearest = volumes.nearestArmorToImpact(trace);
-                ArmorImpactReporter.logArmorEvent(owner, target, hitVec, String.format(Locale.ROOT,
-                        "[BVP Armor] No plate within %.1f blocks of the shell ray; resolved as unboxed hull. Nearest armor: %s",
-                        NEAREST_PLATE_MAX_GAP_BLOCKS,
-                        nearest == null ? "none" : String.format(Locale.ROOT, "%s dist %.2f",
-                                nearest.box().name, nearest.distance())));
-            }
-            result = resolveUnboxedHit(owner, target, targetProfile, shot, damageSource, hitVec, volumes, trace);
+        // Strict profile, no plate on the shell ray: "Shot missed!" non-penetration. The coarse
+        // vehicle OBB accepted the contact, but the authored armor does not cover it; resolving it
+        // against another plate would invent armor and an impact angle the shell never met. The
+        // always-on log line below records where the armor has a gap.
+        if (!BvpMaterialImpactSounds.hasPresentation(damageSource.getDirectEntity())) {
+            ArmorSoundService.play(target.level(), hitVec, ArmorSoundService.METAL_HIT_SOUND, 1.0F, 0.75F);
         }
-        if (runningGear != null
-                && result.getPresentationOutcome() != ProjectileImpactPresentationOutcome.PENETRATION
-                && result.getPresentationOutcome() != ProjectileImpactPresentationOutcome.RICOCHET) {
-            // The hull held, but the running gear did not: show the track damage to the shooter.
-            ArmorImpactReporter.reportRunningGearHit(owner, target, hitVec, runningGear.side(),
-                    runningGear.broken(), runningGear.newlyBroken(), shot);
-        }
-        return result;
-    }
-
-    /**
-     * Damages the struck track side when the contact lies below the armor on a vehicle with track
-     * modules. The armor floor is the nearest hull plate's lowest point, or the lowest hull plate
-     * when no plate is near the ray; contacts beside turret plates are never running gear.
-     */
-    private static RunningGearHit damageRunningGear(ArmorTarget target, ArmorProfile profile,
-                                                    ProjectileArmorEffect shot, ShotTrace trace,
-                                                    RaySnap snap, Vec3 hitVec) {
-        ArmoredVehicleEntity vehicle = target.vehicle();
-        if (!vehicle.usesBvpTrackModuleRepair()) {
-            return null;
-        }
-        double armorFloor = Double.NaN;
-        if (snap != null) {
-            ArmorBox plate = snap.hit().plate;
-            if (!plate.isTurretFrame() && !plate.isBarrelFrame()) {
-                armorFloor = plate.minFrameY();
-            }
-        } else {
-            armorFloor = lowestHullPlateY(profile);
-        }
-        if (!Double.isFinite(armorFloor) || !(trace.hullImpactFallback.y < armorFloor)) {
-            return null;
-        }
-        String side = ArmorModuleResolver.trackSide(target, trace.hullImpactFallback);
-        boolean right = "right".equals(side);
-        String moduleId = right ? ArmorModuleResolver.RIGHT_TRACK : ArmorModuleResolver.LEFT_TRACK;
-        boolean wasBroken = right ? vehicle.isRightTrackBroken() : vehicle.isLeftTrackBroken();
-        vehicle.damageModule(moduleId, hitVec, shot.moduleDamage(moduleId));
-        boolean broken = right ? vehicle.isRightTrackBroken() : vehicle.isLeftTrackBroken();
-        ArmorImpactStats.record(Outcome.RUNNING_GEAR);
-        return new RunningGearHit(side, broken, broken && !wasBroken);
-    }
-
-    private static double lowestHullPlateY(ArmorProfile profile) {
-        double lowest = Double.NaN;
-        for (ArmorBox plate : profile.plates) {
-            if (plate.isTurretFrame() || plate.isBarrelFrame()) continue;
-            double y = plate.minFrameY();
-            if (Double.isFinite(y) && !(y >= lowest)) lowest = y;
-        }
-        return lowest;
+        ArmorImpactStats.record(Outcome.MISS);
+        ArmorImpactReporter.reportNoPlateHit(target.level(), owner, target, hitVec,
+                volumes.nearestArmorToImpact(trace), trace.hullImpactFallback);
+        ArmorImpactReporter.logMiss(target, targetProfile, projectile, trace,
+                volumes.nearestPlateToRay(trace, Double.POSITIVE_INFINITY));
+        return ProjectileArmorMutationService.blockImpact(
+                false, ProjectileImpactPresentationOutcome.NON_PENETRATION);
     }
 
     private static ProjectileImpactResult resolveUnboxedHit(Entity owner, ArmorTarget target,
@@ -462,8 +390,5 @@ final class ArmorImpactService {
             return VehicleDamageService.chemicalVehicleDamageBasis(target, false);
         }
         return 0.0D;
-    }
-
-    private record RunningGearHit(String side, boolean broken, boolean newlyBroken) {
     }
 }

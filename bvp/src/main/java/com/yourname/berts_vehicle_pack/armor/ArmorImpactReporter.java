@@ -1,18 +1,28 @@
 package com.yourname.berts_vehicle_pack.armor;
 
+import com.atsuishio.superbwarfare.api.projectile.ProjectileProfiles;
+import com.atsuishio.superbwarfare.entity.mixin.OBBHitter;
+import com.atsuishio.superbwarfare.world.phys.ProjectileContact;
+import com.mojang.logging.LogUtils;
 import com.yourname.berts_vehicle_pack.armor.ArmorProfiles.ArmorBox;
+import com.yourname.berts_vehicle_pack.entity.ArmoredVehicleEntity;
 import com.yourname.berts_vehicle_pack.network.BvpNetwork;
 import com.atsuishio.superbwarfare.diagnostics.EliteDiagnostics;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.registries.ForgeRegistries;
+import org.slf4j.Logger;
 
 import java.util.Locale;
 import java.util.Set;
 
 final class ArmorImpactReporter {
+    private static final Logger LOGGER = LogUtils.getLogger();
 
     private ArmorImpactReporter() {
     }
@@ -47,18 +57,75 @@ final class ArmorImpactReporter {
         return new Vec3(vector.x, vector.y, vector.z);
     }
 
+    static void reportNoPlateHit(Level level, Entity owner, ArmorTarget target, Vec3 hitVec,
+                                 ArmorHitResolver.NearBox nearestPlate, ArmorProfiles.Vec localImpact) {
+        if (EliteDiagnostics.isEnabled(target.level())) {
+            String nearest = nearestPlateDiagnostic(nearestPlate, localImpact);
+            logArmorEvent(owner, target, hitVec,
+                    "[BVP Armor] Non-Penetration. Shot angle: N/A. Effective armor thickness: N/A. "
+                            + "No armor plate matched along the shell ray; strict armor profile blocked the hit. "
+                            + nearest);
+        }
+        sendImpactFeedback(owner, ArmorImpactFeedback.missed());
+    }
+
+    /**
+     * Always-on (not gated by Elite diagnostics), rate-limited server log line for a "Shot missed!"
+     * result. {@code nearest} is the plate the shell ray passed closest to (closest approach).
+     */
+    static void logMiss(ArmorTarget target, ArmorProfiles.ArmorProfile profile, Projectile projectile,
+                        ArmorHitResolver.ShotTrace trace, ArmorHitResolver.RaySnap nearest) {
+        try {
+            ArmoredVehicleEntity vehicle = target.vehicle();
+            Vec3 velocity = vehicle.m_20184_();
+            double speed = velocity == null ? Double.NaN : Math.sqrt(velocity.f_82479_ * velocity.f_82479_
+                    + velocity.f_82480_ * velocity.f_82480_ + velocity.f_82481_ * velocity.f_82481_);
+            ResourceLocation vehicleType = ForgeRegistries.ENTITY_TYPES.getKey(vehicle.m_6095_());
+            ResourceLocation projectileType = projectile == null ? null
+                    : ForgeRegistries.ENTITY_TYPES.getKey(projectile.m_6095_());
+            ResourceLocation projectileProfile = projectile == null ? null : ProjectileProfiles.profileId(projectile);
+            ArmorMissLog.Fields fields = new ArmorMissLog.Fields(
+                    target.armorProfileId(), profile == null ? null : profile.meshSource,
+                    vehicleType + "#" + vehicle.m_19879_(),
+                    String.valueOf(projectileType),
+                    projectileProfile == null ? null : projectileProfile.toString(),
+                    contactPart(projectile, vehicle),
+                    trace.hitVec == null ? null
+                            : new double[] {trace.hitVec.f_82479_, trace.hitVec.f_82480_, trace.hitVec.f_82481_},
+                    vector(trace.hullImpactFallback), vector(trace.hullShotDirection),
+                    nearest == null ? null : nearest.hit().plate.name,
+                    nearest == null ? null : nearest.hit().plate.frame,
+                    nearest == null ? Double.NaN : nearest.gap(),
+                    nearest == null ? Double.NaN : nearest.hit().distance,
+                    target.turretFrameYaw(), speed);
+            String line = ArmorMissLog.admit(fields, System.nanoTime());
+            if (line != null) {
+                LOGGER.info(line);
+            }
+        } catch (RuntimeException failure) {
+            LOGGER.warn("[BVP Armor] Shot missed on '{}' (details unavailable: {})", target.armorProfileId(),
+                    failure.toString());
+        }
+    }
+
+    /** OBB part the projectile's selected contact struck, when SBW recorded one. */
+    private static String contactPart(Projectile projectile, ArmoredVehicleEntity vehicle) {
+        if (projectile == null) return null;
+        ProjectileContact contact = OBBHitter.getInstance(projectile).sbw$getProjectileContact();
+        if (contact == null || contact.part() == null) return null;
+        String part = contact.part().name();
+        return vehicle.m_20148_().equals(contact.target()) ? part : part + " (on " + contact.target() + ")";
+    }
+
+    private static double[] vector(ArmorProfiles.Vec value) {
+        return value == null ? null : new double[] {value.x, value.y, value.z};
+    }
+
     static void reportDirectTrackHit(Level level, Entity owner, ArmorTarget target, Vec3 hitVec,
                                      ArmorBox trackBox, String side, boolean trackBroken,
                                      boolean newlyDestroyed,
                                      ProjectileArmorEffect shot) {
         reportTrackHit(owner, target, hitVec, trackBox.name, side, trackBroken, newlyDestroyed, shot);
-    }
-
-    /** Running gear below the armor was struck on a profile without authored track boxes. */
-    static void reportRunningGearHit(Entity owner, ArmorTarget target, Vec3 hitVec, String side,
-                                     boolean trackBroken, boolean newlyDestroyed,
-                                     ProjectileArmorEffect shot) {
-        reportTrackHit(owner, target, hitVec, "running_gear", side, trackBroken, newlyDestroyed, shot);
     }
 
     private static void reportTrackHit(Entity owner, ArmorTarget target, Vec3 hitVec,
@@ -246,6 +313,16 @@ final class ArmorImpactReporter {
                 player.m_213846_(Component.m_237113_(notification));
             }
         }
+    }
+
+    private static String nearestPlateDiagnostic(ArmorHitResolver.NearBox nearest,
+                                                 ArmorProfiles.Vec localHit) {
+        if (nearest == null || localHit == null) {
+            return "Nearest armor: none in profile";
+        }
+        return String.format(Locale.ROOT, "Nearest armor: %s %s dist %.2f local %.2f %.2f %.2f",
+                nearest.box().name, nearest.box().frame, nearest.distance(),
+                localHit.x, localHit.y, localHit.z);
     }
 
     private static double impactAngleDegrees(double impactCosine) {

@@ -113,17 +113,15 @@ public final class BvpImpactFragmentCommitter {
         if (volumes != null) {
             ArmorProfiles.ArmorHit armorHit = volumes.armorHit(volumes.initialTrace());
             if (armorHit != null && armorHit.plate != null && armorHit.localImpact != null) {
-                ArmorProfiles.Vec localNormal = armorHit.plate.normalAt(armorHit.localImpact);
-                if (armorHit.plate.isBarrelFrame() && volumes.target().barrelFrame() != null) {
-                    localNormal = volumes.target().barrelFrame().toHullDirection(localNormal);
-                } else if (armorHit.plate.isTurretFrame()) {
-                    localNormal = localNormal.rotateY(volumes.target().turretFrameYaw());
-                }
-                Vec3 origin = volumes.target().armorLocalPointToWorld(ArmorProfiles.Vec.ZERO);
-                Vec3 tip = volumes.target().armorLocalPointToWorld(localNormal);
-                Vec3 worldNormal = tip.m_82546_(origin);
-                if (finite(worldNormal) && worldNormal.m_82556_() > 1.0E-6D) {
-                    return worldNormal.m_82541_();
+                ArmorProfiles.Vec localNormal = ArmorHitResolver.normalToHullFrame(volumes.target(),
+                        armorHit.plate, armorHit.frameNormal());
+                if (localNormal != null) {
+                    Vec3 origin = volumes.target().armorLocalPointToWorld(ArmorProfiles.Vec.ZERO);
+                    Vec3 tip = volumes.target().armorLocalPointToWorld(localNormal);
+                    Vec3 worldNormal = tip.m_82546_(origin);
+                    if (finite(worldNormal) && worldNormal.m_82556_() > 1.0E-6D) {
+                        return worldNormal.m_82541_();
+                    }
                 }
             }
         }

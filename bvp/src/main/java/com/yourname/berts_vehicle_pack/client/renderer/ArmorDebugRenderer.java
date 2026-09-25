@@ -105,7 +105,7 @@ public final class ArmorDebugRenderer {
                         passengerStation ? entity.getPassengerWeaponStationBarrelPosition() : entity.getBarrelPosition(),
                         turretFrameYaw, passengerStation ? renderParts.getStationPitchDegrees()
                                 : renderParts.getBarrelPitchDegrees(),
-                        "t72a".equals(profileId) || "t72b".equals(profileId));
+                        ArmorProfiles.mirrorsProfileX(profileId));
         Set<String> spentEra = EraBrickIds.parseStateIds(entity.getBvpSpentEraBricks());
 
         RenderSystem.disableDepthTest();
@@ -203,9 +203,37 @@ public final class ArmorDebugRenderer {
                                   PoseStack poseStack, VertexConsumer fill, VertexConsumer lines,
                                   float red, float green, float blue, float fillAlpha, float lineAlpha) {
         if (box.isBarrelFrame() && barrelFrame == null) return;
+        if (box.isMesh()) {
+            renderMesh(entity, box, turretFrameYaw, barrelFrame, poseStack, fill, lines,
+                    red, green, blue, fillAlpha, lineAlpha);
+            return;
+        }
         DebugVec[] corners = corners(entity, box, turretFrameYaw, barrelFrame);
         if (fill != null) filledBox(fill, poseStack, corners, red, green, blue, fillAlpha);
         lineBox(lines, poseStack, corners, red, green, blue, lineAlpha);
+    }
+
+    /**
+     * A mesh volume: translucent triangles (as degenerate debug quads) and its feature edges
+     * (outline and creases, not the diagonals of flat faces), in the same colours as boxes.
+     */
+    private static void renderMesh(ArmoredVehicleEntity entity, ArmorBox box, float turretFrameYaw,
+                                   ArmorCoordinateFrame.BarrelFrame barrelFrame,
+                                   PoseStack poseStack, VertexConsumer fill, VertexConsumer lines,
+                                   float red, float green, float blue, float fillAlpha, float lineAlpha) {
+        PoseStack.Pose pose = poseStack.m_85850_();
+        if (fill != null) {
+            box.volume.forEachTriangle((ax, ay, az, bx, by, bz, cx, cy, cz) -> {
+                DebugVec a = framePoint(entity, box, turretFrameYaw, barrelFrame, ax, ay, az);
+                DebugVec b = framePoint(entity, box, turretFrameYaw, barrelFrame, bx, by, bz);
+                DebugVec c = framePoint(entity, box, turretFrameYaw, barrelFrame, cx, cy, cz);
+                quad(fill, pose, a, b, c, c, red, green, blue, fillAlpha);
+            });
+        }
+        box.volume.forEachFeatureEdge((ax, ay, az, bx, by, bz) -> line(lines, pose,
+                framePoint(entity, box, turretFrameYaw, barrelFrame, ax, ay, az),
+                framePoint(entity, box, turretFrameYaw, barrelFrame, bx, by, bz),
+                red, green, blue, lineAlpha));
     }
 
     private static DebugVec[] corners(ArmoredVehicleEntity entity, ArmorBox box, float turretFrameYaw,
@@ -229,12 +257,18 @@ public final class ArmorDebugRenderer {
                                      ArmorCoordinateFrame.BarrelFrame barrelFrame,
                                      double x, double y, double z) {
         DebugVec rotated = rotate(new DebugVec(x, y, z), box.rotationDeg.x, box.rotationDeg.y, box.rotationDeg.z);
-        DebugVec point = new DebugVec(box.center.x + rotated.x, box.center.y + rotated.y, box.center.z + rotated.z);
+        return framePoint(entity, box, turretFrameYaw, barrelFrame,
+                box.center.x + rotated.x, box.center.y + rotated.y, box.center.z + rotated.z);
+    }
+
+    /** A point in the volume's own frame (hull, turret or barrel, rest pose) in the rendered visual frame. */
+    private static DebugVec framePoint(ArmoredVehicleEntity entity, ArmorBox box, float turretFrameYaw,
+                                       ArmorCoordinateFrame.BarrelFrame barrelFrame,
+                                       double x, double y, double z) {
         if (box.isBarrelFrame()) {
-            return armorLocalToVisualLocal(entity, fromArmorVec(barrelFrame.toHullPoint(
-                    point.x, point.y, point.z)));
+            return armorLocalToVisualLocal(entity, fromArmorVec(barrelFrame.toHullPoint(x, y, z)));
         }
-        DebugVec visualPoint = armorLocalToVisualLocal(entity, point);
+        DebugVec visualPoint = armorLocalToVisualLocal(entity, new DebugVec(x, y, z));
         if (!box.isTurretFrame()) {
             return visualPoint;
         }
@@ -242,8 +276,7 @@ public final class ArmorDebugRenderer {
     }
 
     private static DebugVec armorLocalToVisualLocal(ArmoredVehicleEntity entity, DebugVec point) {
-        String profileId = entity.getArmorProfileId();
-        if ("t72a".equals(profileId) || "t72b".equals(profileId)) {
+        if (ArmorProfiles.mirrorsProfileX(entity.getArmorProfileId())) {
             return new DebugVec(-point.x, point.y, point.z);
         }
         return point;

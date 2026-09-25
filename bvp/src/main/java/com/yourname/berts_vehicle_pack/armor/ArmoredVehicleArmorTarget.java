@@ -16,7 +16,7 @@ final class ArmoredVehicleArmorTarget implements ArmorTarget {
     ArmoredVehicleArmorTarget(ArmoredVehicleEntity vehicle) {
         this.vehicle = vehicle;
         String profileId = vehicle.getArmorProfileId();
-        this.mirrorsArmorProfileX = "t72a".equals(profileId) || "t72b".equals(profileId);
+        this.mirrorsArmorProfileX = ArmorProfiles.mirrorsProfileX(profileId);
     }
 
     @Override

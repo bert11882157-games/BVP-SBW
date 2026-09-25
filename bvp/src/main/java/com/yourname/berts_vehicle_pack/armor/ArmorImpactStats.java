@@ -14,7 +14,10 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public final class ArmorImpactStats {
     public enum Outcome {
-        /** "Shot missed!" was reported for an accepted vehicle contact. Expected to stay zero. */
+        /**
+         * "Shot missed!": a strict profile accepted a vehicle OBB contact but no armor plate lies on
+         * the shell ray. Every miss is also written to the server log (rate limited).
+         */
         MISS(true),
         /** The projectile was stopped by armor without penetrating. */
         NON_PENETRATION(true),
@@ -28,11 +31,11 @@ public final class ArmorImpactStats {
         UNMODELED_BLOCK(true),
         /** A hidden crew contact outside every vehicle OBB; the projectile continued. */
         PASSENGER_REDIRECT_SKIPPED(true),
-        /** No plate on the shell ray; resolved against the nearest plate to the ray. */
+        /** Retired: strict profiles no longer snap a miss to the nearest plate. Kept for stable snapshot keys. */
         FALLBACK_NEAREST_PLATE(false),
-        /** No plate on or near the shell ray; resolved as a penetrating unboxed hull hit. */
+        /** No plate on the shell ray of a non-strict profile; resolved as a penetrating unboxed hull hit. */
         FALLBACK_UNBOXED(false),
-        /** Contact below the armor on a vehicle with track modules; the track side was damaged. */
+        /** Retired: the running-gear shortcut for misses was removed. Kept for stable snapshot keys. */
         RUNNING_GEAR(false);
 
         private final boolean terminal;
