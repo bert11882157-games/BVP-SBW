@@ -49,41 +49,6 @@
   "AmmoItem": "superbwarfare:large_atgm",
   "MaxPerPylon": 4,
   "FixedRackCount": 4,
-  "RackAdapter": {
-    "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/rack_pars3_lr.geo.json",
-    "Texture": "berts_vehicle_pack:textures/aircraft_stores/pars3.png",
-    "MountAnchor": [
-      0.0,
-      0.0,
-      0.0
-    ],
-    "Stations": [
-      {
-        "Point": [
-          0.0,
-          -0.645,
-          0.0
-        ],
-        "Face": "bottom"
-      },
-      {
-        "Point": [
-          -0.0853,
-          -0.6225,
-          0.0
-        ],
-        "Face": "left"
-      },
-      {
-        "Point": [
-          0.0853,
-          -0.6225,
-          0.0
-        ],
-        "Face": "right"
-      }
-    ]
-  },
   "RackMassKg": 36,
   "RackColumns": 2,
   "RackSpacing": [
