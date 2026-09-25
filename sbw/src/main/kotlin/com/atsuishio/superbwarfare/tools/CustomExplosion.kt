@@ -164,7 +164,7 @@ open class CustomExplosion(
             explodeTnt(it)
             return
         }
-        if (ExplosionConfig.EXPLOSION_DESTROY.get()) {
+        if (ExplosionConfig.explosionsBreakBlocks()) {
             this.level.gameEvent(this.pSource, GameEvent.EXPLODE, Vec3(this.x, this.y, this.z))
             val set = hashSetOf<BlockPos>()
 
@@ -404,7 +404,7 @@ open class CustomExplosion(
             BlastModel.penetratorCylinder(x, y, z, it.x, it.y, it.z, radii.fireball, parameters)
         }
 
-        if (ExplosionConfig.EXPLOSION_DESTROY.get()) {
+        if (ExplosionConfig.explosionsBreakBlocks()) {
             this.level.gameEvent(this.pSource, GameEvent.EXPLODE, center)
             if (cylinder != null) collectCylinderBlocks(cylinder, plan) else collectFireballBlocks(plan)
         }
@@ -603,7 +603,10 @@ open class CustomExplosion(
             }
         }
 
-        if (flag) {
+        // Backstop for callers that pass BlockInteraction.DESTROY directly: nothing breaks while the munition
+        // block-damage master switch is off.
+        if (flag && !ExplosionConfig.MUNITION_BLOCK_DAMAGE.get()) this.toBlow.clear()
+        if (flag && this.toBlow.isNotEmpty()) {
             val list = ObjectArrayList<Pair<ItemStack, BlockPos>>()
             val flag1 = this.indirectSourceEntity is Player
 
@@ -648,7 +651,7 @@ open class CustomExplosion(
         private var radius = 0f
         private var particleType: ParticleTool.ParticleType = ParticleTool.ParticleType.MINI
         private var destroyBlock: Supplier<BlockInteraction> =
-            Supplier { if (ExplosionConfig.EXPLOSION_DESTROY.get()) BlockInteraction.DESTROY else BlockInteraction.KEEP }
+            Supplier { if (ExplosionConfig.explosionsBreakBlocks()) BlockInteraction.DESTROY else BlockInteraction.KEEP }
         private var fireTime = 0
         private var damageMultiplier = 1f
         private var damageSource: DamageSource? = null

@@ -78,7 +78,7 @@ open class SmallCannonShellEntity(type: EntityType<out SmallCannonShellEntity>, 
         if (this.level() is ServerLevel) {
             val hardness = this.level().getBlockState(resultPos).block.defaultDestroyTime()
             if (hardness != -1f) {
-                if (ExplosionConfig.EXPLOSION_DESTROY.get() && ExplosionConfig.EXTRA_EXPLOSION_EFFECT.get()) {
+                if (ExplosionConfig.extraBlockEffects()) {
                     val destroy = Math.random() < (1.0 - (hardness / 50.0)).coerceIn(0.1, 1.0)
                     if (destroy && !ProjectileProfiles.suppressesVehicleBlockDamage(this)) {
                         this.level().destroyBlock(resultPos, true)
@@ -104,7 +104,7 @@ open class SmallCannonShellEntity(type: EntityType<out SmallCannonShellEntity>, 
             .radius(explosionRadiusValue)
             .position(vec3)
             .withParticleType(explosionParticleType(explosionRadiusValue))
-            .destroyBlock { if (hitEntity) Explosion.BlockInteraction.KEEP else (if (ExplosionConfig.EXPLOSION_DESTROY.get()) Explosion.BlockInteraction.DESTROY else Explosion.BlockInteraction.KEEP) }
+            .destroyBlock { if (hitEntity) Explosion.BlockInteraction.KEEP else (if (ExplosionConfig.explosionsBreakBlocks()) Explosion.BlockInteraction.DESTROY else Explosion.BlockInteraction.KEEP) }
             .damageMultiplier(1.25f)
             .emitFx(shouldEmitDefaultImpactFx())
             .tntEquivalent(com.atsuishio.superbwarfare.tools.blast.TntEquivalents.resolve(this))

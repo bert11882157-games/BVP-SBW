@@ -12,6 +12,11 @@ object ProjectileConfig {
         define("allow_projectile_destroy_blocks", false)
     }
 
+    /** Bullets break `bullet_can_destroy` blocks only when the munition block-damage master switch is also on. */
+    @JvmStatic
+    fun projectilesBreakBlocks(): Boolean =
+        ExplosionConfig.MUNITION_BLOCK_DAMAGE.get() && PROJECTILE_DESTROY_BLOCKS.get()
+
     @JvmField
     val PROJECTILE_CHUNK_LOADING = buildServerConfig {
         comment("Set true to allow projectiles to load chunks")

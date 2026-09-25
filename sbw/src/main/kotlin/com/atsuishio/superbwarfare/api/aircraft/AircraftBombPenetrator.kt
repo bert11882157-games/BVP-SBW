@@ -103,7 +103,7 @@ object AircraftBombPenetrator {
             }
             val hardness = state.getDestroySpeed(level, pos).toDouble()
             if (!hardness.isFinite() || hardness < 0.0 || hardness > config.maxBlockHardness) break
-            if (!ExplosionConfig.EXPLOSION_DESTROY.get() || !permittedToBreak(level, bomb, pos)) break
+            if (!ExplosionConfig.explosionsBreakBlocks() || !permittedToBreak(level, bomb, pos)) break
             if (!level.destroyBlock(pos, false)) break
             crossed++
             detonation = point

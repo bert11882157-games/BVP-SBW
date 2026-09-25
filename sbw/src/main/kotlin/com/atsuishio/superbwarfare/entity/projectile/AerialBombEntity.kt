@@ -203,6 +203,5 @@ open class AerialBombEntity(type: EntityType<out AerialBombEntity>, level: Level
     }
 
     /** The legacy 3-block crater is replaced by the fireball's own block rule for TNT-equivalent bombs. */
-    private fun extraCraterEnabled(): Boolean = ExplosionConfig.EXPLOSION_DESTROY.get() &&
-        ExplosionConfig.EXTRA_EXPLOSION_EFFECT.get() && !TntBlast.active(this)
+    private fun extraCraterEnabled(): Boolean = ExplosionConfig.extraBlockEffects() && !TntBlast.active(this)
 }

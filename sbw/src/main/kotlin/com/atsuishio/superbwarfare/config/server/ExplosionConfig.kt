@@ -21,6 +21,23 @@ object ExplosionConfig {
     }
 
     @JvmField
+    val MUNITION_BLOCK_DAMAGE = buildServerConfig {
+        comment("Master switch for block damage from munitions: explosions, craters, penetrating bombs and rockets,")
+        comment("bullets breaking glass, and vehicle wreck blasts. While false no munition changes a block, whatever")
+        comment("explosion_destroy, extra_explosion_effect or allow_projectile_destroy_blocks say")
+        comment("弹药破坏方块总开关：为false时任何弹药（爆炸、弹坑、穿透、子弹击碎玻璃等）都不会破坏方块")
+        define("munition_block_damage", false)
+    }
+
+    /** Explosions may remove blocks only when both the master switch and `explosion_destroy` allow it. */
+    @JvmStatic
+    fun explosionsBreakBlocks(): Boolean = MUNITION_BLOCK_DAMAGE.get() && EXPLOSION_DESTROY.get()
+
+    /** Pre-explosion block removal (craters, C4 breaching, rocket impact holes) also needs `extra_explosion_effect`. */
+    @JvmStatic
+    fun extraBlockEffects(): Boolean = explosionsBreakBlocks() && EXTRA_EXPLOSION_EFFECT.get()
+
+    @JvmField
     val EXTRA_EXPLOSION_EFFECT = buildServerConfig {
         comment("Set true to enable extra explosion effect. For example, C4 and RPG will destroy blocks before explosion")
         comment("是否开启额外破坏效果，例如C4和RPG弹头的破坏方块效果")

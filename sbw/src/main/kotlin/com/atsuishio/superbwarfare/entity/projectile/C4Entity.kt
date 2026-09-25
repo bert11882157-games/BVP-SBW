@@ -398,7 +398,7 @@ open class C4Entity : Entity, OwnableEntity {
             }
         }
 
-        if (this.level() is ServerLevel && ExplosionConfig.EXPLOSION_DESTROY.get() && ExplosionConfig.EXTRA_EXPLOSION_EFFECT.get()) {
+        if (this.level() is ServerLevel && ExplosionConfig.extraBlockEffects()) {
             val aabb = AABB(pos, pos).inflate(2.0)
             BlockPos.betweenClosedStream(aabb).toList().forEach {
                 val hard = this.level().getBlockState(it).block.defaultDestroyTime()

@@ -72,7 +72,7 @@ object ProjectileTool {
                 pos.y,
                 pos.z,
                 0.5f * radius,
-                if (ExplosionConfig.EXPLOSION_DESTROY.get()
+                if (ExplosionConfig.explosionsBreakBlocks()
                     && !ProjectileProfiles.suppressesVehicleBlockDamage(projectile)
                 ) Level.ExplosionInteraction.BLOCK else Level.ExplosionInteraction.NONE
             )

@@ -14,6 +14,7 @@ val CONFIG_COMMAND = buildCommand("config") {
     booleanConfig(SpawnConfig::SPAWN_MOB_WITH_GUNS)
     booleanConfig(SpawnConfig::SPAWN_STEEL_COIL)
 
+    booleanConfig(ExplosionConfig::MUNITION_BLOCK_DAMAGE)
     booleanConfig(ExplosionConfig::EXPLOSION_DESTROY)
     booleanConfig(ExplosionConfig::EXTRA_EXPLOSION_EFFECT)
     booleanConfig(ExplosionConfig::FRIENDLY_MINES)

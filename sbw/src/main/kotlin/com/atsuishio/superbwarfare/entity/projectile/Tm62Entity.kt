@@ -213,7 +213,7 @@ open class Tm62Entity : Entity, OwnableEntity {
             if (trigger) {
                 this.triggerExplode()
 
-                if (ExplosionConfig.EXPLOSION_DESTROY.get() && ExplosionConfig.EXTRA_EXPLOSION_EFFECT.get()) {
+                if (ExplosionConfig.extraBlockEffects()) {
                     val aabb = AABB(position(), position()).inflate(2.0)
                     BlockPos.betweenClosedStream(aabb).toList().forEach {
                         val hard = this.level().getBlockState(it).block.defaultDestroyTime()

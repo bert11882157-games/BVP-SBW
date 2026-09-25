@@ -357,7 +357,7 @@ abstract class FastThrowableProjectile : ThrowableItemProjectile, CustomSyncMoti
         val resultPos = blockHitResult.blockPos
         val hardness = this.level().getBlockState(resultPos).block.defaultDestroyTime()
         if (hardness != -1f) {
-            if (ExplosionConfig.EXPLOSION_DESTROY.get()) {
+            if (ExplosionConfig.explosionsBreakBlocks()) {
                 if (firstHit) {
                     causeExplode(blockHitResult.getLocation())
                     firstHit = false
@@ -373,14 +373,14 @@ abstract class FastThrowableProjectile : ThrowableItemProjectile, CustomSyncMoti
             causeExplode(blockHitResult.getLocation())
             this.discard()
         }
-        if (!ExplosionConfig.EXPLOSION_DESTROY.get()) {
+        if (!ExplosionConfig.explosionsBreakBlocks()) {
             causeExplode(blockHitResult.getLocation())
             this.discard()
         }
     }
 
     protected fun blockPenetrationResistance(result: BlockHitResult): Double? {
-        if (!ExplosionConfig.EXPLOSION_DESTROY.get()) {
+        if (!ExplosionConfig.explosionsBreakBlocks()) {
             destroyBlock(result)
             return null
         }

@@ -565,7 +565,7 @@ open class ProjectileEntity(entityType: EntityType<out ProjectileEntity>, level:
                 rayTraceBlocks(
                     level,
                     ClipContext(startVec, endVec, ClipContext.Block.COLLIDER, ClipContext.Fluid.ANY, this),
-                    if (this.isPenetrating || this.beast) Predicate { true } else if (ProjectileConfig.PROJECTILE_DESTROY_BLOCKS.get()) IGNORE_LIST.and(
+                    if (this.isPenetrating || this.beast) Predicate { true } else if (ProjectileConfig.projectilesBreakBlocks()) IGNORE_LIST.and(
                         Predicate { input -> !input.`is`(ModTags.Blocks.BULLET_CAN_DESTROY) }) else IGNORE_LIST
                 )
 
@@ -1564,7 +1564,7 @@ open class ProjectileEntity(entityType: EntityType<out ProjectileEntity>, level:
             nominalBlockIgnorePredicate().test(blockState)
 
         private fun nominalBlockIgnorePredicate(): Predicate<BlockState> =
-            if (ProjectileConfig.PROJECTILE_DESTROY_BLOCKS.get()) {
+            if (ProjectileConfig.projectilesBreakBlocks()) {
                 IGNORE_LIST.and(Predicate { input -> !input.`is`(ModTags.Blocks.BULLET_CAN_DESTROY) })
             } else IGNORE_LIST
 

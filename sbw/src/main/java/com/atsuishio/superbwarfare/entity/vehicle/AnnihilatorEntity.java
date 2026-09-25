@@ -131,13 +131,13 @@ public class AnnihilatorEntity extends ArtilleryEntity {
 
         float hardness = this.level().getBlockState(blockPos).getBlock().defaultDestroyTime();
 
-        if (ExplosionConfig.EXPLOSION_DESTROY.get() && ExplosionConfig.EXTRA_EXPLOSION_EFFECT.get() && hardness != -1) {
+        if (ExplosionConfig.extraBlockEffects() && hardness != -1) {
             Block.dropResources(this.level().getBlockState(blockPos), this.level(), blockPos, null);
             this.level().destroyBlock(blockPos, true);
         }
 
         causeLaserExplode(hitPos, data, living);
-        this.level().explode(living, hitPos.x, hitPos.y, hitPos.z, (float) (data.get(GunProp.EXPLOSION_RADIUS) * 0.5f), ExplosionConfig.EXPLOSION_DESTROY.get() ? Level.ExplosionInteraction.BLOCK : Level.ExplosionInteraction.NONE);
+        this.level().explode(living, hitPos.x, hitPos.y, hitPos.z, (float) (data.get(GunProp.EXPLOSION_RADIUS) * 0.5f), ExplosionConfig.explosionsBreakBlocks() ? Level.ExplosionInteraction.BLOCK : Level.ExplosionInteraction.NONE);
 
         return (float) pos.distanceTo(hitPos);
     }

@@ -32,7 +32,7 @@ open class MelonBombEntity(type: EntityType<out MelonBombEntity>, level: Level) 
         if (entity == owner || (owner != null && entity == owner.vehicle) || entity is MelonBombEntity) return
         val level = this.level()
         if (level is ServerLevel) {
-            if (ExplosionConfig.EXPLOSION_DESTROY.get() && ExplosionConfig.EXTRA_EXPLOSION_EFFECT.get()) {
+            if (ExplosionConfig.extraBlockEffects()) {
                 val aabb = AABB(result.getLocation(), result.getLocation()).inflate(5.0)
                 BlockPos.betweenClosedStream(aabb).forEach {
                     val hard = level.getBlockState(it).block.defaultDestroyTime()
@@ -56,7 +56,7 @@ open class MelonBombEntity(type: EntityType<out MelonBombEntity>, level: Level) 
         super.onHitBlock(result)
         val level = this.level()
         if (level is ServerLevel) {
-            if (ExplosionConfig.EXPLOSION_DESTROY.get() && ExplosionConfig.EXTRA_EXPLOSION_EFFECT.get()) {
+            if (ExplosionConfig.extraBlockEffects()) {
                 val aabb = AABB(result.getLocation(), result.getLocation()).inflate(5.0)
                 BlockPos.betweenClosedStream(aabb).forEach {
                     val hard = level.getBlockState(it).block.defaultDestroyTime()

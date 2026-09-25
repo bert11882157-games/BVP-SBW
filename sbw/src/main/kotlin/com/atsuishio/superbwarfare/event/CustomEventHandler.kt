@@ -82,7 +82,7 @@ object CustomEventHandler {
         }
 
         if (projectile is ProjectileEntity) {
-            if (ProjectileConfig.PROJECTILE_DESTROY_BLOCKS.get()
+            if (ProjectileConfig.projectilesBreakBlocks()
                 && !ProjectileProfiles.suppressesVehicleBlockDamage(projectile)
                 && state.`is`(ModTags.Blocks.BULLET_CAN_DESTROY)
             ) {
@@ -95,7 +95,7 @@ object CustomEventHandler {
         }
 
         if (projectile is GrapeshotEntity) {
-            if (ProjectileConfig.PROJECTILE_DESTROY_BLOCKS.get() && state.`is`(ModTags.Blocks.CANNON_SHOT_CAN_DESTROY)) {
+            if (ProjectileConfig.projectilesBreakBlocks() && state.`is`(ModTags.Blocks.CANNON_SHOT_CAN_DESTROY)) {
                 projectile.level().destroyBlock(pos, false, projectile.owner)
             }
         }
