@@ -150,6 +150,49 @@ class BlastModelTest {
         assertEquals(0, BlastModel.fireballTier(Double.NaN))
     }
 
+    @Test fun `visible fireball never extends past the fireball radius`() {
+        val out = DoubleArray(3)
+        for (kg in doubleArrayOf(0.075, 1.0, 5.24, 117.6, 340.8, 3310.5)) {
+            val radius = BlastModel.radii(kg, p).fireball
+            val count = BlastModel.fireballPuffCount(radius, 48)
+            assertTrue(count in 3..48, "puffs for $kg kg")
+            val half = BlastModel.fireballPuffHalfSize(radius, count)
+            val reach = BlastModel.fireballPuffReach(radius, half)
+            for (u in doubleArrayOf(0.0, 0.3, 0.999)) {
+                BlastModel.fireballPuffOffset(u, 1.0 - u, 1.0, false, out)
+                val distance = reach * Math.sqrt(out[0] * out[0] + out[1] * out[1] + out[2] * out[2])
+                assertTrue(distance + BlastModel.FIREBALL_SPRITE_EDGE * half <= radius + 1e-9, "edge inside R for $kg kg")
+            }
+            // The whole ball fills: the outermost puffs reach the fireball edge.
+            assertEquals(radius, reach + BlastModel.FIREBALL_SPRITE_EDGE * half, 1e-9)
+        }
+        assertTrue(BlastModel.fireballPuffCount(7.45, 48) > BlastModel.fireballPuffCount(0.87, 48))
+        assertEquals(10, BlastModel.fireballPuffCount(10.0, 10), "budget caps the puffs")
+        assertEquals(0, BlastModel.fireballPuffCount(Double.NaN, 48))
+        assertEquals(0, BlastModel.fireballPuffCount(1.0, 0))
+    }
+
+    @Test fun `fireball grows fast, cools from white to soot and lasts longer for bigger charges`() {
+        assertEquals(0.0, BlastModel.fireballExpansionAt(0.0), 1e-12)
+        assertEquals(1.0, BlastModel.fireballExpansionAt(0.2), 1e-12)
+        assertTrue(BlastModel.fireballExpansionAt(0.1) > 0.8)
+        val color = FloatArray(4)
+        BlastModel.fireballColorAt(0.0, color)
+        assertTrue(color[0] >= 0.99f && color[1] > 0.95f && color[3] == 1f, "white-hot start")
+        BlastModel.fireballColorAt(0.35, color)
+        assertTrue(color[0] > 0.99f && color[1] in 0.4f..0.6f && color[2] < 0.2f, "orange")
+        BlastModel.fireballColorAt(1.0, color)
+        assertTrue(color[0] < 0.2f && color[3] == 0f, "soot, gone")
+        assertTrue(BlastModel.fireballGlowing(0.5) && !BlastModel.fireballGlowing(0.9))
+        assertTrue(BlastModel.fireballLifetimeTicks(7.45) > BlastModel.fireballLifetimeTicks(0.21))
+        assertTrue(BlastModel.fireballLifetimeTicks(0.21) >= 10 && BlastModel.fireballLifetimeTicks(100.0) <= 32)
+        val out = DoubleArray(3)
+        BlastModel.fireballPuffOffset(0.5, 0.75, 1.0, true, out)
+        assertTrue(out[1] >= 0.0, "ground bursts form a half ball")
+        assertTrue(BlastModel.fireballAudienceRange(7.45) > BlastModel.fireballAudienceRange(0.2))
+        assertTrue(BlastModel.fireballAudienceRange(1000.0) <= 512.0)
+    }
+
     @Test fun `parameters reject unordered or invalid values`() {
         assertThrows(IllegalArgumentException::class.java) { BlastParameters(fireballK = 2.0, severeK = 1.8) }
         assertThrows(IllegalArgumentException::class.java) { BlastParameters(exposureFloor = 1.5) }

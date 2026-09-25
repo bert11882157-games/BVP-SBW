@@ -244,4 +244,7 @@ private fun registerPayloads() {
     playToClient<ShockwaveMessage>(clientSchema(82, PacketLimitProfiles.PRESENTATION,
         delivery = REPLACEABLE_PRESENTATION, priority = P2, owner = "fx.shockwave",
         feature = "tnt_shockwave", since = 43))
+    playToClient<FireballMessage>(clientSchema(83, PacketLimitProfiles.PRESENTATION,
+        delivery = REPLACEABLE_PRESENTATION, priority = P2, owner = "fx.fireball",
+        feature = "tnt_fireball", since = 44))
 }

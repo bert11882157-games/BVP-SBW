@@ -107,6 +107,12 @@ object BlastConfig {
     }
 
     @JvmField
+    val FIREBALL_VISIBLE = buildServerConfig {
+        comment("Show every TNT-equivalent blast as a glowing fireball whose edge is exactly the fireball radius")
+        define("fireball_visible", true)
+    }
+
+    @JvmField
     val EXTERNAL_MUNITION_BLASTS = buildServerConfig {
         comment("Apply the TNT model to externally simulated aircraft missiles (FFA ballistics) that carry a TNT equivalent")
         define("external_munition_blasts", true).also { pop() }
@@ -121,6 +127,9 @@ object BlastConfig {
 
     @JvmStatic
     fun externalMunitionBlasts(): Boolean = runCatching { EXTERNAL_MUNITION_BLASTS.get() }.getOrDefault(false)
+
+    @JvmStatic
+    fun fireballVisible(): Boolean = runCatching { FIREBALL_VISIBLE.get() }.getOrDefault(true)
 
     @JvmStatic
     fun shockwaveDurationTicks(): Int = runCatching { SHOCKWAVE_DURATION_TICKS.get() }.getOrDefault(20)

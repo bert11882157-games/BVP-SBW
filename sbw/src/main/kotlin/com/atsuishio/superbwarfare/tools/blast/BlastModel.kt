@@ -158,6 +158,25 @@ object BlastModel {
     private const val SHOCKWAVE_PARTICLES_PER_SQUARE_METRE = 0.5
     private const val SHOCKWAVE_MIN_PARTICLES = 64
     private val GOLDEN_ANGLE = PI * (3.0 - sqrt(5.0))
+    private const val FIREBALL_MIN_PUFFS = 3
+    private const val FIREBALL_MAX_PUFFS = 48
+    private const val FIREBALL_PUFFS_PER_METRE = 5.0
+    const val FIREBALL_SPRITE_EDGE = 0.8
+    private const val FIREBALL_MIN_TICKS = 10
+    private const val FIREBALL_MAX_TICKS = 32
+    private const val FIREBALL_GROWTH_FRACTION = 0.2
+    private const val FIREBALL_GLOW_FRACTION = 0.72
+    private const val FIREBALL_MIN_AUDIENCE = 96.0
+    private const val FIREBALL_MAX_AUDIENCE = 512.0
+    /** progress, r, g, b, alpha */
+    private val FIREBALL_COLOR_KEYS = arrayOf(
+        doubleArrayOf(0.00, 1.00, 0.98, 0.88, 1.00),
+        doubleArrayOf(0.12, 1.00, 0.84, 0.42, 1.00),
+        doubleArrayOf(0.35, 1.00, 0.52, 0.12, 0.95),
+        doubleArrayOf(0.60, 0.82, 0.26, 0.06, 0.85),
+        doubleArrayOf(0.80, 0.34, 0.14, 0.08, 0.55),
+        doubleArrayOf(1.00, 0.15, 0.12, 0.11, 0.00),
+    )
 
     @JvmStatic
     fun valid(kg: Double): Boolean = kg.isFinite() && kg > 0.0
@@ -308,6 +327,90 @@ object BlastModel {
         val t = if (progress.isFinite()) progress.coerceIn(0.0, 1.0) else 1.0
         val eased = 1.0 - (1.0 - t) * (1.0 - t)
         return from + (to - from) * eased
+    }
+
+    // ---- Visible fireball (presentation of radii.fireball) ----
+
+    /** Puffs that make up one visible fireball of [radius] m: cheap for shells, dense for heavy bombs. */
+    @JvmStatic
+    fun fireballPuffCount(radius: Double, budget: Int): Int {
+        if (budget <= 0 || !radius.isFinite() || radius <= 0.0) return 0
+        val wanted = ceil(FIREBALL_MIN_PUFFS + FIREBALL_PUFFS_PER_METRE * radius)
+            .coerceAtMost(FIREBALL_MAX_PUFFS.toDouble()).toInt()
+        return min(wanted, budget)
+    }
+
+    /** Half-size of one puff quad (m). Few puffs overlap more so a small fireball still reads as one ball. */
+    @JvmStatic
+    fun fireballPuffHalfSize(radius: Double, count: Int): Double {
+        if (!radius.isFinite() || radius <= 0.0 || count <= 0) return 0.0
+        val share = if (count <= FIREBALL_MIN_PUFFS + 1) 0.62 else 0.5
+        return radius * share
+    }
+
+    /**
+     * Farthest a puff centre may sit from the blast centre. The soft sprite's visible edge is about
+     * [FIREBALL_SPRITE_EDGE] of its half-size, so centre + edge never passes the fireball radius.
+     */
+    @JvmStatic
+    fun fireballPuffReach(radius: Double, halfSize: Double): Double =
+        max(0.0, radius - FIREBALL_SPRITE_EDGE * halfSize)
+
+    /** Visible fireball lifetime in ticks: a 30 mm shell flashes, a FAB-5000 burns for over a second. */
+    @JvmStatic
+    fun fireballLifetimeTicks(radius: Double): Int {
+        if (!radius.isFinite() || radius <= 0.0) return FIREBALL_MIN_TICKS
+        return (9.0 + 6.0 * sqrt(radius)).toInt().coerceIn(FIREBALL_MIN_TICKS, FIREBALL_MAX_TICKS)
+    }
+
+    /** Fraction (0..1) of full size at [progress]: the ball reaches its radius within the first fifth of its life. */
+    @JvmStatic
+    fun fireballExpansionAt(progress: Double): Double {
+        val t = if (progress.isFinite()) (progress / FIREBALL_GROWTH_FRACTION).coerceIn(0.0, 1.0) else 1.0
+        val inverse = 1.0 - t
+        return 1.0 - inverse * inverse * inverse
+    }
+
+    /** White-hot, orange, deep red, then soot: writes r, g, b, alpha for [progress] (0..1) into [out]. */
+    @JvmStatic
+    fun fireballColorAt(progress: Double, out: FloatArray) {
+        require(out.size >= 4)
+        val p = if (progress.isFinite()) progress.coerceIn(0.0, 1.0) else 1.0
+        var index = 0
+        while (index < FIREBALL_COLOR_KEYS.size - 2 && p > FIREBALL_COLOR_KEYS[index + 1][0]) index++
+        val a = FIREBALL_COLOR_KEYS[index]
+        val b = FIREBALL_COLOR_KEYS[index + 1]
+        val span = b[0] - a[0]
+        val f = if (span <= 0.0) 1.0 else ((p - a[0]) / span).coerceIn(0.0, 1.0)
+        for (channel in 0 until 4) out[channel] = (a[channel + 1] + (b[channel + 1] - a[channel + 1]) * f).toFloat()
+    }
+
+    /** True while the fireball glows (full-bright); afterwards it is lit like smoke. */
+    @JvmStatic
+    fun fireballGlowing(progress: Double): Boolean = progress.isFinite() && progress < FIREBALL_GLOW_FRACTION
+
+    /**
+     * Uniform point inside the unit ball from three uniform randoms in [0, 1): direction from [u1], [u2], distance
+     * cbrt([u3]). With [upperOnly] the point is mirrored into y >= 0 (a ground burst's hemisphere).
+     */
+    @JvmStatic
+    fun fireballPuffOffset(u1: Double, u2: Double, u3: Double, upperOnly: Boolean, out: DoubleArray) {
+        require(out.size >= 3)
+        val z = 2.0 * u1.coerceIn(0.0, 1.0) - 1.0
+        val angle = 2.0 * PI * u2.coerceIn(0.0, 1.0)
+        val horizontal = sqrt(max(0.0, 1.0 - z * z))
+        val distance = cbrt(u3.coerceIn(0.0, 1.0))
+        val y = horizontal * sin(angle) * distance
+        out[0] = horizontal * cos(angle) * distance
+        out[1] = if (upperOnly) abs(y) else y
+        out[2] = z * distance
+    }
+
+    /** Players farther than this (m) never see a fireball of [radius]; small shells stay local. */
+    @JvmStatic
+    fun fireballAudienceRange(radius: Double): Double {
+        if (!radius.isFinite() || radius <= 0.0) return FIREBALL_MIN_AUDIENCE
+        return (FIREBALL_MIN_AUDIENCE + 48.0 * radius).coerceAtMost(FIREBALL_MAX_AUDIENCE)
     }
 
     /**

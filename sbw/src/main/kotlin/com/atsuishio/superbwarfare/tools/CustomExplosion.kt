@@ -11,6 +11,7 @@ import com.atsuishio.superbwarfare.init.ModSounds
 import com.atsuishio.superbwarfare.network.message.receive.ClientIndicatorMessage
 import com.atsuishio.superbwarfare.network.message.receive.ShakeClientMessage.Companion.sendToNearbyPlayers
 import com.atsuishio.superbwarfare.tools.DamageHandler.doDamage
+import com.atsuishio.superbwarfare.network.message.receive.FireballMessage
 import com.atsuishio.superbwarfare.network.message.receive.ShockwaveMessage
 import com.atsuishio.superbwarfare.tools.blast.BlastCylinder
 import com.atsuishio.superbwarfare.tools.blast.BlastExposure
@@ -804,6 +805,11 @@ open class CustomExplosion(
                     fireballRadius = fireball,
                 )
             )
+            if (plan != null) {
+                // The visible fireball is the blast's own presentation, R = k * W^(1/3): shown for every TNT
+                // detonation, including when an armor hit, a pack effect or FFA replaced the impact recipe.
+                (level as? ServerLevel)?.let { FireballMessage.send(it, particlePosition ?: position, plan.radii.fireball) }
+            }
             if (plan != null && plan.producesShockwave) {
                 // A separate phenomenon from the fireball: sent even when the impact presentation was replaced.
                 (level as? ServerLevel)?.let { ShockwaveMessage.send(it, particlePosition ?: position, plan) }

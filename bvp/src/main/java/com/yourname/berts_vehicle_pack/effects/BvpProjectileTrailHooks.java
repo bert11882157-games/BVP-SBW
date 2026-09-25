@@ -23,6 +23,8 @@ public final class BvpProjectileTrailHooks {
     private static final int MAX_PENDING_REPLACEMENTS = 256;
     private static final double SAME_IMPACT_DISTANCE_SQR = 0.0625D;
     private static final Map<Entity, PendingReplacement> PENDING_REPLACEMENTS = new WeakHashMap<>();
+    /** Fireball radius (m) from which a TNT blast keeps SBW's native explosion recipe. */
+    private static final double TNT_NATIVE_RECIPE_RADIUS = 1.0D;
 
     private BvpProjectileTrailHooks() {
     }
@@ -70,6 +72,12 @@ public final class BvpProjectileTrailHooks {
             return true;
         }
         Entity directSource = context.getDirectSource();
+        // Charges with a fireball of a metre or more (>= 8 kg TNT) keep SBW's native recipe (sound layers, dust,
+        // debris) under the SBW fireball, even after an armor hit already showed its local impact effects.
+        if (com.atsuishio.superbwarfare.tools.blast.TntBlast.fireballRadius(directSource) >= TNT_NATIVE_RECIPE_RADIUS) {
+            consumeDeferredExplosionPresentation(level, directSource, context.getParticlePosition());
+            return false;
+        }
         if (consumeDeferredExplosionPresentation(level, directSource, context.getParticlePosition())) {
             return true;
         }
