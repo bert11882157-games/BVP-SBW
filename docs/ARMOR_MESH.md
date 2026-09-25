@@ -31,7 +31,7 @@ The game picks the source of a profile's volumes like this:
 
 | Situation | Volumes used |
 |---|---|
-| `bvp/src/main/resources/data/berts_vehicle_pack/armor_mesh/<profile_id>.geo.json` exists | the mesh (**all** box lists are replaced) |
+| `bvp/src/main/resources/data/berts_vehicle_pack/armor_mesh/<profile_id>.geo.json` exists | the mesh, **per category**: every category the file defines (plates, ERA, engines, ammo, modules, tracks, internals) replaces that category's boxes; a category the file leaves out keeps its boxes |
 | no mesh file | the box lists in `armor/<profile_id>.json` |
 | the profile JSON sets `"armor_mesh": false` | the box lists, even if a mesh file exists |
 | the profile JSON sets `"armor_mesh": "other_id"` | `armor_mesh/other_id.geo.json` (share one mesh between variants) |
@@ -40,6 +40,15 @@ The game picks the source of a profile's volumes like this:
 Every profile-level setting stays in `armor/<profile_id>.json`: penetration defaults, `impact_tolerance`,
 `unboxed_hits_penetrate`, `strict_armor_gate`, `atgm_tandem`, and so on. The mesh file only replaces the
 volumes.
+
+### ERA: cubes or meshes
+
+ERA bricks can be authored either way in the same file. Ordinary Blockbench **cubes** are the quickest and are
+what most bricks should be (rotate them freely); a Blockbench **Mesh** works too for odd shapes. Name the bone
+`era__<type>[_ke<mm>][_ce<mm>]__<name>` and keep `<name>` equal to the brick's name in the visual model
+(`bvpEraSpent_<name>`) so the spent-brick visuals still hide the right brick. If you leave ERA out of the mesh
+file entirely, the vehicle keeps the ERA boxes from its JSON profile, so you can convert the plates first and the
+ERA later.
 
 When a profile loads a mesh, the log shows what the mesh contains and any problems it found:
 
@@ -115,11 +124,22 @@ read and write `poly_mesh`. The vehicle models in `custom_geo/` use the same for
 
 ### Start from a template (recommended)
 
-`tools/armor_mesh/templates/<profile_id>.armor.geo.json` holds every current box of the profile as a
-closed 6-face mesh, named and parented by the rules above. The game never loads templates.
+Every registered BVP vehicle (171: tanks, IFVs, trucks, helicopters, aircraft, tripods) has a file:
 
-1. Open the template: *File → Open Model*.
-2. To see the vehicle, open `bvp/src/generated/resources/assets/berts_vehicle_pack/custom_geo/<profile_id>.geo.json`
+* `tools/armor_mesh/templates/<profile_id>.armor.geo.json`: armor only. For the 61 vehicles with box armor
+  today it holds every box as a closed 6-face mesh with its original name. For the other 110 it holds
+  **starter** volumes made from the vehicle's collision boxes, named `plate__10mm__starter_<part>_NN`.
+  They are placeholders to reshape, split and re-thickness, not real armor values.
+* `<profile_id>.armor_edit.geo.json` (in the `armor_edit` folder on your PC): the same armor **plus the
+  vehicle's visual model** under a `reference_model` bone (its bones renamed `ref_*`), so one file opens with
+  the vehicle and its armor already lined up. The game ignores the reference bones, so this file also works as
+  the armor file; it is just bigger. Before saving for the game you can hide the reference from the export
+  (step 3) to keep the file small.
+
+The game never loads templates or edit files from where they are; only files copied into `armor_mesh/` count.
+
+1. Open the edit file (or the template): *File → Open Model*.
+2. (Template only.) To see the vehicle, open `bvp/src/generated/resources/assets/berts_vehicle_pack/custom_geo/<profile_id>.geo.json`
    in a second tab and save it once as a Blockbench project (*File → Save Project*, `.bbmodel`). Back in the
    armor tab, merge it in with *File → Import → Import Project*. The template uses the roots `armor_hull`,
    `armor_turret` and `armor_barrel`, so they don't clash with the model's `hull`, `turret` and `barell`.
@@ -150,16 +170,17 @@ better.
 ## Regenerating templates
 
 ```
-python3 tools/armor_mesh/export_boxes.py            # every profile that has volumes
-python3 tools/armor_mesh/export_boxes.py t72b       # one profile
-python3 tools/armor_mesh/export_boxes.py --check    # verify without writing
+python3 tools/armor_mesh/export_templates.py                  # every registered vehicle -> tools/armor_mesh/templates/
+python3 tools/armor_mesh/export_templates.py t72b             # one vehicle
+python3 tools/armor_mesh/export_templates.py --edit DIR       # also write armor + visual reference edit files to DIR
+python3 tools/armor_mesh/export_templates.py --check          # re-read every exported box and compare corners
 ```
 
-The exporter reads the box profiles, writes one bone per box with the naming convention, and checks every
-corner against the source box. Coordinates: armor-profile `(x, y, z)` blocks become geo `(-16x, 16y, 16z)`,
-or `(16x, 16y, 16z)` for the X-mirrored profiles `t72a` and `t72b`. The loader applies the inverse, so a
-template loaded as a mesh reproduces the boxes exactly. `ArmorMeshEquivalenceTest` checks this for every
-profile.
+Coordinates: armor-profile `(x, y, z)` blocks become geo `(-16x, 16y, 16z)`, or `(16x, 16y, 16z)` for the
+X-mirrored profiles `t72a` and `t72b`; starter volumes come from SBW vehicle-local OBBs as geo
+`(16x, 16y, -16z)`. The loader applies the inverse, so a template loaded as a mesh reproduces the boxes
+exactly. `ArmorMeshEquivalenceTest` fires 2,500 rays and 1,500 points per profile at the box and mesh
+versions of all 61 box profiles and requires identical results.
 
 ## For developers
 

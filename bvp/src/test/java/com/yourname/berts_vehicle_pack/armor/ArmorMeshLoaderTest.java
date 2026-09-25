@@ -281,7 +281,17 @@ public final class ArmorMeshLoaderTest {
                 + "]}]}";
         ArmorProfile mesh = ArmorProfiles.withMesh(boxes, GSON.fromJson(geo, JsonObject.class), "armor_mesh/fixture.geo.json");
         check(mesh.usesArmorMesh() && mesh.meshSource.equals("armor_mesh/fixture.geo.json"), "mesh source");
-        check(mesh.plates.size() == 2 && mesh.engineBoxes.isEmpty(), "every box list is replaced");
+        check(mesh.plates.size() == 2 && mesh.plates.get(0).isMesh(), "mesh plates replace the box plates");
+        check(mesh.engineBoxes.size() == 1 && !mesh.engineBoxes.get(0).isMesh(),
+                "a category the mesh leaves out keeps its boxes (e.g. ERA kept as JSON boxes)");
+        String withEra = "{\"minecraft:geometry\":[{\"bones\":[{\"name\":\"armor_hull\"},"
+                + "{\"name\":\"plate__80mm__a\",\"parent\":\"armor_hull\",\"cubes\":[{\"origin\":[0,0,0],\"size\":[16,16,1]}]},"
+                + "{\"name\":\"era__kontakt5__brick_00\",\"parent\":\"armor_hull\",\"cubes\":[{\"origin\":[0,0,-2],\"size\":[4,4,1]}]}"
+                + "]}]}";
+        ArmorProfile eraMesh = ArmorProfiles.withMesh(boxes, GSON.fromJson(withEra, JsonObject.class), "era");
+        check(eraMesh.eraBoxes.size() == 1 && eraMesh.eraBoxes.get(0).isMesh()
+                && "kontakt5".equals(eraMesh.eraBoxes.get(0).eraType)
+                && eraMesh.eraBoxes.get(0).kineticProtectionMm == 120.0D, "ERA authored as a Blockbench cube");
         check(mesh.plates.get(0).isMesh() && mesh.plates.get(0).armorMm == 80.0D, "mesh plate thickness");
         near(mesh.impactTolerance, 0.4D, 0.0D, "settings kept");
         check(!mesh.unboxedHitsPenetrate && mesh.hasImpactVolumes(), "strictness kept, volumes present");

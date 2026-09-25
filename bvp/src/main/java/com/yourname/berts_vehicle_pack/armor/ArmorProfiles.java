@@ -228,7 +228,7 @@ public final class ArmorProfiles {
 
     /**
      * The profile's settings with every volume list replaced by the volumes of a Blockbench armor
-     * mesh. Returns {@code boxes} unchanged (with a warning) when the mesh defines no volume.
+     * mesh, per category (see below). Returns {@code boxes} unchanged (with a warning) when the mesh defines no volume.
      */
     static ArmorProfile withMesh(ArmorProfile boxes, JsonObject geo, String source) {
         ArmorMeshLoader.Result result = ArmorMeshLoader.load(boxes.id + " " + source, geo,
@@ -252,11 +252,20 @@ public final class ArmorProfiles {
                 boxes.id, source, result.volumes, result.plates.size(), result.era.size(), result.engines.size(),
                 result.ammoRacks.size(), result.modules.size(), result.tracks.size(), result.internals.size(),
                 result.triangles, result.warnings.size());
+        // Per category: a category the mesh file defines replaces the boxes of that category; a category it
+        // leaves out keeps the profile's boxes. So ERA can stay as JSON boxes (or Blockbench cubes) while the
+        // plates move to meshes, and a vehicle can be converted one category at a time.
         return new ArmorProfile(boxes.id, boxes.apPenetrationMm, boxes.chemicalPenetrationMm,
                 boxes.fallbackIncomingPenetrationMm, boxes.impactTolerance, boxes.internalRayLength,
                 boxes.unboxedHitsPenetrate, boxes.strictArmorGate, boxes.atgmTandemWarhead,
-                result.plates, result.internals, result.engines, result.ammoRacks, result.tracks, result.modules,
-                result.era, source, result.warnings);
+                pick(result.plates, boxes.plates), pick(result.internals, boxes.sensitiveInternals),
+                pick(result.engines, boxes.engineBoxes), pick(result.ammoRacks, boxes.ammoRacks),
+                pick(result.tracks, boxes.trackBoxes), pick(result.modules, boxes.moduleBoxes),
+                pick(result.era, boxes.eraBoxes), source, result.warnings);
+    }
+
+    private static List<ArmorBox> pick(List<ArmorBox> mesh, List<ArmorBox> boxes) {
+        return mesh.isEmpty() ? boxes : mesh;
     }
 
     static boolean isEngineBoxName(String name) {
