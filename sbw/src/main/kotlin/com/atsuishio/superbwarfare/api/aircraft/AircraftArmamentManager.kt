@@ -6,6 +6,7 @@ import com.atsuishio.superbwarfare.client.aircraft.AircraftArmamentClient
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity
 import com.atsuishio.superbwarfare.network.AircraftArmamentNetwork
 import com.atsuishio.superbwarfare.network.message.send.AircraftArmamentRequestMessage
+import com.atsuishio.superbwarfare.tools.InventoryTool
 import com.google.gson.*
 import net.minecraft.core.BlockPos
 import net.minecraft.nbt.CompoundTag
@@ -14,6 +15,7 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.Entity
+import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.ClipContext
 import net.minecraft.world.phys.HitResult
 import net.minecraft.world.phys.Vec3
@@ -34,6 +36,8 @@ import kotlin.math.*
 object AircraftArmamentManager {
     private const val EQUIPMENT = "BvpAircraftArmament"
     private const val PRESETS = "BvpAircraftPresets"
+    /** Per hardpoint: munitions on the rack that the pilot paid for (the only refundable ones). */
+    private const val PAID = "Paid"
     private data class Lease(val vehicle: VehicleEntity, val epoch: Long, val catalogue: Long,
         var pod: Boolean = false, var seek: JsonObject = JsonObject(), var seekRevision: Long = 0,
         var seekFingerprint: String = "", var seekChannels: Set<String> = emptySet(),
@@ -111,6 +115,75 @@ object AircraftArmamentManager {
             AircraftArmamentClient.getState(vehicle.uuid)?.getAsJsonObject("Fired")?.get(mount)?.asInt ?: 0
             else equipment(vehicle).getCompound("Fired").getInt(mount)
         return (mountCapacity(vehicle, mount) - used).coerceAtLeast(0)
+    }
+
+    // Loadout ammunition: munitions are bought from the pilot's inventory when fitted (AircraftLoadoutCost).
+    private fun ammoExempt(player: ServerPlayer, vehicle: VehicleEntity) = AircraftLoadoutCost.exempt(player.isCreative,
+        InventoryTool.hasCreativeAmmoBox(player), InventoryTool.hasCreativeAmmoBoxForVehicle(vehicle))
+    /** Munitions from [fired] onward that sit on a station still attached to the airframe. */
+    private fun liveRounds(vehicle: VehicleEntity, pair: JsonObject, store: JsonObject, copies: Int, fired: Int): Int {
+        val capacity = AircraftArmamentRegistry.mountCapacity(pair, store["Capacity"]?.asInt ?: 1) * copies
+        if (com.atsuishio.superbwarfare.api.vehicle.flight.AircraftWreckBreakup.mask(vehicle) == 0)
+            return AircraftLoadoutCost.attached(capacity, fired) { false }
+        return AircraftLoadoutCost.attached(capacity, fired) {
+            com.atsuishio.superbwarfare.api.vehicle.flight.AircraftWreckBreakup.detachedAt(vehicle,
+                AircraftPylonRacks.launchPosition(pair, store, copies, it))
+        }
+    }
+    /** What every hardpoint holds now; detached stations and unpaid munitions are never refunded. */
+    private fun fittedRacks(vehicle: VehicleEntity): Map<String, AircraftLoadoutCost.Rack> {
+        val def = definition(vehicle) ?: return emptyMap()
+        val chosen = selection(vehicle); val state = equipment(vehicle)
+        val fired = state.getCompound("Fired"); val paid = state.getCompound(PAID)
+        return mounts(def).mapNotNull { pair ->
+            val key = pair["Id"].asString
+            val id = chosen[key]?.asString ?: return@mapNotNull null
+            val store = AircraftArmamentRegistry.stores[ResourceLocation.tryParse(id)] ?: return@mapNotNull null
+            val rounds = liveRounds(vehicle, pair, store, rackCount(vehicle, key), fired.getInt(key))
+            key to AircraftLoadoutCost.Rack(id, AircraftLoadoutCost.ammoId(store), rounds, paid.getInt(key).coerceIn(0, rounds))
+        }.toMap()
+    }
+    /** Every hardpoint of a validated loadout, refitted full. */
+    private fun plannedRacks(vehicle: VehicleEntity, validated: CompoundTag): Map<String, AircraftLoadoutCost.Rack> {
+        val available = mounts(definition(vehicle)!!).associateBy { it["Id"].asString }
+        val chosen = validated.getCompound("Selections"); val counts = validated.getCompound("Counts")
+        return chosen.allKeys.associateWith { key ->
+            val id = chosen.getString(key)
+            val store = AircraftArmamentRegistry.stores.getValue(ResourceLocation(id))
+            AircraftLoadoutCost.Rack(id, AircraftLoadoutCost.ammoId(store),
+                liveRounds(vehicle, available.getValue(key), store, counts.getInt(key).coerceAtLeast(1), 0))
+        }
+    }
+    private fun loadoutPlan(player: ServerPlayer, vehicle: VehicleEntity, validated: CompoundTag,
+                            fitted: Map<String, AircraftLoadoutCost.Rack> = fittedRacks(vehicle),
+                            exempt: Boolean = ammoExempt(player, vehicle)) =
+        AircraftLoadoutCost.plan(fitted, plannedRacks(vehicle, validated), exempt)
+    private fun ammoName(id: String): String {
+        val item = ResourceLocation.tryParse(id)?.takeIf(ForgeRegistries.ITEMS::containsKey)
+            ?.let(ForgeRegistries.ITEMS::getValue) ?: return id
+        val key = item.descriptionId
+        // A dedicated server has no mod language files; fall back to the item path in title case.
+        return if (net.minecraft.locale.Language.getInstance().has(key)) net.minecraft.locale.Language.getInstance().getOrDefault(key)
+            else id.substringAfter(':').split('_', '/').filter { it.isNotEmpty() }
+                .joinToString(" ") { it.replaceFirstChar(Char::uppercaseChar) }
+    }
+    /** Takes the plan's cost from the pilot all-or-nothing and gives refunds back (overflow drops). */
+    private fun settle(player: ServerPlayer, plan: AircraftLoadoutCost.Plan) {
+        if (plan.net.isEmpty()) return
+        val items = LinkedHashMap<net.minecraft.world.item.Item, Int>()
+        for ((id, delta) in plan.net) {
+            val item = ResourceLocation.tryParse(id)?.takeIf(ForgeRegistries.ITEMS::containsKey)
+                ?.let(ForgeRegistries.ITEMS::getValue)?.takeIf { it != net.minecraft.world.item.Items.AIR }
+            // Unknown ammunition cannot be charged; a refund of it is simply dropped.
+            if (item == null) { require(delta < 0) { "Unknown store ammunition: $id" }; continue }
+            items.merge(item, delta, Int::plus)
+        }
+        val inventory = net.minecraftforge.items.wrapper.CombinedInvWrapper(
+            net.minecraftforge.items.wrapper.PlayerMainInvWrapper(player.inventory),
+            net.minecraftforge.items.wrapper.PlayerOffhandInvWrapper(player.inventory))
+        AircraftLoadoutCost.settle(inventory, items, { ammoName(ForgeRegistries.ITEMS.getKey(it).toString()) }) { item, count ->
+            InventoryTool.insertItem(player, ItemStack(item), count)
+        }
     }
     internal fun nativeWeapons(pair: JsonObject, storeId: String?): List<String> {
         val mapped = storeId?.let { pair.getAsJsonObject("NativeWeaponIds")?.get(it) }
@@ -344,8 +417,34 @@ object AircraftArmamentManager {
         // snapshot. Keep its saved bytes; LOAD still validates them before changing equipment.
         if (oldPreset && message.isBlank()) out.addProperty("Message", "Some saved presets need refitting after station changes.")
         out.add("Presets", saved)
+        // Pilot-private loadout ammunition: exemption, paid munitions per hardpoint and server-priced presets.
+        val exempt = ammoExempt(player, lease.vehicle)
+        out.addProperty("AmmoExempt", exempt)
+        val paid = equipment(lease.vehicle).getCompound(PAID)
+        out.add("Paid", JsonObject().also { j -> for (key in paid.allKeys) if (key in available) j.addProperty(key, paid.getInt(key)) })
+        if (!exempt && available.isNotEmpty()) {
+            val fitted = fittedRacks(lease.vehicle)
+            out.add("PresetCosts", JsonObject().also { costs -> for (name in nbt.allKeys) {
+                val (choices, counts) = presetRequest(nbt.getCompound(name))
+                val plan = try {
+                    loadoutPlan(player, lease.vehicle, validateSelections(lease.vehicle, choices, counts, savedPreset = true), fitted, false)
+                } catch (_: RuntimeException) { continue }
+                costs.add(name, JsonObject().also { j -> plan.net.forEach { (ammo, delta) -> j.addProperty(ammo, delta) } })
+            } })
+        }
         AircraftArmamentNetwork.send(player, out)
     }
+    /** A saved preset's selections and rack counts, in APPLY request form. */
+    private fun presetRequest(stored: CompoundTag): Pair<JsonObject, JsonObject> {
+        val n = if (stored.contains("Selections", 10)) stored.getCompound("Selections") else stored
+        val choices = JsonObject().also { j -> for (k in n.allKeys) j.addProperty(k, n.getString(k)) }
+        val counts = JsonObject().also { j -> val c = stored.getCompound("Counts")
+            for (k in c.allKeys) j.addProperty(k, c.getInt(k)) }
+        return choices to counts
+    }
+    /** Success text naming what the refit cost and returned; bounded for the snapshot Message field. */
+    private fun fittedMessage(done: String, plan: AircraftLoadoutCost.Plan): String =
+        if (plan.net.isEmpty()) "$done." else "$done · ${AircraftLoadoutCost.summary(plan.net, ::ammoName)}".take(240)
     private fun publish(vehicle: VehicleEntity) {
         val out = snapshot(vehicle)
         for (player in recipients(vehicle)) {
@@ -407,7 +506,10 @@ object AircraftArmamentManager {
         try {
             when (request.operation) {
                 "COMMAND" -> AircraftManualCommand.accept(vehicle,player,body,now)
-                "APPLY" -> { apply(vehicle, body); publish(vehicle); reply(player, lease, message = "Armament equipped.") }
+                "APPLY" -> {
+                    val plan = apply(player, vehicle, body); publish(vehicle)
+                    reply(player, lease, message = fittedMessage("Armament equipped", plan))
+                }
                 "SAVE_PRESET" -> {
                     val name = presetName(body); val choices = validateSelections(vehicle, body.getAsJsonObject("Selections"), body.getAsJsonObject("Counts"))
                     val saved = presets(player, vehicle); require(saved.contains(name) || saved.allKeys.size < 16) { "Preset limit reached (16)." }
@@ -418,14 +520,11 @@ object AircraftArmamentManager {
                 "LOAD_PRESET" -> {
                     val name = presetName(body); val saved = presets(player, vehicle)
                     require(saved.contains(name, 10)) { "Preset not found." }
-                    val stored = saved.getCompound(name)
-                    val n = if (stored.contains("Selections", 10)) stored.getCompound("Selections") else stored
-                    val choices = JsonObject().also { j -> for (k in n.allKeys) j.addProperty(k, n.getString(k)) }
-                    val counts = JsonObject().also { j -> val c = stored.getCompound("Counts")
-                        for (k in c.allKeys) j.addProperty(k, c.getInt(k)) }
+                    val (choices, counts) = presetRequest(saved.getCompound(name))
                     val applyBody = JsonObject().also { it.addProperty("Revision", equipment(vehicle).getLong("Revision"))
                         it.add("Selections", choices); it.add("Counts", counts) }
-                    apply(vehicle, applyBody, savedPreset = true); publish(vehicle); reply(player, lease, message = "Preset equipped.")
+                    val plan = apply(player, vehicle, applyBody, savedPreset = true); publish(vehicle)
+                    reply(player, lease, message = fittedMessage("Preset equipped", plan))
                 }
                 "DELETE_PRESET" -> { presets(player, vehicle).remove(presetName(body)); reply(player, lease, message = "Preset deleted.") }
                 "POD" -> {
@@ -514,14 +613,22 @@ object AircraftArmamentManager {
         require(mass <= limit + 1.0e-6) { "Payload ${mass.toInt()} kg exceeds maximum ${limit.toInt()} kg." }
         return validated
     }
-    private fun apply(vehicle: VehicleEntity, body: JsonObject, savedPreset: Boolean = false) {
+    private fun apply(player: ServerPlayer, vehicle: VehicleEntity, body: JsonObject,
+                      savedPreset: Boolean = false): AircraftLoadoutCost.Plan {
         require(vehicle.onGround() && vehicle.deltaMovement.lengthSqr() <= 0.0025) { "Stop the aircraft on the ground before fitting weapons." }
         val state = equipment(vehicle)
         require(body["Revision"]?.asLong == state.getLong("Revision")) { "Loadout changed; reopen the editor." }
         val choices = validateSelections(vehicle, body.getAsJsonObject("Selections"), body.getAsJsonObject("Counts"), savedPreset)
+        // Every hardpoint is refitted full: pay for what is missing, get back what comes off. Nothing
+        // below may change the loadout unless the pilot's inventory settled the whole price.
+        val plan = loadoutPlan(player, vehicle, choices)
+        settle(player, plan)
         state.put("Selections", choices.getCompound("Selections")); state.put("Counts", choices.getCompound("Counts")); state.putLong("Revision", state.getLong("Revision") + 1)
+        state.put(PAID, CompoundTag().also { paid -> for (key in choices.getCompound("Selections").allKeys)
+            plan.paid(key).takeIf { it > 0 }?.let { paid.putInt(key, it) } })
         state.remove("Fired"); state.remove("LastFire"); state.remove("GroupCursor"); AircraftMissileLauncher.clear(vehicle)
         AircraftRocketPodOrder.clear(vehicle); selectGuns(vehicle)
+        return plan
     }
     private fun fire(player: ServerPlayer, vehicle: VehicleEntity, body: JsonObject) {
         val pair = mounts(definition(vehicle)!!).firstOrNull { it["Id"].asString == body["Pair"]?.asString }
@@ -569,21 +676,12 @@ object AircraftArmamentManager {
         require(!com.atsuishio.superbwarfare.api.vehicle.flight.AircraftWreckBreakup.detachedAt(vehicle, mount)) {
             "This weapon station was detached with the wing."
         }
-        val ammoItem = store["AmmoItem"]?.asString?.let { value ->
-            val itemId = ResourceLocation.tryParse(value)
-            require(itemId != null && ForgeRegistries.ITEMS.containsKey(itemId)) { "Unknown store ammunition: $value" }
-            requireNotNull(ForgeRegistries.ITEMS.getValue(itemId)).also {
-                require(it != net.minecraft.world.item.Items.AIR) { "Store ammunition cannot be empty." }
-            }
-        }
-        require(AircraftStoreAmmunition.fire(vehicle.inventory, ammoItem, player.isCreative,
-            { vehicle.spawnAtLocation(it) }) {
-            when {
-                guidedMissile -> AircraftMissileLauncher.launch(vehicle, player, selectedGroup, mount, store)
-                bomb -> AircraftBombLauncher.launch(vehicle, player, mount, store, selectedGroup)
-                cruise -> AircraftCruiseLauncher.launch(vehicle, player, mount, store)
-                else -> AircraftLaserLauncher.launch(vehicle, player, mount, store, selectedGroup)
-            }
+        // The munition was bought when it was fitted (AircraftLoadoutCost); releasing it spends only the rack round.
+        require(when {
+            guidedMissile -> AircraftMissileLauncher.launch(vehicle, player, selectedGroup, mount, store)
+            bomb -> AircraftBombLauncher.launch(vehicle, player, mount, store, selectedGroup)
+            cruise -> AircraftCruiseLauncher.launch(vehicle, player, mount, store)
+            else -> AircraftLaserLauncher.launch(vehicle, player, mount, store, selectedGroup)
         }) { "Munition release failed or launch conditions changed." }
         fired.putInt(key, used + 1); state.put("Fired", fired); times.putLong(key, now); state.put("LastFire", times)
         state.putLong("Revision", state.getLong("Revision") + 1)

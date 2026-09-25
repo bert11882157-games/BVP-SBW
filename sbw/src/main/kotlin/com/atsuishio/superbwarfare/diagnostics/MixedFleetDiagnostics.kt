@@ -6,11 +6,14 @@ import com.atsuishio.superbwarfare.api.aircraft.AircraftArmamentRegistry
 import com.atsuishio.superbwarfare.api.aircraft.AircraftPylonRacks
 import com.atsuishio.superbwarfare.api.diagnostics.DebugFeaturePolicy
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity
+import com.atsuishio.superbwarfare.init.ModItems
+import com.atsuishio.superbwarfare.tools.InventoryTool
 import com.google.gson.JsonObject
 import net.minecraft.commands.Commands
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 import net.minecraft.world.phys.Vec3
 import net.minecraftforge.event.RegisterCommandsEvent
@@ -80,6 +83,8 @@ object MixedFleetDiagnostics {
         private var age = 0
         private var phase = "setup"
         private var capture = false
+        /** Loadout munitions are bought when fitted; the workload fits real stores without spending the operator's. */
+        private var grantedAmmoBox = false
 
         fun record(event: String, vararg values: Pair<String, Any>) {
             val fields = (listOf("age" to age, "phase" to phase) + values).flatMap { listOf(it.first, it.second) }
@@ -90,6 +95,10 @@ object MixedFleetDiagnostics {
             check(EliteDiagnostics.start(player.server).startsWith("Elite diagnostics enabled"))
             capture = true
             player.abilities.flying = true; player.onUpdateAbilities()
+            if (!player.isCreative && !InventoryTool.hasCreativeAmmoBox(player)) {
+                check(player.inventory.add(ItemStack(ModItems.CREATIVE_AMMO_BOX.get()))) { "No room for a creative ammo box" }
+                grantedAmmoBox = true
+            }
             observe()
             record("START", "vehicles" to 16, "ids" to ids, "phases" to phases,
                 "warmup_ticks_per_phase" to 200, "measure_ticks_per_phase" to 600,
@@ -194,6 +203,12 @@ object MixedFleetDiagnostics {
                 record("COMPLETE", "status" to status, "reason" to reason, "owned_live_vehicles" to 0)
                 player.teleportTo(level, saved.x, saved.y, saved.z, yaw, pitch)
                 player.abilities.flying = flying; player.onUpdateAbilities()
+                if (grantedAmmoBox) {
+                    grantedAmmoBox = false
+                    (0 until player.inventory.containerSize).firstOrNull {
+                        player.inventory.getItem(it).`is`(ModItems.CREATIVE_AMMO_BOX.get())
+                    }?.let { player.inventory.removeItem(it, 1) }
+                }
             } finally {
                 if (capture) EliteDiagnostics.stop(player.server)
                 active = null
