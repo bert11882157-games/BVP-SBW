@@ -529,85 +529,135 @@ public final class BvpTracerRenderer {
         if (!finite(direction) || direction.m_82556_() <= MIN_DIRECTION_SQR) {
             return;
         }
-        Vec3 forward = direction.m_82541_();
-        Vec3 start = end.m_82549_(forward.m_82490_(-profile.lengthBlocks() * scale));
-        drawSegment(consumer, matrix, cameraPosition, start, end, forward, profile, remainingLife, scale);
+        double length = Math.sqrt(direction.m_82556_());
+        if (length < 1.0E-4D) return;
+        double fx = direction.f_82479_ / length;
+        double fy = direction.f_82480_ / length;
+        double fz = direction.f_82481_ / length;
+        double back = -profile.lengthBlocks() * scale;
+        drawSegment(consumer, matrix, cameraPosition,
+                end.f_82479_ + fx * back, end.f_82480_ + fy * back, end.f_82481_ + fz * back,
+                end.f_82479_, end.f_82480_, end.f_82481_, fx, fy, fz, profile, remainingLife, scale);
     }
 
     private static void drawSegment(VertexConsumer consumer, Matrix4f matrix, Vec3 cameraPosition,
                                     Vec3 start, Vec3 end, Vec3 forward,
                                     BvpTracerProfile profile, float remainingLife, float scale) {
-        Vec3 midpoint = start.m_82549_(end).m_82490_(0.5D);
-        Vec3 side = forward.m_82537_(cameraPosition.m_82546_(midpoint));
-        if (side.m_82556_() <= MIN_DIRECTION_SQR) {
-            side = forward.m_82537_(leastParallelAxis(forward));
+        drawSegment(consumer, matrix, cameraPosition,
+                start.f_82479_, start.f_82480_, start.f_82481_,
+                end.f_82479_, end.f_82480_, end.f_82481_,
+                forward.f_82479_, forward.f_82480_, forward.f_82481_, profile, remainingLife, scale);
+    }
+
+    /** Allocation-free: this runs for every live and retained beam on every rendered frame. */
+    private static void drawSegment(VertexConsumer consumer, Matrix4f matrix, Vec3 cameraPosition,
+                                    double sx, double sy, double sz, double ex, double ey, double ez,
+                                    double fx, double fy, double fz,
+                                    BvpTracerProfile profile, float remainingLife, float scale) {
+        double tx = cameraPosition.f_82479_ - (sx + ex) * 0.5D;
+        double ty = cameraPosition.f_82480_ - (sy + ey) * 0.5D;
+        double tz = cameraPosition.f_82481_ - (sz + ez) * 0.5D;
+        double sideX = fy * tz - fz * ty;
+        double sideY = fz * tx - fx * tz;
+        double sideZ = fx * ty - fy * tx;
+        if (sideX * sideX + sideY * sideY + sideZ * sideZ <= MIN_DIRECTION_SQR) {
+            Vec3 axis = leastParallelAxis(fx, fy, fz);
+            sideX = fy * axis.f_82481_ - fz * axis.f_82480_;
+            sideY = fz * axis.f_82479_ - fx * axis.f_82481_;
+            sideZ = fx * axis.f_82480_ - fy * axis.f_82479_;
         }
-        if (side.m_82556_() <= MIN_DIRECTION_SQR) {
+        double sideLength = Math.sqrt(sideX * sideX + sideY * sideY + sideZ * sideZ);
+        if (sideLength * sideLength <= MIN_DIRECTION_SQR || sideLength < 1.0E-4D) {
             return;
         }
-        side = side.m_82541_();
-        Vec3 up = forward.m_82537_(side).m_82541_();
-        Vec3 diagonalA = side.m_82549_(up).m_82541_();
-        Vec3 diagonalB = side.m_82546_(up).m_82541_();
+        sideX /= sideLength; sideY /= sideLength; sideZ /= sideLength;
+        double upX = fy * sideZ - fz * sideY;
+        double upY = fz * sideX - fx * sideZ;
+        double upZ = fx * sideY - fy * sideX;
+        double upLength = Math.sqrt(upX * upX + upY * upY + upZ * upZ);
+        if (upLength < 1.0E-4D) return;
+        upX /= upLength; upY /= upLength; upZ /= upLength;
+        double aX = sideX + upX, aY = sideY + upY, aZ = sideZ + upZ;
+        double aLength = Math.sqrt(aX * aX + aY * aY + aZ * aZ);
+        double bX = sideX - upX, bY = sideY - upY, bZ = sideZ - upZ;
+        double bLength = Math.sqrt(bX * bX + bY * bY + bZ * bZ);
+        if (aLength < 1.0E-4D || bLength < 1.0E-4D) return;
+        aX /= aLength; aY /= aLength; aZ /= aLength;
+        bX /= bLength; bY /= bLength; bZ /= bLength;
         float baseAlpha = profile.opacity() * remainingLife;
         float glowAlpha = baseAlpha * profile.glowOpacityScale();
         float coreAlpha = baseAlpha * profile.coreOpacityScale();
         double glowHalfWidth = profile.widthBlocks() * profile.glowWidthScale() * 0.5D * scale;
         double coreHalfWidth = profile.widthBlocks() * profile.coreWidthScale() * 0.5D * scale;
 
-        quad(consumer, matrix, start, end, side, glowHalfWidth, profile, glowAlpha);
-        quad(consumer, matrix, start, end, up, glowHalfWidth, profile, glowAlpha);
-        quad(consumer, matrix, start, end, diagonalA, glowHalfWidth, profile, glowAlpha);
-        quad(consumer, matrix, start, end, diagonalB, glowHalfWidth, profile, glowAlpha);
-        quad(consumer, matrix, start, end, side, coreHalfWidth, profile, coreAlpha);
-        quad(consumer, matrix, start, end, up, coreHalfWidth, profile, coreAlpha);
+        quad(consumer, matrix, sx, sy, sz, ex, ey, ez, sideX, sideY, sideZ, glowHalfWidth, profile, glowAlpha);
+        quad(consumer, matrix, sx, sy, sz, ex, ey, ez, upX, upY, upZ, glowHalfWidth, profile, glowAlpha);
+        quad(consumer, matrix, sx, sy, sz, ex, ey, ez, aX, aY, aZ, glowHalfWidth, profile, glowAlpha);
+        quad(consumer, matrix, sx, sy, sz, ex, ey, ez, bX, bY, bZ, glowHalfWidth, profile, glowAlpha);
+        quad(consumer, matrix, sx, sy, sz, ex, ey, ez, sideX, sideY, sideZ, coreHalfWidth, profile, coreAlpha);
+        quad(consumer, matrix, sx, sy, sz, ex, ey, ez, upX, upY, upZ, coreHalfWidth, profile, coreAlpha);
     }
 
-    private static void quad(VertexConsumer consumer, Matrix4f matrix, Vec3 start, Vec3 end,
-                             Vec3 normal, double halfWidth, BvpTracerProfile profile, float alpha) {
+    private static void quad(VertexConsumer consumer, Matrix4f matrix,
+                             double sx, double sy, double sz, double ex, double ey, double ez,
+                             double nx, double ny, double nz, double halfWidth,
+                             BvpTracerProfile profile, float alpha) {
         if (!(halfWidth > 0.0D) || !(alpha > 0.0F)) {
             return;
         }
-        Vec3 offset = normal.m_82490_(halfWidth);
-        vertex(consumer, matrix, start.m_82546_(offset), profile, alpha);
-        vertex(consumer, matrix, end.m_82546_(offset), profile, alpha);
-        vertex(consumer, matrix, end.m_82549_(offset), profile, alpha);
-        vertex(consumer, matrix, start.m_82549_(offset), profile, alpha);
+        double ox = nx * halfWidth, oy = ny * halfWidth, oz = nz * halfWidth;
+        vertex(consumer, matrix, sx - ox, sy - oy, sz - oz, profile, alpha);
+        vertex(consumer, matrix, ex - ox, ey - oy, ez - oz, profile, alpha);
+        vertex(consumer, matrix, ex + ox, ey + oy, ez + oz, profile, alpha);
+        vertex(consumer, matrix, sx + ox, sy + oy, sz + oz, profile, alpha);
     }
 
     /** A distant live tracer remains readable end-on; retained trails and collision size are unchanged. */
     private static void drawFarHead(VertexConsumer consumer, Matrix4f matrix, Vec3 camera,
                                     Vec3 point, BvpTracerProfile profile, float scale) {
-        Vec3 view = camera.m_82546_(point);
-        double distance = view.m_82553_();
+        double vx = camera.f_82479_ - point.f_82479_;
+        double vy = camera.f_82480_ - point.f_82480_;
+        double vz = camera.f_82481_ - point.f_82481_;
+        double distance = Math.sqrt(vx * vx + vy * vy + vz * vz);
         if (!(distance > 160.0D) || !(worldUnitsPerPixelPerDistance > 0.0D)) return;
-        view = view.m_82490_(1.0D / distance);
-        Vec3 side = view.m_82537_(leastParallelAxis(view)).m_82541_();
-        Vec3 up = view.m_82537_(side).m_82541_();
+        vx /= distance; vy /= distance; vz /= distance;
+        Vec3 axis = leastParallelAxis(vx, vy, vz);
+        double sideX = vy * axis.f_82481_ - vz * axis.f_82480_;
+        double sideY = vz * axis.f_82479_ - vx * axis.f_82481_;
+        double sideZ = vx * axis.f_82480_ - vy * axis.f_82479_;
+        double sideLength = Math.sqrt(sideX * sideX + sideY * sideY + sideZ * sideZ);
+        if (sideLength < 1.0E-4D) return;
+        sideX /= sideLength; sideY /= sideLength; sideZ /= sideLength;
+        double upX = vy * sideZ - vz * sideY;
+        double upY = vz * sideX - vx * sideZ;
+        double upZ = vx * sideY - vy * sideX;
+        double upLength = Math.sqrt(upX * upX + upY * upY + upZ * upZ);
+        if (upLength < 1.0E-4D) return;
+        upX /= upLength; upY /= upLength; upZ /= upLength;
         float fade = (float) Math.min(1.0D, (distance - 160.0D) / 160.0D);
         double pixel = distance * worldUnitsPerPixelPerDistance * scale;
         double glow = Math.max(profile.widthBlocks() * profile.glowWidthScale() * scale * 0.5D, pixel);
         double core = Math.max(profile.widthBlocks() * profile.coreWidthScale() * scale * 0.5D, pixel * 0.4D);
-        quad(consumer, matrix, point.m_82546_(side.m_82490_(glow)), point.m_82549_(side.m_82490_(glow)),
-                up, glow, profile, profile.opacity() * profile.glowOpacityScale() * fade);
-        quad(consumer, matrix, point.m_82546_(side.m_82490_(core)), point.m_82549_(side.m_82490_(core)),
-                up, core, profile, profile.opacity() * profile.coreOpacityScale() * fade);
+        double px = point.f_82479_, py = point.f_82480_, pz = point.f_82481_;
+        quad(consumer, matrix, px - sideX * glow, py - sideY * glow, pz - sideZ * glow,
+                px + sideX * glow, py + sideY * glow, pz + sideZ * glow,
+                upX, upY, upZ, glow, profile, profile.opacity() * profile.glowOpacityScale() * fade);
+        quad(consumer, matrix, px - sideX * core, py - sideY * core, pz - sideZ * core,
+                px + sideX * core, py + sideY * core, pz + sideZ * core,
+                upX, upY, upZ, core, profile, profile.opacity() * profile.coreOpacityScale() * fade);
     }
 
-    private static void vertex(VertexConsumer consumer, Matrix4f matrix, Vec3 position,
+    private static void vertex(VertexConsumer consumer, Matrix4f matrix, double x, double y, double z,
                                BvpTracerProfile profile, float alpha) {
-        consumer.m_252986_(matrix,
-                        (float) position.f_82479_,
-                        (float) position.f_82480_,
-                        (float) position.f_82481_)
+        consumer.m_252986_(matrix, (float) x, (float) y, (float) z)
                 .m_85950_(profile.red(), profile.green(), profile.blue(), alpha)
                 .m_5752_();
     }
 
-    private static Vec3 leastParallelAxis(Vec3 direction) {
-        double x = Math.abs(direction.f_82479_);
-        double y = Math.abs(direction.f_82480_);
-        double z = Math.abs(direction.f_82481_);
+    private static Vec3 leastParallelAxis(double dx, double dy, double dz) {
+        double x = Math.abs(dx);
+        double y = Math.abs(dy);
+        double z = Math.abs(dz);
         return x <= y && x <= z ? WORLD_X : y <= z ? WORLD_Y : WORLD_Z;
     }
 

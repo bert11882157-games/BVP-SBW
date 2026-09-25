@@ -5,7 +5,10 @@ import com.atsuishio.superbwarfare.api.vehicle.weapon.prediction.NominalProjecti
 import com.atsuishio.superbwarfare.Mod.Companion.queueServerWork
 import com.atsuishio.superbwarfare.api.event.ProjectileHitEvent.HitBlock
 import com.atsuishio.superbwarfare.api.event.ProjectileHitEvent.HitEntity
+import com.atsuishio.superbwarfare.api.projectile.BallisticSync
 import com.atsuishio.superbwarfare.api.projectile.ProfiledProjectile
+import com.atsuishio.superbwarfare.api.projectile.SmoothedBallisticProjectile
+import com.atsuishio.superbwarfare.api.vehicle.weapon.AircraftRoundConsolidation
 import com.atsuishio.superbwarfare.api.projectile.FarProjectileAccess
 import com.atsuishio.superbwarfare.api.projectile.FarProjectileSimulation
 import com.atsuishio.superbwarfare.api.projectile.ProjectileProfiles
@@ -56,7 +59,8 @@ import net.minecraftforge.network.NetworkHooks
 import java.util.function.Consumer
 
 abstract class FastThrowableProjectile : ThrowableItemProjectile, CustomSyncMotionEntity, IEntityAdditionalSpawnData,
-    ExplosiveProjectile, ProfiledProjectile, SequencedProjectile, ProjectileImpactDamagePolicy, FarProjectileAccess {
+    ExplosiveProjectile, ProfiledProjectile, SequencedProjectile, ProjectileImpactDamagePolicy, FarProjectileAccess,
+    SmoothedBallisticProjectile {
     override fun farProjectileExplosionRadius(): Double = explosionRadiusValue.toDouble()
     override fun farProjectileLifetimeTicks(): Int = getLife().coerceIn(0, 2399) + 1
     override fun farProjectileTerminatesNextTick(currentAge: Int): Boolean = currentAge >= getLife()
@@ -74,6 +78,13 @@ abstract class FastThrowableProjectile : ThrowableItemProjectile, CustomSyncMoti
     private var activeImpactResult: ProjectileImpactResult? = null
     private var motionSyncPending = false
     private var pendingMotionSyncTick = 0
+    /** Server: state at the start of the current step, compared with the clients' prediction. */
+    private var ballisticStartPosition: Vec3? = null
+    private var ballisticStartVelocity: Vec3 = Vec3.ZERO
+    /** Client: outstanding step-aligned correction, blended over a few ticks. */
+    private val ballisticCorrection = BallisticSync.Correction()
+    /** Client: spawn data (exact velocity) has been applied; later tracker velocity is clamped. */
+    private var ballisticSpawned = false
 
     var damageValue: Float = 0f
     var explosionDamageValue: Float = 0f
@@ -190,6 +201,11 @@ abstract class FastThrowableProjectile : ThrowableItemProjectile, CustomSyncMoti
 
     override fun tick() {
         motionSyncPending = false
+        ballisticStartPosition = null
+        if (!level().isClientSide && smoothsBallisticFlight()) {
+            ballisticStartPosition = position()
+            ballisticStartVelocity = deltaMovement
+        }
         com.atsuishio.superbwarfare.diagnostics.EliteVehicleDiagnostics.projectile(this)
         super.tick()
 
@@ -215,6 +231,10 @@ abstract class FastThrowableProjectile : ThrowableItemProjectile, CustomSyncMoti
         )
 
         // 重新应用重力
+
+        if (level().isClientSide && !isRemoved) {
+            ballisticCorrection.next()?.let { this.setPos(this.x + it.x, this.y + it.y, this.z + it.z) }
+        }
 
         // 同步动量
         if (!isRemoved) {
@@ -486,6 +506,17 @@ abstract class FastThrowableProjectile : ThrowableItemProjectile, CustomSyncMoti
         when (motionSyncMode()) {
             MotionSyncMode.NONE -> return
             MotionSyncMode.ENTITY_INTERVAL -> {
+                if (smoothsBallisticFlight()) {
+                    // Clients run the same step; publish only a departure from it or a sparse realignment.
+                    val start = ballisticStartPosition
+                    ballisticStartPosition = null
+                    val deviated = start == null || BallisticSync.deviates(start, ballisticStartVelocity,
+                        position(), deltaMovement, ballisticStep(ballisticStartVelocity))
+                    if (!deviated && this.tickCount % BallisticSync.CORRECTION_INTERVAL_TICKS != 0) return
+                    NetworkTelemetry.recordSystemWork("projectile.motion_correction")
+                    sendPacketToTrackingThis(ClientMotionSyncMessage.ballistic(this))
+                    return
+                }
                 if (this.tickCount % this.type.updateInterval() != 0) return
             }
             MotionSyncMode.EVERY_TICK -> Unit
@@ -508,6 +539,58 @@ abstract class FastThrowableProjectile : ThrowableItemProjectile, CustomSyncMoti
         return this.deltaMovement.length() >= 0.5
     }
 
+    /** Opt-in for unguided rounds whose whole flight is the deterministic air step below. */
+    override fun smoothsBallisticFlight(): Boolean = false
+
+    override fun ballisticStep(velocity: Vec3): Vec3 =
+        NominalProjectileMotion.afterFastThrowableAirStep(velocity, this.gravity.toDouble())
+
+    override fun acceptBallisticState(tick: Int, position: Vec3, velocity: Vec3) {
+        if (!level().isClientSide || isRemoved) return
+        val gravity = this.gravity.toDouble()
+        val dragProduct = 0.99f.toDouble() * (1f / 0.99f).toDouble()
+        val aligned = BallisticSync.align(tick, tickCount, position, velocity, this::ballisticStep) {
+            it.add(0.0, gravity, 0.0).scale(1.0 / dragProduct)
+        }
+        if (aligned == null) {
+            snapBallistic(position, velocity)
+            return
+        }
+        this.deltaMovement = aligned.second
+        if (!ballisticCorrection.offer(aligned.first.subtract(position()), aligned.second.length())) {
+            snapBallistic(aligned.first, aligned.second)
+        }
+    }
+
+    private fun snapBallistic(position: Vec3, velocity: Vec3) {
+        ballisticCorrection.clear()
+        this.setPos(position)
+        this.xo = position.x; this.yo = position.y; this.zo = position.z
+        this.xOld = position.x; this.yOld = position.y; this.zOld = position.z
+        this.deltaMovement = velocity
+    }
+
+    /**
+     * Vanilla motion packets clamp each axis to 3.9 blocks/tick. After the exact spawn velocity, a
+     * deterministic round takes velocity only from step-aligned motion messages.
+     */
+    override fun lerpMotion(x: Double, y: Double, z: Double) {
+        if (ballisticSpawned && level().isClientSide && smoothsBallisticFlight()) return
+        super.lerpMotion(x, y, z)
+    }
+
+    /** Tracker positions carry no simulation step; step-aligned motion messages own corrections. */
+    override fun lerpTo(x: Double, y: Double, z: Double, yRot: Float, xRot: Float, steps: Int, teleport: Boolean) {
+        if (level().isClientSide && smoothsBallisticFlight()) {
+            val target = Vec3(x, y, z)
+            if (BallisticSync.grossDivergence(target.subtract(position()), deltaMovement)) {
+                snapBallistic(target, deltaMovement)
+            }
+            return
+        }
+        super.lerpTo(x, y, z, yRot, xRot, steps, teleport)
+    }
+
     open fun shouldSyncMotion(): Boolean {
         return true
     }
@@ -518,6 +601,9 @@ abstract class FastThrowableProjectile : ThrowableItemProjectile, CustomSyncMoti
         buffer.writeFloat(motion.y.toFloat())
         buffer.writeFloat(motion.z.toFloat())
         buffer.writeVarInt(this.tickCount)
+        // Client flight uses the authored drop per tick, not the constructor default.
+        buffer.writeFloat(this.gravityValue)
+        buffer.writeVarInt(AircraftRoundConsolidation.weight(this))
         ProjectileProfiles.writeSpawnData(this, buffer)
     }
 
@@ -528,6 +614,10 @@ abstract class FastThrowableProjectile : ThrowableItemProjectile, CustomSyncMoti
             additionalData.readFloat().toDouble()
         )
         this.tickCount = additionalData.readVarInt()
+        val syncedGravity = additionalData.readFloat()
+        if (syncedGravity.isFinite()) this.gravityValue = syncedGravity
+        AircraftRoundConsolidation.mark(this, additionalData.readVarInt())
+        ballisticSpawned = true
         ProjectileProfiles.readSpawnData(this, additionalData)
     }
 

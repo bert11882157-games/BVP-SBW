@@ -3,6 +3,7 @@ package com.atsuishio.superbwarfare.client.renderer
 import com.atsuishio.superbwarfare.Mod
 import com.atsuishio.superbwarfare.api.vehicle.flight.AircraftWreckBreakup
 import com.atsuishio.superbwarfare.api.vehicle.flight.FixedWingFlightStrategy
+import com.atsuishio.superbwarfare.api.vehicle.flight.WreckDebrisPhysics
 import com.atsuishio.superbwarfare.client.FarTerrainClient
 import com.atsuishio.superbwarfare.client.particle.AircraftCombatParticles
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity
@@ -28,13 +29,19 @@ object AircraftDetachedWings {
     }
     private data class Key(val id: UUID, val side: Int, val started: Long)
     private data class Part(val motion: AircraftDebrisMotion, val visual: Visual, val radius: Double,
-                            val corners: List<Vec3>, val halfExtents: Vec3, val owner: UUID, val fuselage: Boolean)
+                            val halfExtents: Vec3, val owner: UUID, val fuselage: Boolean) {
+        var reported = false
+    }
     private val pieces = LinkedHashMap<Key, Part>()
     private val observed = LinkedHashMap<Key, Long>()
     private var world: Any? = null
     private var clock = 0L
     private var lastRenderDiagnostic = Long.MIN_VALUE
     private val random = java.util.Random()
+    /** Fragments of one aircraft may interpenetrate this much before they are pushed apart. */
+    private const val SIBLING_OVERLAP = .1
+    /** Shallow embedded samples recover from this far above; deeper burial is left to depenetration. */
+    private const val SAMPLE_PROBE = 1.25
 
     @JvmStatic fun clear() {
         pieces.clear(); observed.clear(); world = Minecraft.getInstance().level; clock = 0
@@ -52,7 +59,15 @@ object AircraftDetachedWings {
             Key(vehicle.uuid, side, vehicle.aircraftWreckStart) !in observed
     }
 
-    /** Center is world-space, orientation maps captured mesh-local coordinates into world space. */
+    private fun clip(start: Vec3, end: Vec3) =
+        com.atsuishio.superbwarfare.compat.voxy.ClientDebrisTerrain.clip(ClipContext(start, end, ClipContext.Block.COLLIDER,
+            ClipContext.Fluid.ANY, Minecraft.getInstance().player)).takeUnless { it.type == HitResult.Type.MISS }
+    private val surface = AircraftDebrisMotion.Surface { from, depth -> AircraftDebrisContact.surface(from, depth, ::clip) }
+
+    /**
+     * Center is world-space, orientation maps captured mesh-local coordinates into world space.
+     * [halfExtents] should describe the load-bearing core of the mesh, not its thin protrusions.
+     */
     @JvmStatic fun capture(vehicle: VehicleEntity, side: Int, center: Vec3, orientation: Quaternionf,
                            halfExtents: Vec3, visual: Visual) {
         if (!needsCapture(vehicle, side)) return
@@ -61,20 +76,38 @@ object AircraftDetachedWings {
         observed[key] = clock
         if (observed.size > 512) observed.remove(observed.keys.first())
         if (pieces.size >= 64) pieces.remove(pieces.keys.first())
-        val motion = Vec3(vehicle.aircraftWreckMotionX.toDouble(), vehicle.aircraftWreckMotionY.toDouble(),
+        val stored = Vec3(vehicle.aircraftWreckMotionX.toDouble(), vehicle.aircraftWreckMotionY.toDouble(),
             vehicle.aircraftWreckMotionZ.toDouble())
             .takeIf { it.x.isFinite() && it.y.isFinite() && it.z.isFinite() && it.lengthSqr() < 10000 }
             ?: vehicle.deltaMovement
         val gravity = (vehicle.resolveVehicleFlightStrategy() as? FixedWingFlightStrategy)
             ?.handling?.gravityMps2?.div(400.0)?.coerceAtLeast(9.80665 / 400.0) ?: (9.80665 / 400.0)
+        val friction = if (fuselage) WreckDebrisPhysics.FUSELAGE_FRICTION else WreckDebrisPhysics.WING_FRICTION
+        // A piece first seen long after the impact inherits what the sliding wreck still has.
+        val elapsed = if (vehicle.aircraftWreckImpactTime >= 0)
+            (vehicle.level().gameTime - vehicle.aircraftWreckImpactTime).coerceAtLeast(0L) else 0L
+        val inherited = WreckDebrisPhysics.lateCaptureVelocity(stored, elapsed, friction, gravity)
+        // Fragments spring apart from the hull instead of sharing one rigid velocity.
+        val away = center.subtract(vehicle.boundingBox.center).let { Vec3(it.x, it.y * .3, it.z) }
+        val outward = if (away.lengthSqr() > 1e-6) away.normalize() else
+            Vec3(random.nextDouble() - .5, 0.0, random.nextDouble() - .5).normalize()
+        val motion = inherited.add(outward.scale(WreckDebrisPhysics.CAPTURE_IMPULSE * (.7 + random.nextDouble() * .6)))
+            .add(0.0, .02 + random.nextDouble() * .02, 0.0)
         val spin = Vec3(random.nextDouble() * .06 - .03, random.nextDouble() * .04 - .02,
             (if (side == AircraftWreckBreakup.LEFT) -1 else 1) * (.025 + random.nextDouble() * .045))
-        pieces[key] = Part(AircraftDebrisMotion(center, motion, orientation, spin,
-            random.nextDouble() * Math.PI * 2, gravity, 0, halfExtents), visual, halfExtents.length().coerceIn(.25, 48.0),
-            listOf(Vec3.ZERO) + (0..7).map { bits -> Vec3(
-                halfExtents.x * if (bits and 1 == 0) -1 else 1,
-                halfExtents.y * if (bits and 2 == 0) -1 else 1,
-                halfExtents.z * if (bits and 4 == 0) -1 else 1) }, halfExtents, vehicle.uuid, fuselage)
+        val radius = halfExtents.length().coerceIn(.25, 48.0)
+        val part = Part(AircraftDebrisMotion(center, motion, orientation, spin,
+            random.nextDouble() * Math.PI * 2, gravity, 0, halfExtents,
+            if (fuselage) WreckDebrisPhysics.Rest.FUSELAGE else WreckDebrisPhysics.Rest.WING, friction),
+            visual, radius, halfExtents, vehicle.uuid, fuselage)
+        // A section captured already inside the ground starts on top of it, not pinned below.
+        part.motion.placeOn(surface)
+        pieces[key] = part
+        if (com.atsuishio.superbwarfare.diagnostics.EliteDiagnostics.isClientEnabled())
+            com.atsuishio.superbwarfare.diagnostics.EliteDiagnostics.recordClient(vehicle.level().gameTime,
+                "aircraft_debris", "CAPTURE", "vehicle", vehicle.uuid, "part", side,
+                "wreck_speed", stored.length(), "initial_speed", motion.length(), "elapsed", elapsed,
+                "half_x", halfExtents.x, "half_y", halfExtents.y, "half_z", halfExtents.z)
     }
 
     @SubscribeEvent fun tick(event: TickEvent.ClientTickEvent) {
@@ -87,6 +120,8 @@ object AircraftDetachedWings {
         val terrain = com.atsuishio.superbwarfare.compat.voxy.ClientDebrisTerrain
         terrain.tick()
         var emissions = 0
+        var scrapes = 0
+        val camera = mc.gameRenderer.mainCamera.position
         val diagnostics = com.atsuishio.superbwarfare.diagnostics.EliteDiagnostics.isClientEnabled()
         pieces.entries.removeIf { (key, part) ->
             val remove = part.motion.expired || part.motion.position.y < level.minBuildHeight - 32
@@ -100,42 +135,39 @@ object AircraftDetachedWings {
                 terrain.prefetch(motion.position)
                 terrain.prefetch(motion.position.add(motion.velocity.scale(12.0)).add(0.0, -2.0, 0.0))
             }
-            motion.tick { from, to ->
-                part.corners.mapNotNull { local ->
-                    val rotated = motion.orientation.transform(org.joml.Vector3f(local.x.toFloat(), local.y.toFloat(), local.z.toFloat()))
-                    val offset = Vec3(rotated.x.toDouble(), rotated.y.toDouble(), rotated.z.toDouble())
-                    // Lift the sampling rays above the relaxed ground overlap. Otherwise a horizontal
+            motion.tick({ from, to ->
+                motion.sweep(from, to) { start, end ->
+                    // Sampling rays are lifted above the relaxed ground overlap. Otherwise a horizontal
                     // scrape starts inside a block and repeats a zero-distance contact forever.
-                    AircraftDebrisContact.relaxedSweep(from.add(offset), to.add(offset)) { start, end ->
-                        terrain.clip(ClipContext(start, end, ClipContext.Block.COLLIDER,
-                            ClipContext.Fluid.ANY, mc.player)).takeUnless { it.type == HitResult.Type.MISS }
-                    }?.let { AircraftDebrisMotion.Contact(it.position.subtract(offset), it.normal) }
-                }.minByOrNull { it.position.distanceToSqr(from) }
-            }
-            if (motion.grounded) {
-                fun lowest(rotation: Quaternionf) = part.corners.minOf { local ->
-                    rotation.transform(org.joml.Vector3f(local.x.toFloat(),local.y.toFloat(),local.z.toFloat())).y.toDouble()
+                    AircraftDebrisContact.relaxedSweep(start, end, SAMPLE_PROBE, ::clip)
                 }
-                val rise = lowest(motion.previousOrientation) - lowest(motion.orientation)
-                motion.separate(Vec3(0.0,rise,0.0),Vec3(0.0,1.0,0.0))
-            }
+            }, surface)
             if (diagnostics && clock % 4L == 0L)
                 com.atsuishio.superbwarfare.diagnostics.EliteDiagnostics.recordClient(level.gameTime,
                     "aircraft_debris", "STEP", "vehicle", key.id, "part", key.side,
                     "age", motion.age, "x", motion.position.x, "y", motion.position.y, "z", motion.position.z,
                     "vx", motion.velocity.x, "vy", motion.velocity.y, "vz", motion.velocity.z,
-                    "grounded", motion.grounded, "impacted", motion.impacted, "bounces", motion.bounces)
-            if (part.fuselage && motion.grounded && motion.velocity.horizontalDistanceSqr() > .0004 && emissions < 64) {
-                val low = part.corners.minOf { local ->
-                    motion.orientation.transform(org.joml.Vector3f(local.x.toFloat(),local.y.toFloat(),local.z.toFloat())).y.toDouble()
-                }
-                AircraftCombatParticles.grindingSmoke(motion.position.add(0.0, low + .08, 0.0), motion.velocity.horizontalDistance())
-                emissions++
+                    "grounded", motion.grounded, "impacted", motion.impacted, "bounces", motion.bounces,
+                    "slide", motion.slideDistance, "penetration", motion.maxPenetration, "pinned", motion.pinnedTicks)
+            if (diagnostics && !part.reported && motion.restAge >= 0) {
+                part.reported = true
+                val up = WreckDebrisPhysics.verticalAxis(motion.orientation, Vec3(0.0, 1.0, 0.0))
+                com.atsuishio.superbwarfare.diagnostics.EliteDiagnostics.recordClient(level.gameTime,
+                    "aircraft_debris", "REST", "vehicle", key.id, "part", key.side, "rest_age", motion.restAge,
+                    "slide", motion.slideDistance, "penetration", motion.maxPenetration, "pinned", motion.pinnedTicks,
+                    "up_axis", up, "fuselage", part.fuselage)
+            }
+            // Fiery scrape: flame streak along the contact path, sparks thrown back, grinding smoke.
+            val scrape = motion.scrapePoint
+            if (scrape != null && motion.grounded && scrapes < 72 &&
+                motion.velocity.horizontalDistance() > WreckDebrisPhysics.SCRAPE_SPEED &&
+                scrape.distanceToSqr(camera) < 1024.0 * 1024.0) {
+                scrapes += AircraftCombatParticles.scrape(motion.previousScrapePoint, scrape, motion.velocity,
+                    motion.scrapeRadius, minOf(8, 72 - scrapes), clock)
             }
             if (emissions < 62 &&
-                motion.position.distanceToSqr(mc.gameRenderer.mainCamera.position) < 16384.0 * 16384) {
-                val fire = com.atsuishio.superbwarfare.api.vehicle.flight.WreckDebrisPhysics.flameStrength(
-                    motion.groundedTicks.toLong(), key.id.hashCode().toLong())
+                motion.position.distanceToSqr(camera) < 16384.0 * 16384) {
+                val fire = WreckDebrisPhysics.flameStrength(motion.groundedTicks.toLong(), key.id.hashCode().toLong())
                 // Upper exposed face, not the opaque mesh center. Keep points on the moving
                 // piece and above the supporting terrain after it settles.
                 val up = motion.orientation.conjugate(Quaternionf()).transform(org.joml.Vector3f(0f, 1f, 0f))
@@ -145,13 +177,13 @@ object AircraftDetachedWings {
                     if (kotlin.math.abs(direction.x) > 1e-6) extents.x / kotlin.math.abs(direction.x) else Double.POSITIVE_INFINITY,
                     if (kotlin.math.abs(direction.y) > 1e-6) extents.y / kotlin.math.abs(direction.y) else Double.POSITIVE_INFINITY,
                     if (kotlin.math.abs(direction.z) > 1e-6) extents.z / kotlin.math.abs(direction.z) else Double.POSITIVE_INFINITY)
-                val surface = motion.position.add(0.0, reach.coerceAtLeast(0.0) + .08, 0.0)
+                val exposed = motion.position.add(0.0, reach.coerceAtLeast(0.0) + .08, 0.0)
                 if (clock % 3L == 0L && fire > 0) {
-                    AircraftCombatParticles.wreckFlame(surface, fire)
+                    AircraftCombatParticles.wreckFlame(exposed, fire)
                     emissions++
                 }
                 if (clock % 2L == 0L) {
-                    AircraftCombatParticles.wreckSmoke(surface.add(0.0,.12,0.0), if(motion.grounded) 1.5f else 2.2f); emissions++
+                    AircraftCombatParticles.wreckSmoke(exposed.add(0.0,.12,0.0), if(motion.grounded) 1.5f else 2.2f); emissions++
                 }
             }
         }
@@ -163,6 +195,13 @@ object AircraftDetachedWings {
             val native = level.entitiesForRendering().filterIsInstance<VehicleEntity>().filter { it.uuid in ids }.associateBy { it.uuid }
             ids.associateWith { native[it] ?: com.atsuishio.superbwarfare.api.vehicle.render.FarVehicleCopies.find(it) }
         }
+        val separated = HashSet<Part>()
+        fun push(part: Part, correction: Vec3, normal: Vec3) {
+            // Bounded per pass: overlapping captures spread apart over a few ticks instead of teleporting.
+            val length = correction.length()
+            part.motion.separate(if (length > .4) correction.scale(.4 / length) else correction, normal)
+            separated += part
+        }
         repeat(4) {
             for (i in fragments.indices) {
                 val a = fragments[i]
@@ -170,10 +209,10 @@ object AircraftDetachedWings {
                     val b = fragments[j]
                     if (a.owner != b.owner) continue
                     val correction = AircraftDebrisContact.separation(a.motion.position, a.motion.orientation, a.halfExtents,
-                        b.motion.position, b.motion.orientation, b.halfExtents) ?: continue
+                        b.motion.position, b.motion.orientation, b.halfExtents, SIBLING_OVERLAP) ?: continue
                     val normal = correction.normalize()
-                    a.motion.separate(correction.scale(.5), normal)
-                    b.motion.separate(correction.scale(-.5), normal.scale(-1.0))
+                    push(a, correction.scale(.5), normal)
+                    push(b, correction.scale(-.5), normal.scale(-1.0))
                 }
                 val vehicle = owners[a.owner]
                 if (vehicle != null && vehicle.aircraftWreckImpactTime >= 0) {
@@ -184,12 +223,14 @@ object AircraftDetachedWings {
                         val point = frame.transformPosition(org.joml.Vector3d(local.x, local.y, local.z))
                         val correction = AircraftDebrisContact.separation(a.motion.position, a.motion.orientation, a.halfExtents,
                             Vec3(point.x, point.y, point.z), org.joml.Quaternionf(frame.getNormalizedRotation(org.joml.Quaterniond())),
-                            section.maximum.subtract(section.minimum).scale(.5))
-                        if (correction != null) a.motion.separate(correction, correction.normalize())
+                            section.maximum.subtract(section.minimum).scale(.5), SIBLING_OVERLAP)
+                        if (correction != null) push(a, correction, correction.normalize())
                     }
                 }
             }
         }
+        // A sideways push can move a piece into a rise; lift it back onto the surface.
+        for (part in separated) if (part.motion.impacted) part.motion.depenetrate(surface)
         pieces.entries.removeIf { (key, part) ->
             if (part.motion.expired && diagnostics) com.atsuishio.superbwarfare.diagnostics.EliteDiagnostics.recordClient(
                 level.gameTime,"aircraft_debris","REMOVE","vehicle",key.id,"part",key.side,"age",part.motion.age)

@@ -1,5 +1,6 @@
 package com.atsuishio.superbwarfare.api.vehicle.flight
 
+import com.atsuishio.superbwarfare.data.vehicle.subdata.AircraftTerrainContact
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.phys.Vec3
@@ -30,6 +31,8 @@ open class FixedWingFlightStrategy @JvmOverloads constructor(
     private val sonicCrossing = FixedWingSonicCrossing()
     private val afterburnerFuelCostPerTick =
         profile.afterburnerConsumptionPerSecond * FixedWingFlightModel.DT
+    private var groundPitchSource: AircraftTerrainContact? = null
+    private var groundPitchLimit = FixedWingFlightModel.MAX_GROUND_PITCH_DEGREES
 
     /** Observes admitted edges without advancing dynamics, including two edges in one tick. */
     fun observePilotThrottleInput(vehicle: VehicleEntity, throttleAxis: Double) {
@@ -111,6 +114,7 @@ open class FixedWingFlightStrategy @JvmOverloads constructor(
         val vz = input.airVelocity.z * TICKS_PER_SECOND
         mouseAim.update(model, pilotIntent.sample(input.serverTick), controlsEnabled,
             input.onGround, vx, vy, vz, density)
+        model.groundPitchLimitDegrees = groundPitchLimit(vehicle)
         val validStep = model.step(
             serverTick = input.serverTick,
             inputVelocityX = vx,
@@ -364,6 +368,17 @@ open class FixedWingFlightStrategy @JvmOverloads constructor(
     }
 
     internal fun acceptGroundPitch(pitchDegrees: Double) = model.acceptGroundPitch(pitchDegrees)
+
+    /** Tail clearance is fixed airframe geometry; measure it once per terrain definition. */
+    private fun groundPitchLimit(vehicle: VehicleEntity): Double {
+        val terrain = vehicle.computed().aircraftTerrainContact
+        if (terrain !== groundPitchSource) {
+            groundPitchSource = terrain
+            groundPitchLimit = terrain?.takeIf { it.valid() }?.groundPitchLimitDegrees()
+                ?: FixedWingFlightModel.MAX_GROUND_PITCH_DEGREES
+        }
+        return groundPitchLimit
+    }
 
     private fun attitudeDiscontinuous(input: VehicleFlightInputContext): Boolean =
         VehicleFlightAttitude.separationDegrees(

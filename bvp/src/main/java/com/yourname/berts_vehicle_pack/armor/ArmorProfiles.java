@@ -271,6 +271,10 @@ public final class ArmorProfiles {
         }
     }
 
+    /** Closest approach of a shot segment to a box, with the entered face point in the box's frame. */
+    record SegmentApproach(double rayDistance, double gap, Vec frameEntry) {
+    }
+
     public static final class ArmorBox {
         private static final String TURRET_FRAME = "turret";
         private static final String BARREL_FRAME = "barrel";
@@ -353,6 +357,37 @@ public final class ArmorProfiles {
                 normal = new Vec(0.0D, 0.0D, Math.signum(boxPoint.z));
             }
             return fromBoxDirection(normal).normalize();
+        }
+
+        /** Lowest point of this box in its own frame (hull, turret or barrel coordinates). */
+        public double minFrameY() {
+            Vec axisX = rotate(new Vec(this.halfSize.x, 0.0D, 0.0D));
+            Vec axisY = rotate(new Vec(0.0D, this.halfSize.y, 0.0D));
+            Vec axisZ = rotate(new Vec(0.0D, 0.0D, this.halfSize.z));
+            return this.center.y - (Math.abs(axisX.y) + Math.abs(axisY.y) + Math.abs(axisZ.y));
+        }
+
+        /**
+         * Closest approach of a frame-local ray segment to this box and the face the shot would
+         * enter if displaced onto it. Returns null for a degenerate segment.
+         */
+        SegmentApproach closestApproach(Vec frameStart, Vec frameDirection, double length) {
+            Vec start = toBoxSpace(frameStart);
+            Vec direction = toBoxDirection(frameDirection).normalize();
+            if (direction.length() < 1.0E-6D) {
+                return null;
+            }
+            RayBoxProximity.Approach approach = RayBoxProximity.approach(
+                    new double[] {start.x, start.y, start.z},
+                    new double[] {direction.x, direction.y, direction.z},
+                    length,
+                    new double[] {this.halfSize.x, this.halfSize.y, this.halfSize.z});
+            if (approach == null) {
+                return null;
+            }
+            double[] entry = approach.entry();
+            Vec frameEntry = rotate(new Vec(entry[0], entry[1], entry[2])).add(this.center);
+            return new SegmentApproach(approach.rayDistance(), approach.gap(), frameEntry);
         }
 
         public double distanceOutside(Vec localPoint) {

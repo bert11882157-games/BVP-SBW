@@ -35,9 +35,19 @@ object VehicleWeaponDamagePolicy {
         else projectile.persistentData.remove(TAG)
     }
 
+    /**
+     * Damage factor for every hit and blast of [projectile]: the captured mount factor times its
+     * consolidated round weight. Penetration and other per-round capabilities never use it.
+     */
     @JvmStatic
-    fun scale(projectile: Entity?): Double = projectile?.persistentData?.getDouble(TAG)
+    fun scale(projectile: Entity?): Double =
+        combinedScale(capturedScale(projectile), AircraftRoundConsolidation.weight(projectile))
+
+    private fun capturedScale(projectile: Entity?): Double = projectile?.persistentData?.getDouble(TAG)
         ?.takeIf { it == 0.33 || it == 0.5 } ?: 1.0
+
+    internal fun combinedScale(capturedFactor: Double, roundWeight: Int): Double =
+        capturedFactor * roundWeight.coerceIn(1, AircraftRoundConsolidation.WEIGHT)
 
     /** One damage-boundary application for both direct and explosion damage sources.
      * Explosion builders retain raw damage/radius; their falloff result enters DamageHandler once.

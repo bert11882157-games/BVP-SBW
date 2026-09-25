@@ -32,6 +32,14 @@ internal object VehicleFixedGunBanks {
         return (rpm + 1199) / 1200
     }
 
+    /**
+     * Whether [profile] fires the authored [rpm] one round per event, or as consolidated
+     * aircraft events at 1/roundWeight of that rate while still presenting the authored rate.
+     */
+    internal fun matchesAuthoredRate(profile: VehicleWeaponScheduleProfile, rpm: Int): Boolean =
+        profile.bulletRpm == rpm &&
+            profile.eventRpm == AircraftRoundConsolidation.eventRpm(rpm, profile.roundWeight)
+
     fun bankSnapshot(selection: VehicleWeaponSelection): List<String>? =
         com.atsuishio.superbwarfare.api.aircraft.AircraftGunPodGroups.bank(selection)
             ?: selection.vehicle.getSeat(selection.seatIndex)?.fixedGunBank?.takeIf { selection.weaponName in it }?.toList()
@@ -67,8 +75,7 @@ internal object VehicleFixedGunBanks {
             val profile = resolved.profile
             val required = eventCapacity(profile.eventRpm) ?: return null
             if (profile.projectilesPerEvent != 1 ||
-                profile.bulletRpm != profile.eventRpm ||
-                profile.eventRpm != member.gunData.get(GunProp.RPM) ||
+                !matchesAuthoredRate(profile, member.gunData.get(GunProp.RPM)) ||
                 profile.maxCatchUpEvents > MAX_EVENTS_PER_TICK
             ) return null
 
@@ -95,7 +102,7 @@ internal object VehicleFixedGunBanks {
             ?: return false
         if (com.atsuishio.superbwarfare.api.aircraft.AircraftGunPodGroups.isPod(selection.vehicle, selection.weaponName) &&
             (data.ammo.get() <= 0 || selection.weaponName !in com.atsuishio.superbwarfare.api.aircraft.AircraftGunPodGroups.equipped(selection.vehicle))) return false
-        if (!validGun(selection, data) || data.get(GunProp.RPM) != profile.eventRpm) return false
+        if (!validGun(selection, data) || !matchesAuthoredRate(profile, data.get(GunProp.RPM))) return false
         val belt = data.resolveProjectileBelt()
         // Retain the normal transaction's precise invalid-belt rejection and diagnostics.
         if (belt.status == ProjectileBeltResolutionStatus.INVALID) return true

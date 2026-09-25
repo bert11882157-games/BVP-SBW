@@ -24,6 +24,31 @@ object FarProjectileSimulation {
     private var prefetchChecks = 0
     private data class PrefetchPath(val level: ServerLevel, val chunks: Set<Long>)
     private val prefetchedPaths = HashSet<PrefetchPath>()
+    private val dimensionKeys = java.util.WeakHashMap<ServerLevel, String>()
+    private val snapshot = ArrayList<Map.Entry<Projectile, FarProjectileTickGate>>()
+    private val tickingProbe = net.minecraft.core.BlockPos.MutableBlockPos()
+
+    private fun dimensionKey(level: ServerLevel): String =
+        dimensionKeys.getOrPut(level) { level.dimension().location().toString() }
+
+    /**
+     * Every swept chunk is already entity-ticking with its entities loaded, so the native step can
+     * run without any residency request (such a sweep has no remote chunk to lease). No loads.
+     */
+    private fun nativeTicking(level: ServerLevel, chunks: Set<Long>): Boolean {
+        for (key in chunks) {
+            tickingProbe.set(net.minecraft.world.level.ChunkPos.getX(key) shl 4, 0, net.minecraft.world.level.ChunkPos.getZ(key) shl 4)
+            if (!level.isPositionEntityTicking(tickingProbe) || !level.areEntitiesLoaded(key)) return false
+        }
+        return true
+    }
+
+    /** Warming budget is reserved for rounds whose near future leaves the entity-ticking area. */
+    private fun leavingNativeArea(projectile: Projectile, level: ServerLevel): Boolean {
+        val motion = projectile.deltaMovement
+        tickingProbe.set(projectile.x + motion.x * 10.0, projectile.y, projectile.z + motion.z * 10.0)
+        return !level.isPositionEntityTicking(tickingProbe)
+    }
 
     /** Request only a short rolling path before it is needed; never block a loaded current step
      * on an unloaded future step. The shared residency owner still caps total chunks/tickets. */
@@ -60,12 +85,18 @@ object FarProjectileSimulation {
                 "game_time", level.gameTime, "age", projectile.tickCount, "position", projectile.position())
     }
 
-    private fun expire(projectile: Projectile, level: ServerLevel, allowNativeTerminalTick: Boolean = false): Boolean {
+    private fun expire(projectile: Projectile, level: ServerLevel, allowNativeTerminalTick: Boolean = false,
+                       gate: FarProjectileTickGate? = projectiles[projectile]): Boolean {
         if (projectile.isRemoved) return true
+        // A passed check stays valid for the rest of this game tick; only elapsed time can expire it.
+        if (gate != null && gate.lifetimeValidAt == level.gameTime) return false
         val access = projectile as FarProjectileAccess
         if (!FarProjectileLifetime.expired(projectile.persistentData, level.gameTime,
-                level.dimension().location().toString(), access.farProjectileLifetimeTicks(), projectile.tickCount,
-                access.farProjectileMaximumLifetimeTicks())) return false
+                dimensionKey(level), access.farProjectileLifetimeTicks(), projectile.tickCount,
+                access.farProjectileMaximumLifetimeTicks())) {
+            gate?.lifetimeValidAt = level.gameTime
+            return false
+        }
         // A resident admitted/native final tick keeps its existing end-of-life explosion. Any deferred
         // entity that cannot actually run that tick is discarded by the unconditional end sweep.
         if (allowNativeTerminalTick && access.farProjectileTerminatesNextTick(projectile.tickCount)) return false
@@ -78,8 +109,9 @@ object FarProjectileSimulation {
 
     private fun register(entity: Entity, allowNativeTerminalTick: Boolean = false): FarProjectileTickGate? {
         if (entity !is Projectile || entity !is FarProjectileAccess || entity.level() !is ServerLevel || entity.isRemoved) return null
-        if (expire(entity, entity.level() as ServerLevel, allowNativeTerminalTick)) return null
-        return projectiles[entity] ?: if (projectiles.size < FarProjectilePolicy.MAX_REGISTERED) {
+        val existing = projectiles[entity]
+        if (expire(entity, entity.level() as ServerLevel, allowNativeTerminalTick, existing)) return null
+        return existing ?: if (projectiles.size < FarProjectilePolicy.MAX_REGISTERED) {
             FarProjectileTickGate(entity.level().gameTime, entity.tickCount).also {
                 projectiles[entity] = it
                 // Initialize before native tracker pairing; subsequent registrations retain the state.
@@ -104,6 +136,7 @@ object FarProjectileSimulation {
     }
     @SubscribeEvent fun stopped(event: ServerStoppedEvent) {
         projectiles.clear(); supplemental = null; cursor = 0; prefetchTick = Long.MIN_VALUE; prefetchChecks = 0; prefetchedPaths.clear()
+        snapshot.clear(); dimensionKeys.clear()
     }
 
     /** Called at the whole tick boundary, not a superclass tick that a subclass can continue after. */
@@ -114,15 +147,18 @@ object FarProjectileSimulation {
             (autonomousMunition(entity) || FarTerrainServer.hasProjectileCorridors(level))) {
             val path = FarProjectilePolicy.chunks(entity.boundingBox, entity.deltaMovement,
                 entity.farProjectileExplosionRadius(), entity.farProjectileLookAheadTicks(), entity.farProjectileCollisionPadding())
-            val ready = if (autonomousMunition(entity) && path != null) {
+            val autonomous = autonomousMunition(entity)
+            val nativeReady = !autonomous && path != null && nativeTicking(level, path)
+            val ready = if (autonomous && path != null) {
                 FarTerrainServer.requestProjectileSweep(level, entity.position(), entity.position().add(entity.deltaMovement),
                     path, guidedBomb = true) == FarTerrainServer.ProjectileAdmission.READY &&
                     FarTerrainServer.projectilePathLoaded(level, path)
-            } else path == null || FarTerrainServer.nativeProjectilePathReady(level, entity.position(),
+            } else path == null || nativeReady || FarTerrainServer.nativeProjectilePathReady(level, entity.position(),
                 entity.position().add(entity.deltaMovement), path)
             // Warm the bounded next steps even while the current step is awaiting residency.
             // Otherwise the first cold boundary serializes current loading and future loading.
-            prefetch(entity, level)
+            // Rounds that stay inside the entity-ticking area do not spend the shared warming budget.
+            if (!nativeReady || leavingNativeArea(entity, level)) prefetch(entity, level)
             if (path != null && !ready) {
                 if (level.gameTime % 20L == 0L && EliteDiagnostics.isServerEnabled())
                     deferred(entity, level, "NATIVE_PATH_" + FarTerrainServer.requestProjectileSweep(level,
@@ -144,11 +180,12 @@ object FarProjectileSimulation {
         if (event.phase != TickEvent.Phase.END) return
         val server = ServerLifecycleHooks.getCurrentServer() ?: return
         projectiles.keys.removeIf { it.isRemoved || it.level() !is ServerLevel }
-        val snapshot = projectiles.entries.toList()
+        snapshot.clear()
+        snapshot.addAll(projectiles.entries)
         if (snapshot.isEmpty()) { cursor = 0; return }
         // Expiry is independent of simulation admission, residency and round-robin work budgets.
-        snapshot.forEach { (projectile, _) ->
-            (projectile.level() as? ServerLevel)?.takeIf { it.server === server }?.let { expire(projectile, it, true) }
+        snapshot.forEach { (projectile, gate) ->
+            (projectile.level() as? ServerLevel)?.takeIf { it.server === server }?.let { expire(projectile, it, true, gate) }
         }
         var advanced = 0; var checks = 0; var waiting = 0; var denied = 0
         var recovered = 0
@@ -210,14 +247,20 @@ object FarProjectileSimulation {
             if (simulatedHere) FarProjectileTracking.flush(projectile)
         }
         cursor = (start + maxOf(1, visited)) % snapshot.size
-        snapshot.forEach { (projectile, _) ->
-            (projectile.level() as? ServerLevel)?.takeIf { it.server === server }?.let { expire(projectile, it) }
+        snapshot.forEach { (projectile, gate) ->
+            (projectile.level() as? ServerLevel)?.takeIf { it.server === server }?.let { expire(projectile, it, gate = gate) }
         }
+        val registered = snapshot.size
+        snapshot.clear()
         // Visit the complete surviving registry, including budget-skipped and newly created shots.
         // Publish one final decision per tick; successful far steps never get a pause/unpause pair.
-        projectiles.entries.toList().forEach { (projectile, gate) ->
-            val level = projectile.level() as? ServerLevel ?: return@forEach
+        // Publication only sends packets and never mutates the registry, so iterate it in place.
+        for ((projectile, gate) in projectiles) {
+            val level = projectile.level() as? ServerLevel ?: continue
             if (!projectile.isRemoved && level.server === server) {
+                // A round fired during this tick's entity iteration has its first native tick next
+                // tick; publishing a pause now would hold it at the muzzle and then snap it.
+                if (gate.awaitingFirstTick(level.gameTime)) continue
                 // Native chunks can also wait for the next swept chunk. Position residency
                 // does not prove this tick ran; otherwise the client flies ahead of the server.
                 FarProjectileTracking.pause(projectile, !gate.advancedAt(level.gameTime))
@@ -225,7 +268,7 @@ object FarProjectileSimulation {
         }
         if (server.tickCount % 20 == 0 && EliteDiagnostics.isServerEnabled()) {
             server.playerList.players.forEach { player ->
-                EliteDiagnostics.record(player, "far_projectile", "SERVER_STATE", "registered", snapshot.size,
+                EliteDiagnostics.record(player, "far_projectile", "SERVER_STATE", "registered", registered,
                     "simulated", advanced, "chunk_checks", checks, "waiting_loaded", waiting, "outside_corridor", denied)
             }
         }

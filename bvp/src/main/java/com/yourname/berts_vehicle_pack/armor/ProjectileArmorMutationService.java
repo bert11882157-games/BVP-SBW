@@ -46,6 +46,17 @@ final class ProjectileArmorMutationService {
                 .build();
     }
 
+    /**
+     * The contact is not a vehicle hit: no damage, no presentation, and the projectile keeps
+     * flying on its current velocity.
+     */
+    static ProjectileImpactResult passImpact() {
+        return ProjectileImpactResult.builder(ProjectileImpactDisposition.PASS)
+                .visualPolicy(ProjectileImpactVisualPolicy.SUPPRESS)
+                .presentationOutcome(ProjectileImpactPresentationOutcome.DEFAULT)
+                .build();
+    }
+
     static ProjectileImpactResult blockApfsdsBlockImpact() {
         // APFSDS is terminal on geometric block contact.  Vehicle armor/module penetration
         // remains handled by ArmorImpactService; only the block path consumes the round.

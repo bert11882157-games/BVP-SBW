@@ -105,6 +105,42 @@ final class ArmorHitResolver {
         return new BoxQuery(hit, nearest);
     }
 
+    /**
+     * Nearest box to the shot segment {@code hullStart + hullDirection * [0, length]} when the ray
+     * itself crossed none. The returned hit carries the entered face of that box, so penetration
+     * uses the incidence the shot would have had against it. Null when every box is further than
+     * {@code maxGap} or the profile has none.
+     */
+    static RaySnap findNearestBoxToRay(ArmorTarget target, List<ArmorBox> boxes, Vec hullStart,
+                                       Vec hullDirection, double length, double maxGap) {
+        Vec direction = hullDirection.normalize();
+        if (direction.length() < 1.0E-6D || boxes.isEmpty()) {
+            return null;
+        }
+        ArmorBox bestBox = null;
+        ArmorProfiles.SegmentApproach best = null;
+        for (ArmorBox box : boxes) {
+            Vec frameStart = pointToBoxFrame(target, box, hullStart);
+            if (frameStart == null) continue;
+            Vec frameDirection = directionToBoxFrame(target, box, direction).normalize();
+            ArmorProfiles.SegmentApproach approach = box.closestApproach(frameStart, frameDirection, length);
+            if (approach == null || !Double.isFinite(approach.gap())) continue;
+            if (best == null || approach.gap() < best.gap() - 1.0E-6D
+                    || (approach.gap() <= best.gap() + 1.0E-6D && approach.rayDistance() < best.rayDistance())) {
+                best = approach;
+                bestBox = box;
+            }
+        }
+        if (best == null || best.gap() > maxGap) {
+            return null;
+        }
+        Vec hullImpact = pointToHullFrame(target, bestBox, best.frameEntry());
+        if (hullImpact == null) {
+            return null;
+        }
+        return new RaySnap(new ArmorHit(bestBox, best.frameEntry(), hullImpact, best.rayDistance()), best.gap());
+    }
+
     static ArmorHit findFirstBoxOnRay(ArmorTarget target, List<ArmorBox> boxes,
                                       Vec hullStart, Vec hullDirection, double maxDistance,
                                       double impactTolerance) {
@@ -160,7 +196,7 @@ final class ArmorHitResolver {
         return pivot.add(framePoint.subtract(pivot).rotateY(target.turretFrameYaw()));
     }
 
-    private static Vec3 shotDirection(Projectile projectile, Vec3 hitVec) {
+    static Vec3 shotDirection(Projectile projectile, Vec3 hitVec) {
         Vec3 velocity = projectile.m_20184_();
         double length = vec3Length(velocity);
         if (length > 1.0E-6D) {
@@ -203,5 +239,9 @@ final class ArmorHitResolver {
     }
 
     record BoxQuery(ArmorHit hit, NearBox nearest) {
+    }
+
+    /** A plate the shot passed close to, resolved as if the shot had struck its entered face. */
+    record RaySnap(ArmorHit hit, double gap) {
     }
 }

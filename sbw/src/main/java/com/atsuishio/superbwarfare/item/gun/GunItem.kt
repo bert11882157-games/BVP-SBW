@@ -573,6 +573,14 @@ abstract class GunItem(properties: Properties) : Item(properties.stacksTo(1)), I
             return ShotResult.rejected(ShotRejectionReason.CANNOT_SHOOT)
         }
 
+        // A consolidated aircraft round costs the ammunition of every round it stands for; the
+        // last round that cannot cover that fires as an ordinary round.
+        val requestedRoundWeight = com.atsuishio.superbwarfare.api.vehicle.weapon.AircraftRoundConsolidation.requestedWeight()
+        val roundWeight = if (requestedRoundWeight <= 1) 1 else
+            com.atsuishio.superbwarfare.api.vehicle.weapon.AircraftRoundConsolidation.affordableWeight(
+                requestedRoundWeight, data.get(GunProp.AMMO_COST_PER_SHOOT), data.currentAvailableAmmo(ammoSupplier),
+            )
+
         val boltNeededBeforeShoot = data.bolt.needed.get()
         val hideBulletChainBeforeShoot = data.hideBulletChain.get()
 
@@ -596,7 +604,9 @@ abstract class GunItem(properties: Properties) : Item(properties.stacksTo(1)), I
             for (index in 0 until projectileAmount) {
                 val reservation = reserveProjectileShotSequence(parameters, projectileProfileId)
                 val spawned = withProjectileShotSequence(reservation?.next ?: 0L) {
-                    shootBullet(parameters)
+                    com.atsuishio.superbwarfare.api.vehicle.weapon.AircraftRoundConsolidation.withLaunchWeight(roundWeight) {
+                        shootBullet(parameters)
+                    }
                 }
                 if (!spawned) {
                     rollbackProjectileShotSequence(reservation)
@@ -627,7 +637,7 @@ abstract class GunItem(properties: Properties) : Item(properties.stacksTo(1)), I
             data.heat.set(0.0)
             data.overHeat.set(false)
         } else {
-            data.heat.set(Math.max(data.heat.get() + data.get(GunProp.HEAT_PER_SHOOT), 0.0))
+            data.heat.set(Math.max(data.heat.get() + data.get(GunProp.HEAT_PER_SHOOT) * roundWeight, 0.0))
         }
 
         if (data.item.enableShootTimer()) {
@@ -647,6 +657,18 @@ abstract class GunItem(properties: Properties) : Item(properties.stacksTo(1)), I
 
         if (parameters.emitNativeSound) {
             playFireSounds(data, shooter, zoom)
+        }
+
+        // afterShoot pays one round; a consolidated round pays for the rest before it.
+        val extraAmmo = com.atsuishio.superbwarfare.api.vehicle.weapon.AircraftRoundConsolidation.extraAmmo(
+            roundWeight, data.get(GunProp.AMMO_COST_PER_SHOOT),
+        )
+        if (extraAmmo > 0) {
+            if (!data.useBackpackAmmo()) {
+                data.ammo.set(data.ammo.get() - extraAmmo)
+            } else {
+                data.consumeBackupAmmo(ammoSupplier, extraAmmo)
+            }
         }
 
         // 开火后事件

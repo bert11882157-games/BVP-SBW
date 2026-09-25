@@ -8,15 +8,18 @@ import kotlin.math.floor
 /** Conservative, bounded coverage of the real swept broadphase and possible explosion queries. */
 object FarProjectilePolicy {
     const val MAX_SWEEP_CHUNKS = 256
-    const val MAX_REGISTERED = 4096
+    /** Sustained high-volume fire keeps tens of thousands of rounds in flight; beyond this new rounds are refused. */
+    const val MAX_REGISTERED = 65536
     const val MAX_TICKS_PER_SERVER_TICK = MAX_REGISTERED
     const val MAX_RECOVERY_TICKS_PER_SERVER_TICK = 128
     const val MAX_CHUNK_CHECKS_PER_SERVER_TICK = 8192
 
     @JvmOverloads fun chunks(bounds: AABB, motion: Vec3, radius: Double, lookAheadTicks: Int,
                             collisionPadding: Double = 9.0): Set<Long>? {
-        if (!listOf(bounds.minX, bounds.minY, bounds.minZ, bounds.maxX, bounds.maxY, bounds.maxZ,
-                motion.x, motion.y, motion.z, radius, collisionPadding).all(Double::isFinite) || radius < 0 ||
+        if (!(bounds.minX.isFinite() && bounds.minY.isFinite() && bounds.minZ.isFinite() &&
+                bounds.maxX.isFinite() && bounds.maxY.isFinite() && bounds.maxZ.isFinite() &&
+                motion.x.isFinite() && motion.y.isFinite() && motion.z.isFinite() &&
+                radius.isFinite() && collisionPadding.isFinite()) || radius < 0 ||
             collisionPadding < 1 || lookAheadTicks !in 0..8) return null
         // ProjectileUtil's vanilla +1 broadphase is expanded by another8 for large vehicle OBBs.
         // CustomExplosion queries entities out to2R+1; include a further block for inclusive edges.
@@ -41,6 +44,14 @@ internal class FarProjectileTickGate(private val bornTick: Long = 0, private val
     private var supplemental = Long.MIN_VALUE
     private var recoveryTick = Long.MIN_VALUE
     private var recoverySteps = 0
+    /** Game tick of the last passed lifetime check; the check is idempotent within one tick. */
+    var lifetimeValidAt = Long.MIN_VALUE
+
+    /**
+     * Registered this tick and not stepped yet (e.g. fired during entity iteration). Its first native
+     * tick is the next one, so it has no residency wait to publish.
+     */
+    fun awaitingFirstTick(tick: Long): Boolean = observed == Long.MIN_VALUE && tick == bornTick
 
     /** Recover only elapsed flight time, never accelerate an on-time projectile. */
     fun hasRecoveryDebt(tick: Long, age: Int): Boolean =

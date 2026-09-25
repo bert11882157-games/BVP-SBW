@@ -1,6 +1,7 @@
 package com.yourname.berts_vehicle_pack.armor;
 
 import com.atsuishio.superbwarfare.api.projectile.impact.ProjectileImpactContext;
+import com.atsuishio.superbwarfare.api.projectile.impact.ProjectileImpactDisposition;
 import com.atsuishio.superbwarfare.api.projectile.impact.ProjectileImpactPresentationOutcome;
 import com.atsuishio.superbwarfare.api.projectile.impact.ProjectileImpactResolver;
 import com.atsuishio.superbwarfare.api.projectile.impact.ProjectileImpactResult;
@@ -58,7 +59,9 @@ public final class ArmorImpactHandler {
                 .get(VOLUME_PROVIDER_ID, BvpImpactVolumeQuery.class);
         if (volumes != null) {
             ProjectileImpactResult result = impactService.handle(context, volumes);
-            applyRocketEra(context);
+            if (!passesThrough(result)) {
+                applyRocketEra(context);
+            }
             return result;
         }
 
@@ -72,6 +75,12 @@ public final class ArmorImpactHandler {
                 true, ProjectileImpactPresentationOutcome.NON_PENETRATION);
         applyRocketEra(context);
         return result;
+    }
+
+    /** A PASS that is not a ricochet means the contact was not a vehicle hit; nothing detonated. */
+    private static boolean passesThrough(ProjectileImpactResult result) {
+        return result.getDisposition() == ProjectileImpactDisposition.PASS
+                && result.getPresentationOutcome() != ProjectileImpactPresentationOutcome.RICOCHET;
     }
 
     private static void applyRocketEra(ProjectileImpactContext context) {

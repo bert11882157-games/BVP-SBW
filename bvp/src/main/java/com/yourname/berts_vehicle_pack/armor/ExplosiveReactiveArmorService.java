@@ -33,8 +33,12 @@ final class ExplosiveReactiveArmorService {
         double protectionMm = protectionAgainst(era, shot);
         ProjectileArmorEffect reducedShot = shot.withPenetration(postEraPenetration(shot, protectionMm));
         double appliedProtectionMm = shot.penetrationMm - reducedShot.penetrationMm;
-        Vec restart = eraHit.hullImpact.add(trace.hullShotDirection.normalize().scale(RAY_RESTART_OFFSET_BLOCKS));
-        ShotTrace reducedTrace = new ShotTrace(trace.hitVec, trace.hullShotDirection, restart, restart);
+        Vec direction = trace.hullShotDirection.normalize();
+        Vec restart = eraHit.hullImpact.add(direction.scale(RAY_RESTART_OFFSET_BLOCKS));
+        // The plate ray keeps the normal backtrace: the accepted contact can sit behind the outer
+        // face of the plate carrying the brick, and a ray started at the contact would skip it.
+        Vec rayStart = restart.subtract(direction.scale(ArmorHitResolver.ARMOR_RAY_BACKTRACE_BLOCKS));
+        ShotTrace reducedTrace = new ShotTrace(trace.hitVec, trace.hullShotDirection, rayStart, restart);
 
         Vec3 eraImpact = target.armorLocalPointToWorld(eraHit.hullImpact);
         target.vehicle().bvpDetonateEraBrick(era.name);

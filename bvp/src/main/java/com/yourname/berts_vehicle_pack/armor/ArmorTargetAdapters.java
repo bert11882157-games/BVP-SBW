@@ -23,4 +23,15 @@ final class ArmorTargetAdapters {
         }
         return null;
     }
+
+    /**
+     * Crew whose model is hidden inside the vehicle and whose seat is not exposed to fire. Their
+     * pick boxes are not part of the vehicle's visible hull, so a contact on them must be
+     * re-checked against the vehicle's own collision volumes.
+     */
+    static boolean isHiddenCrew(ArmoredVehicleEntity vehicle, Entity passenger) {
+        return vehicle != null && passenger != null
+                && (vehicle.hidePassenger(passenger) || vehicle.isEnclosed(passenger))
+                && !vehicle.exposesPassengerToFire(passenger);
+    }
 }

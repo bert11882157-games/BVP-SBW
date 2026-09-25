@@ -128,10 +128,25 @@ object VehicleWeaponScheduleProviders {
                 VehicleFixedGunBanks.eventCapacity(cadence.eventRpm) ?: 2),
             heatPolicy = cadence.heatPolicy.takeIf { selection.gunData.get(GunProp.OVERHEAT_ENABLED) },
         )
-        if (!isAtgm(selection)) return resolved
+        if (!isAtgm(selection)) return consolidate(selection, resolved, projectile.itemId)
         val rate = minOf(60, resolved.eventRpm)
         return resolved.copy(eventRpm = rate, bulletRpm = bulletRpm(rate, resolved.projectilesPerEvent),
             preserveAcceptedCadenceAcrossPresses = true, maxCatchUpEvents = 1)
+    }
+
+    /** Aircraft guns above [AircraftRoundConsolidation.MIN_RPM] fire half the rounds, each counting twice. */
+    private fun consolidate(
+        selection: VehicleWeaponSelection,
+        profile: VehicleWeaponScheduleProfile,
+        projectileItemId: String,
+    ): VehicleWeaponScheduleProfile {
+        val weight = AircraftRoundConsolidation.scheduleWeight(
+            AircraftRoundConsolidation.isAircraft(selection.vehicle),
+            profile.eventRpm,
+            profile.repeatWhileHeld && selection.gunData.selectedFireModeInfo().mode != FireMode.BURST,
+            AircraftRoundConsolidation.isGunRound(projectileItemId),
+        )
+        return profile.consolidated(weight)
     }
 }
 

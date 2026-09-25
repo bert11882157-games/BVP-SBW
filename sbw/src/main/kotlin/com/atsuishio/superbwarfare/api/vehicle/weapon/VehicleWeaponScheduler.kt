@@ -338,15 +338,17 @@ class VehicleWeaponScheduler(private val vehicle: VehicleEntity) {
                 trigger.intent.targetPos,
             )
             val selection = trigger.resolved.selection
-            if (selection.weaponIndex == vehicle.getSelectedWeapon(selection.seatIndex)) {
-                vehicle.vehicleShootResult(selection.controller, target.entityUuid, target.position)
-            } else {
-                vehicle.vehicleShootResult(
-                    selection.controller,
-                    selection.weaponName,
-                    target.entityUuid,
-                    target.position,
-                )
+            AircraftRoundConsolidation.withRequestedWeight(trigger.resolved.profile.roundWeight) {
+                if (selection.weaponIndex == vehicle.getSelectedWeapon(selection.seatIndex)) {
+                    vehicle.vehicleShootResult(selection.controller, target.entityUuid, target.position)
+                } else {
+                    vehicle.vehicleShootResult(
+                        selection.controller,
+                        selection.weaponName,
+                        target.entityUuid,
+                        target.position,
+                    )
+                }
             }
         } finally {
             executingProfile = null
@@ -487,7 +489,9 @@ class VehicleWeaponScheduler(private val vehicle: VehicleEntity) {
             acceptedOnCurrentPress = true
             val firstShot = firstSoundAfterPress
             firstSoundAfterPress = false
-            bulletsSinceSound += profile.projectilesPerEvent
+            // Consolidated events count every round they stand for, so the scheduled sound keeps
+            // the real gun's cadence while half as many events are fired.
+            bulletsSinceSound += profile.roundsPerEvent
             recordProjectileHeat(tick)
             if (firstShot || bulletsSinceSound >= profile.soundIntervalProjectiles) {
                 bulletsSinceSound = 0
@@ -541,7 +545,7 @@ class VehicleWeaponScheduler(private val vehicle: VehicleEntity) {
         private fun recordProjectileHeat(tick: Int) {
             val policy = profile.heatPolicy ?: return
             trimRecentProjectileTicks(tick)
-            repeat(profile.projectilesPerEvent) {
+            repeat(profile.roundsPerEvent) {
                 recentProjectileTicks.addLast(tick)
             }
             lastDecision = "accepted"

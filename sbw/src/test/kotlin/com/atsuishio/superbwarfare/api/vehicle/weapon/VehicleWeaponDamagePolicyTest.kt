@@ -37,4 +37,20 @@ class VehicleWeaponDamagePolicyTest {
         val infantry=VehicleWeaponDamagePolicy.factor(false,"autocannon_shell",30.0,.5)
         assertEquals(80f,VehicleWeaponDamagePolicy.scaleDamage(80f,infantry))
     }
+    @Test fun `consolidated round deals the direct and blast damage of two rounds exactly once`() {
+        assertEquals(2.0,VehicleWeaponDamagePolicy.combinedScale(1.0,2))
+        assertEquals(1.0,VehicleWeaponDamagePolicy.combinedScale(.5,2))
+        assertEquals(.66,VehicleWeaponDamagePolicy.combinedScale(.33,2),1e-9)
+        assertEquals(.5,VehicleWeaponDamagePolicy.combinedScale(.5,1))
+        assertEquals(1.0,VehicleWeaponDamagePolicy.combinedScale(1.0,0),"invalid weight is an ordinary round")
+        assertEquals(2.0,VehicleWeaponDamagePolicy.combinedScale(1.0,9),"weight never exceeds two rounds")
+        for ((munition,caliber) in listOf("autocannon_shell" to 20.0,"bullet" to 12.7,"bullet" to 7.62)) {
+            val captured=VehicleWeaponDamagePolicy.factor(true,munition,caliber,1.0)
+            val weighted=VehicleWeaponDamagePolicy.combinedScale(captured,AircraftRoundConsolidation.WEIGHT)
+            for (raw in listOf(40f,80f*.25f,166.66667f)) {
+                val two=2*VehicleWeaponDamagePolicy.scaleDamage(raw,captured)
+                assertEquals(two.toDouble(),VehicleWeaponDamagePolicy.scaleDamage(raw,weighted).toDouble(),1e-4)
+            }
+        }
+    }
 }

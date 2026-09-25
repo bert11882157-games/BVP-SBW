@@ -14,13 +14,21 @@ internal class AircraftTerrainCollisionService(private val vehicle: VehicleEntit
     private val gearImpactGate = AircraftGearImpactGate()
     private val wheelSupport = AircraftWheelSupportService(vehicle, probe)
     private var lastContactTick = Int.MIN_VALUE
+    private var lastBodyContactTick = Int.MIN_VALUE
     private var lastGearSupportTick: Int? = null
     private var gearTravelDirection = Vec3.ZERO
 
-    fun recentContact(): Boolean = lastContactTick != Int.MIN_VALUE &&
-        vehicle.tickCount - lastContactTick in 0..1
+    /**
+     * World contact that can finish a damaged airframe. Before the wreck state only hull and
+     * wing contact counts, so a wing-damaged aircraft rolling out on its wheels is not destroyed
+     * by the contact itself; a wreck counts every contact.
+     */
+    fun recentContact(): Boolean = recent(lastBodyContactTick) || vehicle.isWreck && recent(lastContactTick)
+
+    private fun recent(tick: Int) = tick != Int.MIN_VALUE && vehicle.tickCount - tick in 0..1
 
     fun move(requested: Vec3) {
+        wheelSupport.pivotOnMainGear()
         val snapshot = vehicle.getAircraftCollisionSnapshot(1F) ?: return
         val incoming = vehicle.deltaMovement
         val gearDown = snapshot.parts.any { it.role == AircraftCollisionRole.LANDING_GEAR && it.active }
@@ -58,7 +66,11 @@ internal class AircraftTerrainCollisionService(private val vehicle: VehicleEntit
                     val wing = snapshot.parts.filter { it.active && it.wingSide == side }.map { it.toTerrainInfo() }
                     if (wing.isEmpty()) continue
                     val hit = probe.sample(requested, Vec3.ZERO, terrainBoxes = wing)
-                    if (hit.complete && (hit.contact != null || hit.bodyOverlap)) sheared = sheared or side
+                    val contact = hit.contact
+                    // A wingtip or stabilizer brushing the runway only scrapes; a real strike
+                    // into terrain tears the wing off.
+                    if (hit.complete && contact != null && com.atsuishio.superbwarfare.api.vehicle.flight
+                            .FixedWingImpactModel.shearsWing(incoming, contact.normal)) sheared = sheared or side
                 }
                 if (sheared != 0) {
                     val breakup = com.atsuishio.superbwarfare.api.vehicle.flight.AircraftWreckBreakup
@@ -74,8 +86,7 @@ internal class AircraftTerrainCollisionService(private val vehicle: VehicleEntit
             }
         }
         if (bodyContact || gearContact) lastContactTick = vehicle.tickCount
-        lastGearSupportTick = if (complete && motion.gearGroundContact) vehicle.tickCount else null
-        if (lastGearSupportTick == null) gearTravelDirection = Vec3.ZERO
+        if (bodyContact) lastBodyContactTick = vehicle.tickCount
         vehicle.setPos(vehicle.x + admitted.x, vehicle.y + admitted.y, vehicle.z + admitted.z)
         vehicle.setDeltaMovement(motion.velocity)
         vehicle.horizontalCollision = motion.horizontal
@@ -84,6 +95,11 @@ internal class AircraftTerrainCollisionService(private val vehicle: VehicleEntit
         vehicle.minorHorizontalCollision = false
         vehicle.setOnGroundForCollision(motion.below, admitted)
         wheelSupport.afterMove(motion)
+        // Tyres left resting on the runway by the support settle keep the ground run alive,
+        // including a tick whose requested motion only grazed the floor.
+        lastGearSupportTick = if (complete && (motion.gearGroundContact || wheelSupport.supported))
+            vehicle.tickCount else null
+        if (lastGearSupportTick == null) gearTravelDirection = Vec3.ZERO
         val gearImpactSpeed = gearImpactGate.sample(vehicle.level().gameTime, complete,
             motion.gearGroundContact, motion.gearImpactSpeedBlocksPerTick)
         if (gearImpactSpeed > 0.0 && !vehicle.isWreck && !wheelSupport.active) {

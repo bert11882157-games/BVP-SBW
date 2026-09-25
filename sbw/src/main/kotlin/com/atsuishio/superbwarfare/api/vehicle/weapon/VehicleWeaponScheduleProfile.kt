@@ -19,8 +19,12 @@ data class VehicleWeaponHeatPolicy(
 /**
  * Data-only cadence and heat policy for a server-scheduled vehicle weapon.
  * Addons own the values; SBW owns the state machine that consumes them.
+ *
+ * [roundWeight] > 1 marks a consolidated schedule: each event fires rounds that each stand for
+ * [roundWeight] rounds, [eventRpm] is already divided accordingly and [bulletRpm] keeps the real
+ * rate for presentation. Providers author ordinary profiles; SBW applies [consolidated].
  */
-data class VehicleWeaponScheduleProfile(
+data class VehicleWeaponScheduleProfile @JvmOverloads constructor(
     val id: ResourceLocation,
     val bulletRpm: Int,
     val eventRpm: Int,
@@ -36,6 +40,7 @@ data class VehicleWeaponScheduleProfile(
     val threeQuarterHeatPitch: Float = 0.68f,
     val nineTenthsHeatPitch: Float = 0.50f,
     val emitNativeSound: Boolean = true,
+    val roundWeight: Int = 1,
 ) {
     init {
         require(bulletRpm > 0) { "bulletRpm must be positive" }
@@ -44,6 +49,26 @@ data class VehicleWeaponScheduleProfile(
         require(soundIntervalProjectiles > 0) { "soundIntervalProjectiles must be positive" }
         require(releaseGraceTicks >= 0) { "releaseGraceTicks cannot be negative" }
         require(maxCatchUpEvents > 0) { "maxCatchUpEvents must be positive" }
+        require(roundWeight in 1..AircraftRoundConsolidation.WEIGHT) { "roundWeight out of range" }
+    }
+
+    /** Rounds one accepted event represents, for heat, sound cadence and ammunition. */
+    val roundsPerEvent: Int get() = projectilesPerEvent * roundWeight
+
+    /**
+     * The same weapon firing [weight]-round events: the event rate and catch-up budget shrink by
+     * [weight] while [bulletRpm], heat per second and sound cadence stay those of the real gun.
+     */
+    fun consolidated(weight: Int): VehicleWeaponScheduleProfile {
+        val span = weight.coerceIn(1, AircraftRoundConsolidation.WEIGHT)
+        if (span == 1 || roundWeight != 1) return this
+        val rate = AircraftRoundConsolidation.eventRpm(eventRpm, span)
+        val capacity = ((rate.toLong() + 1199) / 1200).toInt()
+        return copy(
+            eventRpm = rate,
+            roundWeight = span,
+            maxCatchUpEvents = maxOf((maxCatchUpEvents + span - 1) / span, capacity, 1),
+        )
     }
 
     fun soundPitch(heatFraction: Double): Float = when {

@@ -3,6 +3,7 @@ package com.yourname.berts_vehicle_pack.armor;
 import com.atsuishio.superbwarfare.api.projectile.impact.ProjectileImpactContext;
 import com.atsuishio.superbwarfare.api.projectile.impact.VehicleImpactVolumeView;
 import com.yourname.berts_vehicle_pack.armor.ArmorHitResolver.NearBox;
+import com.yourname.berts_vehicle_pack.armor.ArmorHitResolver.RaySnap;
 import com.yourname.berts_vehicle_pack.armor.ArmorHitResolver.ShotTrace;
 import com.yourname.berts_vehicle_pack.armor.ArmorModuleResolver.InternalModuleHits;
 import com.yourname.berts_vehicle_pack.armor.ArmorModuleResolver.ModuleHit;
@@ -90,12 +91,25 @@ final class BvpImpactVolumeQuery implements VehicleImpactVolumeView {
     /** Previously resolved contact only; presentation must not start another armor ray. */
     ArmorHit resolvedImpactBox() {
         if (secondaryVolumes != null && secondaryVolumes.armorResolved) {
-            return secondaryVolumes.armorHit;
+            return secondaryVolumes.resolvedContact();
         }
         if (initialVolumes.armorResolved) {
-            return initialVolumes.armorHit;
+            return initialVolumes.resolvedContact();
         }
         return initialVolumes.eraResolved ? initialVolumes.eraHit : null;
+    }
+
+    /** Nearest plate to a shot whose ray crossed no plate; evaluated once per trace. */
+    RaySnap nearestPlateToRay(ShotTrace trace, double maxGap) {
+        TraceVolumes volumes = volumes(trace);
+        if (!volumes.snapResolved || Double.compare(volumes.snapMaxGap, maxGap) != 0) {
+            volumes.snap = ArmorHitResolver.findNearestBoxToRay(target, profile.plates,
+                    trace.rayStart, trace.hullShotDirection,
+                    ArmorHitResolver.ARMOR_RAY_DISTANCE_BLOCKS, maxGap);
+            volumes.snapMaxGap = maxGap;
+            volumes.snapResolved = true;
+        }
+        return volumes.snap;
     }
 
     NearBox nearestArmorToImpact(ShotTrace trace) {
@@ -161,5 +175,15 @@ final class BvpImpactVolumeQuery implements VehicleImpactVolumeView {
         private boolean internalsResolved;
         private ArmorHit internalArmorHit;
         private InternalModuleHits internalHits;
+        private boolean snapResolved;
+        private double snapMaxGap;
+        private RaySnap snap;
+
+        private ArmorHit resolvedContact() {
+            if (armorHit != null) {
+                return armorHit;
+            }
+            return snap == null ? null : snap.hit();
+        }
     }
 }

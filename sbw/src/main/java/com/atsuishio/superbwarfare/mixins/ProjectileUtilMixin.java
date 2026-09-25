@@ -4,6 +4,7 @@ import com.atsuishio.superbwarfare.api.projectile.ProjectileCollisionTarget;
 import com.atsuishio.superbwarfare.entity.OBBEntity;
 import com.atsuishio.superbwarfare.entity.mixin.OBBHitter;
 import com.atsuishio.superbwarfare.entity.projectile.WireGuideMissileEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity;
 import com.atsuishio.superbwarfare.init.ModParticleTypes;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.tools.OBB;
@@ -55,7 +56,7 @@ public class ProjectileUtilMixin {
 
     private static boolean requiresCustomQuery(Iterable<Entity> entities, Entity shooter) {
         for (Entity entity : entities) {
-            if (usesDetailedTarget(entity, shooter) || isNarrowAtgm(entity, shooter)
+            if (usesDetailedTarget(entity, shooter) || isNarrowAtgm(entity, shooter) || isHiddenCrew(entity, shooter)
                     || (entity instanceof OBBEntity obbEntity && !obbEntity.enableAABB())) return true;
         }
         return false;
@@ -81,6 +82,7 @@ public class ProjectileUtilMixin {
             if (shooterOverload && (entity.getPassengers().contains(shooter)
                     || (maxDistance != 0 && entity.getRootVehicle() == shooter.getRootVehicle()
                     && !entity.canRiderInteract()))) continue;
+            if (isHiddenCrew(entity, shooter)) continue;
 
             Vec3 point;
             OBB.Part part = null;
@@ -114,6 +116,19 @@ public class ProjectileUtilMixin {
                 nearest.part() == null ? OBB.Part.EMPTY : nearest.part()));
         if (nearest.part() != null) emitObbHitEffects(shooter, result);
         return result;
+    }
+
+    /**
+     * Hidden, non-exposed crew of an OBB vehicle are covered by its hull. Their passenger boxes can
+     * protrude above turrets and roofs, so a projectile must strike the vehicle's own OBBs instead.
+     * Exposed seats (open hatches, pintle gunners) remain projectile targets.
+     */
+    private static boolean isHiddenCrew(Entity entity, Entity shooter) {
+        return shooter instanceof Projectile
+                && entity.getVehicle() instanceof VehicleEntity vehicle
+                && !vehicle.enableAABB()
+                && (vehicle.hidePassenger(entity) || vehicle.isEnclosed(entity))
+                && !vehicle.exposesPassengerToFire(entity);
     }
 
     private static boolean isNarrowAtgm(Entity entity, Entity shooter) {

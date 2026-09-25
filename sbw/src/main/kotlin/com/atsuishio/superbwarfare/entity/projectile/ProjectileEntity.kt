@@ -3,7 +3,10 @@ package com.atsuishio.superbwarfare.entity.projectile
 import com.atsuishio.superbwarfare.api.event.ProjectileHitEvent.HitBlock
 import com.atsuishio.superbwarfare.api.event.ProjectileHitEvent.HitEntity
 import com.atsuishio.superbwarfare.api.projectile.ProfiledProjectile
+import com.atsuishio.superbwarfare.api.projectile.BallisticSync
 import com.atsuishio.superbwarfare.api.projectile.FarProjectileAccess
+import com.atsuishio.superbwarfare.api.projectile.SmoothedBallisticProjectile
+import com.atsuishio.superbwarfare.api.vehicle.weapon.AircraftRoundConsolidation
 import com.atsuishio.superbwarfare.api.projectile.ProjectileCollisionTarget
 import com.atsuishio.superbwarfare.api.projectile.ProjectileProfiles
 import com.atsuishio.superbwarfare.api.projectile.ResolvedProjectileProfile
@@ -102,7 +105,7 @@ import kotlin.math.max
 @Suppress("unused")
 open class ProjectileEntity(entityType: EntityType<out ProjectileEntity>, level: Level) : Projectile(entityType, level),
     CustomSyncMotionEntity, ExplosiveProjectile, IEntityAdditionalSpawnData, ProfiledProjectile, SequencedProjectile,
-    ProjectileImpactDamagePolicy, FarProjectileAccess {
+    ProjectileImpactDamagePolicy, FarProjectileAccess, SmoothedBallisticProjectile {
     override fun farProjectileExplosionRadius(): Double = explosionRadius.toDouble()
     // This entity uses findEntitiesOnPath's +1 query, not ProjectileUtilMixin's +8 query.
     // Include the entity-section lookup's two-block neighbor margin as well.
@@ -118,6 +121,13 @@ open class ProjectileEntity(entityType: EntityType<out ProjectileEntity>, level:
     private var lastImpactStopsTraversal = false
     /** Legacy persisted provenance used to retire obsolete server-side impact fragments. */
     private var impactShrapnel = false
+    /** Server: state at the start of the current step, compared with the clients' prediction. */
+    private var ballisticStartPosition: Vec3? = null
+    private var ballisticStartVelocity: Vec3 = Vec3.ZERO
+    /** Client: outstanding step-aligned correction, blended over a few ticks. */
+    private val ballisticCorrection = BallisticSync.Correction()
+    /** Client: spawn data (exact velocity) has been applied; later tracker velocity is clamped. */
+    private var ballisticSpawned = false
 
     // 子弹的发射者，可以为空
     var shooter: Entity? = null
@@ -308,6 +318,9 @@ open class ProjectileEntity(entityType: EntityType<out ProjectileEntity>, level:
         buffer.writeFloat(motion.y.toFloat())
         buffer.writeFloat(motion.z.toFloat())
         buffer.writeVarInt(this.tickCount)
+        // The client flies the same deterministic step, so it needs the authored drop per tick.
+        buffer.writeFloat(this.gravity)
+        buffer.writeVarInt(AircraftRoundConsolidation.weight(this))
         ProjectileProfiles.writeSpawnData(this, buffer)
     }
 
@@ -318,8 +331,63 @@ open class ProjectileEntity(entityType: EntityType<out ProjectileEntity>, level:
             additionalData.readFloat().toDouble(),
         )
         this.tickCount = additionalData.readVarInt()
+        val syncedGravity = additionalData.readFloat()
+        if (syncedGravity.isFinite()) this.gravity = syncedGravity
+        AircraftRoundConsolidation.mark(this, additionalData.readVarInt())
+        ballisticSpawned = true
         ProjectileProfiles.readSpawnData(this, additionalData)
         this.setOldPosAndRot()
+    }
+
+    override fun smoothsBallisticFlight(): Boolean =
+        motionSyncMode() == FastThrowableProjectile.MotionSyncMode.ENTITY_INTERVAL
+
+    override fun ballisticStep(velocity: Vec3): Vec3 =
+        NominalProjectileMotion.afterStep(velocity, this.gravity.toDouble())
+
+    override fun acceptBallisticState(tick: Int, position: Vec3, velocity: Vec3) {
+        if (!level().isClientSide || isRemoved) return
+        val gravity = this.gravity.toDouble()
+        val aligned = BallisticSync.align(tick, tickCount, position, velocity, this::ballisticStep) {
+            it.add(0.0, gravity, 0.0)
+        }
+        if (aligned == null) {
+            snapBallistic(position, velocity)
+            return
+        }
+        this.deltaMovement = aligned.second
+        if (!ballisticCorrection.offer(aligned.first.subtract(position()), aligned.second.length())) {
+            snapBallistic(aligned.first, aligned.second)
+        }
+    }
+
+    private fun snapBallistic(position: Vec3, velocity: Vec3) {
+        ballisticCorrection.clear()
+        this.setPos(position)
+        this.xo = position.x; this.yo = position.y; this.zo = position.z
+        this.xOld = position.x; this.yOld = position.y; this.zOld = position.z
+        this.deltaMovement = velocity
+    }
+
+    /**
+     * Vanilla motion packets clamp each axis to 3.9 blocks/tick. After the exact spawn velocity, a
+     * deterministic round takes velocity only from step-aligned motion messages.
+     */
+    override fun lerpMotion(x: Double, y: Double, z: Double) {
+        if (ballisticSpawned && level().isClientSide && smoothsBallisticFlight()) return
+        super.lerpMotion(x, y, z)
+    }
+
+    /** Tracker positions carry no simulation step; step-aligned motion messages own corrections. */
+    override fun lerpTo(x: Double, y: Double, z: Double, yRot: Float, xRot: Float, steps: Int, teleport: Boolean) {
+        if (level().isClientSide && smoothsBallisticFlight()) {
+            val target = Vec3(x, y, z)
+            if (BallisticSync.grossDivergence(target.subtract(position()), deltaMovement)) {
+                snapBallistic(target, deltaMovement)
+            }
+            return
+        }
+        super.lerpTo(x, y, z, yRot, xRot, steps, teleport)
     }
 
     override fun getAddEntityPacket(): Packet<ClientGamePacketListener> {
@@ -475,6 +543,8 @@ open class ProjectileEntity(entityType: EntityType<out ProjectileEntity>, level:
 
         val level = this.level()
         if (!level.isClientSide()) {
+            ballisticStartPosition = this.position()
+            ballisticStartVelocity = vec
             val startVec = this.position()
             var endVec = startVec.add(this.deltaMovement)
             var result: HitResult? = if (this.isPenetrating || this.beast) {
@@ -548,6 +618,7 @@ open class ProjectileEntity(entityType: EntityType<out ProjectileEntity>, level:
             this.setPos(this.x + vec.x, this.y + vec.y, this.z + vec.z)
         } else {
             this.setPosRaw(this.x + vec.x, this.y + vec.y, this.z + vec.z)
+            ballisticCorrection.next()?.let { this.setPosRaw(this.x + it.x, this.y + it.y, this.z + it.z) }
         }
 
         this.deltaMovement = NominalProjectileMotion.afterStep(this.deltaMovement, this.gravity.toDouble())
@@ -600,7 +671,16 @@ open class ProjectileEntity(entityType: EntityType<out ProjectileEntity>, level:
         when (motionSyncMode()) {
             FastThrowableProjectile.MotionSyncMode.NONE -> return
             FastThrowableProjectile.MotionSyncMode.ENTITY_INTERVAL -> {
-                if (this.tickCount % this.type.updateInterval() != 0) return
+                // Clients run the same step; publish only a departure from it or a sparse realignment.
+                val start = ballisticStartPosition
+                ballisticStartPosition = null
+                if (isRemoved) return
+                val deviated = start == null || BallisticSync.deviates(start, ballisticStartVelocity,
+                    position(), deltaMovement, ballisticStep(ballisticStartVelocity))
+                if (!deviated && this.tickCount % BallisticSync.CORRECTION_INTERVAL_TICKS != 0) return
+                NetworkTelemetry.recordSystemWork("projectile.motion_correction")
+                sendPacketToTrackingThis(ClientMotionSyncMessage.ballistic(this))
+                return
             }
             FastThrowableProjectile.MotionSyncMode.EVERY_TICK -> Unit
         }
@@ -609,8 +689,9 @@ open class ProjectileEntity(entityType: EntityType<out ProjectileEntity>, level:
         sendPacketToTrackingThis(ClientMotionSyncMessage(this))
     }
 
+    /** Unguided bullets fly deterministically on the client; a profile may still opt into EVERY_TICK. */
     open fun motionSyncMode(): FastThrowableProjectile.MotionSyncMode {
-        return ProjectileProfiles.motionSyncMode(this, FastThrowableProjectile.MotionSyncMode.EVERY_TICK)
+        return ProjectileProfiles.motionSyncMode(this, FastThrowableProjectile.MotionSyncMode.ENTITY_INTERVAL)
     }
 
     override fun onHit(result: HitResult) {

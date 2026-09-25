@@ -135,8 +135,9 @@ class AircraftRunwayMovementTest {
     @Test fun airborneAscendingRetractedAndSteepAttitudeNeverGetRunwayClimb() {
         val step = AABB(-50.0, 0.0, mig.contact.fuselage.maximum.z + 0.1, 50.0, 1.0, 100.0)
         val scene = Scene(listOf(floor, step))
-        assertFalse(scene.move(Vec3(0.0, -0.012, 1.0), false).gearStepUsed)
-        assertFalse(scene.move(Vec3(0.0, 0.05, 1.0)).gearStepUsed)
+        val airborne = Scene(listOf(floor, step), origin = Vec3(0.0, 0.5, 0.0))
+        assertFalse(airborne.move(Vec3(0.0, -0.012, 1.0), false).gearStepUsed)
+        assertFalse(scene.move(Vec3(0.0, 0.2, 1.0)).gearStepUsed)
         assertFalse(Scene(listOf(floor, step), gear = false).move(Vec3(0.0, -0.012, 1.0)).gearStepUsed)
         val tilted = Scene(listOf(floor, step), origin = Vec3(0.0, 4.0, 0.0),
             rotation = Quaterniond().rotateX(Math.toRadians(60.0)))
@@ -247,14 +248,20 @@ class AircraftRunwayMovementTest {
         }
     }
 
-    @Test fun normalAndHardGearLandingsRemainNondamagingAndUseActualImpactSpeed() {
-        for (fit in fits) for (speed in listOf(0.03, 0.2, 2.0)) {
+    @Test fun gearLandingDamageFollowsTheActualSinkRate() {
+        // Blocks per tick: 0.6, 2 and 2.5 m/s are normal landings, 4 m/s is hard, 40 m/s a crash.
+        for (fit in fits) for (speed in listOf(0.03, 0.1, 0.125, 0.2, 2.0)) {
             val result = Scene(listOf(floor), origin = Vec3(0.0, speed * 0.5, 0.0), fit = fit)
                 .move(Vec3(0.0, -speed, 0.5), false)
-            assertTrue(result.gearGroundContact && !result.bodyContact)
-            assertEquals(0.0, result.damage.healthFraction)
+            assertTrue(result.gearGroundContact && !result.bodyContact, "${fit.id} sink=$speed")
             assertEquals(speed, result.gearImpactSpeedBlocksPerTick, 1e-7)
             assertEquals(0.5, result.velocity.z, 1e-7)
+            when {
+                speed <= 0.125 -> assertEquals(0.0, result.damage.healthFraction, "${fit.id} sink=$speed")
+                speed < 0.45 -> assertTrue(result.damage.healthFraction > 0.0 &&
+                    result.damage.healthFraction < 0.15 && !result.damage.destructive, result.toString())
+                else -> assertTrue(result.damage.destructive, result.toString())
+            }
         }
     }
 

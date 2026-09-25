@@ -82,7 +82,7 @@ public final class BvpClientArmorEventStatus {
         if (line1.startsWith("Track hit!") || line1.startsWith("Module hit!")) {
             return MODULE_COLOR;
         }
-        return line1.startsWith("Non-penetration") || line1.startsWith("Shot Missed")
+        return line1.startsWith("Non-penetration") || line1.regionMatches(true, 0, "Shot missed", 0, 11)
                 ? NON_PENETRATION_COLOR
                 : PENETRATION_COLOR;
     }

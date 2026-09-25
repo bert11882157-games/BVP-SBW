@@ -35,15 +35,38 @@ object AircraftWreckBreakup {
             detach(vehicle, timedMask(vehicle.uuid,
                 vehicle.level().gameTime - vehicle.aircraftWreckStart, false))
     }
+    /** Ticks during which one impact event may raise, but never lower, the stored breakup momentum. */
+    const val IMPACT_EVENT_TICKS = 8L
+    private val momentumStamps = java.util.WeakHashMap<VehicleEntity, Long>()
+
+    /**
+     * The lethal impact reports the pre-impact velocity first; the following ticks only see the
+     * post-collision remainder. Keep the largest sample of one event so fragments inherit real inertia.
+     */
+    @JvmStatic fun recordMomentum(vehicle: VehicleEntity, momentum: net.minecraft.world.phys.Vec3) {
+        if (vehicle.level().isClientSide ||
+            !(momentum.x.isFinite() && momentum.y.isFinite() && momentum.z.isFinite())) return
+        val now = vehicle.level().gameTime
+        val stored = net.minecraft.world.phys.Vec3(vehicle.aircraftWreckMotionX.toDouble(),
+            vehicle.aircraftWreckMotionY.toDouble(), vehicle.aircraftWreckMotionZ.toDouble())
+        if (keepsStoredMomentum(stored, momentumStamps[vehicle], momentum, now)) return
+        vehicle.aircraftWreckMotionX = momentum.x.coerceIn(-99.0, 99.0).toFloat()
+        vehicle.aircraftWreckMotionY = momentum.y.coerceIn(-99.0, 99.0).toFloat()
+        vehicle.aircraftWreckMotionZ = momentum.z.coerceIn(-99.0, 99.0).toFloat()
+        momentumStamps[vehicle] = now
+    }
+    internal fun keepsStoredMomentum(stored: net.minecraft.world.phys.Vec3, storedAt: Long?,
+                                     incoming: net.minecraft.world.phys.Vec3, now: Long): Boolean =
+        storedAt != null && now - storedAt in 0L..IMPACT_EVENT_TICKS &&
+            stored.lengthSqr() >= incoming.lengthSqr()
+
     fun detach(vehicle: VehicleEntity, sides: Int, momentum: net.minecraft.world.phys.Vec3 = vehicle.deltaMovement) {
         if (vehicle.level().isClientSide || !supported(vehicle)) return
         val previous = vehicle.aircraftWreckWings.coerceAtLeast(0)
         val next = previous or (sides and 3)
         if (vehicle.aircraftWreckStart < 0) vehicle.aircraftWreckStart = vehicle.level().gameTime
         if (next != previous || vehicle.aircraftWreckWings < 0) {
-            vehicle.aircraftWreckMotionX = momentum.x.toFloat()
-            vehicle.aircraftWreckMotionY = momentum.y.toFloat()
-            vehicle.aircraftWreckMotionZ = momentum.z.toFloat()
+            recordMomentum(vehicle, momentum)
             vehicle.aircraftWreckWings = next
             if (next != previous) {
                 val level = vehicle.level() as? net.minecraft.server.level.ServerLevel

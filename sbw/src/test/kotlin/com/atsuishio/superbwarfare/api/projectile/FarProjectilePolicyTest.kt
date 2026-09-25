@@ -87,6 +87,22 @@ class FarProjectilePolicyTest {
         assertNull(FarProjectilePolicy.chunks(box, Vec3.ZERO, 0.0, 9))
     }
 
+    @Test fun `round fired during entity iteration is not paused before its first native tick`() {
+        val gate = FarProjectileTickGate(200, 0)
+        assertTrue(gate.awaitingFirstTick(200), "Registered this tick and not yet stepped")
+        assertFalse(gate.awaitingFirstTick(201), "A later skipped tick is a real wait")
+        assertTrue(gate.ordinary(201))
+        assertFalse(gate.awaitingFirstTick(201))
+        val claimed = FarProjectileTickGate(300, 0)
+        assertTrue(claimed.claim(300, false, true, true, true))
+        assertFalse(claimed.awaitingFirstTick(300), "A far step in the spawn tick publishes normally")
+    }
+
+    @Test fun `registry holds tens of thousands of rounds and always offers each one a step`() {
+        assertTrue(FarProjectilePolicy.MAX_REGISTERED >= 32768)
+        assertTrue(FarProjectilePolicy.MAX_TICKS_PER_SERVER_TICK >= FarProjectilePolicy.MAX_REGISTERED)
+    }
+
     @Test fun `ordinary movement into full corridor is not ticked twice`() {
         val gate = FarProjectileTickGate()
         assertTrue(gate.ordinary(40))

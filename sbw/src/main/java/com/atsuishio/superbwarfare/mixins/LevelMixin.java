@@ -1,16 +1,13 @@
 package com.atsuishio.superbwarfare.mixins;
 
-import com.atsuishio.superbwarfare.entity.OBBEntity;
+import com.atsuishio.superbwarfare.api.projectile.ProjectileObbTargets;
 import com.atsuishio.superbwarfare.entity.vehicle.base.AircraftCollisionIndex;
-import com.atsuishio.superbwarfare.tools.OBB;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.entity.LevelEntityGetter;
 import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.phys.AABB;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -18,13 +15,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
 import java.util.function.Predicate;
-import java.util.stream.StreamSupport;
 
 @Mixin(Level.class)
 public abstract class LevelMixin {
-
-    @Shadow
-    protected abstract LevelEntityGetter<Entity> getEntities();
 
     @Inject(method = "getEntities(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/phys/AABB;Ljava/util/function/Predicate;)Ljava/util/List;",
             at = @At("RETURN"))
@@ -38,23 +31,22 @@ public abstract class LevelMixin {
             return;
         }
 
-        for (Entity aircraft : com.atsuishio.superbwarfare.entity.vehicle.base.AircraftSurfaceProjectileIndex.query((Level) (Object) this, pBoundingBox)) {
-            if (aircraft != pEntity && pPredicate.test(aircraft) && !cir.getReturnValue().contains(aircraft)) cir.getReturnValue().add(aircraft);
+        Level level = (Level) (Object) this;
+        List<Entity> result = cir.getReturnValue();
+        for (Entity aircraft : com.atsuishio.superbwarfare.entity.vehicle.base.AircraftSurfaceProjectileIndex.query(level, pBoundingBox)) {
+            if (aircraft != pEntity && pPredicate.test(aircraft) && !result.contains(aircraft)) result.add(aircraft);
         }
-        StreamSupport.stream(this.getEntities().getAll().spliterator(), false).filter(e -> pPredicate.test(e) && e != pEntity)
-                .forEach(entity -> {
-                            if (!((Level) (Object) this).isClientSide
-                                    && entity instanceof com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity vehicle
-                                    && !vehicle.computed().getAircraftSurfaceModules().isEmpty()) return;
-                            if (entity instanceof OBBEntity obbEntity && !obbEntity.enableAABB()) {
-                                for (OBB obb : obbEntity.getOBBs()) {
-                                    if (OBB.isColliding(obb, pBoundingBox) && !cir.getReturnValue().contains(entity)) {
-                                        cir.getReturnValue().add(entity);
-                                    }
-                                }
-                            }
-                        }
-                );
+        // Only registered OBB owners can add a candidate here; never scan the whole level per projectile.
+        boolean server = !level.isClientSide;
+        for (ProjectileObbTargets.Target target : ProjectileObbTargets.candidates(level)) {
+            Entity entity = target.getEntity();
+            if (entity == pEntity || entity instanceof Projectile || entity.isRemoved() || entity.level() != level) continue;
+            if (!target.mayOverlap(pBoundingBox)) continue;
+            if (server && entity instanceof com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity vehicle
+                    && !vehicle.computed().getAircraftSurfaceModules().isEmpty()) continue;
+            if (!pPredicate.test(entity)) continue;
+            if (target.collides(pBoundingBox) && !result.contains(entity)) result.add(entity);
+        }
     }
 
     @Inject(method = "getEntities(Lnet/minecraft/world/level/entity/EntityTypeTest;Lnet/minecraft/world/phys/AABB;Ljava/util/function/Predicate;Ljava/util/List;I)V",

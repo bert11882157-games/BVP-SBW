@@ -91,5 +91,23 @@ class FarProjectileWiringTest {
         assertTrue(paused > tick.indexOfLast { it.name == "expire" || it.name == "expire\$default" })
         assertTrue(tick.subList(0, paused).any { it.name == "advancedAt" },
             "Final publication must include both ordinary boundary crossing and supplemental advancement")
+        assertTrue(tick.subList(0, paused).any { it.name == "awaitingFirstTick" },
+            "A round fired during entity iteration must not be held at the muzzle before its first tick")
+    }
+
+    @Test fun `ballistic rounds never publish a residency hold and clients ignore one`() {
+        val pause = calls("api/projectile/FarProjectileTracking", "pause")
+        val free = pause.indexOfFirst { it.name == "holdsFreeFlight" }
+        val send = pause.indexOfFirst { it.name == "sendPacketToTrackingThis" }
+        assertTrue(free >= 0 && send > free)
+        val apply = calls("client/FarProjectilePlayback", "apply")
+        assertTrue(apply.any { it.name == "holdsFreeFlight" })
+    }
+
+    @Test fun `projectile broadphase no longer streams the whole level`() {
+        val query = calls("mixins/LevelMixin", "getEntities")
+        assertFalse(query.any { it.name in setOf("getAll", "stream", "spliterator") })
+        assertTrue(query.any { it.name == "candidates" })
+        assertTrue(query.indexOfFirst { it.name == "mayOverlap" } < query.indexOfFirst { it.name == "collides" })
     }
 }

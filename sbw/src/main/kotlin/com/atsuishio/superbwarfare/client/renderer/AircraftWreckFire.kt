@@ -16,7 +16,8 @@ import java.util.UUID
 /** Both native and far copies pass through the same renderer; UUIDs avoid handoff duplicates. */
 @net.minecraftforge.fml.common.Mod.EventBusSubscriber(modid = Mod.MODID, value = [Dist.CLIENT])
 object AircraftWreckFire {
-    private data class Seen(var vehicle: VehicleEntity, var observed: Long, var previous: List<Vec3> = emptyList())
+    private data class Seen(var vehicle: VehicleEntity, var observed: Long, var previous: List<Vec3> = emptyList(),
+                            var scrape: Vec3? = null)
     private val seen = LinkedHashMap<UUID, Seen>()
     private var level: Any? = null
     private var tick = 0L
@@ -75,14 +76,17 @@ object AircraftWreckFire {
                     val diameter = if (groundVehicle) 2.7f+(1-flame)*1.2f else 1.8f+(1-flame)*.8f
                     AircraftCombatParticles.wreckSmoke(point.add(0.0,.2,0.0),diameter); budget--
                 }
-                val speed = vehicle.deltaMovement.horizontalDistance()
-                if (vehicle.onGround() && speed > .02 && budget > 0) {
-                    if (section != null) {
-                        val local = section.minimum.add(section.maximum).scale(.5)
-                        val point = vehicle.getVehicleTransform(1f).transformPosition(org.joml.Vector3d(local.x,section.minimum.y,local.z))
-                        AircraftCombatParticles.grindingSmoke(Vec3(point.x,point.y+.08,point.z),speed); budget--
-                    }
+                val travel = Vec3(vehicle.x - vehicle.xo, 0.0, vehicle.z - vehicle.zo)
+                val motion = if (vehicle.deltaMovement.horizontalDistance() >= travel.horizontalDistance())
+                    vehicle.deltaMovement else travel
+                val contact = if (section != null && vehicle.onGround() && budget > 0 &&
+                    motion.horizontalDistance() > com.atsuishio.superbwarfare.api.vehicle.flight.WreckDebrisPhysics.SCRAPE_SPEED)
+                    belly(vehicle, section.minimum, section.maximum) else null
+                if (contact != null) {
+                    budget -= AircraftCombatParticles.scrape(value.scrape, contact.first, motion, contact.second,
+                        minOf(8, budget), tick)
                 }
+                value.scrape = contact?.first
                 continue
             }
             val intensity = com.atsuishio.superbwarfare.api.vehicle.flight.AircraftWreckFlightStrategy
@@ -116,6 +120,23 @@ object AircraftWreckFire {
                 }
             }
         }
+    }
+
+    /** Load-bearing underside of the retained hull box: the corners within reach of the lowest one. */
+    private fun belly(vehicle: VehicleEntity, minimum: Vec3, maximum: Vec3): Pair<Vec3, Double> {
+        val transform = vehicle.getVehicleTransform(1f)
+        val corners = (0..7).map { bits ->
+            val point = transform.transformPosition(org.joml.Vector3d(
+                if (bits and 1 == 0) minimum.x else maximum.x,
+                if (bits and 2 == 0) minimum.y else maximum.y,
+                if (bits and 4 == 0) minimum.z else maximum.z))
+            Vec3(point.x, point.y, point.z)
+        }
+        val low = corners.minOf { it.y }
+        val touching = corners.filter { it.y <= low + .2 }
+        val center = touching.fold(Vec3.ZERO) { sum, point -> sum.add(point) }.scale(1.0 / touching.size)
+        val spread = touching.maxOf { Math.hypot(it.x - center.x, it.z - center.z) }
+        return Vec3(center.x, low + .06, center.z) to spread
     }
 
     private fun engines(vehicle: VehicleEntity): List<Vec3> {

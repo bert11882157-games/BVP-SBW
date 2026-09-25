@@ -8,7 +8,9 @@ import com.atsuishio.superbwarfare.data.vehicle.subdata.AircraftTerrainContact
 import com.atsuishio.superbwarfare.data.vehicle.subdata.OBBInfo
 import com.atsuishio.superbwarfare.data.vehicle.subdata.VehicleType
 import com.atsuishio.superbwarfare.diagnostics.EliteDiagnostics
+import net.minecraft.util.Mth
 import net.minecraft.world.phys.Vec3
+import kotlin.math.abs
 
 /** Server wheel probes, physical support-pivot settling and one authoritative touchdown producer. */
 internal class AircraftWheelSupportService(private val vehicle: VehicleEntity,
@@ -18,12 +20,44 @@ internal class AircraftWheelSupportService(private val vehicle: VehicleEntity,
     private var previousPoints = emptyMap<String, Vec3>()
     private var expectedPoints = emptyMap<String, Vec3>()
     private var previousTick: Int? = null
+    /** Pitch left by the last move while a main tyre carried the aircraft. */
+    private var mainSupportPitch: Float? = null
     private val events = AircraftWheelContactEvents()
     private val kernel = AircraftWheelSupportKernel { boxes, movement, offset ->
         val result = probe.sample(movement, offset, terrainBoxes = boxes)
         AircraftWheelSupportKernel.Probe(result.contact, result.complete, result.bodyOverlap)
     }
     val active: Boolean get() = definition != null
+    /** Any tyre rested on terrain after the last committed move. */
+    var supported = false
+        private set
+
+    /**
+     * Attitude changes commanded while a main tyre carries the aircraft rotate about that tyre's
+     * contact edge instead of the native pivot. Rotating about the pivot would drive main gear
+     * behind it into the runway and drop the tail, turning every rotation into a tail strike.
+     */
+    fun pivotOnMainGear() {
+        val pitch = mainSupportPitch ?: return
+        mainSupportPitch = null
+        val data = vehicle.computed().aircraftTerrainContact ?: return
+        if (previousTick != vehicle.tickCount - 1 || vehicle.aircraftWreckImpactTime >= 0 ||
+            !data.validWheelContacts() || !data.gearDeployed(vehicle.synchedGearRot)) return
+        val delta = Mth.wrapDegrees(vehicle.xRot - pitch).toDouble()
+        val roll = vehicle.roll.toDouble()
+        if (abs(delta) < 1e-6 || abs(delta) > MAX_PIVOT_DEGREES || abs(roll) > 15.0) return
+        val frame = vehicle.getVehicleTransform(1F)
+        val pivot = vehicle.rotateOffsetHeight
+        val before = AircraftWheelGeometry.pitchAround(frame, Vec3(0.0, pivot, 0.0), roll, -delta)
+        // The tyre edge that is lowest in the new attitude keeps its world position.
+        val anchor = AircraftWheelGeometry.sample(data, frame)
+            .filter { it.group == AircraftWheelContactGroup.MAIN }
+            .minByOrNull { it.world.y }?.localSupport ?: return
+        val pivoted = AircraftWheelGeometry.pitchAround(before, anchor, roll, delta)
+        val correction = AircraftWheelGeometry.originCorrection(before, pivoted, pivot, roll, delta)
+        if (!correction.x.isFinite() || !correction.y.isFinite() || !correction.z.isFinite()) return
+        vehicle.setPos(vehicle.x + correction.x, vehicle.y + correction.y, vehicle.z + correction.z)
+    }
 
     fun prepare(snapshot: AircraftCollisionSnapshot, requested: Vec3): List<OBBInfo> {
         val data = vehicle.computed().aircraftTerrainContact
@@ -33,6 +67,7 @@ internal class AircraftWheelSupportService(private val vehicle: VehicleEntity,
         val selected = definition ?: run {
             events.sample(vehicle.level().gameTime, false, emptyMap(), emptyMap())
             previousPoints = emptyMap(); wheels = emptyList(); previousTick = null
+            supported = false; mainSupportPitch = null
             return snapshot.terrainInfos()
         }
         wheels = AircraftWheelGeometry.sample(selected, vehicle.getVehicleTransform(1F))
@@ -84,6 +119,9 @@ internal class AircraftWheelSupportService(private val vehicle: VehicleEntity,
         }
         previousPoints = samples.associate { it.id to it.world }
         previousTick = vehicle.tickCount
+        supported = motion.complete && support.complete && support.rows.isNotEmpty()
+        mainSupportPitch = if (supported && !motion.bodyContact &&
+            support.rows.any { it.wheel.group == AircraftWheelContactGroup.MAIN }) vehicle.xRot else null
         if (EliteDiagnostics.isEnabled(vehicle.level()) &&
             (plan.deltaPitch != 0.0 || emitted.isNotEmpty() || vehicle.tickCount % 20 == 0)) {
             EliteDiagnostics.record(vehicle, "aircraft_wheel_contact", "SUPPORT",
@@ -95,4 +133,8 @@ internal class AircraftWheelSupportService(private val vehicle: VehicleEntity,
         }
     }
 
+    private companion object {
+        /** Larger jumps are teleports or resets, not rotation on the gear. */
+        const val MAX_PIVOT_DEGREES = 10.0
+    }
 }

@@ -97,6 +97,42 @@ class AircraftWreckFlightTest {
             assertTrue(state.previousMotion.y < 0.0, "gravity must continue during the coast")
         }
     }
+    @Test fun impactMomentumKeepsTheLargestSampleOfOneEventOnly() {
+        val impact = Vec3(1.8, -.9, .4)
+        val remainder = Vec3(.2, 0.0, .05)
+        assertTrue(AircraftWreckBreakup.keepsStoredMomentum(impact, 100L, remainder, 101L),
+            "the post-collision remainder never overwrites the pre-impact velocity")
+        assertFalse(AircraftWreckBreakup.keepsStoredMomentum(remainder, 100L, impact, 101L))
+        assertFalse(AircraftWreckBreakup.keepsStoredMomentum(impact, 100L, remainder,
+            100L + AircraftWreckBreakup.IMPACT_EVENT_TICKS + 1), "a later event records its own momentum")
+        assertFalse(AircraftWreckBreakup.keepsStoredMomentum(impact, null, remainder, 101L))
+    }
+    @Test fun fragmentingHullSlidesIntoItsFirstContactInsteadOfStopping() {
+        val grounded = input(Vec3(1.6, -.1, 0.0)).copy(onGround = true)
+        assertEquals(Vec3.ZERO, AircraftWreckFlightStrategy.step(grounded, 50, 1, true).motion)
+        val sliding = AircraftWreckFlightStrategy.step(grounded, 50, 1, true, slideOnGround = true).motion
+        assertTrue(sliding.horizontalDistance() > 1.5, "the breakup contact must see the crash speed")
+        assertTrue(sliding.y < -.1)
+    }
+    @Test fun groundedHullAndLateFragmentsUseCoulombFriction() {
+        val gravity = 9.80665 / 400.0
+        var motion = Vec3(2.0, 0.0, 0.0)
+        var distance = 0.0
+        var ticks = 0
+        while (motion.horizontalDistanceSqr() > 0 && ticks < 400) {
+            motion = AircraftFuselageWreck.hullMotion(motion, true, false, gravity).let { Vec3(it.x, 0.0, it.z) }
+            distance += motion.horizontalDistance(); ticks++
+            if (ticks == 20) assertTrue(motion.x > 1.0, "one second of sliding keeps most of 40 b/s")
+        }
+        assertTrue(ticks in 40..120, "stops within a few seconds: $ticks")
+        assertTrue(distance in 30.0..90.0, "slides tens of blocks: $distance")
+        val stored = Vec3(2.0, -1.0, 0.0)
+        assertEquals(stored, WreckDebrisPhysics.lateCaptureVelocity(stored, 2, WreckDebrisPhysics.FUSELAGE_FRICTION, gravity))
+        val late = WreckDebrisPhysics.lateCaptureVelocity(stored, 40, WreckDebrisPhysics.FUSELAGE_FRICTION, gravity)
+        assertEquals(0.0, late.y)
+        assertTrue(late.horizontalDistance() in .1..1.2, "a late capture inherits the decayed slide: $late")
+        assertEquals(Vec3.ZERO, WreckDebrisPhysics.lateCaptureVelocity(stored, 190, WreckDebrisPhysics.FUSELAGE_FRICTION, gravity))
+    }
     private fun input(motion: Vec3 = Vec3(1.5, 0.6, 2.0)) = VehicleFlightInputContext(
         0L, 0, 0.0, 0.0, motion, motion, Vec3(0.0, 0.0, 1.0), Vec3(0.0, 1.0, 0.0),
         1.0, true, true, false, 0.08, bodyYawDegrees = 175.0, bodyPitchDegrees = -35.0,

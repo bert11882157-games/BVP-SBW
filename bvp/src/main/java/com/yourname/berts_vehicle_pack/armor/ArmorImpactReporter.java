@@ -47,22 +47,23 @@ final class ArmorImpactReporter {
         return new Vec3(vector.x, vector.y, vector.z);
     }
 
-    static void reportNoPlateHit(Level level, Entity owner, ArmorTarget target, Vec3 hitVec,
-                                 ArmorHitResolver.NearBox nearestPlate, ArmorProfiles.Vec localImpact) {
-        if (EliteDiagnostics.isEnabled(target.level())) {
-            String nearest = nearestPlateDiagnostic(nearestPlate, localImpact);
-            logArmorEvent(owner, target, hitVec,
-                    "[BVP Armor] Non-Penetration. Shot angle: N/A. Effective armor thickness: N/A. "
-                            + "No armor plate matched along the shell ray; strict armor profile blocked the hit. "
-                            + nearest);
-        }
-        sendImpactFeedback(owner, ArmorImpactFeedback.missed());
-    }
-
     static void reportDirectTrackHit(Level level, Entity owner, ArmorTarget target, Vec3 hitVec,
                                      ArmorBox trackBox, String side, boolean trackBroken,
                                      boolean newlyDestroyed,
                                      ProjectileArmorEffect shot) {
+        reportTrackHit(owner, target, hitVec, trackBox.name, side, trackBroken, newlyDestroyed, shot);
+    }
+
+    /** Running gear below the armor was struck on a profile without authored track boxes. */
+    static void reportRunningGearHit(Entity owner, ArmorTarget target, Vec3 hitVec, String side,
+                                     boolean trackBroken, boolean newlyDestroyed,
+                                     ProjectileArmorEffect shot) {
+        reportTrackHit(owner, target, hitVec, "running_gear", side, trackBroken, newlyDestroyed, shot);
+    }
+
+    private static void reportTrackHit(Entity owner, ArmorTarget target, Vec3 hitVec,
+                                       String boxName, String side, boolean trackBroken,
+                                       boolean newlyDestroyed, ProjectileArmorEffect shot) {
         String moduleId = "right".equals(side) ? ArmorModuleResolver.RIGHT_TRACK : ArmorModuleResolver.LEFT_TRACK;
         if (EliteDiagnostics.isEnabled(target.level())) {
             String message = trackBroken
@@ -70,13 +71,13 @@ final class ArmorImpactReporter {
                     "[BVP Armor] %s hit disabled %s track for 20.0s. Box: %s.",
                     shot.damageType.displayName,
                     side,
-                    trackBox.name)
+                    boxName)
                     : String.format(Locale.ROOT,
                     "[BVP Armor] %s hit damaged %s track by %.1f HP module damage. Box: %s.",
                     shot.damageType.displayName,
                     side,
                     shot.moduleDamage(),
-                    trackBox.name);
+                    boxName);
             logArmorEvent(owner, target, hitVec, message);
         }
         java.util.List<String> notifications = newlyDestroyed
@@ -167,6 +168,31 @@ final class ArmorImpactReporter {
                         newlyDestroyedModules)));
     }
 
+    /** A penetrating hit where no authored plate covered the contact. */
+    static void reportUnboxedPenetration(Entity owner, ArmorTarget target, Vec3 hitVec,
+                                         ProjectileArmorEffect shot, ArmorBox engineBox, ArmorBox ammoRack,
+                                         ArmorBox moduleBox, boolean ammoRackDetonated,
+                                         Set<String> newlyDestroyedModules) {
+        if (EliteDiagnostics.isEnabled(target.level())) {
+            EliteDiagnostics.record(target.vehicle(), "armor", "resolved_hit",
+                    "owner", owner == null ? null : owner.m_20148_(), "profile", target.armorProfileId(),
+                    "position", hitVec, "plate", null, "unboxed", true, "penetrated", true,
+                    "classification", ArmorImpactFeedback.Classification.PENETRATION,
+                    "damage_type", shot.damageType, "profile_hull_damage", shot.vehicleDamage,
+                    "engine_hit", engineBox != null, "ammo_hit", ammoRack != null,
+                    "ammo_detonated", ammoRackDetonated,
+                    "module", moduleBox == null ? null : moduleBox.name,
+                    "newly_destroyed_modules", newlyDestroyedModules);
+        }
+        sendImpactFeedback(owner, ArmorImpactFeedback.plate(
+                ArmorImpactFeedback.Classification.PENETRATION,
+                Double.NaN, Double.NaN,
+                feedbackModuleName(engineBox, ammoRack, moduleBox),
+                feedbackModuleHp(target, engineBox, ammoRack, moduleBox),
+                feedbackNotifications(target, engineBox, ammoRack, moduleBox, ammoRackDetonated,
+                        newlyDestroyedModules)));
+    }
+
     static void reportEraHit(Level level, Entity owner, ArmorTarget target, Vec3 hitVec,
                              ArmorBox eraBox, ProjectileArmorEffect originalShot,
                              ProjectileArmorEffect reducedShot, double protectionMm) {
@@ -220,16 +246,6 @@ final class ArmorImpactReporter {
                 player.m_213846_(Component.m_237113_(notification));
             }
         }
-    }
-
-    private static String nearestPlateDiagnostic(ArmorHitResolver.NearBox nearest,
-                                                 ArmorProfiles.Vec localHit) {
-        if (nearest == null || localHit == null) {
-            return "Nearest armor: none in profile";
-        }
-        return String.format(Locale.ROOT, "Nearest armor: %s %s dist %.2f local %.2f %.2f %.2f",
-                nearest.box().name, nearest.box().frame, nearest.distance(),
-                localHit.x, localHit.y, localHit.z);
     }
 
     private static double impactAngleDegrees(double impactCosine) {

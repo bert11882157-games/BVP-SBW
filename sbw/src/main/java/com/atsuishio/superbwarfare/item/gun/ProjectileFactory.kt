@@ -67,6 +67,9 @@ object ProjectileFactory {
         ProjectileProfiles.assign(entity, requestedProfileId)
         if (entity is Projectile) com.atsuishio.superbwarfare.api.projectile.ProjectileCalibers.capture(entity, projectileInfo.caliberMm)
         com.atsuishio.superbwarfare.api.vehicle.weapon.VehicleWeaponDamagePolicy.capture(entity, parameters)
+        // Stamped before spawn() inserts the entity: the spawn packet carries the weight to clients.
+        val roundWeight = com.atsuishio.superbwarfare.api.vehicle.weapon.AircraftRoundConsolidation.launchWeight()
+        if (roundWeight > 1) com.atsuishio.superbwarfare.api.vehicle.weapon.AircraftRoundConsolidation.mark(entity, roundWeight)
         if (requestedProfileId != null) {
             val assignedProfileId = ProjectileProfiles.profileId(entity)
             when {

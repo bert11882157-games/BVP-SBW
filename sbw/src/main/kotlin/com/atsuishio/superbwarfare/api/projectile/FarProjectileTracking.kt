@@ -17,10 +17,17 @@ object FarProjectileTracking {
 
     @JvmStatic fun pause(entity: Entity, value: Boolean) {
         if (entity.isRemoved || entity !is FarProjectileAccess || entity.level() !is ServerLevel) return
+        // Deterministic ballistic rounds keep flying on the client while the server waits for
+        // residency; their step-aligned corrections resume sync without a hold/snap pair.
+        if (holdsFreeFlight(entity)) return
         if ((paused[entity] ?: false) == value) return
         if (value) paused[entity] = true else paused.remove(entity)
         entity.sendPacketToTrackingThis(FarProjectileStateMessage(entity, value))
     }
+
+    /** Rounds whose client copy is never held by a residency pause. */
+    @JvmStatic fun holdsFreeFlight(entity: Entity): Boolean =
+        entity is SmoothedBallisticProjectile && entity.smoothsBallisticFlight()
 
     /** Pairing follows spawn/data packets, so late observers cannot miss an earlier pause edge. */
     @JvmStatic fun paired(entity: Entity, player: ServerPlayer) {

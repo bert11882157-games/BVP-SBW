@@ -110,7 +110,7 @@ final class ArmorModuleResolver {
         return "right".equals(side) ? RIGHT_TRACK : LEFT_TRACK;
     }
 
-    private static String trackSide(ArmorTarget target, Vec localImpact) {
+    static String trackSide(ArmorTarget target, Vec localImpact) {
         // Resolve the physical side after profile reflection, independent of inherited box labels.
         return target.armorLocalPointToVehicleLocal(localImpact).f_82479_ > 0.0D ? "left" : "right";
     }

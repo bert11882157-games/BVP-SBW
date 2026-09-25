@@ -9,7 +9,12 @@ import kotlin.math.abs
 
 /** Shared exposed-surface admission for the authored aircraft terrain volumes. */
 internal object AircraftTerrainContactQuery {
-    private const val GEAR_FLOOR_TOLERANCE_BLOCKS = 1e-4
+    /** Wheels resting this far into a floor are lifted onto it, never pushed off its edge. */
+    private const val GEAR_FLOOR_TOLERANCE_BLOCKS = 0.15
+    /** Deeper wheel overlap is lifted only when the least-penetration direction is upward. */
+    private const val GEAR_EMBEDDED_LIFT_BLOCKS = 0.5
+    /** Contact this shallow does not hold back a wheel moving level or away from its floor. */
+    private const val GEAR_REST_TOLERANCE_BLOCKS = 1e-4
 
     fun resolve(body: FixedWingContactSweep.Body, box: OBB, gear: Boolean, movement: Vec3,
                 obstacle: AABB, raw: FixedWingContactSweep.Contact, terrain: List<AABB>,
@@ -70,18 +75,26 @@ internal object AircraftTerrainContactQuery {
             return AircraftTerrainMotionSolver.Query(if (exposed) raw.copy(
                 normal = Vec3(0.0, 1.0, 0.0), penetrationDepth = depth) else null, true, true)
         }
-        val shallowGearFloor = gear && raw.initiallyOverlapping &&
-            obstacle.maxY - body.bounds.minY in -1e-7..GEAR_FLOOR_TOLERANCE_BLOCKS &&
-            AircraftTerrainMotionSolver.acceptsGearContact(Vec3(0.0, 1.0, 0.0), box)
+        // A wheel pressed into the floor by an attitude change is lifted by its vertical overlap.
+        // Choosing the face most opposed to travel would push it back off the block edge and
+        // stop the aircraft dead on a seam it is already standing on.
+        val floorDepth = obstacle.maxY - body.bounds.minY
+        val embeddedGearFloor = gear && raw.initiallyOverlapping &&
+            AircraftTerrainMotionSolver.acceptsGearContact(Vec3(0.0, 1.0, 0.0), box) &&
+            (floorDepth in -1e-7..GEAR_FLOOR_TOLERANCE_BLOCKS ||
+                raw.normal.y > 0.5 && floorDepth in -1e-7..GEAR_EMBEDDED_LIFT_BLOCKS)
         val surface = FixedWingContactSurface.resolve(body, movement, obstacle, raw, terrain,
-            budget, allowGearSupportPoint = gear, preferUpwardSupport = shallowGearFloor)
+            budget, allowGearSupportPoint = gear, preferUpwardSupport = embeddedGearFloor)
         val normal = surface.normal ?: return AircraftTerrainMotionSolver.Query(null, gear, surface.complete)
-        val leavingShallowFloor = shallowGearFloor && normal.y > 0.5 && movement.dot(normal) >= -1e-9
+        val lifted = embeddedGearFloor && normal.y > 0.5
+        val depth = if (lifted) floorDepth.coerceAtLeast(0.0) else raw.penetrationDepth
+        val leavingShallowFloor = lifted && floorDepth <= GEAR_REST_TOLERANCE_BLOCKS &&
+            movement.dot(normal) >= -1e-9
         val admitted = (!gear || AircraftTerrainMotionSolver.acceptsGearContact(normal, box)) &&
             !leavingShallowFloor &&
-            (raw.penetrationDepth > 1e-7 || movement.dot(normal) < -1e-9)
-        return AircraftTerrainMotionSolver.Query(if (admitted) raw.copy(normal = normal) else null,
-            gear, surface.complete)
+            (depth > 1e-7 || movement.dot(normal) < -1e-9)
+        return AircraftTerrainMotionSolver.Query(if (admitted) raw.copy(normal = normal,
+            penetrationDepth = depth) else null, gear, surface.complete)
     }
 
     fun preferred(contact: FixedWingContactSweep.Contact, gear: Boolean,

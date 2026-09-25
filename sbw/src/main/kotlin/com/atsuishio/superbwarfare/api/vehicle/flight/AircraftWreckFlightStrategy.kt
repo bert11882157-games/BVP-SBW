@@ -20,9 +20,11 @@ class AircraftWreckFlightStrategy : VehicleFlightStrategy() {
         val gravity = gravityPerTick(fixedWing?.handling?.gravityMps2, input.gravityPerTick)
             .let { if (AircraftWreckBreakup.mask(vehicle) != 0) it.coerceAtLeast(9.80665 / 400.0) else it }
         AircraftFuselageWreck.step(vehicle, input, gravity)?.let { return it }
+        // A fragmenting hull keeps sliding into its first fuselage contact; that contact records the
+        // breakup momentum, so a zero here would launch every fragment at rest.
         return step(input.copy(gravityPerTick = gravity), ticks++, if (vehicle.uuid.leastSignificantBits and 1L == 0L) 1 else -1,
             vehicle.sympatheticDetonated, initialPitch, initialRoll, vehicle.uuid.leastSignificantBits,
-            AircraftWreckBreakup.mask(vehicle))
+            AircraftWreckBreakup.mask(vehicle), AircraftFuselageWreck.fragmented(vehicle))
     }
 
     companion object {
@@ -38,7 +40,8 @@ class AircraftWreckFlightStrategy : VehicleFlightStrategy() {
 
         internal fun step(input: VehicleFlightInputContext, ticks: Int, direction: Int, impacted: Boolean,
                           initialPitch: Double = input.bodyPitchDegrees, initialRoll: Double = input.bodyRollDegrees,
-                          seed: Long = 0L, detachedWings: Int = 0): VehicleFlightTickResult {
+                          seed: Long = 0L, detachedWings: Int = 0,
+                          slideOnGround: Boolean = false): VehicleFlightTickResult {
             // A living, sheared aircraft must still slide/roll into its fuselage contact.
             // A wheel touching first is not an impact event and cannot erase its inertia.
             val grounded = !input.inFluid && (impacted || (input.onGround && input.wreck))
@@ -52,7 +55,10 @@ class AircraftWreckFlightStrategy : VehicleFlightStrategy() {
             // Torn surfaces bleed horizontal speed while gravity keeps accelerating the fall.
             // Keep the first-frame inertia; never replace world motion with facing-direction thrust.
             val verticalRetention = if (input.inFluid) .92 else MOMENTUM_RETENTION
-            val motion = if (grounded) Vec3.ZERO else Vec3(
+            val motion = if (grounded) {
+                if (slideOnGround) AircraftFuselageWreck.hullMotion(input.previousMotion, true, false, input.gravityPerTick)
+                else Vec3.ZERO
+            } else Vec3(
                 input.previousMotion.x * horizontalRetention,
                 input.previousMotion.y * verticalRetention - input.gravityPerTick.coerceAtLeast(if (input.inFluid) .018 else 0.0),
                 input.previousMotion.z * horizontalRetention)

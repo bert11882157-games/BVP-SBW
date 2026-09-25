@@ -1,6 +1,7 @@
 package com.atsuishio.superbwarfare.client.particle
 
 import com.atsuishio.superbwarfare.client.FarEffectsClient
+import com.atsuishio.superbwarfare.init.ModParticleTypes
 import com.atsuishio.superbwarfare.network.message.receive.ExplosionBurstMessage
 import net.minecraft.client.Minecraft
 import net.minecraft.core.particles.ParticleOptions
@@ -11,10 +12,12 @@ import net.minecraft.sounds.SoundSource
 import net.minecraft.world.phys.Vec3
 import net.minecraftforge.registries.ForgeRegistries
 import java.util.Random
+import kotlin.math.roundToInt
 
 /** Small bounded recipes, using the pack's transparent orange explosion and TaP flame sprites. */
 object AircraftCombatParticles {
     private val diameterMethods = HashMap<Class<*>, java.lang.reflect.Method?>()
+    private val random = Random()
     private fun packParticle(name: String): SimpleParticleType? =
         ForgeRegistries.PARTICLE_TYPES.getValue(ResourceLocation("berts_vehicle_pack", name)) as? SimpleParticleType
 
@@ -43,6 +46,41 @@ object AircraftCombatParticles {
         val options: ParticleOptions = packParticle("impact_smoke") ?:
             CustomCloudOption(.4f,.38f,.35f,18,1.2f,0f,false,false)
         emit(options, point, Vec3(0.0, .015, 0.0), .6f + intensity * 1.8f)
+    }
+
+    /**
+     * Fiery ground scrape at a sliding contact: a flame streak lerped from the previous contact point,
+     * sparks thrown back and up, and grinding smoke. Spawns at most [budget] particles; returns the count.
+     */
+    fun scrape(previous: Vec3?, contact: Vec3, velocity: Vec3, spread: Double, budget: Int, tick: Long): Int {
+        if (budget <= 0) return 0
+        val speed = velocity.horizontalDistance()
+        val intensity = ((speed - .02) / .8).coerceIn(0.0, 1.0)
+        val start = previous?.takeIf { it.distanceToSqr(contact) < 64.0 } ?: contact
+        val backward = if (speed > 1e-6) Vec3(-velocity.x / speed, 0.0, -velocity.z / speed) else Vec3.ZERO
+        val lateral = Vec3(-backward.z, 0.0, backward.x)
+        val width = spread.coerceIn(0.0, 3.0)
+        var used = 0
+        val segments = (1 + (intensity * 3).roundToInt()).coerceAtMost(budget)
+        for (segment in 1..segments) {
+            val across = lateral.scale((random.nextDouble() - .5) * width)
+            fire(start.lerp(contact, segment.toDouble() / segments).add(across), (.6 + 1.2 * intensity).toFloat(), false)
+            used++
+        }
+        val sparks = (if (intensity > .15) 2 else 1).coerceAtMost(budget - used)
+        repeat(sparks) {
+            val thrown = backward.scale(.1 + (.08 + .3 * intensity) * random.nextDouble())
+                .add(lateral.scale((random.nextDouble() - .5) * .16))
+                .add(0.0, .08 + (.1 + .2 * intensity) * random.nextDouble(), 0.0)
+            emit(ModParticleTypes.FIRE_STAR.get(), contact.add(lateral.scale((random.nextDouble() - .5) * width))
+                .add(0.0, .05, 0.0), thrown)
+            used++
+        }
+        if (used < budget && tick % 2L == 0L) {
+            grindingSmoke(contact.add(0.0, .1, 0.0), speed)
+            used++
+        }
+        return used
     }
 
     fun wreckSmoke(point: Vec3, diameter: Float) {

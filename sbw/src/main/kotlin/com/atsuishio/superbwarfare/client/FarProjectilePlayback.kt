@@ -1,6 +1,7 @@
 package com.atsuishio.superbwarfare.client
 
 import com.atsuishio.superbwarfare.api.projectile.FarProjectileAccess
+import com.atsuishio.superbwarfare.api.projectile.FarProjectileTracking
 import com.atsuishio.superbwarfare.diagnostics.EliteDiagnostics
 import com.atsuishio.superbwarfare.network.message.receive.FarProjectileStateMessage
 import net.minecraft.client.Minecraft
@@ -47,6 +48,8 @@ object FarProjectilePlayback {
 
     private fun apply(entity: Entity, message: FarProjectileStateMessage) {
         if (entity !is FarProjectileAccess || entity.stringUUID != message.uuid || entity.isRemoved) return
+        // Deterministic ballistic rounds are never held; step-aligned motion messages correct them.
+        if (FarProjectileTracking.holdsFreeFlight(entity)) { paused.remove(entity); return }
         val position = Vec3(message.x, message.y, message.z)
         entity.setPos(position)
         entity.xo = message.x; entity.yo = message.y; entity.zo = message.z

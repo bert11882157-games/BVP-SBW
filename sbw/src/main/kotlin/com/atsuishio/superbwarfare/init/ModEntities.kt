@@ -131,7 +131,7 @@ object ModEntities {
 
     @JvmField
     val SMALL_CANNON_SHELL =
-        register("small_cannon_shell", fastProjectile(::SmallCannonShellEntity).sized(0.25f, 0.25f))
+        register("small_cannon_shell", ballisticProjectile(::SmallCannonShellEntity).sized(0.25f, 0.25f))
 
     @JvmField
     val RPG_ROCKET_TBG = register("rpg_rocket_tbg", fastProjectile(::RpgRocketTBGEntity).sized(0.5f, 0.5f))
@@ -144,7 +144,7 @@ object ModEntities {
     val MORTAR_SHELL = register("mortar_shell", fastProjectile(::MortarShellEntity).sized(0.5f, 0.5f))
 
     @JvmField
-    val PROJECTILE = register("projectile", fastProjectile(::ProjectileEntity).sized(0.25f, 0.25f))
+    val PROJECTILE = register("projectile", ballisticProjectile(::ProjectileEntity).sized(0.25f, 0.25f))
 
     @JvmField
     val CANNON_SHELL = register("cannon_shell", fastProjectile(::CannonShellEntity).sized(0.75f, 0.75f))
@@ -355,6 +355,16 @@ object ModEntities {
         .setTrackingRange(64)
         .setUpdateInterval(1)
         .noSave()
+
+    /**
+     * Unguided rounds fly the same deterministic step on the client and receive step-aligned
+     * corrections (see BallisticSync); the native tracker position stream is only a sparse fallback.
+     */
+    private const val BALLISTIC_UPDATE_INTERVAL = 20
+
+    private fun <T : Entity> ballisticProjectile(
+        entity: (EntityType<T>, Level) -> T
+    ): EntityType.Builder<T> = fastProjectile(entity).setUpdateInterval(BALLISTIC_UPDATE_INTERVAL)
 
     @SubscribeEvent
     fun onRegisterSpawnPlacement(event: SpawnPlacementRegisterEvent) {

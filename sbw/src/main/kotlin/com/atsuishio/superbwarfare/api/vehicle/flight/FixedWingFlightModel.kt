@@ -73,6 +73,14 @@ class FixedWingFlightModel(
     var maneuverDragAccelerationMps2 = 0.0
         private set
     private var groundedForDrag = false
+    /**
+     * Highest nose-up attitude the pilot can command while the wheels carry the aircraft,
+     * normally the airframe's tail clearance less a margin.
+     */
+    var groundPitchLimitDegrees = MAX_GROUND_PITCH_DEGREES
+        set(value) {
+            field = if (value.isFinite()) value.coerceIn(0.0, MAX_GROUND_PITCH_DEGREES) else MAX_GROUND_PITCH_DEGREES
+        }
     var thrustAccelerationMps2 = 0.0
         private set
     var runwayLaunchMultiplier = 1.0
@@ -458,7 +466,8 @@ class FixedWingFlightModel(
         )
         if (grounded) {
             pitchRateDegreesPerSecond =
-                boundedRate(-pitchDegrees, pitchRateDegreesPerSecond, 0.0, 18.0) * groundRotationAuthority
+                boundedRate(-pitchDegrees, pitchRateDegreesPerSecond, 0.0, groundPitchLimitDegrees) *
+                    groundRotationAuthority
             rollRateDegreesPerSecond =
                 boundedRate(-rollDegrees, rollRateDegreesPerSecond, -8.0, 8.0)
         }
@@ -836,6 +845,8 @@ class FixedWingFlightModel(
 
     companion object {
         const val DT = 0.05
+        /** Ground rotation cap for airframes without a measured tail clearance. */
+        const val MAX_GROUND_PITCH_DEGREES = 18.0
         private const val EPSILON = 1.0E-9
         private const val FORCE_SUBSTEPS = 5
         private const val RADIANS = PI / 180.0

@@ -66,7 +66,9 @@ class FixedWingGearSupportTest {
             assertEquals(-0.01, height, 1e-8)
             val normalEnergy = sinkPerTick * sinkPerTick * 400.0
             val damage = FixedWingImpactModel.evaluate(normalEnergy, movement.lengthSqr() * 400.0, true)
-            assertEquals(sinkPerTick >= 0.3, damage.destructive)
+            // 6 m/s damages the undercarriage; only a crash-rate sink collapses it.
+            assertEquals(sinkPerTick * 20.0 >= FixedWingImpactModel.GEAR_LETHAL_SINK_SPEED, damage.destructive)
+            assertEquals(sinkPerTick * 20.0 > FixedWingImpactModel.GEAR_SAFE_SINK_SPEED, damage.healthFraction > 0.0)
         }
     }
 

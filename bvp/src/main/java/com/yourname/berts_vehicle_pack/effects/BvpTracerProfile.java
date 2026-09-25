@@ -2,9 +2,14 @@ package com.yourname.berts_vehicle_pack.effects;
 
 import com.atsuishio.superbwarfare.api.projectile.ProjectileProfiles;
 import com.atsuishio.superbwarfare.api.projectile.ResolvedProjectileProfile;
+import com.atsuishio.superbwarfare.api.vehicle.weapon.AircraftRoundConsolidation;
 import com.atsuishio.superbwarfare.data.projectile.ProjectileTrailMode;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
+
+import java.util.Map;
+import java.util.Optional;
+import java.util.WeakHashMap;
 
 /** Immutable client presentation parsed from the synchronized projectile profile snapshot. */
 public record BvpTracerProfile(
@@ -26,6 +31,11 @@ public record BvpTracerProfile(
             new ResourceLocation("berts_vehicle_pack", "tank_shell_heatfs");
     private static final ResourceLocation TANK_SHELL_HE =
             new ResourceLocation("berts_vehicle_pack", "tank_shell_he");
+    /**
+     * Parsed once per immutable profile snapshot (identity keyed). Each synchronized projectile owns
+     * its snapshot, so the entry lives exactly as long as the projectile's profile is reachable.
+     */
+    private static final Map<ResolvedProjectileProfile, Optional<BvpTracerProfile>> CACHE = new WeakHashMap<>();
 
     /**
      * Resolves typed policy before legacy v1 effects. SUPPRESS is terminal, GREEN can be a
@@ -35,7 +45,20 @@ public record BvpTracerProfile(
     public static BvpTracerProfile forEntity(Entity entity) {
         if (entity == null) return null;
         ResolvedProjectileProfile profile = ProjectileProfiles.resolve(entity);
-        if (profile == null || profile.getTrailMode() == ProjectileTrailMode.SUPPRESS) return null;
+        if (profile == null) return null;
+        synchronized (CACHE) {
+            Optional<BvpTracerProfile> cached = CACHE.get(profile);
+            if (cached != null) return cached.orElse(null);
+        }
+        BvpTracerProfile parsed = parse(profile);
+        synchronized (CACHE) {
+            CACHE.put(profile, Optional.ofNullable(parsed));
+        }
+        return parsed;
+    }
+
+    private static BvpTracerProfile parse(ResolvedProjectileProfile profile) {
+        if (profile.getTrailMode() == ProjectileTrailMode.SUPPRESS) return null;
 
         BvpProjectileEffectDefinition.EmbeddedTracer direct =
                 BvpProjectileEffectDefinition.directTracer(profile);
@@ -61,7 +84,10 @@ public record BvpTracerProfile(
             return true;
         }
         long sequence = entity == null ? 0L : ProjectileProfiles.shotSequence(entity);
-        return sequence > 0L && sequence % everyNthShot == 0L;
+        // A consolidated aircraft round stands for several authored rounds; it is a tracer when
+        // any of them is, so the visible tracer count per second is unchanged.
+        return sequence > 0L && AircraftRoundConsolidation.tracerRound(
+                sequence, everyNthShot, AircraftRoundConsolidation.weight(entity));
     }
 
     private static BvpTracerProfile from(BvpProjectileEffectDefinition.EmbeddedTracer tracer) {

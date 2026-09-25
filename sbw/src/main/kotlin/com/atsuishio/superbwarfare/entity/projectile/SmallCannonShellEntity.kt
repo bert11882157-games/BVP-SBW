@@ -186,4 +186,7 @@ open class SmallCannonShellEntity(type: EntityType<out SmallCannonShellEntity>, 
     override fun isFastMoving(): Boolean {
         return false
     }
+
+    /** Unguided autocannon rounds: deterministic client flight with sparse step-aligned corrections. */
+    override fun smoothsBallisticFlight(): Boolean = motionSyncMode() == MotionSyncMode.ENTITY_INTERVAL
 }
