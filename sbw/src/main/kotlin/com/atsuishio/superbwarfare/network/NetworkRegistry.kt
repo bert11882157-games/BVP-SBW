@@ -247,4 +247,7 @@ private fun registerPayloads() {
     playToClient<FireballMessage>(clientSchema(83, PacketLimitProfiles.PRESENTATION,
         delivery = REPLACEABLE_PRESENTATION, priority = P2, owner = "fx.fireball",
         feature = "tnt_fireball", since = 44))
+    playToClient<VehicleBlastImpulseMessage>(clientSchema(84, PacketLimitProfiles.TINY,
+        delivery = EXACT_EVENT, priority = P0, owner = "vehicle.blast_push",
+        feature = "tnt_blast_push", since = 45))
 }

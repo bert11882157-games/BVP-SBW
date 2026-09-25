@@ -15,7 +15,9 @@ import com.atsuishio.superbwarfare.network.message.receive.FireballMessage
 import com.atsuishio.superbwarfare.network.message.receive.ShockwaveMessage
 import com.atsuishio.superbwarfare.tools.blast.BlastCylinder
 import com.atsuishio.superbwarfare.tools.blast.BlastExposure
+import com.atsuishio.superbwarfare.data.vehicle.subdata.VehicleType
 import com.atsuishio.superbwarfare.tools.blast.BlastModel
+import com.atsuishio.superbwarfare.tools.blast.BlastPush
 import com.atsuishio.superbwarfare.tools.blast.TntBlast
 import com.atsuishio.superbwarfare.tools.blast.TntEquivalents
 import com.mojang.datafixers.util.Pair
@@ -49,7 +51,10 @@ import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
 import net.minecraftforge.event.ForgeEventFactory
 import java.util.function.Supplier
+import kotlin.math.cos
 import kotlin.math.floor
+import kotlin.math.sign
+import kotlin.math.sin
 import kotlin.math.sqrt
 
 open class CustomExplosion(
@@ -484,6 +489,7 @@ open class CustomExplosion(
             )
             hit = result.accepted
         }
+        if (vehicle.isAlive) applyBlastPush(vehicle, plan, center, distance)
         val armored = vehicle.hasArmorHitboxes()
         var softDamage = 0.0
         if (!armored && vehicle.isAlive) {
@@ -501,6 +507,40 @@ open class CustomExplosion(
             "in_cylinder", inCylinder, "armor_hitboxes", armored, "true_damage", trueDamage,
             "soft_damage", softDamage, "health_before", healthBefore, "health_after", vehicle.health)
         return hit
+    }
+
+    /**
+     * Shoves (and spins) ground vehicles: IFV-class from 5 kg, MBT-class from 20 kg, harder for bigger charges and
+     * closer blasts, lifting them near the charge ([BlastPush]).
+     */
+    private fun applyBlastPush(vehicle: VehicleEntity, plan: TntBlast.Plan, center: Vec3, distance: Double) {
+        val type = vehicle.vehicleType
+        if (type !in PUSHED_TYPES || vehicle.isFixedWingFlightVehicle()) return
+        val pushRadius = plan.radii.severe
+        val speed = BlastPush.speedMps(plan.kg, distance, pushRadius, vehicle.mass.toDouble())
+        if (speed <= 0.0) return
+        val target = vehicle.boundingBox.center
+        var hx = target.x - center.x
+        var hz = target.z - center.z
+        val horizontal = sqrt(hx * hx + hz * hz)
+        if (horizontal > 1.0e-4) { hx /= horizontal; hz /= horizontal } else { hx = 0.0; hz = 0.0 }
+        val lift = BlastPush.liftShare(distance, pushRadius)
+        val side = sqrt((1.0 - lift * lift).coerceAtLeast(0.0))
+        val perTick = speed / 20.0
+        val vx = hx * side * perTick
+        val vy = lift * perTick
+        val vz = hz * side * perTick
+        // Spin: the top tips away from the charge, plus a yaw from where it struck along the hull.
+        val yawRadians = Math.toRadians(vehicle.yRot.toDouble())
+        val forwardX = -sin(yawRadians); val forwardZ = cos(yawRadians)
+        val along = hx * forwardX + hz * forwardZ          // +1 blast behind (pushes forward)
+        val across = hx * forwardZ - hz * forwardX
+        val spin = (speed * 1.6).coerceAtMost(40.0)          // deg/tick at full push
+        val random = level.random
+        val yawSpin = ((random.nextDouble() - 0.5) * 0.8 + 0.4 * across * along.sign) * spin * 0.6
+        val pitchSpin = -along * spin * 0.5
+        val rollSpin = across * spin * 0.5
+        vehicle.applyBlastPush(vx, vy, vz, yawSpin.toFloat(), pitchSpin.toFloat(), rollSpin.toFloat())
     }
 
     /** Legacy damage application (monster bonus, knockback, fire) for a non-vehicle blast target. */
@@ -825,6 +865,9 @@ open class CustomExplosion(
     }
 
     companion object {
+        private val PUSHED_TYPES = setOf(VehicleType.TANK, VehicleType.APC, VehicleType.AA, VehicleType.CAR,
+            VehicleType.ARTILLERY)
+
         @JvmStatic
         fun addBlockDrops(
             pDropPositionArray: ObjectArrayList<Pair<ItemStack, BlockPos>>,

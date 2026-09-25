@@ -2608,9 +2608,55 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         }
     }
 
+    // Blast push spin (degrees per tick), applied where this vehicle's movement is simulated.
+    private var blastSpinYaw = 0f
+    private var blastSpinPitch = 0f
+    private var blastSpinRoll = 0f
+
+    /**
+     * Pushes and spins this vehicle for a blast. Velocity in blocks/tick, spins in degrees/tick. A vehicle driven
+     * by a player moves on that player's client, so the push is sent there; otherwise it is applied here.
+     */
+    fun applyBlastPush(vx: Double, vy: Double, vz: Double, yawSpin: Float, pitchSpin: Float, rollSpin: Float) {
+        val driver = controllingPassenger
+        if (!level().isClientSide && driver is net.minecraft.server.level.ServerPlayer) {
+            com.atsuishio.superbwarfare.tools.sendPacketTo(driver,
+                com.atsuishio.superbwarfare.network.message.receive.VehicleBlastImpulseMessage(id,
+                    vx.toFloat(), vy.toFloat(), vz.toFloat(), yawSpin, pitchSpin, rollSpin))
+            return
+        }
+        receiveBlastImpulse(vx, vy, vz, yawSpin, pitchSpin, rollSpin)
+    }
+
+    fun receiveBlastImpulse(vx: Double, vy: Double, vz: Double, yawSpin: Float, pitchSpin: Float, rollSpin: Float) {
+        if (!(vx.isFinite() && vy.isFinite() && vz.isFinite())) return
+        setDeltaMovement(deltaMovement.add(vx, vy, vz))
+        blastSpinYaw += yawSpin
+        blastSpinPitch += pitchSpin
+        blastSpinRoll += rollSpin
+        setOnGround(false)
+        hasImpulse = true
+    }
+
+    private fun tickBlastSpin() {
+        if (blastSpinYaw == 0f && blastSpinPitch == 0f && blastSpinRoll == 0f) return
+        yRot += blastSpinYaw
+        xRot = (xRot + blastSpinPitch).coerceIn(-89f, 89f)
+        setZRot(roll + blastSpinRoll)
+        // Airborne spin carries on; ground contact scrubs it quickly.
+        val decay = if (onGround()) 0.55f else 0.985f
+        blastSpinYaw *= decay
+        blastSpinPitch *= if (onGround()) 0.3f else 0.97f
+        blastSpinRoll *= if (onGround()) 0.3f else 0.97f
+        if (kotlin.math.abs(blastSpinYaw) < 0.02f) blastSpinYaw = 0f
+        if (kotlin.math.abs(blastSpinPitch) < 0.02f) blastSpinPitch = 0f
+        if (kotlin.math.abs(blastSpinRoll) < 0.02f) blastSpinRoll = 0f
+    }
+
     internal fun tickPipelineMovement() {
         // Authoritative flight clients present server snapshots and vanilla position interpolation.
         if (level().isClientSide && flightStrategyOwnsAttitudeThisTick) return
+        tickBlastSpin()
         this.supportEntities()
         this.crushEntities()
         if (!vehicleFlightController.motionIncludesGravityThisTick) {

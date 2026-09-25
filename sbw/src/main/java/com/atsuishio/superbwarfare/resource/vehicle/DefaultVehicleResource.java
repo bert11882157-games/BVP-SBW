@@ -165,6 +165,8 @@ public class DefaultVehicleResource implements IDBasedData<DefaultVehicleResourc
             @SerializedName("Id") public String id;
             @SerializedName("Position") public double[] position;
             @SerializedName("Direction") public double[] direction;
+            /** Exit radius of the nozzle in blocks (measured from the model); drives the afterburner plume size. */
+            @SerializedName("NozzleRadiusBlocks") public Double nozzleRadiusBlocks;
         }
 
         public static final class Stream {

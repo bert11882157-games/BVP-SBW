@@ -16,8 +16,8 @@ import kotlin.math.max
  */
 @OnlyIn(Dist.CLIENT)
 object BlastSprites {
-    const val FIREBALL_FRAMES = 16
-    const val SOOT_FRAMES = 12
+    const val FIREBALL_FRAMES = 8
+    const val SOOT_FRAMES = 6
 
     @Volatile private var fireballSet: SpriteSet? = null
     @Volatile private var sootSet: SpriteSet? = null
@@ -35,7 +35,8 @@ object BlastSprites {
 
     fun sootFrames(): Array<TextureAtlasSprite>? = frames(sootSet, SOOT_FRAMES, "blast_soot")
 
-    fun shockwaveSprite(): TextureAtlasSprite? = frames(shockwaveSet, 1, "blast_shockwave")?.get(0)
+    /** Soft radial glow (index 0) and a bright ring (index 1), used for flashes and afterburner shock diamonds. */
+    fun glowSprites(): Array<TextureAtlasSprite>? = frames(shockwaveSet, 2, "blast_shockwave")
 
     private fun frames(set: SpriteSet?, count: Int, name: String): Array<TextureAtlasSprite>? {
         if (set == null) {

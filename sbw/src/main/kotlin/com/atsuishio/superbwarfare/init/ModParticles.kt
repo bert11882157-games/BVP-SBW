@@ -14,8 +14,8 @@ object ModParticles {
     @SubscribeEvent
     fun registerParticles(event: RegisterParticleProvidersEvent) {
         ExplosionBurstPresentations.registerClientEmitter(ExplosionBurstClient::spawn)
-        ShockwavePresentations.registerClientEmitter(ShockwaveClient::emit)
-        FireballPresentations.registerClientEmitter(FireballClient::emit)
+        ShockwavePresentations.registerClientEmitter(BlastEffects::onShockwave)
+        FireballPresentations.registerClientEmitter(BlastEffects::onFireball)
         with(event) {
             registerSpriteSet(ModParticleTypes.FIRE_STAR.get()) { FireStarParticle.provider(it) }
             registerSpriteSet(ModParticleTypes.WHITE_STAR.get()) { WhiteStarParticle.provider(it) }

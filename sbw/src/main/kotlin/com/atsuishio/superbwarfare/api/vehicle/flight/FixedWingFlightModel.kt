@@ -80,7 +80,30 @@ class FixedWingFlightModel(
     var groundPitchLimitDegrees = MAX_GROUND_PITCH_DEGREES
         set(value) {
             field = if (value.isFinite()) value.coerceIn(0.0, MAX_GROUND_PITCH_DEGREES) else MAX_GROUND_PITCH_DEGREES
+            takeoffFlapIncidenceDegrees = takeoffFlapIncidence(field)
         }
+
+    /**
+     * Extra wing angle of attack at low airspeed, standing in for wing incidence plus takeoff/landing flaps.
+     * Lift here comes only from body angle of attack, so a tail-clearance rotation limit below the pitch
+     * protection angle would otherwise cap liftoff lift (the Tu-95's 5.5° limit needed 1.6x its takeoff
+     * speed). The increment restores the pre-limit liftoff lift and fades out as the aircraft accelerates.
+     */
+    var takeoffFlapIncidenceDegrees = 0.0
+        private set
+
+    private fun takeoffFlapIncidence(limit: Double): Double =
+        (min(handling.pitchProtectionAngleDegrees, MAX_GROUND_PITCH_DEGREES) - limit).coerceAtLeast(0.0)
+
+    /** Full flap increment up to 1.3x the takeoff reference speed, retracted by 2x. */
+    internal fun takeoffFlapFraction(wingSpeedSquared: Double): Double {
+        if (takeoffFlapIncidenceDegrees <= 0.0) return 0.0
+        val reference = handling.takeoffHandling?.referenceSpeedMps ?: handling.liftReferenceSpeedMps
+        if (!(reference > 0.0)) return 0.0
+        val t = ((sqrt(wingSpeedSquared) / reference - FLAP_FULL_SPEED_RATIO) /
+            (FLAP_RETRACTED_SPEED_RATIO - FLAP_FULL_SPEED_RATIO)).coerceIn(0.0, 1.0)
+        return 1.0 - t * t * (3.0 - 2.0 * t)
+    }
     var thrustAccelerationMps2 = 0.0
         private set
     var runwayLaunchMultiplier = 1.0
@@ -598,9 +621,10 @@ class FixedWingFlightModel(
         return direction * min(abs(rate), allowed)
     }
 
-    private fun requestedNormalizedLift(alpha: Double, forward: Double): Double =
+    private fun requestedNormalizedLift(alpha: Double, forward: Double, wingSpeedSquared: Double): Double =
         if (forward > 0.0) {
-            (alpha * handling.normalizedLiftSlopePerDegree).coerceIn(-1.0, 1.0) *
+            val wingAlpha = alpha + takeoffFlapIncidenceDegrees * takeoffFlapFraction(wingSpeedSquared)
+            (wingAlpha * handling.normalizedLiftSlopePerDegree).coerceIn(-1.0, 1.0) *
                 (1.0 - 0.8 * stallSeverity)
         } else {
             0.0
@@ -608,7 +632,7 @@ class FixedWingFlightModel(
 
     private fun signedLiftAcceleration(alpha: Double, forward: Double, wingSpeedSquared: Double): Double {
         val pressure = densityRatio * wingSpeedSquared / square(handling.liftReferenceSpeedMps)
-        val requested = handling.gravityMps2 * pressure * requestedNormalizedLift(alpha, forward)
+        val requested = handling.gravityMps2 * pressure * requestedNormalizedLift(alpha, forward, wingSpeedSquared)
         val limited = requested.coerceIn(
             -handling.maximumNegativeLoadFactor * handling.gravityMps2,
             handling.maximumLoadFactor * handling.gravityMps2,
@@ -847,6 +871,8 @@ class FixedWingFlightModel(
         const val DT = 0.05
         /** Ground rotation cap for airframes without a measured tail clearance. */
         const val MAX_GROUND_PITCH_DEGREES = 18.0
+        private const val FLAP_FULL_SPEED_RATIO = 1.3
+        private const val FLAP_RETRACTED_SPEED_RATIO = 2.0
         private const val EPSILON = 1.0E-9
         private const val FORCE_SUBSTEPS = 5
         private const val RADIANS = PI / 180.0

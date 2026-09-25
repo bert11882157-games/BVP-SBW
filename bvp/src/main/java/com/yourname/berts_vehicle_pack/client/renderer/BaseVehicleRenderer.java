@@ -512,7 +512,7 @@ public class BaseVehicleRenderer<T extends GeoVehicleEntity> implements VehicleR
                     FarVehicleDiagnostics.modelRendered(entity, partialTicks,
                             context.getChassisPresentation().getAnchor(), fadeAlpha);
                 }
-                BvpAircraftAfterburnerRenderer.observe(entity);
+                BvpAircraftAfterburnerRenderer.observe(entity, partialTicks);
                 renderModelSpaceEffects(entity, entityYaw, loadedModel, partialTicks, poseStack,
                         bufferSource, packedLight);
             } finally {

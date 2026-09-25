@@ -28,10 +28,15 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-/** Bounded, client-only afterburner emission from accepted fixed-wing controls. */
+/**
+ * Client-only afterburner presentation from accepted fixed-wing controls. Each rendered frame the nozzles' world pose
+ * at that frame's partial tick is handed to SBW's {@code AfterburnerPlumes}, which draws the flame body, core, shock
+ * diamonds and nozzle glow as geometry and owns ignition and shutdown transitions (no particles).
+ */
 @Mod.EventBusSubscriber(modid = BertsVehiclePack.MODID, value = Dist.CLIENT)
 public final class BvpAircraftAfterburnerRenderer {
     private static final int MAX_AIRCRAFT = 64;
+    private static final double DEFAULT_NOZZLE_RADIUS = 0.42;
     private static final long VISIBLE_TTL_TICKS = 20;
     private static final LinkedHashMap<VehicleEntity, State> STATES = new LinkedHashMap<>();
     private static final Budget BUDGET = new Budget();
@@ -42,7 +47,50 @@ public final class BvpAircraftAfterburnerRenderer {
     private BvpAircraftAfterburnerRenderer() {}
 
     /** Called by the full-model renderer; item previews and non-fixed-wing vehicles are excluded. */
-    public static void observe(VehicleEntity vehicle) {
+    public static void observe(VehicleEntity vehicle, float partialTicks) {
+        observe(vehicle);
+        State state = STATES.get(vehicle);
+        if (state == null || activeLevel == null) return;
+        var controls = vehicle.getVehicleFlightControlSurfaceSnapshot(partialTicks);
+        boolean active = controls != null && controls.getAfterburnerActive();
+        try {
+            DefaultVehicleResource resource = VehicleResource.getDefault(vehicle);
+            if (!state.resolved || state.resource != resource) {
+                state.resource = resource;
+                state.resolved = true;
+                state.warned = false;
+                state.config = null;
+                state.stop();
+                if (resource != null && resource.getAfterburnerPresentation() != null) {
+                    state.config = compile(resource.getAfterburnerPresentation());
+                }
+            }
+            Config config = state.config;
+            if (config == null) return;
+            var transform = vehicle.getVehicleTransform(partialTicks);
+            double time = activeLevel.m_46467_() + partialTicks;
+            int index = 0;
+            for (Outlet outlet : config.outlets()) {
+                Vec3 p = outlet.position();
+                Vec3 d = outlet.direction();
+                transform.transform(p.f_82479_, p.f_82480_, p.f_82481_, 1.0D, state.point);
+                transform.transform(d.f_82479_, d.f_82480_, d.f_82481_, 0.0D, state.direction);
+                com.atsuishio.superbwarfare.client.particle.AfterburnerPlumes.submit(vehicle.m_19879_(), index++,
+                        state.point.x, state.point.y, state.point.z,
+                        state.direction.x, state.direction.y, state.direction.z,
+                        outlet.radius(), active, time);
+            }
+        } catch (RuntimeException failure) {
+            state.config = null;
+            if (!state.warned && warningsRemaining > 0) {
+                state.warned = true;
+                warningsRemaining--;
+                LogUtils.getLogger().warn("Afterburner presentation skipped for {}", vehicle.m_20148_(), failure);
+            }
+        }
+    }
+
+    private static void observe(VehicleEntity vehicle) {
         Minecraft minecraft = Minecraft.m_91087_();
         syncLevel(minecraft.f_91073_);
         if (!live(vehicle) || vehicle.getVehicleFlightControlSurfaceSnapshot(1.0F) == null) {
@@ -76,9 +124,7 @@ public final class BvpAircraftAfterburnerRenderer {
             State state = entry.getValue();
             if (!live(vehicle) || clientTick - state.lastSeen > VISIBLE_TTL_TICKS) {
                 iterator.remove();
-                continue;
             }
-            emit(vehicle, state);
         }
     }
 
@@ -225,7 +271,11 @@ public final class BvpAircraftAfterburnerRenderer {
                     || Math.abs(position.f_82480_) > 128 || Math.abs(position.f_82481_) > 128) {
                 throw new IllegalArgumentException("Invalid afterburner outlet transform");
             }
-            outlets.add(new Outlet(outlet.id, position, direction.m_82541_()));
+            double radius = outlet.nozzleRadiusBlocks == null ? DEFAULT_NOZZLE_RADIUS : outlet.nozzleRadiusBlocks;
+            if (!Double.isFinite(radius) || radius < 0.05 || radius > 2.0) {
+                throw new IllegalArgumentException("Afterburner nozzle radius outside 0.05..2 blocks");
+            }
+            outlets.add(new Outlet(outlet.id, position, direction.m_82541_(), radius));
         }
         var emitters = new ArrayList<TapEmitter>();
         if (data.schema == 2) {
@@ -336,7 +386,7 @@ public final class BvpAircraftAfterburnerRenderer {
         syncLevel(null);
     }
 
-    record Outlet(String id, Vec3 position, Vec3 direction) {}
+    record Outlet(String id, Vec3 position, Vec3 direction, double radius) {}
     record TapEmitter(Vec3 position, Vec3 extents, Vec3 velocity, int interval, boolean flame) {}
     record Channel(float scale, float width, double length, double density, int lifetime,
                    float red, float green, float blue) {}

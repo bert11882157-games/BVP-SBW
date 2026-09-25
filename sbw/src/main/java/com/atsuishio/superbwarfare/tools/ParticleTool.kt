@@ -128,9 +128,11 @@ object ParticleTool {
             ParticleType.MINI -> spawnMiniExplosionParticles(level, context.particlePosition)
             ParticleType.SMALL -> spawnSmallExplosionParticles(level, context.particlePosition)
             ParticleType.MEDIUM -> spawnMediumExplosionParticles(level, context.particlePosition)
-            ParticleType.LARGE -> spawnLargeExplosionParticles(level, context.particlePosition)
-            ParticleType.HUGE -> spawnHugeExplosionParticles(level, context.particlePosition)
-            ParticleType.GIANT -> spawnGiantExplosionParticles(level, context.particlePosition)
+            // A TNT blast draws its own fireball, smoke, dust, chunks and mushroom (BlastEffects); the old burst
+            // recipes of thousands of engine particles evicted each other when blasts overlapped. Keep their sound.
+            ParticleType.LARGE -> spawnLargeExplosionParticles(level, context.particlePosition, context.fireballRadius <= 0f)
+            ParticleType.HUGE -> spawnHugeExplosionParticles(level, context.particlePosition, context.fireballRadius <= 0f)
+            ParticleType.GIANT -> spawnGiantExplosionParticles(level, context.particlePosition, context.fireballRadius <= 0f)
         }
     }
 
@@ -203,9 +205,10 @@ object ParticleTool {
     }
 
     @JvmStatic
-    fun spawnLargeExplosionParticles(level: Level?, pos: Vec3) {
+    @JvmOverloads
+    fun spawnLargeExplosionParticles(level: Level?, pos: Vec3, burst: Boolean = true) {
         if (level is ServerLevel) {
-            ExplosionBurstMessage.send(
+            if (burst) ExplosionBurstMessage.send(
                 level,
                 ExplosionBurstMessage.Recipe.LARGE,
                 pos,
@@ -217,7 +220,8 @@ object ParticleTool {
     }
 
     @JvmStatic
-    fun spawnHugeExplosionParticles(level: Level?, pos: Vec3) {
+    @JvmOverloads
+    fun spawnHugeExplosionParticles(level: Level?, pos: Vec3, burst: Boolean = true) {
         val x = pos.x
         val y = pos.y
         val z = pos.z
@@ -225,7 +229,7 @@ object ParticleTool {
         if (level is ServerLevel) {
             playExplosionSoundLayers(level, pos, ModSounds.HUGE_EXPLOSION_CLOSE.get(), 8f, ModSounds.HUGE_EXPLOSION_FAR.get(), 24f, ModSounds.HUGE_EXPLOSION_VERY_FAR.get(), 128f)
 
-            ExplosionBurstMessage.send(
+            if (burst) ExplosionBurstMessage.send(
                 level,
                 ExplosionBurstMessage.Recipe.HUGE,
                 pos,
@@ -237,7 +241,8 @@ object ParticleTool {
     }
 
     @JvmStatic
-    fun spawnGiantExplosionParticles(level: Level?, pos: Vec3) {
+    @JvmOverloads
+    fun spawnGiantExplosionParticles(level: Level?, pos: Vec3, burst: Boolean = true) {
         val x = pos.x
         val y = pos.y
         val z = pos.z
@@ -245,7 +250,7 @@ object ParticleTool {
         if (level is ServerLevel) {
             playExplosionSoundLayers(level, pos, ModSounds.HUGE_EXPLOSION_CLOSE.get(), 12f, ModSounds.HUGE_EXPLOSION_FAR.get(), 32f, ModSounds.HUGE_EXPLOSION_VERY_FAR.get(), 192f)
 
-            ExplosionBurstMessage.send(
+            if (burst) ExplosionBurstMessage.send(
                 level,
                 ExplosionBurstMessage.Recipe.GIANT,
                 pos,
