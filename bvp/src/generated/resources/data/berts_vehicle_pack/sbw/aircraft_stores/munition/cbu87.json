@@ -5,9 +5,26 @@
   "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/cbu87.geo.json",
   "ModelForward": "+Z",
   "MountAnchor": [
-    0,
+    -0.0013,
     0.1897,
-    0.0
+    0.1487
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      -0.191,
+      0.0,
+      0.1487
+    ],
+    "Right": [
+      0.1884,
+      0.0,
+      0.1487
+    ]
+  },
+  "MountAxis": [
+    -0.0013,
+    0.0,
+    0.1487
   ],
   "Texture": "berts_vehicle_pack:textures/aircraft_stores/cbu87.png",
   "Capacity": 1,

@@ -11,8 +11,9 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.phys.Vec3
 
 object AircraftBombLauncher {
+    /** [launchOffset]: hull offset from [mount] to the release point (the pylon layout's); null uses LaunchOffset. */
     @JvmStatic @JvmOverloads fun launch(vehicle: VehicleEntity, player: ServerPlayer, mount: Vec3, store: JsonObject,
-                                      channel: String? = null): Boolean {
+                                      channel: String? = null, launchOffset: Vec3? = null): Boolean {
         val level = vehicle.level() as? ServerLevel ?: return false
         if (player.level() !== level || !vehicle.isAlive) return false
         val config = store.getAsJsonObject("Bomb") ?: return false
@@ -39,7 +40,7 @@ object AircraftBombLauncher {
             mass < 1000.0 -> ModEntities.SC_250.get().create(level)
             else -> ModEntities.MK_82.get().create(level)
         } ?: return false
-        val offset = AircraftArmamentRegistry.vector(store["LaunchOffset"]) ?: Vec3.ZERO
+        val offset = launchOffset ?: AircraftArmamentRegistry.vector(store["LaunchOffset"]) ?: Vec3.ZERO
         val local = mount.add(offset)
         val origin = AircraftBombFlight.launchOrigin(vehicle, local)
         val motion = AircraftBombFlight.initialMotion(vehicle.deltaMovement)

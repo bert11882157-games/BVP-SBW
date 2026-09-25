@@ -19,8 +19,9 @@ import org.joml.Vector3d
 
 /** Mount positions are vehicle-local blocks; called only after server equipment/capacity admission. */
 object AircraftLaserLauncher {
+    /** [launchOffset]: hull offset from [localMount] to the launch point (the pylon layout's); null uses LaunchOffset. */
     @JvmStatic @JvmOverloads fun launch(vehicle: VehicleEntity, player: ServerPlayer, localMount: Vec3,
-        store: JsonObject, channel: String? = null): Boolean {
+        store: JsonObject, channel: String? = null, launchOffset: Vec3? = null): Boolean {
         if (vehicle.level().isClientSide || player.level() !== vehicle.level() || !vehicle.isAlive) return false
         val launchId = store["LaunchGunProfile"]?.asString ?: return false
         val rawGun = CustomData.GUN_DATA[launchId] ?: return false
@@ -29,7 +30,7 @@ object AircraftLaserLauncher {
         if (!flight.isValid()) return false
         val data = GunData.from(ItemStack(ModItems.VEHICLE_GUN.get())) { rawGun }
         if (data.get(GunProp.PROJECTILE).resolvedProfileId() != profileId) return false
-        val offset = if (store.has("LaunchOffset"))
+        val offset = launchOffset?.takeIf { it.length() <= 8.0 } ?: if (store.has("LaunchOffset"))
             AircraftArmamentRegistry.vector(store["LaunchOffset"])?.takeIf { it.length() <= 8.0 } ?: return false
             else Vec3.ZERO
         val launchMount = localMount.add(offset)

@@ -5,8 +5,25 @@
   "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/kh31.geo.json",
   "ModelForward": "-Z",
   "MountAnchor": [
-    0,
-    -0.086,
+    0.0,
+    -0.1004,
+    0.3282
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.1985,
+      -0.2989,
+      0.3282
+    ],
+    "Right": [
+      -0.1985,
+      -0.2989,
+      0.3282
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    -0.2989,
     0.3282
   ],
   "Texture": "berts_vehicle_pack:textures/aircraft_stores/kh31.png",
@@ -30,8 +47,8 @@
   },
   "AmmoItem": "superbwarfare:large_air_to_ground_missile",
   "LaunchOffset": [
-    0,
-    0.086,
-    0.3282
+    0.0,
+    -0.1985,
+    0.0
   ]
 }

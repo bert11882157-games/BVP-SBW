@@ -14,10 +14,30 @@
         2.435,
         -4.5319
       ],
+      "LeftStations": [
+        {
+          "Point": [
+            -7.2824,
+            2.435,
+            -4.4929
+          ],
+          "Face": "bottom"
+        }
+      ],
       "Right": [
         7.2825,
         2.435,
         -4.5319
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            7.2824,
+            2.435,
+            -4.4929
+          ],
+          "Face": "bottom"
+        }
       ],
       "AllowedStores": [
         "berts_vehicle_pack:r73"
@@ -33,10 +53,150 @@
         2.1869,
         -4.3741
       ],
+      "LeftStations": [
+        {
+          "Point": [
+            -6.1776,
+            2.187,
+            -4.3739
+          ],
+          "Face": "bottom",
+          "Copies": [
+            1,
+            3
+          ],
+          "ExceptStores": [
+            "berts_vehicle_pack:r73",
+            "berts_vehicle_pack:r77"
+          ]
+        },
+        {
+          "Point": [
+            -6.3354,
+            2.2095,
+            -4.3739
+          ],
+          "Face": "left",
+          "Copies": [
+            2,
+            3
+          ]
+        },
+        {
+          "Point": [
+            -6.0198,
+            2.2095,
+            -4.3739
+          ],
+          "Face": "right",
+          "Copies": [
+            2,
+            3
+          ]
+        },
+        {
+          "Point": [
+            -6.3354,
+            2.2095,
+            -4.3739
+          ],
+          "Face": "left",
+          "Copies": [
+            1
+          ],
+          "Stores": [
+            "berts_vehicle_pack:r73"
+          ]
+        },
+        {
+          "Point": [
+            -6.3354,
+            2.2095,
+            -4.3739
+          ],
+          "Face": "left",
+          "Copies": [
+            1
+          ],
+          "Stores": [
+            "berts_vehicle_pack:r77"
+          ]
+        }
+      ],
       "Right": [
         6.1775,
         2.1869,
         -4.3741
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            6.1776,
+            2.187,
+            -4.3739
+          ],
+          "Face": "bottom",
+          "Copies": [
+            1,
+            3
+          ],
+          "ExceptStores": [
+            "berts_vehicle_pack:r73",
+            "berts_vehicle_pack:r77"
+          ]
+        },
+        {
+          "Point": [
+            6.3354,
+            2.2095,
+            -4.3739
+          ],
+          "Face": "right",
+          "Copies": [
+            2,
+            3
+          ]
+        },
+        {
+          "Point": [
+            6.0198,
+            2.2095,
+            -4.3739
+          ],
+          "Face": "left",
+          "Copies": [
+            2,
+            3
+          ]
+        },
+        {
+          "Point": [
+            6.3354,
+            2.2095,
+            -4.3739
+          ],
+          "Face": "right",
+          "Copies": [
+            1
+          ],
+          "Stores": [
+            "berts_vehicle_pack:r73"
+          ]
+        },
+        {
+          "Point": [
+            6.3354,
+            2.2095,
+            -4.3739
+          ],
+          "Face": "right",
+          "Copies": [
+            1
+          ],
+          "Stores": [
+            "berts_vehicle_pack:r77"
+          ]
+        }
       ],
       "AllowedStores": [
         "berts_vehicle_pack:r73",
@@ -57,10 +217,240 @@
         2.0069,
         -3.1787
       ],
+      "LeftStations": [
+        {
+          "Point": [
+            -4.6445,
+            2.0066,
+            -3.179
+          ],
+          "Face": "bottom",
+          "Copies": [
+            1,
+            3
+          ],
+          "ExceptStores": [
+            "berts_vehicle_pack:r27r",
+            "berts_vehicle_pack:r27t",
+            "berts_vehicle_pack:r73",
+            "berts_vehicle_pack:r77",
+            "berts_vehicle_pack:su25_s8ko_pod"
+          ]
+        },
+        {
+          "Point": [
+            -4.8925,
+            2.0291,
+            -3.179
+          ],
+          "Face": "left",
+          "Copies": [
+            2,
+            3
+          ]
+        },
+        {
+          "Point": [
+            -4.3965,
+            2.0291,
+            -3.179
+          ],
+          "Face": "right",
+          "Copies": [
+            2,
+            3
+          ]
+        },
+        {
+          "Point": [
+            -4.8925,
+            2.0291,
+            -3.179
+          ],
+          "Face": "left",
+          "Copies": [
+            1
+          ],
+          "Stores": [
+            "berts_vehicle_pack:r73"
+          ]
+        },
+        {
+          "Point": [
+            -4.8925,
+            2.0291,
+            -3.179
+          ],
+          "Face": "left",
+          "Copies": [
+            1
+          ],
+          "Stores": [
+            "berts_vehicle_pack:r27r"
+          ]
+        },
+        {
+          "Point": [
+            -4.8925,
+            2.0291,
+            -3.179
+          ],
+          "Face": "left",
+          "Copies": [
+            1
+          ],
+          "Stores": [
+            "berts_vehicle_pack:r27t"
+          ]
+        },
+        {
+          "Point": [
+            -4.8925,
+            2.0291,
+            -3.179
+          ],
+          "Face": "left",
+          "Copies": [
+            1
+          ],
+          "Stores": [
+            "berts_vehicle_pack:r77"
+          ]
+        },
+        {
+          "Point": [
+            -4.8925,
+            2.0291,
+            -3.179
+          ],
+          "Face": "left",
+          "Copies": [
+            1
+          ],
+          "Stores": [
+            "berts_vehicle_pack:su25_s8ko_pod"
+          ]
+        }
+      ],
       "Right": [
         4.6444,
         2.0069,
         -3.1787
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            4.6445,
+            2.0066,
+            -3.179
+          ],
+          "Face": "bottom",
+          "Copies": [
+            1,
+            3
+          ],
+          "ExceptStores": [
+            "berts_vehicle_pack:r27r",
+            "berts_vehicle_pack:r27t",
+            "berts_vehicle_pack:r73",
+            "berts_vehicle_pack:r77",
+            "berts_vehicle_pack:su25_s8ko_pod"
+          ]
+        },
+        {
+          "Point": [
+            4.8925,
+            2.0291,
+            -3.179
+          ],
+          "Face": "right",
+          "Copies": [
+            2,
+            3
+          ]
+        },
+        {
+          "Point": [
+            4.3965,
+            2.0291,
+            -3.179
+          ],
+          "Face": "left",
+          "Copies": [
+            2,
+            3
+          ]
+        },
+        {
+          "Point": [
+            4.8925,
+            2.0291,
+            -3.179
+          ],
+          "Face": "right",
+          "Copies": [
+            1
+          ],
+          "Stores": [
+            "berts_vehicle_pack:r73"
+          ]
+        },
+        {
+          "Point": [
+            4.8925,
+            2.0291,
+            -3.179
+          ],
+          "Face": "right",
+          "Copies": [
+            1
+          ],
+          "Stores": [
+            "berts_vehicle_pack:r27r"
+          ]
+        },
+        {
+          "Point": [
+            4.8925,
+            2.0291,
+            -3.179
+          ],
+          "Face": "right",
+          "Copies": [
+            1
+          ],
+          "Stores": [
+            "berts_vehicle_pack:r27t"
+          ]
+        },
+        {
+          "Point": [
+            4.8925,
+            2.0291,
+            -3.179
+          ],
+          "Face": "right",
+          "Copies": [
+            1
+          ],
+          "Stores": [
+            "berts_vehicle_pack:r77"
+          ]
+        },
+        {
+          "Point": [
+            4.8925,
+            2.0291,
+            -3.179
+          ],
+          "Face": "right",
+          "Copies": [
+            1
+          ],
+          "Stores": [
+            "berts_vehicle_pack:su25_s8ko_pod"
+          ]
+        }
       ],
       "AllowedStores": [
         "berts_vehicle_pack:r73",
@@ -93,10 +483,30 @@
         0.9694,
         -1.9163
       ],
+      "LeftStations": [
+        {
+          "Point": [
+            -1.1273,
+            0.9695,
+            -1.9164
+          ],
+          "Face": "bottom"
+        }
+      ],
       "Right": [
         1.1275,
         0.9694,
         -1.9163
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            1.1273,
+            0.9695,
+            -1.9164
+          ],
+          "Face": "bottom"
+        }
       ],
       "AllowedStores": [
         "berts_vehicle_pack:r27r",

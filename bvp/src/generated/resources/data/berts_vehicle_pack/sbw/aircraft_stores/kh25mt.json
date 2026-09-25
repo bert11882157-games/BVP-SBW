@@ -9,13 +9,30 @@
     0.1633,
     0.5187
   ],
+  "SideMountAnchors": {
+    "Left": [
+      0.1633,
+      0.0,
+      0.5187
+    ],
+    "Right": [
+      -0.1633,
+      0.0,
+      0.5187
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    0.5187
+  ],
   "Texture": "berts_vehicle_pack:textures/aircraft_stores/kh25ml.png",
   "Capacity": 1,
   "Scale": 1,
   "LaunchOffset": [
-    0,
-    -0.3741,
-    0.5187
+    0.0,
+    -0.1633,
+    0.0
   ],
   "MassKg": 320,
   "AmmoItem": "superbwarfare:medium_air_to_ground_missile",

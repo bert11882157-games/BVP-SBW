@@ -1,0 +1,8 @@
+{
+  "_doc": "Per-mount overrides for attach.py. layout: blade | arm | crossbar | shoulders | skin (auto when absent); skip: reason string.",
+  "aircraft": {
+    "f_15c": {
+      "wing_shoulders": {"layout": "shoulders"}
+    }
+  }
+}

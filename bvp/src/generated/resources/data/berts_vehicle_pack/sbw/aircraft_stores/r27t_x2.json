@@ -9,6 +9,23 @@
     0.2085,
     -0.532
   ],
+  "SideMountAnchors": {
+    "Left": [
+      -0.2085,
+      0.0,
+      -0.532
+    ],
+    "Right": [
+      0.2085,
+      0.0,
+      -0.532
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    -0.532
+  ],
   "Texture": "berts_vehicle_pack:textures/aircraft_stores/r27t.png",
   "Capacity": 1,
   "MassKg": 254,
@@ -37,8 +54,8 @@
     0
   ],
   "LaunchOffset": [
-    0,
+    0.0,
     -0.2085,
-    0.532
+    0.0
   ]
 }

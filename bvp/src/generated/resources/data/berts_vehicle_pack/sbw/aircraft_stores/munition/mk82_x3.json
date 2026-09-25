@@ -9,6 +9,23 @@
     0.0,
     0.0
   ],
+  "SideMountAnchors": {
+    "Left": [
+      0.1971,
+      -0.2513,
+      0.0
+    ],
+    "Right": [
+      -0.1971,
+      -0.2513,
+      0.0
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    -0.2513,
+    0.0
+  ],
   "Texture": "berts_vehicle_pack:textures/aircraft_stores/mk82.png",
   "Capacity": 1,
   "MassKg": 227,
@@ -25,14 +42,49 @@
   "ProjectileProfile": "berts_vehicle_pack:aircraft_bombs/mk82",
   "MaxPerPylon": 3,
   "FixedRackCount": 3,
+  "RackAdapter": {
+    "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/rack_mk82_x3.geo.json",
+    "Texture": "berts_vehicle_pack:textures/aircraft_stores/mk82.png",
+    "MountAnchor": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "Stations": [
+      {
+        "Point": [
+          0.0,
+          -0.045,
+          0.0
+        ],
+        "Face": "bottom"
+      },
+      {
+        "Point": [
+          -0.0635,
+          -0.0225,
+          0.0
+        ],
+        "Face": "left"
+      },
+      {
+        "Point": [
+          0.0635,
+          -0.0225,
+          0.0
+        ],
+        "Face": "right"
+      }
+    ]
+  },
   "RackSpacing": [
     0.47,
     0.45,
     0
   ],
   "LaunchOffset": [
-    0,
     0.0,
+    -0.2513,
     0.0
   ]
 }

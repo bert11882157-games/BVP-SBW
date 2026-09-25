@@ -70,12 +70,39 @@ object AircraftPylonRacks {
     fun spacing(store: JsonObject): Vec3 = AircraftArmamentRegistry.vector(store["RackSpacing"])
         ?: Vec3(0.6, 0.4, 0.0)
 
-    fun launchPosition(mount: JsonObject, store: JsonObject, copies: Int, fired: Int): Vec3 {
+    /** The registry id of a catalogue store object (station store filters are keyed by id). */
+    private fun registeredId(store: JsonObject): String? =
+        AircraftArmamentRegistry.stores.entries.firstOrNull { it.value === store }?.key?.toString()
+
+    /** Neutral copy placements on pylon stations, a rack adapter or legacy offsets; see [AircraftStoreAttachment]. */
+    @JvmOverloads
+    fun layout(mount: JsonObject, store: JsonObject, copies: Int, storeId: String? = registeredId(store)): AircraftStoreAttachment.Layout =
+        AircraftStoreAttachment.layout(AircraftArmamentRegistry.mountPositions(mount), AircraftStoreAttachment.stations(mount),
+            mount.has("Left"), mount["Internal"]?.asBoolean == true, AircraftStoreAttachment.anchors(store),
+            AircraftStoreAttachment.adapter(store), copies, spacing(store), store["RackColumns"]?.asInt, storeId)
+
+    private fun placement(mount: JsonObject, store: JsonObject, copies: Int, fired: Int,
+                          storeId: String?): AircraftStoreAttachment.Placement {
         val positions = AircraftArmamentRegistry.mountPositions(mount)
         val capacity = store["Capacity"]?.asInt ?: 1
         require(fired in 0 until capacity * positions.size * copies)
-        if (mount["Internal"]?.asBoolean == true) return positions[fired % positions.size]
-        val copy = (fired / positions.size) % copies
-        return positions[fired % positions.size].add(offset(copy, copies, spacing(store), store["RackColumns"]?.asInt))
+        val slot = if (mount["Internal"]?.asBoolean == true) fired % positions.size
+            else ((fired / positions.size) % copies) * positions.size + fired % positions.size
+        return layout(mount, store, if (mount["Internal"]?.asBoolean == true) 1 else copies, storeId).placements[slot]
     }
+
+    /** Where the round [fired] touches its pylon (the drawn attachment point), before any wing sweep. */
+    @JvmOverloads
+    fun launchPosition(mount: JsonObject, store: JsonObject, copies: Int, fired: Int, storeId: String? = registeredId(store)): Vec3 =
+        placement(mount, store, copies, fired, storeId).point
+
+    /** Hull offset from [launchPosition] to the round's launch point (derived from its anchors, or LaunchOffset). */
+    @JvmOverloads
+    fun launchOffset(mount: JsonObject, store: JsonObject, copies: Int, fired: Int, storeId: String? = registeredId(store)): Vec3 =
+        placement(mount, store, copies, fired, storeId).let { it.launch.subtract(it.point) }
+
+    /** Neutral launch point of round [fired]: [launchPosition] plus [launchOffset]. */
+    @JvmOverloads
+    fun launchPoint(mount: JsonObject, store: JsonObject, copies: Int, fired: Int, storeId: String? = registeredId(store)): Vec3 =
+        placement(mount, store, copies, fired, storeId).launch
 }

@@ -91,6 +91,7 @@ object AircraftArmamentManager {
             if (allowed(pair, nbt.getString(key))) j.addProperty(key, nbt.getString(key))
         } }
     }
+    internal fun equippedStoreId(vehicle: VehicleEntity, mount: String): String? = selection(vehicle)[mount]?.asString
     internal fun equippedStore(vehicle: VehicleEntity, mount: String): JsonObject? {
         val id = selection(vehicle)[mount]?.asString ?: return null
         return if (vehicle.level().isClientSide) AircraftArmamentClient.getState(vehicle.uuid)?.getAsJsonObject("Stores")?.getAsJsonObject(id)
@@ -676,12 +677,14 @@ object AircraftArmamentManager {
         require(!com.atsuishio.superbwarfare.api.vehicle.flight.AircraftWreckBreakup.detachedAt(vehicle, mount)) {
             "This weapon station was detached with the wing."
         }
+        // Launch from where the round is drawn: its placement on the station (AircraftStoreAttachment).
+        val offset = AircraftPylonRacks.launchOffset(pair, store, rackCount(vehicle, key), used, id)
         // The munition was bought when it was fitted (AircraftLoadoutCost); releasing it spends only the rack round.
         require(when {
-            guidedMissile -> AircraftMissileLauncher.launch(vehicle, player, selectedGroup, mount, store)
-            bomb -> AircraftBombLauncher.launch(vehicle, player, mount, store, selectedGroup)
-            cruise -> AircraftCruiseLauncher.launch(vehicle, player, mount, store)
-            else -> AircraftLaserLauncher.launch(vehicle, player, mount, store, selectedGroup)
+            guidedMissile -> AircraftMissileLauncher.launch(vehicle, player, selectedGroup, mount, store, offset)
+            bomb -> AircraftBombLauncher.launch(vehicle, player, mount, store, selectedGroup, offset)
+            cruise -> AircraftCruiseLauncher.launch(vehicle, player, mount, store, offset)
+            else -> AircraftLaserLauncher.launch(vehicle, player, mount, store, selectedGroup, offset)
         }) { "Munition release failed or launch conditions changed." }
         fired.putInt(key, used + 1); state.put("Fired", fired); times.putLong(key, now); state.put("LastFire", times)
         state.putLong("Revision", state.getLong("Revision") + 1)

@@ -5,9 +5,26 @@
   "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/blu109_jdam.geo.json",
   "ModelForward": "-Z",
   "MountAnchor": [
-    0,
+    0.0117,
     0.0365,
-    0.2313
+    0.0357
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.2669,
+      -0.207,
+      0.0357
+    ],
+    "Right": [
+      -0.2435,
+      -0.207,
+      0.0357
+    ]
+  },
+  "MountAxis": [
+    0.0117,
+    -0.207,
+    0.0357
   ],
   "Texture": "berts_vehicle_pack:textures/aircraft_stores/blu109_jdam.png",
   "Capacity": 1,
@@ -29,8 +46,8 @@
   "AmmoItem": "superbwarfare:large_guided_bomb",
   "ProjectileProfile": "berts_vehicle_pack:aircraft_bombs/blu109_jdam",
   "LaunchOffset": [
-    0,
-    -0.0365,
-    0.2313
+    0.0,
+    -0.2435,
+    0.0
   ]
 }

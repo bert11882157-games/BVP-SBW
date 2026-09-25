@@ -17,9 +17,11 @@ object AircraftCruiseLauncher {
             BlockPos::class.java, CompoundTag::class.java) }.getOrNull()
     }
 
-    fun launch(vehicle: VehicleEntity, player: ServerPlayer, mount: Vec3, store: JsonObject): Boolean = runCatching {
+    /** [launchOffset]: hull offset from [mount] to the launch point (the pylon layout's); null uses LaunchOffset. */
+    fun launch(vehicle: VehicleEntity, player: ServerPlayer, mount: Vec3, store: JsonObject,
+               launchOffset: Vec3? = null): Boolean = runCatching {
         val flight = store.getAsJsonObject("Flight") ?: return false
-        val local = mount.add(AircraftArmamentRegistry.vector(store["LaunchOffset"]) ?: Vec3.ZERO)
+        val local = mount.add(launchOffset ?: AircraftArmamentRegistry.vector(store["LaunchOffset"]) ?: Vec3.ZERO)
         val origin = vehicle.getVehicleTransform(1f).transformPosition(Vector3d(local.x, local.y, local.z))
         val heading = vehicle.getVehicleTransform(1f).transformDirection(Vector3d(0.0, 0.0, 1.0)).normalize()
         val profile = CompoundTag()

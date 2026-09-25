@@ -5,9 +5,26 @@
   "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/gbu15.geo.json",
   "ModelForward": "+Z",
   "MountAnchor": [
-    0,
-    0.2119,
-    0.0
+    -0.0132,
+    0.053,
+    -0.3998
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      -0.2119,
+      -0.053,
+      -0.3998
+    ],
+    "Right": [
+      0.2119,
+      -0.053,
+      -0.3998
+    ]
+  },
+  "MountAxis": [
+    -0.0132,
+    -0.053,
+    -0.3998
   ],
   "Texture": "berts_vehicle_pack:textures/aircraft_stores/gbu15.png",
   "Capacity": 1,
@@ -32,8 +49,8 @@
   "AmmoItem": "superbwarfare:large_guided_bomb",
   "ProjectileProfile": "berts_vehicle_pack:aircraft_bombs/gbu15",
   "LaunchOffset": [
-    0,
-    -0.2119,
-    -1.96
+    0.0,
+    -0.1059,
+    0.0
   ]
 }

@@ -64,9 +64,12 @@ object AircraftMissileLauncher {
         val p = guidance(store) ?: return -1
         (api?.update?.invoke(null, vehicle, player, channel, forward(vehicle), p.mode, p.lockTicks, p.range, p.cone) as? Int) ?: -1
     }.getOrDefault(-1)
-    fun launch(vehicle: VehicleEntity, player: ServerPlayer, channel: String, mount: Vec3, store: JsonObject): Boolean = runCatching {
+    /** [launchOffset]: hull offset from [mount] to the launch point (the pylon layout's); null uses LaunchOffset. */
+    fun launch(vehicle: VehicleEntity, player: ServerPlayer, channel: String, mount: Vec3, store: JsonObject,
+               launchOffset: Vec3? = null): Boolean = runCatching {
         val p = guidance(store) ?: return false
-        val offset = if (store.has("LaunchOffset")) requireNotNull(AircraftArmamentRegistry.vector(store["LaunchOffset"])) else Vec3.ZERO
+        val offset = launchOffset
+            ?: if (store.has("LaunchOffset")) requireNotNull(AircraftArmamentRegistry.vector(store["LaunchOffset"])) else Vec3.ZERO
         val local = mount.add(offset)
         val position = vehicle.getVehicleTransform(1f).transformPosition(Vector3d(local.x, local.y, local.z))
         val flight = store.getAsJsonObject("Flight")

@@ -5,9 +5,26 @@
   "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/fab_5000.geo.json",
   "ModelForward": "+Z",
   "MountAnchor": [
-    0,
-    0.4731,
-    -0.0548
+    0.0,
+    0.4798,
+    0.4401
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      -0.5254,
+      -0.1304,
+      0.4401
+    ],
+    "Right": [
+      0.5254,
+      -0.1304,
+      0.4401
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    -0.1304,
+    0.4401
   ],
   "Texture": "berts_vehicle_pack:textures/aircraft_stores/fab_5000.png",
   "Scale": 1,

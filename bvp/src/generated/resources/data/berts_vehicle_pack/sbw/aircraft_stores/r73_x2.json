@@ -9,6 +9,23 @@
     0.125,
     -0.406
   ],
+  "SideMountAnchors": {
+    "Left": [
+      -0.125,
+      0.0,
+      -0.406
+    ],
+    "Right": [
+      0.125,
+      0.0,
+      -0.406
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    -0.406
+  ],
   "Texture": "berts_vehicle_pack:textures/aircraft_stores/r73.png",
   "Capacity": 1,
   "MassKg": 105,
@@ -37,8 +54,8 @@
     0
   ],
   "LaunchOffset": [
-    0,
+    0.0,
     -0.125,
-    0.406
+    0.0
   ]
 }

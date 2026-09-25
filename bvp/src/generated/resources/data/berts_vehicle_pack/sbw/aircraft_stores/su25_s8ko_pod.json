@@ -5,9 +5,26 @@
   "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/su25_s8ko_pod.geo.json",
   "ModelForward": "-Z",
   "MountAnchor": [
-    0,
     0.0,
-    -0.3241
+    0.0,
+    0.078
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.2742,
+      -0.2742,
+      0.078
+    ],
+    "Right": [
+      -0.2742,
+      -0.2742,
+      0.078
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    -0.2742,
+    0.078
   ],
   "Texture": "berts_vehicle_pack:textures/aircraft_stores/su25_s8ko_pod.png",
   "LaunchGunProfile": "berts_vehicle_pack:aircraft_rockets/s8ko_pair40",
@@ -17,8 +34,8 @@
   "MassKg": 16.5,
   "AmmoItem": "superbwarfare:small_unguided_rocket",
   "LaunchOffset": [
-    0,
     0.0,
-    -0.3241
+    -0.2742,
+    0.0
   ]
 }

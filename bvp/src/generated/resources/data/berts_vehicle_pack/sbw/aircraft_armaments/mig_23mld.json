@@ -14,10 +14,30 @@
         2.1063,
         0.025
       ],
+      "LeftStations": [
+        {
+          "Point": [
+            -1.3297,
+            2.1075,
+            0.0837
+          ],
+          "Face": "bottom"
+        }
+      ],
       "Right": [
         1.3313,
         2.1063,
         0.025
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            1.3297,
+            2.1075,
+            0.0837
+          ],
+          "Face": "bottom"
+        }
       ],
       "AllowedStores": [
         "berts_vehicle_pack:munition/r13m1",
@@ -38,10 +58,124 @@
         1.4062,
         0.5281
       ],
+      "LeftStations": [
+        {
+          "Point": [
+            -0.5018,
+            1.4492,
+            0.3276
+          ],
+          "Face": "bottom",
+          "ExceptStores": [
+            "berts_vehicle_pack:fab_250",
+            "berts_vehicle_pack:fab_500",
+            "berts_vehicle_pack:r60"
+          ]
+        },
+        {
+          "Point": [
+            -0.9032,
+            1.5469,
+            0.3276
+          ],
+          "Face": "left",
+          "Copies": [
+            1
+          ],
+          "Stores": [
+            "berts_vehicle_pack:r60"
+          ]
+        },
+        {
+          "Point": [
+            -0.9032,
+            1.5469,
+            0.3276
+          ],
+          "Face": "left",
+          "Copies": [
+            1
+          ],
+          "Stores": [
+            "berts_vehicle_pack:fab_250"
+          ]
+        },
+        {
+          "Point": [
+            -0.9032,
+            1.5469,
+            0.3276
+          ],
+          "Face": "left",
+          "Copies": [
+            1
+          ],
+          "Stores": [
+            "berts_vehicle_pack:fab_500"
+          ]
+        }
+      ],
       "Right": [
         0.6094,
         1.4062,
         0.5281
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            0.5018,
+            1.4492,
+            0.3276
+          ],
+          "Face": "bottom",
+          "ExceptStores": [
+            "berts_vehicle_pack:fab_250",
+            "berts_vehicle_pack:fab_500",
+            "berts_vehicle_pack:r60"
+          ]
+        },
+        {
+          "Point": [
+            0.9032,
+            1.5469,
+            0.3276
+          ],
+          "Face": "right",
+          "Copies": [
+            1
+          ],
+          "Stores": [
+            "berts_vehicle_pack:r60"
+          ]
+        },
+        {
+          "Point": [
+            0.9032,
+            1.5469,
+            0.3276
+          ],
+          "Face": "right",
+          "Copies": [
+            1
+          ],
+          "Stores": [
+            "berts_vehicle_pack:fab_250"
+          ]
+        },
+        {
+          "Point": [
+            0.9032,
+            1.5469,
+            0.3276
+          ],
+          "Face": "right",
+          "Copies": [
+            1
+          ],
+          "Stores": [
+            "berts_vehicle_pack:fab_500"
+          ]
+        }
       ],
       "AllowedStores": [
         "berts_vehicle_pack:munition/r13m1",

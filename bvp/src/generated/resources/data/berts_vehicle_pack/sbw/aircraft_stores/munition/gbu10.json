@@ -9,6 +9,23 @@
     0.0169,
     0.0
   ],
+  "SideMountAnchors": {
+    "Left": [
+      0.2402,
+      -0.2789,
+      0.0
+    ],
+    "Right": [
+      -0.2402,
+      -0.2789,
+      0.0
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    -0.2789,
+    0.0
+  ],
   "Texture": "berts_vehicle_pack:textures/aircraft_stores/gbu10.png",
   "Capacity": 1,
   "MassKg": 934,
@@ -24,8 +41,8 @@
   "AmmoItem": "superbwarfare:large_guided_bomb",
   "ProjectileProfile": "berts_vehicle_pack:aircraft_bombs/gbu10",
   "LaunchOffset": [
-    0,
-    -0.0169,
+    0.0,
+    -0.2959,
     0.0
   ]
 }
