@@ -19,10 +19,30 @@
         0.7875,
         1.35
       ],
+      "LeftStations": [
+        {
+          "Point": [
+            -1.0693,
+            0.7734,
+            1.6459
+          ],
+          "Face": "bottom"
+        }
+      ],
       "Right": [
         1.0694,
         0.7875,
         1.35
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            1.0693,
+            0.7734,
+            1.6459
+          ],
+          "Face": "bottom"
+        }
       ],
       "AllowedStores": [
         "berts_vehicle_pack:munition/mk82",

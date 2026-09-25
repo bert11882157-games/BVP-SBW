@@ -42,6 +42,41 @@
   "ProjectileProfile": "berts_vehicle_pack:aircraft_bombs/mk82_snakeeye",
   "MaxPerPylon": 3,
   "FixedRackCount": 3,
+  "RackAdapter": {
+    "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/rack_mk82_snakeeye_x3.geo.json",
+    "Texture": "berts_vehicle_pack:textures/aircraft_stores/mk82_snakeeye.png",
+    "MountAnchor": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "Stations": [
+      {
+        "Point": [
+          0.0,
+          -0.045,
+          0.0
+        ],
+        "Face": "bottom"
+      },
+      {
+        "Point": [
+          -0.0635,
+          -0.0225,
+          0.0
+        ],
+        "Face": "left"
+      },
+      {
+        "Point": [
+          0.0635,
+          -0.0225,
+          0.0
+        ],
+        "Face": "right"
+      }
+    ]
+  },
   "RackSpacing": [
     0.42,
     0.42,

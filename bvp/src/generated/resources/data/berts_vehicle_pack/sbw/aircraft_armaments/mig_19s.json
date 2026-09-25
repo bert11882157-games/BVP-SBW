@@ -16,10 +16,30 @@
         0.7875,
         -0.54
       ],
+      "LeftStations": [
+        {
+          "Point": [
+            -2.565,
+            0.7875,
+            -0.54
+          ],
+          "Face": "bottom"
+        }
+      ],
       "Right": [
         2.565,
         0.7875,
         -0.54
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            2.565,
+            0.7875,
+            -0.54
+          ],
+          "Face": "bottom"
+        }
       ],
       "AllowedStores": [
         "berts_vehicle_pack:fab_100",
