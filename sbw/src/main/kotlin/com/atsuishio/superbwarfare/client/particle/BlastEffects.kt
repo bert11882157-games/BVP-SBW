@@ -60,7 +60,7 @@ import kotlin.math.sqrt
 @EventBusSubscriber(modid = Mod.MODID, value = [Dist.CLIENT])
 object BlastEffects {
     private const val MAX_BLASTS = 64
-    private const val MAX_QUADS = 16000
+    private const val MAX_QUADS = 40000
     private const val MAX_SHOCKWAVES = 16
     private const val GRAVITY = 0.04
     private const val EJECTA_GRAVITY = 0.04
@@ -322,10 +322,19 @@ object BlastEffects {
             size++
         }
 
+        private var keys = LongArray(0)
+
+        /** Farthest first. Primitive sort (depth bits high, index low): no boxing on the render thread. */
         fun sortBackToFront() {
             if (order.size < size) order = IntArray(capacity)
-            val boxed = (0 until size).sortedByDescending { depth[it] }
-            for (i in 0 until size) order[i] = boxed[i]
+            if (keys.size < size) keys = LongArray(capacity)
+            for (i in 0 until size) {
+                // squared distances are >= 0, so their float bits order like the values; invert for descending
+                val bits = java.lang.Float.floatToRawIntBits(depth[i].toFloat()).toLong() and 0x7FFFFFFFL
+                keys[i] = ((0x7FFFFFFFL - bits) shl 32) or i.toLong()
+            }
+            java.util.Arrays.sort(keys, 0, size)
+            for (i in 0 until size) order[i] = (keys[i] and 0xFFFFFFFFL).toInt()
         }
 
         fun write(builder: BufferBuilder, lx: Double, ly: Double, lz: Double, ux: Double, uy: Double, uz: Double) {
