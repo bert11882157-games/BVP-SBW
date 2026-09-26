@@ -14,7 +14,7 @@ public final class BvpArmorFrames {
     private enum Frame { HULL, TURRET, BARREL }
     // Visual-only M1A1 bustle point: the accepted M1 rack center mapped through four
     // corresponding source turret roof faces (tools/bvp/m1a1_rear_bustle_visual.json).
-    private static final Vec M1A1_REAR_BUSTLE_VISUAL = new Vec(0.06035913D, 2.45975034D, 2.18100489D);
+    private static final Vec M1A1_REAR_BUSTLE_VISUAL = new Vec(0.06639504D, 2.70572537D, 2.39910538D) /* x1.1 ground vehicle scale */;
 
     /** The accepted world collision transformed into the resolved surface's moving frame. */
     public static final class ImpactAnchor {

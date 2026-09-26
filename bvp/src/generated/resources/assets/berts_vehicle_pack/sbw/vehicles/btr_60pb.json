@@ -6,10 +6,7 @@
     "Texture": "berts_vehicle_pack:textures/entity/btr_60pb.png",
     "WreckTexture": "berts_vehicle_pack:textures/entity_dead/btr_60pb.png"
   },
-  "MouseSpeed": [
-    0.2,
-    0.2
-  ],
+  "MouseSpeed": [0.2, 0.2],
   "RunningGear": {
     "Type": "WHEELED",
     "RoadWheelCount": 4,
@@ -35,17 +32,17 @@
       {
         "Id": "engine_exhaust_000",
         "Position": [
-          -0.25096,
-          1.6315,
-          2.71841
+          -0.27606,
+          1.79465,
+          2.99025
         ]
       },
       {
         "Id": "engine_exhaust_001",
         "Position": [
-          0.3008,
-          1.6315,
-          2.71841
+          0.33088,
+          1.79465,
+          2.99025
         ]
       }
     ]

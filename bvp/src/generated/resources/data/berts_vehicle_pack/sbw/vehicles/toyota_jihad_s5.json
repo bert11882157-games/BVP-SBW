@@ -11,13 +11,13 @@
     {
       "Position": [
         0,
-        1.03587,
-        4.53749
+        1.13946,
+        4.99124
       ],
       "Size": [
-        1.36865,
-        0.57627,
-        1.15323
+        1.50551,
+        0.6339,
+        1.26855
       ],
       "Transform": "Vehicle",
       "Rotation": "Vehicle"
@@ -25,13 +25,13 @@
     {
       "Position": [
         0,
-        1.46447,
-        2.26086
+        1.61092,
+        2.48695
       ],
       "Size": [
-        1.15255,
-        0.97607,
-        1.10831
+        1.26781,
+        1.07368,
+        1.21914
       ],
       "Transform": "Vehicle",
       "Rotation": "Vehicle"
@@ -39,13 +39,13 @@
     {
       "Position": [
         0,
-        1.04307,
-        -0.01801
+        1.14738,
+        -0.01981
       ],
       "Size": [
-        1.15255,
-        0.53305,
-        1.09852
+        1.26781,
+        0.58636,
+        1.20837
       ],
       "Transform": "Vehicle",
       "Rotation": "Vehicle"
@@ -53,13 +53,13 @@
     {
       "Position": [
         0,
-        2.22919,
-        -0.97524
+        2.45211,
+        -1.07276
       ],
       "Size": [
-        0.36032,
-        0.20314,
-        0.20932
+        0.39635,
+        0.22345,
+        0.23025
       ],
       "Transform": "Vehicle",
       "Rotation": "Vehicle"
@@ -67,27 +67,27 @@
     {
       "Position": [
         0,
-        -0.04997,
-        0.19222
+        -0.05497,
+        0.21144
       ],
       "Size": [
-        0.36032,
-        0.65818,
-        1.33081
+        0.39635,
+        0.724,
+        1.46389
       ],
       "Transform": "WeaponStationBarrel",
       "Rotation": "WeaponStationBarrel"
     },
     {
       "Position": [
-        1.08052,
-        0.53163,
-        0.46822
+        1.18857,
+        0.58479,
+        0.51504
       ],
       "Size": [
-        0.14407,
-        0.50424,
-        0.50424
+        0.15848,
+        0.55466,
+        0.55466
       ],
       "Transform": "Vehicle",
       "Rotation": "Vehicle",
@@ -95,14 +95,14 @@
     },
     {
       "Position": [
-        1.08052,
-        0.53163,
-        4.53817
+        1.18857,
+        0.58479,
+        4.99199
       ],
       "Size": [
-        0.14407,
-        0.50424,
-        0.50424
+        0.15848,
+        0.55466,
+        0.55466
       ],
       "Transform": "Vehicle",
       "Rotation": "Vehicle",
@@ -110,14 +110,14 @@
     },
     {
       "Position": [
-        -1.08052,
-        0.53163,
-        0.46822
+        -1.18857,
+        0.58479,
+        0.51504
       ],
       "Size": [
-        0.14407,
-        0.50424,
-        0.50424
+        0.15848,
+        0.55466,
+        0.55466
       ],
       "Transform": "Vehicle",
       "Rotation": "Vehicle",
@@ -125,14 +125,14 @@
     },
     {
       "Position": [
-        -1.08052,
-        0.53163,
-        4.53817
+        -1.18857,
+        0.58479,
+        4.99199
       ],
       "Size": [
-        0.14407,
-        0.50424,
-        0.50424
+        0.15848,
+        0.55466,
+        0.55466
       ],
       "Transform": "Vehicle",
       "Rotation": "Vehicle",
@@ -144,9 +144,9 @@
       "IsEnclosed": true,
       "Transform": "Vehicle",
       "Position": [
-        0.57627,
-        0.19528,
-        2.84536
+        0.6339,
+        0.21481,
+        3.1299
       ],
       "MinPitch": 0,
       "MaxPitch": 15,
@@ -188,9 +188,9 @@
       "BanHand": true,
       "Transform": "Vehicle",
       "Position": [
-        -0.57627,
-        0.19528,
-        2.84536
+        -0.6339,
+        0.21481,
+        3.1299
       ],
       "MinPitch": -60,
       "MaxPitch": 60,
@@ -199,8 +199,8 @@
       "CameraPos": {
         "UseSimulate3P": true,
         "Simulate3PPos": [
-          6,
-          1
+          6.6,
+          1.1
         ]
       }
     },
@@ -210,9 +210,9 @@
       "BanHand": true,
       "Transform": "Vehicle",
       "Position": [
-        0.57627,
-        0.74773,
-        2.01696
+        0.6339,
+        0.8225,
+        2.21866
       ],
       "MinPitch": -60,
       "MaxPitch": 60,
@@ -221,8 +221,8 @@
       "CameraPos": {
         "UseSimulate3P": true,
         "Simulate3PPos": [
-          6,
-          1
+          6.6,
+          1.1
         ]
       }
     },
@@ -232,9 +232,9 @@
       "BanHand": true,
       "Transform": "Vehicle",
       "Position": [
-        -0.57627,
-        0.74773,
-        2.01696
+        -0.6339,
+        0.8225,
+        2.21866
       ],
       "MinPitch": -60,
       "MaxPitch": 60,
@@ -243,8 +243,8 @@
       "CameraPos": {
         "UseSimulate3P": true,
         "Simulate3PPos": [
-          6,
-          1
+          6.6,
+          1.1
         ]
       }
     }
@@ -255,7 +255,9 @@
         {
           "Ammo": "superbwarfare:small_rocket",
           "ConsumptionItem": "superbwarfare:small_unguided_rocket",
-          "Override": {"TntEquivalentKg": 0.465}
+          "Override": {
+            "TntEquivalentKg": 0.465
+          }
         }
       ],
       "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_small_rocket.png",
@@ -293,8 +295,8 @@
         "Positions": [
           [
             0,
-            -0.04997,
-            1.52303
+            -0.05497,
+            1.67533
           ]
         ],
         "Directions": [
@@ -302,8 +304,8 @@
         ],
         "ViewPosition": [
           0,
-          -0.04997,
-          1.52303
+          -0.05497,
+          1.67533
         ],
         "MuzzleAttachments": [
           "passenger_station_muzzle"
@@ -359,7 +361,7 @@
   "EngineInfo": {
     "Buoyancy": 0,
     "EnergyCostRate": 32,
-    "WheelRotSpeed": 1.1,
+    "WheelRotSpeed": 1.0,
     "WheelDifferential": 0.5,
     "MaxForwardSpeedRate": 1.25,
     "MaxBackwardSpeedRate": 0.75,
@@ -374,7 +376,7 @@
   ],
   "HasDecoy": false,
   "UpStep": 1.1,
-  "RotateOffsetHeight": 2.2,
+  "RotateOffsetHeight": 2.42,
   "Mass": 3,
   "DamageModifiers": [],
   "DestroyInfo": {
@@ -388,8 +390,8 @@
   },
   "ThirdPersonCameraPos": [
     0,
-    0.5,
-    3
+    0.55,
+    3.3
   ],
   "VehicleIcon": "superbwarfare:textures/vehicle_icon/sodayo_pick_up_hmg_icon.png",
   "ContainerIcon": "superbwarfare:textures/gui/vehicle/type/civilian.png",
@@ -414,24 +416,24 @@
   "HudType": "@Land",
   "TerrainCompat": [
     [
-      1.08052,
-      0.02739,
-      0.46822
+      1.18857,
+      0.03013,
+      0.51504
     ],
     [
-      1.08052,
-      0.02739,
-      4.53817
+      1.18857,
+      0.03013,
+      4.99199
     ],
     [
-      -1.08052,
-      0.02739,
-      0.46822
+      -1.18857,
+      0.03013,
+      0.51504
     ],
     [
-      -1.08052,
-      0.02739,
-      4.53817
+      -1.18857,
+      0.03013,
+      4.99199
     ]
   ],
   "PassengerWeaponStationTurnSpeed": [
@@ -440,13 +442,13 @@
   ],
   "PassengerWeaponStationPos": [
     0,
-    2.02605,
-    -0.97524
+    2.22866,
+    -1.07276
   ],
   "PassengerWeaponStationBarrelPos": [
     0,
-    0.48652,
-    1.19134
+    0.53517,
+    1.31047
   ],
   "PassengerWeaponStationControllerIndex": 0,
   "PassengerWeaponStationBinding": {
@@ -464,8 +466,8 @@
       "Parent": "WeaponStationBarrel",
       "Position": [
         0,
-        0.6082,
-        -1.13859
+        0.66902,
+        -1.25245
       ],
       "Direction": [
         0,
@@ -477,8 +479,8 @@
       "Parent": "WeaponStationBarrel",
       "Position": [
         0,
-        -0.04997,
-        1.52303
+        -0.05497,
+        1.67533
       ],
       "Direction": [
         0,
@@ -489,9 +491,9 @@
     "driver_camera": {
       "Parent": "VehicleCustomPitch",
       "Position": [
-        0.57627,
-        1.81528,
-        2.84536
+        0.6339,
+        1.99681,
+        3.1299
       ],
       "Direction": [
         0,

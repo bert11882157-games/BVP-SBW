@@ -6,10 +6,7 @@
     "Texture": "berts_vehicle_pack:textures/entity/bm_21_grad.png",
     "WreckTexture": "berts_vehicle_pack:textures/entity_dead/bm_21_grad.png"
   },
-  "MouseSpeed": [
-    0.2,
-    0.2
-  ],
+  "MouseSpeed": [0.2, 0.2],
   "RunningGear": {
     "Type": "WHEELED",
     "RoadWheelCount": 3,
@@ -33,9 +30,9 @@
       {
         "Id": "engine_exhaust_group_origin_000",
         "Position": [
-          -1.18342,
-          1.04661,
-          -1.44069
+          -1.30176,
+          1.15127,
+          -1.58476
         ]
       }
     ]

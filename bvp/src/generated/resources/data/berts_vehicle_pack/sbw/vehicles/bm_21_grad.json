@@ -7,66 +7,66 @@
   "OBB": [
     {
       "Size": [
-        1.83668,
-        0.6747,
-        3.71085
+        2.02035,
+        0.74217,
+        4.08194
       ],
       "Position": [
         0,
-        0.86212,
-        0.03748
+        0.94833,
+        0.04123
       ]
     },
     {
       "Part": "WheelLeft",
       "Size": [
-        0.23989,
-        0.48728,
-        2.66131
+        0.26388,
+        0.53601,
+        2.92744
       ],
       "Position": [
-        1.61178,
-        0.53976,
-        -0.18742
+        1.77296,
+        0.59374,
+        -0.20616
       ]
     },
     {
       "Part": "WheelRight",
       "Size": [
-        0.23989,
-        0.48728,
-        2.66131
+        0.26388,
+        0.53601,
+        2.92744
       ],
       "Position": [
-        -1.61178,
-        0.53976,
-        -0.18742
+        -1.77296,
+        0.59374,
+        -0.20616
       ]
     },
     {
       "Part": "MainEngine",
       "Size": [
-        0.86212,
-        0.48728,
-        0.58474
+        0.94833,
+        0.53601,
+        0.64321
       ],
       "Position": [
         0,
-        0.86212,
-        -3.01366
+        0.94833,
+        -3.31503
       ]
     },
     {
       "Part": "Turret",
       "Size": [
-        1.16198,
-        0.52477,
-        1.38688
+        1.27818,
+        0.57725,
+        1.52557
       ],
       "Position": [
         0,
-        -0.03748,
-        0.14993
+        -0.04123,
+        0.16492
       ],
       "Transform": "Turret",
       "Rotation": "Turret"
@@ -77,9 +77,9 @@
       "IsEnclosed": true,
       "Transform": "Vehicle",
       "Position": [
-        -0.5,
-        0.6875,
-        -1.0625
+        -0.55,
+        0.75625,
+        -1.16875
       ],
       "MinPitch": 2,
       "MaxPitch": 45,
@@ -114,7 +114,9 @@
         {
           "Ammo": "superbwarfare:small_rocket",
           "ConsumptionItem": "superbwarfare:small_unguided_rocket",
-          "Override": {"TntEquivalentKg": 9.856}
+          "Override": {
+            "TntEquivalentKg": 9.856
+          }
         }
       ],
       "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_small_rocket.png",
@@ -206,7 +208,7 @@
   "EngineInfo": {
     "Buoyancy": 0,
     "EnergyCostRate": 64,
-    "WheelRotSpeed": 0.833,
+    "WheelRotSpeed": 0.75727,
     "WheelDifferential": 0.5,
     "MaxForwardSpeedRate": 1.64,
     "MaxBackwardSpeedRate": 0.9,
@@ -217,13 +219,13 @@
   },
   "TurretPos": [
     0,
-    1.44947,
-    2.10606
+    1.59442,
+    2.31667
   ],
   "BarrelPos": [
     0,
-    0.14851,
-    0.75602
+    0.16336,
+    0.83162
   ],
   "TurretTurnSpeed": [
     5,
@@ -235,7 +237,7 @@
   ],
   "HasDecoy": false,
   "UpStep": 1.5,
-  "RotateOffsetHeight": 2.30897,
+  "RotateOffsetHeight": 2.53987,
   "Mass": 100,
   "DamageModifiers": [
     "minecraft:arrow 0",
@@ -275,8 +277,8 @@
   },
   "ThirdPersonCameraPos": [
     0,
-    1.04953,
-    5.24766
+    1.15448,
+    5.77243
   ],
   "VehicleIcon": "superbwarfare:textures/vehicle_icon/truck_icon.png",
   "ContainerIcon": "superbwarfare:textures/gui/vehicle/type/civilian.png",
@@ -311,34 +313,34 @@
   "HudType": "@Land",
   "TerrainCompat": [
     [
-      1.23845,
+      1.3623,
       0,
-      -3.41098
+      -3.75208
     ],
     [
-      -1.23845,
+      -1.3623,
       0,
-      -3.41098
+      -3.75208
     ],
     [
-      1.23845,
+      1.3623,
       0,
       0
     ],
     [
-      -1.23845,
+      -1.3623,
       0,
       0
     ],
     [
-      1.23845,
+      1.3623,
       0,
-      1.31192
+      1.44311
     ],
     [
-      -1.23845,
+      -1.3623,
       0,
-      1.31192
+      1.44311
     ]
   ],
   "HornSound": "superbwarfare:truck_horn",
@@ -391,8 +393,8 @@
       "Parent": "Barrel",
       "Position": [
         0,
-        0.28351,
-        -0.75602
+        0.31186,
+        -0.83162
       ],
       "Direction": [
         0,

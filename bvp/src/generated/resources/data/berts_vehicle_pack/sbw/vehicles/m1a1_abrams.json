@@ -6,40 +6,40 @@
   "OBB": [
     {
       "Size": [
-        2.06656,
-        0.75915,
-        4.1753
+        2.27322,
+        0.83507,
+        4.59283
       ],
       "Position": [
         0,
-        0.97002,
-        0.04217
+        1.06702,
+        0.04639
       ]
     },
     {
       "Part": "MainEngine",
       "Size": [
-        0.97002,
-        0.54827,
-        0.65793
+        1.06702,
+        0.6031,
+        0.72372
       ],
       "Position": [
         0,
-        0.97002,
-        -3.39085
+        1.06702,
+        -3.72994
       ]
     },
     {
       "Part": "Turret",
       "Size": [
-        1.30742,
-        0.59045,
-        1.56047
+        1.43816,
+        0.6495,
+        1.71652
       ],
       "Position": [
         0,
-        -0.04217,
-        0.1687
+        -0.04639,
+        0.18557
       ],
       "Transform": "Turret",
       "Rotation": "Turret"
@@ -53,7 +53,7 @@
       "Transform": "Vehicle",
       "Position": [
         0,
-        1.3125,
+        1.44375,
         0
       ],
       "MinPitch": -5,
@@ -63,8 +63,8 @@
       "CameraPos": {
         "UseSimulate3P": true,
         "Simulate3PPos": [
-          6,
-          1
+          6.6,
+          1.1
         ]
       }
     },
@@ -74,9 +74,9 @@
       "BanHand": true,
       "Transform": "Vehicle",
       "Position": [
-        0.625,
-        2.0625,
-        0.9375
+        0.6875,
+        2.26875,
+        1.03125
       ],
       "MinPitch": -60,
       "MaxPitch": 60,
@@ -85,8 +85,8 @@
       "CameraPos": {
         "UseSimulate3P": true,
         "Simulate3PPos": [
-          6,
-          1
+          6.6,
+          1.1
         ]
       }
     },
@@ -96,9 +96,9 @@
       "BanHand": true,
       "Transform": "Vehicle",
       "Position": [
-        -0.56249,
-        1.81251,
-        0.9375
+        -0.61874,
+        1.99376,
+        1.03125
       ],
       "MinPitch": -60,
       "MaxPitch": 60,
@@ -107,8 +107,8 @@
       "CameraPos": {
         "UseSimulate3P": true,
         "Simulate3PPos": [
-          6,
-          1
+          6.6,
+          1.1
         ]
       }
     }
@@ -121,9 +121,9 @@
   "EngineInfo": {
     "Buoyancy": 0,
     "EnergyCostRate": 120,
-    "WheelRotSpeed": 1.25,
+    "WheelRotSpeed": 1.13636,
     "WheelDifferential": 0.75,
-    "TrackRotSpeed": 1.7,
+    "TrackRotSpeed": 1.54545,
     "TrackDifferential": 0.6,
     "MaxForwardSpeedRate": 0.816,
     "MaxBackwardSpeedRate": 0.48,
@@ -134,12 +134,12 @@
   },
   "TurretPos": [
     0,
-    1.91821,
+    2.11003,
     0
   ],
   "BarrelPos": [
     0,
-    -1.34432,
+    -1.47875,
     0
   ],
   "TurretTurnSpeed": [
@@ -152,7 +152,7 @@
   ],
   "HasDecoy": false,
   "UpStep": 1.5,
-  "RotateOffsetHeight": 3.07032,
+  "RotateOffsetHeight": 3.37735,
   "Mass": 44.5,
   "DamageModifiers": [
     "minecraft:arrow 0",
@@ -194,9 +194,9 @@
     "SympatheticDetonationChance": 0.55
   },
   "ThirdPersonCameraPos": [
-    -1.02379,
-    1.77134,
-    5.90446
+    -1.12617,
+    1.94847,
+    6.49491
   ],
   "VehicleIcon": "superbwarfare:textures/vehicle_icon/t_90a_icon.png",
   "ContainerIcon": "superbwarfare:textures/gui/vehicle/type/land.png",
@@ -231,64 +231,64 @@
   "HudType": "@Land",
   "TerrainCompat": [
     [
-      2.20827,
+      2.4291,
       0,
-      3.8268
+      4.20948
     ],
     [
-      -2.20827,
+      -2.4291,
       0,
-      3.8268
+      4.20948
     ],
     [
-      2.20827,
+      2.4291,
       0,
-      2.44988
+      2.69487
     ],
     [
-      -2.20827,
+      -2.4291,
       0,
-      2.44988
+      2.69487
     ],
     [
-      2.20827,
+      2.4291,
       0,
-      1.13791
+      1.2517
     ],
     [
-      -2.20827,
+      -2.4291,
       0,
-      1.13791
+      1.2517
     ],
     [
-      2.20827,
+      2.4291,
       0,
-      0.17796
+      0.19576
     ],
     [
-      -2.20827,
+      -2.4291,
       0,
-      0.17796
+      0.19576
     ],
     [
-      2.20827,
+      2.4291,
       0,
-      -1.53799
+      -1.69179
     ],
     [
-      -2.20827,
+      -2.4291,
       0,
-      -1.53799
+      -1.69179
     ],
     [
-      2.20827,
+      2.4291,
       0,
-      -2.87075
+      -3.15783
     ],
     [
-      -2.20827,
+      -2.4291,
       0,
-      -2.87075
+      -3.15783
     ]
   ]
 }

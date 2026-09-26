@@ -7,78 +7,78 @@
   "OBB": [
     {
       "Size": [
-        0.32012,
-        0.62023,
-        0.72027
+        0.35213,
+        0.68225,
+        0.7923
       ],
       "Position": [
-        1.18044,
-        0.62023,
-        -3.2512
+        1.29848,
+        0.68225,
+        -3.57632
       ],
       "Part": "WheelLeft"
     },
     {
       "Size": [
-        0.32012,
-        0.62023,
-        0.72027
+        0.35213,
+        0.68225,
+        0.7923
       ],
       "Position": [
-        -1.18044,
-        0.62023,
-        -3.2512
+        -1.29848,
+        0.68225,
+        -3.57632
       ],
       "Part": "WheelRight"
     },
     {
       "Size": [
-        0.32012,
-        0.62023,
-        1.45054
+        0.35213,
+        0.68225,
+        1.59559
       ],
       "Position": [
-        1.18044,
-        0.62023,
-        0.5502
+        1.29848,
+        0.68225,
+        0.60522
       ],
       "Part": "WheelLeft"
     },
     {
       "Size": [
-        0.32012,
-        0.62023,
-        1.45054
+        0.35213,
+        0.68225,
+        1.59559
       ],
       "Position": [
-        -1.18044,
-        0.62023,
-        0.5502
+        -1.29848,
+        0.68225,
+        0.60522
       ],
       "Part": "WheelRight"
     },
     {
       "Size": [
-        1.42053,
-        0.8203,
-        4.95183
+        1.56258,
+        0.90233,
+        5.44701
       ],
       "Position": [
         0,
-        1.24046,
-        -0.10004
+        1.36451,
+        -0.11004
       ]
     },
     {
       "Size": [
-        1.28047,
-        0.75028,
-        1.65061
+        1.40852,
+        0.82531,
+        1.81567
       ],
       "Position": [
         0,
-        2.4209,
-        -3.30122
+        2.66299,
+        -3.63134
       ]
     }
   ],
@@ -90,8 +90,8 @@
       "Transform": "Vehicle",
       "Position": [
         0,
-        2.01861,
-        2.04756
+        2.22047,
+        2.25232
       ],
       "MinPitch": -60,
       "MaxPitch": 60,
@@ -100,8 +100,8 @@
       "CameraPos": {
         "UseSimulate3P": true,
         "Simulate3PPos": [
-          6,
-          1
+          6.6,
+          1.1
         ]
       }
     }
@@ -114,7 +114,7 @@
   "EngineInfo": {
     "Buoyancy": 0,
     "EnergyCostRate": 64,
-    "WheelRotSpeed": 0.833,
+    "WheelRotSpeed": 0.75727,
     "WheelDifferential": 0.5,
     "MaxForwardSpeedRate": 1.25,
     "MaxBackwardSpeedRate": 0.75,
@@ -125,13 +125,13 @@
   },
   "TurretPos": [
     0,
-    1.80577,
+    1.98635,
     0
   ],
   "BarrelPos": [
     0,
-    0.41265,
-    1.16918
+    0.45392,
+    1.2861
   ],
   "TurretTurnSpeed": [
     1.35,
@@ -143,7 +143,7 @@
   ],
   "HasDecoy": false,
   "UpStep": 2.1,
-  "RotateOffsetHeight": 2.20081,
+  "RotateOffsetHeight": 2.42089,
   "Mass": 100,
   "DamageModifiers": [
     "minecraft:arrow 0",
@@ -183,8 +183,8 @@
   },
   "ThirdPersonCameraPos": [
     0,
-    1.00037,
-    5.00185
+    1.10041,
+    5.50204
   ],
   "VehicleIcon": "superbwarfare:textures/vehicle_icon/truck_icon.png",
   "ContainerIcon": "superbwarfare:textures/gui/vehicle/type/civilian.png",
@@ -219,34 +219,34 @@
   "HudType": "@Land",
   "TerrainCompat": [
     [
-      1.18044,
+      1.29848,
       0,
-      -3.2512
+      -3.57632
     ],
     [
-      -1.18044,
+      -1.29848,
       0,
-      -3.2512
+      -3.57632
     ],
     [
-      1.18044,
+      1.29848,
       0,
       0
     ],
     [
-      -1.18044,
+      -1.29848,
       0,
       0
     ],
     [
-      1.18044,
+      1.29848,
       0,
-      1.25046
+      1.37551
     ],
     [
-      -1.18044,
+      -1.29848,
       0,
-      1.25046
+      1.37551
     ]
   ],
   "HornSound": "superbwarfare:truck_horn",

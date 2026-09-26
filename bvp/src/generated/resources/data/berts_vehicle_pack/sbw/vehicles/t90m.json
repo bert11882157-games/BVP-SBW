@@ -17,40 +17,40 @@
   "OBB": [
     {
       "Size": [
-        1.7552,
-        0.64477,
-        3.54622
+        1.93072,
+        0.70925,
+        3.90084
       ],
       "Position": [
         0,
-        0.82387,
-        0.03582
+        0.90626,
+        0.0394
       ]
     },
     {
       "Part": "MainEngine",
       "Size": [
-        0.82387,
-        0.46567,
-        0.5588
+        0.90626,
+        0.51224,
+        0.61468
       ],
       "Position": [
         0,
-        0.82387,
-        -2.87996
+        0.90626,
+        -3.16796
       ]
     },
     {
       "Part": "Turret",
       "Size": [
-        1.11043,
-        0.50149,
-        1.32536
+        1.22147,
+        0.55164,
+        1.4579
       ],
       "Position": [
         0,
-        -0.03582,
-        0.14328
+        -0.0394,
+        0.15761
       ],
       "Transform": "Turret",
       "Rotation": "Turret"
@@ -83,8 +83,8 @@
       "Transform": "Turret",
       "Position": [
         0,
-        -0.68029,
-        -0.10322
+        -0.74832,
+        -0.11354
       ],
       "Weapons": [
         "Cannon",
@@ -101,8 +101,8 @@
       "DismountInfo": {
         "Transform": "Vehicle",
         "Position": [
-          3.30981,
-          0.37611,
+          3.64079,
+          0.41372,
           0
         ]
       },
@@ -135,8 +135,8 @@
       },
       "Position": [
         0,
-        0.71076,
-        -0.0895
+        0.78184,
+        -0.09845
       ],
       "Weapons": [
         "PassengerMachineGun"
@@ -152,8 +152,8 @@
       "DismountInfo": {
         "Transform": "Vehicle",
         "Position": [
-          -2.37118,
-          0.26946,
+          -2.6083,
+          0.29641,
           0
         ]
       },
@@ -166,9 +166,9 @@
       "BanHand": true,
       "Transform": "Vehicle",
       "Position": [
-        0.75,
-        1,
-        -0.1875
+        0.825,
+        1.1,
+        -0.20625
       ],
       "MinPitch": -60,
       "MaxPitch": 60,
@@ -177,8 +177,8 @@
       "CameraPos": {
         "UseSimulate3P": true,
         "Simulate3PPos": [
-          6,
-          1
+          6.6,
+          1.1
         ]
       }
     },
@@ -189,7 +189,7 @@
       "Transform": "Vehicle",
       "Position": [
         0,
-        2.3125,
+        2.54375,
         0
       ],
       "MinPitch": -60,
@@ -199,8 +199,8 @@
       "CameraPos": {
         "UseSimulate3P": true,
         "Simulate3PPos": [
-          6,
-          1
+          6.6,
+          1.1
         ]
       }
     }
@@ -393,18 +393,18 @@
         "Transform": "Barrel",
         "Positions": [
           [
-            0.00196,
-            -0.32606,
-            -4.25966
+            0.00216,
+            -0.35867,
+            -4.68563
           ]
         ],
         "Directions": [
           "Barrel"
         ],
         "ViewPosition": [
-          0.00195,
-          -0.32509,
-          -4.24704
+          0.00215,
+          -0.3576,
+          -4.67174
         ],
         "MuzzleAttachments": [
           "main_muzzle"
@@ -510,18 +510,18 @@
         "Transform": "Barrel",
         "Positions": [
           [
-            -0.42575,
-            -0.09033,
-            -0.93881
+            -0.46833,
+            -0.09936,
+            -1.03269
           ]
         ],
         "Directions": [
           "Barrel"
         ],
         "ViewPosition": [
-          -0.42449,
-          -0.09006,
-          -0.93603
+          -0.46694,
+          -0.09907,
+          -1.02963
         ],
         "MuzzleAttachments": [
           "coax_muzzle"
@@ -679,18 +679,18 @@
         "Transform": "WeaponStationBarrel",
         "Positions": [
           [
-            -0.03638,
-            0.00659,
-            -1.2727
+            -0.04002,
+            0.00725,
+            -1.39997
           ]
         ],
         "Directions": [
           "WeaponStationBarrel"
         ],
         "ViewPosition": [
-          -0.03627,
-          0.00657,
-          -1.26893
+          -0.0399,
+          0.00723,
+          -1.39582
         ],
         "MuzzleAttachments": [
           "hmg_muzzle"
@@ -817,9 +817,9 @@
   "EngineInfo": {
     "Buoyancy": 0,
     "EnergyCostRate": 120,
-    "WheelRotSpeed": 1.25,
+    "WheelRotSpeed": 1.13636,
     "WheelDifferential": 0.75,
-    "TrackRotSpeed": 1.7,
+    "TrackRotSpeed": 1.54545,
     "TrackDifferential": 0.6,
     "MaxForwardSpeedRate": 0.72,
     "MaxBackwardSpeedRate": 0.048,
@@ -830,13 +830,13 @@
   },
   "TurretPos": [
     0,
-    1.49278,
-    -0.10322
+    1.64206,
+    -0.11354
   ],
   "BarrelPos": [
-    -0.0129,
-    0.21933,
-    0.8644
+    -0.01419,
+    0.24126,
+    0.95084
   ],
   "TurretTurnSpeed": [
     28,
@@ -852,7 +852,7 @@
   ],
   "HasDecoy": false,
   "UpStep": 1.5,
-  "RotateOffsetHeight": 2.60773,
+  "RotateOffsetHeight": 2.8685,
   "Mass": 44.5,
   "DamageModifiers": [
     "minecraft:arrow 0",
@@ -894,9 +894,9 @@
     "SympatheticDetonationChance": 0.55
   },
   "ThirdPersonCameraPos": [
-    -0.86954,
-    1.50446,
-    5.01486
+    -0.95649,
+    1.65491,
+    5.51635
   ],
   "VehicleIcon": "superbwarfare:textures/vehicle_icon/t_90a_icon.png",
   "ContainerIcon": "superbwarfare:textures/gui/vehicle/type/land.png",
@@ -931,64 +931,64 @@
   "HudType": "@Land",
   "TerrainCompat": [
     [
-      1.87556,
+      2.06312,
       0,
-      3.25023
+      3.57525
     ],
     [
-      -1.87556,
+      -2.06312,
       0,
-      3.25023
+      3.57525
     ],
     [
-      1.87556,
+      2.06312,
       0,
-      2.08077
+      2.28885
     ],
     [
-      -1.87556,
+      -2.06312,
       0,
-      2.08077
+      2.28885
     ],
     [
-      1.87556,
+      2.06312,
       0,
-      0.96646
+      1.06311
     ],
     [
-      -1.87556,
+      -2.06312,
       0,
-      0.96646
+      1.06311
     ],
     [
-      1.87556,
+      2.06312,
       0,
-      0.15115
+      0.16627
     ],
     [
-      -1.87556,
+      -2.06312,
       0,
-      0.15115
+      0.16627
     ],
     [
-      1.87556,
+      2.06312,
       0,
-      -1.30627
+      -1.4369
     ],
     [
-      -1.87556,
+      -2.06312,
       0,
-      -1.30627
+      -1.4369
     ],
     [
-      1.87556,
+      2.06312,
       0,
-      -2.43822
+      -2.68204
     ],
     [
-      -1.87556,
+      -2.06312,
       0,
-      -2.43822
+      -2.68204
     ]
   ],
   "TurretControllerIndex": 0,
@@ -1002,14 +1002,14 @@
     "MuzzleAttachment": "hmg_muzzle"
   },
   "PassengerWeaponStationPos": [
-    -0.43492,
-    0.87069,
-    -0.75903
+    -0.47841,
+    0.95776,
+    -0.83493
   ],
   "PassengerWeaponStationBarrelPos": [
-    0.27832,
-    0.28735,
-    -0.26733
+    0.30615,
+    0.31609,
+    -0.29406
   ],
   "PassengerWeaponStationTurnSpeed": [
     90,
@@ -1027,9 +1027,9 @@
     "gunner1_camera": {
       "Parent": "Turret",
       "Position": [
-        0.49198,
-        0.71431,
-        0.90102
+        0.54118,
+        0.78574,
+        0.99112
       ],
       "Direction": [
         0,
@@ -1040,9 +1040,9 @@
     "gunner1_zoom": {
       "Parent": "Turret",
       "Position": [
-        0.49198,
-        0.71431,
-        0.90102
+        0.54118,
+        0.78574,
+        0.99112
       ],
       "Direction": [
         0,
@@ -1053,9 +1053,9 @@
     "gunner2_camera": {
       "Parent": "WeaponStationBarrel",
       "Position": [
-        -0.27319,
-        -0.2041,
-        0.46704
+        -0.30051,
+        -0.22451,
+        0.51374
       ],
       "Direction": [
         0,
@@ -1066,9 +1066,9 @@
     "main_muzzle": {
       "Parent": "Barrel",
       "Position": [
-        0.00196,
-        -0.32606,
-        4.25966
+        0.00216,
+        -0.35867,
+        4.68563
       ],
       "Direction": [
         0,
@@ -1079,9 +1079,9 @@
     "coax_muzzle": {
       "Parent": "Barrel",
       "Position": [
-        -0.42575,
-        -0.09033,
-        0.93881
+        -0.46833,
+        -0.09936,
+        1.03269
       ],
       "Direction": [
         0,
@@ -1092,9 +1092,9 @@
     "hmg_muzzle": {
       "Parent": "WeaponStationBarrel",
       "Position": [
-        -0.03638,
-        0.00659,
-        1.2727
+        -0.04002,
+        0.00725,
+        1.39997
       ],
       "Direction": [
         0,

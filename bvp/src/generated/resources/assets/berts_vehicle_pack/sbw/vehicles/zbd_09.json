@@ -6,10 +6,7 @@
     "Texture": "berts_vehicle_pack:textures/entity/zbd_09.png",
     "WreckTexture": "berts_vehicle_pack:textures/entity_dead/zbd_09.png"
   },
-  "MouseSpeed": [
-    0.2,
-    0.2
-  ],
+  "MouseSpeed": [0.2, 0.2],
   "FittedGroundRig": {
     "Schema": 1,
     "Frame": "RUNTIME_MODEL_PIXELS",
@@ -18,18 +15,18 @@
         "Bone": "pod_L",
         "Parent": "turret",
         "Pivot": [
-          13.7564,
-          37.62782,
-          8.4966
+          15.13204,
+          41.3906,
+          9.34626
         ]
       },
       {
         "Bone": "pod_R",
         "Parent": "turret",
         "Pivot": [
-          -13.7564,
-          37.62782,
-          8.4966
+          -15.13204,
+          41.3906,
+          9.34626
         ]
       }
     ]
@@ -88,9 +85,9 @@
       {
         "Id": "fitted_exhaust_face_000",
         "Position": [
-          -1.0873625,
-          1.64368875,
-          3.0597875
+          -1.1961,
+          1.80806,
+          3.36577
         ]
       }
     ]

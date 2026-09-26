@@ -6,10 +6,7 @@
     "Texture": "berts_vehicle_pack:textures/entity/btr_90.png",
     "WreckTexture": "berts_vehicle_pack:textures/entity_dead/btr_90.png"
   },
-  "MouseSpeed": [
-    0.2,
-    0.2
-  ],
+  "MouseSpeed": [0.2, 0.2],
   "FittedGroundRig": {
     "Schema": 1,
     "Frame": "RUNTIME_MODEL_PIXELS",
@@ -18,8 +15,8 @@
         "Bone": "pod_L",
         "Parent": "turret",
         "Pivot": [
-          14.87556,
-          38.87092,
+          16.36312,
+          42.75801,
           0
         ]
       },
@@ -27,8 +24,8 @@
         "Bone": "pod_R",
         "Parent": "turret",
         "Pivot": [
-          -14.87556,
-          38.87092,
+          -16.36312,
+          42.75801,
           0
         ]
       },
@@ -36,9 +33,9 @@
         "Bone": "grenade_pitch",
         "Parent": "turret",
         "Pivot": [
-          -4.1321,
-          44.24265,
-          11.56988
+          -4.54531,
+          48.66692,
+          12.72687
         ]
       }
     ]
@@ -97,17 +94,17 @@
       {
         "Id": "fitted_exhaust_face_000",
         "Position": [
-          -1.38167125,
-          1.34475625,
-          -4.10627437
+          -1.51984,
+          1.47923,
+          -4.5169
         ]
       },
       {
         "Id": "fitted_exhaust_face_001",
         "Position": [
-          1.38167125,
-          1.34475625,
-          -4.10627437
+          1.51984,
+          1.47923,
+          -4.5169
         ]
       }
     ]

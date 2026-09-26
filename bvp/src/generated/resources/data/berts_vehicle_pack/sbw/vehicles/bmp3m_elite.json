@@ -10,40 +10,40 @@
   "OBB": [
     {
       "Size": [
-        1.74851,
-        0.64231,
-        3.5327
+        1.92336,
+        0.70654,
+        3.88597
       ],
       "Position": [
         0,
-        0.82073,
-        0.03568
+        0.9028,
+        0.03925
       ]
     },
     {
       "Part": "MainEngine",
       "Size": [
-        0.82073,
-        0.46389,
-        0.55667
+        0.9028,
+        0.51028,
+        0.61234
       ],
       "Position": [
         0,
-        0.82073,
-        -2.86898
+        0.9028,
+        -3.15588
       ]
     },
     {
       "Part": "Turret",
       "Size": [
-        1.1062,
-        0.49957,
-        1.3203
+        1.21682,
+        0.54953,
+        1.45233
       ],
       "Position": [
         0,
-        -0.03568,
-        0.14274
+        -0.03925,
+        0.15701
       ],
       "Transform": "Turret",
       "Rotation": "Turret"
@@ -75,9 +75,9 @@
       ],
       "Transform": "Turret",
       "Position": [
-        0.35969,
-        -0.64945,
-        0.3497
+        0.39566,
+        -0.7144,
+        0.38467
       ],
       "CanRotateHead": false,
       "MinPitch": -6,
@@ -91,8 +91,8 @@
         "Transform": "Vehicle",
         "Position": [
           0,
-          0.37468,
-          -4.99574
+          0.41215,
+          -5.49531
         ]
       },
       "HasThermalImaging": true,
@@ -103,23 +103,23 @@
       "BanHand": true,
       "Transform": "Vehicle",
       "Position": [
-        1.34885,
-        0.44962,
-        -0.6994
+        1.48374,
+        0.49458,
+        -0.76934
       ],
       "CameraPos": {
         "UseSimulate3P": true,
         "Simulate3PPos": [
-          6,
-          1
+          6.6,
+          1.1
         ]
       },
       "DismountInfo": {
         "Transform": "Vehicle",
         "Position": [
           0,
-          0.37468,
-          -4.99574
+          0.41215,
+          -5.49531
         ]
       }
     },
@@ -128,23 +128,23 @@
       "BanHand": true,
       "Transform": "Vehicle",
       "Position": [
-        -1.34885,
-        0.44962,
-        -0.6994
+        -1.48374,
+        0.49458,
+        -0.76934
       ],
       "CameraPos": {
         "UseSimulate3P": true,
         "Simulate3PPos": [
-          6,
-          1
+          6.6,
+          1.1
         ]
       },
       "DismountInfo": {
         "Transform": "Vehicle",
         "Position": [
           0,
-          0.37468,
-          -4.99574
+          0.41215,
+          -5.49531
         ]
       }
     },
@@ -153,23 +153,23 @@
       "BanHand": true,
       "Transform": "Vehicle",
       "Position": [
-        1.34885,
-        0.44962,
-        -1.69855
+        1.48374,
+        0.49458,
+        -1.86841
       ],
       "CameraPos": {
         "UseSimulate3P": true,
         "Simulate3PPos": [
-          6,
-          1
+          6.6,
+          1.1
         ]
       },
       "DismountInfo": {
         "Transform": "Vehicle",
         "Position": [
           0,
-          0.37468,
-          -4.99574
+          0.41215,
+          -5.49531
         ]
       }
     },
@@ -178,23 +178,23 @@
       "BanHand": true,
       "Transform": "Vehicle",
       "Position": [
-        -1.34885,
-        0.44962,
-        -1.69855
+        -1.48374,
+        0.49458,
+        -1.86841
       ],
       "CameraPos": {
         "UseSimulate3P": true,
         "Simulate3PPos": [
-          6,
-          1
+          6.6,
+          1.1
         ]
       },
       "DismountInfo": {
         "Transform": "Vehicle",
         "Position": [
           0,
-          0.37468,
-          -4.99574
+          0.41215,
+          -5.49531
         ]
       }
     },
@@ -203,23 +203,23 @@
       "BanHand": true,
       "Transform": "Vehicle",
       "Position": [
-        0.54953,
-        0.44962,
-        -2.6977
+        0.60448,
+        0.49458,
+        -2.96747
       ],
       "CameraPos": {
         "UseSimulate3P": true,
         "Simulate3PPos": [
-          6,
-          1
+          6.6,
+          1.1
         ]
       },
       "DismountInfo": {
         "Transform": "Vehicle",
         "Position": [
           0,
-          0.37468,
-          -4.99574
+          0.41215,
+          -5.49531
         ]
       }
     },
@@ -228,23 +228,23 @@
       "BanHand": true,
       "Transform": "Vehicle",
       "Position": [
-        -0.54953,
-        0.44962,
-        -2.6977
+        -0.60448,
+        0.49458,
+        -2.96747
       ],
       "CameraPos": {
         "UseSimulate3P": true,
         "Simulate3PPos": [
-          6,
-          1
+          6.6,
+          1.1
         ]
       },
       "DismountInfo": {
         "Transform": "Vehicle",
         "Position": [
           0,
-          0.37468,
-          -4.99574
+          0.41215,
+          -5.49531
         ]
       }
     }
@@ -374,18 +374,18 @@
         "Transform": "Barrel",
         "Positions": [
           [
-            0.02056,
-            0.00515,
-            -2.51905
+            0.02262,
+            0.00567,
+            -2.77096
           ]
         ],
         "Directions": [
           "Barrel"
         ],
         "ViewPosition": [
-          0.02058,
-          0.00515,
-          -2.5212
+          0.02264,
+          0.00567,
+          -2.77332
         ],
         "MuzzleAttachments": [
           "main_muzzle"
@@ -494,18 +494,18 @@
         "Transform": "Barrel",
         "Positions": [
           [
-            0.15936,
-            0.01543,
-            -0.42322
+            0.1753,
+            0.01697,
+            -0.46554
           ]
         ],
         "Directions": [
           "Barrel"
         ],
         "ViewPosition": [
-          0.1595,
-          0.01544,
-          -0.42358
+          0.17545,
+          0.01698,
+          -0.46594
         ],
         "MuzzleAttachments": [
           "coax_muzzle"
@@ -716,18 +716,18 @@
         "Transform": "Barrel",
         "Positions": [
           [
-            -0.18507,
-            0.00257,
-            -2.11715
+            -0.20358,
+            0.00283,
+            -2.32887
           ]
         ],
         "Directions": [
           "Barrel"
         ],
         "ViewPosition": [
-          -0.18523,
-          0.00257,
-          -2.11896
+          -0.20375,
+          0.00283,
+          -2.33086
         ],
         "MuzzleAttachments": [
           "dual_cannon_muzzle"
@@ -813,9 +813,9 @@
   "EngineInfo": {
     "Buoyancy": 0,
     "EnergyCostRate": 120,
-    "WheelRotSpeed": 1.25,
+    "WheelRotSpeed": 1.13636,
     "WheelDifferential": 0.75,
-    "TrackRotSpeed": 1.7,
+    "TrackRotSpeed": 1.54545,
     "TrackDifferential": 0.6,
     "MaxForwardSpeedRate": 0.72,
     "MaxBackwardSpeedRate": 0.16,
@@ -826,13 +826,13 @@
   },
   "TurretPos": [
     0,
-    1.89875,
+    2.08862,
     0
   ],
   "BarrelPos": [
-    0.08226,
-    0.2005,
-    0.61691
+    0.09049,
+    0.22055,
+    0.6786
   ],
   "TurretTurnSpeed": [
     24.5,
@@ -844,7 +844,7 @@
   ],
   "HasDecoy": false,
   "UpStep": 1.5,
-  "RotateOffsetHeight": 2.42793,
+  "RotateOffsetHeight": 2.67072,
   "Mass": 16,
   "DamageModifiers": [
     "minecraft:arrow 0",
@@ -887,8 +887,8 @@
   },
   "ThirdPersonCameraPos": [
     0,
-    0.99915,
-    2.99744
+    1.09906,
+    3.29718
   ],
   "VehicleIcon": "superbwarfare:textures/vehicle_icon/bmp_2_icon.png",
   "ContainerIcon": "superbwarfare:textures/gui/vehicle/type/land.png",
@@ -923,73 +923,73 @@
   "HudType": "@Land",
   "TerrainCompat": [
     [
-      1.67857,
+      1.84643,
       0,
-      2.13818
+      2.352
     ],
     [
-      -1.67857,
+      -1.84643,
       0,
-      2.13818
+      2.352
     ],
     [
-      1.67857,
+      1.84643,
       0,
-      1.2889
+      1.41779
     ],
     [
-      -1.67857,
+      -1.84643,
       0,
-      1.2889
+      1.41779
     ],
     [
-      1.67857,
+      1.84643,
       0,
-      0.44962
+      0.49458
     ],
     [
-      -1.67857,
+      -1.84643,
       0,
-      0.44962
+      0.49458
     ],
     [
-      1.67857,
+      1.84643,
       0,
-      -0.38967
+      -0.42864
     ],
     [
-      -1.67857,
+      -1.84643,
       0,
-      -0.38967
+      -0.42864
     ],
     [
-      1.67857,
+      1.84643,
       0,
-      -1.2889
+      -1.41779
     ],
     [
-      -1.67857,
+      -1.84643,
       0,
-      -1.2889
+      -1.41779
     ],
     [
-      1.67857,
+      1.84643,
       0,
-      -2.18813
+      -2.40694
     ],
     [
-      -1.67857,
+      -1.84643,
       0,
-      -2.18813
+      -2.40694
     ]
   ],
   "Attachments": {
     "gunner1_camera": {
       "Parent": "Turret",
       "Position": [
-        0.41504,
-        0.50848,
-        0.45921
+        0.45654,
+        0.55933,
+        0.50513
       ],
       "Direction": [
         0,
@@ -1000,9 +1000,9 @@
     "gunner1_zoom": {
       "Parent": "Turret",
       "Position": [
-        0.41504,
-        0.50848,
-        0.45921
+        0.45654,
+        0.55933,
+        0.50513
       ],
       "Direction": [
         0,
@@ -1013,9 +1013,9 @@
     "main_muzzle": {
       "Parent": "Barrel",
       "Position": [
-        0.02056,
-        0.00515,
-        2.51905
+        0.02262,
+        0.00567,
+        2.77096
       ],
       "Direction": [
         0,
@@ -1026,9 +1026,9 @@
     "coax_muzzle": {
       "Parent": "Barrel",
       "Position": [
-        0.15936,
-        0.01543,
-        0.42322
+        0.1753,
+        0.01697,
+        0.46554
       ],
       "Direction": [
         0,
@@ -1039,9 +1039,9 @@
     "dual_cannon_muzzle": {
       "Parent": "Barrel",
       "Position": [
-        -0.18507,
-        0.00257,
-        2.11715
+        -0.20358,
+        0.00283,
+        2.32887
       ],
       "Direction": [
         0,

@@ -10,40 +10,40 @@
   "OBB": [
     {
       "Size": [
-        1.8064,
-        0.66357,
-        3.64966
+        1.98704,
+        0.72993,
+        4.01463
       ],
       "Position": [
         0,
-        0.8479,
-        0.03687
+        0.93269,
+        0.04056
       ]
     },
     {
       "Part": "MainEngine",
       "Size": [
-        0.8479,
-        0.47925,
-        0.5751
+        0.93269,
+        0.52718,
+        0.63261
       ],
       "Position": [
         0,
-        0.8479,
-        -2.96396
+        0.93269,
+        -3.26036
       ]
     },
     {
       "Part": "Turret",
       "Size": [
-        1.14282,
-        0.51611,
-        1.36401
+        1.2571,
+        0.56772,
+        1.50041
       ],
       "Position": [
         0,
-        -0.03687,
-        0.14746
+        -0.04056,
+        0.16221
       ],
       "Transform": "Turret",
       "Rotation": "Turret"
@@ -76,8 +76,8 @@
       "Transform": "Turret",
       "Position": [
         0,
-        -0.51465,
-        1.25
+        -0.56612,
+        1.375
       ],
       "Weapons": [
         "Cannon"
@@ -93,8 +93,8 @@
       "DismountInfo": {
         "Transform": "Vehicle",
         "Position": [
-          3.40635,
-          0.38708,
+          3.74699,
+          0.42579,
           0
         ]
       },
@@ -177,7 +177,7 @@
           [
             0,
             0,
-            -4.3645
+            -4.80095
           ]
         ],
         "Directions": [
@@ -186,7 +186,7 @@
         "ViewPosition": [
           0,
           0,
-          -4.22824
+          -4.65106
         ],
         "MuzzleAttachments": [
           "main_muzzle"
@@ -227,9 +227,9 @@
   "EngineInfo": {
     "Buoyancy": 0,
     "EnergyCostRate": 120,
-    "WheelRotSpeed": 1.25,
+    "WheelRotSpeed": 1.13636,
     "WheelDifferential": 0.75,
-    "TrackRotSpeed": 1.7,
+    "TrackRotSpeed": 1.54545,
     "TrackDifferential": 0.6,
     "MaxForwardSpeedRate": 0.84,
     "MaxBackwardSpeedRate": 0.84,
@@ -240,13 +240,13 @@
   },
   "TurretPos": [
     0,
-    1.63965,
+    1.80362,
     0
   ],
   "BarrelPos": [
     0,
-    0.21244,
-    0.69045
+    0.23368,
+    0.7595
   ],
   "TurretTurnSpeed": [
     2.4,
@@ -258,7 +258,7 @@
   ],
   "HasDecoy": false,
   "UpStep": 1.5,
-  "RotateOffsetHeight": 2.68379,
+  "RotateOffsetHeight": 2.95217,
   "Mass": 44.5,
   "DamageModifiers": [
     "minecraft:arrow 0",
@@ -300,9 +300,9 @@
     "SympatheticDetonationChance": 0.55
   },
   "ThirdPersonCameraPos": [
-    -0.8949,
-    1.54834,
-    5.16113
+    -0.98439,
+    1.70317,
+    5.67724
   ],
   "VehicleIcon": "superbwarfare:textures/vehicle_icon/t_90a_icon.png",
   "ContainerIcon": "superbwarfare:textures/gui/vehicle/type/land.png",
@@ -337,64 +337,64 @@
   "HudType": "@Land",
   "TerrainCompat": [
     [
-      1.93026,
+      2.12329,
       0,
-      3.34503
+      3.67953
     ],
     [
-      -1.93026,
+      -2.12329,
       0,
-      3.34503
+      3.67953
     ],
     [
-      1.93026,
+      2.12329,
       0,
-      2.14146
+      2.35561
     ],
     [
-      -1.93026,
+      -2.12329,
       0,
-      2.14146
+      2.35561
     ],
     [
-      1.93026,
+      2.12329,
       0,
-      0.99465
+      1.09412
     ],
     [
-      -1.93026,
+      -2.12329,
       0,
-      0.99465
+      1.09412
     ],
     [
-      1.93026,
+      2.12329,
       0,
-      0.15556
+      0.17112
     ],
     [
-      -1.93026,
+      -2.12329,
       0,
-      0.15556
+      0.17112
     ],
     [
-      1.93026,
+      2.12329,
       0,
-      -1.34437
+      -1.47881
     ],
     [
-      -1.93026,
+      -2.12329,
       0,
-      -1.34437
+      -1.47881
     ],
     [
-      1.93026,
+      2.12329,
       0,
-      -2.50934
+      -2.76027
     ],
     [
-      -1.93026,
+      -2.12329,
       0,
-      -2.50934
+      -2.76027
     ]
   ],
   "TurretControllerIndex": 0,
@@ -402,9 +402,9 @@
     "gunner1_camera": {
       "Parent": "Turret",
       "Position": [
-        -0.39834,
-        0.478,
-        0.30148
+        -0.43817,
+        0.5258,
+        0.33163
       ],
       "Direction": [
         0,
@@ -415,9 +415,9 @@
     "gunner1_zoom": {
       "Parent": "Turret",
       "Position": [
-        -0.39834,
-        0.478,
-        0.30148
+        -0.43817,
+        0.5258,
+        0.33163
       ],
       "Direction": [
         0,
@@ -430,7 +430,7 @@
       "Position": [
         0,
         0,
-        4.3645
+        4.80095
       ],
       "Direction": [
         0,

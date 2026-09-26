@@ -99,29 +99,29 @@ public class ModEntities {
                     .m_20712_("ataka_missile"));
 
     public static final RegistryObject<EntityType<T72BEntity>> T72B =
-            ENTITIES.register("t72b", () -> vehicle(T72BEntity::new, 3.7f, 2.2f, "t72b"));
+            ENTITIES.register("t72b", () -> vehicle(T72BEntity::new, 4.07f, 2.42f, "t72b"));
     public static final RegistryObject<EntityType<T80BEntity>> T80B_OBR1976 =
-            ENTITIES.register("t80b_obr1976", () -> vehicle(T80BEntity::new, 3.7f, 2.2f, "t80b_obr1976"));
+            ENTITIES.register("t80b_obr1976", () -> vehicle(T80BEntity::new, 4.07f, 2.42f, "t80b_obr1976"));
     public static final RegistryObject<EntityType<T72AEntity>> T72A =
-            ENTITIES.register("t72a", () -> vehicle(T72AEntity::new, 3.7f, 2.2f, "t72a"));
+            ENTITIES.register("t72a", () -> vehicle(T72AEntity::new, 4.07f, 2.42f, "t72a"));
     public static final RegistryObject<EntityType<T90AEntity>> T90A =
-            ENTITIES.register("t90a", () -> vehicle(T90AEntity::new, 3.0f, 1.9f, "t90a"));
+            ENTITIES.register("t90a", () -> vehicle(T90AEntity::new, 3.30f, 2.09f, "t90a"));
     public static final RegistryObject<EntityType<T90MEntity>> T90M =
-            ENTITIES.register("t90m", () -> vehicle(T90MEntity::new, 3.0f, 1.9f, "t90m"));
+            ENTITIES.register("t90m", () -> vehicle(T90MEntity::new, 3.30f, 2.09f, "t90m"));
     public static final RegistryObject<EntityType<BmptEntity>> BMPT =
-            ENTITIES.register("bmpt", () -> vehicle(BmptEntity::new, 3.0f, 1.9f, "bmpt"));
+            ENTITIES.register("bmpt", () -> vehicle(BmptEntity::new, 3.30f, 2.09f, "bmpt"));
     public static final RegistryObject<EntityType<Zsu23_4Entity>> ZSU23_4 =
-            ENTITIES.register("zsu23_4", () -> vehicle(Zsu23_4Entity::new, 3.3f, 2.4f, "zsu23_4"));
+            ENTITIES.register("zsu23_4", () -> vehicle(Zsu23_4Entity::new, 3.63f, 2.64f, "zsu23_4"));
     public static final RegistryObject<EntityType<ToyotaJihadDshkEntity>> TOYOTA_JIHAD_DSHK =
-            ENTITIES.register("toyota_jihad_dshk", () -> vehicle(ToyotaJihadDshkEntity::new, 2.4f, 1.8f, "toyota_jihad_dshk"));
+            ENTITIES.register("toyota_jihad_dshk", () -> vehicle(ToyotaJihadDshkEntity::new, 2.64f, 1.98f, "toyota_jihad_dshk"));
     public static final RegistryObject<EntityType<ToyotaJihadSpg9Entity>> TOYOTA_JIHAD_SPG9 =
-            ENTITIES.register("toyota_jihad_spg9", () -> vehicle(ToyotaJihadSpg9Entity::new, 2.4f, 1.8f, "toyota_jihad_spg9"));
+            ENTITIES.register("toyota_jihad_spg9", () -> vehicle(ToyotaJihadSpg9Entity::new, 2.64f, 1.98f, "toyota_jihad_spg9"));
     public static final RegistryObject<EntityType<Btr80AEntity>> BTR80A =
-            ENTITIES.register("btr80a", () -> vehicle(Btr80AEntity::new, 3.7f, 2.2f, "btr80a"));
+            ENTITIES.register("btr80a", () -> vehicle(Btr80AEntity::new, 4.07f, 2.42f, "btr80a"));
     public static final RegistryObject<EntityType<Bmp2Entity>> BMP2 =
-            ENTITIES.register("bmp2", () -> vehicle(Bmp2Entity::new, 3.7f, 2.2f, "bmp2"));
+            ENTITIES.register("bmp2", () -> vehicle(Bmp2Entity::new, 4.07f, 2.42f, "bmp2"));
     public static final RegistryObject<EntityType<Bmp2MEntity>> BMP2M =
-            ENTITIES.register("bmp2m", () -> vehicle(Bmp2MEntity::new, 3.15f, 2.45f, "bmp2m"));
+            ENTITIES.register("bmp2m", () -> vehicle(Bmp2MEntity::new, 3.47f, 2.70f, "bmp2m"));
     public static final RegistryObject<EntityType<Mi24VEntity>> MI24V =
             ENTITIES.register("mi24v", () -> vehicle(Mi24VEntity::new, 2.6f, 2.15f, "mi24v"));
     public static final RegistryObject<EntityType<Mi28NEntity>> MI28N =
@@ -129,79 +129,79 @@ public class ModEntities {
     public static final RegistryObject<EntityType<Ka50Entity>> KA50 =
             ENTITIES.register("ka50", () -> vehicle(Ka50Entity::new, 2.6f, 2.15f, "ka50"));
     public static final RegistryObject<EntityType<M60A1Entity>> M60A1 =
-            ENTITIES.register("m60a1", () -> vehicle(M60A1Entity::new, 3.7f, 2.2f, "m60a1"));
+            ENTITIES.register("m60a1", () -> vehicle(M60A1Entity::new, 4.07f, 2.42f, "m60a1"));
     public static final RegistryObject<EntityType<M48A3EliteEntity>> M48A3_ELITE =
-            ENTITIES.register("m48a3_elite", () -> vehicle(M48A3EliteEntity::new, 3.7f, 2.2f, "m48a3_elite"));
+            ENTITIES.register("m48a3_elite", () -> vehicle(M48A3EliteEntity::new, 4.07f, 2.42f, "m48a3_elite"));
     public static final RegistryObject<EntityType<T55AEntity>> T55A =
-            ENTITIES.register("t55a_2_0", () -> vehicle(T55AEntity::new, 3.7f, 2.2f, "t55a_2_0"));
+            ENTITIES.register("t55a_2_0", () -> vehicle(T55AEntity::new, 4.07f, 2.42f, "t55a_2_0"));
     public static final RegistryObject<EntityType<T64BObr1976Entity>> T64B_OBR1976 =
-            ENTITIES.register("t64b_obr1976", () -> vehicle(T64BObr1976Entity::new, 3.7f, 2.2f, "t64b_obr1976"));
+            ENTITIES.register("t64b_obr1976", () -> vehicle(T64BObr1976Entity::new, 4.07f, 2.42f, "t64b_obr1976"));
     public static final RegistryObject<EntityType<T72B3Entity>> T72B3 =
-            ENTITIES.register("t72b3", () -> vehicle(T72B3Entity::new, 3.7f, 2.2f, "t72b3"));
+            ENTITIES.register("t72b3", () -> vehicle(T72B3Entity::new, 4.07f, 2.42f, "t72b3"));
     public static final RegistryObject<EntityType<T72B3UbhCopeEntity>> T72B3_UBH_COPE =
-            ENTITIES.register("t72b3_ubh_cope", () -> vehicle(T72B3UbhCopeEntity::new, 3.7f, 2.2f, "t72b3_ubh_cope"));
+            ENTITIES.register("t72b3_ubh_cope", () -> vehicle(T72B3UbhCopeEntity::new, 4.07f, 2.42f, "t72b3_ubh_cope"));
     public static final RegistryObject<EntityType<M1AbramsEliteEntity>> M1_ABRAMS_ELITE =
-            ENTITIES.register("m1_abrams_elite", () -> vehicle(M1AbramsEliteEntity::new, 3.7f, 2.2f, "m1_abrams_elite"));
+            ENTITIES.register("m1_abrams_elite", () -> vehicle(M1AbramsEliteEntity::new, 4.07f, 2.42f, "m1_abrams_elite"));
     public static final RegistryObject<EntityType<M1A2AbramsSepV2Entity>> M1A2_ABRAMS_SEP_V2 =
-            ENTITIES.register("m1a2_abrams_sep_v2", () -> vehicle(M1A2AbramsSepV2Entity::new, 3.7f, 2.2f, "m1a2_abrams_sep_v2"));
+            ENTITIES.register("m1a2_abrams_sep_v2", () -> vehicle(M1A2AbramsSepV2Entity::new, 4.07f, 2.42f, "m1a2_abrams_sep_v2"));
     public static final RegistryObject<EntityType<Ztz99AEntity>> ZTZ99A =
-            ENTITIES.register("ztz99a", () -> vehicle(Ztz99AEntity::new, 3.7f, 2.2f, "ztz99a"));
+            ENTITIES.register("ztz99a", () -> vehicle(Ztz99AEntity::new, 4.07f, 2.42f, "ztz99a"));
     public static final RegistryObject<EntityType<Bmp3mEliteEntity>> BMP3M_ELITE =
-            ENTITIES.register("bmp3m_elite", () -> vehicle(Bmp3mEliteEntity::new, 3.2f, 2.4f, "bmp3m_elite"));
+            ENTITIES.register("bmp3m_elite", () -> vehicle(Bmp3mEliteEntity::new, 3.52f, 2.64f, "bmp3m_elite"));
     public static final RegistryObject<EntityType<M2BradleyEntity>> M2_BRADLEY =
-            ENTITIES.register("m2_bradley", () -> vehicle(M2BradleyEntity::new, 3.2004f, 2.9718f, "m2_bradley"));
+            ENTITIES.register("m2_bradley", () -> vehicle(M2BradleyEntity::new, 3.52f, 3.27f, "m2_bradley"));
     public static final RegistryObject<EntityType<Marder1A1Entity>> MARDER_1A1 =
-            ENTITIES.register("marder_1a1", () -> vehicle(Marder1A1Entity::new, 3.24f, 2.98f, "marder_1a1"));
+            ENTITIES.register("marder_1a1", () -> vehicle(Marder1A1Entity::new, 3.56f, 3.28f, "marder_1a1"));
     public static final RegistryObject<EntityType<Cv9040NoNetEntity>> CV9040_NO_NET =
-            ENTITIES.register("cv9040_no_net", () -> vehicle(Cv9040NoNetEntity::new, 3.2f, 2.8f, "cv9040_no_net"));
+            ENTITIES.register("cv9040_no_net", () -> vehicle(Cv9040NoNetEntity::new, 3.52f, 3.08f, "cv9040_no_net"));
     public static final RegistryObject<EntityType<Leo2A6Entity>> LEO2A6 =
-            ENTITIES.register("leo2a6", () -> vehicle(Leo2A6Entity::new, 3.7f, 2.2f, "leo2a6"));
+            ENTITIES.register("leo2a6", () -> vehicle(Leo2A6Entity::new, 4.07f, 2.42f, "leo2a6"));
     public static final RegistryObject<EntityType<T80UObr1985Entity>> T80U_OBR1985 =
-            ENTITIES.register("t80u_obr1985", () -> vehicle(T80UObr1985Entity::new, 3.7f, 2.2f, "t80u_obr1985"));
+            ENTITIES.register("t80u_obr1985", () -> vehicle(T80UObr1985Entity::new, 4.07f, 2.42f, "t80u_obr1985"));
     public static final RegistryObject<EntityType<M551A1Entity>> M551A1 =
-            ENTITIES.register("m551a1", () -> vehicle(M551A1Entity::new, 2.794f, 2.9464f, "m551a1"));
+            ENTITIES.register("m551a1", () -> vehicle(M551A1Entity::new, 3.07f, 3.24f, "m551a1"));
     public static final RegistryObject<EntityType<ToyotaJihadBmp1Entity>> TOYOTA_JIHAD_BMP1 =
-            ENTITIES.register("toyota_jihad_bmp1", () -> vehicle(ToyotaJihadBmp1Entity::new, 2.4f, 1.8f, "toyota_jihad_bmp1"));
+            ENTITIES.register("toyota_jihad_bmp1", () -> vehicle(ToyotaJihadBmp1Entity::new, 2.64f, 1.98f, "toyota_jihad_bmp1"));
     public static final RegistryObject<EntityType<ToyotaJihadS5Entity>> TOYOTA_JIHAD_S5 =
-            ENTITIES.register("toyota_jihad_s5", () -> vehicle(ToyotaJihadS5Entity::new, 2.4f, 1.8f, "toyota_jihad_s5"));
+            ENTITIES.register("toyota_jihad_s5", () -> vehicle(ToyotaJihadS5Entity::new, 2.64f, 1.98f, "toyota_jihad_s5"));
     public static final RegistryObject<EntityType<Zu23_2Entity>> ZU23_2 =
             ENTITIES.register("zu23_2", () -> vehicle(Zu23_2Entity::new, 3.0f, 2.2f, "zu23_2"));
 
     // Conservative registration bounds; these dimensions do not select per-vehicle physics.
     public static final RegistryObject<EntityType<Bmp1amEntity>> BMP_1AM =
-            ENTITIES.register("bmp_1am", () -> vehicle(Bmp1amEntity::new, 3.7f, 2.2f, "bmp_1am"));
+            ENTITIES.register("bmp_1am", () -> vehicle(Bmp1amEntity::new, 4.07f, 2.42f, "bmp_1am"));
     public static final RegistryObject<EntityType<Marder1A2Entity>> MARDER_1A2 =
-            ENTITIES.register("marder_1a2", () -> vehicle(Marder1A2Entity::new, 3.7f, 2.2f, "marder_1a2"));
+            ENTITIES.register("marder_1a2", () -> vehicle(Marder1A2Entity::new, 4.07f, 2.42f, "marder_1a2"));
     public static final RegistryObject<EntityType<M41Entity>> M41 =
-            ENTITIES.register("m41", () -> vehicle(M41Entity::new, 3.7f, 2.2f, "m41"));
+            ENTITIES.register("m41", () -> vehicle(M41Entity::new, 4.07f, 2.42f, "m41"));
     public static final RegistryObject<EntityType<PantherGEntity>> PANTHER_G =
-            ENTITIES.register("panther_g", () -> vehicle(PantherGEntity::new, 3.7f, 2.2f, "panther_g"));
+            ENTITIES.register("panther_g", () -> vehicle(PantherGEntity::new, 4.07f, 2.42f, "panther_g"));
     public static final RegistryObject<EntityType<StugIIIEntity>> STUG_III =
-            ENTITIES.register("stug_iii", () -> vehicle(StugIIIEntity::new, 3.7f, 2.2f, "stug_iii"));
+            ENTITIES.register("stug_iii", () -> vehicle(StugIIIEntity::new, 4.07f, 2.42f, "stug_iii"));
     public static final RegistryObject<EntityType<T62AEntity>> T62A =
-            ENTITIES.register("t_62a", () -> vehicle(T62AEntity::new, 3.7f, 2.2f, "t_62a"));
+            ENTITIES.register("t_62a", () -> vehicle(T62AEntity::new, 4.07f, 2.42f, "t_62a"));
     public static final RegistryObject<EntityType<Tiger1Entity>> TIGER_1 =
-            ENTITIES.register("tiger_1", () -> vehicle(Tiger1Entity::new, 3.7f, 2.2f, "tiger_1"));
+            ENTITIES.register("tiger_1", () -> vehicle(Tiger1Entity::new, 4.07f, 2.42f, "tiger_1"));
     public static final RegistryObject<EntityType<TigerIIEntity>> TIGER_II =
-            ENTITIES.register("tiger_ii", () -> vehicle(TigerIIEntity::new, 3.7f, 2.2f, "tiger_ii"));
+            ENTITIES.register("tiger_ii", () -> vehicle(TigerIIEntity::new, 4.07f, 2.42f, "tiger_ii"));
     public static final RegistryObject<EntityType<S2s25SprutSdEntity>> S2S25_SPRUT_SD =
-            ENTITIES.register("2s25_sprut_sd", () -> vehicle(S2s25SprutSdEntity::new, 3.7f, 2.2f, "2s25_sprut_sd"));
+            ENTITIES.register("2s25_sprut_sd", () -> vehicle(S2s25SprutSdEntity::new, 4.07f, 2.42f, "2s25_sprut_sd"));
     public static final RegistryObject<EntityType<Kamaz4310Entity>> KAMAZ4310 =
-            ENTITIES.register("kamaz4310", () -> vehicle(Kamaz4310Entity::new, 3.7f, 2.2f, "kamaz4310"));
+            ENTITIES.register("kamaz4310", () -> vehicle(Kamaz4310Entity::new, 4.07f, 2.42f, "kamaz4310"));
     public static final RegistryObject<EntityType<Bm21GradEntity>> BM_21_GRAD =
-            ENTITIES.register("bm_21_grad", () -> vehicle(Bm21GradEntity::new, 3.7f, 2.2f, "bm_21_grad"));
+            ENTITIES.register("bm_21_grad", () -> vehicle(Bm21GradEntity::new, 4.07f, 2.42f, "bm_21_grad"));
     public static final RegistryObject<EntityType<Amx10rcEntity>> AMX_10RC =
-            ENTITIES.register("amx_10rc", () -> vehicle(Amx10rcEntity::new, 3.7f, 2.2f, "amx_10rc"));
+            ENTITIES.register("amx_10rc", () -> vehicle(Amx10rcEntity::new, 4.07f, 2.42f, "amx_10rc"));
     public static final RegistryObject<EntityType<Btr60pbEntity>> BTR60PB =
-            ENTITIES.register("btr_60pb", () -> vehicle(Btr60pbEntity::new, 3.7f, 2.2f, "btr_60pb"));
+            ENTITIES.register("btr_60pb", () -> vehicle(Btr60pbEntity::new, 4.07f, 2.42f, "btr_60pb"));
     public static final RegistryObject<EntityType<VbciEntity>> VBCI =
-            ENTITIES.register("vbci", () -> vehicle(VbciEntity::new, 3.7f, 2.2f, "vbci"));
+            ENTITIES.register("vbci", () -> vehicle(VbciEntity::new, 4.07f, 2.42f, "vbci"));
     public static final RegistryObject<EntityType<Lav25Entity>> LAV25 =
-            ENTITIES.register("lav25", () -> vehicle(Lav25Entity::new, 2.5f, 2.2f, "lav25"));
+            ENTITIES.register("lav25", () -> vehicle(Lav25Entity::new, 2.75f, 2.42f, "lav25"));
     public static final RegistryObject<EntityType<M1128Entity>> M1128 =
-            ENTITIES.register("m1128", () -> vehicle(M1128Entity::new, 3.0f, 2.2f, "m1128"));
+            ENTITIES.register("m1128", () -> vehicle(M1128Entity::new, 3.30f, 2.42f, "m1128"));
     public static final RegistryObject<EntityType<Btr152Entity>> BTR152 =
-            ENTITIES.register("btr_152", () -> vehicle(Btr152Entity::new, 3.7f, 2.2f, "btr_152"));
+            ENTITIES.register("btr_152", () -> vehicle(Btr152Entity::new, 4.07f, 2.42f, "btr_152"));
     public static final RegistryObject<EntityType<Ah6jEntity>> AH6J =
             ENTITIES.register("ah_6j", () -> vehicle(Ah6jEntity::new, 2.6f, 2.15f, "ah_6j"));
     public static final RegistryObject<EntityType<Ah1gCobraEntity>> AH1G_COBRA =
@@ -568,115 +568,115 @@ public class ModEntities {
     public static final RegistryObject<EntityType<FittedGroundVehicleEntity>> CHALLENGER_2 =
             ENTITIES.register("challenger_2", () -> vehicle(
                     (type, level) -> new FittedGroundVehicleEntity(type, level, "challenger_2"),
-                    12.04753f, 3.49779f, "challenger_2"));
+                    13.25f, 3.85f, "challenger_2"));
     public static final RegistryObject<EntityType<FittedGroundVehicleEntity>> LECLERC_S1 =
             ENTITIES.register("leclerc_s1", () -> vehicle(
                     (type, level) -> new FittedGroundVehicleEntity(type, level, "leclerc_s1"),
-                    11.05607f, 3.61981f, "leclerc_s1"));
+                    12.16f, 3.98f, "leclerc_s1"));
     public static final RegistryObject<EntityType<FittedGroundVehicleEntity>> M103 =
             ENTITIES.register("m103", () -> vehicle(
                     (type, level) -> new FittedGroundVehicleEntity(type, level, "m103"),
-                    11.30400f, 5.09716f, "m103"));
+                    12.43f, 5.61f, "m103"));
     public static final RegistryObject<EntityType<FittedGroundVehicleEntity>> MBT_70 =
             ENTITIES.register("mbt_70", () -> vehicle(
                     (type, level) -> new FittedGroundVehicleEntity(type, level, "mbt_70"),
-                    9.15977f, 3.53857f, "mbt_70"));
+                    10.08f, 3.89f, "mbt_70"));
     public static final RegistryObject<EntityType<FittedGroundVehicleEntity>> NINE_P_148 =
             ENTITIES.register("9p148", () -> vehicle(
                     (type, level) -> new FittedGroundVehicleEntity(type, level, "9p148"),
-                    2.5f, 2.5f, "9p148"));
+                    2.75f, 2.75f, "9p148"));
     public static final RegistryObject<EntityType<FittedGroundVehicleEntity>> GEPARD =
             ENTITIES.register("gepard", () -> vehicle(
                     (type, level) -> new FittedGroundVehicleEntity(type, level, "gepard"),
-                    3.4f, 3.5f, "gepard"));
+                    3.74f, 3.85f, "gepard"));
     public static final RegistryObject<EntityType<FittedGroundVehicleEntity>> AML_90 =
             ENTITIES.register("aml_90", () -> vehicle(
                     (type, level) -> new FittedGroundVehicleEntity(type, level, "aml_90"),
-                    2.03492700f, 2.38816000f, "aml_90"));
+                    2.24f, 2.63f, "aml_90"));
     public static final RegistryObject<EntityType<FittedGroundVehicleEntity>> ZSL_92 =
             ENTITIES.register("zsl_92", () -> vehicle(
                     (type, level) -> new FittedGroundVehicleEntity(type, level, "zsl_92"),
-                    2.96688300f, 2.36095000f, "zsl_92"));
+                    3.26f, 2.60f, "zsl_92"));
     public static final RegistryObject<EntityType<FittedGroundVehicleEntity>> FV721_FOX =
             ENTITIES.register("fv721_fox", () -> vehicle(
                     (type, level) -> new FittedGroundVehicleEntity(type, level, "fv721_fox"),
-                    2.18051600f, 1.69310700f, "fv721_fox"));
+                    2.40f, 1.86f, "fv721_fox"));
     public static final RegistryObject<EntityType<FittedGroundVehicleEntity>> GAZ_3937_VODNIK_AA =
             ENTITIES.register("gaz_3937_vodnik_aa", () -> vehicle(
                     (type, level) -> new FittedGroundVehicleEntity(type, level, "gaz_3937_vodnik_aa"),
-                    2.79907200f, 3.67378200f, "gaz_3937_vodnik_aa"));
+                    3.08f, 4.04f, "gaz_3937_vodnik_aa"));
     public static final RegistryObject<EntityType<FittedGroundVehicleEntity>> BMD_1 =
             ENTITIES.register("bmd_1", () -> vehicle(
                     (type, level) -> new FittedGroundVehicleEntity(type, level, "bmd_1"),
-                    2.61633800f, 1.96880100f, "bmd_1"));
+                    2.88f, 2.17f, "bmd_1"));
     public static final RegistryObject<EntityType<FittedGroundVehicleEntity>> BTR_ZD =
             ENTITIES.register("btr_zd", () -> vehicle(
                     (type, level) -> new FittedGroundVehicleEntity(type, level, "btr_zd"),
-                    2.47680000f, 2.93419800f, "btr_zd"));
+                    2.72f, 3.23f, "btr_zd"));
     public static final RegistryObject<EntityType<FittedGroundVehicleEntity>> WARRIOR =
             ENTITIES.register("warrior", () -> vehicle(
                     (type, level) -> new FittedGroundVehicleEntity(type, level, "warrior"),
-                    2.95699600f, 1.90781100f, "warrior"));
+                    3.25f, 2.10f, "warrior"));
     public static final RegistryObject<EntityType<FittedGroundVehicleEntity>> BEGLEITPANZER =
             ENTITIES.register("begleitpanzer", () -> vehicle(
                     (type, level) -> new FittedGroundVehicleEntity(type, level, "begleitpanzer"),
-                    3.10325400f, 1.84414700f, "begleitpanzer"));
+                    3.41f, 2.03f, "begleitpanzer"));
     public static final RegistryObject<EntityType<FittedGroundVehicleEntity>> TYPE_89_IFV =
             ENTITIES.register("type_89_ifv", () -> vehicle(
                     (type, level) -> new FittedGroundVehicleEntity(type, level, "type_89_ifv"),
-                    3.40000000f, 1.95680000f, "type_89_ifv"));
+                    3.74f, 2.15f, "type_89_ifv"));
     public static final RegistryObject<EntityType<FittedGroundVehicleEntity>> BTR_90 =
             ENTITIES.register("btr_90", () -> vehicle(
                     (type, level) -> new FittedGroundVehicleEntity(type, level, "btr_90"),
-                    9.29722f, 2.93303f, "btr_90"));
+                    10.23f, 3.23f, "btr_90"));
     public static final RegistryObject<EntityType<FittedGroundVehicleEntity>> LEOPARD_2A7 =
             ENTITIES.register("leopard_2a7", () -> vehicle(
                     (type, level) -> new FittedGroundVehicleEntity(type, level, "leopard_2a7"),
-                    14.23741f, 3.77539f, "leopard_2a7"));
+                    15.66f, 4.15f, "leopard_2a7"));
     public static final RegistryObject<EntityType<FittedGroundVehicleEntity>> LEOPARD_2A4 =
             ENTITIES.register("leopard_2a4", () -> vehicle(
                     (type, level) -> new FittedGroundVehicleEntity(type, level, "leopard_2a4"),
-                    11.32897f, 3.76247f, "leopard_2a4"));
+                    12.46f, 4.14f, "leopard_2a4"));
     public static final RegistryObject<EntityType<FittedGroundVehicleEntity>> LAV_III =
             ENTITIES.register("lav_iii", () -> vehicle(
                     (type, level) -> new FittedGroundVehicleEntity(type, level, "lav_iii"),
-                    8.35951f, 4.20007f, "lav_iii"));
+                    9.20f, 4.62f, "lav_iii"));
     public static final RegistryObject<EntityType<FittedGroundVehicleEntity>> K2A1_BLACK_PANTHER =
             ENTITIES.register("k2a1_black_panther", () -> vehicle(
                     (type, level) -> new FittedGroundVehicleEntity(type, level, "k2a1_black_panther"),
-                    15.01081f, 4.37306f, "k2a1_black_panther"));
+                    16.51f, 4.81f, "k2a1_black_panther"));
     public static final RegistryObject<EntityType<FittedGroundVehicleEntity>> M109A7_PALADIN =
             ENTITIES.register("m109a7_paladin", () -> vehicle(
                     (type, level) -> new FittedGroundVehicleEntity(type, level, "m109a7_paladin"),
-                    15.80975f, 5.35243f, "m109a7_paladin"));
+                    17.39f, 5.89f, "m109a7_paladin"));
     public static final RegistryObject<EntityType<FittedGroundVehicleEntity>> MARDER_1A5 =
             ENTITIES.register("marder_1a5", () -> vehicle(
                     (type, level) -> new FittedGroundVehicleEntity(type, level, "marder_1a5"),
-                    7.06807f, 3.07481f, "marder_1a5"));
+                    7.77f, 3.38f, "marder_1a5"));
     public static final RegistryObject<EntityType<FittedGroundVehicleEntity>> ZBD_09 =
             ENTITIES.register("zbd_09", () -> vehicle(
                     (type, level) -> new FittedGroundVehicleEntity(type, level, "zbd_09"),
-                    9.17936f, 2.84484f, "zbd_09"));
+                    10.10f, 3.13f, "zbd_09"));
     public static final RegistryObject<EntityType<FittedGroundVehicleEntity>> ZTL_09 =
             ENTITIES.register("ztl_09", () -> vehicle(
                     (type, level) -> new FittedGroundVehicleEntity(type, level, "ztl_09"),
-                    11.98627f, 3.21714f, "ztl_09"));
+                    13.18f, 3.54f, "ztl_09"));
     public static final RegistryObject<EntityType<FittedGroundVehicleEntity>> PZH_2000 =
             ENTITIES.register("pzh_2000", () -> vehicle(
                     (type, level) -> new FittedGroundVehicleEntity(type, level, "pzh_2000"),
-                    18.89894f, 4.67317f, "pzh_2000"));
+                    20.79f, 5.14f, "pzh_2000"));
     public static final RegistryObject<EntityType<FittedGroundVehicleEntity>> QN_506MODEL =
             ENTITIES.register("qn_506model", () -> vehicle(
                     (type, level) -> new FittedGroundVehicleEntity(type, level, "qn_506model"),
-                    6.72442f, 5.09355f, "qn_506model"));
+                    7.40f, 5.60f, "qn_506model"));
     public static final RegistryObject<EntityType<FittedGroundVehicleEntity>> TUNGUSKA =
             ENTITIES.register("tunguska", () -> vehicle(
                     (type, level) -> new FittedGroundVehicleEntity(type, level, "tunguska"),
-                    3.34f, 4.05f, "tunguska"));
+                    3.67f, 4.46f, "tunguska"));
     public static final RegistryObject<EntityType<FittedGroundVehicleEntity>> VT_4A1 =
             ENTITIES.register("vt_4a1", () -> vehicle(
                     (type, level) -> new FittedGroundVehicleEntity(type, level, "vt_4a1"),
-                    12.12491f, 4.02015f, "vt_4a1"));
+                    13.34f, 4.42f, "vt_4a1"));
 
     public static final RegistryObject<EntityType<AuthoredHelicopter>> MI_24A =
             ENTITIES.register("mi_24a", () -> vehicle(

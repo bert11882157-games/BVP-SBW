@@ -6,10 +6,7 @@
     "Texture": "berts_vehicle_pack:textures/entity/aml_90.png",
     "WreckTexture": "berts_vehicle_pack:textures/entity_dead/aml_90.png"
   },
-  "MouseSpeed": [
-    0.2,
-    0.2
-  ],
+  "MouseSpeed": [0.2, 0.2],
   "FittedGroundRig": {
     "Schema": 1,
     "Frame": "RUNTIME_MODEL_PIXELS",
@@ -18,9 +15,9 @@
         "Bone": "roof_gun",
         "Parent": "turret",
         "Pivot": [
-          -4.30022,
-          35.50756,
-          -1.53579
+          -4.73024,
+          39.05832,
+          -1.68937
         ]
       }
     ]
@@ -64,8 +61,8 @@
         "Id": "fitted_exhaust_face_000",
         "Position": [
           0,
-          0.85428563,
-          -2.10211813
+          0.93971,
+          -2.31233
         ]
       }
     ]

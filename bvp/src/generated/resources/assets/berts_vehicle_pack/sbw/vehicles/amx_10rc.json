@@ -6,10 +6,7 @@
     "Texture": "berts_vehicle_pack:textures/entity/amx_10rc.png",
     "WreckTexture": "berts_vehicle_pack:textures/entity_dead/amx_10rc.png"
   },
-  "MouseSpeed": [
-    0.2,
-    0.2
-  ],
+  "MouseSpeed": [0.2, 0.2],
   "RunningGear": {
     "Type": "WHEELED",
     "RoadWheelCount": 3,
@@ -33,17 +30,17 @@
       {
         "Id": "engine_exhaust_000",
         "Position": [
-          0.36017,
-          0.93741,
-          3.7818
+          0.39619,
+          1.03115,
+          4.15998
         ]
       },
       {
         "Id": "engine_exhaust_001",
         "Position": [
-          -0.36017,
-          0.93741,
-          3.7818
+          -0.39619,
+          1.03115,
+          4.15998
         ]
       }
     ]

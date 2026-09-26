@@ -7,40 +7,40 @@
   "OBB": [
     {
       "Size": [
-        2.21616,
-        0.8141,
-        4.47754
+        2.43778,
+        0.89551,
+        4.92529
       ],
       "Position": [
         0,
-        1.04024,
-        0.04523
+        1.14426,
+        0.04975
       ]
     },
     {
       "Part": "MainEngine",
       "Size": [
-        1.04024,
-        0.58796,
-        0.70555
+        1.14426,
+        0.64676,
+        0.77611
       ],
       "Position": [
         0,
-        1.04024,
-        -3.63631
+        1.14426,
+        -3.99994
       ]
     },
     {
       "Part": "Turret",
       "Size": [
-        1.40206,
-        0.63319,
-        1.67342
+        1.54227,
+        0.69651,
+        1.84076
       ],
       "Position": [
         0,
-        -0.04523,
-        0.18091
+        -0.04975,
+        0.199
       ],
       "Transform": "Turret",
       "Rotation": "Turret"
@@ -54,7 +54,7 @@
       "Transform": "Vehicle",
       "Position": [
         0,
-        1.87499,
+        2.06249,
         0
       ],
       "MinPitch": -60,
@@ -64,8 +64,8 @@
       "CameraPos": {
         "UseSimulate3P": true,
         "Simulate3PPos": [
-          6,
-          1
+          6.6,
+          1.1
         ]
       }
     }
@@ -78,9 +78,9 @@
   "EngineInfo": {
     "Buoyancy": 0,
     "EnergyCostRate": 120,
-    "WheelRotSpeed": 1.25,
+    "WheelRotSpeed": 1.13636,
     "WheelDifferential": 0.75,
-    "TrackRotSpeed": 1.7,
+    "TrackRotSpeed": 1.54545,
     "TrackDifferential": 0.6,
     "MaxForwardSpeedRate": 0.7799999999999999,
     "MaxBackwardSpeedRate": 0.7799999999999999,
@@ -91,13 +91,13 @@
   },
   "TurretPos": [
     0,
-    1.79545,
+    1.975,
     0
   ],
   "BarrelPos": [
     0,
-    0.67841,
-    -1.35683
+    0.74625,
+    -1.49251
   ],
   "TurretTurnSpeed": [
     56,
@@ -109,7 +109,7 @@
   ],
   "HasDecoy": false,
   "UpStep": 1.5,
-  "RotateOffsetHeight": 3.07729,
+  "RotateOffsetHeight": 3.38502,
   "Mass": 16,
   "DamageModifiers": [
     "minecraft:arrow 0",
@@ -152,8 +152,8 @@
   },
   "ThirdPersonCameraPos": [
     0,
-    1.26638,
-    3.79913
+    1.39302,
+    4.17904
   ],
   "VehicleIcon": "superbwarfare:textures/vehicle_icon/bmp_2_icon.png",
   "ContainerIcon": "superbwarfare:textures/gui/vehicle/type/land.png",
@@ -188,64 +188,64 @@
   "HudType": "@Land",
   "TerrainCompat": [
     [
-      2.12751,
+      2.34026,
       0,
-      2.71004
+      2.98104
     ],
     [
-      -2.12751,
+      -2.34026,
       0,
-      2.71004
+      2.98104
     ],
     [
-      2.12751,
+      2.34026,
       0,
-      1.63362
+      1.79698
     ],
     [
-      -2.12751,
+      -2.34026,
       0,
-      1.63362
+      1.79698
     ],
     [
-      2.12751,
+      2.34026,
       0,
-      0.56987
+      0.62686
     ],
     [
-      -2.12751,
+      -2.34026,
       0,
-      0.56987
+      0.62686
     ],
     [
-      2.12751,
+      2.34026,
       0,
-      -0.49389
+      -0.54328
     ],
     [
-      -2.12751,
+      -2.34026,
       0,
-      -0.49389
+      -0.54328
     ],
     [
-      2.12751,
+      2.34026,
       0,
-      -1.63362
+      -1.79698
     ],
     [
-      -2.12751,
+      -2.34026,
       0,
-      -1.63362
+      -1.79698
     ],
     [
-      2.12751,
+      2.34026,
       0,
-      -2.77336
+      -3.0507
     ],
     [
-      -2.12751,
+      -2.34026,
       0,
-      -2.77336
+      -3.0507
     ]
   ]
 }
