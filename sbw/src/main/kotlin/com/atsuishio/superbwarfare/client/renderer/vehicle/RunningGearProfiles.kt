@@ -59,6 +59,23 @@ data class TrackPathProfile(
     val rotationX: List<TrackPathKeyframe>,
 )
 
+/** Runtime belt around the wheels (TrackBeltPath); `enabled` false keeps the authored path. */
+data class TrackAutoProfile @JvmOverloads constructor(
+    val enabled: Boolean = true,
+    val offsetX: Float = 0F,
+    val offsetY: Float = 0F,
+    val radii: Map<String, Float> = emptyMap(),
+    val leftOrder: List<String> = emptyList(),
+    val rightOrder: List<String> = emptyList(),
+    val farLinksBlocks: Float = 96F,
+) {
+    fun order(side: RunningGearSide): List<String> = if (side == RunningGearSide.LEFT) leftOrder else rightOrder
+
+    companion object {
+        @JvmField val DEFAULT = TrackAutoProfile()
+    }
+}
+
 data class TrackRenderProfile @JvmOverloads constructor(
     val mode: TrackRenderMode,
     val linkCount: Int,
@@ -69,6 +86,7 @@ data class TrackRenderProfile @JvmOverloads constructor(
     val path: TrackPathProfile,
     val linkHalfThickness: Float = 0F,
     val linkFit: TrackLinkFit = TrackLinkFit.CONTACT_INTERVAL,
+    val auto: TrackAutoProfile = TrackAutoProfile.DEFAULT,
 ) {
     fun side(side: RunningGearSide): TrackSideProfile = requireNotNull(sides[side])
 
@@ -232,7 +250,25 @@ object RunningGearProfiles {
             path,
             raw.linkHalfThickness,
             linkFit,
+            raw.auto?.let(::validateAuto) ?: TrackAutoProfile.DEFAULT,
         )
+    }
+
+    private fun validateAuto(raw: RunningGearResource.TrackAuto): TrackAutoProfile {
+        require(raw.offsetX.isFinite() && kotlin.math.abs(raw.offsetX) <= 64F) { "TrackRender.Auto.OffsetX must be finite, |x| <= 64" }
+        require(raw.offsetY.isFinite() && kotlin.math.abs(raw.offsetY) <= 64F) { "TrackRender.Auto.OffsetY must be finite, |y| <= 64" }
+        require(raw.farLinksBlocks.isFinite() && raw.farLinksBlocks >= 0F) { "TrackRender.Auto.FarLinksBlocks must be >= 0" }
+        val radii = LinkedHashMap<String, Float>()
+        for ((name, value) in raw.radii) {
+            requireName(name, "TrackRender.Auto.Radii bone")
+            require(value != null && value.isFinite() && value > 0F && value <= 256F) { "TrackRender.Auto.Radii.$name must be in (0,256]" }
+            radii[name] = value
+        }
+        val order = raw.order
+        return TrackAutoProfile(raw.isEnabled, raw.offsetX, raw.offsetY, java.util.Map.copyOf(radii),
+            order?.let { validateNames(it.left, "TrackRender.Auto.Order.Left") } ?: emptyList(),
+            order?.let { validateNames(it.right, "TrackRender.Auto.Order.Right") } ?: emptyList(),
+            raw.farLinksBlocks)
     }
 
     private fun validateSide(

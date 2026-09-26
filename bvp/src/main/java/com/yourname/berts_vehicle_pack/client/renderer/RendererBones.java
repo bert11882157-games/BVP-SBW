@@ -30,6 +30,12 @@ final class RendererBones {
         }
     }
 
+    /** The bone's authored position (before any offset this class applied), without recording it. */
+    static float[] basePosition(BedrockBone bone) {
+        float[] base = BASE_BONE_POSITIONS.get(bone);
+        return base != null ? base : new float[]{bone.x, bone.y, bone.z};
+    }
+
     static void setPositionOffset(BedrockBone bone, float x, float y, float z) {
         setPositionOffset(bone, x, y, z, true);
     }

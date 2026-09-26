@@ -126,6 +126,14 @@ public final class RunningGearResource {
         @SerializedName("Path")
         private TrackPath path;
 
+        @SerializedName("Auto")
+        private TrackAuto auto;
+
+        /** Runtime belt from the wheels; absent means the default automatic belt. */
+        public @Nullable TrackAuto getAuto() {
+            return auto;
+        }
+
         public String getMode() {
             return mode;
         }
@@ -162,6 +170,44 @@ public final class RunningGearResource {
             return path;
         }
 
+    }
+
+    /** Belt traced at runtime around the side's wheels (see TrackBeltPath). */
+    public static final class TrackAuto {
+        @SerializedName("Enabled")
+        private boolean enabled = true;
+
+        /** Model pixels outward from each side's links (the same for both sides). */
+        @SerializedName("OffsetX")
+        private float offsetX;
+
+        /** Model pixels up for the whole belt (both sides). */
+        @SerializedName("OffsetY")
+        private float offsetY;
+
+        /** Wheel radius overrides in model pixels, by bone name. */
+        @SerializedName("Radii")
+        private java.util.Map<String, Float> radii;
+
+        /** Optional explicit wheel order per side (lets a belt sag onto rollers); default is the convex hull. */
+        @SerializedName("Order")
+        private WheelBones order;
+
+        /** Beyond this many blocks from the camera the static fallback track is drawn instead of the links. */
+        @SerializedName("FarLinksBlocks")
+        private float farLinksBlocks = 96.0F;
+
+        public boolean isEnabled() { return enabled; }
+
+        public float getOffsetX() { return offsetX; }
+
+        public float getOffsetY() { return offsetY; }
+
+        public java.util.Map<String, Float> getRadii() { return radii == null ? java.util.Map.of() : radii; }
+
+        public @Nullable WheelBones getOrder() { return order; }
+
+        public float getFarLinksBlocks() { return farLinksBlocks; }
     }
 
     public static class TrackBounds {

@@ -14,6 +14,11 @@ public final class ClientRenderPerformanceDiagnostics {
     public static final long TIMER_DISABLED = Long.MIN_VALUE;
 
     private static volatile boolean enabled;
+    /** Held by the diagnostic perf probe so Elite's per-tick shutdown does not stop its counters. */
+    private static volatile boolean probeActive;
+    /** A/B switch for the batched direct VBO draw (BVP); only the perf probe sets it. */
+    private static volatile boolean batchingDisabled;
+    private static long batchPasses;
     private static long lastFrameNanos = Long.MIN_VALUE;
 
     private static long frameIntervals;
@@ -54,6 +59,34 @@ public final class ClientRenderPerformanceDiagnostics {
 
     public static boolean isEnabled() {
         return enabled;
+    }
+
+    public static boolean isProbeActive() {
+        return probeActive;
+    }
+
+    /** Diagnostic launches only: the perf probe owns the counters for its capture window. */
+    public static void setProbeActive(boolean value) {
+        probeActive = value && DebugFeaturePolicy.allowsDebugTools();
+        setEnabled(probeActive);
+    }
+
+    public static boolean isBatchingDisabled() {
+        return batchingDisabled;
+    }
+
+    public static void setBatchingDisabled(boolean value) {
+        batchingDisabled = value && DebugFeaturePolicy.allowsDebugTools();
+    }
+
+    public static void recordBatchPass() {
+        if (enabled) {
+            batchPasses++;
+        }
+    }
+
+    public static long batchPasses() {
+        return batchPasses;
     }
 
     public static void setEnabled(boolean value) {
@@ -190,6 +223,7 @@ public final class ClientRenderPerformanceDiagnostics {
         polyMeshUploads = 0L;
         polyMeshUploadBytes = 0L;
         polyMeshDrawCalls = 0L;
+        batchPasses = 0L;
         linksTransformRebuilds = 0L;
         linksEvaluated = 0L;
         linksTransformNanos = 0L;

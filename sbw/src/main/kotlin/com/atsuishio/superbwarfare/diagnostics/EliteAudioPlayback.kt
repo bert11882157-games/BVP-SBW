@@ -70,7 +70,7 @@ object EliteAudioPlayback {
         if (event.phase != TickEvent.Phase.END) return
         if (!EliteDiagnostics.isClientEnabled()) {
             playing.clear(); observedSession = null; seededSession = null; lastPerformanceTick = Long.MIN_VALUE
-            ClientRenderPerformanceDiagnostics.setEnabled(false)
+            if (!ClientRenderPerformanceDiagnostics.isProbeActive()) ClientRenderPerformanceDiagnostics.setEnabled(false)
             return
         }
         NetworkTelemetry.tickClient()

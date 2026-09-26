@@ -96,7 +96,7 @@ class AircraftWheelSupportTest {
     @Test fun expansionSourceWheelSetsSettleFromLevelAndNoseFirstWithoutSuspendedMains() {
         val authored = Json.parseToJsonElement(javaClass.getResourceAsStream("/aircraft_expansion_wheel_contact_fits.json")!!
             .bufferedReader().use { it.readText() }).jsonObject
-        assertEquals(13, authored.size)
+        assertEquals(12, authored.size)   // f_16a removed
         val scene = Scene(listOf(floor))
         val spread: (String) -> Matrix4d = { Matrix4d() }
         for ((id, json) in authored) for (pitch in listOf(0.0,2.0)) {
@@ -180,8 +180,8 @@ class AircraftWheelSupportTest {
     }
 
     @Test fun allReviewedFleetLayoutsReachRealSecondarySupportGradually() {
-        assertEquals(34, fits.size)
-        assertEquals(164, fits.values.sumOf { it.wheelContacts.size })
+        assertEquals(33, fits.size)   // saab_105 removed
+        assertEquals(161, fits.values.sumOf { it.wheelContacts.size })
         val scene = Scene(listOf(floor))
         for ((id, data) in fits) {
             val group = if (data.wheelContacts.any { it.group == nose }) nose else tail

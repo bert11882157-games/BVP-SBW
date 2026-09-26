@@ -96,7 +96,7 @@ object EliteDiagnostics {
         if (!enabled) NetworkTelemetry.flushElite(force = true)
         clientSink?.close()
         clientSink = if (enabled) open(session, "client") else null
-        ClientRenderPerformanceDiagnostics.setEnabled(enabled)
+        if (!ClientRenderPerformanceDiagnostics.isProbeActive()) ClientRenderPerformanceDiagnostics.setEnabled(enabled)
     }
 
     private fun open(session: UUID, side: String, entityIds: Set<UUID>? = null): EliteDiagnosticSink {

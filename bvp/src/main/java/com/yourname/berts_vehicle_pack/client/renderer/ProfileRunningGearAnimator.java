@@ -33,9 +33,10 @@ final class ProfileRunningGearAnimator {
                 * layout.left.profile.getDirection();
         float rightPhase = RunningGearTrackEvaluator.normalizePhase(state.getRightTrackPhase(), wrapRange)
                 * layout.right.profile.getDirection();
-        animate(layout.left, trackProfile, leftPhase);
-        animate(layout.right, trackProfile, rightPhase);
-        applyVisibility(entity, layout);
+        boolean far = far(entity, trackProfile);
+        if (!far || layout.left.fallbackTrack == null) animate(layout.left, trackProfile, leftPhase);
+        if (!far || layout.right.fallbackTrack == null) animate(layout.right, trackProfile, rightPhase);
+        applyVisibility(entity, layout, far);
         recordVisibility(entity, layout);
     }
 
@@ -55,20 +56,32 @@ final class ProfileRunningGearAnimator {
         }
     }
 
+    /** Beyond the profile's link distance the static fallback track stands in for the animated links. */
+    private static boolean far(GeoVehicleEntity entity, TrackRenderProfile profile) {
+        float limit = profile.getAuto().getFarLinksBlocks();
+        if (!(limit > 0.0F)) return false;
+        var camera = net.minecraft.client.Minecraft.getInstance().gameRenderer.getMainCamera();
+        if (camera == null) return false;
+        return camera.getPosition().distanceToSqr(entity.position()) > (double) limit * limit;
+    }
+
     private RuntimeLayout layout(PolyMeshModel model, RunningGearProfile profile, TrackRenderProfile trackProfile) {
         if (this.cachedModel != model || this.cachedProfile != profile) {
             this.cachedModel = model;
             this.cachedProfile = profile;
             this.cachedLayout = new RuntimeLayout(
-                    buildSide(model, trackProfile.side(RunningGearSide.LEFT), trackProfile.getLinkCount()),
-                    buildSide(model, trackProfile.side(RunningGearSide.RIGHT), trackProfile.getLinkCount()),
+                    buildSide(model, trackProfile, RunningGearSide.LEFT, profile.getLeftWheelBones()),
+                    buildSide(model, trackProfile, RunningGearSide.RIGHT, profile.getRightWheelBones()),
                     RunningGearAnimationSupport.wheels(model, profile.getLeftWheelBones()),
                     RunningGearAnimationSupport.wheels(model, profile.getRightWheelBones()));
         }
         return this.cachedLayout;
     }
 
-    private static SideLayout buildSide(PolyMeshModel model, TrackSideProfile profile, int linkCount) {
+    private static SideLayout buildSide(PolyMeshModel model, TrackRenderProfile trackProfile, RunningGearSide sideId,
+                                        java.util.List<String> wheelNames) {
+        TrackSideProfile profile = trackProfile.side(sideId);
+        int linkCount = trackProfile.getLinkCount();
         LinkBonePair[] links = new LinkBonePair[linkCount];
         boolean linksReady = true;
         for (int index = 0; index < linkCount; index++) {
@@ -94,6 +107,20 @@ final class ProfileRunningGearAnimator {
             }
         }
         BedrockBone trackParent = model.getBone(profile.getTrackBone());
+        AutoTrackLayout auto = null;
+        if (linksReady && links.length > 0) {
+            BedrockBone[] moves = new BedrockBone[links.length];
+            BedrockBone[] rotations = new BedrockBone[links.length];
+            for (int index = 0; index < links.length; index++) {
+                moves[index] = links[index].moveBone;
+                rotations[index] = links[index].rotationBone;
+            }
+            try {
+                auto = AutoTrackLayout.build(model, sideId, trackProfile.getAuto(), wheelNames, moves, rotations);
+            } catch (RuntimeException failure) {
+                auto = null;   // an unmeasurable model keeps its authored path
+            }
+        }
         return new SideLayout(
                 profile,
                 links,
@@ -101,14 +128,19 @@ final class ProfileRunningGearAnimator {
                 trackParent,
                 model.getBone(profile.getBrokenBone()),
                 model.getBone(profile.getFallbackBone()),
-                trackParent != null && (linksReady || legacyFrames.length > 0));
+                trackParent != null && (linksReady || legacyFrames.length > 0),
+                auto);
     }
 
     private static void animate(SideLayout side, TrackRenderProfile profile, float phase) {
         if (Float.compare(side.lastPhase, phase) == 0) {
             return;
         }
-        if (side.links.length > 0) {
+        if (side.auto != null) {
+            long performanceStarted = ClientRenderPerformanceDiagnostics.startTimer();
+            side.auto.animate(phase * 0.01F * side.auto.length());
+            ClientRenderPerformanceDiagnostics.recordLinksTransformRebuild(performanceStarted, side.auto.count);
+        } else if (side.links.length > 0) {
             long performanceStarted = ClientRenderPerformanceDiagnostics.startTimer();
             for (LinkBonePair link : side.links) {
                 RunningGearTrackEvaluator.linkPoseInto(
@@ -130,17 +162,17 @@ final class ProfileRunningGearAnimator {
         side.lastPhase = phase;
     }
 
-    private static void applyVisibility(GeoVehicleEntity entity, RuntimeLayout layout) {
+    private static void applyVisibility(GeoVehicleEntity entity, RuntimeLayout layout, boolean far) {
         ArmoredVehicleEntity armored = entity instanceof ArmoredVehicleEntity value ? value : null;
         boolean canShowBroken = armored != null && !armored.isWreck();
-        applyVisibility(layout.left, canShowBroken && BvpFarVehicleVisuals.trackBroken(armored, true));
-        applyVisibility(layout.right, canShowBroken && BvpFarVehicleVisuals.trackBroken(armored, false));
+        applyVisibility(layout.left, canShowBroken && BvpFarVehicleVisuals.trackBroken(armored, true), far);
+        applyVisibility(layout.right, canShowBroken && BvpFarVehicleVisuals.trackBroken(armored, false), far);
     }
 
-    private static void applyVisibility(SideLayout side, boolean brokenRequested) {
+    private static void applyVisibility(SideLayout side, boolean brokenRequested, boolean far) {
         TrackVisualState state = RunningGearVisualSelector.select(
                 brokenRequested,
-                side.intactReady,
+                side.intactReady && !(far && side.fallbackTrack != null),
                 side.brokenTrack != null,
                 side.fallbackTrack != null);
         if (side.visualStateInitialized && side.lastVisualState == state) {
@@ -175,6 +207,7 @@ final class ProfileRunningGearAnimator {
         final BedrockBone brokenTrack;
         final BedrockBone fallbackTrack;
         final boolean intactReady;
+        final AutoTrackLayout auto;
         final float[] currentPose = new float[4];
         float lastPhase = Float.NaN;
         TrackVisualState lastVisualState;
@@ -182,7 +215,7 @@ final class ProfileRunningGearAnimator {
 
         SideLayout(TrackSideProfile profile, LinkBonePair[] links, BedrockBone[] legacyFrames,
                    BedrockBone trackParent, BedrockBone brokenTrack, BedrockBone fallbackTrack,
-                   boolean intactReady) {
+                   boolean intactReady, AutoTrackLayout auto) {
             this.profile = profile;
             this.links = links;
             this.legacyFrames = legacyFrames;
@@ -190,6 +223,7 @@ final class ProfileRunningGearAnimator {
             this.brokenTrack = brokenTrack;
             this.fallbackTrack = fallbackTrack;
             this.intactReady = intactReady;
+            this.auto = auto;
         }
     }
 

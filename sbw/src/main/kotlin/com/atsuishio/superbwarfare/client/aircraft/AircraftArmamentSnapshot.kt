@@ -162,7 +162,7 @@ data class AircraftArmamentSnapshot(
     /** Launches alternate across the mount's physical positions. Pods stay after firing. */
     fun storePresent(mount: AircraftMountView, position: Int): Boolean {
         val store = stores[selections[mount.id]] ?: return false
-        if (store.category !in setOf("LASER_GUIDED", "COMMAND_GUIDED", "BOMB", "CRUISE") && !store.guidedAirToAir) return true
+        if (store.category !in RELEASED_ONE_BY_ONE && !store.guidedAirToAir) return true
         val capacity = store.capacity ?: 1
         return (fired[mount.id] ?: 0) < (capacity - 1) * mount.positions.size * (counts[mount.id] ?: 1) + position + 1
     }
@@ -177,6 +177,8 @@ data class AircraftArmamentSnapshot(
     })
 
     companion object {
+        /** Stores whose munitions leave the rack one at a time (checked per store, per frame, while drawing). */
+        private val RELEASED_ONE_BY_ONE = setOf("LASER_GUIDED", "COMMAND_GUIDED", "BOMB", "CRUISE")
         private val categories = setOf("COMMAND_GUIDED", "LASER_GUIDED", "GUN_POD", "BOMB", "AIR_TO_AIR", "AIR_TO_GROUND", "ANTI_RADIATION", "CRUISE", "ROCKET_POD", "VISUAL_ONLY")
 
         fun decode(json: JsonObject): AircraftArmamentSnapshot? = try {
