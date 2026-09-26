@@ -166,7 +166,8 @@ object FxLights {
             val lv = l.current(now)
             if (lv < 2.0) continue
             val r = min(l.radius, MAX_POOL_RADIUS.toDouble())
-            val strength = (lv / 15.0) * 0.55
+            // a soft warm tint on the ground, not a painted patch: strong only right under a big fireball
+            val strength = (lv / 15.0) * (lv / 15.0) * 0.32
             val bx0 = kotlin.math.floor(l.x - r).toInt(); val bx1 = kotlin.math.floor(l.x + r).toInt()
             val bz0 = kotlin.math.floor(l.z - r).toInt(); val bz1 = kotlin.math.floor(l.z + r).toInt()
             for (bx in bx0..bx1) for (bz in bz0..bz1) {
@@ -198,7 +199,7 @@ object FxLights {
         for (q in 0 until quads) {
             val o = q * 12
             for (v in 0 until 4) {
-                builder.vertex(pose, pq[o + v * 3], py[q], pq[o + v * 3 + 1]).color(1f, 0.62f, 0.3f, pq[o + v * 3 + 2]).endVertex()
+                builder.vertex(pose, pq[o + v * 3], py[q], pq[o + v * 3 + 1]).color(1f, 0.5f, 0.22f, pq[o + v * 3 + 2]).endVertex()
             }
         }
         RenderSystem.setShader { GameRenderer.getPositionColorShader() }
@@ -240,6 +241,6 @@ object FxLights {
         val d = sqrt(dx * dx + dy * dy + dz * dz) / r
         if (d >= 1.0) return 0f
         val f = 1.0 - d
-        return (strength * f * f).toFloat()
+        return (strength * f * f * f).toFloat()        // falls off fast: a pool round the source, no hard rim
     }
 }

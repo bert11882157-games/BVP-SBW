@@ -125,6 +125,8 @@ class Loft:
         deg = 4 if len(self.z) > 12 else 2
         coef = np.polynomial.polynomial.polyfit(self.z - zc, yb, deg)
         Yb = np.polynomial.polynomial.polyval(self.z - zc, coef)
+        if 'lip' in cfg:
+            Yb = np.full(len(self.z), float(cfg['lip']))
         # --- spine: through frame tops, over the heads and everything in the cockpit, onto the skin at both ends ---
         pts = []
         for f in ev.frames:
@@ -157,6 +159,8 @@ class Loft:
         for _ in range(6):
             S = ndimage.gaussian_filter1d(S, 1.5, mode='nearest')
             S = np.maximum(S, need_c)
+        if 'spine_max' in cfg:
+            S = np.minimum(S, float(cfg['spine_max']))
         S[0], S[-1] = Yb[0], Yb[-1]
         self.S = np.maximum(S, Yb)
         self.W, self.Yb, self.anchors = W, Yb, pts
