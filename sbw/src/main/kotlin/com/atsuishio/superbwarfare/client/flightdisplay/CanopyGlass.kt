@@ -34,9 +34,9 @@ import kotlin.math.sqrt
  */
 @EventBusSubscriber(modid = Mod.MODID, value = [Dist.CLIENT])
 object CanopyGlass {
-    private const val BASE_ALPHA = 0.07f
-    private const val EDGE_ALPHA = 0.30f
-    private const val MAX_ALPHA = 0.42f
+    private const val BASE_ALPHA = 0.045f
+    private const val EDGE_ALPHA = 0.20f
+    private const val MAX_ALPHA = 0.28f
     private const val TINT_R = 205; private const val TINT_G = 228; private const val TINT_B = 240
     private const val VERTEX_FLOATS = 7            // x y z (view space), r g b a
     private const val MAX_VERTICES = 300_000
