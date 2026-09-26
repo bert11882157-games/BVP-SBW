@@ -222,11 +222,18 @@ public class DefaultVehicleResource implements IDBasedData<DefaultVehicleResourc
         return canopyGlass;
     }
 
-    /** VEHICLE_LOCAL_BLOCKS (+X left, +Y up, +Z forward) glass triangles, three xyz corners each. */
+    /**
+     * VEHICLE_LOCAL_BLOCKS (+X left, +Y up, +Z forward) canopy glass. Schema 1: loose triangles, three xyz corners
+     * each. Schema 2: a dome - the apex and, for each spoke round it, Rings points from the apex out to the rim
+     * (neighbouring spokes, wrapping round, are joined into one sheet).
+     */
     public static final class CanopyGlassResource {
         @SerializedName("Schema") public int schema;
         @SerializedName("Frame") public String frame;
         @SerializedName("Triangles") public double[] triangles;
+        @SerializedName("Apex") public double[] apex;
+        @SerializedName("Rings") public int rings;
+        @SerializedName("Spokes") public double[][] spokes;
     }
 
     @SerializedName("CockpitGauges")

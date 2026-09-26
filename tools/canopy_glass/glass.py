@@ -107,6 +107,29 @@ DOWN = np.array([0.0, -1.0, 0.0])
 DOWN_RANGE = 0.9       # blocks: glass lower than this above the fuselage skin is air beside the nose
 
 
+def down_distance(caster, point, reach):
+    """Distance straight down from point to the first opaque surface within reach, or None."""
+    lo, hi = 0.005, reach
+    if not caster_hits_from(caster, point, DOWN, lo, hi):
+        return None
+    for _ in range(12):
+        mid = (lo + hi) / 2
+        if caster_hits_from(caster, point, DOWN, lo, mid):
+            hi = mid
+        else:
+            lo = mid
+    return hi
+
+
+def caster_hits_from(caster, point, d, tmin, tmax):
+    eye = caster.eye
+    caster.eye = point
+    try:
+        return caster.hits(d, tmin, tmax)
+    finally:
+        caster.eye = eye
+
+
 def below(caster, point):
     eye = caster.eye
     caster.eye = point
@@ -174,10 +197,55 @@ def circular_smooth(values, width):
 
 
 RIM_PROBE = 2.0        # degrees past the glazed edge where the rail is measured
+RIM_DROP = 0.9         # blocks: a rail lower than this under the eye is the airframe beyond the canopy
 RIM_RANGE = 1.6        # blocks: farther surfaces past the edge are not the rail
 FRAME_RANGE = 1.3      # blocks: frame bars crossing the glazed region
 APEX = 0.3             # blocks above the eye when nothing shows the canopy height (frameless bubbles)
 CLEARANCE = 0.15       # the glass clears the pilot's eye by at least this much
+
+
+def rail_width(depth, eye):
+    """Half-width of the cockpit at its rails: the outermost cockpit wall the pilot sees straight to either side."""
+    best = 0.0
+    for az in (90.0, -90.0):
+        prev = None
+        for el in np.arange(-70.0, 1.0, 2.0):          # up the cockpit wall until the view jumps past the rail
+            d = direction(az, el)
+            t = float(T.lookup(depth, d[None])[0])
+            if t >= 1.5 or (prev is not None and t > prev * 1.25 + 0.03):
+                break
+            best = max(best, abs(d[0] * t))
+            prev = t
+    return max(best, 0.25) + 0.04
+
+
+def bubble(eye, rim):
+    """Frameless canopy: half an ellipsoid standing on the canopy rails, as wide as the rails, as long as the
+    glazed rim and APEX above the eye. Returns the eye-ray exit distance function, or None."""
+    rel = rim - eye
+    band = rim[(rel[:, 1] > -0.9) & (rel[:, 1] < 0.2)]
+    if len(band) < 6:
+        return None
+    a = float(np.clip(np.percentile(np.abs(band[:, 0]), 90), 0.2, 1.2))
+    rails = band[np.abs(band[:, 0]) > 0.6 * a]
+    yc = float(np.median(rails[:, 1])) if len(rails) else float(np.median(band[:, 1]))
+    zc = float((rim[:, 2].min() + rim[:, 2].max()) / 2)
+    c = float((rim[:, 2].max() - rim[:, 2].min()) / 2 * 1.05)
+    b = eye[1] + APEX - yc
+    if c < 0.3 or b < 0.15:
+        return None
+    ex, ey, ez = eye[0] / a, (eye[1] - yc) / b, (eye[2] - zc) / c
+    if ex * ex + ey * ey + ez * ez >= 1:
+        # The eye must sit inside: raise the dome until it clears the pilot.
+        need = (eye[1] + CLEARANCE - yc) / math.sqrt(max(1e-6, 1 - ex * ex - min(ez * ez, 0.95)))
+        b = max(b, need)
+
+    def exit_(dirs):
+        o = np.array([eye[0] / a, (eye[1] - yc) / b, (eye[2] - zc) / c])
+        d = dirs / np.array([a, b, c])
+        A = (d * d).sum(-1); B = 2 * (d @ o); C = o @ o - 1
+        return (-B + np.sqrt(np.maximum(B * B - 4 * A * C, 0))) / (2 * A)
+    return exit_
 
 
 def frame_points(depth, caster, eye, img):
@@ -208,8 +276,16 @@ def glass(vid):
     if img is None or img.sum() < 40:
         return eye, None
     # Spokes from the middle of the glazed region out to its edge.
-    d = raster_dirs()[img]
-    axis = d.mean(axis=0); axis[0] = 0.0; axis /= np.linalg.norm(axis)
+    # Spoke centre: the point of the region deepest inside it (on the centre line; the region is symmetric).
+    from scipy.ndimage import distance_transform_edt
+    depth_in = distance_transform_edt(img)
+    c = RASTER // 2
+    xs = np.arange(RASTER)
+    col = depth_in[:, c]
+    if col.max() <= 0:
+        return eye, None
+    j = int(col.argmax())
+    axis = raster_dirs()[j, c].copy(); axis[0] = 0.0; axis /= np.linalg.norm(axis)
     ref = np.array([0.0, 0.0, 1.0]) - axis[2] * axis
     if np.linalg.norm(ref) < 1e-3:
         ref = np.array([1.0, 0.0, 0.0]) - axis[0] * axis
@@ -231,7 +307,7 @@ def glass(vid):
     # Where each spoke meets the canopy rail: the first surface just past the glazed edge.
     rim_dirs = spoke_dirs(axis, ref, phis, edge + RIM_PROBE)
     rim_t = T.lookup(depth, rim_dirs).astype(float)
-    for extra in np.arange(2.0, 30.1, 2.0):              # rail lower than the glazed edge: look further out
+    for extra in np.arange(2.0, 6.1, 2.0):              # rail lower than the glazed edge: look further out
         miss = rim_t >= RIM_RANGE
         if not miss.any():
             break
@@ -239,6 +315,17 @@ def glass(vid):
         rim_dirs[miss] = d2
         rim_t[miss] = T.lookup(depth, d2)
     ok = rim_t < RIM_RANGE
+    # Otherwise the rail is straight below the glazed edge (canopies wider than the pilot can see past).
+    edge_dirs = spoke_dirs(axis, ref, phis, edge)
+    edge_r = exit_distance(hull, eye, edge_dirs)
+    for i in np.where(~ok)[0]:
+        if not np.isfinite(edge_r[i]):
+            continue
+        p0 = eye + edge_dirs[i] * edge_r[i]
+        h = down_distance(caster, p0, 1.0)
+        if h is not None:
+            q = p0 + DOWN * h - eye
+            rim_t[i] = np.linalg.norm(q); rim_dirs[i] = q / rim_t[i]; ok[i] = True
     if ok.sum() < len(phis) // 2:
         return eye, None
     rim = rim_dirs * np.where(ok, rim_t, 0)[:, None]
@@ -252,31 +339,31 @@ def glass(vid):
         rim[:, c] = circular_smooth(rim[:, c], 2)
     rim = rim + eye
     frames = frame_points(depth, caster, eye, img)
-    points = [rim, frames]
     tallest = frames[:, 1].max() if len(frames) else -np.inf
     if tallest < eye[1] + CLEARANCE:
-        # Frameless bubble: nothing shows the canopy height, so give it an elliptical dome over the rim.
-        centre = rim.mean(axis=0); centre[0] = 0.0
-        height = max(eye[1] + APEX, tallest) - centre[1]
-        for s_ in (0.3, 0.55, 0.75, 0.9):
-            points.append(centre + (rim - centre) * s_ + np.array([0.0, height * math.sqrt(1 - s_ * s_), 0.0]))
-        points.append((centre + np.array([0.0, height, 0.0]))[None])
-    points.append(eye + np.array([[0.0, -0.8, 0.0]]))  # closes the shell under the pilot (never glazed)
-    P = np.vstack(points)
-    P = np.vstack([P, P * np.array([-1.0, 1, 1])])
-    from scipy.spatial import ConvexHull
-    try:
-        shell = ConvexHull(P)
-    except Exception:
-        return eye, None
-    if (shell.equations[:, :3] @ eye + shell.equations[:, 3]).max() > -0.05:
-        return eye, None
+        shell_exit = bubble(eye, rim)                    # frameless bubble: nothing modelled above the pilot
+        if shell_exit is None:
+            return eye, None
+    else:
+        points = [rim, frames, eye + np.array([[0.0, -0.8, 0.0]])]   # the last closes the shell under the pilot
+        P = np.vstack(points)
+        P = np.vstack([P, P * np.array([-1.0, 1, 1])])
+        from scipy.spatial import ConvexHull
+        try:
+            shell = ConvexHull(P)
+        except Exception:
+            return eye, None
+        if (shell.equations[:, :3] @ eye + shell.equations[:, 3]).max() > -0.05:
+            return eye, None
+        shell_exit = lambda dirs: exit_distance(shell, eye, dirs)
+    width = rail_width(depth, eye)
     s_k = np.sin(np.arange(0, ROWS) / (ROWS - 1) * math.pi / 2)
     spokes = []
     apex = None
     for phi, e in zip(phis, edge):
         dirs = spoke_dirs(axis, ref, np.full(ROWS, phi), e * s_k)
-        r = exit_distance(shell, eye, dirs) - INSET
+        r = shell_exit(dirs)
+        r = np.minimum(r, width / np.maximum(np.abs(dirs[:, 0]), 1e-6)) - INSET   # never wider than the rails
         if not np.isfinite(r).all():
             return eye, None
         ring = eye + dirs * r[:, None]
