@@ -37,7 +37,10 @@ import java.time.Instant
  * `/bvp_stress <label>` builds a stone pad with bedrock walls in front of and behind it, then runs fixed phases
  * (server ticks): `empty` (the pad alone), `fleet` (20 ground vehicles in two staggered rows and 10 aircraft and
  * helicopters behind them, every hardpoint carrying the store that hangs the most munitions), `war` (every ground
- * vehicle fires every weapon it has as fast as its guns allow, aircraft fire their guns and release their stores;
+ * vehicle fires every weapon at its real cadence into a line of live targets downrange (every other vehicle class in
+ * front of the tanks; tanks in front of the IFVs, so autocannons, ATGMs and non-penetrating hits are exercised),
+ * aircraft held 30 blocks above the targets fire their guns and drop their stores onto them; destroyed targets are
+ * counted, cleared and respawned, and every hit on a target is tallied by cause (with the ones that did no damage);
  * ammunition and heat are topped up every second) and `ceasefire`. Fixtures are held in place, kept at full health
  * and invulnerable. Each phase start and end is logged as `BVP_STRESS <label> <phase> START|END` so external
  * orchestration can time client captures; the server tick wall/CPU times, projectile counts and shot results per
@@ -49,6 +52,12 @@ object StressDiagnostics {
         "k2a1_black_panther", "ztz99a", "t80u_obr1985", "m1_abrams_elite", "bmp2", "bmp3m_elite", "m2_bradley",
         "cv9040_no_net", "marder_1a2", "btr80a", "lav25", "tunguska", "gepard", "zsu23_4")
     private val air = listOf("f_16c", "su_25", "a_10", "f_15c", "su_27", "fa_18e", "mig_29", "su_35", "ah_64d", "mi24v")
+    /** War targets downrange of the tank row (x = 9k, z +45): every other vehicle class, destroyed and respawned. */
+    private val softTargets = listOf("bmp2", "btr80a", "m2_bradley", "lav25", "zsu23_4", "gepard", "marder_1a2",
+        "tunguska", "ah_64d", "f_16c")
+    /** War targets downrange of the IFV row (x = 4.5 + 9k, z +62): tanks, for autocannons, ATGMs and non-penetrations. */
+    private val armourTargets = listOf("t72b", "m1a2_abrams_sep_v2", "leopard_2a4", "t90a", "challenger_2", "leclerc_s1",
+        "k2a1_black_panther", "ztz99a", "t80u_obr1985", "m1_abrams_elite")
     /** Phase name and the server tick it starts at; the last entry ends the run. */
     private val schedule = listOf("empty" to 60, "warmup" to 300, "fleet" to 600, "war" to 1200, "ceasefire" to 2400,
         "end" to 2600)
@@ -116,6 +125,12 @@ object StressDiagnostics {
         val origin = Vec3(kotlin.math.floor(player.x) + 8, kotlin.math.floor(player.y), kotlin.math.floor(player.z) + 8)
         val fleet = linkedMapOf<VehicleEntity, Vec3>()
         val aircraft = HashSet<VehicleEntity>()
+        /** War targets: slot -> (type id, position, live entity or null, tick it may respawn at). */
+        inner class Target(val id: String, val point: Vec3) { var entity: VehicleEntity? = null; var wreckedAt = -1; var respawnAt = 0 }
+        val targets = ArrayList<Target>()
+        val kills = linkedMapOf<String, Int>()
+        /** (target type / damage source) -> [hits, hits that did no damage, damage] */
+        val hits = linkedMapOf<String, DoubleArray>()
         val forced = LinkedHashSet<ChunkPos>()
         val phases = ArrayList<Phase>()
         val notes = ArrayList<String>()
@@ -152,10 +167,10 @@ object StressDiagnostics {
             level.getChunk(pos.x, pos.z)
         }
 
-        /** Above and in front of the ground rows, looking back over them to the aircraft (fire passes below). */
+        /** Behind and above the firing rows, looking downrange over them to the targets and the aircraft above them. */
         fun observe() {
             player.stopRiding()
-            player.teleportTo(level, origin.x + 45, origin.y + 18, origin.z + 38, 180f, 28f)
+            player.teleportTo(level, origin.x + 45, origin.y + 26, origin.z - 42, 0f, 14f)
             player.deltaMovement = Vec3.ZERO
         }
 
@@ -165,7 +180,10 @@ object StressDiagnostics {
                 val point = origin.add((index % 10) * 9.0 + row * 4.5, 0.0, -row * 14.0)
                 add(id, point, null)
             }
-            air.forEachIndexed { index, id -> add(id, origin.add(index * 18.0 - 2.0, 0.0, -45.0), loadout(id)) }
+            // aircraft hang 30 blocks above the target lines, so bombs and rockets fall onto the targets
+            air.forEachIndexed { index, id -> add(id, origin.add(index * 9.0, 30.0, 40.0 + (index % 2) * 18.0), loadout(id)) }
+            softTargets.forEachIndexed { index, id -> targets.add(Target(id, origin.add(index * 9.0, 0.0, 45.0))) }
+            armourTargets.forEachIndexed { index, id -> targets.add(Target(id, origin.add(index * 9.0 + 4.5, 0.0, 62.0))) }
             log("fleet", "SPAWNED", "vehicles" to fleet.size, "aircraft" to aircraft.size)
         }
 
@@ -209,6 +227,43 @@ object StressDiagnostics {
                 vehicle.setPos(point); vehicle.deltaMovement = Vec3.ZERO; vehicle.setOnGround(true)
                 if (vehicle.health < vehicle.getMaxHealth()) vehicle.health = vehicle.getMaxHealth()
             }
+        }
+
+        fun spawnTarget(t: Target) {
+            val type = ForgeRegistries.ENTITY_TYPES.getValue(ResourceLocation("berts_vehicle_pack", t.id))
+            val vehicle = type?.create(level) as? VehicleEntity ?: run { notes.add("missing target ${t.id}"); return }
+            vehicle.load(CompoundTag())
+            vehicle.moveTo(t.point.x, t.point.y, t.point.z, 180f, 0f)      // facing the shooters
+            vehicle.addTag("bvp_stress_fixture"); vehicle.addTag("bvp_stress_target")
+            if (level.addFreshEntity(vehicle)) { t.entity = vehicle; t.wreckedAt = -1 }
+        }
+
+        /** Targets stay put; a destroyed one is counted, left burning for two seconds, cleared, and respawned. */
+        fun manageTargets() {
+            for (t in targets) {
+                val e = t.entity
+                if (e == null) { if (age >= t.respawnAt) spawnTarget(t); continue }
+                if (e.isRemoved || e.isWreck || e.health <= 0f) {
+                    if (t.wreckedAt < 0) { t.wreckedAt = age; kills.merge(t.id, 1, Int::plus) }
+                    if (age - t.wreckedAt >= 40 || e.isRemoved) { if (!e.isRemoved) e.discard(); t.entity = null; t.respawnAt = age + 20 }
+                    continue
+                }
+                if (e.position().distanceToSqr(t.point) > 0.25) { e.setPos(t.point); e.deltaMovement = Vec3.ZERO }
+            }
+        }
+
+        fun observeHits(on: Boolean) {
+            com.atsuishio.superbwarfare.api.diagnostics.VehicleHitObserver.listener = if (!on) null else
+                com.atsuishio.superbwarfare.api.diagnostics.VehicleHitObserver.Listener { vehicle, source, requested, lost ->
+                    if (!vehicle.tags.contains("bvp_stress_target")) return@Listener
+                    val type = ForgeRegistries.ENTITY_TYPES.getKey(vehicle.type)?.path ?: "?"
+                    val cause = source.directEntity?.let { ForgeRegistries.ENTITY_TYPES.getKey(it.type)?.toString() }
+                        ?: source.type().msgId()
+                    val row = hits.getOrPut("$type <- $cause") { DoubleArray(3) }
+                    row[0] += 1.0
+                    if (!(lost > 0.01f) && requested > 0f) row[1] += 1.0
+                    row[2] += maxOf(0f, lost).toDouble()
+                }
         }
 
         fun rearm() {
@@ -262,7 +317,8 @@ object StressDiagnostics {
                 phase?.let { log(it.name, "END") }
                 when (next.first) {
                     "warmup" -> { spawn(); phase = null }
-                    "war" -> rearm()
+                    "war" -> { rearm(); targets.forEach { spawnTarget(it) }; observeHits(true) }
+                    "ceasefire" -> observeHits(false)
                     "end" -> { finish("COMPLETE", null); return }
                 }
                 if (next.first != "warmup") {
@@ -274,6 +330,7 @@ object StressDiagnostics {
             if (current != null) {
                 if (current.name == "war") {
                     if (age % 20 == 0) rearm()
+                    manageTargets()
                     fire()
                 }
                 if (age % 10 == 0) current.projectiles.add(level.allEntities.count { it is Projectile })
@@ -298,7 +355,11 @@ object StressDiagnostics {
                 "startedUtc" to startedUtc, "completedUtc" to Instant.now().toString(),
                 "wallSeconds" to (System.nanoTime() - started) / 1e9, "ticks" to age,
                 "ground" to ground, "aircraft" to air, "lostFixtures" to lostFixtures, "notes" to notes,
-                "phases" to phases.map { it.report() })
+                "phases" to phases.map { it.report() },
+                "warKills" to kills,
+                "warHits" to hits.entries.sortedByDescending { it.value[0] }.associate {
+                    it.key to linkedMapOf("hits" to it.value[0].toInt(), "noDamage" to it.value[1].toInt(),
+                        "damage" to it.value[2]) })
             try {
                 val dir = Path.of("logs", "bvp-stress")
                 Files.createDirectories(dir)
@@ -307,6 +368,7 @@ object StressDiagnostics {
             } catch (failure: Exception) {
                 Mod.LOGGER.error("BVP_STRESS report failed", failure)
             } finally {
+                observeHits(false)
                 for (entity in level.allEntities.toList())
                     if (entity is Projectile || entity.tags.contains("bvp_stress_fixture")) entity.discard()
                 fleet.clear()

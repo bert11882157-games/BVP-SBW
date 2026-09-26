@@ -77,9 +77,14 @@ internal class VehicleDamageLifecycleService(
         return true
     }
 
-    fun hurt(source: DamageSource, amount: Float): Boolean =
-        com.atsuishio.superbwarfare.api.vehicle.damage.LightPlatformProjectileDamage.handleNativeDamage(vehicle, source)
+    fun hurt(source: DamageSource, amount: Float): Boolean {
+        val observer = com.atsuishio.superbwarfare.api.diagnostics.VehicleHitObserver.listener
+        val before = vehicle.health
+        val result = com.atsuishio.superbwarfare.api.vehicle.damage.LightPlatformProjectileDamage.handleNativeDamage(vehicle, source)
             ?: AircraftProjectileDamage.handleNativeDamage(vehicle, source) ?: transaction.hurt(source, amount)
+        observer?.hit(vehicle, source, amount, before - vehicle.health)
+        return result
+    }
 
     fun applyResolved(request: ResolvedVehicleDamageRequest): ResolvedVehicleDamageResult =
         transaction.applyResolved(
