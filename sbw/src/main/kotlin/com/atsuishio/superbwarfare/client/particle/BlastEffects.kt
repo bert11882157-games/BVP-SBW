@@ -182,11 +182,25 @@ object BlastEffects {
         RenderSystem.depthMask(false)
         RenderSystem.enableDepthTest()
         RenderSystem.disableCull()
+        // With far terrain drawn, blasts beyond the vanilla view keep the far pass's fog: vanilla fog would fade
+        // their glow to nothing at the render-distance edge while the terrain around them is still visible.
+        val oldFogStart = RenderSystem.getShaderFogStart()
+        val oldFogEnd = RenderSystem.getShaderFogEnd()
+        val farRange = farRange()
+        if (farRange > 0F) {
+            RenderSystem.setShaderFogStart(maxOf(oldFogStart, farRange))
+            RenderSystem.setShaderFogEnd(maxOf(oldFogEnd, farRange + 512F))
+        }
         val builder: BufferBuilder = Tesselator.getInstance().builder
         builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE)
         quads.write(builder, left.x().toDouble(), left.y().toDouble(), left.z().toDouble(),
             up.x().toDouble(), up.y().toDouble(), up.z().toDouble())
-        BufferUploader.drawWithShader(builder.end())
+        try {
+            BufferUploader.drawWithShader(builder.end())
+        } finally {
+            RenderSystem.setShaderFogStart(oldFogStart)
+            RenderSystem.setShaderFogEnd(oldFogEnd)
+        }
         RenderSystem.enableCull()
         RenderSystem.depthMask(true)
         RenderSystem.defaultBlendFunc()
@@ -195,6 +209,21 @@ object BlastEffects {
         modelView.popPose()
         RenderSystem.applyModelViewMatrix()
     }
+
+    /** Far-terrain radius in blocks while the far pass is active, else 0. */
+    private fun farRange(): Float = runCatching {
+        if (com.atsuishio.superbwarfare.config.client.FarVehicleRenderConfig.ENABLED.get() &&
+            com.atsuishio.superbwarfare.client.FarTerrainClient.ready())
+            com.atsuishio.superbwarfare.client.FarTerrainClient.renderRadius().toFloat() else 0F
+    }.getOrDefault(0F)
+
+    /**
+     * Radius the flash and fire are drawn at: the fireball's own radius, but never smaller than about a third of a
+     * degree across (radius 0.006 x distance), so a distant blast still reads as a fireball rather than a pixel.
+     */
+    @JvmStatic
+    fun apparentRadius(radius: Double, distance: Double): Double =
+        if (distance.isFinite()) maxOf(radius, 0.006 * distance) else radius
 
     private fun renderChunks(mc: Minecraft, level: ClientLevel, poseStack: PoseStack, cx: Double, cy: Double, cz: Double,
                              time: Double, partial: Float) {
@@ -553,9 +582,10 @@ object BlastEffects {
 
             // Flash: an instant, bright glow at the impact point.
             val flash = BlastVisuals.flashTicks(kg)
+            val fireRadius = apparentRadius(radius, sqrt(ox * ox + oy * oy + oz * oz))
             if (age < flash) {
                 val k = 1.0 - age / flash
-                out.add(ox, oy + 0.1 * radius, oz, radius * 2.4 * (0.7 + 0.3 * k), 0.0,
+                out.add(ox, oy + 0.1 * radius, oz, fireRadius * 2.4 * (0.7 + 0.3 * k), 0.0,
                     1.6 * k, 1.45 * k, 1.1 * k, 0.0, sprites.flash, FULL_BRIGHT)
             }
 
@@ -574,10 +604,10 @@ object BlastEffects {
                     val e = BlastVisuals.expansionAt(age - fire[o + 4], kg)
                     if (e <= 0.0) continue
                     val grow = 0.35 + 0.65 * e
-                    val px = ox + fire[o] * radius * e
-                    val py = oy + fire[o + 1] * radius * e + rise * (0.6 + 0.4 * fire[o + 1])
-                    val pz = oz + fire[o + 2] * radius * e
-                    val half = fire[o + 3] * radius * grow * (1.0 + 0.3 * burn)
+                    val px = ox + fire[o] * fireRadius * e
+                    val py = oy + fire[o + 1] * fireRadius * e + rise * (0.6 + 0.4 * fire[o + 1])
+                    val pz = oz + fire[o + 2] * fireRadius * e
+                    val half = fire[o + 3] * fireRadius * grow * (1.0 + 0.3 * burn)
                     fireColor(temperature + 0.25 * (1.0 - abs(fire[o + 1])) * burn, 1.15 * intensity, color)
                     // Dense fire partly hides what is behind it while it is young; then it is pure glow.
                     val cover = 0.35 * intensity * (1.0 - burn)

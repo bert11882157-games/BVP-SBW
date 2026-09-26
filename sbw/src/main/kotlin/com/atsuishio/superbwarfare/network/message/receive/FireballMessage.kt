@@ -43,7 +43,10 @@ data class FireballMessage(
             val range = BlastModel.fireballAudienceRange(radius)
             for (player in level.players()) {
                 if (!com.atsuishio.superbwarfare.api.vehicle.render.VehicleDeathEffects.allowsFullFx(player.uuid)) continue
-                if (player.distanceToSqr(position) <= range * range) sendPacketTo(player, message)
+                // Players drawing far terrain over the spot see the fireball too, however far away.
+                if (player.distanceToSqr(position) <= range * range ||
+                    com.atsuishio.superbwarfare.api.vehicle.render.FarTerrainServer.admitsEffect(player, position.x, position.z))
+                    sendPacketTo(player, message)
             }
         }
     }

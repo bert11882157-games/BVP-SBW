@@ -125,9 +125,9 @@ object ParticleTool {
         val type = if (vehicle != null && (vehicle.health <= 0 || vehicle.isWreck) &&
             context.particleType in setOf(ParticleType.HUGE, ParticleType.GIANT)) ParticleType.LARGE else context.particleType
         when (type) {
-            ParticleType.MINI -> spawnMiniExplosionParticles(level, context.particlePosition)
-            ParticleType.SMALL -> spawnSmallExplosionParticles(level, context.particlePosition)
-            ParticleType.MEDIUM -> spawnMediumExplosionParticles(level, context.particlePosition)
+            ParticleType.MINI -> spawnMiniExplosionParticles(level, context.particlePosition, context.fireballRadius <= 0f)
+            ParticleType.SMALL -> spawnSmallExplosionParticles(level, context.particlePosition, context.fireballRadius <= 0f)
+            ParticleType.MEDIUM -> spawnMediumExplosionParticles(level, context.particlePosition, context.fireballRadius <= 0f)
             // A TNT blast draws its own fireball, smoke, dust, chunks and mushroom (BlastEffects); the old burst
             // recipes of thousands of engine particles evicted each other when blasts overlapped. Keep their sound.
             ParticleType.LARGE -> spawnLargeExplosionParticles(level, context.particlePosition, context.fireballRadius <= 0f)
@@ -147,45 +147,52 @@ object ParticleTool {
 
     //@formatter:off
     @JvmStatic
-    fun spawnMiniExplosionParticles(level: Level, pos: Vec3) {
+    @JvmOverloads
+    fun spawnMiniExplosionParticles(level: Level, pos: Vec3, burst: Boolean = true) {
         val x = pos.x
         val y = pos.y
         val z = pos.z
 
         if (level is ServerLevel) {
             level.playSound(null, BlockPos.containing(x, y + 1, z), ModSounds.MINI_EXPLOSION.get(), SoundSource.BLOCKS, 4f, 1f)
+            if (!burst) return
             sendParticle(level, ParticleTypes.CAMPFIRE_COSY_SMOKE, x, y, z, 2, 0.1, 0.1, 0.1, 0.02, true)
             sendParticle(level, ParticleTypes.EXPLOSION, x, y, z, 2, 0.05, 0.05, 0.05, 1.0, true)
             sendParticle(level, ParticleTypes.LARGE_SMOKE, x, y, z, 1, 0.2, 0.2, 0.2, 0.02, true)
-            sendParticle(level, ModParticleTypes.FIRE_STAR.get(), x, y, z, 7, 0.0, 0.0, 0.0, 0.4, true)
             sendParticle(level, ParticleTypes.FLASH, x, y, z, 1, 0.0, 0.0, 0.0, 20.0, true)
         }
     }
 
     @JvmStatic
-    fun spawnSmallExplosionParticles(level: Level?, pos: Vec3) {
+    @JvmOverloads
+    fun spawnSmallExplosionParticles(level: Level?, pos: Vec3, burst: Boolean = true) {
         val x = pos.x
         val y = pos.y
         val z = pos.z
 
         if (level is ServerLevel) {
             playExplosionSoundLayers(level, pos, ModSounds.EXPLOSION_CLOSE.get(), 2f, ModSounds.EXPLOSION_FAR.get(), 8f, ModSounds.EXPLOSION_VERY_FAR.get(), 32f)
+            if (!burst) return
 
             sendParticle(level, ParticleTypes.EXPLOSION, x, y, z, 2, 0.05, 0.05, 0.05, 1.0, true)
             sendParticle(level, ParticleTypes.CAMPFIRE_COSY_SMOKE, x, y, z, 3, 0.1, 0.1, 0.1, 0.02, true)
             sendParticle(level, ParticleTypes.LARGE_SMOKE, x, y, z, 4, 0.2, 0.2, 0.2, 0.02, true)
-            sendParticle(level, ModParticleTypes.FIRE_STAR.get(), x, y, z, 12, 0.0, 0.0, 0.0, 0.6, true)
             sendParticle(level, ParticleTypes.FLASH, x, y, z, 3, 0.1, 0.1, 0.1, 20.0, true)
         }
     }
 
     @JvmStatic
-    fun spawnMediumExplosionParticles(level: Level?, pos: Vec3) {
+    @JvmOverloads
+    fun spawnMediumExplosionParticles(level: Level?, pos: Vec3, burst: Boolean = true) {
         val x = pos.x
         val y = pos.y
         val z = pos.z
 
         if (level is ServerLevel) {
+            if (!burst) {
+                playExplosionSoundLayers(level, pos, ModSounds.EXPLOSION_CLOSE.get(), 4f, ModSounds.EXPLOSION_FAR.get(), 16f, ModSounds.EXPLOSION_VERY_FAR.get(), 32f)
+                return
+            }
             if ((level.getBlockState(BlockPos.containing(x, y, z))).block === Blocks.WATER) {
                 sendParticle(level, ParticleTypes.CLOUD, x, y + 3, z, 20, 1.0, 3.0, 1.0, 0.01, true)
                 sendParticle(level, ParticleTypes.CLOUD, x, y + 3, z, 30, 2.0, 1.0, 2.0, 0.01, true)
@@ -199,7 +206,6 @@ object ParticleTool {
             sendParticle(level, ParticleTypes.CAMPFIRE_COSY_SMOKE, x, y + 1, z, 20, 0.2, 1.0, 0.2, 0.02, true)
             sendParticle(level, ParticleTypes.LARGE_SMOKE, x, y + 1, z, 10, 0.4, 1.0, 0.4, 0.02, true)
             sendParticle(level, ParticleTypes.CAMPFIRE_COSY_SMOKE, x, y + 0.25, z, 40, 2.0, 0.001, 2.0, 0.01, true)
-            sendParticle(level, ModParticleTypes.FIRE_STAR.get(), x, y + 0.2, z, 50, 0.0, 0.0, 0.0, 0.8, true)
             sendParticle(level, ParticleTypes.FLASH, x, y + 0.5, z, 50, 0.2, 0.2, 0.2, 20.0, true)
         }
     }
@@ -289,7 +295,6 @@ object ParticleTool {
     fun cannonHitParticles(serverLevel: ServerLevel, pos: Vec3) {
         sendParticle(serverLevel, ParticleTypes.EXPLOSION, pos.x, pos.y, pos.z, 2, 0.5, 0.5, 0.5, 1.0, true)
         sendParticle(serverLevel, ParticleTypes.FLASH, pos.x, pos.y, pos.z, 2, 0.2, 0.2, 0.2, 10.0, true)
-        sendParticle(serverLevel, ModParticleTypes.FIRE_STAR.get(), pos.x, pos.y, pos.z, 15, 0.0, 0.0, 0.0, 1.5, true)
     }
 
     @JvmStatic

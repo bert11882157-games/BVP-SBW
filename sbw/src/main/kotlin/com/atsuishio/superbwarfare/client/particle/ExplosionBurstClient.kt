@@ -1,7 +1,6 @@
 package com.atsuishio.superbwarfare.client.particle
 
 import com.atsuishio.superbwarfare.Mod.Companion.queueClientWork
-import com.atsuishio.superbwarfare.init.ModParticleTypes
 import com.atsuishio.superbwarfare.network.message.receive.ExplosionBurstMessage
 import com.atsuishio.superbwarfare.tools.clientLevel
 import net.minecraft.client.multiplayer.ClientLevel
@@ -32,7 +31,6 @@ object ExplosionBurstClient {
             val scale = if (distance.isFinite()) (distance / 256.0).coerceIn(1.0, 64.0) else 1.0
             spawnBatch(level, CustomCloudOption(1f, 0.45f, 0.08f, 22, 4f * scale.toFloat(), 0f, true, true),
                 position, 5, 0.65 * scale, 0.65 * scale, 0.65 * scale, 0.02)
-            spawnBatch(level, ModParticleTypes.FIRE_STAR.get(), position, 8, 0.0, 0.0, 0.0, 0.4)
             spawnBatch(level, CustomCloudOption(0.24f, 0.22f, 0.20f, 45, 3f * scale.toFloat(), 0f, false, true),
                 position, 4, 0.8 * scale, 0.8 * scale, 0.8 * scale, 0.03)
             return
@@ -52,7 +50,6 @@ object ExplosionBurstClient {
     private fun spawnLarge(level: ClientLevel, pos: Vec3, phaseRandom: Random) {
         spawnBatch(level, ParticleTypes.CAMPFIRE_COSY_SMOKE, pos.add(0.0, 1.0, 0.0), 60, 0.5, 2.0, 0.5, 0.02)
         spawnBatch(level, ParticleTypes.CAMPFIRE_COSY_SMOKE, pos.add(0.0, 0.25, 0.0), 120, 5.0, 0.001, 5.0, 0.01)
-        spawnBatch(level, ModParticleTypes.FIRE_STAR.get(), pos.add(0.0, 0.2, 0.0), 100, 0.0, 0.0, 0.0, 1.2)
         spawnBatch(level, ParticleTypes.EXPLOSION, pos.add(0.0, 1.0, 0.0), 35, 1.5, 1.5, 1.5, 1.0)
         spawnBatch(level, ParticleTypes.FLASH, pos.add(0.0, 1.0, 0.0), 120, 3.0, 3.0, 3.0, 20.0)
         repeat(2) { ring ->
@@ -68,7 +65,6 @@ object ExplosionBurstClient {
         }
         spawnBatch(level, ParticleTypes.EXPLOSION, pos.add(0.0, 3.0, 0.0), 75, 2.5, 2.5, 2.5, 1.0)
         spawnBatch(level, ParticleTypes.FLASH, pos.add(0.0, 3.0, 0.0), 200, 5.0, 5.0, 5.0, 20.0)
-        spawnBatch(level, ModParticleTypes.FIRE_STAR.get(), pos.add(0.0, 1.0, 0.0), 400, 0.0, 0.0, 0.0, 1.5)
         spawnBatch(level, ParticleTypes.CAMPFIRE_COSY_SMOKE, pos.add(0.0, 3.0, 0.0), 75, 2.0, 3.0, 2.0, 0.005)
         spawnBatch(level, ParticleTypes.CAMPFIRE_COSY_SMOKE, pos, 150, 7.0, 0.1, 7.0, 0.005)
         spawnBatch(level, ParticleTypes.CLOUD, pos.add(0.0, 1.0, 0.0), 200, 3.0, 4.0, 3.0, 0.4)
@@ -77,7 +73,6 @@ object ExplosionBurstClient {
     private fun spawnGiant(level: ClientLevel, pos: Vec3, phaseRandom: Random) {
         spawnBatch(level, ParticleTypes.EXPLOSION, pos.add(0.0, 6.0, 0.0), 100, 6.0, 6.0, 6.0, 1.0)
         spawnBatch(level, ParticleTypes.FLASH, pos.add(0.0, 7.0, 0.0), 200, 7.0, 7.0, 7.0, 1.0)
-        spawnBatch(level, ModParticleTypes.FIRE_STAR.get(), pos.add(0.0, 3.0, 0.0), 800, 0.0, 0.0, 0.0, 2.0)
         repeat(5) { ring ->
             spawnRadial(level, CustomCloudOption(1f, 1f, 1f, 25, 4f, 0f, false, false),
                 pos.add(0.0, 1.0, 0.0), 200, (500 - 3 * ring).toDouble(), phaseRandom)
