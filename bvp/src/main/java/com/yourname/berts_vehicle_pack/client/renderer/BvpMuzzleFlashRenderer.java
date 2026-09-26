@@ -110,6 +110,12 @@ public final class BvpMuzzleFlashRenderer {
 
     private static void enqueue(Vec3 position, Vec3 direction, long seed, BurstProfile profile,
                                 boolean suppressForwardSpray, FlashAnchor anchor) {
+        if (position != null) {
+            // the flash lights the vehicle and the ground round the muzzle for a moment (SBW FxLights)
+            double size = profile.bloomHalfSize();
+            com.atsuishio.superbwarfare.client.particle.FxLights.flash(position.f_82479_, position.f_82480_, position.f_82481_,
+                    4.0D + 5.0D * size, Math.min(15.0D, 9.0D + 4.0D * size), size >= 1.0D ? 3.0D : 1.5D);
+        }
         Minecraft minecraft = Minecraft.m_91087_();
         if (minecraft == null || minecraft.f_91073_ == null || position == null
                 || direction == null || direction.m_82556_() <= 1.0E-8D) {

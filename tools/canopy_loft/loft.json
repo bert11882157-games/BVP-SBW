@@ -1,0 +1,71 @@
+{
+  "_comment": "Per-aircraft corrections (vehicle-local blocks, +Z forward): front/rear = canopy ends on the centre line, halfwidth = plan half-width at the crew, spine = extra [z, y] points the top must pass through, rake/windscreen_slope for the windscreen, skip = no lofted glass (flat-panel canopies).",
+  "f_15c": {
+    "front": 6.35,
+    "dark_rear": true
+  },
+  "su_57": {
+    "front": 5.6
+  },
+  "ho_229": {
+    "skip": true
+  },
+  "il_10": {
+    "skip": true,
+    "_note": "flat-panel greenhouse: separate pane fill"
+  },
+  "ju_87_b2": {
+    "skip": true,
+    "_note": "flat-panel greenhouse: separate pane fill"
+  },
+  "f_16c": {
+    "dark_rear": true
+  },
+  "saab_j_21a_1": {
+    "skip": true,
+    "_note": "flat-panel framed canopy: separate pane fill"
+  },
+  "su_35": {
+    "front": 6.45
+  },
+  "f_5a": {
+    "front": 2.15
+  },
+  "fa_18e": {
+    "front": 5.15
+  },
+  "eurofighter_typhoon": {
+    "front": 4.9,
+    "rear": 2.55
+  },
+  "a_10": {
+    "rear": 4.4
+  },
+  "f2h_2": {
+    "rear": 2.6
+  },
+  "f_111f": {
+    "rear": 4.25
+  },
+  "f_8h": {
+    "front": 7.35
+  },
+  "j_11a": {
+    "front": 7.1
+  },
+  "md_450_ouragan": {
+    "rear": 2.3
+  },
+  "mig_19s": {
+    "rear": 1.15
+  },
+  "su_25": {
+    "rear": 2.85
+  },
+  "su_27": {
+    "front": 6.62
+  },
+  "su_9": {
+    "rear": 2.3
+  }
+}

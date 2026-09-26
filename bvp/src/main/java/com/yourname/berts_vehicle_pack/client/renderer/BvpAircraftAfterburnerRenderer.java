@@ -54,6 +54,11 @@ public final class BvpAircraftAfterburnerRenderer {
         var controls = vehicle.getVehicleFlightControlSurfaceSnapshot(partialTicks);
         boolean lit = controls != null && controls.getAfterburnerActive();
         double throttle = controls == null ? 0.0D : Math.max(0.0F, Math.min(1.0F, controls.getThrottle()));
+        var preview = com.atsuishio.superbwarfare.diagnostics.FxPreview.getEngine();
+        if (preview != null) {
+            lit = preview.afterburner;
+            throttle = preview.throttle;
+        }
         try {
             DefaultVehicleResource resource = VehicleResource.getDefault(vehicle);
             if (!state.resolved || state.resource != resource) {
@@ -70,7 +75,7 @@ public final class BvpAircraftAfterburnerRenderer {
             if (config == null) return;
             boolean active = lit && config.afterburning();
             // no shimmer from a stopped engine or a wreck
-            double haze = vehicle.engineRunning() ? config.haze() : 0.0D;
+            double haze = vehicle.engineRunning() || preview != null ? config.haze() : 0.0D;
             var transform = vehicle.getVehicleTransform(partialTicks);
             double time = activeLevel.m_46467_() + partialTicks;
             int index = 0;

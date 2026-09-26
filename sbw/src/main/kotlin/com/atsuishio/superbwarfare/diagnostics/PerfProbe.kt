@@ -45,6 +45,7 @@ object PerfProbe {
     }
 
     private var capture: Capture? = null
+    private var fxNanos0 = 0L
     private var poll = 0
 
     @SubscribeEvent
@@ -75,6 +76,8 @@ object PerfProbe {
         val label = parts.getOrNull(0)?.takeIf { it.matches(Regex("[A-Za-z0-9_-]{1,60}")) } ?: return
         val seconds = parts.getOrNull(1)?.toDoubleOrNull()?.coerceIn(1.0, 300.0) ?: 10.0
         val batch = parts.none { it == "batch=off" }
+        com.atsuishio.superbwarfare.client.particle.FxLights.enabled = parts.none { it == "fx=off" }
+        fxNanos0 = com.atsuishio.superbwarfare.client.particle.FxLights.renderNanos
         ClientRenderPerformanceDiagnostics.setBatchingDisabled(!batch)
         ClientRenderPerformanceDiagnostics.setProbeActive(true)
         capture = Capture(label, seconds, batch)
@@ -88,6 +91,8 @@ object PerfProbe {
         val passes = ClientRenderPerformanceDiagnostics.batchPasses()
         ClientRenderPerformanceDiagnostics.setProbeActive(false)
         ClientRenderPerformanceDiagnostics.setBatchingDisabled(false)
+        val fxEnabled = com.atsuishio.superbwarfare.client.particle.FxLights.enabled
+        com.atsuishio.superbwarfare.client.particle.FxLights.enabled = true
         val frames = active.frames.copyOf(active.count).also { it.sort() }
         fun pct(p: Double) = if (frames.isEmpty()) 0f else frames[((p * frames.size).toInt()).coerceIn(0, frames.size - 1)]
         val totalMs = frames.sum().toDouble()
@@ -113,7 +118,11 @@ object PerfProbe {
                 "tracerDiscoveryMs" to perMs(counters.tracerDiscoveryNanos, frames.size),
                 "tracerBeams" to per(counters.tracerBeamsDrawn, frames.size),
                 "ccipMs" to perMs(counters.ccipSampleNanos, frames.size),
-                "modelLoadMs" to perMs(counters.vehicleModelLoadNanos, frames.size)),
+                "modelLoadMs" to perMs(counters.vehicleModelLoadNanos, frames.size),
+                "fxLightMs" to perMs(com.atsuishio.superbwarfare.client.particle.FxLights.renderNanos - fxNanos0, frames.size)),
+            "fxLights" to linkedMapOf("enabled" to fxEnabled,
+                "alive" to com.atsuishio.superbwarfare.client.particle.FxLights.lastLights,
+                "groundQuads" to com.atsuishio.superbwarfare.client.particle.FxLights.lastPoolQuads),
             "renderThreadAllocatedMBPerSecond" to (allocatedBytes() - active.allocated0).let {
                 if (active.allocated0 < 0 || it < 0) null else it / 1048576.0 / wallSeconds },
             "gc" to linkedMapOf("collections" to gcCount() - active.gcCount0, "millis" to gcMillis() - active.gcMillis0),

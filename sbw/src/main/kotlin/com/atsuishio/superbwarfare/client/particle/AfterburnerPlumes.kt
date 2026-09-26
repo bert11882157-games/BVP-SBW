@@ -107,6 +107,11 @@ object AfterburnerPlumes {
         plume.hazeTarget = (0.25 + 0.75 * thrust) * (1.0 - plume.intensity).pow(2.0)
         plume.haze += (plume.hazeTarget - plume.haze) * min(1.0, step / 8.0)
         plume.seenAt = time
+        if (plume.intensity > 0.02) {
+            val back = plume.radius * 3.0
+            FxLights.sustain(key or 0x4100000000000000L, x + plume.dx * back, y + plume.dy * back, z + plume.dz * back,
+                6.0 + 8.0 * plume.intensity, 14.0 * plume.intensity)
+        }
     }
 
     @SubscribeEvent

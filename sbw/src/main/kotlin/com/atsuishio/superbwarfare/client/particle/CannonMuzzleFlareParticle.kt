@@ -61,6 +61,7 @@ open class CannonMuzzleFlareParticle protected constructor(
     }
 
     init {
+        FxLights.flash(x, y, z, 9.0, 13.0, 3.0)
         this.setSize(0.35f, 0.35f)
         this.quadSize *= 11f
         this.lifetime = max(1, life + (this.random.nextInt(1)))
