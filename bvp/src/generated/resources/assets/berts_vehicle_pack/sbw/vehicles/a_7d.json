@@ -6,6 +6,27 @@
     "Texture": "berts_vehicle_pack:textures/entity/a_7d.png",
     "WreckTexture": "berts_vehicle_pack:textures/entity_dead/a_7d.png"
   },
+  "AfterburnerPresentation": {
+    "Schema": 1,
+    "Frame": "VEHICLE_LOCAL_BLOCKS",
+    "Afterburning": false,
+    "Outlets": [
+      {
+        "Id": "engine_0",
+        "Position": [
+          0.0,
+          2.08,
+          -6.68
+        ],
+        "Direction": [
+          0,
+          0,
+          -1
+        ],
+        "NozzleRadiusBlocks": 0.5
+      }
+    ]
+  },
   "MouseSpeed": [
     0.2,
     0.2

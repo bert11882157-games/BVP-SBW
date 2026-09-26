@@ -6,6 +6,41 @@
     "Texture": "berts_vehicle_pack:textures/entity/su_25.png",
     "WreckTexture": "berts_vehicle_pack:textures/entity_dead/su_25.png"
   },
+  "AfterburnerPresentation": {
+    "Schema": 1,
+    "Frame": "VEHICLE_LOCAL_BLOCKS",
+    "Afterburning": false,
+    "Outlets": [
+      {
+        "Id": "engine_0",
+        "Position": [
+          0.847,
+          1.805,
+          -3.82
+        ],
+        "Direction": [
+          0,
+          0,
+          -1
+        ],
+        "NozzleRadiusBlocks": 0.24
+      },
+      {
+        "Id": "engine_1",
+        "Position": [
+          -0.847,
+          1.805,
+          -3.82
+        ],
+        "Direction": [
+          0,
+          0,
+          -1
+        ],
+        "NozzleRadiusBlocks": 0.24
+      }
+    ]
+  },
   "MouseSpeed": [
     0.2,
     0.2

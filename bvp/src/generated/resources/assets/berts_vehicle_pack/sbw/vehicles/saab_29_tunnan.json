@@ -6,6 +6,27 @@
     "Texture": "berts_vehicle_pack:textures/entity/saab_29_tunnan.png",
     "WreckTexture": "berts_vehicle_pack:textures/entity_dead/saab_29_tunnan.png"
   },
+  "AfterburnerPresentation": {
+    "Schema": 1,
+    "Frame": "VEHICLE_LOCAL_BLOCKS",
+    "Afterburning": false,
+    "Outlets": [
+      {
+        "Id": "engine_0",
+        "Position": [
+          0.0,
+          1.082,
+          -3.23
+        ],
+        "Direction": [
+          0,
+          0,
+          -1
+        ],
+        "NozzleRadiusBlocks": 0.24
+      }
+    ]
+  },
   "MouseSpeed": [
     0.2,
     0.2

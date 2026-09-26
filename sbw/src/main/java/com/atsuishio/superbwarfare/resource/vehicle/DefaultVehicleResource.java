@@ -151,6 +151,23 @@ public class DefaultVehicleResource implements IDBasedData<DefaultVehicleResourc
         @SerializedName("Flame") public Stream flame = new Stream();
         @SerializedName("Smoke") public Stream smoke = new Stream();
         @SerializedName("TapEmitters") public TapEmitter[] tapEmitters;
+        /** False for jets without an afterburner: the outlets then only drive the dry-thrust heat haze. */
+        @SerializedName("Afterburning") public Boolean afterburning;
+        /** Flame colours of this engine's afterburner (RGB 0..1); absent keeps the neutral orange. */
+        @SerializedName("Palette") public Palette palette;
+        /** Strength of the dry-thrust heat haze, 0..2 (1 = normal); absent means 1. */
+        @SerializedName("Haze") public Double haze;
+
+        public static final class Palette {
+            /** Hot core right behind the nozzle. */
+            @SerializedName("Core") public double[] core;
+            /** Flame body near the nozzle. */
+            @SerializedName("Flame") public double[] flame;
+            /** Flame body toward its tail. */
+            @SerializedName("Tail") public double[] tail;
+            /** Shock diamonds. */
+            @SerializedName("Diamonds") public double[] diamonds;
+        }
 
         public static final class TapEmitter {
             @SerializedName("Outlet") public String outlet;

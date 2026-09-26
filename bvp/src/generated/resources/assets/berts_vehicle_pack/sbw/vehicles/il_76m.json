@@ -6,6 +6,69 @@
     "Texture": "berts_vehicle_pack:textures/entity/il_76m.png",
     "WreckTexture": "berts_vehicle_pack:textures/entity_dead/il_76m.png"
   },
+  "AfterburnerPresentation": {
+    "Schema": 1,
+    "Frame": "VEHICLE_LOCAL_BLOCKS",
+    "Afterburning": false,
+    "Outlets": [
+      {
+        "Id": "engine_0",
+        "Position": [
+          5.95,
+          4.05,
+          4.23
+        ],
+        "Direction": [
+          0,
+          0,
+          -1
+        ],
+        "NozzleRadiusBlocks": 0.7
+      },
+      {
+        "Id": "engine_1",
+        "Position": [
+          -5.95,
+          4.05,
+          4.23
+        ],
+        "Direction": [
+          0,
+          0,
+          -1
+        ],
+        "NozzleRadiusBlocks": 0.7
+      },
+      {
+        "Id": "engine_2",
+        "Position": [
+          11.15,
+          3.9,
+          1.66
+        ],
+        "Direction": [
+          0,
+          0,
+          -1
+        ],
+        "NozzleRadiusBlocks": 0.7
+      },
+      {
+        "Id": "engine_3",
+        "Position": [
+          -11.15,
+          3.9,
+          1.66
+        ],
+        "Direction": [
+          0,
+          0,
+          -1
+        ],
+        "NozzleRadiusBlocks": 0.7
+      }
+    ]
+  },
   "MouseSpeed": [
     0.2,
     0.2

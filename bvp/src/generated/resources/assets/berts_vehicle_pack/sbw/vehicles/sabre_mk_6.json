@@ -6,6 +6,27 @@
     "Texture": "berts_vehicle_pack:textures/entity/sabre_mk_6.png",
     "WreckTexture": "berts_vehicle_pack:textures/entity_dead/sabre_mk_6.png"
   },
+  "AfterburnerPresentation": {
+    "Schema": 1,
+    "Frame": "VEHICLE_LOCAL_BLOCKS",
+    "Afterburning": false,
+    "Outlets": [
+      {
+        "Id": "engine_0",
+        "Position": [
+          0.0,
+          1.56,
+          -4.84
+        ],
+        "Direction": [
+          0,
+          0,
+          -1
+        ],
+        "NozzleRadiusBlocks": 0.23
+      }
+    ]
+  },
   "MouseSpeed": [
     0.2,
     0.2

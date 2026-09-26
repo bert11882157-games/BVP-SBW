@@ -6,6 +6,69 @@
     "Texture": "berts_vehicle_pack:textures/entity/m_50a.png",
     "WreckTexture": "berts_vehicle_pack:textures/entity_dead/m_50a.png"
   },
+  "AfterburnerPresentation": {
+    "Schema": 1,
+    "Frame": "VEHICLE_LOCAL_BLOCKS",
+    "Afterburning": false,
+    "Outlets": [
+      {
+        "Id": "engine_0",
+        "Position": [
+          6.152,
+          3.002,
+          -8.45
+        ],
+        "Direction": [
+          0,
+          0,
+          -1
+        ],
+        "NozzleRadiusBlocks": 0.43
+      },
+      {
+        "Id": "engine_1",
+        "Position": [
+          -6.152,
+          3.002,
+          -8.45
+        ],
+        "Direction": [
+          0,
+          0,
+          -1
+        ],
+        "NozzleRadiusBlocks": 0.43
+      },
+      {
+        "Id": "engine_2",
+        "Position": [
+          11.32,
+          4.724,
+          -13.81
+        ],
+        "Direction": [
+          0,
+          0,
+          -1
+        ],
+        "NozzleRadiusBlocks": 0.43
+      },
+      {
+        "Id": "engine_3",
+        "Position": [
+          -11.32,
+          4.724,
+          -13.81
+        ],
+        "Direction": [
+          0,
+          0,
+          -1
+        ],
+        "NozzleRadiusBlocks": 0.43
+      }
+    ]
+  },
   "MouseSpeed": [
     0.2,
     0.2

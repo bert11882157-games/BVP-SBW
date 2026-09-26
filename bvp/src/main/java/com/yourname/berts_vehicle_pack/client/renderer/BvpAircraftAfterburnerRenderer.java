@@ -52,7 +52,8 @@ public final class BvpAircraftAfterburnerRenderer {
         State state = STATES.get(vehicle);
         if (state == null || activeLevel == null) return;
         var controls = vehicle.getVehicleFlightControlSurfaceSnapshot(partialTicks);
-        boolean active = controls != null && controls.getAfterburnerActive();
+        boolean lit = controls != null && controls.getAfterburnerActive();
+        double throttle = controls == null ? 0.0D : Math.max(0.0F, Math.min(1.0F, controls.getThrottle()));
         try {
             DefaultVehicleResource resource = VehicleResource.getDefault(vehicle);
             if (!state.resolved || state.resource != resource) {
@@ -67,6 +68,9 @@ public final class BvpAircraftAfterburnerRenderer {
             }
             Config config = state.config;
             if (config == null) return;
+            boolean active = lit && config.afterburning();
+            // no shimmer from a stopped engine or a wreck
+            double haze = vehicle.engineRunning() ? config.haze() : 0.0D;
             var transform = vehicle.getVehicleTransform(partialTicks);
             double time = activeLevel.m_46467_() + partialTicks;
             int index = 0;
@@ -78,7 +82,7 @@ public final class BvpAircraftAfterburnerRenderer {
                 com.atsuishio.superbwarfare.client.particle.AfterburnerPlumes.submit(vehicle.m_19879_(), index++,
                         state.point.x, state.point.y, state.point.z,
                         state.direction.x, state.direction.y, state.direction.z,
-                        outlet.radius(), active, time);
+                        outlet.radius(), active, time, config.palette(), throttle, haze);
             }
         } catch (RuntimeException failure) {
             state.config = null;
@@ -147,7 +151,7 @@ public final class BvpAircraftAfterburnerRenderer {
                 }
             }
             Config config = state.config;
-            if (config == null) return;
+            if (config == null || !config.afterburning()) return;
             var transform = vehicle.getVehicleTransform(1.0F);
             Vec3 inherited = vehicle.getVehicleFlightPresentationSnapshot(1.0F).getMotion();
             if (!finite(inherited)) return;
@@ -256,7 +260,7 @@ public final class BvpAircraftAfterburnerRenderer {
 
     static Config compile(AfterburnerResource data) {
         if (data == null || (data.schema != 1 && data.schema != 2) || !"VEHICLE_LOCAL_BLOCKS".equals(data.frame)
-                || data.outlets == null || data.outlets.length == 0 || data.outlets.length > 4) {
+                || data.outlets == null || data.outlets.length == 0 || data.outlets.length > 8) {
             throw new IllegalArgumentException("Invalid afterburner schema, frame, or outlets");
         }
         var ids = new HashSet<String>();
@@ -295,8 +299,32 @@ public final class BvpAircraftAfterburnerRenderer {
                         emitter.interval, "FM_FLAME".equals(emitter.style)));
             }
         }
+        boolean afterburning = data.afterburning == null || data.afterburning;
+        double haze = data.haze == null ? 1.0D : data.haze;
+        if (!Double.isFinite(haze) || haze < 0.0D || haze > 2.0D) {
+            throw new IllegalArgumentException("Afterburner haze outside 0..2");
+        }
         return new Config(List.copyOf(outlets),
-                channel(data.flame, true), channel(data.smoke, false), List.copyOf(emitters));
+                channel(data.flame, true), channel(data.smoke, false), List.copyOf(emitters),
+                palette(data.palette), afterburning, haze);
+    }
+
+    /** Core, flame, tail and diamond RGB as twelve floats; null when absent (the neutral orange). */
+    static float[] palette(AfterburnerResource.Palette palette) {
+        if (palette == null) return null;
+        double[][] parts = {palette.core, palette.flame, palette.tail, palette.diamonds};
+        float[] result = new float[12];
+        for (int part = 0; part < 4; part++) {
+            double[] rgb = parts[part];
+            if (rgb == null || rgb.length != 3) throw new IllegalArgumentException("Afterburner palette needs four RGB triples");
+            for (int c = 0; c < 3; c++) {
+                if (!Double.isFinite(rgb[c]) || rgb[c] < 0.0D || rgb[c] > 1.0D) {
+                    throw new IllegalArgumentException("Afterburner palette value outside 0..1");
+                }
+                result[part * 3 + c] = (float) rgb[c];
+            }
+        }
+        return result;
     }
 
     static Vec3 tapSample(TapEmitter emitter, float x, float y, float z) {
@@ -390,7 +418,8 @@ public final class BvpAircraftAfterburnerRenderer {
     record TapEmitter(Vec3 position, Vec3 extents, Vec3 velocity, int interval, boolean flame) {}
     record Channel(float scale, float width, double length, double density, int lifetime,
                    float red, float green, float blue) {}
-    record Config(List<Outlet> outlets, Channel flame, Channel smoke, List<TapEmitter> tapEmitters) {}
+    record Config(List<Outlet> outlets, Channel flame, Channel smoke, List<TapEmitter> tapEmitters,
+                  float[] palette, boolean afterburning, double haze) {}
 
     static final class State {
         DefaultVehicleResource resource;

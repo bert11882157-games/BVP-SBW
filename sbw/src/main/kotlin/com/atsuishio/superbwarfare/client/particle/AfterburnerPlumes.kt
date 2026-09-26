@@ -51,6 +51,12 @@ object AfterburnerPlumes {
         var ignitedAt = -1e9
         var seenAt = 0.0
         val seed = Math.random() * 1000.0
+        /** Core, flame, tail, diamonds RGB (12 floats). */
+        var palette = DEFAULT_PALETTE
+        /** Dry-thrust heat haze 0..1, eased; target set each frame from throttle and afterburner. */
+        var haze = 0.0
+        var hazeTarget = 0.0
+        var hazeScale = 1.0
     }
 
     private val plumes = HashMap<Long, Plume>()
@@ -64,7 +70,18 @@ object AfterburnerPlumes {
      */
     @JvmStatic
     fun submit(entityId: Int, outlet: Int, x: Double, y: Double, z: Double, dx: Double, dy: Double, dz: Double,
-               nozzleRadius: Double, active: Boolean, time: Double) {
+               nozzleRadius: Double, active: Boolean, time: Double) =
+        submit(entityId, outlet, x, y, z, dx, dy, dz, nozzleRadius, active, time, null, 0.0, 1.0)
+
+    /**
+     * As above, with this engine's afterburner [palette] (core, flame, tail, diamonds RGB; null = neutral orange),
+     * the accepted [throttle] 0..1 for the dry-thrust heat haze and its strength [hazeScale] (0 = none). The haze
+     * fades out as the afterburner lights so it never competes with the flame.
+     */
+    @JvmStatic
+    fun submit(entityId: Int, outlet: Int, x: Double, y: Double, z: Double, dx: Double, dy: Double, dz: Double,
+               nozzleRadius: Double, active: Boolean, time: Double, palette: FloatArray?, throttle: Double,
+               hazeScale: Double) {
         val mc = Minecraft.getInstance()
         if (mc.level !== level) { plumes.clear(); level = mc.level }
         val length = sqrt(dx * dx + dy * dy + dz * dz)
@@ -83,6 +100,12 @@ object AfterburnerPlumes {
         plume.clock = time
         plume.intensity = if (active) min(1.0, plume.intensity + step / STARTUP_TICKS)
             else max(0.0, plume.intensity - step / SHUTDOWN_TICKS)
+        plume.palette = if (palette != null && palette.size >= 12) palette else DEFAULT_PALETTE
+        plume.hazeScale = if (hazeScale.isFinite()) hazeScale.coerceIn(0.0, 2.0) else 1.0
+        val thrust = if (throttle.isFinite()) throttle.coerceIn(0.0, 1.0) else 0.0
+        // Idle engines still shimmer a little; the haze grows with thrust and gives way to the afterburner.
+        plume.hazeTarget = (0.25 + 0.75 * thrust) * (1.0 - plume.intensity).pow(2.0)
+        plume.haze += (plume.hazeTarget - plume.haze) * min(1.0, step / 8.0)
         plume.seenAt = time
     }
 
@@ -99,6 +122,7 @@ object AfterburnerPlumes {
         val glow = BlastSprites.glowSprites() ?: return
         val cam = event.camera.position
         quadCount = 0
+        HeatHaze.render(mc, event, plumes.values, time)
         val ordered = plumes.values.filter { it.intensity > 0.005 || time - it.ignitedAt < IGNITION_TICKS }
             .sortedByDescending { (it.x - cam.x).pow(2) + (it.y - cam.y).pow(2) + (it.z - cam.z).pow(2) }
         for (plume in ordered) emit(plume, time, cam.x, cam.y, cam.z, fire, glow[0], glow[1], event.camera.leftVector.x().toDouble(),
@@ -151,7 +175,10 @@ object AfterburnerPlumes {
                 val width = r * BlastSprites.PUFF_FILL * (1.2 - 0.55 * t) * (1.0 + 0.07 * sin(time * 1.9 + k * 2.3 + p.seed))
                 val warm = 1.0 - t
                 val k0 = 0.8 * i * fade * side
-                val rr = k0 * 1.0; val gg = k0 * (0.36 + 0.34 * warm); val bb = k0 * (0.1 + 0.22 * warm)
+                val pal = p.palette
+                val rr = k0 * (pal[6] + (pal[3] - pal[6]) * warm)
+                val gg = k0 * (pal[7] + (pal[4] - pal[7]) * warm)
+                val bb = k0 * (pal[8] + (pal[5] - pal[8]) * warm)
                 val frame = fire[(k + (time * 0.9).toInt()) % fire.size]
                 segment(ox, oy, oz, p, s0 - segLength * 0.3, s0 + segLength * 0.7, width, width * 0.9, sx, sy, sz,
                     rr, gg, bb, 0.09 * i * fade * side, frame)
@@ -159,7 +186,7 @@ object AfterburnerPlumes {
             // Hot core close to the nozzle.
             val coreLength = length * 0.36
             segment(ox, oy, oz, p, -0.05 * r, coreLength, r * 0.6 * flicker, r * 0.25, sx, sy, sz,
-                0.95 * i * side, 0.78 * i * side, 0.5 * i * side, 0.12 * i * side, flash)
+                p.palette[0] * i * side, p.palette[1] * i * side, p.palette[2] * i * side, 0.12 * i * side, flash)
             // Shock diamonds: stationary along the jet, breathing and flickering, strongest near the nozzle.
             val ringLevel = ((i - 0.45) / 0.45).coerceIn(0.0, 1.0)
             if (ringLevel > 0.0) {
@@ -173,7 +200,7 @@ object AfterburnerPlumes {
                     val halfLength = r * 0.42
                     val width = r * 0.72 * (1.0 - 0.1 * n)
                     segment(ox, oy, oz, p, centre - halfLength, centre + halfLength, width, width, sx, sy, sz,
-                        k1, k1 * 0.76, k1 * 0.46, 0.05 * k1, flash)
+                        k1 * p.palette[9], k1 * p.palette[10], k1 * p.palette[11], 0.05 * k1, flash)
                 }
             }
         }
@@ -187,8 +214,11 @@ object AfterburnerPlumes {
                 val s0 = t * length * 0.8
                 val fade = (1.0 - t).pow(1.1)
                 val k2 = 0.55 * i * back * fade
+                val pal = p.palette
+                val w = 1.0 - t
                 billboard(ox + p.dx * s0, oy + p.dy * s0, oz + p.dz * s0, r * (1.25 - 0.55 * t), time * 0.03 + k,
-                    k2, k2 * (0.42 + 0.3 * (1.0 - t)), k2 * (0.15 + 0.2 * (1.0 - t)), 0.05 * k2,
+                    k2 * (pal[6] + (pal[3] - pal[6]) * w), k2 * (pal[7] + (pal[4] - pal[7]) * w),
+                    k2 * (pal[8] + (pal[5] - pal[8]) * w), 0.05 * k2,
                     fire[(k + (time * 0.9).toInt()) % fire.size], lx, ly, lz, ux, uy, uz)
             }
             val ringLevel = ((i - 0.45) / 0.45).coerceIn(0.0, 1.0)
@@ -199,17 +229,19 @@ object AfterburnerPlumes {
                     if (centre > length * 0.9) break
                     val k3 = 0.7 * ringLevel * back * (1.0 - 0.17 * n)
                     billboard(ox + p.dx * centre, oy + p.dy * centre, oz + p.dz * centre, r * 0.8 * (1.0 - 0.1 * n),
-                        0.0, k3, k3 * 0.76, k3 * 0.46, 0.0, flash, lx, ly, lz, ux, uy, uz)
+                        0.0, k3 * p.palette[9], k3 * p.palette[10], k3 * p.palette[11], 0.0, flash, lx, ly, lz, ux, uy, uz)
                 }
             }
         }
         // Nozzle seen from behind: a glowing ring with a hot centre; always a little heat glow.
         val rear = (alongView.pow(1.5) * i).coerceIn(0.0, 1.0)
         val ax = ox + p.dx * r * 0.15; val ay = oy + p.dy * r * 0.15; val az = oz + p.dz * r * 0.15
-        billboard(ax, ay, az, r * 1.15, time * 0.02, 1.0 * rear, 0.62 * rear, 0.3 * rear, 0.1 * rear, ring,
-            lx, ly, lz, ux, uy, uz)
-        billboard(ax, ay, az, r * (0.7 + 0.5 * rear), 0.0, 0.7 * i * (0.4 + 0.6 * rear), 0.5 * i * (0.4 + 0.6 * rear),
-            0.28 * i * (0.4 + 0.6 * rear), 0.0, flash, lx, ly, lz, ux, uy, uz)
+        val pal = p.palette
+        billboard(ax, ay, az, r * 1.15, time * 0.02, pal[3] * rear, pal[4] * 0.85 * rear, pal[5] * 0.85 * rear,
+            0.1 * rear, ring, lx, ly, lz, ux, uy, uz)
+        val hot = i * (0.4 + 0.6 * rear)
+        billboard(ax, ay, az, r * (0.7 + 0.5 * rear), 0.0, 0.72 * pal[0] * hot, 0.62 * pal[1] * hot,
+            0.55 * pal[2] * hot, 0.0, flash, lx, ly, lz, ux, uy, uz)
     }
 
     /** Camera-facing ribbon along the plume axis from distance [s0] to [s1] aft of the nozzle. */
@@ -289,4 +321,135 @@ object AfterburnerPlumes {
     }
 
     private const val QUAD_FLOATS = 20
+
+    /** The previous hard-coded orange: core, flame, tail, diamonds. */
+    @JvmField val DEFAULT_PALETTE = floatArrayOf(0.95f, 0.78f, 0.5f, 1f, 0.70f, 0.32f, 1f, 0.36f, 0.1f, 1f, 0.76f, 0.46f)
+
+    /**
+     * Dry-thrust heat haze: the scene behind each nozzle shimmers, drawn by refracting a copy of the frame
+     * (shader `superbwarfare:heat_haze`) through soft ribbons along the exhaust. Faint at idle, clearer at full
+     * dry thrust, gone while the afterburner burns.
+     */
+    private object HeatHaze {
+        private var copy: com.mojang.blaze3d.pipeline.TextureTarget? = null
+        private val q = FloatArray(512 * QUAD_FLOATS)
+        private var n = 0
+
+        fun render(mc: Minecraft, event: RenderLevelStageEvent, plumes: Collection<Plume>, time: Double) {
+            val program = shader ?: return
+            n = 0
+            val cam = event.camera.position
+            val lx = event.camera.leftVector.x().toDouble(); val ly = event.camera.leftVector.y().toDouble()
+            val lz = event.camera.leftVector.z().toDouble()
+            val ux = event.camera.upVector.x().toDouble(); val uy = event.camera.upVector.y().toDouble()
+            val uz = event.camera.upVector.z().toDouble()
+            for (p in plumes) {
+                val h = p.haze * p.hazeScale
+                if (h < 0.02) continue
+                val ox = p.x - cam.x; val oy = p.y - cam.y; val oz = p.z - cam.z
+                val dist2 = ox * ox + oy * oy + oz * oz
+                if (dist2 > 160.0 * 160.0) continue
+                val r = p.radius
+                val vl = sqrt(dist2).coerceAtLeast(1e-6)
+                var sx = p.dy * -oz - p.dz * -oy
+                var sy = p.dz * -ox - p.dx * -oz
+                var sz = p.dx * -oy - p.dy * -ox
+                val sl = sqrt(sx * sx + sy * sy + sz * sz)
+                val along = abs((p.dx * -ox + p.dy * -oy + p.dz * -oz) / vl)
+                val side = (1.0 - along * along).coerceIn(0.0, 1.0)
+                if (sl > 1e-4 * vl && side > 0.02) {
+                    sx /= sl; sy /= sl; sz /= sl
+                    val length = r * 10.0
+                    val pieces = 4
+                    for (k in 0 until pieces) {
+                        val s0 = length * k / pieces
+                        val s1 = length * (k + 1) / pieces
+                        val w0 = r * (0.85 + 1.1 * k / pieces)
+                        val w1 = r * (0.85 + 1.1 * (k + 1) / pieces)
+                        val a0 = h * side * (1.0 - k.toDouble() / pieces)
+                        val a1 = h * side * (1.0 - (k + 1).toDouble() / pieces)
+                        val ax = ox + p.dx * s0; val ay = oy + p.dy * s0; val az = oz + p.dz * s0
+                        val bx = ox + p.dx * s1; val by = oy + p.dy * s1; val bz = oz + p.dz * s1
+                        add(ax - sx * w0, ay - sy * w0, az - sz * w0, 0f, k.toFloat() / pieces, a0,
+                            ax + sx * w0, ay + sy * w0, az + sz * w0, 1f, k.toFloat() / pieces, a0,
+                            bx + sx * w1, by + sy * w1, bz + sz * w1, 1f, (k + 1f) / pieces, a1,
+                            bx - sx * w1, by - sy * w1, bz - sz * w1, 0f, (k + 1f) / pieces, a1)
+                    }
+                }
+                val back = 1.0 - side
+                if (back > 0.02) {
+                    // Looking up the exhaust: a round shimmer over the nozzle.
+                    val s = r * 1.6
+                    val cx = ox + p.dx * r * 0.5; val cy = oy + p.dy * r * 0.5; val cz = oz + p.dz * r * 0.5
+                    val a = h * back
+                    add(cx - (lx + ux) * s, cy - (ly + uy) * s, cz - (lz + uz) * s, 0f, 0f, a,
+                        cx - (lx - ux) * s, cy - (ly - uy) * s, cz - (lz - uz) * s, 0f, 1f, a,
+                        cx + (lx + ux) * s, cy + (ly + uy) * s, cz + (lz + uz) * s, 1f, 1f, a,
+                        cx + (lx - ux) * s, cy + (ly - uy) * s, cz + (lz - uz) * s, 1f, 0f, a)
+                }
+            }
+            if (n == 0) return
+            val main = mc.mainRenderTarget
+            val w = main.width; val hgt = main.height
+            val target = copy?.takeIf { it.width == w && it.height == hgt } ?: run {
+                copy?.destroyBuffers()
+                com.mojang.blaze3d.pipeline.TextureTarget(w, hgt, false, Minecraft.ON_OSX).also {
+                    it.setFilterMode(org.lwjgl.opengl.GL11.GL_LINEAR); copy = it }
+            }
+            // Copy the frame drawn so far, then refract it through the haze ribbons.
+            GlStateManager._glBindFramebuffer(org.lwjgl.opengl.GL30.GL_READ_FRAMEBUFFER, main.frameBufferId)
+            GlStateManager._glBindFramebuffer(org.lwjgl.opengl.GL30.GL_DRAW_FRAMEBUFFER, target.frameBufferId)
+            GlStateManager._glBlitFrameBuffer(0, 0, w, hgt, 0, 0, w, hgt, org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT,
+                org.lwjgl.opengl.GL11.GL_NEAREST)
+            main.bindWrite(false)
+            val modelView = RenderSystem.getModelViewStack()
+            modelView.pushPose()
+            modelView.mulPoseMatrix(event.poseStack.last().pose())
+            RenderSystem.applyModelViewMatrix()
+            RenderSystem.setShader { program }
+            RenderSystem.setShaderTexture(0, target.colorTextureId)
+            RenderSystem.enableBlend()
+            RenderSystem.defaultBlendFunc()
+            RenderSystem.depthMask(false)
+            RenderSystem.enableDepthTest()
+            RenderSystem.disableCull()
+            val builder = Tesselator.getInstance().builder
+            builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR)
+            for (k in 0 until n) {
+                val o = k * 24
+                for (v in 0 until 4) {
+                    val b = o + v * 6
+                    builder.vertex(q[b].toDouble(), q[b + 1].toDouble(), q[b + 2].toDouble()).uv(q[b + 3], q[b + 4])
+                        .color(1f, 1f, 1f, q[b + 5].coerceIn(0f, 1f)).endVertex()
+                }
+            }
+            BufferUploader.drawWithShader(builder.end())
+            RenderSystem.enableCull()
+            RenderSystem.depthMask(true)
+            RenderSystem.disableBlend()
+            modelView.popPose()
+            RenderSystem.applyModelViewMatrix()
+        }
+
+        private fun add(x0: Double, y0: Double, z0: Double, u0: Float, v0: Float, a0: Double,
+                        x1: Double, y1: Double, z1: Double, u1: Float, v1: Float, a1: Double,
+                        x2: Double, y2: Double, z2: Double, u2: Float, v2: Float, a2: Double,
+                        x3: Double, y3: Double, z3: Double, u3: Float, v3: Float, a3: Double) {
+            if ((n + 1) * 24 > q.size) return
+            val o = n * 24
+            val xs = doubleArrayOf(x0, x1, x2, x3); val ys = doubleArrayOf(y0, y1, y2, y3)
+            val zs = doubleArrayOf(z0, z1, z2, z3); val us = floatArrayOf(u0, u1, u2, u3)
+            val vs = floatArrayOf(v0, v1, v2, v3); val al = doubleArrayOf(a0, a1, a2, a3)
+            for (v in 0 until 4) {
+                val b = o + v * 6
+                q[b] = xs[v].toFloat(); q[b + 1] = ys[v].toFloat(); q[b + 2] = zs[v].toFloat()
+                q[b + 3] = us[v]; q[b + 4] = vs[v]; q[b + 5] = al[v].toFloat()
+            }
+            n++
+        }
+    }
+
+    /** `superbwarfare:heat_haze`, registered by [BlastShaders]. */
+    @JvmStatic
+    var shader: net.minecraft.client.renderer.ShaderInstance? = null
 }

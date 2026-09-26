@@ -6,6 +6,97 @@
     "Texture": "berts_vehicle_pack:textures/entity/b_47e.png",
     "WreckTexture": "berts_vehicle_pack:textures/entity_dead/b_47e.png"
   },
+  "AfterburnerPresentation": {
+    "Schema": 1,
+    "Frame": "VEHICLE_LOCAL_BLOCKS",
+    "Afterburning": false,
+    "Outlets": [
+      {
+        "Id": "engine_0",
+        "Position": [
+          6.24,
+          2.67,
+          2.12
+        ],
+        "Direction": [
+          0,
+          0,
+          -1
+        ],
+        "NozzleRadiusBlocks": 0.2
+      },
+      {
+        "Id": "engine_1",
+        "Position": [
+          -6.24,
+          2.67,
+          2.12
+        ],
+        "Direction": [
+          0,
+          0,
+          -1
+        ],
+        "NozzleRadiusBlocks": 0.2
+      },
+      {
+        "Id": "engine_2",
+        "Position": [
+          7.24,
+          2.67,
+          2.12
+        ],
+        "Direction": [
+          0,
+          0,
+          -1
+        ],
+        "NozzleRadiusBlocks": 0.2
+      },
+      {
+        "Id": "engine_3",
+        "Position": [
+          -7.24,
+          2.67,
+          2.12
+        ],
+        "Direction": [
+          0,
+          0,
+          -1
+        ],
+        "NozzleRadiusBlocks": 0.2
+      },
+      {
+        "Id": "engine_4",
+        "Position": [
+          13.68,
+          2.62,
+          -4.32
+        ],
+        "Direction": [
+          0,
+          0,
+          -1
+        ],
+        "NozzleRadiusBlocks": 0.2
+      },
+      {
+        "Id": "engine_5",
+        "Position": [
+          -13.68,
+          2.62,
+          -4.32
+        ],
+        "Direction": [
+          0,
+          0,
+          -1
+        ],
+        "NozzleRadiusBlocks": 0.2
+      }
+    ]
+  },
   "MouseSpeed": [
     0.2,
     0.2

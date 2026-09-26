@@ -6,6 +6,27 @@
     "Texture": "berts_vehicle_pack:textures/entity/md_450_ouragan.png",
     "WreckTexture": "berts_vehicle_pack:textures/entity_dead/md_450_ouragan.png"
   },
+  "AfterburnerPresentation": {
+    "Schema": 1,
+    "Frame": "VEHICLE_LOCAL_BLOCKS",
+    "Afterburning": false,
+    "Outlets": [
+      {
+        "Id": "engine_0",
+        "Position": [
+          0.0,
+          1.387,
+          -3.74
+        ],
+        "Direction": [
+          0,
+          0,
+          -1
+        ],
+        "NozzleRadiusBlocks": 0.28
+      }
+    ]
+  },
   "MouseSpeed": [
     0.2,
     0.2

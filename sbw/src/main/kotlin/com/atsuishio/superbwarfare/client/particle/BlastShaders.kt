@@ -16,5 +16,7 @@ object BlastShaders {
     fun register(event: RegisterShadersEvent) {
         event.registerShader(ShaderInstance(event.resourceProvider, ResourceLocation(Mod.MODID, "blast"),
             DefaultVertexFormat.PARTICLE)) { BlastEffects.shader = it }
+        event.registerShader(ShaderInstance(event.resourceProvider, ResourceLocation(Mod.MODID, "heat_haze"),
+            DefaultVertexFormat.POSITION_TEX_COLOR)) { AfterburnerPlumes.shader = it }
     }
 }

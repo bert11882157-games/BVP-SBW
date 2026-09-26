@@ -1,0 +1,31 @@
+{
+  "_comment": "Jet-pipe exits (vehicle-local blocks: +X left, +Y up, +Z forward; mirrored pairs listed once with +X). Found by nozzles.py (rear-view pits, see-through pipes and dark painted exits) and checked by eye on its rear views; seeds marked 'manual' were read off the views and depth probes. 'dry': jets without an afterburner (heat haze only). 'fix': corrections to afterburner outlets that sat inside the airframe or off the nozzle.",
+  "dry": {
+    "a_10":           [[1.449, 3.021, -4.99, 0.30]],
+    "a_7d":           [[0.0, 2.08, -6.68, 0.50, "manual"]],
+    "b_47e":          [[6.24, 2.67, 2.12, 0.20], [7.24, 2.67, 2.12, 0.20], [13.68, 2.62, -4.32, 0.20]],
+    "f2h_2":          [[0.75, 1.53, -2.50, 0.15]],
+    "f9f_2":          [[0.0, 1.407, -3.03, 0.36]],
+    "f_84f":          [[0.0, 1.602, -5.32, 0.30]],
+    "fiat_g_91":      [[0.0, 1.41, -4.69, 0.20]],
+    "ho_229":         [[0.65, 2.12, -1.28, 0.22, "manual"]],
+    "il_76m":         [[5.95, 4.05, 4.23, 0.70, "manual"], [11.15, 3.90, 1.66, 0.70, "manual"]],
+    "m_50a":          [[6.152, 3.002, -8.45, 0.43], [11.32, 4.724, -13.81, 0.43]],
+    "md_450_ouragan": [[0.0, 1.387, -3.74, 0.28]],
+    "meteor_f_8":     [[2.266, 1.221, -1.94, 0.15]],
+    "mig_15bis":      [[0.0, 1.086, -3.23, 0.26]],
+    "mig_9":          [[0.30, 0.72, -0.93, 0.18, "manual"]],
+    "saab_29_tunnan": [[0.0, 1.082, -3.23, 0.24]],
+    "sabre_mk_6":     [[0.0, 1.56, -4.84, 0.23]],
+    "su_25":          [[0.847, 1.805, -3.82, 0.24]],
+    "su_39":          [[0.926, 1.808, -4.08, 0.35]],
+    "yak_15p":        [[0.0, 0.759, -0.30, 0.22]]
+  },
+  "fix": {
+    "f_14a":     [[1.289, 1.781, -8.778, 0.43]],
+    "f_14d":     [[1.289, 1.781, -8.778, 0.43]],
+    "fa_18e":    [[0.52, 1.585, -8.496, 0.34]],
+    "b_1b":      [[3.039, 2.20, -11.069, 0.62], [4.713, 2.20, -11.069, 0.62]],
+    "mirage_f1": [[0.0, 1.731, -6.668, 0.43]]
+  }
+}

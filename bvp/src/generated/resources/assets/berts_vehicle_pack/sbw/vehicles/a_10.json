@@ -6,6 +6,41 @@
     "Texture": "berts_vehicle_pack:textures/entity/a_10.png",
     "WreckTexture": "berts_vehicle_pack:textures/entity_dead/a_10.png"
   },
+  "AfterburnerPresentation": {
+    "Schema": 1,
+    "Frame": "VEHICLE_LOCAL_BLOCKS",
+    "Afterburning": false,
+    "Outlets": [
+      {
+        "Id": "engine_0",
+        "Position": [
+          1.449,
+          3.021,
+          -4.99
+        ],
+        "Direction": [
+          0,
+          0,
+          -1
+        ],
+        "NozzleRadiusBlocks": 0.3
+      },
+      {
+        "Id": "engine_1",
+        "Position": [
+          -1.449,
+          3.021,
+          -4.99
+        ],
+        "Direction": [
+          0,
+          0,
+          -1
+        ],
+        "NozzleRadiusBlocks": 0.3
+      }
+    ]
+  },
   "MouseSpeed": [
     0.2,
     0.2

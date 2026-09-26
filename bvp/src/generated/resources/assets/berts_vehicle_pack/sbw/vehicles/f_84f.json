@@ -6,6 +6,27 @@
     "Texture": "berts_vehicle_pack:textures/entity/f_84f.png",
     "WreckTexture": "berts_vehicle_pack:textures/entity_dead/f_84f.png"
   },
+  "AfterburnerPresentation": {
+    "Schema": 1,
+    "Frame": "VEHICLE_LOCAL_BLOCKS",
+    "Afterburning": false,
+    "Outlets": [
+      {
+        "Id": "engine_0",
+        "Position": [
+          0.0,
+          1.602,
+          -5.32
+        ],
+        "Direction": [
+          0,
+          0,
+          -1
+        ],
+        "NozzleRadiusBlocks": 0.3
+      }
+    ]
+  },
   "MouseSpeed": [
     0.2,
     0.2

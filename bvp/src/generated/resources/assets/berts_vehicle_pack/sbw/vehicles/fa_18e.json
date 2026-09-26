@@ -11,36 +11,37 @@
     0.2
   ],
   "AfterburnerPresentation": {
+    "Palette": {"Core": [1.0, 0.92, 0.94], "Flame": [1.0, 0.56, 0.52], "Tail": [1.0, 0.48, 0.2], "Diamonds": [1.0, 0.72, 0.86]},
     "Schema": 2,
     "Frame": "VEHICLE_LOCAL_BLOCKS",
     "Outlets": [
       {
         "Id": "afterburner_0",
         "Position": [
-          1.051724375,
-          1.8405175,
-          -7.3094825
+          0.52,
+          1.585,
+          -8.496
         ],
         "Direction": [
           0,
           0,
           -1
         ],
-        "NozzleRadiusBlocks": 0.42
+        "NozzleRadiusBlocks": 0.34
       },
       {
         "Id": "afterburner_1",
         "Position": [
-          -1.051724375,
-          1.8405175,
-          -7.3094825
+          -0.52,
+          1.585,
+          -8.496
         ],
         "Direction": [
           0,
           0,
           -1
         ],
-        "NozzleRadiusBlocks": 0.42
+        "NozzleRadiusBlocks": 0.34
       }
     ],
     "Flame": {

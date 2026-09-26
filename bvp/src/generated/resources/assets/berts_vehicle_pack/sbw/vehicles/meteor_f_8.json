@@ -6,6 +6,41 @@
     "Texture": "berts_vehicle_pack:textures/entity/meteor_f_8.png",
     "WreckTexture": "berts_vehicle_pack:textures/entity_dead/meteor_f_8.png"
   },
+  "AfterburnerPresentation": {
+    "Schema": 1,
+    "Frame": "VEHICLE_LOCAL_BLOCKS",
+    "Afterburning": false,
+    "Outlets": [
+      {
+        "Id": "engine_0",
+        "Position": [
+          2.266,
+          1.221,
+          -1.94
+        ],
+        "Direction": [
+          0,
+          0,
+          -1
+        ],
+        "NozzleRadiusBlocks": 0.15
+      },
+      {
+        "Id": "engine_1",
+        "Position": [
+          -2.266,
+          1.221,
+          -1.94
+        ],
+        "Direction": [
+          0,
+          0,
+          -1
+        ],
+        "NozzleRadiusBlocks": 0.15
+      }
+    ]
+  },
   "MouseSpeed": [
     0.2,
     0.2

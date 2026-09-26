@@ -11,22 +11,23 @@
     0.2
   ],
   "AfterburnerPresentation": {
+    "Palette": {"Core": [1.0, 0.93, 0.72], "Flame": [1.0, 0.68, 0.26], "Tail": [0.96, 0.4, 0.1], "Diamonds": [1.0, 0.86, 0.56]},
     "Schema": 2,
     "Frame": "VEHICLE_LOCAL_BLOCKS",
     "Outlets": [
       {
         "Id": "afterburner_0",
         "Position": [
-          0,
-          1.950305,
-          -6.537643125
+          0.0,
+          1.731,
+          -6.668
         ],
         "Direction": [
           0,
           0,
           -1
         ],
-        "NozzleRadiusBlocks": 0.617
+        "NozzleRadiusBlocks": 0.43
       }
     ],
     "Flame": {
