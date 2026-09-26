@@ -1,6 +1,11 @@
 #!/usr/bin/env python3
 """Rebuilds tracked vehicles' track paths so the links wrap the running gear.
 
+The path is the line of the links' pivots. A link is a plate (full width, outer side) with guide horns on its
+inner side that run between the road wheels, so the belt puts the plate's inner face on the wheels: the pivot
+path runs at wheel radius minus the plate's inner offset from the pivot (measured from the link model), and the
+horns overlap the wheels as real guide horns do.
+
 The authored paths were coarse polygons (about a dozen keyframes) scaled into a bounding box: links cut the corners
 at the idler and sprocket, passed through the tops of the idler and sprocket, and ran through the bottoms of the road
 wheels. The new path is the belt around the actual wheels: the convex hull of every wheel circle grown by the link
@@ -19,6 +24,7 @@ GEN = os.path.join(HERE, '..', '..', 'bvp', 'src', 'generated', 'resources')
 VEH = os.path.join(GEN, 'assets/berts_vehicle_pack/sbw/vehicles')
 GEO = os.path.join(GEN, 'assets/berts_vehicle_pack/custom_geo')
 KEYFRAMES = 120
+GROUND_LIFT = 0.05   # plates this far above the model's ground plane
 ARC_STEP_DEG = 3.0
 
 
@@ -59,10 +65,11 @@ def hull(points):
     return np.array(lower[:-1] + upper[:-1])
 
 
-def belt(circles, h):
-    pts = []
+def belt(circles, offset, extra=()):
+    """Hull of the wheel circles grown by [offset] (pivot distance outside the wheel surface) and [extra] points."""
+    pts = [np.asarray(p, float) for p in extra]
     for c, r in circles:
-        R = r + h
+        R = r + offset
         for a in np.arange(0, 360, ARC_STEP_DEG):
             pts.append(c + R * np.array([math.cos(math.radians(a)), math.sin(math.radians(a))]))
     return hull(np.array(pts))                     # counter-clockwise in (z, y)
@@ -116,9 +123,10 @@ def ray_up(tris, o, maxd):
     return t[hit].min() if hit.any() else np.inf
 
 
-def clear_hull(pts, bones, side, circles, h):
-    """Lets the upper run sag under the hull (fenders, sponsons) where the straight run would pass through it:
-    one smooth plateau-shaped sag between the idler and sprocket, never below the road wheels."""
+def clear_hull(pts, bones, side, circles, offset, outer):
+    """Lets the upper run sag under the hull (fenders, sponsons) where the links' outer face would pass through
+    it: one smooth plateau-shaped sag between the idler and sprocket, never below the road wheels. [offset] is
+    the pivot path's distance outside the wheels, [outer] the links' outer face above the pivot."""
     tris = hull_triangles(bones)
     rot = bones.get(side['LinkRotationPrefix'] + '0')
     P = bone_points(rot) if rot else None
@@ -127,18 +135,20 @@ def clear_hull(pts, bones, side, circles, h):
     xs = [P[:, 0].min() + 0.3, (P[:, 0].min() + P[:, 0].max()) / 2, P[:, 0].max() - 0.3]
     median_y = np.median([c[1] for c, _ in circles])
     road = [(c, r) for c, r in circles if c[1] <= median_y + 1.0]
-    road_top = max(c[1] + r for c, r in road) + h
+    road_top = max(c[1] + r for c, r in road) + offset
     zs = [c[0] for c, _ in circles]
     z_lo, z_hi = min(zs), max(zs)
     upper = [i for i, (z, y) in enumerate(pts) if y > road_top + 0.5 and z_lo < z < z_hi]
     if not upper:
         return pts, 0
     need = 0.0
+    margin = 0.1
     for i in upper:
         z, y = pts[i]
-        clear = min(ray_up(tris, np.array([x, y - 3 * h, z]), 6 * h) for x in xs) - 2 * h
-        if clear < h:
-            need = max(need, h - clear + 0.05)
+        # hull surfaces above the pivot line only: anything below it is inside the loop
+        gap = min(ray_up(tris, np.array([x, y, z]), outer + 4.0) for x in xs) - outer
+        if gap < margin:
+            need = max(need, margin - gap)
     if need <= 0:
         return pts, 0
     out = pts.copy()
@@ -150,7 +160,7 @@ def clear_hull(pts, bones, side, circles, h):
         ramp = min(1.0, min(t, 1 - t) / 0.18)
         ramp = ramp * ramp * (3 - 2 * ramp)
         out[i, 1] = max(road_top, y - need * ramp)
-    return out, len(upper)
+    return out, need
 
 
 def link_centres(bones, side):
@@ -163,6 +173,27 @@ def link_centres(bones, side):
         out.append(np.array(b['pivot'], float))
         i += 1
     return np.array(out) if out else np.zeros((0, 3))
+
+
+def link_profile(bones, side, h):
+    """(inner, outer): offsets from a link's pivot, outward positive, of the plate's inner face (where the
+    wheels roll) and of the link's outermost face, from the rest model (links rest flat, outward = +y)."""
+    b = bones.get(side['LinkRotationPrefix'] + '0')
+    pm = (b or {}).get('poly_mesh') or {}
+    if not pm.get('polys'):
+        return -h, h
+    piv = np.array(b['pivot'], float)
+    rows = []
+    for poly in pm['polys']:
+        q = np.array([pm['positions'][v[0]] for v in poly], float) - piv
+        rows.append((q[:, 1].min(), q[:, 1].max(), np.ptp(q[:, 0])))
+    r = np.array(rows)
+    full = r[r[:, 2] > 0.8 * r[:, 2].max()]
+    inner = float(full[:, 0].min()) if len(full) else -h
+    return inner, float(r[:, 1].max())
+
+
+FITTED = os.path.join(HERE, 'fitted_wheels.json')
 
 
 def unlisted_wheels(bones, side, listed):
@@ -193,9 +224,13 @@ def fit_circle(P):
     return np.array([cx, cy]), math.sqrt(max(k + cx * cx + cy * cy, 0.0))
 
 
-def link_end_circles(bones, side, circles, h):
+def link_end_circles(bones, side, circles, h, vid=None):
     """Sprocket or idler modelled into the hull (no bone of its own): where the authored links reach well past
     the wheels, the end of the loop is fitted as a wheel from the links' own rest positions."""
+    cache = json.load(open(FITTED)) if os.path.exists(FITTED) else {}
+    key = f'{vid}:{side["Side"]}'
+    if vid and key in cache:
+        return [(n, (np.array(c), r)) for n, c, r in cache[key]]
     C = link_centres(bones, side)
     if len(C) < 8:
         return []
@@ -215,6 +250,12 @@ def link_end_circles(bones, side, circles, h):
         # keep the fitted wheel's outer edge where the authored loop ends
         c = np.array([tip[0] + (r + h) * (1 if name == 'rear' else -1), c[1]])
         out.append((name, (c, r)))
+    if vid and out:
+        # Fitted once from the authored links (which sat [h] outside the wheels); later runs reuse the fit,
+        # because the links have moved onto the belt by then.
+        cache[key] = [(n, [round(float(x), 5) for x in c], round(r, 5)) for n, (c, r) in out]
+        with open(FITTED, 'w') as fh:
+            json.dump(dict(sorted(cache.items())), fh, indent=1)
     return out
 
 
@@ -255,22 +296,33 @@ def rebuild(vid, write=False):
         if extra:
             circles += [c for _, c in extra]
             report.append(f'{s}: added unlisted wheels ' + ', '.join(n for n, _ in extra))
-        ends = link_end_circles(bones, side, circles, h)
+        ends = link_end_circles(bones, side, circles, h, vid)
         if ends:
             circles += [c for _, c in ends]
             report.append(f'{s}: fitted {"/".join(n for n, _ in ends)} wheel from the authored links')
-        poly = belt(circles, h)
+        inner, outer = link_profile(bones, side, h)
+        # Where the model's road wheels sit above its ground plane (y = 0), the lower run goes down to the
+        # ground rather than leaving the vehicle standing on air; the guide horns still reach up to the wheels.
+        median_y = np.median([c[1] for c, _ in circles])
+        roads = [(c, r) for c, r in circles if c[1] <= median_y + 1.0]
+        contact = min(c[1] - r for c, r in roads) + inner
+        # ... but no further than the horns reach, so the wheels still bear on the horn tips
+        ground = max(outer + GROUND_LIFT, contact - (inner + h))
+        extra = [(c[0], ground) for c, _ in roads] if ground < contact - 0.05 else []
+        if extra:
+            report.append(f'{s}: lower run brought {contact - ground:.2f} px down to the ground')
+        poly = belt(circles, -inner, extra)
         pts, L = resample(poly, start, ahead, KEYFRAMES)
-        pts, sunk = clear_hull(pts, bones, side, circles, h)
+        pts, sunk = clear_hull(pts, bones, side, circles, -inner, outer)
         if sunk:
-            report.append(f'{s}: top run lowered at {sunk} samples to clear the hull')
+            report.append(f'{s}: top run sags {sunk:.2f} px under the hull')
         new_paths[s] = (pts, L)
         # how far the old path sank into the wheels (negative = inside a wheel by that much)
         worst = 0.0
         for ph in np.linspace(0, 100, 400, endpoint=False):
             p = np.array([interp(mz, ph), interp(my, ph)])
             for c, r in circles:
-                worst = min(worst, np.linalg.norm(p - c) - (r + h))
+                worst = min(worst, np.linalg.norm(p - c) - (r - inner))
         report.append(f'{s}: {len(circles)} wheels, belt {L:.1f} px, old path up to {-worst:.2f} px inside wheels')
     # Both sides share one path unless they differ (mirror-symmetric running gear is the norm).
     (pl, Ll), (pr, Lr) = new_paths['L'], new_paths['R']
