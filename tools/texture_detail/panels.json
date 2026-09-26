@@ -1,0 +1,47 @@
+{
+ "_doc": "Structural seams per aircraft. Fuselage lines: 'frac' of the length from the nose tip (0) to the tail end (1), or 'at' a landmark (canopy_front, canopy_rear, fin_root_le, wing_root_te, wing_root_le) plus 'offset' in blocks (+ forward). Wing lines: 'chord' fractions from the leading edge, 'span' fractions of the exposed semi-span (root 0, tip 1), 'outer' limits a chord line to span fractions [a, b]. Fin lines work the same way on the vertical tail (span = height).",
+ "f_16c": {
+  "source": "F-16 built in three sections (nose, centre, aft); forward splice just aft of the cockpit, aft splice forward of the vertical fin; radome joint; five-spar wing with one-piece skins, leading-edge flap and inboard flaperon (aircraftinformation.info, F-16 structure).",
+  "fuselage": [
+   {"frac": 0.115, "name": "radome joint"},
+   {"at": "canopy_rear", "offset": -0.08, "name": "forward splice"},
+   {"at": "fin_root_le", "offset": 0.1, "name": "aft splice"},
+   {"frac": 0.9, "name": "engine nozzle section"}
+  ],
+  "wing": {"chord": [0.16, 0.74], "span": [0.52], "outer": {"0.74": [0.0, 0.52]}},
+  "fin": {"chord": [0.14, 0.72], "span": [0.55], "outer": {"0.72": [0.0, 0.55]}}
+ },
+ "f_15c": {
+  "source": "F-15 fuselage in forward (radome, cockpit, avionics bays), centre (inlets, wing carry-through, main gear) and aft (titanium engine bay) sections; radome joint; three-spar wing with plain flap inboard and aileron outboard (McDonnell Douglas F-15 structure).",
+  "fuselage": [
+   {"frac": 0.11, "name": "radome joint"},
+   {"at": "canopy_rear", "offset": -0.05, "name": "forward / centre splice"},
+   {"frac": 0.64, "name": "centre / aft splice (engine bay)"},
+   {"frac": 0.93, "name": "nozzle shroud"}
+  ],
+  "wing": {"chord": [0.14, 0.72], "span": [0.45], "outer": {"0.72": [0.0, 1.0]}},
+  "fin": {"chord": [0.12, 0.74], "span": [0.5], "outer": {"0.74": [0.5, 1.0]}}
+ },
+ "su_27": {
+  "source": "Su-27 airframe: nose section (radome, cockpit, avionics bay) joined to the integral centre section behind the cockpit, tail section with engine nacelles and tail booms joined at the wing trailing-edge root; radome joint; leading-edge flaps, flaperons (Sukhoi Su-27 structure, Butowski / Gordon).",
+  "fuselage": [
+   {"frac": 0.095, "name": "radome joint"},
+   {"at": "canopy_rear", "offset": -0.05, "name": "nose / centre section joint"},
+   {"at": "wing_root_te", "offset": 0.1, "name": "centre / tail section joint"},
+   {"frac": 0.94, "name": "nozzle"}
+  ],
+  "wing": {"chord": [0.15, 0.73], "span": [0.5], "outer": {"0.73": [0.0, 0.62]}},
+  "fin": {"chord": [0.12, 0.72], "span": [0.55], "outer": {"0.72": [0.0, 0.8]}}
+ },
+ "mig_29": {
+  "source": "MiG-29 airframe: nose section (hinged radome, cockpit, avionics compartment), centre fuselage with the wing centre section and LERX, tail section with engine bays and tail booms; radome joint; leading-edge slats, flaps and ailerons (Mikoyan MiG-29 structure, Gordon / Butowski).",
+  "fuselage": [
+   {"frac": 0.12, "name": "radome joint"},
+   {"at": "canopy_rear", "offset": -0.25, "name": "nose / centre joint behind the avionics bay"},
+   {"at": "wing_root_te", "offset": 0.1, "name": "centre / tail joint"},
+   {"frac": 0.93, "name": "nozzle"}
+  ],
+  "wing": {"chord": [0.15, 0.74], "span": [0.55], "outer": {"0.74": [0.0, 1.0]}},
+  "fin": {"chord": [0.12, 0.72], "span": [0.55], "outer": {"0.72": [0.3, 1.0]}}
+ }
+}

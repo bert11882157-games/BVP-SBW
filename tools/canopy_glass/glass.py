@@ -238,6 +238,14 @@ def glass(vid):
     shell = shell_points(depth, caster, eye)
     rays = Rays(tris, uvs, tex, eye, reach=6.0)
     extent = canopy_extent(rays, eye, width, rail_y)
+    # Tandem cockpits (F-14, two-seat trainers): the other crew seat under the same canopy stretches it.
+    for other in T.eyes(vid)[1:]:
+        if extent is None:
+            break
+        if abs(other[0] - eye[0]) < 0.3 and abs(other[1] - eye[1]) < 0.4 and 0.3 < abs(other[2] - eye[2]) < 2.2:
+            more = canopy_extent(rays, other, width, rail_y)
+            if more is not None:
+                extent = (max(extent[0], more[0]), min(extent[1], more[1]), np.vstack([extent[2], more[2]]))
     P, centre, _ = canopy_volume(vid, eye, shell, width, rail_y, overrides, extent)
     from scipy.spatial import ConvexHull
     hull = ConvexHull(np.vstack([P, [[0.0, rail_y - 0.8, centre[2]]]]))

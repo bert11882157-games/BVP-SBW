@@ -117,6 +117,12 @@ final class AircraftRigAnimator {
                 }
             }
         }
+        double[] forced = com.atsuishio.superbwarfare.diagnostics.DiagnosticControlOverride.current();
+        if (forced != null && !entity.isWreck()) {
+            elevator = forced[0];
+            aileron = forced[1];
+            rudder = forced[2];
+        }
         Phase phase = PHASES.get(entity.getUUID());
         if (phase == null || phase.binding != binding) {
             phase = new Phase(binding);
