@@ -37,6 +37,7 @@ ESCAPE_RANGE = 2.5       # blocks: a surface point with a clear line this long o
 ESCAPE_TILT = 25.0       # degrees: the fan of escape rays around the outward normal
 SKIN_GAP = 0.07          # blocks: glass with the airframe this close under it (toward the canopy middle) is on the skin
 INSET = 0.006
+NOSE_REACH = 1.2         # a frameless windscreen runs at most this many rail half-widths past the cockpit opening
 REFINE = 10              # binary search steps along cut edges
 SKIP = {'ho_229', 'me_163', 'me_262_50mm', 'me_262_elite'}
 OVERRIDES = os.path.join(HERE, 'canopies.json')
@@ -164,13 +165,16 @@ def canopy_extent(rays, eye, width, rail_y):
             if np.isfinite(t):
                 best = max(best, o[1] - t)
         h[k] = best - eye[1]
-    deep = h < (rail_y - eye[1]) + 0.02                  # the view drops below the rails: inside the cockpit
+    # The view drops clearly below the rails: inside the cockpit (nose skin just under high rails does not count).
+    deep = h < min((rail_y - eye[1]) + 0.02, -0.15)
     i0 = int(np.argmin(np.abs(zs)))
     bridge = int(round(0.35 / step))                    # frame bars, headrest and sight narrower than this
     def run(direction):
         k, last, gap = i0, i0, 0
         while 0 <= k + direction < len(zs):
             k += direction
+            if direction > 0 and h[k] > 0.08:           # the windscreen arch closes the opening in front
+                break
             if deep[k]:
                 last, gap = k, 0
             else:
@@ -185,12 +189,12 @@ def canopy_extent(rays, eye, width, rail_y):
     # Forward: a windscreen frame above eye level ends the canopy; otherwise it runs on over the nose.
     zf = zs[front_i] + step
     framed = False
-    for k in range(front_i + 1, min(len(zs), front_i + int(round(0.6 / step)))):
-        if h[k] > -0.05:
+    for k in range(front_i + 1, min(len(zs), front_i + int(round(1.0 / step)))):
+        if h[k] > 0.08:                                  # an arch above eye level, not the sight
             zf, framed = zs[k] + step, True
     if not framed:
         k = front_i + 1
-        while k < len(zs) and h[k] > (rail_y - eye[1]) and zs[k] - zs[front_i] < 3.0 * width:
+        while k < len(zs) and h[k] > (rail_y - eye[1]) and zs[k] - zs[front_i] < NOSE_REACH * width:
             k += 1
         zf = max(zf, zs[min(k, len(zs) - 1)])
     # Everything standing up inside the canopy (headrest, sight, frames) must stay under the glass.
