@@ -1418,24 +1418,6 @@
       }
     ]
   },
-  "su_17_engine_start": {
-    "sounds": [
-      {
-        "name": "berts_vehicle_pack:aircraft/su_17/su_17_engine_start",
-        "stream": false,
-        "attenuation_distance": 64
-      }
-    ]
-  },
-  "su_17_engine_loop": {
-    "sounds": [
-      {
-        "name": "berts_vehicle_pack:aircraft/su_17/su_17_engine_loop",
-        "stream": true,
-        "attenuation_distance": 64
-      }
-    ]
-  },
   "mig_23mld_engine_start": {
     "sounds": [
       {
@@ -2186,15 +2168,6 @@
     "sounds": [
       {
         "name": "berts_vehicle_pack:aircraft_guns/saab_32_lansen/saab_32_lansen_gun_warthunder30mm",
-        "stream": false,
-        "attenuation_distance": 96
-      }
-    ]
-  },
-  "su_17_gun_aacannon": {
-    "sounds": [
-      {
-        "name": "berts_vehicle_pack:aircraft_guns/su_17/su_17_gun_aacannon",
         "stream": false,
         "attenuation_distance": 96
       }

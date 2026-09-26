@@ -47,7 +47,6 @@ ENGINES = {
     'mirage_f1': 'TURBOJET',     # Atar 9K-50
     'mig_21bis': 'TURBOJET',     # R-25-300
     'mig_23mld': 'TURBOJET',     # R-35-300
-    'su_17': 'TURBOJET',         # AL-21F-3
     'f_14a': 'TURBOJET',         # TF30-P-414A
     'f_111f': 'TURBOJET',        # TF30-P-100
     'saab_37_viggen': 'TURBOJET',  # RM8A/B (JT8D reheat)

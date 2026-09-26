@@ -242,9 +242,6 @@ public class ModEntityRenderers {
         registerVehicle(event, ModEntities.SAAB_32_LANSEN, "saab_32_lansen", standardVehicle(
                 "custom_geo/saab_32_lansen.geo.json", "textures/entity/saab_32_lansen.png",
                 "saab_32_lansen"));
-        registerVehicle(event, ModEntities.SU_17, "su_17", standardVehicle(
-                "custom_geo/su_17.geo.json", "textures/entity/su_17.png",
-                "su_17"));
         registerVehicle(event, ModEntities.MIG_23MLD, "mig_23mld", standardVehicle(
                 "custom_geo/mig_23mld.geo.json", "textures/entity/mig_23mld.png",
                 "mig_23mld"));

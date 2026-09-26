@@ -29,7 +29,7 @@ FIGHTERS = """a_10 a_7d eurofighter_typhoon f2h_2 f3h f8f_1 f9f_2 f_100c f_104g 
 f_84f f_86k f_8h fa_18e fiat_g_91 ho_229 il_10 j_11a j_2 j_26 j_5 ju_87_b2 m_50a md_450_ouragan meteor_f_8
 mig_15bis mig_19s mig_21bis mig_23mld mig_29 mig_9 mirage_5 mirage_f1 p_51d panavia_tornado_ids_marineflieger
 rafale saab_29_tunnan saab_32_lansen saab_35_draken saab_37_viggen saab_j_21a_1 saab_jas_39_gripen sabre_mk_6
-su_17 su_25 su_27 su_35 su_39 su_57 su_9 super_mystere supermarine_spitfire_griffon yak_15p yak_3 yak_9u""".split()
+su_25 su_27 su_35 su_39 su_57 su_9 super_mystere supermarine_spitfire_griffon yak_15p yak_3 yak_9u""".split()
 
 FACE = 480                  # cube-map face resolution (90 degrees)
 NEAR_TRIS = 3.0             # triangles farther than this from the eye are ignored (blocks)

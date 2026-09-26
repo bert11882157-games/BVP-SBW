@@ -39,7 +39,7 @@ class AircraftEntityCollisionTest {
         AircraftEntityMovement.resolve(movement, bounds, snapshot.activeObbs()) { axis, _ -> axis }
 
     @Test fun allAcceptedAircraftExposeExactlyTwoPartsAndTightActiveBounds() {
-        assertEquals(45, fits.size)   // saab_105 removed
+        assertEquals(44, fits.size)   // saab_105, su_17 removed
         for (fit in fits) {
             val snapshot = snapshot(fit, position = Vec3(2048.5, -59.0, 3072.5), yaw = 0.37, pitch = 0.13, roll = -0.09)
             assertEquals(listOf(AircraftCollisionRole.FUSELAGE, AircraftCollisionRole.LANDING_GEAR), snapshot.parts.map { it.role })

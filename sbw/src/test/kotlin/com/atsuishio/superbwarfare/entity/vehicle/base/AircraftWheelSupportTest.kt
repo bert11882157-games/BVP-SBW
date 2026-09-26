@@ -180,8 +180,8 @@ class AircraftWheelSupportTest {
     }
 
     @Test fun allReviewedFleetLayoutsReachRealSecondarySupportGradually() {
-        assertEquals(33, fits.size)   // saab_105 removed
-        assertEquals(161, fits.values.sumOf { it.wheelContacts.size })
+        assertEquals(32, fits.size)   // saab_105, su_17 removed
+        assertEquals(158, fits.values.sumOf { it.wheelContacts.size })
         val scene = Scene(listOf(floor))
         for ((id, data) in fits) {
             val group = if (data.wheelContacts.any { it.group == nose }) nose else tail
