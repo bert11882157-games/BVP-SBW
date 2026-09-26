@@ -1,0 +1,65 @@
+{
+ "berts_vehicle_pack:custom_geo/aircraft_stores/agm84k_slam_er.geo.json": {
+  "DeployTicks": 8,
+  "Bones": {
+   "wing_left": {
+    "Axis": [
+     0,
+     1,
+     0
+    ],
+    "Degrees": -49.25
+   },
+   "wing_right": {
+    "Axis": [
+     0,
+     1,
+     0
+    ],
+    "Degrees": 49.25
+   }
+  }
+ },
+ "berts_vehicle_pack:custom_geo/aircraft_stores/kh55.geo.json": {
+  "DeployTicks": 8,
+  "Bones": {
+   "wing_left": {
+    "Axis": [
+     0,
+     1,
+     0
+    ],
+    "Degrees": 89.0
+   },
+   "wing_right": {
+    "Axis": [
+     0,
+     1,
+     0
+    ],
+    "Degrees": -90.0
+   }
+  }
+ },
+ "berts_vehicle_pack:custom_geo/projectiles/kh55.geo.json": {
+  "DeployTicks": 8,
+  "Bones": {
+   "wing_left": {
+    "Axis": [
+     0,
+     0,
+     1
+    ],
+    "Degrees": 89.0
+   },
+   "wing_right": {
+    "Axis": [
+     0,
+     0,
+     1
+    ],
+    "Degrees": -90.0
+   }
+  }
+ }
+}

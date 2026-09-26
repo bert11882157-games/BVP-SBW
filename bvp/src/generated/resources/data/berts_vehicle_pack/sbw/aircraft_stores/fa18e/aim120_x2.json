@@ -2,6 +2,31 @@
   "Schema": 1,
   "Name": "AIM-120 · active radar · shoulder rails",
   "Category": "AIR_TO_AIR",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/aim120.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0,
+    0.089,
+    0
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.089,
+      0.0,
+      0
+    ],
+    "Right": [
+      -0.089,
+      0.0,
+      0
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    0
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/aim120.png",
   "Capacity": 1,
   "MassKg": 180,
   "Guidance": {
@@ -27,5 +52,10 @@
     0.35,
     0
   ],
-  "FixedRackCount": 2
+  "FixedRackCount": 2,
+  "LaunchOffset": [
+    0.0,
+    -0.089,
+    0.0
+  ]
 }

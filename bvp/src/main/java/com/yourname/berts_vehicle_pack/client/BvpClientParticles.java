@@ -19,6 +19,17 @@ public final class BvpClientParticles {
     }
 
     /** Reuses the aircraft afterburner material, texture and fades at the missile's body size. */
+    /** Missile smoke that lingers [linger] times longer than engine haze. */
+    public static void spawnMissileSmoke(Vec3 position, float diameter, float linger) {
+        var engine = net.minecraft.client.Minecraft.m_91087_().f_91061_;
+        var particle = engine.m_107370_(ModParticles.TAP_EXHAUST_SMOKE.get(),
+                position.f_82479_, position.f_82480_, position.f_82481_, 0, 0, 0);
+        if (particle instanceof com.yourname.berts_vehicle_pack.client.particle.BvpTapSmokeParticle smoke) {
+            smoke.setDiameter(diameter);
+            smoke.setLinger(linger);
+        }
+    }
+
     public static void spawnMissileExhaust(boolean flame, Vec3 position, float diameter) {
         var engine = net.minecraft.client.Minecraft.m_91087_().f_91061_;
         var particle = engine.m_107370_(flame ? ModParticles.TAP_EXHAUST_FLAME.get()

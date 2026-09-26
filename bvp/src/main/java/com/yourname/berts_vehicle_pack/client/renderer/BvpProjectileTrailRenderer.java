@@ -235,7 +235,8 @@ public final class BvpProjectileTrailRenderer {
         double dx = missile.m_20185_() - missile.f_19854_;
         double dy = missile.m_20186_() - missile.f_19855_;
         double dz = missile.m_20189_() - missile.f_19856_;
-        int particlesPerSample = thrust ? 5 : 1;
+        // Thrust: flame core + 4 swirling flame puffs + 2 smoke puffs; coasting: 2 smoke puffs.
+        int particlesPerSample = thrust ? 7 : 2;
         int samples = Math.min(MAX_PARTICLES_PER_EMIT / particlesPerSample,
                 Math.max(3, Math.min(MAX_CENTER_SAMPLES_PER_EMIT * 3,
                         definition.trail().sampleCount(Math.sqrt(dx * dx + dy * dy + dz * dz)) * 3)));
@@ -250,6 +251,11 @@ public final class BvpProjectileTrailRenderer {
                     .m_82546_(forward.m_82490_(shape.rear()));
             BvpClientParticles.spawnMissileExhaust(thrust, center, (float) (exhaustRadius * (thrust ? 1.1 : 2.2)));
             emitted++;
+            // A denser, wider smoke trail behind the flame (ATGM motors leave a thick trail).
+            Vec3 behind = center.m_82546_(forward.m_82490_(exhaustRadius * 0.8));
+            BvpClientParticles.spawnMissileSmoke(behind, (float) (exhaustRadius * 2.8), 3.0F);
+            BvpClientParticles.spawnMissileSmoke(behind.m_82549_(frame.up().m_82490_(exhaustRadius * 0.3)),
+                    (float) (exhaustRadius * 2.2), 2.2F);
             if (!thrust) continue;
             for (int satellite = 0; satellite < 4; satellite++) {
                 double angle = (missile.f_19797_ - 1 + t) * 0.628318531 + satellite * Math.PI / 2;

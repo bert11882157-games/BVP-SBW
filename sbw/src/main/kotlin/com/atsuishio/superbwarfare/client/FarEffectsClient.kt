@@ -146,6 +146,11 @@ object FarEffectsClient {
                 RenderSystem.setShader(GameRenderer::getParticleShader)
                 val tessellator = Tesselator.getInstance()
                 type.begin(tessellator.builder, mc.textureManager)
+                // Distant smoke is always blended and never writes depth: written depth made each puff hide the
+                // ones behind it, so far trails read as solid grey tubes instead of translucent smoke.
+                RenderSystem.enableBlend()
+                RenderSystem.defaultBlendFunc()
+                RenderSystem.depthMask(false)
                 try {
                     if (EliteDiagnostics.isClientEnabled() &&
                         (lastDiagnostic == Long.MIN_VALUE || (mc.level?.gameTime ?: 0) - lastDiagnostic >= 20)) {

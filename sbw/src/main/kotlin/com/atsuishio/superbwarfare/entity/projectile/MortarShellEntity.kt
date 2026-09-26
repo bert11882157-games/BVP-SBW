@@ -302,4 +302,10 @@ open class MortarShellEntity : FastThrowableProjectile, BasicGeoProjectileEntity
     }
 
     override fun getModel() = BedrockModelLoader.MORTAR_SHELL_MODEL
+
+    /**
+     * Unguided, unpowered flight: clients run the same deterministic air step and blend the server's step-aligned
+     * corrections instead of snapping to tracker positions, so the round flies smoothly from the muzzle.
+     */
+    override fun smoothsBallisticFlight(): Boolean = motionSyncMode() != MotionSyncMode.NONE
 }

@@ -39,6 +39,11 @@ public final class BvpCoordinateMissileRenderer {
      * Returns false while the optional model is unavailable so FFA can draw its native fallback.
      */
     public static boolean render(String model, PoseStack pose, MultiBufferSource buffers, int light) {
+        return render(model, pose, buffers, light, Float.POSITIVE_INFINITY);
+    }
+
+    /** As above, [ageTicks] after launch: pop-out wings swing out over their first few ticks. */
+    public static boolean render(String model, PoseStack pose, MultiBufferSource buffers, int light, float ageTicks) {
         MissileAsset asset = switch (model) {
             case "kh55" -> KH55;
             case "agm84k_slam_er" -> SLAM_ER;
@@ -55,8 +60,13 @@ public final class BvpCoordinateMissileRenderer {
                 pose.m_252880_(0.0F, 2.2F, 0.0F);
                 pose.m_252781_(Axis.f_252529_.m_252977_(-90.0F));
             }
-            mesh.renderCutoutOnly(pose, buffers, asset.texture, light, 1.0F);
-            mesh.renderTranslucentOnly(pose, buffers, asset.texture, light, 1.0F);
+            BvpFoldingWings.Restore wings = BvpFoldingWings.pose(mesh, asset.model,
+                    BvpFoldingWings.deployed(asset.model, ageTicks));
+            float lighting = BvpVboLighting.setFlat(BvpSuspendedStoreRenderer.MUNITION_FLAT_LIGHTING);
+            try {
+                mesh.renderCutoutOnly(pose, buffers, asset.texture, light, 1.0F);
+                mesh.renderTranslucentOnly(pose, buffers, asset.texture, light, 1.0F);
+            } finally { wings.run(); BvpVboLighting.setFlat(lighting); }
         } finally {
             pose.m_85849_();
         }
@@ -66,12 +76,14 @@ public final class BvpCoordinateMissileRenderer {
     /** Reuse the bounded model queue and resource-reload lifetime used by suspended stores. */
     private static final class MissileAsset extends BaseVehicleRenderer<GeoVehicleEntity> {
         private final ResourceLocation texture;
+        private final ResourceLocation model;
         private long textureGeneration = -1;
         private boolean texturePresent;
 
         private MissileAsset(ResourceLocation model, ResourceLocation texture, String debugName) {
             super(null, model, texture, debugName);
             this.texture = texture;
+            this.model = model;
         }
 
         private PolyMeshModel ready() {

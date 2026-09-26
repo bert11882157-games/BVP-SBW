@@ -28,6 +28,20 @@ public final class BvpVboLighting {
     private static final Matrix3f VIEW = new Matrix3f();
     private static final Matrix3f MODEL = new Matrix3f();
     private static boolean active;
+    /** 0 = normal level lighting; toward 1 the lights swing round to the viewer, flattening the shading. */
+    private static float flat;
+    private static final Vector3f VIEWER = new Vector3f();
+
+    /**
+     * Munition models (low-poly Blockbench stores and projectiles) band badly under directional lighting: while
+     * {@code amount} is set, the lights point mostly at the viewer so faces the camera sees are evenly lit
+     * (0.9 removes about 90% of the shading). Returns the previous value for {@link #setFlat} to restore.
+     */
+    public static float setFlat(float amount) {
+        float previous = flat;
+        flat = Math.max(0F, Math.min(1F, amount));
+        return previous;
+    }
 
     private BvpVboLighting() { }
 
@@ -45,6 +59,15 @@ public final class BvpVboLighting {
         modelView.get3x3(MODEL).transpose();
         MODEL_0.set(VIEW_0).mul(MODEL);
         MODEL_1.set(VIEW_1).mul(MODEL);
+        if (flat > 0F) {
+            // View space looks down -Z: toward the viewer is +Z, carried into the mesh frame like the lights.
+            VIEWER.set(0F, 0F, 1F).mul(MODEL);
+            if (VIEWER.lengthSquared() > 1.0E-12F) {
+                VIEWER.normalize();
+                MODEL_0.normalize().lerp(VIEWER, flat);
+                MODEL_1.normalize().lerp(VIEWER, flat);
+            }
+        }
         if (!(MODEL_0.lengthSquared() > 1.0E-12F) || !(MODEL_1.lengthSquared() > 1.0E-12F)) return;
         MODEL_0.normalize();
         MODEL_1.normalize();

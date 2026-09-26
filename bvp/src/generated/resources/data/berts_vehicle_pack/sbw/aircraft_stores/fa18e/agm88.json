@@ -2,6 +2,31 @@
   "Schema": 1,
   "Name": "AGM-88 · anti-radiation",
   "Category": "ANTI_RADIATION",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/agm88.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0,
+    0.127,
+    0
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.127,
+      0.0,
+      0
+    ],
+    "Right": [
+      -0.127,
+      0.0,
+      0
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    0
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/agm88.png",
   "Capacity": 1,
   "MassKg": 650,
   "Guidance": {
@@ -20,5 +45,10 @@
     "BlastRadius": 8,
     "TntEquivalentKg": 21.63
   },
-  "AmmoItem": "superbwarfare:large_air_to_ground_missile"
+  "AmmoItem": "superbwarfare:large_air_to_ground_missile",
+  "LaunchOffset": [
+    0.0,
+    -0.127,
+    0.0
+  ]
 }

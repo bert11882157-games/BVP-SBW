@@ -142,7 +142,10 @@ public class BvpSpinningProjectileRenderer<T extends Entity> extends EntityRende
             var profile = com.atsuishio.superbwarfare.api.projectile.ProjectileProfiles.resolve(entity);
             float scale = profile == null ? 1.0F : profile.getRenderScale();
             if (Float.isFinite(scale) && scale > 0.0F) poseStack.m_85841_(scale, scale, scale);
-            loadedModel.renderWithTranslucentSplit(poseStack, bufferSource, renderTextureLocation, packedLight);
+            float lighting = BvpVboLighting.setFlat(BvpSuspendedStoreRenderer.MUNITION_FLAT_LIGHTING);
+            try {
+                loadedModel.renderWithTranslucentSplit(poseStack, bufferSource, renderTextureLocation, packedLight);
+            } finally { BvpVboLighting.setFlat(lighting); }
             recordRendered(entity, partialTicks);
         } finally {
             poseStack.m_85849_();

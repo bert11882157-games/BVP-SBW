@@ -333,4 +333,10 @@ open class CannonShellEntity(type: EntityType<out CannonShellEntity>, level: Lev
     override fun getModel() = BedrockModelLoader.CANNON_SHELL_MODEL
 
     override fun getHiddenTicks() = 1
+
+    /**
+     * Unguided, unpowered flight: clients run the same deterministic air step and blend the server's step-aligned
+     * corrections instead of snapping to tracker positions, so the round flies smoothly from the muzzle.
+     */
+    override fun smoothsBallisticFlight(): Boolean = motionSyncMode() != MotionSyncMode.NONE
 }

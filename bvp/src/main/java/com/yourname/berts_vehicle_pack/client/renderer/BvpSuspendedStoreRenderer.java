@@ -116,6 +116,9 @@ final class BvpSuspendedStoreRenderer {
         };
     }
 
+    /** Munition models keep only a tenth of the directional shading (see BvpVboLighting.setFlat). */
+    static final float MUNITION_FLAT_LIGHTING = 0.9F;
+
     void apply(GeoVehicleEntity entity, PolyMeshModel current) {
         restore();
         AircraftArmamentSnapshot state = AircraftArmamentClient.getVehicleSnapshot(entity);
@@ -249,8 +252,13 @@ final class BvpSuspendedStoreRenderer {
             // Hang the store from the anchor its station uses (top, or a side) rather than its model origin.
             pose.m_85837_(-anchor.f_82479_, -anchor.f_82480_, -anchor.f_82481_);
             if (mesh != null) {
-                mesh.renderCutoutOnly(pose, buffers, asset.texture, light, alpha);
-                mesh.renderTranslucentOnly(pose, buffers, asset.texture, light, alpha);
+                // Pop-out wings stay folded along the body while the store hangs on its pylon.
+                BvpFoldingWings.Restore wings = BvpFoldingWings.pose(mesh, store.getModel(), 0.0F);
+                float lighting = BvpVboLighting.setFlat(MUNITION_FLAT_LIGHTING);
+                try {
+                    mesh.renderCutoutOnly(pose, buffers, asset.texture, light, alpha);
+                    mesh.renderTranslucentOnly(pose, buffers, asset.texture, light, alpha);
+                } finally { wings.run(); BvpVboLighting.setFlat(lighting); }
             } else if (alpha >= 1.0F) {
                 AircraftStoreItemRenderer.render(store.getItem(), pose, buffers, light);
             }
