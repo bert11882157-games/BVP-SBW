@@ -1112,24 +1112,6 @@
       }
     ]
   },
-  "saab_105_engine_start": {
-    "sounds": [
-      {
-        "name": "berts_vehicle_pack:aircraft/saab_105/saab_105_engine_start",
-        "stream": false,
-        "attenuation_distance": 64
-      }
-    ]
-  },
-  "saab_105_engine_loop": {
-    "sounds": [
-      {
-        "name": "berts_vehicle_pack:aircraft/saab_105/saab_105_engine_loop",
-        "stream": true,
-        "attenuation_distance": 64
-      }
-    ]
-  },
   "supermarine_spitfire_griffon_engine_start": {
     "sounds": [
       {
@@ -2011,33 +1993,6 @@
       }
     ]
   },
-  "f_22a_engine_start": {
-    "sounds": [
-      {
-        "name": "berts_vehicle_pack:aircraft/f_22a/f_22a_engine_start",
-        "stream": false,
-        "attenuation_distance": 64
-      }
-    ]
-  },
-  "f_22a_engine_loop": {
-    "sounds": [
-      {
-        "name": "berts_vehicle_pack:aircraft/f_22a/f_22a_engine_loop",
-        "stream": true,
-        "attenuation_distance": 64
-      }
-    ]
-  },
-  "f_22a_gun_jetshoot": {
-    "sounds": [
-      {
-        "name": "berts_vehicle_pack:aircraft_guns/f_22a/f_22a_gun_jetshoot",
-        "stream": false,
-        "attenuation_distance": 96
-      }
-    ]
-  },
   "yak_3_gun_gshshoot": {
     "sounds": [
       {
@@ -2330,123 +2285,6 @@
     "sounds": [
       {
         "name": "berts_vehicle_pack:aircraft_guns/tu_95ms/tu_95ms_gun_gshshoot",
-        "stream": false,
-        "attenuation_distance": 96
-      }
-    ]
-  },
-  "me_163_engine_start": {
-    "sounds": [
-      {
-        "name": "berts_vehicle_pack:aircraft/me_163/me_163_engine_start",
-        "stream": false,
-        "attenuation_distance": 64
-      }
-    ]
-  },
-  "me_163_engine_loop": {
-    "sounds": [
-      {
-        "name": "berts_vehicle_pack:aircraft/me_163/me_163_engine_loop",
-        "stream": true,
-        "attenuation_distance": 64
-      }
-    ]
-  },
-  "me_163_gun_deutsche30mm": {
-    "sounds": [
-      {
-        "name": "berts_vehicle_pack:aircraft_guns/me_163/me_163_gun_deutsche30mm",
-        "stream": false,
-        "attenuation_distance": 96
-      }
-    ]
-  },
-  "do_335_b2_engine_start": {
-    "sounds": [
-      {
-        "name": "berts_vehicle_pack:aircraft/do_335_b2/do_335_b2_engine_start",
-        "stream": false,
-        "attenuation_distance": 64
-      }
-    ]
-  },
-  "do_335_b2_engine_loop": {
-    "sounds": [
-      {
-        "name": "berts_vehicle_pack:aircraft/do_335_b2/do_335_b2_engine_loop",
-        "stream": true,
-        "attenuation_distance": 64
-      }
-    ]
-  },
-  "do_335_b2_gun_deutsche30mm": {
-    "sounds": [
-      {
-        "name": "berts_vehicle_pack:aircraft_guns/do_335_b2/do_335_b2_gun_deutsche30mm",
-        "stream": false,
-        "attenuation_distance": 96
-      }
-    ]
-  },
-  "hs_129_b3_engine_start": {
-    "sounds": [
-      {
-        "name": "berts_vehicle_pack:aircraft/hs_129_b3/hs_129_b3_engine_start",
-        "stream": false,
-        "attenuation_distance": 64
-      }
-    ]
-  },
-  "hs_129_b3_engine_loop": {
-    "sounds": [
-      {
-        "name": "berts_vehicle_pack:aircraft/hs_129_b3/hs_129_b3_engine_loop",
-        "stream": true,
-        "attenuation_distance": 64
-      }
-    ]
-  },
-  "hs_129_b3_gun_duckfire": {
-    "sounds": [
-      {
-        "name": "berts_vehicle_pack:aircraft_guns/hs_129_b3/hs_129_b3_gun_duckfire",
-        "stream": false,
-        "attenuation_distance": 96
-      }
-    ]
-  },
-  "hs_129_b3_gun_planemgshoot": {
-    "sounds": [
-      {
-        "name": "berts_vehicle_pack:aircraft_guns/hs_129_b3/hs_129_b3_gun_planemgshoot",
-        "stream": false,
-        "attenuation_distance": 96
-      }
-    ]
-  },
-  "p_39_engine_start": {
-    "sounds": [
-      {
-        "name": "berts_vehicle_pack:aircraft/p_39/p_39_engine_start",
-        "stream": false,
-        "attenuation_distance": 64
-      }
-    ]
-  },
-  "p_39_engine_loop": {
-    "sounds": [
-      {
-        "name": "berts_vehicle_pack:aircraft/p_39/p_39_engine_loop",
-        "stream": true,
-        "attenuation_distance": 64
-      }
-    ]
-  },
-  "p_39_gun_p39shoot": {
-    "sounds": [
-      {
-        "name": "berts_vehicle_pack:aircraft_guns/p_39/p_39_gun_p39shoot",
         "stream": false,
         "attenuation_distance": 96
       }
@@ -2902,33 +2740,6 @@
       }
     ]
   },
-  "f_16a_engine_start": {
-    "sounds": [
-      {
-        "name": "berts_vehicle_pack:aircraft/f_16a/f_16a_engine_start",
-        "stream": false,
-        "attenuation_distance": 64
-      }
-    ]
-  },
-  "f_16a_engine_loop": {
-    "sounds": [
-      {
-        "name": "berts_vehicle_pack:aircraft/f_16a/f_16a_engine_loop",
-        "stream": true,
-        "attenuation_distance": 64
-      }
-    ]
-  },
-  "f_16a_gun_jetshoot": {
-    "sounds": [
-      {
-        "name": "berts_vehicle_pack:aircraft_guns/f_16a/f_16a_gun_jetshoot",
-        "stream": false,
-        "attenuation_distance": 96
-      }
-    ]
-  },
   "a_10_engine_start": {
     "sounds": [
       {
@@ -3235,33 +3046,6 @@
       }
     ]
   },
-  "aml_90_engine_loop": {
-    "sounds": [
-      {
-        "name": "berts_vehicle_pack:ground/aml_90/aml_90_engine_loop",
-        "stream": true,
-        "attenuation_distance": 48
-      }
-    ]
-  },
-  "aml_90_cannon_fire": {
-    "sounds": [
-      {
-        "name": "berts_vehicle_pack:ground/aml_90/aml_90_cannon_fire",
-        "stream": false,
-        "attenuation_distance": 48
-      }
-    ]
-  },
-  "aml_90_machine_gun_fire": {
-    "sounds": [
-      {
-        "name": "berts_vehicle_pack:ground/aml_90/aml_90_machine_gun_fire",
-        "stream": false,
-        "attenuation_distance": 48
-      }
-    ]
-  },
   "zsl_92_engine_loop": {
     "sounds": [
       {
@@ -3284,33 +3068,6 @@
     "sounds": [
       {
         "name": "berts_vehicle_pack:ground/zsl_92/zsl_92_machine_gun_fire",
-        "stream": false,
-        "attenuation_distance": 48
-      }
-    ]
-  },
-  "fv721_fox_engine_loop": {
-    "sounds": [
-      {
-        "name": "berts_vehicle_pack:ground/fv721_fox/fv721_fox_engine_loop",
-        "stream": true,
-        "attenuation_distance": 48
-      }
-    ]
-  },
-  "fv721_fox_cannon_fire": {
-    "sounds": [
-      {
-        "name": "berts_vehicle_pack:ground/fv721_fox/fv721_fox_cannon_fire",
-        "stream": false,
-        "attenuation_distance": 48
-      }
-    ]
-  },
-  "fv721_fox_machine_gun_fire": {
-    "sounds": [
-      {
-        "name": "berts_vehicle_pack:ground/fv721_fox/fv721_fox_machine_gun_fire",
         "stream": false,
         "attenuation_distance": 48
       }
@@ -3394,141 +3151,6 @@
         "name": "berts_vehicle_pack:ground/btr_zd/btr_zd_machine_gun_fire",
         "stream": false,
         "attenuation_distance": 48
-      }
-    ]
-  },
-  "warrior_engine_loop": {
-    "sounds": [
-      {
-        "name": "berts_vehicle_pack:ground/warrior/warrior_engine_loop",
-        "stream": true,
-        "attenuation_distance": 48
-      }
-    ]
-  },
-  "warrior_cannon_fire": {
-    "sounds": [
-      {
-        "name": "berts_vehicle_pack:ground/warrior/warrior_cannon_fire",
-        "stream": false,
-        "attenuation_distance": 48
-      }
-    ]
-  },
-  "warrior_machine_gun_fire": {
-    "sounds": [
-      {
-        "name": "berts_vehicle_pack:ground/warrior/warrior_machine_gun_fire",
-        "stream": false,
-        "attenuation_distance": 48
-      }
-    ]
-  },
-  "begleitpanzer_engine_loop": {
-    "sounds": [
-      {
-        "name": "berts_vehicle_pack:ground/begleitpanzer/begleitpanzer_engine_loop",
-        "stream": true,
-        "attenuation_distance": 48
-      }
-    ]
-  },
-  "begleitpanzer_cannon_fire": {
-    "sounds": [
-      {
-        "name": "berts_vehicle_pack:ground/begleitpanzer/begleitpanzer_cannon_fire",
-        "stream": false,
-        "attenuation_distance": 48
-      }
-    ]
-  },
-  "begleitpanzer_missile_fire": {
-    "sounds": [
-      {
-        "name": "berts_vehicle_pack:ground/begleitpanzer/begleitpanzer_missile_fire",
-        "stream": false,
-        "attenuation_distance": 48
-      }
-    ]
-  },
-  "begleitpanzer_machine_gun_fire": {
-    "sounds": [
-      {
-        "name": "berts_vehicle_pack:ground/begleitpanzer/begleitpanzer_machine_gun_fire",
-        "stream": false,
-        "attenuation_distance": 48
-      }
-    ]
-  },
-  "type_89_ifv_engine_loop": {
-    "sounds": [
-      {
-        "name": "berts_vehicle_pack:ground/type_89_ifv/type_89_ifv_engine_loop",
-        "stream": true,
-        "attenuation_distance": 48
-      }
-    ]
-  },
-  "type_89_ifv_cannon_fire": {
-    "sounds": [
-      {
-        "name": "berts_vehicle_pack:ground/type_89_ifv/type_89_ifv_cannon_fire",
-        "stream": false,
-        "attenuation_distance": 48
-      }
-    ]
-  },
-  "type_89_ifv_missile_fire": {
-    "sounds": [
-      {
-        "name": "berts_vehicle_pack:ground/type_89_ifv/type_89_ifv_missile_fire",
-        "stream": false,
-        "attenuation_distance": 48
-      }
-    ]
-  },
-  "type_89_ifv_machine_gun_fire": {
-    "sounds": [
-      {
-        "name": "berts_vehicle_pack:ground/type_89_ifv/type_89_ifv_machine_gun_fire",
-        "stream": false,
-        "attenuation_distance": 48
-      }
-    ]
-  },
-  "me_262_elite_engine_start": {
-    "sounds": [
-      {
-        "name": "berts_vehicle_pack:aircraft/me_262_elite/me_262_elite_engine_start",
-        "stream": false,
-        "attenuation_distance": 64
-      }
-    ]
-  },
-  "me_262_elite_engine_loop": {
-    "sounds": [
-      {
-        "name": "berts_vehicle_pack:aircraft/me_262_elite/me_262_elite_engine_loop",
-        "stream": true,
-        "attenuation_distance": 64
-      }
-    ]
-  },
-  "me_262_50mm_engine_start": {
-    "sounds": [
-      {
-        "name": "berts_vehicle_pack:aircraft/me_262_50mm/me_262_50mm_engine_start",
-        "stream": false,
-        "attenuation_distance": 64
-      }
-    ]
-  },
-  "me_262_50mm_engine_loop": {
-    "sounds": [
-      {
-        "name": "berts_vehicle_pack:aircraft/me_262_50mm/me_262_50mm_engine_loop",
-        "stream": true,
-        "attenuation_distance": 64
       }
     ]
   }

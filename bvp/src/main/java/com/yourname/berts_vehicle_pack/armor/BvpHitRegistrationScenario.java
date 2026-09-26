@@ -90,18 +90,18 @@ public final class BvpHitRegistrationScenario {
                     if (active != null || !admitted(player) || EliteDiagnostics.isServerEnabled()) return 0;
                     String[] args = StringArgumentType.getString(c, "case").trim().split("\\s+");
                     if (args.length != 6 || !Set.of("leo2a6", "t72b", "m48a3_elite", "native_t90").contains(args[0])
-                            || !Set.of("shell", "bullet", "tacz", "rpg", "tow", "rocket").contains(args[1])
+                            || !Set.of("shell", "bullet", "tacz", "rpg", "tow").contains(args[1])
                             || !Set.of("left", "right", "front", "rear", "oblique_left", "oblique_right", "hull", "miss", "gap", "turret_front", "turret_rear").contains(args[2])
                             || !Set.of("12", "80").contains(args[3])
                             || !Set.of("stationary", "moving").contains(args[4])
                             || !Set.of("clear", "wall", "splash").contains(args[5])) {
-                        player.sendSystemMessage(Component.literal("Usage: bvp_hitreg <leo2a6|t72b|m48a3_elite|native_t90> <shell|bullet|tacz|rpg|tow|rocket> <left|right|front|rear|oblique_left|oblique_right|hull|miss|gap|turret_front|turret_rear> <12|80> <stationary|moving> <clear|wall|splash>"));
+                        player.sendSystemMessage(Component.literal("Usage: bvp_hitreg <leo2a6|t72b|m48a3_elite|native_t90> <shell|bullet|tacz|rpg|tow> <left|right|front|rear|oblique_left|oblique_right|hull|miss|gap|turret_front|turret_rear> <12|80> <stationary|moving> <clear|wall|splash>"));
                         return 0;
                     }
                     if (args[2].startsWith("turret_") && !(args[0].equals("t72b")
-                            && Set.of("rpg", "tow", "rocket").contains(args[1]) && args[3].equals("12")
+                            && Set.of("rpg", "tow").contains(args[1]) && args[3].equals("12")
                             && args[4].equals("stationary") && args[5].equals("clear"))) {
-                        player.sendSystemMessage(Component.literal("Turret ERA acceptance requires t72b rpg|tow|rocket turret_front|turret_rear 12 stationary clear."));
+                        player.sendSystemMessage(Component.literal("Turret ERA acceptance requires t72b rpg|tow turret_front|turret_rear 12 stationary clear."));
                         return 0;
                     }
                     if (args[5].equals("splash") && !(args[0].equals("native_t90")
@@ -186,7 +186,7 @@ public final class BvpHitRegistrationScenario {
                 target.setEnergy(target.getMaxEnergy());
             }
             weapon = spawn(args[1].equals("tow") ? "tow_tripod"
-                    : args[1].equals("rocket") ? "bm_21_grad" : "leo2a6",
+                    : "leo2a6",
                     origin.add(0, 0, 25));
             // A smaller native vehicle gives a separated, unoccluded witness inside the RPG's
             // three-block origin-distance radius. Both vehicles keep their authored geometry.

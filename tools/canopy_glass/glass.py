@@ -39,7 +39,7 @@ SKIN_GAP = 0.07          # blocks: glass with the airframe this close under it (
 INSET = 0.006
 NOSE_REACH = 1.2         # a frameless windscreen runs at most this many rail half-widths past the cockpit opening
 REFINE = 10              # binary search steps along cut edges
-SKIP = {'ho_229', 'me_163', 'me_262_50mm', 'me_262_elite'}
+SKIP = {'ho_229'}
 OVERRIDES = os.path.join(HERE, 'canopies.json')
 
 

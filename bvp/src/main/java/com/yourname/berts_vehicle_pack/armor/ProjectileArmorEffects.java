@@ -170,7 +170,6 @@ final class ProjectileArmorEffects {
             Map.entry("t72b/cannon", 250.0D),
             Map.entry("t80b_obr1976/cannon", 250.0D),
             Map.entry("t80u_obr1985/cannon", 250.0D),
-            Map.entry("2s25_sprut_sd/cannon", 250.0D),
             Map.entry("t72b3/cannon", 280.0D),
             Map.entry("t72b3_ubh_cope/cannon", 280.0D),
             Map.entry("t90a/cannon", 280.0D)
@@ -181,7 +180,6 @@ final class ProjectileArmorEffects {
             Map.entry("t72b", 250.0D),
             Map.entry("t80b_obr1976", 250.0D),
             Map.entry("t80u_obr1985", 250.0D),
-            Map.entry("2s25_sprut_sd", 250.0D),
             Map.entry("t72b3", 280.0D),
             Map.entry("t72b3_ubh_cope", 280.0D),
             Map.entry("t90a", 280.0D)

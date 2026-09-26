@@ -7,22 +7,20 @@
     "GEN4_CRT": {"gauges": false, "displays": [{"kind": "STORES", "style": "CRT"}, {"kind": "PFD", "style": "CRT"}, {"kind": "RADAR", "style": "CRT"}]},
     "MODERN_GLASS": {"gauges": false, "displays": [{"kind": "STORES", "style": "LCD"}, {"kind": "PFD", "style": "LCD"}, {"kind": "RADAR", "style": "LCD"}]}
   },
-  "aircraft": {
-    "do_335_b2": "WWII_STEAM", "f8f_1": "WWII_STEAM", "ho_229": "WWII_STEAM", "hs_129_b3": "WWII_STEAM",
-    "il_10": "WWII_STEAM", "ju_87_b2": "WWII_STEAM", "me_163": "WWII_STEAM", "me_262_50mm": "WWII_STEAM",
-    "me_262_elite": "WWII_STEAM", "p_39": "WWII_STEAM", "p_51d": "WWII_STEAM", "supermarine_spitfire_griffon": "WWII_STEAM",
+  "aircraft": { "f8f_1": "WWII_STEAM", "ho_229": "WWII_STEAM",
+    "il_10": "WWII_STEAM", "ju_87_b2": "WWII_STEAM", "p_51d": "WWII_STEAM", "supermarine_spitfire_griffon": "WWII_STEAM",
     "yak_3": "WWII_STEAM", "yak_9u": "WWII_STEAM", "saab_j_21a_1": "WWII_STEAM", "mig_9": "WWII_STEAM", "yak_15p": "WWII_STEAM",
 
     "a_10": "COLD_WAR_STEAM", "an_12b": "COLD_WAR_STEAM", "f2h_2": "COLD_WAR_STEAM", "f9f_2": "COLD_WAR_STEAM",
     "f_100c": "COLD_WAR_STEAM", "f_5a": "COLD_WAR_STEAM", "f_84f": "COLD_WAR_STEAM", "fiat_g_91": "COLD_WAR_STEAM",
     "il_76m": "COLD_WAR_STEAM", "j_2": "COLD_WAR_STEAM", "j_26": "COLD_WAR_STEAM", "j_5": "COLD_WAR_STEAM",
     "m_50a": "COLD_WAR_STEAM", "md_450_ouragan": "COLD_WAR_STEAM", "meteor_f_8": "COLD_WAR_STEAM",
-    "mig_15bis": "COLD_WAR_STEAM", "mig_19s": "COLD_WAR_STEAM", "mirage_5": "COLD_WAR_STEAM", "saab_105": "COLD_WAR_STEAM",
+    "mig_15bis": "COLD_WAR_STEAM", "mig_19s": "COLD_WAR_STEAM", "mirage_5": "COLD_WAR_STEAM",
     "saab_29_tunnan": "COLD_WAR_STEAM", "sabre_mk_6": "COLD_WAR_STEAM", "su_17": "COLD_WAR_STEAM",
     "super_mystere": "COLD_WAR_STEAM",
 
     "a_7d": "COLD_WAR_RADAR", "b_47e": "COLD_WAR_RADAR", "f3h": "COLD_WAR_RADAR", "f_104g": "COLD_WAR_RADAR",
-    "f_111f": "COLD_WAR_RADAR", "f_14a": "COLD_WAR_RADAR", "f_15c": "COLD_WAR_RADAR", "f_16a": "COLD_WAR_RADAR",
+    "f_111f": "COLD_WAR_RADAR", "f_14a": "COLD_WAR_RADAR", "f_15c": "COLD_WAR_RADAR",
     "f_4c": "COLD_WAR_RADAR", "f_86k": "COLD_WAR_RADAR", "f_8h": "COLD_WAR_RADAR", "mig_21bis": "COLD_WAR_RADAR",
     "mig_23mld": "COLD_WAR_RADAR", "mig_29": "COLD_WAR_RADAR", "mirage_f1": "COLD_WAR_RADAR",
     "panavia_tornado_ids_marineflieger": "COLD_WAR_RADAR", "saab_32_lansen": "COLD_WAR_RADAR",
@@ -32,7 +30,7 @@
 
     "b_1b": "GEN4_CRT", "f_14d": "GEN4_CRT", "j_11a": "GEN4_CRT", "ah_64d": "GEN4_CRT", "mi28n": "GEN4_CRT",
 
-    "eurofighter_typhoon": "MODERN_GLASS", "f_16c": "MODERN_GLASS", "f_22a": "MODERN_GLASS", "fa_18e": "MODERN_GLASS",
+    "eurofighter_typhoon": "MODERN_GLASS", "f_16c": "MODERN_GLASS", "fa_18e": "MODERN_GLASS",
     "rafale": "MODERN_GLASS", "saab_jas_39_gripen": "MODERN_GLASS", "su_35": "MODERN_GLASS", "su_57": "MODERN_GLASS",
     "eurocopter_tiger": "MODERN_GLASS"
   }

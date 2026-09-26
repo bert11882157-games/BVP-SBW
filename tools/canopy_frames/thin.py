@@ -25,12 +25,11 @@ ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 GEN = os.path.join(ROOT, 'bvp', 'src', 'generated', 'resources')
 
 # Fighters, fighter-bombers and attack aircraft with a pilot canopy (bombers and transports are not included).
-FIGHTERS = """a_10 a_7d do_335_b2 eurofighter_typhoon f2h_2 f3h f8f_1 f9f_2 f_100c f_104g f_111f f_14a f_14d f_15c
-f_16a f_16c f_22a f_4c f_5a f_84f f_86k f_8h fa_18e fiat_g_91 ho_229 hs_129_b3 il_10 j_11a j_2 j_26 j_5 ju_87_b2
-m_50a md_450_ouragan me_163 me_262_50mm me_262_elite meteor_f_8 mig_15bis mig_19s mig_21bis mig_23mld mig_29 mig_9
-mirage_5 mirage_f1 p_39 p_51d panavia_tornado_ids_marineflieger rafale saab_105 saab_29_tunnan saab_32_lansen
-saab_35_draken saab_37_viggen saab_j_21a_1 saab_jas_39_gripen sabre_mk_6 su_17 su_25 su_27 su_35 su_39 su_57 su_9
-super_mystere supermarine_spitfire_griffon yak_15p yak_3 yak_9u""".split()
+FIGHTERS = """a_10 a_7d eurofighter_typhoon f2h_2 f3h f8f_1 f9f_2 f_100c f_104g f_111f f_14a f_14d f_15c f_16c f_4c f_5a
+f_84f f_86k f_8h fa_18e fiat_g_91 ho_229 il_10 j_11a j_2 j_26 j_5 ju_87_b2 m_50a md_450_ouragan meteor_f_8
+mig_15bis mig_19s mig_21bis mig_23mld mig_29 mig_9 mirage_5 mirage_f1 p_51d panavia_tornado_ids_marineflieger
+rafale saab_29_tunnan saab_32_lansen saab_35_draken saab_37_viggen saab_j_21a_1 saab_jas_39_gripen sabre_mk_6
+su_17 su_25 su_27 su_35 su_39 su_57 su_9 super_mystere supermarine_spitfire_griffon yak_15p yak_3 yak_9u""".split()
 
 FACE = 480                  # cube-map face resolution (90 degrees)
 NEAR_TRIS = 3.0             # triangles farther than this from the eye are ignored (blocks)

@@ -31,7 +31,7 @@ import java.util.UUID
 object MixedFleetDiagnostics {
     private var active: Run? = null
     private val ids = listOf("f_14a", "f_14d", "b_1b", "su_35", "a_10", "su_39", "ah_64d", "ch_46e",
-        "bmd_1", "btr_zd", "warrior", "begleitpanzer", "type_89_ifv", "aml_90", "zsl_92", "gaz_3937_vodnik_aa")
+        "bmd_1", "btr_zd", "bmp2", "marder_1a2", "cv9040_no_net", "lav25", "zsl_92", "gaz_3937_vodnik_aa")
     private val phases = listOf("empty", "clean", "loaded", "removed", "cleanup")
     private fun privateOperator(p: ServerPlayer): Boolean {
         val remote = p.connection.connection.remoteAddress as? InetSocketAddress ?: return false

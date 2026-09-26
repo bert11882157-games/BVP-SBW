@@ -27,7 +27,6 @@ GLASS_COCKPITS = {
     'eurofighter_typhoon': [0],
     'f_14d': [0],                    # the RIO station has no flight instruments of its own
     'f_16c': [0],
-    'f_22a': [0],
     'fa_18e': [0],
     'j_11a': [0],
     'rafale': [0],
