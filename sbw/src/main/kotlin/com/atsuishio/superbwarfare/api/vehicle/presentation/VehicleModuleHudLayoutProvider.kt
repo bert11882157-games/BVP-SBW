@@ -17,4 +17,9 @@ data class VehicleModuleHudMarker @JvmOverloads constructor(
     /** Authored longitudinal bounds; grouped track sections retain their complete span. */
     val modelMinZ: Double = modelZ,
     val modelMaxZ: Double = modelZ,
+    /**
+     * Top-down outlines of the module's hit volumes, each a convex polygon as flat [x0, z0, x1, z1, ...] in the
+     * same model-pixel frame. Empty: only the position is known and a glyph is drawn.
+     */
+    val footprints: List<DoubleArray> = emptyList(),
 )

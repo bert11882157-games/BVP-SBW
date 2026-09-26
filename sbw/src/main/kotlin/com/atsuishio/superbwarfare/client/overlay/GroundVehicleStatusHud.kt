@@ -35,6 +35,7 @@ object GroundVehicleStatusHud {
         pose.pushPose()
         pose.mulPose(Axis.ZP.rotationDegrees(Mth.rotLerp(partial,v.turretYRotO,v.turretYRot)))
         val hull = GroundVehicleHullHud.draw(g,v)
+        val labels = ArrayList<Triple<String, Double, Double>>()
         if (hull != null) {
             val markers = (v as? VehicleModuleHudLayoutProvider)?.vehicleModuleHudLayout(partial)
                 ?: NativeVehicleModuleHudLayout.sample(v, partial)
@@ -46,7 +47,21 @@ object GroundVehicleStatusHud {
                 lastDiagnosticTick = tick
                 EliteDiagnostics.record(v, "ground_hud", "module_layout", "count", markers.size)
             }
+            // True-size outlines first, largest underneath; glyphs only where no outline is known.
+            val outlined = markers.filter { VehicleModuleFootprints.hasFootprint(it) }
+                .sortedByDescending { VehicleModuleFootprints.area(it, hull) }
+            for (marker in outlined) {
+                val state = VehicleModuleHudDamage.from(marker.health)
+                VehicleModuleFootprints.draw(g, marker, hull, state.fill, state.outline,
+                    state == VehicleModuleHudDamage.DESTROYED)
+                val (lx, ly) = VehicleModuleFootprints.centre(marker, hull)
+                labels.add(Triple(VehicleModuleFootprints.label(marker), lx, ly))
+                if (capture) EliteDiagnostics.record(v, "ground_hud", "module_outline",
+                    "module", marker.id, "kind", marker.kind, "polygons", marker.footprints.size,
+                    "label_x", lx, "label_y", ly, "color", state)
+            }
             for (marker in markers) {
+                if (VehicleModuleFootprints.hasFootprint(marker)) continue
                 if (!marker.modelX.isFinite() || !marker.modelZ.isFinite()) continue
                 val shape = VehicleSystemGlyphs.module(marker.kind)
                 val x = hull.hudX(marker.modelX).roundToInt() - shape[0].length / 2
@@ -68,6 +83,25 @@ object GroundVehicleStatusHud {
             }
         }
         pose.popPose()
+        // Labels stay upright: place each at its module's rotated centre, skipping any that would overlap.
+        if (labels.isNotEmpty()) {
+            val turn = Math.toRadians(Mth.rotLerp(partial,v.turretYRotO,v.turretYRot).toDouble())
+            val c = kotlin.math.cos(turn); val s = kotlin.math.sin(turn)
+            val textScale = 0.42F
+            val placed = ArrayList<FloatArray>()
+            for ((text, x, y) in labels) {
+                val rx = (x * c - y * s).toFloat(); val ry = (x * s + y * c).toFloat()
+                val w = font.width(text) * textScale; val h = 8 * textScale
+                val box = floatArrayOf(rx - w / 2 - 0.5F, ry - h / 2 - 0.5F, rx + w / 2 + 0.5F, ry + h / 2 + 0.5F)
+                if (placed.any { it[0] < box[2] && box[0] < it[2] && it[1] < box[3] && box[1] < it[3] }) continue
+                placed.add(box)
+                pose.pushPose()
+                pose.translate(rx.toDouble(), ry.toDouble(), 0.0)
+                pose.scale(textScale, textScale, 1F)
+                g.drawString(font, text, -font.width(text) / 2, -4, 0xFFF2F2F2.toInt(), true)
+                pose.popPose()
+            }
+        }
         // Neutral aim tick is orientation, not a fabricated weapon-health module.
         if (v.hasTurret()) g.fill(0,-20,1,-16,0xFFCAD2DB.toInt())
         pose.popPose()

@@ -93,23 +93,59 @@ public final class ArmorModuleHudLayout {
         double volume = Math.max(box.volume.volume(), 1.0E-9D);
         var located = result.computeIfAbsent(kind + ":" + id, key -> new LocatedModule(marker));
         located.add(marker, volume);
-        if (kind == VehicleModuleHudKind.TRACK) {
-            // Project every vertex (a box's eight rotated corners), then union sections of one track.
-            double[] vertex = new double[3];
-            for (int index = 0; index < box.volume.vertexCount(); index++) {
-                box.volume.vertex(index, vertex);
-                var p = new ArmorProfiles.Vec(vertex[0], vertex[1], vertex[2]);
-                if (box.isBarrelFrame()) p = barrel.toHullPoint(p);
-                else if (box.isTurretFrame()) p = turret.toHullPoint(p);
+        // Project every vertex (a box's eight rotated corners, or a mesh volume's vertices) into the hull's
+        // top-down frame: the outline is their convex hull, and track sections union into one span.
+        double[] vertex = new double[3];
+        int count = box.volume.vertexCount();
+        double[] xs = new double[count], zs = new double[count];
+        for (int index = 0; index < count; index++) {
+            box.volume.vertex(index, vertex);
+            var p = new ArmorProfiles.Vec(vertex[0], vertex[1], vertex[2]);
+            if (box.isBarrelFrame()) p = barrel.toHullPoint(p);
+            else if (box.isTurretFrame()) p = turret.toHullPoint(p);
+            xs[index] = (mirror ? p.x : -p.x) * 16;
+            zs[index] = p.z * 16;
+            if (kind == VehicleModuleHudKind.TRACK) {
                 located.minZ = Math.min(located.minZ, p.z * 16);
                 located.maxZ = Math.max(located.maxZ, p.z * 16);
             }
         }
+        double[] outline = convexHull(xs, zs);
+        if (outline != null) located.footprints.add(outline);
+    }
+
+    /** Monotone-chain convex hull as a flat [x0, z0, x1, z1, ...] polygon, or null when degenerate. */
+    static double[] convexHull(double[] xs, double[] zs) {
+        int n = xs.length;
+        if (n < 3) return null;
+        Integer[] order = new Integer[n];
+        for (int i = 0; i < n; i++) order[i] = i;
+        java.util.Arrays.sort(order, (a, b) -> xs[a] != xs[b] ? Double.compare(xs[a], xs[b]) : Double.compare(zs[a], zs[b]));
+        int[] hull = new int[2 * n];
+        int k = 0;
+        for (int pass = 0; pass < 2; pass++) {
+            int start = k;
+            for (int j = 0; j < n; j++) {
+                int i = order[pass == 0 ? j : n - 1 - j];
+                while (k >= start + 2 && cross(xs, zs, hull[k - 2], hull[k - 1], i) <= 0) k--;
+                hull[k++] = i;
+            }
+            k--;
+        }
+        if (k < 3) return null;
+        double[] out = new double[2 * k];
+        for (int i = 0; i < k; i++) { out[2 * i] = xs[hull[i]]; out[2 * i + 1] = zs[hull[i]]; }
+        return out;
+    }
+
+    private static double cross(double[] xs, double[] zs, int o, int a, int b) {
+        return (xs[a] - xs[o]) * (zs[b] - zs[o]) - (zs[a] - zs[o]) * (xs[b] - xs[o]);
     }
 
     /** Multiple hitboxes belonging to one logical module produce one volume-weighted marker. */
     private static final class LocatedModule {
         final VehicleModuleHudMarker state;
+        final List<double[]> footprints = new java.util.ArrayList<>();
         double x, z, weight;
         double minZ = Double.POSITIVE_INFINITY, maxZ = Double.NEGATIVE_INFINITY;
 
@@ -124,7 +160,7 @@ public final class ArmorModuleHudLayout {
         VehicleModuleHudMarker marker() {
             return new VehicleModuleHudMarker(state.getId(), state.getKind(), x / weight, z / weight,
                     state.getHealth(), Double.isFinite(minZ) ? minZ : z / weight,
-                    Double.isFinite(maxZ) ? maxZ : z / weight);
+                    Double.isFinite(maxZ) ? maxZ : z / weight, List.copyOf(footprints));
         }
     }
 }
