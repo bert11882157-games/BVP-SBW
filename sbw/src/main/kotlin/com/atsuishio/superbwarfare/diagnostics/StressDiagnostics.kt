@@ -5,6 +5,7 @@ import com.atsuishio.superbwarfare.api.aircraft.AircraftArmamentRegistry
 import com.atsuishio.superbwarfare.api.aircraft.AircraftPylonRacks
 import com.atsuishio.superbwarfare.api.aircraft.AircraftStoreWeapons
 import com.atsuishio.superbwarfare.api.diagnostics.DebugFeaturePolicy
+import com.atsuishio.superbwarfare.data.gun.GunProp
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity
 import com.google.gson.GsonBuilder
 import com.mojang.brigadier.arguments.StringArgumentType
@@ -120,6 +121,8 @@ object StressDiagnostics {
         val notes = ArrayList<String>()
         var phase: Phase? = null
         var age = 0
+        /** Per weapon: shots owed at its real cadence (RPM, or one per reload for single-round guns). */
+        val credit = HashMap<Pair<VehicleEntity, String>, Double>()
         var tickStartNanos = 0L
         var tickStartCpu = -1L
         var finished = false
@@ -226,12 +229,29 @@ object StressDiagnostics {
                     else natives
                 } else natives
                 for (name in names) {
-                    val result = vehicle.vehicleShootResult(null, name)
-                    if (result.isAccepted()) {
-                        current.accepted++
-                        val key = ForgeRegistries.ENTITY_TYPES.getKey(vehicle.type)?.path + "/" + name
-                        current.firedByType.merge(key, 1, Int::plus)
-                    } else current.rejected.merge(result.reason.toString(), 1, Int::plus)
+                    // Guns keep their real cadence: RPM for automatic weapons, one round per reload for
+                    // single-shot guns (tank cannon), so the war is what a real firefight could produce.
+                    val data = vehicle.getGunData(name)
+                    val perTick = if (data == null) 1.0 else {
+                        val rpm = data.get(GunProp.RPM).coerceAtLeast(1)
+                        val reload = maxOf(data.get(GunProp.EMPTY_RELOAD_TIME), data.get(GunProp.NORMAL_RELOAD_TIME))
+                        if (data.get(GunProp.MAGAZINE) <= 1 && reload > 0) minOf(rpm / 1200.0, 1.0 / reload)
+                        else rpm / 1200.0
+                    }
+                    val key = vehicle to name
+                    // stagger the first shot of every weapon across the line
+                    var owed = credit.getOrPut(key) { (fleet.keys.indexOf(vehicle) * 0.37 + name.length * 0.11) % 1.0 } + perTick
+                    var shots = 0
+                    while (owed >= 1.0 && shots < 3) {
+                        owed -= 1.0; shots++
+                        val result = vehicle.vehicleShootResult(null, name)
+                        if (result.isAccepted()) {
+                            current.accepted++
+                            val type = ForgeRegistries.ENTITY_TYPES.getKey(vehicle.type)?.path + "/" + name
+                            current.firedByType.merge(type, 1, Int::plus)
+                        } else current.rejected.merge(result.reason.toString(), 1, Int::plus)
+                    }
+                    credit[key] = owed.coerceAtMost(3.0)
                 }
             }
         }
