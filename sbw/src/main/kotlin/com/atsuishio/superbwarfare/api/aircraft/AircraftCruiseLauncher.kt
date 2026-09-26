@@ -30,12 +30,15 @@ object AircraftCruiseLauncher {
         AircraftMissileLauncher.visualModel(store)?.let { profile.putString("VisualModel", it) }
         flight["Trajectory"]?.let { profile.putString("Trajectory", it.asString) }
         flight["LoftHeight"]?.let { profile.putDouble("LoftHeight", it.asDouble) }
-        val gps = AircraftBombTargeting.gpsTarget(vehicle)?.let { BlockPos.containing(it) }
+        val gpsPoint = AircraftBombTargeting.gpsTarget(vehicle)
+        val gps = gpsPoint?.let { BlockPos.containing(it) }
         // FFA simulates the missile; SBW stamps the TNT charge on the entity it spawns (see ExternalMunitionBlasts).
         val tnt = com.atsuishio.superbwarfare.tools.blast.ExternalMunitionBlasts.storeCharge(store)
-        com.atsuishio.superbwarfare.tools.blast.ExternalMunitionBlasts.launch(vehicle.level(), tnt) {
+        val launched = com.atsuishio.superbwarfare.tools.blast.ExternalMunitionBlasts.launch(vehicle.level(), tnt) {
             launchMethod?.invoke(null, vehicle, player, Vec3(origin.x, origin.y, origin.z),
                 Vec3(heading.x, heading.y, heading.z), gps, profile) == true
         }
+        if (launched && AircraftBombTargeting.isGpsStore(store)) AircraftBombTargeting.consumeGpsTarget(vehicle, gpsPoint)
+        launched
     }.getOrDefault(false)
 }

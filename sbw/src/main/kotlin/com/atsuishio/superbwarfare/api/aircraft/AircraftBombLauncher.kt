@@ -42,6 +42,7 @@ object AircraftBombLauncher {
         } ?: return false
         val offset = launchOffset ?: AircraftArmamentRegistry.vector(store["LaunchOffset"]) ?: Vec3.ZERO
         val local = mount.add(offset)
+        val gps = AircraftBombTargeting.gpsTarget(vehicle)
         val origin = AircraftBombFlight.launchOrigin(vehicle, local)
         val motion = AircraftBombFlight.initialMotion(vehicle.deltaMovement)
         if (!origin.x.isFinite() || !origin.y.isFinite() || !origin.z.isFinite() ||
@@ -53,7 +54,7 @@ object AircraftBombLauncher {
         entity.configure(config["Mode"].asString, vehicle.uuid, config["Gravity"].asFloat,
             config["DragMultiplier"].asDouble, config["TurnDegreesPerTick"].asDouble,
             config["BlastDamage"].asFloat, config["BlastRadius"].asFloat,
-            AircraftBombTargeting.gpsTarget(vehicle), target?.uuid)
+            gps, target?.uuid)
         com.atsuishio.superbwarfare.tools.blast.TntEquivalents.set(entity, config["TntEquivalentKg"]?.asDouble ?: 0.0)
         config.getAsJsonObject("Cluster")?.let { AircraftClusterBomb.configure(entity, it) }
         config.getAsJsonObject("Penetrator")?.let { AircraftBombPenetrator.configure(entity, it) }
@@ -61,6 +62,7 @@ object AircraftBombLauncher {
             ProjectileProfiles.assign(entity, ResourceLocation(it))
         }
         val accepted = level.addFreshEntity(entity)
+        if (accepted && config["Mode"].asString == "GPS") AircraftBombTargeting.consumeGpsTarget(vehicle, gps)
         if (accepted) AircraftMunitionDebug.log(entity, "bomb release mode=${config["Mode"].asString} massKg=$mass")
         return accepted
     }
