@@ -138,6 +138,7 @@ object StressDiagnostics {
         var age = 0
         /** Per weapon: shots owed at its real cadence (RPM, or one per reload for single-round guns). */
         val credit = HashMap<Pair<VehicleEntity, String>, Double>()
+        val cadence = HashMap<Pair<VehicleEntity, String>, Double>()
         var tickStartNanos = 0L
         var tickStartCpu = -1L
         var finished = false
@@ -286,14 +287,17 @@ object StressDiagnostics {
                 for (name in names) {
                     // Guns keep their real cadence: RPM for automatic weapons, one round per reload for
                     // single-shot guns (tank cannon), so the war is what a real firefight could produce.
-                    val data = vehicle.getGunData(name)
-                    val perTick = if (data == null) 1.0 else {
-                        val rpm = data.get(GunProp.RPM).coerceAtLeast(1)
-                        val reload = maxOf(data.get(GunProp.EMPTY_RELOAD_TIME), data.get(GunProp.NORMAL_RELOAD_TIME))
-                        if (data.get(GunProp.MAGAZINE) <= 1 && reload > 0) minOf(rpm / 1200.0, 1.0 / reload)
-                        else rpm / 1200.0
-                    }
                     val key = vehicle to name
+                    // cadence looked up once per weapon (reading gun data every tick would load the harness itself)
+                    val perTick = cadence.getOrPut(key) {
+                        val data = vehicle.getGunData(name)
+                        if (data == null) 1.0 else {
+                            val rpm = data.get(GunProp.RPM).coerceAtLeast(1)
+                            val reload = maxOf(data.get(GunProp.EMPTY_RELOAD_TIME), data.get(GunProp.NORMAL_RELOAD_TIME))
+                            if (data.get(GunProp.MAGAZINE) <= 1 && reload > 0) minOf(rpm / 1200.0, 1.0 / reload)
+                            else rpm / 1200.0
+                        }
+                    }
                     // stagger the first shot of every weapon across the line
                     var owed = credit.getOrPut(key) { (fleet.keys.indexOf(vehicle) * 0.37 + name.length * 0.11) % 1.0 } + perTick
                     var shots = 0

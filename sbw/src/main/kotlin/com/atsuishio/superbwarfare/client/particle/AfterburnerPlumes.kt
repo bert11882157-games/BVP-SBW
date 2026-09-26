@@ -110,7 +110,7 @@ object AfterburnerPlumes {
         if (plume.intensity > 0.02) {
             val back = plume.radius * 3.0
             FxLights.sustain(key or 0x4100000000000000L, x + plume.dx * back, y + plume.dy * back, z + plume.dz * back,
-                3.0 + 4.0 * plume.intensity, 12.0 * plume.intensity)
+                3.0 + 5.5 * plume.intensity, 12.0 * plume.intensity)
         }
     }
 

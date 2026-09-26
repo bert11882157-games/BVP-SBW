@@ -7036,11 +7036,43 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
     fun getAircraftCollisionSnapshot(partialTicks: Float): AircraftCollisionSnapshot? {
         if (!isInitialized || !usesAircraftTerrainContact()) return null
         val definition = computed().aircraftTerrainContact ?: return null
-        return AircraftCollisionSnapshot.create(definition, getVehicleTransform(partialTicks), synchedGearRot,
-            com.atsuishio.superbwarfare.api.vehicle.flight.AircraftWreckBreakup.mask(this), aircraftWreckImpactTime >= 0,
+        val mask = com.atsuishio.superbwarfare.api.vehicle.flight.AircraftWreckBreakup.mask(this)
+        val impacted = aircraftWreckImpactTime >= 0
+        // The whole-tick pose is asked for many times a tick (culling bounds, entity pushes, projectile clips);
+        // the snapshot is immutable, so reuse it while nothing it is built from has changed.
+        val memoable = partialTicks == 1F
+        if (memoable) {
+            val memo = collisionMemo
+            if (memo != null && collisionMemoTick == tickCount && collisionMemoX == x && collisionMemoY == y &&
+                collisionMemoZ == z && collisionMemoYaw == yRot && collisionMemoPitch == xRot &&
+                collisionMemoRoll == roll && collisionMemoGear == synchedGearRot && collisionMemoMask == mask &&
+                collisionMemoImpact == impacted && collisionMemoDefinition === definition) return memo
+        }
+        val snapshot = AircraftCollisionSnapshot.create(definition, getVehicleTransform(partialTicks), synchedGearRot,
+            mask, impacted,
             if (definition.bodyVolumes().any { it.bone != "hull" })
                 com.atsuishio.superbwarfare.api.aircraft.AircraftSurfaceModules.boneMatrices(this, partialTicks) else null)
+        if (memoable) {
+            collisionMemo = snapshot; collisionMemoTick = tickCount; collisionMemoX = x; collisionMemoY = y
+            collisionMemoZ = z; collisionMemoYaw = yRot; collisionMemoPitch = xRot; collisionMemoRoll = roll
+            collisionMemoGear = synchedGearRot; collisionMemoMask = mask; collisionMemoImpact = impacted
+            collisionMemoDefinition = definition
+        }
+        return snapshot
     }
+
+    private var collisionMemo: AircraftCollisionSnapshot? = null
+    private var collisionMemoTick = Int.MIN_VALUE
+    private var collisionMemoX = 0.0
+    private var collisionMemoY = 0.0
+    private var collisionMemoZ = 0.0
+    private var collisionMemoYaw = 0F
+    private var collisionMemoPitch = 0F
+    private var collisionMemoRoll = 0F
+    private var collisionMemoGear = 0F
+    private var collisionMemoMask = Int.MIN_VALUE
+    private var collisionMemoImpact = false
+    private var collisionMemoDefinition: Any? = null
 
     /** UI selection uses physical parts while projectile/module routing keeps its authored API. */
     @JvmOverloads

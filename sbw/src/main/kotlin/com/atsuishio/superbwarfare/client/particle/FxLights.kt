@@ -37,7 +37,7 @@ import kotlin.math.sqrt
 object FxLights {
     private const val MAX_LIGHTS = 48
     private const val MAX_POOL_LIGHTS = 16
-    private const val MAX_POOL_QUADS = 6000
+    private const val MAX_POOL_QUADS = 2500
     private const val MAX_POOL_RADIUS = 12
 
     private class Light {
@@ -164,7 +164,8 @@ object FxLights {
         for (i in order) {
             val l = lights[i]
             val lv = l.current(now)
-            if (lv < 2.0) continue
+            // small flashes (machine guns, autocannons) light the vehicles round them but lay no ground pool
+            if (lv < 6.0 || l.radius < 8.0) continue
             val r = min(l.radius, MAX_POOL_RADIUS.toDouble())
             // a soft warm tint on the ground, not a painted patch: strong only right under a big fireball
             val strength = (lv / 15.0) * (lv / 15.0) * 0.32
