@@ -23,6 +23,8 @@ data class FireballMessage(
 ) : ClientPacketPayload() {
     override fun PayloadContext.handler() {
         if (!valid()) return
+        com.atsuishio.superbwarfare.client.debug.BlastRadiusDebug.record(
+            Vec3(position.x, position.y, position.z), radius.toDouble())
         FireballPresentations.emit(this@FireballMessage)
     }
 

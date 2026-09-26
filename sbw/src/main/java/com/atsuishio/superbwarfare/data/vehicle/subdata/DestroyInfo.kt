@@ -36,6 +36,14 @@ class DestroyInfo {
     @SerialName("NoWreck")
     var noWreck: Boolean = false
 
+    /** Ticks a ground wreck stays before it is removed; 0 or less keeps the shared wreck lifetime. */
+    @SerialName("WreckLifetimeTicks")
+    var wreckLifetimeTicks: Int = 0
+
+    /** False for things that burn out quietly (gun mounts): no far-death burst and no final pop. */
+    @SerialName("DeathBurst")
+    var deathBurst: Boolean = true
+
     constructor(
         crashPassengers: Boolean,
         explodePassengers: Boolean,

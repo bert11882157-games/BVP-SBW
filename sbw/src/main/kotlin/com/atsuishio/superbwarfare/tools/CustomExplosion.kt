@@ -434,6 +434,14 @@ open class CustomExplosion(
             com.atsuishio.superbwarfare.api.projectile.WarheadFragments.apply(
                 level, pSource, damageSource, center, list, fragmentPolicy) else false
 
+        // High-explosive gun and mortar shells are anti-personnel rounds first: harder hitting and a little wider
+        // against infantry than a bomb or warhead of the same charge.
+        val heShell = pSource is com.atsuishio.superbwarfare.entity.projectile.CannonShellEntity ||
+            pSource is com.atsuishio.superbwarfare.entity.projectile.SmallCannonShellEntity ||
+            pSource is com.atsuishio.superbwarfare.entity.projectile.MortarShellEntity
+        val heShellInfantry = if (heShell) HE_SHELL_INFANTRY_DAMAGE else 1.0
+        val infantryRadii = if (heShell) radii.copy(severe = minOf(radii.severe * HE_SHELL_INFANTRY_REACH, radii.moderate))
+            else radii
         for (entity in list) {
             if (entity.ignoreExplosion()) continue
             val box = entity.boundingBox
@@ -450,8 +458,8 @@ open class CustomExplosion(
             val damage = when {
                 // Inside the penetrator cylinder the fireball itself reaches the target: no occlusion.
                 inCylinder -> parameters.infantryCentreDamage
-                distance < radii.severe ->
-                    BlastModel.infantryDamage(distance, BlastExposure.seenFraction(level, center, entity), radii, parameters)
+                distance < infantryRadii.severe -> heShellInfantry * BlastModel.infantryDamage(
+                    distance, BlastExposure.seenFraction(level, center, entity), infantryRadii, parameters)
                 else -> 0.0
             }
             if (damage <= 0.0) continue
@@ -865,6 +873,9 @@ open class CustomExplosion(
     }
 
     companion object {
+        /** HE gun/mortar shells against infantry: damage and severe-radius factors. */
+        const val HE_SHELL_INFANTRY_DAMAGE = 1.3
+        const val HE_SHELL_INFANTRY_REACH = 1.25
         private val PUSHED_TYPES = setOf(VehicleType.TANK, VehicleType.APC, VehicleType.AA, VehicleType.CAR,
             VehicleType.ARTILLERY)
 

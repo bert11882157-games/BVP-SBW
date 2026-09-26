@@ -7,4 +7,18 @@ internal object FixedWingGroundAttitude {
         val progress = ((speedMps / referenceSpeedMps - 0.35) / 0.30).coerceIn(0.0, 1.0)
         return 1.0 - progress * progress * (3.0 - 2.0 * progress)
     }
+
+    /**
+     * Ground pitch/roll authority: none until the aircraft is close to the speed at which the wing can lift it
+     * (80% of the takeoff reference speed), full from 95%. Earlier the nose stays planted on the runway.
+     */
+    fun rotationAuthority(speedMps: Double, referenceSpeedMps: Double): Double {
+        if (!speedMps.isFinite() || !referenceSpeedMps.isFinite() || referenceSpeedMps <= 0) return 0.0
+        val progress = ((speedMps / referenceSpeedMps - ROTATION_START) / (ROTATION_FULL - ROTATION_START))
+            .coerceIn(0.0, 1.0)
+        return progress * progress * (3.0 - 2.0 * progress)
+    }
+
+    const val ROTATION_START = 0.80
+    const val ROTATION_FULL = 0.95
 }

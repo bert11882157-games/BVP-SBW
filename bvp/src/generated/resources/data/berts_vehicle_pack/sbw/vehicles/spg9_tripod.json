@@ -114,7 +114,9 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:large_shell_ap",
-          "Override": {"TntEquivalentKg": 0.4025},
+          "Override": {
+            "TntEquivalentKg": 0.4025
+          },
           "ConsumptionItem": "superbwarfare:tier_1_armor_piercing_shell"
         },
         {
@@ -245,12 +247,14 @@
   "DamageModifiers": [],
   "DestroyInfo": {
     "ParticleType": "Mini",
-    "ExplosionDamage": 6,
-    "ExplosionRadius": 0.75,
+    "ExplosionDamage": 0,
+    "ExplosionRadius": 0,
     "ExplodeBlocks": false,
     "ExplodePassengers": false,
     "SympatheticDetonation": false,
-    "NoWreck": true
+    "NoWreck": false,
+    "WreckLifetimeTicks": 200,
+    "DeathBurst": false
   },
   "ThirdPersonCameraPos": [
     -0.98617,

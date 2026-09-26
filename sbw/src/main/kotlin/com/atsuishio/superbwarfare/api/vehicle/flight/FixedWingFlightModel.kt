@@ -425,7 +425,7 @@ class FixedWingFlightModel(
         }
         val pitchCurve = handling.pitchResponseLinearFraction +
             (1.0 - handling.pitchResponseLinearFraction) * abs(elevator)
-        val groundRotationAuthority = if (grounded) 1.0 - FixedWingGroundAttitude.settleWeight(speed,
+        val groundRotationAuthority = if (grounded) FixedWingGroundAttitude.rotationAuthority(speed,
             handling.takeoffHandling?.referenceSpeedMps ?: handling.liftReferenceSpeedMps) else 1.0
         val desiredPitch = limitPitchLoading(
             elevator * pitchCurve * handling.gamePitchRateDegreesPerSecond * pitchAuthority,

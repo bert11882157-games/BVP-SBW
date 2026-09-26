@@ -42,11 +42,14 @@ internal class AircraftPodStabilizer {
         return result
     }
 
+    /** Follows the mouse; true when the aim moved this frame. */
     fun sample(x: Double, y: Double, sensitivity: Double, zoom: Double,
-        pod: AircraftPodView, hull: Matrix4d, origin: Vec3) {
-        if (!x.isFinite() || !y.isFinite() || !sensitivity.isFinite()) { resetCursor(); return }
-        val direction = direction(pod, hull, origin) ?: return
+        pod: AircraftPodView, hull: Matrix4d, origin: Vec3): Boolean {
+        if (!x.isFinite() || !y.isFinite() || !sensitivity.isFinite()) { resetCursor(); return false }
+        val direction = direction(pod, hull, origin) ?: return false
+        var moved = false
         if (cursorX.isFinite() && cursorY.isFinite() && (x != cursorX || y != cursorY)) {
+            moved = true
             val scale = sensitivity.coerceIn(0.01, 2.0) / zoom.coerceIn(1.0, pod.maxZoom)
             val yaw = Math.toDegrees(atan2(-direction.x, direction.z)) + (x - cursorX).coerceIn(-256.0, 256.0) * scale
             val pitch = (Math.toDegrees(atan2(-direction.y, hypot(direction.x, direction.z))) +
@@ -56,6 +59,7 @@ internal class AircraftPodStabilizer {
             direction(pod, hull, origin)
         }
         cursorX = x; cursorY = y
+        return moved
     }
 
     private fun finite(v: Vec3) = v.x.isFinite() && v.y.isFinite() && v.z.isFinite()

@@ -46,7 +46,21 @@ final class ArmorShotClassifier {
                                           ArmorProfile targetProfile, Vec3 impactPosition) {
         ProjectileArmorEffect raw = classifyUnscaled(projectile, owner, targetProfile, impactPosition);
         return raw == null ? null : raw.withDirectDamageScale(
-                com.atsuishio.superbwarfare.api.vehicle.weapon.VehicleWeaponDamagePolicy.scale(projectile));
+                com.atsuishio.superbwarfare.api.vehicle.weapon.VehicleWeaponDamagePolicy.scale(projectile)
+                        * roundBalance(raw));
+    }
+
+    /** Round-type balance on vehicle damage: APFSDS slightly lower, HEAT higher, ATGMs unchanged. */
+    static final double APFSDS_DAMAGE_BALANCE = 0.95D;
+    static final double HEAT_DAMAGE_BALANCE = 1.15D;
+
+    static double roundBalance(ProjectileArmorEffect effect) {
+        if (effect.atgm) return 1.0D;
+        return switch (effect.impactVisual) {
+            case APFSDS -> APFSDS_DAMAGE_BALANCE;
+            case HEAT_FS -> HEAT_DAMAGE_BALANCE;
+            default -> 1.0D;
+        };
     }
 
     private static ProjectileArmorEffect classifyUnscaled(Projectile projectile, Entity owner,

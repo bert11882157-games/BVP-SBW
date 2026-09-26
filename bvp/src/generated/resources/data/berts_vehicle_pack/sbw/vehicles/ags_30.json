@@ -244,12 +244,14 @@
   "DamageModifiers": [],
   "DestroyInfo": {
     "ParticleType": "Mini",
-    "ExplosionDamage": 6,
-    "ExplosionRadius": 0.75,
+    "ExplosionDamage": 0,
+    "ExplosionRadius": 0,
     "ExplodeBlocks": false,
     "ExplodePassengers": false,
     "SympatheticDetonation": false,
-    "NoWreck": true
+    "NoWreck": false,
+    "WreckLifetimeTicks": 200,
+    "DeathBurst": false
   },
   "ThirdPersonCameraPos": [
     -0.69172,

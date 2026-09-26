@@ -51,10 +51,10 @@ import kotlin.math.sqrt
  * the oldest, which made stacked explosions vanish) and so every puff is depth-sorted and interpolated per frame.
  *
  * One [Blast] per detonation: a flash, a fireball that starts at the impact point and expands to its radius
- * ([BlastVisuals.expansionAt]), burns out and leaves smoke in the central region; a ground dust ring and tumbling
- * terrain chunks for ground bursts; a mushroom cloud for [BlastVisuals.MUSHROOM_KG] and more; and the shockwave
+ * ([BlastVisuals.expansionAt]), burns out and leaves smoke in the central region; a ground dust ring and a few soil puffs
+ * thrown out on ballistic arcs for ground bursts; a mushroom cloud for [BlastVisuals.MUSHROOM_KG] and more; and the shockwave
  * shell sent separately for heavy charges. Glow and smoke share one premultiplied-alpha pass (shader
- * `superbwarfare:blast`), chunks are drawn as small textured cubes of the ground block.
+ * `superbwarfare:blast`), ground ejecta are soil-tinted puffs in the same batch (no block cubes).
  */
 @OnlyIn(Dist.CLIENT)
 @EventBusSubscriber(modid = Mod.MODID, value = [Dist.CLIENT])
@@ -63,6 +63,7 @@ object BlastEffects {
     private const val MAX_QUADS = 16000
     private const val MAX_SHOCKWAVES = 16
     private const val GRAVITY = 0.04
+    private const val EJECTA_GRAVITY = 0.04
     private const val LOG_INTERVAL_MS = 5000L
 
     @JvmStatic
@@ -380,7 +381,10 @@ object BlastEffects {
         private val dust: DoubleArray
         private val cap: DoubleArray
         private val stem: DoubleArray
+        /** Kept empty: tumbling block chunks were replaced by [ejecta]. */
         val chunks = ArrayList<Chunk>()
+        /** Ground ejecta: a few dust puffs thrown up in a cone (azimuth, elevation, speed, size, roll, frame). */
+        private val ejecta: DoubleArray
         private val color = DoubleArray(3)
 
         init {
@@ -481,27 +485,19 @@ object BlastEffects {
                 cap = DoubleArray(0)
                 stem = DoubleArray(0)
             }
-            if (groundState != null && chunkSprite != null) {
-                val count = (BlastVisuals.chunkCount(kg) * max(0.5, quality)).toInt()
-                val speed = BlastVisuals.chunkSpeed(kg) / 20.0
-                val size = BlastVisuals.chunkSize(kg)
-                repeat(count) {
-                    val azimuth = random.nextDouble() * 2 * PI
-                    val elevation = Math.toRadians(30.0 + 50.0 * random.nextDouble())
-                    val v = speed * (0.55 + 0.65 * random.nextDouble())
-                    val spread = radius * 0.3 * random.nextDouble()
-                    val axis = Vector3f(random.nextFloat() - 0.5f, random.nextFloat() - 0.5f, random.nextFloat() - 0.5f)
-                    if (axis.lengthSquared() < 1e-4f) axis.set(0f, 1f, 0f)
-                    axis.normalize()
-                    val edge = size * (0.6 + 0.8 * random.nextDouble())
-                    val span = (0.25 + 0.35 * random.nextDouble()).coerceAtMost(1.0)
-                    chunks.add(Chunk(x + cos(azimuth) * spread, groundY + 0.05, z + sin(azimuth) * spread,
-                        cos(azimuth) * cos(elevation) * v, sin(elevation) * v, sin(azimuth) * cos(elevation) * v,
-                        edge, axis.x, axis.y, axis.z, (random.nextDouble() - 0.5) * 1.2,
-                        random.nextDouble() * (1.0 - span), random.nextDouble() * (1.0 - span), span).also {
-                        it.restTicks = 50.0 + 60.0 * random.nextDouble()
-                    })
-                }
+            // Ground ejecta: a handful of soil-coloured puffs thrown out of the crater on analytic ballistic arcs.
+            // No per-tick physics, block queries or extra geometry: they are ordinary quads in the blast's batch.
+            val nEjecta = if (groundState != null)
+                (BlastVisuals.chunkCount(kg) / 3.0 * max(0.5, quality)).toInt().coerceIn(5, 16) else 0
+            ejecta = DoubleArray(nEjecta * 6)
+            for (i in 0 until nEjecta) {
+                val o = i * 6
+                ejecta[o] = 2 * PI * (i + random.nextDouble() * 0.7) / nEjecta
+                ejecta[o + 1] = Math.toRadians(55.0 + 30.0 * random.nextDouble())
+                ejecta[o + 2] = BlastVisuals.chunkSpeed(kg) / 20.0 * (0.6 + 0.6 * random.nextDouble())
+                ejecta[o + 3] = radius * (0.18 + 0.14 * random.nextDouble())
+                ejecta[o + 4] = random.nextDouble() * 2 * PI
+                ejecta[o + 5] = random.nextInt(6).toDouble()
             }
         }
 
@@ -616,6 +612,29 @@ object BlastEffects {
                     val lit = alpha
                     out.add(px, py, pz, half, smoke[o + 5] + 0.02 * seconds, grey * lit, grey * 0.95 * lit,
                         grey * 0.9 * lit, alpha, sprites.smoke[smoke[o + 7].toInt()], light)
+                }
+            }
+
+            // Ground ejecta arcs: rise, slow, fall back and thin out.
+            if (ejecta.isNotEmpty()) {
+                val count = ejecta.size / 6
+                for (i in 0 until count) {
+                    val o = i * 6
+                    val v = ejecta[o + 2]
+                    val vy = v * sin(ejecta[o + 1])
+                    val vh = v * cos(ejecta[o + 1])
+                    val flight = 2.0 * vy / EJECTA_GRAVITY
+                    val t = age.coerceAtMost(flight * 1.15)
+                    if (age > flight * 1.6) continue
+                    val h = (vy * t - 0.5 * EJECTA_GRAVITY * t * t).coerceAtLeast(0.0)
+                    val px = ox + cos(ejecta[o]) * (vh * t + radius * 0.2)
+                    val pz = oz + sin(ejecta[o]) * (vh * t + radius * 0.2)
+                    val py = groundY - cy + h + ejecta[o + 3] * 0.5
+                    val p = (age / (flight * 1.6)).coerceIn(0.0, 1.0)
+                    val alpha = 0.7 * smoothstep(0.0, 0.05, p) * (1.0 - smoothstep(0.55, 1.0, p))
+                    val half = ejecta[o + 3] * (0.6 + 0.8 * p)
+                    out.add(px, py, pz, half, ejecta[o + 4], dustR * 0.8 * alpha, dustG * 0.8 * alpha,
+                        dustB * 0.8 * alpha, alpha, sprites.smoke[ejecta[o + 5].toInt()], light)
                 }
             }
 

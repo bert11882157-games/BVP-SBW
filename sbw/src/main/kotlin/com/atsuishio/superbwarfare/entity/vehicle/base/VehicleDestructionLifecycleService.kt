@@ -28,7 +28,8 @@ internal class VehicleDestructionLifecycleService(
         farDeathPublished = true
         if (vehicle.aircraftWreckStart < 0L) vehicle.aircraftWreckStart = vehicle.level().gameTime
         if (aircraft) com.atsuishio.superbwarfare.api.aircraft.AircraftCombatEffects.aircraftBreakup(vehicle)
-        else com.atsuishio.superbwarfare.network.message.receive.ExplosionBurstMessage.sendFarDeath(vehicle)
+        else if (vehicle.computed().destroyInfo.deathBurst)
+            com.atsuishio.superbwarfare.network.message.receive.ExplosionBurstMessage.sendFarDeath(vehicle)
     }
 
     fun tickAfterVanilla() {
@@ -53,8 +54,10 @@ internal class VehicleDestructionLifecycleService(
         if (!vehicle.isWreck) return
         if (!vehicle.level().isClientSide && vehicle.aircraftWreckStart < 0L)
             vehicle.aircraftWreckStart = vehicle.level().gameTime
+        val ownLifetime = vehicle.computed().destroyInfo.wreckLifetimeTicks
         if (!vehicle.level().isClientSide && vehicle.level().gameTime - vehicle.aircraftWreckStart >=
-            com.atsuishio.superbwarfare.api.vehicle.flight.WreckDebrisPhysics.WRECK_LIFETIME_TICKS) {
+            (if (ownLifetime > 0 && !aircraft) ownLifetime.toLong()
+                else com.atsuishio.superbwarfare.api.vehicle.flight.WreckDebrisPhysics.WRECK_LIFETIME_TICKS.toLong())) {
             vehicle.discard()
             vehicle.generateWreckageLoot()
             return
@@ -82,6 +85,10 @@ internal class VehicleDestructionLifecycleService(
 
         if (vehicle.health <= -vehicle.getMaxHealth() && (!aircraft || vehicle.sympatheticDetonated)) {
             vehicle.discard()
+            if (!vehicle.computed().destroyInfo.deathBurst) {
+                vehicle.generateWreckageLoot()
+                return
+            }
             vehicle.createCustomExplosion()
                 .radius(0f)
                 .damage(0f)

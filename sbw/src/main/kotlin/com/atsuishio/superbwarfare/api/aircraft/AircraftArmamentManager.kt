@@ -42,6 +42,7 @@ object AircraftArmamentManager {
         var pod: Boolean = false, var seek: JsonObject = JsonObject(), var seekRevision: Long = 0,
         var seekFingerprint: String = "", var seekChannels: Set<String> = emptySet(),
         var designationGeneration: Long = 0, var designating: Boolean = false,
+        var stabilizeGeneration: Long = 0, var stabilizing: Boolean = false,
         val last: MutableMap<String, Long> = mutableMapOf())
     private val leases = WeakHashMap<ServerPlayer, Lease>()
     private val sequences = WeakHashMap<Connection, Long>()
@@ -497,7 +498,7 @@ object AircraftArmamentManager {
         }
         if (request.epoch != lease.epoch) { reply(player, lease, message = "Controls refreshed; try again."); return }
         val now = player.serverLevel().gameTime
-        val bucket = when(request.operation) { "DESIGNATE", "STABILIZE", "CLEAR_POINT" -> "point"; "FIRE" -> "fire"; "SEEK" -> "seek"; "COMMAND" -> "command"; else -> "edit" }
+        val bucket = when(request.operation) { "DESIGNATE", "CLEAR_POINT" -> "point"; "STABILIZE" -> "stabilize"; "FIRE" -> "fire"; "SEEK" -> "seek"; "COMMAND" -> "command"; else -> "edit" }
         val interval = if (bucket == "edit") 5L else 2L
         if (now - (lease.last[bucket] ?: Long.MIN_VALUE / 2) < interval) {
             if (bucket == "edit") reply(player, lease, message = "Please wait briefly before another change.")
@@ -531,7 +532,7 @@ object AircraftArmamentManager {
                 "POD" -> {
                     val active = body["Active"].asBoolean
                     require(!active || definition(vehicle)?.has("Pod") == true) { "This aircraft has no authored targeting pod." }
-                    lease.pod = active; lease.designationGeneration++; reply(player, lease)
+                    lease.pod = active; lease.designationGeneration++; lease.stabilizeGeneration++; reply(player, lease)
                 }
                 "DESIGNATE" -> {
                     designateAsync(player, vehicle, lease, body)
@@ -692,7 +693,10 @@ object AircraftArmamentManager {
     }
 
     private fun designateAsync(player: ServerPlayer, vehicle: VehicleEntity, lease: Lease, body: JsonObject, stabilizeOnly: Boolean = false) {
-        require(!lease.designating) { "Laser is measuring terrain; please wait." }
+        // Stabilization (the pod holding its aim on the ground) runs on its own channel, so it never delays or
+        // cancels a designation, and a busy stabilizer silently skips a request (the client asks again).
+        if (stabilizeOnly && lease.stabilizing) return
+        require(stabilizeOnly || !lease.designating) { "Laser is measuring terrain; please wait." }
         val stabilizeRequest = if (stabilizeOnly) requireNotNull(body["StabilizeRequest"]) {
             "Missing stabilization request."
         }.asLong else -1L
@@ -723,25 +727,36 @@ object AircraftArmamentManager {
             range = 8192.0
         }
         val o = transform.transformPosition(Vector3d(localPosition.x, localPosition.y, localPosition.z))
-        val origin = Vec3(o.x, o.y, o.z)
+        val serverOrigin = Vec3(o.x, o.y, o.z)
+        // The pilot aimed from the pod position of the frame on screen. A fast aircraft moves several blocks per
+        // tick, so the same direction from the server's (newer) position lands off the aimed spot, badly so at
+        // long range. Use the client's ray origin when it is plausibly this pod's.
+        val clientOrigin = if (podMode) AircraftArmamentRegistry.vector(body["Origin"]) else null
+        val slack = 6.0 + vehicle.deltaMovement.length() * 3.0
+        val origin = clientOrigin?.takeIf { it.x.isFinite() && it.y.isFinite() && it.z.isFinite() &&
+            it.distanceToSqr(serverOrigin) <= slack * slack } ?: serverOrigin
         require(origin.x.isFinite() && origin.y.isFinite() && origin.z.isFinite() && direction.lengthSqr().isFinite())
         val level = player.serverLevel()
-        val generation = ++lease.designationGeneration
+        val generation = if (stabilizeOnly) ++lease.stabilizeGeneration else ++lease.designationGeneration
         val equipmentRevision = equipment(vehicle).getLong("Revision")
-        lease.designating = true
+        if (stabilizeOnly) lease.stabilizing = true else lease.designating = true
         val pending = try {
             com.atsuishio.superbwarfare.api.vehicle.aim.VehicleLaserRangefinder.measureAsync(
                 level, vehicle, origin, direction, range, false)
-        } catch (error: Exception) { lease.designating = false; throw error }
+        } catch (error: Exception) {
+            if (stabilizeOnly) lease.stabilizing = false else lease.designating = false
+            throw error
+        }
         pending.whenComplete { distance, error ->
             level.server.execute {
-                lease.designating = false
-                if (leases[player] !== lease || generation != lease.designationGeneration ||
+                if (stabilizeOnly) lease.stabilizing = false else lease.designating = false
+                val current = if (stabilizeOnly) lease.stabilizeGeneration else lease.designationGeneration
+                if (leases[player] !== lease || generation != current ||
                     lease.catalogue != AircraftArmamentRegistry.revision || !pilot(player, vehicle) ||
                     vehicle.level() !== level || player.level() !== level ||
                     (podMode && !lease.pod) || equipment(vehicle).getLong("Revision") != equipmentRevision) return@execute
                 if (error != null || distance == null || !distance.isFinite() || distance !in 0.0..range) {
-                    reply(player, lease, message = "No saved terrain return along this laser ray.")
+                    if (!stabilizeOnly) reply(player, lease, message = "No saved terrain return along this laser ray.")
                     return@execute
                 }
                 val point = origin.add(direction.scale(distance))

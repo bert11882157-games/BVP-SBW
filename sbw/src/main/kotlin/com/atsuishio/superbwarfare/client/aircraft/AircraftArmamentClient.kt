@@ -39,6 +39,10 @@ object AircraftArmamentClient {
     private val aim = AircraftPodStabilizer()
     private var podZoom = 1.0
     private var podStabilized = false
+    /** The pod holds its aim on the ground: after the aim settles the laser measures where it points. */
+    private var stabilizePending = false
+    private var stillFrames = 0
+    private var lastDesignateMs = 0L
     private var stabilizeRequest = 0L
     private var lockTargetEntity: net.minecraft.world.entity.Entity? = null
     private var selectedPair: String? = null
@@ -146,7 +150,7 @@ object AircraftArmamentClient {
             previousView?.let(mc.options::setCameraType)
         }
         podVehicle = null; previousView = null
-        aim.reset(); podZoom = 1.0; podStabilized = false; stabilizeRequest++
+        aim.reset(); podZoom = 1.0; podStabilized = false; stabilizeRequest++; stabilizePending = false
         if (leavingActivePod) FixedWingDynamicCamera.reset()
     }
 
@@ -204,7 +208,7 @@ object AircraftArmamentClient {
             val pod = state.definition.pod
             val origin = cameraPosition(vehicle, 1F) ?: vehicle.position()
             aim.begin(pod, vehicle.getVehicleTransform(1F), origin)
-            state.point?.let { aim.designate(it); podStabilized = true }
+            state.point?.let { aim.designate(it); podStabilized = true } ?: run { stabilizePending = true; stillFrames = 0 }
         } else if (mc.options.cameraType != CameraType.FIRST_PERSON) {
             // A manual F5 change wins; restoration must not overwrite that user's new choice.
             exitPending = vehicle.uuid
@@ -223,9 +227,31 @@ object AircraftArmamentClient {
         }
         val pod = getVehicleSnapshot(vehicle)?.definition?.pod ?: return
         val origin = cameraPosition(vehicle, event.renderTickTime) ?: return
-        aim.sample(mc.mouseHandler.xpos(), mc.mouseHandler.ypos(),
+        val moved = aim.sample(mc.mouseHandler.xpos(), mc.mouseHandler.ypos(),
             vehicle.mouseSensitivity.coerceIn(0.01, 2.0), podZoom, pod,
             vehicle.getVehicleTransform(event.renderTickTime), origin)
+        if (moved) { stabilizePending = true; stillFrames = 0 }
+        else if (stabilizePending && ++stillFrames >= STABILIZE_SETTLE_FRAMES &&
+            System.currentTimeMillis() - lastDesignateMs > 400) {
+            stabilizePending = false
+            requestStabilize(vehicle, event.renderTickTime)
+        }
+    }
+
+    private const val STABILIZE_SETTLE_FRAMES = 6
+
+    /** Asks the server laser for the ground point along the current aim; the reply anchors the pod there. */
+    private fun requestStabilize(vehicle: VehicleEntity, partial: Float) {
+        stabilizeRequest++
+        request("STABILIZE", JsonObject().apply {
+            addProperty("Pod", true); addProperty("StabilizeRequest", stabilizeRequest)
+            podDirection(vehicle, partial)?.let { direction ->
+                add("Direction", JsonArray().apply { add(direction.x); add(direction.y); add(direction.z) })
+            }
+            cameraPosition(vehicle, partial)?.let { origin ->
+                add("Origin", JsonArray().apply { add(origin.x); add(origin.y); add(origin.z) })
+            }
+        })
     }
 
     private fun press(key: InputConstants.Key, action: Int) {
@@ -240,27 +266,23 @@ object AircraftArmamentClient {
                 if (active) { exitPending = vehicle.uuid; leavePod() }
                 request("POD", JsonObject().apply { addProperty("Active", !active) })
             }
-            AircraftArmamentKeys.DESIGNATE.isActiveAndMatches(key) -> request("DESIGNATE", JsonObject().apply {
-                val active = isPodActive(vehicle)
-                addProperty("Pod", active)
-                if (active) podDirection(vehicle, mc.frameTime)?.let { direction ->
-                    add("Direction", JsonArray().apply { add(direction.x); add(direction.y); add(direction.z) })
-                }
-            })
-            AircraftArmamentKeys.STABILIZE.isActiveAndMatches(key) && isPodActive(vehicle) -> {
-                stabilizeRequest++
-                if (podStabilized) {
-                    podStabilized = false
-                    val origin = cameraPosition(vehicle, mc.frameTime)
-                    val direction = podDirection(vehicle, mc.frameTime)
-                    val range = getVehicleSnapshot(vehicle)?.definition?.pod?.range
-                    if (origin != null && direction != null && range != null) aim.designate(origin.add(direction.scale(range)))
-                } else request("STABILIZE", JsonObject().apply {
-                    addProperty("Pod", true); addProperty("StabilizeRequest", stabilizeRequest)
-                    podDirection(vehicle, mc.frameTime)?.let { direction ->
+            AircraftArmamentKeys.DESIGNATE.isActiveAndMatches(key) -> {
+                lastDesignateMs = System.currentTimeMillis()
+                request("DESIGNATE", JsonObject().apply {
+                    val active = isPodActive(vehicle)
+                    addProperty("Pod", active)
+                    if (active) podDirection(vehicle, mc.frameTime)?.let { direction ->
                         add("Direction", JsonArray().apply { add(direction.x); add(direction.y); add(direction.z) })
                     }
+                    if (active) cameraPosition(vehicle, mc.frameTime)?.let { origin ->
+                        add("Origin", JsonArray().apply { add(origin.x); add(origin.y); add(origin.z) })
+                    }
                 })
+            }
+            AircraftArmamentKeys.STABILIZE.isActiveAndMatches(key) && isPodActive(vehicle) -> {
+                // The pod is always stabilized; the key re-measures the ground point under the crosshair now.
+                stabilizePending = false
+                requestStabilize(vehicle, mc.frameTime)
             }
             AircraftArmamentKeys.CLEAR.isActiveAndMatches(key) -> request("CLEAR_POINT")
             AircraftArmamentKeys.CYCLE.isActiveAndMatches(key) -> {
@@ -340,8 +362,8 @@ object AircraftArmamentClient {
         if (isPodActive(vehicle)) {
             val zoom = String.format(java.util.Locale.ROOT, "%.1fx", podZoom)
             graphics.drawCenteredString(mc.font, "TARGETING POD  $zoom  |  [${AircraftArmamentKeys.DESIGNATE.translatedKeyMessage.string}] Designate", width / 2, 24, color)
-            graphics.drawCenteredString(mc.font, if (podStabilized) "STAB  [${AircraftArmamentKeys.STABILIZE.translatedKeyMessage.string}]"
-                else "[${AircraftArmamentKeys.STABILIZE.translatedKeyMessage.string}] Stabilize", width / 2, 36, color)
+            graphics.drawCenteredString(mc.font, "STAB  [${AircraftArmamentKeys.STABILIZE.translatedKeyMessage.string}] Re-measure",
+                width / 2, 36, color)
             graphics.fill(width / 2 - 5, height / 2, width / 2 + 6, height / 2 + 1, color)
             graphics.fill(width / 2, height / 2 - 5, width / 2 + 1, height / 2 + 6, color)
         }
