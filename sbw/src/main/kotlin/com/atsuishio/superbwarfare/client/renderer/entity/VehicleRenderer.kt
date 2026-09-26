@@ -52,9 +52,15 @@ abstract class VehicleRenderer<T>(renderManager: EntityRendererProvider.Context,
     protected override fun getSkyLightLevel(vehicle: T, pos: BlockPos): Int {
         val level = vehicle.level()
         com.atsuishio.superbwarfare.client.FarTerrainClient.lightOverride(net.minecraft.world.level.LightLayer.SKY, pos)?.let { return it }
-        return VehicleLightSampling.skyLightOverride(
+        val native = VehicleLightSampling.skyLightOverride(
             pos.y, level.minBuildHeight, level.maxBuildHeight, level.dimensionType().hasSkyLight(),
         ) ?: super.getSkyLightLevel(vehicle, pos)
+        // A chunk that has just arrived (a far vehicle handing over to its live entity) can read sky light 0 for
+        // a few frames until the light engine catches up, drawing the vehicle black. Open sky is 15 by
+        // definition, and the height map arrives with the chunk itself.
+        if (native < 15 && level.dimensionType().hasSkyLight() && level.hasChunk(pos.x shr 4, pos.z shr 4) &&
+            pos.y >= level.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.WORLD_SURFACE, pos.x, pos.z)) return 15
+        return native
     }
 
     protected override fun getBlockLightLevel(vehicle: T, pos: BlockPos): Int {
