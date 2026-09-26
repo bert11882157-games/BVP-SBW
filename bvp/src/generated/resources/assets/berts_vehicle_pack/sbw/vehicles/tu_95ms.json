@@ -291,6 +291,74 @@
         "SpeedChannel": "engineSpool",
         "Direction": -1,
         "DegreesPerTickAtFullSpeed": 75
+      },
+      {
+        "Bone": "gear_wheel_0",
+        "Parent": "landing_gear_0",
+        "Pivot": [
+          90.47232,
+          10.80864,
+          -63.25056
+        ],
+        "Axis": [
+          1,
+          0,
+          0
+        ],
+        "SpeedChannel": "groundRoll",
+        "Direction": -1,
+        "DegreesPerTickAtFullSpeed": 84.815
+      },
+      {
+        "Bone": "gear_wheel_1",
+        "Parent": "landing_gear_0",
+        "Pivot": [
+          106.48512,
+          10.80864,
+          -33.62688
+        ],
+        "Axis": [
+          1,
+          0,
+          0
+        ],
+        "SpeedChannel": "groundRoll",
+        "Direction": -1,
+        "DegreesPerTickAtFullSpeed": 84.815
+      },
+      {
+        "Bone": "gear_wheel_2",
+        "Parent": "landing_gear_1",
+        "Pivot": [
+          -90.47232,
+          10.80864,
+          -63.25056
+        ],
+        "Axis": [
+          1,
+          0,
+          0
+        ],
+        "SpeedChannel": "groundRoll",
+        "Direction": -1,
+        "DegreesPerTickAtFullSpeed": 84.815
+      },
+      {
+        "Bone": "gear_wheel_3",
+        "Parent": "landing_gear_1",
+        "Pivot": [
+          -106.48512,
+          10.80864,
+          -33.62688
+        ],
+        "Axis": [
+          1,
+          0,
+          0
+        ],
+        "SpeedChannel": "groundRoll",
+        "Direction": -1,
+        "DegreesPerTickAtFullSpeed": 84.815
       }
     ],
     "Gear": [

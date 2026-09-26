@@ -285,7 +285,178 @@
         "MaxDeflectionDegrees": 14.0
       }
     ],
-    "Rotors": [],
+    "Rotors": [
+      {
+        "Bone": "gear_wheel_0",
+        "Parent": "landing_gear_12",
+        "Pivot": [
+          2.48072,
+          7.44214,
+          -229.2178
+        ],
+        "Axis": [
+          1,
+          0,
+          0
+        ],
+        "SpeedChannel": "groundRoll",
+        "Direction": -1,
+        "DegreesPerTickAtFullSpeed": 123.181
+      },
+      {
+        "Bone": "gear_wheel_1",
+        "Parent": "landing_gear_12",
+        "Pivot": [
+          -5.45756,
+          7.44214,
+          -229.2178
+        ],
+        "Axis": [
+          1,
+          0,
+          0
+        ],
+        "SpeedChannel": "groundRoll",
+        "Direction": -1,
+        "DegreesPerTickAtFullSpeed": 123.181
+      },
+      {
+        "Bone": "gear_wheel_2",
+        "Parent": "landing_gear_14",
+        "Pivot": [
+          59.04095,
+          8.93056,
+          37.70683
+        ],
+        "Axis": [
+          1,
+          0,
+          0
+        ],
+        "SpeedChannel": "groundRoll",
+        "Direction": -1,
+        "DegreesPerTickAtFullSpeed": 102.651
+      },
+      {
+        "Bone": "gear_wheel_3",
+        "Parent": "landing_gear_14",
+        "Pivot": [
+          44.15667,
+          8.93056,
+          37.70683
+        ],
+        "Axis": [
+          1,
+          0,
+          0
+        ],
+        "SpeedChannel": "groundRoll",
+        "Direction": -1,
+        "DegreesPerTickAtFullSpeed": 102.651
+      },
+      {
+        "Bone": "gear_wheel_4",
+        "Parent": "landing_gear_14",
+        "Pivot": [
+          44.15667,
+          8.93056,
+          60.52938
+        ],
+        "Axis": [
+          1,
+          0,
+          0
+        ],
+        "SpeedChannel": "groundRoll",
+        "Direction": -1,
+        "DegreesPerTickAtFullSpeed": 102.651
+      },
+      {
+        "Bone": "gear_wheel_5",
+        "Parent": "landing_gear_14",
+        "Pivot": [
+          59.04095,
+          8.93056,
+          60.52938
+        ],
+        "Axis": [
+          1,
+          0,
+          0
+        ],
+        "SpeedChannel": "groundRoll",
+        "Direction": -1,
+        "DegreesPerTickAtFullSpeed": 102.651
+      },
+      {
+        "Bone": "gear_wheel_6",
+        "Parent": "landing_gear_15",
+        "Pivot": [
+          -59.04095,
+          8.93056,
+          37.70683
+        ],
+        "Axis": [
+          1,
+          0,
+          0
+        ],
+        "SpeedChannel": "groundRoll",
+        "Direction": -1,
+        "DegreesPerTickAtFullSpeed": 102.651
+      },
+      {
+        "Bone": "gear_wheel_7",
+        "Parent": "landing_gear_15",
+        "Pivot": [
+          -44.15667,
+          8.93056,
+          37.70683
+        ],
+        "Axis": [
+          1,
+          0,
+          0
+        ],
+        "SpeedChannel": "groundRoll",
+        "Direction": -1,
+        "DegreesPerTickAtFullSpeed": 102.651
+      },
+      {
+        "Bone": "gear_wheel_8",
+        "Parent": "landing_gear_15",
+        "Pivot": [
+          -44.15667,
+          8.93056,
+          60.52938
+        ],
+        "Axis": [
+          1,
+          0,
+          0
+        ],
+        "SpeedChannel": "groundRoll",
+        "Direction": -1,
+        "DegreesPerTickAtFullSpeed": 102.651
+      },
+      {
+        "Bone": "gear_wheel_9",
+        "Parent": "landing_gear_15",
+        "Pivot": [
+          -59.04095,
+          8.93056,
+          60.52938
+        ],
+        "Axis": [
+          1,
+          0,
+          0
+        ],
+        "SpeedChannel": "groundRoll",
+        "Direction": -1,
+        "DegreesPerTickAtFullSpeed": 102.651
+      }
+    ],
     "Gear": [
       {
         "Bone": "landing_gear_12",

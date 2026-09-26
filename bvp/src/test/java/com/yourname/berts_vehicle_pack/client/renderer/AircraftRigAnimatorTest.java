@@ -49,6 +49,7 @@ public final class AircraftRigAnimatorTest {
         channelsAndReflection();
         rotorsAndClock();
         windDrivenGenerator();
+        groundRollWheels();
         invalidAtomicity();
         resetAndResourceReplacement();
         mixedControlsAndNestedSweep();
@@ -86,6 +87,29 @@ public final class AircraftRigAnimatorTest {
         close(phase.degrees[1], 0, "engine propeller cannot follow glide speed");
         phase.advance(30, 0, .5);
         close(phase.degrees[0], 0, "long absent interval does not cause catch-up spin");
+    }
+
+    private static void groundRollWheels() {
+        var data = GSON.fromJson(RESOURCE, DefaultVehicleResource.class).getAircraftRig();
+        data.rotors[0].speedChannel = "groundRoll";
+        var binding = AircraftRigAnimator.bind(data, model()::getBone);
+        var phase = new AircraftRigAnimator.Phase(binding);
+        phase.advance(0, 0, .5, .5);
+        phase.advance(1, 0, .5, .5);
+        close(phase.degrees[0], 15, "wheel turns with the distance rolled");
+        close(phase.degrees[1], 0, "engine propeller ignores ground roll");
+        phase.reset();
+        phase.advance(0, 0, 0, -.5);
+        phase.advance(1, 0, 0, -.5);
+        close(phase.degrees[0], -15, "rolling backwards turns the wheel back");
+        phase.reset();
+        phase.advance(0, 0, 3, 3);
+        phase.advance(1, 0, 3, 3);
+        close(phase.degrees[0], 30, "visible spin is capped at one block per tick");
+        phase.reset();
+        phase.advance(0, 0, .5, 0);
+        phase.advance(1, 0, .5, 0);
+        close(phase.degrees[0], 0, "airborne wheels do not follow airspeed");
     }
 
     private static AircraftRigResource flapResource() {

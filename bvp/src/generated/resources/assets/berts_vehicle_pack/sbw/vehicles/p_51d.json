@@ -172,6 +172,40 @@
         "SpeedChannel": "engineSpool",
         "Direction": 1,
         "DegreesPerTickAtFullSpeed": 75
+      },
+      {
+        "Bone": "gear_wheel_0",
+        "Parent": "landing_gear_14",
+        "Pivot": [
+          29.05714,
+          5.65,
+          -36.32143
+        ],
+        "Axis": [
+          1,
+          0,
+          0
+        ],
+        "SpeedChannel": "groundRoll",
+        "Direction": -1,
+        "DegreesPerTickAtFullSpeed": 162.254
+      },
+      {
+        "Bone": "gear_wheel_1",
+        "Parent": "landing_gear_15",
+        "Pivot": [
+          -29.05714,
+          5.65,
+          -36.32143
+        ],
+        "Axis": [
+          1,
+          0,
+          0
+        ],
+        "SpeedChannel": "groundRoll",
+        "Direction": -1,
+        "DegreesPerTickAtFullSpeed": 162.254
       }
     ],
     "Gear": [

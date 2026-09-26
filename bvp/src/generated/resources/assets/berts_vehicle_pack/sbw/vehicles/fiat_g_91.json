@@ -155,7 +155,76 @@
         "MaxDeflectionDegrees": 14.0
       }
     ],
-    "Rotors": [],
+    "Rotors": [
+      {
+        "Bone": "gear_wheel_0",
+        "Parent": "landing_gear_0",
+        "Pivot": [
+          21.88683,
+          5.38201,
+          4.3056
+        ],
+        "Axis": [
+          1,
+          0,
+          0
+        ],
+        "SpeedChannel": "groundRoll",
+        "Direction": -1,
+        "DegreesPerTickAtFullSpeed": 170.333
+      },
+      {
+        "Bone": "gear_wheel_1",
+        "Parent": "landing_gear_1",
+        "Pivot": [
+          -21.88683,
+          5.38201,
+          4.3056
+        ],
+        "Axis": [
+          1,
+          0,
+          0
+        ],
+        "SpeedChannel": "groundRoll",
+        "Direction": -1,
+        "DegreesPerTickAtFullSpeed": 170.333
+      },
+      {
+        "Bone": "gear_wheel_2",
+        "Parent": "landing_gear_2",
+        "Pivot": [
+          1.794,
+          3.2292,
+          -43.41486
+        ],
+        "Axis": [
+          1,
+          0,
+          0
+        ],
+        "SpeedChannel": "groundRoll",
+        "Direction": -1,
+        "DegreesPerTickAtFullSpeed": 283.888
+      },
+      {
+        "Bone": "gear_wheel_3",
+        "Parent": "landing_gear_2",
+        "Pivot": [
+          -1.794,
+          3.2292,
+          -43.41486
+        ],
+        "Axis": [
+          1,
+          0,
+          0
+        ],
+        "SpeedChannel": "groundRoll",
+        "Direction": -1,
+        "DegreesPerTickAtFullSpeed": 283.888
+      }
+    ],
     "Gear": [
       {
         "Bone": "landing_gear_0",

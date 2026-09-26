@@ -79,7 +79,7 @@ final class AircraftRigAnimator {
         Binding binding = entry.binding;
         if (binding == null) return true;
 
-        double elevator = 0, aileron = 0, rudder = 0, spool = 0, speed = 0, airbrake = 0;
+        double elevator = 0, aileron = 0, rudder = 0, spool = 0, speed = 0, airbrake = 0, rolling = 0;
         boolean usable = Float.isFinite(partialTick) && !entity.isWreck();
         if (usable && entity instanceof AuthoredHelicopter) {
             spool = BvpFarVehicleVisuals.helicopterRotorSpool(entity, partialTick);
@@ -97,6 +97,7 @@ final class AircraftRigAnimator {
                 if (binding.sweeps.length != 0 || binding.rotors.length != 0) {
                     var snapshot = far.getSnapshot();
                     speed = speed(snapshot.getMotionX(), snapshot.getMotionY(), snapshot.getMotionZ());
+                    rolling = rolling(entity, snapshot.getMotionX(), snapshot.getMotionZ());
                 }
             }
         } else if (usable) {
@@ -107,6 +108,7 @@ final class AircraftRigAnimator {
                 if (binding.sweeps.length != 0 || binding.rotors.length != 0) {
                     var motion = flight.getMotion();
                     speed = speed(motion.f_82479_, motion.f_82480_, motion.f_82481_);
+                    rolling = rolling(entity, motion.f_82479_, motion.f_82481_);
                 }
                 var controls = flight.getControlSurfaces();
                 if (controls != null) {
@@ -130,7 +132,7 @@ final class AircraftRigAnimator {
             trim(PHASES);
         }
         if (usable) {
-            phase.advance(entity.m_9236_().m_46467_() + (double) partialTick, spool, speed);
+            phase.advance(entity.m_9236_().m_46467_() + (double) partialTick, spool, speed, rolling);
         } else {
             phase.reset();
         }
@@ -264,10 +266,12 @@ final class AircraftRigAnimator {
         for (int index = 0; index < rotors.length; index++) {
             var source = data.rotors[index];
             require(source != null && ("engineSpool".equals(source.speedChannel)
-                    || "presentedSpeed".equals(source.speedChannel)), "rotor channel");
+                    || "presentedSpeed".equals(source.speedChannel)
+                    || "groundRoll".equals(source.speedChannel)), "rotor channel");
             double rate = positive(source.degreesPerTickAtFullSpeed, 3600, "rotor rate")
                     * sign(source.direction);
-            rotors[index] = part(source, "presentedSpeed".equals(source.speedChannel) ? -4 : -1,
+            rotors[index] = part(source, "presentedSpeed".equals(source.speedChannel) ? -4
+                    : "groundRoll".equals(source.speedChannel) ? -5 : -1,
                     rate, 0, 0, 0, extended, names, bones);
         }
         for (int index = 0; index < sweeps.length; index++) {
@@ -352,6 +356,7 @@ final class AircraftRigAnimator {
         Map<String, String> parents = new HashMap<>();
         for (var source : data.surfaces) parents.put(source.bone, source.parent);
         for (var source : data.sweeps) parents.put(source.bone, source.parent);
+        if (data.gear != null) for (var source : data.gear) if (source != null) parents.put(source.bone, "hull");
         for (var source : data.rotors) validateParent(source.bone, source.parent, parents);
         for (var entry : parents.entrySet()) validateParent(entry.getKey(), entry.getValue(), parents);
     }
@@ -369,6 +374,23 @@ final class AircraftRigAnimator {
     private static double weight(Double value) {
         require(value != null && Double.isFinite(value) && Math.abs(value) <= 1, "control weight");
         return value;
+    }
+
+    /**
+     * Signed ground roll along the nose, blocks/tick, for landing gear wheels: zero off the ground. The client
+     * onGround flag is not reliable for synchronized vehicles, so a solid block just below the airframe also counts.
+     */
+    private static double rolling(GeoVehicleEntity entity, double x, double z) {
+        if (!Double.isFinite(x) || !Double.isFinite(z)) return 0;
+        boolean grounded = entity.m_20096_();
+        if (!grounded) {
+            var level = entity.m_9236_();
+            var below = net.minecraft.core.BlockPos.m_274561_(entity.m_20185_(), entity.m_20186_() - 0.35, entity.m_20189_());
+            grounded = !level.m_8055_(below).m_60795_();
+        }
+        if (!grounded) return 0;
+        double yaw = Math.toRadians(entity.m_146908_());
+        return -Math.sin(yaw) * x + Math.cos(yaw) * z;
     }
 
     private static double speed(double x, double y, double z) {
@@ -615,6 +637,7 @@ final class AircraftRigAnimator {
         double previousTick = Double.NaN;
         double previousSpool;
         double previousSpeed;
+        double previousRolling;
 
         Phase(Binding binding) {
             this.binding = binding;
@@ -626,7 +649,13 @@ final class AircraftRigAnimator {
         }
 
         void advance(double tick, double spool, double speed) {
+            advance(tick, spool, speed, 0);
+        }
+
+        void advance(double tick, double spool, double speed, double rolling) {
             if (!Double.isFinite(tick)) { reset(); return; }
+            // Wheels show at most one block/tick of roll: faster spins only strobe at frame rate.
+            rolling = Double.isFinite(rolling) ? clamp(rolling, -1, 1) : 0;
             spool = clamp(spool, 0, 1);
             // Wind-driven auxiliaries reach their presentation rate at one block/tick.
             // Use the same snapshot motion for live entities and distant copies.
@@ -637,18 +666,21 @@ final class AircraftRigAnimator {
                 previousTick = tick;
                 previousSpool = spool;
                 previousSpeed = speed;
+                previousRolling = rolling;
                 return;
             }
             double integratedSpool = elapsed * (previousSpool + spool) * 0.5;
             double integratedSpeed = elapsed * (previousSpeed + speed) * 0.5;
+            double integratedRolling = elapsed * (previousRolling + rolling) * 0.5;
             for (int index = 0; index < degrees.length; index++) {
                 var rotor = binding.rotors[index];
-                degrees[index] = (degrees[index] + rotor.rate
-                        * (rotor.channel == -4 ? integratedSpeed : integratedSpool)) % 360;
+                degrees[index] = (degrees[index] + rotor.rate * (rotor.channel == -4 ? integratedSpeed
+                        : rotor.channel == -5 ? integratedRolling : integratedSpool)) % 360;
             }
             previousTick = tick;
             previousSpool = spool;
             previousSpeed = speed;
+            previousRolling = rolling;
         }
 
         void reset() {
@@ -656,6 +688,7 @@ final class AircraftRigAnimator {
             previousTick = Double.NaN;
             previousSpool = 0;
             previousSpeed = 0;
+            previousRolling = 0;
         }
     }
 }
