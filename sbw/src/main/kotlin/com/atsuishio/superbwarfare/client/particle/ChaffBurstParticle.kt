@@ -27,7 +27,7 @@ class ChaffBurstParticle(level: ClientLevel, x: Double, y: Double, z: Double,
         setSize(6f, 6f)
         pickSprite(sprites)
     }
-    override fun getRenderType(): ParticleRenderType = ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT
+    override fun getRenderType(): ParticleRenderType = SoftParticleRenderType
     override fun render(buffer: VertexConsumer, camera: Camera, partialTicks: Float) {
         val t = age + partialTicks
         val progress = (t / lifetime).coerceIn(0f, 1f)

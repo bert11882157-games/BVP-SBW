@@ -99,7 +99,7 @@ internal object RadarDisplayPainter {
     private fun contact(g: GuiGraphics, c: RadarDisplayState.Contact, s: RadarDisplayState, p: DisplayPalette) {
         val x = xOf(c.bearing)
         val y = yOf(c.range, s.rangeScale)
-        val half = 6
+        val half = 9
         val color = if (c.locked) p.amber else if (c.air) p.white else p.green
         if (c.air) {
             g.fill((x - half).roundToInt(), (y - half).roundToInt(), (x + half).roundToInt(), (y + half).roundToInt(), color)

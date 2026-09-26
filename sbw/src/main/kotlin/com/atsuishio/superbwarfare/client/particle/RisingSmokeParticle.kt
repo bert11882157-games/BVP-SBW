@@ -46,7 +46,7 @@ open class RisingSmokeParticle protected constructor(
     }
 
     override fun getRenderType(): ParticleRenderType {
-        return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT
+        return SoftParticleRenderType
     }
 
     override fun tick() {

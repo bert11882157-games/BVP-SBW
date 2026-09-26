@@ -192,6 +192,8 @@ public class DefaultVehicleResource implements IDBasedData<DefaultVehicleResourc
         @SerializedName("Schema") public int schema;
         @SerializedName("Frame") public String frame;
         @SerializedName("Displays") public Display[] displays;
+        /** Top-view outline polylines of the airframe for the stores page: [x, z, x, z, ...] vehicle-local blocks. */
+        @SerializedName("Planform") public double[][] planform;
 
         public static final class Display {
             @SerializedName("Seat") public int seat;
@@ -205,11 +207,26 @@ public class DefaultVehicleResource implements IDBasedData<DefaultVehicleResourc
             @SerializedName("Width") public double width;
             /** Depth of the display housing behind the screen, blocks. */
             @SerializedName("Depth") public double depth;
-            /** Page shown: "PFD" (primary flight display, the default) or "RADAR". */
+            /** Page shown: "PFD" (primary flight display, the default), "RADAR" or "STORES". */
             @SerializedName("Kind") public @Nullable String kind;
             /** Screen technology: "LCD" (colour, the default) or "CRT" (green phosphor). */
             @SerializedName("Style") public @Nullable String style;
         }
+    }
+
+    @SerializedName("CanopyGlass")
+    private CanopyGlassResource canopyGlass;
+
+    /** Tinted canopy glass fitted over the canopy openings (tools/canopy_glass/glass.py). */
+    public @Nullable CanopyGlassResource getCanopyGlass() {
+        return canopyGlass;
+    }
+
+    /** VEHICLE_LOCAL_BLOCKS (+X left, +Y up, +Z forward) glass triangles, three xyz corners each. */
+    public static final class CanopyGlassResource {
+        @SerializedName("Schema") public int schema;
+        @SerializedName("Frame") public String frame;
+        @SerializedName("Triangles") public double[] triangles;
     }
 
     @SerializedName("CockpitGauges")

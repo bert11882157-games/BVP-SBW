@@ -86,7 +86,7 @@ open class CustomCloudParticle protected constructor(
     }
 
     override fun getRenderType(): ParticleRenderType {
-        return if (light) ParticleRenderType.PARTICLE_SHEET_LIT else ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT
+        return if (light) ParticleRenderType.PARTICLE_SHEET_LIT else SoftParticleRenderType
     }
 
     override fun tick() {

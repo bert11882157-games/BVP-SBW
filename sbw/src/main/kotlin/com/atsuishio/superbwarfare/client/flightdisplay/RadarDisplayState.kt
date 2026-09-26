@@ -39,7 +39,7 @@ data class RadarDisplayState(
             val level = vehicle.level()
             val radar = runCatching { AircraftArmamentManager.definition(vehicle)?.getAsJsonObject("Radar") }.getOrNull()
             val range = radar?.get("Range")?.asDouble?.takeIf { it > 0 } ?: DEFAULT_RANGE
-            val scale = SCALES.firstOrNull { it >= range } ?: SCALES.last()
+            val maxScale = SCALES.firstOrNull { it >= range } ?: SCALES.last()
             val yaw = Mth.lerp(partialTick, vehicle.yRotO, vehicle.yRot).toDouble()
             val heading = Mth.positiveModulo(yaw + 180.0, 360.0)
             val ox = Mth.lerp(partialTick.toDouble(), vehicle.xo, vehicle.x)
@@ -74,7 +74,10 @@ data class RadarDisplayState(
             // Scan bar: +-60 degrees and back every 2 seconds.
             val phase = (time % 80.0) / 40.0
             val sweep = if (phase < 1.0) -AZIMUTH_LIMIT + phase * 2 * AZIMUTH_LIMIT else AZIMUTH_LIMIT - (phase - 1.0) * 2 * AZIMUTH_LIMIT
-            return RadarDisplayState(scale, heading, sweep, out, true)
+            // Automatic range scale: the smallest that keeps the farthest contact in the upper part of the scope.
+            val farthest = out.maxOfOrNull { it.range } ?: 0.0
+            val scale = SCALES.firstOrNull { it >= maxOf(250.0, farthest * 1.3) && it <= maxScale } ?: maxScale
+            return RadarDisplayState(scale, heading, sweep, out.filter { it.range <= scale }, true)
         }
     }
 }

@@ -129,7 +129,7 @@ object AfterburnerPlumes {
         val sinceIgnition = time - p.ignitedAt
         val ignition = if (sinceIgnition in 0.0..IGNITION_TICKS) 1.0 - sinceIgnition / IGNITION_TICKS else 0.0
         val flicker = 1.0 + 0.05 * sin(time * 2.7 + p.seed) + 0.04 * sin(time * 5.3 + p.seed * 1.7)
-        val length = r * 9.5 * (0.3 + 0.7 * i) * (1.0 + 0.3 * ignition) * flicker
+        val length = r * 11.0 * (0.3 + 0.7 * i) * (1.0 + 0.3 * ignition) * flicker
 
         // Ignition pop.
         if (ignition > 0.0) {
@@ -148,13 +148,13 @@ object AfterburnerPlumes {
                 val segLength = length / segments * 2.6 * BlastSprites.PUFF_FILL
                 val t = phase
                 val fade = (1.0 - t).pow(1.25) * min(1.0, phase * 8.0)
-                val width = r * BlastSprites.PUFF_FILL * (1.05 - 0.5 * t) * (1.0 + 0.07 * sin(time * 1.9 + k * 2.3 + p.seed))
+                val width = r * BlastSprites.PUFF_FILL * (1.2 - 0.55 * t) * (1.0 + 0.07 * sin(time * 1.9 + k * 2.3 + p.seed))
                 val warm = 1.0 - t
-                val k0 = 0.55 * i * fade * side
+                val k0 = 0.8 * i * fade * side
                 val rr = k0 * 1.0; val gg = k0 * (0.36 + 0.34 * warm); val bb = k0 * (0.1 + 0.22 * warm)
                 val frame = fire[(k + (time * 0.9).toInt()) % fire.size]
                 segment(ox, oy, oz, p, s0 - segLength * 0.3, s0 + segLength * 0.7, width, width * 0.9, sx, sy, sz,
-                    rr, gg, bb, 0.06 * i * fade * side, frame)
+                    rr, gg, bb, 0.09 * i * fade * side, frame)
             }
             // Hot core close to the nozzle.
             val coreLength = length * 0.36
@@ -169,11 +169,37 @@ object AfterburnerPlumes {
                     if (centre > length * 0.9) break
                     val decay = 1.0 - 0.17 * n
                     val shimmer = 0.85 + 0.15 * sin(time * 4.3 + n * 2.9 + p.seed * 0.7)
-                    val k1 = 0.85 * ringLevel * decay * shimmer * side
+                    val k1 = 1.0 * ringLevel * decay * shimmer * side
                     val halfLength = r * 0.42
                     val width = r * 0.72 * (1.0 - 0.1 * n)
                     segment(ox, oy, oz, p, centre - halfLength, centre + halfLength, width, width, sx, sy, sz,
                         k1, k1 * 0.76, k1 * 0.46, 0.05 * k1, flash)
+                }
+            }
+        }
+        // Looking up the jet the ribbons turn edge-on, so the flame body and the diamonds are drawn as camera-facing
+        // glows stacked along the axis instead (blended in as the ribbons fade out).
+        val back = (1.0 - side).coerceIn(0.0, 1.0)
+        if (back > 0.02) {
+            val glows = 7
+            for (k in 0 until glows) {
+                val t = (k + 0.5) / glows
+                val s0 = t * length * 0.8
+                val fade = (1.0 - t).pow(1.1)
+                val k2 = 0.55 * i * back * fade
+                billboard(ox + p.dx * s0, oy + p.dy * s0, oz + p.dz * s0, r * (1.25 - 0.55 * t), time * 0.03 + k,
+                    k2, k2 * (0.42 + 0.3 * (1.0 - t)), k2 * (0.15 + 0.2 * (1.0 - t)), 0.05 * k2,
+                    fire[(k + (time * 0.9).toInt()) % fire.size], lx, ly, lz, ux, uy, uz)
+            }
+            val ringLevel = ((i - 0.45) / 0.45).coerceIn(0.0, 1.0)
+            if (ringLevel > 0.0) {
+                val spacing = r * 1.45
+                for (n in 0 until 5) {
+                    val centre = r * 0.75 + n * spacing
+                    if (centre > length * 0.9) break
+                    val k3 = 0.7 * ringLevel * back * (1.0 - 0.17 * n)
+                    billboard(ox + p.dx * centre, oy + p.dy * centre, oz + p.dz * centre, r * 0.8 * (1.0 - 0.1 * n),
+                        0.0, k3, k3 * 0.76, k3 * 0.46, 0.0, flash, lx, ly, lz, ux, uy, uz)
                 }
             }
         }

@@ -105,19 +105,25 @@ def place(vid):
     if spot['mode'] != 'panel':
         return scene, eye, spot, None
     base = float(np.clip(2 * spot['distance'] * math.tan(math.radians(ANGULAR / 2)), MIN_D, MAX_D))
-    for scale in (1.0, 0.85, 0.72, 0.6, 0.5):
-        for live in LAYOUTS:
-            # The flight-display spot sits where a screen fits; the cluster may sit a little higher or lower.
-            for lift in (0.0, 0.5, -0.5):
-                s = dict(spot)
-                d = base * scale
-                c = reseat(scene, spot['centre'] + spot['up'] * lift * d, spot['normal'])
-                if c is None:
-                    continue
-                s['centre'] = c
-                gauges = cluster(scene, eye, s, d, live)
-                if gauges:
-                    return scene, eye, spot, gauges
+    right = np.cross(spot['up'], spot['normal'])
+    # The flight-display spot sits where a screen fits; the cluster may sit a little higher or lower. Panels
+    # where nothing fits near it get a wider search (further down, and off to either side).
+    near = [(0.0, 0.0), (0.5, 0.0), (-0.5, 0.0)]
+    wide = [(lift, shift) for lift in (-1.0, -1.5, -2.0, -2.5, 0.0, 1.0) for shift in (0.0, -0.75, 0.75, -1.5, 1.5)
+            if (lift, shift) not in near]
+    for offsets in (near, wide):
+        for scale in (1.0, 0.85, 0.72, 0.6, 0.5):
+            for live in LAYOUTS:
+                for lift, shift in offsets:
+                    s = dict(spot)
+                    d = base * scale
+                    c = reseat(scene, spot['centre'] + spot['up'] * lift * d + right * shift * d, spot['normal'])
+                    if c is None:
+                        continue
+                    s['centre'] = c
+                    gauges = cluster(scene, eye, s, d, live)
+                    if gauges:
+                        return scene, eye, spot, gauges
     return scene, eye, spot, None
 
 

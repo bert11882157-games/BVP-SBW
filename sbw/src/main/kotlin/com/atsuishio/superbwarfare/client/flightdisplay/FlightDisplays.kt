@@ -50,18 +50,22 @@ object FlightDisplays {
     private const val FACE = 0.006f         // housing front stands this far proud of the screen, blocks
 
     /** A page on a screen technology: one texture each, live and still. */
-    private enum class Page(val radar: Boolean, val palette: DisplayPalette) {
+    private enum class Page(val radar: Boolean, val palette: DisplayPalette, val stores: Boolean = false) {
         PFD_LCD(false, DisplayPalette.LCD), PFD_CRT(false, DisplayPalette.CRT),
-        RADAR_LCD(true, DisplayPalette.LCD), RADAR_CRT(true, DisplayPalette.CRT);
+        RADAR_LCD(true, DisplayPalette.LCD), RADAR_CRT(true, DisplayPalette.CRT),
+        STORES_LCD(false, DisplayPalette.LCD, true), STORES_CRT(false, DisplayPalette.CRT, true);
 
         val liveTexture = Mod.loc("dynamic/flight_display_live_" + name.lowercase())
         val stillTexture = Mod.loc("dynamic/flight_display_still_" + name.lowercase())
 
         companion object {
             fun of(d: DefaultVehicleResource.FlightDisplaysResource.Display): Page {
-                val radar = d.kind.equals("RADAR", ignoreCase = true)
                 val crt = d.style.equals("CRT", ignoreCase = true)
-                return if (radar) (if (crt) RADAR_CRT else RADAR_LCD) else (if (crt) PFD_CRT else PFD_LCD)
+                return when {
+                    d.kind.equals("RADAR", ignoreCase = true) -> if (crt) RADAR_CRT else RADAR_LCD
+                    d.kind.equals("STORES", ignoreCase = true) -> if (crt) STORES_CRT else STORES_LCD
+                    else -> if (crt) PFD_CRT else PFD_LCD
+                }
             }
         }
     }
@@ -92,7 +96,7 @@ object FlightDisplays {
             if (page in stillPainted) continue
             try {
                 val target = still.getOrPut(page) { create(page.stillTexture) }
-                paint(target, page, FlightDisplayState.STILL, RadarDisplayState.STILL)
+                paint(target, page, FlightDisplayState.STILL, RadarDisplayState.STILL, StoresDisplayState.STILL)
                 stillPainted.add(page)
                 LOGGER.info("Flight display still image painted: {}", page)
             } catch (e: Throwable) {
@@ -109,8 +113,9 @@ object FlightDisplays {
         val state = FlightDisplayState.sample(vehicle, event.renderTickTime) ?: return
         val pages = resource.displays.map(Page::of).toSet()
         val radar = if (pages.any { it.radar }) RadarDisplayState.sample(vehicle, event.renderTickTime) else RadarDisplayState.STILL
+        val stores = if (pages.any { it.stores }) StoresDisplayState.sample(vehicle, planform(resource)) else StoresDisplayState.STILL
         try {
-            for (page in pages) paint(live.getOrPut(page) { create(page.liveTexture) }, page, state, radar)
+            for (page in pages) paint(live.getOrPut(page) { create(page.liveTexture) }, page, state, radar, stores)
             livePages.clear(); livePages.addAll(pages)
             liveVehicleId = vehicle.id
             if (!loggedFirstLive) {
@@ -134,6 +139,7 @@ object FlightDisplays {
         val camera = mc.gameRenderer.mainCamera.position
         if (vehicle.position().distanceToSqr(camera) > MAX_RENDER_DISTANCE_SQ) return
         CockpitGauges.render(vehicle, poseStack, buffers, packedLight)
+        CanopyGlass.render(vehicle, poseStack, buffers, packedLight)
         if (failed) return
         val resource = displays(vehicle) ?: return
         val list = resource.displays ?: return
@@ -297,7 +303,19 @@ object FlightDisplays {
     }
 
     /** Runs at the start of a frame, outside the world pass; still saves and restores the state it touches. */
-    private fun paint(target: RenderTarget, page: Page, state: FlightDisplayState, radar: RadarDisplayState) {
+    private var planformSource: Any? = null
+    private var planformCache: Array<DoubleArray>? = null
+
+    private fun planform(resource: DefaultVehicleResource.FlightDisplaysResource): Array<DoubleArray>? {
+        if (planformSource !== resource) {
+            planformSource = resource
+            planformCache = resource.planform?.filter { it.size >= 4 && it.all(Double::isFinite) }?.toTypedArray()
+        }
+        return planformCache
+    }
+
+    private fun paint(target: RenderTarget, page: Page, state: FlightDisplayState, radar: RadarDisplayState,
+                      stores: StoresDisplayState) {
         val mc = Minecraft.getInstance()
         RenderSystem.assertOnRenderThread()
         val size = PrimaryFlightDisplayPainter.SIZE.toFloat()
@@ -318,8 +336,11 @@ object FlightDisplays {
             val buffers = MultiBufferSource.immediate(Tesselator.getInstance().builder)
             val graphics = GuiGraphics(mc, buffers)
             if (SUPERSAMPLE != 1) graphics.pose().scale(SUPERSAMPLE.toFloat(), SUPERSAMPLE.toFloat(), 1f)
-            if (page.radar) RadarDisplayPainter.paint(graphics, radar, SUPERSAMPLE, page.palette)
-            else PrimaryFlightDisplayPainter.paint(graphics, state, SUPERSAMPLE, page.palette)
+            when {
+                page.radar -> RadarDisplayPainter.paint(graphics, radar, SUPERSAMPLE, page.palette)
+                page.stores -> StoresDisplayPainter.paint(graphics, stores, SUPERSAMPLE, page.palette)
+                else -> PrimaryFlightDisplayPainter.paint(graphics, state, SUPERSAMPLE, page.palette)
+            }
             graphics.flush()
             if (paintsLogged < 3) {
                 paintsLogged++
