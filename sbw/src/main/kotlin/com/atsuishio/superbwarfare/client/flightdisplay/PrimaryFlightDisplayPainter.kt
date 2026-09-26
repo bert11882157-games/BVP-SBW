@@ -40,22 +40,24 @@ internal object PrimaryFlightDisplayPainter {
     private const val ALT_PX = 1.6      // per metre
     private const val HDG_PX = 4.0      // per degree
 
-    private const val WHITE = 0xFFFFFFFF.toInt()
-    private const val BLACK = 0xFF000000.toInt()
-    private const val CYAN = 0xFF2CE6FF.toInt()
-    private const val GREEN = 0xFF3DFF5A.toInt()
-    private const val AMBER = 0xFFFFB21C.toInt()
-    private const val MAGENTA = 0xFFFF4FE0.toInt()
-    private const val SKY = 0xFF1F6FD1.toInt()
-    private const val SKY_DEEP = 0xFF1856A8.toInt()
-    private const val GROUND = 0xFF7A4A1E.toInt()
-    private const val GROUND_DEEP = 0xFF5E3915.toInt()
-    private const val TAPE = 0xFF3A3F47.toInt()
-    private const val BG = 0xFF06080B.toInt()
+    // Colours of the page being painted (set for the duration of paint()).
+    private var p: DisplayPalette = DisplayPalette.LCD
+    private val WHITE get() = p.white
+    private val BLACK get() = p.black
+    private val CYAN get() = p.cyan
+    private val GREEN get() = p.green
+    private val AMBER get() = p.amber
+    private val SKY get() = p.sky
+    private val SKY_DEEP get() = p.skyDeep
+    private val GROUND get() = p.ground
+    private val GROUND_DEEP get() = p.groundDeep
+    private val TAPE get() = p.tape
+    private val FRAME get() = p.frame
 
-    fun paint(g: GuiGraphics, state: FlightDisplayState, scale: Int) {
+    fun paint(g: GuiGraphics, state: FlightDisplayState, scale: Int, palette: DisplayPalette = DisplayPalette.LCD) {
+        p = palette
         val font = Minecraft.getInstance().font
-        g.fill(0, 0, SIZE, SIZE, BG)
+        g.fill(0, 0, SIZE, SIZE, p.background)
         attitude(g, font, state, scale)
         speedTape(g, font, state, scale)
         altitudeTape(g, font, state, scale)
@@ -63,7 +65,8 @@ internal object PrimaryFlightDisplayPainter {
         headingTape(g, font, state, scale)
         machAndHeader(g, font, state)
         // Screen frame.
-        outline(g, 2, 2, SIZE - 2, SIZE - 2, 2, 0xFF2A2F36.toInt())
+        outline(g, 2, 2, SIZE - 2, SIZE - 2, 2, p.bezelLine)
+        palette.finish(g, SIZE)
     }
 
     // ------------------------------------------------------------------ attitude
@@ -133,7 +136,7 @@ internal object PrimaryFlightDisplayPainter {
         symbolBar(g, ADI_CX + 40, ADI_CX + 112, ADI_CY, false)
         g.fill(ADI_CX - 6, ADI_CY - 6, ADI_CX + 6, ADI_CY + 6, BLACK)
         g.fill(ADI_CX - 4, ADI_CY - 4, ADI_CX + 4, ADI_CY + 4, AMBER)
-        outline(g, ADI_L, ADI_T, ADI_R, ADI_B, 2, 0xFF9AA3AD.toInt())
+        outline(g, ADI_L, ADI_T, ADI_R, ADI_B, 2, FRAME)
     }
 
     private fun symbolBar(g: GuiGraphics, x0: Int, x1: Int, y: Int, left: Boolean) {
@@ -162,7 +165,7 @@ internal object PrimaryFlightDisplayPainter {
         RenderSystem.disableScissor()
         readout(g, font, SPD_L - 6, SPD_R + 4, formatInt(v), true)
         text(g, font, "KM/H", (SPD_L + SPD_R) / 2f, ADI_T - 14f, 1.6f, CYAN, Align.CENTER)
-        outline(g, SPD_L, ADI_T, SPD_R, ADI_B, 2, 0xFF9AA3AD.toInt())
+        outline(g, SPD_L, ADI_T, SPD_R, ADI_B, 2, FRAME)
     }
 
     private fun altitudeTape(g: GuiGraphics, font: Font, s: FlightDisplayState, scale: Int) {
@@ -180,13 +183,13 @@ internal object PrimaryFlightDisplayPainter {
         RenderSystem.disableScissor()
         readout(g, font, ALT_L - 4, ALT_R + 4, formatInt(a), false)
         text(g, font, "ALT", (ALT_L + ALT_R) / 2f, ADI_T - 14f, 1.6f, CYAN, Align.CENTER)
-        outline(g, ALT_L, ADI_T, ALT_R, ADI_B, 2, 0xFF9AA3AD.toInt())
+        outline(g, ALT_L, ADI_T, ALT_R, ADI_B, 2, FRAME)
     }
 
     private fun verticalSpeed(g: GuiGraphics, font: Font, s: FlightDisplayState) {
         val top = ADI_T + 40; val bottom = ADI_B - 40
         val half = (bottom - top) / 2
-        g.fill(VSI_L, top, VSI_R, bottom, 0xFF22262C.toInt())
+        g.fill(VSI_L, top, VSI_R, bottom, p.tapeDark)
         // Non-linear scale: 0, 5, 10, 20, 40 m/s.
         fun offset(vs: Double): Float = (sign(vs) * sqrt(minOf(abs(vs), 40.0) / 40.0) * half).toFloat()
         for (mark in doubleArrayOf(-40.0, -20.0, -10.0, -5.0, 0.0, 5.0, 10.0, 20.0, 40.0)) {
@@ -229,7 +232,7 @@ internal object PrimaryFlightDisplayPainter {
         g.fill(ADI_CX - 30, HDG_T - 30, ADI_CX + 30, HDG_T - 10, BLACK)
         outline(g, ADI_CX - 30, HDG_T - 30, ADI_CX + 30, HDG_T - 10, 2, WHITE)
         text(g, font, hdg.toString().padStart(3, '0'), ADI_CX.toFloat(), HDG_T - 20f, 1.7f, WHITE, Align.CENTER)
-        outline(g, ADI_L, HDG_T, ADI_R, HDG_B, 2, 0xFF9AA3AD.toInt())
+        outline(g, ADI_L, HDG_T, ADI_R, HDG_B, 2, FRAME)
     }
 
     private fun machAndHeader(g: GuiGraphics, font: Font, s: FlightDisplayState) {

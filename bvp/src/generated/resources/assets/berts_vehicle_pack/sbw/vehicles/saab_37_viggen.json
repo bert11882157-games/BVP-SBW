@@ -195,5 +195,95 @@
       }
     ],
     "Sweeps": []
+  },
+  "CockpitGauges": {
+    "Schema": 1,
+    "Frame": "VEHICLE_LOCAL_BLOCKS",
+    "Gauges": [
+      {
+        "Seat": 0,
+        "Kind": "ATTITUDE",
+        "Center": [
+          0.03575,
+          2.70157,
+          3.72762
+        ],
+        "Normal": [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        "Up": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "Diameter": 0.0565,
+        "Depth": 0.03
+      },
+      {
+        "Seat": 0,
+        "Kind": "ALTIMETER",
+        "Center": [
+          -0.03575,
+          2.70157,
+          3.72762
+        ],
+        "Normal": [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        "Up": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "Diameter": 0.0565,
+        "Depth": 0.03
+      },
+      {
+        "Seat": 0,
+        "Kind": "THROTTLE",
+        "Center": [
+          0.03575,
+          2.63007,
+          3.77782
+        ],
+        "Normal": [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        "Up": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "Diameter": 0.0565,
+        "Depth": 0.03
+      },
+      {
+        "Seat": 0,
+        "Kind": "HEADING",
+        "Center": [
+          -0.03575,
+          2.63007,
+          3.77782
+        ],
+        "Normal": [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        "Up": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "Diameter": 0.0565,
+        "Depth": 0.03
+      }
+    ]
   }
 }

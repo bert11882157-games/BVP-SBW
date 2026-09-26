@@ -205,6 +205,41 @@ public class DefaultVehicleResource implements IDBasedData<DefaultVehicleResourc
             @SerializedName("Width") public double width;
             /** Depth of the display housing behind the screen, blocks. */
             @SerializedName("Depth") public double depth;
+            /** Page shown: "PFD" (primary flight display, the default) or "RADAR". */
+            @SerializedName("Kind") public @Nullable String kind;
+            /** Screen technology: "LCD" (colour, the default) or "CRT" (green phosphor). */
+            @SerializedName("Style") public @Nullable String style;
+        }
+    }
+
+    @SerializedName("CockpitGauges")
+    private CockpitGaugesResource cockpitGauges;
+
+    /** Round analogue ("steam") instruments on the panels of cockpits without electronic displays. */
+    public @Nullable CockpitGaugesResource getCockpitGauges() {
+        return cockpitGauges;
+    }
+
+    /** VEHICLE_LOCAL_BLOCKS (+X left, +Y up, +Z forward) gauge placements. */
+    public static final class CockpitGaugesResource {
+        @SerializedName("Schema") public int schema;
+        @SerializedName("Frame") public String frame;
+        @SerializedName("Gauges") public Gauge[] gauges;
+
+        public static final class Gauge {
+            @SerializedName("Seat") public int seat;
+            /** ALTIMETER, ATTITUDE, HEADING, THROTTLE (live for the pilot) or a FILLER_* dial (fixed). */
+            @SerializedName("Kind") public String kind;
+            /** Centre of the dial face. */
+            @SerializedName("Center") public double[] center;
+            /** Unit normal of the dial, pointing at the crew member. */
+            @SerializedName("Normal") public double[] normal;
+            /** Unit dial-up direction, perpendicular to the normal. */
+            @SerializedName("Up") public double[] up;
+            /** Dial diameter, blocks. */
+            @SerializedName("Diameter") public double diameter;
+            /** Depth of the case behind the dial, blocks. */
+            @SerializedName("Depth") public double depth;
         }
     }
 

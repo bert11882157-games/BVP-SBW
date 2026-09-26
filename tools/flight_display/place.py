@@ -39,6 +39,10 @@ GLASS_COCKPITS = {
     'mi28n': [0],                    # the operator's station is only seen through its nose sight camera
 }
 
+# Older glass cockpits fly monochrome green CRT displays; the rest colour LCDs.
+CRT_COCKPITS = {'b_1b', 'f_14d', 'j_11a', 'ah_64d', 'mi28n'}
+HOUSING = 1.4                 # multi-function display housing (button bezel) edge, in screen widths
+
 PREFERRED_DOWN = 18.0
 ANGULAR_WIDTH = 15.0          # degrees the screen subtends from the eye, like a real 8 inch PFD at arm's length
 MIN_WIDTH, MAX_WIDTH = 0.14, 0.34
@@ -279,6 +283,93 @@ def r5(v):
     return [round(float(x), 5) + 0.0 for x in v]
 
 
+def has_radar(vid):
+    path = os.path.join(GEN, 'data/berts_vehicle_pack/sbw/aircraft_armaments', vid + '.json')
+    try:
+        radar = json.load(open(path)).get('Radar') or {}
+    except Exception:
+        return False
+    return bool(radar.get('Enabled'))
+
+
+def panel_fit(scene, eye, centre, normal, up, width):
+    """(support, visibility) of a display housing HOUSING * width square at centre: panel geometry directly behind
+    it, and nothing between the eye and its screen."""
+    right = np.cross(up, normal)
+    supported = total = 0
+    for sy in np.linspace(-0.45, 0.45, 5):
+        for sx in np.linspace(-0.45, 0.45, 5):
+            s = centre + (right * sx + up * sy) * width * HOUSING
+            total += 1
+            tb, _ = scene.cast(s + normal * 0.02, -normal, tmin=0.0, tmax=0.02 + 0.09)
+            supported += tb is not None
+    visible = n = 0
+    for sy in np.linspace(-0.45, 0.45, 4):
+        for sx in np.linspace(-0.45, 0.45, 4):
+            s = centre + (right * sx + up * sy) * width
+            v = s - eye
+            dist = np.linalg.norm(v)
+            tv, _ = scene.cast(eye, v / dist, tmin=0.05, tmax=dist - 0.03)
+            visible += tv is None
+            n += 1
+    return supported / total, visible / n
+
+
+def place_side(scene, eye, primary, others):
+    """Second display (radar) beside the primary one on the same panel: toward the aircraft centre line for an
+    off-centre seat, else on the pilot's right; smaller if the panel is narrow. None if nothing fits."""
+    normal, up = primary['normal'], primary['up']
+    right = np.cross(up, normal)        # pilot's right
+    toward_centre = -np.sign(primary['centre'][0]) if abs(primary['centre'][0]) > 0.15 else None
+    sides = [1.0, -1.0]
+    if toward_centre is not None:
+        # right points to -X; moving toward x = 0 from +X means +right
+        sides = [1.0, -1.0] if toward_centre < 0 else [-1.0, 1.0]
+    for scale in (1.0, 0.85, 0.72):
+        w = primary['width'] * scale
+        gap = 0.01
+        for side in sides:
+            offset = (primary['width'] + w) / 2 * HOUSING + gap
+            centre = primary['centre'] + right * side * offset
+            # follow the panel surface: re-seat the centre on the geometry behind it
+            tb, i = scene.cast(centre + normal * 0.06, -normal, tmin=0.0, tmax=0.2)
+            if tb is None:
+                continue
+            centre = centre + normal * 0.06 - normal * tb + normal * EPS
+            if any(np.linalg.norm(centre - o['centre']) < (o['width'] + w) / 2 * HOUSING for o in others):
+                continue
+            support, vis = panel_fit(scene, eye, centre, normal, up, w)
+            if support >= 0.7 and vis >= 0.9:
+                return dict(score=None, centre=centre, normal=normal, up=up, width=w, down=primary['down'],
+                            left=primary['left'], distance=primary['distance'], support=support, mode='panel',
+                            kind='RADAR')
+    return None
+
+
+def reseat(scene, centre, normal):
+    tb, _ = scene.cast(centre + normal * 0.06, -normal, tmin=0.0, tmax=0.2)
+    return None if tb is None else centre + normal * 0.06 - normal * tb + normal * EPS
+
+
+def place_pair(scene, eye, primary):
+    """No room beside the PFD: move it aside and put both displays side by side around its old centre."""
+    normal, up = primary['normal'], primary['up']
+    right = np.cross(up, normal)
+    for scale in (1.0, 0.85, 0.72, 0.62):
+        w = primary['width'] * scale
+        offset = (w * HOUSING + 0.01) / 2
+        a = reseat(scene, primary['centre'] - right * offset, normal)
+        b = reseat(scene, primary['centre'] + right * offset, normal)
+        if a is None or b is None:
+            continue
+        fa, fb = panel_fit(scene, eye, a, normal, up, w), panel_fit(scene, eye, b, normal, up, w)
+        if min(fa[0], fb[0]) >= 0.7 and min(fa[1], fb[1]) >= 0.9:
+            pfd = dict(primary, centre=a, width=w, support=fa[0])
+            radar = dict(primary, centre=b, width=w, support=fb[0], kind='RADAR', stats={})
+            return pfd, radar
+    return None
+
+
 def place(vid):
     scene = Scene(vid)
     seat_eyes = eyes(vid)
@@ -295,14 +386,33 @@ def place(vid):
                 found['mode'] = 'panel-head'
                 r = found
         r['seat'] = seat
+        r['kind'] = 'PFD'
         results.append(r)
+    if has_radar(vid) and results and results[0]['mode'] != 'floating':
+        side = place_side(scene, results[0]['eye'], results[0], results)
+        if side:
+            side['seat'] = results[0]['seat']
+            side['eye'] = results[0]['eye']
+            side['stats'] = {}
+            results.append(side)
+        else:
+            pair = place_pair(scene, results[0]['eye'], results[0])
+            if pair:
+                results[0] = pair[0]
+                results.append(pair[1])
+            else:
+                print(f'{vid}: no room for a radar display beside the PFD')
+    style = 'CRT' if vid in CRT_COCKPITS else 'LCD'
+    for r in results:
+        r['style'] = style
     return scene, results
 
 
 def resource_block(results):
     return {'Schema': 1, 'Frame': 'VEHICLE_LOCAL_BLOCKS', 'Displays': [
         {'Seat': r['seat'], 'Center': r5(r['centre']), 'Normal': r5(r['normal']), 'Up': r5(r['up']),
-         'Width': round(r['width'], 4), 'Depth': DEPTH} for r in results]}
+         'Width': round(r['width'], 4), 'Depth': DEPTH, 'Kind': r.get('kind', 'PFD'), 'Style': r.get('style', 'LCD')}
+        for r in results]}
 
 
 # ---------------------------------------------------------------- verification render
@@ -349,12 +459,13 @@ def render_view(scene, results, eye, ax, fov=70.0, down=14.0, title=''):
         polys.append(xy); depth.append(np.linalg.norm(rel)); fc.append(np.clip((0.12 + 0.88 * c ** 0.6) * shade, 0, 1))
     for r in results:
         upv, rightv = r['up'], np.cross(r['up'], r['normal'])
-        w = r['width'] / 2
+        w = r['width'] / 2 * HOUSING
         quad = np.array([r['centre'] + rightv * sx * w + upv * sy * w for sx, sy in ((-1, -1), (1, -1), (1, 1), (-1, 1))])
         pts = clip(quad)
         if len(pts) >= 3:
             xy, _ = project(pts)
-            polys.append(xy); depth.append(-1); fc.append((0.1, 1.0, 0.3) if r['mode'] == 'panel' else (1, 0.2, 0.9))
+            polys.append(xy); depth.append(-1)
+            fc.append((1.0, 0.8, 0.1) if r.get('kind') == 'RADAR' else (0.1, 1.0, 0.3) if r['mode'] == 'panel' else (1, 0.2, 0.9))
     order = np.argsort(depth)[::-1]
     ax.add_collection(PolyCollection([polys[i] for i in order], facecolors=[fc[i] for i in order],
                                      edgecolors=(0, 0, 0, 0.25), linewidths=0.2))
