@@ -21,7 +21,7 @@ import kotlin.math.sqrt
 /**
  * Draws the primary flight display into the currently bound [SIZE] x [SIZE] target (GUI projection, y down, one
  * unit per texel): attitude indicator with pitch ladder, bank scale and aircraft symbol; speed tape (km/h) on the
- * left; altitude tape (blocks/metres) and vertical speed scale on the right; heading tape below; Mach in green
+ * left; altitude tape (ten units per block) and vertical speed scale on the right; heading tape below; Mach in green
  * under the attitude indicator.
  */
 internal object PrimaryFlightDisplayPainter {
@@ -37,7 +37,8 @@ internal object PrimaryFlightDisplayPainter {
     private const val VSI_L = 478; private const val VSI_R = 506
     private const val HDG_T = 448; private const val HDG_B = 504
     private const val SPD_PX = 2.4      // per km/h
-    private const val ALT_PX = 1.6      // per metre
+    private const val ALT_UNITS_PER_BLOCK = 10.0   // the altimeter reads ten units per block of height
+    private const val ALT_PX = 0.16     // per altimeter unit
     private const val HDG_PX = 4.0      // per degree
 
     // Colours of the page being painted (set for the duration of paint()).
@@ -171,14 +172,14 @@ internal object PrimaryFlightDisplayPainter {
     private fun altitudeTape(g: GuiGraphics, font: Font, s: FlightDisplayState, scale: Int) {
         g.fill(ALT_L, ADI_T, ALT_R, ADI_B, TAPE)
         scissor(ALT_L, ADI_T, ALT_R, ADI_B, scale)
-        val a = s.altitude
-        var mark = (floor((a - 110) / 10.0) * 10).toInt()
-        while (mark <= a + 110) {
+        val a = s.altitude * ALT_UNITS_PER_BLOCK
+        var mark = (floor((a - 1100) / 100.0) * 100).toInt()
+        while (mark <= a + 1100) {
             val y = (ADI_CY - (mark - a) * ALT_PX).roundToInt()
-            val major = mark % 50 == 0
+            val major = mark % 500 == 0
             g.fill(ALT_L, y - 1, ALT_L + (if (major) 16 else 9), y + 2, WHITE)
             if (major) text(g, font, mark.toString(), ALT_L + 21f, y.toFloat(), 1.5f, WHITE, Align.LEFT)
-            mark += 10
+            mark += 100
         }
         RenderSystem.disableScissor()
         readout(g, font, ALT_L - 4, ALT_R + 4, formatInt(a), false)
@@ -274,7 +275,8 @@ internal object PrimaryFlightDisplayPainter {
         outline(g, x0, y0, x1, y1, 2, WHITE)
         if (pointRight) triangle(g, x1.toFloat(), ADI_CY - 9f, x1.toFloat(), ADI_CY + 9f, x1 + 10f, ADI_CY.toFloat(), WHITE)
         else triangle(g, x0.toFloat(), ADI_CY + 9f, x0.toFloat(), ADI_CY - 9f, x0 - 10f, ADI_CY.toFloat(), WHITE)
-        text(g, Minecraft.getInstance().font, value, (x0 + x1) / 2f, ADI_CY.toFloat(), 2.3f, WHITE, Align.CENTER)
+        text(g, Minecraft.getInstance().font, value, (x0 + x1) / 2f, ADI_CY.toFloat(),
+            if (value.length <= 4) 2.3f else 2.3f * 4.5f / value.length, WHITE, Align.CENTER)
     }
 
     private fun outline(g: GuiGraphics, x0: Int, y0: Int, x1: Int, y1: Int, t: Int, color: Int) {

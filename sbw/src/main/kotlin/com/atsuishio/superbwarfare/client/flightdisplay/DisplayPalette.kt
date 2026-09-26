@@ -3,9 +3,10 @@ package com.atsuishio.superbwarfare.client.flightdisplay
 import net.minecraft.client.gui.GuiGraphics
 
 /**
- * Colours of an electronic display. [LCD] is the full-colour flat panel; [CRT] is a monochrome green-phosphor tube
- * (older glass cockpits), drawn with the same symbology in shades of green and finished with [finish] (scan lines,
- * darkened rounded corners).
+ * Colours of an electronic display. [LCD] is the full-colour flat panel; [CRT] is a full-colour shadow-mask tube
+ * (older glass cockpits): slightly softer phosphor colours on a lifted black, finished with [finish] (faint scan
+ * lines, darker toward the tube edge). The tube shape, curvature, bloom and glass reflection are drawn with the screen
+ * ([FlightDisplays]).
  */
 internal class DisplayPalette(
     val crt: Boolean,
@@ -27,34 +28,23 @@ internal class DisplayPalette(
     val background: Int,
     val dim: Int,
 ) {
-    /** CRT finish over the painted page: scan lines and a vignette toward the rounded tube corners. */
+    /** CRT finish over the painted page: faint scan lines and a soft falloff toward the tube edge. */
     fun finish(g: GuiGraphics, size: Int) {
         if (!crt) return
         var y = 0
         while (y < size) {
-            g.fill(0, y, size, y + 1, 0x40000000)
+            g.fill(0, y, size, y + 1, 0x22000000)
             y += 3
         }
-        // Vignette: nested translucent frames, darkest at the edge.
-        for (k in 0 until 10) {
-            val inset = k * 5
-            val alpha = (0x58 - k * 9).coerceAtLeast(0)
+        for (k in 0 until 8) {
+            val inset = k * 6
+            val alpha = (0x30 - k * 6).coerceAtLeast(0)
             if (alpha == 0) break
             val c = alpha shl 24
-            g.fill(inset, inset, size - inset, inset + 5, c)
-            g.fill(inset, size - inset - 5, size - inset, size - inset, c)
-            g.fill(inset, inset + 5, inset + 5, size - inset - 5, c)
-            g.fill(size - inset - 5, inset + 5, size - inset, size - inset - 5, c)
-        }
-        // Rounded tube corners.
-        val r = 40
-        for (i in 0 until r) {
-            val w = r - kotlin.math.sqrt((r * r - (r - i) * (r - i)).toDouble()).toInt()
-            if (w <= 0) continue
-            g.fill(0, i, w, i + 1, 0xFF000000.toInt())
-            g.fill(size - w, i, size, i + 1, 0xFF000000.toInt())
-            g.fill(0, size - i - 1, w, size - i, 0xFF000000.toInt())
-            g.fill(size - w, size - i - 1, size, size - i, 0xFF000000.toInt())
+            g.fill(inset, inset, size - inset, inset + 6, c)
+            g.fill(inset, size - inset - 6, size - inset, size - inset, c)
+            g.fill(inset, inset + 6, inset + 6, size - inset - 6, c)
+            g.fill(size - inset - 6, inset + 6, size - inset, size - inset - 6, c)
         }
     }
 
@@ -84,23 +74,23 @@ internal class DisplayPalette(
         @JvmField
         val CRT = DisplayPalette(
             crt = true,
-            white = 0xFF8CFF98.toInt(),
-            black = 0xFF010602.toInt(),
-            cyan = 0xFF5CE872.toInt(),
-            green = 0xFFB4FFBC.toInt(),
-            amber = 0xFFC8FFC4.toInt(),
-            magenta = 0xFF78F088.toInt(),
-            red = 0xFFD8FFD8.toInt(),
-            sky = 0xFF0B3F16.toInt(),
-            skyDeep = 0xFF083011.toInt(),
-            ground = 0xFF031407.toInt(),
-            groundDeep = 0xFF020D05.toInt(),
-            tape = 0xFF06240C.toInt(),
-            tapeDark = 0xFF041A08.toInt(),
-            frame = 0xFF3FA04F.toInt(),
-            bezelLine = 0xFF0E3A16.toInt(),
-            background = 0xFF010502.toInt(),
-            dim = 0xFF2A7A38.toInt(),
+            white = 0xFFF2F5EA.toInt(),
+            black = 0xFF070A09.toInt(),
+            cyan = 0xFF46E0EE.toInt(),
+            green = 0xFF55F26C.toInt(),
+            amber = 0xFFFFB648.toInt(),
+            magenta = 0xFFF068D8.toInt(),
+            red = 0xFFFF5846.toInt(),
+            sky = 0xFF2A62A6.toInt(),
+            skyDeep = 0xFF214E88.toInt(),
+            ground = 0xFF74502A.toInt(),
+            groundDeep = 0xFF5A3E20.toInt(),
+            tape = 0xFF2E3238.toInt(),
+            tapeDark = 0xFF1C1F24.toInt(),
+            frame = 0xFF929AA2.toInt(),
+            bezelLine = 0xFF252A30.toInt(),
+            background = 0xFF0B0F0D.toInt(),
+            dim = 0xFF58626C.toInt(),
         )
 
         @JvmStatic

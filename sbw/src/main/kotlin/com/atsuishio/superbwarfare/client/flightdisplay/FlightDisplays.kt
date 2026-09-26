@@ -153,7 +153,10 @@ object FlightDisplays {
             val texture = if (isLive && page in livePages) page.liveTexture
                 else if (page in stillPainted) page.stillTexture else { stillRequested.add(page); null }
             housing(buffers.getBuffer(RenderType.entityCutoutNoCull(HOUSING_TEXTURE)), pose, quad, packedLight)
-            if (texture != null) screen(buffers.getBuffer(RenderType.text(texture)), pose.pose(), quad)
+            if (texture != null) {
+                if (page.palette.crt) crtScreen(buffers, pose.pose(), quad, texture)
+                else screen(buffers.getBuffer(RenderType.text(texture)), pose.pose(), quad)
+            }
         }
         if (loggedRender < 4 && (loggedRender == 0 || isLive)) {
             loggedRender++
@@ -203,6 +206,94 @@ object FlightDisplays {
         for (c in corners) emit(consumer, matrix, q, c, lift)
         // Also the reverse winding (faces into the housing, hidden), so no cull setting can lose the screen.
         for (c in corners.reversedArray()) emit(consumer, matrix, q, c, lift)
+    }
+
+    // ------------------------------------------------------------------ CRT tube
+
+    private const val CRT_GRID = 14
+    private const val CRT_BARREL = 0.075f   // raster bows outward: edge centres reach the glass edge, corners fall short
+    private const val CRT_FILL = 0.965f     // raster size against the opening
+    private const val CRT_BULGE = 0.05f     // glass dome height, fraction of the half width
+
+    /** Point on the tube face for raster coordinates tx, ty in -1..1: barrel-distorted and on the domed glass. */
+    private fun crtPoint(q: Quad, tx: Float, ty: Float, lift: Float): Vector3f {
+        val f = (1f - CRT_BARREL * (tx * tx + ty * ty)) / (1f - CRT_BARREL) * CRT_FILL
+        val sx = tx * f; val sy = ty * f
+        return q.point(sx * q.half, sy * q.half, -(lift + dome(q, sx, sy)))
+    }
+
+    private fun dome(q: Quad, sx: Float, sy: Float): Float =
+        q.half * CRT_BULGE * (1f - ((sx * sx + sy * sy) / 2f).coerceAtMost(1f))
+
+    /**
+     * A cathode-ray tube: the page in full colour on a curved glass face. The raster is barrel-distorted into the
+     * rounded tube shape (dark glass around it), each phosphor dot blooms into its neighbours (additive glow passes
+     * with offset samples), and the domed glass carries a soft reflection.
+     */
+    private fun crtScreen(buffers: MultiBufferSource, matrix: Matrix4f, q: Quad, texture: ResourceLocation) {
+        val n = CRT_GRID
+        // Dark tube glass across the whole opening, following the dome.
+        val glass = buffers.getBuffer(RenderType.text(texture))
+        grid(n) { tx, ty -> q.point(tx * q.half, ty * q.half, -(0.001f + dome(q, tx, ty))) }.forEach { cell ->
+            quadBoth(cell) { p, _ -> glass.vertex(matrix, p.x, p.y, p.z).color(6, 8, 7, 255).uv(0.5f, 0.5f)
+                .uv2(LightTexture.FULL_BRIGHT).endVertex() }
+        }
+        // The raster.
+        val image = buffers.getBuffer(RenderType.text(texture))
+        grid(n) { tx, ty -> crtPoint(q, tx, ty, 0.0016f) }.forEachIndexed { index, cell ->
+            val uv = cellUv(index, n)
+            quadBoth(cell) { p, k -> image.vertex(matrix, p.x, p.y, p.z).color(255, 255, 255, 255)
+                .uv(uv[k][0], uv[k][1]).uv2(LightTexture.FULL_BRIGHT).endVertex() }
+        }
+        // Phosphor bloom: offset copies added on top, a tight ring and a wide faint one.
+        val glow = buffers.getBuffer(RenderType.eyes(texture))
+        val rings = arrayOf(floatArrayOf(0.004f, 46f), floatArrayOf(0.010f, 22f))
+        for ((r, level) in rings.map { it[0] to it[1].toInt() }) {
+            for ((dx, dy) in arrayOf(r to 0f, -r to 0f, 0f to r, 0f to -r)) {
+                grid(n) { tx, ty -> crtPoint(q, tx, ty, 0.0018f) }.forEachIndexed { index, cell ->
+                    val uv = cellUv(index, n)
+                    quadBoth(cell) { p, k -> glow.vertex(matrix, p.x, p.y, p.z).color(level, level, level, 255)
+                        .uv(uv[k][0] + dx, uv[k][1] + dy).overlayCoords(OverlayTexture.NO_OVERLAY)
+                        .uv2(LightTexture.FULL_BRIGHT).normal(0f, 1f, 0f).endVertex() }
+                }
+            }
+        }
+        // Reflection on the curved glass: a soft highlight upper left and a faint sheen toward the rim.
+        val sheen = buffers.getBuffer(RenderType.lightning())
+        grid(n) { tx, ty -> q.point(tx * q.half, ty * q.half, -(0.0022f + dome(q, tx, ty))) }.forEachIndexed { index, cell ->
+            val i = index / n; val j = index % n
+            quadBoth(cell) { p, k ->
+                val tx = -1f + 2f * (i + if (k == 2 || k == 3) 1 else 0) / n
+                val ty = -1f + 2f * (j + if (k == 1 || k == 2) 1 else 0) / n
+                val spot = kotlin.math.exp(-((tx + 0.35f) * (tx + 0.35f) + (ty - 0.5f) * (ty - 0.5f)) / 0.12f)
+                val rim = ((tx * tx + ty * ty) / 2f).coerceIn(0f, 1f)
+                val a = (0.10f * spot + 0.035f * rim * rim).coerceIn(0f, 1f)
+                sheen.vertex(matrix, p.x, p.y, p.z).color(0.85f, 0.92f, 1f, a).endVertex()
+            }
+        }
+    }
+
+    /** Cells of an n x n grid over -1..1 as corner quadruples (x0y0, x0y1, x1y1, x1y0), column-major. */
+    private inline fun grid(n: Int, point: (Float, Float) -> Vector3f): List<Array<Vector3f>> {
+        val pts = Array(n + 1) { i -> Array(n + 1) { j -> point(-1f + 2f * i / n, -1f + 2f * j / n) } }
+        val out = ArrayList<Array<Vector3f>>(n * n)
+        for (i in 0 until n) for (j in 0 until n)
+            out.add(arrayOf(pts[i][j], pts[i][j + 1], pts[i + 1][j + 1], pts[i + 1][j]))
+        return out
+    }
+
+    /** Texture coordinates of the corners of cell [index] (render targets store their top row at v = 1). */
+    private fun cellUv(index: Int, n: Int): Array<FloatArray> {
+        val i = index / n; val j = index % n
+        val u0 = i.toFloat() / n; val u1 = (i + 1f) / n
+        val v0 = j.toFloat() / n; val v1 = (j + 1f) / n
+        return arrayOf(floatArrayOf(u0, v0), floatArrayOf(u0, v1), floatArrayOf(u1, v1), floatArrayOf(u1, v0))
+    }
+
+    /** Emits the quad in both windings (the housing hides the back), passing each corner's index. */
+    private inline fun quadBoth(cell: Array<Vector3f>, emit: (Vector3f, Int) -> Unit) {
+        for (k in 0 until 4) emit(cell[k], k)
+        for (k in 3 downTo 0) emit(cell[k], k)
     }
 
     private fun emit(consumer: VertexConsumer, matrix: Matrix4f, q: Quad, c: FloatArray, lift: Float) {
