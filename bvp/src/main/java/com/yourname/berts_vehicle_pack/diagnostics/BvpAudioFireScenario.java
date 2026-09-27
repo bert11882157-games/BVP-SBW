@@ -1,0 +1,52 @@
+package com.yourname.berts_vehicle_pack.diagnostics;
+
+import com.atsuishio.superbwarfare.api.diagnostics.DebugFeaturePolicy;
+import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity;
+import com.mojang.brigadier.arguments.StringArgumentType;
+import com.yourname.berts_vehicle_pack.BertsVehiclePack;
+import net.minecraft.commands.Commands;
+import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.Entity;
+import net.minecraftforge.event.RegisterCommandsEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+
+/**
+ * Diagnostic launches only ({@code bvp.diagnostics.scenarios}): {@code /bvp_audio_fire <vehicles> <weapon>} fires one
+ * round of the named weapon from each selected vehicle with no crew, through the normal vehicle shot path, so its
+ * fire cue goes out exactly as in play. Used by the audio loudness test to fire guns at set listener distances.
+ */
+@Mod.EventBusSubscriber(modid = BertsVehiclePack.MODID)
+public final class BvpAudioFireScenario {
+    private static final org.slf4j.Logger LOGGER = com.mojang.logging.LogUtils.getLogger();
+
+    private BvpAudioFireScenario() {
+    }
+
+    @SubscribeEvent
+    public static void commands(RegisterCommandsEvent event) {
+        if (!DebugFeaturePolicy.isDiagnosticPropertyEnabled("bvp.diagnostics.scenarios")) return;
+        event.getDispatcher().register(Commands.literal("bvp_audio_fire")
+                .requires(source -> source.hasPermission(2))
+                .then(Commands.argument("vehicles", EntityArgument.entities())
+                        .then(Commands.argument("weapon", StringArgumentType.word()).executes(context -> {
+                            String weapon = StringArgumentType.getString(context, "weapon");
+                            int fired = 0;
+                            for (Entity entity : EntityArgument.getEntities(context, "vehicles")) {
+                                if (!(entity instanceof VehicleEntity vehicle)) continue;
+                                vehicle.modifyGunData(weapon, data -> {
+                                    data.resetStatus();
+                                    data.ammo.set(Math.max(1, data.ammo.get()));
+                                });
+                                var result = vehicle.vehicleShootResult(null, weapon);
+                                if (result.isAccepted()) fired++;
+                                LOGGER.info("[BVP audio] fire {} {}: {}",
+                                        entity.getType(), weapon, result);
+                            }
+                            int count = fired;
+                            context.getSource().sendSuccess(() -> Component.literal("audio fire: " + count), false);
+                            return count;
+                        }))));
+    }
+}
