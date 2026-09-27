@@ -1,0 +1,161 @@
+{
+  "id": "su_24",
+  "name": "Su-24 Fencer",
+  "entityClass": "AuthoredFixedWingAircraft",
+  "template": "f_111f",
+  "source": "SU-24 Fencer.mtb",
+  "note": "Side-by-side swing-wing strike aircraft on the F-111F data and rig. Scaled nose to tail onto the F-111F fuselage. The source has one wing pose (extended, baked into part 0): the single wing element per side goes into the sweep bones, the fixed glove into the wing sections. The source's own gear is in the template gear bones. The glove pylon and its store are dropped.",
+  "yaw180": true,
+  "lengthParts": [
+    0,
+    1
+  ],
+  "templateLengthBones": [
+    "wreck_fuselage_0__hull",
+    "wreck_fuselage_1__hull",
+    "wreck_fuselage_2__hull",
+    "wreck_fuselage_3__hull"
+  ],
+  "groundParts": [
+    0,
+    1,
+    12,
+    14,
+    15
+  ],
+  "excludeParts": [
+    24
+  ],
+  "storeTextureV": -1,
+  "keepBoxes": [],
+  "dropRules": [
+    {
+      "absXMin": 29,
+      "absXMax": 41,
+      "yMin": 24,
+      "yMax": 40.5,
+      "zMin": -4,
+      "zMax": 51
+    }
+  ],
+  "fuselageCuts": [
+    -96,
+    4,
+    76
+  ],
+  "parts": {
+    "0": [
+      {
+        "bone": "side:wreck_wing_left__sweep_20,wreck_wing_right__sweep_22",
+        "if": {
+          "absXMin": 60,
+          "zMax": 85
+        }
+      },
+      {
+        "bone": "side:wreck_fuselage_3__elevator_0,wreck_fuselage_3__elevator_1",
+        "if": {
+          "absXMin": 20,
+          "zMin": 85
+        }
+      },
+      {
+        "bone": "wing",
+        "if": {
+          "absXMin": 20
+        }
+      }
+    ],
+    "1": "fuselage",
+    "7": [
+      {
+        "bone": "wreck_fuselage_1__control_stick_pitch",
+        "if": {
+          "xMin": 0
+        }
+      }
+    ],
+    "12": "wreck_fuselage_1__landing_gear_12",
+    "14": "wreck_fuselage_2__landing_gear_14",
+    "15": "wreck_fuselage_2__landing_gear_15"
+  },
+  "keepTemplateBones": [
+    "suspended_f_111f_0",
+    "suspended_f_111f_1",
+    "suspended_f_111f_2",
+    "suspended_f_111f_3",
+    "suspended_f_111f_4"
+  ],
+  "removeClientKeys": [
+    "CanopyGlass"
+  ],
+  "sweeps": {
+    "sweep_20": {
+      "pivot": [
+        43.0,
+        null,
+        43.3
+      ],
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "maxDegrees": 53
+    },
+    "sweep_22": {
+      "pivot": [
+        -43.0,
+        null,
+        43.3
+      ],
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "maxDegrees": 53
+    }
+  },
+  "note_sweep": "One wing pose in the source (13.7 deg leading edge). Pivot at the glove's outer edge (x 43) at 30% of the root chord there (z 32.5..68.4); range 53 deg (real 16-69).",
+  "attachments": {
+    "pilot_eye": [
+      5.5,
+      49.5,
+      -74.5
+    ],
+    "copilot_eye": [
+      -5.5,
+      49.5,
+      -74.5
+    ]
+  },
+  "seatPositions": {
+    "0": [
+      5.5,
+      23.6,
+      -74.5
+    ],
+    "1": [
+      -5.5,
+      23.6,
+      -74.5
+    ]
+  },
+  "addSeats": [],
+  "flightReference": {
+    "baseMassKg": 22300,
+    "mainFuelMassKg": 11100,
+    "fullFuelWingLoadingKgPerSquareMetre": 605.0725,
+    "dryThrustKgfPerEngine": 7800,
+    "afterburnerThrustKgfPerEngine": 11200,
+    "maximumTrueAirspeedKmh": 1430,
+    "referenceAltitudeMetres": 11000,
+    "maximumIndicatedAirspeedKmh": 1400,
+    "climbMetresPerSecond": 150,
+    "turnSeconds": 30,
+    "takeoffRunMetres": 1300
+  },
+  "note_flight": "Su-24M: empty 22,300 kg, internal fuel 11,100 kg, wing 55.2 m2 at minimum sweep, 2x AL-21F-3 (7,800 / 11,200 kgf), Mach 1.35 at 11 km, 1,400 km/h IAS.",
+  "note_crew": "Side-by-side seats at x +-5.5 (the sticks), headrests at z -70, cushions y ~37, panel top y 46 at z -87. The template eyes were level with the panel top; both are now 3.5 px over it, in front of the headrests. Pilot left, WSO right as in the real aircraft; seats keep the template's eye-to-seat offset (25.9 px)."
+}

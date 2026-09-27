@@ -123,7 +123,8 @@ def main(argv):
             def holds(cond):
                 return (cond.get('zMin', -1e9) <= c[2] <= cond.get('zMax', 1e9)
                         and cond.get('yMin', -1e9) <= c[1] <= cond.get('yMax', 1e9)
-                        and cond.get('absXMin', -1e9) <= abs(c[0]) <= cond.get('absXMax', 1e9))
+                        and cond.get('absXMin', -1e9) <= abs(c[0]) <= cond.get('absXMax', 1e9)
+                        and cond.get('xMin', -1e9) <= c[0] <= cond.get('xMax', 1e9))
 
             if isinstance(rule, list):     # [{"bone": ..., "if": {...}}, ...]: the first that holds; else fuselage
                 rule_name = next((r['bone'] for r in rule if holds(r.get('if', {}))), 'fuselage')

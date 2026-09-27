@@ -1,0 +1,490 @@
+{
+  "Schema": 1,
+  "Name": "Su-24 Fencer",
+  "BuiltInWeapons": [],
+  "SuspendedWeapons": [
+    "BayVulcan"
+  ],
+  "Pairs": [
+    {
+      "Id": "pylon_1",
+      "Name": "Inboard swivel pylon",
+      "Left": [
+        2.5366,
+        1.965,
+        -1.6413
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            2.5368,
+            1.9648,
+            -1.6415
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Right": [
+        -2.5366,
+        1.965,
+        -1.6413
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -2.5368,
+            1.9648,
+            -1.6415
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/mk82",
+        "berts_vehicle_pack:munition/mk82_snakeeye",
+        "berts_vehicle_pack:munition/mk84",
+        "berts_vehicle_pack:munition/gbu10",
+        "berts_vehicle_pack:munition/gbu12",
+        "berts_vehicle_pack:munition/gbu15_v2b",
+        "berts_vehicle_pack:munition/gbu27",
+        "berts_vehicle_pack:munition/gbu28",
+        "berts_vehicle_pack:fa18e/agm65d",
+        "berts_vehicle_pack:munition/aim9l"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 2300,
+      "SweepFrames": [
+        {
+          "Pivot": [
+            2.18860125,
+            2.362694375,
+            -0.248704375
+          ],
+          "Axis": [
+            0,
+            -1,
+            0
+          ],
+          "MaxDegrees": -56,
+          "Points": [
+            [
+              0,
+              0
+            ],
+            [
+              1.5,
+              0
+            ],
+            [
+              2.5,
+              0.5
+            ],
+            [
+              3.5,
+              1
+            ]
+          ]
+        },
+        {
+          "Pivot": [
+            -2.18860125,
+            2.362694375,
+            -0.248704375
+          ],
+          "Axis": [
+            0,
+            -1,
+            0
+          ],
+          "MaxDegrees": 56,
+          "Points": [
+            [
+              0,
+              0
+            ],
+            [
+              1.5,
+              0
+            ],
+            [
+              2.5,
+              0.5
+            ],
+            [
+              3.5,
+              1
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "Id": "pylon_2",
+      "Name": "Inner-mid swivel pylon",
+      "Left": [
+        4.0788,
+        1.965,
+        -1.89
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            4.0788,
+            1.9648,
+            -1.8902
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Right": [
+        -4.0788,
+        1.965,
+        -1.89
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -4.0788,
+            1.9648,
+            -1.8902
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/mk82",
+        "berts_vehicle_pack:munition/mk82_snakeeye",
+        "berts_vehicle_pack:munition/mk84",
+        "berts_vehicle_pack:munition/gbu10",
+        "berts_vehicle_pack:munition/gbu12",
+        "berts_vehicle_pack:munition/gbu15_v2b",
+        "berts_vehicle_pack:munition/gbu27",
+        "berts_vehicle_pack:munition/gbu28",
+        "berts_vehicle_pack:fa18e/agm65d",
+        "berts_vehicle_pack:munition/aim9l"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 2300,
+      "SweepFrames": [
+        {
+          "Pivot": [
+            2.18860125,
+            2.362694375,
+            -0.248704375
+          ],
+          "Axis": [
+            0,
+            -1,
+            0
+          ],
+          "MaxDegrees": -56,
+          "Points": [
+            [
+              0,
+              0
+            ],
+            [
+              1.5,
+              0
+            ],
+            [
+              2.5,
+              0.5
+            ],
+            [
+              3.5,
+              1
+            ]
+          ]
+        },
+        {
+          "Pivot": [
+            -2.18860125,
+            2.362694375,
+            -0.248704375
+          ],
+          "Axis": [
+            0,
+            -1,
+            0
+          ],
+          "MaxDegrees": 56,
+          "Points": [
+            [
+              0,
+              0
+            ],
+            [
+              1.5,
+              0
+            ],
+            [
+              2.5,
+              0.5
+            ],
+            [
+              3.5,
+              1
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "Id": "pylon_3",
+      "Name": "Outer-mid swivel pylon",
+      "Left": [
+        5.5709,
+        1.965,
+        -2.3875
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            5.571,
+            1.9648,
+            -2.3876
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Right": [
+        -5.5709,
+        1.965,
+        -2.3875
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -5.571,
+            1.9648,
+            -2.3876
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/mk82",
+        "berts_vehicle_pack:munition/mk82_snakeeye",
+        "berts_vehicle_pack:munition/mk84",
+        "berts_vehicle_pack:munition/gbu10",
+        "berts_vehicle_pack:munition/gbu12",
+        "berts_vehicle_pack:munition/gbu27",
+        "berts_vehicle_pack:munition/gbu28",
+        "berts_vehicle_pack:munition/aim9l"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 2000,
+      "SweepFrames": [
+        {
+          "Pivot": [
+            2.18860125,
+            2.362694375,
+            -0.248704375
+          ],
+          "Axis": [
+            0,
+            -1,
+            0
+          ],
+          "MaxDegrees": -56,
+          "Points": [
+            [
+              0,
+              0
+            ],
+            [
+              1.5,
+              0
+            ],
+            [
+              2.5,
+              0.5
+            ],
+            [
+              3.5,
+              1
+            ]
+          ]
+        },
+        {
+          "Pivot": [
+            -2.18860125,
+            2.362694375,
+            -0.248704375
+          ],
+          "Axis": [
+            0,
+            -1,
+            0
+          ],
+          "MaxDegrees": 56,
+          "Points": [
+            [
+              0,
+              0
+            ],
+            [
+              1.5,
+              0
+            ],
+            [
+              2.5,
+              0.5
+            ],
+            [
+              3.5,
+              1
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "Id": "pylon_4",
+      "Name": "Outboard swivel pylon",
+      "Left": [
+        7.5606,
+        1.965,
+        -3.1338
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            7.5606,
+            1.9648,
+            -3.1337
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Right": [
+        -7.5606,
+        1.965,
+        -3.1338
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -7.5606,
+            1.9648,
+            -3.1337
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/aim9l",
+        "berts_vehicle_pack:munition/mk82",
+        "berts_vehicle_pack:munition/mk82_snakeeye",
+        "berts_vehicle_pack:munition/gbu12"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 1000,
+      "SweepFrames": [
+        {
+          "Pivot": [
+            2.18860125,
+            2.362694375,
+            -0.248704375
+          ],
+          "Axis": [
+            0,
+            -1,
+            0
+          ],
+          "MaxDegrees": -56,
+          "Points": [
+            [
+              0,
+              0
+            ],
+            [
+              1.5,
+              0
+            ],
+            [
+              2.5,
+              0.5
+            ],
+            [
+              3.5,
+              1
+            ]
+          ]
+        },
+        {
+          "Pivot": [
+            -2.18860125,
+            2.362694375,
+            -0.248704375
+          ],
+          "Axis": [
+            0,
+            -1,
+            0
+          ],
+          "MaxDegrees": 56,
+          "Points": [
+            [
+              0,
+              0
+            ],
+            [
+              1.5,
+              0
+            ],
+            [
+              2.5,
+              0.5
+            ],
+            [
+              3.5,
+              1
+            ]
+          ]
+        }
+      ]
+    }
+  ],
+  "StoreGroups": {
+    "berts_vehicle_pack:modeled_store/su_24/assembly_0": [
+      "suspended_f_111f_0"
+    ],
+    "berts_vehicle_pack:modeled_store/su_24/assembly_1": [
+      "suspended_f_111f_1"
+    ],
+    "berts_vehicle_pack:modeled_store/su_24/assembly_2": [
+      "suspended_f_111f_2"
+    ],
+    "berts_vehicle_pack:modeled_store/su_24/assembly_3": [
+      "suspended_f_111f_3"
+    ],
+    "berts_vehicle_pack:gun_pod/f111_m61_bay": [
+      "suspended_f_111f_4"
+    ]
+  },
+  "Singles": [
+    {
+      "Id": "bay_gun",
+      "Name": "Bay gun",
+      "Position": [
+        0.58694300519625,
+        0.9600000000243751,
+        4.081243523419687
+      ],
+      "WeaponId": "BayVulcan",
+      "AllowedStores": [
+        "berts_vehicle_pack:gun_pod/f111_m61_bay"
+      ],
+      "MaxPylonMassKg": 1000
+    }
+  ],
+  "MaxPayloadKg": 18125,
+  "Radar": {
+    "Enabled": true,
+    "Range": 1000
+  },
+  "MaxPylonMassKg": 1000,
+  "MaxWeaponsPerPylon": 12
+}

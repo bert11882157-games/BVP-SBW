@@ -1,0 +1,453 @@
+{
+  "ID": "berts_vehicle_pack:su_24",
+  "Model": {
+    "GeometryBackend": "berts_vehicle_pack:vehicle/su_24",
+    "Model": "berts_vehicle_pack:geo/native_fallback/su_24.geo.json",
+    "Texture": "berts_vehicle_pack:textures/entity/su_24.png",
+    "WreckTexture": "berts_vehicle_pack:textures/entity_dead/su_24.png"
+  },
+  "MouseSpeed": [
+    0.2,
+    0.2
+  ],
+  "AfterburnerPresentation": {
+    "Palette": {
+      "Core": [
+        1.0,
+        0.93,
+        0.72
+      ],
+      "Flame": [
+        1.0,
+        0.68,
+        0.26
+      ],
+      "Tail": [
+        0.96,
+        0.4,
+        0.1
+      ],
+      "Diamonds": [
+        1.0,
+        0.86,
+        0.56
+      ]
+    },
+    "Schema": 2,
+    "Frame": "VEHICLE_LOCAL_BLOCKS",
+    "Outlets": [
+      {
+        "Id": "afterburner_0",
+        "Position": [
+          0.59689125,
+          1.840414375,
+          -9.55274625
+        ],
+        "Direction": [
+          0,
+          0,
+          -1
+        ],
+        "NozzleRadiusBlocks": 0.425
+      },
+      {
+        "Id": "afterburner_1",
+        "Position": [
+          -0.59689125,
+          1.840414375,
+          -9.55274625
+        ],
+        "Direction": [
+          0,
+          0,
+          -1
+        ],
+        "NozzleRadiusBlocks": 0.425
+      }
+    ],
+    "Flame": {
+      "Scale": 0.9,
+      "WidthBlocks": 0.2,
+      "LengthBlocks": 7,
+      "ParticlesPerTick": 3,
+      "LifetimeTicks": 10,
+      "ColorRgb": [
+        1,
+        1,
+        1
+      ]
+    },
+    "Smoke": {
+      "Scale": 0.5,
+      "WidthBlocks": 0.18,
+      "LengthBlocks": 6,
+      "ParticlesPerTick": 0.5,
+      "LifetimeTicks": 14,
+      "ColorRgb": [
+        1,
+        1,
+        1
+      ]
+    },
+    "TapEmitters": [
+      {
+        "Outlet": "afterburner_0",
+        "Style": "FM_FLAME",
+        "Interval": 1,
+        "Offset": [
+          0,
+          0,
+          0
+        ],
+        "Extents": [
+          0.14922279793124998,
+          0.14922279793124998,
+          0.14922279793124998
+        ],
+        "Velocity": [
+          0,
+          0,
+          0.1875
+        ]
+      },
+      {
+        "Outlet": "afterburner_1",
+        "Style": "FM_FLAME",
+        "Interval": 1,
+        "Offset": [
+          0,
+          0,
+          0
+        ],
+        "Extents": [
+          0.14922279793124998,
+          0.14922279793124998,
+          0.14922279793124998
+        ],
+        "Velocity": [
+          0,
+          0,
+          0.1875
+        ]
+      }
+    ],
+    "TapSource": "GENERIC_TAP_FMFLAME",
+    "TapVariant": "GENERIC_TAP_FMFLAME_AT_AUTHORED_NOZZLES"
+  },
+  "AircraftRig": {
+    "Schema": 2,
+    "Frame": "GENERATED_MODEL_PIXELS",
+    "Surfaces": [
+      {
+        "Bone": "elevator_0",
+        "Parent": "hull",
+        "Pivot": [
+          43.77202,
+          36.60932,
+          150.01866
+        ],
+        "Axis": [
+          -0.9998699541131599,
+          0,
+          0.016126836693775976
+        ],
+        "ControlWeights": {
+          "ElevatorUp": 1,
+          "RightRoll": 0,
+          "RudderRight": 0
+        },
+        "MaxDeflectionDegrees": 25
+      },
+      {
+        "Bone": "elevator_1",
+        "Parent": "hull",
+        "Pivot": [
+          -43.77202,
+          36.60932,
+          150.01866
+        ],
+        "Axis": [
+          -0.9998699541131599,
+          0,
+          -0.016126836693775976
+        ],
+        "ControlWeights": {
+          "ElevatorUp": 1,
+          "RightRoll": 0,
+          "RudderRight": 0
+        },
+        "MaxDeflectionDegrees": 25
+      },
+      {
+        "Bone": "control_stick_roll",
+        "Parent": "hull",
+        "Pivot": [
+          4.77513,
+          32.34872,
+          -84.87515
+        ],
+        "Axis": [
+          0,
+          0,
+          1
+        ],
+        "ControlWeights": {
+          "ElevatorUp": 0,
+          "RightRoll": 1,
+          "RudderRight": 0
+        },
+        "MaxDeflectionDegrees": 11.0
+      },
+      {
+        "Bone": "control_stick_pitch",
+        "Parent": "control_stick_roll",
+        "Pivot": [
+          4.77513,
+          32.34872,
+          -84.87515
+        ],
+        "Axis": [
+          1,
+          0,
+          0
+        ],
+        "ControlWeights": {
+          "ElevatorUp": 1,
+          "RightRoll": 0,
+          "RudderRight": 0
+        },
+        "MaxDeflectionDegrees": 14.0
+      }
+    ],
+    "Rotors": [
+      {
+        "Bone": "gear_wheel_0",
+        "Parent": "landing_gear_12",
+        "Pivot": [
+          -3.97927,
+          3.58134,
+          -66.05596
+        ],
+        "Axis": [
+          1,
+          0,
+          0
+        ],
+        "SpeedChannel": "groundRoll",
+        "Direction": -1,
+        "DegreesPerTickAtFullSpeed": 255.974
+      }
+    ],
+    "Gear": [
+      {
+        "Bone": "landing_gear_12",
+        "Parent": "hull"
+      },
+      {
+        "Bone": "landing_gear_14",
+        "Parent": "hull"
+      },
+      {
+        "Bone": "landing_gear_15",
+        "Parent": "hull"
+      }
+    ],
+    "Flaps": [],
+    "Sweeps": [
+      {
+        "Bone": "sweep_20",
+        "Parent": "hull",
+        "Pivot": [
+          43.0,
+          37.80311,
+          43.3
+        ],
+        "Axis": [
+          0,
+          1,
+          0
+        ],
+        "AngleSign": -1,
+        "MaxDeflectionDegrees": 53,
+        "Schedule": {
+          "Input": "PRESENTED_SPEED_BLOCKS_PER_TICK",
+          "Interpolation": "LINEAR_CLAMPED",
+          "Points": [
+            [
+              0,
+              0
+            ],
+            [
+              1.5,
+              0
+            ],
+            [
+              2.5,
+              0.5
+            ],
+            [
+              3.5,
+              1
+            ]
+          ]
+        }
+      },
+      {
+        "Bone": "sweep_22",
+        "Parent": "hull",
+        "Pivot": [
+          -43.0,
+          37.80311,
+          43.3
+        ],
+        "Axis": [
+          0,
+          1,
+          0
+        ],
+        "AngleSign": 1,
+        "MaxDeflectionDegrees": 53,
+        "Schedule": {
+          "Input": "PRESENTED_SPEED_BLOCKS_PER_TICK",
+          "Interpolation": "LINEAR_CLAMPED",
+          "Points": [
+            [
+              0,
+              0
+            ],
+            [
+              1.5,
+              0
+            ],
+            [
+              2.5,
+              0.5
+            ],
+            [
+              3.5,
+              1
+            ]
+          ]
+        }
+      }
+    ]
+  },
+  "CockpitGauges": {
+    "Schema": 1,
+    "Frame": "VEHICLE_LOCAL_BLOCKS",
+    "Gauges": [
+      {
+        "Seat": 0,
+        "Kind": "THROTTLE",
+        "Center": [
+          0.42281,
+          2.45912,
+          5.37454
+        ],
+        "Normal": [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        "Up": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "Diameter": 0.0806,
+        "Depth": 0.03
+      },
+      {
+        "Seat": 0,
+        "Kind": "ATTITUDE",
+        "Center": [
+          0.32332,
+          2.45912,
+          5.31828
+        ],
+        "Normal": [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        "Up": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "Diameter": 0.0806,
+        "Depth": 0.03
+      },
+      {
+        "Seat": 0,
+        "Kind": "ALTIMETER",
+        "Center": [
+          0.22383,
+          2.45912,
+          5.31828
+        ],
+        "Normal": [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        "Up": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "Diameter": 0.0806,
+        "Depth": 0.03
+      },
+      {
+        "Seat": 0,
+        "Kind": "HEADING",
+        "Center": [
+          0.12434,
+          2.45912,
+          5.31828
+        ],
+        "Normal": [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        "Up": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "Diameter": 0.0806,
+        "Depth": 0.03
+      }
+    ]
+  },
+  "FlightDisplays": {
+    "Schema": 1,
+    "Frame": "VEHICLE_LOCAL_BLOCKS",
+    "Displays": [
+      {
+        "Seat": 0,
+        "Center": [
+          -0.06981,
+          2.45912,
+          5.31828
+        ],
+        "Normal": [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        "Up": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "Width": 0.1934,
+        "Depth": 0.035,
+        "Kind": "RADAR",
+        "Style": "CRT"
+      }
+    ]
+  }
+}
