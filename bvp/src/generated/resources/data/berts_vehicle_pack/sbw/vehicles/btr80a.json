@@ -345,7 +345,7 @@
       "NormalReloadTime": 20,
       "EmptyReloadTime": 20,
       "AmmoCostPerShoot": 1,
-      "Velocity": 18,
+      "Velocity": 56.0,
       "Damage": 58,
       "ExplosionDamage": 8,
       "ExplosionRadius": 2,
@@ -408,7 +408,8 @@
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
               "Profile": "berts_vehicle_pack:btr80a/cannon/ammo_00_3ubr8_apds"
-            }
+            },
+            "Velocity": 56.0
           },
           "ConsumptionItem": "superbwarfare:medium_autocannon_shell"
         },
@@ -416,7 +417,7 @@
           "Ammo": "superbwarfare:small_shell_aa",
           "Override": {
             "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_he.png",
-            "Velocity": 15,
+            "Velocity": 56.0,
             "Damage": 250,
             "ExplosionDamage": 0,
             "ExplosionRadius": 5,
