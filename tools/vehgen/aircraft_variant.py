@@ -23,6 +23,7 @@ from PIL import Image
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
+import flightref  # noqa: E402
 import mtbgeo  # noqa: E402
 import sweeps  # noqa: E402
 import vehgen  # noqa: E402
@@ -256,6 +257,10 @@ def main(argv):
                 # renamed handlingProfileId must stay: a template handling id fails 'flight profile pair mismatch'
                 for k, v in spec.get('flightReference', {}).items():
                     d['reference'][k] = v
+                flightref.derive(d)     # full-fuel mass, wing area, installed thrust, afterburner ratio
+                bad = flightref.problems(d, vid)
+                if bad:
+                    raise SystemExit(f'{vid} flight reference: ' + '; '.join(bad))
             out.json(os.path.join(DATA, rel, f'{vid}.json'), d)
     arm = renamed(load(TPL(os.path.join(DATA, 'sbw', 'aircraft_armaments', f'{tid}.json'))))
     arm['Name'] = spec['name']

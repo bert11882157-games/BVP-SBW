@@ -87,6 +87,13 @@ Then:
   pivot (with its wreck child) and the client `AircraftRig.Sweeps` entry change together, because the rig animator
   rejects a mismatch. A sweep turns about +Y (`[0, 1, 0]`); `AngleSign` −1 on the left wing sweeps the tip aft.
 
+- **Flight reference:** after `flightReference` overrides, `flightref.derive` recomputes the full-fuel mass, the wing
+  area (from the full-fuel wing loading), the installed thrust and the afterburner ratio. `flightref.py` mirrors the
+  entity-side validation: a flight reference that fails it makes the aircraft impossible to spawn.
+- **After generating a new aircraft**, run `tools/aircraft_attach/attach.py apply <id>` so the pylon stations sit
+  on the new wing. A partial run leaves shared rack adapters alone; `--shared` rewrites them from the listed carriers
+  only.
+
 Sound events stay the template's. Only exact ids and asset paths are renamed.
 
 | id | source | template | notes |
@@ -97,6 +104,7 @@ Sound events stay the template's. Only exact ids and asset paths are renamed.
 | `su_57` (replacement) | Su-57 source model | su_57 (originals in `replaced/su_57`) | Scale 0.7731, aligned by length (nose to tail) and the source gear. The template gear, gear wheels, stick and suspended stores are kept. The tail parts split into the rudder and elevator bones; the wing parts are split by `zMin`. The template canopy glass is removed. The pilot eye has moved to the new cockpit: 2.4 px over the glare shield and 2 px under the canopy, looking through the HUD frame. The seat is at the eye minus 25.9 px. |
 | `f_14a` (replacement) | F-14A.mtb | f_14a (originals in `replaced/f_14a`) | Scale 0.7602, aligned by length and the source gear; the stick, gear and seats land within about 1 px of the old model. The extended wings (parts 20/22) go into the `sweep_left/right` bones, and their roots sit on the template sweep pivots, so the swing-wing rig is unchanged. The swept copies (21/23) are dropped. The tail part is split by position into the fins (rudder bones) and the stabilators. Baked stores (texture rows 1088–1215) are dropped outside the cockpit. The RIO eye is raised over the RIO instrument panel, which the old eye looked straight into. |
 | `b_1b` (replacement) | B-1B Lancer.mtb | b_1b (originals in `replaced/b_1b`) | Scale 0.7798, aligned by length and the source gear; the template gear lands within 3 px. The extended wings go into the sweep bones. The model's swept pose is the extended one turned 42° about the wing root leading edge (fit residual 0), so that point is the new pivot; range 52° (real 15–67.5°). The fin's aft strip is the rudder, and the all-moving tailplanes go into `elevator_8/9`. The pilot and copilot eyes had sat inside the seat backs; they are now 4 px in front of the headrests, 2 px over the panel. |
+| `su_30` | Su-30.mtb | su_27 | Scaled nose to tail onto the Su-27 fuselage (0.802); the span comes out 5% wider. The source's own gear is in the template gear bones (the rig only shows or hides gear, so pivots do not matter) and stands on the ground. Baked stores are dropped by three boxes: the wing stations, the centreline tandem pair and the under-intake pair. Part 7 holds the rudders and the stick; parts 8/9 hold the tailplanes, a leading-edge piece and the nozzles. The pilot eye is in the front cockpit and a WSO seat is added in the stepped rear cockpit. Flight reference: Su-30 masses on the Su-27's AL-31F. The pylons were re-seated with `attach.py apply su_30` (21/31 clean). Twin rails sink 0.4 px on legacy spacing until a shared-adapter run; the under-intake fins dip up to 2.5 px into the intakes. |
 
 Replacing an aircraft in place (`template` = `id`):
 - The original files are copied to `tools/vehgen/replaced/<id>/` on the first run, and every later run reads the

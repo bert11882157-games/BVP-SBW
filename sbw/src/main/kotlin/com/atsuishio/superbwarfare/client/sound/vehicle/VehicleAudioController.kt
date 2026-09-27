@@ -120,7 +120,8 @@ object VehicleAudioController {
     private fun engineOn(vehicle: VehicleEntity): Boolean {
         if (vehicle.isWreck || vehicle.health <= 0f) return false
         if (vehicle.isFixedWingFlightVehicle()) return vehicle.engineRunning()
-        return vehicle.controllingPassenger != null || vehicle.engineRunning()
+        // VehicleEntity has no controlling passenger (Entity's default is null): seat 0 is the driving seat
+        return vehicle.getNthEntity(0) != null || vehicle.engineRunning()
     }
 
     private fun load(vehicle: VehicleEntity): Float {

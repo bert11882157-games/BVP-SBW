@@ -1,0 +1,177 @@
+{
+  "id": "su_30",
+  "name": "Su-30 Flanker-C",
+  "entityClass": "AuthoredFixedWingAircraft",
+  "template": "su_27",
+  "source": "Su-30.mtb",
+  "note": "Two-seat Flanker on the Su-27 data. Scaled nose to tail onto the Su-27 fuselage (0.802); span comes out 5% wider. The source's own gear goes into the template gear bones (gear is a visibility toggle in the rig, so its pivots do not matter) and stands on the ground. Baked stores are dropped by boxes (wing stations, the centreline tandem pair, the under-intake pair); the template's modeled stores stay. Part 7 carries the rudders and the stick; part 8/9 the tailplanes, a leading-edge piece and the nozzles.",
+  "yaw180": true,
+  "lengthParts": [
+    0,
+    1,
+    2
+  ],
+  "templateLengthBones": [
+    "wreck_fuselage_0__hull",
+    "wreck_fuselage_1__hull",
+    "wreck_fuselage_2__hull",
+    "wreck_fuselage_3__hull"
+  ],
+  "groundParts": [
+    0,
+    1,
+    2,
+    12,
+    14,
+    15
+  ],
+  "excludeParts": [
+    24
+  ],
+  "storeTextureV": -1,
+  "keepBoxes": [],
+  "dropRules": [
+    {
+      "absXMin": 45,
+      "yMax": 39.3,
+      "zMax": 99
+    },
+    {
+      "absXMax": 6,
+      "yMax": 26,
+      "zMin": -25,
+      "zMax": 115
+    },
+    {
+      "absXMin": 12,
+      "absXMax": 28,
+      "yMax": 25,
+      "zMin": -10,
+      "zMax": 55
+    }
+  ],
+  "fuselageCuts": [
+    -86,
+    -5,
+    70
+  ],
+  "parts": {
+    "0": [
+      {
+        "bone": "wing",
+        "if": {
+          "absXMin": 38
+        }
+      }
+    ],
+    "1": "fuselage",
+    "2": "fuselage",
+    "4": "wing",
+    "5": "wing",
+    "7": [
+      {
+        "bone": "side:wreck_fuselage_3__rudder_left,wreck_fuselage_3__rudder_right",
+        "if": {
+          "absXMin": 25
+        }
+      },
+      {
+        "bone": "wreck_fuselage_0__control_stick_pitch",
+        "if": {
+          "absXMax": 5
+        }
+      }
+    ],
+    "8": [
+      {
+        "bone": "wreck_fuselage_3__elevator",
+        "if": {
+          "absXMin": 30,
+          "zMin": 85
+        }
+      },
+      {
+        "bone": "wing",
+        "if": {
+          "zMax": 20
+        }
+      }
+    ],
+    "9": [
+      {
+        "bone": "wreck_fuselage_3__elevator",
+        "if": {
+          "absXMin": 30,
+          "zMin": 85
+        }
+      },
+      {
+        "bone": "wing",
+        "if": {
+          "zMax": 20
+        }
+      }
+    ],
+    "10": "side:wreck_wing_left__aileron_left,wreck_wing_right__aileron_right",
+    "11": "side:wreck_wing_left__aileron_left,wreck_wing_right__aileron_right",
+    "12": "wreck_fuselage_1__landing_gear_2",
+    "14": "wreck_wing_left__landing_gear_0",
+    "15": "wreck_wing_right__landing_gear_1"
+  },
+  "keepTemplateBones": [
+    "suspended_1734044096_hull",
+    "suspended_880185541_hull",
+    "suspended_310593714_hull",
+    "suspended_310593714_landing_gear_2"
+  ],
+  "removeClientKeys": [
+    "CanopyGlass"
+  ],
+  "attachments": {
+    "pilot_eye": [
+      0,
+      55.5,
+      -91.5
+    ],
+    "wso_eye": [
+      0,
+      58.5,
+      -73.0
+    ]
+  },
+  "seatPositions": {
+    "0": [
+      0,
+      30.2,
+      -91.5
+    ]
+  },
+  "addSeats": [
+    {
+      "note": "WSO: rear seat back z -67, raised cushion y ~45",
+      "copyOf": 0,
+      "remove": [
+        "Weapons",
+        "FixedGunBank"
+      ],
+      "at": [
+        0,
+        33.2,
+        -73.0
+      ],
+      "eye": "wso_eye"
+    }
+  ],
+  "flightReference": {
+    "baseMassKg": 17700,
+    "mainFuelMassKg": 9400,
+    "fullFuelMassKg": 27100,
+    "fullFuelWingLoadingKgPerSquareMetre": 437.6723,
+    "maximumTrueAirspeedKmh": 2120,
+    "referenceAltitudeMetres": 11000,
+    "climbMetresPerSecond": 230,
+    "turnSeconds": 24.5
+  },
+  "note_flight": "Su-30 (AL-31F, same engines as the Su-27 data): empty 17,700 kg, internal fuel 9,400 kg, Mach 2.0 (2,120 km/h) at 11 km; wing area unchanged (62 m2), so the full-fuel wing loading follows from the mass.",
+  "note_crew": "Front seat back z -85 (headrest to y 61), cushion y ~43, glare shield y 53 at z -110..-105, HUD top y 57 at z -98. The template eye (z -81.4) landed in the rear cockpit: the pilot eye is now in front of the front headrest, 2.5 px over the glare shield, looking through the HUD window. The WSO sits in the stepped rear seat. Seats keep the template's eye-to-seat offset (25.3 px)."
+}

@@ -276,7 +276,7 @@ def external_store_ids(aircraft):
     return ext
 
 
-def run_plan(write, only=None, verbose=True):
+def run_plan(write, only=None, verbose=True, shared=False):
     stores = data.all_stores()
     aircraft = data.all_aircraft()
     ext = external_store_ids(aircraft)
@@ -307,6 +307,14 @@ def run_plan(write, only=None, verbose=True):
         plans[name] = plan
     # 3) native rack checks and rack adapters
     adapter_uses = adapters.resolve(plans, stores)
+    if only and not shared:
+        # A rack adapter is shared by every carrier of its store and sized from the planned carriers. A partial run
+        # would resize (or add) adapters that other aircraft draw, so it leaves them alone; its mounts fall back to
+        # the store's existing adapter or the legacy RackSpacing. Pass --shared, or run without an aircraft list.
+        if adapter_uses:
+            print("partial run: rack adapters left unchanged for %s (use --shared to rewrite them)"
+                  % ", ".join(s.split(":")[1] for s in adapter_uses))
+        adapter_uses = {}
     for sid, spec in adapter_uses.items():
         store_changes.setdefault(sid, OrderedDict())["RackAdapter"] = spec["json"]
         apply_store_changes(stores[sid], {"RackAdapter": spec["json"]})
@@ -350,10 +358,12 @@ def main():
     ap.add_argument("command", choices=["plan", "apply", "check"])
     ap.add_argument("aircraft", nargs="*")
     ap.add_argument("--render", default=None)
+    ap.add_argument("--shared", action="store_true", help="partial apply may rewrite shared rack adapters")
     args = ap.parse_args()
     if args.command in ("plan", "apply"):
         stores, aircraft, plans, store_changes, adapter_uses, report = run_plan(args.command == "apply",
-                                                                              set(args.aircraft) or None)
+                                                                              set(args.aircraft) or None,
+                                                                              shared=args.shared)
         print_plan(plans, store_changes, adapter_uses, report)
     else:
         import check
