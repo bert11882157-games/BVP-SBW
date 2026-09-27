@@ -16,6 +16,7 @@ import net.minecraftforge.fml.common.Mod;
  * Diagnostic launches only ({@code bvp.diagnostics.scenarios}): {@code /bvp_audio_fire <vehicles> <weapon>} fires one
  * round of the named weapon from each selected vehicle with no crew, through the normal vehicle shot path, so its
  * fire cue goes out exactly as in play. Used by the audio loudness test to fire guns at set listener distances.
+ * {@code /bvp_seat <player> <seat>} moves a rider to another seat (seat views in the spawn checks).
  */
 @Mod.EventBusSubscriber(modid = BertsVehiclePack.MODID)
 public final class BvpAudioFireScenario {
@@ -48,5 +49,18 @@ public final class BvpAudioFireScenario {
                             context.getSource().sendSuccess(() -> Component.literal("audio fire: " + count), false);
                             return count;
                         }))));
+        // /bvp_seat <player> <seat>: moves a rider to another seat of the vehicle it rides (seat views in checks)
+        event.getDispatcher().register(Commands.literal("bvp_seat")
+                .requires(source -> source.hasPermission(2))
+                .then(Commands.argument("player", EntityArgument.player())
+                        .then(Commands.argument("seat", com.mojang.brigadier.arguments.IntegerArgumentType.integer(0, 31))
+                                .executes(context -> {
+                                    Entity rider = EntityArgument.getPlayer(context, "player");
+                                    int seat = com.mojang.brigadier.arguments.IntegerArgumentType.getInteger(context, "seat");
+                                    if (!(rider.getVehicle() instanceof VehicleEntity vehicle)) return 0;
+                                    boolean moved = vehicle.changeSeat(rider, seat);
+                                    LOGGER.info("[BVP seat] {} -> seat {}: {}", vehicle.getType(), seat, moved);
+                                    return moved ? 1 : 0;
+                                }))));
     }
 }
