@@ -52,9 +52,9 @@
       "BanHand": true,
       "Transform": "Vehicle",
       "Position": [
-        0,
-        1.7875,
-        0
+        0.55,
+        0.45,
+        2.6
       ],
       "MinPitch": -5,
       "MaxPitch": 18,
@@ -65,8 +65,26 @@
         "Simulate3PPos": [
           6.6,
           1.1
-        ]
-      }
+        ],
+        "UseFixedCameraPos": true,
+        "Position": [
+          0,
+          0,
+          0
+        ],
+        "ZoomPosition": [
+          0,
+          0,
+          0
+        ],
+        "EyeAttachment": "driver_camera",
+        "ZoomEyeAttachment": "driver_camera",
+        "DirectionAttachment": "VehicleCustomPitch",
+        "ZoomDirectionAttachment": "VehicleCustomPitch",
+        "CameraMode": "PLAYER_LOOK_AIM",
+        "AimCameraMode": "PLAYER_LOOK_AIM"
+      },
+      "BodyAttachment": "Vehicle"
     }
   ],
   "Weapons": {},
@@ -246,5 +264,20 @@
       0,
       -2.51771
     ]
-  ]
+  ],
+  "Attachments": {
+    "driver_camera": {
+      "Parent": "VehicleCustomPitch",
+      "Position": [
+        0.55,
+        2.07,
+        2.6
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    }
+  }
 }

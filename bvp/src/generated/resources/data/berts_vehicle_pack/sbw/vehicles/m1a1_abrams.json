@@ -52,9 +52,9 @@
       "BanHand": true,
       "Transform": "Vehicle",
       "Position": [
-        0,
-        1.44375,
-        0
+        0.0,
+        0.5,
+        3.0
       ],
       "MinPitch": -5,
       "MaxPitch": 18,
@@ -65,8 +65,26 @@
         "Simulate3PPos": [
           6.6,
           1.1
-        ]
-      }
+        ],
+        "UseFixedCameraPos": true,
+        "Position": [
+          0,
+          0,
+          0
+        ],
+        "ZoomPosition": [
+          0,
+          0,
+          0
+        ],
+        "EyeAttachment": "driver_camera",
+        "ZoomEyeAttachment": "driver_camera",
+        "DirectionAttachment": "VehicleCustomPitch",
+        "ZoomDirectionAttachment": "VehicleCustomPitch",
+        "CameraMode": "PLAYER_LOOK_AIM",
+        "AimCameraMode": "PLAYER_LOOK_AIM"
+      },
+      "BodyAttachment": "Vehicle"
     },
     {
       "IsEnclosed": true,
@@ -290,5 +308,20 @@
       0,
       -3.15783
     ]
-  ]
+  ],
+  "Attachments": {
+    "driver_camera": {
+      "Parent": "VehicleCustomPitch",
+      "Position": [
+        0.0,
+        2.12,
+        3.0
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    }
+  }
 }

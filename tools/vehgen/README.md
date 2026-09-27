@@ -118,3 +118,8 @@ Replacing an aircraft in place (`template` = `id`):
 - The original files are copied to `tools/vehgen/replaced/<id>/` on the first run, and every later run reads the
   template from there.
 - Registrations are left as they are.
+
+## Driver cameras (`driver_cameras.py`)
+Ground vehicles whose driver seat had no eye showed the simulated third-person camera in first person. `driver_cameras.json`
+gives each one a `driver_camera` at the driver's real station (lifted about 0.2 blocks over the roof for visibility);
+`python3 tools/vehgen/driver_cameras.py` applies it, `--check` verifies. Seats whose camera is a gunner sight are refused.
