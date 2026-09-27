@@ -68,7 +68,8 @@ class SmallCannonShellEntityRenderer(manager: EntityRendererProvider.Context) :
             poseStack.mulPose(Axis.XP.rotationDegrees(-VehicleVecUtils.getXRotFromVector(entity.deltaMovement).toFloat()))
             poseStack.scale(width, width, length.toFloat())
 
-            val type = RenderType.energySwirl(TEXTURE, 15.0f, 15.0f)
+            // one shared render type: a fresh energySwirl per round broke the batch into a draw call per round
+            val type = RENDER_TYPE
             model.renderToBuffer(
                 poseStack,
                 buffer.getBuffer(type),
@@ -88,5 +89,6 @@ class SmallCannonShellEntityRenderer(manager: EntityRendererProvider.Context) :
 
     companion object {
         val TEXTURE = loc("textures/bedrock/projectile/small_cannon_shell.png")
+        private val RENDER_TYPE: RenderType by lazy { RenderType.energySwirl(TEXTURE, 15.0f, 15.0f) }
     }
 }

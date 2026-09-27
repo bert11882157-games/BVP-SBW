@@ -205,14 +205,18 @@ object StressDiagnostics {
         fun loadout(id: String): CompoundTag? {
             val definition = AircraftArmamentRegistry.aircraft[ResourceLocation("berts_vehicle_pack", id)] ?: return null
             val selections = CompoundTag(); val counts = CompoundTag()
-            for (mount in AircraftArmamentRegistry.mounts(definition)) {
+            for ((mountIndex, mount) in AircraftArmamentRegistry.mounts(definition).withIndex()) {
                 val key = mount["Id"].asString
                 var best: Pair<String, Int>? = null; var bestScore = -1.0
+                // every other hardpoint carries free-fall bombs where it can, so the war drops bombs as well
                 for (value in mount.getAsJsonArray("AllowedStores") ?: continue) {
                     val store = AircraftArmamentRegistry.stores[ResourceLocation(value.asString)] ?: continue
                     val copies = AircraftPylonRacks.maxCopies(definition, mount, store)
                     if (copies < 1) continue
-                    val score = copies * (store["Capacity"]?.asInt ?: 1) + (store["MassKg"]?.asDouble ?: 0.0) / 1e5
+                    val bomb = store["Category"]?.asString == "BOMB" && store.has("Bomb") &&
+                        store.getAsJsonObject("Bomb")["Mode"]?.asString != "TV"
+                    val score = copies * (store["Capacity"]?.asInt ?: 1) + (store["MassKg"]?.asDouble ?: 0.0) / 1e5 +
+                        (if (bomb && mountIndex % 2 == 0) 1e4 else 0.0)
                     if (score > bestScore) { bestScore = score; best = value.asString to copies }
                 }
                 val (store, copies) = best ?: continue
@@ -274,6 +278,32 @@ object StressDiagnostics {
             }
         }
 
+        private val bombCursor = HashMap<VehicleEntity, Int>()
+
+        /** Free-fall bombs need a pilot to release through the armament UI; the harness releases them through the
+         *  bomb launcher itself (same munition entity, fuze and blast as a real release), one per two-second slot,
+         *  cycling the hardpoints that carry one. */
+        fun dropBomb(vehicle: VehicleEntity, current: Phase) {
+            val definition = com.atsuishio.superbwarfare.api.aircraft.AircraftArmamentManager.definition(vehicle) ?: return
+            val chosen = vehicle.persistentData.getCompound("BvpAircraftArmament").getCompound("Selections")
+            val bombs = AircraftArmamentRegistry.mounts(definition).mapNotNull { pair ->
+                val id = chosen.getString(pair["Id"].asString).takeIf { it.isNotEmpty() } ?: return@mapNotNull null
+                val store = AircraftArmamentRegistry.stores[ResourceLocation.tryParse(id)] ?: return@mapNotNull null
+                val bomb = store["Category"]?.asString == "BOMB" && store.has("Bomb") &&
+                    store.getAsJsonObject("Bomb")["Mode"]?.asString != "TV"
+                if (bomb) Triple(pair, store, id) else null
+            }
+            if (bombs.isEmpty()) return
+            val k = bombCursor.merge(vehicle, 1, Int::plus)!! % bombs.size
+            val (pair, store, id) = bombs[k]
+            val mount = AircraftArmamentRegistry.mountPositions(pair).firstOrNull() ?: return
+            val type = ForgeRegistries.ENTITY_TYPES.getKey(vehicle.type)?.path + "/bomb:" + id.substringAfter(':')
+            if (com.atsuishio.superbwarfare.api.aircraft.AircraftBombLauncher.launch(vehicle, player, mount, store)) {
+                current.accepted++
+                current.firedByType.merge(type, 1, Int::plus)
+            } else current.rejected.merge("BOMB_RELEASE_FAILED", 1, Int::plus)
+        }
+
         fun fire() {
             val current = phase ?: return
             for (vehicle in fleet.keys) {
@@ -281,8 +311,10 @@ object StressDiagnostics {
                 val natives = vehicle.gunDataMap.keys.toList()
                 val names = if (vehicle in aircraft) {
                     // Stores go every two seconds, staggered across the line; guns every tick.
-                    if ((age + fleet.keys.indexOf(vehicle) * 4) % 40 == 0) AircraftStoreWeapons.ids(vehicle, 0, natives)
-                    else natives
+                    if ((age + fleet.keys.indexOf(vehicle) * 4) % 40 == 0) {
+                        dropBomb(vehicle, current)
+                        AircraftStoreWeapons.ids(vehicle, 0, natives)
+                    } else natives
                 } else natives
                 for (name in names) {
                     // Guns keep their real cadence: RPM for automatic weapons, one round per reload for

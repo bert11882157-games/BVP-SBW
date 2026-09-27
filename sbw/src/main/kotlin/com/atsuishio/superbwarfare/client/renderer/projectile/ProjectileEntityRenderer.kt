@@ -65,7 +65,8 @@ class ProjectileEntityRenderer(manager: EntityRendererProvider.Context) : Entity
             poseStack.mulPose(Axis.XP.rotationDegrees(-VehicleVecUtils.getXRotFromVector(entity.deltaMovement).toFloat()))
             poseStack.scale(width, width, length.toFloat())
 
-            val type = RenderType.energySwirl(TEXTURE, 15.0f, 15.0f)
+            // one shared render type: a fresh energySwirl per round broke the batch into a draw call per round
+            val type = RENDER_TYPE
             model.renderToBuffer(
                 poseStack,
                 buffer.getBuffer(type),
@@ -85,5 +86,6 @@ class ProjectileEntityRenderer(manager: EntityRendererProvider.Context) : Entity
 
     companion object {
         val TEXTURE = loc("textures/bedrock/projectile/projectile.png")
+        private val RENDER_TYPE: RenderType by lazy { RenderType.energySwirl(TEXTURE, 15.0f, 15.0f) }
     }
 }
