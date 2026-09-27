@@ -147,7 +147,7 @@
       "DefaultZoom": 2,
       "Magazine": 1,
       "EmptyReloadTime": 120,
-      "Velocity": 20,
+      "Velocity": 85.0,
       "ProjectileLife": 50,
       "Gravity": 0.03,
       "ApDurability": 95,
@@ -186,7 +186,8 @@
             "Projectile": {
               "Type": "superbwarfare:cannon_shell",
               "Profile": "berts_vehicle_pack:t80b_obr1976/cannon/ammo_00_3bm42"
-            }
+            },
+            "Velocity": 85.0
           },
           "ConsumptionItem": "superbwarfare:tier_3_armor_piercing_shell"
         },
@@ -210,7 +211,8 @@
             "Projectile": {
               "Type": "superbwarfare:cannon_shell",
               "Profile": "berts_vehicle_pack:t80b_obr1976/cannon/ammo_01_3bk18m_heat_fs"
-            }
+            },
+            "Velocity": 45.25
           },
           "ConsumptionItem": "superbwarfare:tier_2_heat_shell"
         },

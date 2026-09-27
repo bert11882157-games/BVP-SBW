@@ -133,7 +133,7 @@
       "DefaultZoom": 3,
       "Magazine": 1,
       "EmptyReloadTime": 115,
-      "Velocity": 20,
+      "Velocity": 88.5,
       "ProjectileLife": 50,
       "Gravity": 0.03,
       "ApDurability": 95,
@@ -171,7 +171,8 @@
               8,
               10,
               120
-            ]
+            ],
+            "Velocity": 88.5
           },
           "ConsumptionItem": "superbwarfare:tier_3_armor_piercing_shell"
         },
@@ -230,7 +231,7 @@
           "Override": {
             "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_he.png",
             "ShellType": "HE",
-            "Velocity": 17,
+            "Velocity": 42.5,
             "ApDurability": 45,
             "Damage": 230,
             "ExplosionDamage": 115,
@@ -280,7 +281,8 @@
               8,
               10,
               120
-            ]
+            ],
+            "Velocity": 45.25
           },
           "ConsumptionItem": "superbwarfare:tier_2_heat_shell"
         }

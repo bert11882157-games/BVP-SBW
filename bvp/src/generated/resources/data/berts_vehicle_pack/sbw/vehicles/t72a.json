@@ -193,7 +193,7 @@
       "DefaultZoom": 3,
       "Magazine": 1,
       "EmptyReloadTime": 115,
-      "Velocity": 20,
+      "Velocity": 88.0,
       "ProjectileLife": 50,
       "Gravity": 0.03,
       "ApDurability": 95,
@@ -231,7 +231,8 @@
               8,
               10,
               120
-            ]
+            ],
+            "Velocity": 88.0
           },
           "ConsumptionItem": "superbwarfare:tier_2_armor_piercing_shell"
         },
@@ -260,7 +261,8 @@
               8,
               10,
               120
-            ]
+            ],
+            "Velocity": 45.25
           },
           "ConsumptionItem": "superbwarfare:tier_2_heat_shell"
         }
