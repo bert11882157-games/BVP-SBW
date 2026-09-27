@@ -1,8 +1,76 @@
 {
   "_note": "Driver eyes in data blocks (+X left, +Y up, nose +Z). Each sits over the driver's real hatch, lifted about 0.2 blocks over the hull roof so the view clears the roof and glacis. Reviewed with first-person renders.",
-  "m1a1_abrams": {"eye": [0.0, 2.12, 3.0], "note": "driver centred under the gun, hatch just ahead of the turret face (turret front z 2.6, roof 1.89, glacis from z 4.0)"},
-  "t14_armata": {"eye": [0.5, 2.25, 2.8], "note": "crew capsule in the front hull: driver left, gunner centre, commander right; roof 2.02 at z 2.8"},
-  "type_90": {"eye": [0.55, 2.07, 2.6], "note": "driver front left of the hull, left of the gun; roof 1.86 at z 2.6"},
-  "9k22_tunguska": {"eye": [0.65, 2.52, 2.75], "note": "GM-352 chassis: driver front left, ahead of the turret (turret face z 2.3), roof 2.31, nose slope from z 3.0"},
-  "9p149_shturm": {"eye": [0.6, 2.3, 2.3], "note": "MT-LB chassis: driver front left in the cab, behind the nose slope (from z 2.5), roof 2.10-2.16"}
+  "m1a1_abrams": {
+    "eye": [
+      0.0,
+      2.12,
+      3.0
+    ],
+    "note": "driver centred under the gun, hatch just ahead of the turret face (turret front z 2.6, roof 1.89, glacis from z 4.0)"
+  },
+  "t14_armata": {
+    "eye": [
+      0.5,
+      2.25,
+      2.8
+    ],
+    "note": "crew capsule in the front hull: driver left, gunner centre, commander right; roof 2.02 at z 2.8"
+  },
+  "type_90": {
+    "eye": [
+      0.55,
+      2.07,
+      2.6
+    ],
+    "note": "driver front left of the hull, left of the gun; roof 1.86 at z 2.6"
+  },
+  "9k22_tunguska": {
+    "eye": [
+      0.65,
+      2.52,
+      2.75
+    ],
+    "note": "GM-352 chassis: driver front left, ahead of the turret (turret face z 2.3), roof 2.31, nose slope from z 3.0"
+  },
+  "9p149_shturm": {
+    "eye": [
+      0.6,
+      2.3,
+      2.3
+    ],
+    "note": "MT-LB chassis: driver front left in the cab, behind the nose slope (from z 2.5), roof 2.10-2.16"
+  },
+  "_eyes_note": "Seat-0 sight eyes that sat inside the model (checked in game, eyes1 screenshots). 'eye' is the data-frame point; the attachment keeps its name and is written in its parent's frame (Turret: minus TurretPos at rest).",
+  "_eyes": {
+    "gepard": {
+      "attachment": "gunnerCamera",
+      "parent": "Turret",
+      "eye": [
+        0.5,
+        3.28,
+        1.0
+      ],
+      "note": "was inside the turret roof (eye 2.95, roof 3.05) and saw only turret faces; now 0.1 over the gunner's roof sight head (front left, top 3.18)"
+    },
+    "k2a1_black_panther": {
+      "attachment": "gunnerCamera",
+      "parent": "Turret",
+      "eye": [
+        0.9,
+        2.95,
+        1.19
+      ],
+      "note": "was 0.17 under the top of the gunner's sight box (2.82) at the turret front left, half the view blocked; now 0.13 over it"
+    },
+    "9p148": {
+      "attachment": "gunnerCamera",
+      "parent": "Vehicle",
+      "eye": [
+        -0.49,
+        2.33,
+        1.75
+      ],
+      "note": "was under the Konkurs launcher box (top 2.92) on the launcher mount; the operator is the commander, front right in the BRDM-2 hull, sighting through the 9Sh119 periscope: 0.14 over the hull roof there"
+    }
+  }
 }

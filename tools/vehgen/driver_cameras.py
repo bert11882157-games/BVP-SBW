@@ -6,6 +6,8 @@ For each entry in driver_cameras.json the driver seat gets a first-person eye at
 way as the Toyota and UAZ drivers: an attachment `driver_camera` (parent VehicleCustomPitch) and a CameraPos that uses
 it, with the hidden body placed 1.62 blocks under the eye. `eye` is in data blocks (+X left, +Y up, nose +Z); the
 notes say where the driver sits in the real vehicle and how far the eye is lifted above the hull roof for visibility.
+
+`_eyes` moves existing seat-0 sight eyes (gunner cameras) that sat inside the model to the real sight head.
 """
 import json
 import os
@@ -39,16 +41,26 @@ def apply(d, spec):
     return d
 
 
+def apply_eye(d, spec):
+    """Moves an existing sight eye attachment to `eye` (data frame), expressed in its parent frame at rest."""
+    eye = [float(v) for v in spec['eye']]
+    origin = {'Vehicle': [0, 0, 0], 'VehicleCustomPitch': [0, 0, 0], 'Turret': d.get('TurretPos')}[spec['parent']]
+    a = d['Attachments'][spec['attachment']]
+    a['Parent'] = spec['parent']
+    a['Position'] = [round(eye[k] - origin[k], 5) for k in range(3)]
+    return d
+
+
 def main(argv):
     check = '--check' in argv
     specs = json.load(open(os.path.join(HERE, 'driver_cameras.json')))
     bad = 0
-    for vid, spec in specs.items():
-        if vid.startswith('_'):
-            continue
+    jobs = [(vid, spec, apply) for vid, spec in specs.items() if not vid.startswith('_')]
+    jobs += [(vid, spec, apply_eye) for vid, spec in specs.get('_eyes', {}).items()]
+    for vid, spec, fn in jobs:
         path = os.path.join(DATA, f'{vid}.json')
         text = open(path).read()
-        d = apply(json.loads(text), spec)
+        d = fn(json.loads(text), spec)
         new = json.dumps(d, indent=2) + ('\n' if text.endswith('\n') else '')
         if new != text:
             if check:
@@ -56,7 +68,7 @@ def main(argv):
                 print(f'{vid}: driver camera not applied')
             else:
                 open(path, 'w').write(new)
-                print(f'{vid}: driver eye {spec["eye"]}')
+                print(f'{vid}: eye {spec["eye"]}')
     return 1 if bad else 0
 
 
