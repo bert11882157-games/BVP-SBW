@@ -39,6 +39,13 @@ internal class VehicleWeaponRuntime(
                                      val nativeAmmo: List<Pair<String, Int>>, val weapons: List<String>,
                                      val indices: List<Int>)
     private val selectionCache = mutableMapOf<Int, SelectionCache>()
+    /**
+     * Client only: the selectable weapons per seat, kept for one level tick. Rendering asks several times a frame per
+     * vehicle (chassis presentation, animations, sounds), and even the validated cache above rebuilt the weapon list,
+     * hashed the selection and listed the ammo on each ask (10% of the render thread in a battle). Keyed on the
+     * level's game time, which advances even for vehicles the client does not tick.
+     */
+    private val clientSelection = arrayOfNulls<Pair<Long, List<Int>>>(8)
     /** Null [weaponName] resolves the occupied seat's primary; a name is an explicit channel. */
     fun fire(
         living: LivingEntity?,
@@ -200,16 +207,28 @@ internal class VehicleWeaponRuntime(
     fun invalidateResolvedGunData() {
         weaponState.clear()
         selectionCache.clear()
+        clientSelection.fill(null)
     }
 
     fun invalidateConfiguration() {
         weaponState.invalidateConfiguration()
         selectionCache.clear()
+        clientSelection.fill(null)
         normalizationDataOwner = null
         normalizationFingerprint = Int.MIN_VALUE
     }
 
     fun validWeaponIndices(seatIndex: Int): List<Int> {
+        val level = vehicle.level()
+        if (level.isClientSide && seatIndex in clientSelection.indices) {
+            val time = level.gameTime
+            clientSelection[seatIndex]?.let { (at, indices) -> if (at == time) return indices }
+            return validWeaponIndicesUncached(seatIndex).also { clientSelection[seatIndex] = time to it }
+        }
+        return validWeaponIndicesUncached(seatIndex)
+    }
+
+    private fun validWeaponIndicesUncached(seatIndex: Int): List<Int> {
         val weapons = vehicle.getWeaponIds(seatIndex)
         val aircraft = com.atsuishio.superbwarfare.api.aircraft.AircraftArmamentManager.definition(vehicle) != null
         val revision = if (aircraft) com.atsuishio.superbwarfare.api.aircraft.AircraftArmamentManager.weaponSelectionRevision(vehicle) else 0
