@@ -83,6 +83,10 @@ Then:
 - **Crew:** extra seats and eye attachments come from the spec. `removeClientKeys` drops, for example, a template
   `CanopyGlass` that does not fit the new canopy.
 
+- **Swing wings** (`sweeps`, also `sweeps.py <id> '<json>'` for aircraft that are not regenerated): the sweep bone
+  pivot (with its wreck child) and the client `AircraftRig.Sweeps` entry change together, because the rig animator
+  rejects a mismatch. A sweep turns about +Y (`[0, 1, 0]`); `AngleSign` −1 on the left wing sweeps the tip aft.
+
 Sound events stay the template's. Only exact ids and asset paths are renamed.
 
 | id | source | template | notes |

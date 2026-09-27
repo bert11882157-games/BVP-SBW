@@ -121,5 +121,34 @@
   },
   "addSeats": [],
   "flightReference": {},
-  "note_crew": "Pilot eye unchanged (10.6 px over the cushion at y 40, in front of the headrest). The template RIO eye (y 45.3) looked straight into the RIO instrument panel 6.5 px ahead (top y 53.2). It is raised to 54.5: 1.3 px over the panel, about 3 px under the canopy glass (57.9), 1 px forward. The RIO seat keeps the template's eye-to-seat offset (22.6 px)."
+  "note_crew": "Pilot eye unchanged (10.6 px over the cushion at y 40, in front of the headrest). The template RIO eye (y 45.3) looked straight into the RIO instrument panel 6.5 px ahead (top y 53.2). It is raised to 54.5: 1.3 px over the panel, about 3 px under the canopy glass (57.9), 1 px forward. The RIO seat keeps the template's eye-to-seat offset (22.6 px).",
+  "sweeps": {
+    "sweep_left": {
+      "pivot": [
+        31.9,
+        null,
+        13.7
+      ],
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "maxDegrees": 48
+    },
+    "sweep_right": {
+      "pivot": [
+        -31.9,
+        null,
+        13.7
+      ],
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "maxDegrees": 48
+    }
+  },
+  "note_sweep": "The template rig swept about [0,0,1] (the wings would droop at speed); the other swing-wing rigs (MiG-23, Tornado, Tu-22M, F-111) turn about +Y. The model's own swept pose (part 21) turns about the root leading-edge corner (31.9, 13.7): the template pivot sat 22 px aft of it. Range 48 degrees, the real 20-68 degree leading-edge sweep (the template's 54 reached the oversweep position)."
 }

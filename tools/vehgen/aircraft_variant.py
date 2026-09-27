@@ -24,6 +24,7 @@ from PIL import Image
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import mtbgeo  # noqa: E402
+import sweeps  # noqa: E402
 import vehgen  # noqa: E402
 from vehgen import ASSETS, DATA, MAIN, NS, Output, load, r5  # noqa: E402
 
@@ -185,6 +186,7 @@ def main(argv):
                 b['poly_mesh'] = remap_template(b['poly_mesh'])
             else:
                 b.pop('poly_mesh')
+    sweep_pivots = sweeps.apply_geo([geo], spec.get('sweeps', {}))     # swing-wing pivots (the rig follows below)
     out.json(os.path.join(ASSETS, 'custom_geo', f'{vid}.geo.json'), geo, compact=True)
     wreck_path = TPL(os.path.join(ASSETS, 'custom_geo', f'{tid}_turret_wreck.geo.json'))
     if os.path.exists(wreck_path):
@@ -239,6 +241,7 @@ def main(argv):
     data.update(spec.get('dataOverrides', {}))
     out.json(os.path.join(DATA, 'sbw', 'vehicles', f'{vid}.json'), data)
     client = renamed(load(TPL(os.path.join(ASSETS, 'sbw', 'vehicles', f'{tid}.json'))))
+    sweeps.apply_client(client, spec.get('sweeps', {}), sweep_pivots)
     for k in spec.get('removeClientKeys', []):
         client.pop(k, None)
     out.json(os.path.join(ASSETS, 'sbw', 'vehicles', f'{vid}.json'), client)

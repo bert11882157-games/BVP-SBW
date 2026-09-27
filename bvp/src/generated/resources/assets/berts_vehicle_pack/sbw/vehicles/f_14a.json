@@ -348,17 +348,17 @@
         "Bone": "sweep_left",
         "Parent": "hull",
         "Pivot": [
-          31.60396,
+          31.9,
           33.27686,
-          35.74257
+          13.7
         ],
         "Axis": [
           0,
-          0,
-          1
+          1,
+          0
         ],
         "AngleSign": -1,
-        "MaxDeflectionDegrees": 54,
+        "MaxDeflectionDegrees": 48,
         "Schedule": {
           "Input": "PRESENTED_SPEED_BLOCKS_PER_TICK",
           "Interpolation": "LINEAR_CLAMPED",
@@ -386,17 +386,17 @@
         "Bone": "sweep_right",
         "Parent": "hull",
         "Pivot": [
-          -31.60396,
+          -31.9,
           33.27686,
-          35.74257
+          13.7
         ],
         "Axis": [
           0,
-          0,
-          1
+          1,
+          0
         ],
         "AngleSign": 1,
-        "MaxDeflectionDegrees": 54,
+        "MaxDeflectionDegrees": 48,
         "Schedule": {
           "Input": "PRESENTED_SPEED_BLOCKS_PER_TICK",
           "Interpolation": "LINEAR_CLAMPED",
