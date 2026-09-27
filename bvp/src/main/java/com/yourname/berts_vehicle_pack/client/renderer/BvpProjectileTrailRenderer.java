@@ -203,6 +203,20 @@ public final class BvpProjectileTrailRenderer {
                 centerSamples, satelliteSamples, flameParticles, smokeParticles, tick);
     }
 
+    /**
+     * Revolutions the ATGM thruster swirl has made [seconds] after launch. The spin rate rises linearly to 2.5 Hz at
+     * 0.25 s, then to its 4 Hz maximum at 0.75 s, and holds (the integral of that piecewise-linear rate).
+     */
+    static double spinTurns(double seconds) {
+        if (!(seconds > 0.0D)) return 0.0D;
+        if (seconds <= 0.25D) return 5.0D * seconds * seconds;                 // rate 10 Hz/s: 0.3125 turns at 0.25 s
+        if (seconds <= 0.75D) {
+            double u = seconds - 0.25D;
+            return 0.3125D + 2.5D * u + 1.5D * u * u;                           // rate 3 Hz/s: 1.9375 turns at 0.75 s
+        }
+        return 1.9375D + 4.0D * (seconds - 0.75D);
+    }
+
     private static OrbitFrame orbitFrame(Entity entity, double travelX, double travelY, double travelZ) {
         Vec3 forward = travelX * travelX + travelY * travelY + travelZ * travelZ > MIN_FLIGHT_DIRECTION_SQR
                 ? new Vec3(travelX, travelY, travelZ) : entity.m_20184_();
@@ -232,6 +246,9 @@ public final class BvpProjectileTrailRenderer {
         OrbitFrame frame = orbitFrame(missile, motion.f_82479_, motion.f_82480_, motion.f_82481_);
         if (frame == null) return;
         boolean thrust = missile.isGuidedPropulsionThrusting();
+        // The thruster flame grows with viewing distance, linearly to 150% at 600 blocks, so a distant ATGM stays readable.
+        double viewDistance = missile.m_20182_().m_82554_(Minecraft.m_91087_().f_91063_.m_109153_().m_90583_());
+        double thrusterScale = 1.0D + 0.5D * clamp(viewDistance / 600.0D, 0.0D, 1.0D);
         double dx = missile.m_20185_() - missile.f_19854_;
         double dy = missile.m_20186_() - missile.f_19855_;
         double dz = missile.m_20189_() - missile.f_19856_;
@@ -249,7 +266,8 @@ public final class BvpProjectileTrailRenderer {
                     missile.f_19855_ + (missile.m_20186_() - missile.f_19855_) * t + missile.m_20206_() * 0.5,
                     missile.f_19856_ + (missile.m_20189_() - missile.f_19856_) * t)
                     .m_82546_(forward.m_82490_(shape.rear()));
-            BvpClientParticles.spawnMissileExhaust(thrust, center, (float) (exhaustRadius * (thrust ? 1.1 : 2.2)));
+            BvpClientParticles.spawnMissileExhaust(thrust, center,
+                    (float) (exhaustRadius * (thrust ? 1.1 * thrusterScale : 2.2)));
             emitted++;
             // A denser, wider smoke trail behind the flame (ATGM motors leave a thick trail).
             Vec3 behind = center.m_82546_(forward.m_82490_(exhaustRadius * 0.8));
@@ -257,11 +275,16 @@ public final class BvpProjectileTrailRenderer {
             BvpClientParticles.spawnMissileSmoke(behind.m_82549_(frame.up().m_82490_(exhaustRadius * 0.3)),
                     (float) (exhaustRadius * 2.2), 2.2F);
             if (!thrust) continue;
+            // Four spinning thruster flames. The frame's "right" is the left of someone watching from behind the
+            // missile, so a falling angle turns counterclockwise as seen from the launcher.
+            double spin = -2.0D * Math.PI * spinTurns((missile.f_19797_ - 1 + t) / 20.0D);
+            double orbitRadius = exhaustRadius * 0.42 * thrusterScale;
             for (int satellite = 0; satellite < 4; satellite++) {
-                double angle = (missile.f_19797_ - 1 + t) * 0.628318531 + satellite * Math.PI / 2;
-                Vec3 offset = frame.right().m_82490_(Math.cos(angle) * exhaustRadius * 0.35)
-                        .m_82549_(frame.up().m_82490_(Math.sin(angle) * exhaustRadius * 0.35));
-                BvpClientParticles.spawnMissileExhaust(true, center.m_82549_(offset), (float) (exhaustRadius * 0.8));
+                double angle = spin + satellite * Math.PI / 2;
+                Vec3 offset = frame.right().m_82490_(Math.cos(angle) * orbitRadius)
+                        .m_82549_(frame.up().m_82490_(Math.sin(angle) * orbitRadius));
+                BvpClientParticles.spawnMissileExhaust(true, center.m_82549_(offset),
+                        (float) (exhaustRadius * 1.0 * thrusterScale));
             }
         }
         BvpTrailDiagnostics.recordBvpTrailSpawn(missile, definition, kind,
