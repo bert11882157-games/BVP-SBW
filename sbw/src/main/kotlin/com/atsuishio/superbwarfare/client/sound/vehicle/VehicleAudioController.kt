@@ -58,6 +58,7 @@ object VehicleAudioController {
     }
 
     private val states = LinkedHashMap<UUID, State>()
+    private var firstStartLogged = false
 
     private fun typeId(vehicle: VehicleEntity): ResourceLocation? = ForgeRegistries.ENTITY_TYPES.getKey(vehicle.type)
 
@@ -150,6 +151,11 @@ object VehicleAudioController {
                 state.running = true
                 state.startTick = now
                 engine.start?.let { oneShot(mc, it, vehicle, gain) }
+                if (!firstStartLogged) {
+                    firstStartLogged = true
+                    com.atsuishio.superbwarfare.Mod.LOGGER.info("Vehicle audio: engine start voiced for {} ({} profiles)",
+                        typeId(vehicle), VehicleAudioProfiles.count())
+                }
             } else if (!on && state.running) {
                 state.running = false
                 engine.stop?.let { oneShot(mc, it, vehicle, gain) }
