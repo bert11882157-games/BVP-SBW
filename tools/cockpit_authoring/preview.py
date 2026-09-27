@@ -1,16 +1,18 @@
 #!/usr/bin/env python3
 """Preview of cockpit authoring files: side and top views of the cut cockpit (textured), the context in grey, the
-displays (magenta) and gauges (yellow). Usage: preview.py out.png file.cockpit.geo.json..."""
+displays (magenta) and gauges (yellow). Usage: preview.py out.png file.cockpit.bbmodel|file.cockpit.geo.json..."""
 import sys, os, json, copy
 import numpy as np
 from PIL import Image, ImageDraw
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'canopy_loft'))
 import ortho as O
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import cockpit
 T = O.T
 out = sys.argv[1]; files = sys.argv[2:]
 rows = []
 for path in files:
-    geo = json.load(open(path)); vid = os.path.basename(path).split('.')[0]
+    geo = cockpit.load_edited(path); vid = os.path.basename(path).split('.')[0]
     bones = geo['minecraft:geometry'][0]['bones']
     def pick(pred):
         g = copy.deepcopy(geo); g['minecraft:geometry'][0]['bones'] = [b for b in bones if pred(b['name'])]

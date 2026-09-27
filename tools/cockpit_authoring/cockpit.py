@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """Cockpit authoring models for Blockbench, and the way back into the game.
 
-export  Cuts each aircraft's cockpit section out of its visual model (custom_geo/<id>.geo.json) into a Bedrock
-        Entity model (<id>.cockpit.geo.json, format 1.12.0, poly_mesh, open it with the Meshy plugin like the armor
-        files) in the same model-pixel frame as the full model, so the cockpit sits exactly where it sits on the
-        aircraft. Next to it: the aircraft texture (<id>.png) and <id>.cockpit.manifest.json (which faces were cut,
-        so the import can put the edited cockpit back in their place).
+export  Cuts each aircraft's cockpit section out of its visual model (custom_geo/<id>.geo.json) into a native
+        Blockbench project (<id>.cockpit.bbmodel, Generic Model format, Mesh elements, the aircraft texture embedded,
+        no plugin needed) in the same model-pixel frame as the full model, so the cockpit sits exactly where it sits
+        on the aircraft (Blockbench shows it the way it shows the Bedrock model: x mirrored). Next to it:
+        <id>.cockpit.manifest.json (which faces were cut, so the import can put the edited cockpit back in their
+        place).
 
         Bones in the file:
           <original bone names>   the cockpit faces, still in the bones they came from (parents kept, empty)
@@ -21,7 +22,7 @@ export  Cuts each aircraft's cockpit section out of its visual model (custom_geo
 
         Output folders: <out>/jets, <out>/props, <out>/helis.
 
-import  Reads an edited <id>.cockpit.geo.json: the faces it holds replace the faces that were cut from the model
+import  Reads an edited <id>.cockpit.bbmodel (or an older <id>.cockpit.geo.json): the faces it holds replace the faces that were cut from the model
         (added and deleted faces included, new bones are added under their parent), the display__/gauge__ bones
         become the aircraft's FlightDisplays / CockpitGauges (kind, seat and count from the bone names; depth and
         style kept from the display they replace).
@@ -29,9 +30,9 @@ import  Reads an edited <id>.cockpit.geo.json: the faces it holds replace the fa
 Frames: model pixels (x left, y up, z aft) <-> vehicle-local blocks (x left, y up, z forward) = (x, y, -z) / 16.
 Usage:
   python3 tools/cockpit_authoring/cockpit.py export OUT_DIR [id...]
-  python3 tools/cockpit_authoring/cockpit.py import FILE.cockpit.geo.json [--dry-run]
+  python3 tools/cockpit_authoring/cockpit.py import FILE.cockpit.bbmodel [--dry-run]
 """
-import json, math, os, re, shutil, sys
+import base64, hashlib, json, math, os, re, shutil, sys, uuid
 import numpy as np
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -276,11 +277,9 @@ def export(vid, out_root):
     desc = dict(g['description']); desc['identifier'] = f'geometry.{vid}_cockpit'
     model = {'format_version': '1.12.0', 'minecraft:geometry': [{'description': desc, 'bones': out_bones}]}
     base = os.path.join(out, vid)
-    with open(base + '.cockpit.geo.json', 'w') as f:
-        json.dump(model, f, separators=(',', ':'))
     tex = os.path.join(TEX, vid + '.png')
-    if os.path.exists(tex):
-        shutil.copyfile(tex, base + '.png')
+    with open(base + '.cockpit.bbmodel', 'w') as f:
+        json.dump(to_bbmodel(model, vid, tex if os.path.exists(tex) else None), f, separators=(',', ':'))
     manifest = {'vehicle': vid, 'category': cat, 'box_vehicle_local': [r5(lo), r5(hi)], 'cut': cut,
                 'displays': displays, 'gauges': gauges,
                 'source_geo_sha': sha(os.path.join(GEO, vid + '.geo.json'))}
@@ -299,6 +298,242 @@ def px_mesh(centre, normal, up, half, outline):
 def sha(path):
     import hashlib
     return hashlib.sha256(open(path, 'rb').read()).hexdigest()
+
+
+
+# ---------------------------------------------------------------- Blockbench project (.bbmodel)
+#
+# Blockbench shows a Bedrock model with x mirrored (its bedrock codec negates x of pivots and positions), so the
+# project uses bb = (-x, y, z) of model pixels, and the mirror flips every face's winding. Faces are front-facing
+# counter-clockwise in both frames (the model's normals agree with cross(v1-v0, v2-v0)); the reversal restores that.
+# Mesh vertices are relative to the Mesh's origin (its rotation pivot), which is the bone pivot. UVs: poly_mesh
+# normalized with v up from the bottom; Blockbench texture pixels with v down from the top.
+
+BB_FORMAT = '4.10'
+
+
+def _uid(*parts):
+    return str(uuid.uuid5(uuid.NAMESPACE_URL, 'bvp-cockpit/' + '/'.join(str(p) for p in parts)))
+
+
+def _bbv(p):
+    return [-float(p[0]), float(p[1]), float(p[2])]
+
+
+def to_bbmodel(model, vid, tex_path):
+    g = model['minecraft:geometry'][0]
+    desc = g['description']
+    if tex_path:
+        from PIL import Image
+        tw, th = Image.open(tex_path).size
+        src = 'data:image/png;base64,' + base64.b64encode(open(tex_path, 'rb').read()).decode()
+    else:
+        tw, th, src = desc.get('texture_width', 64), desc.get('texture_height', 64), None
+    elements, groups = [], {}
+    for b in g['bones']:
+        name = b['name']
+        locked = name.startswith('ref_')
+        pivot = _bbv(b.get('pivot', [0, 0, 0]))
+        rot = b.get('rotation', [0, 0, 0])
+        grp = {'name': name, 'origin': pivot, 'color': 0, 'uuid': _uid(vid, 'g', name), 'export': True,
+               'mirror_uv': False, 'isOpen': name in ('displays', 'gauges'), 'locked': locked, 'visibility': True,
+               'autouv': 0, 'children': []}
+        if any(abs(x) > 1e-9 for x in rot):
+            grp['rotation'] = [-float(rot[0]), -float(rot[1]), float(rot[2])]
+        groups[name] = grp
+        pm = b.get('poly_mesh')
+        if pm and pm.get('polys'):
+            el = mesh_element(pm, pivot, vid, name, tw, th, locked,
+                              'screen' if name.startswith(('display', 'unused_display')) else
+                              'dial' if name.startswith('gauge') else 'context' if locked else 'faces')
+            elements.append(el)
+            grp['children'].append(el['uuid'])
+    outliner = []
+    for b in g['bones']:                      # parents precede children in the exported bone order
+        grp, parent = groups[b['name']], b.get('parent')
+        (groups[parent]['children'] if parent in groups else outliner).append(grp)
+    tex = {'path': '', 'name': vid + '.png', 'folder': '', 'namespace': '', 'id': '0', 'width': tw, 'height': th,
+           'uv_width': tw, 'uv_height': th, 'particle': False, 'use_as_default': True, 'layers_enabled': False,
+           'sync_to_project': '', 'render_mode': 'default', 'render_sides': 'double', 'frame_time': 1,
+           'frame_order_type': 'loop', 'frame_order': '', 'frame_interpolate': False, 'visible': True,
+           'internal': True, 'saved': False, 'uuid': _uid(vid, 'texture')}
+    if src:
+        tex['source'] = src
+    return {'meta': {'format_version': BB_FORMAT, 'model_format': 'free', 'box_uv': False},
+            'name': vid + '_cockpit', 'model_identifier': '', 'visible_box': [1, 1, 0],
+            'variable_placeholders': '', 'variable_placeholder_buttons': [], 'timeline_setups': [],
+            'unhandled_root_fields': {}, 'resolution': {'width': tw, 'height': th},
+            'elements': elements, 'outliner': outliner, 'textures': [tex] if src else []}
+
+
+def mesh_element(pm, origin, vid, bone, tw, th, locked, label):
+    P = pm['positions']; U = pm.get('uvs') or [[0, 0]]
+    norm = pm.get('normalized_uvs', True)
+    verts, faces, used = {}, {}, {}
+    for fi, poly in enumerate(pm['polys']):
+        keys, seen = [], set()
+        for v in reversed(poly):              # mirror: reverse the winding
+            if v[0] in seen:
+                continue
+            seen.add(v[0])
+            k = used.get(v[0])
+            if k is None:
+                k = used[v[0]] = 'v%d' % len(used)
+                p = _bbv(P[v[0]])
+                verts[k] = [round(p[i] - origin[i], 6) + 0.0 for i in range(3)]
+            uv = U[v[2]] if len(v) > 2 and v[2] < len(U) else [0, 0]
+            keys.append((k, [round(uv[0] * tw if norm else uv[0], 5), round((1 - uv[1]) * th if norm else th - uv[1], 5)]))
+        if len(keys) < 3:
+            continue
+        faces['f%d' % fi] = {'uv': {k: uv for k, uv in keys}, 'vertices': [k for k, _ in keys], 'texture': 0}
+    return {'name': label, 'color': 0, 'origin': list(origin), 'rotation': [0, 0, 0], 'export': True,
+            'visibility': True, 'locked': locked, 'render_order': 'default', 'allow_mirror_modeling': True,
+            'vertices': verts, 'faces': faces, 'type': 'mesh', 'uuid': _uid(vid, 'm', bone)}
+
+
+def _rot_zyx(deg):
+    x, y, z = (math.radians(float(a)) for a in deg)
+    rx = np.array([[1, 0, 0], [0, math.cos(x), -math.sin(x)], [0, math.sin(x), math.cos(x)]])
+    ry = np.array([[math.cos(y), 0, math.sin(y)], [0, 1, 0], [-math.sin(y), 0, math.cos(y)]])
+    rz = np.array([[math.cos(z), -math.sin(z), 0], [math.sin(z), math.cos(z), 0], [0, 0, 1]])
+    return rz @ ry @ rx                        # Blockbench / three.js Euler order 'ZYX'
+
+
+def _face_key(pts):
+    """Corners in winding order, starting at the smallest: a double-sided panel's two faces differ."""
+    q = [tuple(round(float(c), 3) for c in p) for p in pts]
+    q = [c for i, c in enumerate(q) if c != q[i - 1]] or q
+    i = q.index(min(q))
+    return tuple(q[i:] + q[:i])
+
+
+def from_bbmodel(bb, original_normals=None):
+    """A Bedrock geometry dict (bones with poly_mesh in model pixels) from a Blockbench project. Groups are bones;
+    every Mesh directly in a group becomes that bone's faces (a Mesh's own rotation is baked in, a group's rotation
+    is kept as the bone rotation). Meshes outside any group go to 'hull'. Faces whose corners match a face of the
+    exported model keep its normals; others get a flat normal."""
+    res = bb.get('resolution') or {}
+    texs = bb.get('textures') or []
+    tw = float((texs[0].get('uv_width') or texs[0].get('width')) if texs else res.get('width', 64))
+    th = float((texs[0].get('uv_height') or texs[0].get('height')) if texs else res.get('height', 64))
+    els = {e['uuid']: e for e in bb.get('elements', [])}
+    bones = []
+
+    def add_mesh(pm, el):
+        if el.get('type') != 'mesh':
+            return
+        R = _rot_zyx(el.get('rotation', [0, 0, 0]))
+        o = np.array(el.get('origin', [0, 0, 0]), float)
+        vmap = {}
+        for k, p in el.get('vertices', {}).items():
+            w = o + R @ np.array(p, float)
+            vmap[k] = [round(-float(w[0]), 6) + 0.0, round(float(w[1]), 6) + 0.0, round(float(w[2]), 6) + 0.0]
+        for f in el.get('faces', {}).values():
+            ks = [k for k in f.get('vertices', []) if k in vmap]
+            if len(ks) < 3:
+                continue
+            ks = ks[::-1]                      # un-mirror the winding
+            if len(ks) == 4:                   # Blockbench keeps quads in any order; restore a non-twisted ring
+                ks = _ring(ks, vmap)
+            pts = [np.array(vmap[k]) for k in ks]
+            key = _face_key(pts)
+            nrm = (original_normals or {}).get(key)
+            if nrm is None:
+                n = np.cross(pts[1] - pts[0], pts[2] - pts[0])
+                if len(pts) == 4:
+                    n = n + np.cross(pts[2] - pts[0], pts[3] - pts[0])
+                ln = np.linalg.norm(n)
+                n = n / ln if ln > 1e-12 else np.array([0, 1.0, 0])
+                nrm = {tuple(round(float(c), 3) for c in p): r5(n) for p in pts}
+            poly = []
+            for k, p in zip(ks, pts):
+                uv = (f.get('uv') or {}).get(k, [0, 0])
+                pi = len(pm['positions']); pm['positions'].append(vmap[k])
+                ni = len(pm['normals']); pm['normals'].append(nrm.get(tuple(round(float(c), 3) for c in p), r5([0, 1, 0])))
+                ui = len(pm['uvs']); pm['uvs'].append([round(uv[0] / tw, 6), round(1 - uv[1] / th, 6)])
+                poly.append([pi, ni, ui])
+            pm['polys'].append(poly)
+
+    def walk(node, parent):
+        pm = {'normalized_uvs': True, 'positions': [], 'normals': [], 'uvs': [], 'polys': []}
+        o = node.get('origin', [0, 0, 0])
+        b = {'name': node['name'], 'pivot': [-float(o[0]) + 0.0, float(o[1]), float(o[2])]}
+        if parent:
+            b['parent'] = parent
+        rot = node.get('rotation') or [0, 0, 0]
+        if any(abs(x) > 1e-9 for x in rot):
+            b['rotation'] = [-float(rot[0]) + 0.0, -float(rot[1]) + 0.0, float(rot[2])]
+        bones.append(b)
+        for c in node.get('children', []):
+            if isinstance(c, dict):
+                walk(c, node['name'])
+            elif c in els:
+                add_mesh(pm, els[c])
+        if pm['polys']:
+            b['poly_mesh'] = pm
+
+    loose = {'normalized_uvs': True, 'positions': [], 'normals': [], 'uvs': [], 'polys': []}
+    for node in bb.get('outliner', []):
+        if isinstance(node, dict):
+            walk(node, None)
+        elif node in els:
+            add_mesh(loose, els[node])
+    if loose['polys']:
+        hull = next((b for b in bones if b['name'] == 'hull'), None)
+        if hull is None:
+            hull = {'name': 'hull', 'pivot': [0, 0, 0]}; bones.insert(0, hull)
+        pm = hull.setdefault('poly_mesh', {'normalized_uvs': True, 'positions': [], 'normals': [], 'uvs': [], 'polys': []})
+        po, no, uo = len(pm['positions']), len(pm['normals']), len(pm['uvs'])
+        pm['positions'] += loose['positions']; pm['normals'] += loose['normals']; pm['uvs'] += loose['uvs']
+        pm['polys'] += [[[v[0] + po, v[1] + no, v[2] + uo] for v in p] for p in loose['polys']]
+    return {'format_version': '1.12.0', 'minecraft:geometry': [{'description': {}, 'bones': bones}]}
+
+
+def _ring(ks, vmap):
+    """The order of a quad's corners that goes around its edge (the diagonal pair never adjacent), keeping ks[0],
+    ks[1] and the winding direction when that order already is a ring."""
+    P = {k: np.array(vmap[k]) for k in ks}
+    def twisted(o):
+        a, b, c, d = (P[k] for k in o)
+        n1 = np.cross(b - a, c - a); n2 = np.cross(c - a, d - a)
+        return n1 @ n2 < 0
+    if not twisted(ks):
+        return ks
+    for o in ([ks[0], ks[1], ks[3], ks[2]], [ks[0], ks[2], ks[1], ks[3]]):
+        if not twisted(o):
+            return o
+    return ks
+
+
+def original_face_normals(manifest):
+    """{face key: {corner: normal}} for every face cut from the game model, so unchanged faces keep their normals."""
+    geo = json.load(open(os.path.join(GEO, manifest['vehicle'] + '.geo.json')))
+    bones = {b['name']: b for b in geo['minecraft:geometry'][0]['bones']}
+    out = {}
+    for name, idx in manifest.get('cut', {}).items():
+        pm = (bones.get(name) or {}).get('poly_mesh')
+        if not pm:
+            continue
+        for i in idx:
+            if i >= len(pm['polys']):
+                continue
+            poly = pm['polys'][i]
+            pts = [pm['positions'][v[0]] for v in poly]
+            out[_face_key(pts)] = {tuple(round(float(c), 3) for c in pm['positions'][v[0]]):
+                                   pm['normals'][v[1]] if len(v) > 1 and v[1] < len(pm['normals']) else [0, 1, 0]
+                                   for v in poly}
+    return out
+
+
+def load_edited(path, manifest=None):
+    data = json.load(open(path))
+    if path.endswith('.bbmodel') or 'meta' in data:
+        try:
+            normals = original_face_normals(manifest) if manifest else None
+        except (OSError, KeyError, ValueError):
+            normals = None
+        return from_bbmodel(data, normals)
+    return data
 
 
 # ---------------------------------------------------------------- import
@@ -331,9 +566,13 @@ def read_marker(pm):
 
 
 def import_file(path, dry=False):
-    edited = json.load(open(path))
-    base = path[:-len('.cockpit.geo.json')]
-    manifest = json.load(open(base + '.cockpit.manifest.json'))
+    if path.endswith('.bbmodel'):
+        base = path[:-len('.cockpit.bbmodel')]
+    else:
+        base = path[:-len('.cockpit.geo.json')]
+    manifest_path = base + '.cockpit.manifest.json'
+    edited = load_edited(path, json.load(open(manifest_path)) if os.path.exists(manifest_path) else None)
+    manifest = json.load(open(manifest_path))
     vid = manifest['vehicle']
     geo_path = os.path.join(GEO, vid + '.geo.json')
     if sha(geo_path) != manifest['source_geo_sha']:
