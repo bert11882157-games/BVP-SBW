@@ -8,11 +8,11 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 
-public abstract class VehicleFireSoundInstance extends AbstractTickableSoundInstance {
+public abstract class VehicleFireSoundInstance extends AbstractTickableSoundInstance
+        implements com.atsuishio.superbwarfare.client.sound.spatial.DopplerSound {
 
     private final Minecraft client;
     private final Entity entity;
-    private double lastDistance;
     private int fade = 0;
     private boolean die = false;
 
@@ -57,16 +57,14 @@ public abstract class VehicleFireSoundInstance extends AbstractTickableSoundInst
         this.z = this.entity.getZ();
 
         this.pitch = this.getPitch(this.entity);
-        Vec3 cameraPos = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
+    }
 
-        if (player.getVehicle() != this.entity) {
-            double distance = this.entity.position().subtract(cameraPos).length();
-            this.pitch += (float) (0.1 * Math.atan(lastDistance - distance));
-
-            this.lastDistance = distance;
-        } else {
-            this.lastDistance = 0;
-        }
+    /** Real OpenAL Doppler from the source's motion (replaces the distance-rate pitch formula). */
+    @Override
+    public Vec3 dopplerVelocity() {
+        var player = this.client.player;
+        if (player != null && player.getRootVehicle() == this.entity) return null;
+        return com.atsuishio.superbwarfare.client.sound.spatial.SpatialDoppler.entityVelocity(this.entity);
     }
 
     public static class VehicleFireSound extends VehicleSoundInstance {

@@ -33,6 +33,12 @@ object ModSoundInstances {
                     VehicleSoundInstance.EngineSound(vehicle)
                 }
             }
+        VehicleEntity.authoredEngineAudio = java.util.function.Predicate {
+            com.atsuishio.superbwarfare.client.sound.vehicle.VehicleAudioController.ownsEngine(it)
+        }
+        VehicleEntity.authoredTurretAudio = java.util.function.Predicate {
+            com.atsuishio.superbwarfare.client.sound.vehicle.VehicleAudioController.ownsTurret(it)
+        }
         VehicleEntity.tickCustomLoopSound =
             BiConsumer { vehicle, channel ->
                 if (vehicle != null) VehicleLoopSoundProviderRegistry.tickLoop(vehicle, channel)

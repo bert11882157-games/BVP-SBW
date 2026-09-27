@@ -13,12 +13,11 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 
-public abstract class VehicleSoundInstance extends AbstractTickableSoundInstance implements AttributedVehicleSound {
+public abstract class VehicleSoundInstance extends AbstractTickableSoundInstance implements AttributedVehicleSound,
+        com.atsuishio.superbwarfare.client.sound.spatial.DopplerSound {
 
     private final Minecraft client;
     private final VehicleEntity mobileVehicle;
-    private double lastDistance;
-    private boolean hasLastDistance;
     private int fade = 0;
     private boolean die = false;
 
@@ -69,20 +68,19 @@ public abstract class VehicleSoundInstance extends AbstractTickableSoundInstance
         this.pitch = this.getPitch(this.mobileVehicle);
         Vec3 cameraPos = this.client.gameRenderer.getMainCamera().getPosition();
 
-        if (player.getVehicle() != this.mobileVehicle) {
-            double distance = this.mobileVehicle.position().subtract(cameraPos).length();
-            if (this.hasLastDistance) {
-                this.pitch += (float) (0.16 * java.lang.Math.atan(lastDistance - distance));
-            }
-            this.lastDistance = distance;
-            this.hasLastDistance = true;
-        } else {
-            this.hasLastDistance = false;
-        }
+        // Doppler is real OpenAL velocity now (dopplerVelocity); no distance-rate pitch formula
 
         if (this.mobileVehicle instanceof DroneEntity drone && cameraPos.distanceToSqr(drone.position()) < 0.0625) {
             pitch = 1;
         }
+    }
+
+    /** Source motion for OpenAL Doppler; none for the listener's own vehicle. */
+    @Override
+    public Vec3 dopplerVelocity() {
+        var player = this.client.player;
+        if (player != null && player.getRootVehicle() == this.mobileVehicle) return null;
+        return com.atsuishio.superbwarfare.client.sound.spatial.SpatialDoppler.entityVelocity(this.mobileVehicle);
     }
 
     public static class EngineSound extends VehicleSoundInstance {
@@ -93,7 +91,7 @@ public abstract class VehicleSoundInstance extends AbstractTickableSoundInstance
 
         @Override
         protected boolean canPlay(VehicleEntity mobileVehicle) {
-            return mobileVehicle.engineRunning();
+            return mobileVehicle.engineRunning() && !VehicleEntity.authoredEngineAudio.test(mobileVehicle);
         }
 
         @Override
@@ -127,7 +125,7 @@ public abstract class VehicleSoundInstance extends AbstractTickableSoundInstance
 
         @Override
         protected boolean canPlay(VehicleEntity mobileVehicle) {
-            return mobileVehicle.engineRunning();
+            return mobileVehicle.engineRunning() && !VehicleEntity.authoredEngineAudio.test(mobileVehicle);
         }
 
         @Override

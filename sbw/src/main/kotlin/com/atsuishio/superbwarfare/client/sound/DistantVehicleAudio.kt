@@ -76,7 +76,11 @@ object DistantVehicleAudio {
         }
     }
     private class EngineLoop(var vehicle: VehicleEntity, sound: SoundEvent, val jet: Boolean) : AbstractTickableSoundInstance(
-        sound, SoundSource.NEUTRAL, RandomSource.create()) {
+        sound, SoundSource.NEUTRAL, RandomSource.create()), com.atsuishio.superbwarfare.client.sound.spatial.DopplerSound {
+        override fun dopplerVelocity(): net.minecraft.world.phys.Vec3? {
+            val moved = com.atsuishio.superbwarfare.client.sound.spatial.SpatialDoppler.entityVelocity(vehicle)
+            return if (moved.lengthSqr() > 1e-8) moved else vehicle.deltaMovement
+        }
         init { looping = true; delay = 0; attenuation = SoundInstance.Attenuation.NONE; volume = 0f }
         override fun canStartSilent() = true
         override fun tick() {
@@ -90,9 +94,8 @@ object DistantVehicleAudio {
             val rangeFade=(1-distance/(if(jet) 1600 else 512)).coerceIn(0.0,1.0)
             val flyby = if (jet && speed > 1.5) .35*(1-distance/128).coerceIn(0.0,1.0) else 0.0
             volume=((if(jet) .24 else .16)*nearFade*rangeFade*rangeFade+flyby).toFloat()
-            // Mild Doppler shift makes a close pass swell and recede without a repeated one-shot.
-            val radial=if(distance>1) vehicle.deltaMovement.dot(offset.scale(1/distance)) else 0.0
-            pitch=((.75+min(.3,speed*.08))* (17/(17+radial.coerceIn(-5.0,5.0)))).toFloat().coerceIn(.55f,1.5f)
+            // Doppler comes from OpenAL (dopplerVelocity); the pitch only follows engine speed.
+            pitch=(.75+min(.3,speed*.08)).toFloat()
         }
     }
 }

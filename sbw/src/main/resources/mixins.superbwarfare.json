@@ -75,7 +75,8 @@
     "OverlayTextureMixin",
     "PlayerItemInHandLayerMixin",
     "PlayerRendererMixin",
-    "SoundEngineMixin"
+    "SoundEngineMixin",
+    "ChannelAccessor"
   ],
   "minVersion": "0.8",
   "injectors": {

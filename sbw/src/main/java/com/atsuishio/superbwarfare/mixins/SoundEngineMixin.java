@@ -20,6 +20,7 @@ public abstract class SoundEngineMixin {
     @Inject(method = "tick(Z)V", at = @At("RETURN"))
     private void superbWarfare$observeActiveSounds(boolean paused, CallbackInfo ci) {
         EliteAudioPlayback.observeExisting(instanceToChannel.keySet());
+        if (!paused) com.atsuishio.superbwarfare.client.sound.spatial.SpatialDoppler.apply(instanceToChannel);
     }
 
     @Inject(method = "play", at = @At("RETURN"))

@@ -115,8 +115,12 @@ public class MortarEntity extends ArtilleryEntity {
         }
 
         if (level() instanceof ServerLevel serverLevel) {
-            SoundTool.playDistantSound(serverLevel, soundInfo.fire3P, position(), (float) (0.25f * gunData.get(GunProp.SOUND_RADIUS)), random.nextFloat() * 0.1f + 1, null);
-            SoundTool.playDistantSound(serverLevel, soundInfo.fire3PFar, position(), gunData.get(GunProp.SOUND_RADIUS).floatValue(), random.nextFloat() * 0.1f + 1, null);
+            float radius = gunData.get(GunProp.SOUND_RADIUS).floatValue();
+            var cue = com.atsuishio.superbwarfare.api.audio.SpatialAudio.weaponCue(soundInfo.getFire1P(), soundInfo.fire3P,
+                    soundInfo.fire3PFar, null, 0.25f * radius, radius, radius);
+            com.atsuishio.superbwarfare.api.audio.SpatialAudio.emit(serverLevel, position(), cue, 1f,
+                    random.nextFloat() * 0.1f + 1, this, living,
+                    com.atsuishio.superbwarfare.api.audio.SpatialAudio.Category.WEAPON, weaponName);
         }
     }
 

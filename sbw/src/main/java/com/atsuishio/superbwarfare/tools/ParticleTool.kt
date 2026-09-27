@@ -11,7 +11,6 @@ import com.atsuishio.superbwarfare.init.ModSounds
 import com.atsuishio.superbwarfare.network.message.receive.ExplosionBurstMessage
 import com.atsuishio.superbwarfare.network.NetworkTelemetry
 import com.atsuishio.superbwarfare.network.message.receive.ShakeClientMessage.Companion.sendToNearbyPlayers
-import com.atsuishio.superbwarfare.tools.SoundTool.playDistantSound
 import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -142,9 +141,11 @@ object ParticleTool {
         level: ServerLevel, pos: Vec3, close: SoundEvent, closeVolume: Float, far: SoundEvent, farVolume: Float,
         veryFar: SoundEvent, veryFarVolume: Float
     ) {
-        playDistantSound(level, close, pos, closeVolume, 1f, null)
-        playDistantSound(level, far, pos, farVolume, 1f, null)
-        playDistantSound(level, veryFar, pos, veryFarVolume, 1f, null)
+        // one event: each listener hears the close, far or very-far layer for its distance (SpatialAudio)
+        val cue = com.atsuishio.superbwarfare.api.audio.SpatialAudio.weaponCue(
+            null, close, far, veryFar, closeVolume, farVolume, veryFarVolume)
+        com.atsuishio.superbwarfare.api.audio.SpatialAudio.emit(level, pos, cue, 1f, 1f, null, null,
+            com.atsuishio.superbwarfare.api.audio.SpatialAudio.Category.EXPLOSION, null)
     }
 
     //@formatter:off

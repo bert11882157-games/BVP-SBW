@@ -1132,6 +1132,8 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
 
     fun turretTurnSound(diffX: Float, diffY: Float, pitch: Float) {
         if (this is MortarEntity) return
+        // authored turret audio is a start / loop / stop voice driven by the slew rate, not one-shots per tick
+        if (level().isClientSide && authoredTurretAudio.test(this)) return
         if (level().isClientSide && (Math.abs(diffY) > 0.5 || Math.abs(diffX) > 0.5)) {
             level().playLocalSound(
                 this.x,
@@ -1682,15 +1684,19 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
                     sound,
                     "radius=$radius pitch=$pitch listener=${listener?.uuid ?: "<none>"}",
                 )
-                SoundTool.playDistantSound(
-                    serverLevel,
-                    sound,
-                    it,
-                    radius,
-                    pitch,
-                    listener, this, gunData.vehicleWeaponIdentity, channel,
-                )
             }
+            // one event, every tier: each client plays the interior (crew) or near/far/very-far variant for its
+            // distance, delayed by the speed of sound and Doppler-shifted (SpatialAudio)
+            val cue = com.atsuishio.superbwarfare.api.audio.SpatialAudio.weaponCue(
+                soundInfo.fire1P, fire3P, fire3PFar, fire3PVeryFar,
+                (soundRadius * 0.4f * soundInfo.fire3PGain).toFloat(),
+                (soundRadius * 0.7f * soundInfo.fire3PFarGain).toFloat(),
+                (soundRadius * soundInfo.fire3PVeryFarGain).toFloat(),
+            )
+            com.atsuishio.superbwarfare.api.audio.SpatialAudio.emit(
+                serverLevel, it, cue, 1f, pitch, this, living ?: controllingPassenger,
+                com.atsuishio.superbwarfare.api.audio.SpatialAudio.Category.WEAPON, gunData.vehicleWeaponIdentity,
+            )
         }
     }
 
@@ -2857,7 +2863,9 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
     }
 
     private fun tickClientSounds(computed: DefaultVehicleData) {
-        val engineRunning = this.engineRunning()
+        // an authored vehicle audio profile voices engine and tracks itself (start/idle/drive/stop, by speed)
+        val authoredAudio = authoredEngineAudio.test(this)
+        val engineRunning = this.engineRunning() && !authoredAudio
         if (engineRunning) {
             when (computed.engineSoundMode) {
                 VehicleLoopSoundMode.NATIVE -> playEngineSound.accept(this)
@@ -2866,8 +2874,8 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
             if (computed.engineType == EngineType.TRACK && computed.trackSoundMode == VehicleLoopSoundMode.NATIVE) {
                 playTrackSound.accept(this)
             }
-            if (this.isInWater) playSwimSound.accept(this)
         }
+        if (this.engineRunning() && this.isInWater) playSwimSound.accept(this)
 
         if (engineRunning) {
             if (computed.engineSoundMode == VehicleLoopSoundMode.CUSTOM) {
@@ -7605,6 +7613,14 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
 
         @JvmField
         var playEngineSound: Consumer<VehicleEntity?> = Consumer { }
+
+        /** Client: the vehicle's engine and tracks are voiced by an authored audio profile. */
+        @JvmField
+        var authoredEngineAudio: java.util.function.Predicate<VehicleEntity> = java.util.function.Predicate { false }
+
+        /** Client: the vehicle's turret slewing is voiced by an authored audio profile. */
+        @JvmField
+        var authoredTurretAudio: java.util.function.Predicate<VehicleEntity> = java.util.function.Predicate { false }
 
         @JvmField
         var tickCustomLoopSound: BiConsumer<VehicleEntity?, VehicleLoopSoundChannel> = BiConsumer { _, _ -> }
