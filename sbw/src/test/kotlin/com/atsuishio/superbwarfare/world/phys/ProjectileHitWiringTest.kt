@@ -51,7 +51,11 @@ class ProjectileHitWiringTest {
             assertEquals(1, overload.calls.count { it.name == "getEntities" })
             assertEquals(1, overload.calls.count { it.name == "requiresCustomQuery" })
             assertEquals(1, overload.calls.count { it.name == "resolveEntityHits" })
-            assertEquals(1, overload.calls.count { it.name == "setReturnValue" })
+            // One return for the custom query, one for the client-side small cannon shell skip, which is decided
+            // before the entity query runs.
+            assertEquals(2, overload.calls.count { it.name == "setReturnValue" })
+            val skip = overload.calls.indexOfFirst { it.name == "sbw\$clientShellWithoutEntityHits" }
+            assertTrue(skip >= 0 && skip < overload.calls.indexOfFirst { it.name == "getEntities" })
             assertFalse(overload.calls.any { it.name in setOf("nearestObb", "clipProjectile", "emitObbHitEffects") })
         }
         val query = methods("mixins/ProjectileUtilMixin", "resolveEntityHits").single()
