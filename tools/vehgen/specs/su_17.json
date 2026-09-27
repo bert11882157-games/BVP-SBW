@@ -1,0 +1,330 @@
+{
+  "id": "su_17",
+  "name": "Su-17M4 Fitter-K",
+  "entityClass": "AuthoredFixedWingAircraft",
+  "template": "mig_23mld",
+  "source": "Su-17.mtb",
+  "yaw180": true,
+  "lengthParts": [
+    0,
+    1,
+    2
+  ],
+  "templateLengthBones": [
+    "wreck_fuselage_0__hull",
+    "wreck_fuselage_1__hull",
+    "wreck_fuselage_2__hull",
+    "wreck_fuselage_3__hull"
+  ],
+  "groundParts": [
+    0,
+    1,
+    2,
+    12,
+    14,
+    15
+  ],
+  "excludeParts": [
+    24,
+    21,
+    23
+  ],
+  "storeTextureV": -1,
+  "keepBoxes": [],
+  "dropRules": [
+    {
+      "parts": [
+        4,
+        5
+      ],
+      "yMax": 21.5
+    }
+  ],
+  "fuselageCuts": [
+    -68,
+    -5,
+    64
+  ],
+  "parts": {
+    "1": "fuselage",
+    "2": "fuselage",
+    "4": "wing",
+    "5": "wing",
+    "7": "wreck_fuselage_1__control_stick_pitch",
+    "8": "wreck_fuselage_3__taileron_left",
+    "9": "wreck_fuselage_3__taileron_right",
+    "12": "wreck_fuselage_1__gear_body",
+    "14": "wreck_fuselage_2__gear_left",
+    "15": "wreck_fuselage_2__gear_right",
+    "20": "wreck_wing_left__sweep_left",
+    "22": "wreck_wing_right__sweep_right"
+  },
+  "keepTemplateBones": [],
+  "removeClientKeys": [
+    "CanopyGlass",
+    "FlightDisplays",
+    "CockpitGauges"
+  ],
+  "attachments": {
+    "pilot_eye": [
+      0,
+      45.0,
+      -55.0
+    ]
+  },
+  "seatPositions": {
+    "0": [
+      0,
+      17.4,
+      -55.0
+    ]
+  },
+  "addSeats": [],
+  "flightReference": {
+    "engineCount": 1,
+    "baseMassKg": 10640,
+    "mainFuelMassKg": 3770,
+    "fullFuelWingLoadingKgPerSquareMetre": 374.383,
+    "dryThrustKgfPerEngine": 7800,
+    "afterburnerThrustKgfPerEngine": 11200,
+    "maximumTrueAirspeedKmh": 1860,
+    "referenceAltitudeMetres": 11000,
+    "maximumIndicatedAirspeedKmh": 1400,
+    "climbMetresPerSecond": 230,
+    "turnSeconds": 30,
+    "takeoffRunMetres": 900,
+    "negativeGLimit": -3,
+    "positiveGLimit": 7
+  },
+  "note": "Swing-wing fighter-bomber on the MiG-23MLD data and rig. Scaled nose to tail onto the MiG-23 fuselage (0.706; the Su-17M4 comes out 12% under its real 19 m). The outer wing panels (20/22, extended) go into the sweep bones; the swept copies (21/23) are dropped. The model's swept pose is the extended one turned 39 deg about (34.78, 27.32), fit residual 0.03, so that is the pivot; range 34 deg (real 30-63). Inner-wing stores are dropped (pylons kept); the source's own gear is in the template gear bones; the fin has no separate rudder.",
+  "sweeps": {
+    "sweep_left": {
+      "pivot": [
+        34.78,
+        null,
+        27.32
+      ],
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "maxDegrees": 34
+    },
+    "sweep_right": {
+      "pivot": [
+        -34.78,
+        null,
+        27.32
+      ],
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "maxDegrees": 34
+    },
+    "taileron_left": {
+      "pivot": [
+        9.9,
+        25.4,
+        98.0
+      ],
+      "axis": [
+        -1,
+        0,
+        0
+      ]
+    },
+    "taileron_right": {
+      "pivot": [
+        -9.9,
+        25.4,
+        98.0
+      ],
+      "axis": [
+        -1,
+        0,
+        0
+      ]
+    },
+    "control_stick_roll": {
+      "pivot": [
+        0,
+        32.0,
+        -64.6
+      ]
+    },
+    "control_stick_pitch": {
+      "pivot": [
+        0,
+        32.0,
+        -64.6
+      ]
+    }
+  },
+  "note_flight": "Su-17M4: empty 10,640 kg, internal fuel 3,770 kg, wing 38.49 m2 extended, one AL-21F-3 (7,800 / 11,200 kgf), Mach 1.77 at 11 km, +7 g.",
+  "note_crew": "Seat back z -52..-49 (headrest y 48), cushion y ~34, panel top y 41, canopy ~50. The template eye was inside the seat back; it is now in front of the headrest, 4 px over the panel and 4 px under the canopy.",
+  "clientSet": {
+    "AfterburnerPresentation.Outlets": [
+      {
+        "Id": "afterburner_center",
+        "Position": [
+          0,
+          1.78125,
+          -7.06
+        ],
+        "Direction": [
+          0,
+          0,
+          -1
+        ],
+        "NozzleRadiusBlocks": 0.44
+      }
+    ]
+  },
+  "armamentOverrides": {
+    "Name": "Su-17M4",
+    "MaxPayloadKg": 4000,
+    "Pairs": [
+      {
+        "Id": "inner",
+        "Name": "Inner wing pylon",
+        "Left": [
+          1.16875,
+          1.21875,
+          1.34375
+        ],
+        "LeftStations": [
+          {
+            "Point": [
+              1.16875,
+              1.21875,
+              1.34375
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "Right": [
+          -1.16875,
+          1.21875,
+          1.34375
+        ],
+        "RightStations": [
+          {
+            "Point": [
+              -1.16875,
+              1.21875,
+              1.34375
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "AllowedStores": [
+          "berts_vehicle_pack:fab_250",
+          "berts_vehicle_pack:fab_500",
+          "berts_vehicle_pack:munition/kab500od",
+          "berts_vehicle_pack:munition/odab500pm",
+          "berts_vehicle_pack:kh29l",
+          "berts_vehicle_pack:kh29d",
+          "berts_vehicle_pack:kh25ml",
+          "berts_vehicle_pack:kh25mt",
+          "berts_vehicle_pack:rbk_250",
+          "berts_vehicle_pack:su25_s8ko_pod"
+        ],
+        "MaxWeaponsPerPylon": 1,
+        "MaxPylonMassKg": 1000
+      },
+      {
+        "Id": "mid",
+        "Name": "Mid wing pylon",
+        "Left": [
+          1.69375,
+          1.2625,
+          0.76875
+        ],
+        "LeftStations": [
+          {
+            "Point": [
+              1.69375,
+              1.2625,
+              0.76875
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "Right": [
+          -1.69375,
+          1.2625,
+          0.76875
+        ],
+        "RightStations": [
+          {
+            "Point": [
+              -1.69375,
+              1.2625,
+              0.76875
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "AllowedStores": [
+          "berts_vehicle_pack:fab_250",
+          "berts_vehicle_pack:fab_500",
+          "berts_vehicle_pack:munition/kab250",
+          "berts_vehicle_pack:kh25ml",
+          "berts_vehicle_pack:kh25mt",
+          "berts_vehicle_pack:rbk_250",
+          "berts_vehicle_pack:su25_s8ko_pod"
+        ],
+        "MaxWeaponsPerPylon": 1,
+        "MaxPylonMassKg": 600
+      },
+      {
+        "Id": "outer",
+        "Name": "Outer wing pylon",
+        "Left": [
+          2.1875,
+          1.175,
+          -0.79375
+        ],
+        "LeftStations": [
+          {
+            "Point": [
+              2.1875,
+              1.175,
+              -0.79375
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "Right": [
+          -2.1875,
+          1.175,
+          -0.79375
+        ],
+        "RightStations": [
+          {
+            "Point": [
+              -2.1875,
+              1.175,
+              -0.79375
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "AllowedStores": [
+          "berts_vehicle_pack:r60",
+          "berts_vehicle_pack:munition/r13m1",
+          "berts_vehicle_pack:fab_250",
+          "berts_vehicle_pack:su25_s8ko_pod"
+        ],
+        "MaxWeaponsPerPylon": 1,
+        "MaxPylonMassKg": 300
+      }
+    ],
+    "Singles": [],
+    "StoreGroups": {}
+  },
+  "note_armament": "Own layout on the model's three pylons under the fixed inner wing (the MiG-23's belly station would sit inside the Su-17 fuselage and its internal bay carries US bombs): Kh-25/Kh-29, KAB, FAB, rocket pods inboard, R-60 / R-13 outboard."
+}

@@ -94,9 +94,11 @@ def main(argv):
 
     drop_rules = spec.get('dropRules', [])     # [{"absXMin": .., "yMax": .., "absXMax": .., "zMin": ..}] (all given hold)
 
-    def is_store(f):
+    def is_store(f, part=None):
         c = centre(f)
         for r in drop_rules:
+            if 'parts' in r and part not in r['parts']:
+                continue
             if (abs(c[0]) >= r.get('absXMin', -1e9) and abs(c[0]) <= r.get('absXMax', 1e9)
                     and r.get('yMin', -1e9) <= c[1] <= r.get('yMax', 1e9)
                     and r.get('zMin', -1e9) <= c[2] <= r.get('zMax', 1e9)):
@@ -114,7 +116,7 @@ def main(argv):
     for p in air_parts:
         rule = spec['parts'].get(str(p), 'fuselage')
         for f in src.parts[p]:
-            if is_store(f):
+            if is_store(f, p):
                 dropped += 1
                 continue
             c = centre(f)

@@ -1,0 +1,378 @@
+{
+  "id": "q_5",
+  "name": "Q-5 Fantan",
+  "entityClass": "AuthoredFixedWingAircraft",
+  "template": "mig_21bis",
+  "source": "Q-5 Fantan.mtb",
+  "note": "Attack jet on the MiG-21bis data and rig: the MiG-19S (its ancestor) is 25% shorter, the MiG-21bis matches the Q-5's 15.65 m nose to tail (scale 0.755; span 17% wider). The source's own gear goes into the template gear bones. Wing stores are dropped (the model's pylons and fences stay); the stabilators go into the elevator bone and the ailerons (in the tail part of the source) into the aileron bones. The fin has no separate rudder, so the rudder bone stays empty.",
+  "yaw180": true,
+  "lengthParts": [
+    0,
+    1,
+    2
+  ],
+  "templateLengthBones": [
+    "wreck_fuselage_0__hull",
+    "wreck_fuselage_1__hull",
+    "wreck_fuselage_2__hull",
+    "wreck_fuselage_3__hull"
+  ],
+  "groundParts": [
+    0,
+    1,
+    2,
+    12,
+    14,
+    15
+  ],
+  "excludeParts": [
+    24
+  ],
+  "storeTextureV": -1,
+  "keepBoxes": [],
+  "dropRules": [
+    {
+      "parts": [
+        4,
+        5
+      ],
+      "absXMin": 22,
+      "absXMax": 56,
+      "yMax": 17.5
+    },
+    {
+      "parts": [
+        0
+      ],
+      "absXMin": 1,
+      "yMax": 13.1,
+      "zMin": -40,
+      "zMax": 31
+    }
+  ],
+  "fuselageCuts": [
+    -62,
+    0,
+    60
+  ],
+  "parts": {
+    "0": [
+      {
+        "bone": "wing",
+        "if": {
+          "absXMin": 30
+        }
+      }
+    ],
+    "1": "fuselage",
+    "2": [
+      {
+        "bone": "side:wreck_wing_left__aileron_left,wreck_wing_right__aileron_right",
+        "if": {
+          "absXMin": 40
+        }
+      },
+      {
+        "bone": "wreck_fuselage_3__elevator",
+        "if": {
+          "absXMin": 10,
+          "yMin": 26,
+          "yMax": 32
+        }
+      }
+    ],
+    "4": "wing",
+    "5": "wing",
+    "12": "wreck_fuselage_0__landing_gear_2",
+    "14": "wreck_wing_left__landing_gear_0",
+    "15": "wreck_wing_right__landing_gear_1"
+  },
+  "keepTemplateBones": [],
+  "removeClientKeys": [
+    "CanopyGlass",
+    "FlightDisplays",
+    "CockpitGauges"
+  ],
+  "attachments": {
+    "pilot_eye": [
+      0,
+      37.5,
+      -56.0
+    ]
+  },
+  "seatPositions": {
+    "0": [
+      0,
+      11.9,
+      -56.0
+    ]
+  },
+  "addSeats": [],
+  "flightReference": {
+    "engineCount": 2,
+    "baseMassKg": 6375,
+    "mainFuelMassKg": 2830,
+    "fullFuelWingLoadingKgPerSquareMetre": 329.3381,
+    "dryThrustKgfPerEngine": 2600,
+    "afterburnerThrustKgfPerEngine": 3250,
+    "maximumTrueAirspeedKmh": 1210,
+    "referenceAltitudeMetres": 11000,
+    "maximumIndicatedAirspeedKmh": 1150,
+    "climbMetresPerSecond": 103,
+    "turnSeconds": 30,
+    "takeoffRunMetres": 700,
+    "negativeGLimit": -3,
+    "positiveGLimit": 7.5
+  },
+  "note_flight": "Q-5: empty 6,375 kg, internal fuel 2,830 kg, wing 27.95 m2, 2x WP-6 (2,600 / 3,250 kgf), Mach 1.12 at 11 km, +7.5 g.",
+  "note_crew": "Panel top y 35 at z -65, headrest z -52..-48 (y 41), canopy ~40-41. The template eye sat on the spine behind the canopy; it is now in front of the headrest, 2.5 px over the panel, looking through the gunsight. The MiG-21 stick would sit behind the new seat, so it is not kept (the source has none).",
+  "clientSet": {
+    "AfterburnerPresentation.Outlets": [
+      {
+        "Id": "afterburner_left",
+        "Position": [
+          0.225,
+          1.46875,
+          -5.5625
+        ],
+        "Direction": [
+          0,
+          0,
+          -1
+        ],
+        "NozzleRadiusBlocks": 0.22
+      },
+      {
+        "Id": "afterburner_right",
+        "Position": [
+          -0.225,
+          1.46875,
+          -5.5625
+        ],
+        "Direction": [
+          0,
+          0,
+          -1
+        ],
+        "NozzleRadiusBlocks": 0.22
+      }
+    ]
+  },
+  "armamentOverrides": {
+    "Name": "Q-5",
+    "MaxPayloadKg": 2000,
+    "Pairs": [
+      {
+        "Id": "inner",
+        "Name": "Inner wing pylon",
+        "Left": [
+          1.86563,
+          1.15625,
+          1.075
+        ],
+        "LeftStations": [
+          {
+            "Point": [
+              1.86563,
+              1.15625,
+              1.075
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "Right": [
+          -1.86563,
+          1.15625,
+          1.075
+        ],
+        "RightStations": [
+          {
+            "Point": [
+              -1.86563,
+              1.15625,
+              1.075
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "AllowedStores": [
+          "berts_vehicle_pack:fab_250",
+          "berts_vehicle_pack:fab_500",
+          "berts_vehicle_pack:munition/odab250",
+          "berts_vehicle_pack:rbk_250"
+        ],
+        "MaxWeaponsPerPylon": 1,
+        "MaxPylonMassKg": 600
+      },
+      {
+        "Id": "mid",
+        "Name": "Mid wing pylon",
+        "Left": [
+          2.42813,
+          1.0875,
+          0.08125
+        ],
+        "LeftStations": [
+          {
+            "Point": [
+              2.42813,
+              1.0875,
+              0.08125
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "Right": [
+          -2.42813,
+          1.0875,
+          0.08125
+        ],
+        "RightStations": [
+          {
+            "Point": [
+              -2.42813,
+              1.0875,
+              0.08125
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "AllowedStores": [
+          "berts_vehicle_pack:fab_100",
+          "berts_vehicle_pack:fab_250",
+          "berts_vehicle_pack:munition/odab250",
+          "berts_vehicle_pack:rbk_250",
+          "berts_vehicle_pack:su25_s8ko_pod"
+        ],
+        "MaxWeaponsPerPylon": 1,
+        "MaxPylonMassKg": 400
+      },
+      {
+        "Id": "outer",
+        "Name": "Outer wing pylon",
+        "Left": [
+          2.99688,
+          1.0875,
+          -0.90625
+        ],
+        "LeftStations": [
+          {
+            "Point": [
+              2.99688,
+              1.0875,
+              -0.90625
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "Right": [
+          -2.99688,
+          1.0875,
+          -0.90625
+        ],
+        "RightStations": [
+          {
+            "Point": [
+              -2.99688,
+              1.0875,
+              -0.90625
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "AllowedStores": [
+          "berts_vehicle_pack:munition/r13m1",
+          "berts_vehicle_pack:r3r",
+          "berts_vehicle_pack:r60"
+        ],
+        "MaxWeaponsPerPylon": 1,
+        "MaxPylonMassKg": 150
+      },
+      {
+        "Id": "belly_fwd",
+        "Name": "Forward belly rack",
+        "Left": [
+          0.20938,
+          0.73125,
+          1.73125
+        ],
+        "LeftStations": [
+          {
+            "Point": [
+              0.20938,
+              0.73125,
+              1.73125
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "Right": [
+          -0.20938,
+          0.73125,
+          1.73125
+        ],
+        "RightStations": [
+          {
+            "Point": [
+              -0.20938,
+              0.73125,
+              1.73125
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "AllowedStores": [
+          "berts_vehicle_pack:fab_100",
+          "berts_vehicle_pack:fab_250",
+          "berts_vehicle_pack:munition/odab250"
+        ],
+        "MaxWeaponsPerPylon": 1,
+        "MaxPylonMassKg": 300
+      },
+      {
+        "Id": "belly_aft",
+        "Name": "Aft belly rack",
+        "Left": [
+          0.4,
+          0.78125,
+          -0.96875
+        ],
+        "LeftStations": [
+          {
+            "Point": [
+              0.4,
+              0.78125,
+              -0.96875
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "Right": [
+          -0.4,
+          0.78125,
+          -0.96875
+        ],
+        "RightStations": [
+          {
+            "Point": [
+              -0.4,
+              0.78125,
+              -0.96875
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "AllowedStores": [
+          "berts_vehicle_pack:fab_100",
+          "berts_vehicle_pack:fab_250",
+          "berts_vehicle_pack:munition/odab250"
+        ],
+        "MaxWeaponsPerPylon": 1,
+        "MaxPylonMassKg": 300
+      }
+    ],
+    "Singles": [],
+    "StoreGroups": {}
+  },
+  "note_armament": "Own layout on the model's wing pylons and belly racks: bombs and rocket pods on the wing and belly, R-13/R-3 (PL-2 class) and R-60 outboard."
+}

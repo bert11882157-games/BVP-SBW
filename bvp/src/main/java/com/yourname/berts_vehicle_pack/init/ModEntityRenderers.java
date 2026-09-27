@@ -206,6 +206,9 @@ public class ModEntityRenderers {
         registerVehicle(event, ModEntities.MIG_21BIS, "mig_21bis", standardVehicle(
                 "custom_geo/mig_21bis.geo.json", "textures/entity/mig_21bis.png",
                 "mig_21bis"));
+        registerVehicle(event, ModEntities.Q_5, "q_5", standardVehicle(
+                "custom_geo/q_5.geo.json", "textures/entity/q_5.png",
+                "q_5"));
         registerVehicle(event, ModEntities.SU_25, "su_25", standardVehicle(
                 "custom_geo/su_25.geo.json", "textures/entity/su_25.png",
                 "su_25"));
@@ -251,6 +254,9 @@ public class ModEntityRenderers {
         registerVehicle(event, ModEntities.MIG_23MLD, "mig_23mld", standardVehicle(
                 "custom_geo/mig_23mld.geo.json", "textures/entity/mig_23mld.png",
                 "mig_23mld"));
+        registerVehicle(event, ModEntities.SU_17, "su_17", standardVehicle(
+                "custom_geo/su_17.geo.json", "textures/entity/su_17.png",
+                "su_17"));
         registerVehicle(event, ModEntities.SAAB_35_DRAKEN, "saab_35_draken", standardVehicle(
                 "custom_geo/saab_35_draken.geo.json", "textures/entity/saab_35_draken.png",
                 "saab_35_draken"));

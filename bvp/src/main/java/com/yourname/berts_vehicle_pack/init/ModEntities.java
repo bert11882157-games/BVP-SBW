@@ -239,6 +239,10 @@ public class ModEntities {
             ENTITIES.register("mig_21bis", () -> vehicle(
                     (type, level) -> new AuthoredFixedWingAircraft(type, level, "mig_21bis"),
                     15.3861f, 4.0841f, "mig_21bis"));
+    public static final RegistryObject<EntityType<AuthoredFixedWingAircraft>> Q_5 =
+            ENTITIES.register("q_5", () -> vehicle(
+                    (type, level) -> new AuthoredFixedWingAircraft(type, level, "q_5"),
+                    15.3861f, 4.0841f, "q_5"));
     public static final RegistryObject<EntityType<AuthoredFixedWingAircraft>> SU_25 =
             ENTITIES.register("su_25", () -> vehicle(
                     (type, level) -> new AuthoredFixedWingAircraft(type, level, "su_25"),
@@ -301,6 +305,10 @@ public class ModEntities {
             ENTITIES.register("mig_23mld", () -> vehicle(
                     (type, level) -> new AuthoredFixedWingAircraft(type, level, "mig_23mld"),
                     16.7599f, 5.1183f, "mig_23mld"));
+    public static final RegistryObject<EntityType<AuthoredFixedWingAircraft>> SU_17 =
+            ENTITIES.register("su_17", () -> vehicle(
+                    (type, level) -> new AuthoredFixedWingAircraft(type, level, "su_17"),
+                    16.7599f, 5.1183f, "su_17"));
     public static final RegistryObject<EntityType<AuthoredFixedWingAircraft>> SAAB_35_DRAKEN =
             ENTITIES.register("saab_35_draken", () -> vehicle(
                     (type, level) -> new AuthoredFixedWingAircraft(type, level, "saab_35_draken"),

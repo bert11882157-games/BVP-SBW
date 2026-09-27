@@ -1,0 +1,154 @@
+{
+  "Schema": 1,
+  "Name": "Su-17M4",
+  "BuiltInWeapons": [
+    "GSh23L"
+  ],
+  "SuspendedWeapons": [],
+  "Pairs": [
+    {
+      "Id": "inner",
+      "Name": "Inner wing pylon",
+      "Left": [
+        1.16875,
+        1.21875,
+        1.34375
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            1.16875,
+            1.21875,
+            1.34375
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Right": [
+        -1.16875,
+        1.21875,
+        1.34375
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -1.16875,
+            1.21875,
+            1.34375
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:fab_250",
+        "berts_vehicle_pack:fab_500",
+        "berts_vehicle_pack:munition/kab500od",
+        "berts_vehicle_pack:munition/odab500pm",
+        "berts_vehicle_pack:kh29l",
+        "berts_vehicle_pack:kh29d",
+        "berts_vehicle_pack:kh25ml",
+        "berts_vehicle_pack:kh25mt",
+        "berts_vehicle_pack:rbk_250",
+        "berts_vehicle_pack:su25_s8ko_pod"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 1000
+    },
+    {
+      "Id": "mid",
+      "Name": "Mid wing pylon",
+      "Left": [
+        1.69375,
+        1.2625,
+        0.76875
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            1.69375,
+            1.2625,
+            0.76875
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Right": [
+        -1.69375,
+        1.2625,
+        0.76875
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -1.69375,
+            1.2625,
+            0.76875
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:fab_250",
+        "berts_vehicle_pack:fab_500",
+        "berts_vehicle_pack:munition/kab250",
+        "berts_vehicle_pack:kh25ml",
+        "berts_vehicle_pack:kh25mt",
+        "berts_vehicle_pack:rbk_250",
+        "berts_vehicle_pack:su25_s8ko_pod"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 600
+    },
+    {
+      "Id": "outer",
+      "Name": "Outer wing pylon",
+      "Left": [
+        2.1875,
+        1.175,
+        -0.79375
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            2.1875,
+            1.175,
+            -0.79375
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Right": [
+        -2.1875,
+        1.175,
+        -0.79375
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -2.1875,
+            1.175,
+            -0.79375
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:r60",
+        "berts_vehicle_pack:munition/r13m1",
+        "berts_vehicle_pack:fab_250",
+        "berts_vehicle_pack:su25_s8ko_pod"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 300
+    }
+  ],
+  "StoreGroups": {},
+  "MaxPayloadKg": 4000,
+  "Radar": {
+    "Enabled": true,
+    "Range": 1000
+  },
+  "MaxPylonMassKg": 1000,
+  "MaxWeaponsPerPylon": 12,
+  "Singles": []
+}

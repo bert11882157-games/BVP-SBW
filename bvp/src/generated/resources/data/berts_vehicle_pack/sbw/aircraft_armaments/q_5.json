@@ -1,0 +1,227 @@
+{
+  "Schema": 1,
+  "Name": "Q-5",
+  "BuiltInWeapons": [
+    "Cannon"
+  ],
+  "SuspendedWeapons": [],
+  "Pairs": [
+    {
+      "Id": "inner",
+      "Name": "Inner wing pylon",
+      "Left": [
+        1.86563,
+        1.15625,
+        1.075
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            1.8584,
+            1.1762,
+            1.0709
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Right": [
+        -1.86563,
+        1.15625,
+        1.075
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -1.8584,
+            1.1762,
+            1.0709
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:fab_250",
+        "berts_vehicle_pack:fab_500",
+        "berts_vehicle_pack:munition/odab250",
+        "berts_vehicle_pack:rbk_250"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 600
+    },
+    {
+      "Id": "mid",
+      "Name": "Mid wing pylon",
+      "Left": [
+        2.42813,
+        1.0875,
+        0.08125
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            2.423,
+            1.1057,
+            0.0828
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Right": [
+        -2.42813,
+        1.0875,
+        0.08125
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -2.423,
+            1.1057,
+            0.0828
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:fab_100",
+        "berts_vehicle_pack:fab_250",
+        "berts_vehicle_pack:munition/odab250",
+        "berts_vehicle_pack:rbk_250",
+        "berts_vehicle_pack:su25_s8ko_pod"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 400
+    },
+    {
+      "Id": "outer",
+      "Name": "Outer wing pylon",
+      "Left": [
+        2.99688,
+        1.0875,
+        -0.90625
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            2.9876,
+            1.1057,
+            -0.9052
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Right": [
+        -2.99688,
+        1.0875,
+        -0.90625
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -2.9876,
+            1.1057,
+            -0.9052
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/r13m1",
+        "berts_vehicle_pack:r3r",
+        "berts_vehicle_pack:r60"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 150
+    },
+    {
+      "Id": "belly_fwd",
+      "Name": "Forward belly rack",
+      "Left": [
+        0.20938,
+        0.73125,
+        1.73125
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            0.2117,
+            0.7528,
+            1.7296
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Right": [
+        -0.20938,
+        0.73125,
+        1.73125
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -0.2117,
+            0.7528,
+            1.7296
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:fab_100",
+        "berts_vehicle_pack:fab_250",
+        "berts_vehicle_pack:munition/odab250"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 300
+    },
+    {
+      "Id": "belly_aft",
+      "Name": "Aft belly rack",
+      "Left": [
+        0.4,
+        0.78125,
+        -0.96875
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            0.3999,
+            0.7998,
+            -0.9052
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Right": [
+        -0.4,
+        0.78125,
+        -0.96875
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -0.3999,
+            0.7998,
+            -0.9052
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:fab_100",
+        "berts_vehicle_pack:fab_250",
+        "berts_vehicle_pack:munition/odab250"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 300
+    }
+  ],
+  "StoreGroups": {},
+  "MaxPayloadKg": 2000,
+  "Radar": {
+    "Enabled": true,
+    "Range": 1000
+  },
+  "MaxPylonMassKg": 1000,
+  "MaxWeaponsPerPylon": 12,
+  "Singles": []
+}
