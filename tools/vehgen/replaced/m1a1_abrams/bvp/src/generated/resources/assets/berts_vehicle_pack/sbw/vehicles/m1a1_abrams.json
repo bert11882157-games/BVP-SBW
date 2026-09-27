@@ -43,30 +43,30 @@
       "PhaseDistance": 1.1235955056179776,
       "TravelScale": 1,
       "EvaluationLayout": {
-        "YCenter": 12.78815,
-        "Radius": 11.45968,
-        "ZRear": -55.59526,
-        "ZFront": 69.0985
+        "YCenter": 14.73898,
+        "Radius": 13.20785,
+        "ZRear": -64.07632,
+        "ZFront": 79.63948
       },
       "Sides": [
         {
           "Side": "L",
           "Direction": 1,
-          "XCenter": 21.73598,
-          "YCenter": 12.78815,
-          "Radius": 11.45968,
-          "YBottom": 1.32847,
-          "YTop": 24.24782,
-          "ZRear": -55.59526,
-          "ZFront": 69.0985,
+          "XCenter": 25.0518,
+          "YCenter": 14.73898,
+          "Radius": 13.20785,
+          "YBottom": 1.53113,
+          "YTop": 27.94683,
+          "ZRear": -64.07632,
+          "ZFront": 79.63948,
           "RoadCenters": [
-            -34.33025,
-            -18.55689,
-            -5.10315,
-            8.3506,
-            21.80435,
-            35.25809,
-            48.71182
+            -39.56733,
+            -21.38774,
+            -5.88163,
+            9.62448,
+            25.1306,
+            40.63671,
+            56.14281
           ],
           "TrackBone": "TrackL",
           "BrokenBone": "brokenTrackL",
@@ -78,21 +78,21 @@
         {
           "Side": "R",
           "Direction": 1,
-          "XCenter": -21.73598,
-          "YCenter": 12.78815,
-          "Radius": 11.45968,
-          "YBottom": 1.32847,
-          "YTop": 24.24782,
-          "ZRear": -55.59526,
-          "ZFront": 69.0985,
+          "XCenter": -23.19612,
+          "YCenter": 14.73898,
+          "Radius": 13.20785,
+          "YBottom": 1.53113,
+          "YTop": 27.94683,
+          "ZRear": -64.07632,
+          "ZFront": 79.63948,
           "RoadCenters": [
-            -34.33025,
-            -18.55689,
-            -5.10315,
-            8.3506,
-            21.80435,
-            35.25809,
-            48.71182
+            -39.56733,
+            -21.38774,
+            -5.88163,
+            9.62448,
+            25.1306,
+            40.63671,
+            56.14281
           ],
           "TrackBone": "TrackR",
           "BrokenBone": "brokenTrackR",
@@ -1566,7 +1566,7 @@
           ]
         ]
       },
-      "LinkHalfThickness": 1.28509
+      "LinkHalfThickness": 1.48113
     }
   },
   "EngineExhaust": {
@@ -1576,9 +1576,9 @@
       {
         "Id": "engine_exhaust_group_origin_000",
         "Position": [
-          0.0,
-          1.20981,
-          4.02679
+          0,
+          1.39437,
+          4.64108
         ]
       }
     ]

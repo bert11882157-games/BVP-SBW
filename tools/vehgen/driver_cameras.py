@@ -31,7 +31,11 @@ def apply(d, spec):
     eye = [round(float(v), 5) for v in spec['eye']]
     seat = d['Seats'][spec.get('seat', 0)]
     if seat.get('Weapons'):
-        raise SystemExit(f"{d['ID']}: seat {spec.get('seat', 0)} has weapons; its camera is the gunner's")
+        # a tank driven from the gunner's seat (the pack's convention): the gunner's sight stays the seat's camera
+        # and the driver's eye is kept as a reference attachment only
+        d.setdefault('Attachments', {})['driver_camera'] = {"Parent": "VehicleCustomPitch", "Position": eye,
+                                                            "Direction": [0, 0, 1]}
+        return d
     seat['Transform'] = 'Vehicle'
     seat['Position'] = [eye[0], round(eye[1] - SITTING_EYE, 5), eye[2]]
     seat['CameraPos'] = camera()

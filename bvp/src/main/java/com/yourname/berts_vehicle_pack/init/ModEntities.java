@@ -574,6 +574,10 @@ public class ModEntities {
             ENTITIES.register("leopard_2a4", () -> vehicle(
                     (type, level) -> new FittedGroundVehicleEntity(type, level, "leopard_2a4"),
                     12.46f, 4.14f, "leopard_2a4"));
+    public static final RegistryObject<EntityType<FittedGroundVehicleEntity>> M1A1_ABRAMS =
+            ENTITIES.register("m1a1_abrams", () -> vehicle(
+                    (type, level) -> new FittedGroundVehicleEntity(type, level, "m1a1_abrams"),
+                    4.07f, 2.42f, "m1a1_abrams"));
     public static final RegistryObject<EntityType<FittedGroundVehicleEntity>> K2A1_BLACK_PANTHER =
             ENTITIES.register("k2a1_black_panther", () -> vehicle(
                     (type, level) -> new FittedGroundVehicleEntity(type, level, "k2a1_black_panther"),

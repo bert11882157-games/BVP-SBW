@@ -1,0 +1,65 @@
+{
+  "Combat": {
+    "WeaponId": "berts_vehicle_pack:m1a1_abrams/passengermachinegun",
+    "RoundId": "berts_vehicle_pack:western_127_m2_ap",
+    "MunitionType": "berts_vehicle_pack:bullet",
+    "DamageType": "berts_vehicle_pack:kinetic",
+    "CaliberMm": 12.7,
+    "DiameterMm": 12.7,
+    "HullDamageClass": "DEFAULT",
+    "HullDamage": 8,
+    "ModuleDamage": 4,
+    "AmmoRackDamage": 1,
+    "PenetrationMm": 31,
+    "PenetrationCurve": {
+      "DistancesMetres": [
+        10,
+        100,
+        500,
+        1000,
+        1500,
+        2000
+      ],
+      "PenetrationMm": [
+        31,
+        29,
+        21,
+        14,
+        9,
+        6
+      ]
+    },
+    "RicochetCurve": {
+      "IncidenceAnglesDegrees": [
+        0,
+        47,
+        49,
+        50,
+        60,
+        65,
+        90
+      ],
+      "Probability": [
+        0,
+        0,
+        0.005,
+        0.35,
+        0.6,
+        1,
+        1
+      ]
+    },
+    "Tandem": false
+  },
+  "VisualProfile": "berts_vehicle_pack:scaled_bullet",
+  "ImpactVisualProfile": "berts_vehicle_pack:autocannon_ap",
+  "MotionSync": "INHERIT",
+  "Collision": {
+    "Width": 0.1,
+    "Height": 0.1
+  },
+  "Luminance": 8,
+  "TrailMode": "DEFAULT",
+  "RenderScale": 1,
+  "Extensions": {}
+}
