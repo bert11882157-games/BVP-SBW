@@ -88,7 +88,8 @@ class Build:
         self.frame = mtbgeo.Frame(s, ground * s)
         # longitudinal anchor: the named part's centre lands on the template's geo z
         anchor = spec['anchor']
-        z = self.frame.geo(self.src.corners(anchor['parts']).mean(0))[2]
+        c = np.array([self.frame.geo(p) for f in self.elements(anchor['parts']) for p in mtbgeo.mtb.box_corners(f)])
+        z = (c[:, 2].min() + c[:, 2].max()) / 2
         self.z_shift = anchor['geoZ'] - z
 
     def geo(self, p):
@@ -96,26 +97,42 @@ class Build:
         g[2] += self.z_shift
         return g
 
+    def elements(self, entries):
+        """Toolbox elements for a list of part numbers or {"part": n, "rotX": x} (the part's elements whose rotation
+        point has toolbox x = rotX, e.g. one wheel of a part holding two)."""
+        out = []
+        for e in entries:
+            if isinstance(e, dict):
+                out += [f for f in self.src.parts.get(e['part'], [])
+                        if abs(mtbgeo.mtb.num(f[6]) - e['rotX']) < 1e-6]
+            else:
+                out += self.src.parts.get(e, [])
+        if not out:
+            raise SystemExit(f'no elements for {entries}')
+        return out
+
     def mesh(self, parts):
-        els = [f for p in parts for f in self.src.parts.get(p, [])]
+        els = self.elements(parts)
         m = mtbgeo.mesh(els, self.frame, self.src.tw, self.src.th)
         for p in m['positions']:
             p[2] = round(p[2] + self.z_shift, 5)
         return m
 
     def part_centre(self, parts):
-        c = np.array([self.geo(p) for p in self.src.corners(parts)])
+        c = np.array([self.geo(p) for f in self.elements(parts) for p in mtbgeo.mtb.box_corners(f)])
         return (c.min(0) + c.max(0)) / 2, c.min(0), c.max(0)
 
     def point(self, v):
         """A spec point: [x, y, z] in model px (the geo frame before the longitudinal shift), or
         {"part": n | "parts": [..], "at": "centre" | "rotation"} (bounding-box centre / element rotation point)."""
         if isinstance(v, dict):
-            parts = v.get('parts') or [v['part']]
+            parts = v.get('parts') or [v['part'] if 'rotX' not in v else {'part': v['part'], 'rotX': v['rotX']}]
             if v.get('at') == 'rotation':
-                return self.geo(mtbgeo.Source.rotation_point([f for p in parts for f in self.src.parts[p]]))
+                return self.geo(mtbgeo.Source.rotation_point(self.elements(parts)))
             return self.part_centre(parts)[0]
         g = np.array(v, float)
+        if self.spec.get('pointsAtUnitScale'):        # measured on the model converted at 1 px per toolbox unit
+            g = g * self.spec['scale']
         g[2] += self.z_shift
         return g
 
@@ -173,85 +190,122 @@ def box_obb(lo, hi, transform='Vehicle', part=None, origin=np.zeros(3)):
     return o
 
 
+def wheel_bones(bones):
+    return sorted(n for n in bones if re.fullmatch(r'wheel[LR]\d+', n))
+
+
 def build_data(b, tpl, geo, lo, hi):
+    """Template vehicle data with every geometric field re-derived from the new model. Frames of relative points:
+    WeaponStation (station pivot), WeaponStationBarrel (station pitch pivot), Turret (turret pivot), Barrel
+    (barrel pivot), Vehicle / VehicleCustomPitch (absolute)."""
     spec = b.spec
     d = copy.deepcopy(tpl)
     d['ID'] = f'{NS}:{b.id}'
     bones = {bone['name']: bone for bone in geo['minecraft:geometry'][0]['bones']}
-    pts = {k: b.point(v) for k, v in spec['points'].items()}
-    station = np.array(bones['passengerWeaponStation']['pivot'])
-    pitch = np.array(bones['passengerWeaponStationPitch']['pivot'])
-    d['PassengerWeaponStationPos'] = r5(mtbgeo.geo_to_data(station))
-    d['PassengerWeaponStationBarrelPos'] = r5(mtbgeo.geo_to_data(pitch - station))
+    pivot = lambda name: np.array(bones[name]['pivot'], float)
+    origins = {'Vehicle': np.zeros(3), 'VehicleCustomPitch': np.zeros(3)}
+    station_kind = 'passengerWeaponStation' in bones
+    if station_kind:
+        origins['WeaponStation'] = pivot('passengerWeaponStation')
+        origins['WeaponStationBarrel'] = pivot('passengerWeaponStationPitch')
+        d['PassengerWeaponStationPos'] = r5(mtbgeo.geo_to_data(origins['WeaponStation']))
+        d['PassengerWeaponStationBarrelPos'] = r5(mtbgeo.geo_to_data(origins['WeaponStationBarrel'] -
+                                                                     origins['WeaponStation']))
+    else:
+        origins['Turret'] = pivot('turret')
+        origins['Barrel'] = pivot('barell')
+        d['TurretPos'] = r5(mtbgeo.geo_to_data(origins['Turret']))
+        d['BarrelPos'] = r5(mtbgeo.geo_to_data(origins['Barrel'] - origins['Turret']))
 
-    # seats: [geo px point, frame]; frames: Vehicle (absolute) or WeaponStation (relative to the station pivot)
     for i, seat in enumerate(spec['seats']):
-        p = b.point(seat['at'])
-        if seat.get('frame', 'Vehicle') == 'WeaponStation':
-            p = p - station
-        d['Seats'][i]['Position'] = r5(mtbgeo.geo_to_data(p))
+        frame = seat.get('frame', 'Vehicle')
+        d['Seats'][i]['Position'] = r5(mtbgeo.geo_to_data(b.point(seat['at']) - origins[frame]))
+        if 'dismount' in seat:
+            d['Seats'][i].setdefault('DismountInfo', {'Transform': 'Vehicle'})
+            d['Seats'][i]['DismountInfo']['Position'] = r5(mtbgeo.geo_to_data(b.point(seat['dismount'])))
     if len(spec['seats']) != len(d['Seats']):
         d['Seats'] = d['Seats'][:len(spec['seats'])]
 
     at = d['Attachments']
     for name, v in spec['attachments'].items():
-        p = b.point(v['at'])
         parent = at[name]['Parent']
-        if parent == 'WeaponStationBarrel':
-            p = p - pitch
-        elif parent != 'VehicleCustomPitch':
+        if parent not in origins:
             raise SystemExit(f'attachment {name}: unsupported parent {parent}')
-        at[name]['Position'] = r5(mtbgeo.geo_to_data(p))
-    muzzle = at['passenger_station_muzzle']['Position']
+        at[name]['Position'] = r5(mtbgeo.geo_to_data(b.point(v['at']) - origins[parent]))
     for w in d['Weapons'].values():
         sp = w.get('ShootPos') or {}
-        if sp.get('Transform') == 'WeaponStationBarrel':
-            sp['Positions'] = [muzzle for _ in sp['Positions']]
-            sp['ViewPosition'] = muzzle
+        names = sp.get('MuzzleAttachments') or []
+        if names and all(n in at for n in names) and sp.get('Transform') == at[names[0]]['Parent']:
+            sp['Positions'] = [at[n]['Position'] for n in names]
+            sp['ViewPosition'] = at[sp.get('ViewAttachment', names[0])]['Position']
 
-    # OBBs: hull sections along the length (spec 'obbSections', geo z cuts), station, barrel, wheels
+    # OBBs: hull sections along the length (spec 'obbSections', model px z cuts), moving parts, wheels
     hull = np.array(bones['hull']['poly_mesh']['positions'])
     obbs = []
-    for z0, z1, y_min in spec['obbSections']:          # model px (before the longitudinal shift)
-        z0, z1 = z0 + b.z_shift, z1 + b.z_shift
+    for z0, z1, y_min in spec['obbSections']:
+        z0, z1 = z0 * (spec['scale'] if spec.get('pointsAtUnitScale') else 1) + b.z_shift, \
+            z1 * (spec['scale'] if spec.get('pointsAtUnitScale') else 1) + b.z_shift
         sel = hull[(hull[:, 2] >= z0) & (hull[:, 2] <= z1) & (hull[:, 1] >= y_min)]
         slo, shi = sel.min(0), sel.max(0)
         slo[2], shi[2] = max(slo[2], z0), min(shi[2], z1)
         obbs.append(box_obb(slo, shi))
-    yaw = np.array(bones['passengerWeaponStationYaw']['poly_mesh']['positions'])
-    obbs.append(box_obb(yaw.min(0), yaw.max(0), 'WeaponStation', origin=station))
-    tube = np.array(bones['passengerWeaponStationPitch']['poly_mesh']['positions'])
-    obbs.append(box_obb(tube.min(0), tube.max(0), 'WeaponStationBarrel', origin=pitch))
+    for part, box in spec.get('obbParts', {}).items():
+        a, c = b.point(box[0]), b.point(box[1])
+        obbs.append(box_obb(np.minimum(a, c), np.maximum(a, c), part=part))
+    if station_kind:
+        yaw = np.array(bones['passengerWeaponStationYaw']['poly_mesh']['positions'])
+        obbs.append(box_obb(yaw.min(0), yaw.max(0), 'WeaponStation', origin=origins['WeaponStation']))
+        tube = np.array(bones['passengerWeaponStationPitch']['poly_mesh']['positions'])
+        obbs.append(box_obb(tube.min(0), tube.max(0), 'WeaponStationBarrel', origin=origins['WeaponStationBarrel']))
+    else:
+        tur = np.array(bones['turret']['poly_mesh']['positions'])
+        body = tur[tur[:, 1] <= spec.get('turretObbTop', 1e9) * (spec['scale'] if spec.get('pointsAtUnitScale') else 1)]
+        o = box_obb(body.min(0), body.max(0), 'Turret', part='Turret', origin=origins['Turret'])
+        obbs.append(o)
     contacts = []
-    for name in ('wheelL0', 'wheelL1', 'wheelR0', 'wheelR1'):
+    wheels = wheel_bones(bones)
+    boxes = {}
+    for name in wheels:
         P = np.array(bones[name]['poly_mesh']['positions'])
-        wlo, whi = P.min(0), P.max(0)
-        obbs.append(box_obb(wlo, whi, part='WheelLeft' if 'L' in name else 'WheelRight'))
-        c = mtbgeo.geo_to_data((wlo + whi) / 2)
-        contacts.append((name, [c[0], 0.03013, c[2]]))
+        boxes[name] = (P.min(0), P.max(0))
+        c = mtbgeo.geo_to_data((P.min(0) + P.max(0)) / 2)
+        contacts.append([c[0], spec.get('contactY', 0.03013), c[2]])
+    if spec.get('wheelObb', 'each') == 'each':
+        for name in wheels:
+            obbs.append(box_obb(*boxes[name], part='WheelLeft' if name[5] == 'L' else 'WheelRight'))
+    else:
+        for side, part in (('L', 'WheelLeft'), ('R', 'WheelRight')):
+            P = np.vstack([np.vstack(boxes[n]) for n in wheels if n[5] == side])
+            obbs.append(box_obb(P.min(0), P.max(0), part=part))
     d['OBB'] = obbs
-    order = {'wheelL0': 0, 'wheelL1': 1, 'wheelR0': 2, 'wheelR1': 3}
-    d['TerrainCompat'] = [r5(c) for _, c in sorted(contacts, key=lambda x: order[x[0]])]
+    d['TerrainCompat'] = [r5(c) for c in contacts]
 
     # third person camera distance follows the model length (template ratio); RotateOffsetHeight stays the template's
     t_len = spec['_templateHull'][1][2] - spec['_templateHull'][0][2]
     ratio = (hi[2] - lo[2]) / t_len
     d['ThirdPersonCameraPos'] = r5(np.array(tpl['ThirdPersonCameraPos']) * ratio)
     d.update(spec.get('dataOverrides', {}))
-    return d, pts
+    return d, {}
 
 
-def build_armor(b, tpl, lo, hi, tlo, thi):
+def build_armor(b, tpl, boxes, tpl_boxes):
+    """Template armor mapped box to box per frame (hull, turret): plates, engines, ammo racks keep their place
+    relative to the part they belong to."""
     a = copy.deepcopy(tpl)
     a['id'] = b.id
-    k = (hi - lo) / (thi - tlo)
-    for plate in a['plates']:
-        if plate['frame'] != 'hull':
-            raise SystemExit('armor: only hull plates are mapped')
-        c = np.array(plate['center']) * 16
-        plate['center'] = r5(((c - tlo) * k + lo) / 16)
-        plate['half_size'] = r5(np.array(plate['half_size']) * k)
-        plate['name'] = plate['name'].replace(b.template, b.id)
+    for key in ('plates', 'engines', 'ammo_racks', 'sensitive_internals', 'modules', 'explosive_reactive_armor'):
+        for item in a.get(key, []):
+            frame = item.get('frame', 'hull')
+            if frame not in boxes:
+                raise SystemExit(f'armor {key}: frame {frame} has no mapping')
+            lo, hi = boxes[frame]
+            tlo, thi = tpl_boxes[frame]
+            k = (hi - lo) / (thi - tlo)
+            c = np.array(item['center']) * 16
+            item['center'] = r5(((c - tlo) * k + lo) / 16)
+            item['half_size'] = r5(np.array(item['half_size']) * k)
+            if 'name' in item:
+                item['name'] = item['name'].replace(b.template, b.id)
     return a
 
 
@@ -386,6 +440,24 @@ def main(argv):
     out.json(os.path.join(ASSETS, 'custom_geo', f'{b.id}.geo.json'), geo, compact=True)
     wreck = load(os.path.join(ASSETS, 'custom_geo', f'{tid}_turret_wreck.geo.json'))
     wreck['minecraft:geometry'][0]['description']['identifier'] = f'geometry.{b.id}_turret_wreck'
+    wreck['minecraft:geometry'][0]['description']['texture_width'] = b.src.tw
+    wreck['minecraft:geometry'][0]['description']['texture_height'] = b.src.th
+    # a detached turret: the turret and gun meshes moved so the turret pivot is the origin
+    gb = {bn['name']: bn for bn in geo['minecraft:geometry'][0]['bones']}
+    if gb.get('turret', {}).get('poly_mesh'):
+        tp = np.array(gb['turret']['pivot'], float)
+        for bn in wreck['minecraft:geometry'][0]['bones']:
+            src_bone = gb.get(bn['name'])
+            if not src_bone or 'poly_mesh' not in src_bone:
+                bn.pop('poly_mesh', None)
+                continue
+            m = copy.deepcopy(src_bone['poly_mesh'])
+            m['positions'] = [r5(np.array(q) - tp) for q in m['positions']]
+            bn['poly_mesh'] = m
+            bn['pivot'] = [0, 0, 0] if bn['name'] == 'turret' else r5(np.array(src_bone['pivot']) - tp)
+    else:
+        for bn in wreck['minecraft:geometry'][0]['bones']:
+            bn.pop('poly_mesh', None)
     out.json(os.path.join(ASSETS, 'custom_geo', f'{b.id}_turret_wreck.geo.json'), wreck, compact=True)
     out.json(os.path.join(ASSETS, 'geo', 'native_fallback', f'{b.id}.geo.json'), native_fallback(b, geo), compact=True)
 
@@ -397,11 +469,15 @@ def main(argv):
 
     data, pts = build_data(b, load(os.path.join(DATA, 'sbw', 'vehicles', f'{tid}.json')), geo, lo, hi)
     out.json(os.path.join(DATA, 'sbw', 'vehicles', f'{b.id}.json'), data)
-    hull = np.array([bn for bn in geo['minecraft:geometry'][0]['bones'] if bn['name'] == 'hull'][0]
-                    ['poly_mesh']['positions'])
+    boxes, tpl_boxes = {}, {}
+    for frame, bone in (('hull', 'hull'), ('turret', 'turret')):
+        for target, g in ((boxes, geo), (tpl_boxes, tpl_geo)):
+            bn = [x for x in g['minecraft:geometry'][0]['bones'] if x['name'] == bone]
+            if bn and bn[0].get('poly_mesh') and bn[0]['poly_mesh']['positions']:
+                P = np.array(bn[0]['poly_mesh']['positions'])
+                target[frame] = (P.min(0), P.max(0))
     out.json(os.path.join(DATA, 'armor', f'{b.id}.json'),
-             build_armor(b, load(os.path.join(DATA, 'armor', f'{tid}.json')), hull.min(0), hull.max(0),
-                         *spec['_templateHull']))
+             build_armor(b, load(os.path.join(DATA, 'armor', f'{tid}.json')), boxes, tpl_boxes))
 
     img = Image.open(io.BytesIO(b.src.png)).convert('RGBA')
     out.image(os.path.join(ASSETS, 'textures', 'entity', f'{b.id}.png'), img)
@@ -412,7 +488,8 @@ def main(argv):
     meshes = [bn['poly_mesh'] for bn in geo['minecraft:geometry'][0]['bones'] if 'poly_mesh' in bn]
     out.image(os.path.join(MAIN, 'resources', 'assets', NS, 'textures', 'item', 'vehicle_icons', f'{b.id}.png'),
               icon(b, meshes, np.asarray(img).astype(float) / 255))
-    register(b, out)
+    if b.id != tid:
+        register(b, out)
     # vehgen sizes ground vehicles against their (already x1.1) template: record it so vehicle_scale never rescales
     path = os.path.join(REPO, 'tools', 'vehicle_scale', 'applied.json')
     applied = load(path)

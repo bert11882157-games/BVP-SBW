@@ -5,26 +5,26 @@
   "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/aim120.geo.json",
   "ModelForward": "-Z",
   "MountAnchor": [
-    0,
-    0.089,
-    0
+    0.0,
+    0.1123,
+    0.511
   ],
   "SideMountAnchors": {
     "Left": [
-      0.089,
+      0.1123,
       0.0,
-      0
+      0.511
     ],
     "Right": [
-      -0.089,
+      -0.1123,
       0.0,
-      0
+      0.511
     ]
   },
   "MountAxis": [
     0.0,
     0.0,
-    0
+    0.511
   ],
   "Texture": "berts_vehicle_pack:textures/aircraft_stores/aim120.png",
   "Capacity": 1,
@@ -54,7 +54,7 @@
   ],
   "LaunchOffset": [
     0.0,
-    -0.089,
+    -0.1123,
     0.0
   ]
 }

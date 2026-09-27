@@ -2,38 +2,37 @@
   "Schema": 1,
   "Name": "AGM-114K Hellfire II",
   "Category": "LASER_GUIDED",
-  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/kh29l.geo.json",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/agm114.geo.json",
   "ModelForward": "-Z",
   "MountAnchor": [
-    0,
     0.0,
-    0.546
+    0.1232,
+    -0.2339
   ],
   "SideMountAnchors": {
     "Left": [
-      0.2108,
-      -0.2108,
-      0.546
+      0.1204,
+      -0.0213,
+      -0.2339
     ],
     "Right": [
-      -0.2108,
-      -0.2108,
-      0.546
+      -0.1204,
+      -0.0213,
+      -0.2339
     ]
   },
   "MountAxis": [
     0.0,
-    -0.2108,
-    0.546
+    -0.0213,
+    -0.2339
   ],
-  "Texture": "berts_vehicle_pack:textures/aircraft_stores/kh29l.png",
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/agm114.png",
   "Capacity": 1,
-  "Scale": 0.45,
   "ProjectileProfile": "berts_vehicle_pack:aircraft_stores/agm114k_ah64d",
   "LaunchGunProfile": "berts_vehicle_pack:aircraft_stores/agm114k_ah64d",
   "LaunchOffset": [
     0.0,
-    -0.0949,
+    -0.1445,
     0.0
   ],
   "MassKg": 49,

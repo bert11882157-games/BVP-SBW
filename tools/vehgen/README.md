@@ -54,3 +54,9 @@ Check it with the first-person render in `scratchpad/fpview.py`: straight ahead,
 | id | source | template | notes |
 |---|---|---|---|
 | `uaz_469_spg9` | UAZ-469_SPG-9.mtb | toyota_jihad_spg9 | Scale 1.15 px/unit: width equals the Toyota's, and its length/real-length ratio matches (1.43). Left-hand drive; the driver's eye is at 37.4 px, under the windshield bar at 41.2. Four crew seats: driver, commander, gunner standing left of the SPG-9 sight, loader on the right ammo bench. |
+| `lav25` (replacement) | ModelLAV25.mtb | lav25 (itself) | Scale 0.8856, which keeps the old in-game length of 7.64 blocks. The wheel midpoint is now at the origin; the old model sat 1.1 blocks ahead of its collision boxes and terrain probes. The engine box is front-right, where the armor already placed the engine. Scouts sit in the rear compartment. The gunner/controller camera sits just over the left periscope head. |
+
+Replacements use the vehicle itself as the template:
+- Re-running is idempotent. Every derived field is recomputed.
+- Armor is mapped hull box → hull box and turret box → turret box.
+- Old versions stay in git history.

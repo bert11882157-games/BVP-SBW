@@ -6,7 +6,10 @@
     "Texture": "berts_vehicle_pack:textures/entity/lav25.png",
     "WreckTexture": "berts_vehicle_pack:textures/entity_dead/lav25.png"
   },
-  "MouseSpeed": [0.2, 0.2],
+  "MouseSpeed": [
+    0.2,
+    0.2
+  ],
   "RunningGear": {
     "Type": "WHEELED",
     "RoadWheelCount": 4,
@@ -32,9 +35,9 @@
       {
         "Id": "engine_exhaust_group_origin_000",
         "Position": [
-          -1.54508,
-          1.99704,
-          0
+          -1.49445,
+          1.7712,
+          1.41143
         ]
       }
     ]

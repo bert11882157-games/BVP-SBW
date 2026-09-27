@@ -1,0 +1,49 @@
+{
+  "id": "lav25",
+  "name": "LAV-25",
+  "template": "lav25",
+  "note": "Model replacement: ModelLAV25.mtb. Points are measured on the model converted at 1 px per toolbox unit (pointsAtUnitScale), nose -Z, ground 0, before the longitudinal shift.",
+  "source": "ModelLAV25.mtb",
+  "scale": 0.8856,
+  "pointsAtUnitScale": true,
+  "anchor": {"parts": [5, 6, 7, 8], "geoZ": 0.0},
+  "bones": {
+    "hull": [0, 15],
+    "turret": [3],
+    "barell": [4],
+    "wheelL3": [{"part": 5, "rotX": 56.5}], "wheelL2": [{"part": 5, "rotX": 34.5}],
+    "wheelL1": [{"part": 7, "rotX": 4.5}], "wheelL0": [{"part": 7, "rotX": -17.5}],
+    "wheelR3": [{"part": 6, "rotX": 56.5}], "wheelR2": [{"part": 6, "rotX": 34.5}],
+    "wheelR1": [{"part": 8, "rotX": 4.5}], "wheelR0": [{"part": 8, "rotX": -17.5}]
+  },
+  "keepBones": ["Wheel"],
+  "pivots": {
+    "hull": {"parts": [0]},
+    "turret": {"part": 3, "at": "rotation"},
+    "barell": {"part": 4, "at": "rotation"},
+    "WheelL": {"parts": [5, 7]}, "WheelR": {"parts": [6, 8]},
+    "wheelL0": {"part": 7, "rotX": -17.5}, "wheelL1": {"part": 7, "rotX": 4.5},
+    "wheelL2": {"part": 5, "rotX": 34.5}, "wheelL3": {"part": 5, "rotX": 56.5},
+    "wheelR0": {"part": 8, "rotX": -17.5}, "wheelR1": {"part": 8, "rotX": 4.5},
+    "wheelR2": {"part": 6, "rotX": 34.5}, "wheelR3": {"part": 6, "rotX": 56.5}
+  },
+  "seats": [
+    {"note": "gunner (drives and fires, the SBW controller seat): left of the gun under the left periscope; head below the turret roof (51)", "at": [10.5, 22.0, -3.0], "frame": "Turret", "dismount": [0.0, 6.0, 62.0]},
+    {"note": "scouts in the rear compartment", "at": [-9.0, 16.0, 20.0]},
+    {"at": [-9.0, 16.0, 35.0]},
+    {"at": [9.0, 16.0, 35.0]},
+    {"at": [9.0, 16.0, 20.0]}
+  ],
+  "attachments": {
+    "gunner1_camera": {"note": "just over and ahead of the gunner's periscope head (X 8-13, Y 51-54, Z -9.5..-6.5), left of the 25 mm", "at": [10.5, 54.5, -10.0]},
+    "gunner1_zoom": {"at": [10.5, 54.5, -10.0]},
+    "main_muzzle": {"note": "M242 muzzle, axis X 1.25 Y 45.7", "at": [1.25, 45.7, -58.4]},
+    "coax_muzzle": {"note": "M240 coax muzzle right of the gun", "at": [-4.4, 45.7, -26.0]}
+  },
+  "points": {"exhaust": [-27.0, 32.0, -45.0]},
+  "obbSections": [[-89, -50, 12], [-50, 20, 12], [20, 50, 12]],
+  "obbParts": {"MainEngine": [[-20.0, 20.0, -70.0], [-2.0, 38.0, -45.0]]},
+  "turretObbTop": 56,
+  "wheelObb": "side",
+  "contactY": 0
+}

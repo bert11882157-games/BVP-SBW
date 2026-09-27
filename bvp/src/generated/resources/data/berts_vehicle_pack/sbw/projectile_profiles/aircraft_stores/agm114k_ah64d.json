@@ -22,7 +22,7 @@
   },
   "Luminance": 9,
   "TrailMode": "REPLACE",
-  "RenderScale": 0.45,
+  "RenderScale": 1,
   "GuidedPropulsion": {
     "InitialSpeed": 2,
     "MaxSpeed": 8,
@@ -36,9 +36,9 @@
   },
   "Extensions": {
     "berts_vehicle_pack:projectile_mesh_v1": {
-      "Model": "berts_vehicle_pack:custom_geo/projectiles/kh29l.geo.json",
-      "Texture": "berts_vehicle_pack:textures/aircraft_stores/kh29l.png",
-      "ForwardYaw": 180,
+      "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/agm114.geo.json",
+      "Texture": "berts_vehicle_pack:textures/aircraft_stores/agm114.png",
+      "ForwardYaw": 0,
       "SpinDegreesPerTick": 0
     },
     "superbwarfare:guided_maneuver_v1": {

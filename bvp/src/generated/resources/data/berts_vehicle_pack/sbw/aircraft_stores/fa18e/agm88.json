@@ -5,26 +5,26 @@
   "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/agm88.geo.json",
   "ModelForward": "-Z",
   "MountAnchor": [
-    0,
-    0.127,
-    0
+    0.0,
+    0.1955,
+    0.5838
   ],
   "SideMountAnchors": {
     "Left": [
-      0.127,
+      0.1955,
       0.0,
-      0
+      0.5838
     ],
     "Right": [
-      -0.127,
+      -0.1955,
       0.0,
-      0
+      0.5838
     ]
   },
   "MountAxis": [
     0.0,
     0.0,
-    0
+    0.5838
   ],
   "Texture": "berts_vehicle_pack:textures/aircraft_stores/agm88.png",
   "Capacity": 1,
@@ -48,7 +48,7 @@
   "AmmoItem": "superbwarfare:large_air_to_ground_missile",
   "LaunchOffset": [
     0.0,
-    -0.127,
+    -0.1955,
     0.0
   ]
 }
