@@ -41,29 +41,29 @@
       "PhaseDistance": 1.0416666666666667,
       "TravelScale": 1,
       "EvaluationLayout": {
-        "YCenter": 11.20804,
-        "Radius": 9.54927,
-        "ZRear": -57.87355,
-        "ZFront": 80.29376
+        "YCenter": 9.90277,
+        "Radius": 8.43717,
+        "ZRear": -51.13367,
+        "ZFront": 70.94285
       },
       "Sides": [
         {
           "Side": "L",
           "Direction": 1,
-          "XCenter": 26.93386,
-          "YCenter": 11.20804,
-          "Radius": 9.54927,
-          "YBottom": 1.65876,
-          "YTop": 20.75731,
-          "ZRear": -57.87355,
-          "ZFront": 80.29376,
+          "XCenter": 25.15326,
+          "YCenter": 9.90277,
+          "Radius": 8.43717,
+          "YBottom": 1.46558,
+          "YTop": 18.33994,
+          "ZRear": -51.13367,
+          "ZFront": 70.94285,
           "RoadCenters": [
-            -36.12412,
-            -14.33497,
-            4.01379,
-            24.65615,
-            43.00491,
-            61.35368
+            -31.91715,
+            -12.66554,
+            3.54635,
+            21.78473,
+            37.99661,
+            54.20851
           ],
           "TrackBone": "TrackL",
           "BrokenBone": "brokenTrackL",
@@ -1539,20 +1539,20 @@
         {
           "Side": "R",
           "Direction": 1,
-          "XCenter": -23.38271,
-          "YCenter": 11.20804,
-          "Radius": 9.54927,
-          "YBottom": 1.65876,
-          "YTop": 20.75731,
-          "ZRear": -57.87355,
-          "ZFront": 80.29376,
+          "XCenter": -25.15326,
+          "YCenter": 9.90277,
+          "Radius": 8.43717,
+          "YBottom": 1.46558,
+          "YTop": 18.33994,
+          "ZRear": -51.13367,
+          "ZFront": 70.94285,
           "RoadCenters": [
-            -36.12412,
-            -14.90837,
-            4.01379,
-            24.08275,
-            43.57832,
-            61.35368
+            -31.91715,
+            -13.17216,
+            3.54635,
+            21.2781,
+            38.50324,
+            54.20851
           ],
           "TrackBone": "TrackR",
           "BrokenBone": "brokenTrackR",
@@ -4490,7 +4490,7 @@
           ]
         ]
       },
-      "LinkHalfThickness": 1.90266
+      "LinkHalfThickness": 1.68108
     }
   },
   "EngineExhaust": {
@@ -4500,9 +4500,42 @@
       {
         "Id": "engine_exhaust_group_origin_000",
         "Position": [
-          -1.13197,
-          1.86921,
-          2.43373
+          -1.00014,
+          1.65152,
+          2.1503
+        ]
+      }
+    ]
+  },
+  "FittedGroundRig": {
+    "Schema": 1,
+    "Frame": "RUNTIME_MODEL_PIXELS",
+    "PitchBones": [
+      {
+        "Bone": "pod_L",
+        "Parent": "turret",
+        "Pivot": [
+          18.73107,
+          42.40998,
+          16.21298
+        ]
+      },
+      {
+        "Bone": "pod_R",
+        "Parent": "turret",
+        "Pivot": [
+          -18.73107,
+          42.40998,
+          16.21298
+        ]
+      },
+      {
+        "Bone": "tracking_radar",
+        "Parent": "turret",
+        "Pivot": [
+          0.0,
+          41.7915,
+          -24.29738
         ]
       }
     ]

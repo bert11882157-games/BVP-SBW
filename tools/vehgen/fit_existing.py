@@ -113,6 +113,9 @@ def move_components(geo, move):
     picked = []
     for comp in poly_components(src):
         pts = P[sorted({v[0] for k in comp for v in src['polys'][k]})]
+        cx = (pts[:, 0].min() + pts[:, 0].max()) / 2
+        if 'centreX' in move and not (move['centreX'][0] <= cx <= move['centreX'][1]):
+            continue
         if np.all(pts.min(0) >= lo) and np.all(pts.max(0) <= hi):
             picked += comp
     if len(picked) == 0:
@@ -194,21 +197,61 @@ def mirror_running_gear(geo, source_side):
     return moved
 
 
-def symmetrize_running_gear(geo):
-    """Both sides placed mirror-symmetric about x = 0: each road wheel pair keeps its separation; the tracks sit on
-    the wheels, their inner edge 0.8 px inside the wheels' inner face (as on the healthy fitted tanks). The source
-    fits of these vehicles had whole sides several px (the 9P149 18 px) off."""
+def mirror_meshes(geo, source_side):
+    """The other side's running gear rebuilt as the mirror image of `source_side` (meshes, cubes and pivots): the
+    source had one side's road wheels or track links malformed (the 9K22's left links 2.9 px wide, its right 8.2)."""
+    bones = bones_of(geo)
+    pairs = side_bones(bones, source_side)
+    n = 0
+    for src, dst in pairs.items():
+        if dst not in bones:
+            continue
+        s, d = bones[src], bones[dst]
+        d['pivot'] = [round(-s['pivot'][0], 5), s['pivot'][1], s['pivot'][2]]
+        if 'rotation' in s:
+            d['rotation'] = [s['rotation'][0], -s['rotation'][1], -s['rotation'][2]]
+        else:
+            d.pop('rotation', None)
+        if s.get('poly_mesh'):
+            pm = copy.deepcopy(s['poly_mesh'])
+            pm['positions'] = [[round(-p[0], 5), p[1], p[2]] for p in pm['positions']]
+            pm['normals'] = [[-v[0], v[1], v[2]] for v in pm['normals']]
+            pm['polys'] = [list(reversed(poly)) for poly in pm['polys']]
+            d['poly_mesh'] = pm
+        else:
+            d.pop('poly_mesh', None)
+        if s.get('cubes'):
+            cubes = copy.deepcopy(s['cubes'])
+            for c in cubes:
+                c['origin'][0] = round(-(c['origin'][0] + c['size'][0]), 5)
+                if 'pivot' in c:
+                    c['pivot'][0] = round(-c['pivot'][0], 5)
+                if 'rotation' in c:
+                    c['rotation'] = [c['rotation'][0], -c['rotation'][1], -c['rotation'][2]]
+            d['cubes'] = cubes
+        else:
+            d.pop('cubes', None)
+        n += 1
+    return n
+
+
+def symmetrize_running_gear(geo, outer=None):
+    """Both sides placed mirror-symmetric about x = 0, flush on one outer plane: every wheel bone (road wheels,
+    sprocket, idler) moved so its outer face is at +-`outer`, and the track bones (crude, broken, link and path
+    bones) so the track's outer face is 0.4 px beyond it, as on the healthy fitted vehicles (Leopard 2A4, 2K22M,
+    Marder). `outer` defaults to the road wheels' outer face when both sides agree. The source fits of these
+    vehicles had wheels, sprockets and tracks of one or both sides several px (the 9P149 up to 36 px) off."""
     bones = bones_of(geo)
 
-    def centre(b):
+    def extent(b):
         pm = b.get('poly_mesh')
         if pm and pm['positions']:
             P = np.array(pm['positions'])
-            return (P[:, 0].min() + P[:, 0].max()) / 2
+            return P[:, 0].min(), P[:, 0].max()
         if b.get('cubes'):
             xs = [c['origin'][0] for c in b['cubes']] + [c['origin'][0] + c['size'][0] for c in b['cubes']]
-            return (min(xs) + max(xs)) / 2
-        return b['pivot'][0]
+            return min(xs), max(xs)
+        return None
 
     def shift(b, dx):
         pm = b.get('poly_mesh')
@@ -221,28 +264,26 @@ def symmetrize_running_gear(geo):
                 c['pivot'][0] = round(c['pivot'][0] + dx, 5)
         b['pivot'][0] = round(b['pivot'][0] + dx, 5)
 
-    pairs = side_bones(bones, 'L')
-    wheels = {l: r for l, r in pairs.items() if l.startswith('wheel') and r in bones}
-    for l, r in wheels.items():
-        cl, cr = centre(bones[l]), centre(bones[r])
-        half = (cl - cr) / 2
-        shift(bones[l], half - cl)
-        shift(bones[r], -half - cr)
-    for l, r in (('WheelL', 'WheelR'),):
-        if l in bones and r in bones:
-            half = (bones[l]['pivot'][0] - bones[r]['pivot'][0]) / 2
-            bones[l]['pivot'][0], bones[r]['pivot'][0] = round(half, 5), round(-half, 5)
-    P = np.array(bones['wheelL0']['poly_mesh']['positions'])
-    inner = P[:, 0].min()
-    crude = bones['crudeTrackL']['cubes']
-    half_width = max(c['size'][0] for c in crude) / 2
-    target = inner - 0.8 + half_width
-    tracks = {l: r for l, r in pairs.items() if not l.startswith('wheel') and not l.startswith('Wheel') and r in bones}
-    cl0, cr0 = bones['TrackL']['pivot'][0], bones['TrackR']['pivot'][0]
-    for l, r in tracks.items():
-        shift(bones[l], target - cl0)
-        shift(bones[r], -target - cr0)
-    return round(float(target), 5), round(float(inner), 3)
+    road = sorted(n for n in bones if re.fullmatch(r'wheelL\d+', n))
+    if outer is None:
+        lo = [extent(bones[n])[1] for n in road]
+        ro = [-extent(bones[n.replace('L', 'R', 1)])[0] for n in road]
+        if max(abs(a - b) for a, b in zip(lo, ro)) > 1.0:
+            raise SystemExit(f'road wheel outer faces disagree (L {lo[:2]} R {ro[:2]}): give "wheelOuter"')
+        outer = float(np.mean(lo + ro))
+    for n, b in bones.items():
+        if re.fullmatch(r'wheel[LR](\d+|Front|Rear)', n):
+            e = extent(b)
+            shift(b, (outer - e[1]) if n[5] == 'L' else (-outer - e[0]))
+    for side, sign in (('L', 1), ('R', -1)):
+        e = extent(bones[f'crudeTrack{side}'])
+        dx = (outer + 0.4 - e[1]) if side == 'L' else (-outer - 0.4 - e[0])
+        for n, b in bones.items():
+            if re.fullmatch(rf'(Track{side}|crudeTrack{side}|brokenTrack{side}|trackMov{side}\d+|trackRot{side}\d+)', n):
+                shift(b, dx)
+        bones[f'Wheel{side}']['pivot'][0] = round(sign * abs(bones[f'wheel{side}0']['pivot'][0]), 5)
+    e = extent(bones['crudeTrackL'])
+    return round(float((e[0] + e[1]) / 2), 5), round(outer, 3)
 
 
 def stretch(geo, spec, scale):
@@ -338,6 +379,9 @@ def frame_origin(d, frame):
         return ws
     if frame == 'WeaponStationBarrel':
         return ws + np.array(d.get('PassengerWeaponStationBarrelPos', z), float)
+    a = (d.get('Attachments') or {}).get(frame)
+    if a:
+        return frame_origin(d, a['Parent']) + np.array(a['Position'], float)
     raise SystemExit(f'no origin for frame {frame}')
 
 
@@ -357,6 +401,7 @@ def import_weapons(spec, d):
         w = json.loads(text)
         if keep_pos:
             w['ShootPos'] = keep_pos
+        w.update(spec.get('weaponSet', {}).get(wname, {}))
         d['Weapons'][wname] = w
     return sources
 
@@ -405,6 +450,10 @@ def build_data(spec, tpl, geo, s, old_data, tpl_geo):
             p = pt(a['at'])
         at[name] = {'Parent': a['parent'], 'Position': r5(geo_to_data(p - origin[a['parent']])),
                     'Direction': [0, 0, 1]}
+        for key in ('RotationChannel',):
+            if key in a:
+                at[name][key] = a[key]
+        origin[name] = p          # later attachments may use this one as their frame
     # the driver's eye (tools/vehgen/driver_cameras.json, data blocks of the original model) scales with the model
     if 'driver_camera' in old_data.get('Attachments', {}):
         eye = old_data['Attachments']['driver_camera']
@@ -437,6 +486,16 @@ def build_data(spec, tpl, geo, s, old_data, tpl_geo):
         break
     if tpl_sign is None:
         raise SystemExit('template ShootPos convention not found')
+    for wname, fields in spec.get('weaponSet', {}).items():
+        d['Weapons'][wname].update(fields)
+    for wname, names in spec.get('muzzles', {}).items():
+        sp = d['Weapons'][wname]['ShootPos']
+        for key in ('MuzzleAttachments', 'MuzzleDirectionAttachments', 'EffectAttachments',
+                    'EffectDirectionAttachments'):
+            if key in sp:
+                sp[key] = list(names)
+        if 'Directions' in sp:
+            sp['Directions'] = [sp['Directions'][0]] * len(names)
     for wname, w in d['Weapons'].items():
         sp = w.get('ShootPos') or {}
         for old, new in spec.get('muzzleRename', {}).items():
@@ -459,8 +518,6 @@ def build_data(spec, tpl, geo, s, old_data, tpl_geo):
                 return r5([v[0], v[1], sign * v[2]])
             sp['Positions'] = [shoot(n) for n in names]
             sp['ViewPosition'] = shoot(sp.get('ViewAttachment', names[0]))
-    for wname, fields in spec.get('weaponSet', {}).items():
-        d['Weapons'][wname].update(fields)
     for key, value in spec.get('dataSet', {}).items():
         d[key] = value
 
@@ -490,7 +547,28 @@ def build_data(spec, tpl, geo, s, old_data, tpl_geo):
             raise SystemExit(f'OBB transform {tr} has no mapping')
         o['Size'] = r5(half * np.abs(k) / 16)
         obbs.append(o)
+    if spec.get('obb'):
+        # OBBs from this model's own boxes (model px, original model; 'bone' = that bone's own polygons)
+        obbs = []
+        for o in spec['obb']:
+            if 'bone' in o:
+                lo, hi = own_box(geo, o['bone'])
+            else:
+                lo, hi = np.array(o['box'][0], float) * s, np.array(o['box'][1], float) * s
+            tr = o.get('transform', 'Vehicle')
+            c = (lo + hi) / 2 - (origin[tr] if tr in origin else 0)
+            box = {'Size': r5((hi - lo) / 32), 'Position': r5(geo_to_data(c))}
+            if tr != 'Vehicle':
+                box['Transform'] = box['Rotation'] = tr
+            if o.get('part'):
+                box['Part'] = o['part']
+            obbs.append(box)
     d['OBB'] = obbs
+    for key in spec.get('keepData', []):
+        if key in old_data:
+            d[key] = copy.deepcopy(old_data[key])
+        else:
+            d.pop(key, None)
     contacts = []
     for name in vehgen.wheel_bones(bones):
         P = np.array(bones[name]['poly_mesh']['positions'])
@@ -522,7 +600,7 @@ def build_armor(spec, tpl, geo, tpl_geo):
     return a
 
 
-def build_client(spec, old_client, s, track_x=None):
+def build_client(spec, old_client, s, track_x=None, pivots=None):
     c = copy.deepcopy(old_client)
     rg = c.get('RunningGear', {}).get('TrackRender', {})
     lay = rg.get('EvaluationLayout', {})
@@ -540,6 +618,10 @@ def build_client(spec, old_client, s, track_x=None):
     if src and src in sides:
         other = sides['R' if src == 'L' else 'L']
         other['XCenter'] = -sides[src]['XCenter']
+    if spec.get('rig'):
+        c['FittedGroundRig'] = {'Schema': 1, 'Frame': 'RUNTIME_MODEL_PIXELS',
+                                'PitchBones': [{'Bone': n, 'Parent': 'turret', 'Pivot': pivots[n]}
+                                               for n in spec['rig']]}
     if track_x is not None:
         for name, side in sides.items():
             side['XCenter'] = round((track_x if name == 'L' else -track_x) * s, 5)
@@ -651,13 +733,17 @@ def main(argv):
     add_bones(geo, G.get('newBones', {}))
     for mv in G.get('moves', []):
         report.append(f'{move_components(geo, mv)} polys {mv["from"]} -> {mv["to"]}')
+    for name, pivot in G.get('setPivots', {}).items():
+        bones_of(geo)[name]['pivot'] = list(pivot)
     if G.get('mirrorRunningGear'):
         moved = mirror_running_gear(geo, G['mirrorRunningGear'])
         report.append(f'mirrored running gear: {len(moved)} bones, e.g. {moved[:3]}')
     track_x = None
+    if G.get('mirrorMeshes'):
+        report.append(f'running gear rebuilt from the {G["mirrorMeshes"]} side: {mirror_meshes(geo, G["mirrorMeshes"])} bones')
     if G.get('symmetrizeRunningGear'):
-        track_x, inner = symmetrize_running_gear(geo)
-        report.append(f'running gear symmetric: tracks at +-{track_x} px (wheels inner face {inner})')
+        track_x, outer = symmetrize_running_gear(geo, G.get('wheelOuter'))
+        report.append(f'running gear symmetric: outer face +-{outer} px, track centre +-{track_x} px')
     t_lo, t_hi = own_box(tpl_geo, 'hull')
     lo, hi = own_box(geo, 'hull')
     s = G['scale'] if isinstance(G.get('scale'), (int, float)) else float((t_hi[2] - t_lo[2]) / (hi[2] - lo[2]))
@@ -675,7 +761,8 @@ def main(argv):
     b = B()
     b.id = vid
     out.json(files_of(vid)['fallback'], vehgen.native_fallback(b, geo), compact=True)
-    out.json(files_of(vid)['client'], build_client(spec, orig['client'], s, track_x))
+    pivots = {b['name']: b['pivot'] for b in geo['minecraft:geometry'][0]['bones']}
+    out.json(files_of(vid)['client'], build_client(spec, orig['client'], s, track_x, pivots))
 
     tpl_data = vehgen.load(files_of(tid)['data'])
     data = build_data(spec, tpl_data, geo, s, orig['data'], tpl_geo)

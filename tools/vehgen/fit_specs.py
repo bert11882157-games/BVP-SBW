@@ -103,4 +103,98 @@ SPECS = {
                  'weapon.berts_vehicle_pack.jm12a1_heat_fs': 'JM12A1 HEAT-FS',
                  'weapon.berts_vehicle_pack.type_90_machinegun': '7.62 mm Type 74'},
     },
+    '9k22_tunguska': {
+        'id': '9k22_tunguska',
+        'template': 'tunguska',
+        'hitbox': (3.67, 4.46),
+        'geometry': {
+            # the early 2K22 (two 9M311 per side): the gun block, the two missile pods and the tracking radar were
+            # one bone; split like the 2K22M template (pods and radar elevate with the guns, FittedGroundRig)
+            'newBones': {
+                'pod_L': {'parent': 'turret', 'pivot': [21.2, 48.0, 18.35]},
+                'pod_R': {'parent': 'turret', 'pivot': [-21.2, 48.0, 18.35]},
+                'tracking_radar': {'parent': 'turret', 'pivot': [0.0, 47.3, -27.5]},
+            },
+            'moves': [
+                {'from': 'barell', 'to': 'pod_L', 'box': [[17.5, 43.0, -31.0], [27.0, 56.0, 31.0]],
+                 'centreX': [18.5, 30.0]},
+                {'from': 'barell', 'to': 'pod_R', 'box': [[-27.0, 43.0, -31.0], [-17.5, 56.0, 31.0]],
+                 'centreX': [-30.0, -18.5]},
+                {'from': 'barell', 'to': 'tracking_radar', 'box': [[-7.6, 42.4, -35.7], [7.6, 57.5, -26.3]]},
+            ],
+            # the guns elevate about the trunnions at the rear of the gun block, like the template's
+            'setPivots': {'barell': [0.0, 48.0, 18.35]},
+            # the left road wheels (16 px wide, the right 7) and track links (2.9 px, the right 8.2) were malformed
+            'mirrorMeshes': 'R',
+            'symmetrizeRunningGear': True,
+            'scale': 'templateHullLength',
+        },
+        'rig': ['pod_L', 'pod_R', 'tracking_radar'],
+        'attachments': {
+            'fitted_pod_L': {'parent': 'Turret', 'at': 'pivot:pod_L', 'RotationChannel': 'TURRET_PITCH'},
+            'fitted_pod_R': {'parent': 'Turret', 'at': 'pivot:pod_R', 'RotationChannel': 'TURRET_PITCH'},
+            'fitted_tracking_radar': {'parent': 'Turret', 'at': 'pivot:tracking_radar',
+                                      'RotationChannel': 'TURRET_PITCH'},
+            'gunnerCamera': {'parent': 'Turret', 'at': [7.97, 60.6, 0.4]},
+            'driverCamera': {'parent': 'Vehicle', 'at': [10.4, 40.32, -44.0]},
+            'driverSeat': {'parent': 'Vehicle', 'at': [10.4, 27.5, -40.0]},
+            'gunnerSeat': {'parent': 'Turret', 'at': [5.74, 43.3, 2.3]},
+            'turretPivot': {'parent': 'Vehicle', 'at': 'pivot:turret'},
+            'barrelPivot': {'parent': 'Turret', 'at': 'pivot:barell'},
+            'mainMuzzle': {'parent': 'Barrel', 'at': [0.0, 49.9, -39.6]},
+            'cannonMuzzle_1': {'parent': 'Barrel', 'at': [14.9, 49.9, -39.6]},
+            'cannonMuzzle_2': {'parent': 'Barrel', 'at': [16.35, 49.9, -39.1]},
+            'cannonMuzzle_3': {'parent': 'Barrel', 'at': [-14.9, 49.9, -39.6]},
+            'cannonMuzzle_4': {'parent': 'Barrel', 'at': [-16.35, 49.9, -39.1]},
+            'missileMuzzle_1': {'parent': 'fitted_pod_L', 'at': [21.2, 49.35, -29.8]},
+            'missileMuzzle_2': {'parent': 'fitted_pod_L', 'at': [21.2, 45.3, -29.8]},
+            'missileMuzzle_3': {'parent': 'fitted_pod_R', 'at': [-21.2, 49.35, -29.8]},
+            'missileMuzzle_4': {'parent': 'fitted_pod_R', 'at': [-21.2, 45.3, -29.8]},
+        },
+        'seats': [
+            {'frame': 'Turret', 'at': [5.74, 43.3, 2.3]},
+        ],
+        'muzzles': {'Missile': ['missileMuzzle_1', 'missileMuzzle_2', 'missileMuzzle_3', 'missileMuzzle_4']},
+        'weaponSet': {'Missile': {'Magazine': 4}},
+    },
+    '9p149_shturm': {
+        'id': '9p149_shturm',
+        'template': '9p148',
+        'hitbox': (2.9, 2.6),
+        'geometry': {
+            # MT-LB chassis: wheels, sprockets and tracks of both sides were 16-18 px off to one side (left wheels
+            # inside the hull, right tracks inside the hull); flush on the hull side, which is the MT-LB's track line
+            'symmetrizeRunningGear': True,
+            'wheelOuter': 28.5,
+            'scale': 1.0,
+        },
+        # the launcher arm turns and elevates about its base (the model's turret and barrel pivots)
+        'attachments': {
+            'driverCamera': {'parent': 'Vehicle', 'at': [9.6, 36.8, -36.8]},
+            # operator's 1K11 sight: commander's cupola, front right of the cab
+            'gunnerCamera': {'parent': 'Vehicle', 'at': [-10.0, 47.0, -40.0]},
+            'gunnerSeat': {'parent': 'Vehicle', 'at': [-10.0, 21.0, -40.0]},
+            'passengerSeat_1': {'parent': 'Vehicle', 'at': [9.6, 10.9, -36.8]},
+            'turretPivot': {'parent': 'Vehicle', 'at': 'pivot:turret'},
+            'barrelPivot': {'parent': 'Turret', 'at': 'pivot:barell'},
+            'missileMuzzle_1': {'parent': 'Barrel', 'at': [-13.0, 49.7, 10.2]},
+        },
+        'seats': [
+            {'frame': 'Vehicle', 'at': [-10.0, 21.0, -40.0]},           # operator (launcher)
+            {'frame': 'Vehicle', 'at': [9.6, 10.9, -36.8]},             # driver, front left
+        ],
+        # Shturm-S: 9M114 (radio command), 12 in the autoloader, one on the rail
+        'weaponFrom': {'Missile': ('mi24v', 'PilotMissile')},
+        'muzzles': {'Missile': ['missileMuzzle_1']},
+        'weaponSet': {'Missile': {'Magazine': 12, 'RPM': 6}},
+        'obb': [
+            {'bone': 'hull'},
+            {'box': [[-8.0, 12.0, -50.0], [8.0, 32.0, -30.0]], 'part': 'MainEngine'},
+            {'bone': 'barell', 'transform': 'Barrel', 'part': 'Turret'},
+        ],
+        # the MT-LB's tracked running data stays (the template is the wheeled BRDM-2 9P148)
+        'keepData': ['EngineType', 'EngineInfo', 'Mass', 'MaxEnergy', 'EngineSound', 'UpStep', 'RotateOffsetHeight',
+                     'ThirdPersonCameraPos', 'InertiaRotateRate', 'ParkingBrakeWhenUnoccupied', 'TurretTurnSpeed',
+                     'TurretPitchRange', 'Type', 'HUDColor'],
+    },
 }

@@ -26,11 +26,11 @@
   },
   "9k22_tunguska": {
     "eye": [
-      0.65,
-      2.52,
-      2.75
+      0.5743,
+      2.22652,
+      2.42974
     ],
-    "note": "GM-352 chassis: driver front left, ahead of the turret (turret face z 2.3), roof 2.31, nose slope from z 3.0"
+    "note": "GM-352 chassis: driver front left, ahead of the turret (turret face z 2.3), roof 2.31, nose slope from z 3.0 (x0.88354 with the model fitted to the 2K22M size, fit_existing.py)"
   },
   "9p149_shturm": {
     "eye": [
@@ -38,7 +38,8 @@
       2.3,
       2.3
     ],
-    "note": "MT-LB chassis: driver front left in the cab, behind the nose slope (from z 2.5), roof 2.10-2.16"
+    "note": "MT-LB chassis: driver front left in the cab, behind the nose slope (from z 2.5), roof 2.10-2.16",
+    "seat": 1
   },
   "_eyes_note": "Seat-0 sight eyes that sat inside the model (checked in game, eyes1 screenshots). 'eye' is the data-frame point; the attachment keeps its name and is written in its parent's frame (Turret: minus TurretPos at rest).",
   "_eyes": {
