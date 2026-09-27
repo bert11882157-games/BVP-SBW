@@ -67,6 +67,8 @@ object ParticleTool {
         xOffset: Double, yOffset: Double, zOffset: Double, speed: Double, force: Boolean, viewer: ServerPlayer
     ) {
         if (!VehicleDeathEffects.allowsFullFx(viewer.uuid)) return
+        // Retired effect: do not spend packets on it (clients create nothing for it either).
+        if (particle.type === ModParticleTypes.FIRE_STAR.get()) return
         level.sendParticles(viewer, particle, force, x, y, z, count, xOffset, yOffset, zOffset, speed)
     }
 

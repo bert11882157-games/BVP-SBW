@@ -53,6 +53,20 @@ public final class BvpKomodoVehicleVisual extends AbstractEntityVisual<GeoVehicl
     private static final long BAKE_NANOS_PER_FRAME = 1_000_000L;
     private static final Map<GeometryKey, Geometry> GEOMETRY = new HashMap<>();
     private static final ArrayDeque<Geometry> BAKING = new ArrayDeque<>();
+    /**
+     * Vertex data shared by every texture variant of a part (live, dead, camouflage): Flywheel pools meshes by
+     * identity, so a wreck's dead texture reuses the live meshes instead of adding new ones.
+     */
+    private static final Map<VertexKey, SharedMesh> SHARED = new HashMap<>();
+    /**
+     * One parked instance per model, never drawn (zero scale, far below the world; the GPU cull rejects it), which keeps
+     * the model's instancer and mesh resident. Flywheel deletes an instancer as soon as it has no visible instance and
+     * then re-packs and re-uploads its ENTIRE mesh pool (every vehicle's vertices) on the next frame, and again when the
+     * model comes back: in a battle that happened each time the last vehicle of a type left the view, died (texture
+     * swap) or respawned, a 50-100 ms frame each time.
+     */
+    private static final Map<Model, TransformedInstance> ANCHORS = new java.util.IdentityHashMap<>();
+    private static final Matrix4f ANCHOR_POSE = new Matrix4f().translation(0.0F, -1.0E6F, 0.0F).scale(0.0F);
     private static long budgetFrame = Long.MIN_VALUE;
 
     static {
@@ -162,6 +176,14 @@ public final class BvpKomodoVehicleVisual extends AbstractEntityVisual<GeoVehicl
             deleteInstances();
             instanceGeometry = pendingGeometry;
             for (Part part : instanceGeometry.parts) {
+                ANCHORS.computeIfAbsent(part.mesh.model, model -> {
+                    TransformedInstance anchor = instancerProvider().instancer(InstanceTypes.TRANSFORMED, model)
+                            .createInstance();
+                    anchor.setTransform(ANCHOR_POSE);
+                    anchor.setVisible(true);
+                    anchor.setChanged();
+                    return anchor;
+                });
                 TransformedInstance instance = instancerProvider()
                         .instancer(InstanceTypes.TRANSFORMED, part.mesh.model).createInstance();
                 instance.setVisible(false);
@@ -172,6 +194,8 @@ public final class BvpKomodoVehicleVisual extends AbstractEntityVisual<GeoVehicl
         int drawn = 0;
         int changed = 0;
         int poseHash = 1;
+        // Diagnostics only: hashing every part's matrix every frame was a third of this method's cost.
+        boolean recording = EliteDiagnostics.isClientEnabled() && (entity.tickCount <= 100 || entity.tickCount % 20 == 0);
         for (int index = 0; index < instances.size(); index++) {
             TransformedInstance instance = instances.get(index);
             boolean show = visible[index];
@@ -182,7 +206,7 @@ public final class BvpKomodoVehicleVisual extends AbstractEntityVisual<GeoVehicl
             if (!show) continue;
             drawn++;
             Matrix4f transform = transforms[index];
-            poseHash = 31 * poseHash + transform.hashCode();
+            if (recording) poseHash = 31 * poseHash + transform.hashCode();
             if (!instance.pose.equals(transform, 0.000001F) || instance.light != lights[index]) {
                 instance.setTransform(transform);
                 instance.light(lights[index]);
@@ -190,7 +214,7 @@ public final class BvpKomodoVehicleVisual extends AbstractEntityVisual<GeoVehicl
                 changed++;
             }
         }
-        if (entity.tickCount <= 100 || entity.tickCount % 20 == 0) {
+        if (recording) {
             record("INSTANCE_FRAME", "frame", frame, "instances", drawn,
                     "unique_meshes", instanceGeometry.meshes.size(), "changed_instances", changed,
                     "vertices", instanceGeometry.vertices, "pose_hash", poseHash);
@@ -238,6 +262,10 @@ public final class BvpKomodoVehicleVisual extends AbstractEntityVisual<GeoVehicl
 
     private static void clearGeometry() {
         for (Geometry geometry : GEOMETRY.values()) geometry.close();
+        // The engine that owned the anchors is gone with its instancers.
+        ANCHORS.clear();
+        for (SharedMesh mesh : SHARED.values()) mesh.memory.free();
+        SHARED.clear();
         GEOMETRY.clear();
         BAKING.clear();
         budgetFrame = Long.MIN_VALUE;
@@ -341,7 +369,7 @@ public final class BvpKomodoVehicleVisual extends AbstractEntityVisual<GeoVehicl
         boolean ready() { return cursor == parts.size(); }
 
         void close() {
-            for (BakedMesh mesh : meshes.values()) mesh.memory.free();
+            // vertex memory is shared ([SHARED]) and freed with it
             meshes.clear();
         }
     }
@@ -381,7 +409,9 @@ public final class BvpKomodoVehicleVisual extends AbstractEntityVisual<GeoVehicl
         }
     }
 
-    private record BakedMesh(Model model, MemoryBlock memory) { }
+    private record BakedMesh(Model model) { }
+
+    private record SharedMesh(SimpleQuadMesh mesh, MemoryBlock memory) { }
 
     /** Exact vertex equality shares repeated links without merging merely similar geometry. */
     private static final class VertexKey {
@@ -435,6 +465,13 @@ public final class BvpKomodoVehicleVisual extends AbstractEntityVisual<GeoVehicl
     private record VehicleModel(List<Model.ConfiguredMesh> meshes, Vector4fc boundingSphere) implements Model { }
 
     private static BakedMesh bake(VertexKey key, Material material, String name, Vector4f sphere) {
+        SimpleQuadMesh mesh = SHARED.computeIfAbsent(key, k -> bakeMesh(k, name)).mesh();
+        Model model = sphere == null ? new SingleMeshModel(mesh, material)
+                : new VehicleModel(List.of(new Model.ConfiguredMesh(material, mesh)), new Vector4f(sphere));
+        return new BakedMesh(model);
+    }
+
+    private static SharedMesh bakeMesh(VertexKey key, String name) {
         int count = key.values[0].length;
         MemoryBlock memory = MemoryBlock.mallocTracked((long) FullVertexView.STRIDE * count);
         try {
@@ -457,10 +494,7 @@ public final class BvpKomodoVehicleVisual extends AbstractEntityVisual<GeoVehicl
                 view.overlay(index, OverlayTexture.f_118083_);
                 view.light(index, 0);
             }
-            SimpleQuadMesh mesh = new SimpleQuadMesh(view, "bvp_vehicle:" + name);
-            Model model = sphere == null ? new SingleMeshModel(mesh, material)
-                    : new VehicleModel(List.of(new Model.ConfiguredMesh(material, mesh)), new Vector4f(sphere));
-            return new BakedMesh(model, memory);
+            return new SharedMesh(new SimpleQuadMesh(view, "bvp_vehicle:" + name), memory);
         } catch (RuntimeException | Error exception) {
             memory.free();
             throw exception;

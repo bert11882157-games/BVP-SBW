@@ -87,6 +87,23 @@ object FxLights {
         return weakest
     }
 
+    /**
+     * Multiplier for self-lit effect quads (fire, flash, afterburner flame; shader uniform `GlowBoost`): a little
+     * brighter in daylight, and much brighter as the surroundings get dark, so a fireball or a lit afterburner glows at
+     * night instead of looking like the same pale sprite.
+     */
+    @JvmStatic
+    fun glowBoost(partialTick: Float): Float {
+        val mc = Minecraft.getInstance()
+        val world = mc.level ?: return 1.15f
+        val pos = net.minecraft.core.BlockPos.containing(mc.gameRenderer.mainCamera.position)
+        val sky = world.getBrightness(net.minecraft.world.level.LightLayer.SKY, pos) / 15f *
+            world.getSkyDarken(partialTick).coerceIn(0f, 1f)
+        val block = world.getBrightness(net.minecraft.world.level.LightLayer.BLOCK, pos) / 15f * 0.8f
+        val dark = 1f - max(sky, block).coerceIn(0f, 1f)
+        return 1.15f + 1.35f * dark
+    }
+
     /** A flash: [level] block light at the centre, reaching [radius] blocks, fading to nothing over [ticks]. */
     @JvmStatic
     fun flash(x: Double, y: Double, z: Double, radius: Double, level: Double, ticks: Double) =
@@ -181,6 +198,7 @@ object FxLights {
         val order = (0 until count).sortedByDescending { lights[it].current(now) * lights[it].radius * lights[it].boost }
             .take(MAX_POOL_LIGHTS)
         var quads = 0
+        var walls = 0
         val pose = event.poseStack.last().pose()
         for (i in order) {
             val l = lights[i]
@@ -193,9 +211,46 @@ object FxLights {
             val strength = ((lv / 15.0) * (lv / 15.0) * 0.32 * l.boost).coerceAtMost(1.6)
             val bx0 = kotlin.math.floor(l.x - r).toInt(); val bx1 = kotlin.math.floor(l.x + r).toInt()
             val bz0 = kotlin.math.floor(l.z - r).toInt(); val bz1 = kotlin.math.floor(l.z + r).toInt()
+            // Column tops once per light, with a one-column border for the side faces.
+            val gw = bx1 - bx0 + 3
+            val gh = bz1 - bz0 + 3
+            if (heights.size < gw * gh) heights = IntArray(gw * gh)
+            for (gx in 0 until gw) for (gz in 0 until gh)
+                heights[gx * gh + gz] = world.getHeight(Heightmap.Types.MOTION_BLOCKING, bx0 - 1 + gx, bz0 - 1 + gz)
             for (bx in bx0..bx1) for (bz in bz0..bz1) {
                 if (quads >= MAX_POOL_QUADS) break
-                val top = world.getHeight(Heightmap.Types.MOTION_BLOCKING, bx, bz).toDouble()
+                val topI = heights[(bx - bx0 + 1) * gh + (bz - bz0 + 1)]
+                val top = topI.toDouble()
+                // Side faces: where a neighbouring column is lower, this column shows a vertical face; light it when it
+                // faces the light (block steps, walls, the sides of a crater rim).
+                for (d in 0 until 4) {
+                    if (walls >= MAX_WALL_QUADS) break
+                    val dx = SIDE_X[d]; val dz = SIDE_Z[d]
+                    val lower = heights[(bx - bx0 + 1 + dx) * gh + (bz - bz0 + 1 + dz)]
+                    if (lower >= topI) continue
+                    // the face plane and whether the light is in front of it
+                    val fx = if (dx > 0) bx + 1.0 else if (dx < 0) bx.toDouble() else 0.0
+                    val fz = if (dz > 0) bz + 1.0 else if (dz < 0) bz.toDouble() else 0.0
+                    val facing = if (dx != 0) (l.x - fx) * dx else (l.z - fz) * dz
+                    if (facing <= 0.05) continue
+                    val y0 = max(lower.toDouble(), l.y - r); val y1 = min(top, l.y + r)
+                    if (y1 - y0 < 0.05) continue
+                    // edge end points along the face
+                    val ax: Double; val az: Double; val cx: Double; val cz: Double
+                    if (dx != 0) { ax = fx; cx = fx; az = bz.toDouble(); cz = bz + 1.0 } else { az = fz; cz = fz; ax = bx.toDouble(); cx = bx + 1.0 }
+                    val w00 = wall(l, r, strength, ax, y0, az); val w01 = wall(l, r, strength, ax, y1, az)
+                    val w11 = wall(l, r, strength, cx, y1, cz); val w10 = wall(l, r, strength, cx, y0, cz)
+                    if (w00 + w01 + w11 + w10 < 0.004f) continue
+                    // a hair off the face, toward the light
+                    val ox = dx * 0.015; val oz = dz * 0.015
+                    val w = walls * 16
+                    wq[w] = (ax + ox - cam.x).toFloat(); wq[w + 1] = (y0 - cam.y).toFloat(); wq[w + 2] = (az + oz - cam.z).toFloat(); wq[w + 3] = w00
+                    wq[w + 4] = (ax + ox - cam.x).toFloat(); wq[w + 5] = (y1 - cam.y).toFloat(); wq[w + 6] = (az + oz - cam.z).toFloat(); wq[w + 7] = w01
+                    wq[w + 8] = (cx + ox - cam.x).toFloat(); wq[w + 9] = (y1 - cam.y).toFloat(); wq[w + 10] = (cz + oz - cam.z).toFloat(); wq[w + 11] = w11
+                    wq[w + 12] = (cx + ox - cam.x).toFloat(); wq[w + 13] = (y0 - cam.y).toFloat(); wq[w + 14] = (cz + oz - cam.z).toFloat(); wq[w + 15] = w10
+                    wc[walls * 3] = l.r; wc[walls * 3 + 1] = l.g; wc[walls * 3 + 2] = l.b
+                    walls++
+                }
                 val dy = l.y - top
                 if (dy < -1.0 || dy > r) continue                 // the surface must be under (or at) the light
                 val o = quads * 12
@@ -216,10 +271,20 @@ object FxLights {
                 quads++
             }
         }
-        lastPoolQuads = quads
-        if (quads == 0) return
+        lastPoolQuads = quads + walls
+        if (quads + walls == 0) return
         val builder = Tesselator.getInstance().builder
         builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR)
+        for (q in 0 until walls) {
+            val w = q * 16
+            for (v in 0 until 4) {
+                val a = wq[w + v * 4 + 3]
+                val over = kotlin.math.max(1f, a)
+                builder.vertex(pose, wq[w + v * 4], wq[w + v * 4 + 1], wq[w + v * 4 + 2])
+                    .color(min(1f, wc[q * 3] * over), min(1f, wc[q * 3 + 1] * over), min(1f, wc[q * 3 + 2] * over), min(1f, a))
+                    .endVertex()
+            }
+        }
         for (q in 0 until quads) {
             val o = q * 12
             for (v in 0 until 4) {
@@ -247,6 +312,21 @@ object FxLights {
     private val pq = FloatArray(MAX_POOL_QUADS * 12)
     private val py = FloatArray(MAX_POOL_QUADS)
     private val pc = FloatArray(MAX_POOL_QUADS * 3)
+    private const val MAX_WALL_QUADS = 4000
+    private val SIDE_X = intArrayOf(1, -1, 0, 0)
+    private val SIDE_Z = intArrayOf(0, 0, 1, -1)
+    private val wq = FloatArray(MAX_WALL_QUADS * 16)
+    private val wc = FloatArray(MAX_WALL_QUADS * 3)
+    private var heights = IntArray(64 * 64)
+
+    /** Light on a vertical face: plain 3-D falloff (the ground pool flattens its reach vertically). */
+    private fun wall(l: Light, r: Double, strength: Double, x: Double, y: Double, z: Double): Float {
+        val dx = x - l.x; val dy = y - l.y; val dz = z - l.z
+        val d = sqrt(dx * dx + dy * dy + dz * dz) / r
+        if (d >= 1.0) return 0f
+        val f = 1.0 - d
+        return (strength * 0.85 * f * f * f).toFloat()
+    }
 
     // ---------------------------------------------------------------- missile and rocket motors
 

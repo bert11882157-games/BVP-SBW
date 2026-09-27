@@ -13,7 +13,8 @@
     "BvpPolyMeshVertexAccessor",
     "BvpKomodoNativeModelMixin",
     "BvpKomodoRegistrarMixin",
-    "BvpKomodoUploadMixin"
+    "BvpKomodoUploadMixin",
+    "BvpMeshPoolProbeMixin"
   ],
   "injectors": {
     "defaultRequire": 1

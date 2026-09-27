@@ -109,9 +109,9 @@ object AfterburnerPlumes {
         plume.seenAt = time
         if (plume.intensity > 0.02) {
             val back = plume.radius * 3.0
-            // a lit afterburner is brilliant: it floods the airframe, the ground under a low pass and the ramp
+            // the original afterburner light, 25% more intense
             FxLights.sustain(key or 0x4100000000000000L, x + plume.dx * back, y + plume.dy * back, z + plume.dz * back,
-                5.0 + 15.0 * plume.intensity, 15.0 * plume.intensity, 1.0 + 1.6 * plume.intensity, 1f, 0.78f, 0.5f)
+                3.0 + 5.5 * plume.intensity, 15.0 * plume.intensity, 1.25, 1f, 0.5f, 0.22f)
         }
     }
 
@@ -297,6 +297,7 @@ object AfterburnerPlumes {
         RenderSystem.applyModelViewMatrix()
         mc.gameRenderer.lightTexture().turnOnLightLayer()
         RenderSystem.setShader { program }
+        program.safeGetUniform("GlowBoost").set(FxLights.glowBoost(mc.frameTime))
         RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_PARTICLES)
         RenderSystem.enableBlend()
         RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA,

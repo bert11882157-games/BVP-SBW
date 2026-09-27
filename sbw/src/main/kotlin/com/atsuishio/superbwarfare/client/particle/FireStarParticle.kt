@@ -28,8 +28,10 @@ open class FireStarParticle protected constructor(
             xSpeed: Double,
             ySpeed: Double,
             zSpeed: Double
-        ): Particle {
-            return FireStarParticle(worldIn, x, y, z, xSpeed, ySpeed, zSpeed, this.spriteSet)
+        ): Particle? {
+            // Fire-star (firework spark) effects are retired everywhere: no particle is ever created, whatever
+            // asks for one (impacts, repairs, wrecks, decoys, grinding aircraft, other servers' packets).
+            return null
         }
     }
 

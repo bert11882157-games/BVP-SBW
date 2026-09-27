@@ -16,8 +16,11 @@ object FramePhases {
     @JvmField var renderStart = 0L
     @JvmField var renderNanos = 0L
     @JvmField var joins = 0
+    /** Flywheel mesh-pool full re-uploads (counted by a BVP mixin), this frame. */
+    @JvmField var meshUploads = 0
+    @JvmField var meshUploadNanos = 0L
 
     fun reset() {
-        entitiesNanos = 0; particlesNanos = 0; tickNanos = 0; ticks = 0; renderNanos = 0; joins = 0
+        entitiesNanos = 0; particlesNanos = 0; tickNanos = 0; ticks = 0; renderNanos = 0; joins = 0; meshUploads = 0; meshUploadNanos = 0
     }
 }

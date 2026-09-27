@@ -92,8 +92,8 @@ object BlastEffects {
         blasts.add(blast)
         // the detonation: a white-hot flash that lights everything round it for a moment, far brighter than any
         // lamp (boosted ground glow, twice the fireball light's reach)
-        FxLights.flash(p.x, p.y + blast.radius * 0.5, p.z, (blast.radius * 10.0).coerceIn(16.0, 48.0), 15.0, 5.0,
-            3.5, 1f, 0.92f, 0.75f)
+        FxLights.flash(p.x, p.y + blast.radius * 0.5, p.z, (blast.radius * 7.0).coerceIn(12.0, 32.0), 15.0, 4.0,
+            2.0, 1f, 0.9f, 0.7f)
         // then the fireball lights its surroundings while it burns
         FxLights.flash(p.x, p.y + blast.radius * 0.5, p.z, max(10.0, blast.radius * 6.0), 15.0,
             BlastVisuals.expansionTicks(blast.kg) + 12.0, 1.4, 1f, 0.55f, 0.22f)
@@ -143,7 +143,8 @@ object BlastEffects {
 
     // ---------------------------------------------------------------- render
 
-    @SubscribeEvent
+    // Last of the after-particles passes, so the fireball is drawn over other effects' smoke instead of under it.
+    @SubscribeEvent(priority = net.minecraftforge.eventbus.api.EventPriority.LOWEST)
     fun onRender(event: RenderLevelStageEvent) {
         if (event.stage != RenderLevelStageEvent.Stage.AFTER_PARTICLES) return
         if (com.atsuishio.superbwarfare.diagnostics.ParticleProbe.hideBlasts) return
@@ -179,6 +180,7 @@ object BlastEffects {
         RenderSystem.applyModelViewMatrix()
         mc.gameRenderer.lightTexture().turnOnLightLayer()
         RenderSystem.setShader { program }
+        program.safeGetUniform("GlowBoost").set(FxLights.glowBoost(Minecraft.getInstance().frameTime))
         RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_PARTICLES)
         RenderSystem.enableBlend()
         RenderSystem.blendFuncSeparate(

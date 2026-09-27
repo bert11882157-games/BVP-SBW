@@ -27,8 +27,9 @@ import java.time.Instant
 object PerfProbe {
     private const val REQUEST = "diagnostic-perf.request"
     private const val POLL_TICKS = 4
-    private const val PHASES = 6
-    private val PHASE_NAMES = listOf("clientTickMs", "ticks", "entityTickMs", "particleTickMs", "renderMs", "entitiesJoined")
+    private const val PHASES = 8
+    private val PHASE_NAMES = listOf("clientTickMs", "ticks", "entityTickMs", "particleTickMs", "renderMs", "entitiesJoined",
+        "meshPoolUploads", "meshPoolUploadMs")
 
     private class Capture(val label: String, val seconds: Double, val batch: Boolean) {
         val startedNanos = System.nanoTime()
@@ -51,6 +52,8 @@ object PerfProbe {
             phases[at + 3] = FramePhases.particlesNanos / 1e6f
             phases[at + 4] = FramePhases.renderNanos / 1e6f
             phases[at + 5] = FramePhases.joins.toFloat()
+            phases[at + 6] = FramePhases.meshUploads.toFloat()
+            phases[at + 7] = FramePhases.meshUploadNanos / 1e6f
             frames[count++] = ms
         }
     }
@@ -223,7 +226,10 @@ object PerfProbe {
             out["otherMs"] = (out["frameMs"] as Double) - accounted
             return out
         }
-        return linkedMapOf("median" to band(0.4, 0.6), "slowest10pct" to band(0.9, 1.0), "worst1pct" to band(0.99, 1.0))
+        var uploads = 0.0; var uploadMs = 0.0
+        for (i in 0 until n) { uploads += active.phases[i * PHASES + 6]; uploadMs += active.phases[i * PHASES + 7] }
+        return linkedMapOf("median" to band(0.4, 0.6), "slowest10pct" to band(0.9, 1.0), "worst1pct" to band(0.99, 1.0),
+            "meshPoolUploadsTotal" to uploads, "meshPoolUploadMsTotal" to uploadMs)
     }
 
     private fun per(value: Long, frames: Int) = if (frames == 0) 0.0 else value.toDouble() / frames
