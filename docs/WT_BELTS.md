@@ -69,3 +69,21 @@ The tracer-only fixes (12.7 mm, 14.5 mm and 7.62 mm families) edit the existing 
   wt_belts.py is the source for belt-round TNT.
 - The 14.5 mm KPVT BZT tracer colour is inferred from the 12.7 mm BZT-44 (same Soviet red composition). It was not
   checked against the KPVT's own datamine entry.
+
+## Tank rounds and missiles (`tools/ballistics/wt_tank_rounds.py`)
+
+The same sources set, per round:
+- penetration at 10 m (profile `Combat.PenetrationMm`; the entry's `ApDurability` follows it);
+- TNT equivalent;
+- muzzle velocity.
+
+Existing values within WT's rounding are kept: TNT within 0.5 %, velocity within 1 m/s.
+
+Values changed by the first run:
+- Leopard 2A6 DM53: 500 → 653 mm (the L55 value).
+- Mi-24V 9M114: 575 → 560 mm.
+- M332: 1021 → 1249 m/s.
+- M900, M830A1, M431 and 3BM25: small velocity corrections.
+
+The table covers the 125/120/115/105/100/90 mm rounds in the pack plus 9M114 and 9M311. M829A1, JM33 and JM12A1 are
+listed for the M1A1 and Type 90.
