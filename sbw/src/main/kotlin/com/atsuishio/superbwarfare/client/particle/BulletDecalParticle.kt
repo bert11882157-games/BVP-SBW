@@ -144,8 +144,12 @@ class BulletDecalParticle @JvmOverloads constructor(
             .color(red, green, blue, alphaFade).uv2(lightColor).endVertex()
     }
 
+    // the block state the decal was last found attached to: while it is unchanged the (costly) shape test is skipped
+    private var attachedTo: net.minecraft.world.level.block.state.BlockState? = null
+
     private fun shouldRemove(): Boolean {
         val blockState = this.level.getBlockState(this.pos)
+        if (blockState === attachedTo) return false
         if (blockState.isAir) {
             return true
         } else {
@@ -156,10 +160,12 @@ class BulletDecalParticle @JvmOverloads constructor(
             }
             val baseBlockBoundingBox = shape.bounds()
             val blockBoundingBox = baseBlockBoundingBox.move(this.pos)
-            return !blockBoundingBox.intersects(
+            val detached = !blockBoundingBox.intersects(
                 this.x - 0.1, this.y - 0.1, this.z - 0.1,
                 this.x + 0.1, this.y + 0.1, this.z + 0.1
             )
+            if (!detached) attachedTo = blockState
+            return detached
         }
     }
 
