@@ -40,8 +40,7 @@ internal class VehicleWeaponRuntime(
                                      val indices: List<Int>)
     private val selectionCache = mutableMapOf<Int, SelectionCache>()
     /**
-     * Client only: the selectable weapons per seat, kept for one level tick on the local player's vehicle and ten on
-     * others. Rendering asks several times a frame per
+     * Client only: the selectable weapons per seat, kept for one level tick. Rendering asks several times a frame per
      * vehicle (chassis presentation, animations, sounds), and even the validated cache above rebuilt the weapon list,
      * hashed the selection and listed the ammo on each ask (10% of the render thread in a battle). Keyed on the
      * level's game time, which advances even for vehicles the client does not tick.
@@ -223,10 +222,7 @@ internal class VehicleWeaponRuntime(
         val level = vehicle.level()
         if (level.isClientSide && seatIndex in clientSelection.indices) {
             val time = level.gameTime
-            // Vehicles the local player is not riding refresh every 10 ticks: their selection only steers sounds and
-            // turret presentation, and remote switches arrive by sync anyway.
-            val hold = if (vehicle.passengers.any { it is net.minecraft.world.entity.player.Player && it.isLocalPlayer }) 1L else 10L
-            clientSelection[seatIndex]?.let { (at, indices) -> if (time >= at && time - at < hold) return indices }
+            clientSelection[seatIndex]?.let { (at, indices) -> if (at == time) return indices }
             return validWeaponIndicesUncached(seatIndex).also { clientSelection[seatIndex] = time to it }
         }
         return validWeaponIndicesUncached(seatIndex)
@@ -269,6 +265,14 @@ internal class VehicleWeaponRuntime(
     }
 
     fun selectedWeaponIndex(seatIndex: Int): Int {
+        // On vehicles the local player is not riding, the client trusts the server's synced selection: the server
+        // normalises it whenever the loadout or selection changes, and the client only needs it for sounds and pose.
+        // The local player's own vehicle (HUD, switching) and an unset selection still take the full check.
+        if (vehicle.level().isClientSide) {
+            val persisted = vehicle.selectedWeapon.getOrNull(seatIndex) ?: -1
+            if (persisted >= 0 && vehicle.passengers.none { it is net.minecraft.world.entity.player.Player && it.isLocalPlayer })
+                return persisted
+        }
         val ordered = validWeaponIndices(seatIndex)
         return resolvedPrimaryIndex(seatIndex, ordered)
     }
