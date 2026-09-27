@@ -135,6 +135,8 @@ open class VehicleModel<T> : GeoModel<T>() where T : VehicleEntity, T : GeoAnima
 
     /** Compiled bindings are keyed by the active model/LOD bone set and survive safe LOD swaps. */
     private val transformsByBoneSet = mutableMapOf<List<String>, List<Pair<String, TransformContext<T>>>>()
+    private val transformsByFirstBone =
+        java.util.IdentityHashMap<Any, Pair<Int, List<Pair<String, TransformContext<T>>>>>()
 
     open fun collectTransform(boneName: String): TransformContext<T>? {
         // Typed role state owns visibility.  Do not consult a vehicle-model override here:
@@ -276,8 +278,12 @@ open class VehicleModel<T> : GeoModel<T>() where T : VehicleEntity, T : GeoAnima
     }
 
     override fun setCustomAnimations(vehicle: T, instanceId: Long, animationState: AnimationState<T>) {
-        val boneNames = animationProcessor.registeredBones.map { it.name }
-        val transforms = transformsByBoneSet.getOrPut(boneNames) {
+        // the bone set only changes when the baked model does: keyed by its first bone and size (identity), the
+        // name list (and hashing it) is built only then, not every frame for every vehicle
+        val registered = animationProcessor.registeredBones
+        val first = registered.firstOrNull()
+        val cachedSet = if (first != null) transformsByFirstBone[first]?.takeIf { it.first == registered.size } else null
+        val transforms = cachedSet?.second ?: transformsByBoneSet.getOrPut(registered.map { it.name }) {
             buildList {
                 animationProcessor.registeredBones.forEach { bone ->
                     val name = bone.name
@@ -292,6 +298,7 @@ open class VehicleModel<T> : GeoModel<T>() where T : VehicleEntity, T : GeoAnima
                 }
             }
         }
+        if (first != null && cachedSet == null) transformsByFirstBone[first] = registered.size to transforms
 
         val partialTick = animationState.partialTick
         val parts = VehicleRenderPartSnapshot.capture(vehicle, partialTick)
