@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.yourname.berts_vehicle_pack.armor.ArmorProfiles.ArmorBox;
+import com.yourname.berts_vehicle_pack.armor.ArmorProfiles.Vec;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,6 +39,12 @@ import java.util.regex.Pattern;
  * <p>Uses only Gson and plain Java, so it is safe on the dedicated server.</p>
  */
 final class ArmorMeshLoader {
+    /**
+     * Optional volume-bone field: the outer-surface normal of a plate slab, in the bone's geo space (the direction
+     * the lined vehicle face looks). Written by tools/armor_mesh/build_mesh.py; see docs/ARMOR_MESH.md.
+     */
+    static final String SURFACE_NORMAL_KEY = "bvp_surface_normal";
+
     private static final Pattern FRAME_NAME = Pattern.compile("^(?:armor[_.-]?)?(hull|turret|barrel|barell)\\d*$",
             Pattern.CASE_INSENSITIVE);
     private static final Pattern THICKNESS = Pattern.compile("^(\\d+(?:[.p]\\d+)?)(?:mm)?$", Pattern.CASE_INSENSITIVE);
@@ -254,6 +261,13 @@ final class ArmorMeshLoader {
                 result.warnings.add(label + ": bone '" + name + "' has a cyclic parent chain; skipped");
                 continue;
             }
+            if (bone.has(SURFACE_NORMAL_KEY)) {
+                double[] n = vector(bone, SURFACE_NORMAL_KEY);
+                accumulator.surfaceNormal = new double[] {
+                        matrix[0] * n[0] + matrix[1] * n[1] + matrix[2] * n[2],
+                        matrix[4] * n[0] + matrix[5] * n[1] + matrix[6] * n[2],
+                        matrix[8] * n[0] + matrix[9] * n[1] + matrix[10] * n[2]};
+            }
             appendPolyMesh(bone, matrix, accumulator, label, result.warnings);
             appendCubes(bone, matrix, accumulator);
         }
@@ -269,6 +283,11 @@ final class ArmorMeshLoader {
             double[] soup = accumulator.toArmorLocal(mirrorProfileX);
             ArmorMeshVolume volume = ArmorMeshVolume.build(soup, accumulator.triangles, volumeLabel, result.warnings);
             if (volume == null) continue;
+            if (accumulator.surfaceNormal != null) {
+                double sign = mirrorProfileX ? 1.0D : -1.0D;
+                volume.setSurfaceNormal(new Vec(sign * accumulator.surfaceNormal[0], accumulator.surfaceNormal[1],
+                        accumulator.surfaceNormal[2]));
+            }
             if (!usedNames.add(parsed.name().toLowerCase(Locale.ROOT))) {
                 result.warnings.add(volumeLabel + ": volume name '" + parsed.name()
                         + "' is used twice; hit highlights and ERA spent state are shared by name");
@@ -502,6 +521,8 @@ final class ArmorMeshLoader {
         final Frame frame;
         double[] soup = new double[9 * 16];
         int triangles;
+        /** Geo-space outer-surface normal from the volume bone's {@code bvp_surface_normal}, or null. */
+        double[] surfaceNormal;
 
         Accumulator(String bone, VolumeName name, Frame frame) {
             this.bone = bone;

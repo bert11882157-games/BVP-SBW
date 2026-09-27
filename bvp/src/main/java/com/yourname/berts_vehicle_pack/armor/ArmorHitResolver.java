@@ -166,35 +166,70 @@ final class ArmorHitResolver {
         }
         double inflation = Math.min(0.03D, Math.max(0.005D, impactTolerance * 0.1D));
         FrameRays rays = new FrameRays(target, hullStart, direction);
+        // Mesh volumes are ranked by where the shot meets the exact solid; the numerical skin only decides
+        // hits that graze past every exact solid. A skin grows every face of a mitred plate slab, so near an edge
+        // it lets a later plate's grown miter face win over the plate the shot actually strikes (and reports the
+        // miter as the struck face). Box volumes keep the grown ranking they were tuned with.
         ArmorBox bestBox = null;
         int bestFrame = 0;
         double best = Double.POSITIVE_INFINITY;
+        boolean bestExact = false;
+        ArmorBox grazeBox = null;
+        int grazeFrame = 0;
+        double graze = Double.POSITIVE_INFINITY;
         for (ArmorBox box : boxes) {
             int frame = FrameRays.frameIndex(box);
             Vec frameStart = rays.start(frame);
             if (frameStart == null) continue;
             Vec frameDirection = rays.direction(frame);
             double boundsEntry = box.boundsEntry(frameStart, frameDirection, maxDistance, inflation);
-            // Missing the grown bounds, or entering them beyond the best hit, rules the volume out.
+            // Missing the grown bounds, or entering them beyond the best ranked hit, rules the volume out.
             if (!(boundsEntry <= best + CULL_MARGIN)) continue;
             double distance = box.rayHitDistance(frameStart, frameDirection, maxDistance, inflation);
-            if (Double.isFinite(distance) && distance >= 0.0D && (bestBox == null || distance < best)) {
+            if (!(Double.isFinite(distance) && distance >= 0.0D)) continue;
+            double rank = distance;
+            if (box.isMesh()) {
+                double exact = box.rayHitDistance(frameStart, frameDirection, maxDistance, 0.0D);
+                if (!(Double.isFinite(exact) && exact >= 0.0D)) {
+                    if (distance < graze) {
+                        grazeBox = box;
+                        grazeFrame = frame;
+                        graze = distance;
+                    }
+                    continue;
+                }
+                rank = exact;
+            }
+            if (bestBox == null || rank < best) {
                 bestBox = box;
                 bestFrame = frame;
-                best = distance;
+                best = rank;
+                bestExact = box.isMesh();
             }
         }
+        double skin = inflation;
         if (bestBox == null) {
-            return null;
+            if (grazeBox == null) {
+                return null;
+            }
+            bestBox = grazeBox;
+            bestFrame = grazeFrame;
+            best = graze;
+        } else if (bestExact) {
+            skin = 0.0D;
         }
         Vec frameStart = rays.start(bestFrame);
         Vec frameDirection = rays.direction(bestFrame);
         Vec frameImpact = frameStart.add(frameDirection.scale(best));
         Vec hullImpact = pointToHullFrame(target, bestBox, frameImpact);
-        // Mesh hits carry the true normal of the entered triangle; box hits keep the legacy lookup.
-        Vec normal = bestBox.isMesh()
-                ? bestBox.volume.rayEntryNormal(frameStart, frameDirection, maxDistance, inflation)
-                : null;
+        // Mesh hits carry the true normal of the entered triangle; box hits keep the legacy lookup. A shot that
+        // only grazes a mesh plate's skin met no face of it: it is scored against the surface the plate lines.
+        Vec normal = null;
+        if (bestBox.isMesh()) {
+            Vec surface = !bestExact && bestBox.volume instanceof ArmorMeshVolume mesh ? mesh.surfaceNormal() : null;
+            normal = surface != null ? surface
+                    : bestBox.volume.rayEntryNormal(frameStart, frameDirection, maxDistance, skin);
+        }
         return new ArmorHit(bestBox, frameImpact, hullImpact, best, normal);
     }
 

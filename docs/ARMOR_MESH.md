@@ -109,6 +109,15 @@ example `plate__thick__x`) is skipped and logged.
   including the thin "skin" that stops shells from slipping through seams between plates. Concave pieces
   work too; for those the skin is the space within the same distance of the surface.
 * Use as few triangles as the shape needs. Armor never needs the visual model's detail.
+* Optional `"bvp_surface_normal": [x, y, z]` on a plate's volume bone names the vehicle face the plate lines
+  (outward, in the bone's geo space). A shot that only passes through a mesh plate's skin, without touching
+  the solid, is scored against this face rather than whichever skin face it crossed. The generator below
+  writes it on every plate. Hand-made plates may leave it out.
+* **Mesh plates are ranked by their solids.** When a shot's ray crosses several mesh plates, the first
+  plate whose actual solid the ray meets wins, and the skin only decides shots that miss every solid
+  (grazes). The angle is taken from the face the shot really enters. So neighbouring slabs may meet at any
+  angle without a later plate's grown edge winning near the seam. Box volumes keep their old skin-first
+  ranking.
 
 ### Rotations
 
@@ -181,6 +190,57 @@ X-mirrored profiles `t72a` and `t72b`; starter volumes come from SBW vehicle-loc
 `(16x, 16y, -16z)`. The loader applies the inverse, so a template loaded as a mesh reproduces the boxes
 exactly. `ArmorMeshEquivalenceTest` fires 2,500 rays and 1,500 points per profile at the box and mesh
 versions of all 61 box profiles and requires identical results.
+
+## Generating a mesh from the vehicle model
+
+`tools/armor_mesh/build_mesh.py <id>` builds an armor mesh from the visual model and a spec,
+`tools/armor_mesh/specs/<id>.json`. The spec says which model parts are armored structure, how thick each
+face region is, and where the modules go. The T-90A (`t90a`) is the first vehicle done this way.
+
+* **Hull.** The side profile (`hull.profile`, z/y points) is extruded to `hull.halfWidth`, then optionally cut
+  by `hull.chamfers` planes (`mirrorX` for both sides). Each face is split by `hull.cuts` and assigned a
+  thickness by the first `hull.regions` rule it matches. A rule can match on the normal (`nx`, `ny`, `nz`,
+  `anx` = |nx|), the centre (`x`, `y`, `z`, `ax` = |x|) or both. It gives either `mm`, or
+  `los: [dx, dy, dz, mm]`: the line-of-sight thickness along that direction, turned into nominal mm for
+  the face's angle, with `minMm` as a floor.
+* **Turret and mantlet.** `parts` select connected components of a model bone (`within` bounds plus
+  `minVolume`). Fittings, ERA, sights and the barrel tube are left out. The selection's convex hull, or each
+  component's own hull with `"each": true` for stepped or staggered pieces, is split and classified the
+  same way.
+* **Plates.** Every face becomes a *mitred slab*: the part of the solid within 1 px of that face and nearer
+  to it than to any other face. Neighbouring slabs share their mitre planes exactly, so the shell has no
+  seams and no rim of one plate is ever exposed. Every slab is written as a closed triangulated convex
+  solid, and the build fails if any edge is open.
+* **Modules, automatic.** `modules.engine` fills the hull behind the turret ring. `modules.carousel`
+  places an autoloader ring under the turret ring. `modules.racks` adds extra ammo boxes.
+  `modules.tracks` adds per-side run, idler and sprocket track modules.
+* To make a region thicker, add a rule for it. For a weak spot, add a cut that isolates the patch, then a
+  thinner rule for it (e.g. `ufp_driver_port`, `sight_notch`).
+
+```
+python3 tools/armor_mesh/build_mesh.py t90a            # write armor_mesh/t90a.geo.json
+python3 tools/armor_mesh/build_mesh.py t90a --report   # list the volumes only
+```
+
+### Hit registration test
+
+```
+python3 tools/armor_mesh/hitreg_rays.py t90a rays.jsonl --step 2 --az 10 --el=-8,0,12,30,55,80
+# ArmorMeshHitregHarness (bvp/src/test) resolves every ray with the game's own resolver at turret yaws:
+java ... ArmorMeshHitregHarness t90a <armor.json> <mesh.geo.json> rays.jsonl out.csv <turretPos> <barrelPos> 0,45,90,180,270
+python3 tools/armor_mesh/hitreg_report.py t90a rays.jsonl out.csv
+```
+
+`hitreg_rays.py` fires parallel ray grids from every direction at the visual model and labels the first
+model face each ray meets: core structure, track, ERA, barrel or fitting. The harness runs those rays
+through `ArmorHitResolver`, `ArmorModuleResolver` and the angle rule. The report fails on any of these:
+
+* a core ray that finds no plate;
+* a plate entry more than 2 px from the model surface, measured along the plate normal;
+* an entered face that is not the plate's own face;
+* a fitting, ERA or track ray with structure behind it that finds no plate;
+* a turret result that changes when the turret turns, other than a rotated shot now meeting hull armor or
+  a track first, or a skin graze now resolving to the solid behind it.
 
 ## For developers
 

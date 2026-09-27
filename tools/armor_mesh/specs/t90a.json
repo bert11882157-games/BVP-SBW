@@ -1,0 +1,817 @@
+{
+  "_note": "T-90A mesh armor spec (geo px, +X vehicle left, nose -Z). Hull core measured on the model with ray probes (tools/armor_mesh/build_mesh.py docstring); thickness targets approximate War Thunder's T-90A X-ray (composite given as RHA-equivalent vs APFSDS). 'los' = [dx, dy, dz, mm]: mm met by a shot along that direction. Edit any region and re-run build_mesh.py.",
+  "hull": {
+    "halfWidth": 17.3,
+    "profile": [
+      [
+        -54.5,
+        14.9
+      ],
+      [
+        -29.1,
+        24.0
+      ],
+      [
+        55.6,
+        24.0
+      ],
+      [
+        55.6,
+        17.3
+      ],
+      [
+        40.2,
+        7.7
+      ],
+      [
+        -44.5,
+        7.7
+      ]
+    ],
+    "cuts": [
+      {
+        "when": {
+          "ny": [
+            0.5,
+            0.99
+          ],
+          "nz": [
+            -1,
+            -0.1
+          ]
+        },
+        "planes": [
+          [
+            1,
+            0,
+            0,
+            4.5
+          ],
+          [
+            1,
+            0,
+            0,
+            -4.5
+          ],
+          [
+            0,
+            1,
+            0,
+            22.2
+          ]
+        ]
+      },
+      {
+        "when": {
+          "ny": [
+            0.99,
+            1.01
+          ]
+        },
+        "planes": [
+          [
+            0,
+            0,
+            1,
+            -22
+          ],
+          [
+            0,
+            0,
+            1,
+            -12
+          ],
+          [
+            0,
+            0,
+            1,
+            22
+          ],
+          [
+            1,
+            0,
+            0,
+            4
+          ],
+          [
+            1,
+            0,
+            0,
+            -4
+          ]
+        ]
+      },
+      {
+        "when": {
+          "anx": [
+            0.99,
+            1.01
+          ]
+        },
+        "planes": [
+          [
+            0,
+            1,
+            0,
+            15
+          ]
+        ]
+      }
+    ],
+    "regions": [
+      {
+        "name": "ufp_driver_port",
+        "when": {
+          "ny": [
+            0.5,
+            0.99
+          ],
+          "nz": [
+            -1,
+            -0.1
+          ],
+          "ax": [
+            0,
+            4.5
+          ],
+          "y": [
+            22.2,
+            30
+          ]
+        },
+        "mm": 45
+      },
+      {
+        "name": "ufp",
+        "when": {
+          "ny": [
+            0.5,
+            0.99
+          ],
+          "nz": [
+            -1,
+            -0.1
+          ]
+        },
+        "los": [
+          0,
+          0,
+          -1,
+          480
+        ]
+      },
+      {
+        "name": "lfp",
+        "when": {
+          "ny": [
+            -1,
+            -0.1
+          ],
+          "nz": [
+            -1,
+            -0.1
+          ]
+        },
+        "mm": 80
+      },
+      {
+        "name": "driver_hatch",
+        "when": {
+          "ny": [
+            0.99,
+            1.01
+          ],
+          "ax": [
+            0,
+            4
+          ],
+          "z": [
+            -30,
+            -22
+          ]
+        },
+        "mm": 20
+      },
+      {
+        "name": "roof_front",
+        "when": {
+          "ny": [
+            0.99,
+            1.01
+          ],
+          "z": [
+            -40,
+            -12
+          ]
+        },
+        "mm": 45
+      },
+      {
+        "name": "engine_deck",
+        "when": {
+          "ny": [
+            0.99,
+            1.01
+          ],
+          "z": [
+            22,
+            60
+          ]
+        },
+        "mm": 20
+      },
+      {
+        "name": "roof_mid",
+        "when": {
+          "ny": [
+            0.99,
+            1.01
+          ]
+        },
+        "mm": 30
+      },
+      {
+        "name": "belly",
+        "when": {
+          "ny": [
+            -1.01,
+            -0.99
+          ]
+        },
+        "mm": 20
+      },
+      {
+        "name": "side_upper",
+        "when": {
+          "anx": [
+            0.99,
+            1.01
+          ],
+          "y": [
+            15,
+            30
+          ]
+        },
+        "mm": 80
+      },
+      {
+        "name": "side_lower",
+        "when": {
+          "anx": [
+            0.99,
+            1.01
+          ]
+        },
+        "mm": 70
+      },
+      {
+        "name": "side_rear_chamfer",
+        "when": {
+          "anx": [
+            0.7,
+            0.99
+          ],
+          "nz": [
+            0.1,
+            0.5
+          ],
+          "ny": [
+            -1,
+            0
+          ]
+        },
+        "mm": 70
+      },
+      {
+        "name": "rear_top_corner",
+        "when": {
+          "anx": [
+            0.4,
+            0.8
+          ],
+          "ny": [
+            0.6,
+            0.9
+          ],
+          "nz": [
+            0.1,
+            0.5
+          ]
+        },
+        "mm": 40
+      },
+      {
+        "name": "rear_plate",
+        "when": {
+          "nz": [
+            0.99,
+            1.01
+          ]
+        },
+        "mm": 40
+      },
+      {
+        "name": "rear_lower",
+        "when": {
+          "nz": [
+            0.1,
+            1
+          ],
+          "ny": [
+            -1,
+            -0.1
+          ]
+        },
+        "mm": 40
+      }
+    ],
+    "_profile_note": "UFP plane n.p = 32.4 and LFP n.p = 19.8 fitted to the model's own largest hull faces with those normals; belly 7.7, roof 24.0, rear 55.6, lower rear slope from the side probe",
+    "chamfers": [
+      {
+        "name": "rear_lower_corner",
+        "plane": [
+          -0.8846,
+          -0.3985,
+          0.2425,
+          20.224
+        ],
+        "mirrorX": true
+      },
+      {
+        "name": "rear_top_corner",
+        "plane": [
+          0.729,
+          0.643,
+          0.2348,
+          39.782
+        ],
+        "mirrorX": true
+      }
+    ]
+  },
+  "ring": {
+    "name": "turret_ring",
+    "mm": 60,
+    "center": [
+      0,
+      0,
+      -4.5
+    ],
+    "rInner": 14.0,
+    "rOuter": 16.0,
+    "y": [
+      24.0,
+      25.2
+    ],
+    "segments": 16
+  },
+  "parts": [
+    {
+      "name": "turret_shell",
+      "bone": "turret",
+      "frame": "turret",
+      "select": [
+        {
+          "within": [
+            [
+              -27,
+              24.8,
+              -23
+            ],
+            [
+              27,
+              36,
+              24
+            ]
+          ],
+          "minVolume": 20000
+        }
+      ],
+      "cuts": [
+        {
+          "when": {
+            "nz": [
+              -1.01,
+              -0.5
+            ]
+          },
+          "planes": [
+            [
+              1,
+              0,
+              0,
+              5
+            ],
+            [
+              1,
+              0,
+              0,
+              -5
+            ],
+            [
+              1,
+              0,
+              0,
+              12
+            ],
+            [
+              1,
+              0,
+              0,
+              -12
+            ]
+          ]
+        }
+      ],
+      "regions": [
+        {
+          "name": "turret_front_center",
+          "when": {
+            "nz": [
+              -1.01,
+              -0.5
+            ],
+            "ax": [
+              0,
+              5
+            ]
+          },
+          "los": [
+            0,
+            0,
+            -1,
+            450
+          ]
+        },
+        {
+          "name": "sight_notch",
+          "when": {
+            "nz": [
+              -1.01,
+              -0.5
+            ],
+            "x": [
+              5,
+              12
+            ]
+          },
+          "los": [
+            0,
+            0,
+            -1,
+            300
+          ]
+        },
+        {
+          "name": "turret_front_inner_r",
+          "when": {
+            "nz": [
+              -1.01,
+              -0.5
+            ],
+            "x": [
+              -12,
+              -5
+            ]
+          },
+          "los": [
+            0,
+            0,
+            -1,
+            450
+          ]
+        },
+        {
+          "name": "turret_front_outer",
+          "when": {
+            "nz": [
+              -1.01,
+              -0.5
+            ]
+          },
+          "los": [
+            0,
+            0,
+            -1,
+            500
+          ]
+        },
+        {
+          "name": "turret_roof",
+          "when": {
+            "ny": [
+              0.7,
+              1.01
+            ]
+          },
+          "mm": 40
+        },
+        {
+          "name": "turret_floor",
+          "when": {
+            "ny": [
+              -1.01,
+              -0.7
+            ]
+          },
+          "mm": 40
+        },
+        {
+          "name": "turret_side",
+          "when": {
+            "anx": [
+              0.5,
+              1.01
+            ]
+          },
+          "mm": 80
+        },
+        {
+          "name": "turret_rear",
+          "when": {
+            "nz": [
+              0.5,
+              1.01
+            ]
+          },
+          "mm": 60
+        },
+        {
+          "name": "turret_shell",
+          "mm": 60
+        }
+      ]
+    },
+    {
+      "name": "cheek_l",
+      "bone": "turret",
+      "frame": "turret",
+      "select": [
+        {
+          "within": [
+            [
+              14,
+              26.5,
+              -26
+            ],
+            [
+              33.5,
+              36.2,
+              -6
+            ]
+          ],
+          "minVolume": 500
+        }
+      ],
+      "regions": [
+        {
+          "name": "cheek_l_front",
+          "when": {
+            "nz": [
+              -1.01,
+              -0.35
+            ]
+          },
+          "los": [
+            0,
+            0,
+            -1,
+            650
+          ],
+          "minMm": 300
+        },
+        {
+          "name": "cheek_l_top",
+          "when": {
+            "ny": [
+              0.7,
+              1.01
+            ]
+          },
+          "mm": 60
+        },
+        {
+          "name": "cheek_l_bottom",
+          "when": {
+            "ny": [
+              -1.01,
+              -0.7
+            ]
+          },
+          "mm": 40
+        },
+        {
+          "name": "cheek_l_side",
+          "when": {
+            "anx": [
+              0.5,
+              1.01
+            ]
+          },
+          "mm": 150
+        },
+        {
+          "name": "cheek_l_back",
+          "mm": 60
+        }
+      ],
+      "each": true
+    },
+    {
+      "name": "cheek_r",
+      "bone": "turret",
+      "frame": "turret",
+      "select": [
+        {
+          "within": [
+            [
+              -33.5,
+              26.5,
+              -26
+            ],
+            [
+              -14,
+              36.2,
+              -6
+            ]
+          ],
+          "minVolume": 500
+        }
+      ],
+      "regions": [
+        {
+          "name": "cheek_r_front",
+          "when": {
+            "nz": [
+              -1.01,
+              -0.35
+            ]
+          },
+          "los": [
+            0,
+            0,
+            -1,
+            650
+          ],
+          "minMm": 300
+        },
+        {
+          "name": "cheek_r_top",
+          "when": {
+            "ny": [
+              0.7,
+              1.01
+            ]
+          },
+          "mm": 60
+        },
+        {
+          "name": "cheek_r_bottom",
+          "when": {
+            "ny": [
+              -1.01,
+              -0.7
+            ]
+          },
+          "mm": 40
+        },
+        {
+          "name": "cheek_r_side",
+          "when": {
+            "anx": [
+              0.5,
+              1.01
+            ]
+          },
+          "mm": 150
+        },
+        {
+          "name": "cheek_r_back",
+          "mm": 60
+        }
+      ],
+      "each": true
+    },
+    {
+      "name": "mantlet",
+      "bone": "barell",
+      "frame": "barrel",
+      "select": [
+        {
+          "within": [
+            [
+              -5.1,
+              25.3,
+              -29.4
+            ],
+            [
+              5.1,
+              35,
+              -15
+            ]
+          ],
+          "minVolume": 100
+        }
+      ],
+      "regions": [
+        {
+          "name": "mantlet_front",
+          "when": {
+            "nz": [
+              -1.01,
+              -0.5
+            ]
+          },
+          "mm": 250
+        },
+        {
+          "name": "mantlet_side",
+          "when": {
+            "anx": [
+              0.5,
+              1.01
+            ]
+          },
+          "mm": 150
+        },
+        {
+          "name": "mantlet",
+          "mm": 100
+        }
+      ],
+      "each": true
+    }
+  ],
+  "modules": {
+    "engine": {
+      "name": "powerpack",
+      "gapAfterRing": 6.0,
+      "insetRear": 3.0,
+      "insetSide": 2.5,
+      "insetTop": 2.5,
+      "insetBottom": 1.5
+    },
+    "carousel": {
+      "name": "autoloader_carousel",
+      "rInner": 0.28,
+      "rOuter": 0.85,
+      "bottom": 0.8,
+      "top": 4.5
+    },
+    "racks": [
+      {
+        "name": "hull_rack_front_right",
+        "min": [
+          -16.0,
+          8.5,
+          -33.0
+        ],
+        "max": [
+          -7.5,
+          19.0,
+          -20.0
+        ]
+      }
+    ],
+    "tracks": {
+      "_note": "Track modules where a shot meets the track before any hull plate: the run below the belly, and the idler (front) and sprocket (rear) ends above it. Side shots through the road wheels between them reach the hull side plates.",
+      "xInner": 19.0,
+      "xOuter": 30.6,
+      "boxes": {
+        "run": [
+          0.0,
+          7.7,
+          -47.0,
+          38.0
+        ],
+        "idler": [
+          0.0,
+          19.3,
+          -58.6,
+          -47.0
+        ],
+        "sprocket": [
+          0.0,
+          19.3,
+          38.0,
+          50.5
+        ]
+      }
+    }
+  },
+  "trackEnvelope": {
+    "_note": "test-only stand-in for the animated track links (hitreg_rays.py)",
+    "x": [
+      19.2,
+      30.4
+    ],
+    "y": [
+      0.0,
+      19.3
+    ],
+    "z": [
+      -58.6,
+      50.5
+    ]
+  }
+}

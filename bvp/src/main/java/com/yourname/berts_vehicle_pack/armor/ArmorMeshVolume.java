@@ -46,6 +46,12 @@ public final class ArmorMeshVolume implements ArmorVolume {
     private final double minY;
     private final double[] featureEdges;
     private final Report report;
+    /**
+     * Optional authored outer-surface normal (armor-profile frame) of a plate slab: the face of the vehicle that
+     * the slab lines. Used as the struck face for a shot that only grazes the slab's numerical skin, where the
+     * grown entry face may be one of the slab's internal (mitre, inner, cut) faces. Set once while loading.
+     */
+    private Vec surfaceNormal;
 
     private ArmorMeshVolume(double[] tri, double[] nrm, double[] vertices, Part[] parts, double[] featureEdges,
                             Report report) {
@@ -284,6 +290,16 @@ public final class ArmorMeshVolume implements ArmorVolume {
     @Override
     public boolean isMesh() {
         return true;
+    }
+
+    /** Authored outer-surface normal (unit, armor-profile frame), or null. */
+    public Vec surfaceNormal() {
+        return surfaceNormal;
+    }
+
+    void setSurfaceNormal(Vec normal) {
+        double length = normal == null ? 0.0D : normal.length();
+        this.surfaceNormal = length > 1.0E-9D ? normal.scale(1.0D / length) : null;
     }
 
     // ------------------------------------------------------------------ ray queries
