@@ -31,11 +31,12 @@ SPECS = {
             'scale': 'templateHullLength',
         },
         'attachments': {
-            # gunner's primary sight: on top of the GPS housing, right front of the cupola
-            'gunner1_camera': {'parent': 'Turret', 'at': [-16.0, 54.4, -13.5]},
-            'gunner1_zoom': {'parent': 'Turret', 'at': [-16.0, 54.4, -13.5]},
-            # commander at the M2, head out of the cupola, behind the receiver
-            'gunner2_camera': {'parent': 'WeaponStationBarrel', 'at': [-10.7, 60.5, 17.0]},
+            # gunner's primary sight: at the GPS window, front face of the housing right of the cupola (r46: from
+            # on top of the housing the commander's M2 barrel crossed the upper left of the view)
+            'gunner1_camera': {'parent': 'Turret', 'at': [-18.5, 51.5, -15.6]},
+            'gunner1_zoom': {'parent': 'Turret', 'at': [-18.5, 51.5, -15.6]},
+            # commander at the M2, head out of the cupola, eye over the receiver and sight
+            'gunner2_camera': {'parent': 'WeaponStationBarrel', 'at': [-10.7, 62.5, 17.0]},
             'main_muzzle': {'parent': 'Barrel', 'at': [0.55, 40.75, 'tip']},
             'coax_muzzle': {'parent': 'Barrel', 'at': [-5.6, 44.3, -46.5]},
             'hmg_muzzle': {'parent': 'WeaponStationBarrel', 'at': [-10.7, 57.35, -22.5]},
