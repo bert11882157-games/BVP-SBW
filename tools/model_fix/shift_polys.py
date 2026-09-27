@@ -25,6 +25,8 @@ FIXES = [
              'collar opening (x 0.55, y 40.75) and the gun pitches about the trunnion inside the mantlet'},
     {'vid': 'm1a1_abrams', 'bone': 'barell', 'to': 'turret', 'box': ((-14, 50, -12), (0, 62, 14)), 'shift': (0, 0, 0),
      'note': "the commander's M2 on the cupola was parented to the gun"},
+    {'vid': 'type_90', 'bone': 'barell', 'to': 'turret', 'box': ((-3, 49, -40), (10, 59, 5)), 'shift': (0, 0, 0),
+     'note': "the commander's M2 on the turret roof was parented to the gun"},
 ]
 
 
