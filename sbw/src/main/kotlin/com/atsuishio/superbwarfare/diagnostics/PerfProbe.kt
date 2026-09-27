@@ -81,6 +81,11 @@ object PerfProbe {
         ParticleProbe.hideParticles = parts.any { it == "particles=off" }
         ParticleProbe.hideBlasts = parts.any { it == "blasts=off" }
         ParticleProbe.start()
+        // vanilla's F3+L profiler (10 s, section times incl. GPU wait) saved under debug/profiling
+        if (parts.any { it == "mcprof=on" }) {
+            val started = mc.debugClientMetricsStart { Mod.LOGGER.info("BVP_PERF mcprof {}", it.string) }
+            Mod.LOGGER.info("BVP_PERF mcprof started={}", started)
+        }
         ClientRenderPerformanceDiagnostics.setBatchingDisabled(!batch)
         ClientRenderPerformanceDiagnostics.setProbeActive(true)
         capture = Capture(label, seconds, batch)

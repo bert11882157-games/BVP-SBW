@@ -116,7 +116,7 @@ public final class BvpKomodoVehicleVisual extends AbstractEntityVisual<GeoVehicl
             root.translation((float) (anchor.x - origin.getX()), (float) (anchor.y - origin.getY()),
                     (float) (anchor.z - origin.getZ())).mul(relative);
             pose.m_85850_().m_252943_().set(new Matrix3f(root).invert().transpose());
-            for (BedrockBone bone : geometry.roots) collect(geometry, bone, pose, light);
+            for (Node node : geometry.tree) collect(node, pose, light);
             submittedFrame = frame;
             return true;
         } catch (RuntimeException | LinkageError exception) {
@@ -127,21 +127,23 @@ public final class BvpKomodoVehicleVisual extends AbstractEntityVisual<GeoVehicl
         }
     }
 
-    private void collect(Geometry geometry, BedrockBone bone, PoseStack pose, int light) {
-        // subtrees without an opaque mesh (locators, seats, translucent-only bones) need no transform
-        if (!bone.visible || !geometry.liveBones.containsKey(bone)) return;
+    private void collect(Node node, PoseStack pose, int light) {
+        BedrockBone bone = node.bone;
+        if (!bone.visible) return;
         pose.m_85836_();
         try {
             bone.translateAndRotateAndScale(pose);
-            int[] parts = geometry.bonePartIndices.get(bone);
-            if (parts != null) {
+            int[] parts = node.parts;
+            if (parts.length > 0) {
+                Matrix4f current = pose.m_85850_().m_252922_();
+                int boneLight = bone.illuminated ? 0x00F000F0 : light;
                 for (int index : parts) {
-                    transforms[index].set(pose.m_85850_().m_252922_());
+                    transforms[index].set(current);
                     visible[index] = true;
-                    lights[index] = bone.illuminated ? 0x00F000F0 : light;
+                    lights[index] = boneLight;
                 }
             }
-            for (BedrockBone child : bone.getChildren()) collect(geometry, child, pose, light);
+            for (Node child : node.children) collect(child, pose, light);
         } finally {
             pose.m_85849_();
         }
@@ -276,8 +278,8 @@ public final class BvpKomodoVehicleVisual extends AbstractEntityVisual<GeoVehicl
         final List<BedrockBone> roots = new ArrayList<>();
         final List<Part> parts = new ArrayList<>();
         final Map<BedrockBone, List<Integer>> boneParts = new IdentityHashMap<>();
-        final Map<BedrockBone, int[]> bonePartIndices = new IdentityHashMap<>();
-        final Map<BedrockBone, Boolean> liveBones = new IdentityHashMap<>();
+        /** The bone hierarchy pruned to bones with an opaque mesh in their subtree, part indices resolved. */
+        final List<Node> tree = new ArrayList<>();
         final Map<VertexKey, BakedMesh> meshes = new HashMap<>();
         final Material material;
         int cursor;
@@ -305,9 +307,12 @@ public final class BvpKomodoVehicleVisual extends AbstractEntityVisual<GeoVehicl
                     vertices += mesh.getVertexCount();
                 }
             }
-            for (var entry : boneParts.entrySet()) {
-                bonePartIndices.put(entry.getKey(), entry.getValue().stream().mapToInt(Integer::intValue).toArray());
-                for (BedrockBone b = entry.getKey(); b != null && liveBones.put(b, Boolean.TRUE) == null; b = b.parent) { }
+            var live = new IdentityHashMap<BedrockBone, Boolean>();
+            for (BedrockBone bone : boneParts.keySet())
+                for (BedrockBone b = bone; b != null && live.put(b, Boolean.TRUE) == null; b = b.parent) { }
+            for (BedrockBone root : roots) {
+                Node node = Node.build(root, live, boneParts);
+                if (node != null) tree.add(node);
             }
         }
 
@@ -327,6 +332,30 @@ public final class BvpKomodoVehicleVisual extends AbstractEntityVisual<GeoVehicl
         void close() {
             for (BakedMesh mesh : meshes.values()) mesh.memory.free();
             meshes.clear();
+        }
+    }
+
+    private static final class Node {
+        final BedrockBone bone;
+        final int[] parts;
+        final Node[] children;
+
+        private Node(BedrockBone bone, int[] parts, Node[] children) {
+            this.bone = bone;
+            this.parts = parts;
+            this.children = children;
+        }
+
+        static Node build(BedrockBone bone, Map<BedrockBone, Boolean> live, Map<BedrockBone, List<Integer>> boneParts) {
+            if (!live.containsKey(bone)) return null;
+            List<Node> kids = new ArrayList<>();
+            for (BedrockBone child : bone.getChildren()) {
+                Node node = build(child, live, boneParts);
+                if (node != null) kids.add(node);
+            }
+            List<Integer> indices = boneParts.get(bone);
+            int[] parts = indices == null ? new int[0] : indices.stream().mapToInt(Integer::intValue).toArray();
+            return new Node(bone, parts, kids.toArray(new Node[0]));
         }
     }
 
