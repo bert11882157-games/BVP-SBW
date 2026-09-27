@@ -1,0 +1,141 @@
+{
+  "id": "b_1b",
+  "name": "B-1B Lancer",
+  "entityClass": "AuthoredFixedWingAircraft",
+  "template": "b_1b",
+  "source": "B-1B Lancer.mtb",
+  "note": "Model replacement: B-1B Lancer.mtb on the existing B-1B data. Originals kept in tools/vehgen/replaced/b_1b. Extended wings (20/22) go into the sweep bones; the swept copies (21/23) are dropped. The fin's aft strip is the rudder; the all-moving tailplanes go into elevator_8/9. No baked stores (internal bays).",
+  "yaw180": true,
+  "lengthParts": [
+    0,
+    2
+  ],
+  "templateLengthBones": [
+    "wreck_fuselage_0__hull",
+    "wreck_fuselage_1__hull",
+    "wreck_fuselage_2__hull",
+    "wreck_fuselage_3__hull"
+  ],
+  "groundParts": [
+    0,
+    2,
+    12,
+    15
+  ],
+  "excludeParts": [
+    12,
+    15,
+    21,
+    23
+  ],
+  "storeTextureV": -1,
+  "keepBoxes": [],
+  "fuselageCuts": [
+    -177.1,
+    0,
+    177.1
+  ],
+  "parts": {
+    "0": [
+      {
+        "bone": "wing",
+        "if": {
+          "absXMin": 66
+        }
+      }
+    ],
+    "2": [
+      {
+        "bone": "wreck_fuselage_3__rudder",
+        "if": {
+          "absXMax": 3.5,
+          "yMin": 107,
+          "zMin": 305
+        }
+      },
+      {
+        "bone": "side:wreck_fuselage_3__elevator_8,wreck_fuselage_3__elevator_9",
+        "if": {
+          "absXMin": 8,
+          "yMin": 98.5,
+          "yMax": 104.5
+        }
+      }
+    ],
+    "5": "fuselage",
+    "20": "wreck_wing_left__sweep_left",
+    "22": "wreck_wing_right__sweep_right"
+  },
+  "keepTemplateBones": [
+    "gear_wheel_0",
+    "gear_wheel_1",
+    "gear_wheel_2",
+    "gear_wheel_3",
+    "gear_wheel_4",
+    "gear_wheel_5",
+    "gear_wheel_6",
+    "gear_wheel_7",
+    "gear_wheel_8",
+    "gear_wheel_9",
+    "landing_gear_12",
+    "landing_gear_14",
+    "landing_gear_15",
+    "control_stick_pitch"
+  ],
+  "sweeps": {
+    "sweep_left": {
+      "pivot": [
+        76.42,
+        null,
+        -11.13
+      ],
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "maxDegrees": 52
+    },
+    "sweep_right": {
+      "pivot": [
+        -76.42,
+        null,
+        -11.13
+      ],
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "maxDegrees": 52
+    }
+  },
+  "note_sweep": "The template rig swept about [0,0,1] (wings drooping). The model's swept pose (21) is its extended pose (20) turned 42 degrees about the wing root leading edge (76.42, -11.13), fit residual 0. Range 52 degrees (real 15-67.5).",
+  "attachments": {
+    "pilot_eye": [
+      10.1,
+      83.0,
+      -246.0
+    ],
+    "crew_2_eye": [
+      -10.1,
+      83.0,
+      -246.0
+    ]
+  },
+  "seatPositions": {
+    "0": [
+      10.1,
+      68.6,
+      -246.0
+    ],
+    "1": [
+      -10.1,
+      68.6,
+      -246.0
+    ]
+  },
+  "addSeats": [],
+  "flightReference": {},
+  "note_crew": "New flight deck: seat backs at z -242 (headrests to y 85-88, x 6.2-14), cushions y ~67, panel top y 81 at z -262..-255, windscreen frame y ~93. The template eyes sat inside the seat backs (z -237) and the copilot's 4.5 px lower; both now 4 px in front of the headrest at y 83 (2 px over the panel), seats keep the template's eye-to-seat offset (14.4 px). The rear stations (crew 3/4) are windowless as on the real aircraft and keep their template eyes."
+}
