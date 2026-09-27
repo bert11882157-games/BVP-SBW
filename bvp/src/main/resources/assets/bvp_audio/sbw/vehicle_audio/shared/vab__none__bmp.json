@@ -1,0 +1,29 @@
+{
+  "engine": {
+    "start": "bvp_audio:engine/vab_start",
+    "idle": "bvp_audio:engine/vab_idle",
+    "startSeconds": 2.469,
+    "range": 112,
+    "volume": 0.9,
+    "interiorVolume": 0.55,
+    "idlePitch": [
+      1.0,
+      1.28
+    ],
+    "drivePitch": [
+      1.0,
+      1.28
+    ],
+    "driveVolume": [
+      0.0,
+      0.0
+    ],
+    "stop": "bvp_audio:engine/vab_stop"
+  },
+  "turret": {
+    "loop": "bvp_audio:turret/bmp",
+    "range": 28,
+    "volume": 0.6,
+    "fullRate": 24.0
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "engine": {
+    "start": "bvp_audio:engine/warrior_start",
+    "idle": "bvp_audio:engine/warrior_idle",
+    "startSeconds": 1.418,
+    "range": 112,
+    "volume": 0.9,
+    "interiorVolume": 0.55,
+    "idlePitch": [
+      1.0,
+      1.28
+    ],
+    "drivePitch": [
+      1.0,
+      1.28
+    ],
+    "driveVolume": [
+      0.0,
+      0.0
+    ],
+    "stop": "bvp_audio:engine/warrior_stop"
+  },
+  "tracks": {
+    "loop": "bvp_audio:tracks/puma",
+    "range": 48,
+    "volume": 0.75,
+    "fullSpeed": 0.45
+  },
+  "turret": {
+    "loop": "bvp_audio:turret/warrior",
+    "range": 28,
+    "volume": 0.6,
+    "fullRate": 24.0
+  }
+}

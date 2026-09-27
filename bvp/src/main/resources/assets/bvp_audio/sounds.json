@@ -1,0 +1,848 @@
+{
+  "engine/bmp1_idle": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/bmp1_idle",
+        "stream": false
+      }
+    ]
+  },
+  "engine/bmp1_start": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/bmp1_start",
+        "stream": false
+      }
+    ]
+  },
+  "engine/bmp1_stop": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/bmp1_stop",
+        "stream": false
+      }
+    ]
+  },
+  "engine/bmp3_idle": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/bmp3_idle",
+        "stream": false
+      }
+    ]
+  },
+  "engine/bmp3_start": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/bmp3_start",
+        "stream": false
+      }
+    ]
+  },
+  "engine/bmp3_stop": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/bmp3_stop",
+        "stream": false
+      }
+    ]
+  },
+  "engine/brdm_idle": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/brdm_idle",
+        "stream": false
+      }
+    ]
+  },
+  "engine/brdm_start": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/brdm_start",
+        "stream": false
+      }
+    ]
+  },
+  "engine/brdm_stop": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/brdm_stop",
+        "stream": false
+      }
+    ]
+  },
+  "engine/btr90_idle": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/btr90_idle",
+        "stream": false
+      }
+    ]
+  },
+  "engine/btr90_start": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/btr90_start",
+        "stream": false
+      }
+    ]
+  },
+  "engine/btr90_stop": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/btr90_stop",
+        "stream": false
+      }
+    ]
+  },
+  "engine/cr2_idle": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/cr2_idle",
+        "stream": false
+      }
+    ]
+  },
+  "engine/cr2_start": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/cr2_start",
+        "stream": false
+      }
+    ]
+  },
+  "engine/cr2_stop": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/cr2_stop",
+        "stream": false
+      }
+    ]
+  },
+  "engine/gtk_idle": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/gtk_idle",
+        "stream": false
+      }
+    ]
+  },
+  "engine/gtk_start": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/gtk_start",
+        "stream": false
+      }
+    ]
+  },
+  "engine/gtk_stop": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/gtk_stop",
+        "stream": false
+      }
+    ]
+  },
+  "engine/lav_idle": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/lav_idle",
+        "stream": false
+      }
+    ]
+  },
+  "engine/lav_start": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/lav_start",
+        "stream": false
+      }
+    ]
+  },
+  "engine/lav_stop": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/lav_stop",
+        "stream": false
+      }
+    ]
+  },
+  "engine/leo_idle": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/leo_idle",
+        "stream": false
+      }
+    ]
+  },
+  "engine/leo_start": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/leo_start",
+        "stream": false
+      }
+    ]
+  },
+  "engine/leo_stop": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/leo_stop",
+        "stream": false
+      }
+    ]
+  },
+  "engine/m1a2_idle": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/m1a2_idle",
+        "stream": false
+      }
+    ]
+  },
+  "engine/m1a2_start": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/m1a2_start",
+        "stream": false
+      }
+    ]
+  },
+  "engine/m1a2_stop": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/m1a2_stop",
+        "stream": false
+      }
+    ]
+  },
+  "engine/m2a2_idle": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/m2a2_idle",
+        "stream": false
+      }
+    ]
+  },
+  "engine/m2a2_start": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/m2a2_start",
+        "stream": false
+      }
+    ]
+  },
+  "engine/m2a2_stop": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/m2a2_stop",
+        "stream": false
+      }
+    ]
+  },
+  "engine/m48_idle": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/m48_idle",
+        "stream": false
+      }
+    ]
+  },
+  "engine/m48_start": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/m48_start",
+        "stream": false
+      }
+    ]
+  },
+  "engine/m48_stop": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/m48_stop",
+        "stream": false
+      }
+    ]
+  },
+  "engine/m8_idle": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/m8_idle",
+        "stream": false
+      }
+    ]
+  },
+  "engine/m8_start": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/m8_start",
+        "stream": false
+      }
+    ]
+  },
+  "engine/m8_stop": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/m8_stop",
+        "stream": false
+      }
+    ]
+  },
+  "engine/pickup_idle": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/pickup_idle",
+        "stream": false
+      }
+    ]
+  },
+  "engine/pickup_start": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/pickup_start",
+        "stream": false
+      }
+    ]
+  },
+  "engine/pickup_stop": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/pickup_stop",
+        "stream": false
+      }
+    ]
+  },
+  "engine/pt76_idle": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/pt76_idle",
+        "stream": false
+      }
+    ]
+  },
+  "engine/pt76_start": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/pt76_start",
+        "stream": false
+      }
+    ]
+  },
+  "engine/pt76_stop": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/pt76_stop",
+        "stream": false
+      }
+    ]
+  },
+  "engine/stryker_idle": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/stryker_idle",
+        "stream": false
+      }
+    ]
+  },
+  "engine/stryker_start": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/stryker_start",
+        "stream": false
+      }
+    ]
+  },
+  "engine/stryker_stop": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/stryker_stop",
+        "stream": false
+      }
+    ]
+  },
+  "engine/t62_idle": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/t62_idle",
+        "stream": false
+      }
+    ]
+  },
+  "engine/t62_start": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/t62_start",
+        "stream": false
+      }
+    ]
+  },
+  "engine/t62_stop": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/t62_stop",
+        "stream": false
+      }
+    ]
+  },
+  "engine/t72_idle": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/t72_idle",
+        "stream": false
+      }
+    ]
+  },
+  "engine/t72_start": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/t72_start",
+        "stream": false
+      }
+    ]
+  },
+  "engine/t72_stop": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/t72_stop",
+        "stream": false
+      }
+    ]
+  },
+  "engine/t90_idle": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/t90_idle",
+        "stream": false
+      }
+    ]
+  },
+  "engine/t90_start": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/t90_start",
+        "stream": false
+      }
+    ]
+  },
+  "engine/t90_stop": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/t90_stop",
+        "stream": false
+      }
+    ]
+  },
+  "engine/tigr_idle": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/tigr_idle",
+        "stream": false
+      }
+    ]
+  },
+  "engine/tigr_start": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/tigr_start",
+        "stream": false
+      }
+    ]
+  },
+  "engine/tunguska_idle": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/tunguska_idle",
+        "stream": false
+      }
+    ]
+  },
+  "engine/tunguska_start": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/tunguska_start",
+        "stream": false
+      }
+    ]
+  },
+  "engine/tunguska_stop": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/tunguska_stop",
+        "stream": false
+      }
+    ]
+  },
+  "engine/type98_idle": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/type98_idle",
+        "stream": false
+      }
+    ]
+  },
+  "engine/type98_start": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/type98_start",
+        "stream": false
+      }
+    ]
+  },
+  "engine/type98_stop": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/type98_stop",
+        "stream": false
+      }
+    ]
+  },
+  "engine/uaz_idle": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/uaz_idle",
+        "stream": false
+      }
+    ]
+  },
+  "engine/uaz_start": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/uaz_start",
+        "stream": false
+      }
+    ]
+  },
+  "engine/uaz_stop": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/uaz_stop",
+        "stream": false
+      }
+    ]
+  },
+  "engine/vab_idle": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/vab_idle",
+        "stream": false
+      }
+    ]
+  },
+  "engine/vab_start": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/vab_start",
+        "stream": false
+      }
+    ]
+  },
+  "engine/vab_stop": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/vab_stop",
+        "stream": false
+      }
+    ]
+  },
+  "engine/warrior_idle": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/warrior_idle",
+        "stream": false
+      }
+    ]
+  },
+  "engine/warrior_start": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/warrior_start",
+        "stream": false
+      }
+    ]
+  },
+  "engine/warrior_stop": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/warrior_stop",
+        "stream": false
+      }
+    ]
+  },
+  "tracks/bmp1": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:tracks/bmp1",
+        "stream": false
+      }
+    ]
+  },
+  "tracks/bmp3": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:tracks/bmp3",
+        "stream": false
+      }
+    ]
+  },
+  "tracks/cr2": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:tracks/cr2",
+        "stream": false
+      }
+    ]
+  },
+  "tracks/leo": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:tracks/leo",
+        "stream": false
+      }
+    ]
+  },
+  "tracks/m1a2": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:tracks/m1a2",
+        "stream": false
+      }
+    ]
+  },
+  "tracks/m2a2": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:tracks/m2a2",
+        "stream": false
+      }
+    ]
+  },
+  "tracks/m48": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:tracks/m48",
+        "stream": false
+      }
+    ]
+  },
+  "tracks/puma": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:tracks/puma",
+        "stream": false
+      }
+    ]
+  },
+  "tracks/rubber": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:tracks/rubber",
+        "stream": false
+      }
+    ]
+  },
+  "tracks/t72": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:tracks/t72",
+        "stream": false
+      }
+    ]
+  },
+  "tracks/t90": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:tracks/t90",
+        "stream": false
+      }
+    ]
+  },
+  "tracks/tunguska": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:tracks/tunguska",
+        "stream": false
+      }
+    ]
+  },
+  "turret/abrams": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:turret/abrams",
+        "stream": false
+      }
+    ]
+  },
+  "turret/bmp": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:turret/bmp",
+        "stream": false
+      }
+    ]
+  },
+  "turret/cr2": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:turret/cr2",
+        "stream": false
+      }
+    ]
+  },
+  "turret/generic": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:turret/generic",
+        "stream": false
+      }
+    ]
+  },
+  "turret/hmmwv": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:turret/hmmwv",
+        "stream": false
+      }
+    ]
+  },
+  "turret/leo": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:turret/leo",
+        "stream": false
+      }
+    ]
+  },
+  "turret/m2a2": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:turret/m2a2",
+        "stream": false
+      }
+    ]
+  },
+  "turret/t62": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:turret/t62",
+        "stream": false
+      }
+    ]
+  },
+  "turret/t90": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:turret/t90",
+        "stream": false
+      }
+    ]
+  },
+  "turret/tunguska": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:turret/tunguska",
+        "stream": false
+      }
+    ]
+  },
+  "turret/warrior": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:turret/warrior",
+        "stream": false
+      }
+    ]
+  }
+}
