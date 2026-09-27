@@ -40,8 +40,27 @@ def main(argv):
     spec = load(args[0])
     vid, tid = spec['id'], spec['template']
     out = Output(write)
+    replacing = vid == tid
+
+    def TPL(path):
+        """A template input. Replacing an aircraft in place, the original files are kept under
+        tools/vehgen/replaced/<id>/ (copied there on the first run) and always read from there, so re-running
+        never builds on its own output."""
+        if not replacing:
+            return path
+        snap = os.path.join(vehgen.REPO, 'tools', 'vehgen', 'replaced', tid, os.path.relpath(path, vehgen.REPO))
+        if not os.path.exists(snap) and os.path.exists(path):
+            os.makedirs(os.path.dirname(snap), exist_ok=True)
+            if os.path.isdir(path):
+                import shutil
+                shutil.copytree(path, snap)
+            else:
+                import shutil
+                shutil.copy2(path, snap)
+        return snap if os.path.exists(snap) else path
+
     src = mtbgeo.Source(os.path.join(sources, spec['source']))
-    tpl_geo = load(os.path.join(ASSETS, 'custom_geo', f'{tid}.geo.json'))
+    tpl_geo = load(TPL(os.path.join(ASSETS, 'custom_geo', f'{tid}.geo.json')))
     tg = tpl_geo['minecraft:geometry'][0]
     tbones = {b['name']: b for b in tg['bones']}
 
@@ -80,6 +99,9 @@ def main(argv):
                     and r.get('yMin', -1e9) <= c[1] <= r.get('yMax', 1e9)
                     and r.get('zMin', -1e9) <= c[2] <= r.get('zMax', 1e9)):
                 return True
+        for lo_v, hi_v in spec.get('storeTextureRanges', []):     # texture rows only the baked stores use
+            if lo_v <= num(f[19]) < hi_v and not any(np.all(c >= lo) and np.all(c <= hi) for lo, hi in boxes):
+                return True
         if num(f[19]) >= spec.get('storeTextureV', -1):
             return False
         return not any(np.all(c >= lo) and np.all(c <= hi) for lo, hi in boxes)
@@ -98,8 +120,9 @@ def main(argv):
             if isinstance(rule, dict):     # {"bone": ..., "if": {"zMin": ...}} else fuselage
                 cond = rule.get('if', {})
                 if c[2] >= cond.get('zMin', -1e9) and c[2] <= cond.get('zMax', 1e9):
-                    bone = rule['bone']
-                rule_name = rule.get('else', 'fuselage') if bone is None else None
+                    rule_name = rule['bone']
+                else:
+                    rule_name = rule.get('else', 'fuselage')
             else:
                 rule_name = rule
             if bone is None:
@@ -118,7 +141,7 @@ def main(argv):
             assign.setdefault(bone, []).append(f)
 
     # ---- combined texture: template atlas on top, source below (normalized v, flipped: 1 = top)
-    t_img = Image.open(os.path.join(ASSETS, 'textures', 'entity', f'{tid}.png')).convert('RGBA')
+    t_img = Image.open(TPL(os.path.join(ASSETS, 'textures', 'entity', f'{tid}.png'))).convert('RGBA')
     s_img = Image.open(io.BytesIO(src.png)).convert('RGBA')
     W = max(t_img.width, s_img.width)
     atlas = Image.new('RGBA', (W, t_img.height + s_img.height), (0, 0, 0, 0))
@@ -159,7 +182,7 @@ def main(argv):
             else:
                 b.pop('poly_mesh')
     out.json(os.path.join(ASSETS, 'custom_geo', f'{vid}.geo.json'), geo, compact=True)
-    wreck_path = os.path.join(ASSETS, 'custom_geo', f'{tid}_turret_wreck.geo.json')
+    wreck_path = TPL(os.path.join(ASSETS, 'custom_geo', f'{tid}_turret_wreck.geo.json'))
     if os.path.exists(wreck_path):
         w = load(wreck_path)
         w['minecraft:geometry'][0]['description']['identifier'] = f'geometry.{vid}_turret_wreck'
@@ -179,7 +202,7 @@ def main(argv):
     icon = vehgen.icon(b, meshes, a / 255)
     for rel, base in (('textures/vehicle_icon', ASSETS), ('textures/item/vehicle_icons', ASSETS),
                       ('textures/item/vehicle_icons', os.path.join(MAIN, 'resources', 'assets', NS))):
-        tpl_icon = os.path.join(base, rel, f'{tid}.png')
+        tpl_icon = TPL(os.path.join(base, rel, f'{tid}.png'))
         if os.path.exists(tpl_icon):
             size = Image.open(tpl_icon).size
             out.image(os.path.join(base, rel, f'{vid}.png'), icon.resize(size, Image.NEAREST))
@@ -193,7 +216,7 @@ def main(argv):
             text = text.replace(a_, b_)
         return json.loads(text)
 
-    data = renamed(load(os.path.join(DATA, 'sbw', 'vehicles', f'{tid}.json')))
+    data = renamed(load(TPL(os.path.join(DATA, 'sbw', 'vehicles', f'{tid}.json'))))
     for name, at in spec.get('attachments', {}).items():
         data['Attachments'][name] = {'Parent': 'Vehicle', 'Position': r5(mtbgeo.geo_to_data(np.array(at))),
                                      'Direction': [0, 0, 1]}
@@ -211,12 +234,12 @@ def main(argv):
         data['Seats'].append(base_seat)
     data.update(spec.get('dataOverrides', {}))
     out.json(os.path.join(DATA, 'sbw', 'vehicles', f'{vid}.json'), data)
-    client = renamed(load(os.path.join(ASSETS, 'sbw', 'vehicles', f'{tid}.json')))
+    client = renamed(load(TPL(os.path.join(ASSETS, 'sbw', 'vehicles', f'{tid}.json'))))
     for k in spec.get('removeClientKeys', []):
         client.pop(k, None)
     out.json(os.path.join(ASSETS, 'sbw', 'vehicles', f'{vid}.json'), client)
     for rel in ('armor', 'flight_reference'):
-        path = os.path.join(DATA, rel, f'{tid}.json')
+        path = TPL(os.path.join(DATA, rel, f'{tid}.json'))
         if os.path.exists(path):
             d = renamed(load(path))
             if 'id' in d:
@@ -226,21 +249,22 @@ def main(argv):
                 for k, v in spec.get('flightReference', {}).items():
                     d['reference'][k] = v
             out.json(os.path.join(DATA, rel, f'{vid}.json'), d)
-    arm = renamed(load(os.path.join(DATA, 'sbw', 'aircraft_armaments', f'{tid}.json')))
+    arm = renamed(load(TPL(os.path.join(DATA, 'sbw', 'aircraft_armaments', f'{tid}.json'))))
     arm['Name'] = spec['name']
     out.json(os.path.join(DATA, 'sbw', 'aircraft_armaments', f'{vid}.json'), arm)
-    ms = os.path.join(DATA, 'sbw', 'aircraft_stores', 'modeled_store', tid)
+    ms = TPL(os.path.join(DATA, 'sbw', 'aircraft_stores', 'modeled_store', tid))
     if os.path.isdir(ms):
         for fn in sorted(os.listdir(ms)):
             d = load(os.path.join(ms, fn))
-            d['Name'] = d['Name'].replace(load(os.path.join(DATA, 'sbw', 'aircraft_armaments', f'{tid}.json'))['Name'],
+            d['Name'] = d['Name'].replace(load(TPL(os.path.join(DATA, 'sbw', 'aircraft_armaments', f'{tid}.json')))['Name'],
                                           spec['name'])
             out.json(os.path.join(DATA, 'sbw', 'aircraft_stores', 'modeled_store', vid, fn), d)
 
     # ---- sounds: the template's events are reused by id (data keeps the template's sound ids)
     # ---- registration (entity class, entities, renderers, lang, tab, containers)
     reg = type('R', (), {'id': vid, 'template': tid, 'spec': spec})()
-    register_aircraft(reg, out)
+    if not replacing:
+        register_aircraft(reg, out)
 
     print(f'{vid}: scale {s:.4f} px/unit, offset {r5(off)}, {dropped} baked store elements dropped')
     for bone, els in sorted(assign.items()):

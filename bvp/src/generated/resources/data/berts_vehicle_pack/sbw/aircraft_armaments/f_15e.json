@@ -1,0 +1,263 @@
+{
+  "Schema": 1,
+  "Name": "F-15E Strike Eagle",
+  "BuiltInWeapons": [
+    "Vulcan"
+  ],
+  "SuspendedWeapons": [],
+  "Pairs": [
+    {
+      "Id": "wing_centre",
+      "Name": "Wing pylon (triple) \u00b7 centre",
+      "Left": [
+        2.8625,
+        1.2856,
+        -2.4016
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            2.8626,
+            1.2857,
+            -2.4017
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Right": [
+        -2.8625,
+        1.2856,
+        -2.4016
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -2.8626,
+            1.2857,
+            -2.4017
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/mk82",
+        "berts_vehicle_pack:munition/mk82_x3",
+        "berts_vehicle_pack:munition/mk82_snakeeye",
+        "berts_vehicle_pack:munition/mk82_snakeeye_x3",
+        "berts_vehicle_pack:munition/mk84",
+        "berts_vehicle_pack:munition/blu109_jdam",
+        "berts_vehicle_pack:munition/gbu15_v2b"
+      ],
+      "MaxWeaponsPerPylon": 3,
+      "MaxPylonMassKg": 1500
+    },
+    {
+      "Id": "wing_shoulders",
+      "Name": "Wing pylon (triple) \u00b7 shoulder rails",
+      "Left": [
+        2.8625,
+        1.6738,
+        -1.0188
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            3.0809,
+            1.6981,
+            -1.0189
+          ],
+          "Face": "left"
+        },
+        {
+          "Point": [
+            2.6443,
+            1.6981,
+            -1.0189
+          ],
+          "Face": "right"
+        }
+      ],
+      "Right": [
+        -2.8625,
+        1.6738,
+        -1.0188
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -3.0809,
+            1.6981,
+            -1.0189
+          ],
+          "Face": "right"
+        },
+        {
+          "Point": [
+            -2.6443,
+            1.6981,
+            -1.0189
+          ],
+          "Face": "left"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/aim9l_x2",
+        "berts_vehicle_pack:fa18e/aim9m_x2",
+        "berts_vehicle_pack:fa18e/aim120_x2"
+      ],
+      "MaxWeaponsPerPylon": 2,
+      "MaxPylonMassKg": 350
+    },
+    {
+      "Id": "fuselage_front",
+      "Name": "Forward fuselage station",
+      "Left": [
+        1.7969,
+        1.2375,
+        0.3875
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            1.4556,
+            1.3587,
+            -0.3879
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Right": [
+        -1.7969,
+        1.2375,
+        0.3875
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -1.4556,
+            1.3587,
+            -0.3879
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/aim7e",
+        "berts_vehicle_pack:fa18e/aim120"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 250
+    },
+    {
+      "Id": "fuselage_rear",
+      "Name": "Aft fuselage station",
+      "Left": [
+        1.7969,
+        1.2375,
+        -3.3
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            1.7952,
+            1.0674,
+            -3.6874
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Right": [
+        -1.7969,
+        1.2375,
+        -3.3
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -1.7952,
+            1.0674,
+            -3.6874
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/aim7e",
+        "berts_vehicle_pack:fa18e/aim120"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 250
+    }
+  ],
+  "StoreGroups": {
+    "berts_vehicle_pack:modeled_store/f_15e/assembly_0": [
+      "suspended_f_15c_0"
+    ],
+    "berts_vehicle_pack:modeled_store/f_15e/assembly_1": [
+      "suspended_f_15c_1"
+    ],
+    "berts_vehicle_pack:modeled_store/f_15e/assembly_2": [
+      "suspended_f_15c_2"
+    ],
+    "berts_vehicle_pack:modeled_store/f_15e/assembly_3": [
+      "suspended_f_15c_3"
+    ],
+    "berts_vehicle_pack:modeled_store/f_15e/assembly_4": [
+      "suspended_f_15c_4"
+    ]
+  },
+  "MaxPayloadKg": 7250,
+  "Radar": {
+    "Enabled": true,
+    "Range": 1000
+  },
+  "MaxPylonMassKg": 1000,
+  "MaxWeaponsPerPylon": 12,
+  "Singles": [
+    {
+      "Id": "internal_bay",
+      "Name": "Armament",
+      "Position": [
+        0,
+        0.668889,
+        2.260963
+      ],
+      "Internal": true,
+      "MaxPylonMassKg": 1206,
+      "AllowedStores": [
+        "berts_vehicle_pack:fa18e/bomb_500kg_dumb_1",
+        "berts_vehicle_pack:fa18e/bomb_500kg_laser_1",
+        "berts_vehicle_pack:fa18e/bomb_500kg_gps_1"
+      ],
+      "QuantitySelectable": false
+    },
+    {
+      "Id": "centerline",
+      "Name": "Centerline station (gear up)",
+      "Position": [
+        0,
+        0.875,
+        -1.1406
+      ],
+      "Stations": [
+        {
+          "Point": [
+            0,
+            0.8491,
+            -2.2319
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/mk82",
+        "berts_vehicle_pack:munition/mk82_snakeeye",
+        "berts_vehicle_pack:munition/mk84",
+        "berts_vehicle_pack:munition/blu109_jdam"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 1000,
+      "RequiresRetractedGear": true
+    }
+  ]
+}

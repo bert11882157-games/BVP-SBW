@@ -1,0 +1,162 @@
+{
+  "id": "f_15e",
+  "name": "F-15E Strike Eagle",
+  "entityClass": "AuthoredFixedWingAircraft",
+  "template": "f_15c",
+  "source": "F-15E.mtb",
+  "note": "Two-seat strike Eagle on the F-15C airframe data (span and wing trailing edge match the template exactly). Baked stores dropped: texture rows < 128 outside the cockpit and outer wing panels, wing pylon tanks, centerline tank; the conformal tanks stay.",
+  "yaw180": true,
+  "lengthParts": [
+    0,
+    1,
+    2,
+    4,
+    5,
+    8,
+    12,
+    14,
+    15
+  ],
+  "templateLengthBones": [
+    "wreck_fuselage_0__hull",
+    "wreck_fuselage_1__hull",
+    "wreck_fuselage_2__hull",
+    "wreck_fuselage_3__hull",
+    "wreck_wing_left__hull",
+    "wreck_wing_right__hull",
+    "wreck_fuselage_3__elevator_0",
+    "wreck_fuselage_3__elevator_1",
+    "wreck_fuselage_1__landing_gear_12"
+  ],
+  "excludeParts": [
+    24,
+    12,
+    14,
+    15
+  ],
+  "storeTextureV": 128,
+  "keepBoxes": [
+    [
+      [
+        -10,
+        28,
+        -110
+      ],
+      [
+        10,
+        60,
+        -40
+      ]
+    ],
+    [
+      [
+        55,
+        30,
+        -150
+      ],
+      [
+        110,
+        42,
+        150
+      ]
+    ],
+    [
+      [
+        -110,
+        30,
+        -150
+      ],
+      [
+        -55,
+        42,
+        150
+      ]
+    ]
+  ],
+  "fuselageCuts": [
+    -73,
+    -2,
+    62
+  ],
+  "parts": {
+    "0": "fuselage",
+    "1": "fuselage",
+    "2": "wreck_fuselage_3__hull",
+    "4": "wing",
+    "5": "wing",
+    "7": {
+      "bone": "side:wreck_fuselage_3__rudder_0,wreck_fuselage_3__rudder_1",
+      "if": {
+        "zMin": 100
+      },
+      "else": "drop"
+    },
+    "8": "side:wreck_fuselage_3__elevator_0,wreck_fuselage_3__elevator_1",
+    "10": "side:wreck_wing_left__aileron_10,wreck_wing_right__aileron_11",
+    "11": "side:wreck_wing_left__aileron_10,wreck_wing_right__aileron_11"
+  },
+  "keepTemplateBones": [
+    "landing_gear_12",
+    "landing_gear_14",
+    "landing_gear_15",
+    "gear_wheel_0",
+    "gear_wheel_1",
+    "gear_wheel_2",
+    "control_stick_pitch",
+    "suspended_f_15c_0",
+    "suspended_f_15c_1",
+    "suspended_f_15c_2",
+    "suspended_f_15c_3",
+    "suspended_f_15c_4"
+  ],
+  "attachments": {
+    "pilot2_eye": [
+      0,
+      53.3,
+      -53.5
+    ]
+  },
+  "seatPositions": {},
+  "addSeats": [
+    {
+      "note": "WSO: cushion 38.8, seat back z -49..-44",
+      "copyOf": 0,
+      "remove": [
+        "Weapons",
+        "FixedGunBank"
+      ],
+      "at": [
+        0,
+        27.4,
+        -53.5
+      ],
+      "eye": "pilot2_eye"
+    }
+  ],
+  "removeClientKeys": [
+    "CanopyGlass"
+  ],
+  "flightReference": {
+    "baseMassKg": 15200,
+    "mainFuelMassKg": 10200,
+    "fullFuelMassKg": 25400,
+    "fullFuelWingLoadingKgPerSquareMetre": 450,
+    "dryThrustKgfPerEngine": 8050,
+    "afterburnerThrustKgfPerEngine": 13200,
+    "climbMetresPerSecond": 254,
+    "turnSeconds": 24,
+    "maximumTrueAirspeedKmh": 2655
+  },
+  "dropRules": [
+    {
+      "absXMin": 38,
+      "absXMax": 56,
+      "yMax": 31,
+      "zMax": 85
+    },
+    {
+      "absXMax": 6,
+      "yMax": 16
+    }
+  ]
+}

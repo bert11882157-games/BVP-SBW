@@ -1,0 +1,101 @@
+{
+  "id": "a_10",
+  "name": "A-10C Thunderbolt II",
+  "entityClass": "AuthoredFixedWingAircraft",
+  "template": "a_10",
+  "source": "A-10C.mtb",
+  "note": "Model replacement: A-10C.mtb on the existing A-10 data (span and wing chord match the old model). Originals kept in tools/vehgen/replaced/a_10. Baked stores dropped: texture rows 1024-1151 (the store atlas), the left ECM pod and the centerline pod.",
+  "yaw180": true,
+  "lengthParts": [
+    0,
+    1,
+    2,
+    4,
+    5,
+    8,
+    9,
+    12,
+    14,
+    15
+  ],
+  "templateLengthBones": [
+    "wreck_fuselage_0__hull",
+    "wreck_fuselage_1__hull",
+    "wreck_fuselage_2__hull",
+    "wreck_fuselage_3__hull",
+    "wreck_wing_left__hull",
+    "wreck_wing_right__hull",
+    "wreck_fuselage_3__elevator_left",
+    "wreck_fuselage_3__elevator_right",
+    "wreck_fuselage_3__rudder_left",
+    "wreck_fuselage_3__rudder_right",
+    "wreck_fuselage_0__landing_gear_12"
+  ],
+  "excludeParts": [
+    24,
+    12,
+    14,
+    15
+  ],
+  "storeTextureV": -1,
+  "keepBoxes": [],
+  "fuselageCuts": [
+    -64,
+    -17,
+    65
+  ],
+  "parts": {
+    "0": "fuselage",
+    "1": "fuselage",
+    "2": "wreck_fuselage_3__hull",
+    "3": "fuselage",
+    "4": "wing",
+    "5": "wing",
+    "7": {
+      "bone": "side:wreck_fuselage_3__rudder_left,wreck_fuselage_3__rudder_right",
+      "if": {
+        "zMin": 90
+      },
+      "else": "fuselage"
+    },
+    "8": "side:wreck_fuselage_3__elevator_left,wreck_fuselage_3__elevator_right",
+    "9": "side:wreck_fuselage_3__elevator_left,wreck_fuselage_3__elevator_right",
+    "10": "side:wreck_wing_left__aileron_left,wreck_wing_right__aileron_right",
+    "11": "side:wreck_wing_left__aileron_left,wreck_wing_right__aileron_right",
+    "16": "fuselage",
+    "17": "fuselage"
+  },
+  "keepTemplateBones": [
+    "gear_wheel_0",
+    "gear_wheel_1",
+    "landing_gear_12",
+    "landing_gear_14",
+    "landing_gear_15",
+    "turbine_fan_1",
+    "turbine_fan_2"
+  ],
+  "attachments": {},
+  "seatPositions": {},
+  "addSeats": [],
+  "flightReference": {},
+  "storeTextureRanges": [
+    [
+      1024,
+      1152
+    ]
+  ],
+  "dropRules": [
+    {
+      "absXMin": 85,
+      "absXMax": 105,
+      "yMax": 25
+    },
+    {
+      "absXMax": 7,
+      "yMax": 17
+    }
+  ],
+  "removeClientKeys": [
+    "CanopyGlass"
+  ]
+}

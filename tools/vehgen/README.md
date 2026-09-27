@@ -87,3 +87,10 @@ Sound events stay the template's. Only exact ids and asset paths are renamed.
 | id | source | template | notes |
 |---|---|---|---|
 | `f_16b` | F-16B.mtb | f_16c | Scale 0.8076, aligned by nose and gear. 345 baked store elements are dropped (texture rows < 200 outside the cockpit). Front eye at the F-16B front seat (z −41.5, 4 px behind the F-16C's); rear seat and eye added (z −18.5, 0.8 px higher). The template canopy glass is removed because the model has its own. Flight reference: base 9,300 kg, fuel 2,750 kg. |
+| `f_15e` | F-15E.mtb | f_15c | Span and wing trailing edge match the template exactly (scale 0.7763). The baked stores are dropped: texture rows below 128 outside the cockpit and outer wing panels, plus the wing tanks and the centerline tank; the conformal tanks stay. The front eye matches the F-15C's; the WSO seat and eye are added at the model's rear seat. Flight reference: F-15E masses and F100-PW-229 thrust. |
+| `a_10` (replacement) | A-10C.mtb | a_10 (originals in `replaced/a_10`) | Span and chord match the old model (scale 0.794). Stores on texture rows 1024–1151, the left ECM pod and the centerline pod are dropped. The template gear and turbine fans are kept. The template canopy glass is removed. |
+
+Replacing an aircraft in place (`template` = `id`):
+- The original files are copied to `tools/vehgen/replaced/<id>/` on the first run, and every later run reads the
+  template from there.
+- Registrations are left as they are.

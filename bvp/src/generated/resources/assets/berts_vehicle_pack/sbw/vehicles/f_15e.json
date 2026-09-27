@@ -1,66 +1,155 @@
 {
-  "ID": "berts_vehicle_pack:a_10",
+  "ID": "berts_vehicle_pack:f_15e",
   "Model": {
-    "GeometryBackend": "berts_vehicle_pack:vehicle/a_10",
-    "Model": "berts_vehicle_pack:geo/native_fallback/a_10.geo.json",
-    "Texture": "berts_vehicle_pack:textures/entity/a_10.png",
-    "WreckTexture": "berts_vehicle_pack:textures/entity_dead/a_10.png"
-  },
-  "AfterburnerPresentation": {
-    "Schema": 1,
-    "Frame": "VEHICLE_LOCAL_BLOCKS",
-    "Afterburning": false,
-    "Outlets": [
-      {
-        "Id": "engine_0",
-        "Position": [
-          1.449,
-          3.021,
-          -4.99
-        ],
-        "Direction": [
-          0,
-          0,
-          -1
-        ],
-        "NozzleRadiusBlocks": 0.3
-      },
-      {
-        "Id": "engine_1",
-        "Position": [
-          -1.449,
-          3.021,
-          -4.99
-        ],
-        "Direction": [
-          0,
-          0,
-          -1
-        ],
-        "NozzleRadiusBlocks": 0.3
-      }
-    ]
+    "GeometryBackend": "berts_vehicle_pack:vehicle/f_15e",
+    "Model": "berts_vehicle_pack:geo/native_fallback/f_15e.geo.json",
+    "Texture": "berts_vehicle_pack:textures/entity/f_15e.png",
+    "WreckTexture": "berts_vehicle_pack:textures/entity_dead/f_15e.png"
   },
   "MouseSpeed": [
     0.2,
     0.2
   ],
+  "AfterburnerPresentation": {
+    "Palette": {
+      "Core": [
+        1.0,
+        0.92,
+        0.94
+      ],
+      "Flame": [
+        1.0,
+        0.56,
+        0.52
+      ],
+      "Tail": [
+        1.0,
+        0.48,
+        0.2
+      ],
+      "Diamonds": [
+        1.0,
+        0.72,
+        0.86
+      ]
+    },
+    "Schema": 2,
+    "Frame": "VEHICLE_LOCAL_BLOCKS",
+    "Outlets": [
+      {
+        "Id": "afterburner_0",
+        "Position": [
+          0.679259375,
+          1.91648125,
+          -8.153536875
+        ],
+        "Direction": [
+          0,
+          0,
+          -1
+        ],
+        "NozzleRadiusBlocks": 0.463
+      },
+      {
+        "Id": "afterburner_1",
+        "Position": [
+          -0.679259375,
+          1.91648125,
+          -8.153536875
+        ],
+        "Direction": [
+          0,
+          0,
+          -1
+        ],
+        "NozzleRadiusBlocks": 0.463
+      }
+    ],
+    "Flame": {
+      "Scale": 0.9,
+      "WidthBlocks": 0.2,
+      "LengthBlocks": 7,
+      "ParticlesPerTick": 3,
+      "LifetimeTicks": 10,
+      "ColorRgb": [
+        1,
+        1,
+        1
+      ]
+    },
+    "Smoke": {
+      "Scale": 0.5,
+      "WidthBlocks": 0.18,
+      "LengthBlocks": 6,
+      "ParticlesPerTick": 0.5,
+      "LifetimeTicks": 14,
+      "ColorRgb": [
+        1,
+        1,
+        1
+      ]
+    },
+    "TapEmitters": [
+      {
+        "Outlet": "afterburner_0",
+        "Style": "FM_FLAME",
+        "Interval": 1,
+        "Offset": [
+          0,
+          0,
+          0
+        ],
+        "Extents": [
+          0.14555555555625,
+          0.14555555555625,
+          0.14555555555625
+        ],
+        "Velocity": [
+          0,
+          0,
+          0.1875
+        ]
+      },
+      {
+        "Outlet": "afterburner_1",
+        "Style": "FM_FLAME",
+        "Interval": 1,
+        "Offset": [
+          0,
+          0,
+          0
+        ],
+        "Extents": [
+          0.14555555555625,
+          0.14555555555625,
+          0.14555555555625
+        ],
+        "Velocity": [
+          0,
+          0,
+          0.1875
+        ]
+      }
+    ],
+    "TapSource": "planes/T3p5F F-15C.txt#D638FFB9AC1FA61E5CBA54AFCC2B49545FE365E49038D03BAED78238B25DE3F8",
+    "TapVariant": "GENERIC_TAP_FMFLAME_AT_AUTHORED_NOZZLES"
+  },
   "AircraftRig": {
     "Schema": 2,
     "Frame": "GENERATED_MODEL_PIXELS",
     "Surfaces": [
       {
-        "Bone": "elevator_left",
+        "Bone": "elevator_0",
         "Parent": "hull",
         "Pivot": [
-          25.603,
-          35.55529,
-          115.02589
+          48.51852,
+          29.11111,
+          118.77334
         ],
         "Axis": [
-          -1,
+          -0.7002086339541564,
           0,
-          0
+          -0.7139382809011254
         ],
         "ControlWeights": {
           "ElevatorUp": 1,
@@ -70,17 +159,17 @@
         "MaxDeflectionDegrees": 25
       },
       {
-        "Bone": "elevator_right",
+        "Bone": "elevator_1",
         "Parent": "hull",
         "Pivot": [
-          -25.603,
-          33.62769,
-          114.8911
+          -48.51852,
+          29.11111,
+          118.7733
         ],
         "Axis": [
-          -1,
+          -0.7002093412614377,
           0,
-          0
+          0.713937587195284
         ],
         "ControlWeights": {
           "ElevatorUp": 1,
@@ -90,17 +179,17 @@
         "MaxDeflectionDegrees": 25
       },
       {
-        "Bone": "aileron_left",
+        "Bone": "aileron_10",
         "Parent": "hull",
         "Pivot": [
-          100.94268,
-          39.40072,
-          9.66151
+          57.05777,
+          34.54519,
+          77.62963
         ],
         "Axis": [
-          -0.9965203801425908,
-          -0.08334945686965457,
-          0
+          -0.98230901927638,
+          0.02068015482745421,
+          -0.1861217930404411
         ],
         "ControlWeights": {
           "ElevatorUp": 0,
@@ -110,17 +199,17 @@
         "MaxDeflectionDegrees": 25
       },
       {
-        "Bone": "aileron_right",
+        "Bone": "aileron_11",
         "Parent": "hull",
         "Pivot": [
-          -101.74422,
-          34.15434,
-          9.66151
+          -57.05777,
+          34.54519,
+          77.62963
         ],
         "Axis": [
-          -0.992073365460749,
-          0.12566000773270367,
-          0
+          -0.98230901927638,
+          -0.02068015482745421,
+          0.1861217930404411
         ],
         "ControlWeights": {
           "ElevatorUp": 0,
@@ -130,17 +219,17 @@
         "MaxDeflectionDegrees": 25
       },
       {
-        "Bone": "rudder_left",
+        "Bone": "rudder_0",
         "Parent": "hull",
         "Pivot": [
-          47.3414,
-          51.71639,
-          114.94126
+          26.78222,
+          50.45926,
+          124.20741
         ],
         "Axis": [
           0,
-          0.998629541113708,
-          -0.05233583490329631
+          -1,
+          0
         ],
         "ControlWeights": {
           "ElevatorUp": 0,
@@ -150,17 +239,17 @@
         "MaxDeflectionDegrees": 25
       },
       {
-        "Bone": "rudder_right",
+        "Bone": "rudder_1",
         "Parent": "hull",
         "Pivot": [
-          -45.4091,
-          51.71639,
-          114.94126
+          -26.78222,
+          50.45926,
+          124.20741
         ],
         "Axis": [
           0,
-          0.998629541113708,
-          -0.05233583490329631
+          -1,
+          0
         ],
         "ControlWeights": {
           "ElevatorUp": 0,
@@ -168,50 +257,56 @@
           "RudderRight": -1
         },
         "MaxDeflectionDegrees": 25
+      },
+      {
+        "Bone": "control_stick_roll",
+        "Parent": "hull",
+        "Pivot": [
+          0.0,
+          35.5097,
+          -88.16504
+        ],
+        "Axis": [
+          0,
+          0,
+          1
+        ],
+        "ControlWeights": {
+          "ElevatorUp": 0,
+          "RightRoll": 1,
+          "RudderRight": 0
+        },
+        "MaxDeflectionDegrees": 11.0
+      },
+      {
+        "Bone": "control_stick_pitch",
+        "Parent": "control_stick_roll",
+        "Pivot": [
+          0.0,
+          35.5097,
+          -88.16504
+        ],
+        "Axis": [
+          1,
+          0,
+          0
+        ],
+        "ControlWeights": {
+          "ElevatorUp": 1,
+          "RightRoll": 0,
+          "RudderRight": 0
+        },
+        "MaxDeflectionDegrees": 14.0
       }
     ],
     "Rotors": [
       {
-        "Bone": "turbine_fan_1",
-        "Parent": "hull",
-        "Pivot": [
-          23.18762,
-          50.72574,
-          35.74759
-        ],
-        "Axis": [
-          0,
-          -0.05233595624294383,
-          0.9986295347545738
-        ],
-        "SpeedChannel": "engineSpool",
-        "Direction": 1,
-        "DegreesPerTickAtFullSpeed": 45
-      },
-      {
-        "Bone": "turbine_fan_2",
-        "Parent": "hull",
-        "Pivot": [
-          -23.18762,
-          50.72574,
-          35.74759
-        ],
-        "Axis": [
-          0,
-          -0.05233595624294383,
-          0.9986295347545738
-        ],
-        "SpeedChannel": "engineSpool",
-        "Direction": 1,
-        "DegreesPerTickAtFullSpeed": 45
-      },
-      {
         "Bone": "gear_wheel_0",
-        "Parent": "landing_gear_14",
+        "Parent": "landing_gear_12",
         "Pivot": [
-          42.51064,
-          6.76587,
-          10.62766
+          0.0,
+          4.65778,
+          -50.45926
         ],
         "Axis": [
           1,
@@ -220,15 +315,15 @@
         ],
         "SpeedChannel": "groundRoll",
         "Direction": -1,
-        "DegreesPerTickAtFullSpeed": 135.494
+        "DegreesPerTickAtFullSpeed": 196.817
       },
       {
         "Bone": "gear_wheel_1",
-        "Parent": "landing_gear_15",
+        "Parent": "landing_gear_14",
         "Pivot": [
-          -42.51064,
-          6.76587,
-          10.62766
+          27.17037,
+          5.82222,
+          45.41334
         ],
         "Axis": [
           1,
@@ -237,7 +332,24 @@
         ],
         "SpeedChannel": "groundRoll",
         "Direction": -1,
-        "DegreesPerTickAtFullSpeed": 135.494
+        "DegreesPerTickAtFullSpeed": 157.454
+      },
+      {
+        "Bone": "gear_wheel_2",
+        "Parent": "landing_gear_15",
+        "Pivot": [
+          -27.17037,
+          5.82222,
+          45.41334
+        ],
+        "Axis": [
+          1,
+          0,
+          0
+        ],
+        "SpeedChannel": "groundRoll",
+        "Direction": -1,
+        "DegreesPerTickAtFullSpeed": 157.454
       }
     ],
     "Gear": [
@@ -254,6 +366,7 @@
         "Parent": "hull"
       }
     ],
+    "Flaps": [],
     "Sweeps": []
   },
   "CockpitGauges": {
@@ -264,9 +377,9 @@
         "Seat": 0,
         "Kind": "THROTTLE",
         "Center": [
-          0.1122,
-          2.85968,
-          5.55137
+          0.10807,
+          2.88007,
+          5.62415
         ],
         "Normal": [
           0.0,
@@ -278,7 +391,7 @@
           1.0,
           0.0
         ],
-        "Diameter": 0.0916,
+        "Diameter": 0.088,
         "Depth": 0.03
       },
       {
@@ -286,8 +399,8 @@
         "Kind": "ATTITUDE",
         "Center": [
           0.0,
-          2.85968,
-          5.55137
+          2.88007,
+          5.62415
         ],
         "Normal": [
           0.0,
@@ -299,16 +412,16 @@
           1.0,
           0.0
         ],
-        "Diameter": 0.0916,
+        "Diameter": 0.088,
         "Depth": 0.03
       },
       {
         "Seat": 0,
         "Kind": "ALTIMETER",
         "Center": [
-          -0.1122,
-          2.85968,
-          5.55137
+          -0.10807,
+          2.88007,
+          5.62415
         ],
         "Normal": [
           0.0,
@@ -320,7 +433,7 @@
           1.0,
           0.0
         ],
-        "Diameter": 0.0916,
+        "Diameter": 0.088,
         "Depth": 0.03
       },
       {
@@ -328,8 +441,8 @@
         "Kind": "HEADING",
         "Center": [
           0.0,
-          2.74748,
-          5.55137
+          2.772,
+          5.62415
         ],
         "Normal": [
           0.0,
@@ -341,16 +454,16 @@
           1.0,
           0.0
         ],
-        "Diameter": 0.0916,
+        "Diameter": 0.088,
         "Depth": 0.03
       },
       {
         "Seat": 0,
         "Kind": "FILLER_RPM",
         "Center": [
-          0.1122,
-          2.74748,
-          5.55137
+          0.10807,
+          2.772,
+          5.62415
         ],
         "Normal": [
           0.0,
@@ -362,16 +475,16 @@
           1.0,
           0.0
         ],
-        "Diameter": 0.0916,
+        "Diameter": 0.088,
         "Depth": 0.03
       },
       {
         "Seat": 0,
         "Kind": "FILLER_FUEL",
         "Center": [
-          -0.1122,
-          2.74748,
-          5.55137
+          -0.10807,
+          2.772,
+          5.62415
         ],
         "Normal": [
           0.0,
@@ -383,58 +496,16 @@
           1.0,
           0.0
         ],
-        "Diameter": 0.0916,
-        "Depth": 0.03
-      },
-      {
-        "Seat": 0,
-        "Kind": "FILLER_OIL",
-        "Center": [
-          0.2244,
-          2.85968,
-          5.55137
-        ],
-        "Normal": [
-          0.0,
-          0.0,
-          -1.0
-        ],
-        "Up": [
-          0.0,
-          1.0,
-          0.0
-        ],
-        "Diameter": 0.0916,
-        "Depth": 0.03
-      },
-      {
-        "Seat": 0,
-        "Kind": "FILLER_TEMP",
-        "Center": [
-          -0.2244,
-          2.85968,
-          5.55137
-        ],
-        "Normal": [
-          0.0,
-          0.0,
-          -1.0
-        ],
-        "Up": [
-          0.0,
-          1.0,
-          0.0
-        ],
-        "Diameter": 0.0916,
+        "Diameter": 0.088,
         "Depth": 0.03
       },
       {
         "Seat": 0,
         "Kind": "FILLER_CLOCK",
         "Center": [
-          0.2244,
-          2.74748,
-          5.55137
+          0.21613,
+          2.772,
+          5.62415
         ],
         "Normal": [
           0.0,
@@ -446,16 +517,16 @@
           1.0,
           0.0
         ],
-        "Diameter": 0.0916,
+        "Diameter": 0.088,
         "Depth": 0.03
       },
       {
         "Seat": 0,
         "Kind": "FILLER_VOLTS",
         "Center": [
-          -0.2244,
-          2.74748,
-          5.55137
+          -0.21613,
+          2.772,
+          5.62415
         ],
         "Normal": [
           0.0,
@@ -467,8 +538,36 @@
           1.0,
           0.0
         ],
-        "Diameter": 0.0916,
+        "Diameter": 0.088,
         "Depth": 0.03
+      }
+    ]
+  },
+  "FlightDisplays": {
+    "Schema": 1,
+    "Frame": "VEHICLE_LOCAL_BLOCKS",
+    "Displays": [
+      {
+        "Seat": 0,
+        "Center": [
+          0.0,
+          2.56115,
+          5.62415
+        ],
+        "Normal": [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        "Up": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "Width": 0.2112,
+        "Depth": 0.035,
+        "Kind": "RADAR",
+        "Style": "CRT"
       }
     ]
   }
