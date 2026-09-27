@@ -350,6 +350,8 @@ public class InventoryTool {
         return originalCount - stack.getCount();
     }
 
+    private static volatile long lastWithdrawWarning;
+
     public static int insertItem(IItemHandler handler, ItemStack stack, int count) {
         int inserted = 0;
         while (count > 0) {
@@ -361,7 +363,13 @@ public class InventoryTool {
             inserted += toInsert - result.getCount();
 
             if (!result.isEmpty()) {
-                Mod.LOGGER.warn("trying to withdraw ammo {} with count {}, but only {} is inserted", stack, count, inserted);
+                // a full ammo container on every weapon-slot change: logged at most once every 10 s (a synchronous log
+                // line per shot was hundreds of lines a second in a firefight)
+                long now = System.currentTimeMillis();
+                if (now - lastWithdrawWarning > 10_000L) {
+                    lastWithdrawWarning = now;
+                    Mod.LOGGER.warn("trying to withdraw ammo {} with count {}, but only {} is inserted (further warnings suppressed for 10 s)", stack, count, inserted);
+                }
                 break;
             }
         }

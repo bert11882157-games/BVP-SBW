@@ -298,7 +298,10 @@ object StressDiagnostics {
             val (pair, store, id) = bombs[k]
             val mount = AircraftArmamentRegistry.mountPositions(pair).firstOrNull() ?: return
             val type = ForgeRegistries.ENTITY_TYPES.getKey(vehicle.type)?.path + "/bomb:" + id.substringAfter(':')
-            if (com.atsuishio.superbwarfare.api.aircraft.AircraftBombLauncher.launch(vehicle, player, mount, store)) {
+            // released 2.5 blocks under the hardpoint: the harness holds the aircraft still, so a bomb spawned at the rack
+            // falls through its own airframe (a real release inherits the aircraft's motion and drops clear)
+            if (com.atsuishio.superbwarfare.api.aircraft.AircraftBombLauncher.launch(vehicle, player, mount, store, null,
+                    net.minecraft.world.phys.Vec3(0.0, -2.5, 0.0))) {
                 current.accepted++
                 current.firedByType.merge(type, 1, Int::plus)
             } else current.rejected.merge("BOMB_RELEASE_FAILED", 1, Int::plus)

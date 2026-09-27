@@ -38,6 +38,10 @@ public class ProjectileUtilMixin {
             at = @At("HEAD"), cancellable = true)
     private static void getEntityHitResult(Level pLevel, Entity pProjectile, Vec3 pStartVec, Vec3 pEndVec, AABB pBoundingBox, Predicate<Entity> pFilter, float pInflationAmount, CallbackInfoReturnable<EntityHitResult> cir) {
         OBBHitter.getInstance(pProjectile).sbw$setProjectileContact(null);
+        if (sbw$clientShellWithoutEntityHits(pLevel, pProjectile)) {
+            cir.setReturnValue(null);
+            return;
+        }
         var candidates = pLevel.getEntities(pProjectile, pBoundingBox.inflate(8), pFilter);
         if (!requiresCustomQuery(candidates, pProjectile)) return;
         cir.setReturnValue(resolveEntityHits(candidates, pProjectile, pStartVec, pEndVec,
@@ -48,10 +52,23 @@ public class ProjectileUtilMixin {
             at = @At("HEAD"), cancellable = true)
     private static void getEntityHitResult(Entity pShooter, Vec3 pStartVec, Vec3 pEndVec, AABB pBoundingBox, Predicate<Entity> pFilter, double pDistance, CallbackInfoReturnable<EntityHitResult> cir) {
         OBBHitter.getInstance(pShooter).sbw$setProjectileContact(null);
+        if (sbw$clientShellWithoutEntityHits(pShooter.level(), pShooter)) {
+            cir.setReturnValue(null);
+            return;
+        }
         var candidates = pShooter.level().getEntities(pShooter, pBoundingBox.inflate(8), pFilter);
         if (!requiresCustomQuery(candidates, pShooter)) return;
         cir.setReturnValue(resolveEntityHits(candidates, pShooter, pStartVec, pEndVec,
                 pBoundingBox, 0.0F, pDistance, true));
+    }
+
+    /**
+     * Small cannon shells resolve entity hits on the server only (their client onHitEntity does nothing), so the
+     * client's per-tick entity sweep for each shell in flight (two broad queries plus the OBB target scan, hundreds of
+     * shells in a firefight) is skipped. Block hits are still predicted on the client.
+     */
+    private static boolean sbw$clientShellWithoutEntityHits(Level level, Entity projectile) {
+        return level.isClientSide && projectile instanceof com.atsuishio.superbwarfare.entity.projectile.SmallCannonShellEntity;
     }
 
     private static boolean requiresCustomQuery(Iterable<Entity> entities, Entity shooter) {
