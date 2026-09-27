@@ -33,6 +33,8 @@ def main(argv):
     ap.add_argument('rays')
     ap.add_argument('csv')
     ap.add_argument('--examples', type=int, default=6)
+    ap.add_argument('--vehicle-data', help='sbw/vehicles/<id>.json: also require an SBW OBB contact for core rays '
+                                           '(a shell only reaches the armor resolver after one)')
     a = ap.parse_args(argv)
     spec, volumes = B.build(a.vid)
     # expected outer normal per plate, in the armor-profile frame ((-x, y, z) of geo)
@@ -94,6 +96,32 @@ def main(argv):
             e = expect[r['volume']]
             if r['volume_frame'] in ('turret', 'barrel', 'hull') and n @ e < 0.999:
                 problems['entered face is not the plate face (rim or skin corner)'].append((i, ray, r))
+    if a.vehicle_data:
+        d = json.load(open(a.vehicle_data))
+        tp = np.array(d['TurretPos'], float)
+        boxes = []
+        for o in d['OBB']:
+            c, h = np.array(o['Position'], float), np.array(o['Size'], float)
+            if o.get('Transform') == 'Turret':
+                boxes.append((c + tp, h))
+            elif o.get('Transform') in (None, 'Vehicle', 'Default'):
+                boxes.append((c, h))
+        for i, ray in enumerate(rays):
+            if ray['cat'] != 'core':
+                continue
+            dd = np.array(ray['d'], float) * [-1, 1, -1]
+            o = (np.array(ray['hit'], float) - 4 * np.array(ray['d'], float)) * [-1, 1, -1]
+            hit = False
+            for c, h in boxes:
+                with np.errstate(divide='ignore', invalid='ignore'):
+                    t1, t2 = (c - h - o) / dd, (c + h - o) / dd
+                tn, tf = np.nanmax(np.minimum(t1, t2)), np.nanmin(np.maximum(t1, t2))
+                if tn <= tf and tf >= 0 and tn <= 8:
+                    hit = True
+                    break
+            if not hit:
+                problems['core ray with no SBW OBB contact (the shell never reaches the armor)'].append(
+                    (i, ray, base[i]))
     print(f'{a.vid}: {len(base)} rays at yaw 0')
     grazes = collections.Counter(r['cat'] for r in base if r.get('exact') == 'false' and r['outcome'] == 'plate')
     if grazes:
