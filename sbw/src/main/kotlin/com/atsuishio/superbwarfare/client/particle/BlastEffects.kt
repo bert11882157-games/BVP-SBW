@@ -142,6 +142,7 @@ object BlastEffects {
     @SubscribeEvent
     fun onRender(event: RenderLevelStageEvent) {
         if (event.stage != RenderLevelStageEvent.Stage.AFTER_PARTICLES) return
+        if (com.atsuishio.superbwarfare.diagnostics.ParticleProbe.hideBlasts) return
         val level = level() ?: return
         if (blasts.isEmpty() && shockwaves.isEmpty()) return
         val mc = Minecraft.getInstance()

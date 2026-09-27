@@ -128,11 +128,12 @@ public final class BvpKomodoVehicleVisual extends AbstractEntityVisual<GeoVehicl
     }
 
     private void collect(Geometry geometry, BedrockBone bone, PoseStack pose, int light) {
-        if (!bone.visible) return;
+        // subtrees without an opaque mesh (locators, seats, translucent-only bones) need no transform
+        if (!bone.visible || !geometry.liveBones.containsKey(bone)) return;
         pose.m_85836_();
         try {
             bone.translateAndRotateAndScale(pose);
-            List<Integer> parts = geometry.boneParts.get(bone);
+            int[] parts = geometry.bonePartIndices.get(bone);
             if (parts != null) {
                 for (int index : parts) {
                     transforms[index].set(pose.m_85850_().m_252922_());
@@ -275,6 +276,8 @@ public final class BvpKomodoVehicleVisual extends AbstractEntityVisual<GeoVehicl
         final List<BedrockBone> roots = new ArrayList<>();
         final List<Part> parts = new ArrayList<>();
         final Map<BedrockBone, List<Integer>> boneParts = new IdentityHashMap<>();
+        final Map<BedrockBone, int[]> bonePartIndices = new IdentityHashMap<>();
+        final Map<BedrockBone, Boolean> liveBones = new IdentityHashMap<>();
         final Map<VertexKey, BakedMesh> meshes = new HashMap<>();
         final Material material;
         int cursor;
@@ -301,6 +304,10 @@ public final class BvpKomodoVehicleVisual extends AbstractEntityVisual<GeoVehicl
                     parts.add(new Part(entry.getKey(), mesh));
                     vertices += mesh.getVertexCount();
                 }
+            }
+            for (var entry : boneParts.entrySet()) {
+                bonePartIndices.put(entry.getKey(), entry.getValue().stream().mapToInt(Integer::intValue).toArray());
+                for (BedrockBone b = entry.getKey(); b != null && liveBones.put(b, Boolean.TRUE) == null; b = b.parent) { }
             }
         }
 

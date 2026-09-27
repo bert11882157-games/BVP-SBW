@@ -46,6 +46,8 @@ object FlightDisplays {
     private val HOUSING_TEXTURE = Mod.loc("textures/misc/flight_display_housing.png")
     private const val SUPERSAMPLE = 1
     private const val MAX_RENDER_DISTANCE_SQ = 96.0 * 96.0
+    private const val DETAIL_DISTANCE_SQ = 32.0 * 32.0
+    private const val CRT_DETAIL_DISTANCE_SQ = 10.0 * 10.0
     private const val BEZEL = 0.2           // housing border around the screen, fraction of the screen width
     private const val FACE = 0.006f         // housing front stands this far proud of the screen, blocks
 
@@ -137,10 +139,15 @@ object FlightDisplays {
         if (vehicle.isWreck) return
         val mc = Minecraft.getInstance()
         val camera = mc.gameRenderer.mainCamera.position
-        if (vehicle.position().distanceToSqr(camera) > MAX_RENDER_DISTANCE_SQ) return
-        CockpitGauges.render(vehicle, poseStack, buffers, packedLight)
+        val distanceSq = vehicle.position().distanceToSqr(camera)
+        if (distanceSq > MAX_RENDER_DISTANCE_SQ) return
         CanopyGlass.render(vehicle, poseStack, buffers, packedLight)
+        // gauges and screens are a few pixels across beyond this: not drawn
+        if (distanceSq > DETAIL_DISTANCE_SQ) return
+        CockpitGauges.render(vehicle, poseStack, buffers, packedLight)
         if (failed) return
+        // the curved CRT (dome, bloom rings, sheen: ~17k vertices a screen) only up close; a flat screen further out
+        val crtDetail = distanceSq <= CRT_DETAIL_DISTANCE_SQ
         val resource = displays(vehicle) ?: return
         val list = resource.displays ?: return
         if (list.isEmpty()) return
@@ -154,7 +161,7 @@ object FlightDisplays {
                 else if (page in stillPainted) page.stillTexture else { stillRequested.add(page); null }
             housing(buffers.getBuffer(RenderType.entityCutoutNoCull(HOUSING_TEXTURE)), pose, quad, packedLight)
             if (texture != null) {
-                if (page.palette.crt) crtScreen(buffers, pose.pose(), quad, texture)
+                if (page.palette.crt && crtDetail) crtScreen(buffers, pose.pose(), quad, texture)
                 else screen(buffers.getBuffer(RenderType.text(texture)), pose.pose(), quad)
             }
         }

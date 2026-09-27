@@ -78,6 +78,9 @@ object PerfProbe {
         val batch = parts.none { it == "batch=off" }
         com.atsuishio.superbwarfare.client.particle.FxLights.enabled = parts.none { it == "fx=off" }
         fxNanos0 = com.atsuishio.superbwarfare.client.particle.FxLights.renderNanos
+        ParticleProbe.hideParticles = parts.any { it == "particles=off" }
+        ParticleProbe.hideBlasts = parts.any { it == "blasts=off" }
+        ParticleProbe.start()
         ClientRenderPerformanceDiagnostics.setBatchingDisabled(!batch)
         ClientRenderPerformanceDiagnostics.setProbeActive(true)
         capture = Capture(label, seconds, batch)
@@ -92,6 +95,8 @@ object PerfProbe {
         ClientRenderPerformanceDiagnostics.setProbeActive(false)
         ClientRenderPerformanceDiagnostics.setBatchingDisabled(false)
         val fxEnabled = com.atsuishio.superbwarfare.client.particle.FxLights.enabled
+        val hidden = listOfNotNull("particles".takeIf { ParticleProbe.hideParticles }, "blasts".takeIf { ParticleProbe.hideBlasts })
+        ParticleProbe.hideParticles = false; ParticleProbe.hideBlasts = false
         com.atsuishio.superbwarfare.client.particle.FxLights.enabled = true
         val frames = active.frames.copyOf(active.count).also { it.sort() }
         fun pct(p: Double) = if (frames.isEmpty()) 0f else frames[((p * frames.size).toInt()).coerceIn(0, frames.size - 1)]
@@ -130,6 +135,8 @@ object PerfProbe {
             "entitiesAtStart" to active.entities0, "entitiesAtEnd" to entityCounts(),
             "levelRenderer" to runCatching { mc.levelRenderer.entityStatistics }.getOrNull(),
             "particles" to runCatching { mc.particleEngine.countParticles() }.getOrNull(),
+            "hidden" to hidden,
+            "drawnParticlesPerFrame" to ParticleProbe.finish(frames.size),
             "window" to "${mc.window.width}x${mc.window.height}",
             "renderDistance" to mc.options.renderDistance().get(),
         )
