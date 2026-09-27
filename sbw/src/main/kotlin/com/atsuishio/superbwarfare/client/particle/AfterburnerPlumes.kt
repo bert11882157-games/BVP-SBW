@@ -109,8 +109,9 @@ object AfterburnerPlumes {
         plume.seenAt = time
         if (plume.intensity > 0.02) {
             val back = plume.radius * 3.0
+            // a lit afterburner is brilliant: it floods the airframe, the ground under a low pass and the ramp
             FxLights.sustain(key or 0x4100000000000000L, x + plume.dx * back, y + plume.dy * back, z + plume.dz * back,
-                3.0 + 5.5 * plume.intensity, 12.0 * plume.intensity)
+                5.0 + 15.0 * plume.intensity, 15.0 * plume.intensity, 1.0 + 1.6 * plume.intensity, 1f, 0.78f, 0.5f)
         }
     }
 

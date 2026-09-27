@@ -90,9 +90,13 @@ object BlastEffects {
         val p = message.position
         val blast = Blast(level, p.x, p.y, p.z, message.radius.toDouble(), message.seed, level.gameTime, quality)
         blasts.add(blast)
-        // the fireball lights its surroundings while it burns
-        FxLights.flash(p.x, p.y + blast.radius * 0.5, p.z, max(8.0, blast.radius * 5.0), 15.0,
-            BlastVisuals.expansionTicks(blast.kg) + 12.0)
+        // the detonation: a white-hot flash that lights everything round it for a moment, far brighter than any
+        // lamp (boosted ground glow, twice the fireball light's reach)
+        FxLights.flash(p.x, p.y + blast.radius * 0.5, p.z, (blast.radius * 10.0).coerceIn(16.0, 48.0), 15.0, 5.0,
+            3.5, 1f, 0.92f, 0.75f)
+        // then the fireball lights its surroundings while it burns
+        FxLights.flash(p.x, p.y + blast.radius * 0.5, p.z, max(10.0, blast.radius * 6.0), 15.0,
+            BlastVisuals.expansionTicks(blast.kg) + 12.0, 1.4, 1f, 0.55f, 0.22f)
         val clock = System.currentTimeMillis()
         if (clock - lastLogAt >= LOG_INTERVAL_MS) {
             lastLogAt = clock

@@ -27,11 +27,15 @@ import java.time.Instant
 object PerfProbe {
     private const val REQUEST = "diagnostic-perf.request"
     private const val POLL_TICKS = 4
+    private const val PHASES = 6
+    private val PHASE_NAMES = listOf("clientTickMs", "ticks", "entityTickMs", "particleTickMs", "renderMs", "entitiesJoined")
 
     private class Capture(val label: String, val seconds: Double, val batch: Boolean) {
         val startedNanos = System.nanoTime()
         val startedUtc: String = Instant.now().toString()
         var frames = FloatArray(4096)
+        /** Per frame: client tick ms, ticks run, entity tick ms, particle tick ms, render ms, entities joined. */
+        var phases = FloatArray(4096 * PHASES)
         var count = 0
         var lastFrame = Long.MIN_VALUE
         val gcCount0 = gcCount()
@@ -39,7 +43,14 @@ object PerfProbe {
         val allocated0 = allocatedBytes()
         val entities0 = entityCounts()
         fun add(ms: Float) {
-            if (count == frames.size) frames = frames.copyOf(frames.size * 2)
+            if (count == frames.size) { frames = frames.copyOf(frames.size * 2); phases = phases.copyOf(frames.size * PHASES) }
+            val at = count * PHASES
+            phases[at] = FramePhases.tickNanos / 1e6f
+            phases[at + 1] = FramePhases.ticks.toFloat()
+            phases[at + 2] = FramePhases.entitiesNanos / 1e6f
+            phases[at + 3] = FramePhases.particlesNanos / 1e6f
+            phases[at + 4] = FramePhases.renderNanos / 1e6f
+            phases[at + 5] = FramePhases.joins.toFloat()
             frames[count++] = ms
         }
     }
@@ -50,15 +61,32 @@ object PerfProbe {
 
     @SubscribeEvent
     fun onRenderTick(event: TickEvent.RenderTickEvent) {
-        if (event.phase != TickEvent.Phase.START) return
         val active = capture ?: return
         val now = System.nanoTime()
+        if (event.phase == TickEvent.Phase.END) {
+            FramePhases.renderNanos += now - FramePhases.renderStart
+            return
+        }
+        // Frame boundary. The interval since the previous one holds the previous frame's render and buffer swap,
+        // then this frame's packets and client ticks.
         if (active.lastFrame != Long.MIN_VALUE) active.add((now - active.lastFrame) / 1_000_000f)
+        FramePhases.reset()
         active.lastFrame = now
+        FramePhases.renderStart = now
+    }
+
+    @SubscribeEvent
+    fun onEntityJoin(event: net.minecraftforge.event.entity.EntityJoinLevelEvent) {
+        if (FramePhases.active && event.level.isClientSide) FramePhases.joins++
     }
 
     @SubscribeEvent
     fun onClientTick(event: TickEvent.ClientTickEvent) {
+        if (FramePhases.active) {
+            if (event.phase == TickEvent.Phase.START) { FramePhases.tickStart = System.nanoTime(); return }
+            FramePhases.tickNanos += System.nanoTime() - FramePhases.tickStart
+            FramePhases.ticks++
+        }
         if (event.phase != TickEvent.Phase.END) return
         if (!DebugFeaturePolicy.isDiagnosticPropertyEnabled("bvp.diagnostics.scenarios")) return
         val mc = Minecraft.getInstance()
@@ -89,11 +117,15 @@ object PerfProbe {
         ClientRenderPerformanceDiagnostics.setBatchingDisabled(!batch)
         ClientRenderPerformanceDiagnostics.setProbeActive(true)
         capture = Capture(label, seconds, batch)
+        FramePhases.reset()
+        FramePhases.active = true
         Mod.LOGGER.info("BVP_PERF start {} {}s batch={}", label, seconds, batch)
     }
 
     private fun finish(mc: Minecraft, active: Capture) {
         capture = null
+        FramePhases.active = false
+        val breakdown = frameBreakdown(active)
         val wallSeconds = (System.nanoTime() - active.startedNanos) / 1e9
         val counters = ClientRenderPerformanceDiagnostics.snapshot()
         val passes = ClientRenderPerformanceDiagnostics.batchPasses()
@@ -115,6 +147,10 @@ object PerfProbe {
                 "p50" to pct(0.50), "p90" to pct(0.90), "p95" to pct(0.95), "p99" to pct(0.99),
                 "p999" to pct(0.999), "max" to (frames.lastOrNull() ?: 0f)),
             "framesOver16_7ms" to frames.count { it > 16.7f }, "framesOver33ms" to frames.count { it > 33.3f },
+            "lows" to linkedMapOf(
+                "onePercentLowFps" to lowFps(frames, 0.01), "pointOnePercentLowFps" to lowFps(frames, 0.001),
+                "fivePercentLowFps" to lowFps(frames, 0.05)),
+            "frameBreakdown" to breakdown,
             "perFrame" to linkedMapOf(
                 "vehicleRenders" to per(counters.vehicleRenders, frames.size),
                 "vehicleRenderMs" to perMs(counters.vehicleRenderNanos, frames.size),
@@ -153,6 +189,41 @@ object PerfProbe {
         }
         Mod.LOGGER.info("BVP_PERF done {} fps={} p50={} p99={} frames={}", active.label,
             "%.1f".format(report["fps"] as Double), pct(0.5), pct(0.99), frames.size)
+    }
+
+    /** FPS over the slowest [share] of frames (mean of their times), the usual "1% low". */
+    private fun lowFps(sorted: FloatArray, share: Double): Double {
+        if (sorted.isEmpty()) return 0.0
+        val n = (sorted.size * share).toInt().coerceAtLeast(1)
+        var sum = 0.0
+        for (i in sorted.size - n until sorted.size) sum += sorted[i]
+        return if (sum > 0) n * 1000.0 / sum else 0.0
+    }
+
+    /**
+     * Mean phase times for typical frames (the middle fifth), slow frames (slowest 10%) and the worst 1%, so the
+     * frames behind the lows can be told apart from the median ones. `otherMs` is the rest of the interval: packets,
+     * the buffer swap / GPU wait, and anything outside the tick and render events.
+     */
+    private fun frameBreakdown(active: Capture): Map<String, Any> {
+        val n = active.count
+        if (n == 0) return emptyMap()
+        val order = (0 until n).sortedBy { active.frames[it] }
+        fun band(from: Double, to: Double): Map<String, Any> {
+            val a = (n * from).toInt().coerceIn(0, n - 1)
+            val b = (n * to).toInt().coerceIn(a + 1, n)
+            val idx = order.subList(a, b)
+            val out = linkedMapOf<String, Any>("frames" to idx.size, "frameMs" to idx.map { active.frames[it].toDouble() }.average())
+            var accounted = 0.0
+            for (k in 0 until PHASES) {
+                val mean = idx.map { active.phases[it * PHASES + k].toDouble() }.average()
+                out[PHASE_NAMES[k]] = mean
+                if (k == 0 || k == 4) accounted += mean
+            }
+            out["otherMs"] = (out["frameMs"] as Double) - accounted
+            return out
+        }
+        return linkedMapOf("median" to band(0.4, 0.6), "slowest10pct" to band(0.9, 1.0), "worst1pct" to band(0.99, 1.0))
     }
 
     private fun per(value: Long, frames: Int) = if (frames == 0) 0.0 else value.toDouble() / frames

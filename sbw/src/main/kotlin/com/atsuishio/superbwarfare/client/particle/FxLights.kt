@@ -37,8 +37,9 @@ import kotlin.math.sqrt
 object FxLights {
     private const val MAX_LIGHTS = 48
     private const val MAX_POOL_LIGHTS = 16
-    private const val MAX_POOL_QUADS = 2500
-    private const val MAX_POOL_RADIUS = 12
+    private const val MAX_POOL_QUADS = 6000
+    private const val MAX_POOL_RADIUS = 24
+    private const val MAX_RADIUS = 48.0
 
     private class Light {
         var key = 0L
@@ -48,6 +49,8 @@ object FxLights {
         var born = 0.0           // client time (ticks) it was set
         var life = 0.0           // ticks for a flash to fade out; 0 = sustained
         var seen = 0.0           // sustained: last refresh
+        var boost = 1.0          // ground-glow strength multiplier (a blast's first flash burns far brighter than 15)
+        var r = 1f; var g = 0.5f; var b = 0.22f   // ground-glow colour
         fun current(now: Double): Double = if (life > 0) level * max(0.0, 1.0 - (now - born) / life)
             else if (now - seen <= 2.0) level else 0.0
     }
@@ -86,33 +89,50 @@ object FxLights {
 
     /** A flash: [level] block light at the centre, reaching [radius] blocks, fading to nothing over [ticks]. */
     @JvmStatic
-    fun flash(x: Double, y: Double, z: Double, radius: Double, level: Double, ticks: Double) {
+    fun flash(x: Double, y: Double, z: Double, radius: Double, level: Double, ticks: Double) =
+        flash(x, y, z, radius, level, ticks, 1.0, 1f, 0.5f, 0.22f)
+
+    /**
+     * A flash with a ground-glow [boost] (1 = normal) and colour. Separate flashes are never merged with ones of a
+     * different boost, so a blast's white-hot first flash and its lingering orange fireball light stay distinct.
+     */
+    @JvmStatic
+    fun flash(x: Double, y: Double, z: Double, radius: Double, level: Double, ticks: Double,
+              boost: Double, r: Float, g: Float, b: Float) {
         if (!x.isFinite() || !y.isFinite() || !z.isFinite() || radius <= 0 || level <= 0) return
         val t = clock()
         // several particles of one burst (or rapid fire from one muzzle) share one light
         for (i in 0 until count) {
             val o = lights[i]
-            if (o.key != 0L || o.life <= 0) continue
+            if (o.key != 0L || o.life <= 0 || o.boost != boost) continue
             val dx = o.x - x; val dy = o.y - y; val dz = o.z - z
             if (dx * dx + dy * dy + dz * dz < 2.25) {
-                o.radius = max(o.current(t) / max(o.level, 1e-3) * o.radius, min(radius, 24.0))
+                o.radius = max(o.current(t) / max(o.level, 1e-3) * o.radius, min(radius, MAX_RADIUS))
                 o.level = max(o.current(t), min(level, 15.0)); o.born = t; o.life = max(ticks, 0.5)
                 return
             }
         }
         val l = slot(0L, t) ?: return
-        l.key = 0L; l.x = x; l.y = y; l.z = z; l.radius = min(radius, 24.0); l.level = min(level, 15.0)
+        l.key = 0L; l.x = x; l.y = y; l.z = z; l.radius = min(radius, MAX_RADIUS); l.level = min(level, 15.0)
         l.born = t; l.life = max(ticks, 0.5); l.seen = t
+        l.boost = boost; l.r = r; l.g = g; l.b = b
     }
 
     /** A sustained light owned by [key] (refresh it every frame while it burns). */
     @JvmStatic
-    fun sustain(key: Long, x: Double, y: Double, z: Double, radius: Double, level: Double) {
+    fun sustain(key: Long, x: Double, y: Double, z: Double, radius: Double, level: Double) =
+        sustain(key, x, y, z, radius, level, 1.0, 1f, 0.5f, 0.22f)
+
+    /** A sustained light with a ground-glow [boost] and colour (afterburners burn brilliant and yellow-white). */
+    @JvmStatic
+    fun sustain(key: Long, x: Double, y: Double, z: Double, radius: Double, level: Double,
+                boost: Double, r: Float, g: Float, b: Float) {
         if (!x.isFinite() || !y.isFinite() || !z.isFinite() || radius <= 0 || level <= 0.05) return
         val t = clock()
         val l = slot(key, t) ?: return
-        l.key = key; l.x = x; l.y = y; l.z = z; l.radius = min(radius, 24.0); l.level = min(level, 15.0)
+        l.key = key; l.x = x; l.y = y; l.z = z; l.radius = min(radius, MAX_RADIUS); l.level = min(level, 15.0)
         l.life = 0.0; l.seen = t
+        l.boost = boost; l.r = r; l.g = g; l.b = b
     }
 
     /** Effect block light (0..15) at a point: the brightest light reaching it, falling off smoothly with distance. */
@@ -158,7 +178,8 @@ object FxLights {
         if (count == 0 || !enabled) return
         val cam = event.camera.position
         // strongest lights first
-        val order = (0 until count).sortedByDescending { lights[it].current(now) * lights[it].radius }.take(MAX_POOL_LIGHTS)
+        val order = (0 until count).sortedByDescending { lights[it].current(now) * lights[it].radius * lights[it].boost }
+            .take(MAX_POOL_LIGHTS)
         var quads = 0
         val pose = event.poseStack.last().pose()
         for (i in order) {
@@ -167,8 +188,9 @@ object FxLights {
             // small flashes (machine guns, autocannons) light the vehicles round them but lay no ground pool
             if (lv < 6.0 || l.radius < 8.0) continue
             val r = min(l.radius, MAX_POOL_RADIUS.toDouble())
-            // a soft warm tint on the ground, not a painted patch: strong only right under a big fireball
-            val strength = (lv / 15.0) * (lv / 15.0) * 0.32
+            // a soft warm tint on the ground, not a painted patch: strong only right under a big fireball, and far
+            // brighter for a boosted light (a blast's first flash, an afterburner)
+            val strength = ((lv / 15.0) * (lv / 15.0) * 0.32 * l.boost).coerceAtMost(1.6)
             val bx0 = kotlin.math.floor(l.x - r).toInt(); val bx1 = kotlin.math.floor(l.x + r).toInt()
             val bz0 = kotlin.math.floor(l.z - r).toInt(); val bz1 = kotlin.math.floor(l.z + r).toInt()
             for (bx in bx0..bx1) for (bz in bz0..bz1) {
@@ -176,12 +198,13 @@ object FxLights {
                 val top = world.getHeight(Heightmap.Types.MOTION_BLOCKING, bx, bz).toDouble()
                 val dy = l.y - top
                 if (dy < -1.0 || dy > r) continue                 // the surface must be under (or at) the light
+                val o = quads * 12
+                pc[quads * 3] = l.r; pc[quads * 3 + 1] = l.g; pc[quads * 3 + 2] = l.b
                 val a00 = pool(l, r, strength, bx.toDouble(), top, bz.toDouble())
                 val a10 = pool(l, r, strength, bx + 1.0, top, bz.toDouble())
                 val a11 = pool(l, r, strength, bx + 1.0, top, bz + 1.0)
                 val a01 = pool(l, r, strength, bx.toDouble(), top, bz + 1.0)
                 if (a00 + a10 + a11 + a01 < 0.004f) continue
-                val o = quads * 12
                 val yf = (top + 0.015 - cam.y).toFloat()
                 val x0 = (bx - cam.x).toFloat(); val x1 = (bx + 1 - cam.x).toFloat()
                 val z0 = (bz - cam.z).toFloat(); val z1 = (bz + 1 - cam.z).toFloat()
@@ -200,7 +223,12 @@ object FxLights {
         for (q in 0 until quads) {
             val o = q * 12
             for (v in 0 until 4) {
-                builder.vertex(pose, pq[o + v * 3], py[q], pq[o + v * 3 + 1]).color(1f, 0.5f, 0.22f, pq[o + v * 3 + 2]).endVertex()
+                // alpha above 1 is split into brighter colour: additive blending, so a boosted pool reads as more light
+                val a = pq[o + v * 3 + 2]
+                val over = kotlin.math.max(1f, a)
+                builder.vertex(pose, pq[o + v * 3], py[q], pq[o + v * 3 + 1])
+                    .color(min(1f, pc[q * 3] * over), min(1f, pc[q * 3 + 1] * over), min(1f, pc[q * 3 + 2] * over), min(1f, a))
+                    .endVertex()
             }
         }
         RenderSystem.setShader { GameRenderer.getPositionColorShader() }
@@ -218,6 +246,7 @@ object FxLights {
 
     private val pq = FloatArray(MAX_POOL_QUADS * 12)
     private val py = FloatArray(MAX_POOL_QUADS)
+    private val pc = FloatArray(MAX_POOL_QUADS * 3)
 
     // ---------------------------------------------------------------- missile and rocket motors
 
