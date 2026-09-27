@@ -194,6 +194,57 @@ def mirror_running_gear(geo, source_side):
     return moved
 
 
+def symmetrize_running_gear(geo):
+    """Both sides placed mirror-symmetric about x = 0: each road wheel pair keeps its separation; the tracks sit on
+    the wheels, their inner edge 0.8 px inside the wheels' inner face (as on the healthy fitted tanks). The source
+    fits of these vehicles had whole sides several px (the 9P149 18 px) off."""
+    bones = bones_of(geo)
+
+    def centre(b):
+        pm = b.get('poly_mesh')
+        if pm and pm['positions']:
+            P = np.array(pm['positions'])
+            return (P[:, 0].min() + P[:, 0].max()) / 2
+        if b.get('cubes'):
+            xs = [c['origin'][0] for c in b['cubes']] + [c['origin'][0] + c['size'][0] for c in b['cubes']]
+            return (min(xs) + max(xs)) / 2
+        return b['pivot'][0]
+
+    def shift(b, dx):
+        pm = b.get('poly_mesh')
+        if pm:
+            for p in pm['positions']:
+                p[0] = round(p[0] + dx, 5)
+        for c in b.get('cubes', []):
+            c['origin'][0] = round(c['origin'][0] + dx, 5)
+            if 'pivot' in c:
+                c['pivot'][0] = round(c['pivot'][0] + dx, 5)
+        b['pivot'][0] = round(b['pivot'][0] + dx, 5)
+
+    pairs = side_bones(bones, 'L')
+    wheels = {l: r for l, r in pairs.items() if l.startswith('wheel') and r in bones}
+    for l, r in wheels.items():
+        cl, cr = centre(bones[l]), centre(bones[r])
+        half = (cl - cr) / 2
+        shift(bones[l], half - cl)
+        shift(bones[r], -half - cr)
+    for l, r in (('WheelL', 'WheelR'),):
+        if l in bones and r in bones:
+            half = (bones[l]['pivot'][0] - bones[r]['pivot'][0]) / 2
+            bones[l]['pivot'][0], bones[r]['pivot'][0] = round(half, 5), round(-half, 5)
+    P = np.array(bones['wheelL0']['poly_mesh']['positions'])
+    inner = P[:, 0].min()
+    crude = bones['crudeTrackL']['cubes']
+    half_width = max(c['size'][0] for c in crude) / 2
+    target = inner - 0.8 + half_width
+    tracks = {l: r for l, r in pairs.items() if not l.startswith('wheel') and not l.startswith('Wheel') and r in bones}
+    cl0, cr0 = bones['TrackL']['pivot'][0], bones['TrackR']['pivot'][0]
+    for l, r in tracks.items():
+        shift(bones[l], target - cl0)
+        shift(bones[r], -target - cr0)
+    return round(float(target), 5), round(float(inner), 3)
+
+
 def stretch(geo, spec, scale):
     """Moves the vertices of `bone` in front of `zBelow` (px) forward so the muzzle ends at `muzzleZ` after the
     scale: the source gun stopped at the hull front."""
@@ -272,6 +323,56 @@ def map_point(p, src_box, dst_box):
     return (np.asarray(p, float) - lo) * k + dlo, k
 
 
+def frame_origin(d, frame):
+    """Rest-pose origin (vehicle data blocks) of an attachment parent frame."""
+    z = np.zeros(3)
+    tur = np.array(d.get('TurretPos', z), float)
+    if frame in ('Vehicle', 'VehicleCustomPitch'):
+        return z
+    if frame == 'Turret':
+        return tur
+    if frame == 'Barrel':
+        return tur + np.array(d.get('BarrelPos', z), float)
+    ws = tur + np.array(d.get('PassengerWeaponStationPos', z), float)
+    if frame == 'WeaponStation':
+        return ws
+    if frame == 'WeaponStationBarrel':
+        return ws + np.array(d.get('PassengerWeaponStationBarrelPos', z), float)
+    raise SystemExit(f'no origin for frame {frame}')
+
+
+def import_weapons(spec, d):
+    """Weapons taken from another vehicle (e.g. an M2HB station): their profile ids renamed to this vehicle; the
+    profile sources are remembered for copy_profiles."""
+    vid = spec['id']
+    sources = {}
+    for wname, (src_vid, src_w) in spec.get('weaponFrom', {}).items():
+        w = copy.deepcopy(vehgen.load(files_of(src_vid)['data'])['Weapons'][src_w])
+        text = json.dumps(w)
+        for pid in set(re.findall(rf'"{NS}:({src_vid}/[^"]+)"', text)):
+            new = f'{vid}/{wname.lower()}/' + pid.split('/', 2)[2]
+            sources[new] = pid
+            text = text.replace(f'"{NS}:{pid}"', f'"{NS}:{new}"')
+        keep_pos = (d['Weapons'].get(wname) or {}).get('ShootPos')
+        w = json.loads(text)
+        if keep_pos:
+            w['ShootPos'] = keep_pos
+        d['Weapons'][wname] = w
+    return sources
+
+
+def drop_rounds(spec, d):
+    """AmmoType entries of the listed template rounds are removed (the vehicle never carried them)."""
+    drop = set(spec.get('dropRounds', []))
+    if not drop:
+        return
+    for w in d['Weapons'].values():
+        if w.get('AmmoType'):
+            w['AmmoType'] = [a for a in w['AmmoType']
+                             if not any(((a.get('Override') or {}).get('Projectile') or {}).get('Profile', '')
+                                        .endswith('_' + r) for r in drop)]
+
+
 def build_data(spec, tpl, geo, s, old_data, tpl_geo):
     d = copy.deepcopy(tpl)
     vid, tid = spec['id'], spec['template']
@@ -296,7 +397,12 @@ def build_data(spec, tpl, geo, s, old_data, tpl_geo):
     tip = spec['geometry'].get('stretch', {}).get('muzzleZ')
     for name, a in spec['attachments'].items():
         # 'tip': the muzzle z the gun stretch ends at (final model px)
-        p = pt([a['at'][0], a['at'][1], 0.0]) + [0, 0, tip] if a['at'][2] == 'tip' else pt(a['at'])
+        if isinstance(a['at'], str) and a['at'].startswith('pivot:'):
+            p = piv(a['at'][6:])
+        elif a['at'][2] == 'tip':
+            p = pt([a['at'][0], a['at'][1], 0.0]) + [0, 0, tip]
+        else:
+            p = pt(a['at'])
         at[name] = {'Parent': a['parent'], 'Position': r5(geo_to_data(p - origin[a['parent']])),
                     'Direction': [0, 0, 1]}
     # the driver's eye (tools/vehgen/driver_cameras.json, data blocks of the original model) scales with the model
@@ -316,6 +422,21 @@ def build_data(spec, tpl, geo, s, old_data, tpl_geo):
         seats.append(seat)
     d['Seats'] = seats
 
+    # the template's ShootPos z convention (some store the muzzle with z negated), from its first weapon whose
+    # ShootPos frame is its muzzle attachment's parent or the vehicle
+    tpl_sign = None
+    for w in tpl['Weapons'].values():
+        sp = w.get('ShootPos') or {}
+        a = (tpl.get('Attachments') or {}).get(((sp.get('MuzzleAttachments') or [None])[0]))
+        tp = sp.get('Transform', 'Vehicle')
+        if not a or not sp.get('Positions') or tp not in (a['Parent'], 'Vehicle'):
+            continue
+        ref = np.array(a['Position'], float) + (frame_origin(tpl, a['Parent']) if tp == 'Vehicle' else 0)
+        z0 = sp['Positions'][0][2]
+        tpl_sign = -1.0 if abs(z0 + ref[2]) < abs(z0 - ref[2]) else 1.0
+        break
+    if tpl_sign is None:
+        raise SystemExit('template ShootPos convention not found')
     for wname, w in d['Weapons'].items():
         sp = w.get('ShootPos') or {}
         for old, new in spec.get('muzzleRename', {}).items():
@@ -326,12 +447,18 @@ def build_data(spec, tpl, geo, s, old_data, tpl_geo):
                     sp[key] = [new if x == old else x for x in sp[key]]
         names = sp.get('MuzzleAttachments') or []
         if names and all(n in at for n in names):
-            # the template stores ShootPos with the attachment's z negated (nose -z)
-            sp['Transform'] = at[names[0]]['Parent']
-            sp['Positions'] = [[at[n]['Position'][0], at[n]['Position'][1], -at[n]['Position'][2]] for n in names]
-            v = at[sp.get('ViewAttachment', names[0])]['Position']
-            sp['ViewPosition'] = [v[0], v[1], -v[2]]
-            sp['Directions'] = [at[names[0]]['Parent']] * len(names)
+            tp = sp.get('Transform', 'Vehicle')
+            sign = tpl_sign
+
+            def shoot(n):
+                v = np.array(at[n]['Position'], float)
+                if tp == 'Vehicle':
+                    v = v + frame_origin(d, at[n]['Parent'])
+                elif tp != at[n]['Parent']:
+                    raise SystemExit(f'{wname}: ShootPos frame {tp} vs attachment {n} parent {at[n]["Parent"]}')
+                return r5([v[0], v[1], sign * v[2]])
+            sp['Positions'] = [shoot(n) for n in names]
+            sp['ViewPosition'] = shoot(sp.get('ViewAttachment', names[0]))
     for wname, fields in spec.get('weaponSet', {}).items():
         d['Weapons'][wname].update(fields)
     for key, value in spec.get('dataSet', {}).items():
@@ -352,6 +479,10 @@ def build_data(spec, tpl, geo, s, old_data, tpl_geo):
             (slo, shi), (dlo, dhi) = tur_map
             g, k = map_point(c + t_turret, (slo, shi), (dlo, dhi))
             o['Position'] = r5(geo_to_data(g - n_turret))
+        elif tr == 'Barrel':
+            t_bar = np.array(t_b['barell']['pivot'])
+            g, k = map_point(c + t_bar, own_box(tpl_geo, 'barell'), own_box(geo, 'barell'))
+            o['Position'] = r5(geo_to_data(g - piv('barell')))
         elif tr in ('Vehicle', None):
             g, k = map_point(c, *hull_map)
             o['Position'] = r5(geo_to_data(g))
@@ -391,7 +522,7 @@ def build_armor(spec, tpl, geo, tpl_geo):
     return a
 
 
-def build_client(spec, old_client, s):
+def build_client(spec, old_client, s, track_x=None):
     c = copy.deepcopy(old_client)
     rg = c.get('RunningGear', {}).get('TrackRender', {})
     lay = rg.get('EvaluationLayout', {})
@@ -409,34 +540,50 @@ def build_client(spec, old_client, s):
     if src and src in sides:
         other = sides['R' if src == 'L' else 'L']
         other['XCenter'] = -sides[src]['XCenter']
+    if track_x is not None:
+        for name, side in sides.items():
+            side['XCenter'] = round((track_x if name == 'L' else -track_x) * s, 5)
     for o in c.get('EngineExhaust', {}).get('Origins', []):
         o['Position'] = r5(np.array(o['Position']) * s)
     return c
 
 
-def copy_profiles(spec, data, out):
+def copy_profiles(spec, data, out, sources=None):
     """Every projectile profile the data names under this vehicle is copied from the template's; renamed rounds
     get their new round id."""
     vid, tid = spec['id'], spec['template']
     base = os.path.join(DATA, 'sbw', 'projectile_profiles')
     ids = set(re.findall(rf'"{NS}:({vid}/[^"]+)"', json.dumps(data)))
+    written = {}
     back = {new['id']: old for old, new in spec.get('rounds', {}).items()}
     for pid in sorted(ids):
         tpid = pid.replace(f'{vid}/', f'{tid}/', 1)
         for new_id, old_id in back.items():
             tpid = re.sub(rf'_{new_id}$', f'_{old_id}', tpid)
+        if sources and pid in sources:
+            tpid = sources[pid]
         src = os.path.join(base, tpid + '.json')
         dst = os.path.join(base, pid + '.json')
         if not os.path.exists(src):
             raise SystemExit(f'profile {pid}: template file {rel(src)} missing')
         p = vehgen.load(src)
         p = json.loads(json.dumps(p).replace(f'{NS}:{tid}/', f'{NS}:{vid}/'))
+        if sources and pid in sources:
+            p = json.loads(json.dumps(p).replace(f'{NS}:{sources[pid].split("/")[0]}/', f'{NS}:{vid}/'))
         rid = p.get('Combat', {}).get('RoundId', '').split(':')[-1]
         if rid in spec.get('rounds', {}):
             new = spec['rounds'][rid]
             p['Combat']['RoundId'] = f'{NS}:{new["id"]}'
             p['Combat'].update(new.get('combat', {}))
         out.json(dst, p)
+        written[pid] = p
+    # a weapon's default profile follows its first remaining round (after dropped/renamed rounds)
+    for w in data['Weapons'].values():
+        default = (w.get('Projectile') or {}).get('Profile', '').split(':', 1)[-1]
+        first = next(iter(w.get('AmmoType') or []), None)
+        fpid = ((first or {}).get('Override') or {}).get('Projectile', {}).get('Profile', '').split(':', 1)[-1]
+        if spec.get('defaultFromFirst') and default in written and fpid in written and default != fpid:
+            out.json(os.path.join(base, default + '.json'), written[fpid])
 
 
 def rename_rounds(spec, data):
@@ -505,7 +652,12 @@ def main(argv):
     for mv in G.get('moves', []):
         report.append(f'{move_components(geo, mv)} polys {mv["from"]} -> {mv["to"]}')
     if G.get('mirrorRunningGear'):
-        report.append(f'mirrored running gear: {mirror_running_gear(geo, G["mirrorRunningGear"])}')
+        moved = mirror_running_gear(geo, G['mirrorRunningGear'])
+        report.append(f'mirrored running gear: {len(moved)} bones, e.g. {moved[:3]}')
+    track_x = None
+    if G.get('symmetrizeRunningGear'):
+        track_x, inner = symmetrize_running_gear(geo)
+        report.append(f'running gear symmetric: tracks at +-{track_x} px (wheels inner face {inner})')
     t_lo, t_hi = own_box(tpl_geo, 'hull')
     lo, hi = own_box(geo, 'hull')
     s = G['scale'] if isinstance(G.get('scale'), (int, float)) else float((t_hi[2] - t_lo[2]) / (hi[2] - lo[2]))
@@ -523,13 +675,15 @@ def main(argv):
     b = B()
     b.id = vid
     out.json(files_of(vid)['fallback'], vehgen.native_fallback(b, geo), compact=True)
-    out.json(files_of(vid)['client'], build_client(spec, orig['client'], s))
+    out.json(files_of(vid)['client'], build_client(spec, orig['client'], s, track_x))
 
     tpl_data = vehgen.load(files_of(tid)['data'])
     data = build_data(spec, tpl_data, geo, s, orig['data'], tpl_geo)
+    sources = import_weapons(spec, data)
+    drop_rounds(spec, data)
     data = rename_rounds(spec, data)
     out.json(files_of(vid)['data'], data)
-    copy_profiles(spec, data, out)
+    copy_profiles(spec, data, out, sources)
     out.json(files_of(vid)['armor'], build_armor(spec, vehgen.load(files_of(tid)['armor']), geo, tpl_geo))
     register(spec, out)
 

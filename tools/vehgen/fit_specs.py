@@ -52,4 +52,55 @@ SPECS = {
         'weaponSet': {'Cannon': {'Velocity': 78.75}},     # M829A1, 1575 m/s
         'lang': {'weapon.berts_vehicle_pack.m829a1_apfsds': 'M829A1 APFSDS'},
     },
+    'type_90': {
+        'id': 'type_90',
+        'template': 'leopard_2a4',
+        'hitbox': (3.9, 2.4),
+        'geometry': {
+            # the roof M2HB on its pintle, left of the gun: the post turns (yaw), the gun elevates on the post top
+            'newBones': {
+                'passengerWeaponStationYaw': {'parent': 'turret', 'pivot': [3.0, 49.3, -14.5]},
+                'passengerWeaponStationPitch': {'parent': 'passengerWeaponStationYaw', 'pivot': [3.0, 53.8, -14.5]},
+            },
+            'moves': [
+                # receiver, barrel, ammunition box, grips, sight
+                {'from': 'turret', 'to': 'passengerWeaponStationPitch', 'box': [[-2.0, 52.8, -38.5], [9.0, 58.1, 3.5]]},
+                # pintle post and its brace
+                {'from': 'turret', 'to': 'passengerWeaponStationYaw', 'box': [[0.5, 49.0, -19.0], [5.5, 54.3, -9.0]]},
+            ],
+            'scale': 1.0,
+        },
+        'attachments': {
+            # gunner's sight: right front of the turret roof, just over the roof
+            'gunnerCamera': {'parent': 'Turret', 'at': [-12.0, 49.0, -20.0]},
+            'driverCamera': {'parent': 'Vehicle', 'at': [8.8, 33.12, -41.6]},
+            'driverSeat': {'parent': 'Vehicle', 'at': [8.8, 19.2, -38.0]},
+            'gunnerSeat': {'parent': 'Turret', 'at': [-12.0, 35.0, -10.0]},
+            'turretPivot': {'parent': 'Vehicle', 'at': 'pivot:turret'},
+            'barrelPivot': {'parent': 'Turret', 'at': 'pivot:barell'},
+            'mainMuzzle': {'parent': 'Barrel', 'at': [1.7, 39.3, -110.0]},
+            # Type 74 coax, left of the gun
+            'coaxMuzzle': {'parent': 'Barrel', 'at': [8.1, 40.55, -36.1]},
+            'hmgMuzzle': {'parent': 'WeaponStationBarrel', 'at': [2.95, 55.45, -38.4]},
+            'hmgSeat': {'parent': 'Turret', 'at': [3.0, 34.0, 7.0]},
+            'hmgCamera': {'parent': 'WeaponStation', 'at': [3.0, 59.5, 6.0]},
+        },
+        'seats': [
+            {'frame': 'Turret', 'at': [-12.0, 35.0, -10.0]},     # gunner (drives, the pack's tank convention)
+            {'frame': 'Turret', 'at': [3.0, 34.0, 7.0]},         # at the roof M2HB
+        ],
+        'weaponFrom': {'PassengerMachineGun': ('m1a2_abrams_sep_v2', 'PassengerMachineGun')},
+        'dropRounds': ['dm13_apfsds'],
+        'rounds': {'dm23_apfsds': {'id': 'jm33_apfsds', 'combat': {'PenetrationMm': 481}},
+                   'dm12_heat_fs': {'id': 'jm12a1_heat_fs', 'combat': {'PenetrationMm': 480}}},
+        'defaultFromFirst': True,
+        # autoloader, 4.0 s (War Thunder)
+        'dataSet': {'HasAutoloader': True},
+        'weaponSet': {'Cannon': {'EmptyReloadTime': 80, 'Velocity': 82.0},
+                      'MachineGun': {'Name': 'weapon.berts_vehicle_pack.type_90_machinegun'}},
+        'armorSet': {'ap_penetration_mm': 481},
+        'lang': {'weapon.berts_vehicle_pack.jm33_apfsds': 'JM33 APFSDS',
+                 'weapon.berts_vehicle_pack.jm12a1_heat_fs': 'JM12A1 HEAT-FS',
+                 'weapon.berts_vehicle_pack.type_90_machinegun': '7.62 mm Type 74'},
+    },
 }
