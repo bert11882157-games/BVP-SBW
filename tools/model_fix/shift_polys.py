@@ -62,6 +62,17 @@ def shift_in_place(pm, idx, shift):
         pm['positions'][v] = [round(pm['positions'][v][k] + shift[k], 5) for k in range(3)]
 
 
+def compact(pm):
+    """Drops positions, normals and uvs no polygon uses any more."""
+    for slot, key in enumerate(('positions', 'normals', 'uvs')):
+        used = sorted({v[slot] for poly in pm['polys'] for v in poly})
+        remap = {old: new for new, old in enumerate(used)}
+        pm[key] = [pm[key][i] for i in used]
+        for poly in pm['polys']:
+            for v in poly:
+                v[slot] = remap[v[slot]]
+
+
 def fix_geo(geo, fix, offset):
     """offset: where this model puts the turret relative to the main model (the wreck is re-centred)."""
     bones = bones_of(geo)
@@ -74,6 +85,7 @@ def fix_geo(geo, fix, offset):
         move(pm, bones[fix['to']], [pm['polys'][i] for i in idx], fix['shift'])
         keep = set(range(len(pm['polys']))) - set(idx)
         pm['polys'] = [p for i, p in enumerate(pm['polys']) if i in keep]
+        compact(pm)
     else:
         shift_in_place(pm, idx, fix['shift'])
     if fix.get('pivot'):
