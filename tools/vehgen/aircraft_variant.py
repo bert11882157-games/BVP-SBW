@@ -252,7 +252,8 @@ def main(argv):
             if 'id' in d:
                 d['id'] = vid
             if rel == 'flight_reference':
-                d['handlingProfileId'] = load(path)['handlingProfileId']   # handling is shared with the template
+                # the entity binds flight_handling/<own id> (the handling is derived from this reference), so the
+                # renamed handlingProfileId must stay: a template handling id fails 'flight profile pair mismatch'
                 for k, v in spec.get('flightReference', {}).items():
                     d['reference'][k] = v
             out.json(os.path.join(DATA, rel, f'{vid}.json'), d)
