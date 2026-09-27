@@ -105,7 +105,6 @@ object VehicleDismountInput {
         gesture.clear()
     }
 
-    @JvmStatic
     @SubscribeEvent
     fun mount(event: EntityMountEvent) {
         if (event.entityMounting === mc.player) cancel()

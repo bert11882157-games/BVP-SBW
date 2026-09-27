@@ -32,7 +32,7 @@ object GroundVehicleHullHud {
         if (backendModels.size<512 || backendModels.containsKey(backend)) backendModels[backend]=model
     }
 
-    @JvmStatic @SubscribeEvent fun reload(event:RegisterClientReloadListenersEvent) {
+    @SubscribeEvent fun reload(event:RegisterClientReloadListenersEvent) {
         event.registerReloadListener(ResourceManagerReloadListener {
             Minecraft.getInstance().execute {
                 for (entry in cache.values) close(entry)

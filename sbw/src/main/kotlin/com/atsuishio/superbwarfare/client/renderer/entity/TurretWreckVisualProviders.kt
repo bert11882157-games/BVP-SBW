@@ -66,7 +66,6 @@ object TurretWreckVisualProviders {
     internal fun generation(): Int = generation
 
     @SubscribeEvent
-    @JvmStatic
     fun onRegisterReloadListeners(event: RegisterClientReloadListenersEvent) {
         event.registerReloadListener(ResourceManagerReloadListener {
             synchronized(this) { generation++ }

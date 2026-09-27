@@ -50,7 +50,6 @@ object VehicleDismountServer {
         sessions[player.connection.connection]?.clearGesture()
     }
 
-    @JvmStatic
     @SubscribeEvent
     fun tick(event: TickEvent.PlayerTickEvent) {
         val player = event.player as? ServerPlayer ?: return
@@ -58,35 +57,30 @@ object VehicleDismountServer {
             current(player), System.nanoTime())
     }
 
-    @JvmStatic
     @SubscribeEvent
     fun mount(event: EntityMountEvent) {
         val player = event.entityMounting as? ServerPlayer ?: return
         sessions[player.connection.connection]?.clearGesture()
     }
 
-    @JvmStatic
     @SubscribeEvent
     fun death(event: LivingDeathEvent) {
         val player = event.entity as? ServerPlayer ?: return
         sessions[player.connection.connection]?.clearGesture()
     }
 
-    @JvmStatic
     @SubscribeEvent
     fun dimension(event: PlayerEvent.PlayerChangedDimensionEvent) {
         val player = event.entity as? ServerPlayer ?: return
         sessions[player.connection.connection]?.clearGesture()
     }
 
-    @JvmStatic
     @SubscribeEvent
     fun logout(event: PlayerEvent.PlayerLoggedOutEvent) {
         val player = event.entity as? ServerPlayer ?: return
         sessions.remove(player.connection.connection)
     }
 
-    @JvmStatic
     @SubscribeEvent
     fun stopped(event: ServerStoppedEvent) { sessions.clear() }
 }

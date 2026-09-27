@@ -17,7 +17,6 @@ internal fun transportPassengerView(type: VehicleType?, seatIndex: Int, armed: B
 object VehiclePassengerCamera {
     private var priorView: CameraType? = null
 
-    @JvmStatic
     @SubscribeEvent
     fun tick(event: TickEvent.ClientTickEvent) {
         if (event.phase == TickEvent.Phase.END) enforce()

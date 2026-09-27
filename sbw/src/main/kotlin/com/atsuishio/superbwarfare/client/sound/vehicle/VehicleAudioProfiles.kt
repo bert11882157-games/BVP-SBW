@@ -148,7 +148,6 @@ object VehicleAudioProfiles : SimplePreparableReloadListener<Map<ResourceLocatio
     }
 
     @SubscribeEvent
-    @JvmStatic
     fun register(event: RegisterClientReloadListenersEvent) {
         event.registerReloadListener(this)
     }

@@ -104,7 +104,6 @@ object VehicleHudLayout : SimplePreparableReloadListener<JsonElement>() {
     }
 
     @SubscribeEvent
-    @JvmStatic
     fun registerReloadListener(event: RegisterClientReloadListenersEvent) {
         event.registerReloadListener(this)
     }

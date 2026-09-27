@@ -8,11 +8,9 @@ import net.minecraftforge.eventbus.api.SubscribeEvent
 /** Hidden crew still have vanilla interaction boxes. Route those clicks to their vehicle. */
 @net.minecraftforge.fml.common.Mod.EventBusSubscriber(modid = Mod.MODID)
 object VehicleBoardingEventHandler {
-    @JvmStatic
     @SubscribeEvent
     fun interact(event: PlayerInteractEvent.EntityInteract) = forward(event, event.target)
 
-    @JvmStatic
     @SubscribeEvent
     fun interactAt(event: PlayerInteractEvent.EntityInteractSpecific) = forward(event, event.target)
 
