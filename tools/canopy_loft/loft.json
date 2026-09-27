@@ -1,5 +1,5 @@
 {
-  "_comment": "Per-aircraft corrections (vehicle-local blocks, +Z forward): front/rear = canopy ends on the centre line, halfwidth = plan half-width at the crew, spine = extra [z, y] points the top must pass through, rake/windscreen_slope for the windscreen, skip = no lofted glass (flat-panel canopies).",
+  "_comment": "Per-aircraft corrections (vehicle-local blocks, +Z forward): front/rear = canopy ends on the centre line, halfwidth = plan half-width at the crew, spine = extra [z, y] points the top must pass through, rake/windscreen_slope for the windscreen, skip = no lofted glass (flat-panel canopies); plan = 'painted' (default: the dark-painted glazing seen from above shapes the plan and may extend the ends) or 'oval'.",
   "f_15c": {
     "front": 6.35,
     "dark_rear": true
@@ -33,10 +33,6 @@
   "saab_j_21a_1": {
     "skip": true,
     "_note": "flat-panel framed canopy: the earlier dome glass is kept"
-  },
-  "su_35": {
-    "front": 6.45,
-    "rear": 4.15
   },
   "f_5a": {
     "front": 2.15
@@ -83,5 +79,26 @@
   },
   "f3h": {
     "rear": 4.3
+  },
+  "f8f_1": {
+    "plan": "oval"
+  },
+  "j_26": {
+    "plan": "oval"
+  },
+  "p_51d": {
+    "plan": "oval"
+  },
+  "yak_3": {
+    "plan": "oval"
+  },
+  "rafale": {
+    "plan": "oval"
+  },
+  "mig_9": {
+    "plan": "oval"
+  },
+  "su_35": {
+    "front": 6.66
   }
 }

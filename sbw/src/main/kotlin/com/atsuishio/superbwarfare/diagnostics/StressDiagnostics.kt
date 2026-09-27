@@ -299,7 +299,9 @@ object StressDiagnostics {
                         }
                     }
                     // stagger the first shot of every weapon across the line
-                    var owed = credit.getOrPut(key) { (fleet.keys.indexOf(vehicle) * 0.37 + name.length * 0.11) % 1.0 } + perTick
+                    // stores (bombs, missiles, rocket pods) already come on their own two-second schedule: one release each time
+                    var owed = if (name !in natives) 1.0
+                        else credit.getOrPut(key) { (fleet.keys.indexOf(vehicle) * 0.37 + name.length * 0.11) % 1.0 } + perTick
                     var shots = 0
                     while (owed >= 1.0 && shots < 3) {
                         owed -= 1.0; shots++

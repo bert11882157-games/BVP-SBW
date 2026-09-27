@@ -20,6 +20,7 @@ import numpy as np
 from scipy import ndimage
 from scipy.interpolate import PchipInterpolator
 import evidence as E
+import footprint as F
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 CONFIG = os.path.join(HERE, 'loft.json')
@@ -46,6 +47,9 @@ def upper_hull(pts):
 
 
 OVAL = 2.4          # plan-view footprint: superellipse exponent (2 = ellipse, higher = fuller)
+FP_REACH = (0.5, 0.6)  # blocks the painted footprint may extend the front / rear beyond the frame evidence
+FP_COVER = 0.6        # the paint shapes the plan only where it spans at least this share of the canopy
+PAINTED_MIN = 0.3      # footprint share that must be dark paint for the painted plan to be used
 WINDSCREEN_BASE = 0.45  # the oval's front end as a fraction of its widest (0 = a point)
 RAKE = 32.0         # degrees: windscreen slope down from a standing windscreen hoop to the nose
 
@@ -93,6 +97,15 @@ class Loft:
                 W0 = cfg.get('halfwidth', float(min(max(W0, np.percentile(np.abs(side[:, 0]), 90)), W0 + 0.12, 0.9)))
         if cfg.get('dark_rear'):
             zr = min(zr, self._dark_rear(ev, eyes))
+        # the painted glazing seen from above (tinted, dark on most models) is the canopy's exact plan: the glass
+        # covers at least all of it, and follows its outline where it is painted
+        self.fp = None
+        if cfg.get('plan', 'painted') == 'painted':
+            fp = F.Footprint(ev)
+            if fp.painted >= PAINTED_MIN:
+                self.fp = fp
+                # the frames bound the paint's reach: a painted end at most FP_REACH beyond them
+                zf = max(zf, min(fp.front, zf + FP_REACH[0])); zr = min(zr, max(fp.rear, zr - FP_REACH[1]))
         zf = cfg.get('front', zf); zr = cfg.get('rear', zr)
         zc = min(max(zc, zr + 0.2), zf - 0.2)
         self.zf, self.zr, self.zc, self.W0 = zf, zr, zc, W0
@@ -112,6 +125,17 @@ class Loft:
         # collapses onto the nose), the rear closes to a point on the spine
         base = np.where(self.z >= zc, cfg.get('windscreen_base', WINDSCREEN_BASE), 0.0)
         W = W0 * cfg.get('width', 1.0) * (base + (1 - base) * (1 - r ** OVAL) ** (1 / OVAL))
+        if self.fp is not None and (min(self.fp.front, zf) - max(self.fp.rear, zr)) >= FP_COVER * (zf - zr):
+            # the painted outline where there is one (a clear canopy beyond the paint keeps the oval), blended over
+            # a few stations so the two meet smoothly
+            Wf = self.fp.halfwidth(self.z)
+            inside = Wf > 0.04
+            wgt = ndimage.gaussian_filter1d(inside.astype(float), 1.5, mode='nearest')
+            oval = W
+            W = np.where(inside, Wf, W) * wgt + W * (1 - wgt)
+            W = ndimage.gaussian_filter1d(W, 1.0, mode='nearest')
+            # never much wider than the oval: the ends still close (a cut-off footprint would end in a wall)
+            W = np.minimum(W, oval * 1.2 + 0.02)
         # --- lower edge height: the rails (raw top field, so sill rail bars count) or the skin under the oval ---
         yb = np.array([max(ev.filled[ev.row(z), ev.col(w)], ev.filled[ev.row(z), ev.col(-w)])
                        if w > 0.02 else ev.skin_at(0.0, z) for z, w in zip(self.z, W)])
@@ -300,8 +324,12 @@ def main(argv):
         cfg = cfgs.get(vid, {})
         if cfg.get('skip'):
             continue
-        L = Loft(vid, cfg)
-        tris = L.mesh()
+        try:
+            L = Loft(vid, cfg)
+            tris = L.mesh()
+        except Exception as failure:
+            print(f'{vid:34s} FAILED {failure!r}', flush=True)
+            continue
         results[vid] = block(tris)
         print(f'{vid:34s} {len(tris):5d} triangles  front {L.zf:.2f} rear {L.zr:.2f} eye {L.zc:.2f} halfwidth {L.W0:.2f}', flush=True)
         if '--write' in argv:
