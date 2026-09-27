@@ -1,71 +1,119 @@
 {
   "Schema": 1,
-  "Name": "Su-24 Fencer",
+  "Name": "Su-24",
   "BuiltInWeapons": [],
   "SuspendedWeapons": [
     "BayVulcan"
   ],
   "Pairs": [
     {
-      "Id": "pylon_1",
-      "Name": "Inboard swivel pylon",
+      "Id": "glove",
+      "Name": "Glove pylon",
       "Left": [
-        2.5366,
-        1.965,
-        -1.6413
+        2.21875,
+        2.0625,
+        -1.5625
       ],
       "LeftStations": [
         {
           "Point": [
-            2.5368,
-            1.9648,
-            -1.6415
+            2.1789,
+            2.1541,
+            -1.56
           ],
           "Face": "bottom"
         }
       ],
       "Right": [
-        -2.5366,
-        1.965,
-        -1.6413
+        -2.21875,
+        2.0625,
+        -1.5625
       ],
       "RightStations": [
         {
           "Point": [
-            -2.5368,
-            1.9648,
-            -1.6415
+            -2.1789,
+            2.1541,
+            -1.56
           ],
           "Face": "bottom"
         }
       ],
       "AllowedStores": [
-        "berts_vehicle_pack:munition/mk82",
-        "berts_vehicle_pack:munition/mk82_snakeeye",
-        "berts_vehicle_pack:munition/mk84",
-        "berts_vehicle_pack:munition/gbu10",
-        "berts_vehicle_pack:munition/gbu12",
-        "berts_vehicle_pack:munition/gbu15_v2b",
-        "berts_vehicle_pack:munition/gbu27",
-        "berts_vehicle_pack:munition/gbu28",
-        "berts_vehicle_pack:fa18e/agm65d",
-        "berts_vehicle_pack:munition/aim9l"
+        "berts_vehicle_pack:fab_250",
+        "berts_vehicle_pack:fab_250_x2",
+        "berts_vehicle_pack:fab_500",
+        "berts_vehicle_pack:munition/kab250",
+        "berts_vehicle_pack:munition/odab250",
+        "berts_vehicle_pack:munition/odab500pm",
+        "berts_vehicle_pack:munition/kab500od",
+        "berts_vehicle_pack:kh29l",
+        "berts_vehicle_pack:kh29d",
+        "berts_vehicle_pack:kh25ml",
+        "berts_vehicle_pack:kh25mt",
+        "berts_vehicle_pack:rbk_250",
+        "berts_vehicle_pack:su25_s8ko_pod"
       ],
       "MaxWeaponsPerPylon": 1,
-      "MaxPylonMassKg": 2300,
+      "MaxPylonMassKg": 1000
+    },
+    {
+      "Id": "wing",
+      "Name": "Swivel wing pylon",
+      "Left": [
+        4.375,
+        2.2125,
+        -3.375
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            4.375,
+            2.2722,
+            -3.375
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Right": [
+        -4.375,
+        2.2125,
+        -3.375
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -4.375,
+            2.2722,
+            -3.375
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:r60",
+        "berts_vehicle_pack:kh25ml",
+        "berts_vehicle_pack:kh25mt",
+        "berts_vehicle_pack:fab_250",
+        "berts_vehicle_pack:munition/kab250",
+        "berts_vehicle_pack:munition/odab250",
+        "berts_vehicle_pack:rbk_250"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 600,
       "SweepFrames": [
         {
           "Pivot": [
-            2.18860125,
+            2.6875,
             2.362694375,
-            -0.248704375
+            -2.70625
           ],
           "Axis": [
             0,
             -1,
             0
           ],
-          "MaxDegrees": -56,
+          "MaxDegrees": -53,
           "Points": [
             [
               0,
@@ -87,16 +135,16 @@
         },
         {
           "Pivot": [
-            -2.18860125,
+            -2.6875,
             2.362694375,
-            -0.248704375
+            -2.70625
           ],
           "Axis": [
             0,
             -1,
             0
           ],
-          "MaxDegrees": 56,
+          "MaxDegrees": 53,
           "Points": [
             [
               0,
@@ -119,347 +167,105 @@
       ]
     },
     {
-      "Id": "pylon_2",
-      "Name": "Inner-mid swivel pylon",
+      "Id": "belly_fwd",
+      "Name": "Forward belly pylon",
       "Left": [
-        4.0788,
-        1.965,
-        -1.89
+        0.625,
+        1.40625,
+        2.1875
       ],
       "LeftStations": [
         {
           "Point": [
-            4.0788,
-            1.9648,
-            -1.8902
+            0.625,
+            1.3903,
+            2.1875
           ],
           "Face": "bottom"
         }
       ],
       "Right": [
-        -4.0788,
-        1.965,
-        -1.89
+        -0.625,
+        1.40625,
+        2.1875
       ],
       "RightStations": [
         {
           "Point": [
-            -4.0788,
-            1.9648,
-            -1.8902
+            -0.625,
+            1.3903,
+            2.1875
           ],
           "Face": "bottom"
         }
       ],
       "AllowedStores": [
-        "berts_vehicle_pack:munition/mk82",
-        "berts_vehicle_pack:munition/mk82_snakeeye",
-        "berts_vehicle_pack:munition/mk84",
-        "berts_vehicle_pack:munition/gbu10",
-        "berts_vehicle_pack:munition/gbu12",
-        "berts_vehicle_pack:munition/gbu15_v2b",
-        "berts_vehicle_pack:munition/gbu27",
-        "berts_vehicle_pack:munition/gbu28",
-        "berts_vehicle_pack:fa18e/agm65d",
-        "berts_vehicle_pack:munition/aim9l"
+        "berts_vehicle_pack:fab_100_x3",
+        "berts_vehicle_pack:fab_250",
+        "berts_vehicle_pack:fab_250_x2",
+        "berts_vehicle_pack:fab_500",
+        "berts_vehicle_pack:munition/kab250",
+        "berts_vehicle_pack:munition/odab250",
+        "berts_vehicle_pack:munition/odab500pm",
+        "berts_vehicle_pack:munition/kab500od",
+        "berts_vehicle_pack:kh29l",
+        "berts_vehicle_pack:kh29d",
+        "berts_vehicle_pack:rbk_250"
       ],
       "MaxWeaponsPerPylon": 1,
-      "MaxPylonMassKg": 2300,
-      "SweepFrames": [
-        {
-          "Pivot": [
-            2.18860125,
-            2.362694375,
-            -0.248704375
-          ],
-          "Axis": [
-            0,
-            -1,
-            0
-          ],
-          "MaxDegrees": -56,
-          "Points": [
-            [
-              0,
-              0
-            ],
-            [
-              1.5,
-              0
-            ],
-            [
-              2.5,
-              0.5
-            ],
-            [
-              3.5,
-              1
-            ]
-          ]
-        },
-        {
-          "Pivot": [
-            -2.18860125,
-            2.362694375,
-            -0.248704375
-          ],
-          "Axis": [
-            0,
-            -1,
-            0
-          ],
-          "MaxDegrees": 56,
-          "Points": [
-            [
-              0,
-              0
-            ],
-            [
-              1.5,
-              0
-            ],
-            [
-              2.5,
-              0.5
-            ],
-            [
-              3.5,
-              1
-            ]
-          ]
-        }
-      ]
+      "MaxPylonMassKg": 1000
     },
     {
-      "Id": "pylon_3",
-      "Name": "Outer-mid swivel pylon",
+      "Id": "belly_aft",
+      "Name": "Aft belly pylon",
       "Left": [
-        5.5709,
-        1.965,
-        -2.3875
+        0.625,
+        1.40625,
+        -0.3125
       ],
       "LeftStations": [
         {
           "Point": [
-            5.571,
-            1.9648,
-            -2.3876
+            0.675,
+            1.3678,
+            -0.3125
           ],
           "Face": "bottom"
         }
       ],
       "Right": [
-        -5.5709,
-        1.965,
-        -2.3875
+        -0.625,
+        1.40625,
+        -0.3125
       ],
       "RightStations": [
         {
           "Point": [
-            -5.571,
-            1.9648,
-            -2.3876
+            -0.675,
+            1.3678,
+            -0.3125
           ],
           "Face": "bottom"
         }
       ],
       "AllowedStores": [
-        "berts_vehicle_pack:munition/mk82",
-        "berts_vehicle_pack:munition/mk82_snakeeye",
-        "berts_vehicle_pack:munition/mk84",
-        "berts_vehicle_pack:munition/gbu10",
-        "berts_vehicle_pack:munition/gbu12",
-        "berts_vehicle_pack:munition/gbu27",
-        "berts_vehicle_pack:munition/gbu28",
-        "berts_vehicle_pack:munition/aim9l"
+        "berts_vehicle_pack:fab_100_x3",
+        "berts_vehicle_pack:fab_250",
+        "berts_vehicle_pack:fab_250_x2",
+        "berts_vehicle_pack:fab_500",
+        "berts_vehicle_pack:munition/kab250",
+        "berts_vehicle_pack:munition/odab250",
+        "berts_vehicle_pack:munition/odab500pm",
+        "berts_vehicle_pack:munition/kab500od",
+        "berts_vehicle_pack:kh29l",
+        "berts_vehicle_pack:kh29d",
+        "berts_vehicle_pack:rbk_250"
       ],
       "MaxWeaponsPerPylon": 1,
-      "MaxPylonMassKg": 2000,
-      "SweepFrames": [
-        {
-          "Pivot": [
-            2.18860125,
-            2.362694375,
-            -0.248704375
-          ],
-          "Axis": [
-            0,
-            -1,
-            0
-          ],
-          "MaxDegrees": -56,
-          "Points": [
-            [
-              0,
-              0
-            ],
-            [
-              1.5,
-              0
-            ],
-            [
-              2.5,
-              0.5
-            ],
-            [
-              3.5,
-              1
-            ]
-          ]
-        },
-        {
-          "Pivot": [
-            -2.18860125,
-            2.362694375,
-            -0.248704375
-          ],
-          "Axis": [
-            0,
-            -1,
-            0
-          ],
-          "MaxDegrees": 56,
-          "Points": [
-            [
-              0,
-              0
-            ],
-            [
-              1.5,
-              0
-            ],
-            [
-              2.5,
-              0.5
-            ],
-            [
-              3.5,
-              1
-            ]
-          ]
-        }
-      ]
-    },
-    {
-      "Id": "pylon_4",
-      "Name": "Outboard swivel pylon",
-      "Left": [
-        7.5606,
-        1.965,
-        -3.1338
-      ],
-      "LeftStations": [
-        {
-          "Point": [
-            7.5606,
-            1.9648,
-            -3.1337
-          ],
-          "Face": "bottom"
-        }
-      ],
-      "Right": [
-        -7.5606,
-        1.965,
-        -3.1338
-      ],
-      "RightStations": [
-        {
-          "Point": [
-            -7.5606,
-            1.9648,
-            -3.1337
-          ],
-          "Face": "bottom"
-        }
-      ],
-      "AllowedStores": [
-        "berts_vehicle_pack:munition/aim9l",
-        "berts_vehicle_pack:munition/mk82",
-        "berts_vehicle_pack:munition/mk82_snakeeye",
-        "berts_vehicle_pack:munition/gbu12"
-      ],
-      "MaxWeaponsPerPylon": 1,
-      "MaxPylonMassKg": 1000,
-      "SweepFrames": [
-        {
-          "Pivot": [
-            2.18860125,
-            2.362694375,
-            -0.248704375
-          ],
-          "Axis": [
-            0,
-            -1,
-            0
-          ],
-          "MaxDegrees": -56,
-          "Points": [
-            [
-              0,
-              0
-            ],
-            [
-              1.5,
-              0
-            ],
-            [
-              2.5,
-              0.5
-            ],
-            [
-              3.5,
-              1
-            ]
-          ]
-        },
-        {
-          "Pivot": [
-            -2.18860125,
-            2.362694375,
-            -0.248704375
-          ],
-          "Axis": [
-            0,
-            -1,
-            0
-          ],
-          "MaxDegrees": 56,
-          "Points": [
-            [
-              0,
-              0
-            ],
-            [
-              1.5,
-              0
-            ],
-            [
-              2.5,
-              0.5
-            ],
-            [
-              3.5,
-              1
-            ]
-          ]
-        }
-      ]
+      "MaxPylonMassKg": 1000
     }
   ],
   "StoreGroups": {
-    "berts_vehicle_pack:modeled_store/su_24/assembly_0": [
-      "suspended_f_111f_0"
-    ],
-    "berts_vehicle_pack:modeled_store/su_24/assembly_1": [
-      "suspended_f_111f_1"
-    ],
-    "berts_vehicle_pack:modeled_store/su_24/assembly_2": [
-      "suspended_f_111f_2"
-    ],
-    "berts_vehicle_pack:modeled_store/su_24/assembly_3": [
-      "suspended_f_111f_3"
-    ],
     "berts_vehicle_pack:gun_pod/f111_m61_bay": [
       "suspended_f_111f_4"
     ]
@@ -480,7 +286,7 @@
       "MaxPylonMassKg": 1000
     }
   ],
-  "MaxPayloadKg": 18125,
+  "MaxPayloadKg": 8000,
   "Radar": {
     "Enabled": true,
     "Range": 1000

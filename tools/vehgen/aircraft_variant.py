@@ -265,6 +265,7 @@ def main(argv):
             out.json(os.path.join(DATA, rel, f'{vid}.json'), d)
     arm = renamed(load(TPL(os.path.join(DATA, 'sbw', 'aircraft_armaments', f'{tid}.json'))))
     arm['Name'] = spec['name']
+    arm.update(spec.get('armamentOverrides', {}))     # e.g. a different pylon layout / store set than the template's
     out.json(os.path.join(DATA, 'sbw', 'aircraft_armaments', f'{vid}.json'), arm)
     ms = TPL(os.path.join(DATA, 'sbw', 'aircraft_stores', 'modeled_store', tid))
     if os.path.isdir(ms):
