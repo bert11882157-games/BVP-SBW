@@ -104,6 +104,16 @@ NEW = {
     'pl8': dict(template='r73.json', name='PL-8 · short range IR', mass=115, carriers=['j_11a']),
     'pl12': dict(template='r77.json', name='PL-12 · medium range radar', mass=180, match=['r27r.json'],
                  carriers=['j_11a']),
+    # Chinese short-range IR missiles for the Q-5 / J-10A / J-15D (2026-09-27): on every pylon of those aircraft
+    # that already allows an R-13 / PL-8 class missile
+    'pl2': dict(template='munition/r13m1.json', name='PL-2 · short range IR (K-13 class)', mass=76,
+                match=['munition/r13m1.json'], carriers=['q_5']),
+    'pl5': dict(template='munition/r13m1.json', name='PL-5 · short range IR', mass=83,
+                match=['munition/r13m1.json', 'munition/pl8.json'], carriers=['q_5', 'j_10a']),
+    'pl7': dict(template='r60.json', name='PL-7 · short range IR', mass=89,
+                match=['r60.json', 'munition/pl8.json'], carriers=['q_5', 'j_10a']),
+    'pl10': dict(template='r73.json', name='PL-10 · high off-boresight IR', mass=89,
+                 match=['munition/pl8.json'], carriers=['j_10a', 'j_15d']),
 }
 # anchors the aircraft_attach rules cannot derive (non-circular bodies); MountAnchor frame, blocks
 ANCHORS = {

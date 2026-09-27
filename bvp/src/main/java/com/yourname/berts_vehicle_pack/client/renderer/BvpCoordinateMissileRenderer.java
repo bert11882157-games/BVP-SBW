@@ -28,7 +28,7 @@ public final class BvpCoordinateMissileRenderer {
         flight("aim9b"), flight("aim9l"), flight("aim9x"), flight("aim7e"),
         flight("aim54"), flight("agm45a"), flight("pars3"), flight("agm88"), flight("aim120"),
         flight("agm122"), flight("agm158"), flight("agm86"), flight("cm102"), flight("yj91"), flight("kd88"),
-        flight("pl8"), flight("pl12"));
+        flight("pl8"), flight("pl12"), flight("pl2"), flight("pl5"), flight("pl7"), flight("pl10"));
     private static java.util.Map.Entry<String, MissileAsset> flight(String id) {
         return java.util.Map.entry(id, new MissileAsset(
             new ResourceLocation("berts_vehicle_pack", "custom_geo/aircraft_stores/" + id + "_flight.geo.json"),

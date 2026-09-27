@@ -1,0 +1,52 @@
+{
+  "Schema": 1,
+  "Name": "PL-7 · short range IR",
+  "Category": "AIR_TO_AIR",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/pl7.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.0853,
+    0.385
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.0878,
+      -0.0025,
+      0.385
+    ],
+    "Right": [
+      -0.0878,
+      -0.0025,
+      0.385
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    -0.0025,
+    0.385
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/pl7.png",
+  "Capacity": 1,
+  "LaunchOffset": [
+    0.0,
+    -0.0878,
+    0.0
+  ],
+  "Guidance": {
+    "Mode": "INFRARED",
+    "LockTicks": 60,
+    "Range": 1024,
+    "ConeDegrees": 25,
+    "CountermeasureVulnerability": 1
+  },
+  "MassKg": 89,
+  "TntEquivalentKg": 1.15,
+  "AmmoItem": "superbwarfare:small_air_to_air_missile",
+  "MaxPerPylon": 2,
+  "RackSpacing": [
+    0.55,
+    0.3,
+    0
+  ]
+}
