@@ -4817,6 +4817,15 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
     /** Explicit provider opt-in; native helicopters keep their existing control lifecycle. */
     open fun usesRotorCoupledHelicopterControls(): Boolean = false
 
+    /**
+     * Helicopter engine load for audio, 0..1: rotor-coupled helicopters keep power at rotorPower x 0.12, so it is
+     * scaled back to the rotor's 0..1; legacy helicopter controls use power directly.
+     */
+    fun helicopterEngineLoad(): Float {
+        val p = kotlin.math.abs(power)
+        return (if (usesRotorCoupledHelicopterControls()) p / 0.12f else p).coerceIn(0f, 1f)
+    }
+
     fun getRotorCoupledHelicopterControlEpoch(): Long = rotorCoupledHelicopterControlEpoch
 
     /** Existing server-validated control bits; this accessor does not acquire or retain input. */

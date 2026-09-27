@@ -129,7 +129,7 @@ object VehicleAudioController {
             return vehicle.getVehicleFlightInstrumentSnapshot(1f).throttle.toFloat().coerceIn(0f, 1f)
         }
         val computed = vehicle.computed()
-        if (computed?.engineType == EngineType.HELICOPTER) return abs(vehicle.power).coerceIn(0f, 1f)
+        if (computed?.engineType == EngineType.HELICOPTER) return vehicle.helicopterEngineLoad()
         val speed = vehicle.deltaMovement.horizontalDistance().toFloat()
         val input = if (vehicle.forwardInputDown || vehicle.backInputDown) 0.55f else 0f
         return max(input, (speed / 0.5f).coerceIn(0f, 1f))

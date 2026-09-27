@@ -283,7 +283,7 @@ final class BvpTankEngineSounds {
 
     private static boolean hasLongitudinalThrottle(VehicleEntity vehicle) {
         if (vehicle.computed().getEngineType() == EngineType.HELICOPTER) {
-            return Math.abs(vehicle.getPower()) > 0.01F;
+            return vehicle.helicopterEngineLoad() > 0.1F;
         }
         return vehicle.forwardInputDown() || vehicle.backInputDown();
     }
@@ -312,10 +312,18 @@ final class BvpTankEngineSounds {
         }
     }
 
+    /**
+     * One engine layer (idle or drive). The drive layer fades in with the throttle and the idle layer sinks under it
+     * (smoothed over about half a second instead of switching), and both rise in pitch with engine load: ground
+     * vehicles with their power output, helicopters with collective (rotor load). Played positionally with Doppler
+     * by VehicleSoundInstance.
+     */
     private static final class VehicleEngineLoop extends VehicleSoundInstance {
+        private static final float MIX_RATE = 0.12F;
         private final VehicleEntity vehicle;
         private final boolean running;
         private final boolean phaseSensitive;
+        private float mix = -1.0F;
 
         private VehicleEngineLoop(SoundEvent event, Minecraft minecraft, VehicleEntity vehicle,
                                   boolean running, boolean phaseSensitive) {
@@ -330,15 +338,35 @@ final class BvpTankEngineSounds {
             return isLive(vehicle) && vehicle.engineRunning();
         }
 
+        /** 0 idle .. 1 full load, smoothed per tick (getVolume runs once per sound tick). */
+        private float load() {
+            float target;
+            if (vehicle.computed().getEngineType() == EngineType.HELICOPTER) {
+                target = vehicle.helicopterEngineLoad();
+            } else {
+                float power = Math.min(1.0F, Math.abs(vehicle.getPower()));
+                target = Math.max(hasLongitudinalThrottle(vehicle) ? 0.6F : 0.0F, power);
+            }
+            if (mix < 0.0F) mix = target;
+            else mix += (target - mix) * MIX_RATE;
+            return mix;
+        }
+
         @Override
         protected float getPitch(VehicleEntity ignored) {
-            return 1.0F;
+            float m = Math.max(0.0F, mix);
+            if (vehicle.computed().getEngineType() == EngineType.HELICOPTER) {
+                return 0.94F + 0.14F * m;              // rotor and turbine load
+            }
+            return running ? 0.88F + 0.3F * m : 0.97F + 0.08F * m;
         }
 
         @Override
         protected float getVolume(VehicleEntity ignored) {
-            return !phaseSensitive || hasLongitudinalThrottle(vehicle) == running
-                    ? vehicle.getEngineSoundVolume() * 2.0F : 0.0F;
+            float m = load();
+            float base = vehicle.getEngineSoundVolume() * 2.0F;
+            if (!phaseSensitive) return base * (0.75F + 0.25F * m);
+            return running ? base * m : base * (1.0F - 0.65F * m);
         }
     }
 

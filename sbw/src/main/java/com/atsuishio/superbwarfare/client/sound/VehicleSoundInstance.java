@@ -96,7 +96,9 @@ public abstract class VehicleSoundInstance extends AbstractTickableSoundInstance
 
         @Override
         protected float getPitch(VehicleEntity mobileVehicle) {
-            if (mobileVehicle.getVehicleType() == VehicleType.HELICOPTER) return 1;
+            // helicopters: the rotor/turbine note rises with collective (load), not with a throttle ramp
+            if (mobileVehicle.getVehicleType() == VehicleType.HELICOPTER)
+                return 0.94F + 0.14F * mobileVehicle.helicopterEngineLoad();
             float power = mobileVehicle.isFixedWingFlightVehicle()
                     ? (float) mobileVehicle.getVehicleFlightInstrumentSnapshot(1.0F).getThrottle()
                     : mobileVehicle.getPower();
