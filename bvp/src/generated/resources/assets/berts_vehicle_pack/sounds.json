@@ -3126,5 +3126,133 @@
         "attenuation_distance": 48
       }
     ]
+  },
+  "impact_tap_bricks": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:impact/tap/bricks_1",
+        "stream": false
+      },
+      {
+        "name": "berts_vehicle_pack:impact/tap/bricks_2",
+        "stream": false
+      },
+      {
+        "name": "berts_vehicle_pack:impact/tap/bricks_3",
+        "stream": false
+      },
+      {
+        "name": "berts_vehicle_pack:impact/tap/bricks_4",
+        "stream": false
+      },
+      {
+        "name": "berts_vehicle_pack:impact/tap/bricks_5",
+        "stream": false
+      }
+    ]
+  },
+  "impact_tap_dirt": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:impact/tap/dirt_1",
+        "stream": false
+      },
+      {
+        "name": "berts_vehicle_pack:impact/tap/dirt_2",
+        "stream": false
+      },
+      {
+        "name": "berts_vehicle_pack:impact/tap/dirt_3",
+        "stream": false
+      },
+      {
+        "name": "berts_vehicle_pack:impact/tap/dirt_4",
+        "stream": false
+      }
+    ]
+  },
+  "impact_tap_glass": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:impact/tap/glass_1",
+        "stream": false
+      },
+      {
+        "name": "berts_vehicle_pack:impact/tap/glass_2",
+        "stream": false
+      },
+      {
+        "name": "berts_vehicle_pack:impact/tap/glass_3",
+        "stream": false
+      }
+    ]
+  },
+  "impact_tap_metal": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:impact/tap/metal_1",
+        "stream": false
+      },
+      {
+        "name": "berts_vehicle_pack:impact/tap/metal_2",
+        "stream": false
+      },
+      {
+        "name": "berts_vehicle_pack:impact/tap/metal_3",
+        "stream": false
+      },
+      {
+        "name": "berts_vehicle_pack:impact/tap/metal_4",
+        "stream": false
+      },
+      {
+        "name": "berts_vehicle_pack:impact/tap/metal_5",
+        "stream": false
+      }
+    ]
+  },
+  "impact_tap_rock": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:impact/tap/rock_1",
+        "stream": false
+      },
+      {
+        "name": "berts_vehicle_pack:impact/tap/rock_2",
+        "stream": false
+      },
+      {
+        "name": "berts_vehicle_pack:impact/tap/rock_3",
+        "stream": false
+      },
+      {
+        "name": "berts_vehicle_pack:impact/tap/rock_4",
+        "stream": false
+      }
+    ]
+  },
+  "impact_tap_wood": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:impact/tap/wood_1",
+        "stream": false
+      },
+      {
+        "name": "berts_vehicle_pack:impact/tap/wood_2",
+        "stream": false
+      },
+      {
+        "name": "berts_vehicle_pack:impact/tap/wood_3",
+        "stream": false
+      },
+      {
+        "name": "berts_vehicle_pack:impact/tap/wood_4",
+        "stream": false
+      },
+      {
+        "name": "berts_vehicle_pack:impact/tap/wood_5",
+        "stream": false
+      }
+    ]
   }
 }
