@@ -1,0 +1,546 @@
+{
+  "ID": "berts_vehicle_pack:f_16b",
+  "Model": {
+    "GeometryBackend": "berts_vehicle_pack:vehicle/f_16b",
+    "Model": "berts_vehicle_pack:geo/native_fallback/f_16b.geo.json",
+    "Texture": "berts_vehicle_pack:textures/entity/f_16b.png",
+    "WreckTexture": "berts_vehicle_pack:textures/entity_dead/f_16b.png"
+  },
+  "MouseSpeed": [
+    0.2,
+    0.2
+  ],
+  "AfterburnerPresentation": {
+    "Palette": {
+      "Core": [
+        1.0,
+        0.92,
+        0.94
+      ],
+      "Flame": [
+        1.0,
+        0.56,
+        0.52
+      ],
+      "Tail": [
+        1.0,
+        0.48,
+        0.2
+      ],
+      "Diamonds": [
+        1.0,
+        0.72,
+        0.86
+      ]
+    },
+    "Schema": 2,
+    "Frame": "VEHICLE_LOCAL_BLOCKS",
+    "Outlets": [
+      {
+        "Id": "afterburner_0",
+        "Position": [
+          0,
+          1.73157875,
+          -7.275105
+        ],
+        "Direction": [
+          0,
+          0,
+          -1
+        ],
+        "NozzleRadiusBlocks": 0.42
+      }
+    ],
+    "Flame": {
+      "Scale": 0.9,
+      "WidthBlocks": 0.2,
+      "LengthBlocks": 7,
+      "ParticlesPerTick": 3,
+      "LifetimeTicks": 10,
+      "ColorRgb": [
+        1,
+        1,
+        1
+      ]
+    },
+    "Smoke": {
+      "Scale": 0.5,
+      "WidthBlocks": 0.18,
+      "LengthBlocks": 6,
+      "ParticlesPerTick": 0.5,
+      "LifetimeTicks": 14,
+      "ColorRgb": [
+        1,
+        1,
+        1
+      ]
+    },
+    "TapEmitters": [
+      {
+        "Outlet": "afterburner_0",
+        "Style": "FM_FLAME",
+        "Interval": 1,
+        "Offset": [
+          0,
+          0,
+          0
+        ],
+        "Extents": [
+          0.1484210526375,
+          0.1484210526375,
+          0.1484210526375
+        ],
+        "Velocity": [
+          0,
+          0,
+          0.1875
+        ]
+      },
+      {
+        "Outlet": "afterburner_0",
+        "Style": "FM_FLAME",
+        "Interval": 1,
+        "Offset": [
+          0,
+          0,
+          0
+        ],
+        "Extents": [
+          0.1484210526375,
+          0.1484210526375,
+          0.1484210526375
+        ],
+        "Velocity": [
+          0,
+          0,
+          0.1875
+        ]
+      },
+      {
+        "Outlet": "afterburner_0",
+        "Style": "FM_FLAME",
+        "Interval": 1,
+        "Offset": [
+          0,
+          0,
+          0
+        ],
+        "Extents": [
+          0.1484210526375,
+          0.1484210526375,
+          0.1484210526375
+        ],
+        "Velocity": [
+          0,
+          0,
+          0.1875
+        ]
+      }
+    ],
+    "TapSource": "planes/T3p5F F-16C.txt#115203467AFEBB4A94A7640E127107F3696E9554000AEDA03C6905E183995543",
+    "TapVariant": "MATCHED_TAP_AIRCRAFT"
+  },
+  "AircraftRig": {
+    "Schema": 2,
+    "Frame": "GENERATED_MODEL_PIXELS",
+    "Surfaces": [
+      {
+        "Bone": "elevator_0",
+        "Parent": "hull",
+        "Pivot": [
+          30.47579,
+          24.93473,
+          89.05263
+        ],
+        "Axis": [
+          -0.7562051462152936,
+          0.16350378050701803,
+          -0.6335773753831645
+        ],
+        "ControlWeights": {
+          "ElevatorUp": 1,
+          "RightRoll": 0,
+          "RudderRight": 0
+        },
+        "MaxDeflectionDegrees": 25
+      },
+      {
+        "Bone": "elevator_1",
+        "Parent": "hull",
+        "Pivot": [
+          -30.47579,
+          24.93473,
+          89.05263
+        ],
+        "Axis": [
+          -0.7562051462152936,
+          -0.16350378050701803,
+          0.6335773753831645
+        ],
+        "ControlWeights": {
+          "ElevatorUp": 1,
+          "RightRoll": 0,
+          "RudderRight": 0
+        },
+        "MaxDeflectionDegrees": 25
+      },
+      {
+        "Bone": "rudder_0",
+        "Parent": "hull",
+        "Pivot": [
+          0,
+          60.95158,
+          94.59365
+        ],
+        "Axis": [
+          0,
+          -0.9301560050511224,
+          -0.3671645493063516
+        ],
+        "ControlWeights": {
+          "ElevatorUp": 0,
+          "RightRoll": 0,
+          "RudderRight": -1
+        },
+        "MaxDeflectionDegrees": 25
+      },
+      {
+        "Bone": "control_stick_roll",
+        "Parent": "hull",
+        "Pivot": [
+          0.0,
+          28.2698,
+          -54.2947
+        ],
+        "Axis": [
+          0,
+          0,
+          1
+        ],
+        "ControlWeights": {
+          "ElevatorUp": 0,
+          "RightRoll": 1,
+          "RudderRight": 0
+        },
+        "MaxDeflectionDegrees": 11.0
+      },
+      {
+        "Bone": "control_stick_pitch",
+        "Parent": "control_stick_roll",
+        "Pivot": [
+          0.0,
+          28.2698,
+          -54.2947
+        ],
+        "Axis": [
+          1,
+          0,
+          0
+        ],
+        "ControlWeights": {
+          "ElevatorUp": 1,
+          "RightRoll": 0,
+          "RudderRight": 0
+        },
+        "MaxDeflectionDegrees": 14.0
+      }
+    ],
+    "Rotors": [
+      {
+        "Bone": "gear_wheel_0",
+        "Parent": "landing_gear_12",
+        "Pivot": [
+          0.0,
+          2.37473,
+          -28.10106
+        ],
+        "Axis": [
+          1,
+          0,
+          0
+        ],
+        "SpeedChannel": "groundRoll",
+        "Direction": -1,
+        "DegreesPerTickAtFullSpeed": 386.036
+      },
+      {
+        "Bone": "gear_wheel_1",
+        "Parent": "landing_gear_14",
+        "Pivot": [
+          19.39368,
+          4.74948,
+          30.87158
+        ],
+        "Axis": [
+          1,
+          0,
+          0
+        ],
+        "SpeedChannel": "groundRoll",
+        "Direction": -1,
+        "DegreesPerTickAtFullSpeed": 193.018
+      },
+      {
+        "Bone": "gear_wheel_2",
+        "Parent": "landing_gear_15",
+        "Pivot": [
+          -19.39368,
+          4.74948,
+          30.87158
+        ],
+        "Axis": [
+          1,
+          0,
+          0
+        ],
+        "SpeedChannel": "groundRoll",
+        "Direction": -1,
+        "DegreesPerTickAtFullSpeed": 193.018
+      }
+    ],
+    "Gear": [
+      {
+        "Bone": "landing_gear_12",
+        "Parent": "hull"
+      },
+      {
+        "Bone": "landing_gear_14",
+        "Parent": "hull"
+      },
+      {
+        "Bone": "landing_gear_15",
+        "Parent": "hull"
+      }
+    ],
+    "Flaps": [],
+    "Sweeps": []
+  },
+  "FlightDisplays": {
+    "Schema": 1,
+    "Frame": "VEHICLE_LOCAL_BLOCKS",
+    "Displays": [
+      {
+        "Seat": 0,
+        "Center": [
+          0.2216,
+          2.34948,
+          3.45916
+        ],
+        "Normal": [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        "Up": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "Width": 0.1497,
+        "Depth": 0.035,
+        "Kind": "STORES",
+        "Style": "LCD"
+      },
+      {
+        "Seat": 0,
+        "Center": [
+          0.0,
+          2.34948,
+          3.45916
+        ],
+        "Normal": [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        "Up": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "Width": 0.1497,
+        "Depth": 0.035,
+        "Kind": "PFD",
+        "Style": "LCD"
+      },
+      {
+        "Seat": 0,
+        "Center": [
+          -0.2216,
+          2.34948,
+          3.45916
+        ],
+        "Normal": [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        "Up": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "Width": 0.1497,
+        "Depth": 0.035,
+        "Kind": "RADAR",
+        "Style": "LCD"
+      }
+    ],
+    "Planform": [
+      [
+        0.013,
+        -7.589,
+        0.053,
+        -7.309,
+        0.533,
+        -7.309,
+        0.653,
+        -6.989,
+        0.693,
+        -7.029,
+        1.013,
+        -7.029,
+        1.053,
+        -7.269,
+        2.873,
+        -7.249,
+        2.873,
+        -5.769,
+        1.693,
+        -4.749,
+        1.073,
+        -4.729,
+        1.073,
+        -4.289,
+        1.113,
+        -4.249,
+        1.133,
+        -3.949,
+        4.993,
+        -3.929,
+        4.993,
+        -1.369,
+        4.773,
+        -1.349,
+        4.733,
+        -1.589,
+        3.253,
+        -0.709,
+        2.573,
+        -0.709,
+        1.733,
+        -0.029,
+        1.513,
+        -0.009,
+        1.513,
+        0.191,
+        1.233,
+        0.911,
+        1.233,
+        1.351,
+        1.073,
+        1.951,
+        0.913,
+        2.031,
+        0.873,
+        3.711,
+        0.753,
+        3.751,
+        0.713,
+        3.951,
+        0.713,
+        4.871,
+        0.593,
+        4.991,
+        0.593,
+        5.191,
+        0.273,
+        6.311,
+        0.073,
+        6.511,
+        0.013,
+        7.451,
+        -0.047,
+        7.191,
+        -0.047,
+        6.591,
+        -0.127,
+        6.431,
+        -0.287,
+        6.271,
+        -0.287,
+        6.151,
+        -0.567,
+        5.271,
+        -0.567,
+        4.991,
+        -0.687,
+        4.951,
+        -0.727,
+        4.791,
+        -0.727,
+        3.951,
+        -0.767,
+        3.751,
+        -0.887,
+        3.711,
+        -0.927,
+        2.031,
+        -1.027,
+        2.011,
+        -1.087,
+        1.911,
+        -1.207,
+        1.431,
+        -1.207,
+        0.911,
+        -1.287,
+        0.871,
+        -1.527,
+        0.151,
+        -1.527,
+        -0.009,
+        -1.747,
+        -0.029,
+        -2.587,
+        -0.709,
+        -3.227,
+        -0.709,
+        -4.747,
+        -1.589,
+        -4.767,
+        -1.369,
+        -4.967,
+        -1.369,
+        -4.947,
+        -3.949,
+        -1.127,
+        -3.969,
+        -1.087,
+        -4.729,
+        -1.667,
+        -4.749,
+        -1.747,
+        -4.789,
+        -2.847,
+        -5.729,
+        -2.847,
+        -7.249,
+        -1.067,
+        -7.269,
+        -1.027,
+        -7.029,
+        -0.667,
+        -7.029,
+        -0.627,
+        -6.989,
+        -0.467,
+        -7.309,
+        -0.067,
+        -7.309,
+        0.013,
+        -7.589
+      ]
+    ]
+  }
+}

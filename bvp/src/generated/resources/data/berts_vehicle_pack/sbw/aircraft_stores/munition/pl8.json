@@ -1,0 +1,55 @@
+{
+  "Schema": 1,
+  "Name": "PL-8 · short range IR",
+  "Category": "AIR_TO_AIR",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/pl8.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.0906,
+    0.4186
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.0906,
+      0.0,
+      0.4186
+    ],
+    "Right": [
+      -0.0906,
+      0.0,
+      0.4186
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    0.4186
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/pl8.png",
+  "Capacity": 1,
+  "MassKg": 115,
+  "Guidance": {
+    "Mode": "INFRARED",
+    "LockTicks": 45,
+    "Range": 550,
+    "ConeDegrees": 40,
+    "CountermeasureVulnerability": 0.75
+  },
+  "Flight": {
+    "InitialSpeed": 0.5,
+    "MaxSpeed": 5.5,
+    "AccelerationPerTick": 0.1,
+    "TurnDegreesPerSecond": 95,
+    "Damage": 45,
+    "BlastRadius": 3,
+    "TntEquivalentKg": 6.075
+  },
+  "AmmoItem": "superbwarfare:small_air_to_air_missile",
+  "MaxPerPylon": 1,
+  "LaunchOffset": [
+    0.0,
+    -0.0906,
+    0.0
+  ]
+}

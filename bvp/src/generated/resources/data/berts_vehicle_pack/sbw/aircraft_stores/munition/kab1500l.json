@@ -1,0 +1,49 @@
+{
+  "Schema": 1,
+  "Name": "KAB-1500L · 1,500 kg laser-guided",
+  "Category": "BOMB",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/kab1500l.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.3119,
+    0.3231
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.3119,
+      0.0,
+      0.3231
+    ],
+    "Right": [
+      -0.3119,
+      0.0,
+      0.3231
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    0.3231
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/kab1500l.png",
+  "Capacity": 1,
+  "MassKg": 1525,
+  "Bomb": {
+    "Mode": "LASER",
+    "Gravity": 0.08,
+    "DragMultiplier": 1,
+    "TurnDegreesPerTick": 1.5,
+    "BlastRadius": 36,
+    "TntEquivalentKg": 675.0,
+    "BlastDamage": 1200
+  },
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_bombs/kab1500l",
+  "AmmoItem": "superbwarfare:large_freefall_bomb",
+  "MaxPerPylon": 1,
+  "LaunchOffset": [
+    0.0,
+    -0.3119,
+    0.0
+  ]
+}

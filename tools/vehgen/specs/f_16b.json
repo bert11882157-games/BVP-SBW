@@ -1,0 +1,41 @@
+{
+  "id": "f_16b",
+  "name": "F-16B Fighting Falcon",
+  "entityClass": "AuthoredFixedWingAircraft",
+  "template": "f_16c",
+  "source": "F-16B.mtb",
+  "note": "Two-seat F-16 on the F-16C airframe data. Source nose is toolbox -x (yaw180). Aligned by overall length (nose tip to fin, as the template including its rudder) and ground; the template's gear, gear wheels, control stick and modeled store assemblies are kept. Baked stores (texture rows below 200) are dropped except the cockpit contents.",
+  "yaw180": true,
+  "lengthParts": [0, 1, 2, 3, 4, 5, 8, 9, 12, 14, 15],
+  "templateLengthBones": ["wreck_fuselage_0__hull", "wreck_fuselage_1__hull", "wreck_fuselage_2__hull", "wreck_fuselage_3__hull",
+                          "wreck_wing_left__hull", "wreck_wing_right__hull", "wreck_fuselage_3__rudder_0",
+                          "wreck_fuselage_3__elevator_0", "wreck_fuselage_3__elevator_1", "wreck_fuselage_1__landing_gear_12"],
+  "excludeParts": [24, 12, 14, 15],
+  "storeTextureV": 200,
+  "keepBoxes": [[[-8, 22, -62], [8, 50, -8]]],
+  "fuselageCuts": [-60, -6, 58],
+  "parts": {
+    "0": "fuselage", "1": "fuselage", "3": "fuselage",
+    "2": "wreck_fuselage_3__hull",
+    "4": "wing", "5": "wing",
+    "7": {"bone": "wreck_fuselage_3__rudder_0", "if": {"zMin": 60}, "else": "drop"},
+    "8": "side:wreck_fuselage_3__elevator_0,wreck_fuselage_3__elevator_1",
+    "9": "side:wreck_fuselage_3__elevator_0,wreck_fuselage_3__elevator_1"
+  },
+  "keepTemplateBones": ["landing_gear_12", "landing_gear_14", "landing_gear_15", "gear_wheel_0", "gear_wheel_1",
+                        "gear_wheel_2", "control_stick_pitch", "suspended_f_16c_0", "suspended_f_16c_1",
+                        "suspended_f_16c_2", "suspended_f_16c_3", "suspended_f_16c_4", "suspended_f_16c_5",
+                        "suspended_f_16c_6"],
+  "attachments": {
+    "pilot_eye": [0, 42.2, -41.5],
+    "pilot2_eye": [0, 43.0, -18.5]
+  },
+  "seatPositions": {"0": [0, 16.3, -41.5]},
+  "addSeats": [
+    {"note": "rear cockpit: seat back z -15.4..-11.3, cushion 28.3; eye 0.8 px higher (raised rear seat)",
+     "copyOf": 0, "remove": ["Weapons", "FixedGunBank"], "at": [0, 17.1, -18.5], "eye": "pilot2_eye"}
+  ],
+  "removeClientKeys": ["CanopyGlass"],
+  "flightReference": {"baseMassKg": 9300, "mainFuelMassKg": 2750, "fullFuelMassKg": 12050,
+                      "fullFuelWingLoadingKgPerSquareMetre": 431}
+}

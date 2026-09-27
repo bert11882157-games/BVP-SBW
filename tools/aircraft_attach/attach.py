@@ -80,6 +80,10 @@ def plan_store(store_id, store, external):
     if not store.get("Model"):
         return {}, None
     v = store_anchor_values(store)
+    if any(not np.isfinite(float(c)) for key in ("top", "left", "right", "axis", "launch") for c in v[key]):
+        # geometry the rules cannot resolve (e.g. an open or non-circular body at the station): never write NaN,
+        # keep the store's current anchors
+        return {}, "%-48s %-16s UNRESOLVED (non-finite anchors) - kept as written" % (store_id, data.model_name(store))
     changes = OrderedDict()
     if differs(store.get("MountAnchor"), v["top"]):
         changes["MountAnchor"] = v["top"]

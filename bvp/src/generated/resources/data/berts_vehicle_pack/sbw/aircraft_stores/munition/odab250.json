@@ -1,0 +1,49 @@
+{
+  "Schema": 1,
+  "Name": "ODAB-250 · 250 kg fuel-air",
+  "Category": "BOMB",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/odab250.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.2621,
+    -0.2457
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.2184,
+      0.0,
+      -0.2457
+    ],
+    "Right": [
+      -0.2184,
+      0.0,
+      -0.2457
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    -0.2457
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/odab250.png",
+  "Capacity": 1,
+  "MassKg": 250,
+  "Bomb": {
+    "Mode": "DUMB",
+    "Gravity": 0.08,
+    "DragMultiplier": 1,
+    "TurnDegreesPerTick": 0,
+    "BlastRadius": 22,
+    "TntEquivalentKg": 200,
+    "BlastDamage": 500
+  },
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_bombs/odab250",
+  "AmmoItem": "superbwarfare:small_freefall_bomb",
+  "MaxPerPylon": 1,
+  "LaunchOffset": [
+    0.0,
+    -0.2621,
+    0.0
+  ]
+}

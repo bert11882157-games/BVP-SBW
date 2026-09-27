@@ -1,0 +1,53 @@
+{
+  "Schema": 1,
+  "Name": "GBU-28 · 2,100 kg deep penetrator (laser)",
+  "Category": "BOMB",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/gbu28.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.2575,
+    0.2982
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.1971,
+      0.0,
+      0.2982
+    ],
+    "Right": [
+      -0.1971,
+      0.0,
+      0.2982
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    0.2982
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/gbu28.png",
+  "Capacity": 1,
+  "MassKg": 2130,
+  "Bomb": {
+    "Mode": "LASER",
+    "Gravity": 0.08,
+    "DragMultiplier": 1,
+    "TurnDegreesPerTick": 2,
+    "BlastRadius": 13,
+    "TntEquivalentKg": 333.5,
+    "BlastDamage": 1100,
+    "Penetrator": {
+      "MaxDepthBlocks": 8,
+      "MaxBlockHardness": 12,
+      "FuzeDelayTicks": 8
+    }
+  },
+  "AmmoItem": "superbwarfare:medium_guided_bomb",
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_bombs/gbu28",
+  "LaunchOffset": [
+    0.0,
+    -0.2575,
+    0.0
+  ]
+}

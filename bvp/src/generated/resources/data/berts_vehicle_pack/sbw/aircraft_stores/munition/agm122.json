@@ -1,0 +1,54 @@
+{
+  "Schema": 1,
+  "Name": "AGM-122 Sidearm · anti-radiation",
+  "Category": "ANTI_RADIATION",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/agm122.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.0667,
+    0.4018
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.0667,
+      0.0,
+      0.4018
+    ],
+    "Right": [
+      -0.0667,
+      0.0,
+      0.4018
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    0.4018
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/agm122.png",
+  "Capacity": 1,
+  "MassKg": 88,
+  "Guidance": {
+    "Mode": "ANTI_RADIATION",
+    "LockTicks": 60,
+    "Range": 900,
+    "ConeDegrees": 40,
+    "CountermeasureVulnerability": 1
+  },
+  "Flight": {
+    "InitialSpeed": 0.5,
+    "MaxSpeed": 8,
+    "AccelerationPerTick": 0.18,
+    "TurnDegreesPerSecond": 35,
+    "Damage": 35,
+    "BlastRadius": 4,
+    "TntEquivalentKg": 5.1
+  },
+  "AmmoItem": "superbwarfare:large_air_to_ground_missile",
+  "LaunchOffset": [
+    0.0,
+    -0.1955,
+    0.0
+  ]
+}

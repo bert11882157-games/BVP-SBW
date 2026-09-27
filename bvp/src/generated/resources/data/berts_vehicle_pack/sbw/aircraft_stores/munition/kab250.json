@@ -1,0 +1,49 @@
+{
+  "Schema": 1,
+  "Name": "KAB-250LG-E · 250 kg laser-guided",
+  "Category": "BOMB",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/kab250.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.2578,
+    0.1342
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.2119,
+      0.0,
+      0.1342
+    ],
+    "Right": [
+      -0.2119,
+      0.0,
+      0.1342
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    0.1342
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/kab250.png",
+  "Capacity": 1,
+  "MassKg": 256,
+  "Bomb": {
+    "Mode": "LASER",
+    "Gravity": 0.08,
+    "DragMultiplier": 1,
+    "TurnDegreesPerTick": 2.5,
+    "BlastRadius": 20,
+    "TntEquivalentKg": 160.0,
+    "BlastDamage": 500
+  },
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_bombs/kab250",
+  "AmmoItem": "superbwarfare:small_freefall_bomb",
+  "MaxPerPylon": 1,
+  "LaunchOffset": [
+    0.0,
+    -0.2578,
+    0.0
+  ]
+}

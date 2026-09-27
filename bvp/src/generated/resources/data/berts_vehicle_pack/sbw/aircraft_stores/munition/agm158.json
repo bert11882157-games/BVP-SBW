@@ -1,0 +1,48 @@
+{
+  "Schema": 1,
+  "Name": "AGM-158 JASSM · stealth cruise",
+  "Category": "CRUISE",
+  "Capacity": 1,
+  "MassKg": 1020,
+  "Flight": {
+    "InitialSpeed": 0.3,
+    "MaxSpeed": 2.5,
+    "AccelerationPerTick": 0.025,
+    "TurnDegreesPerSecond": 36,
+    "Damage": 140,
+    "BlastRadius": 8,
+    "TntEquivalentKg": 150,
+    "Range": 1400
+  },
+  "AmmoItem": "superbwarfare:cruise_missile",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/agm158.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.314,
+    0.5978
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.3588,
+      0.0,
+      0.5978
+    ],
+    "Right": [
+      -0.3588,
+      0.0,
+      0.5978
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    0.5978
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/agm158.png",
+  "LaunchOffset": [
+    0.0,
+    -0.314,
+    0.0
+  ]
+}

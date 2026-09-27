@@ -1,0 +1,198 @@
+{
+  "Schema": 1,
+  "Name": "F-16B Fighting Falcon",
+  "BuiltInWeapons": [
+    "Vulcan"
+  ],
+  "SuspendedWeapons": [],
+  "Pairs": [
+    {
+      "Id": "inner",
+      "Name": "Inner wing pylon",
+      "Left": [
+        1.9294,
+        1.3606,
+        -1.7069
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            1.9295,
+            1.3605,
+            -1.7068
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Right": [
+        -1.9294,
+        1.3606,
+        -1.7069
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -1.9295,
+            1.3605,
+            -1.7068
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:fa18e/agm65d",
+        "berts_vehicle_pack:fa18e/agm88",
+        "berts_vehicle_pack:munition/agm158",
+        "berts_vehicle_pack:munition/mk82",
+        "berts_vehicle_pack:munition/mk82_snakeeye",
+        "berts_vehicle_pack:munition/mk84",
+        "berts_vehicle_pack:munition/gbu12",
+        "berts_vehicle_pack:munition/gbu27",
+        "berts_vehicle_pack:munition/blu109_jdam"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 1100
+    },
+    {
+      "Id": "middle",
+      "Name": "Middle wing pylon",
+      "Left": [
+        3.0675,
+        1.3113,
+        -2.1272
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            3.0674,
+            1.3111,
+            -2.1274
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Right": [
+        -3.0675,
+        1.3113,
+        -2.1272
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -3.0674,
+            1.3111,
+            -2.1274
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/aim9l",
+        "berts_vehicle_pack:fa18e/aim9m",
+        "berts_vehicle_pack:fa18e/aim120",
+        "berts_vehicle_pack:munition/aim7e",
+        "berts_vehicle_pack:fa18e/agm65d",
+        "berts_vehicle_pack:fa18e/agm88",
+        "berts_vehicle_pack:munition/agm158",
+        "berts_vehicle_pack:munition/mk82",
+        "berts_vehicle_pack:munition/mk82_snakeeye",
+        "berts_vehicle_pack:munition/mk84",
+        "berts_vehicle_pack:munition/gbu12",
+        "berts_vehicle_pack:munition/gbu27",
+        "berts_vehicle_pack:munition/blu109_jdam"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 1100
+    },
+    {
+      "Id": "outer",
+      "Name": "Outer wing pylon",
+      "Left": [
+        4.1556,
+        1.3113,
+        -2.7703
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            4.1558,
+            1.3111,
+            -2.7705
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Right": [
+        -4.1556,
+        1.3113,
+        -2.7703
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -4.1558,
+            1.3111,
+            -2.7705
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/aim9l",
+        "berts_vehicle_pack:fa18e/aim9m",
+        "berts_vehicle_pack:fa18e/aim120"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 250
+    }
+  ],
+  "StoreGroups": {
+    "berts_vehicle_pack:modeled_store/f_16b/assembly_0": [
+      "suspended_f_16c_0"
+    ],
+    "berts_vehicle_pack:modeled_store/f_16b/assembly_1": [
+      "suspended_f_16c_1"
+    ],
+    "berts_vehicle_pack:modeled_store/f_16b/assembly_2": [
+      "suspended_f_16c_2"
+    ],
+    "berts_vehicle_pack:modeled_store/f_16b/assembly_3": [
+      "suspended_f_16c_3"
+    ],
+    "berts_vehicle_pack:modeled_store/f_16b/assembly_4": [
+      "suspended_f_16c_4"
+    ],
+    "berts_vehicle_pack:modeled_store/f_16b/assembly_5": [
+      "suspended_f_16c_5"
+    ],
+    "berts_vehicle_pack:modeled_store/f_16b/assembly_6": [
+      "suspended_f_16c_6"
+    ]
+  },
+  "MaxPayloadKg": 5443,
+  "Radar": {
+    "Enabled": true,
+    "Range": 1000
+  },
+  "MaxPylonMassKg": 1000,
+  "MaxWeaponsPerPylon": 12,
+  "Singles": [
+    {
+      "Id": "internal_bay",
+      "Name": "Armament",
+      "Position": [
+        0,
+        0.441579,
+        -0.429432
+      ],
+      "Internal": true,
+      "MaxPylonMassKg": 5443,
+      "AllowedStores": [
+        "berts_vehicle_pack:fa18e/bomb_500kg_dumb_1",
+        "berts_vehicle_pack:fa18e/bomb_500kg_laser_1",
+        "berts_vehicle_pack:fa18e/bomb_500kg_gps_1"
+      ],
+      "QuantitySelectable": false
+    }
+  ]
+}

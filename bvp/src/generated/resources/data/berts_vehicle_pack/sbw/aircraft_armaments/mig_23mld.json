@@ -43,7 +43,9 @@
         "berts_vehicle_pack:munition/r13m1",
         "berts_vehicle_pack:r60",
         "berts_vehicle_pack:fab_250",
+        "berts_vehicle_pack:munition/odab250",
         "berts_vehicle_pack:fab_500",
+        "berts_vehicle_pack:munition/odab500pm",
         "berts_vehicle_pack:su25_s8ko_pod",
         "berts_vehicle_pack:gsh23_pod"
       ],
@@ -69,6 +71,8 @@
           "ExceptStores": [
             "berts_vehicle_pack:fab_250",
             "berts_vehicle_pack:fab_500",
+            "berts_vehicle_pack:munition/odab250",
+            "berts_vehicle_pack:munition/odab500pm",
             "berts_vehicle_pack:r60"
           ]
         },
@@ -78,7 +82,7 @@
             1.5469,
             0.3276
           ],
-          "Face": "left",
+          "Face": "right",
           "Copies": [
             1
           ],
@@ -92,7 +96,7 @@
             1.5469,
             0.3276
           ],
-          "Face": "left",
+          "Face": "right",
           "Copies": [
             1
           ],
@@ -106,12 +110,40 @@
             1.5469,
             0.3276
           ],
-          "Face": "left",
+          "Face": "right",
+          "Copies": [
+            1
+          ],
+          "Stores": [
+            "berts_vehicle_pack:munition/odab250"
+          ]
+        },
+        {
+          "Point": [
+            0.9032,
+            1.5469,
+            0.3276
+          ],
+          "Face": "right",
           "Copies": [
             1
           ],
           "Stores": [
             "berts_vehicle_pack:fab_500"
+          ]
+        },
+        {
+          "Point": [
+            0.9032,
+            1.5469,
+            0.3276
+          ],
+          "Face": "right",
+          "Copies": [
+            1
+          ],
+          "Stores": [
+            "berts_vehicle_pack:munition/odab500pm"
           ]
         }
       ],
@@ -131,6 +163,8 @@
           "ExceptStores": [
             "berts_vehicle_pack:fab_250",
             "berts_vehicle_pack:fab_500",
+            "berts_vehicle_pack:munition/odab250",
+            "berts_vehicle_pack:munition/odab500pm",
             "berts_vehicle_pack:r60"
           ]
         },
@@ -140,7 +174,7 @@
             1.5469,
             0.3276
           ],
-          "Face": "right",
+          "Face": "left",
           "Copies": [
             1
           ],
@@ -154,7 +188,7 @@
             1.5469,
             0.3276
           ],
-          "Face": "right",
+          "Face": "left",
           "Copies": [
             1
           ],
@@ -168,12 +202,40 @@
             1.5469,
             0.3276
           ],
-          "Face": "right",
+          "Face": "left",
+          "Copies": [
+            1
+          ],
+          "Stores": [
+            "berts_vehicle_pack:munition/odab250"
+          ]
+        },
+        {
+          "Point": [
+            -0.9032,
+            1.5469,
+            0.3276
+          ],
+          "Face": "left",
           "Copies": [
             1
           ],
           "Stores": [
             "berts_vehicle_pack:fab_500"
+          ]
+        },
+        {
+          "Point": [
+            -0.9032,
+            1.5469,
+            0.3276
+          ],
+          "Face": "left",
+          "Copies": [
+            1
+          ],
+          "Stores": [
+            "berts_vehicle_pack:munition/odab500pm"
           ]
         }
       ],
@@ -181,7 +243,9 @@
         "berts_vehicle_pack:munition/r13m1",
         "berts_vehicle_pack:r60",
         "berts_vehicle_pack:fab_250",
-        "berts_vehicle_pack:fab_500"
+        "berts_vehicle_pack:munition/odab250",
+        "berts_vehicle_pack:fab_500",
+        "berts_vehicle_pack:munition/odab500pm"
       ],
       "MaxWeaponsPerPylon": 1,
       "MaxPylonMassKg": 550

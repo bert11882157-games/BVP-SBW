@@ -60,3 +60,30 @@ Replacements use the vehicle itself as the template:
 - Re-running is idempotent. Every derived field is recomputed.
 - Armor is mapped hull box → hull box and turret box → turret box.
 - Old versions stay in git history.
+
+## Aircraft variants (`aircraft_variant.py`)
+
+A new aircraft of an existing family takes the template's complete data (flight reference, handling, armor,
+armaments, modeled stores, OBBs, surface modules, rig, afterburner outlets). The provided model is **aligned** to
+the template, so that data stays valid:
+- **Scale:** the `lengthParts` extent is matched to the `templateLengthBones` extent.
+- **Longitudinal:** the nose tips coincide.
+- **Vertical:** the ground (`groundParts`, the source's own gear), or with `alignY: templateBottom` the fuselage
+  bottom when the template gear is kept and is shorter.
+
+Then:
+- **Baked stores are dropped.** An element goes when either rule holds:
+  - its texture row is below `storeTextureV` and it is outside the `keepBoxes` (the cockpit);
+  - it matches a `dropRules` box (|x|, y, z bounds).
+- **The rest of the airframe goes into the template's wreck sections.** Wings go by part and side, the fuselage by
+  `fuselageCuts` (geo z), and the control surfaces into their template bones.
+- **The template's gear, gear wheels, control stick and modeled store assemblies stay.** They are textured through
+  an atlas: the template texture on top and the source texture below.
+- **Crew:** extra seats and eye attachments come from the spec. `removeClientKeys` drops, for example, a template
+  `CanopyGlass` that does not fit the new canopy.
+
+Sound events stay the template's. Only exact ids and asset paths are renamed.
+
+| id | source | template | notes |
+|---|---|---|---|
+| `f_16b` | F-16B.mtb | f_16c | Scale 0.8076, aligned by nose and gear. 345 baked store elements are dropped (texture rows < 200 outside the cockpit). Front eye at the F-16B front seat (z −41.5, 4 px behind the F-16C's); rear seat and eye added (z −18.5, 0.8 px higher). The template canopy glass is removed because the model has its own. Flight reference: base 9,300 kg, fuel 2,750 kg. |

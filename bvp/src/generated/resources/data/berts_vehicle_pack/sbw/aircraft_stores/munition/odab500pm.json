@@ -1,0 +1,49 @@
+{
+  "Schema": 1,
+  "Name": "ODAB-500PM · 500 kg fuel-air",
+  "Category": "BOMB",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/odab500pm.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.3384,
+    -0.4038
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.282,
+      0.0,
+      -0.4038
+    ],
+    "Right": [
+      -0.282,
+      0.0,
+      -0.4038
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    -0.4038
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/odab500pm.png",
+  "Capacity": 1,
+  "MassKg": 520,
+  "Bomb": {
+    "Mode": "DUMB",
+    "Gravity": 0.08,
+    "DragMultiplier": 1,
+    "TurnDegreesPerTick": 0,
+    "BlastRadius": 32,
+    "TntEquivalentKg": 386,
+    "BlastDamage": 800
+  },
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_bombs/odab500pm",
+  "AmmoItem": "superbwarfare:medium_freefall_bomb",
+  "MaxPerPylon": 1,
+  "LaunchOffset": [
+    0.0,
+    -0.3384,
+    0.0
+  ]
+}

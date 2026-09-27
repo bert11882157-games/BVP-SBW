@@ -1,0 +1,48 @@
+{
+  "Schema": 1,
+  "Name": "AGM-86C CALCM · cruise",
+  "Category": "CRUISE",
+  "Capacity": 1,
+  "MassKg": 1430,
+  "Flight": {
+    "InitialSpeed": 0.3,
+    "MaxSpeed": 2.5,
+    "AccelerationPerTick": 0.025,
+    "TurnDegreesPerSecond": 36,
+    "Damage": 200,
+    "BlastRadius": 12,
+    "TntEquivalentKg": 600,
+    "Range": 2000
+  },
+  "AmmoItem": "superbwarfare:cruise_missile",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/agm86.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.2575,
+    0.8848
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.2502,
+      0.0,
+      0.8848
+    ],
+    "Right": [
+      -0.2502,
+      0.0,
+      0.8848
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    0.8848
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/agm86.png",
+  "LaunchOffset": [
+    0.0,
+    -0.2575,
+    0.0
+  ]
+}
