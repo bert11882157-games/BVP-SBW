@@ -1,0 +1,58 @@
+{
+  "ID": "berts_vehicle_pack:uaz_469_spg9",
+  "Model": {
+    "GeometryBackend": "berts_vehicle_pack:vehicle/uaz_469_spg9",
+    "Model": "berts_vehicle_pack:geo/native_fallback/uaz_469_spg9.geo.json",
+    "Texture": "berts_vehicle_pack:textures/entity/uaz_469_spg9.png",
+    "WreckTexture": "berts_vehicle_pack:textures/entity_dead/uaz_469_spg9.png"
+  },
+  "MouseSpeed": [
+    0.2,
+    0.2
+  ],
+  "RunningGear": {
+    "Type": "WHEELED",
+    "RoadWheelCount": 2,
+    "WheelBones": {
+      "Left": [
+        "wheelL0",
+        "wheelL1"
+      ],
+      "Right": [
+        "wheelR0",
+        "wheelR1"
+      ]
+    },
+    "Steering": {
+      "Schema": 1,
+      "Wheels": [
+        {
+          "SteeringBone": "wheelSteerL1",
+          "WheelBone": "wheelL1",
+          "MaxAngleDegrees": 30,
+          "Sign": 1
+        },
+        {
+          "SteeringBone": "wheelSteerR1",
+          "WheelBone": "wheelR1",
+          "MaxAngleDegrees": 30,
+          "Sign": 1
+        }
+      ]
+    }
+  },
+  "EngineExhaust": {
+    "Schema": "berts_vehicle_pack:engine_exhaust_origins/v1",
+    "Parent": "HULL",
+    "Origins": [
+      {
+        "Id": "engine_exhaust_group_origin_000",
+        "Position": [
+          -1.0625,
+          0.5625,
+          -0.15371
+        ]
+      }
+    ]
+  }
+}

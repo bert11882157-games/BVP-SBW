@@ -43,6 +43,7 @@ import com.yourname.berts_vehicle_pack.entity.T90MEntity;
 import com.yourname.berts_vehicle_pack.entity.ToyotaJihadBmp1Entity;
 import com.yourname.berts_vehicle_pack.entity.ToyotaJihadDshkEntity;
 import com.yourname.berts_vehicle_pack.entity.ToyotaJihadSpg9Entity;
+import com.yourname.berts_vehicle_pack.entity.Uaz469Spg9Entity;
 import com.yourname.berts_vehicle_pack.entity.ToyotaJihadS5Entity;
 import com.yourname.berts_vehicle_pack.entity.TowTripodEntity;
 import com.yourname.berts_vehicle_pack.entity.VbciEntity;
@@ -106,6 +107,8 @@ public class ModEntities {
             ENTITIES.register("toyota_jihad_dshk", () -> vehicle(ToyotaJihadDshkEntity::new, 2.64f, 1.98f, "toyota_jihad_dshk"));
     public static final RegistryObject<EntityType<ToyotaJihadSpg9Entity>> TOYOTA_JIHAD_SPG9 =
             ENTITIES.register("toyota_jihad_spg9", () -> vehicle(ToyotaJihadSpg9Entity::new, 2.64f, 1.98f, "toyota_jihad_spg9"));
+    public static final RegistryObject<EntityType<Uaz469Spg9Entity>> UAZ_469_SPG9 =
+            ENTITIES.register("uaz_469_spg9", () -> vehicle(Uaz469Spg9Entity::new, 2.64f, 1.98f, "uaz_469_spg9"));
     public static final RegistryObject<EntityType<Btr80AEntity>> BTR80A =
             ENTITIES.register("btr80a", () -> vehicle(Btr80AEntity::new, 4.07f, 2.42f, "btr80a"));
     public static final RegistryObject<EntityType<Bmp2Entity>> BMP2 =

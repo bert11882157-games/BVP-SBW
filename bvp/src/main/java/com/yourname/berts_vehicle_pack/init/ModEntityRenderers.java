@@ -135,6 +135,9 @@ public class ModEntityRenderers {
         registerVehicle(event, ModEntities.TOYOTA_JIHAD_SPG9, "toyota_jihad_spg9", standardVehicle(
                 "custom_geo/toyota_jihad_spg9.geo.json", "textures/entity/toyota_jihad_spg9.png",
                 "ToyotaJihadSpg9Renderer"));
+        registerVehicle(event, ModEntities.UAZ_469_SPG9, "uaz_469_spg9", standardVehicle(
+                "custom_geo/uaz_469_spg9.geo.json", "textures/entity/uaz_469_spg9.png",
+                "Uaz469Spg9Renderer"));
         registerVehicle(event, ModEntities.BTR80A, "btr80a", standardTank(
                 "custom_geo/btr80a.geo.json", "textures/entity/btr80a.png",
                 4, 12.53998F, 10.94923F, -56.47495F, 58.43429F, "Btr80ARenderer"));

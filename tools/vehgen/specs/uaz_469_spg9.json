@@ -1,0 +1,43 @@
+{
+  "id": "uaz_469_spg9",
+  "name": "UAZ-469 SPG-9",
+  "entityClass": "Uaz469Spg9Entity",
+  "template": "toyota_jihad_spg9",
+  "source": "UAZ-469_SPG-9.mtb",
+  "scale": 1.15,
+  "hitbox": [2.64, 1.98],
+  "anchor": {"parts": [7, 8], "geoZ": -8.24066},
+  "bones": {
+    "hull": [0, 16],
+    "passengerWeaponStationYaw": [3],
+    "passengerWeaponStationPitch": [4],
+    "wheelL0": [7], "wheelL1": [5], "wheelR0": [8], "wheelR1": [6]
+  },
+  "keepBones": ["turret", "barell", "Wheel"],
+  "pivots": {
+    "passengerWeaponStation": {"part": 3, "at": "rotation"},
+    "passengerWeaponStationYaw": {"part": 3, "at": "rotation"},
+    "passengerWeaponStationPitch": {"part": 4, "at": "rotation"},
+    "WheelL": {"parts": [5, 7]}, "WheelR": {"parts": [6, 8]},
+    "wheelL0": {"part": 7}, "wheelL1": {"part": 5}, "wheelSteerL1": {"part": 5},
+    "wheelR0": {"part": 8}, "wheelR1": {"part": 6}, "wheelSteerR1": {"part": 6}
+  },
+  "seats": [
+    {"note": "driver, left-hand drive: hips (seat + 12 px) on the cushion top 22.7 behind the steering wheel", "at": [10.8, 11.5, 5.5]},
+    {"note": "front passenger / commander, mirrored", "at": [-10.8, 11.5, 5.5]},
+    {"note": "gunner standing on the rear floor (15 px) left of and behind the SPG-9 sight", "at": [9.0, 15.0, 33.0], "frame": "WeaponStation"},
+    {"note": "loader on the right rear ammo bench (top 22.5)", "at": [-14.0, 11.5, 34.0]}
+  ],
+  "attachments": {
+    "driver_camera": {"note": "sitting eye (seat + 1.62 blocks = 37.4) 1 px ahead of the hips: under the windshield top bar (41.2), over the wheel (35.4) and hood (31)", "at": [10.8, 37.4, 4.5]},
+    "passenger_station_camera": {"note": "gunner eye just behind and above the left-side sight eyepiece (X 1.6-4.3, Y 44-48, Z 23-28.7)", "at": [5.5, 46.8, 33.5]},
+    "passenger_station_scope": {"note": "inside the sight body", "at": [2.9, 46.0, 25.0]},
+    "passenger_station_muzzle": {"note": "tube front, axis Y 44.7", "at": [0.0, 44.7, -4.0]},
+    "passenger_station_left_grip": {"note": "trigger grip under the pivot", "at": [1.5, 43.0, 26.0]},
+    "passenger_station_right_grip": {"at": [0.8, 42.6, 30.0]}
+  },
+  "points": {
+    "exhaust": [-17.0, 9.0, 36.0]
+  },
+  "obbSections": [[-45, -8, 4], [-8, 18, 4], [18, 51, 4]]
+}
