@@ -277,7 +277,7 @@
       "NormalReloadTime": 100,
       "EmptyReloadTime": 100,
       "AmmoCostPerShoot": 1,
-      "Velocity": 56,
+      "Velocity": 48.5,
       "Damage": 65,
       "ExplosionDamage": 8,
       "ExplosionRadius": 2,
@@ -311,73 +311,31 @@
       "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/cannon_30mm_ap.png",
       "AmmoType": [
         {
-          "Ammo": "superbwarfare:small_shell_ap",
+          "Ammo": "superbwarfare:small_shell_gs",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
-              "Profile": "berts_vehicle_pack:bmpt/cannon/ammo_00_3ubr8_apds"
+              "Profile": "berts_vehicle_pack:bmpt/cannon/belt_ammo_00_3ubr6_ap_t"
             },
             "ShellType": "AP",
-            "Velocity": 56,
-            "ApDurability": 82,
+            "Velocity": 48.5,
+            "ApDurability": 65,
             "Damage": 65,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
-            "Name": "APDS Belt",
+            "Name": "Default",
             "ProjectileBelt": {
-              "Name": "APDS Belt",
+              "Name": "Default",
               "Family": "TWO_A42",
               "Rounds": [
-                {
-                  "Shots": 1,
-                  "Round": "3ubr8_apds",
-                  "Ammo": "superbwarfare:small_shell_ap",
-                  "Tracer": "NONE"
-                }
-              ]
-            },
-            "NominalBallistics": {
-              "Supported": true,
-              "ProjectileType": "superbwarfare:small_cannon_shell",
-              "ProjectileProfile": "berts_vehicle_pack:bmpt/cannon/ammo_00_3ubr8_apds",
-              "ProjectileLife": 40
-            }
-          },
-          "ConsumptionItem": "superbwarfare:medium_autocannon_shell"
-        },
-        {
-          "Ammo": "superbwarfare:small_shell_aa",
-          "Override": {
-            "Projectile": {
-              "Type": "superbwarfare:small_cannon_shell",
-              "Profile": "berts_vehicle_pack:bmpt/cannon/ammo_01_3uor6_hef_t"
-            },
-            "ShellType": "HE",
-            "Velocity": 56,
-            "ApDurability": 9,
-            "Damage": 250,
-            "ExplosionDamage": 0,
-            "ExplosionRadius": 5,
-            "TntEquivalentKg": 0.0179,
-            "Name": "HE Belt",
-            "ProjectileBelt": {
-              "Name": "HE Belt",
-              "Family": "TWO_A42",
-              "Rounds": [
-                {
-                  "Shots": 1,
-                  "Round": "3uor6_hef_t",
-                  "Ammo": "superbwarfare:small_shell_aa",
-                  "Tracer": "GREEN"
-                },
                 {
                   "Shots": 1,
                   "Round": "3ubr6_ap_t",
                   "Ammo": "superbwarfare:small_shell_gs",
-                  "Tracer": "GREEN"
+                  "Tracer": "RED"
                 },
                 {
-                  "Shots": 2,
+                  "Shots": 1,
                   "Round": "3uof8_hef_i",
                   "Ammo": "superbwarfare:small_shell_he",
                   "Tracer": "NONE"
@@ -387,7 +345,130 @@
             "NominalBallistics": {
               "Supported": true,
               "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:bmpt/cannon/belt_ammo_00_3ubr6_ap_t",
+              "ProjectileLife": 40
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_he",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:bmpt/cannon/belt_ammo_01_3uof8_hef_i"
+            },
+            "ShellType": "HE",
+            "Velocity": 56.0,
+            "ApDurability": 8,
+            "Damage": 250,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 5,
+            "TntEquivalentKg": 0.0755,
+            "Name": "30 mm HEI",
+            "ProjectileBelt": {
+              "Name": "30 mm HEI",
+              "Family": "TWO_A42",
+              "Rounds": [
+                {
+                  "Shots": 3,
+                  "Round": "3uof8_hef_i",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "3ubr6_ap_t",
+                  "Ammo": "superbwarfare:small_shell_gs",
+                  "Tracer": "RED"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:bmpt/cannon/belt_ammo_01_3uof8_hef_i",
+              "ProjectileLife": 40
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_aa",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:bmpt/cannon/ammo_01_3uor6_hef_t"
+            },
+            "ShellType": "HE",
+            "Velocity": 56.0,
+            "ApDurability": 9,
+            "Damage": 250,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 5,
+            "TntEquivalentKg": 0.0179,
+            "Name": "30 mm AP-T",
+            "ProjectileBelt": {
+              "Name": "30 mm AP-T",
+              "Family": "TWO_A42",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "3uor6_hef_t",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "BRIGHT_RED"
+                },
+                {
+                  "Shots": 3,
+                  "Round": "3ubr6_ap_t",
+                  "Ammo": "superbwarfare:small_shell_gs",
+                  "Tracer": "RED"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
               "ProjectileProfile": "berts_vehicle_pack:bmpt/cannon/ammo_01_3uor6_hef_t",
+              "ProjectileLife": 40
+            }
+          },
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell"
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_ap",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:bmpt/cannon/ammo_00_3ubr8_apds"
+            },
+            "ShellType": "AP",
+            "Velocity": 56.0,
+            "ApDurability": 82,
+            "Damage": 65,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "30 mm APDS",
+            "ProjectileBelt": {
+              "Name": "30 mm APDS",
+              "Family": "TWO_A42",
+              "Rounds": [
+                {
+                  "Shots": 4,
+                  "Round": "3ubr8_apds",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "DARK_RED"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "3uor6_hef_t",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "BRIGHT_RED"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:bmpt/cannon/ammo_00_3ubr8_apds",
               "ProjectileLife": 40
             }
           },
@@ -418,41 +499,7 @@
         "ProjectileProfile": "berts_vehicle_pack:bmpt/cannon/default",
         "ProjectileLife": 40
       },
-      "ProjectileBeltAmmoType": [
-        {
-          "Ammo": "superbwarfare:small_shell_gs",
-          "Override": {
-            "Projectile": {
-              "Type": "superbwarfare:small_cannon_shell",
-              "Profile": "berts_vehicle_pack:bmpt/cannon/belt_ammo_00_3ubr6_ap_t"
-            },
-            "ShellType": "AP",
-            "Velocity": 48.5,
-            "ApDurability": 65,
-            "Damage": 65,
-            "ExplosionDamage": 0,
-            "ExplosionRadius": 0,
-            "Name": "AP_T"
-          }
-        },
-        {
-          "Ammo": "superbwarfare:small_shell_he",
-          "Override": {
-            "Projectile": {
-              "Type": "superbwarfare:small_cannon_shell",
-              "Profile": "berts_vehicle_pack:bmpt/cannon/belt_ammo_01_3uof8_hef_i"
-            },
-            "ShellType": "HE",
-            "Velocity": 48,
-            "ApDurability": 8,
-            "Damage": 250,
-            "ExplosionDamage": 0,
-            "ExplosionRadius": 5,
-            "TntEquivalentKg": 0.0755,
-            "Name": "HEF_I"
-          }
-        }
-      ]
+      "ProjectileBeltAmmoType": []
     },
     "DualCannon": {
       "DefaultFireMode": "Auto",
@@ -463,7 +510,7 @@
       "NormalReloadTime": 100,
       "EmptyReloadTime": 100,
       "AmmoCostPerShoot": 1,
-      "Velocity": 56,
+      "Velocity": 48.5,
       "Damage": 65,
       "ExplosionDamage": 8,
       "ExplosionRadius": 2,
@@ -497,73 +544,31 @@
       "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/cannon_30mm_ap.png",
       "AmmoType": [
         {
-          "Ammo": "superbwarfare:small_shell_ap",
+          "Ammo": "superbwarfare:small_shell_gs",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
-              "Profile": "berts_vehicle_pack:bmpt/dualcannon/ammo_00_3ubr8_apds"
+              "Profile": "berts_vehicle_pack:bmpt/dualcannon/belt_ammo_00_3ubr6_ap_t"
             },
             "ShellType": "AP",
-            "Velocity": 56,
-            "ApDurability": 82,
+            "Velocity": 48.5,
+            "ApDurability": 65,
             "Damage": 65,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
-            "Name": "APDS Belt",
+            "Name": "Default",
             "ProjectileBelt": {
-              "Name": "APDS Belt",
+              "Name": "Default",
               "Family": "TWO_A42",
               "Rounds": [
-                {
-                  "Shots": 1,
-                  "Round": "3ubr8_apds",
-                  "Ammo": "superbwarfare:small_shell_ap",
-                  "Tracer": "NONE"
-                }
-              ]
-            },
-            "NominalBallistics": {
-              "Supported": true,
-              "ProjectileType": "superbwarfare:small_cannon_shell",
-              "ProjectileProfile": "berts_vehicle_pack:bmpt/dualcannon/ammo_00_3ubr8_apds",
-              "ProjectileLife": 40
-            }
-          },
-          "ConsumptionItem": "superbwarfare:medium_autocannon_shell"
-        },
-        {
-          "Ammo": "superbwarfare:small_shell_aa",
-          "Override": {
-            "Projectile": {
-              "Type": "superbwarfare:small_cannon_shell",
-              "Profile": "berts_vehicle_pack:bmpt/dualcannon/ammo_01_3uor6_hef_t"
-            },
-            "ShellType": "HE",
-            "Velocity": 56,
-            "ApDurability": 9,
-            "Damage": 250,
-            "ExplosionDamage": 0,
-            "ExplosionRadius": 5,
-            "TntEquivalentKg": 0.0179,
-            "Name": "HE Belt",
-            "ProjectileBelt": {
-              "Name": "HE Belt",
-              "Family": "TWO_A42",
-              "Rounds": [
-                {
-                  "Shots": 1,
-                  "Round": "3uor6_hef_t",
-                  "Ammo": "superbwarfare:small_shell_aa",
-                  "Tracer": "GREEN"
-                },
                 {
                   "Shots": 1,
                   "Round": "3ubr6_ap_t",
                   "Ammo": "superbwarfare:small_shell_gs",
-                  "Tracer": "GREEN"
+                  "Tracer": "RED"
                 },
                 {
-                  "Shots": 2,
+                  "Shots": 1,
                   "Round": "3uof8_hef_i",
                   "Ammo": "superbwarfare:small_shell_he",
                   "Tracer": "NONE"
@@ -573,7 +578,130 @@
             "NominalBallistics": {
               "Supported": true,
               "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:bmpt/dualcannon/belt_ammo_00_3ubr6_ap_t",
+              "ProjectileLife": 40
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_he",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:bmpt/dualcannon/belt_ammo_01_3uof8_hef_i"
+            },
+            "ShellType": "HE",
+            "Velocity": 56.0,
+            "ApDurability": 8,
+            "Damage": 250,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 5,
+            "TntEquivalentKg": 0.0755,
+            "Name": "30 mm HEI",
+            "ProjectileBelt": {
+              "Name": "30 mm HEI",
+              "Family": "TWO_A42",
+              "Rounds": [
+                {
+                  "Shots": 3,
+                  "Round": "3uof8_hef_i",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "3ubr6_ap_t",
+                  "Ammo": "superbwarfare:small_shell_gs",
+                  "Tracer": "RED"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:bmpt/dualcannon/belt_ammo_01_3uof8_hef_i",
+              "ProjectileLife": 40
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_aa",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:bmpt/dualcannon/ammo_01_3uor6_hef_t"
+            },
+            "ShellType": "HE",
+            "Velocity": 56.0,
+            "ApDurability": 9,
+            "Damage": 250,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 5,
+            "TntEquivalentKg": 0.0179,
+            "Name": "30 mm AP-T",
+            "ProjectileBelt": {
+              "Name": "30 mm AP-T",
+              "Family": "TWO_A42",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "3uor6_hef_t",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "BRIGHT_RED"
+                },
+                {
+                  "Shots": 3,
+                  "Round": "3ubr6_ap_t",
+                  "Ammo": "superbwarfare:small_shell_gs",
+                  "Tracer": "RED"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
               "ProjectileProfile": "berts_vehicle_pack:bmpt/dualcannon/ammo_01_3uor6_hef_t",
+              "ProjectileLife": 40
+            }
+          },
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell"
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_ap",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:bmpt/dualcannon/ammo_00_3ubr8_apds"
+            },
+            "ShellType": "AP",
+            "Velocity": 56.0,
+            "ApDurability": 82,
+            "Damage": 65,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "30 mm APDS",
+            "ProjectileBelt": {
+              "Name": "30 mm APDS",
+              "Family": "TWO_A42",
+              "Rounds": [
+                {
+                  "Shots": 4,
+                  "Round": "3ubr8_apds",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "DARK_RED"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "3uor6_hef_t",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "BRIGHT_RED"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:bmpt/dualcannon/ammo_00_3ubr8_apds",
               "ProjectileLife": 40
             }
           },
@@ -609,41 +737,7 @@
         "ProjectileProfile": "berts_vehicle_pack:bmpt/dualcannon/default",
         "ProjectileLife": 40
       },
-      "ProjectileBeltAmmoType": [
-        {
-          "Ammo": "superbwarfare:small_shell_gs",
-          "Override": {
-            "Projectile": {
-              "Type": "superbwarfare:small_cannon_shell",
-              "Profile": "berts_vehicle_pack:bmpt/dualcannon/belt_ammo_00_3ubr6_ap_t"
-            },
-            "ShellType": "AP",
-            "Velocity": 48.5,
-            "ApDurability": 65,
-            "Damage": 65,
-            "ExplosionDamage": 0,
-            "ExplosionRadius": 0,
-            "Name": "AP_T"
-          }
-        },
-        {
-          "Ammo": "superbwarfare:small_shell_he",
-          "Override": {
-            "Projectile": {
-              "Type": "superbwarfare:small_cannon_shell",
-              "Profile": "berts_vehicle_pack:bmpt/dualcannon/belt_ammo_01_3uof8_hef_i"
-            },
-            "ShellType": "HE",
-            "Velocity": 48,
-            "ApDurability": 8,
-            "Damage": 250,
-            "ExplosionDamage": 0,
-            "ExplosionRadius": 5,
-            "TntEquivalentKg": 0.0755,
-            "Name": "HEF_I"
-          }
-        }
-      ]
+      "ProjectileBeltAmmoType": []
     },
     "Missile": {
       "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_atgm.png",

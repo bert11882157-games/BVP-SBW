@@ -113,6 +113,17 @@ enum class ProjectileBeltTracer {
 
     /** Enable the synchronized tracer extension and force its RGB to green. */
     GREEN,
+
+    /*
+     * War Thunder's other tracer colours (gameparams tracerColors; the addon picks the RGB): white (US 25 mm M791,
+     * 120 mm APFSDS, 40 mm APFSDS), light red (pale pink-white: Rh202, KDA, 23 mm OFZT), bright red (orange-red:
+     * 30 mm 3UOR6, 40 mm HE), dark red (30 mm 3UBR8 and DTC04 APDS) and pink (PKTM, Type 59 API-T).
+     */
+    WHITE,
+    LIGHT_RED,
+    BRIGHT_RED,
+    DARK_RED,
+    PINK,
 }
 
 enum class ProjectileBeltResolutionStatus {

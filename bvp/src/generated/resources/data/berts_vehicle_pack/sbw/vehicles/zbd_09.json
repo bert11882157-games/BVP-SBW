@@ -569,7 +569,7 @@
       "NormalReloadTime": 100,
       "EmptyReloadTime": 100,
       "AmmoCostPerShoot": 1,
-      "Velocity": 59,
+      "Velocity": 59.0,
       "Damage": 65,
       "ExplosionDamage": 0,
       "ExplosionRadius": 0,
@@ -610,28 +610,47 @@
               "Profile": "berts_vehicle_pack:zbd_09/cannon/ammo_00_dtc04_30_apds"
             },
             "ShellType": "AP",
-            "Velocity": 59,
+            "Velocity": 59.0,
             "ApDurability": 85,
             "Damage": 65,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
-            "Name": "APDS Belt",
-            "ProjectileBelt": {
-              "Name": "APDS Belt",
-              "Rounds": [
-                {
-                  "Shots": 4,
-                  "Round": "dtc04_30_apds",
-                  "Ammo": "superbwarfare:small_shell_ap",
-                  "Tracer": "NONE"
-                }
-              ]
-            },
+            "Name": "Default",
             "ShootShake": [
               8,
               10,
               12
             ],
+            "ProjectileBelt": {
+              "Name": "Default",
+              "Family": "GENERIC",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "dtc04_30_apds",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "DARK_RED"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "dty02_30_hefi",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "dtc04_30_apds",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "DARK_RED"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "dty02_30_hefi",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
             "NominalBallistics": {
               "Supported": true,
               "ProjectileType": "superbwarfare:small_cannon_shell",
@@ -649,15 +668,21 @@
               "Profile": "berts_vehicle_pack:zbd_09/cannon/ammo_01_dty02_30_hefi"
             },
             "ShellType": "HE",
-            "Velocity": 59,
+            "Velocity": 59.0,
             "ApDurability": 8,
             "Damage": 250,
             "ExplosionDamage": 0,
             "ExplosionRadius": 5,
             "TntEquivalentKg": 0.0755,
-            "Name": "HE Belt",
+            "Name": "DTY02-30",
+            "ShootShake": [
+              8,
+              10,
+              12
+            ],
             "ProjectileBelt": {
-              "Name": "HE Belt",
+              "Name": "DTY02-30",
+              "Family": "GENERIC",
               "Rounds": [
                 {
                   "Shots": 1,
@@ -669,7 +694,7 @@
                   "Shots": 1,
                   "Round": "dtc04_30_apds",
                   "Ammo": "superbwarfare:small_shell_ap",
-                  "Tracer": "NONE"
+                  "Tracer": "DARK_RED"
                 },
                 {
                   "Shots": 2,
@@ -679,11 +704,6 @@
                 }
               ]
             },
-            "ShootShake": [
-              8,
-              10,
-              12
-            ],
             "NominalBallistics": {
               "Supported": true,
               "ProjectileType": "superbwarfare:small_cannon_shell",
@@ -692,6 +712,86 @@
             }
           },
           "ConsumptionItem": "superbwarfare:medium_autocannon_shell"
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_aa",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:zbd_09/cannon/ammo_00_dtc04_30_apds"
+            },
+            "ShellType": "AP",
+            "Velocity": 59.0,
+            "ApDurability": 85,
+            "Damage": 65,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "DTC04-30",
+            "ShootShake": [
+              8,
+              10,
+              12
+            ],
+            "ProjectileBelt": {
+              "Name": "DTC04-30",
+              "Family": "GENERIC",
+              "Rounds": [
+                {
+                  "Shots": 4,
+                  "Round": "dtc04_30_apds",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "DARK_RED"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:zbd_09/cannon/ammo_00_dtc04_30_apds",
+              "ProjectileLife": 40
+            }
+          },
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell"
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_gs",
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:zbd_09/cannon/belt_ammo_wt_dtc10_30_apfsds"
+            },
+            "ShellType": "AP",
+            "Velocity": 65.5,
+            "ApDurability": 102,
+            "Damage": 65,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "DTC10-30",
+            "ShootShake": [
+              8,
+              10,
+              12
+            ],
+            "ProjectileBelt": {
+              "Name": "DTC10-30",
+              "Family": "GENERIC",
+              "Rounds": [
+                {
+                  "Shots": 3,
+                  "Round": "dtc10_30_apfsds",
+                  "Ammo": "superbwarfare:small_shell_gs",
+                  "Tracer": "RED"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:zbd_09/cannon/belt_ammo_wt_dtc10_30_apfsds",
+              "ProjectileLife": 40
+            }
+          }
         }
       ],
       "ProjectileAmount": 1,
@@ -779,7 +879,7 @@
                   "Shots": 1,
                   "Round": "type86_api_t",
                   "Ammo": "superbwarfare:small_shell_he",
-                  "Tracer": "GREEN",
+                  "Tracer": "RED",
                   "DisplayLabel": "API-T"
                 }
               ]

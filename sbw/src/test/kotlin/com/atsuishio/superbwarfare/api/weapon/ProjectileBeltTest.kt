@@ -48,6 +48,21 @@ class ProjectileBeltTest {
         assertEquals(belt.roundAt(1), belt.roundAt(2))
     }
 
+    @Test fun `War Thunder tracer colours decode per round`() {
+        val belt = Json.decodeFromString<ProjectileBeltProfile>("""
+            {"Name":"Mixed","Rounds":[
+                {"Shots":1,"Round":"a","Ammo":"fixture:a","Tracer":"WHITE"},
+                {"Shots":1,"Round":"b","Ammo":"fixture:b","Tracer":"LIGHT_RED"},
+                {"Shots":1,"Round":"c","Ammo":"fixture:c","Tracer":"BRIGHT_RED"},
+                {"Shots":1,"Round":"d","Ammo":"fixture:d","Tracer":"DARK_RED"},
+                {"Shots":1,"Round":"e","Ammo":"fixture:e","Tracer":"PINK"}
+            ]}
+        """.trimIndent())
+        assertTrue(belt.isValid())
+        assertEquals(listOf(ProjectileBeltTracer.WHITE, ProjectileBeltTracer.LIGHT_RED, ProjectileBeltTracer.BRIGHT_RED,
+            ProjectileBeltTracer.DARK_RED, ProjectileBeltTracer.PINK), (0..4).map { belt.roundAt(it)?.tracer })
+    }
+
     @Test fun `Bradley APDS and HE belts preserve exact four shot ordering`() {
         val ap = round("m791_apds", 3)
         val he = round("m792_hei_t_1", tracer = ProjectileBeltTracer.INHERIT)

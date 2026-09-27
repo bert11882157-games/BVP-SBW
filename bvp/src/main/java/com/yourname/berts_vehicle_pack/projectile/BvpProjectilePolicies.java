@@ -55,8 +55,7 @@ public final class BvpProjectilePolicies implements ProjectileProfilePolicy {
                         extensions.add(TRACER, tracer);
                     }
                     tracer.addProperty("Enabled", true);
-                    tracer.add("ColorRgb", policy == ProjectileBeltTracer.GREEN
-                            ? color(72, 255, 96) : color(255, 32, 32));
+                    tracer.add("ColorRgb", tracerColor(policy));
                     trailMode = ProjectileTrailMode.REPLACE;
                 }
             }
@@ -109,6 +108,23 @@ public final class BvpProjectilePolicies implements ProjectileProfilePolicy {
 
     private static JsonObject object(JsonElement value) {
         return value != null && value.isJsonObject() ? value.getAsJsonObject() : null;
+    }
+
+
+    /**
+     * Tracer RGB per belt policy: War Thunder's tracer glow colours (gameparams tracerColors, stored BGRA). RED and
+     * GREEN keep the pack's established tones.
+     */
+    static JsonArray tracerColor(ProjectileBeltTracer policy) {
+        return switch (policy) {
+            case GREEN -> color(72, 255, 96);
+            case WHITE -> color(213, 237, 255);
+            case LIGHT_RED -> color(255, 144, 132);
+            case BRIGHT_RED -> color(255, 60, 20);
+            case DARK_RED -> color(210, 0, 0);
+            case PINK -> color(255, 65, 154);
+            default -> color(255, 32, 32);
+        };
     }
 
     private static JsonArray color(int red, int green, int blue) {

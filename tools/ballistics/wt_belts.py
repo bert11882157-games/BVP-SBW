@@ -1,0 +1,363 @@
+"""Autocannon and machine-gun belts, tracers, velocities and HE filler as in War Thunder.
+
+    python3 tools/ballistics/wt_belts.py [--check]
+
+User rules (2026-09-27): War Thunder is the source for autocannon/HMG belts; tracers must have the right colour and be
+in the right order; HE filler (grams of TNT) from WT; 30 mm HE flies at the gun's APDS velocity.
+
+Source: the War Thunder datamine (gszabi99/War-Thunder-Datamine, gamedata/weapons/groundmodels_weapons/*.blkx: belt
+bullet order, speed, explosiveMass/explosiveType, visual.tracer; config/gameparams.blkx tracerColors), TNT equivalent
+= mass x strengthEquivalent from gamedata/damage_model/explosive.blkx (A-IX-2 1.54, Hexal 1.70, Torpex 1.60,
+Octol 1.59, PETN 1.70, JHL-3 1.54), and wiki.warthunder.com unit pages for belt names. Research notes: docs/WT_BELTS.md.
+
+For each listed weapon the belts are rebuilt from the WT belt list: one AmmoType entry per belt (its Ammo is the
+belt's selector identity, so belts start at distinct rounds; a belt may start at any phase of its cycle), and one
+ProjectileBeltAmmoType entry per round the belts use. Round entries keep their projectile profile and gameplay
+fields; a round the weapon lacks is copied from another weapon that has it (profile file included). Tracer-only
+fixes (12.7 mm and 7.62 mm families) edit the rounds in place. A second run changes nothing.
+"""
+import copy
+import glob
+import json
+import os
+import sys
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+REPO = os.path.abspath(os.path.join(HERE, '..', '..'))
+SBW = os.path.join(REPO, 'bvp', 'src', 'generated', 'resources', 'data', 'berts_vehicle_pack', 'sbw')
+POOL = ['superbwarfare:small_shell_ap', 'superbwarfare:small_shell_aa', 'superbwarfare:small_shell_gs',
+        'superbwarfare:small_shell_he']
+
+# round id -> (tracer, WT muzzle velocity m/s, TNT equivalent kg or None when inert)
+ROUNDS = {
+    # 30 mm 2A42 / 2A72 / 2A38
+    '3ubr6_ap_t': ('RED', 970, None), '3uof8_hef_i': ('NONE', 960, 0.0755), '3uor6_hef_t': ('BRIGHT_RED', 960, 0.0179),
+    '3ubr8_apds': ('DARK_RED', 1120, None),
+    # 23 mm 2A7 / 2A14: BZT, OFZ, OFZT (the pack's second HE round is the OFZT)
+    '23mm_apit': ('RED', 970, None), '23mm_hei': ('NONE', 980, 0.0285), '23mm_hei_2': ('LIGHT_RED', 970, 0.0200),
+    # 25 mm M242 / M811
+    'm791_apds': ('WHITE', 1345, None), 'm792_hei_t_1': ('RED', 1100, 0.0544), 'm919_apfsds': ('WHITE', 1385, None),
+    'm811_m791_apds': ('WHITE', 1345, None), 'm811_m792_hei_t': ('RED', 1100, 0.0544),
+    'm811_pmb090_apfsds': ('WHITE', 1385, None),
+    # 20 mm Rh202
+    'dm63_apds': ('LIGHT_RED', 1150, None), 'dm43_hvap_t': ('LIGHT_RED', 1100, None), 'dm51a1_hefi_t_1': ('LIGHT_RED', 1100, 0.01105),
+    'dm51a1_hefi_t_2': ('LIGHT_RED', 1100, 0.01105),
+    # 35 mm KDA
+    'kda_35_api_t': ('LIGHT_RED', 1175, 0.0374), 'kda_35_hei_t': ('LIGHT_RED', 1175, 0.204),
+    'kda_35_dm23_apds': ('LIGHT_RED', 1400, None),
+    # 40 mm Bofors L/70 (Strf 90)
+    'slpprj_m01_apfsds': ('WHITE', 1495, None), 'slsgr_m90_he': ('BRIGHT_RED', 988, 0.1744),
+    # 30 mm ZPT-99
+    'dtc04_30_apds': ('DARK_RED', 1180, None), 'dty02_30_hefi': ('NONE', 960, 0.0755),
+    'dtc10_30_apfsds': ('RED', 1310, None),
+}
+# HE rounds of these guns fly at the gun's APDS velocity (user rule), not WT's
+HE_AT_APDS = {'3uof8_hef_i': '3ubr8_apds', '3uor6_hef_t': '3ubr8_apds', 'dty02_30_hefi': 'dtc04_30_apds'}
+
+A42 = [('Default', [('3ubr6_ap_t', 1), ('3uof8_hef_i', 1)]),
+       ('30 mm HEI', [('3uof8_hef_i', 3), ('3ubr6_ap_t', 1)]),
+       ('30 mm AP-T', [('3ubr6_ap_t', 3), ('3uor6_hef_t', 1)]),
+       ('30 mm APDS', [('3ubr8_apds', 4), ('3uor6_hef_t', 1)])]
+A72 = [('Default', [('3ubr6_ap_t', 1), ('3uof8_hef_i', 1), ('3ubr6_ap_t', 1), ('3uof8_hef_i', 1)])] + A42[1:]
+BMP3 = A42[1:]
+A38 = [('Default', [('3ubr6_ap_t', 1), ('3uof8_hef_i', 1)]),
+       ('30 mm HEI', [('3uof8_hef_i', 1), ('3uor6_hef_t', 1), ('3uof8_hef_i', 1), ('3ubr6_ap_t', 1)]),
+       ('30 mm AP-T', [('3ubr6_ap_t', 3), ('3uof8_hef_i', 1)])]
+A42_HELI = [('Default', [('3ubr6_ap_t', 1), ('3uof8_hef_i', 1)]),
+            ('Ground targets', [('3ubr8_apds', 1), ('3ubr6_ap_t', 1), ('3uof8_hef_i', 2)]),
+            ('Armored targets', [('3ubr8_apds', 1)]),
+            ('Air targets', [('3uor6_hef_t', 1), ('3ubr6_ap_t', 1), ('3uof8_hef_i', 2)])]
+ZU23 = [('Default', [('23mm_apit', 1), ('23mm_hei', 1)]),
+        ('23 mm HEFI-T', [('23mm_hei', 1), ('23mm_hei_2', 1), ('23mm_hei', 1), ('23mm_apit', 1)]),
+        ('23 mm API-T', [('23mm_apit', 3), ('23mm_hei_2', 1)])]
+M242 = [('Default', [('m791_apds', 1), ('m792_hei_t_1', 1)]),
+        ('M792', [('m792_hei_t_1', 3), ('m791_apds', 1)]),
+        ('M791', [('m791_apds', 3), ('m792_hei_t_1', 1)])]
+M242_LAV = M242 + [('M919', [('m919_apfsds', 1)])]
+M811 = [('Default', [('m811_m791_apds', 1), ('m811_m792_hei_t', 1)]),
+        ('M792', [('m811_m792_hei_t', 3), ('m811_m791_apds', 1)]),
+        ('M791', [('m811_m791_apds', 3), ('m811_m792_hei_t', 1)]),
+        ('PMB090', [('m811_pmb090_apfsds', 1)])]
+# DM51A1 appears twice in the pack (two entries of one round); the second serves as the DM43 belt's HE round
+RH202 = [('Default', [('dm43_hvap_t', 1), ('dm51a1_hefi_t_1', 1)]),
+         ('DM51A1', [('dm51a1_hefi_t_1', 3), ('dm43_hvap_t', 1)]),
+         ('DM43', [('dm43_hvap_t', 3), ('dm51a1_hefi_t_2', 1)]),
+         ('DM63', [('dm63_apds', 3), ('dm51a1_hefi_t_1', 1)])]
+KDA = [('Default', [('kda_35_api_t', 1), ('kda_35_hei_t', 1)]),
+       ('DM11A1', [('kda_35_hei_t', 3), ('kda_35_api_t', 1)]),
+       ('DM13', [('kda_35_api_t', 3), ('kda_35_hei_t', 1)]),
+       ('DM23', [('kda_35_dm23_apds', 1)])]
+BOFORS = [('slpprj m/01', [('slpprj_m01_apfsds', 1)]), ('slsgr m/90', [('slsgr_m90_he', 1)])]
+ZPT99 = [('Default', [('dtc04_30_apds', 1), ('dty02_30_hefi', 1), ('dtc04_30_apds', 1), ('dty02_30_hefi', 1)]),
+         ('DTY02-30', [('dty02_30_hefi', 1), ('dtc04_30_apds', 1), ('dty02_30_hefi', 2)]),
+         ('DTC04-30', [('dtc04_30_apds', 4)]),
+         ('DTC10-30', [('dtc10_30_apfsds', 3)])]
+
+WEAPONS = {
+    ('bmp2', 'Cannon'): ('TWO_A42', A42), ('bmp2m', 'Cannon'): ('TWO_A42', A42),
+    ('bmpt', 'Cannon'): ('TWO_A42', A42), ('bmpt', 'DualCannon'): ('TWO_A42', A42),
+    ('btr_90', 'Cannon'): ('TWO_A42', A42),
+    ('btr80a', 'Cannon'): ('TWO_A42', A72), ('bmp3m_elite', 'DualCannon'): ('TWO_A42', BMP3),
+    ('tunguska', 'Cannon'): ('TWO_A42', A38),
+    ('ka50', 'Cannon'): ('TWO_A42', A42_HELI), ('mi28n', 'Cannon'): ('TWO_A42', A42_HELI),
+    ('zu23_2', 'Cannon'): ('ZU23', ZU23), ('zsu23_4', 'Cannon'): ('ZU23', ZU23),
+    ('m2_bradley', 'Cannon'): ('M242', M242), ('lav25', 'Cannon'): ('M242', M242_LAV),
+    ('vbci', 'Cannon'): ('M242', M811),
+    ('marder_1a1', 'Cannon'): ('RH202', RH202), ('marder_1a2', 'Cannon'): ('RH202', RH202),
+    ('marder_1a5', 'Cannon'): ('RH202', RH202),
+    ('gepard', 'Cannon'): ('GENERIC', KDA), ('cv9040_no_net', 'Cannon'): ('GENERIC', BOFORS),
+    ('qn_506model', 'Cannon'): ('GENERIC', ZPT99), ('zbd_09', 'Cannon'): ('GENERIC', ZPT99),
+}
+# tracer-only fixes, by round id: 12.7 mm BZT-44 is red in WT (the pack had green); PKT/Type 86 API-T red,
+# PKTM (BMP-2M) pink; 14.5 mm KPVT BZT the same Soviet red composition as the 12.7 mm BZT-44
+TRACER_ONLY = {
+    'kpvt_api_t_1': 'RED', 'kpvt_api_t_2': 'RED',
+    'russian_127_bzt44_api_t_1': 'RED', 'russian_127_bzt44_api_t_2': 'RED', 'qjc88a_bzt44_api_t': 'RED',
+    'russian_762_ap_t': 'RED', 'type86_api_t': 'RED',
+}
+TRACER_ONLY_VEHICLE = {('bmp2m', 'MainMachineGun', 'russian_762_ap_t'): 'PINK'}
+ENTRY_KEYS_DROP = ('ProjectileBelt', 'NominalBallistics')
+# rounds WT has that no pack weapon had: built from a sibling round of the same gun with WT's combat values
+SYNTH = {
+    'dm43_hvap_t': ('dm63_apds', {'HullDamageClass': 'APCR', 'PenetrationMm': 57, 'PenetrationCurve': {
+        'DistancesMetres': [10, 100, 500, 1000, 1500, 2000], 'PenetrationMm': [57, 52, 37, 24, 15, 10]}},
+        {'Name': 'DM43'}),
+}
+
+
+def profile_path(pid):
+    return os.path.join(SBW, 'projectile_profiles', pid.split(':', 1)[1] + '.json')
+
+
+def round_id_of(entry):
+    pid = ((entry.get('Override') or {}).get('Projectile') or {}).get('Profile')
+    if not pid or not os.path.exists(profile_path(pid)):
+        return None
+    return json.load(open(profile_path(pid))).get('Combat', {}).get('RoundId', '').split(':')[-1] or None
+
+
+def catalogue():
+    """round id -> (vehicle, weapon, entry) for every round entry of every weapon (a donor for missing rounds)."""
+    out = {}
+    for path in sorted(glob.glob(os.path.join(SBW, 'vehicles', '*.json'))):
+        vid = os.path.basename(path)[:-5]
+        d = json.load(open(path))
+        for wn, w in (d.get('Weapons') or {}).items():
+            for e in (w.get('ProjectileBeltAmmoType') or []) + (w.get('AmmoType') or []):
+                rid = round_id_of(e)
+                if rid and rid not in out:
+                    out[rid] = (vid, wn, e)
+    return out
+
+
+def adopt(vid, wn, rid, donor, writes):
+    """A round entry for this weapon copied from a donor weapon, with its profile file copied into this weapon."""
+    dvid, dwn, dentry = donor
+    e = copy.deepcopy(dentry)
+    for k in ENTRY_KEYS_DROP:
+        e.get('Override', {}).pop(k, None)
+    src = e['Override']['Projectile']['Profile']
+    name = f'belt_ammo_wt_{rid}'
+    dst = f'berts_vehicle_pack:{vid}/{wn.lower()}/{name}'
+    prof = json.load(open(profile_path(src)))
+    prof['Combat']['WeaponId'] = f'berts_vehicle_pack:{vid}/{wn.lower()}'
+    writes[profile_path(dst)] = prof
+    e['Override']['Projectile']['Profile'] = dst
+    return e
+
+
+def match(order):
+    """A distinct start round per belt (bipartite matching, preferring each belt's own first round); None where
+    no distinct start exists."""
+    best = [None] * len(order)
+    best_n = [-1]
+
+    def go(i, used, cur, n):
+        if n + (len(order) - i) <= best_n[0]:
+            return
+        if i == len(order):
+            best_n[0] = n
+            best[:] = cur
+            return
+        for r in order[i]:
+            if r not in used:
+                go(i + 1, used | {r}, cur + [r], n + 1)
+        go(i + 1, used, cur + [None], n)
+    go(0, frozenset(), [], 0)
+    return best
+
+
+def rotate_for_start(rounds, start):
+    """The belt's cycle rotated so that it begins at round `start` (same repeating order)."""
+    seq = [r for r, n in rounds for _ in range(n)]
+    i = seq.index(start)
+    seq = seq[i:] + seq[:i]
+    out = []
+    for r in seq:
+        if out and out[-1][0] == r:
+            out[-1][1] += 1
+        else:
+            out.append([r, 1])
+    return [tuple(x) for x in out]
+
+
+def rebuild(vid, wn, w, family, belts, cat, writes, notes):
+    entries = {}
+    for e in (w.get('AmmoType') or []) + (w.get('ProjectileBeltAmmoType') or []):
+        rid = round_id_of(e)
+        if rid and rid not in entries:
+            base = copy.deepcopy(e)
+            for k in ENTRY_KEYS_DROP:
+                base.get('Override', {}).pop(k, None)
+            entries[rid] = base
+    needed = []
+    for _, rounds in belts:
+        for r, _ in rounds:
+            if r not in needed:
+                needed.append(r)
+    for r, (base, combat, over) in SYNTH.items():
+        if any(r in [x for x, _ in rs] for _, rs in belts) and r not in entries and base in entries:
+            e = copy.deepcopy(entries[base])
+            src = e['Override']['Projectile']['Profile']
+            dst = f'berts_vehicle_pack:{vid}/{wn.lower()}/belt_ammo_wt_{r}'
+            prof = copy.deepcopy(json.load(open(profile_path(src))))
+            prof['Combat'].update(copy.deepcopy(combat))
+            prof['Combat']['RoundId'] = f'berts_vehicle_pack:{r}'
+            writes[profile_path(dst)] = prof
+            e['Override']['Projectile']['Profile'] = dst
+            e['Override'].update(over)
+            e['Override']['ApDurability'] = combat.get('PenetrationMm', e['Override'].get('ApDurability'))
+            e['Ammo'] = None
+            entries[r] = e
+            notes.append(f'{vid}.{wn}: built WT round {r} from {base}')
+    usable = []
+    for bname, rounds in belts:
+        missing = [r for r, _ in rounds if r not in entries and r not in cat]
+        if missing:
+            notes.append(f'{vid}.{wn}: belt {bname} skipped, no profile anywhere for {missing}')
+            continue
+        usable.append((bname, rounds))
+    for r in needed:
+        if r not in entries and r in cat and any(r in [x for x, _ in rs] for _, rs in usable):
+            entries[r] = adopt(vid, wn, r, cat[r], writes)
+            notes.append(f'{vid}.{wn}: added round {r} (from {cat[r][0]}.{cat[r][1]})')
+    # ammo identities: keep each round's current one when unique, else take a free one from the pool
+    ammo, taken = {}, set()
+    for r in needed:
+        if r in entries:
+            a = entries[r].get('Ammo')
+            if a and a not in taken:
+                ammo[r] = a
+                taken.add(a)
+    for r in needed:
+        if r in entries and r not in ammo:
+            free = [p for p in POOL if p not in taken]
+            if not free:
+                notes.append(f'{vid}.{wn}: no free ammo identity for {r}')
+                continue
+            ammo[r] = free[0]
+            taken.add(free[0])
+    # WT velocity, filler and the HE-at-APDS rule
+    for r, e in entries.items():
+        if r not in ROUNDS:
+            continue
+        _, ms, tnt = ROUNDS[r]
+        apds = HE_AT_APDS.get(r)
+        if apds and apds in entries:
+            ms = ROUNDS[apds][1]
+        o = e.setdefault('Override', {})
+        o['Velocity'] = round(ms / 20.0, 3)
+        if tnt is not None:
+            o['TntEquivalentKg'] = tnt
+        if r in ammo:
+            e['Ammo'] = ammo[r]
+    # belts: each starts at a round no other belt starts at (a belt may begin at any phase of its cycle); a
+    # belt left without one gets an alias of its first round under a free ammo identity
+    order = [[rounds[0][0]] + [r for r, _ in rounds if r != rounds[0][0]] for _, rounds in usable]
+    choice = match(order)
+    at, starts, pb_extra = [], set(), []
+    for i, (bname, rounds) in enumerate(usable):
+        start = choice[i]
+        if start is None:
+            free = [p for p in POOL if p not in taken]
+            if not free:
+                notes.append(f'{vid}.{wn}: belt {bname} skipped, no ammo identity left for its start')
+                continue
+            alias = rounds[0][0] + '#' + bname
+            entries[alias] = copy.deepcopy(entries[rounds[0][0]])
+            ammo[alias] = free[0]
+            taken.add(free[0])
+            entries[alias]['Ammo'] = free[0]
+            rounds = [(alias if r == rounds[0][0] else r, n) for r, n in rounds]
+            start = alias
+        starts.add(ammo[start])
+        rot = rotate_for_start(rounds, start)
+        e = copy.deepcopy(entries[start])
+        o = e['Override']
+        o['Name'] = bname
+        o['ProjectileBelt'] = {'Name': bname, 'Family': family, 'Rounds': [
+            {'Shots': n, 'Round': r.split('#')[0], 'Ammo': ammo[r], 'Tracer': ROUNDS[r.split('#')[0]][0]}
+            for r, n in rot]}
+        o['NominalBallistics'] = {'Supported': True, 'ProjectileType': o['Projectile']['Type'],
+                                  'ProjectileProfile': o['Projectile']['Profile'],
+                                  'ProjectileLife': w.get('ProjectileLife', 40)}
+        at.append(e)
+    pb = [entries[r] for r in needed if r in entries and ammo.get(r) not in starts]
+    w['AmmoType'] = at
+    w['ProjectileBeltAmmoType'] = pb
+    if at:
+        # the weapon-level fallback velocity follows the first belt's first round
+        w['Velocity'] = at[0]['Override']['Velocity']
+
+
+def tracer_only(vid, wn, w):
+    changed = False
+    for e in (w.get('AmmoType') or []):
+        b = (e.get('Override') or {}).get('ProjectileBelt')
+        if not b:
+            continue
+        for r in b['Rounds']:
+            ent = next((x for x in (w.get('AmmoType') or []) + (w.get('ProjectileBeltAmmoType') or [])
+                        if x.get('Ammo') == r.get('Ammo')), None)
+            rid = round_id_of(ent) if ent else None
+            want = TRACER_ONLY_VEHICLE.get((vid, wn, rid), TRACER_ONLY.get(rid))
+            if want and r.get('Tracer') != want:
+                r['Tracer'] = want
+                changed = True
+    return changed
+
+
+def main(argv):
+    check = '--check' in argv
+    cat = catalogue()
+    report, writes = [], {}
+    for path in sorted(glob.glob(os.path.join(SBW, 'vehicles', '*.json'))):
+        vid = os.path.basename(path)[:-5]
+        text = open(path).read()
+        d = json.loads(text)
+        before = json.dumps(d, sort_keys=True)
+        notes = []
+        for wn, w in (d.get('Weapons') or {}).items():
+            if (vid, wn) in WEAPONS:
+                family, belts = WEAPONS[(vid, wn)]
+                rebuild(vid, wn, w, family, belts, cat, writes, notes)
+            else:
+                tracer_only(vid, wn, w)
+        if json.dumps(d, sort_keys=True) != before:
+            report.append(f'{vid}: ' + ('; '.join(notes) if notes else 'belts/tracers updated'))
+            if not check:
+                open(path, 'w').write(json.dumps(d, indent=2) + ('\n' if text.endswith('\n') else ''))
+        elif notes:
+            report.append(f'{vid}: ' + '; '.join(notes))
+    for p, prof in writes.items():
+        if not os.path.exists(p) or json.load(open(p)) != prof:
+            report.append(f'profile {os.path.relpath(p, SBW)}')
+            if not check:
+                os.makedirs(os.path.dirname(p), exist_ok=True)
+                open(p, 'w').write(json.dumps(prof, indent=2) + '\n')
+    print('\n'.join(report) or 'nothing to change')
+    return 1 if (check and report) else 0
+
+
+if __name__ == '__main__':
+    sys.exit(main(sys.argv[1:]))

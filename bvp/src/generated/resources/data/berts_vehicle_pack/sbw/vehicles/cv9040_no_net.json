@@ -460,7 +460,7 @@
       "NormalReloadTime": 4,
       "EmptyReloadTime": 4,
       "AmmoCostPerShoot": 1,
-      "Velocity": 18,
+      "Velocity": 74.75,
       "Damage": 65,
       "ExplosionDamage": 8,
       "ExplosionRadius": 2,
@@ -505,16 +505,22 @@
             "Damage": 65,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
-            "Name": "APFSDS Belt",
+            "Name": "slpprj m/01",
+            "ShootShake": [
+              8,
+              10,
+              18
+            ],
+            "Velocity": 74.75,
             "ProjectileBelt": {
-              "Name": "APFSDS Belt",
+              "Name": "slpprj m/01",
+              "Family": "GENERIC",
               "Rounds": [
                 {
                   "Shots": 1,
                   "Round": "slpprj_m01_apfsds",
-                  "Ammo": "superbwarfare:small_shell_gs",
-                  "Tracer": "NONE",
-                  "DisplayLabel": "40 mm slpprj m/01 APFSDS"
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "WHITE"
                 }
               ]
             },
@@ -523,12 +529,7 @@
               "ProjectileType": "superbwarfare:small_cannon_shell",
               "ProjectileProfile": "berts_vehicle_pack:cv9040_no_net/cannon/ammo_00_slpprj_m01_apfsds",
               "ProjectileLife": 40
-            },
-            "ShootShake": [
-              8,
-              10,
-              18
-            ]
+            }
           },
           "ConsumptionItem": "superbwarfare:large_autocannon_shell"
         },
@@ -545,16 +546,22 @@
             "ExplosionDamage": 0,
             "ExplosionRadius": 5,
             "TntEquivalentKg": 0.1744,
-            "Name": "HE Belt",
+            "Name": "slsgr m/90",
+            "ShootShake": [
+              8,
+              10,
+              18
+            ],
+            "Velocity": 49.4,
             "ProjectileBelt": {
-              "Name": "HE Belt",
+              "Name": "slsgr m/90",
+              "Family": "GENERIC",
               "Rounds": [
                 {
                   "Shots": 1,
                   "Round": "slsgr_m90_he",
-                  "Ammo": "superbwarfare:small_shell_aa",
-                  "Tracer": "NONE",
-                  "DisplayLabel": "40 mm slsgr m/90 HE"
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "BRIGHT_RED"
                 }
               ]
             },
@@ -563,12 +570,7 @@
               "ProjectileType": "superbwarfare:small_cannon_shell",
               "ProjectileProfile": "berts_vehicle_pack:cv9040_no_net/cannon/ammo_01_slsgr_m90_he",
               "ProjectileLife": 40
-            },
-            "ShootShake": [
-              8,
-              10,
-              18
-            ]
+            }
           },
           "ConsumptionItem": "superbwarfare:large_autocannon_shell"
         }
@@ -609,49 +611,7 @@
           "main_muzzle"
         ]
       },
-      "ProjectileBeltAmmoType": [
-        {
-          "Ammo": "superbwarfare:small_shell_gs",
-          "Override": {
-            "Projectile": {
-              "Type": "superbwarfare:small_cannon_shell",
-              "Profile": "berts_vehicle_pack:cv9040_no_net/cannon/belt_ammo_00_slpprj_m01_apfsds"
-            },
-            "ShellType": "AP",
-            "ApDurability": 170,
-            "Damage": 65,
-            "ExplosionDamage": 0,
-            "ExplosionRadius": 0,
-            "Name": "APFSDS",
-            "ShootShake": [
-              8,
-              10,
-              18
-            ]
-          }
-        },
-        {
-          "Ammo": "superbwarfare:small_shell_aa",
-          "Override": {
-            "Projectile": {
-              "Type": "superbwarfare:small_cannon_shell",
-              "Profile": "berts_vehicle_pack:cv9040_no_net/cannon/belt_ammo_01_slsgr_m90_he"
-            },
-            "ShellType": "HE",
-            "ApDurability": 11,
-            "Damage": 250,
-            "ExplosionDamage": 0,
-            "ExplosionRadius": 5,
-            "TntEquivalentKg": 0.1744,
-            "Name": "HE",
-            "ShootShake": [
-              8,
-              10,
-              18
-            ]
-          }
-        }
-      ],
+      "ProjectileBeltAmmoType": [],
       "NominalBallistics": {
         "Supported": true,
         "ProjectileType": "superbwarfare:small_cannon_shell",

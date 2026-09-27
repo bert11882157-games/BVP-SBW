@@ -379,7 +379,7 @@
       "NormalReloadTime": 4,
       "EmptyReloadTime": 4,
       "AmmoCostPerShoot": 1,
-      "Velocity": 18,
+      "Velocity": 67.25,
       "Damage": 65,
       "ExplosionDamage": 8,
       "ExplosionRadius": 2,
@@ -425,32 +425,30 @@
             "Damage": 65,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
-            "Name": "APDS Belt",
-            "ProjectileBelt": {
-              "Name": "APDS Belt",
-              "Family": "M242",
-              "Rounds": [
-                {
-                  "Shots": 3,
-                  "Round": "m791_apds",
-                  "Ammo": "superbwarfare:small_shell_gs",
-                  "Tracer": "NONE",
-                  "DisplayLabel": "M791 APDS"
-                },
-                {
-                  "Shots": 1,
-                  "Round": "m792_hei_t_1",
-                  "Ammo": "superbwarfare:small_shell_aa",
-                  "Tracer": "RED",
-                  "DisplayLabel": "M792 HEI-T"
-                }
-              ]
-            },
+            "Name": "Default",
             "ShootShake": [
               8,
               10,
               12
             ],
+            "ProjectileBelt": {
+              "Name": "Default",
+              "Family": "M242",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "m791_apds",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "WHITE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "m792_hei_t_1",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "RED"
+                }
+              ]
+            },
             "NominalBallistics": {
               "Supported": true,
               "ProjectileType": "superbwarfare:small_cannon_shell",
@@ -468,42 +466,86 @@
               "Profile": "berts_vehicle_pack:m2_bradley/cannon/ammo_01_m792_hei_t_1"
             },
             "ShellType": "HE",
-            "Velocity": 55,
+            "Velocity": 55.0,
             "ApDurability": 7,
             "Damage": 250,
             "ExplosionDamage": 0,
             "ExplosionRadius": 5,
             "TntEquivalentKg": 0.0544,
-            "Name": "HE Belt",
-            "ProjectileBelt": {
-              "Name": "HE Belt",
-              "Family": "M242",
-              "Rounds": [
-                {
-                  "Shots": 3,
-                  "Round": "m792_hei_t_1",
-                  "Ammo": "superbwarfare:small_shell_aa",
-                  "Tracer": "RED",
-                  "DisplayLabel": "M792 HEI-T"
-                },
-                {
-                  "Shots": 1,
-                  "Round": "m791_apds",
-                  "Ammo": "superbwarfare:small_shell_gs",
-                  "Tracer": "NONE",
-                  "DisplayLabel": "M791 APDS"
-                }
-              ]
-            },
+            "Name": "M792",
             "ShootShake": [
               8,
               10,
               12
             ],
+            "ProjectileBelt": {
+              "Name": "M792",
+              "Family": "M242",
+              "Rounds": [
+                {
+                  "Shots": 3,
+                  "Round": "m792_hei_t_1",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "RED"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "m791_apds",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "WHITE"
+                }
+              ]
+            },
             "NominalBallistics": {
               "Supported": true,
               "ProjectileType": "superbwarfare:small_cannon_shell",
               "ProjectileProfile": "berts_vehicle_pack:m2_bradley/cannon/ammo_01_m792_hei_t_1",
+              "ProjectileLife": 40
+            }
+          },
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell"
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_aa",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:m2_bradley/cannon/ammo_00_m791_apds"
+            },
+            "ShellType": "AP",
+            "Velocity": 67.25,
+            "ApDurability": 81,
+            "Damage": 65,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "M791",
+            "ShootShake": [
+              8,
+              10,
+              12
+            ],
+            "ProjectileBelt": {
+              "Name": "M791",
+              "Family": "M242",
+              "Rounds": [
+                {
+                  "Shots": 3,
+                  "Round": "m791_apds",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "WHITE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "m792_hei_t_1",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "RED"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:m2_bradley/cannon/ammo_00_m791_apds",
               "ProjectileLife": 40
             }
           },
@@ -557,51 +599,7 @@
         10,
         12
       ],
-      "ProjectileBeltAmmoType": [
-        {
-          "Ammo": "superbwarfare:small_shell_gs",
-          "Override": {
-            "Projectile": {
-              "Type": "superbwarfare:small_cannon_shell",
-              "Profile": "berts_vehicle_pack:m2_bradley/cannon/belt_ammo_00_m791_apds"
-            },
-            "ShellType": "AP",
-            "Velocity": 67.25,
-            "ApDurability": 81,
-            "Damage": 65,
-            "ExplosionDamage": 0,
-            "ExplosionRadius": 0,
-            "Name": "APDS",
-            "ShootShake": [
-              8,
-              10,
-              12
-            ]
-          }
-        },
-        {
-          "Ammo": "superbwarfare:small_shell_aa",
-          "Override": {
-            "Projectile": {
-              "Type": "superbwarfare:small_cannon_shell",
-              "Profile": "berts_vehicle_pack:m2_bradley/cannon/belt_ammo_01_m792_hei_t_1"
-            },
-            "ShellType": "HE",
-            "Velocity": 55,
-            "ApDurability": 7,
-            "Damage": 250,
-            "ExplosionDamage": 0,
-            "ExplosionRadius": 5,
-            "TntEquivalentKg": 0.0544,
-            "Name": "HEI_T",
-            "ShootShake": [
-              8,
-              10,
-              12
-            ]
-          }
-        }
-      ]
+      "ProjectileBeltAmmoType": []
     },
     "MainMachineGun": {
       "DefaultFireMode": "Auto",
