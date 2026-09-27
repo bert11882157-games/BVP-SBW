@@ -26,9 +26,8 @@ object BlastVisuals {
 
     @JvmStatic
     fun chargeFromFireballRadius(fireballRadius: Double, k: Double = BlastParameters.DEFAULT.fireballK): Double {
-        if (!(fireballRadius > 0.0) || !(k > 0.0)) return 0.0
-        val s = fireballRadius / k
-        return s * s * s
+        // The server boosts blast radii by charge (BlastModel.radiusBoost); undo it so timings follow the true charge.
+        return BlastModel.chargeForRadius(fireballRadius, k)
     }
 
     @JvmStatic

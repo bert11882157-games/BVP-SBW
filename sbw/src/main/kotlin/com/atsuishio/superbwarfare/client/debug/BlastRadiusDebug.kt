@@ -58,7 +58,7 @@ object BlastRadiusDebug {
         val level = mc.level ?: return
         val p = BlastParameters.DEFAULT
         val severe = fireballRadius * p.severeK / p.fireballK
-        val kg = Math.pow(fireballRadius / p.fireballK, 3.0)
+        val kg = com.atsuishio.superbwarfare.tools.blast.BlastModel.chargeForRadius(fireballRadius, p.fireballK)
         synchronized(blasts) { blasts.add(Blast(position, fireballRadius, severe, level.gameTime + SHOW_TICKS)) }
         val player = mc.player ?: return
         if (player.position().distanceTo(position) < 512)

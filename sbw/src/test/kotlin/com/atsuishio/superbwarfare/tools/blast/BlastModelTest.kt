@@ -10,7 +10,8 @@ class BlastModelTest {
 
     @Test fun `hopkinson cranz radii match the owner's reference charges`() {
         fun check(kg: Double, fireball: Double, severe: Double, moderate: Double?) {
-            val r = BlastModel.radii(kg, p)
+            val boost = BlastModel.radiusBoost(kg)
+            val r = BlastModel.radii(kg, p).let { BlastRadii(it.fireball / boost, it.severe / boost, it.moderate / boost) }
             assertEquals(fireball, r.fireball, 0.01, "fireball $kg kg")
             assertEquals(severe, r.severe, 0.01, "severe $kg kg")
             moderate?.let { assertEquals(it, r.moderate, 0.01, "moderate $kg kg") }
@@ -19,11 +20,34 @@ class BlastModelTest {
         check(5.0, 0.86, 3.08, null)
         check(100.0, 2.32, 8.36, null)
         check(0.1, 0.23, 0.84, null)
-        assertEquals(35.0, BlastModel.radii(1000.0, p).moderate, 1e-9)
+        assertEquals(35.0, BlastModel.baseRadius(p.moderateK, 1000.0), 1e-9)
         for (bad in listOf(0.0, -1.0, Double.NaN, Double.POSITIVE_INFINITY)) {
             assertEquals(BlastRadii(0.0, 0.0, 0.0), BlastModel.radii(bad, p))
             assertFalse(BlastModel.valid(bad))
         }
+    }
+
+    @Test fun `blast radii are boosted by charge class and the boost inverts`() {
+        assertEquals(1.0, BlastModel.radiusBoost(19.99))
+        assertEquals(1.25, BlastModel.radiusBoost(20.0))
+        assertEquals(1.25, BlastModel.radiusBoost(99.9))
+        assertEquals(1.5, BlastModel.radiusBoost(100.0))
+        assertEquals(1.5, BlastModel.radiusBoost(499.0))
+        assertEquals(2.0, BlastModel.radiusBoost(500.0))
+        assertEquals(2.0, BlastModel.radiusBoost(3310.5))
+        assertEquals(1.0, BlastModel.radiusBoost(Double.NaN))
+        for (kg in listOf(250.0, 1000.0)) {
+            val base = BlastModel.baseRadius(p.fireballK, kg)
+            val r = BlastModel.radii(kg, p)
+            assertEquals(base * BlastModel.radiusBoost(kg), r.fireball, 1e-12)
+            assertEquals(BlastModel.baseRadius(p.severeK, kg) * BlastModel.radiusBoost(kg), r.severe, 1e-12)
+            assertEquals(BlastModel.baseRadius(p.moderateK, kg) * BlastModel.radiusBoost(kg), r.moderate, 1e-12)
+            assertEquals(1.4 * r.fireball, BlastModel.vehicleTrueDamageRadius(r, p), 1e-12)
+        }
+        for (kg in listOf(0.2, 5.24, 19.99, 20.0, 50.0, 99.99, 100.0, 117.6, 499.9, 500.0, 907.0, 3310.5)) {
+            assertEquals(kg, BlastModel.chargeForRadius(BlastModel.radius(p.fireballK, kg), p.fireballK), kg * 1e-9, "$kg kg")
+        }
+        assertEquals(0.0, BlastModel.chargeForRadius(0.0, p.fireballK))
     }
 
     @Test fun `zones are classified by scaled distance`() {
@@ -144,14 +168,18 @@ class BlastModelTest {
         assertEquals(0, BlastModel.presentationTier(0.47))
         assertEquals(1, BlastModel.presentationTier(3.1))
         assertEquals(2, BlastModel.presentationTier(5.0))
-        assertEquals(3, BlastModel.presentationTier(BlastModel.radii(117.6, p).severe))
+        // Mk 82 (117.6 kg): the +50 % boost lifts its 8.8 m severe radius to 13.2 m, one presentation tier up.
+        assertEquals(3, BlastModel.presentationTier(BlastModel.baseRadius(p.severeK, 117.6)))
+        assertEquals(4, BlastModel.presentationTier(BlastModel.radii(117.6, p).severe))
         assertEquals(4, BlastModel.presentationTier(BlastModel.radii(340.8, p).severe))
         assertEquals(5, BlastModel.presentationTier(BlastModel.radii(2219.2, p).severe))
         assertEquals(0, BlastModel.presentationTier(Double.NaN))
         // Never smaller than the authored radius: a 125 mm HE shell (5.24 kg, authored 9) keeps its 9 m presentation,
-        // a FAB-5000 (authored 48) keeps 48, and a heavy charge with a small authored radius grows to its reach.
+        // a FAB-5000 (authored 48) grows to its boosted reach, and a heavy charge with a small authored radius grows to
+        // its reach.
         assertEquals(9.0, BlastModel.presentationRadius(9.0, BlastModel.radii(5.24, p)), 1e-9)
-        assertEquals(48.0, BlastModel.presentationRadius(48.0, BlastModel.radii(3310.5, p)), 1e-9)
+        assertEquals(BlastModel.radii(3310.5, p).severe, BlastModel.presentationRadius(48.0, BlastModel.radii(3310.5, p)), 1e-9)
+        assertTrue(BlastModel.radii(3310.5, p).severe > 48.0)
         assertEquals(BlastModel.radii(119.04, p).severe, BlastModel.presentationRadius(1.25, BlastModel.radii(119.04, p)), 1e-9)
         assertEquals(BlastModel.radii(1.0, p).severe, BlastModel.presentationRadius(Double.NaN, BlastModel.radii(1.0, p)), 1e-9)
     }

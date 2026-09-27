@@ -184,8 +184,42 @@ object BlastModel {
     @JvmStatic
     fun valid(kg: Double): Boolean = kg.isFinite() && kg > 0.0
 
+    /**
+     * Gameplay size boost on top of Hopkinson-Cranz scaling, by charge: 20 kg and more +25 %, 100 kg and more +50 %,
+     * 500 kg and more +100 %. It multiplies every blast radius (fireball, infantry/severe, moderate/shockwave), and
+     * with them the vehicle true-damage sphere, the penetrator cylinder and the block-force reach, which all derive
+     * from the fireball radius. Damage amounts per kg are unchanged.
+     */
+    @JvmField val RADIUS_BOOST_TIERS: List<Pair<Double, Double>> = listOf(500.0 to 2.0, 100.0 to 1.5, 20.0 to 1.25)
+
     @JvmStatic
-    fun radius(k: Double, kg: Double): Double = if (valid(kg) && k.isFinite() && k > 0.0) k * cbrt(kg) else 0.0
+    fun radiusBoost(kg: Double): Double {
+        if (!valid(kg)) return 1.0
+        for ((minKg, factor) in RADIUS_BOOST_TIERS) if (kg >= minKg) return factor
+        return 1.0
+    }
+
+    /** Hopkinson-Cranz radius k * W^(1/3), without the gameplay boost. */
+    @JvmStatic
+    fun baseRadius(k: Double, kg: Double): Double = if (valid(kg) && k.isFinite() && k > 0.0) k * cbrt(kg) else 0.0
+
+    @JvmStatic
+    fun radius(k: Double, kg: Double): Double = baseRadius(k, kg) * radiusBoost(kg)
+
+    /** Charge (kg) whose boosted radius with constant [k] is [radius]; the inverse of [radius]. 0 when invalid. */
+    @JvmStatic
+    fun chargeForRadius(radius: Double, k: Double): Double {
+        if (!(radius > 0.0) || !radius.isFinite() || !(k > 0.0)) return 0.0
+        val s = radius / k
+        // Tiers from the heaviest down; the boost steps leave gaps between tiers, so exactly one tier fits.
+        var upper = Double.POSITIVE_INFINITY
+        for ((minKg, factor) in RADIUS_BOOST_TIERS) {
+            val kg = (s / factor).let { it * it * it }
+            if (kg >= minKg * (1.0 - 1e-9) && kg < upper * (1.0 + 1e-9)) return kg
+            upper = minKg
+        }
+        return s * s * s
+    }
 
     @JvmStatic
     fun radii(kg: Double, parameters: BlastParameters = BlastParameters.DEFAULT): BlastRadii = BlastRadii(
