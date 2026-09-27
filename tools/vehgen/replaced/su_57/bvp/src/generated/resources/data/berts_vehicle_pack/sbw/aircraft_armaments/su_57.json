@@ -1,0 +1,43 @@
+{
+  "Schema": 1,
+  "Name": "Su-57",
+  "BuiltInWeapons": [
+    "Cannon"
+  ],
+  "SuspendedWeapons": [],
+  "Pairs": [],
+  "StoreGroups": {
+    "berts_vehicle_pack:modeled_store/su_57/assembly_0": [
+      "suspended_su_57_0"
+    ],
+    "berts_vehicle_pack:modeled_store/su_57/assembly_1": [
+      "suspended_su_57_1"
+    ]
+  },
+  "MaxPayloadKg": 8000,
+  "Radar": {
+    "Enabled": true,
+    "Range": 1000
+  },
+  "MaxPylonMassKg": 1000,
+  "MaxWeaponsPerPylon": 12,
+  "Singles": [
+    {
+      "Id": "internal_bay",
+      "Name": "Bomb bay / internal stores",
+      "Position": [
+        0,
+        1.1,
+        -0.1
+      ],
+      "Internal": true,
+      "MaxPylonMassKg": 8000,
+      "AllowedStores": [
+        "berts_vehicle_pack:fa18e/bomb_500kg_dumb_1",
+        "berts_vehicle_pack:fa18e/bomb_500kg_laser_1",
+        "berts_vehicle_pack:fa18e/bomb_500kg_gps_1"
+      ],
+      "QuantitySelectable": true
+    }
+  ]
+}

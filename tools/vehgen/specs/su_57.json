@@ -1,0 +1,112 @@
+{
+  "id": "su_57",
+  "name": "Su-57",
+  "entityClass": "AuthoredFixedWingAircraft",
+  "template": "su_57",
+  "source": "Su-57.mtb",
+  "note": "Model replacement: Su-57.mtb on the existing Su-57 data. Originals kept in tools/vehgen/replaced/su_57.",
+  "yaw180": true,
+  "lengthParts": [
+    0,
+    1,
+    2,
+    4,
+    5,
+    8,
+    9
+  ],
+  "templateLengthBones": [
+    "wreck_fuselage_0__hull",
+    "wreck_fuselage_1__hull",
+    "wreck_fuselage_2__hull",
+    "wreck_fuselage_3__hull",
+    "wreck_wing_left__hull",
+    "wreck_wing_right__hull",
+    "wreck_fuselage_3__elevator_0",
+    "wreck_fuselage_3__elevator_1"
+  ],
+  "groundParts": [
+    0,
+    1,
+    2,
+    4,
+    5,
+    12,
+    14,
+    15
+  ],
+  "excludeParts": [
+    12,
+    14,
+    15
+  ],
+  "storeTextureV": -1,
+  "keepBoxes": [],
+  "fuselageCuts": [
+    -81,
+    0,
+    80
+  ],
+  "parts": {
+    "0": "fuselage",
+    "1": "fuselage",
+    "2": "fuselage",
+    "4": "wing",
+    "5": "wing",
+    "7": {
+      "bone": "side:wreck_fuselage_3__rudder_0,wreck_fuselage_3__rudder_1",
+      "if": {
+        "zMin": 60
+      },
+      "else": "drop"
+    },
+    "8": {
+      "bone": "wreck_fuselage_3__elevator_0",
+      "if": {
+        "zMin": 80
+      },
+      "else": "wing"
+    },
+    "9": {
+      "bone": "wreck_fuselage_3__elevator_1",
+      "if": {
+        "zMin": 80
+      },
+      "else": "wing"
+    },
+    "10": "side:wreck_wing_left__aileron_10,wreck_wing_right__aileron_11",
+    "11": "side:wreck_wing_left__aileron_10,wreck_wing_right__aileron_11"
+  },
+  "keepTemplateBones": [
+    "gear_wheel_0",
+    "gear_wheel_1",
+    "gear_wheel_2",
+    "gear_wheel_3",
+    "landing_gear_12",
+    "landing_gear_14",
+    "landing_gear_15",
+    "control_stick_pitch",
+    "suspended_su_57_0",
+    "suspended_su_57_1"
+  ],
+  "removeClientKeys": [
+    "CanopyGlass"
+  ],
+  "attachments": {
+    "pilot_eye": [
+      0,
+      52.6,
+      -71.5
+    ]
+  },
+  "seatPositions": {
+    "0": [
+      0,
+      26.7,
+      -71.5
+    ]
+  },
+  "addSeats": [],
+  "flightReference": {},
+  "note_crew": "New cockpit: floor y36, cushion top 41, seat back z -67..-63, glare shield top 50.2 at z -80, canopy ~54.5. Eye 2.4 px over the glare shield, 2 px under the canopy, looking through the HUD frame; feet = eye - 25.9."
+}
