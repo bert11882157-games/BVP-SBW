@@ -1,4 +1,5 @@
-"""Swing-wing rig pivots and axes, kept consistent between the geo bones and the client AircraftRig.
+"""Rig part pivots and axes (swing wings, and also control surfaces and rotors), kept consistent between the geo bones
+and the client AircraftRig.
 
 The rig animator rejects a Sweeps entry whose Pivot differs from the bone pivot in the model, so both change together:
 the sweep bone and every descendant that shares its pivot (e.g. wreck_wing_left__sweep_left), in each geo given.
@@ -54,7 +55,8 @@ def apply_client(client, overrides, pivots):
     for bone, o in overrides.items():
         new = pivots[bone]
         hit = False
-        for s in client['AircraftRig'].get('Sweeps', []):
+        rig = client['AircraftRig']
+        for s in [s for key in ('Sweeps', 'Surfaces', 'Rotors') for s in (rig.get(key) or [])]:
             if s['Bone'] == bone:
                 s['Pivot'] = list(new)
                 if 'axis' in o:
@@ -63,7 +65,7 @@ def apply_client(client, overrides, pivots):
                     s['MaxDeflectionDegrees'] = o['maxDegrees']
                 hit = True
         if not hit:
-            raise SystemExit(f'no Sweeps entry for {bone}')
+            raise SystemExit(f'no rig Sweeps/Surfaces/Rotors entry for {bone}')
 
 
 def _set_array(block, key, values):
@@ -90,15 +92,18 @@ def main(argv):
             f.write('\n')
     # edit only the changed values in the text: the client files are partly hand-formatted
     text = open(cpath).read()
-    start = text.index('"Sweeps"')
-    for s in client['AircraftRig']['Sweeps']:
+    rig = client['AircraftRig']
+    for s in [s for key in ('Sweeps', 'Surfaces', 'Rotors') for s in (rig.get(key) or [])]:
         if s['Bone'] not in overrides:
             continue
+        start = text.index('"AircraftRig"')
         a = text.index(f'"Bone": "{s["Bone"]}"', start)
         nxt = text.find('"Bone":', a + 8)
         b = len(text) if nxt < 0 else nxt
         block = text[a:b]
         for key, value in (('Pivot', s['Pivot']), ('Axis', s['Axis'])):
+            if key not in block:
+                continue
             block = _set_array(block, key, value)
         block = re.sub(r'("MaxDeflectionDegrees":\s*)[-0-9.eE]+', lambda m: m.group(1) + json.dumps(
             s['MaxDeflectionDegrees']), block, count=1)
@@ -106,8 +111,9 @@ def main(argv):
     assert json.loads(text) == client
     with open(cpath, 'w') as f:
         f.write(text)
-    for s in client['AircraftRig']['Sweeps']:
-        print(vid, s['Bone'], s['Pivot'], s['Axis'])
+    for s in [s for key in ('Sweeps', 'Surfaces', 'Rotors') for s in (rig.get(key) or [])]:
+        if s['Bone'] in overrides:
+            print(vid, s['Bone'], s['Pivot'], s['Axis'])
 
 
 if __name__ == '__main__':
