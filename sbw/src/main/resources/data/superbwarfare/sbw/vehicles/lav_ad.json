@@ -217,16 +217,6 @@
       "ExplosionRadius": 6,
       "TntEquivalentKg": 0.54,
       "Velocity": 3,
-      "SeekWeaponInfo": {
-        "SeekDirection": "Barrel",
-        "CanGuidedByRadar": false,
-        "AffectedByStealthTarget": false,
-        "SeekRange": 384,
-        "SeekAngle": 20,
-        "SeekTime": 10,
-        "MinTargetHeight": 16,
-        "OnlyLockEntity": true
-      },
       "ShootPos": {
         "Transform": "Barrel",
         "Directions": ["Barrel"],
@@ -247,7 +237,7 @@
         "Locked": "superbwarfare:javelin_locked"
       },
       "CrosshairColor": "0x66FF00",
-      "Crosshair": "@VehicleCommonSeekMissile",
+      "Crosshair": "@VehicleCommonMissile",
       "SoundRadius": 12
     }
   },

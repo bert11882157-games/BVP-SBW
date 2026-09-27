@@ -1,0 +1,26 @@
+{
+  "Schema": 1,
+  "_comment": "GAZ-3937 Vodnik with a 9K333 Verba-type IR launcher (9M336). Passive IR: no radar; the seeker must hold the target before launch.",
+  "Weapons": {
+    "Missile": {
+      "Name": "9M336",
+      "WithoutLock": "REFUSE",
+      "Guidance": {
+        "Mode": "INFRARED",
+        "LockTicks": 40,
+        "Range": 500,
+        "ConeDegrees": 20,
+        "CountermeasureVulnerability": 0.6
+      },
+      "Flight": {
+        "InitialSpeed": 0.5,
+        "MaxSpeed": 4.5,
+        "AccelerationPerTick": 0.15,
+        "TurnDegreesPerSecond": 80,
+        "Damage": 35,
+        "BlastRadius": 3,
+        "TntEquivalentKg": 0.53
+      }
+    }
+  }
+}

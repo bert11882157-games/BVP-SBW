@@ -64,6 +64,33 @@ object AircraftMissileLauncher {
         val p = guidance(store) ?: return -1
         (api?.update?.invoke(null, vehicle, player, channel, forward(vehicle), p.mode, p.lockTicks, p.range, p.cone) as? Int) ?: -1
     }.getOrDefault(-1)
+    /** Lock toward an explicit world [forward] (a turret or launcher bore) instead of the hull nose. */
+    fun updateToward(vehicle: VehicleEntity, player: ServerPlayer, channel: String, forward: Vec3, store: JsonObject): Int = runCatching {
+        val p = guidance(store) ?: return -1
+        (api?.update?.invoke(null, vehicle, player, channel, forward, p.mode, p.lockTicks, p.range, p.cone) as? Int) ?: -1
+    }.getOrDefault(-1)
+    fun available(): Boolean = api?.launchProfile != null
+    /** Launch from a world [origin] along a world [forward] (a ground launcher's muzzle frame). */
+    fun launchAt(vehicle: VehicleEntity, player: ServerPlayer, channel: String, origin: Vec3, forward: Vec3,
+                 store: JsonObject): Boolean = runCatching {
+        val p = guidance(store) ?: return false
+        val profile = flightProfile(store)
+        val tnt = com.atsuishio.superbwarfare.tools.blast.ExternalMunitionBlasts.storeCharge(store)
+        val method = api?.launchProfile ?: return false
+        com.atsuishio.superbwarfare.tools.blast.ExternalMunitionBlasts.launch(vehicle.level(), tnt) {
+            method.invoke(null, vehicle, player, channel, origin, forward, p.mode, p.lockTicks, p.range, p.cone,
+                p.vulnerability, profile) == true
+        }
+    }.getOrDefault(false)
+    private fun flightProfile(store: JsonObject): CompoundTag {
+        val flight = store.getAsJsonObject("Flight")
+        val profile = CompoundTag()
+        for (key in listOf("InitialSpeed", "MaxSpeed", "AccelerationPerTick", "TurnDegreesPerSecond", "Damage", "BlastRadius",
+            "MaxLoadFactorG", "BodyTurnLimitScale"))
+            flight?.get(key)?.let { profile.putDouble(key, it.asDouble) }
+        visualModel(store)?.let { profile.putString("VisualModel", it) }
+        return profile
+    }
     /** [launchOffset]: hull offset from [mount] to the launch point (the pylon layout's); null uses LaunchOffset. */
     fun launch(vehicle: VehicleEntity, player: ServerPlayer, channel: String, mount: Vec3, store: JsonObject,
                launchOffset: Vec3? = null): Boolean = runCatching {
@@ -72,12 +99,7 @@ object AircraftMissileLauncher {
             ?: if (store.has("LaunchOffset")) requireNotNull(AircraftArmamentRegistry.vector(store["LaunchOffset"])) else Vec3.ZERO
         val local = mount.add(offset)
         val position = vehicle.getVehicleTransform(1f).transformPosition(Vector3d(local.x, local.y, local.z))
-        val flight = store.getAsJsonObject("Flight")
-        val profile = CompoundTag()
-        for (key in listOf("InitialSpeed", "MaxSpeed", "AccelerationPerTick", "TurnDegreesPerSecond", "Damage", "BlastRadius",
-            "MaxLoadFactorG", "BodyTurnLimitScale"))
-            flight?.get(key)?.let { profile.putDouble(key, it.asDouble) }
-        visualModel(store)?.let { profile.putString("VisualModel", it) }
+        val profile = flightProfile(store)
         // FFA simulates the missile; SBW stamps the TNT charge on the entity it spawns (see ExternalMunitionBlasts).
         val tnt = com.atsuishio.superbwarfare.tools.blast.ExternalMunitionBlasts.storeCharge(store)
         val method = if (profile.isEmpty) api?.launch else api?.launchProfile

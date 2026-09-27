@@ -1,0 +1,26 @@
+{
+  "Schema": 1,
+  "_comment": "LAV-AD FIM-92 Stinger pods, tuned like the AIM-92 air-to-air store.",
+  "Weapons": {
+    "FimMissile": {
+      "Name": "FIM-92",
+      "WithoutLock": "REFUSE",
+      "Guidance": {
+        "Mode": "INFRARED",
+        "LockTicks": 60,
+        "Range": 500,
+        "ConeDegrees": 25,
+        "CountermeasureVulnerability": 0.8
+      },
+      "Flight": {
+        "InitialSpeed": 0.5,
+        "MaxSpeed": 5,
+        "AccelerationPerTick": 0.1,
+        "TurnDegreesPerSecond": 80,
+        "Damage": 40,
+        "BlastRadius": 3,
+        "TntEquivalentKg": 0.54
+      }
+    }
+  }
+}

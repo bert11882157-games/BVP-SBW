@@ -20,9 +20,12 @@ object AircraftMobileRadar {
     }.getOrNull() }
     private fun update(vehicle: VehicleEntity) {
         val radar = AircraftArmamentManager.definition(vehicle)?.getAsJsonObject("Radar")
-        val active = !vehicle.isRemoved && !vehicle.isWreck && vehicle.health > 0 && radar?.get("Enabled")?.asBoolean == true
+        // Ground SAM vehicles (GroundSamLauncher) carry their search/track radar in their SAM definition.
+        val groundRange = if (radar == null) com.atsuishio.superbwarfare.api.vehicle.weapon.GroundSamLauncher.radarRange(vehicle) else null
+        val alive = !vehicle.isRemoved && !vehicle.isWreck && vehicle.health > 0
+        val active = alive && (radar?.get("Enabled")?.asBoolean == true || groundRange != null)
         runCatching {
-            if (active) api?.first?.invoke(null, vehicle, radar?.get("Range")?.asInt ?: 500)
+            if (active) api?.first?.invoke(null, vehicle, groundRange ?: radar?.get("Range")?.asInt ?: 500)
             else api?.second?.invoke(null, vehicle)
         }
     }

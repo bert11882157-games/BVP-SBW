@@ -369,16 +369,6 @@
         "Type": "superbwarfare:ru_9m336_missile",
         "Profile": "berts_vehicle_pack:gaz_3937_vodnik_aa/vodnik_aa_ir_proxy"
       },
-      "SeekWeaponInfo": {
-        "SeekDirection": "Barrel",
-        "CanGuidedByRadar": false,
-        "AffectedByStealthTarget": false,
-        "SeekRange": 384,
-        "SeekAngle": 20,
-        "SeekTime": 10,
-        "MinTargetHeight": 16,
-        "OnlyLockEntity": true
-      },
       "AmmoType": [
         {
           "Ammo": "superbwarfare:medium_anti_air_missile",

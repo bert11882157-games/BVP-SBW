@@ -802,6 +802,9 @@ abstract class GunItem(properties: Properties) : Item(properties.stacksTo(1)), I
             "ray" -> return shootRay(parameters)
         }
 
+        // A ground SAM with Fire From Above guidance launches FFA's interceptor instead of the native projectile.
+        com.atsuishio.superbwarfare.api.vehicle.weapon.GroundSamLauncher.tryLaunch(parameters)?.let { return it }
+
         val prepared = ProjectileFactory.prepare(parameters) ?: return false
         if (!ProjectileFactory.spawn(prepared, parameters)) return false
         recordSpawnedProjectile(prepared.entity.uuid)
