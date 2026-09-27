@@ -328,7 +328,8 @@
         "Fire3P": "bvp_audio:weapon/rh202_20_3p",
         "Fire3PFar": "bvp_audio:weapon/rh202_20_far",
         "Fire3PVeryFar": "bvp_audio:weapon/rh202_20_far",
-        "Change": "superbwarfare:into_missile"
+        "Change": "superbwarfare:into_missile",
+        "Volume": 0.85
       },
       "SoundRadius": 22,
       "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/cannon_20mm_ap.png",
@@ -615,7 +616,8 @@
         "Fire3P": "bvp_audio:weapon/mg3_3p",
         "Fire3PFar": "bvp_audio:weapon/mg3_far",
         "Fire3PVeryFar": "bvp_audio:weapon/mg3_veryfar",
-        "Change": "superbwarfare:into_cannon"
+        "Change": "superbwarfare:into_cannon",
+        "Volume": 0.4
       },
       "SoundRadius": 12,
       "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/gun_7_62mm.png",

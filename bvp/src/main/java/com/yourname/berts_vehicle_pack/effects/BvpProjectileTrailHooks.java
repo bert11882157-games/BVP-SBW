@@ -71,6 +71,8 @@ public final class BvpProjectileTrailHooks {
         }
         Entity directSource = context.getDirectSource();
         if (consumeDeferredExplosionPresentation(level, directSource, context.getParticlePosition())) {
+            // the impact provider drew the burst; the blast is still heard like any explosion of its size
+            ParticleTool.playExplosionSound(level, context.getParticlePosition(), context.getParticleType());
             return true;
         }
         var profile = directSource == null ? null : ProjectileProfiles.resolve(directSource);
@@ -83,6 +85,8 @@ public final class BvpProjectileTrailHooks {
             return false;
         }
         BvpLeanImpactEffects.spawn(level, context.getParticlePosition(), directSource);
+        // the lean burst has no sound of its own: without this BVP HE/HEAT impacts were silent
+        ParticleTool.playExplosionSound(level, context.getParticlePosition(), context.getParticleType());
         return true;
     }
 

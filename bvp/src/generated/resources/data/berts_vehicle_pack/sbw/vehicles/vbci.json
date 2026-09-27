@@ -302,7 +302,8 @@
         "Fire3P": "bvp_audio:weapon/m242_25_3p",
         "Fire3PFar": "bvp_audio:weapon/m242_25_far",
         "Fire3PVeryFar": "bvp_audio:weapon/m242_25_veryfar",
-        "Change": "superbwarfare:into_missile"
+        "Change": "superbwarfare:into_missile",
+        "Volume": 0.85
       },
       "SoundRadius": 24,
       "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/cannon_25mm_ap.png",
@@ -604,7 +605,8 @@
         "Fire3P": "bvp_audio:weapon/m240_3p",
         "Fire3PFar": "bvp_audio:weapon/m240_far",
         "Fire3PVeryFar": "bvp_audio:weapon/m240_veryfar",
-        "Change": "superbwarfare:into_cannon"
+        "Change": "superbwarfare:into_cannon",
+        "Volume": 0.4
       },
       "SoundRadius": 12,
       "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/gun_7_62mm.png",

@@ -353,7 +353,8 @@
         "Fire3P": "berts_vehicle_pack:mi28n_2a42_fire",
         "Fire3PFar": "berts_vehicle_pack:mi28n_2a42_fire",
         "Fire3PVeryFar": "berts_vehicle_pack:mi28n_2a42_fire",
-        "Change": "superbwarfare:into_cannon"
+        "Change": "superbwarfare:into_cannon",
+        "Volume": 1.0
       },
       "Crosshair": "@Empty",
       "CrosshairColor": "0xFFC700",
@@ -530,7 +531,8 @@
         "VehicleReloadSoundTime": 7,
         "Change": "superbwarfare:into_missile",
         "Fire3PFar": "bvp_audio:weapon/s8_far",
-        "Fire3PVeryFar": "bvp_audio:weapon/s8_far"
+        "Fire3PVeryFar": "bvp_audio:weapon/s8_far",
+        "Volume": 1.7
       },
       "Crosshair": "@Empty",
       "SoundRadius": 16,
@@ -638,7 +640,8 @@
         "VehicleReloadSoundTime": 7,
         "Change": "superbwarfare:into_missile",
         "Fire3PFar": "bvp_audio:weapon/s8_far",
-        "Fire3PVeryFar": "bvp_audio:weapon/s8_far"
+        "Fire3PVeryFar": "bvp_audio:weapon/s8_far",
+        "Volume": 1.7
       },
       "Crosshair": "@Empty",
       "SoundRadius": 16,
@@ -746,7 +749,8 @@
         "VehicleReloadSoundTime": 7,
         "Change": "superbwarfare:into_missile",
         "Fire3PFar": "bvp_audio:weapon/s8_far",
-        "Fire3PVeryFar": "bvp_audio:weapon/s8_far"
+        "Fire3PVeryFar": "bvp_audio:weapon/s8_far",
+        "Volume": 1.7
       },
       "Crosshair": "@Empty",
       "SoundRadius": 16,
@@ -796,7 +800,8 @@
         "VehicleReloadSoundTime": 11,
         "Change": "superbwarfare:into_missile",
         "Fire3PFar": "bvp_audio:weapon/atgm_ru_far",
-        "Fire3PVeryFar": "bvp_audio:weapon/atgm_ru_veryfar"
+        "Fire3PVeryFar": "bvp_audio:weapon/atgm_ru_veryfar",
+        "Volume": 0.9
       },
       "SoundRadius": 16,
       "ShellType": "ATGM"

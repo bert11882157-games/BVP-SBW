@@ -366,7 +366,8 @@
         "Fire3P": "bvp_audio:weapon/erc_90_3p",
         "Fire3PFar": "bvp_audio:weapon/erc_90_far",
         "Fire3PVeryFar": "bvp_audio:weapon/erc_90_veryfar",
-        "Change": "superbwarfare:into_missile"
+        "Change": "superbwarfare:into_missile",
+        "Volume": 1.2
       },
       "SoundRadius": 34,
       "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_heatfs.png",
@@ -579,7 +580,8 @@
         "Fire3P": "bvp_audio:weapon/pkt_3p",
         "Fire3PFar": "bvp_audio:weapon/pkt_far",
         "Fire3PVeryFar": "bvp_audio:weapon/pkt_veryfar",
-        "Change": "superbwarfare:into_cannon"
+        "Change": "superbwarfare:into_cannon",
+        "Volume": 0.4
       },
       "SoundRadius": 12,
       "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/gun_7_62mm.png",
@@ -655,7 +657,8 @@
         "VehicleReloadSoundTime": 28,
         "Change": "superbwarfare:into_missile",
         "Fire3PFar": "bvp_audio:weapon/atgm_ru_far",
-        "Fire3PVeryFar": "bvp_audio:weapon/atgm_ru_veryfar"
+        "Fire3PVeryFar": "bvp_audio:weapon/atgm_ru_veryfar",
+        "Volume": 0.9
       },
       "SoundRadius": 16,
       "ShootPos": {

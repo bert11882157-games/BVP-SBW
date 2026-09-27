@@ -441,7 +441,8 @@
         "VehicleReloadClipDurationTicks": 86,
         "CancellableSounds": [
           "berts_vehicle_pack:m1_abrams_elite_m68a1_reload"
-        ]
+        ],
+        "Volume": 2.0
       },
       "SoundRadius": 40,
       "ShootPos": {
@@ -608,7 +609,8 @@
         "Fire3P": "bvp_audio:weapon/mg3_3p",
         "Fire3PFar": "bvp_audio:weapon/mg3_far",
         "Fire3PVeryFar": "bvp_audio:weapon/mg3_veryfar",
-        "Change": "superbwarfare:into_cannon"
+        "Change": "superbwarfare:into_cannon",
+        "Volume": 0.4
       },
       "SoundRadius": 12,
       "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/gun_7_62mm.png",
@@ -763,7 +765,8 @@
         "Fire3P": "bvp_audio:weapon/mg3_3p",
         "Fire3PFar": "bvp_audio:weapon/mg3_far",
         "Fire3PVeryFar": "bvp_audio:weapon/mg3_veryfar",
-        "Change": "superbwarfare:missile_change"
+        "Change": "superbwarfare:missile_change",
+        "Volume": 0.4
       },
       "SoundRadius": 12,
       "Magazine": 250,

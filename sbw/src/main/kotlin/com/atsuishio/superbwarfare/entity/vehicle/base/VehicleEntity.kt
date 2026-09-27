@@ -1694,7 +1694,8 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
                 (soundRadius * soundInfo.fire3PVeryFarGain).toFloat(),
             )
             com.atsuishio.superbwarfare.api.audio.SpatialAudio.emit(
-                serverLevel, it, cue, 1f, pitch, this, living ?: controllingPassenger,
+                serverLevel, it, cue, soundInfo.volume.takeIf { v -> v.isFinite() && v > 0f } ?: 1f, pitch, this,
+                living ?: controllingPassenger,
                 com.atsuishio.superbwarfare.api.audio.SpatialAudio.Category.WEAPON, gunData.vehicleWeaponIdentity,
             )
         }

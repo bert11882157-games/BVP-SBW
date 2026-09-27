@@ -319,7 +319,8 @@
         "Fire3P": "bvp_audio:weapon/kpvt_145_3p",
         "Fire3PFar": "bvp_audio:weapon/kpvt_145_far",
         "Fire3PVeryFar": "bvp_audio:weapon/kpvt_145_far",
-        "Change": "superbwarfare:into_missile"
+        "Change": "superbwarfare:into_missile",
+        "Volume": 0.6
       },
       "SoundRadius": 20,
       "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/cannon_14.5mm_ap.png",
@@ -570,7 +571,8 @@
         "Fire3P": "bvp_audio:weapon/pkt_3p",
         "Fire3PFar": "bvp_audio:weapon/pkt_far",
         "Fire3PVeryFar": "bvp_audio:weapon/pkt_veryfar",
-        "Change": "superbwarfare:into_cannon"
+        "Change": "superbwarfare:into_cannon",
+        "Volume": 0.4
       },
       "SoundRadius": 12,
       "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/gun_7_62mm.png",

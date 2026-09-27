@@ -250,7 +250,8 @@
         "Fire3P": "berts_vehicle_pack:tap_minigun",
         "Fire3PFar": "berts_vehicle_pack:tap_minigun",
         "Fire3PVeryFar": "berts_vehicle_pack:tap_minigun",
-        "Change": "superbwarfare:into_cannon"
+        "Change": "superbwarfare:into_cannon",
+        "Volume": 0.4
       },
       "Crosshair": "@Empty",
       "CrosshairColor": "0xFFC700",
@@ -430,7 +431,8 @@
         "VehicleReloadSoundTime": 7,
         "Change": "superbwarfare:into_missile",
         "Fire3PFar": "bvp_audio:weapon/hydra_far",
-        "Fire3PVeryFar": "bvp_audio:weapon/hydra_far"
+        "Fire3PVeryFar": "bvp_audio:weapon/hydra_far",
+        "Volume": 1.2
       },
       "Crosshair": "@Empty",
       "SoundRadius": 16,

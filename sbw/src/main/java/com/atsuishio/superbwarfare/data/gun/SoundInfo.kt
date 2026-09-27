@@ -43,6 +43,17 @@ class SoundInfo {
     @SerialName("Fire3PFarGain")
     var fire3PFarGain: Float = 1f
 
+    /**
+     * Loudness of this weapon's fire cue (all distance bands), relative to a tank main gun at 2.0: the SpatialAudio
+     * gain, so above 1 a gun stays at full level farther out (gain sqrt(6 / d) x Volume, capped at 1 per clip). Set per
+     * calibre by tools/audio/weapon_loudness.py; 1 keeps the old behaviour.
+     */
+    @JvmField
+    @ServerOnly
+    @SerializedName("Volume")
+    @SerialName("Volume")
+    var volume: Float = 1f
+
     @ServerOnly
     @SerializedName("Fire3PVeryFar")
     @SerialName("Fire3PVeryFar")

@@ -139,13 +139,50 @@ object ParticleTool {
 
     private fun playExplosionSoundLayers(
         level: ServerLevel, pos: Vec3, close: SoundEvent, closeVolume: Float, far: SoundEvent, farVolume: Float,
-        veryFar: SoundEvent, veryFarVolume: Float
+        veryFar: SoundEvent, veryFarVolume: Float, gain: Float = 1f,
     ) {
         // one event: each listener hears the close, far or very-far layer for its distance (SpatialAudio)
         val cue = com.atsuishio.superbwarfare.api.audio.SpatialAudio.weaponCue(
             null, close, far, veryFar, closeVolume, farVolume, veryFarVolume)
-        com.atsuishio.superbwarfare.api.audio.SpatialAudio.emit(level, pos, cue, 1f, 1f, null, null,
+        com.atsuishio.superbwarfare.api.audio.SpatialAudio.emit(level, pos, cue, gain, 1f, null, null,
             com.atsuishio.superbwarfare.api.audio.SpatialAudio.Category.EXPLOSION, null)
+    }
+
+    /**
+     * SpatialAudio gain of each explosion tier: a blast is heard at full level out to 6 x gain^2 blocks. Tank gun fire
+     * plays at 2.0 (tools/audio/weapon_loudness.py): a shell burst (MEDIUM) sits a little under it, a bomb (LARGE and
+     * up) above it, so bombs and cannon are the loud events of a battle and small bursts stay modest.
+     */
+    private fun explosionGain(type: ParticleType): Float = when (type) {
+        ParticleType.MINI -> 1f
+        ParticleType.SMALL -> 1.0f
+        ParticleType.MEDIUM -> 1.6f
+        ParticleType.LARGE -> 2.4f
+        ParticleType.HUGE -> 3.0f
+        ParticleType.GIANT -> 3.6f
+    }
+
+    /**
+     * The layered explosion sound of [type] alone, for presentations that draw their own burst (BVP lean impacts)
+     * but must still be heard like any other explosion of that size.
+     */
+    @JvmStatic
+    fun playExplosionSound(level: Level?, pos: Vec3, type: ParticleType) {
+        if (level !is ServerLevel) return
+        when (type) {
+            ParticleType.MINI -> level.playSound(null, BlockPos.containing(pos.x, pos.y + 1, pos.z),
+                ModSounds.MINI_EXPLOSION.get(), SoundSource.BLOCKS, 4f, 1f)
+            ParticleType.SMALL -> playExplosionSoundLayers(level, pos, ModSounds.EXPLOSION_CLOSE.get(), 2f,
+                ModSounds.EXPLOSION_FAR.get(), 8f, ModSounds.EXPLOSION_VERY_FAR.get(), 32f, explosionGain(type))
+            ParticleType.MEDIUM -> playExplosionSoundLayers(level, pos, ModSounds.EXPLOSION_CLOSE.get(), 4f,
+                ModSounds.EXPLOSION_FAR.get(), 16f, ModSounds.EXPLOSION_VERY_FAR.get(), 32f, explosionGain(type))
+            ParticleType.LARGE -> playExplosionSoundLayers(level, pos, ModSounds.HUGE_EXPLOSION_CLOSE.get(), 6f,
+                ModSounds.HUGE_EXPLOSION_FAR.get(), 20f, ModSounds.HUGE_EXPLOSION_VERY_FAR.get(), 64f, explosionGain(type))
+            ParticleType.HUGE -> playExplosionSoundLayers(level, pos, ModSounds.HUGE_EXPLOSION_CLOSE.get(), 8f,
+                ModSounds.HUGE_EXPLOSION_FAR.get(), 24f, ModSounds.HUGE_EXPLOSION_VERY_FAR.get(), 128f, explosionGain(type))
+            ParticleType.GIANT -> playExplosionSoundLayers(level, pos, ModSounds.HUGE_EXPLOSION_CLOSE.get(), 12f,
+                ModSounds.HUGE_EXPLOSION_FAR.get(), 32f, ModSounds.HUGE_EXPLOSION_VERY_FAR.get(), 192f, explosionGain(type))
+        }
     }
 
     //@formatter:off
@@ -174,7 +211,7 @@ object ParticleTool {
         val z = pos.z
 
         if (level is ServerLevel) {
-            playExplosionSoundLayers(level, pos, ModSounds.EXPLOSION_CLOSE.get(), 2f, ModSounds.EXPLOSION_FAR.get(), 8f, ModSounds.EXPLOSION_VERY_FAR.get(), 32f)
+            playExplosionSound(level, pos, ParticleType.SMALL)
             if (!burst) return
 
             sendParticle(level, ParticleTypes.EXPLOSION, x, y, z, 2, 0.05, 0.05, 0.05, 1.0, true)
@@ -193,7 +230,7 @@ object ParticleTool {
 
         if (level is ServerLevel) {
             if (!burst) {
-                playExplosionSoundLayers(level, pos, ModSounds.EXPLOSION_CLOSE.get(), 4f, ModSounds.EXPLOSION_FAR.get(), 16f, ModSounds.EXPLOSION_VERY_FAR.get(), 32f)
+                playExplosionSound(level, pos, ParticleType.MEDIUM)
                 return
             }
             if ((level.getBlockState(BlockPos.containing(x, y, z))).block === Blocks.WATER) {
@@ -203,7 +240,7 @@ object ParticleTool {
                 sendParticle(level, ParticleTypes.BUBBLE_COLUMN_UP, x, y, z, 60, 3.0, 0.5, 3.0, 0.1, true)
             }
 
-            playExplosionSoundLayers(level, pos, ModSounds.EXPLOSION_CLOSE.get(), 4f, ModSounds.EXPLOSION_FAR.get(), 16f, ModSounds.EXPLOSION_VERY_FAR.get(), 32f)
+            playExplosionSound(level, pos, ParticleType.MEDIUM)
 
             sendParticle(level, ParticleTypes.EXPLOSION, x, y + 1, z, 5, 0.7, 0.7, 0.7, 1.0, true)
             sendParticle(level, ParticleTypes.CAMPFIRE_COSY_SMOKE, x, y + 1, z, 20, 0.2, 1.0, 0.2, 0.02, true)
@@ -224,7 +261,7 @@ object ParticleTool {
                 level.getBlockState(BlockPos.containing(pos)).block === Blocks.WATER,
             )
 
-            playExplosionSoundLayers(level, pos, ModSounds.HUGE_EXPLOSION_CLOSE.get(), 6f, ModSounds.HUGE_EXPLOSION_FAR.get(), 20f, ModSounds.HUGE_EXPLOSION_VERY_FAR.get(), 64f)
+            playExplosionSound(level, pos, ParticleType.LARGE)
         }
     }
 
@@ -236,7 +273,7 @@ object ParticleTool {
         val z = pos.z
 
         if (level is ServerLevel) {
-            playExplosionSoundLayers(level, pos, ModSounds.HUGE_EXPLOSION_CLOSE.get(), 8f, ModSounds.HUGE_EXPLOSION_FAR.get(), 24f, ModSounds.HUGE_EXPLOSION_VERY_FAR.get(), 128f)
+            playExplosionSound(level, pos, ParticleType.HUGE)
 
             if (burst) ExplosionBurstMessage.send(
                 level,
@@ -257,7 +294,7 @@ object ParticleTool {
         val z = pos.z
 
         if (level is ServerLevel) {
-            playExplosionSoundLayers(level, pos, ModSounds.HUGE_EXPLOSION_CLOSE.get(), 12f, ModSounds.HUGE_EXPLOSION_FAR.get(), 32f, ModSounds.HUGE_EXPLOSION_VERY_FAR.get(), 192f)
+            playExplosionSound(level, pos, ParticleType.GIANT)
 
             if (burst) ExplosionBurstMessage.send(
                 level,
