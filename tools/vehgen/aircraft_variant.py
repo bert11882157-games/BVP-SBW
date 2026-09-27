@@ -117,12 +117,16 @@ def main(argv):
                 continue
             c = centre(f)
             bone = None
-            if isinstance(rule, dict):     # {"bone": ..., "if": {"zMin": ...}} else fuselage
-                cond = rule.get('if', {})
-                if c[2] >= cond.get('zMin', -1e9) and c[2] <= cond.get('zMax', 1e9):
-                    rule_name = rule['bone']
-                else:
-                    rule_name = rule.get('else', 'fuselage')
+
+            def holds(cond):
+                return (cond.get('zMin', -1e9) <= c[2] <= cond.get('zMax', 1e9)
+                        and cond.get('yMin', -1e9) <= c[1] <= cond.get('yMax', 1e9)
+                        and cond.get('absXMin', -1e9) <= abs(c[0]) <= cond.get('absXMax', 1e9))
+
+            if isinstance(rule, list):     # [{"bone": ..., "if": {...}}, ...]: the first that holds; else fuselage
+                rule_name = next((r['bone'] for r in rule if holds(r.get('if', {}))), 'fuselage')
+            elif isinstance(rule, dict):     # {"bone": ..., "if": {"zMin": ...}, "else": ...}
+                rule_name = rule['bone'] if holds(rule.get('if', {})) else rule.get('else', 'fuselage')
             else:
                 rule_name = rule
             if bone is None:
