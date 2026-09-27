@@ -2953,8 +2953,11 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
     override fun canFreeze() = false
 
     open fun updateOBB() {
+        // Boxes on the same part share one transform chain; it is only read below (transform / getNormalizedRotation
+        // write into their own destinations), so each distinct part is resolved once per update.
+        val transforms = HashMap<String?, Matrix4d>(8)
         this.obb.forEach { obbInfo ->
-            val transform = this.getTransformFromString(obbInfo.transform)
+            val transform = transforms.getOrPut(obbInfo.transform) { this.getTransformFromString(obbInfo.transform) }
             val obb = obbInfo.getOBB()
             val worldPos = this.transformPosition(transform, obbInfo.position.x, obbInfo.position.y, obbInfo.position.z)
 
