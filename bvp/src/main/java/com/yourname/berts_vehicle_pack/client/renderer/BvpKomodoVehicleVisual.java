@@ -31,6 +31,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
+import org.joml.Vector4f;
+import org.joml.Vector4fc;
 import org.slf4j.Logger;
 
 import java.util.ArrayList;
@@ -285,6 +287,14 @@ public final class BvpKomodoVehicleVisual extends AbstractEntityVisual<GeoVehicl
         int cursor;
         long vertices;
         Throwable failure;
+        /**
+         * One bounding sphere for every part of the vehicle, in the parts' shared mesh space. Flywheel's indirect
+         * backend frustum- and occlusion-culls every instance on the GPU by its model's sphere; with each small part
+         * (a wheel, a link group, a turret) tested on its own tight sphere, moving running gear and traversing turrets
+         * winked out for single frames at close range. A part is now culled only when the whole vehicle would be.
+         * Any rigid (or uniformly scaled) pose keeps each part inside its transformed sphere.
+         */
+        final Vector4f sphere;
 
         Geometry(PolyMeshModel model, ResourceLocation texture) {
             material = new SimpleMaterial.Builder().copyFrom(Materials.CUTOUT_MIPPED_BLOCK)
@@ -307,6 +317,7 @@ public final class BvpKomodoVehicleVisual extends AbstractEntityVisual<GeoVehicl
                     vertices += mesh.getVertexCount();
                 }
             }
+            sphere = vehicleSphere(parts);
             var live = new IdentityHashMap<BedrockBone, Boolean>();
             for (BedrockBone bone : boneParts.keySet())
                 for (BedrockBone b = bone; b != null && live.put(b, Boolean.TRUE) == null; b = b.parent) { }
@@ -321,7 +332,7 @@ public final class BvpKomodoVehicleVisual extends AbstractEntityVisual<GeoVehicl
             VertexKey key = new VertexKey(part.source);
             part.mesh = meshes.get(key);
             if (part.mesh == null) {
-                part.mesh = bake(key, material, part.name);
+                part.mesh = bake(key, material, part.name, sphere);
                 meshes.put(key, part.mesh);
             }
             cursor++;
@@ -394,7 +405,36 @@ public final class BvpKomodoVehicleVisual extends AbstractEntityVisual<GeoVehicl
         }
     }
 
-    private static BakedMesh bake(VertexKey key, Material material, String name) {
+    private static Vector4f vehicleSphere(List<Part> parts) {
+        float minX = Float.POSITIVE_INFINITY, minY = Float.POSITIVE_INFINITY, minZ = Float.POSITIVE_INFINITY;
+        float maxX = Float.NEGATIVE_INFINITY, maxY = Float.NEGATIVE_INFINITY, maxZ = Float.NEGATIVE_INFINITY;
+        for (Part part : parts) {
+            var v = (BvpPolyMeshVertexAccessor) (Object) part.source;
+            float[] xs = v.bvp$positionsX(), ys = v.bvp$positionsY(), zs = v.bvp$positionsZ();
+            for (int i = 0; i < xs.length; i++) {
+                minX = Math.min(minX, xs[i]); maxX = Math.max(maxX, xs[i]);
+                minY = Math.min(minY, ys[i]); maxY = Math.max(maxY, ys[i]);
+                minZ = Math.min(minZ, zs[i]); maxZ = Math.max(maxZ, zs[i]);
+            }
+        }
+        if (!(minX <= maxX)) return null;
+        float cx = (minX + maxX) * 0.5F, cy = (minY + maxY) * 0.5F, cz = (minZ + maxZ) * 0.5F;
+        float r2 = 0.0F;
+        for (Part part : parts) {
+            var v = (BvpPolyMeshVertexAccessor) (Object) part.source;
+            float[] xs = v.bvp$positionsX(), ys = v.bvp$positionsY(), zs = v.bvp$positionsZ();
+            for (int i = 0; i < xs.length; i++) {
+                float dx = xs[i] - cx, dy = ys[i] - cy, dz = zs[i] - cz;
+                r2 = Math.max(r2, dx * dx + dy * dy + dz * dz);
+            }
+        }
+        return new Vector4f(cx, cy, cz, (float) Math.sqrt(r2) * 1.02F + 1.0E-3F);
+    }
+
+    /** A single-mesh model whose culling sphere is the whole vehicle's (see {@link Geometry#sphere}). */
+    private record VehicleModel(List<Model.ConfiguredMesh> meshes, Vector4fc boundingSphere) implements Model { }
+
+    private static BakedMesh bake(VertexKey key, Material material, String name, Vector4f sphere) {
         int count = key.values[0].length;
         MemoryBlock memory = MemoryBlock.mallocTracked((long) FullVertexView.STRIDE * count);
         try {
@@ -417,7 +457,9 @@ public final class BvpKomodoVehicleVisual extends AbstractEntityVisual<GeoVehicl
                 view.overlay(index, OverlayTexture.f_118083_);
                 view.light(index, 0);
             }
-            Model model = new SingleMeshModel(new SimpleQuadMesh(view, "bvp_vehicle:" + name), material);
+            SimpleQuadMesh mesh = new SimpleQuadMesh(view, "bvp_vehicle:" + name);
+            Model model = sphere == null ? new SingleMeshModel(mesh, material)
+                    : new VehicleModel(List.of(new Model.ConfiguredMesh(material, mesh)), new Vector4f(sphere));
             return new BakedMesh(model, memory);
         } catch (RuntimeException | Error exception) {
             memory.free();
