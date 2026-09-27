@@ -2887,8 +2887,10 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         }
         if (!this.wasHeliCrash && this.heliCrash()) playHeliCrashSound.accept(this)
         if (!this.wasVehicleSkip && this.vehicleSkip()) playVehicleSkipSound.accept(this)
-        if (playFireSound != null && !this.wasFiring && this.isFiring) playFireSound!!.accept(this)
-        this.wasFiring = this.isFiring
+        // one evaluation a tick (it resolves the selected weapon and its sound profile)
+        val firing = this.isFiring
+        if (playFireSound != null && !this.wasFiring && firing) playFireSound!!.accept(this)
+        this.wasFiring = firing
     }
 
     fun keepChunkLoaded(position: Vec3) {
@@ -3016,17 +3018,10 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
 
     val isFiring: Boolean
         get() {
-            val gunData = getGunData(0)
-            return if (gunData != null) {
-                val instance = gunData.get(GunProp.SOUND_INFO).fireSoundInstances
-                if (instance != null) {
-                    gunData.shootTimer.get() > 0
-                } else {
-                    false
-                }
-            } else {
-                false
-            }
+            val gunData = getGunData(0) ?: return false
+            // the timer first: resolving the sound profile runs the property modifiers
+            if (gunData.shootTimer.get() <= 0) return false
+            return gunData.get(GunProp.SOUND_INFO).fireSoundInstances != null
         }
 
     fun shootingVolume(): Float {

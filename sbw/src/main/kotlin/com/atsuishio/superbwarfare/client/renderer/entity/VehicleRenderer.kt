@@ -243,7 +243,11 @@ abstract class VehicleRenderer<T>(renderManager: EntityRendererProvider.Context,
             if (!backendPass.attempted) {
                 backendPass.attempted = true
                 backendPass.handled = vehicleRenderBackendHost.render(backendPass.context)
-                if (backendPass.handled) {
+                // the lifecycle walk only matters for render layers and dog tags: most models have neither
+                if (backendPass.handled && (getRenderLayers().isNotEmpty() ||
+                        dogTagModels.getOrPut(backendPass.context.nativeModel) {
+                            hasDogTag(backendPass.context.nativeModel.topLevelBones())
+                        })) {
                     renderNativeBoneLifecycleOnly(
                         poseStack,
                         animatable,
@@ -286,6 +290,11 @@ abstract class VehicleRenderer<T>(renderManager: EntityRendererProvider.Context,
             alpha
         )
     }
+
+    private val dogTagModels = java.util.IdentityHashMap<Any, Boolean>()
+
+    private fun hasDogTag(bones: Iterable<GeoBone>): Boolean =
+        bones.any { it.name.endsWith("_dogTag") || hasDogTag(it.childBones) }
 
     /** Runs the native bone overlays and dog tags without emitting native cubes. */
     private fun renderNativeBoneLifecycleOnly(
