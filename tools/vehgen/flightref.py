@@ -4,7 +4,7 @@ entity is constructed, so the aircraft cannot be spawned at all).
     python3 tools/vehgen/flightref.py [ids...]      # validate (all flight_reference files when no ids are given)
 
 `derive(d)` recomputes the dependent fields after reference overrides: full-fuel mass, wing area from the full-fuel
-wing loading, installed static thrust and the afterburner ratio.
+wing loading, installed static thrust (jet or propeller), the afterburner ratio and the propeller normal-power fraction.
 """
 import glob
 import json
@@ -22,7 +22,13 @@ def derive(d):
     r, e = d['reference'], d['engineering']
     r['fullFuelMassKg'] = r['baseMassKg'] + r['mainFuelMassKg']
     r['wingAreaSquareMetres'] = r['fullFuelMassKg'] / r['fullFuelWingLoadingKgPerSquareMetre']
-    if e.get('propellerPowerReferenceSpeedMps', 0) == 0 and r.get('dryThrustKgfPerEngine') is not None:
+    prop = e.get('propellerPowerReferenceSpeedMps', 0)
+    if prop > 0 and r.get('maximumPowerHpPerEngine') is not None:
+        e['staticOrEquivalentThrustNewtons'] = (r['engineCount'] * r['maximumPowerHpPerEngine'] * e['hpToWatts']
+                                                 * e['effectivePropulsiveEfficiency'] / prop)
+        if r.get('normalPowerHpPerEngine') is not None:
+            e['normalPowerThrottleFraction'] = r['normalPowerHpPerEngine'] / r['maximumPowerHpPerEngine']
+    if prop == 0 and r.get('dryThrustKgfPerEngine') is not None:
         e['staticOrEquivalentThrustNewtons'] = r['engineCount'] * r['dryThrustKgfPerEngine'] * GRAVITY
         if e.get('afterburnerEnabled'):
             e['afterburnerMultiplier'] = r['afterburnerThrustKgfPerEngine'] / r['dryThrustKgfPerEngine']

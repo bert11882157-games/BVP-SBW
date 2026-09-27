@@ -72,6 +72,7 @@ def main(argv):
     c1 = np.array([frame1.geo(q) for p in spec['lengthParts'] for f in src.parts[p] for q in mtbgeo.mtb.box_corners(f)])
     T = np.vstack([np.array(tbones[n]['poly_mesh']['positions']) for n in spec['templateLengthBones']])
     s = (T[:, 2].max() - T[:, 2].min()) / (c1[:, 2].max() - c1[:, 2].min())
+    s = spec.get('scale', s)     # explicit scale, e.g. real size at the template's px/m when proportions differ
     frame = mtbgeo.Frame(s, 0.0, yaw180=spec.get('yaw180', False))
     cs = c1 * s
     off = np.array([0.0, 0.0, T[:, 2].min() - cs[:, 2].min()])
@@ -81,6 +82,8 @@ def main(argv):
     if spec.get('alignY') == 'templateBottom':
         # the template's gear is kept: the fuselage bottom goes where the template's is, not the source's own gear
         off[1] = T[:, 1].min() - cs[:, 1].min()
+
+    off = off + np.array(spec.get('shift', [0.0, 0.0, 0.0]), float)     # e.g. an off-centre source, or wing alignment
 
     def g(p):
         return frame.geo(p) + off
@@ -242,6 +245,10 @@ def main(argv):
             if k in cam:
                 cam[k] = seat['eye']
         data['Seats'].append(base_seat)
+    for i in sorted(spec.get('removeSeats', []), reverse=True):     # e.g. the template's tail gunner
+        data['Seats'].pop(i)
+    for k in spec.get('removeDataKeys', []):
+        data.pop(k, None)
     data.update(spec.get('dataOverrides', {}))
     out.json(os.path.join(DATA, 'sbw', 'vehicles', f'{vid}.json'), data)
     client = renamed(load(TPL(os.path.join(ASSETS, 'sbw', 'vehicles', f'{tid}.json'))))

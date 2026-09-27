@@ -1,0 +1,33 @@
+{
+  "Schema": 1,
+  "Name": "C-130H Hercules",
+  "BuiltInWeapons": [
+    "tail_gun_1",
+    "tail_gun_2"
+  ],
+  "SuspendedWeapons": [],
+  "Pairs": [],
+  "StoreGroups": {},
+  "MaxPayloadKg": 20000,
+  "MaxPylonMassKg": 1000,
+  "MaxWeaponsPerPylon": 12,
+  "Singles": [
+    {
+      "Id": "internal_bay",
+      "Name": "Armament",
+      "Position": [
+        0,
+        1.05,
+        0.424697
+      ],
+      "Internal": true,
+      "MaxPylonMassKg": 20000,
+      "AllowedStores": [
+        "berts_vehicle_pack:fa18e/bomb_500kg_dumb_1",
+        "berts_vehicle_pack:fa18e/bomb_500kg_laser_1",
+        "berts_vehicle_pack:fa18e/bomb_500kg_gps_1"
+      ],
+      "QuantitySelectable": false
+    }
+  ]
+}

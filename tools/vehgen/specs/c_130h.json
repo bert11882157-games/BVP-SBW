@@ -1,0 +1,228 @@
+{
+  "id": "c_130h",
+  "name": "C-130H Hercules",
+  "entityClass": "AuthoredFixedWingAircraft",
+  "template": "an_12b",
+  "source": "C-130H Hercules.mtb",
+  "note": "Four-turboprop transport on the An-12B data and rig. Real size at the An-12's 16 px/m (scale 0.987): the span then matches the An-12's (+1%) while the C-130 is 10% shorter, so it is aligned by the wing (shift z +10), not the nose. The source is built 4.9 px off-centre (fin, gear, props and tail all centre at x -4.9), so it is shifted back. The source's own gear goes into the template gear bones; the four propellers into the An-12 rotor bones, whose pivots move to the C-130 hubs. The An-12 tail gunner seat and its weapon station are removed.",
+  "yaw180": true,
+  "lengthParts": [
+    0,
+    2
+  ],
+  "templateLengthBones": [
+    "wreck_fuselage_0__hull",
+    "wreck_fuselage_1__hull",
+    "wreck_fuselage_2__hull",
+    "wreck_fuselage_3__hull"
+  ],
+  "scale": 0.987,
+  "shift": [
+    4.9,
+    0,
+    10
+  ],
+  "groundParts": [
+    0,
+    2,
+    12
+  ],
+  "excludeParts": [],
+  "storeTextureV": -1,
+  "keepBoxes": [],
+  "dropRules": [],
+  "fuselageCuts": [
+    -128,
+    20,
+    150
+  ],
+  "parts": {
+    "0": [
+      {
+        "bone": "wing",
+        "if": {
+          "absXMin": 34
+        }
+      }
+    ],
+    "2": [
+      {
+        "bone": "side:wreck_fuselage_3__elevator_left,wreck_fuselage_3__elevator_right",
+        "if": {
+          "absXMin": 12,
+          "yMin": 66,
+          "yMax": 78,
+          "zMin": 175
+        }
+      },
+      {
+        "bone": "wreck_fuselage_3__rudder",
+        "if": {
+          "absXMax": 8,
+          "yMin": 64,
+          "zMin": 185
+        }
+      }
+    ],
+    "4": "wing",
+    "5": "wing",
+    "12": [
+      {
+        "bone": "wreck_fuselage_0__landing_gear_2",
+        "if": {
+          "zMax": -150
+        }
+      },
+      {
+        "bone": "side:wreck_fuselage_1__landing_gear_0,wreck_fuselage_1__landing_gear_1",
+        "if": {}
+      }
+    ],
+    "18": "fuselage",
+    "19": "fuselage",
+    "27": [
+      {
+        "bone": "wreck_wing_left__engine_rotor_1",
+        "if": {
+          "xMin": 120
+        }
+      },
+      {
+        "bone": "wreck_wing_left__engine_rotor_0",
+        "if": {
+          "xMin": 0
+        }
+      },
+      {
+        "bone": "wreck_wing_right__engine_rotor_3",
+        "if": {
+          "xMax": -120
+        }
+      },
+      {
+        "bone": "wreck_wing_right__engine_rotor_2",
+        "if": {}
+      }
+    ]
+  },
+  "keepTemplateBones": [],
+  "removeClientKeys": [
+    "CanopyGlass",
+    "FlightDisplays",
+    "CockpitGauges"
+  ],
+  "removeSeats": [
+    5
+  ],
+  "removeDataKeys": [
+    "PassengerWeaponStationPos",
+    "PassengerWeaponStationBarrelPos",
+    "PassengerWeaponStationControllerIndex",
+    "PassengerWeaponStationTurnSpeed",
+    "PassengerWeaponStationYawRange",
+    "PassengerWeaponStationPitchRange",
+    "RemoteWeaponStation",
+    "PassengerWeaponStationBinding",
+    "Weapons"
+  ],
+  "attachments": {
+    "pilot_eye": [
+      11.2,
+      58.5,
+      -210.0
+    ],
+    "copilot_eye": [
+      -11.2,
+      58.5,
+      -210.0
+    ],
+    "engineer_eye": [
+      0,
+      60.0,
+      -196.0
+    ],
+    "navigator_eye": [
+      14.4,
+      60.0,
+      -182.0
+    ],
+    "radio_operator_eye": [
+      -15.2,
+      60.0,
+      -182.0
+    ]
+  },
+  "seatPositions": {
+    "0": [
+      11.2,
+      35.3,
+      -210.0
+    ],
+    "1": [
+      -11.2,
+      35.3,
+      -210.0
+    ],
+    "2": [
+      0,
+      32.0,
+      -196.0
+    ],
+    "3": [
+      14.4,
+      32.0,
+      -182.0
+    ],
+    "4": [
+      -15.2,
+      32.0,
+      -182.0
+    ]
+  },
+  "addSeats": [],
+  "flightReference": {
+    "baseMassKg": 34400,
+    "mainFuelMassKg": 20500,
+    "fullFuelWingLoadingKgPerSquareMetre": 338.6798,
+    "normalPowerHpPerEngine": 4200,
+    "maximumPowerHpPerEngine": 4591,
+    "maximumTrueAirspeedKmh": 592,
+    "referenceAltitudeMetres": 6000,
+    "maximumIndicatedAirspeedKmh": 520,
+    "climbMetresPerSecond": 9.5,
+    "takeoffRunMetres": 1100
+  },
+  "note_flight": "C-130H: empty 34,400 kg, internal fuel 20,500 kg, wing 162.1 m2, 4x T56-A-15 (4,591 shp), 592 km/h at 6 km.",
+  "sweeps": {
+    "engine_rotor_0": {
+      "pivot": [
+        78.43,
+        63.17,
+        -117.75
+      ]
+    },
+    "engine_rotor_1": {
+      "pivot": [
+        161.34,
+        63.17,
+        -117.75
+      ]
+    },
+    "engine_rotor_2": {
+      "pivot": [
+        -78.5,
+        63.17,
+        -117.75
+      ]
+    },
+    "engine_rotor_3": {
+      "pivot": [
+        -161.41,
+        63.17,
+        -117.75
+      ]
+    }
+  },
+  "note_crew": "Flight deck: floor y 31, pilot seat backs z -207..-203, cushions y ~40, glare shield y 50 at z -222, roof y 64-68. The An-12 eyes (y 59 / 63.8) were at or inside the roof; the pilots look through the windscreen (whose lower edge is ~16 deg above a coaming-level eye) at y 58.5, 5 px under the roof; the engineer and navigator/radio operator sit behind at y 60. The source's cargo ramp is modelled open (airdrop configuration) and stays so: the lower rear fuselage is not in the model.",
+  "note_rig": "The four propellers sit on the An-12 rotor bones with their pivots moved to the C-130 hubs."
+}
