@@ -813,12 +813,8 @@ open class ProjectileEntity(entityType: EntityType<out ProjectileEntity>, level:
             if (shouldExplode(resolution)) {
                 explosionBullet(this, hitVec)
             }
-            if (fireLevel > 0 && level is ServerLevel && !resolution.suppressesDefaultVisuals()) {
-                ParticleTool.sendParticle(
-                    level, ParticleTypes.LAVA, hitVec.x, hitVec.y, hitVec.z,
-                    3, 0.0, 0.0, 0.0, 0.5, true
-                )
-            }
+            // Incendiary hits no longer throw lava embers: they arced out of every impact and lay glowing on the ground
+            // for seconds after the fireball.
         }
 
         if (result is ExtendedEntityRayTraceResult) {

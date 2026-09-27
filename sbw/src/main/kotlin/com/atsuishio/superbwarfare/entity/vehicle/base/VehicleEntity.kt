@@ -3406,24 +3406,8 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
                         pos,
                         4.5 + random
                     )
-                    ParticleTool.spawnDirectionalParticles(
-                        (4 + 4 * random).toInt(),
-                        0.8 * random.toDouble(),
-                        level(),
-                        ModParticleTypes.FIRE_STAR.get(),
-                        dir,
-                        pos,
-                        0.4 + random
-                    )
-                    ParticleTool.spawnDirectionalParticles(
-                        (4 + 4 * random).toInt(),
-                        0.8 * random.toDouble(),
-                        level(),
-                        ParticleTypes.LAVA,
-                        dir,
-                        pos,
-                        0.4 + random
-                    )
+                    // The burning turret vents a rising flame jet. The fire-stars and lava embers it used to spray arced out
+                    // and fell back every tick (a 'fountain') and the embers lay about on the ground afterwards.
                     ParticleTool.spawnDirectionalParticles(
                         (4 + 4 * random).toInt(),
                         0.8 * random.toDouble(),

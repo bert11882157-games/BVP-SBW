@@ -225,14 +225,6 @@ object BlastEffects {
             com.atsuishio.superbwarfare.client.FarTerrainClient.renderRadius().toFloat() else 0F
     }.getOrDefault(0F)
 
-    /**
-     * Radius the flash and fire are drawn at: the fireball's own radius, but never smaller than about a third of a
-     * degree across (radius 0.006 x distance), so a distant blast still reads as a fireball rather than a pixel.
-     */
-    @JvmStatic
-    fun apparentRadius(radius: Double, distance: Double): Double =
-        if (distance.isFinite()) maxOf(radius, 0.006 * distance) else radius
-
     private fun renderChunks(mc: Minecraft, level: ClientLevel, poseStack: PoseStack, cx: Double, cy: Double, cz: Double,
                              time: Double, partial: Float) {
         if (blasts.none { it.chunks.isNotEmpty() }) return
@@ -599,7 +591,8 @@ object BlastEffects {
 
             // Flash: an instant, bright glow at the impact point.
             val flash = BlastVisuals.flashTicks(kg)
-            val fireRadius = apparentRadius(radius, sqrt(ox * ox + oy * oy + oz * oz))
+            // True size at every distance (a minimum apparent size made distant fireballs grow with distance).
+            val fireRadius = radius
             if (age < flash) {
                 val k = 1.0 - age / flash
                 out.add(ox, oy + 0.1 * radius, oz, fireRadius * 2.4 * (0.7 + 0.3 * k), 0.0,
