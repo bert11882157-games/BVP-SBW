@@ -79,6 +79,7 @@ Then:
   `fuselageCuts` (geo z), and the control surfaces into their template bones.
 - **The template's gear, gear wheels, control stick and modeled store assemblies stay.** They are textured through
   an atlas: the template texture on top and the source texture below.
+- **Part rules** (`parts`): a bone name, `wing`, `fuselage`, `side:<left bone>,<right bone>`, `drop`, `{bone, if, else}`, or an ordered list of `{bone, if}` where the first match wins (the fallback is `fuselage`). `if` takes `zMin/zMax/yMin/yMax/absXMin/absXMax` on the element centre in geo px.
 - **Crew:** extra seats and eye attachments come from the spec. `removeClientKeys` drops, for example, a template
   `CanopyGlass` that does not fit the new canopy.
 
