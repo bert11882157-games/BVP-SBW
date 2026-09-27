@@ -27,7 +27,10 @@ import kotlin.math.sqrt
  *  - entities and vehicles: their packed block light is raised to the effect light at their centre (one mixin on
  *    `EntityRenderer.getBlockLightLevel`, a loop over at most [MAX_LIGHTS] lights per rendered entity);
  *  - the ground: a warm, additive glow laid on the top surface of the block columns round each strong light
- *    (heightmap lookups, one small quad per column, at most [MAX_POOL_QUADS] quads a frame in one draw).
+ *    (heightmap lookups, one small quad per column, at most [MAX_POOL_QUADS] quads a frame in one draw);
+ *  - interiors: a light with blocks overhead (inside a building, under a roof or a bridge) has no heightmap surface
+ *    to light, so the solid blocks round it are scanned once into an occupancy grid, and every block face that faces
+ *    the light across open air, with nothing solid in between, gets the glow instead (floor, walls and ceiling).
  *
  * Sustained lights (afterburners, motors) are refreshed by their owner every frame and vanish two ticks after the
  * owner stops; flashes decay on their own.
@@ -51,6 +54,11 @@ object FxLights {
         var seen = 0.0           // sustained: last refresh
         var boost = 1.0          // ground-glow strength multiplier (a blast's first flash burns far brighter than 15)
         var r = 1f; var g = 0.5f; var b = 0.22f   // ground-glow colour
+        // interior light: faces lit (corners xyz x4, normal xyz: 15 floats each), built for the block the light is in
+        var faceKey = Long.MIN_VALUE
+        var faces = FloatArray(0)
+        var faceCount = 0
+        var covered = false
         fun current(now: Double): Double = if (life > 0) level * max(0.0, 1.0 - (now - born) / life)
             else if (now - seen <= 2.0) level else 0.0
     }
@@ -133,6 +141,7 @@ object FxLights {
         l.key = 0L; l.x = x; l.y = y; l.z = z; l.radius = min(radius, MAX_RADIUS); l.level = min(level, 15.0)
         l.born = t; l.life = max(ticks, 0.5); l.seen = t
         l.boost = boost; l.r = r; l.g = g; l.b = b
+        l.faceKey = Long.MIN_VALUE; l.faceCount = 0
     }
 
     /** A sustained light owned by [key] (refresh it every frame while it burns). */
@@ -147,6 +156,7 @@ object FxLights {
         if (!x.isFinite() || !y.isFinite() || !z.isFinite() || radius <= 0 || level <= 0.05) return
         val t = clock()
         val l = slot(key, t) ?: return
+        if (l.key != key) { l.faceKey = Long.MIN_VALUE; l.faceCount = 0 }
         l.key = key; l.x = x; l.y = y; l.z = z; l.radius = min(radius, MAX_RADIUS); l.level = min(level, 15.0)
         l.life = 0.0; l.seen = t
         l.boost = boost; l.r = r; l.g = g; l.b = b
@@ -199,6 +209,7 @@ object FxLights {
             .take(MAX_POOL_LIGHTS)
         var quads = 0
         var walls = 0
+        var builds = 0
         val pose = event.poseStack.last().pose()
         for (i in order) {
             val l = lights[i]
@@ -209,6 +220,47 @@ object FxLights {
             // a soft warm tint on the ground, not a painted patch: strong only right under a big fireball, and far
             // brighter for a boosted light (a blast's first flash, an afterburner)
             val strength = ((lv / 15.0) * (lv / 15.0) * 0.32 * l.boost).coerceAtMost(1.6)
+            // Indoors (blocks overhead): light the faces round the light instead of the heightmap surface.
+            val lbx = kotlin.math.floor(l.x).toInt(); val lby = kotlin.math.floor(l.y).toInt(); val lbz = kotlin.math.floor(l.z).toInt()
+            val key = net.minecraft.core.BlockPos.asLong(lbx, lby, lbz)
+            if (l.faceKey != key) {
+                // a blast's flash and fireball light share a block: reuse the faces already found for it
+                var twin: Light? = null
+                for (j in 0 until count) { val o = lights[j]; if (o !== l && o.faceKey == key) { twin = o; break } }
+                if (twin != null) {
+                    l.covered = twin.covered; l.faceCount = twin.faceCount
+                    if (l.faces.size < twin.faceCount * 15) l.faces = FloatArray(MAX_INTERIOR_FACES * 15)
+                    System.arraycopy(twin.faces, 0, l.faces, 0, twin.faceCount * 15)
+                } else {
+                    if (builds >= MAX_INTERIOR_BUILDS) continue   // next frame; bounds the one-off scan cost
+                    l.covered = world.getHeight(Heightmap.Types.MOTION_BLOCKING, lbx, lbz) > lby + 1
+                    if (l.covered) { buildInterior(world, l, lbx, lby, lbz); builds++ } else l.faceCount = 0
+                }
+                l.faceKey = key
+            }
+            if (l.covered) {
+                val ri = min(r, INTERIOR_RADIUS.toDouble())
+                val si = (strength * 1.25).coerceAtMost(1.8)
+                val f = l.faces
+                for (k in 0 until l.faceCount) {
+                    if (walls >= MAX_WALL_QUADS) break
+                    val o = k * 15
+                    val nx = f[o + 12]; val ny = f[o + 13]; val nz = f[o + 14]
+                    val w = walls * 16
+                    var sum = 0f
+                    for (v in 0 until 4) {
+                        val vx = f[o + v * 3].toDouble(); val vy = f[o + v * 3 + 1].toDouble(); val vz = f[o + v * 3 + 2].toDouble()
+                        val a = interior(l, ri, si, vx, vy, vz, nx, ny, nz)
+                        wq[w + v * 4] = (vx - cam.x).toFloat(); wq[w + v * 4 + 1] = (vy - cam.y).toFloat()
+                        wq[w + v * 4 + 2] = (vz - cam.z).toFloat(); wq[w + v * 4 + 3] = a
+                        sum += a
+                    }
+                    if (sum < 0.004f) continue
+                    wc[walls * 3] = l.r; wc[walls * 3 + 1] = l.g; wc[walls * 3 + 2] = l.b
+                    walls++
+                }
+                continue
+            }
             val bx0 = kotlin.math.floor(l.x - r).toInt(); val bx1 = kotlin.math.floor(l.x + r).toInt()
             val bz0 = kotlin.math.floor(l.z - r).toInt(); val bz1 = kotlin.math.floor(l.z + r).toInt()
             // Column tops once per light, with a one-column border for the side faces.
@@ -307,6 +359,115 @@ object FxLights {
         RenderSystem.depthMask(true)
         RenderSystem.defaultBlendFunc()
         RenderSystem.disableBlend()
+    }
+
+    // ---------------------------------------------------------------- interiors
+
+    private const val INTERIOR_RADIUS = 12
+    private const val MAX_INTERIOR_BUILDS = 2
+    private const val MAX_INTERIOR_FACES = 2500
+    private val DIR = arrayOf(intArrayOf(1, 0, 0), intArrayOf(-1, 0, 0), intArrayOf(0, 1, 0), intArrayOf(0, -1, 0),
+        intArrayOf(0, 0, 1), intArrayOf(0, 0, -1))
+    private var occ = java.util.BitSet()
+    private val scanPos = net.minecraft.core.BlockPos.MutableBlockPos()
+
+    /**
+     * Scans the full solid blocks within [INTERIOR_RADIUS] of the light into an occupancy grid, then keeps every face of
+     * a solid block that faces the light across an open cell and has a clear line (grid DDA) back to it. Runs once per
+     * light and block position (a flash never moves; a sustained light rebuilds when it enters another block).
+     */
+    private fun buildInterior(world: net.minecraft.client.multiplayer.ClientLevel, l: Light, lbx: Int, lby: Int, lbz: Int) {
+        val rr = INTERIOR_RADIUS
+        val n = rr * 2 + 3                                         // one-cell border for the neighbour tests
+        val x0 = lbx - rr - 1; val y0 = lby - rr - 1; val z0 = lbz - rr - 1
+        occ.clear()
+        for (gx in 0 until n) for (gy in 0 until n) {
+            val wy = y0 + gy
+            if (world.isOutsideBuildHeight(wy)) continue
+            for (gz in 0 until n) {
+                scanPos.set(x0 + gx, wy, z0 + gz)
+                val state = world.getBlockState(scanPos)
+                if (!state.isAir && state.isSolidRender(world, scanPos)) occ.set((gx * n + gy) * n + gz)
+            }
+        }
+        // the light may sit inside a block (a blast centre raised into a low ceiling): start from the nearest open cell
+        var lx = l.x; var ly = l.y; var lz = l.z
+        run {
+            var gy = lby - y0
+            val gx = lbx - x0; val gz = lbz - z0
+            var steps = 0
+            while (steps < 3 && gy > 0 && occ[(gx * n + gy) * n + gz]) { gy--; steps++ }
+            if (steps > 0) ly = y0 + gy + 0.5
+        }
+        if (l.faces.size < MAX_INTERIOR_FACES * 15) l.faces = FloatArray(MAX_INTERIOR_FACES * 15)
+        val f = l.faces
+        var count = 0
+        val r2 = (rr + 0.5) * (rr + 0.5)
+        outer@ for (gx in 1 until n - 1) for (gy in 1 until n - 1) for (gz in 1 until n - 1) {
+            if (!occ[(gx * n + gy) * n + gz]) continue
+            val bx = x0 + gx; val by = y0 + gy; val bz = z0 + gz
+            val cx = bx + 0.5 - lx; val cy = by + 0.5 - ly; val cz = bz + 0.5 - lz
+            if (cx * cx + cy * cy + cz * cz > r2) continue
+            for (d in DIR) {
+                val ax = gx + d[0]; val ay = gy + d[1]; val az = gz + d[2]
+                if (occ[(ax * n + ay) * n + az]) continue
+                // face centre, and the light must be on its open side
+                val fx = bx + 0.5 + d[0] * 0.5; val fy = by + 0.5 + d[1] * 0.5; val fz = bz + 0.5 + d[2] * 0.5
+                if ((lx - fx) * d[0] + (ly - fy) * d[1] + (lz - fz) * d[2] <= 0.05) continue
+                if (!clear(n, x0, y0, z0, lx, ly, lz, fx + d[0] * 0.05, fy + d[1] * 0.05, fz + d[2] * 0.05)) continue
+                val o = count * 15
+                // corners of the face, a hair off it toward the light
+                val px = fx + d[0] * 0.015; val py = fy + d[1] * 0.015; val pz = fz + d[2] * 0.015
+                val ux: Double; val uy: Double; val uz: Double; val vx: Double; val vy: Double; val vz: Double
+                if (d[0] != 0) { ux = 0.0; uy = 0.5; uz = 0.0; vx = 0.0; vy = 0.0; vz = 0.5 }
+                else if (d[1] != 0) { ux = 0.5; uy = 0.0; uz = 0.0; vx = 0.0; vy = 0.0; vz = 0.5 }
+                else { ux = 0.5; uy = 0.0; uz = 0.0; vx = 0.0; vy = 0.5; vz = 0.0 }
+                f[o] = (px - ux - vx).toFloat(); f[o + 1] = (py - uy - vy).toFloat(); f[o + 2] = (pz - uz - vz).toFloat()
+                f[o + 3] = (px + ux - vx).toFloat(); f[o + 4] = (py + uy - vy).toFloat(); f[o + 5] = (pz + uz - vz).toFloat()
+                f[o + 6] = (px + ux + vx).toFloat(); f[o + 7] = (py + uy + vy).toFloat(); f[o + 8] = (pz + uz + vz).toFloat()
+                f[o + 9] = (px - ux + vx).toFloat(); f[o + 10] = (py - uy + vy).toFloat(); f[o + 11] = (pz - uz + vz).toFloat()
+                f[o + 12] = d[0].toFloat(); f[o + 13] = d[1].toFloat(); f[o + 14] = d[2].toFloat()
+                if (++count >= MAX_INTERIOR_FACES) break@outer
+            }
+        }
+        l.faceCount = count
+    }
+
+    /** No solid grid cell on the segment from the light to (tx, ty, tz), the light's own cell excepted (voxel DDA). */
+    private fun clear(n: Int, x0: Int, y0: Int, z0: Int, sx: Double, sy: Double, sz: Double,
+                      tx: Double, ty: Double, tz: Double): Boolean {
+        var ix = kotlin.math.floor(sx).toInt(); var iy = kotlin.math.floor(sy).toInt(); var iz = kotlin.math.floor(sz).toInt()
+        val ex = kotlin.math.floor(tx).toInt(); val ey = kotlin.math.floor(ty).toInt(); val ez = kotlin.math.floor(tz).toInt()
+        val dx = tx - sx; val dy = ty - sy; val dz = tz - sz
+        val stepX = if (dx > 0) 1 else -1; val stepY = if (dy > 0) 1 else -1; val stepZ = if (dz > 0) 1 else -1
+        val tdx = if (dx != 0.0) kotlin.math.abs(1.0 / dx) else Double.MAX_VALUE
+        val tdy = if (dy != 0.0) kotlin.math.abs(1.0 / dy) else Double.MAX_VALUE
+        val tdz = if (dz != 0.0) kotlin.math.abs(1.0 / dz) else Double.MAX_VALUE
+        var tmx = if (dx != 0.0) ((if (dx > 0) ix + 1 - sx else sx - ix) * tdx) else Double.MAX_VALUE
+        var tmy = if (dy != 0.0) ((if (dy > 0) iy + 1 - sy else sy - iy) * tdy) else Double.MAX_VALUE
+        var tmz = if (dz != 0.0) ((if (dz > 0) iz + 1 - sz else sz - iz) * tdz) else Double.MAX_VALUE
+        var guard = 0
+        while ((ix != ex || iy != ey || iz != ez) && guard++ < n * 3) {
+            if (tmx < tmy && tmx < tmz) { ix += stepX; tmx += tdx }
+            else if (tmy < tmz) { iy += stepY; tmy += tdy }
+            else { iz += stepZ; tmz += tdz }
+            val gx = ix - x0; val gy = iy - y0; val gz = iz - z0
+            if (gx < 0 || gy < 0 || gz < 0 || gx >= n || gy >= n || gz >= n) return true
+            if (occ[(gx * n + gy) * n + gz]) return false
+        }
+        return true
+    }
+
+    /** Light on an interior face corner: 3-D falloff, softer than outdoors (small rooms), times how squarely it faces. */
+    private fun interior(l: Light, r: Double, strength: Double, x: Double, y: Double, z: Double,
+                         nx: Float, ny: Float, nz: Float): Float {
+        val dx = l.x - x; val dy = l.y - y; val dz = l.z - z
+        val dist = sqrt(dx * dx + dy * dy + dz * dz)
+        val d = dist / r
+        if (d >= 1.0) return 0f
+        val fall = (1.0 - d) * (1.0 - d)
+        val cos = if (dist > 1e-6) ((dx * nx + dy * ny + dz * nz) / dist).coerceIn(0.0, 1.0) else 1.0
+        return (strength * fall * (0.35 + 0.65 * cos)).toFloat()
     }
 
     private val pq = FloatArray(MAX_POOL_QUADS * 12)
