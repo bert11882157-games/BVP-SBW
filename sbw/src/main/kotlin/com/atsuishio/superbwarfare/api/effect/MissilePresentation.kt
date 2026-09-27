@@ -43,6 +43,19 @@ object MissilePresentation {
         type == "superbwarfare:bmp_2" -> 1
         else -> 0
     }
+    /**
+     * TOW family (BGM-71): roll-stabilised, its flight motor exhausts through two side nozzles, drawn by FFA bvp.17+
+     * as the "external_atgm_tow" track model. Profile round/visual ids decide; native SBW TOW launchers otherwise.
+     */
+    @JvmStatic fun isTow(entity: Entity): Boolean = runCatching {
+        val profile = com.atsuishio.superbwarfare.api.projectile.ProjectileProfiles.resolve(entity)
+        if (profile != null) {
+            val round = profile.combat?.roundId?.path.orEmpty()
+            val visual = profile.visualProfileId?.path.orEmpty()
+            return round.contains("bgm71") || round.endsWith("_tow") || visual.startsWith("tow")
+        }
+        nativePhysicalWireCount(entity) == 2
+    }.getOrDefault(false)
     data class NozzleOffset(val centerHeight: Double, val rear: Double)
     private var nozzleResolver: java.util.function.Function<Entity, NozzleOffset?>? = null
     /** Optional model attachment; offsets are presentation only and never move the entity. */
@@ -76,6 +89,9 @@ object MissilePresentation {
             type.getMethod("impactAt", Level::class.java, Vec3::class.java, Float::class.javaPrimitiveType,
                 Boolean::class.javaPrimitiveType)
     }.getOrNull() }
+    private val registered by lazy { runCatching {
+        Class.forName("dev.ballistics.MissileVisualHooks").getMethod("registered", Entity::class.java)
+    }.getOrNull() }
     private val attachedBridge by lazy { runCatching {
         Class.forName("dev.ballistics.MissileVisualHooks").getMethod("registerAttached", Entity::class.java,
             Double::class.javaPrimitiveType, String::class.java, Double::class.javaPrimitiveType,
@@ -95,12 +111,17 @@ object MissilePresentation {
             val airborne = vehicle?.vehicleType in setOf(
                 com.atsuishio.superbwarfare.data.vehicle.subdata.VehicleType.AIRPLANE,
                 com.atsuishio.superbwarfare.data.vehicle.subdata.VehicleType.HELICOPTER)
-            val kind = if (entity is WireGuideMissileEntity) "external_atgm" else
+            val kind = if (entity is WireGuideMissileEntity) (if (isTow(entity)) "external_atgm_tow" else "external_atgm") else
                 if (entity.bbWidth >= .3f) "external_large" else "external_small"
             val offset = nozzleOffset(entity)
-            if (attachedBridge != null) attachedBridge!!.invoke(null, entity, entity.bbWidth.toDouble(),
-                kind + if (airborne) "_air" else "_ground", offset.centerHeight, offset.rear,
-                entity is MissileProjectile, physicalWireCount(entity))
+            val suffix = if (airborne) "_air" else "_ground"
+            val attach = { model: String -> attachedBridge!!.invoke(null, entity, entity.bbWidth.toDouble(),
+                model + suffix, offset.centerHeight, offset.rear, entity is MissileProjectile, physicalWireCount(entity)) }
+            if (attachedBridge != null) {
+                attach(kind)
+                // FFA before bvp.17 rejects the TOW model id: fall back to the generic ATGM exhaust
+                if (kind == "external_atgm_tow" && registered?.invoke(null, entity) == false) attach("external_atgm")
+            }
             else bridge?.first?.invoke(null, entity, entity.bbWidth.toDouble())
         }
             .onFailure { Mod.LOGGER.debug("Missile visual registration unavailable", it) }

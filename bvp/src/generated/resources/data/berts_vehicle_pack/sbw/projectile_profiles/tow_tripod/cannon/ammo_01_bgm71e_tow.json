@@ -103,6 +103,12 @@
         "Explosion": "large",
         "WaterExplosion": "same"
       }
+    },
+    "berts_vehicle_pack:projectile_mesh_v1": {
+      "Model": "berts_vehicle_pack:custom_geo/atgm/tow.geo.json",
+      "Texture": "berts_vehicle_pack:textures/atgm/tow.png",
+      "ForwardYaw": 0,
+      "SpinDegreesPerTick": 0.0
     }
   }
 }
