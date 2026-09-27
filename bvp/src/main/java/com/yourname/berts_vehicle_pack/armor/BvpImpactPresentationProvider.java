@@ -43,6 +43,7 @@ public final class BvpImpactPresentationProvider {
 
     public static void register() {
         ProjectileImpactPresentations.register(PROVIDER_ID, BvpImpactPresentationProvider::present);
+        ProjectileImpactPresentations.registerMaterialAudioOwner(PROVIDER_ID, BvpMaterialImpactSounds::hasPresentation);
     }
 
     private static boolean present(ProjectileImpactContext context, ProjectileImpactResult result) {
@@ -103,6 +104,11 @@ public final class BvpImpactPresentationProvider {
         boolean solidImpactBurst = penetration && emitsSolidImpactBurst(visual);
         // Small-caliber impacts still own material audio even when their policy emits no fragments.
         if (!explosion && !nonPenetration && !solidImpactBurst) {
+            // no burst to draw, but the hit on a vehicle is still heard (SBW's own ping defers to this sound)
+            if (context.getKind() == ProjectileImpactContext.Kind.ENTITY
+                    && claimImpact(projectile, context.getKind(), context.getHitVec())) {
+                BvpMaterialImpactSounds.play(context);
+            }
             return false;
         }
         if (!claimImpact(projectile, context.getKind(), context.getHitVec())) {

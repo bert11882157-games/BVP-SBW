@@ -716,7 +716,8 @@ open class ProjectileEntity(entityType: EntityType<out ProjectileEntity>, level:
             // Publish only the selected hit's metadata/effect, never a later broadphase candidate's.
             OBBHitter.getInstance(this).`sbw$setProjectileContact`(ProjectileContact(
                 entity.uuid, level().gameTime, result.hitPart ?: OBB.Part.EMPTY))
-            if (result.hitPart != null && level() is ServerLevel) {
+            if (result.hitPart != null && level() is ServerLevel && !com.atsuishio.superbwarfare.api.projectile.impact
+                    .ProjectileImpactPresentations.ownsMaterialAudio(this)) {
                 level().playSound(null, BlockPos.containing(result.location), ModSounds.HIT.get(), SoundSource.PLAYERS, 1f, 1f)
             }
         } else {

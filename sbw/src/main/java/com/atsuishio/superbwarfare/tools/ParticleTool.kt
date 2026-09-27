@@ -101,8 +101,18 @@ object ParticleTool {
     }
 
     private fun dispatchExplosionFxToAudience(level: Level, context: ExplosionFxContext) {
+        // Ammunition-rack providers explicitly own the mushroom presentation. Ordinary vehicle
+        // destruction must not inherit the giant mushroom recipe from its blast radius.
+        val vehicle = context.directSource as? VehicleEntity
+        val type = if (vehicle != null && (vehicle.health <= 0 || vehicle.isWreck) &&
+            context.particleType in setOf(ParticleType.HUGE, ParticleType.GIANT)) ParticleType.LARGE else context.particleType
+        // FFA's impact presentation draws the burst but its own cue is a faint, non-positional clip: the blast is
+        // still heard through SpatialAudio at its size (r45 audio test: a 118 kg bomb played only FFA's cue at 0.1).
         if (com.atsuishio.superbwarfare.api.effect.MissilePresentation.impact(
-                level, context.particlePosition, context.directSource, context.radius)) return
+                level, context.particlePosition, context.directSource, context.radius)) {
+            playExplosionSound(level, context.particlePosition, type)
+            return
+        }
         if (level is ServerLevel) com.atsuishio.superbwarfare.api.vehicle.render.FarTerrainServer.rememberEffect(
             level, context.particlePosition, maxOf(8.0, context.radius * 2.0))
 
@@ -118,13 +128,11 @@ object ParticleTool {
         }
 
         if (context.radius > 0 && com.atsuishio.superbwarfare.api.effect.MissilePresentation.effect(
-                level, context.particlePosition, context.radius, false)) return
+                level, context.particlePosition, context.radius, false)) {
+            playExplosionSound(level, context.particlePosition, type)
+            return
+        }
 
-        // Ammunition-rack providers explicitly own the mushroom presentation. Ordinary vehicle
-        // destruction must not inherit the giant mushroom recipe from its blast radius.
-        val vehicle = context.directSource as? VehicleEntity
-        val type = if (vehicle != null && (vehicle.health <= 0 || vehicle.isWreck) &&
-            context.particleType in setOf(ParticleType.HUGE, ParticleType.GIANT)) ParticleType.LARGE else context.particleType
         when (type) {
             ParticleType.MINI -> spawnMiniExplosionParticles(level, context.particlePosition, context.fireballRadius <= 0f)
             ParticleType.SMALL -> spawnSmallExplosionParticles(level, context.particlePosition, context.fireballRadius <= 0f)
@@ -154,7 +162,7 @@ object ParticleTool {
      * up) above it, so bombs and cannon are the loud events of a battle and small bursts stay modest.
      */
     private fun explosionGain(type: ParticleType): Float = when (type) {
-        ParticleType.MINI -> 1f
+        ParticleType.MINI -> 0.7f
         ParticleType.SMALL -> 1.0f
         ParticleType.MEDIUM -> 1.6f
         ParticleType.LARGE -> 2.4f
@@ -170,8 +178,11 @@ object ParticleTool {
     fun playExplosionSound(level: Level?, pos: Vec3, type: ParticleType) {
         if (level !is ServerLevel) return
         when (type) {
-            ParticleType.MINI -> level.playSound(null, BlockPos.containing(pos.x, pos.y + 1, pos.z),
-                ModSounds.MINI_EXPLOSION.get(), SoundSource.BLOCKS, 4f, 1f)
+            // a small burst (AP impact, 20-30 mm HE): quieter than the gun that fired it, heard to 48 blocks
+            ParticleType.MINI -> com.atsuishio.superbwarfare.api.audio.SpatialAudio.emit(level, pos,
+                com.atsuishio.superbwarfare.api.audio.SpatialAudio.Cue(null, ModSounds.MINI_EXPLOSION.get(), null, null,
+                    16f, 48f, 48f), explosionGain(type), 1f, null, null,
+                com.atsuishio.superbwarfare.api.audio.SpatialAudio.Category.EXPLOSION, null)
             ParticleType.SMALL -> playExplosionSoundLayers(level, pos, ModSounds.EXPLOSION_CLOSE.get(), 2f,
                 ModSounds.EXPLOSION_FAR.get(), 8f, ModSounds.EXPLOSION_VERY_FAR.get(), 32f, explosionGain(type))
             ParticleType.MEDIUM -> playExplosionSoundLayers(level, pos, ModSounds.EXPLOSION_CLOSE.get(), 4f,
@@ -194,7 +205,7 @@ object ParticleTool {
         val z = pos.z
 
         if (level is ServerLevel) {
-            level.playSound(null, BlockPos.containing(x, y + 1, z), ModSounds.MINI_EXPLOSION.get(), SoundSource.BLOCKS, 4f, 1f)
+            playExplosionSound(level, pos, ParticleType.MINI)
             if (!burst) return
             sendParticle(level, ParticleTypes.CAMPFIRE_COSY_SMOKE, x, y, z, 2, 0.1, 0.1, 0.1, 0.02, true)
             sendParticle(level, ParticleTypes.EXPLOSION, x, y, z, 2, 0.05, 0.05, 0.05, 1.0, true)
