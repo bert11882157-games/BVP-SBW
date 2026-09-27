@@ -96,6 +96,11 @@ final class ArmorImpactService {
         }
 
         ArmorHit armorHit = volumes.armorHit(trace);
+        if (armorHit != null && !armorHit.isRayHit() && targetProfile.usesArmorMesh()) {
+            // A mesh is traced from the visual model: a shell ray that meets no plate went past the armor. The
+            // proximity match (the nearest plate within the impact tolerance) exists for coarse box profiles only.
+            armorHit = null;
+        }
         ModuleHit trackHit = volumes.directTrackHit(trace);
         ModuleHit moduleHit = volumes.directModuleHit(trace);
         ModuleHit exposedHit = ArmorModuleResolver.nearestExposed(armorHit, trackHit, moduleHit);
@@ -251,6 +256,15 @@ final class ArmorImpactService {
                                                            ProjectileArmorEffect shot, DamageSource damageSource,
                                                            Vec3 hitVec, BvpImpactVolumeQuery volumes,
                                                            ShotTrace trace) {
+        if (targetProfile.usesArmorMesh()) {
+            // The OBB contact is coarser than the mesh: the shell ray passes the armor without touching it (beside
+            // an angled cheek, past a hull edge). It is no hit, and the shell keeps flying instead of stopping at
+            // an invisible wall.
+            ArmorImpactStats.record(Outcome.MISS);
+            ArmorImpactReporter.logArmorEvent(owner, target, hitVec,
+                    "[BVP Armor] Shell ray meets no mesh armor; projectile continues.");
+            return ProjectileArmorMutationService.passImpact();
+        }
         if (targetProfile.unboxedHitsPenetrate) {
             return resolveUnboxedHit(owner, target, targetProfile, shot, damageSource, hitVec, volumes, trace);
         }
