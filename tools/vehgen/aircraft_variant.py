@@ -246,6 +246,12 @@ def main(argv):
     sweeps.apply_client(client, spec.get('sweeps', {}), sweep_pivots)
     for k in spec.get('removeClientKeys', []):
         client.pop(k, None)
+    for path, value in spec.get('clientSet', {}).items():     # dotted path, e.g. AfterburnerPresentation.Outlets
+        node = client
+        keys = path.split('.')
+        for k in keys[:-1]:
+            node = node[k]
+        node[keys[-1]] = value
     out.json(os.path.join(ASSETS, 'sbw', 'vehicles', f'{vid}.json'), client)
     for rel in ('armor', 'flight_reference'):
         path = TPL(os.path.join(DATA, rel, f'{tid}.json'))

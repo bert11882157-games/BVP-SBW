@@ -1,0 +1,157 @@
+{
+  "Schema": 1,
+  "Name": "J-10A",
+  "BuiltInWeapons": [
+    "Cannon"
+  ],
+  "SuspendedWeapons": [],
+  "Pairs": [
+    {
+      "Id": "outer",
+      "Name": "Outer wing pylon",
+      "Left": [
+        3.5375,
+        1.20625,
+        -2.8125
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            3.5349,
+            1.2219,
+            -2.8156
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Right": [
+        -3.5375,
+        1.20625,
+        -2.8125
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -3.5349,
+            1.2219,
+            -2.8156
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/pl8",
+        "berts_vehicle_pack:munition/pl12"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 300
+    },
+    {
+      "Id": "mid",
+      "Name": "Mid wing pylon",
+      "Left": [
+        2.6625,
+        1.2875,
+        -3.03125
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            2.6621,
+            1.3092,
+            -3.0338
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Right": [
+        -2.6625,
+        1.2875,
+        -3.03125
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -2.6621,
+            1.3092,
+            -3.0338
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/pl12",
+        "berts_vehicle_pack:munition/pl8",
+        "berts_vehicle_pack:fab_250",
+        "berts_vehicle_pack:munition/kab250"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 600
+    },
+    {
+      "Id": "inner",
+      "Name": "Inner wing pylon",
+      "Left": [
+        1.7875,
+        1.2875,
+        -1.875
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            1.7893,
+            1.3092,
+            -1.8992
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Right": [
+        -1.7875,
+        1.2875,
+        -1.875
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -1.7893,
+            1.3092,
+            -1.8992
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:fab_250",
+        "berts_vehicle_pack:fab_500",
+        "berts_vehicle_pack:munition/kab250",
+        "berts_vehicle_pack:munition/kab500od",
+        "berts_vehicle_pack:munition/odab500pm"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 1000
+    }
+  ],
+  "StoreGroups": {},
+  "Pod": {
+    "Position": [
+      0,
+      1.016941875,
+      3.462603125
+    ],
+    "YawLimit": 180,
+    "PitchMin": -10,
+    "PitchMax": 90,
+    "Source": "Approximate virtual optical origin; pod mesh pending. Eurofighter Litening support: https://www.eurofighter.com/news/future ; UK MoD Litening III centreline station 13: https://assets.publishing.service.gov.uk/media/5a7f2898e5274a2e87db4261/20160301-Typhoon_ZJ943_BOI-final.pdf",
+    "MaxZoom": 24,
+    "Range": 8192
+  },
+  "MaxPayloadKg": 6000,
+  "Radar": {
+    "Enabled": true,
+    "Range": 1000
+  },
+  "MaxPylonMassKg": 1000,
+  "MaxWeaponsPerPylon": 12,
+  "Singles": []
+}

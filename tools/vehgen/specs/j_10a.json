@@ -1,0 +1,346 @@
+{
+  "id": "j_10a",
+  "name": "J-10A Vigorous Dragon",
+  "entityClass": "AuthoredFixedWingAircraft",
+  "template": "eurofighter_typhoon",
+  "source": "J-10A.mtb",
+  "note": "Canard delta on the Typhoon data and rig (closest in size: 16.0 m vs the J-10A's 16.9 m). Scaled nose to tail onto the Typhoon fuselage. The source's own gear goes into the template gear bones; the rig surface pivots (canards, elevons, rudder) move to the J-10's hinges. The baked centreline tank is dropped. Single AL-31FN: one afterburner outlet at the J-10 nozzle.",
+  "yaw180": true,
+  "lengthParts": [
+    0,
+    1,
+    2
+  ],
+  "templateLengthBones": [
+    "wreck_fuselage_0__hull",
+    "wreck_fuselage_1__hull",
+    "wreck_fuselage_2__hull",
+    "wreck_fuselage_3__hull"
+  ],
+  "groundParts": [
+    0,
+    1,
+    2,
+    12,
+    14,
+    15
+  ],
+  "excludeParts": [
+    24,
+    3
+  ],
+  "storeTextureV": -1,
+  "keepBoxes": [],
+  "dropRules": [
+    {
+      "absXMin": 22,
+      "yMax": 20.5
+    }
+  ],
+  "fuselageCuts": [
+    -70,
+    0,
+    60
+  ],
+  "parts": {
+    "0": [
+      {
+        "bone": "wing",
+        "if": {
+          "absXMin": 30
+        }
+      }
+    ],
+    "1": "fuselage",
+    "2": "fuselage",
+    "4": "wing",
+    "5": "wing",
+    "7": [
+      {
+        "bone": "wreck_fuselage_3__rudder",
+        "if": {
+          "zMin": 80
+        }
+      },
+      {
+        "bone": "wreck_fuselage_0__control_stick_pitch",
+        "if": {
+          "zMax": -50
+        }
+      }
+    ],
+    "8": "wreck_fuselage_0__canard_left",
+    "9": "wreck_fuselage_0__canard_right",
+    "10": "wreck_wing_left__elevon_left_inner",
+    "11": "wreck_wing_right__elevon_right_inner",
+    "12": "wreck_fuselage_1__landing_gear_2",
+    "14": "wreck_wing_left__landing_gear_0",
+    "15": "wreck_wing_right__landing_gear_1"
+  },
+  "keepTemplateBones": [],
+  "removeClientKeys": [
+    "CanopyGlass",
+    "FlightDisplays"
+  ],
+  "attachments": {
+    "pilot_eye": [
+      0,
+      48.5,
+      -63.0
+    ]
+  },
+  "seatPositions": {
+    "0": [
+      0,
+      22.8,
+      -63.0
+    ]
+  },
+  "addSeats": [],
+  "flightReference": {
+    "engineCount": 1,
+    "baseMassKg": 9750,
+    "mainFuelMassKg": 4950,
+    "fullFuelWingLoadingKgPerSquareMetre": 444.1088,
+    "dryThrustKgfPerEngine": 7600,
+    "afterburnerThrustKgfPerEngine": 12500,
+    "maximumTrueAirspeedKmh": 2336,
+    "referenceAltitudeMetres": 11000,
+    "maximumIndicatedAirspeedKmh": 1450,
+    "climbMetresPerSecond": 300,
+    "turnSeconds": 21,
+    "negativeGLimit": -3,
+    "positiveGLimit": 9
+  },
+  "note_flight": "J-10A: empty 9,750 kg, internal fuel 4,950 kg, wing 33.1 m2, one AL-31FN (7,600 / 12,500 kgf), Mach 2.2 at 11 km, +9/-3 g.",
+  "sweeps": {
+    "elevon_left_inner": {
+      "pivot": [
+        45.0,
+        25.8,
+        58.6
+      ],
+      "axis": [
+        -0.99564,
+        0,
+        -0.09331
+      ]
+    },
+    "elevon_right_inner": {
+      "pivot": [
+        -45.0,
+        25.8,
+        58.6
+      ],
+      "axis": [
+        -0.99564,
+        0,
+        0.09331
+      ]
+    },
+    "canard_left": {
+      "pivot": [
+        9.8,
+        35.0,
+        -32.1
+      ],
+      "axis": [
+        -1,
+        0,
+        0
+      ]
+    },
+    "canard_right": {
+      "pivot": [
+        -9.8,
+        35.0,
+        -32.1
+      ],
+      "axis": [
+        -1,
+        0,
+        0
+      ]
+    },
+    "rudder": {
+      "pivot": [
+        0,
+        48.9,
+        95.3
+      ],
+      "axis": [
+        0,
+        0.72336,
+        0.69047
+      ]
+    },
+    "control_stick_roll": {
+      "pivot": [
+        0,
+        36.3,
+        -68.3
+      ]
+    },
+    "control_stick_pitch": {
+      "pivot": [
+        0,
+        36.3,
+        -68.3
+      ]
+    }
+  },
+  "note_rig": "Rig pivots on the J-10 hinges: elevons on their leading-edge hinge line (whole flaperon in the inner bone; the outer bone is empty), all-moving canards on a spanwise spindle at 45% root chord, rudder on its swept hinge, stick base.",
+  "clientSet": {
+    "AfterburnerPresentation.Outlets": [
+      {
+        "Id": "afterburner_center",
+        "Position": [
+          0,
+          1.83125,
+          -7.45
+        ],
+        "Direction": [
+          0,
+          0,
+          -1
+        ],
+        "NozzleRadiusBlocks": 0.39
+      }
+    ]
+  },
+  "note_crew": "Seat back z -59 (headrest y 52), cushion y ~35, canopy peak ~52. The template eye was above the canopy (y 56.5); it is now in front of the headrest, 3.5 px under the canopy, over the glare shield and through the HUD posts.",
+  "armamentOverrides": {
+    "Name": "J-10A",
+    "MaxPayloadKg": 6000,
+    "Pairs": [
+      {
+        "Id": "outer",
+        "Name": "Outer wing pylon",
+        "Left": [
+          3.5375,
+          1.20625,
+          -2.8125
+        ],
+        "LeftStations": [
+          {
+            "Point": [
+              3.5375,
+              1.20625,
+              -2.8125
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "Right": [
+          -3.5375,
+          1.20625,
+          -2.8125
+        ],
+        "RightStations": [
+          {
+            "Point": [
+              -3.5375,
+              1.20625,
+              -2.8125
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "AllowedStores": [
+          "berts_vehicle_pack:munition/pl8",
+          "berts_vehicle_pack:munition/pl12"
+        ],
+        "MaxWeaponsPerPylon": 1,
+        "MaxPylonMassKg": 300
+      },
+      {
+        "Id": "mid",
+        "Name": "Mid wing pylon",
+        "Left": [
+          2.6625,
+          1.2875,
+          -3.03125
+        ],
+        "LeftStations": [
+          {
+            "Point": [
+              2.6625,
+              1.2875,
+              -3.03125
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "Right": [
+          -2.6625,
+          1.2875,
+          -3.03125
+        ],
+        "RightStations": [
+          {
+            "Point": [
+              -2.6625,
+              1.2875,
+              -3.03125
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "AllowedStores": [
+          "berts_vehicle_pack:munition/pl12",
+          "berts_vehicle_pack:munition/pl8",
+          "berts_vehicle_pack:fab_250",
+          "berts_vehicle_pack:munition/kab250"
+        ],
+        "MaxWeaponsPerPylon": 1,
+        "MaxPylonMassKg": 600
+      },
+      {
+        "Id": "inner",
+        "Name": "Inner wing pylon",
+        "Left": [
+          1.7875,
+          1.2875,
+          -1.875
+        ],
+        "LeftStations": [
+          {
+            "Point": [
+              1.7875,
+              1.2875,
+              -1.875
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "Right": [
+          -1.7875,
+          1.2875,
+          -1.875
+        ],
+        "RightStations": [
+          {
+            "Point": [
+              -1.7875,
+              1.2875,
+              -1.875
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "AllowedStores": [
+          "berts_vehicle_pack:fab_250",
+          "berts_vehicle_pack:fab_500",
+          "berts_vehicle_pack:munition/kab250",
+          "berts_vehicle_pack:munition/kab500od",
+          "berts_vehicle_pack:munition/odab500pm"
+        ],
+        "MaxWeaponsPerPylon": 1,
+        "MaxPylonMassKg": 1000
+      }
+    ],
+    "Singles": [],
+    "StoreGroups": {}
+  },
+  "note_armament": "Own layout on the model's pylons (the Typhoon's is an internal-bay abstraction): PL-8 / PL-12 outboard, PL-12 or light bombs mid, bombs inboard (Soviet-type bombs stand in for the Chinese 250-3 / 500-3 and LT-2)."
+}

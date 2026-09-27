@@ -266,6 +266,9 @@ public class ModEntityRenderers {
         registerVehicle(event, ModEntities.EUROFIGHTER_TYPHOON, "eurofighter_typhoon", standardVehicle(
                 "custom_geo/eurofighter_typhoon.geo.json", "textures/entity/eurofighter_typhoon.png",
                 "eurofighter_typhoon"));
+        registerVehicle(event, ModEntities.J_10A, "j_10a", standardVehicle(
+                "custom_geo/j_10a.geo.json", "textures/entity/j_10a.png",
+                "j_10a"));
         registerVehicle(event, ModEntities.AN_12B, "an_12b", standardVehicle(
                 "custom_geo/an_12b.geo.json", "textures/entity/an_12b.png",
                 "an_12b"));

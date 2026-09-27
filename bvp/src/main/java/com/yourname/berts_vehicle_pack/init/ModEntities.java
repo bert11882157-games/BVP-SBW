@@ -321,6 +321,10 @@ public class ModEntities {
             ENTITIES.register("eurofighter_typhoon", () -> vehicle(
                     (type, level) -> new AuthoredFixedWingAircraft(type, level, "eurofighter_typhoon"),
                     16.0178f, 5.2714f, "eurofighter_typhoon"));
+    public static final RegistryObject<EntityType<AuthoredFixedWingAircraft>> J_10A =
+            ENTITIES.register("j_10a", () -> vehicle(
+                    (type, level) -> new AuthoredFixedWingAircraft(type, level, "j_10a"),
+                    16.0178f, 5.2714f, "j_10a"));
 
     public static final RegistryObject<EntityType<AuthoredFixedWingAircraft>> AN_12B =
             ENTITIES.register("an_12b", () -> vehicle(
