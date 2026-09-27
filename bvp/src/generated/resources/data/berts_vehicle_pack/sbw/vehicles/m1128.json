@@ -285,14 +285,14 @@
         }
       ],
       "SoundInfo": {
-        "Fire1PGain": 0.3,
-        "Fire3PGain": 0.3,
-        "Fire3PFarGain": 0.3,
-        "Fire3PVeryFarGain": 0.3,
-        "Fire1P": "superbwarfare:t_90a_fire_1p",
-        "Fire3P": "superbwarfare:t_90a_fire_3p",
-        "Fire3PFar": "superbwarfare:t_90a_far",
-        "Fire3PVeryFar": "superbwarfare:t_90a_veryfar",
+        "Fire1PGain": 1.0,
+        "Fire3PGain": 1.0,
+        "Fire3PFarGain": 1.0,
+        "Fire3PVeryFarGain": 1.0,
+        "Fire1P": "bvp_audio:weapon/nato_120_1p",
+        "Fire3P": "bvp_audio:weapon/nato_120_3p",
+        "Fire3PFar": "bvp_audio:weapon/nato_120_far",
+        "Fire3PVeryFar": "bvp_audio:weapon/nato_120_veryfar",
         "Change": "superbwarfare:into_cannon",
         "VehicleReload": "berts_vehicle_pack:soviet_125mm_autoloader",
         "VehicleReloadClipDurationTicks": 133,
@@ -300,7 +300,7 @@
           "berts_vehicle_pack:soviet_125mm_autoloader"
         ]
       },
-      "SoundRadius": 32,
+      "SoundRadius": 40,
       "ShootPos": {
         "Transform": "Barrel",
         "Positions": [
@@ -468,17 +468,17 @@
       "Crosshair": "@VehicleCommonGun",
       "Name": "weapon.berts_vehicle_pack.m1128_hmg",
       "SoundInfo": {
-        "Fire1PGain": 0.5,
-        "Fire3PGain": 0.5,
-        "Fire3PFarGain": 0.5,
-        "Fire3PVeryFarGain": 0.5,
-        "Fire1P": "berts_vehicle_pack:m2hb_shoot_alt",
-        "Fire3P": "berts_vehicle_pack:m2hb_shoot_alt",
-        "Fire3PFar": "berts_vehicle_pack:m2hb_shoot_alt",
-        "Fire3PVeryFar": "berts_vehicle_pack:m2hb_shoot_alt",
+        "Fire1PGain": 1.0,
+        "Fire3PGain": 1.0,
+        "Fire3PFarGain": 1.0,
+        "Fire3PVeryFarGain": 1.0,
+        "Fire1P": "bvp_audio:weapon/m2hb_1p",
+        "Fire3P": "bvp_audio:weapon/m2hb_3p",
+        "Fire3PFar": "bvp_audio:weapon/m2hb_far",
+        "Fire3PVeryFar": "bvp_audio:weapon/m2hb_veryfar",
         "Change": "superbwarfare:missile_change"
       },
-      "SoundRadius": 16,
+      "SoundRadius": 18,
       "Magazine": 100,
       "NormalReloadTime": 100,
       "EmptyReloadTime": 100,

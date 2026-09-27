@@ -118,14 +118,14 @@
         "Profile": "berts_vehicle_pack:zu23_2/cannon/default"
       },
       "SoundInfo": {
-        "Fire1PGain": 0.5,
-        "Fire3PGain": 0.5,
-        "Fire3PFarGain": 0.5,
-        "Fire3PVeryFarGain": 0.5,
-        "Fire1P": "berts_vehicle_pack:tap_zu23shoot",
-        "Fire3P": "berts_vehicle_pack:tap_zu23shoot",
-        "Fire3PFar": "berts_vehicle_pack:tap_zu23shoot",
-        "Fire3PVeryFar": "berts_vehicle_pack:tap_zu23shoot",
+        "Fire1PGain": 1.0,
+        "Fire3PGain": 1.0,
+        "Fire3PFarGain": 1.0,
+        "Fire3PVeryFarGain": 1.0,
+        "Fire1P": "bvp_audio:weapon/zu23_1p",
+        "Fire3P": "bvp_audio:weapon/zu23_3p",
+        "Fire3PFar": "bvp_audio:weapon/zu23_far",
+        "Fire3PVeryFar": "bvp_audio:weapon/zu23_far",
         "Change": "superbwarfare:into_missile"
       },
       "SoundRadius": 24,

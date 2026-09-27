@@ -381,16 +381,16 @@
         }
       ],
       "SoundInfo": {
-        "Fire1PGain": 0.5,
-        "Fire3PGain": 0.5,
-        "Fire3PFarGain": 0.5,
-        "Fire3PVeryFarGain": 0.5,
-        "Fire1P": "berts_vehicle_pack:tap_aw_90mmfire",
-        "Fire3P": "berts_vehicle_pack:tap_aw_90mmfire",
-        "Fire3PFar": "berts_vehicle_pack:tap_aw_90mmfire",
-        "Fire3PVeryFar": "berts_vehicle_pack:tap_aw_90mmfire"
+        "Fire1PGain": 1.0,
+        "Fire3PGain": 1.0,
+        "Fire3PFarGain": 1.0,
+        "Fire3PVeryFarGain": 1.0,
+        "Fire1P": "bvp_audio:weapon/erc_90_1p",
+        "Fire3P": "bvp_audio:weapon/erc_90_3p",
+        "Fire3PFar": "bvp_audio:weapon/erc_90_far",
+        "Fire3PVeryFar": "bvp_audio:weapon/erc_90_veryfar"
       },
-      "SoundRadius": 28,
+      "SoundRadius": 34,
       "ShootPos": {
         "Transform": "WeaponStationBarrel",
         "Positions": [
@@ -534,14 +534,14 @@
       "Crosshair": "@VehicleCommonGun",
       "Name": "weapon.berts_vehicle_pack.toyota_jihad_bmp1_pkt",
       "SoundInfo": {
-        "Fire1PGain": 0.5,
-        "Fire3PGain": 0.5,
-        "Fire3PFarGain": 0.5,
-        "Fire3PVeryFarGain": 0.5,
-        "Fire1P": "superbwarfare:coax_fire_1p",
-        "Fire3P": "superbwarfare:m_60_fire_3p",
-        "Fire3PFar": "superbwarfare:m_60_far",
-        "Fire3PVeryFar": "superbwarfare:m_60_veryfar",
+        "Fire1PGain": 1.0,
+        "Fire3PGain": 1.0,
+        "Fire3PFarGain": 1.0,
+        "Fire3PVeryFarGain": 1.0,
+        "Fire1P": "bvp_audio:weapon/pkt_1p",
+        "Fire3P": "bvp_audio:weapon/pkt_3p",
+        "Fire3PFar": "bvp_audio:weapon/pkt_far",
+        "Fire3PVeryFar": "bvp_audio:weapon/pkt_veryfar",
         "Change": "superbwarfare:into_cannon"
       },
       "SoundRadius": 12,

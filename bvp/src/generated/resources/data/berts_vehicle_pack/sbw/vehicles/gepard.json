@@ -364,13 +364,17 @@
         "Profile": "berts_vehicle_pack:gepard/cannon/default"
       },
       "SoundInfo": {
-        "Fire1P": "superbwarfare:bmp_2_cannon_fire_1p",
-        "Fire3P": "superbwarfare:bmp_2_cannon_fire_3p",
-        "Fire3PFar": "superbwarfare:mi_28_cannon_far",
-        "Fire3PVeryFar": "superbwarfare:mi_28_cannon_veryfar",
-        "Change": "superbwarfare:into_missile"
+        "Fire1P": "bvp_audio:weapon/rh202_20_1p",
+        "Fire3P": "bvp_audio:weapon/rh202_20_3p",
+        "Fire3PFar": "bvp_audio:weapon/rh202_20_far",
+        "Fire3PVeryFar": "bvp_audio:weapon/rh202_20_far",
+        "Change": "superbwarfare:into_missile",
+        "Fire1PGain": 1.0,
+        "Fire3PGain": 1.0,
+        "Fire3PFarGain": 1.0,
+        "Fire3PVeryFarGain": 1.0
       },
-      "SoundRadius": 24,
+      "SoundRadius": 22,
       "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/cannon_35mm_ap.png",
       "AmmoType": [
         {

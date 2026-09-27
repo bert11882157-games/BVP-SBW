@@ -190,6 +190,37 @@ def main(argv):
                 register(f'{section}/{key}', f'{section}/{key}')
                 print(f'{section:6s} {key:9s} {"region" if end else "whole"} {duration(dst):5.2f}s')
 
+        # weapon families: [1p, 3p, far, veryfar]; automatic weapons keep one shot cycle plus a short faded tail
+        for fam, spec in manifest.get('weapons', {}).items():
+            for slot, rel in zip(('1p', '3p', 'far', 'veryfar'), spec['src']):
+                if not rel:
+                    continue
+                src = source(rel)
+                if not os.path.exists(src):
+                    problems.append(f'weapon {fam} {slot}: missing {rel}')
+                    continue
+                wav = src
+                if not src.lower().endswith('.wav'):
+                    wav = os.path.join(tmp, f'w_{fam}_{slot}.wav')
+                    ffmpeg(['-i', src, wav])
+                rate, frames, regions = wav_regions(wav)
+                gain = peak_gain_db(wav)
+                dst = os.path.join(OUT, NS, 'sounds', 'weapon', f'{fam}_{slot}.ogg')
+                end = None
+                if spec.get('auto') and regions and slot in ('1p', '3p'):
+                    cycle_end = max(s + l for s, l in regions)
+                    end = min(frames, cycle_end + int(spec.get('tailSeconds', 0.55) * rate))
+                channels = ['-ac', '1'] if slot != '1p' else []
+                filters = [f'volume={gain:.2f}dB']
+                if end is not None:
+                    filters.insert(0, f'atrim=end_sample={end},asetpts=PTS-STARTPTS')
+                    tail = (end - frames) if False else 0
+                    filters.append(f'afade=t=out:st={max(0.0, end / rate - 0.35):.3f}:d=0.35')
+                os.makedirs(os.path.dirname(dst), exist_ok=True)
+                ffmpeg(['-i', wav, '-af', ','.join(filters)] + channels + ['-c:a', 'libvorbis', '-q:a', '5', dst])
+                register(f'weapon/{fam}_{slot}', f'weapon/{fam}_{slot}')
+            print(f'weapon {fam:9s} ' + ' '.join(f'{sl}' for sl, r in zip(('1p', '3p', 'far', 'veryfar'), spec['src']) if r))
+
     # sounds.json (this namespace is BVP-source-owned; the generator never writes it)
     path = os.path.join(OUT, NS, 'sounds.json')
     existing = json.load(open(path)) if os.path.exists(path) else {}

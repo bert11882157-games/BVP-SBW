@@ -109,17 +109,17 @@
       "RPM": 400,
       "Name": "weapon.berts_vehicle_pack.ags_30",
       "SoundInfo": {
-        "Fire1PGain": 0.5,
-        "Fire3PGain": 0.5,
-        "Fire3PFarGain": 0.5,
-        "Fire3PVeryFarGain": 0.5,
-        "Fire1P": "superbwarfare:m_79_fire_3p",
-        "Fire3P": "superbwarfare:m_79_fire_3p",
-        "Fire3PFar": "superbwarfare:m_79_fire_3p",
-        "Fire3PVeryFar": "superbwarfare:m_79_fire_3p",
+        "Fire1PGain": 1.0,
+        "Fire3PGain": 1.0,
+        "Fire3PFarGain": 1.0,
+        "Fire3PVeryFarGain": 1.0,
+        "Fire1P": "bvp_audio:weapon/mk19_1p",
+        "Fire3P": "bvp_audio:weapon/mk19_3p",
+        "Fire3PFar": "bvp_audio:weapon/mk19_far",
+        "Fire3PVeryFar": "bvp_audio:weapon/mk19_far",
         "Change": "superbwarfare:into_cannon"
       },
-      "SoundRadius": 32,
+      "SoundRadius": 12,
       "ShootPos": {
         "Transform": "Barrel",
         "Positions": [

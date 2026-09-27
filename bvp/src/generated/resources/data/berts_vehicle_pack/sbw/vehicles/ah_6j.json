@@ -420,20 +420,20 @@
         "HudDirectionAttachment": "rocket_hud_direction_01"
       },
       "SoundInfo": {
-        "Fire1PGain": 0.5,
-        "Fire3PGain": 0.5,
-        "Fire3PFarGain": 0.5,
-        "Fire3PVeryFarGain": 0.5,
-        "Fire1P": "berts_vehicle_pack:tap_rocketfire1",
-        "Fire3P": "berts_vehicle_pack:tap_rocketfire1",
+        "Fire1PGain": 1.0,
+        "Fire3PGain": 1.0,
+        "Fire3PFarGain": 1.0,
+        "Fire3PVeryFarGain": 1.0,
+        "Fire1P": "bvp_audio:weapon/hydra_1p",
+        "Fire3P": "bvp_audio:weapon/hydra_3p",
         "VehicleReload3p": "superbwarfare:missile_reload",
         "VehicleReloadSoundTime": 7,
         "Change": "superbwarfare:into_missile",
-        "Fire3PFar": "berts_vehicle_pack:tap_rocketfire1",
-        "Fire3PVeryFar": "berts_vehicle_pack:tap_rocketfire1"
+        "Fire3PFar": "bvp_audio:weapon/hydra_far",
+        "Fire3PVeryFar": "bvp_audio:weapon/hydra_far"
       },
       "Crosshair": "@Empty",
-      "SoundRadius": 12,
+      "SoundRadius": 16,
       "NominalBallistics": {
         "Supported": true,
         "ProjectileType": "berts_vehicle_pack:s8ko_rocket",

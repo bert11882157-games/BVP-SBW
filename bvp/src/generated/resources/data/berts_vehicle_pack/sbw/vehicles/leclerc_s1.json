@@ -440,18 +440,22 @@
         }
       ],
       "SoundInfo": {
-        "Fire1P": "superbwarfare:t_90a_fire_1p",
-        "Fire3P": "superbwarfare:t_90a_fire_3p",
-        "Fire3PFar": "superbwarfare:t_90a_far",
-        "Fire3PVeryFar": "superbwarfare:t_90a_veryfar",
+        "Fire1P": "bvp_audio:weapon/nato_120_1p",
+        "Fire3P": "bvp_audio:weapon/nato_120_3p",
+        "Fire3PFar": "bvp_audio:weapon/nato_120_far",
+        "Fire3PVeryFar": "bvp_audio:weapon/nato_120_veryfar",
         "Change": "superbwarfare:into_cannon",
         "VehicleReload": "berts_vehicle_pack:soviet_125mm_autoloader",
         "VehicleReloadClipDurationTicks": 133,
         "CancellableSounds": [
           "berts_vehicle_pack:soviet_125mm_autoloader"
-        ]
+        ],
+        "Fire1PGain": 1.0,
+        "Fire3PGain": 1.0,
+        "Fire3PFarGain": 1.0,
+        "Fire3PVeryFarGain": 1.0
       },
-      "SoundRadius": 32,
+      "SoundRadius": 40,
       "RPM": 12,
       "Magazine": 1,
       "NormalReloadTime": 100,
@@ -588,13 +592,17 @@
       "Crosshair": "@VehicleCommonGun",
       "Name": "weapon.berts_vehicle_pack.leclerc_s1_machinegun",
       "SoundInfo": {
-        "Fire1P": "superbwarfare:m_2_hb_fire_1p",
-        "Fire3P": "superbwarfare:m_2_hb_fire_3p",
-        "Fire3PFar": "superbwarfare:m_2_hb_far",
-        "Fire3PVeryFar": "superbwarfare:m_2_hb_veryfar",
-        "Change": "superbwarfare:missile_change"
+        "Fire1P": "bvp_audio:weapon/m2hb_1p",
+        "Fire3P": "bvp_audio:weapon/m2hb_3p",
+        "Fire3PFar": "bvp_audio:weapon/m2hb_far",
+        "Fire3PVeryFar": "bvp_audio:weapon/m2hb_veryfar",
+        "Change": "superbwarfare:missile_change",
+        "Fire1PGain": 1.0,
+        "Fire3PGain": 1.0,
+        "Fire3PFarGain": 1.0,
+        "Fire3PVeryFarGain": 1.0
       },
-      "SoundRadius": 16,
+      "SoundRadius": 18,
       "Magazine": 200,
       "NormalReloadTime": 160,
       "EmptyReloadTime": 160,

@@ -54,34 +54,644 @@
     "generic": "land/us_tnk_m1a2/sounds/genericturretmovement.wav"
   },
   "vehicles": {
-    "t90a": ["t90", "t90", "t90"], "t90m": ["t90", "t90", "t90"], "t14_armata": ["t90", "t90", "t90"],
-    "t72a": ["t72", "t72", "t90"], "t72b": ["t72", "t72", "t90"], "t72b3": ["t72", "t72", "t90"],
-    "t72b3_ubh_cope": ["t72", "t72", "t90"], "bmpt": ["t72", "t72", "t90"], "t64b_obr1976": ["t72", "t72", "t90"],
-    "t80b_obr1976": ["m1a2", "t72", "t90"], "t80u_obr1985": ["m1a2", "t72", "t90"],
-    "t_62a": ["t62", "t72", "t62"], "t55a_2_0": ["t62", "t72", "t62"], "qn_506model": ["t62", "t72", "t62"],
-    "ztz99a": ["type98", "t72", "t90"], "vt_4a1": ["type98", "t72", "t90"],
-    "m1_abrams_elite": ["m1a2", "m1a2", "abrams"], "m1a1_abrams": ["m1a2", "m1a2", "abrams"],
-    "m1a2_abrams_sep_v2": ["m1a2", "m1a2", "abrams"],
-    "leopard_2a4": ["leo", "leo", "leo"], "leo2a6": ["leo", "leo", "leo"], "k2a1_black_panther": ["leo", "leo", "leo"],
-    "type_90": ["leo", "leo", "leo"], "leclerc_s1": ["leo", "leo", "leo"], "gepard": ["leo", "leo", "leo"],
-    "pzh_2000": ["leo", "leo", "leo"],
-    "challenger_2": ["cr2", "cr2", "cr2"],
-    "m48a3_elite": ["m48", "m48", "generic"], "m60a1": ["m48", "m48", "generic"], "m109a7_paladin": ["m48", "m48", "generic"],
-    "m551a1": ["m8", "m48", "generic"],
-    "bmp_1am": ["bmp1", "bmp1", "bmp"], "bmd_1": ["bmp1", "bmp1", "bmp"], "btr_zd": ["bmp1", "bmp1", "bmp"],
-    "9p149_shturm": ["bmp1", "bmp1", "bmp"], "bmp2": ["bmp1", "bmp1", "bmp"], "bmp2m": ["bmp1", "bmp1", "bmp"],
-    "bmp3m_elite": ["bmp3", "bmp3", "bmp"],
-    "btr80a": ["btr90", null, "bmp"], "btr_90": ["btr90", null, "bmp"], "btr_60pb": ["btr90", null, "bmp"],
-    "9p148": ["brdm", null, "bmp"], "gaz_3937_vodnik_aa": ["tigr", null, "hmmwv"],
-    "tunguska": ["tunguska", "tunguska", "tunguska"], "9k22_tunguska": ["tunguska", "tunguska", "tunguska"],
-    "zsu23_4": ["pt76", "bmp1", "bmp"],
-    "m2_bradley": ["m2a2", "m2a2", "m2a2"], "lav25": ["lav", null, "m2a2"], "m1128": ["stryker", null, "generic"],
-    "marder_1a1": ["warrior", "puma", "warrior"], "marder_1a2": ["warrior", "puma", "warrior"],
-    "marder_1a5": ["warrior", "puma", "warrior"], "cv9040_no_net": ["warrior", "rubber", "warrior"],
-    "vbci": ["gtk", null, "warrior"], "zbd_09": ["gtk", null, "warrior"], "ztl_09": ["gtk", null, "warrior"],
-    "zsl_92": ["vab", null, "bmp"],
-    "toyota_jihad_bmp1": ["pickup", null, "hmmwv"], "toyota_jihad_dshk": ["pickup", null, "hmmwv"],
-    "toyota_jihad_s5": ["pickup", null, "hmmwv"], "toyota_jihad_spg9": ["pickup", null, "hmmwv"],
-    "uaz_469_spg9": ["uaz", null, "hmmwv"]
+    "t90a": [
+      "t90",
+      "t90",
+      "t90"
+    ],
+    "t90m": [
+      "t90",
+      "t90",
+      "t90"
+    ],
+    "t14_armata": [
+      "t90",
+      "t90",
+      "t90"
+    ],
+    "t72a": [
+      "t72",
+      "t72",
+      "t90"
+    ],
+    "t72b": [
+      "t72",
+      "t72",
+      "t90"
+    ],
+    "t72b3": [
+      "t72",
+      "t72",
+      "t90"
+    ],
+    "t72b3_ubh_cope": [
+      "t72",
+      "t72",
+      "t90"
+    ],
+    "bmpt": [
+      "t72",
+      "t72",
+      "t90"
+    ],
+    "t64b_obr1976": [
+      "t72",
+      "t72",
+      "t90"
+    ],
+    "t80b_obr1976": [
+      "m1a2",
+      "t72",
+      "t90"
+    ],
+    "t80u_obr1985": [
+      "m1a2",
+      "t72",
+      "t90"
+    ],
+    "t_62a": [
+      "t62",
+      "t72",
+      "t62"
+    ],
+    "t55a_2_0": [
+      "t62",
+      "t72",
+      "t62"
+    ],
+    "qn_506model": [
+      "t62",
+      "t72",
+      "t62"
+    ],
+    "ztz99a": [
+      "type98",
+      "t72",
+      "t90"
+    ],
+    "vt_4a1": [
+      "type98",
+      "t72",
+      "t90"
+    ],
+    "m1_abrams_elite": [
+      "m1a2",
+      "m1a2",
+      "abrams"
+    ],
+    "m1a1_abrams": [
+      "m1a2",
+      "m1a2",
+      "abrams"
+    ],
+    "m1a2_abrams_sep_v2": [
+      "m1a2",
+      "m1a2",
+      "abrams"
+    ],
+    "leopard_2a4": [
+      "leo",
+      "leo",
+      "leo"
+    ],
+    "leo2a6": [
+      "leo",
+      "leo",
+      "leo"
+    ],
+    "k2a1_black_panther": [
+      "leo",
+      "leo",
+      "leo"
+    ],
+    "type_90": [
+      "leo",
+      "leo",
+      "leo"
+    ],
+    "leclerc_s1": [
+      "leo",
+      "leo",
+      "leo"
+    ],
+    "gepard": [
+      "leo",
+      "leo",
+      "leo"
+    ],
+    "pzh_2000": [
+      "leo",
+      "leo",
+      "leo"
+    ],
+    "challenger_2": [
+      "cr2",
+      "cr2",
+      "cr2"
+    ],
+    "m48a3_elite": [
+      "m48",
+      "m48",
+      "generic"
+    ],
+    "m60a1": [
+      "m48",
+      "m48",
+      "generic"
+    ],
+    "m109a7_paladin": [
+      "m48",
+      "m48",
+      "generic"
+    ],
+    "m551a1": [
+      "m8",
+      "m48",
+      "generic"
+    ],
+    "bmp_1am": [
+      "bmp1",
+      "bmp1",
+      "bmp"
+    ],
+    "bmd_1": [
+      "bmp1",
+      "bmp1",
+      "bmp"
+    ],
+    "btr_zd": [
+      "bmp1",
+      "bmp1",
+      "bmp"
+    ],
+    "9p149_shturm": [
+      "bmp1",
+      "bmp1",
+      "bmp"
+    ],
+    "bmp2": [
+      "bmp1",
+      "bmp1",
+      "bmp"
+    ],
+    "bmp2m": [
+      "bmp1",
+      "bmp1",
+      "bmp"
+    ],
+    "bmp3m_elite": [
+      "bmp3",
+      "bmp3",
+      "bmp"
+    ],
+    "btr80a": [
+      "btr90",
+      null,
+      "bmp"
+    ],
+    "btr_90": [
+      "btr90",
+      null,
+      "bmp"
+    ],
+    "btr_60pb": [
+      "btr90",
+      null,
+      "bmp"
+    ],
+    "9p148": [
+      "brdm",
+      null,
+      "bmp"
+    ],
+    "gaz_3937_vodnik_aa": [
+      "tigr",
+      null,
+      "hmmwv"
+    ],
+    "tunguska": [
+      "tunguska",
+      "tunguska",
+      "tunguska"
+    ],
+    "9k22_tunguska": [
+      "tunguska",
+      "tunguska",
+      "tunguska"
+    ],
+    "zsu23_4": [
+      "pt76",
+      "bmp1",
+      "bmp"
+    ],
+    "m2_bradley": [
+      "m2a2",
+      "m2a2",
+      "m2a2"
+    ],
+    "lav25": [
+      "lav",
+      null,
+      "m2a2"
+    ],
+    "m1128": [
+      "stryker",
+      null,
+      "generic"
+    ],
+    "marder_1a1": [
+      "warrior",
+      "puma",
+      "warrior"
+    ],
+    "marder_1a2": [
+      "warrior",
+      "puma",
+      "warrior"
+    ],
+    "marder_1a5": [
+      "warrior",
+      "puma",
+      "warrior"
+    ],
+    "cv9040_no_net": [
+      "warrior",
+      "rubber",
+      "warrior"
+    ],
+    "vbci": [
+      "gtk",
+      null,
+      "warrior"
+    ],
+    "zbd_09": [
+      "gtk",
+      null,
+      "warrior"
+    ],
+    "ztl_09": [
+      "gtk",
+      null,
+      "warrior"
+    ],
+    "zsl_92": [
+      "vab",
+      null,
+      "bmp"
+    ],
+    "toyota_jihad_bmp1": [
+      "pickup",
+      null,
+      "hmmwv"
+    ],
+    "toyota_jihad_dshk": [
+      "pickup",
+      null,
+      "hmmwv"
+    ],
+    "toyota_jihad_s5": [
+      "pickup",
+      null,
+      "hmmwv"
+    ],
+    "toyota_jihad_spg9": [
+      "pickup",
+      null,
+      "hmmwv"
+    ],
+    "uaz_469_spg9": [
+      "uaz",
+      null,
+      "hmmwv"
+    ]
+  },
+  "_weapons_doc": "weapon families: [1p, 3p, far, veryfar] sources (vehicles/... or weapons:...). Automatic-fire files are trimmed to their first shot cycle plus a faded tail (tailSeconds); single-shot cannons keep their full reverb. weapon_map assigns families by the weapon's current Fire3P event or by '<vehicle>.<weapon>' (overrides).",
+  "weapons": {
+    "t90_125": {
+      "src": [
+        "land/ru_tnk_t90/sounds/cannon/t90_1p_fire.wav",
+        "land/ru_tnk_t90/sounds/cannon/t90_3p_fire.wav",
+        "land/ru_tnk_t90/sounds/cannon/t90_fire_distant.wav",
+        "weapons:common/sounds/distantshots/tank_distant_01.ogg"
+      ],
+      "auto": false
+    },
+    "t72_125": {
+      "src": [
+        "land/mec_tnk_t72/sounds/t72_fire1p.wav",
+        "land/mec_tnk_t72/sounds/t72_fire3p.wav",
+        "land/mec_tnk_t72/sounds/t72_fire_distant.wav",
+        "weapons:common/sounds/distantshots/tank_distant_02.ogg"
+      ],
+      "auto": false
+    },
+    "nato_120": {
+      "src": [
+        "land/us_tnk_m1a2/sounds/us_tnk_m1a2_fire_1p.wav",
+        "land/us_tnk_m1a2/sounds/us_tnk_m1a2_fire_3p.wav",
+        "land/us_tnk_m1a2/sounds/m1a2_cannon_distant.wav",
+        "weapons:common/sounds/distantshots/tank_distant_03.ogg"
+      ],
+      "auto": false
+    },
+    "cr2_120": {
+      "src": [
+        "land/gb_tnk_challenger/sounds/cr2_firing_1p.wav",
+        "land/gb_tnk_challenger/sounds/cr2_firing_3p_1b.wav",
+        "land/us_tnk_m1a2/sounds/tank_cannon_distant.wav",
+        "weapons:common/sounds/distantshots/tank_distant_04.ogg"
+      ],
+      "auto": false
+    },
+    "bmp3_100": {
+      "src": [
+        "land/mec_ifv_bmp3/sounds/bmp3_singlefire1p.wav",
+        "land/mec_ifv_bmp3/sounds/bmp3_singlefire3p.wav",
+        "land/mec_ifv_bmp3/sounds/bmp_fire_distant.wav",
+        "weapons:common/sounds/distantshots/cannon_distant.ogg"
+      ],
+      "auto": false
+    },
+    "erc_90": {
+      "src": [
+        "land/fr_tnk_erc/sounds/fr_tnk_erc_fire_1p.wav",
+        "land/fr_tnk_erc/sounds/fr_tnk_erc_fire_3p.wav",
+        "weapons:common/sounds/distantshots/cannon_distant.ogg",
+        "weapons:common/sounds/distantshots/tank_distant_05.ogg"
+      ],
+      "auto": false
+    },
+    "2a42_30": {
+      "src": [
+        "land/mec_ifv_bmp3/sounds/btr90_cannon_1p.wav",
+        "land/mec_ifv_bmp3/sounds/btr90_cannon_3p.wav",
+        "weapons:common/sounds/distantshots/30mm_cannon.ogg",
+        "weapons:common/sounds/distantshots/25mm_ru_far.ogg"
+      ],
+      "auto": true
+    },
+    "2a72_30": {
+      "src": [
+        "land/mec_ifv_bmp3/sounds/btr80a_cannon_1p.wav",
+        "land/mec_ifv_bmp3/sounds/btr80a_cannon_3p.wav",
+        "weapons:common/sounds/distantshots/30mm_cannon.ogg",
+        "weapons:common/sounds/distantshots/25mm_ru_far.ogg"
+      ],
+      "auto": true
+    },
+    "lav_25": {
+      "src": [
+        "land/us_apc_lav25/sounds/lav25_cannon_1p.wav",
+        "land/us_apc_lav25/sounds/lav25_cannon_3p.wav",
+        "land/us_apc_lav25/sounds/25mm_distant.wav",
+        "land/us_apc_lav25/sounds/25mm_distant_02.wav"
+      ],
+      "auto": true
+    },
+    "m242_25": {
+      "src": [
+        "land/us_ifv_m2a2/sounds/25mm_fire1p.wav",
+        "land/us_ifv_m2a2/sounds/25mm_fire3p.wav",
+        "land/us_apc_lav25/sounds/25mm_distant_03.wav",
+        "land/us_apc_lav25/sounds/25mm_distant_04.wav"
+      ],
+      "auto": true
+    },
+    "rh202_20": {
+      "src": [
+        "weapons:stationary/aaa_rh202/sounds/aaa_rh202_autocannon_1p.wav",
+        "weapons:stationary/aaa_rh202/sounds/aaa_rh202_autocannon_3p.wav",
+        "land/us_apc_lav25/sounds/25mm_distant_04.wav",
+        null
+      ],
+      "auto": true
+    },
+    "zu23": {
+      "src": [
+        "weapons:stationary/zu232/sounds/zu232_fire_1p.wav",
+        "weapons:stationary/zu232/sounds/zu232_fire_3p.wav",
+        "weapons:common/sounds/distantshots/25mm_ru_far.ogg",
+        null
+      ],
+      "auto": true
+    },
+    "kpvt_145": {
+      "src": [
+        "land/mec_jep_brdm2/sounds/brdm_cannon_1p.wav",
+        "land/mec_jep_brdm2/sounds/brdm_cannon_3p.wav",
+        "weapons:common/sounds/stationary/distantsounds/14_5mm_distant.ogg",
+        null
+      ],
+      "auto": true
+    },
+    "kord": {
+      "src": [
+        "weapons:stationary/chhmg_kord/sounds/kord_fire_1p_interior.wav",
+        "weapons:stationary/chhmg_kord/sounds/kord_fire_3p.wav",
+        "weapons:common/sounds/distantshots/kord_far.ogg",
+        "weapons:common/sounds/distantshots/kord_far02.ogg"
+      ],
+      "auto": true
+    },
+    "dshk": {
+      "src": [
+        "weapons:stationary/rushmg_dshk/sounds/dshk_fire_1p.wav",
+        "weapons:stationary/rushmg_dshk/sounds/dshk_fire_3p.wav",
+        "weapons:common/sounds/distantshots/kord_far01.ogg",
+        "weapons:common/sounds/distantshots/kord_far03.ogg"
+      ],
+      "auto": true
+    },
+    "m2hb": {
+      "src": [
+        "weapons:stationary/hmg_m2hb/sounds/m2hb_fire_1p.wav",
+        "weapons:stationary/hmg_m2hb/sounds/m2hb_fire_3p.wav",
+        "weapons:stationary/hmg_m2hb/sounds/50cal_distant.wav",
+        "weapons:common/sounds/distantshots/m2_far.ogg"
+      ],
+      "auto": true
+    },
+    "pkt": {
+      "src": [
+        "weapons:armament/coaxial_mgs/sounds/pkt_coax_1p_fire.wav",
+        "weapons:armament/coaxial_mgs/sounds/pkt_coax_3p_fire.wav",
+        "weapons:common/sounds/stationary/distantsounds/coax_distant.ogg",
+        "weapons:common/sounds/distantshots/pkm_very_far.wav"
+      ],
+      "auto": true
+    },
+    "m240": {
+      "src": [
+        "weapons:armament/coaxial_mgs/sounds/browning_coax_1p_fire.wav",
+        "weapons:armament/coaxial_mgs/sounds/browning_coax_3p_fire.wav",
+        "weapons:common/sounds/distantshots/coax_distant2.ogg",
+        "weapons:common/sounds/distantshots/m60_distant.ogg"
+      ],
+      "auto": true
+    },
+    "mg3": {
+      "src": [
+        "weapons:armament/coaxial_mgs/sounds/mg3_coax_fire_1p.wav",
+        "weapons:armament/coaxial_mgs/sounds/mg3_coax_fire_3p.wav",
+        "weapons:common/sounds/distantshots/mg3_distant.ogg",
+        "weapons:common/sounds/distantshots/mg42_distant.ogg"
+      ],
+      "auto": true
+    },
+    "china_mg": {
+      "src": [
+        "weapons:armament/coaxial_mgs/sounds/china_coax_1p_fire.wav",
+        "weapons:armament/coaxial_mgs/sounds/china_coax_3p_fire.wav",
+        "weapons:common/sounds/stationary/distantsounds/coax_distant.ogg",
+        "weapons:common/sounds/distantshots/coax_distant3.ogg"
+      ],
+      "auto": true
+    },
+    "tow": {
+      "src": [
+        "weapons:stationary/ats_tow/sounds/tow_fire_1p.wav",
+        "weapons:stationary/ats_tow/sounds/tow_fire_3p.wav",
+        "weapons:common/sounds/stationary/distantsounds/at4_distant.ogg",
+        "weapons:common/sounds/stationary/distantsounds/rpg_distant.ogg"
+      ],
+      "auto": false
+    },
+    "atgm_ru": {
+      "src": [
+        "weapons:armament/missiles/sounds/missile_shot_60rpm_1p_fire.wav",
+        "weapons:armament/missiles/sounds/missile_shot_60rpm_3p_fire.wav",
+        "weapons:common/sounds/stationary/distantsounds/at4_distant.ogg",
+        "weapons:common/sounds/stationary/distantsounds/rpg_distant.ogg"
+      ],
+      "auto": false
+    },
+    "mk19": {
+      "src": [
+        "weapons:stationary/us_agl_mk19/sounds/mk19_fire_1p.wav",
+        "weapons:stationary/us_agl_mk19/sounds/mk19_fire_3p.wav",
+        "weapons:common/sounds/distantshots/mk19_distant.ogg",
+        null
+      ],
+      "auto": true
+    },
+    "spg9": {
+      "src": [
+        "weapons:stationary/ats_spg9/sounds/spg9_fire1p.wav",
+        "weapons:stationary/ats_spg9/sounds/spg9_fire3p.wav",
+        "weapons:common/sounds/stationary/distantsounds/spg_distant.ogg",
+        "weapons:common/sounds/stationary/distantsounds/rpg_distant.ogg"
+      ],
+      "auto": false
+    },
+    "s8": {
+      "src": [
+        "air/ru_ahe_mi24/sounds/s8_rocket_fire_1p.wav",
+        "air/ru_ahe_mi24/sounds/s8_rocket_fire_3p.wav",
+        "weapons:common/sounds/stationary/distantsounds/rpg_distant.ogg",
+        null
+      ],
+      "auto": true
+    },
+    "hydra": {
+      "src": [
+        "air/us_ahe_apache/sounds/hydra_fire1p.wav",
+        "air/us_ahe_apache/sounds/hydra_fire_2_3p.wav",
+        "weapons:common/sounds/stationary/distantsounds/rpg_distant.ogg",
+        null
+      ],
+      "auto": true
+    }
+  },
+  "weapon_map": {
+    "superbwarfare:m_60_fire_3p": "m240",
+    "berts_vehicle_pack:tap_shoot_gun_pkt": "pkt",
+    "berts_vehicle_pack:atgm_tube_launch": "atgm_ru",
+    "berts_vehicle_pack:shoot_tnk_125mm": "t72_125",
+    "superbwarfare:t_90a_fire_3p": "nato_120",
+    "berts_vehicle_pack:tap_dshkshoot": "dshk",
+    "superbwarfare:bmp_2_cannon_fire_3p": "2a42_30",
+    "superbwarfare:m_2_hb_fire_3p": "m2hb",
+    "berts_vehicle_pack:m2hb_shoot_alt": "m2hb",
+    "berts_vehicle_pack:atgm_gun_launch": "atgm_ru",
+    "berts_vehicle_pack:tap_shoot_gun_m240": "m240",
+    "berts_vehicle_pack:bmp2_2a42_fire": "2a42_30",
+    "berts_vehicle_pack:tap_shoot_tnk_120mm": "nato_120",
+    "berts_vehicle_pack:tap_mg34shootcoax": "mg3",
+    "berts_vehicle_pack:tap_shoot_ifv_2a42": "2a42_30",
+    "berts_vehicle_pack:tap_zu23shoot": "zu23",
+    "berts_vehicle_pack:tap_aw_90mmfire": "erc_90",
+    "berts_vehicle_pack:tap_shoot_ifv_rh202": "rh202_20",
+    "berts_vehicle_pack:tap_shoot_ifv_m242": "m242_25",
+    "berts_vehicle_pack:t90m_kord_fire": "kord",
+    "berts_vehicle_pack:m1_abrams_elite_m240_coax_fire": "m240",
+    "superbwarfare:m_79_fire_3p": "mk19",
+    "berts_vehicle_pack:tap_bmp3cannon": "bmp3_100",
+    "berts_vehicle_pack:btr_zd_cannon_fire": "2a42_30",
+    "berts_vehicle_pack:btr_zd_machine_gun_fire": "pkt",
+    "berts_vehicle_pack:bmd_1_cannon_fire": "erc_90",
+    "berts_vehicle_pack:bmd_1_missile_fire": "atgm_ru",
+    "berts_vehicle_pack:bmd_1_machine_gun_fire": "pkt",
+    "berts_vehicle_pack:zsl_92_cannon_fire": "2a42_30",
+    "berts_vehicle_pack:zsl_92_machine_gun_fire": "china_mg",
+    "berts_vehicle_pack:btr80a_2a72_fire": "2a72_30",
+    "superbwarfare:rpg_fire_3p": "spg9",
+    "berts_vehicle_pack:t55a_2_0_d10t2s_fire": "t72_125",
+    "berts_vehicle_pack:t55a_2_0_dshk_fire": "dshk",
+    "berts_vehicle_pack:tap_cv90shoot": "rh202_20",
+    "berts_vehicle_pack:tap_missileshoot": "atgm_ru",
+    "berts_vehicle_pack:tap_shoot_90mmus": "erc_90",
+    "berts_vehicle_pack:tap_ags30bmp": "mk19",
+    "berts_vehicle_pack:tap_spg9shoot": "spg9",
+    "berts_vehicle_pack:tap_shoot_tnk_105mm": "cr2_120",
+    "berts_vehicle_pack:tap_t62shoot": "t72_125",
+    "berts_vehicle_pack:m48a3_elite_m41_90mm_fire": "erc_90",
+    "berts_vehicle_pack:tap_s5rocketshoot": "s8",
+    "berts_vehicle_pack:qn506_small_atgm_fire": "atgm_ru",
+    "berts_vehicle_pack:tap_btr80shoot": "kpvt_145",
+    "berts_vehicle_pack:m1_abrams_elite_m68a1_fire": "cr2_120",
+    "berts_vehicle_pack:gaz_3937_vodnik_aa_missile_fire": "atgm_ru",
+    "superbwarfare:small_rocket_fire_3p": "s8",
+    "berts_vehicle_pack:mi24v_s8_fire": "s8",
+    "berts_vehicle_pack:mi24v_s13_fire": "s8",
+    "berts_vehicle_pack:tap_hydra": "hydra",
+    "berts_vehicle_pack:tap_rocketfire1": "hydra",
+    "t90a.Cannon": "t90_125",
+    "t90m.Cannon": "t90_125",
+    "t14_armata.Cannon": "t90_125",
+    "challenger_2.Cannon": "cr2_120",
+    "tow_tripod.Cannon": "tow",
+    "m2_bradley.Missile": "tow",
+    "m1128.Missile": "tow",
+    "lav25.Missile": "tow",
+    "marder_1a5.Missile": "tow",
+    "leopard_2a4.MachineGun": "mg3",
+    "leopard_2a4.PassengerMachineGun": "mg3",
+    "gepard.Cannon": "rh202_20",
+    "marder_1a5.Cannon": "rh202_20",
+    "lav25.Cannon": "lav_25",
+    "tunguska.Cannon": "2a42_30",
+    "9k22_tunguska.Cannon": "2a42_30",
+    "bmp3m_elite.MainMachineGun": "pkt",
+    "ztl_09.MachineGun": "china_mg",
+    "toyota_jihad_bmp1.PKT": "pkt",
+    "bmp3m_elite.DualCannon": "2a72_30",
+    "bmp_1am.MainMachineGun": "pkt",
+    "btr_90.MainMachineGun": "pkt",
+    "t90m.MachineGun": "pkt",
+    "qn_506model.MainMachineGun": "china_mg",
+    "zbd_09.MainMachineGun": "china_mg",
+    "ztz99a.MachineGun": "china_mg",
+    "vt_4a1.MachineGun": "china_mg",
+    "vt_4a1.PassengerMachineGun": "dshk",
+    "ztl_09.PassengerMachineGun": "dshk",
+    "vt_4a1.Cannon": "t90_125",
+    "ztz99a.Cannon": "t90_125",
+    "milan_tripod.Cannon": "tow",
+    "marder_1a2.Missile": "tow",
+    "pzh_2000.PassengerMachineGun": "mg3",
+    "marder_1a1.MainMachineGun": "mg3",
+    "marder_1a5.MainMachineGun": "mg3",
+    "leo2a6.MachineGun": "mg3",
+    "leo2a6.PassengerMachineGun": "mg3"
   }
 }

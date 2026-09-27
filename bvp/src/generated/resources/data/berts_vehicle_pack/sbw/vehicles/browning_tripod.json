@@ -137,17 +137,17 @@
       "RPM": 575,
       "Name": "weapon.berts_vehicle_pack.browning_tripod",
       "SoundInfo": {
-        "Fire1PGain": 0.5,
-        "Fire3PGain": 0.5,
-        "Fire3PFarGain": 0.5,
-        "Fire3PVeryFarGain": 0.5,
-        "Fire1P": "berts_vehicle_pack:m2hb_shoot_alt",
-        "Fire3P": "berts_vehicle_pack:m2hb_shoot_alt",
-        "Fire3PFar": "berts_vehicle_pack:m2hb_shoot_alt",
-        "Fire3PVeryFar": "berts_vehicle_pack:m2hb_shoot_alt",
+        "Fire1PGain": 1.0,
+        "Fire3PGain": 1.0,
+        "Fire3PFarGain": 1.0,
+        "Fire3PVeryFarGain": 1.0,
+        "Fire1P": "bvp_audio:weapon/m2hb_1p",
+        "Fire3P": "bvp_audio:weapon/m2hb_3p",
+        "Fire3PFar": "bvp_audio:weapon/m2hb_far",
+        "Fire3PVeryFar": "bvp_audio:weapon/m2hb_veryfar",
         "Change": "superbwarfare:into_cannon"
       },
-      "SoundRadius": 24,
+      "SoundRadius": 18,
       "ShootPos": {
         "Transform": "Barrel",
         "Positions": [

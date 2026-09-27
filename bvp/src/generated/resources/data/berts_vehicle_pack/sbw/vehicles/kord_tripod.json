@@ -95,17 +95,17 @@
       "RPM": 700,
       "Name": "weapon.berts_vehicle_pack.kord_tripod",
       "SoundInfo": {
-        "Fire1PGain": 0.5,
-        "Fire3PGain": 0.5,
-        "Fire3PFarGain": 0.5,
-        "Fire3PVeryFarGain": 0.5,
-        "Fire1P": "berts_vehicle_pack:t90m_kord_fire",
-        "Fire3P": "berts_vehicle_pack:t90m_kord_fire",
-        "Fire3PFar": "berts_vehicle_pack:t90m_kord_fire",
-        "Fire3PVeryFar": "berts_vehicle_pack:t90m_kord_fire",
+        "Fire1PGain": 1.0,
+        "Fire3PGain": 1.0,
+        "Fire3PFarGain": 1.0,
+        "Fire3PVeryFarGain": 1.0,
+        "Fire1P": "bvp_audio:weapon/kord_1p",
+        "Fire3P": "bvp_audio:weapon/kord_3p",
+        "Fire3PFar": "bvp_audio:weapon/kord_far",
+        "Fire3PVeryFar": "bvp_audio:weapon/kord_veryfar",
         "Change": "superbwarfare:into_cannon"
       },
-      "SoundRadius": 24,
+      "SoundRadius": 18,
       "ShootPos": {
         "Transform": "Barrel",
         "Positions": [

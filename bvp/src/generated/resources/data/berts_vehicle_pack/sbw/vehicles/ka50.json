@@ -349,7 +349,9 @@
         {
           "Ammo": "superbwarfare:small_rocket",
           "ConsumptionItem": "superbwarfare:small_unguided_rocket",
-          "Override": {"TntEquivalentKg": 1.375}
+          "Override": {
+            "TntEquivalentKg": 1.375
+          }
         }
       ],
       "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_small_rocket.png",
@@ -429,18 +431,20 @@
         "HudDirectionAttachment": "rocket_hud_direction_01"
       },
       "SoundInfo": {
-        "Fire1PGain": 0.5,
-        "Fire3PGain": 0.5,
-        "Fire3PFarGain": 0.5,
-        "Fire3PVeryFarGain": 0.5,
-        "Fire1P": "superbwarfare:small_rocket_fire_1p",
-        "Fire3P": "superbwarfare:small_rocket_fire_3p",
+        "Fire1PGain": 1.0,
+        "Fire3PGain": 1.0,
+        "Fire3PFarGain": 1.0,
+        "Fire3PVeryFarGain": 1.0,
+        "Fire1P": "bvp_audio:weapon/s8_1p",
+        "Fire3P": "bvp_audio:weapon/s8_3p",
         "VehicleReload3p": "superbwarfare:missile_reload",
         "VehicleReloadSoundTime": 7,
-        "Change": "superbwarfare:into_missile"
+        "Change": "superbwarfare:into_missile",
+        "Fire3PFar": "bvp_audio:weapon/s8_far",
+        "Fire3PVeryFar": "bvp_audio:weapon/s8_far"
       },
       "Crosshair": "@Empty",
-      "SoundRadius": 12,
+      "SoundRadius": 16,
       "NominalBallistics": {
         "Supported": true,
         "ProjectileType": "berts_vehicle_pack:s8ko_rocket",
@@ -453,7 +457,9 @@
         {
           "Ammo": "superbwarfare:small_rocket",
           "ConsumptionItem": "superbwarfare:small_unguided_rocket",
-          "Override": {"TntEquivalentKg": 1.375}
+          "Override": {
+            "TntEquivalentKg": 1.375
+          }
         }
       ],
       "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_small_rocket.png",
@@ -533,18 +539,20 @@
         "HudDirectionAttachment": "b13lrocket_hud_direction_01"
       },
       "SoundInfo": {
-        "Fire1PGain": 0.5,
-        "Fire3PGain": 0.5,
-        "Fire3PFarGain": 0.5,
-        "Fire3PVeryFarGain": 0.5,
-        "Fire1P": "superbwarfare:small_rocket_fire_1p",
-        "Fire3P": "superbwarfare:small_rocket_fire_3p",
+        "Fire1PGain": 1.0,
+        "Fire3PGain": 1.0,
+        "Fire3PFarGain": 1.0,
+        "Fire3PVeryFarGain": 1.0,
+        "Fire1P": "bvp_audio:weapon/s8_1p",
+        "Fire3P": "bvp_audio:weapon/s8_3p",
         "VehicleReload3p": "superbwarfare:missile_reload",
         "VehicleReloadSoundTime": 7,
-        "Change": "superbwarfare:into_missile"
+        "Change": "superbwarfare:into_missile",
+        "Fire3PFar": "bvp_audio:weapon/s8_far",
+        "Fire3PVeryFar": "bvp_audio:weapon/s8_far"
       },
       "Crosshair": "@Empty",
-      "SoundRadius": 12,
+      "SoundRadius": 16,
       "NominalBallistics": {
         "Supported": true,
         "ProjectileType": "berts_vehicle_pack:s8ko_rocket",
@@ -557,7 +565,9 @@
         {
           "Ammo": "superbwarfare:small_rocket",
           "ConsumptionItem": "superbwarfare:small_unguided_rocket",
-          "Override": {"TntEquivalentKg": 1.375}
+          "Override": {
+            "TntEquivalentKg": 1.375
+          }
         }
       ],
       "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_small_rocket.png",
@@ -637,20 +647,20 @@
         "HudDirectionAttachment": "s8korocket_hud_direction_01"
       },
       "SoundInfo": {
-        "Fire1PGain": 0.5,
-        "Fire3PGain": 0.5,
-        "Fire3PFarGain": 0.5,
-        "Fire3PVeryFarGain": 0.5,
-        "Fire1P": "berts_vehicle_pack:mi24v_s8_fire",
-        "Fire3P": "berts_vehicle_pack:mi24v_s8_fire",
+        "Fire1PGain": 1.0,
+        "Fire3PGain": 1.0,
+        "Fire3PFarGain": 1.0,
+        "Fire3PVeryFarGain": 1.0,
+        "Fire1P": "bvp_audio:weapon/s8_1p",
+        "Fire3P": "bvp_audio:weapon/s8_3p",
         "VehicleReload3p": "superbwarfare:missile_reload",
         "VehicleReloadSoundTime": 7,
         "Change": "superbwarfare:into_missile",
-        "Fire3PFar": "berts_vehicle_pack:mi24v_s8_fire",
-        "Fire3PVeryFar": "berts_vehicle_pack:mi24v_s8_fire"
+        "Fire3PFar": "bvp_audio:weapon/s8_far",
+        "Fire3PVeryFar": "bvp_audio:weapon/s8_far"
       },
       "Crosshair": "@Empty",
-      "SoundRadius": 12,
+      "SoundRadius": 16,
       "ShellType": "HEAT",
       "NominalBallistics": {
         "Supported": true,
@@ -669,7 +679,9 @@
         {
           "Ammo": "superbwarfare:medium_anti_ground_missile",
           "ConsumptionItem": "superbwarfare:medium_atgm",
-          "Override": {"TntEquivalentKg": 6.8714}
+          "Override": {
+            "TntEquivalentKg": 6.8714
+          }
         }
       ],
       "Projectile": {
@@ -685,19 +697,19 @@
       "ApDurability": 800,
       "CrosshairColor": "0xFFC700",
       "SoundInfo": {
-        "Fire1PGain": 0.35,
-        "Fire3PGain": 0.35,
-        "Fire3PFarGain": 0.35,
-        "Fire3PVeryFarGain": 0.35,
-        "Fire1P": "berts_vehicle_pack:atgm_gun_launch",
-        "Fire3P": "berts_vehicle_pack:atgm_gun_launch",
+        "Fire1PGain": 1.0,
+        "Fire3PGain": 1.0,
+        "Fire3PFarGain": 1.0,
+        "Fire3PVeryFarGain": 1.0,
+        "Fire1P": "bvp_audio:weapon/atgm_ru_1p",
+        "Fire3P": "bvp_audio:weapon/atgm_ru_3p",
         "VehicleReload3p": "superbwarfare:bomb_reload",
         "VehicleReloadSoundTime": 11,
         "Change": "superbwarfare:into_missile",
-        "Fire3PFar": "berts_vehicle_pack:atgm_gun_launch",
-        "Fire3PVeryFar": "berts_vehicle_pack:atgm_gun_launch"
+        "Fire3PFar": "bvp_audio:weapon/atgm_ru_far",
+        "Fire3PVeryFar": "bvp_audio:weapon/atgm_ru_veryfar"
       },
-      "SoundRadius": 8,
+      "SoundRadius": 16,
       "ShellType": "ATGM"
     },
     "PassengerMissile": {

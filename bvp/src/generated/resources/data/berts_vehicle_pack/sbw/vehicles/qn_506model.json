@@ -671,13 +671,17 @@
         "Profile": "berts_vehicle_pack:qn_506model/cannon/default"
       },
       "SoundInfo": {
-        "Fire1P": "superbwarfare:bmp_2_cannon_fire_1p",
-        "Fire3P": "superbwarfare:bmp_2_cannon_fire_3p",
-        "Fire3PFar": "superbwarfare:mi_28_cannon_far",
-        "Fire3PVeryFar": "superbwarfare:mi_28_cannon_veryfar",
-        "Change": "superbwarfare:into_missile"
+        "Fire1P": "bvp_audio:weapon/2a42_30_1p",
+        "Fire3P": "bvp_audio:weapon/2a42_30_3p",
+        "Fire3PFar": "bvp_audio:weapon/2a42_30_far",
+        "Fire3PVeryFar": "bvp_audio:weapon/2a42_30_veryfar",
+        "Change": "superbwarfare:into_missile",
+        "Fire1PGain": 1.0,
+        "Fire3PGain": 1.0,
+        "Fire3PFarGain": 1.0,
+        "Fire3PVeryFarGain": 1.0
       },
-      "SoundRadius": 24,
+      "SoundRadius": 26,
       "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/cannon_30mm_ap.png",
       "AmmoType": [
         {
@@ -918,11 +922,15 @@
       "Crosshair": "@VehicleCommonGun",
       "Name": "weapon.berts_vehicle_pack.qn_506model_mainmachinegun",
       "SoundInfo": {
-        "Fire1P": "superbwarfare:coax_fire_1p",
-        "Fire3P": "superbwarfare:m_60_fire_3p",
-        "Fire3PFar": "superbwarfare:m_60_far",
-        "Fire3PVeryFar": "superbwarfare:m_60_veryfar",
-        "Change": "superbwarfare:into_cannon"
+        "Fire1P": "bvp_audio:weapon/china_mg_1p",
+        "Fire3P": "bvp_audio:weapon/china_mg_3p",
+        "Fire3PFar": "bvp_audio:weapon/china_mg_far",
+        "Fire3PVeryFar": "bvp_audio:weapon/china_mg_veryfar",
+        "Change": "superbwarfare:into_cannon",
+        "Fire1PGain": 1.0,
+        "Fire3PGain": 1.0,
+        "Fire3PFarGain": 1.0,
+        "Fire3PVeryFarGain": 1.0
       },
       "SoundRadius": 12,
       "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/gun_7_62mm.png",
@@ -1054,19 +1062,19 @@
         }
       ],
       "SoundInfo": {
-        "Fire1P": "berts_vehicle_pack:atgm_tube_launch",
-        "Fire3P": "berts_vehicle_pack:atgm_tube_launch",
+        "Fire1P": "bvp_audio:weapon/atgm_ru_1p",
+        "Fire3P": "bvp_audio:weapon/atgm_ru_3p",
         "VehicleReload3p": "superbwarfare:medium_missile_reload",
         "VehicleReloadSoundTime": 28,
         "Change": "superbwarfare:into_missile",
-        "Fire3PFar": "berts_vehicle_pack:atgm_tube_launch",
-        "Fire3PVeryFar": "berts_vehicle_pack:atgm_tube_launch",
-        "Fire1PGain": 0.7,
-        "Fire3PGain": 0.7,
-        "Fire3PFarGain": 0.7,
-        "Fire3PVeryFarGain": 0.7
+        "Fire3PFar": "bvp_audio:weapon/atgm_ru_far",
+        "Fire3PVeryFar": "bvp_audio:weapon/atgm_ru_veryfar",
+        "Fire1PGain": 1.0,
+        "Fire3PGain": 1.0,
+        "Fire3PFarGain": 1.0,
+        "Fire3PVeryFarGain": 1.0
       },
-      "SoundRadius": 24,
+      "SoundRadius": 16,
       "RPM": 60,
       "ProjectileAmount": 1,
       "AmmoCostPerShoot": 1,
@@ -1208,19 +1216,19 @@
         }
       ],
       "SoundInfo": {
-        "Fire1P": "berts_vehicle_pack:qn506_small_atgm_fire",
-        "Fire3P": "berts_vehicle_pack:qn506_small_atgm_fire",
+        "Fire1P": "bvp_audio:weapon/atgm_ru_1p",
+        "Fire3P": "bvp_audio:weapon/atgm_ru_3p",
         "VehicleReload3p": "superbwarfare:medium_missile_reload",
         "VehicleReloadSoundTime": 28,
         "Change": "superbwarfare:into_missile",
-        "Fire3PFar": "berts_vehicle_pack:qn506_small_atgm_fire",
-        "Fire3PVeryFar": "berts_vehicle_pack:qn506_small_atgm_fire",
-        "Fire1PGain": 0.7,
-        "Fire3PGain": 0.7,
-        "Fire3PFarGain": 0.7,
-        "Fire3PVeryFarGain": 0.7
+        "Fire3PFar": "bvp_audio:weapon/atgm_ru_far",
+        "Fire3PVeryFar": "bvp_audio:weapon/atgm_ru_veryfar",
+        "Fire1PGain": 1.0,
+        "Fire3PGain": 1.0,
+        "Fire3PFarGain": 1.0,
+        "Fire3PVeryFarGain": 1.0
       },
-      "SoundRadius": 24,
+      "SoundRadius": 16,
       "RPM": 60,
       "ProjectileAmount": 1,
       "AmmoCostPerShoot": 1,

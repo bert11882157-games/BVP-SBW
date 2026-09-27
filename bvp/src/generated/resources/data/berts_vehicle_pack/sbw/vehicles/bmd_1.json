@@ -345,12 +345,16 @@
       "Crosshair": "@VehicleCommonGun",
       "CrosshairColor": "0xFFC700",
       "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_heatfs.png",
-      "SoundRadius": 24,
+      "SoundRadius": 34,
       "SoundInfo": {
-        "Fire1P": "berts_vehicle_pack:bmd_1_cannon_fire",
-        "Fire3P": "berts_vehicle_pack:bmd_1_cannon_fire",
-        "Fire3PFar": "berts_vehicle_pack:bmd_1_cannon_fire",
-        "Fire3PVeryFar": "berts_vehicle_pack:bmd_1_cannon_fire"
+        "Fire1P": "bvp_audio:weapon/erc_90_1p",
+        "Fire3P": "bvp_audio:weapon/erc_90_3p",
+        "Fire3PFar": "bvp_audio:weapon/erc_90_far",
+        "Fire3PVeryFar": "bvp_audio:weapon/erc_90_veryfar",
+        "Fire1PGain": 1.0,
+        "Fire3PGain": 1.0,
+        "Fire3PFarGain": 1.0,
+        "Fire3PVeryFarGain": 1.0
       },
       "Velocity": 8,
       "Gravity": 0.03,
@@ -475,12 +479,16 @@
       "Crosshair": "@VehicleCommonMissile",
       "CrosshairColor": "0xFFC700",
       "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_atgm.png",
-      "SoundRadius": 24,
+      "SoundRadius": 16,
       "SoundInfo": {
-        "Fire1P": "berts_vehicle_pack:bmd_1_missile_fire",
-        "Fire3P": "berts_vehicle_pack:bmd_1_missile_fire",
-        "Fire3PFar": "berts_vehicle_pack:bmd_1_missile_fire",
-        "Fire3PVeryFar": "berts_vehicle_pack:bmd_1_missile_fire"
+        "Fire1P": "bvp_audio:weapon/atgm_ru_1p",
+        "Fire3P": "bvp_audio:weapon/atgm_ru_3p",
+        "Fire3PFar": "bvp_audio:weapon/atgm_ru_far",
+        "Fire3PVeryFar": "bvp_audio:weapon/atgm_ru_veryfar",
+        "Fire1PGain": 1.0,
+        "Fire3PGain": 1.0,
+        "Fire3PFarGain": 1.0,
+        "Fire3PVeryFarGain": 1.0
       },
       "Velocity": 2.55,
       "Gravity": 0,
@@ -565,10 +573,14 @@
       "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/gun_7_62mm.png",
       "SoundRadius": 12,
       "SoundInfo": {
-        "Fire1P": "berts_vehicle_pack:bmd_1_machine_gun_fire",
-        "Fire3P": "berts_vehicle_pack:bmd_1_machine_gun_fire",
-        "Fire3PFar": "berts_vehicle_pack:bmd_1_machine_gun_fire",
-        "Fire3PVeryFar": "berts_vehicle_pack:bmd_1_machine_gun_fire"
+        "Fire1P": "bvp_audio:weapon/pkt_1p",
+        "Fire3P": "bvp_audio:weapon/pkt_3p",
+        "Fire3PFar": "bvp_audio:weapon/pkt_far",
+        "Fire3PVeryFar": "bvp_audio:weapon/pkt_veryfar",
+        "Fire1PGain": 1.0,
+        "Fire3PGain": 1.0,
+        "Fire3PFarGain": 1.0,
+        "Fire3PVeryFarGain": 1.0
       },
       "Velocity": 42.75,
       "Gravity": 0.01,

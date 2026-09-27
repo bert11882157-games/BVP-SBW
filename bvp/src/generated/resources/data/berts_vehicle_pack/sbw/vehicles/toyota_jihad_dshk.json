@@ -503,17 +503,17 @@
       },
       "Crosshair": "@NoCross",
       "SoundInfo": {
-        "Fire1PGain": 0.5,
-        "Fire3PGain": 0.5,
-        "Fire3PFarGain": 0.5,
-        "Fire3PVeryFarGain": 0.5,
-        "Fire1P": "berts_vehicle_pack:tap_dshkshoot",
-        "Fire3P": "berts_vehicle_pack:tap_dshkshoot",
-        "Fire3PFar": "berts_vehicle_pack:tap_dshkshoot",
-        "Fire3PVeryFar": "berts_vehicle_pack:tap_dshkshoot",
+        "Fire1PGain": 1.0,
+        "Fire3PGain": 1.0,
+        "Fire3PFarGain": 1.0,
+        "Fire3PVeryFarGain": 1.0,
+        "Fire1P": "bvp_audio:weapon/dshk_1p",
+        "Fire3P": "bvp_audio:weapon/dshk_3p",
+        "Fire3PFar": "bvp_audio:weapon/dshk_far",
+        "Fire3PVeryFar": "bvp_audio:weapon/dshk_veryfar",
         "Change": "superbwarfare:into_cannon"
       },
-      "SoundRadius": 16,
+      "SoundRadius": 18,
       "ProjectileBeltAmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",

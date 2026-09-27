@@ -157,14 +157,14 @@
         }
       ],
       "SoundInfo": {
-        "Fire1PGain": 0.3,
-        "Fire3PGain": 0.3,
-        "Fire3PFarGain": 0.3,
-        "Fire3PVeryFarGain": 0.3,
-        "Fire1P": "berts_vehicle_pack:tap_t62shoot",
-        "Fire3P": "berts_vehicle_pack:tap_t62shoot",
-        "Fire3PFar": "berts_vehicle_pack:tap_t62shoot",
-        "Fire3PVeryFar": "berts_vehicle_pack:tap_t62shoot",
+        "Fire1PGain": 1.0,
+        "Fire3PGain": 1.0,
+        "Fire3PFarGain": 1.0,
+        "Fire3PVeryFarGain": 1.0,
+        "Fire1P": "bvp_audio:weapon/t72_125_1p",
+        "Fire3P": "bvp_audio:weapon/t72_125_3p",
+        "Fire3PFar": "bvp_audio:weapon/t72_125_far",
+        "Fire3PVeryFar": "bvp_audio:weapon/t72_125_veryfar",
         "VehicleReload": "berts_vehicle_pack:m1_abrams_elite_m68a1_reload",
         "Change": "superbwarfare:into_cannon",
         "CancellableSounds": [
@@ -173,7 +173,7 @@
         "VehicleReloadClipDurationTicks": 86,
         "VehicleReloadSoundTime": 88
       },
-      "SoundRadius": 32,
+      "SoundRadius": 40,
       "ShootPos": {
         "Transform": "Barrel",
         "Positions": [
@@ -320,14 +320,14 @@
       "Crosshair": "@VehicleCommonGun",
       "Name": "weapon.superbwarfare.7_62mm_coax",
       "SoundInfo": {
-        "Fire1PGain": 0.5,
-        "Fire3PGain": 0.5,
-        "Fire3PFarGain": 0.5,
-        "Fire3PVeryFarGain": 0.5,
-        "Fire1P": "berts_vehicle_pack:tap_shoot_gun_pkt",
-        "Fire3P": "berts_vehicle_pack:tap_shoot_gun_pkt",
-        "Fire3PFar": "berts_vehicle_pack:tap_shoot_gun_pkt",
-        "Fire3PVeryFar": "berts_vehicle_pack:tap_shoot_gun_pkt",
+        "Fire1PGain": 1.0,
+        "Fire3PGain": 1.0,
+        "Fire3PFarGain": 1.0,
+        "Fire3PVeryFarGain": 1.0,
+        "Fire1P": "bvp_audio:weapon/pkt_1p",
+        "Fire3P": "bvp_audio:weapon/pkt_3p",
+        "Fire3PFar": "bvp_audio:weapon/pkt_far",
+        "Fire3PVeryFar": "bvp_audio:weapon/pkt_veryfar",
         "Change": "superbwarfare:into_cannon"
       },
       "SoundRadius": 12,

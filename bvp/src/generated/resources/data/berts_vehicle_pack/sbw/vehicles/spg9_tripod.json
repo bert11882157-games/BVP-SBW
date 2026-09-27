@@ -150,17 +150,17 @@
         }
       ],
       "SoundInfo": {
-        "Fire1PGain": 0.5,
-        "Fire3PGain": 0.5,
-        "Fire3PFarGain": 0.5,
-        "Fire3PVeryFarGain": 0.5,
-        "Fire1P": "superbwarfare:rpg_fire_3p",
-        "Fire3P": "superbwarfare:rpg_fire_3p",
-        "Fire3PFar": "superbwarfare:rpg_fire_3p",
-        "Fire3PVeryFar": "superbwarfare:rpg_fire_3p",
+        "Fire1PGain": 1.0,
+        "Fire3PGain": 1.0,
+        "Fire3PFarGain": 1.0,
+        "Fire3PVeryFarGain": 1.0,
+        "Fire1P": "bvp_audio:weapon/spg9_1p",
+        "Fire3P": "bvp_audio:weapon/spg9_3p",
+        "Fire3PFar": "bvp_audio:weapon/spg9_far",
+        "Fire3PVeryFar": "bvp_audio:weapon/spg9_veryfar",
         "Change": "superbwarfare:into_cannon"
       },
-      "SoundRadius": 32,
+      "SoundRadius": 18,
       "ShootPos": {
         "Transform": "Barrel",
         "Positions": [
