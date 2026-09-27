@@ -70,6 +70,8 @@ NEW = {
                      bomb={'Mode': 'LASER', 'TurnDegreesPerTick': 1.5}, carriers=['su_35', 'tu_22m']),
     'kab500od': dict(template='fab_500.json', name='KAB-500Kr-OD · 500 kg fuel-air (TV)', mass=525,
                      bomb={'Mode': 'TV', 'TurnDegreesPerTick': 2, 'TntEquivalentKg': 500, 'BlastRadius': 30},
+                     set={'Guidance': {'Mode': 'GROUND_INFRARED', 'Presentation': 'TV', 'LockTicks': 60, 'Range': 800,
+                                       'ConeDegrees': 25, 'CountermeasureVulnerability': 0}},   # TV bombs need it
                      carriers=['su_35', 'su_27', 'su_39']),
     'kab250': dict(template='fab_250.json', name='KAB-250LG-E · 250 kg laser-guided', mass=256,
                    bomb={'Mode': 'LASER', 'TurnDegreesPerTick': 2.5},
@@ -130,6 +132,8 @@ def create_store(mid, write):
     d['ModelForward'] = '-Z'
     d.pop('Scale', None)
     d['MassKg'] = spec['mass']
+    for k, v in spec.get('set', {}).items():      # whole top-level blocks the template lacks
+        d[k] = copy.deepcopy(v)
     for key, block in (('Bomb', 'bomb'), ('Flight', 'flight'), ('Guidance', 'guidance')):
         if block in spec:
             if key not in d:

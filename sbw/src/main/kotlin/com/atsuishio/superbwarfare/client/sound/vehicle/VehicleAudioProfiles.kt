@@ -3,7 +3,6 @@ package com.atsuishio.superbwarfare.client.sound.vehicle
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
-import com.mojang.logging.LogUtils
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.packs.resources.ResourceManager
 import net.minecraft.server.packs.resources.SimplePreparableReloadListener
@@ -31,7 +30,8 @@ import net.minecraftforge.fml.common.Mod
  */
 @Mod.EventBusSubscriber(modid = com.atsuishio.superbwarfare.Mod.MODID, value = [Dist.CLIENT], bus = Mod.EventBusSubscriber.Bus.MOD)
 object VehicleAudioProfiles : SimplePreparableReloadListener<Map<ResourceLocation, JsonObject>>() {
-    private val LOGGER = LogUtils.getLogger()
+    // the mod logger: class loggers of SBW objects do not reach latest.log in the pack's log configuration
+    private val LOGGER get() = com.atsuishio.superbwarfare.Mod.LOGGER
     private const val FOLDER = "sbw/vehicle_audio"
 
     data class Engine(
