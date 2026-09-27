@@ -270,7 +270,7 @@ public class AnnihilatorEntity extends ArtilleryEntity {
 
             Mod.queueServerWork(reloadTime - 20, () -> {
                 if (this.isAlive()) {
-                    this.level().playSound(null, this.getOnPos(), gunData.get(GunProp.SOUND_INFO).vehicleReload, SoundSource.PLAYERS, 1, 1);
+                    com.atsuishio.superbwarfare.api.weapon.VehicleReloadAudio.playOperatorCue(living, gunData.get(GunProp.SOUND_INFO).vehicleReload, 1f, 1f);
                 }
             });
 

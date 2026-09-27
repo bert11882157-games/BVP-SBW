@@ -393,7 +393,38 @@ object VehicleReloadAudio {
         )
     }
 
-    /** Emits exactly one vehicle reload transition; the remote event is authoritative when set. */
+    private data class SameClipKey(val vehicle: UUID, val listener: UUID, val sound: String)
+    private const val SAME_CLIP_WINDOW_TICKS = 40
+    private val recentClips = HashMap<SameClipKey, Long>()
+
+    /**
+     * The players seated where [weaponIdentity] is operated (any seat whose weapon list holds it). Falls back to the
+     * controlling passenger when no seat lists the weapon (aliases, pods).
+     */
+    @JvmStatic
+    fun operatorListeners(vehicle: VehicleEntity, weaponIdentity: String): List<ServerPlayer> {
+        val crew = vehicle.passengers.filterIsInstance<ServerPlayer>()
+        val operators = crew.filter { player ->
+            val seat = vehicle.getSeatIndex(player)
+            seat >= 0 && vehicle.getWeaponIds(seat).contains(weaponIdentity)
+        }
+        if (operators.isNotEmpty()) return operators
+        return listOfNotNull(vehicle.controllingPassenger as? ServerPlayer)
+    }
+
+    /**
+     * A one-off crew cue (a manual reload, a shell dropped down a mortar tube): heard only by [operator], never
+     * broadcast to the players around the vehicle.
+     */
+    @JvmStatic
+    @JvmOverloads
+    fun playOperatorCue(operator: Entity?, sound: SoundEvent?, volume: Float = 1f, pitch: Float = 1f) {
+        val player = operator as? ServerPlayer ?: return
+        if (sound == null || sound.location == SoundEvents.EMPTY.location) return
+        player.playNotifySound(sound, net.minecraft.sounds.SoundSource.PLAYERS, volume, pitch)
+    }
+
+    /** Emits exactly one vehicle reload transition, to the crew operating the weapon only. */
     private fun emit(
         vehicle: VehicleEntity,
         data: GunData,
@@ -415,7 +446,9 @@ object VehicleReloadAudio {
             )
             return
         }
-        val selectedSound = if (hasRemote) remote else local
+        // Reload audio belongs to the crew working the weapon: the interior clip when authored, the exterior clip
+        // otherwise, heard only by the players in the seats that operate this weapon (never by bystanders).
+        val selectedSound = if (hasLocal) local else remote
         when (val claim = claimVehicleReloadSound(vehicle, data, vehicle.level().gameTime)) {
             VehicleReloadSoundClaim.CLAIMED -> Unit
             VehicleReloadSoundClaim.DUPLICATE -> {
@@ -423,7 +456,7 @@ object VehicleReloadAudio {
                     vehicle,
                     controller,
                     data,
-                    if (hasRemote) "TYPED_VEHICLE_RELOAD_3P" else "TYPED_VEHICLE_RELOAD_LOCAL",
+                    "TYPED_VEHICLE_RELOAD_LOCAL",
                     VehicleWeaponAudioDiagnostics.Disposition.DUPLICATE_SUPPRESSED,
                     selectedSound,
                     "claim=${claim.name}",
@@ -435,7 +468,7 @@ object VehicleReloadAudio {
                     vehicle,
                     controller,
                     data,
-                    if (hasRemote) "TYPED_VEHICLE_RELOAD_3P" else "TYPED_VEHICLE_RELOAD_LOCAL",
+                    "TYPED_VEHICLE_RELOAD_LOCAL",
                     VehicleWeaponAudioDiagnostics.Disposition.CLAIM_REJECTED,
                     selectedSound,
                     "claim=${claim.name}",
@@ -446,25 +479,34 @@ object VehicleReloadAudio {
 
         val key = vehicleReloadSoundKey(vehicle, data) ?: return
         val cycle = vehicleReloadSoundCycles[key] ?: return
-        val serverLevel = vehicle.level() as? ServerLevel ?: return
-        val listeners = if (hasRemote) {
-            serverLevel.getPlayers { it.distanceToSqr(vehicle.position()) <= 32.0 * 32.0 }
-        } else vehicle.passengers.filterIsInstance<ServerPlayer>()
+        val gameTime = vehicle.level().gameTime
+        var listeners = operatorListeners(vehicle, key.weaponIdentity)
+        // Several weapons of one seat often share a clip (rocket pods, twin launchers) and reload together:
+        // a player already hearing that clip from this vehicle does not get a second, overlapping copy.
+        val clipTicks = soundInfo.vehicleReloadClipDurationTicks.takeIf { it > 0 } ?: SAME_CLIP_WINDOW_TICKS
+        listeners = listeners.filter { player ->
+            val clipKey = SameClipKey(vehicle.uuid, player.uuid, selectedSound.location.toString())
+            val last = recentClips[clipKey]
+            if (last != null && gameTime - last in 0 until clipTicks) false
+            else { recentClips[clipKey] = gameTime; true }
+        }
+        if (recentClips.size > 256) recentClips.entries.removeIf { gameTime - it.value > 1200 }
         retainVehicleReloadSoundEmission(
             vehicle, data, selectedSound, listeners, reloadDurationTicks,
-            soundInfo.vehicleReloadClipDurationTicks, !hasRemote,
+            soundInfo.vehicleReloadClipDurationTicks, true,
         )
         VehicleWeaponAudioDiagnostics.recordServer(
             vehicle, controller, data,
-            if (hasRemote) "TYPED_VEHICLE_RELOAD_3P" else "TYPED_VEHICLE_RELOAD_LOCAL",
+            "TYPED_VEHICLE_RELOAD_LOCAL",
             VehicleWeaponAudioDiagnostics.Disposition.PLAYED, selectedSound,
             "cycle=${cycle.playbackId} listener_count=${listeners.size}",
         )
+        if (listeners.isEmpty()) return
         val message = VehicleReloadSoundMessage(
             cycle.playbackId, vehicle.level().dimension().location(), vehicle.id, vehicle.uuid,
             key.weaponIdentity, key.reloadRevision, selectedSound.location,
             VehicleReloadSoundTiming.ticksUntilCompletion(data.reload.time()).coerceIn(1, 1200),
-            !hasRemote, false,
+            true, false,
         )
         for (listener in listeners) sendPacketTo(PacketDistributor.PLAYER.with { listener }, message)
     }

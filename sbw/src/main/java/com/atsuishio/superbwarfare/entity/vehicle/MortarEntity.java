@@ -111,7 +111,7 @@ public class MortarEntity extends ArtilleryEntity {
         this.entityData.set(FIRE_TIME, 25);
 
         if (!this.level().isClientSide()) {
-            this.level().playSound(null, this.getX(), this.getY(), this.getZ(), soundInfo.vehicleReload, SoundSource.PLAYERS, 1f, 1f);
+            com.atsuishio.superbwarfare.api.weapon.VehicleReloadAudio.playOperatorCue(living, soundInfo.vehicleReload, 1f, 1f);
         }
 
         if (level() instanceof ServerLevel serverLevel) {

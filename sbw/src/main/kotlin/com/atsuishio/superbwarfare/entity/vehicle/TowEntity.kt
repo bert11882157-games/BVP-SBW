@@ -79,13 +79,8 @@ class TowEntity(type: EntityType<TowEntity>, world: Level) : GeoVehicleEntity(ty
                 modifyGunData(0) { data -> data.reloadAmmo(player) }
 
                 loaded = true
-                level.playSound(
-                    null,
-                    onPos,
-                    ModSounds.TYPE_63_RELOAD.get(),
-                    SoundSource.PLAYERS,
-                    1f,
-                    random.nextFloat() * 0.1f + 0.9f
+                com.atsuishio.superbwarfare.api.weapon.VehicleReloadAudio.playOperatorCue(
+                    player, ModSounds.TYPE_63_RELOAD.get(), 1f, random.nextFloat() * 0.1f + 0.9f
                 )
             } else {
                 player.displayClientMessage(
