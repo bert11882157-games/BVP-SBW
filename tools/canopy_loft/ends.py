@@ -18,7 +18,15 @@ for vid in ids:
     im = O.image(col, dep, 1); d = ImageDraw.Draw(im, 'RGBA')
     cc = c + np.array([0, -0.2, 0])
     for t in g:
-        d.polygon([O.to_pixel(p, 'left', cc, hw, hh, st) for p in t], fill=(0, 230, 255, 18))
+        d.polygon([O.to_pixel(p, 'left', cc, hw, hh, st) for p in t], fill=(0, 230, 255, 10))
+    if len(g):
+        P = g.reshape(-1, 3)
+        zb = np.round(P[:, 2] / 0.02).astype(int)
+        for key in np.unique(zb):
+            m = zb == key
+            for yv in (P[m, 1].max(), P[m, 1].min()):
+                x, y = O.to_pixel((0, yv, key * 0.02), 'left', cc, hw, hh, st)
+                d.point((x, y), fill=(0, 255, 255, 255))
     for k in range(int((zc - hw) * 10), int((zc + hw) * 10) + 1):
         z = k / 10
         x, _ = O.to_pixel((0, 0, z), 'left', cc, hw, hh, st)
@@ -29,10 +37,10 @@ for vid in ids:
     ex, ey = O.to_pixel(eye, 'left', cc, hw, hh, st)
     d.ellipse([ex - 3, ey - 3, ex + 3, ey + 3], outline=(255, 0, 0, 255))
     d.text((3, im.height - 12), vid, fill=(255, 255, 0, 255))
-    im.thumbnail((620, 400)); tiles.append(im)
-for s0 in range(0, len(tiles), 6):
-    grp = tiles[s0:s0 + 6]; w = max(i.width for i in grp); h = max(i.height for i in grp)
-    sh = Image.new('RGB', (w * 2, h * 3), (30, 30, 30))
+    im.thumbnail((900, 520)); tiles.append(im)
+for s0 in range(0, len(tiles), 4):
+    grp = tiles[s0:s0 + 4]; w = max(i.width for i in grp); h = max(i.height for i in grp)
+    sh = Image.new('RGB', (w * 2, h * 2), (30, 30, 30))
     for k, i in enumerate(grp): sh.paste(i, ((k % 2) * w, (k // 2) * h))
-    sh.save(f'{S}/ends{s0 // 6:02d}.png')
+    sh.save(f'{S}/ends{s0 // 4:02d}.png')
 print(len(tiles))
