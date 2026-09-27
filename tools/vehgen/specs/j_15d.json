@@ -1,0 +1,304 @@
+{
+  "id": "j_15d",
+  "name": "J-15D Flying Shark",
+  "entityClass": "AuthoredFixedWingAircraft",
+  "template": "su_30",
+  "source": "J-15D.mtb",
+  "note": "Two-seat carrier EW Flanker on the Su-30 (same modeller, same proportions; scaled nose to tail). Baked stores (part 3 and the outer-wing pylons' pods) are dropped; the wingtip EW pods that define the D stay. The outer wing panels are shown spread (the folded copies 21/23 are dropped). Crew seats and eyes come from the Su-30.",
+  "yaw180": true,
+  "lengthParts": [
+    0,
+    1,
+    2
+  ],
+  "templateLengthBones": [
+    "wreck_fuselage_0__hull",
+    "wreck_fuselage_1__hull",
+    "wreck_fuselage_2__hull",
+    "wreck_fuselage_3__hull"
+  ],
+  "groundParts": [
+    0,
+    1,
+    2,
+    12,
+    14,
+    15
+  ],
+  "excludeParts": [
+    24,
+    3,
+    21,
+    23
+  ],
+  "storeTextureV": -1,
+  "keepBoxes": [],
+  "fuselageCuts": [
+    -86,
+    -5,
+    70
+  ],
+  "parts": {
+    "0": [
+      {
+        "bone": "wing",
+        "if": {
+          "absXMin": 38
+        }
+      }
+    ],
+    "1": "fuselage",
+    "2": "fuselage",
+    "4": "wing",
+    "5": [
+      {
+        "bone": "fuselage",
+        "if": {
+          "yMin": 50
+        }
+      },
+      {
+        "bone": "wing",
+        "if": {}
+      }
+    ],
+    "7": [
+      {
+        "bone": "side:wreck_fuselage_3__rudder_left,wreck_fuselage_3__rudder_right",
+        "if": {
+          "absXMin": 25
+        }
+      },
+      {
+        "bone": "wreck_fuselage_0__control_stick_pitch",
+        "if": {
+          "absXMax": 5
+        }
+      }
+    ],
+    "8": [
+      {
+        "bone": "wreck_fuselage_3__elevator",
+        "if": {
+          "absXMin": 30,
+          "zMin": 85
+        }
+      },
+      {
+        "bone": "wing",
+        "if": {
+          "zMax": 20
+        }
+      }
+    ],
+    "9": [
+      {
+        "bone": "wreck_fuselage_3__elevator",
+        "if": {
+          "absXMin": 30,
+          "zMin": 85
+        }
+      },
+      {
+        "bone": "wing",
+        "if": {
+          "zMax": 20
+        }
+      }
+    ],
+    "10": "side:wreck_wing_left__aileron_left,wreck_wing_right__aileron_right",
+    "11": "side:wreck_wing_left__aileron_left,wreck_wing_right__aileron_right",
+    "12": "wreck_fuselage_1__landing_gear_2",
+    "14": "wreck_wing_left__landing_gear_0",
+    "15": "wreck_wing_right__landing_gear_1",
+    "20": "wing",
+    "22": "wing"
+  },
+  "keepTemplateBones": [
+    "suspended_1734044096_hull",
+    "suspended_880185541_hull",
+    "suspended_310593714_hull",
+    "suspended_310593714_landing_gear_2"
+  ],
+  "removeClientKeys": [
+    "CanopyGlass"
+  ],
+  "dropRules": [
+    {
+      "parts": [
+        20,
+        22
+      ],
+      "absXMax": 105,
+      "yMax": 37
+    }
+  ],
+  "attachments": {
+    "pilot_eye": [
+      0,
+      55.0,
+      -94.5
+    ],
+    "wso_eye": [
+      0,
+      58.5,
+      -75.0
+    ]
+  },
+  "seatPositions": {
+    "0": [
+      0,
+      29.7,
+      -94.5
+    ],
+    "1": [
+      0,
+      33.2,
+      -75.0
+    ]
+  },
+  "addSeats": [],
+  "flightReference": {
+    "baseMassKg": 17500,
+    "mainFuelMassKg": 9500,
+    "fullFuelWingLoadingKgPerSquareMetre": 397.9953,
+    "dryThrustKgfPerEngine": 7600,
+    "afterburnerThrustKgfPerEngine": 12500,
+    "maximumTrueAirspeedKmh": 2300,
+    "referenceAltitudeMetres": 11000,
+    "turnSeconds": 24,
+    "climbMetresPerSecond": 250
+  },
+  "note_flight": "J-15 family: empty ~17,500 kg, internal fuel ~9,500 kg, wing 67.84 m2 (Su-33), 2x AL-31F class (7,600 / 12,500 kgf), Mach 2.17.",
+  "note_crew": "Seat backs at z -89..-87 and -71..-69 (3 px aft of the Su-30's after scaling); both eyes moved to 4-5 px in front of their headrests, the pilot 5 px over the glare shield.",
+  "armamentOverrides": {
+    "Name": "J-15D",
+    "Pairs": [
+      {
+        "Id": "outer",
+        "Name": "Outer wing pylon (double)",
+        "Left": [
+          6.0116,
+          2.1281,
+          -4.2566
+        ],
+        "LeftStations": [
+          {
+            "Point": [
+              6.0116,
+              2.5045,
+              -4.2566
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "Right": [
+          -6.0116,
+          2.1281,
+          -4.2566
+        ],
+        "RightStations": [
+          {
+            "Point": [
+              -6.0116,
+              2.5045,
+              -4.2566
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "AllowedStores": [
+          "berts_vehicle_pack:munition/pl8",
+          "berts_vehicle_pack:munition/pl12"
+        ],
+        "MaxWeaponsPerPylon": 3,
+        "MaxPylonMassKg": 600
+      },
+      {
+        "Id": "inner",
+        "Name": "Inner wing pylon (double)",
+        "Left": [
+          4.5197,
+          1.9525,
+          -3.0934
+        ],
+        "LeftStations": [
+          {
+            "Point": [
+              4.5197,
+              2.5045,
+              -3.0934
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "Right": [
+          -4.5197,
+          1.9525,
+          -3.0934
+        ],
+        "RightStations": [
+          {
+            "Point": [
+              -4.5197,
+              2.5045,
+              -3.0934
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "AllowedStores": [
+          "berts_vehicle_pack:munition/pl12",
+          "berts_vehicle_pack:munition/yj91",
+          "berts_vehicle_pack:munition/kd88",
+          "berts_vehicle_pack:fab_250",
+          "berts_vehicle_pack:fab_500"
+        ],
+        "MaxWeaponsPerPylon": 3,
+        "MaxPylonMassKg": 1500
+      },
+      {
+        "Id": "intake",
+        "Name": "Intake pylon",
+        "Left": [
+          1.0969,
+          0.9431,
+          -1.865
+        ],
+        "LeftStations": [
+          {
+            "Point": [
+              1.0969,
+              1.3732,
+              -1.865
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "Right": [
+          -1.0969,
+          0.9431,
+          -1.865
+        ],
+        "RightStations": [
+          {
+            "Point": [
+              -1.0969,
+              1.3732,
+              -1.865
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "AllowedStores": [
+          "berts_vehicle_pack:munition/pl12",
+          "berts_vehicle_pack:munition/yj91",
+          "berts_vehicle_pack:munition/kd88"
+        ],
+        "MaxWeaponsPerPylon": 1,
+        "MaxPylonMassKg": 1000
+      }
+    ]
+  },
+  "note_armament": "Su-30 pylon positions (re-seated by attach.py) without the wingtip station, which the EW pods occupy; Chinese stores: PL-8 / PL-12 outboard, YJ-91 anti-radiation, KD-88 and PL-12 inboard and under the intakes, bombs inboard."
+}

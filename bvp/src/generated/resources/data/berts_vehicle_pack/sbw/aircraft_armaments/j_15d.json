@@ -1,0 +1,154 @@
+{
+  "Schema": 1,
+  "Name": "J-15D",
+  "BuiltInWeapons": [
+    "Cannon"
+  ],
+  "SuspendedWeapons": [],
+  "Pairs": [
+    {
+      "Id": "outer",
+      "Name": "Outer wing pylon (double)",
+      "Left": [
+        6.0116,
+        2.1281,
+        -4.2566
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            6.0116,
+            2.5045,
+            -4.2566
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Right": [
+        -6.0116,
+        2.1281,
+        -4.2566
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -6.0116,
+            2.5045,
+            -4.2566
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/pl8",
+        "berts_vehicle_pack:munition/pl12"
+      ],
+      "MaxWeaponsPerPylon": 3,
+      "MaxPylonMassKg": 600
+    },
+    {
+      "Id": "inner",
+      "Name": "Inner wing pylon (double)",
+      "Left": [
+        4.5197,
+        1.9525,
+        -3.0934
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            4.5197,
+            2.5045,
+            -3.0934
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Right": [
+        -4.5197,
+        1.9525,
+        -3.0934
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -4.5197,
+            2.5045,
+            -3.0934
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/pl12",
+        "berts_vehicle_pack:munition/yj91",
+        "berts_vehicle_pack:munition/kd88",
+        "berts_vehicle_pack:fab_250",
+        "berts_vehicle_pack:fab_500"
+      ],
+      "MaxWeaponsPerPylon": 3,
+      "MaxPylonMassKg": 1500
+    },
+    {
+      "Id": "intake",
+      "Name": "Intake pylon",
+      "Left": [
+        1.0969,
+        0.9431,
+        -1.865
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            1.0969,
+            1.3732,
+            -1.865
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Right": [
+        -1.0969,
+        0.9431,
+        -1.865
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -1.0969,
+            1.3732,
+            -1.865
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/pl12",
+        "berts_vehicle_pack:munition/yj91",
+        "berts_vehicle_pack:munition/kd88"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 1000
+    }
+  ],
+  "StoreGroups": {
+    "berts_vehicle_pack:modeled_store/j_15d/310593714": [
+      "suspended_310593714_hull",
+      "suspended_310593714_landing_gear_2"
+    ],
+    "berts_vehicle_pack:modeled_store/j_15d/1734044096": [
+      "suspended_1734044096_hull"
+    ],
+    "berts_vehicle_pack:modeled_store/j_15d/880185541": [
+      "suspended_880185541_hull"
+    ]
+  },
+  "MaxPayloadKg": 8000,
+  "Radar": {
+    "Enabled": true,
+    "Range": 1000
+  },
+  "MaxPylonMassKg": 1000,
+  "MaxWeaponsPerPylon": 12,
+  "Singles": []
+}
