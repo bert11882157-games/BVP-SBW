@@ -456,7 +456,7 @@ class FixedWingMouseAimController(
         val effective = airflow * if (grounded) 1.0 else 1.0 - 0.65 * model.stallSeverity
         val pitchAirflow = handling.pitchAirflowAuthority(
             forwardSpeed * forwardSpeed + upSpeed * upSpeed, densityRatio)
-        val rudderAuthority = handling.rudderRateDegreesPerSecond * effective
+        val rudderAuthority = handling.rudderRateDegreesPerSecond * FixedWingFlightModel.YAW_AUTHORITY_SCALE * effective
         val totalPressure = ((densityRatio * speedSquared -
             handling.minimumControlSpeedMps * handling.minimumControlSpeedMps) /
             (handling.trimSpeedMps * handling.trimSpeedMps -
@@ -554,9 +554,11 @@ class FixedWingMouseAimController(
             normalizedRate(gain * previousTaxiError - 0.25 * model.yawRateDegreesPerSecond,
                 handling.taxiTurnRateDegreesPerSecond(forwardSpeed))
         } else {
+            // Rudder sensitivity raised (0.25 -> 0.40 of the error gain and of the rudder budget) for a noticeably
+            // quicker yaw response.
             val legacyYawRate =
-                (0.25 * gain * yawErrorDegrees - 0.25 * model.yawRateDegreesPerSecond)
-                    .coerceIn(-0.25 * rudderAuthority, 0.25 * rudderAuthority)
+                (0.40 * gain * yawErrorDegrees - 0.25 * model.yawRateDegreesPerSecond)
+                    .coerceIn(-0.40 * rudderAuthority, 0.40 * rudderAuthority)
             val activeYawRate = legacyYawRate +
                 (ordinaryYawRate - legacyYawRate) * ordinaryCaptureWeight
             normalizedRate(activeYawRate - passiveYawRate, rudderAuthority)
@@ -597,7 +599,12 @@ class FixedWingMouseAimController(
                 smoothUnit((abs(yawErrorDegrees) - 3.0) / 12.0)
             val manoeuvreLimit = if (positiveLiftCapture) manoeuvreRollAuthority else 0.0
             val travelLimit = max(max(steeringLimit, manoeuvreLimit), max(recoveryLimit, bankedTurnLimit))
-            val rollDemand = (autoRoll * rollResponseGain).coerceIn(-travelLimit, travelLimit)
+            // Aileron sensitivity: a little lower overall, and noticeably lower the further below the nose the
+            // steering indicator sits, so a pitch-down command no longer throws the aircraft into a hard roll.
+            // A deliberate inversion request keeps full authority.
+            val belowNose = smoothUnit(-pitchErrorDegrees / 25.0)
+            val aileronSensitivity = if (intent.inversionRequested) 1.0 else 0.85 * (1.0 - 0.45 * belowNose)
+            val rollDemand = (autoRoll * rollResponseGain * aileronSensitivity).coerceIn(-travelLimit, travelLimit)
             aileronCommand = handover(aileronCommand, mouseRollResponse(rollDemand), rollHandover)
             if (rollHandover > 0) rollHandover--
         }

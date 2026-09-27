@@ -152,7 +152,7 @@ object AircraftHud {
                     forward.x.toFloat() - 2F, forward.y.toFloat() - 2F,
                     0F, 0F, 4F, 4F, 4F, 4F, vehicle.hudColor)
             }
-            if (fixedWing) renderFlightAim(player, guiGraphics, flightPresentation, screenWidth, screenHeight)
+            if (fixedWing) renderFlightAim(vehicle, player, guiGraphics, flightPresentation, screenWidth, screenHeight, partialTick)
             com.atsuishio.superbwarfare.client.overlay.VehicleSystemsHud.aircraft(
                 guiGraphics, vehicle, player, screenWidth,
                 if (fixedWing) flightPresentation?.throttle?.toDouble() else vehicle.power.toDouble(),
@@ -256,7 +256,7 @@ object AircraftHud {
                 )
                 poseStack.popPose()
                 poseStack.popPose()
-                if (fixedWing) renderFlightAim(player, guiGraphics, flightPresentation, screenWidth, screenHeight)
+                if (fixedWing) renderFlightAim(vehicle, player, guiGraphics, flightPresentation, screenWidth, screenHeight, partialTick)
                 return
             }
         }
@@ -737,7 +737,7 @@ object AircraftHud {
         poseStack.popPose()
         poseStack.popPose()
         if (fixedWing) {
-            renderFlightAim(player, guiGraphics, flightPresentation, screenWidth, screenHeight)
+            renderFlightAim(vehicle, player, guiGraphics, flightPresentation, screenWidth, screenHeight, partialTick)
             com.atsuishio.superbwarfare.client.overlay.VehicleSystemsHud.aircraft(
                 guiGraphics, vehicle, player, screenWidth, flightPresentation?.throttle?.toDouble(),
                 FixedWingHudMetrics.speedKmh(flightPresentation))
@@ -745,11 +745,13 @@ object AircraftHud {
     }
 
     private fun renderFlightAim(
+        vehicle: VehicleEntity,
         player: Player,
         graphics: GuiGraphics,
         flight: VehicleFlightInstrumentSnapshot?,
         width: Int,
         height: Int,
+        partialTick: Float,
     ) {
         if (flight?.controlSurfaces?.wheelBrakeActive == true) {
             val braking = Component.literal("BRAKING")
@@ -771,9 +773,34 @@ object AircraftHud {
         val pose = graphics.pose()
         pose.pushPose()
         pose.translate(marker.x, marker.y, 0f)
-        FixedWingJoystickRing.emit(pose.last().pose(), graphics.bufferSource().getBuffer(RenderType.gui()), color)
-        graphics.flush()
+        val buffer = graphics.bufferSource().getBuffer(RenderType.gui())
+        FixedWingJoystickRing.emit(pose.last().pose(), buffer, color)
         pose.popPose()
+        // A line from the steering circle toward the aircraft's frontal projection (where the nose points): it grows
+        // with the separation, up to a maximum length, and never reaches past the nose marker.
+        val nose = net.minecraft.world.phys.Vec3.directionFromRotation(vehicle.getPitch(partialTick),
+            vehicle.getResolvedChassisYaw(partialTick))
+        val noseMarker = FixedWingMouseAimMath.project(nose.x, nose.y, nose.z, matrix, projection, width, height)
+        if (noseMarker != null) {
+            val dx = noseMarker.x - marker.x
+            val dy = noseMarker.y - marker.y
+            val distance = kotlin.math.hypot(dx, dy)
+            val start = FixedWingJoystickRing.OUTER_RADIUS + 1.5f
+            val length = minOf(distance - start - 3f, (distance - start) * 0.6f, 48f)
+            if (distance > 1e-3f && length > 1f) {
+                val ux = dx / distance; val uy = dy / distance
+                val half = 0.6f
+                val x0 = marker.x + ux * start; val y0 = marker.y + uy * start
+                val x1 = x0 + ux * length; val y1 = y0 + uy * length
+                val m = pose.last().pose()
+                val r = color ushr 16 and 255; val g = color ushr 8 and 255; val b = color and 255
+                buffer.vertex(m, x0 - uy * half, y0 + ux * half, 0f).color(r, g, b, 230).endVertex()
+                buffer.vertex(m, x1 - uy * half, y1 + ux * half, 0f).color(r, g, b, 120).endVertex()
+                buffer.vertex(m, x1 + uy * half, y1 - ux * half, 0f).color(r, g, b, 120).endVertex()
+                buffer.vertex(m, x0 + uy * half, y0 - ux * half, 0f).color(r, g, b, 230).endVertex()
+            }
+        }
+        graphics.flush()
         if (flight?.controlSurfaces?.afterburnerActive == true) {
             val boost = Component.translatable("hud.superbwarfare.afterburner")
             graphics.drawString(mc.font, boost, width - mc.font.width(boost) - 12,

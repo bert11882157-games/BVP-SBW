@@ -23,8 +23,10 @@ class FixedWingMouseAimControllerTest {
             val middle = command(0.50)
             val deliberate = command(0.75)
             assertTrue(fine.first < 0.05, "near-center pitch correction rolls too strongly: $fine")
-            assertTrue(middle.first > 0.60, "half-radius intentional roll remains too weak: $middle")
-            assertTrue(deliberate.first > 0.90, "outer intentional roll lacks full authority: $deliberate")
+            // Ailerons are 15% less sensitive, and less again with the indicator below the nose.
+            val sensitivity = if (pitch < 0.0) 0.6 else 0.85
+            assertTrue(middle.first > 0.60 * sensitivity, "half-radius intentional roll remains too weak: $middle")
+            assertTrue(deliberate.first > 0.90 * sensitivity, "outer intentional roll lacks full authority: $deliberate")
             assertTrue(deliberate.first > fine.first * 4.0,
                 "deliberate lateral travel lacks roll authority: fine=$fine deliberate=$deliberate")
             assertTrue(fine.second * pitch > 0.1, "fine pitch authority was lost: $fine")
@@ -118,9 +120,9 @@ class FixedWingMouseAimControllerTest {
             val p=c.elevatorCommand*(h.pitchResponseLinearFraction+
                 (1.0-h.pitchResponseLinearFraction)*abs(c.elevatorCommand))*
                 h.gamePitchRateDegreesPerSecond*h.pitchAirflowAuthority(speed*speed,1.0)
-            val yaw=c.rudderCommand*h.rudderRateDegreesPerSecond
+            val yaw=c.rudderCommand*h.rudderRateDegreesPerSecond*FixedWingFlightModel.YAW_AUTHORITY_SCALE
             assertTrue(p>0.0)
-            assertTrue(abs(yaw)<=h.rudderRateDegreesPerSecond+1e-9)
+            assertTrue(abs(yaw)<=h.rudderRateDegreesPerSecond*FixedWingFlightModel.YAW_AUTHORITY_SCALE+1e-9)
             assertEquals(0.0,p*upY+yaw*rightY,1e-8,
                 "A level world target must not gain elevator-only climb")
             assertTrue(c.elevatorCommand in -1.0..1.0 && c.aileronCommand in -1.0..1.0)

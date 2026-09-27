@@ -470,7 +470,8 @@ class FixedWingFlightModel(
             .coerceIn(-automaticYawLimit, automaticYawLimit)
         val desiredYaw = if (grounded) {
             rudder * handling.taxiTurnRateDegreesPerSecond(previousForward)
-        } else rudder * handling.rudderRateDegreesPerSecond * yawAuthority * surfaceDamage.yawAuthority + automaticYaw
+        } else rudder * handling.rudderRateDegreesPerSecond * YAW_AUTHORITY_SCALE * yawAuthority *
+            surfaceDamage.yawAuthority + automaticYaw
         val angularResponse = response(handling.angularResponsePerSecond)
         // Small, zero-mean roll buffet shares the camera's speed envelope. Rotation about
         // the forward axis preserves upright/inverted force symmetry and pitch protection.
@@ -868,6 +869,8 @@ class FixedWingFlightModel(
     }
 
     companion object {
+        /** Slightly more yaw authority for the rudder than the profile's base rate (airborne; taxi unchanged). */
+        const val YAW_AUTHORITY_SCALE = 1.12
         const val DT = 0.05
         /** Ground rotation cap for airframes without a measured tail clearance. */
         const val MAX_GROUND_PITCH_DEGREES = 18.0

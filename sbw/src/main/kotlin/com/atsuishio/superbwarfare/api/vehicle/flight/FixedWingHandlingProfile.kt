@@ -115,7 +115,8 @@ data class FixedWingHandlingProfile(
     /** Normalized surface travel per second, independent of airspeed and aerodynamic authority. */
     val elevatorTravelPerSecond: Double get() = (0.5 * angularResponsePerSecond).coerceIn(1.0, 4.0)
     val aileronTravelPerSecond: Double get() = angularResponsePerSecond.coerceIn(1.5, 10.0)
-    val rudderTravelPerSecond: Double get() = elevatorTravelPerSecond
+    // The rudder moves 30% faster than the elevator: a more sensitive, quicker yaw response.
+    val rudderTravelPerSecond: Double get() = (elevatorTravelPerSecond * 1.3).coerceAtMost(5.2)
 
     /** Passive windmilling/inlet resistance relative to zero-lift drag at power off. */
     val idleDragFactor: Double get() = if (propellerPowerReferenceSpeedMps > 0.0) 3.0 else 1.0
