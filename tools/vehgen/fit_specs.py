@@ -197,4 +197,40 @@ SPECS = {
                      'ThirdPersonCameraPos', 'InertiaRotateRate', 'ParkingBrakeWhenUnoccupied', 'TurretTurnSpeed',
                      'TurretPitchRange', 'Type', 'HUDColor'],
     },
+    't14_armata': {
+        'id': 't14_armata',
+        'template': 't90m',
+        'hitbox': (3.6, 2.4),
+        'geometry': {
+            # the gun pitched about a point 5 px under its bore, ahead of the turret face: trunnion inside the mantlet
+            'setPivots': {'barell': [0.0, 40.9, -20.0]},
+            # the left sprocket and idler sat inside the hull (x 5-16 px) and the left track links were 2.7 px
+            # narrower than the right: the left running gear is rebuilt as the mirror of the right
+            'mirrorMeshes': 'R',
+            'symmetrizeRunningGear': True,
+            'scale': 1.0,
+        },
+        'attachments': {
+            # gunner's sight head on the turret roof, front right (the crew sits in the hull capsule)
+            'gunner1_camera': {'parent': 'Turret', 'at': [-10.0, 54.0, -16.0]},
+            'gunner1_zoom': {'parent': 'Turret', 'at': [-10.0, 54.0, -16.0]},
+            'main_muzzle': {'parent': 'Barrel', 'at': [0.0, 40.9, -126.8]},
+            # PKTM coax, right of the gun in the mantlet
+            'coax_muzzle': {'parent': 'Barrel', 'at': [-5.0, 42.0, -32.2]},
+        },
+        'seats': [
+            {'frame': 'Vehicle', 'at': [0.0, 24.0, -44.8], 'fromTemplate': 0},     # gunner, capsule centre
+            {'frame': 'Vehicle', 'at': [-8.0, 24.0, -44.8], 'fromTemplate': 2},    # commander, capsule right
+        ],
+        # the model has no remote weapon station on the turret: the T-90M's commander HMG station is left out
+        'dropWeapons': ['PassengerMachineGun'],
+        'dropData': ['PassengerWeaponStationControllerIndex', 'PassengerWeaponStationBinding',
+                     'PassengerWeaponStationPos', 'PassengerWeaponStationBarrelPos', 'PassengerWeaponStationTurnSpeed',
+                     'PassengerWeaponStationPitchRange', 'PassengerWeaponStationYawRange'],
+        'dataSet': {'RemoteWeaponStation': False},
+        'weaponSet': {'Cannon': {'Name': 'weapon.berts_vehicle_pack.t14_cannon'}},
+        # Malachit ERA on the hull only; the unmanned turret carries none
+        'armorDrop': {'explosive_reactive_armor': 'turret'},
+        'lang': {'weapon.berts_vehicle_pack.t14_cannon': '125 mm 2A82-1M'},
+    },
 }

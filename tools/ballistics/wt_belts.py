@@ -98,7 +98,7 @@ WEAPONS = {
     ('bmpt', 'Cannon'): ('TWO_A42', A42), ('bmpt', 'DualCannon'): ('TWO_A42', A42),
     ('btr_90', 'Cannon'): ('TWO_A42', A42),
     ('btr80a', 'Cannon'): ('TWO_A42', A72), ('bmp3m_elite', 'DualCannon'): ('TWO_A42', BMP3),
-    ('tunguska', 'Cannon'): ('TWO_A42', A38),
+    ('tunguska', 'Cannon'): ('TWO_A42', A38), ('9k22_tunguska', 'Cannon'): ('TWO_A42', A38),
     ('ka50', 'Cannon'): ('TWO_A42', A42_HELI), ('mi28n', 'Cannon'): ('TWO_A42', A42_HELI),
     ('zu23_2', 'Cannon'): ('ZU23', ZU23), ('zsu23_4', 'Cannon'): ('ZU23', ZU23),
     ('m2_bradley', 'Cannon'): ('M242', M242), ('lav25', 'Cannon'): ('M242', M242_LAV),

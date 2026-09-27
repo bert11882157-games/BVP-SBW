@@ -438,6 +438,8 @@ def build_data(spec, tpl, geo, s, old_data, tpl_geo):
 
     for key in spec.get('dropData', []):
         d.pop(key, None)
+    for wname in spec.get('dropWeapons', []):
+        d['Weapons'].pop(wname, None)
     at = {}
     tip = spec['geometry'].get('stretch', {}).get('muzzleZ')
     for name, a in spec['attachments'].items():
@@ -596,6 +598,8 @@ def build_armor(spec, tpl, geo, tpl_geo):
             m, k = map_point(g, *maps[frame])
             item['center'] = r5([-m[0] / 16, m[1] / 16, m[2] / 16])
             item['half_size'] = r5(np.array(item['half_size']) * np.abs(k))
+    for key, frame in spec.get('armorDrop', {}).items():
+        a[key] = [item for item in a.get(key, []) if item.get('frame', 'hull') != frame]
     a.update(spec.get('armorSet', {}))
     return a
 
