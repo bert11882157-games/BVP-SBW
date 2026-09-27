@@ -679,6 +679,8 @@ def rename_rounds(spec, data):
 def register(spec, out):
     vid, tid = spec['id'], spec['template']
     const = vid.upper()
+    if const[0].isdigit():      # Java names: 9p149_shturm -> NINE_P_149_SHTURM, like NINE_P_148
+        const = re.sub(r'^9([A-Z])(\d+)', r'NINE_\1_\2', const)
     path = os.path.join(JAVA, 'init', 'ModEntities.java')
     src = open(path).read()
     if f'"{vid}"' not in src:
