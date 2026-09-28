@@ -26,7 +26,7 @@ public abstract class SoundBarrierEventsMixin {
     private static double sbw$alreadyAcceptedSpeed(double original) { return SoundBarrierCompat.effectSpeed(original); }
 
     @ModifyConstant(method = "onPlayerTick", constant = @Constant(doubleValue = 70))
-    private static double sbw$threshold(double original) { return SoundBarrierCompat.dispatching() ? 350.0 / 3.6 : original; }
+    private static double sbw$threshold(double original) { return SoundBarrierCompat.dispatching() ? 400.0 / 3.6 : original; }
 
     @ModifyConstant(method = "onPlayerTick", constant = @Constant(intValue = 18))
     private static int sbw$groundDustOwner(int original) { return SoundBarrierCompat.dispatching() ? 0 : original; }

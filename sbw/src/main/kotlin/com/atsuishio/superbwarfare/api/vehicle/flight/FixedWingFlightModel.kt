@@ -288,8 +288,9 @@ class FixedWingFlightModel(
         this.gearDeployment = gearDeployment
         groundedForDrag = grounded
         densityRatio = airDensityRatio
-        worldSoundSpeedMps =
-            sqrt(1.4 * 287.05287 * airTemperatureKelvin) * handling.simulationLengthScale
+        // Mach 1 is 400 km/h in the game world at sea level (FixedWingHandlingProfile.MACH_STRETCH)
+        worldSoundSpeedMps = sqrt(1.4 * 287.05287 * airTemperatureKelvin) * handling.simulationLengthScale *
+            FixedWingHandlingProfile.MACH_STRETCH
         if (!worldSoundSpeedMps.isFinite() || worldSoundSpeedMps <= 0.0) return failClosed()
         structuralTrueSpeedLimitMps = FixedWingAtmosphere.trueSpeedForIndicatedLimit(
             handling.maximumIndicatedSpeedMps / handling.simulationLengthScale,
@@ -409,6 +410,15 @@ class FixedWingFlightModel(
             (if (grounded) handling.launchThrustMultiplier(speed) else 1.0) *
             (1.0 - 0.15 * gearDeployment) *
             if (afterburnerActive) handling.gameAfterburnerMultiplier * engagementBoost else 1.0
+        // Transonic speed is earned: near and above Mach 1 only a share of the surplus over last step's drag
+        // accelerates the aircraft. The equilibrium (top speed) is unchanged and dives are not affected.
+        if (!grounded && thrustAccelerationMps2 > dragAccelerationMps2) {
+            val share = FixedWingHandlingProfile.transonicSurplusShare(inletMach)
+            if (share < 1.0) {
+                thrustAccelerationMps2 = dragAccelerationMps2 +
+                    (thrustAccelerationMps2 - dragAccelerationMps2) * share
+            }
+        }
 
         // Surface authority begins with usable airflow. Smooth pressure and stall response avoid
         // an attitude jump at either boundary; parked control deflections create no flight torque.
@@ -661,10 +671,12 @@ class FixedWingFlightModel(
         } else {
             0.0
         }
-        val excessSpeed = max(0.0, speed - handling.softSpeedLimitMps)
-        // Soft envelope resistance; never clamp or replace the velocity vector.
-        overspeedDragAccelerationMps2 = (handling.overspeedResponsePerSecond * excessSpeed +
-            handling.overspeedDragPerMetre * square(excessSpeed)) * (1.0 - 0.85 * diveFraction)
+        val excessSpeed = max(0.0, speed - handling.effectiveSoftSpeedLimitMps)
+        // Soft envelope resistance above the aircraft's first soft cap (or the shared one); never clamps or
+        // replaces the velocity vector. Level flight passes the cap a little and slowly; steep dives shed most of it.
+        overspeedDragAccelerationMps2 = (FixedWingHandlingProfile.OVERSPEED_LINEAR_PER_SECOND * excessSpeed +
+            FixedWingHandlingProfile.OVERSPEED_QUADRATIC_PER_METRE * square(excessSpeed)) *
+            (1.0 - FixedWingHandlingProfile.OVERSPEED_DIVE_RELIEF * diveFraction)
         // Passive transonic drag rise. Its coefficient is calibrated independently of the
         // safety-envelope resistance; no velocity replacement or extra integration occurs.
         waveDragAccelerationMps2 = if (handling.waveDragPerMetre > 0.0) {

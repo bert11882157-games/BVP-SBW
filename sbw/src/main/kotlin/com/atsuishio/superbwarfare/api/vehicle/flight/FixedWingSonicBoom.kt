@@ -22,7 +22,7 @@ internal object FixedWingSonicBoom {
         com.atsuishio.superbwarfare.diagnostics.EliteDiagnostics.record(vehicle, "fixed_wing", "SONIC_EFFECT",
             "provider", if (nativeBursts.isEmpty()) "sbw_fallback" else "supersonic",
             "bursts", nativeBursts.size, "particles", nativeBursts.sumOf { maxOf(1, it.count) },
-            "threshold_kmh", 350)
+            "threshold_kmh", FixedWingSonicCrossing.BOOM_KMH)
         if (nativeBursts.isEmpty()) SoundTool.playDistantSound(level, ModSounds.EXPLOSION_AIR.get(), center,
             128f, .85f, null, vehicle, null, "SONIC_BOOM")
         val message = SonicBoomMessage(center, Vec3.directionFromRotation(vehicle.xRot, vehicle.yRot),

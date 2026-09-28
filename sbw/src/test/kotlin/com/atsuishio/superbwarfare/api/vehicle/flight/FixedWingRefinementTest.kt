@@ -47,23 +47,23 @@ class FixedWingRefinementTest {
         assertTrue(FixedWingSpeedEffects.buffetDegrees(48.0, slow) > 0.0)
         assertEquals(0.0, FixedWingSpeedEffects.buffetDegrees(48.0, fast), 0.0)
         assertEquals(0.10, FixedWingSpeedEffects.buffetDegrees(100.0, fast), 1e-12)
-        assertTrue(FixedWingSpeedEffects.buffetDegrees(450.0 / 3.6, fast) > 0.20)
+        assertTrue(FixedWingSpeedEffects.buffetDegrees(700.0 / 3.6, fast) > 0.20)
         assertEquals(0.45, FixedWingSpeedEffects.buffetDegrees(10000.0, fast), 1e-12)
     }
 
     @Test fun sonicBoomRequiresCrossingAndRearmWithoutThresholdChatter() {
         val fresh = FixedWingSonicCrossing()
-        assertFalse(fresh.update(340.0, 0))
-        assertTrue(fresh.update(350.0, 1))
+        assertFalse(fresh.update(390.0, 0))
+        assertTrue(fresh.update(400.0, 1))
         val gate = FixedWingSonicCrossing()
-        assertFalse(gate.update(360.0, 0))
-        assertFalse(gate.update(349.0, 1))
-        assertFalse(gate.update(351.0, 2))
-        assertFalse(gate.update(329.0, 3))
-        assertTrue(gate.update(350.0, 4))
-        for (tick in 5L..100L) assertFalse(gate.update(if (tick % 2L == 0L) 349.0 else 351.0, tick))
-        assertFalse(gate.update(320.0, 105))
-        assertTrue(gate.update(350.0, 106))
+        assertFalse(gate.update(410.0, 0))
+        assertFalse(gate.update(399.0, 1))
+        assertFalse(gate.update(401.0, 2))
+        assertFalse(gate.update(379.0, 3))
+        assertTrue(gate.update(400.0, 4))
+        for (tick in 5L..100L) assertFalse(gate.update(if (tick % 2L == 0L) 399.0 else 401.0, tick))
+        assertFalse(gate.update(370.0, 105))
+        assertTrue(gate.update(400.0, 106))
     }
 
     @Test fun smallDownwardAimUsesElevatorAndSmallSidewaysAimDoesNotCommandFullRoll() {

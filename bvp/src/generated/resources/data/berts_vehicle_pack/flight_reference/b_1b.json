@@ -47,7 +47,7 @@
     "thrustDensityKneeReferenceAltitudeMetres": 0,
     "dryMachThrustFactor": 1,
     "afterburnerMachThrustFactor": 1,
-    "waveDragCoefficient": 0,
+    "waveDragCoefficient": 0.009,
     "afterburnerEnabled": true,
     "afterburnerMultiplier": 1.7251521298174441,
     "throttleSpoolUpPerSecond": 0.35,
@@ -62,6 +62,7 @@
     "hpToWatts": 735.49875,
     "normalPowerThrottleFraction": null,
     "takeoffPitchReferenceSpeedMps": 100.7398368370195,
-    "lowSpeedThrustMultiplier": 1
+    "lowSpeedThrustMultiplier": 1,
+    "firstSoftCapKmh": 400
   }
 }

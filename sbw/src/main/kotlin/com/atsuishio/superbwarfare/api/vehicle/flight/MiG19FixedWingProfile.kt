@@ -121,6 +121,8 @@ object MiG19FixedWingProfile {
             waveDragOnsetMach = 0.82,
             waveDragWidthMach = 0.25,
             waveDragPerMetre = REFERENCE_WAVE_DRAG_PER_METRE,
+            // owner's balance (2026-09-28): Mach 1.35 fighter, first soft cap 350 km/h (same as the MiG-19S)
+            firstSoftSpeedLimitMps = 350.0 / 3.6,
         ),
         0.25,
     )

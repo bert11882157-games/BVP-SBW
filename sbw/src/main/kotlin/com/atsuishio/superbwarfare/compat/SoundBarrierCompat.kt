@@ -29,7 +29,7 @@ object SoundBarrierCompat {
     }
     @JvmStatic fun dispatching() = capture.get() != null
     @JvmStatic fun effectVehicle(original: Entity): Entity = capture.get()?.vehicle ?: original
-    @JvmStatic fun effectSpeed(original: Double): Double = if (dispatching()) 350.0 / 3.6 + .01 else original
+    @JvmStatic fun effectSpeed(original: Double): Double = if (dispatching()) 400.0 / 3.6 + .01 else original
     @JvmStatic fun suppressAutomatic(event: TickEvent.PlayerTickEvent): Boolean =
         !dispatching() && (event.player.vehicle as? VehicleEntity)?.isFixedWingFlightVehicle() == true
 

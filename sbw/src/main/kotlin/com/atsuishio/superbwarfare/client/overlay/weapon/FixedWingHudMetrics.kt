@@ -48,7 +48,9 @@ internal object FixedWingHudMetrics {
         val referenceAltitudeMetres = (presentedVehicleY - seaLevel) / simulationLengthScale
         if (!speedMetresPerSecond.isFinite() || !referenceAltitudeMetres.isFinite()) return null
         val temperature = FixedWingAtmosphere.temperatureKelvin(referenceAltitudeMetres)
-        val soundSpeed = sqrt(1.4 * 287.05287 * temperature)
+        // the flight model's Mach: 400 km/h is Mach 1 at sea level
+        val soundSpeed = sqrt(1.4 * 287.05287 * temperature) *
+            com.atsuishio.superbwarfare.api.vehicle.flight.FixedWingHandlingProfile.MACH_STRETCH
         return (speedMetresPerSecond / soundSpeed).takeIf { it.isFinite() && it >= 0.0 }
     }
 

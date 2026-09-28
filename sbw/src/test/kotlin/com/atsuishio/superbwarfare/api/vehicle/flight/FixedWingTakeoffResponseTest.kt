@@ -45,10 +45,11 @@ class FixedWingTakeoffResponseTest {
     }
 
     @Test fun responseTuningKeepsPitchAndAppliesRequestedAccelerationAndSpeedEnvelope() {
-        assertEquals(handling.pitchRateDegreesPerSecond * 0.99, handling.gamePitchRateDegreesPerSecond)
-        assertEquals(handling.dryAccelerationMps2 * 1.12 * 1.6, handling.gameDryAccelerationMps2)
-        assertEquals(400.0 / 3.6, handling.softSpeedLimitMps)
-        assertEquals(500.0 / 3.6, handling.hardSpeedLimitMps)
+        assertEquals(handling.pitchRateDegreesPerSecond * 1.10 * 1.12, handling.gamePitchRateDegreesPerSecond, 1e-12)
+        // jets fly on their reference thrust (2026-09-28); propellers keep a x1.6 gain
+        assertEquals(handling.dryAccelerationMps2, handling.gameDryAccelerationMps2, 1e-12)
+        assertEquals(650.0 / 3.6, handling.softSpeedLimitMps, 1e-12)
+        assertEquals(750.0 / 3.6, handling.hardSpeedLimitMps, 1e-12)
     }
 
     @Test fun stablePoweredContactAcquiresButContactFlickerNeverDoes() {

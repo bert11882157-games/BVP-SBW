@@ -77,6 +77,10 @@ def problems(d, vid):
         out.append('pitot CAS calibration')
     if ('takeoffPitchReferenceSpeedMps' in e) != ('lowSpeedThrustMultiplier' in e):
         out.append('takeoff calibration pair')
+    if 'firstSoftCapKmh' in e and not 0 < e['firstSoftCapKmh'] <= 800:
+        out.append('first soft cap %s not in (0, 800] km/h' % e['firstSoftCapKmh'])
+    if 'waveDragOnsetMach' in e and not 0.3 < e['waveDragOnsetMach'] < 1.2:
+        out.append('wave drag onset Mach %s not in (0.3, 1.2)' % e['waveDragOnsetMach'])
     return out
 
 

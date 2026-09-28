@@ -4,7 +4,7 @@
   "handlingProfileId": "berts_vehicle_pack:flight_handling/su_35",
   "lengthScale": 0.25,
   "reference": {
-    "maximumTrueAirspeedKmh": 1400,
+    "maximumTrueAirspeedKmh": 2400,
     "referenceAltitudeMetres": 0,
     "climbMetresPerSecond": 225,
     "turnSeconds": 23.5,
@@ -25,7 +25,7 @@
   },
   "engineering": {
     "effectivePropulsiveEfficiency": null,
-    "zeroLiftDragCoefficient": 0.04919992002061666,
+    "zeroLiftDragCoefficient": 0.022,
     "inducedDragFactor": 0.11416084122006472,
     "maximumLiftCoefficient": 1.8,
     "liftSlopePerRadian": 4.5,
@@ -46,7 +46,7 @@
     "thrustDensityKneeReferenceAltitudeMetres": 0,
     "dryMachThrustFactor": 1,
     "afterburnerMachThrustFactor": 1,
-    "waveDragCoefficient": 0,
+    "waveDragCoefficient": 0.0058,
     "afterburnerEnabled": true,
     "afterburnerMultiplier": 1.6477272727272727,
     "throttleSpoolUpPerSecond": 0.8,
@@ -62,6 +62,7 @@
     "normalPowerThrottleFraction": null,
     "controlReferenceSpeedMps": 133.27095699165125,
     "takeoffPitchReferenceSpeedMps": 66.63547849582562,
-    "lowSpeedThrustMultiplier": 1.25
+    "lowSpeedThrustMultiplier": 1.25,
+    "firstSoftCapKmh": 455
   }
 }

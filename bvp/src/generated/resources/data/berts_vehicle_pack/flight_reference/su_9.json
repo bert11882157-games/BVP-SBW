@@ -54,7 +54,7 @@
     "throttleSpoolDownPerSecond": 1.2,
     "sideDragPerMetre": 0.0015,
     "overspeedDragPerMetre": 0.0025,
-    "airbrakeDragPerMetre": 0,
+    "airbrakeDragPerMetre": 0.0012,
     "rollingResistanceMps2": 0.25,
     "groundBrakingMps2": 6,
     "taxiFullSteeringSpeedMps": 24,
@@ -62,6 +62,7 @@
     "hpToWatts": 735.49875,
     "normalPowerThrottleFraction": null,
     "takeoffPitchReferenceSpeedMps": 72.08882041780926,
-    "lowSpeedThrustMultiplier": 1.25
+    "lowSpeedThrustMultiplier": 1.25,
+    "firstSoftCapKmh": 440
   }
 }

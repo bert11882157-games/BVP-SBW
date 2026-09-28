@@ -49,19 +49,20 @@
     "thrustDensityKneeReferenceAltitudeMetres": 8000,
     "dryMachThrustFactor": 1,
     "afterburnerMachThrustFactor": 1,
-    "waveDragCoefficient": 0,
+    "waveDragCoefficient": 0.04,
     "afterburnerEnabled": false,
     "afterburnerMultiplier": 1,
     "throttleSpoolUpPerSecond": 1.5,
     "throttleSpoolDownPerSecond": 2,
     "sideDragPerMetre": 0.0015,
     "overspeedDragPerMetre": 0.0025,
-    "airbrakeDragPerMetre": 0,
+    "airbrakeDragPerMetre": 0.0012,
     "rollingResistanceMps2": 0.25,
     "groundBrakingMps2": 6,
     "taxiFullSteeringSpeedMps": 18,
     "minimumStallStateSpeedMps": 4,
     "hpToWatts": 735.49875,
-    "normalPowerThrottleFraction": null
+    "normalPowerThrottleFraction": null,
+    "firstSoftCapKmh": 190
   }
 }

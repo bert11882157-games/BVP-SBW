@@ -49,11 +49,11 @@ class FixedWingGroundOperationTest {
         assertTrue(deployed.step(51, 0.0, 0.0, 25.0, false, true, gearDeployment = 1.0))
         assertEquals(clean.thrustAccelerationMps2 * 0.85, deployed.thrustAccelerationMps2, 1e-10)
         val fastProfile = handling.copy(maximumSpeedMps = 150.0, maximumIndicatedSpeedMps = 150.0)
-        assertEquals(400.0 / 3.6, fastProfile.softSpeedLimitMps, 1e-10)
+        assertEquals(650.0 / 3.6, fastProfile.softSpeedLimitMps, 1e-10)
         for (gear in listOf(0.0, 1.0)) {
             val model = FixedWingFlightModel(fastProfile)
             assertTrue(model.step(0, 0.0, -120.0, 70.0, false, false, gearDeployment = gear))
-            assertTrue(model.speedMps <= 500.0 / 3.6 + 1e-9)
+            assertTrue(model.speedMps <= 750.0 / 3.6 + 1e-9)
             val work = model.stepThrustWorkPerKg + model.stepGravityWorkPerKg + model.stepDragWorkPerKg +
                 model.stepLiftWorkPerKg + model.stepSideWorkPerKg + model.stepGroundResistanceWorkPerKg
             assertEquals(model.postStepKineticEnergyPerKg - model.preStepKineticEnergyPerKg, work, 1e-8)

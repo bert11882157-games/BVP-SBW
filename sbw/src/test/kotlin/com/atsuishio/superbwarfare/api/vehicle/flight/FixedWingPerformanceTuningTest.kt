@@ -4,44 +4,73 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import kotlin.math.*
 
+/** Owner's speed balance, 2026-09-28: Mach 1 = 400 km/h, shared soft cap 650, hard cap 750, slow transonic gains. */
 class FixedWingPerformanceTuningTest {
-    @Test fun allHandlingProfilesShareCapsAndRelativeAccelerationWithoutChangingReferenceValues() {
+    @Test fun allHandlingProfilesShareCapsAndJetsFlyOnReferenceThrust() {
         for (h in listOf(FixedWingHandlingProfile.GAME_JET, MiG19FixedWingProfile.HANDLING,
             FixedWingHandlingProfile.GAME_JET.copy(dryAccelerationMps2 = 2.0, maximumSpeedMps = 30.0))) {
-            assertEquals(400.0, h.softSpeedLimitMps * 3.6, 1e-9)
-            assertEquals(500.0, h.hardSpeedLimitMps * 3.6, 1e-9)
-            assertEquals(1.6, h.gameDryAccelerationMps2 / (h.dryAccelerationMps2 * 1.12), 1e-12)
+            assertEquals(650.0, h.softSpeedLimitMps * 3.6, 1e-9)
+            assertEquals(750.0, h.hardSpeedLimitMps * 3.6, 1e-9)
+            assertEquals(h.dryAccelerationMps2, h.gameDryAccelerationMps2, 1e-12)
+            assertEquals(max(1.0, h.afterburnerMultiplier), h.gameAfterburnerMultiplier, 1e-12)
             assertEquals(0.90, h.gameRollRateDegreesPerSecond / h.rollRateDegreesPerSecond, 1e-12)
         }
+        val prop = FixedWingHandlingProfile.GAME_JET.copy(propellerPowerReferenceSpeedMps = 30.0)
+        assertEquals(1.6, prop.gameDryAccelerationMps2 / prop.dryAccelerationMps2, 1e-12)
     }
 
-    @Test fun poweredModelUsesAccelerationGainAndTaperedAfterburnerSurge() {
+    @Test fun firstSoftCapNeverExceedsTheSharedOne() {
+        val h = FixedWingHandlingProfile.GAME_JET
+        assertEquals(h.softSpeedLimitMps, h.effectiveSoftSpeedLimitMps, 0.0)
+        assertEquals(300.0 / 3.6, h.copy(firstSoftSpeedLimitMps = 300.0 / 3.6).effectiveSoftSpeedLimitMps, 1e-12)
+        assertEquals(h.softSpeedLimitMps, h.copy(firstSoftSpeedLimitMps = 700.0 / 3.6).effectiveSoftSpeedLimitMps, 0.0)
+        assertEquals(350.0, MiG19FixedWingProfile.HANDLING.effectiveSoftSpeedLimitMps * 3.6, 1e-9)
+    }
+
+    @Test fun transonicSurplusShareFallsFromFullToTheFloor() {
+        assertEquals(1.0, FixedWingHandlingProfile.transonicSurplusShare(0.5), 0.0)
+        assertEquals(1.0, FixedWingHandlingProfile.transonicSurplusShare(0.85), 0.0)
+        val mid = FixedWingHandlingProfile.transonicSurplusShare(0.975)
+        assertTrue(mid < 1.0 && mid > FixedWingHandlingProfile.TRANSONIC_SURPLUS)
+        assertEquals(FixedWingHandlingProfile.TRANSONIC_SURPLUS, FixedWingHandlingProfile.transonicSurplusShare(1.1), 1e-12)
+        assertEquals(FixedWingHandlingProfile.TRANSONIC_SURPLUS, FixedWingHandlingProfile.transonicSurplusShare(2.0), 1e-12)
+        assertEquals(1.0, FixedWingHandlingProfile.transonicSurplusShare(Double.NaN), 0.0)
+    }
+
+    @Test fun poweredModelUsesReferenceThrustAndASmallTaperedAfterburnerSurge() {
         val model = warmed(FixedWingHandlingProfile.GAME_JET)
         assertTrue(model.step(100, 0.0, 0.0, 24.0, false, true))
         val dry = model.thrustAccelerationMps2
         assertEquals(model.handling.gameDryAccelerationMps2, dry, 1e-9)
+        val ab = model.handling.gameAfterburnerMultiplier
+        val surge = FixedWingAfterburnerBoost.SURGE
         assertTrue(model.step(101, 0.0, 0.0, 24.0, false, true, afterburnerRequested = true))
-        assertEquals(dry * model.handling.gameAfterburnerMultiplier * 1.5, model.thrustAccelerationMps2, 1e-9)
-        assertTrue(model.step(111, 0.0, 0.0, 24.0, false, true, afterburnerRequested = true))
-        assertEquals(dry * model.handling.gameAfterburnerMultiplier * 1.25, model.thrustAccelerationMps2, 1e-9)
-        assertTrue(model.step(121, 0.0, 0.0, 24.0, false, true, afterburnerRequested = true))
-        assertEquals(dry * model.handling.gameAfterburnerMultiplier, model.thrustAccelerationMps2, 1e-9)
-        assertTrue(model.step(122, 0.0, 0.0, 24.0, false, true, afterburnerRequested = true, engineAvailability = 0.0))
+        assertEquals(dry * ab * (1.0 + surge), model.thrustAccelerationMps2, 1e-9)
+        assertTrue(model.step(116, 0.0, 0.0, 24.0, false, true, afterburnerRequested = true))
+        assertEquals(dry * ab * (1.0 + surge * 0.5), model.thrustAccelerationMps2, 1e-9)
+        assertTrue(model.step(131, 0.0, 0.0, 24.0, false, true, afterburnerRequested = true))
+        assertEquals(dry * ab, model.thrustAccelerationMps2, 1e-9)
+        assertTrue(model.step(132, 0.0, 0.0, 24.0, false, true, afterburnerRequested = true, engineAvailability = 0.0))
         assertEquals(0.0, model.thrustAccelerationMps2, 0.0)
         assertFalse(model.afterburnerActive)
     }
 
     @Test fun rapidAfterburnerTogglesCannotRestartTheSurge() {
         val boost = FixedWingAfterburnerBoost()
-        assertEquals(1.5, boost.update(true, 0), 0.0)
+        val full = 1.0 + FixedWingAfterburnerBoost.SURGE
+        assertEquals(full, boost.update(true, 0), 1e-12)
         assertEquals(1.0, boost.update(false, 5), 0.0)
-        assertEquals(1.25, boost.update(true, 10), 0.0)
-        assertEquals(1.0, boost.update(false, 22), 0.0)
-        assertEquals(1.0, boost.update(true, 23), 0.0)
-        boost.update(false, 39)
-        assertEquals(1.5, boost.update(true, 40), 0.0)
+        // relit within the re-arm window: the surge keeps fading from the first light-up, it never restarts
+        assertEquals(1.0 + FixedWingAfterburnerBoost.SURGE * (1.0 - 10.0 / 30.0), boost.update(true, 10), 1e-12)
+        assertEquals(1.0, boost.update(false, 40), 0.0)
+        assertEquals(1.0, boost.update(true, 41), 0.0)
+        boost.update(false, 42)
+        // re-arms only after REARM_OFF_TICKS since it was last lit (tick 41)
+        assertEquals(1.0, boost.update(true, 41 + FixedWingAfterburnerBoost.REARM_OFF_TICKS - 1), 0.0)
+        boost.update(false, 300)
+        assertEquals(full, boost.update(true, 300 + FixedWingAfterburnerBoost.REARM_OFF_TICKS), 1e-12)
         boost.reset()
-        assertEquals(1.0, boost.update(false, 41), 0.0)
+        assertEquals(1.0, boost.update(false, 600), 0.0)
     }
 
     @Test fun oldReferenceSpeedDoesNotApplyAnEarlierSoftCap() {
@@ -52,9 +81,9 @@ class FixedWingPerformanceTuningTest {
         assertTrue(model.speedMps > 320.0 / 3.6)
     }
 
-    @Test fun realMigDiveCanCrossSoftCapAndNeverPassHardCap() {
+    @Test fun realMigDiveCrossesItsFirstSoftCapAndNeverPassesTheHardCap() {
         val model = warmed(MiG19FixedWingProfile.HANDLING, 70.0)
-        var speed = 380.0 / 3.6
+        var speed = 330.0 / 3.6
         var vy = -sin(70.0 * PI / 180.0) * speed
         var vz = cos(70.0 * PI / 180.0) * speed
         var maximum = speed
@@ -65,10 +94,10 @@ class FixedWingPerformanceTuningTest {
             vy = model.velocityY
             vz = model.velocityZ
             maximum = max(maximum, speed)
-            assertTrue(speed <= 500.0 / 3.6 + 1e-9)
+            assertTrue(speed <= 750.0 / 3.6 + 1e-9)
             assertTrue(model.stepDragWorkPerKg <= 0.0)
         }
-        assertTrue(maximum > 400.0 / 3.6, "MiG dive must pass soft cap, reached ${maximum * 3.6} km/h")
+        assertTrue(maximum > 350.0 / 3.6, "MiG dive must pass its first soft cap, reached ${maximum * 3.6} km/h")
         println("MiG-19 continuous 30-second dive peak: ${maximum * 3.6} km/h")
     }
 
@@ -90,8 +119,8 @@ class FixedWingPerformanceTuningTest {
     @Test fun hardCapClampsCombinedVelocityIncludingAfterburnerAndDives() {
         for (h in listOf(FixedWingHandlingProfile.GAME_JET, MiG19FixedWingProfile.HANDLING)) {
             val model = warmed(h, 45.0)
-            assertTrue(model.step(100, 90.0, -100.0, 110.0, false, true, afterburnerRequested = true))
-            assertEquals(500.0 / 3.6, model.speedMps, 1e-9)
+            assertTrue(model.step(100, 140.0, -150.0, 160.0, false, true, afterburnerRequested = true))
+            assertEquals(750.0 / 3.6, model.speedMps, 1e-9)
         }
     }
 
@@ -102,4 +131,3 @@ class FixedWingPerformanceTuningTest {
         return model
     }
 }
-

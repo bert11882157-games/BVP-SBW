@@ -53,13 +53,14 @@
     "throttleSpoolDownPerSecond": 1.2,
     "sideDragPerMetre": 0.0015,
     "overspeedDragPerMetre": 0.0025,
-    "airbrakeDragPerMetre": 0,
+    "airbrakeDragPerMetre": 0.0012,
     "rollingResistanceMps2": 0.25,
     "groundBrakingMps2": 6,
     "taxiFullSteeringSpeedMps": 24,
     "minimumStallStateSpeedMps": 4,
     "hpToWatts": 735.49875,
     "normalPowerThrottleFraction": null,
-    "controlReferenceSpeedMps": 111.89501632722663
+    "controlReferenceSpeedMps": 111.89501632722663,
+    "firstSoftCapKmh": 460
   }
 }

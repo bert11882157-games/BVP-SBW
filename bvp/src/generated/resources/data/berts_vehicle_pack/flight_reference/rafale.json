@@ -25,7 +25,7 @@
   },
   "engineering": {
     "effectivePropulsiveEfficiency": null,
-    "zeroLiftDragCoefficient": 0.07142145617283295,
+    "zeroLiftDragCoefficient": 0.022,
     "inducedDragFactor": 0.18123127390786792,
     "maximumLiftCoefficient": 1.8,
     "liftSlopePerRadian": 4.5,
@@ -47,14 +47,14 @@
     "thrustDensityKneeReferenceAltitudeMetres": 12000,
     "dryMachThrustFactor": 1,
     "afterburnerMachThrustFactor": 1,
-    "waveDragCoefficient": 0,
+    "waveDragCoefficient": 0.009,
     "afterburnerEnabled": true,
     "afterburnerMultiplier": 1.4959183673469387,
     "throttleSpoolUpPerSecond": 0.8,
     "throttleSpoolDownPerSecond": 1.2,
     "sideDragPerMetre": 0.0015,
     "overspeedDragPerMetre": 0.0025,
-    "airbrakeDragPerMetre": 0,
+    "airbrakeDragPerMetre": 0.0012,
     "rollingResistanceMps2": 0.25,
     "groundBrakingMps2": 6,
     "taxiFullSteeringSpeedMps": 24,
@@ -62,6 +62,7 @@
     "hpToWatts": 735.49875,
     "normalPowerThrottleFraction": null,
     "takeoffPitchReferenceSpeedMps": 52.51119306229289,
-    "lowSpeedThrustMultiplier": 1
+    "lowSpeedThrustMultiplier": 1,
+    "firstSoftCapKmh": 435
   }
 }

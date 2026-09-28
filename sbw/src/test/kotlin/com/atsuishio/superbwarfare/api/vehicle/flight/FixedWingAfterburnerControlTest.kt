@@ -111,7 +111,8 @@ class FixedWingAfterburnerControlTest {
         ))
         assertTrue(model.afterburnerActive)
         assertEquals(
-            model.handling.gameDryAccelerationMps2 * model.handling.gameAfterburnerMultiplier * 1.5,
+            model.handling.gameDryAccelerationMps2 * model.handling.gameAfterburnerMultiplier *
+                (1.0 + FixedWingAfterburnerBoost.SURGE),
             model.thrustAccelerationMps2,
             1.0E-9,
         )

@@ -82,6 +82,10 @@ public final class BvpAircraftFlightProfiles {
         engineeringFields.remove("pitotCasCalibrationFactor");
         engineeringFields.remove("takeoffPitchReferenceSpeedMps");
         engineeringFields.remove("lowSpeedThrustMultiplier");
+        // owner's speed balance (tools/flight_balance): the aircraft's first soft cap in HUD km/h, and an earlier
+        // transonic drag rise (propeller compressibility)
+        engineeringFields.remove("firstSoftCapKmh");
+        engineeringFields.remove("waveDragOnsetMach");
         require(engineeringFields.equals(ENGINEERING_FIELDS), "Aircraft flight fields do not match schema");
         validateScalarRecord(r, Set.of("dryThrustKgfPerEngine", "afterburnerThrustKgfPerEngine",
                 "normalPowerHpPerEngine", "maximumPowerHpPerEngine"), Set.of());
@@ -181,7 +185,13 @@ public final class BvpAircraftFlightProfiles {
                 e.get("thrustDensityKneeReferenceAltitudeMetres").isJsonNull() ? 0
                         : FixedWingAtmosphere.densityRatio(number(e, "thrustDensityKneeReferenceAltitudeMetres")),
                 number(e, "dryMachThrustFactor"), number(e, "afterburnerMachThrustFactor"),
-                0.82, 0.25, forcePerSpeedSquared * number(e, "waveDragCoefficient"), takeoff);
+                e.has("waveDragOnsetMach") ? number(e, "waveDragOnsetMach") : 0.82, 0.25,
+                forcePerSpeedSquared * number(e, "waveDragCoefficient"), takeoff,
+                e.has("firstSoftCapKmh") ? number(e, "firstSoftCapKmh") / 3.6 : 0.0);
+        require(!e.has("firstSoftCapKmh") || (number(e, "firstSoftCapKmh") > 0 && number(e, "firstSoftCapKmh") <= 800),
+                "First soft cap must be a positive HUD speed");
+        require(!e.has("waveDragOnsetMach") || (number(e, "waveDragOnsetMach") > 0.3
+                && number(e, "waveDragOnsetMach") < 1.2), "Wave drag onset must be a subsonic-to-transonic Mach");
         // Keep source IAS intact; only the handling input reconciles its published envelope with pitot CAS.
         FixedWingFlightProfile handlingReference = casCalibration == 1 ? reference
                 : referenceAtStructuralSpeed.apply(indicatedSpeed * casCalibration);
