@@ -129,16 +129,32 @@ class GunData private constructor(
     @JvmField
     var vehicleWeaponIdentity: String? = null
 
+    /**
+     * What the property pipeline of a perk-less vehicle gun reads from the stack: the override, the selected ammo
+     * type and fire mode, and the attachments. Everything else in its tag is runtime state (ammo, heat, timers,
+     * reload, belt phase) that changes every tick a weapon fires or cools, and each such change used to rebuild the
+     * whole property map (deep NBT compare, stack copy, override and ammo-type deserialisation).
+     */
+    private var vehiclePropertyKey: Any? = null
+
+    private fun vehiclePropertyKey(): Any? {
+        if (item !is com.atsuishio.superbwarfare.item.gun.vehicle.VehicleGun || !perkTag.isEmpty) return null
+        return listOf(gunDataTag.getString("Override"), gunDataTag.getInt("SelectedAmmoType"),
+            gunDataTag.getInt("SelectedFireMode"), attachmentTag.hashCode(), attachmentTag.size())
+    }
+
     @Suppress("unchecked_cast")
     fun <T> get(prop: GunProp<*, T>): T {
         val revision = dataRevision.get()
-        val stackChanged = !(stack sameWith lastTimeStack)
         val cached = pmc
-        if (!stackChanged && resolvedDataRevision == revision && cached != null) return cached[prop]
+        val key = vehiclePropertyKey()
+        val unchanged = if (key != null) key == vehiclePropertyKey else stack sameWith lastTimeStack
+        if (unchanged && resolvedDataRevision == revision && cached != null) return cached[prop]
 
         val pmc = PMC(this)
         this.pmc = pmc
-        lastTimeStack = stack.copy()
+        vehiclePropertyKey = key
+        lastTimeStack = if (key == null) stack.copy() else null
         resolvedDataRevision = revision
 
         // property override tag
