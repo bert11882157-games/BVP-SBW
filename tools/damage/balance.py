@@ -11,7 +11,7 @@ What it writes (all numbers are the rules below, nothing hand-tuned per vehicle)
     for HE, PenetrationMm = calibre / 2;
   * machine-gun belts (< 20 mm): no TNT charge and no legacy explosion;
   * placeholder box armor on light vehicles: one realistic thickness per face (public figures, RHA-equivalent);
-  * launcher-tube module boxes behind every missile muzzle of an ATGM launcher (+ launcher_weapon);
+  * launcher_weapon for the 9P149 Shturm's launcher-tube module (the only carrier with one for now);
   * mi24v / mi28n: no armor boxes, no rotor modules, no strict armor gate (originals kept in tools/replaced/).
 
 MBT reference R = 300 hull HP. Weights are public combat weights (tonnes).
@@ -391,6 +391,7 @@ def plate_mm(values, frame, asp):
 
 # ---------------------------------------------------------------- launcher tubes
 MIRRORED = {'t72a', 't72b'}
+LAUNCHER_TUBE_VEHICLES = {'9p149_shturm'}   # launcher-tube module (owner 2026-09-28: Shturm only for now)
 TUBE_HALF_WIDTH = 0.14
 TUBE_LENGTH = 1.2
 
@@ -553,6 +554,14 @@ def main():
         if not key:
             continue
         d = load(armor)
+        if name not in LAUNCHER_TUBE_VEHICLES:
+            # owner 2026-09-28: only the Shturm has a launcher-tube module for now
+            modules = [m for m in d.get('modules') or [] if m.get('module') != 'launcherreload']
+            if modules != (d.get('modules') or []) or 'launcher_weapon' in d:
+                d['modules'] = modules
+                d.pop('launcher_weapon', None)
+                dump(armor, d, args.check, changed)
+            continue
         modules = d.get('modules') or []
         authored = [m for m in modules if m.get('module') == 'launcherreload'
                     and not m['name'].startswith('launcherreload_tube_')]

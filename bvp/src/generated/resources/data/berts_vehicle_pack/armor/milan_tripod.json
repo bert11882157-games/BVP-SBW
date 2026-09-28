@@ -13,30 +13,8 @@
   "engines": [],
   "ammo_racks": [],
   "tracks": [],
-  "modules": [
-    {
-      "name": "launcherreload_tube_00",
-      "center": [
-        0.0,
-        0.42357,
-        -0.04831
-      ],
-      "half_size": [
-        0.14,
-        0.14,
-        0.6
-      ],
-      "rotation": [
-        -0.0,
-        -180.0,
-        0
-      ],
-      "frame": "barrel",
-      "module": "launcherreload"
-    }
-  ],
+  "modules": [],
   "explosive_reactive_armor": [],
   "sbw_obb": [],
-  "schema": "berts_vehicle_pack:armor_profile/v1",
-  "launcher_weapon": "Cannon"
+  "schema": "berts_vehicle_pack:armor_profile/v1"
 }
