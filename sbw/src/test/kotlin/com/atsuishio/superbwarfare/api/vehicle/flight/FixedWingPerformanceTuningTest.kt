@@ -61,6 +61,24 @@ class FixedWingPerformanceTuningTest {
         assertTrue(run(jet, 40) > run(FixedWingHandlingProfile.GAME_JET, 40))
     }
 
+    @Test fun theTakeoffRollGetsTheLowSpeedBoostAndNoGearDragPenalty() {
+        // owner 2026-09-28: jets were slow on the runway even on afterburner (the boost was flight-only)
+        val jet = FixedWingHandlingProfile.GAME_JET.copy(lowSpeedSurplusBoost = FixedWingHandlingProfile.JET_LOW_SPEED_BOOST)
+        fun roll(h: FixedWingHandlingProfile): Double {
+            val m = FixedWingFlightModel(h)
+            m.reset(0.0, 0.0, 0.0)
+            var vx = 0.0; var vz = 60.0 / 3.6
+            repeat(60) {
+                assertTrue(m.step(it.toLong(), vx, 0.0, vz, true, true, throttleAxis = 1.0, gearDeployment = 1.0))
+                vx = m.velocityX; vz = m.velocityZ
+            }
+            return m.speedMps
+        }
+        val boosted = roll(jet)
+        val plain = roll(FixedWingHandlingProfile.GAME_JET)
+        assertTrue(boosted > plain + 1.0, "boosted roll $boosted m/s vs plain $plain m/s")
+    }
+
     @Test fun poweredModelUsesReferenceThrustAndASmallTaperedAfterburnerSurge() {
         val model = warmed(FixedWingHandlingProfile.GAME_JET)
         assertTrue(model.step(100, 0.0, 0.0, 24.0, false, true))

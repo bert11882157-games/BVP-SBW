@@ -408,12 +408,14 @@ class FixedWingFlightModel(
         thrustAccelerationMps2 = handling.gameDryAccelerationMps2 * throttle * engine *
             powerFraction * jetThrustEnvironmentFraction * handling.lowSpeedThrustMultiplier(speed) *
             (if (grounded) handling.launchThrustMultiplier(speed) else 1.0) *
-            (1.0 - 0.15 * gearDeployment) *
+            // gear drag is an in-flight penalty; on the runway the wheels carry the aircraft
+            (if (grounded) 1.0 else 1.0 - 0.15 * gearDeployment) *
             if (afterburnerActive) handling.gameAfterburnerMultiplier * engagementBoost else 1.0
         // Harder to accelerate the faster you go: jets pick up speed briskly when slow (low-speed boost), and near and
         // above Mach 1 only a share of the surplus over last step's drag accelerates the aircraft. The equilibrium
         // (top speed) is unchanged and dives are not affected. HUD km/h = world m/s x 3.6.
-        if (!grounded && thrustAccelerationMps2 > dragAccelerationMps2) {
+        // The takeoff roll gets the same low-speed boost as flight (owner 2026-09-28: jets were slow on the runway).
+        if (thrustAccelerationMps2 > dragAccelerationMps2) {
             val share = FixedWingHandlingProfile.transonicSurplusShare(inletMach) *
                 handling.lowSpeedSurplusMultiplier(speed * 3.6)
             if (share != 1.0) {
