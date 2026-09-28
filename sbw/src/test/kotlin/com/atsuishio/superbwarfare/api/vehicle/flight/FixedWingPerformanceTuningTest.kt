@@ -79,6 +79,30 @@ class FixedWingPerformanceTuningTest {
         assertTrue(boosted > plain + 1.0, "boosted roll $boosted m/s vs plain $plain m/s")
     }
 
+    @Test fun aStalledJetDropsItsNoseAndGetsItsControlsBack() {
+        // owner 2026-09-28: pitched up until all speed was gone, the jet hung nose-high with no control authority
+        for (h in listOf(FixedWingHandlingProfile.GAME_JET, MiG19FixedWingProfile.HANDLING)) {
+            val m = FixedWingFlightModel(h)
+            m.reset(0.0, -80.0, 0.0)                  // nose 80 degrees up
+            var vx = 0.0; var vy = 1.0; var vz = 2.0     // almost no airspeed left
+            var maxPitch = m.pitchDegrees
+            var authority = 0.0
+            var fell = 0.0
+            repeat(20 * 12) {
+                assertTrue(m.step(it.toLong(), vx, vy, vz, false, true, throttleAxis = 0.3))
+                vx = m.velocityX; vy = m.velocityY; vz = m.velocityZ
+                fell -= vy * FixedWingFlightModel.DT
+                maxPitch = maxOf(maxPitch, m.pitchDegrees)
+                authority = maxOf(authority, m.controlEffectiveness)
+            }
+            // positive pitch = nose down
+            assertTrue(maxPitch > -20.0, "the nose drops from 80 degrees up to near the horizon, lowest ${maxPitch}")
+            assertTrue(m.pitchDegrees > -30.0, "not hanging nose-high any more, pitch ${m.pitchDegrees}")
+            assertTrue(authority > 0.5, "controls come back with the airspeed, authority $authority")
+            assertTrue(fell > 30.0, "the recovery costs altitude, fell $fell m")
+        }
+    }
+
     @Test fun poweredModelUsesReferenceThrustAndASmallTaperedAfterburnerSurge() {
         val model = warmed(FixedWingHandlingProfile.GAME_JET)
         assertTrue(model.step(100, 0.0, 0.0, 24.0, false, true))

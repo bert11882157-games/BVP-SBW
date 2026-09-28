@@ -258,7 +258,8 @@ object AircraftSurfaceModules {
             com.atsuishio.superbwarfare.api.vehicle.flight.AircraftWreckBreakup.detach(vehicle, side)
         AircraftDamageLog.event(vehicle, "WING", java.lang.String.format(java.util.Locale.ROOT,
             "wing=%s via=%s damage=%.1f wing_hp=%.1f->%.1f/%.0f%s%s", id.path, cause, damage, before, after.health,
-            after.maxHealth, if (aileron) " AILERON_DEAD" else "", if (off) " WING_OFF" else ""))
+            after.maxHealth, if (aileron) " AILERON_DEAD" else "", if (off) " WING_OFF" else ""),
+            quiet = !aileron && !off && damage < 10.0)
     }
 
     private fun aileronDeadAt(health: Float, max: Float) = max > 0 &&

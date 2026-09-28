@@ -66,8 +66,9 @@ object AircraftWreckBreakup {
         if (vehicle.level().isClientSide || !supported(vehicle)) return
         val previous = vehicle.aircraftWreckWings.coerceAtLeast(0)
         val next = previous or (sides and 3)
-        // A wing shot off a flying aircraft does not start the wreck clock (the wreck lifetime counts from death).
-        if (vehicle.aircraftWreckStart < 0 && vehicle.isWreck) vehicle.aircraftWreckStart = vehicle.level().gameTime
+        // Also for a wing shot off a flying aircraft: the falling wing piece and the breakup clock start here, and
+        // the aircraft flies on as a falling wreck until it hits the ground.
+        if (vehicle.aircraftWreckStart < 0) vehicle.aircraftWreckStart = vehicle.level().gameTime
         if (next != previous || vehicle.aircraftWreckWings < 0) {
             recordMomentum(vehicle, momentum)
             vehicle.aircraftWreckWings = next

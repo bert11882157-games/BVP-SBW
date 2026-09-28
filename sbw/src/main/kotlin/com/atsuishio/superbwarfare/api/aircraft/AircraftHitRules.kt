@@ -84,8 +84,10 @@ object AircraftHitRules {
         val m = munition ?: ""
         return when {
             m == "atgm" || m == "sam" -> if (hullClass == "ATGM" || hullClass == "HEAT") Kind.ATGM else Kind.MISSILE
-            m == "rocket" || m == "cluster_bomblet" -> Kind.ROCKET
-            m == "tank_shell" || m == "heat_fs" || m == "he" -> Kind.TANK_SHELL
+            m == "rocket" -> Kind.ROCKET
+            m == "tank_shell" -> Kind.TANK_SHELL
+            // full-bore HE / HEAT-FS gun rounds are shells; 20-57 mm "he" autocannon rounds are gun rounds
+            (m == "heat_fs" || m == "he") && (calibreMm == null || calibreMm >= LETHAL_CALIBRE_MM) -> Kind.TANK_SHELL
             calibreMm != null && calibreMm >= LETHAL_CALIBRE_MM -> Kind.TANK_SHELL
             else -> Kind.GUN
         }

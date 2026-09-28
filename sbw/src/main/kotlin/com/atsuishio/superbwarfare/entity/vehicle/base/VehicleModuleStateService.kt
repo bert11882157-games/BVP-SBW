@@ -96,8 +96,11 @@ internal class VehicleModuleStateService(private val access: VehicleModuleStateA
                 val maxHealth = (tag.getFloat(MODULE_MAX_HEALTH_TAG)
                     .takeIf { it.isFinite() && it > 0f }
                     ?: access.definition(id)?.maxHealth ?: 1f).takeIf { it.isFinite() && it > 0f } ?: 1f
-                val healthValue = boundedHealth(tag.getFloat(MODULE_HEALTH_TAG).toDouble(), maxHealth)
-                states[id] = StoredState(maxHealth, healthValue,
+                val storedHealth = boundedHealth(tag.getFloat(MODULE_HEALTH_TAG).toDouble(), maxHealth)
+                // A module whose authored maximum changed since the save keeps its health fraction.
+                val current = access.definition(id)?.maxHealth?.takeIf { it.isFinite() && it > 0f } ?: maxHealth
+                val healthValue = if (current != maxHealth) storedHealth / maxHealth * current else storedHealth
+                states[id] = StoredState(current, healthValue,
                     tag.getBoolean(MODULE_DESTROYED_TAG) || healthValue <= 0f)
             }
         }

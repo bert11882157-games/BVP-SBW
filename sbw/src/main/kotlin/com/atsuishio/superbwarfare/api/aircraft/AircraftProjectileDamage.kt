@@ -83,7 +83,8 @@ object AircraftProjectileDamage {
             return AircraftHitRules.kind(it.munitionType?.path, it.hullDamageClass.name, caliber)
         }
         return when (projectile) {
-            is com.atsuishio.superbwarfare.entity.projectile.JavelinMissileEntity -> AircraftHitRules.Kind.ATGM
+            is com.atsuishio.superbwarfare.entity.projectile.JavelinMissileEntity,
+            is com.atsuishio.superbwarfare.entity.projectile.WireGuideMissileEntity -> AircraftHitRules.Kind.ATGM
             is com.atsuishio.superbwarfare.entity.projectile.SwarmDroneEntity -> AircraftHitRules.Kind.ROCKET
             is com.atsuishio.superbwarfare.entity.projectile.MissileProjectile -> AircraftHitRules.Kind.MISSILE
             is com.atsuishio.superbwarfare.entity.projectile.SmallRocketEntity,

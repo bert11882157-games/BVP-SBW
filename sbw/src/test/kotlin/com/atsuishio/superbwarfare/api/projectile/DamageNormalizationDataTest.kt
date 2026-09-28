@@ -62,7 +62,7 @@ class DamageNormalizationDataTest {
             val hull = c.get("HullDamage").asDouble
             val module = c.get("ModuleDamage").asInt
             val rack = c.get("AmmoRackDamage").asInt
-            if (path.startsWith("aircraft_stores/") || munition == "cluster_bomblet") continue
+            if ((path.startsWith("aircraft_stores/") && cls != "ATGM") || munition == "cluster_bomblet") continue
             assertTrue(rack in 1..1000, "$path rack per mille $rack")
             assertEquals(minOf(100.0, 0.6 * hull), module.toDouble(), 1.0, "$path module damage")
             when {

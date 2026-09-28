@@ -82,6 +82,13 @@ final class ArmorImpactService {
             ArmorImpactReporter.logArmorEvent(owner, target, hitVec,
                     "[BVP Armor] Armor ignored: target profile has no armor plates.");
             ArmorImpactStats.record(Outcome.PENETRATION);
+            if (shot.vehicleDamage >= 0.0D) {
+                // Unarmored mounts (tripods, towed guns) take the round's typed hull damage like a penetration,
+                // and its blast then leaves them alone.
+                com.atsuishio.superbwarfare.tools.blast.StruckVehicles.mark(projectile, target.vehicle());
+                return resolvePenetratingDamage(target, damageSource, shot, false,
+                        ProjectileArmorEffects.hasImpactVisual(shot));
+            }
             return ProjectileArmorMutationService.continueImpact(
                     ProjectileArmorEffects.hasImpactVisual(shot), ProjectileImpactPresentationOutcome.PENETRATION);
         }
@@ -107,18 +114,26 @@ final class ArmorImpactService {
         ModuleHit moduleHit = volumes.directModuleHit(trace);
         ModuleHit exposedHit = ArmorModuleResolver.nearestExposed(armorHit, null, moduleHit);
         ArmorImpactReporter.reportVolumeSelection(target, projectile, trace, armorHit, null, moduleHit, exposedHit);
+        String directModule = null;
         if (exposedHit != null && !ArmorModuleResolver.isTrack(exposedHit.moduleId)) {
             ArmorModuleDamageService.damageDirectModule(owner, target, shot, exposedHit, false, hitVec);
             ArmorImpactStats.record(Outcome.MODULE_HIT);
             DamageDiagnostics.module(target, projectile, shot, exposedHit.moduleId, "direct");
+            directModule = exposedHit.moduleId;
         }
 
-        if (armorHit == null || armorHit.plate == null) {
-            return handleNoPlateHit(owner, target, targetProfile, projectile, shot, damageSource, hitVec,
-                    volumes, trace);
+        // the module hit directly is not hit a second time by the same shot from inside
+        ArmorModuleDamageService.DIRECT_MODULE.set(directModule);
+        try {
+            if (armorHit == null || armorHit.plate == null) {
+                return handleNoPlateHit(owner, target, targetProfile, projectile, shot, damageSource, hitVec,
+                        volumes, trace);
+            }
+            return resolvePlateHit(owner, target, targetProfile, projectile, shot, damageSource, hitVec,
+                    volumes, trace, armorHit);
+        } finally {
+            ArmorModuleDamageService.DIRECT_MODULE.remove();
         }
-        return resolvePlateHit(owner, target, targetProfile, projectile, shot, damageSource, hitVec,
-                volumes, trace, armorHit);
     }
 
     /** Resolves ricochet, penetration and internal damage against the plate on the shell ray. */
@@ -156,8 +171,6 @@ final class ArmorImpactService {
             return ProjectileArmorMutationService.ricochetImpact(replacementVisual);
         }
 
-        // The round's own blast does not hit this vehicle again (its hull damage is the direct hit's).
-        com.atsuishio.superbwarfare.tools.blast.StruckVehicles.mark(projectile, target.vehicle());
         Result penetration = ArmorPenetrationService.evaluate(target, armorHit, trace, shot,
                 targetProfile.minArmorMm);
         if (!penetration.penetrated()) {
@@ -176,6 +189,8 @@ final class ArmorImpactService {
         }
 
         ArmorImpactStats.record(Outcome.PENETRATION);
+        // The round's own blast does not hit this vehicle again: the penetrating hit carries its damage.
+        com.atsuishio.superbwarfare.tools.blast.StruckVehicles.mark(projectile, target.vehicle());
         DamageDiagnostics.plate(target, projectile, shot, plate.name, plate.armorMm,
                 penetration.effectiveArmorMm(), penetration.penetrationMm(), true);
         if (AmmoRackService.isSuperAmmoRackOverloaded(target)) {
@@ -267,9 +282,6 @@ final class ArmorImpactService {
                     "[BVP Armor] Shell ray meets no mesh armor; projectile continues.");
             return ProjectileArmorMutationService.passImpact();
         }
-        if (targetProfile.unboxedHitsPenetrate) {
-            com.atsuishio.superbwarfare.tools.blast.StruckVehicles.mark(projectile, target.vehicle());
-        }
         if (targetProfile.unboxedHitsPenetrate && shot.penetrationMm + 1.0E-4D < targetProfile.minArmorMm) {
             // A gap in the boxes is still hull steel: a round below the profile's floor stops there.
             if (!BvpMaterialImpactSounds.hasPresentation(projectile)) {
@@ -305,6 +317,7 @@ final class ArmorImpactService {
                                                             BvpImpactVolumeQuery volumes, ShotTrace trace) {
         ArmorImpactStats.record(Outcome.FALLBACK_UNBOXED);
         ArmorImpactStats.record(Outcome.PENETRATION);
+        com.atsuishio.superbwarfare.tools.blast.StruckVehicles.mark(damageSource.getDirectEntity(), target.vehicle());
         boolean replacementVisual = ProjectileArmorEffects.hasImpactVisual(shot);
         if (AmmoRackService.isSuperAmmoRackOverloaded(target)) {
             boolean detonated = AmmoRackService.triggerSuperAmmoRackDetonation(target, hitVec, damageSource);
@@ -410,6 +423,9 @@ final class ArmorImpactService {
         double damageBasis = nonCriticalDirectDamageBasis(target, damageSource, shot);
         double damage = damageBasis * LIGHT_ARMOR_NON_PENETRATION_DAMAGE_FRACTION;
         VehicleDamageService.applyVehicleDamage(target, damageSource, damage);
+        if (damage > 0.0D) {
+            com.atsuishio.superbwarfare.tools.blast.StruckVehicles.mark(damageSource.getDirectEntity(), target.vehicle());
+        }
         DamageDiagnostics.hull(target, damageSource, shot, damage, "light_armor_non_penetration");
     }
 

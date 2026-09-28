@@ -13,7 +13,7 @@ import java.util.Locale;
  * One line per damage decision of the ground damage model (damage normalization 2026-09-28), so a hit in play can
  * be read back from latest.log: which plate, penetration against line-of-sight armor, hull damage and the HP left,
  * module damage and module health, the ammo-rack roll. Lines start with "[BVP Damage]". Rounds below 20 mm are
- * logged only while diagnostics are on (a machine-gun burst would flood the log); everything is also recorded to
+ * logged only while diagnostics are on (a machine-gun burst would flood the log), as are unprofiled rounds; everything is also recorded to
  * the diagnostics stream (category "damage_model") when it runs.
  */
 public final class DamageDiagnostics {
@@ -62,11 +62,16 @@ public final class DamageDiagnostics {
 
     /** A line from outside the armor resolver (blast, death explosion). */
     public static void event(ArmoredVehicleEntity vehicle, Entity source, String event, String detail) {
-        emit(vehicle, source, event, detail, "detail", detail);
+        emitForced(vehicle, source, event, detail, true, "detail", detail);
     }
 
     private static void emit(ArmoredVehicleEntity vehicle, Entity projectile, String event, String detail,
                              Object... fields) {
+        emitForced(vehicle, projectile, event, detail, false, fields);
+    }
+
+    private static void emitForced(ArmoredVehicleEntity vehicle, Entity projectile, String event, String detail,
+                                   boolean force, Object... fields) {
         ProjectileCombatDescriptor combat = projectile == null ? null : ProjectileProfiles.combatDescriptor(projectile);
         String round = combat == null ? (projectile == null ? "-" : projectile.m_6095_().toString())
                 : String.valueOf(combat.getRoundId());
@@ -82,7 +87,7 @@ public final class DamageDiagnostics {
             System.arraycopy(fields, 0, all, 6, fields.length);
             EliteDiagnostics.record(vehicle, "damage_model", event, all);
         }
-        if (diagnostics || calibre == null || calibre >= ALWAYS_LOG_FROM_MM) {
+        if (force || diagnostics || calibre != null && calibre >= ALWAYS_LOG_FROM_MM) {
             com.atsuishio.superbwarfare.Mod.LOGGER.info("[BVP Damage] {} vehicle={} round={} class={} cal={} {}",
                     event, vehicle.getArmorProfileId(), round, kind, calibre == null ? "-" : calibre, detail);
         }

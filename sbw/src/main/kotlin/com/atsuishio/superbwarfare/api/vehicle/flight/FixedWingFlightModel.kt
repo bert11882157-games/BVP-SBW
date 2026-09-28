@@ -54,6 +54,8 @@ class FixedWingFlightModel(
         private set
     var stallSeverity = 0.0
         private set
+    /** Ticks the aircraft has hung without airspeed and nose off its path (stall nose-drop onset). */
+    private var stallRecoveryTicks = 0
     var speedMps = 0.0
         private set
     var angleOfAttackDegrees = 0.0
@@ -198,6 +200,7 @@ class FixedWingFlightModel(
         yawRateDegreesPerSecond = 0.0
         stallActive = false
         stallSeverity = 0.0
+        stallRecoveryTicks = 0
         recoveryTicks = 0
         velocityX = 0.0
         velocityY = 0.0
@@ -444,7 +447,7 @@ class FixedWingFlightModel(
         val desiredPitch = limitPitchLoading(
             elevator * pitchCurve * handling.gamePitchRateDegreesPerSecond * pitchAuthority,
             grounded, previousForward, previousUp, previousLateral, wingSpeedSquared, previousAlpha,
-        ) * surfaceDamage.pitchAuthority * groundRotationAuthority
+        ) * surfaceDamage.pitchAuthority * groundRotationAuthority + stallNoseRate(grounded, previousForward, previousUp)
         val desiredRoll = aileron * handling.gameRollRateDegreesPerSecond * controlEffectiveness *
             (surfaces?.groundRollAuthority ?: 1.0) * surfaceDamage.rollAuthority * groundRotationAuthority +
             (if (grounded) 0.0 else surfaceDamage.rollBiasDegreesPerSecond * controlEffectiveness) +
@@ -763,6 +766,52 @@ class FixedWingFlightModel(
     }
 
     /** The fuselage can restore sideslip even when the wing has little usable forward airflow. */
+    /**
+     * Stall recovery (owner 2026-09-28): an aircraft that has run out of airspeed (it pitched up until all speed was
+     * gone, and the controls with it) drops its nose towards the flight path, and towards the ground when there is
+     * hardly any airspeed left, so it picks up speed and the controls come back at the cost of altitude. Fades out
+     * as control authority returns; the pilot's inputs still add on top. Positive = nose up.
+     */
+    private fun stallNoseRate(grounded: Boolean, previousForward: Double, previousUp: Double): Double {
+        if (grounded) {
+            stallRecoveryTicks = 0
+            return 0.0
+        }
+        // only once the airflow over the wing is nearly gone: ordinary stalls keep their own wing-drop handling
+        val weight = ((STALL_RECOVERY_AUTHORITY - airflowAuthority) / STALL_RECOVERY_AUTHORITY).coerceIn(0.0, 1.0)
+        if (weight <= 0.0) {
+            stallRecoveryTicks = 0
+            return 0.0
+        }
+        // Only while the nose points well away from where the aircraft is going (past the stall angle).
+        val airspeed = sqrt(previousForward * previousForward + previousUp * previousUp)
+        // a parked airframe (no motion at all, e.g. held in place while the engine spools) is not stalling
+        if (airspeed < STALL_RECOVERY_PARKED_MPS) {
+            stallRecoveryTicks = 0
+            return 0.0
+        }
+        val alphaDegrees = atan2(previousUp, previousForward) / RADIANS
+        val offPath = if (airspeed < STALL_RECOVERY_STILL_MPS) 1.0
+            else ((abs(alphaDegrees) - handling.stallAngleDegrees - 5.0) / 20.0).coerceIn(0.0, 1.0)
+        if (offPath <= 0.0) {
+            stallRecoveryTicks = 0
+            return 0.0
+        }
+        // the aircraft hangs for a moment before the nose goes (a second), then drops it over the next second
+        stallRecoveryTicks = min(stallRecoveryTicks + 1, 2 * STALL_RECOVERY_DELAY_TICKS)
+        val onset = ((stallRecoveryTicks - STALL_RECOVERY_DELAY_TICKS).toDouble() / STALL_RECOVERY_DELAY_TICKS)
+            .coerceIn(0.0, 1.0)
+        if (onset <= 0.0) return 0.0
+        // Target: the flight path; with hardly any airspeed the nose falls towards the ground.
+        val fall = 0.5 * (1.0 - airspeed / (2.0 * STALL_RECOVERY_STILL_MPS)).coerceIn(0.0, 1.0)
+        val targetForward = previousForward - fall * handling.gravityMps2 * forwardY
+        val targetUp = previousUp - fall * handling.gravityMps2 * upY
+        if (abs(targetForward) + abs(targetUp) < EPSILON) return 0.0
+        val errorDegrees = atan2(targetUp, targetForward) / RADIANS
+        return (errorDegrees * STALL_WEATHERVANE_PER_SECOND)
+            .coerceIn(-STALL_NOSE_RATE_LIMIT_DEGREES, STALL_NOSE_RATE_LIMIT_DEGREES) * weight * offPath * onset
+    }
+
     private fun pressureAuthority(speedSquared: Double): Double {
         val fraction = ((densityRatio * speedSquared - square(handling.minimumControlSpeedMps)) /
             (square(handling.trimSpeedMps) - square(handling.minimumControlSpeedMps))).coerceIn(0.0, 1.0)
@@ -887,6 +936,15 @@ class FixedWingFlightModel(
     companion object {
         /** Slightly more yaw authority for the rudder than the profile's base rate (airborne; taxi unchanged). */
         const val YAW_AUTHORITY_SCALE = 1.12
+        /** Stall recovery: nose rate per degree between the nose and the flight path, and its limit. */
+        const val STALL_WEATHERVANE_PER_SECOND = 1.2
+        const val STALL_NOSE_RATE_LIMIT_DEGREES = 50.0
+        /** Control authority below which the nose-drop recovery acts (full at 0). */
+        const val STALL_RECOVERY_AUTHORITY = 0.2
+        /** Below this airspeed (m/s) the nose simply falls. */
+        const val STALL_RECOVERY_STILL_MPS = 4.0
+        const val STALL_RECOVERY_DELAY_TICKS = 20
+        const val STALL_RECOVERY_PARKED_MPS = 0.05
         const val DT = 0.05
         /** Ground rotation cap for airframes without a measured tail clearance. */
         const val MAX_GROUND_PITCH_DEGREES = 18.0

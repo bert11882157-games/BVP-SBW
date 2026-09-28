@@ -14,6 +14,8 @@ import java.util.concurrent.ThreadLocalRandom;
 
 final class ArmorModuleDamageService {
     private static final double AMMO_RACK_NEIGHBOR_GAP = 0.12D;
+    /** Module the current shot already hit directly from outside (skipped by its internal ray). */
+    static final ThreadLocal<String> DIRECT_MODULE = new ThreadLocal<>();
 
     private ArmorModuleDamageService() {
     }
@@ -66,7 +68,8 @@ final class ArmorModuleDamageService {
         }
         if (ArmorModuleResolver.isAmmoRack(internalHits.moduleId)
                 || ArmorModuleResolver.ENGINE.equals(internalHits.moduleId)
-                || ArmorModuleResolver.isTrack(internalHits.moduleId)) {
+                || ArmorModuleResolver.isTrack(internalHits.moduleId)
+                || internalHits.moduleId.equals(DIRECT_MODULE.get())) {
             return new InternalModuleDamageResult(internalHits.moduleHit.plate, ammoRackDestroyed, newlyDestroyed);
         }
         boolean wasDestroyed = target.vehicle().isModuleDestroyed(internalHits.moduleId);

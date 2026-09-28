@@ -84,7 +84,7 @@ def death_charge_kg(name):
     tonnes, cls = GROUND[name]
     if cls == 'STATIC':
         return 0.5
-    return round(max(2.0, min(40.0, 0.6 * tonnes)), 1)
+    return round(max(2.0, min(25.0, 0.4 * tonnes)), 1)
 
 
 # Native (non-armor) damage resistance by class: SBW's standard vehicle list with a class-scaled "All" factor.
@@ -185,6 +185,9 @@ def rack_permille(kind, cal, atgm_f=None):
 
 def round_kind(c, rid, path):
     """The rule family of a Combat block, or None to leave it as authored."""
+    stem = os.path.splitext(os.path.basename(path))[0]
+    if stem in AIR_ATGM:
+        rid = stem
     cls = c['HullDamageClass']
     mun = c['MunitionType'].split(':')[1]
     cal = c.get('CaliberMm') or c.get('DiameterMm') or 0
@@ -212,6 +215,9 @@ def rules(c, rid, path):
     kind = round_kind(c, rid, path)
     if kind is None:
         return None
+    stem = os.path.splitext(os.path.basename(path))[0]
+    if stem in AIR_ATGM:
+        rid = stem   # aircraft-store ATGMs carry a proxy RoundId; the store file names the missile
     cal = float(c.get('CaliberMm') or c.get('DiameterMm') or 0)
     pen = c['PenetrationMm']
     # full-bore gun rounds (tank / recoilless / low-pressure guns) use the gun rules at any calibre >= 57 mm;

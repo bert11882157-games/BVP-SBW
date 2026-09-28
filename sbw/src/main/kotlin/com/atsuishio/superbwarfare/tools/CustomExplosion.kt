@@ -521,7 +521,7 @@ open class CustomExplosion(
                     result.appliedDamage.toDouble())
         }
         if (vehicle.isAlive) applyBlastPush(vehicle, plan, center, distance)
-        if (damage > 0.0 || struck) com.atsuishio.superbwarfare.tools.blast.BlastDamageLog.vehicle(vehicle, pSource,
+        if (damage >= 5.0 || diagnostics && (damage > 0.0 || struck)) com.atsuishio.superbwarfare.tools.blast.BlastDamageLog.vehicle(vehicle, pSource,
             damageClass.name, rule, plan.kg, distance, radii.severe, damage, healthBefore)
         if (diagnostics && damage > 0.0) EliteDiagnostics.record(vehicle,
             "tnt_blast", "VEHICLE", "source_uuid", pSource?.uuid, "tnt_kg", plan.kg, "distance", distance,

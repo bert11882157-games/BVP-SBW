@@ -12,11 +12,13 @@ import java.util.Locale
  */
 object AircraftDamageLog {
     private const val ALWAYS_FROM_MM = 20.0
+    private const val QUIET_BELOW_HP = 10.0
 
     @JvmStatic
     fun hit(vehicle: VehicleEntity, projectile: Entity?, kind: String, calibre: Double?, damage: Double,
             healthBefore: Float, accepted: Boolean) {
-        emit(vehicle, "HIT", kind == AircraftHitRules.Kind.GUN.name && (calibre ?: 0.0) < ALWAYS_FROM_MM,
+        // gun, rifle and pellet hits stay out of the log unless diagnostics run (a burst would flood it)
+        emit(vehicle, "HIT", damage < QUIET_BELOW_HP && (calibre ?: 0.0) < ALWAYS_FROM_MM,
             String.format(Locale.ROOT, "kind=%s cal=%s damage=%.1f hp=%.1f->%.1f/%.0f%s", kind,
                 calibre?.let { String.format(Locale.ROOT, "%.1f", it) } ?: "-", damage, healthBefore, vehicle.health,
                 vehicle.getMaxHealth(), if (accepted) "" else " REJECTED"),
@@ -25,8 +27,9 @@ object AircraftDamageLog {
     }
 
     @JvmStatic
-    fun event(vehicle: VehicleEntity, event: String, detail: String) =
-        emit(vehicle, event, false, detail, "detail", detail)
+    @JvmOverloads
+    fun event(vehicle: VehicleEntity, event: String, detail: String, quiet: Boolean = false) =
+        emit(vehicle, event, quiet, detail, "detail", detail)
 
     private fun emit(vehicle: VehicleEntity, event: String, quiet: Boolean, detail: String, vararg fields: Any?) {
         val diagnostics = EliteDiagnostics.isEnabled(vehicle.level())
