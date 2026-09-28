@@ -1,0 +1,53 @@
+{
+  "engine": {
+    "range": 384,
+    "volume": 1.0,
+    "interiorVolume": 0.4,
+    "idlePitch": [
+      0.684,
+      1.045
+    ],
+    "idleVolume": [
+      0.45,
+      1.0
+    ],
+    "spoolUp": 4.5,
+    "spoolDown": 3.0,
+    "start": "bvp_audio:air/a10_start",
+    "idle": "bvp_audio:air/a10_idle",
+    "startSeconds": 4.551,
+    "drivePitch": [
+      1.0,
+      1.0
+    ],
+    "driveVolume": [
+      0.0,
+      0.0
+    ],
+    "stop": "bvp_audio:air/a10_stop"
+  },
+  "distant": {
+    "range": 1600,
+    "near": 110,
+    "volume": [
+      0.6,
+      1.0
+    ],
+    "pitch": [
+      0.836,
+      1.007
+    ],
+    "loop": "bvp_audio:air/layer/jet_far"
+  },
+  "interior": {
+    "volume": [
+      0.5,
+      0.7
+    ],
+    "pitch": [
+      0.95,
+      1.05
+    ],
+    "loop": "bvp_audio:air/layer/jet_cockpit"
+  }
+}

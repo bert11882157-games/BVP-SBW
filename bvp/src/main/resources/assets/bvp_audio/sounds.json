@@ -1,4 +1,1048 @@
 {
+  "air/a10_idle": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/a10_idle",
+        "stream": false
+      }
+    ]
+  },
+  "air/a10_start": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/a10_start",
+        "stream": false
+      }
+    ]
+  },
+  "air/a10_stop": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/a10_stop",
+        "stream": false
+      }
+    ]
+  },
+  "air/a10a_idle": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/a10a_idle",
+        "stream": false
+      }
+    ]
+  },
+  "air/a10a_start": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/a10a_start",
+        "stream": false
+      }
+    ]
+  },
+  "air/a10a_stop": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/a10a_stop",
+        "stream": false
+      }
+    ]
+  },
+  "air/ah1_idle": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/ah1_idle",
+        "stream": false
+      }
+    ]
+  },
+  "air/ah1_start": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/ah1_start",
+        "stream": false
+      }
+    ]
+  },
+  "air/ah1_stop": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/ah1_stop",
+        "stream": false
+      }
+    ]
+  },
+  "air/ah1z_idle": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/ah1z_idle",
+        "stream": false
+      }
+    ]
+  },
+  "air/ah1z_start": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/ah1z_start",
+        "stream": false
+      }
+    ]
+  },
+  "air/ah1z_stop": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/ah1z_stop",
+        "stream": false
+      }
+    ]
+  },
+  "air/apache_idle": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/apache_idle",
+        "stream": false
+      }
+    ]
+  },
+  "air/apache_start": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/apache_start",
+        "stream": false
+      }
+    ]
+  },
+  "air/apache_stop": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/apache_stop",
+        "stream": false
+      }
+    ]
+  },
+  "air/bf109_idle": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/bf109_idle",
+        "stream": false
+      }
+    ]
+  },
+  "air/bf109_start": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/bf109_start",
+        "stream": false
+      }
+    ]
+  },
+  "air/bf109_stop": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/bf109_stop",
+        "stream": false
+      }
+    ]
+  },
+  "air/chinook_idle": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/chinook_idle",
+        "stream": false
+      }
+    ]
+  },
+  "air/chinook_start": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/chinook_start",
+        "stream": false
+      }
+    ]
+  },
+  "air/chinook_stop": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/chinook_stop",
+        "stream": false
+      }
+    ]
+  },
+  "air/db601_idle": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/db601_idle",
+        "stream": false
+      }
+    ]
+  },
+  "air/db601_start": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/db601_start",
+        "stream": false
+      }
+    ]
+  },
+  "air/db601_stop": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/db601_stop",
+        "stream": false
+      }
+    ]
+  },
+  "air/f15_idle": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/f15_idle",
+        "stream": false
+      }
+    ]
+  },
+  "air/f15_start": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/f15_start",
+        "stream": false
+      }
+    ]
+  },
+  "air/f15_stop": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/f15_stop",
+        "stream": false
+      }
+    ]
+  },
+  "air/f16_idle": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/f16_idle",
+        "stream": false
+      }
+    ]
+  },
+  "air/f16_start": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/f16_start",
+        "stream": false
+      }
+    ]
+  },
+  "air/f16_stop": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/f16_stop",
+        "stream": false
+      }
+    ]
+  },
+  "air/f18_idle": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/f18_idle",
+        "stream": false
+      }
+    ]
+  },
+  "air/f18_start": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/f18_start",
+        "stream": false
+      }
+    ]
+  },
+  "air/f18_stop": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/f18_stop",
+        "stream": false
+      }
+    ]
+  },
+  "air/flanker_idle": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/flanker_idle",
+        "stream": false
+      }
+    ]
+  },
+  "air/flanker_start": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/flanker_start",
+        "stream": false
+      }
+    ]
+  },
+  "air/flanker_stop": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/flanker_stop",
+        "stream": false
+      }
+    ]
+  },
+  "air/generic_prop_idle": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/generic_prop_idle",
+        "stream": false
+      }
+    ]
+  },
+  "air/generic_prop_start": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/generic_prop_start",
+        "stream": false
+      }
+    ]
+  },
+  "air/generic_prop_stop": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/generic_prop_stop",
+        "stream": false
+      }
+    ]
+  },
+  "air/harrier_idle": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/harrier_idle",
+        "stream": false
+      }
+    ]
+  },
+  "air/harrier_start": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/harrier_start",
+        "stream": false
+      }
+    ]
+  },
+  "air/harrier_stop": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/harrier_stop",
+        "stream": false
+      }
+    ]
+  },
+  "air/havoc_idle": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/havoc_idle",
+        "stream": false
+      }
+    ]
+  },
+  "air/havoc_rpm_idle": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/havoc_rpm_idle",
+        "stream": false
+      }
+    ]
+  },
+  "air/havoc_rpm_start": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/havoc_rpm_start",
+        "stream": false
+      }
+    ]
+  },
+  "air/havoc_rpm_stop": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/havoc_rpm_stop",
+        "stream": false
+      }
+    ]
+  },
+  "air/havoc_start": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/havoc_start",
+        "stream": false
+      }
+    ]
+  },
+  "air/havoc_stop": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/havoc_stop",
+        "stream": false
+      }
+    ]
+  },
+  "air/huey_idle": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/huey_idle",
+        "stream": false
+      }
+    ]
+  },
+  "air/huey_long_idle": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/huey_long_idle",
+        "stream": false
+      }
+    ]
+  },
+  "air/huey_long_start": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/huey_long_start",
+        "stream": false
+      }
+    ]
+  },
+  "air/huey_long_stop": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/huey_long_stop",
+        "stream": false
+      }
+    ]
+  },
+  "air/huey_start": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/huey_start",
+        "stream": false
+      }
+    ]
+  },
+  "air/huey_stop": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/huey_stop",
+        "stream": false
+      }
+    ]
+  },
+  "air/il2_idle": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/il2_idle",
+        "stream": false
+      }
+    ]
+  },
+  "air/il2_start": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/il2_start",
+        "stream": false
+      }
+    ]
+  },
+  "air/il2_stop": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/il2_stop",
+        "stream": false
+      }
+    ]
+  },
+  "air/layer/a10_cockpit": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/layer/a10_cockpit",
+        "stream": false
+      }
+    ]
+  },
+  "air/layer/a10_far": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/layer/a10_far",
+        "stream": false
+      }
+    ]
+  },
+  "air/layer/apache_cockpit": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/layer/apache_cockpit",
+        "stream": false
+      }
+    ]
+  },
+  "air/layer/apache_far": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/layer/apache_far",
+        "stream": false
+      }
+    ]
+  },
+  "air/layer/c47_cabin": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/layer/c47_cabin",
+        "stream": false
+      }
+    ]
+  },
+  "air/layer/chinook_rotor": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/layer/chinook_rotor",
+        "stream": false
+      }
+    ]
+  },
+  "air/layer/flanker_far": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/layer/flanker_far",
+        "stream": false
+      }
+    ]
+  },
+  "air/layer/havoc_rotor": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/layer/havoc_rotor",
+        "stream": false
+      }
+    ]
+  },
+  "air/layer/huey_cockpit": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/layer/huey_cockpit",
+        "stream": false
+      }
+    ]
+  },
+  "air/layer/huey_far": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/layer/huey_far",
+        "stream": false
+      }
+    ]
+  },
+  "air/layer/jet_cockpit": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/layer/jet_cockpit",
+        "stream": false
+      }
+    ]
+  },
+  "air/layer/jet_far": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/layer/jet_far",
+        "stream": false
+      }
+    ]
+  },
+  "air/layer/jet_far2": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/layer/jet_far2",
+        "stream": false
+      }
+    ]
+  },
+  "air/layer/jet_far5": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/layer/jet_far5",
+        "stream": false
+      }
+    ]
+  },
+  "air/layer/jet_roar": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/layer/jet_roar",
+        "stream": false
+      }
+    ]
+  },
+  "air/layer/kiowa_cockpit": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/layer/kiowa_cockpit",
+        "stream": false
+      }
+    ]
+  },
+  "air/layer/kiowa_far": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/layer/kiowa_far",
+        "stream": false
+      }
+    ]
+  },
+  "air/layer/littlebird_rotor": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/layer/littlebird_rotor",
+        "stream": false
+      }
+    ]
+  },
+  "air/layer/mi17_cockpit": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/layer/mi17_cockpit",
+        "stream": false
+      }
+    ]
+  },
+  "air/layer/mi24_rotor": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/layer/mi24_rotor",
+        "stream": false
+      }
+    ]
+  },
+  "air/layer/mv22_cockpit": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/layer/mv22_cockpit",
+        "stream": false
+      }
+    ]
+  },
+  "air/layer/mv22_far": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/layer/mv22_far",
+        "stream": false
+      }
+    ]
+  },
+  "air/layer/prop_far": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/layer/prop_far",
+        "stream": false
+      }
+    ]
+  },
+  "air/layer/prop_far3": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/layer/prop_far3",
+        "stream": false
+      }
+    ]
+  },
+  "air/layer/tornado_cockpit": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/layer/tornado_cockpit",
+        "stream": false
+      }
+    ]
+  },
+  "air/layer/uh60_rotor": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/layer/uh60_rotor",
+        "stream": false
+      }
+    ]
+  },
+  "air/littlebird_idle": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/littlebird_idle",
+        "stream": false
+      }
+    ]
+  },
+  "air/littlebird_start": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/littlebird_start",
+        "stream": false
+      }
+    ]
+  },
+  "air/littlebird_stop": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/littlebird_stop",
+        "stream": false
+      }
+    ]
+  },
+  "air/mi24_idle": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/mi24_idle",
+        "stream": false
+      }
+    ]
+  },
+  "air/mi24_start": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/mi24_start",
+        "stream": false
+      }
+    ]
+  },
+  "air/mi24_stop": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/mi24_stop",
+        "stream": false
+      }
+    ]
+  },
+  "air/mi8_idle": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/mi8_idle",
+        "stream": false
+      }
+    ]
+  },
+  "air/mi8_start": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/mi8_start",
+        "stream": false
+      }
+    ]
+  },
+  "air/mi8_stop": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/mi8_stop",
+        "stream": false
+      }
+    ]
+  },
+  "air/mig29_idle": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/mig29_idle",
+        "stream": false
+      }
+    ]
+  },
+  "air/mig29_start": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/mig29_start",
+        "stream": false
+      }
+    ]
+  },
+  "air/mig29_stop": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/mig29_stop",
+        "stream": false
+      }
+    ]
+  },
+  "air/mv22_idle": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/mv22_idle",
+        "stream": false
+      }
+    ]
+  },
+  "air/mv22_start": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/mv22_start",
+        "stream": false
+      }
+    ]
+  },
+  "air/mv22_stop": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/mv22_stop",
+        "stream": false
+      }
+    ]
+  },
+  "air/p51_idle": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/p51_idle",
+        "stream": false
+      }
+    ]
+  },
+  "air/p51_start": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/p51_start",
+        "stream": false
+      }
+    ]
+  },
+  "air/p51_stop": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/p51_stop",
+        "stream": false
+      }
+    ]
+  },
+  "air/radial_idle": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/radial_idle",
+        "stream": false
+      }
+    ]
+  },
+  "air/radial_start": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/radial_start",
+        "stream": false
+      }
+    ]
+  },
+  "air/radial_stop": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/radial_stop",
+        "stream": false
+      }
+    ]
+  },
+  "air/su25_idle": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/su25_idle",
+        "stream": false
+      }
+    ]
+  },
+  "air/su25_start": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/su25_start",
+        "stream": false
+      }
+    ]
+  },
+  "air/su25_stop": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/su25_stop",
+        "stream": false
+      }
+    ]
+  },
+  "air/su34_idle": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/su34_idle",
+        "stream": false
+      }
+    ]
+  },
+  "air/su34_start": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/su34_start",
+        "stream": false
+      }
+    ]
+  },
+  "air/su34_stop": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/su34_stop",
+        "stream": false
+      }
+    ]
+  },
+  "air/tiger_idle": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/tiger_idle",
+        "stream": false
+      }
+    ]
+  },
+  "air/tiger_start": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/tiger_start",
+        "stream": false
+      }
+    ]
+  },
+  "air/tiger_stop": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/tiger_stop",
+        "stream": false
+      }
+    ]
+  },
+  "air/tornado_idle": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/tornado_idle",
+        "stream": false
+      }
+    ]
+  },
+  "air/tornado_start": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/tornado_start",
+        "stream": false
+      }
+    ]
+  },
+  "air/tornado_stop": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/tornado_stop",
+        "stream": false
+      }
+    ]
+  },
   "engine/bmp1_idle": {
     "category": "neutral",
     "sounds": [

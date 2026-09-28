@@ -693,5 +693,957 @@
     "marder_1a5.MainMachineGun": "mg3",
     "leo2a6.MachineGun": "mg3",
     "leo2a6.PassengerMachineGun": "mg3"
+  },
+  "_air_doc": "Aircraft (Lizardpyle BF2 archive, objects_vehicles_client/vehicles/...). air_engine: start_idle_stop sets by kind (jet/prop/heli). air_layer: loops by role (boost = low-frequency roar and afterburner, distant = far sound, rotor = blades, interior = cockpit ambience, crew only). aircraft: entity type -> kind, engine set, layers and a pitch factor that tells aircraft sharing a set apart.",
+  "air_engine": {
+    "f16": {
+      "kind": "jet",
+      "src": "air/us_jet_f16/sounds/f16_start_idle_stop.wav"
+    },
+    "f15": {
+      "kind": "jet",
+      "src": "air/us_jet_f15/sounds/engine/mono/f-15_start_idle_stop.wav"
+    },
+    "f18": {
+      "kind": "jet",
+      "src": "air/us_jet_f18c/sounds/engine/start_idle_stop.wav"
+    },
+    "flanker": {
+      "kind": "jet",
+      "src": "air/ru_jet_su27/sounds/flanker_start_idle_stop.wav"
+    },
+    "mig29": {
+      "kind": "jet",
+      "src": "air/ru_jet_mig29/sounds/mig_29_start_idle_stop.wav"
+    },
+    "su34": {
+      "kind": "jet",
+      "src": "air/ru_jet_su34/sounds/mono/start_idle_stop_01.wav"
+    },
+    "su25": {
+      "kind": "jet",
+      "src": "air/mec_jet_su25a/sounds/su30_start_idle_stop.wav"
+    },
+    "tornado": {
+      "kind": "jet",
+      "src": "air/gb_jet_tornadogr4/sounds/engine/gb_jet_tornadogr4_start_idle_stop.wav"
+    },
+    "harrier": {
+      "kind": "jet",
+      "src": "air/gb_jet_harrier/sounds/harrier_start_idle_stop.wav"
+    },
+    "a10a": {
+      "kind": "jet",
+      "src": "air/us_jet_a10a/sounds/a10a_start_idle_stop.wav"
+    },
+    "a10": {
+      "kind": "jet",
+      "src": "air/us_jet_a10a/sounds/engine/a10_start_idle_stop.wav"
+    },
+    "mv22": {
+      "kind": "jet",
+      "src": "air/us_the_mv22/sounds/m22_start_idle_stop.wav"
+    },
+    "p51": {
+      "kind": "prop",
+      "src": "air/us_jet_p51d/sounds/p51d_startrunstop.wav"
+    },
+    "bf109": {
+      "kind": "prop",
+      "src": "air/ger_jet_bf109g6/sounds/bf109e_startrunstop.wav"
+    },
+    "radial": {
+      "kind": "prop",
+      "src": "air/ru_jet_i16/sounds/i16_start_idle_stop.wav"
+    },
+    "il2": {
+      "kind": "prop",
+      "src": "air/ru_jet_il2/sounds/jenny_start_idle_stop.wav"
+    },
+    "db601": {
+      "kind": "prop",
+      "src": "air/us_jet_a1h/sounds/db601_start_idle_stop.wav"
+    },
+    "generic_prop": {
+      "kind": "prop",
+      "src": "common/sounds/air/generic_plane_start_idle_stop.wav"
+    },
+    "apache": {
+      "kind": "heli",
+      "src": "air/us_ahe_ah1z/sounds/mono/apache_start_idle_stop.wav"
+    },
+    "ah1z": {
+      "kind": "heli",
+      "src": "air/us_ahe_ah1z/sounds/mono/ah1z_start_idle_stop.wav"
+    },
+    "ah1": {
+      "kind": "heli",
+      "src": "air/us_ahe_ah1z/sounds/mono/ah1_start_idle_stop.wav"
+    },
+    "havoc": {
+      "kind": "heli",
+      "src": "air/us_ahe_ah1z/sounds/mono/havoc_start_idle_stop.wav"
+    },
+    "havoc_rpm": {
+      "kind": "heli",
+      "src": "air/us_ahe_ah1z/sounds/mono/havoc_start_idle_stop_rpm1.wav"
+    },
+    "mi24": {
+      "kind": "heli",
+      "src": "air/ru_ahe_mi24/sounds/m24_start_idle_stop.wav"
+    },
+    "mi8": {
+      "kind": "heli",
+      "src": "air/ru_the_mi8/sounds/mi8_start_idle_stop.wav"
+    },
+    "huey": {
+      "kind": "heli",
+      "src": "air/us_the_uh1d/sounds/huey_start_idle_stop.wav"
+    },
+    "huey_long": {
+      "kind": "heli",
+      "src": "air/us_the_uh1n/sounds/huey_start_idle_stop3.wav"
+    },
+    "littlebird": {
+      "kind": "heli",
+      "src": "air/us_ahe_ah6/sounds/littlebird_start_idle_stop.wav"
+    },
+    "chinook": {
+      "kind": "heli",
+      "src": "air/gb_the_chinook/sounds/chinook_start_idle_stop.wav"
+    },
+    "tiger": {
+      "kind": "heli",
+      "src": "air/ger_ahe_tiger/sounds/tiger_start_idle_stop.wav"
+    }
+  },
+  "air_layer": {
+    "jet_roar": {
+      "role": "boost",
+      "src": "common/sounds/air/jet_low_freq.ogg"
+    },
+    "jet_far": {
+      "role": "distant",
+      "src": "common/sounds/air/jet_distant.ogg"
+    },
+    "jet_far2": {
+      "role": "distant",
+      "src": "common/sounds/air/jet_distant2.ogg"
+    },
+    "jet_far5": {
+      "role": "distant",
+      "src": "common/sounds/air/jet_distant5.ogg"
+    },
+    "flanker_far": {
+      "role": "distant",
+      "src": "air/ru_jet_su27/sounds/flanker_distant.wav"
+    },
+    "a10_far": {
+      "role": "distant",
+      "src": "air/us_jet_a10a/sounds/a10_distant.ogg"
+    },
+    "prop_far": {
+      "role": "distant",
+      "src": "common/sounds/air/prop_distant.wav"
+    },
+    "prop_far3": {
+      "role": "distant",
+      "src": "air/ru_jet_i16/sounds/prop_distant3.wav"
+    },
+    "apache_far": {
+      "role": "distant",
+      "src": "air/us_ahe_ah1z/sounds/mono/apache_distant.wav"
+    },
+    "huey_far": {
+      "role": "distant",
+      "src": "air/us_the_uh1n/sounds/huey_distant.wav"
+    },
+    "kiowa_far": {
+      "role": "distant",
+      "src": "air/us_ahe_ah6/sounds/kiowa_distant.wav"
+    },
+    "mv22_far": {
+      "role": "distant",
+      "src": "air/us_the_mv22/sounds/m22_idle_distant.wav"
+    },
+    "mi24_rotor": {
+      "role": "rotor",
+      "src": "air/ru_ahe_mi24/sounds/m24_rotor.wav"
+    },
+    "havoc_rotor": {
+      "role": "rotor",
+      "src": "air/us_ahe_ah1z/sounds/mono/havoc_rotors.wav"
+    },
+    "littlebird_rotor": {
+      "role": "rotor",
+      "src": "air/us_ahe_ah6/sounds/littlebird_rotors.wav"
+    },
+    "chinook_rotor": {
+      "role": "rotor",
+      "src": "air/gb_the_chinook/sounds/chinook_rotors.wav"
+    },
+    "uh60_rotor": {
+      "role": "rotor",
+      "src": "air/us_the_uh60/sounds/uh60_rotors.wav"
+    },
+    "jet_cockpit": {
+      "role": "interior",
+      "src": "air/us_jet_f15/sounds/airplane_ambloop.ogg"
+    },
+    "tornado_cockpit": {
+      "role": "interior",
+      "src": "air/gb_jet_tornadogr4/sounds/gb_jet_tornadogr4_ambloop.ogg"
+    },
+    "a10_cockpit": {
+      "role": "interior",
+      "src": "air/us_jet_a10a/sounds/a10_ambloop.ogg",
+      "maxSeconds": 14
+    },
+    "apache_cockpit": {
+      "role": "interior",
+      "src": "air/us_ahe_ah1z/sounds/mono/apache_cockpit.ogg"
+    },
+    "huey_cockpit": {
+      "role": "interior",
+      "src": "air/us_the_uh1n/sounds/cockpit.ogg"
+    },
+    "mi17_cockpit": {
+      "role": "interior",
+      "src": "air/ru_the_mi8/sounds/mi17_cockpit_idle.ogg"
+    },
+    "kiowa_cockpit": {
+      "role": "interior",
+      "src": "air/us_ahe_ah6/sounds/kiowa_cockpit.ogg"
+    },
+    "mv22_cockpit": {
+      "role": "interior",
+      "src": "air/us_the_mv22/sounds/m22_pilot_cockpit.ogg"
+    },
+    "c47_cabin": {
+      "role": "interior",
+      "src": "air/us_air_c47/sounds/c47_ambient_engine.ogg"
+    }
+  },
+  "aircraft": {
+    "berts_vehicle_pack:f_15c": {
+      "kind": "jet",
+      "engine": "f15",
+      "pitch": 1.0,
+      "distant": "jet_far",
+      "interior": "jet_cockpit",
+      "boost": "jet_roar"
+    },
+    "berts_vehicle_pack:f_15e": {
+      "kind": "jet",
+      "engine": "f15",
+      "pitch": 0.97,
+      "distant": "jet_far",
+      "interior": "jet_cockpit",
+      "boost": "jet_roar"
+    },
+    "berts_vehicle_pack:f_16c": {
+      "kind": "jet",
+      "engine": "f16",
+      "pitch": 1.0,
+      "distant": "jet_far",
+      "interior": "jet_cockpit",
+      "boost": "jet_roar"
+    },
+    "berts_vehicle_pack:f_16b": {
+      "kind": "jet",
+      "engine": "f16",
+      "pitch": 1.02,
+      "distant": "jet_far",
+      "interior": "jet_cockpit",
+      "boost": "jet_roar"
+    },
+    "berts_vehicle_pack:fa_18e": {
+      "kind": "jet",
+      "engine": "f18",
+      "pitch": 1.0,
+      "distant": "jet_far",
+      "interior": "jet_cockpit",
+      "boost": "jet_roar"
+    },
+    "berts_vehicle_pack:f_14a": {
+      "kind": "jet",
+      "engine": "f15",
+      "pitch": 0.9,
+      "distant": "jet_far5",
+      "interior": "jet_cockpit",
+      "boost": "jet_roar"
+    },
+    "berts_vehicle_pack:f_14d": {
+      "kind": "jet",
+      "engine": "f16",
+      "pitch": 0.93,
+      "distant": "jet_far5",
+      "interior": "jet_cockpit",
+      "boost": "jet_roar"
+    },
+    "berts_vehicle_pack:eurofighter_typhoon": {
+      "kind": "jet",
+      "engine": "f18",
+      "pitch": 1.05,
+      "distant": "jet_far",
+      "interior": "jet_cockpit",
+      "boost": "jet_roar"
+    },
+    "berts_vehicle_pack:rafale": {
+      "kind": "jet",
+      "engine": "f18",
+      "pitch": 1.08,
+      "distant": "jet_far2",
+      "interior": "jet_cockpit",
+      "boost": "jet_roar"
+    },
+    "berts_vehicle_pack:saab_jas_39_gripen": {
+      "kind": "jet",
+      "engine": "f18",
+      "pitch": 1.1,
+      "distant": "jet_far2",
+      "interior": "jet_cockpit",
+      "boost": "jet_roar"
+    },
+    "berts_vehicle_pack:j_10a": {
+      "kind": "jet",
+      "engine": "flanker",
+      "pitch": 1.05,
+      "distant": "flanker_far",
+      "interior": "jet_cockpit",
+      "boost": "jet_roar"
+    },
+    "berts_vehicle_pack:su_27": {
+      "kind": "jet",
+      "engine": "flanker",
+      "pitch": 1.0,
+      "distant": "flanker_far",
+      "interior": "jet_cockpit",
+      "boost": "jet_roar"
+    },
+    "berts_vehicle_pack:su_30": {
+      "kind": "jet",
+      "engine": "flanker",
+      "pitch": 0.98,
+      "distant": "flanker_far",
+      "interior": "jet_cockpit",
+      "boost": "jet_roar"
+    },
+    "berts_vehicle_pack:su_35": {
+      "kind": "jet",
+      "engine": "flanker",
+      "pitch": 1.02,
+      "distant": "flanker_far",
+      "interior": "jet_cockpit",
+      "boost": "jet_roar"
+    },
+    "berts_vehicle_pack:su_57": {
+      "kind": "jet",
+      "engine": "flanker",
+      "pitch": 1.06,
+      "distant": "flanker_far",
+      "interior": "jet_cockpit",
+      "boost": "jet_roar"
+    },
+    "berts_vehicle_pack:j_11a": {
+      "kind": "jet",
+      "engine": "flanker",
+      "pitch": 1.01,
+      "distant": "flanker_far",
+      "interior": "jet_cockpit",
+      "boost": "jet_roar"
+    },
+    "berts_vehicle_pack:j_15d": {
+      "kind": "jet",
+      "engine": "flanker",
+      "pitch": 0.97,
+      "distant": "flanker_far",
+      "interior": "jet_cockpit",
+      "boost": "jet_roar"
+    },
+    "berts_vehicle_pack:mig_29": {
+      "kind": "jet",
+      "engine": "mig29",
+      "pitch": 1.0,
+      "distant": "flanker_far",
+      "interior": "jet_cockpit",
+      "boost": "jet_roar"
+    },
+    "berts_vehicle_pack:su_24": {
+      "kind": "jet",
+      "engine": "su34",
+      "pitch": 0.95,
+      "distant": "jet_far5",
+      "interior": "jet_cockpit",
+      "boost": "jet_roar"
+    },
+    "berts_vehicle_pack:su_25": {
+      "kind": "jet",
+      "engine": "su25",
+      "pitch": 1.0,
+      "distant": "a10_far",
+      "interior": "jet_cockpit"
+    },
+    "berts_vehicle_pack:su_39": {
+      "kind": "jet",
+      "engine": "su25",
+      "pitch": 1.03,
+      "distant": "a10_far",
+      "interior": "jet_cockpit"
+    },
+    "berts_vehicle_pack:a_10": {
+      "kind": "jet",
+      "engine": "a10a",
+      "pitch": 1.0,
+      "distant": "a10_far",
+      "interior": "a10_cockpit"
+    },
+    "berts_vehicle_pack:a_7d": {
+      "kind": "jet",
+      "engine": "a10",
+      "pitch": 1.0,
+      "distant": "a10_far",
+      "interior": "a10_cockpit"
+    },
+    "berts_vehicle_pack:panavia_tornado_ids_marineflieger": {
+      "kind": "jet",
+      "engine": "tornado",
+      "pitch": 1.0,
+      "distant": "jet_far5",
+      "interior": "tornado_cockpit",
+      "boost": "jet_roar"
+    },
+    "berts_vehicle_pack:b_1b": {
+      "kind": "jet",
+      "engine": "tornado",
+      "pitch": 0.82,
+      "distant": "jet_far5",
+      "interior": "tornado_cockpit",
+      "boost": "jet_roar",
+      "volume": 1.15
+    },
+    "berts_vehicle_pack:tu_22m": {
+      "kind": "jet",
+      "engine": "flanker",
+      "pitch": 0.8,
+      "distant": "jet_far5",
+      "interior": "tornado_cockpit",
+      "boost": "jet_roar",
+      "volume": 1.15
+    },
+    "berts_vehicle_pack:mig_23mld": {
+      "kind": "jet",
+      "engine": "mig29",
+      "pitch": 0.92,
+      "distant": "jet_far2",
+      "interior": "jet_cockpit",
+      "boost": "jet_roar"
+    },
+    "berts_vehicle_pack:su_17": {
+      "kind": "jet",
+      "engine": "mig29",
+      "pitch": 0.88,
+      "distant": "jet_far2",
+      "interior": "jet_cockpit",
+      "boost": "jet_roar"
+    },
+    "berts_vehicle_pack:mig_21bis": {
+      "kind": "jet",
+      "engine": "su34",
+      "pitch": 1.08,
+      "distant": "jet_far2",
+      "interior": "jet_cockpit",
+      "boost": "jet_roar"
+    },
+    "berts_vehicle_pack:q_5": {
+      "kind": "jet",
+      "engine": "su34",
+      "pitch": 1.0,
+      "distant": "jet_far2",
+      "interior": "jet_cockpit",
+      "boost": "jet_roar"
+    },
+    "berts_vehicle_pack:f_104g": {
+      "kind": "jet",
+      "engine": "f15",
+      "pitch": 1.12,
+      "distant": "jet_far2",
+      "interior": "jet_cockpit",
+      "boost": "jet_roar"
+    },
+    "berts_vehicle_pack:f_4c": {
+      "kind": "jet",
+      "engine": "f15",
+      "pitch": 0.95,
+      "distant": "jet_far5",
+      "interior": "jet_cockpit",
+      "boost": "jet_roar"
+    },
+    "berts_vehicle_pack:saab_35_draken": {
+      "kind": "jet",
+      "engine": "tornado",
+      "pitch": 1.05,
+      "distant": "jet_far2",
+      "interior": "jet_cockpit",
+      "boost": "jet_roar"
+    },
+    "berts_vehicle_pack:saab_37_viggen": {
+      "kind": "jet",
+      "engine": "tornado",
+      "pitch": 0.95,
+      "distant": "jet_far5",
+      "interior": "jet_cockpit",
+      "boost": "jet_roar"
+    },
+    "berts_vehicle_pack:mirage_5": {
+      "kind": "jet",
+      "engine": "mig29",
+      "pitch": 1.05,
+      "distant": "jet_far2",
+      "interior": "jet_cockpit",
+      "boost": "jet_roar"
+    },
+    "berts_vehicle_pack:mirage_f1": {
+      "kind": "jet",
+      "engine": "mig29",
+      "pitch": 1.0,
+      "distant": "jet_far2",
+      "interior": "jet_cockpit",
+      "boost": "jet_roar"
+    },
+    "berts_vehicle_pack:f_8h": {
+      "kind": "jet",
+      "engine": "f15",
+      "pitch": 1.02,
+      "distant": "jet_far",
+      "interior": "jet_cockpit",
+      "boost": "jet_roar"
+    },
+    "berts_vehicle_pack:su_9": {
+      "kind": "jet",
+      "engine": "flanker",
+      "pitch": 1.1,
+      "distant": "jet_far2",
+      "interior": "jet_cockpit",
+      "boost": "jet_roar"
+    },
+    "berts_vehicle_pack:mig_19s": {
+      "kind": "jet",
+      "engine": "su34",
+      "pitch": 1.12,
+      "distant": "jet_far",
+      "interior": "jet_cockpit",
+      "boost": "jet_roar"
+    },
+    "berts_vehicle_pack:mig19": {
+      "kind": "jet",
+      "engine": "su34",
+      "pitch": 1.12,
+      "distant": "jet_far",
+      "interior": "jet_cockpit",
+      "boost": "jet_roar"
+    },
+    "berts_vehicle_pack:f_100c": {
+      "kind": "jet",
+      "engine": "f15",
+      "pitch": 0.92,
+      "distant": "jet_far",
+      "interior": "jet_cockpit",
+      "boost": "jet_roar"
+    },
+    "berts_vehicle_pack:super_mystere": {
+      "kind": "jet",
+      "engine": "mig29",
+      "pitch": 0.95,
+      "distant": "jet_far",
+      "interior": "jet_cockpit",
+      "boost": "jet_roar"
+    },
+    "berts_vehicle_pack:f_5a": {
+      "kind": "jet",
+      "engine": "f16",
+      "pitch": 1.12,
+      "distant": "jet_far2",
+      "interior": "jet_cockpit",
+      "boost": "jet_roar"
+    },
+    "berts_vehicle_pack:fiat_g_91": {
+      "kind": "jet",
+      "engine": "su34",
+      "pitch": 1.04,
+      "distant": "jet_far",
+      "interior": "jet_cockpit",
+      "boost": "jet_roar"
+    },
+    "berts_vehicle_pack:saab_32_lansen": {
+      "kind": "jet",
+      "engine": "tornado",
+      "pitch": 0.9,
+      "distant": "jet_far",
+      "interior": "jet_cockpit",
+      "boost": "jet_roar"
+    },
+    "berts_vehicle_pack:f2h_2": {
+      "kind": "jet",
+      "engine": "a10",
+      "pitch": 1.05,
+      "distant": "jet_far",
+      "interior": "jet_cockpit"
+    },
+    "berts_vehicle_pack:f3h": {
+      "kind": "jet",
+      "engine": "harrier",
+      "pitch": 1.0,
+      "distant": "jet_far",
+      "interior": "jet_cockpit"
+    },
+    "berts_vehicle_pack:f9f_2": {
+      "kind": "jet",
+      "engine": "a10",
+      "pitch": 0.95,
+      "distant": "jet_far",
+      "interior": "jet_cockpit"
+    },
+    "berts_vehicle_pack:f_84f": {
+      "kind": "jet",
+      "engine": "harrier",
+      "pitch": 1.05,
+      "distant": "jet_far",
+      "interior": "jet_cockpit"
+    },
+    "berts_vehicle_pack:f_86k": {
+      "kind": "jet",
+      "engine": "harrier",
+      "pitch": 0.95,
+      "distant": "jet_far",
+      "interior": "jet_cockpit",
+      "boost": "jet_roar"
+    },
+    "berts_vehicle_pack:meteor_f_8": {
+      "kind": "jet",
+      "engine": "a10",
+      "pitch": 0.9,
+      "distant": "jet_far",
+      "interior": "jet_cockpit"
+    },
+    "berts_vehicle_pack:mig_9": {
+      "kind": "jet",
+      "engine": "a10",
+      "pitch": 1.1,
+      "distant": "jet_far",
+      "interior": "jet_cockpit"
+    },
+    "berts_vehicle_pack:mig_15bis": {
+      "kind": "jet",
+      "engine": "harrier",
+      "pitch": 1.1,
+      "distant": "jet_far",
+      "interior": "jet_cockpit"
+    },
+    "berts_vehicle_pack:yak_15p": {
+      "kind": "jet",
+      "engine": "a10",
+      "pitch": 1.15,
+      "distant": "jet_far",
+      "interior": "jet_cockpit"
+    },
+    "berts_vehicle_pack:saab_29_tunnan": {
+      "kind": "jet",
+      "engine": "harrier",
+      "pitch": 0.9,
+      "distant": "jet_far",
+      "interior": "jet_cockpit"
+    },
+    "berts_vehicle_pack:ho_229": {
+      "kind": "jet",
+      "engine": "a10",
+      "pitch": 1.0,
+      "distant": "jet_far",
+      "interior": "jet_cockpit"
+    },
+    "berts_vehicle_pack:md_450_ouragan": {
+      "kind": "jet",
+      "engine": "harrier",
+      "pitch": 1.02,
+      "distant": "jet_far",
+      "interior": "jet_cockpit"
+    },
+    "berts_vehicle_pack:sabre_mk_6": {
+      "kind": "jet",
+      "engine": "harrier",
+      "pitch": 0.98,
+      "distant": "jet_far",
+      "interior": "jet_cockpit"
+    },
+    "berts_vehicle_pack:j_2": {
+      "kind": "jet",
+      "engine": "harrier",
+      "pitch": 1.1,
+      "distant": "jet_far",
+      "interior": "jet_cockpit"
+    },
+    "berts_vehicle_pack:j_5": {
+      "kind": "jet",
+      "engine": "harrier",
+      "pitch": 1.06,
+      "distant": "jet_far",
+      "interior": "jet_cockpit",
+      "boost": "jet_roar"
+    },
+    "berts_vehicle_pack:b_47e": {
+      "kind": "jet",
+      "engine": "a10",
+      "pitch": 0.8,
+      "distant": "jet_far5",
+      "interior": "tornado_cockpit",
+      "volume": 1.15
+    },
+    "berts_vehicle_pack:m_50a": {
+      "kind": "jet",
+      "engine": "tornado",
+      "pitch": 0.78,
+      "distant": "jet_far5",
+      "interior": "tornado_cockpit",
+      "boost": "jet_roar",
+      "volume": 1.2
+    },
+    "berts_vehicle_pack:il_76m": {
+      "kind": "jet",
+      "engine": "a10",
+      "pitch": 0.75,
+      "distant": "jet_far5",
+      "interior": "tornado_cockpit",
+      "volume": 1.2
+    },
+    "berts_vehicle_pack:an_12b": {
+      "kind": "jet",
+      "engine": "mv22",
+      "pitch": 0.9,
+      "distant": "mv22_far",
+      "interior": "c47_cabin",
+      "volume": 1.15
+    },
+    "berts_vehicle_pack:c_130h": {
+      "kind": "jet",
+      "engine": "mv22",
+      "pitch": 1.0,
+      "distant": "mv22_far",
+      "interior": "c47_cabin",
+      "volume": 1.15
+    },
+    "berts_vehicle_pack:tu_95ms": {
+      "kind": "jet",
+      "engine": "mv22",
+      "pitch": 0.72,
+      "distant": "mv22_far",
+      "interior": "c47_cabin",
+      "volume": 1.25
+    },
+    "berts_vehicle_pack:p_51d": {
+      "kind": "prop",
+      "engine": "p51",
+      "pitch": 1.0,
+      "distant": "prop_far"
+    },
+    "berts_vehicle_pack:j_26": {
+      "kind": "prop",
+      "engine": "p51",
+      "pitch": 1.02,
+      "distant": "prop_far"
+    },
+    "berts_vehicle_pack:supermarine_spitfire_griffon": {
+      "kind": "prop",
+      "engine": "p51",
+      "pitch": 0.93,
+      "distant": "prop_far"
+    },
+    "berts_vehicle_pack:yak_3": {
+      "kind": "prop",
+      "engine": "bf109",
+      "pitch": 1.05,
+      "distant": "prop_far3"
+    },
+    "berts_vehicle_pack:yak_9u": {
+      "kind": "prop",
+      "engine": "bf109",
+      "pitch": 1.0,
+      "distant": "prop_far3"
+    },
+    "berts_vehicle_pack:il_10": {
+      "kind": "prop",
+      "engine": "il2",
+      "pitch": 1.0,
+      "distant": "prop_far3"
+    },
+    "berts_vehicle_pack:ju_87_b2": {
+      "kind": "prop",
+      "engine": "bf109",
+      "pitch": 0.95,
+      "distant": "prop_far"
+    },
+    "berts_vehicle_pack:f8f_1": {
+      "kind": "prop",
+      "engine": "radial",
+      "pitch": 1.0,
+      "distant": "prop_far"
+    },
+    "berts_vehicle_pack:saab_j_21a_1": {
+      "kind": "prop",
+      "engine": "db601",
+      "pitch": 1.0,
+      "distant": "prop_far"
+    },
+    "berts_vehicle_pack:ah_64d": {
+      "kind": "heli",
+      "engine": "apache",
+      "pitch": 1.0,
+      "distant": "apache_far",
+      "interior": "apache_cockpit"
+    },
+    "berts_vehicle_pack:eurocopter_tiger": {
+      "kind": "heli",
+      "engine": "tiger",
+      "pitch": 1.0,
+      "distant": "apache_far",
+      "interior": "apache_cockpit"
+    },
+    "berts_vehicle_pack:ah1w_super_cobra": {
+      "kind": "heli",
+      "engine": "ah1z",
+      "pitch": 1.0,
+      "distant": "apache_far",
+      "interior": "apache_cockpit"
+    },
+    "berts_vehicle_pack:ah_1f": {
+      "kind": "heli",
+      "engine": "ah1",
+      "pitch": 1.0,
+      "distant": "huey_far",
+      "interior": "apache_cockpit"
+    },
+    "berts_vehicle_pack:ah_1g_cobra": {
+      "kind": "heli",
+      "engine": "huey",
+      "pitch": 1.0,
+      "distant": "huey_far",
+      "interior": "huey_cockpit"
+    },
+    "berts_vehicle_pack:uh1d_huey": {
+      "kind": "heli",
+      "engine": "huey_long",
+      "pitch": 1.0,
+      "distant": "huey_far",
+      "interior": "huey_cockpit"
+    },
+    "berts_vehicle_pack:ah_6j": {
+      "kind": "heli",
+      "engine": "littlebird",
+      "pitch": 1.0,
+      "distant": "kiowa_far",
+      "interior": "kiowa_cockpit",
+      "rotor": "littlebird_rotor"
+    },
+    "berts_vehicle_pack:ch_46e": {
+      "kind": "heli",
+      "engine": "chinook",
+      "pitch": 1.0,
+      "distant": "mv22_far",
+      "interior": "mv22_cockpit",
+      "rotor": "chinook_rotor"
+    },
+    "berts_vehicle_pack:ka50": {
+      "kind": "heli",
+      "engine": "havoc_rpm",
+      "pitch": 1.0,
+      "distant": "huey_far",
+      "interior": "apache_cockpit",
+      "rotor": "havoc_rotor"
+    },
+    "berts_vehicle_pack:mi28n": {
+      "kind": "heli",
+      "engine": "havoc",
+      "pitch": 1.0,
+      "distant": "huey_far",
+      "interior": "apache_cockpit",
+      "rotor": "havoc_rotor"
+    },
+    "berts_vehicle_pack:mi24_hind_a": {
+      "kind": "heli",
+      "engine": "mi24",
+      "pitch": 0.98,
+      "distant": "huey_far",
+      "interior": "mi17_cockpit",
+      "rotor": "mi24_rotor"
+    },
+    "berts_vehicle_pack:mi_24a": {
+      "kind": "heli",
+      "engine": "mi24",
+      "pitch": 0.99,
+      "distant": "huey_far",
+      "interior": "mi17_cockpit",
+      "rotor": "mi24_rotor"
+    },
+    "berts_vehicle_pack:mi_24d": {
+      "kind": "heli",
+      "engine": "mi24",
+      "pitch": 1.0,
+      "distant": "huey_far",
+      "interior": "mi17_cockpit",
+      "rotor": "mi24_rotor"
+    },
+    "berts_vehicle_pack:mi24v": {
+      "kind": "heli",
+      "engine": "mi24",
+      "pitch": 1.01,
+      "distant": "huey_far",
+      "interior": "mi17_cockpit",
+      "rotor": "mi24_rotor"
+    },
+    "berts_vehicle_pack:mi_26": {
+      "kind": "heli",
+      "engine": "mi8",
+      "pitch": 0.84,
+      "distant": "mv22_far",
+      "interior": "mi17_cockpit",
+      "rotor": "mi24_rotor",
+      "volume": 1.2
+    },
+    "superbwarfare:a_10a": {
+      "kind": "jet",
+      "engine": "a10a",
+      "pitch": 1.0,
+      "distant": "a10_far",
+      "interior": "a10_cockpit"
+    },
+    "superbwarfare:ju_87": {
+      "kind": "prop",
+      "engine": "bf109",
+      "pitch": 0.95,
+      "distant": "prop_far"
+    },
+    "superbwarfare:ah_6": {
+      "kind": "heli",
+      "engine": "littlebird",
+      "pitch": 1.02,
+      "distant": "kiowa_far",
+      "interior": "kiowa_cockpit",
+      "rotor": "littlebird_rotor"
+    },
+    "superbwarfare:mi_28": {
+      "kind": "heli",
+      "engine": "havoc",
+      "pitch": 1.0,
+      "distant": "huey_far",
+      "interior": "apache_cockpit",
+      "rotor": "havoc_rotor"
+    },
+    "berts_vehicle_pack:f_111f": {
+      "kind": "jet",
+      "engine": "tornado",
+      "pitch": 0.9,
+      "distant": "jet_far5",
+      "interior": "tornado_cockpit",
+      "boost": "jet_roar"
+    }
   }
 }

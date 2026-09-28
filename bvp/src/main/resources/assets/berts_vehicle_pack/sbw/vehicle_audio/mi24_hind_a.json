@@ -1,0 +1,65 @@
+{
+  "engine": {
+    "range": 256,
+    "volume": 1.0,
+    "interiorVolume": 0.45,
+    "idlePitch": [
+      0.911,
+      1.019
+    ],
+    "idleVolume": [
+      0.8,
+      1.0
+    ],
+    "spoolUp": 1.5,
+    "spoolDown": 1.5,
+    "start": "bvp_audio:air/mi24_start",
+    "idle": "bvp_audio:air/mi24_idle",
+    "startSeconds": 12.0,
+    "drivePitch": [
+      1.0,
+      1.0
+    ],
+    "driveVolume": [
+      0.0,
+      0.0
+    ],
+    "stop": "bvp_audio:air/mi24_stop"
+  },
+  "distant": {
+    "range": 1100,
+    "near": 120,
+    "volume": [
+      0.8,
+      1.0
+    ],
+    "pitch": [
+      0.941,
+      1.009
+    ],
+    "loop": "bvp_audio:air/layer/huey_far"
+  },
+  "rotor": {
+    "range": 512,
+    "volume": [
+      0.75,
+      1.0
+    ],
+    "pitch": [
+      0.951,
+      1.009
+    ],
+    "loop": "bvp_audio:air/layer/mi24_rotor"
+  },
+  "interior": {
+    "volume": [
+      0.55,
+      0.65
+    ],
+    "pitch": [
+      0.98,
+      1.02
+    ],
+    "loop": "bvp_audio:air/layer/mi17_cockpit"
+  }
+}

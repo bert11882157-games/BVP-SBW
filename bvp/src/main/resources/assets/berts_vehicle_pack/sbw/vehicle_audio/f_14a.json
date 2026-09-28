@@ -1,0 +1,66 @@
+{
+  "engine": {
+    "range": 384,
+    "volume": 1.0,
+    "interiorVolume": 0.4,
+    "idlePitch": [
+      0.648,
+      0.99
+    ],
+    "idleVolume": [
+      0.45,
+      1.0
+    ],
+    "spoolUp": 4.5,
+    "spoolDown": 3.0,
+    "start": "bvp_audio:air/f15_start",
+    "idle": "bvp_audio:air/f15_idle",
+    "startSeconds": 7.0,
+    "drivePitch": [
+      1.0,
+      1.0
+    ],
+    "driveVolume": [
+      0.0,
+      0.0
+    ],
+    "stop": "bvp_audio:air/f15_stop"
+  },
+  "boost": {
+    "range": 640,
+    "volume": [
+      0.0,
+      1.0
+    ],
+    "pitch": [
+      0.765,
+      0.945
+    ],
+    "from": 0.6,
+    "loop": "bvp_audio:air/layer/jet_roar"
+  },
+  "distant": {
+    "range": 1600,
+    "near": 110,
+    "volume": [
+      0.6,
+      1.0
+    ],
+    "pitch": [
+      0.792,
+      0.954
+    ],
+    "loop": "bvp_audio:air/layer/jet_far5"
+  },
+  "interior": {
+    "volume": [
+      0.5,
+      0.7
+    ],
+    "pitch": [
+      0.95,
+      1.05
+    ],
+    "loop": "bvp_audio:air/layer/jet_cockpit"
+  }
+}

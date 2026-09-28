@@ -41,8 +41,12 @@ object DistantVehicleAudio {
         for (entry in candidates) {
             val vehicle = FarVehicleClient.resolve(entry,1f) ?: continue
             if (mc.player?.let(vehicle::hasPassenger) == true) continue
+            // a profile with a far layer is voiced by the authored-profile controller while the vehicle is loaded
+            val authored = com.atsuishio.superbwarfare.client.sound.vehicle.VehicleAudioController.distantLayer(vehicle)
+            if (authored != null &&
+                com.atsuishio.superbwarfare.client.sound.vehicle.VehicleAudioController.voices(vehicle.uuid)) continue
             val jet = vehicle.vehicleType == VehicleType.AIRPLANE
-            val sound = if (jet) {
+            val sound = if (authored != null) SoundEvent.createVariableRangeEvent(authored.loop) else if (jet) {
                 val strategy = vehicle.resolveVehicleFlightStrategy() as? com.atsuishio.superbwarfare.api.vehicle.flight.FixedWingFlightStrategy ?: continue
                 if (strategy.handling.propellerPowerReferenceSpeedMps > 0) continue
                 ModSounds.DISTANT_JET_ENGINE.get()
@@ -54,7 +58,7 @@ object DistantVehicleAudio {
             wanted.add(vehicle.uuid)
             val old = loops[vehicle.uuid]
             if (old == null || old.isStopped) {
-                EngineLoop(vehicle, sound, jet).also { loops[vehicle.uuid] = it; mc.soundManager.play(it) }
+                EngineLoop(vehicle, sound, jet, authored?.range).also { loops[vehicle.uuid] = it; mc.soundManager.play(it) }
             } else old.vehicle = vehicle
             if (jet && world.gameTime % 4L == 0L && vehicle.deltaMovement.lengthSqr() > 2.25 &&
                 vehicle.position().distanceToSqr(eye) < 128.0*128.0) {
@@ -75,7 +79,9 @@ object DistantVehicleAudio {
             if (id !in wanted) { mc.soundManager.stop(sound); true } else false
         }
     }
-    private class EngineLoop(var vehicle: VehicleEntity, sound: SoundEvent, val jet: Boolean) : AbstractTickableSoundInstance(
+    /** [authoredRange]: the profile's far layer range; its level then follows the controller's far curve. */
+    private class EngineLoop(var vehicle: VehicleEntity, sound: SoundEvent, val jet: Boolean,
+                             val authoredRange: Float? = null) : AbstractTickableSoundInstance(
         sound, SoundSource.NEUTRAL, RandomSource.create()), com.atsuishio.superbwarfare.client.sound.spatial.DopplerSound {
         override fun dopplerVelocity(): net.minecraft.world.phys.Vec3? {
             val moved = com.atsuishio.superbwarfare.client.sound.spatial.SpatialDoppler.entityVelocity(vehicle)
@@ -93,7 +99,10 @@ object DistantVehicleAudio {
             val nearFade=((distance-64)/96).coerceIn(0.0,1.0)
             val rangeFade=(1-distance/(if(jet) 1600 else 512)).coerceIn(0.0,1.0)
             val flyby = if (jet && speed > 1.5) .35*(1-distance/128).coerceIn(0.0,1.0) else 0.0
-            volume=((if(jet) .24 else .16)*nearFade*rangeFade*rangeFade+flyby).toFloat()
+            volume = if (authoredRange != null) {
+                // same curve as the controller's far layer, so the hand-over at the loading edge is level
+                (com.atsuishio.superbwarfare.client.sound.spatial.SpatialAudioPlayer.gainAt(distance, authoredRange.toDouble()) * 0.85).toFloat()
+            } else ((if(jet) .24 else .16)*nearFade*rangeFade*rangeFade+flyby).toFloat()
             // Doppler comes from OpenAL (dopplerVelocity); the pitch only follows engine speed.
             pitch=(.75+min(.3,speed*.08)).toFloat()
         }

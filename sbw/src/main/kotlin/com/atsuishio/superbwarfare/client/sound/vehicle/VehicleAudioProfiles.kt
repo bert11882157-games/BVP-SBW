@@ -27,6 +27,10 @@ import net.minecraftforge.fml.common.Mod
  *   "tracks": { "loop": "...", "range": 48, "volume": 0.8, "fullSpeed": 0.5 },
  *   "turret": { "loop": "...", "start": "...", "stop": "...", "range": 32, "volume": 0.7, "fullRate": 20.0 } }
  * ```
+ * Aircraft add RPM spooling to the engine (`"idleVolume": [0.45, 1.0], "spoolUp": 4.5, "spoolDown": 3.0`) and
+ * [Layer]s levelled by RPM, each `{ "loop": "...", "range": 640, "volume": [low, high], "pitch": [low, high] }`:
+ * `"boost"` (with `"from"`: the RPM it starts at), `"distant"` (with `"near"`: the distance it takes over at),
+ * `"rotor"` and `"interior"`. tools/audio/lizard_import.py generates the aircraft profiles.
  */
 @Mod.EventBusSubscriber(modid = com.atsuishio.superbwarfare.Mod.MODID, value = [Dist.CLIENT], bus = Mod.EventBusSubscriber.Bus.MOD)
 object VehicleAudioProfiles : SimplePreparableReloadListener<Map<ResourceLocation, JsonObject>>() {
@@ -34,10 +38,28 @@ object VehicleAudioProfiles : SimplePreparableReloadListener<Map<ResourceLocatio
     private val LOGGER get() = com.atsuishio.superbwarfare.Mod.LOGGER
     private const val FOLDER = "sbw/vehicle_audio"
 
+    /**
+     * [idleVolume] scales the idle layer by load (aircraft: one engine loop that swells with RPM). [spoolUp] /
+     * [spoolDown] are the seconds the engine RPM needs to follow the load from 0 to 1 and back (0 = instant).
+     */
     data class Engine(
         val start: ResourceLocation?, val idle: ResourceLocation?, val drive: ResourceLocation?,
         val stop: ResourceLocation?, val startSeconds: Float, val range: Float, val volume: Float,
         val interiorVolume: Float, val idlePitch: FloatArray, val drivePitch: FloatArray, val driveVolume: FloatArray,
+        val idleVolume: FloatArray = floatArrayOf(1f, 1f), val spoolUp: Float = 0f, val spoolDown: Float = 0f,
+    )
+
+    /**
+     * An extra loop of an aircraft profile, levelled by engine RPM (`volume` over [low, high] RPM, `pitch` likewise):
+     *  - `boost`: low-frequency roar / afterburner, from RPM [from] up to full, and at full level while the afterburner
+     *    is lit;
+     *  - `distant`: the far sound, fading in beyond [near] blocks while the near engine layers recede;
+     *  - `rotor`: rotor blades, spinning up with the engine start;
+     *  - `interior`: cockpit ambience, crew only.
+     */
+    data class Layer(
+        val loop: ResourceLocation, val range: Float, val volume: FloatArray, val pitch: FloatArray,
+        val from: Float, val near: Float,
     )
 
     data class Tracks(val loop: ResourceLocation, val range: Float, val volume: Float, val fullSpeed: Float)
@@ -47,7 +69,15 @@ object VehicleAudioProfiles : SimplePreparableReloadListener<Map<ResourceLocatio
         val range: Float, val volume: Float, val fullRate: Float,
     )
 
-    data class Profile(val id: ResourceLocation, val engine: Engine?, val tracks: Tracks?, val turret: Turret?)
+    data class Profile(
+        val id: ResourceLocation, val engine: Engine?, val tracks: Tracks?, val turret: Turret?,
+        val boost: Layer? = null, val distant: Layer? = null, val rotor: Layer? = null, val interior: Layer? = null,
+    ) {
+        /** Farthest distance any layer is heard at. */
+        val reach: Float
+            get() = maxOf(engine?.range ?: 0f, tracks?.range ?: 0f, turret?.range ?: 0f, boost?.range ?: 0f,
+                distant?.range ?: 0f, rotor?.range ?: 0f)
+    }
 
     @Volatile private var profiles: Map<ResourceLocation, Profile> = emptyMap()
 
@@ -81,8 +111,7 @@ object VehicleAudioProfiles : SimplePreparableReloadListener<Map<ResourceLocatio
             if (id.path.startsWith("shared/")) continue
             val merged = flatten(id, raw, 0) ?: continue
             try {
-                resolved[id] = Profile(id, engine(merged.getAsJsonObject("engine")),
-                    tracks(merged.getAsJsonObject("tracks")), turret(merged.getAsJsonObject("turret")))
+                resolved[id] = parse(id, merged)
             } catch (e: Exception) {
                 LOGGER.warn("Vehicle audio profile {} is invalid: {}", id, e.toString())
             }
@@ -91,6 +120,15 @@ object VehicleAudioProfiles : SimplePreparableReloadListener<Map<ResourceLocatio
         VehicleAudioController.clear()
         LOGGER.info("Loaded {} authored vehicle audio profiles", resolved.size)
     }
+
+    /** A flattened profile JSON -> [Profile] (public for the profile checks in the tests). */
+    @JvmStatic
+    fun parse(id: ResourceLocation, merged: JsonObject): Profile = Profile(id,
+        engine(merged.obj("engine")), tracks(merged.obj("tracks")), turret(merged.obj("turret")),
+        layer(merged.obj("boost"), 256f, 0.75f, 0f), layer(merged.obj("distant"), 1024f, 0f, 96f),
+        layer(merged.obj("rotor"), 320f, 0f, 0f), layer(merged.obj("interior"), 16f, 0f, 0f))
+
+    private fun JsonObject.obj(key: String): JsonObject? = get(key)?.takeIf { it.isJsonObject }?.asJsonObject
 
     private fun flatten(id: ResourceLocation, raw: Map<ResourceLocation, JsonObject>, depth: Int): JsonObject? {
         val own = raw[id] ?: return null
@@ -130,7 +168,15 @@ object VehicleAudioProfiles : SimplePreparableReloadListener<Map<ResourceLocatio
         return Engine(o.sound("start"), idle, drive, o.sound("stop"), o.float("startSeconds", 1.5f).coerceIn(0f, 30f),
             o.float("range", 96f).coerceIn(8f, 1024f), o.float("volume", 1f).coerceIn(0f, 2f),
             o.float("interiorVolume", 0.8f).coerceIn(0f, 2f), o.pair("idlePitch", 1f, 1.1f),
-            o.pair("drivePitch", 0.9f, 1.3f), o.pair("driveVolume", 0.15f, 1f))
+            o.pair("drivePitch", 0.9f, 1.3f), o.pair("driveVolume", 0.15f, 1f), o.pair("idleVolume", 1f, 1f),
+            o.float("spoolUp", 0f).coerceIn(0f, 30f), o.float("spoolDown", 0f).coerceIn(0f, 30f))
+    }
+
+    private fun layer(o: JsonObject?, range: Float, from: Float, near: Float): Layer? {
+        o ?: return null
+        val loop = o.sound("loop") ?: return null
+        return Layer(loop, o.float("range", range).coerceIn(4f, 2048f), o.pair("volume", 1f, 1f),
+            o.pair("pitch", 1f, 1f), o.float("from", from).coerceIn(0f, 1f), o.float("near", near).coerceIn(0f, 1024f))
     }
 
     private fun tracks(o: JsonObject?): Tracks? {

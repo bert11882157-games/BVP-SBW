@@ -1,0 +1,42 @@
+{
+  "engine": {
+    "range": 320,
+    "volume": 1.0,
+    "interiorVolume": 0.55,
+    "idlePitch": [
+      0.6,
+      1.12
+    ],
+    "idleVolume": [
+      0.55,
+      1.0
+    ],
+    "spoolUp": 1.2,
+    "spoolDown": 1.0,
+    "start": "bvp_audio:air/il2_start",
+    "idle": "bvp_audio:air/il2_idle",
+    "startSeconds": 5.0,
+    "drivePitch": [
+      1.0,
+      1.0
+    ],
+    "driveVolume": [
+      0.0,
+      0.0
+    ],
+    "stop": "bvp_audio:air/il2_stop"
+  },
+  "distant": {
+    "range": 900,
+    "near": 90,
+    "volume": [
+      0.5,
+      1.0
+    ],
+    "pitch": [
+      0.8,
+      1.08
+    ],
+    "loop": "bvp_audio:air/layer/prop_far3"
+  }
+}

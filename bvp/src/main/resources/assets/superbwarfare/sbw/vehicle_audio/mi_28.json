@@ -1,0 +1,65 @@
+{
+  "engine": {
+    "range": 256,
+    "volume": 1.0,
+    "interiorVolume": 0.45,
+    "idlePitch": [
+      0.93,
+      1.04
+    ],
+    "idleVolume": [
+      0.8,
+      1.0
+    ],
+    "spoolUp": 1.5,
+    "spoolDown": 1.5,
+    "start": "bvp_audio:air/havoc_start",
+    "idle": "bvp_audio:air/havoc_idle",
+    "startSeconds": 12.0,
+    "drivePitch": [
+      1.0,
+      1.0
+    ],
+    "driveVolume": [
+      0.0,
+      0.0
+    ],
+    "stop": "bvp_audio:air/havoc_stop"
+  },
+  "distant": {
+    "range": 1100,
+    "near": 120,
+    "volume": [
+      0.8,
+      1.0
+    ],
+    "pitch": [
+      0.96,
+      1.03
+    ],
+    "loop": "bvp_audio:air/layer/huey_far"
+  },
+  "rotor": {
+    "range": 512,
+    "volume": [
+      0.75,
+      1.0
+    ],
+    "pitch": [
+      0.97,
+      1.03
+    ],
+    "loop": "bvp_audio:air/layer/havoc_rotor"
+  },
+  "interior": {
+    "volume": [
+      0.55,
+      0.65
+    ],
+    "pitch": [
+      0.98,
+      1.02
+    ],
+    "loop": "bvp_audio:air/layer/apache_cockpit"
+  }
+}

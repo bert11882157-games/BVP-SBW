@@ -1,0 +1,65 @@
+{
+  "engine": {
+    "range": 256,
+    "volume": 1.0,
+    "interiorVolume": 0.45,
+    "idlePitch": [
+      0.949,
+      1.061
+    ],
+    "idleVolume": [
+      0.8,
+      1.0
+    ],
+    "spoolUp": 1.5,
+    "spoolDown": 1.5,
+    "start": "bvp_audio:air/littlebird_start",
+    "idle": "bvp_audio:air/littlebird_idle",
+    "startSeconds": 12.0,
+    "drivePitch": [
+      1.0,
+      1.0
+    ],
+    "driveVolume": [
+      0.0,
+      0.0
+    ],
+    "stop": "bvp_audio:air/littlebird_stop"
+  },
+  "distant": {
+    "range": 1100,
+    "near": 120,
+    "volume": [
+      0.8,
+      1.0
+    ],
+    "pitch": [
+      0.979,
+      1.051
+    ],
+    "loop": "bvp_audio:air/layer/kiowa_far"
+  },
+  "rotor": {
+    "range": 512,
+    "volume": [
+      0.75,
+      1.0
+    ],
+    "pitch": [
+      0.989,
+      1.051
+    ],
+    "loop": "bvp_audio:air/layer/littlebird_rotor"
+  },
+  "interior": {
+    "volume": [
+      0.55,
+      0.65
+    ],
+    "pitch": [
+      0.98,
+      1.02
+    ],
+    "loop": "bvp_audio:air/layer/kiowa_cockpit"
+  }
+}
