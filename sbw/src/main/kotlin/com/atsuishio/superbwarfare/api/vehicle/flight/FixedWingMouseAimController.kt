@@ -247,8 +247,11 @@ class FixedWingMouseAimController(
         // meaningful after climbing, banking through knife-edge or aiming behind the nose.
         val desiredLiftUp = if (radial > 1.0e-6) (intent.directionY - z * fy) / radial else 0.0
         val bank = abs(atan2(ry, uy) * DEGREES)
+        // A target behind the nose or a turn already past 60 degrees of bank may roll through on its own. A steep
+        // nose (|fy| > 0.5) alone qualifies only on the pilot's request: pushing further down in a dive used to
+        // roll the aircraft inverted by itself, making the dive unrecoverable.
         val spatialLowerTurn = angularErrorDegrees > 25.0 && desiredLiftUp < -0.15 &&
-            (z < -0.1 || bank > 60.0 || abs(fy) > 0.5)
+            (z < -0.1 || bank > 60.0 || (abs(fy) > 0.5 && intent.inversionRequested))
         // Once a useful lower turn is underway, a changing screen projection must not
         // replace it with gravity-level capture mid-manoeuvre. New horizontal/up targets
         // still revoke it; reaching the held destination uses the normal capture cone.
@@ -602,8 +605,11 @@ class FixedWingMouseAimController(
             // Aileron sensitivity: a little lower overall, and noticeably lower the further below the nose the
             // steering indicator sits, so a pitch-down command no longer throws the aircraft into a hard roll.
             // A deliberate inversion request keeps full authority.
-            val belowNose = smoothUnit(-pitchErrorDegrees / 25.0)
-            val aileronSensitivity = if (intent.inversionRequested) 1.0 else 0.85 * (1.0 - 0.45 * belowNose)
+            // The cut applies to indicators mostly straight below the nose (a pitch-down push), not to deliberate
+            // sideways turns that happen to sit a little low.
+            val belowNose = smoothUnit(-pitchErrorDegrees / 25.0) *
+                abs(pitchErrorDegrees) / max(1.0e-6, abs(pitchErrorDegrees) + abs(yawErrorDegrees))
+            val aileronSensitivity = if (intent.inversionRequested) 1.0 else 0.85 * (1.0 - 0.75 * belowNose)
             val rollDemand = (autoRoll * rollResponseGain * aileronSensitivity).coerceIn(-travelLimit, travelLimit)
             aileronCommand = handover(aileronCommand, mouseRollResponse(rollDemand), rollHandover)
             if (rollHandover > 0) rollHandover--

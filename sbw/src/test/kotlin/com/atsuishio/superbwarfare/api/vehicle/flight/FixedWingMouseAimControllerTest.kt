@@ -769,6 +769,34 @@ class FixedWingMouseAimControllerTest {
         }
     }
 
+    @Test fun pushingDownInADiveDoesNotRollOverWithoutARequest() {
+        // Gameplay (r51): moving the indicator down to steepen a dive rolled the jet inverted, and the dive
+        // could not be recovered. Without the deliberate roll-over request a push must stay a push.
+        for (dive in listOf(0.0, 35.0, 60.0)) for (side in listOf(-3.0, 0.0, 3.0)) {
+            val m = FixedWingFlightModel(h); m.reset(0.0, 10.0, 0.0)
+            val noseDown = if (forward(m)[1] < 0.0) 1.0 else -1.0
+            m.reset(0.0, noseDown * dive, 0.0)
+            val c = FixedWingMouseAimController(h)
+            val f = forward(m); val u = up(m)
+            val r = doubleArrayOf(u[1] * f[2] - u[2] * f[1], u[2] * f[0] - u[0] * f[2], u[0] * f[1] - u[1] * f[0])
+            val down = 30.0 * rad; val lateral = side * rad
+            val d = DoubleArray(3) { f[it] * cos(down) - u[it] * sin(down) + r[it] * sin(lateral) }
+            val n = sqrt(d.sumOf { it * it })
+            val target = requireNotNull(FixedWingPilotIntent.normalized(d[0] / n, d[1] / n, d[2] / n, 0,
+                (side / 30.0).toFloat(), true, inversionRequested = false))
+            var vx = f[0] * 60.0; var vy = f[1] * 60.0; var vz = f[2] * 60.0
+            // Body roll rate, not Euler bank: a push toward the vertical makes the Euler bank meaningless.
+            var peakRollRate = 0.0
+            repeat(60) { tick ->
+                step(m, c, target, tick.toLong(), vx, vy, vz, throttle = 1.0, engine = 1.0)
+                vx = m.velocityX; vy = m.velocityY; vz = m.velocityZ
+                peakRollRate = max(peakRollRate, abs(m.rollRateDegreesPerSecond))
+            }
+            assertTrue(peakRollRate < 20.0, "push-down rolled: dive=$dive side=$side peakRollRate=$peakRollRate")
+            assertTrue(forward(m)[1] < f[1] - 0.05, "push-down did not lower the nose: dive=$dive side=$side")
+        }
+    }
+
     @Test fun alreadyInvertedAircraftKeepsUsefulPositivePitchBeforeLeveling() {
         for (bank in listOf(-180.0, -150.0, 150.0, 180.0)) {
             val m = FixedWingFlightModel(h); m.reset(0.0, 0.0, bank)

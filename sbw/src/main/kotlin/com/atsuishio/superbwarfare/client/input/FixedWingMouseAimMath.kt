@@ -369,9 +369,11 @@ class FixedWingMouseAimState {
     }
 
     private companion object {
-        const val DELIBERATE_DOWN = 0.08
-        const val LOWER_ACQUIRE = 0.20
-        const val LOWER_CLEAR = 0.10
+        // A roll-over lower turn needs the indicator pushed well down (60% of the way to the edge) by a
+        // deliberate downward movement; ordinary pitch-down travel above that stays a plain push, no roll.
+        const val DELIBERATE_DOWN = 0.25
+        const val LOWER_ACQUIRE = 0.60
+        const val LOWER_CLEAR = 0.35
         const val CAPTURE_ALIGNMENT = 0.9998476951563913 // cos(1 degree)
         const val CAPTURE_IDLE_NANOS = 100_000_000L
     }
