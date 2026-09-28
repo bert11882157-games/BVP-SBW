@@ -120,6 +120,12 @@
     },
     "superbwarfare:guided_target_v1": {
       "Mode": "TOP_ATTACK"
+    },
+    "superbwarfare:missile_roll_v1": {
+      "Schema": 1,
+      "RollHz": 8.0,
+      "RollAccelerationHzPerSecond": 16.0,
+      "Direction": "CLOCKWISE"
     }
   },
   "Collision": {

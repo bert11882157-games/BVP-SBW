@@ -99,6 +99,12 @@
         "Explosion": "large",
         "WaterExplosion": "same"
       }
+    },
+    "superbwarfare:missile_roll_v1": {
+      "Schema": 1,
+      "RollHz": 7.5,
+      "RollAccelerationHzPerSecond": 15.0,
+      "Direction": "CLOCKWISE"
     }
   }
 }

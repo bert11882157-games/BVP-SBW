@@ -128,6 +128,12 @@
       "Texture": "berts_vehicle_pack:textures/entity/bmp_1am.png",
       "ForwardYaw": 0,
       "SpinDegreesPerTick": 36.0
+    },
+    "superbwarfare:missile_roll_v1": {
+      "Schema": 1,
+      "RollHz": 8.5,
+      "RollAccelerationHzPerSecond": 17.0,
+      "Direction": "CLOCKWISE"
     }
   }
 }

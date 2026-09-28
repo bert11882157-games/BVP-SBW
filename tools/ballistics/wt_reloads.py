@@ -103,8 +103,9 @@ def classify(vid, weapon, v, name):
 # Weapons left alone: internal autoloading launchers, recoilless rifles, rocket pods (see docs/RELOADS.md).
 SKIP = {('9p149_shturm', 'Missile'), ('toyota_jihad_s5', 'S5RocketPod'), ('spg9_tripod', 'Cannon'),
         ('toyota_jihad_spg9', 'RecoillessGun'), ('uaz_469_spg9', 'RecoillessGun')}
-# The 9P149's launcher is reloaded from inside by its autoloader: WT 8.33 s between missiles.
-EXTRA_RPM = {('9p149_shturm', 'Missile'): 7.2, ('zu23_2', 'Cannon'): 1600}
+# The 9P149's launcher is reloaded from inside by its autoloader: WT 8.33 s between missiles (RPM is an integer:
+# 7 rounds/min = 8.6 s).
+EXTRA_RPM = {('9p149_shturm', 'Missile'): 7, ('zu23_2', 'Cannon'): 1600}
 # Marder 1A1/1A2 Rh202 had no magazine (fed straight from the hold, never reloading): a 200-round box like the 1A5.
 MAGAZINE = {('marder_1a1', 'Cannon'): 200, ('marder_1a2', 'Cannon'): 200}
 

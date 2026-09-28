@@ -127,6 +127,12 @@
       "Texture": "berts_vehicle_pack:textures/atgm/tow.png",
       "ForwardYaw": 0,
       "SpinDegreesPerTick": 0.0
+    },
+    "superbwarfare:missile_roll_v1": {
+      "Schema": 1,
+      "RollHz": 0.0,
+      "RollAccelerationHzPerSecond": 0.0,
+      "Direction": "CLOCKWISE"
     }
   }
 }

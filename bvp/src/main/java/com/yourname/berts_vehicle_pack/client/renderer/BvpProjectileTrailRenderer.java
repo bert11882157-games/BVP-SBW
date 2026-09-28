@@ -218,6 +218,14 @@ public final class BvpProjectileTrailRenderer {
         return 0.96875D + 2.0D * (seconds - 0.75D);
     }
 
+    /** The fallback swirl's rate (Hz) [seconds] after launch: the derivative of [spinTurns]. */
+    static double spinRate(double seconds) {
+        if (!(seconds > 0.0D)) return 0.0D;
+        if (seconds <= 0.25D) return 5.0D * seconds;
+        if (seconds <= 0.75D) return 1.25D + 1.5D * (seconds - 0.25D);
+        return 2.0D;
+    }
+
     private static OrbitFrame orbitFrame(Entity entity, double travelX, double travelY, double travelZ) {
         Vec3 forward = travelX * travelX + travelY * travelY + travelZ * travelZ > MIN_FLIGHT_DIRECTION_SQR
                 ? new Vec3(travelX, travelY, travelZ) : entity.m_20184_();
@@ -278,14 +286,21 @@ public final class BvpProjectileTrailRenderer {
             if (!thrust) continue;
             // Four spinning thruster flames. The frame's "right" is the left of someone watching from behind the
             // missile, so a falling angle turns counterclockwise as seen from the launcher.
-            double spin = -2.0D * Math.PI * spinTurns((missile.f_19797_ - 1 + t) / 20.0D);
-            double orbitRadius = exhaustRadius * 0.42 * thrusterScale;
+            // The missile's own roll (SBW MissileRoll; + counterclockwise from behind) when it declares one. The four
+            // plumes reach out and grow with the roll: 25% at launch, 150% at full roll rate.
+            double age = (missile.f_19797_ - 1 + t) / 20.0D;
+            double[] roll = com.atsuishio.superbwarfare.api.effect.MissileRoll.state(missile, age);
+            double turns = roll != null ? roll[0] : spinTurns(age);
+            double plume = com.atsuishio.superbwarfare.api.effect.MissileRoll.plumeScale(
+                    roll != null ? roll[1] : Math.min(1.0D, spinRate(age) / 2.0D));
+            double spin = -2.0D * Math.PI * turns;
+            double orbitRadius = exhaustRadius * 0.42 * thrusterScale * plume;
             for (int satellite = 0; satellite < 4; satellite++) {
                 double angle = spin + satellite * Math.PI / 2;
                 Vec3 offset = frame.right().m_82490_(Math.cos(angle) * orbitRadius)
                         .m_82549_(frame.up().m_82490_(Math.sin(angle) * orbitRadius));
                 BvpClientParticles.spawnMissileExhaust(true, center.m_82549_(offset),
-                        (float) (exhaustRadius * 1.0 * thrusterScale));
+                        (float) (exhaustRadius * 1.0 * thrusterScale * plume));
             }
         }
         BvpTrailDiagnostics.recordBvpTrailSpawn(missile, definition, kind,

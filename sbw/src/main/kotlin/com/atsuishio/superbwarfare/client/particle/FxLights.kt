@@ -43,8 +43,35 @@ object FxLights {
     private const val MAX_POOL_QUADS = 6000
     private const val MAX_POOL_RADIUS = 24
     private const val MAX_RADIUS = 48.0
-    /** Column tops that block effect light: leaves do not (a canopy used to hang glowing wall quads in the air). */
-    private val SURFACE = Heightmap.Types.MOTION_BLOCKING_NO_LEAVES
+    /**
+     * Column tops: MOTION_BLOCKING, the heightmap the server sends to clients (MOTION_BLOCKING_NO_LEAVES is not sent;
+     * on a client it is an unprimed, partly updated map, which cut whole strips out of the glow in r50). Leaves are
+     * stepped through by [top] where they matter.
+     */
+    private val SURFACE = Heightmap.Types.MOTION_BLOCKING
+    private val probe = net.minecraft.core.BlockPos.MutableBlockPos()
+
+    /**
+     * The first free y above column (x, z) for effect light: the heightmap top, but a leaf canopy above [aboveY] is
+     * looked through (at most 16 leaf blocks), so a tree does not hang glowing walls in the air or roof the light.
+     */
+    private fun top(world: net.minecraft.world.level.Level, x: Int, z: Int, aboveY: Int): Int {
+        var top = world.getHeight(SURFACE, x, z)
+        if (top <= aboveY) return top
+        var steps = 0
+        while (steps++ < 16 && world.getBlockState(probe.set(x, top - 1, z))
+                .`is`(net.minecraft.tags.BlockTags.LEAVES)) {
+            top--
+            while (steps++ < 32 && top > aboveY && world.getBlockState(probe.set(x, top - 1, z)).isAir) top--
+        }
+        return top
+    }
+
+    /** Whether the block topping column (x, z) is a full cube (fences, panes, walls, slabs take no glow of their own). */
+    private fun fullTop(world: net.minecraft.world.level.Level, x: Int, top: Int, z: Int): Boolean {
+        val state = world.getBlockState(probe.set(x, top - 1, z))
+        return state.isSolidRender(world, probe)
+    }
 
     private class Light {
         var key = 0L
@@ -235,7 +262,7 @@ object FxLights {
                     System.arraycopy(twin.faces, 0, l.faces, 0, twin.faceCount * 15)
                 } else {
                     if (builds >= MAX_INTERIOR_BUILDS) continue   // next frame; bounds the one-off scan cost
-                    l.covered = world.getHeight(SURFACE, lbx, lbz) > lby + 1
+                    l.covered = top(world, lbx, lbz, lby + 1) > lby + 1
                     if (l.covered) { buildInterior(world, l, lbx, lby, lbz); builds++ } else l.faceCount = 0
                 }
                 l.faceKey = key
@@ -270,12 +297,15 @@ object FxLights {
             val gh = bz1 - bz0 + 3
             if (heights.size < gw * gh) heights = IntArray(gw * gh)
             for (gx in 0 until gw) for (gz in 0 until gh)
-                heights[gx * gh + gz] = world.getHeight(SURFACE, bx0 - 1 + gx, bz0 - 1 + gz)
+                heights[gx * gh + gz] = top(world, bx0 - 1 + gx, bz0 - 1 + gz, lby + 1)
             buildHorizon(l, r, bx0, bz0, gw, gh)
             for (bx in bx0..bx1) for (bz in bz0..bz1) {
                 if (quads >= MAX_POOL_QUADS) break
                 val topI = heights[(bx - bx0 + 1) * gh + (bz - bz0 + 1)]
                 val top = topI.toDouble()
+                // A thin top block (fence, pane, wall, slab) keeps its place in the horizon but takes no glow: full-width
+                // quads on it read as a glowing box round the fence or window.
+                if (topI - l.y < r + 1 && l.y - topI < r + 1 && !fullTop(world, bx, topI, bz)) continue
                 // Side faces: where a neighbouring column is lower, this column shows a vertical face; light it when it
                 // faces the light (block steps, walls, the sides of a crater rim).
                 for (d in 0 until 4) {

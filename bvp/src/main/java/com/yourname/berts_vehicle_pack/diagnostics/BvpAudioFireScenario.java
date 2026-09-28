@@ -50,6 +50,22 @@ public final class BvpAudioFireScenario {
                             context.getSource().sendSuccess(() -> Component.literal("audio fire: " + count), false);
                             return count;
                         }))));
+        // /bvp_fire_as <player> <weapon>: the rider fires the named weapon of the vehicle it rides (owned shot, as in play)
+        event.getDispatcher().register(Commands.literal("bvp_fire_as")
+                .requires(source -> source.hasPermission(2))
+                .then(Commands.argument("player", EntityArgument.player())
+                        .then(Commands.argument("weapon", StringArgumentType.word()).executes(context -> {
+                            var player = EntityArgument.getPlayer(context, "player");
+                            String weapon = StringArgumentType.getString(context, "weapon");
+                            if (!(player.getVehicle() instanceof VehicleEntity vehicle) || vehicle.getGunData(weapon) == null) return 0;
+                            vehicle.modifyGunData(weapon, data -> {
+                                data.resetStatus();
+                                data.ammo.set(Math.max(1, data.ammo.get()));
+                            });
+                            var result = vehicle.vehicleShootResult(player, weapon);
+                            LOGGER.info("[BVP audio] fire_as {} {}: {}", vehicle.getType(), weapon, result);
+                            return result.isAccepted() ? 1 : 0;
+                        }))));
         // /bvp_ammo <vehicles> <weapon> <rounds>: sets a weapon's loaded rounds (ammo-bone visibility checks)
         event.getDispatcher().register(Commands.literal("bvp_ammo")
                 .requires(source -> source.hasPermission(2))

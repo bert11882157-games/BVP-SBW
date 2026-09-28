@@ -133,7 +133,13 @@ public class BvpSpinningProjectileRenderer<T extends Entity> extends EntityRende
             poseStack.m_252781_(Axis.f_252529_.m_252977_((float) -VehicleVecUtils.getXRotFromVector(look) + 180.0F));
             float spin = authored == null ? spinDegreesPerTick : authored.spin;
             float forwardYaw = authored == null ? modelForwardYawDegrees : authored.yaw;
-            poseStack.m_252781_(Axis.f_252403_.m_252977_((entity.f_19797_ + partialTicks) * spin));
+            // A missile with a declared roll (SBW MissileRoll: real rate and spin-up, capped at 6 Hz) turns on that
+            // curve, the same one its orbiting exhaust plumes follow; + is counterclockwise seen from behind.
+            var roll = com.atsuishio.superbwarfare.api.effect.MissileRoll.of(entity);
+            float rollDegrees = roll != null
+                    ? (float) (360.0D * roll.turns((entity.f_19797_ + partialTicks) / 20.0D))
+                    : (entity.f_19797_ + partialTicks) * spin;
+            poseStack.m_252781_(Axis.f_252403_.m_252977_(rollDegrees));
             if (forwardYaw != 0.0F) {
                 poseStack.m_252781_(Axis.f_252436_.m_252977_(forwardYaw));
             }
