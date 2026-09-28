@@ -44,6 +44,29 @@ class AircraftStoreCatalogTest {
         assertTrue(failures.isEmpty(), failures.joinToString("\n"))
     }
 
+    @Test fun `every offered rocket or gun pod has a native weapon to fire`() {
+        assumeTrue(File(root, "aircraft_stores").isDirectory, "pack data not beside this project")
+        val pods = File(root, "aircraft_stores").walkTopDown().filter { it.isFile && it.extension == "json" }
+            .filter { json(it)["Category"]?.asString in setOf("ROCKET_POD", "GUN_POD") }
+            .map { "berts_vehicle_pack:" + it.relativeTo(File(root, "aircraft_stores")).path.removeSuffix(".json").replace('\\', '/') }
+            .toSet()
+        val silent = mutableListOf<String>()
+        for (file in File(root, "aircraft_armaments").listFiles().orEmpty().filter { it.extension == "json" }) {
+            val arm = json(file)
+            for (key in listOf("Pairs", "Singles")) arm.getAsJsonArray(key)?.forEach { element ->
+                val pair = element.asJsonObject
+                pair.getAsJsonArray("AllowedStores")?.map { it.asString }?.filter { it in pods }?.forEach { id ->
+                    // AircraftArmamentManager.nativeWeapons: the station's mapping for this store, else its WeaponId
+                    val mapped = pair.getAsJsonObject("NativeWeaponIds")?.get(id)
+                    val fires = mapped != null && (!mapped.isJsonArray || mapped.asJsonArray.size() > 0) ||
+                        mapped == null && pair.has("WeaponId")
+                    if (!fires) silent += "${file.nameWithoutExtension}/${pair["Id"].asString}: $id"
+                }
+            }
+        }
+        assertTrue(silent.isEmpty(), "pods offered where nothing fires them:\n" + silent.joinToString("\n"))
+    }
+
     @Test fun `television weapons are command guided TV stores`() {
         assumeTrue(File(root, "aircraft_stores").isDirectory, "pack data not beside this project")
         for (path in listOf("fa18e/agm65", "kh25mt", "munition/kd88")) {

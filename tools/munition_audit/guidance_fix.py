@@ -15,6 +15,7 @@ Launch-gun and projectile profiles for the new SBW missiles are cloned from the 
 nothing; --check exits 1 when a file would change.
 """
 import copy
+import glob
 import json
 import os
 import sys
@@ -94,6 +95,53 @@ def offer_plan(out):
             out[path] = json.dumps(arm, indent=indent, ensure_ascii=False) + ('\n' if raw.endswith('\n') else '')
 
 
+def pod_channels(pair, store_id):
+    """The native weapons a pod on this station fires (AircraftArmamentManager.nativeWeapons)."""
+    mapped = (pair.get('NativeWeaponIds') or {}).get(store_id)
+    if isinstance(mapped, list):
+        return mapped
+    return [mapped] if mapped else ([pair['WeaponId']] if pair.get('WeaponId') else [])
+
+
+def pod_plan(out):
+    """Rocket and gun pods only where the station has a native weapon to fire them (war recheck 2026-09-28:
+    an S-8/B-8 or GSh-23 pod offered on a station without one could be fitted but never fired)."""
+    stores = {}
+    for f in glob.glob(os.path.join(SBW, 'aircraft_stores', '**', '*.json'), recursive=True):
+        rel = os.path.relpath(f, os.path.join(SBW, 'aircraft_stores'))[:-5].replace(os.sep, '/')
+        stores[f'{NS}:{rel}'] = json.loads(load(f)).get('Category')
+    for path in sorted(glob.glob(os.path.join(SBW, 'aircraft_armaments', '*.json'))):
+        raw = out.get(path) or load(path)
+        arm = json.loads(raw)
+        touched = False
+        for pair in arm.get('Pairs', []) + arm.get('Singles', []):
+            allowed = pair.get('AllowedStores', [])
+            kept = [x for x in allowed
+                    if stores.get(x) not in ('ROCKET_POD', 'GUN_POD') or pod_channels(pair, x)]
+            if kept != allowed and kept:          # never leave a station with nothing to carry
+                pair['AllowedStores'] = kept
+                touched = True
+                # pylon station placement lists may only name stores the mount allows
+                dropped = set(allowed) - set(kept)
+                # (a station that only placed a dropped store goes with it; paired lists drop the same entries)
+                for key in ('Stations', 'LeftStations', 'RightStations'):
+                    if key not in pair:
+                        continue
+                    stations = []
+                    for station in pair[key]:
+                        if 'Stores' in station:
+                            station['Stores'] = [x for x in station['Stores'] if x not in dropped]
+                            if not station['Stores']:
+                                continue
+                        if 'ExceptStores' in station:
+                            station['ExceptStores'] = [x for x in station['ExceptStores'] if x not in dropped]
+                        stations.append(station)
+                    pair[key] = stations
+        if touched:
+            indent = 1 if raw.startswith('{\n ') and not raw.startswith('{\n  ') else 2
+            out[path] = json.dumps(arm, indent=indent, ensure_ascii=False) + ('\n' if raw.endswith('\n') else '')
+
+
 def load(path):
     with open(path) as f:
         return f.read()
@@ -138,6 +186,7 @@ def plan():
         out[path] = dump(store)
     armament_plan(out)
     offer_plan(out)
+    pod_plan(out)
     return out
 
 
