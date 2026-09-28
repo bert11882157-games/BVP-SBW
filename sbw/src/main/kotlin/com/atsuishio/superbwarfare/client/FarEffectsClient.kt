@@ -92,7 +92,7 @@ object FarEffectsClient {
         if (!outsideNative(x, z)) return false
         if (particles.size < 2048) {
             val origin = Minecraft.getInstance().gameRenderer.mainCamera.position
-            if (particle in retainedParticles || FarTerrainPolicy.inside(origin.x, origin.z, x, z, FarTerrainClient.renderRadius()))
+            if (FarTerrainPolicy.inside(origin.x, origin.z, x, z, FarTerrainClient.renderRadius()) || particle in retainedParticles)
                 particles.add(particle)
         }
         return true
@@ -115,7 +115,8 @@ object FarEffectsClient {
             if (!it.isAlive) return@removeIf true
             val box = it.boundingBox
             val x = centerX(box); val z = centerZ(box)
-            !outsideNative(x, z) || (it !in retainedParticles && !FarTerrainPolicy.inside(origin.x, origin.z, x, z, radius))
+            // Geometry first: the identity-set lookup only for particles outside the far radius.
+            !outsideNative(x, z) || (!FarTerrainPolicy.inside(origin.x, origin.z, x, z, radius) && it !in retainedParticles)
         }
         var projectiles: MutableList<Entity>? = null
         for (entity in level.entitiesForRendering()) {

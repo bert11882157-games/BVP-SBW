@@ -12,7 +12,8 @@ internal class PhysicalBoundsIndex<T : Any> {
         val owner = WeakReference(owner)
     }
     private val entries = WeakHashMap<T, Entry<T>>()
-    private val sections = HashMap<Long, MutableSet<Entry<T>>>()
+    // Primitive long keys: query probes one cell per section of every Level.getEntities box.
+    private val sections = it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap<MutableSet<Entry<T>>>()
     private val oversized = HashSet<Entry<T>>()
 
     fun update(owner: T, bounds: AABB) {
@@ -26,16 +27,20 @@ internal class PhysicalBoundsIndex<T : Any> {
         val entry = Entry(owner, bounds, cells)
         entries[owner] = entry
         if (cells == null) oversized.add(entry)
-        else for (cell in cells) sections.getOrPut(cell) { HashSet() }.add(entry)
+        else for (cell in cells) {
+            val key: Long = cell
+            (sections.get(key) ?: HashSet<Entry<T>>().also { sections.put(key, it) }).add(entry)
+        }
     }
 
     fun remove(owner: T) {
         val entry = entries.remove(owner) ?: return
         if (entry.cells == null) oversized.remove(entry)
         else for (cell in entry.cells) {
-            sections[cell]?.let { occupants ->
+            val key: Long = cell
+            sections.get(key)?.let { occupants ->
                 occupants.remove(entry)
-                if (occupants.isEmpty()) sections.remove(cell)
+                if (occupants.isEmpty()) sections.remove(key)
             }
         }
     }
@@ -64,7 +69,7 @@ internal class PhysicalBoundsIndex<T : Any> {
         } else {
             for (entry in oversized) offer(entry)
             for (x in minX..maxX) for (y in minY..maxY) for (z in minZ..maxZ)
-                sections[SectionPos.asLong(x, y, z)]?.let { cell -> for (entry in cell) offer(entry) }
+                sections.get(SectionPos.asLong(x, y, z))?.let { cell -> for (entry in cell) offer(entry) }
         }
         return out ?: emptyList()
     }

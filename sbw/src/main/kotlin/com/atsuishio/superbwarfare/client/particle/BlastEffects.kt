@@ -304,8 +304,12 @@ object BlastEffects {
             private set
         /** Fire and smoke sprites: their puff body ends well inside the square, so their quads are drawn larger. */
         var puffs: Set<TextureAtlasSprite> = emptySet()
+            set(value) { field = value; lastSprite = null }
+        // Consecutive quads mostly share a sprite: remember the last membership answer instead of asking the set per quad.
+        private var lastSprite: TextureAtlasSprite? = null
+        private var lastPuff = false
 
-        fun clear() { size = 0 }
+        fun clear() { size = 0; lastSprite = null }
 
         /** [r],[g],[b] are the emitted/lit colour, [cover] the opacity (0 = pure glow). */
         fun add(x: Double, y: Double, z: Double, half: Double, roll: Double, r: Double, g: Double, b: Double,
@@ -315,7 +319,8 @@ object BlastEffects {
             if (r + g + b + a < 0.004) return
             val o = size * STRIDE
             data[o] = x; data[o + 1] = y; data[o + 2] = z; data[o + 4] = roll
-            data[o + 3] = if (sprite in puffs) half * BlastSprites.PUFF_FILL else half
+            if (sprite !== lastSprite) { lastSprite = sprite; lastPuff = sprite in puffs }
+            data[o + 3] = if (lastPuff) half * BlastSprites.PUFF_FILL else half
             data[o + 5] = max(0.0, r); data[o + 6] = max(0.0, g); data[o + 7] = max(0.0, b); data[o + 8] = a
             data[o + 9] = sprite.u0.toDouble(); data[o + 10] = sprite.u1.toDouble()
             data[o + 11] = sprite.v0.toDouble(); data[o + 12] = sprite.v1.toDouble()

@@ -43,11 +43,15 @@ class FarVehicleStore {
         private set
 
     fun values(): Collection<Entry> = entries.values
+    /** Changes whenever the entries do (for per-frame memos over them). */
+    var revision = 0L
+        private set
     fun contains(id: Int): Boolean = entries.containsKey(id)
     fun get(id: Int): Entry? = entries[id]
 
     fun clear() {
         entries.clear()
+        revision++
         pending = null
         session = null
         sequence = -1L
@@ -132,6 +136,7 @@ class FarVehicleStore {
         }
         entries.clear()
         entries.putAll(next)
+        revision++
         rangeBlocks = range
         sequence = frame
         pending = null

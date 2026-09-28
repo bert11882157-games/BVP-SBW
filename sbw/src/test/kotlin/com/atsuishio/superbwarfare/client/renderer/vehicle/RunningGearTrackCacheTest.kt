@@ -80,3 +80,24 @@ class RunningGearTrackCacheTest {
         }
     }
 }
+
+class RunningGearTrackSegmentTest {
+    @Test fun `proportional keyframe search finds the binary search's segment`() {
+        val random = java.util.Random(7)
+        val curves = mutableListOf<List<TrackPathKeyframe>>()
+        curves += (0..120).map { TrackPathKeyframe(it * 100F / 120, 0F) }                 // evenly spaced
+        curves += listOf(TrackPathKeyframe(0F, 0F), TrackPathKeyframe(100F, 1F))         // two keys
+        curves += (0..40).map { TrackPathKeyframe((it * it) * 100F / 1600, 0F) }         // bunched at the start
+        curves += (0..30).map { TrackPathKeyframe(if (it < 10) 0F else if (it > 25) 100F else it * 3.3F, 0F) } // repeats
+        repeat(20) {
+            var phase = 0F
+            curves += (0..random.nextInt(60) + 1).map { TrackPathKeyframe(phase.also { phase += random.nextFloat() * 5F }, 0F) }
+        }
+        val probes = listOf(-1F, 0F, 1E-7F, 0.5F, 33.3F, 49.99F, 50F, 99.999F, 100F, 101F, Float.NaN) +
+            (0 until 400).map { random.nextFloat() * 110F - 5F }
+        for (curve in curves) for (phase in probes + curve.map { it.phase }) {
+            assertEquals(RunningGearTrackEvaluator.binarySegment(curve, phase), RunningGearTrackEvaluator.segment(curve, phase),
+                "phase $phase over ${curve.size} keys")
+        }
+    }
+}

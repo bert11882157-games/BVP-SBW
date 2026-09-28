@@ -320,8 +320,24 @@ object RunningGearTrackEvaluator {
         return lerpAt(curve, segment(curve, wrapped), wrapped)
     }
 
-    /** Index of the first keyframe at or after the wrapped phase (at least 1). */
-    private fun segment(curve: List<TrackPathKeyframe>, wrapped: Float): Int {
+    /**
+     * Index of the first keyframe at or after the wrapped phase (at least 1; the last when none is). Keyframes are
+     * sorted and, in generated profiles, evenly spaced: start from the proportional guess and step to the exact
+     * index, which gives the binary search's answer in one or two probes instead of seven.
+     */
+    internal fun segment(curve: List<TrackPathKeyframe>, wrapped: Float): Int {
+        val last = curve.lastIndex
+        if (last < 1 || wrapped.isNaN()) return binarySegment(curve, wrapped)
+        val first = curve[0].phase
+        val span = curve[last].phase - first
+        if (!(span > 0F)) return binarySegment(curve, wrapped)
+        var index = kotlin.math.ceil((wrapped - first) / span * last).toInt().coerceIn(1, last)
+        while (index > 1 && wrapped <= curve[index - 1].phase) index--
+        while (index < last && wrapped > curve[index].phase) index++
+        return index
+    }
+
+    internal fun binarySegment(curve: List<TrackPathKeyframe>, wrapped: Float): Int {
         var low = 1
         var high = curve.lastIndex
         while (low < high) {

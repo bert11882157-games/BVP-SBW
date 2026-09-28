@@ -207,14 +207,30 @@ object FarTerrainClient : BlockAndTintGetter {
     @JvmStatic fun ready(): Boolean = enabled && gate.ready(ticks)
     @JvmStatic fun radius(): Int = if (enabled) radius else 0
     /** Projection follows retained vehicles; acquisition radius is not a visibility cutoff. */
+    // renderRadius is asked per distant particle per frame; its inputs (camera, far vehicle entries, radius) rarely
+    // change within a frame, so the last answer is reused while they are the same.
+    private var radiusMemo = Int.MIN_VALUE
+    private var radiusMemoX = Double.NaN
+    private var radiusMemoY = Double.NaN
+    private var radiusMemoZ = Double.NaN
+    private var radiusMemoRevision = -1L
+    private var radiusMemoBase = Int.MIN_VALUE
+    private var radiusMemoStore: Any? = null
+
     @JvmStatic fun renderRadius(): Int {
         if (!enabled) return 0
         val camera = Minecraft.getInstance().gameRenderer.mainCamera.position
-        val farthest = FarVehicleClient.store.values().maxOfOrNull {
+        val store = FarVehicleClient.store
+        if (radiusMemo != Int.MIN_VALUE && camera.x == radiusMemoX && camera.y == radiusMemoY && camera.z == radiusMemoZ &&
+            store === radiusMemoStore && store.revision == radiusMemoRevision && radius == radiusMemoBase) return radiusMemo
+        val farthest = store.values().maxOfOrNull {
             kotlin.math.sqrt(it.current.distanceSquared(camera.x, camera.y, camera.z)) + 64.0
         } ?: 0.0
-        return maxOf(radius, com.atsuishio.superbwarfare.api.vehicle.render.FarTerrainServer.PROJECTILE_VISIBILITY_RADIUS,
+        val result = maxOf(radius, com.atsuishio.superbwarfare.api.vehicle.render.FarTerrainServer.PROJECTILE_VISIBILITY_RADIUS,
             kotlin.math.ceil(farthest).toInt())
+        radiusMemo = result; radiusMemoX = camera.x; radiusMemoY = camera.y; radiusMemoZ = camera.z
+        radiusMemoRevision = store.revision; radiusMemoBase = radius; radiusMemoStore = store
+        return result
     }
     @JvmStatic fun chunks(): Collection<Terrain> = terrain.values
     @JvmStatic fun contains(key: Long): Boolean = key in terrain
