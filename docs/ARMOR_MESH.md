@@ -243,6 +243,42 @@ through `ArmorHitResolver`, `ArmorModuleResolver` and the angle rule. The report
 * a turret result that changes when the turret turns, other than a rotated shot now meeting hull armor or
   a track first, or a skin graze now resolving to the solid behind it.
 
+## Generated meshes (no spec)
+
+`tools/armor_mesh/auto_mesh.py` builds the same kind of file straight from the visual model, with no
+hand-written spec. It covers every armored ground vehicle except the ones with hand-authored box armor
+the owner keeps (BMP-1/2/2M, T-90A, all Abrams, T-72B, M48, M1128, T-62A, BTR-80A, BTR-60, the Toyotas,
+ZBD-09, Marder 1A2, CV9040C, M2 Bradley, BMPT) and the emplacements: `AUTO_TARGETS`, 40 vehicles.
+
+* **Structure.** Model bones go to the hull, turret or barrel frame by their parent chain. Running gear,
+  ERA, secondary mounts, rods (antennas, rails), specks, tubes and small roof fittings are left out. The
+  hull is built in lengthwise segments of about 32 px: a core between the running gear (pulled in to the
+  inner face of the tracks or wheels) and, where the hull is wider above the running gear, a sponson solid
+  from the track top up. The turret is the convex hull of the turret frame, the mantlet the barrel-frame
+  parts around the trunnion (no gun tube), and a collar closes any gap between the hull roof and the turret.
+* **Thickness.** Each face takes the millimetres of the vehicle's own box plate it lines
+  (`templates/<id>.armor.geo.json`), found by rays along the face normal (median over sample points;
+  plates facing the same way win). The face's mirror image is looked up too and both sides take the
+  thicker value, because some box profiles have a mislabelled plate on one side. Vehicles with no box
+  plates use the nominal per-aspect values in `DEFAULTS`. ERA, engines, ammo and modules stay on the boxes.
+* **Tracks** get no hitbox.
+
+```
+python3 tools/armor_mesh/auto_mesh.py --targets             # write all 40 into armor_mesh/
+python3 tools/armor_mesh/auto_mesh.py leo2a6 --report       # plate table and thickness sources only
+python3 tools/armor_mesh/auto_hitreg.py leo2a6 rays.jsonl   # ground-truth rays from the generator's own solids
+java ... ArmorMeshHitregHarness leo2a6 <armor.json> <mesh.geo.json> rays.jsonl out.csv <turretPos> <barrelPos> 0,90
+python3 tools/armor_mesh/auto_hitreg_report.py leo2a6 out.csv
+java ... ArmorMeshAutoCheck <armorDir> <meshDir> <id>...     # loads each file through the game's loader
+```
+
+The generated-mesh gates are looser on placement than the hand-built T-90A: every shot at armored
+structure must find a plate (≥ 99.5%), shots through the tracks must reach the hull behind (≥ 97%), the
+armor entry must lie within 8 px of the model surface for ≥ 80% of shots, and turret results must stay the
+same when the turret turns (≥ 95%). Convex solids bridge concave outlines, so a generated mesh sits a few
+px proud of the model in places (under a turret bustle, around stowage). To tighten a vehicle, give it a
+spec and use `build_mesh.py`.
+
 ## For developers
 
 * `ArmorVolume` is the geometry contract. `ArmorBoxVolume` is the unchanged box math. `ArmorMeshVolume` is
