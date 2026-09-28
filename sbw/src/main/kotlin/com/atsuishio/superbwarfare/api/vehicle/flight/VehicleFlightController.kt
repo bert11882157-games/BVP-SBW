@@ -41,7 +41,8 @@ class VehicleFlightController(private val vehicle: VehicleEntity) {
             com.atsuishio.superbwarfare.data.vehicle.subdata.VehicleType.AIRPLANE || vehicle.vehicleType ==
             com.atsuishio.superbwarfare.data.vehicle.subdata.VehicleType.HELICOPTER)
         transition(if (aircraftWreck || AircraftWreckBreakup.mask(vehicle) != 0) wreckStrategy else
-            com.atsuishio.superbwarfare.diagnostics.AamTestTargets.flightStrategy(vehicle) ?: strategy)
+            com.atsuishio.superbwarfare.diagnostics.AamTestTargets.flightStrategy(vehicle)
+                ?: com.atsuishio.superbwarfare.diagnostics.WarDiagnostics.flightStrategy(vehicle) ?: strategy)
         val selected = activeStrategy ?: return false
         strategyOwnsAttitudeThisTick = true
 

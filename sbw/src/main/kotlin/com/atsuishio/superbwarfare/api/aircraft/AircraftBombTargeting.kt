@@ -64,6 +64,12 @@ object AircraftBombTargeting {
         return true
     }
 
+    /** Diagnostics only (war harness): the next GPS release flies to [target]. */
+    @JvmStatic fun setDiagnosticGpsTarget(aircraft: VehicleEntity, target: BlockPos) {
+        check(java.lang.Boolean.getBoolean("bvp.diagnostics.scenarios"))
+        write(aircraft, listOf(target))
+    }
+
     /** Older terminals: a single waypoint goes into the first free slot (or replaces the first). */
     @JvmStatic fun setGpsTarget(player: ServerPlayer, aircraft: Entity, target: BlockPos): Boolean {
         val vehicle = aircraft as? VehicleEntity ?: return false

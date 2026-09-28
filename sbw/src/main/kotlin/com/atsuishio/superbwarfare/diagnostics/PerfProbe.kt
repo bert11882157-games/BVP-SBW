@@ -177,6 +177,7 @@ object PerfProbe {
             "gc" to linkedMapOf("collections" to gcCount() - active.gcCount0, "millis" to gcMillis() - active.gcMillis0),
             "heapUsedMB" to Runtime.getRuntime().let { (it.totalMemory() - it.freeMemory()) / 1048576.0 },
             "entitiesAtStart" to active.entities0, "entitiesAtEnd" to entityCounts(),
+            "entityTypesAtEnd" to entityTypes(),
             "levelRenderer" to runCatching { mc.levelRenderer.entityStatistics }.getOrNull(),
             "particles" to runCatching { mc.particleEngine.countParticles() }.getOrNull(),
             "hidden" to hidden,
@@ -244,6 +245,15 @@ object PerfProbe {
         if (bean.isThreadAllocatedMemorySupported && bean.isThreadAllocatedMemoryEnabled)
             bean.getThreadAllocatedBytes(Thread.currentThread().id) else -1L
     }.getOrDefault(-1L)
+
+    /** The 25 most numerous client entity types (what the client ticks and renders). */
+    private fun entityTypes(): Map<String, Int> {
+        val level = Minecraft.getInstance().level ?: return emptyMap()
+        val counts = HashMap<String, Int>()
+        for (entity in level.entitiesForRendering())
+            counts.merge(net.minecraftforge.registries.ForgeRegistries.ENTITY_TYPES.getKey(entity.type)?.toString() ?: "?", 1, Int::plus)
+        return counts.entries.sortedByDescending { it.value }.take(25).associate { it.key to it.value }
+    }
 
     private fun entityCounts(): Map<String, Int> {
         val level = Minecraft.getInstance().level ?: return emptyMap()
