@@ -34,7 +34,8 @@ object FarEffectsClient {
     fun retainParticle(particle: Particle) {
         if (particles.size < 2048 && retainedParticles.size < 2048) {
             retainedParticles.add(particle)
-            if (outsideNative(particle.boundingBox.center)) particles.add(particle)
+            val box = particle.boundingBox
+            if (outsideNative(centerX(box), centerZ(box))) particles.add(particle)
         }
     }
     private var lastDiagnostic = Long.MIN_VALUE
@@ -62,33 +63,38 @@ object FarEffectsClient {
                 "filename", filename, "projectiles", counts.first, "particles", counts.second, "result", it.string)
         }
     }
-    data class ParticleGroup(val bounds: AABB, val particles: List<Particle>)
-    data class Frame(val projectiles: List<Entity>, val groups: List<ParticleGroup>) {
-        fun bounds(): List<AABB> = projectiles.map { it.boundingBox.expandTowards(it.deltaMovement.scale(-1.0)) } + groups.map { it.bounds }
-        fun isEmpty() = projectiles.isEmpty() && groups.isEmpty()
+    /** Distant projectiles to draw and the admitted distant particles (their draw order is not significant). */
+    data class Frame(val projectiles: List<Entity>, val particles: List<Particle>) {
+        fun isEmpty() = projectiles.isEmpty() && particles.isEmpty()
     }
+
+    private fun centerX(box: AABB) = (box.minX + box.maxX) * 0.5
+    private fun centerZ(box: AABB) = (box.minZ + box.maxZ) * 0.5
 
     @JvmStatic fun clear() { particles.clear(); retainedParticles.clear(); lastDiagnostic = Long.MIN_VALUE }
 
-    private fun outsideNative(position: Vec3, halfWidth: Double = 0.0): Boolean {
+    // Horizontal centres straight from the bounding box: these run for every particle every frame, and
+    // AABB.getCenter()/Entity.position() allocated a Vec3 per call.
+    private fun outsideNative(x: Double, z: Double, halfWidth: Double = 0.0): Boolean {
         val mc = Minecraft.getInstance()
         val camera = mc.gameRenderer.mainCamera.position
-        val dx = position.x - camera.x; val dz = position.z - camera.z
+        val dx = x - camera.x; val dz = z - camera.z
         return FarTerrainPolicy.deferNative(dx * dx + dz * dz, mc.options.effectiveRenderDistance,
             halfWidth, FarVehicleRenderConfig.ENABLED.get(), false)
     }
 
     @JvmStatic fun deferProjectile(entity: Entity): Boolean = entity is FarProjectileAccess &&
-        outsideNative(entity.position(), maxOf(entity.bbWidth.toDouble(), entity.deltaMovement.length()))
+        outsideNative(entity.x, entity.z, maxOf(entity.bbWidth.toDouble(), entity.deltaMovement.length()))
 
     @JvmStatic fun deferParticle(particle: Particle): Boolean {
-        if (!outsideNative(particle.boundingBox.center)) return false
-        val mc = Minecraft.getInstance()
-        val origin = mc.gameRenderer.mainCamera.position
-        val point = particle.boundingBox.center
-        if (particles.size < 2048 && (particle in retainedParticles ||
-            FarTerrainPolicy.inside(origin.x, origin.z, point.x, point.z, FarTerrainClient.renderRadius())))
-            particles.add(particle)
+        val box = particle.boundingBox
+        val x = centerX(box); val z = centerZ(box)
+        if (!outsideNative(x, z)) return false
+        if (particles.size < 2048) {
+            val origin = Minecraft.getInstance().gameRenderer.mainCamera.position
+            if (particle in retainedParticles || FarTerrainPolicy.inside(origin.x, origin.z, x, z, FarTerrainClient.renderRadius()))
+                particles.add(particle)
+        }
         return true
     }
 
@@ -104,15 +110,24 @@ object FarEffectsClient {
         val level = mc.level ?: return Frame(emptyList(), emptyList())
         val origin = mc.gameRenderer.mainCamera.position
         val radius = FarTerrainClient.renderRadius()
-        retainedParticles.removeIf { !it.isAlive }
-        particles.removeIf { !it.isAlive || !outsideNative(it.boundingBox.center) ||
-            (it !in retainedParticles && !FarTerrainPolicy.inside(origin.x, origin.z, it.boundingBox.center.x, it.boundingBox.center.z, radius)) }
-        val projectiles = level.entitiesForRendering().asSequence()
-            .filter { !it.isRemoved && deferProjectile(it) && FarTerrainPolicy.inside(origin.x, origin.z, it.x, it.z, radius) }
-            .sortedBy { it.distanceToSqr(origin) }.take(512).toList()
-        val groups = particles.groupBy { net.minecraft.core.SectionPos.asLong(BlockPos.containing(it.boundingBox.center)) }
-            .values.map { group -> ParticleGroup(group.map { it.boundingBox }.reduce(AABB::minmax), group) }
-        return Frame(projectiles, groups)
+        if (retainedParticles.isNotEmpty()) retainedParticles.removeIf { !it.isAlive }
+        if (particles.isNotEmpty()) particles.removeIf {
+            if (!it.isAlive) return@removeIf true
+            val box = it.boundingBox
+            val x = centerX(box); val z = centerZ(box)
+            !outsideNative(x, z) || (it !in retainedParticles && !FarTerrainPolicy.inside(origin.x, origin.z, x, z, radius))
+        }
+        var projectiles: MutableList<Entity>? = null
+        for (entity in level.entitiesForRendering()) {
+            if (entity !is FarProjectileAccess || entity.isRemoved) continue
+            if (!deferProjectile(entity) || !FarTerrainPolicy.inside(origin.x, origin.z, entity.x, entity.z, radius)) continue
+            (projectiles ?: ArrayList<Entity>().also { projectiles = it }).add(entity)
+        }
+        val drawn: List<Entity> = projectiles?.let { found ->
+            if (found.size > 512) found.sortedBy { it.distanceToSqr(origin) }.take(512)
+            else found.also { list -> list.sortBy { it.distanceToSqr(origin) } }
+        } ?: emptyList()
+        return Frame(drawn, if (particles.isEmpty()) emptyList() else ArrayList(particles))
     }
 
     fun render(frame: Frame, event: RenderLevelStageEvent) {
@@ -133,7 +148,7 @@ object FarEffectsClient {
             } finally { event.poseStack.popPose() }
         }
         buffers.endBatch()
-        val visible = frame.groups.flatMap { it.particles }
+        val visible = frame.particles
         val modelView = RenderSystem.getModelViewStack()
         modelView.pushPose()
         mc.gameRenderer.lightTexture().turnOnLightLayer()

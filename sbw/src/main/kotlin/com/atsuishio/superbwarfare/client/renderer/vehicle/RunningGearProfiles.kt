@@ -57,7 +57,10 @@ data class TrackPathProfile(
     val moveY: List<TrackPathKeyframe>,
     val moveZ: List<TrackPathKeyframe>,
     val rotationX: List<TrackPathKeyframe>,
-)
+) {
+    /** MoveY and MoveZ keyed at the same phases (every generated profile): one keyframe search serves both. */
+    internal val sharedYZPhases: Boolean = moveY.size == moveZ.size && moveY.indices.all { moveY[it].phase == moveZ[it].phase }
+}
 
 /** Runtime belt around the wheels (TrackBeltPath); `enabled` false keeps the authored path. */
 data class TrackAutoProfile @JvmOverloads constructor(
@@ -88,7 +91,17 @@ data class TrackRenderProfile @JvmOverloads constructor(
     val linkFit: TrackLinkFit = TrackLinkFit.CONTACT_INTERVAL,
     val auto: TrackAutoProfile = TrackAutoProfile.DEFAULT,
 ) {
-    fun side(side: RunningGearSide): TrackSideProfile = requireNotNull(sides[side])
+    private val leftSide = sides[RunningGearSide.LEFT]
+    private val rightSide = sides[RunningGearSide.RIGHT]
+
+    /**
+     * Phase-independent base chord of every link, per path (0 shared, 1 left, 2 right), filled on first use by
+     * RunningGearTrackEvaluator. Not part of the profile's value (data class equality ignores body properties).
+     */
+    internal val linkBases = arrayOfNulls<FloatArray>(3)
+
+    fun side(side: RunningGearSide): TrackSideProfile =
+        requireNotNull(if (side == RunningGearSide.LEFT) leftSide else rightSide)
 
     /** Resolves the exact side path, falling back to the legacy shared path. */
     fun path(side: RunningGearSide): TrackPathProfile = side(side).path ?: this.path
