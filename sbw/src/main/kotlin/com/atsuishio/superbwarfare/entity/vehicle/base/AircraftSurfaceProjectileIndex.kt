@@ -16,6 +16,9 @@ object AircraftSurfaceProjectileIndex {
         levels.getOrPut(vehicle.level()) { PhysicalBoundsIndex() }.update(vehicle,bounds)
     }
     @Synchronized fun remove(vehicle:VehicleEntity) { levels[vehicle.level()]?.remove(vehicle) }
-    @JvmStatic @Synchronized fun query(level:Level,bounds:AABB):List<VehicleEntity> =
-        if(level.isClientSide) emptyList() else levels[level]?.query(bounds)?.filter { !it.isRemoved && it.isAddedToWorld && it.level()===level } ?: emptyList()
+    @JvmStatic @Synchronized fun query(level:Level,bounds:AABB):List<VehicleEntity> {
+        if(level.isClientSide) return emptyList()
+        val hits=levels[level]?.query(bounds) ?: return emptyList()
+        return if(hits.isEmpty()) hits else hits.filter { !it.isRemoved && it.isAddedToWorld && it.level()===level }
+    }
 }

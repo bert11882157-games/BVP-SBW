@@ -21,7 +21,8 @@ internal object AircraftCollisionIndex {
 
     @JvmStatic
     @Synchronized
-    fun query(level: Level, bounds: AABB): List<VehicleEntity> =
-        levels[level]?.query(bounds)?.filter { !it.isRemoved && it.isAddedToWorld && it.level() === level }
-            ?: emptyList()
+    fun query(level: Level, bounds: AABB): List<VehicleEntity> {
+        val hits = levels[level]?.query(bounds) ?: return emptyList()
+        return if (hits.isEmpty()) hits else hits.filter { !it.isRemoved && it.isAddedToWorld && it.level() === level }
+    }
 }

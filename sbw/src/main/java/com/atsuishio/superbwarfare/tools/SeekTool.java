@@ -71,6 +71,25 @@ public class SeekTool {
                 .build();
     }
 
+    /**
+     * The first decoy {@link #seekLivingEntities} would return: the same filters, with the decoy tag tested first
+     * so the thousands of projectiles in a battle are rejected before the range, angle, smoke and line-of-sight
+     * tests, and the scan stops at the first match.
+     */
+    @Nullable
+    public static Entity seekDecoy(Entity entity, double seekRange, double seekAngle) {
+        return new Builder(entity)
+                .filter(e -> e.getType().is(com.atsuishio.superbwarfare.init.ModTags.EntityTypes.DECOY))
+                .withinRange(seekRange)
+                .withinAngle(seekAngle)
+                .baseFilter()
+                .smokeFilter()
+                .noVehicle()
+                .notFriendly()
+                .noClip()
+                .buildFirst();
+    }
+
     public static List<Entity> seekLivingEntitiesThroughWall(Entity entity, double range, double angle) {
         return new Builder(entity)
                 .withinRange(range)
@@ -311,6 +330,12 @@ public class SeekTool {
         private final Entity entity;
         private final List<Predicate<Entity>> filters = new ArrayList<>();
 
+        /** Any extra condition; put the cheapest, most selective ones first. */
+        public Builder filter(Predicate<Entity> predicate) {
+            this.filters.add(predicate);
+            return this;
+        }
+
         public Builder(@NotNull Entity entity) {
             this(entity, true);
         }
@@ -320,6 +345,26 @@ public class SeekTool {
             if (excludeSelf) {
                 this.filters.add(e -> e != this.entity);
             }
+        }
+
+        /** The first entity {@link #build} would return, without collecting the rest. */
+        @Nullable
+        public Entity buildFirst() {
+            var entities = EntityFindUtil.getEntities(entity.level()).getAll().spliterator();
+            var stream = StreamSupport.stream(entities, false);
+            if (entity.level().isClientSide) {
+                var clientEntities = ClientSyncedEntityHandler.getSyncedHostileEntities(entity.level());
+                if (!clientEntities.isEmpty()) {
+                    stream = Stream.concat(stream, clientEntities.stream());
+                }
+            }
+            return stream.filter(e -> {
+                        for (var f : this.filters) {
+                            if (!f.test(e)) return false;
+                        }
+                        return true;
+                    })
+                    .findFirst().orElse(null);
         }
 
         public List<Entity> build() {
@@ -423,11 +468,24 @@ public class SeekTool {
             return this;
         }
 
+        /** Radar-synced hostile entities, read once per scan (only a client-side player scan uses them). */
+        private java.util.Set<Entity> syncedHostile;
+
+        private java.util.Set<Entity> syncedHostile() {
+            if (syncedHostile == null) {
+                syncedHostile = java.util.Collections.newSetFromMap(new java.util.IdentityHashMap<>());
+                syncedHostile.addAll(ClientSyncedEntityHandler.getSyncedHostileEntities(entity.level()));
+            }
+            return syncedHostile;
+        }
+
         public Builder withinRange(double range) {
             this.filters.add(e -> {
-                var clientEntities = ClientSyncedEntityHandler.getSyncedHostileEntities(entity.level());
-                if (!clientEntities.isEmpty() && entity.level().isClientSide && entity instanceof Player player && (player.level().getEntity(e.getId()) == null || clientEntities.contains(e))) {
-                    return true;
+                if (entity.level().isClientSide && entity instanceof Player player) {
+                    var clientEntities = syncedHostile();
+                    if (!clientEntities.isEmpty() && (player.level().getEntity(e.getId()) == null || clientEntities.contains(e))) {
+                        return true;
+                    }
                 }
 
                 if (e instanceof VehicleEntity vehicle) {
@@ -440,9 +498,9 @@ public class SeekTool {
 
         public Builder withinRangeSeekWeapon(double range, double maxGuidedRange, boolean affectedByStealthTarget, boolean canGuidedByRadar) {
             this.filters.add(e -> {
-                if (canGuidedByRadar) {
-                    var clientEntities = ClientSyncedEntityHandler.getSyncedHostileEntities(entity.level());
-                    if (!clientEntities.isEmpty() && entity.level().isClientSide && entity instanceof Player player && (player.level().getEntity(e.getId()) == null || clientEntities.contains(e))) {
+                if (canGuidedByRadar && entity.level().isClientSide && entity instanceof Player player) {
+                    var clientEntities = syncedHostile();
+                    if (!clientEntities.isEmpty() && (player.level().getEntity(e.getId()) == null || clientEntities.contains(e))) {
                         return e.position().distanceToSqr(this.entity.getEyePosition()) <= maxGuidedRange * maxGuidedRange;
                     }
                 }

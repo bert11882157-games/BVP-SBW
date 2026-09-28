@@ -34,7 +34,9 @@ object EntityFindUtil {
      */
     @JvmStatic
     fun findEntity(level: Level, uuidString: String?): Entity? {
-        if (uuidString == null) return null
+        // "none", "undefined" and "" are the usual no-target values: UUID.fromString would throw (and build a stack
+        // trace) for every one of them, every tick. A string without a dash can never parse.
+        if (uuidString == null || uuidString.indexOf('-') < 0) return null
         try {
             val uuid = UUID.fromString(uuidString)
             val target: Entity?

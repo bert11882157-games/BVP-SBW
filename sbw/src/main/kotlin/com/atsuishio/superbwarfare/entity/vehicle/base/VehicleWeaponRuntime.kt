@@ -166,9 +166,12 @@ internal class VehicleWeaponRuntime(
     fun tickWeapons() {
         val live = vehicle.gunDataMap
         val published = vehicle.publishedGunDataSnapshot()
+        // The loadout does not change inside this loop: resolve the pod channels once, not per weapon.
+        val pods = com.atsuishio.superbwarfare.api.aircraft.AircraftArmamentManager.gunPodChannels(vehicle, false)
+        val fittedPods = if (pods.isEmpty()) emptySet()
+            else com.atsuishio.superbwarfare.api.aircraft.AircraftGunPodGroups.equipped(vehicle).toHashSet()
         for ((name, data) in live) {
-            if (com.atsuishio.superbwarfare.api.aircraft.AircraftGunPodGroups.isPod(vehicle, name) &&
-                name !in com.atsuishio.superbwarfare.api.aircraft.AircraftGunPodGroups.equipped(vehicle)) continue
+            if (name in pods && name !in fittedPods) continue
             data.vehicleWeaponIdentity = name
             if (data.get(GunProp.BELT_FED)) {
                 val capacity = data.get(GunProp.MAGAZINE)

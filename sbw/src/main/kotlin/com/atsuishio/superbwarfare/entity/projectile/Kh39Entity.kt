@@ -46,14 +46,10 @@ open class Kh39Entity(type: EntityType<out Kh39Entity>, level: Level) : MissileP
         largeTrail()
 
         val entity = EntityFindUtil.findEntity(this.level(), this.targetUUID)
-        val decoy = SeekTool.seekLivingEntities(this, 32.0, 90.0)
-
-        for (e in decoy) {
-            if (e.type.`is`(ModTags.EntityTypes.DECOY) && !this.distracted) {
-                this.targetUUID = e.getStringUUID()
-                this.distracted = true
-                break
-            }
+        // once distracted a missile never re-evaluates decoys; before that only the first decoy in view matters
+        if (!this.distracted) SeekTool.seekDecoy(this, 32.0, 90.0)?.let { e ->
+            this.targetUUID = e.getStringUUID()
+            this.distracted = true
         }
 
         var toVec = lookAngle

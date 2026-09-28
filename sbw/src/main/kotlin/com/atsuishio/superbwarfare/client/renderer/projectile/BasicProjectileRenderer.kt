@@ -26,16 +26,20 @@ open class BasicProjectileRenderer<T>(manager: EntityRendererProvider.Context) :
     private val diagnosticSamples = WeakHashMap<Entity, Double>()
 
     private fun recordRendered(entity: T, partialTick: Float) {
-        if (!java.lang.Boolean.getBoolean("bvp.diagnostics.scenarios") || !EliteDiagnostics.isClientEnabled()) return
+        if (!DIAGNOSTICS || !EliteDiagnostics.isClientEnabled()) return
         val renderTick = entity.level().gameTime.toDouble() + partialTick
         if (renderTick - (diagnosticSamples[entity] ?: Double.NEGATIVE_INFINITY) < 0.25) return
         diagnosticSamples[entity] = renderTick
         EliteDiagnostics.record(entity, "elite_flight", "PROJECTILE_RENDERED",
             "render_tick", renderTick, "partial_tick", partialTick, "position", entity.getPosition(partialTick))
     }
-    override fun getTextureLocation(entity: T): ResourceLocation {
-        return loc("textures/bedrock/projectile/${entity.type.descriptionId.split(".")[2]}.png")
+    /** One texture per entity type (it depends on the type's description id only), built once instead of per frame. */
+    private val textures = java.util.IdentityHashMap<net.minecraft.world.entity.EntityType<*>, ResourceLocation>()
+
+    override fun getTextureLocation(entity: T): ResourceLocation = textures.getOrPut(entity.type) {
+        loc("textures/bedrock/projectile/${entity.type.descriptionId.split(".")[2]}.png")
     }
+
 
     override fun shouldShowName(pEntity: T): Boolean {
         return false
@@ -123,5 +127,7 @@ open class BasicProjectileRenderer<T>(manager: EntityRendererProvider.Context) :
     companion object {
         val BLENDER: EulerAdditiveBlender = SimpleEulerAdditiveBlender(ZYXBoneTransformFactory()) { ArrayPoseBuilder() }
         val FLARE_TEXTURE = loc("textures/bedrock/projectile/flare.png")
+        /** A launch property: read once, not in every render call. */
+        private val DIAGNOSTICS: Boolean = java.lang.Boolean.getBoolean("bvp.diagnostics.scenarios")
     }
 }

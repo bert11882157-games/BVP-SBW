@@ -65,12 +65,9 @@ open class SwarmDroneEntity(type: EntityType<out SwarmDroneEntity>, level: Level
     override fun tick() {
         super.tick()
         val entity = EntityFindUtil.findEntity(this.level(), entityData.get(TARGET_UUID))
-        SeekTool.seekLivingEntities(this, 32.0, 90.0).forEach {
-            if (it.type.`is`(ModTags.EntityTypes.DECOY) && !this.distracted) {
-                this.entityData.set(TARGET_UUID, it.getStringUUID())
-                this.distracted = true
-                return@forEach
-            }
+        if (!this.distracted) SeekTool.seekDecoy(this, 32.0, 90.0)?.let {
+            this.entityData.set(TARGET_UUID, it.getStringUUID())
+            this.distracted = true
         }
 
         if (this.tickCount == 1) {

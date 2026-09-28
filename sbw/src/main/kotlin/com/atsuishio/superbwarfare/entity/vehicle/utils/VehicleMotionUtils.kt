@@ -221,6 +221,9 @@ object VehicleMotionUtils {
     fun crushEntities(vehicle: VehicleEntity) {
         if (!vehicle.canCrushEntities()) return
         if (vehicle.isRemoved) return
+        // The loop below returns at its first candidate while this slow, and nothing before that check has a side
+        // effect: a slow or parked vehicle skips the entity query and OBB tests altogether.
+        if (vehicle.deltaMovement.lengthSqr() < 0.09) return
 
         val vec3 = vehicle.deltaMovement
 
