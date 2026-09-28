@@ -243,10 +243,12 @@ class VehicleAimController(private val vehicle: VehicleEntity) {
         val base = vehicle.getTurretBaseTransformSnapshot(1F)
         val snapshot = buildFcsNominalSnapshot(context, muzzle, level)
             ?: return done(publishFcsResult(context, VehicleFcsZeroStatus.UNSUPPORTED))
+        // The laser follows the gunner's sight line (the centre-screen ray the range is applied to below), not
+        // the barrel: once a previous solution has super-elevated the gun, a barrel-axis lase flies over the target.
         val measurement = if (savedTerrain) VehicleLaserRangefinder.measureAsync(level, vehicle,
-            muzzle.position, muzzle.direction, MAX_FCS_ZERO_RANGE_BLOCKS)
+            ray.origin, ray.direction, MAX_FCS_ZERO_RANGE_BLOCKS)
         else java.util.concurrent.CompletableFuture.completedFuture(VehicleLaserRangefinder.measure(level,
-            vehicle, muzzle.position, muzzle.direction, MAX_FCS_ZERO_RANGE_BLOCKS))
+            vehicle, ray.origin, ray.direction, MAX_FCS_ZERO_RANGE_BLOCKS))
         val serverExecutor = java.util.concurrent.Executor { action ->
             if (level.server.isSameThread) action.run() else level.server.execute(action)
         }

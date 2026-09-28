@@ -131,6 +131,21 @@ class AircraftArmamentValidationTest {
         assertNull(cleared.get(a)?.position); assertEquals(3L, cleared.get(a)?.revision)
         assertNotNull(cleared.get(b)?.position)
     }
+    @Test fun `a painted vehicle track survives save load and follow keeps it`() {
+        val a = UUID.randomUUID(); val tank = UUID.randomUUID()
+        val tag = CompoundTag().apply { put("Points", net.minecraft.nbt.ListTag().apply { add(CompoundTag().apply {
+            putUUID("Aircraft", a); putLong("Revision", 4L); putDouble("X", 1.0); putDouble("Y", 2.0); putDouble("Z", 3.0)
+            putUUID("Target", tank); putDouble("OX", 0.5); putDouble("OY", 1.5); putDouble("OZ", -2.0)
+        }) }) }
+        val data = AircraftDesignationData.load(tag)
+        assertEquals(tank, data.get(a)?.target); assertEquals(Vec3(0.5, 1.5, -2.0), data.get(a)?.offset)
+        val moved = data.follow(a, Vec3(11.0, 2.0, 3.0))!!
+        assertEquals(5L, moved.revision); assertEquals(tank, moved.target)
+        val again = AircraftDesignationData.load(data.save(CompoundTag()))
+        assertEquals(Vec3(11.0, 2.0, 3.0), again.get(a)?.position); assertEquals(tank, again.get(a)?.target)
+        // a repaint on terrain, or a clear, drops the track
+        again.put(a, Vec3(0.0, 0.0, 0.0)); assertNull(again.get(a)?.target); assertNull(again.follow(a, Vec3.ZERO))
+    }
     @Test fun `designation capacity does not evict active destinations`() {
         val data = AircraftDesignationData(); val first = UUID.randomUUID()
         data.put(first, Vec3(1.0, 2.0, 3.0))

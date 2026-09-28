@@ -57,4 +57,12 @@ class VehicleLaserSavedTerrainTest {
         assertNull(VehicleLaserSavedTerrain.decode(partial, ChunkPos(200, 0), -64, 384))
         assertNull(VehicleLaserSavedTerrain.decode(CompoundTag(), ChunkPos(200, 0), -64, 384))
     }
+
+    @Test fun `edge chunks saved after their terrain is shaped are read`() {
+        for (status in listOf("minecraft:surface", "minecraft:features", "minecraft:light", "minecraft:spawn", "full"))
+            assertNotNull(VehicleLaserSavedTerrain.decode(saved("minecraft:stone").apply { putString("Status", status) },
+                ChunkPos(200, 0), -64, 384), status)
+        for (status in listOf("minecraft:empty", "minecraft:structure_starts", "minecraft:biomes", "minecraft:noise", ""))
+            assertFalse(VehicleLaserSavedTerrain.terrainFinal(status), status)
+    }
 }

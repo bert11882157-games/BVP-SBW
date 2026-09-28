@@ -723,31 +723,39 @@ object AircraftArmamentManager {
         } else {
             localPosition = Vec3(0.0, vehicle.bbHeight * 0.5, 1.0)
             val d = transform.transformDirection(Vector3d(0.0, 0.0, 1.0)).normalize()
-            direction = Vec3(d.x, d.y, d.z)
             range = 8192.0
+            // Without the pod the laser follows the pilot's crosshair: the centre of the first-person view on the
+            // frame the key was pressed on. The hull nose is the fallback when the client sent no view.
+            val view = if (body["Camera"]?.asBoolean == true) AircraftArmamentRegistry.vector(body["Direction"]) else null
+            direction = view?.takeIf { it.x.isFinite() && it.y.isFinite() && it.z.isFinite() &&
+                it.lengthSqr() in 0.99..1.01 }?.normalize() ?: Vec3(d.x, d.y, d.z)
         }
         val o = transform.transformPosition(Vector3d(localPosition.x, localPosition.y, localPosition.z))
         val serverOrigin = Vec3(o.x, o.y, o.z)
-        // The pilot aimed from the pod position of the frame on screen. A fast aircraft moves several blocks per
-        // tick, so the same direction from the server's (newer) position lands off the aimed spot, badly so at
-        // long range. Use the client's ray origin when it is plausibly this pod's.
-        val clientOrigin = if (podMode) AircraftArmamentRegistry.vector(body["Origin"]) else null
+        // The pilot aimed from the pod (or cockpit) position of the frame on screen. A fast aircraft moves several
+        // blocks per tick, so the same direction from the server's (newer) position lands off the aimed spot, badly
+        // so at long range. Use the client's ray origin when it is plausibly this aircraft's.
+        val clientOrigin = if (podMode || body["Camera"]?.asBoolean == true) AircraftArmamentRegistry.vector(body["Origin"]) else null
         val slack = 6.0 + vehicle.deltaMovement.length() * 3.0
         val origin = clientOrigin?.takeIf { it.x.isFinite() && it.y.isFinite() && it.z.isFinite() &&
-            it.distanceToSqr(serverOrigin) <= slack * slack } ?: serverOrigin
+            (if (podMode) it.distanceToSqr(serverOrigin) else vehicle.boundingBox.distanceToSqr(it)) <= slack * slack }
+            ?: serverOrigin
         require(origin.x.isFinite() && origin.y.isFinite() && origin.z.isFinite() && direction.lengthSqr().isFinite())
         val level = player.serverLevel()
         val generation = if (stabilizeOnly) ++lease.stabilizeGeneration else ++lease.designationGeneration
         val equipmentRevision = equipment(vehicle).getLong("Revision")
         if (stabilizeOnly) lease.stabilizing = true else lease.designating = true
+        // Designation lases vehicles too: a painted vehicle keeps the spot on it while it moves. Stabilization only
+        // anchors the pod view and stays on terrain.
         val pending = try {
-            com.atsuishio.superbwarfare.api.vehicle.aim.VehicleLaserRangefinder.measureAsync(
-                level, vehicle, origin, direction, range, false)
+            com.atsuishio.superbwarfare.api.vehicle.aim.VehicleLaserRangefinder.measureReturnAsync(
+                level, vehicle, origin, direction, range, !stabilizeOnly)
         } catch (error: Exception) {
             if (stabilizeOnly) lease.stabilizing = false else lease.designating = false
             throw error
         }
-        pending.whenComplete { distance, error ->
+        pending.whenComplete { laser, error ->
+            val distance = laser?.distance
             level.server.execute {
                 if (stabilizeOnly) lease.stabilizing = false else lease.designating = false
                 val current = if (stabilizeOnly) lease.stabilizeGeneration else lease.designationGeneration
@@ -767,17 +775,19 @@ object AircraftArmamentManager {
                     })
                     return@execute
                 }
-                if (!AircraftDesignationData.get(level).put(vehicle.uuid, point)) {
+                val painted = laser?.vehicle?.takeIf { !it.isRemoved && it.isAlive && it.level() === level }
+                if (!AircraftDesignationData.get(level).put(vehicle.uuid, point, painted)) {
                     reply(player, lease, message = "Designation storage is full.")
                     return@execute
                 }
                 publishPoint(vehicle)
-                reply(player, lease, message = "Target designated.")
+                reply(player, lease, message = if (painted != null) "Target designated (tracking vehicle)." else "Target designated.")
             }
         }
     }
-    private fun publishPoint(vehicle: VehicleEntity) {
+    private fun publishPoint(vehicle: VehicleEntity, track: Boolean = false) {
         val out = base(vehicle)
+        if (track) out.addProperty("Track", true)
         val p = AircraftDesignationData.get(vehicle.level() as ServerLevel).get(vehicle.uuid)
         out.addProperty("PointRevision", p?.revision ?: 0)
         p?.position?.let { out.add("Point", pointJson(it)) } ?: out.addProperty("ClearPoint", true)
@@ -791,11 +801,13 @@ object AircraftArmamentManager {
         val point = AircraftDesignationData.get(level).get(tag.getUUID("BvpLaserAircraft"))
         if (point != null) {
             tag.putLong("BvpLaserRevision", point.revision)
-            if (point.position == null) { tag.remove("BvpLaserLastPoint"); return null }
+            // On a painted vehicle the spot is where the vehicle is this tick, not where it was designated.
+            val live = point.live(level)
+            if (live == null) { tag.remove("BvpLaserLastPoint"); return null }
             tag.put("BvpLaserLastPoint", CompoundTag().also { n ->
-                n.putDouble("X", point.position.x); n.putDouble("Y", point.position.y); n.putDouble("Z", point.position.z)
+                n.putDouble("X", live.x); n.putDouble("Y", live.y); n.putDouble("Z", live.z)
             })
-            return point.position
+            return live
         }
         if (!tag.contains("BvpLaserLastPoint", 10)) return null
         val last = tag.getCompound("BvpLaserLastPoint")
@@ -866,6 +878,20 @@ object AircraftArmamentManager {
         }
     }
 
+    private const val TRACK_PUBLISH_TICKS = 5
+    private const val TRACK_PUBLISH_MOVE_SQR = 0.5 * 0.5
+
+    /** Keeps the pilot's designation marker (and pod) on a painted vehicle that has moved. */
+    private fun followPaintedVehicle(aircraft: VehicleEntity) {
+        val level = aircraft.level() as? ServerLevel ?: return
+        val data = AircraftDesignationData.get(level)
+        val point = data.get(aircraft.uuid)?.takeIf { it.target != null } ?: return
+        val live = point.live(level) ?: return
+        if (point.position != null && point.position.distanceToSqr(live) < TRACK_PUBLISH_MOVE_SQR) return
+        data.follow(aircraft.uuid, live) ?: return
+        publishPoint(aircraft, track = true)
+    }
+
     @SubscribeEvent fun tick(event: TickEvent.PlayerTickEvent) {
         if (event.phase != TickEvent.Phase.END) return
         val player = event.player as? ServerPlayer ?: return
@@ -876,6 +902,7 @@ object AircraftArmamentManager {
         val old = leases[player]
         if (old?.vehicle === vehicle && old.catalogue == AircraftArmamentRegistry.revision) {
             updateSeeker(player, old)
+            if (player.tickCount % TRACK_PUBLISH_TICKS == 0) followPaintedVehicle(vehicle)
             return
         }
         old?.let { AircraftMissileLauncher.clear(it.vehicle) }

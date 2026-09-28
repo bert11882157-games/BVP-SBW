@@ -49,10 +49,21 @@ object VehicleLaserRangefinder {
 
     /** Capture loaded geometry on the server thread, then read only missing saved palettes off-thread. */
     fun measureAsync(level: ServerLevel, source: VehicleEntity, start: Vec3, direction: Vec3,
-                     range: Double, includeVehicles: Boolean = true): CompletableFuture<Double?> {
+                     range: Double, includeVehicles: Boolean = true): CompletableFuture<Double?> =
+        measureReturnAsync(level, source, start, direction, range, includeVehicles).thenApply { it?.distance }
+
+    /** One laser return: its distance and, when the first surface along the ray is a vehicle, that vehicle. */
+    data class LaserReturn(val distance: Double, val vehicle: VehicleEntity?)
+
+    /**
+     * [measureAsync] that also says which vehicle the laser landed on, so a designation can stay on a moving
+     * target. The vehicle is only handed to the future's consumer; use it on the server thread.
+     */
+    fun measureReturnAsync(level: ServerLevel, source: VehicleEntity, start: Vec3, direction: Vec3,
+                           range: Double, includeVehicles: Boolean = true): CompletableFuture<LaserReturn?> {
         val fullEnd = start.add(direction.normalize().scale(range))
-        val vehicleHit = if (includeVehicles) nearestVehicle(level, source, start, fullEnd, null, range * range) else null
-        val end = vehicleHit ?: fullEnd
+        val vehicleHit = if (includeVehicles) nearestVehicleHit(level, source, start, fullEnd, range * range) else null
+        val end = vehicleHit?.first ?: fullEnd
         val context = ClipContext(start, end, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, source)
         val missing = linkedMapOf<ChunkPos, MutableList<BlockPos>>()
         val terrain = traceTerrain(start, end) { pos ->
@@ -63,20 +74,31 @@ object VehicleLaserRangefinder {
             } else TerrainProbe(true, context.getBlockShape(level.getBlockState(pos), level, pos)
                 .clip(start, end, pos)?.location)
         }
-        val known = terrain.point ?: vehicleHit
-        if (missing.isEmpty()) return CompletableFuture.completedFuture(known?.let(start::distanceTo))
-        return VehicleLaserSavedTerrain.trace(level, start, end, missing, known)
+        // The terrain trace ends at the vehicle hit, so any terrain point found lies in front of the vehicle.
+        val vehicleDistance = vehicleHit?.first?.let(start::distanceTo)
+        fun resolve(distance: Double?): LaserReturn? = distance?.let {
+            LaserReturn(it, vehicleHit?.second?.takeIf { _ ->
+                terrain.point == null && vehicleDistance != null && it >= vehicleDistance - 1.0E-6 })
+        }
+        val known = terrain.point ?: vehicleHit?.first
+        if (missing.isEmpty()) return CompletableFuture.completedFuture(resolve(known?.let(start::distanceTo)))
+        return VehicleLaserSavedTerrain.trace(level, start, end, missing, known).thenApply(::resolve)
     }
 
     private fun nearestVehicle(level: ServerLevel, source: VehicleEntity, start: Vec3, end: Vec3,
-                               known: Vec3?, maximumSquared: Double): Vec3? {
-        var closest = known
-        var distanceSquared = maximumSquared
+                               known: Vec3?, maximumSquared: Double): Vec3? =
+        nearestVehicleHit(level, source, start, end, maximumSquared, known)?.first ?: known
+
+    private fun nearestVehicleHit(level: ServerLevel, source: VehicleEntity, start: Vec3, end: Vec3,
+                                  maximumSquared: Double, known: Vec3? = null): Pair<Vec3, VehicleEntity>? {
+        var closest: Pair<Vec3, VehicleEntity>? = null
+        var distanceSquared = known?.let { minOf(maximumSquared, start.distanceToSqr(it)) } ?: maximumSquared
+        val ray = AABB(start, end)
         // Iterate already-loaded entities once per key edge, avoiding a giant AABB chunk search.
         for (target in level.allEntities) {
             if (target !is VehicleEntity || target === source || target.isRemoved || !target.isAlive) continue
             // Detailed geometry may extend beyond the entity collision box (especially wings).
-            if (!target.boundingBox.inflate(64.0).intersects(AABB(start, end))) continue
+            if (!target.boundingBox.inflate(64.0).intersects(ray)) continue
             val hit = if (target is ProjectileCollisionTarget && target.usesDetailedProjectileCollision()) {
                 // A material miss is final, exactly as it is for a projectile.
                 target.clipProjectile(start, end)?.point()
@@ -84,8 +106,8 @@ object VehicleLaserRangefinder {
                 ProjectileHitSelection.nearestObb(target.getOBBs(), start, end, 0.0)?.point()
             } else target.boundingBox.clip(start, end).orElse(null)
             if (isNearer(start, hit, distanceSquared)) {
-                closest = hit
-                distanceSquared = start.distanceToSqr(hit!!)
+                closest = hit!! to target
+                distanceSquared = start.distanceToSqr(hit)
             }
         }
         return closest

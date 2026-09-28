@@ -101,7 +101,12 @@ object AircraftArmamentClient {
         val seek = state.seek
         if (lockTargetEntity?.uuid != seek?.target || lockTargetEntity?.isRemoved == true)
             lockTargetEntity = seek?.target?.let { id -> mc.level?.entitiesForRendering()?.firstOrNull { it.uuid == id } }
-        if (entry.pointRevision > previousPointRevision && state.point != null && isPodActive(vehicle)) {
+        // A painted vehicle's spot follows it ("Track" updates); the pod follows too unless the pilot has slewed it
+        // away since designating.
+        val track = json.get("Track")?.let { it.isJsonPrimitive && it.asJsonPrimitive.isBoolean && it.asBoolean } == true
+        if (!track && entry.pointRevision > previousPointRevision) podSlewedSinceDesignate = false
+        if (entry.pointRevision > previousPointRevision && state.point != null && isPodActive(vehicle) &&
+            !(track && podSlewedSinceDesignate)) {
             aim.designate(state.point); podStabilized = true; stabilizeRequest++
         }
         if (selectedOwner != state.vehicle) { selectedOwner = state.vehicle; selectedPair = null }
@@ -230,7 +235,7 @@ object AircraftArmamentClient {
         val moved = aim.sample(mc.mouseHandler.xpos(), mc.mouseHandler.ypos(),
             vehicle.mouseSensitivity.coerceIn(0.01, 2.0), podZoom, pod,
             vehicle.getVehicleTransform(event.renderTickTime), origin)
-        if (moved) { stabilizePending = true; stillFrames = 0 }
+        if (moved) { stabilizePending = true; stillFrames = 0; podSlewedSinceDesignate = true }
         else if (stabilizePending && ++stillFrames >= STABILIZE_SETTLE_FRAMES &&
             System.currentTimeMillis() - lastDesignateMs > 400) {
             stabilizePending = false
@@ -239,6 +244,7 @@ object AircraftArmamentClient {
     }
 
     private const val STABILIZE_SETTLE_FRAMES = 6
+    private var podSlewedSinceDesignate = false
 
     /** Asks the server laser for the ground point along the current aim; the reply anchors the pod there. */
     private fun requestStabilize(vehicle: VehicleEntity, partial: Float) {
@@ -277,6 +283,13 @@ object AircraftArmamentClient {
                     if (active) cameraPosition(vehicle, mc.frameTime)?.let { origin ->
                         add("Origin", JsonArray().apply { add(origin.x); add(origin.y); add(origin.z) })
                     }
+                    // Without the pod, lase along the centre of the view the pilot just saw (key events arrive
+                    // after that frame was drawn, so the camera still holds it). Third person keeps the nose.
+                    if (!active && mc.options.cameraType == CameraType.FIRST_PERSON) presentedView()?.let { (origin, look) ->
+                        addProperty("Camera", true)
+                        add("Origin", JsonArray().apply { add(origin.x); add(origin.y); add(origin.z) })
+                        add("Direction", JsonArray().apply { add(look.x); add(look.y); add(look.z) })
+                    }
                 })
             }
             AircraftArmamentKeys.STABILIZE.isActiveAndMatches(key) && isPodActive(vehicle) -> {
@@ -310,6 +323,18 @@ object AircraftArmamentClient {
         val pod = getVehicleSnapshot(vehicle)?.definition?.pod ?: return
         podZoom = (podZoom * Math.pow(1.25, event.scrollDelta)).coerceIn(1.0, pod.maxZoom)
         event.isCanceled = true
+    }
+
+    /** The origin and unit look direction of the last drawn frame's camera, or null when it is not usable. */
+    private fun presentedView(): Pair<Vec3, Vec3>? {
+        val camera = Minecraft.getInstance().gameRenderer.mainCamera
+        if (!camera.isInitialized) return null
+        val origin = camera.position
+        val look = camera.lookVector.let { Vec3(it.x().toDouble(), it.y().toDouble(), it.z().toDouble()) }
+        val length = look.length()
+        if (!origin.x.isFinite() || !origin.y.isFinite() || !origin.z.isFinite() || !length.isFinite() || length < 1.0E-6)
+            return null
+        return origin to look.scale(1.0 / length)
     }
 
     @JvmStatic fun podMagnification(vehicle: VehicleEntity): Double? =
