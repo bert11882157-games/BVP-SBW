@@ -255,11 +255,20 @@ object AircraftArmamentManager {
 
     internal fun gunPodAliases(vehicle: VehicleEntity): List<String> = fittedGroups(vehicle)
         .filter { it.category == "GUN_POD" }.map { it.representative }
+    /** All gun-pod channels of a definition (equippedOnly = false) for the store catalogue they were read from. */
+    private class PodChannelMemo(val stores: Any?, val channels: List<String>)
+    private val podChannelMemo: MutableMap<JsonObject, PodChannelMemo> =
+        com.google.common.collect.MapMaker().weakKeys().makeMap()
+
     internal fun gunPodChannels(vehicle: VehicleEntity, equippedOnly: Boolean): List<String> {
         val def = definition(vehicle) ?: return emptyList()
         val chosen = if (equippedOnly) selection(vehicle) else null
         val clientStores = if (vehicle.level().isClientSide)
             AircraftArmamentClient.getState(vehicle.uuid)?.getAsJsonObject("Stores") else null
+        // Every vehicle weapon tick asks whether each weapon is a pod; without a selection the answer depends only on
+        // the definition and the store catalogue (both replaced, not edited, when they change), so it is kept per pair.
+        val source: Any? = if (vehicle.level().isClientSide) clientStores else AircraftArmamentRegistry.stores
+        if (!equippedOnly) podChannelMemo[def]?.takeIf { it.stores === source }?.let { return it.channels }
         return mounts(def).flatMap { mount ->
             val ids = if (equippedOnly) listOfNotNull(chosen?.get(mount["Id"].asString)?.asString)
                 else mount.getAsJsonArray("AllowedStores")?.map { it.asString } ?: emptyList()
@@ -268,7 +277,7 @@ object AircraftArmamentManager {
                     else AircraftArmamentRegistry.stores[ResourceLocation.tryParse(id)]
                 store?.get("Category")?.asString == "GUN_POD"
             }.flatMap { nativeWeapons(mount, it) }
-        }.distinct()
+        }.distinct().also { if (!equippedOnly) podChannelMemo[def] = PodChannelMemo(source, it) }
     }
     internal fun rocketPodChannels(vehicle: VehicleEntity): List<String> {
         val def = definition(vehicle) ?: return emptyList()

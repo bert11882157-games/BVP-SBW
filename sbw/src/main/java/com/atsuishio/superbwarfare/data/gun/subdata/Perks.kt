@@ -14,11 +14,24 @@ class Perks(gun: GunData) {
     private val rootTag: CompoundTag = gun.perk()
 
     private fun findPerkByName(name: String): Perk? {
+        // A gun without a perk of a type reads an empty name; this runs for every perk type of every gun every tick.
+        if (name.isEmpty()) return null
+        byName?.let { return it[name] }
         val allEntries = ModPerks.AMMO_PERKS.entries +
                 ModPerks.FUNC_PERKS.entries +
                 ModPerks.DAMAGE_PERKS.entries
-
+        // Registries are complete once every entry is bound: index them once (first entry wins, as the scan did).
+        if (allEntries.isNotEmpty() && allEntries.all { it.isPresent }) {
+            val index = HashMap<String, Perk>()
+            for (entry in allEntries) index.putIfAbsent(entry.get().name, entry.get())
+            byName = index
+            return index[name]
+        }
         return allEntries.firstOrNull { it.get().name == name }?.get()
+    }
+
+    private companion object {
+        @Volatile private var byName: Map<String, Perk>? = null
     }
 
     fun getOrCreateList(type: Perk.Type): ListTag {
