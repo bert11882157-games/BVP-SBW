@@ -125,14 +125,16 @@ public final class BvpSamScenario {
         RUNS.removeIf(run -> {
             run.age++;
             boolean gone = run.target.isRemoved();
-            if (gone || run.age > 500 || (run.firedAt >= 0 && run.age - run.firedAt > 240) || run.player.getVehicle() != run.vehicle) {
+            // a target lost before the shot does not end the run: the no-lock shot still fires on time
+            if ((gone && run.firedAt >= 0) || run.age > 500 || (run.firedAt >= 0 && run.age - run.firedAt > 240)
+                    || run.player.getVehicle() != run.vehicle) {
                 LOGGER.info("[BVP sam] end age={} target removed={} health {} -> {} interceptors={}", run.age, gone,
                         run.startHealth, health(run.target), interceptors(run));
                 if (!gone) run.target.discard();
                 return true;
             }
             if (run.drift.lengthSqr() > 0) run.target.setDeltaMovement(run.drift);
-            if (run.firedAt < 0) run.player.connection.send(new ClientboundPlayerLookAtPacket(
+            if (run.firedAt < 0 && !gone) run.player.connection.send(new ClientboundPlayerLookAtPacket(
                     EntityAnchorArgument.Anchor.EYES, run.target, EntityAnchorArgument.Anchor.EYES));
             var state = AircraftMissileLauncher.INSTANCE.state(run.vehicle, GroundSamLauncher.CHANNEL_PREFIX + run.weapon);
             boolean ready = state.getBoolean("Ready");
