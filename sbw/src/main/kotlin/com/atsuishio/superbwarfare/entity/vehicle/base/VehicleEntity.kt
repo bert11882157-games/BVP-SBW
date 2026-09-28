@@ -2240,7 +2240,9 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         }
         collect(source.entity, 0)
         if (players.isEmpty()) collect(source.directEntity, 0)
-        if (java.lang.Boolean.getBoolean("bvp.diagnostics.scenarios")) {
+        // Diagnostic launches log the feedback a player receives (the hit-marker checks read it); hits with nobody to
+        // tell (AI crews firing at each other) are not logged: a firefight made that thousands of lines a second.
+        if (players.isNotEmpty() && HIT_FEEDBACK_LOG) {
             Mod.LOGGER.info("Vehicle hit feedback: {} took {} ({}) from {} -> {}", this.type.descriptionId, amount,
                 if (killed) "kill" else "hit", source.msgId, players.map { it.gameProfile.name })
         }
@@ -7496,6 +7498,9 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
     }
 
     companion object {
+        /** Launch property, read once: log the hit feedback players receive (diagnostic launches only). */
+        private val HIT_FEEDBACK_LOG: Boolean = java.lang.Boolean.getBoolean("bvp.diagnostics.scenarios")
+
         private const val MAX_HELICOPTER_ATGM_CAMERA_RAY_STREAMS = 16
         private const val AIM_PRESENTATION_DIRECTION_DOT_MINIMUM = 0.99999
         private const val AIM_PRESENTATION_TIME_EPSILON = 1.0E-6
