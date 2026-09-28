@@ -431,6 +431,9 @@ public class ModEntityRenderers {
         registerVehicle(event, ModEntities.NINE_P_149_SHTURM, "9p149_shturm", context ->
                 new FittedGroundVehicleRenderer(context, bvp("custom_geo/9p149_shturm.geo.json"),
                         bvp("textures/entity/9p149_shturm.png"), "9p149_shturm"));
+        registerVehicle(event, ModEntities.NINE_K_22_TUNGUSKA, "9k22_tunguska", context ->
+                new FittedGroundVehicleRenderer(context, bvp("custom_geo/9k22_tunguska.geo.json"),
+                        bvp("textures/entity/9k22_tunguska.png"), "9k22_tunguska"));
         registerVehicle(event, ModEntities.TYPE_90, "type_90", context ->
                 new FittedGroundVehicleRenderer(context, bvp("custom_geo/type_90.geo.json"),
                         bvp("textures/entity/type_90.png"), "type_90"));
@@ -461,9 +464,6 @@ public class ModEntityRenderers {
         registerVehicle(event, ModEntities.VT_4A1, "vt_4a1", context ->
                 new FittedGroundVehicleRenderer(context, bvp("custom_geo/vt_4a1.geo.json"),
                         bvp("textures/entity/vt_4a1.png"), "vt_4a1"));
-        registerVehicle(event, ModEntities.TUNGUSKA, "tunguska", context ->
-                new FittedGroundVehicleRenderer(context, bvp("custom_geo/tunguska.geo.json"),
-                        bvp("textures/entity/tunguska.png"), "tunguska"));
     }
 
     private static <T extends GeoVehicleEntity> void registerVehicle(

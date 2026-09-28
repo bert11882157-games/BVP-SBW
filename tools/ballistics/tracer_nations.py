@@ -30,7 +30,7 @@ EAST_VEHICLES = {
     '9k22_tunguska', '9p148', '9p149_shturm', 'bmd_1', 'bmp2', 'bmp2m', 'bmp3m_elite', 'bmp_1am', 'bmpt', 'btr80a',
     'btr_60pb', 'btr_90', 'btr_zd', 'gaz_3937_vodnik_aa', 'kord_tripod', 'qn_506model', 't14_armata', 't55a_2_0',
     't64b_obr1976', 't72a', 't72b', 't72b3', 't72b3_ubh_cope', 't80b_obr1976', 't80u_obr1985', 't90a', 't90m',
-    't_62a', 'toyota_jihad_bmp1', 'toyota_jihad_dshk', 'toyota_jihad_s5', 'toyota_jihad_spg9', 'tunguska', 'vt_4a1',
+    't_62a', 'toyota_jihad_bmp1', 'toyota_jihad_dshk', 'toyota_jihad_s5', 'toyota_jihad_spg9', 'vt_4a1',
     'zbd_09', 'zsl_92', 'zsu23_4', 'ztl_09', 'ztz99a', 'zu23_2', 'uaz_469_spg9', 'ags_30',
     # helicopters
     'ka50', 'mi24v', 'mi28n', 'mi_24a', 'mi_24d',

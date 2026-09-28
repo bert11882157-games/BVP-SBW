@@ -53,7 +53,7 @@ AUTO_TARGETS = [
     'gaz_3937_vodnik_aa', 'gepard', 'k2a1_black_panther', 'leclerc_s1', 'leopard_2a4',
     'm109a7_paladin', 'm551a1', 'm60a1', 'marder_1a1', 'marder_1a5', 'pzh_2000', 'qn_506model', 't14_armata',
     't64b_obr1976', 't72a', 't72b3', 't72b3_ubh_cope', 't80b_obr1976', 't80u_obr1985', 't90m',
-    'tunguska', 'type_90', 'vbci', 'vt_4a1', 'zsl_92', 'zsu23_4', 'ztl_09', 'ztz99a', 'uaz_469_spg9',
+    '9k22_tunguska', 'type_90', 'vbci', 'vt_4a1', 'zsl_92', 'zsu23_4', 'ztl_09', 'ztz99a', 'uaz_469_spg9',
 ]
 
 # Nominal plate thickness (mm) per aspect for vehicles whose profile has no box plates. Public figures, rounded:
@@ -409,9 +409,9 @@ def symmetric_thickness(template, frame, samples, n):
     return best[0], f'{best[1]}|{a[0]:g}/{b[0]:g}'
 
 
-# Simplified solids (owner, 2026-09-28: "much simpler, well-encompassing"): every solid is the 26-DOP of its points -
-# the box faces, the 12 edge bevels and the 8 corner bevels, each pushed out to the farthest point. At most 26 plates
-# per solid; a glacis or a sloped turret front is one or two bevel faces.
+# Simplified solids (owner, 2026-09-28: "much simpler, well-encompassing"): at most 26 planes per solid, fitted to the
+# model's largest hull faces (fitted_directions). DOP_DIRECTIONS (the fixed 26-DOP) is kept for comparison only; it
+# was 7-40% larger than the model.
 DOP_DIRECTIONS = np.array([d for d in
                            [(1, 0, 0), (-1, 0, 0), (0, 1, 0), (0, -1, 0), (0, 0, 1), (0, 0, -1)] +
                            [(a, b, 0) for a in (1, -1) for b in (1, -1)] +
@@ -427,15 +427,42 @@ DOP_DIRECTIONS /= np.linalg.norm(DOP_DIRECTIONS, axis=1)[:, None]
 NO_WEAPON_ARMOR = {'9p149_shturm'}
 
 
+def fitted_directions(points, limit=26, min_angle=14.0):
+    """Face directions for a simplified solid: the normals of the convex hull's largest facets, most area first,
+    skipping any within min_angle of one already taken, then the six box axes where nothing is close. The planes
+    lie on the model's real big faces (a glacis, a turret cheek), so the solid stays tight with few faces."""
+    from scipy.spatial import ConvexHull
+    P = np.asarray(points, float)
+    hull = ConvexHull(P)
+    tri = P[hull.simplices]
+    area = np.linalg.norm(np.cross(tri[:, 1] - tri[:, 0], tri[:, 2] - tri[:, 0]), axis=1) / 2
+    normals = hull.equations[:, :3]
+    # area per direction: facets of one planar face share a normal
+    order = np.argsort(-area)
+    cos_min = math.cos(math.radians(min_angle))
+    chosen = []
+    for k in order:
+        n = normals[k]
+        if all(float(n @ c) < cos_min for c in chosen):
+            chosen.append(n)
+            if len(chosen) >= limit - 6:
+                break
+    for axis in list(np.eye(3)) + list(-np.eye(3)):
+        if all(float(axis @ c) < cos_min for c in chosen):
+            chosen.append(axis)
+    return np.array(chosen)
+
+
 def dop_vertices(points):
-    """Vertices of the 26-DOP of the points (the intersection of the 26 supporting halfspaces)."""
+    """Vertices of the simplified solid: the intersection of the supporting halfspaces along fitted_directions."""
     from scipy.spatial import HalfspaceIntersection
     P = np.asarray(points, float)
-    off = (P @ DOP_DIRECTIONS.T).max(0)
-    hs = np.c_[DOP_DIRECTIONS, -off]
-    centre = P.mean(0)
-    hi = HalfspaceIntersection(hs, centre)
-    return snap(hi.intersections)
+    dirs = fitted_directions(P)
+    off = (P @ dirs.T).max(0)
+    hs = np.c_[dirs, -off]
+    hi = HalfspaceIntersection(hs, P.mean(0))
+    # not snapped to the model grid: a snapped vertex would bend an oblique face into several plates
+    return np.unique(np.round(hi.intersections, 5), axis=0)
 
 
 # Axis a shot along each aspect travels against (geo frame: front is -z).

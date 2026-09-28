@@ -250,13 +250,14 @@ hand-written spec. It covers every armored ground vehicle except the ones with h
 the owner keeps (BMP-1/2/2M, T-90A, all Abrams, T-72B, M48, M1128, T-62A, BTR-80A, BTR-60, the Toyotas,
 ZBD-09, Marder 1A2, CV9040C, M2 Bradley, BMPT, and since 2026-09-28 the T-55A, Leopard 2A6, LAV-25 and
 BTR-90, whose generated meshes are in `tools/replaced/armor-mesh-restored-box-20260928/`) and the
-emplacements: `AUTO_TARGETS`, 35 vehicles.
+emplacements: `AUTO_TARGETS`, 36 vehicles.
 
 * **Structure (simplified, 2026-09-28).** Model bones go to the hull, turret or barrel frame by their parent
   chain. Running gear, ERA, secondary mounts, rods (antennas, rails), specks, tubes and small roof fittings
-  are left out. Every solid is the 26-sided discrete-orientation polytope of its points (box faces, 12 edge
-  bevels, 8 corner bevels), so a solid has at most 26 plates and a glacis or a sloped turret front is one or
-  two faces: 65-140 plates per vehicle instead of 350-470. The hull is two lengthwise halves, each a core
+  are left out. Every solid is bounded by at most 26 planes: the planes of the convex hull's largest faces
+  (most area first, none within 14 degrees of another) plus the box axes where nothing is close, each pushed
+  out to the farthest point. The planes lie on the model's real big faces, so a glacis or a turret cheek is one
+  face and the solid is only 1-10% larger than the model's hull: 80-150 plates per vehicle instead of 350-470. The hull is two lengthwise halves, each a core
   between the running gear plus a sponson above it where the hull is wider; the turret solid is carried
   down to the hull roof (no separate collar); the mantlet is the barrel-frame parts around the trunnion.
   The 9P149 launcher has no armor at all: it is the `launcherreload` weapon module (see below).
@@ -273,7 +274,7 @@ emplacements: `AUTO_TARGETS`, 35 vehicles.
 * **Tracks** get no hitbox.
 
 ```
-python3 tools/armor_mesh/auto_mesh.py --targets             # write all 35 into armor_mesh/
+python3 tools/armor_mesh/auto_mesh.py --targets             # write all 36 into armor_mesh/
 python3 tools/armor_mesh/auto_mesh.py leo2a6 --report       # plate table and thickness sources only
 python3 tools/armor_mesh/auto_hitreg.py leo2a6 rays.jsonl   # ground-truth rays from the generator's own solids
 java ... ArmorMeshHitregHarness leo2a6 <armor.json> <mesh.geo.json> rays.jsonl out.csv <turretPos> <barrelPos> 0,90

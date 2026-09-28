@@ -50,11 +50,11 @@ import java.time.Instant
 object StressDiagnostics {
     private val ground = listOf("t72b", "t90a", "m1a2_abrams_sep_v2", "leopard_2a4", "challenger_2", "leclerc_s1",
         "k2a1_black_panther", "ztz99a", "t80u_obr1985", "m1_abrams_elite", "bmp2", "bmp3m_elite", "m2_bradley",
-        "cv9040_no_net", "marder_1a2", "btr80a", "lav25", "tunguska", "gepard", "zsu23_4")
+        "cv9040_no_net", "marder_1a2", "btr80a", "lav25", "9k22_tunguska", "gepard", "zsu23_4")
     private val air = listOf("f_16c", "su_25", "a_10", "f_15c", "su_27", "fa_18e", "mig_29", "su_35", "ah_64d", "mi24v")
     /** War targets downrange of the tank row (x = 9k, z +45): every other vehicle class, destroyed and respawned. */
     private val softTargets = listOf("bmp2", "btr80a", "m2_bradley", "lav25", "zsu23_4", "gepard", "marder_1a2",
-        "tunguska", "ah_64d", "f_16c")
+        "9k22_tunguska", "ah_64d", "f_16c")
     /** War targets downrange of the IFV row (x = 4.5 + 9k, z +62): tanks, for autocannons, ATGMs and non-penetrations. */
     private val armourTargets = listOf("t72b", "m1a2_abrams_sep_v2", "leopard_2a4", "t90a", "challenger_2", "leclerc_s1",
         "k2a1_black_panther", "ztz99a", "t80u_obr1985", "m1_abrams_elite")

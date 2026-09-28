@@ -54,7 +54,7 @@ public final class BvpItemPlacementScenario {
             "qn_506model", "vt_4a1", "cv9040_no_net", "leo2a6", "toyota_jihad_bmp1",
             "toyota_jihad_dshk", "toyota_jihad_s5", "toyota_jihad_spg9", "zu23_2",
             "kord_tripod", "browning_tripod", "milan_tripod", "tow_tripod", "spg9_tripod",
-            "vbci", "marder_1a2", "t72a", "tunguska",
+            "vbci", "marder_1a2", "t72a", "9k22_tunguska",
             "challenger_2", "leclerc_s1",
             "ho_229", "ju_87_b2");
     private static Run active;
