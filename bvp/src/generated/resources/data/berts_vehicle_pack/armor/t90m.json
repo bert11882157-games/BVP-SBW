@@ -28,7 +28,7 @@
         0
       ],
       "frame": "hull",
-      "armor_mm": 100
+      "armor_mm": 110.0
     },
     {
       "name": "make_295mm_01",
@@ -68,7 +68,7 @@
         0
       ],
       "frame": "hull",
-      "armor_mm": 80
+      "armor_mm": 80.0
     },
     {
       "name": "make_80mm_03",
@@ -88,7 +88,7 @@
         0
       ],
       "frame": "hull",
-      "armor_mm": 80
+      "armor_mm": 80.0
     },
     {
       "name": "make_80mm_04",
@@ -108,7 +108,7 @@
         0
       ],
       "frame": "hull",
-      "armor_mm": 80
+      "armor_mm": 520.0
     },
     {
       "name": "make_80mm_05",
@@ -128,7 +128,7 @@
         0
       ],
       "frame": "hull",
-      "armor_mm": 80
+      "armor_mm": 80.0
     },
     {
       "name": "make_80mm_06",
@@ -148,7 +148,7 @@
         0
       ],
       "frame": "hull",
-      "armor_mm": 80
+      "armor_mm": 520.0
     },
     {
       "name": "make_80mm_07",
@@ -168,7 +168,7 @@
         0
       ],
       "frame": "hull",
-      "armor_mm": 80
+      "armor_mm": 80.0
     },
     {
       "name": "make_80mm_08",
@@ -188,7 +188,7 @@
         0
       ],
       "frame": "hull",
-      "armor_mm": 80
+      "armor_mm": 80.0
     },
     {
       "name": "make_80mm_09",
@@ -208,7 +208,7 @@
         0
       ],
       "frame": "hull",
-      "armor_mm": 80
+      "armor_mm": 80.0
     },
     {
       "name": "make_50mm_10",
@@ -268,7 +268,7 @@
         0
       ],
       "frame": "hull",
-      "armor_mm": 50
+      "armor_mm": 40.0
     },
     {
       "name": "make_150mm_13",
@@ -1909,6 +1909,26 @@
       ],
       "frame": "turret",
       "armor_mm": 650
+    },
+    {
+      "name": "ufp_composite_00",
+      "center": [
+        0.0,
+        1.18806,
+        -2.60118
+      ],
+      "half_size": [
+        1.29836,
+        0.03,
+        0.8439
+      ],
+      "rotation": [
+        -19.654,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 174.9
     }
   ],
   "sensitive_internals": [],
@@ -1935,84 +1955,42 @@
   ],
   "ammo_racks": [
     {
-      "name": "ammo_rack_00",
+      "name": "carousel_0",
       "center": [
-        -0.76469,
-        0.82261,
-        0.17756
+        -0.0,
+        0.66585,
+        0.11353
       ],
       "half_size": [
-        0.09856,
-        0.16553,
-        0.72378
-      ],
-      "rotation": [
-        -0.01745,
-        -0.00015,
-        -0.99985
-      ],
-      "frame": "hull",
-      "health": 10
-    },
-    {
-      "name": "ammo_rack_01",
-      "center": [
-        0.7641,
-        0.82261,
-        0.17756
-      ],
-      "half_size": [
-        0.09856,
-        0.16553,
-        0.72378
-      ],
-      "rotation": [
-        -0.01745,
-        -0.00015,
-        -0.99985
-      ],
-      "frame": "hull",
-      "health": 10
-    },
-    {
-      "name": "ammo_rack_02",
-      "center": [
-        0.00385,
-        0.8095,
-        -0.65348
-      ],
-      "half_size": [
-        0.65865,
-        0.16553,
-        0.11275
+        0.93793,
+        0.125,
+        0.93793
       ],
       "rotation": [
         0,
         0,
         0
       ],
-      "frame": "hull",
-      "health": 10
+      "frame": "hull"
     },
     {
-      "name": "ammo_rack_03",
+      "name": "carousel_1",
       "center": [
-        -0.00173,
-        0.8095,
-        1.00053
+        -0.0,
+        0.66585,
+        0.11353
       ],
       "half_size": [
-        0.66543,
-        0.16553,
-        0.11275
+        0.93793,
+        0.125,
+        0.93793
       ],
       "rotation": [
         0,
-        0,
+        45,
         0
       ],
-      "frame": "hull",
-      "health": 10
+      "frame": "hull"
     }
   ],
   "tracks": [],

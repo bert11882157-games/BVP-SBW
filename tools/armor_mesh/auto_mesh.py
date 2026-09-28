@@ -41,20 +41,24 @@ import numpy as np
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import build_mesh as B  # noqa: E402
+import shape as S  # noqa: E402
 
 TEMPLATES = os.path.join(HERE, 'templates')
 
 # Every armored ground vehicle except the ones with hand-authored box armor the owner keeps (BMP-2/2M, BMP-1, T-90A
 # (hand-measured mesh), all Abrams, T-72B, M48, M1128, T-62A, BTR-80A, BTR-60, the Toyotas, ZBD-09, Marder 1A2,
-# CV9040C, M2 Bradley, BMPT) and the emplacements (tripods, ZU-23). The T-55A, Leopard 2A6, LAV-25 and BTR-90 keep
-# their box armor (owner, 2026-09-28).
+# CV9040C, M2 Bradley, BMPT) and the emplacements (tripods, ZU-23). The T-55A, Leopard 2A6, LAV-25, BTR-90, T-72A,
+# T-90M and VBCI keep their box armor (owner, 2026-09-28).
 AUTO_TARGETS = [
     '9p148', '9p149_shturm', 'bmd_1', 'bmp3m_elite', 'btr_zd', 'challenger_2',
     'gaz_3937_vodnik_aa', 'gepard', 'k2a1_black_panther', 'leclerc_s1', 'leopard_2a4',
     'm109a7_paladin', 'm551a1', 'm60a1', 'marder_1a1', 'marder_1a5', 'pzh_2000', 'qn_506model', 't14_armata',
-    't64b_obr1976', 't72a', 't72b3', 't72b3_ubh_cope', 't80b_obr1976', 't80u_obr1985', 't90m',
-    '9k22_tunguska', 'type_90', 'vbci', 'vt_4a1', 'zsl_92', 'zsu23_4', 'ztl_09', 'ztz99a', 'uaz_469_spg9',
+    't64b_obr1976', 't72b3', 't72b3_ubh_cope', 't80b_obr1976', 't80u_obr1985',
+    '9k22_tunguska', 'type_90', 'vt_4a1', 'zsl_92', 'zsu23_4', 'ztl_09', 'ztz99a', 'uaz_469_spg9',
 ]
+
+# Meshes the owner tuned by hand in Blockbench (tools/armor_authoring/with_armor.py): --targets leaves them alone.
+HAND_TUNED = set()
 
 # Nominal plate thickness (mm) per aspect for vehicles whose profile has no box plates. Public figures, rounded:
 # BRDM-2 14 front / 7 elsewhere; MT-LB 10 / 7; BMD-1 and BTR-D 15 front / 10 sides (turret 23 / 19, from the
@@ -344,9 +348,52 @@ def clipped_points(poly_groups, z0, z1, y_min=None):
                 q = B.clip(q, np.array([0.0, 0.0, -1.0]), -z0)
             if q is not None and y_min is not None:
                 q = B.clip(q, np.array([0.0, -1.0, 0.0]), -y_min)
+            if q is not None and x_range is not None and not clamp:
+                q = B.clip(q, np.array([1.0, 0.0, 0.0]), x_range[1])
+                if q is not None:
+                    q = B.clip(q, np.array([-1.0, 0.0, 0.0]), -x_range[0])
             if q is not None:
                 out.append(q)
     return np.concatenate(out) if out else np.zeros((0, 3))
+
+
+def engine_type(vid):
+    path = os.path.join(B.DATA if hasattr(B, 'DATA') else '', 'sbw', 'vehicles', f'{vid}.json')
+    if not os.path.exists(path):
+        path = os.path.join(HERE, '..', '..', 'bvp', 'src', 'generated', 'resources', 'data', 'berts_vehicle_pack',
+                            'sbw', 'vehicles', f'{vid}.json')
+    m = re.search(r'"EngineType": *"(\w+)"', open(path).read()) if os.path.exists(path) else None
+    return m.group(1) if m else None
+
+
+def clip_polys(poly_groups, y_min=None, y_max=None, x_range=None, clamp=False, as_polys=False):
+    """Vertices of the model polygons clipped to y_min <= y <= y_max (cut points included); with x_range and clamp,
+    x is pulled in to the range (the part of the hull between the tracks)."""
+    out = []
+    for group in poly_groups:
+        for poly in group:
+            q = poly
+            if q is not None and y_max is not None:
+                q = B.clip(q, np.array([0.0, 1.0, 0.0]), y_max)
+            if q is not None and y_min is not None:
+                q = B.clip(q, np.array([0.0, -1.0, 0.0]), -y_min)
+            if q is not None and x_range is not None and not clamp:
+                q = B.clip(q, np.array([1.0, 0.0, 0.0]), x_range[1])
+                if q is not None:
+                    q = B.clip(q, np.array([-1.0, 0.0, 0.0]), -x_range[0])
+            if q is not None:
+                out.append(q)
+    if as_polys:
+        if x_range is not None and clamp:
+            for q in out:
+                q[:, 0] = np.clip(q[:, 0], x_range[0], x_range[1])
+        return out
+    if not out:
+        return np.zeros((0, 3))
+    P = np.concatenate(out)
+    if x_range is not None and clamp:
+        P[:, 0] = np.clip(P[:, 0], x_range[0], x_range[1])
+    return P
 
 
 def snap(pts):
@@ -354,6 +401,12 @@ def snap(pts):
 
 
 def aspect(n, frame):
+    # a hull glacis is steep (the T-72's upper plate is 68 deg from vertical, its normal mostly up): any hull face
+    # turned forward by more than ~7 deg is front armor, not roof
+    if frame == 'hull' and n[2] < -0.12 and abs(n[1]) < 0.995:
+        return 'front'
+    if frame == 'hull' and n[2] > 0.25 and abs(n[1]) < 0.97:
+        return 'rear'
     if n[1] > 0.7:
         return 'roof'
     if n[1] < -0.7:
@@ -424,7 +477,7 @@ DOP_DIRECTIONS /= np.linalg.norm(DOP_DIRECTIONS, axis=1)[:, None]
 # armor_floor.py, 16 mm on every Tank/APC) is applied at runtime under box and mesh plates alike, so a car (the UAZ)
 # keeps its sheet steel.
 # No armor on the launcher itself: the 9P149's arm is a weapon module instead (armor profile "launcherreload").
-NO_WEAPON_ARMOR = {'9p149_shturm'}
+NO_WEAPON_ARMOR = {'9p149_shturm', '9p148'}
 
 
 def fitted_directions(points, limit=26, min_angle=14.0):
@@ -499,9 +552,12 @@ def aspect_thickness(template, frame):
             c = float(outward @ aspect_axis(asp, outward))
             if c >= MIN_COS:
                 by[asp].append((mm / c, area * c))
+                if asp == 'front' and frame == 'hull':
+                    # upper front plate faces up and forward, the lower one down and forward
+                    by['ufp' if outward[1] >= 0 else 'lfp'].append((mm / c, area * c))
     out = {}
     for asp, rows in by.items():
-        if asp == 'front':
+        if asp in ('front', 'ufp', 'lfp'):
             out[asp] = max(los for los, _ in rows)
         else:
             rows.sort()
@@ -515,15 +571,91 @@ def aspect_thickness(template, frame):
     return out
 
 
-def plates_for(points, frame, tag, vid, template):
-    vols = B.plates_from(dop_vertices(points), [{'name': 'plate', 'mm': 1.0}], [], frame, tag)
+# Upper front plate, line of sight (mm RHA vs kinetic rounds, rounded public / War Thunder-style estimates):
+# composite glacis of the MBTs (owner, 2026-09-28: "the upper front plate is typically very strong composite").
+UFP_LOS = {
+    't64b_obr1976': 330, 't72a': 335, 't72b': 420, 't72b3': 480, 't72b3_ubh_cope': 480, 't80b_obr1976': 335,
+    't80u_obr1985': 470, 't90a': 500, 't90m': 520, 't14_armata': 600, 'leopard_2a4': 400, 'leo2a6': 420,
+    'challenger_2': 500, 'leclerc_s1': 470, 'type_90': 450, 'k2a1_black_panther': 550, 'vt_4a1': 540,
+    'ztz99a': 560,
+}
+# Lower front plate of the same MBTs: plain steel, 110 mm (owner, 2026-09-28).
+LFP_MM = 110.0
+# MBT hull side 80 mm and the rear plate behind the engine 40 mm (owner, 2026-09-28).
+MBT_SIDE_MM = 80.0
+MBT_REAR_MM = 40.0
+
+
+def front_part(n, centre, mid_y):
+    """'ufp' / 'lfp' for a hull front face (by its slope, or its height when it is vertical)."""
+    if n[1] > 0.12:
+        return 'ufp'
+    if n[1] < -0.12:
+        return 'lfp'
+    return 'ufp' if centre[1] >= mid_y else 'lfp'
+
+
+def composite_depth(vertices, frame, mid_y, vid, barrel_pivot_z=None):
+    """z (geo px, front is -z) behind which a side face is no longer backed by the frontal composite: the rear edge
+    of the upper front plate on an MBT hull, the trunnion (+2 px) on a turret. None when not an MBT."""
+    if vid not in UFP_LOS:
+        return None
+    if frame == 'hull':
+        ufp = [poly for n, d, poly in B.hull_faces(vertices)
+               if aspect(n, 'hull') == 'front' and front_part(n, poly.mean(0), mid_y) == 'ufp']
+        if not ufp:
+            return None
+        # the composite block is at most a quarter of the hull deep, and only as low as the glacis reaches
+        front, length = float(vertices[:, 2].min()), float(np.ptp(vertices[:, 2]))
+        z = min(max(float(q[:, 2].max()) for q in ufp), front + 0.25 * length)
+        return z, min(float(q[:, 1].min()) for q in ufp)
+    if frame == 'turret' and barrel_pivot_z is not None:
+        return float(barrel_pivot_z) + 2.0, None
+    return None
+
+
+def plates_for_solid(vertices, frame, tag, vid, template, mid_y=None, side_cut_z=None):
+    """Plates on the faces of a solid. With side_cut_z, the side faces are split there: the part ahead of it is the
+    side of the frontal composite and is as thick seen from the side as from the front (owner, 2026-09-28)."""
+    cut_y = None
+    if side_cut_z is not None:
+        side_cut_z, cut_y = side_cut_z
+    planes = [] if side_cut_z is None else [[0.0, 0.0, 1.0, side_cut_z]]
+    if cut_y is not None:
+        planes.append([0.0, 1.0, 0.0, cut_y])
+    cuts = [{'when': {'anx': (0.7, 1.01)}, 'planes': planes}] if planes else []
+    vols = B.plates_from(vertices, [{'name': 'plate', 'mm': 1.0}], cuts, frame, tag)
     table = aspect_thickness(template, frame)
     for v in vols:
-        asp = aspect(v['n'], frame)
-        v['name'] = f'{tag}_{asp}'
-        if table and asp in table:
-            # line of sight along the aspect's axis -> plate thickness for this face's slope
-            cos = max(MIN_COS, abs(float(np.asarray(v['n']) @ aspect_axis(asp, v['n']))))
+        n = np.asarray(v['n'])
+        asp = aspect(n, frame)
+        part = asp
+        if frame == 'hull' and asp == 'front':
+            part = front_part(n, v['centroid'], mid_y if mid_y is not None else v['centroid'][1])
+        if asp == 'side' and side_cut_z is not None and v['centroid'][2] < side_cut_z and \
+                (cut_y is None or v['centroid'][1] > cut_y):
+            part = 'cheek' if frame != 'hull' else 'ufp_side'
+        if part == 'ufp_side':
+            v['name'] = f'{tag}_{part}'
+            v['mm'], v['source'] = float(UFP_LOS[vid]), 'ufp_table'
+            continue
+        if part == 'cheek' and table and 'front' in table:
+            v['name'] = f'{tag}_{part}'
+            v['mm'], v['source'] = float(round(table['front'], 1)), 'profile'
+            continue
+        v['name'] = f'{tag}_{part}'
+        cos = max(MIN_COS, abs(float(n @ aspect_axis(asp, n))))
+        if part == 'ufp' and vid in UFP_LOS:
+            mm, src = UFP_LOS[vid] * cos, 'ufp_table'
+        elif part == 'lfp' and vid in UFP_LOS:
+            mm, src = LFP_MM, 'lfp_table'
+        elif frame == 'hull' and part == 'side' and vid in UFP_LOS:
+            mm, src = MBT_SIDE_MM, 'mbt_side'
+        elif frame == 'hull' and part == 'rear' and vid in UFP_LOS:
+            mm, src = MBT_REAR_MM, 'mbt_rear'
+        elif table and part in table:
+            mm, src = table[part] * cos, 'profile'
+        elif table and asp in table:
             mm, src = table[asp] * cos, 'profile'
         elif table:
             mm, src = max(table.values()) if asp == 'front' else float(np.median(list(table.values()))), 'profile~'
@@ -534,13 +666,110 @@ def plates_for(points, frame, tag, vid, template):
     return vols
 
 
+# Ammunition (owner, 2026-09-28: only where it really is - an ammo hit is an instant kill). A carousel autoloader is
+# a short thick cylinder on the hull floor under the turret; otherwise the hull racks sit low behind the frontal
+# composite, beside the driver. Vehicles not listed keep their profile's ammo boxes (or have none).
+AMMO = {
+    't64b_obr1976': 'carousel', 't72b3': 'carousel', 't72b3_ubh_cope': 'carousel', 't80b_obr1976': 'carousel',
+    't80u_obr1985': 'carousel', 'ztz99a': 'carousel', 'vt_4a1': 'carousel', 't14_armata': 'carousel',
+    'bmp3m_elite': 'carousel',
+    'leopard_2a4': ['front_left'], 'challenger_2': ['front_left', 'front_right'], 'leclerc_s1': ['front_right'],
+    'k2a1_black_panther': ['front_right'], 'type_90': ['front_right'],
+}
+
+
+def box_in_solid(lo, hi, V):
+    """The part of the box [lo, hi] inside the convex solid V, as outward polygons (None when empty)."""
+    from scipy.spatial import HalfspaceIntersection
+    hs = [[1, 0, 0, -hi[0]], [-1, 0, 0, lo[0]], [0, 1, 0, -hi[1]], [0, -1, 0, lo[1]], [0, 0, 1, -hi[2]],
+          [0, 0, -1, lo[2]]]
+    for n, d, _ in B.hull_faces(V):
+        hs.append([n[0], n[1], n[2], -d])
+    hs = np.array(hs, float)
+    from scipy.optimize import linprog
+    A_, b_ = hs[:, :3], -hs[:, 3]
+    res = linprog([0, 0, 0, -1], A_ub=np.c_[A_, np.linalg.norm(A_, axis=1)], b_ub=b_,
+                  bounds=[(None, None)] * 3 + [(0, None)])
+    if not res.success or res.x[3] < 0.3:
+        return None
+    pts = HalfspaceIntersection(hs, res.x[:3]).intersections
+    return B.solid_polys(np.unique(np.round(pts, 5), axis=0))
+
+
+def internals(vid, hull_V, bones, centre_x, profile_engine_front):
+    """Engine and ammunition volumes shaped to the hull solid."""
+    out = []
+    lo, hi = hull_V.min(0), hull_V.max(0)
+    L, H = hi[2] - lo[2], hi[1] - lo[1]
+    half = (hi[0] - lo[0]) / 2
+    belly = lo[1]
+    if profile_engine_front is not None:
+        if profile_engine_front:
+            # front engine beside the driver (M109, PzH 2000, Marder, ZTL-11): the right front of the hull
+            e_lo = [centre_x - half + 1.5, belly + 1.5, lo[2] + 0.08 * L]
+            e_hi = [centre_x - 1.0, hi[1] - 2.0, lo[2] + 0.40 * L]
+        else:
+            e_lo = [centre_x - half + 2.0, belly + 1.5, hi[2] - 0.30 * L]
+            e_hi = [centre_x + half - 2.0, hi[1] - 2.0, hi[2] - 1.5]
+        faces = box_in_solid(e_lo, e_hi, hull_V)
+        if faces:
+            out.append({'frame': 'hull', 'kind': 'engine', 'name': 'powerpack', 'parts': [faces]})
+    layout = AMMO.get(vid)
+    if layout == 'carousel' and 'turret' in bones:
+        piv = np.array(bones['turret'].get('pivot', [0, 0, 0]), float)
+        r = 0.42 * (hi[0] - lo[0])
+        y0, y1 = belly + 1.0, belly + 1.0 + max(4.0, 0.22 * H)
+        ring = [[piv[0] + r * math.cos(2 * math.pi * k / 16), y, piv[2] + r * math.sin(2 * math.pi * k / 16)]
+                for k in range(16) for y in (y0, y1)]
+        out.append({'frame': 'hull', 'kind': 'ammo', 'name': 'carousel', 'param': '10hp',
+                    'parts': [B.solid_polys(np.array(ring))]})
+    elif isinstance(layout, list):
+        for side in layout:
+            # a rack beside the driver: the outer part of that side, low, behind the frontal composite
+            x_lo, x_hi = ((centre_x + 0.4 * half, centre_x + half - 1.5) if side == 'front_left'
+                          else (centre_x - half + 1.5, centre_x - 0.4 * half))
+            faces = box_in_solid([x_lo, belly + 1.0, lo[2] + 0.14 * L], [x_hi, belly + 0.45 * H, lo[2] + 0.32 * L],
+                                 hull_V)
+            if faces:
+                out.append({'frame': 'hull', 'kind': 'ammo', 'name': f'rack_{side}', 'param': '10hp',
+                            'parts': [faces]})
+    return out
+
+
+# Family commonality (owner, 2026-09-28): members take the reference's solids - the hull fitted to the member's own
+# hull extents, the turret and mantlet moved with the turret pivot - so a family reads the same everywhere.
+HULL_FROM = {'t80u_obr1985': 't80b_obr1976'}
+TURRET_FROM = {'t72b3': 't72a', 't72b3_ubh_cope': 't72a'}
+
+
+def family_made(vid, made, bones):
+    """Replace the hull / turret / mantlet solids [(frame, tag, V)] with the family reference's (HULL_FROM,
+    TURRET_FROM)."""
+    refs = {HULL_FROM.get(vid), TURRET_FROM.get(vid)} - {None}
+    for ref in refs:
+        _, rinfo = build(ref, verbose=False)
+        theirs_all = rinfo['made']
+        if HULL_FROM.get(vid) == ref:
+            own = np.vstack([V for f, _, V in made if f == 'hull'])
+            theirs = np.vstack([V for f, _, V in theirs_all if f == 'hull'])
+            lo, hi, rlo, rhi = own.min(0), own.max(0), theirs.min(0), theirs.max(0)
+            scale = (hi - lo) / np.maximum(rhi - rlo, 1e-6)
+            made = [m for m in made if m[0] != 'hull'] + \
+                   [(f, t, lo + (V - rlo) * scale) for f, t, V in theirs_all if f == 'hull']
+        if TURRET_FROM.get(vid) == ref:
+            rb = load_model(ref)
+            delta = np.array(bones['turret']['pivot'], float) - np.array(rb['turret']['pivot'], float)
+            made = [m for m in made if m[0] not in ('turret', 'barrel')] + \
+                   [(f, t, V + delta) for f, t, V in theirs_all if f in ('turret', 'barrel')]
+    return made
+
+
 def build(vid, verbose=True):
     bones = load_model(vid)
     frame, running = classify_bones(bones)
     template = load_template(vid)
     era = template['era'] if template else []
     comps = collections.defaultdict(list)
-    polys = collections.defaultdict(list)
     dropped = collections.Counter()
     for name, b in bones.items():
         f = frame.get(name)
@@ -549,92 +778,118 @@ def build(vid, verbose=True):
         for c, pl in bone_points(b):
             screen = any(sf == f and c[:, 1].min() >= lo and c[:, 1].max() > hi for sf, lo, hi in SCREENS.get(vid, []))
             if not screen and keep_component(c, era, f):
-                comps[f].append(c)
-                polys[f].append(pl)
+                comps[f].append((c, pl, sum(B.polygon_area(q) for q in pl)))
             else:
                 dropped[f] += 1
+    # the underlying body: the largest shell plus big long panels; the rest is greeble and does not shape the armor
     for f in ('hull', 'turret'):
-        keep = drop_roof_fittings(comps[f])
-        dropped[f + '_roof'] += len(comps[f]) - len(keep)
+        keep = S.structure(comps[f])
+        dropped[f + '_greeble'] += len(comps[f]) - len(keep)
         comps[f] = [comps[f][i] for i in keep]
-        polys[f] = [polys[f][i] for i in keep]
     volumes = []
     info = {'dropped': dict(dropped)}
-
-    # hull: a core between the running gear (every point pulled in to the inner face of the wheels/tracks) and,
-    # where the hull is wider above the running gear (sponsons, fenders over the tracks), a second solid from the
-    # top of the running gear up. Two solids instead of one hull so no sloped face reaches down over the tracks.
-    # Both are built in lengthwise segments (the model's polygons clipped at each cut) so a raised engine deck or a
-    # stepped roof keeps its step instead of being bridged by one long slope.
-    all_hull = np.concatenate(comps['hull'])
+    hull_polys = [pl for _, pl, _ in comps['hull']]
+    body = np.concatenate([c for c, _, _ in comps['hull']])
+    centre_x = round(float((body[:, 0].max() + body[:, 0].min()) / 2), 3)
     gear = running_gear(bones, running)
-    zmin, zmax = all_hull[:, 2].min(), all_hull[:, 2].max()
-    # two lengthwise halves: a raised deck or a stepped roof keeps a step, and each half is one simple solid
-    nseg = 2 if zmax - zmin > SEGMENT else 1
-    edges = np.linspace(zmin, zmax, nseg + 1)
-    top = gear[2] if gear else None
-    sponson = False
-    for i in range(nseg):
-        z0, z1 = edges[i] - (0.0 if i == 0 else 0.01), edges[i + 1] + (0.0 if i == nseg - 1 else 0.01)
-        seg = clipped_points(polys['hull'], z0, z1)
-        if len(seg) < 4:
-            continue
-        core = seg.copy()
-        if gear:
-            core[:, 0] = np.clip(core[:, 0], gear[1] + 0.2, gear[0] - 0.2)
-        core = snap(core)
-        if len(core) >= 4 and np.ptp(core, axis=0).min() > 1.0:
-            volumes += plates_for(core, 'hull', 'hull', vid, template)
-            info.setdefault('solids', []).append(('hull', core))
-        if gear:
-            up = clipped_points(polys['hull'], z0, z1, y_min=top)
-            if len(up) >= 4 and (up[:, 0].max() > gear[0] + 1.0 or up[:, 0].min() < gear[1] - 1.0):
-                up = snap(up)
-                if np.ptp(up, axis=0).min() > 1.0:
-                    volumes += plates_for(up, 'hull', 'sponson', vid, template)
-                    info.setdefault('solids', []).append(('hull', up))
-                    sponson = True
-    hull_pts = snap(np.concatenate([s for f, s in info.get('solids', []) if f == 'hull']))
-    info['segments'] = nseg
+    mid_y = float((body[:, 1].max() + body[:, 1].min()) / 2)
+    solids = []
+    tracked = engine_type(vid) == 'Track'
+    info['tracked'] = tracked
     if gear:
-        info['gear'] = [round(float(gear[0]), 2), round(float(gear[1]), 2), round(float(top), 2)]
-        info['sponson'] = sponson
+        top = float(gear[2])
+        half = min(gear[0] - centre_x, centre_x - gear[1]) - 0.2
+        lower = clip_polys(hull_polys, y_max=top, x_range=(centre_x - half, centre_x + half), clamp=True,
+                           as_polys=True)
+        upper = clip_polys(hull_polys, y_min=top, as_polys=True)
+        upper_pts = np.concatenate(upper) if upper else np.zeros((0, 3))
+        info['gear'] = [round(float(gear[0]), 2), round(float(gear[1]), 2), round(top, 2)]
+        if tracked:
+            # the cover over the tracks (fenders, skirts, mudguards, bins) and the running gear are no armor: a
+            # tracked hull is the body between the tracks, belly to roof (owner, 2026-09-28). Wheeled vehicles keep
+            # the body over their wheels.
+            # clipped at the inner faces of the tracks (not squeezed in): the fenders' ends must not shape the nose
+            solids += [('hull', 'hull', clip_polys(hull_polys, x_range=(centre_x - half, centre_x + half),
+                                                   as_polys=True))]
+        elif len(upper_pts) >= 4 and np.ptp(upper_pts[:, 0]) > 2 * half + 2.0 and np.ptp(upper_pts[:, 1]) > 1.0:
+            solids += [('hull', 'hull', lower), ('hull', 'sponson', upper)]
+            info['sponson'] = True
+        else:
+            solids += [('hull', 'hull', [q for g in hull_polys for q in g])]
+    else:
+        solids += [('hull', 'hull', [q for g in hull_polys for q in g])]
+    hull_top = None
+    made = []
+    for f, tag, polys_ in solids:
+        V = S.solid_from_polys(polys_, centre_x) if len(polys_) >= 2 else None
+        if V is None:
+            continue
+        made.append(('hull', tag, V))
+        info.setdefault('solids', []).append(('hull', V))
+        hull_top = V if hull_top is None else np.vstack([hull_top, V])
 
     if vid in NO_WEAPON_ARMOR:
         comps['turret'], comps['barrel'] = [], []
-    # turret, carried down to the hull roof so no gap is left under it (the base outline repeated at roof height)
-    turret_pts = None
-    if comps['turret']:
-        turret_pts = snap(np.concatenate(comps['turret']))
-        if 'turret' in bones and len(turret_pts) >= 4:
-            piv = np.array(bones['turret'].get('pivot', [0, 0, 0]), float)
-            near = hull_pts[(np.abs(hull_pts[:, 0] - piv[0]) < 12) & (np.abs(hull_pts[:, 2] - piv[2]) < 12)]
-            roof = near[:, 1].max() if len(near) else hull_pts[:, 1].max()
-            floor = turret_pts[:, 1].min()
-            base = turret_pts[turret_pts[:, 1] < floor + 1.5]
+    turret_front_z = None
+    # turret: the underlying shell, carried down to the hull roof so no gap is left under it
+    if comps['turret'] and 'turret' in bones:
+        piv = np.array(bones['turret'].get('pivot', [0, 0, 0]), float)
+        tpts = np.concatenate([c for c, _, _ in comps['turret']])
+        tpolys = [q for _, pl, _ in comps['turret'] for q in pl]
+        if hull_top is not None:
+            near = hull_top[(np.abs(hull_top[:, 0] - piv[0]) < 14) & (np.abs(hull_top[:, 2] - piv[2]) < 14)]
+            roof = float(near[:, 1].max()) if len(near) else float(hull_top[:, 1].max())
+            floor = float(tpts[:, 1].min())
+            base = tpts[tpts[:, 1] < floor + 1.5]
             if floor > roof + 0.3 and len(base) >= 3:
-                shrink = piv + 0.9 * (base - piv) * np.array([1, 0, 1])
-                shrink[:, 1] = roof - 0.5
-                turret_pts = snap(np.concatenate([turret_pts, shrink]))
-                info['ring'] = [round(float(roof), 2), round(float(floor), 2)]
-        if len(turret_pts) >= 4 and np.ptp(turret_pts, axis=0).min() > 1.0:
-            volumes += plates_for(turret_pts, 'turret', 'turret', vid, template)
-            info.setdefault('solids', []).append(('turret', turret_pts))
-        else:
-            turret_pts = None
+                ring = piv + 0.9 * (base - piv) * np.array([1, 0, 1])
+                ring[:, 1] = roof - 0.5
+                tpolys.append(ring)
+                info['ring'] = [round(roof, 2), round(floor, 2)]
+        V = S.solid_from_polys(tpolys, float(piv[0]))
+        if V is not None:
+            made.append(('turret', 'turret', V))
+            info.setdefault('solids', []).append(('turret', V))
+            turret_front_z = float(V[:, 2].min())
 
-    # mantlet: barrel-frame parts around the trunnion, no gun tube
+    # mantlet: the barrel-frame parts around the trunnion and ahead of it (the breech behind it is ignored), a box
     if 'barell' in bones and comps['barrel']:
         piv = np.array(bones['barell'].get('pivot', [0, 0, 0]), float)
-        near = [c for c in comps['barrel']
-                if np.ptp(c, axis=0).max() < 28.0 and np.linalg.norm((c.mean(0) - piv) * [1, 1, 0.6]) < 16.0]
+        near = [c for c, _, _ in comps['barrel']
+                if np.ptp(c, axis=0).max() < 28.0 and np.linalg.norm((c.mean(0) - piv) * [1, 1, 0.6]) < 16.0
+                and c[:, 2].mean() <= piv[2] + 1.0]
         if near:
-            m_pts = snap(np.concatenate(near))
-            if len(m_pts) >= 4 and np.ptp(m_pts, axis=0).min() > 1.0:
-                volumes += plates_for(m_pts, 'barrel', 'mantlet', vid, template)
-                info.setdefault('solids', []).append(('barrel', m_pts))
+            m_pts = np.concatenate(near)
+            if turret_front_z is not None:
+                # the mantlet stands at most 4 px proud of the turret front; the gun tube ahead of it is no armor
+                m_pts[:, 2] = np.maximum(m_pts[:, 2], turret_front_z - 4.0)
+            if np.ptp(m_pts, axis=0).min() > 1.0:
+                V = S.box(m_pts, float(piv[0]))
+                made.append(('barrel', 'mantlet', V))
+                info.setdefault('solids', []).append(('barrel', V))
                 info['mantlet_parts'] = len(near)
 
+    made = family_made(vid, made, bones)
+    info['solids'] = [(f, V) for f, _, V in made]
+    info['made'] = made
+    bpz = bones['barell'].get('pivot', [0, 0, 0])[2] if 'barell' in bones else None
+    for f, tag, V in made:
+        if f == 'hull':
+            volumes += plates_for_solid(V, 'hull', tag, vid, template, mid_y,
+                                        side_cut_z=composite_depth(V, 'hull', mid_y, vid))
+        elif f == 'turret':
+            volumes += plates_for_solid(V, 'turret', tag, vid, template,
+                                        side_cut_z=composite_depth(V, 'turret', None, vid, bpz))
+        else:
+            volumes += plates_for_solid(V, f, tag, vid, template)
+    if hull_top is not None:
+        prof = os.path.join(HERE, '..', '..', 'bvp', 'src', 'generated', 'resources', 'data', 'berts_vehicle_pack',
+                            'armor', f'{vid}.json')
+        engines = json.load(open(prof)).get('engines', []) if os.path.exists(prof) else []
+        # profile frame: front is -z
+        front = None if not engines else float(np.mean([e['center'][2] for e in engines])) < 0
+        main_hull = next(V for f, V in info['solids'] if f == 'hull')
+        volumes += internals(vid, main_hull, bones, centre_x, front)
     info['asym'] = sum(1 for v in volumes if v.get('asym'))
     count = collections.Counter(v['name'] for v in volumes)
     idx = collections.Counter()
@@ -652,18 +907,18 @@ def main(argv):
     ap.add_argument('--report', action='store_true')
     ap.add_argument('--out-dir')
     a = ap.parse_args(argv)
-    ids = AUTO_TARGETS if a.targets else a.ids
+    ids = [v for v in AUTO_TARGETS if v not in HAND_TUNED] if a.targets else a.ids
     for vid in ids:
         B.SKIPPED.clear()
         volumes, info = build(vid)
         kinds = collections.Counter(v['frame'] for v in volumes)
-        src = collections.Counter('default' if v['source'] == 'default' else 'nearest' if str(v['source']).split('|')[0].endswith('~')
+        src = collections.Counter('module' if 'source' not in v else 'default' if v['source'] == 'default' else 'nearest' if str(v['source']).split('|')[0].endswith('~')
                                   else 'ring' if v['source'] == 'ring' else 'ray' for v in volumes)
-        shown = {k: v for k, v in info.items() if k != 'solids'}
+        shown = {k: v for k, v in info.items() if k not in ('solids', 'made')}
         print(f"{vid}: {len(volumes)} plates {dict(kinds)} thickness {dict(src)} {shown}")
         if a.report:
             for v in volumes:
-                print(f"   {v['frame']:7s} {B.bone_name(v):44s} n={np.round(v['n'], 2).tolist()} from {v['source']}")
+                print(f"   {v['frame']:7s} {B.bone_name(v):44s} n={np.round(v['n'], 2).tolist() if 'n' in v else '-'} from {v.get('source', v['kind'])}")
             continue
         path = os.path.join(a.out_dir or B.OUT, f'{vid}.geo.json')
         B.write(vid, volumes, path)

@@ -247,27 +247,40 @@ through `ArmorHitResolver`, `ArmorModuleResolver` and the angle rule. The report
 
 `tools/armor_mesh/auto_mesh.py` builds the same kind of file straight from the visual model, with no
 hand-written spec. It covers every armored ground vehicle except the ones with hand-authored box armor
-the owner keeps (BMP-1/2/2M, T-90A, all Abrams, T-72B, M48, M1128, T-62A, BTR-80A, BTR-60, the Toyotas,
-ZBD-09, Marder 1A2, CV9040C, M2 Bradley, BMPT, and since 2026-09-28 the T-55A, Leopard 2A6, LAV-25 and
-BTR-90, whose generated meshes are in `tools/replaced/armor-mesh-restored-box-20260928/`) and the
-emplacements: `AUTO_TARGETS`, 36 vehicles.
+the owner keeps (BMP-1/2/2M, T-90A (hand-measured mesh), all Abrams, T-72B, M48, M1128, T-62A, BTR-80A,
+BTR-60, the Toyotas, ZBD-09, Marder 1A2, CV9040C, M2 Bradley, BMPT and, since 2026-09-28, T-55A, Leopard
+2A6, LAV-25, BTR-90, T-72A, T-90M and VBCI, whose generated meshes are in
+`tools/replaced/armor-mesh-restored-box-20260928/`) and the emplacements: `AUTO_TARGETS`.
 
-* **Structure (simplified, 2026-09-28).** Model bones go to the hull, turret or barrel frame by their parent
-  chain. Running gear, ERA, secondary mounts, rods (antennas, rails), specks, tubes and small roof fittings
-  are left out. Every solid is bounded by at most 26 planes: the planes of the convex hull's largest faces
-  (most area first, none within 14 degrees of another) plus the box axes where nothing is close, each pushed
-  out to the farthest point. The planes lie on the model's real big faces, so a glacis or a turret cheek is one
-  face and the solid is only 1-10% larger than the model's hull: 80-150 plates per vehicle instead of 350-470. The hull is two lengthwise halves, each a core
-  between the running gear plus a sponson above it where the hull is wider; the turret solid is carried
-  down to the hull roof (no separate collar); the mantlet is the barrel-frame parts around the trunnion.
-  The 9P149 launcher has no armor at all: it is the `launcherreload` weapon module (see below).
-* **Thickness.** Per frame and aspect, the line-of-sight thickness of the vehicle's own box plates
-  (`templates/<id>.armor.geo.json`): a plate counts for an aspect when it faces within ~70 degrees of it,
-  with its mm divided by that cosine. The front takes the largest value, so a shot at composite cheeks or
-  a glacis meets the full protection; the other aspects take the median weighted by projected area. Each
-  face then gets that value times the cosine of its own slope, so a horizontal shot meets the same line of
-  sight the box armor had. Vehicles with no box plates use the nominal per-aspect values in `DEFAULTS`.
-  ERA, engines, ammo and modules stay on the boxes.
+* **The underlying body only** (owner, 2026-09-28). A frame's structure is its largest connected component
+  (the hull or turret shell) plus big blocks (a separate lower hull or rear plate) and thin long panels;
+  hatches, boxes, bins, lights, tools, handles and the like are greeble and do not shape the armor. On a
+  tracked vehicle the hull is the body between the tracks, belly to roof: the cover over the tracks
+  (fenders, skirts, mudguards) and the running gear are not armor. Wheeled vehicles keep the body over
+  their wheels. The gun tube is left out, and the breech behind the trunnion is ignored (the mantlet is a
+  box ahead of it, at most 4 px proud of the turret front).
+* **Shape** (`tools/armor_mesh/shape.py`). Each solid is the intersection of three outline extrusions:
+  side (z, y: upper and lower front plate, roof, engine deck, rear), front (x, y: side walls and their
+  slope) and top (x, z: plan shape). Each outline is the convex hull of the faces that span that view
+  (a sliver or bracket at the nose cannot bend the glacis), mirrored about the centreline so both sides
+  match, and simplified to at most 8 vertices. Every face lies on a flat plane of the real body; a tank is
+  30-70 plates.
+* **Families.** `HULL_FROM` / `TURRET_FROM` give a member its reference's solids (hull fitted to the
+  member's hull extents, turret moved with the pivot): the T-72B3 and T-72B3 UBH use the T-72A turret, the
+  T-80U the T-80B hull.
+* **Thickness.** Per frame and aspect, the line of sight of the vehicle's own box plates
+  (`templates/<id>.armor.geo.json`), re-sloped to each face. MBTs (`UFP_LOS`): the upper front plate is
+  composite with a table line of sight, as thick seen from the side where it sits (the hull side beside the
+  glacis, above the nose, at most a quarter of the hull deep; the turret side ahead of the trunnion takes
+  the turret front value); the lower front plate 110 mm, hull sides 80 mm, the rear plate 40 mm.
+  `tools/armor_mesh/mbt_front.py` applies the same to the box-armor T-72A / T-72B / T-90M (adding the
+  glacis plate their profiles lacked) and to the T-90A mesh.
+* **Engine and ammunition.** The engine is a box in the rear 30 % of the hull (the right front for the
+  front-engined M109, PzH 2000, Marder and ZTL-11). Ammunition only where it is (`AMMO`): a carousel
+  autoloader is a short thick cylinder on the hull floor under the turret; hull racks sit low beside the
+  driver behind the frontal composite; vehicles not listed keep their profile's racks.
+* **Hand tuning.** `tools/armor_authoring/with_armor.py` writes Blockbench files with the outline and the
+  armor mesh together; a tuned file goes back into `armor_mesh/` and its id into `HAND_TUNED`.
 * **Rifle-calibre floor.** `min_armor_mm` in an armor profile (`tools/armor_mesh/armor_floor.py` sets 16 on
   every vehicle of SBW Type Tank or APC) is a floor under every plate, box or mesh, and under gaps in box
   armor: rifle-calibre rounds (at most 13 mm) cannot kill an IFV with the coax; 12.7 mm and up still can.

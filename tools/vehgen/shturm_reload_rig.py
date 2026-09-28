@@ -10,8 +10,8 @@ Model (geo px; data frame = (x, y, -z) / 16):
 * ``barell``  - the 9M114 launch tube and rail: elevates about the mount at the top of the pole (y 45.7).
 * ``launcher_plate``  - the angled plate between the pole and the roof (hull child, hinged at its roof edge): follows
   the pole's yaw and folds flat onto the roof while the pole is down.
-* ``launcher_tube_spent`` - a copy of the tube (turret child, pivot = the barrel's), shown only while the fired tube
-  is thrown off; the barrel itself is hidden from the shot until the new tube appears.
+* ``launcher_tube_spent`` - a copy of the tube (hull child, pivot = the barrel's, on the pole axis), shown while the
+  fired tube is thrown off, falls and lies on the ground; the barrel itself is hidden from the shot until the new tube appears.
 * ``reload_hatch`` - the roof hatch beside the pole (hull child, hinged along its outer edge, x 10.2).
 * ``reload_hatch_well`` - a black quad just above the roof under the closed hatch (inside the hatch slab, so it
   cannot be seen while the hatch is closed): the open hatch shows a black opening (there is no interior).
@@ -169,7 +169,7 @@ def main(argv):
     turret['pivot'] = [YAW_AXIS[0], ROLL_Y, YAW_AXIS[1]]
     turret['poly_mesh'] = merge(turret.get('poly_mesh'), parts['pole'])
     barrel['pivot'] = [YAW_AXIS[0], PITCH_Y, YAW_AXIS[1]]
-    spent = {'name': 'launcher_tube_spent', 'parent': 'turret', 'pivot': list(barrel['pivot']),
+    spent = {'name': 'launcher_tube_spent', 'parent': 'hull', 'pivot': list(barrel['pivot']),
              'poly_mesh': copy.deepcopy(barrel['poly_mesh'])}
     plate = {'name': 'launcher_plate', 'parent': 'hull', 'pivot': list(PLATE_HINGE), 'poly_mesh': parts['plate']}
     hatch = {'name': 'reload_hatch', 'parent': 'hull', 'pivot': list(HATCH_HINGE), 'poly_mesh': parts['hatch']}

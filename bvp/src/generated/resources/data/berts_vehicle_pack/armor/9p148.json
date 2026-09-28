@@ -14,7 +14,48 @@
   "engines": [],
   "ammo_racks": [],
   "tracks": [],
-  "modules": [],
+  "modules": [
+    {
+      "name": "weaponsystems_launcher",
+      "center": [
+        0.00281,
+        2.645,
+        -0.28875
+      ],
+      "half_size": [
+        0.63344,
+        0.29688,
+        0.83625
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "barrel",
+      "module": "weaponsystems"
+    },
+    {
+      "name": "weaponsystems_mount",
+      "center": [
+        -0.00313,
+        2.18063,
+        -0.27063
+      ],
+      "half_size": [
+        0.3875,
+        0.33375,
+        0.3875
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "turret",
+      "module": "weaponsystems"
+    }
+  ],
   "explosive_reactive_armor": [],
   "sbw_obb": [],
   "authoring_state": "PENDING_AUTHORING"
