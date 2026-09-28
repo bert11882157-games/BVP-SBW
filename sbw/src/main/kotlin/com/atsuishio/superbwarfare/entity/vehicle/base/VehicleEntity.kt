@@ -3055,10 +3055,14 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
     }
 
     protected fun updateBackupAmmoCount() {
-        // Every channel needs a current presentation count, including secondary weapons.
+        // Every channel needs a current presentation count, including secondary weapons. The creative check
+        // (passengers' and the vehicle's inventories) is the same for every weapon: made once, not per weapon.
+        val supplier = this.ammoSupplier
+        val creative = supplier is Player && supplier.isCreative ||
+            com.atsuishio.superbwarfare.tools.InventoryTool.hasCreativeAmmoBox(supplier)
         for (name in gunDataMap.keys.toList()) {
             val currentData = getGunData(name) ?: continue
-            val count = currentData.countBackupAmmo(this.ammoSupplier)
+            val count = if (creative) Int.MAX_VALUE else currentData.countBackupAmmoWithoutCreative(supplier)
             if (currentData.backupAmmoCount.get() != count) {
                 modifyGunData(name) { it.backupAmmoCount.set(count) }
             }

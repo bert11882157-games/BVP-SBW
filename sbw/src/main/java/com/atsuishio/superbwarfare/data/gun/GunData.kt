@@ -597,6 +597,11 @@ class GunData private constructor(
     fun countBackupAmmo(entity: Entity?): Int {
         if (entity == null) return virtualAmmo.get()
         if (entity is Player && entity.isCreative || InventoryTool.hasCreativeAmmoBox(entity)) return Int.MAX_VALUE
+        return countBackupAmmoWithoutCreative(entity)
+    }
+
+    /** [countBackupAmmo] for a supplier already known to have no creative source (checked once for all weapons). */
+    fun countBackupAmmoWithoutCreative(entity: Entity): Int {
 
         return Math.toIntExact(
             min(
