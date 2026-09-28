@@ -52,12 +52,18 @@ public final class VehicleWeaponUtils {
      */
     public static void turretAutoAimFromVector(VehicleEntity vehicle, Vec3 shootVec) {
         if (vehicle.isWreck()) return;
+        // A firing solution can come back non-finite (no ballistic solution, a zero-velocity launcher, a target on
+        // the muzzle). A NaN turret angle poisons every seat pose on the vehicle and crashes the server tick: keep
+        // the current aim instead.
+        if (shootVec == null || !Double.isFinite(shootVec.x) || !Double.isFinite(shootVec.y) || !Double.isFinite(shootVec.z)
+                || shootVec.lengthSqr() < 1.0E-12) return;
         float ySpeed = vehicle.getTurretTurnYSpeed();
         float xSpeed = vehicle.getTurretTurnXSpeed();
 
         var barrelVector = vehicle.getBarrelVector(1);
         float diffY = (float) Mth.wrapDegrees(-VehicleVecUtils.getYRotFromVector(shootVec) + VehicleVecUtils.getYRotFromVector(barrelVector));
         float diffX = (float) Mth.wrapDegrees(-VehicleVecUtils.getXRotFromVector(shootVec) + VehicleVecUtils.getXRotFromVector(barrelVector));
+        if (!Float.isFinite(diffX) || !Float.isFinite(diffY)) return;
 
         vehicle.turretTurnSound(diffX, diffY, 0.95f);
 
