@@ -82,11 +82,37 @@ object AircraftArmamentManager {
         return root.getCompound(EQUIPMENT)
     }
     private fun mounts(def: JsonObject) = AircraftArmamentRegistry.mounts(def)
+    /** The last validated selection per aircraft (server), reused while its inputs are unchanged. */
+    private class SelectionMemo(val tag: CompoundTag, val hash: Int, val catalogue: Long, val definition: JsonObject?,
+                                val json: JsonObject)
+    private val selectionMemo = java.util.WeakHashMap<VehicleEntity, SelectionMemo>()
+
+    /**
+     * The equipped store per mount, validated against the aircraft's definition. Many per-tick paths (weapon
+     * selection, store lookups, gun and rocket pod channels, capacity) ask for it several times a tick, so the
+     * server keeps the result until the Selections tag (identity or content), the catalogue or the definition
+     * changes. Callers only read it; one that hands it on (the snapshot) copies it.
+     */
     private fun selection(vehicle: VehicleEntity): JsonObject {
         if (vehicle.level().isClientSide) return AircraftArmamentClient.getState(vehicle.uuid)
             ?.getAsJsonObject("Selections") ?: JsonObject()
-        val nbt = equipment(vehicle).getCompound("Selections")
-        val available = definition(vehicle)?.let(::mounts)?.associateBy { it["Id"].asString } ?: emptyMap()
+        val state = equipment(vehicle)
+        // no fitted stores (every ground vehicle): nothing to validate or remember
+        if (!state.contains("Selections", 10)) return JsonObject()
+        val nbt = state.getCompound("Selections")
+        val definition = definition(vehicle)
+        val hash = nbt.hashCode()
+        selectionMemo[vehicle]?.let { memo ->
+            if (memo.tag === nbt && memo.hash == hash && memo.catalogue == AircraftArmamentRegistry.revision &&
+                memo.definition === definition) return memo.json
+        }
+        return computeSelection(nbt, definition).also {
+            selectionMemo[vehicle] = SelectionMemo(nbt, hash, AircraftArmamentRegistry.revision, definition, it)
+        }
+    }
+
+    private fun computeSelection(nbt: CompoundTag, definition: JsonObject?): JsonObject {
+        val available = definition?.let(::mounts)?.associateBy { it["Id"].asString } ?: emptyMap()
         return JsonObject().also { j -> for (key in nbt.allKeys) {
             val pair = available[key] ?: continue
             if (allowed(pair, nbt.getString(key))) j.addProperty(key, nbt.getString(key))
@@ -364,7 +390,7 @@ object AircraftArmamentManager {
     @JvmStatic fun snapshot(vehicle: VehicleEntity): JsonObject = base(vehicle).also { out ->
         out.addProperty("Revision", equipment(vehicle).getLong("Revision"))
         out.addProperty("CatalogueRevision", AircraftArmamentRegistry.revision)
-        out.add("Selections", selection(vehicle)); out.add("Definition", definition(vehicle)?.deepCopy() ?: JsonObject())
+        out.add("Selections", selection(vehicle).deepCopy()); out.add("Definition", definition(vehicle)?.deepCopy() ?: JsonObject())
         out.add("Counts", JsonObject().also { counts ->
             for ((key, _) in selection(vehicle).entrySet()) counts.addProperty(key, rackCount(vehicle, key))
         })
