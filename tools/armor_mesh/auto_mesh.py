@@ -48,7 +48,7 @@ TEMPLATES = os.path.join(HERE, 'templates')
 # (hand-measured mesh), all Abrams, T-72B, M48, M1128, T-62A, BTR-80A, BTR-60, the Toyotas, ZBD-09, Marder 1A2,
 # CV9040C, M2 Bradley, BMPT) and the emplacements (tripods, ZU-23).
 AUTO_TARGETS = [
-    '9k22_tunguska', '9p148', '9p149_shturm', 'bmd_1', 'bmp3m_elite', 'btr_90', 'btr_zd', 'challenger_2',
+    '9p148', '9p149_shturm', 'bmd_1', 'bmp3m_elite', 'btr_90', 'btr_zd', 'challenger_2',
     'gaz_3937_vodnik_aa', 'gepard', 'k2a1_black_panther', 'lav25', 'leclerc_s1', 'leo2a6', 'leopard_2a4',
     'm109a7_paladin', 'm551a1', 'm60a1', 'marder_1a1', 'marder_1a5', 'pzh_2000', 'qn_506model', 't14_armata',
     't55a_2_0', 't64b_obr1976', 't72a', 't72b3', 't72b3_ubh_cope', 't80b_obr1976', 't80u_obr1985', 't90m',
