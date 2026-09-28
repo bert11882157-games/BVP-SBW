@@ -487,7 +487,9 @@
         "Fire3PFar": "bvp_audio:weapon/spg9_far",
         "Fire3PVeryFar": "bvp_audio:weapon/spg9_veryfar",
         "Change": "superbwarfare:into_cannon",
-        "Volume": 1.2
+        "Volume": 1.2,
+        "VehicleReload": "superbwarfare:cannon_reload",
+        "VehicleReloadClipDurationTicks": 37
       },
       "SoundRadius": 18,
       "ShootPos": {

@@ -305,8 +305,8 @@
       "Name": "25 mm ZPT90",
       "RPM": 500,
       "Magazine": 200,
-      "NormalReloadTime": 160,
-      "EmptyReloadTime": 160,
+      "NormalReloadTime": 400,
+      "EmptyReloadTime": 400,
       "ProjectileAmount": 1,
       "AmmoCostPerShoot": 1,
       "DefaultFireMode": "Auto",
@@ -324,7 +324,9 @@
         "Fire3PGain": 1.0,
         "Fire3PFarGain": 1.0,
         "Fire3PVeryFarGain": 1.0,
-        "Volume": 0.85
+        "Volume": 0.85,
+        "VehicleReload": "superbwarfare:m_2_hb_reload_empty",
+        "VehicleReloadClipDurationTicks": 127
       },
       "SoundRadius": 26,
       "Velocity": 43,
@@ -438,8 +440,8 @@
       "Name": "7.62 mm Type 86",
       "RPM": 700,
       "Magazine": 250,
-      "NormalReloadTime": 208,
-      "EmptyReloadTime": 208,
+      "NormalReloadTime": 400,
+      "EmptyReloadTime": 400,
       "ProjectileAmount": 1,
       "AmmoCostPerShoot": 1,
       "DefaultFireMode": "Auto",
@@ -458,7 +460,9 @@
         "Fire3PGain": 1.0,
         "Fire3PFarGain": 1.0,
         "Fire3PVeryFarGain": 1.0,
-        "Volume": 0.4
+        "Volume": 0.4,
+        "VehicleReload": "superbwarfare:m_60_reload_empty",
+        "VehicleReloadClipDurationTicks": 127
       },
       "SoundRadius": 12,
       "Velocity": 40.5,

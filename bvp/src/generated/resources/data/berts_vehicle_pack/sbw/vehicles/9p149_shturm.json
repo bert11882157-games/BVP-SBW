@@ -336,7 +336,7 @@
       "DefaultZoom": 3,
       "Magazine": 12,
       "Template": "@Missile",
-      "RPM": 6,
+      "RPM": 7.2,
       "EmptyReloadTime": 900,
       "Crosshair": "@VehicleCommonMissile",
       "ShootPos": {
@@ -381,7 +381,9 @@
         "Fire1PGain": 0.7,
         "Fire3PGain": 0.7,
         "Fire3PFarGain": 0.7,
-        "Fire3PVeryFarGain": 0.7
+        "Fire3PVeryFarGain": 0.7,
+        "VehicleReload": "superbwarfare:medium_missile_reload",
+        "VehicleReloadClipDurationTicks": 32
       },
       "NominalBallistics": {
         "Supported": false,

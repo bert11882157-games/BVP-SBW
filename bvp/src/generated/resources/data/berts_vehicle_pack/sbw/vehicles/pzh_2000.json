@@ -436,8 +436,8 @@
         "Fire3PFar": "bvp_audio:weapon/nato_120_far",
         "Fire3PVeryFar": "bvp_audio:weapon/nato_120_veryfar",
         "Change": "superbwarfare:into_cannon",
-        "VehicleReload": "berts_vehicle_pack:soviet_125mm_autoloader",
-        "VehicleReloadClipDurationTicks": 133,
+        "VehicleReload": "berts_vehicle_pack:m1_abrams_elite_m68a1_reload",
+        "VehicleReloadClipDurationTicks": 87,
         "CancellableSounds": [
           "berts_vehicle_pack:soviet_125mm_autoloader"
         ],
@@ -450,8 +450,8 @@
       "SoundRadius": 40,
       "RPM": 60,
       "Magazine": 1,
-      "NormalReloadTime": 120,
-      "EmptyReloadTime": 120,
+      "NormalReloadTime": 100,
+      "EmptyReloadTime": 100,
       "ProjectileAmount": 1,
       "AmmoCostPerShoot": 1,
       "Name": "weapon.berts_vehicle_pack.pzh_2000_cannon",
@@ -560,8 +560,8 @@
         "Profile": "berts_vehicle_pack:pzh_2000/passengermachinegun/default"
       },
       "Magazine": 200,
-      "NormalReloadTime": 160,
-      "EmptyReloadTime": 160,
+      "NormalReloadTime": 400,
+      "EmptyReloadTime": 400,
       "RPM": 1200,
       "Damage": 9.5,
       "BypassesArmor": 0.3,
@@ -582,7 +582,9 @@
         "Fire3PGain": 1.0,
         "Fire3PFarGain": 1.0,
         "Fire3PVeryFarGain": 1.0,
-        "Volume": 0.4
+        "Volume": 0.4,
+        "VehicleReload": "superbwarfare:m_60_reload_empty",
+        "VehicleReloadClipDurationTicks": 127
       },
       "SoundRadius": 12,
       "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/gun_7_62mm.png",

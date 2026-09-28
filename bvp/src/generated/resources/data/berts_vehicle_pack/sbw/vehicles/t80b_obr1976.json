@@ -370,12 +370,13 @@
         "Fire3P": "bvp_audio:weapon/t72_125_3p",
         "Fire3PFar": "bvp_audio:weapon/t72_125_far",
         "Fire3PVeryFar": "bvp_audio:weapon/t72_125_veryfar",
-        "VehicleReload": "berts_vehicle_pack:soviet_125mm_autoloader",
+        "VehicleReload": "superbwarfare:t_90a_reload",
         "Change": "superbwarfare:into_cannon",
         "CancellableSounds": [
           "berts_vehicle_pack:soviet_125mm_autoloader"
         ],
-        "Volume": 2.0
+        "Volume": 2.0,
+        "VehicleReloadClipDurationTicks": 109
       },
       "SoundRadius": 40,
       "ShootPos": {
@@ -419,7 +420,9 @@
         "ProjectileType": "superbwarfare:cannon_shell",
         "ProjectileProfile": "berts_vehicle_pack:t80b_obr1976/cannon/default",
         "ProjectileLife": 50
-      }
+      },
+      "NormalReloadTime": 120,
+      "RPM": 60
     },
     "MachineGun": {
       "DefaultFireMode": "Auto",
@@ -475,9 +478,9 @@
         "Profile": "berts_vehicle_pack:t80b_obr1976/machinegun/default"
       },
       "Magazine": 250,
-      "NormalReloadTime": 160,
-      "EmptyReloadTime": 160,
-      "RPM": 600,
+      "NormalReloadTime": 400,
+      "EmptyReloadTime": 400,
+      "RPM": 700,
       "Damage": 9.5,
       "BypassesArmor": 0.3,
       "Velocity": 30,
@@ -533,7 +536,9 @@
         "Fire3PFar": "bvp_audio:weapon/pkt_far",
         "Fire3PVeryFar": "bvp_audio:weapon/pkt_veryfar",
         "Change": "superbwarfare:into_cannon",
-        "Volume": 0.4
+        "Volume": 0.4,
+        "VehicleReload": "superbwarfare:m_60_reload_empty",
+        "VehicleReloadClipDurationTicks": 127
       },
       "SoundRadius": 12,
       "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/gun_7_62mm.png",

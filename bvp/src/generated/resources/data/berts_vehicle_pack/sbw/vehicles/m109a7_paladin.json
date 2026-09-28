@@ -438,8 +438,8 @@
         "Fire3PFar": "bvp_audio:weapon/nato_120_far",
         "Fire3PVeryFar": "bvp_audio:weapon/nato_120_veryfar",
         "Change": "superbwarfare:into_cannon",
-        "VehicleReload": "berts_vehicle_pack:m1_abrams_elite_m68a1_reload",
-        "VehicleReloadClipDurationTicks": 86,
+        "VehicleReload": "superbwarfare:plz_05_reload",
+        "VehicleReloadClipDurationTicks": 121,
         "CancellableSounds": [
           "berts_vehicle_pack:m1_abrams_elite_m68a1_reload"
         ],
@@ -452,8 +452,8 @@
       "SoundRadius": 40,
       "RPM": 60,
       "Magazine": 1,
-      "NormalReloadTime": 300,
-      "EmptyReloadTime": 300,
+      "NormalReloadTime": 200,
+      "EmptyReloadTime": 200,
       "ProjectileAmount": 1,
       "AmmoCostPerShoot": 1,
       "Name": "weapon.berts_vehicle_pack.m109a7_paladin_cannon",
@@ -595,12 +595,14 @@
         "Fire3PGain": 1.0,
         "Fire3PFarGain": 1.0,
         "Fire3PVeryFarGain": 1.0,
-        "Volume": 0.6
+        "Volume": 0.6,
+        "VehicleReload": "superbwarfare:m_2_hb_reload_empty",
+        "VehicleReloadClipDurationTicks": 127
       },
       "SoundRadius": 18,
       "Magazine": 200,
-      "NormalReloadTime": 160,
-      "EmptyReloadTime": 160,
+      "NormalReloadTime": 200,
+      "EmptyReloadTime": 200,
       "ProjectileAmount": 1,
       "AmmoCostPerShoot": 1,
       "ProjectileBeltAmmoType": [

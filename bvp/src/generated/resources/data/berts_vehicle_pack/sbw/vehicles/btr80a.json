@@ -366,8 +366,8 @@
       "DefaultZoom": 3,
       "RPM": 330,
       "Magazine": 150,
-      "NormalReloadTime": 20,
-      "EmptyReloadTime": 20,
+      "NormalReloadTime": 400,
+      "EmptyReloadTime": 400,
       "AmmoCostPerShoot": 1,
       "Velocity": 48.5,
       "Damage": 58,
@@ -397,7 +397,9 @@
         "Fire3PFar": "bvp_audio:weapon/2a72_30_far",
         "Fire3PVeryFar": "bvp_audio:weapon/2a72_30_veryfar",
         "Change": "superbwarfare:into_missile",
-        "Volume": 1.0
+        "Volume": 1.0,
+        "VehicleReload": "superbwarfare:m_2_hb_reload_empty",
+        "VehicleReloadClipDurationTicks": 127
       },
       "SoundRadius": 26,
       "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/cannon_30mm_ap.png",
@@ -683,9 +685,9 @@
         "Profile": "berts_vehicle_pack:btr80a/mainmachinegun/default"
       },
       "Magazine": 250,
-      "NormalReloadTime": 160,
-      "EmptyReloadTime": 160,
-      "RPM": 600,
+      "NormalReloadTime": 400,
+      "EmptyReloadTime": 400,
+      "RPM": 700,
       "Damage": 9.5,
       "BypassesArmor": 0.3,
       "Velocity": 30,
@@ -737,7 +739,9 @@
         "Fire3PFar": "bvp_audio:weapon/pkt_far",
         "Fire3PVeryFar": "bvp_audio:weapon/pkt_veryfar",
         "Change": "superbwarfare:into_cannon",
-        "Volume": 0.4
+        "Volume": 0.4,
+        "VehicleReload": "superbwarfare:m_60_reload_empty",
+        "VehicleReloadClipDurationTicks": 127
       },
       "SoundRadius": 12,
       "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/gun_7_62mm.png",

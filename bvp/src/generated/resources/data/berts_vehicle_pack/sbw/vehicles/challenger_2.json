@@ -596,7 +596,7 @@
         "Fire3PVeryFar": "bvp_audio:weapon/cr2_120_veryfar",
         "Change": "superbwarfare:into_cannon",
         "VehicleReload": "berts_vehicle_pack:m1_abrams_elite_m68a1_reload",
-        "VehicleReloadClipDurationTicks": 86,
+        "VehicleReloadClipDurationTicks": 87,
         "CancellableSounds": [
           "berts_vehicle_pack:m1_abrams_elite_m68a1_reload"
         ],
@@ -607,7 +607,7 @@
         "Volume": 2.0
       },
       "SoundRadius": 40,
-      "RPM": 12,
+      "RPM": 60,
       "Magazine": 1,
       "NormalReloadTime": 100,
       "EmptyReloadTime": 100,
@@ -718,8 +718,8 @@
         "Profile": "berts_vehicle_pack:challenger_2/machinegun/default"
       },
       "Magazine": 2000,
-      "NormalReloadTime": 160,
-      "EmptyReloadTime": 160,
+      "NormalReloadTime": 400,
+      "EmptyReloadTime": 400,
       "RPM": 600,
       "Damage": 9.5,
       "BypassesArmor": 0.3,
@@ -740,7 +740,9 @@
         "Fire3PGain": 1.0,
         "Fire3PFarGain": 1.0,
         "Fire3PVeryFarGain": 1.0,
-        "Volume": 0.4
+        "Volume": 0.4,
+        "VehicleReload": "superbwarfare:m_60_reload_empty",
+        "VehicleReloadClipDurationTicks": 127
       },
       "SoundRadius": 12,
       "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/gun_7_62mm.png",
@@ -879,8 +881,8 @@
         "Profile": "berts_vehicle_pack:challenger_2/passengermachinegun/default"
       },
       "Magazine": 100,
-      "NormalReloadTime": 160,
-      "EmptyReloadTime": 160,
+      "NormalReloadTime": 400,
+      "EmptyReloadTime": 400,
       "RPM": 650,
       "Damage": 9.5,
       "BypassesArmor": 0.3,
@@ -901,7 +903,9 @@
         "Fire3PGain": 1.0,
         "Fire3PFarGain": 1.0,
         "Fire3PVeryFarGain": 1.0,
-        "Volume": 0.4
+        "Volume": 0.4,
+        "VehicleReload": "superbwarfare:m_60_reload_empty",
+        "VehicleReloadClipDurationTicks": 127
       },
       "SoundRadius": 12,
       "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/gun_7_62mm.png",

@@ -418,8 +418,8 @@
       "DefaultZoom": 3,
       "RPM": 550,
       "Magazine": 250,
-      "NormalReloadTime": 20,
-      "EmptyReloadTime": 20,
+      "NormalReloadTime": 400,
+      "EmptyReloadTime": 400,
       "AmmoCostPerShoot": 1,
       "Velocity": 48.5,
       "Damage": 65,
@@ -449,7 +449,9 @@
         "Fire3PFar": "bvp_audio:weapon/2a42_30_far",
         "Fire3PVeryFar": "bvp_audio:weapon/2a42_30_veryfar",
         "Change": "superbwarfare:into_missile",
-        "Volume": 1.0
+        "Volume": 1.0,
+        "VehicleReload": "superbwarfare:m_2_hb_reload_empty",
+        "VehicleReloadClipDurationTicks": 127
       },
       "SoundRadius": 26,
       "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/cannon_30mm_ap.png",
@@ -723,9 +725,9 @@
         "Profile": "berts_vehicle_pack:bmp2/mainmachinegun/default"
       },
       "Magazine": 250,
-      "NormalReloadTime": 160,
-      "EmptyReloadTime": 160,
-      "RPM": 600,
+      "NormalReloadTime": 400,
+      "EmptyReloadTime": 400,
+      "RPM": 700,
       "Damage": 9.5,
       "BypassesArmor": 0.3,
       "Velocity": 30,
@@ -777,7 +779,9 @@
         "Fire3PFar": "bvp_audio:weapon/pkt_far",
         "Fire3PVeryFar": "bvp_audio:weapon/pkt_veryfar",
         "Change": "superbwarfare:into_cannon",
-        "Volume": 0.4
+        "Volume": 0.4,
+        "VehicleReload": "superbwarfare:m_60_reload_empty",
+        "VehicleReloadClipDurationTicks": 127
       },
       "SoundRadius": 12,
       "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/gun_7_62mm.png",
@@ -817,7 +821,7 @@
       },
       "DefaultZoom": 3,
       "Magazine": 1,
-      "EmptyReloadTime": 120,
+      "EmptyReloadTime": 240,
       "Velocity": 3,
       "ProjectileLife": 180,
       "Gravity": 0,
@@ -850,11 +854,11 @@
         "Fire1P": "bvp_audio:weapon/atgm_ru_1p",
         "Fire3P": "bvp_audio:weapon/atgm_ru_3p",
         "VehicleReload3p": "superbwarfare:medium_missile_reload",
-        "VehicleReloadSoundTime": 28,
         "Change": "superbwarfare:into_missile",
         "Fire3PFar": "bvp_audio:weapon/atgm_ru_far",
         "Fire3PVeryFar": "bvp_audio:weapon/atgm_ru_veryfar",
-        "Volume": 0.9
+        "Volume": 0.9,
+        "VehicleReloadClipDurationTicks": 32
       },
       "SoundRadius": 16,
       "ShootPos": {
@@ -889,7 +893,8 @@
         "Supported": false,
         "ProjectileType": "superbwarfare:wire_guide_missile",
         "ProjectileProfile": "berts_vehicle_pack:bmp2/missile/default"
-      }
+      },
+      "NormalReloadTime": 240
     }
   },
   "HUDColor": "0x66FF00",

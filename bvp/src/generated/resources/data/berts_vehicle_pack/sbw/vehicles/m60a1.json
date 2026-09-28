@@ -341,7 +341,7 @@
       "ShellType": "AP",
       "DefaultZoom": 3,
       "Magazine": 1,
-      "EmptyReloadTime": 115,
+      "EmptyReloadTime": 133,
       "Velocity": 71.3,
       "ProjectileLife": 50,
       "Gravity": 0.03,
@@ -427,7 +427,7 @@
         "Fire3PVeryFar": "bvp_audio:weapon/cr2_120_veryfar",
         "Change": "superbwarfare:into_cannon",
         "VehicleReload": "berts_vehicle_pack:m1_abrams_elite_m68a1_reload",
-        "VehicleReloadClipDurationTicks": 86,
+        "VehicleReloadClipDurationTicks": 87,
         "CancellableSounds": [
           "berts_vehicle_pack:m1_abrams_elite_m68a1_reload"
         ],
@@ -480,7 +480,9 @@
         8,
         10,
         96
-      ]
+      ],
+      "NormalReloadTime": 133,
+      "RPM": 60
     },
     "MachineGun": {
       "DefaultFireMode": "Auto",
@@ -541,9 +543,9 @@
         "Profile": "berts_vehicle_pack:m60a1/machinegun/default"
       },
       "Magazine": 250,
-      "NormalReloadTime": 160,
-      "EmptyReloadTime": 160,
-      "RPM": 600,
+      "NormalReloadTime": 400,
+      "EmptyReloadTime": 400,
+      "RPM": 500,
       "Damage": 9.5,
       "BypassesArmor": 0.3,
       "Velocity": 30,
@@ -599,7 +601,9 @@
         "Fire3PFar": "bvp_audio:weapon/m240_far",
         "Fire3PVeryFar": "bvp_audio:weapon/m240_veryfar",
         "Change": "superbwarfare:into_cannon",
-        "Volume": 0.4
+        "Volume": 0.4,
+        "VehicleReload": "superbwarfare:m_60_reload_empty",
+        "VehicleReloadClipDurationTicks": 127
       },
       "SoundRadius": 12,
       "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/gun_7_62mm.png",
@@ -650,7 +654,7 @@
         "Profile": "berts_vehicle_pack:m60a1/passengermachinegun/default"
       },
       "DefaultZoom": 3,
-      "RPM": 450,
+      "RPM": 625,
       "Damage": 40,
       "BypassesArmor": 0.6,
       "Velocity": 25,
@@ -767,12 +771,14 @@
         "Fire3PFar": "bvp_audio:weapon/m2hb_far",
         "Fire3PVeryFar": "bvp_audio:weapon/m2hb_veryfar",
         "Change": "superbwarfare:missile_change",
-        "Volume": 0.6
+        "Volume": 0.6,
+        "VehicleReload": "superbwarfare:m_2_hb_reload_empty",
+        "VehicleReloadClipDurationTicks": 127
       },
       "SoundRadius": 18,
       "Magazine": 100,
-      "NormalReloadTime": 100,
-      "EmptyReloadTime": 100,
+      "NormalReloadTime": 200,
+      "EmptyReloadTime": 200,
       "ProjectileBeltAmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",

@@ -566,8 +566,8 @@
       "DefaultZoom": 3,
       "RPM": 330,
       "Magazine": 200,
-      "NormalReloadTime": 100,
-      "EmptyReloadTime": 100,
+      "NormalReloadTime": 400,
+      "EmptyReloadTime": 400,
       "AmmoCostPerShoot": 1,
       "Velocity": 59.0,
       "Damage": 65,
@@ -597,7 +597,9 @@
         "Fire3PGain": 1.0,
         "Fire3PFarGain": 1.0,
         "Fire3PVeryFarGain": 1.0,
-        "Volume": 1.0
+        "Volume": 1.0,
+        "VehicleReload": "superbwarfare:m_2_hb_reload_empty",
+        "VehicleReloadClipDurationTicks": 127
       },
       "SoundRadius": 26,
       "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/cannon_30mm_ap.png",
@@ -904,8 +906,8 @@
         "Profile": "berts_vehicle_pack:zbd_09/mainmachinegun/default"
       },
       "Magazine": 250,
-      "NormalReloadTime": 160,
-      "EmptyReloadTime": 160,
+      "NormalReloadTime": 400,
+      "EmptyReloadTime": 400,
       "RPM": 700,
       "Damage": 9.5,
       "BypassesArmor": 0.3,
@@ -926,7 +928,9 @@
         "Fire3PGain": 1.0,
         "Fire3PFarGain": 1.0,
         "Fire3PVeryFarGain": 1.0,
-        "Volume": 0.4
+        "Volume": 0.4,
+        "VehicleReload": "superbwarfare:m_60_reload_empty",
+        "VehicleReloadClipDurationTicks": 127
       },
       "SoundRadius": 12,
       "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/gun_7_62mm.png",
@@ -1016,8 +1020,8 @@
       },
       "DefaultZoom": 3,
       "Magazine": 2,
-      "NormalReloadTime": 120,
-      "EmptyReloadTime": 120,
+      "NormalReloadTime": 240,
+      "EmptyReloadTime": 240,
       "Velocity": 3,
       "ProjectileLife": 180,
       "Gravity": 0,
@@ -1060,7 +1064,6 @@
         "Fire1P": "bvp_audio:weapon/atgm_ru_1p",
         "Fire3P": "bvp_audio:weapon/atgm_ru_3p",
         "VehicleReload3p": "superbwarfare:medium_missile_reload",
-        "VehicleReloadSoundTime": 28,
         "Change": "superbwarfare:into_missile",
         "Fire3PFar": "bvp_audio:weapon/atgm_ru_far",
         "Fire3PVeryFar": "bvp_audio:weapon/atgm_ru_veryfar",
@@ -1068,7 +1071,8 @@
         "Fire3PGain": 1.0,
         "Fire3PFarGain": 1.0,
         "Fire3PVeryFarGain": 1.0,
-        "Volume": 0.9
+        "Volume": 0.9,
+        "VehicleReloadClipDurationTicks": 32
       },
       "SoundRadius": 16,
       "RPM": 40,

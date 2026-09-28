@@ -367,7 +367,7 @@
         "Fire3PVeryFar": "bvp_audio:weapon/nato_120_veryfar",
         "Change": "superbwarfare:into_cannon",
         "VehicleReload": "berts_vehicle_pack:soviet_125mm_autoloader",
-        "VehicleReloadClipDurationTicks": 133,
+        "VehicleReloadClipDurationTicks": 134,
         "CancellableSounds": [
           "berts_vehicle_pack:soviet_125mm_autoloader"
         ],
@@ -420,7 +420,9 @@
         8,
         10,
         96
-      ]
+      ],
+      "NormalReloadTime": 150,
+      "RPM": 60
     },
     "PassengerMachineGun": {
       "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/gun_12_7mm.png",
@@ -550,12 +552,14 @@
         "Fire3PFar": "bvp_audio:weapon/m2hb_far",
         "Fire3PVeryFar": "bvp_audio:weapon/m2hb_veryfar",
         "Change": "superbwarfare:missile_change",
-        "Volume": 0.6
+        "Volume": 0.6,
+        "VehicleReload": "superbwarfare:m_2_hb_reload_empty",
+        "VehicleReloadClipDurationTicks": 127
       },
       "SoundRadius": 18,
       "Magazine": 100,
-      "NormalReloadTime": 100,
-      "EmptyReloadTime": 100,
+      "NormalReloadTime": 200,
+      "EmptyReloadTime": 200,
       "ProjectileBeltAmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",

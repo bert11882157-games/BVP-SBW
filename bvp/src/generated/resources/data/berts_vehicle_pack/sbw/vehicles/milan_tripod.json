@@ -104,7 +104,9 @@
         "Fire3PFar": "bvp_audio:weapon/tow_far",
         "Fire3PVeryFar": "bvp_audio:weapon/tow_veryfar",
         "Change": "superbwarfare:into_cannon",
-        "Volume": 0.9
+        "Volume": 0.9,
+        "VehicleReload": "superbwarfare:medium_missile_reload",
+        "VehicleReloadClipDurationTicks": 32
       },
       "SoundRadius": 16,
       "ShootPos": {

@@ -104,8 +104,8 @@
       "DefaultZoom": 2,
       "Magazine": 29,
       "AutoReload": true,
-      "NormalReloadTime": 100,
-      "EmptyReloadTime": 100,
+      "NormalReloadTime": 400,
+      "EmptyReloadTime": 400,
       "RPM": 400,
       "Name": "weapon.berts_vehicle_pack.ags_30",
       "SoundInfo": {
@@ -118,7 +118,9 @@
         "Fire3PFar": "bvp_audio:weapon/mk19_far",
         "Fire3PVeryFar": "bvp_audio:weapon/mk19_far",
         "Change": "superbwarfare:into_cannon",
-        "Volume": 0.55
+        "Volume": 0.55,
+        "VehicleReload": "superbwarfare:m_2_hb_reload_empty",
+        "VehicleReloadClipDurationTicks": 127
       },
       "SoundRadius": 12,
       "ShootPos": {

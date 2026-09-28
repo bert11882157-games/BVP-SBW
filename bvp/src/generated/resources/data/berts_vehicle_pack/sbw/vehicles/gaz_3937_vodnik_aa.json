@@ -346,8 +346,8 @@
       "Name": "Short-range IR SAM (model-based proxy)",
       "RPM": 30,
       "Magazine": 8,
-      "NormalReloadTime": 260,
-      "EmptyReloadTime": 260,
+      "NormalReloadTime": 240,
+      "EmptyReloadTime": 240,
       "ProjectileAmount": 1,
       "AmmoCostPerShoot": 1,
       "DefaultFireMode": "Semi",
@@ -394,7 +394,9 @@
         "Fire3PGain": 1.0,
         "Fire3PFarGain": 1.0,
         "Fire3PVeryFarGain": 1.0,
-        "Volume": 0.9
+        "Volume": 0.9,
+        "VehicleReload": "superbwarfare:medium_missile_reload",
+        "VehicleReloadClipDurationTicks": 32
       },
       "ShootPos": {
         "Transform": "Vehicle",

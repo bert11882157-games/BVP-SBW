@@ -331,8 +331,8 @@
       "Name": "Twin 23 mm ZU-23",
       "RPM": 1600,
       "Magazine": 100,
-      "NormalReloadTime": 100,
-      "EmptyReloadTime": 100,
+      "NormalReloadTime": 400,
+      "EmptyReloadTime": 400,
       "ProjectileAmount": 1,
       "AmmoCostPerShoot": 1,
       "DefaultFireMode": "Auto",
@@ -350,7 +350,9 @@
         "Fire3PGain": 1.0,
         "Fire3PFarGain": 1.0,
         "Fire3PVeryFarGain": 1.0,
-        "Volume": 0.85
+        "Volume": 0.85,
+        "VehicleReload": "superbwarfare:m_2_hb_reload_empty",
+        "VehicleReloadClipDurationTicks": 127
       },
       "SoundRadius": 26,
       "Velocity": 44,
@@ -478,8 +480,8 @@
       "Name": "Twin 7.62 mm PKT bow guns",
       "RPM": 1400,
       "Magazine": 500,
-      "NormalReloadTime": 160,
-      "EmptyReloadTime": 160,
+      "NormalReloadTime": 400,
+      "EmptyReloadTime": 400,
       "ProjectileAmount": 1,
       "AmmoCostPerShoot": 1,
       "DefaultFireMode": "Auto",
@@ -497,7 +499,9 @@
         "Fire3PGain": 1.0,
         "Fire3PFarGain": 1.0,
         "Fire3PVeryFarGain": 1.0,
-        "Volume": 0.4
+        "Volume": 0.4,
+        "VehicleReload": "superbwarfare:m_60_reload_empty",
+        "VehicleReloadClipDurationTicks": 127
       },
       "SoundRadius": 12,
       "Velocity": 40.5,

@@ -178,8 +178,8 @@
       "DefaultZoom": 3,
       "RPM": 3400,
       "Magazine": 2000,
-      "NormalReloadTime": 100,
-      "EmptyReloadTime": 100,
+      "NormalReloadTime": 400,
+      "EmptyReloadTime": 400,
       "AmmoCostPerShoot": 1,
       "Velocity": 48.5,
       "Damage": 23,
@@ -209,7 +209,9 @@
         "Fire3PFar": "bvp_audio:weapon/zu23_far",
         "Fire3PVeryFar": "bvp_audio:weapon/zu23_far",
         "Change": "superbwarfare:into_missile",
-        "Volume": 0.85
+        "Volume": 0.85,
+        "VehicleReload": "superbwarfare:m_2_hb_reload_empty",
+        "VehicleReloadClipDurationTicks": 127
       },
       "SoundRadius": 24,
       "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/cannon_25mm_ap.png",

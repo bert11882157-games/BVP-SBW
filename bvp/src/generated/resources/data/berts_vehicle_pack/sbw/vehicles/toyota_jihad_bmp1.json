@@ -349,7 +349,7 @@
       "ShellType": "HE",
       "DefaultZoom": 2,
       "Magazine": 1,
-      "EmptyReloadTime": 150,
+      "EmptyReloadTime": 160,
       "Velocity": 8,
       "ProjectileLife": 160,
       "Gravity": 0.045,
@@ -431,7 +431,9 @@
         "Fire3P": "bvp_audio:weapon/erc_90_3p",
         "Fire3PFar": "bvp_audio:weapon/erc_90_far",
         "Fire3PVeryFar": "bvp_audio:weapon/erc_90_veryfar",
-        "Volume": 1.2
+        "Volume": 1.2,
+        "VehicleReload": "superbwarfare:cannon_reload",
+        "VehicleReloadClipDurationTicks": 37
       },
       "SoundRadius": 34,
       "ShootPos": {
@@ -470,8 +472,8 @@
           "passenger_station_muzzle"
         ]
       },
-      "RPM": 8,
-      "NormalReloadTime": 150,
+      "RPM": 60,
+      "NormalReloadTime": 160,
       "ApDurability": 300,
       "OverheatEnabled": false,
       "HeatPerShoot": 0,
@@ -546,9 +548,9 @@
         "Profile": "berts_vehicle_pack:toyota_jihad_bmp1/pkt/default"
       },
       "Magazine": 250,
-      "NormalReloadTime": 160,
-      "EmptyReloadTime": 160,
-      "RPM": 600,
+      "NormalReloadTime": 400,
+      "EmptyReloadTime": 400,
+      "RPM": 700,
       "Damage": 9.5,
       "BypassesArmor": 0.3,
       "Velocity": 30,
@@ -586,7 +588,9 @@
         "Fire3PFar": "bvp_audio:weapon/pkt_far",
         "Fire3PVeryFar": "bvp_audio:weapon/pkt_veryfar",
         "Change": "superbwarfare:into_cannon",
-        "Volume": 0.4
+        "Volume": 0.4,
+        "VehicleReload": "superbwarfare:m_60_reload_empty",
+        "VehicleReloadClipDurationTicks": 127
       },
       "SoundRadius": 12,
       "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/gun_7_62mm.png",

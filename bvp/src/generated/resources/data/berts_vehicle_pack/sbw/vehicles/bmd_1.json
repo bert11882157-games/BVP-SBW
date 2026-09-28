@@ -333,7 +333,7 @@
   "Weapons": {
     "Cannon": {
       "Name": "73 mm 2A28 Grom",
-      "RPM": 8,
+      "RPM": 60,
       "Magazine": 1,
       "NormalReloadTime": 120,
       "EmptyReloadTime": 120,
@@ -355,7 +355,9 @@
         "Fire3PGain": 1.0,
         "Fire3PFarGain": 1.0,
         "Fire3PVeryFarGain": 1.0,
-        "Volume": 1.2
+        "Volume": 1.2,
+        "VehicleReload": "superbwarfare:t_90a_reload",
+        "VehicleReloadClipDurationTicks": 109
       },
       "Velocity": 8,
       "Gravity": 0.03,
@@ -470,8 +472,8 @@
       "Name": "9M14 Malyutka ATGM",
       "RPM": 6,
       "Magazine": 1,
-      "NormalReloadTime": 120,
-      "EmptyReloadTime": 120,
+      "NormalReloadTime": 240,
+      "EmptyReloadTime": 240,
       "ProjectileAmount": 1,
       "AmmoCostPerShoot": 1,
       "DefaultFireMode": "Semi",
@@ -490,7 +492,9 @@
         "Fire3PGain": 1.0,
         "Fire3PFarGain": 1.0,
         "Fire3PVeryFarGain": 1.0,
-        "Volume": 0.9
+        "Volume": 0.9,
+        "VehicleReload": "superbwarfare:medium_missile_reload",
+        "VehicleReloadClipDurationTicks": 32
       },
       "Velocity": 2.55,
       "Gravity": 0,
@@ -561,10 +565,10 @@
     },
     "MachineGun": {
       "Name": "7.62 mm PKT",
-      "RPM": 650,
+      "RPM": 700,
       "Magazine": 250,
-      "NormalReloadTime": 160,
-      "EmptyReloadTime": 160,
+      "NormalReloadTime": 400,
+      "EmptyReloadTime": 400,
       "ProjectileAmount": 1,
       "AmmoCostPerShoot": 1,
       "DefaultFireMode": "Auto",
@@ -583,7 +587,9 @@
         "Fire3PGain": 1.0,
         "Fire3PFarGain": 1.0,
         "Fire3PVeryFarGain": 1.0,
-        "Volume": 0.4
+        "Volume": 0.4,
+        "VehicleReload": "superbwarfare:m_60_reload_empty",
+        "VehicleReloadClipDurationTicks": 127
       },
       "Velocity": 42.75,
       "Gravity": 0.01,

@@ -132,8 +132,8 @@
       "DefaultZoom": 2,
       "Magazine": 100,
       "AutoReload": true,
-      "NormalReloadTime": 100,
-      "EmptyReloadTime": 100,
+      "NormalReloadTime": 200,
+      "EmptyReloadTime": 200,
       "RPM": 575,
       "Name": "weapon.berts_vehicle_pack.browning_tripod",
       "SoundInfo": {
@@ -146,7 +146,9 @@
         "Fire3PFar": "bvp_audio:weapon/m2hb_far",
         "Fire3PVeryFar": "bvp_audio:weapon/m2hb_veryfar",
         "Change": "superbwarfare:into_cannon",
-        "Volume": 0.6
+        "Volume": 0.6,
+        "VehicleReload": "superbwarfare:m_2_hb_reload_empty",
+        "VehicleReloadClipDurationTicks": 127
       },
       "SoundRadius": 18,
       "ShootPos": {

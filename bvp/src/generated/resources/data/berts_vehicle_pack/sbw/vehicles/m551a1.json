@@ -239,7 +239,7 @@
       "ShellType": "AP",
       "DefaultZoom": 3,
       "Magazine": 1,
-      "EmptyReloadTime": 115,
+      "EmptyReloadTime": 240,
       "Velocity": 73.9,
       "ProjectileLife": 50,
       "Gravity": 0.03,
@@ -291,7 +291,7 @@
         "Fire3PVeryFar": "bvp_audio:weapon/erc_90_veryfar",
         "Change": "superbwarfare:into_cannon",
         "VehicleReload": "berts_vehicle_pack:m1_abrams_elite_m68a1_reload",
-        "VehicleReloadClipDurationTicks": 86,
+        "VehicleReloadClipDurationTicks": 87,
         "CancellableSounds": [
           "berts_vehicle_pack:m1_abrams_elite_m68a1_reload"
         ],
@@ -344,7 +344,9 @@
         8,
         10,
         152.4
-      ]
+      ],
+      "NormalReloadTime": 240,
+      "RPM": 60
     },
     "MachineGun": {
       "DefaultFireMode": "Auto",
@@ -405,9 +407,9 @@
         "Profile": "berts_vehicle_pack:m551a1/machinegun/default"
       },
       "Magazine": 250,
-      "NormalReloadTime": 160,
-      "EmptyReloadTime": 160,
-      "RPM": 600,
+      "NormalReloadTime": 400,
+      "EmptyReloadTime": 400,
+      "RPM": 500,
       "Damage": 9.5,
       "BypassesArmor": 0.3,
       "Velocity": 30,
@@ -463,7 +465,9 @@
         "Fire3PFar": "bvp_audio:weapon/m240_far",
         "Fire3PVeryFar": "bvp_audio:weapon/m240_veryfar",
         "Change": "superbwarfare:into_cannon",
-        "Volume": 0.4
+        "Volume": 0.4,
+        "VehicleReload": "superbwarfare:m_60_reload_empty",
+        "VehicleReloadClipDurationTicks": 127
       },
       "SoundRadius": 12,
       "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/gun_7_62mm.png",

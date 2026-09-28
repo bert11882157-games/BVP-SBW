@@ -529,8 +529,8 @@
         "Fire3PFar": "bvp_audio:weapon/nato_120_far",
         "Fire3PVeryFar": "bvp_audio:weapon/nato_120_veryfar",
         "Change": "superbwarfare:into_cannon",
-        "VehicleReload": "berts_vehicle_pack:m1_abrams_elite_m68a1_reload",
-        "VehicleReloadClipDurationTicks": 86,
+        "VehicleReload": "superbwarfare:m_1a_2_reload",
+        "VehicleReloadClipDurationTicks": 104,
         "CancellableSounds": [
           "berts_vehicle_pack:m1_abrams_elite_m68a1_reload"
         ],
@@ -541,7 +541,7 @@
         "Volume": 2.0
       },
       "SoundRadius": 40,
-      "RPM": 10,
+      "RPM": 60,
       "Magazine": 1,
       "NormalReloadTime": 120,
       "EmptyReloadTime": 120,
@@ -653,8 +653,8 @@
         "Profile": "berts_vehicle_pack:leopard_2a4/machinegun/default"
       },
       "Magazine": 200,
-      "NormalReloadTime": 160,
-      "EmptyReloadTime": 160,
+      "NormalReloadTime": 400,
+      "EmptyReloadTime": 400,
       "RPM": 1200,
       "Damage": 9.5,
       "BypassesArmor": 0.3,
@@ -675,7 +675,9 @@
         "Fire3PGain": 1.0,
         "Fire3PFarGain": 1.0,
         "Fire3PVeryFarGain": 1.0,
-        "Volume": 0.4
+        "Volume": 0.4,
+        "VehicleReload": "superbwarfare:m_60_reload_empty",
+        "VehicleReloadClipDurationTicks": 127
       },
       "SoundRadius": 12,
       "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/gun_7_62mm.png",
@@ -815,8 +817,8 @@
         "Profile": "berts_vehicle_pack:leopard_2a4/passengermachinegun/default"
       },
       "Magazine": 200,
-      "NormalReloadTime": 160,
-      "EmptyReloadTime": 160,
+      "NormalReloadTime": 400,
+      "EmptyReloadTime": 400,
       "RPM": 1200,
       "Damage": 9.5,
       "BypassesArmor": 0.3,
@@ -837,7 +839,9 @@
         "Fire3PGain": 1.0,
         "Fire3PFarGain": 1.0,
         "Fire3PVeryFarGain": 1.0,
-        "Volume": 0.4
+        "Volume": 0.4,
+        "VehicleReload": "superbwarfare:m_60_reload_empty",
+        "VehicleReloadClipDurationTicks": 127
       },
       "SoundRadius": 12,
       "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/gun_7_62mm.png",
