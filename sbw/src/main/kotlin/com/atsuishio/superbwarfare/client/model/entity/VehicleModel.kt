@@ -376,6 +376,14 @@ open class VehicleModel<T> : GeoModel<T>() where T : VehicleEntity, T : GeoAnima
     open fun getBoneMoveZ(t: Float) = t
     open fun getTrackDistance() = 2f
 
+    /**
+     * The last pose evaluated for each track link: [phase, y, z, rotation, scale]. Every link has a Mov and a Rot
+     * bone, and both asked for the same full link evaluation (up to 16 path samples) in the same frame; the second
+     * one now reuses it. The pose depends only on the track profile, side, link and phase, so a hit is exact.
+     */
+    private val trackPoseCache = HashMap<Int, FloatArray>()
+    private var trackPoseCacheProfile: Any? = null
+
     private fun profiledTrackPoseInto(left: Boolean, index: Int): Boolean {
         val track = runningGearProfile?.trackRender ?: return false
         if (track.mode != TrackRenderMode.LINKS) return false
@@ -384,6 +392,13 @@ open class VehicleModel<T> : GeoModel<T>() where T : VehicleEntity, T : GeoAnima
             if (left) leftTrack else rightTrack,
             runningGearTrackAnimationLength,
         ) * track.side(side).direction
+        if (trackPoseCacheProfile !== track) { trackPoseCache.clear(); trackPoseCacheProfile = track }
+        val key = (if (left) 0 else 1 shl 20) or (index and 0xFFFFF)
+        val cached = trackPoseCache[key]
+        if (cached != null && cached[0] == phase) {
+            System.arraycopy(cached, 1, profiledTrackPose, 0, 4)
+            return true
+        }
         RunningGearTrackEvaluator.linkPoseInto(
             track,
             side,
@@ -392,6 +407,9 @@ open class VehicleModel<T> : GeoModel<T>() where T : VehicleEntity, T : GeoAnima
             profiledTrackPose,
             0,
         )
+        val entry = cached ?: FloatArray(5).also { trackPoseCache[key] = it }
+        entry[0] = phase
+        System.arraycopy(profiledTrackPose, 0, entry, 1, 4)
         return true
     }
 

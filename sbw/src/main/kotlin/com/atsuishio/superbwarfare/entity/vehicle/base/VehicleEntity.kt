@@ -361,6 +361,9 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
             return
         }
 
+        // Weapons of the live map are changed in place and published like the per-tick publisher does.
+        if (vehicleWeaponRuntime.modifyLive(name, consumer)) return
+
         val map = this.gunDataMap.toMutableMap()
         var data = getGunData(name) ?: return
 

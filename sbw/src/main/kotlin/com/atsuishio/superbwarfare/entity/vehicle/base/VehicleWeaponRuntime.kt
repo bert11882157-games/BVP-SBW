@@ -207,6 +207,27 @@ internal class VehicleWeaponRuntime(
         }
     }
 
+    /**
+     * [VehicleEntity.modifyGunData] for a weapon of the live map: the change is made on the live state and the
+     * changed weapons are published as a new snapshot, exactly as the per-tick publisher does. Publishing through
+     * the gunDataMap setter instead dropped the whole live cache, so the next read rebuilt every weapon of the
+     * vehicle (stack copy + GunData construction) after every single shot.
+     */
+    fun modifyLive(name: String, consumer: java.util.function.Consumer<GunData>): Boolean {
+        val live = vehicle.gunDataMap
+        val data = live[name] ?: return false
+        data.vehicleWeaponIdentity = name
+        consumer.accept(data)
+        data.save()
+        val published = vehicle.publishedGunDataSnapshot()
+        val snapshot = WeaponSnapshotPublisher.changedSnapshot(live, published, GunData::copy) ?: return true
+        vehicle.publishWeaponRuntimeSnapshot(snapshot)
+        weaponState.published(snapshot)
+        selectionCache.clear()
+        clientSelection.fill(null)
+        return true
+    }
+
     fun invalidateResolvedGunData() {
         weaponState.clear()
         selectionCache.clear()

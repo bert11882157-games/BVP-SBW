@@ -39,9 +39,20 @@ class JsonPropertyModifier<DATA : DefaultDataSupplier<DEFAULT_DATA>, DEFAULT_DAT
     private var str: String? = null
 
     fun update(`object`: JsonObject?) {
+        if (`object` !== this.obj) resolved = null
         this.obj = `object`
         this.str = null
     }
+
+    /**
+     * The override converted and deserialized once per override object. Property maps are rebuilt whenever a gun's
+     * state tag changes (every shot, every heat or reload step), and each rebuild converted the whole override tree
+     * and deserialized every property again. Immutable values (numbers, strings, booleans, enums) are reused;
+     * anything else is deserialized fresh each time, as before, so no rebuild can see another's mutable value.
+     */
+    private class Resolved(val source: JsonObject, val entries: List<Pair<Prop<*, *, *, *, *>, KxElement>>,
+                           val immutable: Array<Any?>)
+    private var resolved: Resolved? = null
 
     fun update(string: String?) {
         if (string.isNullOrEmpty() || string == this.str) return
@@ -71,13 +82,21 @@ class JsonPropertyModifier<DATA : DefaultDataSupplier<DEFAULT_DATA>, DEFAULT_DAT
 
     override fun modifyProperty(modifier: PMC<DATA, DEFAULT_DATA>) {
         val source = obj ?: return
-        val element = propertyJson(source) as KxObject
+        var cache = resolved
+        if (cache == null || cache.source !== source) {
+            val element = propertyJson(source) as KxObject
+            val entries = ArrayList<Pair<Prop<*, *, *, *, *>, KxElement>>(element.size)
+            for ((key, value) in element) entries.add((propsMap[key] ?: continue) to value)
+            cache = Resolved(source, entries, arrayOfNulls(entries.size))
+            resolved = cache
+        }
 
-        for ((key, value) in element) {
-            val prop = propsMap[key] ?: continue
-
-            val deserialized = try {
-                prop.deserialize(value)!!
+        for ((index, entry) in cache.entries.withIndex()) {
+            val (prop, value) = entry
+            val deserialized = cache.immutable[index] ?: try {
+                prop.deserialize(value)!!.also {
+                    if (it is Number || it is String || it is Boolean || it is Enum<*>) cache.immutable[index] = it
+                }
             } catch (exception: Exception) {
                 Mod.LOGGER.error("Failed to deserialize prop: {}", value, exception)
                 continue
