@@ -181,7 +181,8 @@ SPECS = {
             'missileMuzzle_1': {'parent': 'Barrel', 'at': [-13.0, 49.7, 10.2]},
         },
         'seats': [
-            {'frame': 'Vehicle', 'at': [-10.0, 21.0, -40.0]},           # operator (launcher)
+            # the operator's seat is in the turret frame: a hull-frame seat with a fixed head cannot slew the launcher
+            {'frame': 'Turret', 'at': [-10.0, 21.0, -40.0]},            # operator (launcher)
             {'frame': 'Vehicle', 'at': [9.6, 10.9, -36.8]},             # driver, front left
         ],
         # Shturm-S: 9M114 (radio command), 12 in the autoloader, one on the rail
@@ -220,7 +221,8 @@ SPECS = {
             'coax_muzzle': {'parent': 'Barrel', 'at': [-5.0, 42.0, -32.2]},
         },
         'seats': [
-            {'frame': 'Vehicle', 'at': [0.0, 24.0, -44.8], 'fromTemplate': 0},     # gunner, capsule centre
+            # the gunner aims the turret, so the seat is in the turret frame (a hull-frame seat cannot traverse)
+            {'frame': 'Turret', 'at': [0.0, 24.0, -44.8], 'fromTemplate': 0},      # gunner, capsule centre
             {'frame': 'Vehicle', 'at': [-8.0, 24.0, -44.8], 'fromTemplate': 2},    # commander, capsule right
         ],
         # the model has no remote weapon station on the turret: the T-90M's commander HMG station is left out
