@@ -17,6 +17,7 @@ import net.minecraftforge.fml.common.Mod;
  * round of the named weapon from each selected vehicle with no crew, through the normal vehicle shot path, so its
  * fire cue goes out exactly as in play. Used by the audio loudness test to fire guns at set listener distances.
  * {@code /bvp_seat <player> <seat>} moves a rider to another seat (seat views in the spawn checks).
+ * {@code /bvp_ammo <vehicles> <weapon> <rounds>} sets a weapon's loaded rounds (ammo-bone visibility checks).
  */
 @Mod.EventBusSubscriber(modid = BertsVehiclePack.MODID)
 public final class BvpAudioFireScenario {
@@ -49,6 +50,27 @@ public final class BvpAudioFireScenario {
                             context.getSource().sendSuccess(() -> Component.literal("audio fire: " + count), false);
                             return count;
                         }))));
+        // /bvp_ammo <vehicles> <weapon> <rounds>: sets a weapon's loaded rounds (ammo-bone visibility checks)
+        event.getDispatcher().register(Commands.literal("bvp_ammo")
+                .requires(source -> source.hasPermission(2))
+                .then(Commands.argument("vehicles", EntityArgument.entities())
+                        .then(Commands.argument("weapon", StringArgumentType.word())
+                                .then(Commands.argument("rounds", com.mojang.brigadier.arguments.IntegerArgumentType.integer(0, 10000))
+                                        .executes(context -> {
+                                            String weapon = StringArgumentType.getString(context, "weapon");
+                                            int rounds = com.mojang.brigadier.arguments.IntegerArgumentType.getInteger(context, "rounds");
+                                            int set = 0;
+                                            for (Entity entity : EntityArgument.getEntities(context, "vehicles")) {
+                                                if (!(entity instanceof VehicleEntity vehicle) || vehicle.getGunData(weapon) == null) continue;
+                                                vehicle.modifyGunData(weapon, data -> {
+                                                    data.resetStatus();
+                                                    data.ammo.set(rounds);
+                                                });
+                                                set++;
+                                                LOGGER.info("[BVP ammo] {} {} = {}", entity.getType(), weapon, rounds);
+                                            }
+                                            return set;
+                                        })))));
         // /bvp_seat <player> <seat>: moves a rider to another seat of the vehicle it rides (seat views in checks)
         event.getDispatcher().register(Commands.literal("bvp_seat")
                 .requires(source -> source.hasPermission(2))

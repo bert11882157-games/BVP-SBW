@@ -31,8 +31,9 @@ PX = 16.0
 MISSILES = {
     # BGM-71 TOW: 1.17 m (probe retracted), 152 mm. Roll-stabilised: no spin.
     'tow': dict(source='TOW.mtb', length=1.17, spin=0.0, rounds=('bgm71',)),
-    # 9M133 Kornet: 1.20 m, 152 mm. Rolls in flight (the FFA exhaust swirl is 4 Hz = 72 degrees per tick).
-    'kornet': dict(source='Kornet Elite.mtb', length=1.20, spin=72.0, rounds=('9m133', 'kornet')),
+    # 9M133 Kornet: 1.20 m, 152 mm. Rolls in flight at the pack's 2 Hz ATGM rate (36 degrees per tick), the same as
+    # the exhaust swirl.
+    'kornet': dict(source='Kornet Elite.mtb', length=1.20, spin=36.0, rounds=('9m133', 'kornet')),
 }
 
 

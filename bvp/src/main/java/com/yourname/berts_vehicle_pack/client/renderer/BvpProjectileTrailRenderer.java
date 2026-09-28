@@ -204,17 +204,18 @@ public final class BvpProjectileTrailRenderer {
     }
 
     /**
-     * Revolutions the ATGM thruster swirl has made [seconds] after launch. The spin rate rises linearly to 2.5 Hz at
-     * 0.25 s, then to its 4 Hz maximum at 0.75 s, and holds (the integral of that piecewise-linear rate).
+     * Revolutions the ATGM thruster swirl has made [seconds] after launch. The spin rate rises linearly to 1.25 Hz at
+     * 0.25 s, then to its 2 Hz maximum at 0.75 s, and holds (the integral of that piecewise-linear rate). 2 Hz is the
+     * ATGM body roll too (ModEntityRenderers.ATGM_SPIN_DEGREES_PER_TICK).
      */
     static double spinTurns(double seconds) {
         if (!(seconds > 0.0D)) return 0.0D;
-        if (seconds <= 0.25D) return 5.0D * seconds * seconds;                 // rate 10 Hz/s: 0.3125 turns at 0.25 s
+        if (seconds <= 0.25D) return 2.5D * seconds * seconds;                 // rate 5 Hz/s: 0.15625 turns at 0.25 s
         if (seconds <= 0.75D) {
             double u = seconds - 0.25D;
-            return 0.3125D + 2.5D * u + 1.5D * u * u;                           // rate 3 Hz/s: 1.9375 turns at 0.75 s
+            return 0.15625D + 1.25D * u + 0.75D * u * u;                        // rate 1.5 Hz/s: 0.96875 turns at 0.75 s
         }
-        return 1.9375D + 4.0D * (seconds - 0.75D);
+        return 0.96875D + 2.0D * (seconds - 0.75D);
     }
 
     private static OrbitFrame orbitFrame(Entity entity, double travelX, double travelY, double travelZ) {

@@ -43,6 +43,8 @@ object FxLights {
     private const val MAX_POOL_QUADS = 6000
     private const val MAX_POOL_RADIUS = 24
     private const val MAX_RADIUS = 48.0
+    /** Column tops that block effect light: leaves do not (a canopy used to hang glowing wall quads in the air). */
+    private val SURFACE = Heightmap.Types.MOTION_BLOCKING_NO_LEAVES
 
     private class Light {
         var key = 0L
@@ -187,7 +189,7 @@ object FxLights {
     fun onRender(event: RenderLevelStageEvent) {
         if (event.stage != RenderLevelStageEvent.Stage.AFTER_TRANSLUCENT_BLOCKS) return
         val started = System.nanoTime()
-        try { renderGround(event) } finally { renderNanos += System.nanoTime() - started }
+        try { renderGround(event); renderGlows(event) } finally { renderNanos += System.nanoTime() - started }
     }
 
     private fun renderGround(event: RenderLevelStageEvent) {
@@ -233,7 +235,7 @@ object FxLights {
                     System.arraycopy(twin.faces, 0, l.faces, 0, twin.faceCount * 15)
                 } else {
                     if (builds >= MAX_INTERIOR_BUILDS) continue   // next frame; bounds the one-off scan cost
-                    l.covered = world.getHeight(Heightmap.Types.MOTION_BLOCKING, lbx, lbz) > lby + 1
+                    l.covered = world.getHeight(SURFACE, lbx, lbz) > lby + 1
                     if (l.covered) { buildInterior(world, l, lbx, lby, lbz); builds++ } else l.faceCount = 0
                 }
                 l.faceKey = key
@@ -268,7 +270,8 @@ object FxLights {
             val gh = bz1 - bz0 + 3
             if (heights.size < gw * gh) heights = IntArray(gw * gh)
             for (gx in 0 until gw) for (gz in 0 until gh)
-                heights[gx * gh + gz] = world.getHeight(Heightmap.Types.MOTION_BLOCKING, bx0 - 1 + gx, bz0 - 1 + gz)
+                heights[gx * gh + gz] = world.getHeight(SURFACE, bx0 - 1 + gx, bz0 - 1 + gz)
+            buildHorizon(l, r, bx0, bz0, gw, gh)
             for (bx in bx0..bx1) for (bz in bz0..bz1) {
                 if (quads >= MAX_POOL_QUADS) break
                 val topI = heights[(bx - bx0 + 1) * gh + (bz - bz0 + 1)]
@@ -290,21 +293,34 @@ object FxLights {
                     // edge end points along the face
                     val ax: Double; val az: Double; val cx: Double; val cz: Double
                     if (dx != 0) { ax = fx; cx = fx; az = bz.toDouble(); cz = bz + 1.0 } else { az = fz; cz = fz; ax = bx.toDouble(); cx = bx + 1.0 }
-                    val w00 = wall(l, r, strength, ax, y0, az); val w01 = wall(l, r, strength, ax, y1, az)
-                    val w11 = wall(l, r, strength, cx, y1, cz); val w10 = wall(l, r, strength, cx, y0, cz)
-                    if (w00 + w01 + w11 + w10 < 0.004f) continue
                     // a hair off the face, toward the light
                     val ox = dx * 0.015; val oz = dz * 0.015
-                    val w = walls * 16
-                    wq[w] = (ax + ox - cam.x).toFloat(); wq[w + 1] = (y0 - cam.y).toFloat(); wq[w + 2] = (az + oz - cam.z).toFloat(); wq[w + 3] = w00
-                    wq[w + 4] = (ax + ox - cam.x).toFloat(); wq[w + 5] = (y1 - cam.y).toFloat(); wq[w + 6] = (az + oz - cam.z).toFloat(); wq[w + 7] = w01
-                    wq[w + 8] = (cx + ox - cam.x).toFloat(); wq[w + 9] = (y1 - cam.y).toFloat(); wq[w + 10] = (cz + oz - cam.z).toFloat(); wq[w + 11] = w11
-                    wq[w + 12] = (cx + ox - cam.x).toFloat(); wq[w + 13] = (y0 - cam.y).toFloat(); wq[w + 14] = (cz + oz - cam.z).toFloat(); wq[w + 15] = w10
-                    wc[walls * 3] = l.r; wc[walls * 3 + 1] = l.g; wc[walls * 3 + 2] = l.b
-                    walls++
+                    // One quad per block row, so a tall face (cliff, building) gets its hot spot at the light's height
+                    // instead of one corner-lit gradient that went black when all four corners were out of reach; a row
+                    // hidden from the light behind higher terrain (the horizon) stays dark.
+                    val midX = (ax + cx) * 0.5 + dx * 0.05; val midZ = (az + cz) * 0.5 + dz * 0.05
+                    var ya = y0
+                    while (ya < y1 - 1e-6 && walls < MAX_WALL_QUADS) {
+                        val yb = min(y1, kotlin.math.floor(ya) + 1.0)
+                        if (!occluded(l, midX, yb, midZ)) {
+                            val w00 = wall(l, r, strength, ax, ya, az); val w01 = wall(l, r, strength, ax, yb, az)
+                            val w11 = wall(l, r, strength, cx, yb, cz); val w10 = wall(l, r, strength, cx, ya, cz)
+                            if (w00 + w01 + w11 + w10 >= 0.004f) {
+                                val w = walls * 16
+                                wq[w] = (ax + ox - cam.x).toFloat(); wq[w + 1] = (ya - cam.y).toFloat(); wq[w + 2] = (az + oz - cam.z).toFloat(); wq[w + 3] = w00
+                                wq[w + 4] = (ax + ox - cam.x).toFloat(); wq[w + 5] = (yb - cam.y).toFloat(); wq[w + 6] = (az + oz - cam.z).toFloat(); wq[w + 7] = w01
+                                wq[w + 8] = (cx + ox - cam.x).toFloat(); wq[w + 9] = (yb - cam.y).toFloat(); wq[w + 10] = (cz + oz - cam.z).toFloat(); wq[w + 11] = w11
+                                wq[w + 12] = (cx + ox - cam.x).toFloat(); wq[w + 13] = (ya - cam.y).toFloat(); wq[w + 14] = (cz + oz - cam.z).toFloat(); wq[w + 15] = w10
+                                wc[walls * 3] = l.r; wc[walls * 3 + 1] = l.g; wc[walls * 3 + 2] = l.b
+                                walls++
+                            }
+                        }
+                        ya = yb
+                    }
                 }
                 val dy = l.y - top
                 if (dy < -1.0 || dy > r) continue                 // the surface must be under (or at) the light
+                if (occluded(l, bx + 0.5, top, bz + 0.5)) continue   // behind a wall or ridge from the light
                 val o = quads * 12
                 pc[quads * 3] = l.r; pc[quads * 3 + 1] = l.g; pc[quads * 3 + 2] = l.b
                 val a00 = pool(l, r, strength, bx.toDouble(), top, bz.toDouble())
@@ -348,6 +364,70 @@ object FxLights {
                     .endVertex()
             }
         }
+        RenderSystem.setShader { GameRenderer.getPositionColorShader() }
+        RenderSystem.enableBlend()
+        RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE)
+        RenderSystem.depthMask(false)
+        RenderSystem.enableDepthTest()
+        RenderSystem.disableCull()
+        BufferUploader.drawWithShader(builder.end())
+        RenderSystem.enableCull()
+        RenderSystem.depthMask(true)
+        RenderSystem.defaultBlendFunc()
+        RenderSystem.disableBlend()
+    }
+
+    // ---------------------------------------------------------------- distant light bursts
+
+    private const val GLOW_NEAR = 48.0
+    private const val GLOW_FULL = 96.0
+    private const val GLOW_SEGMENTS = 8
+
+    /**
+     * Past [GLOW_NEAR] blocks the ground glow shrinks to nothing on screen, and past the loaded chunks there is no
+     * terrain to paint at all (the far terrain has no heightmap here), so each light is also drawn as one soft
+     * additive disc facing the camera: a blast, a fireball, a burning motor or an afterburner reads as a burst of
+     * light across the far view. At most [MAX_LIGHTS] eight-triangle fans in one draw; depth-tested (terrain hides
+     * it), never depth-written. Fades in from [GLOW_NEAR] to [GLOW_FULL].
+     */
+    private fun renderGlows(event: RenderLevelStageEvent) {
+        if (count == 0 || !enabled) return
+        val camera = event.camera
+        val cam = camera.position
+        val left = camera.leftVector; val up = camera.upVector
+        val pose = event.poseStack.last().pose()
+        var builder: com.mojang.blaze3d.vertex.BufferBuilder? = null
+        for (i in 0 until count) {
+            val l = lights[i]
+            val lv = l.current(now)
+            if (lv < 3.0) continue
+            val dx = l.x - cam.x; val dy = l.y - cam.y; val dz = l.z - cam.z
+            val dist = sqrt(dx * dx + dy * dy + dz * dz)
+            if (dist < GLOW_NEAR) continue
+            val fade = ((dist - GLOW_NEAR) / (GLOW_FULL - GLOW_NEAR)).coerceIn(0.0, 1.0)
+            val a = ((lv / 15.0) * (lv / 15.0) * 0.55 * min(l.boost, 2.0) * fade).toFloat().coerceAtMost(1f)
+            if (a < 0.01f) continue
+            // a visible disc: a fraction of the light's reach, never smaller than ~0.15 degrees across
+            val size = max(l.radius * 0.3 * (lv / 15.0), dist * 0.0013).toFloat()
+            if (builder == null) {
+                builder = Tesselator.getInstance().builder
+                builder.begin(VertexFormat.Mode.TRIANGLES, DefaultVertexFormat.POSITION_COLOR)
+            }
+            val cx = dx.toFloat(); val cy = dy.toFloat(); val cz = dz.toFloat()
+            val over = max(1f, a)
+            val r = min(1f, l.r * over); val g = min(1f, l.g * over); val b = min(1f, l.b * over)
+            for (k in 0 until GLOW_SEGMENTS) {
+                val a0 = k * (2.0 * Math.PI / GLOW_SEGMENTS); val a1 = (k + 1) * (2.0 * Math.PI / GLOW_SEGMENTS)
+                val c0 = kotlin.math.cos(a0).toFloat() * size; val s0 = kotlin.math.sin(a0).toFloat() * size
+                val c1 = kotlin.math.cos(a1).toFloat() * size; val s1 = kotlin.math.sin(a1).toFloat() * size
+                builder.vertex(pose, cx, cy, cz).color(r, g, b, a).endVertex()
+                builder.vertex(pose, cx + left.x() * c0 + up.x() * s0, cy + left.y() * c0 + up.y() * s0,
+                    cz + left.z() * c0 + up.z() * s0).color(r, g, b, 0f).endVertex()
+                builder.vertex(pose, cx + left.x() * c1 + up.x() * s1, cy + left.y() * c1 + up.y() * s1,
+                    cz + left.z() * c1 + up.z() * s1).color(r, g, b, 0f).endVertex()
+            }
+        }
+        builder ?: return
         RenderSystem.setShader { GameRenderer.getPositionColorShader() }
         RenderSystem.enableBlend()
         RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE)
@@ -480,6 +560,56 @@ object FxLights {
     private val wc = FloatArray(MAX_WALL_QUADS * 3)
     private var heights = IntArray(64 * 64)
 
+    // ---------------------------------------------------------------- outdoor occlusion (terrain horizon)
+
+    private const val HZ_SECTORS = 64
+    private const val HZ_STEP = 0.5
+    private const val HZ_MAX_STEPS = 64
+    private val horizon = FloatArray(HZ_SECTORS * HZ_MAX_STEPS)
+    private var hzSteps = 0
+    private var hzEye = 0.0
+
+    /**
+     * For each of [HZ_SECTORS] directions round the light, the steepest terrain slope (column top above the light's
+     * eye, over horizontal distance) met so far, every [HZ_STEP] blocks out to the light's reach: one march per
+     * direction, then [occluded] is a table look-up for every ground column and wall row the light touches.
+     */
+    private fun buildHorizon(l: Light, r: Double, bx0: Int, bz0: Int, gw: Int, gh: Int) {
+        hzSteps = min(HZ_MAX_STEPS, kotlin.math.ceil(r / HZ_STEP).toInt())
+        // A light at or just under its own column's surface (a ground burst) sees along the ground, not into it.
+        val lx = kotlin.math.floor(l.x).toInt() - bx0 + 1; val lz = kotlin.math.floor(l.z).toInt() - bz0 + 1
+        val under = if (lx in 0 until gw && lz in 0 until gh) heights[lx * gh + lz].toDouble() else l.y
+        hzEye = max(l.y, under + 0.25)
+        for (sct in 0 until HZ_SECTORS) {
+            val a = sct * (2.0 * Math.PI / HZ_SECTORS)
+            val cx = kotlin.math.cos(a); val cz = kotlin.math.sin(a)
+            var best = -1.0e9f
+            for (k in 0 until hzSteps) {
+                val d = (k + 1) * HZ_STEP
+                val gx = kotlin.math.floor(l.x + cx * d).toInt() - bx0 + 1
+                val gz = kotlin.math.floor(l.z + cz * d).toInt() - bz0 + 1
+                if (gx in 0 until gw && gz in 0 until gh) {
+                    val slope = ((heights[gx * gh + gz] - hzEye) / d).toFloat()
+                    if (slope > best) best = slope
+                }
+                horizon[sct * HZ_MAX_STEPS + k] = best
+            }
+        }
+    }
+
+    /** Whether terrain between the light and the point (x, y, z) hides it (the point's own column excluded). */
+    private fun occluded(l: Light, x: Double, y: Double, z: Double): Boolean {
+        val dx = x - l.x; val dz = z - l.z
+        val d = sqrt(dx * dx + dz * dz)
+        val k = min(kotlin.math.floor((d - 0.75) / HZ_STEP).toInt() - 1, hzSteps - 1)
+        if (k < 0) return false
+        val f = (kotlin.math.atan2(dz, dx) / (2.0 * Math.PI) * HZ_SECTORS + HZ_SECTORS) % HZ_SECTORS
+        val s0 = kotlin.math.floor(f).toInt() % HZ_SECTORS; val s1 = (s0 + 1) % HZ_SECTORS
+        // the lower of the two bounding directions: an edge case stays lit rather than going dark
+        val hz = min(horizon[s0 * HZ_MAX_STEPS + k], horizon[s1 * HZ_MAX_STEPS + k])
+        return (y - hzEye) / d < hz - 0.05
+    }
+
     /** Light on a vertical face: plain 3-D falloff (the ground pool flattens its reach vertically). */
     private fun wall(l: Light, r: Double, strength: Double, x: Double, y: Double, z: Double): Float {
         val dx = x - l.x; val dy = y - l.y; val dz = z - l.z
@@ -491,6 +621,12 @@ object FxLights {
 
     // ---------------------------------------------------------------- missile and rocket motors
 
+    /**
+     * Burning missile and rocket motors light their surroundings, terrain and walls included (radius 8 / level 10
+     * passes the terrain gate), from the nozzle, only while the motor burns: an ATGM's ejection charge and its coast
+     * after burnout stay dark. Missiles and rockets of any class are found through [MissilePresentation.isMissile]
+     * plus the class-name fallback for add-on entities (BVP's Ataka, rocket pods).
+     */
     @SubscribeEvent
     fun onClientTick(event: net.minecraftforge.event.TickEvent.ClientTickEvent) {
         if (event.phase != net.minecraftforge.event.TickEvent.Phase.END) return
@@ -499,13 +635,24 @@ object FxLights {
         val cam = mc.gameRenderer.mainCamera.position
         for (entity in world.entitiesForRendering()) {
             if (entity !is net.minecraft.world.entity.projectile.Projectile) continue
-            val name = entity.javaClass.simpleName
-            if (!(name.contains("Missile") || name.contains("Rocket"))) continue
-            if (entity.distanceToSqr(cam) > 160.0 * 160.0 || entity.deltaMovement.lengthSqr() < 0.09) continue
-            val back = entity.deltaMovement.normalize().scale(-0.6)
-            sustain(0x4D0000000000L or entity.id.toLong(), entity.x + back.x, entity.y + back.y, entity.z + back.z, 6.0, 12.0)
+            val missile = com.atsuishio.superbwarfare.api.effect.MissilePresentation.isMissile(entity) ||
+                entity.javaClass.simpleName.let { it.contains("Missile") || it.contains("Rocket") }
+            if (!missile) continue
+            if (entity.distanceToSqr(cam) > 512.0 * 512.0 || entity.deltaMovement.lengthSqr() < 0.09) continue
+            if (entity is com.atsuishio.superbwarfare.entity.projectile.WireGuideMissileEntity &&
+                entity.hasGuidedPropulsion() &&
+                (!entity.isGuidedPropulsionThrusting() || entity.suppressesGuidedPropulsionTrail())) continue
+            val nozzle = runCatching {
+                com.atsuishio.superbwarfare.api.effect.MissilePresentation.nozzlePosition(entity, 1f)
+            }.getOrElse { entity.position().subtract(entity.deltaMovement.normalize().scale(0.6)) }
+            motor(0x4D0000000000L or entity.id.toLong(), nozzle.x, nozzle.y, nozzle.z)
         }
     }
+
+    /** One motor's light: a hot yellow-white core that lights the ground and walls round the missile. */
+    @JvmStatic
+    fun motor(key: Long, x: Double, y: Double, z: Double) =
+        sustain(key, x, y, z, 8.0, 10.0, 1.1, 1f, 0.72f, 0.4f)
 
     private fun pool(l: Light, r: Double, strength: Double, x: Double, y: Double, z: Double): Float {
         val dx = x - l.x; val dy = (y - l.y) * 1.5; val dz = z - l.z

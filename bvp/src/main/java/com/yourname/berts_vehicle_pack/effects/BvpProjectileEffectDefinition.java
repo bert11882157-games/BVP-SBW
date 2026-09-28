@@ -39,7 +39,7 @@ public final class BvpProjectileEffectDefinition {
     private static final ResourceLocation ATGM_MUNITION =
             new ResourceLocation(BertsVehiclePack.MODID, "atgm");
     private static final double ATGM_TRAIL_SIZE_MULTIPLIER = 1.0D / 3.0D;
-    private static final double ATGM_ORBIT_SPEED_MULTIPLIER = 0.5D;
+    private static final double ATGM_ORBIT_SPEED_MULTIPLIER = 0.25D; // 3 Hz authored orbit -> 0.75 Hz (halved with the ATGM spin)
     private static final double ATGM_CENTRAL_TRAIL_SCALE_MULTIPLIER = 1.5D;
     private static final Map<ResolvedProjectileProfile, Optional<BvpProjectileEffectDefinition>> CACHE =
             new WeakHashMap<>();

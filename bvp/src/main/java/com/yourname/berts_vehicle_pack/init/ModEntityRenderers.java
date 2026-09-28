@@ -42,6 +42,8 @@ public class ModEntityRenderers {
     private static final ResourceLocation TURRET_WRECK_VISUAL_PROVIDER =
             new ResourceLocation(BertsVehiclePack.MODID, "turret_wreck_visuals");
     private static final float ROCKET_SPIN_DEGREES_PER_TICK = 540.0F;
+    /** ATGM body roll: 2 Hz (36 degrees per tick), matching the exhaust swirl's 2 Hz. It was 330 (18 Hz). */
+    private static final float ATGM_SPIN_DEGREES_PER_TICK = 36.0F;
 
     public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
         registerProjectileVisualProviders();
@@ -50,7 +52,7 @@ public class ModEntityRenderers {
                 new BvpSpinningProjectileRenderer<>(context,
                         new ResourceLocation(BertsVehiclePack.MODID, "custom_geo/mi24v_atgm_projectile.geo.json"),
                         new ResourceLocation(BertsVehiclePack.MODID, "textures/entity/mi24v_atgm.png"),
-                        330.0F));
+                        ATGM_SPIN_DEGREES_PER_TICK));
         event.registerEntityRenderer(ModEntities.S8KO_ROCKET.get(), context ->
                 new BvpSpinningProjectileRenderer<>(context,
                         new ResourceLocation(BertsVehiclePack.MODID, "custom_geo/mi24v_s8ko_projectile.geo.json"),
@@ -497,11 +499,11 @@ public class ModEntityRenderers {
         registerVisual("ataka_atgm", context -> adapt(WireGuideMissileEntity.class,
                 new BvpSpinningProjectileRenderer<>(context,
                         bvp("custom_geo/mi24v_atgm_projectile.geo.json"),
-                        bvp("textures/entity/mi24v_atgm.png"), 330.0F)));
+                        bvp("textures/entity/mi24v_atgm.png"), ATGM_SPIN_DEGREES_PER_TICK)));
         registerVisual("bastion_atgm", context -> adapt(WireGuideMissileEntity.class,
                 new BvpSpinningProjectileRenderer<>(context,
                         bvp("custom_geo/mi24v_atgm_projectile.geo.json"),
-                        bvp("textures/entity/mi24v_atgm.png"), 330.0F)));
+                        bvp("textures/entity/mi24v_atgm.png"), ATGM_SPIN_DEGREES_PER_TICK)));
     }
 
     private static void registerCannonVisual(String path, String assetName) {
