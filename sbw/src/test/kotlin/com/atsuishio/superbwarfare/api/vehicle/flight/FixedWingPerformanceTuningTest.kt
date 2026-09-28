@@ -37,6 +37,30 @@ class FixedWingPerformanceTuningTest {
         assertEquals(1.0, FixedWingHandlingProfile.transonicSurplusShare(Double.NaN), 0.0)
     }
 
+    @Test fun jetsGetALowSpeedSurplusBoostThatFadesByThreeHundred() {
+        val jet = FixedWingHandlingProfile.GAME_JET.copy(lowSpeedSurplusBoost = FixedWingHandlingProfile.JET_LOW_SPEED_BOOST)
+        assertEquals(1.8, jet.lowSpeedSurplusMultiplier(0.0), 1e-12)
+        assertEquals(1.8, jet.lowSpeedSurplusMultiplier(150.0), 1e-12)
+        assertEquals(1.4, jet.lowSpeedSurplusMultiplier(225.0), 1e-12)
+        assertEquals(1.0, jet.lowSpeedSurplusMultiplier(300.0), 1e-12)
+        assertEquals(1.0, jet.lowSpeedSurplusMultiplier(600.0), 1e-12)
+        assertEquals(1.0, FixedWingHandlingProfile.GAME_JET.lowSpeedSurplusMultiplier(100.0), 0.0)
+        assertEquals(1.8, MiG19FixedWingProfile.HANDLING.lowSpeedSurplusBoost, 0.0)
+        // a boosted jet out-accelerates the same jet without the boost from 100 km/h, and ends at the same top speed
+        fun run(h: FixedWingHandlingProfile, ticks: Int): Double {
+            val m = FixedWingFlightModel(h)
+            m.reset(0.0, 0.0, 0.0)
+            var vz = 100.0 / 3.6
+            var vy = 0.0
+            repeat(ticks) {
+                assertTrue(m.step(it.toLong(), 0.0, vy, vz, false, true, throttleAxis = 1.0))
+                vy = m.velocityY; vz = m.velocityZ
+            }
+            return m.speedMps
+        }
+        assertTrue(run(jet, 40) > run(FixedWingHandlingProfile.GAME_JET, 40))
+    }
+
     @Test fun poweredModelUsesReferenceThrustAndASmallTaperedAfterburnerSurge() {
         val model = warmed(FixedWingHandlingProfile.GAME_JET)
         assertTrue(model.step(100, 0.0, 0.0, 24.0, false, true))

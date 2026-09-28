@@ -40,6 +40,11 @@ class Params:
     transonic_start = 0.85
     transonic_full = 1.1
     transonic_excess = 0.22
+    # jets: engine surplus multiplied by low_boost up to low_full km/h, back to 1 by low_end km/h (owner: buff low-speed
+    # acceleration, only make it harder the faster you go)
+    low_boost = 1.8
+    low_full = 150.0
+    low_end = 300.0
 
 
 def load(vid):
@@ -93,9 +98,16 @@ def accel(m, v, ab=False, dive_deg=0.0, surge=1.0, P=Params):
     over = (P.cap_linear * e1 + P.cap_quadratic * e1 * e1)
     drag = (m['kp'] * v * v + wave) * (1 - 0.4 * d) + induced + over * (1 - P.dive_relief * d)
     t0, t1 = P.transonic_start, P.transonic_full
-    if mach > t0 and thrust > drag:
+    share = 1.0
+    if mach > t0:
         f = min(1.0, (mach - t0) / (t1 - t0))
-        thrust = drag + (thrust - drag) * (1 - (1 - P.transonic_excess) * f)
+        share *= 1 - (1 - P.transonic_excess) * f
+    if m['prop'] <= 0:
+        kmh = v * 3.6
+        u = min(1.0, max(0.0, (kmh - P.low_full) / (P.low_end - P.low_full)))
+        share *= P.low_boost + (1.0 - P.low_boost) * u
+    if thrust > drag:
+        thrust = drag + (thrust - drag) * share
     return thrust - drag + G * d
 
 
@@ -112,7 +124,7 @@ def run(m, v0_kmh, seconds, ab=False, dive_deg=0.0, P=Params):
         v = min(P.hard_kmh / 3.6, max(1.0, v + accel(m, v, ab, dive_deg, surge, P) * dt))
         t += dt
         ticks += 1
-        for k in (300, 350, 400, 450, 500, 550, 600, 650, 700):
+        for k in (150, 200, 250, 300, 350, 400, 450, 500, 550, 600, 650, 700):
             if v * 3.6 >= k and k not in marks:
                 marks[k] = t
     return v * 3.6, marks

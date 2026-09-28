@@ -75,6 +75,12 @@ data class FixedWingHandlingProfile(
      * soft cap. Level flight passes it a little and slowly, dives go well past it. Not length-scaled.
      */
     val firstSoftSpeedLimitMps: Double = 0.0,
+    /**
+     * Multiplier on the engine's surplus over drag at low speed (owner, 2026-09-28: jets pick up speed briskly when
+     * slow; only going fast is hard): this value up to LOW_SPEED_BOOST_FULL_KMH, back to 1 by LOW_SPEED_BOOST_END_KMH.
+     * 1 = none. Top speeds are unchanged (the surplus is zero there).
+     */
+    val lowSpeedSurplusBoost: Double = 1.0,
 ) {
     /** Small shared gameplay tuning; reference specifications remain unchanged. */
     val gamePitchRateDegreesPerSecond: Double get() = pitchRateDegreesPerSecond * 1.10 * 1.12
@@ -114,6 +120,14 @@ data class FixedWingHandlingProfile(
     /** Where overspeed resistance begins: this aircraft's first soft cap, never above the shared one. */
     val effectiveSoftSpeedLimitMps: Double get() =
         if (firstSoftSpeedLimitMps > 0.0) minOf(firstSoftSpeedLimitMps, softSpeedLimitMps) else softSpeedLimitMps
+    /** Multiplier on the engine's surplus over drag at this HUD speed (see [lowSpeedSurplusBoost]). */
+    fun lowSpeedSurplusMultiplier(speedKmh: Double): Double {
+        if (lowSpeedSurplusBoost <= 1.0 || !speedKmh.isFinite()) return 1.0
+        val u = ((speedKmh - LOW_SPEED_BOOST_FULL_KMH) / (LOW_SPEED_BOOST_END_KMH - LOW_SPEED_BOOST_FULL_KMH))
+            .coerceIn(0.0, 1.0)
+        return lowSpeedSurplusBoost + (1.0 - lowSpeedSurplusBoost) * u
+    }
+
     /** The engine's real afterburner ratio (the old x1.8 floor made light-up far too strong). */
     val gameAfterburnerMultiplier: Double get() = maxOf(1.0, afterburnerMultiplier)
 
@@ -205,6 +219,7 @@ data class FixedWingHandlingProfile(
         require(operationalEnergyPerTick >= 0)
         require(afterburnerEnergyMultiplier >= 1)
         require(firstSoftSpeedLimitMps.isFinite() && firstSoftSpeedLimitMps >= 0.0)
+        require(lowSpeedSurplusBoost.isFinite() && lowSpeedSurplusBoost in 1.0..4.0)
         require(operationalEnergyPerTick.toLong() * afterburnerEnergyMultiplier <= Int.MAX_VALUE)
     }
 
@@ -232,6 +247,11 @@ data class FixedWingHandlingProfile(
         const val TRANSONIC_SURPLUS_START_MACH = 0.85
         const val TRANSONIC_SURPLUS_FULL_MACH = 1.1
         const val TRANSONIC_SURPLUS = 0.22
+
+        /** Low-speed surplus boost for jets (BVP flight references); see [lowSpeedSurplusBoost]. */
+        const val JET_LOW_SPEED_BOOST = 1.8
+        const val LOW_SPEED_BOOST_FULL_KMH = 150.0
+        const val LOW_SPEED_BOOST_END_KMH = 300.0
 
         /** Share of the engine's surplus over drag that accelerates the aircraft at this flight Mach number. */
         @JvmStatic

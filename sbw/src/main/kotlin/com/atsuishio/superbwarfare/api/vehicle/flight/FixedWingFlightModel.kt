@@ -410,11 +410,13 @@ class FixedWingFlightModel(
             (if (grounded) handling.launchThrustMultiplier(speed) else 1.0) *
             (1.0 - 0.15 * gearDeployment) *
             if (afterburnerActive) handling.gameAfterburnerMultiplier * engagementBoost else 1.0
-        // Transonic speed is earned: near and above Mach 1 only a share of the surplus over last step's drag
-        // accelerates the aircraft. The equilibrium (top speed) is unchanged and dives are not affected.
+        // Harder to accelerate the faster you go: jets pick up speed briskly when slow (low-speed boost), and near and
+        // above Mach 1 only a share of the surplus over last step's drag accelerates the aircraft. The equilibrium
+        // (top speed) is unchanged and dives are not affected. HUD km/h = world m/s x 3.6.
         if (!grounded && thrustAccelerationMps2 > dragAccelerationMps2) {
-            val share = FixedWingHandlingProfile.transonicSurplusShare(inletMach)
-            if (share < 1.0) {
+            val share = FixedWingHandlingProfile.transonicSurplusShare(inletMach) *
+                handling.lowSpeedSurplusMultiplier(speed * 3.6)
+            if (share != 1.0) {
                 thrustAccelerationMps2 = dragAccelerationMps2 +
                     (thrustAccelerationMps2 - dragAccelerationMps2) * share
             }

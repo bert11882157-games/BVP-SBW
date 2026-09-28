@@ -187,7 +187,9 @@ public final class BvpAircraftFlightProfiles {
                 number(e, "dryMachThrustFactor"), number(e, "afterburnerMachThrustFactor"),
                 e.has("waveDragOnsetMach") ? number(e, "waveDragOnsetMach") : 0.82, 0.25,
                 forcePerSpeedSquared * number(e, "waveDragCoefficient"), takeoff,
-                e.has("firstSoftCapKmh") ? number(e, "firstSoftCapKmh") / 3.6 : 0.0);
+                e.has("firstSoftCapKmh") ? number(e, "firstSoftCapKmh") / 3.6 : 0.0,
+                // jets pick up speed briskly when slow; propellers already have their game gain
+                propellerSpeed > 0 ? 1.0 : FixedWingHandlingProfile.JET_LOW_SPEED_BOOST);
         require(!e.has("firstSoftCapKmh") || (number(e, "firstSoftCapKmh") > 0 && number(e, "firstSoftCapKmh") <= 800),
                 "First soft cap must be a positive HUD speed");
         require(!e.has("waveDragOnsetMach") || (number(e, "waveDragOnsetMach") > 0.3
