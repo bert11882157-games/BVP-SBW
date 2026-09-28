@@ -41,6 +41,15 @@ import org.joml.Math
 @OnlyIn(Dist.CLIENT)
 @Mod.EventBusSubscriber(Dist.CLIENT)
 object AircraftHud {
+    // Steering-circle ticks toward the nose (GUI px, ring radius 6.5): three bars across the direction, the first
+    // just outside the ring, spaced about a third of the ring's diameter apart.
+    private const val JOYSTICK_TICKS = 3
+    private const val TICK_GAP = 1.4f
+    private const val TICK_SPACING = 4.6f
+    private const val TICK_HALF_LENGTH = 1.0f
+    private const val TICK_HALF_WIDTH = 0.3f
+    private const val TICK_ALPHA = 200
+    private const val NOSE_CLEARANCE = 4f
     const val ID: String = "@Aircraft"
 
     private var lerpVy = 1f
@@ -776,8 +785,9 @@ object AircraftHud {
         val buffer = graphics.bufferSource().getBuffer(RenderType.gui())
         FixedWingJoystickRing.emit(pose.last().pose(), buffer, color)
         pose.popPose()
-        // A line from the steering circle toward the aircraft's frontal projection (where the nose points): it grows
-        // with the separation, up to a maximum length, and never reaches past the nose marker.
+        // Three short ticks from the steering circle toward the aircraft's frontal projection (where the nose
+        // points), each a small bar across that direction, evenly spaced; a tick that would reach the nose marker
+        // is left out, so they vanish one by one as the nose closes on the circle.
         val nose = net.minecraft.world.phys.Vec3.directionFromRotation(vehicle.getPitch(partialTick),
             vehicle.getResolvedChassisYaw(partialTick))
         val noseMarker = FixedWingMouseAimMath.project(nose.x, nose.y, nose.z, matrix, projection, width, height)
@@ -785,19 +795,22 @@ object AircraftHud {
             val dx = noseMarker.x - marker.x
             val dy = noseMarker.y - marker.y
             val distance = kotlin.math.hypot(dx, dy)
-            val start = FixedWingJoystickRing.OUTER_RADIUS + 1.5f
-            val length = minOf(distance - start - 3f, (distance - start) * 0.6f, 48f)
-            if (distance > 1e-3f && length > 1f) {
+            if (distance > 1e-3f) {
                 val ux = dx / distance; val uy = dy / distance
-                val half = 0.6f
-                val x0 = marker.x + ux * start; val y0 = marker.y + uy * start
-                val x1 = x0 + ux * length; val y1 = y0 + uy * length
                 val m = pose.last().pose()
                 val r = color ushr 16 and 255; val g = color ushr 8 and 255; val b = color and 255
-                buffer.vertex(m, x0 - uy * half, y0 + ux * half, 0f).color(r, g, b, 230).endVertex()
-                buffer.vertex(m, x1 - uy * half, y1 + ux * half, 0f).color(r, g, b, 120).endVertex()
-                buffer.vertex(m, x1 + uy * half, y1 - ux * half, 0f).color(r, g, b, 120).endVertex()
-                buffer.vertex(m, x0 + uy * half, y0 - ux * half, 0f).color(r, g, b, 230).endVertex()
+                for (i in 0 until JOYSTICK_TICKS) {
+                    val along = FixedWingJoystickRing.OUTER_RADIUS + TICK_GAP + i * TICK_SPACING
+                    if (along > distance - NOSE_CLEARANCE) break
+                    val cx = marker.x + ux * along; val cy = marker.y + uy * along
+                    // half-length across the direction (-uy, ux), half-width along it (ux, uy)
+                    val ax = -uy * TICK_HALF_LENGTH; val ay = ux * TICK_HALF_LENGTH
+                    val wx = ux * TICK_HALF_WIDTH; val wy = uy * TICK_HALF_WIDTH
+                    buffer.vertex(m, cx - ax - wx, cy - ay - wy, 0f).color(r, g, b, TICK_ALPHA).endVertex()
+                    buffer.vertex(m, cx + ax - wx, cy + ay - wy, 0f).color(r, g, b, TICK_ALPHA).endVertex()
+                    buffer.vertex(m, cx + ax + wx, cy + ay + wy, 0f).color(r, g, b, TICK_ALPHA).endVertex()
+                    buffer.vertex(m, cx - ax + wx, cy - ay + wy, 0f).color(r, g, b, TICK_ALPHA).endVertex()
+                }
             }
         }
         graphics.flush()
