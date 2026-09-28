@@ -381,7 +381,10 @@ open class VehicleModel<T> : GeoModel<T>() where T : VehicleEntity, T : GeoAnima
      * bone, and both asked for the same full link evaluation (up to 16 path samples) in the same frame; the second
      * one now reuses it. The pose depends only on the track profile, side, link and phase, so a hit is exact.
      */
-    private val trackPoseCache = HashMap<Int, FloatArray>()
+    // Last pose per link and side, 5 floats each: phase, then the 4 pose values. The Mov and Rot bones of a link ask
+    // for the same pose in the same frame, so the second reads it here. NaN phase = empty (never equal).
+    private var trackPoseCacheLeft = FloatArray(0)
+    private var trackPoseCacheRight = FloatArray(0)
     private var trackPoseCacheProfile: Any? = null
 
     private fun profiledTrackPoseInto(left: Boolean, index: Int): Boolean {
@@ -392,11 +395,13 @@ open class VehicleModel<T> : GeoModel<T>() where T : VehicleEntity, T : GeoAnima
             if (left) leftTrack else rightTrack,
             runningGearTrackAnimationLength,
         ) * track.side(side).direction
-        if (trackPoseCacheProfile !== track) { trackPoseCache.clear(); trackPoseCacheProfile = track }
-        val key = (if (left) 0 else 1 shl 20) or (index and 0xFFFFF)
-        val cached = trackPoseCache[key]
-        if (cached != null && cached[0] == phase) {
-            System.arraycopy(cached, 1, profiledTrackPose, 0, 4)
+        if (trackPoseCacheProfile !== track) {
+            trackPoseCacheLeft.fill(Float.NaN); trackPoseCacheRight.fill(Float.NaN); trackPoseCacheProfile = track
+        }
+        var cache = if (left) trackPoseCacheLeft else trackPoseCacheRight
+        val base = index * 5
+        if (index >= 0 && base + 4 < cache.size && cache[base] == phase) {
+            System.arraycopy(cache, base + 1, profiledTrackPose, 0, 4)
             return true
         }
         RunningGearTrackEvaluator.linkPoseInto(
@@ -407,9 +412,16 @@ open class VehicleModel<T> : GeoModel<T>() where T : VehicleEntity, T : GeoAnima
             profiledTrackPose,
             0,
         )
-        val entry = cached ?: FloatArray(5).also { trackPoseCache[key] = it }
-        entry[0] = phase
-        System.arraycopy(profiledTrackPose, 0, entry, 1, 4)
+        if (index in 0 until 4096) {
+            if (base + 4 >= cache.size) {
+                val grown = FloatArray(maxOf(base + 5, cache.size * 2)) { Float.NaN }
+                System.arraycopy(cache, 0, grown, 0, cache.size)
+                cache = grown
+                if (left) trackPoseCacheLeft = grown else trackPoseCacheRight = grown
+            }
+            cache[base] = phase
+            System.arraycopy(profiledTrackPose, 0, cache, base + 1, 4)
+        }
         return true
     }
 
