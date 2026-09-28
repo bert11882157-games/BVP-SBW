@@ -52,12 +52,19 @@ class ProjectileHitWiringTest {
             assertEquals(1, overload.calls.count { it.name == "requiresCustomQuery" })
             assertEquals(1, overload.calls.count { it.name == "resolveEntityHits" })
             // One return for the custom query, one for the client-side small cannon shell skip, which is decided
-            // before the entity query runs.
-            assertEquals(2, overload.calls.count { it.name == "setReturnValue" })
+            // before the entity query runs. The Level overload also answers vanilla's own query from the candidates
+            // it already fetched (sbw$vanillaHit), after requiresCustomQuery said no custom query is needed.
+            val vanilla = overload.calls.indexOfFirst { it.name == "sbw\$vanillaHit" }
+            assertEquals(if (vanilla >= 0) 3 else 2, overload.calls.count { it.name == "setReturnValue" })
+            if (vanilla >= 0) assertTrue(vanilla > overload.calls.indexOfFirst { it.name == "requiresCustomQuery" })
             val skip = overload.calls.indexOfFirst { it.name == "sbw\$clientShellWithoutEntityHits" }
             assertTrue(skip >= 0 && skip < overload.calls.indexOfFirst { it.name == "getEntities" })
             assertFalse(overload.calls.any { it.name in setOf("nearestObb", "clipProjectile", "emitObbHitEffects") })
         }
+        assertEquals(1, overloads.count { overload -> overload.calls.any { it.name == "sbw\$vanillaHit" } })
+        // The vanilla answer defers to vanilla's own query whenever a vehicle is among the candidates.
+        val vanillaHit = methods("mixins/ProjectileUtilMixin", "sbw\$vanillaHit").single()
+        assertTrue(vanillaHit.calls.any { it.name == "intersects" } && vanillaHit.calls.any { it.name == "clip" })
         val query = methods("mixins/ProjectileUtilMixin", "resolveEntityHits").single()
         for (name in listOf("getOwner", "getPassengers", "getRootVehicle", "canRiderInteract",
             "clipProjectile", "isNarrowAtgm", "preciseInterceptionHitPoint", "nearestObb", "intersects", "consider")) {

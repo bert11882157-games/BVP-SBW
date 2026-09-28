@@ -421,7 +421,8 @@ object GunEventHandler {
     private fun handleGunSingleReload(shooter: Entity?, data: GunData) {
         val stack = data.stack()
         val reload = data.reload
-        val typedVehicleReloadOwnsAudio = VehicleReloadAudio.owns(shooter, data)
+        // Only read when a reload stage plays a sound; this runs every tick for every single-reload gun.
+        val typedVehicleReloadOwnsAudio by lazy(LazyThreadSafetyMode.NONE) { VehicleReloadAudio.owns(shooter, data) }
 
         // 换弹流程计时器
         reload.prepareTimer.reduce()

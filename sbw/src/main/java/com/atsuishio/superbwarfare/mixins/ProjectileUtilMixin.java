@@ -43,9 +43,41 @@ public class ProjectileUtilMixin {
             return;
         }
         var candidates = pLevel.getEntities(pProjectile, pBoundingBox.inflate(8), pFilter);
-        if (!requiresCustomQuery(candidates, pProjectile)) return;
+        if (!requiresCustomQuery(candidates, pProjectile)) {
+            // Answer vanilla's query from the candidates already fetched instead of letting it query the level again.
+            var vanilla = sbw$vanillaHit(candidates, pStartVec, pEndVec, pBoundingBox, pInflationAmount);
+            if (vanilla != null) cir.setReturnValue(vanilla.orElse(null));
+            return;
+        }
         cir.setReturnValue(resolveEntityHits(candidates, pProjectile, pStartVec, pEndVec,
                 pBoundingBox, pInflationAmount, pStartVec.distanceToSqr(pEndVec), false));
+    }
+
+    /**
+     * Vanilla's getEntityHitResult(Level, ...) over the candidates of the 8-block query that also lie in the original
+     * box: the same entities, in the same order (entity sections are visited in the same sorted order for a box
+     * and a larger box around it), the same inflated-box clip and strictly-nearer choice. Returns null (let vanilla
+     * run its own query) when a candidate is a vehicle, whose aircraft-surface or OBB additions to the entity
+     * query are box-dependent and not reproduced here.
+     */
+    @org.jetbrains.annotations.Nullable
+    private static java.util.Optional<EntityHitResult> sbw$vanillaHit(java.util.List<Entity> candidates, Vec3 start, Vec3 end,
+                                                                     AABB box, float inflation) {
+        double nearest = Double.MAX_VALUE;
+        Entity hit = null;
+        for (Entity entity : candidates) {
+            if (entity instanceof VehicleEntity) return null;
+            if (!entity.getBoundingBox().intersects(box)) continue;
+            var clip = entity.getBoundingBox().inflate(inflation).clip(start, end);
+            if (clip.isPresent()) {
+                double distance = start.distanceToSqr(clip.get());
+                if (distance < nearest) {
+                    hit = entity;
+                    nearest = distance;
+                }
+            }
+        }
+        return java.util.Optional.ofNullable(hit == null ? null : new EntityHitResult(hit));
     }
 
     @Inject(method = "getEntityHitResult(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/world/phys/AABB;Ljava/util/function/Predicate;D)Lnet/minecraft/world/phys/EntityHitResult;",
