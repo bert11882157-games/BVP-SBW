@@ -521,12 +521,17 @@
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
             "Name": "AP Belt",
+            "ShootShake": [
+              0,
+              0,
+              0
+            ],
             "ProjectileBelt": {
               "Name": "AP Belt",
               "Family": "RUSSIAN_COAX_762",
               "Rounds": [
                 {
-                  "Shots": 1,
+                  "Shots": 3,
                   "Round": "AP_I",
                   "Ammo": "superbwarfare:small_shell_ap",
                   "Tracer": "NONE"
@@ -539,16 +544,11 @@
                 }
               ]
             },
-            "ShootShake": [
-              0,
-              0,
-              0
-            ],
             "NominalBallistics": {
               "Supported": true,
               "ProjectileType": "superbwarfare:projectile",
               "ProjectileProfile": "berts_vehicle_pack:bmp3m_elite/mainmachinegun/ammo_00_russian_762_ap_i",
-              "ProjectileLife": 400
+              "ProjectileLife": 40
             }
           },
           "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition"
@@ -717,14 +717,14 @@
             "ExplosionDamage": 0,
             "ExplosionRadius": 5,
             "TntEquivalentKg": 0.0755,
-            "Name": "30 mm HEI",
+            "Name": "Air Belt",
             "ShootShake": [
               8,
               10,
               12
             ],
             "ProjectileBelt": {
-              "Name": "30 mm HEI",
+              "Name": "Air Belt",
               "Family": "TWO_A42",
               "Rounds": [
                 {
@@ -750,51 +750,6 @@
           }
         },
         {
-          "Ammo": "superbwarfare:small_shell_gs",
-          "Override": {
-            "Projectile": {
-              "Type": "superbwarfare:small_cannon_shell",
-              "Profile": "berts_vehicle_pack:bmp3m_elite/dualcannon/belt_ammo_00_3ubr6_ap_t"
-            },
-            "ShellType": "AP",
-            "Velocity": 48.5,
-            "ApDurability": 65,
-            "Damage": 65,
-            "ExplosionDamage": 0,
-            "ExplosionRadius": 0,
-            "Name": "30 mm AP-T",
-            "ShootShake": [
-              8,
-              10,
-              12
-            ],
-            "ProjectileBelt": {
-              "Name": "30 mm AP-T",
-              "Family": "TWO_A42",
-              "Rounds": [
-                {
-                  "Shots": 3,
-                  "Round": "3ubr6_ap_t",
-                  "Ammo": "superbwarfare:small_shell_gs",
-                  "Tracer": "GREEN"
-                },
-                {
-                  "Shots": 1,
-                  "Round": "3uor6_hef_t",
-                  "Ammo": "superbwarfare:small_shell_aa",
-                  "Tracer": "GREEN"
-                }
-              ]
-            },
-            "NominalBallistics": {
-              "Supported": true,
-              "ProjectileType": "superbwarfare:small_cannon_shell",
-              "ProjectileProfile": "berts_vehicle_pack:bmp3m_elite/dualcannon/belt_ammo_00_3ubr6_ap_t",
-              "ProjectileLife": 40
-            }
-          }
-        },
-        {
           "Ammo": "superbwarfare:small_shell_ap",
           "Override": {
             "Projectile": {
@@ -807,14 +762,14 @@
             "Damage": 65,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
-            "Name": "30 mm APDS",
+            "Name": "Ground Belt",
             "ShootShake": [
               8,
               10,
               12
             ],
             "ProjectileBelt": {
-              "Name": "30 mm APDS",
+              "Name": "Ground Belt",
               "Family": "TWO_A42",
               "Rounds": [
                 {
@@ -889,6 +844,27 @@
         12
       ],
       "ProjectileBeltAmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_gs",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:bmp3m_elite/dualcannon/belt_ammo_00_3ubr6_ap_t"
+            },
+            "ShellType": "AP",
+            "Velocity": 48.5,
+            "ApDurability": 65,
+            "Damage": 65,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "30 mm AP-T",
+            "ShootShake": [
+              8,
+              10,
+              12
+            ]
+          }
+        },
         {
           "Ammo": "superbwarfare:small_shell_aa",
           "Override": {

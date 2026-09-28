@@ -155,68 +155,6 @@
       "NaturalCooldown": 1,
       "AmmoType": [
         {
-          "Ammo": "superbwarfare:small_shell_ap",
-          "Override": {
-            "Projectile": {
-              "Type": "superbwarfare:projectile",
-              "Profile": "berts_vehicle_pack:kord_tripod/cannon/ammo_00_russian_127_bzt44_api_t_1"
-            },
-            "ShellType": "AP",
-            "Velocity": 43.25,
-            "ApDurability": 29,
-            "Damage": 65,
-            "ExplosionDamage": 0,
-            "ExplosionRadius": 0,
-            "Name": "AP Belt",
-            "ProjectileBelt": {
-              "Name": "AP Belt",
-              "Rounds": [
-                {
-                  "Shots": 1,
-                  "Round": "API_T_1",
-                  "Ammo": "superbwarfare:small_shell_ap",
-                  "Tracer": "GREEN"
-                },
-                {
-                  "Shots": 1,
-                  "Round": "IAI",
-                  "Ammo": "superbwarfare:small_shell_he",
-                  "Tracer": "NONE"
-                },
-                {
-                  "Shots": 1,
-                  "Round": "API_T_2",
-                  "Ammo": "superbwarfare:small_shell_aa",
-                  "Tracer": "GREEN"
-                },
-                {
-                  "Shots": 1,
-                  "Round": "AP_I_C",
-                  "Ammo": "superbwarfare:small_shell_gs",
-                  "Tracer": "NONE",
-                  "DisplayLabel": "API(cermet)"
-                }
-              ]
-            },
-            "NominalBallistics": {
-              "Supported": true,
-              "ProjectileType": "superbwarfare:projectile",
-              "ProjectileProfile": "berts_vehicle_pack:kord_tripod/cannon/ammo_00_russian_127_bzt44_api_t_1",
-              "ProjectileLife": 400
-            },
-            "ShootShake": [
-              8,
-              10,
-              6
-            ]
-          },
-          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition"
-        }
-      ],
-      "Crosshair": "@VehicleCommonGun",
-      "CrosshairColor": "0xFFFFFF",
-      "ProjectileBeltAmmoType": [
-        {
           "Ammo": "superbwarfare:small_shell_he",
           "Override": {
             "Projectile": {
@@ -230,13 +168,74 @@
             "ExplosionDamage": 0,
             "ExplosionRadius": 1.6666666666666665,
             "TntEquivalentKg": 0.0032,
-            "Name": "IAI",
+            "Name": "AP Belt",
+            "ShootShake": [
+              8,
+              10,
+              6
+            ],
+            "ProjectileBelt": {
+              "Name": "AP Belt",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "IAI",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "AP_I_C",
+                  "Ammo": "superbwarfare:small_shell_gs",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "IAI",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "API_T_1",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "GREEN"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:projectile",
+              "ProjectileProfile": "berts_vehicle_pack:kord_tripod/cannon/belt_ammo_00_russian_127_mdz_iai",
+              "ProjectileLife": 40
+            }
+          }
+        }
+      ],
+      "Crosshair": "@VehicleCommonGun",
+      "CrosshairColor": "0xFFFFFF",
+      "ProjectileBeltAmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_ap",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:projectile",
+              "Profile": "berts_vehicle_pack:kord_tripod/cannon/ammo_00_russian_127_bzt44_api_t_1"
+            },
+            "ShellType": "AP",
+            "Velocity": 43.25,
+            "ApDurability": 29,
+            "Damage": 65,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "AP Belt",
             "ShootShake": [
               8,
               10,
               6
             ]
-          }
+          },
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition"
         },
         {
           "Ammo": "superbwarfare:small_shell_aa",

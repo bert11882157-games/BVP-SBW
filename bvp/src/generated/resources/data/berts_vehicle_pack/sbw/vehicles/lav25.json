@@ -355,7 +355,7 @@
       "NormalReloadTime": 240,
       "EmptyReloadTime": 240,
       "AmmoCostPerShoot": 1,
-      "Velocity": 67.25,
+      "Velocity": 55.0,
       "Damage": 65,
       "ExplosionDamage": 8,
       "ExplosionRadius": 2,
@@ -391,51 +391,6 @@
       "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/cannon_25mm_ap.png",
       "AmmoType": [
         {
-          "Ammo": "superbwarfare:small_shell_gs",
-          "Override": {
-            "Projectile": {
-              "Type": "superbwarfare:small_cannon_shell",
-              "Profile": "berts_vehicle_pack:lav25/cannon/belt_ammo_00_m791_apds"
-            },
-            "ShellType": "AP",
-            "Velocity": 67.25,
-            "ApDurability": 81,
-            "Damage": 65,
-            "ExplosionDamage": 0,
-            "ExplosionRadius": 0,
-            "Name": "Default",
-            "ShootShake": [
-              8,
-              10,
-              12
-            ],
-            "ProjectileBelt": {
-              "Name": "Default",
-              "Family": "M242",
-              "Rounds": [
-                {
-                  "Shots": 1,
-                  "Round": "m791_apds",
-                  "Ammo": "superbwarfare:small_shell_gs",
-                  "Tracer": "RED"
-                },
-                {
-                  "Shots": 1,
-                  "Round": "m792_hei_t_1",
-                  "Ammo": "superbwarfare:small_shell_he",
-                  "Tracer": "RED"
-                }
-              ]
-            },
-            "NominalBallistics": {
-              "Supported": true,
-              "ProjectileType": "superbwarfare:small_cannon_shell",
-              "ProjectileProfile": "berts_vehicle_pack:lav25/cannon/belt_ammo_00_m791_apds",
-              "ProjectileLife": 40
-            }
-          }
-        },
-        {
           "Ammo": "superbwarfare:small_shell_he",
           "Override": {
             "Projectile": {
@@ -449,21 +404,21 @@
             "ExplosionDamage": 0,
             "ExplosionRadius": 5,
             "TntEquivalentKg": 0.0544,
-            "Name": "M792",
+            "Name": "Air Belt",
             "ShootShake": [
               8,
               10,
               12
             ],
             "ProjectileBelt": {
-              "Name": "M792",
+              "Name": "Air Belt",
               "Family": "M242",
               "Rounds": [
                 {
                   "Shots": 3,
                   "Round": "m792_hei_t_1",
                   "Ammo": "superbwarfare:small_shell_he",
-                  "Tracer": "RED"
+                  "Tracer": "NONE"
                 },
                 {
                   "Shots": 1,
@@ -483,51 +438,6 @@
           "ConsumptionItem": "superbwarfare:small_autocannon_shell"
         },
         {
-          "Ammo": "superbwarfare:small_shell_aa",
-          "Override": {
-            "Projectile": {
-              "Type": "superbwarfare:small_cannon_shell",
-              "Profile": "berts_vehicle_pack:lav25/cannon/belt_ammo_00_m791_apds"
-            },
-            "ShellType": "AP",
-            "Velocity": 67.25,
-            "ApDurability": 81,
-            "Damage": 65,
-            "ExplosionDamage": 0,
-            "ExplosionRadius": 0,
-            "Name": "M791",
-            "ShootShake": [
-              8,
-              10,
-              12
-            ],
-            "ProjectileBelt": {
-              "Name": "M791",
-              "Family": "M242",
-              "Rounds": [
-                {
-                  "Shots": 3,
-                  "Round": "m791_apds",
-                  "Ammo": "superbwarfare:small_shell_aa",
-                  "Tracer": "RED"
-                },
-                {
-                  "Shots": 1,
-                  "Round": "m792_hei_t_1",
-                  "Ammo": "superbwarfare:small_shell_he",
-                  "Tracer": "RED"
-                }
-              ]
-            },
-            "NominalBallistics": {
-              "Supported": true,
-              "ProjectileType": "superbwarfare:small_cannon_shell",
-              "ProjectileProfile": "berts_vehicle_pack:lav25/cannon/belt_ammo_00_m791_apds",
-              "ProjectileLife": 40
-            }
-          }
-        },
-        {
           "Ammo": "superbwarfare:small_shell_ap",
           "Override": {
             "Projectile": {
@@ -540,20 +450,26 @@
             "Damage": 65,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
-            "Name": "M919",
+            "Name": "Ground Belt",
             "ShootShake": [
               8,
               10,
               12
             ],
             "ProjectileBelt": {
-              "Name": "M919",
+              "Name": "Ground Belt",
               "Family": "M242",
               "Rounds": [
                 {
-                  "Shots": 1,
+                  "Shots": 3,
                   "Round": "m919_apfsds",
                   "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "RED"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "m792_hei_t_1",
+                  "Ammo": "superbwarfare:small_shell_he",
                   "Tracer": "RED"
                 }
               ]
@@ -615,7 +531,29 @@
         10,
         12
       ],
-      "ProjectileBeltAmmoType": [],
+      "ProjectileBeltAmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_gs",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:lav25/cannon/belt_ammo_00_m791_apds"
+            },
+            "ShellType": "AP",
+            "Velocity": 67.25,
+            "ApDurability": 81,
+            "Damage": 65,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "Default",
+            "ShootShake": [
+              8,
+              10,
+              12
+            ]
+          }
+        }
+      ],
       "DepletionReload": [
         [
           0.0,
@@ -664,12 +602,17 @@
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
             "Name": "AP Belt",
+            "ShootShake": [
+              0,
+              0,
+              0
+            ],
             "ProjectileBelt": {
               "Name": "AP Belt",
               "Family": "WESTERN_COAX_762",
               "Rounds": [
                 {
-                  "Shots": 1,
+                  "Shots": 3,
                   "Round": "AP",
                   "Ammo": "superbwarfare:small_shell_ap",
                   "Tracer": "NONE"
@@ -682,16 +625,11 @@
                 }
               ]
             },
-            "ShootShake": [
-              0,
-              0,
-              0
-            ],
             "NominalBallistics": {
               "Supported": true,
               "ProjectileType": "superbwarfare:projectile",
               "ProjectileProfile": "berts_vehicle_pack:lav25/mainmachinegun/ammo_00_western_762_ap",
-              "ProjectileLife": 400
+              "ProjectileLife": 40
             }
           },
           "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition"

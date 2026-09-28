@@ -87,3 +87,18 @@ Values changed by the first run:
 
 The table covers the 125/120/115/105/100/90 mm rounds in the pack plus 9M114 and 9M311. M829A1, JM33 and JM12A1 are
 listed for the M1A1 and Type 90.
+
+## Owner's belt standard (2026-09-28)
+
+Every autocannon, aircraft guns included, has two belts:
+
+- **Air Belt** (HE-dominant): 3× HE without tracer, then 1× AP with tracer.
+- **Ground Belt** (AP-dominant): 3× the gun's best penetrator (APFSDS > APDS > HVAP > AP), then 1× HE with tracer.
+  The BMP-2M's Ground Belt is WT's all-APFSDS belt (3UBR11).
+
+Machine guns keep one belt: 3 rounds without tracer, then 1 tracer. Aircraft and helicopter guns with both HE and AP
+rounds (including the "air game"/"ground game" pairs) get the Air/Ground pair.
+
+Run order: `wt_belts.py` (ground autocannons, WT rounds), `belt_standard.py` (everything else), then
+`tracer_nations.py` (colours: Eastern green, Western red). All three are idempotent and the first two apply the
+nation colours themselves.

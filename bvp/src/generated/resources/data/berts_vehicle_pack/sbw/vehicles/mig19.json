@@ -858,6 +858,53 @@
       },
       "AmmoType": [
         {
+          "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:mig19/cannon/belt_ammo_00_nr30_hef_i"
+            },
+            "ShellType": "HE",
+            "Velocity": 39,
+            "ApDurability": 8,
+            "Damage": 250,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 5,
+            "TntEquivalentKg": 0.0671,
+            "Name": "Air Belt",
+            "ShootShake": [
+              8,
+              10,
+              12
+            ],
+            "ProjectileBelt": {
+              "Name": "Air Belt",
+              "Family": "NR30",
+              "Rounds": [
+                {
+                  "Shots": 3,
+                  "Round": "nr30_hef_i",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "nr30_aphe",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "GREEN"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:mig19/cannon/belt_ammo_00_nr30_hef_i",
+              "ProjectileLife": 40
+            }
+          }
+        },
+        {
           "Ammo": "superbwarfare:small_shell_ap",
           "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
           "Override": {
@@ -872,27 +919,20 @@
             "ExplosionDamage": 0,
             "ExplosionRadius": 5,
             "TntEquivalentKg": 0.0225,
-            "Name": "Air Belt",
+            "Name": "Ground Belt",
+            "ShootShake": [
+              8,
+              10,
+              12
+            ],
             "ProjectileBelt": {
-              "Name": "Air Belt",
+              "Name": "Ground Belt",
               "Family": "NR30",
               "Rounds": [
                 {
-                  "Shots": 1,
+                  "Shots": 3,
                   "Round": "nr30_aphe",
                   "Ammo": "superbwarfare:small_shell_ap",
-                  "Tracer": "NONE"
-                },
-                {
-                  "Shots": 1,
-                  "Round": "nr30_hef_i",
-                  "Ammo": "superbwarfare:small_shell_he",
-                  "Tracer": "NONE"
-                },
-                {
-                  "Shots": 1,
-                  "Round": "nr30_hef_i",
-                  "Ammo": "superbwarfare:small_shell_he",
                   "Tracer": "NONE"
                 },
                 {
@@ -907,13 +947,8 @@
               "Supported": true,
               "ProjectileType": "superbwarfare:small_cannon_shell",
               "ProjectileProfile": "berts_vehicle_pack:mig19/cannon/ammo_00_nr30_aphe",
-              "ProjectileLife": 400
-            },
-            "ShootShake": [
-              8,
-              10,
-              12
-            ]
+              "ProjectileLife": 40
+            }
           }
         }
       ],
@@ -948,29 +983,6 @@
         ]
       },
       "ProjectileBeltAmmoType": [
-        {
-          "Ammo": "superbwarfare:small_shell_he",
-          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
-          "Override": {
-            "Projectile": {
-              "Type": "superbwarfare:small_cannon_shell",
-              "Profile": "berts_vehicle_pack:mig19/cannon/belt_ammo_00_nr30_hef_i"
-            },
-            "ShellType": "HE",
-            "Velocity": 39,
-            "ApDurability": 8,
-            "Damage": 250,
-            "ExplosionDamage": 0,
-            "ExplosionRadius": 5,
-            "TntEquivalentKg": 0.0671,
-            "Name": "HEF_I",
-            "ShootShake": [
-              8,
-              10,
-              12
-            ]
-          }
-        },
         {
           "Ammo": "superbwarfare:small_shell_aa",
           "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
@@ -1050,6 +1062,53 @@
       },
       "AmmoType": [
         {
+          "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:mig19/cannon2/belt_ammo_00_nr30_hef_i"
+            },
+            "ShellType": "HE",
+            "Velocity": 39,
+            "ApDurability": 8,
+            "Damage": 250,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 5,
+            "TntEquivalentKg": 0.0671,
+            "Name": "Air Belt",
+            "ShootShake": [
+              8,
+              10,
+              12
+            ],
+            "ProjectileBelt": {
+              "Name": "Air Belt",
+              "Family": "NR30",
+              "Rounds": [
+                {
+                  "Shots": 3,
+                  "Round": "nr30_hef_i",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "nr30_aphe",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "GREEN"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:mig19/cannon2/belt_ammo_00_nr30_hef_i",
+              "ProjectileLife": 40
+            }
+          }
+        },
+        {
           "Ammo": "superbwarfare:small_shell_ap",
           "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
           "Override": {
@@ -1064,27 +1123,20 @@
             "ExplosionDamage": 0,
             "ExplosionRadius": 5,
             "TntEquivalentKg": 0.0225,
-            "Name": "Air Belt",
+            "Name": "Ground Belt",
+            "ShootShake": [
+              8,
+              10,
+              12
+            ],
             "ProjectileBelt": {
-              "Name": "Air Belt",
+              "Name": "Ground Belt",
               "Family": "NR30",
               "Rounds": [
                 {
-                  "Shots": 1,
+                  "Shots": 3,
                   "Round": "nr30_aphe",
                   "Ammo": "superbwarfare:small_shell_ap",
-                  "Tracer": "NONE"
-                },
-                {
-                  "Shots": 1,
-                  "Round": "nr30_hef_i",
-                  "Ammo": "superbwarfare:small_shell_he",
-                  "Tracer": "NONE"
-                },
-                {
-                  "Shots": 1,
-                  "Round": "nr30_hef_i",
-                  "Ammo": "superbwarfare:small_shell_he",
                   "Tracer": "NONE"
                 },
                 {
@@ -1099,13 +1151,8 @@
               "Supported": true,
               "ProjectileType": "superbwarfare:small_cannon_shell",
               "ProjectileProfile": "berts_vehicle_pack:mig19/cannon2/ammo_00_nr30_aphe",
-              "ProjectileLife": 400
-            },
-            "ShootShake": [
-              8,
-              10,
-              12
-            ]
+              "ProjectileLife": 40
+            }
           }
         }
       ],
@@ -1140,29 +1187,6 @@
         ]
       },
       "ProjectileBeltAmmoType": [
-        {
-          "Ammo": "superbwarfare:small_shell_he",
-          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
-          "Override": {
-            "Projectile": {
-              "Type": "superbwarfare:small_cannon_shell",
-              "Profile": "berts_vehicle_pack:mig19/cannon2/belt_ammo_00_nr30_hef_i"
-            },
-            "ShellType": "HE",
-            "Velocity": 39,
-            "ApDurability": 8,
-            "Damage": 250,
-            "ExplosionDamage": 0,
-            "ExplosionRadius": 5,
-            "TntEquivalentKg": 0.0671,
-            "Name": "HEF_I",
-            "ShootShake": [
-              8,
-              10,
-              12
-            ]
-          }
-        },
         {
           "Ammo": "superbwarfare:small_shell_aa",
           "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
@@ -1242,6 +1266,53 @@
       },
       "AmmoType": [
         {
+          "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:mig19/cannon3/belt_ammo_00_nr30_hef_i"
+            },
+            "ShellType": "HE",
+            "Velocity": 39,
+            "ApDurability": 8,
+            "Damage": 250,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 5,
+            "TntEquivalentKg": 0.0671,
+            "Name": "Air Belt",
+            "ShootShake": [
+              8,
+              10,
+              12
+            ],
+            "ProjectileBelt": {
+              "Name": "Air Belt",
+              "Family": "NR30",
+              "Rounds": [
+                {
+                  "Shots": 3,
+                  "Round": "nr30_hef_i",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "nr30_aphe",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "GREEN"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:mig19/cannon3/belt_ammo_00_nr30_hef_i",
+              "ProjectileLife": 40
+            }
+          }
+        },
+        {
           "Ammo": "superbwarfare:small_shell_ap",
           "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
           "Override": {
@@ -1256,27 +1327,20 @@
             "ExplosionDamage": 0,
             "ExplosionRadius": 5,
             "TntEquivalentKg": 0.0225,
-            "Name": "Air Belt",
+            "Name": "Ground Belt",
+            "ShootShake": [
+              8,
+              10,
+              12
+            ],
             "ProjectileBelt": {
-              "Name": "Air Belt",
+              "Name": "Ground Belt",
               "Family": "NR30",
               "Rounds": [
                 {
-                  "Shots": 1,
+                  "Shots": 3,
                   "Round": "nr30_aphe",
                   "Ammo": "superbwarfare:small_shell_ap",
-                  "Tracer": "NONE"
-                },
-                {
-                  "Shots": 1,
-                  "Round": "nr30_hef_i",
-                  "Ammo": "superbwarfare:small_shell_he",
-                  "Tracer": "NONE"
-                },
-                {
-                  "Shots": 1,
-                  "Round": "nr30_hef_i",
-                  "Ammo": "superbwarfare:small_shell_he",
                   "Tracer": "NONE"
                 },
                 {
@@ -1291,13 +1355,8 @@
               "Supported": true,
               "ProjectileType": "superbwarfare:small_cannon_shell",
               "ProjectileProfile": "berts_vehicle_pack:mig19/cannon3/ammo_00_nr30_aphe",
-              "ProjectileLife": 400
-            },
-            "ShootShake": [
-              8,
-              10,
-              12
-            ]
+              "ProjectileLife": 40
+            }
           }
         }
       ],
@@ -1332,29 +1391,6 @@
         ]
       },
       "ProjectileBeltAmmoType": [
-        {
-          "Ammo": "superbwarfare:small_shell_he",
-          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
-          "Override": {
-            "Projectile": {
-              "Type": "superbwarfare:small_cannon_shell",
-              "Profile": "berts_vehicle_pack:mig19/cannon3/belt_ammo_00_nr30_hef_i"
-            },
-            "ShellType": "HE",
-            "Velocity": 39,
-            "ApDurability": 8,
-            "Damage": 250,
-            "ExplosionDamage": 0,
-            "ExplosionRadius": 5,
-            "TntEquivalentKg": 0.0671,
-            "Name": "HEF_I",
-            "ShootShake": [
-              8,
-              10,
-              12
-            ]
-          }
-        },
         {
           "Ammo": "superbwarfare:small_shell_aa",
           "ConsumptionItem": "superbwarfare:medium_autocannon_shell",

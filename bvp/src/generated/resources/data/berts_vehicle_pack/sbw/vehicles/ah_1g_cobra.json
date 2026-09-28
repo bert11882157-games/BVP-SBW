@@ -222,53 +222,6 @@
       "Name": "weapon.berts_vehicle_pack.20_mm_m195",
       "AmmoType": [
         {
-          "Ammo": "superbwarfare:small_shell_ap",
-          "Override": {
-            "Projectile": {
-              "Type": "superbwarfare:projectile",
-              "Profile": "berts_vehicle_pack:ah_1g_cobra/cannon/ammo_00_m195_api_t"
-            },
-            "ShellType": "AP",
-            "Velocity": 51.5,
-            "ApDurability": 40,
-            "Damage": 22,
-            "ExplosionDamage": 0,
-            "ExplosionRadius": 0,
-            "Name": "AP Belt",
-            "ProjectileBelt": {
-              "Name": "AP Belt",
-              "Rounds": [
-                {
-                  "Shots": 3,
-                  "Round": "m195_api_t",
-                  "Ammo": "superbwarfare:small_shell_gs",
-                  "Tracer": "RED",
-                  "DisplayLabel": "API-T"
-                },
-                {
-                  "Shots": 1,
-                  "Round": "m195_hef_i",
-                  "Ammo": "superbwarfare:small_shell_aa",
-                  "Tracer": "NONE",
-                  "DisplayLabel": "HEF-I"
-                }
-              ]
-            },
-            "ShootShake": [
-              8,
-              10,
-              12
-            ],
-            "NominalBallistics": {
-              "Supported": true,
-              "ProjectileType": "superbwarfare:projectile",
-              "ProjectileProfile": "berts_vehicle_pack:ah_1g_cobra/cannon/ammo_00_m195_api_t",
-              "ProjectileLife": 45
-            }
-          },
-          "ConsumptionItem": "superbwarfare:large_machine_gun_ammunition"
-        },
-        {
           "Ammo": "superbwarfare:small_shell_he",
           "Override": {
             "Projectile": {
@@ -282,35 +235,78 @@
             "ExplosionDamage": 0,
             "ExplosionRadius": 5,
             "TntEquivalentKg": 0.0117,
-            "Name": "HE Belt",
-            "ProjectileBelt": {
-              "Name": "HE Belt",
-              "Rounds": [
-                {
-                  "Shots": 3,
-                  "Round": "m195_hef_i",
-                  "Ammo": "superbwarfare:small_shell_aa",
-                  "Tracer": "NONE",
-                  "DisplayLabel": "HEF-I"
-                },
-                {
-                  "Shots": 1,
-                  "Round": "m195_api_t",
-                  "Ammo": "superbwarfare:small_shell_gs",
-                  "Tracer": "RED",
-                  "DisplayLabel": "API-T"
-                }
-              ]
-            },
+            "Name": "Air Belt",
             "ShootShake": [
               8,
               10,
               12
             ],
+            "ProjectileBelt": {
+              "Name": "Air Belt",
+              "Rounds": [
+                {
+                  "Shots": 3,
+                  "Round": "m195_hef_i",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "m195_api_t",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "RED"
+                }
+              ]
+            },
             "NominalBallistics": {
               "Supported": true,
               "ProjectileType": "superbwarfare:projectile",
               "ProjectileProfile": "berts_vehicle_pack:ah_1g_cobra/cannon/ammo_01_m195_hef_i",
+              "ProjectileLife": 45
+            }
+          },
+          "ConsumptionItem": "superbwarfare:large_machine_gun_ammunition"
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_ap",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:projectile",
+              "Profile": "berts_vehicle_pack:ah_1g_cobra/cannon/ammo_00_m195_api_t"
+            },
+            "ShellType": "AP",
+            "Velocity": 51.5,
+            "ApDurability": 40,
+            "Damage": 22,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "Ground Belt",
+            "ShootShake": [
+              8,
+              10,
+              12
+            ],
+            "ProjectileBelt": {
+              "Name": "Ground Belt",
+              "Rounds": [
+                {
+                  "Shots": 3,
+                  "Round": "m195_api_t",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "RED"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "m195_hef_i",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "RED"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:projectile",
+              "ProjectileProfile": "berts_vehicle_pack:ah_1g_cobra/cannon/ammo_00_m195_api_t",
               "ProjectileLife": 45
             }
           },

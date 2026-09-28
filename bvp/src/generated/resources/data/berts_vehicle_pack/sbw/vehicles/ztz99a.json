@@ -586,35 +586,33 @@
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
             "Name": "AP Belt",
-            "ProjectileBelt": {
-              "Name": "AP Belt",
-              "Rounds": [
-                {
-                  "Shots": 1,
-                  "Round": "type86_ap_i",
-                  "Ammo": "superbwarfare:small_shell_ap",
-                  "Tracer": "NONE",
-                  "DisplayLabel": "AP-I"
-                },
-                {
-                  "Shots": 1,
-                  "Round": "type86_api_t",
-                  "Ammo": "superbwarfare:small_shell_he",
-                  "Tracer": "GREEN",
-                  "DisplayLabel": "API-T"
-                }
-              ]
-            },
             "ShootShake": [
               0,
               0,
               0
             ],
+            "ProjectileBelt": {
+              "Name": "AP Belt",
+              "Rounds": [
+                {
+                  "Shots": 3,
+                  "Round": "type86_ap_i",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "type86_api_t",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "GREEN"
+                }
+              ]
+            },
             "NominalBallistics": {
               "Supported": true,
               "ProjectileType": "superbwarfare:projectile",
               "ProjectileProfile": "berts_vehicle_pack:ztz99a/machinegun/ammo_00_type86_ap_i",
-              "ProjectileLife": 400
+              "ProjectileLife": 40
             }
           },
           "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition"

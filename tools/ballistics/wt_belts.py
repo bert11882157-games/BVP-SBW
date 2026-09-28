@@ -62,47 +62,31 @@ ROUNDS = {
 HE_AT_APDS_NO_BELT = {('bmp2m', 'Cannon')}
 HE_AT_APDS = {'3uof8_hef_i': '3ubr8_apds', '3uor6_hef_t': '3ubr8_apds', 'dty02_30_hefi': 'dtc04_30_apds'}
 
-A42 = [('Default', [('3ubr6_ap_t', 1), ('3uof8_hef_i', 1)]),
-       ('30 mm HEI', [('3uof8_hef_i', 3), ('3ubr6_ap_t', 1)]),
-       ('30 mm AP-T', [('3ubr6_ap_t', 3), ('3uor6_hef_t', 1)]),
-       ('30 mm APDS', [('3ubr8_apds', 3), ('3uor6_hef_t', 1)])]
-# owner's rule (2026-09-28): APDS belt 3x APDS then 1x HEF-T; HE belt 3x HEF-I (no tracer) then 1x AP-T. The BMP-2M
-# (Berezhok) fires WT's all-APFSDS "30 mm APDS-FS" belt in place of the APDS belt (4 belt identities per weapon).
-A42M = A42[:3] + [('30 mm APFSDS', [('3ubr11_apfsds', 1)])]
-A72 = [('Default', [('3ubr6_ap_t', 1), ('3uof8_hef_i', 1), ('3ubr6_ap_t', 1), ('3uof8_hef_i', 1)])] + A42[1:]
-BMP3 = A42[1:]
-A38 = [('Default', [('3ubr6_ap_t', 1), ('3uof8_hef_i', 1)]),
-       ('30 mm HEI', [('3uof8_hef_i', 1), ('3uor6_hef_t', 1), ('3uof8_hef_i', 1), ('3ubr6_ap_t', 1)]),
-       ('30 mm AP-T', [('3ubr6_ap_t', 3), ('3uof8_hef_i', 1)])]
-A42_HELI = [('Default', [('3ubr6_ap_t', 1), ('3uof8_hef_i', 1)]),
-            ('Ground targets', [('3ubr8_apds', 1), ('3ubr6_ap_t', 1), ('3uof8_hef_i', 2)]),
-            ('Armored targets', [('3ubr8_apds', 1)]),
-            ('Air targets', [('3uor6_hef_t', 1), ('3ubr6_ap_t', 1), ('3uof8_hef_i', 2)])]
-ZU23 = [('Default', [('23mm_apit', 1), ('23mm_hei', 1)]),
-        ('23 mm HEFI-T', [('23mm_hei', 1), ('23mm_hei_2', 1), ('23mm_hei', 1), ('23mm_apit', 1)]),
-        ('23 mm API-T', [('23mm_apit', 3), ('23mm_hei_2', 1)])]
-M242 = [('Default', [('m791_apds', 1), ('m792_hei_t_1', 1)]),
-        ('M792', [('m792_hei_t_1', 3), ('m791_apds', 1)]),
-        ('M791', [('m791_apds', 3), ('m792_hei_t_1', 1)])]
-M242_LAV = M242 + [('M919', [('m919_apfsds', 1)])]
-M811 = [('Default', [('m811_m791_apds', 1), ('m811_m792_hei_t', 1)]),
-        ('M792', [('m811_m792_hei_t', 3), ('m811_m791_apds', 1)]),
-        ('M791', [('m811_m791_apds', 3), ('m811_m792_hei_t', 1)]),
-        ('PMB090', [('m811_pmb090_apfsds', 1)])]
-# DM51A1 appears twice in the pack (two entries of one round); the second serves as the DM43 belt's HE round
-RH202 = [('Default', [('dm43_hvap_t', 1), ('dm51a1_hefi_t_1', 1)]),
-         ('DM51A1', [('dm51a1_hefi_t_1', 3), ('dm43_hvap_t', 1)]),
-         ('DM43', [('dm43_hvap_t', 3), ('dm51a1_hefi_t_2', 1)]),
-         ('DM63', [('dm63_apds', 3), ('dm51a1_hefi_t_1', 1)])]
-KDA = [('Default', [('kda_35_api_t', 1), ('kda_35_hei_t', 1)]),
-       ('DM11A1', [('kda_35_hei_t', 3), ('kda_35_api_t', 1)]),
-       ('DM13', [('kda_35_api_t', 3), ('kda_35_hei_t', 1)]),
-       ('DM23', [('kda_35_dm23_apds', 1)])]
-BOFORS = [('slpprj m/01', [('slpprj_m01_apfsds', 1)]), ('slsgr m/90', [('slsgr_m90_he', 1)])]
-ZPT99 = [('Default', [('dtc04_30_apds', 1), ('dty02_30_hefi', 1), ('dtc04_30_apds', 1), ('dty02_30_hefi', 1)]),
-         ('DTY02-30', [('dty02_30_hefi', 1), ('dtc04_30_apds', 1), ('dty02_30_hefi', 2)]),
-         ('DTC04-30', [('dtc04_30_apds', 4)]),
-         ('DTC10-30', [('dtc10_30_apfsds', 3)])]
+# Owner's standard (2026-09-28): every autocannon has two belts.
+#   Air Belt    (HE-dominant): 3x HE, no tracer, then 1x AP with tracer
+#   Ground Belt (AP-dominant): 3x the gun's best penetrator (APFSDS > APDS > AP), then 1x HE with tracer
+# A slot's third element forces its tracer: 'NONE' = untraced, 'T' = traced (the round's WT colour, red if WT has
+# none; tracer_nations.py then sets green/red by nation). Without it the round's WT tracer is used.
+def std(he, ap_t, best_ap, he_t):
+    return [('Air Belt', [(he, 3, 'NONE'), (ap_t, 1, 'T')]),
+            ('Ground Belt', [(best_ap, 3), (he_t, 1, 'T')])]
+
+
+A42 = std('3uof8_hef_i', '3ubr6_ap_t', '3ubr8_apds', '3uor6_hef_t')
+# the BMP-2M (Berezhok) Ground Belt is WT's all-APFSDS belt (owner: uniformly APFSDS)
+A42M = [A42[0], ('Ground Belt', [('3ubr11_apfsds', 1)])]
+A72 = A42
+BMP3 = A42
+A42_HELI = A42
+A38 = std('3uof8_hef_i', '3ubr6_ap_t', '3ubr6_ap_t', '3uor6_hef_t')      # 2A38: no APDS
+ZU23 = std('23mm_hei', '23mm_apit', '23mm_apit', '23mm_hei_2')
+M242 = std('m792_hei_t_1', 'm791_apds', 'm791_apds', 'm792_hei_t_1')
+M242_LAV = std('m792_hei_t_1', 'm791_apds', 'm919_apfsds', 'm792_hei_t_1')
+M811 = std('m811_m792_hei_t', 'm811_m791_apds', 'm811_pmb090_apfsds', 'm811_m792_hei_t')
+RH202 = std('dm51a1_hefi_t_1', 'dm43_hvap_t', 'dm63_apds', 'dm51a1_hefi_t_1')
+KDA = std('kda_35_hei_t', 'kda_35_api_t', 'kda_35_dm23_apds', 'kda_35_hei_t')
+BOFORS = std('slsgr_m90_he', 'slpprj_m01_apfsds', 'slpprj_m01_apfsds', 'slsgr_m90_he')
+ZPT99 = std('dty02_30_hefi', 'dtc04_30_apds', 'dtc10_30_apfsds', 'dty02_30_hefi')
 
 WEAPONS = {
     ('bmp2', 'Cannon'): ('TWO_A42', A42), ('bmp2m', 'Cannon'): ('TWO_A42', A42M),
@@ -204,17 +188,28 @@ def match(order):
 
 
 def rotate_for_start(rounds, start):
-    """The belt's cycle rotated so that it begins at round `start` (same repeating order)."""
-    seq = [r for r, n in rounds for _ in range(n)]
-    i = seq.index(start)
+    """The belt's cycle rotated so that it begins at round `start` (same repeating order); slots are
+    (round, shots, tracer override)."""
+    seq = [(r, t) for r, n, t in rounds for _ in range(n)]
+    i = next(k for k, (r, _) in enumerate(seq) if r == start)
     seq = seq[i:] + seq[:i]
     out = []
-    for r in seq:
-        if out and out[-1][0] == r:
+    for r, t in seq:
+        if out and out[-1][0] == r and out[-1][2] == t:
             out[-1][1] += 1
         else:
-            out.append([r, 1])
+            out.append([r, 1, t])
     return [tuple(x) for x in out]
+
+
+def slot_tracer(r, t):
+    """Tracer of one belt slot: the round's WT tracer, or the slot's forced one ('NONE' / 'T')."""
+    own = ROUNDS[r][0]
+    if t == 'NONE':
+        return 'NONE'
+    if t == 'T':
+        return own if own != 'NONE' else 'RED'
+    return own
 
 
 def rebuild(vid, wn, w, family, belts, cat, writes, notes):
@@ -227,12 +222,13 @@ def rebuild(vid, wn, w, family, belts, cat, writes, notes):
                 base.get('Override', {}).pop(k, None)
             entries[rid] = base
     needed = []
+    belts = [(b, [tuple(x) + (None,) * (3 - len(x)) for x in rounds]) for b, rounds in belts]
     for _, rounds in belts:
-        for r, _ in rounds:
+        for r, _, _ in rounds:
             if r not in needed:
                 needed.append(r)
     for r, (base, combat, over) in SYNTH.items():
-        if any(r in [x for x, _ in rs] for _, rs in belts) and r not in entries and base in entries:
+        if any(r in [x[0] for x in rs] for _, rs in belts) and r not in entries and base in entries:
             e = copy.deepcopy(entries[base])
             src = e['Override']['Projectile']['Profile']
             dst = f'berts_vehicle_pack:{vid}/{wn.lower()}/belt_ammo_wt_{r}'
@@ -248,13 +244,13 @@ def rebuild(vid, wn, w, family, belts, cat, writes, notes):
             notes.append(f'{vid}.{wn}: built WT round {r} from {base}')
     usable = []
     for bname, rounds in belts:
-        missing = [r for r, _ in rounds if r not in entries and r not in cat]
+        missing = [r for r, _, _ in rounds if r not in entries and r not in cat]
         if missing:
             notes.append(f'{vid}.{wn}: belt {bname} skipped, no profile anywhere for {missing}')
             continue
         usable.append((bname, rounds))
     for r in needed:
-        if r not in entries and r in cat and any(r in [x for x, _ in rs] for _, rs in usable):
+        if r not in entries and r in cat and any(r in [x[0] for x in rs] for _, rs in usable):
             entries[r] = adopt(vid, wn, r, cat[r], writes)
             notes.append(f'{vid}.{wn}: added round {r} (from {cat[r][0]}.{cat[r][1]})')
     # ammo identities: keep each round's current one when unique, else take a free one from the pool
@@ -289,7 +285,7 @@ def rebuild(vid, wn, w, family, belts, cat, writes, notes):
             e['Ammo'] = ammo[r]
     # belts: each starts at a round no other belt starts at (a belt may begin at any phase of its cycle); a
     # belt left without one gets an alias of its first round under a free ammo identity
-    order = [[rounds[0][0]] + [r for r, _ in rounds if r != rounds[0][0]] for _, rounds in usable]
+    order = [[rounds[0][0]] + [x[0] for x in rounds if x[0] != rounds[0][0]] for _, rounds in usable]
     choice = match(order)
     at, starts, pb_extra = [], set(), []
     for i, (bname, rounds) in enumerate(usable):
@@ -304,7 +300,7 @@ def rebuild(vid, wn, w, family, belts, cat, writes, notes):
             ammo[alias] = free[0]
             taken.add(free[0])
             entries[alias]['Ammo'] = free[0]
-            rounds = [(alias if r == rounds[0][0] else r, n) for r, n in rounds]
+            rounds = [(alias if r == rounds[0][0] else r, n, t) for r, n, t in rounds]
             start = alias
         starts.add(ammo[start])
         rot = rotate_for_start(rounds, start)
@@ -312,8 +308,8 @@ def rebuild(vid, wn, w, family, belts, cat, writes, notes):
         o = e['Override']
         o['Name'] = bname
         o['ProjectileBelt'] = {'Name': bname, 'Family': family, 'Rounds': [
-            {'Shots': n, 'Round': r.split('#')[0], 'Ammo': ammo[r], 'Tracer': ROUNDS[r.split('#')[0]][0]}
-            for r, n in rot]}
+            {'Shots': n, 'Round': r.split('#')[0], 'Ammo': ammo[r], 'Tracer': slot_tracer(r.split('#')[0], t)}
+            for r, n, t in rot]}
         o['NominalBallistics'] = {'Supported': True, 'ProjectileType': o['Projectile']['Type'],
                                   'ProjectileProfile': o['Projectile']['Profile'],
                                   'ProjectileLife': w.get('ProjectileLife', 40)}

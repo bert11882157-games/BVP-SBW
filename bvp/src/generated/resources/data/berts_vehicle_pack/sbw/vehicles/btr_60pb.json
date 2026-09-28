@@ -328,15 +328,15 @@
       "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/cannon_14.5mm_ap.png",
       "AmmoType": [
         {
-          "Ammo": "superbwarfare:small_shell_ap",
+          "Ammo": "superbwarfare:small_shell_gs",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
-              "Profile": "berts_vehicle_pack:btr_60pb/cannon/ammo_00_kpvt_api_t_1"
+              "Profile": "berts_vehicle_pack:btr_60pb/cannon/belt_ammo_00_kpvt_ap_i_c"
             },
             "ShellType": "AP",
             "Velocity": 50,
-            "ApDurability": 38,
+            "ApDurability": 49,
             "Damage": 65,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
@@ -347,9 +347,15 @@
               "Rounds": [
                 {
                   "Shots": 1,
-                  "Round": "kpvt_api_t_1",
-                  "Ammo": "superbwarfare:small_shell_ap",
-                  "Tracer": "GREEN"
+                  "Round": "kpvt_ap_i_c",
+                  "Ammo": "superbwarfare:small_shell_gs",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "kpvt_iai",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
                 },
                 {
                   "Shots": 1,
@@ -359,26 +365,19 @@
                 },
                 {
                   "Shots": 1,
-                  "Round": "kpvt_api_t_2",
-                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Round": "kpvt_api_t_1",
+                  "Ammo": "superbwarfare:small_shell_ap",
                   "Tracer": "GREEN"
-                },
-                {
-                  "Shots": 1,
-                  "Round": "kpvt_iai",
-                  "Ammo": "superbwarfare:small_shell_he",
-                  "Tracer": "NONE"
                 }
               ]
             },
             "NominalBallistics": {
               "Supported": true,
               "ProjectileType": "superbwarfare:small_cannon_shell",
-              "ProjectileProfile": "berts_vehicle_pack:btr_60pb/cannon/ammo_00_kpvt_api_t_1",
+              "ProjectileProfile": "berts_vehicle_pack:btr_60pb/cannon/belt_ammo_00_kpvt_ap_i_c",
               "ProjectileLife": 40
             }
-          },
-          "ConsumptionItem": "superbwarfare:small_autocannon_shell"
+          }
         }
       ],
       "ShootPos": {
@@ -410,20 +409,21 @@
       },
       "ProjectileBeltAmmoType": [
         {
-          "Ammo": "superbwarfare:small_shell_gs",
+          "Ammo": "superbwarfare:small_shell_ap",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
-              "Profile": "berts_vehicle_pack:btr_60pb/cannon/belt_ammo_00_kpvt_ap_i_c"
+              "Profile": "berts_vehicle_pack:btr_60pb/cannon/ammo_00_kpvt_api_t_1"
             },
             "ShellType": "AP",
             "Velocity": 50,
-            "ApDurability": 49,
+            "ApDurability": 38,
             "Damage": 65,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
-            "Name": "AP_I_C"
-          }
+            "Name": "AP Belt"
+          },
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell"
         },
         {
           "Ammo": "superbwarfare:small_shell_aa",
@@ -492,7 +492,7 @@
               "Family": "RUSSIAN_COAX_762",
               "Rounds": [
                 {
-                  "Shots": 1,
+                  "Shots": 3,
                   "Round": "AP_I",
                   "Ammo": "superbwarfare:small_shell_ap",
                   "Tracer": "NONE"
@@ -509,7 +509,7 @@
               "Supported": true,
               "ProjectileType": "superbwarfare:projectile",
               "ProjectileProfile": "berts_vehicle_pack:btr_60pb/mainmachinegun/ammo_00_russian_762_ap_i",
-              "ProjectileLife": 400
+              "ProjectileLife": 40
             }
           },
           "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition"

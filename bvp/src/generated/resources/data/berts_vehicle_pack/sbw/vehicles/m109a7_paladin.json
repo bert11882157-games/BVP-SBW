@@ -585,30 +585,29 @@
       "ShootAnimationTime": 1,
       "AmmoType": [
         {
-          "Ammo": "superbwarfare:small_shell_ap",
+          "Ammo": "superbwarfare:small_shell_he",
           "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:projectile",
-              "Profile": "berts_vehicle_pack:m109a7_paladin/passengermachinegun/ammo_00_western_127_m20_api_t_1"
+              "Profile": "berts_vehicle_pack:m109a7_paladin/passengermachinegun/belt_ammo_00_western_127_m1_i"
             },
             "ShellType": "AP",
-            "Velocity": 46.45,
-            "ApDurability": 29,
+            "Velocity": 47.2,
+            "ApDurability": 7,
             "Damage": 40,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
             "Name": "AP Belt",
+            "ShootShake": [
+              8,
+              10,
+              6
+            ],
             "ProjectileBelt": {
               "Name": "AP Belt",
               "Family": "WESTERN_127",
               "Rounds": [
-                {
-                  "Shots": 1,
-                  "Round": "API_T_1",
-                  "Ammo": "superbwarfare:small_shell_ap",
-                  "Tracer": "RED"
-                },
                 {
                   "Shots": 1,
                   "Round": "I",
@@ -623,22 +622,23 @@
                 },
                 {
                   "Shots": 1,
-                  "Round": "API_T_2",
-                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Round": "I",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "API_T_1",
+                  "Ammo": "superbwarfare:small_shell_ap",
                   "Tracer": "RED"
                 }
               ]
             },
-            "ShootShake": [
-              8,
-              10,
-              6
-            ],
             "NominalBallistics": {
               "Supported": true,
               "ProjectileType": "superbwarfare:projectile",
-              "ProjectileProfile": "berts_vehicle_pack:m109a7_paladin/passengermachinegun/ammo_00_western_127_m20_api_t_1",
-              "ProjectileLife": 400
+              "ProjectileProfile": "berts_vehicle_pack:m109a7_paladin/passengermachinegun/belt_ammo_00_western_127_m1_i",
+              "ProjectileLife": 40
             }
           }
         }
@@ -667,20 +667,20 @@
       "AmmoCostPerShoot": 1,
       "ProjectileBeltAmmoType": [
         {
-          "Ammo": "superbwarfare:small_shell_he",
+          "Ammo": "superbwarfare:small_shell_ap",
           "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:projectile",
-              "Profile": "berts_vehicle_pack:m109a7_paladin/passengermachinegun/belt_ammo_00_western_127_m1_i"
+              "Profile": "berts_vehicle_pack:m109a7_paladin/passengermachinegun/ammo_00_western_127_m20_api_t_1"
             },
             "ShellType": "AP",
-            "Velocity": 47.2,
-            "ApDurability": 7,
+            "Velocity": 46.45,
+            "ApDurability": 29,
             "Damage": 40,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
-            "Name": "I",
+            "Name": "AP Belt",
             "ShootShake": [
               8,
               10,

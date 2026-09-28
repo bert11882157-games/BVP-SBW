@@ -449,27 +449,39 @@
       "Name": "weapon.berts_vehicle_pack.dshk_12_7_mm_heavy_machine_gun",
       "AmmoType": [
         {
-          "Ammo": "superbwarfare:small_shell_ap",
+          "Ammo": "superbwarfare:small_shell_he",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:projectile",
-              "Profile": "berts_vehicle_pack:toyota_jihad_dshk/dshk/ammo_00_russian_127_bzt44_api_t_1"
+              "Profile": "berts_vehicle_pack:toyota_jihad_dshk/dshk/belt_ammo_00_russian_127_mdz_iai"
             },
-            "ShellType": "AP",
-            "Velocity": 43.25,
-            "ApDurability": 29,
-            "Damage": 40,
+            "ShellType": "HE",
+            "Velocity": 43,
+            "ApDurability": 3,
+            "Damage": 83.33333333333333,
             "ExplosionDamage": 0,
-            "ExplosionRadius": 0,
+            "ExplosionRadius": 1.6666666666666665,
+            "TntEquivalentKg": 0.0032,
             "Name": "AP Belt",
+            "ShootShake": [
+              8,
+              10,
+              6
+            ],
             "ProjectileBelt": {
               "Name": "AP Belt",
               "Rounds": [
                 {
                   "Shots": 1,
-                  "Round": "API_T_1",
-                  "Ammo": "superbwarfare:small_shell_ap",
-                  "Tracer": "GREEN"
+                  "Round": "IAI",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "AP_I_C",
+                  "Ammo": "superbwarfare:small_shell_gs",
+                  "Tracer": "NONE"
                 },
                 {
                   "Shots": 1,
@@ -479,32 +491,19 @@
                 },
                 {
                   "Shots": 1,
-                  "Round": "API_T_2",
-                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Round": "API_T_1",
+                  "Ammo": "superbwarfare:small_shell_ap",
                   "Tracer": "GREEN"
-                },
-                {
-                  "Shots": 1,
-                  "Round": "AP_I_C",
-                  "Ammo": "superbwarfare:small_shell_gs",
-                  "Tracer": "NONE",
-                  "DisplayLabel": "API(cermet)"
                 }
               ]
             },
             "NominalBallistics": {
               "Supported": true,
               "ProjectileType": "superbwarfare:projectile",
-              "ProjectileProfile": "berts_vehicle_pack:toyota_jihad_dshk/dshk/ammo_00_russian_127_bzt44_api_t_1",
-              "ProjectileLife": 400
-            },
-            "ShootShake": [
-              8,
-              10,
-              6
-            ]
-          },
-          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition"
+              "ProjectileProfile": "berts_vehicle_pack:toyota_jihad_dshk/dshk/belt_ammo_00_russian_127_mdz_iai",
+              "ProjectileLife": 40
+            }
+          }
         }
       ],
       "ShootPos": {
@@ -561,26 +560,26 @@
       "SoundRadius": 18,
       "ProjectileBeltAmmoType": [
         {
-          "Ammo": "superbwarfare:small_shell_he",
+          "Ammo": "superbwarfare:small_shell_ap",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:projectile",
-              "Profile": "berts_vehicle_pack:toyota_jihad_dshk/dshk/belt_ammo_00_russian_127_mdz_iai"
+              "Profile": "berts_vehicle_pack:toyota_jihad_dshk/dshk/ammo_00_russian_127_bzt44_api_t_1"
             },
-            "ShellType": "HE",
-            "Velocity": 43,
-            "ApDurability": 3,
-            "Damage": 83.33333333333333,
+            "ShellType": "AP",
+            "Velocity": 43.25,
+            "ApDurability": 29,
+            "Damage": 40,
             "ExplosionDamage": 0,
-            "ExplosionRadius": 1.6666666666666665,
-            "TntEquivalentKg": 0.0032,
-            "Name": "IAI",
+            "ExplosionRadius": 0,
+            "Name": "AP Belt",
             "ShootShake": [
               8,
               10,
               6
             ]
-          }
+          },
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition"
         },
         {
           "Ammo": "superbwarfare:small_shell_aa",

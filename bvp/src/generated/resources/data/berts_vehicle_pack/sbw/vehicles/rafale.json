@@ -823,15 +823,21 @@
             "ExplosionDamage": 0,
             "ExplosionRadius": 5,
             "TntEquivalentKg": 0.0384,
-            "Name": "Air Belt",
+            "Name": "Ground Belt",
             "ProjectileBelt": {
-              "Name": "Air Belt",
+              "Name": "Ground Belt",
               "Rounds": [
+                {
+                  "Shots": 3,
+                  "Round": "m791_saphei",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "NONE"
+                },
                 {
                   "Shots": 1,
                   "Round": "m791_saphei",
                   "Ammo": "superbwarfare:small_shell_ap",
-                  "Tracer": "NONE"
+                  "Tracer": "RED"
                 }
               ]
             },

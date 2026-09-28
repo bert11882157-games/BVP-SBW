@@ -263,45 +263,29 @@
             "ExplosionDamage": 0,
             "ExplosionRadius": 1.6666666666666665,
             "TntEquivalentKg": 0.0032,
-            "Name": "AP Belt",
-            "ProjectileBelt": {
-              "Name": "AP Belt",
-              "Rounds": [
-                {
-                  "Shots": 1,
-                  "Round": "yakb_iai",
-                  "Ammo": "superbwarfare:small_shell_he",
-                  "Tracer": "NONE",
-                  "DisplayLabel": "IAI"
-                },
-                {
-                  "Shots": 3,
-                  "Round": "yakb_ap",
-                  "Ammo": "superbwarfare:small_shell_gs",
-                  "Tracer": "NONE",
-                  "DisplayLabel": "AP"
-                },
-                {
-                  "Shots": 1,
-                  "Round": "yakb_api_t",
-                  "Ammo": "superbwarfare:small_shell_aa",
-                  "Tracer": "GREEN",
-                  "DisplayLabel": "API-T"
-                },
-                {
-                  "Shots": 1,
-                  "Round": "yakb_ap",
-                  "Ammo": "superbwarfare:small_shell_gs",
-                  "Tracer": "NONE",
-                  "DisplayLabel": "AP"
-                }
-              ]
-            },
+            "Name": "Air Belt",
             "ShootShake": [
               8,
               10,
               6
             ],
+            "ProjectileBelt": {
+              "Name": "Air Belt",
+              "Rounds": [
+                {
+                  "Shots": 3,
+                  "Round": "yakb_iai",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "yakb_api_t",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "GREEN"
+                }
+              ]
+            },
             "NominalBallistics": {
               "Supported": true,
               "ProjectileType": "superbwarfare:projectile",
@@ -312,59 +296,49 @@
           "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition"
         },
         {
-          "Ammo": "superbwarfare:small_shell_he",
+          "Ammo": "superbwarfare:small_shell_gs",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:projectile",
-              "Profile": "berts_vehicle_pack:mi24v/cannon/ammo_01_yakb_iai"
+              "Profile": "berts_vehicle_pack:mi24v/cannon/belt_ammo_00_yakb_ap"
             },
-            "ShellType": "HE",
-            "Velocity": 43,
-            "ApDurability": 3,
-            "Damage": 83.33333333333333,
+            "ShellType": "AP",
+            "Velocity": 40.9,
+            "ApDurability": 31,
+            "Damage": 22,
             "ExplosionDamage": 0,
-            "ExplosionRadius": 1.6666666666666665,
-            "TntEquivalentKg": 0.0032,
-            "Name": "HE Belt",
-            "ProjectileBelt": {
-              "Name": "HE Belt",
-              "Rounds": [
-                {
-                  "Shots": 1,
-                  "Round": "yakb_iai",
-                  "Ammo": "superbwarfare:small_shell_he",
-                  "Tracer": "NONE",
-                  "DisplayLabel": "IAI"
-                },
-                {
-                  "Shots": 1,
-                  "Round": "yakb_api_t",
-                  "Ammo": "superbwarfare:small_shell_aa",
-                  "Tracer": "GREEN",
-                  "DisplayLabel": "API-T"
-                },
-                {
-                  "Shots": 4,
-                  "Round": "yakb_iai",
-                  "Ammo": "superbwarfare:small_shell_he",
-                  "Tracer": "NONE",
-                  "DisplayLabel": "IAI"
-                }
-              ]
-            },
+            "ExplosionRadius": 0,
+            "TntEquivalentKg": 0.0,
+            "Name": "Ground Belt",
             "ShootShake": [
               8,
               10,
               6
             ],
+            "ProjectileBelt": {
+              "Name": "Ground Belt",
+              "Rounds": [
+                {
+                  "Shots": 3,
+                  "Round": "yakb_ap",
+                  "Ammo": "superbwarfare:small_shell_gs",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "yakb_iai",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "GREEN"
+                }
+              ]
+            },
             "NominalBallistics": {
               "Supported": true,
               "ProjectileType": "superbwarfare:projectile",
-              "ProjectileProfile": "berts_vehicle_pack:mi24v/cannon/ammo_01_yakb_iai",
+              "ProjectileProfile": "berts_vehicle_pack:mi24v/cannon/belt_ammo_00_yakb_ap",
               "ProjectileLife": 45
             }
-          },
-          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition"
+          }
         }
       ],
       "SoundInfo": {
@@ -428,26 +402,27 @@
       "AmmoCostPerShoot": 1,
       "ProjectileBeltAmmoType": [
         {
-          "Ammo": "superbwarfare:small_shell_gs",
+          "Ammo": "superbwarfare:small_shell_he",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:projectile",
-              "Profile": "berts_vehicle_pack:mi24v/cannon/belt_ammo_00_yakb_ap"
+              "Profile": "berts_vehicle_pack:mi24v/cannon/ammo_01_yakb_iai"
             },
-            "ShellType": "AP",
-            "Velocity": 40.9,
-            "ApDurability": 31,
-            "Damage": 22,
+            "ShellType": "HE",
+            "Velocity": 43,
+            "ApDurability": 3,
+            "Damage": 83.33333333333333,
             "ExplosionDamage": 0,
-            "ExplosionRadius": 0,
-            "TntEquivalentKg": 0.0,
-            "Name": "AP",
+            "ExplosionRadius": 1.6666666666666665,
+            "TntEquivalentKg": 0.0032,
+            "Name": "HE Belt",
             "ShootShake": [
               8,
               10,
               6
             ]
-          }
+          },
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition"
         },
         {
           "Ammo": "superbwarfare:small_shell_aa",

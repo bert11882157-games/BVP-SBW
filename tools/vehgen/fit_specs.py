@@ -188,7 +188,8 @@ SPECS = {
         # Shturm-S: 9M114 (radio command), 12 in the autoloader, one on the rail
         'weaponFrom': {'Missile': ('mi24v', 'PilotMissile')},
         'muzzles': {'Missile': ['missileMuzzle_1']},
-        'weaponSet': {'Missile': {'Magazine': 12, 'RPM': 6}},
+        # one missile on the launcher arm, reloaded from inside after every shot (wt_reloads.py sets the reload)
+        'weaponSet': {'Missile': {'Magazine': 1, 'RPM': 60}},
         'obb': [
             {'bone': 'hull'},
             {'box': [[-8.0, 12.0, -50.0], [8.0, 32.0, -30.0]], 'part': 'MainEngine'},

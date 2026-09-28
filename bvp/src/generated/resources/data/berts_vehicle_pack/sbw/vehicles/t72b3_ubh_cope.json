@@ -607,12 +607,17 @@
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
             "Name": "AP Belt",
+            "ShootShake": [
+              0,
+              0,
+              0
+            ],
             "ProjectileBelt": {
               "Name": "AP Belt",
               "Family": "RUSSIAN_COAX_762",
               "Rounds": [
                 {
-                  "Shots": 1,
+                  "Shots": 3,
                   "Round": "AP_I",
                   "Ammo": "superbwarfare:small_shell_ap",
                   "Tracer": "NONE"
@@ -629,13 +634,8 @@
               "Supported": true,
               "ProjectileType": "superbwarfare:projectile",
               "ProjectileProfile": "berts_vehicle_pack:t72b3_ubh_cope/machinegun/ammo_00_russian_762_ap_i",
-              "ProjectileLife": 400
-            },
-            "ShootShake": [
-              0,
-              0,
-              0
-            ]
+              "ProjectileLife": 40
+            }
           }
         }
       ],
@@ -767,29 +767,41 @@
       "ShootAnimationTime": 1,
       "AmmoType": [
         {
-          "Ammo": "superbwarfare:small_shell_ap",
+          "Ammo": "superbwarfare:small_shell_he",
           "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:projectile",
-              "Profile": "berts_vehicle_pack:t72b3_ubh_cope/passengermachinegun/ammo_00_russian_127_bzt44_api_t_1"
+              "Profile": "berts_vehicle_pack:t72b3_ubh_cope/passengermachinegun/belt_ammo_00_russian_127_mdz_iai"
             },
-            "ShellType": "AP",
-            "Velocity": 43.25,
-            "ApDurability": 29,
-            "Damage": 40,
+            "ShellType": "HE",
+            "Velocity": 43,
+            "ApDurability": 3,
+            "Damage": 83.33333333333333,
             "ExplosionDamage": 0,
-            "ExplosionRadius": 0,
+            "ExplosionRadius": 1.6666666666666665,
+            "TntEquivalentKg": 0.0032,
             "Name": "AP Belt",
+            "ShootShake": [
+              8,
+              10,
+              6
+            ],
             "ProjectileBelt": {
               "Name": "AP Belt",
               "Family": "RUSSIAN_127",
               "Rounds": [
                 {
                   "Shots": 1,
-                  "Round": "API_T_1",
-                  "Ammo": "superbwarfare:small_shell_ap",
-                  "Tracer": "GREEN"
+                  "Round": "IAI",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "AP_I_C",
+                  "Ammo": "superbwarfare:small_shell_gs",
+                  "Tracer": "NONE"
                 },
                 {
                   "Shots": 1,
@@ -799,30 +811,18 @@
                 },
                 {
                   "Shots": 1,
-                  "Round": "API_T_2",
-                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Round": "API_T_1",
+                  "Ammo": "superbwarfare:small_shell_ap",
                   "Tracer": "GREEN"
-                },
-                {
-                  "Shots": 1,
-                  "Round": "AP_I_C",
-                  "Ammo": "superbwarfare:small_shell_gs",
-                  "Tracer": "NONE",
-                  "DisplayLabel": "API(cermet)"
                 }
               ]
             },
             "NominalBallistics": {
               "Supported": true,
               "ProjectileType": "superbwarfare:projectile",
-              "ProjectileProfile": "berts_vehicle_pack:t72b3_ubh_cope/passengermachinegun/ammo_00_russian_127_bzt44_api_t_1",
-              "ProjectileLife": 400
-            },
-            "ShootShake": [
-              8,
-              10,
-              6
-            ]
+              "ProjectileProfile": "berts_vehicle_pack:t72b3_ubh_cope/passengermachinegun/belt_ammo_00_russian_127_mdz_iai",
+              "ProjectileLife": 40
+            }
           }
         }
       ],
@@ -884,21 +884,20 @@
       "EmptyReloadTime": 200,
       "ProjectileBeltAmmoType": [
         {
-          "Ammo": "superbwarfare:small_shell_he",
+          "Ammo": "superbwarfare:small_shell_ap",
           "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:projectile",
-              "Profile": "berts_vehicle_pack:t72b3_ubh_cope/passengermachinegun/belt_ammo_00_russian_127_mdz_iai"
+              "Profile": "berts_vehicle_pack:t72b3_ubh_cope/passengermachinegun/ammo_00_russian_127_bzt44_api_t_1"
             },
-            "ShellType": "HE",
-            "Velocity": 43,
-            "ApDurability": 3,
-            "Damage": 83.33333333333333,
+            "ShellType": "AP",
+            "Velocity": 43.25,
+            "ApDurability": 29,
+            "Damage": 40,
             "ExplosionDamage": 0,
-            "ExplosionRadius": 1.6666666666666665,
-            "TntEquivalentKg": 0.0032,
-            "Name": "IAI",
+            "ExplosionRadius": 0,
+            "Name": "AP Belt",
             "ShootShake": [
               8,
               10,

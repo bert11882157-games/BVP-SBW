@@ -251,19 +251,7 @@
               "Name": "Air Belt",
               "Rounds": [
                 {
-                  "Shots": 1,
-                  "Round": "m230e1_hedp",
-                  "Ammo": "superbwarfare:small_shell_ap",
-                  "Tracer": "NONE"
-                },
-                {
-                  "Shots": 1,
-                  "Round": "m230e1_hedp",
-                  "Ammo": "superbwarfare:small_shell_ap",
-                  "Tracer": "NONE"
-                },
-                {
-                  "Shots": 1,
+                  "Shots": 3,
                   "Round": "m230e1_hedp",
                   "Ammo": "superbwarfare:small_shell_ap",
                   "Tracer": "NONE"
@@ -272,7 +260,7 @@
                   "Shots": 1,
                   "Round": "m230e1_hedp_t",
                   "Ammo": "superbwarfare:small_shell_he",
-                  "Tracer": "INHERIT"
+                  "Tracer": "RED"
                 }
               ]
             },
@@ -301,13 +289,7 @@
             "ExplosionDamage": 0,
             "ExplosionRadius": 1.5666915555555554,
             "TntEquivalentKg": 0.0282,
-            "Name": "HEDP_T",
-            "NominalBallistics": {
-              "Supported": true,
-              "ProjectileType": "superbwarfare:small_cannon_shell",
-              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/m230e1/m230e1_hedp_t",
-              "ProjectileLife": 400
-            }
+            "Name": "HEDP_T"
           }
         }
       ],

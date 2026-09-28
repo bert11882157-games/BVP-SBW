@@ -604,12 +604,17 @@
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
             "Name": "AP Belt",
+            "ShootShake": [
+              0,
+              0,
+              0
+            ],
             "ProjectileBelt": {
               "Name": "AP Belt",
               "Family": "RUSSIAN_COAX_762",
               "Rounds": [
                 {
-                  "Shots": 1,
+                  "Shots": 3,
                   "Round": "AP_I",
                   "Ammo": "superbwarfare:small_shell_ap",
                   "Tracer": "NONE"
@@ -626,13 +631,8 @@
               "Supported": true,
               "ProjectileType": "superbwarfare:projectile",
               "ProjectileProfile": "berts_vehicle_pack:t14_armata/machinegun/ammo_00_russian_762_ap_i",
-              "ProjectileLife": 400
-            },
-            "ShootShake": [
-              0,
-              0,
-              0
-            ]
+              "ProjectileLife": 40
+            }
           }
         }
       ],

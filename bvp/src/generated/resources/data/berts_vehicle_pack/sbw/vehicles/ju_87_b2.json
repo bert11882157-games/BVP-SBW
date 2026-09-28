@@ -544,54 +544,6 @@
       },
       "AmmoType": [
         {
-          "Ammo": "superbwarfare:small_shell_ap",
-          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition",
-          "Override": {
-            "Projectile": {
-              "Type": "superbwarfare:projectile",
-              "Profile": "berts_vehicle_pack:aircraft_rounds/mg17/mg17_ap_t_ball"
-            },
-            "ShellType": "AP",
-            "Velocity": 56.5625,
-            "ApDurability": 9,
-            "Damage": 5,
-            "ExplosionDamage": 0,
-            "ExplosionRadius": 0,
-            "Name": "Air Belt",
-            "ProjectileBelt": {
-              "Name": "Air Belt",
-              "Rounds": [
-                {
-                  "Shots": 1,
-                  "Round": "mg17_ap_t_ball",
-                  "Ammo": "superbwarfare:small_shell_ap",
-                  "Tracer": "RED"
-                },
-                {
-                  "Shots": 1,
-                  "Round": "mg17_ap_i_ball",
-                  "Ammo": "superbwarfare:small_shell_he",
-                  "Tracer": "NONE"
-                },
-                {
-                  "Shots": 1,
-                  "Round": "mg17_he_ball",
-                  "Ammo": "superbwarfare:small_shell_gs",
-                  "Tracer": "NONE"
-                }
-              ]
-            },
-            "NominalBallistics": {
-              "Supported": true,
-              "ProjectileType": "superbwarfare:projectile",
-              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/mg17/mg17_ap_t_ball",
-              "ProjectileLife": 400
-            }
-          }
-        }
-      ],
-      "ProjectileBeltAmmoType": [
-        {
           "Ammo": "superbwarfare:small_shell_he",
           "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition",
           "Override": {
@@ -605,13 +557,61 @@
             "Damage": 5,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
-            "Name": "AP_I",
+            "Name": "Air Belt",
+            "ProjectileBelt": {
+              "Name": "Air Belt",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "mg17_ap_i_ball",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "mg17_he_ball",
+                  "Ammo": "superbwarfare:small_shell_gs",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "mg17_ap_i_ball",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "mg17_ap_t_ball",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "RED"
+                }
+              ]
+            },
             "NominalBallistics": {
               "Supported": true,
               "ProjectileType": "superbwarfare:projectile",
               "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/mg17/mg17_ap_i_ball",
               "ProjectileLife": 400
             }
+          }
+        }
+      ],
+      "ProjectileBeltAmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:projectile",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/mg17/mg17_ap_t_ball"
+            },
+            "ShellType": "AP",
+            "Velocity": 56.5625,
+            "ApDurability": 9,
+            "Damage": 5,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "Air Belt"
           }
         },
         {
@@ -628,13 +628,7 @@
             "Damage": 5,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
-            "Name": "AI",
-            "NominalBallistics": {
-              "Supported": true,
-              "ProjectileType": "superbwarfare:projectile",
-              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/mg17/mg17_he_ball",
-              "ProjectileLife": 400
-            }
+            "Name": "AI"
           }
         }
       ],
@@ -723,54 +717,6 @@
       },
       "AmmoType": [
         {
-          "Ammo": "superbwarfare:small_shell_ap",
-          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition",
-          "Override": {
-            "Projectile": {
-              "Type": "superbwarfare:projectile",
-              "Profile": "berts_vehicle_pack:aircraft_rounds/mg17/mg17_ap_t_ball"
-            },
-            "ShellType": "AP",
-            "Velocity": 56.5625,
-            "ApDurability": 9,
-            "Damage": 5,
-            "ExplosionDamage": 0,
-            "ExplosionRadius": 0,
-            "Name": "Air Belt",
-            "ProjectileBelt": {
-              "Name": "Air Belt",
-              "Rounds": [
-                {
-                  "Shots": 1,
-                  "Round": "mg17_ap_t_ball",
-                  "Ammo": "superbwarfare:small_shell_ap",
-                  "Tracer": "RED"
-                },
-                {
-                  "Shots": 1,
-                  "Round": "mg17_ap_i_ball",
-                  "Ammo": "superbwarfare:small_shell_he",
-                  "Tracer": "NONE"
-                },
-                {
-                  "Shots": 1,
-                  "Round": "mg17_he_ball",
-                  "Ammo": "superbwarfare:small_shell_gs",
-                  "Tracer": "NONE"
-                }
-              ]
-            },
-            "NominalBallistics": {
-              "Supported": true,
-              "ProjectileType": "superbwarfare:projectile",
-              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/mg17/mg17_ap_t_ball",
-              "ProjectileLife": 400
-            }
-          }
-        }
-      ],
-      "ProjectileBeltAmmoType": [
-        {
           "Ammo": "superbwarfare:small_shell_he",
           "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition",
           "Override": {
@@ -784,13 +730,61 @@
             "Damage": 5,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
-            "Name": "AP_I",
+            "Name": "Air Belt",
+            "ProjectileBelt": {
+              "Name": "Air Belt",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "mg17_ap_i_ball",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "mg17_he_ball",
+                  "Ammo": "superbwarfare:small_shell_gs",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "mg17_ap_i_ball",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "mg17_ap_t_ball",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "RED"
+                }
+              ]
+            },
             "NominalBallistics": {
               "Supported": true,
               "ProjectileType": "superbwarfare:projectile",
               "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/mg17/mg17_ap_i_ball",
               "ProjectileLife": 400
             }
+          }
+        }
+      ],
+      "ProjectileBeltAmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:projectile",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/mg17/mg17_ap_t_ball"
+            },
+            "ShellType": "AP",
+            "Velocity": 56.5625,
+            "ApDurability": 9,
+            "Damage": 5,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "Air Belt"
           }
         },
         {
@@ -807,13 +801,7 @@
             "Damage": 5,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
-            "Name": "AI",
-            "NominalBallistics": {
-              "Supported": true,
-              "ProjectileType": "superbwarfare:projectile",
-              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/mg17/mg17_he_ball",
-              "ProjectileLife": 400
-            }
+            "Name": "AI"
           }
         }
       ],
@@ -902,16 +890,16 @@
       },
       "AmmoType": [
         {
-          "Ammo": "superbwarfare:small_shell_ap",
+          "Ammo": "superbwarfare:small_shell_he",
           "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:projectile",
-              "Profile": "berts_vehicle_pack:aircraft_rounds/mg15/mg15_ap_t_ball"
+              "Profile": "berts_vehicle_pack:aircraft_rounds/mg15/mg15_ball"
             },
             "ShellType": "AP",
-            "Velocity": 56.5625,
-            "ApDurability": 9,
+            "Velocity": 53.4375,
+            "ApDurability": 5,
             "Damage": 5,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
@@ -919,18 +907,6 @@
             "ProjectileBelt": {
               "Name": "Air Belt",
               "Rounds": [
-                {
-                  "Shots": 1,
-                  "Round": "mg15_ap_t_ball",
-                  "Ammo": "superbwarfare:small_shell_ap",
-                  "Tracer": "RED"
-                },
-                {
-                  "Shots": 1,
-                  "Round": "mg15_ball",
-                  "Ammo": "superbwarfare:small_shell_he",
-                  "Tracer": "NONE"
-                },
                 {
                   "Shots": 1,
                   "Round": "mg15_ball",
@@ -948,13 +924,19 @@
                   "Round": "mg15_he_ball",
                   "Ammo": "superbwarfare:small_shell_aa",
                   "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "mg15_ap_t_ball",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "RED"
                 }
               ]
             },
             "NominalBallistics": {
               "Supported": true,
               "ProjectileType": "superbwarfare:projectile",
-              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/mg15/mg15_ap_t_ball",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/mg15/mg15_ball",
               "ProjectileLife": 400
             }
           }
@@ -962,26 +944,20 @@
       ],
       "ProjectileBeltAmmoType": [
         {
-          "Ammo": "superbwarfare:small_shell_he",
+          "Ammo": "superbwarfare:small_shell_ap",
           "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:projectile",
-              "Profile": "berts_vehicle_pack:aircraft_rounds/mg15/mg15_ball"
+              "Profile": "berts_vehicle_pack:aircraft_rounds/mg15/mg15_ap_t_ball"
             },
             "ShellType": "AP",
-            "Velocity": 53.4375,
-            "ApDurability": 5,
+            "Velocity": 56.5625,
+            "ApDurability": 9,
             "Damage": 5,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
-            "Name": "BALL",
-            "NominalBallistics": {
-              "Supported": true,
-              "ProjectileType": "superbwarfare:projectile",
-              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/mg15/mg15_ball",
-              "ProjectileLife": 400
-            }
+            "Name": "Air Belt"
           }
         },
         {
@@ -998,13 +974,7 @@
             "Damage": 5,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
-            "Name": "AP_I",
-            "NominalBallistics": {
-              "Supported": true,
-              "ProjectileType": "superbwarfare:projectile",
-              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/mg15/mg15_ap_i_ball",
-              "ProjectileLife": 400
-            }
+            "Name": "AP_I"
           }
         },
         {
@@ -1021,13 +991,7 @@
             "Damage": 5,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
-            "Name": "AI",
-            "NominalBallistics": {
-              "Supported": true,
-              "ProjectileType": "superbwarfare:projectile",
-              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/mg15/mg15_he_ball",
-              "ProjectileLife": 400
-            }
+            "Name": "AI"
           }
         }
       ],

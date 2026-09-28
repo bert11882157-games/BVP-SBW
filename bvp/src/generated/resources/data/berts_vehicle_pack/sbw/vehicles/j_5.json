@@ -780,9 +780,15 @@
               "Name": "Air Belt",
               "Rounds": [
                 {
-                  "Shots": 1,
+                  "Shots": 3,
                   "Round": "nr23_air_game",
                   "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "nr23_ground_game",
+                  "Ammo": "superbwarfare:small_shell_ap",
                   "Tracer": "GREEN"
                 }
               ]
@@ -815,9 +821,15 @@
               "Name": "Ground Belt",
               "Rounds": [
                 {
-                  "Shots": 1,
+                  "Shots": 3,
                   "Round": "nr23_ground_game",
                   "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "nr23_air_game",
+                  "Ammo": "superbwarfare:small_shell_he",
                   "Tracer": "GREEN"
                 }
               ]
@@ -937,9 +949,15 @@
               "Name": "Air Belt",
               "Rounds": [
                 {
-                  "Shots": 1,
+                  "Shots": 3,
                   "Round": "nr23_air_game",
                   "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "nr23_ground_game",
+                  "Ammo": "superbwarfare:small_shell_ap",
                   "Tracer": "GREEN"
                 }
               ]
@@ -972,9 +990,15 @@
               "Name": "Ground Belt",
               "Rounds": [
                 {
-                  "Shots": 1,
+                  "Shots": 3,
                   "Round": "nr23_ground_game",
                   "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "nr23_air_game",
+                  "Ammo": "superbwarfare:small_shell_he",
                   "Tracer": "GREEN"
                 }
               ]
@@ -1094,9 +1118,15 @@
               "Name": "Air Belt",
               "Rounds": [
                 {
-                  "Shots": 1,
+                  "Shots": 3,
                   "Round": "n37d_air_game",
                   "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "n37d_ground_game",
+                  "Ammo": "superbwarfare:small_shell_ap",
                   "Tracer": "GREEN"
                 }
               ]
@@ -1129,9 +1159,15 @@
               "Name": "Ground Belt",
               "Rounds": [
                 {
-                  "Shots": 1,
+                  "Shots": 3,
                   "Round": "n37d_ground_game",
                   "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "n37d_air_game",
+                  "Ammo": "superbwarfare:small_shell_he",
                   "Tracer": "GREEN"
                 }
               ]

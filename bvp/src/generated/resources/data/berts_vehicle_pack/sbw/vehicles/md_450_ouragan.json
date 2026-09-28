@@ -938,15 +938,9 @@
               "Name": "Air Belt",
               "Rounds": [
                 {
-                  "Shots": 1,
+                  "Shots": 3,
                   "Round": "m50_hei",
                   "Ammo": "superbwarfare:small_shell_ap",
-                  "Tracer": "NONE"
-                },
-                {
-                  "Shots": 1,
-                  "Round": "m50_sapi",
-                  "Ammo": "superbwarfare:small_shell_he",
                   "Tracer": "NONE"
                 },
                 {
@@ -964,9 +958,7 @@
               "ProjectileLife": 400
             }
           }
-        }
-      ],
-      "ProjectileBeltAmmoType": [
+        },
         {
           "Ammo": "superbwarfare:small_shell_he",
           "ConsumptionItem": "superbwarfare:small_autocannon_shell",
@@ -982,7 +974,24 @@
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
             "TntEquivalentKg": 0.0,
-            "Name": "SAPI",
+            "Name": "Ground Belt",
+            "ProjectileBelt": {
+              "Name": "Ground Belt",
+              "Rounds": [
+                {
+                  "Shots": 3,
+                  "Round": "m50_sapi",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "m50_hei",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "RED"
+                }
+              ]
+            },
             "NominalBallistics": {
               "Supported": true,
               "ProjectileType": "superbwarfare:small_cannon_shell",
@@ -990,7 +999,9 @@
               "ProjectileLife": 400
             }
           }
-        },
+        }
+      ],
+      "ProjectileBeltAmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_gs",
           "ConsumptionItem": "superbwarfare:small_autocannon_shell",
@@ -1006,13 +1017,7 @@
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
             "TntEquivalentKg": 0.0,
-            "Name": "T",
-            "NominalBallistics": {
-              "Supported": true,
-              "ProjectileType": "superbwarfare:small_cannon_shell",
-              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/m50/m50_t",
-              "ProjectileLife": 400
-            }
+            "Name": "T"
           }
         }
       ],
@@ -1121,15 +1126,9 @@
               "Name": "Air Belt",
               "Rounds": [
                 {
-                  "Shots": 1,
+                  "Shots": 3,
                   "Round": "m50_hei",
                   "Ammo": "superbwarfare:small_shell_ap",
-                  "Tracer": "NONE"
-                },
-                {
-                  "Shots": 1,
-                  "Round": "m50_sapi",
-                  "Ammo": "superbwarfare:small_shell_he",
                   "Tracer": "NONE"
                 },
                 {
@@ -1147,9 +1146,7 @@
               "ProjectileLife": 400
             }
           }
-        }
-      ],
-      "ProjectileBeltAmmoType": [
+        },
         {
           "Ammo": "superbwarfare:small_shell_he",
           "ConsumptionItem": "superbwarfare:small_autocannon_shell",
@@ -1165,7 +1162,24 @@
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
             "TntEquivalentKg": 0.0,
-            "Name": "SAPI",
+            "Name": "Ground Belt",
+            "ProjectileBelt": {
+              "Name": "Ground Belt",
+              "Rounds": [
+                {
+                  "Shots": 3,
+                  "Round": "m50_sapi",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "m50_hei",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "RED"
+                }
+              ]
+            },
             "NominalBallistics": {
               "Supported": true,
               "ProjectileType": "superbwarfare:small_cannon_shell",
@@ -1173,7 +1187,9 @@
               "ProjectileLife": 400
             }
           }
-        },
+        }
+      ],
+      "ProjectileBeltAmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_gs",
           "ConsumptionItem": "superbwarfare:small_autocannon_shell",
@@ -1189,13 +1205,7 @@
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
             "TntEquivalentKg": 0.0,
-            "Name": "T",
-            "NominalBallistics": {
-              "Supported": true,
-              "ProjectileType": "superbwarfare:small_cannon_shell",
-              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/m50/m50_t",
-              "ProjectileLife": 400
-            }
+            "Name": "T"
           }
         }
       ],
@@ -1304,15 +1314,9 @@
               "Name": "Air Belt",
               "Rounds": [
                 {
-                  "Shots": 1,
+                  "Shots": 3,
                   "Round": "m50_hei",
                   "Ammo": "superbwarfare:small_shell_ap",
-                  "Tracer": "NONE"
-                },
-                {
-                  "Shots": 1,
-                  "Round": "m50_sapi",
-                  "Ammo": "superbwarfare:small_shell_he",
                   "Tracer": "NONE"
                 },
                 {
@@ -1330,9 +1334,7 @@
               "ProjectileLife": 400
             }
           }
-        }
-      ],
-      "ProjectileBeltAmmoType": [
+        },
         {
           "Ammo": "superbwarfare:small_shell_he",
           "ConsumptionItem": "superbwarfare:small_autocannon_shell",
@@ -1348,7 +1350,24 @@
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
             "TntEquivalentKg": 0.0,
-            "Name": "SAPI",
+            "Name": "Ground Belt",
+            "ProjectileBelt": {
+              "Name": "Ground Belt",
+              "Rounds": [
+                {
+                  "Shots": 3,
+                  "Round": "m50_sapi",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "m50_hei",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "RED"
+                }
+              ]
+            },
             "NominalBallistics": {
               "Supported": true,
               "ProjectileType": "superbwarfare:small_cannon_shell",
@@ -1356,7 +1375,9 @@
               "ProjectileLife": 400
             }
           }
-        },
+        }
+      ],
+      "ProjectileBeltAmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_gs",
           "ConsumptionItem": "superbwarfare:small_autocannon_shell",
@@ -1372,13 +1393,7 @@
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
             "TntEquivalentKg": 0.0,
-            "Name": "T",
-            "NominalBallistics": {
-              "Supported": true,
-              "ProjectileType": "superbwarfare:small_cannon_shell",
-              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/m50/m50_t",
-              "ProjectileLife": 400
-            }
+            "Name": "T"
           }
         }
       ],
@@ -1487,15 +1502,9 @@
               "Name": "Air Belt",
               "Rounds": [
                 {
-                  "Shots": 1,
+                  "Shots": 3,
                   "Round": "m50_hei",
                   "Ammo": "superbwarfare:small_shell_ap",
-                  "Tracer": "NONE"
-                },
-                {
-                  "Shots": 1,
-                  "Round": "m50_sapi",
-                  "Ammo": "superbwarfare:small_shell_he",
                   "Tracer": "NONE"
                 },
                 {
@@ -1513,9 +1522,7 @@
               "ProjectileLife": 400
             }
           }
-        }
-      ],
-      "ProjectileBeltAmmoType": [
+        },
         {
           "Ammo": "superbwarfare:small_shell_he",
           "ConsumptionItem": "superbwarfare:small_autocannon_shell",
@@ -1531,7 +1538,24 @@
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
             "TntEquivalentKg": 0.0,
-            "Name": "SAPI",
+            "Name": "Ground Belt",
+            "ProjectileBelt": {
+              "Name": "Ground Belt",
+              "Rounds": [
+                {
+                  "Shots": 3,
+                  "Round": "m50_sapi",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "m50_hei",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "RED"
+                }
+              ]
+            },
             "NominalBallistics": {
               "Supported": true,
               "ProjectileType": "superbwarfare:small_cannon_shell",
@@ -1539,7 +1563,9 @@
               "ProjectileLife": 400
             }
           }
-        },
+        }
+      ],
+      "ProjectileBeltAmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_gs",
           "ConsumptionItem": "superbwarfare:small_autocannon_shell",
@@ -1555,13 +1581,7 @@
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
             "TntEquivalentKg": 0.0,
-            "Name": "T",
-            "NominalBallistics": {
-              "Supported": true,
-              "ProjectileType": "superbwarfare:small_cannon_shell",
-              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/m50/m50_t",
-              "ProjectileLife": 400
-            }
+            "Name": "T"
           }
         }
       ],

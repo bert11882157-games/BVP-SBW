@@ -207,30 +207,28 @@
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
             "Name": "AP Belt",
-            "ProjectileBelt": {
-              "Name": "AP Belt",
-              "Rounds": [
-                {
-                  "Shots": 6,
-                  "Round": "m134_ap",
-                  "Ammo": "superbwarfare:small_shell_ap",
-                  "Tracer": "NONE",
-                  "DisplayLabel": "AP"
-                },
-                {
-                  "Shots": 1,
-                  "Round": "m134_t",
-                  "Ammo": "superbwarfare:small_shell_he",
-                  "Tracer": "RED",
-                  "DisplayLabel": "T"
-                }
-              ]
-            },
             "ShootShake": [
               0,
               0,
               0
             ],
+            "ProjectileBelt": {
+              "Name": "AP Belt",
+              "Rounds": [
+                {
+                  "Shots": 3,
+                  "Round": "m134_ap",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "m134_t",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "RED"
+                }
+              ]
+            },
             "NominalBallistics": {
               "Supported": true,
               "ProjectileType": "superbwarfare:projectile",

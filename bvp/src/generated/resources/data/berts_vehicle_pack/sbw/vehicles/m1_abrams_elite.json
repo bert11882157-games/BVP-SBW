@@ -397,12 +397,17 @@
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
             "Name": "AP Belt",
+            "ShootShake": [
+              0,
+              0,
+              0
+            ],
             "ProjectileBelt": {
               "Name": "AP Belt",
               "Family": "WESTERN_COAX_762",
               "Rounds": [
                 {
-                  "Shots": 1,
+                  "Shots": 3,
                   "Round": "AP",
                   "Ammo": "superbwarfare:small_shell_ap",
                   "Tracer": "NONE"
@@ -419,13 +424,8 @@
               "Supported": true,
               "ProjectileType": "superbwarfare:projectile",
               "ProjectileProfile": "berts_vehicle_pack:m1_abrams_elite/machinegun/ammo_00_western_762_ap",
-              "ProjectileLife": 400
-            },
-            "ShootShake": [
-              0,
-              0,
-              0
-            ]
+              "ProjectileLife": 40
+            }
           },
           "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition"
         }
@@ -557,29 +557,28 @@
       "ShootAnimationTime": 1,
       "AmmoType": [
         {
-          "Ammo": "superbwarfare:small_shell_ap",
+          "Ammo": "superbwarfare:small_shell_he",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:projectile",
-              "Profile": "berts_vehicle_pack:m1_abrams_elite/passengermachinegun/ammo_00_western_127_m20_api_t_1"
+              "Profile": "berts_vehicle_pack:m1_abrams_elite/passengermachinegun/belt_ammo_00_western_127_m1_i"
             },
             "ShellType": "AP",
-            "Velocity": 46.45,
-            "ApDurability": 29,
+            "Velocity": 47.2,
+            "ApDurability": 7,
             "Damage": 40,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
             "Name": "AP Belt",
+            "ShootShake": [
+              8,
+              10,
+              6
+            ],
             "ProjectileBelt": {
               "Name": "AP Belt",
               "Family": "WESTERN_127",
               "Rounds": [
-                {
-                  "Shots": 1,
-                  "Round": "API_T_1",
-                  "Ammo": "superbwarfare:small_shell_ap",
-                  "Tracer": "RED"
-                },
                 {
                   "Shots": 1,
                   "Round": "I",
@@ -594,8 +593,14 @@
                 },
                 {
                   "Shots": 1,
-                  "Round": "API_T_2",
-                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Round": "I",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "API_T_1",
+                  "Ammo": "superbwarfare:small_shell_ap",
                   "Tracer": "RED"
                 }
               ]
@@ -603,16 +608,10 @@
             "NominalBallistics": {
               "Supported": true,
               "ProjectileType": "superbwarfare:projectile",
-              "ProjectileProfile": "berts_vehicle_pack:m1_abrams_elite/passengermachinegun/ammo_00_western_127_m20_api_t_1",
-              "ProjectileLife": 400
-            },
-            "ShootShake": [
-              8,
-              10,
-              6
-            ]
-          },
-          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition"
+              "ProjectileProfile": "berts_vehicle_pack:m1_abrams_elite/passengermachinegun/belt_ammo_00_western_127_m1_i",
+              "ProjectileLife": 40
+            }
+          }
         }
       ],
       "ShootPos": {
@@ -673,25 +672,26 @@
       "EmptyReloadTime": 200,
       "ProjectileBeltAmmoType": [
         {
-          "Ammo": "superbwarfare:small_shell_he",
+          "Ammo": "superbwarfare:small_shell_ap",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:projectile",
-              "Profile": "berts_vehicle_pack:m1_abrams_elite/passengermachinegun/belt_ammo_00_western_127_m1_i"
+              "Profile": "berts_vehicle_pack:m1_abrams_elite/passengermachinegun/ammo_00_western_127_m20_api_t_1"
             },
             "ShellType": "AP",
-            "Velocity": 47.2,
-            "ApDurability": 7,
+            "Velocity": 46.45,
+            "ApDurability": 29,
             "Damage": 40,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
-            "Name": "I",
+            "Name": "AP Belt",
             "ShootShake": [
               8,
               10,
               6
             ]
-          }
+          },
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition"
         },
         {
           "Ammo": "superbwarfare:small_shell_gs",

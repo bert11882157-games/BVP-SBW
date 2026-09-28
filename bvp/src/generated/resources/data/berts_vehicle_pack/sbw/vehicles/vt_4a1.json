@@ -729,35 +729,33 @@
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
             "Name": "AP Belt",
-            "ProjectileBelt": {
-              "Name": "AP Belt",
-              "Rounds": [
-                {
-                  "Shots": 1,
-                  "Round": "type86_ap_i",
-                  "Ammo": "superbwarfare:small_shell_ap",
-                  "Tracer": "NONE",
-                  "DisplayLabel": "AP-I"
-                },
-                {
-                  "Shots": 1,
-                  "Round": "type86_api_t",
-                  "Ammo": "superbwarfare:small_shell_he",
-                  "Tracer": "GREEN",
-                  "DisplayLabel": "API-T"
-                }
-              ]
-            },
             "ShootShake": [
               0,
               0,
               0
             ],
+            "ProjectileBelt": {
+              "Name": "AP Belt",
+              "Rounds": [
+                {
+                  "Shots": 3,
+                  "Round": "type86_ap_i",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "type86_api_t",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "GREEN"
+                }
+              ]
+            },
             "NominalBallistics": {
               "Supported": true,
               "ProjectileType": "superbwarfare:projectile",
               "ProjectileProfile": "berts_vehicle_pack:vt_4a1/machinegun/ammo_00_type86_ap_i",
-              "ProjectileLife": 400
+              "ProjectileLife": 40
             }
           }
         }
@@ -894,63 +892,60 @@
       "ShootAnimationTime": 1,
       "AmmoType": [
         {
-          "Ammo": "superbwarfare:small_shell_ap",
+          "Ammo": "superbwarfare:small_shell_he",
           "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:projectile",
-              "Profile": "berts_vehicle_pack:vt_4a1/passengermachinegun/ammo_00_qjc88a_bzt44_api_t"
+              "Profile": "berts_vehicle_pack:vt_4a1/passengermachinegun/belt_ammo_00_qjc88a_iai"
             },
-            "ShellType": "AP",
-            "Velocity": 43.25,
-            "ApDurability": 29,
-            "Damage": 40,
+            "ShellType": "HE",
+            "Velocity": 43,
+            "ApDurability": 3,
+            "Damage": 83.33333333333333,
             "ExplosionDamage": 0,
-            "ExplosionRadius": 0,
+            "ExplosionRadius": 1.6666666666666665,
+            "TntEquivalentKg": 0.0032,
             "Name": "AP Belt",
-            "ProjectileBelt": {
-              "Name": "AP Belt",
-              "Rounds": [
-                {
-                  "Shots": 1,
-                  "Round": "qjc88a_bzt44_api_t",
-                  "Ammo": "superbwarfare:small_shell_ap",
-                  "Tracer": "GREEN",
-                  "DisplayLabel": "API-T"
-                },
-                {
-                  "Shots": 1,
-                  "Round": "qjc88a_iai",
-                  "Ammo": "superbwarfare:small_shell_he",
-                  "Tracer": "NONE",
-                  "DisplayLabel": "IAI"
-                },
-                {
-                  "Shots": 1,
-                  "Round": "qjc88a_bzt44_api_t",
-                  "Ammo": "superbwarfare:small_shell_ap",
-                  "Tracer": "GREEN",
-                  "DisplayLabel": "API-T"
-                },
-                {
-                  "Shots": 1,
-                  "Round": "qjc88a_ap_i_c",
-                  "Ammo": "superbwarfare:small_shell_gs",
-                  "Tracer": "NONE",
-                  "DisplayLabel": "AP-I-C"
-                }
-              ]
-            },
             "ShootShake": [
               8,
               10,
               6
             ],
+            "ProjectileBelt": {
+              "Name": "AP Belt",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "qjc88a_iai",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "qjc88a_ap_i_c",
+                  "Ammo": "superbwarfare:small_shell_gs",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "qjc88a_iai",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "qjc88a_bzt44_api_t",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "GREEN"
+                }
+              ]
+            },
             "NominalBallistics": {
               "Supported": true,
               "ProjectileType": "superbwarfare:projectile",
-              "ProjectileProfile": "berts_vehicle_pack:vt_4a1/passengermachinegun/ammo_00_qjc88a_bzt44_api_t",
-              "ProjectileLife": 400
+              "ProjectileProfile": "berts_vehicle_pack:vt_4a1/passengermachinegun/belt_ammo_00_qjc88a_iai",
+              "ProjectileLife": 40
             }
           }
         }
@@ -979,21 +974,20 @@
       "AmmoCostPerShoot": 1,
       "ProjectileBeltAmmoType": [
         {
-          "Ammo": "superbwarfare:small_shell_he",
+          "Ammo": "superbwarfare:small_shell_ap",
           "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:projectile",
-              "Profile": "berts_vehicle_pack:vt_4a1/passengermachinegun/belt_ammo_00_qjc88a_iai"
+              "Profile": "berts_vehicle_pack:vt_4a1/passengermachinegun/ammo_00_qjc88a_bzt44_api_t"
             },
-            "ShellType": "HE",
-            "Velocity": 43,
-            "ApDurability": 3,
-            "Damage": 83.33333333333333,
+            "ShellType": "AP",
+            "Velocity": 43.25,
+            "ApDurability": 29,
+            "Damage": 40,
             "ExplosionDamage": 0,
-            "ExplosionRadius": 1.6666666666666665,
-            "TntEquivalentKg": 0.0032,
-            "Name": "IAI",
+            "ExplosionRadius": 0,
+            "Name": "AP Belt",
             "ShootShake": [
               8,
               10,
