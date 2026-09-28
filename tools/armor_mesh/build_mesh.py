@@ -15,9 +15,9 @@ The armor captures the vehicle's underlying structure, not its fittings (see doc
   split by cut planes where a region boundary falls inside one face (driver's port, sight notch, roof zones...).
 * A region's thickness is either nominal (`mm`) or a line-of-sight target (`los`: [dx, dy, dz, mm]): the plate is
   then made just thick enough that a shot along (dx, dy, dz) meets `mm` of armor, whatever the face's slope.
-* **Modules** are generated from the hull solid: the engine fills the rear compartment, the ammunition sits where
-  the vehicle's layout puts it (autoloader carousel under the turret ring, hull racks), and the lower track runs
-  become track modules so low side hits register on the tracks instead of missing.
+* **Modules** are generated from the hull solid: the engine fills the rear compartment and the ammunition sits where
+  the vehicle's layout puts it (autoloader carousel under the turret ring, hull racks). Tracks get no hitbox: a shot
+  through the running gear goes on to the hull plates behind it.
 
 ERA is not part of the file: the vehicle keeps its ERA boxes from armor/<id>.json (the loader replaces only the
 categories a mesh file defines).

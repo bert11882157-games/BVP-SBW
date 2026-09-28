@@ -213,7 +213,8 @@ face region is, and where the modules go. The T-90A (`t90a`) is the first vehicl
   solid, and the build fails if any edge is open.
 * **Modules, automatic.** `modules.engine` fills the hull behind the turret ring. `modules.carousel`
   places an autoloader ring under the turret ring. `modules.racks` adds extra ammo boxes.
-  `modules.tracks` adds per-side run, idler and sprocket track modules.
+  Tracks get no hitbox: a shot through the running gear goes on to the hull plates behind it.
+  (`modules.tracks` still builds per-side track modules if a spec asks for one; no shipped spec does.)
 * To make a region thicker, add a rule for it. For a weak spot, add a cut that isolates the patch, then a
   thinner rule for it (e.g. `ufp_driver_port`, `sight_notch`).
 

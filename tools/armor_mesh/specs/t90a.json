@@ -772,32 +772,7 @@
           -20.0
         ]
       }
-    ],
-    "tracks": {
-      "_note": "Track modules where a shot meets the track before any hull plate: the run below the belly, and the idler (front) and sprocket (rear) ends above it. Side shots through the road wheels between them reach the hull side plates.",
-      "xInner": 19.0,
-      "xOuter": 30.6,
-      "boxes": {
-        "run": [
-          0.0,
-          7.7,
-          -47.0,
-          38.0
-        ],
-        "idler": [
-          0.0,
-          19.3,
-          -58.6,
-          -47.0
-        ],
-        "sprocket": [
-          0.0,
-          19.3,
-          38.0,
-          50.5
-        ]
-      }
-    }
+    ]
   },
   "trackEnvelope": {
     "_note": "test-only stand-in for the animated track links (hitreg_rays.py)",
