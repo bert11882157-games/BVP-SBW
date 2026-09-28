@@ -65,10 +65,14 @@ object MissileRoll {
 
     /**
      * Presentation hook (also called by FFA through reflection): {signed turns, fraction of the steady rate} for the
-     * missile [seconds] after launch, or null when it declares no roll.
+     * missile [seconds] after launch, or null when it declares no roll. A missile declared not to roll (RollHz 0)
+     * reports [STILL_FRACTION], so its plumes neither shrink nor grow.
      */
     @JvmStatic fun state(entity: Entity, seconds: Double): DoubleArray? =
-        of(entity)?.let { doubleArrayOf(it.turns(seconds), it.fraction(seconds)) }
+        of(entity)?.let { doubleArrayOf(it.turns(seconds), if (it.hz > 0) it.fraction(seconds) else STILL_FRACTION) }
+
+    /** The fraction a roll-stabilised missile (TOW) reports: its plumes stay at their normal size (scale 1). */
+    const val STILL_FRACTION = 0.6
 
     /** Orbiting thruster plume scale (length and outward cant) for a roll fraction: 25% at launch, 150% at full roll. */
     @JvmStatic fun plumeScale(fraction: Double): Double = 0.25 + 1.25 * fraction.coerceIn(0.0, 1.0)

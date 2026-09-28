@@ -18,6 +18,8 @@ import net.minecraftforge.fml.common.Mod;
  * fire cue goes out exactly as in play. Used by the audio loudness test to fire guns at set listener distances.
  * {@code /bvp_seat <player> <seat>} moves a rider to another seat (seat views in the spawn checks).
  * {@code /bvp_ammo <vehicles> <weapon> <rounds>} sets a weapon's loaded rounds (ammo-bone visibility checks).
+ * {@code /bvp_aim <player> <weapon>} seats the rider at the weapon and looks straight ahead of the hull;
+ * {@code /bvp_fire_as <player> <weapon>} then fires it as that rider (an owned shot, as in play).
  */
 @Mod.EventBusSubscriber(modid = BertsVehiclePack.MODID)
 public final class BvpAudioFireScenario {
@@ -65,6 +67,29 @@ public final class BvpAudioFireScenario {
                             var result = vehicle.vehicleShootResult(player, weapon);
                             LOGGER.info("[BVP audio] fire_as {} {}: {}", vehicle.getType(), weapon, result);
                             return result.isAccepted() ? 1 : 0;
+                        }))));
+        // /bvp_aim <player> <weapon>: moves the rider to the seat carrying the weapon, selects it and turns the rider's
+        // view straight ahead of the hull, level (the turret follows over the next seconds), for /bvp_fire_as
+        event.getDispatcher().register(Commands.literal("bvp_aim")
+                .requires(source -> source.hasPermission(2))
+                .then(Commands.argument("player", EntityArgument.player())
+                        .then(Commands.argument("weapon", StringArgumentType.word()).executes(context -> {
+                            var player = EntityArgument.getPlayer(context, "player");
+                            String weapon = StringArgumentType.getString(context, "weapon");
+                            if (!(player.getVehicle() instanceof VehicleEntity vehicle)) return 0;
+                            int seat = -1, slot = -1;
+                            for (int s = 0; s < vehicle.getMaxPassengers() && seat < 0; s++)
+                                for (int i = 0; i < 8; i++)
+                                    if (weapon.equals(vehicle.getGunName(s, i))) { seat = s; slot = i; break; }
+                            if (seat < 0) return 0;
+                            if (vehicle.getSeatIndex(player) != seat) vehicle.changeSeat(player, seat);
+                            vehicle.changeWeapon(seat, slot, false);
+                            var ahead = net.minecraft.world.phys.Vec3.directionFromRotation(0, vehicle.getYRot());
+                            player.lookAt(net.minecraft.commands.arguments.EntityAnchorArgument.Anchor.EYES,
+                                    player.getEyePosition().add(ahead.scale(200)));
+                            LOGGER.info("[BVP audio] aim {} {} seat {} slot {} (now seat {})", vehicle.getType(), weapon,
+                                    seat, slot, vehicle.getSeatIndex(player));
+                            return 1;
                         }))));
         // /bvp_ammo <vehicles> <weapon> <rounds>: sets a weapon's loaded rounds (ammo-bone visibility checks)
         event.getDispatcher().register(Commands.literal("bvp_ammo")
