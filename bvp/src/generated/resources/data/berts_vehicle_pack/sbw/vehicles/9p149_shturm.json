@@ -20,14 +20,14 @@
     "EngineSoundVolume": 0.85
   },
   "TurretPos": [
-    -0.69089,
-    2.4584,
-    -1.65815
+    -0.79688,
+    2.0625,
+    -1.91063
   ],
   "BarrelPos": [
     0.0,
-    0.0,
-    -0.0
+    0.79375,
+    0.0
   ],
   "TurretControllerIndex": 0,
   "TurretTurnSpeed": [
@@ -136,9 +136,9 @@
         1.21832
       ],
       "Position": [
-        -0.12132,
-        0.49571,
-        -0.19721
+        -0.01533,
+        0.09786,
+        0.05527
       ],
       "Transform": "Barrel",
       "Rotation": "Barrel",
@@ -201,9 +201,9 @@
     "turretPivot": {
       "Parent": "Vehicle",
       "Position": [
-        -0.69089,
-        2.4584,
-        -1.65815
+        -0.79688,
+        2.0625,
+        -1.91063
       ],
       "Direction": [
         0,
@@ -215,8 +215,8 @@
       "Parent": "Turret",
       "Position": [
         0.0,
-        0.0,
-        -0.0
+        0.79375,
+        0.0
       ],
       "Direction": [
         0,
@@ -227,9 +227,9 @@
     "missileMuzzle_1": {
       "Parent": "Barrel",
       "Position": [
-        -0.12161,
-        0.64785,
-        1.02065
+        -0.01562,
+        0.25,
+        1.27313
       ],
       "Direction": [
         0,
@@ -257,9 +257,9 @@
       "IsEnclosed": true,
       "Transform": "Turret",
       "Position": [
-        0.06589,
-        -1.1459,
-        4.15815
+        0.17188,
+        -0.75,
+        4.41063
       ],
       "BodyAttachment": "Turret",
       "Weapons": [
@@ -398,7 +398,8 @@
       },
       "TntEquivalentKg": 4.0014,
       "NormalReloadTime": 167,
-      "SoundRadius": 16
+      "SoundRadius": 16,
+      "BarrelMarker": true
     }
   },
   "HudType": "@Land",

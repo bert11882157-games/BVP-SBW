@@ -50,8 +50,13 @@ public final class FittedGroundVehicleRenderer extends BaseTrackedVehicleRendere
                 LogUtils.getLogger().warn("Fitted ground rig skipped: {}", invalid.getMessage());
             }
         }
-        if (this.activePose == null || this.pitchBones.isEmpty()) return;
-        float pitch = VehicleRenderPartSnapshot.capture(entity, entityYaw, partialTicks).getBarrelPitchDegrees();
-        this.activePose.apply(this.pitchBones, pitch);
+        if (this.activePose != null && !this.pitchBones.isEmpty()) {
+            float pitch = VehicleRenderPartSnapshot.capture(entity, entityYaw, partialTicks).getBarrelPitchDegrees();
+            this.activePose.apply(this.pitchBones, pitch);
+        }
+        // launchers whose model carries the reload rig (9P149 Shturm-S): fire / reload animation
+        if (LauncherReloadAnimator.applies(model)) {
+            LauncherReloadAnimator.apply(entity, model, partialTicks);
+        }
     }
 }

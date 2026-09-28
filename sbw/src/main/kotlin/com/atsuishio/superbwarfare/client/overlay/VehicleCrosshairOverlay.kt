@@ -474,7 +474,8 @@ object VehicleCrosshairOverlay : CommonOverlay("vehicle_crosshair") {
         val provider = entity as? VehicleAimReticleProfileProvider ?: return
         val weaponIndex = entity.getPrimaryWeaponIndex(seatIndex)
         val gunData = entity.getGunData(seatIndex, weaponIndex) ?: return
-        if (VehicleWeaponGuidance.isAtgm(gunData)) return
+        // guided missiles fly to the sight, so their tube has no marker unless the weapon asks for one (BarrelMarker)
+        if (VehicleWeaponGuidance.isAtgm(gunData) && !gunData.getDefault().barrelMarker) return
         val profile = provider.getVehicleAimReticleProfile(seatIndex, weaponIndex) ?: return
         // Ground Crosshair B consumes only the epoch-paired authoritative presentation tuple.
         // Flight vehicles intentionally have no aim-presentation timeline, so they may use one

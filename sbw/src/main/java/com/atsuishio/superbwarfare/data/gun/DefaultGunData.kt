@@ -254,6 +254,10 @@ class DefaultGunData : IDBasedData<DefaultGunData> {
      * Reload length by how much of the magazine has been fired: knots `[fraction fired, seconds]`, linear in
      * between (autocannon belt changes: the emptier the belt, the longer the change). Empty = the fixed reload times.
      */
+    /** Draw the physical barrel marker (Crosshair B) for this weapon even when it is a guided ATGM. */
+    @SerialName("BarrelMarker")
+    var barrelMarker = false
+
     @SerialName("DepletionReload")
     var depletionReload: List<List<Double>> = emptyList()
 
