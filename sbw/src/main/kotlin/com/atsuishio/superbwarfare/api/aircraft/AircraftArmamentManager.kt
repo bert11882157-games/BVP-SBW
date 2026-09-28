@@ -34,7 +34,8 @@ import kotlin.math.*
 /** Server authority for equipment and designations. Rendering and editor drafts never mutate this state. */
 @EventBusSubscriber(modid = com.atsuishio.superbwarfare.Mod.MODID)
 object AircraftArmamentManager {
-    private const val EQUIPMENT = "BvpAircraftArmament"
+    /** The entity persistent-data compound holding the fitted armament (selections, counts, fired, paid). */
+    const val EQUIPMENT = "BvpAircraftArmament"
     private const val PRESETS = "BvpAircraftPresets"
     /** Per hardpoint: munitions on the rack that the pilot paid for (the only refundable ones). */
     private const val PAID = "Paid"

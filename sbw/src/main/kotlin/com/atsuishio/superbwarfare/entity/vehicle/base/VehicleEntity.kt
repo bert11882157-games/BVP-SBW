@@ -6768,7 +6768,16 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         for (key in VEHICLE_ITEM_DURABLE_KEYS) {
             full.get(key)?.let { state.put(key, it.copy()) }
         }
+        // The fitted suspended armament lives in the entity's persistent data, which the save above does not
+        // include: carry it (minus per-world launch timers) so a recovered aircraft keeps its paid-for stores.
+        armamentForVehicleItem()?.let { state.put(VEHICLE_ITEM_ARMAMENT_TAG, it) }
         return state
+    }
+
+    private fun armamentForVehicleItem(): CompoundTag? {
+        val tag = persistentData.get(com.atsuishio.superbwarfare.api.aircraft.AircraftArmamentManager.EQUIPMENT)
+            as? CompoundTag ?: return null
+        return tag.copy().also { it.remove("LastFire") }.takeIf { !it.isEmpty }
     }
 
     /**
@@ -6789,6 +6798,9 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
             // Virtual dispatch intentionally lets BVP restore its own bounded ERA/module state
             // after the shared hull/weapon state has been loaded.
             readAdditionalSaveData(durable)
+            (state.get(VEHICLE_ITEM_ARMAMENT_TAG) as? CompoundTag)?.let {
+                persistentData.put(com.atsuishio.superbwarfare.api.aircraft.AircraftArmamentManager.EQUIPMENT, it.copy())
+            }
             isWreck = false
             aircraftWreckStart = -1L
             aircraftWreckMotionX = 0F
@@ -6817,7 +6829,8 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         if (state.getInt(VehicleItemLifecycleCodec.SCHEMA_TAG) != VehicleItemLifecycleCodec.SCHEMA_VERSION ||
             state.getString(VehicleItemLifecycleCodec.ENTITY_TYPE_TAG) != expectedType ||
             state.allKeys.any { it != VehicleItemLifecycleCodec.SCHEMA_TAG &&
-                it != VehicleItemLifecycleCodec.ENTITY_TYPE_TAG && it !in VEHICLE_ITEM_DURABLE_KEYS }
+                it != VehicleItemLifecycleCodec.ENTITY_TYPE_TAG && it != VEHICLE_ITEM_ARMAMENT_TAG &&
+                it !in VEHICLE_ITEM_DURABLE_KEYS }
         ) return false
 
         val healthFields = arrayOf(
@@ -6843,6 +6856,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         ) return false
         if (state.contains("DogTagIcon") && !validVehicleItemDogTag(state.get("DogTagIcon"))) return false
         if (state.contains("BvpSpentEraBricks") && state.get("BvpSpentEraBricks") !is CompoundTag) return false
+        if (state.contains(VEHICLE_ITEM_ARMAMENT_TAG) && state.get(VEHICLE_ITEM_ARMAMENT_TAG) !is CompoundTag) return false
 
         val weaponIndicesOptional = maxPassengers == 0
         if (!validVehicleItemWeaponIndices(state.get("SelectedWeapon"), allowMissing = weaponIndicesOptional) ||
@@ -6854,7 +6868,10 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         if (tag == null) return allowMissing
         if (tag !is IntArrayTag || tag.asIntArray.size != maxPassengers) return false
         for (seatIndex in tag.asIntArray.indices) {
-            val weaponCount = getSeat(seatIndex)?.weapons()?.size ?: 0
+            // The same list the weapon slots index: native weapons, then the suspended-armament mount channels and
+            // gun-pod aliases. Checking only the native count refused every aircraft whose selected weapon was a
+            // store, so a recovered armed aircraft could not be placed again.
+            val weaponCount = getWeaponIds(seatIndex).size
             val index = tag.asIntArray[seatIndex]
             if (index < -1 || index >= weaponCount) return false
         }
@@ -7512,6 +7529,8 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         // coalesced. Keep the last directly received same-epoch world ray for at most one second;
         // held frames never renew this lease and always lose the lock diagnostic.
         private const val MAX_AIM_PRESENTATION_CONTINUITY_TICKS = 20.0
+        /** The fitted suspended armament (AircraftArmamentManager.EQUIPMENT) inside a vehicle item. */
+        private const val VEHICLE_ITEM_ARMAMENT_TAG = "AircraftArmament"
         private val VEHICLE_ITEM_DURABLE_KEYS = setOf(
             "Override",
             "Health",
