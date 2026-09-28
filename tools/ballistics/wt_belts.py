@@ -15,12 +15,18 @@ belt's selector identity, so belts start at distinct rounds; a belt may start at
 ProjectileBeltAmmoType entry per round the belts use. Round entries keep their projectile profile and gameplay
 fields; a round the weapon lacks is copied from another weapon that has it (profile file included). Tracer-only
 fixes (12.7 mm and 7.62 mm families) edit the rounds in place. A second run changes nothing.
+
+Tracer colours are then set by nation (tracer_nations.py, owner's rule 2026-09-28: Eastern tracers green, Western
+red), so the WT colours above only decide which rounds are traced and, for the West, the shade of red.
 """
 import copy
 import glob
 import json
 import os
 import sys
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import tracer_nations  # noqa: E402
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.abspath(os.path.join(HERE, '..', '..'))
@@ -343,6 +349,7 @@ def main(argv):
                 rebuild(vid, wn, w, family, belts, cat, writes, notes)
             else:
                 tracer_only(vid, wn, w)
+        tracer_nations.fix(d, tracer_nations.east_of(os.path.join('vehicles', vid + '.json')), [])
         if json.dumps(d, sort_keys=True) != before:
             report.append(f'{vid}: ' + ('; '.join(notes) if notes else 'belts/tracers updated'))
             if not check:
@@ -350,6 +357,9 @@ def main(argv):
         elif notes:
             report.append(f'{vid}: ' + '; '.join(notes))
     for p, prof in writes.items():
+        east = tracer_nations.east_of(os.path.relpath(p, SBW))
+        if east is not None:
+            tracer_nations.fix(prof, east, [])
         if not os.path.exists(p) or json.load(open(p)) != prof:
             report.append(f'profile {os.path.relpath(p, SBW)}')
             if not check:
