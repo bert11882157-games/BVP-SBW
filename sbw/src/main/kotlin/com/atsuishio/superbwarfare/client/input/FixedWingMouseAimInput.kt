@@ -98,7 +98,7 @@ object FixedWingMouseAimInput {
             held.retain(index, Press(mapping.key, mapping.keyModifier))
         }
         val mask = held.mask()
-        val keepGuidance = !guidanceReset && mask == 0 && !AircraftArmamentClient.isPodActive(candidate)
+        val keepGuidance = !guidanceReset && mask == 0 && !AircraftArmamentClient.sensorView(candidate)
         if (!keepGuidance) sampling.clearInversionRequest()
         FixedWingPilotIntentClient.offer(player, view.directionX, view.directionY, view.directionZ,
             mask, false, view.screenRollInput.takeIf { keepGuidance }, keepGuidance && view.inversionRequested)
@@ -124,7 +124,7 @@ object FixedWingMouseAimInput {
         if (!eligible(player, candidate) || paused(player) || event.camera.entity !== player) return
         val view = FixedWingPilotIntentClient.activeView(player) ?: return
         bind(player, candidate, view.controlEpoch)
-        if (AircraftArmamentClient.isPodActive(candidate)) {
+        if (AircraftArmamentClient.sensorView(candidate)) {
             // The tick owner still offers the live manual/arrow mask. Pod mouse never reaches flight intent.
             sampling.reset()
             FixedWingDynamicCamera.reset()

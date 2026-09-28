@@ -1,5 +1,5 @@
 {
-  "Name": "AGM-65B Maverick · TV",
+  "Name": "KD-88 · TV land attack",
   "AmmoType": "superbwarfare:medium_anti_ground_missile",
   "DefaultFireMode": "Semi",
   "AvailableFireModes": "Semi",
@@ -8,18 +8,18 @@
   "RPM": 30,
   "Projectile": {
     "Type": "superbwarfare:wire_guide_missile",
-    "Profile": "berts_vehicle_pack:aircraft_stores/agm65"
+    "Profile": "berts_vehicle_pack:aircraft_stores/kd88"
   },
   "ProjectileAmount": 1,
   "AddShooterDeltaMovement": true,
   "Velocity": 2,
   "Gravity": 0.0125,
-  "ProjectileLife": 800,
+  "ProjectileLife": 900,
   "Spread": 0,
-  "Damage": 1600,
-  "ExplosionDamage": 1600,
-  "ExplosionRadius": 0.625,
-  "TntEquivalentKg": 44.6335,
+  "Damage": 2840,
+  "ExplosionDamage": 2840,
+  "ExplosionRadius": 1.25,
+  "TntEquivalentKg": 165,
   "ShellType": "HE",
   "ApDurability": 0,
   "Crosshair": "@Empty",

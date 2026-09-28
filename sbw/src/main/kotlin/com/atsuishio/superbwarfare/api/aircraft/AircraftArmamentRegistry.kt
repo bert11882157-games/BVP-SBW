@@ -94,7 +94,7 @@ object AircraftArmamentRegistry {
             require(json["Category"]?.asString in categories)
             require((json["Category"]?.asString == "COMMAND_GUIDED") == json.has("CommandGuidance"))
             json.getAsJsonObject("CommandGuidance")?.let {
-                require(it["Mode"]?.asString in setOf("MCLOS", "SACLOS"))
+                require(it["Mode"]?.asString in setOf("MCLOS", "SACLOS", "TV"))
                 require(json.has("LaunchGunProfile") && json.has("ProjectileProfile") &&
                     !json.has("Guidance") && !json.has("Flight") && !json.has("Bomb"))
             }

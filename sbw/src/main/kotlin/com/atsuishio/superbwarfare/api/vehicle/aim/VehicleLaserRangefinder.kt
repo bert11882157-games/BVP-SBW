@@ -10,6 +10,7 @@ import com.atsuishio.superbwarfare.world.phys.ProjectileHitSelection
 import net.minecraft.core.BlockPos
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.level.BlockGetter
+import net.minecraft.world.entity.Entity
 import net.minecraft.world.level.ClipContext
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
@@ -35,7 +36,7 @@ object VehicleLaserRangefinder {
         if (kind != null) kind == WeaponSystemKind.TANK_CANNON || kind == WeaponSystemKind.AUTOCANNON
         else projectileType == "superbwarfare:cannon_shell" || projectileType == "superbwarfare:small_cannon_shell"
 
-    fun measure(level: ServerLevel, source: VehicleEntity, start: Vec3, direction: Vec3, range: Double): Double? {
+    fun measure(level: ServerLevel, source: Entity?, start: Vec3, direction: Vec3, range: Double): Double? {
         val end = start.add(direction.normalize().scale(range))
         val context = ClipContext(start, end, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, source)
         val terrain = traceTerrain(start, end) { pos ->
@@ -47,8 +48,25 @@ object VehicleLaserRangefinder {
         return nearestVehicle(level, source, start, end, terrain.point, terrain.limitSquared)?.let(start::distanceTo)
     }
 
+    /**
+     * [measure] with the vehicle the laser landed on, through loaded terrain only (it stops at an unloaded chunk).
+     * Used by seekers that ask every few ticks, where a disk read would arrive too late to matter.
+     */
+    fun measureReturn(level: ServerLevel, source: Entity?, start: Vec3, direction: Vec3, range: Double): LaserReturn? {
+        val end = start.add(direction.normalize().scale(range))
+        val context = ClipContext(start, end, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, source)
+        val terrain = traceTerrain(start, end) { pos ->
+            if (!level.hasChunkAt(pos)) TerrainProbe(false, null)
+            else TerrainProbe(true, context.getBlockShape(level.getBlockState(pos), level, pos)
+                .clip(start, end, pos)?.location)
+        }
+        val vehicle = nearestVehicleHit(level, source, start, end, terrain.limitSquared)
+        if (vehicle != null) return LaserReturn(start.distanceTo(vehicle.first), vehicle.second)
+        return terrain.point?.let { LaserReturn(start.distanceTo(it), null) }
+    }
+
     /** Capture loaded geometry on the server thread, then read only missing saved palettes off-thread. */
-    fun measureAsync(level: ServerLevel, source: VehicleEntity, start: Vec3, direction: Vec3,
+    fun measureAsync(level: ServerLevel, source: Entity?, start: Vec3, direction: Vec3,
                      range: Double, includeVehicles: Boolean = true): CompletableFuture<Double?> =
         measureReturnAsync(level, source, start, direction, range, includeVehicles).thenApply { it?.distance }
 
@@ -59,7 +77,7 @@ object VehicleLaserRangefinder {
      * [measureAsync] that also says which vehicle the laser landed on, so a designation can stay on a moving
      * target. The vehicle is only handed to the future's consumer; use it on the server thread.
      */
-    fun measureReturnAsync(level: ServerLevel, source: VehicleEntity, start: Vec3, direction: Vec3,
+    fun measureReturnAsync(level: ServerLevel, source: Entity?, start: Vec3, direction: Vec3,
                            range: Double, includeVehicles: Boolean = true): CompletableFuture<LaserReturn?> {
         val fullEnd = start.add(direction.normalize().scale(range))
         val vehicleHit = if (includeVehicles) nearestVehicleHit(level, source, start, fullEnd, range * range) else null
@@ -85,11 +103,11 @@ object VehicleLaserRangefinder {
         return VehicleLaserSavedTerrain.trace(level, start, end, missing, known).thenApply(::resolve)
     }
 
-    private fun nearestVehicle(level: ServerLevel, source: VehicleEntity, start: Vec3, end: Vec3,
+    private fun nearestVehicle(level: ServerLevel, source: Entity?, start: Vec3, end: Vec3,
                                known: Vec3?, maximumSquared: Double): Vec3? =
         nearestVehicleHit(level, source, start, end, maximumSquared, known)?.first ?: known
 
-    private fun nearestVehicleHit(level: ServerLevel, source: VehicleEntity, start: Vec3, end: Vec3,
+    private fun nearestVehicleHit(level: ServerLevel, source: Entity?, start: Vec3, end: Vec3,
                                   maximumSquared: Double, known: Vec3? = null): Pair<Vec3, VehicleEntity>? {
         var closest: Pair<Vec3, VehicleEntity>? = null
         var distanceSquared = known?.let { minOf(maximumSquared, start.distanceToSqr(it)) } ?: maximumSquared

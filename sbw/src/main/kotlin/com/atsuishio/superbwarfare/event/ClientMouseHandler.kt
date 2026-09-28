@@ -91,7 +91,7 @@ object ClientMouseHandler {
         val moveSpeedY = Mth.clamp(posN.y - posO.y, -speed, speed)
 
         val podAircraft = player.vehicle as? VehicleEntity
-        val podActive = com.atsuishio.superbwarfare.client.aircraft.AircraftArmamentClient.isPodActive(podAircraft)
+        val podActive = com.atsuishio.superbwarfare.client.aircraft.AircraftArmamentClient.sensorView(podAircraft)
         if (legacyPodOwner != null && (legacyPodOwner !== podAircraft || !podActive)) {
             legacyPodOwner = null
             resetMouseSampling()
@@ -318,6 +318,8 @@ object ClientMouseHandler {
     @JvmStatic
     fun changeSensitivity(original: Double): Double {
         val player = localPlayer ?: return original
+        // A TV seeker view takes the mouse for the seeker (AircraftTvClient).
+        if (com.atsuishio.superbwarfare.client.aircraft.AircraftTvClient.active()) return 0.0
         if (player.hasEffect(ModMobEffects.SHOCK.get()) && !player.isSpectator) {
             return 0.0
         }

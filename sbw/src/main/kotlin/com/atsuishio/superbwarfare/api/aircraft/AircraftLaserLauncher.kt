@@ -42,7 +42,7 @@ object AircraftLaserLauncher {
         if (!origin.x.isFinite() || !origin.y.isFinite() || !origin.z.isFinite() ||
             !forward.x.isFinite() || !forward.y.isFinite() || !forward.z.isFinite()) return false
         val commandMode = store.getAsJsonObject("CommandGuidance")?.get("Mode")?.asString
-        val guidanceContext = if (commandMode != null) {
+        val guidanceContext = if (commandMode != null && commandMode != "TV") {
             if (commandMode !in setOf("MCLOS","SACLOS") || channel == null) return false
             vehicle.captureVehicleWeaponGuidanceContext(player,channel,data) ?: return false
         } else null
@@ -51,7 +51,15 @@ object AircraftLaserLauncher {
         val prepared = ProjectileFactory.prepare(parameters) ?: return false
         val missile = prepared.entity as? WireGuideMissileEntity ?: return false
         if (ProjectileProfiles.profileId(missile) != profileId || ProjectileProfiles.guidedPropulsion(missile) == null) return false
-        if (commandMode != null) {
+        if (commandMode == "TV") {
+            // The seeker starts on the pilot's designation when there is one; the pilot's view takes over at once.
+            missile.persistentData.putString("BvpCommandMode", "TV")
+            val designation = AircraftDesignationData.get(player.serverLevel()).get(vehicle.uuid)?.live(player.serverLevel())
+            AircraftTvGuidance.attach(missile, vehicle, player, point = designation)
+            if (!ProjectileFactory.spawn(prepared, parameters)) return false
+            AircraftTvGuidance.openView(missile, vehicle, player)
+            return true
+        } else if (commandMode != null) {
             missile.persistentData.putString("BvpCommandMode",commandMode)
             val up = transform.transformDirection(Vector3d(0.0,1.0,0.0)).normalize()
             missile.persistentData.putDouble("BvpCommandUpX",up.x)

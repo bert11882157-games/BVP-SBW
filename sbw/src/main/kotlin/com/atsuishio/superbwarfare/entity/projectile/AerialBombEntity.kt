@@ -36,7 +36,6 @@ open class AerialBombEntity(type: EntityType<out AerialBombEntity>, level: Level
     @JvmOverloads fun configure(mode: String, aircraft: java.util.UUID, gravity: Float, drag: Double,
         turnDegrees: Double, damage: Float, radius: Float, gps: Vec3?, target: java.util.UUID? = null) {
         require(!level().isClientSide && mode in setOf("DUMB", "LASER", "GPS", "TV"))
-        require(mode != "TV" || target != null)
         setGravity(gravity)
         explosionDamageValue = damage
         explosionRadiusValue = radius
@@ -60,12 +59,15 @@ open class AerialBombEntity(type: EntityType<out AerialBombEntity>, level: Level
         velocity = AircraftBombFlight.applyHorizontalDrag(velocity, data.getDouble("BvpBombDrag"))
         val target = when (data.getString("BvpBombMode")) {
             "LASER" -> (level() as? ServerLevel)?.let { server ->
+                // live: a spot painted on a vehicle moves with it
                 if (data.hasUUID("BvpBombAircraft")) AircraftDesignationData.get(server)
-                    .get(data.getUUID("BvpBombAircraft"))?.position else null
+                    .get(data.getUUID("BvpBombAircraft"))?.live(server) else null
             }
             "GPS" -> if (data.contains("BvpBombGpsX")) Vec3(data.getDouble("BvpBombGpsX"),
                 data.getDouble("BvpBombGpsY"), data.getDouble("BvpBombGpsZ")) else null
-            "TV" -> if (data.hasUUID("BvpBombTarget")) {
+            "TV" -> if (com.atsuishio.superbwarfare.api.aircraft.AircraftTvGuidance.isTv(this)) {
+                com.atsuishio.superbwarfare.api.aircraft.AircraftTvGuidance.aimPoint(this)
+            } else if (data.hasUUID("BvpBombTarget")) {
                 val entity = (level() as? ServerLevel)?.getEntity(data.getUUID("BvpBombTarget"))
                 if (entity != null && (!entity.isAlive || entity.isRemoved ||
                         (entity as? com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity)?.isWreck == true)) {

@@ -66,6 +66,18 @@ object GuidedMissileGuidance {
         return laserInterceptDirection(position, target, relativeSpeed, inherited)
     }
 
+    /**
+     * A gimballed television seeker: steers at [target] while it lies within [gimbalDegrees] of the missile's
+     * facing (the operator's crosshair cannot leave the seeker's view, so this only drops a point left far behind).
+     */
+    fun tvSeekerDirection(position: Vec3, facing: Vec3, target: Vec3?, relativeSpeed: Double, inherited: Vec3,
+                          gimbalDegrees: Double): Vec3? {
+        val line = pointDirection(position, target) ?: return null
+        if (!finite(facing) || facing.lengthSqr() <= MIN_VECTOR_LENGTH_SQUARED || !line.lengthSqr().isFinite()) return null
+        if (facing.normalize().dot(line.normalize()) + 1e-12 < cos(Math.toRadians(gimbalDegrees))) return null
+        return laserInterceptDirection(position, target, relativeSpeed, inherited)
+    }
+
     /** A bounded loft, tapering continuously into the stored target rather than chasing the operator. */
     fun topAttackDirection(position: Vec3, target: Vec3): Vec3? {
         if (!finite(position) || !finite(target)) return null

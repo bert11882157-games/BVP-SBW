@@ -29,7 +29,7 @@ object AircraftGuidanceLabels {
     fun description(mode: String): String = when (short(mode)) {
         "IR" -> "Infrared homing"
         "F&F" -> "Fire and forget"
-        "TV" -> "Electro-optical homing"
+        "TV" -> "TV seeker · steer through the seeker view"
         "MCLOS" -> "Manual command · arrow keys steer"
         "SACLOS" -> "Command guided · keep sight on target"
         "ARH" -> "Active radar homing"

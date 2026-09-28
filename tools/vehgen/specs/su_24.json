@@ -418,10 +418,15 @@
       }
     ],
     "StoreGroups": {
-      "berts_vehicle_pack:gun_pod/f111_m61_bay": [
+      "berts_vehicle_pack:gun_pod/su24_gsh623": [
         "suspended_f_111f_4"
       ]
     }
   },
-  "note_armament": "Own layout instead of the F-111F's four swivel pylons (US stores, three of them outside the Su-24 wing): glove pylons (the model's own glove pylon is kept; its tank is dropped), swivel wing pylons that follow the sweep about the wing pivot, forward and aft belly pairs; Soviet stores as on the Su-25. Mount points sit just below the skin and attach.py apply seats the stations. The F-111F bay gun is kept (GSh-6-23 stand-in)."
+  "note_armament": "Own layout instead of the F-111F's four swivel pylons (US stores, three of them outside the Su-24 wing): glove pylons (the model's own glove pylon is kept; its tank is dropped), swivel wing pylons that follow the sweep about the wing pivot, forward and aft belly pairs; Soviet stores as on the Su-25. Mount points sit just below the skin and attach.py apply seats the stations. The F-111F bay gun is kept as the internal GSh-6-23M (dataSet: name, 9,000 rpm, 500 rounds; the 20 mm round stands in for the 23 mm).",
+  "dataSet": {
+    "Weapons.BayVulcan.Name": "23 mm GSh-6-23M",
+    "Weapons.BayVulcan.RPM": 9000,
+    "Weapons.BayVulcan.Magazine": 500
+  }
 }

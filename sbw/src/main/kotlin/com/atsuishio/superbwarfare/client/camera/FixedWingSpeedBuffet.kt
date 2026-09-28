@@ -33,7 +33,7 @@ object FixedWingSpeedBuffet {
         val player = mc.player ?: return
         val vehicle = player.vehicle as? VehicleEntity ?: return
         if (mc.isPaused || mc.screen != null || vehicle.isWreck || vehicle.onGround() ||
-            vehicle.getNthEntity(0) !== player || AircraftArmamentClient.isPodActive(vehicle) ||
+            vehicle.getNthEntity(0) !== player || AircraftArmamentClient.sensorView(vehicle) ||
             VehicleFreeCameraController.hasPresentation(player, vehicle)) return
         val strategy = vehicle.resolveVehicleFlightStrategy() as? FixedWingFlightStrategy ?: return
         val partial = event.partialTick.toFloat()

@@ -250,6 +250,12 @@ def main(argv):
     for k in spec.get('removeDataKeys', []):
         data.pop(k, None)
     data.update(spec.get('dataOverrides', {}))
+    for path, value in spec.get('dataSet', {}).items():     # dotted path, e.g. Weapons.BayVulcan.Name
+        node = data
+        keys = path.split('.')
+        for k in keys[:-1]:
+            node = node[k]
+        node[keys[-1]] = value
     out.json(os.path.join(DATA, 'sbw', 'vehicles', f'{vid}.json'), data)
     client = renamed(load(TPL(os.path.join(ASSETS, 'sbw', 'vehicles', f'{tid}.json'))))
     sweeps.apply_client(client, spec.get('sweeps', {}), sweep_pivots)

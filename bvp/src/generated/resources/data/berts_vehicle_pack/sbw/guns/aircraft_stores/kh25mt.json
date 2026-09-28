@@ -1,5 +1,5 @@
 {
-  "Name": "AGM-65B Maverick · TV",
+  "Name": "Kh-25MT · TV",
   "AmmoType": "superbwarfare:medium_anti_ground_missile",
   "DefaultFireMode": "Semi",
   "AvailableFireModes": "Semi",
@@ -8,7 +8,7 @@
   "RPM": 30,
   "Projectile": {
     "Type": "superbwarfare:wire_guide_missile",
-    "Profile": "berts_vehicle_pack:aircraft_stores/agm65"
+    "Profile": "berts_vehicle_pack:aircraft_stores/kh25mt"
   },
   "ProjectileAmount": 1,
   "AddShooterDeltaMovement": true,
@@ -19,7 +19,7 @@
   "Damage": 1600,
   "ExplosionDamage": 1600,
   "ExplosionRadius": 0.625,
-  "TntEquivalentKg": 44.6335,
+  "TntEquivalentKg": 119.04,
   "ShellType": "HE",
   "ApDurability": 0,
   "Crosshair": "@Empty",

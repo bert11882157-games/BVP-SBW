@@ -194,8 +194,9 @@ open class WireGuideMissileEntity(type: EntityType<out WireGuideMissileEntity>, 
         val owner = this.owner
         val vehicle = owner?.vehicle
         val laserPointMode = persistentData.hasUUID("BvpLaserAircraft")
+        val tvMode = persistentData.getString("BvpCommandMode") == "TV"
         if (!level().isClientSide && hasGuidedPropulsion() && movementPhase != GuidedPropulsionPhase.EJECTION &&
-            tickCount > 0 && (laserPointMode || usesLatchedTopAttack() || owner != null && vehicle is VehicleEntity)) {
+            tickCount > 0 && (laserPointMode || tvMode || usesLatchedTopAttack() || owner != null && vehicle is VehicleEntity)) {
             var toVec = deltaMovement.subtract(guidedInheritedMotion)
             val relativeSpeed = toVec.length()
 
@@ -206,7 +207,16 @@ open class WireGuideMissileEntity(type: EntityType<out WireGuideMissileEntity>, 
                 }
                 targetPos?.takeIf(::finite)
             } else null
-            if (persistentData.getString("BvpCommandMode") == "MCLOS") {
+            if (tvMode) {
+                // Television seeker: the point under the operator's crosshair, or the point/vehicle it locked when
+                // the operator let go. Out of the seeker's view it coasts, like a laser seeker.
+                val point = com.atsuishio.superbwarfare.api.aircraft.AircraftTvGuidance.aimPoint(this)
+                GuidedMissileGuidance.tvSeekerDirection(position(), lookAngle, point, relativeSpeed,
+                    guidedInheritedMotion, com.atsuishio.superbwarfare.api.aircraft.AircraftTvGuidance.GIMBAL_DEGREES + 5.0)?.let {
+                    toVec = it
+                    actualGuidanceTargetUUID = com.atsuishio.superbwarfare.api.aircraft.AircraftTvGuidance.trackedVehicle(this)
+                }
+            } else if (persistentData.getString("BvpCommandMode") == "MCLOS") {
                 val context = launcherWeaponGuidanceContext
                 if (vehicle is VehicleEntity && owner is net.minecraft.server.level.ServerPlayer &&
                     launcherVehicleUUID == vehicle.uuid && context?.launcherControllerUUID == owner.uuid &&

@@ -1,7 +1,7 @@
 {
   "Schema": 1,
-  "Name": "AGM-65 · laser-guided",
-  "Category": "LASER_GUIDED",
+  "Name": "AGM-65B Maverick · TV",
+  "Category": "COMMAND_GUIDED",
   "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/kh29l.geo.json",
   "ModelForward": "-Z",
   "MountAnchor": [
@@ -37,5 +37,8 @@
     0.4368
   ],
   "MassKg": 300,
-  "AmmoItem": "superbwarfare:medium_air_to_ground_missile"
+  "AmmoItem": "superbwarfare:medium_air_to_ground_missile",
+  "CommandGuidance": {
+    "Mode": "TV"
+  }
 }

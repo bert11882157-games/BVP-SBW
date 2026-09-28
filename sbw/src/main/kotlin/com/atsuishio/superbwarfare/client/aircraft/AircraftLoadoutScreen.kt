@@ -362,7 +362,8 @@ class AircraftLoadoutScreen(private var state: AircraftArmamentSnapshot) : Scree
                 val rounds=AircraftLoadoutCost.rounds(store.capacity?:1,mount.positions.size,count)
                 inventorySlot(g,ix,iy,state.selections[mount.id]==store.id)
                 val podAmmo = if(store.id in setOf("berts_vehicle_pack:gsh23_pod",
-                    "berts_vehicle_pack:gun_pod/f111_m61_bay", "berts_vehicle_pack:gun_pod/f4c_gau4"))
+                    "berts_vehicle_pack:gun_pod/f111_m61_bay", "berts_vehicle_pack:gun_pod/f4c_gau4",
+                    "berts_vehicle_pack:gun_pod/su24_gsh623"))
                     net.minecraft.resources.ResourceLocation("superbwarfare:small_autocannon_shell") else null
                 val item=(store.ammoItem ?: podAmmo ?: store.item)?.let { ForgeRegistries.ITEMS.getValue(it) }?:Items.PAPER
                 g.renderItem(ItemStack(item),ix+1,iy+1)

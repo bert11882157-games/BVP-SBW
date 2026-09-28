@@ -83,7 +83,12 @@ object FarTerrainServer {
     @JvmStatic fun projectileTrackingRange(player: ServerPlayer, entity: net.minecraft.world.entity.Entity,
                                            normal: Int): Int =
         if (entity is com.atsuishio.superbwarfare.api.projectile.FarProjectileAccess &&
-            projectileObserverActive(player)) maxOf(normal, PROJECTILE_VISIBILITY_RADIUS) else normal
+            projectileObserverActive(player)) maxOf(normal, PROJECTILE_VISIBILITY_RADIUS)
+        // a TV munition's operator watches through its seeker however far it flies
+        else if (entity.persistentData.hasUUID(com.atsuishio.superbwarfare.api.aircraft.AircraftTvGuidance.OPERATOR) &&
+            entity.persistentData.getUUID(com.atsuishio.superbwarfare.api.aircraft.AircraftTvGuidance.OPERATOR) == player.uuid)
+            maxOf(normal, PROJECTILE_VISIBILITY_RADIUS)
+        else normal
 
     private fun projectileObserverActive(player: ServerPlayer): Boolean = sessions[player.uuid]?.let {
         FarRenderConfig.ENABLED.get() && it.level === player.serverLevel() &&

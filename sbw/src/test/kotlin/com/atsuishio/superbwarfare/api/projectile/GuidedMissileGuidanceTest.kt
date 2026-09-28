@@ -170,4 +170,15 @@ class GuidedMissileGuidanceTest {
         assertFalse(profile.copy(guidanceLookAheadTicks = 0).isValid())
         assertFalse(profile.copy(maxSpeed = Double.POSITIVE_INFINITY).isValid())
     }
+
+    @Test fun `tv seeker follows a point anywhere inside its gimbal and drops one behind it`() {
+        val position = Vec3.ZERO; val facing = Vec3(0.0, 0.0, 1.0)
+        // 60 degrees off the nose: beyond a laser seeker's cone, inside a 75 degree TV gimbal
+        val side = Vec3(Math.sin(Math.toRadians(60.0)) * 100.0, 0.0, Math.cos(Math.toRadians(60.0)) * 100.0)
+        assertNull(GuidedMissileGuidance.laserSeekerDirection(position, facing, side, 4.0, Vec3.ZERO))
+        val steer = GuidedMissileGuidance.tvSeekerDirection(position, facing, side, 4.0, Vec3.ZERO, 75.0)
+        assertNotNull(steer); assertTrue(steer!!.x > 0.0)
+        assertNull(GuidedMissileGuidance.tvSeekerDirection(position, facing, Vec3(0.0, 0.0, -100.0), 4.0, Vec3.ZERO, 75.0))
+        assertNull(GuidedMissileGuidance.tvSeekerDirection(position, facing, null, 4.0, Vec3.ZERO, 75.0))
+    }
 }

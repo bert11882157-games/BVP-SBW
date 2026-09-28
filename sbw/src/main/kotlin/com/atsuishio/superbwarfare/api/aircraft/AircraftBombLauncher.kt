@@ -17,11 +17,13 @@ object AircraftBombLauncher {
         val level = vehicle.level() as? ServerLevel ?: return false
         if (player.level() !== level || !vehicle.isAlive) return false
         val config = store.getAsJsonObject("Bomb") ?: return false
-        val target = if (config["Mode"]?.asString == "TV") {
-            if (channel == null || AircraftMissileLauncher.update(vehicle, player, channel, store) != 2) return false
+        // A TV bomb may be released locked (the seeker starts on the locked target) or unlocked (the pilot then
+        // finds the target through the seeker); either way the pilot's seeker view opens after release.
+        val tv = config["Mode"]?.asString == "TV"
+        val target = if (tv && channel != null && AircraftMissileLauncher.update(vehicle, player, channel, store) == 2) {
             val lock = AircraftMissileLauncher.state(vehicle, channel)
-            if (!lock.hasUUID("TargetUUID")) return false
-            level.getEntity(lock.getUUID("TargetUUID"))?.takeIf { it.isAlive && !it.isRemoved } ?: return false
+            if (lock.hasUUID("TargetUUID"))
+                level.getEntity(lock.getUUID("TargetUUID"))?.takeIf { it.isAlive && !it.isRemoved } else null
         } else null
         config.getAsJsonObject("Cluster")?.let { cluster ->
             val profileKey = when (cluster["Mode"]?.asString) {
@@ -61,7 +63,10 @@ object AircraftBombLauncher {
         store["ProjectileProfile"]?.asString?.let {
             ProjectileProfiles.assign(entity, ResourceLocation(it))
         }
+        if (tv) AircraftTvGuidance.attach(entity, vehicle, player, track = target,
+            point = AircraftDesignationData.get(level).get(vehicle.uuid)?.live(level))
         val accepted = level.addFreshEntity(entity)
+        if (accepted && tv) AircraftTvGuidance.openView(entity, vehicle, player)
         if (accepted && config["Mode"].asString == "GPS") AircraftBombTargeting.consumeGpsTarget(vehicle, gps)
         if (accepted) AircraftMunitionDebug.log(entity, "bomb release mode=${config["Mode"].asString} massKg=$mass")
         return accepted

@@ -15,7 +15,7 @@ public final class FixedWingCockpitCamera {
         if (!firstPerson || !Float.isFinite(partialTick) || !(passenger instanceof Player)
                 || !(passenger.getVehicle() instanceof VehicleEntity vehicle)
                 || !vehicle.isFixedWingFlightVehicle()
-                || AircraftArmamentClient.isPodActive(vehicle)
+                || AircraftArmamentClient.sensorView(vehicle)
                 || vehicle.isPassengerStationLocalAimController(passenger)) return null;
         int seatIndex = vehicle.getSeatIndex(passenger);
         var seats = vehicle.computed().seats();

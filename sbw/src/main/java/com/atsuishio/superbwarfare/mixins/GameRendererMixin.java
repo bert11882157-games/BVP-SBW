@@ -134,7 +134,7 @@ public class GameRendererMixin {
         if (frame == null && entity != null
                 && minecraft.options.getCameraType().isFirstPerson()
                 && entity.getRootVehicle() instanceof VehicleEntity vehicle && !mainCamera.isDetached()
-                && !AircraftArmamentClient.isPodActive(vehicle)
+                && !AircraftArmamentClient.sensorView(vehicle)
                 && !vehicle.isPassengerStationLocalAimController(entity)) {
             // rotate camera
             float a = Mth.wrapDegrees(mainCamera.getYRot() - Mth.lerp(tickDelta, vehicle.yRotO, vehicle.getYRot()));

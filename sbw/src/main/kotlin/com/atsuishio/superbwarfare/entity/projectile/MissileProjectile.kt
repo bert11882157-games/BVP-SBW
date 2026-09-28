@@ -35,6 +35,7 @@ abstract class MissileProjectile : DestroyableProjectile, CustomSyncMotionEntity
         val launcher = owner
         if (target === launcher || (launcher != null && target === launcher.vehicle)) return false
         if (persistentData.hasUUID("BvpLaserAircraft") && target.uuid == persistentData.getUUID("BvpLaserAircraft")) return false
+        if (persistentData.hasUUID("BvpTvAircraft") && target.uuid == persistentData.getUUID("BvpTvAircraft")) return false
         return super.canHitEntity(target)
     }
     private var friendlySyncPending = false

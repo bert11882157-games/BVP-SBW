@@ -498,7 +498,7 @@ object AircraftArmamentManager {
         }
         if (request.epoch != lease.epoch) { reply(player, lease, message = "Controls refreshed; try again."); return }
         val now = player.serverLevel().gameTime
-        val bucket = when(request.operation) { "DESIGNATE", "CLEAR_POINT" -> "point"; "STABILIZE" -> "stabilize"; "FIRE" -> "fire"; "SEEK" -> "seek"; "COMMAND" -> "command"; else -> "edit" }
+        val bucket = when(request.operation) { "DESIGNATE", "CLEAR_POINT" -> "point"; "STABILIZE" -> "stabilize"; "TV" -> "tv"; "FIRE" -> "fire"; "SEEK" -> "seek"; "COMMAND" -> "command"; else -> "edit" }
         val interval = if (bucket == "edit") 5L else 2L
         if (now - (lease.last[bucket] ?: Long.MIN_VALUE / 2) < interval) {
             if (bucket == "edit") reply(player, lease, message = "Please wait briefly before another change.")
@@ -508,6 +508,7 @@ object AircraftArmamentManager {
         try {
             when (request.operation) {
                 "COMMAND" -> AircraftManualCommand.accept(vehicle,player,body,now)
+                "TV" -> AircraftTvGuidance.command(player, vehicle, body)
                 "APPLY" -> {
                     val plan = apply(player, vehicle, body); publish(vehicle)
                     reply(player, lease, message = fittedMessage("Armament equipped", plan))
@@ -641,7 +642,6 @@ object AircraftArmamentManager {
         val category = store["Category"].asString
         val guidedMissile = category in setOf("AIR_TO_AIR", "AIR_TO_GROUND", "ANTI_RADIATION", "CRUISE") && store.has("Guidance")
         val bomb = category == "BOMB" && store.has("Bomb")
-        val seekingBomb = bomb && store.getAsJsonObject("Bomb")["Mode"]?.asString == "TV"
         val cruise = category == "CRUISE" && store.has("Flight")
         require(category != "VISUAL_ONLY" && (category !in setOf("AIR_TO_AIR", "AIR_TO_GROUND", "ANTI_RADIATION", "BOMB", "CRUISE") || guidedMissile || bomb || cruise)) { "This store is visual only in this version." }
         require(com.atsuishio.superbwarfare.entity.vehicle.base.permitsLandingGearShot(
@@ -658,7 +658,8 @@ object AircraftArmamentManager {
         val equipped = listOfNotNull(vehicle.getGunName(0), vehicle.getSecondaryWeaponIndex(0)?.let { vehicle.getGunName(0, it) })
         val selectedGroup = groupFor(vehicle, weaponId)?.representative ?: weaponId
         require(selectedGroup in equipped) { "Select this store in a weapon slot first." }
-        if (guidedMissile || seekingBomb) {
+        // A TV bomb needs no lock to release: its seeker view opens after release (AircraftTvGuidance).
+        if (guidedMissile) {
             val lock = AircraftMissileLauncher.update(vehicle, player, selectedGroup, store)
             require(lock >= 0) { "Compatible Fire From Above missile support is unavailable." }
             require(lock == 2) { "Hold the target in the seeker cone until locked." }

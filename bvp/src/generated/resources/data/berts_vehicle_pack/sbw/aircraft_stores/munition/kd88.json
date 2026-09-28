@@ -1,7 +1,7 @@
 {
   "Schema": 1,
-  "Name": "KD-88 · TV/IR land attack",
-  "Category": "ANTI_RADIATION",
+  "Name": "KD-88 · TV land attack (data link)",
+  "Category": "COMMAND_GUIDED",
   "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/kd88.geo.json",
   "ModelForward": "-Z",
   "MountAnchor": [
@@ -29,26 +29,15 @@
   "Texture": "berts_vehicle_pack:textures/aircraft_stores/kd88.png",
   "Capacity": 1,
   "MassKg": 600,
-  "Guidance": {
-    "Mode": "ANTI_RADIATION",
-    "LockTicks": 50,
-    "Range": 1600,
-    "ConeDegrees": 30,
-    "CountermeasureVulnerability": 0.3
-  },
-  "Flight": {
-    "InitialSpeed": 0.7,
-    "MaxSpeed": 9,
-    "AccelerationPerTick": 0.2,
-    "TurnDegreesPerSecond": 32,
-    "Damage": 150,
-    "BlastRadius": 9,
-    "TntEquivalentKg": 165
-  },
   "AmmoItem": "superbwarfare:large_air_to_ground_missile",
   "LaunchOffset": [
     0.0,
     -0.1371,
     0.0
-  ]
+  ],
+  "CommandGuidance": {
+    "Mode": "TV"
+  },
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_stores/kd88",
+  "LaunchGunProfile": "berts_vehicle_pack:aircraft_stores/kd88"
 }
