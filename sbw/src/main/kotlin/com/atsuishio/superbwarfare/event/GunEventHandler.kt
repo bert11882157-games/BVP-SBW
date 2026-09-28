@@ -1,6 +1,7 @@
 package com.atsuishio.superbwarfare.event
 
 import com.atsuishio.superbwarfare.api.event.ReloadEvent
+import com.atsuishio.superbwarfare.api.weapon.DepletionReload
 import com.atsuishio.superbwarfare.api.weapon.VehicleReloadAudio
 import com.atsuishio.superbwarfare.data.gun.*
 import com.atsuishio.superbwarfare.data.gun.value.ReloadState
@@ -332,10 +333,13 @@ object GunEventHandler {
     private fun startReload(shooter: Entity?, data: GunData) {
         val reload = data.reload
         val typedVehicleReloadOwnsAudio = VehicleReloadAudio.owns(shooter, data)
+        // an autocannon belt change grows with how much of the belt was fired (DepletionReload)
+        val depletion = DepletionReload.ticks(data)
+        reload.setTotal(depletion ?: 0)
 
         if (data.item.isOpenBolt(data)) {
             if (!data.hasEnoughAmmoToShoot(shooter)) {
-                reload.setTime(data.get(GunProp.EMPTY_RELOAD_TIME) + 1)
+                reload.setTime((depletion ?: data.get(GunProp.EMPTY_RELOAD_TIME)) + 1)
                 reload.setState(ReloadState.EMPTY_RELOADING)
                 if (!typedVehicleReloadOwnsAudio) {
                     playGunEmptyReloadSounds(shooter, data)
@@ -348,7 +352,7 @@ object GunEventHandler {
                     )
                 }
             } else {
-                reload.setTime(data.get(GunProp.NORMAL_RELOAD_TIME) + 1)
+                reload.setTime((depletion ?: data.get(GunProp.NORMAL_RELOAD_TIME)) + 1)
                 reload.setState(ReloadState.NORMAL_RELOADING)
                 if (!typedVehicleReloadOwnsAudio) {
                     playGunNormalReloadSounds(shooter, data)
@@ -362,7 +366,7 @@ object GunEventHandler {
                 }
             }
         } else {
-            reload.setTime(data.get(GunProp.EMPTY_RELOAD_TIME) + 2)
+            reload.setTime((depletion ?: data.get(GunProp.EMPTY_RELOAD_TIME)) + 2)
             reload.setState(ReloadState.EMPTY_RELOADING)
             if (!typedVehicleReloadOwnsAudio) {
                 playGunEmptyReloadSounds(shooter, data)

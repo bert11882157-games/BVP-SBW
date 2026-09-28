@@ -161,6 +161,18 @@
         0.60278,
         2.45834
       ]
+    },
+    {
+      "Size": [
+        1.06688,
+        0.05689,
+        2.9097
+      ],
+      "Position": [
+        0.0,
+        0.60706,
+        -1.0772
+      ]
     }
   ],
   "Attachments": {
@@ -584,8 +596,8 @@
       "DefaultZoom": 3,
       "RPM": 550,
       "Magazine": 250,
-      "NormalReloadTime": 400,
-      "EmptyReloadTime": 400,
+      "NormalReloadTime": 240,
+      "EmptyReloadTime": 240,
       "AmmoCostPerShoot": 1,
       "Velocity": 48.5,
       "Damage": 65,
@@ -787,7 +799,7 @@
               "Family": "TWO_A42",
               "Rounds": [
                 {
-                  "Shots": 4,
+                  "Shots": 3,
                   "Round": "3ubr8_apds",
                   "Ammo": "superbwarfare:small_shell_ap",
                   "Tracer": "GREEN"
@@ -857,7 +869,33 @@
         "ProjectileType": "superbwarfare:small_cannon_shell",
         "ProjectileProfile": "berts_vehicle_pack:btr_90/cannon/default",
         "ProjectileLife": 40
-      }
+      },
+      "DepletionReload": [
+        [
+          0.0,
+          2.0
+        ],
+        [
+          0.1,
+          4.0
+        ],
+        [
+          0.25,
+          6.0
+        ],
+        [
+          0.5,
+          8.0
+        ],
+        [
+          0.75,
+          10.0
+        ],
+        [
+          1.0,
+          12.0
+        ]
+      ]
     },
     "MainMachineGun": {
       "DefaultFireMode": "Auto",

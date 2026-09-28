@@ -332,9 +332,10 @@ object VehicleReloadAudio {
         val cycle = vehicleReloadSoundCycles[key] ?: return
         if (cycle.emitted || cycle.retired) return
         val soundInfo = data.get(GunProp.SOUND_INFO)
-        val reloadDuration = if (data.reload.state() == ReloadState.NORMAL_RELOADING) {
-            data.get(GunProp.NORMAL_RELOAD_TIME)
-        } else data.get(GunProp.EMPTY_RELOAD_TIME)
+        val reloadDuration = data.reload.total().takeIf { it > 0 }
+            ?: if (data.reload.state() == ReloadState.NORMAL_RELOADING) {
+                data.get(GunProp.NORMAL_RELOAD_TIME)
+            } else data.get(GunProp.EMPTY_RELOAD_TIME)
         val countdown = VehicleReloadSoundTiming.countdownFor(
             reloadDuration, soundInfo.vehicleReloadClipDurationTicks,
             soundInfo.vehicleReloadSoundTime, if (data.item.isOpenBolt(data)) 1 else 2,

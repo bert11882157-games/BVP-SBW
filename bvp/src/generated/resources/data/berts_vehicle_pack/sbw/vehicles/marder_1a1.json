@@ -89,6 +89,33 @@
         0.63584,
         -0.50486
       ]
+    },
+    {
+      "Part": "Turret",
+      "Transform": "Turret",
+      "Rotation": "Turret",
+      "Size": [
+        0.71531,
+        0.10516,
+        0.85594
+      ],
+      "Position": [
+        -0.06534,
+        0.70457,
+        -0.22656
+      ]
+    },
+    {
+      "Size": [
+        1.72313,
+        0.08487,
+        0.11372
+      ],
+      "Position": [
+        -0.03125,
+        1.99763,
+        2.60941
+      ]
     }
   ],
   "Seats": [
@@ -570,9 +597,35 @@
         10,
         12
       ],
-      "NormalReloadTime": 400,
-      "EmptyReloadTime": 400,
-      "Magazine": 200
+      "NormalReloadTime": 240,
+      "EmptyReloadTime": 240,
+      "Magazine": 200,
+      "DepletionReload": [
+        [
+          0.0,
+          2.0
+        ],
+        [
+          0.1,
+          4.0
+        ],
+        [
+          0.25,
+          6.0
+        ],
+        [
+          0.5,
+          8.0
+        ],
+        [
+          0.75,
+          10.0
+        ],
+        [
+          1.0,
+          12.0
+        ]
+      ]
     },
     "MainMachineGun": {
       "DefaultFireMode": "Auto",

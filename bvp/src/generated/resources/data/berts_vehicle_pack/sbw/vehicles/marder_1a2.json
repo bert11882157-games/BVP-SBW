@@ -551,9 +551,35 @@
         12
       ],
       "ProjectileBeltAmmoType": [],
-      "NormalReloadTime": 400,
-      "EmptyReloadTime": 400,
-      "Magazine": 200
+      "NormalReloadTime": 240,
+      "EmptyReloadTime": 240,
+      "Magazine": 200,
+      "DepletionReload": [
+        [
+          0.0,
+          2.0
+        ],
+        [
+          0.1,
+          4.0
+        ],
+        [
+          0.25,
+          6.0
+        ],
+        [
+          0.5,
+          8.0
+        ],
+        [
+          0.75,
+          10.0
+        ],
+        [
+          1.0,
+          12.0
+        ]
+      ]
     },
     "Missile": {
       "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_atgm.png",

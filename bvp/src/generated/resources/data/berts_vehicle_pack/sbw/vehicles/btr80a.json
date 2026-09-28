@@ -366,8 +366,8 @@
       "DefaultZoom": 3,
       "RPM": 330,
       "Magazine": 150,
-      "NormalReloadTime": 400,
-      "EmptyReloadTime": 400,
+      "NormalReloadTime": 240,
+      "EmptyReloadTime": 240,
       "AmmoCostPerShoot": 1,
       "Velocity": 48.5,
       "Damage": 58,
@@ -568,7 +568,7 @@
               "Family": "TWO_A42",
               "Rounds": [
                 {
-                  "Shots": 4,
+                  "Shots": 3,
                   "Round": "3ubr8_apds",
                   "Ammo": "superbwarfare:small_shell_ap",
                   "Tracer": "GREEN"
@@ -629,7 +629,33 @@
         "ProjectileProfile": "berts_vehicle_pack:btr80a/cannon/default",
         "ProjectileLife": 40
       },
-      "ProjectileBeltAmmoType": []
+      "ProjectileBeltAmmoType": [],
+      "DepletionReload": [
+        [
+          0.0,
+          2.0
+        ],
+        [
+          0.1,
+          4.0
+        ],
+        [
+          0.25,
+          6.0
+        ],
+        [
+          0.5,
+          8.0
+        ],
+        [
+          0.75,
+          10.0
+        ],
+        [
+          1.0,
+          12.0
+        ]
+      ]
     },
     "MainMachineGun": {
       "DefaultFireMode": "Auto",

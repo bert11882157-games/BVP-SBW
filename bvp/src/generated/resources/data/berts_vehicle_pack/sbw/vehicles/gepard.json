@@ -341,8 +341,8 @@
       "DefaultZoom": 3,
       "RPM": 1100,
       "Magazine": 640,
-      "NormalReloadTime": 400,
-      "EmptyReloadTime": 400,
+      "NormalReloadTime": 240,
+      "EmptyReloadTime": 240,
       "AmmoCostPerShoot": 1,
       "Velocity": 58.75,
       "Damage": 250,
@@ -625,7 +625,33 @@
         "ProjectileType": "superbwarfare:small_cannon_shell",
         "ProjectileProfile": "berts_vehicle_pack:gepard/cannon/default",
         "ProjectileLife": 40
-      }
+      },
+      "DepletionReload": [
+        [
+          0.0,
+          2.0
+        ],
+        [
+          0.1,
+          4.0
+        ],
+        [
+          0.25,
+          6.0
+        ],
+        [
+          0.5,
+          8.0
+        ],
+        [
+          0.75,
+          10.0
+        ],
+        [
+          1.0,
+          12.0
+        ]
+      ]
     }
   },
   "HudType": "@Land",

@@ -9,7 +9,9 @@ the pack's rules of thumb (the user's):
 
   coaxial / pintle LMG (<= 8 mm)   20 s
   HMG (12.7 / 14.5 mm)             10 s
-  autocannon / automatic grenade   20 s
+  automatic grenade launcher       20 s
+  autocannon                       by rounds fired (DepletionReload): 2 s after one round, 4 s at 10%, 6 s at
+                                   25%, 8 s at 50%, 10 s at 75%, 12 s for an empty belt (owner, 2026-09-28)
   externally mounted ATGM / SAM    12 s
 
 Machine-gun and autocannon fire rates follow WT's rounds per minute for the same gun. A magazine-fed main gun gets
@@ -49,6 +51,10 @@ MAIN = {
 MAIN_WEAPON = {'bmp3m_elite': 'Cannon', 'toyota_jihad_bmp1': 'BMP1Cannon'}
 
 RULE = {'LMG': 20.0, 'HMG': 10.0, 'AUTOCANNON': 20.0, 'ATGM': 12.0}
+# autocannon belt change by how much of the belt was fired: [fraction fired, seconds]; the fixed reload times are
+# set to the empty-belt value (12 s) as the fallback
+DEPLETION = [[0.0, 2.0], [0.10, 4.0], [0.25, 6.0], [0.50, 8.0], [0.75, 10.0], [1.0, 12.0]]
+GRENADE = re.compile(r'AG-30|AGS-30|AGS|grenade|Mk ?19|QLZ', re.I)
 
 # WT rounds per minute by gun.
 RPM = {
@@ -103,9 +109,12 @@ def classify(vid, weapon, v, name):
 # Weapons left alone: internal autoloading launchers, recoilless rifles, rocket pods (see docs/RELOADS.md).
 SKIP = {('9p149_shturm', 'Missile'), ('toyota_jihad_s5', 'S5RocketPod'), ('spg9_tripod', 'Cannon'),
         ('toyota_jihad_spg9', 'RecoillessGun'), ('uaz_469_spg9', 'RecoillessGun')}
-# The 9P149's launcher is reloaded from inside by its autoloader: WT 8.33 s between missiles (RPM is an integer:
-# 7 rounds/min = 8.6 s).
-EXTRA_RPM = {('9p149_shturm', 'Missile'): 7, ('zu23_2', 'Cannon'): 1600}
+# The 9P149's launcher arm holds one missile and is reloaded from inside after every shot (owner, 2026-09-28): a
+# one-round magazine with WT's 8.33 s between missiles as the reload; RPM 60 so the reload sets the interval.
+SINGLE_SHOT = {('9p149_shturm', 'Missile'): 8.33}
+EXTRA_RPM = {('9p149_shturm', 'Missile'): 60, ('zu23_2', 'Cannon'): 1600,
+             # owner (2026-09-28): the 9P148's five Konkurs rails fire 0.5 s apart
+             ('9p148', 'Missile'): 120}
 # Marder 1A1/1A2 Rh202 had no magazine (fed straight from the hold, never reloading): a 200-round box like the 1A5.
 MAGAZINE = {('marder_1a1', 'Cannon'): 200, ('marder_1a2', 'Cannon'): 200}
 
@@ -115,13 +124,21 @@ def plan(vid, weapon, v, name, typ):
         changes = {}
         if (vid, weapon) in EXTRA_RPM:
             changes['RPM'] = EXTRA_RPM[(vid, weapon)]
+        if (vid, weapon) in SINGLE_SHOT:
+            ticks = int(round(SINGLE_SHOT[(vid, weapon)] * TPS))
+            changes.update({'Magazine': 1, 'NormalReloadTime': ticks, 'EmptyReloadTime': ticks})
         return None, changes
     cls = classify(vid, weapon, v, name)
     if cls is None:
         return None, {}
     secs = MAIN[vid][0] if cls == 'MAIN' else RULE[cls]
+    depletion = cls == 'AUTOCANNON' and not GRENADE.search(name) and weapon != 'GrenadeLauncher'
+    if depletion:
+        secs = DEPLETION[-1][1]
     ticks = int(round(secs * TPS))
     changes = {'NormalReloadTime': ticks, 'EmptyReloadTime': ticks}
+    if depletion:
+        changes['DepletionReload'] = DEPLETION
     if (vid, weapon) in MAGAZINE:
         changes['Magazine'] = MAGAZINE[(vid, weapon)]
     if cls == 'MAIN' and v.get('Magazine', 1) == 1:

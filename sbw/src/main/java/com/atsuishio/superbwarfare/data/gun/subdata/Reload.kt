@@ -79,6 +79,15 @@ class Reload(private val data: CompoundTag) {
 
     fun time() = reloadTimer.get()
 
+    /** Length of the current reload when it was chosen at the start (a depletion reload), else 0. */
+    private val totalValue = IntValue(this.data, "ReloadTotal", 0)
+
+    fun total() = totalValue.get()
+
+    fun setTotal(ticks: Int) {
+        if (ticks > 0) totalValue.set(ticks) else totalValue.reset()
+    }
+
     fun setTime(time: Int) {
         reloadTimer.set(time)
     }

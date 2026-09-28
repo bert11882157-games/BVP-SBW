@@ -193,6 +193,66 @@
         1.73138,
         -3.88653
       ]
+    },
+    {
+      "Size": [
+        1.36375,
+        0.02165,
+        2.34813
+      ],
+      "Position": [
+        0.0,
+        2.3421,
+        -1.35938
+      ]
+    },
+    {
+      "Size": [
+        1.11375,
+        0.06853,
+        2.29604
+      ],
+      "Position": [
+        0.0,
+        0.48609,
+        0.17708
+      ]
+    },
+    {
+      "Size": [
+        0.02522,
+        0.07469,
+        2.77781
+      ],
+      "Position": [
+        -1.85194,
+        1.44531,
+        -0.85156
+      ]
+    },
+    {
+      "Size": [
+        0.02522,
+        0.07469,
+        3.63719
+      ],
+      "Position": [
+        1.85194,
+        1.44531,
+        0.00781
+      ]
+    },
+    {
+      "Size": [
+        0.56688,
+        0.02,
+        0.02091
+      ],
+      "Position": [
+        0.0,
+        1.875,
+        -3.88653
+      ]
     }
   ],
   "Attachments": {
@@ -496,8 +556,8 @@
       "DefaultZoom": 3,
       "RPM": 1000,
       "Magazine": 200,
-      "NormalReloadTime": 400,
-      "EmptyReloadTime": 400,
+      "NormalReloadTime": 240,
+      "EmptyReloadTime": 240,
       "AmmoCostPerShoot": 1,
       "Velocity": 55.0,
       "Damage": 65,
@@ -769,7 +829,33 @@
         "ProjectileType": "superbwarfare:small_cannon_shell",
         "ProjectileProfile": "berts_vehicle_pack:marder_1a5/cannon/default",
         "ProjectileLife": 40
-      }
+      },
+      "DepletionReload": [
+        [
+          0.0,
+          2.0
+        ],
+        [
+          0.1,
+          4.0
+        ],
+        [
+          0.25,
+          6.0
+        ],
+        [
+          0.5,
+          8.0
+        ],
+        [
+          0.75,
+          10.0
+        ],
+        [
+          1.0,
+          12.0
+        ]
+      ]
     },
     "MainMachineGun": {
       "DefaultFireMode": "Auto",

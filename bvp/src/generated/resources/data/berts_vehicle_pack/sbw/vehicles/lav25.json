@@ -163,6 +163,49 @@
         0.7796,
         -0.71368
       ]
+    },
+    {
+      "Transform": "Turret",
+      "Rotation": "Turret",
+      "Part": "Turret",
+      "Size": [
+        0.22129,
+        0.19187,
+        0.27357
+      ],
+      "Position": [
+        -0.13297,
+        0.0405,
+        1.37264
+      ]
+    },
+    {
+      "Transform": "Vehicle",
+      "Rotation": "Vehicle",
+      "Size": [
+        1.12938,
+        0.20467,
+        2.45337
+      ],
+      "Position": [
+        0.0,
+        0.57529,
+        -0.75413
+      ]
+    },
+    {
+      "Transform": "Vehicle",
+      "Rotation": "Vehicle",
+      "Size": [
+        1.12938,
+        0.22981,
+        0.60931
+      ],
+      "Position": [
+        0.0,
+        0.60044,
+        2.34819
+      ]
     }
   ],
   "Seats": [
@@ -309,8 +352,8 @@
       "DefaultZoom": 3,
       "RPM": 200,
       "Magazine": 300,
-      "NormalReloadTime": 400,
-      "EmptyReloadTime": 400,
+      "NormalReloadTime": 240,
+      "EmptyReloadTime": 240,
       "AmmoCostPerShoot": 1,
       "Velocity": 67.25,
       "Damage": 65,
@@ -572,7 +615,33 @@
         10,
         12
       ],
-      "ProjectileBeltAmmoType": []
+      "ProjectileBeltAmmoType": [],
+      "DepletionReload": [
+        [
+          0.0,
+          2.0
+        ],
+        [
+          0.1,
+          4.0
+        ],
+        [
+          0.25,
+          6.0
+        ],
+        [
+          0.5,
+          8.0
+        ],
+        [
+          0.75,
+          10.0
+        ],
+        [
+          1.0,
+          12.0
+        ]
+      ]
     },
     "MainMachineGun": {
       "DefaultFireMode": "Auto",

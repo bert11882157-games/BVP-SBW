@@ -62,14 +62,14 @@
       "Transform": "Turret",
       "Rotation": "Turret",
       "Size": [
-        0.33923,
-        0.40429,
-        1.17364
+        1.08384,
+        0.34426,
+        0.31743
       ],
       "Position": [
-        -1.25589,
-        0.11069,
-        -0.18486
+        0.00056,
+        -0.26244,
+        1.00493
       ]
     },
     {
@@ -77,14 +77,14 @@
       "Transform": "Turret",
       "Rotation": "Turret",
       "Size": [
-        0.33988,
-        0.40429,
-        1.17364
+        0.22045,
+        0.34633,
+        0.80559
       ],
       "Position": [
-        1.25654,
-        0.11069,
-        -0.18486
+        -1.13711,
+        -0.26451,
+        -0.25315
       ]
     },
     {
@@ -92,14 +92,14 @@
       "Transform": "Turret",
       "Rotation": "Turret",
       "Size": [
-        1.1448,
-        0.40184,
-        0.40083
+        0.22101,
+        0.34633,
+        0.80559
       ],
       "Position": [
-        0.00065,
-        0.11314,
-        1.08833
+        1.13767,
+        -0.26451,
+        -0.25315
       ]
     },
     {
@@ -107,77 +107,50 @@
       "Transform": "Turret",
       "Rotation": "Turret",
       "Size": [
-        0.71352,
-        0.07978,
-        0.13089
+        0.97515,
+        0.11328,
+        1.07366
       ],
       "Position": [
-        0.00065,
-        -0.20892,
-        -1.64339
+        0.00056,
+        -0.49341,
+        -0.38128
       ]
     },
     {
       "Size": [
-        2.01745,
-        0.28665,
-        4.02359
+        1.79152,
+        0.11821,
+        3.52853
       ],
       "Position": [
-        0.0,
-        2.11999,
-        0.16386
+        0.00056,
+        1.94498,
+        0.03041
       ]
     },
     {
       "Size": [
-        2.01745,
-        0.85863,
+        1.90824,
+        0.43461,
         0.52894
       ],
       "Position": [
-        0.0,
-        1.30998,
+        0.00056,
+        1.32458,
         4.56228
       ]
     },
     {
-      "Part": "Turret",
-      "Transform": "Turret",
-      "Rotation": "Turret",
       "Size": [
-        1.22438,
-        0.02003,
-        0.16756
+        1.3899,
+        0.03079,
+        3.25259
       ],
       "Position": [
-        0.00065,
-        -0.14379,
-        0.85506
-      ]
-    },
-    {
-      "Size": [
-        0.02331,
-        0.33661,
-        3.70875
-      ],
-      "Position": [
-        -1.99415,
-        1.4984,
-        0.13938
-      ]
-    },
-    {
-      "Size": [
-        0.02331,
-        0.33661,
-        3.70875
-      ],
-      "Position": [
-        1.99415,
-        1.4984,
-        0.13938
+        0.00055,
+        0.42755,
+        0.33422
       ]
     }
   ],
@@ -389,8 +362,8 @@
       "DefaultZoom": 3,
       "RPM": 550,
       "Magazine": 250,
-      "NormalReloadTime": 400,
-      "EmptyReloadTime": 400,
+      "NormalReloadTime": 240,
+      "EmptyReloadTime": 240,
       "AmmoCostPerShoot": 1,
       "Velocity": 48.5,
       "Damage": 65,
@@ -573,34 +546,28 @@
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
-              "Profile": "berts_vehicle_pack:bmp2m/cannon/ammo_00_3ubr8_apds"
+              "Profile": "berts_vehicle_pack:bmp2m/cannon/belt_ammo_wt_3ubr11_apfsds"
             },
             "ShellType": "AP",
-            "Velocity": 56.0,
-            "ApDurability": 82,
+            "Velocity": 63.0,
+            "ApDurability": 102,
             "Damage": 65,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
-            "Name": "30 mm APDS",
+            "Name": "30 mm APFSDS",
             "ShootShake": [
               8,
               10,
               12
             ],
             "ProjectileBelt": {
-              "Name": "30 mm APDS",
+              "Name": "30 mm APFSDS",
               "Family": "TWO_A42",
               "Rounds": [
                 {
-                  "Shots": 4,
-                  "Round": "3ubr8_apds",
-                  "Ammo": "superbwarfare:small_shell_ap",
-                  "Tracer": "GREEN"
-                },
-                {
                   "Shots": 1,
-                  "Round": "3uor6_hef_t",
-                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Round": "3ubr11_apfsds",
+                  "Ammo": "superbwarfare:small_shell_ap",
                   "Tracer": "GREEN"
                 }
               ]
@@ -608,7 +575,7 @@
             "NominalBallistics": {
               "Supported": true,
               "ProjectileType": "superbwarfare:small_cannon_shell",
-              "ProjectileProfile": "berts_vehicle_pack:bmp2m/cannon/ammo_00_3ubr8_apds",
+              "ProjectileProfile": "berts_vehicle_pack:bmp2m/cannon/belt_ammo_wt_3ubr11_apfsds",
               "ProjectileLife": 40
             }
           }
@@ -618,18 +585,18 @@
         "Transform": "Barrel",
         "Positions": [
           [
-            -0.06994,
-            0.41122,
-            -3.87071
+            -0.04943,
+            0.01062,
+            3.18735
           ]
         ],
         "Directions": [
           "Barrel"
         ],
         "ViewPosition": [
-          -0.05995,
-          0.35247,
-          -3.31775
+          0,
+          0,
+          0.77
         ],
         "MuzzleAttachments": [
           "main_muzzle"
@@ -661,6 +628,32 @@
         8,
         10,
         12
+      ],
+      "DepletionReload": [
+        [
+          0.0,
+          2.0
+        ],
+        [
+          0.1,
+          4.0
+        ],
+        [
+          0.25,
+          6.0
+        ],
+        [
+          0.5,
+          8.0
+        ],
+        [
+          0.75,
+          10.0
+        ],
+        [
+          1.0,
+          12.0
+        ]
       ]
     },
     "MainMachineGun": {
@@ -739,18 +732,18 @@
         "Transform": "Barrel",
         "Positions": [
           [
-            0.27735,
-            0.40073,
-            -0.47269
+            0.24549,
+            0.00171,
+            0.30182
           ]
         ],
         "Directions": [
           "Barrel"
         ],
         "ViewPosition": [
-          0.23773,
-          0.34349,
-          -0.40516
+          0.21042,
+          0.00146,
+          0.2587
         ],
         "MuzzleAttachments": [
           "coax_muzzle"
@@ -897,24 +890,24 @@
         "Transform": "Turret",
         "Positions": [
           [
-            -1.32063,
-            0.13207,
-            -0.89143
+            -1.29563,
+            0.1076,
+            0.79249
           ],
           [
-            -1.58475,
-            0.13207,
-            -0.89143
+            -1.57625,
+            0.1076,
+            0.79249
           ],
           [
-            1.32063,
-            0.13207,
-            -0.89143
+            1.29563,
+            0.1076,
+            0.79249
           ],
           [
-            1.58475,
-            0.13207,
-            -0.89143
+            1.57625,
+            0.1076,
+            0.79249
           ]
         ],
         "Directions": [
@@ -1290,9 +1283,9 @@
     "main_muzzle": {
       "Parent": "Barrel",
       "Position": [
-        -0.06994,
-        0.41122,
-        3.87071
+        -0.04943,
+        0.01062,
+        3.18735
       ],
       "Direction": [
         0,
@@ -1303,9 +1296,9 @@
     "coax_muzzle": {
       "Parent": "Barrel",
       "Position": [
-        0.27735,
-        0.40073,
-        0.47269
+        0.24549,
+        0.00171,
+        0.30182
       ],
       "Direction": [
         0,
@@ -1316,9 +1309,9 @@
     "missile_muzzle_01": {
       "Parent": "Turret",
       "Position": [
-        -1.32063,
-        0.13207,
-        0.89143
+        -1.29563,
+        0.1076,
+        0.79249
       ],
       "Direction": [
         0,
@@ -1329,9 +1322,9 @@
     "missile_muzzle_02": {
       "Parent": "Turret",
       "Position": [
-        -1.58475,
-        0.13207,
-        0.89143
+        -1.57625,
+        0.1076,
+        0.79249
       ],
       "Direction": [
         0,
@@ -1342,9 +1335,9 @@
     "missile_muzzle_03": {
       "Parent": "Turret",
       "Position": [
-        1.32063,
-        0.13207,
-        0.89143
+        1.29563,
+        0.1076,
+        0.79249
       ],
       "Direction": [
         0,
@@ -1355,9 +1348,9 @@
     "missile_muzzle_04": {
       "Parent": "Turret",
       "Position": [
-        1.58475,
-        0.13207,
-        0.89143
+        1.57625,
+        0.1076,
+        0.79249
       ],
       "Direction": [
         0,

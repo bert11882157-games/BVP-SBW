@@ -97,8 +97,8 @@
       "DefaultZoom": 3,
       "RPM": 1600,
       "Magazine": 100,
-      "NormalReloadTime": 400,
-      "EmptyReloadTime": 400,
+      "NormalReloadTime": 240,
+      "EmptyReloadTime": 240,
       "Velocity": 48.5,
       "Damage": 65,
       "ExplosionDamage": 8,
@@ -331,7 +331,33 @@
         10,
         12
       ],
-      "ProjectileBeltAmmoType": []
+      "ProjectileBeltAmmoType": [],
+      "DepletionReload": [
+        [
+          0.0,
+          2.0
+        ],
+        [
+          0.1,
+          4.0
+        ],
+        [
+          0.25,
+          6.0
+        ],
+        [
+          0.5,
+          8.0
+        ],
+        [
+          0.75,
+          10.0
+        ],
+        [
+          1.0,
+          12.0
+        ]
+      ]
     }
   },
   "HUDColor": "0xFFFFFF",

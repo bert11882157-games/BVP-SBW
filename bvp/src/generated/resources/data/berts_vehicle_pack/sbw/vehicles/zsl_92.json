@@ -305,8 +305,8 @@
       "Name": "25 mm ZPT90",
       "RPM": 500,
       "Magazine": 200,
-      "NormalReloadTime": 400,
-      "EmptyReloadTime": 400,
+      "NormalReloadTime": 240,
+      "EmptyReloadTime": 240,
       "ProjectileAmount": 1,
       "AmmoCostPerShoot": 1,
       "DefaultFireMode": "Auto",
@@ -434,7 +434,33 @@
         "ProjectileType": "superbwarfare:small_cannon_shell",
         "ProjectileProfile": "berts_vehicle_pack:zsl_92/type87_25_ap_t",
         "ProjectileLife": 50
-      }
+      },
+      "DepletionReload": [
+        [
+          0.0,
+          2.0
+        ],
+        [
+          0.1,
+          4.0
+        ],
+        [
+          0.25,
+          6.0
+        ],
+        [
+          0.5,
+          8.0
+        ],
+        [
+          0.75,
+          10.0
+        ],
+        [
+          1.0,
+          12.0
+        ]
+      ]
     },
     "MachineGun": {
       "Name": "7.62 mm Type 86",

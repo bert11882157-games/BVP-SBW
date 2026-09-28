@@ -193,6 +193,54 @@
         1.26819,
         -4.88227
       ]
+    },
+    {
+      "Size": [
+        1.3325,
+        0.10499,
+        2.91589
+      ],
+      "Position": [
+        0.0,
+        0.43493,
+        -0.64985
+      ]
+    },
+    {
+      "Size": [
+        0.06184,
+        0.40281,
+        3.92221
+      ],
+      "Position": [
+        1.79466,
+        1.61719,
+        -0.62289
+      ]
+    },
+    {
+      "Size": [
+        0.08916,
+        0.19313,
+        3.90802
+      ],
+      "Position": [
+        -1.76735,
+        1.4075,
+        -0.61198
+      ]
+    },
+    {
+      "Size": [
+        1.72313,
+        0.40281,
+        0.07469
+      ],
+      "Position": [
+        0.03125,
+        1.58594,
+        -4.88281
+      ]
     }
   ],
   "Attachments": {
@@ -497,8 +545,8 @@
       "DefaultZoom": 3,
       "RPM": 5000,
       "Magazine": 1936,
-      "NormalReloadTime": 400,
-      "EmptyReloadTime": 400,
+      "NormalReloadTime": 240,
+      "EmptyReloadTime": 240,
       "AmmoCostPerShoot": 1,
       "Velocity": 48.5,
       "Damage": 250,
@@ -780,7 +828,33 @@
         "ProjectileType": "superbwarfare:small_cannon_shell",
         "ProjectileProfile": "berts_vehicle_pack:9k22_tunguska/cannon/default",
         "ProjectileLife": 40
-      }
+      },
+      "DepletionReload": [
+        [
+          0.0,
+          2.0
+        ],
+        [
+          0.1,
+          4.0
+        ],
+        [
+          0.25,
+          6.0
+        ],
+        [
+          0.5,
+          8.0
+        ],
+        [
+          0.75,
+          10.0
+        ],
+        [
+          1.0,
+          12.0
+        ]
+      ]
     },
     "Missile": {
       "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_atgm.png",

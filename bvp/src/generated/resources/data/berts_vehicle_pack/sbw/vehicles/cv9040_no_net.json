@@ -457,8 +457,8 @@
       "DefaultZoom": 3,
       "RPM": 250,
       "Magazine": 24,
-      "NormalReloadTime": 400,
-      "EmptyReloadTime": 400,
+      "NormalReloadTime": 240,
+      "EmptyReloadTime": 240,
       "AmmoCostPerShoot": 1,
       "Velocity": 74.75,
       "Damage": 65,
@@ -624,6 +624,32 @@
         8,
         10,
         18
+      ],
+      "DepletionReload": [
+        [
+          0.0,
+          2.0
+        ],
+        [
+          0.1,
+          4.0
+        ],
+        [
+          0.25,
+          6.0
+        ],
+        [
+          0.5,
+          8.0
+        ],
+        [
+          0.75,
+          10.0
+        ],
+        [
+          1.0,
+          12.0
+        ]
       ]
     },
     "MainMachineGun": {

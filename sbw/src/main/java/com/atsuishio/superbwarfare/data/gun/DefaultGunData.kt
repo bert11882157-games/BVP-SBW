@@ -250,6 +250,13 @@ class DefaultGunData : IDBasedData<DefaultGunData> {
     @SerialName("EmptyReloadTime")
     var emptyReloadTime = 0
 
+    /**
+     * Reload length by how much of the magazine has been fired: knots `[fraction fired, seconds]`, linear in
+     * between (autocannon belt changes: the emptier the belt, the longer the change). Empty = the fixed reload times.
+     */
+    @SerialName("DepletionReload")
+    var depletionReload: List<List<Double>> = emptyList()
+
     @SerialName("BoltActionTime")
     var boltActionTime = 0
 

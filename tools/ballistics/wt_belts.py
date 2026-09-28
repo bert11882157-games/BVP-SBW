@@ -38,7 +38,7 @@ POOL = ['superbwarfare:small_shell_ap', 'superbwarfare:small_shell_aa', 'superbw
 ROUNDS = {
     # 30 mm 2A42 / 2A72 / 2A38
     '3ubr6_ap_t': ('RED', 970, None), '3uof8_hef_i': ('NONE', 960, 0.0755), '3uor6_hef_t': ('BRIGHT_RED', 960, 0.0179),
-    '3ubr8_apds': ('DARK_RED', 1120, None),
+    '3ubr8_apds': ('DARK_RED', 1120, None), '3ubr11_apfsds': ('GREEN', 1260, None),
     # 23 mm 2A7 / 2A14: BZT, OFZ, OFZT (the pack's second HE round is the OFZT)
     '23mm_apit': ('RED', 970, None), '23mm_hei': ('NONE', 980, 0.0285), '23mm_hei_2': ('LIGHT_RED', 970, 0.0200),
     # 25 mm M242 / M811
@@ -58,12 +58,17 @@ ROUNDS = {
     'dtc10_30_apfsds': ('RED', 1310, None),
 }
 # HE rounds of these guns fly at the gun's APDS velocity (user rule), not WT's
+# weapons whose gun has the APDS round but no belt of it here (the BMP-2M fires APFSDS instead): same HE velocity
+HE_AT_APDS_NO_BELT = {('bmp2m', 'Cannon')}
 HE_AT_APDS = {'3uof8_hef_i': '3ubr8_apds', '3uor6_hef_t': '3ubr8_apds', 'dty02_30_hefi': 'dtc04_30_apds'}
 
 A42 = [('Default', [('3ubr6_ap_t', 1), ('3uof8_hef_i', 1)]),
        ('30 mm HEI', [('3uof8_hef_i', 3), ('3ubr6_ap_t', 1)]),
        ('30 mm AP-T', [('3ubr6_ap_t', 3), ('3uor6_hef_t', 1)]),
-       ('30 mm APDS', [('3ubr8_apds', 4), ('3uor6_hef_t', 1)])]
+       ('30 mm APDS', [('3ubr8_apds', 3), ('3uor6_hef_t', 1)])]
+# owner's rule (2026-09-28): APDS belt 3x APDS then 1x HEF-T; HE belt 3x HEF-I (no tracer) then 1x AP-T. The BMP-2M
+# (Berezhok) fires WT's all-APFSDS "30 mm APDS-FS" belt in place of the APDS belt (4 belt identities per weapon).
+A42M = A42[:3] + [('30 mm APFSDS', [('3ubr11_apfsds', 1)])]
 A72 = [('Default', [('3ubr6_ap_t', 1), ('3uof8_hef_i', 1), ('3ubr6_ap_t', 1), ('3uof8_hef_i', 1)])] + A42[1:]
 BMP3 = A42[1:]
 A38 = [('Default', [('3ubr6_ap_t', 1), ('3uof8_hef_i', 1)]),
@@ -100,7 +105,7 @@ ZPT99 = [('Default', [('dtc04_30_apds', 1), ('dty02_30_hefi', 1), ('dtc04_30_apd
          ('DTC10-30', [('dtc10_30_apfsds', 3)])]
 
 WEAPONS = {
-    ('bmp2', 'Cannon'): ('TWO_A42', A42), ('bmp2m', 'Cannon'): ('TWO_A42', A42),
+    ('bmp2', 'Cannon'): ('TWO_A42', A42), ('bmp2m', 'Cannon'): ('TWO_A42', A42M),
     ('bmpt', 'Cannon'): ('TWO_A42', A42), ('bmpt', 'DualCannon'): ('TWO_A42', A42),
     ('btr_90', 'Cannon'): ('TWO_A42', A42),
     ('btr80a', 'Cannon'): ('TWO_A42', A72), ('bmp3m_elite', 'DualCannon'): ('TWO_A42', BMP3),
@@ -128,6 +133,11 @@ SYNTH = {
     'dm43_hvap_t': ('dm63_apds', {'HullDamageClass': 'APCR', 'PenetrationMm': 57, 'PenetrationCurve': {
         'DistancesMetres': [10, 100, 500, 1000, 1500, 2000], 'PenetrationMm': [57, 52, 37, 24, 15, 10]}},
         {'Name': 'DM43'}),
+    # WT BMP-2M "APFSDS": 1260 m/s, 0.1 kg, 102/99/94/88/81/75 mm, ricochet 78/80/81 deg
+    '3ubr11_apfsds': ('3ubr8_apds', {'HullDamageClass': 'APFSDS', 'PenetrationMm': 102, 'PenetrationCurve': {
+        'DistancesMetres': [10, 100, 500, 1000, 1500, 2000], 'PenetrationMm': [102, 99, 94, 88, 81, 75]},
+        'RicochetCurve': {'IncidenceAnglesDegrees': [0, 78, 80, 81, 90], 'Probability': [0, 0, 0.5, 1, 1]}},
+        {'Name': '3UBR11 APFSDS'}),
 }
 
 
@@ -269,7 +279,7 @@ def rebuild(vid, wn, w, family, belts, cat, writes, notes):
             continue
         _, ms, tnt = ROUNDS[r]
         apds = HE_AT_APDS.get(r)
-        if apds and apds in entries:
+        if apds and (apds in entries or (vid, wn) in HE_AT_APDS_NO_BELT):
             ms = ROUNDS[apds][1]
         o = e.setdefault('Override', {})
         o['Velocity'] = round(ms / 20.0, 3)

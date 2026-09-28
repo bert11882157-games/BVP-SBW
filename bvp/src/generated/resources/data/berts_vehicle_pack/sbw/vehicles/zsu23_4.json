@@ -53,6 +53,66 @@
       ],
       "Transform": "Turret",
       "Rotation": "Turret"
+    },
+    {
+      "Part": "Turret",
+      "Transform": "Turret",
+      "Rotation": "Turret",
+      "Size": [
+        1.62938,
+        0.23743,
+        1.80125
+      ],
+      "Position": [
+        -0.02392,
+        0.84168,
+        -0.18457
+      ]
+    },
+    {
+      "Part": "Turret",
+      "Transform": "Turret",
+      "Rotation": "Turret",
+      "Size": [
+        1.71754,
+        0.47313,
+        0.53846
+      ],
+      "Position": [
+        -0.01627,
+        0.60598,
+        -2.07235
+      ]
+    },
+    {
+      "Part": "Turret",
+      "Transform": "Turret",
+      "Rotation": "Turret",
+      "Size": [
+        0.19459,
+        0.23794,
+        1.76219
+      ],
+      "Position": [
+        -1.63058,
+        0.3708,
+        -0.08301
+      ]
+    },
+    {
+      "Part": "Turret",
+      "Transform": "Turret",
+      "Rotation": "Turret",
+      "Size": [
+        0.16844,
+        0.22313,
+        1.76219
+      ],
+      "Position": [
+        1.60889,
+        0.35598,
+        -0.08301
+      ]
     }
   ],
   "Seats": [
@@ -178,8 +238,8 @@
       "DefaultZoom": 3,
       "RPM": 3400,
       "Magazine": 2000,
-      "NormalReloadTime": 400,
-      "EmptyReloadTime": 400,
+      "NormalReloadTime": 240,
+      "EmptyReloadTime": 240,
       "AmmoCostPerShoot": 1,
       "Velocity": 48.5,
       "Damage": 23,
@@ -392,7 +452,33 @@
         "ProjectileType": "superbwarfare:small_cannon_shell",
         "ProjectileProfile": "berts_vehicle_pack:zsu23_4/cannon/default",
         "ProjectileLife": 40
-      }
+      },
+      "DepletionReload": [
+        [
+          0.0,
+          2.0
+        ],
+        [
+          0.1,
+          4.0
+        ],
+        [
+          0.25,
+          6.0
+        ],
+        [
+          0.5,
+          8.0
+        ],
+        [
+          0.75,
+          10.0
+        ],
+        [
+          1.0,
+          12.0
+        ]
+      ]
     }
   },
   "HUDColor": "0x66FF00",

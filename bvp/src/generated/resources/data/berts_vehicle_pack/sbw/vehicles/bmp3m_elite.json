@@ -98,6 +98,30 @@
         1.62451,
         3.40833
       ]
+    },
+    {
+      "Size": [
+        1.09813,
+        0.06471,
+        0.02
+      ],
+      "Position": [
+        -0.03125,
+        1.67405,
+        3.44956
+      ]
+    },
+    {
+      "Size": [
+        0.02,
+        0.02,
+        0.0632
+      ],
+      "Position": [
+        1.58898,
+        1.49223,
+        -3.90992
+      ]
     }
   ],
   "Seats": [
@@ -641,8 +665,8 @@
       "DefaultZoom": 3,
       "RPM": 300,
       "Magazine": 500,
-      "NormalReloadTime": 400,
-      "EmptyReloadTime": 400,
+      "NormalReloadTime": 240,
+      "EmptyReloadTime": 240,
       "AmmoCostPerShoot": 1,
       "Velocity": 56.0,
       "Damage": 65,
@@ -794,7 +818,7 @@
               "Family": "TWO_A42",
               "Rounds": [
                 {
-                  "Shots": 4,
+                  "Shots": 3,
                   "Round": "3ubr8_apds",
                   "Ammo": "superbwarfare:small_shell_ap",
                   "Tracer": "GREEN"
@@ -888,6 +912,32 @@
           },
           "ConsumptionItem": "superbwarfare:medium_autocannon_shell"
         }
+      ],
+      "DepletionReload": [
+        [
+          0.0,
+          2.0
+        ],
+        [
+          0.1,
+          4.0
+        ],
+        [
+          0.25,
+          6.0
+        ],
+        [
+          0.5,
+          8.0
+        ],
+        [
+          0.75,
+          10.0
+        ],
+        [
+          1.0,
+          12.0
+        ]
       ]
     }
   },

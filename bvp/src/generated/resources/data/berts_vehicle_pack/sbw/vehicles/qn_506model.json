@@ -183,6 +183,78 @@
         1.02073,
         3.62322
       ]
+    },
+    {
+      "Size": [
+        0.39069,
+        0.85594,
+        3.48875
+      ],
+      "Position": [
+        -1.48869,
+        1.47656,
+        0.09375
+      ]
+    },
+    {
+      "Size": [
+        1.02,
+        0.21355,
+        1.18477
+      ],
+      "Position": [
+        0.0,
+        2.5252,
+        -0.06359
+      ]
+    },
+    {
+      "Size": [
+        1.55125,
+        0.46272,
+        0.20977
+      ],
+      "Position": [
+        0.32812,
+        1.33335,
+        -3.48211
+      ]
+    },
+    {
+      "Size": [
+        0.03301,
+        0.15281,
+        3.41844
+      ],
+      "Position": [
+        1.84637,
+        1.58594,
+        0.16406
+      ]
+    },
+    {
+      "Size": [
+        1.22313,
+        0.13719,
+        0.09578
+      ],
+      "Position": [
+        0.0,
+        1.17969,
+        3.62265
+      ]
+    },
+    {
+      "Size": [
+        1.17625,
+        0.04599,
+        2.80125
+      ],
+      "Position": [
+        0.0,
+        0.62307,
+        -0.32812
+      ]
     }
   ],
   "Attachments": {
@@ -697,8 +769,8 @@
       "DefaultZoom": 3,
       "RPM": 330,
       "Magazine": 100,
-      "NormalReloadTime": 400,
-      "EmptyReloadTime": 400,
+      "NormalReloadTime": 240,
+      "EmptyReloadTime": 240,
       "AmmoCostPerShoot": 1,
       "Velocity": 59.0,
       "Damage": 65,
@@ -975,7 +1047,33 @@
         "ProjectileType": "superbwarfare:small_cannon_shell",
         "ProjectileProfile": "berts_vehicle_pack:qn_506model/cannon/default",
         "ProjectileLife": 40
-      }
+      },
+      "DepletionReload": [
+        [
+          0.0,
+          2.0
+        ],
+        [
+          0.1,
+          4.0
+        ],
+        [
+          0.25,
+          6.0
+        ],
+        [
+          0.5,
+          8.0
+        ],
+        [
+          0.75,
+          10.0
+        ],
+        [
+          1.0,
+          12.0
+        ]
+      ]
     },
     "MainMachineGun": {
       "DefaultFireMode": "Auto",

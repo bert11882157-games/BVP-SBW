@@ -334,10 +334,10 @@
     "Missile": {
       "Name": "weapon.berts_vehicle_pack.9m114_shturm_atgm",
       "DefaultZoom": 3,
-      "Magazine": 12,
+      "Magazine": 1,
       "Template": "@Missile",
-      "RPM": 7,
-      "EmptyReloadTime": 900,
+      "RPM": 60,
+      "EmptyReloadTime": 167,
       "Crosshair": "@VehicleCommonMissile",
       "ShootPos": {
         "Transform": "Vehicle",
@@ -378,19 +378,27 @@
         "Profile": "berts_vehicle_pack:9p149_shturm/missile/default"
       },
       "SoundInfo": {
-        "Fire1PGain": 0.7,
-        "Fire3PGain": 0.7,
-        "Fire3PFarGain": 0.7,
-        "Fire3PVeryFarGain": 0.7,
+        "Fire1PGain": 1.0,
+        "Fire3PGain": 1.0,
+        "Fire3PFarGain": 1.0,
+        "Fire3PVeryFarGain": 1.0,
         "VehicleReload": "superbwarfare:medium_missile_reload",
-        "VehicleReloadClipDurationTicks": 32
+        "VehicleReloadClipDurationTicks": 32,
+        "Fire1P": "bvp_audio:weapon/atgm_ru_1p",
+        "Fire3P": "bvp_audio:weapon/atgm_ru_3p",
+        "Fire3PFar": "bvp_audio:weapon/atgm_ru_far",
+        "Fire3PVeryFar": "bvp_audio:weapon/atgm_ru_veryfar",
+        "Change": "superbwarfare:into_missile",
+        "Volume": 0.9
       },
       "NominalBallistics": {
         "Supported": false,
         "ProjectileType": "berts_vehicle_pack:ataka_missile",
         "ProjectileProfile": "berts_vehicle_pack:9p149_shturm/missile/default"
       },
-      "TntEquivalentKg": 4.0014
+      "TntEquivalentKg": 4.0014,
+      "NormalReloadTime": 167,
+      "SoundRadius": 16
     }
   },
   "HudType": "@Land",
