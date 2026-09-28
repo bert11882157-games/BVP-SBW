@@ -15,7 +15,7 @@ class AircraftTvBombContractTest {
     @Test fun tvBombRequiresGroundLockAndRemainsUnpowered() {
         assertDoesNotThrow { AircraftArmamentRegistry.validate(bomb(),true) }
         assertEquals("TV",AircraftGuidanceLabels.mode(bomb()))
-        assertEquals("Electro-optical homing",AircraftGuidanceLabels.description("TV"))
+        assertEquals("TV seeker · steer through the seeker view",AircraftGuidanceLabels.description("TV"))
         for(change in listOf<(JsonObject)->Unit>(
             { it.remove("Guidance") },
             { it.getAsJsonObject("Guidance").addProperty("Mode","INFRARED") },
