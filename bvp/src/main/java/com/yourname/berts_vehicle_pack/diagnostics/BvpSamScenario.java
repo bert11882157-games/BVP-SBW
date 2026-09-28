@@ -30,7 +30,8 @@ import net.minecraftforge.registries.ForgeRegistries;
  * Diagnostic ({@code bvp.diagnostics.scenarios}): {@code /bvp_sam <player> <weapon> <target type> <distance> <height>}.
  * The player rides a ground SAM vehicle as its first crew member. A target of the given type is summoned ahead of
  * the vehicle, held aloft and drifting sideways; the player's view is turned onto it (the turret follows), the lock
- * is logged, and the named weapon fires once the lock is ready (or after 8 s regardless). The log then follows the
+ * is logged, and the named weapon fires once the lock is ready (or after 8 s regardless; a ground target is given
+ * 3 s to settle first). The log then follows the
  * FFA interceptors and the target's health: {@code [BVP sam]}.
  */
 @Mod.EventBusSubscriber(modid = BertsVehiclePack.MODID)
@@ -45,6 +46,8 @@ public final class BvpSamScenario {
         final Entity target;
         final Vec3 drift;
         final float startHealth;
+        /** A target summoned on the ground is briefly off the ground while it settles; hold fire until then. */
+        final int minFireAge;
         int age;
         int firedAt = -1;
 
@@ -55,6 +58,7 @@ public final class BvpSamScenario {
             this.target = target;
             this.drift = drift;
             this.startHealth = health(target);
+            this.minFireAge = drift.lengthSqr() > 0 ? 0 : 60;
         }
     }
 
@@ -143,7 +147,7 @@ public final class BvpSamScenario {
                         String.format("%.0f", los.length()), String.format("%.1f", run.target.getY()),
                         !run.target.onGround(), health(run.target), interceptors(run));
             }
-            if (run.firedAt < 0 && (ready || run.age >= 160)) {
+            if (run.firedAt < 0 && ((ready && run.age >= run.minFireAge) || run.age >= 160)) {
                 run.vehicle.modifyGunData(run.weapon, data -> {
                     data.resetStatus();
                     data.ammo.set(Math.max(1, data.ammo.get()));
