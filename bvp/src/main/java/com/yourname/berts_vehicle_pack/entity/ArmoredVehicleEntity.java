@@ -139,6 +139,7 @@ public abstract class ArmoredVehicleEntity extends GeoVehicleEntity implements V
                 bvpAmmoRack.tickWarning();
             }
             tickBvpEraRegeneration();
+            bvpModuleDamage.tickLauncherModule();
         }
         if (EliteDiagnostics.isEnabled(this.m_9236_()) && (this.f_19797_ + this.m_19879_()) % 20 == 0) {
             EliteDiagnostics.record(this, "armor", "module_snapshot", "profile", armorProfileId,

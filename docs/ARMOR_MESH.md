@@ -248,23 +248,32 @@ through `ArmorHitResolver`, `ArmorModuleResolver` and the angle rule. The report
 `tools/armor_mesh/auto_mesh.py` builds the same kind of file straight from the visual model, with no
 hand-written spec. It covers every armored ground vehicle except the ones with hand-authored box armor
 the owner keeps (BMP-1/2/2M, T-90A, all Abrams, T-72B, M48, M1128, T-62A, BTR-80A, BTR-60, the Toyotas,
-ZBD-09, Marder 1A2, CV9040C, M2 Bradley, BMPT) and the emplacements: `AUTO_TARGETS`, 40 vehicles.
+ZBD-09, Marder 1A2, CV9040C, M2 Bradley, BMPT, and since 2026-09-28 the T-55A, Leopard 2A6, LAV-25 and
+BTR-90, whose generated meshes are in `tools/replaced/armor-mesh-restored-box-20260928/`) and the
+emplacements: `AUTO_TARGETS`, 35 vehicles.
 
-* **Structure.** Model bones go to the hull, turret or barrel frame by their parent chain. Running gear,
-  ERA, secondary mounts, rods (antennas, rails), specks, tubes and small roof fittings are left out. The
-  hull is built in lengthwise segments of about 32 px: a core between the running gear (pulled in to the
-  inner face of the tracks or wheels) and, where the hull is wider above the running gear, a sponson solid
-  from the track top up. The turret is the convex hull of the turret frame, the mantlet the barrel-frame
-  parts around the trunnion (no gun tube), and a collar closes any gap between the hull roof and the turret.
-* **Thickness.** Each face takes the millimetres of the vehicle's own box plate it lines
-  (`templates/<id>.armor.geo.json`), found by rays along the face normal (median over sample points;
-  plates facing the same way win). The face's mirror image is looked up too and both sides take the
-  thicker value, because some box profiles have a mislabelled plate on one side. Vehicles with no box
-  plates use the nominal per-aspect values in `DEFAULTS`. ERA, engines, ammo and modules stay on the boxes.
+* **Structure (simplified, 2026-09-28).** Model bones go to the hull, turret or barrel frame by their parent
+  chain. Running gear, ERA, secondary mounts, rods (antennas, rails), specks, tubes and small roof fittings
+  are left out. Every solid is the 26-sided discrete-orientation polytope of its points (box faces, 12 edge
+  bevels, 8 corner bevels), so a solid has at most 26 plates and a glacis or a sloped turret front is one or
+  two faces: 65-140 plates per vehicle instead of 350-470. The hull is two lengthwise halves, each a core
+  between the running gear plus a sponson above it where the hull is wider; the turret solid is carried
+  down to the hull roof (no separate collar); the mantlet is the barrel-frame parts around the trunnion.
+  The 9P149 launcher has no armor at all: it is the `launcherreload` weapon module (see below).
+* **Thickness.** Per frame and aspect, the line-of-sight thickness of the vehicle's own box plates
+  (`templates/<id>.armor.geo.json`): a plate counts for an aspect when it faces within ~70 degrees of it,
+  with its mm divided by that cosine. The front takes the largest value, so a shot at composite cheeks or
+  a glacis meets the full protection; the other aspects take the median weighted by projected area. Each
+  face then gets that value times the cosine of its own slope, so a horizontal shot meets the same line of
+  sight the box armor had. Vehicles with no box plates use the nominal per-aspect values in `DEFAULTS`.
+  ERA, engines, ammo and modules stay on the boxes.
+* **Rifle-calibre floor.** `min_armor_mm` in an armor profile (`tools/armor_mesh/armor_floor.py` sets 16 on
+  every vehicle of SBW Type Tank or APC) is a floor under every plate, box or mesh, and under gaps in box
+  armor: rifle-calibre rounds (at most 13 mm) cannot kill an IFV with the coax; 12.7 mm and up still can.
 * **Tracks** get no hitbox.
 
 ```
-python3 tools/armor_mesh/auto_mesh.py --targets             # write all 40 into armor_mesh/
+python3 tools/armor_mesh/auto_mesh.py --targets             # write all 35 into armor_mesh/
 python3 tools/armor_mesh/auto_mesh.py leo2a6 --report       # plate table and thickness sources only
 python3 tools/armor_mesh/auto_hitreg.py leo2a6 rays.jsonl   # ground-truth rays from the generator's own solids
 java ... ArmorMeshHitregHarness leo2a6 <armor.json> <mesh.geo.json> rays.jsonl out.csv <turretPos> <barrelPos> 0,90
@@ -292,3 +301,12 @@ spec and use `build_mesh.py`.
   triangle's normal. A box hit keeps the old face-ratio rule, so box profiles behave exactly as before.
 * `ArmorMeshLoader` depends only on Gson and plain Java, so it is safe on the dedicated server.
   `ArmorProfiles.prefetch` parses a profile on a background thread when a vehicle is created.
+
+## Launcher weapon module (`launcherreload`)
+
+A module box with `"module": "launcherreload"` (9P149: the tube in the barrel frame, the arm in the turret
+frame) stands in for armor on an exposed launcher. A hit damages it like any generic module
+(`VehicleModuleHealth.GENERIC_MODULE_HP`); when it is destroyed the loaded missile is lost - seat 0 weapon 0
+is emptied and the vehicle's auto-reload runs as if the missile had been fired, without a launch. The module
+is whole again once that reload is over (`VehicleModuleDamageSystem.tickLauncherModule`). Weapons are not
+disabled.

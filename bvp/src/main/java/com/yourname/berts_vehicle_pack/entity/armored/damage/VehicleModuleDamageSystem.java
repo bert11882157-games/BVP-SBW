@@ -21,6 +21,12 @@ public final class VehicleModuleDamageSystem {
     public static final int REPAIR_TARGET_HULL = 5;
 
     private static final float HEALTH_EPSILON = 0.001F;
+    /**
+     * A launcher module ("launcherreload", 9P149 Shturm-S arm): the launcher has no armor. When the module is
+     * destroyed the loaded missile is lost - the launcher reloads as if it had fired, without a launch - and the
+     * module is whole again once that reload is over.
+     */
+    public static final String LAUNCHER_RELOAD = "launcherreload";
 
     private final ArmoredVehicleEntity vehicle;
 
@@ -39,7 +45,36 @@ public final class VehicleModuleDamageSystem {
                 damageTrackSide(false, hitVec, damage);
             }
             case "engine" -> damageEngine(hitVec, damage);
+            case LAUNCHER_RELOAD -> damageLauncher(damage);
             default -> damageGenericModule(normalized, damage);
+        }
+    }
+
+    private void damageLauncher(double damage) {
+        ResourceLocation id = BvpVehicleModules.idForNormalized(LAUNCHER_RELOAD);
+        if (destroyed(id) || damage <= 0.0D) {
+            return; // already knocked out: the reload it forced is running
+        }
+        if (damageLegacyModule(id, damage)) {
+            // the loaded missile is lost; the vehicle's auto-reload starts on the next tick
+            vehicle.modifyGunData(0, 0, data -> {
+                if (!data.reloading()) {
+                    data.ammo.set(0);
+                }
+            });
+        }
+    }
+
+    /** Server tick: a knocked-out launcher module is whole again once the reload it forced is over. */
+    public void tickLauncherModule() {
+        ResourceLocation id = BvpVehicleModules.idForNormalized(LAUNCHER_RELOAD);
+        VehicleModuleState state = vehicle.getVehicleModuleState(id);
+        if (state == null || !state.getDestroyed()) {
+            return;
+        }
+        var gun = vehicle.getGunData(0, 0);
+        if (gun == null || !gun.reloading() && gun.ammo.get() > 0) {
+            vehicle.setVehicleModuleState(id, state.getMaxHealth(), false);
         }
     }
 

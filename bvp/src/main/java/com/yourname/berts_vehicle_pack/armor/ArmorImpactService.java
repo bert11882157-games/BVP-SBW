@@ -153,7 +153,8 @@ final class ArmorImpactService {
             return ProjectileArmorMutationService.ricochetImpact(replacementVisual);
         }
 
-        Result penetration = ArmorPenetrationService.evaluate(target, armorHit, trace, shot);
+        Result penetration = ArmorPenetrationService.evaluate(target, armorHit, trace, shot,
+                targetProfile.minArmorMm);
         if (!penetration.penetrated()) {
             if (!BvpMaterialImpactSounds.hasPresentation(projectile)) {
                 ArmorSoundService.play(level, hitVec, ArmorSoundService.METAL_HIT_SOUND, 1.0F, 0.75F);
@@ -264,6 +265,16 @@ final class ArmorImpactService {
             ArmorImpactReporter.logArmorEvent(owner, target, hitVec,
                     "[BVP Armor] Shell ray meets no mesh armor; projectile continues.");
             return ProjectileArmorMutationService.passImpact();
+        }
+        if (targetProfile.unboxedHitsPenetrate && shot.penetrationMm + 1.0E-4D < targetProfile.minArmorMm) {
+            // A gap in the boxes is still hull steel: a round below the profile's floor stops there.
+            if (!BvpMaterialImpactSounds.hasPresentation(projectile)) {
+                ArmorSoundService.play(target.level(), hitVec, ArmorSoundService.METAL_HIT_SOUND, 1.0F, 0.75F);
+            }
+            applyLightArmorNonPenetrationDamage(target, damageSource, shot);
+            ArmorImpactStats.record(Outcome.NON_PENETRATION);
+            return ProjectileArmorMutationService.blockImpact(
+                    ProjectileArmorEffects.hasImpactVisual(shot), ProjectileImpactPresentationOutcome.NON_PENETRATION);
         }
         if (targetProfile.unboxedHitsPenetrate) {
             return resolveUnboxedHit(owner, target, targetProfile, shot, damageSource, hitVec, volumes, trace);

@@ -46,12 +46,13 @@ TEMPLATES = os.path.join(HERE, 'templates')
 
 # Every armored ground vehicle except the ones with hand-authored box armor the owner keeps (BMP-2/2M, BMP-1, T-90A
 # (hand-measured mesh), all Abrams, T-72B, M48, M1128, T-62A, BTR-80A, BTR-60, the Toyotas, ZBD-09, Marder 1A2,
-# CV9040C, M2 Bradley, BMPT) and the emplacements (tripods, ZU-23).
+# CV9040C, M2 Bradley, BMPT) and the emplacements (tripods, ZU-23). The T-55A, Leopard 2A6, LAV-25 and BTR-90 keep
+# their box armor (owner, 2026-09-28).
 AUTO_TARGETS = [
-    '9p148', '9p149_shturm', 'bmd_1', 'bmp3m_elite', 'btr_90', 'btr_zd', 'challenger_2',
-    'gaz_3937_vodnik_aa', 'gepard', 'k2a1_black_panther', 'lav25', 'leclerc_s1', 'leo2a6', 'leopard_2a4',
+    '9p148', '9p149_shturm', 'bmd_1', 'bmp3m_elite', 'btr_zd', 'challenger_2',
+    'gaz_3937_vodnik_aa', 'gepard', 'k2a1_black_panther', 'leclerc_s1', 'leopard_2a4',
     'm109a7_paladin', 'm551a1', 'm60a1', 'marder_1a1', 'marder_1a5', 'pzh_2000', 'qn_506model', 't14_armata',
-    't55a_2_0', 't64b_obr1976', 't72a', 't72b3', 't72b3_ubh_cope', 't80b_obr1976', 't80u_obr1985', 't90m',
+    't64b_obr1976', 't72a', 't72b3', 't72b3_ubh_cope', 't80b_obr1976', 't80u_obr1985', 't90m',
     'tunguska', 'type_90', 'vbci', 'vt_4a1', 'zsl_92', 'zsu23_4', 'ztl_09', 'ztz99a', 'uaz_469_spg9',
 ]
 
@@ -408,20 +409,100 @@ def symmetric_thickness(template, frame, samples, n):
     return best[0], f'{best[1]}|{a[0]:g}/{b[0]:g}'
 
 
+# Simplified solids (owner, 2026-09-28: "much simpler, well-encompassing"): every solid is the 26-DOP of its points -
+# the box faces, the 12 edge bevels and the 8 corner bevels, each pushed out to the farthest point. At most 26 plates
+# per solid; a glacis or a sloped turret front is one or two bevel faces.
+DOP_DIRECTIONS = np.array([d for d in
+                           [(1, 0, 0), (-1, 0, 0), (0, 1, 0), (0, -1, 0), (0, 0, 1), (0, 0, -1)] +
+                           [(a, b, 0) for a in (1, -1) for b in (1, -1)] +
+                           [(a, 0, b) for a in (1, -1) for b in (1, -1)] +
+                           [(0, a, b) for a in (1, -1) for b in (1, -1)] +
+                           [(a, b, c) for a in (1, -1) for b in (1, -1) for c in (1, -1)]], float)
+DOP_DIRECTIONS /= np.linalg.norm(DOP_DIRECTIONS, axis=1)[:, None]
+
+# The rifle-calibre floor is not baked into the plates: the armor profile's "min_armor_mm" (tools/armor_mesh/
+# armor_floor.py, 16 mm on every Tank/APC) is applied at runtime under box and mesh plates alike, so a car (the UAZ)
+# keeps its sheet steel.
+# No armor on the launcher itself: the 9P149's arm is a weapon module instead (armor profile "launcherreload").
+NO_WEAPON_ARMOR = {'9p149_shturm'}
+
+
+def dop_vertices(points):
+    """Vertices of the 26-DOP of the points (the intersection of the 26 supporting halfspaces)."""
+    from scipy.spatial import HalfspaceIntersection
+    P = np.asarray(points, float)
+    off = (P @ DOP_DIRECTIONS.T).max(0)
+    hs = np.c_[DOP_DIRECTIONS, -off]
+    centre = P.mean(0)
+    hi = HalfspaceIntersection(hs, centre)
+    return snap(hi.intersections)
+
+
+# Axis a shot along each aspect travels against (geo frame: front is -z).
+ASPECT_AXIS = {'front': np.array([0, 0, -1.0]), 'rear': np.array([0, 0, 1.0]), 'roof': np.array([0, 1.0, 0]),
+               'belly': np.array([0, -1.0, 0]), 'floor': np.array([0, -1.0, 0])}
+MIN_COS = 0.35  # a box plate counts for an aspect when it faces it within ~70 deg
+
+
+def aspect_axis(asp, n):
+    if asp == 'side':
+        return np.array([1.0 if n[0] >= 0 else -1.0, 0, 0])
+    return ASPECT_AXIS[asp]
+
+
+def aspect_thickness(template, frame):
+    """{aspect: line-of-sight mm} from the vehicle's own box plates of this frame (the barrel frame falls back to
+    the turret). A box plate's line-of-sight thickness along an aspect's axis is its mm over the cosine between its
+    facing and that axis, so a sloped glacis keeps the protection it had even though the simplified solid's face is
+    sloped differently. The front is the largest line-of-sight value (a shot at composite cheeks or the glacis meets
+    the full value); every other aspect is the median weighted by projected area. None when there are no plates."""
+    sets = template['plates'].get(frame) if template else None
+    if not sets and frame == 'barrel' and template:
+        sets = template['plates'].get('turret')
+    if not sets:
+        return None
+    by = collections.defaultdict(list)
+    centre = np.mean([tris.reshape(-1, 3).mean(0) for tris, _, _, _ in sets], axis=0)
+    for tris, mm, name, facing in sets:
+        cr = np.cross(tris[:, 1] - tris[:, 0], tris[:, 2] - tris[:, 0])
+        area = float(np.linalg.norm(cr, axis=1).max()) / 2
+        # a slab's facing is either of its large faces: take the one pointing away from the frame's centre
+        outward = facing if (tris.reshape(-1, 3).mean(0) - centre) @ facing >= 0 else -facing
+        for asp in ('front', 'rear', 'roof', 'side', 'belly' if frame == 'hull' else 'floor'):
+            c = float(outward @ aspect_axis(asp, outward))
+            if c >= MIN_COS:
+                by[asp].append((mm / c, area * c))
+    out = {}
+    for asp, rows in by.items():
+        if asp == 'front':
+            out[asp] = max(los for los, _ in rows)
+        else:
+            rows.sort()
+            total = sum(a for _, a in rows)
+            acc = 0.0
+            for los, a in rows:
+                acc += a
+                if acc >= total / 2:
+                    out[asp] = los
+                    break
+    return out
+
+
 def plates_for(points, frame, tag, vid, template):
-    vols = B.plates_from(points, [{'name': 'plate', 'mm': 1.0}], [], frame, tag)
+    vols = B.plates_from(dop_vertices(points), [{'name': 'plate', 'mm': 1.0}], [], frame, tag)
+    table = aspect_thickness(template, frame)
     for v in vols:
         asp = aspect(v['n'], frame)
         v['name'] = f'{tag}_{asp}'
-        if template and template['plates']:
-            mm, src = symmetric_thickness(template, frame, outer_samples(v), v['n'])
-            if src and '|' in src:
-                v['asym'] = src
-            if mm is None:
-                mm, src = default_mm(vid, frame, asp) if vid in DEFAULTS else 10.0, 'default'
+        if table and asp in table:
+            # line of sight along the aspect's axis -> plate thickness for this face's slope
+            cos = max(MIN_COS, abs(float(np.asarray(v['n']) @ aspect_axis(asp, v['n']))))
+            mm, src = table[asp] * cos, 'profile'
+        elif table:
+            mm, src = max(table.values()) if asp == 'front' else float(np.median(list(table.values()))), 'profile~'
         else:
             mm, src = (default_mm(vid, frame, asp) if vid in DEFAULTS else 10.0), 'default'
-        v['mm'] = float(mm)
+        v['mm'] = float(round(mm, 1))
         v['source'] = src
     return vols
 
@@ -461,7 +542,8 @@ def build(vid, verbose=True):
     all_hull = np.concatenate(comps['hull'])
     gear = running_gear(bones, running)
     zmin, zmax = all_hull[:, 2].min(), all_hull[:, 2].max()
-    nseg = max(1, int(round((zmax - zmin) / SEGMENT)))
+    # two lengthwise halves: a raised deck or a stepped roof keeps a step, and each half is one simple solid
+    nseg = 2 if zmax - zmin > SEGMENT else 1
     edges = np.linspace(zmin, zmax, nseg + 1)
     top = gear[2] if gear else None
     sponson = False
@@ -491,10 +573,23 @@ def build(vid, verbose=True):
         info['gear'] = [round(float(gear[0]), 2), round(float(gear[1]), 2), round(float(top), 2)]
         info['sponson'] = sponson
 
-    # turret
+    if vid in NO_WEAPON_ARMOR:
+        comps['turret'], comps['barrel'] = [], []
+    # turret, carried down to the hull roof so no gap is left under it (the base outline repeated at roof height)
     turret_pts = None
     if comps['turret']:
         turret_pts = snap(np.concatenate(comps['turret']))
+        if 'turret' in bones and len(turret_pts) >= 4:
+            piv = np.array(bones['turret'].get('pivot', [0, 0, 0]), float)
+            near = hull_pts[(np.abs(hull_pts[:, 0] - piv[0]) < 12) & (np.abs(hull_pts[:, 2] - piv[2]) < 12)]
+            roof = near[:, 1].max() if len(near) else hull_pts[:, 1].max()
+            floor = turret_pts[:, 1].min()
+            base = turret_pts[turret_pts[:, 1] < floor + 1.5]
+            if floor > roof + 0.3 and len(base) >= 3:
+                shrink = piv + 0.9 * (base - piv) * np.array([1, 0, 1])
+                shrink[:, 1] = roof - 0.5
+                turret_pts = snap(np.concatenate([turret_pts, shrink]))
+                info['ring'] = [round(float(roof), 2), round(float(floor), 2)]
         if len(turret_pts) >= 4 and np.ptp(turret_pts, axis=0).min() > 1.0:
             volumes += plates_for(turret_pts, 'turret', 'turret', vid, template)
             info.setdefault('solids', []).append(('turret', turret_pts))
@@ -512,25 +607,6 @@ def build(vid, verbose=True):
                 volumes += plates_for(m_pts, 'barrel', 'mantlet', vid, template)
                 info.setdefault('solids', []).append(('barrel', m_pts))
                 info['mantlet_parts'] = len(near)
-
-    # collar between the hull roof and the turret floor
-    if turret_pts is not None and 'turret' in bones:
-        piv = np.array(bones['turret'].get('pivot', [0, 0, 0]), float)
-        floor = turret_pts[:, 1].min()
-        near = hull_pts[(np.abs(hull_pts[:, 0] - piv[0]) < 12) & (np.abs(hull_pts[:, 2] - piv[2]) < 12)]
-        roof = near[:, 1].max() if len(near) else hull_pts[:, 1].max()
-        base = turret_pts[turret_pts[:, 1] < floor + 1.5]
-        r_out = 0.9 * min(np.ptp(base[:, 0]), np.ptp(base[:, 2])) / 2 if len(base) >= 3 else 0.0
-        if floor > roof + 0.3 and r_out > 3.0:
-            ring_mm = min((v['mm'] for v in volumes if v['frame'] == 'turret' and v['name'].endswith('side')),
-                          default=20.0)
-            for i, part in enumerate(B.ring_segments([piv[0], 0, piv[2]], r_out - 2.0, r_out, roof - 0.5,
-                                                      floor + 0.5, 16)):
-                a = 2 * math.pi * (i + 0.5) / 16
-                volumes.append({'frame': 'hull', 'kind': 'plate', 'name': f'turret_ring_{i:02d}', 'mm': ring_mm,
-                                'faces': part, 'part': 'ring', 'n': np.array([math.cos(a), 0.0, math.sin(a)]),
-                                'source': 'ring'})
-            info['ring'] = [round(r_out, 2), round(roof, 2), round(floor, 2)]
 
     info['asym'] = sum(1 for v in volumes if v.get('asym'))
     count = collections.Counter(v['name'] for v in volumes)

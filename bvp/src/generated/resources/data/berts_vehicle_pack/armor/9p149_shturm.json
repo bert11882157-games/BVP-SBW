@@ -8,12 +8,54 @@
   "impact_tolerance": 0.25,
   "internal_ray_length": 10,
   "unboxed_hits_penetrate": true,
+  "min_armor_mm": 16,
   "plates": [],
   "sensitive_internals": [],
   "engines": [],
   "ammo_racks": [],
   "tracks": [],
-  "modules": [],
+  "modules": [
+    {
+      "name": "launcherreload_tube",
+      "center": [
+        0.81219,
+        2.95406,
+        1.85531
+      ],
+      "half_size": [
+        0.17031,
+        0.30719,
+        1.23719
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "barrel",
+      "module": "launcherreload"
+    },
+    {
+      "name": "launcherreload_arm",
+      "center": [
+        0.79625,
+        2.46656,
+        1.91125
+      ],
+      "half_size": [
+        0.10625,
+        0.48844,
+        0.11437
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "turret",
+      "module": "launcherreload"
+    }
+  ],
   "explosive_reactive_armor": [],
   "sbw_obb": [],
   "authoring_state": "PENDING_AUTHORING"

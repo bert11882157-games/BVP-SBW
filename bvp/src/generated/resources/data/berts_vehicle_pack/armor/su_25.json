@@ -8,7 +8,128 @@
   "impact_tolerance": 0.25,
   "internal_ray_length": 10,
   "unboxed_hits_penetrate": true,
-  "plates": [],
+  "plates": [
+    {
+      "name": "cockpit_tub_left_24mm",
+      "center": [
+        -0.5125,
+        2.04688,
+        -3.375
+      ],
+      "half_size": [
+        0.025,
+        0.48438,
+        0.65625
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 24
+    },
+    {
+      "name": "cockpit_tub_right_24mm",
+      "center": [
+        0.5125,
+        2.04688,
+        -3.375
+      ],
+      "half_size": [
+        0.025,
+        0.48438,
+        0.65625
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 24
+    },
+    {
+      "name": "cockpit_tub_floor_24mm",
+      "center": [
+        0.0,
+        1.5625,
+        -3.375
+      ],
+      "half_size": [
+        0.5375,
+        0.025,
+        0.65625
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 24
+    },
+    {
+      "name": "cockpit_tub_front_24mm",
+      "center": [
+        0.0,
+        2.04688,
+        -4.05625
+      ],
+      "half_size": [
+        0.5375,
+        0.48438,
+        0.025
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 24
+    },
+    {
+      "name": "cockpit_windscreen_65mm",
+      "center": [
+        0.0,
+        2.70938,
+        -4.1125
+      ],
+      "half_size": [
+        0.35,
+        0.17813,
+        0.03125
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 65
+    },
+    {
+      "name": "cockpit_headrest_10mm",
+      "center": [
+        0.0,
+        2.1875,
+        -2.69375
+      ],
+      "half_size": [
+        0.5375,
+        0.625,
+        0.025
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 10
+    }
+  ],
   "sensitive_internals": [],
   "engines": [],
   "ammo_racks": [],

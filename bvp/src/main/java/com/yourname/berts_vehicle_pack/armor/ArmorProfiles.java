@@ -203,6 +203,7 @@ public final class ArmorProfiles {
                 DEFAULT_UNBOXED_HITS_PENETRATE);
         boolean strictArmorGate = bool(root, "strict_armor_gate", defaultStrictArmorGate(id));
         boolean atgmTandemWarhead = bool(root, "atgm_tandem", false);
+        double minArmorMm = Math.max(0.0D, number(root, "min_armor_mm", 0.0D));
         List<ArmorBox> plates = readBoxes(root.getAsJsonArray("plates"), true);
         List<ArmorBox> rawInternals = readBoxes(root.getAsJsonArray("sensitive_internals"), false);
         List<ArmorBox> internals = new ArrayList<>();
@@ -223,7 +224,7 @@ public final class ArmorProfiles {
         List<ArmorBox> eraBoxes = readEraBoxes(eraArray);
         return new ArmorProfile(id, apPenetrationMm, chemicalPenetrationMm, fallbackIncomingPenetrationMm,
                 impactTolerance, internalRayLength, unboxedHitsPenetrate, strictArmorGate, atgmTandemWarhead,
-                plates, internals, engines, ammoRacks, tracks, modules, eraBoxes, null, List.of());
+                minArmorMm, plates, internals, engines, ammoRacks, tracks, modules, eraBoxes, null, List.of());
     }
 
     /**
@@ -257,7 +258,7 @@ public final class ArmorProfiles {
         // plates move to meshes, and a vehicle can be converted one category at a time.
         return new ArmorProfile(boxes.id, boxes.apPenetrationMm, boxes.chemicalPenetrationMm,
                 boxes.fallbackIncomingPenetrationMm, boxes.impactTolerance, boxes.internalRayLength,
-                boxes.unboxedHitsPenetrate, boxes.strictArmorGate, boxes.atgmTandemWarhead,
+                boxes.unboxedHitsPenetrate, boxes.strictArmorGate, boxes.atgmTandemWarhead, boxes.minArmorMm,
                 pick(result.plates, boxes.plates), pick(result.internals, boxes.sensitiveInternals),
                 pick(result.engines, boxes.engineBoxes), pick(result.ammoRacks, boxes.ammoRacks),
                 pick(result.tracks, boxes.trackBoxes), pick(result.modules, boxes.moduleBoxes),
@@ -361,6 +362,11 @@ public final class ArmorProfiles {
         public final boolean unboxedHitsPenetrate;
         public final boolean strictArmorGate;
         public final boolean atgmTandemWarhead;
+        /**
+         * Floor under every plate and under unboxed hits ({@code min_armor_mm}, default 0): the hull steel no
+         * rifle-calibre round defeats, so a coax cannot kill an IFV through a thin roof plate or a gap in the boxes.
+         */
+        public final double minArmorMm;
         public final List<ArmorBox> plates;
         public final List<ArmorBox> sensitiveInternals;
         public final List<ArmorBox> engineBoxes;
@@ -376,7 +382,7 @@ public final class ArmorProfiles {
         private ArmorProfile(String id, double apPenetrationMm, double chemicalPenetrationMm,
                              double fallbackIncomingPenetrationMm, double impactTolerance, double internalRayLength,
                              boolean unboxedHitsPenetrate, boolean strictArmorGate, boolean atgmTandemWarhead,
-                             List<ArmorBox> plates, List<ArmorBox> sensitiveInternals,
+                             double minArmorMm, List<ArmorBox> plates, List<ArmorBox> sensitiveInternals,
                              List<ArmorBox> engineBoxes, List<ArmorBox> ammoRacks, List<ArmorBox> trackBoxes,
                              List<ArmorBox> moduleBoxes, List<ArmorBox> eraBoxes, String meshSource,
                              List<String> meshWarnings) {
@@ -389,6 +395,7 @@ public final class ArmorProfiles {
             this.unboxedHitsPenetrate = unboxedHitsPenetrate;
             this.strictArmorGate = strictArmorGate;
             this.atgmTandemWarhead = atgmTandemWarhead;
+            this.minArmorMm = minArmorMm;
             this.plates = Collections.unmodifiableList(plates);
             this.sensitiveInternals = Collections.unmodifiableList(sensitiveInternals);
             this.engineBoxes = Collections.unmodifiableList(engineBoxes);
@@ -404,7 +411,7 @@ public final class ArmorProfiles {
             return new ArmorProfile(id, DEFAULT_AP_PENETRATION_MM, DEFAULT_CHEMICAL_PENETRATION_MM,
                     DEFAULT_FALLBACK_INCOMING_PENETRATION_MM, DEFAULT_IMPACT_TOLERANCE,
                     DEFAULT_INTERNAL_RAY_LENGTH, DEFAULT_UNBOXED_HITS_PENETRATE,
-                    false, false, Collections.emptyList(), Collections.emptyList(), Collections.emptyList(),
+                    false, false, 0.0D, Collections.emptyList(), Collections.emptyList(), Collections.emptyList(),
                     Collections.emptyList(), Collections.emptyList(), Collections.emptyList(), Collections.emptyList(),
                     null, List.of());
         }
