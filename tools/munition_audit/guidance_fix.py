@@ -45,6 +45,14 @@ TV_STORES = {
 }
 
 
+# store names that contradict the guidance the store actually has: {store path: correct name}
+RENAMES = {
+    # the (V)2/B carries the WGU-10/B imaging-infrared seeker; the television seeker (DSU-27) is the (V)1/B. The store
+    # is the TV bomb (Bomb Mode TV, the seeker view), so it is the (V)1/B; same Mk 84 body and warhead.
+    'munition/gbu15_v2b.json': 'GBU-15(V)1/B · television glide bomb',
+}
+
+
 # stores to offer next to one a carrier already allows: (new store, next to, carriers)
 OFFER = [
     # the TV Maverick went wherever the AGM-65D (IIR) does on aircraft of its era or later
@@ -183,6 +191,12 @@ def plan():
             gun = json.loads(load(gun_path))
             gun['Name'] = spec['name']
             out[gun_path] = dump(gun)
+        out[path] = dump(store)
+    for rel, name in RENAMES.items():
+        path = os.path.join(SBW, 'aircraft_stores', rel)
+        raw = out.get(path) or load(path)
+        store = json.loads(raw)
+        store['Name'] = name
         out[path] = dump(store)
     armament_plan(out)
     offer_plan(out)
