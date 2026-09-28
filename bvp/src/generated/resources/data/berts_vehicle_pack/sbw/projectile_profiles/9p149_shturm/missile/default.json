@@ -1,7 +1,7 @@
 {
   "Combat": {
     "WeaponId": "berts_vehicle_pack:9p149_shturm/pilotmissile",
-    "RoundId": "berts_vehicle_pack:9m114_shturm",
+    "RoundId": "berts_vehicle_pack:9m120_ataka",
     "MunitionType": "berts_vehicle_pack:atgm",
     "DamageType": "berts_vehicle_pack:chemical",
     "DiameterMm": 130,
@@ -9,7 +9,7 @@
     "HullDamage": 125,
     "ModuleDamage": 39,
     "AmmoRackDamage": 8,
-    "PenetrationMm": 560,
+    "PenetrationMm": 800,
     "RicochetCurve": {
       "IncidenceAnglesDegrees": [
         0,
@@ -24,7 +24,7 @@
         1
       ]
     },
-    "Tandem": false
+    "Tandem": true
   },
   "VisualProfile": "berts_vehicle_pack:ataka_atgm",
   "ImpactVisualProfile": "berts_vehicle_pack:atgm",
@@ -33,9 +33,9 @@
   "TrailMode": "REPLACE",
   "RenderScale": 1,
   "GuidedPropulsion": {
-    "InitialSpeed": 2.625,
-    "MaxSpeed": 7.5,
-    "AccelerationPerTick": 0.24375,
+    "InitialSpeed": 2.8,
+    "MaxSpeed": 8,
+    "AccelerationPerTick": 0.26,
     "ThrustDurationTicks": 120,
     "MaxTurnRateDegreesPerSecond": 24,
     "GuidanceLookAheadTicks": 12,

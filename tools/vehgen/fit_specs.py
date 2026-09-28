@@ -185,8 +185,9 @@ SPECS = {
             {'frame': 'Turret', 'at': [-10.0, 21.0, -40.0]},            # operator (launcher)
             {'frame': 'Vehicle', 'at': [9.6, 10.9, -36.8]},             # driver, front left
         ],
-        # Shturm-S: 9M114 (radio command), 12 in the autoloader, one on the rail
-        'weaponFrom': {'Missile': ('mi24v', 'PilotMissile')},
+        # Shturm-S firing the 9M120 Ataka (radio command, tandem HEAT; the owner's call 2026-09-28, it replaced the
+        # 9M114): the Mi-28N's missile. 12 in the autoloader, one on the rail
+        'weaponFrom': {'Missile': ('mi28n', 'PilotMissile')},
         'muzzles': {'Missile': ['missileMuzzle_1']},
         # one missile on the launcher arm, reloaded from inside after every shot (wt_reloads.py sets the reload)
         'weaponSet': {'Missile': {'Magazine': 1, 'RPM': 60}},
