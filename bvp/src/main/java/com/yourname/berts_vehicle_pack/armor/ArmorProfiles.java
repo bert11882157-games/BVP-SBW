@@ -203,6 +203,7 @@ public final class ArmorProfiles {
                 DEFAULT_UNBOXED_HITS_PENETRATE);
         boolean strictArmorGate = bool(root, "strict_armor_gate", defaultStrictArmorGate(id));
         boolean atgmTandemWarhead = bool(root, "atgm_tandem", false);
+        String launcherWeapon = string(root, "launcher_weapon", "");
         double minArmorMm = Math.max(0.0D, number(root, "min_armor_mm", 0.0D));
         List<ArmorBox> plates = readBoxes(root.getAsJsonArray("plates"), true);
         List<ArmorBox> rawInternals = readBoxes(root.getAsJsonArray("sensitive_internals"), false);
@@ -224,7 +225,8 @@ public final class ArmorProfiles {
         List<ArmorBox> eraBoxes = readEraBoxes(eraArray);
         return new ArmorProfile(id, apPenetrationMm, chemicalPenetrationMm, fallbackIncomingPenetrationMm,
                 impactTolerance, internalRayLength, unboxedHitsPenetrate, strictArmorGate, atgmTandemWarhead,
-                minArmorMm, plates, internals, engines, ammoRacks, tracks, modules, eraBoxes, null, List.of());
+                minArmorMm, plates, internals, engines, ammoRacks, tracks, modules, eraBoxes, null, List.of(),
+                launcherWeapon);
     }
 
     /**
@@ -261,8 +263,22 @@ public final class ArmorProfiles {
                 boxes.unboxedHitsPenetrate, boxes.strictArmorGate, boxes.atgmTandemWarhead, boxes.minArmorMm,
                 pick(result.plates, boxes.plates), pick(result.internals, boxes.sensitiveInternals),
                 pick(result.engines, boxes.engineBoxes), pick(result.ammoRacks, boxes.ammoRacks),
-                pick(result.tracks, boxes.trackBoxes), pick(result.modules, boxes.moduleBoxes),
-                pick(result.era, boxes.eraBoxes), source, result.warnings);
+                pick(result.tracks, boxes.trackBoxes), withLauncherBoxes(result.modules, boxes.moduleBoxes),
+                pick(result.era, boxes.eraBoxes), source, result.warnings, boxes.launcherWeapon);
+    }
+
+    /** Mesh modules replace the box modules, but the generated launcher-tube boxes always stay. */
+    private static List<ArmorBox> withLauncherBoxes(List<ArmorBox> mesh, List<ArmorBox> boxes) {
+        if (mesh.isEmpty()) {
+            return boxes;
+        }
+        List<ArmorBox> out = new ArrayList<>(mesh);
+        for (ArmorBox box : boxes) {
+            if ("launcherreload".equals(box.module) && out.stream().noneMatch(m -> m.name.equals(box.name))) {
+                out.add(box);
+            }
+        }
+        return out;
     }
 
     private static List<ArmorBox> pick(List<ArmorBox> mesh, List<ArmorBox> boxes) {
@@ -378,6 +394,8 @@ public final class ArmorProfiles {
         public final String meshSource;
         /** Validation warnings from the armor mesh (empty for box volumes). */
         public final List<String> meshWarnings;
+        /** Weapon a destroyed launcher tube unloads ({@code launcher_weapon}); empty = seat 0, weapon 0. */
+        public final String launcherWeapon;
 
         private ArmorProfile(String id, double apPenetrationMm, double chemicalPenetrationMm,
                              double fallbackIncomingPenetrationMm, double impactTolerance, double internalRayLength,
@@ -385,7 +403,7 @@ public final class ArmorProfiles {
                              double minArmorMm, List<ArmorBox> plates, List<ArmorBox> sensitiveInternals,
                              List<ArmorBox> engineBoxes, List<ArmorBox> ammoRacks, List<ArmorBox> trackBoxes,
                              List<ArmorBox> moduleBoxes, List<ArmorBox> eraBoxes, String meshSource,
-                             List<String> meshWarnings) {
+                             List<String> meshWarnings, String launcherWeapon) {
             this.id = id;
             this.apPenetrationMm = apPenetrationMm;
             this.chemicalPenetrationMm = chemicalPenetrationMm;
@@ -405,6 +423,7 @@ public final class ArmorProfiles {
             this.eraBoxes = Collections.unmodifiableList(eraBoxes);
             this.meshSource = meshSource;
             this.meshWarnings = List.copyOf(meshWarnings);
+            this.launcherWeapon = launcherWeapon == null ? "" : launcherWeapon;
         }
 
         private static ArmorProfile empty(String id) {
@@ -413,7 +432,7 @@ public final class ArmorProfiles {
                     DEFAULT_INTERNAL_RAY_LENGTH, DEFAULT_UNBOXED_HITS_PENETRATE,
                     false, false, 0.0D, Collections.emptyList(), Collections.emptyList(), Collections.emptyList(),
                     Collections.emptyList(), Collections.emptyList(), Collections.emptyList(), Collections.emptyList(),
-                    null, List.of());
+                    null, List.of(), "");
         }
 
         public boolean hasImpactVolumes() {

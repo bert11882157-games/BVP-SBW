@@ -7,10 +7,10 @@
     "CaliberMm": 70,
     "DiameterMm": 70,
     "HullDamageClass": "HE",
-    "HullDamage": 120,
-    "ModuleDamage": 48,
-    "AmmoRackDamage": 12,
-    "PenetrationMm": 25,
+    "HullDamage": 59,
+    "ModuleDamage": 35,
+    "AmmoRackDamage": 300,
+    "PenetrationMm": 14.0,
     "PenetrationCurve": {
       "DistancesMetres": [
         10,
@@ -21,12 +21,12 @@
         2000
       ],
       "PenetrationMm": [
-        25,
-        25,
-        25,
-        25,
-        25,
-        25
+        14.0,
+        14.0,
+        14.0,
+        14.0,
+        14.0,
+        14.0
       ]
     },
     "RicochetCurve": {

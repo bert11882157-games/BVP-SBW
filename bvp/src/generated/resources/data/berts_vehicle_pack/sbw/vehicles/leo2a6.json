@@ -1,6 +1,6 @@
 {
   "ID": "berts_vehicle_pack:leo2a6",
-  "MaxHealth": 250,
+  "MaxHealth": 323,
   "MaxEnergy": 10000000,
   "AllowFreeCam": true,
   "EngineSoundMode": "CUSTOM",
@@ -1250,5 +1250,7 @@
         1
       ]
     }
-  }
+  },
+  "DeathChargeKg": 37.4,
+  "DamageClass": "MBT"
 }

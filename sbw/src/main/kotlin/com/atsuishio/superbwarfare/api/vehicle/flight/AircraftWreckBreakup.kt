@@ -7,15 +7,17 @@ import java.util.UUID
 object AircraftWreckBreakup {
     const val LEFT = 1
     const val RIGHT = 2
+    /** Whether a vehicle-local [point] lies on a wing that is gone (each wing by its own authored span). */
     @JvmStatic fun detachedAt(vehicle: VehicleEntity, point: net.minecraft.world.phys.Vec3): Boolean {
         val missing = mask(vehicle)
         if (missing == 0) return false
-        val side = if (point.x < 0) LEFT else RIGHT
-        if (missing and side == 0) return false
-        val id = if (side == LEFT) "superbwarfare:wing_left" else "superbwarfare:wing_right"
-        val boxes = vehicle.computed().aircraftSurfaceModules.firstOrNull { it.id == id }?.hitboxes ?: return false
-        if (boxes.isEmpty()) return false
-        return point.x >= boxes.minOf { it.min.x } - .15 && point.x <= boxes.maxOf { it.max.x } + .15
+        for ((side, id) in listOf(LEFT to "superbwarfare:wing_left", RIGHT to "superbwarfare:wing_right")) {
+            if (missing and side == 0) continue
+            val boxes = vehicle.computed().aircraftSurfaceModules.firstOrNull { it.id == id }?.hitboxes ?: continue
+            if (boxes.isEmpty()) continue
+            if (point.x >= boxes.minOf { it.min.x } - .15 && point.x <= boxes.maxOf { it.max.x } + .15) return true
+        }
+        return false
     }
     @JvmStatic fun mask(id: UUID): Int = outcome(Math.floorMod(id.hashCode(), 100))
     @JvmStatic fun delayTicks(id: UUID): Int = 40 + Math.floorMod(id.mostSignificantBits xor
@@ -64,7 +66,8 @@ object AircraftWreckBreakup {
         if (vehicle.level().isClientSide || !supported(vehicle)) return
         val previous = vehicle.aircraftWreckWings.coerceAtLeast(0)
         val next = previous or (sides and 3)
-        if (vehicle.aircraftWreckStart < 0) vehicle.aircraftWreckStart = vehicle.level().gameTime
+        // A wing shot off a flying aircraft does not start the wreck clock (the wreck lifetime counts from death).
+        if (vehicle.aircraftWreckStart < 0 && vehicle.isWreck) vehicle.aircraftWreckStart = vehicle.level().gameTime
         if (next != previous || vehicle.aircraftWreckWings < 0) {
             recordMomentum(vehicle, momentum)
             vehicle.aircraftWreckWings = next

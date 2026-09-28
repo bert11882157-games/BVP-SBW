@@ -1,6 +1,6 @@
 {
   "ID": "berts_vehicle_pack:m1a1_abrams",
-  "MaxHealth": 250,
+  "MaxHealth": 313,
   "MaxEnergy": 10000000,
   "AllowFreeCam": true,
   "EngineSoundMode": "CUSTOM",
@@ -1136,5 +1136,7 @@
         1
       ]
     }
-  }
+  },
+  "DeathChargeKg": 34.2,
+  "DamageClass": "MBT"
 }

@@ -1,6 +1,6 @@
 {
   "ID": "berts_vehicle_pack:t72b3",
-  "MaxHealth": 250,
+  "MaxHealth": 292,
   "MaxEnergy": 10000000,
   "AllowFreeCam": true,
   "HasAutoloader": true,
@@ -795,8 +795,7 @@
             "ApDurability": 3,
             "Damage": 83.33333333333333,
             "ExplosionDamage": 0,
-            "ExplosionRadius": 1.6666666666666665,
-            "TntEquivalentKg": 0.0032,
+            "ExplosionRadius": 0,
             "Name": "AP Belt",
             "ShootShake": [
               8,
@@ -1270,5 +1269,7 @@
         1
       ]
     }
-  }
+  },
+  "DeathChargeKg": 27.6,
+  "DamageClass": "MBT"
 }

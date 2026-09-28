@@ -5,7 +5,7 @@
   "UpStep": 0,
   "InertiaRotateRate": 0,
   "RotateOffsetHeight": 2.03903,
-  "MaxHealth": 70,
+  "MaxHealth": 210,
   "MaxEnergy": 10000000,
   "AllowFreeCam": true,
   "OBB": [
@@ -511,7 +511,7 @@
       "ShellType": "HE",
       "Velocity": 56.1875,
       "ApDurability": 3,
-      "ExplosionRadius": 1.6666666666666665,
+      "ExplosionRadius": 0,
       "NominalBallistics": {
         "Supported": true,
         "ProjectileType": "superbwarfare:projectile",
@@ -532,7 +532,7 @@
             "ApDurability": 3,
             "Damage": 83.33333333333333,
             "ExplosionDamage": 0,
-            "ExplosionRadius": 1.6666666666666665,
+            "ExplosionRadius": 0,
             "Name": "Air Belt",
             "ProjectileBelt": {
               "Name": "Air Belt",
@@ -677,7 +677,7 @@
       "ShellType": "HE",
       "Velocity": 56.1875,
       "ApDurability": 3,
-      "ExplosionRadius": 1.6666666666666665,
+      "ExplosionRadius": 0,
       "NominalBallistics": {
         "Supported": true,
         "ProjectileType": "superbwarfare:projectile",
@@ -698,7 +698,7 @@
             "ApDurability": 3,
             "Damage": 83.33333333333333,
             "ExplosionDamage": 0,
-            "ExplosionRadius": 1.6666666666666665,
+            "ExplosionRadius": 0,
             "Name": "Air Belt",
             "ProjectileBelt": {
               "Name": "Air Belt",
@@ -843,7 +843,7 @@
       "ShellType": "HE",
       "Velocity": 56.1875,
       "ApDurability": 3,
-      "ExplosionRadius": 1.6666666666666665,
+      "ExplosionRadius": 0,
       "NominalBallistics": {
         "Supported": true,
         "ProjectileType": "superbwarfare:projectile",
@@ -864,7 +864,7 @@
             "ApDurability": 3,
             "Damage": 83.33333333333333,
             "ExplosionDamage": 0,
-            "ExplosionRadius": 1.6666666666666665,
+            "ExplosionRadius": 0,
             "Name": "Air Belt",
             "ProjectileBelt": {
               "Name": "Air Belt",
@@ -1009,7 +1009,7 @@
       "ShellType": "HE",
       "Velocity": 56.1875,
       "ApDurability": 3,
-      "ExplosionRadius": 1.6666666666666665,
+      "ExplosionRadius": 0,
       "NominalBallistics": {
         "Supported": true,
         "ProjectileType": "superbwarfare:projectile",
@@ -1030,7 +1030,7 @@
             "ApDurability": 3,
             "Damage": 83.33333333333333,
             "ExplosionDamage": 0,
-            "ExplosionRadius": 1.6666666666666665,
+            "ExplosionRadius": 0,
             "Name": "Air Belt",
             "ProjectileBelt": {
               "Name": "Air Belt",
@@ -1175,7 +1175,7 @@
       "ShellType": "HE",
       "Velocity": 56.1875,
       "ApDurability": 3,
-      "ExplosionRadius": 1.6666666666666665,
+      "ExplosionRadius": 0,
       "NominalBallistics": {
         "Supported": true,
         "ProjectileType": "superbwarfare:projectile",
@@ -1196,7 +1196,7 @@
             "ApDurability": 3,
             "Damage": 83.33333333333333,
             "ExplosionDamage": 0,
-            "ExplosionRadius": 1.6666666666666665,
+            "ExplosionRadius": 0,
             "Name": "Air Belt",
             "ProjectileBelt": {
               "Name": "Air Belt",
@@ -1341,7 +1341,7 @@
       "ShellType": "HE",
       "Velocity": 56.1875,
       "ApDurability": 3,
-      "ExplosionRadius": 1.6666666666666665,
+      "ExplosionRadius": 0,
       "NominalBallistics": {
         "Supported": true,
         "ProjectileType": "superbwarfare:projectile",
@@ -1362,7 +1362,7 @@
             "ApDurability": 3,
             "Damage": 83.33333333333333,
             "ExplosionDamage": 0,
-            "ExplosionRadius": 1.6666666666666665,
+            "ExplosionRadius": 0,
             "Name": "Air Belt",
             "ProjectileBelt": {
               "Name": "Air Belt",
@@ -1951,7 +1951,7 @@
   "AircraftSurfaceModules": [
     {
       "Id": "superbwarfare:wing_left",
-      "MaxHealthFraction": 0.2,
+      "MaxHealthFraction": 0.4,
       "Hitboxes": [
         {
           "Bone": "hull",
@@ -2087,7 +2087,7 @@
     },
     {
       "Id": "superbwarfare:wing_right",
-      "MaxHealthFraction": 0.2,
+      "MaxHealthFraction": 0.4,
       "Hitboxes": [
         {
           "Bone": "hull",
@@ -2220,115 +2220,6 @@
           ]
         }
       ]
-    },
-    {
-      "Id": "superbwarfare:elevator_left",
-      "MaxHealthFraction": 0.15,
-      "Hitboxes": [
-        {
-          "Bone": "elevator_left",
-          "Min": [
-            1.241879,
-            2.416629,
-            -4.161971
-          ],
-          "Max": [
-            1.812471,
-            2.517321,
-            -3.826329
-          ]
-        },
-        {
-          "Bone": "elevator_left",
-          "Min": [
-            0.671286,
-            2.416629,
-            -4.220709
-          ],
-          "Max": [
-            1.241879,
-            2.517321,
-            -3.826329
-          ]
-        },
-        {
-          "Bone": "elevator_left",
-          "Min": [
-            0.100693,
-            2.416629,
-            -4.279446
-          ],
-          "Max": [
-            0.671286,
-            2.517321,
-            -3.826329
-          ]
-        }
-      ]
-    },
-    {
-      "Id": "superbwarfare:elevator_right",
-      "MaxHealthFraction": 0.15,
-      "Hitboxes": [
-        {
-          "Bone": "elevator_right",
-          "Min": [
-            -0.671286,
-            2.416629,
-            -4.279446
-          ],
-          "Max": [
-            -0.100693,
-            2.517321,
-            -3.826329
-          ]
-        },
-        {
-          "Bone": "elevator_right",
-          "Min": [
-            -1.241879,
-            2.416629,
-            -4.220709
-          ],
-          "Max": [
-            -0.671286,
-            2.517321,
-            -3.826329
-          ]
-        },
-        {
-          "Bone": "elevator_right",
-          "Min": [
-            -1.812471,
-            2.416629,
-            -4.161971
-          ],
-          "Max": [
-            -1.241879,
-            2.517321,
-            -3.826329
-          ]
-        }
-      ]
-    },
-    {
-      "Id": "superbwarfare:rudder",
-      "MaxHealthFraction": 0.15,
-      "Hitboxes": [
-        {
-          "Bone": "rudder",
-          "Min": [
-            -0.100693,
-            2.466975,
-            -4.984296
-          ],
-          "Max": [
-            0.100693,
-            3.927021,
-            -4.329793
-          ]
-        }
-      ]
     }
   ],
   "AircraftSurfaceTransforms": {
@@ -2427,5 +2318,7 @@
       ],
       "MaxDeflectionDegrees": 25
     }
-  }
+  },
+  "DamageClass": "AIRPLANE",
+  "DeathChargeKg": 6.9
 }

@@ -28,7 +28,8 @@ internal class VehicleDestructionLifecycleService(
         farDeathPublished = true
         if (vehicle.aircraftWreckStart < 0L) vehicle.aircraftWreckStart = vehicle.level().gameTime
         if (aircraft) com.atsuishio.superbwarfare.api.aircraft.AircraftCombatEffects.aircraftBreakup(vehicle)
-        else if (vehicle.computed().destroyInfo.deathBurst)
+        // A vehicle with a TNT death charge shows the fireball only (no white SBW burst rings).
+        else if (vehicle.computed().destroyInfo.deathBurst && vehicle.computed().deathChargeKg <= 0.0)
             com.atsuishio.superbwarfare.network.message.receive.ExplosionBurstMessage.sendFarDeath(vehicle)
     }
 
@@ -198,6 +199,28 @@ internal class VehicleDestructionLifecycleService(
 
     private fun performVehicleExplosion(destroyInfo: DestroyInfo, context: VehicleDestructionContext) {
         val radius = destroyInfo.explosionRadius
+        val charge = vehicle.computed().deathChargeKg
+        if (charge > 0.0 && com.atsuishio.superbwarfare.tools.blast.TntBlast.active(charge)) {
+            // Classed vehicles go up on the TNT model: fuel and stowed ammunition (DeathChargeKg), doubled when the
+            // ammunition rack set it off, with the TNT fireball and no SBW burst recipe.
+            val kg = charge * (if (context.explosionCauseId()?.path == "ammo_rack") 2.0 else 1.0)
+            queueServerWork(1) {
+                val explosion = vehicle.createCustomExplosion(context)
+                    .radius(0f)
+                    .damage(0f)
+                    .tntEquivalent(kg)
+                    .withParticleType(ParticleTool.ParticleType.MINI)
+                    .emitFx(context.emitExplosionFx())
+                    .explosionCause(context.explosionCauseId())
+                    .explosionProfile(context.explosionProfileId())
+                    .keepBlock()
+                context.particlePosition()?.let(explosion::particlePosition)
+                com.atsuishio.superbwarfare.Mod.LOGGER.info("[Blast Damage] death explosion vehicle={} tnt_kg={} cause={}",
+                    ForgeRegistries.ENTITY_TYPES.getKey(vehicle.type), kg, context.explosionCauseId())
+                explosion.explode()
+            }
+            return
+        }
         if (radius <= 0) return
 
         // Capture this transaction's context before queueing; a later damage transaction must not

@@ -6,9 +6,9 @@
     "DamageType": "berts_vehicle_pack:chemical",
     "DiameterMm": 115,
     "HullDamageClass": "ATGM",
-    "HullDamage": 111,
-    "ModuleDamage": 35,
-    "AmmoRackDamage": 7,
+    "HullDamage": 128,
+    "ModuleDamage": 77,
+    "AmmoRackDamage": 603,
     "PenetrationMm": 900,
     "RicochetCurve": {
       "IncidenceAnglesDegrees": [
@@ -24,7 +24,7 @@
         1
       ]
     },
-    "Tandem": false
+    "Tandem": true
   },
   "VisualProfile": "berts_vehicle_pack:ataka_atgm",
   "ImpactVisualProfile": "berts_vehicle_pack:atgm",

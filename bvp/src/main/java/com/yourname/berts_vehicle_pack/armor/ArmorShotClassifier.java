@@ -45,22 +45,11 @@ final class ArmorShotClassifier {
     static ProjectileArmorEffect classify(Projectile projectile, Entity owner,
                                           ArmorProfile targetProfile, Vec3 impactPosition) {
         ProjectileArmorEffect raw = classifyUnscaled(projectile, owner, targetProfile, impactPosition);
+        // Damage normalization 2026-09-28: the profile's HullDamage is the hull damage. No mount factor and no
+        // round-type balance on top; a consolidated aircraft round (one projectile standing for two) still counts
+        // for the rounds it carries.
         return raw == null ? null : raw.withDirectDamageScale(
-                com.atsuishio.superbwarfare.api.vehicle.weapon.VehicleWeaponDamagePolicy.scale(projectile)
-                        * roundBalance(raw));
-    }
-
-    /** Round-type balance on vehicle damage: APFSDS slightly lower, HEAT higher, ATGMs unchanged. */
-    static final double APFSDS_DAMAGE_BALANCE = 0.95D;
-    static final double HEAT_DAMAGE_BALANCE = 1.15D;
-
-    static double roundBalance(ProjectileArmorEffect effect) {
-        if (effect.atgm) return 1.0D;
-        return switch (effect.impactVisual) {
-            case APFSDS -> APFSDS_DAMAGE_BALANCE;
-            case HEAT_FS -> HEAT_DAMAGE_BALANCE;
-            default -> 1.0D;
-        };
+                com.atsuishio.superbwarfare.api.vehicle.weapon.AircraftRoundConsolidation.weight(projectile));
     }
 
     private static ProjectileArmorEffect classifyUnscaled(Projectile projectile, Entity owner,

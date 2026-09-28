@@ -29,7 +29,8 @@ final class ProjectileArmorEffects {
     static final double ROUND_3OF26_VEHICLE_DAMAGE = TANK_HE_DEFAULT_VEHICLE_DAMAGE;
     static final double NON_TANDEM_ATGM_PENETRATION_MM = 575.0D;
     static final double TANDEM_ATGM_PENETRATION_MM = 800.0D;
-    static final double DEFAULT_ATGM_VEHICLE_DAMAGE = 180.0D;
+    /** Unprofiled (SBW native) guided missiles: the usual ATGM, 40 % of an MBT (damage normalization 2026-09-28). */
+    static final double DEFAULT_ATGM_VEHICLE_DAMAGE = 120.0D;
     static final double ATGM_9M113_KONKURS_VEHICLE_DAMAGE = 180.0D;
     static final double ATGM_9M119M1_TANDEM_VEHICLE_DAMAGE = 225.0D;
     static final double ATGM_9M117_BASTION_VEHICLE_DAMAGE = 200.0D;
@@ -220,9 +221,11 @@ final class ProjectileArmorEffects {
                 || !validPrecomputedDamage(ammoRackDamage)) {
             return null;
         }
-        double multiplier = BvpHandheldAtPolicy.damageMultiplier(descriptor);
-        return effect.withArmorDamage(moduleDamage * multiplier, ammoRackDamage * multiplier,
-                hullDamage * multiplier);
+        // Damage normalization 2026-09-28 (tools/damage/balance.py): HullDamage is the whole hull damage of a
+        // penetrating hit, ModuleDamage goes to every module the shot crosses (ammo racks included), and
+        // AmmoRackDamage is the per-mille chance that a crossed rack goes up at once.
+        return effect.withArmorDamage(moduleDamage, moduleDamage, hullDamage)
+                .withAmmoRackChance(ammoRackDamage / 1000.0D);
     }
 
     private static boolean validPrecomputedDamage(int value) {

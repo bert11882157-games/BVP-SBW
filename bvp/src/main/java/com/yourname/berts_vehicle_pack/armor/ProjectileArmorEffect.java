@@ -21,6 +21,12 @@ final class ProjectileArmorEffect {
     private final Map<String, Double> moduleDamageById;
 
     final double vehicleDamage;
+    /**
+     * Typed (profiled) rounds: the chance, per ammo rack the shot crosses, that the rack goes up at once (the
+     * profile's AmmoRackDamage in per mille). Independent of how full the racks are. Negative for the legacy
+     * effects, whose chance is their ammo-rack damage x {@value #AMMO_RACK_INSTANT_DETONATION_CHANCE_PER_DAMAGE}.
+     */
+    final double ammoRackChance;
 
     ProjectileArmorEffect(ArmorDamageType damageType, double penetrationMm, CannonShellEntity shell,
                           double defaultModuleDamage) {
@@ -41,13 +47,13 @@ final class ProjectileArmorEffect {
                           boolean atgm, double defaultModuleDamage, Map<String, Double> moduleDamageById,
                           double vehicleDamage) {
         this(damageType, penetrationMm, shell, atgm, defaultModuleDamage, moduleDamageById,
-                vehicleDamage, false, ImpactVisual.NONE, false);
+                vehicleDamage, false, ImpactVisual.NONE, false, -1.0D);
     }
 
     private ProjectileArmorEffect(ArmorDamageType damageType, double penetrationMm, CannonShellEntity shell,
                                   boolean atgm, double defaultModuleDamage, Map<String, Double> moduleDamageById,
                                   double vehicleDamage, boolean tandemWarhead, ImpactVisual impactVisual,
-                                  boolean overridesNormalized) {
+                                  boolean overridesNormalized, double ammoRackChance) {
         this.damageType = damageType;
         this.penetrationMm = penetrationMm;
         this.shell = shell;
@@ -57,6 +63,7 @@ final class ProjectileArmorEffect {
         this.defaultModuleDamage = defaultModuleDamage;
         this.moduleDamageById = overridesNormalized ? moduleDamageById : normalizeOverrides(moduleDamageById);
         this.vehicleDamage = vehicleDamage;
+        this.ammoRackChance = ammoRackChance;
     }
 
     double moduleDamage() {
@@ -70,7 +77,7 @@ final class ProjectileArmorEffect {
         return new ProjectileArmorEffect(damageType, penetrationMm, shell, atgm,
                 defaultModuleDamage * factor, overrides,
                 vehicleDamage < 0.0D ? vehicleDamage : vehicleDamage * factor,
-                tandemWarhead, impactVisual, true);
+                tandemWarhead, impactVisual, true, ammoRackChance);
     }
 
     double moduleDamage(String moduleId) {
@@ -82,25 +89,36 @@ final class ProjectileArmorEffect {
         return override == null ? defaultModuleDamage : override;
     }
 
+    /** Damage to an ammo rack module the shot crosses without setting it off: the round's module damage. */
     double ammoRackDamage() {
-        return moduleDamage(ArmorModuleResolver.AMMO_RACK);
+        return ammoRackChance >= 0.0D ? defaultModuleDamage : moduleDamage(ArmorModuleResolver.AMMO_RACK);
     }
 
     double ammoRackInstantDetonationChance() {
+        if (ammoRackChance >= 0.0D) {
+            return Math.min(1.0D, ammoRackChance);
+        }
         return Math.max(0.0D, Math.min(1.0D,
-                ammoRackDamage() * AMMO_RACK_INSTANT_DETONATION_CHANCE_PER_DAMAGE));
+                moduleDamage(ArmorModuleResolver.AMMO_RACK) * AMMO_RACK_INSTANT_DETONATION_CHANCE_PER_DAMAGE));
+    }
+
+    /** The typed per-rack detonation chance (0..1); see {@link #ammoRackChance}. */
+    ProjectileArmorEffect withAmmoRackChance(double chance) {
+        return new ProjectileArmorEffect(this.damageType, this.penetrationMm, this.shell, this.atgm,
+                this.defaultModuleDamage, this.moduleDamageById, this.vehicleDamage,
+                this.tandemWarhead, this.impactVisual, true, Math.max(0.0D, Math.min(1.0D, chance)));
     }
 
     ProjectileArmorEffect withPenetration(double newPenetrationMm) {
         return new ProjectileArmorEffect(this.damageType, Math.max(0.0D, newPenetrationMm),
                 this.shell, this.atgm, this.defaultModuleDamage, this.moduleDamageById,
-                this.vehicleDamage, this.tandemWarhead, this.impactVisual, true);
+                this.vehicleDamage, this.tandemWarhead, this.impactVisual, true, this.ammoRackChance);
     }
 
     ProjectileArmorEffect withVehicleDamage(double newVehicleDamage) {
         return new ProjectileArmorEffect(this.damageType, this.penetrationMm, this.shell, this.atgm,
                 this.defaultModuleDamage, this.moduleDamageById, newVehicleDamage,
-                this.tandemWarhead, this.impactVisual, true);
+                this.tandemWarhead, this.impactVisual, true, this.ammoRackChance);
     }
 
     /**
@@ -115,18 +133,18 @@ final class ProjectileArmorEffect {
         overrides.put(ArmorModuleResolver.AMMO_RACK, newAmmoRackDamage);
         return new ProjectileArmorEffect(this.damageType, this.penetrationMm, this.shell, this.atgm,
                 newModuleDamage, overrides, newVehicleDamage,
-                this.tandemWarhead, this.impactVisual, true);
+                this.tandemWarhead, this.impactVisual, true, this.ammoRackChance);
     }
 
     ProjectileArmorEffect withImpactVisual(ImpactVisual newImpactVisual) {
         return new ProjectileArmorEffect(this.damageType, this.penetrationMm, this.shell, this.atgm,
                 this.defaultModuleDamage, this.moduleDamageById, this.vehicleDamage,
-                this.tandemWarhead, newImpactVisual, true);
+                this.tandemWarhead, newImpactVisual, true, this.ammoRackChance);
     }
 
     ProjectileArmorEffect withTandemWarhead() {
         return new ProjectileArmorEffect(this.damageType, this.penetrationMm, this.shell, this.atgm,
-                this.defaultModuleDamage, this.moduleDamageById, this.vehicleDamage, true, this.impactVisual, true);
+                this.defaultModuleDamage, this.moduleDamageById, this.vehicleDamage, true, this.impactVisual, true, this.ammoRackChance);
     }
 
     Map<String, Double> moduleDamageOverrides() {

@@ -457,8 +457,8 @@ open class CustomExplosion(
             if (mount is VehicleEntity && mount.isEnclosed(entity)) continue
             val damage = when {
                 // Inside the penetrator cylinder the fireball itself reaches the target: no occlusion.
-                inCylinder -> parameters.infantryCentreDamage
-                distance < infantryRadii.severe -> heShellInfantry * BlastModel.infantryDamage(
+                inCylinder -> parameters.infantryCentreDamage * BlastModel.infantryPeakScale(plan.kg)
+                distance < infantryRadii.severe -> heShellInfantry * BlastModel.infantryDamageFor(plan.kg,
                     distance, BlastExposure.seenFraction(level, center, entity), infantryRadii, parameters)
                 else -> 0.0
             }
@@ -476,8 +476,71 @@ open class CustomExplosion(
         }
     }
 
-    /** True damage near the fireball (>= 25 kg) plus infantry-style falloff for vehicles without armor hitboxes. */
+    /**
+     * A classed vehicle (DamageClass, owner direction 2026-09-28) takes 3 x kg x falloff x its class multiplier,
+     * with no charge threshold, except from the munition that hit it directly. An aircraft near an air-to-air or
+     * surface-to-air missile takes the missile rule scaled by proximity instead, once per missile; blast damage
+     * on an airframe also wears the nearer wing. Vehicles without a class keep the legacy true-damage rules.
+     */
     private fun applyTntToVehicle(
+        vehicle: VehicleEntity, plan: TntBlast.Plan, center: Vec3, distance: Double,
+        cylinder: BlastCylinder?, inCylinder: Boolean, diagnostics: Boolean,
+    ): Boolean {
+        val damageClass = com.atsuishio.superbwarfare.tools.blast.VehicleDamageClass.of(vehicle)
+            ?: return applyLegacyTntToVehicle(vehicle, plan, center, distance, cylinder, inCylinder, diagnostics)
+        val parameters = plan.parameters
+        val radii = plan.radii
+        var hit = false
+        val healthBefore = vehicle.health
+        val struck = com.atsuishio.superbwarfare.tools.blast.StruckVehicles.struck(pSource, vehicle)
+        val missile = damageClass.aircraft && missileSource(pSource)
+        val rule: String
+        val damage = when {
+            struck -> { rule = "struck_directly"; 0.0 }
+            missile -> {
+                rule = "missile_proximity"
+                val proximity = com.atsuishio.superbwarfare.api.aircraft.AircraftHitRules.proximity(distance, radii.severe)
+                if (proximity > 0.0) com.atsuishio.superbwarfare.api.aircraft.AircraftHitRules.missile(
+                    plan.kg, vehicle.getMaxHealth().toDouble(), proximity) else 0.0
+            }
+            cylinder != null && inCylinder -> { rule = "penetrator"; parameters.vehicleDamagePerKg * plan.kg * damageClass.blastMultiplier }
+            cylinder != null -> { rule = "outside_penetrator"; 0.0 }
+            else -> { rule = "class_blast"; BlastModel.classBlastDamage(plan.kg, distance, radii, damageClass.blastMultiplier, parameters) }
+        }
+        if (damage > 0.0) {
+            val result = vehicle.applyResolvedDamage(
+                com.atsuishio.superbwarfare.api.vehicle.damage.ResolvedVehicleDamageRequest(
+                    damageSource, damage.toFloat(),
+                    com.atsuishio.superbwarfare.api.vehicle.damage.ResolvedVehicleModulePolicy.SKIP_NATIVE
+                )
+            )
+            hit = result.accepted
+            if (result.accepted && missile) com.atsuishio.superbwarfare.tools.blast.StruckVehicles.mark(pSource, vehicle)
+            if (result.accepted && damageClass == com.atsuishio.superbwarfare.tools.blast.VehicleDamageClass.AIRPLANE)
+                com.atsuishio.superbwarfare.api.aircraft.AircraftSurfaceModules.applyBlast(vehicle, center,
+                    result.appliedDamage.toDouble())
+        }
+        if (vehicle.isAlive) applyBlastPush(vehicle, plan, center, distance)
+        if (damage > 0.0 || struck) com.atsuishio.superbwarfare.tools.blast.BlastDamageLog.vehicle(vehicle, pSource,
+            damageClass.name, rule, plan.kg, distance, radii.severe, damage, healthBefore)
+        if (diagnostics && damage > 0.0) EliteDiagnostics.record(vehicle,
+            "tnt_blast", "VEHICLE", "source_uuid", pSource?.uuid, "tnt_kg", plan.kg, "distance", distance,
+            "class", damageClass.name, "rule", rule, "damage", damage,
+            "health_before", healthBefore, "health_after", vehicle.health)
+        return hit
+    }
+
+    /** Air-to-air / surface-to-air missiles (not anti-tank ones) for the aircraft proximity rule. */
+    private fun missileSource(source: Entity?): Boolean {
+        if (source == null) return false
+        if (com.atsuishio.superbwarfare.tools.blast.ExternalMunitionBlasts.isExternal(source)) return true
+        val projectile = source as? net.minecraft.world.entity.projectile.Projectile ?: return false
+        return com.atsuishio.superbwarfare.api.aircraft.AircraftProjectileDamage.kindOf(projectile, null) ==
+            com.atsuishio.superbwarfare.api.aircraft.AircraftHitRules.Kind.MISSILE
+    }
+
+    /** Legacy rules for vehicles without a DamageClass: true damage near the fireball (>= 25 kg), soft falloff. */
+    private fun applyLegacyTntToVehicle(
         vehicle: VehicleEntity, plan: TntBlast.Plan, center: Vec3, distance: Double,
         cylinder: BlastCylinder?, inCylinder: Boolean, diagnostics: Boolean,
     ): Boolean {

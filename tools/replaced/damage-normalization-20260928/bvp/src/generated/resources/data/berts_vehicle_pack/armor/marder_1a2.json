@@ -1,0 +1,683 @@
+{
+  "id": "marder_1a2",
+  "model_scale": 0.783141399426741,
+  "ap_penetration_mm": 500,
+  "chemical_penetration_mm": 700,
+  "fallback_incoming_penetration_mm": 500,
+  "atgm_tandem": false,
+  "impact_tolerance": 0.25,
+  "internal_ray_length": 10,
+  "unboxed_hits_penetrate": true,
+  "min_armor_mm": 16,
+  "plates": [
+    {
+      "name": "authored_red_plate_00",
+      "center": [
+        0,
+        2.19859,
+        1.27212
+      ],
+      "half_size": [
+        1.2435,
+        2.14328,
+        0.02888
+      ],
+      "rotation": [
+        90,
+        0,
+        180
+      ],
+      "frame": "hull",
+      "armor_mm": 25
+    },
+    {
+      "name": "authored_red_plate_01",
+      "center": [
+        0,
+        1.77461,
+        -2.2242
+      ],
+      "half_size": [
+        1.27787,
+        1.40766,
+        0.02888
+      ],
+      "rotation": [
+        107,
+        0,
+        180
+      ],
+      "frame": "hull",
+      "armor_mm": 25
+    },
+    {
+      "name": "authored_red_plate_02",
+      "center": [
+        1.38875,
+        1.57762,
+        -2.86851
+      ],
+      "half_size": [
+        0.10225,
+        0.73391,
+        0.02888
+      ],
+      "rotation": [
+        107,
+        0,
+        180
+      ],
+      "frame": "hull",
+      "armor_mm": 25
+    },
+    {
+      "name": "authored_red_plate_03",
+      "center": [
+        0,
+        2.08898,
+        3.54481
+      ],
+      "half_size": [
+        1.2435,
+        0.17359,
+        0.02888
+      ],
+      "rotation": [
+        39,
+        0,
+        180
+      ],
+      "frame": "hull",
+      "armor_mm": 25
+    },
+    {
+      "name": "authored_red_plate_04",
+      "center": [
+        0.00343,
+        1.14414,
+        3.23321
+      ],
+      "half_size": [
+        1.3638,
+        0.94359,
+        0.02888
+      ],
+      "rotation": [
+        -31,
+        0,
+        180
+      ],
+      "frame": "hull",
+      "armor_mm": 25
+    },
+    {
+      "name": "authored_red_plate_05",
+      "center": [
+        1.44991,
+        1.82142,
+        1.25492
+      ],
+      "half_size": [
+        0.43912,
+        2.10547,
+        0.02888
+      ],
+      "rotation": [
+        90,
+        0,
+        115
+      ],
+      "frame": "hull",
+      "armor_mm": 25
+    },
+    {
+      "name": "authored_red_plate_06",
+      "center": [
+        1.40488,
+        1.918,
+        3.46867
+      ],
+      "half_size": [
+        0.19505,
+        0.10484,
+        0.02888
+      ],
+      "rotation": [
+        90,
+        0,
+        115
+      ],
+      "frame": "hull",
+      "armor_mm": 25
+    },
+    {
+      "name": "authored_red_plate_07",
+      "center": [
+        1.46782,
+        1.09111,
+        3.20134
+      ],
+      "half_size": [
+        0.09193,
+        0.53797,
+        0.02888
+      ],
+      "rotation": [
+        -31,
+        0,
+        180
+      ],
+      "frame": "hull",
+      "armor_mm": 25
+    },
+    {
+      "name": "authored_red_plate_08",
+      "center": [
+        1.49059,
+        1.73419,
+        -1.11351
+      ],
+      "half_size": [
+        0.34287,
+        0.25266,
+        0.02888
+      ],
+      "rotation": [
+        90,
+        0,
+        115
+      ],
+      "frame": "hull",
+      "armor_mm": 25
+    },
+    {
+      "name": "authored_red_plate_09",
+      "center": [
+        1.51964,
+        1.67188,
+        -1.68758
+      ],
+      "half_size": [
+        0.27412,
+        0.31109,
+        0.02888
+      ],
+      "rotation": [
+        90,
+        0,
+        115
+      ],
+      "frame": "hull",
+      "armor_mm": 25
+    },
+    {
+      "name": "authored_red_plate_10",
+      "center": [
+        1.5734,
+        1.55661,
+        -2.33383
+      ],
+      "half_size": [
+        0.14693,
+        0.32484,
+        0.02888
+      ],
+      "rotation": [
+        90,
+        0,
+        115
+      ],
+      "frame": "hull",
+      "armor_mm": 25
+    },
+    {
+      "name": "authored_red_plate_11",
+      "center": [
+        1.60099,
+        1.49742,
+        -2.84258
+      ],
+      "half_size": [
+        0.08162,
+        0.18047,
+        0.02888
+      ],
+      "rotation": [
+        90,
+        0,
+        115
+      ],
+      "frame": "hull",
+      "armor_mm": 25
+    },
+    {
+      "name": "authored_red_plate_12",
+      "center": [
+        1.62218,
+        0.91821,
+        0.17212
+      ],
+      "half_size": [
+        0.49068,
+        2.92703,
+        0.02888
+      ],
+      "rotation": [
+        90,
+        0,
+        89
+      ],
+      "frame": "hull",
+      "armor_mm": 25
+    },
+    {
+      "name": "authored_red_plate_13",
+      "center": [
+        1.62621,
+        1.14849,
+        -3.0007
+      ],
+      "half_size": [
+        0.26037,
+        0.23547,
+        0.02888
+      ],
+      "rotation": [
+        90,
+        0,
+        89
+      ],
+      "frame": "hull",
+      "armor_mm": 25
+    },
+    {
+      "name": "authored_red_plate_14",
+      "center": [
+        0.00343,
+        1.10692,
+        -3.43873
+      ],
+      "half_size": [
+        1.56318,
+        0.25266,
+        0.02888
+      ],
+      "rotation": [
+        -155,
+        0,
+        180
+      ],
+      "frame": "hull",
+      "armor_mm": 25
+    },
+    {
+      "name": "authored_red_plate_15",
+      "center": [
+        0.00344,
+        0.59514,
+        -3.00788
+      ],
+      "half_size": [
+        1.56318,
+        0.42453,
+        0.02888
+      ],
+      "rotation": [
+        -127,
+        0,
+        180
+      ],
+      "frame": "hull",
+      "armor_mm": 25
+    },
+    {
+      "name": "authored_red_plate_16",
+      "center": [
+        1.61949,
+        0.76355,
+        -2.89413
+      ],
+      "half_size": [
+        0.12287,
+        0.12891,
+        0.02888
+      ],
+      "rotation": [
+        90,
+        0,
+        89
+      ],
+      "frame": "hull",
+      "armor_mm": 25
+    },
+    {
+      "name": "authored_red_plate_17",
+      "center": [
+        1.6268,
+        1.18286,
+        -3.33413
+      ],
+      "half_size": [
+        0.171,
+        0.09453,
+        0.02888
+      ],
+      "rotation": [
+        90,
+        0,
+        89
+      ],
+      "frame": "hull",
+      "armor_mm": 25
+    },
+    {
+      "name": "authored_red_plate_18",
+      "center": [
+        -1.38875,
+        1.57762,
+        -2.86851
+      ],
+      "half_size": [
+        0.10225,
+        0.73391,
+        0.02888
+      ],
+      "rotation": [
+        107,
+        0,
+        -180
+      ],
+      "frame": "hull",
+      "armor_mm": 25
+    },
+    {
+      "name": "authored_red_plate_19",
+      "center": [
+        -1.6268,
+        1.18286,
+        -3.33413
+      ],
+      "half_size": [
+        0.171,
+        0.09453,
+        0.02888
+      ],
+      "rotation": [
+        90,
+        0,
+        -89
+      ],
+      "frame": "hull",
+      "armor_mm": 25
+    },
+    {
+      "name": "authored_red_plate_20",
+      "center": [
+        -1.62621,
+        1.14849,
+        -3.0007
+      ],
+      "half_size": [
+        0.26037,
+        0.23547,
+        0.02888
+      ],
+      "rotation": [
+        90,
+        0,
+        -89
+      ],
+      "frame": "hull",
+      "armor_mm": 25
+    },
+    {
+      "name": "authored_red_plate_21",
+      "center": [
+        -1.5734,
+        1.55661,
+        -2.33383
+      ],
+      "half_size": [
+        0.14693,
+        0.32484,
+        0.02888
+      ],
+      "rotation": [
+        90,
+        0,
+        -115
+      ],
+      "frame": "hull",
+      "armor_mm": 25
+    },
+    {
+      "name": "authored_red_plate_22",
+      "center": [
+        -1.60099,
+        1.49742,
+        -2.84258
+      ],
+      "half_size": [
+        0.08162,
+        0.18047,
+        0.02888
+      ],
+      "rotation": [
+        90,
+        0,
+        -115
+      ],
+      "frame": "hull",
+      "armor_mm": 25
+    },
+    {
+      "name": "authored_red_plate_23",
+      "center": [
+        -1.62218,
+        0.91821,
+        0.17212
+      ],
+      "half_size": [
+        0.49068,
+        2.92703,
+        0.02888
+      ],
+      "rotation": [
+        90,
+        0,
+        -89
+      ],
+      "frame": "hull",
+      "armor_mm": 25
+    },
+    {
+      "name": "authored_red_plate_24",
+      "center": [
+        -1.61949,
+        0.76355,
+        -2.89413
+      ],
+      "half_size": [
+        0.12287,
+        0.12891,
+        0.02888
+      ],
+      "rotation": [
+        90,
+        0,
+        -89
+      ],
+      "frame": "hull",
+      "armor_mm": 25
+    },
+    {
+      "name": "authored_red_plate_25",
+      "center": [
+        -1.51964,
+        1.67188,
+        -1.68758
+      ],
+      "half_size": [
+        0.27412,
+        0.31109,
+        0.02888
+      ],
+      "rotation": [
+        90,
+        0,
+        -115
+      ],
+      "frame": "hull",
+      "armor_mm": 25
+    },
+    {
+      "name": "authored_red_plate_26",
+      "center": [
+        -1.49059,
+        1.73419,
+        -1.11351
+      ],
+      "half_size": [
+        0.34287,
+        0.25266,
+        0.02888
+      ],
+      "rotation": [
+        90,
+        0,
+        -115
+      ],
+      "frame": "hull",
+      "armor_mm": 25
+    },
+    {
+      "name": "authored_red_plate_27",
+      "center": [
+        -1.44991,
+        1.82142,
+        1.25492
+      ],
+      "half_size": [
+        0.43912,
+        2.10547,
+        0.02888
+      ],
+      "rotation": [
+        90,
+        0,
+        -115
+      ],
+      "frame": "hull",
+      "armor_mm": 25
+    },
+    {
+      "name": "authored_red_plate_28",
+      "center": [
+        -1.40488,
+        1.918,
+        3.46867
+      ],
+      "half_size": [
+        0.19505,
+        0.10484,
+        0.02888
+      ],
+      "rotation": [
+        90,
+        0,
+        -115
+      ],
+      "frame": "hull",
+      "armor_mm": 25
+    },
+    {
+      "name": "authored_red_plate_29",
+      "center": [
+        -1.46782,
+        1.09111,
+        3.20134
+      ],
+      "half_size": [
+        0.09193,
+        0.53797,
+        0.02888
+      ],
+      "rotation": [
+        -31,
+        0,
+        -180
+      ],
+      "frame": "hull",
+      "armor_mm": 25
+    },
+    {
+      "name": "authored_red_plate_30",
+      "center": [
+        0.00344,
+        0.34022,
+        0.05023
+      ],
+      "half_size": [
+        1.56318,
+        2.70359,
+        0.02888
+      ],
+      "rotation": [
+        -90,
+        0,
+        180
+      ],
+      "frame": "hull",
+      "armor_mm": 25
+    }
+  ],
+  "sensitive_internals": [],
+  "engines": [
+    {
+      "name": "engine_block_00",
+      "center": [
+        -0.47438,
+        1.06563,
+        -1.82532
+      ],
+      "half_size": [
+        0.39188,
+        0.37125,
+        0.64968
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull"
+    }
+  ],
+  "ammo_racks": [],
+  "tracks": [],
+  "modules": [
+    {
+      "name": "weaponsystems_00",
+      "center": [
+        0.15469,
+        2.79125,
+        0.69782
+      ],
+      "half_size": [
+        0.43656,
+        0.22687,
+        0.58781
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "turret",
+      "module": "weaponsystems",
+      "unified": true
+    }
+  ],
+  "explosive_reactive_armor": [],
+  "sbw_obb": []
+}

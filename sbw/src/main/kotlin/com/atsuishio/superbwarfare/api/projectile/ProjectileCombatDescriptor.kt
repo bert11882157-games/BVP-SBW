@@ -19,11 +19,14 @@ data class ProjectileCombatDescriptor(
     val diameterMm: Double? = null,
     /** Required generation-time direct-hull classification. */
     val hullDamageClass: ProjectileHullDamageClass,
-    /** Required generator-precomputed authoritative direct hull damage. */
+    /** Hull damage of a penetrating hit (tools/damage/balance.py; MBT reference 300 HP). */
     val hullDamage: Int,
-    /** Precomputed ordinary-module damage for the exact authored projectile. */
+    /** Damage to every module the shot crosses, ammunition racks included (0.6 x hull, at most 100). */
     val moduleDamage: Int,
-    /** Precomputed ammunition-rack damage for the exact authored projectile. */
+    /**
+     * Per-mille chance that an ammunition rack the shot crosses detonates at once (e.g. 350 = 35 % for APFSDS).
+     * Independent of how full the racks are; a rack that holds takes [moduleDamage] and goes up at 0.
+     */
     val ammoRackDamage: Int,
 ) {
     init {

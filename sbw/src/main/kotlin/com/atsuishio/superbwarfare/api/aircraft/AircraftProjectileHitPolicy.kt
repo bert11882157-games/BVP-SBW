@@ -13,16 +13,9 @@ object AircraftProjectileHitPolicy {
         else -> false
     }
 
+    /** Gun-round damage by calibre ([AircraftHitRules.gun]); null for an unusable calibre. */
     @JvmStatic
-    fun damageForCaliberMillimetres(caliber: Double?): Float? = when {
-        caliber == null || !caliber.isFinite() || caliber < 1.0 -> null
-        caliber < 12.7 -> 1f
-        caliber < 20.0 -> 2.5f
-        caliber < 30.0 -> 6f
-        caliber < 50.0 -> 9f
-        caliber < 80.0 -> 30f
-        else -> 100f
-    }
+    fun damageForCaliberMillimetres(caliber: Double?): Float? = AircraftHitRules.gun(caliber)?.toFloat()
 
     /** Explicit family HP is authoritative even when a projectile also carries combat metadata. */
     internal fun resolveDamage(caliber: Double?, directOverride: Float?): Float? =

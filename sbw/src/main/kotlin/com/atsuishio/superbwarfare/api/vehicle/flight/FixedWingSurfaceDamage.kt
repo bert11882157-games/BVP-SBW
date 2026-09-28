@@ -1,32 +1,35 @@
 package com.atsuishio.superbwarfare.api.vehicle.flight
 
-/** Aerodynamic effects of independently disabled surfaces. Both wings share one authority penalty. */
+/**
+ * Aerodynamic effect of wing damage (owner 2026-09-28). A wing at or below 25 % of its pool has a dead aileron:
+ * each dead aileron halves roll authority. A wing that is gone also rolls the aircraft towards the missing side.
+ * Elevators and the rudder are part of the hull and never lose authority.
+ */
 data class FixedWingSurfaceDamage(
-    val leftWing: Boolean = false,
-    val rightWing: Boolean = false,
-    val leftElevator: Boolean = false,
-    val rightElevator: Boolean = false,
-    val rudder: Boolean = false,
+    val leftAileronDead: Boolean = false,
+    val rightAileronDead: Boolean = false,
+    val leftWingGone: Boolean = false,
+    val rightWingGone: Boolean = false,
 ) {
-    val rollAuthority: Double get() = if (leftWing || rightWing) 0.5 else 1.0
-    val pitchAuthority: Double get() = when {
-        leftElevator && rightElevator -> 0.1
-        leftElevator || rightElevator -> 0.55
-        else -> 1.0
-    }
-    val yawAuthority: Double get() = if (rudder) 0.0 else 1.0
-    /** Positive body roll is right bank. Opposite damaged-wing biases cancel. */
+    val rollAuthority: Double get() =
+        (if (leftAileronDead || leftWingGone) 0.5 else 1.0) * (if (rightAileronDead || rightWingGone) 0.5 else 1.0)
+    val pitchAuthority: Double get() = 1.0
+    val yawAuthority: Double get() = 1.0
+    /** Positive body roll is right bank: the side without its wing drops. */
     val rollBiasDegreesPerSecond: Double get() =
-        ((if (rightWing) 1 else 0) - (if (leftWing) 1 else 0)) * 1.5
+        ((if (rightWingGone) 1 else 0) - (if (leftWingGone) 1 else 0)) * WING_LOSS_ROLL_DEGREES_PER_SECOND +
+            ((if (rightAileronDead) 1 else 0) - (if (leftAileronDead) 1 else 0)) * 1.5
 
     companion object {
+        const val AILERON_DEAD_FRACTION = 0.25
+        const val WING_LOSS_ROLL_DEGREES_PER_SECOND = 55.0
         val INTACT = FixedWingSurfaceDamage()
         fun from(vehicle: com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity): FixedWingSurfaceDamage {
             val modules = com.atsuishio.superbwarfare.api.aircraft.AircraftSurfaceModules
+            val gone = AircraftWreckBreakup.mask(vehicle)
             return FixedWingSurfaceDamage(
-                modules.damaged(vehicle, modules.WING_LEFT), modules.damaged(vehicle, modules.WING_RIGHT),
-                modules.damaged(vehicle, modules.ELEVATOR_LEFT), modules.damaged(vehicle, modules.ELEVATOR_RIGHT),
-                modules.damaged(vehicle, modules.RUDDER),
+                modules.aileronDead(vehicle, modules.WING_LEFT), modules.aileronDead(vehicle, modules.WING_RIGHT),
+                gone and AircraftWreckBreakup.LEFT != 0, gone and AircraftWreckBreakup.RIGHT != 0,
             )
         }
     }

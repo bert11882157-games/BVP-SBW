@@ -1,6 +1,6 @@
 {
   "ID": "berts_vehicle_pack:zu23_2",
-  "MaxHealth": 250,
+  "MaxHealth": 44,
   "MaxEnergy": 0,
   "AllowFreeCam": true,
   "LightlyArmored": true,
@@ -440,5 +440,7 @@
     }
   },
   "ApplyDefaultDamageModifiers": false,
-  "LethalDirectCaliberMm": 37
+  "LethalDirectCaliberMm": 37,
+  "DeathChargeKg": 0.5,
+  "DamageClass": "STATIC"
 }

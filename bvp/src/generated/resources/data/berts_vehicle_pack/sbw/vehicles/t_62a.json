@@ -1,6 +1,6 @@
 {
   "ID": "berts_vehicle_pack:t_62a",
-  "MaxHealth": 250,
+  "MaxHealth": 273,
   "MaxEnergy": 10000000,
   "AllowFreeCam": true,
   "EngineSoundMode": "CUSTOM",
@@ -713,5 +713,7 @@
         1
       ]
     }
-  }
+  },
+  "DeathChargeKg": 22.5,
+  "DamageClass": "MBT"
 }

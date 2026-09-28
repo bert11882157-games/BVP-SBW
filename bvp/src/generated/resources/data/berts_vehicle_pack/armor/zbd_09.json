@@ -997,8 +997,49 @@
       "frame": "barrel",
       "module": "weaponsystems",
       "unified": true
+    },
+    {
+      "name": "launcherreload_tube_00",
+      "center": [
+        -1.14046,
+        2.66759,
+        0.23004
+      ],
+      "half_size": [
+        0.14,
+        0.14,
+        0.6
+      ],
+      "rotation": [
+        -0.0,
+        -180.0,
+        0
+      ],
+      "frame": "turret",
+      "module": "launcherreload"
+    },
+    {
+      "name": "launcherreload_tube_01",
+      "center": [
+        1.14046,
+        2.66759,
+        0.23004
+      ],
+      "half_size": [
+        0.14,
+        0.14,
+        0.6
+      ],
+      "rotation": [
+        -0.0,
+        -180.0,
+        0
+      ],
+      "frame": "turret",
+      "module": "launcherreload"
     }
   ],
   "explosive_reactive_armor": [],
-  "sbw_obb": []
+  "sbw_obb": [],
+  "launcher_weapon": "Missile"
 }

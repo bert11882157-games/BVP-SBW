@@ -44,7 +44,8 @@ final class ArmorModuleDamageService {
 
     static InternalModuleDamageResult applyInternalModuleDamage(ArmorTarget target, ArmorProfile profile, Vec3 hitVec,
                                                                ProjectileArmorEffect shot,
-                                                               InternalModuleHits internalHits) {
+                                                               InternalModuleHits internalHits,
+                                                               Entity projectile) {
         boolean ammoRackDestroyed = false;
         Set<String> newlyDestroyed = new LinkedHashSet<>();
         if (internalHits.engineBox() != null) {
@@ -54,15 +55,18 @@ final class ArmorModuleDamageService {
             if (!wasDestroyed && target.vehicle().isModuleDestroyed(ArmorModuleResolver.ENGINE)) {
                 newlyDestroyed.add(ArmorModuleResolver.ENGINE);
             }
+            DamageDiagnostics.module(target, projectile, shot, ArmorModuleResolver.ENGINE, "internal");
         }
         if (internalHits.ammoRackBox() != null) {
-            ammoRackDestroyed = applyAmmoRackDamage(target, profile, hitVec, shot, internalHits.ammoRackBox());
+            ammoRackDestroyed = applyAmmoRackDamage(target, profile, hitVec, shot, internalHits.ammoRackBox(),
+                    projectile);
         }
         if (internalHits.moduleHit == null || internalHits.moduleId.isEmpty()) {
             return new InternalModuleDamageResult(null, ammoRackDestroyed, newlyDestroyed);
         }
         if (ArmorModuleResolver.isAmmoRack(internalHits.moduleId)
-                || ArmorModuleResolver.ENGINE.equals(internalHits.moduleId)) {
+                || ArmorModuleResolver.ENGINE.equals(internalHits.moduleId)
+                || ArmorModuleResolver.isTrack(internalHits.moduleId)) {
             return new InternalModuleDamageResult(internalHits.moduleHit.plate, ammoRackDestroyed, newlyDestroyed);
         }
         boolean wasDestroyed = target.vehicle().isModuleDestroyed(internalHits.moduleId);
@@ -70,11 +74,25 @@ final class ArmorModuleDamageService {
         if (!wasDestroyed && target.vehicle().isModuleDestroyed(internalHits.moduleId)) {
             newlyDestroyed.add(ArmorModuleResolver.normalizeModuleId(internalHits.moduleId));
         }
+        DamageDiagnostics.module(target, projectile, shot, internalHits.moduleId, "internal");
         return new InternalModuleDamageResult(internalHits.moduleHit.plate, ammoRackDestroyed, newlyDestroyed);
     }
 
+    /**
+     * The rack the shot crosses rolls the round's detonation chance (its AmmoRackDamage per mille, however full
+     * the racks are). A rack that holds takes the round's module damage, and so do its neighbours; any rack
+     * brought to 0 goes up.
+     */
     private static boolean applyAmmoRackDamage(ArmorTarget target, ArmorProfile profile, Vec3 hitVec,
-                                               ProjectileArmorEffect shot, ArmorBox hitBox) {
+                                               ProjectileArmorEffect shot, ArmorBox hitBox, Entity projectile) {
+        String hitAmmoRackModuleId = ArmorModuleResolver.ammoRackModuleId(hitBox);
+        double chance = shot.ammoRackInstantDetonationChance();
+        double roll = ThreadLocalRandom.current().nextDouble();
+        if (chance > 0.0D && roll < chance) {
+            target.vehicle().setModuleHealth(hitAmmoRackModuleId, 0.0D);
+            DamageDiagnostics.ammoRack(target, projectile, hitAmmoRackModuleId, chance, roll, true, 0.0D);
+            return true;
+        }
         double damage = shot.ammoRackDamage();
         boolean ammoRackDestroyed = damageAmmoRackModule(target, hitVec, damage, hitBox);
         if (profile != null) {
@@ -86,11 +104,8 @@ final class ArmorModuleDamageService {
                 ammoRackDestroyed |= damageAmmoRackModule(target, hitVec, damage, candidate);
             }
         }
-        if (!ammoRackDestroyed && rollsInstantAmmoRack(shot)) {
-            String hitAmmoRackModuleId = ArmorModuleResolver.ammoRackModuleId(hitBox);
-            target.vehicle().setModuleHealth(hitAmmoRackModuleId, 0.0D);
-            ammoRackDestroyed = true;
-        }
+        DamageDiagnostics.ammoRack(target, projectile, hitAmmoRackModuleId, chance, roll, ammoRackDestroyed,
+                target.vehicle().getModuleHealth(hitAmmoRackModuleId));
         return ammoRackDestroyed;
     }
 
@@ -100,11 +115,6 @@ final class ArmorModuleDamageService {
         boolean wasDestroyed = target.vehicle().isModuleDestroyed(moduleId);
         target.vehicle().damageModule(moduleId, hitVec, damage);
         return !wasDestroyed && target.vehicle().isModuleDestroyed(moduleId);
-    }
-
-    private static boolean rollsInstantAmmoRack(ProjectileArmorEffect shot) {
-        double chance = shot.ammoRackInstantDetonationChance();
-        return chance > 0.0D && ThreadLocalRandom.current().nextDouble() < chance;
     }
 
     private static boolean isNeighboringAmmoRack(ArmorBox source, ArmorBox candidate) {

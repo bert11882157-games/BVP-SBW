@@ -103,6 +103,10 @@ object ExternalMunitionBlasts {
         if (TntBlast.active(kg)) schedule(entity, entity.position(), kg)
     }
 
+    /** Whether [entity] is a munition launched through the external FFA integration. */
+    @JvmStatic
+    fun isExternal(entity: Entity?): Boolean = entity?.persistentData?.getBoolean(EXTERNAL_KEY) == true
+
     /** True once per marked external munition. */
     private fun claim(entity: Entity): Boolean {
         val data = entity.persistentData

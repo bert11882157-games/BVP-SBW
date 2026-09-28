@@ -54,9 +54,110 @@
       ],
       "frame": "turret",
       "module": "weaponsystems"
+    },
+    {
+      "name": "launcherreload_tube_00",
+      "center": [
+        0.47639,
+        2.81531,
+        -0.50645
+      ],
+      "half_size": [
+        0.14,
+        0.14,
+        0.6
+      ],
+      "rotation": [
+        -0.0,
+        -180.0,
+        0
+      ],
+      "frame": "barrel",
+      "module": "launcherreload"
+    },
+    {
+      "name": "launcherreload_tube_01",
+      "center": [
+        0.23666,
+        2.81531,
+        -0.50645
+      ],
+      "half_size": [
+        0.14,
+        0.14,
+        0.6
+      ],
+      "rotation": [
+        -0.0,
+        -180.0,
+        0
+      ],
+      "frame": "barrel",
+      "module": "launcherreload"
+    },
+    {
+      "name": "launcherreload_tube_02",
+      "center": [
+        -0.00307,
+        2.81531,
+        -0.50645
+      ],
+      "half_size": [
+        0.14,
+        0.14,
+        0.6
+      ],
+      "rotation": [
+        -0.0,
+        -180.0,
+        0
+      ],
+      "frame": "barrel",
+      "module": "launcherreload"
+    },
+    {
+      "name": "launcherreload_tube_03",
+      "center": [
+        -0.2428,
+        2.81531,
+        -0.50645
+      ],
+      "half_size": [
+        0.14,
+        0.14,
+        0.6
+      ],
+      "rotation": [
+        -0.0,
+        -180.0,
+        0
+      ],
+      "frame": "barrel",
+      "module": "launcherreload"
+    },
+    {
+      "name": "launcherreload_tube_04",
+      "center": [
+        -0.48253,
+        2.81531,
+        -0.50645
+      ],
+      "half_size": [
+        0.14,
+        0.14,
+        0.6
+      ],
+      "rotation": [
+        -0.0,
+        -180.0,
+        0
+      ],
+      "frame": "barrel",
+      "module": "launcherreload"
     }
   ],
   "explosive_reactive_armor": [],
   "sbw_obb": [],
-  "authoring_state": "PENDING_AUTHORING"
+  "authoring_state": "PENDING_AUTHORING",
+  "launcher_weapon": "Missile"
 }

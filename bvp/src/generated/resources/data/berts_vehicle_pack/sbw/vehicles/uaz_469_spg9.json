@@ -1,6 +1,6 @@
 {
   "ID": "berts_vehicle_pack:uaz_469_spg9",
-  "MaxHealth": 300,
+  "MaxHealth": 66,
   "MaxEnergy": 5000000,
   "AllowFreeCam": true,
   "LightlyArmored": true,
@@ -638,5 +638,7 @@
   ],
   "ApplyDefaultDamageModifiers": false,
   "LethalDirectCaliberMm": 37,
-  "TerrainCompatFitPlane": true
+  "TerrainCompatFitPlane": true,
+  "DeathChargeKg": 2.0,
+  "DamageClass": "CAR"
 }

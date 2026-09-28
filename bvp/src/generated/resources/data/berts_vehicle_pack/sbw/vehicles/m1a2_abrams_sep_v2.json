@@ -1,6 +1,6 @@
 {
   "ID": "berts_vehicle_pack:m1a2_abrams_sep_v2",
-  "MaxHealth": 250,
+  "MaxHealth": 327,
   "MaxEnergy": 10000000,
   "AllowFreeCam": true,
   "EngineSoundMode": "CUSTOM",
@@ -1110,5 +1110,7 @@
       -0.23874
     ],
     "MuzzleAttachment": "roof_coax_muzzle"
-  }
+  },
+  "DeathChargeKg": 38.8,
+  "DamageClass": "MBT"
 }

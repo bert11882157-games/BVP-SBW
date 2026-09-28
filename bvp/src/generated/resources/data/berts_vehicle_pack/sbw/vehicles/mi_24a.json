@@ -5,7 +5,7 @@
   "UpStep": 0,
   "InertiaRotateRate": 0,
   "RotateOffsetHeight": 0,
-  "MaxHealth": 150,
+  "MaxHealth": 486,
   "MaxEnergy": 10000000,
   "AllowFreeCam": true,
   "OBB": [
@@ -853,8 +853,7 @@
       "ShellType": "HE",
       "Velocity": 53.75,
       "ApDurability": 3,
-      "ExplosionRadius": 1.6666666666666665,
-      "TntEquivalentKg": 0.0032,
+      "ExplosionRadius": 0,
       "NominalBallistics": {
         "Supported": true,
         "ProjectileType": "superbwarfare:projectile",
@@ -874,8 +873,7 @@
             "ApDurability": 3,
             "Damage": 83.33333333333333,
             "ExplosionDamage": 0,
-            "ExplosionRadius": 1.6666666666666665,
-            "TntEquivalentKg": 0.0032,
+            "ExplosionRadius": 0,
             "Name": "Air Belt",
             "ProjectileBelt": {
               "Name": "Air Belt",
@@ -916,7 +914,6 @@
             "Damage": 8,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
-            "TntEquivalentKg": 0.0,
             "Name": "Ground Belt",
             "ProjectileBelt": {
               "Name": "Ground Belt",
@@ -1016,7 +1013,7 @@
     "@minecraft:tnt * 4",
     "@minecraft:tnt_minecart * 4",
     "@#superbwarfare:aerial_bomb * 12",
-    "All * 0.23",
+    "All * 0.35",
     "superbwarfare:vehicle_strike * 2.5",
     "minecraft:explosion * 2",
     "superbwarfare:custom_explosion * 0.65",
@@ -1221,5 +1218,7 @@
       ]
     },
     "RetractableGear": false
-  }
+  },
+  "DamageClass": "HELICOPTER",
+  "DeathChargeKg": 17.2
 }

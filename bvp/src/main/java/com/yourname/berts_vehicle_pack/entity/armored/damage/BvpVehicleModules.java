@@ -63,6 +63,9 @@ public final class BvpVehicleModules {
                 || path.startsWith(VehicleModuleHealth.WEAPONS_SYSTEMS_ID + "/")) {
             return VehicleModuleHealth.WEAPONS_SYSTEMS_HP;
         }
+        if (path.equals(VehicleModuleDamageSystem.LAUNCHER_RELOAD)) {
+            return VehicleModuleHealth.LAUNCHER_HP;
+        }
         return VehicleModuleHealth.GENERIC_MODULE_HP;
     }
 

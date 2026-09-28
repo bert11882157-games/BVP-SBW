@@ -6,10 +6,10 @@
     "DamageType": "berts_vehicle_pack:chemical",
     "DiameterMm": 152,
     "HullDamageClass": "HE",
-    "HullDamage": 120,
-    "ModuleDamage": 46,
-    "AmmoRackDamage": 9,
-    "PenetrationMm": 39,
+    "HullDamage": 105,
+    "ModuleDamage": 63,
+    "AmmoRackDamage": 300,
+    "PenetrationMm": 30.4,
     "RicochetCurve": {
       "IncidenceAnglesDegrees": [
         0,
@@ -38,12 +38,12 @@
         2000
       ],
       "PenetrationMm": [
-        39,
-        39,
-        39,
-        39,
-        39,
-        39
+        30.4,
+        30.4,
+        30.4,
+        30.4,
+        30.4,
+        30.4
       ]
     }
   },

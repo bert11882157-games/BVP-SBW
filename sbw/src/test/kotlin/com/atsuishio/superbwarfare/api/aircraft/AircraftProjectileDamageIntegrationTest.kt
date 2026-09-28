@@ -97,10 +97,13 @@ class AircraftProjectileDamageIntegrationTest {
     }
 
     @Test
-    fun `aircraft native result preserves explosion and disposal and never zeroes shared projectile damage`() {
+    fun `aircraft native result keeps disposal and TNT, drops the legacy burst, never zeroes projectile damage`() {
+        // owner 2026-09-28: no SBW white burst on an aircraft hit; a TNT charge still detonates (fireball only)
         val init = method("api/aircraft/AircraftProjectileDamage", "<clinit>")
         assertTrue(init.calls.any { it.name == "suppressNativeModuleDamage" })
-        assertFalse(init.calls.any { it.name in setOf("residualDamage", "residualExplosion", "suppressDefaultExplosion") })
+        assertTrue(init.calls.any { it.name == "suppressDefaultExplosion" })
+        assertTrue(init.calls.any { it.name == "visualPolicy" })
+        assertFalse(init.calls.any { it.name in setOf("residualDamage", "residualExplosion") })
         assertTrue(init.fields.any { it.endsWith("ProjectileImpactDisposition.DEFAULT") })
     }
 

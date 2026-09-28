@@ -45,6 +45,9 @@ final class ExplosiveReactiveArmorService {
         BvpLeanImpactEffects.spawnEraExplosion(target.level(), eraImpact);
         ArmorSoundService.play(target.level(), eraImpact, ArmorSoundService.PENETRATION_SOUND, 0.55F, 1.35F);
 
+        DamageDiagnostics.event(target.vehicle(), null, "ERA", String.format(java.util.Locale.ROOT,
+                "brick=%s type=%s pen_mm=%.0f -> %.0f tandem=%s", era.name, era.eraType, shot.penetrationMm,
+                reducedShot.penetrationMm, shot.tandemWarhead));
         return new Result(true, era, eraImpact, reducedTrace, shot, reducedShot, appliedProtectionMm);
     }
 
@@ -66,12 +69,12 @@ final class ExplosiveReactiveArmorService {
     }
 
     private static double postEraPenetration(ProjectileArmorEffect shot, double protectionMm) {
-        double reduced = shot.penetrationMm - protectionMm;
         if (shot.tandemWarhead && shot.damageType == ArmorDamageType.CHEMICAL) {
-            // Tandem main-charge jets keep at least half their chemical penetration behind the ERA brick.
-            reduced = Math.max(reduced, shot.penetrationMm * 0.5D);
+            // A tandem warhead's precursor sets the brick off; the main charge meets the armor with its full
+            // penetration (owner 2026-09-28: tandem ignores ERA).
+            return shot.penetrationMm;
         }
-        return reduced;
+        return shot.penetrationMm - protectionMm;
     }
 
     private static double protectionAgainst(ArmorBox era, ProjectileArmorEffect shot) {

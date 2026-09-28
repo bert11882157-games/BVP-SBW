@@ -3331,8 +3331,8 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         if (this.health <= 0.4 * this.getMaxHealth()) {
             addRandomParticle(
                 ParticleTypes.LARGE_SMOKE,
-                Vec3(this.x, this.y + 0.7f * bbHeight, this.z),
-                0.35f * this.bbWidth,
+                lowHealthSmokeOrigin(0.7f),
+                lowHealthSmokeSpread(0.35f),
                 level(),
                 0.01f,
                 1
@@ -3351,16 +3351,16 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
             if (level().isClientSide) {
                 addRandomParticle(
                     ParticleTypes.LARGE_SMOKE,
-                    Vec3(this.x, this.y + 0.7f * bbHeight, this.z),
-                    0.35f * this.bbWidth,
+                    lowHealthSmokeOrigin(0.7f),
+                    lowHealthSmokeSpread(0.35f),
                     level(),
                     0.01f,
                     2
                 )
                 addRandomParticle(
                     ParticleTypes.CAMPFIRE_COSY_SMOKE,
-                    Vec3(this.x, this.y + 0.7f * bbHeight, this.z),
-                    0.35f * this.bbWidth,
+                    lowHealthSmokeOrigin(0.7f),
+                    lowHealthSmokeSpread(0.35f),
                     level(),
                     0.01f,
                     2
@@ -3376,8 +3376,8 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
                         cooldown = true,
                         light = true
                     ),
-                    Vec3(this.x, this.y + 0.85f * bbHeight, this.z),
-                    0.35f * this.bbWidth,
+                    lowHealthSmokeOrigin(0.85f),
+                    lowHealthSmokeSpread(0.35f),
                     level(),
                     0.01f,
                     1
@@ -3393,8 +3393,8 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
                         cooldown = false,
                         light = true
                     ),
-                    Vec3(this.x, this.y + 0.85f * bbHeight, this.z),
-                    0.3f * this.bbWidth,
+                    lowHealthSmokeOrigin(0.85f),
+                    lowHealthSmokeSpread(0.3f),
                     level(),
                     0.01f,
                     1
@@ -3486,21 +3486,57 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         if (level().isClientSide) {
             addRandomParticle(
                 ParticleTypes.LARGE_SMOKE,
-                Vec3(this.x, this.y + 0.7f * bbHeight, this.z),
-                0.35f * this.bbWidth,
+                lowHealthSmokeOrigin(0.7f),
+                lowHealthSmokeSpread(0.35f),
                 level(),
                 0.01f,
                 1
             )
             addRandomParticle(
                 ParticleTypes.CAMPFIRE_COSY_SMOKE,
-                Vec3(this.x, this.y + 0.7f * bbHeight, this.z),
-                0.35f * this.bbWidth,
+                lowHealthSmokeOrigin(0.7f),
+                lowHealthSmokeSpread(0.35f),
                 level(),
                 0.01f,
                 1
             )
         }
+    }
+
+    /**
+     * Where low-health smoke starts. Aircraft: a random point inside the airframe's own hit volumes (owner
+     * 2026-09-28: smoke only from points connected to the aircraft, never from the empty air of its bounding box),
+     * left behind as it flies. Other vehicles: above the middle of the bounding box.
+     */
+    private fun lowHealthSmokeOrigin(heightFactor: Float): Vec3 {
+        if (vehicleType == VehicleType.AIRPLANE || vehicleType == VehicleType.HELICOPTER) {
+            airframePoint()?.let { return it }
+        }
+        return Vec3(this.x, this.y + heightFactor * bbHeight, this.z)
+    }
+
+    private fun lowHealthSmokeSpread(widthFactor: Float): Float =
+        if (vehicleType == VehicleType.AIRPLANE || vehicleType == VehicleType.HELICOPTER) 0.15f
+        else widthFactor * this.bbWidth
+
+    /** A random point inside one of the aircraft's hit volumes (chosen by volume), or null without volumes. */
+    private fun airframePoint(): Vec3? {
+        val boxes = getOBBs()
+        if (boxes.isEmpty()) return null
+        var total = 0.0
+        for (box in boxes) total += box.extents.x * box.extents.y * box.extents.z
+        var pick = this.random.nextDouble() * total
+        var chosen = boxes[0]
+        for (box in boxes) {
+            pick -= box.extents.x * box.extents.y * box.extents.z
+            if (pick <= 0.0) { chosen = box; break }
+        }
+        val local = org.joml.Vector3d(
+            chosen.extents.x * 1.4 * (this.random.nextDouble() - 0.5),
+            chosen.extents.y * 1.4 * (this.random.nextDouble() - 0.5),
+            chosen.extents.z * 1.4 * (this.random.nextDouble() - 0.5))
+        chosen.rotation.transform(local)
+        return Vec3(chosen.center.x + local.x, chosen.center.y + local.y, chosen.center.z + local.z)
     }
 
     fun adjustTurretAngle() {
@@ -7462,8 +7498,15 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
     }
 
     override fun getOBBs(): MutableList<OBB> = combatStateOwner.collisionBoxes.select(
-        obb, hasFixedWingLandingGear(), synchedGearRot, computed().engineType == EngineType.TRACK,
+        obb, hasFixedWingLandingGear(), synchedGearRot, omitsRunningGearHitboxes(),
     )
+
+    /**
+     * Whether the WheelLeft / WheelRight collision boxes are left out of the hit volumes: always for tracked
+     * vehicles; add-on vehicles whose armor model resolves every hit override this for wheeled ones too, so a
+     * side shot is never eaten by the running gear.
+     */
+    open fun omitsRunningGearHitboxes(): Boolean = computed().engineType == EngineType.TRACK
 
     fun getEnergyDataAccessor() = ENERGY
 

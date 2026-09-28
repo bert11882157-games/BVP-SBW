@@ -69,6 +69,8 @@ public abstract class ArmoredVehicleEntity extends GeoVehicleEntity implements V
     private final String armorProfileId;
     private final VehicleModuleDamageSystem bvpModuleDamage = new VehicleModuleDamageSystem(this);
     private final VehicleAmmoRackSystem bvpAmmoRack = new VehicleAmmoRackSystem(this);
+    private final com.yourname.berts_vehicle_pack.effects.PenetrationBurns bvpPenetrationBurns =
+            new com.yourname.berts_vehicle_pack.effects.PenetrationBurns(this);
     private final Map<String, Integer> bvpSpentEraExpiryTicks = new HashMap<>();
     private int bvpNextEraExpiryTick = Integer.MAX_VALUE;
 
@@ -140,6 +142,7 @@ public abstract class ArmoredVehicleEntity extends GeoVehicleEntity implements V
             }
             tickBvpEraRegeneration();
             bvpModuleDamage.tickLauncherModule();
+            bvpPenetrationBurns.tick();
         }
         if (EliteDiagnostics.isEnabled(this.m_9236_()) && (this.f_19797_ + this.m_19879_()) % 20 == 0) {
             EliteDiagnostics.record(this, "armor", "module_snapshot", "profile", armorProfileId,
@@ -214,6 +217,17 @@ public abstract class ArmoredVehicleEntity extends GeoVehicleEntity implements V
     /** Ground drive damage may stop translation; flight owners must retain glide momentum. */
     public boolean usesBvpGroundMobilityLimits() {
         return true;
+    }
+
+    /** Fire and rising smoke at a penetration point, sized by the round's calibre (presentation only). */
+    public void addPenetrationBurn(Vec3 worldPoint, double calibreMm) {
+        bvpPenetrationBurns.add(worldPoint, calibreMm);
+    }
+
+    /** The armor model resolves every ground hit: wheels are never hit volumes of their own (owner 2026-09-28). */
+    @Override
+    public boolean omitsRunningGearHitboxes() {
+        return usesBvpGroundMobilityLimits() || super.omitsRunningGearHitboxes();
     }
 
     protected boolean usesBvpAmmoRackWarnings() {

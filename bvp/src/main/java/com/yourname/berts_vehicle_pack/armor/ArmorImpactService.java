@@ -101,13 +101,16 @@ final class ArmorImpactService {
             // proximity match (the nearest plate within the impact tolerance) exists for coarse box profiles only.
             armorHit = null;
         }
-        ModuleHit trackHit = volumes.directTrackHit(trace);
+        // No track or wheel volumes take hits (owner 2026-09-28: side shots must never be eaten by the running
+        // gear). An exposed module in front of the armor (weapon systems, launcher tube) is damaged and the shot
+        // still goes on to the armor behind it: module damage never replaces hull damage.
         ModuleHit moduleHit = volumes.directModuleHit(trace);
-        ModuleHit exposedHit = ArmorModuleResolver.nearestExposed(armorHit, trackHit, moduleHit);
-        ArmorImpactReporter.reportVolumeSelection(target, projectile, trace, armorHit, trackHit, moduleHit, exposedHit);
-        if (exposedHit != null) {
-            return handleDirectModuleHit(owner, target, shot, exposedHit,
-                    ArmorModuleResolver.isTrack(exposedHit.moduleId), hitVec);
+        ModuleHit exposedHit = ArmorModuleResolver.nearestExposed(armorHit, null, moduleHit);
+        ArmorImpactReporter.reportVolumeSelection(target, projectile, trace, armorHit, null, moduleHit, exposedHit);
+        if (exposedHit != null && !ArmorModuleResolver.isTrack(exposedHit.moduleId)) {
+            ArmorModuleDamageService.damageDirectModule(owner, target, shot, exposedHit, false, hitVec);
+            ArmorImpactStats.record(Outcome.MODULE_HIT);
+            DamageDiagnostics.module(target, projectile, shot, exposedHit.moduleId, "direct");
         }
 
         if (armorHit == null || armorHit.plate == null) {
@@ -153,6 +156,8 @@ final class ArmorImpactService {
             return ProjectileArmorMutationService.ricochetImpact(replacementVisual);
         }
 
+        // The round's own blast does not hit this vehicle again (its hull damage is the direct hit's).
+        com.atsuishio.superbwarfare.tools.blast.StruckVehicles.mark(projectile, target.vehicle());
         Result penetration = ArmorPenetrationService.evaluate(target, armorHit, trace, shot,
                 targetProfile.minArmorMm);
         if (!penetration.penetrated()) {
@@ -162,6 +167,8 @@ final class ArmorImpactService {
             ArmorImpactReporter.reportArmorHit(level, owner, target, hitVec, plate,
                     penetration.impactCosine(), penetration.effectiveArmorMm(), penetration.penetrationMm(),
                     false, false, null, null, null, false, shot);
+            DamageDiagnostics.plate(target, projectile, shot, plate.name, plate.armorMm,
+                    penetration.effectiveArmorMm(), penetration.penetrationMm(), false);
             applyLightArmorNonPenetrationDamage(target, damageSource, shot);
             ArmorImpactStats.record(Outcome.NON_PENETRATION);
             return ProjectileArmorMutationService.blockImpact(
@@ -169,6 +176,8 @@ final class ArmorImpactService {
         }
 
         ArmorImpactStats.record(Outcome.PENETRATION);
+        DamageDiagnostics.plate(target, projectile, shot, plate.name, plate.armorMm,
+                penetration.effectiveArmorMm(), penetration.penetrationMm(), true);
         if (AmmoRackService.isSuperAmmoRackOverloaded(target)) {
             return handleSuperAmmoRackPenetration(owner, target, damageSource, hitVec, plate, penetration,
                     null, shot, replacementVisual);
@@ -178,7 +187,8 @@ final class ArmorImpactService {
         ArmorBox engineBox = internalHits.engineBox();
         ArmorBox ammoRack = internalHits.ammoRackBox();
         ArmorModuleDamageService.InternalModuleDamageResult moduleDamage =
-                ArmorModuleDamageService.applyInternalModuleDamage(target, targetProfile, hitVec, shot, internalHits);
+                ArmorModuleDamageService.applyInternalModuleDamage(target, targetProfile, hitVec, shot, internalHits,
+                        damageSource.getDirectEntity());
         ArmorBox genericModuleBox = moduleDamage.moduleBox();
         if (moduleDamage.ammoRackDestroyed()) {
             boolean detonated = AmmoRackService.triggerAmmoRackDetonation(target, hitVec, damageSource);
@@ -194,6 +204,7 @@ final class ArmorImpactService {
                     !detonated && replacementVisual, ProjectileImpactPresentationOutcome.PENETRATION);
         }
 
+        addPenetrationBurn(target, projectile, hitVec);
         boolean criticalHit = internalHits.criticalHit();
         ProjectileImpactResult impactResult = resolvePenetratingDamage(
                 target, damageSource, shot, criticalHit, replacementVisual);
@@ -206,16 +217,6 @@ final class ArmorImpactService {
                 ArmorImpactFeedback.Classification.PENETRATION,
                 moduleDamage.newlyDestroyedModuleIds());
         return impactResult;
-    }
-
-    private static ProjectileImpactResult handleDirectModuleHit(Entity owner, ArmorTarget target,
-                                                                ProjectileArmorEffect shot,
-                                                                ModuleHit moduleHit, boolean trackHit,
-                                                                Vec3 hitVec) {
-        ArmorModuleDamageService.damageDirectModule(owner, target, shot, moduleHit, trackHit, hitVec);
-        ArmorImpactStats.record(trackHit ? Outcome.TRACK_HIT : Outcome.MODULE_HIT);
-        return ProjectileArmorMutationService.blockImpact(
-                ProjectileArmorEffects.hasImpactVisual(shot), ProjectileImpactPresentationOutcome.NON_PENETRATION);
     }
 
     private static ProjectileImpactResult handleSuperAmmoRackPenetration(Entity owner,
@@ -266,6 +267,9 @@ final class ArmorImpactService {
                     "[BVP Armor] Shell ray meets no mesh armor; projectile continues.");
             return ProjectileArmorMutationService.passImpact();
         }
+        if (targetProfile.unboxedHitsPenetrate) {
+            com.atsuishio.superbwarfare.tools.blast.StruckVehicles.mark(projectile, target.vehicle());
+        }
         if (targetProfile.unboxedHitsPenetrate && shot.penetrationMm + 1.0E-4D < targetProfile.minArmorMm) {
             // A gap in the boxes is still hull steel: a round below the profile's floor stops there.
             if (!BvpMaterialImpactSounds.hasPresentation(projectile)) {
@@ -314,7 +318,8 @@ final class ArmorImpactService {
 
         InternalModuleHits internalHits = volumes.internalHits(trace, null);
         ArmorModuleDamageService.InternalModuleDamageResult moduleDamage =
-                ArmorModuleDamageService.applyInternalModuleDamage(target, targetProfile, hitVec, shot, internalHits);
+                ArmorModuleDamageService.applyInternalModuleDamage(target, targetProfile, hitVec, shot, internalHits,
+                        damageSource.getDirectEntity());
         if (moduleDamage.ammoRackDestroyed()) {
             boolean detonated = AmmoRackService.triggerAmmoRackDetonation(target, hitVec, damageSource);
             ArmorImpactReporter.reportUnboxedPenetration(owner, target, hitVec, shot,
@@ -324,6 +329,7 @@ final class ArmorImpactService {
                     !detonated && replacementVisual, ProjectileImpactPresentationOutcome.PENETRATION);
         }
 
+        addPenetrationBurn(target, damageSource.getDirectEntity(), hitVec);
         ProjectileImpactResult result = resolvePenetratingDamage(
                 target, damageSource, shot, internalHits.criticalHit(), replacementVisual);
         ArmorImpactReporter.reportUnboxedPenetration(owner, target, hitVec, shot,
@@ -354,6 +360,23 @@ final class ArmorImpactService {
         return ProjectileHitSelection.nearestObb(hull, start, end, 0.0D) == null;
     }
 
+    /** Calibre-sized fire and smoke where the round went in (rounds of 20 mm and up). */
+    private static void addPenetrationBurn(ArmorTarget target, Entity projectile, Vec3 hitVec) {
+        var combat = projectile == null ? null
+                : com.atsuishio.superbwarfare.api.projectile.ProjectileProfiles.combatDescriptor(projectile);
+        if (combat == null) {
+            return;
+        }
+        Double calibre = combat.getDiameterMm() != null ? combat.getDiameterMm() : combat.getCaliberMm();
+        if (calibre != null) {
+            target.vehicle().addPenetrationBurn(hitVec, calibre);
+        }
+    }
+
+    /**
+     * The one hull-damage path of a penetrating hit: the round's typed HullDamage (legacy SBW shells keep their
+     * shell damage). Chemical rounds are no different from kinetic ones here.
+     */
     private static ProjectileImpactResult resolvePenetratingDamage(ArmorTarget target,
                                                                    DamageSource damageSource,
                                                                    ProjectileArmorEffect shot,
@@ -362,6 +385,7 @@ final class ArmorImpactService {
         if (shot.vehicleDamage >= 0.0D) {
             VehicleDamageService.applyVehicleDamage(
                     target, damageSource, shot.vehicleDamage);
+            DamageDiagnostics.hull(target, damageSource, shot, shot.vehicleDamage, "penetration");
             return ProjectileArmorMutationService.blockImpact(
                     replacementVisual, ProjectileImpactPresentationOutcome.PENETRATION);
         }
@@ -372,15 +396,6 @@ final class ArmorImpactService {
                     criticalHit,
                     replacementVisual
             );
-        }
-        if (shot.damageType == ArmorDamageType.CHEMICAL) {
-            VehicleDamageService.applyVehicleDamage(
-                    target,
-                    damageSource,
-                    VehicleDamageService.chemicalVehicleDamageBasis(target, criticalHit)
-            );
-            return ProjectileArmorMutationService.blockImpact(
-                    replacementVisual, ProjectileImpactPresentationOutcome.PENETRATION);
         }
         return ProjectileArmorMutationService.continueImpact(
                 replacementVisual, ProjectileImpactPresentationOutcome.PENETRATION);
@@ -393,11 +408,9 @@ final class ArmorImpactService {
             return;
         }
         double damageBasis = nonCriticalDirectDamageBasis(target, damageSource, shot);
-        VehicleDamageService.applyVehicleDamage(
-                target,
-                damageSource,
-                damageBasis * LIGHT_ARMOR_NON_PENETRATION_DAMAGE_FRACTION
-        );
+        double damage = damageBasis * LIGHT_ARMOR_NON_PENETRATION_DAMAGE_FRACTION;
+        VehicleDamageService.applyVehicleDamage(target, damageSource, damage);
+        DamageDiagnostics.hull(target, damageSource, shot, damage, "light_armor_non_penetration");
     }
 
     private static double nonCriticalDirectDamageBasis(ArmorTarget target,
@@ -410,9 +423,6 @@ final class ArmorImpactService {
             float rawDamage = ProjectileArmorMutationService.penetratingShellDamage(
                     shot.shell, shot.damageType, false);
             return target.vehicle().computeVehicleDamageAfterModifiers(damageSource, rawDamage);
-        }
-        if (shot.damageType == ArmorDamageType.CHEMICAL) {
-            return VehicleDamageService.chemicalVehicleDamageBasis(target, false);
         }
         return 0.0D;
     }

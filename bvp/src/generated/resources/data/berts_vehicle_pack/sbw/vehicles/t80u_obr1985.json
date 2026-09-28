@@ -1,6 +1,6 @@
 {
   "ID": "berts_vehicle_pack:t80u_obr1985",
-  "MaxHealth": 250,
+  "MaxHealth": 292,
   "MaxEnergy": 10000000,
   "AllowFreeCam": true,
   "HasAutoloader": true,
@@ -938,5 +938,7 @@
         1
       ]
     }
-  }
+  },
+  "DeathChargeKg": 27.6,
+  "DamageClass": "MBT"
 }

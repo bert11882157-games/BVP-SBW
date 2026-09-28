@@ -23,7 +23,9 @@ object AircraftSurfaceModules {
     @JvmField val ELEVATOR_RIGHT = ResourceLocation("superbwarfare", "elevator_right")
     @JvmField val RUDDER = ResourceLocation("superbwarfare", "rudder")
     @JvmField val ids = listOf(WING_LEFT, WING_RIGHT, ELEVATOR_LEFT, ELEVATOR_RIGHT, RUDDER)
-    private val fractions = ids.associate { it.toString() to if (it == WING_LEFT || it == WING_RIGHT) .20 else .15 }
+    /** Wing pools hold 40 % of the hull HP (owner 2026-09-28); legacy elevator/rudder entries validate at 15 %. */
+    const val WING_FRACTION = .40
+    private val fractions = ids.associate { it.toString() to if (it == WING_LEFT || it == WING_RIGHT) WING_FRACTION else .15 }
 
     @JvmStatic fun ids(): List<ResourceLocation> = ids
 
@@ -37,6 +39,13 @@ object AircraftSurfaceModules {
 
     @JvmStatic fun state(vehicle: VehicleEntity, id: ResourceLocation) = vehicle.getVehicleModuleState(id)
     @JvmStatic fun damaged(vehicle: VehicleEntity, id: ResourceLocation) = state(vehicle, id)?.destroyed == true
+
+    /** Wing at or below 25 % of its pool: that wing's aileron no longer works. */
+    @JvmStatic fun aileronDead(vehicle: VehicleEntity, id: ResourceLocation): Boolean {
+        val state = state(vehicle, id) ?: return false
+        return state.destroyed || state.maxHealth > 0 &&
+            state.health <= state.maxHealth * com.atsuishio.superbwarfare.api.vehicle.flight.FixedWingSurfaceDamage.AILERON_DEAD_FRACTION
+    }
     @JvmStatic fun smokePosition(vehicle: VehicleEntity, id: ResourceLocation, partialTick: Float): Vec3? {
         val entry = vehicle.computed().aircraftSurfaceModules.firstOrNull { it.id == id.toString() } ?: return null
         val box = entry.hitboxes.maxByOrNull { (it.max.x-it.min.x)*(it.max.y-it.min.y)*(it.max.z-it.min.z) } ?: return null
@@ -94,7 +103,7 @@ object AircraftSurfaceModules {
             }
         }
         for (entry in data.aircraftSurfaceModules) {
-            require(fractions[entry.id] == entry.maxHealthFraction)
+            require(entry.id in fractions && entry.maxHealthFraction > 0.0 && entry.maxHealthFraction <= 1.0)
             require(entry.hitboxes.size in 1..256)
             for (box in entry.hitboxes) {
                 require(box.bone == "hull" || box.bone in data.aircraftSurfaceTransforms)
@@ -222,12 +231,58 @@ object AircraftSurfaceModules {
         if (vehicle.level().isClientSide || !damage.isFinite() || damage <= 0 || !finite(incoming)) return
         val id = contactModule(vehicle,start,hit,incoming)
         val before = id?.let { state(vehicle,it)?.health }
-        if (id != null) vehicle.damageVehicleModule(id,damage.toDouble())
+        if (id != null) damageWing(vehicle, id, damage.toDouble(), "hit")
         if (com.atsuishio.superbwarfare.diagnostics.EliteDiagnostics.isEnabled(vehicle.level())) {
             com.atsuishio.superbwarfare.diagnostics.EliteDiagnostics.record(vehicle,"aircraft_surface","CONTACT",
                 "surface",id,"start",start,"hit",hit,"damage",damage,
                 "health_before",before,"health_after",id?.let { state(vehicle,it)?.health })
         }
+    }
+
+    /**
+     * Wing pool damage (the same damage has already come off the hull). At 0 the wing comes off in flight; the
+     * next ground contact then destroys the aircraft ([com.atsuishio.superbwarfare.api.vehicle.flight.AircraftWreckBreakup]).
+     */
+    @JvmStatic fun damageWing(vehicle: VehicleEntity, id: ResourceLocation, damage: Double, cause: String) {
+        if (vehicle.level().isClientSide || !damage.isFinite() || damage <= 0) return
+        if (id != WING_LEFT && id != WING_RIGHT) return
+        val side = if (id == WING_LEFT) com.atsuishio.superbwarfare.api.vehicle.flight.AircraftWreckBreakup.LEFT
+            else com.atsuishio.superbwarfare.api.vehicle.flight.AircraftWreckBreakup.RIGHT
+        if (com.atsuishio.superbwarfare.api.vehicle.flight.AircraftWreckBreakup.mask(vehicle) and side != 0) return
+        val before = state(vehicle, id)?.health ?: return
+        vehicle.damageVehicleModule(id, damage)
+        val after = state(vehicle, id) ?: return
+        val aileron = !aileronDeadAt(before, after.maxHealth) && aileronDead(vehicle, id)
+        val off = after.destroyed || after.health <= 0f
+        if (off && !vehicle.isWreck)
+            com.atsuishio.superbwarfare.api.vehicle.flight.AircraftWreckBreakup.detach(vehicle, side)
+        AircraftDamageLog.event(vehicle, "WING", java.lang.String.format(java.util.Locale.ROOT,
+            "wing=%s via=%s damage=%.1f wing_hp=%.1f->%.1f/%.0f%s%s", id.path, cause, damage, before, after.health,
+            after.maxHealth, if (aileron) " AILERON_DEAD" else "", if (off) " WING_OFF" else ""))
+    }
+
+    private fun aileronDeadAt(health: Float, max: Float) = max > 0 &&
+        health <= max * com.atsuishio.superbwarfare.api.vehicle.flight.FixedWingSurfaceDamage.AILERON_DEAD_FRACTION
+
+    /** A blast next to the airframe (G): the wing nearer the burst takes [share] of the hull damage it dealt. */
+    @JvmStatic fun applyBlast(vehicle: VehicleEntity, center: Vec3, hullDamage: Double, share: Double = .6) {
+        if (vehicle.level().isClientSide || !(hullDamage > 0) || vehicle.isWreck) return
+        val data = vehicle.computed()
+        val inverse = Matrix4d(vehicle.getVehicleTransform(1f)).invert()
+        val local = inverse.transformPosition(Vector3d(center.x, center.y, center.z))
+        var best: ResourceLocation? = null; var bestDistance = Double.POSITIVE_INFINITY
+        for (entry in presentModules(vehicle)) {
+            val id = ResourceLocation(entry.id)
+            if (id != WING_LEFT && id != WING_RIGHT) continue
+            for (box in entry.hitboxes) {
+                val dx = maxOf(box.min.x - local.x, 0.0, local.x - box.max.x)
+                val dy = maxOf(box.min.y - local.y, 0.0, local.y - box.max.y)
+                val dz = maxOf(box.min.z - local.z, 0.0, local.z - box.max.z)
+                val d = dx * dx + dy * dy + dz * dz
+                if (d < bestDistance) { bestDistance = d; best = id }
+            }
+        }
+        if (best != null && data.aircraftSurfaceModules.isNotEmpty()) damageWing(vehicle, best, hullDamage * share, "blast")
     }
 
     /** Read-only presentation of the same articulated volumes used by projectile collision. */

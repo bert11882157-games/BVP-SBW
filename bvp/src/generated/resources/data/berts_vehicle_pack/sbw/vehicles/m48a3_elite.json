@@ -1,6 +1,6 @@
 {
   "ID": "berts_vehicle_pack:m48a3_elite",
-  "MaxHealth": 250,
+  "MaxHealth": 294,
   "MaxEnergy": 10000000,
   "AllowFreeCam": true,
   "EngineSoundMode": "CUSTOM",
@@ -1180,5 +1180,7 @@
         1
       ]
     }
-  }
+  },
+  "DeathChargeKg": 28.2,
+  "DamageClass": "MBT"
 }

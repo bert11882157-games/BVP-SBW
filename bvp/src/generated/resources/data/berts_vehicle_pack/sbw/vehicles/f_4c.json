@@ -5,7 +5,7 @@
   "UpStep": 0,
   "InertiaRotateRate": 0,
   "RotateOffsetHeight": 2.1,
-  "MaxHealth": 130,
+  "MaxHealth": 549,
   "MaxEnergy": 10000000,
   "AllowFreeCam": true,
   "OBB": [
@@ -1308,7 +1308,7 @@
   "AircraftSurfaceModules": [
     {
       "Id": "superbwarfare:wing_left",
-      "MaxHealthFraction": 0.2,
+      "MaxHealthFraction": 0.4,
       "Hitboxes": [
         {
           "Bone": "hull",
@@ -1574,7 +1574,7 @@
     },
     {
       "Id": "superbwarfare:wing_right",
-      "MaxHealthFraction": 0.2,
+      "MaxHealthFraction": 0.4,
       "Hitboxes": [
         {
           "Bone": "hull",
@@ -1837,141 +1837,6 @@
           ]
         }
       ]
-    },
-    {
-      "Id": "superbwarfare:elevator_left",
-      "MaxHealthFraction": 0.15,
-      "Hitboxes": [
-        {
-          "Bone": "elevator_0",
-          "Min": [
-            1.9375,
-            1.55,
-            -9.55
-          ],
-          "Max": [
-            2.55,
-            1.9375,
-            -8.2875
-          ]
-        },
-        {
-          "Bone": "elevator_0",
-          "Min": [
-            1.325,
-            1.8,
-            -9.4625
-          ],
-          "Max": [
-            1.9375,
-            2.225,
-            -7.675
-          ]
-        },
-        {
-          "Bone": "elevator_0",
-          "Min": [
-            0.7125,
-            2.05,
-            -9.375
-          ],
-          "Max": [
-            1.325,
-            2.5125,
-            -7.0625
-          ]
-        },
-        {
-          "Bone": "elevator_0",
-          "Min": [
-            0.1,
-            2.3,
-            -9.2875
-          ],
-          "Max": [
-            0.7125,
-            2.8,
-            -6.45
-          ]
-        }
-      ]
-    },
-    {
-      "Id": "superbwarfare:elevator_right",
-      "MaxHealthFraction": 0.15,
-      "Hitboxes": [
-        {
-          "Bone": "elevator_1",
-          "Min": [
-            -0.7125,
-            2.3,
-            -9.2875
-          ],
-          "Max": [
-            -0.1,
-            2.8,
-            -6.45
-          ]
-        },
-        {
-          "Bone": "elevator_1",
-          "Min": [
-            -1.325,
-            2.05,
-            -9.375
-          ],
-          "Max": [
-            -0.7125,
-            2.5125,
-            -7.0625
-          ]
-        },
-        {
-          "Bone": "elevator_1",
-          "Min": [
-            -1.9375,
-            1.8,
-            -9.4625
-          ],
-          "Max": [
-            -1.325,
-            2.225,
-            -7.675
-          ]
-        },
-        {
-          "Bone": "elevator_1",
-          "Min": [
-            -2.55,
-            1.55,
-            -9.55
-          ],
-          "Max": [
-            -1.9375,
-            1.9375,
-            -8.2875
-          ]
-        }
-      ]
-    },
-    {
-      "Id": "superbwarfare:rudder",
-      "MaxHealthFraction": 0.15,
-      "Hitboxes": [
-        {
-          "Bone": "rudder_0",
-          "Min": [
-            -0.025,
-            3,
-            -9.4
-          ],
-          "Max": [
-            0.025,
-            4.6,
-            -8.95
-          ]
-        }
-      ]
     }
   ],
   "AircraftSurfaceTransforms": {
@@ -2070,5 +1935,7 @@
       ],
       "MaxDeflectionDegrees": 25
     }
-  }
+  },
+  "DamageClass": "AIRPLANE",
+  "DeathChargeKg": 28.9
 }

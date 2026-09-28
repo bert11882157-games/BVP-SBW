@@ -57,12 +57,22 @@ public final class VehicleModuleDamageSystem {
         }
         if (damageLegacyModule(id, damage)) {
             // the loaded missile is lost; the vehicle's auto-reload starts on the next tick
-            vehicle.modifyGunData(0, 0, data -> {
+            java.util.function.Consumer<com.atsuishio.superbwarfare.data.gun.GunData> unload = data -> {
                 if (!data.reloading()) {
                     data.ammo.set(0);
                 }
-            });
+            };
+            String weapon = launcherWeapon();
+            if (weapon.isEmpty()) {
+                vehicle.modifyGunData(0, 0, unload);
+            } else {
+                vehicle.modifyGunData(weapon, unload);
+            }
         }
+    }
+
+    private String launcherWeapon() {
+        return ArmorProfiles.get(vehicle.getArmorProfileId()).launcherWeapon;
     }
 
     /** Server tick: a knocked-out launcher module is whole again once the reload it forced is over. */
@@ -72,7 +82,8 @@ public final class VehicleModuleDamageSystem {
         if (state == null || !state.getDestroyed()) {
             return;
         }
-        var gun = vehicle.getGunData(0, 0);
+        String weapon = launcherWeapon();
+        var gun = weapon.isEmpty() ? vehicle.getGunData(0, 0) : vehicle.getGunData(weapon);
         if (gun == null || !gun.reloading() && gun.ammo.get() > 0) {
             vehicle.setVehicleModuleState(id, state.getMaxHealth(), false);
         }
@@ -130,14 +141,21 @@ public final class VehicleModuleDamageSystem {
         if (vehicle.isEngineDisabled()) {
             return 0.0D;
         }
-        float health = getModuleHealth("engine");
-        if (health <= 10.0F) {
+        return engineMobility(getModuleHealth("engine") / VehicleModuleHealth.ENGINE_HP);
+    }
+
+    /** Speed factor at an engine health fraction: <= 75 % two thirds, <= 40 % one third, <= 15 % a fifth. */
+    public static double engineMobility(double fraction) {
+        if (fraction <= 0.0D) {
+            return 0.0D;
+        }
+        if (fraction <= 0.15D) {
             return 0.2D;
         }
-        if (health <= 20.0F) {
+        if (fraction <= 0.40D) {
             return 1.0D / 3.0D;
         }
-        if (health <= 40.0F) {
+        if (fraction <= 0.75D) {
             return 2.0D / 3.0D;
         }
         return 1.0D;
@@ -446,6 +464,9 @@ public final class VehicleModuleDamageSystem {
         }
         if (isWeaponsSystemsModule(moduleId)) {
             return (float) VehicleModuleHealth.WEAPONS_SYSTEMS_HP;
+        }
+        if (LAUNCHER_RELOAD.equals(moduleId)) {
+            return (float) VehicleModuleHealth.LAUNCHER_HP;
         }
         return (float) VehicleModuleHealth.GENERIC_MODULE_HP;
     }

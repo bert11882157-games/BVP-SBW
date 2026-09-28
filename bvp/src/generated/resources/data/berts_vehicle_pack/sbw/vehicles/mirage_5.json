@@ -5,7 +5,7 @@
   "UpStep": 0,
   "InertiaRotateRate": 0,
   "RotateOffsetHeight": 1.44401,
-  "MaxHealth": 100,
+  "MaxHealth": 347,
   "MaxEnergy": 10000000,
   "AllowFreeCam": true,
   "OBB": [
@@ -1578,7 +1578,7 @@
   "AircraftSurfaceModules": [
     {
       "Id": "superbwarfare:wing_left",
-      "MaxHealthFraction": 0.2,
+      "MaxHealthFraction": 0.4,
       "Hitboxes": [
         {
           "Bone": "hull",
@@ -1870,7 +1870,7 @@
     },
     {
       "Id": "superbwarfare:wing_right",
-      "MaxHealthFraction": 0.2,
+      "MaxHealthFraction": 0.4,
       "Hitboxes": [
         {
           "Bone": "hull",
@@ -2159,167 +2159,6 @@
           ]
         }
       ]
-    },
-    {
-      "Id": "superbwarfare:elevator_left",
-      "MaxHealthFraction": 0.15,
-      "Hitboxes": [
-        {
-          "Bone": "elevon_left",
-          "Min": [
-            3.514286,
-            1.351648,
-            -5.384066
-          ],
-          "Max": [
-            3.91978,
-            1.509341,
-            -4.550549
-          ]
-        },
-        {
-          "Bone": "elevon_left",
-          "Min": [
-            3.108791,
-            1.351648,
-            -5.406593
-          ],
-          "Max": [
-            3.514286,
-            1.531868,
-            -4.550549
-          ]
-        },
-        {
-          "Bone": "elevon_left",
-          "Min": [
-            2.613187,
-            1.351648,
-            -5.43663
-          ],
-          "Max": [
-            3.108791,
-            1.546886,
-            -4.550549
-          ]
-        },
-        {
-          "Bone": "elevon_left",
-          "Min": [
-            2.117583,
-            1.351648,
-            -5.466666
-          ],
-          "Max": [
-            2.613187,
-            1.561905,
-            -4.550549
-          ]
-        },
-        {
-          "Bone": "elevon_left",
-          "Min": [
-            1.621978,
-            1.351648,
-            -5.496703
-          ],
-          "Max": [
-            2.117583,
-            1.576923,
-            -4.550549
-          ]
-        }
-      ]
-    },
-    {
-      "Id": "superbwarfare:elevator_right",
-      "MaxHealthFraction": 0.15,
-      "Hitboxes": [
-        {
-          "Bone": "elevon_right",
-          "Min": [
-            -3.514286,
-            1.351648,
-            -5.406593
-          ],
-          "Max": [
-            -3.108791,
-            1.531868,
-            -4.550549
-          ]
-        },
-        {
-          "Bone": "elevon_right",
-          "Min": [
-            -3.91978,
-            1.351648,
-            -5.384066
-          ],
-          "Max": [
-            -3.514286,
-            1.509341,
-            -4.550549
-          ]
-        },
-        {
-          "Bone": "elevon_right",
-          "Min": [
-            -2.117583,
-            1.351648,
-            -5.496703
-          ],
-          "Max": [
-            -1.621978,
-            1.576923,
-            -4.550549
-          ]
-        },
-        {
-          "Bone": "elevon_right",
-          "Min": [
-            -2.613187,
-            1.351648,
-            -5.466666
-          ],
-          "Max": [
-            -2.117583,
-            1.561905,
-            -4.550549
-          ]
-        },
-        {
-          "Bone": "elevon_right",
-          "Min": [
-            -3.108791,
-            1.351648,
-            -5.43663
-          ],
-          "Max": [
-            -2.613187,
-            1.546886,
-            -4.550549
-          ]
-        }
-      ]
-    },
-    {
-      "Id": "superbwarfare:rudder",
-      "MaxHealthFraction": 0.15,
-      "Hitboxes": [
-        {
-          "Bone": "rudder",
-          "Min": [
-            -0.09011,
-            2.883516,
-            -7.389011
-          ],
-          "Max": [
-            0.09011,
-            3.874725,
-            -6.172528
-          ]
-        }
-      ]
     }
   ],
   "AircraftSurfaceTransforms": {
@@ -2380,5 +2219,7 @@
       ],
       "MaxDeflectionDegrees": 20
     }
-  }
+  },
+  "DamageClass": "AIRPLANE",
+  "DeathChargeKg": 14.6
 }

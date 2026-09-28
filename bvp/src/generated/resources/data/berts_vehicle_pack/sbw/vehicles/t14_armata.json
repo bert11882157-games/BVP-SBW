@@ -1,6 +1,6 @@
 {
   "ID": "berts_vehicle_pack:t14_armata",
-  "MaxHealth": 250,
+  "MaxHealth": 310,
   "MaxEnergy": 10000000,
   "AllowFreeCam": true,
   "RemoteWeaponStation": false,
@@ -1053,5 +1053,7 @@
       "Primary": "Cannon",
       "Secondary": "MachineGun"
     }
-  ]
+  ],
+  "DeathChargeKg": 33.0,
+  "DamageClass": "MBT"
 }

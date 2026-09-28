@@ -1,6 +1,6 @@
 {
   "ID": "berts_vehicle_pack:cv9040_no_net",
-  "MaxHealth": 150,
+  "MaxHealth": 183,
   "MaxEnergy": 7000000,
   "AllowFreeCam": true,
   "EngineSoundMode": "CUSTOM",
@@ -878,7 +878,7 @@
     "@minecraft:tnt * 4",
     "@minecraft:tnt_minecart * 4",
     "@#superbwarfare:aerial_bomb * 12",
-    "All * 0.23",
+    "All * 0.4",
     "superbwarfare:vehicle_strike * 2.5",
     "minecraft:explosion * 2",
     "superbwarfare:custom_explosion * 0.65",
@@ -1054,5 +1054,7 @@
         1
       ]
     }
-  }
+  },
+  "DeathChargeKg": 13.8,
+  "DamageClass": "IFV"
 }

@@ -13,26 +13,14 @@ import java.io.DataOutputStream
 
 class AircraftProjectileHitPolicyTest {
     @Test
-    fun `all lower inclusive and upper exclusive band boundaries are exact`() {
-        val boundaries = listOf(1.0 to 1f, 12.7 to 2.5f, 20.0 to 6f,
-            30.0 to 9f, 50.0 to 30f, 80.0 to 100f)
-        var below: Float? = null
-        for ((caliber, expected) in boundaries) {
-            assertEquals(below, AircraftProjectileHitPolicy.damageForCaliberMillimetres(Math.nextDown(caliber)))
-            assertEquals(expected, AircraftProjectileHitPolicy.damageForCaliberMillimetres(caliber))
-            assertEquals(expected, AircraftProjectileHitPolicy.damageForCaliberMillimetres(Math.nextUp(caliber)))
-            below = expected
+    fun `gun rounds follow the owner table and interpolate between its calibres`() {
+        for ((caliber, damage) in listOf(7.62 to 0.8, 12.7 to 2.5, 14.5 to 3.5, 20.0 to 14.0, 23.0 to 17.0,
+            25.0 to 20.0, 30.0 to 26.0, 37.0 to 36.0, 40.0 to 42.0, 57.0 to 80.0)) {
+            assertEquals(damage, AircraftHitRules.gun(caliber)!!, 1e-9, "$caliber mm")
         }
-        assertEquals(100f, AircraftProjectileHitPolicy.damageForCaliberMillimetres(Double.MAX_VALUE))
-    }
-
-    @Test
-    fun `representative bullets shells and missile bodies use only physical diameter`() {
-        for ((caliber, damage) in listOf(7.62 to 1f, 12.7 to 2.5f, 14.5 to 2.5f,
-            23.0 to 6f, 30.0 to 9f, 57.0 to 30f, 73.0 to 30f, 80.0 to 100f,
-            125.0 to 100f, 152.0 to 100f)) {
-            assertEquals(damage, AircraftProjectileHitPolicy.damageForCaliberMillimetres(caliber))
-        }
+        assertEquals(23.0, AircraftHitRules.gun(27.5)!!, 1e-9)
+        assertTrue(AircraftHitRules.gun(5.56)!! < 0.8)
+        assertEquals(150.0, AircraftHitRules.gun(70.0)!!, 1e-9)
     }
 
     @Test
@@ -41,6 +29,45 @@ class AircraftProjectileHitPolicyTest {
             -10.0, -0.0, 0.0, 0.99)) {
             assertNull(AircraftProjectileHitPolicy.damageForCaliberMillimetres(caliber))
         }
+    }
+
+    @Test
+    fun `fighters survive a lot of fifty calibre and a short cannon burst but not a long one`() {
+        val f16 = 410.0
+        assertTrue(f16 / AircraftHitRules.gun(12.7)!! > 150, ".50 hits to kill")
+        val m61 = 2 * AircraftHitRules.gun(20.0)!!   // consolidated fast-firing round
+        assertTrue(f16 / m61 in 10.0..20.0)
+    }
+
+    @Test
+    fun `heavy weapons follow the aircraft rules`() {
+        assertEquals(AircraftHitRules.Kind.TANK_SHELL, AircraftHitRules.kind("tank_shell", "APFSDS", 125.0))
+        assertEquals(AircraftHitRules.Kind.TANK_SHELL, AircraftHitRules.kind("autocannon_shell", "HE", 76.0))
+        assertEquals(AircraftHitRules.Kind.ROCKET, AircraftHitRules.kind("rocket", "ATGM", 110.0))
+        assertEquals(AircraftHitRules.Kind.ATGM, AircraftHitRules.kind("atgm", "ATGM", 130.0))
+        assertEquals(AircraftHitRules.Kind.MISSILE, AircraftHitRules.kind("atgm", "HE", 152.0))
+        assertEquals(AircraftHitRules.Kind.MISSILE, AircraftHitRules.kind("sam", "HE", 70.0))
+        assertEquals(AircraftHitRules.Kind.GUN, AircraftHitRules.kind("autocannon_shell", "HE", 30.0))
+        // RPG: crippling, never killing a fighter; capped for big airframes
+        assertEquals(287.0, AircraftHitRules.rocket(410.0), 1e-9)
+        assertEquals(350.0, AircraftHitRules.rocket(2000.0), 1e-9)
+        // ATGM: devastating except to large aircraft
+        assertEquals(369.0, AircraftHitRules.atgm(410.0), 1e-9)
+        assertEquals(600.0, AircraftHitRules.atgm(2000.0), 1e-9)
+    }
+
+    @Test
+    fun `small missiles cripple fighters and large ones destroy them`() {
+        val f16 = 410.0; val su27 = 740.0
+        val sidewinder = AircraftHitRules.missile(4.6, f16)
+        assertTrue(sidewinder in 0.55 * f16..0.75 * f16)
+        assertTrue(AircraftHitRules.missile(0.53, f16) >= 0.55 * f16 - 1e-9)   // MANPADS
+        assertTrue(AircraftHitRules.missile(4.6, 2800.0) <= 0.75 * 600.0)      // bombers count as 600 HP
+        assertTrue(AircraftHitRules.missile(9.2, su27) > su27)                 // AIM-120
+        assertTrue(AircraftHitRules.missile(24.0, su27) > su27)                // R-27
+        assertEquals(0.6 * AircraftHitRules.missile(24.0, su27), AircraftHitRules.missile(24.0, su27,
+            AircraftHitRules.proximity(5.0, 5.0)), 1e-9)
+        assertEquals(0.0, AircraftHitRules.proximity(5.01, 5.0))
     }
 
     @Test
@@ -88,7 +115,7 @@ class AircraftProjectileHitPolicyTest {
         val nearby = UUID(2, 2)
         var health = 250f
         assertTrue(AircraftProjectileHitReceipts.claim(data, struck))
-        health -= AircraftProjectileHitPolicy.damageForCaliberMillimetres(152.0)!!
+        health -= 100f
         for (explosion in listOf(false, true, true)) {
             assertEquals(AircraftProjectileDamageRoute.DUPLICATE,
                 AircraftProjectileHitPolicy.nativeRoute(

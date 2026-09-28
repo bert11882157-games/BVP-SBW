@@ -1,6 +1,6 @@
 {
   "ID": "berts_vehicle_pack:ztz99a",
-  "MaxHealth": 250,
+  "MaxHealth": 310,
   "MaxEnergy": 10000000,
   "AllowFreeCam": true,
   "HasAutoloader": true,
@@ -973,5 +973,7 @@
         1
       ]
     }
-  }
+  },
+  "DeathChargeKg": 33.0,
+  "DamageClass": "MBT"
 }

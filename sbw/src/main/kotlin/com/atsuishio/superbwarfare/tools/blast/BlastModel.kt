@@ -262,6 +262,31 @@ object BlastModel {
                        parameters: BlastParameters = BlastParameters.DEFAULT): Double =
         parameters.infantryCentreDamage * severeFalloff(distance, radii) * exposure(seenFraction, parameters.exposureFloor)
 
+    /**
+     * Infantry peak damage grows with the charge (owner direction 2026-09-28): a hand grenade (0.25 kg) keeps the
+     * configured centre damage, a 30 mm shell gets about 60 % of it, a 125 mm HE shell 2.8x, a Mk 82 7.8x (a
+     * bomb kills through body armor); at most 10x.
+     */
+    @JvmStatic
+    fun infantryPeakScale(kg: Double): Double =
+        if (!valid(kg)) 1.0 else cbrt(kg / 0.25).coerceIn(0.25, 10.0)
+
+    @JvmStatic
+    fun infantryDamageFor(kg: Double, distance: Double, seenFraction: Double, radii: BlastRadii,
+                          parameters: BlastParameters = BlastParameters.DEFAULT): Double =
+        infantryPeakScale(kg) * infantryDamage(distance, seenFraction, radii, parameters)
+
+    /**
+     * Area blast on a classed vehicle: 3 x kg (the configured damage per kg) x the severe falloff (1 inside the
+     * fireball, 0 at the severe radius) x the hull class multiplier. No charge threshold.
+     */
+    @JvmStatic
+    fun classBlastDamage(kg: Double, distance: Double, radii: BlastRadii, multiplier: Double,
+                         parameters: BlastParameters = BlastParameters.DEFAULT): Double {
+        if (!valid(kg) || !(multiplier > 0.0)) return 0.0
+        return parameters.vehicleDamagePerKg * kg * severeFalloff(distance, radii) * multiplier
+    }
+
     @JvmStatic
     fun softVehicleDamage(distance: Double, seenFraction: Double, radii: BlastRadii,
                           parameters: BlastParameters = BlastParameters.DEFAULT): Double =

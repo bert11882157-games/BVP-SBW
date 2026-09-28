@@ -1,6 +1,6 @@
 {
   "ID": "berts_vehicle_pack:t80b_obr1976",
-  "MaxHealth": 250,
+  "MaxHealth": 284,
   "MaxEnergy": 10000000,
   "AllowFreeCam": true,
   "HasCCIP": true,
@@ -998,5 +998,7 @@
       "Primary": "Cannon",
       "Secondary": "MachineGun"
     }
-  ]
+  ],
+  "DeathChargeKg": 25.5,
+  "DamageClass": "MBT"
 }

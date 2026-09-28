@@ -152,6 +152,18 @@ class DefaultVehicleData : IDBasedData<DefaultVehicleData> {
     @SerialName("LightlyArmored")
     var lightlyArmored: Boolean = false
 
+    /**
+     * Damage class of the hull (MBT, MBT_CHASSIS, IFV, WHEELED, LIGHT, CAR, STATIC, AIRPLANE, HELICOPTER; written
+     * by tools/damage/balance.py). Scales area blast damage ([com.atsuishio.superbwarfare.tools.blast.VehicleDamageClass]).
+     */
+    @SerialName("DamageClass")
+    var damageClass: String? = null
+
+    /** TNT-equivalent kg of fuel and ammunition that go up when the hull is destroyed (0 = legacy explosion). */
+    @ServerOnly
+    @SerialName("DeathChargeKg")
+    var deathChargeKg: Double = 0.0
+
     @SerialName("Afterburner")
     var afterburner: Boolean = false
 

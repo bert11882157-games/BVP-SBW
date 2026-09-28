@@ -1,6 +1,6 @@
 {
   "ID": "berts_vehicle_pack:kord_tripod",
-  "MaxHealth": 100,
+  "MaxHealth": 40,
   "MaxEnergy": 0,
   "AllowFreeCam": true,
   "LightlyArmored": true,
@@ -166,8 +166,7 @@
             "ApDurability": 3,
             "Damage": 83.33333333333333,
             "ExplosionDamage": 0,
-            "ExplosionRadius": 1.6666666666666665,
-            "TntEquivalentKg": 0.0032,
+            "ExplosionRadius": 0,
             "Name": "AP Belt",
             "ShootShake": [
               8,
@@ -438,5 +437,7 @@
     }
   },
   "ApplyDefaultDamageModifiers": false,
-  "LethalDirectCaliberMm": 37
+  "LethalDirectCaliberMm": 37,
+  "DeathChargeKg": 0.5,
+  "DamageClass": "STATIC"
 }

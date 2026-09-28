@@ -1,6 +1,6 @@
 {
   "ID": "berts_vehicle_pack:bmp2m",
-  "MaxHealth": 150,
+  "MaxHealth": 157,
   "MaxEnergy": 7000000,
   "AllowFreeCam": true,
   "LightlyArmored": true,
@@ -1060,7 +1060,7 @@
     "@minecraft:tnt * 4",
     "@minecraft:tnt_minecart * 4",
     "@#superbwarfare:aerial_bomb * 12",
-    "All * 0.23",
+    "All * 0.4",
     "superbwarfare:vehicle_strike * 2.5",
     "minecraft:explosion * 2",
     "superbwarfare:custom_explosion * 0.65",
@@ -1319,5 +1319,7 @@
       "Primary": "Cannon",
       "Secondary": "Missile"
     }
-  ]
+  ],
+  "DeathChargeKg": 8.8,
+  "DamageClass": "IFV"
 }

@@ -1,6 +1,6 @@
 {
   "ID": "berts_vehicle_pack:mi24v",
-  "MaxHealth": 150,
+  "MaxHealth": 486,
   "MaxEnergy": 10000000,
   "AllowFreeCam": true,
   "HasCCIP": true,
@@ -261,8 +261,7 @@
             "ApDurability": 3,
             "Damage": 83.33333333333333,
             "ExplosionDamage": 0,
-            "ExplosionRadius": 1.6666666666666665,
-            "TntEquivalentKg": 0.0032,
+            "ExplosionRadius": 0,
             "Name": "Air Belt",
             "ShootShake": [
               8,
@@ -308,7 +307,6 @@
             "Damage": 22,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
-            "TntEquivalentKg": 0.0,
             "Name": "Ground Belt",
             "ShootShake": [
               8,
@@ -446,8 +444,7 @@
             ]
           }
         }
-      ],
-      "TntEquivalentKg": 0.0032
+      ]
     },
     "Rocket": {
       "AmmoType": [
@@ -1048,34 +1045,35 @@
   "RotateOffsetHeight": 1.35,
   "Mass": 11.5,
   "DamageModifiers": [
-    "All - 10",
-    "minecraft:lava + 10",
-    "minecraft:arrow * 0.1",
-    "minecraft:trident * 0.2",
-    "minecraft:mob_attack * 0.3",
-    "minecraft:mob_attack_no_aggro * 0.3",
-    "minecraft:mob_projectile * 0.2",
-    "minecraft:player_attack * 0.2",
-    "minecraft:lava * 2.6",
-    "@minecraft:tnt * 3",
-    "@minecraft:tnt_minecart * 3",
-    "minecraft:explosion * 3.5",
-    "minecraft:player_explosion * 3.5",
-    "superbwarfare:projectile_hit * 0.6",
-    "superbwarfare:grapeshot_hit * 0.5",
-    "#superbwarfare:projectile * 0.03",
-    "#superbwarfare:projectile_absolute * 0.3",
-    "superbwarfare:vehicle_strike * 6",
-    "superbwarfare:laser * 0.35",
-    "@superbwarfare:cannon_shell * 1.5",
-    "@superbwarfare:small_cannon_shell * 0.95",
-    "@superbwarfare:gun_grenade * 2.2",
-    "@superbwarfare:rgo_grenade * 6",
-    "@superbwarfare:hand_grenade * 5",
-    "@superbwarfare:mortar_shell * 3",
-    "@#superbwarfare:at_rocket * 1.5",
-    "All * 0.77",
-    "@#superbwarfare:aerial_bomb * 2"
+    "minecraft:arrow 0",
+    "minecraft:trident 0",
+    "minecraft:mob_attack 0",
+    "minecraft:mob_attack_no_aggro 0",
+    "minecraft:mob_projectile 0",
+    "minecraft:player_attack 0",
+    "#superbwarfare:projectile 0",
+    "All - 20",
+    "minecraft:lava + 20",
+    "minecraft:lava * 10",
+    "@minecraft:tnt * 4",
+    "@minecraft:tnt_minecart * 4",
+    "@#superbwarfare:aerial_bomb * 12",
+    "All * 0.35",
+    "superbwarfare:vehicle_strike * 2.5",
+    "minecraft:explosion * 2",
+    "superbwarfare:custom_explosion * 0.65",
+    "superbwarfare:projectile_explosion * 0.65",
+    "superbwarfare:mine * 0.5",
+    "superbwarfare:lunge_mine * 0.5",
+    "superbwarfare:projectile_hit * 1.3",
+    "#superbwarfare:projectile_absolute * 0.15",
+    "@#superbwarfare:aa_missile * 0.3",
+    "@superbwarfare:small_cannon_shell * 0.25",
+    "@superbwarfare:c4 * 4",
+    "@#superbwarfare:at_rocket * 1.1",
+    "@superbwarfare:gun_grenade * 1.25",
+    "@superbwarfare:mortar_shell * 1.25",
+    "@superbwarfare:tm_62 * 2.5"
   ],
   "DestroyInfo": {
     "ParticleType": "Large",
@@ -1646,5 +1644,7 @@
       ]
     },
     "RetractableGear": false
-  }
+  },
+  "DamageClass": "HELICOPTER",
+  "DeathChargeKg": 17.2
 }

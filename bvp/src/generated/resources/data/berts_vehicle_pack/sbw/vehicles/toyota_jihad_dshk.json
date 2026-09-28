@@ -1,6 +1,6 @@
 {
   "ID": "berts_vehicle_pack:toyota_jihad_dshk",
-  "MaxHealth": 300,
+  "MaxHealth": 75,
   "MaxEnergy": 5000000,
   "AllowFreeCam": true,
   "LightlyArmored": true,
@@ -460,8 +460,7 @@
             "ApDurability": 3,
             "Damage": 83.33333333333333,
             "ExplosionDamage": 0,
-            "ExplosionRadius": 1.6666666666666665,
-            "TntEquivalentKg": 0.0032,
+            "ExplosionRadius": 0,
             "Name": "AP Belt",
             "ShootShake": [
               8,
@@ -825,5 +824,7 @@
   },
   "ApplyDefaultDamageModifiers": false,
   "LethalDirectCaliberMm": 37,
-  "TerrainCompatFitPlane": true
+  "TerrainCompatFitPlane": true,
+  "DeathChargeKg": 2.0,
+  "DamageClass": "CAR"
 }

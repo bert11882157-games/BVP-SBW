@@ -22,8 +22,12 @@ import net.minecraft.world.entity.projectile.Projectile
  * Native direct/blast follow-ups for the same struck aircraft are suppressed at its hurt boundary.
  */
 object AircraftProjectileDamage {
+    // No SBW burst on an aircraft hit (owner 2026-09-28): the legacy explosion and its white recipe are suppressed;
+    // a round with a TNT charge still detonates and shows only its fireball.
     private val NATIVE_FOLLOWUP = ProjectileImpactResult.builder(ProjectileImpactDisposition.DEFAULT)
         .suppressNativeModuleDamage(true)
+        .suppressDefaultExplosion(true)
+        .visualPolicy(com.atsuishio.superbwarfare.api.projectile.impact.ProjectileImpactVisualPolicy.SUPPRESS)
         .build()
     private val INVALID_CONTACT = ProjectileImpactResult.builder(ProjectileImpactDisposition.CONSUME).build()
 
@@ -55,10 +59,13 @@ object AircraftProjectileDamage {
         if (!isAircraft(vehicle)) return null
         val projectile = source.directEntity as? Projectile ?: return null
         if (projectile.level() !== vehicle.level()) return null
+        // FFA's own missile hit: its direct damage is replaced by the missile rule, once per aircraft.
+        val externalMissile = com.atsuishio.superbwarfare.tools.blast.ExternalMunitionBlasts.isExternal(projectile) ||
+            source.typeHolder().unwrapKey().map { it.location().path == "air_defense_hit" }.orElse(false)
         val route = AircraftProjectileHitPolicy.nativeRoute(
             AircraftProjectileHitReceipts.contains(projectile.persistentData, vehicle.uuid),
-            source.`is`(DamageTypeTags.IS_EXPLOSION) || source.`is`(ModDamageTypes.CUSTOM_EXPLOSION),
-            source.`is`(DamageTypeTags.IS_PROJECTILE) || source.`is`(ModDamageTypes.PROJECTILE_HIT) ||
+            !externalMissile && (source.`is`(DamageTypeTags.IS_EXPLOSION) || source.`is`(ModDamageTypes.CUSTOM_EXPLOSION)),
+            externalMissile || source.`is`(DamageTypeTags.IS_PROJECTILE) || source.`is`(ModDamageTypes.PROJECTILE_HIT) ||
                 DamageTypeTool.isGunDamage(source),
         )
         return when (route) {
@@ -66,6 +73,26 @@ object AircraftProjectileDamage {
             AircraftProjectileDamageRoute.DUPLICATE -> true
             AircraftProjectileDamageRoute.PHYSICAL_HIT ->
                 if (vehicle.level().isClientSide) false else applyPhysicalHit(vehicle, projectile, source)
+        }
+    }
+
+    /** Rule family of a physical hit ([AircraftHitRules]); SBW's own projectiles by entity class. */
+    @JvmStatic
+    fun kindOf(projectile: Projectile, caliber: Double?): AircraftHitRules.Kind {
+        com.atsuishio.superbwarfare.api.projectile.ProjectileProfiles.combatDescriptor(projectile)?.let {
+            return AircraftHitRules.kind(it.munitionType?.path, it.hullDamageClass.name, caliber)
+        }
+        return when (projectile) {
+            is com.atsuishio.superbwarfare.entity.projectile.JavelinMissileEntity -> AircraftHitRules.Kind.ATGM
+            is com.atsuishio.superbwarfare.entity.projectile.SwarmDroneEntity -> AircraftHitRules.Kind.ROCKET
+            is com.atsuishio.superbwarfare.entity.projectile.MissileProjectile -> AircraftHitRules.Kind.MISSILE
+            is com.atsuishio.superbwarfare.entity.projectile.SmallRocketEntity,
+            is com.atsuishio.superbwarfare.entity.projectile.MediumRocketEntity,
+            is com.atsuishio.superbwarfare.entity.projectile.RpgRocketStandardEntity,
+            is com.atsuishio.superbwarfare.entity.projectile.RpgRocketTBGEntity -> AircraftHitRules.Kind.ROCKET
+            is com.atsuishio.superbwarfare.entity.projectile.CannonShellEntity -> AircraftHitRules.Kind.TANK_SHELL
+            else -> if (com.atsuishio.superbwarfare.tools.blast.ExternalMunitionBlasts.isExternal(projectile))
+                AircraftHitRules.Kind.MISSILE else AircraftHitRules.kind(null, null, caliber)
         }
     }
 
@@ -78,7 +105,18 @@ object AircraftProjectileDamage {
         val directOverride = (projectile as? AircraftProjectileDamageOverride)
             ?.aircraftDirectHitDamage(vehicle.getMaxHealth())
         val caliber = if (directOverride == null) ProjectileCalibers.resolveMillimetres(projectile) else null
-        val damage = AircraftProjectileHitPolicy.resolveDamage(caliber, directOverride)
+        val kind = if (directOverride == null) kindOf(projectile, caliber) else null
+        val maxHealth = vehicle.getMaxHealth().toDouble()
+        val damage: Double? = when (kind) {
+            null -> directOverride?.toDouble()?.takeIf { it.isFinite() && it > 0.0 }
+            AircraftHitRules.Kind.GUN -> AircraftHitRules.gun(caliber)
+                ?.times(com.atsuishio.superbwarfare.api.vehicle.weapon.AircraftRoundConsolidation.weight(projectile))
+            AircraftHitRules.Kind.TANK_SHELL -> maxOf(maxHealth, vehicle.health.toDouble())
+            AircraftHitRules.Kind.ROCKET -> AircraftHitRules.rocket(maxHealth)
+            AircraftHitRules.Kind.ATGM -> AircraftHitRules.atgm(maxHealth)
+            AircraftHitRules.Kind.MISSILE -> AircraftHitRules.missile(
+                com.atsuishio.superbwarfare.tools.blast.TntEquivalents.resolve(projectile), maxHealth)
+        }
         if (damage == null) {
             // Receipt admission bounds this opt-in diagnostic to one round/aircraft pair.
             if (EliteDiagnostics.isEnabled(vehicle.level())) {
@@ -89,11 +127,15 @@ object AircraftProjectileDamage {
             }
             return false
         }
+        val healthBefore = vehicle.health
         val result = vehicle.applyResolvedDamage(ResolvedVehicleDamageRequest(
             source = source,
-            amount = (damage * com.atsuishio.superbwarfare.api.vehicle.weapon.VehicleWeaponDamagePolicy.scale(projectile)).toFloat(),
+            amount = damage.toFloat(),
+            lethal = kind == AircraftHitRules.Kind.TANK_SHELL,
             modulePolicy = ResolvedVehicleModulePolicy.SKIP_NATIVE,
         ))
+        AircraftDamageLog.hit(vehicle, projectile, kind?.name ?: "TACZ_POLICY", caliber, damage,
+            healthBefore, result.accepted)
         if (result.accepted) {
             // Aircraft resolve before addon armor presentation, so notify accepted-hit effects here.
             NativeVehicleHitFeedback.accepted(projectile, vehicle)
@@ -114,7 +156,7 @@ object AircraftProjectileDamage {
         if (EliteDiagnostics.isEnabled(vehicle.level())) {
             EliteDiagnostics.record(vehicle, "aircraft_damage", "PHYSICAL_HIT",
                 "projectile", projectile.uuid, "caliber_mm", caliber,
-                "damage_policy", if (directOverride == null) "CALIBER_BANDS" else "DIRECT_PROJECTILE_POLICY",
+                "damage_policy", kind?.name ?: "DIRECT_PROJECTILE_POLICY",
                 "requested_hp", damage, "applied_hp", result.appliedDamage,
                 "accepted", result.accepted, "rejection", result.rejection)
         }

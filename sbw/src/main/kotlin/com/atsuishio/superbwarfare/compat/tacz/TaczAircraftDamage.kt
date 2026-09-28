@@ -21,16 +21,16 @@ object TaczAircraftDamage {
     )
 
     /**
-     * Per physical aircraft hit: RPG rounds take 67% of fighter-class max HP, capped at 110 HP
-     * so larger airframes retain their distinct durability. Exact .50/12.7mm ammo identities
-     * deal 3 HP, and other TacZ ammunition deals 0.2 HP, including unknown ammo and pellets.
-     * The caller supplies EntityKineticBullet's constructor-captured ammo ID; no gun lookup occurs.
+     * Per physical aircraft hit ([com.atsuishio.superbwarfare.api.aircraft.AircraftHitRules]): RPG rounds 70 % of
+     * the aircraft's HP, at most 350 (crippling, not killing, for a fighter); exact .50/12.7 mm ammo identities
+     * 2.5 HP; other TacZ ammunition 0.2 HP, including unknown ammo and pellets. The caller supplies
+     * EntityKineticBullet's constructor-captured ammo ID; no gun lookup occurs.
      */
     @JvmStatic
     fun damageForAmmo(ammoId: ResourceLocation?, targetMaxHealth: Float): Float = when (ammoId?.toString()) {
         in aircraftRocketAmmoIds -> if (targetMaxHealth.isFinite() && targetMaxHealth > 0F)
-            (targetMaxHealth * 0.67F).coerceAtMost(110F) else 0.2F
-        in fiftyCalibreAmmoIds -> 3F
+            com.atsuishio.superbwarfare.api.aircraft.AircraftHitRules.rocket(targetMaxHealth.toDouble()).toFloat() else 0.2F
+        in fiftyCalibreAmmoIds -> 2.5F
         else -> 0.2F
     }
 }

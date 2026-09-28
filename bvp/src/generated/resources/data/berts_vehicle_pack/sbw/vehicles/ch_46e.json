@@ -5,7 +5,7 @@
   "UpStep": 0,
   "InertiaRotateRate": 0,
   "RotateOffsetHeight": 2.79458,
-  "MaxHealth": 180,
+  "MaxHealth": 364,
   "MaxEnergy": 10000000,
   "AllowFreeCam": true,
   "OBB": [
@@ -944,7 +944,7 @@
     "@minecraft:tnt * 4",
     "@minecraft:tnt_minecart * 4",
     "@#superbwarfare:aerial_bomb * 12",
-    "All * 0.23",
+    "All * 0.35",
     "superbwarfare:vehicle_strike * 2.5",
     "minecraft:explosion * 2",
     "superbwarfare:custom_explosion * 0.65",
@@ -1390,5 +1390,7 @@
         }
       }
     ]
-  }
+  },
+  "DamageClass": "HELICOPTER",
+  "DeathChargeKg": 15.6
 }

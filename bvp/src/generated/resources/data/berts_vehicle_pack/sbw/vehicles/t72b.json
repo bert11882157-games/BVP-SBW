@@ -1,6 +1,6 @@
 {
   "ID": "berts_vehicle_pack:t72b",
-  "MaxHealth": 250,
+  "MaxHealth": 289,
   "MaxEnergy": 10000000,
   "AllowFreeCam": true,
   "HasCCIP": true,
@@ -685,8 +685,7 @@
             "ApDurability": 3,
             "Damage": 83.33333333333333,
             "ExplosionDamage": 0,
-            "ExplosionRadius": 1.6666666666666665,
-            "TntEquivalentKg": 0.0032,
+            "ExplosionRadius": 0,
             "Name": "AP Belt",
             "ShootShake": [
               8,
@@ -1163,5 +1162,7 @@
       "Primary": "Cannon",
       "Secondary": "MachineGun"
     }
-  ]
+  ],
+  "DeathChargeKg": 26.7,
+  "DamageClass": "MBT"
 }

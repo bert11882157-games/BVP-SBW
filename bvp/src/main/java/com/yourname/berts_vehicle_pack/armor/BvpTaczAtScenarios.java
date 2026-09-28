@@ -104,8 +104,8 @@ public final class BvpTaczAtScenarios {
             }
             if (phase == 40) fire(index);
             if (phase == 90) {
-                if (index == 1) check("handheld_atgm_hull_damage_90_1", target != null && !target.isRemoved()
-                        && Math.abs((healthBefore - target.getHealth()) - 90.1) < .02);
+                if (index == 1) check("handheld_rpg_hull_damage_109", target != null && !target.isRemoved()
+                        && Math.abs((healthBefore - target.getHealth()) - 109.0) < .02);
                 if (index == 2) check("400mm_chemical_blocked_by_1000mm_plate", target != null
                         && Math.abs(healthBefore - target.getHealth()) < .001);
                 record("CASE_COMPLETE", "case", caseId, "health_before", healthBefore,
@@ -184,7 +184,7 @@ public final class BvpTaczAtScenarios {
                 var combat = ProjectileProfiles.combatDescriptor(bullet);
                 check("projectile_policy_selected", index == 3 ? ProjectileProfiles.profileId(bullet) == null
                         : combat != null && combat.getCaliberMm() == 110 && combat.getPenetrationMm() == 400
-                        && Math.abs(combat.getHullDamage() * BvpHandheldAtPolicy.damageMultiplier(combat) - 90.1) < .001);
+                        && combat.getHullDamage() == 109);
                 EliteDiagnostics.record(bullet, "tacz_at_suite", "SHOT_FIRED", "case", caseId, "gun", bullet.getGunId(),
                         "profile", ProjectileProfiles.profileId(bullet), "position", bullet.position(), "motion", bullet.getDeltaMovement());
             }
