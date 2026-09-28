@@ -216,6 +216,9 @@ object WarDiagnostics {
         var target: VehicleEntity? = null
         var aligned = false
         var releaseCursor = 0
+        /** FFA seeker state for the next store (-1 none, 0 seeking, 1 acquiring, 2 locked) and releases waited. */
+        var ffaLock = -1
+        var ffaWait = 0
         val credit = HashMap<String, Double>()
         val cadence = HashMap<String, Double>()
     }
@@ -474,33 +477,57 @@ object WarDiagnostics {
                 if (ahead.lengthSqr() < 260.0 * 260.0 && nose.angleTo(ahead) < (if (unit.kind == Kind.HELI) 25.0 else 12.0))
                     for (name in weapons(vehicle)) shoot(unit, vehicle, name, target, current)
             }
-            if ((age + unit.slot * 7) % 40 != 0 || target == null) return
             val definition = AircraftArmamentManager.definition(vehicle) ?: return
             val selections = vehicle.persistentData.getCompound("BvpAircraftArmament").getCompound("Selections")
             val mounts = AircraftArmamentRegistry.mounts(definition).filter { selections.contains(it["Id"].asString) }
             if (mounts.isEmpty()) return
+            // FFA missiles fire only on a lock, as for a pilot (AircraftArmamentManager requires lock 2): the seeker
+            // tracks the next FFA store's target every tick. Air-to-air seekers look for aircraft, the rest for vehicles.
+            val next = mounts[unit.releaseCursor % mounts.size]
+            val nextStore = AircraftArmamentRegistry.stores[ResourceLocation.tryParse(selections.getString(next["Id"].asString))] ?: return
+            val nextKind = guidance(nextStore)
+            val ffaTarget = if (!nextKind.startsWith("FFA")) null else {
+                val air = nextStore["Category"]?.asString == "AIR_TO_AIR"
+                enemies(unit).filter { (it.kind != Kind.GROUND) == air }
+                    .minByOrNull { it.vehicle!!.distanceToSqr(vehicle) }?.vehicle
+            }
+            if (ffaTarget != null) {
+                unit.ffaLock = AircraftMissileLauncher.updateToward(vehicle, player, AircraftStoreWeapons.PREFIX + next["Id"].asString,
+                    ffaTarget.boundingBox.center.subtract(vehicle.position()).normalize(), nextStore)
+            } else if (nextKind.startsWith("FFA")) unit.ffaLock = -1
+            if ((age + unit.slot * 7) % 40 != 0) return
+            if (nextKind.startsWith("FFA")) {
+                if (unit.ffaLock != 2) {
+                    current.rejected.merge("FFA_NOT_LOCKED_$nextKind", 1, Int::plus)
+                    // give the seeker up to three release slots (6 s), then move on to the next station
+                    if (++unit.ffaWait >= 3) { unit.ffaWait = 0; unit.releaseCursor++ }
+                    return
+                }
+                unit.ffaWait = 0
+            } else if (target == null) return
             // over the enemy for bombs; missiles from anywhere
             val pair = mounts[unit.releaseCursor++ % mounts.size]
             val id = selections.getString(pair["Id"].asString)
             val store = AircraftArmamentRegistry.stores[ResourceLocation.tryParse(id)] ?: return
             val kind = guidance(store)
+            val aim = ffaTarget ?: target ?: return
             val mount = AircraftArmamentRegistry.mountPositions(pair).firstOrNull() ?: return
             val channel = AircraftStoreWeapons.PREFIX + pair["Id"].asString
             // paint the target for laser and TV weapons (a moving spot), and give GPS weapons a waypoint on it
             if (kind.contains("LASER") || kind.contains("TV") || kind == "MISSILE_TV")
-                AircraftDesignationData.get(level).put(vehicle.uuid, target.boundingBox.center, target)
-            if (kind == "BOMB_GPS") AircraftBombTargeting.setDiagnosticGpsTarget(vehicle, BlockPos.containing(target.position()))
+                AircraftDesignationData.get(level).put(vehicle.uuid, aim.boundingBox.center, aim)
+            if (kind == "BOMB_GPS") AircraftBombTargeting.setDiagnosticGpsTarget(vehicle, BlockPos.containing(aim.position()))
             val ok = when {
                 kind.startsWith("BOMB") -> AircraftBombLauncher.launch(vehicle, player, mount, store, null, Vec3(0.0, -2.5, 0.0))
                 kind.startsWith("MISSILE") -> AircraftLaserLauncher.launch(vehicle, player, mount, store, channel)
                 kind.startsWith("FFA") -> {
                     val origin = vehicle.position().add(0.0, -1.5, 0.0)
                     AircraftMissileLauncher.launchAt(vehicle, player, channel, origin,
-                        target.boundingBox.center.subtract(origin).normalize(), store)
+                        aim.boundingBox.center.subtract(origin).normalize(), store)
                 }
                 kind == "ROCKETS" || kind == "GUN_POD" -> {
                     val natives = AircraftArmamentManager.nativeWeapons(pair, id)
-                    natives.forEach { shoot(unit, vehicle, it, target, current) }
+                    natives.forEach { shoot(unit, vehicle, it, aim, current) }
                     natives.isNotEmpty()
                 }
                 else -> false
