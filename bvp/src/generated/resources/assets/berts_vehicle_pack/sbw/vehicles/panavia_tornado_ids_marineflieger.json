@@ -255,7 +255,7 @@
       },
       {
         "Bone": "gear_wheel_2",
-        "Parent": "landing_gear_2",
+        "Parent": "gear_steer_0",
         "Pivot": [
           -3.61039,
           3.24935,
@@ -437,6 +437,23 @@
             ]
           ]
         }
+      }
+    ],
+    "NoseSteering": [
+      {
+        "Bone": "gear_steer_0",
+        "Parent": "landing_gear_2",
+        "Pivot": [
+          0.0,
+          3.24935,
+          -66.43117
+        ],
+        "Axis": [
+          0,
+          -1,
+          0
+        ],
+        "MaxDeflectionDegrees": 45.0
       }
     ]
   },

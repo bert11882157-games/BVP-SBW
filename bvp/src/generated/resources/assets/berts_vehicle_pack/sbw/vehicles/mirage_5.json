@@ -251,7 +251,24 @@
         "ClosedAngleDegrees": -90
       }
     ],
-    "Sweeps": []
+    "Sweeps": [],
+    "NoseSteering": [
+      {
+        "Bone": "gear_steer_0",
+        "Parent": "landing_gear_12",
+        "Pivot": [
+          0.0,
+          3.24395,
+          -46.85715
+        ],
+        "Axis": [
+          0,
+          -1,
+          0
+        ],
+        "MaxDeflectionDegrees": 45.0
+      }
+    ]
   },
   "EngineExhaust": {
     "Schema": "berts_vehicle_pack:engine_exhaust_origins/v1",

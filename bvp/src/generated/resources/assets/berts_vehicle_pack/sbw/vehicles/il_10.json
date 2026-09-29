@@ -135,7 +135,7 @@
       },
       {
         "Bone": "gear_wheel_0",
-        "Parent": "landing_gear_13",
+        "Parent": "gear_steer_0",
         "Pivot": [
           0.0,
           26.06575,
@@ -199,7 +199,24 @@
         "Parent": "hull"
       }
     ],
-    "Sweeps": []
+    "Sweeps": [],
+    "NoseSteering": [
+      {
+        "Bone": "gear_steer_0",
+        "Parent": "landing_gear_13",
+        "Pivot": [
+          0.0,
+          26.06575,
+          110.13699
+        ],
+        "Axis": [
+          0,
+          -1,
+          0
+        ],
+        "MaxDeflectionDegrees": 30.0
+      }
+    ]
   },
   "DefensiveStationPresentation": {
     "Schema": 1,

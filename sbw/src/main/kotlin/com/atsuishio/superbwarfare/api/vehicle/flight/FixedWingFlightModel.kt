@@ -242,7 +242,8 @@ class FixedWingFlightModel(
 
     /**
      * Explicit surfaces bypass the legacy virtual stick. Positive pitch is nose-up, positive
-     * roll is right-bank, and positive rudder is nose-right. Legacy mouse targets return toward
+     * roll is right-bank, and positive rudder yaws the nose toward +x (Minecraft yaw falls: the
+     * pilot's left; see FixedWingFlightModelTest.positiveRudderYawsTheNoseTowardPlusX). Legacy mouse targets return toward
      * zero with simulation time; engine failure does not disable aerodynamic surfaces.
      */
     @JvmOverloads

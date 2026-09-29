@@ -261,7 +261,7 @@
     "Rotors": [
       {
         "Bone": "gear_wheel_0",
-        "Parent": "landing_gear_0",
+        "Parent": "gear_steer_0",
         "Pivot": [
           0.0,
           3.80247,
@@ -326,7 +326,24 @@
       }
     ],
     "Flaps": [],
-    "Sweeps": []
+    "Sweeps": [],
+    "NoseSteering": [
+      {
+        "Bone": "gear_steer_0",
+        "Parent": "landing_gear_0",
+        "Pivot": [
+          0.0,
+          3.80247,
+          -48.29136
+        ],
+        "Axis": [
+          0,
+          -1,
+          0
+        ],
+        "MaxDeflectionDegrees": 45.0
+      }
+    ]
   },
   "CockpitGauges": {
     "Schema": 1,

@@ -31,6 +31,9 @@ final class AircraftRigAnimator {
     private static final int MAX_SWEEPS = 16;
     private static final int MAX_GEAR = 32;
     private static final int MAX_FLAPS = 16;
+    private static final int MAX_STEERING = 4;
+    /** Nose-wheel steering authority: full up to taxi speed, easing to a fifth by take-off speed (blocks/tick). */
+    private static final double STEER_FULL_SPEED = 0.5, STEER_LOW_SPEED = 2.0, STEER_HIGH_SPEED_GAIN = 0.2;
     private static final Map<PolyMeshModel, Entry> BINDINGS = new LinkedHashMap<>();
     private static final Map<UUID, Phase> PHASES = new LinkedHashMap<>(16, 0.75F, true);
     private static Object world;
@@ -80,6 +83,8 @@ final class AircraftRigAnimator {
         if (binding == null) return true;
 
         double elevator = 0, aileron = 0, rudder = 0, spool = 0, speed = 0, airbrake = 0, rolling = 0;
+        boolean grounded = false;
+        boolean needsMotion = binding.sweeps.length != 0 || binding.rotors.length != 0 || binding.steering.length != 0;
         boolean usable = Float.isFinite(partialTick) && !entity.isWreck();
         if (usable && entity instanceof AuthoredHelicopter) {
             spool = BvpFarVehicleVisuals.helicopterRotorSpool(entity, partialTick);
@@ -94,10 +99,11 @@ final class AircraftRigAnimator {
                 rudder = controls.getRudder();
                 airbrake = controls.getAirbrake();
                 spool = controls.getThrottle();
-                if (binding.sweeps.length != 0 || binding.rotors.length != 0) {
+                if (needsMotion) {
                     var snapshot = far.getSnapshot();
                     speed = speed(snapshot.getMotionX(), snapshot.getMotionY(), snapshot.getMotionZ());
-                    rolling = rolling(entity, snapshot.getMotionX(), snapshot.getMotionZ());
+                    grounded = grounded(entity);
+                    rolling = rolling(entity, grounded, snapshot.getMotionX(), snapshot.getMotionZ());
                 }
             }
         } else if (usable) {
@@ -105,10 +111,11 @@ final class AircraftRigAnimator {
             usable = flight.getServerTick() > 0 && Double.isFinite(flight.getThrottle());
             if (usable) {
                 spool = clamp(flight.getThrottle(), 0, 1);
-                if (binding.sweeps.length != 0 || binding.rotors.length != 0) {
+                if (needsMotion) {
                     var motion = flight.getMotion();
                     speed = speed(motion.f_82479_, motion.f_82480_, motion.f_82481_);
-                    rolling = rolling(entity, motion.f_82479_, motion.f_82481_);
+                    grounded = grounded(entity);
+                    rolling = rolling(entity, grounded, motion.f_82479_, motion.f_82481_);
                 }
                 var controls = flight.getControlSurfaces();
                 if (controls != null) {
@@ -140,6 +147,7 @@ final class AircraftRigAnimator {
         // Far copies receive the same normalized snapshot value in SynchedGearRot.
         float gearFraction = entity.getSynchedGearRot();
         binding.applyGear(gearFraction);
+        if (binding.steering.length != 0) binding.applySteering(usable && grounded, gearFraction, rudder, speed);
         if (binding.flaps.length != 0) {
             binding.applyFlaps(Float.isFinite(partialTick) && !entity.isWreck()
                     && entity.hasFixedWingLandingGear(), gearFraction);
@@ -172,6 +180,7 @@ final class AircraftRigAnimator {
         for (Sweep sweep : binding.sweeps) require(sweep.part.bone != yaw.bone && sweep.part.bone != pitch.bone, "station/sweep overlap");
         for (Gear gear : binding.gear) require(gear.bone != yaw.bone && gear.bone != pitch.bone, "station/gear overlap");
         for (Part flap : binding.flaps) require(flap.bone != yaw.bone && flap.bone != pitch.bone, "station/flap overlap");
+        for (Part steer : binding.steering) require(steer.bone != yaw.bone && steer.bone != pitch.bone, "station/steering overlap");
         return new Station(yaw, pitch);
     }
 
@@ -229,6 +238,8 @@ final class AircraftRigAnimator {
         require(data.gear == null || extended && data.gear.length <= MAX_GEAR, "gear array/version");
         require(data.gearDoors == null || extended && data.gearDoors.length <= 32, "gear door array/version");
         require(data.flaps == null || extended && data.flaps.length <= MAX_FLAPS, "flap array/version");
+        require(data.noseSteering == null || extended && data.gear != null
+                && data.noseSteering.length <= MAX_STEERING, "nose steering array/version");
         // Each flap validates the availability of its own input below.
         Set<String> names = new HashSet<>();
         Part[] surfaces = new Part[data.surfaces.length];
@@ -312,8 +323,23 @@ final class AircraftRigAnimator {
                     "gear door parent/angle");
             doors[index] = new Door(part(source, -7, source.closedAngleDegrees, 0, 0, 0, true, names, bones));
         }
+        Part[] steering = new Part[data.noseSteering == null ? 0 : data.noseSteering.length];
+        for (int index = 0; index < steering.length; index++) {
+            var source = data.noseSteering[index];
+            require(source != null && source.parent != null, "null nose steering");
+            // only a deployed gear leg can carry a steering assembly: it disappears with the leg on retraction
+            boolean deployedLeg = false;
+            for (var leg : data.gear) {
+                if (leg != null && source.parent.equals(leg.bone) && !"RETRACTED".equals(leg.visibleWhen)) {
+                    deployedLeg = true;
+                }
+            }
+            require(deployedLeg, "nose steering parent must be a deployed gear leg");
+            double rate = positive(source.maxDeflectionDegrees, 90, "nose steering limit");
+            steering[index] = part(source, -8, rate, 0, 0, 0, true, names, bones);
+        }
         if (extended) validateParents(data);
-        return new Binding(surfaces, rotors, sweeps, gear, flaps, doors);
+        return new Binding(surfaces, rotors, sweeps, gear, flaps, doors, steering);
     }
 
     private static Part part(AircraftRigResource.Part source, int channel, double rate,
@@ -357,6 +383,8 @@ final class AircraftRigAnimator {
         for (var source : data.surfaces) parents.put(source.bone, source.parent);
         for (var source : data.sweeps) parents.put(source.bone, source.parent);
         if (data.gear != null) for (var source : data.gear) if (source != null) parents.put(source.bone, "hull");
+        // steering assemblies hang under gear legs; wheel rotors may in turn hang under them
+        if (data.noseSteering != null) for (var source : data.noseSteering) parents.put(source.bone, source.parent);
         for (var source : data.rotors) validateParent(source.bone, source.parent, parents);
         for (var entry : parents.entrySet()) validateParent(entry.getKey(), entry.getValue(), parents);
     }
@@ -380,17 +408,26 @@ final class AircraftRigAnimator {
      * Signed ground roll along the nose, blocks/tick, for landing gear wheels: zero off the ground. The client
      * onGround flag is not reliable for synchronized vehicles, so a solid block just below the airframe also counts.
      */
-    private static double rolling(GeoVehicleEntity entity, double x, double z) {
-        if (!Double.isFinite(x) || !Double.isFinite(z)) return 0;
-        boolean grounded = entity.m_20096_();
-        if (!grounded) {
-            var level = entity.m_9236_();
-            var below = net.minecraft.core.BlockPos.m_274561_(entity.m_20185_(), entity.m_20186_() - 0.35, entity.m_20189_());
-            grounded = !level.m_8055_(below).m_60795_();
-        }
-        if (!grounded) return 0;
+    private static double rolling(GeoVehicleEntity entity, boolean grounded, double x, double z) {
+        if (!Double.isFinite(x) || !Double.isFinite(z) || !grounded) return 0;
         double yaw = Math.toRadians(entity.m_146908_());
         return -Math.sin(yaw) * x + Math.cos(yaw) * z;
+    }
+
+    /** The client onGround flag is not reliable for synchronized vehicles: a solid block just below also counts. */
+    private static boolean grounded(GeoVehicleEntity entity) {
+        if (entity.m_20096_()) return true;
+        var level = entity.m_9236_();
+        var below = net.minecraft.core.BlockPos.m_274561_(entity.m_20185_(), entity.m_20186_() - 0.35, entity.m_20189_());
+        return !level.m_8055_(below).m_60795_();
+    }
+
+    /** Steering authority at a presented speed (blocks/tick): full while taxiing, reduced on the take-off run. */
+    static double steeringGain(double speed) {
+        if (!Double.isFinite(speed) || speed <= STEER_FULL_SPEED) return 1;
+        if (speed >= STEER_LOW_SPEED) return STEER_HIGH_SPEED_GAIN;
+        double alpha = (speed - STEER_FULL_SPEED) / (STEER_LOW_SPEED - STEER_FULL_SPEED);
+        return 1 + alpha * (STEER_HIGH_SPEED_GAIN - 1);
     }
 
     private static double speed(double x, double y, double z) {
@@ -448,14 +485,21 @@ final class AircraftRigAnimator {
         final Gear[] gear;
         final Part[] flaps;
         final Door[] doors;
+        final Part[] steering;
 
         Binding(Part[] surfaces, Part[] rotors, Sweep[] sweeps, Gear[] gear, Part[] flaps, Door[] doors) {
+            this(surfaces, rotors, sweeps, gear, flaps, doors, new Part[0]);
+        }
+
+        Binding(Part[] surfaces, Part[] rotors, Sweep[] sweeps, Gear[] gear, Part[] flaps, Door[] doors,
+                Part[] steering) {
             this.surfaces = surfaces;
             this.rotors = rotors;
             this.sweeps = sweeps;
             this.gear = gear;
             this.flaps = flaps;
             this.doors = doors;
+            this.steering = steering;
         }
 
         void apply(double elevator, double aileron, double rudder, Phase phase) {
@@ -487,6 +531,16 @@ final class AircraftRigAnimator {
             for (Door door : doors) door.apply(closure);
         }
 
+        /**
+         * Nose-wheel steering follows the rudder (positive = nose right) only while the aircraft rests on fully
+         * extended gear; airborne, retracting or wrecked it centres.
+         */
+        void applySteering(boolean grounded, double gearFraction, double rudder, double speed) {
+            boolean down = grounded && Double.isFinite(gearFraction) && gearFraction <= 0;
+            double command = down ? clamp(rudder, -1, 1) * steeringGain(speed) : 0;
+            for (Part steer : steering) steer.rotate(command * steer.rate);
+        }
+
         void applyFlaps(boolean gearAvailable, double gearFraction) {
             double fraction = gearAvailable && Double.isFinite(gearFraction)
                     && gearFraction >= 0 && gearFraction <= 1 ? 1 - gearFraction : 0;
@@ -505,6 +559,7 @@ final class AircraftRigAnimator {
             for (Gear part : gear) part.restore();
             for (Part flap : flaps) flap.restore();
             for (Door door : doors) door.restore();
+            for (Part steer : steering) steer.restore();
         }
     }
 

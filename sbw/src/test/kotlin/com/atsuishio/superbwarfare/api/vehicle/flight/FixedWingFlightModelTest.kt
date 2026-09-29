@@ -322,6 +322,17 @@ class FixedWingFlightModelTest {
         assertTrue(rig.model.elevator > 0.99 && rig.model.aileron > 0.99)
     }
 
+    /**
+     * Pins the rudder sense the rig animator relies on (rudder surfaces, nose-wheel steering): positive rudder yaws
+     * the nose toward +x, so Minecraft yaw falls (a left turn as seen by the pilot).
+     */
+    @Test
+    fun positiveRudderYawsTheNoseTowardPlusX() {
+        val taxi = Rig(speed = 3.0, height = 0.0)
+        repeat(20) { taxi.step(rudder = 1.0) }
+        assertTrue(taxi.model.yawDegrees < -0.1, "yaw=${taxi.model.yawDegrees}")
+    }
+
     @Test
     fun surfaceAuthorityStartsSmoothlyAtMinimumAirspeed() {
         var previous = -1.0

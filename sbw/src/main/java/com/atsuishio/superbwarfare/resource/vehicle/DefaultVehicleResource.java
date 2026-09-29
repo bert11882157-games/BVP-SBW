@@ -77,6 +77,7 @@ public class DefaultVehicleResource implements IDBasedData<DefaultVehicleResourc
         @SerializedName("Gear") public Gear[] gear;
         @SerializedName("GearDoors") public GearDoor[] gearDoors;
         @SerializedName("Flaps") public Flap[] flaps;
+        @SerializedName("NoseSteering") public NoseSteering[] noseSteering;
 
         /** Whole source subtrees, visibility only; no invented retraction axis or angle. */
         public static final class Gear {
@@ -95,6 +96,14 @@ public class DefaultVehicleResource implements IDBasedData<DefaultVehicleResourc
         /** Source-neutral open door, rotated about its authored hinge as the gear retracts. */
         public static final class GearDoor extends Part {
             @SerializedName("ClosedAngleDegrees") public Double closedAngleDegrees;
+        }
+
+        /**
+         * A steerable nose (or tail) wheel assembly under a gear leg: turned about its vertical axis by the rudder /
+         * taxi command, only while the aircraft rests on its extended gear.
+         */
+        public static final class NoseSteering extends Part {
+            @SerializedName("MaxDeflectionDegrees") public Double maxDeflectionDegrees;
         }
 
         public static final class Surface extends Part {

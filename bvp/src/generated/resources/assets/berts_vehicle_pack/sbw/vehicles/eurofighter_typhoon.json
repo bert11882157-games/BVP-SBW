@@ -415,7 +415,7 @@
       },
       {
         "Bone": "gear_wheel_2",
-        "Parent": "landing_gear_2",
+        "Parent": "gear_steer_0",
         "Pivot": [
           0.0,
           3.25785,
@@ -445,7 +445,24 @@
         "Parent": "hull"
       }
     ],
-    "Sweeps": []
+    "Sweeps": [],
+    "NoseSteering": [
+      {
+        "Bone": "gear_steer_0",
+        "Parent": "landing_gear_2",
+        "Pivot": [
+          0.0,
+          3.25785,
+          -43.07603
+        ],
+        "Axis": [
+          0,
+          -1,
+          0
+        ],
+        "MaxDeflectionDegrees": 45.0
+      }
+    ]
   },
   "FlightDisplays": {
     "Schema": 1,

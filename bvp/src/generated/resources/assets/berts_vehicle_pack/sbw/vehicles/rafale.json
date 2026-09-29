@@ -261,7 +261,7 @@
     "Rotors": [
       {
         "Bone": "gear_wheel_0",
-        "Parent": "landing_gear_12",
+        "Parent": "gear_steer_0",
         "Pivot": [
           2.64463,
           3.96694,
@@ -278,7 +278,7 @@
       },
       {
         "Bone": "gear_wheel_1",
-        "Parent": "landing_gear_12",
+        "Parent": "gear_steer_0",
         "Pivot": [
           -2.64463,
           3.96694,
@@ -342,7 +342,24 @@
         "Parent": "hull"
       }
     ],
-    "Sweeps": []
+    "Sweeps": [],
+    "NoseSteering": [
+      {
+        "Bone": "gear_steer_0",
+        "Parent": "landing_gear_12",
+        "Pivot": [
+          0.0,
+          3.96694,
+          -51.23967
+        ],
+        "Axis": [
+          0,
+          -1,
+          0
+        ],
+        "MaxDeflectionDegrees": 45.0
+      }
+    ]
   },
   "EngineExhaust": {
     "Schema": "berts_vehicle_pack:engine_exhaust_origins/v1",

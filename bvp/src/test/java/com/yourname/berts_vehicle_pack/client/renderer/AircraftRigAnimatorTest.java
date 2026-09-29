@@ -62,6 +62,8 @@ public final class AircraftRigAnimatorTest {
         invalidGearAtomicity();
         landingFlapStateAndRestore();
         invalidLandingFlapAtomicity();
+        noseSteeringOnTheGround();
+        invalidNoseSteering();
         if (args.length == 1) actualLandingFlapMesh(args[0]);
         System.out.println("PASS AircraftRig production fixtures: " + checks + " assertions");
     }
@@ -341,6 +343,90 @@ public final class AircraftRigAnimatorTest {
         var legacy = AircraftRigAnimator.bind(data, model::getBone);
         legacy.applyGear(1);
         check(model.getBone("gear_nose").visible, "absent optional Gear preserves existing rigs");
+    }
+
+    private static PolyMeshModel steeringModel() {
+        String source = MODEL.replace("{\"name\":\"tail\"", """
+                {"name":"gear_nose","parent":"hull","pivot":[2,-3,20]},
+                {"name":"gear_nose_up","parent":"hull","pivot":[2,-1,20]},
+                {"name":"gear_steer_0","parent":"gear_nose","pivot":[2,-5,20]},
+                {"name":"gear_wheel_0","parent":"gear_steer_0","pivot":[2,-6,20]},
+                {"name":"tail"
+                """.strip());
+        return new PolyMeshModel(GSON.fromJson(source, BedrockModelPOJO.class),
+                JsonParser.parseString(source).getAsJsonObject());
+    }
+
+    private static AircraftRigResource steeringResource() {
+        return GSON.fromJson("""
+                {"AircraftRig":{"Schema":2,"Frame":"GENERATED_MODEL_PIXELS",
+                  "Surfaces":[],"Sweeps":[],
+                  "Rotors":[{"Bone":"gear_wheel_0","Parent":"gear_steer_0","Pivot":[2,-6,20],"Axis":[1,0,0],
+                    "SpeedChannel":"groundRoll","Direction":1,"DegreesPerTickAtFullSpeed":30}],
+                  "Gear":[{"Bone":"gear_nose","Parent":"hull","VisibleWhen":"DEPLOYED"},
+                    {"Bone":"gear_nose_up","Parent":"hull","VisibleWhen":"RETRACTED"}],
+                  "NoseSteering":[{"Bone":"gear_steer_0","Parent":"gear_nose","Pivot":[2,-5,20],
+                    "Axis":[0,-1,0],"MaxDeflectionDegrees":45}]}}
+                """, DefaultVehicleResource.class).getAircraftRig();
+    }
+
+    /** Owner 2026-09-29: the nose wheel follows the rudder on the ground about its own pivot, and only there. */
+    private static void noseSteeringOnTheGround() {
+        var model = steeringModel();
+        var binding = AircraftRigAnimator.bind(steeringResource(), model::getBone);
+        check(binding.steering.length == 1 && binding.rotors.length == 1, "steering + wheel under it bind");
+        var steer = model.getBone("gear_steer_0");
+        var wheel = model.getBone("gear_wheel_0");
+        Vector3f pivot = new Vector3f(steer.x, steer.y, steer.z);
+        // resource axis [0,-1,0] reflects to model +y
+        for (double rudder : new double[]{1, -1, .5, 2}) {
+            binding.applySteering(true, 0, rudder, 0);
+            quaternion(steer.rotation, new Quaternionf().rotationY((float) Math.toRadians(
+                    45 * Math.max(-1, Math.min(1, rudder)))), "taxi steering follows rudder to its limit");
+            close(new Vector3f(steer.x, steer.y, steer.z).distance(pivot), 0, "steering keeps its pivot");
+            check(wheel.parent == steer, "wheel turns with the steering assembly");
+            binding.restore();
+            quaternion(steer.rotation, new Quaternionf(), "steering restores between shared-model draws");
+        }
+        binding.applySteering(true, 0, 1, 3);
+        quaternion(steer.rotation, new Quaternionf().rotationY((float) Math.toRadians(9)),
+                "take-off run keeps a fifth of the authority");
+        close(AircraftRigAnimator.steeringGain(1.25), .6, "authority eases between taxi and take-off speed");
+        binding.applySteering(false, 0, 1, 0);
+        quaternion(steer.rotation, new Quaternionf(), "airborne nose wheel centres");
+        binding.applySteering(true, .5, 1, 0);
+        quaternion(steer.rotation, new Quaternionf(), "travelling gear centres");
+        binding.applySteering(true, Double.NaN, 1, 0);
+        quaternion(steer.rotation, new Quaternionf(), "invalid gear state centres");
+        binding.applySteering(true, 0, Double.NaN, 0);
+        quaternion(steer.rotation, new Quaternionf(), "invalid rudder centres");
+        binding.restore();
+    }
+
+    private static void invalidNoseSteering() {
+        for (int failure = 0; failure < 8; failure++) {
+            var model = steeringModel();
+            var data = steeringResource();
+            switch (failure) {
+                case 0 -> data.noseSteering[0].parent = "hull";
+                case 1 -> data.noseSteering[0].parent = "gear_nose_up";
+                case 2 -> data.noseSteering[0].maxDeflectionDegrees = 120.0;
+                case 3 -> data.noseSteering[0].pivot = new double[]{2, -4, 20};
+                case 4 -> data.noseSteering[0].bone = "gear_wheel_0";
+                case 5 -> data.noseSteering = new AircraftRigResource.NoseSteering[5];
+                case 6 -> data.gear = null;
+                case 7 -> data.noseSteering = null;
+            }
+            boolean rejected = false;
+            try {
+                AircraftRigAnimator.bind(data, model::getBone);
+            } catch (IllegalArgumentException expected) {
+                rejected = true;
+            }
+            // without the steering entry the wheel rotor's parent chain is unknown
+            check(rejected, "invalid nose steering rejected: case " + failure);
+            quaternion(model.getBone("gear_steer_0").rotation, new Quaternionf(), "failed steering bind is atomic");
+        }
     }
 
     private static PolyMeshModel stationModel() {
