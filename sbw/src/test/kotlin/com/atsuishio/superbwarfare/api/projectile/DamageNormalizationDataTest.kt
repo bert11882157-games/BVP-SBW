@@ -80,6 +80,10 @@ class DamageNormalizationDataTest {
                     assertEquals(0.60 * r * Math.pow(cal / 120.0, 0.75), hull, 1.0, "$path HE")
                     if (cal >= 120) assertTrue(hull >= 180.0, "$path HE is strong against an IFV")
                 }
+                // owner 2026-09-29: autocannon HE is hit or miss against IFVs - it gets through thin weak spots
+                cls == "HE" && munition == "autocannon_shell" && cal in 20.0..56.9 &&
+                    !path.contains("grenadelauncher") && !path.contains("ags_30") ->
+                    assertTrue(c.get("PenetrationMm").asDouble >= 0.7 * cal - 0.06, "$path autocannon HE penetration")
                 munition == "bullet" && cal < 20 -> assertTrue(hull <= 5.0, "$path MG")
             }
         }

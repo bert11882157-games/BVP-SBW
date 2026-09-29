@@ -8,7 +8,7 @@ What it writes (all numbers are the rules below, nothing hand-tuned per vehicle)
   * ground vehicles: MaxHealth by class and combat weight, DamageClass, DeathChargeKg, class DamageModifiers;
   * aircraft: MaxHealth by full-fuel mass, DamageClass, wing pools at 40 % (no elevator/rudder modules);
   * every BVP projectile profile: HullDamage / ModuleDamage / AmmoRackDamage (per-mille detonation chance) and,
-    for HE, PenetrationMm = calibre / 2;
+    for HE, PenetrationMm = calibre / 2 (autocannon HE below 57 mm: 0.7 x calibre);
   * machine-gun belts (< 20 mm): no TNT charge and no legacy explosion;
   * placeholder box armor on light vehicles: one realistic thickness per face (public figures, RHA-equivalent);
   * launcher_weapon for the 9P149 Shturm's launcher-tube module (the only carrier with one for now);
@@ -149,6 +149,13 @@ TANDEM = {'bgm71e_tow', 'milan_3_atgm', 'agm114k_ah64d', 'hot3_uht'}
 AIR_ATGM = {'agm114k_ah64d', 'hot3_uht', 'falanga_9m17m'}   # aircraft stores that are anti-tank guided missiles
 GUN_MM = 75.0
 HE_PEN_FROM_MM = 57.0
+# autocannon HE (20-56 mm) penetration per mm of calibre (owner 2026-09-29: hit or miss vs IFVs)
+AUTOCANNON_HE_PEN = 0.7
+
+
+def GRENADE_LAUNCHER(path, rid):
+    """Automatic grenade launchers (AGS-30 / BMP-2M / BTR-90 VOG-30) fire HE-frag grenades, not autocannon HE."""
+    return 'grenadelauncher' in path or 'ags_30' in path or 'vog' in rid
 
 
 def k(cal):
@@ -242,6 +249,10 @@ def rules(c, rid, path):
         hull = 0.60 * R * k(cal) if gun else 2 * autocannon(cal)
         if cal >= HE_PEN_FROM_MM:
             new_pen = round(0.5 * cal, 1)
+        elif not GRENADE_LAUNCHER(path, rid):
+            # owner 2026-09-29: autocannon HE is hit or miss - it defeats an IFV's weak spots (thin sides, rear,
+            # roof: 30 mm HE 21 mm) and does next to nothing to its heavier plates
+            new_pen = round(max(float(pen), AUTOCANNON_HE_PEN * cal), 1)
     elif kind in ('HEAT_FS', 'HEAT'):
         hull = 0.40 * R * k(cal)
     elif kind == 'APFSDS':

@@ -10,7 +10,7 @@
     "HullDamage": 15,
     "ModuleDamage": 9,
     "AmmoRackDamage": 46,
-    "PenetrationMm": 4,
+    "PenetrationMm": 16.1,
     "PenetrationCurve": {
       "DistancesMetres": [
         10,
@@ -21,12 +21,12 @@
         2000
       ],
       "PenetrationMm": [
-        4,
-        4,
-        3,
-        2,
-        1,
-        1
+        16.1,
+        16.1,
+        16.1,
+        16.1,
+        16.1,
+        16.1
       ]
     },
     "RicochetCurve": {
