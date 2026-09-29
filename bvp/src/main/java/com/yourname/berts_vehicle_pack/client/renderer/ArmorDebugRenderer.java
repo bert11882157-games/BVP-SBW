@@ -6,6 +6,7 @@ import com.atsuishio.superbwarfare.client.renderer.vehicle.VehicleRenderPartSnap
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.yourname.berts_vehicle_pack.armor.ArmorMeshVolume;
 import com.yourname.berts_vehicle_pack.armor.ArmorProfiles;
 import com.yourname.berts_vehicle_pack.armor.ArmorProfiles.ArmorBox;
 import com.yourname.berts_vehicle_pack.armor.ArmorProfiles.ArmorProfile;
@@ -79,6 +80,14 @@ public final class ArmorDebugRenderer {
         for (ArmorBox plate : profile.plates) {
             minArmor = Math.min(minArmor, plate.armorMm);
             maxArmor = Math.max(maxArmor, plate.armorMm);
+            if (plate.volume instanceof ArmorMeshVolume mesh && mesh.hasFaceArmor()) {
+                for (int t = 0, n = mesh.triangleCount(); t < n; t++) {
+                    double mm = mesh.triangleArmorMm(t);
+                    if (!Double.isFinite(mm)) continue;
+                    minArmor = Math.min(minArmor, mm);
+                    maxArmor = Math.max(maxArmor, mm);
+                }
+            }
         }
         if (minArmor == Double.MAX_VALUE) {
             minArmor = 0.0D;
@@ -188,11 +197,32 @@ public final class ArmorDebugRenderer {
         float red = 1.0F;
         float green = 0.0F;
         float blue = 0.0F;
-        if (!plate.name.equals(hitPlate) && maxArmor > minArmor + 1.0E-6D) {
+        boolean graded = !plate.name.equals(hitPlate) && maxArmor > minArmor + 1.0E-6D;
+        if (graded) {
             float t = (float) Math.max(0.0D, Math.min(1.0D,
                     (plate.armorMm - minArmor) / (maxArmor - minArmor)));
             red = t;
             green = 1.0F - t;
+        }
+        if (graded && fill != null && plate.volume instanceof ArmorMeshVolume mesh && mesh.hasFaceArmor()
+                && !(plate.isBarrelFrame() && barrelFrame == null)) {
+            // per-face armor: each triangle in its own thickness colour, outline in the plate's
+            PoseStack.Pose pose = poseStack.m_85850_();
+            int[] index = {0};
+            float plateRed = red;
+            plate.volume.forEachTriangle((ax, ay, az, bx, by, bz, cx, cy, cz) -> {
+                double mm = mesh.triangleArmorMm(index[0]++);
+                float t = Double.isFinite(mm)
+                        ? (float) Math.max(0.0D, Math.min(1.0D, (mm - minArmor) / (maxArmor - minArmor)))
+                        : plateRed;
+                DebugVec a = framePoint(entity, plate, turretFrameYaw, barrelFrame, ax, ay, az);
+                DebugVec b = framePoint(entity, plate, turretFrameYaw, barrelFrame, bx, by, bz);
+                DebugVec c = framePoint(entity, plate, turretFrameYaw, barrelFrame, cx, cy, cz);
+                quad(fill, pose, a, b, c, c, t, 1.0F - t, 0.0F, ARMOR_FILL_ALPHA);
+            });
+            renderMesh(entity, plate, turretFrameYaw, barrelFrame, poseStack, null, lines,
+                    red, green, blue, ARMOR_FILL_ALPHA, ARMOR_LINE_ALPHA);
+            return;
         }
         renderBox(entity, plate, turretFrameYaw, barrelFrame, poseStack, fill, lines,
                 red, green, blue, ARMOR_FILL_ALPHA, ARMOR_LINE_ALPHA);

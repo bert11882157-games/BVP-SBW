@@ -35,6 +35,8 @@ public final class ArmorMeshVolume implements ArmorVolume {
     private static final double PLANE_MERGE_OFFSET = 1.0E-7D;
     private static final double FEATURE_EDGE_DOT = 1.0D - 1.0E-6D;
     private static final int LEAF_SIZE = 4;
+    /** A triangle belongs to the entered face when its normal is within ~8 degrees of the entry normal. */
+    private static final double FACE_MATCH_DOT = 0.99D;
 
     private final double[] tri;
     private final double[] nrm;
@@ -52,6 +54,11 @@ public final class ArmorMeshVolume implements ArmorVolume {
      * grown entry face may be one of the slab's internal (mitre, inner, cut) faces. Set once while loading.
      */
     private Vec surfaceNormal;
+    /**
+     * Per-triangle armor thickness in mm (aligned with {@code tri}), NaN where the triangle uses the volume's
+     * thickness; null when no face of the volume has its own thickness (bvp_face_mm, docs/ARMOR_MESH.md).
+     */
+    private double[] faceMm;
 
     private ArmorMeshVolume(double[] tri, double[] nrm, double[] vertices, Part[] parts, double[] featureEdges,
                             Report report) {
@@ -103,7 +110,17 @@ public final class ArmorMeshVolume implements ArmorVolume {
      * validating are appended to {@code warnings}, prefixed with {@code label}.
      */
     static ArmorMeshVolume build(double[] soup, int triangleCount, String label, List<String> warnings) {
+        return build(soup, triangleCount, label, warnings, null);
+    }
+
+    /**
+     * As {@link #build(double[], int, String, List)}, with an optional thickness per input triangle
+     * ({@code faceMm[t]}, NaN = the volume's own thickness).
+     */
+    static ArmorMeshVolume build(double[] soup, int triangleCount, String label, List<String> warnings,
+                                 double[] faceMm) {
         Report report = new Report();
+        int[] source = new int[triangleCount];
         // 1. Weld identical positions so shared edges become shared vertex pairs.
         Map<WeldKey, Integer> weld = new HashMap<>();
         double[] welded = new double[Math.max(3, triangleCount * 9)];
@@ -140,6 +157,7 @@ public final class ArmorMeshVolume implements ArmorVolume {
             indices[kept * 3] = local[0];
             indices[kept * 3 + 1] = local[1];
             indices[kept * 3 + 2] = local[2];
+            source[kept] = t;
             kept++;
         }
         if (kept == 0) {
@@ -216,6 +234,14 @@ public final class ArmorMeshVolume implements ArmorVolume {
         List<Part> partList = new ArrayList<>();
         double[] triOut = new double[kept * 9];
         double[] nrmOut = new double[kept * 3];
+        boolean anyFaceMm = false;
+        if (faceMm != null) {
+            for (int t = 0; t < kept && !anyFaceMm; t++) {
+                double mm = source[t] < faceMm.length ? faceMm[source[t]] : Double.NaN;
+                anyFaceMm = Double.isFinite(mm) && mm >= 0.0D;
+            }
+        }
+        double[] mmOut = anyFaceMm ? new double[kept] : null;
         int cursor = 0;
         for (int c = 0; c < components.size(); c++) {
             int[] members = components.get(c);
@@ -254,6 +280,10 @@ public final class ArmorMeshVolume implements ArmorVolume {
                 System.arraycopy(vertexArray, i1 * 3, triOut, o + 3, 3);
                 System.arraycopy(vertexArray, i2 * 3, triOut, o + 6, 3);
                 unitNormal(triOut, o, nrmOut, cursor * 3);
+                if (mmOut != null) {
+                    double mm = source[t] < faceMm.length ? faceMm[source[t]] : Double.NaN;
+                    mmOut[cursor] = Double.isFinite(mm) && mm >= 0.0D ? mm : Double.NaN;
+                }
                 cursor++;
             }
             partList.add(Part.create(triOut, nrmOut, first, cursor - first, closed));
@@ -262,6 +292,7 @@ public final class ArmorMeshVolume implements ArmorVolume {
         Part[] parts = partList.toArray(new Part[0]);
         double[] feature = featureEdges(triOut, nrmOut, indices, flip, edges, kept, vertexArray);
         ArmorMeshVolume volume = new ArmorMeshVolume(triOut, nrmOut, vertexArray, parts, feature, report);
+        volume.faceMm = mmOut;
         report.appendWarnings(label, warnings);
         return volume;
     }
@@ -270,7 +301,7 @@ public final class ArmorMeshVolume implements ArmorVolume {
         return report;
     }
 
-    int triangleCount() {
+    public int triangleCount() {
         return tri.length / 9;
     }
 
@@ -290,6 +321,83 @@ public final class ArmorMeshVolume implements ArmorVolume {
     @Override
     public boolean isMesh() {
         return true;
+    }
+
+    /** Whether any face of this volume has its own armor thickness. */
+    public boolean hasFaceArmor() {
+        return faceMm != null;
+    }
+
+    /**
+     * Own thickness (mm) of the {@code index}-th triangle in {@link #forEachTriangle} order, NaN when it uses the
+     * volume's thickness.
+     */
+    public double triangleArmorMm(int index) {
+        return faceMm != null && index >= 0 && index < faceMm.length ? faceMm[index] : Double.NaN;
+    }
+
+    /**
+     * Armor thickness (mm) of the face a shot entered at {@code point} with entry face normal {@code normal}
+     * (armor-profile frame): the nearest triangle facing that way. NaN when the face has no thickness of its own
+     * (the volume's thickness applies) or the volume has no per-face thickness at all.
+     */
+    public double faceArmorMm(Vec point, Vec normal) {
+        if (faceMm == null || point == null || normal == null) return Double.NaN;
+        double length = normal.length();
+        if (!(length > 1.0E-9D)) return Double.NaN;
+        double nx = normal.x / length, ny = normal.y / length, nz = normal.z / length;
+        double best = Double.POSITIVE_INFINITY;
+        double bestMm = Double.NaN;
+        double[] closest = new double[3];
+        for (int t = 0; t < faceMm.length; t++) {
+            int n = t * 3;
+            // the entered face: parallel to the entry normal (open parts may be wound either way); of the parallel
+            // faces the one the entry point lies on is the nearest
+            if (Math.abs(nrm[n] * nx + nrm[n + 1] * ny + nrm[n + 2] * nz) < FACE_MATCH_DOT) continue;
+            closestPointOnTriangle(tri, t * 9, point.x, point.y, point.z, closest);
+            double dx = closest[0] - point.x, dy = closest[1] - point.y, dz = closest[2] - point.z;
+            double d = dx * dx + dy * dy + dz * dz;
+            if (d < best) {
+                best = d;
+                bestMm = faceMm[t];
+            }
+        }
+        return bestMm;
+    }
+
+    private static void closestPointOnTriangle(double[] tri, int o, double px, double py, double pz, double[] out) {
+        double ax = tri[o], ay = tri[o + 1], az = tri[o + 2];
+        double bx = tri[o + 3], by = tri[o + 4], bz = tri[o + 5];
+        double cx = tri[o + 6], cy = tri[o + 7], cz = tri[o + 8];
+        double abx = bx - ax, aby = by - ay, abz = bz - az;
+        double acx = cx - ax, acy = cy - ay, acz = cz - az;
+        double apx = px - ax, apy = py - ay, apz = pz - az;
+        double d1 = abx * apx + aby * apy + abz * apz, d2 = acx * apx + acy * apy + acz * apz;
+        if (d1 <= 0 && d2 <= 0) { out[0] = ax; out[1] = ay; out[2] = az; return; }
+        double bpx = px - bx, bpy = py - by, bpz = pz - bz;
+        double d3 = abx * bpx + aby * bpy + abz * bpz, d4 = acx * bpx + acy * bpy + acz * bpz;
+        if (d3 >= 0 && d4 <= d3) { out[0] = bx; out[1] = by; out[2] = bz; return; }
+        double vc = d1 * d4 - d3 * d2;
+        if (vc <= 0 && d1 >= 0 && d3 <= 0) {
+            double v = d1 / (d1 - d3);
+            out[0] = ax + v * abx; out[1] = ay + v * aby; out[2] = az + v * abz; return;
+        }
+        double cpx = px - cx, cpy = py - cy, cpz = pz - cz;
+        double d5 = abx * cpx + aby * cpy + abz * cpz, d6 = acx * cpx + acy * cpy + acz * cpz;
+        if (d6 >= 0 && d5 <= d6) { out[0] = cx; out[1] = cy; out[2] = cz; return; }
+        double vb = d5 * d2 - d1 * d6;
+        if (vb <= 0 && d2 >= 0 && d6 <= 0) {
+            double w = d2 / (d2 - d6);
+            out[0] = ax + w * acx; out[1] = ay + w * acy; out[2] = az + w * acz; return;
+        }
+        double va = d3 * d6 - d5 * d4;
+        if (va <= 0 && (d4 - d3) >= 0 && (d5 - d6) >= 0) {
+            double w = (d4 - d3) / ((d4 - d3) + (d5 - d6));
+            out[0] = bx + w * (cx - bx); out[1] = by + w * (cy - by); out[2] = bz + w * (cz - bz); return;
+        }
+        double denom = 1.0D / (va + vb + vc);
+        double v = vb * denom, w = vc * denom;
+        out[0] = ax + abx * v + acx * w; out[1] = ay + aby * v + acy * w; out[2] = az + abz * v + acz * w;
     }
 
     /** Authored outer-surface normal (unit, armor-profile frame), or null. */

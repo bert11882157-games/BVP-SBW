@@ -230,7 +230,9 @@ final class ArmorHitResolver {
             normal = surface != null ? surface
                     : bestBox.volume.rayEntryNormal(frameStart, frameDirection, maxDistance, skin);
         }
-        return new ArmorHit(bestBox, frameImpact, hullImpact, best, normal);
+        double faceMm = normal != null && bestBox.volume instanceof ArmorMeshVolume mesh && mesh.hasFaceArmor()
+                ? mesh.faceArmorMm(frameImpact, normal) : Double.NaN;
+        return new ArmorHit(bestBox, frameImpact, hullImpact, best, normal, faceMm);
     }
 
     private static boolean cannotBeWithin(ArmorBox box, Vec framePoint, double limit) {

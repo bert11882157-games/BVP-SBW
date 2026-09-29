@@ -21,7 +21,8 @@ final class ArmorPenetrationService {
         Vec plateNormal = armorHit.frameNormal();
         double rawImpactCosine = Math.abs(localShotDirection.dot(plateNormal));
         double impactCosine = Math.max(0.05D, rawImpactCosine);
-        double effectiveArmorMm = Math.max(plate.armorMm, minArmorMm) / impactCosine;
+        // per-face armor: the entered face's own thickness when it has one
+        double effectiveArmorMm = Math.max(armorHit.armorMm(), minArmorMm) / impactCosine;
         double penetrationMm = shot.penetrationMm;
         boolean penetrated = penetrationMm + 1.0E-4D >= effectiveArmorMm;
         return new Result(impactCosine, effectiveArmorMm, penetrationMm, penetrated);

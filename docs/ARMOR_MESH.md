@@ -125,6 +125,41 @@ Mesh elements are saved with their rotation already applied, so rotate meshes fr
 volume bones and cubes are applied the way Blockbench displays them. Only frame bones ignore rotation, as
 explained above.
 
+### Per-face thickness
+
+A plate's thickness normally comes from its bone name and applies to every face of the volume. Individual
+faces can override it, so one closed slab can have, say, an 80 mm front, 45 mm sides and a 20 mm roof:
+
+* On a bone with a `poly_mesh`: `"bvp_face_mm": [80, null, 45, ...]`. There is one entry per `poly_mesh`
+  polygon, in the same order. A number is that face's thickness in mm; `null` means the bone's thickness.
+  When the count does not match the polygons, the array is ignored and a warning is logged.
+* On a cube: `"bvp_face_mm": {"north": 80, "up": 20}`, keyed by Blockbench face name (`north`, `south`,
+  `east`, `west`, `up`, `down`). Faces left out use the bone's thickness.
+
+A shot uses the thickness of the face it enters, together with that face's angle. The rest of the plate
+logic is unchanged. Per-face values apply to `plate`/`armor` volumes only, and the armor X-ray colours each
+face by its own thickness. The `[BVP Damage] PLATE` log line shows the thickness that was used (`plate_mm`).
+
+Don't write these by hand. Use the **BVP Armor Faces** plugin (`tools/blockbench/bvp_armor_faces.js`):
+
+1. Install it once: *File → Plugins → Load Plugin from File*, then pick `bvp_armor_faces.js`. Meshy must be
+   installed too.
+2. Select faces:
+   * Mesh faces: switch to Edit mode with face selection, then click the faces.
+   * Cube faces: select the cube, then pick faces in the UV panel.
+
+   With a mesh or cube selected but no faces picked, the action applies to all of its faces.
+3. Run *Tools → Set Face Armor Thickness…* (also in the element's right-click menu). Enter the mm value, or
+   tick "Use the volume thickness" to clear it. *Clear Face Armor Thickness* does the same in one click.
+   *Cube Face Armor…* edits all six faces of the selected cubes in one dialog.
+4. *Tools → Show Face Armor* tints every face that has its own thickness: blue is thin, red is 250 mm or more.
+   *Face Armor Summary* lists these faces per volume.
+5. Export as usual (*Export Bedrock Geometry*). The plugin writes `bvp_face_mm` into the file, and reads it
+   back when you open a `.geo.json`. `.bbmodel` projects keep the values too.
+
+Mesh edits that create new faces (extrude, knife, subdivide) give those new faces the bone's thickness.
+Faces you delete take their values with them. Values are all undoable.
+
 ## Blockbench workflow
 
 Stock Blockbench cannot put Mesh elements into Bedrock models. Install the **Meshy** plugin once
@@ -313,6 +348,10 @@ spec and use `build_mesh.py`.
   describe boxes; for a mesh they are its bounds.
 * `ArmorHit.frameNormal()` is the normal every armor consumer uses. A mesh ray hit returns the entered
   triangle's normal. A box hit keeps the old face-ratio rule, so box profiles behave exactly as before.
+* Per-face thickness: the loader carries `bvp_face_mm` per input triangle into `ArmorMeshVolume` (after
+  welding and winding repair). `faceArmorMm(point, normal)` picks the nearest triangle parallel to the entry
+  normal. `ArmorHit.armorMm()` is the thickness every consumer uses: the face's own, else `plate.armorMm`.
+  Tests: `ArmorFaceThicknessTest` (BVP) and `node tools/blockbench/test_bvp_armor_faces.js` (plugin).
 * `ArmorMeshLoader` depends only on Gson and plain Java, so it is safe on the dedicated server.
   `ArmorProfiles.prefetch` parses a profile on a background thread when a vehicle is created.
 

@@ -44,6 +44,15 @@ final class ArmorMeshLoader {
      * the lined vehicle face looks). Written by tools/armor_mesh/build_mesh.py; see docs/ARMOR_MESH.md.
      */
     static final String SURFACE_NORMAL_KEY = "bvp_surface_normal";
+    /**
+     * Per-face armor thickness (written by the BVP Armor Faces Blockbench plugin, tools/blockbench): on a bone, an
+     * array with one entry per {@code poly_mesh} polygon (mm, or null for the volume's thickness); on a cube, an
+     * object keyed by Blockbench face name ({@code north}, {@code south}, {@code east}, {@code west}, {@code up},
+     * {@code down}). See docs/ARMOR_MESH.md.
+     */
+    static final String FACE_MM_KEY = "bvp_face_mm";
+    /** Blockbench face name of each {@link #CUBE_FACES} entry (file -X is Blockbench's east: the X axis is mirrored). */
+    private static final String[] CUBE_FACE_NAMES = {"east", "west", "down", "up", "north", "south"};
 
     private static final Pattern FRAME_NAME = Pattern.compile("^(?:armor[_.-]?)?(hull|turret|barrel|barell)\\d*$",
             Pattern.CASE_INSENSITIVE);
@@ -281,7 +290,8 @@ final class ArmorMeshLoader {
                 continue;
             }
             double[] soup = accumulator.toArmorLocal(mirrorProfileX);
-            ArmorMeshVolume volume = ArmorMeshVolume.build(soup, accumulator.triangles, volumeLabel, result.warnings);
+            ArmorMeshVolume volume = ArmorMeshVolume.build(soup, accumulator.triangles, volumeLabel, result.warnings,
+                    accumulator.anyFaceMm ? Arrays.copyOf(accumulator.faceMm, accumulator.triangles) : null);
             if (volume == null) continue;
             if (accumulator.surfaceNormal != null) {
                 double sign = mirrorProfileX ? 1.0D : -1.0D;
@@ -445,8 +455,18 @@ final class ArmorMeshLoader {
                 polygons.add(polygon);
             }
         }
+        JsonArray faceMm = bone.has(FACE_MM_KEY) && bone.get(FACE_MM_KEY).isJsonArray()
+                ? bone.getAsJsonArray(FACE_MM_KEY) : null;
+        if (faceMm != null && faceMm.size() != polygons.size()) {
+            warnings.add(label + ": bone '" + string(bone, "name") + "' has " + faceMm.size() + " " + FACE_MM_KEY
+                    + " entries for " + polygons.size() + " polygons; per-face thickness ignored");
+            faceMm = null;
+        }
         int badIndices = 0;
+        int polygonIndex = -1;
         for (int[] polygon : polygons) {
+            polygonIndex++;
+            double mm = faceMm == null ? Double.NaN : millimetres(faceMm.get(polygonIndex));
             // Blockbench pads triangles to quads by repeating the first vertex; drop repeats.
             int[] unique = new int[polygon.length];
             int count = 0;
@@ -463,7 +483,7 @@ final class ArmorMeshLoader {
                 continue;
             }
             for (int j = 1; j + 1 < count; j++) {
-                accumulator.add(positions, unique[0], unique[j], unique[j + 1]);
+                accumulator.add(positions, unique[0], unique[j], unique[j + 1], mm);
             }
         }
         if (badIndices > 0) {
@@ -493,11 +513,22 @@ final class ArmorMeshLoader {
                         (corner & 4) == 0 ? origin[2] - inflate : origin[2] + size[2] + inflate,
                         corners, corner * 3);
             }
-            for (int[] face : CUBE_FACES) {
-                accumulator.add(corners, face[0], face[1], face[2]);
-                accumulator.add(corners, face[0], face[2], face[3]);
+            JsonObject faceMm = cube.has(FACE_MM_KEY) && cube.get(FACE_MM_KEY).isJsonObject()
+                    ? cube.getAsJsonObject(FACE_MM_KEY) : null;
+            for (int f = 0; f < CUBE_FACES.length; f++) {
+                int[] face = CUBE_FACES[f];
+                double mm = faceMm == null ? Double.NaN : millimetres(faceMm.get(CUBE_FACE_NAMES[f]));
+                accumulator.add(corners, face[0], face[1], face[2], mm);
+                accumulator.add(corners, face[0], face[2], face[3], mm);
             }
         }
+    }
+
+    /** A per-face thickness entry: a non-negative number, else NaN (the volume's thickness). */
+    private static double millimetres(JsonElement element) {
+        if (element == null || !element.isJsonPrimitive() || !element.getAsJsonPrimitive().isNumber()) return Double.NaN;
+        double mm = element.getAsDouble();
+        return Double.isFinite(mm) && mm >= 0.0D ? mm : Double.NaN;
     }
 
     private static double[] vector(JsonObject object, String key) {
@@ -520,6 +551,8 @@ final class ArmorMeshLoader {
         final VolumeName name;
         final Frame frame;
         double[] soup = new double[9 * 16];
+        double[] faceMm = new double[16];
+        boolean anyFaceMm;
         int triangles;
         /** Geo-space outer-surface normal from the volume bone's {@code bvp_surface_normal}, or null. */
         double[] surfaceNormal;
@@ -531,9 +564,18 @@ final class ArmorMeshLoader {
         }
 
         void add(double[] points, int a, int b, int c) {
+            add(points, a, b, c, Double.NaN);
+        }
+
+        void add(double[] points, int a, int b, int c, double mm) {
             if (soup.length < (triangles + 1) * 9) {
                 soup = Arrays.copyOf(soup, soup.length * 2);
             }
+            if (faceMm.length < triangles + 1) {
+                faceMm = Arrays.copyOf(faceMm, faceMm.length * 2);
+            }
+            faceMm[triangles] = mm;
+            anyFaceMm |= Double.isFinite(mm);
             int o = triangles * 9;
             System.arraycopy(points, a * 3, soup, o, 3);
             System.arraycopy(points, b * 3, soup, o + 3, 3);

@@ -469,17 +469,29 @@ public final class ArmorProfiles {
          * this hit knows it (mesh ray hits: the true triangle normal). Null otherwise.
          */
         public final Vec normal;
+        /** Thickness of the entered face when it has its own (per-face armor); NaN = the plate's thickness. */
+        public final double faceArmorMm;
 
         public ArmorHit(ArmorBox plate, Vec localImpact, Vec hullImpact, double distance) {
             this(plate, localImpact, hullImpact, distance, Kind.RAY, 0.0D, null);
         }
 
         ArmorHit(ArmorBox plate, Vec localImpact, Vec hullImpact, double distance, Vec normal) {
-            this(plate, localImpact, hullImpact, distance, Kind.RAY, 0.0D, normal);
+            this(plate, localImpact, hullImpact, distance, Kind.RAY, 0.0D, normal, Double.NaN);
+        }
+
+        ArmorHit(ArmorBox plate, Vec localImpact, Vec hullImpact, double distance, Vec normal,
+                 double faceArmorMm) {
+            this(plate, localImpact, hullImpact, distance, Kind.RAY, 0.0D, normal, faceArmorMm);
         }
 
         private ArmorHit(ArmorBox plate, Vec localImpact, Vec hullImpact, double distance,
                          Kind kind, double proximityGap, Vec normal) {
+            this(plate, localImpact, hullImpact, distance, kind, proximityGap, normal, Double.NaN);
+        }
+
+        private ArmorHit(ArmorBox plate, Vec localImpact, Vec hullImpact, double distance,
+                         Kind kind, double proximityGap, Vec normal, double faceArmorMm) {
             this.plate = plate;
             this.localImpact = localImpact;
             this.hullImpact = hullImpact;
@@ -487,6 +499,23 @@ public final class ArmorProfiles {
             this.kind = kind;
             this.proximityGap = proximityGap;
             this.normal = normal;
+            this.faceArmorMm = faceArmorMm;
+        }
+
+        /** Armor thickness at the struck face: the face's own thickness when it has one, else the plate's. */
+        /**
+         * Thickness of the struck armor: the entered face's own (per-face armor, bvp_face_mm) when it has one, else
+         * the plate's. Hits that were not resolved on a ray (snaps, proximity) look the face up from the contact
+         * normal here.
+         */
+        public double armorMm() {
+            if (Double.isFinite(faceArmorMm) && faceArmorMm >= 0.0D) return faceArmorMm;
+            if (normal == null && localImpact != null && plate.volume instanceof ArmorMeshVolume mesh
+                    && mesh.hasFaceArmor()) {
+                double mm = mesh.faceArmorMm(localImpact, frameNormal());
+                if (Double.isFinite(mm) && mm >= 0.0D) return mm;
+            }
+            return plate.armorMm;
         }
 
         static ArmorHit proximity(ArmorBox plate, Vec localImpact, Vec hullImpact, double gap) {

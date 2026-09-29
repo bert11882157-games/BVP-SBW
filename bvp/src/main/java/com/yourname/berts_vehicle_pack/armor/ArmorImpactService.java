@@ -163,7 +163,7 @@ final class ArmorImpactService {
                 projectile, target, armorHit, trace)) {
             ArmorImpactReporter.reportArmorHit(level, owner, target, hitVec, plate,
                     Math.cos(Math.toRadians(ricochet.incidenceAngleDegrees())),
-                    plate.armorMm / Math.max(0.05D,
+                    armorHit.armorMm() / Math.max(0.05D,
                             Math.cos(Math.toRadians(ricochet.incidenceAngleDegrees()))),
                     shot.penetrationMm, false, false, null, null, null, false, shot,
                     ArmorImpactFeedback.Classification.RICOCHET);
@@ -180,7 +180,7 @@ final class ArmorImpactService {
             ArmorImpactReporter.reportArmorHit(level, owner, target, hitVec, plate,
                     penetration.impactCosine(), penetration.effectiveArmorMm(), penetration.penetrationMm(),
                     false, false, null, null, null, false, shot);
-            DamageDiagnostics.plate(target, projectile, shot, plate.name, plate.armorMm,
+            DamageDiagnostics.plate(target, projectile, shot, plate.name, armorHit.armorMm(),
                     penetration.effectiveArmorMm(), penetration.penetrationMm(), false);
             applyLightArmorNonPenetrationDamage(target, damageSource, shot);
             ArmorImpactStats.record(Outcome.NON_PENETRATION);
@@ -191,7 +191,7 @@ final class ArmorImpactService {
         ArmorImpactStats.record(Outcome.PENETRATION);
         // The round's own blast does not hit this vehicle again: the penetrating hit carries its damage.
         com.atsuishio.superbwarfare.tools.blast.StruckVehicles.mark(projectile, target.vehicle());
-        DamageDiagnostics.plate(target, projectile, shot, plate.name, plate.armorMm,
+        DamageDiagnostics.plate(target, projectile, shot, plate.name, armorHit.armorMm(),
                 penetration.effectiveArmorMm(), penetration.penetrationMm(), true);
         if (AmmoRackService.isSuperAmmoRackOverloaded(target)) {
             return handleSuperAmmoRackPenetration(owner, target, damageSource, hitVec, plate, penetration,
