@@ -9,10 +9,12 @@ class AircraftRoundConsolidationCadenceTest {
     private val key = VehicleWeaponScheduler.ScheduleKey(0, 0, "Gun")
 
     @Test
-    fun `only automatic aircraft gun rounds above 700 RPM are consolidated`() {
+    fun `no round is consolidated any more (owner 2026-09-29)`() {
         val c = AircraftRoundConsolidation
-        assertEquals(2, c.scheduleWeight(aircraft = true, rpm = 6000, automatic = true, gunRound = true))
-        assertEquals(2, c.scheduleWeight(true, 701, true, true))
+        assertFalse(c.ENABLED)
+        assertEquals(1, c.scheduleWeight(aircraft = true, rpm = 6000, automatic = true, gunRound = true),
+            "the M61 fires every round")
+        assertEquals(1, c.scheduleWeight(true, 701, true, true))
         assertEquals(1, c.scheduleWeight(true, 700, true, true), "exactly 700 RPM keeps every round")
         assertEquals(1, c.scheduleWeight(false, 6000, true, true), "ground vehicles are unchanged")
         assertEquals(1, c.scheduleWeight(true, 6000, false, true), "semi-automatic clicks are unchanged")

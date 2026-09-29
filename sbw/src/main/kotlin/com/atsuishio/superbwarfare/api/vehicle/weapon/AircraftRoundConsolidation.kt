@@ -5,7 +5,8 @@ import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity
 import net.minecraft.world.entity.Entity
 
 /**
- * High-rate aircraft guns fire half as many rounds; each fired round stands for [WEIGHT] rounds.
+ * DISABLED ([ENABLED] = false): high-rate aircraft guns used to fire half as many rounds, each standing for
+ * [WEIGHT] rounds.
  *
  * The weight is stamped on the projectile at launch (server persistent data, and copied into the
  * client entity from its spawn data) and read wherever a hit is resolved, so a consolidated round
@@ -18,7 +19,12 @@ import net.minecraft.world.entity.Entity
  * projectile factory via [withLaunchWeight]; the factory [mark]s each projectile before insertion.
  */
 object AircraftRoundConsolidation {
-    /** Guns strictly faster than this many rounds per minute are consolidated on aircraft. */
+    /**
+     * Off (owner 2026-09-29: "combine two shots into one" removed). Every round is fired as itself; the weight
+     * plumbing stays so rounds stamped by an older build still resolve, and always reads 1 for new rounds.
+     */
+    const val ENABLED = false
+    /** Guns strictly faster than this many rounds per minute were consolidated on aircraft while [ENABLED]. */
     const val MIN_RPM = 700
     const val WEIGHT = 2
     private const val TAG = "SBWRoundWeight"
@@ -34,7 +40,7 @@ object AircraftRoundConsolidation {
     private val launchSlot: ThreadLocal<Int> = ThreadLocal.withInitial { 1 }
 
     @JvmStatic
-    fun applies(aircraft: Boolean, rpm: Int): Boolean = aircraft && rpm > MIN_RPM
+    fun applies(aircraft: Boolean, rpm: Int): Boolean = ENABLED && aircraft && rpm > MIN_RPM
 
     @JvmStatic
     fun mark(projectile: Entity, weight: Int) {
