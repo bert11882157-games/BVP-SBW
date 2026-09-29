@@ -484,6 +484,8 @@ public class BaseVehicleRenderer<T extends GeoVehicleEntity> implements VehicleR
             applyModelAnimations(entity, entityYaw, loadedModel, partialTicks);
             this.suspendedStores.apply(entity, loadedModel);
             ResourceLocation resolvedTexture = m_5478_(entity);
+            // a launcher tube fired this frame leaves the vehicle as a physics object (9P149 Shturm-S)
+            BvpLauncherJettison.capture(context, loadedModel, resolvedTexture);
             detachedWings = BvpAircraftBreakupRenderer.apply(context, loadedModel, this.textureLocation,
                     this.deadTextureLocation, this.suspendedStores);
             cockpitOccluder = BvpCockpitVisibility.apply(entity, loadedModel);

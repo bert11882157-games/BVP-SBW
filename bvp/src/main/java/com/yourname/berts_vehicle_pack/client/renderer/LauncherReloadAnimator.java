@@ -11,8 +11,9 @@ import com.github.mcmodderanchor.simplebedrockmodel.v1.common.model.BedrockBone;
  * frame is the last reload tick:
  *
  * <ol>
- * <li>shot: the fired tube is thrown off the arm, tumbles under gravity, lands beside the hull, bounces once and lies
- *     there for a few seconds before it sinks away; the arm is left empty;</li>
+ * <li>shot: the fired tube is jettisoned off the arm as a physics object that falls, tumbles and lands beside the
+ *     hull and despawns after 5 seconds ({@link BvpLauncherJettison}, not part of this animation); the arm is left
+ *     empty;</li>
  * <li>the roof hatch beside the pole swings open (under it: a black well, invisible while the hatch is closed);</li>
  * <li>the arm turns back to straight ahead, then pole, mount and plate roll 90 degrees toward the hatch and sink
  *     a little into the hull, the angled plate folding flat onto the roof;</li>
@@ -38,14 +39,9 @@ final class LauncherReloadAnimator {
     /** Plate hinge to pole axis in model space (geo (8.95, 0.9, 0.02) with x mirrored). */
     private static final float PLATE_TO_AXIS_X = -8.95F, PLATE_TO_AXIS_Z = 0.02F;
 
-    /** Spent tube flight, model px and seconds: thrown outward (+x), up and slightly back, under real gravity. */
-    private static final float THROW_OUT = 35.0F, THROW_UP = 45.0F, THROW_BACK = 8.0F;
-    private static final float GRAVITY = 157.0F;          // 9.8 m/s^2, 16 px per metre
-    private static final float REST_DROP = 43.2F;         // pivot height above the ground when the tube lies flat
-    private static final float TUMBLE_DEG_PER_S = 260.0F;
-    private static final float LIE_UNTIL = 6.0F;          // seconds after the shot the tube starts to sink away
-    private static final float SINK_SECONDS = 0.6F;
-    /** Aim (yaw, pitch) each launcher had when its tube was thrown, so the spent tube keeps it. */
+    /** Seconds into a reload within which a render still counts as seeing the shot itself. */
+    private static final float JETTISON_WINDOW_S = 0.5F;
+    /** Reload time last seen per launcher, to notice a new shot. */
     private static final java.util.Map<VehicleEntity, float[]> THROWN = new java.util.WeakHashMap<>();
 
     private LauncherReloadAnimator() {
@@ -92,22 +88,22 @@ final class LauncherReloadAnimator {
             RendererBones.hide(barrel);
         }
 
-        // the fired tube: thrown up and out, tumbling under gravity, lands beside the hull, lies there, sinks away
+        // the fired tube is not animated: the shot jettisons it as a physics object (BvpLauncherJettison), and the
+        // spent-tube bone stays hidden on the vehicle
         if (spent != null) {
+            RendererBones.hide(spent);
             float s = elapsed >= 0.0F && total > 0.0F ? elapsed / 20.0F : -1.0F;
-            float life = Math.min(LIE_UNTIL + SINK_SECONDS, total / 20.0F);
-            if (s >= 0.0F && s < life) {
-                float[] aim = THROWN.get(entity);
-                if (aim == null || s < aim[2]) {
-                    // a new shot: remember the aim the tube left with (the pole only starts to turn at 0.6 s)
-                    aim = new float[]{yawRad, pitchRad, s};
-                    THROWN.put(entity, aim);
+            if (s >= 0.0F) {
+                float[] seen = THROWN.get(entity);
+                if (seen == null || s < seen[0]) {
+                    // a new shot (a render that first meets a reload already under way does not throw a tube)
+                    if (s < JETTISON_WINDOW_S) BvpLauncherJettison.queue(entity, yawRad, pitchRad);
+                    seen = new float[]{s};
+                    THROWN.put(entity, seen);
                 }
-                aim[2] = s;
-                spentTube(spent, aim[0], aim[1], s);
+                seen[0] = s;
             } else {
-                RendererBones.hide(spent);
-                if (s < 0.0F) THROWN.remove(entity);
+                THROWN.remove(entity);
             }
         }
 
@@ -125,33 +121,6 @@ final class LauncherReloadAnimator {
             RendererBones.setPositionOffset(hatch, 0.0F, 0.0F, 0.0F);
             RendererBones.setRotation(hatch, 0.0F, 0.0F, pose.hatch * HATCH_OPEN_DEG * RendererBones.DEG_TO_RAD);
         }
-    }
-
-    /** The spent tube {@code s} seconds after the shot: ballistic flight, one small bounce, lying flat, sinking. */
-    static void spentTube(BedrockBone spent, float yaw, float pitch, float s) {
-        float land = (THROW_UP + (float) Math.sqrt(THROW_UP * THROW_UP + 2.0F * GRAVITY * REST_DROP)) / GRAVITY;
-        float x, y, z, tumble;
-        if (s < land) {
-            x = THROW_OUT * s;
-            y = THROW_UP * s - 0.5F * GRAVITY * s * s;
-            z = THROW_BACK * s;
-            tumble = TUMBLE_DEG_PER_S * s;
-        } else {
-            float after = s - land;
-            float bounce = after < 0.3F ? 12.0F * after - 40.0F * after * after : 0.0F;   // a short hop
-            x = THROW_OUT * land + 6.0F * Math.min(after, 0.3F);
-            y = -REST_DROP + Math.max(0.0F, bounce);
-            z = THROW_BACK * land + 2.0F * Math.min(after, 0.3F);
-            // it comes to rest lying flat, turned the way it tumbled
-            float landed = TUMBLE_DEG_PER_S * land;
-            float flat = Math.round(landed / 180.0F) * 180.0F;
-            tumble = landed + (flat - landed) * Math.min(1.0F, after / 0.3F);
-            if (s > LIE_UNTIL) y -= 3.0F * Math.min(1.0F, (s - LIE_UNTIL) / SINK_SECONDS);
-        }
-        float settle = s < land ? 1.0F : Math.max(0.0F, 1.0F - (s - land) / 0.3F);
-        RendererBones.setPositionOffset(spent, x, y, z);
-        RendererBones.setRotation(spent, pitch * settle - tumble * RendererBones.DEG_TO_RAD, yaw,
-                -0.4F * tumble * RendererBones.DEG_TO_RAD * settle);
     }
 
     /** The pose {@code s} seconds into a reload of {@code total} seconds. */
