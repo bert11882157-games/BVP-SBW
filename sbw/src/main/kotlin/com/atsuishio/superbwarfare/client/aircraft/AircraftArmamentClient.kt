@@ -292,12 +292,20 @@ object AircraftArmamentClient {
                     if (active) cameraPosition(vehicle, mc.frameTime)?.let { origin ->
                         add("Origin", JsonArray().apply { add(origin.x); add(origin.y); add(origin.z) })
                     }
-                    // Without the pod, lase along the centre of the view the pilot just saw (key events arrive
-                    // after that frame was drawn, so the camera still holds it). Third person keeps the nose.
-                    if (!active && mc.options.cameraType == CameraType.FIRST_PERSON) presentedView()?.let { (origin, look) ->
-                        addProperty("Camera", true)
-                        add("Origin", JsonArray().apply { add(origin.x); add(origin.y); add(origin.z) })
-                        add("Direction", JsonArray().apply { add(look.x); add(look.y); add(look.z) })
+                    // Without the pod, lase through the aiming ring the pilot just saw (key events arrive after
+                    // that frame was drawn). First person lases from the eye the ring was drawn from; third person
+                    // from the nose point the server also uses, toward the same ring point. Before any ring was
+                    // drawn, first person falls back to the centre of the view and third person to the nose.
+                    if (!active) {
+                        val firstPerson = mc.options.cameraType == CameraType.FIRST_PERSON
+                        val origin = if (firstPerson) presentedView()?.first else laserNose(vehicle, mc.frameTime)
+                        val look = origin?.let { FixedWingGunSight.laserRay(vehicle, it) }
+                            ?: if (firstPerson) presentedView()?.second else null
+                        if (origin != null && look != null) {
+                            addProperty("Camera", true)
+                            add("Origin", JsonArray().apply { add(origin.x); add(origin.y); add(origin.z) })
+                            add("Direction", JsonArray().apply { add(look.x); add(look.y); add(look.z) })
+                        }
                     }
                 })
             }
@@ -336,6 +344,13 @@ object AircraftArmamentClient {
     }
 
     /** The origin and unit look direction of the last drawn frame's camera, or null when it is not usable. */
+    /** The server's non-pod laser origin (hull point half height up, one block forward), at the rendered pose. */
+    private fun laserNose(vehicle: VehicleEntity, partial: Float): Vec3? {
+        if (!partial.isFinite()) return null
+        val p = vehicle.getVehicleTransform(partial).transformPosition(org.joml.Vector3d(0.0, vehicle.bbHeight * 0.5, 1.0))
+        return Vec3(p.x, p.y, p.z).takeIf { it.x.isFinite() && it.y.isFinite() && it.z.isFinite() }
+    }
+
     private fun presentedView(): Pair<Vec3, Vec3>? {
         val camera = Minecraft.getInstance().gameRenderer.mainCamera
         if (!camera.isInitialized) return null

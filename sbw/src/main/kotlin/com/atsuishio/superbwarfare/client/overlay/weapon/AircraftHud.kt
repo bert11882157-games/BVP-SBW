@@ -148,11 +148,13 @@ object AircraftHud {
 
         if (fixedWing || vehicle.vehicleType ==
             com.atsuishio.superbwarfare.data.vehicle.subdata.VehicleType.AIRPLANE) {
-            // The forward cue follows body direction in both camera modes, independently of
-            // the muzzle, aim command and flight-path vector. Hide it when looking away.
+            // The aiming ring: where the selected gun's rounds fired now cross the range of whatever lies under
+            // the body line (muzzle offset, inherited aircraft motion and drop included), else the body line
+            // itself. The laser lases through this same point (FixedWingGunSight). Hide it when looking away.
             val renderedForward = vehicle.getVehicleTransform(partialTick).transformDirection(org.joml.Vector3d(0.0, 0.0, 1.0)).normalize()
-            val forward = cameraPos.add(Vec3(renderedForward.x, renderedForward.y, renderedForward.z).scale(512.0))
-                .worldToScreen()
+            val sight = com.atsuishio.superbwarfare.client.aircraft.FixedWingGunSight.aimPoint(vehicle, player,
+                partialTick, cameraPos, Vec3(renderedForward.x, renderedForward.y, renderedForward.z))
+            val forward = sight.point.worldToScreen()
             if (FixedWingHudMetrics.visibleProjection(forward, screenWidth, screenHeight)) {
                 RenderSystem.enableBlend()
                 RenderSystem.defaultBlendFunc()
