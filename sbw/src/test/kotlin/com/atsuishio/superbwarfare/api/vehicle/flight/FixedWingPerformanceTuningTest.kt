@@ -11,12 +11,12 @@ class FixedWingPerformanceTuningTest {
             FixedWingHandlingProfile.GAME_JET.copy(dryAccelerationMps2 = 2.0, maximumSpeedMps = 30.0))) {
             assertEquals(650.0, h.softSpeedLimitMps * 3.6, 1e-9)
             assertEquals(750.0, h.hardSpeedLimitMps * 3.6, 1e-9)
-            assertEquals(h.dryAccelerationMps2, h.gameDryAccelerationMps2, 1e-12)
+            assertEquals(h.dryAccelerationMps2 * FixedWingHandlingProfile.ACCELERATION_BUMP, h.gameDryAccelerationMps2, 1e-12)
             assertEquals(max(1.0, h.afterburnerMultiplier), h.gameAfterburnerMultiplier, 1e-12)
             assertEquals(0.90, h.gameRollRateDegreesPerSecond / h.rollRateDegreesPerSecond, 1e-12)
         }
         val prop = FixedWingHandlingProfile.GAME_JET.copy(propellerPowerReferenceSpeedMps = 30.0)
-        assertEquals(1.6, prop.gameDryAccelerationMps2 / prop.dryAccelerationMps2, 1e-12)
+        assertEquals(1.6 * FixedWingHandlingProfile.ACCELERATION_BUMP, prop.gameDryAccelerationMps2 / prop.dryAccelerationMps2, 1e-12)
     }
 
     @Test fun firstSoftCapNeverExceedsTheSharedOne() {
@@ -188,6 +188,35 @@ class FixedWingPerformanceTuningTest {
             assertTrue(model.step(100, 140.0, -150.0, 160.0, false, true, afterburnerRequested = true))
             assertEquals(750.0 / 3.6, model.speedMps, 1e-9)
         }
+    }
+
+    /** Owner 2026-09-29: ground braking buffed a lot (fighters most), and brakes grip from touchdown. */
+    @Test fun wheelBrakesStopAFighterFasterThanAHeavyAndFarFasterThanBefore() {
+        val fighter = FixedWingHandlingProfile.GAME_JET.copy(groundBrakeGain = FixedWingHandlingProfile.FIGHTER_GROUND_BRAKE_GAIN)
+        val heavy = FixedWingHandlingProfile.GAME_JET.copy(groundBrakeGain = FixedWingHandlingProfile.HEAVY_GROUND_BRAKE_GAIN)
+        val old = FixedWingHandlingProfile.GAME_JET
+        assertEquals(4.0 * 0.8 * old.gravityMps2, fighter.gameGroundBrakingMps2, 1e-9)
+        fun stopTicks(h: FixedWingHandlingProfile): Int {
+            val model = FixedWingFlightModel(h)
+            model.reset(0.0, 0.0, 0.0)
+            var v = 20.0
+            for (t in 1..2000) {
+                assertTrue(model.step(t.toLong(), 0.0, 0.0, v, true, true, throttleAxis = -1.0, gearDeployment = 1.0))
+                v = model.velocityZ
+                if (v < 0.5) return t
+            }
+            return 2001
+        }
+        val f = stopTicks(fighter); val hv = stopTicks(heavy); val before = stopTicks(old)
+        println("BRAKE_STOP ticks fighter=$f heavy=$hv gain1=$before")
+        assertTrue(f < hv && hv < before, "fighter $f heavy $hv before $before")
+        assertTrue(f * 3 < before, "fighter brakes at least three times as fast: $f vs $before")
+    }
+
+    @Test fun referenceMassPicksTheBrakeGain() {
+        assertEquals(FixedWingHandlingProfile.FIGHTER_GROUND_BRAKE_GAIN, 4.0, 0.0)
+        assertTrue(FixedWingHandlingProfile.HEAVY_GROUND_BRAKE_GAIN in 1.5..FixedWingHandlingProfile.FIGHTER_GROUND_BRAKE_GAIN)
+        assertEquals(0.60, FixedWingHandlingProfile.DIVE_DRAG_RELIEF, 0.0)
     }
 
     private fun warmed(h: FixedWingHandlingProfile, pitch: Double = 0.0): FixedWingFlightModel {

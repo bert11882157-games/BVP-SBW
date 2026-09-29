@@ -69,6 +69,8 @@ object FixedWingReferenceHandling {
             parasiteDragPerMetre = forcePerSpeedSquared * reference.zeroLiftDragCoefficient,
             inducedDragMps2 = g * reference.inducedDragFactor * reference.maxLiftCoefficient,
             stallDragPerMetre = forcePerSpeedSquared * reference.stallDragCoefficient,
+            groundBrakeGain = if (reference.massKg <= FixedWingHandlingProfile.FIGHTER_MAX_MASS_KG)
+                FixedWingHandlingProfile.FIGHTER_GROUND_BRAKE_GAIN else FixedWingHandlingProfile.HEAVY_GROUND_BRAKE_GAIN,
         )
         return scale(fullScale, lengthScale)
     }

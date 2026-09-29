@@ -47,7 +47,7 @@ class FixedWingTakeoffResponseTest {
     @Test fun responseTuningKeepsPitchAndAppliesRequestedAccelerationAndSpeedEnvelope() {
         assertEquals(handling.pitchRateDegreesPerSecond * 1.10 * 1.12, handling.gamePitchRateDegreesPerSecond, 1e-12)
         // jets fly on their reference thrust (2026-09-28); propellers keep a x1.6 gain
-        assertEquals(handling.dryAccelerationMps2, handling.gameDryAccelerationMps2, 1e-12)
+        assertEquals(handling.dryAccelerationMps2 * FixedWingHandlingProfile.ACCELERATION_BUMP, handling.gameDryAccelerationMps2, 1e-12)
         assertEquals(650.0 / 3.6, handling.softSpeedLimitMps, 1e-12)
         assertEquals(750.0 / 3.6, handling.hardSpeedLimitMps, 1e-12)
     }
@@ -119,7 +119,8 @@ class FixedWingTakeoffResponseTest {
         // The same idle-to-full-throttle fixture previously needed 68 ticks. Spool timing stays
         // unchanged; doubled runway propulsion must shorten the roll substantially.
         assertTrue(groundTicks in 30..50, "ground launch took $groundTicks ticks")
-        assertEquals(51, fifty(false), "airborne low-speed acceleration must remain unchanged")
+        // 51 ticks before the 2026-09-29 universal acceleration bump (x1.12)
+        assertEquals(48, fifty(false), "airborne low-speed acceleration: only the universal bump")
     }
 
     @Test fun fixedWheelsQualifyWithoutAddingRetractableGearDrag() {

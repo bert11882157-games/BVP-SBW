@@ -695,7 +695,7 @@ class FixedWingFlightModel(
         }
         // Diving sheds less speed to parasite/wave drag, so gravity can carry the aircraft
         // beyond the soft cap. Lift, airbrakes, stall drag and the final hard cap still apply.
-        val diveDrag = 1.0 - 0.40 * diveFraction
+        val diveDrag = 1.0 - FixedWingHandlingProfile.DIVE_DRAG_RELIEF * diveFraction
         maneuverDragAccelerationMps2 = handling.maneuverDragMps2(speed, vy,
             rollRateDegreesPerSecond, groundedForDrag)
         dragAccelerationMps2 = densityRatio *
@@ -718,11 +718,13 @@ class FixedWingFlightModel(
         val longitudinal = velocityX * fx + velocityZ * fz
         val lateral = velocityX * fz - velocityZ * fx
         val load = (-netVerticalAcceleration / handling.gravityMps2).coerceIn(0.0, 1.0)
+        // Wheel brakes (owner 2026-09-29: buffed a lot, fighters most) keep a minimum grip while lift still
+        // unloads the wheels, so a fast landing roll brakes from touchdown instead of only once it is slow.
         val braking = if (wheelBrakeActive) {
-            max(handling.groundBrakingMps2, 0.8 * handling.gravityMps2)
+            handling.gameGroundBrakingMps2 * max(load, FixedWingHandlingProfile.BRAKE_MIN_WHEEL_LOAD)
         } else 0.0
         val stop = min(abs(longitudinal),
-            (handling.rollingResistanceMps2 + braking) * load * DT)
+            (handling.rollingResistanceMps2 * load + braking) * DT)
         val longitudinalChange = sign(longitudinal) * stop
         val lateralChange = lateral * response(handling.groundLateralResponsePerSecond * load)
         velocityX -= fx * longitudinalChange + fz * lateralChange

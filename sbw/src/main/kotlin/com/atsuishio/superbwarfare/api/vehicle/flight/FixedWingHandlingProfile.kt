@@ -81,6 +81,11 @@ data class FixedWingHandlingProfile(
      * 1 = none. Top speeds are unchanged (the surplus is zero there).
      */
     val lowSpeedSurplusBoost: Double = 1.0,
+    /**
+     * Wheel-brake gain (owner 2026-09-29: ground braking buffed a lot, fighters most). Set from the reference mass:
+     * [FIGHTER_GROUND_BRAKE_GAIN] up to [FIGHTER_MAX_MASS_KG], [HEAVY_GROUND_BRAKE_GAIN] above.
+     */
+    val groundBrakeGain: Double = 1.0,
 ) {
     /** Small shared gameplay tuning; reference specifications remain unchanged. */
     val gamePitchRateDegreesPerSecond: Double get() = pitchRateDegreesPerSecond * 1.10 * 1.12
@@ -88,9 +93,14 @@ data class FixedWingHandlingProfile(
     /** Reduce airbrake deceleration without weakening wheel brakes or changing reference data (owner: nerfed
      *  again 2026-09-28, 0.25 -> 0.12). */
     val gameAirbrakeDragPerMetre: Double get() = airbrakeDragPerMetre * 0.12
-    /** Jets fly on their reference thrust (acceleration nerf, 2026-09-28: was x1.79); propellers keep a gain. */
+    /** Jets fly on their reference thrust (acceleration nerf, 2026-09-28: was x1.79); propellers keep a gain. Both
+     *  get the small universal bump [ACCELERATION_BUMP] (owner 2026-09-29). */
     val gameDryAccelerationMps2: Double get() =
-        dryAccelerationMps2 * (if (propellerPowerReferenceSpeedMps > 0.0) 1.6 else 1.0)
+        dryAccelerationMps2 * (if (propellerPowerReferenceSpeedMps > 0.0) 1.6 else 1.0) * ACCELERATION_BUMP
+
+    /** Wheel-brake deceleration at full wheel load: the reference brakes (at least 0.8 g) times [groundBrakeGain]. */
+    val gameGroundBrakingMps2: Double get() =
+        kotlin.math.max(groundBrakingMps2, 0.8 * gravityMps2) * groundBrakeGain
 
     /** Modest airborne turn assistance above one G; trim and low-speed lift stay unchanged. */
     fun gameTurnLoadFactor(load: Double): Double {
@@ -199,7 +209,7 @@ data class FixedWingHandlingProfile(
         val nonnegative = doubleArrayOf(
             recoveryAngleDegrees, dryAccelerationMps2, spoolUpPerSecond, spoolDownPerSecond,
             parasiteDragPerMetre, inducedDragMps2, airbrakeDragPerMetre,
-            rollingResistanceMps2, groundBrakingMps2, groundLateralResponsePerSecond,
+            rollingResistanceMps2, groundBrakingMps2, groundLateralResponsePerSecond, groundBrakeGain,
             pitchRateDegreesPerSecond, rollRateDegreesPerSecond, rudderRateDegreesPerSecond,
             pitchStabilityPerSecond, headingStabilityPerSecond, wingDropDegreesPerSecond,
             automaticReturnPerSecond, overspeedResponsePerSecond, overspeedDragPerMetre, sideDragPerMetre,
@@ -239,6 +249,16 @@ data class FixedWingHandlingProfile(
         const val OVERSPEED_LINEAR_PER_SECOND = 0.22
         const val OVERSPEED_QUADRATIC_PER_METRE = 0.005
         const val OVERSPEED_DIVE_RELIEF = 0.95
+        /** Share of parasite and wave drag a vertical dive sheds (owner 2026-09-29: dives buffed, was 0.40). */
+        const val DIVE_DRAG_RELIEF = 0.60
+        /** Universal thrust bump (owner 2026-09-29: slight acceleration buff). */
+        const val ACCELERATION_BUMP = 1.12
+        /** Wheel-brake gains by reference mass (owner 2026-09-29: ground braking buffed a lot, fighters most). */
+        const val FIGHTER_GROUND_BRAKE_GAIN = 4.0
+        const val HEAVY_GROUND_BRAKE_GAIN = 2.5
+        const val FIGHTER_MAX_MASS_KG = 40000.0
+        /** Brakes grip with at least this share of the aircraft's weight while wing lift still unloads the wheels. */
+        const val BRAKE_MIN_WHEEL_LOAD = 0.5
         /**
          * Transonic speed is earned (owner, 2026-09-28): from TRANSONIC_SURPLUS_START_MACH to
          * TRANSONIC_SURPLUS_FULL_MACH the engine's surplus over drag shrinks to TRANSONIC_SURPLUS of itself. Top speeds
