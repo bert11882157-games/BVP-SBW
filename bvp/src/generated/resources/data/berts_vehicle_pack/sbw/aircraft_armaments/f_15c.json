@@ -8,7 +8,7 @@
   "Pairs": [
     {
       "Id": "wing_centre",
-      "Name": "Wing pylon (triple) · centre",
+      "Name": "Wing pylon (triple) \u00b7 centre",
       "Left": [
         2.8625,
         1.2856,
@@ -44,16 +44,14 @@
         "berts_vehicle_pack:munition/mk82_x3",
         "berts_vehicle_pack:munition/mk82_snakeeye",
         "berts_vehicle_pack:munition/mk82_snakeeye_x3",
-        "berts_vehicle_pack:munition/mk84",
-        "berts_vehicle_pack:munition/blu109_jdam",
-        "berts_vehicle_pack:munition/gbu15_v2b"
+        "berts_vehicle_pack:munition/mk84"
       ],
       "MaxWeaponsPerPylon": 3,
       "MaxPylonMassKg": 1500
     },
     {
       "Id": "wing_shoulders",
-      "Name": "Wing pylon (triple) · shoulder rails",
+      "Name": "Wing pylon (triple) \u00b7 shoulder rails",
       "Left": [
         2.8625,
         1.6738,
@@ -252,8 +250,7 @@
       "AllowedStores": [
         "berts_vehicle_pack:munition/mk82",
         "berts_vehicle_pack:munition/mk82_snakeeye",
-        "berts_vehicle_pack:munition/mk84",
-        "berts_vehicle_pack:munition/blu109_jdam"
+        "berts_vehicle_pack:munition/mk84"
       ],
       "MaxWeaponsPerPylon": 1,
       "MaxPylonMassKg": 1000,
