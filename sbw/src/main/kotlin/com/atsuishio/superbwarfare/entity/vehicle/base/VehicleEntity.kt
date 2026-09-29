@@ -4779,7 +4779,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         if (level().isClientSide || isWreck || !operator.isAlive || operator.vehicle !== this
             || getSeatIndex(operator) != 0 || !hasFixedWingLandingGear()
             || !vehicleActionController.allowsMovement() || !vehicleActionController.allowsFire()
-            || !FixedWingLandingGear.canToggle(synchedGearRot, onGround())) return false
+            || !FixedWingLandingGear.canToggle(synchedGearRot, onGround(), gearUp)) return false
         gearUp = !gearUp
         return true
     }
@@ -4789,7 +4789,8 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         val available = hasFixedWingLandingGear()
         if (!level().isClientSide) {
             val valid = synchedGearRot.isFinite() && synchedGearRot in 0F..1F
-            if (!available || !valid || onGround() || isWreck) gearUp = false
+            // No automatic deployment (owner 2026-09-29): only an unavailable or corrupt gear state resets it.
+            if (!available || !valid) gearUp = false
             synchedGearRot = if (available) {
                 FixedWingLandingGear.nextFraction(synchedGearRot, gearUp, onGround())
             } else 0F

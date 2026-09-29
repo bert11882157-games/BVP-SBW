@@ -574,10 +574,7 @@ object VehicleEngineUtils {
                     }
                 }
 
-                if (onGround()) {
-                    gearUp = false
-                }
-
+                // no automatic deployment on touchdown (owner 2026-09-29)
                 synchedGearRot = if (gearUp) {
                     Math.min(synchedGearRot + 0.05f, 1f)
                 } else {
