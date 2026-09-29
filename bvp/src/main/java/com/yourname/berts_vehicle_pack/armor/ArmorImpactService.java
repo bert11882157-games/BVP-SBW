@@ -94,7 +94,7 @@ final class ArmorImpactService {
         }
 
         ExplosiveReactiveArmorService.Result eraResult =
-                ExplosiveReactiveArmorService.apply(volumes, trace, shot);
+                ExplosiveReactiveArmorService.apply(volumes, trace, shot, projectile);
         if (eraResult.detonated()) {
             shot = eraResult.shot();
             trace = eraResult.trace();

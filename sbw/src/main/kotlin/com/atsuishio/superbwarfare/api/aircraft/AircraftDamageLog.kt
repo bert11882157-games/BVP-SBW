@@ -17,8 +17,10 @@ object AircraftDamageLog {
     @JvmStatic
     fun hit(vehicle: VehicleEntity, projectile: Entity?, kind: String, calibre: Double?, damage: Double,
             healthBefore: Float, accepted: Boolean) {
-        // gun, rifle and pellet hits stay out of the log unless diagnostics run (a burst would flood it)
-        emit(vehicle, "HIT", damage < QUIET_BELOW_HP && (calibre ?: 0.0) < ALWAYS_FROM_MM,
+        // gun, rifle and pellet hits stay out of the log unless diagnostics run (a burst would flood it), and so do
+        // rounds a destroyed airframe refuses (AA fire keeps hitting a wreck until it is gone)
+        val quiet = (damage < QUIET_BELOW_HP && (calibre ?: 0.0) < ALWAYS_FROM_MM) || (!accepted && healthBefore <= 0f)
+        emit(vehicle, "HIT", quiet,
             String.format(Locale.ROOT, "kind=%s cal=%s damage=%.1f hp=%.1f->%.1f/%.0f%s", kind,
                 calibre?.let { String.format(Locale.ROOT, "%.1f", it) } ?: "-", damage, healthBefore, vehicle.health,
                 vehicle.getMaxHealth(), if (accepted) "" else " REJECTED"),

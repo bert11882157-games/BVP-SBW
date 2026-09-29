@@ -19,6 +19,12 @@ final class ExplosiveReactiveArmorService {
     }
 
     static Result apply(BvpImpactVolumeQuery volumes, ShotTrace trace, ProjectileArmorEffect shot) {
+        return apply(volumes, trace, shot, null);
+    }
+
+    /** As above; {@code projectile} names the round on the ERA diagnostics line. */
+    static Result apply(BvpImpactVolumeQuery volumes, ShotTrace trace, ProjectileArmorEffect shot,
+                        net.minecraft.world.entity.Entity projectile) {
         ArmorTarget target = volumes.target();
         ArmorProfile profile = volumes.profile();
         if (profile.eraBoxes.isEmpty() || shot.penetrationMm <= ERA_TRIGGER_THRESHOLD_MM) {
@@ -45,7 +51,7 @@ final class ExplosiveReactiveArmorService {
         BvpLeanImpactEffects.spawnEraExplosion(target.level(), eraImpact);
         ArmorSoundService.play(target.level(), eraImpact, ArmorSoundService.PENETRATION_SOUND, 0.55F, 1.35F);
 
-        DamageDiagnostics.event(target.vehicle(), null, "ERA", String.format(java.util.Locale.ROOT,
+        DamageDiagnostics.event(target.vehicle(), projectile, "ERA", String.format(java.util.Locale.ROOT,
                 "brick=%s type=%s pen_mm=%.0f -> %.0f tandem=%s", era.name, era.eraType, shot.penetrationMm,
                 reducedShot.penetrationMm, shot.tandemWarhead));
         return new Result(true, era, eraImpact, reducedTrace, shot, reducedShot, appliedProtectionMm);
