@@ -13,7 +13,24 @@ No stable release is currently published in this repository. See [all releases](
 for the complete release history.
 The `0.9.19beta` source tag currently has no GitHub Release or compiled download assets.
 
-## Latest published testing build: 0.11.9beta
+## Latest published testing build: 0.11.21beta
+
+[Aircraft and ground expansion, fitted stores and cockpit corrections](https://github.com/bert11882157-games/BVP-SBW/releases/tag/v0.11.21beta).
+Install all three matching JARs on clients and servers, replacing older active copies:
+
+| Component | Mod JAR | Checksum |
+| --- | --- | --- |
+| BVP 0.11.21beta | [JAR](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.11.21beta/bvp-main-v0.11.21beta.jar) | [SHA-256](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.11.21beta/bvp-main-v0.11.21beta.jar.sha256) |
+| SBW 0.11.21beta | [JAR](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.11.21beta/bvp_superbwarfare-v0.11.21beta.jar) | [SHA-256](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.11.21beta/bvp_superbwarfare-v0.11.21beta.jar.sha256) |
+| FFA 1.0.6-bvp.12 | [JAR](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.11.21beta/fire-from-above-1.0.6-bvp.12.jar) | [SHA-256](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.11.21beta/fire-from-above-1.0.6-bvp.12.jar.sha256) |
+
+The [FFA source and separate release](https://github.com/xenoperk/Fire-From-Above/releases/tag/v1.0.6-bvp.12)
+carry the identical companion JAR. Keep Dominions, meshloader and other required pack dependencies.
+The frozen source build and focused cockpit/loadout gameplay checks passed. Sustained firing,
+live command/TV guidance, moving F-111F sweep/release and moving radar range remain unverified.
+9P148/Gepard armor plate authoring is pending. See the release notes for the full test scope.
+
+## Earlier published testing build: 0.11.9beta
 
 [ATGM flight, physical wires and distant smoke release](https://github.com/bert11882157-games/BVP-SBW/releases/tag/v0.11.9beta).
 Full development roster. Install all three matching JARs on clients and servers:
