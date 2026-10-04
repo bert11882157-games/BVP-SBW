@@ -1,10 +1,10 @@
 {
   "schema": 1,
   "policyVersion": 4,
-  "label": "claude-fixes-20261004-r98",
+  "label": "claude-fixes-20261004-r99",
   "status": "release-candidate",
-  "createdAt": "2026-10-04T18:14:28.390Z",
-  "treeSha256": "d4055a30667e2eaac6ef997ff6db359fe7c50643c3ad7e4eb23d84e602650bcd",
+  "createdAt": "2026-10-04T19:09:48.425Z",
+  "treeSha256": "f1526199974d7e97e2d18b4d707d1254df1d9014b25b6acac82d6eca54842b62",
   "files": [
     {
       "path": ".editorconfig",
@@ -35288,8 +35288,8 @@
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/client/input/VehicleControlBindings.kt",
-      "size": 5931,
-      "sha256": "924794502f6852504dedfb367a04271480ade301a362686937bb021307eef8a0"
+      "size": 6031,
+      "sha256": "28ac66140484d6bfb1f4647e225ada555987c7787e808c607f03bcd4cc5cc076"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/client/input/VehicleControlProfile.kt",
@@ -37165,6 +37165,11 @@
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/diagnostics/DiagnosticControlOverride.kt",
       "size": 2041,
       "sha256": "eecc295fa2b1785c5d8be80e64a45c017eadf09f209f612a5cfade831d5f14e2"
+    },
+    {
+      "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/diagnostics/DiagnosticHeldKeys.kt",
+      "size": 1966,
+      "sha256": "a977a46d0e97c550b702937fb3bb246c7d6c1f66cefc82f4410be5a56e84c579"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/diagnostics/DiagnosticScreenshots.kt",
@@ -39673,8 +39678,8 @@
     },
     {
       "path": "sbw/src/main/resources/META-INF/accesstransformer.cfg",
-      "size": 993,
-      "sha256": "1e70039eba56c96be341b9c64823f621eac3ac95da966ff315cf46ace8b85a4d"
+      "size": 1101,
+      "sha256": "2cf2539baf22ddf7cc4609a496c947e2d5d19e7e47730c0a32ea31bbdefa6021"
     },
     {
       "path": "sbw/src/main/resources/META-INF/mods.toml",
@@ -53009,7 +53014,7 @@
   ],
   "release": {
     "schema": 1,
-    "buildRecordSha256": "ec899b1ea45677e686a13f90dd54ec185cfc071e17cbbd5b27980738f069d436",
+    "buildRecordSha256": "ff03e936fed036e35da42c21b938d0899d3b648c7d3cc0319088852f4fa0af02",
     "artifacts": [
       {
         "id": "bvp",
@@ -53022,8 +53027,8 @@
         "id": "sbw",
         "version": "0.8.9-bvp.1",
         "filename": "superbwarfare-0.8.9-bvp.1-mc1.20.1-6effe43-all.jar",
-        "size": 37742025,
-        "sha256": "3454fd5514f493eb25bce7808f83d0a41da6b8d2d1b7fd721c6455074646fa5c"
+        "size": 37745416,
+        "sha256": "8663b816890ad1b7babb848ae8ba324ef0a9831026eaa4600c2e9d6efe8d6bb0"
       }
     ],
     "dependencies": [
@@ -53917,11 +53922,11 @@
         "sha256": "ed24dc77caa01a715021b0f47217ba46296949ea6b92046986c1be0573f0a93a"
       },
       {
-        "id": "net.minecraftforge:forge:1.20.1-47.2.0_mapped_parchment_2023.08.13-1.20.1_at_9416a54543054a131d42d6dab91b05f8d420bf85:b5e873114ecf",
-        "version": "1.20.1-47.2.0_mapped_parchment_2023.08.13-1.20.1_at_9416a54543054a131d42d6dab91b05f8d420bf85",
+        "id": "net.minecraftforge:forge:1.20.1-47.2.0_mapped_parchment_2023.08.13-1.20.1_at_fd420094fa091253276672f5de393a695c6d3ac1:5661cf537fad",
+        "version": "1.20.1-47.2.0_mapped_parchment_2023.08.13-1.20.1_at_fd420094fa091253276672f5de393a695c6d3ac1",
         "filename": "forge-1.20.1-47.2.0_mapped_parchment_2023.08.13-1.20.1.jar",
-        "size": 19157980,
-        "sha256": "b5e873114ecf079cbf17d9c0337c51266b9d838f102de37ac55d13aca651a2b4"
+        "size": 19157979,
+        "sha256": "5661cf537fadfdbbc664b2b51139af1941d6da0625404c8af57a79f24c93bae7"
       },
       {
         "id": "net.minecraftforge:forgespi:7.0.1:2298eaba25d0",
@@ -54456,11 +54461,11 @@
         "sha256": "ca15a907e4d1f6b38cefed51d7df96a83347dcfb0bc8ced53111519e991d887d"
       },
       {
-        "id": "sbw-mapped-api:0.8.9-bvp.1-mc1.20.1-6effe43:9a0e59469aea",
+        "id": "sbw-mapped-api:0.8.9-bvp.1-mc1.20.1-6effe43:3bbc6fc98a44",
         "version": "0.8.9-bvp.1-mc1.20.1-6effe43",
         "filename": "superbwarfare-mapped-api.jar",
-        "size": 10151472,
-        "sha256": "9a0e59469aea0af282a39e75bf497ec8f0884e02cc322ec4680e92e31c54ac73"
+        "size": 10154788,
+        "sha256": "3bbc6fc98a4455dd812016ef97544274105074f83cc29b1bff602413af76dafe"
       },
       {
         "id": "sbwmeshloader-mapped:0.1.1:0d6da1b68293",
