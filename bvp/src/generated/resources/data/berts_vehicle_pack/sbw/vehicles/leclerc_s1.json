@@ -387,34 +387,6 @@
           "Override": {
             "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_apfsds.png",
             "ShellType": "AP",
-            "Velocity": 89.5,
-            "ApDurability": 576,
-            "ExplosionDamage": 0,
-            "ExplosionRadius": 0,
-            "Name": "weapon.berts_vehicle_pack.ofl120f1_apfsds",
-            "Projectile": {
-              "Type": "superbwarfare:cannon_shell",
-              "Profile": "berts_vehicle_pack:leclerc_s1/cannon/ammo_00_ofl120f1_apfsds"
-            },
-            "ShootShake": [
-              8,
-              10,
-              114
-            ],
-            "NominalBallistics": {
-              "Supported": true,
-              "ProjectileType": "superbwarfare:cannon_shell",
-              "ProjectileProfile": "berts_vehicle_pack:leclerc_s1/cannon/ammo_00_ofl120f1_apfsds",
-              "ProjectileLife": 50
-            }
-          },
-          "ConsumptionItem": "superbwarfare:tier_3_armor_piercing_shell"
-        },
-        {
-          "Ammo": "superbwarfare:large_shell_ap",
-          "Override": {
-            "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_apfsds.png",
-            "ShellType": "AP",
             "Velocity": 87,
             "ApDurability": 562,
             "ExplosionDamage": 0,

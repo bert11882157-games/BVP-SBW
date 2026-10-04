@@ -32,7 +32,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.abspath(os.path.join(HERE, '..', '..'))
 SBW = os.path.join(REPO, 'bvp', 'src', 'generated', 'resources', 'data', 'berts_vehicle_pack', 'sbw')
 POOL = ['superbwarfare:small_shell_ap', 'superbwarfare:small_shell_aa', 'superbwarfare:small_shell_gs',
-        'superbwarfare:small_shell_he']
+        'superbwarfare:small_shell_he', 'superbwarfare:large_shell_ap']
 
 # round id -> (tracer, WT muzzle velocity m/s, TNT equivalent kg or None when inert)
 ROUNDS = {
@@ -65,33 +65,41 @@ HE_AT_APDS = {'3uof8_hef_i': '3ubr8_apds', '3uor6_hef_t': '3ubr8_apds', 'dty02_3
 # Owner's standard (2026-09-28): every autocannon has two belts.
 #   Air Belt    (HE-dominant): 3x HE, no tracer, then 1x AP with tracer
 #   Ground Belt (AP-dominant): 3x the gun's best penetrator (APFSDS > APDS > AP), then 1x HE with tracer
+# The first belt is the default (SBW selects AmmoType[0]). Owner 2026-10-04: ground-vehicle autocannons default to
+# the Ground Belt; the AA guns (AA_FIRST) keep the Air Belt first.
 # A slot's third element forces its tracer: 'NONE' = untraced, 'T' = traced (the round's WT colour, red if WT has
 # none; tracer_nations.py then sets green/red by nation). Without it the round's WT tracer is used.
 def std(he, ap_t, best_ap, he_t):
-    return [('Air Belt', [(he, 3, 'NONE'), (ap_t, 1, 'T')]),
-            ('Ground Belt', [(best_ap, 3), (he_t, 1, 'T')])]
+    return [('Ground Belt', [(best_ap, 3), (he_t, 1, 'T')]),
+            ('Air Belt', [(he, 3, 'NONE'), (ap_t, 1, 'T')])]
+
+
+def air_first(belts):
+    return [b for b in belts if b[0] == 'Air Belt'] + [b for b in belts if b[0] != 'Air Belt']
 
 
 A42 = std('3uof8_hef_i', '3ubr6_ap_t', '3ubr8_apds', '3uor6_hef_t')
 # the BMP-2M (Berezhok) Ground Belt is WT's all-APFSDS belt (owner: uniformly APFSDS)
-A42M = [A42[0], ('Ground Belt', [('3ubr11_apfsds', 1)])]
+A42M = [('Ground Belt', [('3ubr11_apfsds', 1)]), A42[1]]
+# the BTR-90 also carries the BMP-2M's APFSDS belt (owner 2026-10-04), as its default
+BTR90 = [('APFSDS Belt', [('3ubr11_apfsds', 1)])] + A42
 A72 = A42
 BMP3 = A42
-A42_HELI = A42
-A38 = std('3uof8_hef_i', '3ubr6_ap_t', '3ubr6_ap_t', '3uor6_hef_t')      # 2A38: no APDS
-ZU23 = std('23mm_hei', '23mm_apit', '23mm_apit', '23mm_hei_2')
+A42_HELI = air_first(A42)
+A38 = air_first(std('3uof8_hef_i', '3ubr6_ap_t', '3ubr6_ap_t', '3uor6_hef_t'))      # 2A38: no APDS
+ZU23 = air_first(std('23mm_hei', '23mm_apit', '23mm_apit', '23mm_hei_2'))
 M242 = std('m792_hei_t_1', 'm791_apds', 'm791_apds', 'm792_hei_t_1')
 M242_LAV = std('m792_hei_t_1', 'm791_apds', 'm919_apfsds', 'm792_hei_t_1')
 M811 = std('m811_m792_hei_t', 'm811_m791_apds', 'm811_pmb090_apfsds', 'm811_m792_hei_t')
 RH202 = std('dm51a1_hefi_t_1', 'dm43_hvap_t', 'dm63_apds', 'dm51a1_hefi_t_1')
-KDA = std('kda_35_hei_t', 'kda_35_api_t', 'kda_35_dm23_apds', 'kda_35_hei_t')
+KDA = air_first(std('kda_35_hei_t', 'kda_35_api_t', 'kda_35_dm23_apds', 'kda_35_hei_t'))
 BOFORS = std('slsgr_m90_he', 'slpprj_m01_apfsds', 'slpprj_m01_apfsds', 'slsgr_m90_he')
 ZPT99 = std('dty02_30_hefi', 'dtc04_30_apds', 'dtc10_30_apfsds', 'dty02_30_hefi')
 
 WEAPONS = {
     ('bmp2', 'Cannon'): ('TWO_A42', A42), ('bmp2m', 'Cannon'): ('TWO_A42', A42M),
     ('bmpt', 'Cannon'): ('TWO_A42', A42), ('bmpt', 'DualCannon'): ('TWO_A42', A42),
-    ('btr_90', 'Cannon'): ('TWO_A42', A42),
+    ('btr_90', 'Cannon'): ('TWO_A42', BTR90),
     ('btr80a', 'Cannon'): ('TWO_A42', A72), ('bmp3m_elite', 'DualCannon'): ('TWO_A42', BMP3),
     ('9k22_tunguska', 'Cannon'): ('TWO_A42', A38),
     ('ka50', 'Cannon'): ('TWO_A42', A42_HELI), ('mi28n', 'Cannon'): ('TWO_A42', A42_HELI),

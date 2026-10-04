@@ -452,7 +452,7 @@ class GunData private constructor(
         this.closeHammer.set(false)
         this.fireIndex.reset()
 
-        return applyReloadTransition(
+        val transition = applyReloadTransition(
             ReloadTransitionCause.AMMO_CONSUMER_CHANGE,
             policy.forConsumerSwitch(wasReloading, hadMagazineAmmo),
             true,
@@ -461,6 +461,10 @@ class GunData private constructor(
             previousIndex,
             targetIndex,
         )
+        // A switch loads the new belt from empty. Creative refills the magazine above, and without the marker a
+        // DepletionReload gun would time that reload as a nearly full belt (2 s instead of 12 s).
+        if (transition.reloadRequested()) reload.markFullChange()
+        return transition
     }
 
     private fun unchangedAmmoConsumerResult(
@@ -504,6 +508,7 @@ class GunData private constructor(
         this.reload.reloadStarter.finish()
         this.reload.singleReloadStarter.finish()
         this.reload.clearPendingProgress()
+        this.reload.clearFullChange()
         this.bolt.actionTimer.reset()
         this.bolt.needed.reset()
         this.charge.starter.finish()

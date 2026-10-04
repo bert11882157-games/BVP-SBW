@@ -7,28 +7,28 @@
   "OBB": [
     {
       "Position": [
-        0.19584,
-        0.60591,
-        -0.06753
+        0.33293,
+        1.03005,
+        -0.1148
       ],
       "Size": [
-        0.26338,
-        0.12831,
-        0.10805
+        0.44775,
+        0.21813,
+        0.18368
       ],
       "Transform": "Vehicle",
       "Rotation": "Vehicle"
     },
     {
       "Position": [
-        -0.04457,
-        0.08957,
-        0.14857
+        -0.07577,
+        0.15227,
+        0.25257
       ],
       "Size": [
-        0.14452,
-        0.10805,
-        0.82389
+        0.24568,
+        0.18368,
+        1.40061
       ],
       "Transform": "Barrel",
       "Rotation": "Barrel"
@@ -36,41 +36,41 @@
     {
       "Position": [
         0,
-        0.29469,
-        0.28125
+        0.50097,
+        0.47812
       ],
       "Size": [
-        0.02813,
-        0.26469,
-        0.28125
+        0.04782,
+        0.44997,
+        0.47812
       ],
       "Transform": "Vehicle",
       "Rotation": "Vehicle"
     },
     {
       "Position": [
-        -0.25,
-        0.29469,
-        -0.21875
+        -0.425,
+        0.50097,
+        -0.37188
       ],
       "Size": [
-        0.26852,
-        0.26469,
-        0.23992
+        0.45648,
+        0.44997,
+        0.40786
       ],
       "Transform": "Vehicle",
       "Rotation": "Vehicle"
     },
     {
       "Position": [
-        0.25,
-        0.29469,
-        -0.21875
+        0.425,
+        0.50097,
+        -0.37188
       ],
       "Size": [
-        0.26852,
-        0.26469,
-        0.23992
+        0.45648,
+        0.44997,
+        0.40786
       ],
       "Transform": "Vehicle",
       "Rotation": "Vehicle"
@@ -82,9 +82,9 @@
       "BanHand": true,
       "Transform": "Turret",
       "Position": [
-        0.03125,
-        -0.56063,
-        -0.53125
+        0.05312,
+        -0.95307,
+        -0.90312
       ],
       "Weapons": [
         "Cannon"
@@ -114,8 +114,8 @@
         "Transform": "Vehicle",
         "Position": [
           0,
-          0.525,
-          -1.575
+          0.8925,
+          -2.6775
         ]
       },
       "IsEnclosed": false,
@@ -156,8 +156,8 @@
         "Positions": [
           [
             0,
-            0.07607,
-            0.98184
+            0.12932,
+            1.66913
           ]
         ],
         "Directions": [
@@ -165,8 +165,8 @@
         ],
         "ViewPosition": [
           0,
-          0.07245,
-          0.93509
+          0.12316,
+          1.58965
         ],
         "MuzzleAttachments": [
           "main_muzzle"
@@ -348,7 +348,7 @@
   },
   "TurretPos": [
     0,
-    0.59062,
+    1.00405,
     0
   ],
   "BarrelPos": [
@@ -370,7 +370,7 @@
   ],
   "HasDecoy": false,
   "UpStep": 0,
-  "RotateOffsetHeight": 2.73,
+  "RotateOffsetHeight": 4.641,
   "Mass": 44.5,
   "DamageModifiers": [],
   "DestroyInfo": {
@@ -385,9 +385,9 @@
     "DeathBurst": false
   },
   "ThirdPersonCameraPos": [
-    -0.91031,
-    1.575,
-    5.25
+    -1.54753,
+    2.6775,
+    8.925
   ],
   "VehicleIcon": "berts_vehicle_pack:textures/vehicle_icon/browning_tripod.png",
   "ContainerIcon": "superbwarfare:textures/gui/vehicle/type/land.png",
@@ -429,9 +429,9 @@
     "operator_camera": {
       "Parent": "Barrel",
       "Position": [
-        0.03125,
-        0.21563,
-        -0.4375
+        0.05312,
+        0.36657,
+        -0.74375
       ],
       "Direction": [
         0,
@@ -443,8 +443,8 @@
       "Parent": "Barrel",
       "Position": [
         0,
-        0.07607,
-        0.98184
+        0.12932,
+        1.66913
       ],
       "Direction": [
         0,

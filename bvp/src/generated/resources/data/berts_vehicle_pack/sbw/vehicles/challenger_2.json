@@ -527,62 +527,6 @@
           "ConsumptionItem": "superbwarfare:tier_3_armor_piercing_shell"
         },
         {
-          "Ammo": "superbwarfare:large_shell_ap",
-          "Override": {
-            "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_apfsds.png",
-            "ShellType": "AP",
-            "Velocity": 82.5,
-            "ApDurability": 494,
-            "ExplosionDamage": 0,
-            "ExplosionRadius": 0,
-            "Name": "weapon.berts_vehicle_pack.l26_apfsds",
-            "Projectile": {
-              "Type": "superbwarfare:cannon_shell",
-              "Profile": "berts_vehicle_pack:challenger_2/cannon/ammo_01_l26_apfsds"
-            },
-            "ShootShake": [
-              8,
-              10,
-              114
-            ],
-            "NominalBallistics": {
-              "Supported": true,
-              "ProjectileType": "superbwarfare:cannon_shell",
-              "ProjectileProfile": "berts_vehicle_pack:challenger_2/cannon/ammo_01_l26_apfsds",
-              "ProjectileLife": 50
-            }
-          },
-          "ConsumptionItem": "superbwarfare:tier_3_armor_piercing_shell"
-        },
-        {
-          "Ammo": "superbwarfare:large_shell_ap",
-          "Override": {
-            "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_apfsds.png",
-            "ShellType": "AP",
-            "Velocity": 76.75,
-            "ApDurability": 397,
-            "ExplosionDamage": 0,
-            "ExplosionRadius": 0,
-            "Name": "weapon.berts_vehicle_pack.l23a1_apfsds",
-            "Projectile": {
-              "Type": "superbwarfare:cannon_shell",
-              "Profile": "berts_vehicle_pack:challenger_2/cannon/ammo_02_l23a1_apfsds"
-            },
-            "ShootShake": [
-              8,
-              10,
-              114
-            ],
-            "NominalBallistics": {
-              "Supported": true,
-              "ProjectileType": "superbwarfare:cannon_shell",
-              "ProjectileProfile": "berts_vehicle_pack:challenger_2/cannon/ammo_02_l23a1_apfsds",
-              "ProjectileLife": 50
-            }
-          },
-          "ConsumptionItem": "superbwarfare:tier_2_armor_piercing_shell"
-        },
-        {
           "Ammo": "superbwarfare:large_shell_he",
           "Override": {
             "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_he.png",

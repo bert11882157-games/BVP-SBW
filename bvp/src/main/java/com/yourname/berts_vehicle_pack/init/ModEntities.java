@@ -190,7 +190,7 @@ public class ModEntities {
     public static final RegistryObject<EntityType<MilanTripodEntity>> MILAN_TRIPOD =
             ENTITIES.register("milan_tripod", () -> vehicle(MilanTripodEntity::new, 2.2f, 1.8f, "milan_tripod"));
     public static final RegistryObject<EntityType<BrowningTripodEntity>> BROWNING_TRIPOD =
-            ENTITIES.register("browning_tripod", () -> vehicle(BrowningTripodEntity::new, 1.5f, 1.5f, "browning_tripod"));
+            ENTITIES.register("browning_tripod", () -> vehicle(BrowningTripodEntity::new, 2.55f, 2.55f, "browning_tripod"));
     public static final RegistryObject<EntityType<TowTripodEntity>> TOW_TRIPOD =
             ENTITIES.register("tow_tripod", () -> vehicle(TowTripodEntity::new, 2.4f, 2.0f, "tow_tripod"));
     public static final RegistryObject<EntityType<Mig19Entity>> MIG19 =

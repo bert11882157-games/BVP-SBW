@@ -329,7 +329,7 @@
       "NormalReloadTime": 240,
       "EmptyReloadTime": 240,
       "AmmoCostPerShoot": 1,
-      "Velocity": 55.0,
+      "Velocity": 69.25,
       "Damage": 65,
       "ExplosionDamage": 8,
       "ExplosionRadius": 2,
@@ -364,6 +364,52 @@
       "SoundRadius": 24,
       "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/cannon_25mm_ap.png",
       "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_ap",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:vbci/cannon/ammo_00_m811_pmb090_apfsds"
+            },
+            "ShellType": "AP",
+            "Velocity": 69.25,
+            "ApDurability": 92,
+            "Damage": 65,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "Ground Belt",
+            "ShootShake": [
+              8,
+              10,
+              12
+            ],
+            "ProjectileBelt": {
+              "Name": "Ground Belt",
+              "Family": "M242",
+              "Rounds": [
+                {
+                  "Shots": 3,
+                  "Round": "m811_pmb090_apfsds",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "RED"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "m811_m792_hei_t",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "RED"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:vbci/cannon/ammo_00_m811_pmb090_apfsds",
+              "ProjectileLife": 40
+            }
+          },
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell"
+        },
         {
           "Ammo": "superbwarfare:small_shell_he",
           "Override": {
@@ -406,52 +452,6 @@
               "Supported": true,
               "ProjectileType": "superbwarfare:small_cannon_shell",
               "ProjectileProfile": "berts_vehicle_pack:vbci/cannon/ammo_02_m811_m792_hei_t",
-              "ProjectileLife": 40
-            }
-          },
-          "ConsumptionItem": "superbwarfare:small_autocannon_shell"
-        },
-        {
-          "Ammo": "superbwarfare:small_shell_ap",
-          "Override": {
-            "Projectile": {
-              "Type": "superbwarfare:small_cannon_shell",
-              "Profile": "berts_vehicle_pack:vbci/cannon/ammo_00_m811_pmb090_apfsds"
-            },
-            "ShellType": "AP",
-            "Velocity": 69.25,
-            "ApDurability": 92,
-            "Damage": 65,
-            "ExplosionDamage": 0,
-            "ExplosionRadius": 0,
-            "Name": "Ground Belt",
-            "ShootShake": [
-              8,
-              10,
-              12
-            ],
-            "ProjectileBelt": {
-              "Name": "Ground Belt",
-              "Family": "M242",
-              "Rounds": [
-                {
-                  "Shots": 3,
-                  "Round": "m811_pmb090_apfsds",
-                  "Ammo": "superbwarfare:small_shell_ap",
-                  "Tracer": "RED"
-                },
-                {
-                  "Shots": 1,
-                  "Round": "m811_m792_hei_t",
-                  "Ammo": "superbwarfare:small_shell_he",
-                  "Tracer": "RED"
-                }
-              ]
-            },
-            "NominalBallistics": {
-              "Supported": true,
-              "ProjectileType": "superbwarfare:small_cannon_shell",
-              "ProjectileProfile": "berts_vehicle_pack:vbci/cannon/ammo_00_m811_pmb090_apfsds",
               "ProjectileLife": 40
             }
           },
