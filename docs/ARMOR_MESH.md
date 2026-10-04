@@ -166,6 +166,29 @@ Stock Blockbench cannot put Mesh elements into Bedrock models. Install the **Mes
 (*File → Plugins → Available*, search "Meshy"). With it, Bedrock Entity models can hold Mesh elements and
 read and write `poly_mesh`. The vehicle models in `custom_geo/` use the same format.
 
+### Blockbench projects (.bbmodel) - the owner's workflow since 2026-09-29
+
+Flat layout (plugin 1.2.0): each armor volume is ONE element - a Mesh or cube named like a volume bone
+(`plate__80mm__ufp`, `era__kontakt5__brick_03`, `engine____powerpack`) - directly inside `armor_hull` /
+`armor_turret` / `armor_barrel`; there is no folder per plate. On export the plugin writes each such element as its
+own volume bone (the game still needs one bone per volume: a Bedrock mesh has no name of its own), cutting its
+polygons out of the frame's Meshy poly_mesh after every other compile step. Opening a `.geo.json` folds
+single-element volume bones back into named elements. Faces with their own thickness show green (View > Show Face
+Armor, on by default). Folder-per-volume projects still export as before.
+
+`node tools/armor_authoring/to_bbmodel.mjs --tree . --out DIR` writes `DIR/<category>/<id>.armor.bbmodel` for every
+registered vehicle: the armor as the game loads it plus the visual model as a locked, non-exported `reference_model`
+(kept last: Meshy stops exporting meshes at the first group with Export off). Edit it in Blockbench (Meshy and BVP
+Armor Faces installed) and save the project.
+
+`node tools/armor_authoring/from_bbmodel.mjs <id>.armor.bbmodel armor_mesh/<id>.geo.json --original <old geo>`
+turns the saved project into the game file, reflecting everything in it: per-face thickness, renamed thickness,
+moved / reshaped / added volumes, moved engines and ammo racks, and deletions (a deleted volume or frame is simply
+gone). Groups with Export off are left out. `bvp_surface_normal` comes from the project, or - if it was saved
+without plugin v1.1.0 - from the same-named bone of `--original`. It reads Blockbench 4 and 5 projects and matches
+Meshy's export exactly (round trip of an unedited project is identical). Keep the edited project in
+`tools/armor_authoring/projects/` and add the id to `auto_mesh.HAND_TUNED`.
+
 ### Start from a template (recommended)
 
 Every registered BVP vehicle (171: tanks, IFVs, trucks, helicopters, aircraft, tripods) has a file:

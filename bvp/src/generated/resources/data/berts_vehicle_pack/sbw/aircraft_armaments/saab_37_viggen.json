@@ -5,7 +5,47 @@
     "VentralCannon"
   ],
   "SuspendedWeapons": [],
-  "Pairs": [],
+  "Pairs": [
+    {
+      "Id": "inner_wing",
+      "Name": "Inner wing pylons",
+      "Left": [
+        2.75,
+        1.0,
+        -3.27
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            2.7504,
+            1.2248,
+            -4.4909
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Right": [
+        -2.75,
+        1.0,
+        -3.27
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -2.7504,
+            1.2248,
+            -4.4909
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/skyflash"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 600
+    }
+  ],
   "StoreGroups": {
     "berts_vehicle_pack:modeled_store/saab_37_viggen/583528770": [
       "suspended_583528770_hull"

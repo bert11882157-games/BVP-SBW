@@ -6,21 +6,21 @@
     "DamageType": "berts_vehicle_pack:chemical",
     "DiameterMm": 65,
     "HullDamageClass": "HEAT",
-    "HullDamage": 40,
-    "ModuleDamage": 20,
-    "AmmoRackDamage": 4,
-    "PenetrationMm": 180,
+    "HullDamage": 105,
+    "ModuleDamage": 63,
+    "AmmoRackDamage": 500,
+    "PenetrationMm": 200.0,
     "Tandem": false
   },
   "VisualProfile": "berts_vehicle_pack:authored_bomb",
   "MotionSync": "INHERIT",
   "TrailMode": "SUPPRESS",
-  "RenderScale": 0.1,
+  "RenderScale": 0.34,
   "Extensions": {
     "berts_vehicle_pack:projectile_mesh_v1": {
-      "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/fab_100.geo.json",
-      "Texture": "berts_vehicle_pack:textures/aircraft_stores/fab_100.png",
-      "ForwardYaw": 180,
+      "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/cluster_sub.geo.json",
+      "Texture": "berts_vehicle_pack:textures/aircraft_stores/cluster_sub.png",
+      "ForwardYaw": 0,
       "SpinDegreesPerTick": 0
     }
   }

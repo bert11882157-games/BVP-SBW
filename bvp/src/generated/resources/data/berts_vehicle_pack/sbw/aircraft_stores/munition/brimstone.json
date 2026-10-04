@@ -1,0 +1,99 @@
+{
+  "Schema": 1,
+  "Name": "Brimstone · mmW fire and forget · three-missile rack",
+  "Category": "AIR_TO_GROUND",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/brimstone.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.1256,
+    0.252
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.1256,
+      0.0,
+      0.252
+    ],
+    "Right": [
+      -0.1256,
+      0.0,
+      0.252
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    0.252
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/brimstone.png",
+  "Capacity": 1,
+  "MassKg": 48.5,
+  "Guidance": {
+    "Mode": "GROUND_INFRARED",
+    "Presentation": "FIRE_AND_FORGET",
+    "LockTicks": 40,
+    "Range": 1000,
+    "ConeDegrees": 30,
+    "CountermeasureVulnerability": 0.5
+  },
+  "Flight": {
+    "InitialSpeed": 0.5,
+    "MaxSpeed": 10,
+    "AccelerationPerTick": 0.15,
+    "TurnDegreesPerSecond": 65,
+    "Damage": 95,
+    "BlastRadius": 1.25,
+    "TntEquivalentKg": 5.0
+  },
+  "AmmoItem": "superbwarfare:medium_air_to_ground_missile",
+  "MaxPerPylon": 3,
+  "FixedRackCount": 3,
+  "RackAdapter": {
+    "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/rack_brimstone.geo.json",
+    "Texture": "berts_vehicle_pack:textures/aircraft_stores/brimstone.png",
+    "MountAnchor": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "Stations": [
+      {
+        "Point": [
+          0.0,
+          -0.195,
+          0.0
+        ],
+        "Face": "bottom"
+      },
+      {
+        "Point": [
+          -0.1504,
+          -0.1725,
+          0.0
+        ],
+        "Face": "left"
+      },
+      {
+        "Point": [
+          0.1504,
+          -0.1725,
+          0.0
+        ],
+        "Face": "right"
+      }
+    ]
+  },
+  "RackMassKg": 40,
+  "RackColumns": 3,
+  "RackSpacing": [
+    0.24,
+    0.0,
+    0.0
+  ],
+  "LaunchOffset": [
+    0.0,
+    -0.1256,
+    0.0
+  ]
+}

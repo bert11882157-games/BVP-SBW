@@ -5,7 +5,52 @@
     "Cannon"
   ],
   "SuspendedWeapons": [],
-  "Pairs": [],
+  "Pairs": [
+    {
+      "Id": "inboard_wing",
+      "Name": "Inboard wing pylons",
+      "Left": [
+        2.67,
+        0.85,
+        -0.2
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            2.6696,
+            1.1312,
+            -0.905
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Right": [
+        -2.67,
+        0.85,
+        -0.2
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -2.6696,
+            1.1312,
+            -0.905
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/storm_shadow",
+        "berts_vehicle_pack:munition/kepd350",
+        "berts_vehicle_pack:munition/brimstone",
+        "berts_vehicle_pack:munition/brimstone2",
+        "berts_vehicle_pack:munition/iris_t",
+        "berts_vehicle_pack:munition/asraam"
+      ],
+      "MaxWeaponsPerPylon": 3,
+      "MaxPylonMassKg": 1500
+    }
+  ],
   "StoreGroups": {
     "berts_vehicle_pack:modeled_store/eurofighter_typhoon/1587884386": [
       "suspended_1587884386_hull"

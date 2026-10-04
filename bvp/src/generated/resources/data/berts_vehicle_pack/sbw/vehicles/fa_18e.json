@@ -193,7 +193,7 @@
         "Fire3P": "berts_vehicle_pack:fa_18e_gun_jetshoot",
         "Fire3PFar": "berts_vehicle_pack:fa_18e_gun_jetshoot",
         "Fire3PVeryFar": "berts_vehicle_pack:fa_18e_gun_jetshoot",
-        "Volume": 0.85
+        "Volume": 1.0
       },
       "Projectile": {
         "Type": "superbwarfare:small_cannon_shell",
@@ -410,8 +410,8 @@
       "Parent": "Vehicle",
       "Position": [
         0,
-        2.89224125,
-        4.101724375
+        2.892241,
+        3.981724
       ],
       "Direction": [
         0,
@@ -431,12 +431,12 @@
     "FlaresPerBurst": 48,
     "FlareLeftPos": [
       1.1,
-      1.9,
+      1.0,
       -3.5
     ],
     "FlareRightPos": [
       -1.1,
-      1.9,
+      1.0,
       -3.5
     ],
     "FlareEjectionSpeed": 0.7

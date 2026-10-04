@@ -419,9 +419,11 @@ open class CustomExplosion(
         val blastProfile = pSource?.let(ProjectileProfiles::resolve)
         val fragmentPolicy = com.atsuishio.superbwarfare.api.projectile.WarheadFragmentPolicy.from(blastProfile)
         val reach = maxOf(BlastModel.queryRadius(radii, parameters, cylinder), fragmentPolicy?.range ?: 0.0)
+        // Vehicle hull boxes reach past their entity box: widen the query, then measure to the hull (below).
+        val queryReach = reach + 1 + com.atsuishio.superbwarfare.tools.blast.BlastDistance.VEHICLE_QUERY_MARGIN
         val list = this.level.getEntities(
             this.pSource,
-            AABB(x - reach - 1, y - reach - 1, z - reach - 1, x + reach + 1, y + reach + 1, z + reach + 1)
+            AABB(x - queryReach, y - queryReach, z - queryReach, x + queryReach, y + queryReach, z + queryReach)
         )
         ForgeEventFactory.onExplosionDetonate(this.level, this, list, reach)
         if (diagnostics) EliteDiagnostics.record(diagnosticSubject!!, "tnt_blast", "PLAN",
@@ -436,16 +438,24 @@ open class CustomExplosion(
 
         // High-explosive gun and mortar shells are anti-personnel rounds first: harder hitting and a little wider
         // against infantry than a bomb or warhead of the same charge.
+        // Unguided rockets too (owner 2026-09-29: rockets felt harmless outside a direct hit).
         val heShell = pSource is com.atsuishio.superbwarfare.entity.projectile.CannonShellEntity ||
             pSource is com.atsuishio.superbwarfare.entity.projectile.SmallCannonShellEntity ||
-            pSource is com.atsuishio.superbwarfare.entity.projectile.MortarShellEntity
+            pSource is com.atsuishio.superbwarfare.entity.projectile.MortarShellEntity ||
+            pSource is com.atsuishio.superbwarfare.entity.projectile.SmallRocketEntity ||
+            pSource is com.atsuishio.superbwarfare.entity.projectile.MediumRocketEntity
+        val munitionBlast = pSource is net.minecraft.world.entity.projectile.Projectile
         val heShellInfantry = if (heShell) HE_SHELL_INFANTRY_DAMAGE else 1.0
         val infantryRadii = if (heShell) radii.copy(severe = minOf(radii.severe * HE_SHELL_INFANTRY_REACH, radii.moderate))
             else radii
         for (entity in list) {
             if (entity.ignoreExplosion()) continue
             val box = entity.boundingBox
-            val distance = sqrt(box.distanceToSqr(center))
+            // Munitions measure to the vehicle's hull boxes; vehicle death explosions keep the entity box, so a wreck
+            // going up does not reach further into its neighbours than before.
+            val distance = if (entity is VehicleEntity && munitionBlast)
+                com.atsuishio.superbwarfare.tools.blast.BlastDistance.toVehicle(entity, center)
+            else sqrt(box.distanceToSqr(center))
             val inCylinder = cylinder?.intersectsBox(box.minX, box.minY, box.minZ, box.maxX, box.maxY, box.maxZ) == true
             if (entity is VehicleEntity) {
                 hit = applyTntToVehicle(entity, plan, center, distance, cylinder, inCylinder, diagnostics) || hit
@@ -492,11 +502,11 @@ open class CustomExplosion(
         val radii = plan.radii
         var hit = false
         val healthBefore = vehicle.health
-        val struck = com.atsuishio.superbwarfare.tools.blast.StruckVehicles.struck(pSource, vehicle)
+        val direct = com.atsuishio.superbwarfare.tools.blast.StruckVehicles.directDamage(pSource, vehicle)
+        val struck = direct != null
         val missile = damageClass.aircraft && missileSource(pSource)
-        val rule: String
-        val damage = when {
-            struck -> { rule = "struck_directly"; 0.0 }
+        var rule: String
+        val blast = when {
             missile -> {
                 rule = "missile_proximity"
                 val proximity = com.atsuishio.superbwarfare.api.aircraft.AircraftHitRules.proximity(distance, radii.severe)
@@ -504,9 +514,13 @@ open class CustomExplosion(
                     plan.kg, vehicle.getMaxHealth().toDouble(), proximity) else 0.0
             }
             cylinder != null && inCylinder -> { rule = "penetrator"; parameters.vehicleDamagePerKg * plan.kg * damageClass.blastMultiplier }
-            cylinder != null -> { rule = "outside_penetrator"; 0.0 }
+            // A penetrator's fireball also reaches what stands beside the crater (was 0 outside the cylinder).
+            cylinder != null -> { rule = "outside_penetrator"; BlastModel.classBlastDamage(plan.kg, distance, radii, damageClass.blastMultiplier, parameters) }
             else -> { rule = "class_blast"; BlastModel.classBlastDamage(plan.kg, distance, radii, damageClass.blastMultiplier, parameters) }
         }
+        // The munition that hit this vehicle directly only adds what its blast does beyond that hit.
+        val damage = com.atsuishio.superbwarfare.tools.blast.StruckVehicles.remainingBlast(blast, direct)
+        if (struck) rule = if (damage > 0.0) "$rule+struck" else "struck_directly"
         if (damage > 0.0) {
             val result = vehicle.applyResolvedDamage(
                 com.atsuishio.superbwarfare.api.vehicle.damage.ResolvedVehicleDamageRequest(

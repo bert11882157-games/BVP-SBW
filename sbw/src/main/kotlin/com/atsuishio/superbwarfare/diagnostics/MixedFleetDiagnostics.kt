@@ -146,7 +146,7 @@ object MixedFleetDiagnostics {
                     val candidates = mount.getAsJsonArray("AllowedStores").mapNotNull { value ->
                         val id = value.asString
                         AircraftArmamentRegistry.stores[ResourceLocation(id)]?.let { id to it }
-                    }.sortedBy { (_, store) -> (store["MassKg"]?.asDouble ?: 0.0) * (store["Capacity"]?.asInt ?: 1) }
+                    }.filterNot { (_, store) -> com.atsuishio.superbwarfare.api.aircraft.AircraftTargetingPods.isPod(store) }.sortedBy { (_, store) -> (store["MassKg"]?.asDouble ?: 0.0) * (store["Capacity"]?.asInt ?: 1) }
                     val chosen = candidates.firstOrNull { (_, store) ->
                         val mass = (store["MassKg"]?.asDouble ?: 0.0) * (store["Capacity"]?.asInt ?: 1)
                         mass > 0 && AircraftPylonRacks.maxCopies(definition, mount, store) >= 1 &&

@@ -1,6 +1,7 @@
 package com.yourname.berts_vehicle_pack.armor;
 
 import com.atsuishio.superbwarfare.api.projectile.ProjectileCombatDescriptor;
+import com.atsuishio.superbwarfare.api.projectile.ProjectileHeAspect;
 import com.atsuishio.superbwarfare.api.projectile.ProjectileProfiles;
 import com.atsuishio.superbwarfare.api.projectile.ProjectileHullDamageClass;
 import com.atsuishio.superbwarfare.api.projectile.ResolvedProjectileProfile;
@@ -209,7 +210,17 @@ final class ArmorShotClassifier {
         if (shot == null) {
             return null;
         }
-        return descriptor.getTandem() && !shot.tandemWarhead ? shot.withTandemWarhead() : shot;
+        if (descriptor.getTandem() && !shot.tandemWarhead) {
+            shot = shot.withTandemWarhead();
+        }
+        ProjectileHeAspect charge = descriptor.getHeAspect();
+        if (charge != null) {
+            // Dual-aspect round (SAPHEI-T): the profile's scalar values are the kinetic body; the HE charge is a
+            // second, chemical effect with its own flat penetration and HE damage. The armor check tries it first.
+            shot = shot.withHeAspect(shot.chemicalAspect(charge.getPenetrationMm(), charge.getModuleDamage(),
+                    charge.getHullDamage(), charge.getAmmoRackDamage() / 1000.0D));
+        }
+        return shot;
     }
 
     private static ProjectileArmorEffect profiledEffect(Projectile projectile,
@@ -269,6 +280,22 @@ final class ArmorShotClassifier {
                     ? (int) ProjectileArmorEffects.TANDEM_ATGM_PENETRATION_MM
                     : 0;
             return AtgmArmorProfiles.forShot(shooterProfileId, durabilityHint).effect();
+        }
+
+        // Unguided rockets from pods and helicopters (Hydra 70, S-5, Zuni ...; owner 2026-09-29): a rocket template,
+        // whose numbers the profile's typed HullDamage / pen / damage type then replace. Without it these rounds were
+        // unclassified and fell back to the entity's flat hit damage through the target's modifiers.
+        if (isBvpId(descriptor.getMunitionType(), "rocket")) {
+            return damageType == ArmorDamageType.KINETIC
+                    ? ProjectileArmorEffects.MI24_S13
+                    : ProjectileArmorEffects.MI24_S8KO;
+        }
+        // Cluster submunitions (owner 2026-09-30): a HEAT charge (BLU-97, Mk 118, PTAB-2.5M) or a Skeet's
+        // explosively formed penetrator. They used to be unclassified: their typed HEAT damage never applied.
+        if (isBvpId(descriptor.getMunitionType(), "cluster_bomblet")) {
+            return damageType == ArmorDamageType.KINETIC
+                    ? ProjectileArmorEffects.MI24_S13
+                    : ProjectileArmorEffects.HEAT_FS;
         }
 
         // Caliber is a typed Combat field. Resolve the complete 12.7/14.5 family before any

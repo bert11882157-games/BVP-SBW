@@ -6,7 +6,156 @@
     "CannonRight"
   ],
   "SuspendedWeapons": [],
-  "Pairs": [],
+  "Pairs": [
+    {
+      "Id": "fuselage_shoulder",
+      "Name": "Fuselage shoulder pylons",
+      "Left": [
+        0.6,
+        0.35,
+        0.1
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            0.5416,
+            0.5416,
+            -0.8913
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Right": [
+        -0.6,
+        0.35,
+        0.1
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -0.5416,
+            0.5416,
+            -0.8913
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/brimstone",
+        "berts_vehicle_pack:munition/brimstone2",
+        "berts_vehicle_pack:munition/skyflash",
+        "berts_vehicle_pack:munition/iris_t",
+        "berts_vehicle_pack:munition/asraam"
+      ],
+      "MaxWeaponsPerPylon": 3,
+      "MaxPylonMassKg": 600
+    },
+    {
+      "Id": "wing_swivel",
+      "Name": "Swivel wing pylons",
+      "Left": [
+        3.25,
+        1.35,
+        -1.1
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            3.1591,
+            1.5344,
+            -1.2142
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Right": [
+        -3.25,
+        1.35,
+        -1.1
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -3.1591,
+            1.5344,
+            -1.2142
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/storm_shadow",
+        "berts_vehicle_pack:munition/kepd350",
+        "berts_vehicle_pack:munition/iris_t"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 1500,
+      "SweepFrames": [
+        {
+          "Pivot": [
+            2.256494,
+            2.369318,
+            0.270779
+          ],
+          "Axis": [
+            0,
+            -1,
+            0
+          ],
+          "MaxDegrees": -42,
+          "Points": [
+            [
+              0,
+              0
+            ],
+            [
+              1.5,
+              0
+            ],
+            [
+              2.5,
+              0.5
+            ],
+            [
+              3.5,
+              1
+            ]
+          ]
+        },
+        {
+          "Pivot": [
+            -2.256494,
+            2.369318,
+            0.270779
+          ],
+          "Axis": [
+            0,
+            -1,
+            0
+          ],
+          "MaxDegrees": 42,
+          "Points": [
+            [
+              0,
+              0
+            ],
+            [
+              1.5,
+              0
+            ],
+            [
+              2.5,
+              0.5
+            ],
+            [
+              3.5,
+              1
+            ]
+          ]
+        }
+      ]
+    }
+  ],
   "StoreGroups": {
     "berts_vehicle_pack:modeled_store/panavia_tornado_ids_marineflieger/570313542": [
       "suspended_570313542_pylon_left",

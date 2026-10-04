@@ -70,6 +70,9 @@ public class ModEntityRenderers {
         registerVehicle(event, ModEntities.M60A1, "m60a1", standardTank(
                 "custom_geo/m60a1.geo.json", "textures/entity/m60a1.png",
                 6, 11.82913F, 11.13837F, -45.84844F, 65.6262F, 65, "M60A1Renderer"));
+        registerVehicle(event, ModEntities.STRV_103, "strv_103", profileTrackedVehicle(
+                "custom_geo/strv_103.geo.json", "textures/entity/strv_103.png",
+                "Strv103Renderer"));
         registerVehicle(event, ModEntities.M1_ABRAMS_ELITE, "m1_abrams_elite", standardTank(
                 "custom_geo/m1_abrams_elite.geo.json", "textures/entity/m1_abrams_elite.png",
                 7, 11.1399F, 10.44915F, -50.76291F, 49.50433F, 60, "M1AbramsEliteRenderer"));
@@ -79,12 +82,18 @@ public class ModEntityRenderers {
         registerVehicle(event, ModEntities.T64B_OBR1976, "t64b_obr1976", standardTank(
                 "custom_geo/t64b_obr1976.geo.json", "textures/entity/t64b_obr1976.png",
                 6, 10.32736F, 10.03826F, -59.04456F, 46.99465F, 60, "T64BObr1976Renderer"));
+        registerVehicle(event, ModEntities.T64A, "t64a", standardTank(
+                "custom_geo/t64a.geo.json", "textures/entity/t64a.png",
+                6, 10.91942F, 8.96678F, -61.64947F, 48.33458F, 46, "T64aRenderer"));
         registerVehicle(event, ModEntities.M48A3_ELITE, "m48a3_elite", standardTank(
                 "custom_geo/m48a3_elite.geo.json", "textures/entity/m48a3_elite.png",
                 6, 11.60438F, 10.91362F, -49.89389F, 62.47974F, 65, "M48A3EliteRenderer"));
         registerVehicle(event, ModEntities.T80U_OBR1985, "t80u_obr1985", standardTank(
                 "custom_geo/t80u_obr1985.geo.json", "textures/entity/t80u_obr1985.png",
                 6, 12.49761F, 11.00006F, -70.23096F, 61.01056F, 38, "T80UObr1985Renderer"));
+        registerVehicle(event, ModEntities.T80BVM_OBR2022, "t80bvm_obr2022", standardTank(
+                "custom_geo/t80bvm_obr2022.geo.json", "textures/entity/t80bvm_obr2022.png",
+                6, 10.24142F, 8.28878F, -55.90676F, 48.08180F, 44, "T80bvmObr2022Renderer"));
         registerVehicle(event, ModEntities.T72A, "t72a", standardTank(
                 "custom_geo/t72a.geo.json", "textures/entity/t72a.png",
                 6, 9.09873F, 8.40798F, -54.11257F, 46.72195F, 48, "T72ARenderer"));
@@ -97,6 +106,9 @@ public class ModEntityRenderers {
         registerVehicle(event, ModEntities.T90A, "t90a", T90ARenderer::new);
         registerVehicle(event, ModEntities.T90M, "t90m", profileTrackedVehicle(
                 "custom_geo/t90m.geo.json", "textures/entity/t90m.png", "T90MRenderer"));
+        registerVehicle(event, ModEntities.CHEONMA_2, "cheonma_2", profileTrackedVehicle(
+                "custom_geo/cheonma_2.geo.json", "textures/entity/cheonma_2.png",
+                "Cheonma2Renderer"));
         registerVehicle(event, ModEntities.BMPT, "bmpt", BmptRenderer::new);
         registerVehicle(event, ModEntities.ZSU23_4, "zsu23_4", Zsu23_4Renderer::new);
         registerVehicle(event, ModEntities.BMP3M_ELITE, "bmp3m_elite", standardTrackedVehicle(
@@ -114,6 +126,9 @@ public class ModEntityRenderers {
         registerVehicle(event, ModEntities.M551A1, "m551a1", standardTrackedVehicle(
                 "custom_geo/m551a1.geo.json", "textures/entity/m551a1.png",
                 5, 7.86062F, 8.36815F, -47.195F, 48.96166F, "M551A1Renderer"));
+        registerVehicle(event, ModEntities.PT76B, "pt76b", profileTrackedVehicle(
+                "custom_geo/pt76b.geo.json", "textures/entity/pt76b.png",
+                "Pt76bRenderer"));
         registerVehicle(event, ModEntities.BMP_1AM, "bmp_1am", profileTrackedVehicle(
                 "custom_geo/bmp_1am.geo.json", "textures/entity/bmp_1am.png", "Bmp1amRenderer"));
         registerVehicle(event, ModEntities.MARDER_1A2, "marder_1a2", profileTrackedVehicle(
@@ -126,6 +141,9 @@ public class ModEntityRenderers {
                 "custom_geo/vbci.geo.json", "textures/entity/vbci.png", "VbciRenderer"));
         registerVehicle(event, ModEntities.LAV25, "lav25", standardVehicle(
                 "custom_geo/lav25.geo.json", "textures/entity/lav25.png", "Lav25Renderer"));
+        registerVehicle(event, ModEntities.LAV_AD, "lav_ad", standardVehicle(
+                "custom_geo/lav_ad.geo.json", "textures/entity/lav_ad.png",
+                "LavAdRenderer"));
         registerVehicle(event, ModEntities.M1128, "m1128", standardVehicle(
                 "custom_geo/m1128.geo.json", "textures/entity/m1128.png", "M1128Renderer"));
         registerVehicle(event, ModEntities.LEO2A6, "leo2a6", standardTank(
@@ -179,6 +197,10 @@ public class ModEntityRenderers {
                 "custom_geo/milan_tripod.geo.json", "textures/entity/milan_tripod.png", "MilanTripodRenderer"));
         registerVehicle(event, ModEntities.BROWNING_TRIPOD, "browning_tripod", standardVehicle(
                 "custom_geo/browning_tripod.geo.json", "textures/entity/browning_tripod.png", "BrowningTripodRenderer"));
+        registerVehicle(event, ModEntities.ESSEX, "essex", standardVehicle(
+                "custom_geo/essex.geo.json", "textures/entity/essex.png", "EssexRenderer"));
+        registerVehicle(event, ModEntities.KIEV, "kiev", standardVehicle(
+                "custom_geo/kiev.geo.json", "textures/entity/kiev.png", "KievRenderer"));
         registerVehicle(event, ModEntities.TOW_TRIPOD, "tow_tripod", standardVehicle(
                 "custom_geo/tow_tripod.geo.json", "textures/entity/tow_tripod.png", "TowTripodRenderer"));
         registerVehicle(event, ModEntities.MIG19, "mig19", standardVehicle(
@@ -397,10 +419,17 @@ public class ModEntityRenderers {
                 "custom_geo/mi_26.geo.json", "textures/entity/mi_26.png", "mi_26"));
         registerVehicle(event, ModEntities.AH_1F, "ah_1f", standardVehicle(
                 "custom_geo/ah_1f.geo.json", "textures/entity/ah_1f.png", "ah_1f"));
-        registerVehicle(event, ModEntities.CHALLENGER_2, "challenger_2", standardVehicle(
-                "custom_geo/challenger_2.geo.json", "textures/entity/challenger_2.png", "challenger_2"));
-        registerVehicle(event, ModEntities.LECLERC_S1, "leclerc_s1", standardVehicle(
-                "custom_geo/leclerc_s1.geo.json", "textures/entity/leclerc_s1.png", "leclerc_s1"));
+        // Tracked like the Leclerc: standardVehicle has no tracked animator (links stuck in the rest pose, the
+        // broken-track slabs showing under the tracks); the fitted ground renderer runs the running gear.
+        registerVehicle(event, ModEntities.CHALLENGER_2, "challenger_2", context ->
+                new FittedGroundVehicleRenderer(context, bvp("custom_geo/challenger_2.geo.json"),
+                        bvp("textures/entity/challenger_2.png"), "challenger_2"));
+        // Tracked: the fitted ground renderer runs the profile's running gear (links, wheel spin, broken/far
+        // track visibility). standardVehicle has no tracked animator, so links sat in their rest pose and the
+        // brokenTrack slabs showed under the tracks.
+        registerVehicle(event, ModEntities.LECLERC_S1, "leclerc_s1", context ->
+                new FittedGroundVehicleRenderer(context, bvp("custom_geo/leclerc_s1.geo.json"),
+                        bvp("textures/entity/leclerc_s1.png"), "leclerc_s1"));
         registerVehicle(event, ModEntities.NINE_P_148, "9p148", context ->
                 new FittedGroundVehicleRenderer(context, bvp("custom_geo/9p148.geo.json"),
                         bvp("textures/entity/9p148.png"), "9p148"));
@@ -425,6 +454,9 @@ public class ModEntityRenderers {
         registerVehicle(event, ModEntities.LEOPARD_2A4, "leopard_2a4", context ->
                 new FittedGroundVehicleRenderer(context, bvp("custom_geo/leopard_2a4.geo.json"),
                         bvp("textures/entity/leopard_2a4.png"), "leopard_2a4"));
+        registerVehicle(event, ModEntities.LEOPARD_1A1A1, "leopard_1a1a1", profileTrackedVehicle(
+                "custom_geo/leopard_1a1a1.geo.json", "textures/entity/leopard_1a1a1.png",
+                "Leopard1a1a1Renderer"));
         registerVehicle(event, ModEntities.T14_ARMATA, "t14_armata", context ->
                 new FittedGroundVehicleRenderer(context, bvp("custom_geo/t14_armata.geo.json"),
                         bvp("textures/entity/t14_armata.png"), "t14_armata"));
@@ -449,6 +481,9 @@ public class ModEntityRenderers {
         registerVehicle(event, ModEntities.MARDER_1A5, "marder_1a5", context ->
                 new FittedGroundVehicleRenderer(context, bvp("custom_geo/marder_1a5.geo.json"),
                         bvp("textures/entity/marder_1a5.png"), "marder_1a5"));
+        registerVehicle(event, ModEntities.BEGLEITPANZER, "begleitpanzer", context ->
+                new FittedGroundVehicleRenderer(context, bvp("custom_geo/begleitpanzer.geo.json"),
+                        bvp("textures/entity/begleitpanzer.png"), "begleitpanzer"));
         registerVehicle(event, ModEntities.ZBD_09, "zbd_09", context ->
                 new FittedGroundVehicleRenderer(context, bvp("custom_geo/zbd_09.geo.json"),
                         bvp("textures/entity/zbd_09.png"), "zbd_09"));

@@ -17,7 +17,9 @@ enum class VehicleDamageClass(val blastMultiplier: Double) {
     CAR(6.0),
     STATIC(6.0),
     AIRPLANE(4.0),
-    HELICOPTER(4.0);
+    HELICOPTER(4.0),
+    /** Warships (BVP's carriers): sunk by bombs and missiles, the blast falloff alone keeps them tough. */
+    SHIP(1.0);
 
     val aircraft: Boolean get() = this == AIRPLANE || this == HELICOPTER
 

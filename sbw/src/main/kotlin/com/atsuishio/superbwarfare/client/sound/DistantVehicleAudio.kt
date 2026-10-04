@@ -82,7 +82,9 @@ object DistantVehicleAudio {
     /** [authoredRange]: the profile's far layer range; its level then follows the controller's far curve. */
     private class EngineLoop(var vehicle: VehicleEntity, sound: SoundEvent, val jet: Boolean,
                              val authoredRange: Float? = null) : AbstractTickableSoundInstance(
-        sound, SoundSource.NEUTRAL, RandomSource.create()), com.atsuishio.superbwarfare.client.sound.spatial.DopplerSound {
+        sound, SoundSource.NEUTRAL, RandomSource.create()), com.atsuishio.superbwarfare.client.sound.spatial.DopplerSound,
+        com.atsuishio.superbwarfare.client.sound.VehicleAudioMix.Tagged {
+        override fun vehicleMixCategory() = com.atsuishio.superbwarfare.client.sound.VehicleAudioMix.engineOf(vehicle)
         override fun dopplerVelocity(): net.minecraft.world.phys.Vec3? {
             val moved = com.atsuishio.superbwarfare.client.sound.spatial.SpatialDoppler.entityVelocity(vehicle)
             return if (moved.lengthSqr() > 1e-8) moved else vehicle.deltaMovement

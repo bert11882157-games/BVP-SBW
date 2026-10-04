@@ -1,0 +1,40 @@
+{
+  "Schema": 1,
+  "Name": "Brimstone II · laser guided",
+  "Category": "LASER_GUIDED",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/brimstone.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.1256,
+    0.252
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.1256,
+      0.0,
+      0.252
+    ],
+    "Right": [
+      -0.1256,
+      0.0,
+      0.252
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    0.252
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/brimstone.png",
+  "Capacity": 1,
+  "MassKg": 48.5,
+  "AmmoItem": "superbwarfare:medium_air_to_ground_missile",
+  "LaunchOffset": [
+    0.0,
+    -0.1256,
+    0.0
+  ],
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_stores/brimstone2",
+  "LaunchGunProfile": "berts_vehicle_pack:aircraft_stores/brimstone2"
+}

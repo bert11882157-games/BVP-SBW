@@ -52,11 +52,12 @@ object AircraftBombLauncher {
         entity.owner = player
         entity.setPos(origin.x, origin.y, origin.z)
         entity.deltaMovement = motion
-        entity.lifeValue = 600
+        entity.lifeValue = if (tv) AircraftBombFlight.TV_LIFETIME_TICKS else 600
         entity.configure(config["Mode"].asString, vehicle.uuid, config["Gravity"].asFloat,
             config["DragMultiplier"].asDouble, config["TurnDegreesPerTick"].asDouble,
             config["BlastDamage"].asFloat, config["BlastRadius"].asFloat,
             gps, target?.uuid)
+        AircraftBombFlight.Glide.store(entity.persistentData, config)
         com.atsuishio.superbwarfare.tools.blast.TntEquivalents.set(entity, config["TntEquivalentKg"]?.asDouble ?: 0.0)
         config.getAsJsonObject("Cluster")?.let { AircraftClusterBomb.configure(entity, it) }
         config.getAsJsonObject("Penetrator")?.let { AircraftBombPenetrator.configure(entity, it) }

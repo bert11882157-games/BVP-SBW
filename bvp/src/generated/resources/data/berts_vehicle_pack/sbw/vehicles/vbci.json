@@ -377,20 +377,60 @@
             "Damage": 65,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
-            "Name": "Ground Belt",
+            "Name": "PMB090",
             "ShootShake": [
               8,
               10,
               12
             ],
             "ProjectileBelt": {
-              "Name": "Ground Belt",
+              "Name": "PMB090",
+              "Family": "M242",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "m811_pmb090_apfsds",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "RED"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:vbci/cannon/ammo_00_m811_pmb090_apfsds",
+              "ProjectileLife": 40
+            }
+          },
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell"
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_gs",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:vbci/cannon/ammo_01_m811_m791_apds"
+            },
+            "ShellType": "AP",
+            "Velocity": 67.25,
+            "ApDurability": 80,
+            "Damage": 65,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "M791",
+            "ShootShake": [
+              8,
+              10,
+              12
+            ],
+            "ProjectileBelt": {
+              "Name": "M791",
               "Family": "M242",
               "Rounds": [
                 {
                   "Shots": 3,
-                  "Round": "m811_pmb090_apfsds",
-                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Round": "m811_m791_apds",
+                  "Ammo": "superbwarfare:small_shell_gs",
                   "Tracer": "RED"
                 },
                 {
@@ -404,7 +444,7 @@
             "NominalBallistics": {
               "Supported": true,
               "ProjectileType": "superbwarfare:small_cannon_shell",
-              "ProjectileProfile": "berts_vehicle_pack:vbci/cannon/ammo_00_m811_pmb090_apfsds",
+              "ProjectileProfile": "berts_vehicle_pack:vbci/cannon/ammo_01_m811_m791_apds",
               "ProjectileLife": 40
             }
           },
@@ -424,21 +464,68 @@
             "ExplosionDamage": 0,
             "ExplosionRadius": 5,
             "TntEquivalentKg": 0.0544,
-            "Name": "Air Belt",
+            "Name": "Default",
             "ShootShake": [
               8,
               10,
               12
             ],
             "ProjectileBelt": {
-              "Name": "Air Belt",
+              "Name": "Default",
+              "Family": "M242",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "m811_m791_apds",
+                  "Ammo": "superbwarfare:small_shell_gs",
+                  "Tracer": "RED"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "m811_m792_hei_t",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "RED"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:vbci/cannon/ammo_02_m811_m792_hei_t",
+              "ProjectileLife": 40
+            }
+          },
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell"
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_aa",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:vbci/cannon/ammo_02_m811_m792_hei_t"
+            },
+            "ShellType": "HE",
+            "Velocity": 55.0,
+            "ApDurability": 7,
+            "Damage": 250,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 5,
+            "TntEquivalentKg": 0.0544,
+            "Name": "M792",
+            "ShootShake": [
+              8,
+              10,
+              12
+            ],
+            "ProjectileBelt": {
+              "Name": "M792",
               "Family": "M242",
               "Rounds": [
                 {
                   "Shots": 3,
                   "Round": "m811_m792_hei_t",
-                  "Ammo": "superbwarfare:small_shell_he",
-                  "Tracer": "NONE"
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "RED"
                 },
                 {
                   "Shots": 1,
@@ -496,30 +583,7 @@
         10,
         12
       ],
-      "ProjectileBeltAmmoType": [
-        {
-          "Ammo": "superbwarfare:small_shell_gs",
-          "Override": {
-            "Projectile": {
-              "Type": "superbwarfare:small_cannon_shell",
-              "Profile": "berts_vehicle_pack:vbci/cannon/ammo_01_m811_m791_apds"
-            },
-            "ShellType": "AP",
-            "Velocity": 67.25,
-            "ApDurability": 80,
-            "Damage": 65,
-            "ExplosionDamage": 0,
-            "ExplosionRadius": 0,
-            "Name": "Default",
-            "ShootShake": [
-              8,
-              10,
-              12
-            ]
-          },
-          "ConsumptionItem": "superbwarfare:small_autocannon_shell"
-        }
-      ],
+      "ProjectileBeltAmmoType": [],
       "DepletionReload": [
         [
           0.0,
@@ -660,7 +724,7 @@
         "Fire3PFar": "bvp_audio:weapon/m240_far",
         "Fire3PVeryFar": "bvp_audio:weapon/m240_veryfar",
         "Change": "superbwarfare:into_cannon",
-        "Volume": 0.4,
+        "Volume": 0.84,
         "VehicleReload": "superbwarfare:m_60_reload_empty",
         "VehicleReloadClipDurationTicks": 127
       },

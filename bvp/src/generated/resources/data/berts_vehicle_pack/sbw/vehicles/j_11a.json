@@ -968,6 +968,24 @@
   "EngineSound": "berts_vehicle_pack:j_11a_engine_loop",
   "EngineSoundMode": "CUSTOM",
   "CustomSoundProfileId": "berts_vehicle_pack:aircraft_engine/j_11a/idle",
+  "Countermeasures": {
+    "Flares": true,
+    "Chaff": true,
+    "RadarWarningReceiver": true,
+    "FlaresPerSecond": 4,
+    "FlaresPerBurst": 12,
+    "FlareLeftPos": [
+      0.6,
+      1.8,
+      -7.6
+    ],
+    "FlareRightPos": [
+      -0.6,
+      1.8,
+      -7.6
+    ],
+    "FlareEjectionSpeed": 0.7
+  },
   "AircraftTerrainContact": {
     "Fuselage": {
       "Min": [

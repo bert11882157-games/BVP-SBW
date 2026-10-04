@@ -242,6 +242,81 @@
         1.28125,
         4.12629
       ]
+    },
+    {
+      "Part": "Turret",
+      "Transform": "Turret",
+      "Rotation": "Turret",
+      "Size": [
+        1.68038,
+        0.54271,
+        1.86511
+      ],
+      "Position": [
+        0.0,
+        0.52271,
+        -1.04517
+      ]
+    },
+    {
+      "Part": "Turret",
+      "Transform": "Turret",
+      "Rotation": "Turret",
+      "Size": [
+        1.68038,
+        0.5094,
+        0.23189
+      ],
+      "Position": [
+        0.0,
+        0.4894,
+        1.05183
+      ]
+    },
+    {
+      "Part": "Turret",
+      "Transform": "Turret",
+      "Rotation": "Turret",
+      "Size": [
+        1.68038,
+        0.45303,
+        0.23189
+      ],
+      "Position": [
+        0.0,
+        0.43303,
+        1.51561
+      ]
+    },
+    {
+      "Part": "Turret",
+      "Transform": "Turret",
+      "Rotation": "Turret",
+      "Size": [
+        1.68038,
+        0.39596,
+        0.23189
+      ],
+      "Position": [
+        -0.0,
+        0.37596,
+        1.97939
+      ]
+    },
+    {
+      "Part": "Turret",
+      "Transform": "Turret",
+      "Rotation": "Turret",
+      "Size": [
+        1.43861,
+        0.27356,
+        0.24189
+      ],
+      "Position": [
+        0.0,
+        0.25356,
+        2.45317
+      ]
     }
   ],
   "Attachments": {
@@ -708,7 +783,7 @@
         "Fire3PGain": 1.0,
         "Fire3PFarGain": 1.0,
         "Fire3PVeryFarGain": 1.0,
-        "Volume": 0.4,
+        "Volume": 0.84,
         "VehicleReload": "superbwarfare:m_60_reload_empty",
         "VehicleReloadClipDurationTicks": 127
       },
@@ -871,7 +946,7 @@
         "Fire3PGain": 1.0,
         "Fire3PFarGain": 1.0,
         "Fire3PVeryFarGain": 1.0,
-        "Volume": 0.4,
+        "Volume": 0.84,
         "VehicleReload": "superbwarfare:m_60_reload_empty",
         "VehicleReloadClipDurationTicks": 127
       },

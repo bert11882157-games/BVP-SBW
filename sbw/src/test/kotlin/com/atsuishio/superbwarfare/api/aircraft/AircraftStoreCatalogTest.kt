@@ -69,13 +69,78 @@ class AircraftStoreCatalogTest {
 
     @Test fun `television weapons are command guided TV stores`() {
         assumeTrue(File(root, "aircraft_stores").isDirectory, "pack data not beside this project")
-        for (path in listOf("fa18e/agm65", "kh25mt", "munition/kd88")) {
+        // (the Kh-59M arrived 2026-10-02; an older pack beside this project lacks it)
+        for (path in listOf("fa18e/agm65", "kh25mt", "munition/kd88", "munition/kh59m")
+            .filter { it != "munition/kh59m" || File(root, "aircraft_stores/$it.json").isFile }) {
             val store = json(File(root, "aircraft_stores/$path.json"))
             assertEquals("COMMAND_GUIDED", store["Category"].asString, path)
             assertEquals("TV", store.getAsJsonObject("CommandGuidance")["Mode"].asString, path)
             val gun = store["LaunchGunProfile"].asString.substringAfter(':')
             assertTrue(File(root, "guns/$gun.json").isFile, "$path launch gun")
             assertTrue(File(root, "projectile_profiles/${store["ProjectileProfile"].asString.substringAfter(':')}.json").isFile)
+        }
+    }
+
+    /**
+     * Owner 2026-10-02: TV missiles turn no faster than the missile they are based on (AGM-65B <- AGM-65D, Kh-25MT <-
+     * Kh-25ML, KD-88 TV <- KD-88 IIR, Kh-59M <- Kh-59MK2), with no body-turn allowance above that rate.
+     */
+    @Test fun `television missiles turn no faster than their base missile`() {
+        assumeTrue(File(root, "aircraft_stores/munition/kh59mk2.json").isFile, "pack data (2026-10-02+) not beside this project")
+        fun profile(path: String) = json(File(root, "projectile_profiles/" +
+            json(File(root, "aircraft_stores/$path.json"))["ProjectileProfile"].asString.substringAfter(':') + ".json"))
+        fun storeRate(path: String): Double {
+            val flight = json(File(root, "aircraft_stores/$path.json")).getAsJsonObject("Flight")
+            val rate = flight["TurnDegreesPerSecond"].asDouble
+            val g = flight["MaxLoadFactorG"]?.asDouble ?: return rate
+            return minOf(rate, Math.toDegrees(g * 9.80665 / (flight["MaxSpeed"].asDouble * 20.0)))
+        }
+        val base = mapOf("fa18e/agm65" to storeRate("fa18e/agm65d"), "munition/kd88" to storeRate("munition/kd88_ir"),
+            "munition/kh59m" to storeRate("munition/kh59mk2"), "kh25mt" to 42.2)
+        for ((path, limit) in base) {
+            val p = profile(path)
+            val rate = p.getAsJsonObject("GuidedPropulsion")["MaxTurnRateDegreesPerSecond"].asDouble
+            assertTrue(rate <= limit + 0.1, "$path turns $rate deg/s, base $limit")
+            val scale = p.getAsJsonObject("Extensions")?.getAsJsonObject("superbwarfare:guided_maneuver_v1")
+                ?.get("BodyTurnLimitScale")?.asDouble ?: 1.0
+            assertEquals(1.0, scale, "$path body turn allowance")
+        }
+    }
+
+    /** Owner 2026-10-02: "KH-59 should only have a GPS guided and TV guided version". */
+    @Test fun `the Kh-59 comes as GPS cruise and TV only`() {
+        assumeTrue(File(root, "aircraft_stores/munition/kh59mk2.json").isFile, "pack data (2026-10-02+) not beside this project")
+        val kh59 = File(root, "aircraft_stores").walkTopDown().filter { it.isFile && it.extension == "json" }
+            .map { it to json(it) }.filter { (_, s) -> s["Name"]?.asString?.startsWith("Kh-59") == true }.toList()
+        assertEquals(setOf("kh59m", "kh59mk2"), kh59.map { it.first.nameWithoutExtension }.toSet())
+        for ((file, store) in kh59) {
+            when (file.nameWithoutExtension) {
+                "kh59m" -> assertEquals("TV", store.getAsJsonObject("CommandGuidance")["Mode"].asString)
+                else -> assertTrue(AircraftBombTargeting.isGpsStore(store), "${file.name} is a GPS store")
+            }
+        }
+        val offered = File(root, "aircraft_armaments").listFiles()!!.filter { it.readText().contains("munition/kh59mk\"") }
+        assertTrue(offered.isEmpty(), "anti-ship Kh-59MK still offered on ${offered.map { it.name }}")
+    }
+
+    /**
+     * Owner 2026-10-02 ("tv guided bombs should at least try to glide"): every TV bomb has the glide figures of a real
+     * glide weapon, 4:1 to 6:1, with its best glide speed at or below the 400 km/h TV cap so a release at the
+     * aircraft's usual speed can hold its path (AircraftBombFlight.tvGlideDirection).
+     */
+    @Test fun `television bombs glide 4 to 6 to 1 at a reachable speed`() {
+        assumeTrue(File(root, "aircraft_stores/munition/walleye.json").isFile, "pack data (2026-10-02+) not beside this project")
+        val tv = File(root, "aircraft_stores").walkTopDown().filter { it.isFile && it.extension == "json" }
+            .map { it to json(it) }
+            .filter { (_, store) -> store.getAsJsonObject("Bomb")?.get("Mode")?.asString == "TV" }.toList()
+        assertTrue(tv.map { it.first.nameWithoutExtension }.containsAll(
+            listOf("gbu15_v2b", "kab500od", "walleye", "walleye2", "gbu8")), tv.map { it.first.name }.toString())
+        for ((file, store) in tv) {
+            val bomb = store.getAsJsonObject("Bomb")
+            val ratio = bomb[AircraftBombFlight.Glide.LD_JSON]?.asDouble ?: AircraftBombFlight.Glide.TV_DEFAULT.liftToDrag
+            val best = bomb[AircraftBombFlight.Glide.SPEED_JSON]?.asDouble ?: AircraftBombFlight.Glide.TV_DEFAULT.bestSpeed
+            assertTrue(ratio in 4.0..6.0, "${file.name}: L/D $ratio")
+            assertTrue(best <= AircraftBombFlight.TV_SPEED_CAP, "${file.name}: best glide speed $best")
         }
     }
 }

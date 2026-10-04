@@ -17,6 +17,9 @@ public class BvpS8KoRocketEntity extends MediumRocketEntity {
         setExplosionRadius(6.0F);
         setLife(60);
         setGravity(0.02F);
+        // A warhead rocket (S-8KO, Hydra): it bursts on what it hits. The SBW default (AP) flies on through blocks
+        // and entities; a weapon's ShellType can still set AP explicitly.
+        setType(MediumRocketEntity.Type.HE);
     }
 
     @Override

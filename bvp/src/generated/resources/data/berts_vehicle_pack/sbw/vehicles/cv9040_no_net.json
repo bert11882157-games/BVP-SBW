@@ -507,7 +507,7 @@
             "Damage": 65,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
-            "Name": "Ground Belt",
+            "Name": "slpprj m/01",
             "ShootShake": [
               8,
               10,
@@ -515,20 +515,14 @@
             ],
             "Velocity": 74.75,
             "ProjectileBelt": {
-              "Name": "Ground Belt",
+              "Name": "slpprj m/01",
               "Family": "GENERIC",
               "Rounds": [
                 {
-                  "Shots": 3,
+                  "Shots": 1,
                   "Round": "slpprj_m01_apfsds",
                   "Ammo": "superbwarfare:small_shell_ap",
                   "Tracer": "RED"
-                },
-                {
-                  "Shots": 1,
-                  "Round": "slsgr_m90_he",
-                  "Ammo": "superbwarfare:small_shell_he",
-                  "Tracer": "BRIGHT_RED"
                 }
               ]
             },
@@ -554,7 +548,7 @@
             "ExplosionDamage": 0,
             "ExplosionRadius": 5,
             "TntEquivalentKg": 0.1744,
-            "Name": "Air Belt",
+            "Name": "slsgr m/90",
             "ShootShake": [
               8,
               10,
@@ -562,20 +556,14 @@
             ],
             "Velocity": 49.4,
             "ProjectileBelt": {
-              "Name": "Air Belt",
+              "Name": "slsgr m/90",
               "Family": "GENERIC",
               "Rounds": [
                 {
-                  "Shots": 3,
+                  "Shots": 1,
                   "Round": "slsgr_m90_he",
                   "Ammo": "superbwarfare:small_shell_he",
-                  "Tracer": "NONE"
-                },
-                {
-                  "Shots": 1,
-                  "Round": "slpprj_m01_apfsds",
-                  "Ammo": "superbwarfare:small_shell_ap",
-                  "Tracer": "RED"
+                  "Tracer": "BRIGHT_RED"
                 }
               ]
             },
@@ -781,7 +769,7 @@
         "Fire3PFar": "bvp_audio:weapon/m240_far",
         "Fire3PVeryFar": "bvp_audio:weapon/m240_veryfar",
         "Change": "superbwarfare:into_cannon",
-        "Volume": 0.4,
+        "Volume": 0.84,
         "VehicleReload": "superbwarfare:m_60_reload_empty",
         "VehicleReloadClipDurationTicks": 127
       },

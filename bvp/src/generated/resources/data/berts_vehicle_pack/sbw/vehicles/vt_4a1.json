@@ -173,7 +173,7 @@
     },
     {
       "Size": [
-        1.11209,
+        1.38647,
         0.03727,
         0.88148
       ],
@@ -233,7 +233,7 @@
     },
     {
       "Size": [
-        1.12938,
+        1.38647,
         0.03577,
         1.51219
       ],
@@ -253,6 +253,111 @@
         0.0,
         1.06208,
         -3.94121
+      ]
+    },
+    {
+      "Part": "Turret",
+      "Transform": "Turret",
+      "Rotation": "Turret",
+      "Size": [
+        1.14022,
+        0.3398,
+        0.24354
+      ],
+      "Position": [
+        5e-05,
+        0.30752,
+        -1.82207
+      ]
+    },
+    {
+      "Part": "Turret",
+      "Transform": "Turret",
+      "Rotation": "Turret",
+      "Size": [
+        1.22434,
+        0.38816,
+        0.23354
+      ],
+      "Position": [
+        0.0,
+        0.23871,
+        -1.34499
+      ]
+    },
+    {
+      "Part": "Turret",
+      "Transform": "Turret",
+      "Rotation": "Turret",
+      "Size": [
+        1.30827,
+        0.42945,
+        0.23354
+      ],
+      "Position": [
+        -1e-05,
+        0.17761,
+        -0.87791
+      ]
+    },
+    {
+      "Part": "Turret",
+      "Transform": "Turret",
+      "Rotation": "Turret",
+      "Size": [
+        1.39223,
+        0.41925,
+        0.23354
+      ],
+      "Position": [
+        2e-05,
+        0.16742,
+        -0.41083
+      ]
+    },
+    {
+      "Part": "Turret",
+      "Transform": "Turret",
+      "Rotation": "Turret",
+      "Size": [
+        1.49284,
+        0.40932,
+        0.46708
+      ],
+      "Position": [
+        -0.0,
+        0.15748,
+        0.2898
+      ]
+    },
+    {
+      "Part": "Turret",
+      "Transform": "Turret",
+      "Rotation": "Turret",
+      "Size": [
+        1.41062,
+        0.35795,
+        0.23354
+      ],
+      "Position": [
+        -4e-05,
+        0.10612,
+        0.99042
+      ]
+    },
+    {
+      "Part": "Turret",
+      "Transform": "Turret",
+      "Rotation": "Turret",
+      "Size": [
+        1.3085,
+        0.28625,
+        0.24354
+      ],
+      "Position": [
+        5e-05,
+        0.04741,
+        1.4675
       ]
     }
   ],
@@ -799,7 +904,7 @@
         "Fire3PGain": 1.0,
         "Fire3PFarGain": 1.0,
         "Fire3PVeryFarGain": 1.0,
-        "Volume": 0.4,
+        "Volume": 0.63,
         "VehicleReload": "superbwarfare:m_60_reload_empty",
         "VehicleReloadClipDurationTicks": 127
       },
@@ -973,7 +1078,7 @@
         "Fire3PGain": 1.0,
         "Fire3PFarGain": 1.0,
         "Fire3PVeryFarGain": 1.0,
-        "Volume": 0.6,
+        "Volume": 0.76,
         "VehicleReload": "superbwarfare:m_2_hb_reload_empty",
         "VehicleReloadClipDurationTicks": 127
       },

@@ -1501,7 +1501,7 @@
         "Fire3P": "berts_vehicle_pack:f_15c_gun_jetshoot",
         "Fire3PFar": "berts_vehicle_pack:f_15c_gun_jetshoot",
         "Fire3PVeryFar": "berts_vehicle_pack:f_15c_gun_jetshoot",
-        "Volume": 0.85
+        "Volume": 1.0
       },
       "Projectile": {
         "Type": "superbwarfare:small_cannon_shell",
@@ -1731,6 +1731,24 @@
   "EngineSound": "berts_vehicle_pack:f_15c_engine_loop",
   "EngineSoundMode": "CUSTOM",
   "CustomSoundProfileId": "berts_vehicle_pack:aircraft_engine/f_15c/idle",
+  "Countermeasures": {
+    "Flares": true,
+    "Chaff": true,
+    "RadarWarningReceiver": true,
+    "FlaresPerSecond": 4,
+    "FlaresPerBurst": 12,
+    "FlareLeftPos": [
+      1.2,
+      1.15,
+      -4.8
+    ],
+    "FlareRightPos": [
+      -1.2,
+      1.15,
+      -4.8
+    ],
+    "FlareEjectionSpeed": 0.7
+  },
   "AircraftTerrainContact": {
     "Fuselage": {
       "Min": [

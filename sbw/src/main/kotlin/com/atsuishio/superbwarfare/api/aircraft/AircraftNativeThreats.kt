@@ -31,14 +31,23 @@ object AircraftNativeThreats {
         val level = event.level as? ServerLevel ?: return
         for (missile in missiles.keys.toList()) {
             if (missile.level() !== level) continue
-            val id = when {
-                missile.isRemoved || missile.lost || missile.lostTarget || missile.distracted -> null
-                missile is WireGuideMissileEntity -> missile.actualGuidanceTargetUUID
-                else -> runCatching { UUID.fromString(missile.targetUUID) }.getOrNull()
-            }
-            val target = id?.let(level::getEntity)?.takeIf { it.isAlive && !it.isRemoved }
-            runCatching { report?.invoke(null, missile, target) }
+            runCatching { report?.invoke(null, missile, target(missile, level)) }
         }
+    }
+    /** Each native missile in [level] still homing, with the entity it homes on (see [IncomingMissileWarning]). */
+    internal fun forEachHoming(level: ServerLevel, action: (MissileProjectile, Entity) -> Unit) {
+        for (missile in missiles.keys.toList()) {
+            if (missile.level() !== level) continue
+            target(missile, level)?.let { action(missile, it) }
+        }
+    }
+    private fun target(missile: MissileProjectile, level: ServerLevel): Entity? {
+        val id = when {
+            missile.isRemoved || missile.lost || missile.lostTarget || missile.distracted -> null
+            missile is WireGuideMissileEntity -> missile.actualGuidanceTargetUUID
+            else -> runCatching { UUID.fromString(missile.targetUUID) }.getOrNull()
+        }
+        return id?.let(level::getEntity)?.takeIf { it.isAlive && !it.isRemoved }
     }
     @SubscribeEvent fun stopped(event: ServerStoppedEvent) { missiles.clear() }
 }

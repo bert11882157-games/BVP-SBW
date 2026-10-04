@@ -88,6 +88,9 @@ object FarTerrainServer {
         else if (entity.persistentData.hasUUID(com.atsuishio.superbwarfare.api.aircraft.AircraftTvGuidance.OPERATOR) &&
             entity.persistentData.getUUID(com.atsuishio.superbwarfare.api.aircraft.AircraftTvGuidance.OPERATOR) == player.uuid)
             maxOf(normal, PROJECTILE_VISIBILITY_RADIUS)
+        // a carrier is seen from anywhere along its hull, not only within range of its centre
+        else if (entity is com.atsuishio.superbwarfare.api.vehicle.deck.DeckSurfaceEntity)
+            normal + ((entity.deckSurface()?.radius ?: 0.0).toInt())
         else normal
 
     private fun projectileObserverActive(player: ServerPlayer): Boolean = sessions[player.uuid]?.let {

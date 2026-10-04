@@ -771,6 +771,24 @@
   "EngineSound": "berts_vehicle_pack:mig_29_engine_loop",
   "EngineSoundMode": "CUSTOM",
   "CustomSoundProfileId": "berts_vehicle_pack:aircraft_engine/mig_29/startup",
+  "Countermeasures": {
+    "Flares": true,
+    "Chaff": true,
+    "RadarWarningReceiver": true,
+    "FlaresPerSecond": 4,
+    "FlaresPerBurst": 12,
+    "FlareLeftPos": [
+      0.8,
+      0.65,
+      -4.3
+    ],
+    "FlareRightPos": [
+      -0.8,
+      0.65,
+      -4.3
+    ],
+    "FlareEjectionSpeed": 0.7
+  },
   "AircraftTerrainContact": {
     "Fuselage": {
       "Min": [

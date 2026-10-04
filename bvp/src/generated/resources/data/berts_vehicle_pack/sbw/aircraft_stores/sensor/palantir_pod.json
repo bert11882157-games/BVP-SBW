@@ -1,0 +1,50 @@
+{
+  "Schema": 1,
+  "Name": "Palantir targeting pod [TEST]",
+  "Category": "TARGETING_POD",
+  "Item": "minecraft:spyglass",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/palantir_pod.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.25,
+    -0.3342
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.25,
+      0.0,
+      -0.3342
+    ],
+    "Right": [
+      -0.25,
+      0.0,
+      -0.3342
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    -0.3342
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/palantir_pod.png",
+  "Capacity": 1,
+  "MassKg": 150,
+  "AnyPylon": {
+    "ExceptMounts": [
+      "bay_gun"
+    ]
+  },
+  "TargetingPod": {
+    "Eye": [
+      0.009,
+      -0.0125,
+      -1.4913
+    ],
+    "YawLimit": 180,
+    "PitchMin": -10,
+    "PitchMax": 90,
+    "MaxZoom": 24,
+    "Range": 8192
+  }
+}

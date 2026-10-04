@@ -21,7 +21,6 @@ import net.minecraft.world.phys.EntityHitResult
 import net.minecraft.world.phys.HitResult
 import net.minecraft.world.phys.Vec3
 import kotlin.math.acos
-import kotlin.math.min
 
 open class AerialBombEntity(type: EntityType<out AerialBombEntity>, level: Level) : DestroyableProjectile(type, level) {
     override fun farProjectileMaximumLifetimeTicks(): Int = 2400
@@ -48,16 +47,63 @@ open class AerialBombEntity(type: EntityType<out AerialBombEntity>, level: Level
             persistentData.putDouble("BvpBombGpsZ", it.z) }
     }
 
+    /**
+     * Horizontal drag multiplier of this bomb's unguided flight, or null for a bomb without one (legacy SBW bombs).
+     * The client gets it with the spawn data so it flies the same step as the server (owner 2026-09-30: munitions
+     * stuttered; bombs snapped to every tracker position).
+     */
+    private var clientDrag: Double? = null
+
+    private fun bombDrag(): Double? = if (level().isClientSide) clientDrag
+        else if (persistentData.contains("BvpBombMode")) persistentData.getDouble("BvpBombDrag") else null
+
+    override fun smoothsBallisticFlight(): Boolean = motionSyncMode() != MotionSyncMode.NONE
+
+    override fun ballisticStep(velocity: Vec3): Vec3 {
+        val base = super.ballisticStep(velocity)
+        val drag = bombDrag() ?: return base
+        return AircraftBombFlight.applyHorizontalDrag(base, drag)
+    }
+
+    // Publish this tick's state after the drag and guidance below, not before (the client got a stale velocity).
+    override fun deferTickSynchronization(): Boolean = true
+
+    override fun writeSpawnData(buffer: net.minecraft.network.FriendlyByteBuf) {
+        super.writeSpawnData(buffer)
+        buffer.writeDouble(bombDrag() ?: -1.0)
+    }
+
+    override fun readSpawnData(additionalData: net.minecraft.network.FriendlyByteBuf) {
+        super.readSpawnData(additionalData)
+        val drag = additionalData.readDouble()
+        clientDrag = if (drag.isFinite() && drag >= 0.0) drag else null
+    }
+
     override fun tick() {
+        try {
+            flightTick()
+        } finally {
+            commitTickSynchronization()
+        }
+    }
+
+    private fun flightTick() {
         super.tick()
-        if (isRemoved || level().isClientSide) return
+        if (isRemoved) return
+        if (level().isClientSide) {
+            // the same unguided step the server flies; guided steering arrives as corrections
+            bombDrag()?.let { deltaMovement = AircraftBombFlight.applyHorizontalDrag(deltaMovement, it) }
+            return
+        }
         if (AircraftBombPenetrator.tick(this)) return
         if (AircraftClusterBomb.tick(this)) return
         val data = persistentData
         if (!data.contains("BvpBombMode")) return
+        val mode = data.getString("BvpBombMode")
+        val guided = mode != "DUMB"
         var velocity = deltaMovement
-        velocity = AircraftBombFlight.applyHorizontalDrag(velocity, data.getDouble("BvpBombDrag"))
-        val target = when (data.getString("BvpBombMode")) {
+        if (!guided) velocity = AircraftBombFlight.applyHorizontalDrag(velocity, data.getDouble("BvpBombDrag"))
+        val target = when (mode) {
             "LASER" -> (level() as? ServerLevel)?.let { server ->
                 // live: a spot painted on a vehicle moves with it
                 if (data.hasUUID("BvpBombAircraft")) AircraftDesignationData.get(server)
@@ -83,27 +129,29 @@ open class AerialBombEntity(type: EntityType<out AerialBombEntity>, level: Level
                 AircraftMunitionDebug.log(this, if (target != null) "bomb guidance acquired" else "bomb guidance lost")
             }
         }
-        if (target != null && velocity.lengthSqr() > 0.0025) {
-            val horizontalRange = kotlin.math.hypot(target.x - x, target.z - z)
-            val height = (y - target.y).coerceAtLeast(0.0)
-            val overhead = min(35.0, min(height * 0.5, horizontalRange * 0.8))
-            val aim = target.add(0.0, overhead, 0.0).subtract(position())
-            if (aim.lengthSqr() > 1.0) {
-                val speed = velocity.length()
-                val current = velocity.scale(1.0 / speed)
-                val desired = aim.normalize()
-                val angle = acos(current.dot(desired).coerceIn(-1.0, 1.0))
-                val maxTurn = Math.toRadians(data.getDouble("BvpBombTurn").coerceIn(0.0, 15.0)) *
-                    min(1.0, speed / 1.5)
-                if (angle > 1.0e-6 && maxTurn > 0.0) {
-                    val blend = (maxTurn / angle).coerceAtMost(1.0)
-                    val turned = current.scale(1.0 - blend).add(desired.scale(blend)).normalize()
-                    // Fins redirect existing momentum; they never add thrust or kinetic energy.
-                    velocity = turned.scale(speed)
-                }
-            }
+        if (!guided) {
+            deltaMovement = velocity
+            return
         }
-        deltaMovement = velocity
+        // Guided bombs glide (owner 2026-09-30: "glide bombs retain their energy like crazy, I should hardly ever be
+        // able to climb"): lift is limited by speed, and parasite plus induced drag bleed energy on every pull.
+        val start = velocity.add(0.0, gravity.toDouble(), 0.0)
+        val maxTurn = Math.toRadians(data.getDouble("BvpBombTurn").coerceIn(0.0, 15.0))
+        if (mode == "TV") {
+            // TV glide bombs (owner 2026-10-02: "tv guided bombs should at least try to glide"): toward the crosshair
+            // on the glide slope, straight down the line once it is reachable, never above 400 km/h for long.
+            val glide = AircraftBombFlight.Glide.of(data, AircraftBombFlight.Glide.TV_DEFAULT)
+            val desired = AircraftBombFlight.tvGlideDirection(position(), start, target, glide)
+            // no more agile than the laser-kit bomb of its class at this speed (owner 2026-10-02: "turn WAY slower")
+            val turn = AircraftBombFlight.tvMaxTurn(start.length(), gravity.toDouble(), maxTurn)
+            deltaMovement = AircraftBombFlight.limitTvSpeed(
+                AircraftBombFlight.glideStep(start, gravity.toDouble(), desired, turn, glide), start.length())
+            return
+        }
+        // laser/GPS: straight at the target once it is within the glide, a shallow lofted approach before that
+        val glide = AircraftBombFlight.Glide.of(data)
+        val desired = target?.let { AircraftBombFlight.guidedDirection(position(), it, glide) }
+        deltaMovement = AircraftBombFlight.glideStep(start, gravity.toDouble(), desired, maxTurn, glide)
     }
     override fun getDefaultItem(): Item {
         return ModItems.MEDIUM_AERIAL_BOMB.get()
@@ -119,6 +167,15 @@ open class AerialBombEntity(type: EntityType<out AerialBombEntity>, level: Level
 
     override fun onHit(result: HitResult) {
         if (AircraftBombPenetrator.isFuzing(this)) return
+        // A dispenser that strikes something before opening (a vehicle whose armor would consume the hit) still
+        // scatters its load there instead of vanishing.
+        if (!level().isClientSide && result is EntityHitResult && AircraftClusterBomb.configured(this) &&
+            !AircraftClusterBomb.isTypedChild(this)) {
+            val entity = result.entity
+            val owner = this.owner
+            if (entity != owner && (owner == null || entity != owner.vehicle) && entity !is AerialBombEntity &&
+                AircraftClusterBomb.release(this, result.location)) return
+        }
         super.onHit(result)
     }
 

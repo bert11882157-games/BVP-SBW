@@ -13,7 +13,20 @@ No stable release is currently published in this repository. See [all releases](
 for the complete release history.
 The `0.9.19beta` source tag currently has no GitHub Release or compiled download assets.
 
-## Latest published testing build: 0.11.21beta
+## Latest published testing build: 0.11.111beta
+
+[Jet stores and cockpits, countermeasures, Strv 103 hull laying, LAV-AD belt](https://github.com/bert11882157-games/BVP-SBW/releases/tag/v0.11.111beta).
+Install all three matching JARs on clients and servers, replacing older active copies:
+
+| Component | Mod JAR | Checksum |
+| --- | --- | --- |
+| BVP 0.11.111beta | [JAR](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.11.111beta/bvp-main-v0.11.111beta.jar) | [SHA-256](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.11.111beta/bvp-main-v0.11.111beta.jar.sha256) |
+| SBW 0.11.111beta | [JAR](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.11.111beta/bvp_superbwarfare-v0.11.111beta.jar) | [SHA-256](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.11.111beta/bvp_superbwarfare-v0.11.111beta.jar.sha256) |
+| FFA 1.0.6-bvp.20 | [JAR](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.11.111beta/fire-from-above-1.0.6-bvp.20.jar) | [SHA-256](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.11.111beta/fire-from-above-1.0.6-bvp.20.jar.sha256) |
+
+The source build passed all build checks. Not yet tested in game.
+
+## Earlier published testing build: 0.11.21beta
 
 [Aircraft and ground expansion, fitted stores and cockpit corrections](https://github.com/bert11882157-games/BVP-SBW/releases/tag/v0.11.21beta).
 Install all three matching JARs on clients and servers, replacing older active copies:

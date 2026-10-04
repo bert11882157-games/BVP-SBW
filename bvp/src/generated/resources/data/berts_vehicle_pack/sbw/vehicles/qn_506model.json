@@ -246,7 +246,7 @@
     },
     {
       "Size": [
-        1.17625,
+        1.26009,
         0.04599,
         2.80125
       ],
@@ -254,6 +254,51 @@
         0.0,
         0.62307,
         -0.32812
+      ]
+    },
+    {
+      "Part": "Turret",
+      "Transform": "Turret",
+      "Rotation": "Turret",
+      "Size": [
+        0.86536,
+        0.4958,
+        0.21452
+      ],
+      "Position": [
+        0.0,
+        0.13776,
+        -0.75991
+      ]
+    },
+    {
+      "Part": "Turret",
+      "Transform": "Turret",
+      "Rotation": "Turret",
+      "Size": [
+        0.97444,
+        0.4958,
+        0.61357
+      ],
+      "Position": [
+        0.0,
+        0.13776,
+        0.06818
+      ]
+    },
+    {
+      "Part": "Turret",
+      "Transform": "Turret",
+      "Rotation": "Turret",
+      "Size": [
+        0.68465,
+        0.45865,
+        0.21452
+      ],
+      "Position": [
+        0.0,
+        0.10061,
+        0.89626
       ]
     }
   ],
@@ -821,26 +866,20 @@
             "Damage": 65,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
-            "Name": "Ground Belt",
+            "Name": "DTC10-30",
             "ShootShake": [
               8,
               10,
               12
             ],
             "ProjectileBelt": {
-              "Name": "Ground Belt",
+              "Name": "DTC10-30",
               "Family": "GENERIC",
               "Rounds": [
                 {
                   "Shots": 3,
                   "Round": "dtc10_30_apfsds",
                   "Ammo": "superbwarfare:small_shell_gs",
-                  "Tracer": "GREEN"
-                },
-                {
-                  "Shots": 1,
-                  "Round": "dty02_30_hefi",
-                  "Ammo": "superbwarfare:small_shell_he",
                   "Tracer": "GREEN"
                 }
               ]
@@ -849,6 +888,46 @@
               "Supported": true,
               "ProjectileType": "superbwarfare:small_cannon_shell",
               "ProjectileProfile": "berts_vehicle_pack:qn_506model/cannon/ammo_00_dtc10_30_apfsds",
+              "ProjectileLife": 40
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:qn_506model/cannon/belt_ammo_00_dtc04_30_apds"
+            },
+            "ShellType": "AP",
+            "Velocity": 59.0,
+            "ApDurability": 85,
+            "Damage": 65,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "DTC04-30",
+            "ShootShake": [
+              8,
+              10,
+              12
+            ],
+            "ProjectileBelt": {
+              "Name": "DTC04-30",
+              "Family": "GENERIC",
+              "Rounds": [
+                {
+                  "Shots": 4,
+                  "Round": "dtc04_30_apds",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "GREEN"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:qn_506model/cannon/belt_ammo_00_dtc04_30_apds",
               "ProjectileLife": 40
             }
           }
@@ -868,18 +947,24 @@
             "ExplosionDamage": 0,
             "ExplosionRadius": 5,
             "TntEquivalentKg": 0.0755,
-            "Name": "Air Belt",
+            "Name": "Default",
             "ShootShake": [
               8,
               10,
               12
             ],
             "ProjectileBelt": {
-              "Name": "Air Belt",
+              "Name": "Default",
               "Family": "GENERIC",
               "Rounds": [
                 {
-                  "Shots": 3,
+                  "Shots": 1,
+                  "Round": "dtc04_30_apds",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "GREEN"
+                },
+                {
+                  "Shots": 1,
                   "Round": "dty02_30_hefi",
                   "Ammo": "superbwarfare:small_shell_he",
                   "Tracer": "NONE"
@@ -889,6 +974,65 @@
                   "Round": "dtc04_30_apds",
                   "Ammo": "superbwarfare:small_shell_ap",
                   "Tracer": "GREEN"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "dty02_30_hefi",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:qn_506model/cannon/ammo_01_dty02_30_hefi",
+              "ProjectileLife": 40
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_aa",
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:qn_506model/cannon/ammo_01_dty02_30_hefi"
+            },
+            "ShellType": "HE",
+            "Velocity": 59.0,
+            "ApDurability": 8,
+            "Damage": 250,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 5,
+            "TntEquivalentKg": 0.0755,
+            "Name": "DTY02-30",
+            "ShootShake": [
+              8,
+              10,
+              12
+            ],
+            "ProjectileBelt": {
+              "Name": "DTY02-30",
+              "Family": "GENERIC",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "dty02_30_hefi",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "dtc04_30_apds",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "GREEN"
+                },
+                {
+                  "Shots": 2,
+                  "Round": "dty02_30_hefi",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "NONE"
                 }
               ]
             },
@@ -902,30 +1046,7 @@
         }
       ],
       "ProjectileAmount": 1,
-      "ProjectileBeltAmmoType": [
-        {
-          "Ammo": "superbwarfare:small_shell_ap",
-          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
-          "Override": {
-            "Projectile": {
-              "Type": "superbwarfare:small_cannon_shell",
-              "Profile": "berts_vehicle_pack:qn_506model/cannon/belt_ammo_00_dtc04_30_apds"
-            },
-            "ShellType": "AP",
-            "Velocity": 59.0,
-            "ApDurability": 85,
-            "Damage": 65,
-            "ExplosionDamage": 0,
-            "ExplosionRadius": 0,
-            "Name": "Default",
-            "ShootShake": [
-              8,
-              10,
-              12
-            ]
-          }
-        }
-      ],
+      "ProjectileBeltAmmoType": [],
       "ShellType": "AP",
       "ApDurability": 102,
       "ShootShake": [
@@ -1080,7 +1201,7 @@
         "Fire3PGain": 1.0,
         "Fire3PFarGain": 1.0,
         "Fire3PVeryFarGain": 1.0,
-        "Volume": 0.4,
+        "Volume": 0.63,
         "VehicleReload": "superbwarfare:m_60_reload_empty",
         "VehicleReloadClipDurationTicks": 127
       },

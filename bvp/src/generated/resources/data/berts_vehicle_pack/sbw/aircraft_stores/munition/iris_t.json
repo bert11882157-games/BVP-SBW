@@ -1,0 +1,60 @@
+{
+  "Schema": 1,
+  "Name": "IRIS-T · infrared",
+  "Category": "AIR_TO_AIR",
+  "Capacity": 1,
+  "MassKg": 87.4,
+  "Guidance": {
+    "Mode": "INFRARED",
+    "LockTicks": 60,
+    "Range": 250,
+    "ConeDegrees": 25,
+    "CountermeasureVulnerability": 0.8
+  },
+  "Flight": {
+    "InitialSpeed": 0.5,
+    "MaxSpeed": 6.5,
+    "AccelerationPerTick": 0.12,
+    "TurnDegreesPerSecond": 120,
+    "Damage": 45,
+    "BlastRadius": 3.2,
+    "TntEquivalentKg": 5.6
+  },
+  "AmmoItem": "superbwarfare:small_air_to_air_missile",
+  "MaxPerPylon": 2,
+  "RackSpacing": [
+    0.55,
+    0.3,
+    0
+  ],
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/iris_t.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.0991,
+    0.4116
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.0991,
+      0.0,
+      0.4116
+    ],
+    "Right": [
+      -0.0991,
+      0.0,
+      0.4116
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    0.4116
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/iris_t.png",
+  "LaunchOffset": [
+    0.0,
+    -0.0991,
+    0.0
+  ]
+}

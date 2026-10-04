@@ -1,0 +1,60 @@
+{
+  "Schema": 1,
+  "Name": "ASRAAM (AIM-132) · infrared",
+  "Category": "AIR_TO_AIR",
+  "Capacity": 1,
+  "MassKg": 88,
+  "Guidance": {
+    "Mode": "INFRARED",
+    "LockTicks": 60,
+    "Range": 1250,
+    "ConeDegrees": 25,
+    "CountermeasureVulnerability": 0.7
+  },
+  "Flight": {
+    "InitialSpeed": 0.5,
+    "MaxSpeed": 9,
+    "AccelerationPerTick": 0.15,
+    "TurnDegreesPerSecond": 80,
+    "Damage": 55,
+    "BlastRadius": 3,
+    "TntEquivalentKg": 4.9
+  },
+  "AmmoItem": "superbwarfare:small_air_to_air_missile",
+  "MaxPerPylon": 2,
+  "RackSpacing": [
+    0.55,
+    0.3,
+    0
+  ],
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/asraam.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.1878,
+    0.1664
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.1426,
+      0.0,
+      0.1664
+    ],
+    "Right": [
+      -0.1426,
+      0.0,
+      0.1664
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    0.1664
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/asraam.png",
+  "LaunchOffset": [
+    0.0,
+    -0.1878,
+    0.0
+  ]
+}

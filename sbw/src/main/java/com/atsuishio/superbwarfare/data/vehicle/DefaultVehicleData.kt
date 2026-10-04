@@ -327,6 +327,13 @@ class DefaultVehicleData : IDBasedData<DefaultVehicleData> {
     @SerialName("TurretPitchRange")
     var turretPitchRange: SerializedVec2 = Vec2(-10f, 30f)
 
+    /**
+     * Fixed-gun vehicles (Strv 103): degrees per second the tracks slew the hull to follow the turret controller's aim
+     * once it leaves TurretYawRange, while nobody is steering. 0 disables it.
+     */
+    @SerialName("HullAimTraverseSpeed")
+    var hullAimTraverseSpeed: Float = 0f
+
     @SerialName("TurretControllerIndex")
     var turretControllerIndex: Int = 0
 

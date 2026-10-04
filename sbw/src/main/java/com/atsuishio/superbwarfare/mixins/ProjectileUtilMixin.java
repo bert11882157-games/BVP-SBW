@@ -145,8 +145,14 @@ public class ProjectileUtilMixin {
                 // No AABB/pick-radius inflation for a guided missile's interception volume.
                 point = WireGuideMissileEntity.preciseInterceptionHitPoint((WireGuideMissileEntity) entity, start, end);
             } else if (entity instanceof OBBEntity obbEntity && !obbEntity.enableAABB()) {
+                // A carrier's hull boxes end at its deck surface: a player aiming at the deck uses the deck (places
+                // a vehicle, walks), only the island is clicked (to take the helm). Projectiles hit every box.
+                var obbs = !(shooter instanceof Projectile)
+                        && entity instanceof com.atsuishio.superbwarfare.api.vehicle.deck.DeckSurfaceEntity
+                        ? com.atsuishio.superbwarfare.api.vehicle.deck.DeckCollisions.pickableObbs(entity, obbEntity.getOBBs())
+                        : obbEntity.getOBBs();
                 var hit = ProjectileHitDiagnostics.query(shooter, entity, "shell_obb", start, end,
-                        ProjectileHitSelection.nearestObb(obbEntity.getOBBs(), start, end, entity.getPickRadius() * 2));
+                        ProjectileHitSelection.nearestObb(obbs, start, end, entity.getPickRadius() * 2));
                 if (hit == null) continue;
                 point = hit.point();
                 part = hit.part();

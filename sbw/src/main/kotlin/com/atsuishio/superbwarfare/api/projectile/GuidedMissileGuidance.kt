@@ -78,6 +78,85 @@ object GuidedMissileGuidance {
         return laserInterceptDirection(position, target, relativeSpeed, inherited)
     }
 
+    /**
+     * Direction [fraction] of the way from [current] toward [desired] (both any length; the result is a unit vector),
+     * so a steering command closes a share of the remaining angle each tick instead of snapping onto it.
+     */
+    @JvmStatic
+    fun easeToward(current: Vec3, desired: Vec3, fraction: Double): Vec3 {
+        if (!finite(current) || !finite(desired) || current.lengthSqr() <= MIN_VECTOR_LENGTH_SQUARED) return desired
+        if (desired.lengthSqr() <= MIN_VECTOR_LENGTH_SQUARED) return current
+        val a = current.normalize()
+        val b = desired.normalize()
+        val f = if (fraction.isFinite()) fraction.coerceIn(0.0, 1.0) else 1.0
+        val mixed = a.scale(1.0 - f).add(b.scale(f))
+        return if (mixed.lengthSqr() > MIN_VECTOR_LENGTH_SQUARED) mixed.normalize() else b
+    }
+
+    /**
+     * TV missiles never fly faster than 400 km/h (owner 2026-10-02: "it should accelerate decently with pitchdown,
+     * but not extremely fast, cap out at 400 km/h"), in blocks/tick (1 block = 1 m, 20 ticks/s).
+     */
+    const val TV_SPEED_CAP = 400.0 / 72.0
+    /** Level cruise is this much faster than the carrier was flying at release (blocks/tick)... */
+    const val TV_CRUISE_MARGIN = 1.25
+    /** ...but at least this fast (about 300 km/h; slow carriers such as helicopters)... */
+    const val TV_CRUISE_MIN_SPEED = 4.2
+    /** ...and, unless the carrier itself was faster, at most this fast (360 km/h): a dive adds the rest to the cap. */
+    const val TV_CRUISE_MAX_SPEED = 5.0
+    /** Most extra motor push while below cruise speed (blocks/tick², about 12 m/s²). */
+    const val TV_CRUISE_ACCELERATION = 0.03
+    /** The extra push fades out over the last this-many blocks/tick below cruise, so a climb costs some speed. */
+    const val TV_CRUISE_PUSH_BAND = 1.0
+    /** Gravity along the flight path (blocks/tick², about 14 m/s²): a dive gains speed, a climb loses it. */
+    const val TV_PATH_GRAVITY = 0.035
+    /** Share of the excess over [TV_SPEED_CAP] a missile released faster keeps per tick (gone in about a second). */
+    const val TV_OVERSPEED_RETAIN = 0.85
+    /** Slowest a TV missile flies (blocks/tick); it never hangs in the air. */
+    const val TV_MIN_SPEED = 1.0
+    /** The motor sustains cruise for at least this long after ignition (ticks), whatever its boost burn time. */
+    const val TV_SUSTAIN_TICKS = 600
+
+    /**
+     * Level cruise speed for a TV missile released at [platformSpeed] (blocks/tick): [TV_CRUISE_MARGIN] faster than
+     * the carrier within [TV_CRUISE_MIN_SPEED]..[TV_CRUISE_MAX_SPEED], never slower than the carrier was, never above
+     * [TV_SPEED_CAP] or the carrier speed plus the profile's MaxSpeed.
+     */
+    @JvmStatic
+    fun tvCruiseSpeed(platformSpeed: Double, profileMaxSpeed: Double): Double {
+        val platform = if (platformSpeed.isFinite()) platformSpeed.coerceAtLeast(0.0) else 0.0
+        val ceiling = if (profileMaxSpeed.isFinite() && profileMaxSpeed > 0.0) platform + profileMaxSpeed else Double.MAX_VALUE
+        val level = (platform + TV_CRUISE_MARGIN).coerceIn(TV_CRUISE_MIN_SPEED, TV_CRUISE_MAX_SPEED)
+        return maxOf(level, platform).coerceAtMost(ceiling).coerceAtMost(TV_SPEED_CAP)
+            .coerceAtMost(GuidedPropulsionProfile.MAX_SPEED_BLOCKS_PER_TICK)
+    }
+
+    /** Air drag on a TV missile at its cruise speed (blocks/tick², about 3 m/s²), growing with v². */
+    const val TV_COAST_DRAG = 0.008
+
+    /**
+     * One tick of TV-missile speed (blocks/tick). [climbSine] is the sine of the flight path angle (negative in a
+     * dive). Gravity along the path [TV_PATH_GRAVITY] speeds a dive and slows a climb; drag d (v/target)² slows it;
+     * while [burning] the motor cancels the drag at cruise and pushes up to [TV_CRUISE_ACCELERATION] more while it is
+     * below [target] (fading over [TV_CRUISE_PUSH_BAND]). Never above [TV_SPEED_CAP]: a missile released faster bleeds
+     * the excess quickly ([TV_OVERSPEED_RETAIN]).
+     */
+    @JvmStatic
+    @JvmOverloads
+    fun tvCruiseStep(speed: Double, target: Double, burning: Boolean, climbSine: Double = 0.0): Double {
+        val v = if (speed.isFinite()) speed.coerceAtLeast(0.0) else 0.0
+        if (!(target > 0.0) || !target.isFinite()) return v
+        val sine = if (climbSine.isFinite()) climbSine.coerceIn(-1.0, 1.0) else 0.0
+        val ratio = v / target
+        val drag = TV_COAST_DRAG * ratio * ratio
+        val motor = if (burning) TV_COAST_DRAG +
+            TV_CRUISE_ACCELERATION * ((target - v) / TV_CRUISE_PUSH_BAND).coerceIn(0.0, 1.0) else 0.0
+        val next = v - TV_PATH_GRAVITY * sine + motor - drag
+        val ceiling = maxOf(TV_SPEED_CAP, TV_SPEED_CAP + (v - TV_SPEED_CAP) * TV_OVERSPEED_RETAIN)
+        return next.coerceAtMost(ceiling).coerceAtLeast(minOf(TV_MIN_SPEED, ceiling))
+            .coerceAtMost(GuidedPropulsionProfile.MAX_SPEED_BLOCKS_PER_TICK)
+    }
+
     /** A bounded loft, tapering continuously into the stored target rather than chasing the operator. */
     fun topAttackDirection(position: Vec3, target: Vec3): Vec3? {
         if (!finite(position) || !finite(target)) return null

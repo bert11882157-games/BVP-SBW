@@ -1,0 +1,103 @@
+{
+  "id": "leopard_1a1a1",
+  "model_scale": 1,
+  "ap_penetration_mm": 350,
+  "chemical_penetration_mm": 700,
+  "fallback_incoming_penetration_mm": 500,
+  "atgm_tandem": false,
+  "impact_tolerance": 0.25,
+  "internal_ray_length": 10,
+  "unboxed_hits_penetrate": true,
+  "min_armor_mm": 16,
+  "plates": [],
+  "sensitive_internals": [],
+  "engines": [
+    {
+      "name": "engine_block_00",
+      "center": [
+        0.0,
+        1.0625,
+        3.6875
+      ],
+      "half_size": [
+        0.8125,
+        0.5,
+        0.6875
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull"
+    }
+  ],
+  "ammo_racks": [
+    {
+      "name": "hull_rack_front_left_00",
+      "center": [
+        -0.625,
+        0.90498,
+        -1.8801
+      ],
+      "half_size": [
+        0.4375,
+        0.34502,
+        0.5051
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "health": 10
+    },
+    {
+      "name": "turret_ready_rack_00",
+      "center": [
+        0.0,
+        2.23637,
+        1.53747
+      ],
+      "half_size": [
+        1.1023,
+        0.17788,
+        0.28747
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "turret",
+      "health": 10
+    }
+  ],
+  "tracks": [],
+  "modules": [
+    {
+      "name": "weaponsystems_00",
+      "center": [
+        0.0,
+        2.15625,
+        -0.1875
+      ],
+      "half_size": [
+        0.5,
+        0.34375,
+        0.5625
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "turret",
+      "module": "weaponsystems",
+      "unified": true
+    }
+  ],
+  "explosive_reactive_armor": [],
+  "sbw_obb": []
+}

@@ -253,4 +253,7 @@ private fun registerPayloads() {
     playToClient<SpatialAudioMessage>(clientSchema(85, PacketLimitProfiles.PRESENTATION,
         delivery = REPLACEABLE_PRESENTATION, priority = P2, owner = "fx.spatial_audio",
         feature = "spatial_audio", since = 46))
+    playToClient<RicochetTracerMessage>(clientSchema(86, PacketLimitProfiles.PRESENTATION,
+        delivery = REPLACEABLE_PRESENTATION, priority = P2, owner = "fx.ricochet_tracer",
+        feature = "cosmetic_ricochet", since = 47))
 }

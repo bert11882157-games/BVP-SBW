@@ -112,6 +112,11 @@ internal object StoresDisplayPainter {
                     tri(x + 3, y + 7, x + 9, y + 14, x + 3, y + 13, color)
                 }
                 "GUN_POD", "ROCKET_POD" -> poly(floatArrayOf(x - 6, y - 12, x + 6, y - 12, x + 6, y + 12, x - 6, y + 12), color)
+                com.atsuishio.superbwarfare.api.aircraft.AircraftTargetingPods.CATEGORY -> {
+                    // targeting pod: slim body with the sensor ball at its nose
+                    poly(floatArrayOf(x - 4, y - 6, x + 4, y - 6, x + 4, y + 13, x - 4, y + 13), color)
+                    disc(x, y - 9, 6f, 0f, color, 16)
+                }
                 else -> {
                     // bomb: fat body with a tail
                     disc(x, y - 1, 7.5f, 0f, color, 20)

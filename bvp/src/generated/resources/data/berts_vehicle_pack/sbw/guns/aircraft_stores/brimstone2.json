@@ -1,0 +1,31 @@
+{
+  "Name": "Brimstone II",
+  "AmmoType": "superbwarfare:medium_air_to_ground_missile",
+  "DefaultFireMode": "Semi",
+  "AvailableFireModes": "Semi",
+  "Magazine": 1,
+  "EmptyReloadTime": 400,
+  "RPM": 30,
+  "Projectile": {
+    "Type": "superbwarfare:wire_guide_missile",
+    "Profile": "berts_vehicle_pack:aircraft_stores/brimstone2"
+  },
+  "ProjectileAmount": 1,
+  "AddShooterDeltaMovement": true,
+  "Velocity": 1.5,
+  "Gravity": 0.0125,
+  "ProjectileLife": 1000,
+  "Spread": 0,
+  "Damage": 95,
+  "ExplosionDamage": 90,
+  "ExplosionRadius": 0.5,
+  "TntEquivalentKg": 5.0,
+  "ShellType": "HE",
+  "ApDurability": 0,
+  "Crosshair": "@Empty",
+  "SoundRadius": 24,
+  "SoundInfo": {
+    "Fire1P": "superbwarfare:bmp_2_missile_fire_1p",
+    "Fire3P": "superbwarfare:bmp_2_missile_fire_3p"
+  }
+}

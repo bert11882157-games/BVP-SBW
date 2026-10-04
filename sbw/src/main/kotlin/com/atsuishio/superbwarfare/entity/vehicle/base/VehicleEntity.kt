@@ -192,6 +192,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
     private val vehicleDamageLifecycleService = VehicleDamageLifecycleService(this)
     private val vehicleCollisionEnvironmentService = VehicleCollisionEnvironmentService(this)
     private val aircraftTerrainCollisionService = AircraftTerrainCollisionService(this)
+    internal val collisionResponse = VehicleCollisionResponseService(this)
     private val fixedWingGroundContactService = FixedWingGroundContactService(this)
     private val vehicleGroundMotionService = VehicleGroundMotionService(this)
     private val lifecycleStateOwner = VehicleLifecycleStateOwner()
@@ -2690,17 +2691,18 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         if (level().isClientSide && flightStrategyOwnsAttitudeThisTick) return
         tickBlastSpin()
         this.supportEntities()
+        collisionResponse.tick()
         this.crushEntities()
         if (!vehicleFlightController.motionIncludesGravityThisTick) {
             this.setDeltaMovement(this.deltaMovement.add(0.0, -this.computed().gravity, 0.0))
         }
         this.move(MoverType.SELF, this.deltaMovement)
+        collisionResponse.afterMove()
     }
 
     internal fun tickPipelinePostMovement(computed: DefaultVehicleData) {
         if (tickCount % 4 == 0) {
             this.clearArrow()
-            this.preventStacking()
             this.moveOnDragonTeeth()
             this.collideBlocks()
         }
@@ -6672,12 +6674,29 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
                 val limitedAcceleration = acceleration.normalize().scale(0.125)
                 val finalMomentum = currentMomentum.add(limitedAcceleration)
 
-                super.setDeltaMovement(finalMomentum)
+                super.setDeltaMovement(limitGroundSpeed(finalMomentum))
                 return
             }
         }
         // 对于减速或允许的加速，直接设置新动量
-        super.setDeltaMovement(pDeltaMovement)
+        super.setDeltaMovement(limitGroundSpeed(pDeltaMovement))
+    }
+
+    /**
+     * Ground vehicles never legitimately exceed [MAX_GROUND_HORIZONTAL_SPEED] horizontally; anything faster is an
+     * injected impulse stacking up (owner 2026-09-29, collision launches), so the excess is dropped.
+     */
+    private fun limitGroundSpeed(motion: Vec3): Vec3 {
+        when (vehicleType) {
+            VehicleType.TANK, VehicleType.APC, VehicleType.AA, VehicleType.CAR, VehicleType.ARTILLERY,
+            VehicleType.DEFENSE -> Unit
+            else -> return motion
+        }
+        val horizontalSq = motion.x * motion.x + motion.z * motion.z
+        val max = MAX_GROUND_HORIZONTAL_SPEED
+        if (horizontalSq <= max * max) return motion
+        val scale = max / kotlin.math.sqrt(horizontalSq)
+        return Vec3(motion.x * scale, motion.y, motion.z * scale)
     }
 
     override fun addDeltaMovement(pAddend: Vec3) {
@@ -7040,6 +7059,8 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
     fun getChaffLevel(): Int = com.atsuishio.superbwarfare.api.aircraft.AircraftCountermeasureWire.chaff(entityData.get(AIRCRAFT_COUNTERMEASURE_LEVELS))
     fun getAircraftThreatLevel(): Int = com.atsuishio.superbwarfare.api.aircraft.AircraftCountermeasureWire.threat(entityData.get(AIRCRAFT_COUNTERMEASURE_LEVELS))
     fun isChaffEmitting(): Boolean = com.atsuishio.superbwarfare.api.aircraft.AircraftCountermeasureWire.emitting(entityData.get(AIRCRAFT_COUNTERMEASURE_LEVELS))
+    /** [com.atsuishio.superbwarfare.api.aircraft.IncomingMissileWarning] flags, synchronized for every vehicle. */
+    fun getIncomingMissileWarning(): Int = com.atsuishio.superbwarfare.api.aircraft.AircraftCountermeasureWire.incoming(entityData.get(AIRCRAFT_COUNTERMEASURE_LEVELS))
     fun getFlareCooldownTicks(): Int = entityData.get(AIRCRAFT_COUNTERMEASURE_TIMERS) and 511
     fun getChaffCooldownTicks(): Int = (entityData.get(AIRCRAFT_COUNTERMEASURE_TIMERS) shr 9) and 511
     internal fun publishAircraftCountermeasures(levels: Int, timers: Int) {
@@ -7058,11 +7079,14 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
 
     fun moveOnDragonTeeth() {
         if (usesAircraftTerrainContact()) return
+        if (this is com.atsuishio.superbwarfare.api.vehicle.deck.DeckSurfaceEntity) return
         VehicleMotionUtils.handleVehicleMoveOnDragonTeeth(this)
     }
 
     fun collideBlocks() {
         if (usesAircraftTerrainContact()) return
+        // a carrier hull moves through water, never breaking blocks (its sweep would cover 10^5 blocks)
+        if (this is com.atsuishio.superbwarfare.api.vehicle.deck.DeckSurfaceEntity) return
         if (tickCount % 4 != 0) return
         if (computed().engineType == EngineType.FIXED) return
         if (deltaMovement.lengthSqr() < 0.01) return
@@ -7305,7 +7329,8 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
             }
         }
 
-        if (this.horizontalCollision) {
+        // A vehicle-against-vehicle contact is charged once, by VehicleCollisionResponseService.
+        if (this.horizontalCollision && !collisionResponse.touchedVehicleThisTick()) {
             this.hurt(
                 ModDamageTypes.causeVehicleStrikeDamage(
                     this.level().registryAccess(),
@@ -7338,10 +7363,6 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
 
     fun bounceVertical(direction: Direction) {
         VehicleMotionUtils.bounceVertical(this, direction)
-    }
-
-    fun preventStacking() {
-        VehicleMotionUtils.preventStacking(this)
     }
 
     fun pushNew(pX: Double, pY: Double, pZ: Double) {
@@ -7565,6 +7586,8 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         /** Launch property, read once: log the hit feedback players receive (diagnostic launches only). */
         private val HIT_FEEDBACK_LOG: Boolean = java.lang.Boolean.getBoolean("bvp.diagnostics.scenarios")
 
+        /** Horizontal speed ceiling for ground vehicles (blocks/tick; 3 = 216 km/h). */
+        const val MAX_GROUND_HORIZONTAL_SPEED = 3.0
         private const val MAX_HELICOPTER_ATGM_CAMERA_RAY_STREAMS = 16
         private const val AIM_PRESENTATION_DIRECTION_DOT_MINIMUM = 0.99999
         private const val AIM_PRESENTATION_TIME_EPSILON = 1.0E-6

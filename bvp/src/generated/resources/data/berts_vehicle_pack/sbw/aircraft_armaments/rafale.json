@@ -1,7 +1,48 @@
 {
   "Schema": 1,
   "SuspendedWeapons": [],
-  "Pairs": [],
+  "Pairs": [
+    {
+      "Id": "heavy_wing",
+      "Name": "Inboard (heavy) wing pylons",
+      "Left": [
+        2.02,
+        0.85,
+        -1.0
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            2.0248,
+            1.3223,
+            -0.9917
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Right": [
+        -2.02,
+        0.85,
+        -1.0
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -2.0248,
+            1.3223,
+            -0.9917
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/storm_shadow",
+        "berts_vehicle_pack:munition/r550_magic"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 1500
+    }
+  ],
   "StoreGroups": {
     "berts_vehicle_pack:modeled_store/rafale/external_tanks": [
       "suspended_external_tanks_left",

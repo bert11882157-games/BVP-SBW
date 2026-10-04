@@ -1,0 +1,59 @@
+{
+  "Schema": 1,
+  "Name": "AGM-62 Walleye I · TV glide bomb",
+  "Category": "BOMB",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/walleye.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.2677,
+    0.2358
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.2677,
+      0.0,
+      0.2358
+    ],
+    "Right": [
+      -0.2677,
+      0.0,
+      0.2358
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    0.2358
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/walleye.png",
+  "Capacity": 1,
+  "MassKg": 510,
+  "Bomb": {
+    "Mode": "TV",
+    "Gravity": 0.08,
+    "DragMultiplier": 1,
+    "TurnDegreesPerTick": 2,
+    "BlastRadius": 12,
+    "TntEquivalentKg": 250,
+    "BlastDamage": 700,
+    "LiftToDrag": 5.5,
+    "BestGlideSpeed": 4.5,
+    "MaxG": 2.5
+  },
+  "Guidance": {
+    "Mode": "GROUND_INFRARED",
+    "Presentation": "TV",
+    "LockTicks": 60,
+    "Range": 900,
+    "ConeDegrees": 25,
+    "CountermeasureVulnerability": 0
+  },
+  "AmmoItem": "superbwarfare:large_guided_bomb",
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_bombs/walleye",
+  "LaunchOffset": [
+    0.0,
+    -0.2677,
+    0.0
+  ]
+}

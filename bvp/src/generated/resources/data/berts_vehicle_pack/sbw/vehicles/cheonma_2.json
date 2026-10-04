@@ -1,0 +1,1239 @@
+{
+  "ID": "berts_vehicle_pack:cheonma_2",
+  "MaxHealth": 304,
+  "MaxEnergy": 10000000,
+  "AllowFreeCam": true,
+  "RemoteWeaponStation": true,
+  "HasCCIP": true,
+  "HasERA": false,
+  "HasFCS": true,
+  "HasAutoloader": false,
+  "Fires": [
+    "3BM60 APFSDS",
+    "3BK18M HEAT-FS",
+    "3OF26 HE",
+    "9M119M1 Tandem ATGM"
+  ],
+  "OBB": [
+    {
+      "Position": [
+        0.0,
+        1.05539,
+        3.22172
+      ],
+      "Size": [
+        1.9575,
+        0.67289,
+        0.66609
+      ],
+      "Transform": "Vehicle",
+      "Rotation": "Vehicle"
+    },
+    {
+      "Position": [
+        0.0,
+        1.11656,
+        -0.17672
+      ],
+      "Size": [
+        1.9575,
+        0.73406,
+        2.05266
+      ],
+      "Transform": "Vehicle",
+      "Rotation": "Vehicle"
+    },
+    {
+      "Position": [
+        0.0,
+        1.14375,
+        -3.45281
+      ],
+      "Size": [
+        1.80797,
+        0.76125,
+        0.78844
+      ],
+      "Transform": "Vehicle",
+      "Rotation": "Vehicle"
+    },
+    {
+      "Position": [
+        0.0,
+        1.035,
+        -3.2625
+      ],
+      "Size": [
+        1.0875,
+        0.54375,
+        0.87
+      ],
+      "Transform": "Vehicle",
+      "Rotation": "Vehicle",
+      "Part": "MainEngine"
+    },
+    {
+      "Position": [
+        0.0,
+        0.01359,
+        0.13594
+      ],
+      "Size": [
+        0.38062,
+        0.33984,
+        0.54375
+      ],
+      "Transform": "WeaponStation",
+      "Rotation": "WeaponStation"
+    },
+    {
+      "Position": [
+        -0.02039,
+        0.09516,
+        0.20119
+      ],
+      "Size": [
+        0.16992,
+        0.09516,
+        0.56006
+      ],
+      "Transform": "WeaponStationBarrel",
+      "Rotation": "WeaponStationBarrel"
+    },
+    {
+      "Position": [
+        0.0,
+        0.55734,
+        -0.73406
+      ],
+      "Size": [
+        1.74,
+        0.66609,
+        2.58281
+      ],
+      "Transform": "Turret",
+      "Rotation": "Turret",
+      "Part": "Turret"
+    },
+    {
+      "Transform": "Vehicle",
+      "Rotation": "Vehicle",
+      "Size": [
+        1.16186,
+        0.46453,
+        0.18135
+      ],
+      "Position": [
+        0.0,
+        0.88953,
+        2.37428
+      ]
+    }
+  ],
+  "Seats": [
+    {
+      "HidePassenger": true,
+      "CameraPos": {
+        "Transform": "Barrel",
+        "ZoomPosition": [
+          0,
+          0,
+          0
+        ],
+        "Direction": "Barrel",
+        "UseFixedCameraPos": true,
+        "Position": [
+          0,
+          0,
+          0
+        ],
+        "EyeAttachment": "gunner1_camera",
+        "ZoomEyeAttachment": "gunner1_zoom",
+        "DirectionAttachment": "main_muzzle",
+        "ZoomDirectionAttachment": "main_muzzle",
+        "CameraMode": "PLAYER_LOOK_AIM",
+        "AimCameraMode": "PLAYER_LOOK_AIM"
+      },
+      "Transform": "Turret",
+      "Position": [
+        -0.54375,
+        -0.35344,
+        -0.435
+      ],
+      "Weapons": [
+        "Cannon",
+        "MachineGun",
+        "Missile"
+      ],
+      "CanRotateHead": false,
+      "MinPitch": -6,
+      "MaxPitch": 13,
+      "Sensitivity": [
+        0.45,
+        0.52,
+        0.8
+      ],
+      "DismountInfo": {
+        "Transform": "Vehicle",
+        "Position": [
+          3.64079,
+          0.41372,
+          0
+        ]
+      },
+      "HasThermalImaging": true,
+      "BodyAttachment": "Turret"
+    },
+    {
+      "HidePassenger": true,
+      "Transform": "Turret",
+      "CameraPos": {
+        "Transform": "WeaponStationBarrel",
+        "UseFixedCameraPos": true,
+        "Position": [
+          0,
+          0,
+          0
+        ],
+        "ZoomPosition": [
+          0,
+          0,
+          0
+        ],
+        "Direction": "WeaponStationBarrel",
+        "EyeAttachment": "gunner2_camera",
+        "ZoomEyeAttachment": "gunner2_camera",
+        "DirectionAttachment": "ags_muzzle",
+        "ZoomDirectionAttachment": "ags_muzzle",
+        "CameraMode": "PLAYER_LOOK_AIM",
+        "AimCameraMode": "PLAYER_LOOK_AIM"
+      },
+      "Position": [
+        0.54375,
+        -0.13594,
+        -0.57094
+      ],
+      "Weapons": [
+        "GrenadeLauncher"
+      ],
+      "CanRotateHead": false,
+      "MinPitch": -10,
+      "MaxPitch": 45,
+      "Sensitivity": [
+        0.57,
+        0.75,
+        0.9
+      ],
+      "DismountInfo": {
+        "Transform": "Vehicle",
+        "Position": [
+          -2.6083,
+          0.29641,
+          0
+        ]
+      },
+      "HasThermalImaging": true,
+      "BodyAttachment": "Turret"
+    },
+    {
+      "IsEnclosed": true,
+      "HidePassenger": true,
+      "BanHand": true,
+      "Transform": "Vehicle",
+      "Position": [
+        0.15,
+        0.22,
+        1.95
+      ],
+      "MinPitch": -60,
+      "MaxPitch": 60,
+      "MinYaw": -95,
+      "MaxYaw": 95,
+      "CameraPos": {
+        "UseSimulate3P": true,
+        "Simulate3PPos": [
+          6.6,
+          1.1
+        ],
+        "UseFixedCameraPos": true,
+        "Position": [
+          0,
+          0,
+          0
+        ],
+        "ZoomPosition": [
+          0,
+          0,
+          0
+        ],
+        "EyeAttachment": "driver_camera",
+        "ZoomEyeAttachment": "driver_camera",
+        "DirectionAttachment": "VehicleCustomPitch",
+        "ZoomDirectionAttachment": "VehicleCustomPitch",
+        "CameraMode": "PLAYER_LOOK_AIM",
+        "AimCameraMode": "PLAYER_LOOK_AIM"
+      },
+      "BodyAttachment": "Vehicle"
+    },
+    {
+      "IsEnclosed": true,
+      "HidePassenger": true,
+      "BanHand": true,
+      "Transform": "Vehicle",
+      "Position": [
+        0.435,
+        0.8175,
+        -0.2175
+      ],
+      "MinPitch": -60,
+      "MaxPitch": 60,
+      "MinYaw": -95,
+      "MaxYaw": 95,
+      "CameraPos": {
+        "UseSimulate3P": true,
+        "Simulate3PPos": [
+          6.6,
+          1.1
+        ]
+      }
+    }
+  ],
+  "Weapons": {
+    "Cannon": {
+      "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_apfsds.png",
+      "DefaultFireMode": "Semi",
+      "AvailableFireModes": "Semi",
+      "Projectile": {
+        "Type": "superbwarfare:cannon_shell",
+        "Profile": "berts_vehicle_pack:cheonma_2/cannon/default"
+      },
+      "ShellType": "AP",
+      "DefaultZoom": 3,
+      "Magazine": 1,
+      "EmptyReloadTime": 160,
+      "Velocity": 85.0,
+      "ProjectileLife": 50,
+      "Gravity": 0.03,
+      "ApDurability": 95,
+      "Damage": 620,
+      "ExplosionDamage": 80,
+      "ExplosionRadius": 4,
+      "RecoilTime": 42,
+      "RecoilForce": 1,
+      "Spread": 0.02,
+      "ShootAnimationTime": 20,
+      "Crosshair": "berts_vehicle_pack:textures/overlay/vehicle/crosshair/sosna_u.png",
+      "CrosshairZooming": "berts_vehicle_pack:textures/overlay/vehicle/crosshair/sosna_u.png",
+      "CrosshairColor": "0xFFC700",
+      "Name": "weapon.berts_vehicle_pack.cheonma_2_125_mm",
+      "SoundInfo": {
+        "Fire1PGain": 1.0,
+        "Fire3PGain": 1.0,
+        "Fire3PFarGain": 1.0,
+        "Fire3PVeryFarGain": 1.0,
+        "Fire1P": "bvp_audio:weapon/t90_125_1p",
+        "Fire3P": "bvp_audio:weapon/t90_125_3p",
+        "Fire3PFar": "bvp_audio:weapon/t90_125_far",
+        "Fire3PVeryFar": "bvp_audio:weapon/t90_125_veryfar",
+        "Change": "superbwarfare:into_cannon",
+        "VehicleReload": "berts_vehicle_pack:m1_abrams_elite_m68a1_reload",
+        "VehicleReloadClipDurationTicks": 87,
+        "CancellableSounds": [
+          "berts_vehicle_pack:m1_abrams_elite_m68a1_reload"
+        ],
+        "Volume": 2.0
+      },
+      "SoundRadius": 40,
+      "ShootPos": {
+        "Transform": "Barrel",
+        "Positions": [
+          [
+            0.0,
+            0.0,
+            6.525
+          ]
+        ],
+        "Directions": [
+          "Barrel"
+        ],
+        "ViewPosition": [
+          0.0,
+          0.0,
+          6.525
+        ],
+        "MuzzleAttachments": [
+          "main_muzzle"
+        ],
+        "MuzzleDirectionAttachments": [
+          "main_muzzle"
+        ],
+        "HudOriginAttachment": "main_muzzle",
+        "HudDirectionAttachment": "main_muzzle",
+        "ViewAttachment": "main_muzzle",
+        "ViewDirectionAttachment": "main_muzzle",
+        "SeekAttachment": "main_muzzle",
+        "SeekDirectionAttachment": "main_muzzle",
+        "EffectAttachments": [
+          "main_muzzle"
+        ],
+        "EffectDirectionAttachments": [
+          "main_muzzle"
+        ]
+      },
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "superbwarfare:cannon_shell",
+        "ProjectileProfile": "berts_vehicle_pack:cheonma_2/cannon/default",
+        "ProjectileLife": 50
+      },
+      "ShootShake": [
+        8,
+        10,
+        120
+      ],
+      "NormalReloadTime": 160,
+      "RPM": 60,
+      "AmmoType": [
+        {
+          "Ammo": "berts_vehicle_pack:level_3_ap_shell",
+          "Override": {
+            "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_apfsds.png",
+            "ShellType": "AP",
+            "ApDurability": 457,
+            "Damage": 250,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "weapon.berts_vehicle_pack.3bm42",
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:cheonma_2/cannon/ammo_00_3bm42",
+              "ProjectileLife": 50
+            },
+            "Projectile": {
+              "Type": "superbwarfare:cannon_shell",
+              "Profile": "berts_vehicle_pack:cheonma_2/cannon/ammo_00_3bm42"
+            },
+            "ShootShake": [
+              8,
+              10,
+              120
+            ],
+            "Velocity": 85.0
+          },
+          "ConsumptionItem": "superbwarfare:tier_3_armor_piercing_shell"
+        },
+        {
+          "Ammo": "berts_vehicle_pack:level_2_ap_shell",
+          "Override": {
+            "ShellType": "HE",
+            "ApDurability": 550,
+            "Damage": 140,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 9,
+            "TntEquivalentKg": 2.8415,
+            "Name": "weapon.berts_vehicle_pack.3bk18m_heat_fs",
+            "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_he.png",
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:cheonma_2/cannon/ammo_01_3bk18m_heat_fs",
+              "ProjectileLife": 50
+            },
+            "Projectile": {
+              "Type": "superbwarfare:cannon_shell",
+              "Profile": "berts_vehicle_pack:cheonma_2/cannon/ammo_01_3bk18m_heat_fs"
+            },
+            "ShootShake": [
+              8,
+              10,
+              120
+            ],
+            "Velocity": 45.25
+          },
+          "ConsumptionItem": "superbwarfare:tier_2_heat_shell"
+        },
+        {
+          "Ammo": "berts_vehicle_pack:3of26_he_shell",
+          "Override": {
+            "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_he.png",
+            "ShellType": "HE",
+            "Velocity": 42.5,
+            "ApDurability": 42,
+            "Damage": 1000,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 9,
+            "TntEquivalentKg": 5.2391,
+            "Name": "weapon.berts_vehicle_pack.3of26_he",
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:cheonma_2/cannon/ammo_02_3of26_he",
+              "ProjectileLife": 50
+            },
+            "Projectile": {
+              "Type": "superbwarfare:cannon_shell",
+              "Profile": "berts_vehicle_pack:cheonma_2/cannon/ammo_02_3of26_he"
+            },
+            "ShootShake": [
+              8,
+              10,
+              120
+            ]
+          },
+          "ConsumptionItem": "superbwarfare:large_he_shell"
+        }
+      ]
+    },
+    "MachineGun": {
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "DefaultZoom": 3,
+      "NaturalCooldown": 1,
+      "CrosshairColor": "0xFFC700",
+      "Projectile": {
+        "Type": "superbwarfare:projectile",
+        "Profile": "berts_vehicle_pack:cheonma_2/machinegun/default"
+      },
+      "Magazine": 250,
+      "NormalReloadTime": 400,
+      "EmptyReloadTime": 400,
+      "RPM": 700,
+      "Damage": 9.5,
+      "BypassesArmor": 0.3,
+      "Velocity": 30,
+      "ShootAnimationTime": 1,
+      "RecoilTime": 20,
+      "RecoilForce": 0.08,
+      "Spread": 0.5,
+      "ShootPos": {
+        "Transform": "Barrel",
+        "Positions": [
+          [
+            0.36431,
+            0.02719,
+            0.78844
+          ]
+        ],
+        "Directions": [
+          "Barrel"
+        ],
+        "ViewPosition": [
+          0.36431,
+          0.02719,
+          0.78844
+        ],
+        "MuzzleAttachments": [
+          "coax_muzzle"
+        ],
+        "MuzzleDirectionAttachments": [
+          "coax_muzzle"
+        ],
+        "HudOriginAttachment": "coax_muzzle",
+        "HudDirectionAttachment": "coax_muzzle",
+        "ViewAttachment": "coax_muzzle",
+        "ViewDirectionAttachment": "coax_muzzle",
+        "SeekAttachment": "coax_muzzle",
+        "SeekDirectionAttachment": "coax_muzzle",
+        "EffectAttachments": [
+          "coax_muzzle"
+        ],
+        "EffectDirectionAttachments": [
+          "coax_muzzle"
+        ]
+      },
+      "Crosshair": "@VehicleCommonGun",
+      "Name": "weapon.superbwarfare.7_62mm_coax",
+      "SoundInfo": {
+        "Fire1PGain": 1.0,
+        "Fire3PGain": 1.0,
+        "Fire3PFarGain": 1.0,
+        "Fire3PVeryFarGain": 1.0,
+        "Fire1P": "bvp_audio:weapon/pkt_1p",
+        "Fire3P": "bvp_audio:weapon/pkt_3p",
+        "Fire3PFar": "bvp_audio:weapon/pkt_far",
+        "Fire3PVeryFar": "bvp_audio:weapon/pkt_veryfar",
+        "Change": "superbwarfare:into_cannon",
+        "Volume": 0.76,
+        "VehicleReload": "superbwarfare:m_60_reload_empty",
+        "VehicleReloadClipDurationTicks": 127
+      },
+      "SoundRadius": 12,
+      "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/gun_7_62mm.png",
+      "HeatPerShoot": 0,
+      "ProjectileBeltAmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:projectile",
+              "Profile": "berts_vehicle_pack:cheonma_2/machinegun/belt_ammo_00_russian_762_ap_t"
+            },
+            "ShellType": "AP",
+            "Velocity": 42.75,
+            "ApDurability": 9,
+            "Damage": 9.5,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "AP_T",
+            "ShootShake": [
+              0,
+              0,
+              0
+            ]
+          }
+        }
+      ],
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "superbwarfare:projectile",
+        "ProjectileProfile": "berts_vehicle_pack:cheonma_2/machinegun/default",
+        "ProjectileLife": 400
+      },
+      "ShootShake": [
+        0,
+        0,
+        0
+      ],
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:projectile",
+              "Profile": "berts_vehicle_pack:cheonma_2/machinegun/ammo_00_russian_762_ap_i"
+            },
+            "ShellType": "AP",
+            "Velocity": 42.75,
+            "ApDurability": 13,
+            "Damage": 9.5,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "AP Belt",
+            "ShootShake": [
+              0,
+              0,
+              0
+            ],
+            "ProjectileBelt": {
+              "Name": "AP Belt",
+              "Family": "RUSSIAN_COAX_762",
+              "Rounds": [
+                {
+                  "Shots": 3,
+                  "Round": "AP_I",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "AP_T",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "GREEN"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:projectile",
+              "ProjectileProfile": "berts_vehicle_pack:cheonma_2/machinegun/ammo_00_russian_762_ap_i",
+              "ProjectileLife": 40
+            }
+          }
+        }
+      ]
+    },
+    "Missile": {
+      "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_atgm.png",
+      "DefaultFireMode": "Semi",
+      "AvailableFireModes": "Semi",
+      "RPM": 40,
+      "Projectile": {
+        "Type": "superbwarfare:wire_guide_missile",
+        "Profile": "berts_vehicle_pack:cheonma_2/missile/default"
+      },
+      "AmmoCostPerShoot": 1,
+      "DefaultZoom": 3,
+      "Magazine": 2,
+      "NormalReloadTime": 240,
+      "EmptyReloadTime": 240,
+      "Velocity": 3.9,
+      "ProjectileLife": 180,
+      "Gravity": 0,
+      "ApDurability": 1200,
+      "Damage": 225,
+      "ExplosionDamage": 0,
+      "ExplosionRadius": 5,
+      "TntEquivalentKg": 6.48,
+      "RecoilTime": 18,
+      "RecoilForce": 0.05,
+      "Spread": 0,
+      "ShootAnimationTime": 20,
+      "Crosshair": "@VehicleCommonMissile",
+      "CrosshairColor": "0x66FF00",
+      "Name": "weapon.berts_vehicle_pack.cheonma_2_bulsae_3_atgm",
+      "SoundInfo": {
+        "Fire1PGain": 1.0,
+        "Fire3PGain": 1.0,
+        "Fire3PFarGain": 1.0,
+        "Fire3PVeryFarGain": 1.0,
+        "Fire1P": "bvp_audio:weapon/atgm_ru_1p",
+        "Fire3P": "bvp_audio:weapon/atgm_ru_3p",
+        "VehicleReload3p": "superbwarfare:medium_missile_reload",
+        "Change": "superbwarfare:into_missile",
+        "Fire3PFar": "bvp_audio:weapon/atgm_ru_far",
+        "Fire3PVeryFar": "bvp_audio:weapon/atgm_ru_veryfar",
+        "Volume": 0.9,
+        "VehicleReloadClipDurationTicks": 32
+      },
+      "SoundRadius": 16,
+      "ShootPos": {
+        "Transform": "Turret",
+        "Positions": [
+          [
+            -1.57688,
+            0.87,
+            0.63075
+          ],
+          [
+            -1.35938,
+            0.87,
+            0.63075
+          ]
+        ],
+        "Directions": [
+          "Turret",
+          "Turret"
+        ],
+        "ViewDirection": "Barrel",
+        "MuzzleAttachments": [
+          "atgm_muzzle_1",
+          "atgm_muzzle_2"
+        ],
+        "MuzzleDirectionAttachments": [
+          "atgm_muzzle_1",
+          "atgm_muzzle_2"
+        ],
+        "HudOriginAttachment": "atgm_muzzle_1",
+        "HudDirectionAttachment": "atgm_muzzle_1",
+        "ViewAttachment": "atgm_muzzle_1",
+        "ViewDirectionAttachment": "atgm_muzzle_1",
+        "SeekAttachment": "atgm_muzzle_1",
+        "SeekDirectionAttachment": "atgm_muzzle_1",
+        "EffectAttachments": [
+          "atgm_muzzle_1",
+          "atgm_muzzle_2"
+        ],
+        "EffectDirectionAttachments": [
+          "atgm_muzzle_1",
+          "atgm_muzzle_2"
+        ],
+        "ViewPosition": [
+          -1.57688,
+          0.87,
+          0.63075
+        ]
+      },
+      "NominalBallistics": {
+        "Supported": false,
+        "ProjectileType": "superbwarfare:wire_guide_missile",
+        "ProjectileProfile": "berts_vehicle_pack:cheonma_2/missile/default"
+      },
+      "ShootShake": [
+        8,
+        10,
+        152.4
+      ],
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:medium_anti_ground_missile",
+          "ConsumptionItem": "superbwarfare:medium_atgm",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:wire_guide_missile",
+              "Profile": "berts_vehicle_pack:cheonma_2/missile/ammo_00_bulsae_3"
+            },
+            "ShootShake": [
+              8,
+              10,
+              152.4
+            ],
+            "NominalBallistics": {
+              "Supported": false,
+              "ProjectileType": "superbwarfare:wire_guide_missile",
+              "ProjectileProfile": "berts_vehicle_pack:cheonma_2/missile/ammo_00_bulsae_3"
+            },
+            "TntEquivalentKg": 6.48
+          }
+        }
+      ]
+    },
+    "GrenadeLauncher": {
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "DefaultZoom": 2,
+      "Magazine": 29,
+      "AutoReload": true,
+      "NormalReloadTime": 400,
+      "EmptyReloadTime": 400,
+      "RPM": 400,
+      "Name": "weapon.berts_vehicle_pack.ags_30",
+      "SoundInfo": {
+        "Fire1PGain": 1.0,
+        "Fire3PGain": 1.0,
+        "Fire3PFarGain": 1.0,
+        "Fire3PVeryFarGain": 1.0,
+        "Fire1P": "bvp_audio:weapon/mk19_1p",
+        "Fire3P": "bvp_audio:weapon/mk19_3p",
+        "Fire3PFar": "bvp_audio:weapon/mk19_far",
+        "Fire3PVeryFar": "bvp_audio:weapon/mk19_far",
+        "Change": "superbwarfare:into_cannon",
+        "Volume": 0.55,
+        "VehicleReload": "superbwarfare:m_2_hb_reload_empty",
+        "VehicleReloadClipDurationTicks": 127
+      },
+      "SoundRadius": 12,
+      "ShootPos": {
+        "Transform": "WeaponStationBarrel",
+        "Positions": [
+          [
+            0.06797,
+            0.08156,
+            0.77213
+          ]
+        ],
+        "Directions": [
+          "WeaponStationBarrel"
+        ],
+        "ViewPosition": [
+          0.06797,
+          0.08156,
+          0.77213
+        ],
+        "MuzzleAttachments": [
+          "ags_muzzle"
+        ],
+        "MuzzleDirectionAttachments": [
+          "ags_muzzle"
+        ],
+        "EffectAttachments": [
+          "ags_muzzle"
+        ],
+        "EffectDirectionAttachments": [
+          "ags_muzzle"
+        ],
+        "HudOriginAttachment": "ags_muzzle",
+        "HudDirectionAttachment": "ags_muzzle",
+        "ViewAttachment": "ags_muzzle",
+        "ViewDirectionAttachment": "ags_muzzle",
+        "SeekAttachment": "ags_muzzle",
+        "SeekDirectionAttachment": "ags_muzzle"
+      },
+      "Icon": "superbwarfare:textures/gun_icon/m_79_icon.png",
+      "Projectile": {
+        "Type": "superbwarfare:gun_grenade",
+        "Profile": "berts_vehicle_pack:cheonma_2/grenadelauncher/default"
+      },
+      "ShellType": "HE",
+      "Velocity": 6,
+      "Damage": 35,
+      "ExplosionDamage": 45,
+      "ExplosionRadius": 6,
+      "TntEquivalentKg": 0.0647,
+      "ProjectileLife": 100,
+      "RecoilTime": 16,
+      "RecoilForce": 0.08,
+      "ShootAnimationTime": 2,
+      "Spread": 1.25,
+      "AmmoCostPerShoot": 1,
+      "Crosshair": "@VehicleRuApc",
+      "CrosshairColor": "0x66FF00",
+      "NominalBallistics": {
+        "Supported": false,
+        "ProjectileType": "superbwarfare:gun_grenade",
+        "ProjectileProfile": "berts_vehicle_pack:cheonma_2/grenadelauncher/default"
+      },
+      "ShootShake": [
+        8,
+        10,
+        12
+      ],
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:grenade_40mm",
+          "ConsumptionItem": "superbwarfare:grenade_ammunition",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:gun_grenade",
+              "Profile": "berts_vehicle_pack:cheonma_2/grenadelauncher/ammo_00_30mm_vog_30"
+            },
+            "ShootShake": [
+              8,
+              10,
+              12
+            ],
+            "NominalBallistics": {
+              "Supported": false,
+              "ProjectileType": "superbwarfare:gun_grenade",
+              "ProjectileProfile": "berts_vehicle_pack:cheonma_2/grenadelauncher/ammo_00_30mm_vog_30"
+            },
+            "TntEquivalentKg": 0.0647
+          }
+        }
+      ]
+    }
+  },
+  "HUDColor": "0xFFC700",
+  "InertiaRotateRate": 1.2,
+  "ParkingBrakeWhenUnoccupied": true,
+  "EngineType": "Track",
+  "EngineInfo": {
+    "Buoyancy": 0,
+    "EnergyCostRate": 120,
+    "WheelRotSpeed": 1.13636,
+    "WheelDifferential": 0.75,
+    "TrackRotSpeed": 1.54545,
+    "TrackDifferential": 0.6,
+    "MaxForwardSpeedRate": 0.72,
+    "MaxBackwardSpeedRate": 0.048,
+    "Increment": 0.008457142857142858,
+    "Decrement": 0.011746031746031747,
+    "SteeringSpeed": 0.065,
+    "EngineSoundVolume": 0.85
+  },
+  "TurretPos": [
+    0.0,
+    1.82344,
+    0.05437
+  ],
+  "BarrelPos": [
+    0.0,
+    0.19031,
+    0.81563
+  ],
+  "TurretTurnSpeed": [
+    28,
+    40
+  ],
+  "TurretPitchRange": [
+    -6,
+    14
+  ],
+  "TurretYawRange": [
+    -180,
+    180
+  ],
+  "HasDecoy": false,
+  "UpStep": 1.5,
+  "RotateOffsetHeight": 2.8685,
+  "Mass": 44.5,
+  "DamageModifiers": [
+    "minecraft:arrow 0",
+    "minecraft:trident 0",
+    "minecraft:mob_attack 0",
+    "minecraft:mob_attack_no_aggro 0",
+    "minecraft:mob_projectile 0",
+    "minecraft:player_attack 0",
+    "#superbwarfare:projectile 0",
+    "All - 20",
+    "minecraft:lava + 20",
+    "minecraft:lava * 10",
+    "@minecraft:tnt * 4",
+    "@minecraft:tnt_minecart * 4",
+    "@#superbwarfare:aerial_bomb * 12",
+    "All * 0.23",
+    "superbwarfare:vehicle_strike * 2.5",
+    "minecraft:explosion * 2",
+    "superbwarfare:custom_explosion * 0.65",
+    "superbwarfare:projectile_explosion * 0.65",
+    "superbwarfare:mine * 0.5",
+    "superbwarfare:lunge_mine * 0.5",
+    "superbwarfare:projectile_hit * 1.3",
+    "#superbwarfare:projectile_absolute * 0.15",
+    "@#superbwarfare:aa_missile * 0.3",
+    "@superbwarfare:small_cannon_shell * 0.25",
+    "@superbwarfare:c4 * 4",
+    "@#superbwarfare:at_rocket * 1.1",
+    "@superbwarfare:gun_grenade * 1.25",
+    "@superbwarfare:mortar_shell * 1.25",
+    "@superbwarfare:tm_62 * 2.5"
+  ],
+  "DestroyInfo": {
+    "ParticleType": "Giant",
+    "ExplosionDamage": 160,
+    "ExplosionRadius": 13,
+    "SympatheticDetonation": true,
+    "SympatheticDetonationForce": 2,
+    "SympatheticDetonationChance": 0.55
+  },
+  "ThirdPersonCameraPos": [
+    -1.37108,
+    2.37224,
+    7.90743
+  ],
+  "VehicleIcon": "superbwarfare:textures/vehicle_icon/t_90a_icon.png",
+  "ContainerIcon": "superbwarfare:textures/gui/vehicle/type/land.png",
+  "VehicleContainerType": "Medium",
+  "Type": "Tank",
+  "CollisionLevel": {
+    "Level": 4,
+    "PowerLimits": [
+      [
+        0,
+        0,
+        true
+      ],
+      [
+        0,
+        0,
+        true
+      ],
+      [
+        0.1,
+        0.05,
+        false
+      ],
+      [
+        1,
+        0.3,
+        false
+      ]
+    ]
+  },
+  "EngineSound": "berts_vehicle_pack:tank_engine_silent",
+  "HudType": "@Land",
+  "TerrainCompat": [
+    [
+      1.44094,
+      0.0,
+      2.61
+    ],
+    [
+      1.44094,
+      0.0,
+      1.74
+    ],
+    [
+      1.44094,
+      0.0,
+      0.87
+    ],
+    [
+      1.44094,
+      0.0,
+      -0.0
+    ],
+    [
+      1.44094,
+      0.0,
+      -0.87
+    ],
+    [
+      1.44094,
+      0.0,
+      -1.74
+    ],
+    [
+      1.44094,
+      0.0,
+      -2.61
+    ],
+    [
+      -1.44094,
+      0.0,
+      2.66437
+    ],
+    [
+      -1.44094,
+      0.0,
+      1.79438
+    ],
+    [
+      -1.44094,
+      0.0,
+      0.92438
+    ],
+    [
+      -1.44094,
+      0.0,
+      0.05437
+    ],
+    [
+      -1.44094,
+      0.0,
+      -0.81563
+    ],
+    [
+      -1.44094,
+      0.0,
+      -1.68562
+    ],
+    [
+      -1.44094,
+      0.0,
+      -2.55563
+    ]
+  ],
+  "TurretControllerIndex": 0,
+  "PassengerWeaponStationControllerIndex": 1,
+  "PassengerWeaponStationBinding": {
+    "Schema": "berts_vehicle_pack:passenger_bed_weapon_station/v1",
+    "Parent": "TURRET",
+    "WeaponId": "GrenadeLauncher",
+    "WeaponKind": "AUTOCANNON",
+    "CameraAttachment": "gunner2_camera",
+    "MuzzleAttachment": "ags_muzzle"
+  },
+  "PassengerWeaponStationPos": [
+    0.54375,
+    1.00594,
+    -0.57094
+  ],
+  "PassengerWeaponStationBarrelPos": [
+    -0.02719,
+    0.35344,
+    0.46219
+  ],
+  "PassengerWeaponStationTurnSpeed": [
+    40,
+    40
+  ],
+  "PassengerWeaponStationPitchRange": [
+    -10,
+    45
+  ],
+  "PassengerWeaponStationYawRange": [
+    -180,
+    180
+  ],
+  "Attachments": {
+    "gunner1_camera": {
+      "Parent": "Turret",
+      "Position": [
+        -0.54375,
+        1.47356,
+        -0.48937
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "gunner1_zoom": {
+      "Parent": "Turret",
+      "Position": [
+        -0.54375,
+        1.47356,
+        -0.48937
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "gunner2_camera": {
+      "Parent": "WeaponStationBarrel",
+      "Position": [
+        0.05437,
+        0.32625,
+        -0.48937
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "main_muzzle": {
+      "Parent": "Barrel",
+      "Position": [
+        0.0,
+        0.0,
+        6.525
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "coax_muzzle": {
+      "Parent": "Barrel",
+      "Position": [
+        0.36431,
+        0.02719,
+        0.78844
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "ags_muzzle": {
+      "Parent": "WeaponStationBarrel",
+      "Position": [
+        0.06797,
+        0.08156,
+        0.77213
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "atgm_muzzle_1": {
+      "Parent": "Turret",
+      "Position": [
+        -1.57688,
+        0.87,
+        0.63075
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "atgm_muzzle_2": {
+      "Parent": "Turret",
+      "Position": [
+        -1.35938,
+        0.87,
+        0.63075
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "driver_camera": {
+      "Parent": "VehicleCustomPitch",
+      "Position": [
+        0.15,
+        1.84,
+        1.95
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    }
+  },
+  "WeaponPairs": [
+    {
+      "Seat": 0,
+      "Primary": "Cannon",
+      "Secondary": "MachineGun"
+    }
+  ],
+  "DeathChargeKg": 20.8,
+  "DamageClass": "MBT"
+}

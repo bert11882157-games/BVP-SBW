@@ -42,8 +42,13 @@ class AircraftAudioProfileTest {
             if (profile.distant == null) missing += "$name: no far layer"
             val helicopter = json(file).get("Type").asString == "Helicopter"
             if (!helicopter && engine.spoolUp < 1f) missing += "$name: jet/prop RPM does not spool"
+            if (!helicopter && profile.boost == null) missing += "$name: no full-power roar"
             val named = listOfNotNull(engine.start, engine.idle, engine.stop, profile.boost?.loop,
-                profile.distant?.loop, profile.rotor?.loop, profile.interior?.loop)
+                profile.distant?.loop, profile.rotor?.loop, profile.interior?.loop, profile.afterburner?.loop,
+                profile.afterburner?.start, profile.afterburnerBody?.loop, profile.airflow?.loop, profile.flyby?.start)
+            // owner 2026-09-29 "we need more whooshing": rushing air on everything, a pass whoosh on every plane
+            if (profile.airflow == null || profile.airflow!!.fullSpeed <= 0f) missing += "$name: no airflow"
+            if (!helicopter && profile.flyby?.start == null) missing += "$name: no flyby whoosh"
             for (sound in named) {
                 if (sound.namespace != "bvp_audio") continue
                 if (!sounds.has(sound.path)) missing += "$name: $sound not in sounds.json"
@@ -59,6 +64,32 @@ class AircraftAudioProfileTest {
         val parsed = VehicleAudioProfiles.parse(ResourceLocation("berts_vehicle_pack", "f_16c"), json(profile))
         assertTrue(parsed.reach >= 1000f, "a jet carries for a kilometre or more, reach ${parsed.reach}")
         assertNotNull(parsed.boost, "afterburning fighters have the low-frequency roar layer")
+    }
+
+    /** Owner 2026-09-29: the afterburner must be heard, above the full-power roar, on every jet that has one. */
+    @Test fun `every afterburning jet has the afterburner layer and its ignition`() {
+        val flight = File(bvp, "src/generated/resources/data/berts_vehicle_pack/flight_reference")
+        assumeTrue(flight.isDirectory && assets.isDirectory, "BVP sources not present")
+        val problems = ArrayList<String>()
+        var burners = 0
+        for (file in flight.listFiles { f -> f.name.endsWith(".json") }!!) {
+            val name = file.name.removeSuffix(".json")
+            val lit = json(file).getAsJsonObject("engineering")?.get("afterburnerEnabled")?.asBoolean == true
+            val path = File(assets, "berts_vehicle_pack/sbw/vehicle_audio/$name.json")
+            if (!path.isFile) continue
+            val profile = VehicleAudioProfiles.parse(ResourceLocation("berts_vehicle_pack", name), json(path))
+            val ab = profile.afterburner
+            if (lit) {
+                burners++
+                if (ab == null) { problems += "$name: afterburner without an afterburner sound"; continue }
+                if (ab.start == null) problems += "$name: no ignition one-shot"
+                if (profile.afterburnerBody == null) problems += "$name: no afterburner rumble voice"
+                if (ab.range < (profile.boost?.range ?: 0f)) problems += "$name: burner carries less far than the roar"
+                if (ab.volume[0] < 0.8f) problems += "$name: burner layer too quiet"
+            } else if (ab != null) problems += "$name: afterburner sound on an aircraft without one"
+        }
+        assertTrue(burners >= 40, "expected the afterburning fleet, found $burners")
+        assertTrue(problems.isEmpty(), problems.joinToString("\n"))
     }
 
     @Test fun `RPM spools at the authored rate and snaps without one`() {

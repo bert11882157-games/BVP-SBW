@@ -521,6 +521,51 @@
       }
     ]
   },
+  "air/layer/afterburner": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/layer/afterburner",
+        "stream": false
+      }
+    ]
+  },
+  "air/layer/afterburner_body": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/layer/afterburner_body",
+        "stream": false
+      }
+    ]
+  },
+  "air/layer/afterburner_heavy": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/layer/afterburner_heavy",
+        "stream": false
+      }
+    ]
+  },
+  "air/layer/afterburner_light": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/layer/afterburner_light",
+        "stream": false
+      }
+    ]
+  },
+  "air/layer/airflow": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/layer/airflow",
+        "stream": false
+      }
+    ]
+  },
   "air/layer/apache_far": {
     "category": "neutral",
     "sounds": [
@@ -544,6 +589,24 @@
     "sounds": [
       {
         "name": "bvp_audio:air/layer/flanker_far",
+        "stream": false
+      }
+    ]
+  },
+  "air/layer/flyby_jet": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/layer/flyby_jet",
+        "stream": false
+      }
+    ]
+  },
+  "air/layer/flyby_prop": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/layer/flyby_prop",
         "stream": false
       }
     ]
@@ -634,6 +697,60 @@
     "sounds": [
       {
         "name": "bvp_audio:air/layer/mv22_far",
+        "stream": false
+      }
+    ]
+  },
+  "air/layer/power_early": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/layer/power_early",
+        "stream": false
+      }
+    ]
+  },
+  "air/layer/power_heavy": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/layer/power_heavy",
+        "stream": false
+      }
+    ]
+  },
+  "air/layer/power_merlin": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/layer/power_merlin",
+        "stream": false
+      }
+    ]
+  },
+  "air/layer/power_modern": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/layer/power_modern",
+        "stream": false
+      }
+    ]
+  },
+  "air/layer/power_turboprop": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/layer/power_turboprop",
+        "stream": false
+      }
+    ]
+  },
+  "air/layer/power_v12": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:air/layer/power_v12",
         "stream": false
       }
     ]

@@ -49,6 +49,9 @@ object AircraftTvClient {
     private var previousView: CameraType? = null
     private var missing = 0
     private var lastEye: Vec3? = null
+    /** Flight-path direction at the last two client ticks, interpolated for the eye (it moved in 20 Hz steps). */
+    private var previousHeading: Vec3? = null
+    private var currentHeading: Vec3? = null
 
     @JvmStatic fun active(): Boolean = munitionId >= 0
 
@@ -64,6 +67,7 @@ object AircraftTvClient {
         if (!active()) previousView = mc.options.cameraType
         munitionId = id; owner = vehicle; level = mc.level; missing = 0; zoom = 1.0
         cursorX = Double.NaN; cursorY = Double.NaN
+        previousHeading = null; currentHeading = null
         // First line of sight: at the aim point the seeker starts on, else where the pilot was looking.
         val munition = mc.level?.getEntity(id)
         val start = munition?.position() ?: mc.gameRenderer.mainCamera.position
@@ -86,11 +90,31 @@ object AircraftTvClient {
 
     private fun munition(): Entity? = Minecraft.getInstance().level?.getEntity(munitionId)?.takeIf { !it.isRemoved }
 
-    /** Flight path from the client's own movement of the munition (bombs do not sync their velocity). */
-    private fun heading(munition: Entity): Vec3 =
-        Vec3(munition.x - munition.xo, munition.y - munition.yo, munition.z - munition.zo)
-            .takeIf { it.lengthSqr() > 1.0E-4 }?.normalize()
-            ?: munition.deltaMovement.takeIf { it.lengthSqr() > 1.0E-4 }?.normalize() ?: munition.lookAngle
+    /**
+     * Flight path of the munition: its velocity (smoothed munitions carry the server's), else its own movement. Not
+     * the raw position step, which carries the blended network corrections.
+     */
+    private fun rawHeading(munition: Entity): Vec3 =
+        munition.deltaMovement.takeIf { it.lengthSqr() > 1.0E-4 }?.normalize()
+            ?: Vec3(munition.x - munition.xo, munition.y - munition.yo, munition.z - munition.zo)
+                .takeIf { it.lengthSqr() > 1.0E-4 }?.normalize() ?: munition.lookAngle
+
+    private fun heading(munition: Entity): Vec3 = currentHeading ?: rawHeading(munition)
+
+    /** The heading between the last two ticks at [partial]. */
+    private fun heading(munition: Entity, partial: Float): Vec3 {
+        val from = previousHeading ?: return heading(munition)
+        val to = currentHeading ?: return from
+        val mixed = from.lerp(to, partial.toDouble().coerceIn(0.0, 1.0))
+        return if (mixed.lengthSqr() > 1.0E-6) mixed.normalize() else to
+    }
+
+    /** Degrees of seeker turn per pixel of mouse travel: the player's own mouse sensitivity, as vanilla aiming. */
+    private fun degreesPerPixel(): Double {
+        val mc = Minecraft.getInstance()
+        val s = mc.options.sensitivity().get() * 0.6 + 0.2
+        return s * s * s * 8.0 * 0.15 / zoom
+    }
 
     fun line(): Vec3 {
         val p = Math.toRadians(pitch); val y = Math.toRadians(yaw)
@@ -115,7 +139,7 @@ object AircraftTvClient {
     @JvmStatic fun cameraPosition(vehicle: VehicleEntity, partial: Float): Vec3? {
         if (!activeFor(vehicle)) return null
         val munition = munition() ?: return lastEye
-        val eye = munition.getPosition(partial).add(heading(munition).scale(EYE_AHEAD))
+        val eye = munition.getPosition(partial).add(heading(munition, partial).scale(EYE_AHEAD))
         lastEye = eye
         return eye
     }
@@ -133,8 +157,11 @@ object AircraftTvClient {
         val munition = munition()
         if (munition == null) { if (++missing >= LOST_TICKS) end(); return }
         missing = 0
+        previousHeading = currentHeading ?: rawHeading(munition)
+        currentHeading = rawHeading(munition)
         clampToGimbal(munition)
-        if (mc.isPaused || vehicle.level().gameTime % 2L != 0L) return
+        // every tick: the server keeps the newest line of sight (it used to arrive at 10 Hz and sometimes 5)
+        if (mc.isPaused) return
         val eye = munition.position().add(heading(munition).scale(EYE_AHEAD))
         val los = line()
         AircraftArmamentClient.request("TV", JsonObject().apply {
@@ -152,10 +179,11 @@ object AircraftTvClient {
         }
         val x = mc.mouseHandler.xpos(); val y = mc.mouseHandler.ypos()
         if (cursorX.isFinite() && cursorY.isFinite()) {
-            val sensitivity = (owner?.mouseSensitivity ?: 0.2).coerceIn(0.01, 2.0)
-            val scale = sensitivity / zoom
+            // the player's own sensitivity and invert-Y, as when aiming on foot (owner 2026-09-30)
+            val scale = degreesPerPixel()
+            val invert = if (mc.options.invertYMouse().get()) -1.0 else 1.0
             yaw += (x - cursorX).coerceIn(-256.0, 256.0) * scale
-            pitch = (pitch + (y - cursorY).coerceIn(-256.0, 256.0) * scale).coerceIn(-89.9, 89.9)
+            pitch = (pitch + invert * (y - cursorY).coerceIn(-256.0, 256.0) * scale).coerceIn(-89.9, 89.9)
             munition()?.let(::clampToGimbal)
         }
         cursorX = x; cursorY = y

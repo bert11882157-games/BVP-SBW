@@ -158,7 +158,7 @@ open class WireGuideMissileEntity(type: EntityType<out WireGuideMissileEntity>, 
             return
         }
 
-        val guidedInheritedMotion = effectiveInheritedMotion()
+        var guidedInheritedMotion = effectiveInheritedMotion()
         if (!level().isClientSide) {
             // super.tick moved and collided along the actual wobbled flight segment. Guidance
             // starts from the underlying course, so oscillation cannot accumulate into a turn.
@@ -170,13 +170,17 @@ open class WireGuideMissileEntity(type: EntityType<out WireGuideMissileEntity>, 
                     discard()
                     return
                 }
-                state.completeMovement(relativeSpeed)?.let(::applyGuidedPropulsionMagnitude)
+                val phaseBefore = state.phase
+                val powered = state.completeMovement(relativeSpeed)
+                if (!cruiseStep(state, phaseBefore)) powered?.let(::applyGuidedPropulsionMagnitude)
                 entityData.set(GUIDED_PROPULSION_PHASE, state.phase.code)
                 entityData.set(GUIDED_PROPULSION_SPEED, state.speed.toFloat())
                 entityData.set(GUIDED_PROPULSION_TRAIL_ACTIVE,
                     movementPhase == GuidedPropulsionPhase.THRUST &&
                         state.phase == GuidedPropulsionPhase.THRUST)
             }
+            // a TV cruise missile folds the carrier's momentum into its own at ignition
+            guidedInheritedMotion = effectiveInheritedMotion()
         } else {
             if (isGuidedPropulsionThrusting()) applyGuidedPropulsionMagnitude(guidedPropulsionSpeed())
             // Smoothed flight ignores tracker rotations: head along the client's own relative motion, so the
@@ -213,7 +217,10 @@ open class WireGuideMissileEntity(type: EntityType<out WireGuideMissileEntity>, 
                 val point = com.atsuishio.superbwarfare.api.aircraft.AircraftTvGuidance.aimPoint(this)
                 GuidedMissileGuidance.tvSeekerDirection(position(), lookAngle, point, relativeSpeed,
                     guidedInheritedMotion, com.atsuishio.superbwarfare.api.aircraft.AircraftTvGuidance.GIMBAL_DEGREES + 5.0)?.let {
-                    toVec = it
+                    // Proportional steering (owner 2026-09-30: "the guidance isn't smooth"): a quarter of the
+                    // remaining angle per tick, still inside the airframe's turn limit, instead of full-rate turns that
+                    // snap onto the crosshair.
+                    toVec = GuidedMissileGuidance.easeToward(toVec, it, TV_STEERING_FRACTION)
                     actualGuidanceTargetUUID = com.atsuishio.superbwarfare.api.aircraft.AircraftTvGuidance.trackedVehicle(this)
                 }
             } else if (persistentData.getString("BvpCommandMode") == "MCLOS") {
@@ -319,6 +326,50 @@ open class WireGuideMissileEntity(type: EntityType<out WireGuideMissileEntity>, 
         deltaMovement = direction.scale(speed).add(inherited)
     }
 
+    /**
+     * Cruise speed of an aircraft-launched TV missile (owner 2026-09-30: "it should only boost to go slightly faster
+     * than the aircraft it launched from; the acceleration is unreasonably quick"), NaN until ignition. At ignition the
+     * aircraft's momentum becomes the missile's own; the motor then eases it toward this speed and after burn-out drag
+     * slows it again.
+     */
+    private var cruiseTargetSpeed = Double.NaN
+    /** Ticks since a TV cruise missile's ignition (its sustainer runs [GuidedMissileGuidance.TV_SUSTAIN_TICKS]). */
+    private var cruiseTicks = 0
+
+    /**
+     * Handles this tick's magnitude for a TV cruise missile; false for every other missile. Owner 2026-10-02 ("tv
+     * guided missiles seem to be too slow, it should accelerate decently with pitchdown, but not extremely fast, cap
+     * out at 400 km/h"): the AGM-65B / Kh-25MT boost burnt out after 2 s and they coasted; now a sustainer holds
+     * cruise for [GuidedMissileGuidance.TV_SUSTAIN_TICKS], gravity along the path speeds a dive and slows a climb, and
+     * the speed never passes [GuidedMissileGuidance.TV_SPEED_CAP].
+     */
+    private fun cruiseStep(state: GuidedPropulsionState, phaseBefore: GuidedPropulsionPhase): Boolean {
+        if (persistentData.getString("BvpCommandMode") != "TV") return false
+        if (cruiseTargetSpeed.isNaN()) {
+            if (phaseBefore != GuidedPropulsionPhase.EJECTION || state.phase == GuidedPropulsionPhase.EJECTION) return false
+            val platform = inheritedPlatformMotion.length().takeIf { it.isFinite() } ?: 0.0
+            cruiseTargetSpeed = GuidedMissileGuidance.tvCruiseSpeed(platform, state.profile.maxSpeed)
+            cruiseTicks = 0
+            // fold the carrier's momentum into the missile: its whole velocity is now its own
+            inheritedPlatformMotion = Vec3.ZERO
+            entityData.set(GUIDED_PROPULSION_INHERITED_X, 0f)
+            entityData.set(GUIDED_PROPULSION_INHERITED_Y, 0f)
+            entityData.set(GUIDED_PROPULSION_INHERITED_Z, 0f)
+        }
+        cruiseTicks++
+        val sustaining = cruiseTicks <= maxOf(state.profile.thrustDurationTicks, GuidedMissileGuidance.TV_SUSTAIN_TICKS)
+        // the sustainer keeps the motor phase (the client then flies the published speed instead of a coast step)
+        if (sustaining && state.phase == GuidedPropulsionPhase.FUEL_OUT) state.phase = GuidedPropulsionPhase.THRUST
+        val burning = sustaining || state.phase == GuidedPropulsionPhase.THRUST || phaseBefore == GuidedPropulsionPhase.THRUST
+        val velocity = deltaMovement
+        val speed = velocity.length()
+        val climbSine = if (speed > 1.0e-6 && speed.isFinite()) velocity.y / speed else 0.0
+        val next = GuidedMissileGuidance.tvCruiseStep(speed, cruiseTargetSpeed, burning, climbSine)
+        state.speed = next
+        applyGuidedPropulsionMagnitude(next)
+        return true
+    }
+
     private fun effectiveInheritedMotion(): Vec3 {
         if (!level().isClientSide) return inheritedPlatformMotion
         val synchronized = Vec3(
@@ -352,6 +403,10 @@ open class WireGuideMissileEntity(type: EntityType<out WireGuideMissileEntity>, 
             compound.putDouble("LatchedTargetY", it.y)
             compound.putDouble("LatchedTargetZ", it.z)
         }
+        if (cruiseTargetSpeed.isFinite()) {
+            compound.putDouble("TvCruiseTargetSpeed", cruiseTargetSpeed)
+            compound.putInt("TvCruiseTicks", cruiseTicks)
+        }
         if (guidedPropulsionEnabled && finite(inheritedPlatformMotion)) {
             propulsionState?.writeTo(compound)
             compound.putDouble("GuidedPropulsionInheritedX", inheritedPlatformMotion.x)
@@ -379,6 +434,10 @@ open class WireGuideMissileEntity(type: EntityType<out WireGuideMissileEntity>, 
                 compound.getDouble("LatchedTargetZ")).takeIf(::finite)
         } else null
         disableGuidedPropulsion()
+        cruiseTargetSpeed = if (compound.contains("TvCruiseTargetSpeed", Tag.TAG_DOUBLE.toInt()))
+            compound.getDouble("TvCruiseTargetSpeed").takeIf { it.isFinite() && it > 0.0 } ?: Double.NaN
+        else Double.NaN
+        cruiseTicks = compound.getInt("TvCruiseTicks").coerceAtLeast(0)
         if (compound.getBoolean("GuidedPropulsionEnabled") &&
             compound.contains("GuidedPropulsionPhase", Tag.TAG_BYTE.toInt()) &&
             compound.contains("GuidedPropulsionSpeed", Tag.TAG_DOUBLE.toInt()) &&
@@ -457,6 +516,9 @@ open class WireGuideMissileEntity(type: EntityType<out WireGuideMissileEntity>, 
     override fun getModel() = BedrockModelLoader.WIRE_GUIDE_MISSILE_MODEL
 
     companion object {
+        /** Share of the remaining angle to the TV aim point a missile turns per tick (within its turn limit). */
+        const val TV_STEERING_FRACTION = 0.25
+
         @JvmField
         val GUIDED_PROPULSION_ENABLED: EntityDataAccessor<Boolean> =
             SynchedEntityData.defineId(WireGuideMissileEntity::class.java, EntityDataSerializers.BOOLEAN)

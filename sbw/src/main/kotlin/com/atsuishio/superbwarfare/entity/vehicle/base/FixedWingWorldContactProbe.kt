@@ -99,6 +99,10 @@ internal class FixedWingWorldContactProbe(private val vehicle: VehicleEntity) {
                     }
                 }
             }
+            // Carrier decks are terrain: their columns join the voxels (never full voxels, so kept as boxes).
+            for (deck in com.atsuishio.superbwarfare.api.vehicle.deck.DeckCollisions.boxes(level, swept, vehicle)) {
+                if (swept.intersects(deck)) terrain.add(deck)
+            }
             // Full adjacent voxels are the same solid as their exact rectangular union. Remove
             // internal voxel faces before the bounded sweep and exposed-surface work.
             val compactTerrain = FixedWingTerrainPrisms.compact(terrain)

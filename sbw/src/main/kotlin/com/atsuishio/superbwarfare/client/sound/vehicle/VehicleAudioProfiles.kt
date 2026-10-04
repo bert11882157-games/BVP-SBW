@@ -29,8 +29,13 @@ import net.minecraftforge.fml.common.Mod
  * ```
  * Aircraft add RPM spooling to the engine (`"idleVolume": [0.45, 1.0], "spoolUp": 4.5, "spoolDown": 3.0`) and
  * [Layer]s levelled by RPM, each `{ "loop": "...", "range": 640, "volume": [low, high], "pitch": [low, high] }`:
- * `"boost"` (with `"from"`: the RPM it starts at), `"distant"` (with `"near"`: the distance it takes over at),
- * `"rotor"` and `"interior"`. tools/audio/lizard_import.py generates the aircraft profiles.
+ * `"boost"` (with `"from"`: the RPM it starts at), `"afterburner"` (with an optional `"start"` one-shot, played when
+ * the burner lights), `"distant"` (with `"near"`: the distance it takes over at), `"rotor"`, `"interior"`,
+ * `"airflow"` (rushing air levelled by airspeed up to `"fullSpeed"` blocks/tick, engine or not) and `"flyby"` (its
+ * `"start"` one-shot plays when the aircraft is about to pass the listener within `"range"` blocks at `"fullSpeed"`
+ * or more, `"lead"` seconds before the closest point).
+ * tools/audio/lizard_import.py generates the aircraft profiles; tools/audio/tap_air_power.py adds the power roar and
+ * afterburner layers.
  */
 @Mod.EventBusSubscriber(modid = com.atsuishio.superbwarfare.Mod.MODID, value = [Dist.CLIENT], bus = Mod.EventBusSubscriber.Bus.MOD)
 object VehicleAudioProfiles : SimplePreparableReloadListener<Map<ResourceLocation, JsonObject>>() {
@@ -51,15 +56,19 @@ object VehicleAudioProfiles : SimplePreparableReloadListener<Map<ResourceLocatio
 
     /**
      * An extra loop of an aircraft profile, levelled by engine RPM (`volume` over [low, high] RPM, `pitch` likewise):
-     *  - `boost`: low-frequency roar / afterburner, from RPM [from] up to full, and at full level while the afterburner
-     *    is lit;
+     *  - `boost`: the full-power roar, from RPM [from] up to full (and, for a profile without an `afterburner` layer,
+     *    at full level while the afterburner is lit);
+     *  - `afterburner`: only while the afterburner is lit, fading in fast and out slower; [start] plays as it lights;
      *  - `distant`: the far sound, fading in beyond [near] blocks while the near engine layers recede;
      *  - `rotor`: rotor blades, spinning up with the engine start;
-     *  - `interior`: cockpit ambience, crew only.
+     *  - `interior`: cockpit ambience, crew only;
+     *  - `airflow`: rushing air by airspeed ([fullSpeed] = the speed it is at full level), with or without engine;
+     *  - `flyby`: [start] is the pass whoosh, fired [lead] seconds before a pass within [range] at [fullSpeed]+.
      */
     data class Layer(
         val loop: ResourceLocation, val range: Float, val volume: FloatArray, val pitch: FloatArray,
-        val from: Float, val near: Float,
+        val from: Float, val near: Float, val start: ResourceLocation? = null,
+        val fullSpeed: Float = 0f, val lead: Float = 0f,
     )
 
     data class Tracks(val loop: ResourceLocation, val range: Float, val volume: Float, val fullSpeed: Float)
@@ -72,11 +81,14 @@ object VehicleAudioProfiles : SimplePreparableReloadListener<Map<ResourceLocatio
     data class Profile(
         val id: ResourceLocation, val engine: Engine?, val tracks: Tracks?, val turret: Turret?,
         val boost: Layer? = null, val distant: Layer? = null, val rotor: Layer? = null, val interior: Layer? = null,
+        val afterburner: Layer? = null, val airflow: Layer? = null, val flyby: Layer? = null,
+        /** Second voice of a lit afterburner: its deep rumble (lets the burner add weight without clipping). */
+        val afterburnerBody: Layer? = null,
     ) {
         /** Farthest distance any layer is heard at. */
         val reach: Float
             get() = maxOf(engine?.range ?: 0f, tracks?.range ?: 0f, turret?.range ?: 0f, boost?.range ?: 0f,
-                distant?.range ?: 0f, rotor?.range ?: 0f)
+                distant?.range ?: 0f, rotor?.range ?: 0f, afterburner?.range ?: 0f, airflow?.range ?: 0f)
     }
 
     @Volatile private var profiles: Map<ResourceLocation, Profile> = emptyMap()
@@ -126,7 +138,9 @@ object VehicleAudioProfiles : SimplePreparableReloadListener<Map<ResourceLocatio
     fun parse(id: ResourceLocation, merged: JsonObject): Profile = Profile(id,
         engine(merged.obj("engine")), tracks(merged.obj("tracks")), turret(merged.obj("turret")),
         layer(merged.obj("boost"), 256f, 0.75f, 0f), layer(merged.obj("distant"), 1024f, 0f, 96f),
-        layer(merged.obj("rotor"), 320f, 0f, 0f), layer(merged.obj("interior"), 16f, 0f, 0f))
+        layer(merged.obj("rotor"), 320f, 0f, 0f), layer(merged.obj("interior"), 16f, 0f, 0f),
+        layer(merged.obj("afterburner"), 1024f, 0f, 0f), layer(merged.obj("airflow"), 192f, 0f, 0f),
+        layer(merged.obj("flyby"), 48f, 0f, 0f), layer(merged.obj("afterburnerBody"), 1024f, 0f, 0f))
 
     private fun JsonObject.obj(key: String): JsonObject? = get(key)?.takeIf { it.isJsonObject }?.asJsonObject
 
@@ -176,7 +190,8 @@ object VehicleAudioProfiles : SimplePreparableReloadListener<Map<ResourceLocatio
         o ?: return null
         val loop = o.sound("loop") ?: return null
         return Layer(loop, o.float("range", range).coerceIn(4f, 2048f), o.pair("volume", 1f, 1f),
-            o.pair("pitch", 1f, 1f), o.float("from", from).coerceIn(0f, 1f), o.float("near", near).coerceIn(0f, 1024f))
+            o.pair("pitch", 1f, 1f), o.float("from", from).coerceIn(0f, 1f), o.float("near", near).coerceIn(0f, 1024f),
+            o.sound("start"), o.float("fullSpeed", 0f).coerceIn(0f, 64f), o.float("lead", 1.5f).coerceIn(0f, 5f))
     }
 
     private fun tracks(o: JsonObject?): Tracks? {

@@ -37,8 +37,9 @@ final class ProjectileArmorMutationService {
      * velocity. PASS prevents native entity/module damage and does not consume the projectile,
      * while the explicit RICOCHET outcome still reaches the presentation provider.
      */
+    /** A ricochet eats the shot (owner 2026-09-30): the round is consumed; its tracer is cosmetic, client side. */
     static ProjectileImpactResult ricochetImpact(boolean replacementVisual) {
-        return ProjectileImpactResult.builder(ProjectileImpactDisposition.PASS)
+        return ProjectileImpactResult.builder(ProjectileImpactDisposition.BLOCK)
                 .visualPolicy(replacementVisual
                         ? ProjectileImpactVisualPolicy.REPLACE
                         : ProjectileImpactVisualPolicy.SUPPRESS)

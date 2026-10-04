@@ -1,0 +1,57 @@
+{
+  "Schema": 1,
+  "Name": "KD-88 · imaging IR fire and forget",
+  "Category": "AIR_TO_GROUND",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/kd88.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.1371,
+    0.672
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.1371,
+      0.0,
+      0.672
+    ],
+    "Right": [
+      -0.1371,
+      0.0,
+      0.672
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    0.672
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/kd88.png",
+  "Capacity": 1,
+  "MassKg": 600,
+  "AmmoItem": "superbwarfare:large_air_to_ground_missile",
+  "LaunchOffset": [
+    0.0,
+    -0.1371,
+    0.0
+  ],
+  "Guidance": {
+    "Mode": "GROUND_INFRARED",
+    "Presentation": "FIRE_AND_FORGET",
+    "LockTicks": 60,
+    "Range": 850,
+    "ConeDegrees": 30,
+    "CountermeasureVulnerability": 1
+  },
+  "Flight": {
+    "InitialSpeed": 1.0,
+    "MaxSpeed": 5.5,
+    "AccelerationPerTick": 0.08,
+    "TurnDegreesPerSecond": 40,
+    "Damage": 2840,
+    "BlastRadius": 1.25,
+    "TntEquivalentKg": 165,
+    "MaxLoadFactorG": 12,
+    "BodyTurnLimitScale": 3
+  }
+}

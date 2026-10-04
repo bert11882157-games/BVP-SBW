@@ -1038,6 +1038,24 @@
   "EngineSound": "berts_vehicle_pack:mig_21bis_engine_loop",
   "EngineSoundMode": "CUSTOM",
   "CustomSoundProfileId": "berts_vehicle_pack:aircraft_engine/mig_21bis/idle",
+  "Countermeasures": {
+    "Flares": true,
+    "Chaff": true,
+    "RadarWarningReceiver": true,
+    "FlaresPerSecond": 4,
+    "FlaresPerBurst": 12,
+    "FlareLeftPos": [
+      0.7,
+      1.4,
+      -3.8
+    ],
+    "FlareRightPos": [
+      -0.7,
+      1.4,
+      -3.8
+    ],
+    "FlareEjectionSpeed": 0.7
+  },
   "AircraftTerrainContact": {
     "Fuselage": {
       "Min": [

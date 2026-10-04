@@ -1,0 +1,60 @@
+{
+  "Schema": 1,
+  "Name": "R.550 Magic · infrared",
+  "Category": "AIR_TO_AIR",
+  "Capacity": 1,
+  "MassKg": 89,
+  "Guidance": {
+    "Mode": "INFRARED",
+    "LockTicks": 60,
+    "Range": 1274,
+    "ConeDegrees": 25,
+    "CountermeasureVulnerability": 1.15
+  },
+  "Flight": {
+    "InitialSpeed": 0.5,
+    "MaxSpeed": 5,
+    "AccelerationPerTick": 0.08,
+    "TurnDegreesPerSecond": 65,
+    "Damage": 55,
+    "BlastRadius": 3.3,
+    "TntEquivalentKg": 6.1
+  },
+  "AmmoItem": "superbwarfare:small_air_to_air_missile",
+  "MaxPerPylon": 2,
+  "RackSpacing": [
+    0.55,
+    0.3,
+    0
+  ],
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/r550_magic.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.1242,
+    0.3808
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.1242,
+      0.0,
+      0.3808
+    ],
+    "Right": [
+      -0.1242,
+      0.0,
+      0.3808
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    0.3808
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/r550_magic.png",
+  "LaunchOffset": [
+    0.0,
+    -0.1242,
+    0.0
+  ]
+}

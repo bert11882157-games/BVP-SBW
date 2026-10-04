@@ -3,28 +3,28 @@
   "Name": "AIM-54C+ Phoenix · active terminal radar",
   "Category": "AIR_TO_AIR",
   "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/aim54.geo.json",
-  "ModelForward": "+Z",
+  "ModelForward": "-Z",
   "MountAnchor": [
-    0,
-    0.25,
-    -0.56
+    0.0,
+    0.2408,
+    0.5544
   ],
   "SideMountAnchors": {
     "Left": [
-      -0.25,
+      0.2408,
       0.0,
-      -0.56
+      0.5544
     ],
     "Right": [
-      0.25,
+      -0.2408,
       0.0,
-      -0.56
+      0.5544
     ]
   },
   "MountAxis": [
     0.0,
     0.0,
-    -0.56
+    0.5544
   ],
   "Texture": "berts_vehicle_pack:textures/aircraft_stores/aim54.png",
   "Capacity": 1,
@@ -32,13 +32,13 @@
   "Guidance": {
     "Mode": "ACTIVE_RADAR",
     "LockTicks": 0,
-    "Range": 2400,
+    "Range": 3500,
     "ConeDegrees": 35,
     "CountermeasureVulnerability": 0.75
   },
   "Flight": {
     "InitialSpeed": 0.5,
-    "MaxSpeed": 10,
+    "MaxSpeed": 11,
     "AccelerationPerTick": 0.1,
     "TurnDegreesPerSecond": 32,
     "Damage": 110,
@@ -49,7 +49,7 @@
   "MaxPerPylon": 1,
   "LaunchOffset": [
     0.0,
-    -0.25,
+    -0.2408,
     0.0
   ]
 }

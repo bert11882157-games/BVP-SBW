@@ -166,21 +166,20 @@
   ],
   "Weapons": {
     "Cannon": {
-      "VehicleDirectDamageScale": 0.5,
       "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/cannon_25mm_aa.png",
       "DefaultFireMode": "Auto",
       "AvailableFireModes": "Auto",
-      "Projectile": { "Type": "superbwarfare:small_cannon_shell", "CaliberMm": 25 },
-      "ShellType": "AA",
+      "Projectile": { "Type": "superbwarfare:small_cannon_shell", "Profile": "berts_vehicle_pack:lav_ad/cannon/default" },
+      "ShellType": "HE",
       "DefaultZoom": 3,
       "RPM": 1200,
-      "Velocity": 23,
+      "Velocity": 55.0,
       "Gravity": 0.03,
-      "Damage": 23,
-      "ExplosionDamage": 2,
-      "ExplosionRadius": 1,
-      "TntEquivalentKg": 0.0544,
-      "ProjectileLife": 20,
+      "Damage": 250,
+      "ExplosionDamage": 0,
+      "ExplosionRadius": 5,
+      "TntEquivalentKg": 0.0205,
+      "ProjectileLife": 40,
       "Spread": 0.75,
       "RecoilTime": 19,
       "RecoilForce": 0.25,
@@ -194,7 +193,58 @@
         "FireSoundInstances": "superbwarfare:lav_ad_fire",
         "Change": "superbwarfare:into_cannon"
       },
-      "AmmoType": "superbwarfare:small_shell_aa",
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
+          "Override": {
+            "Projectile": { "Type": "superbwarfare:small_cannon_shell", "Profile": "berts_vehicle_pack:lav_ad/cannon/ammo_00_pgu_32_saphei_t" },
+            "ShellType": "HE",
+            "Velocity": 55.0,
+            "ApDurability": 31,
+            "Damage": 250,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 5,
+            "TntEquivalentKg": 0.0205,
+            "Name": "Default Belt",
+            "ProjectileBelt": {
+              "Name": "Default Belt",
+              "Family": "GENERIC",
+              "Rounds": [
+                { "Shots": 2, "Round": "pgu_32_saphei_t", "Ammo": "superbwarfare:small_shell_he", "Tracer": "RED" },
+                { "Shots": 1, "Round": "pgu_20_hvap", "Ammo": "superbwarfare:small_shell_ap", "Tracer": "NONE" }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:lav_ad/cannon/ammo_00_pgu_32_saphei_t",
+              "ProjectileLife": 40
+            }
+          }
+        }
+      ],
+      "ProjectileBeltAmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_ap",
+          "Override": {
+            "Projectile": { "Type": "superbwarfare:small_cannon_shell", "Profile": "berts_vehicle_pack:lav_ad/cannon/belt_ammo_00_pgu_20_hvap" },
+            "ShellType": "AP",
+            "Velocity": 51.8,
+            "ApDurability": 66,
+            "Damage": 65,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "PGU-20/U HVAP"
+          }
+        }
+      ],
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "superbwarfare:small_cannon_shell",
+        "ProjectileProfile": "berts_vehicle_pack:lav_ad/cannon/default",
+        "ProjectileLife": 40
+      },
       "ShootPos": {
         "Transform": "Barrel",
         "Positions": [[0, 0.12, 1.96]],

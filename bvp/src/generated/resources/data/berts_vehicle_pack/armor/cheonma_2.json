@@ -1,0 +1,80 @@
+{
+  "id": "cheonma_2",
+  "model_scale": 0.71640856,
+  "ap_penetration_mm": 457,
+  "chemical_penetration_mm": 850,
+  "fallback_incoming_penetration_mm": 500,
+  "atgm_tandem": true,
+  "impact_tolerance": 0.25,
+  "internal_ray_length": 10,
+  "unboxed_hits_penetrate": true,
+  "min_armor_mm": 16,
+  "plates": [],
+  "sensitive_internals": [],
+  "engines": [
+    {
+      "name": "engine_core_00",
+      "center": [
+        0.0,
+        1.00539,
+        2.08801
+      ],
+      "half_size": [
+        0.97618,
+        0.32604,
+        0.48193
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull"
+    }
+  ],
+  "ammo_racks": [
+    {
+      "name": "carousel_0",
+      "center": [
+        0.0,
+        0.80144,
+        0.20514
+      ],
+      "half_size": [
+        0.95126,
+        0.13173,
+        0.93925
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull"
+    },
+    {
+      "name": "carousel_1",
+      "center": [
+        0.01245,
+        0.80215,
+        0.20491
+      ],
+      "half_size": [
+        0.86985,
+        0.13102,
+        0.85913
+      ],
+      "rotation": [
+        0,
+        45,
+        0
+      ],
+      "frame": "hull"
+    }
+  ],
+  "tracks": [],
+  "modules": [],
+  "explosive_reactive_armor": [],
+  "sbw_obb": [],
+  "ap_round": "3BM42 APFSDS"
+}

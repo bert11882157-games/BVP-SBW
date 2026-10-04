@@ -11,6 +11,7 @@ object AircraftGuidanceLabels {
         ?: when (store["Category"]?.asString) {
             "LASER_GUIDED" -> "LASER"
             "ROCKET_POD", "BOMB" -> "DUMB"
+            AircraftTargetingPods.CATEGORY -> "DESIGNATOR"
             else -> ""
         }
 
@@ -23,6 +24,7 @@ object AircraftGuidanceLabels {
         "LASER_GUIDED", "LASER" -> "LASER"
         "GPS", "GPS_GUIDED", "CRUISE" -> "GPS"
         "DUMB", "UNGUIDED" -> "DUMB"
+        "DESIGNATOR" -> "TGP"
         else -> mode.uppercase(java.util.Locale.ROOT).take(8)
     }
 
@@ -38,6 +40,7 @@ object AircraftGuidanceLabels {
         "LASER" -> "Laser guided"
         "GPS" -> "GPS guided"
         "DUMB" -> "Unguided"
+        "TGP" -> "Targeting pod · sensor view and laser designator"
         "" -> "Direct fire"
         else -> short(mode)
     }

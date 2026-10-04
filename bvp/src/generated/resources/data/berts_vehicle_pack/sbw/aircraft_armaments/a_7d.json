@@ -5,7 +5,87 @@
     "Vulcan"
   ],
   "SuspendedWeapons": [],
-  "Pairs": [],
+  "Pairs": [
+    {
+      "Id": "inner_wing",
+      "Name": "Inner wing pylons",
+      "Left": [
+        2.2,
+        1.7,
+        0.25
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            2.2,
+            2.2,
+            0.25
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Right": [
+        -2.2,
+        1.7,
+        0.25
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -2.2,
+            2.2,
+            0.25
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/walleye",
+        "berts_vehicle_pack:munition/walleye2"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 1500
+    },
+    {
+      "Id": "outer_wing",
+      "Name": "Outer wing pylons",
+      "Left": [
+        3.15,
+        1.7,
+        -0.55
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            3.15,
+            2.15,
+            -0.55
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Right": [
+        -3.15,
+        1.7,
+        -0.55
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -3.15,
+            2.15,
+            -0.55
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/walleye"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 1000
+    }
+  ],
   "StoreGroups": {
     "berts_vehicle_pack:modeled_store/a_7d/assembly_0": [
       "suspended_a_7d_0"

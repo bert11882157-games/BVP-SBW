@@ -18,8 +18,10 @@ import com.github.mcmodderanchor.simplebedrockmodel.v1.common.model.BedrockBone;
  * <li>the arm turns back to straight ahead, then pole, mount and plate roll 90 degrees toward the hatch and sink
  *     a little into the hull, the angled plate folding flat onto the roof;</li>
  * <li>a new tube appears on the arm while it is down;</li>
- * <li>(the same in reverse, ending exactly with the reload) the arm rolls back up, turns back to where the operator
- *     aims, and the hatch closes.</li>
+ * <li>(the same in reverse, ending exactly with the reload) the arm rolls back up, still pointing straight ahead, and
+ *     the hatch closes. The reload ends with the launcher straight ahead: the entity resets its turret aim to the
+ *     front at that moment ({@code FittedGroundVehicleEntity}), and the aim servo then slews it to where the
+ *     operator looks at its normal traverse rate (owner 2026-09-29: no snap to the aimed position).</li>
  * </ol>
  *
  * Bones (tools/vehgen/shturm_reload_rig.py): {@code turret} (pole; yaw axis = pole axis, pivot at the pole foot),
@@ -40,9 +42,14 @@ final class LauncherReloadAnimator {
     private static final float PLATE_TO_AXIS_X = -8.95F, PLATE_TO_AXIS_Z = 0.02F;
 
     /** Seconds into a reload within which a render still counts as seeing the shot itself. */
-    private static final float JETTISON_WINDOW_S = 0.5F;
-    /** Reload time last seen per launcher, to notice a new shot. */
-    private static final java.util.Map<VehicleEntity, float[]> THROWN = new java.util.WeakHashMap<>();
+    private static final float JETTISON_WINDOW_S = 1.0F;
+    /**
+     * Per launcher in a reload: the latest reload time shown. One entry per reload, created by the first render
+     * that sees it, so a shot throws exactly one tube (owner 2026-09-29: ten tubes came off, because the synced
+     * reload timer steps back a little between ticks and each step back used to count as a new shot). The time
+     * shown never runs backwards within a reload either.
+     */
+    private static final java.util.Map<VehicleEntity, float[]> RELOADS = new java.util.WeakHashMap<>();
 
     private LauncherReloadAnimator() {
     }
@@ -73,9 +80,23 @@ final class LauncherReloadAnimator {
                 elapsed = Math.max(0.0F, total - remaining);
             }
         }
-        Pose pose = elapsed >= 0.0F && total > 0.0F
-                ? pose(elapsed / 20.0F, total / 20.0F)
-                : ammo > 0 ? Pose.REST : Pose.EMPTY;
+        float s = -1.0F;
+        if (elapsed >= 0.0F && total > 0.0F) {
+            s = elapsed / 20.0F;
+            float[] seen = RELOADS.get(entity);
+            if (seen == null) {
+                // a new reload: the shot that started it throws the fired tube (a render that first meets a reload
+                // well under way - the vehicle just came into view - does not)
+                if (s < JETTISON_WINDOW_S) BvpLauncherJettison.queue(entity, yawRad, pitchRad);
+                RELOADS.put(entity, new float[]{s});
+            } else {
+                s = Math.max(s, seen[0]);
+                seen[0] = s;
+            }
+        } else {
+            RELOADS.remove(entity);
+        }
+        Pose pose = s >= 0.0F ? pose(s, total / 20.0F) : ammo > 0 ? Pose.REST : Pose.EMPTY;
 
         // pole + mount: aim blended toward straight ahead, then the roll toward the hatch and the sink
         RendererBones.setRotation(turret, 0.0F, yawRad * (1.0F - pose.align),
@@ -88,32 +109,17 @@ final class LauncherReloadAnimator {
             RendererBones.hide(barrel);
         }
 
-        // the fired tube is not animated: the shot jettisons it as a physics object (BvpLauncherJettison), and the
-        // spent-tube bone stays hidden on the vehicle
-        if (spent != null) {
-            RendererBones.hide(spent);
-            float s = elapsed >= 0.0F && total > 0.0F ? elapsed / 20.0F : -1.0F;
-            if (s >= 0.0F) {
-                float[] seen = THROWN.get(entity);
-                if (seen == null || s < seen[0]) {
-                    // a new shot (a render that first meets a reload already under way does not throw a tube)
-                    if (s < JETTISON_WINDOW_S) BvpLauncherJettison.queue(entity, yawRad, pitchRad);
-                    seen = new float[]{s};
-                    THROWN.put(entity, seen);
-                }
-                seen[0] = s;
-            } else {
-                THROWN.remove(entity);
-            }
-        }
+        // the fired tube is not animated: the shot jettisons it as a physics object (BvpLauncherJettison, queued
+        // above), and the spent-tube bone stays hidden on the vehicle
+        if (spent != null) RendererBones.hide(spent);
 
         // the angled plate: follows the pole's yaw about the pole axis, folds flat onto the roof while it is down
         if (plate != null) {
             float psi = yawRad * (1.0F - pose.align);
-            float c = (float) Math.cos(psi), s = (float) Math.sin(psi);
+            float c = (float) Math.cos(psi), sn = (float) Math.sin(psi);
             float dx = PLATE_TO_AXIS_X, dz = PLATE_TO_AXIS_Z;
-            float offX = dx - (dx * c + dz * s);
-            float offZ = dz - (-dx * s + dz * c);
+            float offX = dx - (dx * c + dz * sn);
+            float offZ = dz - (-dx * sn + dz * c);
             RendererBones.setPositionOffset(plate, offX, pose.roll * PLATE_RAISE_PX, offZ);
             RendererBones.setRotation(plate, 0.0F, psi, pose.roll * PLATE_FOLD_DEG * RendererBones.DEG_TO_RAD);
         }
@@ -129,7 +135,8 @@ final class LauncherReloadAnimator {
         float end = total;
         float throwEnd = 0.9F * k;
         float hatch = Math.min(ramp(s, 0.25F * k, 1.15F * k), 1.0F - ramp(s, end - 1.0F * k, end));
-        float align = Math.min(ramp(s, 0.6F * k, 1.4F * k), 1.0F - ramp(s, end - 1.3F * k, end - 0.9F * k));
+        // straight ahead from here to the end: the aim servo, not the animation, brings it back onto the target
+        float align = ramp(s, 0.6F * k, 1.4F * k);
         float roll = Math.min(ramp(s, 1.4F * k, 3.0F * k), 1.0F - ramp(s, end - 3.0F * k, end - 1.3F * k));
         boolean tube = s >= 3.3F * k;
         float throwProgress = s < throwEnd ? s / throwEnd : 1.0F;

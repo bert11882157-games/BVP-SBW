@@ -16,6 +16,8 @@ object ModParticles {
         ExplosionBurstPresentations.registerClientEmitter(ExplosionBurstClient::spawn)
         ShockwavePresentations.registerClientEmitter(BlastEffects::onShockwave)
         FireballPresentations.registerClientEmitter(BlastEffects::onFireball)
+        com.atsuishio.superbwarfare.api.effect.RicochetTracerPresentations.registerClientEmitter(
+            com.atsuishio.superbwarfare.client.renderer.RicochetTracers::spawn)
         with(event) {
             registerSpriteSet(ModParticleTypes.FIRE_STAR.get()) { FireStarParticle.provider(it) }
             registerSpriteSet(ModParticleTypes.WHITE_STAR.get()) { WhiteStarParticle.provider(it) }

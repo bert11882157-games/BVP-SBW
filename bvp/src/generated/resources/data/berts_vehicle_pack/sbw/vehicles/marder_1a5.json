@@ -132,21 +132,6 @@
       ]
     },
     {
-      "Part": "Turret",
-      "Transform": "Barrel",
-      "Rotation": "Barrel",
-      "Position": [
-        -0.24356,
-        0.15603,
-        -0.12939
-      ],
-      "Size": [
-        0.12178,
-        0.08372,
-        0.09514
-      ]
-    },
-    {
       "Size": [
         0.02522,
         0.43486,
@@ -252,6 +237,81 @@
         0.0,
         1.875,
         -3.88653
+      ]
+    },
+    {
+      "Part": "Turret",
+      "Transform": "Turret",
+      "Rotation": "Turret",
+      "Size": [
+        0.8079,
+        0.46146,
+        0.24595
+      ],
+      "Position": [
+        0.0,
+        0.44145,
+        -0.83963
+      ]
+    },
+    {
+      "Part": "Turret",
+      "Transform": "Turret",
+      "Rotation": "Turret",
+      "Size": [
+        0.9638,
+        0.46146,
+        0.23595
+      ],
+      "Position": [
+        0.0,
+        0.44145,
+        -0.35773
+      ]
+    },
+    {
+      "Part": "Turret",
+      "Transform": "Turret",
+      "Rotation": "Turret",
+      "Size": [
+        0.9547,
+        0.36312,
+        0.23595
+      ],
+      "Position": [
+        -0.00026,
+        0.34312,
+        0.11417
+      ]
+    },
+    {
+      "Part": "Turret",
+      "Transform": "Turret",
+      "Rotation": "Turret",
+      "Size": [
+        0.88755,
+        0.20355,
+        0.24595
+      ],
+      "Position": [
+        0.0,
+        0.18354,
+        0.59607
+      ]
+    },
+    {
+      "Part": "Turret",
+      "Transform": "Barrel",
+      "Rotation": "Barrel",
+      "Position": [
+        -0.24356,
+        0.1013,
+        -0.11827
+      ],
+      "Size": [
+        0.12178,
+        0.02901,
+        0.08403
       ]
     }
   ],
@@ -608,14 +668,14 @@
             "Damage": 65,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
-            "Name": "Ground Belt",
+            "Name": "DM63",
             "ShootShake": [
               8,
               10,
               12
             ],
             "ProjectileBelt": {
-              "Name": "Ground Belt",
+              "Name": "DM63",
               "Family": "RH202",
               "Rounds": [
                 {
@@ -641,6 +701,52 @@
           }
         },
         {
+          "Ammo": "superbwarfare:small_shell_gs",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:marder_1a5/cannon/belt_ammo_wt_dm43_hvap_t"
+            },
+            "ShellType": "AP",
+            "Velocity": 55.0,
+            "ApDurability": 57,
+            "Damage": 65,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "DM43",
+            "ShootShake": [
+              8,
+              10,
+              12
+            ],
+            "ProjectileBelt": {
+              "Name": "DM43",
+              "Family": "RH202",
+              "Rounds": [
+                {
+                  "Shots": 3,
+                  "Round": "dm43_hvap_t",
+                  "Ammo": "superbwarfare:small_shell_gs",
+                  "Tracer": "LIGHT_RED"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "dm51a1_hefi_t_1",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "LIGHT_RED"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:marder_1a5/cannon/belt_ammo_wt_dm43_hvap_t",
+              "ProjectileLife": 40
+            }
+          }
+        },
+        {
           "Ammo": "superbwarfare:small_shell_he",
           "ConsumptionItem": "superbwarfare:small_autocannon_shell",
           "Override": {
@@ -655,21 +761,68 @@
             "ExplosionDamage": 0,
             "ExplosionRadius": 5,
             "TntEquivalentKg": 0.01105,
-            "Name": "Air Belt",
+            "Name": "Default",
             "ShootShake": [
               8,
               10,
               12
             ],
             "ProjectileBelt": {
-              "Name": "Air Belt",
+              "Name": "Default",
+              "Family": "RH202",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "dm43_hvap_t",
+                  "Ammo": "superbwarfare:small_shell_gs",
+                  "Tracer": "LIGHT_RED"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "dm51a1_hefi_t_1",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "LIGHT_RED"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:marder_1a5/cannon/ammo_01_dm51a1_hefi_t_1",
+              "ProjectileLife": 40
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_aa",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:marder_1a5/cannon/ammo_01_dm51a1_hefi_t_1"
+            },
+            "ShellType": "HE",
+            "Velocity": 55.0,
+            "ApDurability": 7,
+            "Damage": 250,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 5,
+            "TntEquivalentKg": 0.01105,
+            "Name": "DM51A1",
+            "ShootShake": [
+              8,
+              10,
+              12
+            ],
+            "ProjectileBelt": {
+              "Name": "DM51A1",
               "Family": "RH202",
               "Rounds": [
                 {
                   "Shots": 3,
                   "Round": "dm51a1_hefi_t_1",
-                  "Ammo": "superbwarfare:small_shell_he",
-                  "Tracer": "NONE"
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "LIGHT_RED"
                 },
                 {
                   "Shots": 1,
@@ -689,30 +842,7 @@
         }
       ],
       "ProjectileAmount": 1,
-      "ProjectileBeltAmmoType": [
-        {
-          "Ammo": "superbwarfare:small_shell_gs",
-          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
-          "Override": {
-            "Projectile": {
-              "Type": "superbwarfare:small_cannon_shell",
-              "Profile": "berts_vehicle_pack:marder_1a5/cannon/belt_ammo_wt_dm43_hvap_t"
-            },
-            "ShellType": "AP",
-            "Velocity": 55.0,
-            "ApDurability": 57,
-            "Damage": 65,
-            "ExplosionDamage": 0,
-            "ExplosionRadius": 0,
-            "Name": "Default",
-            "ShootShake": [
-              8,
-              10,
-              12
-            ]
-          }
-        }
-      ],
+      "ProjectileBeltAmmoType": [],
       "ShellType": "AP",
       "ApDurability": 66,
       "ShootShake": [
@@ -868,7 +998,7 @@
         "Fire3PGain": 1.0,
         "Fire3PFarGain": 1.0,
         "Fire3PVeryFarGain": 1.0,
-        "Volume": 0.4,
+        "Volume": 0.63,
         "VehicleReload": "superbwarfare:m_60_reload_empty",
         "VehicleReloadClipDurationTicks": 127
       },

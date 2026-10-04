@@ -136,6 +136,36 @@
         1.75186,
         -0.4356
       ]
+    },
+    {
+      "Part": "Turret",
+      "Transform": "Turret",
+      "Rotation": "Turret",
+      "Size": [
+        0.47144,
+        0.53458,
+        0.416
+      ],
+      "Position": [
+        0.0,
+        0.02661,
+        0.0792
+      ]
+    },
+    {
+      "Part": "Turret",
+      "Transform": "Turret",
+      "Rotation": "Turret",
+      "Size": [
+        0.25496,
+        0.16731,
+        0.125
+      ],
+      "Position": [
+        0.0,
+        0.34794,
+        0.6202
+      ]
     }
   ],
   "Attachments": {
@@ -525,7 +555,7 @@
         "Fire3PGain": 1.0,
         "Fire3PFarGain": 1.0,
         "Fire3PVeryFarGain": 1.0,
-        "Volume": 0.4,
+        "Volume": 0.76,
         "VehicleReload": "superbwarfare:m_60_reload_empty",
         "VehicleReloadClipDurationTicks": 127
       },

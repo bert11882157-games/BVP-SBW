@@ -75,7 +75,26 @@ object AircraftArmamentManager {
 
     @JvmStatic fun definition(vehicle: VehicleEntity): JsonObject? = if (vehicle.level().isClientSide)
         AircraftArmamentClient.getState(vehicle.uuid)?.getAsJsonObject("Definition")
-    else AircraftArmamentRegistry.aircraft[ForgeRegistries.ENTITY_TYPES.getKey(vehicle.type)]
+    else AircraftArmamentRegistry.aircraft[ForgeRegistries.ENTITY_TYPES.getKey(vehicle.type)]?.let {
+        // Store targeting pods are offered on every external pylon of a fixed-wing aircraft (AircraftTargetingPods).
+        if (fixedWing(vehicle)) AircraftTargetingPods.withUniversalStores(it, AircraftArmamentRegistry.stores) else it
+    }
+    private fun fixedWing(vehicle: VehicleEntity) = vehicle.isFixedWingFlightVehicle() ||
+        vehicle.vehicleType == com.atsuishio.superbwarfare.data.vehicle.subdata.VehicleType.AIRPLANE
+
+    /**
+     * The aircraft's targeting pod as an aircraft `Pod` object, or null: its authored pod, else a fitted pod store
+     * still on the airframe (AircraftTargetingPods.effective). The client reads the one its last snapshot carried.
+     */
+    @JvmStatic fun pod(vehicle: VehicleEntity): JsonObject? {
+        val def = definition(vehicle) ?: return null
+        if (vehicle.level().isClientSide) return def.getAsJsonObject("Pod")
+        val chosen = selection(vehicle)
+        return AircraftTargetingPods.effective(def, { chosen[it]?.asString },
+            { AircraftArmamentRegistry.stores[ResourceLocation.tryParse(it)] }) {
+            com.atsuishio.superbwarfare.api.vehicle.flight.AircraftWreckBreakup.detachedAt(vehicle, it)
+        }
+    }
 
     private fun equipment(vehicle: VehicleEntity): CompoundTag {
         val root = vehicle.persistentData
@@ -383,7 +402,8 @@ object AircraftArmamentManager {
                 val actualProjectile = vehicle.getGunData(weaponName)
                     ?.get(com.atsuishio.superbwarfare.data.gun.GunProp.PROJECTILE)?.resolvedProfileId()
                 compatible && store != null && store["Category"]?.asString !in
-                    setOf("LASER_GUIDED", "COMMAND_GUIDED", "AIR_TO_AIR", "AIR_TO_GROUND", "ANTI_RADIATION", "BOMB", "CRUISE", "VISUAL_ONLY") &&
+                    setOf("LASER_GUIDED", "COMMAND_GUIDED", "AIR_TO_AIR", "AIR_TO_GROUND", "ANTI_RADIATION", "BOMB", "CRUISE", "VISUAL_ONLY",
+                        AircraftTargetingPods.CATEGORY) &&
                     (vehicle.level().isClientSide || gunProfile == null || actualProjectile != null && actualProjectile in expectedProjectiles)
             } == true }
     }
@@ -400,7 +420,11 @@ object AircraftArmamentManager {
     @JvmStatic fun snapshot(vehicle: VehicleEntity): JsonObject = base(vehicle).also { out ->
         out.addProperty("Revision", equipment(vehicle).getLong("Revision"))
         out.addProperty("CatalogueRevision", AircraftArmamentRegistry.revision)
-        out.add("Selections", selection(vehicle).deepCopy()); out.add("Definition", definition(vehicle)?.deepCopy() ?: JsonObject())
+        out.add("Selections", selection(vehicle).deepCopy())
+        // A fitted pod store gives the client its pod exactly like an authored one (AircraftTargetingPods).
+        out.add("Definition", (definition(vehicle)?.deepCopy() ?: JsonObject()).also { def ->
+            if (!def.has("Pod")) pod(vehicle)?.let { def.add("Pod", it) }
+        })
         out.add("Counts", JsonObject().also { counts ->
             for ((key, _) in selection(vehicle).entrySet()) counts.addProperty(key, rackCount(vehicle, key))
         })
@@ -535,7 +559,9 @@ object AircraftArmamentManager {
         if (request.epoch != lease.epoch) { reply(player, lease, message = "Controls refreshed; try again."); return }
         val now = player.serverLevel().gameTime
         val bucket = when(request.operation) { "DESIGNATE", "CLEAR_POINT" -> "point"; "STABILIZE" -> "stabilize"; "TV" -> "tv"; "FIRE" -> "fire"; "SEEK" -> "seek"; "COMMAND" -> "command"; else -> "edit" }
-        val interval = if (bucket == "edit") 5L else 2L
+        // TV steering arrives every tick and the newest line of sight always wins (owner 2026-09-30: the seeker
+        // stepped when jittered packets were dropped).
+        val interval = when (bucket) { "edit" -> 5L; "tv" -> 0L; else -> 2L }
         if (now - (lease.last[bucket] ?: Long.MIN_VALUE / 2) < interval) {
             if (bucket == "edit") reply(player, lease, message = "Please wait briefly before another change.")
             return
@@ -546,7 +572,7 @@ object AircraftArmamentManager {
                 "COMMAND" -> AircraftManualCommand.accept(vehicle,player,body,now)
                 "TV" -> AircraftTvGuidance.command(player, vehicle, body)
                 "APPLY" -> {
-                    val plan = apply(player, vehicle, body); publish(vehicle)
+                    val plan = apply(player, vehicle, body); if (pod(vehicle) == null) lease.pod = false; publish(vehicle)
                     reply(player, lease, message = fittedMessage("Armament equipped", plan))
                 }
                 "SAVE_PRESET" -> {
@@ -562,13 +588,14 @@ object AircraftArmamentManager {
                     val (choices, counts) = presetRequest(saved.getCompound(name))
                     val applyBody = JsonObject().also { it.addProperty("Revision", equipment(vehicle).getLong("Revision"))
                         it.add("Selections", choices); it.add("Counts", counts) }
-                    val plan = apply(player, vehicle, applyBody, savedPreset = true); publish(vehicle)
+                    val plan = apply(player, vehicle, applyBody, savedPreset = true); if (pod(vehicle) == null) lease.pod = false
+                    publish(vehicle)
                     reply(player, lease, message = fittedMessage("Preset equipped", plan))
                 }
                 "DELETE_PRESET" -> { presets(player, vehicle).remove(presetName(body)); reply(player, lease, message = "Preset deleted.") }
                 "POD" -> {
                     val active = body["Active"].asBoolean
-                    require(!active || definition(vehicle)?.has("Pod") == true) { "This aircraft has no authored targeting pod." }
+                    require(!active || pod(vehicle) != null) { "No targeting pod: fit one on a pylon." }
                     lease.pod = active; lease.designationGeneration++; lease.stabilizeGeneration++; reply(player, lease)
                 }
                 "DESIGNATE" -> {
@@ -679,6 +706,7 @@ object AircraftArmamentManager {
         val guidedMissile = category in setOf("AIR_TO_AIR", "AIR_TO_GROUND", "ANTI_RADIATION", "CRUISE") && store.has("Guidance")
         val bomb = category == "BOMB" && store.has("Bomb")
         val cruise = category == "CRUISE" && store.has("Flight")
+        require(category != AircraftTargetingPods.CATEGORY) { "A targeting pod is a sensor, not a weapon." }
         require(category != "VISUAL_ONLY" && (category !in setOf("AIR_TO_AIR", "AIR_TO_GROUND", "ANTI_RADIATION", "BOMB", "CRUISE") || guidedMissile || bomb || cruise)) { "This store is visual only in this version." }
         require(com.atsuishio.superbwarfare.entity.vehicle.base.permitsLandingGearShot(
             AircraftMountGearInterlock.required(pair), vehicle.gearUp, vehicle.synchedGearRot)) {
@@ -709,7 +737,9 @@ object AircraftArmamentManager {
             "Hardpoint is empty; refit on the ground."
         }
         val times = state.getCompound("LastFire"); val now = player.serverLevel().gameTime
-        require(!times.contains(key) || now - times.getLong(key) >= 10) { "Launcher is cycling." }
+        require(!times.contains(key) || now - times.getLong(key) >= AircraftStoreWeapons.RELEASE_INTERVAL_TICKS) {
+            "Launcher is cycling."
+        }
         val mount = AircraftMountSweep.position(pair, used % AircraftArmamentRegistry.mountPositions(pair).size,
             AircraftPylonRacks.launchPosition(pair, store, rackCount(vehicle, key), used), vehicle.deltaMovement.length())
         require(!com.atsuishio.superbwarfare.api.vehicle.flight.AircraftWreckBreakup.detachedAt(vehicle, mount)) {
@@ -744,7 +774,7 @@ object AircraftArmamentManager {
         val range: Double
         if (podMode) {
             require(lease.pod) { "Activate the targeting pod first." }
-            val pod = definition(vehicle)!!.getAsJsonObject("Pod") ?: throw IllegalArgumentException("No targeting pod.")
+            val pod = pod(vehicle) ?: throw IllegalArgumentException("No targeting pod.")
             val raw = AircraftArmamentRegistry.vector(body["Direction"])
                 ?: throw IllegalArgumentException("Invalid pod direction.")
             require(raw.lengthSqr() in 0.99..1.01) { "Invalid pod direction." }
@@ -755,7 +785,8 @@ object AircraftArmamentManager {
             // Small tolerance covers motion between the rendered frame and its server receipt.
             require(abs(yaw) <= pod["YawLimit"].asDouble + 5.0 &&
                 pitch in (pod["PitchMin"].asDouble - 5.0)..(pod["PitchMax"].asDouble + 5.0)) { "Target is outside pod limits." }
-            localPosition = AircraftArmamentRegistry.vector(pod["Position"])!!
+            // A pod on a swept pylon looks from where its wing has carried it.
+            localPosition = AircraftTargetingPods.sweptPosition(definition(vehicle)!!, pod, vehicle.deltaMovement.length())!!
             range = (pod["Range"]?.asDouble ?: 8192.0).coerceIn(1.0, 8192.0)
         } else {
             localPosition = Vec3(0.0, vehicle.bbHeight * 0.5, 1.0)

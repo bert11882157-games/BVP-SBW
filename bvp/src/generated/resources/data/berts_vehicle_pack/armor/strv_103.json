@@ -1,0 +1,83 @@
+{
+  "id": "strv_103",
+  "model_scale": 0.72776364,
+  "ap_penetration_mm": 280,
+  "chemical_penetration_mm": 700,
+  "fallback_incoming_penetration_mm": 500,
+  "atgm_tandem": false,
+  "impact_tolerance": 0.25,
+  "internal_ray_length": 10,
+  "unboxed_hits_penetrate": true,
+  "min_armor_mm": 16,
+  "plates": [],
+  "sensitive_internals": [],
+  "engines": [
+    {
+      "name": "engine_block_00",
+      "center": [
+        0.0,
+        0.9375,
+        -2.05313
+      ],
+      "half_size": [
+        0.9375,
+        0.4375,
+        0.8125
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull"
+    }
+  ],
+  "ammo_racks": [
+    {
+      "name": "autoloader_magazine_00",
+      "center": [
+        -0.0,
+        1.21873,
+        3.06214
+      ],
+      "half_size": [
+        0.875,
+        0.28127,
+        0.42776
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "health": 10
+    }
+  ],
+  "tracks": [],
+  "modules": [
+    {
+      "name": "weaponsystems_00",
+      "center": [
+        0.0,
+        1.53125,
+        -0.95938
+      ],
+      "half_size": [
+        0.3125,
+        0.21875,
+        0.65625
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "turret",
+      "module": "weaponsystems",
+      "unified": true
+    }
+  ],
+  "explosive_reactive_armor": [],
+  "sbw_obb": []
+}

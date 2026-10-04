@@ -28,6 +28,12 @@ public abstract class LevelMixin {
                     cir.getReturnValue().add(aircraft);
                 }
             }
+            // Carrier hulls are found by their turned deck plan from anywhere along them (UI picking, explosions).
+            for (Entity deck : com.atsuishio.superbwarfare.api.vehicle.deck.DeckRegistry.near((Level) (Object) this, pBoundingBox)) {
+                if (deck != pEntity && pPredicate.test(deck) && !cir.getReturnValue().contains(deck)) {
+                    cir.getReturnValue().add(deck);
+                }
+            }
             return;
         }
 

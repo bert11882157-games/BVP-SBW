@@ -90,6 +90,57 @@ class DamageNormalizationDataTest {
         assertTrue(atgms >= 30)
     }
 
+    /**
+     * Owner 2026-09-29 ("munitions underperforming"): every heavy air-to-ground missile carries a penetration, so the
+     * armor classifier types it and its authored HullDamage applies (with 0 it fell back to a 120-damage ATGM); the
+     * Hydra 70 M247 and S-5K are HEAT rockets.
+     */
+    @Test fun `heavy missiles and rockets carry typed penetration`() {
+        assumeTrue(data.isDirectory, "BVP sources not present")
+        var heavy = 0
+        for ((path, c) in combats()) {
+            val munition = c.get("MunitionType").asString.substringAfter(':')
+            val pen = c.get("PenetrationMm").asDouble
+            if (path.startsWith("aircraft_stores/") && munition == "atgm" && c.get("HullDamageClass").asString != "ATGM") {
+                heavy++
+                assertTrue(pen >= 1000.0, "$path heavy missile penetration $pen")
+                assertTrue(c.get("HullDamage").asDouble >= 1000.0, "$path heavy missile hull damage")
+            }
+            if (munition == "rocket") assertTrue(pen > 0.0, "$path rocket penetration")
+            if (c.get("RoundId").asString.endsWith(":hydra_70_m247")) {
+                assertEquals("HEAT", c.get("HullDamageClass").asString, path)
+                assertTrue(pen >= 250.0, "$path Hydra M247 penetration $pen")
+            }
+            if (c.get("RoundId").asString.endsWith(":s5k"))
+                assertEquals("berts_vehicle_pack:chemical", c.get("DamageType").asString, path)
+        }
+        assertTrue(heavy >= 8, "heavy missiles found: $heavy")
+    }
+
+    /**
+     * Owner 2026-09-30: cluster bombs open 15 m up with their real loads; every submunition is a 200 mm BVP HEAT
+     * charge dealing a 100 mm HEAT cannon round's damage, with its real explosive fill.
+     */
+    @Test fun `cluster bombs carry their real loads of 200 mm HEAT submunitions`() {
+        assumeTrue(data.isDirectory, "BVP sources not present")
+        val stores = File(data, "sbw/aircraft_stores")
+        val expected = mapOf(
+            "munition/cbu87.json" to Pair(202, 0.4018), "munition/cbu99_rockeye_ii.json" to Pair(247, 0.2445),
+            "rbk_250.json" to Pair(42, 0.585), "munition/cbu97.json" to Pair(10, 6.0102))
+        val gunHeat = 0.40 * 300.0 * Math.pow(100.0 / 120.0, 0.75)
+        for ((file, load) in expected) {
+            val cluster = json(File(stores, file)).getAsJsonObject("Bomb").getAsJsonObject("Cluster")
+            assertEquals(load.first, cluster.get("Count").asInt, "$file count")
+            assertEquals(15.0, cluster.get("ReleaseHeight").asDouble, 1e-9, "$file opening height")
+            assertEquals(load.second, cluster.get("BombletTntEquivalentKg").asDouble, 1e-4, "$file bomblet charge")
+            val profile = (cluster.get("BombletProfile") ?: cluster.get("SensorProjectileProfile")).asString
+            val c = json(File(data, "sbw/projectile_profiles/" + profile.substringAfter(':') + ".json"))
+                .getAsJsonObject("Combat")
+            assertEquals(200.0, c.get("PenetrationMm").asDouble, 1e-9, "$profile penetration")
+            assertEquals(gunHeat, c.get("HullDamage").asDouble, 1.0, "$profile hull damage")
+        }
+    }
+
     @Test fun `machine gun belts carry no charge`() {
         assumeTrue(data.isDirectory, "BVP sources not present")
         val combats = combats().toMap()

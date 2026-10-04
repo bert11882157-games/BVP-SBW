@@ -1,0 +1,115 @@
+{
+  "Combat": {
+    "WeaponId": "berts_vehicle_pack:cheonma_2/missile",
+    "RoundId": "berts_vehicle_pack:bulsae_3",
+    "MunitionType": "berts_vehicle_pack:atgm",
+    "DamageType": "berts_vehicle_pack:chemical",
+    "DiameterMm": 152,
+    "HullDamageClass": "ATGM",
+    "HullDamage": 156,
+    "ModuleDamage": 94,
+    "AmmoRackDamage": 714,
+    "PenetrationMm": 1200,
+    "RicochetCurve": {
+      "IncidenceAnglesDegrees": [
+        0,
+        80,
+        82,
+        90
+      ],
+      "Probability": [
+        0,
+        0,
+        0.5,
+        1
+      ]
+    },
+    "Tandem": true
+  },
+  "VisualProfile": "berts_vehicle_pack:ataka_atgm",
+  "ImpactVisualProfile": "berts_vehicle_pack:atgm",
+  "MotionSync": "INHERIT",
+  "Luminance": 15,
+  "TrailMode": "REPLACE",
+  "RenderScale": 1,
+  "GuidedPropulsion": {
+    "InitialSpeed": 2.4499999999999997,
+    "MaxSpeed": 7,
+    "AccelerationPerTick": 0.22750000000000004,
+    "ThrustDurationTicks": 120,
+    "MaxTurnRateDegreesPerSecond": 24,
+    "GuidanceLookAheadTicks": 12,
+    "IgnitionDelayTicks": 6,
+    "EjectionSpeed": 2,
+    "EjectionGravityPerTick": 0.0125
+  },
+  "Extensions": {
+    "berts_vehicle_pack:projectile_effect_v1": {
+      "Schema": 1,
+      "Trail": {
+        "Emitter": {
+          "Flame": "berts_vehicle_pack:rocket_flame",
+          "Smoke": "berts_vehicle_pack:rocket_smoke"
+        },
+        "Phases": [
+          {
+            "Name": "BOOST",
+            "StartTick": 0,
+            "EndTickExclusive": 80,
+            "Flame": true,
+            "Smoke": true,
+            "Scale": 0.24,
+            "Orbit": {
+              "Count": 4,
+              "RadiusBlocks": 0.3,
+              "AngularSpeedRadiansPerTick": 0.942477796,
+              "Scale": 1.6
+            }
+          },
+          {
+            "Name": "COAST",
+            "StartTick": 80,
+            "EndTickExclusive": 2147483647,
+            "Flame": false,
+            "Smoke": true,
+            "Scale": 1.6,
+            "Orbit": null
+          }
+        ],
+        "SpacingBlocks": 0.25,
+        "RatePerTick": null,
+        "LifetimeTicks": {
+          "Flame": 6,
+          "Smoke": 20
+        },
+        "WidthBlocks": 0.1,
+        "AttachmentOffset": [
+          0,
+          0,
+          0
+        ],
+        "VelocityInheritance": 0,
+        "RandomScale": [
+          0.8,
+          1.3
+        ]
+      },
+      "Impact": {
+        "Explosion": "large",
+        "WaterExplosion": "same"
+      }
+    },
+    "berts_vehicle_pack:projectile_mesh_v1": {
+      "Model": "berts_vehicle_pack:custom_geo/atgm/kornet.geo.json",
+      "Texture": "berts_vehicle_pack:textures/atgm/kornet.png",
+      "ForwardYaw": 0,
+      "SpinDegreesPerTick": 36.0
+    },
+    "superbwarfare:missile_roll_v1": {
+      "Schema": 1,
+      "RollHz": 10.0,
+      "RollAccelerationHzPerSecond": 20.0,
+      "Direction": "CLOCKWISE"
+    }
+  }
+}

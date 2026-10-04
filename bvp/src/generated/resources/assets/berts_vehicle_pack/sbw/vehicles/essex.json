@@ -1,0 +1,13 @@
+{
+  "ID": "berts_vehicle_pack:essex",
+  "Model": {
+    "GeometryBackend": "berts_vehicle_pack:vehicle/essex",
+    "Model": "berts_vehicle_pack:geo/native_fallback/essex.geo.json",
+    "Texture": "berts_vehicle_pack:textures/entity/essex.png",
+    "WreckTexture": "berts_vehicle_pack:textures/entity_dead/essex.png"
+  },
+  "MouseSpeed": [
+    0.2,
+    0.2
+  ]
+}

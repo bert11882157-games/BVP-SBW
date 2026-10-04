@@ -47,49 +47,14 @@ import org.joml.Vector3d
 object VehicleMotionUtils {
 
     /**
-     * 防止载具堆叠
-     *
-     * @param vehicle 载具
-     */
-    fun preventStacking(vehicle: VehicleEntity) {
-        val entities = vehicle.level().getEntities(
-            EntityTypeTest.forClass(VehicleEntity::class.java),
-            vehicle.boundingBox.inflate(6.0)
-        ) { entity: VehicleEntity ->
-            entity !== vehicle && !vehicle.getPassengers().contains(entity) && entity.vehicle == null
-        }
-
-        for (entity in entities) {
-            if (entity.boundingBox.intersects(vehicle.boundingBox)) {
-                if ((vehicle.usesAircraftPhysicalCollision() || entity.usesAircraftPhysicalCollision()) &&
-                    VehicleEntityContacts.find(vehicle, entity, Vec3.ZERO) == null) continue
-                val toVec = vehicle.position()
-                    .add(Vec3(1.0, 1.0, 1.0).scale((vehicle.getRandom().nextFloat() * 0.01f + 1f).toDouble()))
-                    .vectorTo(entity.position())
-                val velAdd = toVec.normalize().scale(
-                    Math.max(
-                        (vehicle.bbWidth + 2) - vehicle.position().distanceTo(entity.position()),
-                        0.0
-                    ) * 0.1
-                )
-                val entitySize = (entity.bbWidth * entity.bbHeight).toDouble()
-                val thisSize = (vehicle.bbWidth * vehicle.bbHeight).toDouble()
-                val f = Math.min(entitySize / thisSize, 2.0)
-                val f1 = Math.min(thisSize / entitySize, 2.0)
-
-                vehicle.pushNew(-f * velAdd.x, -f * velAdd.y, -f * velAdd.z)
-                entity.push(f1 * velAdd.x, f1 * velAdd.y, f1 * velAdd.z)
-            }
-        }
-    }
-
-    /**
      * 支撑自身范围内的实体
      *
      * @param vehicle 载具
      */
     fun supportEntities(vehicle: VehicleEntity) {
         if (vehicle.isRemoved) return
+        // A carrier's deck is terrain (DeckCollisions/DeckCarry); its OBBs only take hits.
+        if (vehicle is com.atsuishio.superbwarfare.api.vehicle.deck.DeckSurfaceEntity) return
         if ((vehicle.enableAABB() && !vehicle.usesAircraftPhysicalCollision()) || vehicle is Type63Entity) {
             return
         }
@@ -97,7 +62,8 @@ object VehicleMotionUtils {
         val frontBox = calculateCombinedAABBOptimized(vehicle).inflate(1.0)
         val entities = vehicle.level().getEntities(
             EntityTypeTest.forClass(Entity::class.java), frontBox
-        ) { entity -> entity !== vehicle && entity !== vehicle.getFirstPassenger() && entity!!.vehicle == null }
+        ) { entity -> entity !== vehicle && entity !== vehicle.getFirstPassenger() && entity!!.vehicle == null &&
+            entity !is com.atsuishio.superbwarfare.api.vehicle.deck.DeckSurfaceEntity }
             .stream().filter { entity ->
                 if (entity!!.isAlive && vehicle.isInObb(entity, vehicle.deltaMovement)) {
                     val type = BuiltInRegistries.ENTITY_TYPE.getKey(entity.type)
@@ -148,8 +114,22 @@ object VehicleMotionUtils {
                         entity.setOnGround(true)
                     }
                     val depth = obb.getEmbeddingDepth(feetPos)
-                    entity.deltaMovement =
-                        vehicle.deltaMovement.add(0.0, if (gravity + depth <= 0.4f) 0.0 else depth * 1.1, 0.0)
+                    if (entity is VehicleEntity) {
+                        // A vehicle resting on another is lifted out gently and dragged along by friction (its own
+                        // drive still counts): overwriting its velocity with the supporter's used to fling it with
+                        // the supporter's full speed plus depth x 1.1 upward.
+                        val motion = entity.deltaMovement
+                        val carrier = vehicle.deltaMovement
+                        val lift = if (gravity + depth <= 0.4f) 0.0 else Math.min(depth * 0.5, 0.25)
+                        val grip = if (carrier.horizontalDistanceSqr() < 1.0) 0.5 else 0.0
+                        entity.deltaMovement = Vec3(
+                            motion.x + (carrier.x - motion.x) * grip,
+                            Math.max(Math.max(motion.y, carrier.y), lift),
+                            motion.z + (carrier.z - motion.z) * grip)
+                    } else {
+                        entity.deltaMovement =
+                            vehicle.deltaMovement.add(0.0, if (gravity + depth <= 0.4f) 0.0 else depth * 1.1, 0.0)
+                    }
                     entity.fallDistance = 0f
 
                     continue
@@ -237,7 +217,9 @@ object VehicleMotionUtils {
                 .stream().filter { entity ->
                     if (entity.isAlive && vehicle.isInObb(entity, vec3)) {
                         val type = BuiltInRegistries.ENTITY_TYPE.getKey(entity.type)
-                        return@filter (entity is VehicleEntity || entity is Boat || entity is Minecart || (entity is TurretWreckEntity && entity.tickCount > 5) || (entity is LivingEntity && !(entity is Player && entity.isSpectator))) || VehicleConfig.COLLISION_ENTITY_WHITELIST.get()
+                        // Vehicles: VehicleCollisionResponseService (momentum exchange, size-aware damage).
+                        if (entity is VehicleEntity) return@filter false
+                        return@filter (entity is Boat || entity is Minecart || (entity is TurretWreckEntity && entity.tickCount > 5) || (entity is LivingEntity && !(entity is Player && entity.isSpectator))) || VehicleConfig.COLLISION_ENTITY_WHITELIST.get()
                             .contains(type.toString())
                     }
                     false
@@ -249,9 +231,9 @@ object VehicleMotionUtils {
                 EntityTypeTest.forClass(Entity::class.java), frontBox
             ) { entity -> entity !== vehicle && entity !== vehicle.getFirstPassenger() && entity!!.vehicle == null }
                 .stream().filter { entity ->
-                    if (entity.isAlive) {
+                    if (entity.isAlive && entity !is VehicleEntity) {
                         val type = BuiltInRegistries.ENTITY_TYPE.getKey(entity.type)
-                        return@filter (entity is VehicleEntity || entity is Boat || entity is Minecart || (entity is TurretWreckEntity && entity.tickCount > 5)
+                        return@filter (entity is Boat || entity is Minecart || (entity is TurretWreckEntity && entity.tickCount > 5)
                                 || (entity is LivingEntity && !(entity is Player && entity.isSpectator)))
                                 || VehicleConfig.COLLISION_ENTITY_WHITELIST.get().contains(type.toString())
                     }
@@ -260,36 +242,28 @@ object VehicleMotionUtils {
                 .toList()
         }
 
-        // TODO 继续优化这个逆天碰撞
+        // Vehicles are not in this list (VehicleCollisionResponseService); this strikes people, mobs, boats, minecarts
+        // and turret wrecks.
         for (entity in entities) {
-            val physicalContact = if (vehicle.usesAircraftPhysicalCollision() ||
-                entity is VehicleEntity && entity.usesAircraftPhysicalCollision())
+            val physicalContact = if (vehicle.usesAircraftPhysicalCollision())
                 VehicleEntityContacts.find(vehicle, entity, vec3) ?: continue else null
             val entitySize = entity.boundingBox.getSize()
             val thisSize = vehicle.boundingBox.getSize()
-            val f: Double
-            val f1: Double
 
             val v0 = vec3.subtract(entity.deltaMovement)
-            if (v0.angleTo(vehicle.position().vectorTo(entity.position())) > 90) return
-
-            if (vehicle.deltaMovement.lengthSqr() < 0.09) return
+            if (v0.angleTo(vehicle.position().vectorTo(entity.position())) > 90) continue
 
             // TODO 给非载具实体也设置质量
             if (entity is LivingEntity && entity.hasEffect(ModMobEffects.STRIKE_PROTECTION.get())) {
                 continue
             }
 
-            if (entity is VehicleEntity) {
-                f = Mth.clamp((entity.mass / vehicle.mass).toDouble(), 0.25, 4.0)
-                f1 = Mth.clamp((vehicle.mass / entity.mass).toDouble(), 0.25, 4.0)
-            } else {
-                f = Mth.clamp(entitySize / thisSize, 0.25, 4.0)
-                f1 = Mth.clamp(thisSize / entitySize, 0.25, 4.0)
-            }
+            val f = Mth.clamp(entitySize / thisSize, 0.25, 4.0)
+            // A struck turret wreck or boat is shoved along, not launched at a multiple of the closing speed.
+            val f1 = Mth.clamp(thisSize / entitySize, 0.25, if (entity is LivingEntity) 4.0 else 1.0)
 
             val length = v0.length().toFloat()
-            var velAdd = v0.normalize().scale(0.8 * length)
+            val velAdd = v0.normalize().scale(0.8 * length)
 
             if (length <= 0.3) {
                 continue
@@ -320,52 +294,8 @@ object VehicleMotionUtils {
                 vehicle.pushNew(-0.3f * f * velAdd.x, -0.3f * f * velAdd.y, -0.3f * f * velAdd.z)
             }
 
-            if (entity is VehicleEntity) {
-                if (physicalContact?.ownBody != false) vehicle.hurt(
-                    ModDamageTypes.causeVehicleStrikeDamage(
-                        vehicle.level().registryAccess(),
-                        entity,
-                        if (entity.getFirstPassenger() == null) entity else entity.getFirstPassenger()
-                    ), (f * 40 * (Mth.abs(length) - 0.3) * (Mth.abs(length) - 0.3)).toFloat()
-                )
-
-                if (!vehicle.enableAABB() || vehicle.usesAircraftPhysicalCollision()) {
-                    if (vehicle.isInObb(entity, Vec3.ZERO)) {
-                        var thisPos = vehicle.position()
-                        var otherPos = entity.position()
-
-                        for (obb in vehicle.entityCollisionObbs()) {
-                            if (!entity.enableAABB() || entity.usesAircraftPhysicalCollision()) {
-                                val obbList2 = entity.entityCollisionObbs()
-                                for (obb2 in obbList2) {
-                                    if (OBB.isColliding(obb, obb2)) {
-                                        thisPos = OBB.vector3dToVec3(obb.center)
-                                        otherPos = OBB.vector3dToVec3(obb2.center)
-                                    }
-                                }
-                            } else {
-                                if (OBB.isColliding(obb, entity.boundingBox)) {
-                                    thisPos = OBB.vector3dToVec3(obb.center)
-                                }
-                            }
-                        }
-
-                        val toVec = thisPos.add(
-                            Vec3(1.0, 1.0, 1.0).scale(
-                                (vehicle.getRandom().nextFloat() * 0.01f + 1f).toDouble()
-                            )
-                        ).vectorTo(otherPos)
-                        velAdd = toVec.normalize().scale(Math.max(thisPos.distanceTo(otherPos), 0.0) * 0.01)
-                        vehicle.pushNew(-f * velAdd.x, -f * velAdd.y, -f * velAdd.z)
-                    }
-                }
-
-                val vec31 = vehicle.deltaMovement.normalize().scale(velAdd.length())
-                entity.pushNew(f1 * vec31.x, f1 * vec31.y, f1 * vec31.z)
-            } else {
-                val vec31 = vehicle.deltaMovement.normalize().scale(velAdd.length())
-                entity.push(f1 * vec31.x, f1 * vec31.y, f1 * vec31.z)
-            }
+            val vec31 = vehicle.deltaMovement.normalize().scale(velAdd.length())
+            entity.push(f1 * vec31.x, f1 * vec31.y, f1 * vec31.z)
         }
     }
 
@@ -550,8 +480,13 @@ object VehicleMotionUtils {
 
                 emitTerrainContactEffects(vehicle, p, state)
 
+                // a carrier deck under the wheel is the ground when it is higher than the blocks below
+                val deckTop = com.atsuishio.superbwarfare.api.vehicle.deck.DeckCollisions.surfaceBelow(
+                    level, p.x, p.y + 0.5, p.z, 20.5, vehicle)
                 val heightY = if (!shape.isEmpty) {
                     p.y - (shape.max(Direction.Axis.Y) + blockPos.y)
+                } else if (!deckTop.isNaN() && (res.type != HitResult.Type.BLOCK || deckTop >= res.location.y)) {
+                    Mth.clamp(p.y - deckTop, 0.0, 20.0)
                 } else if (res.type == HitResult.Type.BLOCK && level.noCollision(AABB(p, p))) {
                     Mth.clamp(p.y - res.location.y, 0.0, 20.0)
                 } else {
@@ -578,7 +513,12 @@ object VehicleMotionUtils {
             val level = vehicle.level()
             val hit = level.clip(ClipContext(point.add(0.0, 1.5, 0.0), point.add(0.0, -3.0, 0.0),
                 ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, vehicle))
-            if (hit.type != HitResult.Type.BLOCK) null else {
+            val deckTop = com.atsuishio.superbwarfare.api.vehicle.deck.DeckCollisions.surfaceBelow(
+                level, point.x, point.y + 1.5, point.z, 4.5, vehicle)
+            if (!deckTop.isNaN() && (hit.type != HitResult.Type.BLOCK || deckTop >= hit.location.y)) {
+                contacts.add(local to (deckTop - vehicle.y))
+                Vec3(local.x, deckTop - vehicle.y - local.y, local.z)
+            } else if (hit.type != HitResult.Type.BLOCK) null else {
                 emitTerrainContactEffects(vehicle, hit.location, level.getBlockState(hit.blockPos))
                 contacts.add(local to (hit.location.y - vehicle.y))
                 Vec3(local.x, hit.location.y - vehicle.y - local.y, local.z)

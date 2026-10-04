@@ -192,6 +192,10 @@ final class BvpSuspendedStoreRenderer {
     void render(GeoVehicleEntity entity, PoseStack pose, MultiBufferSource buffers, int light, float alpha, float partialTick) {
         AircraftArmamentSnapshot state = AircraftArmamentClient.getVehicleSnapshot(entity);
         if (state == null || alpha <= 0 || entity.getAircraftWreckImpactTime() >= 0) return;
+        // Looking through a pod carried as a store: its own housing is around the eye, so it is not drawn.
+        var pod = state.getDefinition().getPod();
+        String podMount = pod != null && pod.getMount() != null && AircraftArmamentClient.isPodActive(entity)
+                ? pod.getMount() : null;
         for (AircraftMountView pair : state.getDefinition().getMounts()) {
             if (pair.getInternal()) continue;
             String selected = state.getSelections().get(pair.getId());
@@ -208,7 +212,8 @@ final class BvpSuspendedStoreRenderer {
                 Vec3 point = placement.getPoint();
                 boolean detached = ((missing & 1) != 0 && onWing(entity, point, 1)) ||
                         ((missing & 2) != 0 && onWing(entity, point, 2));
-                if (!detached && state.storePresent(pair, index))
+                boolean eye = pair.getId().equals(podMount) && index == pod.getMountPosition();
+                if (!detached && !eye && state.storePresent(pair, index))
                     mount(point, placement.getAnchor(), store, asset, mesh, pose, buffers, light, alpha);
             }
             // A generated rack stays on its pylon until the pylon itself is lost.

@@ -9,7 +9,11 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import com.atsuishio.superbwarfare.client.sound.VehicleAudioMix;
+import net.minecraft.sounds.SoundSource;
 import java.util.Map;
 
 /** Exact instance/file tracing; never attributes a remote sound to the listener's selected gun. */
@@ -31,5 +35,27 @@ public abstract class SoundEngineMixin {
     @Inject(method = "stop(Lnet/minecraft/client/resources/sounds/SoundInstance;)V", at = @At("HEAD"))
     private void superbWarfare$stoppedSound(SoundInstance instance, CallbackInfo ci) {
         EliteAudioPlayback.stopped(instance, "sound_manager_stop");
+    }
+
+    @Shadow
+    private float calculateVolume(float volume, SoundSource source) {
+        throw new AssertionError();
+    }
+
+    /** Vehicle sound mix (VehicleAudioMix) on every volume update of a playing sound. */
+    @Inject(method = "calculateVolume(Lnet/minecraft/client/resources/sounds/SoundInstance;)F", at = @At("RETURN"),
+            cancellable = true, require = 0)
+    private void superbWarfare$vehicleMix(SoundInstance instance, CallbackInfoReturnable<Float> cir) {
+        float factor = VehicleAudioMix.factor(instance);
+        if (factor != 1.0F) cir.setReturnValue(Math.min(1.0F, cir.getReturnValueF() * factor));
+    }
+
+    /** ... and on the first volume, which play() computes from the raw volume and category. */
+    @Redirect(method = "play(Lnet/minecraft/client/resources/sounds/SoundInstance;)V", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/client/sounds/SoundEngine;calculateVolume(FLnet/minecraft/sounds/SoundSource;)F"),
+            require = 0)
+    private float superbWarfare$vehicleMixOnPlay(SoundEngine engine, float volume, SoundSource source,
+                                                 SoundInstance instance) {
+        return Math.min(1.0F, this.calculateVolume(volume, source) * VehicleAudioMix.factor(instance));
     }
 }

@@ -867,6 +867,24 @@
   "EngineSound": "berts_vehicle_pack:eurofighter_typhoon_engine_loop",
   "EngineSoundMode": "CUSTOM",
   "CustomSoundProfileId": "berts_vehicle_pack:aircraft_engine/eurofighter_typhoon/idle",
+  "Countermeasures": {
+    "Flares": true,
+    "Chaff": true,
+    "RadarWarningReceiver": true,
+    "FlaresPerSecond": 4,
+    "FlaresPerBurst": 12,
+    "FlareLeftPos": [
+      0.8,
+      1.3,
+      -4.0
+    ],
+    "FlareRightPos": [
+      -0.8,
+      1.3,
+      -4.0
+    ],
+    "FlareEjectionSpeed": 0.7
+  },
   "AircraftTerrainContact": {
     "Fuselage": {
       "Min": [

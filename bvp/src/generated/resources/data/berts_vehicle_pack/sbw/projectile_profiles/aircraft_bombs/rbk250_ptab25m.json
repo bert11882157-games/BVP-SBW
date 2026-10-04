@@ -1,0 +1,27 @@
+{
+  "Combat": {
+    "WeaponId": "berts_vehicle_pack:munition/rbk250_ptab25m",
+    "RoundId": "berts_vehicle_pack:rbk250_ptab25m",
+    "MunitionType": "berts_vehicle_pack:cluster_bomblet",
+    "DamageType": "berts_vehicle_pack:chemical",
+    "DiameterMm": 68,
+    "HullDamageClass": "HEAT",
+    "HullDamage": 105,
+    "ModuleDamage": 63,
+    "AmmoRackDamage": 500,
+    "PenetrationMm": 200.0,
+    "Tandem": false
+  },
+  "VisualProfile": "berts_vehicle_pack:authored_bomb",
+  "MotionSync": "INHERIT",
+  "TrailMode": "SUPPRESS",
+  "RenderScale": 0.35,
+  "Extensions": {
+    "berts_vehicle_pack:projectile_mesh_v1": {
+      "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/cluster_sub.geo.json",
+      "Texture": "berts_vehicle_pack:textures/aircraft_stores/cluster_sub.png",
+      "ForwardYaw": 0,
+      "SpinDegreesPerTick": 0
+    }
+  }
+}
