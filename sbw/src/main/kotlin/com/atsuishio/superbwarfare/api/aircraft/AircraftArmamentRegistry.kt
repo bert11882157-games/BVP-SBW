@@ -16,7 +16,8 @@ object AircraftArmamentRegistry {
     var aircraft: Map<ResourceLocation, JsonObject> = emptyMap(); private set
     var stores: Map<ResourceLocation, JsonObject> = emptyMap(); private set
     var revision: Long = 0; private set
-    val categories = setOf("COMMAND_GUIDED", "LASER_GUIDED", "GUN_POD", "BOMB", "AIR_TO_AIR", "AIR_TO_GROUND", "ANTI_RADIATION", "CRUISE", "ROCKET_POD", "VISUAL_ONLY")
+    val categories = setOf("COMMAND_GUIDED", "LASER_GUIDED", "GUN_POD", "BOMB", "AIR_TO_AIR", "AIR_TO_GROUND", "ANTI_RADIATION", "CRUISE", "ROCKET_POD", "VISUAL_ONLY",
+        AircraftTargetingPods.CATEGORY)
 
     /** Mass is per physical round or pod; a paired station contains two complete loads. */
     fun loadoutMassKg(definition: JsonObject, choices: Map<String, JsonObject>, counts: Map<String, Int> = emptyMap()): Double =
@@ -147,6 +148,11 @@ object AircraftArmamentRegistry {
                 require(bomb["Mode"]?.asString in setOf("DUMB", "LASER", "GPS", "TV"))
                 require((bomb["Mode"].asString == "TV") == json.has("Guidance"))
                 if (bomb["Mode"].asString == "TV") require(json.getAsJsonObject("Guidance")["Presentation"]?.asString == "TV")
+                // optional guided-glide performance (AircraftBombFlight.Glide)
+                for ((key, range) in mapOf(AircraftBombFlight.Glide.LD_JSON to (0.5..20.0),
+                    AircraftBombFlight.Glide.SPEED_JSON to (1.0..40.0), AircraftBombFlight.Glide.MAX_G_JSON to (0.5..10.0))) {
+                    bomb[key]?.let { require(it.asDouble.isFinite() && it.asDouble in range) }
+                }
                 bomb.getAsJsonObject("Penetrator")?.let { penetrator ->
                     require(penetrator.entrySet().map { it.key }.toSet() ==
                         setOf("MaxDepthBlocks", "MaxBlockHardness", "FuzeDelayTicks"))
@@ -180,7 +186,7 @@ object AircraftArmamentRegistry {
                     }
                     if (mode != "HE") require(cluster["BombletDamage"].asDouble == 0.0)
                     requireTntEquivalent(cluster[AircraftClusterBomb.BOMBLET_TNT_JSON_KEY])
-                    require(cluster["Count"].asBigDecimal.intValueExact() in 1..24)
+                    require(cluster["Count"].asBigDecimal.intValueExact() in 1..AircraftClusterBomb.MAX_SUBMUNITIONS)
                     require(cluster["LifetimeTicks"].asBigDecimal.intValueExact() in 20..200)
                     for ((key, range) in mapOf("ReleaseHeight" to (2.0..32.0), "SpreadSpeed" to (0.0..1.0),
                         "BombletDamage" to (0.0..2000.0), "BombletRadius" to (0.1..8.0))) {
@@ -217,6 +223,7 @@ object AircraftArmamentRegistry {
             json["Scale"]?.let { require(it.asDouble.isFinite() && it.asDouble in 0.001..32.0) }
             AircraftStoreMountAnchor.validate(json)
             AircraftStoreAttachment.validateStore(json)
+            AircraftTargetingPods.validateStore(json)
             json[AircraftStoreModelForward.KEY]?.let {
                 require(json.has("Model") && it.isJsonPrimitive && it.asJsonPrimitive.isString &&
                     it.asString in AircraftStoreModelForward.values) { "ModelForward must be -Z or +Z for a modeled store" }

@@ -14,6 +14,24 @@ data class AircraftWeaponPresentation(val category: String, val name: String, va
 /** Stable virtual channels use the native slot/scheduler; equipment owns their ammunition. */
 object AircraftStoreWeapons {
     const val PREFIX = "AircraftStore:"
+    /** Owner 2026-09-30: every store (bombs, missiles, all) can be released again after 0.1 s. */
+    const val RELEASE_INTERVAL_TICKS = 2
+    const val RELEASE_RPM = 60 * 20 / RELEASE_INTERVAL_TICKS
+
+    /**
+     * A private copy of a launch profile at the store release rate (the shared profile stays untouched): the whole
+     * load is one magazine with no reload between releases (the TV launch profiles hold 1 round and a 20 s reload).
+     */
+    private fun withReleaseRate(profile: DefaultGunData, capacity: Int): DefaultGunData = runCatching {
+        val json = com.atsuishio.superbwarfare.data.DataLoader.JSON
+        json.decodeFromJsonElement(DefaultGunData.serializer(),
+            json.encodeToJsonElement(DefaultGunData.serializer(), profile)).apply {
+            rpm = RELEASE_RPM
+            magazine = maxOf(1, capacity)
+            emptyReloadTime = 0
+            normalReloadTime = 0
+        }
+    }.getOrElse { profile }
     private data class Cached(val store: JsonObject, val capacity: Int, val data: GunData)
     private val cache = WeakHashMap<VehicleEntity, MutableMap<String, Cached>>()
     fun mountId(weapon: String): String? = weapon.takeIf { it.startsWith(PREFIX) }?.removePrefix(PREFIX)
@@ -45,9 +63,11 @@ object AircraftStoreWeapons {
         var cached = entries[weapon]
         if (cached?.store !== store || cached?.capacity != capacity) {
             val profile = if (store["Category"]?.asString == "COMMAND_GUIDED") {
-                com.atsuishio.superbwarfare.data.CustomData.GUN_DATA[store["LaunchGunProfile"]?.asString] ?: return null
+                val launch = com.atsuishio.superbwarfare.data.CustomData.GUN_DATA[store["LaunchGunProfile"]?.asString]
+                    ?: return null
+                withReleaseRate(launch, capacity)
             } else DefaultGunData().apply {
-                name = store["Name"].asString; magazine = capacity; rpm = 120
+                name = store["Name"].asString; magazine = capacity; rpm = RELEASE_RPM
                 projectileAmount = 1; defaultFireMode = "Semi"
             }
             cached = Cached(store, capacity, GunData.from(ItemStack(ModItems.VEHICLE_GUN.get())) { profile })

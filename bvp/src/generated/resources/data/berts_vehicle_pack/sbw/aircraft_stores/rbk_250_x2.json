@@ -38,13 +38,15 @@
     "BlastRadius": 0,
     "BlastDamage": 0,
     "Cluster": {
-      "Count": 12,
-      "ReleaseHeight": 12,
+      "Count": 42,
+      "ReleaseHeight": 15,
       "SpreadSpeed": 0.35,
-      "BombletDamage": 80,
+      "BombletDamage": 0,
       "BombletRadius": 1.5,
-      "BombletTntEquivalentKg": 0.5,
-      "LifetimeTicks": 100
+      "BombletTntEquivalentKg": 0.585,
+      "LifetimeTicks": 100,
+      "Mode": "HEAT",
+      "BombletProfile": "berts_vehicle_pack:aircraft_bombs/rbk250_ptab25m"
     }
   },
   "ProjectileProfile": "berts_vehicle_pack:aircraft_bombs/rbk_250",

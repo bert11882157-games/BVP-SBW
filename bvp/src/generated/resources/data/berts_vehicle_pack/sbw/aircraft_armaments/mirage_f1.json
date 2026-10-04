@@ -11,16 +11,38 @@
       "Id": "wingtip",
       "Name": "wingtip",
       "Left": [
-        3.680858,
-        1.400924,
-        -1.043825
+        3.983,
+        1.675,
+        -2.884
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            3.9923,
+            1.6756,
+            -2.8843
+          ],
+          "Face": "bottom"
+        }
       ],
       "Right": [
-        -3.680858,
-        1.400924,
-        -1.043825
+        -3.983,
+        1.675,
+        -2.884
       ],
-      "AllowedStores": [],
+      "RightStations": [
+        {
+          "Point": [
+            -3.9923,
+            1.6756,
+            -2.8843
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/r550_magic"
+      ],
       "MaxWeaponsPerPylon": 1,
       "MaxPylonMassKg": 150
     },
@@ -28,16 +50,40 @@
       "Id": "outer",
       "Name": "outer",
       "Left": [
-        2.856785,
-        1.400924,
-        -0.824073
+        2.582,
+        1.648,
+        -2.582
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            2.5821,
+            1.6481,
+            -2.5821
+          ],
+          "Face": "bottom"
+        }
       ],
       "Right": [
-        -2.856785,
-        1.400924,
-        -0.824073
+        -2.582,
+        1.648,
+        -2.582
       ],
-      "AllowedStores": [],
+      "RightStations": [
+        {
+          "Point": [
+            -2.5821,
+            1.6481,
+            -2.5821
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/r550_magic",
+        "berts_vehicle_pack:munition/r530",
+        "berts_vehicle_pack:munition/super_530d"
+      ],
       "MaxWeaponsPerPylon": 1,
       "MaxPylonMassKg": 900
     },
@@ -45,16 +91,41 @@
       "Id": "inner",
       "Name": "inner",
       "Left": [
-        1.703083,
-        1.345985,
-        -0.494444
+        1.84,
+        1.648,
+        -1.95
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            1.8404,
+            1.6481,
+            -1.9503
+          ],
+          "Face": "bottom"
+        }
       ],
       "Right": [
-        -1.703083,
-        1.345985,
-        -0.494444
+        -1.84,
+        1.648,
+        -1.95
       ],
-      "AllowedStores": [],
+      "RightStations": [
+        {
+          "Point": [
+            -1.8404,
+            1.6481,
+            -1.9503
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/super_530d",
+        "berts_vehicle_pack:munition/r530",
+        "berts_vehicle_pack:munition/armat",
+        "berts_vehicle_pack:munition/martel"
+      ],
       "MaxWeaponsPerPylon": 1,
       "MaxPylonMassKg": 900
     }
@@ -68,8 +139,21 @@
         0.851542,
         -0.714196
       ],
+      "Stations": [
+        {
+          "Point": [
+            0.0,
+            0.8241,
+            -1.4559
+          ],
+          "Face": "bottom"
+        }
+      ],
       "Internal": false,
-      "AllowedStores": [],
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/armat",
+        "berts_vehicle_pack:munition/martel"
+      ],
       "MaxWeaponsPerPylon": 1,
       "MaxPylonMassKg": 900
     }

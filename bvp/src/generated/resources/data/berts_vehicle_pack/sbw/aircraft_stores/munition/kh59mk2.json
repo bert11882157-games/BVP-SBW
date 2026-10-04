@@ -1,0 +1,48 @@
+{
+  "Schema": 1,
+  "Name": "Kh-59MK2 · GPS land attack cruise",
+  "Category": "CRUISE",
+  "Capacity": 1,
+  "MassKg": 770,
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/kh59mk.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.3353,
+    0.798
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.3353,
+      0.0,
+      0.798
+    ],
+    "Right": [
+      -0.3353,
+      0.0,
+      0.798
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    0.798
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/kh59mk.png",
+  "LaunchOffset": [
+    0.0,
+    -0.3353,
+    0.0
+  ],
+  "Flight": {
+    "InitialSpeed": 0.3,
+    "MaxSpeed": 5,
+    "AccelerationPerTick": 0.05,
+    "TurnDegreesPerSecond": 24,
+    "Damage": 180,
+    "BlastRadius": 10,
+    "TntEquivalentKg": 150,
+    "Range": 2000
+  },
+  "AmmoItem": "superbwarfare:large_cruise_missile"
+}

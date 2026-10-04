@@ -37,14 +37,15 @@
     "BlastRadius": 0,
     "BlastDamage": 0,
     "Cluster": {
-      "Count": 24,
-      "ReleaseHeight": 12,
+      "Count": 202,
+      "ReleaseHeight": 15,
       "SpreadSpeed": 0.55,
-      "BombletDamage": 55,
+      "BombletDamage": 0,
       "BombletRadius": 1.5,
       "BombletTntEquivalentKg": 0.4018,
       "LifetimeTicks": 100,
-      "Mode": "HE"
+      "Mode": "HEAT",
+      "BombletProfile": "berts_vehicle_pack:aircraft_bombs/cbu87_blu97"
     }
   },
   "AmmoItem": "superbwarfare:small_freefall_bomb",

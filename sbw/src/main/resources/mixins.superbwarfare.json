@@ -12,6 +12,9 @@
     "BlockStateMixin",
     "ClientboundSetPassengersPacketMixin",
     "EntityMixin",
+    "DeckCollisionMixin",
+    "DeckFlightKickMixin",
+    "DeckSneakEdgeMixin",
     "FarTerrainServerLevelAccessor",
     "FarTerrainEntityManagerAccessor",
     "FarTerrainEntityStorageAccessor",
@@ -77,6 +80,7 @@
     "PlayerItemInHandLayerMixin",
     "PlayerRendererMixin",
     "SoundEngineMixin",
+    "SoundOptionsScreenMixin",
     "ChannelAccessor"
   ],
   "minVersion": "0.8",

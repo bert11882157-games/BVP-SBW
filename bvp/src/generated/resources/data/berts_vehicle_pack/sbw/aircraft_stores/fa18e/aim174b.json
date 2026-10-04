@@ -7,18 +7,48 @@
   "Guidance": {
     "Mode": "ACTIVE_RADAR",
     "LockTicks": 0,
-    "Range": 3500,
+    "Range": 4096,
     "ConeDegrees": 25,
-    "CountermeasureVulnerability": 1.35
+    "CountermeasureVulnerability": 1.1
   },
   "Flight": {
     "InitialSpeed": 0.5,
-    "MaxSpeed": 16,
+    "MaxSpeed": 14,
     "AccelerationPerTick": 0.1,
     "TurnDegreesPerSecond": 45,
     "Damage": 80,
     "BlastRadius": 5,
     "TntEquivalentKg": 36.864
   },
-  "AmmoItem": "superbwarfare:large_air_to_air_missile"
+  "AmmoItem": "superbwarfare:large_air_to_air_missile",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/aim174b.geo.json",
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/aim174b.png",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.1656,
+    0.6608
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.1656,
+      0.0,
+      0.6608
+    ],
+    "Right": [
+      -0.1656,
+      0.0,
+      0.6608
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    0.6608
+  ],
+  "LaunchOffset": [
+    0.0,
+    -0.1656,
+    0.0
+  ]
 }

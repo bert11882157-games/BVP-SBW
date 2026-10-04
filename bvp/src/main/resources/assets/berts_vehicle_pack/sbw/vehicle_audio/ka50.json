@@ -50,5 +50,18 @@
       1.03
     ],
     "loop": "bvp_audio:air/layer/havoc_rotor"
+  },
+  "airflow": {
+    "loop": "bvp_audio:air/layer/airflow",
+    "range": 96,
+    "volume": [
+      0.0,
+      0.55
+    ],
+    "pitch": [
+      0.7,
+      0.95
+    ],
+    "fullSpeed": 4.5
   }
 }

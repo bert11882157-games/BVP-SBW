@@ -16,8 +16,16 @@ import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.math.sqrt
 
-/** A finite server-owned submunition release; children cannot recursively split. */
+/**
+ * A finite server-owned submunition release; children cannot recursively split.
+ *
+ * Owner 2026-09-30: dispensers open [OPEN_HEIGHT] above the ground (the release point is interpolated along the
+ * last tick's fall, so it is the height itself, not up to a tick's fall below it) and carry their real load (CBU-87
+ * 202, Mk 20 / CBU-99 247, RBK-250 PTAB-2.5M 42, CBU-97 10 x 4 Skeets).
+ */
 object AircraftClusterBomb {
+    /** Submunition limit per dispenser (the Mk 20 Rockeye carries 247). */
+    const val MAX_SUBMUNITIONS = 256
     private const val KEY = "BvpCluster"
     private const val SENSOR_KEY = "BvpClusterSensor"
     private const val TYPED_CHILD_KEY = "BvpClusterTypedChild"
@@ -32,7 +40,7 @@ object AircraftClusterBomb {
         val bombletProfile: ResourceLocation? = null, val sensorRadius: Double = 0.0,
         val sensorShots: Int = 0, val sensorProjectileProfile: ResourceLocation? = null) {
         init {
-            require(count in 1..24 && releaseHeight.isFinite() && releaseHeight in 2.0..32.0)
+            require(count in 1..MAX_SUBMUNITIONS && releaseHeight.isFinite() && releaseHeight in 2.0..32.0)
             require(spreadSpeed.isFinite() && spreadSpeed in 0.0..1.0)
             require(damage.isFinite() && damage in 0f..2000f && radius.isFinite() && radius in 0.1f..8f)
             require(lifetime in 20..200)
@@ -76,16 +84,31 @@ object AircraftClusterBomb {
     fun tick(bomb: AerialBombEntity): Boolean {
         val level = bomb.level() as? ServerLevel ?: return false
         if (isSensorDispenser(bomb)) return sensorTick(bomb, level)
-        if (!bomb.persistentData.contains(KEY) || bomb.tickCount < 4 || bomb.tickCount % 2 != 0 ||
-            bomb.deltaMovement.y >= 0.0) return false
+        if (!bomb.persistentData.contains(KEY) || bomb.tickCount < 4 || bomb.deltaMovement.y >= 0.0) return false
         val height = bomb.persistentData.getCompound(KEY).getDouble("Height").coerceIn(2.0, 32.0)
+        val motion = bomb.deltaMovement
+        val fall = -motion.y
         // A vertical ray stays in the bomb's current loaded chunk; no terrain search or extra tickets.
-        val point = level.clip(ClipContext(bomb.position(), bomb.position().add(0.0, -height, 0.0),
+        val point = level.clip(ClipContext(bomb.position(), bomb.position().add(0.0, -(height + fall + 1.0), 0.0),
             ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, bomb))
-        return point.type != HitResult.Type.MISS && release(bomb, bomb.position())
+        if (point.type == HitResult.Type.MISS) return false
+        val t = openFraction(bomb.y - point.location.y, height, fall) ?: return false
+        return release(bomb, bomb.position().add(motion.scale(t)))
+    }
+
+    /**
+     * Where along this tick's motion (0..1) a dispenser [clearance] above the ground, falling [fall] blocks per tick,
+     * reaches [height]; null while that is still more than a tick away. Already below it: open at once.
+     */
+    internal fun openFraction(clearance: Double, height: Double, fall: Double): Double? {
+        if (!clearance.isFinite() || !(fall > 0.0)) return null
+        val over = clearance - height
+        if (over <= 0.0) return 0.0
+        if (over > fall) return null
+        return over / fall
     }
     internal fun spread(count: Int, speed: Double, phase: Double): List<Vec3> {
-        require(count in 1..24 && speed.isFinite() && speed in 0.0..1.0 && phase.isFinite())
+        require(count in 1..MAX_SUBMUNITIONS && speed.isFinite() && speed in 0.0..1.0 && phase.isFinite())
         val goldenAngle = Math.PI * (3.0 - sqrt(5.0))
         return (0 until count).map { index ->
             val radius = speed * sqrt((index + 0.5) / count)
@@ -123,7 +146,9 @@ object AircraftClusterBomb {
             ?.getUUID("BvpBombAircraft") ?: dispenser.uuid
         child.configure("DUMB", aircraft, 0.01f, 0.0, 0.0, 0f, 0f, null)
         child.persistentData.putBoolean(TYPED_CHILD_KEY, true)
-        com.atsuishio.superbwarfare.tools.blast.TntEquivalents.set(child, tag.getDouble(TNT_KEY))
+        // The bomblet charge covers all of its Skeets (BLU-108: 4 x 945 g octol): each Skeet carries its share.
+        com.atsuishio.superbwarfare.tools.blast.TntEquivalents.set(child,
+            tag.getDouble(TNT_KEY) / tag.getInt("TotalShots").coerceAtLeast(1))
         ProjectileProfiles.assign(child, profile)
         if (level.addFreshEntity(child)) {
             tag.putInt("Shots", remaining - 1)
@@ -137,6 +162,22 @@ object AircraftClusterBomb {
         if (!isSensorDispenser(bomb)) return false
         bomb.discard()
         return true
+    }
+
+    /** TNT equivalent of a dispenser's opening charge (the cutting charge that splits the casing). */
+    const val OPENING_CHARGE_KG = 1.0
+
+    private fun burst(bomb: AerialBombEntity, at: Vec3) {
+        runCatching {
+            com.atsuishio.superbwarfare.tools.CustomExplosion.Builder(bomb)
+                .attacker(bomb.owner)
+                .damage(0f)
+                .radius(0f)
+                .position(at)
+                .tntEquivalent(OPENING_CHARGE_KG)
+                .keepBlock()
+                .explode()
+        }.onFailure { AircraftMunitionDebug.log(bomb, "cluster opening burst failed: ${it.message}") }
     }
 
     /** Also handles a very low release/impact without detonating the container as an HE bomb. */
@@ -164,6 +205,9 @@ object AircraftClusterBomb {
         }
         val aircraft = if (data.hasUUID("BvpBombAircraft")) data.getUUID("BvpBombAircraft") else bomb.uuid
         val motion = bomb.deltaMovement
+        // The casing bursts open in the air (owner 2026-09-30: "it should be exploding above the ground"): the
+        // dispenser's small opening charge, seen and heard, before the submunitions fall to the ground and go off.
+        burst(bomb, at)
         var spawned = 0
         for (offset in spread(config.count, config.spreadSpeed, level.random.nextDouble() * Math.PI * 2)) {
             val child = ModEntities.SC_50.get().create(level) ?: continue
@@ -180,6 +224,7 @@ object AircraftClusterBomb {
                 val sensorTag = CompoundTag()
                 sensorTag.putDouble("Radius", config.sensorRadius)
                 sensorTag.putInt("Shots", config.sensorShots)
+                sensorTag.putInt("TotalShots", config.sensorShots)
                 sensorTag.putString("Profile", profile.toString())
                 sensorTag.putDouble(TNT_KEY, tag.getDouble(TNT_KEY))
                 child.persistentData.put(SENSOR_KEY, sensorTag)

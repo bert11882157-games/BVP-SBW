@@ -5,6 +5,7 @@ import com.atsuishio.superbwarfare.api.aircraft.AircraftMountSweep
 import com.atsuishio.superbwarfare.api.aircraft.AircraftStoreAttachment
 import com.atsuishio.superbwarfare.api.aircraft.AircraftStoreModelForward
 import com.atsuishio.superbwarfare.api.aircraft.AircraftStoreMountAnchor
+import com.atsuishio.superbwarfare.api.aircraft.AircraftTargetingPods
 import com.google.gson.JsonArray
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
@@ -46,6 +47,7 @@ data class AircraftStoreView(
         "LASER_GUIDED", "COMMAND_GUIDED" -> "Guided air-to-ground munition"
         "GUN_POD" -> "Gun pod"
         "ROCKET_POD" -> "Unguided rocket pod"
+        AircraftTargetingPods.CATEGORY -> "Targeting pod"
         else -> "Bomb"
     }
 }
@@ -90,9 +92,11 @@ data class AircraftSingleView(
     override val positions: List<Vec3> = Collections.singletonList(position)
 }
 
+/** [mount]/[mountPosition]: the station of a pod carried as a store (AircraftTargetingPods), null when built in. */
 data class AircraftPodView(val position: Vec3, val yawLimit: Float, val pitchMin: Float,
                            val pitchMax: Float, val source: String,
-                           val maxZoom: Double = 24.0, val range: Double = 8192.0)
+                           val maxZoom: Double = 24.0, val range: Double = 8192.0,
+                           val mount: String? = null, val mountPosition: Int = 0)
 
 data class AircraftSeekView(val revision: Long, val weaponId: String, val target: UUID?,
                             val position: Vec3?, val progress: Double, val ready: Boolean,
@@ -179,7 +183,8 @@ data class AircraftArmamentSnapshot(
     companion object {
         /** Stores whose munitions leave the rack one at a time (checked per store, per frame, while drawing). */
         private val RELEASED_ONE_BY_ONE = setOf("LASER_GUIDED", "COMMAND_GUIDED", "BOMB", "CRUISE")
-        private val categories = setOf("COMMAND_GUIDED", "LASER_GUIDED", "GUN_POD", "BOMB", "AIR_TO_AIR", "AIR_TO_GROUND", "ANTI_RADIATION", "CRUISE", "ROCKET_POD", "VISUAL_ONLY")
+        private val categories = setOf("COMMAND_GUIDED", "LASER_GUIDED", "GUN_POD", "BOMB", "AIR_TO_AIR", "AIR_TO_GROUND", "ANTI_RADIATION", "CRUISE", "ROCKET_POD", "VISUAL_ONLY",
+            AircraftTargetingPods.CATEGORY)
 
         fun decode(json: JsonObject): AircraftArmamentSnapshot? = try {
             val vehicle = UUID.fromString(string(json, "Vehicle", 36))
@@ -222,9 +227,17 @@ data class AircraftArmamentSnapshot(
                 val min = number(it, "PitchMin", -90.0, -90.0, 90.0).toFloat()
                 val max = number(it, "PitchMax", 20.0, -90.0, 90.0).toFloat()
                 require(min < max)
+                val mount = it.get(AircraftTargetingPods.MOUNT)?.let { _ -> string(it, AircraftTargetingPods.MOUNT, 64) }
                 AircraftPodView(vector(it.get("Position"), 4096.0), yaw, min, max,
                     string(it, "Source", 512), number(it, "MaxZoom", 24.0, 1.0, 64.0),
-                    number(it, "Range", 8192.0, 1.0, 8192.0))
+                    number(it, "Range", 8192.0, 1.0, 8192.0), mount,
+                    if (mount == null) 0 else integer(it, AircraftTargetingPods.MOUNT_POSITION, 0, 1))
+            }
+            pod?.mount?.let { mount ->
+                // A store pod names a station of this definition (a pair has two positions, a single one).
+                val positions = pairs.firstOrNull { it.id == mount }?.positions?.size
+                    ?: singles.firstOrNull { it.id == mount }?.positions?.size ?: error("unknown pod station")
+                require(pod.mountPosition < positions)
             }
             val definition = AircraftDefinitionView(string(raw, "Name", 96),
                 strings(raw, "BuiltInWeapons", 32), Collections.unmodifiableList(pairs), pod,

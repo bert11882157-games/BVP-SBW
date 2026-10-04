@@ -14,7 +14,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 
 public abstract class VehicleSoundInstance extends AbstractTickableSoundInstance implements AttributedVehicleSound,
-        com.atsuishio.superbwarfare.client.sound.spatial.DopplerSound {
+        com.atsuishio.superbwarfare.client.sound.spatial.DopplerSound, VehicleAudioMix.Tagged {
 
     private final Minecraft client;
     private final VehicleEntity mobileVehicle;
@@ -22,6 +22,16 @@ public abstract class VehicleSoundInstance extends AbstractTickableSoundInstance
     private boolean die = false;
 
     @Override public java.util.UUID eliteSourceEntity() { return mobileVehicle.getUUID(); }
+
+    /** Engine-type loops by default (engine, tracks, water); weapons and aircraft effects override this. */
+    @Override
+    public VehicleAudioMix.Category vehicleMixCategory() {
+        return VehicleAudioMix.engineOf(mobileVehicle);
+    }
+
+    protected VehicleEntity mixVehicle() {
+        return mobileVehicle;
+    }
 
     public VehicleSoundInstance(SoundEvent sound, Minecraft client, VehicleEntity mobileVehicle) {
         super(sound, SoundSource.AMBIENT, mobileVehicle.getCommandSenderWorld().getRandom());
@@ -160,6 +170,11 @@ public abstract class VehicleSoundInstance extends AbstractTickableSoundInstance
         }
 
         @Override
+        public VehicleAudioMix.Category vehicleMixCategory() {
+            return VehicleAudioMix.Category.AIRCRAFT_EFFECTS;
+        }
+
+        @Override
         protected boolean canPlay(VehicleEntity mobileVehicle) {
             return mobileVehicle.engineRunning() && mobileVehicle.stuka();
         }
@@ -176,6 +191,11 @@ public abstract class VehicleSoundInstance extends AbstractTickableSoundInstance
 
         public HeliCrashSound(VehicleEntity mobileVehicle) {
             super(ModSounds.HELI_CRASH.get(), Minecraft.getInstance(), mobileVehicle);
+        }
+
+        @Override
+        public VehicleAudioMix.Category vehicleMixCategory() {
+            return VehicleAudioMix.Category.AIRCRAFT_EFFECTS;
         }
 
         @Override

@@ -41,9 +41,13 @@ object BallisticSync {
         return !(predictedVelocity.distanceToSqr(endVelocity) <= VELOCITY_TOLERANCE_SQR)
     }
 
-    /** Beyond this error the client applies the authoritative position directly. */
+    /**
+     * Beyond this error the client applies the authoritative position directly. Two ticks of travel on top of 4
+     * blocks (owner 2026-09-30: fast munitions stuttered; 4 + v/4 was less than one tick of a missile's travel, so
+     * ordinary timing jitter snapped them).
+     */
     @JvmStatic
-    fun snapDistance(speed: Double): Double = 4.0 + 0.25 * (if (speed.isFinite()) speed else 0.0)
+    fun snapDistance(speed: Double): Double = 4.0 + 2.0 * (if (speed.isFinite()) speed.coerceAtLeast(0.0) else 0.0)
 
     /**
      * An unaligned (vanilla tracker) position carries no simulation step, so any difference up to the

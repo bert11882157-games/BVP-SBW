@@ -286,7 +286,7 @@
       "NormalReloadTime": 240,
       "EmptyReloadTime": 240,
       "AmmoCostPerShoot": 1,
-      "Velocity": 49.0,
+      "Velocity": 48.5,
       "Damage": 23,
       "ExplosionDamage": 8,
       "ExplosionRadius": 2,
@@ -322,48 +322,6 @@
       "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/cannon_25mm_ap.png",
       "AmmoType": [
         {
-          "Ammo": "superbwarfare:small_shell_he",
-          "Override": {
-            "Projectile": {
-              "Type": "superbwarfare:small_cannon_shell",
-              "Profile": "berts_vehicle_pack:zsu23_4/cannon/ammo_01_23mm_hei"
-            },
-            "ShellType": "HE",
-            "ApDurability": 6,
-            "Damage": 250,
-            "ExplosionDamage": 0,
-            "ExplosionRadius": 5,
-            "TntEquivalentKg": 0.0285,
-            "Name": "Air Belt",
-            "Velocity": 49.0,
-            "ProjectileBelt": {
-              "Name": "Air Belt",
-              "Family": "ZU23",
-              "Rounds": [
-                {
-                  "Shots": 3,
-                  "Round": "23mm_hei",
-                  "Ammo": "superbwarfare:small_shell_he",
-                  "Tracer": "NONE"
-                },
-                {
-                  "Shots": 1,
-                  "Round": "23mm_apit",
-                  "Ammo": "superbwarfare:small_shell_ap",
-                  "Tracer": "GREEN"
-                }
-              ]
-            },
-            "NominalBallistics": {
-              "Supported": true,
-              "ProjectileType": "superbwarfare:small_cannon_shell",
-              "ProjectileProfile": "berts_vehicle_pack:zsu23_4/cannon/ammo_01_23mm_hei",
-              "ProjectileLife": 40
-            }
-          },
-          "ConsumptionItem": "superbwarfare:small_autocannon_shell"
-        },
-        {
           "Ammo": "superbwarfare:small_shell_ap",
           "Override": {
             "Projectile": {
@@ -375,10 +333,10 @@
             "Damage": 23,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
-            "Name": "Ground Belt",
+            "Name": "23 mm API-T",
             "Velocity": 48.5,
             "ProjectileBelt": {
-              "Name": "Ground Belt",
+              "Name": "23 mm API-T",
               "Family": "ZU23",
               "Rounds": [
                 {
@@ -403,6 +361,101 @@
             }
           },
           "ConsumptionItem": "superbwarfare:small_autocannon_shell"
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_he",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:zsu23_4/cannon/ammo_01_23mm_hei"
+            },
+            "ShellType": "HE",
+            "ApDurability": 6,
+            "Damage": 250,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 5,
+            "TntEquivalentKg": 0.0285,
+            "Name": "Default",
+            "Velocity": 49.0,
+            "ProjectileBelt": {
+              "Name": "Default",
+              "Family": "ZU23",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "23mm_apit",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "GREEN"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "23mm_hei",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:zsu23_4/cannon/ammo_01_23mm_hei",
+              "ProjectileLife": 40
+            }
+          },
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell"
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_aa",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:zsu23_4/cannon/belt_ammo_00_23mm_hei_2"
+            },
+            "ShellType": "HE",
+            "ApDurability": 6,
+            "Damage": 250,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 5,
+            "TntEquivalentKg": 0.02,
+            "Name": "23 mm HEFI-T",
+            "Velocity": 48.5,
+            "ProjectileBelt": {
+              "Name": "23 mm HEFI-T",
+              "Family": "ZU23",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "23mm_hei",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "23mm_hei_2",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "GREEN"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "23mm_hei",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "23mm_apit",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "GREEN"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:zsu23_4/cannon/belt_ammo_00_23mm_hei_2",
+              "ProjectileLife": 40
+            }
+          }
         }
       ],
       "ShootPos": {
@@ -438,25 +491,7 @@
           1.95958
         ]
       },
-      "ProjectileBeltAmmoType": [
-        {
-          "Ammo": "superbwarfare:small_shell_aa",
-          "Override": {
-            "Projectile": {
-              "Type": "superbwarfare:small_cannon_shell",
-              "Profile": "berts_vehicle_pack:zsu23_4/cannon/belt_ammo_00_23mm_hei_2"
-            },
-            "ShellType": "HE",
-            "ApDurability": 6,
-            "Damage": 250,
-            "ExplosionDamage": 0,
-            "ExplosionRadius": 5,
-            "TntEquivalentKg": 0.02,
-            "Name": "23 mm API-T",
-            "Velocity": 48.5
-          }
-        }
-      ],
+      "ProjectileBeltAmmoType": [],
       "NominalBallistics": {
         "Supported": true,
         "ProjectileType": "superbwarfare:small_cannon_shell",

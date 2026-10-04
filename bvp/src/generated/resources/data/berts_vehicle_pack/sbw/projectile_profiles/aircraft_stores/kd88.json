@@ -10,7 +10,7 @@
     "HullDamage": 2840,
     "ModuleDamage": 1700,
     "AmmoRackDamage": 340,
-    "PenetrationMm": 0,
+    "PenetrationMm": 1000.0,
     "Tandem": false
   },
   "VisualProfile": "berts_vehicle_pack:authored_missile",
@@ -47,7 +47,7 @@
       "MaxLoadFactorG": 15,
       "SeekerConeDegrees": 30,
       "SeekerRateDegreesPerSecond": 24,
-      "BodyTurnLimitScale": 3
+      "BodyTurnLimitScale": 1
     },
     "superbwarfare:warhead_fragments_v1": {
       "Count": 192,

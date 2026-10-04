@@ -1,7 +1,7 @@
 {
   "Combat": {
     "WeaponId": "berts_vehicle_pack:leclerc_s1/cannon",
-    "RoundId": "berts_vehicle_pack:ofl120f1_apfsds",
+    "RoundId": "berts_vehicle_pack:ofl120f2_apfsds",
     "MunitionType": "berts_vehicle_pack:tank_shell",
     "DamageType": "berts_vehicle_pack:kinetic",
     "CaliberMm": 120,
@@ -10,7 +10,7 @@
     "HullDamage": 90,
     "ModuleDamage": 54,
     "AmmoRackDamage": 350,
-    "PenetrationMm": 576,
+    "PenetrationMm": 562,
     "PenetrationCurve": {
       "DistancesMetres": [
         10,
@@ -21,11 +21,11 @@
         2000
       ],
       "PenetrationMm": [
-        576,
-        574,
-        567,
-        557,
-        548,
+        562,
+        561,
+        556,
+        550,
+        544,
         538
       ]
     },

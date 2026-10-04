@@ -173,7 +173,8 @@ final class ProjectileArmorEffects {
             Map.entry("t80u_obr1985/cannon", 250.0D),
             Map.entry("t72b3/cannon", 280.0D),
             Map.entry("t72b3_ubh_cope/cannon", 280.0D),
-            Map.entry("t90a/cannon", 280.0D)
+            Map.entry("t90a/cannon", 280.0D),
+            Map.entry("t80bvm_obr2022/cannon", 280.0D)
     );
 
     private static final Map<String, Double> APFSDS_HULL_DAMAGE_BY_PROFILE = Map.ofEntries(
@@ -183,7 +184,8 @@ final class ProjectileArmorEffects {
             Map.entry("t80u_obr1985", 250.0D),
             Map.entry("t72b3", 280.0D),
             Map.entry("t72b3_ubh_cope", 280.0D),
-            Map.entry("t90a", 280.0D)
+            Map.entry("t90a", 280.0D),
+            Map.entry("t80bvm_obr2022", 280.0D)
     );
 
     private ProjectileArmorEffects() {

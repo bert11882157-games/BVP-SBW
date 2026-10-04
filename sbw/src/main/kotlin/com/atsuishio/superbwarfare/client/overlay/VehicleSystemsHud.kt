@@ -98,16 +98,18 @@ object VehicleSystemsHud {
         if(equipment!=null) {
             var y=54
             fun status(cooldown:Int)=if(cooldown>0) "CD ${ceil(cooldown/20.0).toInt()}s" else "READY"
+            val unlimited=com.atsuishio.superbwarfare.api.aircraft.AircraftCountermeasures.hasUnlimitedSupply(v,p)
+            fun shown(count:Int)=if(unlimited) "∞" else count.toString()
             if(equipment.flares) {
                 val key=com.atsuishio.superbwarfare.init.ModKeyMappings.RELEASE_DECOY.key.displayName.string
-                val count=stock(v,ModItems.FLARE_AMMUNITION.get())
-                line("FLR",count.toString(),"[$key] ${if(count<2) "LOAD 2" else status(v.getFlareCooldownTicks())}",y)
+                val count=if(unlimited) Int.MAX_VALUE else stock(v,ModItems.FLARE_AMMUNITION.get())
+                line("FLR",shown(count),"[$key] ${if(count<2) "LOAD 2" else status(v.getFlareCooldownTicks())}",y)
                 y+=12
             }
             if(equipment.chaff) {
                 val key=com.atsuishio.superbwarfare.init.ModKeyMappings.RELEASE_CHAFF.key.displayName.string
-                val count=stock(v,ModItems.CHAFF_AMMUNITION.get())
-                line("CHF",count.toString(),
+                val count=if(unlimited) Int.MAX_VALUE else stock(v,ModItems.CHAFF_AMMUNITION.get())
+                line("CHF",shown(count),
                     "[$key] ${if(v.isChaffEmitting()) "ACTIVE" else if(count<1) "LOAD 1" else status(v.getChaffCooldownTicks())}",y)
                 y+=12
             }

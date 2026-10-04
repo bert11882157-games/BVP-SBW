@@ -253,7 +253,9 @@ object ProjectileFactory {
                 entity.setType(MediumRocketEntity.Type.AP)
                 entity.durability(data.get(GunProp.AP_DURABILITY))
             }
-            ShellMode.HE -> entity.setType(MediumRocketEntity.Type.HE)
+            // HEAT rockets (S-8KO, Hydra, Zuni pods) are warheads too: burst on what they hit instead of flying on as
+            // AP and hurting whatever stands behind the target (owner 2026-09-29).
+            ShellMode.HE, ShellMode.HEAT -> entity.setType(MediumRocketEntity.Type.HE)
             ShellMode.CM -> entity.setType(MediumRocketEntity.Type.CM)
             else -> return
         }
@@ -349,7 +351,7 @@ object ProjectileFactory {
     }
 
     private enum class ShellMode {
-        AP, HE, CM, WP, AA, UNKNOWN;
+        AP, HE, HEAT, CM, WP, AA, UNKNOWN;
 
         companion object {
             fun parse(value: String) = entries.firstOrNull { it.name == value.trim().uppercase() } ?: UNKNOWN

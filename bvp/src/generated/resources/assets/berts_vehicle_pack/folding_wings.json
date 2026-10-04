@@ -61,5 +61,79 @@
     "Degrees": -90.0
    }
   }
+ },
+ "berts_vehicle_pack:custom_geo/aircraft_stores/storm_shadow.geo.json": {
+  "DeployTicks": 8,
+  "Bones": {
+   "wing_left": {
+    "Axis": [
+     0,
+     1,
+     0
+    ],
+    "Degrees": 90.0
+   },
+   "wing_right": {
+    "Axis": [
+     0,
+     1,
+     0
+    ],
+    "Degrees": -90.0
+   },
+   "wing_left_2": {
+    "Axis": [
+     0.08,
+     1,
+     0
+    ],
+    "Degrees": 90.0
+   },
+   "wing_right_2": {
+    "Axis": [
+     -0.08,
+     1,
+     0
+    ],
+    "Degrees": -90.0
+   }
+  }
+ },
+ "berts_vehicle_pack:custom_geo/aircraft_stores/storm_shadow_flight.geo.json": {
+  "DeployTicks": 8,
+  "Bones": {
+   "wing_left": {
+    "Axis": [
+     0,
+     0,
+     1
+    ],
+    "Degrees": 90.0
+   },
+   "wing_right": {
+    "Axis": [
+     0,
+     0,
+     1
+    ],
+    "Degrees": -90.0
+   },
+   "wing_left_2": {
+    "Axis": [
+     0.08,
+     0,
+     1
+    ],
+    "Degrees": 90.0
+   },
+   "wing_right_2": {
+    "Axis": [
+     -0.08,
+     0,
+     1
+    ],
+    "Degrees": -90.0
+   }
+  }
  }
 }

@@ -1,0 +1,54 @@
+{
+  "Schema": 1,
+  "Name": "ARMAT · anti-radiation",
+  "Category": "ANTI_RADIATION",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/armat.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.283,
+    0.581
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.283,
+      0.0,
+      0.581
+    ],
+    "Right": [
+      -0.2358,
+      0.0,
+      0.581
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    0.581
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/armat.png",
+  "Capacity": 1,
+  "MassKg": 550,
+  "Guidance": {
+    "Mode": "ANTI_RADIATION",
+    "LockTicks": 60,
+    "Range": 1500,
+    "ConeDegrees": 35,
+    "CountermeasureVulnerability": 1
+  },
+  "Flight": {
+    "InitialSpeed": 0.5,
+    "MaxSpeed": 8,
+    "AccelerationPerTick": 0.18,
+    "TurnDegreesPerSecond": 30,
+    "Damage": 100,
+    "BlastRadius": 10.5,
+    "TntEquivalentKg": 52.5
+  },
+  "AmmoItem": "superbwarfare:large_air_to_ground_missile",
+  "LaunchOffset": [
+    0.0,
+    -0.283,
+    0.0
+  ]
+}

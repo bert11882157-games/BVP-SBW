@@ -770,7 +770,9 @@ open class ProjectileEntity(entityType: EntityType<out ProjectileEntity>, level:
             lastImpactStopsTraversal = ProjectileSweepTraversal.stops(resolution)
             if (resolution.consumesProjectile()) {
                 // Armor owns the direct hit; a TNT-equivalent charge still detonates at the impact point.
-                if (!tntDetonated && TntBlast.active(this)) {
+                // A ricochet eats the shot (owner 2026-09-30): no detonation; clients only see a cosmetic tracer.
+                if (!tntDetonated && TntBlast.active(this) && resolution.presentationOutcome !=
+                    com.atsuishio.superbwarfare.api.projectile.impact.ProjectileImpactPresentationOutcome.RICOCHET) {
                     activeImpactResult = resolution
                     try {
                         explosionBullet(this, result.location)
@@ -1447,6 +1449,13 @@ open class ProjectileEntity(entityType: EntityType<out ProjectileEntity>, level:
         this.mobEffects.addAll(mobEffectInstances)
         return this
     }
+
+    /** The tracer colour clients draw this round with. */
+    fun tracerRgb(): FloatArray =
+        floatArrayOf(this.entityData.get(COLOR_R), this.entityData.get(COLOR_G), this.entityData.get(COLOR_B))
+
+    /** Gravity per tick (blocks/tick^2). */
+    fun gravityPerTick(): Float = gravity
 
     fun setRGB(rgb: FloatArray) {
         this.entityData.set(COLOR_R, rgb[0])

@@ -12,7 +12,14 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.ChatFormatting;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.phys.Vec3;
+import com.atsuishio.superbwarfare.api.vehicle.deck.DeckCollisions;
+import com.atsuishio.superbwarfare.api.vehicle.deck.DeckPose;
+import com.yourname.berts_vehicle_pack.carrier.CarrierPlacement;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -113,33 +120,99 @@ public final class BvpVehicleItem extends Item {
         if (type.isEmpty()) {
             return InteractionResult.FAIL;
         }
-
         Level level = context.m_43725_();
+        Player player = context.m_43723_();
+        if (player != null) {
+            String id = carrierId(type.get());
+            if (id != null) {
+                return launchCarrier(level, player, stack, type.get(), id);
+            }
+            // A carrier deck between the player and the clicked block takes the vehicle, as terrain would.
+            Vec3 eye = player.getEyePosition();
+            DeckCollisions.Hit deck = DeckCollisions.clip(level, eye, context.getClickLocation(), player);
+            if (deck != null && deck.fromAbove) {
+                return placeOnDeck(level, player, stack, type.get(), deck);
+            }
+        }
         if (level.m_5776_()) {
             return InteractionResult.SUCCESS;
         }
+        BlockPos placement = context.m_8083_().m_121945_(context.m_43719_());
+        float yaw = player == null ? 0.0F : Mth.m_14177_(player.m_146908_());
+        return spawn(level, player, stack, type.get(), placement.m_123341_() + 0.5D, placement.m_123342_() + 0.5D,
+                placement.m_123343_() + 0.5D, yaw, true);
+    }
 
-        VehicleEntity vehicle = VehicleItemLifecycleProviders.createFromType(
-                LIFECYCLE_PROVIDER_ID,
-                type.get(),
-                level
-        );
+    /**
+     * Air use: a carrier launches onto the water the player looks at (CarrierPlacement); any other vehicle is put
+     * down on a carrier deck the player looks at within reach.
+     */
+    @Override
+    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, @NotNull Player player,
+                                                          @NotNull InteractionHand hand) {
+        ItemStack stack = player.getItemInHand(hand);
+        Optional<EntityType<?>> type = getEntityType(stack);
+        if (type.isEmpty()) {
+            return InteractionResultHolder.pass(stack);
+        }
+        String id = carrierId(type.get());
+        if (id != null) {
+            InteractionResult result = launchCarrier(level, player, stack, type.get(), id);
+            return new InteractionResultHolder<>(result, stack);
+        }
+        Vec3 eye = player.getEyePosition();
+        Vec3 end = eye.add(player.getViewVector(1.0F).scale(player.getBlockReach()));
+        DeckCollisions.Hit deck = DeckCollisions.clip(level, eye, end, player);
+        if (deck == null || !deck.fromAbove) {
+            return InteractionResultHolder.pass(stack);
+        }
+        return new InteractionResultHolder<>(placeOnDeck(level, player, stack, type.get(), deck), stack);
+    }
+
+    private InteractionResult placeOnDeck(Level level, Player player, ItemStack stack, EntityType<?> type,
+                                          DeckCollisions.Hit deck) {
+        if (level.isClientSide) {
+            return InteractionResult.SUCCESS;
+        }
+        Vec3 at = deck.location;
+        return spawn(level, player, stack, type, at.x, at.y + 0.5D, at.z, Mth.wrapDegrees(player.getYRot()), true);
+    }
+
+    private InteractionResult launchCarrier(Level level, Player player, ItemStack stack, EntityType<?> type,
+                                            String id) {
+        CarrierPlacement.Plan plan = CarrierPlacement.plan(level, player, id);
+        if (plan == null) {
+            return InteractionResult.PASS;
+        }
+        if (!plan.valid()) {
+            if (!level.isClientSide) {
+                player.displayClientMessage(Component.literal("Cannot launch here: " + plan.problem().text)
+                        .withStyle(ChatFormatting.RED), true);
+            }
+            return InteractionResult.FAIL;
+        }
+        if (level.isClientSide) {
+            return InteractionResult.SUCCESS;
+        }
+        DeckPose pose = plan.pose();
+        return spawn(level, player, stack, type, pose.getX(), pose.getY(), pose.getZ(), pose.getYaw(), false);
+    }
+
+    /** The carrier id of [type], or null for every other vehicle. */
+    private static String carrierId(EntityType<?> type) {
+        ResourceLocation id = ForgeRegistries.ENTITY_TYPES.getKey(type);
+        return id != null && CarrierPlacement.isCarrier(id.getPath()) ? id.getPath() : null;
+    }
+
+    private InteractionResult spawn(Level level, Player player, ItemStack stack, EntityType<?> type,
+                                    double x, double y, double z, float yaw, boolean checkCollision) {
+        VehicleEntity vehicle = VehicleItemLifecycleProviders.createFromType(LIFECYCLE_PROVIDER_ID, type, level);
         if (vehicle == null) {
             return InteractionResult.FAIL;
         }
-
-        BlockPos placement = context.m_8083_().m_121945_(context.m_43719_());
-        Player player = context.m_43723_();
-        float yaw = player == null ? 0.0F : Mth.m_14177_(player.m_146908_());
-        vehicle.m_7678_(
-                placement.m_123341_() + 0.5D,
-                placement.m_123342_() + 0.5D,
-                placement.m_123343_() + 0.5D,
-                yaw,
-                0.0F
-        );
-        vehicle.f_19859_ = yaw;
-        vehicle.f_19860_ = 0.0F;
+        vehicle.moveTo(x, y, z, yaw, 0.0F);
+        vehicle.yRotO = yaw;
+        vehicle.xRotO = 0.0F;
 
         CompoundTag durableState = getDurableState(stack);
         if (durableState != null && !VehicleItemLifecycleProviders.restorePlacementState(
@@ -152,22 +225,16 @@ public final class BvpVehicleItem extends Item {
 
         // State restoration cannot choose position or orientation.  The player's forward bearing
         // is the sole placement heading, including for a recovered vehicle.
-        vehicle.m_7678_(
-                placement.m_123341_() + 0.5D,
-                placement.m_123342_() + 0.5D,
-                placement.m_123343_() + 0.5D,
-                yaw,
-                0.0F
-        );
-        vehicle.f_19859_ = yaw;
-        vehicle.f_19860_ = 0.0F;
-        if (!level.m_45756_(vehicle, vehicle.m_20191_()) || !level.m_7967_(vehicle)) {
+        vehicle.moveTo(x, y, z, yaw, 0.0F);
+        vehicle.yRotO = yaw;
+        vehicle.xRotO = 0.0F;
+        if ((checkCollision && !level.noCollision(vehicle, vehicle.getBoundingBox())) || !level.addFreshEntity(vehicle)) {
             return InteractionResult.FAIL;
         }
 
-        level.m_220400_(player, GameEvent.f_157810_, vehicle.m_20182_());
-        if (player == null || !player.m_150110_().f_35937_) {
-            stack.m_41774_(1);
+        level.gameEvent(player, GameEvent.ENTITY_PLACE, vehicle.position());
+        if (player == null || !player.getAbilities().instabuild) {
+            stack.shrink(1);
         }
         return InteractionResult.CONSUME;
     }

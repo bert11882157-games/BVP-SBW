@@ -32,8 +32,11 @@ import kotlin.math.sqrt
  *    cross-faded and pitched by RPM) -> (stop clip; loops fade out) -> OFF. A vehicle first seen already running
  *    skips the start clip. The load is throttle for aircraft, collective for helicopters and input/speed on the
  *    ground; the engine RPM follows it at the profile's spool rate.
- *  - Aircraft layers: low-frequency roar / afterburner (`boost`), the far sound (`distant`, taking over from the near
- *    engine with distance), rotor blades (`rotor`) and the cockpit ambience for the crew (`interior`).
+ *  - Aircraft layers: the full-power roar (`boost`), the afterburner (`afterburner`: lit-burner loop plus its ignition
+ *    one-shot; the turbine loop ducks under it), the far sound (`distant`, taking over from the near engine with
+ *    distance), rotor blades (`rotor`), the cockpit ambience for the crew (`interior`), rushing air by airspeed
+ *    (`airflow`, whether the engine runs or not) and the whoosh of a close pass (`flyby`, fired ahead of the
+ *    predicted closest point so its peak lands on it).
  *  - Tracks: a loop by ground speed.
  *  - Turret: start clip, a loop while the turret slews (volume and pitch by slew rate), stop clip when it settles.
  *
@@ -48,6 +51,10 @@ object VehicleAudioController {
     private const val MAX_VEHICLES = 12
     private const val LOOP_FADE_OUT_TICKS = 8f
     private const val TURRET_SETTLE_TICKS = 3
+    /** Ticks over which the heard velocity is measured (smooths the client's position interpolation). */
+    private const val SPEED_SPAN = 4
+    /** One flyby whoosh per pass. */
+    private const val FLYBY_QUIET_TICKS = 70L
     /** Ticks of source history kept for the propagation delay (100 ticks = ~1700 blocks of travel). */
     private const val HISTORY = 100
     private const val CREATE_GAIN = 0.004f
@@ -70,9 +77,17 @@ object VehicleAudioController {
         var sz = vehicle.z
         var rpm = 0f
         var boostLevel = 0f
+        /** Heard afterburner level (0..1) and whether the burner was lit in the last heard sample. */
+        var burnerLevel = 0f
+        var burnerHeard = false
         var idle: Voice? = null
         var drive: Voice? = null
         var boost: Voice? = null
+        var afterburner: Voice? = null
+        var afterburnerBody: Voice? = null
+        var airflow: Voice? = null
+        /** Clock before which no new flyby whoosh fires (one per pass). */
+        var flybyQuietUntil = Long.MIN_VALUE
         var distant: Voice? = null
         var rotor: Voice? = null
         var interior: Voice? = null
@@ -87,19 +102,21 @@ object VehicleAudioController {
         val hy = DoubleArray(HISTORY)
         val hz = DoubleArray(HISTORY)
         val hrpm = FloatArray(HISTORY)
+        val hburner = BooleanArray(HISTORY)
         var head = -1
         var filled = 0
 
-        fun record(x: Double, y: Double, z: Double, value: Float) {
+        fun record(x: Double, y: Double, z: Double, value: Float, burner: Boolean) {
             head = (head + 1) % HISTORY
-            hx[head] = x; hy[head] = y; hz[head] = z; hrpm[head] = value
+            hx[head] = x; hy[head] = y; hz[head] = z; hrpm[head] = value; hburner[head] = burner
             if (filled < HISTORY) filled++
         }
 
         /** Ring index of the sample [ticks] ago. */
         fun ago(ticks: Int) = (head - ticks + HISTORY) % HISTORY
 
-        fun voices() = listOfNotNull(idle, drive, boost, distant, rotor, interior, tracks, turret)
+        fun voices() = listOfNotNull(idle, drive, boost, afterburner, afterburnerBody, airflow, distant, rotor, interior,
+            tracks, turret)
     }
 
     private val states = LinkedHashMap<UUID, State>()
@@ -239,7 +256,8 @@ object VehicleAudioController {
 
         // engine RPM follows the load at the spool rate; history for the propagation delay
         state.rpm = spool(state.rpm, if (on) load(vehicle) else 0f, engine?.spoolUp ?: 0f, engine?.spoolDown ?: 0f)
-        state.record(vehicle.x, vehicle.y + vehicle.bbHeight * 0.4, vehicle.z, state.rpm)
+        state.record(vehicle.x, vehicle.y + vehicle.bbHeight * 0.4, vehicle.z, state.rpm,
+            on && profile.afterburner != null && afterburner(vehicle))
         val lag = if (crew) 0 else propagationLag(state.filled) { k ->
             val i = state.ago(k)
             val dx = state.hx[i] - camera.x; val dy = state.hy[i] - camera.y; val dz = state.hz[i] - camera.z
@@ -251,6 +269,7 @@ object VehicleAudioController {
         val distance = if (crew) 0.0 else sqrt((sx - camera.x).let { it * it } + (sy - camera.y).let { it * it } +
             (sz - camera.z).let { it * it })
         val rpm = state.hrpm[at]
+        val burnerNow = state.hburner[at]
         val heard = now - lag
 
         engine?.let {
@@ -259,6 +278,8 @@ object VehicleAudioController {
             if (!state.known) {
                 state.known = true
                 state.running = on
+                // a burner already lit when the aircraft comes into earshot does not replay its ignition
+                state.burnerHeard = burnerNow
                 state.startTick = Long.MIN_VALUE
             } else if (on && !state.running) {
                 state.running = true
@@ -278,10 +299,12 @@ object VehicleAudioController {
             }
             if (!state.running && state.releaseAt != Long.MIN_VALUE && now >= state.releaseAt) {
                 state.releaseAt = Long.MIN_VALUE
-                for (voice in listOfNotNull(state.idle, state.drive, state.boost, state.distant, state.rotor,
-                        state.interior)) voice.release()
-                state.idle = null; state.drive = null; state.boost = null; state.distant = null
-                state.rotor = null; state.interior = null
+                for (voice in listOfNotNull(state.idle, state.drive, state.boost, state.afterburner,
+                        state.afterburnerBody, state.distant, state.rotor, state.interior)) voice.release()
+                state.idle = null; state.drive = null; state.boost = null; state.afterburner = null
+                state.afterburnerBody = null
+                state.distant = null; state.rotor = null; state.interior = null
+                state.burnerLevel = 0f; state.burnerHeard = false
             }
             if (state.running || state.releaseAt != Long.MIN_VALUE) {
                 val startTicks = engine.startSeconds * 20f
@@ -294,22 +317,51 @@ object VehicleAudioController {
                     smoothstep(far.near * 0.5f, far.near * 1.5f, distance.toFloat())
                 val nearShare = 1f - 0.75f * farWeight
                 val hasDrive = engine.drive != null
+                // afterburner: lights fast, dies away slower; the ignition one-shot marks the moment it is heard
+                profile.afterburner?.let { ab ->
+                    val target = if (burnerNow && state.running) 1f else 0f
+                    state.burnerLevel += (target - state.burnerLevel) * (if (target > state.burnerLevel) 0.35f else 0.06f)
+                    if (burnerNow && !state.burnerHeard && state.running) ab.start?.let {
+                        oneShot(mc, it, vehicle, if (crew) engine.interiorVolume else
+                            SpatialAudioPlayer.gainAt(distance, ab.range.toDouble()).toFloat(), 0)
+                    }
+                    state.burnerHeard = burnerNow
+                }
                 engine.idle?.let { sound ->
                     val idleShare = if (hasDrive) Mth.lerp(rpm, 1f, 0.35f) else 1f
+                    // the turbine whine ducks under a lit afterburner
+                    val duck = 1f - 0.6f * state.burnerLevel
                     state.idle = layer(mc, state, state.idle, sound,
-                        gain * idleShare * lerp(rpm, engine.idleVolume) * nearShare * intro, lerp(rpm, engine.idlePitch))
+                        gain * idleShare * lerp(rpm, engine.idleVolume) * nearShare * intro * duck,
+                        lerp(rpm, engine.idlePitch))
                 }
                 engine.drive?.let { sound ->
                     state.drive = layer(mc, state, state.drive, sound,
                         gain * lerp(rpm, engine.driveVolume) * nearShare * intro, lerp(rpm, engine.drivePitch))
                 }
                 profile.boost?.let { b ->
-                    val wanted = max(if (afterburner(vehicle)) 1f else 0f, smoothstep(b.from, 1f, rpm))
+                    // profiles with their own afterburner layer leave the roar to the throttle
+                    val lit = profile.afterburner == null && afterburner(vehicle)
+                    val wanted = max(if (lit) 1f else 0f, smoothstep(b.from, 1f, rpm))
                     state.boostLevel += (wanted - state.boostLevel) * 0.08f
                     val base = if (crew) engine.interiorVolume * 0.7f else
                         SpatialAudioPlayer.gainAt(distance, b.range.toDouble()).toFloat()
+                    // the roar steps back a little under a lit burner (its own layers carry the power then)
+                    val under = 1f - 0.2f * state.burnerLevel
                     state.boost = layer(mc, state, state.boost, b.loop,
-                        base * lerp(rpm, b.volume) * state.boostLevel * intro, lerp(rpm, b.pitch))
+                        base * lerp(rpm, b.volume) * state.boostLevel * intro * under, lerp(rpm, b.pitch))
+                }
+                profile.afterburner?.let { ab ->
+                    val base = if (crew) engine.interiorVolume * 0.8f else
+                        SpatialAudioPlayer.gainAt(distance, ab.range.toDouble()).toFloat()
+                    state.afterburner = layer(mc, state, state.afterburner, ab.loop,
+                        base * lerp(rpm, ab.volume) * state.burnerLevel * intro, lerp(rpm, ab.pitch))
+                }
+                profile.afterburnerBody?.let { body ->
+                    val base = if (crew) engine.interiorVolume * 0.8f else
+                        SpatialAudioPlayer.gainAt(distance, body.range.toDouble()).toFloat()
+                    state.afterburnerBody = layer(mc, state, state.afterburnerBody, body.loop,
+                        base * lerp(rpm, body.volume) * state.burnerLevel * intro, lerp(rpm, body.pitch))
                 }
                 far?.let { d ->
                     state.distant = layer(mc, state, state.distant, d.loop,
@@ -328,6 +380,8 @@ object VehicleAudioController {
                 }
             }
         }
+
+        if (profile.airflow != null || profile.flyby != null) whoosh(mc, state, camera, now, at, lag, distance, crew)
 
         profile.tracks?.let { tracks ->
             val speed = vehicle.deltaMovement.horizontalDistance().toFloat()
@@ -385,8 +439,9 @@ object VehicleAudioController {
         for (voice in state.voices()) {
             if (hard) { voice.stopNow(); mc.soundManager.stop(voice) } else voice.release()
         }
-        state.idle = null; state.drive = null; state.boost = null; state.distant = null; state.rotor = null
-        state.interior = null; state.tracks = null; state.turret = null
+        state.idle = null; state.drive = null; state.boost = null; state.afterburner = null
+        state.afterburnerBody = null; state.airflow = null
+        state.distant = null; state.rotor = null; state.interior = null; state.tracks = null; state.turret = null
     }
 
     private fun loop(mc: Minecraft, sound: ResourceLocation, state: State): Voice =
@@ -396,10 +451,57 @@ object VehicleAudioController {
             mc.soundManager.play(it)
         }
 
-    private fun oneShot(mc: Minecraft, sound: ResourceLocation, vehicle: VehicleEntity, gain: Float, lag: Int) {
+    private fun oneShot(mc: Minecraft, sound: ResourceLocation, vehicle: VehicleEntity, gain: Float, lag: Int,
+                        pitch: Float = 1f,
+                        mix: com.atsuishio.superbwarfare.client.sound.VehicleAudioMix.Category? = null) {
         if (gain < 0.01f) return
-        val voice = Voice(SoundEvent.createVariableRangeEvent(sound), vehicle, false, gain, true)
+        val voice = Voice(SoundEvent.createVariableRangeEvent(sound), vehicle, false, gain, true, mix)
+        voice.pitchNow(pitch)
         if (lag > 0) mc.soundManager.playDelayed(voice, lag) else mc.soundManager.play(voice)
+    }
+
+    /**
+     * Rushing air and the flyby whoosh (owner 2026-09-29: "we need more whooshing"). Both follow the heard motion
+     * (the emission-point history), so they line up with the engine sound: airflow by heard airspeed; the flyby fires
+     * when the heard relative path will pass within the profile's range, `lead` seconds before the closest point.
+     */
+    private fun whoosh(mc: Minecraft, state: State, camera: Vec3, now: Long, at: Int, lag: Int, distance: Double,
+                       crew: Boolean) {
+        val profile = state.profile
+        val span = SPEED_SPAN.coerceAtMost(state.filled - 1 - lag)
+        if (span < 1) return
+        val back = state.ago(lag + span)
+        val vx = (state.hx[at] - state.hx[back]) / span
+        val vy = (state.hy[at] - state.hy[back]) / span
+        val vz = (state.hz[at] - state.hz[back]) / span
+        val speed = sqrt(vx * vx + vy * vy + vz * vz).toFloat()
+        profile.airflow?.let { a ->
+            val norm = if (a.fullSpeed > 0f) smoothstep(0.06f, 1f, speed / a.fullSpeed) else 0f
+            val base = if (crew) (profile.engine?.interiorVolume ?: 0.5f) * 1.2f else
+                SpatialAudioPlayer.gainAt(distance, a.range.toDouble()).toFloat()
+            state.airflow = layer(mc, state, state.airflow, a.loop,
+                if (state.vehicle.isRemoved) 0f else base * lerp(norm, a.volume) * norm, lerp(norm, a.pitch))
+        }
+        val fly = profile.flyby ?: return
+        val sound = fly.start ?: return
+        if (crew || now < state.flybyQuietUntil) return
+        val listener = mc.player?.rootVehicle?.deltaMovement ?: Vec3.ZERO
+        val rx = state.hx[at] - camera.x; val ry = state.hy[at] - camera.y; val rz = state.hz[at] - camera.z
+        val ux = vx - listener.x; val uy = vy - listener.y; val uz = vz - listener.z
+        val u2 = ux * ux + uy * uy + uz * uz
+        val relative = sqrt(u2)
+        if (relative < fly.fullSpeed || u2 < 1e-6) return
+        val closest = -(rx * ux + ry * uy + rz * uz) / u2 // ticks to the closest point of the heard path
+        if (closest < 0 || closest > fly.lead * 20f) return
+        val mx = rx + ux * closest; val my = ry + uy * closest; val mz = rz + uz * closest
+        val miss = sqrt(mx * mx + my * my + mz * mz)
+        if (miss > fly.range) return
+        state.flybyQuietUntil = now + FLYBY_QUIET_TICKS
+        val near = (1.0 - miss / fly.range).coerceIn(0.0, 1.0)
+        val fast = (relative / (fly.fullSpeed * 3.0)).coerceIn(0.0, 1.0)
+        val gain = (Math.pow(near, 0.6) * (0.55 + 0.45 * fast)).toFloat() * fly.volume[1]
+        oneShot(mc, sound, state.vehicle, gain, 0, lerp(fast.toFloat(), fly.pitch),
+            com.atsuishio.superbwarfare.client.sound.VehicleAudioMix.Category.AIRCRAFT_EFFECTS)
     }
 
     /**
@@ -407,9 +509,12 @@ object VehicleAudioController {
      * eases toward them. One-shots ride on the vehicle itself.
      */
     private class Voice(event: SoundEvent, val vehicle: VehicleEntity, loop: Boolean, level: Float,
-                        private val rideVehicle: Boolean) :
+                        private val rideVehicle: Boolean,
+                        mixCategory: com.atsuishio.superbwarfare.client.sound.VehicleAudioMix.Category? = null) :
         AbstractTickableSoundInstance(event, SoundSource.NEUTRAL, RandomSource.create()), DopplerSound,
-        AttributedVehicleSound {
+        AttributedVehicleSound, com.atsuishio.superbwarfare.client.sound.VehicleAudioMix.Tagged {
+        private val mix = mixCategory ?: com.atsuishio.superbwarfare.client.sound.VehicleAudioMix.engineOf(vehicle)
+        override fun vehicleMixCategory() = mix
         private var targetVolume = level
         private var targetPitch = 1f
         private var px = vehicle.x
@@ -432,6 +537,9 @@ object VehicleAudioController {
         }
 
         fun place(x: Double, y: Double, z: Double) { px = x; py = y; pz = z }
+
+        /** One-shots: plays at this pitch from the start. */
+        fun pitchNow(value: Float) { pitch = value.coerceIn(0.5f, 2f); targetPitch = pitch }
 
         /** Moves the voice to its emission point now (before it first plays). */
         fun snap() = follow()

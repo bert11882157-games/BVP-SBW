@@ -253,6 +253,14 @@ object ProjectileProfiles {
         val diameter = data.diameterMm?.takeIf { it.isFinite() && it > 0.0 }
         if (data.diameterMm != null && diameter == null) return null
         if (caliber == null && diameter == null) return null
+        // A declared but incomplete HE aspect rejects the profile rather than silently firing a single-aspect round.
+        val heAspect = data.heAspect?.let { raw ->
+            val penetration = raw.penetrationMm?.takeIf { it.isFinite() && it >= 0.0 } ?: return null
+            val heHull = raw.hullDamage?.takeIf { it >= 0 } ?: return null
+            val heModule = raw.moduleDamage?.takeIf { it >= 0 } ?: return null
+            val heRack = raw.ammoRackDamage?.takeIf { it >= 0 } ?: return null
+            ProjectileHeAspect(penetration, heHull, heModule, heRack)
+        }
 
         return ProjectileCombatDescriptor(
             profileId,
@@ -270,6 +278,7 @@ object ProjectileProfiles {
             hullDamage,
             moduleDamage,
             ammoRackDamage,
+            heAspect,
         )
     }
 
@@ -489,6 +498,14 @@ object ProjectileProfiles {
                         })
                     }
                     putBoolean("Tandem", combat.tandem)
+                    combat.heAspect?.let { aspect ->
+                        put("HeAspect", CompoundTag().apply {
+                            putDouble("PenetrationMm", aspect.penetrationMm)
+                            putInt("HullDamage", aspect.hullDamage)
+                            putInt("ModuleDamage", aspect.moduleDamage)
+                            putInt("AmmoRackDamage", aspect.ammoRackDamage)
+                        })
+                    }
                 })
             }
 
@@ -539,6 +556,17 @@ object ProjectileProfiles {
                 (caliber != null && caliber <= 0.0) || (diameter != null && diameter <= 0.0) ||
                 (caliber == null && diameter == null)
             ) return null
+            val heAspect = if (combatTag.contains("HeAspect", Tag.TAG_COMPOUND.toInt())) {
+                val aspectTag = combatTag.getCompound("HeAspect")
+                ProjectileHeAspect(
+                    readFiniteDouble(aspectTag, "PenetrationMm")?.takeIf { it >= 0.0 } ?: return null,
+                    readNonNegativeInt(aspectTag, "HullDamage") ?: return null,
+                    readNonNegativeInt(aspectTag, "ModuleDamage") ?: return null,
+                    readNonNegativeInt(aspectTag, "AmmoRackDamage") ?: return null,
+                )
+            } else {
+                null
+            }
             ProjectileCombatDescriptor(
                 readResourceLocation(combatTag, "ProfileId") ?: id,
                 readResourceLocation(combatTag, "WeaponId"),
@@ -555,6 +583,7 @@ object ProjectileProfiles {
                 hullDamage,
                 moduleDamage,
                 ammoRackDamage,
+                heAspect,
             )
         } else {
             null

@@ -36,7 +36,10 @@
     "TurnDegreesPerTick": 2,
     "BlastRadius": 30,
     "TntEquivalentKg": 500,
-    "BlastDamage": 800
+    "BlastDamage": 800,
+    "LiftToDrag": 4.0,
+    "BestGlideSpeed": 5.0,
+    "MaxG": 2.0
   },
   "ProjectileProfile": "berts_vehicle_pack:aircraft_bombs/kab500od",
   "AmmoItem": "superbwarfare:medium_freefall_bomb",

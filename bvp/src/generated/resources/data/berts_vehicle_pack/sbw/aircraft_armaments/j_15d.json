@@ -84,8 +84,10 @@
         "berts_vehicle_pack:munition/pl12",
         "berts_vehicle_pack:munition/yj91",
         "berts_vehicle_pack:munition/kd88",
+        "berts_vehicle_pack:munition/kd88_ir",
         "berts_vehicle_pack:fab_250",
-        "berts_vehicle_pack:fab_500"
+        "berts_vehicle_pack:fab_500",
+        "berts_vehicle_pack:munition/cm102"
       ],
       "MaxWeaponsPerPylon": 3,
       "MaxPylonMassKg": 1500
@@ -126,7 +128,8 @@
       "AllowedStores": [
         "berts_vehicle_pack:munition/pl12",
         "berts_vehicle_pack:munition/yj91",
-        "berts_vehicle_pack:munition/kd88"
+        "berts_vehicle_pack:munition/kd88",
+        "berts_vehicle_pack:munition/kd88_ir"
       ],
       "MaxWeaponsPerPylon": 1,
       "MaxPylonMassKg": 1000

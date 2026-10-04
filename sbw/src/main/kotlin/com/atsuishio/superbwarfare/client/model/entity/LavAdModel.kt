@@ -1,15 +1,13 @@
 package com.atsuishio.superbwarfare.client.model.entity
 
 import com.atsuishio.superbwarfare.entity.vehicle.LavAdEntity
+import net.minecraft.util.Mth
 
 class LavAdModel : VehicleModel<LavAdEntity>() {
     override fun collectTransform(boneName: String): TransformContext<LavAdEntity>? {
         return when (boneName) {
-            "rot_barrel" -> TransformContext { bone, vehicle, _ ->
-                val gunData = vehicle.getGunData(0, 0)
-                if (gunData != null) {
-                    bone.rotZ += 0.3f * gunData.shootTimer.get()
-                }
+            "rot_barrel" -> TransformContext { bone, vehicle, state ->
+                bone.rotZ = Mth.lerp(state.partialTick, vehicle.barrelSpinO, vehicle.barrelSpin)
             }
 
             "flare" -> TransformContext { bone, vehicle, _ ->

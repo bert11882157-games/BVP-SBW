@@ -145,6 +145,36 @@
         1.07839,
         -0.33431
       ]
+    },
+    {
+      "Part": "Turret",
+      "Transform": "Turret",
+      "Rotation": "Turret",
+      "Size": [
+        0.78607,
+        0.62402,
+        1.7309
+      ],
+      "Position": [
+        0.0,
+        0.53035,
+        0.13456
+      ]
+    },
+    {
+      "Part": "Turret",
+      "Transform": "Turret",
+      "Rotation": "Turret",
+      "Size": [
+        0.6256,
+        0.47813,
+        0.25584
+      ],
+      "Position": [
+        -0.00025,
+        0.38447,
+        2.1213
+      ]
     }
   ],
   "Attachments": {
@@ -344,7 +374,7 @@
       "NormalReloadTime": 240,
       "EmptyReloadTime": 240,
       "AmmoCostPerShoot": 1,
-      "Velocity": 58.75,
+      "Velocity": 70.0,
       "Damage": 250,
       "ExplosionDamage": 0,
       "ExplosionRadius": 5,
@@ -381,6 +411,94 @@
       "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/cannon_35mm_ap.png",
       "AmmoType": [
         {
+          "Ammo": "superbwarfare:small_shell_gs",
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:gepard/cannon/ammo_02_kda_35_dm23_apds"
+            },
+            "ShellType": "AP",
+            "Velocity": 70.0,
+            "ApDurability": 127,
+            "Damage": 65,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "TntEquivalentKg": 0.0,
+            "Name": "DM23",
+            "ShootShake": [
+              8,
+              10,
+              12
+            ],
+            "ProjectileBelt": {
+              "Name": "DM23",
+              "Family": "GENERIC",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "kda_35_dm23_apds",
+                  "Ammo": "superbwarfare:small_shell_gs",
+                  "Tracer": "LIGHT_RED"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:gepard/cannon/ammo_02_kda_35_dm23_apds",
+              "ProjectileLife": 40
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:gepard/cannon/ammo_01_kda_35_api_t"
+            },
+            "ShellType": "AP",
+            "Velocity": 58.75,
+            "ApDurability": 68,
+            "Damage": 65,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "TntEquivalentKg": 0.0374,
+            "Name": "DM13",
+            "ShootShake": [
+              8,
+              10,
+              12
+            ],
+            "ProjectileBelt": {
+              "Name": "DM13",
+              "Family": "GENERIC",
+              "Rounds": [
+                {
+                  "Shots": 3,
+                  "Round": "kda_35_api_t",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "LIGHT_RED"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "kda_35_hei_t",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "LIGHT_RED"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:gepard/cannon/ammo_01_kda_35_api_t",
+              "ProjectileLife": 40
+            }
+          }
+        },
+        {
           "Ammo": "superbwarfare:small_shell_he",
           "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
           "Override": {
@@ -395,21 +513,68 @@
             "ExplosionDamage": 0,
             "ExplosionRadius": 5,
             "TntEquivalentKg": 0.204,
-            "Name": "Air Belt",
+            "Name": "Default",
             "ShootShake": [
               8,
               10,
               12
             ],
             "ProjectileBelt": {
-              "Name": "Air Belt",
+              "Name": "Default",
+              "Family": "GENERIC",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "kda_35_api_t",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "LIGHT_RED"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "kda_35_hei_t",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "LIGHT_RED"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:gepard/cannon/ammo_00_kda_35_hei_t",
+              "ProjectileLife": 40
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_aa",
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:gepard/cannon/ammo_00_kda_35_hei_t"
+            },
+            "ShellType": "HE",
+            "Velocity": 58.75,
+            "ApDurability": 11,
+            "Damage": 250,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 5,
+            "TntEquivalentKg": 0.204,
+            "Name": "DM11A1",
+            "ShootShake": [
+              8,
+              10,
+              12
+            ],
+            "ProjectileBelt": {
+              "Name": "DM11A1",
               "Family": "GENERIC",
               "Rounds": [
                 {
                   "Shots": 3,
                   "Round": "kda_35_hei_t",
-                  "Ammo": "superbwarfare:small_shell_he",
-                  "Tracer": "NONE"
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "LIGHT_RED"
                 },
                 {
                   "Shots": 1,
@@ -426,81 +591,10 @@
               "ProjectileLife": 40
             }
           }
-        },
-        {
-          "Ammo": "superbwarfare:small_shell_gs",
-          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
-          "Override": {
-            "Projectile": {
-              "Type": "superbwarfare:small_cannon_shell",
-              "Profile": "berts_vehicle_pack:gepard/cannon/ammo_02_kda_35_dm23_apds"
-            },
-            "ShellType": "AP",
-            "Velocity": 70.0,
-            "ApDurability": 127,
-            "Damage": 65,
-            "ExplosionDamage": 0,
-            "ExplosionRadius": 0,
-            "TntEquivalentKg": 0.0,
-            "Name": "Ground Belt",
-            "ShootShake": [
-              8,
-              10,
-              12
-            ],
-            "ProjectileBelt": {
-              "Name": "Ground Belt",
-              "Family": "GENERIC",
-              "Rounds": [
-                {
-                  "Shots": 3,
-                  "Round": "kda_35_dm23_apds",
-                  "Ammo": "superbwarfare:small_shell_gs",
-                  "Tracer": "LIGHT_RED"
-                },
-                {
-                  "Shots": 1,
-                  "Round": "kda_35_hei_t",
-                  "Ammo": "superbwarfare:small_shell_he",
-                  "Tracer": "LIGHT_RED"
-                }
-              ]
-            },
-            "NominalBallistics": {
-              "Supported": true,
-              "ProjectileType": "superbwarfare:small_cannon_shell",
-              "ProjectileProfile": "berts_vehicle_pack:gepard/cannon/ammo_02_kda_35_dm23_apds",
-              "ProjectileLife": 40
-            }
-          }
         }
       ],
       "ProjectileAmount": 1,
-      "ProjectileBeltAmmoType": [
-        {
-          "Ammo": "superbwarfare:small_shell_ap",
-          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
-          "Override": {
-            "Projectile": {
-              "Type": "superbwarfare:small_cannon_shell",
-              "Profile": "berts_vehicle_pack:gepard/cannon/ammo_01_kda_35_api_t"
-            },
-            "ShellType": "AP",
-            "Velocity": 58.75,
-            "ApDurability": 68,
-            "Damage": 65,
-            "ExplosionDamage": 0,
-            "ExplosionRadius": 0,
-            "TntEquivalentKg": 0.0374,
-            "Name": "Default",
-            "ShootShake": [
-              8,
-              10,
-              12
-            ]
-          }
-        }
-      ],
+      "ProjectileBeltAmmoType": [],
       "ShellType": "HE",
       "ApDurability": 11,
       "ShootShake": [

@@ -183,12 +183,12 @@
     },
     {
       "Size": [
-        1.19188,
+        1.53212,
         0.14652,
         2.80302
       ],
       "Position": [
-        0.0,
+        -0.0,
         0.62652,
         -0.47052
       ]
@@ -239,6 +239,81 @@
         0.0,
         1.57812,
         3.96338
+      ]
+    },
+    {
+      "Part": "Turret",
+      "Transform": "Turret",
+      "Rotation": "Turret",
+      "Size": [
+        1.09786,
+        0.33574,
+        0.2419
+      ],
+      "Position": [
+        -0.00017,
+        0.34928,
+        -3.40777
+      ]
+    },
+    {
+      "Part": "Turret",
+      "Transform": "Turret",
+      "Rotation": "Turret",
+      "Size": [
+        1.35006,
+        0.38675,
+        0.2319
+      ],
+      "Position": [
+        -0.00086,
+        0.36002,
+        -2.93398
+      ]
+    },
+    {
+      "Part": "Turret",
+      "Transform": "Turret",
+      "Rotation": "Turret",
+      "Size": [
+        1.47187,
+        0.47371,
+        1.85516
+      ],
+      "Position": [
+        0.0,
+        0.30247,
+        -0.84692
+      ]
+    },
+    {
+      "Part": "Turret",
+      "Transform": "Turret",
+      "Rotation": "Turret",
+      "Size": [
+        1.47187,
+        0.4219,
+        0.2319
+      ],
+      "Position": [
+        0.0,
+        0.27125,
+        1.24014
+      ]
+    },
+    {
+      "Part": "Turret",
+      "Transform": "Turret",
+      "Rotation": "Turret",
+      "Size": [
+        1.25124,
+        0.40243,
+        0.2419
+      ],
+      "Position": [
+        0.0,
+        0.25662,
+        1.71393
       ]
     }
   ],
@@ -677,7 +752,7 @@
         "Fire3PGain": 1.0,
         "Fire3PFarGain": 1.0,
         "Fire3PVeryFarGain": 1.0,
-        "Volume": 0.4,
+        "Volume": 0.63,
         "VehicleReload": "superbwarfare:m_60_reload_empty",
         "VehicleReloadClipDurationTicks": 127
       },
@@ -841,7 +916,7 @@
         "Fire3PGain": 1.0,
         "Fire3PFarGain": 1.0,
         "Fire3PVeryFarGain": 1.0,
-        "Volume": 0.4,
+        "Volume": 0.63,
         "VehicleReload": "superbwarfare:m_60_reload_empty",
         "VehicleReloadClipDurationTicks": 127
       },

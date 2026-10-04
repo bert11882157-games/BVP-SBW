@@ -335,7 +335,10 @@ abstract class FastThrowableProjectile : ThrowableItemProjectile, CustomSyncMoti
             if (resolution.consumesProjectile()) {
                 // An addon armor resolver owns the direct hit; a TNT-equivalent charge still detonates at the
                 // impact point for nearby infantry and vehicles (including the struck hull for >= 25 kg).
-                detonateResolvedImpact(result.location, resolution)
+                // A ricochet eats the shot (owner 2026-09-30): no detonation; clients only see a cosmetic tracer.
+                if (resolution.presentationOutcome !=
+                    com.atsuishio.superbwarfare.api.projectile.impact.ProjectileImpactPresentationOutcome.RICOCHET)
+                    detonateResolvedImpact(result.location, resolution)
                 this.discard()
             }
             return

@@ -27,6 +27,11 @@ final class ProjectileArmorEffect {
      * effects, whose chance is their ammo-rack damage x {@value #AMMO_RACK_INSTANT_DETONATION_CHANCE_PER_DAMAGE}.
      */
     final double ammoRackChance;
+    /**
+     * Dual-aspect rounds (SAPHEI-T): the HE charge as its own chemical effect, with the profile's HE penetration
+     * and HE damage. This effect is then the kinetic body. Null for every single-aspect round.
+     */
+    final ProjectileArmorEffect heAspect;
 
     ProjectileArmorEffect(ArmorDamageType damageType, double penetrationMm, CannonShellEntity shell,
                           double defaultModuleDamage) {
@@ -47,13 +52,14 @@ final class ProjectileArmorEffect {
                           boolean atgm, double defaultModuleDamage, Map<String, Double> moduleDamageById,
                           double vehicleDamage) {
         this(damageType, penetrationMm, shell, atgm, defaultModuleDamage, moduleDamageById,
-                vehicleDamage, false, ImpactVisual.NONE, false, -1.0D);
+                vehicleDamage, false, ImpactVisual.NONE, false, -1.0D, null);
     }
 
     private ProjectileArmorEffect(ArmorDamageType damageType, double penetrationMm, CannonShellEntity shell,
                                   boolean atgm, double defaultModuleDamage, Map<String, Double> moduleDamageById,
                                   double vehicleDamage, boolean tandemWarhead, ImpactVisual impactVisual,
-                                  boolean overridesNormalized, double ammoRackChance) {
+                                  boolean overridesNormalized, double ammoRackChance,
+                                  ProjectileArmorEffect heAspect) {
         this.damageType = damageType;
         this.penetrationMm = penetrationMm;
         this.shell = shell;
@@ -64,6 +70,7 @@ final class ProjectileArmorEffect {
         this.moduleDamageById = overridesNormalized ? moduleDamageById : normalizeOverrides(moduleDamageById);
         this.vehicleDamage = vehicleDamage;
         this.ammoRackChance = ammoRackChance;
+        this.heAspect = heAspect;
     }
 
     double moduleDamage() {
@@ -77,7 +84,8 @@ final class ProjectileArmorEffect {
         return new ProjectileArmorEffect(damageType, penetrationMm, shell, atgm,
                 defaultModuleDamage * factor, overrides,
                 vehicleDamage < 0.0D ? vehicleDamage : vehicleDamage * factor,
-                tandemWarhead, impactVisual, true, ammoRackChance);
+                tandemWarhead, impactVisual, true, ammoRackChance,
+                heAspect == null ? null : heAspect.withDirectDamageScale(factor));
     }
 
     double moduleDamage(String moduleId) {
@@ -106,19 +114,19 @@ final class ProjectileArmorEffect {
     ProjectileArmorEffect withAmmoRackChance(double chance) {
         return new ProjectileArmorEffect(this.damageType, this.penetrationMm, this.shell, this.atgm,
                 this.defaultModuleDamage, this.moduleDamageById, this.vehicleDamage,
-                this.tandemWarhead, this.impactVisual, true, Math.max(0.0D, Math.min(1.0D, chance)));
+                this.tandemWarhead, this.impactVisual, true, Math.max(0.0D, Math.min(1.0D, chance)), this.heAspect);
     }
 
     ProjectileArmorEffect withPenetration(double newPenetrationMm) {
         return new ProjectileArmorEffect(this.damageType, Math.max(0.0D, newPenetrationMm),
                 this.shell, this.atgm, this.defaultModuleDamage, this.moduleDamageById,
-                this.vehicleDamage, this.tandemWarhead, this.impactVisual, true, this.ammoRackChance);
+                this.vehicleDamage, this.tandemWarhead, this.impactVisual, true, this.ammoRackChance, this.heAspect);
     }
 
     ProjectileArmorEffect withVehicleDamage(double newVehicleDamage) {
         return new ProjectileArmorEffect(this.damageType, this.penetrationMm, this.shell, this.atgm,
                 this.defaultModuleDamage, this.moduleDamageById, newVehicleDamage,
-                this.tandemWarhead, this.impactVisual, true, this.ammoRackChance);
+                this.tandemWarhead, this.impactVisual, true, this.ammoRackChance, this.heAspect);
     }
 
     /**
@@ -133,18 +141,55 @@ final class ProjectileArmorEffect {
         overrides.put(ArmorModuleResolver.AMMO_RACK, newAmmoRackDamage);
         return new ProjectileArmorEffect(this.damageType, this.penetrationMm, this.shell, this.atgm,
                 newModuleDamage, overrides, newVehicleDamage,
-                this.tandemWarhead, this.impactVisual, true, this.ammoRackChance);
+                this.tandemWarhead, this.impactVisual, true, this.ammoRackChance, this.heAspect);
     }
 
     ProjectileArmorEffect withImpactVisual(ImpactVisual newImpactVisual) {
         return new ProjectileArmorEffect(this.damageType, this.penetrationMm, this.shell, this.atgm,
                 this.defaultModuleDamage, this.moduleDamageById, this.vehicleDamage,
-                this.tandemWarhead, newImpactVisual, true, this.ammoRackChance);
+                this.tandemWarhead, newImpactVisual, true, this.ammoRackChance, this.heAspect);
     }
 
     ProjectileArmorEffect withTandemWarhead() {
         return new ProjectileArmorEffect(this.damageType, this.penetrationMm, this.shell, this.atgm,
-                this.defaultModuleDamage, this.moduleDamageById, this.vehicleDamage, true, this.impactVisual, true, this.ammoRackChance);
+                this.defaultModuleDamage, this.moduleDamageById, this.vehicleDamage, true, this.impactVisual, true, this.ammoRackChance, this.heAspect);
+    }
+
+    /** Attaches {@code charge} as this kinetic body's HE aspect (see {@link #heAspect}). */
+    ProjectileArmorEffect withHeAspect(ProjectileArmorEffect charge) {
+        return new ProjectileArmorEffect(this.damageType, this.penetrationMm, this.shell, this.atgm,
+                this.defaultModuleDamage, this.moduleDamageById, this.vehicleDamage,
+                this.tandemWarhead, this.impactVisual, true, this.ammoRackChance,
+                charge == null ? null : charge.withoutHeAspect());
+    }
+
+    /** The kinetic body alone, e.g. after explosive reactive armor has spent the HE charge. */
+    ProjectileArmorEffect withoutHeAspect() {
+        if (heAspect == null) return this;
+        return new ProjectileArmorEffect(this.damageType, this.penetrationMm, this.shell, this.atgm,
+                this.defaultModuleDamage, this.moduleDamageById, this.vehicleDamage,
+                this.tandemWarhead, this.impactVisual, true, this.ammoRackChance, null);
+    }
+
+    /**
+     * The HE charge of a dual-aspect round as a chemical effect: its own penetration, hull, module and rack damage,
+     * with this round's shell and presentation.
+     */
+    ProjectileArmorEffect chemicalAspect(double chargePenetrationMm, double chargeModuleDamage,
+                                         double chargeVehicleDamage, double chargeAmmoRackChance) {
+        Map<String, Double> overrides = new HashMap<>();
+        overrides.put(ArmorModuleResolver.AMMO_RACK, chargeModuleDamage);
+        return new ProjectileArmorEffect(ArmorDamageType.CHEMICAL, Math.max(0.0D, chargePenetrationMm), this.shell,
+                false, chargeModuleDamage, overrides, chargeVehicleDamage, false, this.impactVisual, false,
+                Math.max(0.0D, Math.min(1.0D, chargeAmmoRackChance)), null);
+    }
+
+    /**
+     * The aspect that decides a hit on {@code armorMm} of effective armor: the HE charge when it penetrates (its HE
+     * damage), otherwise this kinetic body (its own penetration and AP damage, which may still fail).
+     */
+    ProjectileArmorEffect aspectAgainst(double armorMm) {
+        return heAspect != null && heAspect.penetrationMm + 1.0E-4D >= armorMm ? heAspect : this;
     }
 
     Map<String, Double> moduleDamageOverrides() {

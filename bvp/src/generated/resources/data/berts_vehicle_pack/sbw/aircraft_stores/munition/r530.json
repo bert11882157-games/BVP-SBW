@@ -1,0 +1,60 @@
+{
+  "Schema": 1,
+  "Name": "R.530 · infrared",
+  "Category": "AIR_TO_AIR",
+  "Capacity": 1,
+  "MassKg": 192,
+  "Guidance": {
+    "Mode": "INFRARED",
+    "LockTicks": 60,
+    "Range": 1000,
+    "ConeDegrees": 25,
+    "CountermeasureVulnerability": 1.2
+  },
+  "Flight": {
+    "InitialSpeed": 0.5,
+    "MaxSpeed": 6,
+    "AccelerationPerTick": 0.1,
+    "TurnDegreesPerSecond": 55,
+    "Damage": 50,
+    "BlastRadius": 4.1,
+    "TntEquivalentKg": 13.2
+  },
+  "AmmoItem": "superbwarfare:medium_air_to_air_missile",
+  "MaxPerPylon": 1,
+  "RackSpacing": [
+    0.55,
+    0.3,
+    0
+  ],
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/r530.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.1484,
+    0.4592
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.1436,
+      0.0,
+      0.4592
+    ],
+    "Right": [
+      -0.1436,
+      0.0,
+      0.4592
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    0.4592
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/r530.png",
+  "LaunchOffset": [
+    0.0,
+    -0.1484,
+    0.0
+  ]
+}

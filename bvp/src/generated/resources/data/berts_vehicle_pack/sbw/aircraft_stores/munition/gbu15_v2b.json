@@ -36,7 +36,10 @@
     "TurnDegreesPerTick": 2,
     "BlastRadius": 14,
     "TntEquivalentKg": 578.61,
-    "BlastDamage": 900
+    "BlastDamage": 900,
+    "LiftToDrag": 6.0,
+    "BestGlideSpeed": 4.5,
+    "MaxG": 2.5
   },
   "Guidance": {
     "Mode": "GROUND_INFRARED",

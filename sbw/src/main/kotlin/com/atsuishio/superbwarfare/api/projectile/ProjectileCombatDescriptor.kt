@@ -28,6 +28,8 @@ data class ProjectileCombatDescriptor(
      * Independent of how full the racks are; a rack that holds takes [moduleDamage] and goes up at 0.
      */
     val ammoRackDamage: Int,
+    /** HE charge of a dual-aspect round (SAPHEI-T); null for ordinary single-aspect rounds. */
+    val heAspect: ProjectileHeAspect? = null,
 ) {
     init {
         require(hullDamage >= 0) { "HullDamage must be non-negative" }
@@ -54,5 +56,21 @@ data class ProjectileCombatDescriptor(
 
     fun ricochetProbabilityAtIncidence(angleDegrees: Double): Double? {
         return ricochetCurve?.probabilityAtIncidence(angleDegrees)
+    }
+}
+
+/**
+ * The HE charge of a dual-aspect round.  Against armor it is checked before the kinetic body: when the charge
+ * penetrates, the hit deals this aspect's damage; otherwise the body's own penetration and damage decide.
+ */
+data class ProjectileHeAspect(
+    val penetrationMm: Double,
+    val hullDamage: Int,
+    val moduleDamage: Int,
+    val ammoRackDamage: Int,
+) {
+    init {
+        require(penetrationMm.isFinite() && penetrationMm >= 0.0) { "HeAspect.PenetrationMm must be finite and non-negative" }
+        require(hullDamage >= 0 && moduleDamage >= 0 && ammoRackDamage >= 0) { "HeAspect damage must be non-negative" }
     }
 }

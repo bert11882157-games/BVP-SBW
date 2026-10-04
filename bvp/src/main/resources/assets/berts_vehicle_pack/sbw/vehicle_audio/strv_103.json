@@ -1,0 +1,26 @@
+{
+  "extends": "bvp_audio:shared/lav__none__m2a2",
+  "engine": {
+    "drive": "bvp_audio:engine/m1a2_idle",
+    "drivePitch": [
+      0.9,
+      1.25
+    ],
+    "driveVolume": [
+      0.0,
+      0.85
+    ]
+  },
+  "tracks": {
+    "loop": "bvp_audio:tracks/leo",
+    "range": 48,
+    "volume": 0.75,
+    "fullSpeed": 0.45
+  },
+  "turret": {
+    "loop": "bvp_audio:turret/generic",
+    "range": 24,
+    "volume": 0.45,
+    "fullRate": 6.0
+  }
+}

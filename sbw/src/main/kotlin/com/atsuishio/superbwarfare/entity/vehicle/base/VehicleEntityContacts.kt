@@ -13,14 +13,27 @@ import kotlin.math.abs
 
 /** Physical contact roles for vehicle support/strikes; projectile OBB selection is separate. */
 internal object VehicleEntityContacts {
-    data class Part(val box: OBB, val body: Boolean)
+    data class Part(val box: OBB, val body: Boolean, val zone: VehicleImpactModel.Zone = VehicleImpactModel.Zone.BODY)
     data class Contact(val fraction: Double, val ownBody: Boolean, val otherBody: Boolean)
+
+    /**
+     * Contact for [VehicleImpactModel]: [normal] points from the other vehicle toward this one; [depth] > 0 when
+     * the two already overlap (the deepest overlapping part pair), [fraction] is the time of first touch this tick.
+     */
+    data class Impact(
+        val fraction: Double, val normal: Vec3, val depth: Double,
+        val ownZones: Set<VehicleImpactModel.Zone>, val otherZones: Set<VehicleImpactModel.Zone>,
+    )
 
     fun parts(entity: Entity): List<Part> {
         if (entity is VehicleEntity) {
             entity.getAircraftCollisionSnapshot(1F)?.let { snapshot ->
                 return snapshot.parts.filter { it.active }.map {
-                    Part(it.toObb(), it.role == AircraftCollisionRole.FUSELAGE)
+                    Part(it.toObb(), it.role == AircraftCollisionRole.FUSELAGE, when {
+                        it.role == AircraftCollisionRole.LANDING_GEAR -> VehicleImpactModel.Zone.GEAR
+                        it.wingSide != 0 -> VehicleImpactModel.Zone.WING
+                        else -> VehicleImpactModel.Zone.BODY
+                    })
                 }
             }
         }
@@ -46,6 +59,42 @@ internal object VehicleEntityContacts {
             }
         }
         return nearest
+    }
+
+    /**
+     * First contact between [own] moving by [relativeMovement] (own velocity minus other velocity) and [other] held
+     * still, or the deepest current overlap. Null when they neither touch nor meet within the tick.
+     */
+    fun impact(own: List<Part>, other: List<Part>, relativeMovement: Vec3): Impact? {
+        var overlapDepth = -1.0
+        var overlapNormal = Vec3.ZERO
+        val overlapOwn = HashSet<VehicleImpactModel.Zone>()
+        val overlapOther = HashSet<VehicleImpactModel.Zone>()
+        var fraction = Double.POSITIVE_INFINITY
+        var sweepNormal = Vec3.ZERO
+        val sweepOwn = HashSet<VehicleImpactModel.Zone>()
+        val sweepOther = HashSet<VehicleImpactModel.Zone>()
+        for (first in own) for (second in other) {
+            val hit = sweep(first.box, second.box, relativeMovement) ?: continue
+            if (hit.initiallyOverlapping) {
+                overlapOwn += first.zone; overlapOther += second.zone
+                if (hit.penetrationDepth > overlapDepth) {
+                    overlapDepth = hit.penetrationDepth
+                    overlapNormal = hit.normal
+                }
+            } else if (hit.fraction < fraction - 1e-8) {
+                fraction = hit.fraction; sweepNormal = hit.normal
+                sweepOwn.clear(); sweepOther.clear()
+                sweepOwn += first.zone; sweepOther += second.zone
+            } else if (abs(hit.fraction - fraction) <= 1e-8) {
+                sweepOwn += first.zone; sweepOther += second.zone
+            }
+        }
+        if (overlapDepth >= 0.0 && overlapNormal.lengthSqr() > 1e-12)
+            return Impact(0.0, overlapNormal, overlapDepth.coerceAtLeast(1e-4), overlapOwn, overlapOther)
+        if (fraction.isFinite() && sweepNormal.lengthSqr() > 1e-12)
+            return Impact(fraction, sweepNormal, 0.0, sweepOwn, sweepOther)
+        return null
     }
 
     /** Expressing both boxes in the target frame preserves the existing exact OBB/AABB sweep. */

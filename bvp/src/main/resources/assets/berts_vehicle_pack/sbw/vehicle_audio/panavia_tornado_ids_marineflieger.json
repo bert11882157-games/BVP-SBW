@@ -4,12 +4,12 @@
     "volume": 1.0,
     "interiorVolume": 0.4,
     "idlePitch": [
-      0.72,
-      1.1
+      0.74,
+      1.0
     ],
     "idleVolume": [
-      0.45,
-      1.0
+      0.5,
+      0.62
     ],
     "spoolUp": 4.5,
     "spoolDown": 3.0,
@@ -27,17 +27,17 @@
     "stop": "bvp_audio:air/tornado_stop"
   },
   "boost": {
-    "range": 640,
+    "range": 720,
     "volume": [
       0.0,
       1.0
     ],
     "pitch": [
-      0.85,
-      1.05
+      0.82,
+      1.04
     ],
-    "from": 0.6,
-    "loop": "bvp_audio:air/layer/jet_roar"
+    "from": 0.3,
+    "loop": "bvp_audio:air/layer/power_modern"
   },
   "distant": {
     "range": 1600,
@@ -51,5 +51,58 @@
       1.06
     ],
     "loop": "bvp_audio:air/layer/jet_far5"
+  },
+  "airflow": {
+    "loop": "bvp_audio:air/layer/airflow",
+    "range": 220,
+    "volume": [
+      0.0,
+      1.0
+    ],
+    "pitch": [
+      0.8,
+      1.25
+    ],
+    "fullSpeed": 14.0
+  },
+  "flyby": {
+    "loop": "bvp_audio:air/layer/airflow",
+    "start": "bvp_audio:air/layer/flyby_jet",
+    "range": 48,
+    "fullSpeed": 3.5,
+    "volume": [
+      1.0,
+      1.0
+    ],
+    "pitch": [
+      0.9,
+      1.1
+    ],
+    "lead": 1.5
+  },
+  "afterburner": {
+    "range": 1100,
+    "volume": [
+      0.9,
+      1.0
+    ],
+    "pitch": [
+      0.96,
+      1.04
+    ],
+    "start": "bvp_audio:air/layer/afterburner_light",
+    "loop": "bvp_audio:air/layer/afterburner"
+  },
+  "afterburnerBody": {
+    "loop": "bvp_audio:air/layer/afterburner_body",
+    "range": 1100,
+    "volume": [
+      0.9,
+      1.0
+    ],
+    "pitch": [
+      0.96,
+      1.04
+    ]
   }
 }

@@ -372,10 +372,21 @@ object AircraftArmamentClient {
         (Minecraft.getInstance().screen as? AircraftLoadoutScreen)?.cameraPosition(vehicle, partial)?.let { return it }
         AircraftTvClient.cameraPosition(vehicle, partial)?.let { return it }
         if (!isPodActive(vehicle) || !partial.isFinite()) return null
-        val point = getVehicleSnapshot(vehicle)?.definition?.pod?.position ?: return null
+        val snapshot = getVehicleSnapshot(vehicle) ?: return null
+        val pod = snapshot.definition.pod ?: return null
+        val point = podPoint(vehicle, snapshot, pod, partial)
         // Pod.Position is a native HULL point, exactly like the server designation ray, not an orbit-camera offset.
         val position = vehicle.transformPosition(vehicle.getVehicleTransform(partial), point.x, point.y, point.z)
         return Vec3(position.x, position.y, position.z).takeIf { it.x.isFinite() && it.y.isFinite() && it.z.isFinite() }
+    }
+
+    /** A pod carried on a swept pylon looks from where the wing has carried it (server: AircraftTargetingPods). */
+    private fun podPoint(vehicle: VehicleEntity, snapshot: AircraftArmamentSnapshot, pod: AircraftPodView, partial: Float): Vec3 {
+        val mount = pod.mount?.let { id -> snapshot.definition.mounts.firstOrNull { it.id == id } } ?: return pod.position
+        if (mount.sweepFrames.isEmpty() || pod.mountPosition !in mount.positions.indices) return pod.position
+        val index = pod.mountPosition
+        return pod.position.add(mount.position(index, AircraftMountPresentation.speed(vehicle, partial))
+            .subtract(mount.positions[index]))
     }
 
     @JvmStatic fun cameraRotation(vehicle: VehicleEntity, partial: Float): Vec2? {

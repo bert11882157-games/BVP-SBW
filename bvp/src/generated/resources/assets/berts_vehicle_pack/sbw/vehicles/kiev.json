@@ -1,0 +1,13 @@
+{
+  "ID": "berts_vehicle_pack:kiev",
+  "Model": {
+    "GeometryBackend": "berts_vehicle_pack:vehicle/kiev",
+    "Model": "berts_vehicle_pack:geo/native_fallback/kiev.geo.json",
+    "Texture": "berts_vehicle_pack:textures/entity/kiev.png",
+    "WreckTexture": "berts_vehicle_pack:textures/entity_dead/kiev.png"
+  },
+  "MouseSpeed": [
+    0.2,
+    0.2
+  ]
+}

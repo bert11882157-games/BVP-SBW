@@ -9,7 +9,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 
 public abstract class VehicleFireSoundInstance extends AbstractTickableSoundInstance
-        implements com.atsuishio.superbwarfare.client.sound.spatial.DopplerSound {
+        implements com.atsuishio.superbwarfare.client.sound.spatial.DopplerSound, VehicleAudioMix.Tagged {
 
     private final Minecraft client;
     private final Entity entity;
@@ -22,6 +22,13 @@ public abstract class VehicleFireSoundInstance extends AbstractTickableSoundInst
         this.entity = entity;
         this.looping = true;
         this.delay = 0;
+    }
+
+    @Override
+    public VehicleAudioMix.Category vehicleMixCategory() {
+        Entity root = entity.getRootVehicle();
+        return VehicleAudioMix.weaponsOf(root instanceof VehicleEntity vehicle ? vehicle
+                : entity instanceof VehicleEntity self ? self : null);
     }
 
     protected abstract boolean canPlay(Entity entity);
@@ -71,6 +78,11 @@ public abstract class VehicleFireSoundInstance extends AbstractTickableSoundInst
 
         public VehicleFireSound(VehicleEntity vehicle) {
             super(vehicle.getShootSoundInstance(), Minecraft.getInstance(), vehicle);
+        }
+
+        @Override
+        public VehicleAudioMix.Category vehicleMixCategory() {
+            return VehicleAudioMix.weaponsOf(mixVehicle());
         }
 
         @Override

@@ -995,8 +995,8 @@
       "Parent": "Vehicle",
       "Position": [
         0.0,
-        3.4375,
-        5.90625
+        3.4675,
+        5.82625
       ],
       "Direction": [
         0,
@@ -1021,6 +1021,24 @@
   "EngineSound": "berts_vehicle_pack:su_27_engine_loop",
   "EngineSoundMode": "CUSTOM",
   "CustomSoundProfileId": "berts_vehicle_pack:aircraft_engine/su_27/idle",
+  "Countermeasures": {
+    "Flares": true,
+    "Chaff": true,
+    "RadarWarningReceiver": true,
+    "FlaresPerSecond": 4,
+    "FlaresPerBurst": 12,
+    "FlareLeftPos": [
+      0.6,
+      1.7,
+      -7.4
+    ],
+    "FlareRightPos": [
+      -0.6,
+      1.7,
+      -7.4
+    ],
+    "FlareEjectionSpeed": 0.7
+  },
   "AircraftTerrainContact": {
     "Fuselage": {
       "Min": [

@@ -1,0 +1,26 @@
+{
+  "Schema": 1,
+  "_comment": "LAV-AD (Berts Vehicle Pack): two 4-round FIM-92 Stinger pods on the Blazer turret, tuned like the AIM-92 air-to-air store and SBW's own LAV-AD (passive IR, the seeker must hold the target before launch; no radar).",
+  "Weapons": {
+    "Missile": {
+      "Name": "FIM-92",
+      "WithoutLock": "REFUSE",
+      "Guidance": {
+        "Mode": "INFRARED",
+        "LockTicks": 60,
+        "Range": 500,
+        "ConeDegrees": 25,
+        "CountermeasureVulnerability": 0.8
+      },
+      "Flight": {
+        "InitialSpeed": 0.5,
+        "MaxSpeed": 5,
+        "AccelerationPerTick": 0.1,
+        "TurnDegreesPerSecond": 80,
+        "Damage": 40,
+        "BlastRadius": 3,
+        "TntEquivalentKg": 0.54
+      }
+    }
+  }
+}

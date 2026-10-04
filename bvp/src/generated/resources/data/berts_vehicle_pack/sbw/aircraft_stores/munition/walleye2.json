@@ -1,0 +1,59 @@
+{
+  "Schema": 1,
+  "Name": "AGM-62 Walleye II \"Fat Albert\" · TV glide bomb",
+  "Category": "BOMB",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/walleye2.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.1858,
+    -0.0676
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.1858,
+      0.0,
+      -0.0676
+    ],
+    "Right": [
+      -0.1858,
+      0.0,
+      -0.0676
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    -0.0676
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/walleye2.png",
+  "Capacity": 1,
+  "MassKg": 1060,
+  "Bomb": {
+    "Mode": "TV",
+    "Gravity": 0.08,
+    "DragMultiplier": 1,
+    "TurnDegreesPerTick": 2,
+    "BlastRadius": 14,
+    "TntEquivalentKg": 540,
+    "BlastDamage": 900,
+    "LiftToDrag": 5.5,
+    "BestGlideSpeed": 4.5,
+    "MaxG": 2.5
+  },
+  "Guidance": {
+    "Mode": "GROUND_INFRARED",
+    "Presentation": "TV",
+    "LockTicks": 60,
+    "Range": 900,
+    "ConeDegrees": 25,
+    "CountermeasureVulnerability": 0
+  },
+  "AmmoItem": "superbwarfare:large_guided_bomb",
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_bombs/walleye2",
+  "LaunchOffset": [
+    0.0,
+    -0.1858,
+    0.0
+  ]
+}

@@ -1,0 +1,2201 @@
+{
+  "id": "lav_ad",
+  "model_scale": 0.699094047344,
+  "ap_penetration_mm": 0,
+  "chemical_penetration_mm": 0,
+  "fallback_incoming_penetration_mm": 500,
+  "atgm_tandem": false,
+  "impact_tolerance": 0.25,
+  "internal_ray_length": 10,
+  "unboxed_hits_penetrate": true,
+  "min_armor_mm": 16,
+  "plates": [
+    {
+      "name": "lav_ad_plate_00",
+      "center": [
+        0.41817,
+        1.40901,
+        -2.37173
+      ],
+      "half_size": [
+        0.43278,
+        0.04858,
+        0.66017
+      ],
+      "rotation": [
+        -24.94652,
+        -1.68934,
+        -3.62628
+      ],
+      "frame": "hull",
+      "armor_mm": 14
+    },
+    {
+      "name": "lav_ad_plate_01",
+      "center": [
+        -0.4321,
+        1.41165,
+        -2.37277
+      ],
+      "half_size": [
+        0.41903,
+        0.04453,
+        0.65329
+      ],
+      "rotation": [
+        -24.94652,
+        1.68934,
+        3.62628
+      ],
+      "frame": "hull",
+      "armor_mm": 14
+    },
+    {
+      "name": "lav_ad_plate_02",
+      "center": [
+        0.33936,
+        1.0659,
+        -3.00977
+      ],
+      "half_size": [
+        0.35378,
+        0.04858,
+        0.03439
+      ],
+      "rotation": [
+        -24.94652,
+        -1.68934,
+        -3.62628
+      ],
+      "frame": "hull",
+      "armor_mm": 14
+    },
+    {
+      "name": "lav_ad_plate_03",
+      "center": [
+        0.17488,
+        1.04398,
+        -3.07695
+      ],
+      "half_size": [
+        0.18892,
+        0.04858,
+        0.03439
+      ],
+      "rotation": [
+        -24.94652,
+        -1.68934,
+        -3.62628
+      ],
+      "frame": "hull",
+      "armor_mm": 14
+    },
+    {
+      "name": "lav_ad_plate_04",
+      "center": [
+        -0.35305,
+        1.06488,
+        -3.00937
+      ],
+      "half_size": [
+        0.34005,
+        0.04858,
+        0.03439
+      ],
+      "rotation": [
+        -24.94652,
+        1.68934,
+        3.62628
+      ],
+      "frame": "hull",
+      "armor_mm": 14
+    },
+    {
+      "name": "lav_ad_plate_05",
+      "center": [
+        -0.18859,
+        1.04295,
+        -3.07655
+      ],
+      "half_size": [
+        0.17518,
+        0.04858,
+        0.03439
+      ],
+      "rotation": [
+        -24.94652,
+        1.68934,
+        3.62628
+      ],
+      "frame": "hull",
+      "armor_mm": 14
+    },
+    {
+      "name": "lav_ad_plate_06",
+      "center": [
+        0.02061,
+        1.76166,
+        -1.2585
+      ],
+      "half_size": [
+        0.85868,
+        0.04452,
+        0.52607
+      ],
+      "rotation": [
+        -4,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 8
+    },
+    {
+      "name": "lav_ad_plate_07",
+      "center": [
+        0.02061,
+        1.80814,
+        -0.28387
+      ],
+      "half_size": [
+        0.85868,
+        0.04453,
+        0.44354
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 8
+    },
+    {
+      "name": "lav_ad_plate_08",
+      "center": [
+        -0.66633,
+        1.80814,
+        1.79978
+      ],
+      "half_size": [
+        0.17174,
+        0.04453,
+        1.62634
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 8
+    },
+    {
+      "name": "lav_ad_plate_09",
+      "center": [
+        -0.2782,
+        1.82433,
+        2.86911
+      ],
+      "half_size": [
+        0.22326,
+        0.06073,
+        0.55702
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 8
+    },
+    {
+      "name": "lav_ad_plate_10",
+      "center": [
+        -1.06802,
+        1.43061,
+        1.20494
+      ],
+      "half_size": [
+        0.39843,
+        0.04453,
+        2.04239
+      ],
+      "rotation": [
+        0,
+        0,
+        56
+      ],
+      "frame": "hull",
+      "armor_mm": 10
+    },
+    {
+      "name": "lav_ad_plate_11",
+      "center": [
+        -1.09107,
+        1.39034,
+        -1.31195
+      ],
+      "half_size": [
+        0.35721,
+        0.04453,
+        0.45387
+      ],
+      "rotation": [
+        0,
+        0,
+        56
+      ],
+      "frame": "hull",
+      "armor_mm": 10
+    },
+    {
+      "name": "lav_ad_plate_12",
+      "center": [
+        -1.14671,
+        1.271,
+        -2.07861
+      ],
+      "half_size": [
+        0.24386,
+        0.01619,
+        0.29571
+      ],
+      "rotation": [
+        -8,
+        0,
+        56
+      ],
+      "frame": "hull",
+      "armor_mm": 14
+    },
+    {
+      "name": "lav_ad_plate_13",
+      "center": [
+        -0.99802,
+        1.17906,
+        -2.52643
+      ],
+      "half_size": [
+        0.13739,
+        0.04452,
+        0.18912
+      ],
+      "rotation": [
+        -37,
+        0,
+        56
+      ],
+      "frame": "hull",
+      "armor_mm": 14
+    },
+    {
+      "name": "lav_ad_plate_14",
+      "center": [
+        -0.94605,
+        1.57714,
+        -1.89677
+      ],
+      "half_size": [
+        0.08931,
+        0.02025,
+        0.11347
+      ],
+      "rotation": [
+        -19.9299,
+        1.70818,
+        27.69986
+      ],
+      "frame": "hull",
+      "armor_mm": 14
+    },
+    {
+      "name": "lav_ad_plate_15",
+      "center": [
+        -0.91633,
+        1.39385,
+        -2.4347
+      ],
+      "half_size": [
+        0.04465,
+        0.04452,
+        0.11347
+      ],
+      "rotation": [
+        -30,
+        0,
+        23
+      ],
+      "frame": "hull",
+      "armor_mm": 14
+    },
+    {
+      "name": "lav_ad_plate_16",
+      "center": [
+        -0.92741,
+        1.49428,
+        -2.16579
+      ],
+      "half_size": [
+        0.03778,
+        0.02025,
+        0.15129
+      ],
+      "rotation": [
+        -15,
+        0,
+        23
+      ],
+      "frame": "hull",
+      "armor_mm": 14
+    },
+    {
+      "name": "lav_ad_plate_17",
+      "center": [
+        -0.4521,
+        0.65553,
+        -2.70811
+      ],
+      "half_size": [
+        0.44652,
+        0.4898,
+        0.01719
+      ],
+      "rotation": [
+        -51.15646,
+        4.01072,
+        -4.46617
+      ],
+      "frame": "hull",
+      "armor_mm": 14
+    },
+    {
+      "name": "lav_ad_plate_18",
+      "center": [
+        -0.6,
+        0.34319,
+        -2.35558
+      ],
+      "half_size": [
+        0.32974,
+        0.02834,
+        0.01719
+      ],
+      "rotation": [
+        -51.15646,
+        4.01072,
+        -4.46617
+      ],
+      "frame": "hull",
+      "armor_mm": 14
+    },
+    {
+      "name": "lav_ad_plate_19",
+      "center": [
+        -0.93646,
+        0.6059,
+        -2.57511
+      ],
+      "half_size": [
+        0.04122,
+        0.34003,
+        0.01719
+      ],
+      "rotation": [
+        -51.15646,
+        4.01072,
+        -4.46617
+      ],
+      "frame": "hull",
+      "armor_mm": 14
+    },
+    {
+      "name": "lav_ad_plate_20",
+      "center": [
+        -0.34525,
+        0.97932,
+        -3.06577
+      ],
+      "half_size": [
+        0.33661,
+        0.03238,
+        0.01719
+      ],
+      "rotation": [
+        -51.15646,
+        4.01072,
+        -4.46617
+      ],
+      "frame": "hull",
+      "armor_mm": 14
+    },
+    {
+      "name": "lav_ad_plate_21",
+      "center": [
+        -0.14402,
+        1.00408,
+        -3.12537
+      ],
+      "half_size": [
+        0.13395,
+        0.02833,
+        0.01719
+      ],
+      "rotation": [
+        -51.15646,
+        4.01072,
+        -4.46617
+      ],
+      "frame": "hull",
+      "armor_mm": 14
+    },
+    {
+      "name": "lav_ad_plate_22",
+      "center": [
+        0.4521,
+        0.65553,
+        -2.70811
+      ],
+      "half_size": [
+        0.44652,
+        0.4898,
+        0.01719
+      ],
+      "rotation": [
+        -51.15646,
+        -4.01072,
+        4.46617
+      ],
+      "frame": "hull",
+      "armor_mm": 14
+    },
+    {
+      "name": "lav_ad_plate_23",
+      "center": [
+        0.34525,
+        0.97932,
+        -3.06577
+      ],
+      "half_size": [
+        0.33661,
+        0.03238,
+        0.01719
+      ],
+      "rotation": [
+        -51.15646,
+        -4.01072,
+        4.46617
+      ],
+      "frame": "hull",
+      "armor_mm": 14
+    },
+    {
+      "name": "lav_ad_plate_24",
+      "center": [
+        0.14402,
+        1.00408,
+        -3.12537
+      ],
+      "half_size": [
+        0.13395,
+        0.02833,
+        0.01719
+      ],
+      "rotation": [
+        -51.15646,
+        -4.01072,
+        4.46617
+      ],
+      "frame": "hull",
+      "armor_mm": 14
+    },
+    {
+      "name": "lav_ad_plate_25",
+      "center": [
+        0.93646,
+        0.6059,
+        -2.57511
+      ],
+      "half_size": [
+        0.04122,
+        0.34003,
+        0.01719
+      ],
+      "rotation": [
+        -51.15646,
+        -4.01072,
+        4.46617
+      ],
+      "frame": "hull",
+      "armor_mm": 14
+    },
+    {
+      "name": "lav_ad_plate_26",
+      "center": [
+        0.6,
+        0.34319,
+        -2.35558
+      ],
+      "half_size": [
+        0.32974,
+        0.02834,
+        0.01719
+      ],
+      "rotation": [
+        -51.15646,
+        -4.01072,
+        4.46617
+      ],
+      "frame": "hull",
+      "armor_mm": 14
+    },
+    {
+      "name": "lav_ad_plate_27",
+      "center": [
+        -1.05985,
+        0.81658,
+        -2.60206
+      ],
+      "half_size": [
+        0.13739,
+        0.04452,
+        0.18912
+      ],
+      "rotation": [
+        37,
+        0,
+        -56
+      ],
+      "frame": "hull",
+      "armor_mm": 14
+    },
+    {
+      "name": "lav_ad_plate_28",
+      "center": [
+        -1.20854,
+        0.72463,
+        -2.15425
+      ],
+      "half_size": [
+        0.24388,
+        0.01619,
+        0.29571
+      ],
+      "rotation": [
+        8,
+        0,
+        -56
+      ],
+      "frame": "hull",
+      "armor_mm": 14
+    },
+    {
+      "name": "lav_ad_plate_29",
+      "center": [
+        -1.00788,
+        0.41849,
+        -1.9724
+      ],
+      "half_size": [
+        0.08931,
+        0.02025,
+        0.11347
+      ],
+      "rotation": [
+        19.9299,
+        1.70818,
+        -27.69986
+      ],
+      "frame": "hull",
+      "armor_mm": 14
+    },
+    {
+      "name": "lav_ad_plate_30",
+      "center": [
+        -0.98923,
+        0.50135,
+        -2.24143
+      ],
+      "half_size": [
+        0.03779,
+        0.02025,
+        0.15129
+      ],
+      "rotation": [
+        15,
+        0,
+        -23
+      ],
+      "frame": "hull",
+      "armor_mm": 14
+    },
+    {
+      "name": "lav_ad_plate_31",
+      "center": [
+        -0.97816,
+        0.60177,
+        -2.51035
+      ],
+      "half_size": [
+        0.04465,
+        0.04452,
+        0.11347
+      ],
+      "rotation": [
+        30,
+        0,
+        -23
+      ],
+      "frame": "hull",
+      "armor_mm": 14
+    },
+    {
+      "name": "lav_ad_plate_32",
+      "center": [
+        1.09107,
+        1.39034,
+        -1.31195
+      ],
+      "half_size": [
+        0.35721,
+        0.04453,
+        0.45387
+      ],
+      "rotation": [
+        0,
+        0,
+        -56
+      ],
+      "frame": "hull",
+      "armor_mm": 10
+    },
+    {
+      "name": "lav_ad_plate_33",
+      "center": [
+        1.06802,
+        1.43061,
+        1.20494
+      ],
+      "half_size": [
+        0.39843,
+        0.04453,
+        2.04239
+      ],
+      "rotation": [
+        0,
+        0,
+        -56
+      ],
+      "frame": "hull",
+      "armor_mm": 10
+    },
+    {
+      "name": "lav_ad_plate_34",
+      "center": [
+        0.66633,
+        1.80814,
+        1.79978
+      ],
+      "half_size": [
+        0.17174,
+        0.04453,
+        1.62634
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 8
+    },
+    {
+      "name": "lav_ad_plate_35",
+      "center": [
+        0.2782,
+        1.82433,
+        2.86911
+      ],
+      "half_size": [
+        0.22326,
+        0.06073,
+        0.55702
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 8
+    },
+    {
+      "name": "lav_ad_plate_36",
+      "center": [
+        0.94605,
+        1.57714,
+        -1.89677
+      ],
+      "half_size": [
+        0.08931,
+        0.02025,
+        0.11347
+      ],
+      "rotation": [
+        -19.9299,
+        -1.70818,
+        -27.69986
+      ],
+      "frame": "hull",
+      "armor_mm": 14
+    },
+    {
+      "name": "lav_ad_plate_37",
+      "center": [
+        0.9274,
+        1.49428,
+        -2.16579
+      ],
+      "half_size": [
+        0.03778,
+        0.02025,
+        0.15129
+      ],
+      "rotation": [
+        -15,
+        0,
+        -23
+      ],
+      "frame": "hull",
+      "armor_mm": 14
+    },
+    {
+      "name": "lav_ad_plate_38",
+      "center": [
+        0.91633,
+        1.39385,
+        -2.4347
+      ],
+      "half_size": [
+        0.04465,
+        0.04452,
+        0.11347
+      ],
+      "rotation": [
+        -30,
+        0,
+        -23
+      ],
+      "frame": "hull",
+      "armor_mm": 14
+    },
+    {
+      "name": "lav_ad_plate_39",
+      "center": [
+        1.14671,
+        1.271,
+        -2.07861
+      ],
+      "half_size": [
+        0.24386,
+        0.01619,
+        0.29571
+      ],
+      "rotation": [
+        -8,
+        0,
+        -56
+      ],
+      "frame": "hull",
+      "armor_mm": 14
+    },
+    {
+      "name": "lav_ad_plate_40",
+      "center": [
+        0.99802,
+        1.17906,
+        -2.52643
+      ],
+      "half_size": [
+        0.13739,
+        0.04452,
+        0.18912
+      ],
+      "rotation": [
+        -37,
+        0,
+        -56
+      ],
+      "frame": "hull",
+      "armor_mm": 14
+    },
+    {
+      "name": "lav_ad_plate_41",
+      "center": [
+        1.05985,
+        0.81658,
+        -2.60206
+      ],
+      "half_size": [
+        0.13739,
+        0.04452,
+        0.18912
+      ],
+      "rotation": [
+        37,
+        0,
+        56
+      ],
+      "frame": "hull",
+      "armor_mm": 14
+    },
+    {
+      "name": "lav_ad_plate_42",
+      "center": [
+        1.20854,
+        0.72463,
+        -2.15425
+      ],
+      "half_size": [
+        0.24388,
+        0.01619,
+        0.29571
+      ],
+      "rotation": [
+        8,
+        0,
+        56
+      ],
+      "frame": "hull",
+      "armor_mm": 14
+    },
+    {
+      "name": "lav_ad_plate_43",
+      "center": [
+        0.97816,
+        0.60177,
+        -2.51035
+      ],
+      "half_size": [
+        0.04465,
+        0.04452,
+        0.11347
+      ],
+      "rotation": [
+        30,
+        0,
+        23
+      ],
+      "frame": "hull",
+      "armor_mm": 14
+    },
+    {
+      "name": "lav_ad_plate_44",
+      "center": [
+        0.98923,
+        0.50135,
+        -2.24143
+      ],
+      "half_size": [
+        0.03779,
+        0.02025,
+        0.15129
+      ],
+      "rotation": [
+        15,
+        0,
+        23
+      ],
+      "frame": "hull",
+      "armor_mm": 14
+    },
+    {
+      "name": "lav_ad_plate_45",
+      "center": [
+        1.00788,
+        0.41849,
+        -1.9724
+      ],
+      "half_size": [
+        0.08931,
+        0.02025,
+        0.11347
+      ],
+      "rotation": [
+        19.9299,
+        -1.70818,
+        27.69986
+      ],
+      "frame": "hull",
+      "armor_mm": 14
+    },
+    {
+      "name": "lav_ad_plate_46",
+      "center": [
+        0.97775,
+        1.58835,
+        3.29546
+      ],
+      "half_size": [
+        0.237,
+        0.04453,
+        0.04126
+      ],
+      "rotation": [
+        0,
+        0,
+        -56
+      ],
+      "frame": "hull",
+      "armor_mm": 10
+    },
+    {
+      "name": "lav_ad_plate_47",
+      "center": [
+        0.91437,
+        1.6991,
+        3.36768
+      ],
+      "half_size": [
+        0.12365,
+        0.04453,
+        0.02406
+      ],
+      "rotation": [
+        0,
+        0,
+        -56
+      ],
+      "frame": "hull",
+      "armor_mm": 8
+    },
+    {
+      "name": "lav_ad_plate_48",
+      "center": [
+        -0.91437,
+        1.6991,
+        3.36768
+      ],
+      "half_size": [
+        0.12365,
+        0.04453,
+        0.02406
+      ],
+      "rotation": [
+        0,
+        0,
+        56
+      ],
+      "frame": "hull",
+      "armor_mm": 8
+    },
+    {
+      "name": "lav_ad_plate_49",
+      "center": [
+        -0.97775,
+        1.58835,
+        3.29546
+      ],
+      "half_size": [
+        0.237,
+        0.04453,
+        0.04126
+      ],
+      "rotation": [
+        0,
+        0,
+        56
+      ],
+      "frame": "hull",
+      "armor_mm": 10
+    },
+    {
+      "name": "lav_ad_plate_50",
+      "center": [
+        -0.43622,
+        0.34918,
+        2.99836
+      ],
+      "half_size": [
+        0.37438,
+        0.14977,
+        0.01719
+      ],
+      "rotation": [
+        43,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 8
+    },
+    {
+      "name": "lav_ad_plate_51",
+      "center": [
+        -0.88959,
+        1.34657,
+        3.32198
+      ],
+      "half_size": [
+        0.07212,
+        0.36837,
+        0.01719
+      ],
+      "rotation": [
+        17,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 8
+    },
+    {
+      "name": "lav_ad_plate_52",
+      "center": [
+        -1.0476,
+        1.1956,
+        3.28277
+      ],
+      "half_size": [
+        0.079,
+        0.21049,
+        0.01719
+      ],
+      "rotation": [
+        17,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 8
+    },
+    {
+      "name": "lav_ad_plate_53",
+      "center": [
+        -1.19529,
+        1.10655,
+        3.25966
+      ],
+      "half_size": [
+        0.06183,
+        0.11739,
+        0.01719
+      ],
+      "rotation": [
+        17,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 8
+    },
+    {
+      "name": "lav_ad_plate_54",
+      "center": [
+        -1.00982,
+        1.46657,
+        3.35316
+      ],
+      "half_size": [
+        0.04122,
+        0.06477,
+        0.01719
+      ],
+      "rotation": [
+        17,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 8
+    },
+    {
+      "name": "lav_ad_plate_55",
+      "center": [
+        -0.86555,
+        1.76078,
+        3.42955
+      ],
+      "half_size": [
+        0.0481,
+        0.05667,
+        0.01719
+      ],
+      "rotation": [
+        17,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 8
+    },
+    {
+      "name": "lav_ad_plate_56",
+      "center": [
+        -0.37782,
+        1.15302,
+        3.27171
+      ],
+      "half_size": [
+        0.43278,
+        0.72459,
+        0.01719
+      ],
+      "rotation": [
+        17,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 8
+    },
+    {
+      "name": "lav_ad_plate_57",
+      "center": [
+        0.37782,
+        0.34918,
+        2.99836
+      ],
+      "half_size": [
+        0.43278,
+        0.14977,
+        0.01719
+      ],
+      "rotation": [
+        43,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 8
+    },
+    {
+      "name": "lav_ad_plate_58",
+      "center": [
+        0.43622,
+        1.15302,
+        3.27171
+      ],
+      "half_size": [
+        0.37438,
+        0.72459,
+        0.01719
+      ],
+      "rotation": [
+        17,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 8
+    },
+    {
+      "name": "lav_ad_plate_59",
+      "center": [
+        0.88959,
+        1.34657,
+        3.32198
+      ],
+      "half_size": [
+        0.07212,
+        0.36837,
+        0.01719
+      ],
+      "rotation": [
+        17,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 8
+    },
+    {
+      "name": "lav_ad_plate_60",
+      "center": [
+        1.0476,
+        1.1956,
+        3.28277
+      ],
+      "half_size": [
+        0.079,
+        0.21049,
+        0.01719
+      ],
+      "rotation": [
+        17,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 8
+    },
+    {
+      "name": "lav_ad_plate_61",
+      "center": [
+        1.19529,
+        1.10655,
+        3.25966
+      ],
+      "half_size": [
+        0.06183,
+        0.11739,
+        0.01719
+      ],
+      "rotation": [
+        17,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 8
+    },
+    {
+      "name": "lav_ad_plate_62",
+      "center": [
+        1.00982,
+        1.46657,
+        3.35316
+      ],
+      "half_size": [
+        0.04122,
+        0.06477,
+        0.01719
+      ],
+      "rotation": [
+        17,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 8
+    },
+    {
+      "name": "lav_ad_plate_63",
+      "center": [
+        0.86555,
+        1.76078,
+        3.42955
+      ],
+      "half_size": [
+        0.0481,
+        0.05667,
+        0.01719
+      ],
+      "rotation": [
+        17,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 8
+    },
+    {
+      "name": "lav_ad_plate_64",
+      "center": [
+        0.15399,
+        2.30674,
+        0.33328
+      ],
+      "half_size": [
+        0.64851,
+        0.18373,
+        0.02558
+      ],
+      "rotation": [
+        39,
+        0,
+        0
+      ],
+      "frame": "turret",
+      "armor_mm": 14
+    },
+    {
+      "name": "lav_ad_plate_65",
+      "center": [
+        0.15399,
+        2.09323,
+        0.30573
+      ],
+      "half_size": [
+        0.64851,
+        0.13329,
+        0.02558
+      ],
+      "rotation": [
+        -42,
+        0,
+        0
+      ],
+      "frame": "turret",
+      "armor_mm": 14
+    },
+    {
+      "name": "lav_ad_plate_66",
+      "center": [
+        0.14665,
+        2.45161,
+        0.9874
+      ],
+      "half_size": [
+        0.6412,
+        0.02522,
+        0.57047
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "turret",
+      "armor_mm": 10
+    },
+    {
+      "name": "lav_ad_plate_67",
+      "center": [
+        0.14298,
+        2.45161,
+        1.60903
+      ],
+      "half_size": [
+        0.58624,
+        0.02522,
+        0.05116
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "turret",
+      "armor_mm": 10
+    },
+    {
+      "name": "lav_ad_plate_68",
+      "center": [
+        0.87579,
+        2.45161,
+        1.0232
+      ],
+      "half_size": [
+        0.08061,
+        0.02522,
+        0.22256
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "turret",
+      "armor_mm": 10
+    },
+    {
+      "name": "lav_ad_plate_69",
+      "center": [
+        0.8428,
+        2.45161,
+        0.71111
+      ],
+      "half_size": [
+        0.04762,
+        0.02522,
+        0.08441
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "turret",
+      "armor_mm": 10
+    },
+    {
+      "name": "lav_ad_plate_70",
+      "center": [
+        0.8428,
+        2.45161,
+        1.30717
+      ],
+      "half_size": [
+        0.04762,
+        0.02522,
+        0.05628
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "turret",
+      "armor_mm": 10
+    },
+    {
+      "name": "lav_ad_plate_71",
+      "center": [
+        -0.5495,
+        2.45161,
+        1.30717
+      ],
+      "half_size": [
+        0.04762,
+        0.02522,
+        0.05628
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "turret",
+      "armor_mm": 10
+    },
+    {
+      "name": "lav_ad_plate_72",
+      "center": [
+        -0.58247,
+        2.45161,
+        1.0232
+      ],
+      "half_size": [
+        0.08061,
+        0.02522,
+        0.22256
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "turret",
+      "armor_mm": 10
+    },
+    {
+      "name": "lav_ad_plate_73",
+      "center": [
+        -0.5495,
+        2.45161,
+        0.71111
+      ],
+      "half_size": [
+        0.04762,
+        0.02522,
+        0.08441
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "turret",
+      "armor_mm": 10
+    },
+    {
+      "name": "lav_ad_plate_74",
+      "center": [
+        0.94033,
+        2.29067,
+        0.57545
+      ],
+      "half_size": [
+        0.03665,
+        0.17291,
+        0.19187
+      ],
+      "rotation": [
+        7.12354,
+        19.80643,
+        20.24523
+      ],
+      "frame": "turret",
+      "armor_mm": 10
+    },
+    {
+      "name": "lav_ad_plate_75",
+      "center": [
+        1.02561,
+        2.11016,
+        0.6074
+      ],
+      "half_size": [
+        0.03665,
+        0.01802,
+        0.14071
+      ],
+      "rotation": [
+        7.12354,
+        19.80643,
+        20.24523
+      ],
+      "frame": "turret",
+      "armor_mm": 10
+    },
+    {
+      "name": "lav_ad_plate_76",
+      "center": [
+        1.05815,
+        2.0829,
+        0.648
+      ],
+      "half_size": [
+        0.03665,
+        0.01081,
+        0.08953
+      ],
+      "rotation": [
+        7.12354,
+        19.80643,
+        20.24523
+      ],
+      "frame": "turret",
+      "armor_mm": 10
+    },
+    {
+      "name": "lav_ad_plate_77",
+      "center": [
+        1.08584,
+        2.06247,
+        0.68442
+      ],
+      "half_size": [
+        0.03665,
+        0.0108,
+        0.04861
+      ],
+      "rotation": [
+        7.12354,
+        19.80643,
+        20.24523
+      ],
+      "frame": "turret",
+      "armor_mm": 10
+    },
+    {
+      "name": "lav_ad_plate_78",
+      "center": [
+        0.84259,
+        2.23618,
+        0.36051
+      ],
+      "half_size": [
+        0.03665,
+        0.10086,
+        0.03325
+      ],
+      "rotation": [
+        7.12354,
+        19.80643,
+        20.24523
+      ],
+      "frame": "turret",
+      "armor_mm": 14
+    },
+    {
+      "name": "lav_ad_plate_79",
+      "center": [
+        0.82131,
+        2.20893,
+        0.30319
+      ],
+      "half_size": [
+        0.03665,
+        0.05044,
+        0.02558
+      ],
+      "rotation": [
+        7.12354,
+        19.80643,
+        20.24523
+      ],
+      "frame": "turret",
+      "armor_mm": 14
+    },
+    {
+      "name": "lav_ad_plate_80",
+      "center": [
+        0.80927,
+        2.3622,
+        0.38589
+      ],
+      "half_size": [
+        0.03665,
+        0.03242,
+        0.0179
+      ],
+      "rotation": [
+        7.12354,
+        19.80643,
+        20.24523
+      ],
+      "frame": "turret",
+      "armor_mm": 14
+    },
+    {
+      "name": "lav_ad_plate_81",
+      "center": [
+        0.88438,
+        2.07744,
+        0.4036
+      ],
+      "half_size": [
+        0.011,
+        0.03603,
+        0.11001
+      ],
+      "rotation": [
+        -2.19576,
+        23.54957,
+        -28.35278
+      ],
+      "frame": "turret",
+      "armor_mm": 10
+    },
+    {
+      "name": "lav_ad_plate_82",
+      "center": [
+        0.8285,
+        2.12787,
+        0.2858
+      ],
+      "half_size": [
+        0.011,
+        0.02521,
+        0.0179
+      ],
+      "rotation": [
+        -2.19576,
+        23.54957,
+        -28.35278
+      ],
+      "frame": "turret",
+      "armor_mm": 10
+    },
+    {
+      "name": "lav_ad_plate_83",
+      "center": [
+        0.8207,
+        2.15058,
+        0.25723
+      ],
+      "half_size": [
+        0.011,
+        0.00721,
+        0.0128
+      ],
+      "rotation": [
+        -2.19576,
+        23.54957,
+        -28.35278
+      ],
+      "frame": "turret",
+      "armor_mm": 10
+    },
+    {
+      "name": "lav_ad_plate_84",
+      "center": [
+        0.84042,
+        2.04114,
+        0.3697
+      ],
+      "half_size": [
+        0.011,
+        0.01441,
+        0.03582
+      ],
+      "rotation": [
+        -2.19576,
+        23.54957,
+        -28.35278
+      ],
+      "frame": "turret",
+      "armor_mm": 10
+    },
+    {
+      "name": "lav_ad_plate_85",
+      "center": [
+        0.97204,
+        2.05276,
+        0.54627
+      ],
+      "half_size": [
+        0.011,
+        0.02521,
+        0.04605
+      ],
+      "rotation": [
+        -2.19576,
+        23.54957,
+        -28.35278
+      ],
+      "frame": "turret",
+      "armor_mm": 10
+    },
+    {
+      "name": "lav_ad_plate_86",
+      "center": [
+        1.02314,
+        2.04324,
+        0.62568
+      ],
+      "half_size": [
+        0.011,
+        0.01441,
+        0.04093
+      ],
+      "rotation": [
+        -2.19576,
+        23.54957,
+        -28.35278
+      ],
+      "frame": "turret",
+      "armor_mm": 10
+    },
+    {
+      "name": "lav_ad_plate_87",
+      "center": [
+        1.0509,
+        2.2295,
+        1.00275
+      ],
+      "half_size": [
+        0.0403,
+        0.24856,
+        0.22768
+      ],
+      "rotation": [
+        0,
+        0,
+        18
+      ],
+      "frame": "turret",
+      "armor_mm": 10
+    },
+    {
+      "name": "lav_ad_plate_88",
+      "center": [
+        1.04525,
+        2.24663,
+        1.00275
+      ],
+      "half_size": [
+        0.0403,
+        0.23054,
+        0.22768
+      ],
+      "rotation": [
+        0,
+        0,
+        18
+      ],
+      "frame": "turret",
+      "armor_mm": 10
+    },
+    {
+      "name": "lav_ad_plate_89",
+      "center": [
+        0.92094,
+        2.21919,
+        1.45662
+      ],
+      "half_size": [
+        0.04031,
+        0.24855,
+        0.22768
+      ],
+      "rotation": [
+        -4,
+        -19,
+        18
+      ],
+      "frame": "turret",
+      "armor_mm": 10
+    },
+    {
+      "name": "lav_ad_plate_90",
+      "center": [
+        0.13932,
+        2.22957,
+        1.75452
+      ],
+      "half_size": [
+        0.61188,
+        0.26296,
+        0.0179
+      ],
+      "rotation": [
+        -22,
+        0,
+        0
+      ],
+      "frame": "turret",
+      "armor_mm": 10
+    },
+    {
+      "name": "lav_ad_plate_91",
+      "center": [
+        0.81425,
+        2.15159,
+        1.70543
+      ],
+      "half_size": [
+        0.04031,
+        0.18371,
+        0.02814
+      ],
+      "rotation": [
+        -4,
+        -19,
+        18
+      ],
+      "frame": "turret",
+      "armor_mm": 10
+    },
+    {
+      "name": "lav_ad_plate_92",
+      "center": [
+        -0.72096,
+        2.2295,
+        1.00275
+      ],
+      "half_size": [
+        0.04031,
+        0.24856,
+        0.22768
+      ],
+      "rotation": [
+        0,
+        0,
+        -18
+      ],
+      "frame": "turret",
+      "armor_mm": 10
+    },
+    {
+      "name": "lav_ad_plate_93",
+      "center": [
+        -0.61465,
+        2.23146,
+        0.57804
+      ],
+      "half_size": [
+        0.0403,
+        0.24856,
+        0.2021
+      ],
+      "rotation": [
+        4,
+        -22,
+        -18
+      ],
+      "frame": "turret",
+      "armor_mm": 10
+    },
+    {
+      "name": "lav_ad_plate_94",
+      "center": [
+        -0.60015,
+        2.22244,
+        1.45106
+      ],
+      "half_size": [
+        0.0403,
+        0.25577,
+        0.23279
+      ],
+      "rotation": [
+        -4,
+        22,
+        -18
+      ],
+      "frame": "turret",
+      "armor_mm": 10
+    },
+    {
+      "name": "lav_ad_plate_95",
+      "center": [
+        -0.48594,
+        2.09683,
+        1.70699
+      ],
+      "half_size": [
+        0.0403,
+        0.14409,
+        0.03325
+      ],
+      "rotation": [
+        -4,
+        22,
+        -18
+      ],
+      "frame": "turret",
+      "armor_mm": 10
+    },
+    {
+      "name": "lav_ad_plate_96",
+      "center": [
+        0.87929,
+        0.60516,
+        0.54816
+      ],
+      "half_size": [
+        0.04122,
+        0.34814,
+        2.35184
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 10
+    },
+    {
+      "name": "lav_ad_plate_97",
+      "center": [
+        0.87929,
+        0.7104,
+        3.00315
+      ],
+      "half_size": [
+        0.04122,
+        0.24288,
+        0.08941
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 10
+    },
+    {
+      "name": "lav_ad_plate_98",
+      "center": [
+        1.12659,
+        0.97351,
+        0.7132
+      ],
+      "half_size": [
+        0.1786,
+        0.04453,
+        2.51688
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 6
+    },
+    {
+      "name": "lav_ad_plate_99",
+      "center": [
+        0.87929,
+        0.83591,
+        3.14069
+      ],
+      "half_size": [
+        0.04122,
+        0.11738,
+        0.04126
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 10
+    },
+    {
+      "name": "lav_ad_plate_100",
+      "center": [
+        -0.0,
+        0.2368,
+        0.29371
+      ],
+      "half_size": [
+        0.8999,
+        0.04452,
+        2.59254
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 6
+    },
+    {
+      "name": "lav_ad_plate_101",
+      "center": [
+        -0.87929,
+        0.60516,
+        0.54816
+      ],
+      "half_size": [
+        0.04122,
+        0.34814,
+        2.35184
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 10
+    },
+    {
+      "name": "lav_ad_plate_102",
+      "center": [
+        -1.12659,
+        0.97351,
+        0.7132
+      ],
+      "half_size": [
+        0.1786,
+        0.04453,
+        2.51688
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 6
+    },
+    {
+      "name": "lav_ad_plate_103",
+      "center": [
+        -0.87929,
+        0.7104,
+        3.00315
+      ],
+      "half_size": [
+        0.04122,
+        0.24288,
+        0.08941
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 10
+    },
+    {
+      "name": "lav_ad_plate_104",
+      "center": [
+        -0.87929,
+        0.83591,
+        3.14069
+      ],
+      "half_size": [
+        0.04122,
+        0.11738,
+        0.04126
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 10
+    }
+  ],
+  "sensitive_internals": [],
+  "engines": [
+    {
+      "name": "engine_core_lower_00",
+      "center": [
+        -0.41217,
+        0.89662,
+        -1.25354
+      ],
+      "half_size": [
+        0.27477,
+        0.20241,
+        0.61891
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull"
+    },
+    {
+      "name": "engine_core_upper_01",
+      "center": [
+        -0.54956,
+        1.30143,
+        -1.25354
+      ],
+      "half_size": [
+        0.41217,
+        0.20241,
+        0.61891
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull"
+    }
+  ],
+  "ammo_racks": [
+    {
+      "name": "ap_ready_00",
+      "center": [
+        0.35184,
+        1.95809,
+        1.35833
+      ],
+      "half_size": [
+        0.12824,
+        0.18012,
+        0.15349
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "turret",
+      "health": 10
+    },
+    {
+      "name": "he_ready_01",
+      "center": [
+        -0.1428,
+        1.88604,
+        1.40949
+      ],
+      "half_size": [
+        0.29311,
+        0.25217,
+        0.20465
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "turret",
+      "health": 10
+    }
+  ],
+  "tracks": [],
+  "modules": [],
+  "explosive_reactive_armor": [],
+  "sbw_obb": []
+}

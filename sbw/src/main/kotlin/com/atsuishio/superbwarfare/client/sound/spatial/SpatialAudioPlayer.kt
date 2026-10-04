@@ -80,6 +80,11 @@ object SpatialAudioPlayer {
         val isOperator = message.operatorId >= 0 && player.id == message.operatorId
         val isCrew = source != null && player.vehicle != null && player.rootVehicle === source.rootVehicle
         val category = SpatialAudio.Category.entries.getOrElse(message.category) { SpatialAudio.Category.WEAPON }
+        // vehicle gunfire belongs to the ground / aircraft weapons slider of the vehicle mix
+        val mix = if (category == SpatialAudio.Category.WEAPON)
+            com.atsuishio.superbwarfare.client.sound.VehicleAudioMix.weaponsOf(
+                (source?.rootVehicle ?: source) as? com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity)
+            else null
 
         if (isOperator || isCrew) {
             // inside the vehicle / on the weapon: the interior variant, now, no distance loss or Doppler
@@ -88,7 +93,7 @@ object SpatialAudioPlayer {
                 else message.near ?: message.firstPerson ?: message.far ?: message.veryFar
             interior ?: return
             val relative = firstPersonView && message.firstPerson != null
-            play(category, interior, pos, message.gain.coerceAtMost(1f), message.pitch, null, relative, message)
+            play(category, interior, pos, message.gain.coerceAtMost(1f), message.pitch, null, relative, message, mix)
             return
         }
 
@@ -109,7 +114,7 @@ object SpatialAudioPlayer {
             val volume = (gain * weights[i]).toFloat()
             if (volume < MIN_AUDIBLE) continue
             queueClientWorkIfDelayed(delay) {
-                if (Minecraft.getInstance().level === level) play(category, sound, pos, volume, message.pitch, velocity, false, message)
+                if (Minecraft.getInstance().level === level) play(category, sound, pos, volume, message.pitch, velocity, false, message, mix)
             }
         }
     }
@@ -117,6 +122,7 @@ object SpatialAudioPlayer {
     private fun play(
         category: SpatialAudio.Category, sound: ResourceLocation, pos: Vec3, volume: Float, pitch: Float,
         velocity: Vec3?, relative: Boolean, message: SpatialAudioMessage,
+        mix: com.atsuishio.superbwarfare.client.sound.VehicleAudioMix.Category? = null,
     ) {
         val mc = Minecraft.getInstance()
         val level = mc.level ?: return
@@ -134,7 +140,7 @@ object SpatialAudioPlayer {
             quietest.cut()
             voices.remove(quietest)
         }
-        val instance = OneShot(SoundEvent.createVariableRangeEvent(sound), volume, pitch, pos, velocity, relative, message)
+        val instance = OneShot(SoundEvent.createVariableRangeEvent(sound), volume, pitch, pos, velocity, relative, message, mix)
         voices.add(instance)
         mc.soundManager.play(instance)
     }
@@ -147,8 +153,10 @@ object SpatialAudioPlayer {
     class OneShot(
         event: SoundEvent, val level: Float, pitch: Float, pos: Vec3, private val velocity: Vec3?,
         relative: Boolean, private val origin: SpatialAudioMessage,
+        private val mix: com.atsuishio.superbwarfare.client.sound.VehicleAudioMix.Category? = null,
     ) : AbstractTickableSoundInstance(event, SoundSource.BLOCKS, RandomSource.create()), DopplerSound,
-        AttributedVehicleSound {
+        AttributedVehicleSound, com.atsuishio.superbwarfare.client.sound.VehicleAudioMix.Tagged {
+        override fun vehicleMixCategory() = mix
         private val started = System.nanoTime()
 
         init {

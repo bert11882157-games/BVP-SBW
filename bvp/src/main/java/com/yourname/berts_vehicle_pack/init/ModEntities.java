@@ -2,12 +2,20 @@ package com.yourname.berts_vehicle_pack.init;
 
 import com.yourname.berts_vehicle_pack.BertsVehiclePack;
 import com.yourname.berts_vehicle_pack.entity.Ags30Entity;
+import com.yourname.berts_vehicle_pack.entity.T80BvmObr2022Entity;
+import com.yourname.berts_vehicle_pack.entity.T64AEntity;
+import com.yourname.berts_vehicle_pack.entity.LavAdEntity;
+import com.yourname.berts_vehicle_pack.entity.Pt76bEntity;
+import com.yourname.berts_vehicle_pack.entity.Cheonma2Entity;
+import com.yourname.berts_vehicle_pack.entity.Strv103Entity;
+import com.yourname.berts_vehicle_pack.entity.Leopard1A1A1Entity;
 import com.yourname.berts_vehicle_pack.entity.Bmp2Entity;
 import com.yourname.berts_vehicle_pack.entity.Bmp2MEntity;
 import com.yourname.berts_vehicle_pack.entity.Bmp1amEntity;
 import com.yourname.berts_vehicle_pack.entity.Bmp3mEliteEntity;
 import com.yourname.berts_vehicle_pack.entity.BmptEntity;
 import com.yourname.berts_vehicle_pack.entity.BrowningTripodEntity;
+import com.yourname.berts_vehicle_pack.entity.carrier.AircraftCarrierEntity;
 import com.yourname.berts_vehicle_pack.entity.Btr60pbEntity;
 import com.yourname.berts_vehicle_pack.entity.Btr80AEntity;
 import com.yourname.berts_vehicle_pack.entity.Cv9040NoNetEntity;
@@ -99,6 +107,8 @@ public class ModEntities {
             ENTITIES.register("t90a", () -> vehicle(T90AEntity::new, 3.30f, 2.09f, "t90a"));
     public static final RegistryObject<EntityType<T90MEntity>> T90M =
             ENTITIES.register("t90m", () -> vehicle(T90MEntity::new, 3.30f, 2.09f, "t90m"));
+    public static final RegistryObject<EntityType<Cheonma2Entity>> CHEONMA_2 =
+            ENTITIES.register("cheonma_2", () -> vehicle(Cheonma2Entity::new, 3.4f, 2.3f, "cheonma_2"));
     public static final RegistryObject<EntityType<BmptEntity>> BMPT =
             ENTITIES.register("bmpt", () -> vehicle(BmptEntity::new, 3.30f, 2.09f, "bmpt"));
     public static final RegistryObject<EntityType<Zsu23_4Entity>> ZSU23_4 =
@@ -123,12 +133,16 @@ public class ModEntities {
             ENTITIES.register("ka50", () -> vehicle(Ka50Entity::new, 2.6f, 2.15f, "ka50"));
     public static final RegistryObject<EntityType<M60A1Entity>> M60A1 =
             ENTITIES.register("m60a1", () -> vehicle(M60A1Entity::new, 4.07f, 2.42f, "m60a1"));
+    public static final RegistryObject<EntityType<Strv103Entity>> STRV_103 =
+            ENTITIES.register("strv_103", () -> vehicle(Strv103Entity::new, 3.81f, 2.2f, "strv_103"));
     public static final RegistryObject<EntityType<M48A3EliteEntity>> M48A3_ELITE =
             ENTITIES.register("m48a3_elite", () -> vehicle(M48A3EliteEntity::new, 4.07f, 2.42f, "m48a3_elite"));
     public static final RegistryObject<EntityType<T55AEntity>> T55A =
             ENTITIES.register("t55a_2_0", () -> vehicle(T55AEntity::new, 4.07f, 2.42f, "t55a_2_0"));
     public static final RegistryObject<EntityType<T64BObr1976Entity>> T64B_OBR1976 =
             ENTITIES.register("t64b_obr1976", () -> vehicle(T64BObr1976Entity::new, 4.07f, 2.42f, "t64b_obr1976"));
+    public static final RegistryObject<EntityType<T64AEntity>> T64A =
+            ENTITIES.register("t64a", () -> vehicle(T64AEntity::new, 4.07f, 2.42f, "t64a"));
     public static final RegistryObject<EntityType<T72B3Entity>> T72B3 =
             ENTITIES.register("t72b3", () -> vehicle(T72B3Entity::new, 4.07f, 2.42f, "t72b3"));
     public static final RegistryObject<EntityType<T72B3UbhCopeEntity>> T72B3_UBH_COPE =
@@ -151,8 +165,12 @@ public class ModEntities {
             ENTITIES.register("leo2a6", () -> vehicle(Leo2A6Entity::new, 4.07f, 2.42f, "leo2a6"));
     public static final RegistryObject<EntityType<T80UObr1985Entity>> T80U_OBR1985 =
             ENTITIES.register("t80u_obr1985", () -> vehicle(T80UObr1985Entity::new, 4.07f, 2.42f, "t80u_obr1985"));
+    public static final RegistryObject<EntityType<T80BvmObr2022Entity>> T80BVM_OBR2022 =
+            ENTITIES.register("t80bvm_obr2022", () -> vehicle(T80BvmObr2022Entity::new, 4.07f, 2.42f, "t80bvm_obr2022"));
     public static final RegistryObject<EntityType<M551A1Entity>> M551A1 =
             ENTITIES.register("m551a1", () -> vehicle(M551A1Entity::new, 3.07f, 3.24f, "m551a1"));
+    public static final RegistryObject<EntityType<Pt76bEntity>> PT76B =
+            ENTITIES.register("pt76b", () -> vehicle(Pt76bEntity::new, 3.1f, 2.0f, "pt76b"));
     public static final RegistryObject<EntityType<ToyotaJihadBmp1Entity>> TOYOTA_JIHAD_BMP1 =
             ENTITIES.register("toyota_jihad_bmp1", () -> vehicle(ToyotaJihadBmp1Entity::new, 2.64f, 1.98f, "toyota_jihad_bmp1"));
     public static final RegistryObject<EntityType<ToyotaJihadS5Entity>> TOYOTA_JIHAD_S5 =
@@ -173,6 +191,8 @@ public class ModEntities {
             ENTITIES.register("vbci", () -> vehicle(VbciEntity::new, 4.07f, 2.42f, "vbci"));
     public static final RegistryObject<EntityType<Lav25Entity>> LAV25 =
             ENTITIES.register("lav25", () -> vehicle(Lav25Entity::new, 2.75f, 2.42f, "lav25"));
+    public static final RegistryObject<EntityType<LavAdEntity>> LAV_AD =
+            ENTITIES.register("lav_ad", () -> vehicle(LavAdEntity::new, 2.75f, 2.42f, "lav_ad"));
     public static final RegistryObject<EntityType<M1128Entity>> M1128 =
             ENTITIES.register("m1128", () -> vehicle(M1128Entity::new, 3.30f, 2.42f, "m1128"));
     public static final RegistryObject<EntityType<Ah6jEntity>> AH6J =
@@ -191,6 +211,12 @@ public class ModEntities {
             ENTITIES.register("milan_tripod", () -> vehicle(MilanTripodEntity::new, 2.2f, 1.8f, "milan_tripod"));
     public static final RegistryObject<EntityType<BrowningTripodEntity>> BROWNING_TRIPOD =
             ENTITIES.register("browning_tripod", () -> vehicle(BrowningTripodEntity::new, 2.55f, 2.55f, "browning_tripod"));
+    // Aircraft carriers (1:1, ~270 blocks): tracked far and updated every tick, so a deck the players stand on
+    // never goes stale or out of range (SBW FarTerrainServer adds the hull's radius to the view range).
+    public static final RegistryObject<EntityType<AircraftCarrierEntity>> ESSEX =
+            ENTITIES.register("essex", () -> carrier("essex", 0.84f));
+    public static final RegistryObject<EntityType<AircraftCarrierEntity>> KIEV =
+            ENTITIES.register("kiev", () -> carrier("kiev", 0.82f));
     public static final RegistryObject<EntityType<TowTripodEntity>> TOW_TRIPOD =
             ENTITIES.register("tow_tripod", () -> vehicle(TowTripodEntity::new, 2.4f, 2.0f, "tow_tripod"));
     public static final RegistryObject<EntityType<Mig19Entity>> MIG19 =
@@ -574,6 +600,8 @@ public class ModEntities {
             ENTITIES.register("leopard_2a4", () -> vehicle(
                     (type, level) -> new FittedGroundVehicleEntity(type, level, "leopard_2a4"),
                     12.46f, 4.14f, "leopard_2a4"));
+    public static final RegistryObject<EntityType<Leopard1A1A1Entity>> LEOPARD_1A1A1 =
+            ENTITIES.register("leopard_1a1a1", () -> vehicle(Leopard1A1A1Entity::new, 3.94f, 2.6f, "leopard_1a1a1"));
     public static final RegistryObject<EntityType<FittedGroundVehicleEntity>> T14_ARMATA =
             ENTITIES.register("t14_armata", () -> vehicle(
                     (type, level) -> new FittedGroundVehicleEntity(type, level, "t14_armata"),
@@ -606,6 +634,10 @@ public class ModEntities {
             ENTITIES.register("marder_1a5", () -> vehicle(
                     (type, level) -> new FittedGroundVehicleEntity(type, level, "marder_1a5"),
                     7.77f, 3.38f, "marder_1a5"));
+    public static final RegistryObject<EntityType<FittedGroundVehicleEntity>> BEGLEITPANZER =
+            ENTITIES.register("begleitpanzer", () -> vehicle(
+                    (type, level) -> new FittedGroundVehicleEntity(type, level, "begleitpanzer"),
+                    7.77f, 3.1f, "begleitpanzer"));
     public static final RegistryObject<EntityType<FittedGroundVehicleEntity>> ZBD_09 =
             ENTITIES.register("zbd_09", () -> vehicle(
                     (type, level) -> new FittedGroundVehicleEntity(type, level, "zbd_09"),
@@ -654,6 +686,17 @@ public class ModEntities {
                 .m_20699_(width, height)
                 .m_20702_(10)
                 .m_20712_(id);
+    }
+
+    private static EntityType<AircraftCarrierEntity> carrier(String id, float maxSpeedBlocksPerTick) {
+        return EntityType.Builder.<AircraftCarrierEntity>of(
+                        (type, level) -> new AircraftCarrierEntity(type, level, id, maxSpeedBlocksPerTick),
+                        MobCategory.MISC)
+                .sized(8.0f, 8.0f)
+                .setTrackingRange(32)
+                .setUpdateInterval(1)
+                .fireImmune()
+                .build(id);
     }
 
     private static <T extends Entity> EntityType.Builder<T> fastProjectile(EntityType.EntityFactory<T> factory) {

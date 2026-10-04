@@ -1,0 +1,120 @@
+{
+  "Combat": {
+    "WeaponId": "berts_vehicle_pack:aircraft_stores/kh59m",
+    "RoundId": "berts_vehicle_pack:kh59m",
+    "MunitionType": "berts_vehicle_pack:atgm",
+    "DamageType": "berts_vehicle_pack:chemical",
+    "CaliberMm": 380,
+    "DiameterMm": 380,
+    "HullDamageClass": "HE",
+    "HullDamage": 3000,
+    "ModuleDamage": 1800,
+    "AmmoRackDamage": 360,
+    "PenetrationMm": 1000.0,
+    "Tandem": false
+  },
+  "VisualProfile": "berts_vehicle_pack:authored_missile",
+  "ImpactVisualProfile": "berts_vehicle_pack:atgm",
+  "MotionSync": "INHERIT",
+  "Collision": {
+    "Width": 0.38,
+    "Height": 0.38
+  },
+  "Luminance": 9,
+  "TrailMode": "REPLACE",
+  "RenderScale": 1,
+  "GuidedPropulsion": {
+    "InitialSpeed": 1.0,
+    "MaxSpeed": 5.5,
+    "AccelerationPerTick": 0.08,
+    "ThrustDurationTicks": 1000,
+    "MaxTurnRateDegreesPerSecond": 24,
+    "GuidanceLookAheadTicks": 12,
+    "IgnitionDelayTicks": 8,
+    "EjectionSpeed": 1.0,
+    "EjectionGravityPerTick": 0.0125
+  },
+  "Extensions": {
+    "berts_vehicle_pack:projectile_mesh_v1": {
+      "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/kh59mk_flight.geo.json",
+      "Texture": "berts_vehicle_pack:textures/aircraft_stores/kh59mk.png",
+      "ForwardYaw": 0,
+      "SpinDegreesPerTick": 0,
+      "ForwardAxis": "Y",
+      "Origin": "TAIL"
+    },
+    "superbwarfare:guided_maneuver_v1": {
+      "MaxLoadFactorG": 15,
+      "SeekerConeDegrees": 30,
+      "SeekerRateDegreesPerSecond": 24,
+      "BodyTurnLimitScale": 1
+    },
+    "superbwarfare:warhead_fragments_v1": {
+      "Count": 192,
+      "Range": 2.5,
+      "Damage": 8,
+      "MaxHitsPerTarget": 4
+    },
+    "superbwarfare:heavy_warhead_blast_v1": {
+      "InnerRadius": 1.25,
+      "OuterRadius": 2.5,
+      "HeavyDamageFraction": 0.5,
+      "LightDamageFraction": 0.6666666666666666
+    },
+    "berts_vehicle_pack:projectile_effect_v1": {
+      "Schema": 1,
+      "Trail": {
+        "Emitter": {
+          "Flame": "berts_vehicle_pack:rocket_flame",
+          "Smoke": "berts_vehicle_pack:rocket_smoke"
+        },
+        "Phases": [
+          {
+            "Name": "BOOST",
+            "StartTick": 0,
+            "EndTickExclusive": 80,
+            "Flame": true,
+            "Smoke": true,
+            "Scale": 0.24,
+            "Orbit": {
+              "Count": 4,
+              "RadiusBlocks": 0.3,
+              "AngularSpeedRadiansPerTick": 0.942477796,
+              "Scale": 1.6
+            }
+          },
+          {
+            "Name": "COAST",
+            "StartTick": 80,
+            "EndTickExclusive": 2147483647,
+            "Flame": false,
+            "Smoke": true,
+            "Scale": 1.6,
+            "Orbit": null
+          }
+        ],
+        "SpacingBlocks": 0.25,
+        "RatePerTick": null,
+        "LifetimeTicks": {
+          "Flame": 6,
+          "Smoke": 20
+        },
+        "WidthBlocks": 0.1,
+        "AttachmentOffset": [
+          0,
+          0,
+          0
+        ],
+        "VelocityInheritance": 0,
+        "RandomScale": [
+          0.8,
+          1.3
+        ]
+      },
+      "Impact": {
+        "Explosion": "large",
+        "WaterExplosion": "same"
+      }
+    }
+  }
+}

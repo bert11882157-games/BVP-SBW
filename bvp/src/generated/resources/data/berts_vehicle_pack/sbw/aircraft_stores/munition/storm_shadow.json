@@ -1,0 +1,48 @@
+{
+  "Schema": 1,
+  "Name": "Storm Shadow / SCALP-EG · stealth cruise, penetrator",
+  "Category": "CRUISE",
+  "Capacity": 1,
+  "MassKg": 1300,
+  "Flight": {
+    "InitialSpeed": 0.3,
+    "MaxSpeed": 2.5,
+    "AccelerationPerTick": 0.025,
+    "TurnDegreesPerSecond": 36,
+    "Damage": 160,
+    "BlastRadius": 8,
+    "TntEquivalentKg": 150,
+    "Range": 2500
+  },
+  "AmmoItem": "superbwarfare:cruise_missile",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/storm_shadow.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.3325,
+    0.714
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.3533,
+      0.0,
+      0.714
+    ],
+    "Right": [
+      -0.3533,
+      0.0,
+      0.714
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    0.714
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/storm_shadow.png",
+  "LaunchOffset": [
+    0.0,
+    -0.3325,
+    0.0
+  ]
+}

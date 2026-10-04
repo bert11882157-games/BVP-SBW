@@ -213,23 +213,6 @@
   "MaxWeaponsPerPylon": 12,
   "Singles": [
     {
-      "Id": "internal_bay",
-      "Name": "Armament",
-      "Position": [
-        0,
-        0.668889,
-        2.260963
-      ],
-      "Internal": true,
-      "MaxPylonMassKg": 1206,
-      "AllowedStores": [
-        "berts_vehicle_pack:fa18e/bomb_500kg_dumb_1",
-        "berts_vehicle_pack:fa18e/bomb_500kg_laser_1",
-        "berts_vehicle_pack:fa18e/bomb_500kg_gps_1"
-      ],
-      "QuantitySelectable": false
-    },
-    {
       "Id": "centerline",
       "Name": "Centerline station (gear up)",
       "Position": [

@@ -9,7 +9,7 @@
     ],
     "idleVolume": [
       0.55,
-      1.0
+      0.7
     ],
     "spoolUp": 1.2,
     "spoolDown": 1.0,
@@ -38,5 +38,46 @@
       1.102
     ],
     "loop": "bvp_audio:air/layer/prop_far"
+  },
+  "boost": {
+    "range": 480,
+    "volume": [
+      0.0,
+      1.0
+    ],
+    "pitch": [
+      0.816,
+      1.102
+    ],
+    "from": 0.35,
+    "loop": "bvp_audio:air/layer/power_merlin"
+  },
+  "airflow": {
+    "loop": "bvp_audio:air/layer/airflow",
+    "range": 160,
+    "volume": [
+      0.0,
+      0.85
+    ],
+    "pitch": [
+      0.75,
+      1.1
+    ],
+    "fullSpeed": 7.0
+  },
+  "flyby": {
+    "loop": "bvp_audio:air/layer/airflow",
+    "start": "bvp_audio:air/layer/flyby_prop",
+    "range": 32,
+    "fullSpeed": 2.5,
+    "volume": [
+      1.0,
+      1.0
+    ],
+    "pitch": [
+      0.9,
+      1.08
+    ],
+    "lead": 1.25
   }
 }

@@ -1,0 +1,48 @@
+{
+  "Schema": 1,
+  "Name": "KEPD 350 Taurus · stealth cruise, penetrator",
+  "Category": "CRUISE",
+  "Capacity": 1,
+  "MassKg": 1400,
+  "Flight": {
+    "InitialSpeed": 0.3,
+    "MaxSpeed": 3.5,
+    "AccelerationPerTick": 0.035,
+    "TurnDegreesPerSecond": 45,
+    "Damage": 160,
+    "BlastRadius": 8,
+    "TntEquivalentKg": 160,
+    "Range": 1500
+  },
+  "AmmoItem": "superbwarfare:cruise_missile",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/kepd350.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.3322,
+    0.714
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.353,
+      0.0,
+      0.714
+    ],
+    "Right": [
+      -0.353,
+      0.0,
+      0.714
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    0.714
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/kepd350.png",
+  "LaunchOffset": [
+    0.0,
+    -0.3322,
+    0.0
+  ]
+}

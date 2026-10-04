@@ -34,6 +34,8 @@ object ModSounds {
     @JvmField val HUGE_EXPLOSION_VERY_FAR = register("huge_explosion_very_far")
     @JvmField val EXPLOSION_WATER = register("explosion_water")
     @JvmField val EXPLOSION_AIR = register("explosion_air")
+    /** The same air-burst files as EXPLOSION_AIR under their own id, so the sonic boom has its own mix slider. */
+    @JvmField val SONIC_BOOM = register("sonic_boom")
 
     @JvmField val OUCH = register("ouch")
     @JvmField val STEP = register("step")

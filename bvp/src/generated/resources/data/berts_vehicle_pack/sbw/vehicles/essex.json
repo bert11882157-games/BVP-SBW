@@ -1,0 +1,220 @@
+{
+  "ID": "berts_vehicle_pack:essex",
+  "Type": "Boat",
+  "EngineType": "Empty",
+  "MaxHealth": 20000,
+  "MaxEnergy": 0,
+  "Mass": 40000.0,
+  "Gravity": 0.0,
+  "InertiaRotateRate": 0.0,
+  "UpStep": 0.0,
+  "KeepChunkLoaded": true,
+  "ParkingBrakeWhenUnoccupied": false,
+  "AllowFreeCam": true,
+  "LightlyArmored": false,
+  "HasDecoy": false,
+  "HUDColor": "0xFFFFFF",
+  "HudType": "@Land",
+  "RotateOffsetHeight": 0.0,
+  "ThirdPersonCameraPos": [
+    0.0,
+    18.0,
+    70.0
+  ],
+  "EngineSound": "berts_vehicle_pack:tank_engine_silent",
+  "DestroyInfo": {
+    "ParticleType": "Large",
+    "ExplosionDamage": 60,
+    "ExplosionRadius": 14,
+    "ExplodeBlocks": false,
+    "ExplodePassengers": false,
+    "SympatheticDetonation": false,
+    "NoWreck": true
+  },
+  "OBB": [
+    {
+      "Position": [
+        -1.375,
+        2.87911,
+        -116.8125
+      ],
+      "Size": [
+        18.875,
+        10.93339,
+        16.6875
+      ],
+      "Transform": "Vehicle",
+      "Rotation": "Vehicle"
+    },
+    {
+      "Position": [
+        -5.875,
+        2.575,
+        -83.4375
+      ],
+      "Size": [
+        25.875,
+        11.2375,
+        16.6875
+      ],
+      "Transform": "Vehicle",
+      "Rotation": "Vehicle"
+    },
+    {
+      "Position": [
+        -3.0,
+        2.575,
+        -50.0625
+      ],
+      "Size": [
+        28.75,
+        11.2375,
+        16.6875
+      ],
+      "Transform": "Vehicle",
+      "Rotation": "Vehicle"
+    },
+    {
+      "Position": [
+        4.125,
+        2.575,
+        -16.6875
+      ],
+      "Size": [
+        23.625,
+        11.2375,
+        16.6875
+      ],
+      "Transform": "Vehicle",
+      "Rotation": "Vehicle"
+    },
+    {
+      "Position": [
+        3.75,
+        2.575,
+        16.6875
+      ],
+      "Size": [
+        24.0,
+        11.2375,
+        16.6875
+      ],
+      "Transform": "Vehicle",
+      "Rotation": "Vehicle"
+    },
+    {
+      "Position": [
+        -1.0,
+        2.575,
+        50.0625
+      ],
+      "Size": [
+        19.25,
+        11.2375,
+        16.6875
+      ],
+      "Transform": "Vehicle",
+      "Rotation": "Vehicle"
+    },
+    {
+      "Position": [
+        0.0,
+        2.575,
+        83.4375
+      ],
+      "Size": [
+        19.5,
+        11.2375,
+        16.6875
+      ],
+      "Transform": "Vehicle",
+      "Rotation": "Vehicle"
+    },
+    {
+      "Position": [
+        0.0,
+        2.575,
+        116.8125
+      ],
+      "Size": [
+        17.0,
+        11.2375,
+        16.6875
+      ],
+      "Transform": "Vehicle",
+      "Rotation": "Vehicle"
+    },
+    {
+      "Position": [
+        -11.125,
+        29.04375,
+        13.625
+      ],
+      "Size": [
+        2.875,
+        15.23125,
+        14.375
+      ],
+      "Transform": "Vehicle",
+      "Rotation": "Vehicle"
+    }
+  ],
+  "Seats": [
+    {
+      "Transform": "Vehicle",
+      "Position": [
+        -11.125,
+        28.525,
+        20.875
+      ],
+      "HidePassenger": false,
+      "IsEnclosed": false,
+      "BanHand": false,
+      "MinPitch": -60,
+      "MaxPitch": 60,
+      "MinYaw": -180,
+      "MaxYaw": 180,
+      "DismountInfo": {
+        "Transform": "Vehicle",
+        "Position": [
+          -6.75,
+          13.8625,
+          13.625
+        ]
+      }
+    }
+  ],
+  "DamageClass": "SHIP",
+  "DeathChargeKg": 25.0,
+  "DamageModifiers": [
+    "minecraft:arrow 0",
+    "minecraft:trident 0",
+    "minecraft:mob_attack 0",
+    "minecraft:mob_attack_no_aggro 0",
+    "minecraft:mob_projectile 0",
+    "minecraft:player_attack 0",
+    "#superbwarfare:projectile 0",
+    "All - 20",
+    "minecraft:lava + 20",
+    "minecraft:lava * 10",
+    "@minecraft:tnt * 4",
+    "@minecraft:tnt_minecart * 4",
+    "@#superbwarfare:aerial_bomb * 12",
+    "All * 0.1",
+    "superbwarfare:vehicle_strike * 2.5",
+    "minecraft:explosion * 2",
+    "superbwarfare:custom_explosion * 0.65",
+    "superbwarfare:projectile_explosion * 0.65",
+    "superbwarfare:mine * 0.5",
+    "superbwarfare:lunge_mine * 0.5",
+    "superbwarfare:projectile_hit * 1.3",
+    "#superbwarfare:projectile_absolute * 0.15",
+    "@#superbwarfare:aa_missile * 0.3",
+    "@superbwarfare:small_cannon_shell * 0.25",
+    "@superbwarfare:c4 * 4",
+    "@#superbwarfare:at_rocket * 1.1",
+    "@superbwarfare:gun_grenade * 1.25",
+    "@superbwarfare:mortar_shell * 1.25",
+    "@superbwarfare:tm_62 * 2.5"
+  ]
+}

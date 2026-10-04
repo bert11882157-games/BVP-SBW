@@ -10,7 +10,7 @@
     "turnSeconds": 100,
     "takeoffRunMetres": 2500,
     "baseMassKg": 86183,
-    "mainFuelMassKg": 120326,
+    "mainFuelMassKg": 61817,
     "wingAreaSquareMetres": 181,
     "maximumIndicatedAirspeedKmh": 1448,
     "negativeGLimit": -1,
@@ -20,12 +20,12 @@
     "afterburnerThrustKgfPerEngine": 13608,
     "normalPowerHpPerEngine": null,
     "maximumPowerHpPerEngine": null,
-    "fullFuelMassKg": 206509,
-    "fullFuelWingLoadingKgPerSquareMetre": 1140.9337016574586
+    "fullFuelMassKg": 148000,
+    "fullFuelWingLoadingKgPerSquareMetre": 817.6795580110497
   },
   "engineering": {
     "effectivePropulsiveEfficiency": null,
-    "zeroLiftDragCoefficient": 0.029236231346838205,
+    "zeroLiftDragCoefficient": 0.019,
     "inducedDragFactor": 0.04121792755951252,
     "maximumLiftCoefficient": 1.4,
     "liftSlopePerRadian": 4.5,
@@ -46,11 +46,11 @@
     "thrustDensityExponent": 0,
     "thrustDensityKneeReferenceAltitudeMetres": 0,
     "dryMachThrustFactor": 1,
-    "afterburnerMachThrustFactor": 1,
+    "afterburnerMachThrustFactor": 2.5,
     "waveDragCoefficient": 0.009,
     "afterburnerEnabled": true,
     "afterburnerMultiplier": 1.7251521298174441,
-    "throttleSpoolUpPerSecond": 0.35,
+    "throttleSpoolUpPerSecond": 0.7,
     "throttleSpoolDownPerSecond": 0.6,
     "sideDragPerMetre": 0.0012,
     "overspeedDragPerMetre": 0.0025,
@@ -62,7 +62,7 @@
     "hpToWatts": 735.49875,
     "normalPowerThrottleFraction": null,
     "takeoffPitchReferenceSpeedMps": 100.7398368370195,
-    "lowSpeedThrustMultiplier": 1,
-    "firstSoftCapKmh": 400
+    "lowSpeedThrustMultiplier": 1.75,
+    "firstSoftCapKmh": 450
   }
 }

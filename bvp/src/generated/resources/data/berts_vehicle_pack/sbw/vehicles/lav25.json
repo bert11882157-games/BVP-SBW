@@ -229,7 +229,6 @@
       },
       "Weapons": [
         "Cannon",
-        "Missile",
         "MainMachineGun"
       ],
       "Transform": "Turret",
@@ -404,20 +403,60 @@
             "Damage": 65,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
-            "Name": "Ground Belt",
+            "Name": "M919",
             "ShootShake": [
               8,
               10,
               12
             ],
             "ProjectileBelt": {
-              "Name": "Ground Belt",
+              "Name": "M919",
+              "Family": "M242",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "m919_apfsds",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "RED"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:lav25/cannon/ammo_00_m919_apfsds",
+              "ProjectileLife": 40
+            }
+          },
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell"
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_gs",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:lav25/cannon/belt_ammo_00_m791_apds"
+            },
+            "ShellType": "AP",
+            "Velocity": 67.25,
+            "ApDurability": 81,
+            "Damage": 65,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "M791",
+            "ShootShake": [
+              8,
+              10,
+              12
+            ],
+            "ProjectileBelt": {
+              "Name": "M791",
               "Family": "M242",
               "Rounds": [
                 {
                   "Shots": 3,
-                  "Round": "m919_apfsds",
-                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Round": "m791_apds",
+                  "Ammo": "superbwarfare:small_shell_gs",
                   "Tracer": "RED"
                 },
                 {
@@ -431,11 +470,10 @@
             "NominalBallistics": {
               "Supported": true,
               "ProjectileType": "superbwarfare:small_cannon_shell",
-              "ProjectileProfile": "berts_vehicle_pack:lav25/cannon/ammo_00_m919_apfsds",
+              "ProjectileProfile": "berts_vehicle_pack:lav25/cannon/belt_ammo_00_m791_apds",
               "ProjectileLife": 40
             }
-          },
-          "ConsumptionItem": "superbwarfare:small_autocannon_shell"
+          }
         },
         {
           "Ammo": "superbwarfare:small_shell_he",
@@ -451,21 +489,68 @@
             "ExplosionDamage": 0,
             "ExplosionRadius": 5,
             "TntEquivalentKg": 0.0544,
-            "Name": "Air Belt",
+            "Name": "Default",
             "ShootShake": [
               8,
               10,
               12
             ],
             "ProjectileBelt": {
-              "Name": "Air Belt",
+              "Name": "Default",
+              "Family": "M242",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "m791_apds",
+                  "Ammo": "superbwarfare:small_shell_gs",
+                  "Tracer": "RED"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "m792_hei_t_1",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "RED"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:lav25/cannon/ammo_01_m792_hei_t_1",
+              "ProjectileLife": 40
+            }
+          },
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell"
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_aa",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:lav25/cannon/ammo_01_m792_hei_t_1"
+            },
+            "ShellType": "HE",
+            "Velocity": 55.0,
+            "ApDurability": 7,
+            "Damage": 250,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 5,
+            "TntEquivalentKg": 0.0544,
+            "Name": "M792",
+            "ShootShake": [
+              8,
+              10,
+              12
+            ],
+            "ProjectileBelt": {
+              "Name": "M792",
               "Family": "M242",
               "Rounds": [
                 {
                   "Shots": 3,
                   "Round": "m792_hei_t_1",
-                  "Ammo": "superbwarfare:small_shell_he",
-                  "Tracer": "NONE"
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "RED"
                 },
                 {
                   "Shots": 1,
@@ -532,29 +617,7 @@
         10,
         12
       ],
-      "ProjectileBeltAmmoType": [
-        {
-          "Ammo": "superbwarfare:small_shell_gs",
-          "Override": {
-            "Projectile": {
-              "Type": "superbwarfare:small_cannon_shell",
-              "Profile": "berts_vehicle_pack:lav25/cannon/belt_ammo_00_m791_apds"
-            },
-            "ShellType": "AP",
-            "Velocity": 67.25,
-            "ApDurability": 81,
-            "Damage": 65,
-            "ExplosionDamage": 0,
-            "ExplosionRadius": 0,
-            "Name": "Default",
-            "ShootShake": [
-              8,
-              10,
-              12
-            ]
-          }
-        }
-      ],
+      "ProjectileBeltAmmoType": [],
       "DepletionReload": [
         [
           0.0,
@@ -699,7 +762,7 @@
         "Fire3PFar": "bvp_audio:weapon/m240_far",
         "Fire3PVeryFar": "bvp_audio:weapon/m240_veryfar",
         "Change": "superbwarfare:into_cannon",
-        "Volume": 0.4,
+        "Volume": 0.84,
         "VehicleReload": "superbwarfare:m_60_reload_empty",
         "VehicleReloadClipDurationTicks": 127
       },
@@ -740,111 +803,6 @@
           }
         }
       ]
-    },
-    "Missile": {
-      "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_atgm.png",
-      "DefaultFireMode": "Semi",
-      "AvailableFireModes": "Semi",
-      "RPM": 12,
-      "Projectile": {
-        "Type": "superbwarfare:wire_guide_missile",
-        "Profile": "berts_vehicle_pack:lav25/missile/default"
-      },
-      "DefaultZoom": 3,
-      "Magazine": 2,
-      "NormalReloadTime": 240,
-      "EmptyReloadTime": 240,
-      "Velocity": 0.78,
-      "ProjectileLife": 180,
-      "Gravity": 0,
-      "ApDurability": 430,
-      "Damage": 172,
-      "ExplosionDamage": 0,
-      "ExplosionRadius": 5,
-      "TntEquivalentKg": 3.7524,
-      "RecoilTime": 18,
-      "RecoilForce": 0.05,
-      "Spread": 0,
-      "ShootAnimationTime": 20,
-      "Crosshair": "@VehicleUsApc",
-      "CrosshairColor": "0x66FF00",
-      "Name": "weapon.berts_vehicle_pack.25_mm_m242_bgm_71a_tow",
-      "AmmoType": [
-        {
-          "Ammo": "superbwarfare:medium_anti_ground_missile",
-          "ConsumptionItem": "superbwarfare:medium_atgm",
-          "Override": {
-            "TntEquivalentKg": 3.7524
-          }
-        }
-      ],
-      "SoundInfo": {
-        "Fire1PGain": 1.0,
-        "Fire3PGain": 1.0,
-        "Fire3PFarGain": 1.0,
-        "Fire3PVeryFarGain": 1.0,
-        "Fire1P": "bvp_audio:weapon/tow_1p",
-        "Fire3P": "bvp_audio:weapon/tow_3p",
-        "VehicleReload3p": "superbwarfare:medium_missile_reload",
-        "Change": "superbwarfare:into_missile",
-        "Fire3PFar": "bvp_audio:weapon/tow_far",
-        "Fire3PVeryFar": "bvp_audio:weapon/tow_veryfar",
-        "Volume": 0.9,
-        "VehicleReloadClipDurationTicks": 32
-      },
-      "SoundRadius": 16,
-      "ShootPos": {
-        "Transform": "Turret",
-        "Positions": [
-          [
-            1.1652,
-            0.953,
-            1.08558
-          ],
-          [
-            1.4152,
-            0.953,
-            1.08558
-          ]
-        ],
-        "Directions": [
-          "Barrel",
-          "Barrel"
-        ],
-        "ViewDirection": "Barrel",
-        "MuzzleAttachments": [
-          "tow_muzzle_01",
-          "tow_muzzle_02"
-        ],
-        "MuzzleDirectionAttachments": [
-          "tow_muzzle_01",
-          "tow_muzzle_02"
-        ],
-        "HudOriginAttachment": "tow_muzzle_01",
-        "HudDirectionAttachment": "tow_muzzle_01",
-        "ViewAttachment": "tow_muzzle_01",
-        "ViewDirectionAttachment": "tow_muzzle_01",
-        "SeekAttachment": "tow_muzzle_01",
-        "SeekDirectionAttachment": "tow_muzzle_01",
-        "EffectAttachments": [
-          "tow_muzzle_01",
-          "tow_muzzle_02"
-        ],
-        "EffectDirectionAttachments": [
-          "tow_muzzle_01",
-          "tow_muzzle_02"
-        ]
-      },
-      "ShootShake": [
-        8,
-        10,
-        122.4
-      ],
-      "NominalBallistics": {
-        "Supported": false,
-        "ProjectileType": "superbwarfare:wire_guide_missile",
-        "ProjectileProfile": "berts_vehicle_pack:lav25/missile/default"
-      }
     }
   },
   "HUDColor": "0x66FF00",
@@ -1051,32 +1009,6 @@
         -0.18819,
         -0.1273,
         0.85793
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
-    "tow_muzzle_01": {
-      "Parent": "Turret",
-      "Position": [
-        1.1652,
-        0.953,
-        1.08558
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
-    "tow_muzzle_02": {
-      "Parent": "Turret",
-      "Position": [
-        1.4152,
-        0.953,
-        1.08558
       ],
       "Direction": [
         0,

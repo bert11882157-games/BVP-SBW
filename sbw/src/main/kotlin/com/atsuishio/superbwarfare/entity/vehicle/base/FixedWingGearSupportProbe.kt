@@ -37,6 +37,11 @@ internal class FixedWingGearSupportProbe(private val vehicle: VehicleEntity) {
             val minZ = Mth.floor(bounds.minZ); val maxZ = Mth.floor(bounds.maxZ)
             if ((maxX.toLong() - minX + 1) * (maxY.toLong() - minY + 1) *
                 (maxZ.toLong() - minZ + 1) > 8192) return Result(null, false, visited.size)
+            // Carrier decks are terrain for the wheels too.
+            for (deck in com.atsuishio.superbwarfare.api.vehicle.deck.DeckCollisions.boxes(level, bounds, vehicle)) {
+                if (terrain.size >= 2048) return Result(null, false, visited.size)
+                terrain.add(deck)
+            }
             for (x in minX..maxX) for (z in minZ..maxZ) {
                 val chunk = level.chunkSource.getChunk(x shr 4, z shr 4, ChunkStatus.FULL, false)
                     ?: return Result(null, false, visited.size)

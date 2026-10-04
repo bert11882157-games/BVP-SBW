@@ -206,6 +206,81 @@
         1.60938,
         2.41503
       ]
+    },
+    {
+      "Part": "Turret",
+      "Transform": "Turret",
+      "Rotation": "Turret",
+      "Size": [
+        1.91296,
+        0.54343,
+        1.42111
+      ],
+      "Position": [
+        0.0,
+        0.52343,
+        -0.34843
+      ]
+    },
+    {
+      "Part": "Turret",
+      "Transform": "Turret",
+      "Rotation": "Turret",
+      "Size": [
+        1.91296,
+        0.51338,
+        0.47037
+      ],
+      "Position": [
+        0.0,
+        0.49338,
+        1.54305
+      ]
+    },
+    {
+      "Part": "Turret",
+      "Transform": "Turret",
+      "Rotation": "Turret",
+      "Size": [
+        1.91296,
+        0.47663,
+        0.23519
+      ],
+      "Position": [
+        0.0,
+        0.45663,
+        2.2486
+      ]
+    },
+    {
+      "Part": "Turret",
+      "Transform": "Turret",
+      "Rotation": "Turret",
+      "Size": [
+        1.57417,
+        0.35958,
+        0.24519
+      ],
+      "Position": [
+        0.00045,
+        0.42434,
+        2.72897
+      ]
+    },
+    {
+      "Part": "Turret",
+      "Transform": "Barrel",
+      "Rotation": "Barrel",
+      "Size": [
+        0.09605,
+        0.0529,
+        0.82686
+      ],
+      "Position": [
+        -0.15519,
+        -0.15076,
+        3.29621
+      ]
     }
   ],
   "Attachments": {
@@ -368,10 +443,10 @@
       },
       "ShellType": "AP",
       "DefaultZoom": 3,
-      "Velocity": 89.5,
+      "Velocity": 87,
       "ProjectileLife": 50,
       "Gravity": 0.03,
-      "ApDurability": 576,
+      "ApDurability": 562,
       "Damage": 620,
       "ExplosionDamage": 0,
       "ExplosionRadius": 0,

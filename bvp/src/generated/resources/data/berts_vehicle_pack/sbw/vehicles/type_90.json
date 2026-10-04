@@ -209,7 +209,7 @@
     },
     {
       "Size": [
-        1.25438,
+        1.48879,
         0.16113,
         3.63398
       ],
@@ -253,6 +253,126 @@
         0.0,
         1.27344,
         4.33517
+      ]
+    },
+    {
+      "Part": "Turret",
+      "Transform": "Turret",
+      "Rotation": "Turret",
+      "Size": [
+        1.21885,
+        0.24648,
+        0.24092
+      ],
+      "Position": [
+        0.0,
+        0.88792,
+        -3.4027
+      ]
+    },
+    {
+      "Part": "Turret",
+      "Transform": "Turret",
+      "Rotation": "Turret",
+      "Size": [
+        1.2989,
+        0.42437,
+        0.23092
+      ],
+      "Position": [
+        0.0,
+        0.76251,
+        -2.93087
+      ]
+    },
+    {
+      "Part": "Turret",
+      "Transform": "Turret",
+      "Rotation": "Turret",
+      "Size": [
+        1.37874,
+        0.44317,
+        0.23092
+      ],
+      "Position": [
+        -0.00011,
+        0.7437,
+        -2.46903
+      ]
+    },
+    {
+      "Part": "Turret",
+      "Transform": "Turret",
+      "Rotation": "Turret",
+      "Size": [
+        1.45879,
+        0.46198,
+        0.23092
+      ],
+      "Position": [
+        0.0,
+        0.72489,
+        -2.0072
+      ]
+    },
+    {
+      "Part": "Turret",
+      "Transform": "Turret",
+      "Rotation": "Turret",
+      "Size": [
+        1.53872,
+        0.48079,
+        0.23092
+      ],
+      "Position": [
+        0.0,
+        0.70608,
+        -1.54537
+      ]
+    },
+    {
+      "Part": "Turret",
+      "Transform": "Turret",
+      "Rotation": "Turret",
+      "Size": [
+        1.61866,
+        0.4996,
+        1.15458
+      ],
+      "Position": [
+        -0.0,
+        0.68728,
+        -0.15986
+      ]
+    },
+    {
+      "Part": "Turret",
+      "Transform": "Turret",
+      "Rotation": "Turret",
+      "Size": [
+        1.61866,
+        0.45392,
+        0.23092
+      ],
+      "Position": [
+        0.0,
+        0.6416,
+        1.22564
+      ]
+    },
+    {
+      "Part": "Turret",
+      "Transform": "Turret",
+      "Rotation": "Turret",
+      "Size": [
+        1.46175,
+        0.41352,
+        0.24092
+      ],
+      "Position": [
+        0.00016,
+        0.60777,
+        1.69747
       ]
     }
   ],
@@ -734,7 +854,7 @@
         "Fire3PGain": 1.0,
         "Fire3PFarGain": 1.0,
         "Fire3PVeryFarGain": 1.0,
-        "Volume": 0.4,
+        "Volume": 0.63,
         "VehicleReload": "superbwarfare:m_60_reload_empty",
         "VehicleReloadClipDurationTicks": 127
       },

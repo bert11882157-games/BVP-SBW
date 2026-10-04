@@ -142,6 +142,29 @@ data class ProjectileCombatData(
 
     @SerialName("Tandem")
     var tandem: Boolean = false,
+
+    /**
+     * Optional HE charge of a dual-aspect round (SAPHEI-T).  The scalar fields above are the kinetic body; this is
+     * the charge's own penetration and generator-precomputed damage.  The armor consumer tries the charge first.
+     */
+    @SerialName("HeAspect")
+    var heAspect: ProjectileHeAspectData? = null,
+)
+
+/** Raw [ProjectileCombatData.heAspect]; nullable so the resolver can reject an incomplete aspect. */
+@Serializable
+data class ProjectileHeAspectData(
+    @SerialName("PenetrationMm")
+    var penetrationMm: Double? = null,
+
+    @SerialName("HullDamage")
+    var hullDamage: Int? = null,
+
+    @SerialName("ModuleDamage")
+    var moduleDamage: Int? = null,
+
+    @SerialName("AmmoRackDamage")
+    var ammoRackDamage: Int? = null,
 )
 
 /**

@@ -7,6 +7,8 @@ import com.atsuishio.superbwarfare.entity.vehicle.utils.GroundRestPolicy
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.util.Mth
+import net.minecraft.world.entity.player.Player
+import kotlin.math.abs
 
 /**
  * Samples environment and commits ground-drive results through the compatibility facade.
@@ -14,6 +16,29 @@ import net.minecraft.util.Mth
  * World/FX stay here; virtual view vectors are sampled after steering and after yaw commit.
  */
 internal class VehicleGroundMotionService(private val vehicle: VehicleEntity) {
+    /**
+     * Gun laying with the tracks (HullAimTraverseSpeed): when the turret controller aims beyond TurretYawRange and
+     * nobody steers, returns the track steering state that turns the hull toward the aim this tick (finishTrack
+     * turns the hull by -k * rotation). Runs the same on the controlling client and the server, from the
+     * controller's look direction. Null leaves the normal steering in charge.
+     */
+    private fun hullAimRotation(energyCost: Int): Float? = with(vehicle) {
+        val rate = computed().hullAimTraverseSpeed
+        if (rate <= 0f || leftInputDown || rightInputDown || !hasOperationalPower(energyCost)) return null
+        val inWaterOnly = isInFluidType && !onGround()
+        if (!onGround() && !isInFluidType) return null
+        val gunner = getNthEntity(turretControllerIndex) as? Player ?: return null
+        val hullYaw = -VehicleVecUtils.getYRotFromVector(getViewVector(1f))
+        val aimYaw = -VehicleVecUtils.getYRotFromVector(gunner.getViewVector(1f))
+        val error = Mth.wrapDegrees(aimYaw - hullYaw).toFloat()
+        // The gun itself covers the authored traverse; the hull takes the rest, easing in near the limit.
+        val reach = minOf(abs(turretMinYaw), abs(turretMaxYaw))
+        val overflow = error - Mth.clamp(error, -reach, reach)
+        val maxStep = rate / 20f
+        val step = Mth.clamp(overflow * 0.5f, -maxStep, maxStep)
+        return -step / (if (inWaterOnly) 2.5f else 8.0f)
+    }
+
     fun stepTrack(engineInfo: EngineInfo.Track) = with(vehicle) {
         val buoyancy = engineInfo.buoyancy
         val energyCost = (engineInfo.energyCostRate * Mth.abs(power)).toInt()
@@ -116,10 +141,12 @@ internal class VehicleGroundMotionService(private val vehicle: VehicleEntity) {
                 if (drift()) steeringSpeed *= 3.4f
                 GroundDriveCalculator.trackRotation(deltaRot, deltaMovement.horizontalDistance())
             },
-            commitSteering = { deltaRot = GroundRestPolicy.settleSteering(it,
-                GroundRestPolicy.isAtRest(onGround(), isInFluidType,
-                    deltaMovement.horizontalDistanceSqr(), forwardInputDown || backInputDown ||
-                        leftInputDown || rightInputDown)) },
+            commitSteering = {
+                deltaRot = hullAimRotation(energyCost) ?: GroundRestPolicy.settleSteering(it,
+                    GroundRestPolicy.isAtRest(onGround(), isInFluidType,
+                        deltaMovement.horizontalDistanceSqr(), forwardInputDown || backInputDown ||
+                            leftInputDown || rightInputDown))
+            },
             sampleLongitudinal = { deltaMovement.dot(getViewVector(1f)) },
             finishDrive = { steering, longitudinal ->
                 GroundDriveCalculator.finishTrack(GroundDriveFinishInput(

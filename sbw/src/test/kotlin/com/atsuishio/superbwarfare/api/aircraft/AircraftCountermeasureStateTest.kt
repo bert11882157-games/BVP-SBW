@@ -28,6 +28,19 @@ class AircraftCountermeasureStateTest {
         assertThrows(IllegalArgumentException::class.java) { AircraftCountermeasureState.chaffLevelAt(0, 61) }
     }
 
+    @Test fun `missile warning flags ride above the countermeasure bits`() {
+        val maximum = AircraftCountermeasureState.chaffLevelAt(1200, 1200)
+        for (incoming in 0..15) {
+            val packed = AircraftCountermeasureWire.pack(255, maximum, 2, true, incoming)
+            assertEquals(incoming, AircraftCountermeasureWire.incoming(packed))
+            assertEquals(255, AircraftCountermeasureWire.flares(packed))
+            assertEquals(maximum, AircraftCountermeasureWire.chaff(packed))
+            assertEquals(2, AircraftCountermeasureWire.threat(packed))
+            assertTrue(AircraftCountermeasureWire.emitting(packed))
+        }
+        assertEquals(0, AircraftCountermeasureWire.incoming(AircraftCountermeasureWire.pack(255, 65535, 3, true)))
+    }
+
     private fun AircraftCountermeasureState.sample(t: Long, flares: Boolean = false,
         chaff: Boolean = false, rate: Int = 4, burst: Int = 12) =
         tick(t, flares, chaff, true, true, rate, burst)

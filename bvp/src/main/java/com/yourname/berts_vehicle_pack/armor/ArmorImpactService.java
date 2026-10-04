@@ -82,10 +82,12 @@ final class ArmorImpactService {
             ArmorImpactReporter.logArmorEvent(owner, target, hitVec,
                     "[BVP Armor] Armor ignored: target profile has no armor plates.");
             ArmorImpactStats.record(Outcome.PENETRATION);
+            // With no armor at all, a dual-aspect round's HE charge always penetrates.
+            shot = shot.aspectAgainst(0.0D);
             if (shot.vehicleDamage >= 0.0D) {
                 // Unarmored mounts (tripods, towed guns) take the round's typed hull damage like a penetration,
                 // and its blast then leaves them alone.
-                com.atsuishio.superbwarfare.tools.blast.StruckVehicles.mark(projectile, target.vehicle());
+                com.atsuishio.superbwarfare.tools.blast.StruckVehicles.mark(projectile, target.vehicle(), shot.vehicleDamage);
                 return resolvePenetratingDamage(target, damageSource, shot, false,
                         ProjectileArmorEffects.hasImpactVisual(shot));
             }
@@ -96,7 +98,8 @@ final class ArmorImpactService {
         ExplosiveReactiveArmorService.Result eraResult =
                 ExplosiveReactiveArmorService.apply(volumes, trace, shot, projectile);
         if (eraResult.detonated()) {
-            shot = eraResult.shot();
+            // The ERA block spends a dual-aspect round's HE charge; only its kinetic body goes on.
+            shot = eraResult.shot().withoutHeAspect();
             trace = eraResult.trace();
             ArmorImpactReporter.reportEraHit(level, owner, target, eraResult.impactVec(),
                     eraResult.eraBox(), eraResult.originalShot(), shot, eraResult.protectionMm());
@@ -116,7 +119,9 @@ final class ArmorImpactService {
         ArmorImpactReporter.reportVolumeSelection(target, projectile, trace, armorHit, null, moduleHit, exposedHit);
         String directModule = null;
         if (exposedHit != null && !ArmorModuleResolver.isTrack(exposedHit.moduleId)) {
-            ArmorModuleDamageService.damageDirectModule(owner, target, shot, exposedHit, false, hitVec);
+            // An exposed module has no armor in front of it, so a dual-aspect round's HE charge acts on it.
+            ArmorModuleDamageService.damageDirectModule(owner, target, shot.aspectAgainst(0.0D), exposedHit,
+                    false, hitVec);
             ArmorImpactStats.record(Outcome.MODULE_HIT);
             DamageDiagnostics.module(target, projectile, shot, exposedHit.moduleId, "direct");
             directModule = exposedHit.moduleId;
@@ -159,8 +164,9 @@ final class ArmorImpactService {
             return ProjectileArmorMutationService.blockImpact(
                     false, ProjectileImpactPresentationOutcome.DEFAULT);
         }
-        if (ricochet.ricochet() && ArmorRicochetService.applyDeflection(
-                projectile, target, armorHit, trace)) {
+        ArmorRicochetService.Deflection deflection = ricochet.ricochet()
+                ? ArmorRicochetService.deflection(projectile, target, armorHit, trace) : null;
+        if (deflection != null) {
             ArmorImpactReporter.reportArmorHit(level, owner, target, hitVec, plate,
                     Math.cos(Math.toRadians(ricochet.incidenceAngleDegrees())),
                     armorHit.armorMm() / Math.max(0.05D,
@@ -168,11 +174,26 @@ final class ArmorImpactService {
                     shot.penetrationMm, false, false, null, null, null, false, shot,
                     ArmorImpactFeedback.Classification.RICOCHET);
             ArmorImpactStats.record(Outcome.RICOCHET);
+            // Owner 2026-09-30: a ricochet eats the shot. Clients get a purely cosmetic tracer along the reflected
+            // path at half speed; the round itself stops here, deals nothing and does not detonate.
+            com.atsuishio.superbwarfare.api.projectile.RicochetTracer.send(
+                    projectile, deflection.launchPoint(), deflection.velocity());
             return ProjectileArmorMutationService.ricochetImpact(replacementVisual);
         }
 
         Result penetration = ArmorPenetrationService.evaluate(target, armorHit, trace, shot,
                 targetProfile.minArmorMm);
+        if (shot.heAspect != null) {
+            // Dual-aspect round (SAPHEI-T): when the HE charge defeats the plate the hit deals HE damage (not AP);
+            // when only the kinetic body does, it deals the body's AP damage; otherwise it is a non-penetration.
+            Result charge = ArmorPenetrationService.evaluate(target, armorHit, trace, shot.heAspect,
+                    targetProfile.minArmorMm);
+            if (charge.penetrated()) {
+                shot = shot.heAspect;
+                penetration = charge;
+                replacementVisual = ProjectileArmorEffects.hasImpactVisual(shot);
+            }
+        }
         if (!penetration.penetrated()) {
             if (!BvpMaterialImpactSounds.hasPresentation(projectile)) {
                 ArmorSoundService.play(level, hitVec, ArmorSoundService.METAL_HIT_SOUND, 1.0F, 0.75F);
@@ -189,8 +210,8 @@ final class ArmorImpactService {
         }
 
         ArmorImpactStats.record(Outcome.PENETRATION);
-        // The round's own blast does not hit this vehicle again: the penetrating hit carries its damage.
-        com.atsuishio.superbwarfare.tools.blast.StruckVehicles.mark(projectile, target.vehicle());
+        // The round's own blast only adds what it does beyond the penetrating hit's hull damage.
+        com.atsuishio.superbwarfare.tools.blast.StruckVehicles.mark(projectile, target.vehicle(), struckDamage(shot));
         DamageDiagnostics.plate(target, projectile, shot, plate.name, armorHit.armorMm(),
                 penetration.effectiveArmorMm(), penetration.penetrationMm(), true);
         if (AmmoRackService.isSuperAmmoRackOverloaded(target)) {
@@ -282,6 +303,10 @@ final class ArmorImpactService {
                     "[BVP Armor] Shell ray meets no mesh armor; projectile continues.");
             return ProjectileArmorMutationService.passImpact();
         }
+        if (targetProfile.unboxedHitsPenetrate) {
+            // Hull steel at the profile's floor: a dual-aspect round's HE charge decides first, as on a plate.
+            shot = shot.aspectAgainst(targetProfile.minArmorMm);
+        }
         if (targetProfile.unboxedHitsPenetrate && shot.penetrationMm + 1.0E-4D < targetProfile.minArmorMm) {
             // A gap in the boxes is still hull steel: a round below the profile's floor stops there.
             if (!BvpMaterialImpactSounds.hasPresentation(projectile)) {
@@ -317,7 +342,8 @@ final class ArmorImpactService {
                                                             BvpImpactVolumeQuery volumes, ShotTrace trace) {
         ArmorImpactStats.record(Outcome.FALLBACK_UNBOXED);
         ArmorImpactStats.record(Outcome.PENETRATION);
-        com.atsuishio.superbwarfare.tools.blast.StruckVehicles.mark(damageSource.getDirectEntity(), target.vehicle());
+        com.atsuishio.superbwarfare.tools.blast.StruckVehicles.mark(damageSource.getDirectEntity(), target.vehicle(),
+                struckDamage(shot));
         boolean replacementVisual = ProjectileArmorEffects.hasImpactVisual(shot);
         if (AmmoRackService.isSuperAmmoRackOverloaded(target)) {
             boolean detonated = AmmoRackService.triggerSuperAmmoRackDetonation(target, hitVec, damageSource);
@@ -414,6 +440,11 @@ final class ArmorImpactService {
                 replacementVisual, ProjectileImpactPresentationOutcome.PENETRATION);
     }
 
+    /** Hull damage a direct hit charges for the blast bookkeeping; a shot without a typed value covers it all. */
+    private static double struckDamage(ProjectileArmorEffect shot) {
+        return shot.vehicleDamage >= 0.0D ? shot.vehicleDamage : Double.POSITIVE_INFINITY;
+    }
+
     private static void applyLightArmorNonPenetrationDamage(ArmorTarget target,
                                                              DamageSource damageSource,
                                                              ProjectileArmorEffect shot) {
@@ -424,7 +455,8 @@ final class ArmorImpactService {
         double damage = damageBasis * LIGHT_ARMOR_NON_PENETRATION_DAMAGE_FRACTION;
         VehicleDamageService.applyVehicleDamage(target, damageSource, damage);
         if (damage > 0.0D) {
-            com.atsuishio.superbwarfare.tools.blast.StruckVehicles.mark(damageSource.getDirectEntity(), target.vehicle());
+            // A bounce only deals a sliver: the round's blast still does whatever it does beyond that.
+            com.atsuishio.superbwarfare.tools.blast.StruckVehicles.mark(damageSource.getDirectEntity(), target.vehicle(), damage);
         }
         DamageDiagnostics.hull(target, damageSource, shot, damage, "light_armor_non_penetration");
     }
