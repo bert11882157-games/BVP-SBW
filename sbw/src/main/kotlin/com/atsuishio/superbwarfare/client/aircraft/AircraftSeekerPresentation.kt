@@ -31,7 +31,8 @@ class AircraftSeekerPresentation {
             searchY + ((target?.second ?: searchY) - searchY) * blend,
             searchRadius + (8.0 - searchRadius) * blend)
         val previous = circle
-        val alpha = if (!circleTime.isFinite() || seconds < circleTime) 1.0 else
+        // A clock step backwards holds the circle for that frame instead of snapping it.
+        val alpha = if (!circleTime.isFinite()) 1.0 else
             1 - exp(-(seconds - circleTime).coerceIn(0.0, 0.2) * 24)
         val result = if (previous == null) desired else Circle(
             previous.x + (desired.x - previous.x) * alpha,
@@ -42,7 +43,8 @@ class AircraftSeekerPresentation {
     }
     fun sample(seek: AircraftSeekView, seconds: Double): Double {
         val next = "${seek.weaponId}:${seek.target ?: seek.position}"
-        if (identity != next || !seconds.isFinite() || !lastTime.isFinite() || seconds < lastTime) {
+        // Only a new weapon or target restarts acquisition; a clock step backwards is not a new lock.
+        if (identity != next || !seconds.isFinite() || !lastTime.isFinite()) {
             identity = next; lastTime = seconds; convergence = 0.0
         }
         val dt = (seconds - lastTime).coerceIn(0.0, 0.2)

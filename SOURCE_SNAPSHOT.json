@@ -1,10 +1,10 @@
 {
   "schema": 1,
   "policyVersion": 4,
-  "label": "claude-fixes-20261004-r99",
+  "label": "claude-fixes-20261004-r100",
   "status": "release-candidate",
-  "createdAt": "2026-10-04T19:09:48.425Z",
-  "treeSha256": "f1526199974d7e97e2d18b4d707d1254df1d9014b25b6acac82d6eca54842b62",
+  "createdAt": "2026-10-04T20:15:49.373Z",
+  "treeSha256": "2c3af8cd1d372170321c406d3d79928baa645891cf6726001477257c77ff20c5",
   "files": [
     {
       "path": ".editorconfig",
@@ -35018,13 +35018,13 @@
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/client/aircraft/AircraftSeekerHud.kt",
-      "size": 4438,
-      "sha256": "22d3b30d28ab613fe53c6de81c87c52b1e6b39b8176b636d874b00a80d6252ea"
+      "size": 4643,
+      "sha256": "6df15916d28bdbe04d57064ee43c9238e20492bb7e20eb0288063ad6fc3c717f"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/client/aircraft/AircraftSeekerPresentation.kt",
-      "size": 3765,
-      "sha256": "5457248ccf97a36fc66083439fc35408fb93051952013fba91375e66bddc6102"
+      "size": 3912,
+      "sha256": "82354823a271403eed1f1ca059cb4ff4e8ae435e2a3e19895086f40ddeae0e8f"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/client/aircraft/AircraftSeekerSounds.kt",
@@ -35233,8 +35233,8 @@
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/client/flightdisplay/RadarDisplayState.kt",
-      "size": 4759,
-      "sha256": "804e3670b4690affd7d7bfe2470c2f63f7fb1d63febd952bf0fafe7052e8e886"
+      "size": 4812,
+      "sha256": "7bd320f1dc6f1c7fd3f219f378c70b741c3fc5e163b54aa2058ecbc33480e966"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/client/flightdisplay/StoresDisplayPainter.kt",
@@ -52628,8 +52628,8 @@
     },
     {
       "path": "sbw/src/test/kotlin/com/atsuishio/superbwarfare/client/aircraft/AircraftSeekerPresentationTest.kt",
-      "size": 3351,
-      "sha256": "28596ae13fe5fc18b825d19be2c0a2648ed6bdaa264d2d0b583be2e7f205a667"
+      "size": 4230,
+      "sha256": "b1a1d7eb72f0ec98c6c9d224c8415a7a3fd476294307e47065f811b96a86387e"
     },
     {
       "path": "sbw/src/test/kotlin/com/atsuishio/superbwarfare/client/aircraft/AircraftStoreConsumptionTest.kt",
@@ -53014,7 +53014,7 @@
   ],
   "release": {
     "schema": 1,
-    "buildRecordSha256": "ff03e936fed036e35da42c21b938d0899d3b648c7d3cc0319088852f4fa0af02",
+    "buildRecordSha256": "bab73923cef22ee1d9307a7da4c022532845fd4f43137cc2a38c1894076a4c57",
     "artifacts": [
       {
         "id": "bvp",
@@ -53027,8 +53027,8 @@
         "id": "sbw",
         "version": "0.8.9-bvp.1",
         "filename": "superbwarfare-0.8.9-bvp.1-mc1.20.1-6effe43-all.jar",
-        "size": 37745416,
-        "sha256": "8663b816890ad1b7babb848ae8ba324ef0a9831026eaa4600c2e9d6efe8d6bb0"
+        "size": 37745376,
+        "sha256": "d185d5f214d0aa2d5b333bcf513580b8dcc79dce644a25eab3fe0bcd8a73a7fd"
       }
     ],
     "dependencies": [
@@ -53922,11 +53922,11 @@
         "sha256": "ed24dc77caa01a715021b0f47217ba46296949ea6b92046986c1be0573f0a93a"
       },
       {
-        "id": "net.minecraftforge:forge:1.20.1-47.2.0_mapped_parchment_2023.08.13-1.20.1_at_fd420094fa091253276672f5de393a695c6d3ac1:5661cf537fad",
+        "id": "net.minecraftforge:forge:1.20.1-47.2.0_mapped_parchment_2023.08.13-1.20.1_at_fd420094fa091253276672f5de393a695c6d3ac1:a6ca554b6c18",
         "version": "1.20.1-47.2.0_mapped_parchment_2023.08.13-1.20.1_at_fd420094fa091253276672f5de393a695c6d3ac1",
         "filename": "forge-1.20.1-47.2.0_mapped_parchment_2023.08.13-1.20.1.jar",
         "size": 19157979,
-        "sha256": "5661cf537fadfdbbc664b2b51139af1941d6da0625404c8af57a79f24c93bae7"
+        "sha256": "a6ca554b6c18dc8354982df80ad27f0ea089c79ea524b8459cb3a9f2b0ff28e5"
       },
       {
         "id": "net.minecraftforge:forgespi:7.0.1:2298eaba25d0",
@@ -54461,11 +54461,11 @@
         "sha256": "ca15a907e4d1f6b38cefed51d7df96a83347dcfb0bc8ced53111519e991d887d"
       },
       {
-        "id": "sbw-mapped-api:0.8.9-bvp.1-mc1.20.1-6effe43:3bbc6fc98a44",
+        "id": "sbw-mapped-api:0.8.9-bvp.1-mc1.20.1-6effe43:8925231ad88c",
         "version": "0.8.9-bvp.1-mc1.20.1-6effe43",
         "filename": "superbwarfare-mapped-api.jar",
-        "size": 10154788,
-        "sha256": "3bbc6fc98a4455dd812016ef97544274105074f83cc29b1bff602413af76dafe"
+        "size": 10154758,
+        "sha256": "8925231ad88c7fdd0a22bef5f03e3eeaf2ceb5cd50455c8d95a183ad36a05ecf"
       },
       {
         "id": "sbwmeshloader-mapped:0.1.1:0d6da1b68293",

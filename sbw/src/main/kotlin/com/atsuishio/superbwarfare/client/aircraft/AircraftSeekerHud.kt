@@ -28,7 +28,9 @@ object AircraftSeekerHud {
         if (projectedCentre.z <= 0.01 || !projectedCentre.x.isFinite() || !projectedCentre.y.isFinite()) return
         val fittedRadius = min(width, height) * 0.38 * (seek.coneDegrees / 50.0).coerceIn(0.1, 1.0)
         val acquired = target?.worldToScreen()?.takeIf { it.z > 0.01 && it.x.isFinite() && it.y.isFinite() }
-        val circle = presentation.circle(seek, (vehicle.level().gameTime + partial) / 20.0,
+        // A monotonic client clock: on a dedicated server the level time is corrected by the server's time packet
+        // (every second), which can step it back a tick and used to restart the seeker circle.
+        val circle = presentation.circle(seek, net.minecraft.Util.getNanos() / 1.0E9,
             projectedCentre.x, projectedCentre.y, fittedRadius, acquired?.let { Pair(it.x, it.y) })
         val color = if (seek.ready) 0xFF80FF94.toInt() else 0xDFFFF1B0.toInt()
         var previous: Vec3? = null
