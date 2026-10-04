@@ -261,6 +261,13 @@ class DefaultGunData : IDBasedData<DefaultGunData> {
     @SerialName("DepletionReload")
     var depletionReload: List<List<Double>> = emptyList()
 
+    /**
+     * Weapons of one seat that share this non-blank group are the same physical guns (the BMPT's single and twin
+     * 2A42 modes), so the secondary trigger cannot fire one while the other is the selected weapon.
+     */
+    @SerialName("MountGroup")
+    var mountGroup = ""
+
     @SerialName("BoltActionTime")
     var boltActionTime = 0
 

@@ -73,7 +73,15 @@ GROUND = {  # combat weight (t), class
 }
 
 
+# Owner overrides of the class rule (hull HP).
+HP_OVERRIDE = {
+    'zu23_2': 90,  # owner 2026-10-04: "zu-23-2 has too little health" (the rule gave 44)
+}
+
+
 def ground_hp(name):
+    if name in HP_OVERRIDE:
+        return HP_OVERRIDE[name]
     tonnes, cls = GROUND[name]
     base, ref, lo, hi = CLASSES[cls]
     return int(round(max(lo, min(hi, base * (tonnes / ref) ** (1 / 3)))))

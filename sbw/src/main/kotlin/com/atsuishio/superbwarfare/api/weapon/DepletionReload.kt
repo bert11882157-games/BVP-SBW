@@ -30,13 +30,17 @@ object DepletionReload {
         return pts.last().second
     }
 
-    /** Reload ticks for this gun's current magazine, or null when the gun has no depletion curve. */
+    /**
+     * Reload ticks for this gun's current magazine, or null when the gun has no depletion curve. [fullChange] (an
+     * ammunition switch) times the reload as an empty belt, so creative's refilled magazine does not shorten it.
+     */
     @JvmStatic
-    fun ticks(data: GunData): Int? {
+    @JvmOverloads
+    fun ticks(data: GunData, fullChange: Boolean = false): Int? {
         val knots = data.getDefault().depletionReload
         if (knots.isEmpty()) return null
         val magazine = data.get(GunProp.MAGAZINE)
-        val fired = magazine - data.ammo.get().coerceIn(0, magazine)
+        val fired = if (fullChange) magazine else magazine - data.ammo.get().coerceIn(0, magazine)
         val s = seconds(knots, magazine, fired) ?: return null
         return (s * TICKS_PER_SECOND).roundToInt().coerceAtLeast(1)
     }

@@ -1,16 +1,16 @@
 {
   "Combat": {
-    "WeaponId": "berts_vehicle_pack:challenger_2/cannon",
-    "RoundId": "berts_vehicle_pack:l23a1_apfsds",
-    "MunitionType": "berts_vehicle_pack:tank_shell",
+    "WeaponId": "berts_vehicle_pack:btr_90/cannon",
+    "RoundId": "berts_vehicle_pack:3ubr11_apfsds",
+    "MunitionType": "berts_vehicle_pack:autocannon_shell",
     "DamageType": "berts_vehicle_pack:kinetic",
-    "CaliberMm": 120,
-    "DiameterMm": 120,
+    "CaliberMm": 30,
+    "DiameterMm": 30,
     "HullDamageClass": "APFSDS",
-    "HullDamage": 90,
-    "ModuleDamage": 54,
-    "AmmoRackDamage": 350,
-    "PenetrationMm": 397,
+    "HullDamage": 11,
+    "ModuleDamage": 7,
+    "AmmoRackDamage": 30,
+    "PenetrationMm": 102,
     "PenetrationCurve": {
       "DistancesMetres": [
         10,
@@ -21,12 +21,12 @@
         2000
       ],
       "PenetrationMm": [
-        397,
-        395,
-        388,
-        379,
-        370,
-        361
+        102,
+        99,
+        94,
+        88,
+        81,
+        75
       ]
     },
     "RicochetCurve": {
@@ -47,8 +47,8 @@
     },
     "Tandem": false
   },
-  "VisualProfile": "berts_vehicle_pack:tank_shell_apfsds",
-  "ImpactVisualProfile": "berts_vehicle_pack:apfsds",
+  "VisualProfile": "berts_vehicle_pack:scaled_small_cannon",
+  "ImpactVisualProfile": "berts_vehicle_pack:autocannon_ap",
   "MotionSync": "INHERIT",
   "Collision": {
     "Width": 0.1,

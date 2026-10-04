@@ -139,7 +139,7 @@ final class VehicleBonePoseController {
             if (entity instanceof BmptEntity bmpt) {
                 float activity = bmptBarrelActivity(bmpt, renderParts.getCannonRecoilTime());
                 if (activity > 0.0F) {
-                    boolean dual = bmpt.getSelectedWeapon(0) == 1;
+                    boolean dual = bmptDual(bmpt);
                     float phase = bmptBarrelPhase(bmpt, partialTicks);
                     float pitchAmplitude = dual ? 0.65F : 0.12F;
                     float yawAmplitude = dual ? 0.35F : 0.06F;
@@ -202,7 +202,7 @@ final class VehicleBonePoseController {
             if (activity <= 0.0F) {
                 return 0.0F;
             }
-            boolean dual = bmpt.getSelectedWeapon(0) == 1;
+            boolean dual = bmptDual(bmpt);
             float pulse = 0.72F + 0.28F * Math.abs(Mth.m_14031_(bmptBarrelPhase(bmpt, partialTicks)));
             float force = Math.max(0.0F, renderParts.getCannonRecoilForce());
             return force * (dual ? 0.85F : 0.55F) * activity * pulse;
@@ -244,16 +244,21 @@ final class VehicleBonePoseController {
         return force * kick * 0.32F;
     }
 
+    /** The twin 2A42 mode is selected (by weapon id, so the seat's weapon order can change). */
+    private static boolean bmptDual(BmptEntity entity) {
+        return "DualCannon".equals(entity.getGunName(0));
+    }
+
     private static float bmptBarrelActivity(BmptEntity entity, int cannonRecoilTime) {
-        int weapon = entity.getSelectedWeapon(0);
-        if (weapon < 0 || weapon > 1) {
+        String weapon = entity.getGunName(0);
+        if (!"Cannon".equals(weapon) && !"DualCannon".equals(weapon)) {
             return 0.0F;
         }
         return Mth.m_14036_((cannonRecoilTime - 26.0F) / 5.0F, 0.0F, 1.0F);
     }
 
     private static float bmptBarrelPhase(BmptEntity entity, float partialTicks) {
-        boolean dual = entity.getSelectedWeapon(0) == 1;
+        boolean dual = bmptDual(entity);
         float renderTime = entity.m_9236_().m_46467_() + partialTicks;
         return renderTime * (dual ? 5.76F : 2.88F) + entity.m_19879_() * 0.37F;
     }

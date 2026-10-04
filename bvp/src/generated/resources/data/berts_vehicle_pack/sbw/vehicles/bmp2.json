@@ -457,6 +457,46 @@
       "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/cannon_30mm_ap.png",
       "AmmoType": [
         {
+          "Ammo": "superbwarfare:small_shell_ap",
+          "Override": {
+            "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/cannon_30mm_ap.png",
+            "Damage": 25,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "Ground Belt",
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:bmp2/cannon/ammo_00_3ubr8_apds"
+            },
+            "Velocity": 56.0,
+            "ProjectileBelt": {
+              "Name": "Ground Belt",
+              "Family": "TWO_A42",
+              "Rounds": [
+                {
+                  "Shots": 3,
+                  "Round": "3ubr8_apds",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "GREEN"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "3uor6_hef_t",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "GREEN"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:bmp2/cannon/ammo_00_3ubr8_apds",
+              "ProjectileLife": 40
+            }
+          },
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell"
+        },
+        {
           "Ammo": "superbwarfare:small_shell_he",
           "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
           "Override": {
@@ -502,46 +542,6 @@
               "ProjectileLife": 40
             }
           }
-        },
-        {
-          "Ammo": "superbwarfare:small_shell_ap",
-          "Override": {
-            "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/cannon_30mm_ap.png",
-            "Damage": 25,
-            "ExplosionDamage": 0,
-            "ExplosionRadius": 0,
-            "Name": "Ground Belt",
-            "Projectile": {
-              "Type": "superbwarfare:small_cannon_shell",
-              "Profile": "berts_vehicle_pack:bmp2/cannon/ammo_00_3ubr8_apds"
-            },
-            "Velocity": 56.0,
-            "ProjectileBelt": {
-              "Name": "Ground Belt",
-              "Family": "TWO_A42",
-              "Rounds": [
-                {
-                  "Shots": 3,
-                  "Round": "3ubr8_apds",
-                  "Ammo": "superbwarfare:small_shell_ap",
-                  "Tracer": "GREEN"
-                },
-                {
-                  "Shots": 1,
-                  "Round": "3uor6_hef_t",
-                  "Ammo": "superbwarfare:small_shell_aa",
-                  "Tracer": "GREEN"
-                }
-              ]
-            },
-            "NominalBallistics": {
-              "Supported": true,
-              "ProjectileType": "superbwarfare:small_cannon_shell",
-              "ProjectileProfile": "berts_vehicle_pack:bmp2/cannon/ammo_00_3ubr8_apds",
-              "ProjectileLife": 40
-            }
-          },
-          "ConsumptionItem": "superbwarfare:medium_autocannon_shell"
         }
       ],
       "ShootPos": {
@@ -584,6 +584,23 @@
       },
       "ProjectileBeltAmmoType": [
         {
+          "Ammo": "superbwarfare:small_shell_aa",
+          "Override": {
+            "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_he.png",
+            "Velocity": 56.0,
+            "Damage": 250,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 5,
+            "TntEquivalentKg": 0.0179,
+            "Name": "30 mm AP-T",
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:bmp2/cannon/ammo_01_3uor6_hef_t"
+            }
+          },
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell"
+        },
+        {
           "Ammo": "superbwarfare:small_shell_gs",
           "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
           "Override": {
@@ -604,23 +621,6 @@
               12
             ]
           }
-        },
-        {
-          "Ammo": "superbwarfare:small_shell_aa",
-          "Override": {
-            "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_he.png",
-            "Velocity": 56.0,
-            "Damage": 250,
-            "ExplosionDamage": 0,
-            "ExplosionRadius": 5,
-            "TntEquivalentKg": 0.0179,
-            "Name": "30 mm AP-T",
-            "Projectile": {
-              "Type": "superbwarfare:small_cannon_shell",
-              "Profile": "berts_vehicle_pack:bmp2/cannon/ammo_01_3uor6_hef_t"
-            }
-          },
-          "ConsumptionItem": "superbwarfare:medium_autocannon_shell"
         }
       ],
       "DepletionReload": [

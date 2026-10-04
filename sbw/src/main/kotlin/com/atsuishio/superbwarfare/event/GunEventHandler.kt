@@ -334,7 +334,7 @@ object GunEventHandler {
         val reload = data.reload
         val typedVehicleReloadOwnsAudio = VehicleReloadAudio.owns(shooter, data)
         // an autocannon belt change grows with how much of the belt was fired (DepletionReload)
-        val depletion = DepletionReload.ticks(data)
+        val depletion = DepletionReload.ticks(data, reload.consumeFullChange())
         reload.setTotal(depletion ?: 0)
 
         if (data.item.isOpenBolt(data)) {

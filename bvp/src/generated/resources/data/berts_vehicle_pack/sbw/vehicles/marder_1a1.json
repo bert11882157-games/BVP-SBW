@@ -343,7 +343,7 @@
       "AvailableFireModes": "Auto",
       "DefaultZoom": 3,
       "RPM": 1000,
-      "Velocity": 55.0,
+      "Velocity": 57.5,
       "Damage": 65,
       "ExplosionDamage": 8,
       "ExplosionRadius": 2,
@@ -378,6 +378,52 @@
       "SoundRadius": 22,
       "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/cannon_20mm_ap.png",
       "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_ap",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:marder_1a1/cannon/ammo_00_dm63_apds"
+            },
+            "ShellType": "AP",
+            "Velocity": 57.5,
+            "ApDurability": 66,
+            "Damage": 65,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "Ground Belt",
+            "ShootShake": [
+              8,
+              10,
+              12
+            ],
+            "ProjectileBelt": {
+              "Name": "Ground Belt",
+              "Family": "RH202",
+              "Rounds": [
+                {
+                  "Shots": 3,
+                  "Round": "dm63_apds",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "LIGHT_RED"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "dm51a1_hefi_t_1",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "LIGHT_RED"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:marder_1a1/cannon/ammo_00_dm63_apds",
+              "ProjectileLife": 40
+            }
+          },
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell"
+        },
         {
           "Ammo": "superbwarfare:small_shell_he",
           "Override": {
@@ -420,52 +466,6 @@
               "Supported": true,
               "ProjectileType": "superbwarfare:small_cannon_shell",
               "ProjectileProfile": "berts_vehicle_pack:marder_1a1/cannon/ammo_01_dm51a1_hefi_t_1",
-              "ProjectileLife": 40
-            }
-          },
-          "ConsumptionItem": "superbwarfare:small_autocannon_shell"
-        },
-        {
-          "Ammo": "superbwarfare:small_shell_ap",
-          "Override": {
-            "Projectile": {
-              "Type": "superbwarfare:small_cannon_shell",
-              "Profile": "berts_vehicle_pack:marder_1a1/cannon/ammo_00_dm63_apds"
-            },
-            "ShellType": "AP",
-            "Velocity": 57.5,
-            "ApDurability": 66,
-            "Damage": 65,
-            "ExplosionDamage": 0,
-            "ExplosionRadius": 0,
-            "Name": "Ground Belt",
-            "ShootShake": [
-              8,
-              10,
-              12
-            ],
-            "ProjectileBelt": {
-              "Name": "Ground Belt",
-              "Family": "RH202",
-              "Rounds": [
-                {
-                  "Shots": 3,
-                  "Round": "dm63_apds",
-                  "Ammo": "superbwarfare:small_shell_ap",
-                  "Tracer": "LIGHT_RED"
-                },
-                {
-                  "Shots": 1,
-                  "Round": "dm51a1_hefi_t_1",
-                  "Ammo": "superbwarfare:small_shell_he",
-                  "Tracer": "LIGHT_RED"
-                }
-              ]
-            },
-            "NominalBallistics": {
-              "Supported": true,
-              "ProjectileType": "superbwarfare:small_cannon_shell",
-              "ProjectileProfile": "berts_vehicle_pack:marder_1a1/cannon/ammo_00_dm63_apds",
               "ProjectileLife": 40
             }
           },

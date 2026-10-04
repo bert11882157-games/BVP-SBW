@@ -38,6 +38,16 @@ class Reload(private val data: CompoundTag) {
 
     private val pendingProgress = IntValue(this.data, "PendingReloadProgress", 0)
 
+    /** Set by an ammunition switch: the next reload loads a whole new belt, whatever the magazine count says. */
+    private val fullChangeValue = IntValue(this.data, "ReloadFullChange", 0)
+
+    fun markFullChange() = fullChangeValue.set(1)
+
+    fun clearFullChange() = fullChangeValue.reset()
+
+    /** Reads and clears the switch marker. */
+    fun consumeFullChange(): Boolean = (fullChangeValue.get() != 0).also { fullChangeValue.reset() }
+
     /** Persistent monotonic presentation revision for exactly-once vehicle reload audio. */
     private val soundCycleRevisionValue = IntValue(this.data, "ReloadSoundRevision", 0)
 

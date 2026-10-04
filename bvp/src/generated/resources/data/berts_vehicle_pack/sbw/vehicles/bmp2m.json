@@ -365,7 +365,7 @@
       "NormalReloadTime": 240,
       "EmptyReloadTime": 240,
       "AmmoCostPerShoot": 1,
-      "Velocity": 56.0,
+      "Velocity": 63.0,
       "Damage": 65,
       "ExplosionDamage": 0,
       "ExplosionRadius": 0,
@@ -400,6 +400,46 @@
       "SoundRadius": 26,
       "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/cannon_30mm_ap.png",
       "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:bmp2m/cannon/belt_ammo_wt_3ubr11_apfsds"
+            },
+            "ShellType": "AP",
+            "Velocity": 63.0,
+            "ApDurability": 102,
+            "Damage": 65,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "Ground Belt",
+            "ShootShake": [
+              8,
+              10,
+              12
+            ],
+            "ProjectileBelt": {
+              "Name": "Ground Belt",
+              "Family": "TWO_A42",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "3ubr11_apfsds",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "GREEN"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:bmp2m/cannon/belt_ammo_wt_3ubr11_apfsds",
+              "ProjectileLife": 40
+            }
+          }
+        },
         {
           "Ammo": "superbwarfare:small_shell_he",
           "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
@@ -443,46 +483,6 @@
               "Supported": true,
               "ProjectileType": "superbwarfare:small_cannon_shell",
               "ProjectileProfile": "berts_vehicle_pack:bmp2m/cannon/belt_ammo_01_3uof8_hef_i",
-              "ProjectileLife": 40
-            }
-          }
-        },
-        {
-          "Ammo": "superbwarfare:small_shell_ap",
-          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
-          "Override": {
-            "Projectile": {
-              "Type": "superbwarfare:small_cannon_shell",
-              "Profile": "berts_vehicle_pack:bmp2m/cannon/belt_ammo_wt_3ubr11_apfsds"
-            },
-            "ShellType": "AP",
-            "Velocity": 63.0,
-            "ApDurability": 102,
-            "Damage": 65,
-            "ExplosionDamage": 0,
-            "ExplosionRadius": 0,
-            "Name": "Ground Belt",
-            "ShootShake": [
-              8,
-              10,
-              12
-            ],
-            "ProjectileBelt": {
-              "Name": "Ground Belt",
-              "Family": "TWO_A42",
-              "Rounds": [
-                {
-                  "Shots": 1,
-                  "Round": "3ubr11_apfsds",
-                  "Ammo": "superbwarfare:small_shell_ap",
-                  "Tracer": "GREEN"
-                }
-              ]
-            },
-            "NominalBallistics": {
-              "Supported": true,
-              "ProjectileType": "superbwarfare:small_cannon_shell",
-              "ProjectileProfile": "berts_vehicle_pack:bmp2m/cannon/belt_ammo_wt_3ubr11_apfsds",
               "ProjectileLife": 40
             }
           }

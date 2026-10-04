@@ -61,6 +61,8 @@ internal class VehicleWeaponRuntime(
     ): ShotResult {
         val serverLevel = vehicle.level() as? ServerLevel
         val selectedName = weaponName ?: vehicle.getGunName(vehicle.getSeatIndex(living))
+        if (weaponName != null && sharesMountWithSelected(living, weaponName))
+            return ShotResult.rejected(ShotRejectionReason.CANNOT_SHOOT, weaponName)
         val rocketCandidates = if (routeRocketPods && selectedName != null)
             com.atsuishio.superbwarfare.api.aircraft.AircraftRocketPodOrder.candidates(vehicle, selectedName)
         else null
@@ -240,6 +242,16 @@ internal class VehicleWeaponRuntime(
         clientSelection.fill(null)
         normalizationDataOwner = null
         normalizationFingerprint = Int.MIN_VALUE
+    }
+
+    /** True when [weaponName] is not the seat's selected weapon but shares its MountGroup (same physical guns). */
+    private fun sharesMountWithSelected(living: LivingEntity?, weaponName: String): Boolean {
+        val seat = vehicle.getSeatIndex(living)
+        if (seat < 0) return false
+        val group = vehicle.getGunData(weaponName)?.getDefault()?.mountGroup
+        if (group.isNullOrBlank()) return false
+        val selected = vehicle.getGunName(seat) ?: return false
+        return selected != weaponName && vehicle.getGunData(selected)?.getDefault()?.mountGroup == group
     }
 
     fun validWeaponIndices(seatIndex: Int): List<Int> {

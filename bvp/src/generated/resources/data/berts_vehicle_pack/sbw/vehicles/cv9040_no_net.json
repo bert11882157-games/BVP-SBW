@@ -460,7 +460,7 @@
       "NormalReloadTime": 240,
       "EmptyReloadTime": 240,
       "AmmoCostPerShoot": 1,
-      "Velocity": 49.4,
+      "Velocity": 74.75,
       "Damage": 65,
       "ExplosionDamage": 8,
       "ExplosionRadius": 2,
@@ -495,6 +495,52 @@
       "SoundRadius": 22,
       "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/cannon_40mm_ap.png",
       "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_ap",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:cv9040_no_net/cannon/ammo_00_slpprj_m01_apfsds"
+            },
+            "ShellType": "AP",
+            "ApDurability": 170,
+            "Damage": 65,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "Ground Belt",
+            "ShootShake": [
+              8,
+              10,
+              18
+            ],
+            "Velocity": 74.75,
+            "ProjectileBelt": {
+              "Name": "Ground Belt",
+              "Family": "GENERIC",
+              "Rounds": [
+                {
+                  "Shots": 3,
+                  "Round": "slpprj_m01_apfsds",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "RED"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "slsgr_m90_he",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "BRIGHT_RED"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:cv9040_no_net/cannon/ammo_00_slpprj_m01_apfsds",
+              "ProjectileLife": 40
+            }
+          },
+          "ConsumptionItem": "superbwarfare:large_autocannon_shell"
+        },
         {
           "Ammo": "superbwarfare:small_shell_he",
           "Override": {
@@ -537,52 +583,6 @@
               "Supported": true,
               "ProjectileType": "superbwarfare:small_cannon_shell",
               "ProjectileProfile": "berts_vehicle_pack:cv9040_no_net/cannon/ammo_01_slsgr_m90_he",
-              "ProjectileLife": 40
-            }
-          },
-          "ConsumptionItem": "superbwarfare:large_autocannon_shell"
-        },
-        {
-          "Ammo": "superbwarfare:small_shell_ap",
-          "Override": {
-            "Projectile": {
-              "Type": "superbwarfare:small_cannon_shell",
-              "Profile": "berts_vehicle_pack:cv9040_no_net/cannon/ammo_00_slpprj_m01_apfsds"
-            },
-            "ShellType": "AP",
-            "ApDurability": 170,
-            "Damage": 65,
-            "ExplosionDamage": 0,
-            "ExplosionRadius": 0,
-            "Name": "Ground Belt",
-            "ShootShake": [
-              8,
-              10,
-              18
-            ],
-            "Velocity": 74.75,
-            "ProjectileBelt": {
-              "Name": "Ground Belt",
-              "Family": "GENERIC",
-              "Rounds": [
-                {
-                  "Shots": 3,
-                  "Round": "slpprj_m01_apfsds",
-                  "Ammo": "superbwarfare:small_shell_ap",
-                  "Tracer": "RED"
-                },
-                {
-                  "Shots": 1,
-                  "Round": "slsgr_m90_he",
-                  "Ammo": "superbwarfare:small_shell_he",
-                  "Tracer": "BRIGHT_RED"
-                }
-              ]
-            },
-            "NominalBallistics": {
-              "Supported": true,
-              "ProjectileType": "superbwarfare:small_cannon_shell",
-              "ProjectileProfile": "berts_vehicle_pack:cv9040_no_net/cannon/ammo_00_slpprj_m01_apfsds",
               "ProjectileLife": 40
             }
           },

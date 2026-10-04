@@ -497,34 +497,6 @@
       "CrosshairColor": "0xFFC700",
       "AmmoType": [
         {
-          "Ammo": "superbwarfare:large_shell_ap",
-          "Override": {
-            "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_apfsds.png",
-            "ShellType": "AP",
-            "Velocity": 82.5,
-            "ApDurability": 393,
-            "ExplosionDamage": 0,
-            "ExplosionRadius": 0,
-            "Name": "weapon.berts_vehicle_pack.dm13_apfsds",
-            "Projectile": {
-              "Type": "superbwarfare:cannon_shell",
-              "Profile": "berts_vehicle_pack:leopard_2a4/cannon/ammo_00_dm13_apfsds"
-            },
-            "ShootShake": [
-              8,
-              10,
-              114
-            ],
-            "NominalBallistics": {
-              "Supported": true,
-              "ProjectileType": "superbwarfare:cannon_shell",
-              "ProjectileProfile": "berts_vehicle_pack:leopard_2a4/cannon/ammo_00_dm13_apfsds",
-              "ProjectileLife": 50
-            }
-          },
-          "ConsumptionItem": "superbwarfare:tier_2_armor_piercing_shell"
-        },
-        {
           "Ammo": "berts_vehicle_pack:level_3_ap_shell",
           "Override": {
             "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_apfsds.png",
@@ -551,36 +523,6 @@
             }
           },
           "ConsumptionItem": "superbwarfare:tier_2_armor_piercing_shell"
-        },
-        {
-          "Ammo": "berts_vehicle_pack:level_2_ap_shell",
-          "Override": {
-            "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_heatfs.png",
-            "ShellType": "HE",
-            "Velocity": 57,
-            "ApDurability": 480,
-            "Damage": 140,
-            "ExplosionDamage": 0,
-            "ExplosionRadius": 9,
-            "TntEquivalentKg": 2.1484,
-            "Name": "weapon.berts_vehicle_pack.dm12_heat_fs",
-            "Projectile": {
-              "Type": "superbwarfare:cannon_shell",
-              "Profile": "berts_vehicle_pack:leopard_2a4/cannon/ammo_02_dm12_heat_fs"
-            },
-            "ShootShake": [
-              8,
-              10,
-              114
-            ],
-            "NominalBallistics": {
-              "Supported": true,
-              "ProjectileType": "superbwarfare:cannon_shell",
-              "ProjectileProfile": "berts_vehicle_pack:leopard_2a4/cannon/ammo_02_dm12_heat_fs",
-              "ProjectileLife": 50
-            }
-          },
-          "ConsumptionItem": "superbwarfare:tier_2_heat_shell"
         }
       ],
       "SoundInfo": {
