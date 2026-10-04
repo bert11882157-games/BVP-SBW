@@ -33,6 +33,7 @@ object VehicleControlBindings {
     @JvmStatic
     fun isPhysicallyHeld(mapping: VehicleKeyMapping): Boolean {
         if (!mapping.isConflictContextAndModifierActive()) return false
+        if (com.atsuishio.superbwarfare.diagnostics.DiagnosticHeldKeys.isHeld(mapping)) return true
         val key = mapping.key
         if (key == InputConstants.UNKNOWN) return false
         val window = Minecraft.getInstance().window.window
