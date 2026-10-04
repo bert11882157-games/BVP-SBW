@@ -168,6 +168,7 @@ object ClientRenderHandler {
         event.registerBelowAll(MortarInfoOverlay.ID, MortarInfoOverlay)
         event.registerBelowAll(Type63InfoOverlay.ID, Type63InfoOverlay)
         event.registerBelowAll(SodayoRocketInfoOverlay.ID, SodayoRocketInfoOverlay)
+        event.registerAboveAll(IncomingMissileOverlay.ID, IncomingMissileOverlay)
     }
 
     @SubscribeEvent

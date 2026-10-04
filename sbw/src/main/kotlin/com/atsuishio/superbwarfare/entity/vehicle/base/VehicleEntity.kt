@@ -7040,6 +7040,8 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
     fun getChaffLevel(): Int = com.atsuishio.superbwarfare.api.aircraft.AircraftCountermeasureWire.chaff(entityData.get(AIRCRAFT_COUNTERMEASURE_LEVELS))
     fun getAircraftThreatLevel(): Int = com.atsuishio.superbwarfare.api.aircraft.AircraftCountermeasureWire.threat(entityData.get(AIRCRAFT_COUNTERMEASURE_LEVELS))
     fun isChaffEmitting(): Boolean = com.atsuishio.superbwarfare.api.aircraft.AircraftCountermeasureWire.emitting(entityData.get(AIRCRAFT_COUNTERMEASURE_LEVELS))
+    /** [com.atsuishio.superbwarfare.api.aircraft.IncomingMissileWarning] flags, synchronized for every vehicle. */
+    fun getIncomingMissileWarning(): Int = com.atsuishio.superbwarfare.api.aircraft.AircraftCountermeasureWire.incoming(entityData.get(AIRCRAFT_COUNTERMEASURE_LEVELS))
     fun getFlareCooldownTicks(): Int = entityData.get(AIRCRAFT_COUNTERMEASURE_TIMERS) and 511
     fun getChaffCooldownTicks(): Int = (entityData.get(AIRCRAFT_COUNTERMEASURE_TIMERS) shr 9) and 511
     internal fun publishAircraftCountermeasures(levels: Int, timers: Int) {

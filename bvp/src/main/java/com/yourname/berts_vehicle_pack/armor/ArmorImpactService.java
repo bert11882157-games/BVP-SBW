@@ -82,6 +82,8 @@ final class ArmorImpactService {
             ArmorImpactReporter.logArmorEvent(owner, target, hitVec,
                     "[BVP Armor] Armor ignored: target profile has no armor plates.");
             ArmorImpactStats.record(Outcome.PENETRATION);
+            // With no armor at all, a dual-aspect round's HE charge always penetrates.
+            shot = shot.aspectAgainst(0.0D);
             if (shot.vehicleDamage >= 0.0D) {
                 // Unarmored mounts (tripods, towed guns) take the round's typed hull damage like a penetration,
                 // and its blast then leaves them alone.
@@ -96,7 +98,8 @@ final class ArmorImpactService {
         ExplosiveReactiveArmorService.Result eraResult =
                 ExplosiveReactiveArmorService.apply(volumes, trace, shot, projectile);
         if (eraResult.detonated()) {
-            shot = eraResult.shot();
+            // The ERA block spends a dual-aspect round's HE charge; only its kinetic body goes on.
+            shot = eraResult.shot().withoutHeAspect();
             trace = eraResult.trace();
             ArmorImpactReporter.reportEraHit(level, owner, target, eraResult.impactVec(),
                     eraResult.eraBox(), eraResult.originalShot(), shot, eraResult.protectionMm());
@@ -116,7 +119,9 @@ final class ArmorImpactService {
         ArmorImpactReporter.reportVolumeSelection(target, projectile, trace, armorHit, null, moduleHit, exposedHit);
         String directModule = null;
         if (exposedHit != null && !ArmorModuleResolver.isTrack(exposedHit.moduleId)) {
-            ArmorModuleDamageService.damageDirectModule(owner, target, shot, exposedHit, false, hitVec);
+            // An exposed module has no armor in front of it, so a dual-aspect round's HE charge acts on it.
+            ArmorModuleDamageService.damageDirectModule(owner, target, shot.aspectAgainst(0.0D), exposedHit,
+                    false, hitVec);
             ArmorImpactStats.record(Outcome.MODULE_HIT);
             DamageDiagnostics.module(target, projectile, shot, exposedHit.moduleId, "direct");
             directModule = exposedHit.moduleId;
@@ -173,6 +178,17 @@ final class ArmorImpactService {
 
         Result penetration = ArmorPenetrationService.evaluate(target, armorHit, trace, shot,
                 targetProfile.minArmorMm);
+        if (shot.heAspect != null) {
+            // Dual-aspect round (SAPHEI-T): when the HE charge defeats the plate the hit deals HE damage (not AP);
+            // when only the kinetic body does, it deals the body's AP damage; otherwise it is a non-penetration.
+            Result charge = ArmorPenetrationService.evaluate(target, armorHit, trace, shot.heAspect,
+                    targetProfile.minArmorMm);
+            if (charge.penetrated()) {
+                shot = shot.heAspect;
+                penetration = charge;
+                replacementVisual = ProjectileArmorEffects.hasImpactVisual(shot);
+            }
+        }
         if (!penetration.penetrated()) {
             if (!BvpMaterialImpactSounds.hasPresentation(projectile)) {
                 ArmorSoundService.play(level, hitVec, ArmorSoundService.METAL_HIT_SOUND, 1.0F, 0.75F);
@@ -281,6 +297,10 @@ final class ArmorImpactService {
             ArmorImpactReporter.logArmorEvent(owner, target, hitVec,
                     "[BVP Armor] Shell ray meets no mesh armor; projectile continues.");
             return ProjectileArmorMutationService.passImpact();
+        }
+        if (targetProfile.unboxedHitsPenetrate) {
+            // Hull steel at the profile's floor: a dual-aspect round's HE charge decides first, as on a plate.
+            shot = shot.aspectAgainst(targetProfile.minArmorMm);
         }
         if (targetProfile.unboxedHitsPenetrate && shot.penetrationMm + 1.0E-4D < targetProfile.minArmorMm) {
             // A gap in the boxes is still hull steel: a round below the profile's floor stops there.

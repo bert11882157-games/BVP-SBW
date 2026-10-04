@@ -8,7 +8,8 @@ What it writes (all numbers are the rules below, nothing hand-tuned per vehicle)
   * ground vehicles: MaxHealth by class and combat weight, DamageClass, DeathChargeKg, class DamageModifiers;
   * aircraft: MaxHealth by full-fuel mass, DamageClass, wing pools at 40 % (no elevator/rudder modules);
   * every BVP projectile profile: HullDamage / ModuleDamage / AmmoRackDamage (per-mille detonation chance) and,
-    for HE, PenetrationMm = calibre / 2 (autocannon HE below 57 mm: 0.7 x calibre);
+    for HE, PenetrationMm = calibre / 2 (autocannon HE below 57 mm: 0.7 x calibre); a dual-aspect round's
+    HeAspect (SAPHEI-T charge) takes the HE rules while its kinetic body takes the AP rules;
   * machine-gun belts (< 20 mm): no TNT charge and no legacy explosion;
   * placeholder box armor on light vehicles: one realistic thickness per face (public figures, RHA-equivalent);
   * launcher_weapon for the 9P149 Shturm's launcher-tube module (the only carrier with one for now);
@@ -296,8 +297,20 @@ def apply_round(data, path):
         curve = c.get('PenetrationCurve')
         if curve:
             curve['PenetrationMm'] = [pen] * len(curve['PenetrationMm'])
+    if 'HeAspect' in c:
+        c['HeAspect'] = he_aspect(c, rid, path)
     return {'round': rid, 'kind': kind, 'cal': c.get('CaliberMm') or c.get('DiameterMm'), 'before': before,
             'after': (hull, module, rack, c['PenetrationMm'])}
+
+
+def he_aspect(c, rid, path):
+    """The HE charge of a dual-aspect round (SAPHEI-T): the HE rules at the round's calibre, so the charge keeps
+    the HE damage multiplier and the autocannon HE penetration while the kinetic body keeps the AP rules."""
+    he = dict(c, HullDamageClass='HE', DamageType='berts_vehicle_pack:chemical', Tandem=False,
+              PenetrationMm=c['HeAspect'].get('PenetrationMm', 0))
+    hull, module, rack, pen, _, _ = rules(he, rid, path)
+    return {'PenetrationMm': he['PenetrationMm'] if pen is None else pen, 'HullDamage': hull,
+            'ModuleDamage': module, 'AmmoRackDamage': rack}
 
 
 # ---------------------------------------------------------------- machine-gun belts

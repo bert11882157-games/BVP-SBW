@@ -77,11 +77,16 @@ object AircraftMissileLauncher {
         val profile = flightProfile(store)
         val tnt = com.atsuishio.superbwarfare.tools.blast.ExternalMunitionBlasts.storeCharge(store)
         val method = api?.launchProfile ?: return false
-        com.atsuishio.superbwarfare.tools.blast.ExternalMunitionBlasts.launch(vehicle.level(), tnt) {
-            method.invoke(null, vehicle, player, channel, origin, forward, p.mode, p.lockTicks, p.range, p.cone,
-                p.vulnerability, profile) == true
+        IncomingMissileWarning.launch(vehicle.level(), p.mode, lockedTarget(vehicle, channel)) {
+            com.atsuishio.superbwarfare.tools.blast.ExternalMunitionBlasts.launch(vehicle.level(), tnt) {
+                method.invoke(null, vehicle, player, channel, origin, forward, p.mode, p.lockTicks, p.range, p.cone,
+                    p.vulnerability, profile) == true
+            }
         }
     }.getOrDefault(false)
+    /** The entity the [channel] lock holds, read before launch so the missile warning knows whom it homes on. */
+    private fun lockedTarget(vehicle: VehicleEntity, channel: String): java.util.UUID? =
+        state(vehicle, channel).takeIf { it.hasUUID("TargetUUID") }?.getUUID("TargetUUID")
     private fun flightProfile(store: JsonObject): CompoundTag {
         val flight = store.getAsJsonObject("Flight")
         val profile = CompoundTag()
@@ -105,9 +110,11 @@ object AircraftMissileLauncher {
         val method = if (profile.isEmpty) api?.launch else api?.launchProfile
         val args = arrayOf(vehicle, player, channel, Vec3(position.x, position.y, position.z), forward(vehicle),
             p.mode, p.lockTicks, p.range, p.cone, p.vulnerability)
-        com.atsuishio.superbwarfare.tools.blast.ExternalMunitionBlasts.launch(vehicle.level(), tnt) {
-            if (method == api?.launchProfile) method?.invoke(null, *args, profile) == true
-            else method?.invoke(null, *args) == true
+        IncomingMissileWarning.launch(vehicle.level(), p.mode, lockedTarget(vehicle, channel)) {
+            com.atsuishio.superbwarfare.tools.blast.ExternalMunitionBlasts.launch(vehicle.level(), tnt) {
+                if (method == api?.launchProfile) method?.invoke(null, *args, profile) == true
+                else method?.invoke(null, *args) == true
+            }
         }
     }.getOrDefault(false)
 }

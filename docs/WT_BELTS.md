@@ -102,3 +102,31 @@ rounds (including the "air game"/"ground game" pairs) get the Air/Ground pair.
 Run order: `wt_belts.py` (ground autocannons, WT rounds), `belt_standard.py` (everything else), then
 `tracer_nations.py` (colours: Eastern green, Western red). All three are idempotent and the first two apply the
 nation colours themselves.
+
+## LAV-AD GAU-12/U (SBW vehicle, hand-authored)
+
+The LAV-AD is an SBW vehicle (`sbw/src/main/resources/data/superbwarfare/sbw/vehicles/lav_ad.json`), so the tools
+above do not touch it. Its cannon fires BVP profiles from `projectile_profiles/lav_ad/cannon/`, so it needs BVP
+installed. It has one belt, War Thunder's default: 2× PGU-32/U SAPHEI-T (red tracer), then 1× PGU-20/U HVAP
+(no tracer). The owner asked for this belt (2026-10-04), in place of the Air/Ground pair below.
+
+| Round | m/s | `Velocity` | TNT kg | Penetration at 10/100/500/1000/1500/2000 m |
+|---|---|---|---|---|
+| PGU-32/U SAPHEI-T | 1100 | 55.0 | 0.0205 | body 31/29/20/13/9/6; HE aspect 17.5 flat |
+| PGU-20/U HVAP | 1036 | 51.8 | none | 66/62/46/32/22/16 |
+
+The wiki cannot be reached from cloud sessions, so the curves come from the datamine (the GAU-12 weapon and LAV-AD
+unit files) through War Thunder's de Marre formula with drag:
+`P = k·100·V^1.43·M^0.71 / (1900^1.43·(d/100)^1.07)`, with air density 1.225 and the round's drag coefficient.
+This method reproduces the pack's 3UBR6, M791 and 3UBR8 curves exactly. The PGU-20 APCR fit is less certain
+(effective mass = core + 0.77 × (total − core), Cx 0.36). Check it against the wiki unit page when possible.
+
+## Dual-aspect rounds (`Combat.HeAspect`)
+
+A SAPHEI-T profile's scalar `Combat` fields are its kinetic body: hull class APHE, AP damage, the kinetic curve.
+`HeAspect {PenetrationMm, HullDamage, ModuleDamage, AmmoRackDamage}` is its HE charge. `tools/damage/balance.py`
+fills it with the HE rules: the HE damage multiplier, and penetration 0.7 × calibre for autocannons below 57 mm.
+
+BVP armor tries the charge first. If the charge penetrates, the hit deals HE damage. If only the body penetrates,
+the hit deals the body's AP damage. Otherwise it is a non-penetration. A target without armor, or an exposed
+module, takes the HE damage. Explosive reactive armor spends the charge, so only the body continues.

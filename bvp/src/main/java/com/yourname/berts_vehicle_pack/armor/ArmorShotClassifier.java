@@ -1,6 +1,7 @@
 package com.yourname.berts_vehicle_pack.armor;
 
 import com.atsuishio.superbwarfare.api.projectile.ProjectileCombatDescriptor;
+import com.atsuishio.superbwarfare.api.projectile.ProjectileHeAspect;
 import com.atsuishio.superbwarfare.api.projectile.ProjectileProfiles;
 import com.atsuishio.superbwarfare.api.projectile.ProjectileHullDamageClass;
 import com.atsuishio.superbwarfare.api.projectile.ResolvedProjectileProfile;
@@ -209,7 +210,17 @@ final class ArmorShotClassifier {
         if (shot == null) {
             return null;
         }
-        return descriptor.getTandem() && !shot.tandemWarhead ? shot.withTandemWarhead() : shot;
+        if (descriptor.getTandem() && !shot.tandemWarhead) {
+            shot = shot.withTandemWarhead();
+        }
+        ProjectileHeAspect charge = descriptor.getHeAspect();
+        if (charge != null) {
+            // Dual-aspect round (SAPHEI-T): the profile's scalar values are the kinetic body; the HE charge is a
+            // second, chemical effect with its own flat penetration and HE damage. The armor check tries it first.
+            shot = shot.withHeAspect(shot.chemicalAspect(charge.getPenetrationMm(), charge.getModuleDamage(),
+                    charge.getHullDamage(), charge.getAmmoRackDamage() / 1000.0D));
+        }
+        return shot;
     }
 
     private static ProjectileArmorEffect profiledEffect(Projectile projectile,

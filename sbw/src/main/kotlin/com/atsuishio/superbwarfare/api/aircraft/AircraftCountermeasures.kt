@@ -27,10 +27,13 @@ class AircraftCountermeasures(private val vehicle: VehicleEntity) {
         val level = vehicle.level() as? ServerLevel ?: return
         val now = level.gameTime
         val definition = definition(vehicle)
-        if (definition == null || vehicle.isRemoved || vehicle.isWreck || !vehicle.isAlive) {
+        val intact = !vehicle.isRemoved && !vehicle.isWreck && vehicle.isAlive
+        val incoming = if (intact) IncomingMissileWarning.flags(vehicle) else 0
+        if (definition == null || !intact) {
             if (sentLevels > 0) AircraftFfaBridge.levels(vehicle, 0, 0)
             sentLevels = 0
-            vehicle.publishAircraftCountermeasures(0, 0)
+            // Ground vehicles carry only the missile warning.
+            vehicle.publishAircraftCountermeasures(AircraftCountermeasureWire.pack(0, 0, 0, false, incoming), 0)
             return
         }
         val pilot = vehicle.getNthEntity(0) as? ServerPlayer
@@ -65,15 +68,16 @@ class AircraftCountermeasures(private val vehicle: VehicleEntity) {
             if (observed > threat) nextWarningAt = now
             threat = observed
         }
-        if (controlled && threat > 0 && now >= nextWarningAt) {
-            // Short, local cockpit chirps. Incoming-lock cadence takes priority over radar tracking.
+        if (controlled && threat > 0 && now >= nextWarningAt && incoming == 0) {
+            // Short, local cockpit chirps. Incoming-lock cadence takes priority over radar tracking; a tracked
+            // incoming missile sounds the crew's missile alarm instead.
             pilot!!.playNotifySound(SoundEvents.NOTE_BLOCK_BIT.value(), SoundSource.PLAYERS,
                 if (threat == 2) 0.45F else 0.22F, if (threat == 2) 1.8F else 1.3F)
             nextWarningAt = now + if (threat == 2) 6 else 24
         }
         if (threat == 0) nextWarningAt = now
         vehicle.publishAircraftCountermeasures(AircraftCountermeasureWire.pack(
-            output.flareLevel, output.chaffLevel, threat, output.chaffEmitting),
+            output.flareLevel, output.chaffLevel, threat, output.chaffEmitting, incoming),
             output.flareCooldown or (output.chaffCooldown shl 9))
         vehicle.decoyReady = definition.flares && output.flareCooldown == 0 && countItem(flareItem) >= 2
         vehicle.decoyReloadCoolDown = output.flareCooldown
