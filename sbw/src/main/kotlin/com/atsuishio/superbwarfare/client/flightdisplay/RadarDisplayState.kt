@@ -70,7 +70,7 @@ data class RadarDisplayState(
                 val closing = -(rel.x * dx + rel.z * dz) / horizontal * 20.0 * 3.6
                 out.add(Contact(bearing, horizontal, dy, air, target === locked, closing))
             }
-            val time = level.gameTime + partialTick.toDouble()
+            val time = net.minecraft.Util.getMillis() / 50.0 // monotonic: server time packets step the level clock
             // Scan bar: +-60 degrees and back every 2 seconds.
             val phase = (time % 80.0) / 40.0
             val sweep = if (phase < 1.0) -AZIMUTH_LIMIT + phase * 2 * AZIMUTH_LIMIT else AZIMUTH_LIMIT - (phase - 1.0) * 2 * AZIMUTH_LIMIT

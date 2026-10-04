@@ -13,16 +13,16 @@ No stable release is currently published in this repository. See [all releases](
 for the complete release history.
 The `0.9.19beta` source tag currently has no GitHub Release or compiled download assets.
 
-## Latest published testing build: 0.11.112beta
+## Latest published testing build: 0.11.113beta
 
-[Jet stores and cockpits, countermeasures, Strv 103 hull laying, LAV-AD belt, Music & Sounds crash fix](https://github.com/bert11882157-games/BVP-SBW/releases/tag/v0.11.112beta).
+[Jet stores and cockpits, countermeasures, Strv 103 hull laying, LAV-AD belt, Music & Sounds crash fix, smooth AAM seeker circle on servers](https://github.com/bert11882157-games/BVP-SBW/releases/tag/v0.11.113beta).
 Install all three matching JARs on clients and servers, replacing older active copies:
 
 | Component | Mod JAR | Checksum |
 | --- | --- | --- |
-| BVP 0.11.112beta | [JAR](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.11.112beta/bvp-main-v0.11.112beta.jar) | [SHA-256](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.11.112beta/bvp-main-v0.11.112beta.jar.sha256) |
-| SBW 0.11.112beta | [JAR](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.11.112beta/bvp_superbwarfare-v0.11.112beta.jar) | [SHA-256](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.11.112beta/bvp_superbwarfare-v0.11.112beta.jar.sha256) |
-| FFA 1.0.6-bvp.20 | [JAR](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.11.112beta/fire-from-above-1.0.6-bvp.20.jar) | [SHA-256](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.11.112beta/fire-from-above-1.0.6-bvp.20.jar.sha256) |
+| BVP 0.11.113beta | [JAR](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.11.113beta/bvp-main-v0.11.113beta.jar) | [SHA-256](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.11.113beta/bvp-main-v0.11.113beta.jar.sha256) |
+| SBW 0.11.113beta | [JAR](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.11.113beta/bvp_superbwarfare-v0.11.113beta.jar) | [SHA-256](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.11.113beta/bvp_superbwarfare-v0.11.113beta.jar.sha256) |
+| FFA 1.0.6-bvp.20 | [JAR](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.11.113beta/fire-from-above-1.0.6-bvp.20.jar) | [SHA-256](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.11.113beta/fire-from-above-1.0.6-bvp.20.jar.sha256) |
 
 The source build passed all build checks. Flare and chaff release, item use and the creative ammo box were checked in game in the isolated test runtime; the rest is not yet tested in game.
 

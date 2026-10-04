@@ -59,4 +59,18 @@ class AircraftSeekerPresentationTest {
         }
         assertTrue(radius in 8.0..35.0)
     }
+
+    @Test fun `a clock step backwards neither restarts acquisition nor snaps the circle`() {
+        val acquiring = searching.copy(target = UUID.randomUUID(), status = "ACQUIRING", progress = 0.9)
+        val presentation = AircraftSeekerPresentation()
+        var last: AircraftSeekerPresentation.Circle? = null
+        for (frame in 0..60) last = presentation.circle(acquiring, frame / 60.0, 10.0, 20.0, 100.0, Pair(110.0, 60.0))
+        val before = presentation.convergence
+        assertTrue(before > 0.5)
+        // A dedicated server's time packet corrects the client level clock back by a tick.
+        val stepped = presentation.circle(acquiring, 1.0 - 0.05, 10.0, 20.0, 100.0, Pair(110.0, 60.0))
+        assertEquals(before, presentation.convergence, 1e-9)
+        assertEquals(last!!.radius, stepped.radius, 1e-9)
+        assertEquals(last.x, stepped.x, 1e-9)
+    }
 }
