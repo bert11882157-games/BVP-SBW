@@ -17,25 +17,26 @@ import net.minecraftforge.event.TickEvent
 import net.minecraftforge.eventbus.api.SubscribeEvent
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber
 import kotlin.math.ceil
+import kotlin.math.sin
 
 /**
- * Missile approach warning for the crew of a vehicle a missile homes on (see [IncomingMissileWarning]): a flashing
- * INCOMING, the vehicle's decoy buttons with their keys, and a flashing arrow on each one that breaks the lock.
+ * Missile approach warning for the crew of a vehicle a missile homes on (see [IncomingMissileWarning]): a compact
+ * strip near the top of the screen with a gently pulsing MISSILE tag and the vehicle's decoy buttons with their keys.
+ * The button that breaks the lock carries a steady red outline; nothing flashes.
  */
 @OnlyIn(Dist.CLIENT)
 object IncomingMissileOverlay : CommonOverlay("incoming_missile") {
-    private const val RED = 0xFFFF3030.toInt()
-    private const val DARK_RED = 0xFF8A1A1A.toInt()
+    private const val RED = 0xFFFF4A4A.toInt()
     private const val WHITE = 0xFFEAEFF4.toInt()
     private const val GREY = 0xFF7D8590.toInt()
     private const val AMBER = 0xFFFFCF65.toInt()
-    private const val PANEL = 0xA51B2430.toInt()
-    private const val BUTTON_HEIGHT = 22
-    private const val BUTTON_GAP = 10
-    private const val ARROW_HEIGHT = 8
+    private const val PANEL = 0x8C1B2430.toInt()
+    private const val PAD = 3
+    private const val GAP = 4
+    /** Top of the strip as a fraction of the screen height (clear of the crosshair and the flight HUD). */
+    private const val TOP_FRACTION = 0.1f
 
-    private class Button(val label: String, val key: String, val status: String, val ready: Boolean,
-                         val effective: Boolean)
+    private class Button(val text: String, val status: String, val ready: Boolean, val effective: Boolean)
 
     override fun RenderContext.render() {
         val vehicle = player.vehicle as? VehicleEntity ?: return
@@ -43,17 +44,6 @@ object IncomingMissileOverlay : CommonOverlay("incoming_missile") {
         if (flags and IncomingMissileWarning.INCOMING == 0) return
         val font = mc.font
         val g = guiGraphics
-        // Four flashes a second, shared by the text, the arrows and the highlighted buttons.
-        val on = (System.currentTimeMillis() / 125L) % 2L == 0L
-
-        val top = (h * 0.2f).toInt()
-        val pose = g.pose()
-        pose.pushPose()
-        pose.translate(w / 2f, top.toFloat(), 0f)
-        pose.scale(2f, 2f, 1f)
-        val title = "INCOMING"
-        g.drawString(font, title, -font.width(title) / 2, 0, if (on) RED else DARK_RED, true)
-        pose.popPose()
 
         val needsFlare = flags and (IncomingMissileWarning.DECOY or IncomingMissileWarning.FLARE) != 0
         val needsChaff = flags and IncomingMissileWarning.CHAFF != 0
@@ -66,19 +56,19 @@ object IncomingMissileOverlay : CommonOverlay("incoming_missile") {
             if (equipment.flares) {
                 val count = stock(vehicle, ModItems.FLARE_AMMUNITION.get())
                 val cooldown = vehicle.getFlareCooldownTicks()
-                buttons += Button("FLARE", decoyKey, status(count < 2, cooldown), count >= 2 && cooldown == 0, needsFlare)
+                buttons += Button("FLARE [$decoyKey]", status(count < 2, cooldown), count >= 2 && cooldown == 0, needsFlare)
             } else if (needsFlare) missing += "NO FLARES"
             if (equipment.chaff) {
                 val count = stock(vehicle, ModItems.CHAFF_AMMUNITION.get())
                 val cooldown = vehicle.getChaffCooldownTicks()
-                buttons += Button("CHAFF", chaffKey,
+                buttons += Button("CHAFF [$chaffKey]",
                     if (vehicle.isChaffEmitting()) "ACTIVE" else status(count < 1, cooldown),
                     count >= 1 && cooldown == 0, needsChaff)
             } else if (needsChaff) missing += "NO CHAFF"
         } else {
             // Ground vehicles: the decoy key fires smoke, which diverts native seekers only.
             val needsSmoke = flags and IncomingMissileWarning.DECOY != 0
-            if (vehicle.hasDecoy()) buttons += Button("SMOKE", decoyKey,
+            if (vehicle.hasDecoy()) buttons += Button("SMOKE [$decoyKey]",
                 if (vehicle.decoyReady) "READY" else "RELOAD", vehicle.decoyReady, needsSmoke)
             else if (needsSmoke) missing += "NO SMOKE"
             if (flags and IncomingMissileWarning.FLARE != 0) missing += "NO FLARES"
@@ -86,29 +76,33 @@ object IncomingMissileOverlay : CommonOverlay("incoming_missile") {
         }
         if (missing.isEmpty() && buttons.none { it.effective }) missing += "DECOYS INEFFECTIVE"
 
-        var y = top + 22 + ARROW_HEIGHT + 4
-        if (buttons.isNotEmpty()) {
-            val width = buttons.maxOf { maxOf(font.width("${it.label} [${it.key}]"), font.width(it.status)) } + 12
-            var x = w / 2 - (buttons.size * width + (buttons.size - 1) * BUTTON_GAP) / 2
-            for (button in buttons) {
-                g.fill(x, y, x + width, y + BUTTON_HEIGHT, PANEL)
-                outline(g, x, y, width, BUTTON_HEIGHT, when {
-                    !button.effective -> GREY
-                    on -> RED
-                    else -> WHITE
-                })
-                g.drawCenteredString(font, "${button.label} [${button.key}]", x + width / 2, y + 3,
-                    if (button.effective) WHITE else GREY)
-                g.drawCenteredString(font, button.status, x + width / 2, y + 12,
-                    if (button.ready) WHITE else AMBER)
-                if (button.effective && on) arrow(g, x + width / 2, y - ARROW_HEIGHT - 2)
-                x += width + BUTTON_GAP
+        // One line: [MISSILE] [FLARE [X] READY] [CHAFF [C] READY]  NO SMOKE
+        val title = "MISSILE"
+        val cells = ArrayList<Pair<Int, Button?>>()          // width, button (null = title)
+        cells += font.width(title) + PAD * 2 to null
+        for (button in buttons) cells += font.width("${button.text} ${button.status}") + PAD * 2 to button
+        val note = missing.joinToString("  ")
+        val total = cells.sumOf { it.first } + GAP * (cells.size - 1) +
+            if (note.isEmpty()) 0 else GAP + font.width(note)
+        val height = font.lineHeight + PAD * 2 - 1
+        val top = (h * TOP_FRACTION).toInt()
+        var x = w / 2 - total / 2
+        // A slow, soft pulse (about once a second) on the tag only.
+        val pulse = 0.5f + 0.5f * sin(System.currentTimeMillis() / 1000.0 * Math.PI * 2.0).toFloat()
+        for ((width, button) in cells) {
+            g.fill(x, top, x + width, top + height, PANEL)
+            if (button == null) {
+                outline(g, x, top, width, height, blend(RED, 0xFF8A2A2A.toInt(), 1f - pulse))
+                g.drawString(font, title, x + PAD, top + PAD, RED, false)
+            } else {
+                outline(g, x, top, width, height, if (button.effective) RED else GREY)
+                g.drawString(font, button.text, x + PAD, top + PAD, if (button.effective) WHITE else GREY, false)
+                g.drawString(font, button.status, x + PAD + font.width(button.text + " "), top + PAD,
+                    if (button.ready) WHITE else AMBER, false)
             }
-            y += BUTTON_HEIGHT + 4
+            x += width + GAP
         }
-        if (missing.isNotEmpty()) {
-            g.drawCenteredString(font, missing.joinToString("   "), w / 2, y, RED)
-        }
+        if (note.isNotEmpty()) g.drawString(font, note, x, top + PAD, RED, true)
     }
 
     private fun status(empty: Boolean, cooldown: Int): String = when {
@@ -129,19 +123,21 @@ object IncomingMissileOverlay : CommonOverlay("incoming_missile") {
         g.fill(x + width - 1, y, x + width, y + height, color)
     }
 
-    /** A downward arrow whose tip sits [ARROW_HEIGHT] pixels below [top], centred on [centerX]. */
-    private fun arrow(g: GuiGraphics, centerX: Int, top: Int) {
-        for (row in 0 until ARROW_HEIGHT) {
-            val half = ARROW_HEIGHT - 1 - row
-            g.fill(centerX - half, top + row, centerX + half + 1, top + row + 1, RED)
+    private fun blend(a: Int, b: Int, t: Float): Int {
+        fun channel(shift: Int): Int {
+            val ca = (a ushr shift) and 0xFF
+            val cb = (b ushr shift) and 0xFF
+            return (ca + (cb - ca) * t).toInt().coerceIn(0, 255) shl shift
         }
+        return channel(24) or channel(16) or channel(8) or channel(0)
     }
 }
 
-/** The crew's missile alarm: a fast two-tone beep while [IncomingMissileWarning] flags the vehicle they ride. */
+/** The crew's missile alarm: a soft beep about once a second while [IncomingMissileWarning] flags their vehicle. */
 @EventBusSubscriber(modid = Mod.MODID, value = [Dist.CLIENT])
 object IncomingMissileAlarm {
-    private const val BEEP_TICKS = 5
+    private const val BEEP_TICKS = 20
+    private const val VOLUME = 0.35F
     private var ticks = 0
 
     @SubscribeEvent
@@ -156,8 +152,7 @@ object IncomingMissileAlarm {
             return
         }
         if (ticks % BEEP_TICKS == 0) {
-            val high = (ticks / BEEP_TICKS) % 2 == 0
-            mc.soundManager.play(SimpleSoundInstance.forUI(ModSounds.MISSILE_WARNING.get(), if (high) 1.3F else 1.0F, 0.7F))
+            mc.soundManager.play(SimpleSoundInstance.forUI(ModSounds.MISSILE_WARNING.get(), 1.15F, VOLUME))
         }
         ticks++
     }

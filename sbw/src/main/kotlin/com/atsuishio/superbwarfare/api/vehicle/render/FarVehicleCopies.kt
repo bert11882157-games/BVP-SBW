@@ -102,7 +102,8 @@ object FarVehicleCopies {
             val controls = flight.controlSurfaces
             if (controls != null && controls.serverTick == flight.serverTick) {
                 FarFixedWingVisualState.create(flight.sequence, flight.serverTick,
-                    controls.elevator, controls.aileron, controls.rudder, flight.throttle, controls.airbrake)?.let {
+                    controls.elevator, controls.aileron, controls.rudder, flight.throttle, controls.airbrake,
+                    controls.afterburnerActive)?.let {
                     val encoded = it.encode()
                     val bytes = vehicle.override.toByteArray(Charsets.UTF_8).size +
                         visuals.entries.sumOf { field -> field.key.toByteArray(Charsets.UTF_8).size +

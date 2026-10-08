@@ -1,10 +1,10 @@
 # Missile approach warning
 
-Every vehicle a missile homes on warns its crew. The crew hears a fast two-tone alarm and sees a flashing
-INCOMING. Under it are the vehicle's decoy buttons with their keys: FLARE [V] and CHAFF [B] on aircraft, or
-SMOKE [V] on a ground vehicle. A flashing arrow points at each button that would break the lock. When the right
-decoy is not fitted, the panel says NO FLARES, NO CHAFF or NO SMOKE. A missile no decoy can fool, such as a
-wire-guided one, shows DECOYS INEFFECTIVE.
+Every vehicle a missile homes on warns its crew. The crew hears a soft beep about once a second and sees a compact
+strip near the top of the screen: a gently pulsing MISSILE tag followed by the vehicle's decoy buttons with their
+keys: FLARE [V] and CHAFF [B] on aircraft, or SMOKE [V] on a ground vehicle. Each button that would break the lock
+has a steady red outline; nothing flashes. When the right decoy is not fitted, the strip says NO FLARES, NO CHAFF or
+NO SMOKE. A missile no decoy can fool, such as a wire-guided one, shows DECOYS INEFFECTIVE.
 
 | Missile | Counts while | Effective decoy |
 |---|---|---|

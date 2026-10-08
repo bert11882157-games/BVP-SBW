@@ -40,7 +40,7 @@ object IncomingMissileWarning {
     const val CHAFF = 8
 
     /** An FFA missile still flying this long after launch is no longer tracked. */
-    private const val TRACK_LIMIT_TICKS = 1200L
+    private const val TRACK_LIMIT_TICKS = 2400L
     /** cos 60 degrees: a homing missile flies toward its target or its lead point, a diverted one turns away. */
     private const val HEADING_COS = 0.5
     private const val CLOSE_RANGE_SQR = 16.0 * 16.0

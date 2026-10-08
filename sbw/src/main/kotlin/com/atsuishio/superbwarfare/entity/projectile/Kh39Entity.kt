@@ -29,8 +29,8 @@ open class Kh39Entity(type: EntityType<out Kh39Entity>, level: Level) : MissileP
 
     init {
         this.noCulling = true
-        this.damageValue = 1100f
-        this.explosionDamageValue = 180f
+        this.damageValue = 825f
+        this.explosionDamageValue = 135f
         this.explosionRadiusValue = 12f
         this.distracted = false
         this.durability = 25

@@ -27,7 +27,7 @@ data class RadarDisplayState(
 
     companion object {
         const val AZIMUTH_LIMIT = 60.0
-        private const val DEFAULT_RANGE = 1000.0
+        private const val DEFAULT_RANGE = 2000.0
         private val SCALES = doubleArrayOf(250.0, 500.0, 1000.0, 2000.0, 4000.0)
 
         /** What other players see on this display: an empty scope at a fixed scale. */

@@ -55,10 +55,10 @@ class AircraftCountermeasureStateTest {
             if (t == 40L) assertEquals(8, out.flareLevel)
         }
         assertEquals(listOf(0L, 10L, 20L, 30L, 40L), emitted)
-        assertEquals(400, state.sample(50, flares = true).flareCooldown)
-        for (t in 51L..449) assertEquals(0, state.sample(t, flares = true).flarePairs)
-        assertEquals(0, state.sample(449).flareLevel)
-        assertEquals(1, state.sample(450, flares = true).flarePairs)
+        assertEquals(200, state.sample(50, flares = true).flareCooldown)
+        for (t in 51L..249) assertEquals(0, state.sample(t, flares = true).flarePairs)
+        assertEquals(0, state.sample(249).flareLevel)
+        assertEquals(1, state.sample(250, flares = true).flarePairs)
     }
 
     @Test fun `tapping cannot reset rate or burst count and odd rates retain fractional timing`() {
@@ -98,10 +98,10 @@ class AircraftCountermeasureStateTest {
         assertEquals(0, after.sample(20).flareLevel)
         assertEquals(2, after.burstExpenditure())
         for (t in listOf(21L, 31L, 41L, 51L)) after.sample(t, flares = true)
-        assertEquals(400, after.sample(61, flares = true).flareCooldown)
+        assertEquals(200, after.sample(61, flares = true).flareCooldown)
         val reload = AircraftCountermeasureState()
         reload.restore(80, after.flareReadyAt, after.chaffReadyAt, after.burstExpenditure())
-        assertEquals(381, reload.sample(80, flares = true).flareCooldown)
+        assertEquals(181, reload.sample(80, flares = true).flareCooldown)
         assertEquals(0, reload.sample(80, flares = true).flarePairs)
     }
 

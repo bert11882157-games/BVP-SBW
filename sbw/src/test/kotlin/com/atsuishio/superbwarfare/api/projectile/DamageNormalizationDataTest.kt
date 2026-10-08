@@ -17,6 +17,10 @@ import kotlin.math.abs
  * BVP sources are not beside this project.
  */
 class DamageNormalizationDataTest {
+    private companion object {
+        /** Owner 2026-10-07: every missile's damage x0.75 (rounded to the nearest 5); module damage still follows hull. */
+        const val MISSILE_SCALE = 0.75
+    }
     private val data = File(System.getProperty("bvp.root") ?: "../bvp", "src/generated/resources/data/berts_vehicle_pack")
     private fun json(file: File): JsonObject = file.reader().use { JsonParser.parseReader(it).asJsonObject }
     private fun vehicles() = File(data, "sbw/vehicles").listFiles { f -> f.name.endsWith(".json") }!!.associate {
@@ -68,7 +72,8 @@ class DamageNormalizationDataTest {
             when {
                 cls == "ATGM" && munition == "atgm" -> {
                     atgms++
-                    assertTrue(hull in 0.30 * r - 1..0.55 * r + 1, "$path ATGM $hull")
+                    // owner 2026-10-07: all missile damage x0.75, rounded to the nearest 5
+                    assertTrue(hull in MISSILE_SCALE * 0.30 * r - 5..MISSILE_SCALE * 0.55 * r + 5, "$path ATGM $hull")
                 }
                 cls == "APFSDS" && munition == "tank_shell" && cal >= 120 ->
                     assertEquals(0.30 * r, hull, 0.06 * r, "$path APFSDS")
@@ -104,7 +109,7 @@ class DamageNormalizationDataTest {
             if (path.startsWith("aircraft_stores/") && munition == "atgm" && c.get("HullDamageClass").asString != "ATGM") {
                 heavy++
                 assertTrue(pen >= 1000.0, "$path heavy missile penetration $pen")
-                assertTrue(c.get("HullDamage").asDouble >= 1000.0, "$path heavy missile hull damage")
+                assertTrue(c.get("HullDamage").asDouble >= MISSILE_SCALE * 1000.0, "$path heavy missile hull damage")
             }
             if (munition == "rocket") assertTrue(pen > 0.0, "$path rocket penetration")
             if (c.get("RoundId").asString.endsWith(":hydra_70_m247")) {
