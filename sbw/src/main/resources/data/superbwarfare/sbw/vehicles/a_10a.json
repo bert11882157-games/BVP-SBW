@@ -731,13 +731,13 @@
       "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/small_rocket.png",
       "DefaultZoom": 2,
       "DefaultFireMode": "Auto",
-      "AvailableFireModes": "Semi",
+      "AvailableFireModes": "Auto",
       "Magazine": 28,
       "EmptyReloadTime": 160,
       "Projectile": "superbwarfare:small_rocket",
       "Spread": 0.4,
       "Name": "weapon.superbwarfare.70mm_rocket",
-      "RPM": 450,
+      "RPM": 600,
       "Damage": 80,
       "ExplosionDamage": 40,
       "ExplosionRadius": 5,
@@ -749,8 +749,8 @@
         "Transform": "Vehicle",
         "ShootPositionForHud": [0, 1.18, 0.1],
         "ShootDirectionForHud": [0, -0.03, 1],
-        "Positions": [[2.95, 1.2, 0.1], [1.18, 1.16, 0.1], [-1.18, 1.16, 0.1], [-2.95, 1.2, 0.1]],
-        "Directions": [[-0.005, -0.03, 1], [-0.003, -0.03, 1], [0.003, -0.03, 1], [0.005, -0.03, 1]]
+        "Positions": [[2.95, 1.2, 0.1], [-2.95, 1.2, 0.1], [1.18, 1.16, 0.1], [-1.18, 1.16, 0.1]],
+        "Directions": [[-0.005, -0.03, 1], [0.005, -0.03, 1], [-0.003, -0.03, 1], [0.003, -0.03, 1]]
       },
       "SoundInfo": {
         "Fire1P": "superbwarfare:small_rocket_fire_1p",

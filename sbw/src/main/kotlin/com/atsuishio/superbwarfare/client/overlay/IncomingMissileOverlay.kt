@@ -53,13 +53,15 @@ object IncomingMissileOverlay : CommonOverlay("incoming_missile") {
         val missing = ArrayList<String>(2)
         val equipment = AircraftCountermeasures.definition(vehicle)
         if (equipment != null) {
+            // the same supply rule as the flight HUD: a creative ammo box never runs dry
+            val unlimited = AircraftCountermeasures.hasUnlimitedSupply(vehicle, player)
             if (equipment.flares) {
-                val count = stock(vehicle, ModItems.FLARE_AMMUNITION.get())
+                val count = if (unlimited) Int.MAX_VALUE else stock(vehicle, ModItems.FLARE_AMMUNITION.get())
                 val cooldown = vehicle.getFlareCooldownTicks()
                 buttons += Button("FLARE [$decoyKey]", status(count < 2, cooldown), count >= 2 && cooldown == 0, needsFlare)
             } else if (needsFlare) missing += "NO FLARES"
             if (equipment.chaff) {
-                val count = stock(vehicle, ModItems.CHAFF_AMMUNITION.get())
+                val count = if (unlimited) Int.MAX_VALUE else stock(vehicle, ModItems.CHAFF_AMMUNITION.get())
                 val cooldown = vehicle.getChaffCooldownTicks()
                 buttons += Button("CHAFF [$chaffKey]",
                     if (vehicle.isChaffEmitting()) "ACTIVE" else status(count < 1, cooldown),
