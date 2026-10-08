@@ -13,7 +13,23 @@ No stable release is currently published in this repository. See [all releases](
 for the complete release history.
 The `0.9.19beta` source tag currently has no GitHub Release or compiled download assets.
 
-## Latest published testing build: 0.11.119beta
+## Latest published testing build: 0.11.120beta
+
+[Unguided rocket pods fire 600 per minute, alternating sides, full-auto; missile warning shows unlimited countermeasures correctly](https://github.com/bert11882157-games/BVP-SBW/releases/tag/v0.11.120beta).
+Install all three matching JARs on clients and servers, replacing older active copies:
+
+| Component | Mod JAR | Checksum |
+| --- | --- | --- |
+| BVP 0.11.120beta | [JAR](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.11.120beta/bvp-main-v0.11.120beta.jar) | [SHA-256](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.11.120beta/bvp-main-v0.11.120beta.jar.sha256) |
+| SBW 0.11.120beta | [JAR](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.11.120beta/bvp_superbwarfare-v0.11.120beta.jar) | [SHA-256](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.11.120beta/bvp_superbwarfare-v0.11.120beta.jar.sha256) |
+| FFA 1.0.6-bvp.21 | [JAR](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.11.120beta/fire-from-above-1.0.6-bvp.21.jar) | [SHA-256](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.11.120beta/fire-from-above-1.0.6-bvp.21.jar.sha256) |
+
+All 17 unguided rocket weapons on aircraft and helicopters now fire one rocket every 0.1 s while the trigger is held,
+alternating left and right; damage, ammunition and reload are unchanged. The source build, the rocket-pod order and
+countermeasure unit tests passed, and the rocket aircraft spawned on the isolated dedicated server; holding fire in
+game has not been tested yet.
+
+## Earlier published testing build: 0.11.119beta
 
 [Cockpit glass reworked on every aircraft, flat-pane windows for helicopters and transports, faster flares, longer-range air-to-air missiles and radar, lighter missile damage, smaller missile warning, blue friendly markers, afterburners visible to other players](https://github.com/bert11882157-games/BVP-SBW/releases/tag/v0.11.119beta).
 Install all three matching JARs on clients and servers, replacing older active copies:

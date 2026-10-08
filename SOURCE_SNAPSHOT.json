@@ -1,10 +1,10 @@
 {
   "schema": 1,
   "policyVersion": 4,
-  "label": "claude-fixes-20261008-r107",
+  "label": "claude-fixes-20261008-r108",
   "status": "release-candidate",
-  "createdAt": "2026-10-08T07:22:24.133Z",
-  "treeSha256": "3391e568429adf0e10df6234e55d01bcfa4a332b56945ef5dbc4c984594b08b2",
+  "createdAt": "2026-10-08T08:10:33.635Z",
+  "treeSha256": "3f268268877f1dbbf8c31a15eb74e0ec75229cb76823894557240bcea6f98289",
   "files": [
     {
       "path": ".editorconfig",
@@ -28,8 +28,8 @@
     },
     {
       "path": "DOWNLOADS.md",
-      "size": 14112,
-      "sha256": "c15ed0cd21f383506087dfe24cda216b8ebf2cea35dcaeb9a6561c33de94f31d"
+      "size": 17562,
+      "sha256": "269ebac79711bb9a9d4bb451224c2768f38f8e482b68c67556d0acaaa38d51c6"
     },
     {
       "path": "README.md",
@@ -12724,7 +12724,7 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/guns/aircraft_rockets/s8ko_pair40.json",
       "size": 906,
-      "sha256": "79945331e079e3bda700e74236f536bbef34fad90d7a107c4272f6f7b6b9ade4"
+      "sha256": "91a2f795cdfd9aed0d8661cfa461edfc27b889cdc710ca6ebd8cb3c55659d675"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/guns/aircraft_stores/agm114k_ah64d.json",
@@ -17544,7 +17544,7 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/ah_1g_cobra.json",
       "size": 19070,
-      "sha256": "77e7bc6f8dd6e77b221ca4bc6dd8f7e4651d0e4c9fb14075afada5b537343d97"
+      "sha256": "d670227d4eb698fc425a25cb11529eb585a7c0509e8a28376b9fad479d82f3aa"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/ah_64d.json",
@@ -17554,7 +17554,7 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/ah_6j.json",
       "size": 15498,
-      "sha256": "6c3bcc3636afdce0d3910e0dcb67dbcedebaf0f405f0d050da60230b50f300bb"
+      "sha256": "3fc234a9c1a35a256e52d624240d54f3db4002263637fe2b8beb11c5f03f0479"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/an_12b.json",
@@ -17849,7 +17849,7 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/ka50.json",
       "size": 47606,
-      "sha256": "e38afc397906a28af7cfe122e85109cee7d7caca616eee020eda3e0bc02dcc04"
+      "sha256": "23b7288f77bb96c384952eea2e031285d5b47224eb9bd240de24e15f960581cf"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/kamaz4310.json",
@@ -17999,12 +17999,12 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/mi24v.json",
       "size": 36334,
-      "sha256": "63b8811bef8a3c005239ca3727f6c8e9e160b839443727069e09bf4f895ac6f2"
+      "sha256": "e73f276c77cf8239a70067ac4e4891b58ae7b0fad3c18033615d871e4490d9dd"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/mi28n.json",
       "size": 48865,
-      "sha256": "149d20ae2ec69960c3acd471143feef1a7a8ad4cfee07d1dd32e118bdeed53ca"
+      "sha256": "72a2813926c99b74622d9a628b6893486d1abf270d6e7800f9889753bb52257f"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/mi_24a.json",
@@ -18169,7 +18169,7 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/su_25.json",
       "size": 164731,
-      "sha256": "923c3cfd4af70fc6bc5fd9f5dd96b1b5a1623fd1ef6a95d72e807f8c0e6d6745"
+      "sha256": "9ff5a533e29fc514ed6935b38787ad66e7c2b643266254ee92dad0441d99e938"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/su_27.json",
@@ -23438,8 +23438,8 @@
     },
     {
       "path": "docs/RELEASING.md",
-      "size": 1968,
-      "sha256": "fc3d525546eefc9b4b5fba75c24d8e2ba9bddd5584a2b11575aa2e6c4661985d"
+      "size": 2544,
+      "sha256": "26f1494f7e63b82c7eac8fa5a347bafacfb840cbcaf015d4df7ca45cdc845ec9"
     },
     {
       "path": "docs/RELOADS.md",
@@ -35623,8 +35623,8 @@
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/client/overlay/IncomingMissileOverlay.kt",
-      "size": 8035,
-      "sha256": "6b2df890b8d563c307e7ceb08313b58bd726dd7bb26749f2b8ce32164123fa75"
+      "size": 8283,
+      "sha256": "f4dcd4391b39e858c9c6caf8734df1b34cc1f53b014ba6f75a7fb10d65bc88b0"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/client/overlay/ItemRendererFixOverlay.kt",
@@ -51389,12 +51389,12 @@
     {
       "path": "sbw/src/main/resources/data/superbwarfare/sbw/vehicles/a_10a.json",
       "size": 21204,
-      "sha256": "9d973bcd460d7b98a5d8336fea4758f5557a7c0e76b8faf485ea619f188aa584"
+      "sha256": "580be0c083260bc796d7737722901b726ff88cab5166b74169d0622b4ae0f9b4"
     },
     {
       "path": "sbw/src/main/resources/data/superbwarfare/sbw/vehicles/ah_6.json",
       "size": 7043,
-      "sha256": "f8f98a439cd89b32588432c539758855acb604d5d37b33b0aaec793a1063d779"
+      "sha256": "6ad484e8c4d0c8e826c6d6998e96a7b21a8d6104048ec46b63c0e98275771dfb"
     },
     {
       "path": "sbw/src/main/resources/data/superbwarfare/sbw/vehicles/annihilator.json",
@@ -51464,7 +51464,7 @@
     {
       "path": "sbw/src/main/resources/data/superbwarfare/sbw/vehicles/mi_28.json",
       "size": 13426,
-      "sha256": "d6b41485a9c4898d922377698d70b28fa73b90f0856fa0251166f8141f90f0af"
+      "sha256": "23be08b34c2703eb5c6d0ed0f46f55a6ad0c60437c9a44563273ccc89373c2dc"
     },
     {
       "path": "sbw/src/main/resources/data/superbwarfare/sbw/vehicles/mk_42.json",
@@ -53014,21 +53014,21 @@
   ],
   "release": {
     "schema": 1,
-    "buildRecordSha256": "e7663000528e3da7fafa343bc66f71a21ff865709afbc51c8c18c509a9e9809c",
+    "buildRecordSha256": "be6f91c3345f3102c3f02db1ce4edadab1590059c12e97c71f5f6f214593f0f1",
     "artifacts": [
       {
         "id": "bvp",
         "version": "0.1.0",
         "filename": "berts_vehicle_pack-0.1.0.jar",
-        "size": 247550897,
-        "sha256": "8751a9b3c8f7bb5113b59704101b3043f339d9b8c6e0db4941da5eab9168e46f"
+        "size": 247550885,
+        "sha256": "31651c6f00594a3f02058d63e26d7425f8acbb2f782407de34d4bb6a487f66e8"
       },
       {
         "id": "sbw",
         "version": "0.8.9-bvp.1",
         "filename": "superbwarfare-0.8.9-bvp.1-mc1.20.1-6effe43-all.jar",
-        "size": 37746854,
-        "sha256": "e6f60ff6fa0d54cdb77147e2c7227c0b8b3b6caae094ad7b2f5721f6142a1d4f"
+        "size": 37746965,
+        "sha256": "4e94995a6c4c52a2724f31a3726f258221d090eb59288094e8a17d360806959c"
       }
     ],
     "dependencies": [
@@ -53922,11 +53922,11 @@
         "sha256": "ed24dc77caa01a715021b0f47217ba46296949ea6b92046986c1be0573f0a93a"
       },
       {
-        "id": "net.minecraftforge:forge:1.20.1-47.2.0_mapped_parchment_2023.08.13-1.20.1_at_fd420094fa091253276672f5de393a695c6d3ac1:bade60aab259",
+        "id": "net.minecraftforge:forge:1.20.1-47.2.0_mapped_parchment_2023.08.13-1.20.1_at_fd420094fa091253276672f5de393a695c6d3ac1:d7b415dcf667",
         "version": "1.20.1-47.2.0_mapped_parchment_2023.08.13-1.20.1_at_fd420094fa091253276672f5de393a695c6d3ac1",
         "filename": "forge-1.20.1-47.2.0_mapped_parchment_2023.08.13-1.20.1.jar",
         "size": 19157979,
-        "sha256": "bade60aab2590605f136c420484501caccebed032b221ae5c023c02a3a31c377"
+        "sha256": "d7b415dcf6677338ba0898a9f24ba1d1d9fbb17547d4fc63909b977276984c86"
       },
       {
         "id": "net.minecraftforge:forgespi:7.0.1:2298eaba25d0",
@@ -54461,11 +54461,11 @@
         "sha256": "ca15a907e4d1f6b38cefed51d7df96a83347dcfb0bc8ced53111519e991d887d"
       },
       {
-        "id": "sbw-mapped-api:0.8.9-bvp.1-mc1.20.1-6effe43:6eae4e98ebe3",
+        "id": "sbw-mapped-api:0.8.9-bvp.1-mc1.20.1-6effe43:c31c70d17ce6",
         "version": "0.8.9-bvp.1-mc1.20.1-6effe43",
         "filename": "superbwarfare-mapped-api.jar",
-        "size": 10156302,
-        "sha256": "6eae4e98ebe3da91884465df8f20c77d07a6d564e8961041e5f237dd645e8081"
+        "size": 10156407,
+        "sha256": "c31c70d17ce648ce31f7de2ba2870574ac0560bbd9b1344d0d51ed5dd8b68873"
       },
       {
         "id": "sbwmeshloader-mapped:0.1.1:0d6da1b68293",
