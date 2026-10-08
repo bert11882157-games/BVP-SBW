@@ -25,3 +25,12 @@ Do not merge a development workspace's unrelated directories or task history int
 Do not force-push or rewrite an existing public history as part of ordinary promotion. Preserve
 upstream source notices and credits. Direct changes here must also reach development so the next
 snapshot incorporates them.
+
+## Every build is pushed and merged
+
+Every BVP/SBW build that is installed for testing is also pushed here: its sealed checkpoint tree is
+copied over main on a sync/<version> branch (files that only this repository has, such as
+	ools/, are kept), merged into main through a pull request, and published as a prerelease with
+the BVP, SBW and FFA JARs and their .sha256 files, listed in [DOWNLOADS.md](../DOWNLOADS.md).
+main therefore always matches the newest build. The next development checkpoint starts from that
+build's tree and takes DOWNLOADS.md and this file from main.
