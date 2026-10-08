@@ -1,0 +1,18 @@
+{
+  "Schema": 1,
+  "Name": "9M17M Falanga · 2-round rails",
+  "Category": "COMMAND_GUIDED",
+  "Capacity": 2,
+  "MassKg": 31.5,
+  "CommandGuidance": {
+    "Mode": "MCLOS"
+  },
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_stores/falanga_9m17m",
+  "LaunchGunProfile": "berts_vehicle_pack:aircraft_stores/falanga_9m17m",
+  "LaunchOffset": [
+    0.0,
+    0.25,
+    0.3
+  ],
+  "AmmoItem": "superbwarfare:large_atgm"
+}

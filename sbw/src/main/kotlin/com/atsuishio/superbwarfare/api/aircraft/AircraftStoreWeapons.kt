@@ -43,10 +43,12 @@ object AircraftStoreWeapons {
         else -> false
     }
     fun ids(vehicle: VehicleEntity, seat: Int, native: List<String>): List<String> {
-        if (seat != 0) return native
         val definition = AircraftArmamentManager.definition(vehicle) ?: return native
-        return native + AircraftArmamentRegistry.mounts(definition).map { PREFIX + it["Id"].asString } +
-            AircraftArmamentManager.gunPodAliases(vehicle)
+        // released stores belong to the definition's weapon seat (the pilot unless a gunner operates them)
+        val stores = if (seat == AircraftMissileLaunchers.weaponSeat(definition))
+            AircraftArmamentRegistry.mounts(definition).map { PREFIX + it["Id"].asString } else emptyList()
+        val pods = if (seat == 0) AircraftArmamentManager.gunPodAliases(vehicle) else emptyList()
+        return native + stores + pods
     }
     fun available(vehicle: VehicleEntity, weapon: String): Boolean {
         val mount = mountId(weapon) ?: return false

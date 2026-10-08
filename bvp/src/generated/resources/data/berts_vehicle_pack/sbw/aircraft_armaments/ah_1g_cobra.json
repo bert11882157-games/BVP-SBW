@@ -6,14 +6,67 @@
     "Cannon",
     "Rocket"
   ],
-  "Pairs": [],
-  "StoreGroups": {
-    "berts_vehicle_pack:modeled_store/ah_1g_cobra/suspended_equipment": [
-      "suspended_legacy_hull"
-    ]
-  },
-  "MaxPayloadKg": 904,
+  "Pairs": [
+    {
+      "Id": "inner",
+      "Name": "Inner pylon",
+      "Left": [
+        1.7288,
+        2.1164,
+        0.3152
+      ],
+      "Right": [
+        -1.7288,
+        2.1164,
+        0.3152
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:heli/m195_pods"
+      ],
+      "StoreGroups": {
+        "berts_vehicle_pack:heli/m195_pods": [
+          "suspended_inner_l",
+          "suspended_inner_r"
+        ]
+      },
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 1000,
+      "NativeWeaponIds": {
+        "berts_vehicle_pack:heli/m195_pods": "Cannon"
+      }
+    },
+    {
+      "Id": "outer",
+      "Name": "Outer pylon",
+      "Left": [
+        2.4492,
+        2.1164,
+        -0.2881
+      ],
+      "Right": [
+        -2.4492,
+        2.1164,
+        -0.2881
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:heli/xm158"
+      ],
+      "StoreGroups": {
+        "berts_vehicle_pack:heli/xm158": [
+          "suspended_outer_l",
+          "suspended_outer_r"
+        ]
+      },
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 1000,
+      "NativeWeaponIds": {
+        "berts_vehicle_pack:heli/xm158": "Rocket"
+      }
+    }
+  ],
+  "StoreGroups": {},
+  "MaxPayloadKg": 1000,
   "MaxPylonMassKg": 1000,
-  "MaxWeaponsPerPylon": 12,
+  "MaxWeaponsPerPylon": 1,
   "Singles": []
 }

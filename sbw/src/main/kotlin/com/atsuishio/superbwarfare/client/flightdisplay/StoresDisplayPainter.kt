@@ -104,7 +104,8 @@ internal object StoresDisplayPainter {
         }
         DisplayDraw.shapes(g) {
             when (st.category) {
-                "AIR_TO_AIR", "AIR_TO_GROUND", "ANTI_RADIATION", "CRUISE", "COMMAND_GUIDED" -> {
+                "AIR_TO_AIR", "AIR_TO_GROUND", "ANTI_RADIATION", "CRUISE", "COMMAND_GUIDED",
+                com.atsuishio.superbwarfare.api.aircraft.AircraftMissileLaunchers.CATEGORY -> {
                     // missile: body, nose and fins
                     poly(floatArrayOf(x - 3, y - 12, x + 3, y - 12, x + 3, y + 13, x - 3, y + 13), color)
                     tri(x - 3, y - 12, x + 3, y - 12, x, y - 18, color)

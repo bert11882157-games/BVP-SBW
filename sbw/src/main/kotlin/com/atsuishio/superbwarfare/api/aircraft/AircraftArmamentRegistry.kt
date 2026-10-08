@@ -16,7 +16,7 @@ object AircraftArmamentRegistry {
     var aircraft: Map<ResourceLocation, JsonObject> = emptyMap(); private set
     var stores: Map<ResourceLocation, JsonObject> = emptyMap(); private set
     var revision: Long = 0; private set
-    val categories = setOf("COMMAND_GUIDED", "LASER_GUIDED", "GUN_POD", "BOMB", "AIR_TO_AIR", "AIR_TO_GROUND", "ANTI_RADIATION", "CRUISE", "ROCKET_POD", "VISUAL_ONLY",
+    val categories = setOf("COMMAND_GUIDED", "LASER_GUIDED", "GUN_POD", "BOMB", "AIR_TO_AIR", "AIR_TO_GROUND", "ANTI_RADIATION", "CRUISE", "ROCKET_POD", AircraftMissileLaunchers.CATEGORY, "VISUAL_ONLY",
         AircraftTargetingPods.CATEGORY)
 
     /** Mass is per physical round or pod; a paired station contains two complete loads. */

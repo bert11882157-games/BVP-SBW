@@ -125,8 +125,8 @@
       },
       "CanRotateHead": false,
       "Weapons": [
-        "S8KORocket",
         "Cannon",
+        "S8PodInner",
         "PilotMissile"
       ],
       "DismountInfo": {
@@ -345,334 +345,6 @@
         }
       ]
     },
-    "Rocket": {
-      "AmmoType": [
-        {
-          "Ammo": "superbwarfare:small_rocket",
-          "ConsumptionItem": "superbwarfare:small_unguided_rocket",
-          "Override": {
-            "TntEquivalentKg": 1.375
-          }
-        }
-      ],
-      "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_small_rocket.png",
-      "DefaultZoom": 2,
-      "DefaultFireMode": "Auto",
-      "AvailableFireModes": "Auto",
-      "Magazine": 40,
-      "EmptyReloadTime": 200,
-      "Projectile": {
-        "Type": "berts_vehicle_pack:s8ko_rocket",
-        "Profile": "berts_vehicle_pack:ka50/rocket/default"
-      },
-      "AddShooterDeltaMovement": true,
-      "Spread": 0.25,
-      "Name": "weapon.superbwarfare.80mm_rocket",
-      "RPM": 600,
-      "Damage": 100,
-      "ExplosionDamage": 0,
-      "ExplosionRadius": 6,
-      "TntEquivalentKg": 1.375,
-      "Gravity": 0.02,
-      "Velocity": 9,
-      "ProjectileLife": 60,
-      "ShootPos": {
-        "Transform": "Vehicle",
-        "ShootPositionForHud": [
-          0,
-          1.15153,
-          -2.4183
-        ],
-        "ShootDirectionForHud": [
-          0,
-          0.018,
-          1
-        ],
-        "Positions": [
-          [
-            -1.34,
-            1.161,
-            -0.113
-          ],
-          [
-            1.34,
-            1.161,
-            -0.113
-          ]
-        ],
-        "Directions": [
-          [
-            0.003,
-            0.025,
-            1
-          ],
-          [
-            -0.003,
-            0.025,
-            1
-          ]
-        ],
-        "MuzzleAttachments": [
-          "rocket_muzzle_01",
-          "rocket_muzzle_02"
-        ],
-        "MuzzleDirectionAttachments": [
-          "rocket_direction_01",
-          "rocket_direction_02"
-        ],
-        "EffectAttachments": [
-          "rocket_muzzle_01",
-          "rocket_muzzle_02"
-        ],
-        "EffectDirectionAttachments": [
-          "rocket_direction_01",
-          "rocket_direction_02"
-        ],
-        "HudOriginAttachment": "rocket_hud_origin",
-        "HudDirectionAttachment": "rocket_hud_direction_01"
-      },
-      "SoundInfo": {
-        "Fire1PGain": 1.0,
-        "Fire3PGain": 1.0,
-        "Fire3PFarGain": 1.0,
-        "Fire3PVeryFarGain": 1.0,
-        "Fire1P": "bvp_audio:weapon/s8_1p",
-        "Fire3P": "bvp_audio:weapon/s8_3p",
-        "VehicleReload3p": "superbwarfare:missile_reload",
-        "VehicleReloadSoundTime": 7,
-        "Change": "superbwarfare:into_missile",
-        "Fire3PFar": "bvp_audio:weapon/s8_far",
-        "Fire3PVeryFar": "bvp_audio:weapon/s8_far",
-        "Volume": 1.7
-      },
-      "Crosshair": "@Empty",
-      "SoundRadius": 16,
-      "NominalBallistics": {
-        "Supported": true,
-        "ProjectileType": "berts_vehicle_pack:s8ko_rocket",
-        "ProjectileProfile": "berts_vehicle_pack:ka50/rocket/default",
-        "ProjectileLife": 60
-      }
-    },
-    "B13LRocket": {
-      "AmmoType": [
-        {
-          "Ammo": "superbwarfare:small_rocket",
-          "ConsumptionItem": "superbwarfare:small_unguided_rocket",
-          "Override": {
-            "TntEquivalentKg": 1.375
-          }
-        }
-      ],
-      "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_small_rocket.png",
-      "DefaultZoom": 2,
-      "DefaultFireMode": "Auto",
-      "AvailableFireModes": "Auto",
-      "Magazine": 10,
-      "EmptyReloadTime": 200,
-      "Projectile": {
-        "Type": "berts_vehicle_pack:s8ko_rocket",
-        "Profile": "berts_vehicle_pack:ka50/b13lrocket/default"
-      },
-      "AddShooterDeltaMovement": true,
-      "Spread": 0.25,
-      "Name": "weapon.berts_vehicle_pack.b_13l_rockets",
-      "RPM": 600,
-      "Damage": 100,
-      "ExplosionDamage": 0,
-      "ExplosionRadius": 6,
-      "TntEquivalentKg": 1.375,
-      "Gravity": 0.02,
-      "Velocity": 9,
-      "ProjectileLife": 60,
-      "ShootPos": {
-        "Transform": "Vehicle",
-        "ShootPositionForHud": [
-          -1.34,
-          1.161,
-          -0.113
-        ],
-        "ShootDirectionForHud": [
-          0,
-          0.018,
-          1
-        ],
-        "Positions": [
-          [
-            -1.34,
-            1.161,
-            -0.113
-          ],
-          [
-            1.34,
-            1.161,
-            -0.113
-          ]
-        ],
-        "Directions": [
-          [
-            0.003,
-            0.025,
-            1
-          ],
-          [
-            -0.003,
-            0.025,
-            1
-          ]
-        ],
-        "MuzzleAttachments": [
-          "b13lrocket_muzzle_01",
-          "b13lrocket_muzzle_02"
-        ],
-        "MuzzleDirectionAttachments": [
-          "b13lrocket_direction_01",
-          "b13lrocket_direction_02"
-        ],
-        "EffectAttachments": [
-          "b13lrocket_muzzle_01",
-          "b13lrocket_muzzle_02"
-        ],
-        "EffectDirectionAttachments": [
-          "b13lrocket_direction_01",
-          "b13lrocket_direction_02"
-        ],
-        "HudOriginAttachment": "b13lrocket_hud_origin",
-        "HudDirectionAttachment": "b13lrocket_hud_direction_01"
-      },
-      "SoundInfo": {
-        "Fire1PGain": 1.0,
-        "Fire3PGain": 1.0,
-        "Fire3PFarGain": 1.0,
-        "Fire3PVeryFarGain": 1.0,
-        "Fire1P": "bvp_audio:weapon/s8_1p",
-        "Fire3P": "bvp_audio:weapon/s8_3p",
-        "VehicleReload3p": "superbwarfare:missile_reload",
-        "VehicleReloadSoundTime": 7,
-        "Change": "superbwarfare:into_missile",
-        "Fire3PFar": "bvp_audio:weapon/s8_far",
-        "Fire3PVeryFar": "bvp_audio:weapon/s8_far",
-        "Volume": 1.7
-      },
-      "Crosshair": "@Empty",
-      "SoundRadius": 16,
-      "NominalBallistics": {
-        "Supported": true,
-        "ProjectileType": "berts_vehicle_pack:s8ko_rocket",
-        "ProjectileProfile": "berts_vehicle_pack:ka50/b13lrocket/default",
-        "ProjectileLife": 60
-      }
-    },
-    "S8KORocket": {
-      "AmmoType": [
-        {
-          "Ammo": "superbwarfare:small_rocket",
-          "ConsumptionItem": "superbwarfare:small_unguided_rocket",
-          "Override": {
-            "TntEquivalentKg": 1.375
-          }
-        }
-      ],
-      "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_small_rocket.png",
-      "DefaultZoom": 2,
-      "DefaultFireMode": "Auto",
-      "AvailableFireModes": "Auto",
-      "Magazine": 40,
-      "EmptyReloadTime": 600,
-      "Projectile": {
-        "Type": "berts_vehicle_pack:s8ko_rocket",
-        "Profile": "berts_vehicle_pack:ka50/s8korocket/default"
-      },
-      "AddShooterDeltaMovement": true,
-      "Spread": 0,
-      "Name": "weapon.berts_vehicle_pack.ka50_s_8ko_rockets",
-      "RPM": 600,
-      "Damage": 100,
-      "ExplosionDamage": 0,
-      "ExplosionRadius": 6,
-      "TntEquivalentKg": 1.375,
-      "Gravity": 0.02,
-      "Velocity": 9,
-      "ProjectileLife": 60,
-      "ShootPos": {
-        "Transform": "Vehicle",
-        "ShootPositionForHud": [
-          -2.62314,
-          1.23554,
-          1.61421
-        ],
-        "ShootDirectionForHud": [
-          0,
-          0,
-          1
-        ],
-        "Positions": [
-          [
-            -2.62314,
-            1.23554,
-            1.61421
-          ],
-          [
-            2.61094,
-            1.22382,
-            1.49922
-          ]
-        ],
-        "Directions": [
-          [
-            0,
-            0,
-            1
-          ],
-          [
-            0,
-            0,
-            1
-          ]
-        ],
-        "MuzzleAttachments": [
-          "s8korocket_muzzle_01",
-          "s8korocket_muzzle_02"
-        ],
-        "MuzzleDirectionAttachments": [
-          "s8korocket_direction_01",
-          "s8korocket_direction_02"
-        ],
-        "EffectAttachments": [
-          "s8korocket_muzzle_01",
-          "s8korocket_muzzle_02"
-        ],
-        "EffectDirectionAttachments": [
-          "s8korocket_direction_01",
-          "s8korocket_direction_02"
-        ],
-        "HudOriginAttachment": "s8korocket_hud_origin",
-        "HudDirectionAttachment": "s8korocket_hud_direction_01"
-      },
-      "SoundInfo": {
-        "Fire1PGain": 1.0,
-        "Fire3PGain": 1.0,
-        "Fire3PFarGain": 1.0,
-        "Fire3PVeryFarGain": 1.0,
-        "Fire1P": "bvp_audio:weapon/s8_1p",
-        "Fire3P": "bvp_audio:weapon/s8_3p",
-        "VehicleReload3p": "superbwarfare:missile_reload",
-        "VehicleReloadSoundTime": 7,
-        "Change": "superbwarfare:into_missile",
-        "Fire3PFar": "bvp_audio:weapon/s8_far",
-        "Fire3PVeryFar": "bvp_audio:weapon/s8_far",
-        "Volume": 1.7
-      },
-      "Crosshair": "@Empty",
-      "SoundRadius": 16,
-      "ShellType": "HEAT",
-      "NominalBallistics": {
-        "Supported": true,
-        "ProjectileType": "berts_vehicle_pack:s8ko_rocket",
-        "ProjectileProfile": "berts_vehicle_pack:ka50/s8korocket/default",
-        "ProjectileLife": 60
-      }
-    },
     "@Missile": {
       "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_atgm.png",
       "DefaultFireMode": "Semi",
@@ -717,167 +389,6 @@
       "SoundRadius": 16,
       "ShellType": "ATGM"
     },
-    "PassengerMissile": {
-      "Name": "weapon.berts_vehicle_pack.9k127_vikhr_atgm",
-      "DefaultZoom": 3,
-      "Magazine": 16,
-      "Template": "@Missile",
-      "RPM": 50,
-      "EmptyReloadTime": 900,
-      "Crosshair": "@VehicleCommonMissile",
-      "ShootPos": {
-        "Transform": "Vehicle",
-        "ShootPositionForHud": [
-          0,
-          0.797,
-          4.219
-        ],
-        "Positions": [
-          [
-            -3.52542,
-            1.07682,
-            1.2564
-          ],
-          [
-            3.54251,
-            1.44327,
-            1.26519
-          ],
-          [
-            -3.81253,
-            1.08414,
-            1.23545
-          ],
-          [
-            3.82376,
-            1.43424,
-            1.26108
-          ],
-          [
-            -4.17703,
-            1.08121,
-            1.23086
-          ],
-          [
-            4.17117,
-            1.41422,
-            1.24258
-          ],
-          [
-            -4.46365,
-            1.10855,
-            1.23945
-          ],
-          [
-            4.45535,
-            1.42154,
-            1.26143
-          ],
-          [
-            -4.44559,
-            1.43497,
-            1.23877
-          ],
-          [
-            3.52933,
-            1.08048,
-            1.28809
-          ],
-          [
-            -4.20242,
-            1.41471,
-            1.24736
-          ],
-          [
-            3.81302,
-            1.07462,
-            1.27153
-          ],
-          [
-            -3.83401,
-            1.42594,
-            1.22788
-          ],
-          [
-            4.16531,
-            1.06119,
-            1.27891
-          ],
-          [
-            -3.54324,
-            1.42105,
-            1.22793
-          ],
-          [
-            4.47757,
-            1.07584,
-            1.26602
-          ]
-        ],
-        "BoundUpWithAmmoAmount": true,
-        "ViewDirection": "Barrel",
-        "MuzzleAttachments": [
-          "passengermissile_muzzle_01",
-          "passengermissile_muzzle_02",
-          "passengermissile_muzzle_03",
-          "passengermissile_muzzle_04",
-          "passengermissile_muzzle_05",
-          "passengermissile_muzzle_06",
-          "passengermissile_muzzle_07",
-          "passengermissile_muzzle_08",
-          "passengermissile_muzzle_09",
-          "passengermissile_muzzle_10",
-          "passengermissile_muzzle_11",
-          "passengermissile_muzzle_12",
-          "passengermissile_muzzle_13",
-          "passengermissile_muzzle_14",
-          "passengermissile_muzzle_15",
-          "passengermissile_muzzle_16"
-        ],
-        "MuzzleDirectionAttachments": [
-          "Default"
-        ],
-        "EffectAttachments": [
-          "passengermissile_muzzle_01",
-          "passengermissile_muzzle_02",
-          "passengermissile_muzzle_03",
-          "passengermissile_muzzle_04",
-          "passengermissile_muzzle_05",
-          "passengermissile_muzzle_06",
-          "passengermissile_muzzle_07",
-          "passengermissile_muzzle_08",
-          "passengermissile_muzzle_09",
-          "passengermissile_muzzle_10",
-          "passengermissile_muzzle_11",
-          "passengermissile_muzzle_12",
-          "passengermissile_muzzle_13",
-          "passengermissile_muzzle_14",
-          "passengermissile_muzzle_15",
-          "passengermissile_muzzle_16"
-        ],
-        "EffectDirectionAttachments": [
-          "Default"
-        ],
-        "HudOriginAttachment": "passengermissile_hud_origin",
-        "ViewDirectionAttachment": "Barrel"
-      },
-      "Projectile": {
-        "Type": "berts_vehicle_pack:ataka_missile",
-        "Profile": "berts_vehicle_pack:ka50/passengermissile/default"
-      },
-      "SoundInfo": {
-        "Fire1PGain": 0.7,
-        "Fire3PGain": 0.7,
-        "Fire3PFarGain": 0.7,
-        "Fire3PVeryFarGain": 0.7
-      },
-      "NominalBallistics": {
-        "Supported": false,
-        "ProjectileType": "berts_vehicle_pack:ataka_missile",
-        "ProjectileProfile": "berts_vehicle_pack:ka50/passengermissile/default"
-      },
-      "TntEquivalentKg": 6.8714
-    },
     "PilotMissile": {
       "Name": "weapon.berts_vehicle_pack.9k127_vikhr_atgm",
       "DefaultZoom": 3,
@@ -888,11 +399,6 @@
       "Crosshair": "@VehicleCommonMissile",
       "ShootPos": {
         "Transform": "Vehicle",
-        "ShootPositionForHud": [
-          0,
-          3.04199,
-          2.77109
-        ],
         "ShootDirectionForHud": [
           0,
           0.018,
@@ -900,84 +406,84 @@
         ],
         "Positions": [
           [
-            -3.52542,
-            1.07682,
-            1.2564
+            3.5297,
+            1.4321,
+            1.2246
           ],
           [
-            3.54251,
-            1.44327,
-            1.26519
+            -3.5297,
+            1.4321,
+            1.2246
           ],
           [
-            -3.81253,
-            1.08414,
-            1.23545
+            3.8178,
+            1.4321,
+            1.2246
           ],
           [
-            3.82376,
-            1.43424,
-            1.26108
+            -3.8178,
+            1.4321,
+            1.2246
           ],
           [
-            -4.17703,
-            1.08121,
-            1.23086
+            4.178,
+            1.4321,
+            1.2246
           ],
           [
-            4.17117,
-            1.41422,
-            1.24258
+            -4.178,
+            1.4321,
+            1.2246
           ],
           [
-            -4.46365,
-            1.10855,
-            1.23945
+            4.4661,
+            1.4321,
+            1.2246
           ],
           [
-            4.45535,
-            1.42154,
-            1.26143
+            -4.4661,
+            1.4321,
+            1.2246
           ],
           [
-            -4.44559,
-            1.43497,
-            1.23877
+            3.5297,
+            1.0719,
+            1.2246
           ],
           [
-            3.52933,
-            1.08048,
-            1.28809
+            -3.5297,
+            1.0719,
+            1.2246
           ],
           [
-            -4.20242,
-            1.41471,
-            1.24736
+            3.8178,
+            1.0719,
+            1.2246
           ],
           [
-            3.81302,
-            1.07462,
-            1.27153
+            -3.8178,
+            1.0719,
+            1.2246
           ],
           [
-            -3.83401,
-            1.42594,
-            1.22788
+            4.178,
+            1.0719,
+            1.2246
           ],
           [
-            4.16531,
-            1.06119,
-            1.27891
+            -4.178,
+            1.0719,
+            1.2246
           ],
           [
-            -3.54324,
-            1.42105,
-            1.22793
+            4.4661,
+            1.0719,
+            1.2246
           ],
           [
-            4.47757,
-            1.07584,
-            1.26602
+            -4.4661,
+            1.0719,
+            1.2246
           ]
         ],
         "Directions": [
@@ -987,7 +493,7 @@
             1
           ],
           [
-            -0.006,
+            0.006,
             0.018,
             1
           ],
@@ -997,7 +503,7 @@
             1
           ],
           [
-            -0.006,
+            0.006,
             0.018,
             1
           ],
@@ -1007,7 +513,7 @@
             1
           ],
           [
-            -0.006,
+            0.006,
             0.018,
             1
           ],
@@ -1017,7 +523,7 @@
             1
           ],
           [
-            -0.006,
+            0.006,
             0.018,
             1
           ],
@@ -1027,7 +533,7 @@
             1
           ],
           [
-            -0.006,
+            0.006,
             0.018,
             1
           ],
@@ -1037,7 +543,7 @@
             1
           ],
           [
-            -0.006,
+            0.006,
             0.018,
             1
           ],
@@ -1047,7 +553,7 @@
             1
           ],
           [
-            -0.006,
+            0.006,
             0.018,
             1
           ],
@@ -1057,85 +563,54 @@
             1
           ],
           [
-            -0.006,
+            0.006,
             0.018,
             1
           ]
         ],
         "BoundUpWithAmmoAmount": true,
         "MuzzleAttachments": [
-          "pilotmissile_muzzle_01",
-          "pilotmissile_muzzle_02",
-          "pilotmissile_muzzle_03",
-          "pilotmissile_muzzle_04",
-          "pilotmissile_muzzle_05",
-          "pilotmissile_muzzle_06",
-          "pilotmissile_muzzle_07",
-          "pilotmissile_muzzle_08",
-          "pilotmissile_muzzle_09",
-          "pilotmissile_muzzle_10",
-          "pilotmissile_muzzle_11",
-          "pilotmissile_muzzle_12",
-          "pilotmissile_muzzle_13",
-          "pilotmissile_muzzle_14",
-          "pilotmissile_muzzle_15",
-          "pilotmissile_muzzle_16"
+          "PilotMissile_left_0",
+          "PilotMissile_right_0",
+          "PilotMissile_left_1",
+          "PilotMissile_right_1",
+          "PilotMissile_left_2",
+          "PilotMissile_right_2",
+          "PilotMissile_left_3",
+          "PilotMissile_right_3",
+          "PilotMissile_left_4",
+          "PilotMissile_right_4",
+          "PilotMissile_left_5",
+          "PilotMissile_right_5",
+          "PilotMissile_left_6",
+          "PilotMissile_right_6",
+          "PilotMissile_left_7",
+          "PilotMissile_right_7"
         ],
         "MuzzleDirectionAttachments": [
-          "pilotmissile_direction_01",
-          "pilotmissile_direction_02",
-          "pilotmissile_direction_03",
-          "pilotmissile_direction_04",
-          "pilotmissile_direction_05",
-          "pilotmissile_direction_06",
-          "pilotmissile_direction_07",
-          "pilotmissile_direction_08",
-          "pilotmissile_direction_09",
-          "pilotmissile_direction_10",
-          "pilotmissile_direction_11",
-          "pilotmissile_direction_12",
-          "pilotmissile_direction_13",
-          "pilotmissile_direction_14",
-          "pilotmissile_direction_15",
-          "pilotmissile_direction_16"
+          "Default"
         ],
         "EffectAttachments": [
-          "pilotmissile_muzzle_01",
-          "pilotmissile_muzzle_02",
-          "pilotmissile_muzzle_03",
-          "pilotmissile_muzzle_04",
-          "pilotmissile_muzzle_05",
-          "pilotmissile_muzzle_06",
-          "pilotmissile_muzzle_07",
-          "pilotmissile_muzzle_08",
-          "pilotmissile_muzzle_09",
-          "pilotmissile_muzzle_10",
-          "pilotmissile_muzzle_11",
-          "pilotmissile_muzzle_12",
-          "pilotmissile_muzzle_13",
-          "pilotmissile_muzzle_14",
-          "pilotmissile_muzzle_15",
-          "pilotmissile_muzzle_16"
+          "PilotMissile_left_0",
+          "PilotMissile_right_0",
+          "PilotMissile_left_1",
+          "PilotMissile_right_1",
+          "PilotMissile_left_2",
+          "PilotMissile_right_2",
+          "PilotMissile_left_3",
+          "PilotMissile_right_3",
+          "PilotMissile_left_4",
+          "PilotMissile_right_4",
+          "PilotMissile_left_5",
+          "PilotMissile_right_5",
+          "PilotMissile_left_6",
+          "PilotMissile_right_6",
+          "PilotMissile_left_7",
+          "PilotMissile_right_7"
         ],
         "EffectDirectionAttachments": [
-          "pilotmissile_direction_01",
-          "pilotmissile_direction_02",
-          "pilotmissile_direction_03",
-          "pilotmissile_direction_04",
-          "pilotmissile_direction_05",
-          "pilotmissile_direction_06",
-          "pilotmissile_direction_07",
-          "pilotmissile_direction_08",
-          "pilotmissile_direction_09",
-          "pilotmissile_direction_10",
-          "pilotmissile_direction_11",
-          "pilotmissile_direction_12",
-          "pilotmissile_direction_13",
-          "pilotmissile_direction_14",
-          "pilotmissile_direction_15",
-          "pilotmissile_direction_16"
+          "Default"
         ],
-        "HudOriginAttachment": "pilotmissile_hud_origin",
         "HudDirectionAttachment": "pilotmissile_hud_direction_01"
       },
       "Projectile": {
@@ -1154,6 +629,108 @@
         "ProjectileProfile": "berts_vehicle_pack:ka50/pilotmissile/default"
       },
       "TntEquivalentKg": 6.8714
+    },
+    "S8PodInner": {
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_rocket",
+          "ConsumptionItem": "superbwarfare:small_unguided_rocket",
+          "Override": {
+            "TntEquivalentKg": 1.375
+          }
+        }
+      ],
+      "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_small_rocket.png",
+      "DefaultZoom": 2,
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "Magazine": 40,
+      "EmptyReloadTime": 600,
+      "Projectile": {
+        "Type": "berts_vehicle_pack:s8ko_rocket",
+        "Profile": "berts_vehicle_pack:ka50/s8korocket/default"
+      },
+      "AddShooterDeltaMovement": true,
+      "Spread": 0,
+      "Name": "weapon.berts_vehicle_pack.ka50_s_8ko_rockets",
+      "RPM": 600,
+      "Damage": 100,
+      "ExplosionDamage": 0,
+      "ExplosionRadius": 6,
+      "TntEquivalentKg": 1.375,
+      "Gravity": 0.02,
+      "Velocity": 9,
+      "ProjectileLife": 60,
+      "ShootPos": {
+        "Transform": "Vehicle",
+        "ShootDirectionForHud": [
+          0,
+          0,
+          1
+        ],
+        "Positions": [
+          [
+            2.6293,
+            1.234,
+            1.2426
+          ],
+          [
+            -2.6293,
+            1.234,
+            1.2426
+          ]
+        ],
+        "Directions": [
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "MuzzleAttachments": [
+          "S8PodInner_left_0",
+          "S8PodInner_right_0"
+        ],
+        "MuzzleDirectionAttachments": [
+          "Default"
+        ],
+        "EffectAttachments": [
+          "S8PodInner_left_0",
+          "S8PodInner_right_0"
+        ],
+        "EffectDirectionAttachments": [
+          "Default"
+        ],
+        "HudDirectionAttachment": "s8korocket_hud_direction_01"
+      },
+      "SoundInfo": {
+        "Fire1PGain": 1.0,
+        "Fire3PGain": 1.0,
+        "Fire3PFarGain": 1.0,
+        "Fire3PVeryFarGain": 1.0,
+        "Fire1P": "bvp_audio:weapon/s8_1p",
+        "Fire3P": "bvp_audio:weapon/s8_3p",
+        "VehicleReload3p": "superbwarfare:missile_reload",
+        "VehicleReloadSoundTime": 7,
+        "Change": "superbwarfare:into_missile",
+        "Fire3PFar": "bvp_audio:weapon/s8_far",
+        "Fire3PVeryFar": "bvp_audio:weapon/s8_far",
+        "Volume": 1.7
+      },
+      "Crosshair": "@Empty",
+      "SoundRadius": 16,
+      "ShellType": "HEAT",
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "berts_vehicle_pack:s8ko_rocket",
+        "ProjectileProfile": "berts_vehicle_pack:ka50/s8korocket/default",
+        "ProjectileLife": 60
+      }
     }
   },
   "HUDColor": "0xFFC700",
@@ -2222,12 +1799,246 @@
         0,
         1
       ]
+    },
+    "S8PodInner_left_0": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.6293,
+        1.234,
+        1.2426
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S8PodInner_right_0": {
+      "Parent": "Vehicle",
+      "Position": [
+        -2.6293,
+        1.234,
+        1.2426
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "PilotMissile_left_0": {
+      "Parent": "Vehicle",
+      "Position": [
+        3.5297,
+        1.4321,
+        1.2246
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "PilotMissile_right_0": {
+      "Parent": "Vehicle",
+      "Position": [
+        -3.5297,
+        1.4321,
+        1.2246
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "PilotMissile_left_1": {
+      "Parent": "Vehicle",
+      "Position": [
+        3.8178,
+        1.4321,
+        1.2246
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "PilotMissile_right_1": {
+      "Parent": "Vehicle",
+      "Position": [
+        -3.8178,
+        1.4321,
+        1.2246
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "PilotMissile_left_2": {
+      "Parent": "Vehicle",
+      "Position": [
+        4.178,
+        1.4321,
+        1.2246
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "PilotMissile_right_2": {
+      "Parent": "Vehicle",
+      "Position": [
+        -4.178,
+        1.4321,
+        1.2246
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "PilotMissile_left_3": {
+      "Parent": "Vehicle",
+      "Position": [
+        4.4661,
+        1.4321,
+        1.2246
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "PilotMissile_right_3": {
+      "Parent": "Vehicle",
+      "Position": [
+        -4.4661,
+        1.4321,
+        1.2246
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "PilotMissile_left_4": {
+      "Parent": "Vehicle",
+      "Position": [
+        3.5297,
+        1.0719,
+        1.2246
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "PilotMissile_right_4": {
+      "Parent": "Vehicle",
+      "Position": [
+        -3.5297,
+        1.0719,
+        1.2246
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "PilotMissile_left_5": {
+      "Parent": "Vehicle",
+      "Position": [
+        3.8178,
+        1.0719,
+        1.2246
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "PilotMissile_right_5": {
+      "Parent": "Vehicle",
+      "Position": [
+        -3.8178,
+        1.0719,
+        1.2246
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "PilotMissile_left_6": {
+      "Parent": "Vehicle",
+      "Position": [
+        4.178,
+        1.0719,
+        1.2246
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "PilotMissile_right_6": {
+      "Parent": "Vehicle",
+      "Position": [
+        -4.178,
+        1.0719,
+        1.2246
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "PilotMissile_left_7": {
+      "Parent": "Vehicle",
+      "Position": [
+        4.4661,
+        1.0719,
+        1.2246
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "PilotMissile_right_7": {
+      "Parent": "Vehicle",
+      "Position": [
+        -4.4661,
+        1.0719,
+        1.2246
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
     }
   },
   "WeaponPairs": [
     {
       "Seat": 0,
-      "Primary": "S8KORocket",
+      "Primary": "Cannon",
       "Secondary": "PilotMissile"
     }
   ],

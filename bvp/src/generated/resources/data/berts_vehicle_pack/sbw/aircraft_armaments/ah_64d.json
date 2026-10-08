@@ -4,108 +4,74 @@
   "BuiltInWeapons": [
     "M230"
   ],
-  "SuspendedWeapons": [],
+  "SuspendedWeapons": [
+    "HydraOuter"
+  ],
   "Pairs": [
     {
       "Id": "inner",
       "Name": "Inner wing",
       "Left": [
-        1.72425,
-        1.254,
-        0
-      ],
-      "LeftStations": [
-        {
-          "Point": [
-            1.7373,
-            1.254,
-            0.2351
-          ],
-          "Face": "bottom",
-          "ExceptStores": [
-            "berts_vehicle_pack:ah_64d/agm114_proxy"
-          ]
-        },
-        {
-          "Point": [
-            2.2179,
-            1.2718,
-            -0.3135
-          ],
-          "Face": "right",
-          "Copies": [
-            1
-          ],
-          "Stores": [
-            "berts_vehicle_pack:ah_64d/agm114_proxy"
-          ]
-        }
+        1.9333,
+        1.6198,
+        0.2743
       ],
       "Right": [
-        -1.72425,
-        1.254,
-        0
-      ],
-      "RightStations": [
-        {
-          "Point": [
-            -1.7373,
-            1.254,
-            0.2351
-          ],
-          "Face": "bottom",
-          "ExceptStores": [
-            "berts_vehicle_pack:ah_64d/agm114_proxy"
-          ]
-        },
-        {
-          "Point": [
-            -2.2179,
-            1.2718,
-            -0.3135
-          ],
-          "Face": "left",
-          "Copies": [
-            1
-          ],
-          "Stores": [
-            "berts_vehicle_pack:ah_64d/agm114_proxy"
-          ]
-        }
+        -1.9333,
+        1.6198,
+        0.2743
       ],
       "AllowedStores": [
+        "berts_vehicle_pack:heli/m299_hellfire",
         "berts_vehicle_pack:ah_64d/agm114_proxy"
       ],
+      "StoreGroups": {
+        "berts_vehicle_pack:heli/m299_hellfire": [
+          "suspended_inner_l",
+          "suspended_inner_r"
+        ]
+      },
       "MaxWeaponsPerPylon": 1,
-      "MaxPylonMassKg": 100
+      "MaxPylonMassKg": 1000
     },
     {
       "Id": "outer",
       "Name": "Outer wing",
       "Left": [
-        2.66475,
-        1.20175,
-        1.20175
+        2.9783,
+        1.5936,
+        0.3331
       ],
       "Right": [
-        -2.66475,
-        1.20175,
-        1.20175
+        -2.9783,
+        1.5936,
+        0.3331
       ],
       "AllowedStores": [
+        "berts_vehicle_pack:heli/m261",
         "berts_vehicle_pack:ah_64d/agm114_proxy"
       ],
+      "StoreGroups": {
+        "berts_vehicle_pack:heli/m261": [
+          "suspended_outer_l",
+          "suspended_outer_r"
+        ]
+      },
       "MaxWeaponsPerPylon": 1,
-      "MaxPylonMassKg": 100
+      "MaxPylonMassKg": 1000,
+      "NativeWeaponIds": {
+        "berts_vehicle_pack:heli/m261": "HydraOuter"
+      }
     }
   ],
   "Singles": [],
   "StoreGroups": {},
-  "MaxPayloadKg": 1000,
+  "MaxPayloadKg": 1700,
   "Radar": {
     "Enabled": true,
     "Range": 2000
   },
-  "MaxPylonMassKg": 100,
-  "MaxWeaponsPerPylon": 1
+  "MaxPylonMassKg": 1000,
+  "MaxWeaponsPerPylon": 1,
+  "WeaponSeat": 1
 }

@@ -1,0 +1,31 @@
+{
+  "Name": "BGM-71 TOW · wire-guided, sight command",
+  "AmmoType": "superbwarfare:large_atgm",
+  "DefaultFireMode": "Semi",
+  "AvailableFireModes": "Semi",
+  "Magazine": 1,
+  "EmptyReloadTime": 400,
+  "RPM": 30,
+  "Projectile": {
+    "Type": "superbwarfare:wire_guide_missile",
+    "Profile": "berts_vehicle_pack:aircraft_stores/bgm71_tow"
+  },
+  "ProjectileAmount": 1,
+  "AddShooterDeltaMovement": true,
+  "Velocity": 0.6,
+  "Gravity": 0.0125,
+  "ProjectileLife": 800,
+  "Spread": 0,
+  "Damage": 640,
+  "ExplosionDamage": 640,
+  "ExplosionRadius": 1.5,
+  "TntEquivalentKg": 4.32,
+  "ShellType": "HEAT",
+  "ApDurability": 0,
+  "Crosshair": "@Empty",
+  "SoundRadius": 24,
+  "SoundInfo": {
+    "Fire1P": "superbwarfare:bmp_2_missile_fire_1p",
+    "Fire3P": "superbwarfare:bmp_2_missile_fire_3p"
+  }
+}
