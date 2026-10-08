@@ -8,112 +8,157 @@ public final class HelicopterFlightProfile {
             DEFAULT_MASS_KG * DEFAULT_MAIN_ROTOR_ACCEL_MPS2;
     private static final double DEFAULT_TAIL_ROTOR_FORCE_N =
             DEFAULT_MASS_KG * DEFAULT_TAIL_ROTOR_ACCEL_MPS2;
-    private static final double MI24_MAIN_ROTOR_FORCE_N = 110000.0D;
+    /*
+     * Speed convention: every helicopter flies at REAL_SPEED_FRACTION of its real maximum level speed and climb rate
+     * (the fixed-wing fleet flies at a quarter; helicopters at a half, so they stay well below the jets while
+     * feeling quick). The soft cap is 90 % of that top speed. Drag is rescaled from each type's tuned values so the
+     * drag at the new top speed equals the drag it had at its old top speed, and rotor force is raised by
+     * POWER_UPLIFT so acceleration and climb keep up. Climb never drops below the type's previous hard cap.
+     */
+    static final double REAL_SPEED_FRACTION = 0.5D;
+    private static final double POWER_UPLIFT = 1.15D;
+
+    private static double cap(double realKmh) {
+        return realKmh * REAL_SPEED_FRACTION;
+    }
+
+    private static double soft(double realKmh) {
+        return 0.9D * cap(realKmh);
+    }
+
+    private static double lin(double tuned, double tunedCapKmh, double realKmh) {
+        return tuned * tunedCapKmh / cap(realKmh);
+    }
+
+    private static double quad(double tuned, double tunedCapKmh, double realKmh) {
+        double k = tunedCapKmh / cap(realKmh);
+        return tuned * k * k;
+    }
+
+    private static double climb(double realMps, double previousMps) {
+        return Math.max(realMps * REAL_SPEED_FRACTION, previousMps);
+    }
+
+    // Real maximum level speed (km/h) and climb rate (m/s).
+    private static final double MI24_KMH = 335.0D, MI24_CLIMB = 12.5D;
+    private static final double MI28_KMH = 300.0D, MI28_CLIMB = 13.6D;
+    private static final double KA50_KMH = 315.0D, KA50_CLIMB = 10.0D;
+    private static final double AH6J_KMH = 282.0D, AH6J_CLIMB = 10.0D;
+    private static final double AH1G_KMH = 277.0D, AH1G_CLIMB = 6.9D;
+    private static final double AH1F_KMH = 277.0D, AH1F_CLIMB = 8.0D;
+    private static final double MI26_KMH = 295.0D, MI26_CLIMB = 7.5D;
+    private static final double TIGER_KMH = 315.0D, TIGER_CLIMB = 10.7D;
+    private static final double AH64D_KMH = 293.0D, AH64D_CLIMB = 12.7D;
+    private static final double CH46E_KMH = 267.0D, CH46E_CLIMB = 8.8D;
+
+    private static final double MI24_MAIN_ROTOR_FORCE_N = 110000.0D * POWER_UPLIFT;
     private static final double MI24_ENGINE_POWER_SCALE =
             MI24_MAIN_ROTOR_FORCE_N / DEFAULT_MAIN_ROTOR_FORCE_N;
-    private static final double MI28_MAIN_ROTOR_FORCE_N = 115000.0D;
+    private static final double MI28_MAIN_ROTOR_FORCE_N = 115000.0D * POWER_UPLIFT;
     private static final double MI28_ENGINE_POWER_SCALE =
             MI28_MAIN_ROTOR_FORCE_N / DEFAULT_MAIN_ROTOR_FORCE_N;
-    private static final double KA50_MAIN_ROTOR_FORCE_N = 115000.0D;
+    private static final double KA50_MAIN_ROTOR_FORCE_N = 115000.0D * POWER_UPLIFT;
     private static final double KA50_ENGINE_POWER_SCALE =
             KA50_MAIN_ROTOR_FORCE_N / DEFAULT_MAIN_ROTOR_FORCE_N;
-    private static final double AH6J_ENGINE_POWER_SCALE = 0.14D;
-    private static final double AH1G_ENGINE_POWER_SCALE = 0.30D;
+    private static final double AH6J_ENGINE_POWER_SCALE = 0.14D * POWER_UPLIFT;
+    private static final double AH1G_ENGINE_POWER_SCALE = 0.30D * POWER_UPLIFT;
     private static final double DEFAULT_FORWARD_LINEAR_DRAG = 0.050D;
     private static final double DEFAULT_FORWARD_QUADRATIC_DRAG = 0.0052D;
     private static final double DEFAULT_SIDE_LINEAR_DRAG = 0.135D;
     private static final double DEFAULT_SIDE_QUADRATIC_DRAG = 0.0125D;
     private static final double DEFAULT_VERTICAL_LINEAR_DRAG = 0.055D;
     private static final double DEFAULT_VERTICAL_QUADRATIC_DRAG = 0.0080D;
-    private static final HelicopterFlightProfile MI24V = new HelicopterFlightProfile(72.0D, 94.0D,
+    private static final HelicopterFlightProfile MI24V = new HelicopterFlightProfile(soft(MI24_KMH), cap(MI24_KMH),
             9000.0D,
             MI24_ENGINE_POWER_SCALE, 0.20D,
             HelicopterHandlingProfile.mi24v(),
-            DEFAULT_FORWARD_LINEAR_DRAG, DEFAULT_FORWARD_QUADRATIC_DRAG,
+            lin(DEFAULT_FORWARD_LINEAR_DRAG, 94.0D, MI24_KMH), quad(DEFAULT_FORWARD_QUADRATIC_DRAG, 94.0D, MI24_KMH),
             DEFAULT_SIDE_LINEAR_DRAG, DEFAULT_SIDE_QUADRATIC_DRAG,
             DEFAULT_VERTICAL_LINEAR_DRAG, DEFAULT_VERTICAL_QUADRATIC_DRAG,
-            2.8D, 4.3D);
-    private static final HelicopterFlightProfile MI28N = new HelicopterFlightProfile(89.0D, 112.0D,
+            0.9D * climb(MI24_CLIMB, 4.3D), climb(MI24_CLIMB, 4.3D));
+    private static final HelicopterFlightProfile MI28N = new HelicopterFlightProfile(soft(MI28_KMH), cap(MI28_KMH),
             8250.0D,
             MI28_ENGINE_POWER_SCALE, 0.25D,
             HelicopterHandlingProfile.mi28n(),
-            0.038D, 0.0030D,
+            lin(0.038D, 112.0D, MI28_KMH), quad(0.0030D, 112.0D, MI28_KMH),
             0.105D, 0.0075D,
             0.050D, 0.0070D,
-            4.0D, 6.6D);
-    private static final HelicopterFlightProfile KA50 = new HelicopterFlightProfile(89.0D, 112.0D,
+            0.9D * climb(MI28_CLIMB, 6.6D), climb(MI28_CLIMB, 6.6D));
+    private static final HelicopterFlightProfile KA50 = new HelicopterFlightProfile(soft(KA50_KMH), cap(KA50_KMH),
             8250.0D,
             KA50_ENGINE_POWER_SCALE, 0.25D,
             HelicopterHandlingProfile.ka50(),
-            0.038D, 0.0030D,
+            lin(0.038D, 112.0D, KA50_KMH), quad(0.0030D, 112.0D, KA50_KMH),
             0.105D, 0.0075D,
             0.050D, 0.0070D,
-            4.0D, 6.6D);
-    private static final HelicopterFlightProfile AH6J = new HelicopterFlightProfile(175.0D, 205.0D,
+            0.9D * climb(KA50_CLIMB, 6.6D), climb(KA50_CLIMB, 6.6D));
+    private static final HelicopterFlightProfile AH6J = new HelicopterFlightProfile(soft(AH6J_KMH), cap(AH6J_KMH),
             1600.0D,
             AH6J_ENGINE_POWER_SCALE, 0.08D,
             HelicopterHandlingProfile.ah6j(),
-            0.050D, 0.0052D,
+            lin(0.050D, 205.0D, AH6J_KMH), quad(0.0052D, 205.0D, AH6J_KMH),
             0.135D, 0.0125D,
             0.055D, 0.0080D,
-            4.0D, 7.0D);
-    private static final HelicopterFlightProfile AH1G_COBRA = new HelicopterFlightProfile(210.0D, 235.0D,
+            0.9D * climb(AH6J_CLIMB, 7.0D), climb(AH6J_CLIMB, 7.0D));
+    private static final HelicopterFlightProfile AH1G_COBRA = new HelicopterFlightProfile(soft(AH1G_KMH), cap(AH1G_KMH),
             4300.0D,
             AH1G_ENGINE_POWER_SCALE, 0.15D,
             HelicopterHandlingProfile.ah1gCobra(),
-            0.050D, 0.0052D,
+            lin(0.050D, 235.0D, AH1G_KMH), quad(0.0052D, 235.0D, AH1G_KMH),
             0.135D, 0.0125D,
             0.055D, 0.0080D,
-            4.0D, 7.0D);
+            0.9D * climb(AH1G_CLIMB, 7.0D), climb(AH1G_CLIMB, 7.0D));
 
     private static final HelicopterFlightProfile MI24A = new HelicopterFlightProfile(
-            75.375D, 83.75D, 10320.0D, 130000.0D / 163300.0D, 0.20D,
+            soft(MI24_KMH), cap(MI24_KMH), 10320.0D, 130000.0D * POWER_UPLIFT / 163300.0D, 0.20D,
             HelicopterHandlingProfile.of(0.95D, 0.90D, 0.75D, 0.90D, 0.72D, 1.15D),
-            0.030D, 0.0007007756330102947D, 0.135D, 0.0125D,
-            0.055D, 0.0080D, 2.38D, 2.80D,
-            new HelicopterPhysicalControls(.25D, 1.00D, .30D, .22D, 83.75D, true,
+            lin(0.030D, 83.75D, MI24_KMH), quad(0.0007007756330102947D, 83.75D, MI24_KMH), 0.135D, 0.0125D,
+            0.055D, 0.0080D, 0.9D * climb(MI24_CLIMB, 2.80D), climb(MI24_CLIMB, 2.80D),
+            new HelicopterPhysicalControls(.25D, 1.00D, .30D, .22D, cap(MI24_KMH), true,
                     new HelicopterAttitudeProfile(18.0D, 16.0D, 28.0D, 3.0D, 60.0D, 75.0D, 8.0D)));
     private static final HelicopterFlightProfile MI24D = new HelicopterFlightProfile(
-            75.375D, 83.75D, 10690.0D, 130000.0D / 163300.0D, 0.20D,
+            soft(MI24_KMH), cap(MI24_KMH), 10690.0D, 130000.0D * POWER_UPLIFT / 163300.0D, 0.20D,
             HelicopterHandlingProfile.of(0.97D, 0.92D, 0.78D, 0.92D, 0.76D, 1.18D),
-            0.030D, 0.0007727918703541040D, 0.145D, 0.0130D,
-            0.060D, 0.0090D, 2.38D, 2.80D,
-            new HelicopterPhysicalControls(.24D, .95D, .28D, .20D, 83.75D, true,
+            lin(0.030D, 83.75D, MI24_KMH), quad(0.0007727918703541040D, 83.75D, MI24_KMH), 0.145D, 0.0130D,
+            0.060D, 0.0090D, 0.9D * climb(MI24_CLIMB, 2.80D), climb(MI24_CLIMB, 2.80D),
+            new HelicopterPhysicalControls(.24D, .95D, .28D, .20D, cap(MI24_KMH), true,
                     new HelicopterAttitudeProfile(20.0D, 18.0D, 30.0D, 3.2D, 60.0D, 75.0D, 8.0D)));
     private static final HelicopterFlightProfile AH1F = new HelicopterFlightProfile(
-            62.325D, 69.25D, 3990.0D, 52000.0D / 163300.0D, 0.12D,
+            soft(AH1F_KMH), cap(AH1F_KMH), 3990.0D, 52000.0D * POWER_UPLIFT / 163300.0D, 0.12D,
             HelicopterHandlingProfile.of(1.05D, 1.05D, 0.98D, 1.04D, 1.08D, 0.98D),
-            0.040D, 0.004229106199018914D, 0.130D, 0.0110D,
-            0.050D, 0.0075D, 1.7425D, 2.05D,
-            new HelicopterPhysicalControls(.33D, 1.10D, .40D, .32D, 69.25D, true,
+            lin(0.040D, 69.25D, AH1F_KMH), quad(0.004229106199018914D, 69.25D, AH1F_KMH), 0.130D, 0.0110D,
+            0.050D, 0.0075D, 0.9D * climb(AH1F_CLIMB, 2.05D), climb(AH1F_CLIMB, 2.05D),
+            new HelicopterPhysicalControls(.33D, 1.10D, .40D, .32D, cap(AH1F_KMH), true,
                     new HelicopterAttitudeProfile(28.0D, 28.0D, 42.0D, 4.0D, 65.0D, 80.0D, 8.0D)));
     private static final HelicopterFlightProfile MI26 = new HelicopterFlightProfile(
-            63.75D, 67.50D, 56000.0D, 650000.0D / 163300.0D, 0.0D,
+            soft(MI26_KMH), cap(MI26_KMH), 56000.0D, 650000.0D * POWER_UPLIFT / 163300.0D, 0.0D,
             HelicopterHandlingProfile.of(0.65D, 0.82D, 0.62D, 0.68D, 0.55D, 1.85D),
-            0.015D, 0.001130561929995938D, 0.120D, 0.0160D,
-            0.070D, 0.0120D, 1.25D, 1.75D,
-            new HelicopterPhysicalControls(.12D, .40D, .10D, .08D, 67.50D, true,
+            lin(0.015D, 67.50D, MI26_KMH), quad(0.001130561929995938D, 67.50D, MI26_KMH), 0.120D, 0.0160D,
+            0.070D, 0.0120D, 0.9D * climb(MI26_CLIMB, 1.75D), climb(MI26_CLIMB, 1.75D),
+            new HelicopterPhysicalControls(.12D, .40D, .10D, .08D, cap(MI26_KMH), true,
                     new HelicopterAttitudeProfile(8.0D, 8.0D, 12.0D, 1.5D, 35.0D, 50.0D, 8.0D)));
 
-    // Reference speed uses the fleet's quarter-distance convention. Force, drag and
-    // response are engineering fits: agile light attack / steadier attack / heavy tandem transport.
+    // Force, drag and response are engineering fits: agile light attack / steadier attack / heavy tandem transport.
     private static final HelicopterFlightProfile TIGER = new HelicopterFlightProfile(
-            65.25D, 72.50D, 4730.0D, 64000.0D / DEFAULT_MAIN_ROTOR_FORCE_N, .10D,
+            soft(TIGER_KMH), cap(TIGER_KMH), 4730.0D, 64000.0D * POWER_UPLIFT / DEFAULT_MAIN_ROTOR_FORCE_N, .10D,
             HelicopterHandlingProfile.of(1.10D,1.12D,1.10D,1.12D,1.10D,.90D),
-            .035D,.0038D,.130D,.0110D,.055D,.0080D,2.40D,2.65D,
-            new HelicopterPhysicalControls(.32D,1.10D,.36D,.28D,72.50D,true,
+            lin(.035D, 72.50D, TIGER_KMH), quad(.0038D, 72.50D, TIGER_KMH),.130D,.0110D,.055D,.0080D,
+            0.9D * climb(TIGER_CLIMB, 2.65D), climb(TIGER_CLIMB, 2.65D),
+            new HelicopterPhysicalControls(.32D,1.10D,.36D,.28D,cap(TIGER_KMH),true,
                     new HelicopterAttitudeProfile(29D,30D,40D,4D,65D,80D,8D)));
     private static final HelicopterFlightProfile AH64D = new HelicopterFlightProfile(
-            66.375D, 73.75D, 6650.0D, 90000.0D / DEFAULT_MAIN_ROTOR_FORCE_N, .12D,
+            soft(AH64D_KMH), cap(AH64D_KMH), 6650.0D, 90000.0D * POWER_UPLIFT / DEFAULT_MAIN_ROTOR_FORCE_N, .12D,
             HelicopterHandlingProfile.of(1.02D,1.02D,1.00D,1.02D,.98D,1.10D),
-            .038D,.0035D,.140D,.0120D,.058D,.0085D,3.20D,3.55D,
-            new HelicopterPhysicalControls(.28D,1.00D,.30D,.24D,73.75D,true,
+            lin(.038D, 73.75D, AH64D_KMH), quad(.0035D, 73.75D, AH64D_KMH),.140D,.0120D,.058D,.0085D,
+            0.9D * climb(AH64D_CLIMB, 3.55D), climb(AH64D_CLIMB, 3.55D),
+            new HelicopterPhysicalControls(.28D,1.00D,.30D,.24D,cap(AH64D_KMH),true,
                     new HelicopterAttitudeProfile(25D,25D,35D,3.6D,60D,75D,8D)));
     private static final HelicopterFlightProfile CH46E = new HelicopterFlightProfile(
-            59.76D,66.40D,9500.0D,120000.0D / DEFAULT_MAIN_ROTOR_FORCE_N,0D,
+            soft(CH46E_KMH), cap(CH46E_KMH), 9500.0D, 120000.0D * POWER_UPLIFT / DEFAULT_MAIN_ROTOR_FORCE_N, 0D,
             HelicopterHandlingProfile.of(.75D,.80D,.68D,.72D,.65D,1.50D),
-            .040D,.0045D,.145D,.0140D,.065D,.0100D,2.00D,2.70D,
-            new HelicopterPhysicalControls(.18D,.65D,.18D,.13D,66.40D,true,
+            lin(.040D, 66.40D, CH46E_KMH), quad(.0045D, 66.40D, CH46E_KMH),.145D,.0140D,.065D,.0100D,
+            0.9D * climb(CH46E_CLIMB, 2.70D), climb(CH46E_CLIMB, 2.70D),
+            new HelicopterPhysicalControls(.18D,.65D,.18D,.13D,cap(CH46E_KMH),true,
                     new HelicopterAttitudeProfile(13D,12D,20D,2D,40D,55D,8D)));
 
     final double maxForwardKmh;

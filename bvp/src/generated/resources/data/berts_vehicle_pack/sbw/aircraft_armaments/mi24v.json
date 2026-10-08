@@ -5,19 +5,99 @@
     "Cannon"
   ],
   "SuspendedWeapons": [
-    "B13LRocket",
-    "S8KORocket",
-    "PilotMissile",
+    "S13PodInner",
+    "S8PodMiddle",
     "PassengerMissile"
   ],
-  "Pairs": [],
-  "StoreGroups": {
-    "berts_vehicle_pack:modeled_store/mi24v/suspended_equipment": [
-      "suspended_legacy_hull"
-    ]
-  },
-  "MaxPayloadKg": 1500,
+  "Pairs": [
+    {
+      "Id": "inner",
+      "Name": "Inner pylon",
+      "Left": [
+        2.017,
+        1.7202,
+        -1.3723
+      ],
+      "Right": [
+        -2.017,
+        1.7202,
+        -1.3723
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:heli/b13l"
+      ],
+      "StoreGroups": {
+        "berts_vehicle_pack:heli/b13l": [
+          "suspended_inner_l",
+          "suspended_inner_r"
+        ]
+      },
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 1000,
+      "NativeWeaponIds": {
+        "berts_vehicle_pack:heli/b13l": "S13PodInner"
+      }
+    },
+    {
+      "Id": "middle",
+      "Name": "Middle pylon",
+      "Left": [
+        2.8093,
+        1.6121,
+        -1.4119
+      ],
+      "Right": [
+        -2.8093,
+        1.6121,
+        -1.4119
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:heli/b8v20"
+      ],
+      "StoreGroups": {
+        "berts_vehicle_pack:heli/b8v20": [
+          "suspended_middle_l",
+          "suspended_middle_r"
+        ]
+      },
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 1000,
+      "NativeWeaponIds": {
+        "berts_vehicle_pack:heli/b8v20": "S8PodMiddle"
+      }
+    },
+    {
+      "Id": "outer",
+      "Name": "Wingtip rails",
+      "Left": [
+        3.7458,
+        1.216,
+        -1.5127
+      ],
+      "Right": [
+        -3.7458,
+        1.216,
+        -1.5127
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:heli/shturm_rails"
+      ],
+      "StoreGroups": {
+        "berts_vehicle_pack:heli/shturm_rails": [
+          "suspended_outer_l",
+          "suspended_outer_r"
+        ]
+      },
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 1000,
+      "NativeWeaponIds": {
+        "berts_vehicle_pack:heli/shturm_rails": "PassengerMissile"
+      }
+    }
+  ],
+  "StoreGroups": {},
+  "MaxPayloadKg": 2400,
   "MaxPylonMassKg": 1000,
-  "MaxWeaponsPerPylon": 12,
+  "MaxWeaponsPerPylon": 1,
   "Singles": []
 }

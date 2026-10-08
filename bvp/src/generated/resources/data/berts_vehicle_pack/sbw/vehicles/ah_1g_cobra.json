@@ -330,15 +330,21 @@
       "SoundRadius": 8,
       "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/gun_12_7mm.png",
       "ShootPos": {
-        "Transform": "Barrel",
+        "Transform": "Vehicle",
         "Positions": [
           [
-            2.1,
-            1.4,
-            -1.575
+            1.7288,
+            1.9003,
+            0.072
+          ],
+          [
+            -1.7288,
+            1.9003,
+            0.072
           ]
         ],
         "Directions": [
+          "Barrel",
           "Barrel"
         ],
         "ViewPosition": [
@@ -347,16 +353,18 @@
           -1.125
         ],
         "MuzzleAttachments": [
-          "cannon_muzzle_01"
+          "Cannon_left_0",
+          "Cannon_right_0"
         ],
         "MuzzleDirectionAttachments": [
-          "Barrel"
+          "Default"
         ],
         "EffectAttachments": [
-          "cannon_muzzle_01"
+          "Cannon_left_0",
+          "Cannon_right_0"
         ],
         "EffectDirectionAttachments": [
-          "Barrel"
+          "Default"
         ],
         "ViewAttachment": "cannon_view_origin",
         "SeekAttachment": "cannon_muzzle_01"
@@ -437,7 +445,7 @@
       "DefaultZoom": 2,
       "DefaultFireMode": "Auto",
       "AvailableFireModes": "Auto",
-      "Magazine": 40,
+      "Magazine": 14,
       "EmptyReloadTime": 200,
       "Projectile": {
         "Type": "berts_vehicle_pack:s8ko_rocket",
@@ -455,11 +463,6 @@
       "ProjectileLife": 60,
       "ShootPos": {
         "Transform": "Vehicle",
-        "ShootPositionForHud": [
-          0,
-          1.15153,
-          -2.4183
-        ],
         "ShootDirectionForHud": [
           0,
           0.018,
@@ -467,29 +470,19 @@
         ],
         "Positions": [
           [
-            -2.1,
-            1.4,
-            -1.575
+            2.4492,
+            1.9003,
+            0.2881
           ],
           [
-            2.975,
-            1.4,
-            -0.9625
-          ],
-          [
-            -2.975,
-            1.4,
-            -0.9625
+            -2.4492,
+            1.9003,
+            0.2881
           ]
         ],
         "Directions": [
           [
             0.003,
-            0.025,
-            1
-          ],
-          [
-            -0.003,
             0.025,
             1
           ],
@@ -500,26 +493,19 @@
           ]
         ],
         "MuzzleAttachments": [
-          "rocket_muzzle_01",
-          "rocket_muzzle_02",
-          "rocket_muzzle_03"
+          "Rocket_left_0",
+          "Rocket_right_0"
         ],
         "MuzzleDirectionAttachments": [
-          "rocket_direction_01",
-          "rocket_direction_02",
-          "rocket_direction_03"
+          "Default"
         ],
         "EffectAttachments": [
-          "rocket_muzzle_01",
-          "rocket_muzzle_02",
-          "rocket_muzzle_03"
+          "Rocket_left_0",
+          "Rocket_right_0"
         ],
         "EffectDirectionAttachments": [
-          "rocket_direction_01",
-          "rocket_direction_02",
-          "rocket_direction_03"
+          "Default"
         ],
-        "HudOriginAttachment": "rocket_hud_origin",
         "HudDirectionAttachment": "rocket_hud_direction_01"
       },
       "SoundInfo": {
@@ -839,6 +825,58 @@
         0,
         1.1158,
         5.9066
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "Cannon_left_0": {
+      "Parent": "Vehicle",
+      "Position": [
+        1.7288,
+        1.9003,
+        0.072
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "Cannon_right_0": {
+      "Parent": "Vehicle",
+      "Position": [
+        -1.7288,
+        1.9003,
+        0.072
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "Rocket_left_0": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.4492,
+        1.9003,
+        0.2881
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "Rocket_right_0": {
+      "Parent": "Vehicle",
+      "Position": [
+        -2.4492,
+        1.9003,
+        0.2881
       ],
       "Direction": [
         0,

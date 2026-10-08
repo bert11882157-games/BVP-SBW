@@ -163,9 +163,8 @@
       },
       "CanRotateHead": false,
       "Weapons": [
-        "B13LRocket",
-        "S8KORocket",
-        "PilotMissile"
+        "S13PodInner",
+        "S8PodMiddle"
       ],
       "DismountInfo": {
         "Transform": "Vehicle",
@@ -446,335 +445,6 @@
         }
       ]
     },
-    "Rocket": {
-      "AmmoType": [
-        {
-          "Ammo": "superbwarfare:small_rocket",
-          "ConsumptionItem": "superbwarfare:small_unguided_rocket",
-          "Override": {
-            "TntEquivalentKg": 1.375
-          }
-        }
-      ],
-      "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_small_rocket.png",
-      "DefaultZoom": 2,
-      "DefaultFireMode": "Auto",
-      "AvailableFireModes": "Auto",
-      "Magazine": 40,
-      "EmptyReloadTime": 200,
-      "Projectile": {
-        "Type": "berts_vehicle_pack:s8ko_rocket",
-        "Profile": "berts_vehicle_pack:mi24v/rocket/default"
-      },
-      "AddShooterDeltaMovement": true,
-      "Spread": 0.25,
-      "Name": "weapon.superbwarfare.80mm_rocket",
-      "RPM": 600,
-      "Damage": 100,
-      "ExplosionDamage": 0,
-      "ExplosionRadius": 6,
-      "TntEquivalentKg": 1.375,
-      "Gravity": 0.02,
-      "Velocity": 9,
-      "ProjectileLife": 60,
-      "ShootPos": {
-        "Transform": "Vehicle",
-        "ShootPositionForHud": [
-          0,
-          1.15153,
-          -2.4183
-        ],
-        "ShootDirectionForHud": [
-          0,
-          0.018,
-          1
-        ],
-        "Positions": [
-          [
-            1.34,
-            1.161,
-            -0.113
-          ],
-          [
-            -1.34,
-            1.161,
-            -0.113
-          ]
-        ],
-        "Directions": [
-          [
-            -0.003,
-            0.025,
-            1
-          ],
-          [
-            0.003,
-            0.025,
-            1
-          ]
-        ],
-        "MuzzleAttachments": [
-          "rocket_muzzle_01",
-          "rocket_muzzle_02"
-        ],
-        "MuzzleDirectionAttachments": [
-          "rocket_direction_01",
-          "rocket_direction_02"
-        ],
-        "EffectAttachments": [
-          "rocket_muzzle_01",
-          "rocket_muzzle_02"
-        ],
-        "EffectDirectionAttachments": [
-          "rocket_direction_01",
-          "rocket_direction_02"
-        ],
-        "HudOriginAttachment": "rocket_hud_origin",
-        "HudDirectionAttachment": "rocket_hud_direction_01"
-      },
-      "SoundInfo": {
-        "Fire1PGain": 1.0,
-        "Fire3PGain": 1.0,
-        "Fire3PFarGain": 1.0,
-        "Fire3PVeryFarGain": 1.0,
-        "Fire1P": "bvp_audio:weapon/s8_1p",
-        "Fire3P": "bvp_audio:weapon/s8_3p",
-        "VehicleReload3p": "superbwarfare:missile_reload",
-        "VehicleReloadSoundTime": 7,
-        "Change": "superbwarfare:into_missile",
-        "Fire3PFar": "bvp_audio:weapon/s8_far",
-        "Fire3PVeryFar": "bvp_audio:weapon/s8_far",
-        "Volume": 1.7
-      },
-      "Crosshair": "@Empty",
-      "SoundRadius": 16,
-      "NominalBallistics": {
-        "Supported": true,
-        "ProjectileType": "berts_vehicle_pack:s8ko_rocket",
-        "ProjectileProfile": "berts_vehicle_pack:mi24v/rocket/default",
-        "ProjectileLife": 60
-      }
-    },
-    "B13LRocket": {
-      "AmmoType": [
-        {
-          "Ammo": "superbwarfare:medium_rocket_he",
-          "ConsumptionItem": "superbwarfare:medium_unguided_rocket",
-          "Override": {
-            "TntEquivalentKg": 2.772
-          }
-        }
-      ],
-      "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_large_rocket.png",
-      "DefaultZoom": 2,
-      "DefaultFireMode": "Auto",
-      "AvailableFireModes": "Auto",
-      "Magazine": 10,
-      "EmptyReloadTime": 600,
-      "Projectile": {
-        "Type": "berts_vehicle_pack:s13_rocket",
-        "Profile": "berts_vehicle_pack:mi24v/b13lrocket/default"
-      },
-      "AddShooterDeltaMovement": true,
-      "Spread": 0.32,
-      "Name": "weapon.berts_vehicle_pack.s_13_rockets",
-      "RPM": 150,
-      "Damage": 175,
-      "ExplosionDamage": 115,
-      "ExplosionRadius": 9,
-      "TntEquivalentKg": 2.772,
-      "Gravity": 0.025,
-      "Velocity": 8.5,
-      "ProjectileLife": 70,
-      "ShootPos": {
-        "Transform": "Vehicle",
-        "ShootPositionForHud": [
-          2.01696,
-          -0.04465,
-          0
-        ],
-        "ShootDirectionForHud": [
-          0,
-          0.018,
-          1
-        ],
-        "Positions": [
-          [
-            2.01696,
-            -0.04465,
-            0
-          ],
-          [
-            -2.01696,
-            -0.04465,
-            0
-          ]
-        ],
-        "Directions": [
-          [
-            -0.003,
-            0.025,
-            1
-          ],
-          [
-            0.003,
-            0.025,
-            1
-          ]
-        ],
-        "MuzzleAttachments": [
-          "b13lrocket_muzzle_01",
-          "b13lrocket_muzzle_02"
-        ],
-        "MuzzleDirectionAttachments": [
-          "b13lrocket_direction_01",
-          "b13lrocket_direction_02"
-        ],
-        "EffectAttachments": [
-          "b13lrocket_muzzle_01",
-          "b13lrocket_muzzle_02"
-        ],
-        "EffectDirectionAttachments": [
-          "b13lrocket_direction_01",
-          "b13lrocket_direction_02"
-        ],
-        "HudOriginAttachment": "b13lrocket_hud_origin",
-        "HudDirectionAttachment": "b13lrocket_hud_direction_01"
-      },
-      "SoundInfo": {
-        "Fire1PGain": 1.0,
-        "Fire3PGain": 1.0,
-        "Fire3PFarGain": 1.0,
-        "Fire3PVeryFarGain": 1.0,
-        "Fire1P": "bvp_audio:weapon/s8_1p",
-        "Fire3P": "bvp_audio:weapon/s8_3p",
-        "VehicleReload3p": "superbwarfare:missile_reload",
-        "VehicleReloadSoundTime": 7,
-        "Change": "superbwarfare:into_missile",
-        "Fire3PFar": "bvp_audio:weapon/s8_far",
-        "Fire3PVeryFar": "bvp_audio:weapon/s8_far",
-        "Volume": 2.0
-      },
-      "Crosshair": "@Empty",
-      "SoundRadius": 16,
-      "ShellType": "HE",
-      "NominalBallistics": {
-        "Supported": true,
-        "ProjectileType": "berts_vehicle_pack:s13_rocket",
-        "ProjectileProfile": "berts_vehicle_pack:mi24v/b13lrocket/default",
-        "ProjectileLife": 70
-      }
-    },
-    "S8KORocket": {
-      "AmmoType": [
-        {
-          "Ammo": "superbwarfare:small_rocket",
-          "ConsumptionItem": "superbwarfare:small_unguided_rocket",
-          "Override": {
-            "TntEquivalentKg": 1.375
-          }
-        }
-      ],
-      "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_small_rocket.png",
-      "DefaultZoom": 2,
-      "DefaultFireMode": "Auto",
-      "AvailableFireModes": "Auto",
-      "Magazine": 40,
-      "EmptyReloadTime": 600,
-      "Projectile": {
-        "Type": "berts_vehicle_pack:s8ko_rocket",
-        "Profile": "berts_vehicle_pack:mi24v/s8korocket/default"
-      },
-      "AddShooterDeltaMovement": true,
-      "Spread": 0,
-      "Name": "weapon.berts_vehicle_pack.s_8ko_rockets",
-      "RPM": 600,
-      "Damage": 100,
-      "ExplosionDamage": 0,
-      "ExplosionRadius": 6,
-      "TntEquivalentKg": 1.375,
-      "Gravity": 0.02,
-      "Velocity": 9,
-      "ProjectileLife": 60,
-      "ShootPos": {
-        "Transform": "Vehicle",
-        "ShootPositionForHud": [
-          2.80934,
-          0.17146,
-          -0.57628
-        ],
-        "ShootDirectionForHud": [
-          0,
-          0.018,
-          1
-        ],
-        "Positions": [
-          [
-            2.80934,
-            0.17146,
-            -0.57628
-          ],
-          [
-            -2.80934,
-            0.17146,
-            -0.57628
-          ]
-        ],
-        "Directions": [
-          [
-            0,
-            0.018,
-            1
-          ],
-          [
-            0,
-            0.018,
-            1
-          ]
-        ],
-        "MuzzleAttachments": [
-          "s8korocket_muzzle_01",
-          "s8korocket_muzzle_02"
-        ],
-        "MuzzleDirectionAttachments": [
-          "s8korocket_direction_01",
-          "s8korocket_direction_02"
-        ],
-        "EffectAttachments": [
-          "s8korocket_muzzle_01",
-          "s8korocket_muzzle_02"
-        ],
-        "EffectDirectionAttachments": [
-          "s8korocket_direction_01",
-          "s8korocket_direction_02"
-        ],
-        "HudOriginAttachment": "s8korocket_hud_origin",
-        "HudDirectionAttachment": "s8korocket_hud_direction_01"
-      },
-      "SoundInfo": {
-        "Fire1PGain": 1.0,
-        "Fire3PGain": 1.0,
-        "Fire3PFarGain": 1.0,
-        "Fire3PVeryFarGain": 1.0,
-        "Fire1P": "bvp_audio:weapon/s8_1p",
-        "Fire3P": "bvp_audio:weapon/s8_3p",
-        "VehicleReload3p": "superbwarfare:missile_reload",
-        "VehicleReloadSoundTime": 7,
-        "Change": "superbwarfare:into_missile",
-        "Fire3PFar": "bvp_audio:weapon/s8_far",
-        "Fire3PVeryFar": "bvp_audio:weapon/s8_far",
-        "Volume": 1.7
-      },
-      "Crosshair": "@Empty",
-      "SoundRadius": 16,
-      "ShellType": "HEAT",
-      "NominalBallistics": {
-        "Supported": true,
-        "ProjectileType": "berts_vehicle_pack:s8ko_rocket",
-        "ProjectileProfile": "berts_vehicle_pack:mi24v/s8korocket/default",
-        "ProjectileLife": 60
-      }
-    },
     "@Missile": {
       "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_atgm.png",
       "DefaultFireMode": "Semi",
@@ -829,55 +499,71 @@
       "Crosshair": "@VehicleCommonMissile",
       "ShootPos": {
         "Transform": "Vehicle",
-        "ShootPositionForHud": [
-          0.54395,
-          0.04582,
-          5.58542
-        ],
         "Positions": [
           [
-            3.96189,
-            0.53163,
-            -0.36017
+            3.5657,
+            0.9999,
+            -0.2881
           ],
           [
-            3.60172,
-            0.53163,
-            -0.36017
+            -3.5657,
+            0.9999,
+            -0.2881
           ],
           [
-            -3.52968,
-            0.53163,
-            -0.36017
+            3.9259,
+            0.9999,
+            -0.2881
           ],
           [
-            -3.96189,
-            0.53163,
-            -0.36017
+            -3.9259,
+            0.9999,
+            -0.2881
           ]
         ],
         "BoundUpWithAmmoAmount": true,
         "ViewDirection": "Barrel",
         "MuzzleAttachments": [
-          "passengermissile_muzzle_01",
-          "passengermissile_muzzle_02",
-          "passengermissile_muzzle_03",
-          "passengermissile_muzzle_04"
+          "PassengerMissile_left_0",
+          "PassengerMissile_right_0",
+          "PassengerMissile_left_1",
+          "PassengerMissile_right_1"
         ],
         "MuzzleDirectionAttachments": [
           "Default"
         ],
         "EffectAttachments": [
-          "passengermissile_muzzle_01",
-          "passengermissile_muzzle_02",
-          "passengermissile_muzzle_03",
-          "passengermissile_muzzle_04"
+          "PassengerMissile_left_0",
+          "PassengerMissile_right_0",
+          "PassengerMissile_left_1",
+          "PassengerMissile_right_1"
         ],
         "EffectDirectionAttachments": [
           "Default"
         ],
-        "HudOriginAttachment": "passengermissile_hud_origin",
-        "ViewDirectionAttachment": "Barrel"
+        "ViewDirectionAttachment": "Barrel",
+        "Directions": [
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ]
       },
       "Projectile": {
         "Type": "berts_vehicle_pack:ataka_missile",
@@ -896,21 +582,39 @@
       },
       "TntEquivalentKg": 4.0014
     },
-    "PilotMissile": {
-      "Name": "weapon.berts_vehicle_pack.9m114_shturm_atgm",
-      "DefaultZoom": 3,
-      "Magazine": 4,
-      "Template": "@Missile",
-      "RPM": 24,
-      "EmptyReloadTime": 900,
-      "Crosshair": "@VehicleCommonMissile",
+    "S13PodInner": {
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:medium_rocket_he",
+          "ConsumptionItem": "superbwarfare:medium_unguided_rocket",
+          "Override": {
+            "TntEquivalentKg": 2.772
+          }
+        }
+      ],
+      "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_large_rocket.png",
+      "DefaultZoom": 2,
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "Magazine": 10,
+      "EmptyReloadTime": 600,
+      "Projectile": {
+        "Type": "berts_vehicle_pack:s13_rocket",
+        "Profile": "berts_vehicle_pack:mi24v/b13lrocket/default"
+      },
+      "AddShooterDeltaMovement": true,
+      "Spread": 0.32,
+      "Name": "weapon.berts_vehicle_pack.s_13_rockets",
+      "RPM": 600,
+      "Damage": 175,
+      "ExplosionDamage": 115,
+      "ExplosionRadius": 9,
+      "TntEquivalentKg": 2.772,
+      "Gravity": 0.025,
+      "Velocity": 8.5,
+      "ProjectileLife": 70,
       "ShootPos": {
         "Transform": "Vehicle",
-        "ShootPositionForHud": [
-          0,
-          2.58926,
-          3.64698
-        ],
         "ShootDirectionForHud": [
           0,
           0.018,
@@ -918,92 +622,169 @@
         ],
         "Positions": [
           [
-            3.96189,
-            0.53163,
-            -0.36017
+            2.017,
+            1.5041,
+            0.0936
           ],
           [
-            3.60172,
-            0.53163,
-            -0.36017
-          ],
-          [
-            -3.52968,
-            0.53163,
-            -0.36017
-          ],
-          [
-            -3.96189,
-            0.53163,
-            -0.36017
+            -2.017,
+            1.5041,
+            0.0936
           ]
         ],
         "Directions": [
           [
-            -0.006,
+            -0.003,
+            0.025,
+            1
+          ],
+          [
+            -0.003,
+            0.025,
+            1
+          ]
+        ],
+        "MuzzleAttachments": [
+          "S13PodInner_left_0",
+          "S13PodInner_right_0"
+        ],
+        "MuzzleDirectionAttachments": [
+          "Default"
+        ],
+        "EffectAttachments": [
+          "S13PodInner_left_0",
+          "S13PodInner_right_0"
+        ],
+        "EffectDirectionAttachments": [
+          "Default"
+        ],
+        "HudDirectionAttachment": "b13lrocket_hud_direction_01"
+      },
+      "SoundInfo": {
+        "Fire1PGain": 1.0,
+        "Fire3PGain": 1.0,
+        "Fire3PFarGain": 1.0,
+        "Fire3PVeryFarGain": 1.0,
+        "Fire1P": "bvp_audio:weapon/s8_1p",
+        "Fire3P": "bvp_audio:weapon/s8_3p",
+        "VehicleReload3p": "superbwarfare:missile_reload",
+        "VehicleReloadSoundTime": 7,
+        "Change": "superbwarfare:into_missile",
+        "Fire3PFar": "bvp_audio:weapon/s8_far",
+        "Fire3PVeryFar": "bvp_audio:weapon/s8_far",
+        "Volume": 2.0
+      },
+      "Crosshair": "@Empty",
+      "SoundRadius": 16,
+      "ShellType": "HE",
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "berts_vehicle_pack:s13_rocket",
+        "ProjectileProfile": "berts_vehicle_pack:mi24v/b13lrocket/default",
+        "ProjectileLife": 70
+      }
+    },
+    "S8PodMiddle": {
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_rocket",
+          "ConsumptionItem": "superbwarfare:small_unguided_rocket",
+          "Override": {
+            "TntEquivalentKg": 1.375
+          }
+        }
+      ],
+      "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_small_rocket.png",
+      "DefaultZoom": 2,
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "Magazine": 40,
+      "EmptyReloadTime": 600,
+      "Projectile": {
+        "Type": "berts_vehicle_pack:s8ko_rocket",
+        "Profile": "berts_vehicle_pack:mi24v/s8korocket/default"
+      },
+      "AddShooterDeltaMovement": true,
+      "Spread": 0,
+      "Name": "weapon.berts_vehicle_pack.s_8ko_rockets",
+      "RPM": 600,
+      "Damage": 100,
+      "ExplosionDamage": 0,
+      "ExplosionRadius": 6,
+      "TntEquivalentKg": 1.375,
+      "Gravity": 0.02,
+      "Velocity": 9,
+      "ProjectileLife": 60,
+      "ShootPos": {
+        "Transform": "Vehicle",
+        "ShootDirectionForHud": [
+          0,
+          0.018,
+          1
+        ],
+        "Positions": [
+          [
+            2.8093,
+            1.324,
+            -0.5763
+          ],
+          [
+            -2.8093,
+            1.324,
+            -0.5763
+          ]
+        ],
+        "Directions": [
+          [
+            0,
             0.018,
             1
           ],
           [
-            -0.006,
-            0.018,
-            1
-          ],
-          [
-            0.006,
-            0.018,
-            1
-          ],
-          [
-            0.006,
+            0,
             0.018,
             1
           ]
         ],
-        "BoundUpWithAmmoAmount": true,
         "MuzzleAttachments": [
-          "pilotmissile_muzzle_01",
-          "pilotmissile_muzzle_02",
-          "pilotmissile_muzzle_03",
-          "pilotmissile_muzzle_04"
+          "S8PodMiddle_left_0",
+          "S8PodMiddle_right_0"
         ],
         "MuzzleDirectionAttachments": [
-          "pilotmissile_direction_01",
-          "pilotmissile_direction_02",
-          "pilotmissile_direction_03",
-          "pilotmissile_direction_04"
+          "Default"
         ],
         "EffectAttachments": [
-          "pilotmissile_muzzle_01",
-          "pilotmissile_muzzle_02",
-          "pilotmissile_muzzle_03",
-          "pilotmissile_muzzle_04"
+          "S8PodMiddle_left_0",
+          "S8PodMiddle_right_0"
         ],
         "EffectDirectionAttachments": [
-          "pilotmissile_direction_01",
-          "pilotmissile_direction_02",
-          "pilotmissile_direction_03",
-          "pilotmissile_direction_04"
+          "Default"
         ],
-        "HudOriginAttachment": "pilotmissile_hud_origin",
-        "HudDirectionAttachment": "pilotmissile_hud_direction_01"
-      },
-      "Projectile": {
-        "Type": "berts_vehicle_pack:ataka_missile",
-        "Profile": "berts_vehicle_pack:mi24v/pilotmissile/default"
+        "HudDirectionAttachment": "s8korocket_hud_direction_01"
       },
       "SoundInfo": {
-        "Fire1PGain": 0.7,
-        "Fire3PGain": 0.7,
-        "Fire3PFarGain": 0.7,
-        "Fire3PVeryFarGain": 0.7
+        "Fire1PGain": 1.0,
+        "Fire3PGain": 1.0,
+        "Fire3PFarGain": 1.0,
+        "Fire3PVeryFarGain": 1.0,
+        "Fire1P": "bvp_audio:weapon/s8_1p",
+        "Fire3P": "bvp_audio:weapon/s8_3p",
+        "VehicleReload3p": "superbwarfare:missile_reload",
+        "VehicleReloadSoundTime": 7,
+        "Change": "superbwarfare:into_missile",
+        "Fire3PFar": "bvp_audio:weapon/s8_far",
+        "Fire3PVeryFar": "bvp_audio:weapon/s8_far",
+        "Volume": 1.7
       },
+      "Crosshair": "@Empty",
+      "SoundRadius": 16,
+      "ShellType": "HEAT",
       "NominalBallistics": {
-        "Supported": false,
-        "ProjectileType": "berts_vehicle_pack:ataka_missile",
-        "ProjectileProfile": "berts_vehicle_pack:mi24v/pilotmissile/default"
-      },
-      "TntEquivalentKg": 4.0014
+        "Supported": true,
+        "ProjectileType": "berts_vehicle_pack:s8ko_rocket",
+        "ProjectileProfile": "berts_vehicle_pack:mi24v/s8korocket/default",
+        "ProjectileLife": 60
+      }
     }
   },
   "HUDColor": "0xFFC700",
@@ -1604,13 +1385,117 @@
         0,
         1
       ]
+    },
+    "S13PodInner_left_0": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.017,
+        1.5041,
+        0.0936
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S13PodInner_right_0": {
+      "Parent": "Vehicle",
+      "Position": [
+        -2.017,
+        1.5041,
+        0.0936
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S8PodMiddle_left_0": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.8093,
+        1.324,
+        -0.5763
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S8PodMiddle_right_0": {
+      "Parent": "Vehicle",
+      "Position": [
+        -2.8093,
+        1.324,
+        -0.5763
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "PassengerMissile_left_0": {
+      "Parent": "Vehicle",
+      "Position": [
+        3.5657,
+        0.9999,
+        -0.2881
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "PassengerMissile_right_0": {
+      "Parent": "Vehicle",
+      "Position": [
+        -3.5657,
+        0.9999,
+        -0.2881
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "PassengerMissile_left_1": {
+      "Parent": "Vehicle",
+      "Position": [
+        3.9259,
+        0.9999,
+        -0.2881
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "PassengerMissile_right_1": {
+      "Parent": "Vehicle",
+      "Position": [
+        -3.9259,
+        0.9999,
+        -0.2881
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
     }
   },
   "WeaponPairs": [
     {
       "Seat": 0,
-      "Primary": "S8KORocket",
-      "Secondary": "PilotMissile"
+      "Primary": "S13PodInner",
+      "Secondary": "S8PodMiddle"
     },
     {
       "Seat": 1,

@@ -6,151 +6,64 @@
   "Pairs": [
     {
       "Id": "inner",
-      "Name": "Inner wing",
+      "Name": "Inner pylon",
       "Left": [
-        1.687322,
-        1.107481,
-        0.773356
-      ],
-      "LeftStations": [
-        {
-          "Point": [
-            1.617,
-            1.2129,
-            0.2109
-          ],
-          "Face": "bottom"
-        }
+        1.7928,
+        2.1972,
+        0.2109
       ],
       "Right": [
-        -1.687322,
-        1.107481,
-        0.773356
-      ],
-      "RightStations": [
-        {
-          "Point": [
-            -1.617,
-            1.2129,
-            0.2109
-          ],
-          "Face": "bottom"
-        }
+        -1.7928,
+        2.1972,
+        0.2109
       ],
       "AllowedStores": [
+        "berts_vehicle_pack:heli/hot3_quad",
         "berts_vehicle_pack:eurocopter_tiger/hot3_proxy",
         "berts_vehicle_pack:munition/pars3_lr"
       ],
-      "MaxWeaponsPerPylon": 4,
-      "MaxPylonMassKg": 250
+      "StoreGroups": {
+        "berts_vehicle_pack:heli/hot3_quad": [
+          "suspended_inner_l",
+          "suspended_inner_r"
+        ]
+      },
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 1000
     },
     {
       "Id": "outer",
-      "Name": "Outer wing",
+      "Name": "Outer pylon",
       "Left": [
-        2.671593,
-        1.107481,
-        0.210915
-      ],
-      "LeftStations": [
-        {
-          "Point": [
-            2.8122,
-            1.6699,
-            0.2461
-          ],
-          "Face": "bottom",
-          "Copies": [
-            1
-          ]
-        },
-        {
-          "Point": [
-            3.0934,
-            1.9511,
-            0.2461
-          ],
-          "Face": "left",
-          "Copies": [
-            2
-          ],
-          "ExceptStores": [
-            "berts_vehicle_pack:munition/pars3_lr_dual"
-          ]
-        },
-        {
-          "Point": [
-            2.531,
-            1.9511,
-            0.2461
-          ],
-          "Face": "right",
-          "Copies": [
-            2
-          ],
-          "ExceptStores": [
-            "berts_vehicle_pack:munition/pars3_lr_dual"
-          ]
-        }
+        2.8122,
+        2.4433,
+        0.4921
       ],
       "Right": [
-        -2.671593,
-        1.107481,
-        0.210915
-      ],
-      "RightStations": [
-        {
-          "Point": [
-            -2.8122,
-            1.6699,
-            0.2461
-          ],
-          "Face": "bottom",
-          "Copies": [
-            1
-          ]
-        },
-        {
-          "Point": [
-            -3.0934,
-            1.9511,
-            0.2461
-          ],
-          "Face": "right",
-          "Copies": [
-            2
-          ],
-          "ExceptStores": [
-            "berts_vehicle_pack:munition/pars3_lr_dual"
-          ]
-        },
-        {
-          "Point": [
-            -2.531,
-            1.9511,
-            0.2461
-          ],
-          "Face": "left",
-          "Copies": [
-            2
-          ],
-          "ExceptStores": [
-            "berts_vehicle_pack:munition/pars3_lr_dual"
-          ]
-        }
+        -2.8122,
+        2.4433,
+        0.0615
       ],
       "AllowedStores": [
+        "berts_vehicle_pack:heli/tiger_tanks",
         "berts_vehicle_pack:eurocopter_tiger/hot3_proxy",
         "berts_vehicle_pack:eurocopter_tiger/aim92",
         "berts_vehicle_pack:munition/pars3_lr_dual"
       ],
-      "MaxWeaponsPerPylon": 2,
-      "MaxPylonMassKg": 160
+      "StoreGroups": {
+        "berts_vehicle_pack:heli/tiger_tanks": [
+          "suspended_outer_l",
+          "suspended_outer_r"
+        ]
+      },
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 1000
     }
   ],
   "Singles": [],
   "StoreGroups": {},
-  "MaxPayloadKg": 1000,
-  "MaxPylonMassKg": 500,
-  "MaxWeaponsPerPylon": 4
+  "MaxPayloadKg": 1200,
+  "MaxPylonMassKg": 1000,
+  "MaxWeaponsPerPylon": 1,
+  "WeaponSeat": 1
 }

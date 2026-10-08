@@ -342,7 +342,7 @@ object AircraftArmamentManager {
     @JvmStatic fun tryFireStore(vehicle: VehicleEntity, controller: net.minecraft.world.entity.LivingEntity?, weaponId: String): com.atsuishio.superbwarfare.api.weapon.ShotResult? {
         val key = AircraftStoreWeapons.mountId(weaponId) ?: return null
         val player = controller as? ServerPlayer
-        if (player == null || !pilot(player, vehicle) || !vehicle.isVehicleActionFireAllowed())
+        if (player == null || !operator(player, vehicle) || !vehicle.isVehicleActionFireAllowed())
             return com.atsuishio.superbwarfare.api.weapon.ShotResult.rejected(com.atsuishio.superbwarfare.api.weapon.ShotRejectionReason.ACTION_BLOCKED, weaponId)
         val group = groupFor(vehicle, weaponId)?.takeIf { it.representative == weaponId }
         val mounts = group?.mounts ?: listOf(key)
@@ -535,15 +535,22 @@ object AircraftArmamentManager {
         sent[vehicle.uuid] = stamp
         while (sent.size > 256) sent.remove(sent.keys.first())
     }
-    private fun pilot(player: ServerPlayer, vehicle: VehicleEntity) = player.vehicle === vehicle &&
-        vehicle.getSeatIndex(player) == 0 && player.isAlive && !player.isSpectator && vehicle.isAlive && !vehicle.isWreck
+    private fun pilot(player: ServerPlayer, vehicle: VehicleEntity) = seated(player, vehicle, 0)
+    /** The occupant of the seat that operates the released guided stores (AircraftMissileLaunchers.WEAPON_SEAT). */
+    private fun operator(player: ServerPlayer, vehicle: VehicleEntity) =
+        seated(player, vehicle, AircraftMissileLaunchers.weaponSeat(definition(vehicle)))
+    private fun seated(player: ServerPlayer, vehicle: VehicleEntity, seat: Int) = player.vehicle === vehicle &&
+        vehicle.getSeatIndex(player) == seat && player.isAlive && !player.isSpectator && vehicle.isAlive && !vehicle.isWreck
+    /** Loadout editing is the pilot's; firing, designating and steering are the weapon operator's too. */
+    private val EDITING = setOf("OPEN", "APPLY", "SAVE_PRESET", "LOAD_PRESET", "DELETE_PRESET")
 
     @JvmStatic fun handle(player: ServerPlayer, request: AircraftArmamentRequestMessage, body: JsonObject) {
         if (request.sequence <= (sequences[player.connection.connection] ?: 0)) return
         sequences[player.connection.connection] = request.sequence
         if (request.dimension != player.level().dimension().location()) return
         val vehicle = player.serverLevel().getEntity(request.vehicle) as? VehicleEntity ?: return
-        if (!pilot(player, vehicle) || definition(vehicle) == null) return
+        if (definition(vehicle) == null) return
+        if (!pilot(player, vehicle) && (request.operation in EDITING || !operator(player, vehicle))) return
         var lease = leases[player]
         if (lease == null || lease.vehicle !== vehicle || lease.catalogue != AircraftArmamentRegistry.revision) {
             lease = Lease(vehicle, nextEpoch++, AircraftArmamentRegistry.revision); leases[player] = lease
@@ -719,7 +726,8 @@ object AircraftArmamentManager {
             return
         }
         val weaponId = AircraftStoreWeapons.PREFIX + pair["Id"].asString
-        val equipped = listOfNotNull(vehicle.getGunName(0), vehicle.getSecondaryWeaponIndex(0)?.let { vehicle.getGunName(0, it) })
+        val seat = AircraftMissileLaunchers.weaponSeat(definition(vehicle))
+        val equipped = listOfNotNull(vehicle.getGunName(seat), vehicle.getSecondaryWeaponIndex(seat)?.let { vehicle.getGunName(seat, it) })
         val selectedGroup = groupFor(vehicle, weaponId)?.representative ?: weaponId
         require(selectedGroup in equipped) { "Select this store in a weapon slot first." }
         // A TV bomb needs no lock to release: its seeker view opens after release (AircraftTvGuidance).
@@ -828,7 +836,7 @@ object AircraftArmamentManager {
                 if (stabilizeOnly) lease.stabilizing = false else lease.designating = false
                 val current = if (stabilizeOnly) lease.stabilizeGeneration else lease.designationGeneration
                 if (leases[player] !== lease || generation != current ||
-                    lease.catalogue != AircraftArmamentRegistry.revision || !pilot(player, vehicle) ||
+                    lease.catalogue != AircraftArmamentRegistry.revision || !pilot(player, vehicle) && !operator(player, vehicle) ||
                     vehicle.level() !== level || player.level() !== level ||
                     (podMode && !lease.pod) || equipment(vehicle).getLong("Revision") != equipmentRevision) return@execute
                 if (error != null || distance == null || !distance.isFinite() || distance !in 0.0..range) {
@@ -964,7 +972,7 @@ object AircraftArmamentManager {
         if (event.phase != TickEvent.Phase.END) return
         val player = event.player as? ServerPlayer ?: return
         val vehicle = player.vehicle as? VehicleEntity
-        if (vehicle == null || !pilot(player, vehicle) || definition(vehicle) == null) {
+        if (vehicle == null || definition(vehicle) == null || !pilot(player, vehicle) && !operator(player, vehicle)) {
             leases.remove(player)?.let { AircraftMissileLauncher.clear(it.vehicle) }; return
         }
         val old = leases[player]

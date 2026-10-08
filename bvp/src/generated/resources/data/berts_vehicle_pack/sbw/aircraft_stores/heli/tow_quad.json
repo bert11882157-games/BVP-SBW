@@ -1,0 +1,18 @@
+{
+  "Schema": 1,
+  "Name": "M65 · 4 × BGM-71 TOW",
+  "Category": "COMMAND_GUIDED",
+  "Capacity": 4,
+  "MassKg": 22.0,
+  "CommandGuidance": {
+    "Mode": "SACLOS"
+  },
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_stores/bgm71_tow",
+  "LaunchGunProfile": "berts_vehicle_pack:aircraft_stores/bgm71_tow",
+  "LaunchOffset": [
+    0.0,
+    -0.2,
+    0.6
+  ],
+  "AmmoItem": "superbwarfare:large_atgm"
+}

@@ -382,6 +382,7 @@ object WarDiagnostics {
                 "AIR_TO_AIR", "AIR_TO_GROUND", "ANTI_RADIATION" ->
                     "FFA_" + (store.getAsJsonObject("Guidance")?.get("Mode")?.asString ?: category)
                 "ROCKET_POD" -> "ROCKETS"
+                com.atsuishio.superbwarfare.api.aircraft.AircraftMissileLaunchers.CATEGORY -> "OTHER"
                 "GUN_POD" -> "GUN_POD"
                 else -> "OTHER"
             }.let { if (it == "MISSILE_MCLOS" || it == "MISSILE_SACLOS") "OTHER" else it }  // need a seated pilot

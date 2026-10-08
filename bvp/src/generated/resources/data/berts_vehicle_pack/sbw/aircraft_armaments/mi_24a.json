@@ -4,11 +4,68 @@
   "BuiltInWeapons": [
     "PassengerGun1"
   ],
-  "SuspendedWeapons": [],
-  "Pairs": [],
+  "SuspendedWeapons": [
+    "S5PodInner"
+  ],
+  "Pairs": [
+    {
+      "Id": "inner",
+      "Name": "Inner pylon",
+      "Left": [
+        3.1875,
+        2.3438,
+        0.2188
+      ],
+      "Right": [
+        -3.1875,
+        2.3438,
+        0.2188
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:heli/ub32"
+      ],
+      "StoreGroups": {
+        "berts_vehicle_pack:heli/ub32": [
+          "suspended_inner_l",
+          "suspended_inner_r"
+        ]
+      },
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 1000,
+      "NativeWeaponIds": {
+        "berts_vehicle_pack:heli/ub32": "S5PodInner"
+      }
+    },
+    {
+      "Id": "outer_atgm",
+      "Name": "Outer wing ATGM rails",
+      "Left": [
+        4.5938,
+        2.25,
+        0.0781
+      ],
+      "Right": [
+        -4.5938,
+        2.25,
+        0.0781
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:heli/falanga_twin"
+      ],
+      "StoreGroups": {
+        "berts_vehicle_pack:heli/falanga_twin": [
+          "suspended_outer_atgm_l",
+          "suspended_outer_atgm_r"
+        ]
+      },
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 1000
+    }
+  ],
   "StoreGroups": {},
-  "MaxPayloadKg": 1500,
+  "MaxPayloadKg": 2400,
   "MaxPylonMassKg": 1000,
-  "MaxWeaponsPerPylon": 12,
-  "Singles": []
+  "MaxWeaponsPerPylon": 1,
+  "Singles": [],
+  "WeaponSeat": 1
 }

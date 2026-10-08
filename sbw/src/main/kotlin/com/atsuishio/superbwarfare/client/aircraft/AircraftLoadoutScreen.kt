@@ -380,7 +380,7 @@ class AircraftLoadoutScreen(private var state: AircraftArmamentSnapshot) : Scree
                     Component.literal("${(store.massKg*(store.capacity?:1)*count+store.rackMassKg).toInt()} kg${if(count>1) " · $count munitions" else ""}").withStyle(ChatFormatting.GREEN)) +
                     (if(fits) emptyList() else listOf(Component.literal("Payload or station limit exceeded").withStyle(ChatFormatting.RED))) +
                     (if(ammo!=null) listOf(Component.literal("Munitions: $rounds × ${ammoName(ammo)} · you have ${owned(ammo)}").withStyle(ChatFormatting.GRAY))
-                    else if(store.category=="GUN_POD" || store.category=="ROCKET_POD")
+                    else if(store.category=="GUN_POD" || store.category=="ROCKET_POD" || store.category==com.atsuishio.superbwarfare.api.aircraft.AircraftMissileLaunchers.CATEGORY)
                         listOf(Component.literal("Pod ammunition reloads from the aircraft inventory").withStyle(ChatFormatting.GRAY))
                     else emptyList()) + quoteLines(quote)
                     nextHoverStatus=quoteStatus(quote)

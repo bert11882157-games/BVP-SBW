@@ -1,0 +1,141 @@
+{
+  "_comment": "Per helicopter: sources = bones holding the built-in stores; mounts = pylon pairs (box: |x|, optional y and z ranges, vehicle-local blocks); kind rocket|gun|missile (fires a native channel) or store (a released guided store, fired by the store system); channel = weapon fired from the mount (rocket/gun: copied from template, 'vehicle:Weapon' for another helicopter's; missile: the existing channel, re-pointed at the launch tubes); seat = seat whose weapon list gets the channel; extra_allowed = further stores for the pylon (drawn with their own models); weapon_seat = seat that operates released guided stores (AircraftMissileLaunchers.WEAPON_SEAT); retire = old weapons removed from every seat.",
+  "mi28n": {
+    "sources": ["suspended_legacy_hull"],
+    "payload_kg": 2300,
+    "built_in": ["Cannon"],
+    "retire": ["S8KORocket", "Rocket", "B13LRocket", "PilotMissile"],
+    "mounts": [
+      {"id": "inner", "name": "Inner pylon", "box": {"x": [2.1, 2.98]}, "kind": "rocket",
+       "store": "berts_vehicle_pack:heli/b8v20", "capacity": 20, "channel": "S8PodInner", "template": "S8KORocket", "seat": 0},
+      {"id": "outer", "name": "Outer pylon", "box": {"x": [3.0, 4.3]}, "kind": "missile",
+       "store": "berts_vehicle_pack:heli/ataka_launcher", "channel": "PassengerMissile",
+       "tube": {"min_len": 2.0, "max_dia": 0.3}, "seat": 1}
+    ]
+  },
+  "ka50": {
+    "sources": ["suspended_legacy_hull"],
+    "payload_kg": 2500,
+    "built_in": ["Cannon"],
+    "retire": ["S8KORocket", "Rocket", "B13LRocket", "PassengerMissile"],
+    "mounts": [
+      {"id": "inner", "name": "Inner pylon", "box": {"x": [2.1, 3.2]}, "kind": "rocket",
+       "store": "berts_vehicle_pack:heli/b8v20", "capacity": 20, "channel": "S8PodInner", "template": "S8KORocket", "seat": 0},
+      {"id": "outer", "name": "Outer pylon", "box": {"x": [3.3, 4.7]}, "kind": "missile",
+       "store": "berts_vehicle_pack:heli/vikhr_launcher", "channel": "PilotMissile",
+       "tube": {"min_len": 2.0, "max_dia": 0.3}, "seat": 0}
+    ]
+  },
+  "mi24v": {
+    "sources": ["suspended_legacy_hull"],
+    "payload_kg": 2400,
+    "built_in": ["Cannon"],
+    "retire": ["S8KORocket", "Rocket", "B13LRocket", "PilotMissile"],
+    "mounts": [
+      {"id": "inner", "name": "Inner pylon", "box": {"x": [1.7, 2.35]}, "kind": "rocket",
+       "store": "berts_vehicle_pack:heli/b13l", "capacity": 5, "channel": "S13PodInner", "template": "B13LRocket", "seat": 0},
+      {"id": "middle", "name": "Middle pylon", "box": {"x": [2.4, 3.2]}, "kind": "rocket",
+       "store": "berts_vehicle_pack:heli/b8v20", "capacity": 20, "channel": "S8PodMiddle", "template": "S8KORocket", "seat": 0},
+      {"id": "outer", "name": "Wingtip rails", "box": {"x": [3.3, 4.2]}, "kind": "missile",
+       "store": "berts_vehicle_pack:heli/shturm_rails", "channel": "PassengerMissile",
+       "tube": {"min_len": 2.0, "max_dia": 0.3}, "seat": 1}
+    ]
+  },
+  "ah_6j": {
+    "sources": ["suspended_legacy_hull"],
+    "payload_kg": 600,
+    "built_in": [],
+    "retire": [],
+    "mounts": [
+      {"id": "inner", "name": "Inner mount", "box": {"x": [0.7, 1.58]}, "kind": "gun",
+       "store": "berts_vehicle_pack:heli/m134_pods", "channel": "Cannon", "seat": 0},
+      {"id": "outer", "name": "Outer mount", "box": {"x": [1.6, 2.45]}, "kind": "rocket",
+       "store": "berts_vehicle_pack:heli/m260", "capacity": 7, "channel": "Rocket", "seat": 0}
+    ]
+  },
+  "ah_1g_cobra": {
+    "sources": ["suspended_legacy_hull"],
+    "payload_kg": 1000,
+    "built_in": [],
+    "retire": [],
+    "mounts": [
+      {"id": "inner", "name": "Inner pylon", "box": {"x": [1.6, 1.9]}, "kind": "gun",
+       "store": "berts_vehicle_pack:heli/m195_pods", "channel": "Cannon", "seat": 1},
+      {"id": "outer", "name": "Outer pylon", "box": {"x": [2.2, 2.7]}, "kind": "rocket",
+       "store": "berts_vehicle_pack:heli/xm158", "capacity": 7, "channel": "Rocket", "seat": 0}
+    ]
+  },
+  "ah_64d": {
+    "sources": ["hull"],
+    "payload_kg": 1700,
+    "built_in": ["M230"],
+    "retire": [],
+    "weapon_seat": 1,
+    "mounts": [
+      {"id": "inner", "name": "Inner wing", "box": {"x": [1.6, 2.3], "y": [0.75, 1.5]}, "kind": "store",
+       "store": "berts_vehicle_pack:heli/m299_hellfire", "extra_allowed": ["berts_vehicle_pack:ah_64d/agm114_proxy"]},
+      {"id": "outer", "name": "Outer wing", "box": {"x": [2.7, 3.25], "y": [1.0, 1.6]}, "kind": "rocket",
+       "store": "berts_vehicle_pack:heli/m261", "capacity": 19, "channel": "HydraOuter", "template": "ah_6j:Rocket",
+       "seat": 0, "extra_allowed": ["berts_vehicle_pack:ah_64d/agm114_proxy"],
+       "weapon": {"name": "weapon.superbwarfare.70mm_rocket"}}
+    ]
+  },
+  "ah_1f": {
+    "sources": ["hull"],
+    "payload_kg": 1000,
+    "built_in": ["PassengerGun1"],
+    "retire": [],
+    "weapon_seat": 1,
+    "mounts": [
+      {"id": "inner", "name": "Inner pylon", "box": {"x": [0.98, 1.52], "y": [0.9, 1.55], "z": [1.0, 3.2]},
+       "kind": "rocket", "store": "berts_vehicle_pack:heli/m261", "capacity": 19, "channel": "HydraInner",
+       "template": "ah_6j:Rocket", "seat": 0, "weapon": {"name": "weapon.superbwarfare.70mm_rocket"}},
+      {"id": "outer", "name": "Outer pylon", "box": {"x": [1.65, 2.25], "y": [0.85, 1.6]}, "kind": "store",
+       "store": "berts_vehicle_pack:heli/tow_quad"}
+    ]
+  },
+  "eurocopter_tiger": {
+    "sources": ["hull"],
+    "payload_kg": 1200,
+    "built_in": [],
+    "retire": [],
+    "weapon_seat": 1,
+    "mounts": [
+      {"id": "inner", "name": "Inner pylon", "box": {"x": [1.5, 2.15], "y": [1.0, 2.2]}, "kind": "store",
+       "store": "berts_vehicle_pack:heli/hot3_quad",
+       "extra_allowed": ["berts_vehicle_pack:eurocopter_tiger/hot3_proxy", "berts_vehicle_pack:munition/pars3_lr"]},
+      {"id": "outer", "name": "Outer pylon", "box": {"x": [2.6, 3.0], "y": [1.6, 2.45]}, "kind": "store",
+       "store": "berts_vehicle_pack:heli/tiger_tanks",
+       "extra_allowed": ["berts_vehicle_pack:eurocopter_tiger/hot3_proxy", "berts_vehicle_pack:eurocopter_tiger/aim92",
+                         "berts_vehicle_pack:munition/pars3_lr_dual"]}
+    ]
+  },
+  "mi_24a": {
+    "sources": ["hull"],
+    "payload_kg": 2400,
+    "built_in": ["PassengerGun1"],
+    "retire": [],
+    "weapon_seat": 1,
+    "mounts": [
+      {"id": "inner", "name": "Inner pylon", "box": {"x": [2.95, 3.45], "y": [1.6, 2.4]}, "kind": "rocket",
+       "store": "berts_vehicle_pack:heli/ub32", "capacity": 32, "channel": "S5PodInner", "template": "mi24v:S8PodMiddle",
+       "seat": 0},
+      {"id": "outer_atgm", "name": "Outer wing ATGM rails", "box": {"x": [3.8, 5.4], "y": [1.3, 2.3]}, "kind": "store",
+       "store": "berts_vehicle_pack:heli/falanga_twin"}
+    ]
+  },
+  "mi_24d": {
+    "sources": ["hull"],
+    "payload_kg": 2400,
+    "built_in": ["PassengerGun1"],
+    "retire": [],
+    "weapon_seat": 1,
+    "mounts": [
+      {"id": "inner", "name": "Inner pylon", "box": {"x": [2.95, 3.45], "y": [1.6, 2.4]}, "kind": "rocket",
+       "store": "berts_vehicle_pack:heli/ub32", "capacity": 32, "channel": "S5PodInner", "template": "mi24v:S8PodMiddle",
+       "seat": 0},
+      {"id": "outer_atgm", "name": "Outer wing ATGM rails", "box": {"x": [3.8, 5.4], "y": [1.3, 2.3]}, "kind": "store",
+       "store": "berts_vehicle_pack:heli/falanga_twin", "extra_allowed": ["berts_vehicle_pack:munition/falanga_9m17m"]}
+    ]
+  }
+}

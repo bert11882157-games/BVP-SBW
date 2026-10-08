@@ -54,9 +54,15 @@ object AircraftArmamentClient {
         val player = mc.player ?: return null
         val vehicle = player.vehicle as? VehicleEntity ?: return null
         return vehicle.takeIf { player.isAlive && !player.isSpectator && !it.isRemoved && !it.isWreck &&
-            it.level() === mc.level &&
-            it.getSeatIndex(player) == 0 && it.getNthEntity(0) === player }
+            it.level() === mc.level && it.getSeatIndex(player).let { seat ->
+                seat == 0 && it.getNthEntity(0) === player ||
+                    seat == com.atsuishio.superbwarfare.api.aircraft.AircraftMissileLaunchers.weaponSeat(
+                        getState(it.uuid)?.getAsJsonObject("Definition")) && seat > 0 } }
     }
+
+    /** Only the pilot edits the loadout. */
+    private fun seatedPilot(vehicle: VehicleEntity): Boolean =
+        Minecraft.getInstance().player?.let { vehicle.getSeatIndex(it) == 0 } == true
 
     fun controlsActive(): Boolean = Minecraft.getInstance().screen == null &&
         Minecraft.getInstance().isWindowActive &&
@@ -273,7 +279,7 @@ object AircraftArmamentClient {
         val vehicle = pilot() ?: return
         if (mc.screen != null || !mc.isWindowActive) return
         when {
-            AircraftArmamentKeys.OPEN.isActiveAndMatches(key) -> request("OPEN")
+            AircraftArmamentKeys.OPEN.isActiveAndMatches(key) -> if (seatedPilot(vehicle)) request("OPEN")
             AircraftArmamentKeys.POD.isActiveAndMatches(key) && AircraftTvClient.activeFor(vehicle) -> AircraftTvClient.end()
             AircraftTvClient.activeFor(vehicle) -> Unit   // the seeker view owns the other armament keys
             AircraftArmamentKeys.POD.isActiveAndMatches(key) -> {

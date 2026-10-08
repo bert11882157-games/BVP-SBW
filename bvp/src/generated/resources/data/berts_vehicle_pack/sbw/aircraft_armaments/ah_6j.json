@@ -6,14 +6,67 @@
     "Cannon",
     "Rocket"
   ],
-  "Pairs": [],
-  "StoreGroups": {
-    "berts_vehicle_pack:modeled_store/ah_6j/suspended_equipment": [
-      "suspended_legacy_hull"
-    ]
-  },
-  "MaxPayloadKg": 989,
+  "Pairs": [
+    {
+      "Id": "inner",
+      "Name": "Inner mount",
+      "Left": [
+        1.1237,
+        2.2605,
+        1.9881
+      ],
+      "Right": [
+        -1.0769,
+        2.2605,
+        1.9881
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:heli/m134_pods"
+      ],
+      "StoreGroups": {
+        "berts_vehicle_pack:heli/m134_pods": [
+          "suspended_inner_l",
+          "suspended_inner_r"
+        ]
+      },
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 1000,
+      "NativeWeaponIds": {
+        "berts_vehicle_pack:heli/m134_pods": "Cannon"
+      }
+    },
+    {
+      "Id": "outer",
+      "Name": "Outer mount",
+      "Left": [
+        1.999,
+        1.306,
+        1.6838
+      ],
+      "Right": [
+        -1.999,
+        1.306,
+        1.6838
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:heli/m260"
+      ],
+      "StoreGroups": {
+        "berts_vehicle_pack:heli/m260": [
+          "suspended_outer_l",
+          "suspended_outer_r"
+        ]
+      },
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 1000,
+      "NativeWeaponIds": {
+        "berts_vehicle_pack:heli/m260": "Rocket"
+      }
+    }
+  ],
+  "StoreGroups": {},
+  "MaxPayloadKg": 600,
   "MaxPylonMassKg": 1000,
-  "MaxWeaponsPerPylon": 12,
+  "MaxWeaponsPerPylon": 1,
   "Singles": []
 }

@@ -47,6 +47,7 @@ data class AircraftStoreView(
         "LASER_GUIDED", "COMMAND_GUIDED" -> "Guided air-to-ground munition"
         "GUN_POD" -> "Gun pod"
         "ROCKET_POD" -> "Unguided rocket pod"
+        com.atsuishio.superbwarfare.api.aircraft.AircraftMissileLaunchers.CATEGORY -> "Guided missile launcher"
         AircraftTargetingPods.CATEGORY -> "Targeting pod"
         else -> "Bomb"
     }
@@ -183,7 +184,7 @@ data class AircraftArmamentSnapshot(
     companion object {
         /** Stores whose munitions leave the rack one at a time (checked per store, per frame, while drawing). */
         private val RELEASED_ONE_BY_ONE = setOf("LASER_GUIDED", "COMMAND_GUIDED", "BOMB", "CRUISE")
-        private val categories = setOf("COMMAND_GUIDED", "LASER_GUIDED", "GUN_POD", "BOMB", "AIR_TO_AIR", "AIR_TO_GROUND", "ANTI_RADIATION", "CRUISE", "ROCKET_POD", "VISUAL_ONLY",
+        private val categories = setOf("COMMAND_GUIDED", "LASER_GUIDED", "GUN_POD", "BOMB", "AIR_TO_AIR", "AIR_TO_GROUND", "ANTI_RADIATION", "CRUISE", "ROCKET_POD", com.atsuishio.superbwarfare.api.aircraft.AircraftMissileLaunchers.CATEGORY, "VISUAL_ONLY",
             AircraftTargetingPods.CATEGORY)
 
         fun decode(json: JsonObject): AircraftArmamentSnapshot? = try {

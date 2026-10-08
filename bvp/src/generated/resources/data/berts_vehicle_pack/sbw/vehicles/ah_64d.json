@@ -99,7 +99,9 @@
         1.489125,
         0.99275
       ],
-      "Weapons": [],
+      "Weapons": [
+        "HydraOuter"
+      ],
       "CanRotateHead": true,
       "CameraPos": {
         "Transform": "Vehicle",
@@ -329,6 +331,105 @@
           "m230_muzzle"
         ]
       }
+    },
+    "HydraOuter": {
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_rocket",
+          "ConsumptionItem": "superbwarfare:small_unguided_rocket",
+          "Override": {
+            "TntEquivalentKg": 1.1921
+          }
+        }
+      ],
+      "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_small_rocket.png",
+      "DefaultZoom": 2,
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "Magazine": 38,
+      "EmptyReloadTime": 200,
+      "Projectile": {
+        "Type": "berts_vehicle_pack:s8ko_rocket",
+        "Profile": "berts_vehicle_pack:ah_6j/rocket/default"
+      },
+      "Spread": 0.25,
+      "Name": "weapon.superbwarfare.70mm_rocket",
+      "RPM": 600,
+      "Damage": 100,
+      "ExplosionDamage": 0,
+      "ExplosionRadius": 6,
+      "TntEquivalentKg": 1.1921,
+      "Gravity": 0.02,
+      "Velocity": 9,
+      "ProjectileLife": 60,
+      "ShootPos": {
+        "Transform": "Vehicle",
+        "ShootDirectionForHud": [
+          0,
+          0.018,
+          1
+        ],
+        "Positions": [
+          [
+            2.9783,
+            1.2801,
+            1.3062
+          ],
+          [
+            -2.9783,
+            1.2801,
+            1.3062
+          ]
+        ],
+        "Directions": [
+          [
+            -0.003,
+            0.025,
+            1
+          ],
+          [
+            -0.003,
+            0.025,
+            1
+          ]
+        ],
+        "MuzzleAttachments": [
+          "HydraOuter_left_0",
+          "HydraOuter_right_0"
+        ],
+        "MuzzleDirectionAttachments": [
+          "Default"
+        ],
+        "EffectAttachments": [
+          "HydraOuter_left_0",
+          "HydraOuter_right_0"
+        ],
+        "EffectDirectionAttachments": [
+          "Default"
+        ]
+      },
+      "SoundInfo": {
+        "Fire1PGain": 1.0,
+        "Fire3PGain": 1.0,
+        "Fire3PFarGain": 1.0,
+        "Fire3PVeryFarGain": 1.0,
+        "Fire1P": "bvp_audio:weapon/hydra_1p",
+        "Fire3P": "bvp_audio:weapon/hydra_3p",
+        "VehicleReload3p": "superbwarfare:missile_reload",
+        "VehicleReloadSoundTime": 7,
+        "Change": "superbwarfare:into_missile",
+        "Fire3PFar": "bvp_audio:weapon/hydra_far",
+        "Fire3PVeryFar": "bvp_audio:weapon/hydra_far",
+        "Volume": 1.2
+      },
+      "Crosshair": "@Empty",
+      "SoundRadius": 16,
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "berts_vehicle_pack:s8ko_rocket",
+        "ProjectileProfile": "berts_vehicle_pack:ah_6j/rocket/default",
+        "ProjectileLife": 60
+      }
     }
   },
   "HUDColor": "0xFFC700",
@@ -444,6 +545,32 @@
         0,
         -0.20899999999999996,
         1.8287499999999994
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "HydraOuter_left_0": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.9783,
+        1.2801,
+        1.3062
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "HydraOuter_right_0": {
+      "Parent": "Vehicle",
+      "Position": [
+        -2.9783,
+        1.2801,
+        1.3062
       ],
       "Direction": [
         0,

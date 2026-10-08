@@ -13,7 +13,22 @@ No stable release is currently published in this repository. See [all releases](
 for the complete release history.
 The `0.9.19beta` source tag currently has no GitHub Release or compiled download assets.
 
-## Latest published testing build: 0.11.120beta
+## Latest published testing build: 0.11.121beta
+
+[Helicopter overhaul: pylon loadouts for every armed helicopter, half of real top speed and climb, gunner-fired guided missiles](https://github.com/bert11882157-games/BVP-SBW/releases/tag/v0.11.121beta).
+Install all three matching JARs on clients and servers, replacing older active copies:
+
+| Component | Mod JAR | Checksum |
+| --- | --- | --- |
+| BVP 0.11.121beta | [JAR](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.11.121beta/bvp-main-v0.11.121beta.jar) | [SHA-256](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.11.121beta/bvp-main-v0.11.121beta.jar.sha256) |
+| SBW 0.11.121beta | [JAR](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.11.121beta/bvp_superbwarfare-v0.11.121beta.jar) | [SHA-256](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.11.121beta/bvp_superbwarfare-v0.11.121beta.jar.sha256) |
+| FFA 1.0.6-bvp.21 | [JAR](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.11.121beta/fire-from-above-1.0.6-bvp.21.jar) | [SHA-256](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.11.121beta/fire-from-above-1.0.6-bvp.21.jar.sha256) |
+
+The source build and the aircraft unit tests passed (two failures in the projectile-damage integration test predate this build). In the
+isolated test runtime every helicopter spawned and loaded its data, and fitted pylon stores appeared on the models; flying to the new top
+speeds, firing from the pylons and gunner-operated laser and command-guided stores have not been tested in game yet.
+
+## Earlier published testing build: 0.11.120beta
 
 [Unguided rocket pods fire 600 per minute, alternating sides, full-auto; missile warning shows unlimited countermeasures correctly](https://github.com/bert11882157-games/BVP-SBW/releases/tag/v0.11.120beta).
 Install all three matching JARs on clients and servers, replacing older active copies:

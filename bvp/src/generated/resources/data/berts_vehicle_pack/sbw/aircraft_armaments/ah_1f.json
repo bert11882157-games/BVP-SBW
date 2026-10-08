@@ -4,11 +4,68 @@
   "BuiltInWeapons": [
     "PassengerGun1"
   ],
-  "SuspendedWeapons": [],
-  "Pairs": [],
+  "SuspendedWeapons": [
+    "HydraInner"
+  ],
+  "Pairs": [
+    {
+      "Id": "inner",
+      "Name": "Inner pylon",
+      "Left": [
+        1.25,
+        1.5,
+        2.0
+      ],
+      "Right": [
+        -1.25,
+        1.5,
+        2.0
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:heli/m261"
+      ],
+      "StoreGroups": {
+        "berts_vehicle_pack:heli/m261": [
+          "suspended_inner_l",
+          "suspended_inner_r"
+        ]
+      },
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 1000,
+      "NativeWeaponIds": {
+        "berts_vehicle_pack:heli/m261": "HydraInner"
+      }
+    },
+    {
+      "Id": "outer",
+      "Name": "Outer pylon",
+      "Left": [
+        1.9375,
+        1.5625,
+        1.4688
+      ],
+      "Right": [
+        -1.9375,
+        1.5625,
+        1.4688
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:heli/tow_quad"
+      ],
+      "StoreGroups": {
+        "berts_vehicle_pack:heli/tow_quad": [
+          "suspended_outer_l",
+          "suspended_outer_r"
+        ]
+      },
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 1000
+    }
+  ],
   "StoreGroups": {},
-  "MaxPayloadKg": 1543,
+  "MaxPayloadKg": 1000,
   "MaxPylonMassKg": 1000,
-  "MaxWeaponsPerPylon": 12,
-  "Singles": []
+  "MaxWeaponsPerPylon": 1,
+  "Singles": [],
+  "WeaponSeat": 1
 }

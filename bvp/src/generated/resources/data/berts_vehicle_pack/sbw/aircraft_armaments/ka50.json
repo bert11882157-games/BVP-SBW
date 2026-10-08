@@ -5,17 +5,70 @@
     "Cannon"
   ],
   "SuspendedWeapons": [
-    "S8KORocket",
+    "S8PodInner",
     "PilotMissile"
   ],
-  "Pairs": [],
-  "StoreGroups": {
-    "berts_vehicle_pack:modeled_store/ka50/suspended_equipment": [
-      "suspended_legacy_hull"
-    ]
-  },
+  "Pairs": [
+    {
+      "Id": "inner",
+      "Name": "Inner pylon",
+      "Left": [
+        2.6293,
+        1.6842,
+        0.2701
+      ],
+      "Right": [
+        -2.6293,
+        1.6842,
+        0.2701
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:heli/b8v20"
+      ],
+      "StoreGroups": {
+        "berts_vehicle_pack:heli/b8v20": [
+          "suspended_inner_l",
+          "suspended_inner_r"
+        ]
+      },
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 1000,
+      "NativeWeaponIds": {
+        "berts_vehicle_pack:heli/b8v20": "S8PodInner"
+      }
+    },
+    {
+      "Id": "outer",
+      "Name": "Outer pylon",
+      "Left": [
+        3.9979,
+        1.7562,
+        0.0
+      ],
+      "Right": [
+        -3.9979,
+        1.7562,
+        0.0
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:heli/vikhr_launcher"
+      ],
+      "StoreGroups": {
+        "berts_vehicle_pack:heli/vikhr_launcher": [
+          "suspended_outer_l",
+          "suspended_outer_r"
+        ]
+      },
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 1000,
+      "NativeWeaponIds": {
+        "berts_vehicle_pack:heli/vikhr_launcher": "PilotMissile"
+      }
+    }
+  ],
+  "StoreGroups": {},
   "MaxPayloadKg": 2500,
   "MaxPylonMassKg": 1000,
-  "MaxWeaponsPerPylon": 12,
+  "MaxWeaponsPerPylon": 1,
   "Singles": []
 }
