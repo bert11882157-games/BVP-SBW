@@ -29,6 +29,10 @@ class Evidence:
         eyes = O.T.eyes(vid)
         self.eye = eyes[0]
         self.eyes = [e for e in eyes if abs(e[0]) < 0.4 and np.linalg.norm(e - eyes[0]) < 3.0]
+        if not self.eyes:
+            # side-by-side crew (B-1B, Tu-22M, Tu-95): every seat off the centre line; the canopy spans them all
+            near = [e for e in eyes if np.linalg.norm(e[1:] - eyes[0][1:]) < 3.0]
+            self.eyes = [np.array([0.0, max(e[1] for e in near), z]) for z in sorted({round(float(e[2]), 2) for e in near})]
         zc = float(np.mean([e[2] for e in self.eyes]))
         top_y = tris[..., 1].max() + 1.0
         self.hw, self.hl = 1.8, 4.6

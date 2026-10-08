@@ -4,6 +4,38 @@
     "front": 6.35,
     "dark_rear": true
   },
+  "an_12b": {
+    "skip": true,
+    "_note": "glazed nose and flat cockpit panes: the earlier panel glass is kept"
+  },
+  "il_76m": {
+    "skip": true,
+    "_note": "flat cockpit panes: the earlier panel glass is kept"
+  },
+  "b_1b": {
+    "skip": true,
+    "_note": "crew under the fuselage roof behind panel windows: the earlier panel glass is kept"
+  },
+  "tu_22m": {
+    "skip": true,
+    "_note": "crew under the fuselage roof behind panel windows: the earlier panel glass is kept"
+  },
+  "tu_95ms": {
+    "skip": true,
+    "_note": "airliner-style flight deck windows: the earlier panel glass is kept"
+  },
+  "su_39": {
+    "skip": true,
+    "_note": "glazed by canopy_panes (dome plus flat panes)"
+  },
+  "mig_21bis": {
+    "skip": true,
+    "_note": "glazed by canopy_panes (dome plus flat panes)"
+  },
+  "m_50a": {
+    "skip": true,
+    "_note": "glazed by canopy_panes (dome plus flat panes)"
+  },
   "su_57": {
     "front": 5.6
   },
@@ -45,7 +77,9 @@
     "rear": 2.55
   },
   "a_10": {
-    "rear": 4.4
+    "rear": 4.4,
+    "skip": true,
+    "_note": "glazed by canopy_panes (dome plus flat windscreen)"
   },
   "f2h_2": {
     "rear": 2.6
@@ -60,13 +94,26 @@
     "front": 7.1
   },
   "md_450_ouragan": {
-    "rear": 2.3
+    "plan": "oval",
+    "rear": 1.95,
+    "front": 3.5,
+    "lip": 2.1,
+    "halfwidth": 0.34
+  },
+  "supermarine_spitfire_griffon": {
+    "plan": "oval",
+    "rear": -2.15,
+    "front": -0.5,
+    "lip": 2.18,
+    "halfwidth": 0.3
   },
   "mig_19s": {
     "rear": 1.15
   },
   "su_25": {
-    "rear": 2.85
+    "rear": 2.85,
+    "skip": true,
+    "_note": "glazed by canopy_panes (dome plus flat windscreen)"
   },
   "su_27": {
     "front": 6.62
@@ -75,7 +122,9 @@
     "rear": 2.3
   },
   "mig_23mld": {
-    "front": 4.65
+    "front": 4.65,
+    "skip": true,
+    "_note": "glazed by canopy_panes (dome plus flat windscreen)"
   },
   "f3h": {
     "rear": 4.3

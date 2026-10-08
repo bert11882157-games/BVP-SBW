@@ -33,6 +33,12 @@ N_DEFAULT = 2.2      # superellipse exponent without side frames to fit
 TRACKS = (0.5, 0.85) # side tracks at these fractions of the half-width, each side
 SKIRT = 0.6          # below its base the section runs straight down this far where there are no rails
 REFINE = 10
+POKE_TOL = 0.02      # model points this far above the glass stick through it (frame bars stand only BAR proud)
+INTERIOR_CLEAR = 0.03  # and the glass is raised to clear them by this
+INTERIOR_REACH = 0.8   # only points within this share of the half-width (the rails and sills stand at the edge)
+INTERIOR_SPREAD = 0.12  # blocks: the raise fades along the canopy with this Gaussian width
+INTERIOR_PASSES = 6
+INTERIOR_MAX = 0.14   # anything further through the glass than this is a gun or mast meant to stand out
 
 
 def upper_hull(pts):
@@ -248,6 +254,112 @@ class Loft:
                 H[:, j] = np.minimum(np.maximum(H[:, j], chord), cols[j] - 0.002)
                 cols[j + 1] = H[:, j]
         self.H = H
+        if not cfg.get('no_interior_clearance'):
+            self._clear_interior()
+        if not cfg.get('no_fair'):
+            self._fair()
+
+    def _fair(self):
+        """A blown canopy is smooth and convex along its length: the spine and every side track are raised to their
+        smallest concave majorant along the canopy (dips between frame bars, headrests and seats fill in, nothing
+        drops), then the sections are made monotone convex domes again."""
+        z = self.z
+        def majorant(y):
+            hull = upper_hull(list(zip(z.tolist(), y.tolist())))
+            hz = np.array([h[0] for h in hull]); hy = np.array([h[1] for h in hull])
+            return np.maximum(PchipInterpolator(hz, hy)(z), y)
+        self.S = majorant(self.S)
+        for j in range(len(self.U)):
+            self.H[:, j] = majorant(self.H[:, j])
+        Ub = np.concatenate([[0.0], self.U, [1.0]])
+        top = self.S.copy()
+        for j in range(len(self.U)):
+            self.H[:, j] = np.maximum(np.minimum(self.H[:, j], top - 0.002), self.Yb + 0.001)
+            top = self.H[:, j]
+        for _ in range(3):
+            cols = [self.S] + [self.H[:, j] for j in range(len(self.U))] + [self.Yb]
+            for j in range(len(self.U)):
+                a, b = Ub[j], Ub[j + 2]
+                chord = cols[j] + (cols[j + 2] - cols[j]) * (Ub[j + 1] - a) / (b - a)
+                self.H[:, j] = np.minimum(np.maximum(self.H[:, j], chord), cols[j] - 0.002)
+                cols[j + 1] = self.H[:, j]
+
+    def _profile_table(self, n=41):
+        """Section heights at n evenly spaced arch fractions u in [0, 1] for every station."""
+        us = np.linspace(0.0, 1.0, n)
+        tab = np.empty((len(self.z), n))
+        xs = np.concatenate([[0.0], self.U, [1.0]])
+        for k in range(len(self.z)):
+            tab[k] = PchipInterpolator(xs, np.concatenate([[self.S[k]], self.H[k], [self.Yb[k]]]))(us)
+        return us, tab
+
+    def _surface(self, x, z, us, tab):
+        """Glass height above (x, z) for arrays of points (bilinear in station and arch fraction)."""
+        zi = np.clip(np.interp(z, self.z, np.arange(len(self.z))), 0, len(self.z) - 1)
+        k0 = np.floor(zi).astype(int); k1 = np.minimum(k0 + 1, len(self.z) - 1); f = zi - k0
+        W = self.W[k0] * (1 - f) + self.W[k1] * f
+        u = np.clip(np.abs(x) / np.maximum(W, 1e-6), 0.0, 1.0)
+        ui = u * (len(us) - 1)
+        j0 = np.floor(ui).astype(int); j1 = np.minimum(j0 + 1, len(us) - 1); g = ui - j0
+        h0 = tab[k0, j0] * (1 - g) + tab[k0, j1] * g
+        h1 = tab[k1, j0] * (1 - g) + tab[k1, j1] * g
+        return h0 * (1 - f) + h1 * f, u
+
+    def _clear_interior(self):
+        """Seats, headrests, sights and anything else standing inside the canopy must stay under the glass. Frame
+        bars may stand BAR proud of it (the glass passes through them), so only points more than POKE_TOL above the
+        glass count: the section is raised there by the excess plus INTERIOR_CLEAR, blended smoothly along the
+        canopy, and the dome/convexity rules are applied again."""
+        ev = self.ev
+        tris = getattr(ev, 'tris', None)
+        if tris is None or not len(tris):
+            return
+        pts = tris.reshape(-1, 3)
+        opaque = getattr(ev, 'opaque', None)
+        if opaque is not None:
+            pts = tris[opaque].reshape(-1, 3)
+        m = (pts[:, 2] > self.zr + 0.03) & (pts[:, 2] < self.zf - 0.03)
+        pts = pts[m]
+        if not len(pts):
+            return
+        Wz = np.interp(pts[:, 2], self.z, self.W)
+        pts = pts[np.abs(pts[:, 0]) < INTERIOR_REACH * Wz]
+        if not len(pts):
+            return
+        Ub = np.concatenate([[0.0], self.U, [1.0]])
+        for _ in range(INTERIOR_PASSES):
+            us, tab = self._profile_table()
+            h, u = self._surface(pts[:, 0], pts[:, 2], us, tab)
+            excess = pts[:, 1] - h
+            # a gun, mast or aerial standing well clear is meant to stick out: only nearby contents are cleared
+            bad = (excess > POKE_TOL) & (excess < INTERIOR_MAX)
+            if not bad.any():
+                break
+            lift_S = np.zeros(len(self.z))
+            lift_H = np.zeros((len(self.z), len(self.U)))
+            for p, e, uu in zip(pts[bad], excess[bad], u[bad]):
+                need = e + INTERIOR_CLEAR
+                w = np.exp(-0.5 * ((self.z - p[2]) / INTERIOR_SPREAD) ** 2)
+                # every control line from the spine out to just past the point rises; lines further out less
+                lift_S = np.maximum(lift_S, need * w)
+                for j, uj in enumerate(self.U):
+                    share = 1.0 if uj <= uu + 0.1 else max(0.0, 1.0 - (uj - uu) / 0.5)
+                    lift_H[:, j] = np.maximum(lift_H[:, j], need * w * share)
+            self.S = self.S + lift_S
+            self.H = self.H + lift_H
+            # keep each section a monotone, convex dome from the spine to the lip
+            top = self.S.copy()
+            for j in range(len(self.U)):
+                self.H[:, j] = np.maximum(np.minimum(self.H[:, j], top - 0.002), self.Yb + 0.001)
+                top = self.H[:, j]
+            for _ in range(3):
+                cols = [self.S] + [self.H[:, j] for j in range(len(self.U))] + [self.Yb]
+                for j in range(len(self.U)):
+                    a, b = Ub[j], Ub[j + 2]
+                    chord = cols[j] + (cols[j + 2] - cols[j]) * (Ub[j + 1] - a) / (b - a)
+                    self.H[:, j] = np.minimum(np.maximum(self.H[:, j], chord), cols[j] - 0.002)
+                    cols[j + 1] = self.H[:, j]
+        self.S[0], self.S[-1] = self.Yb[0], self.Yb[-1]
 
     @staticmethod
     def _dark_rear(ev, eyes):
