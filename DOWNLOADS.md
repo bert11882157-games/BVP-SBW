@@ -13,7 +13,25 @@ No stable release is currently published in this repository. See [all releases](
 for the complete release history.
 The `0.9.19beta` source tag currently has no GitHub Release or compiled download assets.
 
-## Latest published testing build: 0.11.113beta
+## Latest published testing build: 0.11.119beta
+
+[Cockpit glass reworked on every aircraft, flat-pane windows for helicopters and transports, faster flares, longer-range air-to-air missiles and radar, lighter missile damage, smaller missile warning, blue friendly markers, afterburners visible to other players](https://github.com/bert11882157-games/BVP-SBW/releases/tag/v0.11.119beta).
+Install all three matching JARs on clients and servers, replacing older active copies:
+
+| Component | Mod JAR | Checksum |
+| --- | --- | --- |
+| BVP 0.11.119beta | [JAR](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.11.119beta/bvp-main-v0.11.119beta.jar) | [SHA-256](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.11.119beta/bvp-main-v0.11.119beta.jar.sha256) |
+| SBW 0.11.119beta | [JAR](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.11.119beta/bvp_superbwarfare-v0.11.119beta.jar) | [SHA-256](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.11.119beta/bvp_superbwarfare-v0.11.119beta.jar.sha256) |
+| FFA 1.0.6-bvp.21 | [JAR](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.11.119beta/fire-from-above-1.0.6-bvp.21.jar) | [SHA-256](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.11.119beta/fire-from-above-1.0.6-bvp.21.jar.sha256) |
+
+FFA 1.0.6-bvp.21 is required: it carries the doubled air-to-air missile lifetime. The source build passed all build
+checks and the countermeasure unit tests. In the isolated two-player test runtime the game loaded, the new cockpit
+glass rendered, the flare cycle measured 12 flares in about 1.25 s followed by the 10 s cooldown, the compact missile
+warning appeared while a missile homed and cleared afterwards, and a teammate's jet showed the blue marker. The
+afterburner seen by another player was not confirmed in that run; the rest is not yet tested in game. Known issue: with
+unlimited countermeasures (creative mode or a creative ammo box) the missile warning labels flares and chaff EMPTY.
+
+## Earlier published testing build: 0.11.113beta
 
 [Jet stores and cockpits, countermeasures, Strv 103 hull laying, LAV-AD belt, Music & Sounds crash fix, smooth AAM seeker circle on servers](https://github.com/bert11882157-games/BVP-SBW/releases/tag/v0.11.113beta).
 Install all three matching JARs on clients and servers, replacing older active copies:

@@ -1,10 +1,10 @@
 {
   "schema": 1,
   "policyVersion": 4,
-  "label": "claude-fixes-20261004-r100",
+  "label": "claude-fixes-20261008-r107",
   "status": "release-candidate",
-  "createdAt": "2026-10-04T20:15:49.373Z",
-  "treeSha256": "2c3af8cd1d372170321c406d3d79928baa645891cf6726001477257c77ff20c5",
+  "createdAt": "2026-10-08T07:22:24.133Z",
+  "treeSha256": "3391e568429adf0e10df6234e55d01bcfa4a332b56945ef5dbc4c984594b08b2",
   "files": [
     {
       "path": ".editorconfig",
@@ -3678,13 +3678,13 @@
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/a_10.json",
-      "size": 7976,
-      "sha256": "b77e3b03ff58d2d42e461840f94200082d610b3368dfdf99ba1d644fe336978a"
+      "size": 36087,
+      "sha256": "6501f950cac3787ac683969f3ec848b782106a79b5508d8a909ea1d1885abd11"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/a_7d.json",
-      "size": 70137,
-      "sha256": "81a2da7e1eddf0ecc0a2219f53727f3414c4e78c73651b8a4f50566714b096b9"
+      "size": 70555,
+      "sha256": "88f06a5e845c4a2a00120e213788715eb5b87e4623896ede55956bfe6c6983d0"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/ags_30.json",
@@ -3693,43 +3693,43 @@
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/ah1w_super_cobra.json",
-      "size": 416,
-      "sha256": "c321ea693d4e7512f4b962cabeeb2ac0b54ddef46d73f79fd066208e06f0b7c4"
+      "size": 2586,
+      "sha256": "9efc697262e547cbfead875be0d0a1ea859ecd2a5edf50eaecade225e9ee8cde"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/ah_1f.json",
-      "size": 1660,
-      "sha256": "ec628e2434074276aeeafadb2929c36c4bf24b975dbaa0912a4c9ccde92a82c4"
+      "size": 11787,
+      "sha256": "2b882b04752956692d9fa970ac627e5d119ad950b0452b9aa8ad157adabc21fd"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/ah_1g_cobra.json",
-      "size": 391,
-      "sha256": "575b77e4f5033435eeaef96553040e517e76540b74ffebccee6aa1edcf0630f5"
+      "size": 2330,
+      "sha256": "6e598d5d6a9fa514b4328a987b13a571cf667bf068cb28bfa8a9ade72959f89e"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/ah_64d.json",
-      "size": 9943,
-      "sha256": "0a1fceddf2ff4e619c5b51c64af2071bbc18837769e9e1dde73bfb0b3c0fea88"
+      "size": 16847,
+      "sha256": "75f2886fb19fc32106937eade583449547c3d1896e287cda102b647b41b5dc63"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/ah_6j.json",
-      "size": 361,
-      "sha256": "d06f027a8fe0a6401b62e831c19b5d63cc91904ccc5eecd35eee4d6b83a8c8f7"
+      "size": 12386,
+      "sha256": "70340d3c3938b8d4ceb93f8ff64c59a374ab95b5eff5bd47ba09b4383d6897f3"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/an_12b.json",
-      "size": 93929,
-      "sha256": "fc0bc7ead9aa610da40607fdb8baa77898689c7f13ee06c3694c05814ee55c31"
+      "size": 49023,
+      "sha256": "ef5e38607d298e7495b9a7949ebeb594b4f56445b32e666b184a7f7614473e4e"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/b_1b.json",
-      "size": 376953,
-      "sha256": "077524ba223d203a39b562e66304d0e70def22d39abad7b23f6a2eef67be69d8"
+      "size": 24190,
+      "sha256": "34adf29ee3bfc64a3415402358b4c674dca253ebf752a1498110f8b38154dcef"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/b_47e.json",
-      "size": 90048,
-      "sha256": "bf8691e14d847780fd27212fd31dd7f7652c34b3f9ecdad04ac67618779dca17"
+      "size": 175536,
+      "sha256": "35dd7c70d7a27b8a96f2168b87e2e42f1b5e1c2bfd230b9c5deed1875e90b1e4"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/begleitpanzer.json",
@@ -3793,13 +3793,13 @@
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/c_130h.json",
-      "size": 9109,
-      "sha256": "dccc15689f1ca29e4fda8655271ef872052a16893518e649da82c1e0dde0359a"
+      "size": 40082,
+      "sha256": "25458c7a0ee454038919e45eba71fe43630861aff33e784ab0f4a98f0bfd35f0"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/ch_46e.json",
-      "size": 1165,
-      "sha256": "583a49f4cac046b4db36aa3b8431d3eabb0bddcd51c0648e1490992433fedc27"
+      "size": 29568,
+      "sha256": "c6e0f928ccd8661c8c729eb1e0a4b55776fb299985b212686734339b9db88bba"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/challenger_2.json",
@@ -3823,113 +3823,113 @@
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/eurocopter_tiger.json",
-      "size": 9354,
-      "sha256": "2e4d6508ddf96e1d4f0fd14a8073a185006410fb9450531c84ed84b3c484988e"
+      "size": 11833,
+      "sha256": "50dcc4ed88d58139895059911a68b816db22adc37e794350f12e89fab73ab17b"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/eurofighter_typhoon.json",
-      "size": 88610,
-      "sha256": "be493978826110f7c6fc23d4f9592b34c02f31b8f286c403c5849ea951abb2ab"
+      "size": 89671,
+      "sha256": "fac2698b78bdb166dcc5e08709d0b7c5fab5071dc679d5e38f4d1de53c024802"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/f2h_2.json",
-      "size": 83947,
-      "sha256": "4f81bf6bc3f388348480cd423c930e77d96b00b0bf887f0a1ad16833830cd918"
+      "size": 84307,
+      "sha256": "758704df901e510efe10c98c844457f1a9f559643b0860d07366830ea890fb8c"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/f3h.json",
-      "size": 92088,
-      "sha256": "59b6173aba5508e1e5aba29e2cc244c3962be002dac783d98e28fcc00fdee8e0"
+      "size": 92959,
+      "sha256": "a07259534c4ce5ff5dc7d656137f35b1b70413823e6f3974472ae7079198a158"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/f8f_1.json",
-      "size": 69120,
-      "sha256": "41ba276c44845cf3173a70f0d057dacfc0a58cbbb70eff5661b8fa5e9473f7f1"
+      "size": 69646,
+      "sha256": "c534494bf48a4c3cbda014ca00539b08a687061c19dd5052fc2101add64094e5"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/f9f_2.json",
-      "size": 72923,
-      "sha256": "351888bba52635edcb4b20ea3e4002d26d5c8fe52969310a39e4866695475a1f"
+      "size": 73168,
+      "sha256": "d41bdfc0bd6cad6f87b599f0013dfade32b8d9b46a891162124d6470333d5b8b"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/f_100c.json",
-      "size": 93825,
-      "sha256": "278c383c97e4b326104cf64c8f64ed912cdc6dd39acd65edee6360d0d59ab777"
+      "size": 94282,
+      "sha256": "30a27e3e92c57349b399a8bed122fcc8c6116c0d44a569785ad81f034b68e277"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/f_104g.json",
-      "size": 68224,
-      "sha256": "107a15a6420b79a83a9f4d8fe980a5d19b1f8b12fe6d3ba93c27611dd9b7b089"
+      "size": 68905,
+      "sha256": "4510fc292fe2d9c3a99a0fb227e34053dddb8265ddf4bac674f8c556fbb3e274"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/f_111f.json",
-      "size": 74052,
-      "sha256": "ba4b2368d1497a8c7f23e903974992e4ec796d48e216e92bc5a1d528dd1f73d9"
+      "size": 74687,
+      "sha256": "3c18fbb6d09653d1decc6315c86ba92ef5c8603e258538631ab4c1a60eec1ba9"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/f_14a.json",
-      "size": 287470,
-      "sha256": "2f92acde15c4ac491ce189c486e631104a93a1cc767b55b039838b77c38305c8"
+      "size": 149735,
+      "sha256": "d650902b8c071e9ce50bb12060b4a8102a1722efc51f62bce55fb3d69deaf7a5"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/f_14d.json",
-      "size": 151793,
-      "sha256": "0798b580554e863fe40dbcba7bb162beec8e1a34e66f32b8b0af59d4eebf9de8"
+      "size": 152998,
+      "sha256": "65d1443e9687aca460bfbff93c2a9548dd2f0dead0c0f36ea1d1bd4adf1dbac8"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/f_15c.json",
-      "size": 144192,
-      "sha256": "2849f14c44012f4bc25e276e5126ccc26cfe4fa52b0811806b4886a235d98ae4"
+      "size": 144894,
+      "sha256": "ac05d57ef2e9665ca62cc190016ddef08de576fc41d1dd2a3518053f1b4760bb"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/f_15e.json",
-      "size": 10987,
-      "sha256": "a0f12695bb9d5ca171436c0c5ccc06e4eab9f523859e205f31378b974e2cd5d3"
+      "size": 124872,
+      "sha256": "fd0261709d0afeee9e55e17c2f3d0423e038c5778236ec683d5f5510febec3c4"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/f_16b.json",
-      "size": 10113,
-      "sha256": "ff9e9cef756c55dc2d704c7345784ef42907361e5d1fb5f2c8b1263f19662679"
+      "size": 126529,
+      "sha256": "b16a17a8afac4295d96d30177579ec47965ecbd641dd24664e64372367c09d68"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/f_16c.json",
-      "size": 90602,
-      "sha256": "d4acf11394156bbd633c72eeb46cb754dee54a09f92846dd341891d6588b7af1"
+      "size": 91360,
+      "sha256": "11e8126fe785757028d7836282cd3f30bcc77c456a27d9eee2fce065387a6d57"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/f_4c.json",
-      "size": 124366,
-      "sha256": "948aaf140895ddfd2bf9d8c758365c77492ae1cf00bdecbaf17595b90621ed81"
+      "size": 125443,
+      "sha256": "5b6eec35db1802e8f6cf8c823f725bcece9261a268a18b22951c06bd35eabc6d"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/f_5a.json",
-      "size": 63672,
-      "sha256": "2d4d9f790b2847f61c9f2cdd51e5774a20048eba0577057697909ce893cca685"
+      "size": 64566,
+      "sha256": "99ac3772217b6d9daa57c0ca246a72239d8c99f1b122e1c12036b8dfcec7fd50"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/f_84f.json",
-      "size": 79349,
-      "sha256": "dd5e10df1f7ab82517c626e72fedf8d2942c9cb2e9616651499e42f806e98f1e"
+      "size": 79793,
+      "sha256": "e06a47bcbde1dc5a56a9718b70f6cfdabcc779876ab89ba8f5c7aa8119729ac3"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/f_86k.json",
-      "size": 82391,
-      "sha256": "3b9674548dd77f740cc0b632b737ead98cc2f2c2b809cbfbf856fda832208e1c"
+      "size": 82939,
+      "sha256": "c7b8b20fae5e1b399a66ad0ab2f8c372e01f977f39c95ee927d8185f0e96e6ab"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/f_8h.json",
-      "size": 85480,
-      "sha256": "47b2695184e602eff8626e6556fe3fffaf3db7bd9a379f4ad13057bbab68e980"
+      "size": 86220,
+      "sha256": "b0846705b93ef474aee6056d87031d1f5d8f72298a0c1948f2b3961b392fffdd"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/fa_18e.json",
-      "size": 63334,
-      "sha256": "59b2c3ada7bc11105aa4a48d538dbd77cbe564e37559f99d8396bbc296fe5d38"
+      "size": 84412,
+      "sha256": "954a815708c8b8440306f9a91129c355cfcb0a543d31b558821c21a302b98749"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/fiat_g_91.json",
-      "size": 65220,
-      "sha256": "671d10a2b3a87a73c3ef73a6bfd20014d174c281a0daf4b34d038cb856952606"
+      "size": 65755,
+      "sha256": "44421897cb477c19006aad67f06ab0ec8ce5efbcca31f48bfa1942ffa8bc83df"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/gaz_3937_vodnik_aa.json",
@@ -3943,53 +3943,53 @@
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/ho_229.json",
-      "size": 62385,
-      "sha256": "09d82a85332487dee72ad84dbc3a021d78edf5300c19b596b5ed441bcc72e721"
+      "size": 62755,
+      "sha256": "9f81e45575a5143b391760295f65a97bf3db29d3132c4718f44b6565bb6c37cb"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/il_10.json",
-      "size": 93688,
-      "sha256": "5ee1212e1792cd0d36de93624ae7631986e1ac2eca5ff2c2941d3cde7303d8d4"
+      "size": 94306,
+      "sha256": "504c317bcd785cfb38d9b05bc39d1d93c6ab79c80aed14d73391f377c60bdaf5"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/il_76m.json",
-      "size": 114889,
-      "sha256": "68d04d5b826c7fc33980a8e9f97d0c3c19e2ae99019e941218f931b3cbb5581b"
+      "size": 25171,
+      "sha256": "382079466f0dd7dd44b62125fdb9f2cdb9a840a80dbe8cb017455607dc446a1d"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/j_10a.json",
-      "size": 10245,
-      "sha256": "6c77897e2ad6eccece3ebe24ea20407f153ef00623f43864a1625905fc451891"
+      "size": 91568,
+      "sha256": "81484713756f23fca442c0da4fa5fdf02c81981d9ca7f33e20dfd39239ec44e1"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/j_11a.json",
-      "size": 98896,
-      "sha256": "58da3949e52b7d047892f467000e3fc31e08077d6e1e2af51f01d4dc1b69cd47"
+      "size": 99824,
+      "sha256": "3d61e333b9edbbf9313f7f9e4c54dbb857a45f0e726b0a403039aee7e3c6f680"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/j_15d.json",
-      "size": 9253,
-      "sha256": "45ce69014fe6913c43fdf004813c970667283538b21193b265674bab6250854e"
+      "size": 130660,
+      "sha256": "9e1fa7b07b021dc0bfae9a6f1c477e7f08daa39d49c8a596f1ed82d5b9bb8571"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/j_2.json",
-      "size": 65734,
-      "sha256": "143f3120ba6a32d1818f08a1d8a6dcfba05d4a486a071711baaf3f0c9f3f37c2"
+      "size": 66433,
+      "sha256": "81b23404e05696b567475054881515e9202382dbcad066b65dc9a5936aa56753"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/j_26.json",
-      "size": 77770,
-      "sha256": "e9fd884d0cf5c0933b2ae1835e2f65194f8cb32e5d9440225e5d590511af8830"
+      "size": 78191,
+      "sha256": "7ab36d5c68a6b4377924fa6aeb7e28cb4445ecdba2d2bc48dff53b2247178007"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/j_5.json",
-      "size": 69354,
-      "sha256": "9f4f880b98c4457ae20e4e6bd24c51c1c3d4ff31ed04b257bc434f94daf81a13"
+      "size": 69899,
+      "sha256": "936636d8a813e8b243ce3a6ba3046cebbd991a14710f4e38c92e48af0be77669"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/ju_87_b2.json",
-      "size": 272719,
-      "sha256": "76ac6916799cd1c8cde564e449e08ae830b3b5dd63984d74433dc65def1baa19"
+      "size": 47221,
+      "sha256": "3a91215e435dfc078cc6f92e4b3dd6eaae5d35c5f7c1186ed1b688030fbdb68b"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/k2a1_black_panther.json",
@@ -3998,8 +3998,8 @@
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/ka50.json",
-      "size": 356,
-      "sha256": "02bacd3071128dde9d28d2d13da03c5c9efc1a903fa4ac0b82bca5eb0801eb19"
+      "size": 41413,
+      "sha256": "f06e6b01750bfc2a917cdefaa912b44f42405e0d798b3bbd8cb4597fe3c9c177"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/kamaz4310.json",
@@ -4093,8 +4093,8 @@
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/m_50a.json",
-      "size": 123557,
-      "sha256": "6b9d2528dbf08ffe7e170713bfe828be912b0b545b2b8078666c2a851dfeeaa1"
+      "size": 131758,
+      "sha256": "16397dd81a3ebd0d34049c406e62ee806032fb95b269d25aa32af32ab135d5f8"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/marder_1a1.json",
@@ -4113,78 +4113,78 @@
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/md_450_ouragan.json",
-      "size": 48589,
-      "sha256": "cf019acec1af4bd832042f7ecab08b44778ab81f90a52013cf7f3801bbb99a4c"
+      "size": 58123,
+      "sha256": "ddadcea76b45954ccd941220611b8819e0aab3a3b38512454138781b7bb87dd1"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/meteor_f_8.json",
-      "size": 60211,
-      "sha256": "913458ee97ea20dc34a9933c756ca8c0df9b0293358964e207b149846c23cea6"
+      "size": 60679,
+      "sha256": "c4714b37e935c79ba2023c5dad1af77feeab5a5fb78416ae23c50de897f3dfc1"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/mi24_hind_a.json",
-      "size": 391,
-      "sha256": "79c449d967e9f59da3c380cbf5521fba326cea718b87224a0e4d577a6be4b74c"
+      "size": 1543,
+      "sha256": "46fd86bb07d961bcf204b23e0e9cd739f2f2e76e507152c85cd0dc33da1caa02"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/mi24v.json",
-      "size": 361,
-      "sha256": "a7b9f0c451a240b8bb91251de0dd9fad1bbbd36bd947736edb41eb4ddf7f324e"
+      "size": 3311,
+      "sha256": "37ecc9712514d409e3e1dcf515a032a18399c93a2eacd50ee1a006e7ce9fbbd9"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/mi28n.json",
-      "size": 9661,
-      "sha256": "e4f260f90499b513a272544467c554693b6ef26fe95663ef9627465908859e7f"
+      "size": 16282,
+      "sha256": "266fa90ec0e8ae0df7f40691b9be0ed0202c59cac6a10fd82fece7c5f96d24d4"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/mi_24a.json",
-      "size": 1658,
-      "sha256": "45c92f5cadd91501261416f77dfd5e7bd446211ade1bcd6a263b7dab1bcaf4e1"
+      "size": 14765,
+      "sha256": "608ce780f631b466bd22b24225a5b2d882ab87534c192446adc375c1ed2ee7d6"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/mi_24d.json",
-      "size": 1657,
-      "sha256": "3ce64f434e1d5599b3398b72d2b6e11e84049baa8cf2e6a9c33b8ec84f959ab0"
+      "size": 10322,
+      "sha256": "358161493f1d03b1f3d8de837fbfcaaedfd06fef40d7b9508929126ba9482e90"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/mi_26.json",
-      "size": 1114,
-      "sha256": "3bf7632935d7fd186bedb57185292374afe8d514f1616da21ec71ce4af6f68c0"
+      "size": 18818,
+      "sha256": "ed44ccf220a1e416b9f318b04a15238f9e5599495b7c51517773cd214129aa25"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/mig19.json",
-      "size": 2859,
-      "sha256": "63f00c66da7fe9ada49f0e790c6ef70fdc1a1057a2dfe763300f6a78fb938204"
+      "size": 90904,
+      "sha256": "e90b1b5d5fa94fc93c1c3fffb8045fff58dca00cb52ee712a23074840ae89ffc"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/mig_15bis.json",
-      "size": 64637,
-      "sha256": "d83378b43270184675d5e5a4a1ad579f4467a62c6da24996dc6177dd977493e4"
+      "size": 65047,
+      "sha256": "24dd4328886a6f5a5a30233875df811789806bc2d6fa3d2586846d0aa45e3b06"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/mig_19s.json",
-      "size": 79878,
-      "sha256": "2f29d97c6d6e5739ed008c7f60cc150f54ae432f01bbaf707e87bf6db7ad0b87"
+      "size": 80751,
+      "sha256": "36e76d3f70833ca4d5069c8ed329d54585927ae534ecc0f7ce9e753ca1ab08b0"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/mig_21bis.json",
-      "size": 66995,
-      "sha256": "09071a87af9281b2572fb05957591ebd6e7e0776bf695ce170b52dd67645cbcd"
+      "size": 43688,
+      "sha256": "1ca82baf8c46631447a14e2c8e4046254d9cda067efdec1d0681a39ebda3ad23"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/mig_23mld.json",
-      "size": 76378,
-      "sha256": "197f794af453f7f612a697b4d2254032423fd930453be9444ba21c14b037459e"
+      "size": 47063,
+      "sha256": "79b27a3b40f3cbc2a930769af886a170adf53614a029e30aa0d2a3e0b9322604"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/mig_29.json",
-      "size": 80869,
-      "sha256": "1b11c3d8661ad5c34aa43f77528d627af87eef982ffed5f69108d6855c0fd8a1"
+      "size": 81597,
+      "sha256": "66a4c869e78938e281204f9c7ce9d9176762579f13c1d8646cf179c3b3c69a3c"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/mig_9.json",
-      "size": 49807,
-      "sha256": "e45c2eba144b907ee4155b6a8bc05d6dd3d163fe54ec4ac441d05c670ea7198a"
+      "size": 50147,
+      "sha256": "bc18b09797ae30573b3f6bcbfd882ad804e679c58cfde30e44bc09e089304726"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/milan_tripod.json",
@@ -4193,23 +4193,23 @@
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/mirage_5.json",
-      "size": 74955,
-      "sha256": "1c4508c2b3576154a1640118c71951844321f6b3d4971cde46909b5593673805"
+      "size": 75518,
+      "sha256": "94e7f6d2fb133f096190e18b9f87580fad65ebf737c14629618b832e0fb9a5b0"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/mirage_f1.json",
-      "size": 87362,
-      "sha256": "599809efb9e0d50f391441cb49cc3692f38c854f366e6302a2744d148b63cbdd"
+      "size": 88048,
+      "sha256": "10fd4f53c47168de43c242ac7efa40f3b1535e9bc8f644637ab21194c625d4fa"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/p_51d.json",
-      "size": 77028,
-      "sha256": "785d5bedc534881f6efe09fcbcdc802842b313f7b439f2f6c2d21d0b48982bb3"
+      "size": 77465,
+      "sha256": "9e091ecd92ec73353f05a8df8ff3757d9bacc1c92343212c644017627eb7dc5d"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/panavia_tornado_ids_marineflieger.json",
-      "size": 126548,
-      "sha256": "bd6d51f5db8658edaebe68c2b0e21af5e63c88b726a5c366281656646a829810"
+      "size": 127666,
+      "sha256": "41d611328c4f8c514cbdc5b7094a5cd13ecf85e8d0c814dfe53dc57d0ee8f971"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/pt76b.json",
@@ -4223,8 +4223,8 @@
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/q_5.json",
-      "size": 9463,
-      "sha256": "719689a8ff3c5acfa4fd608e651edb00f0ce3b4394f3f67b16e2ac45a8d7c8fb"
+      "size": 65053,
+      "sha256": "f9c9805cff15a31b032585d70cb4735facceb92919f2c42933ad97b205575db4"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/qn_506model.json",
@@ -4233,28 +4233,28 @@
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/rafale.json",
-      "size": 62436,
-      "sha256": "be62c7e5d08eea54746e6d1e96418a93bb4938bbf32dae298a05f72d9b40e729"
+      "size": 63186,
+      "sha256": "3c520b70cb97468d01e6b17a08769837f467f3d41dc304e08815d9439c703613"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/saab_29_tunnan.json",
-      "size": 79984,
-      "sha256": "e693f480fe6ce2e00226c0e3dcf367fe5baf9fd55df659a30de17965e7eab315"
+      "size": 80352,
+      "sha256": "704a0eaf05ac1ad4d86e7ad5c487548dc9bdb65e54be3d366c61f265001ea7c8"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/saab_32_lansen.json",
-      "size": 105734,
-      "sha256": "3456874ff9e87d392caacff13837f118853243716aca824865e935fc7cb02721"
+      "size": 106291,
+      "sha256": "ce924252c3f7b744dd6f2aaa7ee06ac5ad94aea4a1d06e7439affd30fcb362fc"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/saab_35_draken.json",
-      "size": 62383,
-      "sha256": "5f302cf824d3b3e9dd8e38cba5502532ff3905b7549d048eede118310da8c4af"
+      "size": 63062,
+      "sha256": "bf96ddbba6860896e759e9b447889a34f0846400302866dfbf9865ca8508292b"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/saab_37_viggen.json",
-      "size": 69931,
-      "sha256": "62c25d18bd302807f0497712ebfbed9e04f716ee36a9e0b0ade8901652a3a135"
+      "size": 70577,
+      "sha256": "0b5ad7311a7bb432226f6f74fb507f58ccb248e87af186ad4f41a3a8f164a825"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/saab_j_21a_1.json",
@@ -4263,13 +4263,13 @@
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/saab_jas_39_gripen.json",
-      "size": 75363,
-      "sha256": "2bce62a128c17e62252610a4752ab44066a210b68a495c924597ec6081918319"
+      "size": 76267,
+      "sha256": "116e81ad8e6295ede8ea33c58bf14fde54c98cd34b4a569dc369d8c1110f5c83"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/sabre_mk_6.json",
-      "size": 109392,
-      "sha256": "af5ef5094cc23f1619ac12fdbb9a9da0cd837035bf75a5b0b1466b245f295fad"
+      "size": 109815,
+      "sha256": "88a311eb84984c234525874fc59f0dbd436578582d4086f9cea1d8ac29d26f6c"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/spg9_tripod.json",
@@ -4283,58 +4283,58 @@
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/su_17.json",
-      "size": 7389,
-      "sha256": "66d55b6fdcdbf5e2b01e93c35eaf0deece2bdf165c478ac7b511f58ec27fe45f"
+      "size": 63204,
+      "sha256": "9d179699f12d953b4a3010544ab61501ddf5646e531e833a32ac3f186f480a5a"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/su_24.json",
-      "size": 8643,
-      "sha256": "55db4ced277a7a0773d567e67191cbffc829b23891676e2145d13275587108a7"
+      "size": 72037,
+      "sha256": "65b3a033a07c04edfe5bb728a0fc38d85d44df7b2823f79eb1e942473fdbbd13"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/su_25.json",
-      "size": 64959,
-      "sha256": "432b9821d08017de88c72910db8ef385227c8dd740ecf7b44f7fb000dc9965b7"
+      "size": 48394,
+      "sha256": "def0784c9ae6a5621054febf1ef46c640d91a3108b55c058d7ecd2f43d273e9b"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/su_27.json",
-      "size": 96482,
-      "sha256": "a250b3f722ba5792198abbcd901c56c07f493eb9e897c01144828d8f0742ffaf"
+      "size": 97377,
+      "sha256": "745566f2af40911cb3761add4856e03a13beee382ef750467b0a7b0028d72673"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/su_30.json",
-      "size": 9552,
-      "sha256": "997dd0c8a174f005156762cd83e325d7dd8e8e52c80303cab84c556a628a64e7"
+      "size": 131181,
+      "sha256": "4de223d6336883691c5a54b8ed2aad4780658534f42fa49e36eac734f203c2c2"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/su_35.json",
-      "size": 95126,
-      "sha256": "8dd68b536d9faa6718b65d0c9b83c25aa426f6e43d93f6700255cfef5aba0dfe"
+      "size": 96077,
+      "sha256": "16067285d51faa83baded6f161a4c4c775c1e237942cc72c5a6ea450fda5e888"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/su_39.json",
-      "size": 70778,
-      "sha256": "9db4c6096174dd84d60e3bfa7bd11c2aa362139b0ec0688e7581289b6e379473"
+      "size": 54427,
+      "sha256": "7c8a9bde6d5b36b370c35935c79e4b7cc32da4271eba5b1eb6b37e347ca4768e"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/su_57.json",
-      "size": 14127,
-      "sha256": "563e4575a6a09da02d3f487c0119d34b28578ba684f8ea2486f86f6102656866"
+      "size": 80054,
+      "sha256": "8ea1e3bc75ecf4b906980139fa6feed23ef402f5be72d82b9cce5f5377a9370f"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/su_9.json",
-      "size": 80010,
-      "sha256": "bfcc9f04bd1f5f7274b2203b6a166f20ee6e45cffb2951ea485724f023504bc8"
+      "size": 80847,
+      "sha256": "49332459a58c4db5c0d41b373b2a2a93e6d3c42c05fc1ac0f6c9fbcfd3c62d6e"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/super_mystere.json",
-      "size": 69077,
-      "sha256": "5f646d8ee4134a5c1e332c23f547bf9257e23c3a71e8aba35082b89f95a50422"
+      "size": 69595,
+      "sha256": "b5099c944300b40ae51e5efa86c0c0e1e33b4029929ab8e4e197d4c07d4ce3b6"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/supermarine_spitfire_griffon.json",
-      "size": 64435,
-      "sha256": "1d5f074228c0a9d42443b9c26f9f3b72d84241a64e216e0630876e16eec92129"
+      "size": 61391,
+      "sha256": "fef9995edca30ad9ec9f564238947e45440df09218f29e2fcb7faf4ec92e6ba3"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/t14_armata.json",
@@ -4438,8 +4438,8 @@
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/tu_95ms.json",
-      "size": 25886,
-      "sha256": "ff54c64162b3b7e34463608bff67ceb391791682fce5a3f1ddd062a53b9c954e"
+      "size": 39515,
+      "sha256": "83e21893e912c857dddda279d916521a05597b91f6f35083fe405275c1af24f9"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/type_90.json",
@@ -4453,8 +4453,8 @@
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/uh1d_huey.json",
-      "size": 381,
-      "sha256": "b4f62e8bf560af55732e6e07c104e3031bd005b046db5c73b5489db41eef3597"
+      "size": 745,
+      "sha256": "9f8b4e4ef880fff9f0e6718e01d876614b3ef6edbfd1a371c5f7bda3c38ee27a"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/vbci.json",
@@ -4468,18 +4468,18 @@
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/yak_15p.json",
-      "size": 49742,
-      "sha256": "fa4be72e2c3f05d68c8da6c572e7094a1ccb1193c69b92f44d2a20f66dcf29e9"
+      "size": 50110,
+      "sha256": "d4080313fd89cb0d23120f95e951b41f9e1196f29f61556760e51793e4eeece3"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/yak_3.json",
-      "size": 66015,
-      "sha256": "0ffaddfa9a362c7eb02f1f23ecbd723fb68f2ea0be26e79b39013107187a5f9f"
+      "size": 66480,
+      "sha256": "7f52df63201d8f5798d22f075e24b71f9f894aa1100f6192eb94d82ddb62a29e"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/yak_9u.json",
-      "size": 54642,
-      "sha256": "6b42ea70c55e2ee39bba9846a58399b430e8bda17ab7e0f6b38392eb7179130b"
+      "size": 55219,
+      "sha256": "4862f37180859403a63371a88cd35706ab06e94310ab0bd512baaba9203e09c6"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/zbd_09.json",
@@ -11079,7 +11079,7 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/a_7d.json",
       "size": 2611,
-      "sha256": "4546dcad9c041bf538dec37fa147767b19818e37591559ebb2b880d432e47421"
+      "sha256": "1746b2bbd51dd5f2aaf21d87f4766d1983258fde6bbbc3272ee2e29be0042f07"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/ah1w_super_cobra.json",
@@ -11099,7 +11099,7 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/ah_64d.json",
       "size": 2091,
-      "sha256": "b8c99fd4847bed8871b16c2a60ee2668b6980db8e2352a2b04643d2ee0f5d671"
+      "sha256": "75b6b29595f50d17ea0017219f52b6fb8f4c6d01b77c9723ca6506f60c8bc339"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/ah_6j.json",
@@ -11114,12 +11114,12 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/b_1b.json",
       "size": 5743,
-      "sha256": "f6d66666f5884c450f7080aae001a03e75f932f94792ad311317dcc7792af873"
+      "sha256": "12092205dba9584a1c6ac7422b88f570b9a68940e092ffb6b77f819f6319ee58"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/b_47e.json",
       "size": 3001,
-      "sha256": "584efeb1da57ed0e60e5b1ac9b31302b3baa6857a9bb27dfa2fb12480555635f"
+      "sha256": "44cba454736bfceca6ed72619c4caa0749754bb3709b2f53edce67bf5cb19161"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/c_130h.json",
@@ -11139,7 +11139,7 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/eurofighter_typhoon.json",
       "size": 2384,
-      "sha256": "62613e25b7cb4510b77dfa9625da156d8af97ac20aa0f5a5535dd21d9b2bcb23"
+      "sha256": "c1b88c878d0f1017a0903c7fa3476905f7c2a7ebbd9e0671341babbf1feb9bb6"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/f2h_2.json",
@@ -11148,8 +11148,8 @@
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/f3h.json",
-      "size": 886,
-      "sha256": "99a1d9b846352dfa92976ebd47742cba798b6eddc36ccb3c9d26db8f57e85dfb"
+      "size": 887,
+      "sha256": "051c28a8c1bcab4036aadb968c8d332ea93329fe3f167060970ca1c0f595ada4"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/f8f_1.json",
@@ -11169,52 +11169,52 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/f_104g.json",
       "size": 719,
-      "sha256": "42723a7965da457eb1b1281930e9b6df46973eab49dc1b966b82362bfe897182"
+      "sha256": "ebeb9a6820c82ac62c7726f6df3c3520f8c7051e365f9bcb7dcac1ea93073c6e"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/f_111f.json",
       "size": 10332,
-      "sha256": "b41b50d685f4e26e9f080212b1bafa0ed41eba7f9d170f82046aef06fd65e830"
+      "sha256": "acab1a6a2030f3f1e506bf58aa791c8428b6b75d6fa4f400a8f3532225326bc6"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/f_14a.json",
       "size": 2809,
-      "sha256": "cce17fbcea026091963d004542631eb554124c7ee301cd3225d50f639b2fb44d"
+      "sha256": "4d27155b0ed2bbd3e45f4c992486c3a90c693f3bdf4efe0f7315c9df7cf9f5fc"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/f_14d.json",
       "size": 2866,
-      "sha256": "344bd973c01c522d55d499b1217db632b805638cea535bd7284edf758aa7f6ad"
+      "sha256": "d6c94d1dc717ee33d51d4c63cb0098e576b7ab457da04c7addff0d82403f5a9b"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/f_15c.json",
       "size": 4898,
-      "sha256": "62e68faf111701784e720eaaa467498e5e045a8eb9358cfdc9b5282cdbe8cb37"
+      "sha256": "c251f262d59a626fb46c0b161cfb3a42ab89149d0516a32c946fec2aa3312c1c"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/f_15e.json",
       "size": 6072,
-      "sha256": "c31eb6398fa66eda118dab12a53b7bcd744cb54a16a68bd371aba6ac7c6c82a8"
+      "sha256": "d99e09ff4108a1f3d5b83dea89a2e65a4e62a72a52f9ea6da5f19b6f7c60b42c"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/f_16b.json",
       "size": 5116,
-      "sha256": "cb1b061c6eda1937033226a7ab6c0d40f4898f498521503b532f2d6bd2b63e92"
+      "sha256": "8a43c0e0114e0a6b071ab43141bd2f60d6970ce95c15a36db9fcb11de21d33c9"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/f_16c.json",
       "size": 5437,
-      "sha256": "cc70196a468de96521a63c7f40d5ab71c4697ca4282b9a7c0df76aff8e856fad"
+      "sha256": "10b43912f944fc8ccf377e530a4bbaf75cead4ec3c389e5afea16d90c57cf060"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/f_22a.json",
       "size": 727,
-      "sha256": "d730a17de2cf7ad3d525a3f17f4a173f2b839a376be49b149e9b5895105e4ddb"
+      "sha256": "0a31046f1707d2a773aaec3cf36afbbe0d2bd7091ba5f2530a2cbd0a44cbfb4a"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/f_4c.json",
       "size": 3014,
-      "sha256": "227775660c38059876b22262673a7de4d28ef886d5738c3b5578b1bda05cc4cd"
+      "sha256": "c0a7dcff274ec6cfcec151f43fb72151f0b74e74ccbfe989952fd8463dcf255c"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/f_5a.json",
@@ -11229,17 +11229,17 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/f_86k.json",
       "size": 1293,
-      "sha256": "b2f8f10002ac1a7fb82c59f92a2508f6ef218847ab4480a90f181c7f45b6c794"
+      "sha256": "a4e8dddafad9756011ce71fd1a25564251633789ca9abaea9c0a1d8f3a9228be"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/f_8h.json",
       "size": 909,
-      "sha256": "62c30ad6e1c43435bd7169a53a967b7abf29ca0efffce5ef79d5365b301a046a"
+      "sha256": "19dbb8417627eb61fb27d770beb5dc064dfca74fb9bab63919c5652758c63776"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/fa_18e.json",
       "size": 11521,
-      "sha256": "ccf2e35e6511003a0d7d42242bae0db8c9f88d467549546fbb7603cf943ae720"
+      "sha256": "54d87a20860a9107f9fc6efb6272bdd3ac5b24e8598cd598f35505c0e8ff300d"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/fiat_g_91.json",
@@ -11264,17 +11264,17 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/j_10a.json",
       "size": 3078,
-      "sha256": "44c8316a06309d4f9b88071f9f3259a9ae0f3391811d02bdcde470c2464d7e30"
+      "sha256": "104a4d787176cc201ec6e2aba4612ba64d3bb128e60eb286b497b258b73a7d8c"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/j_11a.json",
       "size": 3444,
-      "sha256": "c9138f1fe9210d4500d4c8a2f08d77570a67002c7cb289e6693c3180453e30cc"
+      "sha256": "52c28b81949c5412df2873dda526dbf8a7ef66386f5eb8d3b1cf05077fe9899b"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/j_15d.json",
       "size": 3232,
-      "sha256": "eeece49498b31e6862df681b60c374cc2d114bb2e429f14c836ea3f8dbcbbd68"
+      "sha256": "67d4271c7c140e95188af0d9e9c4d11636b210b358f5da19ae182590639aac9d"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/j_2.json",
@@ -11359,17 +11359,17 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/mig_21bis.json",
       "size": 2962,
-      "sha256": "da4951ddc6c8934b0e9f653e525b9d0963550117bf0a2bfb07cbe2095880e241"
+      "sha256": "9100dbb8f6dbe84966777230041e457ac82e62590f065814ccfd5229826892d9"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/mig_23mld.json",
       "size": 5652,
-      "sha256": "d4b7d5a87efcd08ea4016c12509dd26b8ab1e8cca21d5eb6a0fce1f439cd3300"
+      "sha256": "2101e56dce832ad19710f0e228f59127e7bb4135bde81f95ca68889eb9161b54"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/mig_29.json",
       "size": 3159,
-      "sha256": "9c8feed17905ee3598ae6e530fbfc8d005c4d2e85b379e0a80f396a22c4eb195"
+      "sha256": "614ac01e55b50a135bd239a013cdbf9bd2fd9bda17bfa72cde36bd44b56528f5"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/mig_9.json",
@@ -11384,7 +11384,7 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/mirage_f1.json",
       "size": 3128,
-      "sha256": "73a5aa4ff37324787058ac2e645572426b09eef23304600f3617e8ba812f7c32"
+      "sha256": "37dd0ee32e0ea16660d43cf03febe3cb63c599298f2daf98d58e2547bfb252ed"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/p_51d.json",
@@ -11394,17 +11394,17 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/panavia_tornado_ids_marineflieger.json",
       "size": 3901,
-      "sha256": "11188fdef035b41538a6a4ca1a8f5a9ca7fe73778c0214bd71214ffef0d4bc58"
+      "sha256": "a7a9810beb07e87b944a1d37c973be66ea25514b844d302d91b3b5bdb100f893"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/q_5.json",
       "size": 4018,
-      "sha256": "058752f11d4802611fa120473e394962a16d9215d72e9cbf34608bd81f7edf32"
+      "sha256": "23b2c56ebb56278d8f765d1c1c845d0f1880f929f03eace94245cfa2801bf115"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/rafale.json",
       "size": 1874,
-      "sha256": "b20fefa0c1f080598aab633c2c7775f90109e6772f5a2561ecba903ee45d837c"
+      "sha256": "91a16c1bbac1416ee99faba2afb53e81174170a15447f3a48e44fac7a552f9b0"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/saab_29_tunnan.json",
@@ -11414,17 +11414,17 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/saab_32_lansen.json",
       "size": 697,
-      "sha256": "7e6e26a5d92ac5a9a0febcdc506e7e28865d37e42dd43ecd89c2154ebcf2a3a0"
+      "sha256": "966723b0081d3d6600c79183185ab0aa3093a782575d1ded3beb6abb1a921739"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/saab_35_draken.json",
       "size": 433,
-      "sha256": "90b73b7b9d7b701c37f36390412affbda989c53d03ed17924ffb7bfc7b00ca8f"
+      "sha256": "5e819f438b58ad1c0539186f00be9084357177389fc80d5edf8621881f8a3f8d"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/saab_37_viggen.json",
       "size": 1432,
-      "sha256": "e5eef00136e0c82bb4d19e08b619684aa3e093653c8409da8cf9cdc8db747a58"
+      "sha256": "26de040a5729a3b67e9dc4396ea8be94b55ade373f604d9c01cd367e2c2eee3d"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/saab_j_21a_1.json",
@@ -11434,7 +11434,7 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/saab_jas_39_gripen.json",
       "size": 1804,
-      "sha256": "e1b30ee10f97cbed68b2844fa26706397a25ad63566428829dc1bdb2ddf0caa0"
+      "sha256": "83c0542a5e011152ea8add5e352932bc5fa4df8a44a9495786beae648d61c34c"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/sabre_mk_6.json",
@@ -11444,47 +11444,47 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/su_17.json",
       "size": 2974,
-      "sha256": "feecce0898b6bad4622b8a9cd7f69fd4bbac10096ce29c3a602f38b82668fe24"
+      "sha256": "c683d75ad40c0478ede939b968888b9001a38c020e2a439973e50017f3c37fd3"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/su_24.json",
       "size": 6516,
-      "sha256": "cac87561a0f4e56f8af22781ed07e698f0d202eecbad63298b303fb9988a10d3"
+      "sha256": "5e8ae7fb7caeb41db37cdb0aa1fe7a8f64639436e49b56ac620d5421d00b80c1"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/su_25.json",
-      "size": 7764,
-      "sha256": "11d6967ea7fd51c8f0998c504deeee4ec2fda1381e285fb51b213285bc2ca373"
+      "size": 7765,
+      "sha256": "d265bc01e878c9b25cff8ffa96d497581561a4b464666919d31badeeb5daed99"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/su_27.json",
       "size": 8026,
-      "sha256": "c6eef974aa33a2782069aef6acda0d1e63848f356d24cfb10d5f79b361c72d46"
+      "sha256": "d3b5794f670bae78b182409de0943855c1fbd1af04731585653f045aed148fe0"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/su_30.json",
       "size": 4767,
-      "sha256": "cf8e737db990dffe7d96f2a42e539bee0552c7c6c4307050df083d1cc0d06297"
+      "sha256": "ca6f3107f6ec098b2c863593f07b2d9fc5b09a60512e77feac3d49f9b50ff8d4"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/su_35.json",
       "size": 10590,
-      "sha256": "b8766077bd5f3af642126c676213a7ed64e25800ac979c52325df05f255de43d"
+      "sha256": "df4357d8646e8d8d83abbbc8e15c9ca5d72a63ff69459e8a47213484bd807579"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/su_39.json",
       "size": 7085,
-      "sha256": "88f3a600ea93696f445c751d2a831a72db4b1d2d4b483834e6162474e6b3f371"
+      "sha256": "b4ab101f94a83db2e39307f24f58b23bca021b95bbce059cc9f8fef104c52009"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/su_57.json",
       "size": 912,
-      "sha256": "eaae10ae69a6af39d604f53630ed19a8adadae193244acec658395fd0b14787f"
+      "sha256": "bf7ade25398ae29c926d5dac31199c3bbbc881a930ece7f3bf4bb464bb49996a"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/su_9.json",
       "size": 281,
-      "sha256": "0905513f7881713dbf202cb2cb37e57b9180d64bb2f54d5db211428c065da0d3"
+      "sha256": "49fa2c9c05ad0b8ed95b7e30a302c455b29340491f8f7f19c908b2e32297adb6"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/super_mystere.json",
@@ -11499,12 +11499,12 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/tu_22m.json",
       "size": 7371,
-      "sha256": "015743efef1df3b48b5204eff055dfa5be453dda84cee90f2711f3fb1f208d51"
+      "sha256": "7c3ba16868c736fd4c65f809a8986be409ef7057689ea7d1a81ed5bc11709c9b"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/tu_95ms.json",
       "size": 3216,
-      "sha256": "a9cf62641c2b0f30b36f549dd13b3886313eed61494ef63ce3855a4c42ce9ab5"
+      "sha256": "6ea4cdfef0e272c2209fe475d2de2179a2face816c19783511993be0ff063716"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/uh1d_huey.json",
@@ -11533,8 +11533,8 @@
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/eurocopter_tiger/aim92.json",
-      "size": 585,
-      "sha256": "d6c1de14ab9044bcb796711c972bcf26188fe20e3e3632e01e812d1f589bbca1"
+      "size": 586,
+      "sha256": "7a3d645179624023c672d238c3578879592b2ee57f9801ef126464c4fa13fd45"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/eurocopter_tiger/hot3_proxy.json",
@@ -11549,7 +11549,7 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/fa18e/agm65d.json",
       "size": 1148,
-      "sha256": "a5de7f151771a61d00c3428e3d603c47b772634940eb3505a7e432898ae9eb31"
+      "sha256": "229120b19aed5a5c2d0f416c9fda0e12fbff6731803632ee4a6fe52390c58d61"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/fa18e/agm65e.json",
@@ -11558,38 +11558,38 @@
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/fa18e/agm84e.json",
-      "size": 916,
-      "sha256": "bb74cdd59532f6453cde1cd3d6d10527b231266dcaf5ee120a9fcfeda862beb5"
+      "size": 915,
+      "sha256": "18acc1dc0542a5992adefcb6442c4de53f45a6edb44a1db08834f72e80d29430"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/fa18e/agm88.json",
       "size": 1009,
-      "sha256": "dee62460eae4fa9b1be25df574d7054a3b811badc8097d82bc1ca761953e8b94"
+      "sha256": "cf1c189cb0e5987124530fd8608c71daa263752cf6a0cc8438640ba00c54aa7d"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/fa18e/aim120.json",
       "size": 1069,
-      "sha256": "e7391e1cabbf23d7199aa302693d0e148b5859a194140f30f809f24b599e8e2d"
+      "sha256": "b4c4cc4ad00278754afc0d639cd927d98e4cb0544ac16080cd2ae2f1691de7eb"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/fa18e/aim120_x2.json",
       "size": 1111,
-      "sha256": "25181884e22e25ca8f9a9d053846701072e99cb8b4ad3c4e9ba9de7efbb154c3"
+      "sha256": "ab78c6e824f1a99105a875fe104ed8b2ca1dd85258ce74de5f379d9baab92874"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/fa18e/aim174b.json",
       "size": 1016,
-      "sha256": "6e0fbe655b7e4f34ebf6426a666e5a4a1f0ac6d78fe3bf38729f547a40036e52"
+      "sha256": "a76e8a2092b9c2485eed6919c91ec8902612a11ab23d62aba969a4db49afb3dd"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/fa18e/aim9m.json",
-      "size": 1063,
-      "sha256": "8df0c6b543b1f7e2cec23dc6d5d95c31da2ac369d29fccb0ed333cf1b87b3856"
+      "size": 1064,
+      "sha256": "c20139626d519ea05ed621b5715c5c7b8d046ded59129d720aa5f9387e64987b"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/fa18e/aim9m_x2.json",
-      "size": 1105,
-      "sha256": "016f6ca3e7466d17d41deb61a47be3c9a0ed83a574d2c5c8a21f55b5b9ea22c6"
+      "size": 1106,
+      "sha256": "f93663a5b04b9c4313bef5b1d0471077780430783b86b4373499d7b0bd6b7e1c"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/fa18e/bomb_500kg_dumb_1.json",
@@ -11709,7 +11709,7 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/kh29d.json",
       "size": 1036,
-      "sha256": "8d3e4eeac9954e90a166634d95ddc9e84d9d20f9ae779b272495dbbd27597bac"
+      "sha256": "1a20dec3e4563bf1edae946bfa6e94e2abbba36d709516dd5a4700d1f00fbd35"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/kh29l.json",
@@ -11718,8 +11718,8 @@
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/kh55.json",
-      "size": 859,
-      "sha256": "d5f0174867f06caf4df1e1e331e7c3ac752f7c61e7f527cccce5193afbf2283f"
+      "size": 858,
+      "sha256": "e7793f1ca63176b8283bb550bc14561b5177993afe1e5859896faba99e868703"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/modeled_store/a_7d/assembly_0.json",
@@ -12239,7 +12239,7 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/munition/agm122.json",
       "size": 1015,
-      "sha256": "b0f25a814c5e11798215ae53f91014701ed54f3daace7ad13a2156693573b4f0"
+      "sha256": "eaac13b59f650f641460ec334cf2685bfdc8f70cd2e72ae8c25186df8ca1fafb"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/munition/agm12b.json",
@@ -12249,67 +12249,67 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/munition/agm158.json",
       "size": 865,
-      "sha256": "f68bad479cffe1da72861154144d911b594584ccfac8d4b544e195966f84a365"
+      "sha256": "6fc4a68f9f40e737c31424d63186919168798fd139a62b7b1dee6b5564bab2ee"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/munition/agm45a.json",
       "size": 1017,
-      "sha256": "5a63e79a4ea067993d9253ca415108e5d4c13f4ebcbb1f285de992c56de29cde"
+      "sha256": "1e4dca817441b9632e9d381df48a0db4465227a93063f1a4b4e567b7e10a33d3"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/munition/agm86.json",
       "size": 858,
-      "sha256": "9141a255ea499e262fa9c9b3b7b8a9cefa8b128e3e6cf76de276e77c25d7bd45"
+      "sha256": "312ac667e2d05bfe8d265fc20b4c633f822af6a2323837afdbedbf4a9bf80f08"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/munition/aim54a.json",
-      "size": 1041,
-      "sha256": "30cd4eaccc54e7677bc28c67f282a824c5118737c8cef7aa87cec36f1258303f"
+      "size": 1040,
+      "sha256": "a2e4d483812a9f5646bea2430fbd080a3fe215d5eba7215f086b365a1dfbb18d"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/munition/aim54c_plus.json",
-      "size": 1043,
-      "sha256": "736df877c375d1e9dfa2b545d41bd6f429d4f4cb33b6fd8422807a4913eb225b"
+      "size": 1042,
+      "sha256": "e4505981c4a8f002c13d222fa6d10181c545e1b97596ccd63453e5f1b570e17b"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/munition/aim7e.json",
-      "size": 1039,
-      "sha256": "987325c4170404dd56aee38fbdd653f362d152236fa0a4e8a7e4a309ea48f7c5"
+      "size": 1040,
+      "sha256": "101e346e155e813556c7f5d258fd205fb50a47b74d68ec209350ee380eec0112"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/munition/aim9b.json",
       "size": 1040,
-      "sha256": "b974e7621cf756b9f475ea404300b15d143cb0f7191da53f249e8423047a759e"
+      "sha256": "c463895c9ec74e65fc96d089fbab433ad31f8dbbb51d126d4dc3deb4ac2aa837"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/munition/aim9b_x2.json",
       "size": 1135,
-      "sha256": "7bfdef4061077ed7bd3a26edb8219b103198a8edaac29ab42a74b91ac72ec20a"
+      "sha256": "8133d3887544be27e1f2f795afbcbad8b934da03fe6bdc843ed73f043f520bbf"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/munition/aim9l.json",
-      "size": 1033,
-      "sha256": "d13caad8cb722e152e43601922a860252316f11f1ede2a4ef38492a28406ab0b"
+      "size": 1034,
+      "sha256": "34ecb425096414a7e5b95e05e57147dee90e9dac4746973e2f6db3d35962d90d"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/munition/aim9l_x2.json",
-      "size": 1124,
-      "sha256": "74654575cbddbca2ea310b3c5f7101e567e5801894151f9e6c144e788b12d30d"
+      "size": 1125,
+      "sha256": "3759aeccbdfe6f968d8785d8d9ef5c67e2120a47777e30cdee4e73585aec84a5"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/munition/aim9x.json",
-      "size": 1029,
-      "sha256": "011ed8cdeec05a7d68cad61043ed03e1188dcd18df1e022ebbdb707ae27855b4"
+      "size": 1030,
+      "sha256": "7dce80927261e8ad1c4786752f9a2b04a7922f87d52eb97265e1368ea944cf94"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/munition/armat.json",
-      "size": 1003,
-      "sha256": "a23070092aca219cb30185c721491763fb6bd26531df6987fe61874a8c186aac"
+      "size": 1002,
+      "sha256": "57699d860eac30a98f202c948774bdffdc15844fadd66427b119217d41afdf28"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/munition/asraam.json",
       "size": 1069,
-      "sha256": "ecff2a38eed752f0eb6ee1931d71a9371a86ce26109be6da8b96931718b6fb67"
+      "sha256": "4c53b170fedb34c227ddbaaa17868689cf28fb81af5c20ce268468571eb557cb"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/munition/blu109.json",
@@ -12324,7 +12324,7 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/munition/brimstone.json",
       "size": 1853,
-      "sha256": "b0667e89af078b8d604fda4f1cddc17d93b91f0abaa8214b6cd5155c88d5771f"
+      "sha256": "8c4e830cc87aba26f780aef632d55b83e5daab1fc2327591314f1589bd45713f"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/munition/brimstone2.json",
@@ -12354,7 +12354,7 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/munition/cm102.json",
       "size": 1002,
-      "sha256": "41fd1ab303b8eb0c5fa0886dd2429660d8287c8d9bffd87641b5f5e72c25da91"
+      "sha256": "14b070752185fd015879b8c587c7e5adb6318c3955437bae1bc653e48cb71d9c"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/munition/falanga_9m17m.json",
@@ -12404,7 +12404,7 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/munition/iris_t.json",
       "size": 1065,
-      "sha256": "f81247111720a6b75199715d278846516c15b7e97275ba1368da044403009140"
+      "sha256": "0c480962029e69419c5036722d67921bf67623723a0512e29603278e0121d04e"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/munition/kab1500l.json",
@@ -12429,37 +12429,37 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/munition/kd88_ir.json",
       "size": 1111,
-      "sha256": "8665e61c857ddf761005dd522256c5226142a9ca3af1729b145f86b4f9e617fd"
+      "sha256": "544c514127781f0811bb500ddef45500d33637a4bae0e1b36eb17efd3db2c029"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/munition/kepd350.json",
       "size": 877,
-      "sha256": "4e1ad5d88ca14a56bef464ee4beda8e4a766fa8ada2a7ee0bd8709f75718f6a6"
+      "sha256": "278fc157300750f66a6ccae646d59c3dcf37f3929554b7218c0406660965292b"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/munition/kh31p.json",
       "size": 1022,
-      "sha256": "c5bcad10e3f3f8aa5b4afb0d733ee6e496cc677f334e2dab8498f7e6ae40e1b5"
+      "sha256": "604e59dcb43d2c4225b5be26d949bf66a7431685cbd887cb7cb5d100b5bfea97"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/munition/kh32.json",
       "size": 1047,
-      "sha256": "105200c51520a42ceb0d194f12b9a13b463ff7f2d8e0fe2845afdd4668c75712"
+      "sha256": "41cd2e0068cf6eba2c76b050686a60aa6e62e318dd2774e728cc5ccb1b4bd778"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/munition/kh38mt.json",
       "size": 1025,
-      "sha256": "f597f84a1e17162d7b070e7826b5f9fdba4b0044a02f740283b663ad2ffa07ff"
+      "sha256": "4f8600ff38beb1b71a7d397b193b6a5dd46dcf39aecd9d3948c57e623f31bb62"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/munition/kh47m2.json",
       "size": 936,
-      "sha256": "2df3a9ef64b8c22f63e2dda4dac6c86cd7d9dbafbfabd2946f6508442dda2282"
+      "sha256": "c40731cb2397b37d87436f95aa706456a227a2f953882e55453a73fc62406a88"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/munition/kh58.json",
-      "size": 1018,
-      "sha256": "36338c83fe143425013b17671aa9481100bfa3277a6d5d5b696cb522cb1fe0ff"
+      "size": 1017,
+      "sha256": "8ed98f308b78a6a31fcae001b66a457d7ee17e0c0480a1a716888ce815fd4725"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/munition/kh59m.json",
@@ -12469,17 +12469,17 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/munition/kh59mk2.json",
       "size": 869,
-      "sha256": "2af1150832b0273432277cd6f2f706aa946cbfd063969fc6ab2680bcb60e4866"
+      "sha256": "d799a9080dcee9687577f27d682148c0dba224c3060eac3fba5ee252751ce692"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/munition/lmur_305.json",
       "size": 1023,
-      "sha256": "14b1622839b936316bb1e6a36caf0613d78d965d7d807e889ba08940b9d2ec80"
+      "sha256": "f1c442c994b116dda980875d506e6afe51fd13559f22ab305df8384e8eb71153"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/munition/martel.json",
-      "size": 1019,
-      "sha256": "bff77f9f9c94c677235683216944e9d6f2399af0aa764485bdef6903a108e082"
+      "size": 1018,
+      "sha256": "8876d80c8d2cb06e0fe7e36e9ac2d5e0056fd4d4a25c6164500af0cb972d5b3c"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/munition/mk82.json",
@@ -12534,72 +12534,72 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/munition/pars3_lr.json",
       "size": 1176,
-      "sha256": "811e2c5a8a7667c75c2ec4632ef87c6bd430bbcb35767ea548d4c5ecdee3b0ec"
+      "sha256": "9a45ce0a840a6b4e270b09ea809e1d60c8b37afea5ea91d9a271e8cf6f3a8b4d"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/munition/pars3_lr_dual.json",
       "size": 1688,
-      "sha256": "017cf0ef365bd9640fec01779f9aee0bca88b163355d96859bb42396a26c7a7e"
+      "sha256": "6b967eba5b3f8a3e076382ba69812242bee8a1d859826dab9874fb9f3ff070b4"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/munition/pl10.json",
-      "size": 1013,
-      "sha256": "03ef31c245878b56783db51d076f541872bd9ff182ae713b7c8aa61b05794b84"
+      "size": 1014,
+      "sha256": "152b306b3966cfcf789fe23a81baf537bd987577f0e8707faafe0d139eed8122"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/munition/pl12.json",
       "size": 1021,
-      "sha256": "afb4590c21c06e7cc20b54d8b7a36c7698072c1b43e4fd5092fb356ee4332f75"
+      "sha256": "b431cb6c94ee3c5c56c1bb7de53b90f4de04aa33a05a62ff69c92dde491eb1c0"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/munition/pl2.json",
       "size": 997,
-      "sha256": "11b4e8d379df0a6083d56cc4720b3dcecead9f5c5a0f221d15dc6fd7e8eba30a"
+      "sha256": "9215b733cb816667ffb531130d3cd7dc21adcfc77aedafe025f1bfdd7538e07e"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/munition/pl5.json",
       "size": 984,
-      "sha256": "30becc598b30b85efd8bd4ca095f3935e1d70023fb8739419dec673d9cc049e5"
+      "sha256": "a9f1962354c88ce9cd2458c8323af0389612fded45944f06bd5ece5403bfe048"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/munition/pl7.json",
       "size": 895,
-      "sha256": "fb0b0c072e209805d9c9fdc79d6c4b4ad1155257ca8ccb7cc39b6db055105d92"
+      "sha256": "7a63571fd541b820991c0ac8a1a43ea82f7e3c8e65d1dd4b78394edba97107e4"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/munition/pl8.json",
-      "size": 1012,
-      "sha256": "791ec2154148e9fbac6a1424bbd079d445cb3648af4882394f2f3b86e1b0fe57"
+      "size": 1013,
+      "sha256": "2ae8c18a89b66740033b3016d4c9fe9a17c4c461156b9b5c5e1c298ceba54658"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/munition/r13m1.json",
       "size": 989,
-      "sha256": "f7329ae968a71af466a79e16fc96e3a4f280a7ab8936edf98b605c851df5ca6f"
+      "sha256": "cee10905ce210a4aa4fabd4f5d57a9a237655d9f65e8fde0542ac904a5d8685e"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/munition/r530.json",
       "size": 1058,
-      "sha256": "c203d3d6f8a71ec71f523fbf3dd9ba9cb2b2cea8dd5685fefea3737a0a8b6314"
+      "sha256": "6463fc82601a2506bc2c4c5149e0db4610bec508238e430c2ace98c26e982570"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/munition/r550_magic.json",
       "size": 1075,
-      "sha256": "25ac6c219271ada1293110f07466cab30ff748695ca6985d1b8dbba01c1ddad6"
+      "sha256": "74625780f879f4d363f158f31f3e0d7ab5881863e092d403afbe11b81ced3717"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/munition/skyflash.json",
       "size": 1035,
-      "sha256": "b7daad56f7a6d145a4fa7b5f10a6cb85d2bfbd94d013a3b003efb494caf3de14"
+      "sha256": "f935959e7fa2ed7963a5e1680cde798a10d9659bcc7cda6581f99e8a55508471"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/munition/storm_shadow.json",
       "size": 897,
-      "sha256": "fa0383d1167c3b341bd5d80c42922037392af722535b91ab70a90735794dc669"
+      "sha256": "5f5e05e853d38c57352f146da78f92b7fad21fadb18432816dd54af38db8b2f5"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/munition/super_530d.json",
       "size": 1041,
-      "sha256": "8aeee24ae1f7d228ec1d6169bcd4ca003032433c38ebae5127c32121f4549e05"
+      "sha256": "4e0e19d309f1dfa5ad9271cd1ff2ba5b08e57b2ab8f982f8523033f6fa9dfc88"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/munition/walleye.json",
@@ -12614,62 +12614,62 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/munition/yj91.json",
       "size": 1004,
-      "sha256": "5e1dc0025742d4c6e56acb8c89adfbe3a8704363373fa0a1adaa843e47dbaefc"
+      "sha256": "e6fef4a3c5bfdbecc8ee55c7971a769d61be8e5b6ed6b142db109c8dcec50f4e"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/r27r.json",
-      "size": 1026,
-      "sha256": "805de0b99112fd9da4051573b862410c3ae936bda126dfe5ee986b64cfd979c4"
+      "size": 1027,
+      "sha256": "c35b10186a34f6cc5632575e0b0edf6807219b5920dd68b3749acdc42433427a"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/r27r_x2.json",
-      "size": 1120,
-      "sha256": "0c9090f21576021ab9e9ab3e7ded398adebe5fd16f393be814a350d91cc4940e"
+      "size": 1121,
+      "sha256": "cfd435263ab1da6e2497d19fa349462e7b89cf77c76ef33fd8083b11ed0d97e7"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/r27t.json",
-      "size": 1004,
-      "sha256": "56252a21c6ef1a4a854bbd437ea82eff463cb625fa3044591a2cb58f4a3ae906"
+      "size": 1005,
+      "sha256": "3efcc7274fced5f54613f236f799ce15fec5a5b416e5994c808f5bb215281bbe"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/r27t_x2.json",
-      "size": 1098,
-      "sha256": "24510db495d62c2daf366307712ae38573396885fa239a087d4d8cb261558bc8"
+      "size": 1099,
+      "sha256": "4c35e2534f23b5b3238a3ef1dc121cf75551286a773a00410868c1ff56f75e5a"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/r3r.json",
       "size": 1035,
-      "sha256": "bebeddbf8a6d1662471fc2e802395cbfb3b0dcef0b09411357682594d85343cc"
+      "sha256": "d7527ab934b8dcdf02abbf1e514981bdfc72233ae42abb35ebb669aae1d6fa80"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/r60.json",
       "size": 874,
-      "sha256": "8a2f20d8d9e27b81efc9278ce52935fc7992f186343d7731ac3fa43d98cf829e"
+      "sha256": "818c5467fba65a0b05e09ae267dd209274e5139b3605239fd24f61fa75426f45"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/r60_x2.json",
       "size": 919,
-      "sha256": "9d99a44104f19f4d3b3e7b90c6ab46744d92a5beadc40eeb12d90a480b6ed19c"
+      "sha256": "255b51de18fec49cce9589eaca47e5a23958fae4a5724136f084f954e19041ab"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/r73.json",
-      "size": 1000,
-      "sha256": "4a6a2b9bdf0101e4e081faf030c46bf0ba5c05a7556790566f226403d9c2bc07"
+      "size": 1001,
+      "sha256": "b45cb69dcd3ef2ff4cc1936e3a8d5f1488ef1b9a07ea2bfee77b0ab6f6ba4174"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/r73_x2.json",
-      "size": 1095,
-      "sha256": "d9247874b48248c1eaf08e628f6e7b67863e5cbd2c1f1f380a22cbbf25f0af1b"
+      "size": 1096,
+      "sha256": "94876f1168315238f7f8e99292c13b27748c5b135a2168eb062cddd25098ef99"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/r77.json",
       "size": 1010,
-      "sha256": "f1ca71ca63e763b5703aa61261dee2cec7aef769a18224b822dd16c986c58a35"
+      "sha256": "652d65b49d3be093c045b93cf67beaa667a1edb07a390de968631345b3d914e9"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/r77_x2.json",
       "size": 1104,
-      "sha256": "76fdc36731cfb4486262d1277d153ca4d15bd3a9c34c075636f2cfcbd47ea559"
+      "sha256": "ba1534bda9a7d81e570c10199a1b54bda51cb84fb921ba621da51b60e5ce719b"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/rbk_250.json",
@@ -12729,67 +12729,67 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/guns/aircraft_stores/agm114k_ah64d.json",
       "size": 786,
-      "sha256": "d9f798729a82d7ba3ee2d570592c30af96aab909d440ae2a9193f8a4ac3aa020"
+      "sha256": "c9dbaafb858ad537af17df1972d6f6bab6bc85f921a6d3ba0da942db5fccdd92"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/guns/aircraft_stores/agm12b.json",
       "size": 815,
-      "sha256": "2e5cf9eb635f737dab465005ce6c061255108d42de1e713d24d51fbc96ff8c3b"
+      "sha256": "8168627f7d1f1baa5b8593de6b963adb77c944b2da9fa83e991cc3f03b2783b6"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/guns/aircraft_stores/agm65.json",
       "size": 799,
-      "sha256": "9770510626043ab5415f1ce3e7c8034c95421306d52e43255ce6a84d17fd931b"
+      "sha256": "43efce9b717af21a52a5c492456a254d04c092947262bbc3b9a70a71cde42959"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/guns/aircraft_stores/agm65e.json",
       "size": 803,
-      "sha256": "ba53278b11e4392dd644cff2fef8c9453eb534f0fdfab7dba6debde646b89da0"
+      "sha256": "2438bedc2fe6bd7b3d270a3d156205d5f7e1203754c854e36ab60390121bf650"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/guns/aircraft_stores/brimstone2.json",
       "size": 789,
-      "sha256": "8dc81e6af3dd169a666ba8ba757fed5281002a09b93b1336fa295440876dce77"
+      "sha256": "3f7f601cff575e8b2e35d9b354a1e22e9ddda1282656a17e473d70d17dd2c703"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/guns/aircraft_stores/falanga_9m17m.json",
       "size": 803,
-      "sha256": "48410d0e2a64133387c8bfa78ee6a0ee6aae23ff5d1851a3c9625fbdc614be4e"
+      "sha256": "6da50a2a1473881e0cb5be63a7d84a64bf3ecec512c71541b6481454ff31301e"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/guns/aircraft_stores/hot3_uht.json",
       "size": 796,
-      "sha256": "9a4509c90113054704764c3c383cd84db3040cf695f5515271f2238d9d2bb100"
+      "sha256": "b14a4d68a73f0ec99776f435de4dff3d17f8bb3603b5748b8fce93f3ba16135a"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/guns/aircraft_stores/kd88.json",
       "size": 794,
-      "sha256": "c7d9ecf9a50dc9a7b4621c4f1436c316951041e5a7ffd71ecdf85273211040d1"
+      "sha256": "05eb3781a0909a2bba1dc29a4e5ef78f21a49f43651893c4df13ca154ee185c6"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/guns/aircraft_stores/kh25l.json",
       "size": 782,
-      "sha256": "dad56012a5995bfe94c205c59aa9333612a84efe85248c6908088ef8234404b9"
+      "sha256": "317c44678b537f6bdb842fe47078c7a58f262dc74aef30f14de3d2ec7c82b2b0"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/guns/aircraft_stores/kh25ml.json",
       "size": 784,
-      "sha256": "f00dd65ee1134498e8e2f032985794d10f08a24d6e5318b0ea0c1caa8d9d4400"
+      "sha256": "5cd4bf335ca96fe3d5e2e2861fc184ac1187d4211d3f73bcfe322d976e0d0c9f"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/guns/aircraft_stores/kh25mt.json",
       "size": 790,
-      "sha256": "142fcdd9dbc898cd68084825fb638e4e6e5f130555024fec4e07112f578c049e"
+      "sha256": "cf8c7a92fe899c6ccdadef29a5d04cba0632b9745596da283b675aa45522ac8e"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/guns/aircraft_stores/kh29l.json",
       "size": 791,
-      "sha256": "91341a9df08a2851e31168c85e175fd7786cd5092825bebcf287510907ba3fa5"
+      "sha256": "3cd6fd063cb50d9da38c01a32c2a2c3bc20cc29a14c16feedf8a35558e2cdc6d"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/guns/aircraft_stores/kh59m.json",
       "size": 797,
-      "sha256": "590482a60b3462347eecb9fd15e07cbb2f9d5360231474c63a900e984bf38621"
+      "sha256": "a5734cc60e5c80c2438b7a959c2b260b9c8c26518734c559a92a719c93521368"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/2s25_sprut_sd/cannon/ammo_00_3bm42.json",
@@ -12823,28 +12823,28 @@
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/9k22_tunguska/missile/ammo_00_9m311_sam.json",
-      "size": 2819,
-      "sha256": "e93340fa168981c43ae43c2617448765a86dc4ae5c5c66372d8dc4170ba02b89"
+      "size": 2818,
+      "sha256": "0b6e8f13bdea10acd822b42ff941bbb16d87c42ad3f77105d0c7c026500c72b3"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/9k22_tunguska/missile/default.json",
-      "size": 2819,
-      "sha256": "e93340fa168981c43ae43c2617448765a86dc4ae5c5c66372d8dc4170ba02b89"
+      "size": 2818,
+      "sha256": "0b6e8f13bdea10acd822b42ff941bbb16d87c42ad3f77105d0c7c026500c72b3"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/9p148/missile/ammo_00_9m113_konkurs.json",
-      "size": 3054,
-      "sha256": "306e48ecd8bc55e882136d22fd4e0bc034a6c037073d847618f6a76651b0e5b9"
+      "size": 3053,
+      "sha256": "8e4bafc6dece899f9781fdaa56744f5b04f5f317a9cd4a1e8c948a5835ee47e1"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/9p148/missile/default.json",
-      "size": 3054,
-      "sha256": "306e48ecd8bc55e882136d22fd4e0bc034a6c037073d847618f6a76651b0e5b9"
+      "size": 3053,
+      "sha256": "8e4bafc6dece899f9781fdaa56744f5b04f5f317a9cd4a1e8c948a5835ee47e1"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/9p149_shturm/missile/default.json",
       "size": 2600,
-      "sha256": "deab9fc82345ebeaf3f45d0da69560806999ba615f64337c18e8dfd329c2e279"
+      "sha256": "5fc5ade00bcd576a996d14771112e37d8f703c84c27366d9cb675298969eded0"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/ags_30/cannon/ammo_00_30mm_vog_30.json",
@@ -13919,67 +13919,67 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/aircraft_stores/agm114k_ah64d.json",
       "size": 3086,
-      "sha256": "39466a60ffd1ff694e99c91083675b371440467cb60a7d79e2e29f3443c619be"
+      "sha256": "bf9f007aadce5869ec71dca8ff2d299366890b23cf059dc9a926a8d4da5f489d"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/aircraft_stores/agm12b.json",
       "size": 2817,
-      "sha256": "c08bd6befec3c5aef72af276217c032c8e1dc152cbba3055a0f337159da1d103"
+      "sha256": "738a20c847cc83542f10c28bf7f945067fdaffd0e13a4035091f27f2274aba3b"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/aircraft_stores/agm65.json",
       "size": 3098,
-      "sha256": "9b248a98e7d8ed4a0a74fa05c6abbed4984acd652fc81600aa0be007102ccdf1"
+      "sha256": "ced6b28216207d12c50a0b55e97dc3071c83818d4797e0c449e937d7de47d003"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/aircraft_stores/agm65e.json",
       "size": 3102,
-      "sha256": "66bc50f0e0d34857c813644286504242a09dda67598b8fb218251a85bd764b75"
+      "sha256": "aab639b78a3aa432b41950baaec67b73329a554a9a1df7ea4c8a38f37f300f8a"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/aircraft_stores/brimstone2.json",
       "size": 3146,
-      "sha256": "8eb3930f92aee0f935442bbb49e735a94bcc8c45a3ec01336e41cf35cd5a3a94"
+      "sha256": "32f88466db9329fa1fb6aae93218f41b29280f1404f7dcfbd7cc69546e43549d"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/aircraft_stores/falanga_9m17m.json",
-      "size": 2834,
-      "sha256": "35c74261a8f60550b272ccf7f51e50b2d63c0639f1f46b275c49fe606c0adf96"
+      "size": 2833,
+      "sha256": "bcc6b3807ff250c1dfe7ae7a048b025d822915391e8c2cdadd3432da2813cb84"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/aircraft_stores/hot3_uht.json",
       "size": 3202,
-      "sha256": "fb90eebee091c1103d06e3a10eeb2837a35b45b9e8c324a709bc9ae400078a30"
+      "sha256": "06019a967b2ae2f1bba6e8d6998948441e910116ea92652d56ac8132d74e9bf5"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/aircraft_stores/kd88.json",
       "size": 3147,
-      "sha256": "33f8fe7411517dbfb8dcb9141acd3b949c7511e67ce0b7d7ccd3f08ea8e5e828"
+      "sha256": "7529bc2a5da2d451a5465f62fd3095838e31e44cafd49347000a99d696ef4486"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/aircraft_stores/kh25l.json",
       "size": 3091,
-      "sha256": "1503d73b519e646e820f0b93f198ba892998f8bb4c620173d6e5b3eb0b92a081"
+      "sha256": "29c900f3b9b1f16d949ae74562993e0db6cfcac6c91a2ff67c9ca5675546b5c1"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/aircraft_stores/kh25ml.json",
       "size": 3152,
-      "sha256": "8957bdd2b685ce5f1f5fc1167b63c0d4fc4e1665679cde77f60d57fdfd79c042"
+      "sha256": "ccb6d4ebd2da3a15ee1e0bf8b287addb60ef94d3fa29f9c2ad3145138ba4c3d6"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/aircraft_stores/kh25mt.json",
       "size": 3153,
-      "sha256": "3c4390bba980f017bd43e268de1abba53011aeec469c5539e792671a786c282c"
+      "sha256": "ac7d38fe13e24e7233132f082a73c132651f8efa7adf2a49fd52371acdf16e8a"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/aircraft_stores/kh29l.json",
       "size": 3086,
-      "sha256": "746d6d1817abb140eb477b20077e8f8384ff324825b3abf47619b9b2461918b5"
+      "sha256": "0970fe3e8c278370c939a3a78c193b7797f7a85a1e14c24c37274f8f21a387c9"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/aircraft_stores/kh59m.json",
       "size": 3154,
-      "sha256": "11b134e997932bce86ab456d4b49a6b1c3d9dbe0976d9c234627eab6bed38a49"
+      "sha256": "2c12b42613b478fa41d5f29e179a12db57e8c1b158a11dde8cb8d3bacfe5c9bd"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/aml_90/occ90_62_heat_fs.json",
@@ -14004,7 +14004,7 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/begleitpanzer/bgm71a_tow.json",
       "size": 2834,
-      "sha256": "65acbb34f7f035d5e3092563714dd1edf9bac48817c080a63b174d18b78ef194"
+      "sha256": "956a5c7a636058b7ecf9a24d9a53bb3bc9d39907c831778f94ff100727b4512d"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/begleitpanzer/bofors_57_he_t.json",
@@ -14063,8 +14063,8 @@
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/begleitpanzer/missile/default.json",
-      "size": 3206,
-      "sha256": "eaf26580c15bcc6ffea9e9b11295eeb10a698f2bf2ba16f3c4c07ed7eea52576"
+      "size": 3205,
+      "sha256": "6d262b854881100d5e460d51803ee921c4efddf5e79a3b8d9a93f02326bba52a"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/bm_21_grad/rocket/default.json",
@@ -14073,8 +14073,8 @@
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/bmd_1/9m14.json",
-      "size": 3241,
-      "sha256": "f91d791587b64913807324200f5f3de1a9b81353c79f1ffdc3513cd8f378eaa0"
+      "size": 3240,
+      "sha256": "e6174b428eefa105c6f49c6b6150ea5fdc63a5fe1a8c9b9df1f6c06cf26a6c80"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/bmd_1/og9.json",
@@ -14133,8 +14133,8 @@
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/bmp2/missile/default.json",
-      "size": 2711,
-      "sha256": "c8ca2894091ff34aab1382b56c5ed524f8bf6e51293c2bf17cfcbfb1680b0a53"
+      "size": 2710,
+      "sha256": "236427db99b1f220bdfb0e750c6f33ba40894c89601fab8aa8f14725abd8437e"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/bmp2m/cannon/ammo_00_3ubr8_apds.json",
@@ -14199,12 +14199,12 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/bmp2m/missile/ammo_00_9m133_kornet.json",
       "size": 2863,
-      "sha256": "b7bf2f70b6462d3720a7faf0c13b6c5fbf618cd570fedc46f7d812c863a42e45"
+      "sha256": "0482cdff8d7c5e631ac2254aff9b435222673934c72c2433f116ef565f839a50"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/bmp2m/missile/default.json",
       "size": 2863,
-      "sha256": "b7bf2f70b6462d3720a7faf0c13b6c5fbf618cd570fedc46f7d812c863a42e45"
+      "sha256": "0482cdff8d7c5e631ac2254aff9b435222673934c72c2433f116ef565f839a50"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/bmp3m_elite/cannon/ammo_00_3of32_he.json",
@@ -14213,8 +14213,8 @@
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/bmp3m_elite/cannon/ammo_01_9m117_bastion.json",
-      "size": 2878,
-      "sha256": "04c25c292301f6bb9c0a08533d56e53e25eb87b41da8a0fdea494f383cc30c9f"
+      "size": 2877,
+      "sha256": "c685bcd77eb16680b644640e9e93c45508de9a100f736a6c923df652ca4a7169"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/bmp3m_elite/cannon/default.json",
@@ -14293,8 +14293,8 @@
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/bmp_1am/missile/default.json",
-      "size": 3221,
-      "sha256": "96e25196f4bcd9d07747ddb19f6143c7d0ea909f3e6383984ecf134822b9b184"
+      "size": 3220,
+      "sha256": "13f6e43cbc6674a799c0b365695f3aa657452bc5e910ebc960fc3e1c8de8a934"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/bmpt/cannon/ammo_00_3ubr8_apds.json",
@@ -14349,7 +14349,7 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/bmpt/missile/default.json",
       "size": 2587,
-      "sha256": "06606f295bdf3f804b2a147e5fe34680e8d3df9becc3509f2d3e2bc8a6aa966e"
+      "sha256": "1d26ffaa3f409fcdbae3bf60330552d47b3ee31522e822a266163c99faf5fdf2"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/browning_tripod/cannon/ammo_00_western_127_m20_api_t_1.json",
@@ -14514,12 +14514,12 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/btr_90/missile/ammo_00_9m133_kornet.json",
       "size": 3150,
-      "sha256": "b6a24abbd157f322860bb962224af3345fccc85f70b10b1f0c0415f5bed3ae09"
+      "sha256": "fe1501ad5cdfef057143c94871679ed1abc23919a4bd8f11bfd20f523ff8a480"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/btr_90/missile/default.json",
       "size": 3150,
-      "sha256": "b6a24abbd157f322860bb962224af3345fccc85f70b10b1f0c0415f5bed3ae09"
+      "sha256": "fe1501ad5cdfef057143c94871679ed1abc23919a4bd8f11bfd20f523ff8a480"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/btr_zd/btr_zd_pkt_762_ap_t.json",
@@ -14629,12 +14629,12 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/cheonma_2/missile/ammo_00_bulsae_3.json",
       "size": 2863,
-      "sha256": "c3f39f43b4f04487adb8199b8708f170438abd18e3b7eea2e7592d92b3537bc0"
+      "sha256": "56204f38b4d07e5304f1bd499ba1576424dce8941721cb11f1847181e024edd8"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/cheonma_2/missile/default.json",
       "size": 2863,
-      "sha256": "c3f39f43b4f04487adb8199b8708f170438abd18e3b7eea2e7592d92b3537bc0"
+      "sha256": "56204f38b4d07e5304f1bd499ba1576424dce8941721cb11f1847181e024edd8"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/cluster_bomblet.json",
@@ -14689,7 +14689,7 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/gaz_3937_vodnik_aa/vodnik_aa_ir_proxy.json",
       "size": 2281,
-      "sha256": "499c1c8f0c7b3ddea27aa950c3f11bb2298cbe8d6bbcef9778dcafe567b70397"
+      "sha256": "7897518c606e751d73d2cccfb3c1d59c6f6260d7742b00808e7c32f13337f889"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/gepard/cannon/ammo_00_kda_35_hei_t.json",
@@ -14799,12 +14799,12 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/ka50/passengermissile/default.json",
       "size": 2599,
-      "sha256": "eb8c6fbc5be45a1a73aaef802f3c26e9922ffae54588ce34d0002300f98ee69a"
+      "sha256": "9eaf435c54a318e3fa0da3470e4e64ed6259a0407abef128bfbc5bb7bdf2665a"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/ka50/pilotmissile/default.json",
       "size": 2595,
-      "sha256": "e2d3bdbf76784aa17edcfb1a6985e6713cab6912deece977eb498676b989ebcd"
+      "sha256": "d51af6e65e752b08e9c383546b6c80911ace94c65746bff38f3424a43e88b3ad"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/ka50/rocket/default.json",
@@ -14819,7 +14819,7 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/ka50/template_missile/default.json",
       "size": 2599,
-      "sha256": "5ddbb9c336c9951416f392aa6a16d823969d9ec000a5a9347c58615fbda70f81"
+      "sha256": "1ebab8faeb6b1df23e839fb3e2da6f953f47d99bff83acd667f61429862aa938"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/kord_tripod/cannon/ammo_00_russian_127_bzt44_api_t_1.json",
@@ -14888,8 +14888,8 @@
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/lav25/missile/default.json",
-      "size": 3336,
-      "sha256": "0c6f0be688094c2289d19e9e214308a3d859ae5ec9272552728d7cce7cc87532"
+      "size": 3335,
+      "sha256": "0cf6f84ad126762631a8b8f2a3681502e9021abbb4b3fed29a734d4b51ed6322"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/lav_ad/cannon/ammo_00_m919_apfsds.json",
@@ -14924,7 +14924,7 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/lav_ad/missile/fim92_stinger.json",
       "size": 2264,
-      "sha256": "bba2f305c7f310e05cf77e6b6c7a4e4d00b883576d8d6946b927f615d16ba9b2"
+      "sha256": "5661628ff2295eab60be11b2fa64cc1fa3910b0fb3a9629253b34ea8e38391f8"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/lav_iii/cannon/ammo_00_m791_apds.json",
@@ -15553,8 +15553,8 @@
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/m2_bradley/missile/default.json",
-      "size": 3203,
-      "sha256": "cff9a3e3b5adc7df2b3ad40322a8da88255f92cc00a4fec114a40e55a364d896"
+      "size": 3202,
+      "sha256": "9abc26140b0771d8afb7e9bfe0e1241945684f059dd02f296bf859ac22bdb01f"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/m41/cannon/ammo_00_m331a2_apds.json",
@@ -15778,8 +15778,8 @@
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/marder_1a2/missile/default.json",
-      "size": 3203,
-      "sha256": "b3017ac8ad0a852cb33b2f027afceab15a3b1afd4967fc68de3d3142b1901cc7"
+      "size": 3202,
+      "sha256": "ef342910cdbb701d1d1924aee893fc691c40d35582c700183f000e6eb215e0b7"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/marder_1a5/cannon/ammo_00_dm63_apds.json",
@@ -15823,13 +15823,13 @@
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/marder_1a5/missile/ammo_00_milan_atgm.json",
-      "size": 3020,
-      "sha256": "ffd16756b712f63b92bd14e11fdbbebd6dcf9656c0caedfe9aca8d61a0495ec5"
+      "size": 3019,
+      "sha256": "147e7bf8a7ed26b463a1742fcb96b34f4b88b1ce7d89e5cf6e42b1d79f892c0f"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/marder_1a5/missile/default.json",
-      "size": 3020,
-      "sha256": "ffd16756b712f63b92bd14e11fdbbebd6dcf9656c0caedfe9aca8d61a0495ec5"
+      "size": 3019,
+      "sha256": "147e7bf8a7ed26b463a1742fcb96b34f4b88b1ce7d89e5cf6e42b1d79f892c0f"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/mbt_70/cannon/ammo_00_xm578e1_apfsds.json",
@@ -15844,7 +15844,7 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/mbt_70/cannon/ammo_02_mgm51c_atgm.json",
       "size": 2707,
-      "sha256": "d119b01fb7257daa7553c2793e9629f73758d805ec3a0784d7763424fe8a9ab0"
+      "sha256": "6b064d22cc3424522951c2ed7e8b1a54c0f0acfeba1776d67ec2c7a3947f34c3"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/mbt_70/cannon/default.json",
@@ -15913,13 +15913,13 @@
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/mi24v/passengermissile/default.json",
-      "size": 2606,
-      "sha256": "80dbfe90d242581c0934a63f7a03e6a9be853fea2ef066f07b1aa3099d22d2af"
+      "size": 2605,
+      "sha256": "e5aa96907ef7edfa0abf4197f48f476e5e75bdcd1c46e109deb86f4c33394a38"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/mi24v/pilotmissile/default.json",
-      "size": 2602,
-      "sha256": "11688f2c801b26b192684a694bb24e9e49bf1c7b1ac849f8000f6ef8ea6026bd"
+      "size": 2601,
+      "sha256": "7125862497ecef9ee432f651e61ca86b17e81b3e20de3df195c2f8df76276dc9"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/mi24v/rocket/default.json",
@@ -15933,8 +15933,8 @@
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/mi24v/template_missile/default.json",
-      "size": 2606,
-      "sha256": "73fa4b3f1cb50a07b879af5f77d6d835e3fe5df0bd4a0a4ac38346444de52c21"
+      "size": 2605,
+      "sha256": "1cb4fbf9078ce786277acbd16f98c50ff9ece7e41b3e4c5d92647b0a1e4a984a"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/mi28n/b13lrocket/default.json",
@@ -15969,12 +15969,12 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/mi28n/passengermissile/default.json",
       "size": 2597,
-      "sha256": "13671d7b49c688e32a49311999a9f973927d9433c18f17f2867876e6856808ae"
+      "sha256": "f83a05fd8c7ee7a01b7e4fc8200ef610ed81a132ddd93ca9ce8871bd5969620a"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/mi28n/pilotmissile/default.json",
       "size": 2593,
-      "sha256": "7c630f050b52a2faf542d6e06df241b7e7e5cd072ac9455c2975b93dcf5ba343"
+      "sha256": "370a08608618ec405fdb1e18a76a97c211f8936712f958c07286db341d3fbe58"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/mi28n/rocket/default.json",
@@ -15989,7 +15989,7 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/mi28n/template_missile/default.json",
       "size": 2597,
-      "sha256": "c6e3de1916218520dfd86fb35b03725a6af771b41977365cc158a243260911b1"
+      "sha256": "2fce8683483598af56b83a6ad603fbec6433db6312163638680f474c931039a8"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/mig19/cannon/ammo_00_nr30_aphe.json",
@@ -16053,18 +16053,18 @@
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/milan_tripod/cannon/ammo_00_milan_atgm.json",
-      "size": 2741,
-      "sha256": "62d721f3131346366530b03151cfdab09016a4b609794de1eb4e8b07013eb5e6"
+      "size": 2740,
+      "sha256": "018650fc289de5b5a0feaf09ec5516e5a836037c3953758563b5b164a7b39513"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/milan_tripod/cannon/ammo_01_milan_3_atgm.json",
-      "size": 2742,
-      "sha256": "710895431d57ceb814f3608c4b136b0ecb56b5acae2828ede7759488c540da39"
+      "size": 2741,
+      "sha256": "e0e5dce86eb93bc105e11962939a621b2eca7b0da449d2e3b9d3e38687283f31"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/milan_tripod/cannon/default.json",
-      "size": 2741,
-      "sha256": "62d721f3131346366530b03151cfdab09016a4b609794de1eb4e8b07013eb5e6"
+      "size": 2740,
+      "sha256": "018650fc289de5b5a0feaf09ec5516e5a836037c3953758563b5b164a7b39513"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/panther_g/machinegun/belt_ammo_00_mg34_ap_t.json",
@@ -16174,22 +16174,22 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/qn_506model/micromissile/ammo_00_qn201dd_atgm.json",
       "size": 2957,
-      "sha256": "6c830516e938c9ff8a118b35924c7752bae105acf2ea38bcfdfd95fba459658c"
+      "sha256": "0a5a452a20b64814a3b713339b6bdcf3ba7bc9229de71e18f43af40df7eb45f0"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/qn_506model/micromissile/default.json",
       "size": 2957,
-      "sha256": "6c830516e938c9ff8a118b35924c7752bae105acf2ea38bcfdfd95fba459658c"
+      "sha256": "0a5a452a20b64814a3b713339b6bdcf3ba7bc9229de71e18f43af40df7eb45f0"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/qn_506model/missile/ammo_00_qn502cdd_atgm.json",
       "size": 3040,
-      "sha256": "b5466b3938d02b7a5660e242daf539cdb95babf32d6ec348718dc1f565c9a3d0"
+      "sha256": "16f42d9539d78886c613ef15f2487fb831ce9d9f2a5ab9bc45a3469ef4b6efc3"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/qn_506model/missile/default.json",
       "size": 3040,
-      "sha256": "b5466b3938d02b7a5660e242daf539cdb95babf32d6ec348718dc1f565c9a3d0"
+      "sha256": "16f42d9539d78886c613ef15f2487fb831ce9d9f2a5ab9bc45a3469ef4b6efc3"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/spg9_tripod/cannon/ammo_01_og9.json",
@@ -16254,7 +16254,7 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/t14_armata/cannon/ammo_03_9m119m1_tandem.json",
       "size": 2904,
-      "sha256": "96e53c18451cf99ccf6d1aee009047eee79082845f1d613a1b2615a916e73f5d"
+      "sha256": "e6a529e478774b5c1dd7b362c6e1cd38adc6f5192d65dd93ffdbb647d6fc71ac"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/t14_armata/cannon/default.json",
@@ -16418,8 +16418,8 @@
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/t64b_obr1976/cannon/ammo_03_9m112_kobra.json",
-      "size": 2648,
-      "sha256": "db7ea4cc7a324e8c527f137b14874210381d8668eb695bdb8fbbe0614d8cda28"
+      "size": 2647,
+      "sha256": "afc46b510cc5f96e4da6381e292672ffa3d0cd652ff5c36f0f173a68cf578643"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/t64b_obr1976/cannon/default.json",
@@ -16538,8 +16538,8 @@
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/t72b/cannon/ammo_03_9m117_bastion.json",
-      "size": 2873,
-      "sha256": "316bf00e5d77cccad384fb38fa9bf93a341c40daa293d4edc5e1893cd90bce73"
+      "size": 2872,
+      "sha256": "3a86e996d7c0e001c422f46cc71a4f8f3cb4a6ec401b938abad61e7cb47090dd"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/t72b/cannon/default.json",
@@ -16604,7 +16604,7 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/t72b3/cannon/ammo_03_9m119m1_tandem.json",
       "size": 2899,
-      "sha256": "fcbc644933b39a9da5718fb144ac4cd4f72e05ec03f84c4a133a02bb6b317da8"
+      "sha256": "761dbf70b3c86ab786e234c441383ff56cece6003b6d2eafadf7878a9d3041ce"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/t72b3/cannon/default.json",
@@ -16669,7 +16669,7 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/t72b3_ubh_cope/cannon/ammo_03_9m119m1_tandem.json",
       "size": 2908,
-      "sha256": "fb0843aac0189e6359a794b7f8c21da053db8e03b79856daa13835e294bf58c4"
+      "sha256": "87a5d3b14e34980e5ed3f99429680509ff0602dd9d93888cec68f903c31656d9"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/t72b3_ubh_cope/cannon/default.json",
@@ -16728,8 +16728,8 @@
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/t80b_obr1976/cannon/ammo_02_9m112_kobra.json",
-      "size": 2648,
-      "sha256": "c25b75dff2a4efcdc0e890acffb2a20eaf2a7a806caa415f7d5649982c9439e3"
+      "size": 2647,
+      "sha256": "a46efba78178740e0768a192304c40e46e218349544cf21d1b7a5ffd0fa72333"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/t80b_obr1976/cannon/default.json",
@@ -16769,7 +16769,7 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/t80bvm_obr2022/cannon/ammo_03_9m119m1_tandem.json",
       "size": 2908,
-      "sha256": "cc360baca4802f5c576e27665fe444e684e8bc27a5dfad6c91fc3503c00656f5"
+      "sha256": "6f23997ba03ee2e268e0356e2af6633accba7b25c0de542d9a3d4bce0b386bf4"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/t80bvm_obr2022/cannon/default.json",
@@ -16859,7 +16859,7 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/t90a/cannon/ammo_03_9m119m1_tandem.json",
       "size": 2898,
-      "sha256": "f5aa3873b966bcfe34e6397c264f153a4760297766c1e987e9b026d7be24ce3c"
+      "sha256": "381533359cd824d2275815fef9e2b93a6ad6d67e59dcfb8c74d5764aaf72f8bb"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/t90a/cannon/default.json",
@@ -16924,7 +16924,7 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/t90m/cannon/ammo_03_9m119m1_tandem.json",
       "size": 2898,
-      "sha256": "11fac983e5d1679d11d959d79b6f49fed7d2f0a1cca3c43cce409908261c87de"
+      "sha256": "07950bc721a471ca05acb7ee7401d102af5973cb9cf457e5d873a31d04a6c38d"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/t90m/cannon/default.json",
@@ -17008,18 +17008,18 @@
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/tow_tripod/cannon/ammo_00_bgm71a_tow.json",
-      "size": 3202,
-      "sha256": "4b956f149629ca887a162d9fda4837a4d47ad8543c57d7756aa3bbf8dbe78ae5"
+      "size": 3201,
+      "sha256": "a690da55c327884bc6d91abc9b0480b72f68bcf664737a8dd45f3e6968811747"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/tow_tripod/cannon/ammo_01_bgm71e_tow.json",
       "size": 2956,
-      "sha256": "dd1224246d73af074b39b0e346bf599fdb9d44db8920402297383fe744584c85"
+      "sha256": "1da4053bff95a7f84232acd30b7fb5525db3f863c7d5a8f12ae7644298ac0f9d"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/tow_tripod/cannon/default.json",
-      "size": 3202,
-      "sha256": "4b956f149629ca887a162d9fda4837a4d47ad8543c57d7756aa3bbf8dbe78ae5"
+      "size": 3201,
+      "sha256": "a690da55c327884bc6d91abc9b0480b72f68bcf664737a8dd45f3e6968811747"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/toyota_jihad_bmp1/bmp1cannon/ammo_00_pg9.json",
@@ -17113,13 +17113,13 @@
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/tunguska/missile/ammo_00_9m311_sam.json",
-      "size": 2798,
-      "sha256": "908d082f6903b7a43b8434b3610beac0e833228355fccccf9157fb9a7a16ed00"
+      "size": 2797,
+      "sha256": "6dd8a219f8cc41e5f631063813dd250c065b2da63c20642ad0c5cfdae568f150"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/tunguska/missile/default.json",
-      "size": 2798,
-      "sha256": "908d082f6903b7a43b8434b3610beac0e833228355fccccf9157fb9a7a16ed00"
+      "size": 2797,
+      "sha256": "6dd8a219f8cc41e5f631063813dd250c065b2da63c20642ad0c5cfdae568f150"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/type_89_ifv/kde_35_dm11a1_he.json",
@@ -17134,7 +17134,7 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/type_89_ifv/type79_atgm.json",
       "size": 2833,
-      "sha256": "6411a4d122aeb7ab5654b0423df3d18f710165245cb007d6f4b2d07071ebf58d"
+      "sha256": "8d7b1843770a79b54c3df75387c6e3c7e9649400d931f66c344247baa8146f91"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/type_90/cannon/ammo_01_jm33_apfsds.json",
@@ -17249,7 +17249,7 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/vt_4a1/cannon/ammo_03_gp125_tandem_atgm.json",
       "size": 2880,
-      "sha256": "c62f59be919999b759669d3c17f9de900ac6c00696be38e1ec015b6737beeffe"
+      "sha256": "db0b3645d9b49c812983964ea41fa30e1278ce51632705cb7a653297f25e7889"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/vt_4a1/cannon/default.json",
@@ -17334,12 +17334,12 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/zbd_09/missile/ammo_00_hj73e_tandem_atgm.json",
       "size": 2906,
-      "sha256": "4148ce749b5da873f7431af68e66cd57a137147ad534914f063538842e4e9ed6"
+      "sha256": "bfc0542b7d8cb4bd4ded4fdb115adf6607ccce13e76e6c166fdb7ac6ef02c383"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/zbd_09/missile/default.json",
       "size": 2906,
-      "sha256": "4148ce749b5da873f7431af68e66cd57a137147ad534914f063538842e4e9ed6"
+      "sha256": "bfc0542b7d8cb4bd4ded4fdb115adf6607ccce13e76e6c166fdb7ac6ef02c383"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/zsl_92/type86_762_ap_t.json",
@@ -17388,8 +17388,8 @@
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/ztl_09/cannon/ammo_02_gp105_tandem_atgm.json",
-      "size": 2880,
-      "sha256": "6365965cdc293da65c724e591435e1e05df11a49e350ac1aed7e55f0ff82e476"
+      "size": 2879,
+      "sha256": "04b23ae8ccf13443eab77602709d2477ace5ad352b587b98a15436dc02e8b196"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/ztl_09/cannon/default.json",
@@ -17439,7 +17439,7 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/ztz99a/cannon/ammo_01_gp125_tandem_atgm.json",
       "size": 2622,
-      "sha256": "97de2a3c1815bae5c4b3cd955e0bf37471bfc5cbd9779d8a9b0d5133df1bb753"
+      "sha256": "b79b5b227d55c1f6eff850bc889759248f5a36c8015123411feb2a83c3f7ef4e"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/ztz99a/cannon/ammo_02_dtb_125_he.json",
@@ -17504,12 +17504,12 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/9k22_tunguska.json",
       "size": 23079,
-      "sha256": "34bd7bd1a13bd5ba46c59bbe4caae35dab399161b1c66905a1b7fd8168775019"
+      "sha256": "6b259b48c84a1868239bdf4f60176439674f97b1cb4de4b83ff4df52d9461a7f"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/9p148.json",
       "size": 11303,
-      "sha256": "8a94d94c2f8d1debc8e20441f7b4d897d2e518280e7bf749210c1dbd97ee3a63"
+      "sha256": "54b066c4afe081220d66e4e1cd0c53d2c76fd33d21dcdc8048597347d4905525"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/9p149_shturm.json",
@@ -17519,7 +17519,7 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/a_10.json",
       "size": 39166,
-      "sha256": "8ba4e6460b58365c05b7bbabbb2b3261ddf79a2a868e443372db664976a2b0f7"
+      "sha256": "beaa8bf7052133abcf904df908f0b90e3bf90ce1f2c22d98d5453a071d19383c"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/a_7d.json",
@@ -17549,7 +17549,7 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/ah_64d.json",
       "size": 13964,
-      "sha256": "0a704ea7e7ed84ca310267074585b563a0dd720f86864813f4eea2ef4e5f75d6"
+      "sha256": "12e7079ec56a6242f893431bd41c147d5e2a9303b73ed1dae15b33a3b8bc4f4d"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/ah_6j.json",
@@ -17564,7 +17564,7 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/b_1b.json",
       "size": 22573,
-      "sha256": "5e9ea50d5e239942b2d3a99cce359bf46d841684cec55d302e37ffbe56c4c59e"
+      "sha256": "9c4dfb67892f4156a081fb7954a0609c1f97f4fea7c93c938879aa2409854b67"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/b_47e.json",
@@ -17574,37 +17574,37 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/begleitpanzer.json",
       "size": 25973,
-      "sha256": "8aa1fc22438716a0f4fcd1c78e85a4d5e9cdc38163f028baec4a538b6a125307"
+      "sha256": "8ade5ea7dbbd83f654aa16a61e93c3963f4a30645e4f51007225fa3dff1dddbc"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/bmd_1.json",
       "size": 16922,
-      "sha256": "b060c01b219b9c6cc35f7cc04974c49cda41e0fe93a9782e1f63d50d7b24d4d6"
+      "sha256": "6507421249b34456f491bb4a11f533fd4133c45f88cfd587ed112fd706c162b5"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/bmp2.json",
       "size": 27515,
-      "sha256": "e123959e86d9a17093a72325e2fd067f75465effe5ebaf6ecbfbcb3a3acef6a0"
+      "sha256": "6fff4820392f4b6c713095e07f1068ceae19e64eae293bdedf405a3076dc063e"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/bmp2m.json",
       "size": 33265,
-      "sha256": "4a497af3eee762190b03947b7648023134af7a739ce8c8871318a7faebf009cd"
+      "sha256": "eb5eb2f3612cc0fbd51902bb56e4ed090ea770ccf5218caff61370c1d92ffa5f"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/bmp3m_elite.json",
       "size": 28957,
-      "sha256": "da36e8610420635b06e2a1f7a9bbc17799a9094b4ea28e0282748af4842f5e3e"
+      "sha256": "6d4bed596b45db451278f03ec0d4095923bbf055ed0b34b7d819e164ce63ee7a"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/bmp_1am.json",
       "size": 22440,
-      "sha256": "76be795d738a3d4c4a3bda9dfaaa1856e6c6bb4a38930977445d1f9ec98d15e7"
+      "sha256": "67c5721f7a7950178a6e471f3c4369a8f5f11c9cbd9b448363d2c188becd2d63"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/bmpt.json",
       "size": 26771,
-      "sha256": "18e3b25b6573e973bbf9fb6dffd43af74374c07432729fa60ce30b085c6aa083"
+      "sha256": "18558052920c31971099876a51834733d80f382fbf48746b0ba553e248cc6b65"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/browning_tripod.json",
@@ -17624,7 +17624,7 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/btr_90.json",
       "size": 34727,
-      "sha256": "5e0589f315d00793d61444e19cfba10cfe3ac47851fd2af6fba526a060ca8463"
+      "sha256": "2bde90dc5bf316e0f682f1b34a641ac788562d26e0e04b9112eba49096d2096c"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/btr_zd.json",
@@ -17639,7 +17639,7 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/ch_46e.json",
       "size": 29237,
-      "sha256": "00a39572bb38403976a18804d1b1e8057e5d141dc022e90e9e2e93c4ed3a46af"
+      "sha256": "186022399c8ef528af80bbf11a87c77202608dbc9253903891262367f5a1e38b"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/challenger_2.json",
@@ -17649,7 +17649,7 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/cheonma_2.json",
       "size": 30011,
-      "sha256": "271cf545d468721bfa87e7487e0924b12ad59929fa5641d769e0299dda61ccb8"
+      "sha256": "93be691664c417986cb8eae36ecc3c216f83805b73ab71dce81cafcd14b22c8f"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/cv9040_no_net.json",
@@ -17664,7 +17664,7 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/eurocopter_tiger.json",
       "size": 8334,
-      "sha256": "a5a61e43a3b75462ede91b625aad083c47abf4fb34c0d3bcec0eff977048aaa0"
+      "sha256": "29160f1a92aaea2cfd2070051e198f717c1d17cbc38415ff0816e309218df5ba"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/eurofighter_typhoon.json",
@@ -17709,17 +17709,17 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/f_14a.json",
       "size": 25956,
-      "sha256": "1ee8cbc351fffc8a3b4a9e83416dfcc194a6f35d5306f926bcfe00d8f4d5531a"
+      "sha256": "14b8c93351a9f19925714f9b83a9e46beee0444996bf3fd6062ccbef0f33f52c"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/f_14d.json",
       "size": 25967,
-      "sha256": "34ef2cf58b127c5f5a36b98b16efa6c864d3c4ae4942ff720c7914377718887c"
+      "sha256": "f36d41ced5e7be1e68dd69327954e72dde24962c8a40b74cb16ca9e49565a3b5"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/f_15c.json",
       "size": 51432,
-      "sha256": "41d301b8b30ea32a5c98ae93efbc2aad22191072c80c1d79c6b8cf76ba11ef3e"
+      "sha256": "977b9a21bca92bfac6887e7c7442e62d8542c37ec0c199a7f1a4ae5dc736e171"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/f_15e.json",
@@ -17729,7 +17729,7 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/f_16a.json",
       "size": 28389,
-      "sha256": "1e07f34df3fba0cce08616690bc2543ec2fb2ee794eff917bd35ade4b571efd1"
+      "sha256": "45c339703d3a9e6aa82f5a0b7c5e230ff30fe39d2fe1cd58a2caa20b6926bdfb"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/f_16b.json",
@@ -17739,7 +17739,7 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/f_16c.json",
       "size": 30999,
-      "sha256": "0616536bff88d5f0296a4e8187e1822048bd76fc9c0f376252e7bcd306a3c9fa"
+      "sha256": "67543fcdc597b181b7e9e9ebd20996e44aa013ba222aeb2cb091d96420de64a7"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/f_4c.json",
@@ -17784,7 +17784,7 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/gaz_3937_vodnik_aa.json",
       "size": 12200,
-      "sha256": "7933038ffe6d5d123a5d3a6057c9b0b5d81bf11ca03cd380fa081c92dcbcb9a2"
+      "sha256": "047db23c678110bd684d60630f9912936a7b07d31b5389f9d3881fd87d01dfbb"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/gepard.json",
@@ -17809,17 +17809,17 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/j_10a.json",
       "size": 46324,
-      "sha256": "7e2e624daf5266898fec5862082923fc6770e947dc54299ba72c623b39c394d1"
+      "sha256": "8a934b90de5eee5812254ed33c56f1ecb8fd4e0a619cd8a842c9ab4aec0af3d0"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/j_11a.json",
       "size": 29736,
-      "sha256": "dedb744760ce3576de17173ca8b3629f1dc59974e6b2d64ad34dd61d645e7f19"
+      "sha256": "c87a01c6b479187bfdc0b6c722df9d42fc08819eb8792c1edbac6762d23d2c2f"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/j_15d.json",
       "size": 45349,
-      "sha256": "74ff4c59a7def79cd036f487ec96bd83c396160f5a92c4ff467eaf4c337c0732"
+      "sha256": "0a0586234e3dbfb978d6bac0533f8b18442430af031d682e3980238db186e329"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/j_2.json",
@@ -17849,7 +17849,7 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/ka50.json",
       "size": 47606,
-      "sha256": "73764600fb9d2fbc0fe4cc00766fbf4e43b2445f78e07f9fe8e724c10bf77d4a"
+      "sha256": "e38afc397906a28af7cfe122e85109cee7d7caca616eee020eda3e0bc02dcc04"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/kamaz4310.json",
@@ -17874,7 +17874,7 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/lav_ad.json",
       "size": 25247,
-      "sha256": "6321c04687030c28cdcba780e1127a61e4ab926aefe7b5e7929c0b953c438a73"
+      "sha256": "faedf64c4b6a6239a9c654c50f3c81aa45cef6ab0778dcfeb93862450de0ad44"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/lav_iii.json",
@@ -17939,7 +17939,7 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/m2_bradley.json",
       "size": 26508,
-      "sha256": "1f4092d2bb32e641239ad9ee50f95ae038d129825afc37de5f064d25728c19f9"
+      "sha256": "64cfc191e448fd6e8df6707f5ac0fb443be9daa27fa2062148ffad49bfb6cd5b"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/m48a3_elite.json",
@@ -17969,17 +17969,17 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/marder_1a2.json",
       "size": 21394,
-      "sha256": "f4730a3f8f32351ba78591a9d388e605d9bd3669d775a5c150d3776242d5ed1d"
+      "sha256": "19c80bd0fa08c4b4b408fa71b97379af460cadcb2c7c16a3c9c83a31256bf22a"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/marder_1a5.json",
       "size": 28059,
-      "sha256": "6a688dd61cf75f567991b684c473ed020689494f1a0b05a5f32f693b151625f1"
+      "sha256": "ff2ea561ca8d4da79cbd96a44c50cea052f6c1fece01c4ae8d648f294e0a6ac5"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/mbt_70.json",
       "size": 22561,
-      "sha256": "e41af87525550824f394ec45e07b79e677e1bc8a93c9cf9960f35b3e0b7eec07"
+      "sha256": "d9d7357e26add6f6197612e6d5aec52b5067ee19dfc36199872bfa7cbe13024b"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/md_450_ouragan.json",
@@ -17999,12 +17999,12 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/mi24v.json",
       "size": 36334,
-      "sha256": "bae2e322de76718e5a241bd40aa07556fd0f6b6b6df541482216124200e2b5d2"
+      "sha256": "63b8811bef8a3c005239ca3727f6c8e9e160b839443727069e09bf4f895ac6f2"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/mi28n.json",
       "size": 48865,
-      "sha256": "b0b63ca2c495aae039b1ef31680ff8da5df7f4b8d1ff274b35a65644f1f48625"
+      "sha256": "149d20ae2ec69960c3acd471143feef1a7a8ad4cfee07d1dd32e118bdeed53ca"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/mi_24a.json",
@@ -18049,7 +18049,7 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/mig_29.json",
       "size": 36173,
-      "sha256": "609fed0731b15d27cfcbac3a111e77273ade600dae1440e08be64b44db68f913"
+      "sha256": "ae7c0cece09ffbc9e36c31d7b2ec42f88ecbe525698b63ca97528f06f40156db"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/mig_9.json",
@@ -18059,7 +18059,7 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/milan_tripod.json",
       "size": 7929,
-      "sha256": "af8ca263ac98a870beb512e266e96d236b0560c8dfddbdcc10d51f6e7e130201"
+      "sha256": "7580d7c355c27bb081cda202d4dd1ad49d3d477994b22f4ef56cc74c4478f638"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/mirage_5.json",
@@ -18069,7 +18069,7 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/mirage_f1.json",
       "size": 29621,
-      "sha256": "bbd29e0e594b8f4b3150e643ebd76671feae29ca5f46362c272fe35b8d919845"
+      "sha256": "7a596efe072c9b441c6406afe1b4b1a8bae58cde9d4adeee86722b08d54cc1ed"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/p_51d.json",
@@ -18099,12 +18099,12 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/q_5.json",
       "size": 32331,
-      "sha256": "195eaa62476d963995d42c9bd7934078db25f388c0062f1e98aaf94c532ab9f9"
+      "sha256": "cd128ec4d62dd426ec557780de2720e0853d10d582ac26265e9c0fa53fb51406"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/qn_506model.json",
       "size": 41685,
-      "sha256": "9acd0b75886e6294f870fbd48ab641c7500bb26f640781bf994864412f1852c0"
+      "sha256": "d96e5d0472de8d3b335b4bbba1551b9f033a2d346bff265419c35b3849c67417"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/rafale.json",
@@ -18169,12 +18169,12 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/su_25.json",
       "size": 164731,
-      "sha256": "377371fced5b3299b5357fbb40a5e0a13574417b1f2561b33072c6f5064a751a"
+      "sha256": "923c3cfd4af70fc6bc5fd9f5dd96b1b5a1623fd1ef6a95d72e807f8c0e6d6745"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/su_27.json",
       "size": 44206,
-      "sha256": "7949d45facfdeade27cfcc1b74a87244bb29d0abf10e941a0c6907544f448af8"
+      "sha256": "32975cc8a59f76171e043f572948e693350dd13e23bbfdcfcd0e27be3da34e3a"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/su_30.json",
@@ -18184,12 +18184,12 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/su_35.json",
       "size": 38189,
-      "sha256": "fda4bbb89b07d4a55f17bfdca0e4115fd6a8636beef0a4fccb9ee5ac49c4a121"
+      "sha256": "61b1327f9a13979e5384752c8c8e150cf0b81d48e4b0a1fe75ff598f99db6332"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/su_39.json",
       "size": 30374,
-      "sha256": "00c40c3a8eb3e64bc97a254915294e2e302e96858dd43414542b70791c4d341d"
+      "sha256": "0eb3e23260bcc51ef795a70a02f4e8708d8ecb8bdccc4a8133f2a18b73e9ecad"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/su_57.json",
@@ -18214,7 +18214,7 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/t14_armata.json",
       "size": 24211,
-      "sha256": "876891ca5e5a79ea3ad1db6790b424aef621fc294cc7174c41255ae93aef36c3"
+      "sha256": "4d2750e4020ee6a67e2cd020210ec8ca17fe0d288ba3d6eeeafba3059ed5c20b"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/t55a_2_0.json",
@@ -18229,7 +18229,7 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/t64b_obr1976.json",
       "size": 32015,
-      "sha256": "88c8d3ac2d46aa34a4365846f4d32957365ab074db04a45697315a9dbd03c5f0"
+      "sha256": "3a71403e5694aaa7a1ef6f377bb4f118d1a320eeb24eae3e38a684bcca427810"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/t72a.json",
@@ -18239,27 +18239,27 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/t72b.json",
       "size": 29722,
-      "sha256": "00bb5a0c91625346b295a85752c3ba12152c780520c0e76f4326bb4d4de31c6d"
+      "sha256": "02c09cb8c2a239e43a5464d1e4fa039ed7aac14916268e7572871c71ca6566aa"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/t72b3.json",
       "size": 31439,
-      "sha256": "d6d34de82c98a9fafbe396e4ef262031a5ad61bcb87b85176cef12b9720cc225"
+      "sha256": "7ca7298ea0e4ceb2175b5eb0f3b1542efa6e6d47a52d5c5474d74d3c8aafb671"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/t72b3_ubh_cope.json",
       "size": 31466,
-      "sha256": "a82c76547dc49553b521dec7cd1c9c41f843e3e7bc7b2ee9848755d32218ec25"
+      "sha256": "2dedea41237691a614ecceedccaa0aab2d2c2112a781230c14ceb6aa6cb10d8f"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/t80b_obr1976.json",
       "size": 22597,
-      "sha256": "ffa753bb340627597dfd50dc8a19486845617e5f876720398ab4e3a7a9122ec8"
+      "sha256": "87cc912d9809d3979a278df4b0800895a291e4664933233ea542000e1a54391e"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/t80bvm_obr2022.json",
       "size": 30681,
-      "sha256": "9040798a7caea20d606f955f2e923c1e97ea7985c284647b42a995b1b98ba0b9"
+      "sha256": "5c9f052fe8b86e4d95e2f8d91037ff58851fad04758cb07fcd08b9041dc07978"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/t80u_obr1985.json",
@@ -18269,12 +18269,12 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/t90a.json",
       "size": 30236,
-      "sha256": "387523a96166989e84ee04ced09b19f53ebc4e2935a6fcaa1f88a0925cf1c6d7"
+      "sha256": "568a714bbc54a5ae254fd850144e2c1c63ba18e8ff1cfee8601f213cb5378e4b"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/t90m.json",
       "size": 32249,
-      "sha256": "97eda9dce93b90c2857e18188126ffe13089b7af832f725101e0bb6da9ad4ceb"
+      "sha256": "1502fff55130652e60af976e690f78374d1d6cfe816d2dda2fdd42ede0bd08c5"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/t_62a.json",
@@ -18284,7 +18284,7 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/tow_tripod.json",
       "size": 8120,
-      "sha256": "0a99769bb68b45bc913cd77d17a02cbad3fa226c4ff0bce56a16ca87cc6ba995"
+      "sha256": "9b5347f17c3f4bf9eefdacfdd4300c3731a18d560238cdfbf44d40ab9e3184f4"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/toyota_jihad_bmp1.json",
@@ -18319,12 +18319,12 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/tunguska.json",
       "size": 20267,
-      "sha256": "0d9c3498a54dcb60099af3ef4ced896b72cc7f2d31cd434baa2574b0c68c6257"
+      "sha256": "e56c8c72b4a5cd842f7ee380766f97afaa2fdbbccb3bf1e04da0d0a62df2fcba"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/type_89_ifv.json",
       "size": 14468,
-      "sha256": "60fcd00f03919e78cd0fb6a7bfc2be6591c60650228234d259e6f3b7aab2af2a"
+      "sha256": "3f9fe47599486cb7fc339b69348b5295b4a26a28e64c07effe68335efbdf44df"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/type_90.json",
@@ -18349,7 +18349,7 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/vt_4a1.json",
       "size": 29565,
-      "sha256": "68c14b6bba9237833c5ca681158f0deedef6e5d680b0a414e4aeb31ffbaaf828"
+      "sha256": "b81f5ccc7fc673032eb928961c438041983e043e253b46e3b8eba6a39006ab8a"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/warrior.json",
@@ -18374,7 +18374,7 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/zbd_09.json",
       "size": 28321,
-      "sha256": "8d006e41d183dfe47860b4504334da9af985e52365c5cf05c7e001b15cb9d68a"
+      "sha256": "abff474e808c8448ece930723211014f82666d0830e8c077401aec13f2a7cf8e"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/zsl_92.json",
@@ -18389,12 +18389,12 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/ztl_09.json",
       "size": 27536,
-      "sha256": "4c2576ffffbdc2967116530f4ab5b5efd12c9e3d8df71497d844cd463ec8a5c9"
+      "sha256": "e7caca051e76abdf70c632f42e705a7a1e692b0ed6180807d3d10c9af1614bfd"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/ztz99a.json",
       "size": 22633,
-      "sha256": "2a42640e27d93632e98921a74b8dc3a2bfb30a6fea9e37486ac3783eae6d68bf"
+      "sha256": "9926a61a022fa2351dac59bc5b7d680ae10b834b7cea30ae1f9915e7fa28eeb7"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/zu23_2.json",
@@ -23249,17 +23249,17 @@
     {
       "path": "bvp/src/main/resources/data/berts_vehicle_pack/sbw/ground_sams/9k22_tunguska.json",
       "size": 813,
-      "sha256": "ad39208828654bceaa9436c09f0924857b92501233cff2e907e7cc4a40f6f606"
+      "sha256": "148f5990ddd6f69d6876f6c91a7709094c59b5b9f12fe9b864918c07bfc55187"
     },
     {
       "path": "bvp/src/main/resources/data/berts_vehicle_pack/sbw/ground_sams/gaz_3937_vodnik_aa.json",
       "size": 668,
-      "sha256": "19054ba109ebad7ce3cd9e0cd798cb446ede25a8b32d705ca8dbdd3c6fc971a0"
+      "sha256": "a9c2bbff45908bb984cf923953b1db7cc425668290968fe1db4336cc09e5106f"
     },
     {
       "path": "bvp/src/main/resources/data/berts_vehicle_pack/sbw/ground_sams/lav_ad.json",
       "size": 751,
-      "sha256": "4dc144e32f911c4ba32a02c88f36e03fe6c607ddfa1247edd1aeed972cacd6a6"
+      "sha256": "871a9a86104bce424417b278669098a218a53dbe75122304602b00c84feeaf11"
     },
     {
       "path": "bvp/src/main/resources/data/berts_vehicle_pack/sbw/projectile_profiles/handheld_at/heat_110.json",
@@ -23428,8 +23428,8 @@
     },
     {
       "path": "docs/MISSILE_WARNING.md",
-      "size": 2040,
-      "sha256": "9a3c49b9c10179c63e3efff35789fe58f1aad899a5b5b292873a08c7579797a4"
+      "size": 2116,
+      "sha256": "35504913fde1452bd83b8a379406753da04bf503577fd58f0f73ff7c93dfbb48"
     },
     {
       "path": "docs/MODULE_BOUNDARIES.md",
@@ -33468,8 +33468,8 @@
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/api/aircraft/AircraftCountermeasureState.kt",
-      "size": 4730,
-      "sha256": "e60258fce6587289d479a8600625570094278d413992e08274c8d725b66d141c"
+      "size": 4902,
+      "sha256": "48c214dadf86cdc54e9086298fa4dbe89a30c0d768031ec740029f6eabc30686"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/api/aircraft/AircraftCountermeasureWire.kt",
@@ -33528,13 +33528,13 @@
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/api/aircraft/AircraftMissileLauncher.kt",
-      "size": 8396,
-      "sha256": "28e0286b000139aafbfc9f3f4767acb8d4a104662c78c1b17b55ccf6edb4e1bd"
+      "size": 8967,
+      "sha256": "5df10f562dc9cc7e09aeb774ad4c207fe49af40289b9cb46193ca31110fcba4c"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/api/aircraft/AircraftMobileRadar.kt",
-      "size": 2639,
-      "sha256": "2958186de246d7e3dcf3829ba8fd7fea9441a8b03d80ff38cad19f066de2d6d9"
+      "size": 2640,
+      "sha256": "bfabc2301c80e0a17eaec0e6fe7926854471d0dc580f857b6a4c984ebfadf134"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/api/aircraft/AircraftMountGearInterlock.kt",
@@ -33634,7 +33634,7 @@
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/api/aircraft/IncomingMissileWarning.kt",
       "size": 7130,
-      "sha256": "432843fe21eebc708ad507c63f0399a1338937bf1c1d1d62a011d20768f1ac7c"
+      "sha256": "4ae81ec394c15996db2430b396d397e570416490c6f07fddcb0b74931ba8cdc9"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/api/audio/SpatialAudio.kt",
@@ -34333,8 +34333,8 @@
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/api/vehicle/render/FarFixedWingVisualState.kt",
-      "size": 3539,
-      "sha256": "db68337761d17b62935133945c91042158172db9ed818abd014eb9fdad35f876"
+      "size": 4323,
+      "sha256": "35a429455787bad0ff6d83af284e1a0f50aa5e6741cf399877586a3b432066b5"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/api/vehicle/render/FarProjectilePolicyRange.kt",
@@ -34403,8 +34403,8 @@
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/api/vehicle/render/FarVehicleCopies.kt",
-      "size": 12046,
-      "sha256": "85ce65c56b3edf90544ae07a2f87dcb79ab791b1ffd57a5a1038c3d1566be443"
+      "size": 12094,
+      "sha256": "68f06e4d03f76a761f9703b488eeb768e9771a99d02fb5efae8543aafa43e7c0"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/api/vehicle/render/FarVehicleDiagnostics.kt",
@@ -35234,7 +35234,7 @@
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/client/flightdisplay/RadarDisplayState.kt",
       "size": 4812,
-      "sha256": "7bd320f1dc6f1c7fd3f219f378c70b741c3fc5e163b54aa2058ecbc33480e966"
+      "sha256": "d87ba9aaab093b4b16195af581b2833890293dbdb7c5da5f46531ba01e3b88f2"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/client/flightdisplay/StoresDisplayPainter.kt",
@@ -35623,8 +35623,8 @@
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/client/overlay/IncomingMissileOverlay.kt",
-      "size": 7974,
-      "sha256": "617a10cad7b766d3926dc1d717a295a56421d713a4e1ac4bbe622bc8b86df144"
+      "size": 8035,
+      "sha256": "6b2df890b8d563c307e7ceb08313b58bd726dd7bb26749f2b8ce32164123fa75"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/client/overlay/ItemRendererFixOverlay.kt",
@@ -35943,8 +35943,8 @@
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/client/renderer/FriendlyVehicleMarker.kt",
-      "size": 2681,
-      "sha256": "c65d6fd94a2d92060ad39e8cf23bf442759faa662665126156a29dcb2625ef29"
+      "size": 3650,
+      "sha256": "9fa6053e84fc0bd5b2bd4bdd43d4d04fbdfd0b3cb02ce2ec15140a92a2355deb"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/client/renderer/JettisonedParts.kt",
@@ -37318,8 +37318,8 @@
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/entity/projectile/Agm65Entity.kt",
-      "size": 6087,
-      "sha256": "46d015b365730b2b7949325b7f0e820532e153b61ceabe4de6594771cbf896a4"
+      "size": 6086,
+      "sha256": "942279cd3d0d885af6f5b195402d1e06f0155c22823c190887b3af5bfcc8d9d8"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/entity/projectile/BasicGeoProjectileEntity.kt",
@@ -37413,8 +37413,8 @@
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/entity/projectile/Kh39Entity.kt",
-      "size": 6115,
-      "sha256": "b9505c459c0b6ac8b37eb6afd84d052519e303294b3e7ac5656dbde02c26f1fc"
+      "size": 6114,
+      "sha256": "ea4c391ebc71d120e6446a36408290f49790c689d4564abab6ecb25cd1feaf45"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/entity/projectile/M18SmokeGrenadeEntity.kt",
@@ -37888,8 +37888,8 @@
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/base/VehicleEntity.kt",
-      "size": 345668,
-      "sha256": "00e97da9392b2bc934b0265e4062affd0b422c3a8fd1d5d31ba33ef35d56dc55"
+      "size": 346416,
+      "sha256": "6a7a34ca63421b2c84f7475d31c72ea5317a360d8e453f1627a11a27cad69d1a"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/base/VehicleEntityContacts.kt",
@@ -51129,7 +51129,7 @@
     {
       "path": "sbw/src/main/resources/data/superbwarfare/sbw/ground_sams/lav_ad.json",
       "size": 607,
-      "sha256": "3810ebd31cc7ab01a9e3ec66da7062bf14de8e9711316e1d31263e057460a234"
+      "sha256": "c8680986464731a51d1da8811c2652903bd73970d2c76059d64ce1475ad4f253"
     },
     {
       "path": "sbw/src/main/resources/data/superbwarfare/sbw/guns/aa_12.json",
@@ -51194,7 +51194,7 @@
     {
       "path": "sbw/src/main/resources/data/superbwarfare/sbw/guns/igla_9k38.json",
       "size": 1299,
-      "sha256": "60c2672507faf3a9b92da920d49485da5cb4cd80b9c8263b163d54d610bec41c"
+      "sha256": "42d3e778cd36cec4add43763659671673f559516f2d07f5cdfabeef8a30b7774"
     },
     {
       "path": "sbw/src/main/resources/data/superbwarfare/sbw/guns/insidious.json",
@@ -51203,8 +51203,8 @@
     },
     {
       "path": "sbw/src/main/resources/data/superbwarfare/sbw/guns/javelin.json",
-      "size": 1321,
-      "sha256": "44394908c27b57b8ccab81a8220a26b17b438299c0ab231540a466b51d0a6620"
+      "size": 1320,
+      "sha256": "cb74cae41a2af987a7814696e4e843cbc3650ae9be443759faecbc5ba94d17c0"
     },
     {
       "path": "sbw/src/main/resources/data/superbwarfare/sbw/guns/k_98.json",
@@ -51388,8 +51388,8 @@
     },
     {
       "path": "sbw/src/main/resources/data/superbwarfare/sbw/vehicles/a_10a.json",
-      "size": 21205,
-      "sha256": "c00cb574d55296577f317f760b6a90e585c44b58a3113b918b1644f3cef4b1b1"
+      "size": 21204,
+      "sha256": "9d973bcd460d7b98a5d8336fea4758f5557a7c0e76b8faf485ea619f188aa584"
     },
     {
       "path": "sbw/src/main/resources/data/superbwarfare/sbw/vehicles/ah_6.json",
@@ -51409,12 +51409,12 @@
     {
       "path": "sbw/src/main/resources/data/superbwarfare/sbw/vehicles/bmp_2.json",
       "size": 13815,
-      "sha256": "874a8f97afa37d76a828fb316ca6e9f496e02482b35fedee1a3c9a7b5ce43abf"
+      "sha256": "7e411dffda3485f945ea1a24f67ba2615ba235c4070e4e4c474c6e65671bec69"
     },
     {
       "path": "sbw/src/main/resources/data/superbwarfare/sbw/vehicles/bradley.json",
       "size": 11901,
-      "sha256": "1dc4547f87da670caf8d3cbbb9a6ad17abe80777ccd4f2dd78ecebb78ba195d2"
+      "sha256": "dd800fcec5983859b0027aa1ae2c7146c7e45a3362bcb3effa70f065739fe73e"
     },
     {
       "path": "sbw/src/main/resources/data/superbwarfare/sbw/vehicles/drone.json",
@@ -51449,12 +51449,12 @@
     {
       "path": "sbw/src/main/resources/data/superbwarfare/sbw/vehicles/lav_25.json",
       "size": 10600,
-      "sha256": "8e06bad1856a036c40a1fdab71bfba2bf2dfac5e5c46b5038b0a87a80a2fdb18"
+      "sha256": "b6b51a4827564d3f035a6713a33ab89bc6d8fd6f627480e30458ff2654dde153"
     },
     {
       "path": "sbw/src/main/resources/data/superbwarfare/sbw/vehicles/lav_ad.json",
       "size": 11210,
-      "sha256": "262f6b51e4f2ae20927eb508007db4f979ba7a35dee422ad5b3010940ac3909d"
+      "sha256": "99143093f3763d5680f0a1bc2f674801f5159283b67546ad3f63a6106222c19c"
     },
     {
       "path": "sbw/src/main/resources/data/superbwarfare/sbw/vehicles/m_1a_2.json",
@@ -51464,7 +51464,7 @@
     {
       "path": "sbw/src/main/resources/data/superbwarfare/sbw/vehicles/mi_28.json",
       "size": 13426,
-      "sha256": "d7625009ac75224891cc68177f82697f8d6ba9c0852b3be82ad4bab90beb2602"
+      "sha256": "d6b41485a9c4898d922377698d70b28fa73b90f0856fa0251166f8141f90f0af"
     },
     {
       "path": "sbw/src/main/resources/data/superbwarfare/sbw/vehicles/mk_42.json",
@@ -51509,7 +51509,7 @@
     {
       "path": "sbw/src/main/resources/data/superbwarfare/sbw/vehicles/sodayo_pick_up_tow.json",
       "size": 5142,
-      "sha256": "9f84f07955c70e17385cf36813d97547c34927d71068a25efccafb6ebb7ca4b9"
+      "sha256": "301750c239041ac522d7b03c97f2246a6c4396ef1187703de297b30752ada9d7"
     },
     {
       "path": "sbw/src/main/resources/data/superbwarfare/sbw/vehicles/speedboat.json",
@@ -51534,7 +51534,7 @@
     {
       "path": "sbw/src/main/resources/data/superbwarfare/sbw/vehicles/tow.json",
       "size": 2108,
-      "sha256": "be29bfff7e55457d27b5aeb3438b0f728e82ced224186c09077d6ed75af25b7f"
+      "sha256": "74fd528201408dbd2cc350b173deb730d54f2c451650d274a5743a8f34927f9a"
     },
     {
       "path": "sbw/src/main/resources/data/superbwarfare/sbw/vehicles/truck.json",
@@ -51984,7 +51984,7 @@
     {
       "path": "sbw/src/test/kotlin/com/atsuishio/superbwarfare/api/aircraft/AircraftCountermeasureStateTest.kt",
       "size": 7246,
-      "sha256": "508f75b24c6988a33bf1b0ae545ff3ea8449952e533d4d4f3625dbb082708b02"
+      "sha256": "0c0534616fe8505b3be3a2e19f987c5ad2b69d7bd46acea74ab407c9d45b2020"
     },
     {
       "path": "sbw/src/test/kotlin/com/atsuishio/superbwarfare/api/aircraft/AircraftLaserBombGuidanceTest.kt",
@@ -52123,8 +52123,8 @@
     },
     {
       "path": "sbw/src/test/kotlin/com/atsuishio/superbwarfare/api/projectile/DamageNormalizationDataTest.kt",
-      "size": 10568,
-      "sha256": "0915c88c2b26fb5a5882eadb695a4529ae469861edc8c3cbf56708c9622cbeba"
+      "size": 10908,
+      "sha256": "28f332fe9987e900a610b3cdc3dc09858b55244e54311cf4b5977dda49d7919c"
     },
     {
       "path": "sbw/src/test/kotlin/com/atsuishio/superbwarfare/api/projectile/FarProjectileEventRegistrationTest.kt",
@@ -52413,8 +52413,8 @@
     },
     {
       "path": "sbw/src/test/kotlin/com/atsuishio/superbwarfare/api/vehicle/render/FarFixedWingVisualStateTest.kt",
-      "size": 5384,
-      "sha256": "1a6244399883fb27a2aedcf9fb9e999556f4ca6a79544486ddf7fcfe10c7595a"
+      "size": 6062,
+      "sha256": "320aa054d8e00d7215f138a7fefdf15a454a86f90b558173dfa1798f0627fd7b"
     },
     {
       "path": "sbw/src/test/kotlin/com/atsuishio/superbwarfare/api/vehicle/render/FarProjectileReadinessTest.kt",
@@ -53014,21 +53014,21 @@
   ],
   "release": {
     "schema": 1,
-    "buildRecordSha256": "bab73923cef22ee1d9307a7da4c022532845fd4f43137cc2a38c1894076a4c57",
+    "buildRecordSha256": "e7663000528e3da7fafa343bc66f71a21ff865709afbc51c8c18c509a9e9809c",
     "artifacts": [
       {
         "id": "bvp",
         "version": "0.1.0",
         "filename": "berts_vehicle_pack-0.1.0.jar",
-        "size": 247470744,
-        "sha256": "166c293cc3a90f99afeef8913fe176dabbd90d643e0bed8429c01a3e9f4958c1"
+        "size": 247550897,
+        "sha256": "8751a9b3c8f7bb5113b59704101b3043f339d9b8c6e0db4941da5eab9168e46f"
       },
       {
         "id": "sbw",
         "version": "0.8.9-bvp.1",
         "filename": "superbwarfare-0.8.9-bvp.1-mc1.20.1-6effe43-all.jar",
-        "size": 37745376,
-        "sha256": "d185d5f214d0aa2d5b333bcf513580b8dcc79dce644a25eab3fe0bcd8a73a7fd"
+        "size": 37746854,
+        "sha256": "e6f60ff6fa0d54cdb77147e2c7227c0b8b3b6caae094ad7b2f5721f6142a1d4f"
       }
     ],
     "dependencies": [
@@ -53922,11 +53922,11 @@
         "sha256": "ed24dc77caa01a715021b0f47217ba46296949ea6b92046986c1be0573f0a93a"
       },
       {
-        "id": "net.minecraftforge:forge:1.20.1-47.2.0_mapped_parchment_2023.08.13-1.20.1_at_fd420094fa091253276672f5de393a695c6d3ac1:a6ca554b6c18",
+        "id": "net.minecraftforge:forge:1.20.1-47.2.0_mapped_parchment_2023.08.13-1.20.1_at_fd420094fa091253276672f5de393a695c6d3ac1:bade60aab259",
         "version": "1.20.1-47.2.0_mapped_parchment_2023.08.13-1.20.1_at_fd420094fa091253276672f5de393a695c6d3ac1",
         "filename": "forge-1.20.1-47.2.0_mapped_parchment_2023.08.13-1.20.1.jar",
         "size": 19157979,
-        "sha256": "a6ca554b6c18dc8354982df80ad27f0ea089c79ea524b8459cb3a9f2b0ff28e5"
+        "sha256": "bade60aab2590605f136c420484501caccebed032b221ae5c023c02a3a31c377"
       },
       {
         "id": "net.minecraftforge:forgespi:7.0.1:2298eaba25d0",
@@ -54461,11 +54461,11 @@
         "sha256": "ca15a907e4d1f6b38cefed51d7df96a83347dcfb0bc8ced53111519e991d887d"
       },
       {
-        "id": "sbw-mapped-api:0.8.9-bvp.1-mc1.20.1-6effe43:8925231ad88c",
+        "id": "sbw-mapped-api:0.8.9-bvp.1-mc1.20.1-6effe43:6eae4e98ebe3",
         "version": "0.8.9-bvp.1-mc1.20.1-6effe43",
         "filename": "superbwarfare-mapped-api.jar",
-        "size": 10154758,
-        "sha256": "8925231ad88c7fdd0a22bef5f03e3eeaf2ceb5cd50455c8d95a183ad36a05ecf"
+        "size": 10156302,
+        "sha256": "6eae4e98ebe3da91884465df8f20c77d07a6d564e8961041e5f237dd645e8081"
       },
       {
         "id": "sbwmeshloader-mapped:0.1.1:0d6da1b68293",

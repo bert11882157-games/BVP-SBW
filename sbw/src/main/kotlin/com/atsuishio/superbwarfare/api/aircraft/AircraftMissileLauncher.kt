@@ -10,6 +10,9 @@ import org.joml.Vector3d
 
 /** Optional FFA linkage. FFA owns target selection, consecutive dwell and final launch admission. */
 object AircraftMissileLauncher {
+    private val AIR_TO_AIR_MODES = setOf("INFRARED", "ACTIVE_RADAR", "SEMI_ACTIVE_RADAR")
+    /** FFA aircraft missiles live 1200 ticks; air-to-air ones get twice that. */
+    private const val AIR_TO_AIR_LIFETIME_TICKS = 2400
     data class Guidance(val mode: String, val lockTicks: Int, val range: Double,
         val cone: Double, val vulnerability: Double)
     fun guidance(store: JsonObject): Guidance? {
@@ -105,6 +108,9 @@ object AircraftMissileLauncher {
         val local = mount.add(offset)
         val position = vehicle.getVehicleTransform(1f).transformPosition(Vector3d(local.x, local.y, local.z))
         val profile = flightProfile(store)
+        // Air-to-air seekers fly twice the aircraft default (owner 2026-10-07: all air-to-air ranges doubled); FFA
+        // 1.0.6-bvp.21+ reads LifetimeTicks, older builds ignore it. Ground SAMs launch through launchAt and keep theirs.
+        if (p.mode in AIR_TO_AIR_MODES) profile.putInt("LifetimeTicks", AIR_TO_AIR_LIFETIME_TICKS)
         // FFA simulates the missile; SBW stamps the TNT charge on the entity it spawns (see ExternalMunitionBlasts).
         val tnt = com.atsuishio.superbwarfare.tools.blast.ExternalMunitionBlasts.storeCharge(store)
         val method = if (profile.isEmpty) api?.launch else api?.launchProfile

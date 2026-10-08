@@ -13,6 +13,15 @@ class FarFixedWingVisualStateTest {
         assertNull(FarFixedWingVisualState.decode("2;1;10;0;0;0;0;NaN"))
         assertNull(FarFixedWingVisualState.decode("2;1;10;0;0;0;0;1.01"))
     }
+    @Test fun `afterburner reaches far copies, follows the newest sample and older payloads read as off`() {
+        val off = FarFixedWingVisualState.create(1, 10, 0F, 0F, 0F, 1.0, 0F, false)!!
+        val on = FarFixedWingVisualState.create(2, 13, 0F, 0F, 0F, 1.0, 0F, true)!!
+        assertEquals(on, FarFixedWingVisualState.decode(on.encode()))
+        assertTrue(FarFixedWingVisualState.decode(on.encode())!!.afterburner)
+        assertTrue(FarFixedWingVisualState.interpolate(off, on, 0.25F)!!.afterburner)
+        assertFalse(FarFixedWingVisualState.decode("2;1;10;0;0;0;1;0")!!.afterburner)
+        assertNull(FarFixedWingVisualState.decode("3;1;10;0;0;0;1;0;2"))
+    }
     private fun state(sequence: Int = 1, tick: Long = 20, elevator: Float = -1F,
                       aileron: Float = 0.5F, rudder: Float = -0.25F, throttle: Double = 0.7) =
         FarFixedWingVisualState.create(sequence, tick, elevator, aileron, rudder, throttle)!!

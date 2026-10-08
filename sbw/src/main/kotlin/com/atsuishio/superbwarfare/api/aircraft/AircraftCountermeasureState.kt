@@ -38,7 +38,7 @@ class AircraftCountermeasureState {
                 40.0 / flaresPerSecond.coerceIn(2, 40)
             if (burstUsed >= flaresPerBurst.coerceIn(2, 128)) {
                 burstUsed = 0
-                flareReadyAt = now + COOLDOWN_TICKS
+                flareReadyAt = now + FLARE_COOLDOWN_TICKS
             }
         }
         val chaffStarted = chaffEnabled && chaffHeld && now >= chaffReadyAt
@@ -52,14 +52,14 @@ class AircraftCountermeasureState {
         if (elapsed != null && elapsed >= chaffProgramTicks + CHAFF_DECAY_TICKS) chaffStartedAt = null
         return Output(pairs, flareExpiries.size, chaffLevel,
             chaffEnabled && elapsed != null && elapsed in 0..chaffProgramTicks.toLong(),
-            (flareReadyAt - now).coerceIn(0, COOLDOWN_TICKS.toLong()).toInt(),
+            (flareReadyAt - now).coerceIn(0, FLARE_COOLDOWN_TICKS.toLong()).toInt(),
             (chaffReadyAt - now).coerceIn(0, COOLDOWN_TICKS.toLong()).toInt(), chaffStarted)
     }
 
     /** Temporary clouds/decoys do not survive unload; cooldowns and partial burst expenditure do. */
     fun restore(now: Long, flareReady: Long, chaffReady: Long, used: Int) {
         flareExpiries.clear(); chaffStartedAt = null
-        flareReadyAt = flareReady.coerceIn(now, now + COOLDOWN_TICKS)
+        flareReadyAt = flareReady.coerceIn(now, now + FLARE_COOLDOWN_TICKS)
         chaffReadyAt = chaffReady.coerceIn(now, now + MAX_CHAFF_RELEASE_TICKS + COOLDOWN_TICKS)
         burstUsed = used.coerceIn(0, 126)
         nextPairTick = now + 1.0
@@ -82,6 +82,8 @@ class AircraftCountermeasureState {
         const val MAX_CHAFF_RELEASE_TICKS = 1200
         const val CHAFF_DECAY_TICKS = 60
         const val COOLDOWN_TICKS = 400
+        /** Flare burst cooldown: half the chaff cooldown (owner 2026-10-08: flares fire twice as often). */
+        const val FLARE_COOLDOWN_TICKS = 200
         fun chaffLevelAt(elapsed: Long, releaseTicks: Int = CHAFF_RELEASE_TICKS): Int {
             require(releaseTicks in 10..MAX_CHAFF_RELEASE_TICKS && releaseTicks % 10 == 0)
             if (elapsed < 0 || elapsed >= releaseTicks + CHAFF_DECAY_TICKS) return 0

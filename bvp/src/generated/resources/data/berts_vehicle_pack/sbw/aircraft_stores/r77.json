@@ -32,7 +32,7 @@
   "Guidance": {
     "Mode": "ACTIVE_RADAR",
     "LockTicks": 0,
-    "Range": 1500,
+    "Range": 3000,
     "ConeDegrees": 25,
     "CountermeasureVulnerability": 1.1
   },
@@ -41,7 +41,7 @@
     "MaxSpeed": 9,
     "AccelerationPerTick": 0.1,
     "TurnDegreesPerSecond": 70,
-    "Damage": 65,
+    "Damage": 50,
     "BlastRadius": 4,
     "TntEquivalentKg": 15.56
   },

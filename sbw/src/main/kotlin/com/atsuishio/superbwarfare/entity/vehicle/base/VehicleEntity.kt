@@ -4811,8 +4811,18 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
 
     /** Accepted fixed-wing controls on the same clock as the rendered body; null is neutral. */
     fun getVehicleFlightControlSurfaceSnapshot(partialTicks: Float):
-        com.atsuishio.superbwarfare.api.vehicle.flight.FixedWingControlSurfaceSnapshot? =
-        vehicleFlightController.controlSurfacePresentationSnapshot(partialTicks)
+        com.atsuishio.superbwarfare.api.vehicle.flight.FixedWingControlSurfaceSnapshot? {
+        // A far render copy (beyond entity tracking range) never receives the flight payload; its accepted
+        // controls, throttle and afterburner arrive with the far snapshot instead.
+        if (level().isClientSide && com.atsuishio.superbwarfare.api.vehicle.render.FarVehicleCopies.isCopy(this)) {
+            val far = com.atsuishio.superbwarfare.api.vehicle.render.FarVehicleCopies.frame(this)
+                ?.fixedWingControls ?: return null
+            return com.atsuishio.superbwarfare.api.vehicle.flight.FixedWingControlSurfaceSnapshot(
+                far.serverTick, far.elevator, far.aileron, far.rudder, far.airbrake,
+                far.throttle.toFloat().coerceIn(0F, 1F), far.afterburner)
+        }
+        return vehicleFlightController.controlSurfacePresentationSnapshot(partialTicks)
+    }
 
     /** Per-tick precedence flag: a selected strategy outranks terrain, inertia, and pose providers. */
     val flightStrategyOwnsAttitudeThisTick: Boolean

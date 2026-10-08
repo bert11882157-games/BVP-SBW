@@ -25,7 +25,7 @@ object AircraftMobileRadar {
         val alive = !vehicle.isRemoved && !vehicle.isWreck && vehicle.health > 0
         val active = alive && (radar?.get("Enabled")?.asBoolean == true || groundRange != null)
         runCatching {
-            if (active) api?.first?.invoke(null, vehicle, groundRange ?: radar?.get("Range")?.asInt ?: 500)
+            if (active) api?.first?.invoke(null, vehicle, groundRange ?: radar?.get("Range")?.asInt ?: 1000)
             else api?.second?.invoke(null, vehicle)
         }
     }

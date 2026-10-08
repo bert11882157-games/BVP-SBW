@@ -7,7 +7,7 @@
   "Guidance": {
     "Mode": "INFRARED",
     "LockTicks": 60,
-    "Range": 1000,
+    "Range": 2000,
     "ConeDegrees": 25,
     "CountermeasureVulnerability": 1.2
   },
@@ -16,7 +16,7 @@
     "MaxSpeed": 6,
     "AccelerationPerTick": 0.1,
     "TurnDegreesPerSecond": 55,
-    "Damage": 50,
+    "Damage": 40,
     "BlastRadius": 4.1,
     "TntEquivalentKg": 13.2
   },

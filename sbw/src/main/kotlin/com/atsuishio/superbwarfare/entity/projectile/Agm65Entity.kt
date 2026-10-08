@@ -28,8 +28,8 @@ open class Agm65Entity(type: EntityType<out Agm65Entity>, level: Level) : Missil
     BasicGeoProjectileEntity {
     init {
         this.noCulling = true
-        this.damageValue = 1100f
-        this.explosionDamageValue = 180f
+        this.damageValue = 825f
+        this.explosionDamageValue = 135f
         this.explosionRadiusValue = 12f
         this.distracted = false
         this.durability = 25

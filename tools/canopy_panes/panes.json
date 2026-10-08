@@ -1,0 +1,11 @@
+{
+  "_comment": "Flat-pane glazing per vehicle (canopy_panes). base: 'none' (panes only) | 'loft' (canopy_loft dome first, 'loft' holds overrides for it) | 'windscreen' (canopy_loft dome cut open at the windscreen bow, flat panes glaze the windscreen) | 'glass' (canopy_glass dome). eyes: seat indices to glaze from. skip_az: [[az0, az1, el0, el1]] openings meant to stay open (degrees, azimuth positive to the left, 0 ahead). el_min: lowest elevation glazed. tube: fuselage half-width for telling cabin openings from windows.",
+  "ah_64d": {}, "ah1w_super_cobra": {}, "ah_1f": {}, "ah_1g_cobra": {}, "ah_6j": {}, "ch_46e": {},
+  "eurocopter_tiger": {}, "ka50": {}, "mi24_hind_a": {}, "mi24v": {}, "mi28n": {}, "mi_24a": {}, "mi_24d": {},
+  "mi_26": {}, "uh1d_huey": {},
+  "c_130h": {}, "an_12b": {}, "il_76m": {}, "tu_95ms": {}, "b_1b": {},
+  "_tu_22m": "kept on its canopy_glass panel dome: flat panes left the rear crew's view 41% open against 0%", "ju_87_b2": {},
+  "m_50a": {"base": "loft"},
+  "su_25": {"base": "windscreen"}, "su_39": {"base": "windscreen"}, "mig_21bis": {"base": "windscreen"},
+  "mig_23mld": {"base": "windscreen"}, "a_10": {"base": "windscreen"}
+}
