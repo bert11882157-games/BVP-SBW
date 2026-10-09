@@ -30,7 +30,16 @@ snapshot incorporates them.
 
 Every BVP/SBW build that is installed for testing is also pushed here: its sealed checkpoint tree is
 copied over main on a sync/<version> branch (files that only this repository has, such as
-	ools/, are kept), merged into main through a pull request, and published as a prerelease with
+tools/, are kept), merged into main through a pull request, and published as a prerelease with
 the BVP, SBW and FFA JARs and their .sha256 files, listed in [DOWNLOADS.md](../DOWNLOADS.md).
 main therefore always matches the newest build. The next development checkpoint starts from that
 build's tree and takes DOWNLOADS.md and this file from main.
+
+## Pinned compiler dependencies
+
+The release build (`bvp/build-support/build-release.mjs --compiler-extras-manifest`) compiles against Komodo 1.2.3 and
+Flywheel 1.0.5, pinned by size and SHA-256 in the development workspace's `work/claude_jobs/compiler-extras.json`.
+The JARs it names must live at a permanent location, `work/claude_jobs/compiler-deps/`, never inside a checkpoint or
+candidate folder under `work/production_repository_snapshots/`: those folders are cleaned up, and a manifest pointing
+into a deleted one fails the build step with ENOENT (as it did for 0.11.122beta, before packaging, so no version was
+spent). If a pin must change, copy the new JAR into `compiler-deps/` and update its size and hash together.
