@@ -1,10 +1,10 @@
 {
   "schema": 1,
   "policyVersion": 4,
-  "label": "claude-fixes-20261008-r110",
+  "label": "claude-fixes-20261008-r111",
   "status": "release-candidate",
-  "createdAt": "2026-10-08T09:07:04.198Z",
-  "treeSha256": "6d6456196c88cec3468a7b8916eec2e24f6ea1b9681082bbfbbfc6fd83e1518f",
+  "createdAt": "2026-10-09T08:29:21.972Z",
+  "treeSha256": "2157e85729535404c25511f4d3cb7f100e0a9650fc254e4b447625f255b90929",
   "files": [
     {
       "path": ".editorconfig",
@@ -3703,8 +3703,8 @@
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/ah_1g_cobra.json",
-      "size": 2330,
-      "sha256": "6e598d5d6a9fa514b4328a987b13a571cf667bf068cb28bfa8a9ade72959f89e"
+      "size": 16196,
+      "sha256": "a8204a46df36ec190e627d5104a5f54e193fa4d889ea1cb1bdf868def6113719"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/ah_64d.json",
@@ -3713,8 +3713,8 @@
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/ah_6j.json",
-      "size": 12386,
-      "sha256": "70340d3c3938b8d4ceb93f8ff64c59a374ab95b5eff5bd47ba09b4383d6897f3"
+      "size": 30881,
+      "sha256": "15f2c37e27ab0fd133487de10d2b8649ae821e5ee99b1a2218b9641a2e8896b1"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/an_12b.json",
@@ -3823,8 +3823,8 @@
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/eurocopter_tiger.json",
-      "size": 11833,
-      "sha256": "50dcc4ed88d58139895059911a68b816db22adc37e794350f12e89fab73ab17b"
+      "size": 14564,
+      "sha256": "dba003fffa974651bb4b52eaec04a79e5af44c10fea182a35c46bd2684cb5fe3"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/eurofighter_typhoon.json",
@@ -4128,8 +4128,8 @@
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/mi24v.json",
-      "size": 3311,
-      "sha256": "37ecc9712514d409e3e1dcf515a032a18399c93a2eacd50ee1a006e7ce9fbbd9"
+      "size": 24266,
+      "sha256": "08053c95877433fa38e412c169f5f3b09b7968822969dcb9176426615f3c3d5c"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/mi28n.json",
@@ -4148,8 +4148,8 @@
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/mi_26.json",
-      "size": 18818,
-      "sha256": "ed44ccf220a1e416b9f318b04a15238f9e5599495b7c51517773cd214129aa25"
+      "size": 16457,
+      "sha256": "220296a343823ca382fa651ba20890c7cab2abe703624495fa4098e2b7eba116"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/mig19.json",
@@ -17613,8 +17613,8 @@
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/ah_1g_cobra.json",
-      "size": 19487,
-      "sha256": "1a9a46db565146b961e4596dce1a2de99c1204db27e387f50b330fe42d573baf"
+      "size": 19484,
+      "sha256": "7270757f9981105f64f8382f961abfb9747f7ccbdc94e9512a15a9cc60b91720"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/ah_64d.json",
@@ -17624,7 +17624,7 @@
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/ah_6j.json",
       "size": 16061,
-      "sha256": "a0a1e03b16114527c3c6e098ad8ef72f17978207b0e2cda2f56b6535a3e57b06"
+      "sha256": "76d7c0cfba8b0e97860adcdc20734f062f3b1755096e72d718e51c7b90ff7777"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/an_12b.json",
@@ -53089,14 +53089,14 @@
   ],
   "release": {
     "schema": 1,
-    "buildRecordSha256": "ea5423a339cd996afafea1e6c53939a074252885de14ca8a743ae9d6b96e8c63",
+    "buildRecordSha256": "e5a3baaf911f379e9da6c8ef85c9a9b1a338bbb3f77b080300b055d7ad444ea5",
     "artifacts": [
       {
         "id": "bvp",
         "version": "0.1.0",
         "filename": "berts_vehicle_pack-0.1.0.jar",
-        "size": 247749784,
-        "sha256": "396e9e3d039d0d778d0bed737d4bc775ba5f189c793e4a1fa385529179faae3e"
+        "size": 247756988,
+        "sha256": "c59b25c068c96c9704b9bf0a20e67e374515769f2b2a69152e4a1b426a988493"
       },
       {
         "id": "sbw",
@@ -53997,11 +53997,11 @@
         "sha256": "ed24dc77caa01a715021b0f47217ba46296949ea6b92046986c1be0573f0a93a"
       },
       {
-        "id": "net.minecraftforge:forge:1.20.1-47.2.0_mapped_parchment_2023.08.13-1.20.1_at_fd420094fa091253276672f5de393a695c6d3ac1:52cb6190d960",
+        "id": "net.minecraftforge:forge:1.20.1-47.2.0_mapped_parchment_2023.08.13-1.20.1_at_fd420094fa091253276672f5de393a695c6d3ac1:370632c8295b",
         "version": "1.20.1-47.2.0_mapped_parchment_2023.08.13-1.20.1_at_fd420094fa091253276672f5de393a695c6d3ac1",
         "filename": "forge-1.20.1-47.2.0_mapped_parchment_2023.08.13-1.20.1.jar",
         "size": 19157979,
-        "sha256": "52cb6190d960ddf6c88ab2d2c6a994bc4fd3d8fc36d1dd8d9393d35704ac0b5c"
+        "sha256": "370632c8295b5ac832864c97cd6a287e2149ae6f1c5c21dfd780e6ec9be21728"
       },
       {
         "id": "net.minecraftforge:forgespi:7.0.1:2298eaba25d0",

@@ -13,7 +13,21 @@ No stable release is currently published in this repository. See [all releases](
 for the complete release history.
 The `0.9.19beta` source tag currently has no GitHub Release or compiled download assets.
 
-## Latest published testing build: 0.11.121beta
+## Latest published testing build: 0.11.122beta
+
+[Helicopter canopy glass: AH-1G, AH-6J front bubble, Mi-24V gunner, Tiger left windows, Mi-26 windscreen and roof windows; AH-1G and AH-6J pilot views inside the cockpit](https://github.com/bert11882157-games/BVP-SBW/releases/tag/v0.11.122beta).
+Install all three matching JARs on clients and servers, replacing older active copies:
+
+| Component | Mod JAR | Checksum |
+| --- | --- | --- |
+| BVP 0.11.122beta | [JAR](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.11.122beta/bvp-main-v0.11.122beta.jar) | [SHA-256](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.11.122beta/bvp-main-v0.11.122beta.jar.sha256) |
+| SBW 0.11.122beta | [JAR](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.11.122beta/bvp_superbwarfare-v0.11.122beta.jar) | [SHA-256](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.11.122beta/bvp_superbwarfare-v0.11.122beta.jar.sha256) |
+| FFA 1.0.6-bvp.21 | [JAR](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.11.122beta/fire-from-above-1.0.6-bvp.21.jar) | [SHA-256](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.11.122beta/fire-from-above-1.0.6-bvp.21.jar.sha256) |
+
+Only vehicle data changed (five helicopters' canopy glass and two pilot camera positions); code is identical to 0.11.121beta.
+The source build passed, all five helicopters spawned in the isolated test runtime, and the AH-1G and AH-6J pilot views sit
+inside their cockpits.
+## Earlier published testing build: 0.11.121beta
 
 [Helicopter overhaul: pylon loadouts for every armed helicopter, half of real top speed and climb, gunner-fired guided missiles](https://github.com/bert11882157-games/BVP-SBW/releases/tag/v0.11.121beta).
 Install all three matching JARs on clients and servers, replacing older active copies:

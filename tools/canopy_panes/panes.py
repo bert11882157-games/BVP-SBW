@@ -402,7 +402,16 @@ def main(argv):
         cfg = cfgs.get(vid, {})
         try:
             base = base_glass(vid, cfg)
-            p = panes(vid, kinds.get(vid, 'Airplane'), cfg, base)
+            kind = kinds.get(vid, 'Airplane')
+            p = [] if cfg.get('hull_only') else panes(vid, kind, cfg, base)
+            if cfg.get('hull'):
+                # hand-boxed canopies the frame-ring fit cannot read (hull.py)
+                import hull as H
+                _, geo = T.load_geo(vid)
+                tris, uvs = T.triangles(geo)
+                tex = T.load_texture(vid)
+                for spec in cfg['hull']:
+                    p += H.glaze(T, tris, uvs, tex, crew(vid, kind, cfg), spec)
         except Exception as e:
             import traceback; traceback.print_exc()
             print(f'{vid:34s} FAILED {e!r}', flush=True); continue
