@@ -11,6 +11,7 @@ data class BlueprintSetIndexMessage(val index: Int) : ServerPacketPayload() {
         val player = this.sender()
         val menu = player.containerMenu as? BlueprintResearchTableMenu ?: return
         if (!menu.stillValid(player)) return
+        if (index < 0) return
 
         menu.setLastSelectedIndex(index)
     }

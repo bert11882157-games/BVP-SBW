@@ -318,8 +318,9 @@ public abstract class ArmoredVehicleEntity extends GeoVehicleEntity implements V
         if (seatIndex < 0 || selectedWeaponIndex < 0) {
             return null;
         }
-        if (this instanceof Ka50Entity) {
-            return seatIndex == 0 && selectedWeaponIndex == 1 ? BVP_AIM_RETICLE : null;
+        if (this instanceof Ka50Entity ka50) {
+            return seatIndex == ka50.autocannonSeatIndex() && selectedWeaponIndex == ka50.autocannonWeaponIndex()
+                    ? BVP_AIM_RETICLE : null;
         }
         if (this instanceof Mi24VEntity || this instanceof Mi28NEntity) {
             return seatIndex == 1 && selectedWeaponIndex == 0 ? BVP_AIM_RETICLE : null;

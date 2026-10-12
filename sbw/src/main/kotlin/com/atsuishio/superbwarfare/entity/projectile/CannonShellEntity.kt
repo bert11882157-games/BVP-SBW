@@ -91,7 +91,7 @@ open class CannonShellEntity(type: EntityType<out CannonShellEntity>, level: Lev
         val level = this.level()
         if (level is ServerLevel) {
             if (type == Type.WP) {
-                findNearEntity(result.location, owner!!)
+                owner?.let { findNearEntity(result.location, it) }
                 causeExplode(result.location)
                 this.discard()
             }
@@ -137,7 +137,7 @@ open class CannonShellEntity(type: EntityType<out CannonShellEntity>, level: Lev
             }
 
             if (type == Type.WP) {
-                findNearEntity(result.location, owner!!)
+                owner?.let { findNearEntity(result.location, it) }
             }
 
 

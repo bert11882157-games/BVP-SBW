@@ -1,6 +1,9 @@
 package com.atsuishio.superbwarfare.network.message.send
 
+import com.atsuishio.superbwarfare.data.gun.GunData
+import com.atsuishio.superbwarfare.data.gun.GunProp
 import com.atsuishio.superbwarfare.init.ModSounds
+import com.atsuishio.superbwarfare.item.gun.GunItem
 import com.atsuishio.superbwarfare.network.PayloadContext
 import com.atsuishio.superbwarfare.network.ServerPacketPayload
 import com.atsuishio.superbwarfare.serialization.kserializer.SerializedUUID
@@ -22,13 +25,30 @@ import net.minecraftforge.common.ForgeHooks
 import kotlin.math.*
 import kotlin.random.Random
 
+private const val MAX_MELEE_TARGETS = 16
+
 @Serializable
 data class MeleeAttackMessage(val uuidList: List<SerializedUUID>) : ServerPacketPayload() {
     override fun PayloadContext.handler() {
         val player = sender()
         if (player.isSpectator) return
 
-        val entities = uuidList.mapNotNull { EntityFindUtil.findEntity(player.level(), it.toString()) }
+        // The client picks the targets, so only accept a melee-capable gun and nearby, living, non-self targets
+        val stack = player.mainHandItem
+        val item = stack.item as? GunItem ?: return
+        val data = GunData.from(stack)
+        if (!item.hasMeleeAttack(data)) return
+
+        val maxDistance = player.getEntityReach() + data.get(GunProp.MELEE_RANGE) + 2.0
+        val maxDistanceSqr = maxDistance * maxDistance
+
+        val level = player.level()
+        val eye = player.eyePosition
+        val entities = uuidList.asSequence()
+            .mapNotNull { EntityFindUtil.findEntity(level, it.toString()) }
+            .filter { it !== player && it.isAlive && it.boundingBox.distanceToSqr(eye) <= maxDistanceSqr }
+            .take(MAX_MELEE_TARGETS)
+            .toList()
         if (entities.isEmpty()) return
 
         attack(player, entities)

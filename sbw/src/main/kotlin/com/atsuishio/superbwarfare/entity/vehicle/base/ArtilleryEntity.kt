@@ -81,9 +81,21 @@ open class ArtilleryEntity(type: EntityType<*>, world: Level) : GeoVehicleEntity
         return super.interact(player, hand)
     }
 
+    // Yaw at which a saved aim was read (NaN = none). A reload keeps that yaw and its aim; a container or deployer
+    // re-faces the vehicle after load(), which makes the saved world-space aim stale, so it is reset.
+    private var shootVecSavedYaw = Float.NaN
+    private var shootVecInitialized = false
+
     override fun onAddedToWorld() {
         super.onAddedToWorld()
-        shootVec = forward.toVector3f()
+        if (!shootVecInitialized) {
+            if (shootVecSavedYaw.isNaN() ||
+                kotlin.math.abs(net.minecraft.util.Mth.wrapDegrees(yRot - shootVecSavedYaw)) > 0.01f
+            ) {
+                shootVec = forward.toVector3f()
+            }
+            shootVecInitialized = true
+        }
     }
 
     override fun defineSynchedData() {
@@ -117,6 +129,7 @@ open class ArtilleryEntity(type: EntityType<*>, world: Level) : GeoVehicleEntity
         if (compound.contains("ShootVecX") && compound.contains("ShootVecY") && compound.contains("ShootVecZ")) {
             shootVec =
                 Vector3f(compound.getFloat("ShootVecX"), compound.getFloat("ShootVecY"), compound.getFloat("ShootVecZ"))
+            shootVecSavedYaw = yRot
         }
         if (compound.contains("Depressed")) {
             depressed = compound.getBoolean("Depressed")
@@ -125,7 +138,7 @@ open class ArtilleryEntity(type: EntityType<*>, world: Level) : GeoVehicleEntity
             radius = compound.getInt("Radius")
         }
         if (compound.contains("TargetX") && compound.contains("TargetY") && compound.contains("TargetZ")) {
-            targetPos = BlockPos(compound.getInt("TargetX"), compound.getInt("TargetX"), compound.getInt("TargetZ"))
+            targetPos = BlockPos(compound.getInt("TargetX"), compound.getInt("TargetY"), compound.getInt("TargetZ"))
         }
     }
 

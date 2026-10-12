@@ -33,7 +33,17 @@ public class Mi24VEntity extends BvpHelicopterEntity {
     }
 
     protected int autocannonWeaponIndex() {
-        return DEFAULT_AUTOCANNON_WEAPON_INDEX;
+        return resolveAutocannonWeaponIndex(DEFAULT_AUTOCANNON_WEAPON_INDEX);
+    }
+
+    /**
+     * Runtime index of the "Cannon" weapon in the autocannon seat's weapon list (data list, then stores, then
+     * pods), so reordering the authored weapons cannot leave the cannon logic on the wrong slot. Falls back to
+     * {@code fallbackIndex} when the seat has no weapon of that name.
+     */
+    protected final int resolveAutocannonWeaponIndex(int fallbackIndex) {
+        int index = getWeaponIds(autocannonSeatIndex()).indexOf(DEFAULT_AUTOCANNON_WEAPON_NAME);
+        return index >= 0 ? index : fallbackIndex;
     }
 
     @Override

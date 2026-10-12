@@ -221,19 +221,21 @@ public final class BvpHudRenderer {
     }
 
     private static HelicopterWeaponMode helicopterWeaponMode(ArmoredVehicleEntity vehicle, Player player) {
-        if (!(vehicle instanceof Mi24VEntity) || player == null) {
+        if (!(vehicle instanceof Mi24VEntity helicopter) || player == null) {
             return HelicopterWeaponMode.OTHER;
         }
         int seat = vehicle.getSeatIndex(player);
         int selectedWeapon = vehicle.getSelectedWeapon(seat);
         if (vehicle instanceof Ka50Entity) {
-            if (seat == 0 && selectedWeapon == 0) {
-                return HelicopterWeaponMode.ROCKET;
-            }
-            if (seat == 0 && selectedWeapon == 1) {
+            // Decide by the selected weapon's name: the Ka-50 data order is not part of this contract.
+            String weaponName = vehicle.getGunName(seat, selectedWeapon);
+            if (seat == 0 && helicopter.isBvpAutocannonSelection(seat, weaponName)) {
                 return HelicopterWeaponMode.AUTOCANNON;
             }
-            if (seat == 0 && selectedWeapon == 2) {
+            if (seat == 0 && "S8PodInner".equals(weaponName)) {
+                return HelicopterWeaponMode.ROCKET;
+            }
+            if (seat == 0 && "PilotMissile".equals(weaponName)) {
                 return HelicopterWeaponMode.ATGM;
             }
             return HelicopterWeaponMode.OTHER;

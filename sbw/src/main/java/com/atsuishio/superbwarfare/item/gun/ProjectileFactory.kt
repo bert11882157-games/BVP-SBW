@@ -270,6 +270,25 @@ object ProjectileFactory {
         entity.setSpreadAngle(data.get(GunProp.SPREAD_ANGLE))
     }
 
+    /**
+     * The lock target of a handheld seeker (Javelin, Igla, ...) is chosen by the client. Honour it only while the
+     * target lies within the weapon's own seek range (the radar-guided range when the weapon accepts radar guidance),
+     * so a modified client cannot lock anything in the level. Vehicle weapons validate their targets elsewhere.
+     */
+    @JvmStatic
+    fun isLockTargetAllowed(parameters: ShootParameters, target: Entity): Boolean {
+        val shooter = parameters.shooter ?: return true
+        if (parameters.ammoSupplier !== shooter) return true
+
+        val data = parameters.data
+        var range = data.get(GunProp.SEEK_RANGE)
+        if (data.get(GunProp.CAN_GUIDED_BY_RADAR)) range = maxOf(range, data.get(GunProp.MAX_GUIDED_RANGE))
+        if (target is VehicleEntity) range *= maxOf(1.0, target.computed().trackDistanceMultiply)
+        // Slack for a fast target: the client sees remote entities a few ticks late
+        range += 16.0 + 8.0 * target.deltaMovement.length()
+        return target.boundingBox.distanceToSqr(shooter.eyePosition) <= range * range
+    }
+
     private fun configureGuidance(entity: Entity, parameters: ShootParameters) {
         val shooter = parameters.shooter
         if (entity is WireGuideMissileEntity && shooter?.vehicle != null) {
@@ -279,7 +298,7 @@ object ProjectileFactory {
         if (entity is MissileProjectile && shooter != null) {
             val target = parameters.targetEntityUUID?.let {
                 EntityFindUtil.findEntity(shooter.level(), it.toString())
-            }
+            }?.takeIf { isLockTargetAllowed(parameters, it) }
             when {
                 target != null -> {
                     entity.setGuideType(ENTITY_GUIDANCE)
