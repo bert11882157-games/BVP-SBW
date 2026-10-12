@@ -358,7 +358,7 @@ def write_block(vid, block):
     text = json.dumps(doc, indent=indent, ensure_ascii=False)
     if block:
         text = text.replace(marker, json.dumps(block, separators=(',', ':')))
-    open(path, 'w', encoding='utf-8').write(text + ('\n' if raw.endswith('\n') else ''))
+    open(path, 'w', encoding='utf-8', newline='\n').write(text + ('\n' if raw.endswith('\n') else ''))
 
 
 def main(argv):

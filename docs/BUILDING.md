@@ -7,10 +7,11 @@ wrapper JAR, upstream README files, and license. With Java 17 installed, its nor
 
 ```powershell
 cd sbw
-.\gradlew.bat build
+.\gradlew.bat jar
 ```
 
-On Unix, use `sh gradlew build`. The repositories and dependencies declared by the project may
+On Unix, use `sh gradlew jar`. `build` also runs the unit tests; six of them are known to fail
+(`FarTerrainProjectionTest`, two in `AircraftProjectileDamageIntegrationTest` and three in `AircraftDebrisMotionTest`). The repositories and dependencies declared by the project may
 need network access. No clean build of this new checkout is claimed by the initial source import.
 
 ## Bert's Vehicle Pack
@@ -29,10 +30,11 @@ generated directory.
 The source-build entry point requires Java 17 and Node.js 20 or newer:
 
 ```powershell
-node bvp/build-support/build-release.mjs --tree . --meshloader-manifest PATH_TO_DEPENDENCY_MANIFEST.json
+node bvp/build-support/build-release.mjs --tree . --meshloader-manifest PATH_TO_DEPENDENCY_MANIFEST.json --compiler-extras-manifest PATH_TO_COMPILER_EXTRAS.json
 ```
 
-See [the build contract](../bvp/build-support/README.md) for dependency input details. The
+The compiler-extras manifest pins Komodo 1.2.3 and Flywheel 1.0.5 by size and SHA-256; the script stops if it is
+missing. See [the build contract](../bvp/build-support/README.md) for dependency input details. The
 meshloader is an external, separately source-built dependency, identified by version, exact size,
 and SHA-256. Its source and compiled JAR are not committed to this repository. Other dependencies
 come from the matching SBW project's resolved build graph. Dependency resolution may need network

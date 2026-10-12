@@ -411,8 +411,8 @@ def resolve_target(row, repo, json_cache, warnings):
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     here = os.path.dirname(os.path.abspath(__file__))
-    parser.add_argument("--table", default="/home/claude/tnt/tnt_table.json")
-    parser.add_argument("--inventory", default="/home/claude/tnt/munition_inventory.tsv")
+    parser.add_argument("--table", default=os.path.join(here, "data", "tnt_table.json"))
+    parser.add_argument("--inventory", default=os.path.join(here, "data", "munition_inventory.tsv"))
     parser.add_argument("--repo", default=os.path.normpath(os.path.join(here, "..", "..")))
     parser.add_argument("--dry-run", action="store_true", help="print the plan, write nothing")
     parser.add_argument("--verbose", "-v", action="store_true", help="list every change")
