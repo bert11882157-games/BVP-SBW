@@ -91,8 +91,9 @@ MiG-29's generator turned into a fitted, parametric one:
   (old seat, panel, gunsight), and everything in front of the pilot below eye level up to the windscreen base (old
   panels and glareshields). Kept: the outer skin (a face that is the outermost one along its sideways line, or whose
   outward normal ray leaves the aircraft), the canopy and windscreen frames (faces lying along the glass), and the deck
-  under the windscreen, which is cut at the windscreen base. Thin upright members (the legs of an armour-glass frame)
-  are cut at the coaming instead of removed. Old gunsight/HUD glass and glass inside the tub go from `CanopyGlass`.
+  under the windscreen, which is cut at the windscreen base. Thin upright members along the glass (the legs of an
+  armour-glass frame) are cut at the coaming instead of removed; ones standing well inside the glass over the
+  glareshield (old HUD or sight supports, as on the F-16) are removed. Old gunsight/HUD glass and glass inside the tub go from `CanopyGlass`.
 - **Cockpit.** Three-facet panel, coaming, side walls, consoles with switch blocks, sill caps, floor, rear bulkhead,
   footwell, rudder pedals, throttle, an ejection seat (jets) or armoured bucket seat (piston fighters), and a HUD
   (body, control strip, combiner and its glass, plus `HeadUpDisplay`) on HUD-equipped jets or a reflector gunsight
@@ -102,7 +103,7 @@ MiG-29's generator turned into a fitted, parametric one:
   stick's foot, so it pivots where it stands. Aircraft without a stick rig get a fixed stick.
 - **Instruments** by era (`cockpit_lib.ERAS`, the era from `tools/cockpit_layout/presets.json` unless `fleet.json`
   says otherwise), packed in rows from the top of each facet at real sizes (3 inch dials about 80 mm, 2 inch 57 mm,
-  displays with their housings 1.4 times the screen), shrunk a little to fit and dropped from the bottom when they
+  displays about a quarter larger than life so they read in game, with housings 1.4 times the screen), shrunk a little to fit and dropped from the bottom when they
   still do not; `fill` rows are added while a facet has room, and the band under the rows gets switch panels (and a
   gear lever on the left). Live dials: the basic six, Mach, AoA, G, RWR, fuel quantity, radar altimeter, clock,
   turn and slip, engine RPM, EGT and the rounds counter (`FUEL_QTY`, `RADAR_ALT`, `CLOCK`, `TURN_SLIP`,

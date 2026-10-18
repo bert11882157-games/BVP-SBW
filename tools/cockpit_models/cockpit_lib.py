@@ -511,7 +511,7 @@ ACCENT = dict(black=(24, 25, 26), dgrey=(44, 46, 48), mgrey=(88, 92, 94), lgrey=
 # Instrument sets, as rows from the top of each facet. Items: (kind, diameter) for a dial, ('D:<PAGE>', width) for
 # a display of that page (square screen; its housing is 1.4 times wider), ('UFCP', width) for the up-front control
 # block and ('A:<set>', width, height) for an annunciator panel of LAMP_SETS[set]. Sizes are metres at scale 1 (real
-# instruments: 3 inch dials about .080, 2 inch .057). 'fill' rows are added, in order, while the facet has room.
+# instruments: 3 inch dials about .080, 2 inch .057; displays are drawn larger than life so they read in game). 'fill' rows are added, in order, while the facet has room.
 # Dials the game knows the value of are live (GaugePainter.Kind.live): the basic six, Mach, AoA, G, RWR, fuel, radar
 # altitude, clock, turn and slip, engine RPM and EGT, and the rounds counter.
 ERAS = {
@@ -547,25 +547,25 @@ ERAS = {
         left=[[('ENGINE_RPM', .064), ('EGT', .064)], [('FUEL_QTY', .064), ('FILLER_OIL', .050)],
               [('AMMO', .057), ('FILLER_HYDRAULIC', .050)]],
         left_fill=[[('THROTTLE', .050), ('FILLER_TEMP', .050)]],
-        right=[[('D:RADAR', .110)], [('RWR', .064), ('TURN_SLIP', .050)], [('FILLER_OXYGEN', .044), ('FILLER_VOLTS', .044)]],
+        right=[[('D:RADAR', .135)], [('RWR', .064), ('TURN_SLIP', .050)], [('FILLER_OXYGEN', .044), ('FILLER_VOLTS', .044)]],
         right_fill=[[('FILLER_TEMP', .044), ('FILLER_CLOCK', .044)]],
         hud=False, displays='CRT', seat='ejection'),
     'GEN4_CRT': dict(
-        centre=[[('UFCP', .160)], [('D:RADAR', .112), ('D:PFD', .112)],
+        centre=[[('UFCP', .170)], [('D:RADAR', .140), ('D:PFD', .140)],
                 [('AIRSPEED', .057), ('ATTITUDE', .064), ('ALTIMETER', .057), ('VVI', .050)],
                 [('ENGINE_RPM', .050), ('EGT', .050), ('FUEL_QTY', .050), ('CLOCK', .044)]],
         centre_fill=[[('FILLER_HYDRAULIC', .044), ('FILLER_OIL', .044), ('FILLER_OXYGEN', .044)]],
-        left=[[('D:STORES', .088)]],
+        left=[[('D:STORES', .110)]],
         left_fill=[[('G_METER', .050), ('AOA', .050)], [('AMMO', .044), ('FILLER_VOLTS', .044)]],
         right=[[('RWR', .064), ('RADAR_ALT', .050)]],
         right_fill=[[('AMMO', .044), ('FILLER_HYDRAULIC', .044)], [('TURN_SLIP', .044), ('FILLER_TEMP', .044)]],
         eyebrows=(('eyebrow_l', .120, .050), ('eyebrow_r', .120, .050)),
         hud=True, displays='CRT', seat='ejection'),
     'MODERN_GLASS': dict(
-        centre=[[('UFCP', .160)], [('D:STORES', .122), ('D:PFD', .122)],
+        centre=[[('UFCP', .170)], [('D:STORES', .150), ('D:PFD', .150)],
                 [('AIRSPEED', .050), ('ATTITUDE', .057), ('ALTIMETER', .050), ('FUEL_QTY', .050)]],
         centre_fill=[[('ENGINE_RPM', .044), ('EGT', .044), ('FILLER_HYDRAULIC', .044), ('CLOCK', .044)]],
-        left=[[('D:RADAR', .092)]],
+        left=[[('D:RADAR', .115)]],
         left_fill=[[('ENGINE_RPM', .044), ('EGT', .044)], [('G_METER', .044), ('AOA', .044)]],
         right=[[('RWR', .064), ('RADAR_ALT', .050)]],
         right_fill=[[('AMMO', .044), ('CLOCK', .044)], [('FILLER_OXYGEN', .040), ('FILLER_VOLTS', .040)]],
@@ -1157,15 +1157,19 @@ def old_interior(ac, tubs, keep=()):
                 far = V[:, 2] >= t.ws_z + 0.05
                 ax = np.linalg.svd(V - V.mean(0))[2]          # principal axes, longest first
                 ext = np.ptp((V - V.mean(0)) @ ax.T, axis=0)
-                if ext[1] < 0.07 and ext[0] > 0.15 and abs(ax[0][1]) > 0.5 and V[:, 1].max() > t.top_c + 0.03 * s \
-                        and ac.hugs_glass(V):
-                    # a thin upright member reaching above the coaming along the glass (a frame post or an
-                    # armour-glass leg): kept, but not in front of the panel face. One standing away from the glass
-                    # is an old HUD or sight support (its glass is gone) and falls to the rules below.
-                    if np.all(dz > 0.12) and V[:, 1].min() < t.top_c - 0.02 and \
-                            V[V[:, 1] < t.top_c, 2].min() < t.Z + 0.15 * s:
-                        clips.setdefault(b['name'], {})[i] = (1, t.top_c - 0.01)
-                    continue
+                if ext[1] < 0.07 and ext[0] > 0.15 and abs(ax[0][1]) > 0.5 and V[:, 1].max() > t.top_c + 0.03 * s:
+                    if ac.hugs_glass(V):
+                        # a thin upright member reaching above the coaming along the glass (a frame post or an
+                        # armour-glass leg): kept, but not in front of the panel face
+                        if np.all(dz > 0.12) and V[:, 1].min() < t.top_c - 0.02 and \
+                                V[V[:, 1] < t.top_c, 2].min() < t.Z + 0.15 * s:
+                            clips.setdefault(b['name'], {})[i] = (1, t.top_c - 0.01)
+                        continue
+                    if dxv.max() < t.Wg - 0.08 and np.all(dz > 0.12) and np.all(V[:, 1] < E[1]):
+                        # one standing well inside the glass, over the glareshield: an old HUD or sight support
+                        # (its glass is gone), and the new HUD brings its own
+                        sel.add(i)
+                        continue
                 if not (np.all(dz > 0.12) and np.all(V[:, 1] < E[1]) and np.all(V[:, 1] > t.floor_y - 0.3)):
                     continue
                 if far.any() and (far.all() or V[:, 2].min() > t.ws_z - 0.1):
