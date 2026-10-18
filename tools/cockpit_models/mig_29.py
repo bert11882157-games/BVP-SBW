@@ -237,9 +237,12 @@ class Mesh:
             px = [[float(p[0]) * 16, float(p[1]) * 16, -float(p[2]) * 16] for p in pts]
             npx = np.array([n[0], n[1], -n[2]])
             a, b, c = (np.array(q) for q in px[:3])
-            if np.cross(b - a, c - a) @ npx < 0:                 # front-facing counter-clockwise in model px
+            # The mesh loader mirrors X and takes (p1 - p0) x (p2 - p0) of the mirrored points as the face normal, so
+            # in file pixels a face winds clockwise seen from its front (the hull's own faces do the same); the stored
+            # normal follows the file-pixel winding, as the hull's does.
+            if np.cross(b - a, c - a) @ npx > 0:
                 px = px[::-1]; uvs = uvs[::-1]
-            ni = len(N); N.append([round(float(x), 5) + 0.0 for x in npx])
+            ni = len(N); N.append([round(float(x), 5) + 0.0 for x in -npx])
             poly = []
             for p, uv in zip(px, uvs):
                 poly.append([len(P), ni, len(U)])
