@@ -5,67 +5,130 @@
     "PassengerGun1"
   ],
   "SuspendedWeapons": [
-    "S5PodInner"
+    "S5S2Ub32",
+    "Gsh23S2Upk23",
+    "S5S3Ub32",
+    "Gsh23S3Upk23",
+    "S5S4Ub32",
+    "Gsh23S4Upk23",
+    "S5S5Ub32",
+    "Gsh23S5Upk23"
   ],
-  "Pairs": [
+  "Pairs": [],
+  "Singles": [
     {
-      "Id": "inner",
-      "Name": "Inner pylon",
-      "Left": [
+      "Id": "slot_1",
+      "Name": "Left wingtip",
+      "Position": [
+        4.5938,
+        2.25,
+        0.0781
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:heli/falanga_x2"
+      ],
+      "MaxPylonMassKg": 1000,
+      "MaxWeaponsPerPylon": 12
+    },
+    {
+      "Id": "slot_2",
+      "Name": "Left outboard",
+      "Position": [
         3.1875,
         2.3438,
         0.2188
       ],
-      "Right": [
+      "AllowedStores": [
+        "berts_vehicle_pack:heli/ub32_s5k",
+        "berts_vehicle_pack:heli/ofab250",
+        "berts_vehicle_pack:heli/upk23"
+      ],
+      "MaxPylonMassKg": 1000,
+      "MaxWeaponsPerPylon": 12,
+      "NativeWeaponIds": {
+        "berts_vehicle_pack:heli/ub32_s5k": "S5S2Ub32",
+        "berts_vehicle_pack:heli/upk23": "Gsh23S2Upk23"
+      }
+    },
+    {
+      "Id": "slot_3",
+      "Name": "Left inboard",
+      "Position": [
+        2.315,
+        2.59,
+        0.22
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:heli/ub32_s5k",
+        "berts_vehicle_pack:heli/ofab250",
+        "berts_vehicle_pack:heli/fab500_m54",
+        "berts_vehicle_pack:heli/upk23"
+      ],
+      "MaxPylonMassKg": 1000,
+      "MaxWeaponsPerPylon": 12,
+      "NativeWeaponIds": {
+        "berts_vehicle_pack:heli/ub32_s5k": "S5S3Ub32",
+        "berts_vehicle_pack:heli/upk23": "Gsh23S3Upk23"
+      }
+    },
+    {
+      "Id": "slot_4",
+      "Name": "Right inboard",
+      "Position": [
+        -2.315,
+        2.59,
+        0.22
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:heli/ub32_s5k",
+        "berts_vehicle_pack:heli/ofab250",
+        "berts_vehicle_pack:heli/fab500_m54",
+        "berts_vehicle_pack:heli/upk23"
+      ],
+      "MaxPylonMassKg": 1000,
+      "MaxWeaponsPerPylon": 12,
+      "NativeWeaponIds": {
+        "berts_vehicle_pack:heli/ub32_s5k": "S5S4Ub32",
+        "berts_vehicle_pack:heli/upk23": "Gsh23S4Upk23"
+      }
+    },
+    {
+      "Id": "slot_5",
+      "Name": "Right outboard",
+      "Position": [
         -3.1875,
         2.3438,
         0.2188
       ],
       "AllowedStores": [
-        "berts_vehicle_pack:heli/ub32"
+        "berts_vehicle_pack:heli/ub32_s5k",
+        "berts_vehicle_pack:heli/ofab250",
+        "berts_vehicle_pack:heli/upk23"
       ],
-      "StoreGroups": {
-        "berts_vehicle_pack:heli/ub32": [
-          "suspended_inner_l",
-          "suspended_inner_r"
-        ]
-      },
-      "MaxWeaponsPerPylon": 1,
       "MaxPylonMassKg": 1000,
+      "MaxWeaponsPerPylon": 12,
       "NativeWeaponIds": {
-        "berts_vehicle_pack:heli/ub32": "S5PodInner"
+        "berts_vehicle_pack:heli/ub32_s5k": "S5S5Ub32",
+        "berts_vehicle_pack:heli/upk23": "Gsh23S5Upk23"
       }
     },
     {
-      "Id": "outer_atgm",
-      "Name": "Outer wing ATGM rails",
-      "Left": [
-        4.5938,
-        2.25,
-        0.0781
-      ],
-      "Right": [
+      "Id": "slot_6",
+      "Name": "Right wingtip",
+      "Position": [
         -4.5938,
         2.25,
         0.0781
       ],
       "AllowedStores": [
-        "berts_vehicle_pack:heli/falanga_twin"
+        "berts_vehicle_pack:heli/falanga_x2"
       ],
-      "StoreGroups": {
-        "berts_vehicle_pack:heli/falanga_twin": [
-          "suspended_outer_atgm_l",
-          "suspended_outer_atgm_r"
-        ]
-      },
-      "MaxWeaponsPerPylon": 1,
-      "MaxPylonMassKg": 1000
+      "MaxPylonMassKg": 1000,
+      "MaxWeaponsPerPylon": 12
     }
   ],
-  "StoreGroups": {},
-  "MaxPayloadKg": 2400,
+  "MaxPayloadKg": 3017,
   "MaxPylonMassKg": 1000,
-  "MaxWeaponsPerPylon": 1,
-  "Singles": [],
+  "MaxWeaponsPerPylon": 12,
   "WeaponSeat": 1
 }

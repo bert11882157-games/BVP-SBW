@@ -1,0 +1,26 @@
+{
+  "Schema": 1,
+  "Name": "Aero 6A · 7 × 2.75 in FFAR",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/heli_aero_6a.geo.json",
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/heli_stores.png",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "MountAxis": [
+    0.0,
+    -0.16,
+    0.0
+  ],
+  "LaunchOffset": [
+    0.0,
+    -0.16,
+    0.0
+  ],
+  "Category": "ROCKET_POD",
+  "Capacity": 7,
+  "MassKg": 12.5514,
+  "AmmoItem": "superbwarfare:small_unguided_rocket"
+}

@@ -1,0 +1,98 @@
+{
+  "Schema": 1,
+  "Name": "LAU-131 · 7 × APKWS II (M282)",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/heli_apkws.geo.json",
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/heli_stores.png",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "MountAxis": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "LaunchOffset": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "Capacity": 1,
+  "MassKg": 18.1,
+  "MaxPerPylon": 7,
+  "FixedRackCount": 7,
+  "RackMassKg": 34.0,
+  "RackAdapter": {
+    "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/heli_lau131.geo.json",
+    "Texture": "berts_vehicle_pack:textures/aircraft_stores/heli_stores.png",
+    "MountAnchor": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "Stations": [
+      {
+        "Point": [
+          0.0,
+          -0.16,
+          -0.03
+        ],
+        "Face": "bottom"
+      },
+      {
+        "Point": [
+          0.0,
+          -0.078,
+          -0.03
+        ],
+        "Face": "bottom"
+      },
+      {
+        "Point": [
+          -0.071,
+          -0.119,
+          -0.03
+        ],
+        "Face": "bottom"
+      },
+      {
+        "Point": [
+          -0.071,
+          -0.201,
+          -0.03
+        ],
+        "Face": "bottom"
+      },
+      {
+        "Point": [
+          -0.0,
+          -0.242,
+          -0.03
+        ],
+        "Face": "bottom"
+      },
+      {
+        "Point": [
+          0.071,
+          -0.201,
+          -0.03
+        ],
+        "Face": "bottom"
+      },
+      {
+        "Point": [
+          0.071,
+          -0.119,
+          -0.03
+        ],
+        "Face": "bottom"
+      }
+    ]
+  },
+  "Category": "LASER_GUIDED",
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_stores/apkws_m282",
+  "LaunchGunProfile": "berts_vehicle_pack:aircraft_stores/apkws_m282",
+  "AmmoItem": "superbwarfare:small_atgm"
+}

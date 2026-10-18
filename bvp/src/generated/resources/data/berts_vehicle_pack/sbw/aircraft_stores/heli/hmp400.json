@@ -1,0 +1,25 @@
+{
+  "Schema": 1,
+  "Name": "HMP400 · 12.7 mm M3P (400 rds)",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/heli_hmp400.geo.json",
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/heli_stores.png",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "MountAxis": [
+    0.0,
+    -0.2,
+    0.0
+  ],
+  "LaunchOffset": [
+    0.0,
+    -0.2,
+    0.0
+  ],
+  "Category": "GUN_POD",
+  "Capacity": 400,
+  "MassKg": 0.35
+}

@@ -100,7 +100,10 @@
         0.99275
       ],
       "Weapons": [
-        "HydraOuter"
+        "HydraS2",
+        "HydraS3",
+        "HydraS4",
+        "HydraS5"
       ],
       "CanRotateHead": true,
       "CameraPos": {
@@ -332,7 +335,7 @@
         ]
       }
     },
-    "HydraOuter": {
+    "HydraS2": {
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_rocket",
@@ -346,7 +349,7 @@
       "DefaultZoom": 2,
       "DefaultFireMode": "Auto",
       "AvailableFireModes": "Auto",
-      "Magazine": 38,
+      "Magazine": 19,
       "EmptyReloadTime": 200,
       "Projectile": {
         "Type": "berts_vehicle_pack:s8ko_rocket",
@@ -362,52 +365,6 @@
       "Gravity": 0.02,
       "Velocity": 9,
       "ProjectileLife": 60,
-      "ShootPos": {
-        "Transform": "Vehicle",
-        "ShootDirectionForHud": [
-          0,
-          0.018,
-          1
-        ],
-        "Positions": [
-          [
-            2.9783,
-            1.2801,
-            1.3062
-          ],
-          [
-            -2.9783,
-            1.2801,
-            1.3062
-          ]
-        ],
-        "Directions": [
-          [
-            -0.003,
-            0.025,
-            1
-          ],
-          [
-            -0.003,
-            0.025,
-            1
-          ]
-        ],
-        "MuzzleAttachments": [
-          "HydraOuter_left_0",
-          "HydraOuter_right_0"
-        ],
-        "MuzzleDirectionAttachments": [
-          "Default"
-        ],
-        "EffectAttachments": [
-          "HydraOuter_left_0",
-          "HydraOuter_right_0"
-        ],
-        "EffectDirectionAttachments": [
-          "Default"
-        ]
-      },
       "SoundInfo": {
         "Fire1PGain": 1.0,
         "Fire3PGain": 1.0,
@@ -429,6 +386,1165 @@
         "ProjectileType": "berts_vehicle_pack:s8ko_rocket",
         "ProjectileProfile": "berts_vehicle_pack:ah_6j/rocket/default",
         "ProjectileLife": 60
+      },
+      "ShootPos": {
+        "Transform": "Vehicle",
+        "ShootDirectionForHud": [
+          0,
+          0,
+          1
+        ],
+        "Positions": [
+          [
+            2.975,
+            1.335,
+            1.02
+          ],
+          [
+            2.975,
+            1.412,
+            1.02
+          ],
+          [
+            2.9083,
+            1.3735,
+            1.02
+          ],
+          [
+            2.9083,
+            1.2965,
+            1.02
+          ],
+          [
+            2.975,
+            1.258,
+            1.02
+          ],
+          [
+            3.0417,
+            1.2965,
+            1.02
+          ],
+          [
+            3.0417,
+            1.3735,
+            1.02
+          ],
+          [
+            2.975,
+            1.489,
+            1.02
+          ],
+          [
+            2.898,
+            1.4684,
+            1.02
+          ],
+          [
+            2.8416,
+            1.412,
+            1.02
+          ],
+          [
+            2.821,
+            1.335,
+            1.02
+          ],
+          [
+            2.8416,
+            1.258,
+            1.02
+          ],
+          [
+            2.898,
+            1.2016,
+            1.02
+          ],
+          [
+            2.975,
+            1.181,
+            1.02
+          ],
+          [
+            3.052,
+            1.2016,
+            1.02
+          ],
+          [
+            3.1084,
+            1.258,
+            1.02
+          ],
+          [
+            3.129,
+            1.335,
+            1.02
+          ],
+          [
+            3.1084,
+            1.412,
+            1.02
+          ],
+          [
+            3.052,
+            1.4684,
+            1.02
+          ]
+        ],
+        "Directions": [
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "MuzzleAttachments": [
+          "HydraS2_left_0",
+          "HydraS2_left_1",
+          "HydraS2_left_2",
+          "HydraS2_left_3",
+          "HydraS2_left_4",
+          "HydraS2_left_5",
+          "HydraS2_left_6",
+          "HydraS2_left_7",
+          "HydraS2_left_8",
+          "HydraS2_left_9",
+          "HydraS2_left_10",
+          "HydraS2_left_11",
+          "HydraS2_left_12",
+          "HydraS2_left_13",
+          "HydraS2_left_14",
+          "HydraS2_left_15",
+          "HydraS2_left_16",
+          "HydraS2_left_17",
+          "HydraS2_left_18"
+        ],
+        "MuzzleDirectionAttachments": [
+          "Default"
+        ],
+        "EffectAttachments": [
+          "HydraS2_left_0",
+          "HydraS2_left_1",
+          "HydraS2_left_2",
+          "HydraS2_left_3",
+          "HydraS2_left_4",
+          "HydraS2_left_5",
+          "HydraS2_left_6",
+          "HydraS2_left_7",
+          "HydraS2_left_8",
+          "HydraS2_left_9",
+          "HydraS2_left_10",
+          "HydraS2_left_11",
+          "HydraS2_left_12",
+          "HydraS2_left_13",
+          "HydraS2_left_14",
+          "HydraS2_left_15",
+          "HydraS2_left_16",
+          "HydraS2_left_17",
+          "HydraS2_left_18"
+        ],
+        "EffectDirectionAttachments": [
+          "Default"
+        ]
+      }
+    },
+    "HydraS3": {
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_rocket",
+          "ConsumptionItem": "superbwarfare:small_unguided_rocket",
+          "Override": {
+            "TntEquivalentKg": 1.1921
+          }
+        }
+      ],
+      "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_small_rocket.png",
+      "DefaultZoom": 2,
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "Magazine": 19,
+      "EmptyReloadTime": 200,
+      "Projectile": {
+        "Type": "berts_vehicle_pack:s8ko_rocket",
+        "Profile": "berts_vehicle_pack:ah_6j/rocket/default"
+      },
+      "Spread": 0.25,
+      "Name": "weapon.superbwarfare.70mm_rocket",
+      "RPM": 600,
+      "Damage": 100,
+      "ExplosionDamage": 0,
+      "ExplosionRadius": 6,
+      "TntEquivalentKg": 1.1921,
+      "Gravity": 0.02,
+      "Velocity": 9,
+      "ProjectileLife": 60,
+      "SoundInfo": {
+        "Fire1PGain": 1.0,
+        "Fire3PGain": 1.0,
+        "Fire3PFarGain": 1.0,
+        "Fire3PVeryFarGain": 1.0,
+        "Fire1P": "bvp_audio:weapon/hydra_1p",
+        "Fire3P": "bvp_audio:weapon/hydra_3p",
+        "VehicleReload3p": "superbwarfare:missile_reload",
+        "VehicleReloadSoundTime": 7,
+        "Change": "superbwarfare:into_missile",
+        "Fire3PFar": "bvp_audio:weapon/hydra_far",
+        "Fire3PVeryFar": "bvp_audio:weapon/hydra_far",
+        "Volume": 1.2
+      },
+      "Crosshair": "@Empty",
+      "SoundRadius": 16,
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "berts_vehicle_pack:s8ko_rocket",
+        "ProjectileProfile": "berts_vehicle_pack:ah_6j/rocket/default",
+        "ProjectileLife": 60
+      },
+      "ShootPos": {
+        "Transform": "Vehicle",
+        "ShootDirectionForHud": [
+          0,
+          0,
+          1
+        ],
+        "Positions": [
+          [
+            1.935,
+            1.315,
+            1.02
+          ],
+          [
+            1.935,
+            1.392,
+            1.02
+          ],
+          [
+            1.8683,
+            1.3535,
+            1.02
+          ],
+          [
+            1.8683,
+            1.2765,
+            1.02
+          ],
+          [
+            1.935,
+            1.238,
+            1.02
+          ],
+          [
+            2.0017,
+            1.2765,
+            1.02
+          ],
+          [
+            2.0017,
+            1.3535,
+            1.02
+          ],
+          [
+            1.935,
+            1.469,
+            1.02
+          ],
+          [
+            1.858,
+            1.4484,
+            1.02
+          ],
+          [
+            1.8016,
+            1.392,
+            1.02
+          ],
+          [
+            1.781,
+            1.315,
+            1.02
+          ],
+          [
+            1.8016,
+            1.238,
+            1.02
+          ],
+          [
+            1.858,
+            1.1816,
+            1.02
+          ],
+          [
+            1.935,
+            1.161,
+            1.02
+          ],
+          [
+            2.012,
+            1.1816,
+            1.02
+          ],
+          [
+            2.0684,
+            1.238,
+            1.02
+          ],
+          [
+            2.089,
+            1.315,
+            1.02
+          ],
+          [
+            2.0684,
+            1.392,
+            1.02
+          ],
+          [
+            2.012,
+            1.4484,
+            1.02
+          ]
+        ],
+        "Directions": [
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "MuzzleAttachments": [
+          "HydraS3_left_0",
+          "HydraS3_left_1",
+          "HydraS3_left_2",
+          "HydraS3_left_3",
+          "HydraS3_left_4",
+          "HydraS3_left_5",
+          "HydraS3_left_6",
+          "HydraS3_left_7",
+          "HydraS3_left_8",
+          "HydraS3_left_9",
+          "HydraS3_left_10",
+          "HydraS3_left_11",
+          "HydraS3_left_12",
+          "HydraS3_left_13",
+          "HydraS3_left_14",
+          "HydraS3_left_15",
+          "HydraS3_left_16",
+          "HydraS3_left_17",
+          "HydraS3_left_18"
+        ],
+        "MuzzleDirectionAttachments": [
+          "Default"
+        ],
+        "EffectAttachments": [
+          "HydraS3_left_0",
+          "HydraS3_left_1",
+          "HydraS3_left_2",
+          "HydraS3_left_3",
+          "HydraS3_left_4",
+          "HydraS3_left_5",
+          "HydraS3_left_6",
+          "HydraS3_left_7",
+          "HydraS3_left_8",
+          "HydraS3_left_9",
+          "HydraS3_left_10",
+          "HydraS3_left_11",
+          "HydraS3_left_12",
+          "HydraS3_left_13",
+          "HydraS3_left_14",
+          "HydraS3_left_15",
+          "HydraS3_left_16",
+          "HydraS3_left_17",
+          "HydraS3_left_18"
+        ],
+        "EffectDirectionAttachments": [
+          "Default"
+        ]
+      }
+    },
+    "HydraS4": {
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_rocket",
+          "ConsumptionItem": "superbwarfare:small_unguided_rocket",
+          "Override": {
+            "TntEquivalentKg": 1.1921
+          }
+        }
+      ],
+      "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_small_rocket.png",
+      "DefaultZoom": 2,
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "Magazine": 19,
+      "EmptyReloadTime": 200,
+      "Projectile": {
+        "Type": "berts_vehicle_pack:s8ko_rocket",
+        "Profile": "berts_vehicle_pack:ah_6j/rocket/default"
+      },
+      "Spread": 0.25,
+      "Name": "weapon.superbwarfare.70mm_rocket",
+      "RPM": 600,
+      "Damage": 100,
+      "ExplosionDamage": 0,
+      "ExplosionRadius": 6,
+      "TntEquivalentKg": 1.1921,
+      "Gravity": 0.02,
+      "Velocity": 9,
+      "ProjectileLife": 60,
+      "SoundInfo": {
+        "Fire1PGain": 1.0,
+        "Fire3PGain": 1.0,
+        "Fire3PFarGain": 1.0,
+        "Fire3PVeryFarGain": 1.0,
+        "Fire1P": "bvp_audio:weapon/hydra_1p",
+        "Fire3P": "bvp_audio:weapon/hydra_3p",
+        "VehicleReload3p": "superbwarfare:missile_reload",
+        "VehicleReloadSoundTime": 7,
+        "Change": "superbwarfare:into_missile",
+        "Fire3PFar": "bvp_audio:weapon/hydra_far",
+        "Fire3PVeryFar": "bvp_audio:weapon/hydra_far",
+        "Volume": 1.2
+      },
+      "Crosshair": "@Empty",
+      "SoundRadius": 16,
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "berts_vehicle_pack:s8ko_rocket",
+        "ProjectileProfile": "berts_vehicle_pack:ah_6j/rocket/default",
+        "ProjectileLife": 60
+      },
+      "ShootPos": {
+        "Transform": "Vehicle",
+        "ShootDirectionForHud": [
+          0,
+          0,
+          1
+        ],
+        "Positions": [
+          [
+            -1.935,
+            1.315,
+            1.02
+          ],
+          [
+            -1.935,
+            1.392,
+            1.02
+          ],
+          [
+            -2.0017,
+            1.3535,
+            1.02
+          ],
+          [
+            -2.0017,
+            1.2765,
+            1.02
+          ],
+          [
+            -1.935,
+            1.238,
+            1.02
+          ],
+          [
+            -1.8683,
+            1.2765,
+            1.02
+          ],
+          [
+            -1.8683,
+            1.3535,
+            1.02
+          ],
+          [
+            -1.935,
+            1.469,
+            1.02
+          ],
+          [
+            -2.012,
+            1.4484,
+            1.02
+          ],
+          [
+            -2.0684,
+            1.392,
+            1.02
+          ],
+          [
+            -2.089,
+            1.315,
+            1.02
+          ],
+          [
+            -2.0684,
+            1.238,
+            1.02
+          ],
+          [
+            -2.012,
+            1.1816,
+            1.02
+          ],
+          [
+            -1.935,
+            1.161,
+            1.02
+          ],
+          [
+            -1.858,
+            1.1816,
+            1.02
+          ],
+          [
+            -1.8016,
+            1.238,
+            1.02
+          ],
+          [
+            -1.781,
+            1.315,
+            1.02
+          ],
+          [
+            -1.8016,
+            1.392,
+            1.02
+          ],
+          [
+            -1.858,
+            1.4484,
+            1.02
+          ]
+        ],
+        "Directions": [
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "MuzzleAttachments": [
+          "HydraS4_right_0",
+          "HydraS4_right_1",
+          "HydraS4_right_2",
+          "HydraS4_right_3",
+          "HydraS4_right_4",
+          "HydraS4_right_5",
+          "HydraS4_right_6",
+          "HydraS4_right_7",
+          "HydraS4_right_8",
+          "HydraS4_right_9",
+          "HydraS4_right_10",
+          "HydraS4_right_11",
+          "HydraS4_right_12",
+          "HydraS4_right_13",
+          "HydraS4_right_14",
+          "HydraS4_right_15",
+          "HydraS4_right_16",
+          "HydraS4_right_17",
+          "HydraS4_right_18"
+        ],
+        "MuzzleDirectionAttachments": [
+          "Default"
+        ],
+        "EffectAttachments": [
+          "HydraS4_right_0",
+          "HydraS4_right_1",
+          "HydraS4_right_2",
+          "HydraS4_right_3",
+          "HydraS4_right_4",
+          "HydraS4_right_5",
+          "HydraS4_right_6",
+          "HydraS4_right_7",
+          "HydraS4_right_8",
+          "HydraS4_right_9",
+          "HydraS4_right_10",
+          "HydraS4_right_11",
+          "HydraS4_right_12",
+          "HydraS4_right_13",
+          "HydraS4_right_14",
+          "HydraS4_right_15",
+          "HydraS4_right_16",
+          "HydraS4_right_17",
+          "HydraS4_right_18"
+        ],
+        "EffectDirectionAttachments": [
+          "Default"
+        ]
+      }
+    },
+    "HydraS5": {
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_rocket",
+          "ConsumptionItem": "superbwarfare:small_unguided_rocket",
+          "Override": {
+            "TntEquivalentKg": 1.1921
+          }
+        }
+      ],
+      "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_small_rocket.png",
+      "DefaultZoom": 2,
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "Magazine": 19,
+      "EmptyReloadTime": 200,
+      "Projectile": {
+        "Type": "berts_vehicle_pack:s8ko_rocket",
+        "Profile": "berts_vehicle_pack:ah_6j/rocket/default"
+      },
+      "Spread": 0.25,
+      "Name": "weapon.superbwarfare.70mm_rocket",
+      "RPM": 600,
+      "Damage": 100,
+      "ExplosionDamage": 0,
+      "ExplosionRadius": 6,
+      "TntEquivalentKg": 1.1921,
+      "Gravity": 0.02,
+      "Velocity": 9,
+      "ProjectileLife": 60,
+      "SoundInfo": {
+        "Fire1PGain": 1.0,
+        "Fire3PGain": 1.0,
+        "Fire3PFarGain": 1.0,
+        "Fire3PVeryFarGain": 1.0,
+        "Fire1P": "bvp_audio:weapon/hydra_1p",
+        "Fire3P": "bvp_audio:weapon/hydra_3p",
+        "VehicleReload3p": "superbwarfare:missile_reload",
+        "VehicleReloadSoundTime": 7,
+        "Change": "superbwarfare:into_missile",
+        "Fire3PFar": "bvp_audio:weapon/hydra_far",
+        "Fire3PVeryFar": "bvp_audio:weapon/hydra_far",
+        "Volume": 1.2
+      },
+      "Crosshair": "@Empty",
+      "SoundRadius": 16,
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "berts_vehicle_pack:s8ko_rocket",
+        "ProjectileProfile": "berts_vehicle_pack:ah_6j/rocket/default",
+        "ProjectileLife": 60
+      },
+      "ShootPos": {
+        "Transform": "Vehicle",
+        "ShootDirectionForHud": [
+          0,
+          0,
+          1
+        ],
+        "Positions": [
+          [
+            -2.975,
+            1.335,
+            1.02
+          ],
+          [
+            -2.975,
+            1.412,
+            1.02
+          ],
+          [
+            -3.0417,
+            1.3735,
+            1.02
+          ],
+          [
+            -3.0417,
+            1.2965,
+            1.02
+          ],
+          [
+            -2.975,
+            1.258,
+            1.02
+          ],
+          [
+            -2.9083,
+            1.2965,
+            1.02
+          ],
+          [
+            -2.9083,
+            1.3735,
+            1.02
+          ],
+          [
+            -2.975,
+            1.489,
+            1.02
+          ],
+          [
+            -3.052,
+            1.4684,
+            1.02
+          ],
+          [
+            -3.1084,
+            1.412,
+            1.02
+          ],
+          [
+            -3.129,
+            1.335,
+            1.02
+          ],
+          [
+            -3.1084,
+            1.258,
+            1.02
+          ],
+          [
+            -3.052,
+            1.2016,
+            1.02
+          ],
+          [
+            -2.975,
+            1.181,
+            1.02
+          ],
+          [
+            -2.898,
+            1.2016,
+            1.02
+          ],
+          [
+            -2.8416,
+            1.258,
+            1.02
+          ],
+          [
+            -2.821,
+            1.335,
+            1.02
+          ],
+          [
+            -2.8416,
+            1.412,
+            1.02
+          ],
+          [
+            -2.898,
+            1.4684,
+            1.02
+          ]
+        ],
+        "Directions": [
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "MuzzleAttachments": [
+          "HydraS5_right_0",
+          "HydraS5_right_1",
+          "HydraS5_right_2",
+          "HydraS5_right_3",
+          "HydraS5_right_4",
+          "HydraS5_right_5",
+          "HydraS5_right_6",
+          "HydraS5_right_7",
+          "HydraS5_right_8",
+          "HydraS5_right_9",
+          "HydraS5_right_10",
+          "HydraS5_right_11",
+          "HydraS5_right_12",
+          "HydraS5_right_13",
+          "HydraS5_right_14",
+          "HydraS5_right_15",
+          "HydraS5_right_16",
+          "HydraS5_right_17",
+          "HydraS5_right_18"
+        ],
+        "MuzzleDirectionAttachments": [
+          "Default"
+        ],
+        "EffectAttachments": [
+          "HydraS5_right_0",
+          "HydraS5_right_1",
+          "HydraS5_right_2",
+          "HydraS5_right_3",
+          "HydraS5_right_4",
+          "HydraS5_right_5",
+          "HydraS5_right_6",
+          "HydraS5_right_7",
+          "HydraS5_right_8",
+          "HydraS5_right_9",
+          "HydraS5_right_10",
+          "HydraS5_right_11",
+          "HydraS5_right_12",
+          "HydraS5_right_13",
+          "HydraS5_right_14",
+          "HydraS5_right_15",
+          "HydraS5_right_16",
+          "HydraS5_right_17",
+          "HydraS5_right_18"
+        ],
+        "EffectDirectionAttachments": [
+          "Default"
+        ]
       }
     }
   },
@@ -552,12 +1668,12 @@
         1
       ]
     },
-    "HydraOuter_left_0": {
+    "HydraS2_left_0": {
       "Parent": "Vehicle",
       "Position": [
-        2.9783,
-        1.2801,
-        1.3062
+        2.975,
+        1.335,
+        1.02
       ],
       "Direction": [
         0,
@@ -565,12 +1681,974 @@
         1
       ]
     },
-    "HydraOuter_right_0": {
+    "HydraS2_left_1": {
       "Parent": "Vehicle",
       "Position": [
-        -2.9783,
-        1.2801,
-        1.3062
+        2.975,
+        1.412,
+        1.02
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "HydraS2_left_2": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.9083,
+        1.3735,
+        1.02
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "HydraS2_left_3": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.9083,
+        1.2965,
+        1.02
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "HydraS2_left_4": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.975,
+        1.258,
+        1.02
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "HydraS2_left_5": {
+      "Parent": "Vehicle",
+      "Position": [
+        3.0417,
+        1.2965,
+        1.02
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "HydraS2_left_6": {
+      "Parent": "Vehicle",
+      "Position": [
+        3.0417,
+        1.3735,
+        1.02
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "HydraS2_left_7": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.975,
+        1.489,
+        1.02
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "HydraS2_left_8": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.898,
+        1.4684,
+        1.02
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "HydraS2_left_9": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.8416,
+        1.412,
+        1.02
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "HydraS2_left_10": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.821,
+        1.335,
+        1.02
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "HydraS2_left_11": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.8416,
+        1.258,
+        1.02
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "HydraS2_left_12": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.898,
+        1.2016,
+        1.02
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "HydraS2_left_13": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.975,
+        1.181,
+        1.02
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "HydraS2_left_14": {
+      "Parent": "Vehicle",
+      "Position": [
+        3.052,
+        1.2016,
+        1.02
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "HydraS2_left_15": {
+      "Parent": "Vehicle",
+      "Position": [
+        3.1084,
+        1.258,
+        1.02
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "HydraS2_left_16": {
+      "Parent": "Vehicle",
+      "Position": [
+        3.129,
+        1.335,
+        1.02
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "HydraS2_left_17": {
+      "Parent": "Vehicle",
+      "Position": [
+        3.1084,
+        1.412,
+        1.02
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "HydraS2_left_18": {
+      "Parent": "Vehicle",
+      "Position": [
+        3.052,
+        1.4684,
+        1.02
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "HydraS3_left_0": {
+      "Parent": "Vehicle",
+      "Position": [
+        1.935,
+        1.315,
+        1.02
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "HydraS3_left_1": {
+      "Parent": "Vehicle",
+      "Position": [
+        1.935,
+        1.392,
+        1.02
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "HydraS3_left_2": {
+      "Parent": "Vehicle",
+      "Position": [
+        1.8683,
+        1.3535,
+        1.02
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "HydraS3_left_3": {
+      "Parent": "Vehicle",
+      "Position": [
+        1.8683,
+        1.2765,
+        1.02
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "HydraS3_left_4": {
+      "Parent": "Vehicle",
+      "Position": [
+        1.935,
+        1.238,
+        1.02
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "HydraS3_left_5": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.0017,
+        1.2765,
+        1.02
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "HydraS3_left_6": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.0017,
+        1.3535,
+        1.02
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "HydraS3_left_7": {
+      "Parent": "Vehicle",
+      "Position": [
+        1.935,
+        1.469,
+        1.02
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "HydraS3_left_8": {
+      "Parent": "Vehicle",
+      "Position": [
+        1.858,
+        1.4484,
+        1.02
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "HydraS3_left_9": {
+      "Parent": "Vehicle",
+      "Position": [
+        1.8016,
+        1.392,
+        1.02
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "HydraS3_left_10": {
+      "Parent": "Vehicle",
+      "Position": [
+        1.781,
+        1.315,
+        1.02
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "HydraS3_left_11": {
+      "Parent": "Vehicle",
+      "Position": [
+        1.8016,
+        1.238,
+        1.02
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "HydraS3_left_12": {
+      "Parent": "Vehicle",
+      "Position": [
+        1.858,
+        1.1816,
+        1.02
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "HydraS3_left_13": {
+      "Parent": "Vehicle",
+      "Position": [
+        1.935,
+        1.161,
+        1.02
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "HydraS3_left_14": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.012,
+        1.1816,
+        1.02
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "HydraS3_left_15": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.0684,
+        1.238,
+        1.02
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "HydraS3_left_16": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.089,
+        1.315,
+        1.02
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "HydraS3_left_17": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.0684,
+        1.392,
+        1.02
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "HydraS3_left_18": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.012,
+        1.4484,
+        1.02
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "HydraS4_right_0": {
+      "Parent": "Vehicle",
+      "Position": [
+        -1.935,
+        1.315,
+        1.02
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "HydraS4_right_1": {
+      "Parent": "Vehicle",
+      "Position": [
+        -1.935,
+        1.392,
+        1.02
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "HydraS4_right_2": {
+      "Parent": "Vehicle",
+      "Position": [
+        -2.0017,
+        1.3535,
+        1.02
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "HydraS4_right_3": {
+      "Parent": "Vehicle",
+      "Position": [
+        -2.0017,
+        1.2765,
+        1.02
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "HydraS4_right_4": {
+      "Parent": "Vehicle",
+      "Position": [
+        -1.935,
+        1.238,
+        1.02
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "HydraS4_right_5": {
+      "Parent": "Vehicle",
+      "Position": [
+        -1.8683,
+        1.2765,
+        1.02
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "HydraS4_right_6": {
+      "Parent": "Vehicle",
+      "Position": [
+        -1.8683,
+        1.3535,
+        1.02
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "HydraS4_right_7": {
+      "Parent": "Vehicle",
+      "Position": [
+        -1.935,
+        1.469,
+        1.02
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "HydraS4_right_8": {
+      "Parent": "Vehicle",
+      "Position": [
+        -2.012,
+        1.4484,
+        1.02
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "HydraS4_right_9": {
+      "Parent": "Vehicle",
+      "Position": [
+        -2.0684,
+        1.392,
+        1.02
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "HydraS4_right_10": {
+      "Parent": "Vehicle",
+      "Position": [
+        -2.089,
+        1.315,
+        1.02
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "HydraS4_right_11": {
+      "Parent": "Vehicle",
+      "Position": [
+        -2.0684,
+        1.238,
+        1.02
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "HydraS4_right_12": {
+      "Parent": "Vehicle",
+      "Position": [
+        -2.012,
+        1.1816,
+        1.02
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "HydraS4_right_13": {
+      "Parent": "Vehicle",
+      "Position": [
+        -1.935,
+        1.161,
+        1.02
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "HydraS4_right_14": {
+      "Parent": "Vehicle",
+      "Position": [
+        -1.858,
+        1.1816,
+        1.02
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "HydraS4_right_15": {
+      "Parent": "Vehicle",
+      "Position": [
+        -1.8016,
+        1.238,
+        1.02
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "HydraS4_right_16": {
+      "Parent": "Vehicle",
+      "Position": [
+        -1.781,
+        1.315,
+        1.02
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "HydraS4_right_17": {
+      "Parent": "Vehicle",
+      "Position": [
+        -1.8016,
+        1.392,
+        1.02
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "HydraS4_right_18": {
+      "Parent": "Vehicle",
+      "Position": [
+        -1.858,
+        1.4484,
+        1.02
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "HydraS5_right_0": {
+      "Parent": "Vehicle",
+      "Position": [
+        -2.975,
+        1.335,
+        1.02
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "HydraS5_right_1": {
+      "Parent": "Vehicle",
+      "Position": [
+        -2.975,
+        1.412,
+        1.02
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "HydraS5_right_2": {
+      "Parent": "Vehicle",
+      "Position": [
+        -3.0417,
+        1.3735,
+        1.02
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "HydraS5_right_3": {
+      "Parent": "Vehicle",
+      "Position": [
+        -3.0417,
+        1.2965,
+        1.02
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "HydraS5_right_4": {
+      "Parent": "Vehicle",
+      "Position": [
+        -2.975,
+        1.258,
+        1.02
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "HydraS5_right_5": {
+      "Parent": "Vehicle",
+      "Position": [
+        -2.9083,
+        1.2965,
+        1.02
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "HydraS5_right_6": {
+      "Parent": "Vehicle",
+      "Position": [
+        -2.9083,
+        1.3735,
+        1.02
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "HydraS5_right_7": {
+      "Parent": "Vehicle",
+      "Position": [
+        -2.975,
+        1.489,
+        1.02
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "HydraS5_right_8": {
+      "Parent": "Vehicle",
+      "Position": [
+        -3.052,
+        1.4684,
+        1.02
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "HydraS5_right_9": {
+      "Parent": "Vehicle",
+      "Position": [
+        -3.1084,
+        1.412,
+        1.02
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "HydraS5_right_10": {
+      "Parent": "Vehicle",
+      "Position": [
+        -3.129,
+        1.335,
+        1.02
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "HydraS5_right_11": {
+      "Parent": "Vehicle",
+      "Position": [
+        -3.1084,
+        1.258,
+        1.02
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "HydraS5_right_12": {
+      "Parent": "Vehicle",
+      "Position": [
+        -3.052,
+        1.2016,
+        1.02
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "HydraS5_right_13": {
+      "Parent": "Vehicle",
+      "Position": [
+        -2.975,
+        1.181,
+        1.02
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "HydraS5_right_14": {
+      "Parent": "Vehicle",
+      "Position": [
+        -2.898,
+        1.2016,
+        1.02
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "HydraS5_right_15": {
+      "Parent": "Vehicle",
+      "Position": [
+        -2.8416,
+        1.258,
+        1.02
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "HydraS5_right_16": {
+      "Parent": "Vehicle",
+      "Position": [
+        -2.821,
+        1.335,
+        1.02
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "HydraS5_right_17": {
+      "Parent": "Vehicle",
+      "Position": [
+        -2.8416,
+        1.412,
+        1.02
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "HydraS5_right_18": {
+      "Parent": "Vehicle",
+      "Position": [
+        -2.898,
+        1.4684,
+        1.02
       ],
       "Direction": [
         0,

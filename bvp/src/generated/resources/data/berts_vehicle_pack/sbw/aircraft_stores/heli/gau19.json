@@ -1,0 +1,25 @@
+{
+  "Schema": 1,
+  "Name": "GAU-19/B · 12.7 mm (1200 rds)",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/heli_gau19.geo.json",
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/heli_stores.png",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "MountAxis": [
+    0.0,
+    -0.22,
+    0.0
+  ],
+  "LaunchOffset": [
+    0.0,
+    -0.22,
+    0.0
+  ],
+  "Category": "GUN_POD",
+  "Capacity": 1200,
+  "MassKg": 0.175
+}

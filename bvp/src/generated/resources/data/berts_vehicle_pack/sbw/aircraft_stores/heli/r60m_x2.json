@@ -1,0 +1,64 @@
+{
+  "Schema": 1,
+  "Name": "APU-60-2 · 2 × R-60M",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/r60.geo.json",
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/r60.png",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0,
+    0.0,
+    0.308
+  ],
+  "MountAxis": [
+    0.0,
+    -0.05,
+    0.308
+  ],
+  "LaunchOffset": [
+    0.0,
+    -0.05,
+    0.0
+  ],
+  "Capacity": 1,
+  "MassKg": 44.0,
+  "MaxPerPylon": 2,
+  "FixedRackCount": 2,
+  "RackMassKg": 30.0,
+  "RackAdapter": {
+    "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/heli_apu60_x2.geo.json",
+    "Texture": "berts_vehicle_pack:textures/aircraft_stores/heli_stores.png",
+    "MountAnchor": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "Stations": [
+      {
+        "Point": [
+          0.22,
+          -0.21,
+          0.3
+        ],
+        "Face": "bottom"
+      },
+      {
+        "Point": [
+          -0.22,
+          -0.21,
+          0.3
+        ],
+        "Face": "bottom"
+      }
+    ]
+  },
+  "Category": "AIR_TO_AIR",
+  "Guidance": {
+    "Mode": "INFRARED",
+    "LockTicks": 60,
+    "Range": 2048,
+    "ConeDegrees": 25,
+    "CountermeasureVulnerability": 1
+  },
+  "AmmoItem": "superbwarfare:small_air_to_air_missile",
+  "TntEquivalentKg": 1.35
+}

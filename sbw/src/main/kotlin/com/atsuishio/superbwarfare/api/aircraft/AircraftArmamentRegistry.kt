@@ -205,7 +205,7 @@ object AircraftArmamentRegistry {
             json["MaxPerPylon"]?.let { require(it.asBigDecimal.intValueExact() in 1..AircraftPylonRacks.MAX_COPIES) }
             json["FixedRackCount"]?.let {
                 val copies = it.asBigDecimal.intValueExact()
-                require(json["Category"]?.asString in setOf("BOMB", "AIR_TO_GROUND", "AIR_TO_AIR") && json["Capacity"]?.asInt == 1)
+                require(json["Category"]?.asString in AircraftPylonRacks.FIXED_RACK_CATEGORIES && json["Capacity"]?.asInt == 1)
                 require(copies in 2..AircraftPylonRacks.MAX_COPIES &&
                     copies <= (json["MaxPerPylon"]?.asInt ?: 1))
             }

@@ -1,0 +1,77 @@
+{
+  "Schema": 1,
+  "Name": "HOT 3 · 4 tubes",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/heli_hot3.geo.json",
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/heli_stores.png",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "MountAxis": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "LaunchOffset": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "Capacity": 1,
+  "MassKg": 23.6,
+  "MaxPerPylon": 4,
+  "FixedRackCount": 4,
+  "RackMassKg": 55.0,
+  "RackAdapter": {
+    "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/heli_hot_x4.geo.json",
+    "Texture": "berts_vehicle_pack:textures/aircraft_stores/heli_stores.png",
+    "MountAnchor": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "Stations": [
+      {
+        "Point": [
+          0.1,
+          -0.185,
+          0.0
+        ],
+        "Face": "bottom"
+      },
+      {
+        "Point": [
+          -0.1,
+          -0.185,
+          0.0
+        ],
+        "Face": "bottom"
+      },
+      {
+        "Point": [
+          0.1,
+          -0.375,
+          0.0
+        ],
+        "Face": "bottom"
+      },
+      {
+        "Point": [
+          -0.1,
+          -0.375,
+          0.0
+        ],
+        "Face": "bottom"
+      }
+    ]
+  },
+  "Category": "COMMAND_GUIDED",
+  "CommandGuidance": {
+    "Mode": "SACLOS"
+  },
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_stores/hot3_uht",
+  "LaunchGunProfile": "berts_vehicle_pack:aircraft_stores/hot3_uht",
+  "AmmoItem": "superbwarfare:small_atgm"
+}
