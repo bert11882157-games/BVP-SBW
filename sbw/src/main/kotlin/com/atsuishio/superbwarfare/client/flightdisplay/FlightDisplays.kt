@@ -94,6 +94,7 @@ object FlightDisplays {
         } catch (e: Throwable) {
             LOGGER.error("Cockpit gauges failed", e)
         }
+        HeadUpDisplay.renderTick(event.renderTickTime)
         for (page in stillRequested.toList()) {
             if (page in stillPainted) continue
             try {
@@ -145,6 +146,7 @@ object FlightDisplays {
         // gauges and screens are a few pixels across beyond this: not drawn
         if (distanceSq > DETAIL_DISTANCE_SQ) return
         CockpitGauges.render(vehicle, poseStack, buffers, packedLight)
+        HeadUpDisplay.render(vehicle, poseStack, buffers)
         if (failed) return
         // the curved CRT (dome, bloom rings, sheen: ~17k vertices a screen) only up close; a flat screen further out
         val crtDetail = distanceSq <= CRT_DETAIL_DISTANCE_SQ
