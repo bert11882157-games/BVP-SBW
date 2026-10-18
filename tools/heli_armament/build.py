@@ -10,12 +10,18 @@ allows on it. Writes
   vehicles/<vid>.json                                one native channel per (slot, pod) firing from the pod's
                                                      tube mouths or muzzles; retired channels removed
   custom_geo/<vid>.geo.json                          the baked suspended_* store bones removed
+  projectile_profiles/<vid>/<gun>/belt_ammo_wt_*.json,
+  projectile_profiles/aircraft_rounds/<pod gun>/wt_*.json   the War Thunder rounds of every gun's belts (belts.py)
 
 and the shared palette texture to --texture (an LFS file the owner adds; see README.md).
 
     python3 tools/heli_armament/build.py [--texture PATH] [--root DIR] [vid ...]
 
 --root points at another copy of bvp/src/generated/resources (a scratch copy to try a change on).
+
+Belts (belts.py, wt_guns.json): every built-in gun and every gun pod channel carries War Thunder's belts for that gun on
+that helicopter (AmmoType / ProjectileBeltAmmoType of the weapon); only those keys, the weapon's Velocity and BeltFed
+are written.
 
 Crew (helis/<vid>.py 'crew'): which seats fire what. 'unguided' lists the seats that get the rocket and gun pod
 channels, 'guided' the seats that operate the released guided stores (the armament's WeaponSeat, then WeaponSeats when
@@ -29,6 +35,7 @@ import numpy as np
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
+import belts as B
 import catalog as C
 import meshlib
 from meshlib import anchor
@@ -388,6 +395,9 @@ GUN_TEMPLATES = {'m134': ('m134', 6000, None), 'm195': ('m195', 950, None), 'gau
 ROCKET_TEMPLATES = {'hydra': 'hydra', 'ffar': 'ffar', 's8': 's8', 's5': 's5', 's13': 's13', 's24': 's13'}
 
 
+PROFILES = {}   # projectile profile id -> document of the guns' WT rounds (belts.py), written after the builds
+
+
 def side(x):
     return 'left' if x >= 0 else 'right'
 
@@ -412,6 +422,10 @@ def channel(vid, mount, key, family):
             w['Name'] = title
         if family == 'rmp':
             muzzles = muzzles[:1]
+        gun = B.pod_gun(vid, family, w)
+        if gun is None:
+            raise ValueError(f'{vid}: no War Thunder gun for the {family} pod')
+        gun.apply(w, DATA, PROFILES)
     s = side(pos[0])
     att = {f'{name}_{s}_{k}': {'Parent': 'Vehicle', 'Position': [round(float(c), 4) for c in m],
                                'Direction': [0, 0, 1]} for k, m in enumerate(muzzles)}
@@ -464,6 +478,10 @@ def build(vid, spec):
         if natives:
             mount['NativeWeaponIds'] = natives
         singles.append(mount)
+    for wn, w in veh['Weapons'].items():
+        gun = B.builtin_gun(vid, wn, w)
+        if gun:
+            gun.apply(w, DATA, PROFILES)
     crew = crew_of(spec, veh)
     for i, seat in enumerate(veh['Seats']):
         seat['Weapons'] = [w for w in seat.get('Weapons', []) if w not in retire and w in veh['Weapons']
@@ -568,6 +586,7 @@ def main(argv):
     for vid in argv or HELIS:
         build(vid, HELIS[vid])
         print('built', vid)
+    B.write_profiles(PROFILES, DATA, write_json)
 
 
 if __name__ == '__main__':

@@ -6,7 +6,8 @@ on that slot: the same launcher, the same round count and the same munition.
 
 | Script | What it does |
 | --- | --- |
-| `extract_wt.py` | Pulls each unit's slots from the WT datamine and writes `wt_slots.json`. Needs network access. |
+| `extract_wt.py` | Pulls each unit's slots from the WT datamine and writes `wt_slots.json`, and every gun's belts and rounds to `wt_guns.json` (`--guns`: only that). Needs network access. |
+| `belts.py` | Turns `wt_guns.json` into the guns' belts (AmmoType / ProjectileBeltAmmoType) and round profiles. |
 | `catalog.py` | Procedural models of every launcher, pod, rail and munition (built on `meshlib.py`). |
 | `helis/<vid>.py` | One file per helicopter: the WT unit, the pylon points, the stores of each slot and the baked stores to strip. |
 | `build.py` | Writes the models, the store definitions, the profiles, the armaments and the vehicle channels. It also strips the baked stores out of the airframe models. |
@@ -62,6 +63,37 @@ it while the gunner is not steering, the mount stows to its forward boresight.
 
 Missiles leave the launcher one at a time, and each launcher shows its remaining rounds. Rocket and gun pods fire
 from their own tube mouths or muzzles through one native channel per pod, so the left and right pods alternate.
+
+## Gun belts
+
+Every built-in gun and every gun pod carries the belts War Thunder gives that gun on that helicopter, in WT's order
+(Default first), with WT's round sequence, round for round. Sources (datamine, `aces.vromfs.bin_u/`):
+`gamedata/weapons/<gun>.blkx` (the top-level `bullet` list is the default belt, each `<gun>_<purpose>` block a named
+belt), `gamedata/flightmodels/<unit>.blkx` `modifications` (which named belts the unit has),
+`gamedata/damage_model/explosive.blkx` (TNT strength equivalents) and `lang.vromfs.bin_u/lang/units_modifications.csv`
+/ `units_weaponry.csv` (belt and round names; a belt with no name of its own takes the generic purpose name).
+
+| Gun (WT file) | Helicopters | Belts |
+| --- | --- | --- |
+| 2A42 (`cannon2a42`) | Ka-50, Mi-28N | Default: AP-T, HEF-I · Ground targets: APDS, AP-T, 2 HEF-I · Armored targets: APDS · Air targets: HEF-T, AP-T, 2 HEF-I |
+| M230E-1 (`cannonm230e1`) | AH-64D | Default: HEDP (WT has no other belt and no APDS for it) |
+| M197 (`cannonm197`) | AH-1F | Default: HEI-T, 2 HEF-I, AP-I · Universal: HEI-T, AP-I, HEF-I, AP-I · Air targets: HEI-T, 2 HEF-I, AP-I · Armored targets: HEI-T, 3 AP-I · Stealth: HEF-I, AP-I, HEF-I, AP-I |
+| M195 (`cannonm195`, XM35) | AH-1G | Default: API-T, HEF-I, API-T · Air targets: 3 HEF-I, API-T · Armored targets: 3 API-T, HEF-I |
+| GSh-23L (`cannongsh_23l_upk_23_250`) | Ka-50, Mi-28N (UPK-23) | Default: HEFI-T, AP-I, HEF-I · AP: HEFI-T, 3 AP-I · Air targets: HEFI-T, HEF-I, HEFI-T, HEF-I, AP-I · Stealth: AP-I, 2 HEF-I |
+| GSh-23L (`cannongsh_23l`) | Mi-24A/D/V (UPK-23) | as above, but AP: HEF-I, 3 AP-I |
+| YaK-B (`gunyak_b`) | Mi-24V, Mi-24D | Default: AP-I, API-T, 4 AP-I · Universal: 2 AP-I, 3 IAI, API-T · Ground targets: IAI, 3 AP, API-T, AP · Air targets: IAI, API-T, 4 IAI |
+| A-12.7 (`guna_12_7`) | Mi-24A | Default: AP-I, API-T, AP-I · Universal: 2 AP-I, IAI, API-T · Ground targets: IAI, AP, API-T, AP · Air targets: IAI, API-T, 2 IAI |
+| YaK-B (`gunyak_b_guv`) | Mi-24V (GUV-8700) | Default: 4 AP, API-T, 3 AP |
+| FN M3P (`gunfn_m3p`, `_cwp`) | Tiger (HMP400, RMP-LC) | Default: M20 API-T, 2 M2 AP, M1 I · Universal: 2 M8 AP-I, M20 API-T, 2 M23 I · Ground targets: M20, M23, 2 M2, 2 M8 · Tracers: M20 · Stealth: M8, M23, M8, M23 |
+| GAU-19 (`gungau_19`) | AH-6J | Default: SLAP, SLAP-T · Ground targets: SLAP-T, 3 SLAP |
+| M134 (`gunm134_minigun`) | AH-1G (XM18), AH-6J | Default: 6 AP, T |
+
+Per round: WT muzzle velocity (m/s / 16 on the guns with the fixed-wing physics, / 20 on the others), TNT equivalent
+(20 mm and up), penetration at 10 to 2000 m (de Marre with drag, or WT's armour power table), and the damage numbers
+of `tools/damage/balance.py`. Tracers: WT's traced rounds, coloured by the nation rule (`tools/ballistics/tracer_nations.py`).
+30 mm HE flies at the APDS velocity where the helicopter has the APDS (owner's rule, `autocannon_he_velocity.py`).
+The tools in `tools/ballistics` leave these guns alone (`wt_belts.HELI_ARMAMENT`). The GUV's two 7.62 mm GShG guns are
+not a channel of their own; the pod fires its YaK-B.
 
 ## The texture
 
