@@ -1,5 +1,7 @@
 package com.yourname.berts_vehicle_pack.entity.helicopter;
 
+import com.atsuishio.superbwarfare.api.vehicle.aim.VehicleAimChannel;
+import com.atsuishio.superbwarfare.api.vehicle.aim.VehicleAimProfile;
 import com.atsuishio.superbwarfare.api.vehicle.camera.VehicleCameraMode;
 import com.atsuishio.superbwarfare.api.vehicle.flight.VehicleFlightInputContext;
 import com.atsuishio.superbwarfare.api.vehicle.flight.VehicleFlightInstrumentSnapshot;
@@ -7,6 +9,8 @@ import com.atsuishio.superbwarfare.api.vehicle.flight.VehicleFlightStrategy;
 import com.atsuishio.superbwarfare.api.vehicle.flight.VehicleFlightStrategyProvider;
 import com.atsuishio.superbwarfare.api.vehicle.flight.VehicleFlightTickResult;
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity;
+import com.atsuishio.superbwarfare.data.gun.GunData;
+import com.atsuishio.superbwarfare.data.gun.GunProp;
 import com.atsuishio.superbwarfare.data.vehicle.subdata.EngineInfo;
 import net.minecraft.world.entity.player.Player;
 import com.atsuishio.superbwarfare.entity.vehicle.utils.VehicleVecUtils;
@@ -122,6 +126,43 @@ public abstract class BvpHelicopterEntity extends ArmoredVehicleEntity implement
             return VehicleCameraMode.AIRCRAFT_FREELOOK;
         }
         return super.bvpSeatDefaultCameraMode(passenger, seatIndex, selectedWeaponIndex);
+    }
+
+    /**
+     * True where the pilot fires the gunner's movable gun locked straight ahead (AH-1, Mi-24, Mi-28): selecting the
+     * gun in the pilot's seat stows it. False where the pilot fires it wherever the gunner's sight points (AH-64).
+     */
+    protected boolean pilotFiresTurretStowed() {
+        return false;
+    }
+
+    @Override
+    public boolean isVehicleAimChannelStowed(VehicleAimChannel channel) {
+        boolean turret = channel == VehicleAimChannel.TURRET;
+        boolean present = turret ? hasTurret() : hasPassengerWeaponStation();
+        if (!present) return false;
+        int seat = turret ? getTurretControllerIndex() : getPassengerWeaponStationControllerIndex();
+        if (seat < 0) return false;
+        Entity controller = getNthEntity(seat);
+        boolean steers = false;
+        if (controller instanceof Player) {
+            VehicleAimProfile profile = resolveVehicleAimProfile(seat, getSelectedWeapon(seat));
+            steers = profile != null && profile.getChannel() == channel;
+        }
+        boolean pilotStows = seat != 0 && pilotFiresTurretStowed();
+        return HelicopterGunStowPolicy.stowed(true, seat, controller != null, controller instanceof Player, steers,
+                pilotStows, pilotStows && pilotHoldsGunOf(channel));
+    }
+
+    private boolean pilotHoldsGunOf(VehicleAimChannel channel) {
+        if (!(getNthEntity(0) instanceof Player)) return false;
+        String name = getGunName(0, getSelectedWeapon(0));
+        GunData data = name == null ? null : getGunData(name);
+        if (data == null || data.get(GunProp.SHOOT_POS) == null) return false;
+        String transform = data.get(GunProp.SHOOT_POS).getTransform();
+        return channel == VehicleAimChannel.TURRET
+                ? HelicopterGunStowPolicy.firesThroughTurret(transform)
+                : HelicopterGunStowPolicy.firesThroughStation(transform);
     }
 
     @Override

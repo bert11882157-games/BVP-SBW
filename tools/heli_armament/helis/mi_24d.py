@@ -5,6 +5,10 @@ _OUT = ['ub32_s5k', 's24b', 'ofab250', 'upk23']
 _IN = ['ub32_s5k', 's24b', 'ofab250', 'fab500_m54', 'upk23']
 SPEC = {
     'wt': 'mi_24d', 'payload': 3017, 'weapon_seat': 1,
+    # Pilot: rockets, bombs, gun pods, and the nose gun locked straight ahead. Operator: the nose gun and the Falanga.
+    'crew': {'unguided': [0], 'guided': [1], 'guns': {'PassengerGun1': [1, 0]}},
+    # VSPU-24 YaK-B-12.7: 60° either side, +20° / -60° (Wikipedia, YakB-12.7)
+    'gun': {'PassengerWeaponStationYawRange': [-60, 60], 'PassengerWeaponStationPitchRange': [-60, 20]},
     'hull_remove': [[1.9, 2.7, 1.9, 2.65, -1.5, 1.9]],
     'slots': [
         {'id': 'slot_1', 'name': 'Left wingtip', 'pos': [4.5938, 2.25, 0.0781], 'stores': ['falanga_x2']},

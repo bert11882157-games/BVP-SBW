@@ -38,6 +38,31 @@ class VehicleFixedGunBanksTest {
     }
 
     @Test
+    fun `a bank gun may also be listed on another seat but must sit once on the bank seat`() {
+        // AH-64D: the gunner's single-gun M230 bank, the same gun also selectable by the pilot
+        val seats = listOf(listOf("HydraS2", "HydraS3", "M230"), listOf("M230", "HydraS2"))
+        assertTrue(VehicleFixedGunBanks.ownsMember(seats, 1, "M230"))
+        assertTrue(VehicleFixedGunBanks.ownsMember(seats, 0, "M230"))
+        assertFalse(VehicleFixedGunBanks.ownsMember(seats, 1, "Missing"))
+        assertFalse(VehicleFixedGunBanks.ownsMember(seats, 2, "M230"), "no such seat")
+        assertFalse(VehicleFixedGunBanks.ownsMember(listOf(listOf("M230", "M230")), 0, "M230"), "duplicate on own seat")
+    }
+
+    @Test
+    fun `one physical gun is driven by one seat at a time`() {
+        val gunner = VehicleWeaponScheduler.ScheduleKey(1, 0, "M230")
+        val pilot = VehicleWeaponScheduler.ScheduleKey(0, 6, "M230")
+        val pilotRockets = VehicleWeaponScheduler.ScheduleKey(0, 0, "HydraS2")
+        assertTrue(VehicleWeaponScheduler.admitsPhysicalWeapon(emptyList(), pilot))
+        assertFalse(VehicleWeaponScheduler.admitsPhysicalWeapon(listOf(gunner), pilot), "gunner already firing it")
+        assertTrue(VehicleWeaponScheduler.admitsPhysicalWeapon(listOf(gunner), pilotRockets))
+        assertTrue(VehicleWeaponScheduler.admitsPhysicalWeapon(listOf(pilot), pilot.copy()),
+            "the same seat's own key is handled by the duplicate-key check, not refused here")
+        // two independent guns, one per seat, never block each other
+        assertTrue(VehicleWeaponScheduler.admitsPhysicalWeapon(listOf(pilotRockets), gunner))
+    }
+
+    @Test
     fun `assembly rate determines bounded event capacity without projectile multiplication`() {
         assertEquals(1, VehicleFixedGunBanks.eventCapacity(850))
         assertEquals(3, VehicleFixedGunBanks.eventCapacity(3000))

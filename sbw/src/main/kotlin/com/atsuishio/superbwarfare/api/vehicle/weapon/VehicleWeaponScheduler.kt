@@ -214,6 +214,9 @@ class VehicleWeaponScheduler(private val vehicle: VehicleEntity) {
             val key = resolved.selection.scheduleKey()
             // PRIMARY is visited first. An overlapping SECONDARY hold cannot double the rate.
             if (activeTriggers.containsKey(key)) continue
+            // A gun listed on two seats (pilot and gunner) is one physical gun: the seat that pressed first drives
+            // it and the other seat's hold waits, so the two can never double its cadence.
+            if (!admitsPhysicalWeapon(activeTriggers.keys, key)) continue
             activeTriggers[key] = ActiveTrigger(
                 resolved, intent, origin, slot, definition, fixedBank,
             )
@@ -404,6 +407,13 @@ class VehicleWeaponScheduler(private val vehicle: VehicleEntity) {
 
     private fun VehicleWeaponSelection.scheduleKey() =
         ScheduleKey(seatIndex, weaponIndex, weaponName)
+
+    internal companion object {
+        /** False while another seat already drives the same named weapon this tick (first press wins). */
+        @JvmStatic
+        internal fun admitsPhysicalWeapon(active: Collection<ScheduleKey>, candidate: ScheduleKey): Boolean =
+            active.none { it.weaponName == candidate.weaponName && it.seatIndex != candidate.seatIndex }
+    }
 
     internal class RuntimeState(private val profile: VehicleWeaponScheduleProfile) {
         private val recentProjectileTicks = ArrayDeque<Int>()

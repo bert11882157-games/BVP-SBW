@@ -2518,7 +2518,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
             vehicleActionController.consumeClient(entityData.get(VEHICLE_ACTION_SNAPSHOT))
         }
 
-        if (!isFixedWingFlightVehicle() && hasTurret()) {
+        if (!isFixedWingFlightVehicle() && hasTurret() && !isVehicleAimChannelStowed(VehicleAimChannel.TURRET)) {
             val turretController = getNthEntity(this.turretControllerIndex)
             if (turretController is Player &&
                 !vehicleAimController.handles(turretController, VehicleAimChannel.TURRET)
@@ -2535,7 +2535,9 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
             }
         }
 
-        if (!isFixedWingFlightVehicle() && hasPassengerWeaponStation()) {
+        if (!isFixedWingFlightVehicle() && hasPassengerWeaponStation() &&
+            !isVehicleAimChannelStowed(VehicleAimChannel.PASSENGER_WEAPON)
+        ) {
             val passengerWeaponStationController = getNthEntity(this.passengerWeaponStationControllerIndex)
             if ((passengerWeaponStationController is Player &&
                         !vehicleAimController.handles(
@@ -3711,6 +3713,14 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         val index = weapons.indexOf(weaponId)
         return index.takeIf { it >= 0 && getGunData(seatIndex, it) != null }
     }
+
+    /**
+     * Opt-in stowage: while true the channel's gun is held at its neutral (boresight forward) position by the server
+     * aim tick instead of following anyone, and the native direct-angle servo leaves it alone. A two-seat
+     * helicopter stows its turret when no gunner steers it, so a pilot firing the gunner's gun shoots forward.
+     * Must depend only on state both sides know (occupants, synchronized weapon selection).
+     */
+    open fun isVehicleAimChannelStowed(channel: VehicleAimChannel): Boolean = false
 
     /** One immutable profile per configuration/context; null retains native direct-angle behavior. */
     fun resolveVehicleAimProfile(seatIndex: Int, selectedWeaponIndex: Int): VehicleAimProfile? {

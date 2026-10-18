@@ -536,9 +536,9 @@ object AircraftArmamentManager {
         while (sent.size > 256) sent.remove(sent.keys.first())
     }
     private fun pilot(player: ServerPlayer, vehicle: VehicleEntity) = seated(player, vehicle, 0)
-    /** The occupant of the seat that operates the released guided stores (AircraftMissileLaunchers.WEAPON_SEAT). */
+    /** The occupant of a seat that operates the released guided stores (AircraftMissileLaunchers.WEAPON_SEAT(S)). */
     private fun operator(player: ServerPlayer, vehicle: VehicleEntity) =
-        seated(player, vehicle, AircraftMissileLaunchers.weaponSeat(definition(vehicle)))
+        AircraftMissileLaunchers.weaponSeats(definition(vehicle)).any { seated(player, vehicle, it) }
     private fun seated(player: ServerPlayer, vehicle: VehicleEntity, seat: Int) = player.vehicle === vehicle &&
         vehicle.getSeatIndex(player) == seat && player.isAlive && !player.isSpectator && vehicle.isAlive && !vehicle.isWreck
     /** Loadout editing is the pilot's; firing, designating and steering are the weapon operator's too. */
@@ -726,7 +726,8 @@ object AircraftArmamentManager {
             return
         }
         val weaponId = AircraftStoreWeapons.PREFIX + pair["Id"].asString
-        val seat = AircraftMissileLaunchers.weaponSeat(definition(vehicle))
+        // the release reads the slot of the operator who pressed it (either crew member on a two-seat launcher)
+        val seat = AircraftMissileLaunchers.releasingSeat(definition(vehicle), vehicle.getSeatIndex(player))
         val equipped = listOfNotNull(vehicle.getGunName(seat), vehicle.getSecondaryWeaponIndex(seat)?.let { vehicle.getGunName(seat, it) })
         val selectedGroup = groupFor(vehicle, weaponId)?.representative ?: weaponId
         require(selectedGroup in equipped) { "Select this store in a weapon slot first." }

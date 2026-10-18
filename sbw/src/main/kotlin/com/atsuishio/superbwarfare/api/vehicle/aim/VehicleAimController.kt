@@ -107,6 +107,10 @@ class VehicleAimController(private val vehicle: VehicleEntity) {
         snapshots.clear()
         var turretContextSeen = false
         for (channel in VehicleAimChannel.entries) {
+            if (vehicle.isVehicleAimChannelStowed(channel)) {
+                stow(channel)?.let { snapshots[channel] = it }
+                continue
+            }
             val controller = controller(channel) ?: continue
             // The profiled player path retains the existing bounded mechanical servo. Mobs retain
             // SBW's established native auto-aim behavior.
@@ -983,6 +987,46 @@ class VehicleAimController(private val vehicle: VehicleEntity) {
         }
     }
 
+    /**
+     * Holds a stowed channel at its neutral pose (boresight forward, clamped into its authored limits) and publishes
+     * that as the channel's INACTIVE sample, so remote clients and the muzzle frame agree that the gun points ahead.
+     */
+    private fun stow(channel: VehicleAimChannel): VehicleAimSnapshot? {
+        val seatIndex = when (channel) {
+            VehicleAimChannel.TURRET -> if (vehicle.hasTurret()) vehicle.turretControllerIndex else -1
+            VehicleAimChannel.PASSENGER_WEAPON ->
+                if (vehicle.hasPassengerWeaponStation()) vehicle.passengerWeaponStationControllerIndex else -1
+        }
+        if (seatIndex < 0) return null
+        val yaw: Float
+        val pitch: Float
+        when (channel) {
+            VehicleAimChannel.TURRET -> {
+                yaw = stowedAngle(-vehicle.turretMaxYaw, -vehicle.turretMinYaw)
+                pitch = stowedAngle(-vehicle.turretMaxPitch, -vehicle.turretMinPitch)
+                vehicle.turretYRotO = yaw
+                vehicle.turretXRotO = pitch
+                vehicle.turretYRot = yaw
+                vehicle.turretXRot = pitch
+                vehicle.turretYRotLock = 0F
+            }
+            VehicleAimChannel.PASSENGER_WEAPON -> {
+                // A hull-parented station's yaw is hull-local; a legacy station is authored around the turret.
+                val parentYaw = if (vehicle.isHullParentedPassengerWeaponStation() || !vehicle.hasTurret()) 0F
+                else Mth.wrapDegrees(vehicle.turretYRot)
+                yaw = Mth.wrapDegrees(parentYaw +
+                        stowedAngle(-vehicle.passengerWeaponMaxYaw, -vehicle.passengerWeaponMinYaw))
+                pitch = stowedAngle(-vehicle.passengerWeaponMaxPitch, -vehicle.passengerWeaponMinPitch)
+                vehicle.gunYRotO = yaw
+                vehicle.gunXRotO = pitch
+                vehicle.gunYRot = yaw
+                vehicle.gunXRot = pitch
+            }
+        }
+        val weaponIndex = vehicle.getSelectedWeapon(seatIndex).coerceAtLeast(0)
+        return snapshot(channel, seatIndex, weaponIndex, VehicleAimMode.INACTIVE, yaw, pitch, yaw, pitch, true)
+    }
+
     private fun setInactiveNeutral(profile: VehicleAimProfile) {
         val parentedToTurret = usesTurretParentYawFrame(profile)
         val parentYaw = if (parentedToTurret) Mth.wrapDegrees(vehicle.turretYRot) else 0F
@@ -1187,6 +1231,11 @@ class VehicleAimController(private val vehicle: VehicleEntity) {
         else previousYaw - nextYaw
 
     companion object {
+        /** The neutral (0°) angle of an axis, or its nearest limit when the authored range excludes 0°. */
+        @JvmStatic
+        internal fun stowedAngle(minimum: Float, maximum: Float): Float =
+            if (minimum <= maximum) Mth.clamp(0F, minimum, maximum) else 0F
+
         private const val TICKS_PER_SECOND = 20F
         private const val MIN_DIRECTION_LENGTH_SQR = 1.0E-12
         private const val MAX_FCS_ZERO_RANGE_BLOCKS = VehicleShotPredictionService.MAX_PREDICTION_PATH_BLOCKS

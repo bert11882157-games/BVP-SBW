@@ -30,6 +30,12 @@ public class Ka50Entity extends Mi24VEntity {
         return AUTOCANNON_WEAPON_INDEX;
     }
 
+    /** Single seat: the pilot aims the cannon himself (see createVehicleAimProfile). */
+    @Override
+    protected boolean pilotFiresTurretStowed() {
+        return false;
+    }
+
     @Override
     public int getTurretControllerIndex() {
         // SBW's helicopter HUD reads the raw data index, while BVP's cannon slew uses this runtime getter.

@@ -6,6 +6,13 @@ _PYLON = ['m261_m247', 'lau131_apkws_m151', 'lau131_apkws_m282', 'm279_agm114k',
 _TIP = ['atas_stinger', 'ltc']
 SPEC = {
     'wt': 'ah_64d', 'payload': 5000, 'weapon_seat': 1,
+    # Both crew members fly and fight: either seat fires the rockets, the Hellfires / APKWS and the Stingers, and
+    # either can slave the M230 to his helmet sight (Wikipedia, Boeing AH-64 Apache). The CPG steers the gun; the
+    # pilot's rounds go where it points, or straight ahead when nobody steers it.
+    'crew': {'unguided': [0, 1], 'guided': [1, 0], 'guns': {'M230': [1, 0]}},
+    # M230 on the Area Weapon Subsystem turret: ±110° azimuth, +11° / -60° elevation (the commonly published
+    # limits; the spring-loaded stow at +11° is in Wikipedia, M230 chain gun)
+    'gun': {'PassengerWeaponStationYawRange': [-110, 110], 'PassengerWeaponStationPitchRange': [-60, 11]},
     'slots': [
         {'id': 'slot_1', 'name': 'Left wingtip', 'pos': [3.30, 2.02, 0.05], 'stores': _TIP},
         {'id': 'slot_2', 'name': 'Left outboard', 'pos': [2.975, 1.57, 0.18], 'stores': _PYLON},

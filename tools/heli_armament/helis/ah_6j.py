@@ -4,6 +4,8 @@
 _OUT = ['lau131_m247', 'm261_m247', 'lau131_apkws_m151', 'lau131_apkws_m282', 'm279_agm114b', 'm279_agm114k', 'gau19']
 SPEC = {
     'wt': 'ah_6m', 'payload': 815, 'weapon_seat': 0,
+    # The AH-6J has no turret: its placeholder turret block must not be steered by the pilot's mouse (-1: no one).
+    'gun': {'TurretControllerIndex': -1},
     'slots': [
         {'id': 'slot_1', 'name': 'Left outboard', 'pos': [1.999, 1.306, 1.6838], 'stores': _OUT},
         {'id': 'slot_2', 'name': 'Left inboard', 'pos': [1.15, 1.31, 1.90], 'stores': ['m134d']},

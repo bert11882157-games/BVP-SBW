@@ -1,5 +1,8 @@
 package com.yourname.berts_vehicle_pack.entity;
 
+import com.atsuishio.superbwarfare.api.vehicle.aim.VehicleAimChannel;
+import com.atsuishio.superbwarfare.api.vehicle.aim.VehicleAimMode;
+import com.atsuishio.superbwarfare.api.vehicle.aim.VehicleAimProfile;
 import com.atsuishio.superbwarfare.api.vehicle.weapon.VehicleWeaponScheduleSnapshot;
 import com.yourname.berts_vehicle_pack.entity.helicopter.BvpHelicopterEntity;
 import com.yourname.berts_vehicle_pack.entity.helicopter.HelicopterFlightProfile;
@@ -52,6 +55,31 @@ public class Mi24VEntity extends BvpHelicopterEntity {
         return false;
     }
 
+    /**
+     * The operator's sight drives the nose turret at its authored rates and limits whatever he has selected (the
+     * gun follows the sight it is slaved to); the pilot never steers it. Ka-50 replaces this with its pilot-aimed
+     * cannon profile.
+     */
+    @Override
+    public VehicleAimProfile createVehicleAimProfile(int seatIndex, int selectedWeaponIndex) {
+        if (seatIndex != autocannonSeatIndex() || !hasTurret() || getBarrelPosition() == null) {
+            return null;
+        }
+        return VehicleAimProfile.builder(VehicleAimChannel.TURRET)
+                .rates(bvpTurretAimYawRateDegreesPerSecond(), bvpTurretAimPitchRateDegreesPerSecond())
+                .yawRange(-getTurretMaxYaw(), -getTurretMinYaw())
+                .pitchRange(-getTurretMaxPitch(), -getTurretMinPitch())
+                .lockTolerance(bvpTurretAimToleranceDegrees())
+                .defaultMode(VehicleAimMode.PLAYER_LOOK_AIM)
+                .build();
+    }
+
+    /** Mi-24 and Mi-28: the pilot fires the operator's nose gun locked straight ahead. */
+    @Override
+    protected boolean pilotFiresTurretStowed() {
+        return true;
+    }
+
     @Override
     protected boolean usesNativePassengerWeaponAimProfile() {
         return false;
@@ -80,8 +108,10 @@ public class Mi24VEntity extends BvpHelicopterEntity {
         }
     }
 
+    /** The nose gun fired from the operator's seat, or from the pilot's (who shares it, see the armament seats). */
     public boolean isBvpAutocannonSelection(int seatIndex, String weaponName) {
-        return seatIndex == autocannonSeatIndex() && DEFAULT_AUTOCANNON_WEAPON_NAME.equals(weaponName);
+        return (seatIndex == autocannonSeatIndex() || seatIndex == 0)
+                && DEFAULT_AUTOCANNON_WEAPON_NAME.equals(weaponName);
     }
 
     public float getAutocannonBarrelSpinStrength() {
@@ -124,7 +154,14 @@ public class Mi24VEntity extends BvpHelicopterEntity {
         return snapshot == null ? "idle" : snapshot.getLastDecision();
     }
 
+    /** The operator's schedule, or the pilot's while only the pilot is firing the shared gun. */
     private VehicleWeaponScheduleSnapshot autocannonScheduleSnapshot() {
-        return getWeaponScheduleSnapshot(autocannonSeatIndex(), autocannonWeaponIndex());
+        VehicleWeaponScheduleSnapshot operator = getWeaponScheduleSnapshot(autocannonSeatIndex(), autocannonWeaponIndex());
+        if (operator != null && operator.getTriggerHeld() || autocannonSeatIndex() == 0) {
+            return operator;
+        }
+        int pilotIndex = getWeaponIds(0).indexOf(DEFAULT_AUTOCANNON_WEAPON_NAME);
+        VehicleWeaponScheduleSnapshot pilot = pilotIndex < 0 ? null : getWeaponScheduleSnapshot(0, pilotIndex);
+        return pilot != null && pilot.getTriggerHeld() ? pilot : operator;
     }
 }

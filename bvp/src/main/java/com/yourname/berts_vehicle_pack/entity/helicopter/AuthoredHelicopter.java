@@ -9,9 +9,26 @@ import net.minecraft.world.level.Level;
 
 /** Helicopter host with an explicit physical profile and separately operated hull-mounted gun. */
 public final class AuthoredHelicopter extends BvpHelicopterEntity {
+    private final boolean pilotFiresTurretStowed;
+
     public AuthoredHelicopter(EntityType<AuthoredHelicopter> type, Level level, String vehicleId) {
         super(type, level, vehicleId, requireProfile(vehicleId));
+        this.pilotFiresTurretStowed = pilotFiresTurretStowed(vehicleId);
     }
+
+    /**
+     * AH-1F: the pilot fires the M197 with the turret stowed straight ahead; Mi-24A/D: the pilot fires the nose gun
+     * locked forward. AH-64D: either crew member fires the M230 where the slaved sight points (false).
+     */
+    static boolean pilotFiresTurretStowed(String id) {
+        return switch (id) {
+            case "ah_1f", "mi_24a", "mi_24d" -> true;
+            default -> false;
+        };
+    }
+
+    @Override
+    protected boolean pilotFiresTurretStowed() { return pilotFiresTurretStowed; }
 
     private static HelicopterFlightProfile requireProfile(String id) {
         return switch (id) {

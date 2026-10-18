@@ -56,8 +56,8 @@ object AircraftArmamentClient {
         return vehicle.takeIf { player.isAlive && !player.isSpectator && !it.isRemoved && !it.isWreck &&
             it.level() === mc.level && it.getSeatIndex(player).let { seat ->
                 seat == 0 && it.getNthEntity(0) === player ||
-                    seat == com.atsuishio.superbwarfare.api.aircraft.AircraftMissileLaunchers.weaponSeat(
-                        getState(it.uuid)?.getAsJsonObject("Definition")) && seat > 0 } }
+                    seat > 0 && com.atsuishio.superbwarfare.api.aircraft.AircraftMissileLaunchers.isWeaponSeat(
+                        getState(it.uuid)?.getAsJsonObject("Definition"), seat) } }
     }
 
     /** Only the pilot edits the loadout. */

@@ -1,4 +1,4 @@
-"""One module per helicopter: SPEC = {wt, payload, weapon_seat, retire, slots: [{id, name, pos, stores}]}.
+"""One module per helicopter: SPEC = {wt, payload, weapon_seat, crew, gun, retire, slots: [{id, name, pos, stores}]}.
 Slot ids follow War Thunder's WeaponSlot index (1 = the pilot's far left, +x); pos is the pylon point the store's
 lugs touch (vehicle-local blocks: x left, y up, z forward), measured on the airframe model."""
 import importlib, pkgutil

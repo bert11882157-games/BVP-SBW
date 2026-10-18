@@ -6,6 +6,12 @@ _OUT = ['r60_x1', 'r60_x2', 'r60m_x2'] + _POD[:3] + ['shturm_x2'] + _POD[3:]
 _IN = _POD[:4] + ['fab500_m54'] + _POD[4:]
 SPEC = {
     'wt': 'mi_24v', 'payload': 2400, 'weapon_seat': 1,
+    # Pilot: rockets, bombs, gun pods, and the nose gun locked straight ahead. Operator: the VSPU-24 nose turret and
+    # the Shturm / R-60 he guides or locks.
+    'crew': {'unguided': [0], 'guided': [1], 'guns': {'Cannon': [1, 0]}},
+    # VSPU-24 YaK-B-12.7: 60° either side, +20° / -60° (Wikipedia, YakB-12.7). TurretTurnSpeed [pitch, yaw] in °/s
+    # before the native 1.15 factor: ~45 / 60 °/s (estimated; no published slew rate).
+    'gun': {'TurretYawRange': [-60, 60], 'TurretPitchRange': [-60, 20], 'TurretTurnSpeed': [39, 52]},
     'slots': [
         {'id': 'slot_1', 'name': 'Left wingtip', 'pos': [3.7458, 1.216, -1.5127], 'stores': ['shturm_x2']},
         {'id': 'slot_2', 'name': 'Left outboard', 'pos': [2.8093, 1.6121, -1.4119], 'stores': _OUT},

@@ -13,7 +13,16 @@ allows on it. Writes
 
 and the shared palette texture to --texture (an LFS file the owner adds; see README.md).
 
-    python3 tools/heli_armament/build.py [--texture PATH] [vid ...]
+    python3 tools/heli_armament/build.py [--texture PATH] [--root DIR] [vid ...]
+
+--root points at another copy of bvp/src/generated/resources (a scratch copy to try a change on).
+
+Crew (helis/<vid>.py 'crew'): which seats fire what. 'unguided' lists the seats that get the rocket and gun pod
+channels, 'guided' the seats that operate the released guided stores (the armament's WeaponSeat, then WeaponSeats when
+there are several), 'guns' maps a built-in gun to its seats, its own (turret controlling) seat first; the extra seats
+share the same gun (one GunData, one belt) and get it after their store channels. 'gun' sets the movable gun's limits
+and rates (TurretYawRange / PassengerWeaponStationPitchRange ...) in the vehicle file. Nothing else in the vehicle file
+is touched, so the cockpit driver's attachments, seats' eyes and cameras stay as they are.
 """
 import copy, json, math, os, sys
 import numpy as np
@@ -455,22 +464,55 @@ def build(vid, spec):
         if natives:
             mount['NativeWeaponIds'] = natives
         singles.append(mount)
-    pilot = veh['Seats'][0]
+    crew = crew_of(spec, veh)
     for i, seat in enumerate(veh['Seats']):
         seat['Weapons'] = [w for w in seat.get('Weapons', []) if w not in retire and w in veh['Weapons']
                            or w.startswith('@')]
+        # a shared gun goes after the store channels on its extra seats: take it off first so a rebuild is identical
+        seat['Weapons'] = [w for w in seat['Weapons'] if i not in crew['guns'].get(w, [i])[1:]]
         if 'FixedGunBank' in seat:
             seat['FixedGunBank'] = [w for w in seat['FixedGunBank'] if w in veh['Weapons']]
-    pilot['Weapons'] += [c for c in channels if c not in pilot['Weapons']]
+    for i in crew['unguided']:
+        seat = veh['Seats'][i]
+        seat['Weapons'] += [c for c in channels if c not in seat['Weapons']]
+    for gun, seats in crew['guns'].items():
+        for i in seats:
+            if gun not in veh['Seats'][i]['Weapons']:
+                veh['Seats'][i]['Weapons'].append(gun)
+    for key, value in spec.get('gun', {}).items():
+        veh[key] = copy.deepcopy(value)
     builtin = [w for w in arm.get('BuiltInWeapons', []) if w not in retire and w in veh['Weapons']]
     doc = {'Schema': 1, 'Name': arm['Name'], 'BuiltInWeapons': builtin, 'SuspendedWeapons': channels,
            'Pairs': [], 'Singles': singles, 'MaxPayloadKg': spec['payload'], 'MaxPylonMassKg': spec.get('pylon_kg', 1000),
-           'MaxWeaponsPerPylon': 12, 'WeaponSeat': spec['weapon_seat']}
+           'MaxWeaponsPerPylon': 12, 'WeaponSeat': crew['guided'][0]}
+    if len(crew['guided']) > 1:
+        doc['WeaponSeats'] = list(crew['guided'])
     if 'Radar' in arm:
         doc['Radar'] = arm['Radar']
     write_json(arm_path, doc)
     write_json(veh_path, veh)
     strip_baked(vid, spec.get('hull_remove', []))
+
+
+def crew_of(spec, veh):
+    """the seat map of helis/<vid>.py 'crew', checked against the vehicle (see the module docstring)"""
+    crew = spec.get('crew', {})
+    out = {'unguided': list(crew.get('unguided', [0])),
+           'guided': list(crew.get('guided', [spec['weapon_seat']])),
+           'guns': {g: list(s) for g, s in crew.get('guns', {}).items()}}
+    if out['guided'][0] != spec['weapon_seat']:
+        raise ValueError(f"{veh['ID']}: weapon_seat {spec['weapon_seat']} is not the first guided seat {out['guided']}")
+    seats = range(len(veh['Seats']))
+    for role in ('unguided', 'guided'):
+        if not out[role] or len(set(out[role])) != len(out[role]) or any(i not in seats for i in out[role]):
+            raise ValueError(f"{veh['ID']}: bad {role} seats {out[role]}")
+    for gun, listed in out['guns'].items():
+        if gun not in veh['Weapons'] or not listed or len(set(listed)) != len(listed) \
+                or any(i not in seats for i in listed):
+            raise ValueError(f"{veh['ID']}: bad shared gun {gun} on {listed}")
+        if gun not in veh['Seats'][listed[0]].get('Weapons', []):
+            raise ValueError(f"{veh['ID']}: {gun} is not on its own seat {listed[0]}")
+    return out
 
 
 def strip_baked(vid, boxes=()):
@@ -502,8 +544,19 @@ def strip_baked(vid, boxes=()):
                 f.write('\n')
 
 
+def set_root(root):
+    global GEN, ASSETS, DATA
+    GEN = os.path.abspath(root)
+    ASSETS = os.path.join(GEN, 'assets', 'berts_vehicle_pack')
+    DATA = os.path.join(GEN, 'data', 'berts_vehicle_pack', 'sbw')
+
+
 def main(argv):
     from helis import HELIS
+    if '--root' in argv:
+        root = argv[argv.index('--root') + 1]
+        argv = [a for a in argv if a not in ('--root', root)]
+        set_root(root)
     tex = None
     if '--texture' in argv:
         tex = argv[argv.index('--texture') + 1]

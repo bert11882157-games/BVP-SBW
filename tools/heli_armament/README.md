@@ -20,6 +20,10 @@ python3 tools/heli_armament/preview.py ah_64d /tmp/ah64.png --loadout mixed --vi
 
 `build.py` is idempotent. Running it again over its own output gives the same files.
 
+`build.py --root DIR` writes into `DIR/{assets,data}/berts_vehicle_pack/...` instead of `bvp/src/generated/resources`,
+so a scratch copy of the generated tree can be built and diffed. `build.py` only rewrites the seats' `Weapons`, the
+keys in a spec's `gun` map and the armament documents; it leaves attachments, seat eyes and the cockpit rig alone.
+
 ## Sources
 
 * **Slots and presets** come from the [War Thunder datamine](https://github.com/gszabi99/War-Thunder-Datamine),
@@ -40,6 +44,22 @@ python3 tools/heli_armament/preview.py ah_64d /tmp/ah64.png --loadout mixed --vi
 | FIM-92 Stinger (ATAS), 9K38 Igla, R-60 / R-60M, PARS 3 LR (Trigat) | Infrared, locked before launch | Gunner |
 | Hydra, FFAR, S-5, S-8, S-13, S-24, gun pods, bombs | Unguided | Pilot |
 
+The table gives the default. A spec's `crew` map overrides it per helicopter:
+`{'unguided': [seats], 'guided': [seats], 'guns': {gun: [owner, *extra seats]}}`. The first guided seat is the
+`WeaponSeat` (it must equal `weapon_seat`); any further guided seats are written as `WeaponSeats`. A shared gun is one
+physical weapon: it keeps one magazine, the scheduler lets only one seat drive it at a time, and when the pilot fires
+it while the gunner is not steering, the mount stows to its forward boresight.
+
+| Helicopter | Unguided | Guided | Shared gun | Basis |
+| --- | --- | --- | --- | --- |
+| AH-64D | pilot, gunner | gunner, pilot | M230 | Either crew member can slave the gun to his helmet and fire any weapon (Wikipedia, Boeing AH-64 Apache) |
+| AH-1F | pilot, gunner | gunner | M197 | The pilot fires the turret gun stowed forward; the gunner has the TOW sight |
+| AH-1G | pilot, gunner | pilot | none | The pilot fires the wing stores; the gunner could also release them |
+| Tiger UHT | pilot, gunner | gunner | none | Gunner-operated sight for HOT/PARS; either seat fires the rockets |
+| Mi-24V | pilot | gunner | 9A624 / YakB | The pilot can fire the nose gun locked forward; the operator aims it (VSPU-24) |
+| Mi-24A, Mi-24D | pilot | gunner | A-12.7 / YakB | As the Mi-24V |
+| Mi-28N | pilot | gunner | 2A42 | The WSO aims the gun; the pilot fires it fixed forward |
+
 Missiles leave the launcher one at a time, and each launcher shows its remaining rounds. Rocket and gun pods fire
 from their own tube mouths or muzzles through one native channel per pod, so the left and right pods alternate.
 
@@ -56,7 +76,7 @@ bvp/src/generated/resources/assets/berts_vehicle_pack/textures/aircraft_stores/h
 ## Known simplifications
 
 * The S-24 is drawn on its rail and stays on it after firing.
-* Each helicopter has one weapon seat for guided stores, so on two-seat helicopters the gunner fires the AAMs too.
+* Guided stores follow the spec's `crew` map; without one, the single `weapon_seat` fires them all, including AAMs.
 * WT's limits on weight imbalance between the left and right pylons are not enforced.
 * The AH-1G's turret M195 is retired. Its 20 mm now comes from the XM35 store on slot 2, fired by the pilot.
 * `tools/heli_stores` (the older pipeline) is superseded. Only `comps.py` is still used, to find the baked bones.

@@ -4,6 +4,9 @@ _IN = ['fz225_ffar', 'lau131_apkws_m151', 'lau131_apkws_m282', 'hot3_x2', 'hot3_
 _OUT = ['atas_stinger_tiger', 'trigat_x2']
 SPEC = {
     'wt': 'tiger_uht', 'payload': 1000, 'weapon_seat': 1,
+    # The gunner guides HOT 3 / Trigat and fires the Stingers through the mast sight; both crew fire the rockets and
+    # the gun pods. The UHT has no chin gun turret (that is the HAP).
+    'crew': {'unguided': [0, 1], 'guided': [1]},
     # three tube mouths of the old right-hand baked launcher were left in the hull
     'hull_remove': [[2.9, 3.2, 1.7, 2.1, 1.0, 1.3]],
     'slots': [
