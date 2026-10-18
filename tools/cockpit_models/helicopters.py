@@ -130,7 +130,23 @@ L.ERAS.update(ERAS)
 
 _lib_layout = L.layout
 BLOCKS = []                        # (facet, a, y, kind, w, h) of the last layout's panel furniture
-ROW_GAP, ITEM_GAP = 0.006, 0.006   # real panels sit their dials almost bezel to bezel
+
+# Caution and warning panels of helicopters (cockpit_lib.LAMP_SETS shape: caption, Annunciator condition, colour)
+L.LAMP_SETS.update({
+    'heli': dict(columns=8, lamps=[
+        ('MASTER|WARNING', 'MASTER_WARNING', 'red'), ('ROTOR|RPM LOW', 'ROTOR_RPM_LOW', 'red'),
+        ('ENG|OUT', 'ENGINE_OUT', 'red'), ('FIRE', 'FIRE', 'red'), ('LAUNCH', 'MISSILE_LAUNCH', 'red'),
+        ('LOW|ALT', 'LOW_ALT', 'red'), ('XMSN|OIL', 'NONE', 'amber'), ('ENG|RUN', 'ENGINE_RUN', 'green'),
+        ('MASTER|CAUTION', 'MASTER_CAUTION', 'amber'), ('ROTOR|RPM HI', 'ROTOR_RPM_HIGH', 'amber'),
+        ('TORQUE|HIGH', 'TORQUE_HIGH', 'amber'), ('FUEL|LOW', 'LOW_FUEL', 'amber'), ('RWR|LOCK', 'RWR_LOCK', 'amber'),
+        ('DAMAGE', 'DAMAGE', 'amber'), ('AMMO|LOW', 'AMMO_LOW', 'amber'), ('HYD|PRESS', 'NONE', 'amber')]),
+    'heli_small': dict(columns=4, lamps=[
+        ('MASTER|CAUTION', 'MASTER_CAUTION', 'amber'), ('FIRE', 'FIRE', 'red'), ('LAUNCH', 'MISSILE_LAUNCH', 'red'),
+        ('RWR|LOCK', 'RWR_LOCK', 'amber'), ('ROTOR|RPM LOW', 'ROTOR_RPM_LOW', 'red'), ('ENG|OUT', 'ENGINE_OUT', 'red'),
+        ('FUEL|LOW', 'LOW_FUEL', 'amber'), ('AMMO|LOW', 'AMMO_LOW', 'amber')]),
+})
+L.RUSSIAN.update({'MASTER|WARNING': 'ОПАСНО', 'ROTOR|RPM LOW': 'МАЛО|ОБОР НВ', 'ROTOR|RPM HI': 'ВЕЛИКИ|ОБОР НВ',
+                  'TORQUE|HIGH': 'ПРЕВЫШ|РЕЖИМ', 'XMSN|OIL': 'МАСЛО|РЕДУКТ', 'ENG|RUN': 'ДВИГ|РАБОТ'})
 
 
 def draw_blocks(mesh, c):
@@ -163,45 +179,24 @@ def draw_blocks(mesh, c):
 
 
 def layout(tub, era, facets, hud_body=None):
-    """Helicopter panels: an explicit `panel` (real positions from the aircraft's panel drawings) or the era's rows
-    packed tight under the top edge at real size, shrunk only when they don't fit; other eras go to cockpit_lib."""
-    if not era.get('helicopter'):
+    """Helicopter stations with an explicit `panel` (real positions from the aircraft's panel drawings); every other
+    era goes to cockpit_lib, which packs its rows tight at real size and fills the band below with switch panels."""
+    if 'panel' not in era:
         return _lib_layout(tub, era, facets, hud_body)
     s, out = tub.s, []
     for key, f in (('centre', facets[0]), ('left', facets[-1]), ('right', facets[1])):
-        a0, a1 = f.extent()
-        if 'panel' in era:
-            # [kind, a, v, size]: a metres right of the centre line (centre) or out from the hinge (wings),
-            # v metres below the facet's top edge at a, size the diameter or display width, all at real size
-            for item in era['panel'].get(key, []):
-                kind, a, v = item[0], item[1] * s, item[2] * s
-                y = f.top(a) - v * math.cos(tub.lean)
-                if kind.startswith('B:'):              # panel furniture, drawn by the driver after the build
-                    BLOCKS.append((f, a, y, kind[2:], item[3] * s, item[4] * s))
-                else:
-                    out.append((f, a, y, kind, item[3] * s))
-            continue
-        rows = era[key]
-        top = f.top(0) if f.side == 0 else min(f.top(a0), f.top(a1))
-        y_top = top - 0.010 * s
-        width = (a1 - a0) - 0.016 * s
-        height = (y_top - f.bottom()) / math.cos(tub.lean) - 0.006 * s
-        for scale in np.linspace(1.0, 0.45, 23):
-            sizes = [[d * s * scale for _, d in row] for row in rows]
-            hs = [max(r) + ROW_GAP * s * scale for r in sizes]
-            ws = [sum(r) + ITEM_GAP * s * scale * (len(r) - 1) for r in sizes]
-            if sum(hs) <= height and max(ws) <= width:
-                break
-        v = 0.0
-        for row, sz, h in zip(rows, sizes, hs):
-            yc = y_top - (v + h / 2) * math.cos(tub.lean)
-            v += h
-            span = sum(sz) + ITEM_GAP * s * scale * (len(sz) - 1)
-            a = (a0 + a1) / 2 - span / 2
-            for (kind, _), d in zip(row, sz):
-                out.append((f, a + d / 2, yc, kind, d))
-                a += d + ITEM_GAP * s * scale
-    return out
+        # [kind, a, v, size] / [kind, a, v, w, h]: a metres right of the centre line (centre) or out from the hinge
+        # (wings), v metres below the facet's top edge at a; all at real size
+        for item in era['panel'].get(key, []):
+            kind, a, v = item[0], item[1] * s, item[2] * s
+            y = f.top(a) - v * math.cos(tub.lean)
+            if kind.startswith('B:'):                  # panel furniture, drawn by the driver after the build
+                BLOCKS.append((f, a, y, kind[2:], item[3] * s, item[4] * s))
+            elif kind.startswith('A:'):                # annunciator: the game draws its housing and lamps
+                out.append((f, a, y, kind, (item[3] * s, item[4] * s)))
+            else:
+                out.append((f, a, y, kind, item[3] * s))
+    return out, []
 
 
 L.layout = layout
@@ -409,7 +404,7 @@ def apply(vid, dry=False):
     # the new stations
     pal = dict(L.PALETTES[spec.get('palette', 'nato')])
     pal.update({k: tuple(v) for k, v in spec.get('colours', {}).items()})
-    pal_name = f'_{vid}'
+    pal_name = f"{spec.get('palette', 'nato')}_{vid}"     # cockpit_lib.lamps_of reads the palette family
     L.PALETTES[pal_name] = pal
     c = {k: sw.uv(v) for k, v in pal.items()}
     c.update({k: sw.uv(v) for k, v in L.ACCENT.items()})

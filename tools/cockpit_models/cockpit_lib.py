@@ -508,81 +508,185 @@ ACCENT = dict(black=(24, 25, 26), dgrey=(44, 46, 48), mgrey=(88, 92, 94), lgrey=
               metal=(128, 132, 134), yellow=(226, 186, 30), red=(196, 36, 30), bezel=(30, 31, 32),
               white=(220, 222, 214), green=(60, 150, 70), amber=(214, 140, 30))
 
-# Instrument sets, as rows from the top of each facet: (kind, diameter in metres at scale 1). 'D:<KIND>' is a
-# display of that page (square, width given). Dials the game knows the value of are live (GaugePainter.Kind.live).
+# Instrument sets, as rows from the top of each facet. Items: (kind, diameter) for a dial, ('D:<PAGE>', width) for
+# a display of that page (square screen; its housing is 1.4 times wider), ('UFCP', width) for the up-front control
+# block and ('A:<set>', width, height) for an annunciator panel of LAMP_SETS[set]. Sizes are metres at scale 1 (real
+# instruments: 3 inch dials about .080, 2 inch .057). 'fill' rows are added, in order, while the facet has room.
+# Dials the game knows the value of are live (GaugePainter.Kind.live): the basic six, Mach, AoA, G, RWR, fuel, radar
+# altitude, clock, turn and slip, engine RPM and EGT, and the rounds counter.
 ERAS = {
     'WWII_STEAM': dict(
-        centre=[[('AIRSPEED', .072), ('ATTITUDE', .080), ('ALTIMETER', .072)],
-                [('VVI', .064), ('HEADING', .072), ('FILLER_CLOCK', .052)],
-                [('FILLER_FUEL', .056), ('FILLER_OXYGEN', .050)]],
-        left=[[('THROTTLE', .062)], [('FILLER_HYDRAULIC', .050)], [('FILLER_VOLTS', .046)]],
-        right=[[('FILLER_RPM', .062)], [('FILLER_OIL', .050), ('FILLER_TEMP', .050)], [('G_METER', .048)]],
+        centre=[[('A:ww2', .125, .050)],
+                [('AIRSPEED', .076), ('ATTITUDE', .082), ('ALTIMETER', .076)],
+                [('TURN_SLIP', .076), ('HEADING', .082), ('VVI', .076)],
+                [('ENGINE_RPM', .070), ('THROTTLE', .070), ('FILLER_TEMP', .057), ('FILLER_OIL', .057)]],
+        centre_fill=[[('FUEL_QTY', .057), ('FILLER_VOLTS', .050), ('CLOCK', .057), ('FILLER_OXYGEN', .050)]],
+        left=[[('G_METER', .057), ('AMMO', .057)]],
+        left_fill=[[('FILLER_HYDRAULIC', .050), ('FILLER_FUEL', .050)]],
+        right=[[('EGT', .064), ('FILLER_VOLTS', .050)], [('CLOCK', .057), ('FILLER_OXYGEN', .050)]],
+        right_fill=[[('FILLER_HYDRAULIC', .050)]],
         hud=False, displays='CRT', seat='bucket'),
     'COLD_WAR_STEAM': dict(
-        centre=[[('AIRSPEED', .070), ('ATTITUDE', .082), ('ALTIMETER', .070)],
-                [('MACH', .062), ('HEADING', .074), ('VVI', .062)],
-                [('G_METER', .054), ('FILLER_CLOCK', .050), ('AOA', .054)]],
-        left=[[('THROTTLE', .062)], [('FILLER_HYDRAULIC', .050)], [('FILLER_VOLTS', .044), ('FILLER_OXYGEN', .044)]],
-        right=[[('FILLER_RPM', .062)], [('FILLER_TEMP', .052)], [('FILLER_FUEL', .060)]],
+        centre=[[('A:cw', .215, .044)],
+                [('AIRSPEED', .076), ('ATTITUDE', .082), ('ALTIMETER', .076)],
+                [('MACH', .064), ('HEADING', .082), ('VVI', .064)],
+                [('TURN_SLIP', .057), ('AOA', .057), ('G_METER', .057), ('CLOCK', .050)]],
+        centre_fill=[[('FILLER_OXYGEN', .044), ('FILLER_VOLTS', .044), ('FILLER_HYDRAULIC', .044)]],
+        left=[[('ENGINE_RPM', .064), ('EGT', .064)], [('FUEL_QTY', .064), ('FILLER_OIL', .050)],
+              [('AMMO', .057), ('FILLER_HYDRAULIC', .050)]],
+        left_fill=[[('THROTTLE', .050), ('FILLER_TEMP', .050)]],
+        right=[[('RADAR_ALT', .064), ('FILLER_OXYGEN', .050)], [('FILLER_VOLTS', .050), ('FILLER_TEMP', .050)]],
+        right_fill=[[('FILLER_FUEL', .050), ('FILLER_CLOCK', .044)]],
         hud=False, displays='CRT', seat='ejection'),
     'COLD_WAR_RADAR': dict(
-        centre=[[('AIRSPEED', .068), ('ATTITUDE', .080), ('ALTIMETER', .068)],
-                [('MACH', .060), ('HEADING', .072), ('VVI', .060)],
-                [('AOA', .050), ('G_METER', .050), ('FILLER_CLOCK', .046)]],
-        left=[[('THROTTLE', .060)], [('FILLER_RPM', .052), ('FILLER_TEMP', .052)],
-              [('FILLER_HYDRAULIC', .044), ('FILLER_VOLTS', .044)]],
-        right=[[('D:RADAR', .110)], [('RWR', .062)], [('FILLER_FUEL', .054), ('FILLER_OXYGEN', .044)]],
+        centre=[[('A:cw', .215, .044)],
+                [('AIRSPEED', .076), ('ATTITUDE', .082), ('ALTIMETER', .076)],
+                [('MACH', .064), ('HEADING', .082), ('VVI', .064)],
+                [('AOA', .057), ('G_METER', .057), ('RADAR_ALT', .057), ('CLOCK', .050)]],
+        centre_fill=[[('TURN_SLIP', .044), ('FILLER_OXYGEN', .044), ('FILLER_VOLTS', .044)]],
+        left=[[('ENGINE_RPM', .064), ('EGT', .064)], [('FUEL_QTY', .064), ('FILLER_OIL', .050)],
+              [('AMMO', .057), ('FILLER_HYDRAULIC', .050)]],
+        left_fill=[[('THROTTLE', .050), ('FILLER_TEMP', .050)]],
+        right=[[('D:RADAR', .110)], [('RWR', .064), ('TURN_SLIP', .050)], [('FILLER_OXYGEN', .044), ('FILLER_VOLTS', .044)]],
+        right_fill=[[('FILLER_TEMP', .044), ('FILLER_CLOCK', .044)]],
         hud=False, displays='CRT', seat='ejection'),
     'GEN4_CRT': dict(
-        centre=[[('UFCP', .150)], [('D:PFD', .128)], [('AIRSPEED', .044), ('ATTITUDE', .052), ('ALTIMETER', .044)]],
-        left=[[('D:STORES', .118)], [('G_METER', .046), ('AOA', .046)], [('THROTTLE', .048), ('FILLER_FUEL', .048)]],
-        right=[[('D:RADAR', .118)], [('RWR', .060)], [('FILLER_HYDRAULIC', .040), ('FILLER_OXYGEN', .040)]],
+        centre=[[('UFCP', .160)], [('D:RADAR', .112), ('D:PFD', .112)],
+                [('AIRSPEED', .057), ('ATTITUDE', .064), ('ALTIMETER', .057), ('VVI', .050)],
+                [('ENGINE_RPM', .050), ('EGT', .050), ('FUEL_QTY', .050), ('CLOCK', .044)]],
+        centre_fill=[[('FILLER_HYDRAULIC', .044), ('FILLER_OIL', .044), ('FILLER_OXYGEN', .044)]],
+        left=[[('D:STORES', .088)]],
+        left_fill=[[('G_METER', .050), ('AOA', .050)], [('AMMO', .044), ('FILLER_VOLTS', .044)]],
+        right=[[('RWR', .064), ('RADAR_ALT', .050)]],
+        right_fill=[[('AMMO', .044), ('FILLER_HYDRAULIC', .044)], [('TURN_SLIP', .044), ('FILLER_TEMP', .044)]],
+        eyebrows=(('eyebrow_l', .120, .050), ('eyebrow_r', .120, .050)),
         hud=True, displays='CRT', seat='ejection'),
     'MODERN_GLASS': dict(
-        centre=[[('UFCP', .150)], [('D:PFD', .134)], [('AIRSPEED', .042), ('ATTITUDE', .050), ('ALTIMETER', .042)]],
-        left=[[('D:STORES', .124)], [('G_METER', .044), ('AOA', .044)], [('THROTTLE', .046), ('FILLER_FUEL', .046)]],
-        right=[[('D:RADAR', .124)], [('RWR', .058)], [('FILLER_HYDRAULIC', .038), ('FILLER_OXYGEN', .038)]],
+        centre=[[('UFCP', .160)], [('D:STORES', .122), ('D:PFD', .122)],
+                [('AIRSPEED', .050), ('ATTITUDE', .057), ('ALTIMETER', .050), ('FUEL_QTY', .050)]],
+        centre_fill=[[('ENGINE_RPM', .044), ('EGT', .044), ('FILLER_HYDRAULIC', .044), ('CLOCK', .044)]],
+        left=[[('D:RADAR', .092)]],
+        left_fill=[[('ENGINE_RPM', .044), ('EGT', .044)], [('G_METER', .044), ('AOA', .044)]],
+        right=[[('RWR', .064), ('RADAR_ALT', .050)]],
+        right_fill=[[('AMMO', .044), ('CLOCK', .044)], [('FILLER_OXYGEN', .040), ('FILLER_VOLTS', .040)]],
+        eyebrows=(('eyebrow_l', .120, .050), ('eyebrow_r', .120, .050)),
         hud=True, displays='LCD', seat='ejection'),
 }
 
+# Annunciator lamp sets: (caption, condition, colour) left to right, then down; "|" breaks a caption into two lines.
+# Conditions are Annunciator.Condition in the game; NONE legends never light. Soviet palettes get the Russian captions.
+LAMP_SETS = {
+    'ww2': dict(columns=3, lamps=[
+        ('GEAR|DOWN', 'GEAR_DOWN', 'green'), ('GEAR|UNSAFE', 'GEAR_TRANSIT', 'red'), ('FUEL|LOW', 'LOW_FUEL', 'amber'),
+        ('OIL|PRESS', 'NONE', 'amber'), ('ENGINE|FIRE', 'FIRE', 'red'), ('GEN', 'NONE', 'amber')]),
+    'cw': dict(columns=6, lamps=[
+        ('MASTER|CAUTION', 'MASTER_CAUTION', 'amber'), ('GEAR|DOWN', 'GEAR_DOWN', 'green'),
+        ('GEAR|UNSAFE', 'GEAR_TRANSIT', 'red'), ('FUEL|LOW', 'LOW_FUEL', 'amber'), ('FIRE', 'FIRE', 'red'),
+        ('ENG|OUT', 'ENGINE_OUT', 'red'),
+        ('HYD|PRESS', 'NONE', 'amber'), ('GEN', 'NONE', 'amber'), ('STALL', 'STALL', 'red'), ('OVER G', 'OVER_G', 'amber'),
+        ('RWR|LOCK', 'RWR_LOCK', 'amber'), ('LAUNCH', 'MISSILE_LAUNCH', 'red')]),
+    'eyebrow_l': dict(columns=4, lamps=[
+        ('MASTER|CAUTION', 'MASTER_CAUTION', 'amber'), ('FIRE', 'FIRE', 'red'), ('STALL', 'STALL', 'red'),
+        ('LOW|ALT', 'LOW_ALT', 'red'),
+        ('ENG|OUT', 'ENGINE_OUT', 'red'), ('FUEL|LOW', 'LOW_FUEL', 'amber'), ('HYD|PRESS', 'NONE', 'amber'),
+        ('DAMAGE', 'DAMAGE', 'amber')]),
+    'eyebrow_r': dict(columns=4, lamps=[
+        ('LAUNCH', 'MISSILE_LAUNCH', 'red'), ('RWR|LOCK', 'RWR_LOCK', 'amber'), ('GEAR|DOWN', 'GEAR_DOWN', 'green'),
+        ('A/B', 'AFTERBURNER', 'green'),
+        ('OVER G', 'OVER_G', 'amber'), ('OVER|SPEED', 'OVERSPEED', 'amber'), ('SPD|BRK', 'AIRBRAKE', 'green'),
+        ('AMMO|LOW', 'AMMO_LOW', 'amber')]),
+}
+RUSSIAN = {
+    'MASTER|CAUTION': 'ВНИМАНИЕ', 'GEAR|DOWN': 'ШАССИ|ВЫП', 'GEAR|UNSAFE': 'ШАССИ|ПРОМЕЖ', 'FUEL|LOW': 'ОСТАТОК|ТОПЛ',
+    'OIL|PRESS': 'ДАВЛ|МАСЛА', 'ENGINE|FIRE': 'ПОЖАР|ДВИГ', 'GEN': 'ГЕНЕР', 'FIRE': 'ПОЖАР', 'ENG|OUT': 'ОТКАЗ|ДВИГ',
+    'HYD|PRESS': 'ГИДРО', 'STALL': 'УГОЛ|ОПАСН', 'OVER G': 'ПЕРЕГР', 'RWR|LOCK': 'ОБЛУЧ', 'LAUNCH': 'ПУСК',
+    'LOW|ALT': 'ОПАСН|ВЫСОТА', 'DAMAGE': 'ОТКАЗ', 'A/B': 'ФОРСАЖ', 'OVER|SPEED': 'ПРЕДЕЛ|СКОР', 'SPD|BRK': 'ТОРМ|ЩИТКИ',
+    'AMMO|LOW': 'МАЛО|БОЕЗАП',
+}
+
+
+def lamps_of(name, pal_name):
+    spec = LAMP_SETS[name]
+    cyr = pal_name.startswith('soviet') or pal_name == 'ussr_ww2'
+    return spec['columns'], [{'Text': RUSSIAN.get(t, t) if cyr else t, 'Condition': c, 'Colour': k}
+                             for t, c, k in spec['lamps']]
+
+
 RIM = 0.16                     # game gauge bezel width (CockpitGauges.RIM)
+DISPLAY_BEZEL = 0.2            # game display housing border, fraction of the screen width (FlightDisplays.BEZEL)
 GAUGE_LIFT = 0.004             # game dials stand this far proud of the panel face
 DISPLAY_LIFT = 0.003
-GAP = 0.012
+GAP = 0.010
+
+
+def footprint(item):
+    """(w, h) a row item occupies on the panel, bezels included, at scale 1"""
+    kind = item[0]
+    if kind.startswith('A:'):
+        return item[1], item[2]
+    if kind.startswith('D:'):
+        return item[1] * (1 + 2 * DISPLAY_BEZEL), item[1] * (1 + 2 * DISPLAY_BEZEL)
+    if kind == 'UFCP':
+        return item[1], item[1] * 0.42
+    return item[1] * (1 + RIM), item[1] * (1 + RIM)
 
 
 def layout(tub, era, facets, hud_body=None):
-    """[(facet, a, y, kind, size)] instruments packed in rows on each facet, shrunk until every row fits"""
-    out = []
+    """[(facet, a, y, kind, size)] instruments packed in rows on each facet from the top; rows are shrunk a little to
+    fit, dropped from the bottom when they still do not, and 'fill' rows added while room remains. The spare height
+    under the rows is returned per facet as [(facet, y_from, y_to)] for switch panels."""
+    out, spare = [], []
     s = tub.s
     for key, f in (('centre', facets[0]), ('left', facets[-1]), ('right', facets[1])):
-        rows = era[key]
+        base = [list(r) for r in era[key]]
+        fill = [list(r) for r in era.get(key + '_fill', [])]
         a0, a1 = f.extent()
-        width = (a1 - a0) - 0.02 * s
-        top = f.top(a0 if f.side == 0 else a1) if f.side != 0 else f.top(0)
-        top = min(f.top(a0), f.top(a1)) if f.side else top
+        width = (a1 - a0) - 0.016 * s
+        top = f.top(0) if f.side == 0 else min(f.top(a0), f.top(a1))
         y_top = top - 0.012 * s
         if f.side == 0 and hud_body is not None:
             y_top = min(y_top, hud_body)            # the HUD's control strip takes the top of the centre facet
-        height = (y_top - f.bottom()) / math.cos(tub.lean) - 0.01 * s
-        for scale in np.linspace(1.0, 0.45, 23):
-            sizes = [[d * s * scale for _, d in row] for row in rows]
-            hs = [max(r) + GAP * s * scale for r in sizes]
-            ws = [sum(r) + GAP * s * scale * (len(r) - 1) for r in sizes]
-            if sum(hs) <= height and max(ws) <= width:
+        height = (y_top - f.bottom()) / math.cos(tub.lean) - 0.012 * s
+
+        def measure(rows, scale):
+            fp = [[footprint(it) for it in row] for row in rows]
+            hs = [max(h for _, h in r) * s * scale for r in fp]
+            ws = [sum(w for w, _ in r) * s * scale + GAP * s * (len(r) - 1) for r in fp]
+            return hs, ws
+
+        def fits(rows, scale):
+            hs, ws = measure(rows, scale)
+            return sum(hs) + GAP * s * (len(rows) - 1) <= height and max(ws) <= width
+
+        rows, scale = base, 1.0
+        for scale in np.linspace(1.0, 0.72, 15):
+            if fits(rows, scale):
                 break
-        # rows spread over the height, items centred across the facet
-        spare = (height - sum(hs)) / max(1, len(rows))
+        else:
+            while len(rows) > 1 and not fits(rows, scale):
+                rows = rows[:-1]
+        for extra in fill:
+            if fits(rows + [extra], scale):
+                rows = rows + [extra]
+        # too-wide rows (a long annunciator strip on a narrow panel) are squeezed to the width
+        hs, ws = measure(rows, scale)
         v = 0.0
-        for row, sz, h in zip(rows, sizes, hs):
-            yc = y_top - (v + h / 2 + spare * 0.35) * math.cos(tub.lean)
-            v += h + spare
-            span = sum(sz) + GAP * s * scale * (len(sz) - 1)
+        for row, h, w in zip(rows, hs, ws):
+            sq = min(1.0, width / w) if w > width else 1.0
+            yc = y_top - (v + h / 2) * math.cos(tub.lean)
+            v += h + GAP * s
+            fp = [footprint(it) for it in row]
+            span = sum(fw for fw, _ in fp) * s * scale * sq + GAP * s * (len(row) - 1)
             a = (a0 + a1) / 2 - span / 2
-            for (kind, _), d in zip(row, sz):
-                out.append((f, a + d / 2, yc, kind, d))
-                a += d + GAP * s * scale
-    return out
+            for it, (fw, fh) in zip(row, fp):
+                size = it[1] * s * scale * sq
+                if it[0].startswith('A:'):
+                    size = (it[1] * s * scale * sq, it[2] * s * scale)
+                out.append((f, a + fw * s * scale * sq / 2, yc, it[0], size))
+                a += fw * s * scale * sq + GAP * s
+        y_used = y_top - v * math.cos(tub.lean)
+        spare.append((f, f.bottom() + 0.006 * s, y_used - 0.004 * s))
+    return out, spare
 
 
 # ---------------------------------------------------------------- building the cockpit
@@ -656,11 +760,35 @@ def build(ac, tub, era_name, pal_name, sw, hud=None, gunsight=True, stick_foot=N
         else:
             want_hud = False
 
-    # -- instruments
-    rows = layout(t, era, facets, hud_body=None)
+    # -- eyebrow lights: annunciators standing on the glareshield either side of the HUD, facing the pilot
+    if want_hud and era.get('eyebrows'):
+        for sg, (name, ew, eh) in zip((1, -1), era['eyebrows']):      # +1 = pilot's left (x > 0)
+            ew, eh = ew * s, eh * s
+            ax = sg * (0.08 * s + 0.012 * s + ew / 2)                    # clear of the HUD body (half width 0.08 s)
+            foot = cen.at(-ax, t.top_c) + cen.N * 0.045 * s + np.array([0, 0.03 * s, 0])    # on the lip edge
+            top_glass = ac.glass_above(foot[0], foot[2], foot[1])
+            if top_glass is not None:
+                eh = min(eh, (top_glass - 0.02 - foot[1]) / cen.U[1])
+            if eh < 0.028 * s:
+                continue
+            centre = foot + cen.U * eh / 2
+            columns, lamps = lamps_of(name, pal_name)
+            gauges.append({'Seat': t.seat, 'Kind': 'ANNUNCIATOR', 'Center': r5(centre + cen.N * 0.002), 'Normal': r5(cen.N),
+                           'Up': r5(cen.U), 'Diameter': round(ew, 4), 'Width': round(ew, 4), 'Height': round(eh, 4),
+                           'Depth': 0.03, 'Columns': columns, 'Lamps': lamps})
+
+    # -- instruments (the centre rows start under the HUD or sight body hanging over the panel lip)
+    rows, spare = layout(t, era, facets, hud_body=(t.top_c - 0.035 * s - 0.004) if (want_hud or gunsight) else None)
     for f, a, y, kind, d in rows:
         p = f.at(a, y)
-        if kind == 'UFCP':
+        if kind.startswith('A:'):
+            # annunciator panel: the game draws the housing and the lamps (Annunciator.kt)
+            w, h = d
+            columns, lamps = lamps_of(kind[2:], pal_name)
+            gauges.append({'Seat': t.seat, 'Kind': 'ANNUNCIATOR', 'Center': r5(p + f.N * 0.002), 'Normal': r5(f.N),
+                           'Up': r5(f.U), 'Diameter': round(w, 4), 'Width': round(w, 4), 'Height': round(h, 4),
+                           'Depth': 0.02, 'Columns': columns, 'Lamps': lamps})
+        elif kind == 'UFCP':
             # up-front control panel: keypad block under the HUD
             w, h = d, d * 0.42
             m.box(p + f.N * 0.012, (f.R, f.U, f.N), (w / 2, h / 2, 0.012), c['dgrey'], faces={(2, 1): c['black']})
@@ -688,6 +816,38 @@ def build(ac, tub, era_name, pal_name, sw, hud=None, gunsight=True, stick_foot=N
         else:
             gauges.append({'Seat': t.seat, 'Kind': kind, 'Center': r5(p + f.N * GAUGE_LIFT), 'Normal': r5(f.N),
                            'Up': r5(f.U), 'Diameter': round(d, 4), 'Depth': 0.03})
+    # the band under the instruments: switch panels (rows of toggles over a dark strip), a gear lever on the left
+    for f, y0, y1 in spare:
+        a0, a1 = f.extent()
+        a0 += 0.012 * s; a1 -= 0.012 * s
+        band = (y1 - y0) / math.cos(t.lean)
+        n_rows = int(band / (0.045 * s))
+        if n_rows < 1 or a1 - a0 < 0.06 * s:
+            continue
+        gear_lever = f.side == -1 and era['seat'] == 'ejection'
+        if gear_lever:
+            # gear handle: a short lever with a red wheel knob, at the inboard end of the lowest row
+            ga, gy = a0 + 0.025 * s, y0 + 0.018 * s
+            gp = f.at(ga, gy)
+            m.box(gp + f.N * 0.006, (f.R, f.U, f.N), (0.016 * s, 0.022 * s, 0.006), c['black'])
+            m.box(gp + f.N * 0.022 + f.U * 0.012 * s, (f.R, f.U, f.N), (0.004 * s, 0.018 * s, 0.016), c['metal'])
+            m.box(gp + f.N * 0.040 + f.U * 0.028 * s, (f.R, f.U, f.N), (0.010 * s, 0.010 * s, 0.006 * s), c['red'])
+        for k in range(min(n_rows, 2)):
+            yc = y1 - (k + 0.5) * (band / min(n_rows, 2)) * math.cos(t.lean)
+            ra0 = a0 + (0.06 * s if gear_lever and k == min(n_rows, 2) - 1 else 0.0)
+            if a1 - ra0 < 0.05 * s:
+                continue
+            pc = f.at((ra0 + a1) / 2, yc)
+            hw = (a1 - ra0) / 2
+            m.box(pc + f.N * 0.003, (f.R, f.U, f.N), (hw, 0.016 * s, 0.003), c['black'])
+            n_sw = max(2, int((a1 - ra0) / (0.024 * s)))
+            for j in range(n_sw):
+                sa = ra0 + (j + 0.5) * (a1 - ra0) / n_sw
+                sp = f.at(sa, yc) + f.N * 0.006
+                m.box(sp, (f.R, f.U, f.N), (0.005 * s, 0.005 * s, 0.004), c['mgrey'])          # the switch base
+                tilt = 1 if (j + k) % 3 else -1
+                m.box(sp + f.N * 0.010 + f.U * tilt * 0.006 * s, (f.R, unit(f.U * tilt + f.N * 0.9), unit(f.N - f.U * tilt * 0.9)),
+                      (0.0025 * s, 0.009 * s, 0.0025 * s), c['lgrey'] if (j % 4) else c['red'])     # the toggle
 
     # -- coaming: lofted from the panel lip forward to the windscreen base
     lip = []
@@ -997,9 +1157,11 @@ def old_interior(ac, tubs, keep=()):
                 far = V[:, 2] >= t.ws_z + 0.05
                 ax = np.linalg.svd(V - V.mean(0))[2]          # principal axes, longest first
                 ext = np.ptp((V - V.mean(0)) @ ax.T, axis=0)
-                if ext[1] < 0.07 and ext[0] > 0.15 and abs(ax[0][1]) > 0.5 and V[:, 1].max() > t.top_c + 0.03 * s:
-                    # a thin upright member reaching above the coaming (a frame post or leg): kept, but not in
-                    # front of the panel face
+                if ext[1] < 0.07 and ext[0] > 0.15 and abs(ax[0][1]) > 0.5 and V[:, 1].max() > t.top_c + 0.03 * s \
+                        and ac.hugs_glass(V):
+                    # a thin upright member reaching above the coaming along the glass (a frame post or an
+                    # armour-glass leg): kept, but not in front of the panel face. One standing away from the glass
+                    # is an old HUD or sight support (its glass is gone) and falls to the rules below.
                     if np.all(dz > 0.12) and V[:, 1].min() < t.top_c - 0.02 and \
                             V[V[:, 1] < t.top_c, 2].min() < t.Z + 0.15 * s:
                         clips.setdefault(b['name'], {})[i] = (1, t.top_c - 0.01)
