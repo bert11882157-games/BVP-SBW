@@ -33,6 +33,7 @@ internal object GaugePainter {
     enum class Kind(val live: Boolean) {
         ALTIMETER(true), ATTITUDE(true), HEADING(true), THROTTLE(true),
         AIRSPEED(true), MACH(true), AOA(true), VVI(true), G_METER(true), RWR(true), ROTOR_RPM(true), TORQUE(true),
+        FUEL_QTY(true), RADAR_ALT(true), CLOCK(true), TURN_SLIP(true), ENGINE_RPM(true), EGT(true), AMMO(true),
         FILLER_FUEL(false), FILLER_OIL(false), FILLER_RPM(false), FILLER_CLOCK(false),
         FILLER_TEMP(false), FILLER_VOLTS(false), FILLER_HYDRAULIC(false), FILLER_OXYGEN(false);
 
@@ -60,10 +61,23 @@ internal object GaugePainter {
             Kind.ROTOR_RPM -> rotorRpm(g, s)
             Kind.TORQUE -> dial(g, "TORQUE", "%", 0.0, 120.0, 5.0, 20.0, (s.torque ?: 0.0) * 100.0, greenFrom = 0.0,
                 greenTo = 100.0, redFrom = 100.0)
-            Kind.FILLER_FUEL -> fuel(g)
+            Kind.FUEL_QTY -> fuel(g, s.fuel ?: 0.72)
+            Kind.RADAR_ALT -> radarAlt(g, s)
+            Kind.CLOCK -> clock(g, s.dayTime)
+            Kind.TURN_SLIP -> turnSlip(g, s)
+            Kind.ENGINE_RPM -> {
+                val rpm = if (!s.engineRunning) 0.0 else 58.0 + 42.0 * (s.throttle ?: 0.0).coerceIn(0.0, 1.0) + (if (s.afterburner) 2.0 else 0.0)
+                dial(g, "RPM", "%", 0.0, 110.0, 2.0, 20.0, rpm, greenFrom = 60.0, greenTo = 100.0, redFrom = 103.0)
+            }
+            Kind.EGT -> {
+                val egt = if (!s.engineRunning) 20.0 else 320.0 + 480.0 * (s.throttle ?: 0.0).coerceIn(0.0, 1.0) + (if (s.afterburner) 140.0 else 0.0)
+                dial(g, "EGT", "C", 0.0, 1000.0, 50.0, 200.0, egt, greenFrom = 300.0, greenTo = 850.0, redFrom = 900.0)
+            }
+            Kind.AMMO -> ammo(g, s.ammo)
+            Kind.FILLER_FUEL -> fuel(g, 0.72)
             Kind.FILLER_OIL -> dial(g, "OIL PRESS", "PSI", 0.0, 100.0, 5.0, 20.0, 62.0, greenFrom = 40.0, greenTo = 80.0)
             Kind.FILLER_RPM -> dial(g, "RPM", "x100", 0.0, 35.0, 1.0, 5.0, 23.5, redFrom = 31.0)
-            Kind.FILLER_CLOCK -> clock(g)
+            Kind.FILLER_CLOCK -> clock(g, null)
             Kind.FILLER_TEMP -> dial(g, "OIL TEMP", "C", 0.0, 150.0, 5.0, 25.0, 74.0, greenFrom = 60.0, greenTo = 95.0,
                 redFrom = 120.0)
             Kind.FILLER_VOLTS -> dial(g, "VOLTS", "DC", 0.0, 30.0, 1.0, 5.0, 27.5, greenFrom = 24.0, greenTo = 29.0)
@@ -242,7 +256,7 @@ internal object GaugePainter {
         }
     }
 
-    private fun fuel(g: GuiGraphics) {
+    private fun fuel(g: GuiGraphics, fraction: Double) {
         DisplayDraw.shapes(g) {
             for (k in 0..16) tick(C, C, -90.0 + k * 11.25, if (k % 4 == 0) R - 26 else R - 13, R - 2,
                 if (k % 4 == 0) 5f else 2.5f, if (k < 2) RED else MARK)
@@ -252,10 +266,11 @@ internal object GaugePainter {
             DisplayDraw.text(g, label, C + sin(a).toFloat() * (R - 46), C - cos(a).toFloat() * (R - 46), 1.9f, LABEL, Align.CENTER)
         }
         DisplayDraw.text(g, "FUEL", C, C + 40f, 1.7f, LABEL, Align.CENTER)
-        needle(g, -90.0 + 0.72 * 180.0, R - 18, 7f)
+        needle(g, -90.0 + fraction.coerceIn(0.0, 1.0) * 180.0, R - 18, 7f)
     }
 
-    private fun clock(g: GuiGraphics) {
+    /** A clock; with [dayTime] (ticks, 0 = 06:00) it keeps world time, otherwise it stands at ten past ten. */
+    private fun clock(g: GuiGraphics, dayTime: Long?) {
         DisplayDraw.shapes(g) {
             for (k in 0 until 60) tick(C, C, k * 6.0, if (k % 5 == 0) R - 20 else R - 10, R - 2, if (k % 5 == 0) 5f else 2f, MARK)
         }
@@ -263,8 +278,104 @@ internal object GaugePainter {
             val a = Math.toRadians(k * 30.0)
             DisplayDraw.text(g, k.toString(), C + sin(a).toFloat() * (R - 40), C - cos(a).toFloat() * (R - 40), 2.0f, LABEL, Align.CENTER)
         }
-        needle(g, 10 * 30.0 + 5.0, R * 0.55f, 10f, tail = 12f)
-        needle(g, 2 * 30.0, R - 16, 6f)
+        if (dayTime == null) {
+            needle(g, 10 * 30.0 + 5.0, R * 0.55f, 10f, tail = 12f)
+            needle(g, 2 * 30.0, R - 16, 6f)
+            return
+        }
+        val minutes = ((dayTime % 24000L) + 24000L) % 24000L / 1000.0 * 60.0 + 360.0    // minutes since midnight
+        val seconds = (dayTime % 1000L) * 3.6 % 60.0
+        needle(g, minutes / 60.0 * 30.0, R * 0.55f, 10f, tail = 12f)
+        needle(g, minutes % 60.0 * 6.0, R - 16, 6f)
+        val a = Math.toRadians(seconds * 6.0)
+        DisplayDraw.shapes(g) { line(C - sin(a).toFloat() * 20, C + cos(a).toFloat() * 20, C + sin(a).toFloat() * (R - 14),
+            C - cos(a).toFloat() * (R - 14), 2f, ORANGE) }
+    }
+
+    /** Radar altimeter: 0..100 m over the first half of the dial, 100..1000 m on the rest, a flag past that. */
+    private fun raltAngle(h: Double): Double {
+        val c = h.coerceIn(0.0, 1000.0)
+        return if (c <= 100.0) -150.0 + c / 100.0 * 150.0 else 0.0 + (c - 100.0) / 900.0 * 150.0
+    }
+
+    private fun radarAlt(g: GuiGraphics, s: FlightDisplayState) {
+        val marks = doubleArrayOf(0.0, 10.0, 20.0, 30.0, 40.0, 50.0, 60.0, 70.0, 80.0, 90.0, 100.0, 200.0, 300.0, 400.0,
+            500.0, 600.0, 700.0, 800.0, 900.0, 1000.0)
+        DisplayDraw.shapes(g) {
+            for (m in marks) {
+                val major = m % 20.0 == 0.0 && m <= 100.0 || m % 200.0 == 0.0
+                tick(C, C, raltAngle(m), R - if (major) 26 else 13, R - 2, if (major) 5f else 2.5f, MARK)
+            }
+            for (m in doubleArrayOf(5.0, 15.0, 25.0, 35.0, 45.0, 150.0, 250.0, 350.0, 450.0))
+                tick(C, C, raltAngle(m), R - 10, R - 2, 2f, MARK)
+            // the low-altitude bug at 60 m
+            val a = Math.toRadians(raltAngle(60.0))
+            poly(floatArrayOf(C + sin(a).toFloat() * (R - 2), C - cos(a).toFloat() * (R - 2),
+                C + sin(a - 0.06).toFloat() * (R - 24), C - cos(a - 0.06).toFloat() * (R - 24),
+                C + sin(a + 0.06).toFloat() * (R - 24), C - cos(a + 0.06).toFloat() * (R - 24)), YELLOW)
+        }
+        for (m in doubleArrayOf(0.0, 20.0, 40.0, 60.0, 80.0, 100.0, 200.0, 400.0, 600.0, 800.0, 1000.0)) {
+            val a = Math.toRadians(raltAngle(m))
+            DisplayDraw.text(g, if (m >= 100.0) (m / 100).toInt().toString() + "h" else m.toInt().toString(),
+                C + sin(a).toFloat() * (R - 44), C - cos(a).toFloat() * (R - 44), 1.8f, LABEL, Align.CENTER)
+        }
+        DisplayDraw.text(g, "RAD ALT", C, C - 44f, 1.5f, LABEL, Align.CENTER)
+        DisplayDraw.text(g, "M", C, C - 26f, 1.3f, LABEL, Align.CENTER)
+        val h = s.radarAltitude
+        if (h == null || h > 1000.0) {
+            // out of range: the needle parks past the top of the scale and the OFF flag shows
+            DisplayDraw.shapes(g) { poly(floatArrayOf(C - 26, C + 28, C + 26, C + 28, C + 26, C + 52, C - 26, C + 52), RED) }
+            DisplayDraw.text(g, "OFF", C, C + 41f, 1.8f, NEEDLE, Align.CENTER)
+            needle(g, 165.0, R - 18, 7f)
+        } else {
+            drum(g, String.format(java.util.Locale.ROOT, "%4d", h.toInt()))
+            needle(g, raltAngle(h), R - 18, 7f)
+        }
+    }
+
+    /** Turn and slip: the needle shows the yaw rate (a standard-rate turn at the dog house), the ball the slip. */
+    private fun turnSlip(g: GuiGraphics, s: FlightDisplayState) {
+        val rate = 25.0 * (s.yawRate / 9.0).coerceIn(-1.6, 1.6)
+        // slip: the flight path off the nose, the ball falling toward the outside of a skid
+        val slip = (-(s.pathRight ?: 0.0) / 10.0).coerceIn(-1.0, 1.0)
+        DisplayDraw.shapes(g) {
+            for (a in intArrayOf(-25, 0, 25)) tick(C, C, a.toDouble(), R - 30, R - 4, 6f, MARK)
+            for (a in intArrayOf(-50, 50)) tick(C, C, a.toDouble(), R - 22, R - 4, 3f, MARK)
+            // the inclinometer tube at the bottom of the face
+            val cy = C + 52f
+            poly(floatArrayOf(C - 66, cy - 15, C + 66, cy - 15, C + 66, cy + 15, C - 66, cy + 15), 0xFF0A0A0A.toInt())
+            poly(floatArrayOf(C - 66, cy - 15, C + 66, cy - 15, C + 66, cy - 12, C - 66, cy - 12), 0xFF3A3A3A.toInt())
+            poly(floatArrayOf(C - 66, cy + 12, C + 66, cy + 12, C + 66, cy + 15, C - 66, cy + 15), 0xFF3A3A3A.toInt())
+            line(C - 13, cy - 15, C - 13, cy + 15, 2.5f, MARK)
+            line(C + 13, cy - 15, C + 13, cy + 15, 2.5f, MARK)
+            val bx = C + slip.toFloat() * 46f
+            disc(bx, cy + abs(slip).toFloat() * 3f, 11f, 0f, 0xFF1A1A1A.toInt(), 24)
+            disc(bx, cy + abs(slip).toFloat() * 3f, 9f, 0f, 0xFFE8E8E0.toInt(), 24)
+        }
+        DisplayDraw.text(g, "TURN", C, C - 44f, 1.5f, LABEL, Align.CENTER)
+        DisplayDraw.text(g, "L", C - 50f, C - 10f, 1.6f, LABEL, Align.CENTER)
+        DisplayDraw.text(g, "R", C + 50f, C - 10f, 1.6f, LABEL, Align.CENTER)
+        // the turn needle: a bar from the hub, like the real instrument
+        needle(g, rate, R - 26, 9f, tail = 10f)
+    }
+
+    /** Rounds remaining in the selected weapon: a counter window on a plain face. */
+    private fun ammo(g: GuiGraphics, rounds: Int?) {
+        DisplayDraw.shapes(g) {
+            poly(floatArrayOf(C - 74, C - 34, C + 74, C - 34, C + 74, C + 34, C - 74, C + 34), 0xFF3A3A3A.toInt())
+            poly(floatArrayOf(C - 70, C - 30, C + 70, C - 30, C + 70, C + 30, C - 70, C + 30), 0xFF050505.toInt())
+            // a low-ammo lamp under the window
+            val low = rounds != null && rounds != Int.MAX_VALUE && rounds in 1..49
+            disc(C, C + 62f, 12f, 0f, if (low) RED else 0xFF401010.toInt(), 24)
+        }
+        val text = when {
+            rounds == null -> "----"
+            rounds == Int.MAX_VALUE -> "\u221e"
+            else -> String.format(java.util.Locale.ROOT, "%4d", rounds.coerceIn(0, 9999))
+        }
+        DisplayDraw.text(g, text, C, C + 2f, 4.2f, if (rounds == 0) RED else NEEDLE, Align.CENTER)
+        DisplayDraw.text(g, "ROUNDS", C, C - 60f, 1.7f, LABEL, Align.CENTER)
+        DisplayDraw.text(g, "LOW", C, C + 84f, 1.2f, LABEL, Align.CENTER)
     }
 
     // ------------------------------------------------------------------ flight instruments added for modeled cockpits

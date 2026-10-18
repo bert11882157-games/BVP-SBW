@@ -8,9 +8,9 @@ interior is removed, and a modelled cockpit of the aircraft's era is put in its 
     interior, so the cockpit breaks away with its fuselage section;
   * the stick goes into the existing animated stick bone (<piece>__control_stick_pitch), whose pivot (and the
     AircraftRig surfaces that turn it) move to the new stick's foot; aircraft without a stick rig get a fixed stick;
-  * CockpitGauges and FlightDisplays for that seat are replaced by the new panel's instruments (other seats keep
-    theirs), HeadUpDisplay is written for HUD-equipped jets and the HUD combiner / gunsight glass is added to
-    CanopyGlass.
+  * CockpitGauges and FlightDisplays for that seat are replaced by the new panel's instruments and annunciator
+    panels (other seats keep theirs), HeadUpDisplay is written for HUD-equipped jets and the HUD combiner / gunsight
+    glass is added to CanopyGlass.
 
 Run it on the committed originals (git checkout the aircraft's geo and asset files first): the tub is measured from
 the old interior, so a run on top of an earlier one fits slightly differently and removes a few more faces.

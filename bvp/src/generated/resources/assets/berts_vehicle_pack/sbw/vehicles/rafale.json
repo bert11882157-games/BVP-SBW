@@ -411,9 +411,9 @@
       {
         "Seat": 0,
         "Center": [
-          0.0,
-          2.58818,
-          3.42714
+          0.09128,
+          2.70122,
+          3.45116
         ],
         "Normal": [
           0.0,
@@ -425,7 +425,29 @@
           0.97815,
           0.20791
         ],
-        "Width": 0.1353,
+        "Width": 0.1232,
+        "Depth": 0.035,
+        "Kind": "STORES",
+        "Style": "LCD"
+      },
+      {
+        "Seat": 0,
+        "Center": [
+          -0.09128,
+          2.70122,
+          3.45116
+        ],
+        "Normal": [
+          0.0,
+          0.20791,
+          -0.97815
+        ],
+        "Up": [
+          0.0,
+          0.97815,
+          0.20791
+        ],
+        "Width": 0.1232,
         "Depth": 0.035,
         "Kind": "PFD",
         "Style": "LCD"
@@ -434,8 +456,8 @@
         "Seat": 0,
         "Center": [
           0.32424,
-          2.63556,
-          3.37856
+          2.62783,
+          3.37691
         ],
         "Normal": [
           -0.46947,
@@ -447,29 +469,7 @@
           0.97815,
           0.20791
         ],
-        "Width": 0.1033,
-        "Depth": 0.035,
-        "Kind": "STORES",
-        "Style": "LCD"
-      },
-      {
-        "Seat": 0,
-        "Center": [
-          -0.32424,
-          2.63707,
-          3.37888
-        ],
-        "Normal": [
-          0.46947,
-          0.18358,
-          -0.86365
-        ],
-        "Up": [
-          0.0,
-          0.97815,
-          0.20791
-        ],
-        "Width": 0.1002,
+        "Width": 0.0929,
         "Depth": 0.035,
         "Kind": "RADAR",
         "Style": "LCD"
@@ -696,11 +696,11 @@
     "Gauges": [
       {
         "Seat": 0,
-        "Kind": "AIRSPEED",
+        "Kind": "ANNUNCIATOR",
         "Center": [
-          0.05857,
-          2.43474,
-          3.3935
+          0.15348,
+          2.96539,
+          3.45544
         ],
         "Normal": [
           0.0,
@@ -712,16 +712,127 @@
           0.97815,
           0.20791
         ],
-        "Diameter": 0.0424,
-        "Depth": 0.03
+        "Diameter": 0.1212,
+        "Width": 0.1212,
+        "Height": 0.0505,
+        "Depth": 0.03,
+        "Columns": 4,
+        "Lamps": [
+          {
+            "Text": "MASTER|CAUTION",
+            "Condition": "MASTER_CAUTION",
+            "Colour": "amber"
+          },
+          {
+            "Text": "FIRE",
+            "Condition": "FIRE",
+            "Colour": "red"
+          },
+          {
+            "Text": "STALL",
+            "Condition": "STALL",
+            "Colour": "red"
+          },
+          {
+            "Text": "LOW|ALT",
+            "Condition": "LOW_ALT",
+            "Colour": "red"
+          },
+          {
+            "Text": "ENG|OUT",
+            "Condition": "ENGINE_OUT",
+            "Colour": "red"
+          },
+          {
+            "Text": "FUEL|LOW",
+            "Condition": "LOW_FUEL",
+            "Colour": "amber"
+          },
+          {
+            "Text": "HYD|PRESS",
+            "Condition": "NONE",
+            "Colour": "amber"
+          },
+          {
+            "Text": "DAMAGE",
+            "Condition": "DAMAGE",
+            "Colour": "amber"
+          }
+        ]
       },
       {
         "Seat": 0,
-        "Kind": "ATTITUDE",
+        "Kind": "ANNUNCIATOR",
         "Center": [
+          -0.15348,
+          2.96539,
+          3.45544
+        ],
+        "Normal": [
           0.0,
-          2.43474,
-          3.3935
+          0.20791,
+          -0.97815
+        ],
+        "Up": [
+          0.0,
+          0.97815,
+          0.20791
+        ],
+        "Diameter": 0.1212,
+        "Width": 0.1212,
+        "Height": 0.0505,
+        "Depth": 0.03,
+        "Columns": 4,
+        "Lamps": [
+          {
+            "Text": "LAUNCH",
+            "Condition": "MISSILE_LAUNCH",
+            "Colour": "red"
+          },
+          {
+            "Text": "RWR|LOCK",
+            "Condition": "RWR_LOCK",
+            "Colour": "amber"
+          },
+          {
+            "Text": "GEAR|DOWN",
+            "Condition": "GEAR_DOWN",
+            "Colour": "green"
+          },
+          {
+            "Text": "A/B",
+            "Condition": "AFTERBURNER",
+            "Colour": "green"
+          },
+          {
+            "Text": "OVER G",
+            "Condition": "OVER_G",
+            "Colour": "amber"
+          },
+          {
+            "Text": "OVER|SPEED",
+            "Condition": "OVERSPEED",
+            "Colour": "amber"
+          },
+          {
+            "Text": "SPD|BRK",
+            "Condition": "AIRBRAKE",
+            "Colour": "green"
+          },
+          {
+            "Text": "AMMO|LOW",
+            "Condition": "AMMO_LOW",
+            "Colour": "amber"
+          }
+        ]
+      },
+      {
+        "Seat": 0,
+        "Kind": "AIRSPEED",
+        "Center": [
+          0.1071,
+          2.57455,
+          3.42321
         ],
         "Normal": [
           0.0,
@@ -738,11 +849,11 @@
       },
       {
         "Seat": 0,
-        "Kind": "ALTIMETER",
+        "Kind": "ATTITUDE",
         "Center": [
-          -0.05857,
-          2.43474,
-          3.3935
+          0.03433,
+          2.57455,
+          3.42321
         ],
         "Normal": [
           0.0,
@@ -754,121 +865,184 @@
           0.97815,
           0.20791
         ],
-        "Diameter": 0.0424,
+        "Diameter": 0.0576,
         "Depth": 0.03
       },
       {
         "Seat": 0,
-        "Kind": "G_METER",
+        "Kind": "ALTIMETER",
         "Center": [
-          0.30318,
-          2.5539,
-          3.37149
+          -0.03843,
+          2.57455,
+          3.42321
         ],
         "Normal": [
-          -0.46947,
-          0.18358,
-          -0.86365
+          0.0,
+          0.20791,
+          -0.97815
         ],
         "Up": [
           0.0,
           0.97815,
           0.20791
         ],
-        "Diameter": 0.0367,
+        "Diameter": 0.0505,
         "Depth": 0.03
       },
       {
         "Seat": 0,
-        "Kind": "AOA",
+        "Kind": "FUEL_QTY",
         "Center": [
-          0.34437,
-          2.55846,
-          3.35007
+          -0.1071,
+          2.57455,
+          3.42321
         ],
         "Normal": [
-          -0.46947,
-          0.18358,
-          -0.86365
+          0.0,
+          0.20791,
+          -0.97815
         ],
         "Up": [
           0.0,
           0.97815,
           0.20791
         ],
-        "Diameter": 0.0367,
+        "Diameter": 0.0505,
         "Depth": 0.03
       },
       {
         "Seat": 0,
-        "Kind": "THROTTLE",
+        "Kind": "ENGINE_RPM",
         "Center": [
-          0.30244,
-          2.50604,
-          3.36172
+          0.09245,
+          2.50681,
+          3.40882
         ],
         "Normal": [
-          -0.46947,
-          0.18358,
-          -0.86365
+          0.0,
+          0.20791,
+          -0.97815
         ],
         "Up": [
           0.0,
           0.97815,
           0.20791
         ],
-        "Diameter": 0.0383,
+        "Diameter": 0.0444,
         "Depth": 0.03
       },
       {
         "Seat": 0,
-        "Kind": "FILLER_FUEL",
+        "Kind": "EGT",
         "Center": [
-          0.3451,
-          2.51076,
-          3.33953
+          0.03082,
+          2.50681,
+          3.40882
         ],
         "Normal": [
-          -0.46947,
-          0.18358,
-          -0.86365
+          0.0,
+          0.20791,
+          -0.97815
         ],
         "Up": [
           0.0,
           0.97815,
           0.20791
         ],
-        "Diameter": 0.0383,
-        "Depth": 0.03
-      },
-      {
-        "Seat": 0,
-        "Kind": "RWR",
-        "Center": [
-          -0.32377,
-          2.55405,
-          3.36033
-        ],
-        "Normal": [
-          0.46947,
-          0.18358,
-          -0.86365
-        ],
-        "Up": [
-          0.0,
-          0.97815,
-          0.20791
-        ],
-        "Diameter": 0.0469,
+        "Diameter": 0.0444,
         "Depth": 0.03
       },
       {
         "Seat": 0,
         "Kind": "FILLER_HYDRAULIC",
         "Center": [
-          -0.30594,
-          2.50286,
-          3.35914
+          -0.03082,
+          2.50681,
+          3.40882
+        ],
+        "Normal": [
+          0.0,
+          0.20791,
+          -0.97815
+        ],
+        "Up": [
+          0.0,
+          0.97815,
+          0.20791
+        ],
+        "Diameter": 0.0444,
+        "Depth": 0.03
+      },
+      {
+        "Seat": 0,
+        "Kind": "CLOCK",
+        "Center": [
+          -0.09245,
+          2.50681,
+          3.40882
+        ],
+        "Normal": [
+          0.0,
+          0.20791,
+          -0.97815
+        ],
+        "Up": [
+          0.0,
+          0.97815,
+          0.20791
+        ],
+        "Diameter": 0.0444,
+        "Depth": 0.03
+      },
+      {
+        "Seat": 0,
+        "Kind": "ENGINE_RPM",
+        "Center": [
+          0.29656,
+          2.52631,
+          3.36923
+        ],
+        "Normal": [
+          -0.46947,
+          0.18358,
+          -0.86365
+        ],
+        "Up": [
+          0.0,
+          0.97815,
+          0.20791
+        ],
+        "Diameter": 0.0444,
+        "Depth": 0.03
+      },
+      {
+        "Seat": 0,
+        "Kind": "EGT",
+        "Center": [
+          0.35098,
+          2.53233,
+          3.34092
+        ],
+        "Normal": [
+          -0.46947,
+          0.18358,
+          -0.86365
+        ],
+        "Up": [
+          0.0,
+          0.97815,
+          0.20791
+        ],
+        "Diameter": 0.0444,
+        "Depth": 0.03
+      },
+      {
+        "Seat": 0,
+        "Kind": "RWR",
+        "Center": [
+          -0.29346,
+          2.6516,
+          3.39754
         ],
         "Normal": [
           0.46947,
@@ -880,16 +1054,79 @@
           0.97815,
           0.20791
         ],
-        "Diameter": 0.0307,
+        "Diameter": 0.0646,
+        "Depth": 0.03
+      },
+      {
+        "Seat": 0,
+        "Kind": "RADAR_ALT",
+        "Center": [
+          -0.36133,
+          2.65911,
+          3.36225
+        ],
+        "Normal": [
+          0.46947,
+          0.18358,
+          -0.86365
+        ],
+        "Up": [
+          0.0,
+          0.97815,
+          0.20791
+        ],
+        "Diameter": 0.0505,
+        "Depth": 0.03
+      },
+      {
+        "Seat": 0,
+        "Kind": "AMMO",
+        "Center": [
+          -0.29656,
+          2.5802,
+          3.38068
+        ],
+        "Normal": [
+          0.46947,
+          0.18358,
+          -0.86365
+        ],
+        "Up": [
+          0.0,
+          0.97815,
+          0.20791
+        ],
+        "Diameter": 0.0444,
+        "Depth": 0.03
+      },
+      {
+        "Seat": 0,
+        "Kind": "CLOCK",
+        "Center": [
+          -0.35098,
+          2.58622,
+          3.35238
+        ],
+        "Normal": [
+          0.46947,
+          0.18358,
+          -0.86365
+        ],
+        "Up": [
+          0.0,
+          0.97815,
+          0.20791
+        ],
+        "Diameter": 0.0444,
         "Depth": 0.03
       },
       {
         "Seat": 0,
         "Kind": "FILLER_OXYGEN",
         "Center": [
-          -0.3416,
-          2.5068,
-          3.34059
+          -0.29863,
+          2.52243,
+          3.36728
         ],
         "Normal": [
           0.46947,
@@ -901,7 +1138,28 @@
           0.97815,
           0.20791
         ],
-        "Diameter": 0.0307,
+        "Diameter": 0.0404,
+        "Depth": 0.03
+      },
+      {
+        "Seat": 0,
+        "Kind": "FILLER_VOLTS",
+        "Center": [
+          -0.34891,
+          2.52799,
+          3.34112
+        ],
+        "Normal": [
+          0.46947,
+          0.18358,
+          -0.86365
+        ],
+        "Up": [
+          0.0,
+          0.97815,
+          0.20791
+        ],
+        "Diameter": 0.0404,
         "Depth": 0.03
       }
     ]

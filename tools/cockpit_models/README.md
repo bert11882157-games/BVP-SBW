@@ -101,10 +101,23 @@ MiG-29's generator turned into a fitted, parametric one:
   bone `<piece>__control_stick_pitch`; the stick bones' pivots and the `AircraftRig` stick surfaces move to the new
   stick's foot, so it pivots where it stands. Aircraft without a stick rig get a fixed stick.
 - **Instruments** by era (`cockpit_lib.ERAS`, the era from `tools/cockpit_layout/presets.json` unless `fleet.json`
-  says otherwise), packed in rows on each facet; dials the game knows are live (airspeed, Mach, AoA, VVI, g, RWR,
-  attitude, heading, altimeter, throttle). Steam eras get the basic six plus engine dials, radar eras a radar scope
-  with a hood and an RWR, the glass eras three displays (stores, PFD, radar), an up-front control panel and standby
-  dials. A stores page gets the airframe planform for its diagram.
+  says otherwise), packed in rows from the top of each facet at real sizes (3 inch dials about 80 mm, 2 inch 57 mm,
+  displays with their housings 1.4 times the screen), shrunk a little to fit and dropped from the bottom when they
+  still do not; `fill` rows are added while a facet has room, and the band under the rows gets switch panels (and a
+  gear lever on the left). Live dials: the basic six, Mach, AoA, G, RWR, fuel quantity, radar altimeter, clock,
+  turn and slip, engine RPM, EGT and the rounds counter (`FUEL_QTY`, `RADAR_ALT`, `CLOCK`, `TURN_SLIP`,
+  `ENGINE_RPM`, `EGT`, `AMMO` in `GaugePainter`); the `FILLER_*` dials stand still. Steam eras get the basic six, turn
+  and slip, engine and systems dials; radar eras a radar scope with a hood and an RWR; the glass eras two large
+  displays under an up-front control panel, a third on the left wing, standby dials and engine dials. A stores page
+  gets the airframe planform for its diagram.
+- **Annunciators.** A caution and warning panel per aircraft, drawn and lit by the game (`Annunciator.kt`): a
+  `CockpitGauges` entry of kind `ANNUNCIATOR` with its width, height, columns and `Lamps` (caption, condition,
+  colour; `cockpit_lib.LAMP_SETS`, Russian captions on Soviet palettes). HUD jets carry two eyebrow panels standing on
+  the glareshield either side of the HUD; cold war jets a telelight strip across the top of the centre panel; piston
+  fighters a small block of gear, fuel, oil and fire lights there. Lamps light from the aircraft: master caution and
+  warning, gear down / unsafe, low fuel, engine out, fire and damage (hull health), stall, over-G, overspeed, low
+  altitude, afterburner, airbrake, RWR lock and missile launch, low ammunition; legends with condition `NONE` (HYD,
+  GEN) never light.
 - **Colours** come from uniform texel blocks already in each aircraft's own texture (`Swatches`), nearest to the
   palette in `fleet.json` (NATO grey, Soviet turquoise, WWII interior green, RLM 66 and so on), so no texture is
   changed. `BVP_TEX_DIR` points at a folder with the real PNGs when the repository holds Git LFS pointers.

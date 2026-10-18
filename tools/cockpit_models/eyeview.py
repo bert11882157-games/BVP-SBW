@@ -145,7 +145,27 @@ def frame(c, n, up):
 
 TITLES = {'ALTIMETER': 'ALT', 'HEADING': '', 'THROTTLE': 'THROTTLE', 'FILLER_FUEL': 'FUEL', 'FILLER_OIL': 'OIL',
           'FILLER_RPM': 'RPM', 'FILLER_CLOCK': '', 'FILLER_TEMP': 'TEMP', 'FILLER_VOLTS': 'VOLTS',
-          'FILLER_HYDRAULIC': 'HYD', 'FILLER_OXYGEN': 'OXY'}
+          'FILLER_HYDRAULIC': 'HYD', 'FILLER_OXYGEN': 'OXY', 'FUEL_QTY': 'FUEL', 'RADAR_ALT': 'RAD ALT', 'CLOCK': '',
+          'TURN_SLIP': 'TURN', 'ENGINE_RPM': 'RPM', 'EGT': 'EGT', 'AMMO': 'ROUNDS'}
+LAMP_RGB = {'amber': (58, 46, 18), 'red': (58, 20, 18), 'green': (20, 58, 24), 'white': (46, 46, 44), 'blue': (20, 36, 58)}
+
+
+def annunciator_texture(g, px=256):
+    """a stand-in for the panel the game draws: dark lamps with their legends, none lit"""
+    w, h = g['Width'], g['Height']
+    W, H = (px, max(16, int(px * h / w))) if w >= h else (max(16, int(px * w / h)), px)
+    im = Image.new('RGBA', (W, H), (34, 34, 36, 255)); d = ImageDraw.Draw(im)
+    lamps = g.get('Lamps') or []
+    cols = max(1, g.get('Columns', 3)); rows = max(1, (len(lamps) + cols - 1) // cols)
+    m = 3; gap = 2
+    lw = (W - 2 * m - (cols - 1) * gap) / cols; lh = (H - 2 * m - (rows - 1) * gap) / rows
+    for i, lamp in enumerate(lamps):
+        x0 = m + (i % cols) * (lw + gap); y0 = m + (i // cols) * (lh + gap)
+        d.rectangle([x0, y0, x0 + lw - 1, y0 + lh - 1], fill=LAMP_RGB.get(lamp.get('Colour', 'amber'), LAMP_RGB['amber']) + (255,))
+        lines = lamp['Text'].split('|')
+        for k, line in enumerate(lines):
+            d.text((x0 + lw / 2, y0 + lh / 2 + (k - (len(lines) - 1) / 2) * 9), line, fill=(138, 138, 128, 255), anchor='mm')
+    return np.asarray(im).astype(np.float32) / 255.0
 
 
 def dial_texture(kind, px=128):
@@ -191,13 +211,27 @@ def instrument_quad(c, n, up, half):
     c, n, u, r = frame(c, n, up)
     c = c + n * 0.001
     P = [c - r * half - u * half, c + r * half - u * half, c + r * half + u * half, c - r * half + u * half]
-    UV = [[0, 0], [1, 0], [1, 1], [0, 1]]
+    UV = [[1, 0], [0, 0], [0, 1], [1, 1]]
+    return (np.array([P[0], P[1], P[2]]), np.array([UV[0], UV[1], UV[2]])), \
+           (np.array([P[0], P[2], P[3]]), np.array([UV[0], UV[2], UV[3]]))
+
+
+def rect_quad(c, n, up, hw, hh):
+    c, n, u, rr = frame(c, n, up)
+    c = c + n * 0.001
+    P = [c - rr * hw - u * hh, c + rr * hw - u * hh, c + rr * hw + u * hh, c - rr * hw + u * hh]
+    UV = [[1, 0], [0, 0], [0, 1], [1, 1]]
     return (np.array([P[0], P[1], P[2]]), np.array([UV[0], UV[1], UV[2]])), \
            (np.array([P[0], P[2], P[3]]), np.array([UV[0], UV[2], UV[3]]))
 
 
 def draw_instruments(r, asset):
     for g in (asset.get('CockpitGauges') or {}).get('Gauges', []):
+        if g['Kind'] == 'ANNUNCIATOR':
+            tex = annunciator_texture(g)
+            for t, uv in rect_quad(g['Center'], g['Normal'], g['Up'], g['Width'] / 2, g['Height'] / 2):
+                r.draw([t], [uv], tex, shade=False, alpha_test=False)
+            continue
         tex = dial_texture(g['Kind'])
         for t, uv in instrument_quad(g['Center'], g['Normal'], g['Up'], g['Diameter'] / 2):
             r.draw([t], [uv], tex, shade=False)
