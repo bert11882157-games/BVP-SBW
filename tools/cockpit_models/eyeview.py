@@ -15,7 +15,7 @@ GEN = os.path.join(HERE, '..', '..', 'bvp', 'src', 'generated', 'resources')
 GEO = os.path.join(GEN, 'assets/berts_vehicle_pack/custom_geo')
 ASSET = os.path.join(GEN, 'assets/berts_vehicle_pack/sbw/vehicles')
 DATA = os.path.join(GEN, 'data/berts_vehicle_pack/sbw/vehicles')
-TEX = os.path.join(GEN, 'assets/berts_vehicle_pack/textures/entity')
+TEX = os.environ.get('BVP_TEX_DIR') or os.path.join(GEN, 'assets/berts_vehicle_pack/textures/entity')
 LIGHT = np.array([0.25, 0.9, 0.35]); LIGHT /= np.linalg.norm(LIGHT)
 
 
