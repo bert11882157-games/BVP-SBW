@@ -320,17 +320,18 @@ CENTRE, RIGHT, LEFT = Facet(0), Facet(1), Facet(-1)
 # 'paint' ones are painted faces.
 LAYOUT = [
     # centre facet, top row (beside the HUD body)
-    ('aoa_g',    CENTRE, -0.170, 3.192, ('paint_rect', 0.064, 0.050), 'UAP-14 angle of attack / g-meter'),
-    ('caution',  CENTRE, -0.110, 3.196, ('paint_disc', 0.026), 'master caution lamp'),
+    ('aoa',      CENTRE, -0.190, 3.190, ('game', 'AOA', 0.040), 'UAP-14 angle of attack'),
+    ('g',        CENTRE, -0.143, 3.190, ('game', 'G_METER', 0.040), 'UAP-14 g-meter'),
+    ('caution',  CENTRE, -0.100, 3.196, ('paint_disc', 0.024), 'master caution lamp'),
     ('flares',   CENTRE,  0.150, 3.194, ('paint_rect', 0.060, 0.030), 'countermeasure counter'),
     # row 1: the T's top line
     ('adi',      CENTRE, -0.155, 3.075, ('game', 'ATTITUDE', 0.085), 'KPP attitude director (ADI)'),
-    ('vvi',      CENTRE, -0.050, 3.075, ('paint_dial', 0.065), 'VAR vertical velocity'),
+    ('vvi',      CENTRE, -0.050, 3.075, ('game', 'VVI', 0.065), 'VAR vertical velocity'),
     ('radalt',   CENTRE,  0.055, 3.075, ('paint_dial', 0.065), 'radio altimeter'),
     ('tach',     CENTRE,  0.150, 3.075, ('game', 'THROTTLE', 0.065), 'ITE-2T twin tachometer (engine %)'),
     # row 2
     ('hsi',      CENTRE, -0.155, 2.963, ('game', 'HEADING', 0.085), 'PNP-72 horizontal situation (HSI)'),
-    ('mach',     CENTRE, -0.050, 2.970, ('paint_dial', 0.065), 'KUS true airspeed / Mach'),
+    ('mach',     CENTRE, -0.050, 2.970, ('game', 'MACH', 0.065), 'KUS true airspeed / Mach'),
     ('egt_l',    CENTRE,  0.060, 2.975, ('paint_dial', 0.050), 'ITG gas temperature, left engine'),
     ('egt_r',    CENTRE,  0.130, 2.975, ('paint_dial', 0.050), 'ITG gas temperature, right engine'),
     # row 3
@@ -339,7 +340,7 @@ LAYOUT = [
     ('ramps',    CENTRE,  0.095, 2.870, ('paint_rect', 0.075, 0.045), 'air intake ramp positions'),
     # left wing: airspeed / altimeter / mechanisation column, warning lights, gear handle
     ('weapons',  LEFT,    0.075, 3.160, ('paint_rect', 0.110, 0.034), 'weapon control panel'),
-    ('ias',      LEFT,    0.070, 3.075, ('paint_dial', 0.068), 'KUS indicated airspeed'),
+    ('ias',      LEFT,    0.070, 3.075, ('game', 'AIRSPEED', 0.068), 'KUS indicated airspeed'),
     ('alt',      LEFT,    0.070, 2.975, ('game', 'ALTIMETER', 0.068), 'VD-20 barometric altimeter'),
     ('gear_ind', LEFT,    0.070, 2.875, ('paint_dial', 0.058), 'IP-52 gear / flaps / airbrake indicator'),
     ('signals',  LEFT,    0.162, 2.990, ('paint_rect', 0.052, 0.230), 'signal lights panel'),
@@ -347,7 +348,7 @@ LAYOUT = [
     ('hdd',      RIGHT,   0.078, 3.112, ('display', 'RADAR', 0.105), 'IT-23M head-down display'),
     ('fuel',     RIGHT,   0.056, 2.995, ('game', 'FILLER_FUEL', 0.058), 'fuel quantity'),
     ('ekran',    RIGHT,   0.150, 2.995, ('paint_rect', 0.078, 0.046), 'Ekran warning display'),
-    ('spo15',    RIGHT,   0.100, 2.904, ('paint_rect', 0.104, 0.062), 'SPO-15 Beryoza radar warning'),
+    ('spo15',    RIGHT,   0.100, 2.904, ('game', 'RWR', 0.064), 'SPO-15 Beryoza radar warning'),
     ('hyd',      RIGHT,   0.045, 2.832, ('game', 'FILLER_HYDRAULIC', 0.042), 'IKG hydraulic pressures'),
     ('oxy',      RIGHT,   0.110, 2.832, ('game', 'FILLER_OXYGEN', 0.042), 'oxygen'),
     ('volts',    RIGHT,   0.175, 2.832, ('game', 'FILLER_VOLTS', 0.042), 'voltmeter'),
@@ -487,27 +488,10 @@ def panel_paint(facet, rect_px, ppm):
 
 # ---------------------------------------------------------------- painted instrument faces
 
-def p_ias(d, im):
-    dial_face(d, im, 'V пр', 'км/ч ×100', 0, 16, 0.5, 2, 3.0, start=-150, sweep=300)
-
-
-def p_vvi(d, im):
-    # VAR: zero at nine o'clock, climb clockwise above it, descent below
-    dial_face(d, im, 'ВАР', '×10 м/с', -150, 150, 10, 50, 0, start=-240, sweep=300,
-              labels=['15', '10', '5', '0', '5', '10', '15'])
-
-
 def p_radalt(d, im):
     dial_face(d, im, 'H', 'м', 0, 600, 20, 100, 0, start=-150, sweep=300, labels=['0', '1', '2', '3', '4', '5', '6'])
     S = im.width
     d.rectangle([S * .58, S * .55, S * .72, S * .66], fill=(200, 60, 40, 255))
-
-
-def p_mach(d, im):
-    dial_face(d, im, 'V ист', '×100', 0, 25, 1, 5, 2.2, start=-150, sweep=300, second=(9.0, .55, .03))
-    S = im.width
-    d.rectangle([S * .38, S * .62, S * .62, S * .74], fill=(30, 30, 30, 255), outline=WHITE + (255,))
-    text(d, (S * .5, S * .68), 'M 0.18', S * .075)
 
 
 def p_egt(d, im):
@@ -533,21 +517,6 @@ def p_disc_red(d, im):
     S = im.width
     d.ellipse([0, 0, S - 1, S - 1], fill=(120, 18, 14, 255))
     d.ellipse([S * .18, S * .14, S * .55, S * .4], fill=(220, 90, 80, 255))
-
-
-def p_aoa(d, im):
-    S, H = im.width, im.height
-    d.rectangle([0, 0, S, H], fill=(14, 15, 16, 255))
-    for k, (title, lo, hi, val) in enumerate([('α°', -5, 30, 4), ('n', -2, 10, 1)]):
-        cx = S * (0.27 + 0.46 * k); cy = H * .62; R = H * .5
-        for v in np.arange(lo, hi + 1e-6, (hi - lo) / 14):
-            a = math.radians(-60 + (v - lo) / (hi - lo) * 120)
-            d.line([cx + R * .7 * math.sin(a), cy - R * .7 * math.cos(a), cx + R * .9 * math.sin(a),
-                    cy - R * .9 * math.cos(a)], fill=WHITE + (255,), width=5)
-        a = math.radians(-60 + (val - lo) / (hi - lo) * 120)
-        d.line([cx, cy, cx + R * .85 * math.sin(a), cy - R * .85 * math.cos(a)], fill=(240, 240, 232, 255), width=9)
-        text(d, (cx, H * .86), title, H * .2)
-    d.line([S / 2, H * .08, S / 2, H * .92], fill=(60, 60, 60, 255), width=6)
 
 
 def p_flares(d, im):
@@ -611,26 +580,6 @@ def p_ekran(d, im):
     d.rectangle([S * .08, H * .18, S * .92, H * .62], fill=(10, 30, 16, 255), outline=(70, 70, 70, 255), width=4)
     text(d, (S * .5, H * .40), 'ПРОВЕРЬ ТОПЛИВО', H * .14, fill=(110, 220, 120))
     text(d, (S * .5, H * .82), 'ЭКРАН', H * .15)
-
-
-def p_spo15(d, im):
-    S, H = im.width, im.height
-    d.rectangle([0, 0, S, H], fill=(16, 18, 18, 255))
-    cx, cy = S * .5, H * .42
-    # aircraft silhouette (top view) in the middle, the ring of direction lamps around it
-    pl = [(cx, cy - H * .2), (cx + S * .025, cy - H * .05), (cx + S * .12, cy + H * .06), (cx + S * .03, cy + H * .06),
-          (cx + S * .05, cy + H * .18), (cx - S * .05, cy + H * .18), (cx - S * .03, cy + H * .06),
-          (cx - S * .12, cy + H * .06), (cx - S * .025, cy - H * .05)]
-    d.polygon(pl, fill=(150, 150, 140, 255))
-    for k in range(16):
-        a = math.radians(k * 22.5)
-        x, y = cx + S * .30 * math.sin(a), cy - H * .32 * math.cos(a)
-        col = (190, 50, 40) if abs(math.sin(a)) < 0.95 or True else (190, 50, 40)
-        d.ellipse([x - 9, y - 9, x + 9, y + 9], fill=tuple(int(c * .55) for c in col) + (255,), outline=(8, 8, 8, 255))
-    for k in range(6):
-        x = S * (0.12 + k * 0.152)
-        lamp(d, [x - 22, H * .80, x + 22, H * .95], (200, 170, 60), None)
-    text(d, (S * .5, H * .08), 'СПО-15', H * .1)
 
 
 def p_hud_ctrl(d, im):
@@ -802,8 +751,7 @@ def build(atlas):
                   sw['black'])
         elif kind == 'paint_dial':
             dia = spec[1]
-            painter = {'vvi': p_vvi, 'radalt': p_radalt, 'mach': p_mach, 'egt_l': p_egt, 'egt_r': p_egt,
-                       'ias': p_ias, 'gear_ind': p_gear}[name]
+            painter = {'radalt': p_radalt, 'egt_l': p_egt, 'egt_r': p_egt, 'gear_ind': p_gear}[name]
             rect = TILE_CACHE.get(painter) or atlas.paint(128, 128, painter)
             TILE_CACHE[painter] = rect
             m.disc(c + f.N * GAUGE_LIFT, f.N, f.U, dia / 2, rect)
@@ -815,8 +763,8 @@ def build(atlas):
             m.ring(c, f.N, f.U, dia / 2, dia / 2 + 0.004, 0.008, sw['bezel'], seg=12)
         elif kind == 'paint_rect':
             w, h = spec[1], spec[2]
-            painter = {'aoa_g': p_aoa, 'flares': p_flares, 'afcs': p_afcs, 'ramps': p_ramps, 'weapons': p_weapons,
-                       'signals': p_signals, 'ekran': p_ekran, 'spo15': p_spo15}[name]
+            painter = {'flares': p_flares, 'afcs': p_afcs, 'ramps': p_ramps, 'weapons': p_weapons,
+                       'signals': p_signals, 'ekran': p_ekran}[name]
             pw = 128 if w >= h else 48
             ph = max(16, int(round(pw * h / w)))
             rect = atlas.paint(pw, ph, painter)
@@ -892,6 +840,8 @@ def build(atlas):
         m.box((g_bot + g_top) / 2 + X * s * (g_hw + 0.004), (X, g_up, g_n), (0.004, g_h / 2, 0.005), sw['dgrey'])
     corners = [g_bot - X * g_hw, g_bot + X * g_hw, g_top + X * g_hw, g_top - X * g_hw]
     glass += [corners[0], corners[1], corners[2], corners[0], corners[2], corners[3]]
+    # the picture the game projects onto the combiner (HeadUpDisplay): the glass face, normal toward the pilot
+    hud = dict(centre=(g_bot + g_top) / 2, normal=-g_n, up=g_up, width=2 * g_hw, height=g_h)
 
     # -- side walls, consoles, floor, bulkheads, footwell
     for side in (1, -1):                         # +1 = left (x > 0)
@@ -987,7 +937,7 @@ def build(atlas):
     stick.box(gc + grip_ax[1] * 0.07 + grip_ax[2] * 0.010, grip_ax, (0.006, 0.004, 0.006), sw['red'])
     stick.box(gc + grip_ax[2] * 0.031 + grip_ax[1] * 0.015, grip_ax, (0.008, 0.012, 0.005), sw['metal'])  # trigger
     stick.box(gc - grip_ax[2] * 0.034 + grip_ax[1] * 0.01, grip_ax, (0.012, 0.035, 0.004), sw['metal'])  # brake
-    return m, gauges, displays, glass, stick
+    return m, gauges, displays, glass, stick, hud
 
 
 TILE_CACHE = {}
@@ -1072,7 +1022,7 @@ def main(argv):
             pm['polys'] = [p for i, p in enumerate(pm['polys']) if i not in rm[b['name']]]
             removed += len(rm[b['name']])
     atlas = Atlas()
-    mesh, gauges, displays, glass, stick = build(atlas)
+    mesh, gauges, displays, glass, stick, hud = build(atlas)
     pm = mesh.poly_mesh()
     stick_bone = next(b for b in g['bones'] if b['name'] == STICK_BONE)
     stick_bone['poly_mesh'] = stick.poly_mesh()
@@ -1084,6 +1034,10 @@ def main(argv):
     g['bones'] = bones
     asset['CockpitGauges'] = {'Schema': 1, 'Frame': 'VEHICLE_LOCAL_BLOCKS', 'Gauges': gauges}
     asset['FlightDisplays'] = {'Schema': 1, 'Frame': 'VEHICLE_LOCAL_BLOCKS', 'Displays': displays}
+    asset['HeadUpDisplay'] = {'Schema': 1, 'Frame': 'VEHICLE_LOCAL_BLOCKS', 'Seat': 0,
+                              'Center': r5(hud['centre']), 'Normal': r5(hud['normal']), 'Up': r5(hud['up']),
+                              'Width': round(float(hud['width']), 5), 'Height': round(float(hud['height']), 5),
+                              'Eye': r5(EYE)}
     cg = asset.get('CanopyGlass')
     if cg and cg.get('Schema') == 1:
         t = np.array(cg['Triangles'], float).reshape(-1, 3, 3)
