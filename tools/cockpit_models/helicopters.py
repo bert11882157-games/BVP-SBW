@@ -49,69 +49,81 @@ L.is_interior_bone = lambda name: name == 'hull'
 
 # Instrument sets of helicopter stations, rows from the top of each facet as in cockpit_lib.ERAS.
 ERAS = {
-    # Western steam-gauge panel: flight instruments in the T, rotor/engine dials beside them
+    # Sizes are real instrument sizes (3 in = .083, 2 1/4 in = .060, 2 in = .052); layout shrinks a set to fit.
+    # Western steam-gauge panel: flight instruments in the T with the dual tach, torque and engine dials beside them
     'HELO_STEAM': dict(
-        centre=[[('AIRSPEED', .068), ('ATTITUDE', .082), ('ALTIMETER', .068)],
-                [('ROTOR_RPM', .062), ('HEADING', .074), ('VVI', .062)],
-                [('TORQUE', .058), ('FILLER_CLOCK', .044), ('FILLER_FUEL', .052)]],
-        left=[[('FILLER_TEMP', .050)], [('FILLER_OIL', .048)], [('FILLER_VOLTS', .044)]],
-        right=[[('FILLER_RPM', .052)], [('FILLER_HYDRAULIC', .048)], [('G_METER', .044)]],
+        centre=[[('AIRSPEED', .072), ('ATTITUDE', .083), ('ALTIMETER', .072)],
+                [('FILLER_CLOCK', .052), ('HEADING', .083), ('VVI', .072)],
+                [('G_METER', .052), ('FILLER_FUEL', .060), ('FILLER_HYDRAULIC', .052)]],
+        left=[[('ROTOR_RPM', .066)], [('TORQUE', .060), ('FILLER_RPM', .052)],
+              [('FILLER_TEMP', .048), ('FILLER_OIL', .048)], [('FILLER_VOLTS', .044), ('FILLER_TEMP', .044)]],
+        right=[[('FILLER_RPM', .056), ('FILLER_TEMP', .056)], [('FILLER_OIL', .048), ('FILLER_OIL', .048)],
+               [('FILLER_FUEL', .048), ('FILLER_HYDRAULIC', .048)], [('FILLER_VOLTS', .044), ('FILLER_CLOCK', .044)]],
         hud=False, displays='CRT', seat='bucket'),
-    # the same with a radar warning receiver (AH-1F, Mi-24V)
+    # the same with a radar warning receiver (AH-1F, Mi-24V, Mi-24D)
     'HELO_STEAM_RWR': dict(
-        centre=[[('AIRSPEED', .068), ('ATTITUDE', .082), ('ALTIMETER', .068)],
-                [('ROTOR_RPM', .062), ('HEADING', .074), ('VVI', .062)],
-                [('TORQUE', .058), ('FILLER_CLOCK', .044), ('FILLER_FUEL', .052)]],
-        left=[[('FILLER_TEMP', .050)], [('FILLER_OIL', .048)], [('FILLER_VOLTS', .044)]],
-        right=[[('RWR', .060)], [('FILLER_HYDRAULIC', .048)], [('G_METER', .044)]],
+        centre=[[('AIRSPEED', .072), ('ATTITUDE', .083), ('ALTIMETER', .072)],
+                [('FILLER_CLOCK', .052), ('HEADING', .083), ('VVI', .072)],
+                [('G_METER', .052), ('FILLER_FUEL', .060), ('FILLER_HYDRAULIC', .052)]],
+        left=[[('ROTOR_RPM', .066)], [('TORQUE', .060), ('FILLER_RPM', .052)],
+              [('FILLER_TEMP', .048), ('FILLER_OIL', .048)], [('FILLER_VOLTS', .044), ('FILLER_TEMP', .044)]],
+        right=[[('RWR', .066)], [('FILLER_RPM', .052), ('FILLER_TEMP', .052)],
+               [('FILLER_OIL', .046), ('FILLER_OIL', .046)], [('FILLER_FUEL', .044), ('FILLER_VOLTS', .044)]],
         hud=False, displays='CRT', seat='bucket'),
     # a gunner's station: the basic flight instruments around his sight
     'HELO_GUNNER': dict(
-        centre=[[('ATTITUDE', .070)], [('AIRSPEED', .056), ('ALTIMETER', .056)]],
-        left=[[('ROTOR_RPM', .050)], [('FILLER_CLOCK', .040)]],
-        right=[[('HEADING', .056)], [('VVI', .048)]],
+        centre=[[('ATTITUDE', .075)], [('AIRSPEED', .060), ('ALTIMETER', .060)],
+                [('FILLER_CLOCK', .046), ('FILLER_FUEL', .046)]],
+        left=[[('ROTOR_RPM', .056)], [('TORQUE', .052)], [('FILLER_TEMP', .044), ('FILLER_VOLTS', .044)]],
+        right=[[('HEADING', .060)], [('VVI', .052)], [('G_METER', .044), ('FILLER_HYDRAULIC', .044)]],
         hud=False, displays='CRT', seat='bucket'),
     # a gunner's station with a big sight on the centre line: the attitude dial moves to the left wing
     'HELO_GUNNER_SIGHT': dict(
-        centre=[[('FILLER_CLOCK', .040)], [('AIRSPEED', .052), ('ALTIMETER', .052)]],
-        left=[[('ATTITUDE', .060)], [('ROTOR_RPM', .046)]],
-        right=[[('HEADING', .052)], [('VVI', .046)]],
+        centre=[[('FILLER_CLOCK', .044)], [('AIRSPEED', .060), ('ALTIMETER', .060)],
+                [('FILLER_FUEL', .046), ('FILLER_TEMP', .046)]],
+        left=[[('ATTITUDE', .072)], [('ROTOR_RPM', .056)], [('TORQUE', .050), ('FILLER_VOLTS', .044)]],
+        right=[[('HEADING', .066)], [('VVI', .056)], [('G_METER', .046), ('FILLER_HYDRAULIC', .044)]],
         hud=False, displays='CRT', seat='bucket'),
-    # AH-64D pilot: two side displays with the up-front display between them, standby dials below
+    # AH-64D pilot: two 6 in MPDs with the up-front display between them, standby dials and engine strip below
     'HELO_APACHE': dict(
-        centre=[[('UFCP', .120)], [('AIRSPEED', .044), ('ATTITUDE', .052), ('ALTIMETER', .044)]],
-        left=[[('D:STORES', .130)], [('ROTOR_RPM', .048), ('TORQUE', .048)]],
-        right=[[('D:RADAR', .130)], [('RWR', .054), ('FILLER_FUEL', .044)]],
+        centre=[[('UFCP', .130)], [('AIRSPEED', .052), ('ATTITUDE', .060), ('ALTIMETER', .052)],
+                [('FILLER_CLOCK', .040), ('FILLER_FUEL', .044)]],
+        left=[[('D:STORES', .165)], [('ROTOR_RPM', .050), ('TORQUE', .050)], [('FILLER_TEMP', .042), ('FILLER_OIL', .042)]],
+        right=[[('D:RADAR', .165)], [('RWR', .056), ('FILLER_FUEL', .046)], [('FILLER_HYDRAULIC', .042), ('FILLER_VOLTS', .042)]],
         hud=False, displays='CRT', seat='bucket'),
     # glass stations of the 1990s: two or three multi-function displays, standby dials, rotor and torque
     'HELO_GLASS': dict(
-        centre=[[('D:PFD', .150)], [('AIRSPEED', .044), ('ATTITUDE', .052), ('ALTIMETER', .044)]],
-        left=[[('D:STORES', .130)], [('ROTOR_RPM', .048), ('TORQUE', .048)]],
-        right=[[('D:RADAR', .130)], [('RWR', .054), ('FILLER_FUEL', .044)]],
+        centre=[[('D:PFD', .165)], [('AIRSPEED', .052), ('ATTITUDE', .060), ('ALTIMETER', .052)]],
+        left=[[('D:STORES', .160)], [('ROTOR_RPM', .050), ('TORQUE', .050)], [('FILLER_TEMP', .042), ('FILLER_OIL', .042)]],
+        right=[[('D:RADAR', .160)], [('RWR', .056), ('FILLER_FUEL', .046)], [('FILLER_HYDRAULIC', .042), ('FILLER_VOLTS', .042)]],
         hud=False, displays='CRT', seat='bucket'),
+    # Tiger: two 6 x 8 in colour MFDs and the control/display unit, standby dials below
     'HELO_GLASS_LCD': dict(
-        centre=[[('UFCP', .140)], [('AIRSPEED', .044), ('ATTITUDE', .052), ('ALTIMETER', .044)]],
-        left=[[('D:STORES', .140)], [('ROTOR_RPM', .048), ('TORQUE', .048)]],
-        right=[[('D:PFD', .140)], [('RWR', .054), ('FILLER_FUEL', .044)]],
+        centre=[[('UFCP', .140)], [('AIRSPEED', .052), ('ATTITUDE', .060), ('ALTIMETER', .052)]],
+        left=[[('D:STORES', .170)], [('ROTOR_RPM', .050), ('TORQUE', .050)], [('FILLER_TEMP', .042), ('FILLER_OIL', .042)]],
+        right=[[('D:PFD', .170)], [('RWR', .056), ('FILLER_FUEL', .046)], [('FILLER_HYDRAULIC', .042), ('FILLER_VOLTS', .042)]],
         hud=False, displays='LCD', seat='bucket'),
+    # Mi-28N: three colour MFI displays with the radar page, standby dials below
     'HELO_GLASS_RADAR_LCD': dict(
-        centre=[[('D:PFD', .140)], [('AIRSPEED', .044), ('ATTITUDE', .052), ('ALTIMETER', .044)]],
-        left=[[('D:STORES', .130)], [('ROTOR_RPM', .048), ('TORQUE', .048)]],
-        right=[[('D:RADAR', .130)], [('RWR', .054), ('FILLER_FUEL', .044)]],
+        centre=[[('D:PFD', .165)], [('AIRSPEED', .052), ('ATTITUDE', .060), ('ALTIMETER', .052)]],
+        left=[[('D:STORES', .160)], [('ROTOR_RPM', .050), ('TORQUE', .050)], [('FILLER_TEMP', .042), ('FILLER_OIL', .042)]],
+        right=[[('D:RADAR', .160)], [('RWR', .056), ('FILLER_FUEL', .046)], [('FILLER_HYDRAULIC', .042), ('FILLER_VOLTS', .042)]],
         hud=False, displays='LCD', seat='bucket'),
-    # glass station of a gunner/co-pilot: one display and the standby dials
+    # glass station of a gunner/co-pilot: two displays and the standby dials
     'HELO_GLASS_GUNNER': dict(
-        centre=[[('D:PFD', .130)], [('ATTITUDE', .046), ('ALTIMETER', .042)]],
-        left=[[('ROTOR_RPM', .044)], [('AIRSPEED', .042)]],
-        right=[[('D:STORES', .110)], [('HEADING', .042)]],
+        centre=[[('D:PFD', .155)], [('AIRSPEED', .048), ('ATTITUDE', .054), ('ALTIMETER', .048)]],
+        left=[[('ROTOR_RPM', .050)], [('TORQUE', .048)], [('FILLER_FUEL', .044)]],
+        right=[[('D:STORES', .150)], [('HEADING', .048), ('FILLER_CLOCK', .040)]],
         hud=False, displays='CRT', seat='bucket'),
     # Ka-50: the steam panel with the IT-23 tactical screen and the ILS-31 head-up display
     'HELO_KA50': dict(
-        centre=[[('ATTITUDE', .080), ('D:STORES', .110)],
-                [('AIRSPEED', .060), ('HEADING', .072), ('ALTIMETER', .060)],
-                [('VVI', .052), ('FILLER_CLOCK', .040), ('G_METER', .044)]],
-        left=[[('ROTOR_RPM', .058)], [('TORQUE', .052)], [('FILLER_FUEL', .048)]],
-        right=[[('RWR', .058)], [('FILLER_TEMP', .048)], [('FILLER_HYDRAULIC', .044)]],
+        centre=[[('ATTITUDE', .090), ('D:STORES', .140)],
+                [('AIRSPEED', .064), ('HEADING', .083), ('ALTIMETER', .064)],
+                [('VVI', .056), ('FILLER_CLOCK', .046), ('G_METER', .048)]],
+        left=[[('ROTOR_RPM', .062), ('TORQUE', .056)], [('FILLER_TEMP', .048), ('FILLER_TEMP', .048)],
+              [('FILLER_FUEL', .052), ('FILLER_OIL', .044)], [('FILLER_HYDRAULIC', .044), ('FILLER_VOLTS', .044)]],
+        right=[[('RWR', .062)], [('FILLER_RPM', .048), ('FILLER_OIL', .048)],
+               [('FILLER_HYDRAULIC', .046), ('FILLER_VOLTS', .044)], [('FILLER_FUEL', .044), ('FILLER_CLOCK', .040)]],
         hud=True, displays='CRT', seat='ejection'),
 }
 L.ERAS.update(ERAS)
