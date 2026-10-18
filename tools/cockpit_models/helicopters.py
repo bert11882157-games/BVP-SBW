@@ -128,6 +128,86 @@ ERAS = {
 }
 L.ERAS.update(ERAS)
 
+_lib_layout = L.layout
+BLOCKS = []                        # (facet, a, y, kind, w, h) of the last layout's panel furniture
+ROW_GAP, ITEM_GAP = 0.006, 0.006   # real panels sit their dials almost bezel to bezel
+
+
+def draw_blocks(mesh, c):
+    """switch panels, keyboards and blank plates of an explicit panel, centred at (a, y) on their facet"""
+    for f, a, y, kind, w, h in BLOCKS:
+        p = f.at(a, y)
+        ax = (f.R, f.U, f.N)
+        mesh.box(p + f.N * 0.006, ax, (w / 2, h / 2, 0.006), c['dgrey'], faces={(2, 1): c['black']})
+        if kind == 'SWITCHES':                     # rows of toggle switches with their guards
+            nx, ny = max(1, int(w / 0.026)), max(1, int(h / 0.032))
+            for i in range(nx):
+                for j in range(ny):
+                    q = p + f.R * (-w / 2 + (i + 0.5) * w / nx) + f.U * (h / 2 - (j + 0.5) * h / ny) + f.N * 0.012
+                    mesh.box(q + f.N * 0.006 - f.U * 0.003, ax, (0.0025, 0.002, 0.008), c['lgrey'])
+                    mesh.box(q, ax, (0.006, 0.0025, 0.001), c['white'])
+        elif kind == 'KEYPAD':                     # key grid
+            nx, ny = max(1, int(w / 0.018)), max(1, int(h / 0.018))
+            for i in range(nx):
+                for j in range(ny):
+                    q = p + f.R * (-w / 2 + (i + 0.5) * w / nx) + f.U * (h / 2 - (j + 0.5) * h / ny) + f.N * 0.014
+                    mesh.box(q, ax, (w / nx * 0.36, h / ny * 0.36, 0.002), c['mgrey'])
+        elif kind == 'KNOBS':                      # rotary selectors
+            n = max(1, int(w / 0.03))
+            for i in range(n):
+                q = p + f.R * (-w / 2 + (i + 0.5) * w / n) + f.N * 0.016
+                mesh.box(q, ax, (0.007, 0.007, 0.006), c['black'])
+                mesh.box(q + f.N * 0.0065 + f.U * 0.004, ax, (0.0012, 0.003, 0.0005), c['white'])
+        # 'BLANK': the plate only
+    BLOCKS.clear()
+
+
+def layout(tub, era, facets, hud_body=None):
+    """Helicopter panels: an explicit `panel` (real positions from the aircraft's panel drawings) or the era's rows
+    packed tight under the top edge at real size, shrunk only when they don't fit; other eras go to cockpit_lib."""
+    if not era.get('helicopter'):
+        return _lib_layout(tub, era, facets, hud_body)
+    s, out = tub.s, []
+    for key, f in (('centre', facets[0]), ('left', facets[-1]), ('right', facets[1])):
+        a0, a1 = f.extent()
+        if 'panel' in era:
+            # [kind, a, v, size]: a metres right of the centre line (centre) or out from the hinge (wings),
+            # v metres below the facet's top edge at a, size the diameter or display width, all at real size
+            for item in era['panel'].get(key, []):
+                kind, a, v = item[0], item[1] * s, item[2] * s
+                y = f.top(a) - v * math.cos(tub.lean)
+                if kind.startswith('B:'):              # panel furniture, drawn by the driver after the build
+                    BLOCKS.append((f, a, y, kind[2:], item[3] * s, item[4] * s))
+                else:
+                    out.append((f, a, y, kind, item[3] * s))
+            continue
+        rows = era[key]
+        top = f.top(0) if f.side == 0 else min(f.top(a0), f.top(a1))
+        y_top = top - 0.010 * s
+        width = (a1 - a0) - 0.016 * s
+        height = (y_top - f.bottom()) / math.cos(tub.lean) - 0.006 * s
+        for scale in np.linspace(1.0, 0.45, 23):
+            sizes = [[d * s * scale for _, d in row] for row in rows]
+            hs = [max(r) + ROW_GAP * s * scale for r in sizes]
+            ws = [sum(r) + ITEM_GAP * s * scale * (len(r) - 1) for r in sizes]
+            if sum(hs) <= height and max(ws) <= width:
+                break
+        v = 0.0
+        for row, sz, h in zip(rows, sizes, hs):
+            yc = y_top - (v + h / 2) * math.cos(tub.lean)
+            v += h
+            span = sum(sz) + ITEM_GAP * s * scale * (len(sz) - 1)
+            a = (a0 + a1) / 2 - span / 2
+            for (kind, _), d in zip(row, sz):
+                out.append((f, a + d / 2, yc, kind, d))
+                a += d + ITEM_GAP * s * scale
+    return out
+
+
+L.layout = layout
+for _e in ERAS.values():
+    _e['helicopter'] = True
+
 
 def load_spec(vid):
     return json.load(open(os.path.join(SPECS, vid + '.json')))
@@ -339,8 +419,12 @@ def apply(vid, dry=False):
     gauges, displays, glass, hud_out = [], [], [], None
     for st, t in zip(stations, tubs):
         era = st['era']
+        if st.get('panel'):                            # this station's own panel layout
+            era = f"{vid}#{st['seat']}"
+            L.ERAS[era] = dict(L.ERAS[st['era']], panel=st['panel'])
         mesh, _stick, g, d, gl, hud = L.build(ac, t, era, pal_name, sw, hud=st.get('hud'),
                                               gunsight=st.get('gunsight', False))
+        draw_blocks(mesh, c)
         s, E = t.s, t.E
         # cockpit_lib's fixed-wing throttle and rudder pedals: helicopters get a collective, power levers and
         # pedals that move instead
