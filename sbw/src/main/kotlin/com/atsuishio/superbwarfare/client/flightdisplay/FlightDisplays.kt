@@ -48,7 +48,7 @@ object FlightDisplays {
     private const val MAX_RENDER_DISTANCE_SQ = 96.0 * 96.0
     private const val DETAIL_DISTANCE_SQ = 32.0 * 32.0
     private const val CRT_DETAIL_DISTANCE_SQ = 10.0 * 10.0
-    private const val BEZEL = 0.2           // housing border around the screen, fraction of the screen width
+    private const val BEZEL = 0.12          // housing border around the screen, fraction of the screen width
     private const val FACE = 0.006f         // housing front stands this far proud of the screen, blocks
 
     /** A page on a screen technology: one texture each, live and still. */

@@ -427,7 +427,7 @@ class Tub:
                     for sg in (1, -1)):
                 self.W -= 0.01
         self.lean = math.radians(over.get('lean', 12))
-        self.hinge = over.get('hinge', 0.50 * self.W)
+        self.hinge = over.get('hinge', over.get('hinge_frac', 0.50) * self.W)   # glass eras widen the centre facet
         self.wing = math.radians(over.get('wing', 28))
         self.wing_len = (self.W - self.hinge) / math.cos(self.wing)
         self.ws_y = over.get('ws_y', float(np.clip(wy, self.top_c - 0.35 * s, self.top_c + 0.03)))
@@ -547,30 +547,30 @@ ERAS = {
         left=[[('ENGINE_RPM', .064), ('EGT', .064)], [('FUEL_QTY', .064), ('FILLER_OIL', .050)],
               [('AMMO', .057), ('FILLER_HYDRAULIC', .050)]],
         left_fill=[[('THROTTLE', .050), ('FILLER_TEMP', .050)]],
-        right=[[('D:RADAR', .160)], [('RWR', .064), ('TURN_SLIP', .050)], [('FILLER_OXYGEN', .044), ('FILLER_VOLTS', .044)]],
+        right=[[('D:RADAR', .195)], [('RWR', .064), ('TURN_SLIP', .050)], [('FILLER_OXYGEN', .044), ('FILLER_VOLTS', .044)]],
         right_fill=[[('FILLER_TEMP', .044), ('FILLER_CLOCK', .044)]],
         hud=False, displays='CRT', seat='ejection'),
     'GEN4_CRT': dict(
-        centre=[[('UFCP', .180)], [('D:RADAR', .165), ('D:PFD', .165)],
-                [('AIRSPEED', .057), ('ATTITUDE', .064), ('ALTIMETER', .057), ('VVI', .050)],
-                [('ENGINE_RPM', .050), ('EGT', .050), ('FUEL_QTY', .050), ('CLOCK', .044)]],
-        centre_fill=[[('FILLER_HYDRAULIC', .044), ('FILLER_OIL', .044), ('FILLER_OXYGEN', .044)]],
-        left=[[('D:STORES', .130)]],
+        centre=[[('UFCP', .170)], [('D:RADAR', .215), ('D:PFD', .215)],
+                [('AIRSPEED', .057), ('ATTITUDE', .064), ('ALTIMETER', .057), ('VVI', .050)]],
+        centre_fill=[[('ENGINE_RPM', .050), ('EGT', .050), ('FUEL_QTY', .050), ('CLOCK', .044)],
+                     [('FILLER_HYDRAULIC', .044), ('FILLER_OIL', .044), ('FILLER_OXYGEN', .044)]],
+        left=[[('D:STORES', .165)]],
         left_fill=[[('G_METER', .050), ('AOA', .050)], [('AMMO', .044), ('FILLER_VOLTS', .044)]],
         right=[[('RWR', .064), ('RADAR_ALT', .050)]],
         right_fill=[[('AMMO', .044), ('FILLER_HYDRAULIC', .044)], [('TURN_SLIP', .044), ('FILLER_TEMP', .044)]],
         eyebrows=(('eyebrow_l', .120, .050), ('eyebrow_r', .120, .050)),
-        hud=True, displays='CRT', seat='ejection'),
+        hud=True, displays='CRT', seat='ejection', hinge_frac=0.62),
     'MODERN_GLASS': dict(
-        centre=[[('UFCP', .180)], [('D:STORES', .175), ('D:PFD', .175)],
+        centre=[[('UFCP', .170)], [('D:STORES', .225), ('D:PFD', .225)],
                 [('AIRSPEED', .050), ('ATTITUDE', .057), ('ALTIMETER', .050), ('FUEL_QTY', .050)]],
         centre_fill=[[('ENGINE_RPM', .044), ('EGT', .044), ('FILLER_HYDRAULIC', .044), ('CLOCK', .044)]],
-        left=[[('D:RADAR', .135)]],
+        left=[[('D:RADAR', .170)]],
         left_fill=[[('ENGINE_RPM', .044), ('EGT', .044)], [('G_METER', .044), ('AOA', .044)]],
         right=[[('RWR', .064), ('RADAR_ALT', .050)]],
         right_fill=[[('AMMO', .044), ('CLOCK', .044)], [('FILLER_OXYGEN', .040), ('FILLER_VOLTS', .040)]],
         eyebrows=(('eyebrow_l', .120, .050), ('eyebrow_r', .120, .050)),
-        hud=True, displays='LCD', seat='ejection'),
+        hud=True, displays='LCD', seat='ejection', hinge_frac=0.62),
 }
 
 # Annunciator lamp sets: (caption, condition, colour) left to right, then down; "|" breaks a caption into two lines.
@@ -613,7 +613,7 @@ def lamps_of(name, pal_name):
 
 
 RIM = 0.16                     # game gauge bezel width (CockpitGauges.RIM)
-DISPLAY_BEZEL = 0.2            # game display housing border, fraction of the screen width (FlightDisplays.BEZEL)
+DISPLAY_BEZEL = 0.12           # game display housing border, fraction of the screen width (FlightDisplays.BEZEL)
 GAUGE_LIFT = 0.004             # game dials stand this far proud of the panel face
 DISPLAY_LIFT = 0.003
 GAP = 0.010
@@ -766,13 +766,17 @@ def build(ac, tub, era_name, pal_name, sw, hud=None, gunsight=True, stick_foot=N
         for sg, (name, ew, eh) in zip((1, -1), era['eyebrows']):      # +1 = pilot's left (x > 0)
             ew, eh = ew * s, eh * s
             ax = sg * (0.08 * s + 0.012 * s + ew / 2)                    # clear of the HUD body (half width 0.08 s)
-            foot = cen.at(-ax, t.top_c) + cen.N * 0.045 * s + np.array([0, 0.03 * s, 0])    # on the lip edge
+            # the panel face carried on above the lip: the lamps' face just proud of the panel plane, in a housing
+            # that reaches back through the lip into the coaming so it reads as part of the dashboard
+            foot = cen.at(-ax, t.top_c) + cen.N * 0.014
             top_glass = ac.glass_above(foot[0], foot[2], foot[1])
             if top_glass is not None:
                 eh = min(eh, (top_glass - 0.02 - foot[1]) / cen.U[1])
             if eh < 0.028 * s:
                 continue
             centre = foot + cen.U * eh / 2
+            m.box(centre - cen.N * 0.046 - cen.U * 0.004, (cen.R, cen.U, cen.N),
+                  (ew / 2 + 0.010, eh / 2 + 0.012, 0.040), c['dgrey'])
             columns, lamps = lamps_of(name, pal_name)
             gauges.append({'Seat': t.seat, 'Kind': 'ANNUNCIATOR', 'Center': r5(centre + cen.N * 0.002), 'Normal': r5(cen.N),
                            'Up': r5(cen.U), 'Diameter': round(ew, 4), 'Width': round(ew, 4), 'Height': round(eh, 4),

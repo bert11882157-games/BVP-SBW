@@ -46,7 +46,9 @@ def apply(vid, dry=False):
     sw = L.Swatches(L.texture_path(vid))
     seat = spec.get('seat', 0)
     sight_glass = ac.drop_sight_glass(ac.eye(seat), spec.get('tub', {}).get('s', 1.0))
-    tub = L.Tub(ac, seat, **spec.get('tub', {}))
+    tub_kw = dict(spec.get('tub', {}))
+    tub_kw.setdefault('hinge_frac', L.ERAS[era].get('hinge_frac', 0.5))
+    tub = L.Tub(ac, seat, **tub_kw)
     sight_glass += ac.drop_glass_inside(tub)
     E, s = tub.E, tub.s
 

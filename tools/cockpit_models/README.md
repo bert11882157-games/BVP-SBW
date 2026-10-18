@@ -108,7 +108,7 @@ MiG-29's generator turned into a fitted, parametric one:
   stick's foot, so it pivots where it stands. Aircraft without a stick rig get a fixed stick.
 - **Instruments** by era (`cockpit_lib.ERAS`, the era from `tools/cockpit_layout/presets.json` unless `fleet.json`
   says otherwise), packed in rows from the top of each facet at real sizes (3 inch dials about 80 mm, 2 inch 57 mm,
-  displays about half again larger than life so they read in game, with housings 1.4 times the screen), shrunk a little to fit and dropped from the bottom when they
+  displays well over life size so they read in game, with housings 1.24 times the screen; the glass eras widen the centre facet to 62% of the panel for them), shrunk a little to fit and dropped from the bottom when they
   still do not; `fill` rows are added while a facet has room, and the band under the rows gets switch panels (and a
   gear lever on the left). Live dials: the basic six, Mach, AoA, G, RWR, fuel quantity, radar altimeter, clock,
   turn and slip, engine RPM, EGT and the rounds counter (`FUEL_QTY`, `RADAR_ALT`, `CLOCK`, `TURN_SLIP`,
@@ -118,8 +118,8 @@ MiG-29's generator turned into a fitted, parametric one:
   gets the airframe planform for its diagram.
 - **Annunciators.** A caution and warning panel per aircraft, drawn and lit by the game (`Annunciator.kt`): a
   `CockpitGauges` entry of kind `ANNUNCIATOR` with its width, height, columns and `Lamps` (caption, condition,
-  colour; `cockpit_lib.LAMP_SETS`, Russian captions on Soviet palettes). HUD jets carry two eyebrow panels standing on
-  the glareshield either side of the HUD; cold war jets a telelight strip across the top of the centre panel; piston
+  colour; `cockpit_lib.LAMP_SETS`, Russian captions on Soviet palettes). HUD jets carry two eyebrow panels either side of the HUD, carrying the panel
+  face on above its lip in a housing that reaches back into the coaming; cold war jets a telelight strip across the top of the centre panel; piston
   fighters a small block of gear, fuel, oil and fire lights there. Lamps light from the aircraft: master caution and
   warning, gear down / unsafe, low fuel, engine out, fire and damage (hull health), stall, over-G, overspeed, low
   altitude, afterburner, airbrake, RWR lock and missile launch, low ammunition; legends with condition `NONE` (HYD,
