@@ -1,5 +1,5 @@
 {
- "reference": "Mi-26 (izdeliye 90) cockpit: pilot (commander) left and co-pilot right side by side, each with a steam-gauge panel (AGB attitude, UShM heading, airspeed, altimeter, VVI, rotor-RPM and twin-engine power indicators), centre cyclic, collective on the left with the twist throttle, and the two D-136 engine control levers; flight engineer and navigator behind (not modelled). Turquoise Soviet interior as the original model; airforce-technology.com Mi-26 project page (crew layout), FAS Mi-26 page, model's own seat/window measurements",
+ "reference": "Mi-26 (izdeliye 90): commander left (seat 0), co-pilot right (seat 1), each with his own panel: flight group in the middle (PKP-77 attitude director, PNP-72 HSI, airspeed, altimeter, VVI, radar altimeter, g-meter, turn/slip, rotor tach, clock), the engine group (twin-engine tachs, torque, EGT, power, fuel, oil) and the light board on the inner section toward the centre, system gauges and switch rows on the outer section; real instrument size (tub s 1.0). Sources: airforce-technology.com Mi-26 project page, FAS Mi-26 page, the model's own seat/window measurements; no photos reachable from the build machine",
  "palette": "soviet",
  "stations": [
   {
@@ -16,7 +16,44 @@
    "throttle": 2,
    "pedals": true,
    "tub": {
-    "top_w": 4.31
+    "top_w": 4.46,
+    "s": 1.0,
+    "W": 0.6,
+    "panel_dz": 0.72
+   },
+   "panel": {
+    "centre": [
+     ["AIRSPEED", -0.125, 0.06, 0.08],
+     ["ATTITUDE", 0, 0.075, 0.12],
+     ["ALTIMETER", 0.125, 0.06, 0.08],
+     ["VVI", -0.125, 0.15, 0.08],
+     ["HEADING", 0, 0.2, 0.1],
+     ["RADAR_ALT", 0.125, 0.15, 0.08],
+     ["G_METER", -0.125, 0.235, 0.06],
+     ["TURN_SLIP", 0.125, 0.235, 0.06],
+     ["ROTOR_RPM", -0.26, 0.06, 0.066],
+     ["CLOCK", 0.26, 0.06, 0.06],
+     ["B:KNOBS", 0, 0.3, 0.54, 0.04],
+     ["B:SWITCHES", 0, 0.37, 0.56, 0.08],
+     ["B:SWITCHES", 0, 0.46, 0.5, 0.06]
+    ],
+    "left": [
+     ["FILLER_HYDRAULIC", 0.08, 0.05, 0.06],
+     ["FILLER_VOLTS", 0.22, 0.05, 0.06],
+     ["FILLER_TEMP", 0.08, 0.125, 0.055],
+     ["FILLER_OIL", 0.22, 0.125, 0.055],
+     ["B:SWITCHES", 0.15, 0.2, 0.27, 0.06],
+     ["B:KNOBS", 0.15, 0.265, 0.26, 0.04]
+    ],
+    "right": [
+     ["A:heli", 0.15, 0.032, 0.24, 0.05],
+     ["ENGINE_RPM", 0.08, 0.11, 0.08],
+     ["TORQUE", 0.22, 0.11, 0.08],
+     ["EGT", 0.08, 0.195, 0.072],
+     ["THROTTLE", 0.22, 0.195, 0.072],
+     ["FUEL_QTY", 0.08, 0.27, 0.06],
+     ["FILLER_OIL", 0.22, 0.27, 0.06]
+    ]
    }
   },
   {
@@ -33,8 +70,55 @@
    "throttle": 2,
    "pedals": true,
    "tub": {
-    "top_w": 4.31
+    "top_w": 4.46,
+    "s": 1.0,
+    "W": 0.6,
+    "panel_dz": 0.72
+   },
+   "panel": {
+    "centre": [
+     ["AIRSPEED", -0.125, 0.06, 0.08],
+     ["ATTITUDE", 0, 0.075, 0.12],
+     ["ALTIMETER", 0.125, 0.06, 0.08],
+     ["VVI", -0.125, 0.15, 0.08],
+     ["HEADING", 0, 0.2, 0.1],
+     ["RADAR_ALT", 0.125, 0.15, 0.08],
+     ["G_METER", -0.125, 0.235, 0.06],
+     ["TURN_SLIP", 0.125, 0.235, 0.06],
+     ["ROTOR_RPM", -0.26, 0.06, 0.066],
+     ["CLOCK", 0.26, 0.06, 0.06],
+     ["B:KNOBS", 0, 0.3, 0.54, 0.04],
+     ["B:SWITCHES", 0, 0.37, 0.56, 0.08],
+     ["B:SWITCHES", 0, 0.46, 0.5, 0.06]
+    ],
+    "left": [
+     ["A:heli", 0.15, 0.032, 0.24, 0.05],
+     ["ENGINE_RPM", 0.08, 0.11, 0.08],
+     ["TORQUE", 0.22, 0.11, 0.08],
+     ["EGT", 0.08, 0.195, 0.072],
+     ["THROTTLE", 0.22, 0.195, 0.072],
+     ["FUEL_QTY", 0.08, 0.27, 0.06],
+     ["FILLER_OIL", 0.22, 0.27, 0.06]
+    ],
+    "right": [
+     ["FILLER_HYDRAULIC", 0.08, 0.05, 0.06],
+     ["FILLER_VOLTS", 0.22, 0.05, 0.06],
+     ["FILLER_TEMP", 0.08, 0.125, 0.055],
+     ["FILLER_OIL", 0.22, 0.125, 0.055],
+     ["B:SWITCHES", 0.15, 0.2, 0.27, 0.06],
+     ["B:KNOBS", 0.15, 0.265, 0.26, 0.04]
+    ]
    }
   }
+ ],
+ "remove": [
+  [
+   -1.45,
+   1.45,
+   2.95,
+   4.35,
+   12.45,
+   14.1
+  ]
  ]
 }

@@ -1,5 +1,5 @@
 {
- "reference": "Mi-24D: tandem cockpit; pilot steam panel with the SPO-10 Sirena-3M RWR, centre cyclic, collective and two engine levers on the left, PKV collimator sight on the coaming; operator: basic flight instruments around the KPS-53AV stabilised gun sight with the Raduga-F guidance periscope and its handle unit, basic flight controls. Sources: 16va.be 'Combat Hinds' (https://www.16va.be/4.2_les_mi-24_part1_eng.html), airvectors.net (https://airvectors.net/avhind_1.html), Chuck's DCS Mi-24P guide (https://chucksguides.com/aircraft/dcs/mi-24p/) for the turquoise panel layout",
+ "reference": "Mi-24D: the same tandem panels as the Mi-24V (mi24v.json), the pilot's with the SPO-10 Sirena-3M RWR head and the outside-air thermometer at the top corners of the wider centre section; operator's KPS-53AV sight with the Raduga-F periscope, weapon control panel and USPU-24 rounds counter. Sources: Chuck's DCS Mi-24P guide (https://chucksguides.com/aircraft/dcs/mi-24p/), 16va.be 'Combat Hinds' (https://www.16va.be/4.2_les_mi-24_part1_eng.html), airvectors.net (https://airvectors.net/avhind_1.html); no photos reachable from the build machine",
  "palette": "soviet",
  "stations": [
   {
@@ -19,7 +19,47 @@
    "tub": {
     "s": 1.0,
     "ws_z": 6.75,
-    "top_w": 3.3
+    "top_w": 3.37,
+    "ws_y": 3.39
+   },
+   "panel": {
+    "centre": [
+     ["AIRSPEED", -0.125, 0.06, 0.08],
+     ["ATTITUDE", 0, 0.1, 0.11],
+     ["ALTIMETER", 0.125, 0.06, 0.08],
+     ["VVI", -0.125, 0.145, 0.08],
+     ["HEADING", 0, 0.213, 0.1],
+     ["RADAR_ALT", 0.125, 0.145, 0.08],
+     ["G_METER", -0.125, 0.23, 0.06],
+     ["TURN_SLIP", 0.125, 0.23, 0.06],
+     ["B:KNOBS", 0, 0.29, 0.5, 0.04],
+     ["B:SWITCHES", 0, 0.355, 0.52, 0.07],
+     ["B:SWITCHES", -0.14, 0.44, 0.25, 0.06],
+     ["B:KNOBS", 0.14, 0.44, 0.25, 0.04],
+     ["RWR", -0.245, 0.052, 0.06],
+     ["FILLER_TEMP", 0.245, 0.05, 0.052]
+    ],
+    "left": [
+     ["CLOCK", 0.084, 0.05, 0.06],
+     ["FILLER_VOLTS", 0.233, 0.05, 0.055],
+     ["FILLER_HYDRAULIC", 0.084, 0.125, 0.055],
+     ["FILLER_HYDRAULIC", 0.233, 0.125, 0.055],
+     ["FILLER_OXYGEN", 0.084, 0.195, 0.05],
+     ["FILLER_VOLTS", 0.233, 0.195, 0.05],
+     ["B:SWITCHES", 0.159, 0.265, 0.287, 0.06],
+     ["B:KNOBS", 0.159, 0.325, 0.277, 0.04]
+    ],
+    "right": [
+     ["A:heli", 0.148, 0.038, 0.21, 0.048],
+     ["ROTOR_RPM", 0.084, 0.105, 0.08],
+     ["ENGINE_RPM", 0.233, 0.105, 0.08],
+     ["TORQUE", 0.084, 0.19, 0.072],
+     ["EGT", 0.233, 0.19, 0.072],
+     ["THROTTLE", 0.084, 0.262, 0.06],
+     ["FUEL_QTY", 0.233, 0.262, 0.06],
+     ["FILLER_OIL", 0.084, 0.322, 0.05],
+     ["FILLER_OIL", 0.233, 0.322, 0.05]
+    ]
    }
   },
   {
@@ -32,7 +72,32 @@
    "tub": {
     "s": 1.0,
     "top_c": 2.4,
-    "ws_z": 8.55
+    "ws_z": 8.55,
+    "ws_y": 2.43,
+    "top_w": 2.38
+   },
+   "panel": {
+    "centre": [
+     ["AIRSPEED", -0.175, 0.05, 0.072],
+     ["ALTIMETER", -0.095, 0.05, 0.072],
+     ["VVI", -0.175, 0.128, 0.06],
+     ["RADAR_ALT", -0.095, 0.128, 0.06],
+     ["B:SWITCHES", 0.135, 0.12, 0.15, 0.09],
+     ["B:KNOBS", 0, 0.22, 0.38, 0.04],
+     ["B:SWITCHES", 0, 0.29, 0.34, 0.07],
+     ["AMMO", 0.135, 0.045, 0.06]
+    ],
+    "left": [
+     ["ATTITUDE", 0.124, 0.055, 0.08],
+     ["HEADING", 0.077, 0.135, 0.066],
+     ["CLOCK", 0.182, 0.135, 0.055],
+     ["B:SWITCHES", 0.124, 0.215, 0.209, 0.05]
+    ],
+    "right": [
+     ["A:heli_small", 0.124, 0.05, 0.1, 0.06],
+     ["B:SWITCHES", 0.124, 0.13, 0.209, 0.07],
+     ["B:KNOBS", 0.124, 0.2, 0.209, 0.04]
+    ]
    }
   }
  ],
@@ -44,6 +109,38 @@
    4.0,
    6.3,
    6.7
+  ],
+  [
+   -0.66,
+   0.66,
+   2.15,
+   3.46,
+   6.2,
+   7.02
+  ],
+  [
+   -0.4,
+   -0.23,
+   2.78,
+   3.14,
+   7.65,
+   8.21
+  ],
+  [
+   -0.45,
+   -0.1,
+   2.5,
+   3.02,
+   8.15,
+   8.52
+  ],
+  [
+   0.1,
+   0.45,
+   2.5,
+   3.02,
+   8.15,
+   8.52
   ]
  ]
 }
