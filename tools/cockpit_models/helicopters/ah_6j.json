@@ -1,0 +1,99 @@
+{
+ "reference": "AH-6J / MH-6J Little Bird (MD 530-family): one small steam-gauge panel on a pedestal ahead of the two side-by-side pilots, a centre cyclic for each pilot, the collective on each pilot's left with the twist-grip throttle of the single Allison 250 (modelled as one lever); Kitty Hawk 1/35 AH-6J build review (cybermodeler.com/hobby/builds/kh/build_kh_50003.shtml), IPMS AH-6M/MH-6M review, model's own seat and canopy measurements",
+ "palette": "nato",
+ "stations": [
+  {
+   "seat": 0,
+   "eye": [
+    -0.44,
+    2.42,
+    2.45
+   ],
+   "move_eye": true,
+   "era": "HELO_STEAM",
+   "cyclic": "centre",
+   "collective": true,
+   "throttle": 1,
+   "pedals": true,
+   "tub": {
+    "W": 0.38,
+    "top_w": 2.18
+   }
+  },
+  {
+   "seat": 1,
+   "eye": [
+    0.44,
+    2.42,
+    2.45
+   ],
+   "era": "HELO_STEAM",
+   "cyclic": "centre",
+   "collective": true,
+   "throttle": 1,
+   "pedals": true,
+   "tub": {
+    "W": 0.38,
+    "top_w": 2.18
+   }
+  }
+ ],
+ "remove": [
+  [
+   -0.66,
+   0.66,
+   1.3,
+   2.75,
+   2.85,
+   3.75
+  ],
+  [
+   -0.95,
+   -0.57,
+   2.1,
+   2.5,
+   3.38,
+   3.47
+  ],
+  [
+   0.57,
+   0.95,
+   2.1,
+   2.5,
+   3.38,
+   3.47
+  ],
+  [
+   -0.95,
+   -0.2,
+   1.6,
+   2.6,
+   1.95,
+   2.96
+  ],
+  [
+   0.2,
+   0.95,
+   1.6,
+   2.6,
+   1.95,
+   2.96
+  ],
+  [
+   -0.95,
+   -0.7,
+   1.3,
+   1.7,
+   3.3,
+   3.7
+  ],
+  [
+   0.7,
+   0.95,
+   1.3,
+   1.7,
+   3.3,
+   3.7
+  ]
+ ]
+}

@@ -1,0 +1,40 @@
+{
+ "reference": "Mi-24A: common 'greenhouse' cockpit, navigator-operator in the nose with basic flight controls and the sight for the Falanga missiles / A-12.7 gun, pilot behind on the model's offset (left) seat with the flight engineer's station on his right; pilot steam panel, centre cyclic, collective, two engine levers, PKV collimator sight. Sources: 16va.be 'Combat Hinds' (https://www.16va.be/4.2_les_mi-24_part1_eng.html), airvectors.net (https://airvectors.net/avhind_1.html), Wikipedia Mil Mi-24 (https://en.wikipedia.org/wiki/Mil_Mi-24)",
+ "palette": "soviet",
+ "stations": [
+  {
+   "seat": 0,
+   "era": "HELO_STEAM",
+   "cyclic": "centre",
+   "collective": true,
+   "throttle": 2,
+   "pedals": true,
+   "gunsight": true,
+   "eye": [
+    0.5,
+    3.4,
+    5.19
+   ],
+   "move_eye": true,
+   "tub": {
+    "s": 1.0,
+    "ws_z": 6.35,
+    "top_w": 3.13
+   }
+  },
+  {
+   "seat": 1,
+   "era": "HELO_GUNNER_SIGHT",
+   "cyclic": "centre",
+   "collective": true,
+   "throttle": 0,
+   "pedals": true,
+   "tub": {
+    "s": 1.0,
+    "top_c": 2.71,
+    "W": 0.44,
+    "ws_z": 8.15
+   }
+  }
+ ]
+}

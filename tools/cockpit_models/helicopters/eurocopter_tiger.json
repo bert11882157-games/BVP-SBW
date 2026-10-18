@@ -1,0 +1,73 @@
+{
+ "reference": "Tiger HAP/HAD (FFAR / HMP-400 / RMP pod armament): https://www.army-technology.com/projects/tiger/ (two colour multifunction displays and a control and display unit per crew station, Strix roof sight with a direct optical channel for the gunner), https://www.airbus.com/en/products-services/helicopters/military-helicopters/tiger. Pilot in front, gunner behind and above; dual controls. The mod's seat 0 is the rear (gunner's) seat and gets the Strix viewing head.",
+ "palette": "modern",
+ "remove": [
+  [
+   -0.45,
+   0.45,
+   2.85,
+   3.8,
+   2.5,
+   3.15
+  ],
+  [
+   -0.45,
+   0.45,
+   2.1,
+   3.0,
+   4.3,
+   4.95
+  ]
+ ],
+ "stations": [
+  {
+   "seat": 0,
+   "era": "HELO_GLASS_LCD",
+   "cyclic": "centre",
+   "throttle": 2,
+   "tub": {
+    "s": 1.0,
+    "W": 0.5,
+    "sill": 3.45,
+    "top_w": 3.62,
+    "ws_z": 2.85,
+    "ws_y": 3.5
+   }
+  },
+  {
+   "seat": 1,
+   "era": "HELO_GLASS_LCD",
+   "cyclic": "centre",
+   "throttle": 2,
+   "eye": [
+    0,
+    2.9,
+    3.65
+   ],
+   "move_eye": true,
+   "tub": {
+    "s": 1.0,
+    "W": 0.48,
+    "sill": 2.5,
+    "top_w": 2.68
+   }
+  }
+ ],
+ "colours": {
+  "wall": [
+   64,
+   64,
+   64
+  ]
+ },
+ "glass": [
+  [[0.56, 2.935, 3.2], [0.607, 2.473, 3.65], [0.432, 3.581, 3.65], [0.44, 3.656, 3.2]],
+  [[-0.44, 3.656, 3.2], [-0.432, 3.581, 3.65], [-0.607, 2.473, 3.65], [-0.56, 2.935, 3.2]],
+  [[0.607, 2.473, 3.65], [0.633, 2.215, 3.902], [0.62, 2.215, 4.48], [0.527, 2.724, 4.816]],
+  [[0.607, 2.473, 3.65], [0.527, 2.724, 4.816], [0.422, 3.48, 4.254], [0.432, 3.581, 3.65]],
+  [[-0.432, 3.581, 3.65], [-0.422, 3.48, 4.254], [-0.527, 2.724, 4.816], [-0.62, 2.215, 4.48]],
+  [[-0.432, 3.581, 3.65], [-0.62, 2.215, 4.48], [-0.633, 2.215, 3.902], [-0.607, 2.473, 3.65]],
+  [[0.422, 3.48, 4.254], [0.527, 2.724, 4.816], [0, 2.724, 4.816], [0, 3.48, 4.254]],
+  [[0, 3.48, 4.254], [0, 2.724, 4.816], [-0.527, 2.724, 4.816], [-0.422, 3.48, 4.254]]
+ ]
+}

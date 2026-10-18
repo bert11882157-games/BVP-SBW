@@ -1,0 +1,53 @@
+{
+ "reference": "AH-1G HueyCobra: TM 55-1520-221-10 cockpit figures (pilot and gunner instrument panels, controls); vietnamhelicopters.org AH-1 variant table (AH-1G sights: M73 reflex sight for the pilot, XM28 turret pantograph sight for the gunner). Pilot (rear): 1960s steam-gauge panel, centre cyclic, collective on the left with the twist-grip throttle (single T53), M73 rocket sight on the coaming; gunner (front): basic flight instruments, pantograph-mounted reflex sight with two handgrips in the middle, side-arm cyclic on the right console and side-arm collective on the left",
+ "palette": "nato",
+ "stations": [
+  {
+   "seat": 0,
+   "era": "HELO_STEAM",
+   "cyclic": "centre",
+   "throttle": 0,
+   "gunsight": true,
+   "eye": [
+    0,
+    3.55,
+    2.1
+   ],
+   "move_eye": true,
+   "tub": {
+    "top_c": 3.17,
+    "ws_z": 3.45,
+    "ws_y": 3.12,
+    "top_w": 3.04
+   }
+  },
+  {
+   "seat": 1,
+   "era": "HELO_GUNNER_SIGHT",
+   "cyclic": "right",
+   "throttle": 0,
+   "eye": [
+    0,
+    3.22,
+    4.25
+   ],
+   "move_eye": true,
+   "tub": {
+    "top_c": 2.96,
+    "ws_z": 5.3,
+    "ws_y": 2.86,
+    "top_w": 2.83
+   }
+  }
+ ],
+ "remove": [
+  [
+   -0.66,
+   -0.5,
+   2.6,
+   3.05,
+   2.44,
+   2.82
+  ]
+ ]
+}

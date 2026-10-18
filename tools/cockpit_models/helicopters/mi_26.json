@@ -1,0 +1,40 @@
+{
+ "reference": "Mi-26 (izdeliye 90) cockpit: pilot (commander) left and co-pilot right side by side, each with a steam-gauge panel (AGB attitude, UShM heading, airspeed, altimeter, VVI, rotor-RPM and twin-engine power indicators), centre cyclic, collective on the left with the twist throttle, and the two D-136 engine control levers; flight engineer and navigator behind (not modelled). Turquoise Soviet interior as the original model; airforce-technology.com Mi-26 project page (crew layout), FAS Mi-26 page, model's own seat/window measurements",
+ "palette": "soviet",
+ "stations": [
+  {
+   "seat": 0,
+   "eye": [
+    0.75,
+    4.65,
+    11.95
+   ],
+   "move_eye": true,
+   "era": "HELO_STEAM",
+   "cyclic": "centre",
+   "collective": true,
+   "throttle": 2,
+   "pedals": true,
+   "tub": {
+    "top_w": 4.31
+   }
+  },
+  {
+   "seat": 1,
+   "eye": [
+    -0.75,
+    4.65,
+    11.95
+   ],
+   "move_eye": true,
+   "era": "HELO_STEAM",
+   "cyclic": "centre",
+   "collective": true,
+   "throttle": 2,
+   "pedals": true,
+   "tub": {
+    "top_w": 4.31
+   }
+  }
+ ]
+}

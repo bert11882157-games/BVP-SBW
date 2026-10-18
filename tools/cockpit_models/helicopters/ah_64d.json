@@ -1,11 +1,12 @@
 {
- "reference": "AH-64D Longbow: TM 1-1520-251-10 cockpit figures (pilot: two MPDs, standby airspeed/attitude/altimeter, collective left, cyclic centre; CPG: two MPDs around the TADS sight, side-arm cyclic on the right console)",
+ "reference": "AH-64D Longbow: TM 1-1520-251-10 cockpit figures; Chuck's DCS AH-64D guide (chucksguides.com/aircraft/dcs/ah-64d). Pilot: EUFD, two MPDs, standby airspeed/attitude/altimeter, centre cyclic, collective and two power levers on the left; CPG: two MPDs around the TEDAC/ORT, side-arm cyclic on the right console, collective and power levers on the left",
  "palette": "nato",
  "stations": [
   {
    "seat": 0,
-   "era": "HELO_GLASS",
+   "era": "HELO_APACHE",
    "cyclic": "centre",
+   "throttle": 2,
    "tub": {
     "ws_z": 1.85,
     "ws_y": 2.8
@@ -13,8 +14,35 @@
   },
   {
    "seat": 1,
-   "era": "HELO_GLASS_GUNNER",
-   "cyclic": "right"
+   "era": "HELO_GLASS",
+   "cyclic": "right",
+   "throttle": 2,
+   "eye": [
+    0,
+    2.72,
+    2.7
+   ],
+   "move_eye": true,
+   "tub": {
+    "s": 0.87,
+    "top_c": 2.52,
+    "panel_dz": 0.6,
+    "sill": 2.44
+   }
   }
+ ],
+ "glass": [
+  [[0.627, 2.508, 2.194], [0.627, 2.255, 2.7], [0.433, 2.937, 2.7], [0.34, 3.19, 2.194]],
+  [[0.627, 2.508, 2.194], [0.34, 3.19, 2.194], [0.52, 2.926, 2.194], [0.52, 2.926, 2.194]],
+  [[-0.52, 2.926, 2.194], [-0.34, 3.19, 2.194], [-0.433, 2.937, 2.7], [-0.627, 2.255, 2.7]],
+  [[-0.52, 2.926, 2.194], [-0.627, 2.255, 2.7], [-0.627, 2.508, 2.194], [-0.627, 2.508, 2.194]],
+  [[0.627, 2.255, 2.7], [0.627, 2.09, 3.03], [0.627, 1.986, 3.553], [0.6, 2.35, 3.553]],
+  [[0.627, 2.255, 2.7], [0.6, 2.35, 3.553], [0.55, 2.62, 3.335], [0.433, 2.937, 2.7]],
+  [[-0.433, 2.937, 2.7], [-0.55, 2.62, 3.335], [-0.6, 2.35, 3.553], [-0.627, 1.986, 3.553]],
+  [[-0.433, 2.937, 2.7], [-0.627, 1.986, 3.553], [-0.627, 2.09, 3.03], [-0.627, 2.255, 2.7]],
+  [[0.34, 3.19, 2.194], [0.55, 2.62, 3.335], [0, 2.62, 3.335], [0, 3.19, 2.194]],
+  [[0, 3.19, 2.194], [0, 2.62, 3.335], [-0.55, 2.62, 3.335], [-0.34, 3.19, 2.194]],
+  [[0.55, 2.62, 3.335], [0.6, 2.35, 3.553], [0, 2.35, 3.553], [0, 2.62, 3.335]],
+  [[0, 2.62, 3.335], [0, 2.35, 3.553], [-0.6, 2.35, 3.553], [-0.55, 2.62, 3.335]]
  ]
 }

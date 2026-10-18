@@ -1,0 +1,37 @@
+{
+ "reference": "AH-1F (Modernized) Cobra: TM 55-1520-236-10 cockpit figures; vietnamhelicopters.org/ah-1f-cobra-78-23107 (Step 3 upgrades: pilot HUD, gunner TSU and laser rangefinder, C-NITE); pilot: steam-gauge panel with the AN/APR-39 radar warning display, centre cyclic, collective on the left with the twist-grip throttle (single T53, no power levers), head-up display on the coaming; gunner (front): basic flight instruments around the telescopic sight unit (TSU) and its hand control, side-arm cyclic on the right console and side-arm collective on the left",
+ "palette": "nato",
+ "stations": [
+  {
+   "seat": 0,
+   "era": "HELO_STEAM_RWR",
+   "cyclic": "centre",
+   "throttle": 0,
+   "hud": true,
+   "tub": {
+    "panel_dz": 0.75,
+    "ws_z": 4.75,
+    "ws_y": 2.92,
+    "W": 0.48,
+    "top_w": 2.86
+   }
+  },
+  {
+   "seat": 1,
+   "era": "HELO_GUNNER_SIGHT",
+   "cyclic": "right",
+   "throttle": 0,
+   "eye": [
+    0,
+    2.8,
+    5.35
+   ],
+   "move_eye": true,
+   "tub": {
+    "panel_dz": 0.52,
+    "ws_z": 6.02,
+    "ws_y": 2.6
+   }
+  }
+ ]
+}

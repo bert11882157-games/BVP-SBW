@@ -1,0 +1,49 @@
+{
+ "reference": "Mi-24D: tandem cockpit; pilot steam panel with the SPO-10 Sirena-3M RWR, centre cyclic, collective and two engine levers on the left, PKV collimator sight on the coaming; operator: basic flight instruments around the KPS-53AV stabilised gun sight with the Raduga-F guidance periscope and its handle unit, basic flight controls. Sources: 16va.be 'Combat Hinds' (https://www.16va.be/4.2_les_mi-24_part1_eng.html), airvectors.net (https://airvectors.net/avhind_1.html), Chuck's DCS Mi-24P guide (https://chucksguides.com/aircraft/dcs/mi-24p/) for the turquoise panel layout",
+ "palette": "soviet",
+ "stations": [
+  {
+   "seat": 0,
+   "era": "HELO_STEAM_RWR",
+   "cyclic": "centre",
+   "collective": true,
+   "throttle": 2,
+   "pedals": true,
+   "gunsight": true,
+   "eye": [
+    0,
+    3.56,
+    5.75
+   ],
+   "move_eye": true,
+   "tub": {
+    "s": 1.0,
+    "ws_z": 6.75,
+    "top_w": 3.3
+   }
+  },
+  {
+   "seat": 1,
+   "era": "HELO_GUNNER_SIGHT",
+   "cyclic": "centre",
+   "collective": true,
+   "throttle": 0,
+   "pedals": true,
+   "tub": {
+    "s": 1.0,
+    "top_c": 2.4,
+    "ws_z": 8.55
+   }
+  }
+ ],
+ "remove": [
+  [
+   -0.25,
+   0.25,
+   3.4,
+   4.0,
+   6.3,
+   6.7
+  ]
+ ]
+}

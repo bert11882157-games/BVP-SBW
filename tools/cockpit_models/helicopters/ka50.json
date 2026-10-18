@@ -1,0 +1,43 @@
+{
+ "reference": "Ka-50 (single seat): DCS Black Shark 2 flight manual cockpit figures (turquoise panels; IT-23 Shkval TV screen with hood top centre, ADI and HSI below, rotor RPM/engine dials on the left, fuel/hydraulics on the right; ILS-31 HUD on the coaming; centre cyclic, collective on the left with the two engine power levers on the left console; K-37-800 ejection seat), https://www.digitalcombatsimulator.com/en/products/helicopters/black_shark_2/, https://en.wikipedia.org/wiki/Kamov_Ka-50. The texture has no turquoise: the panel is its nearest blue.",
+ "palette": "soviet",
+ "stations": [
+  {
+   "seat": 0,
+   "era": "HELO_KA50",
+   "cyclic": "centre",
+   "throttle": 2,
+   "hud": true,
+   "tub": {
+    "sill": 2.56,
+    "top_w": 2.84
+   }
+  }
+ ],
+ "remove": [
+  [
+   -0.16,
+   0.16,
+   2.3,
+   2.8,
+   4.0,
+   4.35
+  ],
+  [
+   -0.4,
+   0.4,
+   1.2,
+   1.97,
+   2.3,
+   2.8
+  ],
+  [
+   -0.3,
+   0.3,
+   1.2,
+   1.35,
+   2.5,
+   3.7
+  ]
+ ]
+}

@@ -1,0 +1,54 @@
+{
+ "reference": "CH-46E Sea Knight (USMC): side-by-side pilot (right) and co-pilot (left) at a dark-grey steam-gauge panel with a centre console between them, centre cyclics, collectives on each pilot's left; the two T58-GE-16 engines' condition levers sit in the overhead quadrant in the real aircraft (here modelled as two power levers on the left console). NASM CH-46E Sea Knight collection page (airandspace.si.edu, crew/engines), Pima Air & Space CH-46E page, Academy 1/48 HH-46D kit reviews (modelingmadness.com, cybermodeler.com) for the cockpit layout, model's own seat/canopy measurements",
+ "palette": "nato",
+ "stations": [
+  {
+   "seat": 0,
+   "era": "HELO_STEAM",
+   "cyclic": "centre",
+   "collective": true,
+   "throttle": 2,
+   "pedals": true,
+   "tub": {
+    "W": 0.46,
+    "top_w": 1.81
+   }
+  },
+  {
+   "seat": 1,
+   "eye": [
+    0.52,
+    2.1,
+    4.04
+   ],
+   "move_eye": true,
+   "era": "HELO_STEAM",
+   "cyclic": "centre",
+   "collective": true,
+   "throttle": 2,
+   "pedals": true,
+   "tub": {
+    "W": 0.46,
+    "top_w": 1.81
+   }
+  }
+ ],
+ "remove": [
+  [
+   -0.73,
+   0.73,
+   1.8,
+   2.03,
+   4.75,
+   5.55
+  ],
+  [
+   -0.68,
+   0.68,
+   1.44,
+   1.87,
+   4.96,
+   5.39
+  ]
+ ]
+}
