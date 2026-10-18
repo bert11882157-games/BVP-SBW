@@ -1,5 +1,5 @@
 {
- "reference": "AH-1G HueyCobra: TM 55-1520-221-10 cockpit figures (pilot and gunner instrument panels, controls); vietnamhelicopters.org AH-1 variant table (AH-1G sights: M73 reflex sight for the pilot, XM28 turret pantograph sight for the gunner). Pilot (rear): 1960s steam-gauge panel, centre cyclic, collective on the left with the twist-grip throttle (single T53), M73 rocket sight on the coaming; gunner (front): basic flight instruments, pantograph-mounted reflex sight with two handgrips in the middle, side-arm cyclic on the right console and side-arm collective on the left",
+ "reference": "AH-1G HueyCobra: TM 55-1520-221-10 cockpit figures (pilot and gunner instrument panels, controls); vietnamhelicopters.org AH-1 variant table (AH-1G sights: M73 reflex sight for the pilot, XM28 turret pantograph sight for the gunner). Pilot (rear): 1960s steam-gauge panel, centre cyclic, collective on the left with the twist-grip throttle (single T53), M73 rocket sight on the coaming; gunner (front): basic flight instruments, pantograph-mounted reflex sight with two handgrips in the middle, side-arm cyclic on the right console and side-arm collective on the left; Instrument set: TM 55-1520-221-10 lists (flight T with turn and slip and RMI, dual tach, torque, gas producer, EGT, engine/transmission oil, fuel quantity/pressure, DC volts, caution panel lower centre). No photo could be downloaded in this environment.",
  "palette": "nato",
  "stations": [
   {
@@ -19,6 +19,35 @@
     "ws_z": 3.45,
     "ws_y": 3.12,
     "top_w": 3.04
+   },
+   "panel": {
+    "centre": [
+     ["AIRSPEED", -0.098, 0.05, 0.078],
+     ["ATTITUDE", 0.0, 0.055, 0.085],
+     ["ALTIMETER", 0.098, 0.05, 0.078],
+     ["TURN_SLIP", -0.098, 0.145, 0.064],
+     ["HEADING", 0.0, 0.153, 0.078],
+     ["VVI", 0.098, 0.145, 0.078],
+     ["CLOCK", -0.12, 0.23, 0.052],
+     ["A:heli", 0.04, 0.245, 0.24, 0.055],
+     ["B:SWITCHES", 0.0, 0.33, 0.26, 0.05]
+    ],
+    "left": [
+     ["ROTOR_RPM", 0.065, 0.05, 0.074],
+     ["TORQUE", 0.165, 0.05, 0.07],
+     ["ENGINE_RPM", 0.065, 0.14, 0.06],
+     ["EGT", 0.165, 0.135, 0.058],
+     ["FILLER_OIL", 0.065, 0.215, 0.048],
+     ["FILLER_TEMP", 0.16, 0.2, 0.044]
+    ],
+    "right": [
+     ["FUEL_QTY", 0.065, 0.05, 0.066],
+     ["FILLER_OIL", 0.165, 0.05, 0.058],
+     ["FILLER_TEMP", 0.065, 0.135, 0.054],
+     ["FILLER_VOLTS", 0.165, 0.13, 0.054],
+     ["FILLER_FUEL", 0.065, 0.205, 0.046],
+     ["FILLER_HYDRAULIC", 0.16, 0.195, 0.042]
+    ]
    }
   },
   {
@@ -37,6 +66,26 @@
     "ws_z": 5.3,
     "ws_y": 2.86,
     "top_w": 2.83
+   },
+   "panel": {
+    "centre": [
+     ["AIRSPEED", -0.088, 0.085, 0.058],
+     ["ATTITUDE", 0.0, 0.11, 0.066],
+     ["ALTIMETER", 0.088, 0.085, 0.058],
+     ["B:SWITCHES", 0.0, 0.25, 0.32, 0.06],
+     ["B:KNOBS", -0.09, 0.315, 0.13, 0.04],
+     ["AMMO", 0.11, 0.33, 0.05],
+     ["A:heli_small", 0.11, 0.405, 0.12, 0.05]
+    ],
+    "left": [
+     ["ROTOR_RPM", 0.11, 0.06, 0.06],
+     ["TORQUE", 0.11, 0.145, 0.054]
+    ],
+    "right": [
+     ["VVI", 0.11, 0.06, 0.054],
+     ["CLOCK", 0.11, 0.14, 0.048],
+     ["HEADING", 0.11, 0.215, 0.048]
+    ]
    }
   }
  ],

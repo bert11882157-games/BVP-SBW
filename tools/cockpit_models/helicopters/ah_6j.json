@@ -1,5 +1,5 @@
 {
- "reference": "AH-6J / MH-6J Little Bird (MD 530-family): one small steam-gauge panel on a pedestal ahead of the two side-by-side pilots, a centre cyclic for each pilot, the collective on each pilot's left with the twist-grip throttle of the single Allison 250 (modelled as one lever); Kitty Hawk 1/35 AH-6J build review (cybermodeler.com/hobby/builds/kh/build_kh_50003.shtml), IPMS AH-6M/MH-6M review, model's own seat and canopy measurements",
+ "reference": "AH-6J / MH-6J Little Bird (MD 530-family): one small steam-gauge panel on a pedestal ahead of the two side-by-side pilots, a centre cyclic for each pilot, the collective on each pilot's left with the twist-grip throttle of the single Allison 250 (modelled as one lever); Kitty Hawk 1/35 AH-6J build review (cybermodeler.com/hobby/builds/kh/build_kh_50003.shtml), IPMS AH-6M/MH-6M review, model's own seat and canopy measurements; Panel: flight instruments ahead of the right-seat pilot, engine and drive-train dials (dual tach, torque, TOT, N1, fuel) and the caution panel in the middle of the panel, a FLIR/weapons display (drawn 1.5x) ahead of the left seat. No photo could be downloaded in this environment.",
  "palette": "nato",
  "stations": [
   {
@@ -18,6 +18,30 @@
    "tub": {
     "W": 0.38,
     "top_w": 2.18
+   },
+   "panel": {
+    "centre": [
+     ["AIRSPEED", -0.092, 0.05, 0.074],
+     ["ATTITUDE", 0.0, 0.055, 0.085],
+     ["ALTIMETER", 0.092, 0.05, 0.074],
+     ["RADAR_ALT", -0.092, 0.143, 0.064],
+     ["HEADING", 0.0, 0.153, 0.08],
+     ["VVI", 0.092, 0.143, 0.064],
+     ["CLOCK", -0.092, 0.225, 0.05],
+     ["TURN_SLIP", 0.092, 0.225, 0.05]
+    ],
+    "left": [
+     ["A:heli_small", 0.12, 0.035, 0.15, 0.05],
+     ["ROTOR_RPM", 0.07, 0.11, 0.064],
+     ["TORQUE", 0.17, 0.11, 0.064],
+     ["EGT", 0.07, 0.195, 0.056],
+     ["ENGINE_RPM", 0.17, 0.195, 0.056],
+     ["FUEL_QTY", 0.07, 0.27, 0.054],
+     ["FILLER_OIL", 0.17, 0.265, 0.05]
+    ],
+    "right": [
+     ["B:SWITCHES", 0.1, 0.06, 0.13, 0.05]
+    ]
    }
   },
   {
@@ -35,6 +59,24 @@
    "tub": {
     "W": 0.38,
     "top_w": 2.18
+   },
+   "panel": {
+    "centre": [
+     ["D:STORES", 0.0, 0.145, 0.18],
+     ["AIRSPEED", -0.075, 0.32, 0.058],
+     ["ATTITUDE", 0.0, 0.32, 0.064],
+     ["ALTIMETER", 0.075, 0.32, 0.058]
+    ],
+    "right": [
+     ["B:SWITCHES", 0.12, 0.035, 0.16, 0.045],
+     ["FILLER_TEMP", 0.07, 0.11, 0.058],
+     ["FILLER_VOLTS", 0.17, 0.11, 0.058],
+     ["B:KNOBS", 0.12, 0.19, 0.17, 0.045],
+     ["B:KEYPAD", 0.12, 0.26, 0.17, 0.065]
+    ],
+    "left": [
+     ["B:SWITCHES", 0.1, 0.06, 0.13, 0.05]
+    ]
    }
   }
  ],
