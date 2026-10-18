@@ -1,0 +1,20 @@
+{
+ "reference": "AH-64D Longbow: TM 1-1520-251-10 cockpit figures (pilot: two MPDs, standby airspeed/attitude/altimeter, collective left, cyclic centre; CPG: two MPDs around the TADS sight, side-arm cyclic on the right console)",
+ "palette": "nato",
+ "stations": [
+  {
+   "seat": 0,
+   "era": "HELO_GLASS",
+   "cyclic": "centre",
+   "tub": {
+    "ws_z": 1.85,
+    "ws_y": 2.8
+   }
+  },
+  {
+   "seat": 1,
+   "era": "HELO_GLASS_GUNNER",
+   "cyclic": "right"
+  }
+ ]
+}
