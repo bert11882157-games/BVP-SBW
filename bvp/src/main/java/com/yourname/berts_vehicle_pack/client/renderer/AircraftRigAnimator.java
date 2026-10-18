@@ -11,6 +11,7 @@ import com.github.mcmodderanchor.simplebedrockmodel.v1.common.model.BedrockBone;
 import com.mojang.logging.LogUtils;
 import com.yourname.berts_vehicle_pack.entity.BvpFarVehicleVisuals;
 import com.yourname.berts_vehicle_pack.entity.helicopter.AuthoredHelicopter;
+import com.yourname.berts_vehicle_pack.entity.helicopter.BvpHelicopterEntity;
 import net.minecraft.world.entity.EntityType;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
@@ -34,6 +35,8 @@ final class AircraftRigAnimator {
     private static final int MAX_STEERING = 4;
     /** Nose-wheel steering authority: full up to taxi speed, easing to a fifth by take-off speed (blocks/tick). */
     private static final double STEER_FULL_SPEED = 0.5, STEER_LOW_SPEED = 2.0, STEER_HIGH_SPEED_GAIN = 0.2;
+    /** Cockpit controls follow the 20 Hz synchronized inputs through this lag (ticks), so they glide, not step. */
+    private static final double CONTROL_LAG_TICKS = 1.5;
     private static final Map<PolyMeshModel, Entry> BINDINGS = new LinkedHashMap<>();
     private static final Map<UUID, Phase> PHASES = new LinkedHashMap<>(16, 0.75F, true);
     private static Object world;
@@ -83,6 +86,7 @@ final class AircraftRigAnimator {
         if (binding == null) return true;
 
         double elevator = 0, aileron = 0, rudder = 0, spool = 0, speed = 0, airbrake = 0, rolling = 0;
+        double collective = 0, throttle = 0;
         boolean grounded = false;
         boolean needsMotion = binding.sweeps.length != 0 || binding.rotors.length != 0 || binding.steering.length != 0;
         boolean usable = Float.isFinite(partialTick) && !entity.isWreck();
@@ -126,6 +130,20 @@ final class AircraftRigAnimator {
                 }
             }
         }
+        // Helicopter cockpits: cyclic and pedals from the pilot's synchronized inputs, the collective and throttle
+        // levers from the accepted flight snapshot. Far copies carry neither and keep their controls centred.
+        boolean helicopter = usable && entity instanceof BvpHelicopterEntity && !FarVehicleCopies.isCopy(entity);
+        if (helicopter) {
+            BvpHelicopterEntity heli = (BvpHelicopterEntity) entity;
+            elevator = -heli.presentedCyclicForward();
+            aileron = heli.presentedCyclicRight();
+            rudder = heli.presentedPedalRight();
+            var flight = entity.getVehicleFlightPresentationSnapshot(partialTick);
+            if (flight.getServerTick() > 0) {
+                collective = clamp(flight.getCollective(), 0, 1);
+                throttle = clamp(flight.getThrottle(), 0, 1);
+            }
+        }
         double[] forced = com.atsuishio.superbwarfare.diagnostics.DiagnosticControlOverride.current();
         if (forced != null && !entity.isWreck()) {
             elevator = forced[0];
@@ -139,7 +157,16 @@ final class AircraftRigAnimator {
             trim(PHASES);
         }
         if (usable) {
-            phase.advance(entity.m_9236_().m_46467_() + (double) partialTick, spool, speed, rolling);
+            double tick = entity.m_9236_().m_46467_() + (double) partialTick;
+            phase.advance(tick, spool, speed, rolling);
+            if (helicopter) {
+                double[] lagged = phase.controls(tick, elevator, aileron, rudder, collective, throttle);
+                elevator = lagged[0];
+                aileron = lagged[1];
+                rudder = lagged[2];
+                collective = lagged[3];
+                throttle = lagged[4];
+            }
         } else {
             phase.reset();
         }
@@ -152,6 +179,7 @@ final class AircraftRigAnimator {
             binding.applyFlaps(Float.isFinite(partialTick) && !entity.isWreck()
                     && entity.hasFixedWingLandingGear(), gearFraction);
             binding.applyAirbrakes(airbrake);
+            binding.applyLevers(collective, throttle);
         }
         if (entry.station != null) {
             int seat = entity.getPassengerWeaponStationControllerIndex();
@@ -308,13 +336,20 @@ final class AircraftRigAnimator {
         }
         for (int index = 0; index < flaps.length; index++) {
             var source = data.flaps[index];
-            boolean airbrakeInput = source != null && "PRESENTED_AIRBRAKE".equals(source.input);
-            require(source != null && (airbrakeInput || "PRESENTED_LANDING_GEAR_EXTENSION".equals(source.input))
-                    && "hull".equals(source.parent), "flap input/parent");
-            require(airbrakeInput || gear.length > 0, "landing flaps require explicit gear partitions");
+            String input = source == null || source.input == null ? "" : source.input;
+            // collective and throttle levers: cockpit controls driven by the helicopter's accepted flight snapshot
+            int channel = switch (input) {
+                case "PRESENTED_AIRBRAKE" -> -6;
+                case "PRESENTED_LANDING_GEAR_EXTENSION" -> -5;
+                case "PRESENTED_COLLECTIVE" -> -9;
+                case "PRESENTED_THROTTLE" -> -10;
+                default -> 0;
+            };
+            require(channel != 0 && "hull".equals(source.parent), "flap input/parent");
+            require(channel != -5 || gear.length > 0, "landing flaps require explicit gear partitions");
             double rate = positive(source.maxDeflectionDegrees, 90, "landing flap limit")
                     * sign(source.angleSign);
-            flaps[index] = part(source, airbrakeInput ? -6 : -5, rate, 0, 0, 0, true, names, bones);
+            flaps[index] = part(source, channel, rate, 0, 0, 0, true, names, bones);
         }
         for (int index = 0; index < doors.length; index++) {
             var source = data.gearDoors[index];
@@ -552,6 +587,16 @@ final class AircraftRigAnimator {
             for (Part flap : flaps) if (flap.channel == -6) flap.rotate(extension * flap.rate);
         }
 
+        /** Collective and throttle lever travel, fractions 0..1 of the authored deflection. */
+        void applyLevers(double collective, double throttle) {
+            double up = Double.isFinite(collective) ? clamp(collective, 0, 1) : 0;
+            double open = Double.isFinite(throttle) ? clamp(throttle, 0, 1) : 0;
+            for (Part flap : flaps) {
+                if (flap.channel == -9) flap.rotate(up * flap.rate);
+                else if (flap.channel == -10) flap.rotate(open * flap.rate);
+            }
+        }
+
         void restore() {
             for (Part part : surfaces) part.restore();
             for (Part part : rotors) part.restore();
@@ -689,6 +734,8 @@ final class AircraftRigAnimator {
     static final class Phase {
         final Binding binding;
         final double[] degrees;
+        final double[] controls = new double[5];
+        double controlTick = Double.NaN;
         double previousTick = Double.NaN;
         double previousSpool;
         double previousSpeed;
@@ -738,8 +785,25 @@ final class AircraftRigAnimator {
             previousRolling = rolling;
         }
 
+        /** First-order lag of the cockpit controls toward their synchronized targets; returns the shared array. */
+        double[] controls(double tick, double elevator, double aileron, double rudder,
+                          double collective, double throttle) {
+            double elapsed = tick - controlTick;
+            double alpha = !Double.isFinite(elapsed) || elapsed < 0 || elapsed > 20 ? 1
+                    : 1 - Math.exp(-elapsed / CONTROL_LAG_TICKS);
+            controlTick = tick;
+            controls[0] += (elevator - controls[0]) * alpha;
+            controls[1] += (aileron - controls[1]) * alpha;
+            controls[2] += (rudder - controls[2]) * alpha;
+            controls[3] += (collective - controls[3]) * alpha;
+            controls[4] += (throttle - controls[4]) * alpha;
+            return controls;
+        }
+
         void reset() {
             java.util.Arrays.fill(degrees, 0);
+            java.util.Arrays.fill(controls, 0);
+            controlTick = Double.NaN;
             previousTick = Double.NaN;
             previousSpool = 0;
             previousSpeed = 0;

@@ -521,6 +521,31 @@ public abstract class BvpHelicopterEntity extends ArmoredVehicleEntity implement
         return this.helicopterLastRawVerticalMps;
     }
 
+    /**
+     * Cockpit presentation of the pilot's cyclic and pedals, -1..1, from the synchronized inputs the attitude law
+     * reads (so every client shows the same stick): mouse Y is the pitch command (positive = nose down = cyclic
+     * forward), the bank keys less a quarter of mouse X the roll command, and mouse X the yaw command.
+     */
+    public double presentedCyclicForward() {
+        return presentedAxis(getMouseMoveSpeedY());
+    }
+
+    public double presentedCyclicRight() {
+        double keyboard = leftInputDown() == rightInputDown() ? 0.0D : rightInputDown() ? 1.0D : -1.0D;
+        return clamp(keyboard - 0.25D * presentedAxis(getMouseMoveSpeedX()), -1.0D, 1.0D);
+    }
+
+    public double presentedPedalRight() {
+        return presentedAxis(getMouseMoveSpeedX());
+    }
+
+    private double presentedAxis(double mouse) {
+        HelicopterPhysicalControls controls = this.flightProfile.physicalControls();
+        double fullScale = controls == null || controls.attitudeProfile() == null ? 8.0D
+                : controls.attitudeProfile().fullScaleMouseSample();
+        return getFirstPassenger() == null || !Double.isFinite(mouse) ? 0.0D : clamp(mouse / fullScale, -1.0D, 1.0D);
+    }
+
     public int getBvpRawInputBits() {
         return this.controlInput.rawInput() & 0xFFFF;
     }
