@@ -1,5 +1,6 @@
-"""Ka-50: the shading hood of the IT-23 Shkval TV screen (the STORES display at the top of the centre panel) and
+"""Ka-50: the shading hood of the IT-23 Shkval TV screen (the D:STORES item of the station's explicit panel, top centre) and
 the K-37-800 ejection seat's yellow-and-black firing handle between the pilot's knees."""
+import math
 import numpy as np
 import cockpit_lib as L
 
@@ -8,13 +9,14 @@ X, Y, Z = np.array([1.0, 0, 0]), np.array([0, 1.0, 0]), np.array([0, 0, 1.0])
 
 def extra(ac, tubs, stations, mesh, c):
     for st, t in zip(stations, tubs):
-        facets = [L.Facet(t, 0), L.Facet(t, 1), L.Facet(t, -1)]
-        for f, a, y, kind, d in L.layout(t, L.ERAS[st['era']], facets):
-            if kind != 'D:STORES':
-                continue
+        f = L.Facet(t, 0)
+        for kind, a, v, d in [it for it in st.get('panel', {}).get('centre', []) if it[0] == 'D:STORES']:
+            # the IT-23 screen's place in the station's explicit panel (real metres, scaled like the driver does)
+            a, d = a * t.s, d * t.s
+            y = f.top(a) - v * t.s * math.cos(t.lean)
             p = f.at(a, y)
             _, n, u, r = L.frame(p, f.N, f.U)
-            hw = d / 2 + 0.012
+            hw = d * (0.5 + L.DISPLAY_BEZEL) + 0.006        # just outside the display housing
             # side cheeks, deep at the top and shallow at the foot, and a top plate
             for sg in (-1, 1):
                 p0, p1 = p + r * sg * hw - u * hw, p + r * sg * hw + u * hw
