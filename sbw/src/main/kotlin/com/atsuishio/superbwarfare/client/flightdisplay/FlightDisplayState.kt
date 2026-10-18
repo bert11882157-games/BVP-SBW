@@ -29,6 +29,9 @@ data class FlightDisplayState(
     val angleOfAttack: Double? = null,
     val pathUp: Double? = null,
     val pathRight: Double? = null,
+    /** Rotorcraft only: rotor spool (engine N2) and collective torque, fractions 0..1. */
+    val rotorRpm: Double? = null,
+    val torque: Double? = null,
 ) {
     companion object {
         /** What other players see on this display: a powered, level, stationary picture. */
@@ -69,6 +72,8 @@ data class FlightDisplayState(
             val aoa = if (moving) Math.toDegrees(atan2(-motion.y, motion.z)) else null
             val pathUp = if (moving) Math.toDegrees(atan2(motion.y, sqrt(motion.x * motion.x + motion.z * motion.z))) else null
             val pathRight = if (moving) Math.toDegrees(atan2(-motion.x, motion.z)) else null
+            // rotorcraft: the rotor spool and the collective from the presentation snapshot, once one arrived
+            val rotor = if (!fixedWing) vehicle.getVehicleFlightPresentationSnapshot(partialTick).takeIf { it.sequence != 0 } else null
             return FlightDisplayState(
                 pitchUp = -pitch.toDouble(),
                 rollRight = roll.toDouble(),
@@ -82,6 +87,8 @@ data class FlightDisplayState(
                 angleOfAttack = aoa?.takeIf { it.isFinite() },
                 pathUp = pathUp?.takeIf { it.isFinite() },
                 pathRight = pathRight?.takeIf { it.isFinite() },
+                rotorRpm = rotor?.rotorLift?.takeIf { it.isFinite() }?.coerceIn(0.0, 1.0),
+                torque = rotor?.collective?.takeIf { it.isFinite() }?.coerceIn(0.0, 1.0),
             )
         }
     }

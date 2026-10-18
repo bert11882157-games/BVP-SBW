@@ -32,7 +32,7 @@ internal object GaugePainter {
 
     enum class Kind(val live: Boolean) {
         ALTIMETER(true), ATTITUDE(true), HEADING(true), THROTTLE(true),
-        AIRSPEED(true), MACH(true), AOA(true), VVI(true), G_METER(true), RWR(true),
+        AIRSPEED(true), MACH(true), AOA(true), VVI(true), G_METER(true), RWR(true), ROTOR_RPM(true), TORQUE(true),
         FILLER_FUEL(false), FILLER_OIL(false), FILLER_RPM(false), FILLER_CLOCK(false),
         FILLER_TEMP(false), FILLER_VOLTS(false), FILLER_HYDRAULIC(false), FILLER_OXYGEN(false);
 
@@ -57,6 +57,9 @@ internal object GaugePainter {
             Kind.VVI -> vvi(g, s)
             Kind.G_METER -> gMeter(g, s)
             Kind.RWR -> rwr(g, rwr)
+            Kind.ROTOR_RPM -> rotorRpm(g, s)
+            Kind.TORQUE -> dial(g, "TORQUE", "%", 0.0, 120.0, 5.0, 20.0, (s.torque ?: 0.0) * 100.0, greenFrom = 0.0,
+                greenTo = 100.0, redFrom = 100.0)
             Kind.FILLER_FUEL -> fuel(g)
             Kind.FILLER_OIL -> dial(g, "OIL PRESS", "PSI", 0.0, 100.0, 5.0, 20.0, 62.0, greenFrom = 40.0, greenTo = 80.0)
             Kind.FILLER_RPM -> dial(g, "RPM", "x100", 0.0, 35.0, 1.0, 5.0, 23.5, redFrom = 31.0)
@@ -405,6 +408,16 @@ internal object GaugePainter {
         if (r.locked) DisplayDraw.text(g, "LOCK", C, C - outer * 0.45f, 1.7f, YELLOW, Align.CENTER)
         if (r.launch && blink) DisplayDraw.text(g, "LAUNCH", C, C + outer * 0.45f, 1.9f, RED, Align.CENTER)
         if (!r.live) DisplayDraw.text(g, "RWR", C, C + outer * 0.45f, 1.5f, dimGreen, Align.CENTER)
+    }
+
+    /** Rotor and engine tachometer: engine N2 (white) and rotor Nr (orange, lagging a little), percent. */
+    private fun rotorRpm(g: GuiGraphics, s: FlightDisplayState) {
+        val n2 = (s.rotorRpm ?: 0.0) * 100.0
+        val nr = (n2 - 1.0).coerceAtLeast(0.0)
+        dial(g, "ROTOR", "% RPM", 0.0, 110.0, 5.0, 10.0, n2, greenFrom = 95.0, greenTo = 105.0, redFrom = 105.0)
+        needle(g, sweep(nr, 0.0, 110.0), R - 30, 6f, color = ORANGE, tail = 14f)
+        DisplayDraw.text(g, "N2", C - 40f, C + 66f, 1.3f, NEEDLE, Align.CENTER)
+        DisplayDraw.text(g, "NR", C + 40f, C + 66f, 1.3f, ORANGE, Align.CENTER)
     }
 
     /** A faint reflection across the glass. */
