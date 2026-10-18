@@ -28,9 +28,9 @@ import kotlin.math.cos
 import kotlin.math.sin
 
 /**
- * Round analogue ("steam") instruments for cockpits without electronic displays: altimeter, attitude indicator,
- * heading indicator and throttle work for the pilot of the aircraft the local player rides; other aircraft show
- * them at rest. Filler dials (fuel, oil, RPM, clock...) are fixed pictures.
+ * Round analogue ("steam") instruments: altimeter, attitude indicator, heading indicator, throttle, airspeed, Mach
+ * meter, angle of attack, vertical speed, G meter and the radar warning scope work for the pilot of the aircraft the
+ * local player rides; other aircraft show them at rest. Filler dials (fuel, oil, RPM, clock...) are fixed pictures.
  *
  * All faces live in one atlas texture of [GaugePainter.CELL]-texel cells: the live cells are repainted every frame
  * while the local player flies an aircraft with gauges, the rest once. Placement comes from the vehicle's client
@@ -40,11 +40,11 @@ object CockpitGauges {
     private val LOGGER = Mod.LOGGER
     private val ATLAS = Mod.loc("dynamic/cockpit_gauges")
     private val CASE_TEXTURE = Mod.loc("textures/misc/flight_display_housing.png")
-    private const val GRID = 5
+    private const val GRID = 6
     private const val SIZE = GaugePainter.CELL * GRID
 
     // Atlas cells: live kinds first, then still kinds, then fillers.
-    private val LIVE = listOf(Kind.ALTIMETER, Kind.ATTITUDE, Kind.HEADING, Kind.THROTTLE)
+    private val LIVE = Kind.values().filter { it.live }
     private val FILLERS = Kind.values().filter { !it.live }
     private fun liveCell(kind: Kind) = LIVE.indexOf(kind)
     private fun stillCell(kind: Kind) = if (kind.live) LIVE.size + LIVE.indexOf(kind) else 2 * LIVE.size + FILLERS.indexOf(kind)
@@ -81,9 +81,11 @@ object CockpitGauges {
         val kinds = gauges.mapNotNull { Kind.of(it.kind) }.filter { it.live }.toSet()
         if (kinds.isEmpty()) { liveVehicleId = -1; return }
         val state = FlightDisplayState.sample(vehicle, partialTick) ?: return
+        val rwr = if (Kind.RWR in kinds) RwrDisplayState.sample(vehicle, partialTick) else RwrDisplayState.STILL
+        if (liveVehicleId != vehicle.id) GaugePainter.resetPeaks()
         try {
             paint(atlas ?: return, clear = false) { g ->
-                for (kind in kinds) cell(g, liveCell(kind)) { GaugePainter.paint(g, kind, state) }
+                for (kind in kinds) cell(g, liveCell(kind)) { GaugePainter.paint(g, kind, state, rwr) }
             }
             liveKinds.clear(); liveKinds.addAll(kinds)
             liveVehicleId = vehicle.id

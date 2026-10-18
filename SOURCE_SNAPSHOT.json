@@ -33398,8 +33398,8 @@
     },
     {
       "path": "sbw/src/main/java/com/atsuishio/superbwarfare/resource/vehicle/DefaultVehicleResource.java",
-      "size": 14831,
-      "sha256": "fb8c1d327fe3a03d8dad88ed089fb6c0946242a8d6b94dd82959c40f10735984"
+      "size": 16443,
+      "sha256": "a1042733bfdad53f839af23153d0c9bdd34c2a3b9676448c3544cebe7e78c022"
     },
     {
       "path": "sbw/src/main/java/com/atsuishio/superbwarfare/resource/vehicle/FittedGroundRigResource.java",
@@ -35268,8 +35268,8 @@
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/client/flightdisplay/CockpitGauges.kt",
-      "size": 14515,
-      "sha256": "dcf1ed088f7459048a951bd2d1ae861eb4c4a6dd765d756b070ffbe376a88a8e"
+      "size": 14714,
+      "sha256": "03237fa3bb8e59d563ca3c0c17f39dccee3945a46f8d0beb05852c45e45ef297"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/client/flightdisplay/DisplayDraw.kt",
@@ -35283,18 +35283,28 @@
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/client/flightdisplay/FlightDisplayState.kt",
-      "size": 3677,
-      "sha256": "2a9ccb79c15f9e3e44b186d7aacc970afc2b04cfef942422e4de09548dc2a368"
+      "size": 4862,
+      "sha256": "67419d9091f0c4576ef275fe5ab98fffdb489162aba012091f9fa5b8e456f6a0"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/client/flightdisplay/FlightDisplays.kt",
-      "size": 27114,
-      "sha256": "f1e603bb1eb85fa030a256032279f0dfd656b65c9b639040dc6fe55fe61044c2"
+      "size": 27227,
+      "sha256": "3ccc9402cf638b51d511a7c9a5fc9e81d4f5127b5b7f15a73470d98e1149fa0f"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/client/flightdisplay/GaugePainter.kt",
-      "size": 13994,
-      "sha256": "06a6d82b0d6919af08a49a7a2d58ca2a4b3aafee6c76835aed02aab2aa225702"
+      "size": 22425,
+      "sha256": "448d546de9d8b046f91774ca0ab0c00f5c9c04ae3c393fbb029346ac9fc16cd9"
+    },
+    {
+      "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/client/flightdisplay/HeadUpDisplay.kt",
+      "size": 13508,
+      "sha256": "f62b81d114a0b7e45eb19f98005f70c84ae62701fb4569dab24de4de253905e3"
+    },
+    {
+      "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/client/flightdisplay/HudPainter.kt",
+      "size": 14118,
+      "sha256": "a4248bbe3da1706cc9f617480f3ca79f8ab828ef5ec819a11daacb9cdd09e634"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/client/flightdisplay/PrimaryFlightDisplayPainter.kt",
@@ -35310,6 +35320,11 @@
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/client/flightdisplay/RadarDisplayState.kt",
       "size": 4812,
       "sha256": "d87ba9aaab093b4b16195af581b2833890293dbdb7c5da5f46531ba01e3b88f2"
+    },
+    {
+      "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/client/flightdisplay/RwrDisplayState.kt",
+      "size": 6375,
+      "sha256": "4656e41e1896345545a54cc16063bea9278cd20e447522414f06772bd1129088"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/client/flightdisplay/StoresDisplayPainter.kt",
