@@ -234,6 +234,17 @@ final class AircraftRigAnimator {
         return entry != null && entry.explicit;
     }
 
+    /**
+     * True for an accepted rig that only animates cockpit controls (no rotors, sweeps, gear or station): the
+     * helicopter's legacy rotor and turret animators keep their own bones.
+     */
+    static boolean cockpitOnly(PolyMeshModel model) {
+        Entry entry = BINDINGS.get(model);
+        Binding binding = entry == null ? null : entry.binding;
+        return binding != null && entry.station == null && binding.rotors.length == 0
+                && binding.sweeps.length == 0 && binding.gear.length == 0 && binding.steering.length == 0;
+    }
+
     /** Paired with the renderer's finally block; cached geometry never retains a vehicle pose. */
     static void restore(PolyMeshModel model) {
         Entry entry = BINDINGS.get(model);

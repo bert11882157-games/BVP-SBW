@@ -12,6 +12,7 @@ import com.yourname.berts_vehicle_pack.entity.Btr80AEntity;
 import com.yourname.berts_vehicle_pack.entity.Mig19Entity;
 import com.yourname.berts_vehicle_pack.entity.ToyotaJihadDshkEntity;
 import com.yourname.berts_vehicle_pack.entity.ToyotaJihadSpg9Entity;
+import com.yourname.berts_vehicle_pack.entity.helicopter.BvpHelicopterEntity;
 import net.minecraft.util.Mth;
 
 import java.util.Map;
@@ -28,7 +29,8 @@ final class VehicleBonePoseController {
 
     static void apply(GeoVehicleEntity entity, float entityYaw, PolyMeshModel loadedModel, float partialTicks,
                       VehicleRenderPartSnapshot renderParts) {
-        if (AircraftRigAnimator.apply(entity, loadedModel, partialTicks, renderParts)) {
+        if (AircraftRigAnimator.apply(entity, loadedModel, partialTicks, renderParts)
+                && !(entity instanceof BvpHelicopterEntity && AircraftRigAnimator.cockpitOnly(loadedModel))) {
             return;
         }
         if (entity instanceof Mig19Entity) {

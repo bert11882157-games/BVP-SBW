@@ -43,15 +43,15 @@ python3 tools/heli_armament/preview.py ah_64d /tmp/ah64.png --loadout mixed --vi
 Missiles leave the launcher one at a time, and each launcher shows its remaining rounds. Rocket and gun pods fire
 from their own tube mouths or muzzles through one native channel per pod, so the left and right pods alternate.
 
-## The texture (owner step)
+## The texture
 
-All the generated models share one 64×64 palette texture. It is an LFS file, which this environment can't push.
-To add it, run `build.py --texture PATH`, or take the copy in the project files at `heli-armament/heli_stores.png`,
-and commit it through LFS at
+All the generated models share one 64×64 palette texture, an LFS file at
 
 ```
 bvp/src/generated/resources/assets/berts_vehicle_pack/textures/aircraft_stores/heli_stores.png
 ```
+
+`build.py --texture PATH` writes a fresh copy; commit it through LFS if the palette changes.
 
 ## Known simplifications
 

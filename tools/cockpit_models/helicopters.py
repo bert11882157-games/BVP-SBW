@@ -22,7 +22,9 @@ Spec (helicopters/<vid>.json): {"palette": cockpit_lib.PALETTES key, "reference"
                 "pedals": true, "hud": false, "gunsight": false, "tub": {cockpit_lib.Tub overrides}}],
   "remove": [[x0,x1,y0,y1,z0,z1], ...] hull faces wholly inside these boxes go as well,
   "keep": [[...]] hull faces with their centre in these boxes are never removed,
-  "colours": {"panel": [r,g,b], ...} overrides of the palette's colours (nearest uniform block of the texture)}
+  "colours": {"panel": [r,g,b], ...} overrides of the palette's and accent colours (nearest uniform block of the
+  texture), "glass": [[[x,y,z] x 4], ...] quads of canopy glass the model lacks, added to CanopyGlass (both windings)
+  before the stations are measured}
 A station's "eye" with "move_eye": true also moves the seat's eye attachment there (for an eye that sat inside the
 airframe). helicopters/<vid>.py, when present, may define extra(ac, tubs, stations, mesh, c): details of that
 helicopter's cockpit (sights, consoles) added to the cockpit bone.
@@ -69,6 +71,18 @@ ERAS = {
         left=[[('ROTOR_RPM', .050)], [('FILLER_CLOCK', .040)]],
         right=[[('HEADING', .056)], [('VVI', .048)]],
         hud=False, displays='CRT', seat='bucket'),
+    # a gunner's station with a big sight on the centre line: the attitude dial moves to the left wing
+    'HELO_GUNNER_SIGHT': dict(
+        centre=[[('FILLER_CLOCK', .040)], [('AIRSPEED', .052), ('ALTIMETER', .052)]],
+        left=[[('ATTITUDE', .060)], [('ROTOR_RPM', .046)]],
+        right=[[('HEADING', .052)], [('VVI', .046)]],
+        hud=False, displays='CRT', seat='bucket'),
+    # AH-64D pilot: two side displays with the up-front display between them, standby dials below
+    'HELO_APACHE': dict(
+        centre=[[('UFCP', .120)], [('AIRSPEED', .044), ('ATTITUDE', .052), ('ALTIMETER', .044)]],
+        left=[[('D:STORES', .130)], [('ROTOR_RPM', .048), ('TORQUE', .048)]],
+        right=[[('D:RADAR', .130)], [('RWR', .054), ('FILLER_FUEL', .044)]],
+        hud=False, displays='CRT', seat='bucket'),
     # glass stations of the 1990s: two or three multi-function displays, standby dials, rotor and torque
     'HELO_GLASS': dict(
         centre=[[('D:PFD', .150)], [('AIRSPEED', .044), ('ATTITUDE', .052), ('ALTIMETER', .044)]],
@@ -79,6 +93,11 @@ ERAS = {
         centre=[[('UFCP', .140)], [('AIRSPEED', .044), ('ATTITUDE', .052), ('ALTIMETER', .044)]],
         left=[[('D:STORES', .140)], [('ROTOR_RPM', .048), ('TORQUE', .048)]],
         right=[[('D:PFD', .140)], [('RWR', .054), ('FILLER_FUEL', .044)]],
+        hud=False, displays='LCD', seat='bucket'),
+    'HELO_GLASS_RADAR_LCD': dict(
+        centre=[[('D:PFD', .140)], [('AIRSPEED', .044), ('ATTITUDE', .052), ('ALTIMETER', .044)]],
+        left=[[('D:STORES', .130)], [('ROTOR_RPM', .048), ('TORQUE', .048)]],
+        right=[[('D:RADAR', .130)], [('RWR', .054), ('FILLER_FUEL', .044)]],
         hud=False, displays='LCD', seat='bucket'),
     # glass station of a gunner/co-pilot: one display and the standby dials
     'HELO_GLASS_GUNNER': dict(
@@ -93,7 +112,7 @@ ERAS = {
                 [('VVI', .052), ('FILLER_CLOCK', .040), ('G_METER', .044)]],
         left=[[('ROTOR_RPM', .058)], [('TORQUE', .052)], [('FILLER_FUEL', .048)]],
         right=[[('RWR', .058)], [('FILLER_TEMP', .048)], [('FILLER_HYDRAULIC', .044)]],
-        hud=True, displays='CRT', seat='bucket'),
+        hud=True, displays='CRT', seat='ejection'),
 }
 L.ERAS.update(ERAS)
 
@@ -160,10 +179,12 @@ def collective(t, c):
     """(quadrant Mesh, lever Mesh, hinge): the lever runs forward beside the seat on the left, hinged at its aft end,
     modelled fully down"""
     s, E = t.s, t.E
-    x = E[0] + min(0.30 * s, 0.75 * t.W)
-    hinge = np.array([x, E[1] - 0.80 * s, E[2] - 0.18 * s])
+    # in the gap between the seat's side (0.21 s) and the left console's inner edge (0.58 W), just above the
+    # console top, so it stays in the open
+    x = E[0] + 0.5 * (0.21 * s + 0.58 * t.W)
+    hinge = np.array([x, E[1] - 0.62 * s, E[2] - 0.18 * s])
     q = L.Mesh()
-    q.box(hinge + [0, -0.03 * s, 0.02 * s], (X, Y, Z), (0.03 * s, 0.04 * s, 0.06 * s), c['black'])
+    q.box(hinge + [0, -0.03 * s, 0.02 * s], (X, Y, Z), (0.016 * s, 0.03 * s, 0.05 * s), c['black'])
     m = L.Mesh()
     ax = L.unit([0, -0.18, 1])                                         # the lever droops slightly when down
     up = L.unit(np.cross(ax, X))
@@ -261,6 +282,9 @@ def apply(vid, dry=False):
     sw = L.Swatches(L.texture_path(vid))
     ac.bones[:] = [b for b in ac.bones if not ours(b['name'])]
     stations = spec['stations']
+    if spec.get('glass'):                             # canopy glass the model lacks, so the stations can be measured
+        extra_glass = np.array([[q[0], q[1], q[2], q[0], q[2], q[3]] for q in spec['glass']], float).reshape(-1, 3, 3)
+        ac.glass = np.concatenate([ac.glass, extra_glass, extra_glass[:, ::-1]]) if len(ac.glass) else extra_glass
     tubs = []
     dropped = 0
     for st in stations:
@@ -297,6 +321,7 @@ def apply(vid, dry=False):
     L.PALETTES[pal_name] = pal
     c = {k: sw.uv(v) for k, v in pal.items()}
     c.update({k: sw.uv(v) for k, v in L.ACCENT.items()})
+    c.update({k: sw.uv(tuple(v)) for k, v in spec.get('colours', {}).items()})
     cockpit = L.Mesh()
     new_bones, surfaces, flaps = [], [], []
     gauges, displays, glass, hud_out = [], [], [], None
