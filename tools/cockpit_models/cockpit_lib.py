@@ -511,7 +511,7 @@ ACCENT = dict(black=(24, 25, 26), dgrey=(44, 46, 48), mgrey=(88, 92, 94), lgrey=
 # Instrument sets, as rows from the top of each facet. Items: (kind, diameter) for a dial, ('D:<PAGE>', width) for
 # a display of that page (square screen; its housing is 1.4 times wider), ('UFCP', width) for the up-front control
 # block and ('A:<set>', width, height) for an annunciator panel of LAMP_SETS[set]. Sizes are metres at scale 1 (real
-# instruments: 3 inch dials about .080, 2 inch .057; displays are drawn larger than life so they read in game). 'fill' rows are added, in order, while the facet has room.
+# instruments: 3 inch dials about .080, 2 inch .057; displays are drawn about half again larger than life so they read in game). 'fill' rows are added, in order, while the facet has room.
 # Dials the game knows the value of are live (GaugePainter.Kind.live): the basic six, Mach, AoA, G, RWR, fuel, radar
 # altitude, clock, turn and slip, engine RPM and EGT, and the rounds counter.
 ERAS = {
@@ -547,25 +547,25 @@ ERAS = {
         left=[[('ENGINE_RPM', .064), ('EGT', .064)], [('FUEL_QTY', .064), ('FILLER_OIL', .050)],
               [('AMMO', .057), ('FILLER_HYDRAULIC', .050)]],
         left_fill=[[('THROTTLE', .050), ('FILLER_TEMP', .050)]],
-        right=[[('D:RADAR', .135)], [('RWR', .064), ('TURN_SLIP', .050)], [('FILLER_OXYGEN', .044), ('FILLER_VOLTS', .044)]],
+        right=[[('D:RADAR', .160)], [('RWR', .064), ('TURN_SLIP', .050)], [('FILLER_OXYGEN', .044), ('FILLER_VOLTS', .044)]],
         right_fill=[[('FILLER_TEMP', .044), ('FILLER_CLOCK', .044)]],
         hud=False, displays='CRT', seat='ejection'),
     'GEN4_CRT': dict(
-        centre=[[('UFCP', .170)], [('D:RADAR', .140), ('D:PFD', .140)],
+        centre=[[('UFCP', .180)], [('D:RADAR', .165), ('D:PFD', .165)],
                 [('AIRSPEED', .057), ('ATTITUDE', .064), ('ALTIMETER', .057), ('VVI', .050)],
                 [('ENGINE_RPM', .050), ('EGT', .050), ('FUEL_QTY', .050), ('CLOCK', .044)]],
         centre_fill=[[('FILLER_HYDRAULIC', .044), ('FILLER_OIL', .044), ('FILLER_OXYGEN', .044)]],
-        left=[[('D:STORES', .110)]],
+        left=[[('D:STORES', .130)]],
         left_fill=[[('G_METER', .050), ('AOA', .050)], [('AMMO', .044), ('FILLER_VOLTS', .044)]],
         right=[[('RWR', .064), ('RADAR_ALT', .050)]],
         right_fill=[[('AMMO', .044), ('FILLER_HYDRAULIC', .044)], [('TURN_SLIP', .044), ('FILLER_TEMP', .044)]],
         eyebrows=(('eyebrow_l', .120, .050), ('eyebrow_r', .120, .050)),
         hud=True, displays='CRT', seat='ejection'),
     'MODERN_GLASS': dict(
-        centre=[[('UFCP', .170)], [('D:STORES', .150), ('D:PFD', .150)],
+        centre=[[('UFCP', .180)], [('D:STORES', .175), ('D:PFD', .175)],
                 [('AIRSPEED', .050), ('ATTITUDE', .057), ('ALTIMETER', .050), ('FUEL_QTY', .050)]],
         centre_fill=[[('ENGINE_RPM', .044), ('EGT', .044), ('FILLER_HYDRAULIC', .044), ('CLOCK', .044)]],
-        left=[[('D:RADAR', .115)]],
+        left=[[('D:RADAR', .135)]],
         left_fill=[[('ENGINE_RPM', .044), ('EGT', .044)], [('G_METER', .044), ('AOA', .044)]],
         right=[[('RWR', .064), ('RADAR_ALT', .050)]],
         right_fill=[[('AMMO', .044), ('CLOCK', .044)], [('FILLER_OXYGEN', .040), ('FILLER_VOLTS', .040)]],
@@ -655,8 +655,9 @@ def layout(tub, era, facets, hud_body=None):
             return hs, ws
 
         def fits(rows, scale):
+            # rows must fit the height; a row wider than the facet (the big displays) is squeezed on its own below
             hs, ws = measure(rows, scale)
-            return sum(hs) + GAP * s * (len(rows) - 1) <= height and max(ws) <= width
+            return sum(hs) + GAP * s * (len(rows) - 1) <= height
 
         rows, scale = base, 1.0
         for scale in np.linspace(1.0, 0.72, 15):
@@ -1170,6 +1171,24 @@ def old_interior(ac, tubs, keep=()):
                         # (its glass is gone), and the new HUD brings its own
                         sel.add(i)
                         continue
+                # D: the glareshield zone: ahead of the panel, below eye level, under the glass, inside the canopy
+                # width. The new coaming and HUD cover it, so old decks, HUD housings and sight mounts go, whether
+                # or not a ray from them finds a gap in the glass; thin frame members along the glass stay, and a
+                # deck running on under the windscreen is cut there. (Nothing above eye level is touched: low
+                # windscreen bows sit there.)
+                under_glass = lambda r: any(ac.glass_above(cc[0] + ox, cc[2] + oz, cc[1] - 0.01) is not None
+                                            for ox, oz in ((0, 0), (r, 0), (-r, 0), (0, r), (0, -r)))
+                if not skin and cc[2] > t.Z - 0.10 * s and cc[1] > t.sill - 0.10 * s and \
+                        dxv.max() < t.Wg - 0.02 and V[:, 1].max() < E[1] and under_glass(0.15 * s):
+                    if ac.hugs_glass(V) and (ext[1] < 0.12 * s or abs(N[p[0][1]][1]) < 0.5):
+                        continue                              # a frame member or windscreen post along the glass
+                    if far.all():
+                        continue
+                    if far.any():
+                        clips.setdefault(b['name'], {})[i] = (2, t.ws_z)
+                    else:
+                        sel.add(i)
+                    continue
                 if not (np.all(dz > 0.12) and np.all(V[:, 1] < E[1]) and np.all(V[:, 1] > t.floor_y - 0.3)):
                     continue
                 if far.any() and (far.all() or V[:, 2].min() > t.ws_z - 0.1):

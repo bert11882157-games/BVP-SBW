@@ -55,6 +55,19 @@ def apply(vid, dry=False):
 
     # the old interior
     rm, clips = L.old_interior(ac, [tub])
+    # hand-listed leftovers: boxes relative to the eye (x left, y up, z forward) whose faces go too
+    for lo, hi in spec.get('remove_boxes', []):
+        lo, hi = np.array(lo) + E, np.array(hi) + E
+        for b in ac.bones:
+            pm = b.get('poly_mesh')
+            if not pm or not pm.get('polys') or not L.is_interior_bone(b['name']):
+                continue
+            P = np.array(pm['positions'], float) * np.array([1, 1, -1]) / 16.0
+            for i, poly in enumerate(pm['polys']):
+                cc = P[[v[0] for v in poly]].mean(0)
+                if np.all(cc >= lo) and np.all(cc <= hi):
+                    rm.setdefault(b['name'], set()).add(i)
+                    clips.get(b['name'], {}).pop(i, None)
     removed = 0
     count = {}
     for b in ac.bones:
