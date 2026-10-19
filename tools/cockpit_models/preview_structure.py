@@ -85,6 +85,37 @@ def consoles(vid, out):
                  yaw=sg * 55.0, pitch=-58.0, fov=75.0, size=(1000, 760), glass=False, skip=SKIP_OPEN)
 
 
+REFS = '/mnt/project-files/cockpit-refs'
+
+
+def exterior_bones(vid):
+    """every bone that is not the cockpit interior or the stick"""
+    geo = json.load(open(os.path.join(E.GEO, vid + '.geo.json')))
+    return tuple(b['name'] for b in geo['minecraft:geometry'][0]['bones']
+                 if not (b['name'].endswith('__cockpit') or 'control_stick' in b['name']))
+
+
+def matched(vid, out):
+    """renders at the camera angles of the reference photos the aircraft file lists (REF_VIEWS), and a copy of
+    each photo beside them"""
+    import importlib
+    sys.path.insert(0, HERE)
+    try:
+        mod = importlib.import_module('structures.' + vid)
+    except ImportError:
+        return
+    views = getattr(mod, 'REF_VIEWS', [])
+    e = L.Aircraft(vid).eye(0)
+    for k, (photo, caption, off, yaw, pitch, fov) in enumerate(views, 1):
+        eye = [e[0] + off[0], e[1] + off[1], e[2] + off[2]]
+        # the exterior is skipped so a camera standing where the photographer stood (outside the skin) sees in
+        E.render(vid, os.path.join(out, f'{vid}_ref{k}.png'), eye=eye, yaw=yaw, pitch=pitch, fov=fov, size=(1200, 840),
+                 glass=False, skip=exterior_bones(vid))
+        src = os.path.join(REFS, vid, photo)
+        if os.path.exists(src):
+            im = Image.open(src); im.thumbnail((1200, 1200)); im.save(os.path.join(out, f'{vid}_ref{k}_photo.jpg'), quality=85)
+
+
 def main(argv):
     out = argv[0]; os.makedirs(out, exist_ok=True)
     for vid in argv[1:]:
@@ -101,6 +132,7 @@ def main(argv):
                  pitch=-30.0, fov=50.0, size=(1400, 980), glass=False, skip=SKIP_OPEN)
         cutaway(vid, os.path.join(out, f'{vid}_cutaway.png'))
         consoles(vid, out)
+        matched(vid, out)
         print(vid)
 
 

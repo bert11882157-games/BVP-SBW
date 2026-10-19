@@ -550,12 +550,12 @@ def seat_aces2(S, recline=30, hip=None, pan_tilt=12, headbox_top=None, frame='fr
     S.box(back_c - fwd_b * 0.05 * s, (X, up_b, fwd_b), (0.215 * s, 0.36 * s, 0.035 * s), frame)
     for sg in (1, -1):
         S.box(back_c + X * sg * 0.19 * s + fwd_b * 0.03 * s, (X, up_b, fwd_b), (0.025 * s, 0.28 * s, 0.045 * s), frame)
-    rail_h = 0.85 * s
+    rail_h = 0.95 * s
     for sg in (1, -1):
         S.box(hip - up_b * 0.15 * s + up_b * rail_h / 2 - fwd_b * 0.095 * s + X * sg * 0.12 * s, (X, up_b, fwd_b),
               (0.02 * s, rail_h / 2, 0.02 * s), frame)
     # parachute container (head box) on the back, headrest pad on its front face
-    hb_c = hip + up_b * 0.86 * s - fwd_b * 0.045 * s
+    hb_c = hip + up_b * 0.81 * s - fwd_b * 0.045 * s                 # sits on the back's top edge
     hb_half = np.array([0.17, 0.15, 0.085]) * s
     if headbox_top is not None:
         top = (hb_c + up_b * hb_half[1])[1]

@@ -21,12 +21,13 @@ import structure as K
 
 X, Y, Z = K.X, K.Y, K.Z
 
-COLOURS = dict(panel=(38, 39, 40), shade=(26, 27, 28), wall=(84, 86, 88), console=(44, 46, 48), coaming=(18, 18, 19),
+COLOURS = dict(panel=(56, 58, 60), shade=(26, 27, 28), wall=(84, 86, 88), console=(50, 52, 54), coaming=(18, 18, 19),
                floor=(50, 52, 54), frame=(118, 120, 116), cushion=(36, 38, 36))
 
 LEAN = 10                      # the panel's top leans away from the pilot
 MFD_TURN = 22                  # the MFD panels toward the pilot
 AUX_TURN = 45                  # the outer facets toward the pilot
+WING_DROP = 0.08               # the glareshield's wings fall this far (in s) from the facets to the side walls
 
 
 def build(S):
@@ -43,18 +44,18 @@ def build(S):
         return np.array([E[0], top, Zp]) + R * a + U * ((y - top) / math.cos(math.radians(LEAN))) + N * proud
 
     # -- centre column (proud) and the ICP housing over it, the DED to the right
-    col_w = 0.19 * s
-    col_top = top - 0.11 * s
+    col_w = 0.22 * s                                    # two 3-inch dials side by side
+    col_top = top - 0.14 * s                            # under the ICP housing
     col = S.plate('centre', P(0, (col_top + col_bot) / 2, 0.05), R, U, col_w, (col_top - col_bot) / math.cos(math.radians(LEAN)),
                   depth=0.08, label='centre column: flight instruments')
     # the ICP housing: a block tilted up 32 degrees so the keypad faces the pilot's eyes, under the HUD body
     icp_up = K.unit(np.array([0, math.cos(math.radians(32 + LEAN)), math.sin(math.radians(32 + LEAN))]))
     icp_n = K.unit(np.cross(R, icp_up))
-    icp_c = P(0, top - 0.055 * s, 0.03)
-    S.box(icp_c - icp_n * 0.035, (R, icp_up, icp_n), (0.095 * s, 0.05 * s, 0.035), 'panel')
-    S.plate('icp', icp_c + icp_n * 0.001, R, icp_up, 0.16 * s, 0.085 * s, depth=0.004, colour='black',
+    icp_c = P(0, top - 0.065 * s, 0.03)
+    S.box(icp_c - icp_n * 0.035, (R, icp_up, icp_n), (0.095 * s, 0.058 * s, 0.035), 'panel')
+    S.plate('icp', icp_c + icp_n * 0.001, R, icp_up, 0.16 * s, 0.10 * s, depth=0.004, colour='black',
             edge='panel', label='ICP keypad')
-    ded_c = P(0.20 * s, top - 0.035 * s, -0.01)
+    ded_c = P(0.205 * s, top - 0.035 * s, -0.005)
     S.box(ded_c - N * 0.025, (R, U, N), (0.06 * s, 0.03 * s, 0.03), 'panel')
     S.plate('ded', ded_c + N * 0.006, R, icp_up, 0.105 * s, 0.045 * s, depth=0.012, colour='black', edge='panel',
             label='DED window')
@@ -63,7 +64,7 @@ def build(S):
     w_m = math.radians(MFD_TURN)
     x_in = col_w / 2
     mfd_w, mfd_h = 0.19 * s, 0.19 * s
-    mfd_top = top - 0.06 * s
+    mfd_top = top - 0.115 * s                            # under the RWR / DED strips
     low_bot = t.bot_w
     x_out = x_in + mfd_w * math.cos(w_m)
     mfd_proud_out = -0.03 + mfd_w * math.sin(w_m)
@@ -74,16 +75,20 @@ def build(S):
     for side, tag in ((1, 'r'), (-1, 'l')):
         Rm = K.unit(R * math.cos(w_m) + side * N * math.sin(w_m))
         inner = P(side * x_in, mfd_top - mfd_h / 2, -0.03)
-        S.plate('mfd_' + tag, inner + side * Rm * mfd_w / 2, Rm, U, mfd_w, mfd_h, depth=0.03,
-                label=('right' if side > 0 else 'left') + ' MFD')
+        S.plate('mfd_' + tag, inner + side * Rm * mfd_w / 2, Rm, U, mfd_w, mfd_h, depth=0.03, colour='shade',
+                edge='panel', label=('right' if side > 0 else 'left') + ' MFD')
         lo_h = (mfd_top - mfd_h - low_bot) / math.cos(math.radians(LEAN))
         inner_lo = P(side * x_in, low_bot + (mfd_top - mfd_h - low_bot) / 2, -0.06)
         S.plate('under_' + tag, inner_lo + side * Rm * mfd_w / 2, Rm, U, mfd_w, lo_h, depth=0.02, colour='shade',
                 label=('right' if side > 0 else 'left') + ' lower panel')
-        # the strip above the MFD, under the glareshield
-        up_c = P(side * x_in, top - 0.03 * s, -0.03)
-        S.plate('above_' + tag, up_c + side * Rm * mfd_w / 2, Rm, U, mfd_w, 0.05 * s, depth=0.03,
-                label=('right' if side > 0 else 'left') + ' upper strip')
+        # the strip above the MFD, under the glareshield: the RWR scope and threat-warning aux buttons on the
+        # left, the DED with the fuel flow indicator and standby ADI under it on the right
+        up_h = mfd_top - 0.012 * s - (top - 0.012)
+        up_c = P(side * x_in, top - 0.012 - up_h / 2 * 0 - (top - 0.012 - mfd_top - 0.012 * s) / 2, -0.03)
+        up_c = P(side * x_in, (top - 0.012 + mfd_top + 0.012 * s) / 2, -0.03)
+        S.plate('above_' + tag, up_c + side * Rm * mfd_w / 2, Rm, U, mfd_w,
+                (top - 0.012 - mfd_top - 0.012 * s) / math.cos(math.radians(LEAN)), depth=0.03,
+                label='DED, fuel flow, standby ADI' if side > 0 else 'RWR scope, threat warning aux')
         # the auxiliary facet at 45 degrees, in two panels
         Ra = K.unit(R * math.cos(w_a) + side * N * math.sin(w_a))
         aux_in = P(side * x_out, 0.0, mfd_proud_out)
@@ -101,15 +106,23 @@ def build(S):
         xo = E[0] - side * aux_out
         po = P(side * aux_out, top, aux_proud_out)
         pb = P(side * aux_out, low_bot, aux_proud_out)
-        S.m.flat([po, pb, [E[0] - side * t.W, pb[1], pb[2]], [E[0] - side * t.W, po[1], po[2]]], S.c['panel'],
-                 normal=N)
+        S.m.flat([po, pb, [E[0] - side * t.W, pb[1], pb[2]], [E[0] - side * t.W, po[1] - WING_DROP * s, po[2]]],
+                 S.c['panel'], normal=N)
 
     # -- the glareshield: the lip follows the panel top, wrapping forward with the facets
     lip = []
     for a, proud in ((-aux_out, aux_proud_out), (-x_out, mfd_proud_out), (-x_in, -0.03), (-x_in, 0.0), (x_in, 0.0),
                      (x_in, -0.03), (x_out, mfd_proud_out), (aux_out, aux_proud_out)):
         lip.append((P(a, top, proud), N))
-    lip = [(P(-t.W / 1.0 + 0.0, top, aux_proud_out) if False else lip[0][0], N)] + lip[1:]
+    # the lip runs on past the outer facets to the skin, so the glareshield covers the wedge of panel between
+    # the facet's outer edge and the side wall (the skin narrows toward the canopy sill there)
+    z_lip = P(aux_out, top, aux_proud_out)[2]
+    d_plus, d_minus = S.ac.skin_x(top + 0.02 * s, z_lip, E[0])
+    for a_end, d in ((-1, d_plus), (1, d_minus)):
+        xe = min(t.W, d - 0.012) if np.isfinite(d) else t.W
+        if xe > aux_out + 0.01:
+            pt = (P(a_end * xe, top - WING_DROP * s, aux_proud_out), N)
+            lip = [pt] + lip if a_end < 0 else lip + [pt]
     K.coaming(S, lip, crown=0.0, flat=True, front_hw=t.W * 0.92, lip_height=0.02, lip_depth=0.03)
 
     # -- HUD: body on the glareshield, the posts and combiner; eyebrow lamp blocks either side
@@ -162,3 +175,14 @@ def build(S):
     g = S.ac.glass_above(E[0], E[2] - 0.35 * s, E[1])
     K.seat_aces2(S, recline=30, headbox_top=(g - 0.03) if g is not None else None)
     K.pedals(S, raise_=0.16)
+
+
+# Review views matching the reference photos (cockpit-refs/f_16c): (photo, caption, eye offset from the pilot's
+# eye, yaw, pitch, fov). yaw positive to the pilot's left.
+REF_VIEWS = [
+    ('f_16c_03.jpg', "pilot's view of the panel (NMUSAF F-16A)", (0.0, 0.0, -0.06), 0.0, -24.0, 74.0),
+    ('f_16c_01.jpg', 'from the left shoulder (Asian Aerospace F-16)', (0.45, 0.42, -0.25), -22.0, -30.0, 66.0),
+    ('f_16c_06.jpg', 'from above and behind (Twenthe F-16AM)', (0.0, 1.25, -0.95), 0.0, -56.0, 58.0),
+    ('f_16c_05.jpg', 'right console and side stick (F-16D)', (0.55, 0.55, -0.35), -48.0, -36.0, 62.0),
+    ('f_16c_07.jpg', 'over the left sill (Twenthe F-16AM)', (1.05, 0.55, -0.5), -62.0, -30.0, 70.0),
+]

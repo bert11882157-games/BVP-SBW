@@ -12,8 +12,8 @@
    "label": "centre column: flight instruments",
    "centre": [
     0.0,
-    2.20968,
-    3.45244
+    2.1959,
+    3.45487
    ],
    "right": [
     -1.0,
@@ -30,16 +30,16 @@
     -0.17365,
     -0.98481
    ],
-   "width": 0.1746,
-   "height": 0.3032
+   "width": 0.2021,
+   "height": 0.2752
   },
   {
    "name": "icp",
    "label": "ICP keypad",
    "centre": [
     0.0,
-    2.40672,
-    3.43615
+    2.39754,
+    3.43777
    ],
    "right": [
     -1.0,
@@ -57,15 +57,15 @@
     -0.74314
    ],
    "width": 0.147,
-   "height": 0.0781
+   "height": 0.0919
   },
   {
    "name": "ded",
    "label": "DED window",
    "centre": [
-    -0.18377,
-    2.41853,
-    3.46714
+    -0.18836,
+    2.4194,
+    3.46222
    ],
    "right": [
     -1.0,
@@ -89,9 +89,9 @@
    "name": "mfd_r",
    "label": "right MFD",
    "centre": [
-    -0.16822,
-    2.30943,
-    3.47998
+    -0.18201,
+    2.25889,
+    3.48889
    ],
    "right": [
     -0.92718,
@@ -115,9 +115,9 @@
    "name": "under_r",
    "label": "right lower panel",
    "centre": [
-    -0.16822,
-    2.13194,
-    3.53991
+    -0.18201,
+    2.10667,
+    3.54436
    ],
    "right": [
     -0.92718,
@@ -135,15 +135,15 @@
     -0.92069
    ],
    "width": 0.1746,
-   "height": 0.1726
+   "height": 0.1213
   },
   {
    "name": "above_r",
-   "label": "right upper strip",
+   "label": "DED, fuel flow, standby ADI",
    "centre": [
-    -0.16822,
-    2.42429,
-    3.45973
+    -0.18201,
+    2.39853,
+    3.46427
    ],
    "right": [
     -0.92718,
@@ -161,13 +161,13 @@
     -0.92069
    ],
    "width": 0.1746,
-   "height": 0.0459
+   "height": 0.0839
   },
   {
    "name": "eng",
    "label": "engine instruments column",
    "centre": [
-    -0.29139,
+    -0.30517,
     2.33582,
     3.40383
    ],
@@ -193,7 +193,7 @@
    "name": "aux_r",
    "label": "hydraulics, EPU fuel, clock, cabin pressure",
    "centre": [
-    -0.29139,
+    -0.30517,
     2.14097,
     3.43819
    ],
@@ -219,9 +219,9 @@
    "name": "mfd_l",
    "label": "left MFD",
    "centre": [
-    0.16822,
-    2.30943,
-    3.47998
+    0.18201,
+    2.25889,
+    3.48889
    ],
    "right": [
     -0.92718,
@@ -245,9 +245,9 @@
    "name": "under_l",
    "label": "left lower panel",
    "centre": [
-    0.16822,
-    2.13194,
-    3.53991
+    0.18201,
+    2.10667,
+    3.54436
    ],
    "right": [
     -0.92718,
@@ -265,15 +265,15 @@
     -0.92069
    ],
    "width": 0.1746,
-   "height": 0.1726
+   "height": 0.1213
   },
   {
    "name": "above_l",
-   "label": "left upper strip",
+   "label": "RWR scope, threat warning aux",
    "centre": [
-    0.16822,
-    2.42429,
-    3.45973
+    0.18201,
+    2.39853,
+    3.46427
    ],
    "right": [
     -0.92718,
@@ -291,13 +291,13 @@
     -0.92069
    ],
    "width": 0.1746,
-   "height": 0.0459
+   "height": 0.0839
   },
   {
    "name": "misc_l",
    "label": "MISC panel (master arm, laser arm, alt release)",
    "centre": [
-    0.29139,
+    0.30517,
     2.38176,
     3.39573
    ],
@@ -323,7 +323,7 @@
    "name": "gear",
    "label": "landing gear panel",
    "centre": [
-    0.29139,
+    0.30517,
     2.18691,
     3.43009
    ],
