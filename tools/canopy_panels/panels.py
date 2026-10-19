@@ -91,7 +91,12 @@ class Envelope:
         return float(np.interp(z, self.z, self.L.W))
 
     def lip(self, z):
-        return float(np.interp(z, self.z, self.L.Yb))
+        """the glass's lower edge: the loft's rail, capped along the hood (see Builder.cap_sill)"""
+        y = float(np.interp(z, self.z, self.L.Yb))
+        cap = getattr(self, 'cap', None)
+        if cap and cap[0] - 0.05 <= z <= cap[1] + 0.05:
+            y = min(y, cap[2])
+        return y
 
     def spine(self, z):
         return float(np.interp(z, self.z, self.L.S))
@@ -198,7 +203,11 @@ class Builder:
         self.z_hood = float(np.clip(self.z_hood, env.zr, self.z_arch - 0.2))
         bows = hood.get('bows', [])
         self.bows = [self.z_arch + (self.z_hood - self.z_arch) * b for b in bows]
+        self.cap_sill()
         self.tris, self.frames = [], []
+        # panel edges that are not frame rings: the windscreen base, the sills along the glass's lower edge, the
+        # rear spine and end of a glazed tail (tools/canopy_build draws solid members along them)
+        self.edges, self.sill_l, self.sill_r = [], [], []
 
     # ---------------------------------------------------------------- windscreen
     def windscreen(self):
@@ -214,6 +223,9 @@ class Builder:
             # the base row sits on the nose skin
             rows[0][:, 1] = [max(ev.skin_at(p[0], zf) + 0.012, env.lip(zf)) for p in rows[0]]
             self.tris += grid_tris(rows)
+            self.edges.append(('base', rows[0]))
+            for r in rows[1:]:
+                self.sill_r.append(r[0]); self.sill_l.append(r[-1])
             if kind == 'curved':
                 self.frames.append(('arch', env.profile(za, n, self.hood_kind(), self.spec.get('hood', {}))))
             return
@@ -234,6 +246,7 @@ class Builder:
         self.frames.append(('post', np.array([C[0], C[3]])))
         self.frames.append(('post', np.array([C[1], C[2]])))
         prof = env.profile(za, n, self.hood_kind(), self.spec.get('hood', {}))
+        feet = {}
         for sgn in (1, -1):
             top = C[0] if sgn > 0 else C[1]
             bot = C[3] if sgn > 0 else C[2]
@@ -242,6 +255,7 @@ class Builder:
             side = side[np.argsort(side[:, 1])]                     # foot first
             k = int(np.argmin(np.abs(side[:, 1] - yc)))
             side = side[:k + 1]
+            feet[sgn] = side[0]
             if kind == 'flat3' or len(side) < 3:
                 Q = flatten([top, side[-1], side[0], bot])
                 self.tris += quad(*Q)
@@ -251,6 +265,16 @@ class Builder:
                 post = [bot + (top - bot) * i / (m - 1) for i in range(m)]
                 self.tris += grid_tris([np.array(post), side])
         self.frames.append(('arch', prof))
+        self.edges.append(('base', np.array([feet[1], C[3], C[2], feet[-1]])))
+
+    def cap_sill(self):
+        """A hood's lower edge runs level: it does not climb. The loft's rail does where the model's own canopy
+        is painted on as a solid hump merging into the headrest fairing (the rail then rides the hump) or where a
+        windscreen block fills the opening, so along the hood the rail is capped a little above its lower part."""
+        env = self.env
+        zs = np.linspace(self.z_hood, self.z_arch, 40)
+        lips = np.array([float(np.interp(z, env.z, env.L.Yb)) for z in zs])
+        env.cap = (self.z_hood, self.z_arch, float(np.percentile(lips, 30)) + self.spec.get('sill_rise', 0.08))
 
     def hood_kind(self):
         return self.spec.get('hood', {}).get('section', 'round')
@@ -268,6 +292,8 @@ class Builder:
                 zs = np.linspace(z0, z1, max(2, int((z0 - z1) / DZ_CURVED) + 1))
             rows = [env.profile(z, n, kind, hood) for z in zs]
             self.tris += grid_tris(rows)
+            for r in rows:
+                self.sill_r.append(r[0]); self.sill_l.append(r[-1])
         for z in self.bows:
             self.frames.append(('bow', env.profile(z, n, kind, hood)))
         self.frames.append(('bow', env.profile(zh, n, kind, hood)))
@@ -292,6 +318,10 @@ class Builder:
         else:
             rows[-1][:, 0] *= 0.15
         self.tris += grid_tris(rows)
+        for r in rows[1:]:
+            self.sill_r.append(r[0]); self.sill_l.append(r[-1])
+        if kind == 'glazed':
+            self.edges.append(('rear', rows[-1]))      # the hoop the fixed rear glazing ends on
 
     # ---------------------------------------------------------------- frame bars
     def bars(self):
@@ -307,6 +337,28 @@ class Builder:
     def build(self):
         self.windscreen(); self.hood(); self.rear()
         return self.tris
+
+    def sills(self):
+        """(right, left) polylines along the glass's lower edge from the windscreen to the rear end, deduplicated
+        and ordered nose to tail. The rail stops where the opening narrows or its edge climbs onto the headrest
+        fairing or the spine: there the glass sits on the skin without a sill."""
+        out = []
+        for pts in (self.sill_r, self.sill_l):
+            P = np.array(pts, float) if pts else np.zeros((0, 3))
+            if len(P):
+                xw = np.abs(P[:, 0]).max()
+                lo = P[:, 1].min()
+                ok = (np.abs(P[:, 0]) >= 0.5 * xw) & (P[:, 1] <= lo + 0.15)
+                P = P[ok]
+            if len(P):
+                P = P[np.argsort(-P[:, 2], kind='stable')]
+                keep = [P[0]]
+                for q in P[1:]:
+                    if np.linalg.norm(q - keep[-1]) > 0.02:
+                        keep.append(q)
+                P = np.array(keep)
+            out.append(P)
+        return out
 
 
 def write_frames(vid, bars, centre):

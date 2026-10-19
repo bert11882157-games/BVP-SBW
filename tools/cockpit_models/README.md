@@ -81,8 +81,9 @@ BVP_TEX_DIR=DIR python3 tools/cockpit_models/fleet.py [--dry-run] [id...]   # ev
 `fleet.py` gives 65 more aircraft (jets and piston fighters) a modelled cockpit with `cockpit_lib.py`, the
 MiG-29's generator turned into a fitted, parametric one:
 
-- **Glass.** The canopy glass comes from `tools/canopy_panels` (panel by panel, with frame bars drawn by
-  `fleet.py` from `tools/canopy_panels/frames/<id>.json`); where a frames file exists the glass is kept whole.
+- **Glass.** The canopy glass comes from `tools/canopy_panels` (panel by panel); where its frames file
+  `tools/canopy_panels/frames/<id>.json` exists the glass is kept whole. The canopy's frame members, sills and
+  thickness, and the removal of the model's old canopy, are `tools/canopy_build/canopy.py`, run after this tool.
 - **Fit.** From the pilot's eye and the canopy glass (`CanopyGlass`) it measures the tub: half width and sill height
   beside the eye, the windscreen base ahead, and a scale from the width. The canopy width clears the old interior; the
   new tub is narrowed to the fuselage skin beside the pilot (and again until the panel wings fit), so nothing pokes

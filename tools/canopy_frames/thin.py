@@ -47,7 +47,10 @@ def in_region(az, el):
 
 
 def load_geo(vid):
-    path = os.path.join(GEN, 'assets/berts_vehicle_pack/custom_geo', vid + '.geo.json')
+    """the model; BVP_GEO_DIR overrides the repository folder (a copy of the committed originals, for measuring a
+    model that later tools have already changed)"""
+    d = os.environ.get('BVP_GEO_DIR')
+    path = os.path.join(d, vid + '.geo.json') if d else os.path.join(GEN, 'assets/berts_vehicle_pack/custom_geo', vid + '.geo.json')
     return path, json.load(open(path))
 
 

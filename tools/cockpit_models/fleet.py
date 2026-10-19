@@ -31,66 +31,6 @@ MARK = 'modelled_cockpit'          # glass triangles this tool added are tagged 
 
 
 FRAMES_DIR = os.path.join(HERE, '..', 'canopy_panels', 'frames')
-LAYOUTS_PATH = os.path.join(HERE, 'layouts.json')
-
-
-def register_layouts():
-    """layouts.json: the real main-panel layout of each aircraft, researched from its flight manual and cockpit
-    photos (see README.md), in the ERAS row format. Each becomes an era named after the aircraft, filled in from
-    the era preset for anything the layout leaves out (seat, displays, hud, eyebrows). Returns {vid: era name}."""
-    if not os.path.exists(LAYOUTS_PATH):
-        return {}
-    data = json.load(open(LAYOUTS_PATH))
-    out = {}
-    for vid, lay in data.get('aircraft', data).items():
-        if vid.startswith('_') or not isinstance(lay, dict) or 'centre' not in lay:
-            continue
-        base = PRESETS.get(vid, 'COLD_WAR_STEAM')
-        base = base if isinstance(base, str) else base.get('preset')
-        era = dict(L.ERAS[base])
-        for key in ('centre', 'left', 'right', 'centre_fill', 'left_fill', 'right_fill'):
-            if key in lay:
-                era[key] = [[tuple(it) for it in row] for row in lay[key]]
-            elif key.endswith('_fill'):
-                era[key] = []            # a researched layout is complete: no era fillers
-        for key in ('hud', 'displays', 'seat', 'hinge_frac'):
-            if key in lay:
-                era[key] = lay[key]
-        if 'eyebrows' in lay:
-            era['eyebrows'] = L.ERAS['GEN4_CRT']['eyebrows'] if lay['eyebrows'] else None
-        name = 'LAYOUT:' + vid
-        L.ERAS[name] = era
-        out[vid] = name
-    return out
-
-
-LAYOUTS = register_layouts()
-
-
-def canopy_bars(vid, mesh, sw, pal_name):
-    """the canopy frame bars tools/canopy_panels wrote (posts, arch, bows): dark strips along the panel edges,
-    standing a little proud of the glass, into the cockpit mesh"""
-    path = os.path.join(FRAMES_DIR, vid + '.json')
-    if not os.path.exists(path):
-        return
-    fr = json.load(open(path))
-    uv = sw.uv(L.ACCENT['black'])
-    centre = np.array(fr['centre'], float)
-    w, proud, under = fr['width'], fr['proud'], fr['under']
-    for bar in fr['bars']:
-        a, b = np.array(bar['a'], float), np.array(bar['b'], float)
-        d = b - a; ln = np.linalg.norm(d)
-        if ln < 1e-4:
-            continue
-        d /= ln
-        out = (a + b) / 2 - centre
-        out -= d * (out @ d)
-        if np.linalg.norm(out) < 1e-6:
-            out = np.array([0.0, 1.0, 0.0])
-        out /= np.linalg.norm(out)
-        side = np.cross(d, out)
-        c = (a + b) / 2 + out * (proud - under) / 2
-        mesh.box(c, (d, side, out), (ln / 2 + w * 0.3, w / 2, (proud + under) / 2), uv)
 
 
 def stick_bones(ac):
@@ -103,7 +43,7 @@ def piece_of(name):
 
 def apply(vid, dry=False):
     spec = FLEET['aircraft'][vid]
-    era = spec.get('era') or LAYOUTS.get(vid) or PRESETS.get(vid)
+    era = spec.get('era') or PRESETS.get(vid)
     era = era if isinstance(era, str) else era.get('preset')
     ac = L.Aircraft(vid)
     sw = L.Swatches(L.texture_path(vid))
@@ -160,7 +100,7 @@ def apply(vid, dry=False):
         foot = np.array([E[0], E[1] - 0.92 * s, E[2] + 0.44 * s])
 
     mesh, stick, gauges, displays, glass, hud = L.build(ac, tub, era, spec.get('palette', 'nato'), sw,
-                                                        hud=(L.ERAS[era]['hud'] if era.startswith('LAYOUT:') else spec.get('hud')), gunsight=spec.get('gunsight', True),
+                                                        hud=spec.get('hud'), gunsight=spec.get('gunsight', True),
                                                         stick_foot=foot, side_stick=bool(side))
     if rigged:
         px = L.r5(foot * np.array([16.0, 16.0, -16.0]))
@@ -181,7 +121,6 @@ def apply(vid, dry=False):
                 b['poly_mesh'] = {'normalized_uvs': True, 'positions': [], 'normals': [], 'uvs': [], 'polys': []}
         mesh.extend(stick)
 
-    canopy_bars(vid, mesh, sw, spec.get('palette', 'nato'))
     pm = mesh.poly_mesh()
     hull = ac.bone('hull')
     bone = {'name': piece + '__cockpit', 'parent': 'hull', 'pivot': list(hull['pivot']), 'poly_mesh': pm}

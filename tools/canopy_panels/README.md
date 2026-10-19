@@ -21,17 +21,12 @@ glass has polygons where the real canopy has panes and nothing where it has fram
   - `loft`: overrides passed to the loft envelope; `skip: true` leaves hand-built glass alone (MiG-29).
 - Every flat panel is one quad and every curved section a regular grid between two frame stations, so edges are
   shared and nothing is clipped or jagged.
-- `frames/<id>.json` lists the frame bars (posts, arch, bows) as segments; `tools/cockpit_models/fleet.py` draws
-  them as dark strips standing a little proud of the glass, and keeps the panel glass whole (no sight-glass or
-  inside-glass dropping for panelled aircraft).
+- `frames/<id>.json` lists the frame bars (posts, arch, bows) as segments; where it exists
+  `tools/cockpit_models/fleet.py` keeps the panel glass whole (no sight-glass or inside-glass dropping). The frame
+  members themselves, the sills and the glass's thickness are built by `tools/canopy_build/canopy.py` from the
+  same `Builder` (its `frames`, `edges` and `sills()`), which also cuts the model's old canopy out.
 
-Rebuild (on the committed originals, since `fleet.py` measures the old interior):
-
-```
-git checkout 57093ef -- bvp/src/generated/resources/assets/berts_vehicle_pack/custom_geo/<id>.geo.json \
-                        bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/<id>.json
-python3 tools/canopy_panels/panels.py --write <id>
-python3 tools/cockpit_models/fleet.py <id>
-```
+Rebuild (on the committed originals, since `fleet.py` measures the old interior): `python3 tools/canopy_build/run.py
+--rev=57093ef <id>` runs the chain (`panels.py --write`, `fleet.py`, `canopy.py`); see `tools/canopy_build/README.md`.
 
 `--out=dir` writes `glass.json` per aircraft for review instead; `tools/canopy_loft/review.py` renders the sheets.
