@@ -102,7 +102,10 @@ MiG-29's generator turned into a fitted, parametric one:
 - **Cockpit.** Three-facet panel, coaming, side walls, consoles with switch blocks, sill caps, floor, rear bulkhead,
   footwell, rudder pedals, throttle, an ejection seat (jets) or armoured bucket seat (piston fighters), and a HUD
   (body, control strip, combiner and its glass, plus `HeadUpDisplay`) on HUD-equipped jets or a reflector gunsight
-  on the others. New faces go into `wreck_<piece>__cockpit` of the piece that held most of the old interior.
+  on the others. The combiner glass is centred on the pilot's straight-ahead line (the eye's height, directly ahead),
+  so the picture the game projects onto it (`HeadUpDisplay.kt`, boresight at the eye's +Z) sits in the middle of the
+  glass; where the windscreen comes down low over the HUD body (F-16) the glass moves back towards the pilot on a
+  shelf until it has room. New faces go into `wreck_<piece>__cockpit` of the piece that held most of the old interior.
 - **Stick.** A centre stick (or a side stick on the right console for the F-16 and Rafale) in the existing animated
   bone `<piece>__control_stick_pitch`; the stick bones' pivots and the `AircraftRig` stick surfaces move to the new
   stick's foot, so it pivots where it stands. Aircraft without a stick rig get a fixed stick.

@@ -730,15 +730,24 @@ def build(ac, tub, era_name, pal_name, sw, hud=None, gunsight=True, stick_foot=N
         z1 = z0 + (0.29 if want_hud else 0.16) * s
         y0 = t.top_c - 0.035 * s
         y1 = t.top_c + body_h - 0.035 * s
-        # the combiner's height: as tall as the glass above lets it be
+        # the combiner: centred on the pilot's straight-ahead line (the eye's height, so the picture's boresight
+        # sits in the middle of the glass), as tall as the glass above lets it be. Where the windscreen comes down
+        # low over the HUD body (F-16) the glass moves back towards the pilot until it has room.
         lean = math.radians(22 if want_hud else 30)
         g_up = np.array([0, math.cos(lean), -math.sin(lean)])
         g_n = unit(np.cross(X, g_up))
-        g_bot = np.array([E[0], y1 + 0.012 * s, z0 + 0.02 * s])
-        g_h = (0.165 if want_hud else 0.09) * s
-        above = ac.glass_above(E[0], g_bot[2] - g_up[2] * g_h, g_bot[1])
-        if above is not None:
-            g_h = min(g_h, (above - 0.025 - g_bot[1]) / g_up[1])
+        g_h_want = (0.165 if want_hud else 0.09) * s
+        g_h, g_z = 0.0, z0 + 0.02 * s
+        for gz in np.arange(z0 + 0.02 * s, z0 - 0.16 * s, -0.01):
+            h = g_h_want
+            above = ac.glass_above(E[0], gz - g_up[2] * h / 2, E[1])          # over the top of the glass
+            if above is not None:
+                h = min(h, 2 * (above - 0.02 - E[1]) / g_up[1])
+            if h > g_h + 1e-6:
+                g_h, g_z = h, gz
+            if g_h >= 0.12 * s:
+                break
+        g_bot = np.array([E[0], E[1] - g_up[1] * g_h / 2, g_z + g_up[2] * g_h / 2])
         if g_h > 0.05 * s:
             m.box([E[0], (y0 + y1) / 2, (z0 + z1) / 2], (X, Y, Z), (hw, (y1 - y0) / 2, (z1 - z0) / 2), c['dgrey'],
                   faces={(2, -1): c['black']})
@@ -750,6 +759,13 @@ def build(ac, tub, era_name, pal_name, sw, hud=None, gunsight=True, stick_foot=N
                 strip_y = y0 - 0.01 * s
             g_hw = (0.074 if want_hud else 0.035) * s
             g_top = g_bot + g_up * g_h
+            # the mount: a shelf on the body top reaching back under the glass, and a stem up to its foot
+            shelf_z0, shelf_z1 = min(g_bot[2] - 0.015, z0), z0 + 0.04 * s
+            m.box([E[0], y1 + 0.006, (shelf_z0 + shelf_z1) / 2], (X, Y, Z),
+                  (g_hw + 0.008, 0.006, (shelf_z1 - shelf_z0) / 2), c['dgrey'])
+            stem_h = max(g_bot[1] - 0.004 - (y1 + 0.012), 0.0)
+            if stem_h > 0.004:
+                m.box([E[0], y1 + 0.012 + stem_h / 2, g_bot[2]], (X, Y, Z), (g_hw + 0.008, stem_h / 2, 0.012), c['dgrey'])
             m.box(g_bot - g_up * 0.006, (X, g_up, g_n), (g_hw + 0.008, 0.006, 0.012), c['dgrey'])
             for sg in (-1, 1):
                 m.box((g_bot + g_top) / 2 + X * sg * (g_hw + 0.004), (X, g_up, g_n), (0.004, g_h / 2, 0.005),
