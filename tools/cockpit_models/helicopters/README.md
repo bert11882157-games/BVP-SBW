@@ -49,6 +49,13 @@ eye to where the seat is, which changes the in-game camera for that seat: the AH
 seats, the AH-6J pilot, both Mi-26 pilots, the CH-46E co-pilot, the Mi-24V gunner, the Mi-24D and Mi-24A pilots, the
 Mi-28N operator and the Tiger front seat.
 
+## HUDs
+
+The Ka-50, Mi-28N, AH-1F pilot and Tiger front seat have a HUD. The HeadUpDisplay picture is centred where the seat's
+neutral line of sight (straight ahead from its eye attachment) meets the combiner, and trimmed to the part of the
+glass symmetric about that point (`on_eye_line` in the driver), so the boresight is the middle of the picture and
+every symbol is drawn on the glass.
+
 ## Known limits
 
 * Colours come from blocks already in each helicopter's texture, so cockpits without a turquoise or grey-blue in

@@ -178,6 +178,20 @@ def draw_blocks(mesh, c):
     BLOCKS.clear()
 
 
+def on_eye_line(hud, E):
+    """The HUD picture centred where the pilot's neutral line of sight (straight ahead along +Z from the eye) meets
+    the combiner, and cut down to the part of the glass that stays symmetric about that point, so the boresight
+    sits in the middle of the picture and every symbol is drawn on the glass."""
+    c, n, up = (np.asarray(hud[k], float) for k in ('centre', 'normal', 'up'))
+    t = float(np.dot(n, c - E)) / n[2]
+    p = E + np.array([0.0, 0.0, t])
+    dv, du = float(np.dot(p - c, up)), float(p[0] - c[0])
+    h, w = hud['height'] - 2 * abs(dv), hud['width'] - 2 * abs(du)
+    if h <= 0 or w <= 0:
+        raise SystemExit(f'the eye line misses the HUD combiner by {dv:+.3f} m up, {du:+.3f} m across')
+    return dict(hud, centre=p, width=w, height=h)
+
+
 def layout(tub, era, facets, hud_body=None):
     """Helicopter stations with an explicit `panel` (real positions from the aircraft's panel drawings); every other
     era goes to cockpit_lib, which packs its rows tight at real size and fills the band below with switch panels."""
@@ -485,6 +499,7 @@ def apply(vid, dry=False):
         a.pop('FlightDisplays')
     if hud_out:
         seat, hud, E = hud_out
+        hud = on_eye_line(hud, E)
         a['HeadUpDisplay'] = {'Schema': 1, 'Frame': 'VEHICLE_LOCAL_BLOCKS', 'Seat': seat,
                               'Center': L.r5(hud['centre']), 'Normal': L.r5(hud['normal']), 'Up': L.r5(hud['up']),
                               'Width': round(float(hud['width']), 5), 'Height': round(float(hud['height']), 5),
