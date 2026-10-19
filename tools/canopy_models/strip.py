@@ -38,11 +38,15 @@ def hud_glass_mask(asset, glass):
     return on_plane & inside
 
 
-def find(ac, tub):
-    """{bone name: set(poly index)} of the old canopy frame faces, and the glass triangles to keep (the HUD's)"""
+def find(ac, tub, canopy=None, tex=None):
+    """{bone name: set(poly index)} of the old canopy frame faces, and the glass triangles to keep (the HUD's).
+    canopy: the old canopy's glass triangles when the caller has picked them (the default: all glass but the HUD's).
+    tex (RGBA array): with it, faces in the canopy's footprint textured see-through are taken as the model's own
+    canopy glass and go too"""
     g = ac.glass
     keep_glass = hud_glass_mask(ac.asset, g)
-    canopy = g[~keep_glass]
+    if canopy is None:
+        canopy = g[~keep_glass]
     if not len(canopy):
         return {}, keep_glass
     lo, hi = canopy.reshape(-1, 3).min(0), canopy.reshape(-1, 3).max(0)
@@ -57,6 +61,7 @@ def find(ac, tub):
         if not pm or not pm.get('polys'):
             continue
         P = np.array(pm['positions'], float) * np.array([1, 1, -1]) / 16.0
+        U = np.array(pm['uvs'], float) if tex is not None else None
         sel = set()
         for i, poly in enumerate(pm['polys']):
             V = P[[v[0] for v in poly]]
@@ -64,6 +69,9 @@ def find(ac, tub):
             if not (lo[0] - MARGIN < cc[0] < hi[0] + MARGIN and lo[2] - MARGIN < cc[2] < hi[2] + MARGIN):
                 continue
             if V[:, 1].max() < tub.sill - 0.02 or cc[1] < lo[1] - 0.05:
+                continue
+            if U is not None and _see_through(tex, U[[v[2] for v in poly]]):
+                sel.add(i)                        # the model's own canopy glass, a face with a clear texture
                 continue
             if ac.hugs_glass(V, ALONG):
                 sel.add(i)
@@ -85,6 +93,15 @@ def find(ac, tub):
             out[b['name']] = sel
     ac.glass = saved
     return out, keep_glass
+
+
+def _see_through(tex, uvs):
+    """True when the face's texture is mostly translucent (sampled at its uv centre and corners, pulled inward)"""
+    H, W = tex.shape[:2]
+    c = uvs.mean(0)
+    pts = [c] + [c + (u - c) * 0.6 for u in uvs]
+    a = [tex[int(np.clip((1 - p[1]) * H, 0, H - 1)), int(np.clip(p[0] * W, 0, W - 1))][3] for p in pts]
+    return sum(1 for v in a if v < 230) * 2 > len(a)
 
 
 def _edge_at(glass, z, dz=0.08):
