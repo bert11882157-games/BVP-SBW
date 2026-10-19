@@ -12,7 +12,12 @@ What it builds, per crew station, in vehicle-local blocks (x left, y up, z forwa
     the seat (ejection seat on jets, armoured bucket seat on piston fighters) and a control stick (centre or side
     stick) in the existing animated stick bone, pivoting where the stick rig pivots;
   * instruments laid out by era: game-drawn dials (CockpitGauges, live where the game knows the value) and
-    multi-function / radar displays (FlightDisplays).
+    multi-function / radar displays (FlightDisplays);
+  * detail (detail()): the consoles as distinct panels (fuel, radio, caution lights and oxygen regulator facing up,
+    lighting knobs, levers, circuit breakers, trim wheels on the piston fighters), frames and a stringer on the side
+    walls, sill fittings, the panel's chin lip, a centre pedestal with the trim knob, heel plates and pedal straps,
+    harness straps and buckle, the ejection seat's parachute box, headrest and survival kit, a rear deck under a
+    long canopy, and the HUD's lens and a standby compass.
 
 Textures are never written: every face takes its colour from a uniform texel block already in the aircraft's own
 texture (Swatches), so the model works with the textures in the repository as they are.
@@ -169,6 +174,16 @@ class Mesh:
         pts = [c + (rr * math.cos(2 * math.pi * k / seg) + u * math.sin(2 * math.pi * k / seg)) * radius
                for k in range(seg)]
         self.flat(pts, uv, normal=n)
+
+    def cyl(self, centre, normal, up, r, h, uv, seg=10, cap=None):
+        """a cylinder standing on the plane through centre, [h] tall along normal, its top in [cap]"""
+        c, n, u, rr = frame(centre, normal, up)
+        ring_ = [rr * math.cos(2 * math.pi * k / seg) + u * math.sin(2 * math.pi * k / seg) for k in range(seg)]
+        top = c + n * h
+        self.flat([top + d * r for d in ring_], cap or uv, normal=n)
+        for k in range(seg):
+            d0, d1 = ring_[k], ring_[(k + 1) % seg]
+            self.flat([c + d0 * r, c + d1 * r, top + d1 * r, top + d0 * r], uv, normal=(d0 + d1) / 2)
 
     def frame_rect(self, centre, normal, up, w, h, t, proud, uv):
         """rectangular bezel (four bars) around a w x h opening"""
@@ -775,6 +790,14 @@ def build(ac, tub, era_name, pal_name, sw, hud=None, gunsight=True, stick_foot=N
             gc = [g_bot - X * g_hw, g_bot + X * g_hw, g_top + X * g_hw, g_top - X * g_hw]
             glass += [gc[0], gc[1], gc[2], gc[0], gc[2], gc[3]]
             if want_hud:
+                # the projector lens in the body top under the combiner, and the standby compass on the coaming
+                # beside the body (a small case with its card facing the pilot)
+                m.cyl([E[0], y1 + 0.0005, g_bot[2] + 0.05 * s], Y, Z, 0.028 * s, 0.004, c['black'], cap=c['black'])
+                cp = np.array([E[0] - hw - 0.045 * s, y1 - 0.01 * s, z0 + 0.06 * s])
+                m.box(cp, (X, Y, Z), (0.022 * s, 0.022 * s, 0.024 * s), c['dgrey'], faces={(2, -1): c['black']})
+                m.disc(cp - Z * (0.024 * s + 0.001), -Z, Y, 0.014 * s, c['white'])
+                m.box(cp - Z * (0.024 * s + 0.0015), (X, Y, Z), (0.0015 * s, 0.012 * s, 0.0005), c['red'])
+            if want_hud:
                 hud_out = dict(centre=(g_bot + g_top) / 2, normal=-g_n, up=g_up, width=2 * g_hw, height=g_h)
         else:
             want_hud = False
@@ -935,6 +958,7 @@ def build(ac, tub, era_name, pal_name, sw, hud=None, gunsight=True, stick_foot=N
             m.flat([p, q, [q[0], lo, q[2]], [p[0], lo, p[2]]], c['coaming'], toward=[E[0], lo, (p[2] + q[2]) / 2])
 
     # -- side walls, consoles, floor, bulkheads, footwell
+    ctx = {'facets': facets, 'console': {}, 'wall_z': {}}
     xin = 0.58 * t.W                                  # console inner edge
     xlow = {}
     for side in (1, -1):                              # +1 = left (x > 0)
@@ -965,18 +989,8 @@ def build(ac, tub, era_name, pal_name, sw, hud=None, gunsight=True, stick_foot=N
                c['shade'], normal=[-side, 0, 0])
         m.flat([[xi, t.floor_y, zb], [xw, t.floor_y, zb], [xw, t.console_y, zb], [xi, t.console_y, zb]],
                c['shade'], normal=[0, 0, -1])
-        # switch blocks along the console: small dark panels with a few knobs and toggles
-        L = zf_i - zb
-        n_blocks = max(3, int(L / (0.11 * s)))
-        for k in range(n_blocks):
-            zc = zb + (k + 0.5) * L / n_blocks
-            wx = abs(xw - xi) - 0.02 * s
-            m.box([(xi + xw) / 2, t.console_y + 0.004, zc], (X, Y, Z), (wx / 2, 0.004, L / n_blocks / 2 - 0.006 * s),
-                  c['black'])
-            for j in range(3):
-                kx = xi + side * (0.02 * s + (j + 0.5) * (wx - 0.02 * s) / 3)
-                col = c['mgrey'] if (k + j) % 3 else c['lgrey']
-                m.box([kx, t.console_y + 0.016 * s, zc], (X, Y, Z), (0.006 * s, 0.008 * s, 0.006 * s), col)
+        ctx['console'][side] = (xi, xw, zb, zf_i)        # the console panels: detail()
+        ctx['wall_z'][side] = zw
         # sill cap (canopy rail ledge) along the wall top
         m.box([xw - side * 0.015, t.sill + 0.01, (t.back_z + zf_o) / 2], (X, Y, Z),
               (0.03, 0.012, (zf_o - t.back_z) / 2), c['dgrey'])
@@ -1013,6 +1027,8 @@ def build(ac, tub, era_name, pal_name, sw, hud=None, gunsight=True, stick_foot=N
     m.box([tx, t.console_y + 0.135 * s, tz + 0.02 * s], grip_ax, (0.03 * s, 0.045 * s, 0.04 * s), c['black'])
     m.box([tx - 0.023 * s, t.console_y + 0.15 * s, tz + 0.045 * s], grip_ax, (0.004, 0.008 * s, 0.008 * s), c['red'])
     m.box([tx, t.console_y + 0.02 * s, tz], (X, Y, Z), (0.035 * s, 0.02 * s, 0.09 * s), c['black'])   # quadrant
+    ctx['throttle'] = (tx, tz)
+    ctx['stick'] = np.array(stick_foot, float) if side_stick and stick_foot is not None else None
 
     # -- the seat
     if era['seat'] == 'ejection':
@@ -1048,6 +1064,7 @@ def build(ac, tub, era_name, pal_name, sw, hud=None, gunsight=True, stick_foot=N
         stick.box(gc + g_ax[1] * 0.07 * s + g_ax[2] * 0.010 * s, g_ax, (0.006 * s, 0.004 * s, 0.006 * s), c['red'])
         stick.box(gc + g_ax[2] * 0.031 * s + g_ax[1] * 0.015 * s, g_ax, (0.008 * s, 0.012 * s, 0.005 * s),
                   c['metal'])
+    detail(m, ac, t, era, c, ctx, gauges, pal_name)
     if extra:
         extra(m, t, c)
     return m, stick, gauges, displays, glass, hud_out
@@ -1097,6 +1114,285 @@ def bucket_seat(m, t, c):
     m.box([E[0], E[1] - 0.42 * s, E[2] - 0.20 * s], ax, (0.15 * s, 0.22 * s, 0.02 * s), c['cushion'])
     m.box([E[0], E[1] - 0.06 * s, E[2] - 0.30 * s], ax, (0.17 * s, 0.17 * s, 0.012 * s), c['dgrey'])   # head armour
     m.box([E[0], E[1] + 0.0 * s, E[2] - 0.285 * s], ax, (0.08 * s, 0.07 * s, 0.015 * s), c['cushion'])
+
+
+# ---------------------------------------------------------------- detail: console panels, seat furniture, structure
+
+# Console panels front to back (the slot over the throttle quadrant is always 'throttle'); 'toggles' fills any
+# slots past the end of the list.
+CONSOLES = {
+    'ejection': dict(left=['fuel', 'throttle', 'radio', 'lever', 'toggles', 'breakers'],
+                     right=['caution', 'oxygen', 'rotary', 'toggles', 'breakers', 'toggles']),
+    'bucket': dict(left=['throttle', 'trim', 'toggles', 'rotary'],
+                   right=['oxygen', 'radio', 'toggles', 'breakers']),
+}
+LAMP_SETS['console'] = dict(columns=3, lamps=[
+    ('FUEL|LOW', 'LOW_FUEL', 'amber'), ('HYD|PRESS', 'NONE', 'amber'), ('GEN', 'NONE', 'amber'),
+    ('OXY|LOW', 'NONE', 'amber'), ('CANOPY', 'NONE', 'red'), ('ENG|OUT', 'ENGINE_OUT', 'red'),
+    ('AMMO|LOW', 'AMMO_LOW', 'amber'), ('DAMAGE', 'DAMAGE', 'amber'), ('A/B', 'AFTERBURNER', 'green')])
+RUSSIAN.update({'OXY|LOW': 'КИСЛОР', 'CANOPY': 'ФОНАРЬ'})
+
+
+def toggle(m, p, R, U, N, s, c, tilt=1, col=None):
+    """a toggle switch standing on a plane at p: base, then the lever tilted [tilt] along U"""
+    m.box(p, (R, U, N), (0.005 * s, 0.005 * s, 0.004), c['mgrey'])
+    m.box(p + N * 0.010 + U * tilt * 0.006 * s, (R, unit(U * tilt + N * 0.9), unit(N - U * tilt * 0.9)),
+          (0.0025 * s, 0.009 * s, 0.0025 * s), col or c['lgrey'])
+
+
+def knob(m, p, N, U, s, c, r=0.012, h=0.014, pointer=True):
+    """a rotary knob standing on a plane at p"""
+    m.cyl(p, N, U, r * s, h * s, c['mgrey'], cap=c['dgrey'])
+    if pointer:
+        _, n, u, rr = frame(p, N, U)
+        m.box(p + n * (h * s + 0.001) + u * r * s * 0.4, (rr, u, n), (0.0015 * s, r * s * 0.5, 0.001), c['white'])
+
+
+def placard(m, p, R, U, N, w, h, c):
+    m.box(p + N * 0.001, (R, U, N), (w / 2, h / 2, 0.001), c['lgrey'])
+
+
+def console_slot(m, kind, side, xc, zc, hw, hl, y, s, c, t, gauges, pal_name):
+    """one panel on a side console top: base plate (4 mm) and its fittings. side +1 = the pilot's left console."""
+    X, Y, Z = np.array([1.0, 0, 0]), np.array([0, 1.0, 0]), np.array([0, 0, 1.0])
+    R, U, N = -X, Z, Y                                     # plane frame: right, forward (away from the pilot), up
+    base = np.array([xc, y + 0.004, zc])
+    m.box([xc, y + 0.002, zc], (X, Y, Z), (hw, 0.002, hl), c['black'])
+    top = base + N * 0.002
+    if kind == 'throttle':
+        knob(m, top + R * (-side) * (hw - 0.014 * s) + U * (-hl + 0.02 * s), N, U, s, c, r=0.009, h=0.010)
+        return
+    if kind == 'toggles':
+        placard(m, top + U * (hl - 0.006 * s), R, U, N, 2 * hw - 0.02 * s, 0.006 * s, c)
+        ns = max(2, int(2 * hw / (0.032 * s)))
+        for row in range(2):
+            zr = zc + (0.25 - 0.5 * row) * hl * 1.2
+            for j in range(ns):
+                x = xc - hw + (j + 0.5) * 2 * hw / ns
+                toggle(m, np.array([x, y + 0.006, zr]), R, U, N, s, c, tilt=1 if (j + row) % 3 else -1,
+                       col=c['red'] if (j + 2 * row) % 5 == 4 else None)
+        return
+    if kind == 'rotary':
+        placard(m, top + U * (hl - 0.006 * s), R, U, N, 2 * hw - 0.02 * s, 0.006 * s, c)
+        for j, f in enumerate((-0.45, 0.35)):
+            knob(m, top + U * f * hl + R * side * 0.012 * s * (1 if j else -1), N, U, s, c)
+        toggle(m, top + R * (-side) * (hw - 0.014 * s) + U * (-hl * 0.5), R, U, N, s, c)
+        return
+    if kind == 'fuel':
+        placard(m, top + U * (hl - 0.006 * s), R, U, N, 2 * hw - 0.02 * s, 0.006 * s, c)
+        knob(m, top + U * 0.35 * hl, N, U, s, c, r=0.014, h=0.016)
+        for j in range(2):                                 # guarded switches: red covers
+            p = top + U * (-0.45 * hl) + R * (j - 0.5) * 0.035 * s
+            m.box(p + N * 0.008, (R, U, N), (0.010 * s, 0.008 * s, 0.008), c['red'])
+        return
+    if kind == 'radio':
+        # a frequency window (lit) and two tuning knobs, a channel placard
+        m.box(top + U * (hl * 0.45) + N * 0.004, (R, U, N), (hw * 0.7, 0.009 * s, 0.004), c['dgrey'])
+        m.box(top + U * (hl * 0.45) + N * 0.0085, (R, U, N), (hw * 0.6, 0.006 * s, 0.0005), c['amber'])
+        for j in (-1, 1):
+            knob(m, top + U * (-0.35 * hl) + R * j * hw * 0.45, N, U, s, c, r=0.010, h=0.012)
+        placard(m, top + U * (-hl + 0.008 * s), R, U, N, 2 * hw - 0.02 * s, 0.006 * s, c)
+        return
+    if kind == 'breakers':
+        cols = max(3, min(5, int(2 * hw / (0.018 * s))))
+        rows = max(2, min(4, int(2 * hl / (0.018 * s))))
+        for i in range(rows):
+            for j in range(cols):
+                p = top + R * ((j + 0.5) / cols - 0.5) * (2 * hw - 0.012 * s) + U * ((i + 0.5) / rows - 0.5) * (2 * hl - 0.012 * s)
+                m.box(p + N * 0.006, (R, U, N), (0.0035 * s, 0.0035 * s, 0.006), c['black'], faces={(2, 1): c['white']})
+        return
+    if kind == 'caution':
+        columns, lamps = lamps_of('console', pal_name)
+        gauges.append({'Seat': t.seat, 'Kind': 'ANNUNCIATOR', 'Center': r5(top + N * 0.002), 'Normal': r5(N), 'Up': r5(U),
+                       'Diameter': round(2 * hw - 0.008, 4), 'Width': round(2 * hw - 0.008, 4),
+                       'Height': round(2 * hl - 0.008, 4), 'Depth': 0.02, 'Columns': columns, 'Lamps': lamps})
+        return
+    if kind == 'oxygen':
+        d = min(0.050 * s, (2 * hw - 0.012) / (1 + RIM), (2 * hl - 0.012) / (1 + RIM))
+        gc = top + U * (hl - d * (1 + RIM) / 2 - 0.004) + R * side * (hw - d * (1 + RIM) / 2 - 0.004)
+        gauges.append({'Seat': t.seat, 'Kind': 'FILLER_OXYGEN', 'Center': r5(gc + N * GAUGE_LIFT), 'Normal': r5(N),
+                       'Up': r5(U), 'Diameter': round(d, 4), 'Depth': 0.03})
+        # the regulator: a green supply lever and a diluter toggle beside the dial
+        lp = top + U * (hl - 0.03 * s) + R * (-side) * (hw - 0.016 * s)
+        m.box(lp + N * 0.004, (R, U, N), (0.006 * s, 0.004 * s, 0.004), c['dgrey'])
+        m.box(lp + N * 0.014 + U * 0.008 * s, (R, unit(U + N * 1.2), unit(N - U * 0.8)), (0.004 * s, 0.014 * s, 0.003), c['green'])
+        toggle(m, top + U * (-hl + 0.016 * s) + R * (-side) * (hw - 0.016 * s), R, U, N, s, c)
+        toggle(m, top + U * (-hl + 0.016 * s) + R * (-side) * (hw - 0.044 * s), R, U, N, s, c, tilt=-1)
+        return
+    if kind == 'lever':
+        # a lever (flaps / speed brake) in a slot: the slot plate, the lever leaning aft, a round knob
+        m.box(top + N * 0.003, (R, U, N), (0.006 * s, hl * 0.7, 0.003), c['dgrey'])
+        ax = (R, unit(N + U * (-0.35)), unit(U + N * 0.35))
+        m.box(top + ax[1] * 0.028 * s + U * 0.01 * s, ax, (0.0035 * s, 0.028 * s, 0.0035 * s), c['metal'])
+        m.box(top + ax[1] * 0.058 * s + U * 0.01 * s, ax, (0.008 * s, 0.008 * s, 0.008 * s), c['black'])
+        placard(m, top + R * (-side) * (hw - 0.02 * s), R, U, N, 0.016 * s, hl * 1.2, c)
+        return
+    if kind == 'trim':
+        # two trim wheels standing in slots, their rims proud of the console
+        for j, f in enumerate((-0.4, 0.4)):
+            cw = top + U * f * hl + N * (-0.004)
+            m.cyl(cw - R * 0.006 * s, R, U, 0.026 * s, 0.012 * s, c['black'], cap=c['black'])
+        return
+
+
+def consoles(m, ac, t, era, c, ctx, gauges, pal_name):
+    """the side consoles' panels (replacing the plain switch blocks) and their inner lips"""
+    s, E = t.s, t.E
+    X, Y, Z = np.array([1.0, 0, 0]), np.array([0, 1.0, 0]), np.array([0, 0, 1.0])
+    plan = CONSOLES[era['seat']]
+    for side in (1, -1):
+        xi, xw, zb, zf_i = ctx['console'][side]
+        L = zf_i - zb
+        n = max(3, int(L / (0.11 * s)))
+        hl = L / n / 2 - 0.006 * s
+        hw = (abs(xw - xi) - 0.02 * s) / 2
+        xc = (xi + xw) / 2
+        kinds = [k for k in plan['left' if side > 0 else 'right'] if k != 'throttle']
+        tz = ctx['throttle'][1] if side > 0 else None
+        stick = ctx.get('stick')
+        for k in range(n):                                 # front to back
+            zc = zf_i - (k + 0.5) * L / n
+            if tz is not None and abs(zc - tz) < hl + 0.03 * s:
+                kind = 'throttle'
+            elif stick is not None and np.sign(stick[0] - E[0]) == side and abs(zc - stick[2]) < hl + 0.05 * s:
+                kind = 'throttle'                          # the side stick's slot: a bare plate
+            else:
+                kind = kinds.pop(0) if kinds else 'toggles'
+            console_slot(m, kind, side, xc, zc, hw, hl, t.console_y, s, c, t, gauges, pal_name)
+        # the lip along the console's inner edge
+        m.box([xi + side * 0.004, t.console_y + 0.004, (zb + zf_i) / 2], (X, Y, Z), (0.005, 0.005, L / 2), c['dgrey'])
+
+
+def structure(m, ac, t, era, c, ctx):
+    """frames on the side walls, the panel's chin lip, the centre pedestal, heel plates and pedal straps"""
+    s, E = t.s, t.E
+    X, Y, Z = np.array([1.0, 0, 0]), np.array([0, 1.0, 0]), np.array([0, 0, 1.0])
+    for side in (1, -1):
+        xi, xw, zb, zf_i = ctx['console'][side]
+        zw = ctx['wall_z'][side]
+        n = max(2, int((zw - t.back_z) / (0.24 * s)) + 1)
+        ym = (t.sill + t.console_y) / 2
+        hy = (t.sill - t.console_y) / 2 - 0.012
+        for k in range(n):
+            z = t.back_z + (k + 0.5) * (zw - t.back_z) / n
+            m.box([xw - side * 0.007, ym, z], (X, Y, Z), (0.007, hy, 0.010 * s), c['console'])
+        # a stringer along the wall at mid height, between the frames
+        m.box([xw - side * 0.005, ym, (t.back_z + zw) / 2], (X, Y, Z), (0.005, 0.006 * s, (zw - t.back_z) / 2 - 0.01),
+              c['console'])
+        # canopy sill fittings: a jettison handle (yellow) on the left, the lock lever on the right
+        if side > 0:
+            m.box([xw - side * 0.015, t.sill + 0.03, t.back_z + 0.12 * s], (X, Y, Z), (0.012, 0.010 * s, 0.018 * s), c['yellow'])
+            m.box([xw - side * 0.015, t.sill + 0.03, t.back_z + 0.12 * s], (X, Y, Z), (0.013, 0.003 * s, 0.006 * s), c['black'])
+        else:
+            m.box([xw - side * 0.015, t.sill + 0.028, t.back_z + 0.10 * s], (X, Y, Z), (0.006, 0.006, 0.030 * s), c['metal'])
+    # the panel's chin lip under each facet
+    for f in ctx['facets']:
+        a0, a1 = f.extent()
+        p = f.at((a0 + a1) / 2, f.bottom() + 0.005 * s)
+        m.box(p + f.N * 0.006, (f.R, f.U, f.N), ((a1 - a0) / 2, 0.006 * s, 0.006), c['dgrey'])
+    # the centre pedestal under the panel, with the rudder trim knob on it
+    cen = ctx['facets'][0]
+    bl = cen.at(0, t.bot_c)
+    dz = 0.04 * s
+    pc = np.array([E[0], (bl[1] + t.floor_y) / 2, bl[2] - dz])
+    m.box(pc, (X, Y, Z), (0.45 * t.hinge, (bl[1] - t.floor_y) / 2 - 0.002, dz), c['panel'])
+    knob(m, np.array([E[0], bl[1] - 0.06 * s, bl[2] - 2 * dz]), -Z, Y, s, c, r=0.014, h=0.012)
+    # heel plates and pedal straps
+    pz = t.front_z - 0.08 * s
+    for sg in (1, -1):
+        m.box([E[0] + sg * 0.12 * s, t.floor_y + 0.002, pz - 0.16 * s], (X, Y, Z), (0.045 * s, 0.002, 0.07 * s), c['lgrey'])
+        up, fw = unit([0, 1, -0.35]), unit([0, 0.35, 1])
+        m.box(np.array([E[0] + sg * 0.12 * s, t.floor_y + 0.12 * s, pz]) + up * 0.02 * s - fw * 0.014,
+              (X, up, fw), (0.046 * s, 0.007 * s, 0.003), c['dgrey'])
+
+
+def seat_furniture(m, ac, t, era, c):
+    """harness straps and buckle, headrest pad and parachute container, the seat's side handles"""
+    s, E = t.s, t.E
+    X, Y, Z = np.array([1.0, 0, 0]), np.array([0, 1.0, 0]), np.array([0, 0, 1.0])
+    ej = era['seat'] == 'ejection'
+    ax = (X, unit([0, 1, -0.14]), unit([0, 0.14, 1])) if ej else (X, unit([0, 1, -0.2]), unit([0, 0.2, 1]))
+    pan_y = E[1] - (0.85 if ej else 0.80) * s
+    back = np.array([E[0], E[1] - 0.50 * s, E[2] - (0.23 if ej else 0.20) * s])   # back cushion centre
+    front = ax[2] * ((0.03 if ej else 0.02) * s + 0.004)
+    # shoulder straps down the back cushion, lap belt over the pan, a buckle where they meet
+    for sg in (1, -1):
+        m.box(back + front + X * sg * 0.055 * s + ax[1] * 0.08 * s, ax, (0.018 * s, 0.26 * s, 0.004), c['mgrey'])
+    m.box([E[0], pan_y + (0.035 if ej else 0.02) * s + 0.012, E[2] + 0.11 * s], (X, Y, Z), (0.17 * s, 0.006, 0.014 * s), c['mgrey'])
+    m.box([E[0], pan_y + (0.035 if ej else 0.02) * s + 0.014, E[2] + 0.11 * s], (X, Y, Z), (0.03 * s, 0.009, 0.018 * s), c['metal'])
+    if ej:
+        # the parachute container on top of the head box, with its lgrey top cover and a drogue chute pack
+        g = ac.glass_above(E[0], E[2] - 0.31 * s, E[1])
+        hb_top = min(E[1] + 0.21 * s, g - 0.03) if g is not None else E[1] + 0.21 * s
+        m.box([E[0], hb_top - 0.06 * s, E[2] - 0.31 * s], (X, Y, Z), (0.165 * s, 0.045 * s, 0.105 * s), c['dgrey'],
+              faces={(1, 1): c['lgrey']})
+        # headrest pad with a light trim band, seat-back side bolsters
+        m.box([E[0], E[1] + 0.02 * s, E[2] - 0.18 * s], (X, Y, Z), (0.11 * s, 0.015 * s, 0.004), c['lgrey'])
+        for sg in (1, -1):
+            m.box(back + X * sg * 0.17 * s + ax[1] * 0.05 * s, ax, (0.025 * s, 0.25 * s, 0.045 * s), c['frame'])
+        # the survival kit under the pan cushion, with its handle; side ejection handles on older seats
+        m.box([E[0], pan_y - 0.045 * s, E[2] + 0.22 * s], (X, Y, Z), (0.17 * s, 0.012 * s, 0.015 * s), c['dgrey'])
+        for sg in (1, -1):
+            if era['hud']:
+                continue
+            m.box([E[0] + sg * 0.20 * s, pan_y + 0.04 * s, E[2] + 0.16 * s], (X, Y, Z), (0.01, 0.03 * s, 0.012 * s), c['yellow'])
+            m.box([E[0] + sg * 0.20 * s, pan_y + 0.04 * s, E[2] + 0.16 * s], (X, Y, Z), (0.011, 0.008 * s, 0.013 * s), c['black'])
+    else:
+        # the seat adjustment lever and the armour plate's edge
+        m.box([E[0] + 0.21 * s, pan_y + 0.06 * s, E[2] + 0.05 * s], (X, unit([0, 1, 0.3]), unit([0, -0.3, 1])),
+              (0.004, 0.05 * s, 0.004), c['metal'])
+        m.box([E[0], E[1] - 0.06 * s, E[2] - 0.30 * s], ax, (0.175 * s, 0.006, 0.014 * s), c['lgrey'])
+
+
+def rear_deck(m, ac, t, era, c):
+    """the deck behind the rear bulkhead under a long canopy (bubble hoods): a shelf at sill height following the
+    glass's width, with the seat-back fairing on it"""
+    s, E = t.s, t.E
+    X, Y, Z = np.array([1.0, 0, 0]), np.array([0, 1.0, 0]), np.array([0, 0, 1.0])
+    G = ac.glass.reshape(-1, 3)
+    if not len(G):
+        return
+    mid = G[np.abs(G[:, 0] - E[0]) < 0.2]
+    if not len(mid):
+        return
+    z_rear = float(mid[:, 2].min())
+    if z_rear > t.back_z - 0.12:
+        return
+    n = max(3, int((t.back_z - z_rear) / 0.2) + 2)
+    rows, w_prev = [], t.W
+    for z in np.linspace(t.back_z, z_rear + 0.02, n):
+        near = G[np.abs(G[:, 2] - z) < 0.06]
+        if len(near):
+            w = float(np.abs(near[:, 0] - E[0]).max()) - 0.015
+            y = min(t.sill + 0.012, float(near[:, 1].min()) + 0.006)
+        else:
+            w, y = w_prev, t.sill + 0.012
+        w = float(np.clip(w, 0.06, t.W))
+        w_prev = w
+        rows.append((z, w, y))
+    for (z0, w0, y0), (z1, w1, y1) in zip(rows, rows[1:]):
+        m.flat([[E[0] - w0, y0, z0], [E[0] + w0, y0, z0], [E[0] + w1, y1, z1], [E[0] - w1, y1, z1]], c['wall'], normal=[0, 1, 0])
+        for sg in (1, -1):                                  # skirts down from the deck edge
+            m.flat([[E[0] + sg * w0, y0, z0], [E[0] + sg * w1, y1, z1], [E[0] + sg * w1, y1 - 0.12 * s, z1],
+                    [E[0] + sg * w0, y0 - 0.12 * s, z0]], c['wall'], normal=[-sg, 0, 0])
+    z0, w0, y0 = rows[0]
+    m.flat([[E[0] - w0, y0, z0], [E[0] + w0, y0, z0], [E[0] + w0, y0 - 0.12 * s, z0], [E[0] - w0, y0 - 0.12 * s, z0]],
+           c['wall'], normal=[0, 0, 1])
+    # the seat-back fairing: a sloped box behind the bulkhead, lower toward the rear
+    if era['seat'] == 'ejection' and rows[1][0] < t.back_z - 0.15:
+        d = min(0.30 * s, (t.back_z - z_rear) * 0.5)
+        g = ac.glass_above(E[0], t.back_z - d / 2, y0)
+        h = 0.12 * s if g is None else min(0.12 * s, (g - 0.04 - y0))
+        if h > 0.03:
+            m.box([E[0], y0 + h / 2, t.back_z - d / 2], (X, unit([0, 1, 0.2]), unit([0, -0.2, 1])),
+                  (min(0.14 * s, w0 * 0.7), h / 2, d / 2), c['wall'])
+
+
+def detail(m, ac, t, era, c, ctx, gauges, pal_name):
+    consoles(m, ac, t, era, c, ctx, gauges, pal_name)
+    structure(m, ac, t, era, c, ctx)
+    seat_furniture(m, ac, t, era, c)
+    rear_deck(m, ac, t, era, c)
 
 
 # ---------------------------------------------------------------- removing the old interior
