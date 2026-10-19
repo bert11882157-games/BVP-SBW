@@ -16,6 +16,7 @@ on that slot: the same launcher, the same round count and the same munition.
 ```
 python3 tools/heli_armament/extract_wt.py              # only when the WT data changes
 python3 tools/heli_armament/build.py --texture /tmp/heli_stores.png
+python3 tools/heli_armament/camera.py                  # third-person chase cameras, after build.py
 python3 tools/heli_armament/preview.py ah_64d /tmp/ah64.png --loadout mixed --views front,quarter
 ```
 
