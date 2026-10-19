@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """Orthographic top-down and side views of each aircraft's crew area, for marking the canopy glass bounds by hand.
 
 Each image covers the crew stations (every seat's eye, with a margin, so glazed noses and gunner stations are in),
@@ -8,7 +8,8 @@ beside each image records the projection, so marks drawn on the image map back t
   side view (from the left, nose to the left): pixel (u, v) -> z = cz - (u - W/2) / scale, y = cy - (v - H/2) / scale
 The model is drawn as it is (no canopy glass, no instruments).
 
-Usage: python3 tools/canopy_models/ortho.py OUTDIR [id ...]   (no ids: every Airplane and Helicopter)
+Usage: python3 tools/canopy_models/ortho.py OUTDIR [--side] [--pilot] [id ...]   (no ids: every Airplane and Helicopter)
+  --side: the side view only; --pilot: close up on the crew stations (PILOT margins) at PILOT_PX pixels per block
 """
 import json, math, os, sys
 import numpy as np
@@ -47,7 +48,11 @@ def crew_box(data):
     return np.array(eyes, float)
 
 
-def views(vid, out_dir):
+PILOT = dict(ahead=1.7, behind=1.3, below=0.95, above=0.75)   # the --pilot region around the crew eyes, blocks
+PILOT_PX = 1200.0                                               # --pilot scale, pixels per block
+
+
+def views(vid, out_dir, which=('top', 'side'), pilot=False):
     geo = json.load(open(os.path.join(EV.GEO, vid + '.geo.json'), encoding='utf-8'))
     data = json.load(open(os.path.join(EV.DATA, vid + '.json'), encoding='utf-8'))
     tex = np.asarray(Image.open(os.path.join(EV.TEX, vid + '.png')).convert('RGBA')).astype(np.float32) / 255.0
@@ -60,12 +65,18 @@ def views(vid, out_dir):
     eyes = crew_box(data)
     if not len(eyes):
         eyes = np.array([tris.reshape(-1, 3).mean(0)])
+    if pilot:                       # the cockpit: the first seat and any crew station within 2.5 blocks (a tandem
+        eyes = eyes[np.linalg.norm(eyes - eyes[0], axis=1) < 2.5]   # gunner), not the cabin's passenger seats
     lo, hi = eyes.min(0), eyes.max(0)
-    # the region: the crew stations, 2.5 ahead / 2.0 behind, 1.5 either side, 1.3 below / 1.0 above the eyes
-    lo = lo - [1.5, 1.3, 2.0]; hi = hi + [1.5, 1.0, 2.5]
+    if pilot:
+        # the pilot's section, close up: the crew eyes with PILOT's margins, at PILOT_PX
+        lo = lo - [1.0, PILOT['below'], PILOT['behind']]; hi = hi + [1.0, PILOT['above'], PILOT['ahead']]
+    else:
+        # the region: the crew stations, 2.5 ahead / 2.0 behind, 1.5 either side, 1.3 below / 1.0 above the eyes
+        lo = lo - [1.5, 1.3, 2.0]; hi = hi + [1.5, 1.0, 2.5]
     c = (lo + hi) / 2
     span_z, span_x, span_y = hi[2] - lo[2], hi[0] - lo[0], hi[1] - lo[1]
-    scale = LONG_SIDE / max(span_z, span_x, span_y)
+    scale = PILOT_PX if pilot else LONG_SIDE / max(span_z, span_x, span_y)
     P = tris.reshape(-1, 3)
     near = (np.abs(tris.mean(1)[:, 2] - c[2]) < span_z) & (np.abs(tris.mean(1)[:, 0] - c[0]) < span_x * 2)
     X, Y, Z = np.eye(3)
@@ -77,6 +88,8 @@ def views(vid, out_dir):
     }
     written = []
     for name, sp in specs.items():
+        if name not in which:
+            continue
         # depth grows away from the camera (fwd points into the scene); DEPTH keeps it positive
         cam = Ortho(c, sp['right'], sp['up'], sp['fwd'], scale, sp['w'], sp['h'], 0.0)
         r = EV.Raster(cam, bg=(236, 240, 244))
@@ -99,6 +112,11 @@ def grid(im, cam, name, lo, hi):
     """a light grid in vehicle-local blocks: thin lines every 0.25, darker and labelled every 1.0"""
     d = ImageDraw.Draw(im, 'RGBA')
     W, H = im.size
+    try:                                       # labels readable at any image size
+        from PIL import ImageFont
+        font = ImageFont.load_default(size=max(11, int(cam.scale / 60)))
+    except Exception:
+        font = None
     if name == 'top':
         axes = (('x', 0, lo[0], hi[0]), ('z', 2, lo[2], hi[2]))
     else:
@@ -113,14 +131,18 @@ def grid(im, cam, name, lo, hi):
             if vertical:
                 d.line([(s[0], 0), (s[0], H)], fill=col, width=1)
                 if major:
-                    d.text((s[0] + 3, 3), f'{label}={val:g}', fill=(30, 50, 80, 220))
+                    d.text((s[0] + 3, 3), f'{label}={val:g}', fill=(30, 50, 80, 220), font=font)
             else:
                 d.line([(0, s[1]), (W, s[1])], fill=col, width=1)
                 if major:
-                    d.text((3, s[1] + 2), f'{label}={val:g}', fill=(30, 50, 80, 220))
+                    d.text((3, s[1] + 2), f'{label}={val:g}', fill=(30, 50, 80, 220), font=font)
 
 
 def main(argv):
+    flags = {a for a in argv if a.startswith('--')}
+    argv = [a for a in argv if not a.startswith('--')]
+    which = ('side',) if '--side' in flags else ('top', 'side')
+    pilot = '--pilot' in flags
     out = argv[0]
     os.makedirs(out, exist_ok=True)
     ids = argv[1:]
@@ -132,7 +154,7 @@ def main(argv):
                 ids.append(f[:-5])
     for vid in ids:
         try:
-            views(vid, out); print('ok', vid, flush=True)
+            views(vid, out, which, pilot); print('ok', vid, flush=True)
         except Exception as e:
             print('FAILED', vid, type(e).__name__, e, flush=True)
 
