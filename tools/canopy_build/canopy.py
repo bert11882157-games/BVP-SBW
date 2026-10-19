@@ -6,17 +6,19 @@ aircraft's own colours from its texture.
 Runs after tools/canopy_panels/panels.py (the glass panels and their frame stations, from spec.json) and
 tools/cockpit_models/fleet.py (the modelled cockpit); the MiG-29 keeps its own glass but gets the same treatment.
 
-  * Old canopy: every face of the hull wreck pieces that stands above the canopy sill inside the hood's plan, or
-    that stands clearly off the nose skin along the windscreen (posts, bows, armour-glass plates, painted panes),
-    is removed. The outer skin along the sills and the nose deck under the windscreen stay.
-  * Frame members: solid boxes with a real cross-section along every frame station the panels define (windscreen
-    posts, the arch, the hood bows, the hood's end, the base of the windscreen, the sills along the glass's lower
-    edge and the spine of a glazed tail), straddling the glass (outer face proud of it, inner face under it).
-    Outer faces and edges take the airframe paint beside the cockpit (sampled from the model's texture on the skin
-    next to the sills, snapped to a uniform texel block of that texture), inner faces the cockpit's dark grey, and
-    the sill tops the black of the canopy seal.
-  * Glass: the panel glass gets an inner sheet a few millimetres under the outer one (CanopyGlass), so the glass
-    reads as a thick transparency at its edges and from the seat.
+  * Old canopy: only faces lying wholly inside an explicit cut region go (old_canopy): the hood's volume above
+    the sill line, the windscreen's volume off the nose skin, faces painted in the model's glass colour inside the
+    plan, and boxes listed per aircraft in spec.json "cut". Nothing is taken for touching a removed face or for
+    where its middle sits, so the skin and the deck under the windscreen stay. The report counts each rule's take;
+    tools/canopy_build/review.py draws the region and the removed faces for checking.
+  * Frame members: one continuous rail swept round the glass's whole edge (windscreen base, sills, rear edge) and
+    rings over the glass at every frame station (windscreen posts, the arch, the bows, the hinge frame where rear
+    glazing runs on behind the hood), each a solid with a real cross-section straddling the glass, mitred at the
+    corners. Outer and side faces take the airframe paint beside the cockpit (sampled from the model's texture
+    next to the sills, snapped to a uniform texel block), the face under the glass the cockpit's dark grey.
+    Widths follow a real fighter's frame (spec.json "frame" overrides per aircraft).
+  * Glass: the panel glass is a solid: outer sheet, inner sheet GLASS_T under it and the edge between them
+    (CanopyGlass), so the glass reads as a thick transparency at its edges and from the seat.
 
 New faces go into the bone wreck_<piece>__canopy (parent hull) of the piece that holds the cockpit, so the canopy
 breaks away with the forward fuselage. Running the script again on its own output removes the earlier canopy
@@ -37,14 +39,17 @@ import cockpit_lib as L     # noqa: E402
 import loft as LF           # noqa: E402
 import ortho as O           # noqa: E402
 
-FRAME_W = 0.045       # frame member width (across the member)
-FRAME_OUT = 0.014     # stands this proud of the glass
-FRAME_IN = 0.024      # and reaches this far under it
-POST_W = 0.055        # windscreen posts and the arch are heavier
-SILL_W = 0.070        # the sill rail: width across
-SILL_H = 0.036        # and height
-GLASS_T = 0.012       # inner glass sheet this far under the outer
-SEAL = (18, 18, 20)
+# member cross-sections, in blocks (about a metre a block on these models): a real fighter's canopy frame is
+# 8-12 cm wide at the sill and the bow, 15-25 cm along a heavy hinge frame; spec.json "frame" overrides per aircraft
+FRAME_W = 0.080       # bows and the arch: width across the member
+FRAME_OUT = 0.020     # stands this proud of the glass
+FRAME_IN = 0.040      # and reaches this far under it
+POST_W = 0.070        # windscreen posts
+RAIL_W = 0.090        # the rail round the glass's edge (sills, windscreen base, rear edge)
+RAIL_OUT = 0.022
+RAIL_IN = 0.045
+RAIL_SHIFT = 0.025    # the rail sits this much outboard of the glass's edge, on the coaming's top
+GLASS_T = 0.020       # inner glass sheet this far under the outer: the glass's thickness
 INNER = L.ACCENT['dgrey']
 
 
@@ -55,32 +60,65 @@ def unit(v):
 # ---------------------------------------------------------------- members
 
 class Members:
-    """solid members along polylines, straddling a surface whose outward direction is given per point"""
-    def __init__(self, mesh, outward, uv_paint, uv_inner, uv_seal):
+    """solid members swept along polylines, straddling a surface whose outward direction is given per point: a
+    rectangular section (width across, proud + under deep) is set at every point of the line, turned to the line's
+    direction there (mitred at the corners), and the sections are joined into one continuous member. Outer and side
+    faces take the paint, the face under the glass the cockpit's dark grey."""
+    def __init__(self, mesh, outward, uv_paint, uv_inner):
         self.m, self.outward = mesh, outward
-        self.paint, self.inner, self.seal = uv_paint, uv_inner, uv_seal
+        self.paint, self.inner = uv_paint, uv_inner
 
-    def chain(self, pts, width, proud, under, closed=False, top_seal=False):
+    def sweep(self, pts, width, proud, under, closed=False, shift=0.0):
+        """shift: the section is moved this far sideways, away from the middle of the line (a closed loop's
+        rail then lies outboard of the glass's edge, on the skin, instead of straddling it)"""
         P = np.asarray(pts, float)
-        if closed and np.linalg.norm(P[0] - P[-1]) > 1e-6:
-            P = np.vstack([P, P[:1]])
-        for a, b in zip(P[:-1], P[1:]):
-            d = b - a; ln = np.linalg.norm(d)
-            if ln < 1e-4:
-                continue
-            d /= ln
-            out = self.outward((a + b) / 2)
-            out = out - d * (out @ d)
+        keep = [P[0]]
+        for q in P[1:]:
+            if np.linalg.norm(q - keep[-1]) > 1e-4:
+                keep.append(q)
+        P = np.array(keep)
+        if closed and np.linalg.norm(P[0] - P[-1]) < 1e-4:
+            P = P[:-1]
+        n = len(P)
+        if n < 2:
+            return
+        secs = []
+        for i in range(n):
+            if closed:
+                t = unit(P[(i + 1) % n] - P[i]) + unit(P[i] - P[(i - 1) % n])
+            elif i == 0:
+                t = P[1] - P[0]
+            elif i == n - 1:
+                t = P[-1] - P[-2]
+            else:
+                t = unit(P[i + 1] - P[i]) + unit(P[i] - P[i - 1])
+            if np.linalg.norm(t) < 1e-6:                  # a hairpin: use one side
+                t = P[(i + 1) % n] - P[i]
+            t = unit(t)
+            out = self.outward(P[i])
+            out = out - t * (out @ t)
             if np.linalg.norm(out) < 1e-6:
                 out = np.array([0.0, 1.0, 0.0])
             out = unit(out)
-            side = np.cross(d, out)
-            c = (a + b) / 2 + out * (proud - under) / 2
-            faces = {(2, -1): self.inner}
-            if top_seal:
-                faces[(2, 1)] = self.seal
-            self.m.box(c, (d, side, out), (ln / 2 + width * 0.35, width / 2, (proud + under) / 2), self.paint,
-                       faces=faces)
+            side = np.cross(t, out)
+            c = P[i] + out * (proud - under) / 2
+            if shift:
+                mid = P.mean(0)
+                away = unit(P[i] - mid - out * ((P[i] - mid) @ out))
+                c = c + side * (shift if side @ away > 0 else -shift)
+            h = (proud + under) / 2
+            secs.append([c + side * width / 2 + out * h, c - side * width / 2 + out * h,
+                         c - side * width / 2 - out * h, c + side * width / 2 - out * h])
+        pairs = list(zip(range(n - 1), range(1, n))) + ([(n - 1, 0)] if closed else [])
+        for i, j in pairs:
+            A, B = secs[i], secs[j]
+            self.m.flat([A[0], B[0], B[1], A[1]], self.paint, normal=(A[0] + A[1] - A[2] - A[3]))     # outer
+            self.m.flat([A[1], B[1], B[2], A[2]], self.paint, normal=(A[1] + A[2] - A[0] - A[3]))     # side
+            self.m.flat([A[2], B[2], B[3], A[3]], self.inner, normal=(A[2] + A[3] - A[0] - A[1]))     # under
+            self.m.flat([A[3], B[3], B[0], A[0]], self.paint, normal=(A[0] + A[3] - A[1] - A[2]))     # side
+        if not closed:
+            A = secs[0]; self.m.flat(A, self.paint, normal=P[0] - P[1])
+            B = secs[-1]; self.m.flat(B, self.paint, normal=P[-1] - P[-2])
 
 
 # ---------------------------------------------------------------- the old canopy
@@ -114,17 +152,49 @@ def glass_colours(ac, B, env, skip_bones):
     return {c for c, n in total.items() if n >= 4 and near.get(c, 0) >= 0.75 * n}
 
 
+def cut_boxes(B, env):
+    """the cut region as plain boxes, vehicle-local (x left, y up, z forward), for drawing on a review render:
+    one box per hood station slice and per windscreen slice, plus the hand-listed boxes"""
+    out = []
+    ev = env.ev
+    z_back = min(env.zr, B.z_hood) - 0.05
+    for z0 in np.arange(z_back, B.z_arch + 0.06, 0.25):
+        z1 = min(z0 + 0.25, B.z_arch + 0.06)
+        zc = float(np.clip((z0 + z1) / 2, env.zr, env.zf))
+        w = env.W(zc) + 0.15
+        out.append(('hood', [-w, env.lip(zc) - 0.03, z0], [w, env.spine(zc) + 0.5, z1]))
+    for z0 in np.arange(B.z_arch - 0.06, B.z_base + 0.10, 0.2):
+        z1 = min(z0 + 0.2, B.z_base + 0.10)
+        zc = (z0 + z1) / 2
+        w = env.W(B.z_arch) + 0.15
+        out.append(('windscreen', [-w, ev.skin_at(0.0, zc) + 0.015, z0], [w, env.spine(float(np.clip(zc, env.zr, env.zf))) + 0.5, z1]))
+    for lo, hi in B.spec.get('cut', []):
+        out.append(('box', list(np.array(lo, float) + ev.eye), list(np.array(hi, float) + ev.eye)))
+    return out
+
+
 def old_canopy(ac, B, env, skip_bones):
-    """{bone name: set(poly index)}: faces of the model's own canopy"""
+    """{bone name: set(poly index)}: faces of the model's own canopy, taken only from an explicit region: a face
+    goes when ALL its corners lie inside one of these (nothing is grown from neighbours, and no face is taken for
+    where its middle sits):
+      hood        between the hood's rear end and the arch, inside the glass's plan (+0.15), on or above the sill
+                  line (lip - 0.03): the old panes, bows and headrest-fairing glazing;
+      windscreen  between the arch and the base, inside the arch's width (+0.15), standing off the nose skin
+                  (skin + 0.015): posts, bows and armour-glass plates; the deck itself stays;
+      painted     a face painted in the model's glass colour (glass_colours) inside the plan, down to 0.6 under
+                  the sill: a pane painted onto the fuselage side;
+      cut         boxes listed in spec.json "cut" (eye-relative), for leftovers the rules miss.
+    Returns the selection and a per-rule count, so the report says what each rule took."""
     from PIL import Image
     ev = env.ev
-    z_front = B.z_base + 0.12
-    z_back = min(env.zr, B.z_hood) - 0.06
+    z_front = B.z_base + 0.10
+    z_back = min(env.zr, B.z_hood) - 0.05
     Wa = env.W(B.z_arch)
     glassy = glass_colours(ac, B, env, skip_bones)
     tex = np.array(Image.open(L.texture_path(ac.vid)).convert('RGB'))
     H, W = tex.shape[:2]
-    out = {}
+    boxes = [(np.array(lo, float) + ev.eye, np.array(hi, float) + ev.eye) for lo, hi in B.spec.get('cut', [])]
+    out, counts = {}, {'hood': 0, 'windscreen': 0, 'painted': 0, 'cut': 0}
     for b in ac.bones:
         if b['name'] in skip_bones or not L.is_interior_bone(b['name']):
             continue
@@ -137,79 +207,31 @@ def old_canopy(ac, B, env, skip_bones):
         for i, poly in enumerate(pm['polys']):
             V = Pp[[v[0] for v in poly]]
             z0, z1 = V[:, 2].min(), V[:, 2].max()
-            if z1 < z_back - 0.10 or z0 > z_front + 0.10:
-                continue
-            if np.abs(V[:, 0]).max() > max(env.W(z) for z in np.clip(V[:, 2], env.zr, env.zf)) + 0.30:
-                continue
-            # C. painted in the model's glass colour, up at the canopy: an old pane, wherever its frame stands
-            if glassy:
-                uv = UV[[v[2] for v in poly]].mean(0)
-                c = tuple(int(x) for x in tex[min(H - 1, int((1 - uv[1]) * H)), min(W - 1, int(uv[0] * W))])
-                if c in glassy and V[:, 1].max() > env.lip(float(np.clip(V[:, 2].mean(), env.zr, env.zf))) - 0.60:
-                    sel.add(i); continue
-            if z1 < z_back or z0 > z_front:
-                continue
-            # E. a face whose middle lies inside the canopy's volume (well inside the plan, above the sill or the
-            # nose skin, under the roof): an old post or divider standing in the glass, however far it reaches down
-            cx, cy, cz = V.mean(0)
-            czc = float(np.clip(cz, env.zr, env.zf))
-            if z_back <= cz <= z_front and abs(cx) < env.W(czc) - 0.05 and cy < env.spine(czc) + 0.05:
-                floor = env.lip(czc) + 0.02 if cz <= B.z_arch + 0.06 else ev.skin_at(float(cx), float(cz)) + 0.015
-                if cy > floor or V[:, 1].max() > floor + 0.08:
-                    sel.add(i); continue
-            # A. inside the hood's plan, above the sill: old glass panes, bows, the headrest fairing's glazing
-            lips = np.array([env.lip(float(z)) for z in V[:, 2]])
-            if z1 <= B.z_arch + 0.06 and z0 >= z_back and np.all(V[:, 1] >= lips - 0.03):
-                sel.add(i); continue
-            # a modelled pane or frame reaching down to (or a little under) the sill: lies along the new glass
-            if z1 <= B.z_arch + 0.06 and z0 >= env.zr - 0.30 and np.all(V[:, 1] >= lips - 0.14) and \
-                    V[:, 1].max() >= lips.max() + 0.02 and ac.hugs_glass(V, 0.15):
-                sel.add(i); continue
-            # B. along the windscreen: anything standing clearly off the nose skin (posts, a bow, an armour-glass
-            # plate), or lying along the new glass without being the skin under it
-            if z1 > B.z_arch - 0.06 and z1 <= z_front and np.abs(V[:, 0]).max() <= Wa + 0.30:
-                skin = np.array([ev.skin_at(float(x), float(z)) for x, z in zip(V[:, 0], V[:, 2])])
-                if np.all(V[:, 1] > skin + 0.015):
-                    sel.add(i); continue
-                if np.all(V[:, 1] > skin - 0.02) and V[:, 1].max() > skin.max() + 0.006 and ac.hugs_glass(V, 0.08):
-                    sel.add(i); continue
-        # D. the frame around removed panes: dark faces sharing an edge with a removed face, standing off the skin
-        if glassy and sel:
-            import colorsys
-            key = lambda j: tuple(np.round(Pp[j], 3))
-            edges_of = lambda poly: {frozenset((key(poly[k][0]), key(poly[(k + 1) % len(poly)][0])))
-                                     for k in range(len(poly))}
-            E = [edges_of(poly) for poly in pm['polys']]
-            grown = True
-            while grown:
-                grown = False
-                front = set().union(*(E[i] for i in sel))
-                for i, poly in enumerate(pm['polys']):
-                    if i in sel or not (E[i] & front):
-                        continue
-                    V = Pp[[v[0] for v in poly]]
-                    z0, z1 = V[:, 2].min(), V[:, 2].max()
-                    if z1 < z_back - 0.10 or z0 > z_front + 0.10 or \
-                            np.abs(V[:, 0]).max() > max(env.W(z) for z in np.clip(V[:, 2], env.zr, env.zf)) + 0.30:
-                        continue
-                    uv = UV[[v[2] for v in poly]].mean(0)
-                    c = tex[min(H - 1, int((1 - uv[1]) * H)), min(W - 1, int(uv[0] * W))]
-                    if colorsys.rgb_to_hsv(*(c / 255.0))[2] > 0.16:
-                        continue
+            rule = None
+            for lo, hi in boxes:
+                if np.all(V >= lo) and np.all(V <= hi):
+                    rule = 'cut'; break
+            if rule is None and z1 >= z_back and z0 <= z_front:
+                zc = np.clip(V[:, 2], env.zr, env.zf)
+                Ws = np.array([env.W(float(z)) for z in zc])
+                lips = np.array([env.lip(float(z)) for z in zc])
+                if np.all(np.abs(V[:, 0]) <= Ws + 0.15):
+                    if z0 >= z_back and z1 <= B.z_arch + 0.06 and np.all(V[:, 1] >= lips - 0.03):
+                        rule = 'hood'
+                    elif glassy and np.all(V[:, 1] >= lips - 0.60):
+                        uv = UV[[v[2] for v in poly]].mean(0)
+                        c = tuple(int(x) for x in tex[min(H - 1, int((1 - uv[1]) * H)), min(W - 1, int(uv[0] * W))])
+                        if c in glassy:
+                            rule = 'painted'
+                if rule is None and z0 >= B.z_arch - 0.06 and z1 <= z_front and np.all(np.abs(V[:, 0]) <= Wa + 0.15):
                     skin = np.array([ev.skin_at(float(x), float(z)) for x, z in zip(V[:, 0], V[:, 2])])
-                    if V[:, 1].max() > skin.max() + 0.03 and \
-                            V[:, 1].max() > env.lip(float(np.clip(V[:, 2].mean(), env.zr, env.zf))) - 0.60:
-                        sel.add(i); grown = True
-        # F. hand-listed leftovers: boxes relative to the eye (x left, y up, z forward) in spec.json
-        for lo, hi in B.spec.get('remove_boxes', []):
-            lo, hi = np.array(lo, float) + ev.eye, np.array(hi, float) + ev.eye
-            for i, poly in enumerate(pm['polys']):
-                cc = Pp[[v[0] for v in poly]].mean(0)
-                if np.all(cc >= lo) and np.all(cc <= hi):
-                    sel.add(i)
+                    if np.all(V[:, 1] > skin + 0.015):
+                        rule = 'windscreen'
+            if rule:
+                sel.add(i); counts[rule] += 1
         if sel:
             out[b['name']] = sel
-    return out
+    return out, counts
 
 
 # ---------------------------------------------------------------- paint
@@ -250,7 +272,8 @@ def paint_colour(ac, env, B):
 # ---------------------------------------------------------------- glass
 
 def inner_sheet(tris, centre, t):
-    """the panel glass offset inward by t along smoothed vertex normals (normals point away from the canopy centre)"""
+    """(the panel glass offset inward by t along smoothed vertex normals, normal lookup for any point): normals
+    point away from the canopy centre"""
     T = np.asarray(tris, float).reshape(-1, 3, 3)
     n = np.cross(T[:, 1] - T[:, 0], T[:, 2] - T[:, 0])
     n /= np.maximum(np.linalg.norm(n, axis=1, keepdims=True), 1e-12)
@@ -267,7 +290,14 @@ def inner_sheet(tris, centre, t):
     for k in range(len(T)):
         for q in range(3):
             out[k, q] = T[k, q] - nv[key(T[k, q])] * t
-    return out
+    keys = np.array(list(nv.keys()), float); vals = np.array(list(nv.values()), float)
+
+    def normal_at(p):
+        k = key(p)
+        if k in nv:
+            return nv[k]
+        return vals[int(np.argmin(((keys - np.asarray(p, float)) ** 2).sum(1)))]
+    return out, normal_at
 
 
 # ---------------------------------------------------------------- build
@@ -300,12 +330,12 @@ def apply(vid, dry=False, orig=None):
                 os.environ.pop('BVP_GEO_DIR', None)
             else:
                 os.environ['BVP_GEO_DIR'] = was
-    uv_paint, uv_inner, uv_seal = sw.uv(paint), sw.uv(INNER), sw.uv(SEAL)
+    uv_paint, uv_inner = sw.uv(paint), sw.uv(INNER)
     got = sw.got(paint)
 
     # the old canopy
     cockpit = next((b['name'] for b in ac.bones if b['name'].endswith('__cockpit')), None)
-    rm = old_canopy(ac, B, env, {cockpit} if cockpit else set())
+    rm, counts = old_canopy(ac, B, env, {cockpit} if cockpit else set())
     removed = 0
     for b in ac.bones:
         if b['name'] in rm:
@@ -314,25 +344,22 @@ def apply(vid, dry=False, orig=None):
             pm['polys'] = [p for i, p in enumerate(pm['polys']) if i not in gone]
             removed += len(gone)
 
-    # members
+    # members: the rail round the glass's edge, the rings (arch, bows, the hinge frame at the hood's end when
+    # glazing runs on behind it) and the windscreen posts
+    fr = spec.get('frame', {})
+    rail_w, bow_w, arch_w, post_w = fr.get('rail_w', RAIL_W), fr.get('bow_w', FRAME_W), fr.get('arch_w', FRAME_W), fr.get('post_w', POST_W)
     centre = np.array([0.0, env.lip(env.zc) - 0.35, env.zc])
     mesh = L.Mesh()
-    M = Members(mesh, lambda p: unit(np.asarray(p) - centre), uv_paint, uv_inner, uv_seal)
-    for kind, pts in B.frames:
-        w = POST_W if kind in ('post', 'arch') else FRAME_W
-        M.chain(pts, w, FRAME_OUT, FRAME_IN, closed=False)
-    for kind, pts in B.edges:
-        if kind == 'base':
-            M.chain(pts, FRAME_W, FRAME_OUT, FRAME_IN)
-        elif kind == 'spine':
-            M.chain(pts, FRAME_W, FRAME_OUT, FRAME_IN)
-        elif kind == 'rear':
-            M.chain(pts, FRAME_W, FRAME_OUT, FRAME_IN)
-    for pts in B.sills():
-        if len(pts) > 1:
-            # the sill rail sits on the lip, its top the seal; pushed a little inboard so its outer face lies in
-            # the skin
-            M.chain(pts, SILL_W, SILL_H * 0.5, SILL_H * 0.5, top_seal=True)
+    M = Members(mesh, lambda p: unit(np.asarray(p) - centre), uv_paint, uv_inner)
+    loop = B.perimeter()
+    M.sweep(loop, rail_w, RAIL_OUT, RAIL_IN, closed=True, shift=fr.get('rail_shift', RAIL_SHIFT))
+    rear_kind = spec.get('rear', {}).get('type', 'fairing')
+    bows = [(k, pts) for k, pts in B.frames if k == 'bow']
+    for k, pts in B.frames:
+        if k == 'bow' and rear_kind == 'fairing' and pts is bows[-1][1]:
+            continue                                   # the hood's end: the rail closes there
+        w = {'post': post_w, 'arch': arch_w}.get(k, bow_w)
+        M.sweep(pts, w, FRAME_OUT, FRAME_IN)
     pm = mesh.poly_mesh()
     hull = ac.bone('hull')
     piece = cockpit.split('__', 1)[0] if cockpit else 'wreck_fuselage_1'
@@ -340,21 +367,27 @@ def apply(vid, dry=False, orig=None):
     at = next((i for i, b in enumerate(ac.bones) if b['name'] == cockpit), len(ac.bones) - 1) + 1
     ac.bones.insert(at, bone)
 
-    # thick glass: the panel glass plus its inner sheet; an earlier inner sheet is dropped first (it lies under
-    # the panels by GLASS_T along the normal: anything that close under the fresh panels and not on them)
+    # thick glass: the panel glass as a solid: outer sheet, inner sheet GLASS_T under it, and the edge between
+    # them round the perimeter. Other glass in the asset (the HUD combiner, a gunsight) stays; the panel sheets
+    # of an earlier run are dropped by their vertices.
     a = ac.asset
     cg = a.get('CanopyGlass')
     if cg and not spec.get('skip'):
         cur = np.array(cg['Triangles'], float).reshape(-1, 3, 3)
         panel = np.asarray(tris, float).reshape(-1, 3, 3)
-        inner = inner_sheet(panel, centre, GLASS_T)
-        old_inner = inner_sheet(panel, centre, GLASS_T)    # same geometry: match by rounded vertices
-        keyset = {tuple(np.round(p, 3)) for t in old_inner for p in t}
+        inner, nv = inner_sheet(panel, centre, GLASS_T)
+        keyset = {tuple(np.round(p, 3)) for t in list(panel) + list(inner) for p in t}
         keep = [t for t in cur if not all(tuple(np.round(p, 3)) in keyset for p in t)]
-        cg['Triangles'] = [round(float(v), 4) + 0.0 for t in list(keep) + list(inner) for p in t for v in p]
+        band = []
+        Lp = np.array(loop, float)
+        for q0, q1 in zip(Lp, np.vstack([Lp[1:], Lp[:1]])):
+            i0, i1 = q0 - nv(q0) * GLASS_T, q1 - nv(q1) * GLASS_T
+            band += [[q0, q1, i1], [q0, i1, i0]]
+        cg['Triangles'] = [round(float(v), 4) + 0.0 for t in list(keep) + list(panel) + list(inner) + band for p in t for v in p]
     vol = L.loader_volume(pm)
-    report = (f'{vid}: removed {removed} old canopy faces from {sorted(rm)}; {len(pm["polys"])} canopy faces in '
-              f'{bone["name"]} (volume {vol:+.0f}); paint {paint} -> {got}; glass {len(cg["Triangles"]) // 9 if cg else 0} tris')
+    report = (f'{vid}: removed {removed} old canopy faces from {sorted(rm)} ({", ".join(f"{k} {n}" for k, n in counts.items())}); '
+              f'{len(pm["polys"])} canopy faces in {bone["name"]} (volume {vol:+.0f}); paint {paint} -> {got}; '
+              f'glass {len(cg["Triangles"]) // 9 if cg else 0} tris')
     if not dry:
         with open(ac.geo_path, 'w') as f:
             json.dump(ac.geo, f, separators=(',', ':'))

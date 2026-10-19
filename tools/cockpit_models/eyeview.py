@@ -260,7 +260,7 @@ def render(vid, out, eye=None, yaw=0.0, pitch=-12.0, fov=80.0, size=(1100, 760),
     if glass and asset.get('CanopyGlass'):
         g = np.array(asset['CanopyGlass']['Triangles'], float).reshape(-1, 3, 3)
         r.draw(g, np.zeros((len(g), 3, 2)), np.ones((1, 1, 4), np.float32), shade=False, alpha_test=False,
-               blend=0.12, tint=(0.75, 0.85, 0.8))
+               blend=0.14, tint=(0.72, 0.84, 0.9))
     im = r.image(); im.save(out)
     return im
 

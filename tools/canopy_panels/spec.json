@@ -187,7 +187,12 @@
   },
   "rear": {
    "type": "glazed"
-  }
+  },
+  "frame": {
+   "bow_w": 0.14,
+   "rail_w": 0.09
+  },
+  "_ref": "FlightGear F-16 (GPL): canopy 2.9 m long, 0.68 m wide, 0.57 m above the sill at the bow; one-piece bubble, no windscreen bow; the hinge frame behind the seat is a wide band (~0.2 m); glass ~10 mm"
  },
  "f_4c": {
   "windscreen": {
@@ -240,7 +245,7 @@
   "rear": {
    "type": "fairing"
   },
-  "remove_boxes": [
+  "cut": [
    [
     [
      -0.65,

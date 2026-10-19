@@ -210,6 +210,7 @@ class Builder:
         # panel edges that are not frame rings: the windscreen base, the sills along the glass's lower edge, the
         # rear spine and end of a glazed tail (tools/canopy_build draws solid members along them)
         self.edges, self.sill_l, self.sill_r = [], [], []
+        self.base_row, self.rear_row = None, None      # the glass's front and rear edges (profiles, -W .. +W)
 
     # ---------------------------------------------------------------- windscreen
     def windscreen(self):
@@ -226,6 +227,7 @@ class Builder:
             rows[0][:, 1] = [max(ev.skin_at(p[0], zf) + 0.012, env.lip(zf)) for p in rows[0]]
             self.tris += grid_tris(rows)
             self.edges.append(('base', rows[0]))
+            self.base_row = rows[0]
             for r in rows[1:]:
                 self.sill_r.append(r[0]); self.sill_l.append(r[-1])
             if kind == 'curved':
@@ -268,6 +270,7 @@ class Builder:
                 self.tris += grid_tris([np.array(post), side])
         self.frames.append(('arch', prof))
         self.edges.append(('base', np.array([feet[1], C[3], C[2], feet[-1]])))
+        self.base_row = np.array([feet[-1], C[2], C[3], feet[1]])      # ordered -W .. +W like a profile
 
     def cap_sill(self):
         """A hood's lower edge runs level: it does not climb. The loft's rail does where the model's own canopy
@@ -322,6 +325,7 @@ class Builder:
         self.tris += grid_tris(rows)
         for r in rows[1:]:
             self.sill_r.append(r[0]); self.sill_l.append(r[-1])
+        self.rear_row = rows[-1]
         if kind == 'glazed':
             self.edges.append(('rear', rows[-1]))      # the hoop the fixed rear glazing ends on
 
@@ -339,6 +343,29 @@ class Builder:
     def build(self):
         self.windscreen(); self.hood(); self.rear()
         return self.tris
+
+    def perimeter(self):
+        """the glass's outer edge as one closed polyline: the windscreen base (-W to +W), the +W sill nose to
+        tail, the rear edge (the last bow of a fairing-backed hood, or the end of the rear glazing) +W to -W, and
+        the -W sill tail to nose. The canopy's frame runs along it."""
+        env, hood = self.env, self.spec.get('hood', {})
+        rear = self.rear_row
+        if rear is None:
+            rear = env.profile(self.z_hood, N_ARC, self.hood_kind(), hood)
+        parts = []
+        if self.base_row is not None:
+            parts.append(np.asarray(self.base_row, float))
+        parts.append(np.array(self.sill_l, float))
+        parts.append(np.asarray(rear, float)[::-1])
+        parts.append(np.array(self.sill_r, float)[::-1])
+        P = np.vstack([q for q in parts if len(q)])
+        keep = [P[0]]
+        for q in P[1:]:
+            if np.linalg.norm(q - keep[-1]) > 0.02:
+                keep.append(q)
+        if np.linalg.norm(keep[0] - keep[-1]) <= 0.02:
+            keep.pop()
+        return np.array(keep)
 
     def sills(self):
         """(right, left) polylines along the glass's lower edge from the windscreen to the rear end, deduplicated
