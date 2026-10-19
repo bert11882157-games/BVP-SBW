@@ -302,6 +302,22 @@ def inner_sheet(tris, centre, t):
 
 # ---------------------------------------------------------------- build
 
+def sill_outward(loop):
+    """outward direction for the sill rail: horizontally away from the opening's middle, raised 45 degrees, so the
+    rail lies on the sill ledge all round (the radial from the canopy's centre points forward and down at the
+    windscreen foot and buries the rail in the nose)"""
+    P = np.asarray(loop, float)
+    mid = np.array([P[:, 0].mean(), 0.0, P[:, 2].mean()])
+
+    def f(p):
+        d = np.asarray(p, float) - mid
+        d[1] = 0.0
+        if np.linalg.norm(d) < 1e-6:
+            return np.array([0.0, 1.0, 0.0])
+        return unit(unit(d) + np.array([0.0, 1.0, 0.0]))
+    return f
+
+
 def apply(vid, dry=False, orig=None):
     """orig: a folder holding the committed original <vid>.geo.json, the model panels.py measured its glass on;
     the envelope and the paint are measured there, so the frames land exactly on the glass (the modelled cockpit
@@ -352,7 +368,8 @@ def apply(vid, dry=False, orig=None):
     mesh = L.Mesh()
     M = Members(mesh, lambda p: unit(np.asarray(p) - centre), uv_paint, uv_inner)
     loop = B.perimeter()
-    M.sweep(loop, rail_w, RAIL_OUT, RAIL_IN, closed=True, shift=fr.get('rail_shift', RAIL_SHIFT))
+    Members(mesh, sill_outward(loop), uv_paint, uv_inner).sweep(loop, rail_w, RAIL_OUT, RAIL_IN, closed=True,
+                                                                shift=fr.get('rail_shift', RAIL_SHIFT))
     rear_kind = spec.get('rear', {}).get('type', 'fairing')
     bows = [(k, pts) for k, pts in B.frames if k == 'bow']
     for k, pts in B.frames:

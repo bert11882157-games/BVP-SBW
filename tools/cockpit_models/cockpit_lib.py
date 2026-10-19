@@ -257,6 +257,26 @@ def point_triangle_distance(p, t):
 
 # ---------------------------------------------------------------- reading the aircraft
 
+def cover_y(T, x, z, y_from):
+    """lowest point above y_from where the vertical line through (x, z) meets the triangles T (n x 3 x 3), or None"""
+    if T is None or not len(T):
+        return None
+    lo, hi = T.min(1), T.max(1)
+    m = (lo[:, 0] <= x + 1e-6) & (hi[:, 0] >= x - 1e-6) & (lo[:, 2] <= z + 1e-6) & (hi[:, 2] >= z - 1e-6) & (hi[:, 1] > y_from)
+    if not m.any():
+        return None
+    S = T[m]
+    a, b, c = S[:, 0], S[:, 1], S[:, 2]
+    d = (b[:, 0] - a[:, 0]) * (c[:, 2] - a[:, 2]) - (c[:, 0] - a[:, 0]) * (b[:, 2] - a[:, 2])
+    ok = np.abs(d) > 1e-12
+    d = np.where(ok, d, 1.0)
+    u = ((x - a[:, 0]) * (c[:, 2] - a[:, 2]) - (c[:, 0] - a[:, 0]) * (z - a[:, 2])) / d
+    v = ((b[:, 0] - a[:, 0]) * (z - a[:, 2]) - (x - a[:, 0]) * (b[:, 2] - a[:, 2])) / d
+    y = a[:, 1] + u * (b[:, 1] - a[:, 1]) + v * (c[:, 1] - a[:, 1])
+    hit = ok & (u >= -1e-6) & (v >= -1e-6) & (u + v <= 1 + 1e-6) & (y > y_from)
+    return float(y[hit].min()) if hit.any() else None
+
+
 class Aircraft:
     def __init__(self, vid):
         self.vid = vid
@@ -921,8 +941,12 @@ def build(ac, tub, era_name, pal_name, sw, hud=None, gunsight=True, stick_foot=N
             x = le[0] + (xf - le[0]) * tt
             crown = 0.04 * s * math.sin(math.pi * tt) * (1 - sx * sx)
             y = le[1] + (yf - le[1]) * tt + crown
-            # under the glass: a corner reaching out beside a narrow windscreen comes in
+            # under the glass: a corner reaching out beside a narrow windscreen comes in to the glass's footprint
             if k:
+                wz = footprint_w(ac, E, z)
+                if wz is not None and abs(x - E[0]) > wz - 0.02:
+                    x = E[0] + np.sign(x - E[0]) * max(0.05, wz - 0.02)
+                    pinched.add((k, len(row)))
                 while abs(x - E[0]) > 0.05 and ac.glass_above(x, z, y - 0.3) is None:
                     x -= np.sign(x - E[0]) * 0.02
                     pinched.add((k, len(row)))
@@ -1067,6 +1091,7 @@ def build(ac, tub, era_name, pal_name, sw, hud=None, gunsight=True, stick_foot=N
     detail(m, ac, t, era, c, ctx, gauges, pal_name)
     if extra:
         extra(m, t, c)
+    m.clipped = clip_to_skin(m, ac, t)
     return m, stick, gauges, displays, glass, hud_out
 
 
@@ -1386,6 +1411,66 @@ def rear_deck(m, ac, t, era, c):
         if h > 0.03:
             m.box([E[0], y0 + h / 2, t.back_z - d / 2], (X, unit([0, 1, 0.2]), unit([0, -0.2, 1])),
                   (min(0.14 * s, w0 * 0.7), h / 2, d / 2), c['wall'])
+
+
+def footprint_w(ac, E, z, band=0.05):
+    """half width of the canopy glass's footprint (its sill line) at station z, or None where there is no glass"""
+    G = ac.glass.reshape(-1, 3)
+    if not len(G):
+        return None
+    near = G[np.abs(G[:, 2] - z) < band]
+    if not len(near):
+        return None
+    low = near[near[:, 1] < near[:, 1].min() + 0.06]
+    return float(np.abs(low[:, 0] - E[0]).max())
+
+
+def clip_to_skin(m, ac, t):
+    """Nothing of the cockpit shows outside the aircraft: a vertex beyond the side skin is brought in behind it, a
+    vertex that neither the canopy glass nor the skin covers from above is lowered until something does, and a
+    face with a vertex that cannot be brought in is dropped. -> (vertices moved, faces dropped)"""
+    E = t.E
+    ac.skin_x(0.0, 0.0, 0.0)                                   # builds the skin triangles
+    skin = ac._skin
+    cache = {}
+
+    def fix(p):
+        key = tuple(np.round(p, 4))
+        if key in cache:
+            return cache[key]
+        q = np.array(p, float)
+        moved = False
+        d = ac.skin_x(q[1], q[2], E[0])[0 if q[0] > E[0] else 1]
+        if np.isfinite(d) and abs(q[0] - E[0]) > d - 0.004:
+            q[0] = E[0] + np.sign(q[0] - E[0]) * max(0.0, d - 0.004)
+            moved = True
+        if q[1] > t.floor_y + 0.05:
+            for _ in range(25):
+                if cover_y(ac.glass, q[0], q[2], q[1]) is not None or cover_y(skin, q[0], q[2], q[1]) is not None:
+                    break
+                q[1] -= 0.01
+                moved = True
+            else:
+                q = None
+        cache[key] = (q, moved)
+        return cache[key]
+
+    kept, moved, dropped = [], 0, 0
+    for pts, uvs, n in m.faces:
+        new = []
+        for p in pts:
+            q, mv = fix(p)
+            if q is None:
+                new = None
+                break
+            new.append(q)
+            moved += mv
+        if new is None:
+            dropped += 1
+            continue
+        kept.append((np.array(new), uvs, n))
+    m.faces = kept
+    return moved, dropped
 
 
 def detail(m, ac, t, era, c, ctx, gauges, pal_name):
