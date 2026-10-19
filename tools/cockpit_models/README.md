@@ -81,6 +81,13 @@ BVP_TEX_DIR=DIR python3 tools/cockpit_models/fleet.py [--dry-run] [id...]   # ev
 `fleet.py` gives 65 more aircraft (jets and piston fighters) a modelled cockpit with `cockpit_lib.py`, the
 MiG-29's generator turned into a fitted, parametric one:
 
+- **Layout.** `layouts.json` holds each aircraft's real main-panel layout (centre, left and right facets as rows of
+  instruments, in the `cockpit_lib.ERAS` row format) researched from its flight manual, cockpit photos
+  (`/mnt/project-files/cockpit-refs`) and type drawings, with the evidence in `notes` and `sources`. `fleet.py`
+  registers each as an era named `LAYOUT:<id>` (seat, display style, HUD and eyebrow panels from the layout, the
+  rest from the era preset) and builds from it, so a MiG-21 has its radar scope under the hood top centre, an F-15C
+  its VSD top left and TEWS top right, a P-51D its three-row shield panel, and so on, instead of one generic panel
+  per era. Edit the layout and rerun `fleet.py` for that aircraft to move an instrument.
 - **Glass.** The canopy glass comes from `tools/canopy_panels` (panel by panel, with frame bars drawn by
   `fleet.py` from `tools/canopy_panels/frames/<id>.json`); where a frames file exists the glass is kept whole.
 - **Fit.** From the pilot's eye and the canopy glass (`CanopyGlass`) it measures the tub: half width and sill height

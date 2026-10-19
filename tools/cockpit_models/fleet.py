@@ -103,7 +103,7 @@ def piece_of(name):
 
 def apply(vid, dry=False):
     spec = FLEET['aircraft'][vid]
-    era = spec.get('era') or LAYOUTS.get(vid) or PRESETS.get(vid)
+    era = LAYOUTS.get(vid) or spec.get('era') or PRESETS.get(vid)
     era = era if isinstance(era, str) else era.get('preset')
     ac = L.Aircraft(vid)
     sw = L.Swatches(L.texture_path(vid))

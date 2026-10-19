@@ -1,0 +1,9280 @@
+{
+ "_comment": "Per-aircraft main-panel layouts in the cockpit_lib.ERAS row format, researched from flight manuals, cockpit photos (/mnt/project-files/cockpit-refs) and type drawings; fleet.py registers each as an era named after the aircraft. notes/sources record the evidence.",
+ "aircraft": {
+  "a_10": {
+   "centre": [
+    [
+     [
+      "A:cw",
+      0.215,
+      0.044
+     ]
+    ],
+    [
+     [
+      "RWR",
+      0.076
+     ],
+     [
+      "FILLER_CLOCK",
+      0.044
+     ],
+     [
+      "VVI",
+      0.07
+     ]
+    ],
+    [
+     [
+      "AIRSPEED",
+      0.076
+     ],
+     [
+      "ATTITUDE",
+      0.082
+     ],
+     [
+      "ALTIMETER",
+      0.076
+     ]
+    ],
+    [
+     [
+      "AOA",
+      0.057
+     ],
+     [
+      "HEADING",
+      0.082
+     ],
+     [
+      "CLOCK",
+      0.057
+     ]
+    ]
+   ],
+   "centre_fill": [
+    [
+     [
+      "AMMO",
+      0.057
+     ],
+     [
+      "G_METER",
+      0.05
+     ],
+     [
+      "FILLER_OXYGEN",
+      0.044
+     ]
+    ]
+   ],
+   "left": [
+    [
+     [
+      "D:STORES",
+      0.165
+     ]
+    ],
+    [
+     [
+      "AMMO",
+      0.057
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.05
+     ]
+    ]
+   ],
+   "left_fill": [
+    [
+     [
+      "FILLER_VOLTS",
+      0.044
+     ],
+     [
+      "FILLER_TEMP",
+      0.044
+     ]
+    ]
+   ],
+   "right": [
+    [
+     [
+      "ENGINE_RPM",
+      0.05
+     ],
+     [
+      "ENGINE_RPM",
+      0.05
+     ]
+    ],
+    [
+     [
+      "EGT",
+      0.05
+     ],
+     [
+      "FILLER_FUEL",
+      0.05
+     ]
+    ],
+    [
+     [
+      "FILLER_OIL",
+      0.05
+     ],
+     [
+      "FILLER_OIL",
+      0.05
+     ]
+    ],
+    [
+     [
+      "FUEL_QTY",
+      0.064
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.05
+     ]
+    ]
+   ],
+   "right_fill": [
+    [
+     [
+      "FILLER_TEMP",
+      0.044
+     ],
+     [
+      "FILLER_VOLTS",
+      0.044
+     ]
+    ]
+   ],
+   "hud": true,
+   "displays": "CRT",
+   "seat": "ejection",
+   "eyebrows": true,
+   "hinge_frac": 0.6,
+   "notes": "A-10A analog panel: round green RWR scope upper-left of the ADI with the VVI upper-right of it; airspeed-ADI-altimeter row with AoA and HSI/clock below; the Maverick TV monitor is a square screen on the left wing above the armament control panel; the twin-engine cluster (fan/core RPM, ITT, oil pressure, fuel flow, 2 columns x 5 small dials) and the fuel quantity dial fill the right wing; fire handles and caution strip on the glareshield.",
+   "sources": [
+    "/mnt/project-files/cockpit-refs/a_10/a_10_01.jpg",
+    "/mnt/project-files/cockpit-refs/a_10/a_10_06.jpg",
+    "/mnt/project-files/cockpit-refs/a_10/sources.md",
+    "https://commons.wikimedia.org/wiki/File:Fairchild_Republic_A-10A_Thunderbolt_II_cockpit_USAF.jpg",
+    "https://commons.wikimedia.org/wiki/File:A10A_cockpit.jpg"
+   ]
+  },
+  "f9f_2": {
+   "centre": [
+    [
+     [
+      "A:ww2",
+      0.125,
+      0.05
+     ]
+    ],
+    [
+     [
+      "AIRSPEED",
+      0.076
+     ],
+     [
+      "ATTITUDE",
+      0.082
+     ],
+     [
+      "ALTIMETER",
+      0.076
+     ]
+    ],
+    [
+     [
+      "TURN_SLIP",
+      0.076
+     ],
+     [
+      "HEADING",
+      0.082
+     ],
+     [
+      "VVI",
+      0.076
+     ]
+    ],
+    [
+     [
+      "CLOCK",
+      0.057
+     ],
+     [
+      "G_METER",
+      0.057
+     ],
+     [
+      "RADAR_ALT",
+      0.057
+     ],
+     [
+      "FILLER_OXYGEN",
+      0.05
+     ]
+    ]
+   ],
+   "centre_fill": [
+    [
+     [
+      "FILLER_VOLTS",
+      0.044
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.044
+     ]
+    ]
+   ],
+   "left": [
+    [
+     [
+      "AMMO",
+      0.057
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.05
+     ]
+    ],
+    [
+     [
+      "FUEL_QTY",
+      0.064
+     ],
+     [
+      "FILLER_FUEL",
+      0.05
+     ]
+    ]
+   ],
+   "left_fill": [
+    [
+     [
+      "THROTTLE",
+      0.05
+     ]
+    ]
+   ],
+   "right": [
+    [
+     [
+      "ENGINE_RPM",
+      0.07
+     ],
+     [
+      "EGT",
+      0.064
+     ]
+    ],
+    [
+     [
+      "FILLER_OIL",
+      0.05
+     ],
+     [
+      "FILLER_TEMP",
+      0.05
+     ]
+    ],
+    [
+     [
+      "FILLER_FUEL",
+      0.05
+     ],
+     [
+      "FILLER_VOLTS",
+      0.044
+     ]
+    ]
+   ],
+   "right_fill": [
+    [
+     [
+      "FILLER_CLOCK",
+      0.044
+     ]
+    ]
+   ],
+   "hud": false,
+   "displays": "CRT",
+   "seat": "ejection",
+   "notes": "F9F-2 Panther: late-1940s USN panel with the standard flight group (airspeed, gyro horizon, altimeter over turn-and-bank, directional gyro, rate of climb) centred under the Mk 8 gunsight, accelerometer and clock below, engine (tachometer, tailpipe temperature, oil pressure/temperature) on the right and fuel/armament counters on the left. Only a partial period photo was available; layout follows the generic Navy jet T of the era and the F9F-2 flight handbook arrangement from memory, so treat as an approximation.",
+   "sources": [
+    "/mnt/project-files/cockpit-refs/f9f_2/f9f_2_01.jpg",
+    "/mnt/project-files/cockpit-refs/f9f_2/sources.md"
+   ]
+  },
+  "f_15e": {
+   "centre": [
+    [
+     [
+      "UFCP",
+      0.17
+     ]
+    ],
+    [
+     [
+      "D:RADAR",
+      0.215
+     ],
+     [
+      "D:STORES",
+      0.215
+     ]
+    ],
+    [
+     [
+      "D:PFD",
+      0.185
+     ]
+    ]
+   ],
+   "centre_fill": [
+    [
+     [
+      "FILLER_HYDRAULIC",
+      0.044
+     ],
+     [
+      "FILLER_OXYGEN",
+      0.044
+     ],
+     [
+      "FILLER_VOLTS",
+      0.044
+     ]
+    ]
+   ],
+   "left": [
+    [
+     [
+      "AIRSPEED",
+      0.05
+     ],
+     [
+      "ATTITUDE",
+      0.057
+     ]
+    ],
+    [
+     [
+      "ALTIMETER",
+      0.05
+     ],
+     [
+      "VVI",
+      0.05
+     ]
+    ],
+    [
+     [
+      "AOA",
+      0.044
+     ],
+     [
+      "CLOCK",
+      0.044
+     ]
+    ]
+   ],
+   "left_fill": [
+    [
+     [
+      "G_METER",
+      0.044
+     ],
+     [
+      "AMMO",
+      0.044
+     ]
+    ]
+   ],
+   "right": [
+    [
+     [
+      "ENGINE_RPM",
+      0.05
+     ],
+     [
+      "EGT",
+      0.05
+     ]
+    ],
+    [
+     [
+      "FUEL_QTY",
+      0.057
+     ],
+     [
+      "FILLER_FUEL",
+      0.044
+     ]
+    ],
+    [
+     [
+      "RWR",
+      0.057
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.044
+     ]
+    ]
+   ],
+   "right_fill": [
+    [
+     [
+      "RADAR_ALT",
+      0.044
+     ],
+     [
+      "FILLER_TEMP",
+      0.044
+     ]
+    ]
+   ],
+   "hud": true,
+   "displays": "CRT",
+   "seat": "ejection",
+   "eyebrows": true,
+   "hinge_frac": 0.62,
+   "notes": "F-15E front seat: UFC keypad under the HUD, two monochrome MPDs left and right of it, the colour MPCD low centre; the standby airspeed/ADI/altimeter/VVI column is left of the MPCD, engine vertical tapes (RPM, FTIT, fuel flow, nozzle) and fuel quantity on the right; TEWS lamps and caution lights on the glareshield.",
+   "sources": [
+    "/mnt/project-files/cockpit-refs/f_15e/f_15e_02.jpg",
+    "/mnt/project-files/cockpit-refs/f_15e/guide/p-021.jpg (layout reference only)",
+    "/mnt/project-files/cockpit-refs/f_15e/sources.md",
+    "https://commons.wikimedia.org/wiki/File:F-15E_Cockpit_Cleaning.jpg"
+   ]
+  },
+  "f_86k": {
+   "centre": [
+    [
+     [
+      "A:cw",
+      0.215,
+      0.044
+     ]
+    ],
+    [
+     [
+      "AIRSPEED",
+      0.076
+     ],
+     [
+      "HEADING",
+      0.082
+     ],
+     [
+      "ATTITUDE",
+      0.082
+     ]
+    ],
+    [
+     [
+      "D:RADAR",
+      0.16
+     ]
+    ]
+   ],
+   "centre_fill": [
+    [
+     [
+      "MACH",
+      0.057
+     ],
+     [
+      "TURN_SLIP",
+      0.05
+     ],
+     [
+      "RADAR_ALT",
+      0.05
+     ]
+    ]
+   ],
+   "left": [
+    [
+     [
+      "ALTIMETER",
+      0.064
+     ],
+     [
+      "VVI",
+      0.064
+     ]
+    ],
+    [
+     [
+      "TURN_SLIP",
+      0.057
+     ],
+     [
+      "CLOCK",
+      0.057
+     ]
+    ],
+    [
+     [
+      "AMMO",
+      0.057
+     ],
+     [
+      "FILLER_OXYGEN",
+      0.05
+     ]
+    ]
+   ],
+   "left_fill": [
+    [
+     [
+      "FILLER_HYDRAULIC",
+      0.044
+     ],
+     [
+      "FILLER_VOLTS",
+      0.044
+     ]
+    ]
+   ],
+   "right": [
+    [
+     [
+      "ENGINE_RPM",
+      0.064
+     ],
+     [
+      "EGT",
+      0.064
+     ]
+    ],
+    [
+     [
+      "FUEL_QTY",
+      0.057
+     ],
+     [
+      "FILLER_OIL",
+      0.05
+     ]
+    ],
+    [
+     [
+      "G_METER",
+      0.05
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.05
+     ]
+    ]
+   ],
+   "right_fill": [
+    [
+     [
+      "FILLER_TEMP",
+      0.044
+     ],
+     [
+      "FILLER_FUEL",
+      0.044
+     ]
+    ]
+   ],
+   "hud": false,
+   "displays": "CRT",
+   "seat": "ejection",
+   "notes": "F-86K uses the F-86D interceptor panel: the E-4 radar scope sits low centre under a viewing hood below the flight group (airspeed, ID-250 compass and attitude in the top row); altimeter, VVI, turn-and-bank and clock on the left; tachometer, EGT, fuel and oil on the right. The K carries 4 x 20 mm cannon instead of the D's rocket tray (AMMO = rounds counter).",
+   "sources": [
+    "/mnt/project-files/cockpit-refs/f_86k/f_86k_01.jpg",
+    "/mnt/project-files/cockpit-refs/f_86k/sources.md",
+    "https://commons.wikimedia.org/wiki/File:F86d-cockpit.jpg"
+   ]
+  },
+  "j_10a": {
+   "centre": [
+    [
+     [
+      "UFCP",
+      0.17
+     ]
+    ],
+    [
+     [
+      "D:RADAR",
+      0.2
+     ],
+     [
+      "D:PFD",
+      0.2
+     ]
+    ],
+    [
+     [
+      "AIRSPEED",
+      0.05
+     ],
+     [
+      "ATTITUDE",
+      0.057
+     ],
+     [
+      "ALTIMETER",
+      0.05
+     ],
+     [
+      "VVI",
+      0.044
+     ]
+    ]
+   ],
+   "centre_fill": [
+    [
+     [
+      "ENGINE_RPM",
+      0.044
+     ],
+     [
+      "EGT",
+      0.044
+     ],
+     [
+      "FUEL_QTY",
+      0.044
+     ],
+     [
+      "CLOCK",
+      0.044
+     ]
+    ]
+   ],
+   "left": [
+    [
+     [
+      "D:STORES",
+      0.17
+     ]
+    ]
+   ],
+   "left_fill": [
+    [
+     [
+      "AOA",
+      0.044
+     ],
+     [
+      "G_METER",
+      0.044
+     ]
+    ],
+    [
+     [
+      "AMMO",
+      0.044
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.044
+     ]
+    ]
+   ],
+   "right": [
+    [
+     [
+      "RWR",
+      0.064
+     ],
+     [
+      "RADAR_ALT",
+      0.05
+     ]
+    ],
+    [
+     [
+      "FUEL_QTY",
+      0.05
+     ],
+     [
+      "FILLER_OXYGEN",
+      0.044
+     ]
+    ]
+   ],
+   "right_fill": [
+    [
+     [
+      "ENGINE_RPM",
+      0.044
+     ],
+     [
+      "EGT",
+      0.044
+     ]
+    ]
+   ],
+   "hud": true,
+   "displays": "LCD",
+   "seat": "ejection",
+   "eyebrows": true,
+   "hinge_frac": 0.62,
+   "notes": "J-10A: wide-angle HUD with an up-front control panel beneath, three MFDs (two large flanking a smaller one in published photos) across the panel and a small row of standby airspeed/ADI/altimeter dials below; RWR and fuel/engine standby gauges on the right. No reference folder and no web access this turn; arrangement from published airshow cockpit photos recalled from memory, so treat as approximate.",
+   "sources": []
+  },
+  "ju_87_b2": {
+   "centre": [
+    [
+     [
+      "A:ww2",
+      0.125,
+      0.05
+     ]
+    ],
+    [
+     [
+      "AIRSPEED",
+      0.076
+     ],
+     [
+      "TURN_SLIP",
+      0.076
+     ],
+     [
+      "ALTIMETER",
+      0.076
+     ]
+    ],
+    [
+     [
+      "HEADING",
+      0.082
+     ],
+     [
+      "VVI",
+      0.076
+     ],
+     [
+      "ATTITUDE",
+      0.076
+     ]
+    ],
+    [
+     [
+      "ENGINE_RPM",
+      0.07
+     ],
+     [
+      "THROTTLE",
+      0.07
+     ],
+     [
+      "FILLER_TEMP",
+      0.057
+     ],
+     [
+      "FILLER_OIL",
+      0.057
+     ]
+    ]
+   ],
+   "centre_fill": [
+    [
+     [
+      "CLOCK",
+      0.057
+     ],
+     [
+      "FILLER_FUEL",
+      0.05
+     ],
+     [
+      "FILLER_OXYGEN",
+      0.05
+     ]
+    ]
+   ],
+   "left": [
+    [
+     [
+      "AMMO",
+      0.057
+     ],
+     [
+      "G_METER",
+      0.057
+     ]
+    ]
+   ],
+   "left_fill": [
+    [
+     [
+      "FILLER_HYDRAULIC",
+      0.05
+     ]
+    ]
+   ],
+   "right": [
+    [
+     [
+      "FUEL_QTY",
+      0.064
+     ],
+     [
+      "FILLER_FUEL",
+      0.057
+     ]
+    ],
+    [
+     [
+      "FILLER_TEMP",
+      0.05
+     ],
+     [
+      "FILLER_OIL",
+      0.05
+     ]
+    ]
+   ],
+   "right_fill": [
+    [
+     [
+      "FILLER_VOLTS",
+      0.044
+     ]
+    ]
+   ],
+   "hud": false,
+   "displays": "CRT",
+   "seat": "bucket",
+   "notes": "Ju 87 B-2: Luftwaffe standard Ger\u00e4tebrett with the Revi C/12 sight above; flight group on the left/centre (Fahrtmesser, Wendezeiger, H\u00f6henmesser; repeater compass, Variometer, Wendehorizont); Jumo 211 engine block (Drehzahl, Ladedruck, oil/coolant temperatures and pressures) on the lower centre and the fuel contents gauges on the right. Dive-angle lines are on the canopy, not the panel. No reference folder and no web access this turn; layout from the Ju 87 B Flugzeug-Handbuch arrangement recalled from memory, so treat as approximate.",
+   "sources": []
+  },
+  "mig_21bis": {
+   "centre": [
+    [
+     [
+      "A:cw",
+      0.215,
+      0.044
+     ]
+    ],
+    [
+     [
+      "D:RADAR",
+      0.175
+     ]
+    ],
+    [
+     [
+      "ENGINE_RPM",
+      0.076
+     ],
+     [
+      "ATTITUDE",
+      0.082
+     ],
+     [
+      "ALTIMETER",
+      0.076
+     ]
+    ],
+    [
+     [
+      "MACH",
+      0.076
+     ],
+     [
+      "HEADING",
+      0.082
+     ],
+     [
+      "AIRSPEED",
+      0.064
+     ]
+    ]
+   ],
+   "centre_fill": [
+    [
+     [
+      "AOA",
+      0.057
+     ],
+     [
+      "TURN_SLIP",
+      0.05
+     ],
+     [
+      "CLOCK",
+      0.05
+     ]
+    ]
+   ],
+   "left": [
+    [
+     [
+      "AOA",
+      0.064
+     ],
+     [
+      "G_METER",
+      0.057
+     ]
+    ],
+    [
+     [
+      "FUEL_QTY",
+      0.057
+     ],
+     [
+      "FILLER_OXYGEN",
+      0.05
+     ]
+    ]
+   ],
+   "left_fill": [
+    [
+     [
+      "FILLER_HYDRAULIC",
+      0.05
+     ],
+     [
+      "FILLER_VOLTS",
+      0.044
+     ]
+    ]
+   ],
+   "right": [
+    [
+     [
+      "VVI",
+      0.064
+     ],
+     [
+      "EGT",
+      0.064
+     ]
+    ],
+    [
+     [
+      "RADAR_ALT",
+      0.057
+     ],
+     [
+      "FILLER_OIL",
+      0.05
+     ]
+    ],
+    [
+     [
+      "RWR",
+      0.057
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.05
+     ]
+    ]
+   ],
+   "right_fill": [
+    [
+     [
+      "FILLER_TEMP",
+      0.044
+     ],
+     [
+      "FILLER_CLOCK",
+      0.044
+     ]
+    ]
+   ],
+   "hud": false,
+   "displays": "CRT",
+   "seat": "ejection",
+   "notes": "MiG-21bis: RP-22 radar scope under its black hood top centre on the glareshield; left column RPM percent, combined speed/Mach (KUSI) and the UAP AoA/G indicator; centre AGD-1 horizon over the KPP/NPP compass-HSI; right of centre the altimeter (VD-20) and the small airspeed, then variometer, EGT, radio altimeter and fuel counter with the SPO-10 lamp block far right.",
+   "sources": [
+    "/mnt/project-files/cockpit-refs/mig_21bis/mig_21bis_01.jpg",
+    "/mnt/project-files/cockpit-refs/mig_21bis/mig_21bis_10.jpg",
+    "/mnt/project-files/cockpit-refs/mig_21bis/sources.md",
+    "https://commons.wikimedia.org/wiki/File:MiG-21bis_(MG-136)_ohjaamo_Keski-Suomen_ilmailumuseo_1.JPG",
+    "https://commons.wikimedia.org/wiki/File:C01_124_MiG_21bis,_vorderes_Ger%C3%A4tebrett.jpg"
+   ]
+  },
+  "panavia_tornado_ids_marineflieger": {
+   "centre": [
+    [
+     [
+      "UFCP",
+      0.17
+     ]
+    ],
+    [
+     [
+      "AIRSPEED",
+      0.064
+     ],
+     [
+      "ATTITUDE",
+      0.082
+     ],
+     [
+      "RADAR_ALT",
+      0.064
+     ]
+    ],
+    [
+     [
+      "ALTIMETER",
+      0.064
+     ],
+     [
+      "HEADING",
+      0.082
+     ],
+     [
+      "VVI",
+      0.064
+     ]
+    ],
+    [
+     [
+      "D:PFD",
+      0.165
+     ]
+    ]
+   ],
+   "centre_fill": [
+    [
+     [
+      "MACH",
+      0.05
+     ],
+     [
+      "G_METER",
+      0.05
+     ],
+     [
+      "CLOCK",
+      0.05
+     ]
+    ]
+   ],
+   "left": [
+    [
+     [
+      "D:RADAR",
+      0.15
+     ]
+    ],
+    [
+     [
+      "AOA",
+      0.05
+     ],
+     [
+      "G_METER",
+      0.05
+     ]
+    ]
+   ],
+   "left_fill": [
+    [
+     [
+      "AMMO",
+      0.044
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.044
+     ]
+    ]
+   ],
+   "right": [
+    [
+     [
+      "ENGINE_RPM",
+      0.05
+     ],
+     [
+      "ENGINE_RPM",
+      0.05
+     ]
+    ],
+    [
+     [
+      "EGT",
+      0.05
+     ],
+     [
+      "EGT",
+      0.05
+     ]
+    ],
+    [
+     [
+      "FUEL_QTY",
+      0.057
+     ],
+     [
+      "CLOCK",
+      0.05
+     ]
+    ]
+   ],
+   "right_fill": [
+    [
+     [
+      "FILLER_HYDRAULIC",
+      0.044
+     ],
+     [
+      "FILLER_OXYGEN",
+      0.044
+     ]
+    ],
+    [
+     [
+      "RWR",
+      0.05
+     ],
+     [
+      "FILLER_VOLTS",
+      0.044
+     ]
+    ]
+   ],
+   "hud": true,
+   "displays": "CRT",
+   "seat": "ejection",
+   "eyebrows": true,
+   "hinge_frac": 0.6,
+   "notes": "Tornado IDS front cockpit: HUD with its control panel directly below; the green TF E-scope CRT high on the left wing with the AoA tape beside the HUD; airspeed/ADI/radar altimeter and altimeter/HSI/VVI rows centre-left; the square HDD/moving-map CRT low centre; two columns of twin-engine gauges (NH, TBT, nozzle, fuel flow) and the fuel totaliser on the right with the clock and hydraulic/oxygen gauges far right; warning strips on both glareshield shoulders.",
+   "sources": [
+    "/mnt/project-files/cockpit-refs/panavia_tornado_ids_marineflieger/panavia_tornado_ids_marineflieger_01.jpg",
+    "/mnt/project-files/cockpit-refs/panavia_tornado_ids_marineflieger/panavia_tornado_ids_marineflieger_02.jpg",
+    "/mnt/project-files/cockpit-refs/panavia_tornado_ids_marineflieger/sources.md",
+    "https://commons.wikimedia.org/wiki/File:The_Cockpit_of_a_Royal_Air_Force_Tornado_GR4_Aircraft_MOD_45152522.jpg",
+    "https://commons.wikimedia.org/wiki/File:Tornado_GR.4_Forward_Cockpit.jpg"
+   ]
+  },
+  "saab_37_viggen": {
+   "centre": [
+    [
+     [
+      "A:cw",
+      0.215,
+      0.044
+     ]
+    ],
+    [
+     [
+      "D:RADAR",
+      0.185
+     ]
+    ]
+   ],
+   "centre_fill": [
+    [
+     [
+      "HEADING",
+      0.064
+     ],
+     [
+      "CLOCK",
+      0.05
+     ],
+     [
+      "FUEL_QTY",
+      0.057
+     ]
+    ]
+   ],
+   "left": [
+    [
+     [
+      "AIRSPEED",
+      0.064
+     ],
+     [
+      "ATTITUDE",
+      0.076
+     ]
+    ],
+    [
+     [
+      "ALTIMETER",
+      0.076
+     ],
+     [
+      "VVI",
+      0.057
+     ]
+    ],
+    [
+     [
+      "AOA",
+      0.057
+     ],
+     [
+      "G_METER",
+      0.05
+     ]
+    ]
+   ],
+   "left_fill": [
+    [
+     [
+      "RADAR_ALT",
+      0.05
+     ],
+     [
+      "FILLER_OXYGEN",
+      0.044
+     ]
+    ]
+   ],
+   "right": [
+    [
+     [
+      "EGT",
+      0.064
+     ],
+     [
+      "ENGINE_RPM",
+      0.064
+     ]
+    ],
+    [
+     [
+      "FILLER_OIL",
+      0.05
+     ],
+     [
+      "FUEL_QTY",
+      0.064
+     ]
+    ],
+    [
+     [
+      "FILLER_HYDRAULIC",
+      0.05
+     ],
+     [
+      "FILLER_OXYGEN",
+      0.05
+     ],
+     [
+      "RWR",
+      0.05
+     ]
+    ]
+   ],
+   "right_fill": [
+    [
+     [
+      "FILLER_TEMP",
+      0.044
+     ],
+     [
+      "FILLER_VOLTS",
+      0.044
+     ]
+    ]
+   ],
+   "hud": true,
+   "displays": "CRT",
+   "seat": "ejection",
+   "eyebrows": false,
+   "notes": "AJ 37 Viggen: the large central indicator (CI) radar/nav scope with its hood dominates the centre under the HUD; left of it the small ADI with the altimeter (H\u00f6jd) under it and the airspeed/Mach outboard; right of it a block of two columns of engine and systems dials (EGT 'temp kamr\u00f6r' top, RPM, oil, fuel percent, hydraulics, oxygen) with the fuel gauge at the lower right; the AoA indicator and data panel are at the lower left.",
+   "sources": [
+    "/mnt/project-files/cockpit-refs/saab_37_viggen/saab_37_viggen_01.jpg",
+    "/mnt/project-files/cockpit-refs/saab_37_viggen/saab_37_viggen_02.jpg",
+    "/mnt/project-files/cockpit-refs/saab_37_viggen/sources.md",
+    "https://commons.wikimedia.org/wiki/File:Viggen_2008-03-01-35.jpg",
+    "https://commons.wikimedia.org/wiki/File:Saab_AJ_37_Viggen_37094_001-3.jpg"
+   ]
+  },
+  "su_27": {
+   "centre": [
+    [
+     [
+      "A:cw",
+      0.215,
+      0.044
+     ]
+    ],
+    [
+     [
+      "ALTIMETER",
+      0.076
+     ],
+     [
+      "ATTITUDE",
+      0.082
+     ],
+     [
+      "VVI",
+      0.076
+     ]
+    ],
+    [
+     [
+      "AIRSPEED",
+      0.076
+     ],
+     [
+      "HEADING",
+      0.082
+     ],
+     [
+      "FUEL_QTY",
+      0.064
+     ]
+    ]
+   ],
+   "centre_fill": [
+    [
+     [
+      "CLOCK",
+      0.057
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.05
+     ],
+     [
+      "FILLER_OXYGEN",
+      0.05
+     ]
+    ]
+   ],
+   "left": [
+    [
+     [
+      "AOA",
+      0.076
+     ],
+     [
+      "G_METER",
+      0.057
+     ]
+    ],
+    [
+     [
+      "RADAR_ALT",
+      0.064
+     ],
+     [
+      "CLOCK",
+      0.057
+     ]
+    ]
+   ],
+   "left_fill": [
+    [
+     [
+      "FILLER_VOLTS",
+      0.044
+     ],
+     [
+      "FILLER_TEMP",
+      0.044
+     ]
+    ]
+   ],
+   "right": [
+    [
+     [
+      "D:RADAR",
+      0.165
+     ]
+    ],
+    [
+     [
+      "ENGINE_RPM",
+      0.05
+     ],
+     [
+      "EGT",
+      0.05
+     ]
+    ],
+    [
+     [
+      "RWR",
+      0.064
+     ],
+     [
+      "FILLER_OIL",
+      0.044
+     ]
+    ]
+   ],
+   "right_fill": [
+    [
+     [
+      "FILLER_HYDRAULIC",
+      0.044
+     ],
+     [
+      "FILLER_FUEL",
+      0.044
+     ]
+    ]
+   ],
+   "hud": true,
+   "displays": "CRT",
+   "seat": "ejection",
+   "eyebrows": true,
+   "hinge_frac": 0.6,
+   "notes": "Su-27S: HUD (ILS) top centre with the IPV radar/IRST CRT high on the right under the glareshield; top row of the panel left to right UAP AoA/G combined indicator, altimeter, large KPP attitude, variometer; second row radio altimeter, combined speed/Mach, PNP compass-HSI and the vertical fuel-quantity tape; clock bottom left; engine RPM/EGT small dials and the SPO-15 Beryoza warning receiver on the right panel; caution lamp block on the left glareshield.",
+   "sources": [
+    "/mnt/project-files/cockpit-refs/su_27/su_27_01.jpg",
+    "/mnt/project-files/cockpit-refs/su_27/su_27_03.jpg",
+    "/mnt/project-files/cockpit-refs/su_27/sources.md",
+    "https://commons.wikimedia.org/wiki/File:Cockpit_of_Sukhoi_Su-27_(2).jpg",
+    "https://commons.wikimedia.org/wiki/File:Cockpit_of_Sukhoi_Su-27_(4).jpg"
+   ]
+  },
+  "super_mystere": {
+   "centre": [
+    [
+     [
+      "A:cw",
+      0.215,
+      0.044
+     ]
+    ],
+    [
+     [
+      "AIRSPEED",
+      0.076
+     ],
+     [
+      "ATTITUDE",
+      0.082
+     ],
+     [
+      "ALTIMETER",
+      0.076
+     ]
+    ],
+    [
+     [
+      "MACH",
+      0.064
+     ],
+     [
+      "HEADING",
+      0.082
+     ],
+     [
+      "VVI",
+      0.064
+     ]
+    ],
+    [
+     [
+      "TURN_SLIP",
+      0.057
+     ],
+     [
+      "G_METER",
+      0.057
+     ],
+     [
+      "CLOCK",
+      0.05
+     ],
+     [
+      "FILLER_OXYGEN",
+      0.044
+     ]
+    ]
+   ],
+   "centre_fill": [
+    [
+     [
+      "AOA",
+      0.044
+     ],
+     [
+      "FILLER_VOLTS",
+      0.044
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.044
+     ]
+    ]
+   ],
+   "left": [
+    [
+     [
+      "FUEL_QTY",
+      0.064
+     ],
+     [
+      "FILLER_FUEL",
+      0.05
+     ]
+    ],
+    [
+     [
+      "AMMO",
+      0.057
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.05
+     ]
+    ]
+   ],
+   "left_fill": [
+    [
+     [
+      "THROTTLE",
+      0.05
+     ],
+     [
+      "RADAR_ALT",
+      0.05
+     ]
+    ]
+   ],
+   "right": [
+    [
+     [
+      "ENGINE_RPM",
+      0.064
+     ],
+     [
+      "EGT",
+      0.064
+     ]
+    ],
+    [
+     [
+      "FILLER_OIL",
+      0.05
+     ],
+     [
+      "FILLER_TEMP",
+      0.05
+     ]
+    ]
+   ],
+   "right_fill": [
+    [
+     [
+      "FILLER_FUEL",
+      0.044
+     ],
+     [
+      "FILLER_CLOCK",
+      0.044
+     ]
+    ]
+   ],
+   "hud": false,
+   "displays": "CRT",
+   "seat": "ejection",
+   "notes": "Super Myst\u00e8re B2: late-1950s Dassault panel under the CSF radar-ranging gunsight (no scope): airspeed/Mach, sphere horizon and altimeter in the top row with the compass/HSI and variometer below; accelerometer and clock lower centre; the Atar 101G engine group (tachometer, T4 jet-pipe temperature, oil pressure) on the right; fuel contents and the cannon/rocket selector on the left. No reference folder and no web access this turn; layout from the Myst\u00e8re IVA/SMB2 family arrangement recalled from memory, so treat as approximate.",
+   "sources": []
+  },
+  "a_7d": {
+   "centre": [
+    [
+     [
+      "A:cw",
+      0.215,
+      0.044
+     ]
+    ],
+    [
+     [
+      "D:RADAR",
+      0.15
+     ],
+     [
+      "UFCP",
+      0.14
+     ]
+    ],
+    [
+     [
+      "AIRSPEED",
+      0.07
+     ],
+     [
+      "ATTITUDE",
+      0.082
+     ],
+     [
+      "D:PFD",
+      0.13
+     ]
+    ],
+    [
+     [
+      "ALTIMETER",
+      0.07
+     ],
+     [
+      "HEADING",
+      0.082
+     ],
+     [
+      "FUEL_QTY",
+      0.064
+     ]
+    ]
+   ],
+   "centre_fill": [
+    [
+     [
+      "VVI",
+      0.057
+     ],
+     [
+      "AOA",
+      0.057
+     ],
+     [
+      "CLOCK",
+      0.05
+     ]
+    ]
+   ],
+   "left": [
+    [
+     [
+      "RWR",
+      0.064
+     ],
+     [
+      "G_METER",
+      0.057
+     ]
+    ],
+    [
+     [
+      "AMMO",
+      0.057
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.05
+     ]
+    ]
+   ],
+   "left_fill": [
+    [
+     [
+      "FILLER_VOLTS",
+      0.044
+     ],
+     [
+      "FILLER_OXYGEN",
+      0.044
+     ]
+    ]
+   ],
+   "right": [
+    [
+     [
+      "ENGINE_RPM",
+      0.064
+     ],
+     [
+      "EGT",
+      0.064
+     ]
+    ],
+    [
+     [
+      "FILLER_OIL",
+      0.05
+     ],
+     [
+      "FILLER_FUEL",
+      0.05
+     ]
+    ],
+    [
+     [
+      "RADAR_ALT",
+      0.057
+     ],
+     [
+      "FILLER_TEMP",
+      0.05
+     ]
+    ]
+   ],
+   "right_fill": [
+    [
+     [
+      "TURN_SLIP",
+      0.044
+     ],
+     [
+      "FILLER_CLOCK",
+      0.044
+     ]
+    ]
+   ],
+   "hud": true,
+   "displays": "CRT",
+   "seat": "ejection",
+   "eyebrows": false,
+   "hinge_frac": 0.6,
+   "notes": "A-7D: AVQ-7 HUD on the coaming; APQ-126 radar scope upper-left of the centre panel with the HUD control box beside it; ADI centre with the big round Projected Map Display (mapped to D:PFD) to its right and airspeed/altimeter/VVI/AOA stacked on the left; HSI and fuel quantity below. Engine cluster (RPM, EGT, fuel flow, oil) on the right wing, RHAW scope and armament panel on the left.",
+   "sources": [
+    "/mnt/project-files/cockpit-refs/a_7d/ (a_7d_01, a_7d_04, a_7d_05)",
+    "https://commons.wikimedia.org/wiki/File:LTV_A-7D_Corsair_II_Cockpit_USAF.jpg",
+    "https://commons.wikimedia.org/wiki/File:Ling-Temco-Vought_A-7D_Corsair_II_cockpit_PanelFront_FOF_24Aug09_(14403959909).jpg"
+   ]
+  },
+  "f_100c": {
+   "centre": [
+    [
+     [
+      "A:cw",
+      0.215,
+      0.044
+     ]
+    ],
+    [
+     [
+      "AIRSPEED",
+      0.076
+     ],
+     [
+      "G_METER",
+      0.07
+     ],
+     [
+      "ATTITUDE",
+      0.082
+     ]
+    ],
+    [
+     [
+      "ALTIMETER",
+      0.076
+     ],
+     [
+      "MACH",
+      0.07
+     ],
+     [
+      "TURN_SLIP",
+      0.064
+     ]
+    ],
+    [
+     [
+      "VVI",
+      0.076
+     ],
+     [
+      "HEADING",
+      0.082
+     ],
+     [
+      "CLOCK",
+      0.057
+     ]
+    ]
+   ],
+   "centre_fill": [
+    [
+     [
+      "AOA",
+      0.05
+     ],
+     [
+      "FILLER_OXYGEN",
+      0.044
+     ],
+     [
+      "FILLER_VOLTS",
+      0.044
+     ]
+    ]
+   ],
+   "left": [
+    [
+     [
+      "AMMO",
+      0.057
+     ],
+     [
+      "FILLER_OXYGEN",
+      0.05
+     ]
+    ],
+    [
+     [
+      "FILLER_VOLTS",
+      0.05
+     ],
+     [
+      "FILLER_TEMP",
+      0.05
+     ]
+    ]
+   ],
+   "left_fill": [
+    [
+     [
+      "FILLER_HYDRAULIC",
+      0.044
+     ]
+    ]
+   ],
+   "right": [
+    [
+     [
+      "ENGINE_RPM",
+      0.064
+     ],
+     [
+      "EGT",
+      0.064
+     ]
+    ],
+    [
+     [
+      "FILLER_OIL",
+      0.05
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.05
+     ]
+    ],
+    [
+     [
+      "FILLER_FUEL",
+      0.05
+     ],
+     [
+      "FUEL_QTY",
+      0.064
+     ]
+    ]
+   ],
+   "right_fill": [
+    [
+     [
+      "FILLER_TEMP",
+      0.044
+     ],
+     [
+      "FILLER_CLOCK",
+      0.044
+     ]
+    ]
+   ],
+   "hud": false,
+   "displays": "CRT",
+   "seat": "ejection",
+   "eyebrows": false,
+   "notes": "F-100 (D/F photos, C is the same basic panel): gunsight on the coaming, no radar scope. Left-to-right rows: airspeed / accelerometer / attitude; altimeter / Mach / turn-and-slip; climb (VVI) / radio compass / clock. Engine column on the right: tachometer, EGT, EPR, fuel flow, fuel quantity, oil and hydraulic pressure.",
+   "sources": [
+    "/mnt/project-files/cockpit-refs/f_100c/ (f_100c_01 F-100D, f_100c_02 F-100F)",
+    "https://commons.wikimedia.org/wiki/File:North_American_F-100D_Cockpit_060922-F-1234S-014.jpg",
+    "https://commons.wikimedia.org/wiki/File:North_American_F-100F_Super_Sabre_cockpit_view_at_the_National_Museum_of_the_U.S._Air_Force_01_(cropped).jpg"
+   ]
+  },
+  "f_16b": {
+   "centre": [
+    [
+     [
+      "UFCP",
+      0.17
+     ]
+    ],
+    [
+     [
+      "AIRSPEED",
+      0.076
+     ],
+     [
+      "ATTITUDE",
+      0.082
+     ]
+    ],
+    [
+     [
+      "HEADING",
+      0.082
+     ],
+     [
+      "FUEL_QTY",
+      0.064
+     ]
+    ]
+   ],
+   "centre_fill": [
+    [
+     [
+      "AOA",
+      0.05
+     ],
+     [
+      "CLOCK",
+      0.044
+     ],
+     [
+      "FILLER_OXYGEN",
+      0.044
+     ]
+    ]
+   ],
+   "left": [
+    [
+     [
+      "RWR",
+      0.064
+     ],
+     [
+      "G_METER",
+      0.05
+     ]
+    ],
+    [
+     [
+      "D:RADAR",
+      0.13
+     ]
+    ],
+    [
+     [
+      "D:STORES",
+      0.1
+     ]
+    ]
+   ],
+   "left_fill": [
+    [
+     [
+      "AMMO",
+      0.044
+     ],
+     [
+      "FILLER_VOLTS",
+      0.044
+     ]
+    ]
+   ],
+   "right": [
+    [
+     [
+      "ALTIMETER",
+      0.064
+     ],
+     [
+      "VVI",
+      0.064
+     ]
+    ],
+    [
+     [
+      "ENGINE_RPM",
+      0.05
+     ],
+     [
+      "EGT",
+      0.05
+     ]
+    ],
+    [
+     [
+      "FILLER_OIL",
+      0.044
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.044
+     ],
+     [
+      "FILLER_FUEL",
+      0.044
+     ]
+    ]
+   ],
+   "right_fill": [
+    [
+     [
+      "RADAR_ALT",
+      0.044
+     ],
+     [
+      "FILLER_TEMP",
+      0.044
+     ]
+    ]
+   ],
+   "hud": true,
+   "displays": "CRT",
+   "seat": "ejection",
+   "eyebrows": true,
+   "hinge_frac": 0.62,
+   "notes": "F-16A/B Block 15 analog front seat: HUD with the ICP (UFCP) directly beneath it, then airspeed/Mach indicator and ADI, HSI and fuel quantity below. Left side: threat-warning azimuth scope (RWR) top, the single REO radar scope (D:RADAR) and the stores control panel (D:STORES) under it; no MFDs. Right side: altimeter, VVI, then the engine column (RPM, FTIT, nozzle, oil, hydraulics). Eyebrow warning panels on the glareshield.",
+   "sources": [
+    "/mnt/project-files/cockpit-refs/f_16c/ (f_16c_03 F-16A NMUSAF pre-MLU analog panel; guide/ for layout only)",
+    "https://commons.wikimedia.org/wiki/File:General_Dynamics_F-16A_Fighting_Falcon_Cockpit_FrontPanel_Wide_Cold_War_NMUSAF_26Sep09_(14620247703).jpg"
+   ]
+  },
+  "f_8h": {
+   "centre": [
+    [
+     [
+      "A:cw",
+      0.215,
+      0.044
+     ]
+    ],
+    [
+     [
+      "D:RADAR",
+      0.175
+     ]
+    ],
+    [
+     [
+      "AIRSPEED",
+      0.076
+     ],
+     [
+      "ATTITUDE",
+      0.082
+     ],
+     [
+      "ALTIMETER",
+      0.076
+     ]
+    ],
+    [
+     [
+      "AOA",
+      0.057
+     ],
+     [
+      "HEADING",
+      0.082
+     ],
+     [
+      "VVI",
+      0.064
+     ]
+    ]
+   ],
+   "centre_fill": [
+    [
+     [
+      "MACH",
+      0.057
+     ],
+     [
+      "G_METER",
+      0.057
+     ],
+     [
+      "CLOCK",
+      0.05
+     ]
+    ]
+   ],
+   "left": [
+    [
+     [
+      "FILLER_OIL",
+      0.05
+     ],
+     [
+      "ENGINE_RPM",
+      0.064
+     ]
+    ],
+    [
+     [
+      "EGT",
+      0.057
+     ],
+     [
+      "FILLER_FUEL",
+      0.05
+     ]
+    ],
+    [
+     [
+      "FUEL_QTY",
+      0.057
+     ],
+     [
+      "FILLER_OXYGEN",
+      0.05
+     ]
+    ]
+   ],
+   "left_fill": [
+    [
+     [
+      "AMMO",
+      0.05
+     ],
+     [
+      "FILLER_TEMP",
+      0.044
+     ]
+    ]
+   ],
+   "right": [
+    [
+     [
+      "RADAR_ALT",
+      0.057
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.05
+     ]
+    ],
+    [
+     [
+      "AMMO",
+      0.057
+     ],
+     [
+      "FILLER_VOLTS",
+      0.05
+     ]
+    ]
+   ],
+   "right_fill": [
+    [
+     [
+      "RWR",
+      0.057
+     ],
+     [
+      "TURN_SLIP",
+      0.044
+     ]
+    ],
+    [
+     [
+      "FILLER_CLOCK",
+      0.044
+     ]
+    ]
+   ],
+   "hud": false,
+   "displays": "CRT",
+   "seat": "ejection",
+   "eyebrows": false,
+   "notes": "F-8 Crusader: APQ-94 radar scope under a hood top centre with the gunsight above it. Below: engine column on the left (oil pressure, % RPM, pressure ratio, fuel flow, liquid oxygen), then AOA indicator, airspeed, the large attitude ball, altimeter; lower row heading/VVI/clock. Right wing: hydraulic pressures, fuel quantity, standby gauges. French Navy F-8E(FN) photo; the F-8H panel is the same family.",
+   "sources": [
+    "/mnt/project-files/cockpit-refs/f_8h/f_8h_01.jpg",
+    "https://commons.wikimedia.org/wiki/File:Mus%C3%A9e_de_L%E2%80%99A%C3%A9ronautique_Navale_(5).JPG"
+   ]
+  },
+  "j_11a": {
+   "centre": [
+    [
+     [
+      "A:cw",
+      0.215,
+      0.044
+     ]
+    ],
+    [
+     [
+      "AOA",
+      0.057
+     ],
+     [
+      "AIRSPEED",
+      0.076
+     ],
+     [
+      "ATTITUDE",
+      0.082
+     ],
+     [
+      "VVI",
+      0.064
+     ]
+    ],
+    [
+     [
+      "RADAR_ALT",
+      0.064
+     ],
+     [
+      "ALTIMETER",
+      0.076
+     ],
+     [
+      "HEADING",
+      0.082
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.05
+     ]
+    ],
+    [
+     [
+      "CLOCK",
+      0.057
+     ],
+     [
+      "MACH",
+      0.057
+     ],
+     [
+      "FUEL_QTY",
+      0.064
+     ]
+    ]
+   ],
+   "centre_fill": [
+    [
+     [
+      "G_METER",
+      0.05
+     ],
+     [
+      "FILLER_OXYGEN",
+      0.044
+     ],
+     [
+      "FILLER_VOLTS",
+      0.044
+     ]
+    ]
+   ],
+   "left": [
+    [
+     [
+      "G_METER",
+      0.057
+     ],
+     [
+      "FILLER_VOLTS",
+      0.05
+     ]
+    ],
+    [
+     [
+      "AMMO",
+      0.05
+     ],
+     [
+      "FILLER_OXYGEN",
+      0.05
+     ]
+    ]
+   ],
+   "left_fill": [
+    [
+     [
+      "FILLER_TEMP",
+      0.044
+     ],
+     [
+      "FILLER_FUEL",
+      0.044
+     ]
+    ]
+   ],
+   "right": [
+    [
+     [
+      "D:RADAR",
+      0.13
+     ]
+    ],
+    [
+     [
+      "RWR",
+      0.064
+     ],
+     [
+      "ENGINE_RPM",
+      0.05
+     ]
+    ]
+   ],
+   "right_fill": [
+    [
+     [
+      "EGT",
+      0.05
+     ],
+     [
+      "FILLER_OIL",
+      0.044
+     ]
+    ],
+    [
+     [
+      "FILLER_TEMP",
+      0.044
+     ],
+     [
+      "FILLER_CLOCK",
+      0.044
+     ]
+    ]
+   ],
+   "hud": true,
+   "displays": "CRT",
+   "seat": "ejection",
+   "eyebrows": true,
+   "hinge_frac": 0.6,
+   "notes": "J-11A = licence Su-27SK, panel taken from Su-27 photos. ILS-31 HUD; left block of dials: combined AOA/G top-left, airspeed/Mach, KPP attitude, variometer; second row radar altimeter, barometric altimeter, PNP HSI; clock and gear indicator bottom-left; fuel tape right of centre. The radar CRT (IPV) sits upper right under a hood with the SPO-15 RWR beside it; engine RPM/EGT dials on the right side; warning lamp panel (EKRAN) upper left under the glareshield.",
+   "sources": [
+    "/mnt/project-files/cockpit-refs/su_27/ (su_27_01, su_27_03, su_27_04)",
+    "https://commons.wikimedia.org/wiki/File:Cockpit_of_Sukhoi_Su-27_(2).jpg",
+    "https://commons.wikimedia.org/wiki/File:Cockpit_of_Sukhoi_Su-27_(4).jpg"
+   ]
+  },
+  "md_450_ouragan": {
+   "centre": [
+    [
+     [
+      "A:cw",
+      0.18,
+      0.044
+     ]
+    ],
+    [
+     [
+      "AIRSPEED",
+      0.076
+     ],
+     [
+      "ATTITUDE",
+      0.082
+     ],
+     [
+      "VVI",
+      0.076
+     ]
+    ],
+    [
+     [
+      "ALTIMETER",
+      0.076
+     ],
+     [
+      "HEADING",
+      0.082
+     ],
+     [
+      "TURN_SLIP",
+      0.076
+     ]
+    ],
+    [
+     [
+      "MACH",
+      0.064
+     ],
+     [
+      "CLOCK",
+      0.057
+     ],
+     [
+      "G_METER",
+      0.057
+     ]
+    ]
+   ],
+   "centre_fill": [
+    [
+     [
+      "FILLER_OXYGEN",
+      0.044
+     ],
+     [
+      "FILLER_VOLTS",
+      0.044
+     ]
+    ]
+   ],
+   "left": [
+    [
+     [
+      "FUEL_QTY",
+      0.064
+     ],
+     [
+      "FILLER_FUEL",
+      0.05
+     ]
+    ],
+    [
+     [
+      "AMMO",
+      0.057
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.05
+     ]
+    ]
+   ],
+   "left_fill": [
+    [
+     [
+      "FILLER_OXYGEN",
+      0.044
+     ]
+    ]
+   ],
+   "right": [
+    [
+     [
+      "ENGINE_RPM",
+      0.07
+     ],
+     [
+      "EGT",
+      0.064
+     ]
+    ],
+    [
+     [
+      "FILLER_OIL",
+      0.05
+     ],
+     [
+      "FILLER_TEMP",
+      0.05
+     ]
+    ],
+    [
+     [
+      "THROTTLE",
+      0.05
+     ],
+     [
+      "FILLER_VOLTS",
+      0.044
+     ]
+    ]
+   ],
+   "right_fill": [
+    [
+     [
+      "FILLER_CLOCK",
+      0.044
+     ]
+    ]
+   ],
+   "hud": false,
+   "displays": "CRT",
+   "seat": "ejection",
+   "eyebrows": false,
+   "notes": "MD 450 Ouragan (no reference folder; web search budget was unavailable, so this is from memory of Musee de l'Air / Israeli AF museum cockpit photos of the type): early-1950s French panel with a gunsight on the coaming, a classic six-pack blind flying group in the centre (airspeed, horizon, VVI; altimeter, gyro compass, turn-and-slip) plus Machmeter and clock, fuel gauges and armament on the left, Nene engine instruments (RPM, jet pipe temp, oil) on the right. Martin-Baker seat.",
+   "sources": [
+    "memory only: no ref folder; web search quota exhausted in this run (Musee de l'Air et de l'Espace Ouragan cockpit, Wikimedia Commons Dassault Ouragan cockpit photos)"
+   ]
+  },
+  "mig_23mld": {
+   "centre": [
+    [
+     [
+      "A:cw",
+      0.215,
+      0.044
+     ]
+    ],
+    [
+     [
+      "D:RADAR",
+      0.175
+     ]
+    ],
+    [
+     [
+      "AIRSPEED",
+      0.076
+     ],
+     [
+      "ATTITUDE",
+      0.082
+     ],
+     [
+      "VVI",
+      0.064
+     ]
+    ],
+    [
+     [
+      "ALTIMETER",
+      0.076
+     ],
+     [
+      "HEADING",
+      0.082
+     ],
+     [
+      "RADAR_ALT",
+      0.064
+     ]
+    ]
+   ],
+   "centre_fill": [
+    [
+     [
+      "CLOCK",
+      0.05
+     ],
+     [
+      "FILLER_OXYGEN",
+      0.044
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.044
+     ]
+    ]
+   ],
+   "left": [
+    [
+     [
+      "AOA",
+      0.064
+     ],
+     [
+      "G_METER",
+      0.057
+     ]
+    ],
+    [
+     [
+      "MACH",
+      0.057
+     ],
+     [
+      "FUEL_QTY",
+      0.064
+     ]
+    ],
+    [
+     [
+      "AMMO",
+      0.05
+     ],
+     [
+      "FILLER_VOLTS",
+      0.05
+     ]
+    ]
+   ],
+   "left_fill": [
+    [
+     [
+      "TURN_SLIP",
+      0.044
+     ],
+     [
+      "FILLER_TEMP",
+      0.044
+     ]
+    ]
+   ],
+   "right": [
+    [
+     [
+      "RWR",
+      0.064
+     ],
+     [
+      "ENGINE_RPM",
+      0.064
+     ]
+    ],
+    [
+     [
+      "EGT",
+      0.057
+     ],
+     [
+      "FILLER_OIL",
+      0.05
+     ]
+    ],
+    [
+     [
+      "FILLER_TEMP",
+      0.044
+     ],
+     [
+      "FILLER_FUEL",
+      0.044
+     ]
+    ]
+   ],
+   "right_fill": [
+    [
+     [
+      "FILLER_HYDRAULIC",
+      0.044
+     ],
+     [
+      "FILLER_CLOCK",
+      0.044
+     ]
+    ]
+   ],
+   "hud": false,
+   "displays": "CRT",
+   "seat": "ejection",
+   "eyebrows": false,
+   "notes": "MiG-23 (MF/MLD photos, BN diagram): Sapfir-23 radar indicator under a large hood top centre with the ASP-17 sight above it (a reflector sight, not a HUD). Left of the hood the UAP AOA/G indicator, then airspeed, KPP attitude, variometer; altimeter, NPP HSI and radar altimeter beneath. Right side: SPO-10 RWR lamps/scope, engine RPM and EGT, fuel, and the T-4 warning lamp strips; EKRAN and gear lamps left.",
+   "sources": [
+    "/mnt/project-files/cockpit-refs/mig_23mld/ (mig_23mld_01, _02 numbered diagram, _05, _06)",
+    "https://commons.wikimedia.org/wiki/File:MiG-23MF_cockpit_1.jpg",
+    "https://commons.wikimedia.org/wiki/File:Abitacolo_MiG-23BN.jpg",
+    "https://commons.wikimedia.org/wiki/File:4477th_Test_and_Evaluation_Squadron_-_MiG-23_Front_Cockpit.jpg"
+   ]
+  },
+  "q_5": {
+   "centre": [
+    [
+     [
+      "A:cw",
+      0.215,
+      0.044
+     ]
+    ],
+    [
+     [
+      "AIRSPEED",
+      0.076
+     ],
+     [
+      "ATTITUDE",
+      0.082
+     ],
+     [
+      "ALTIMETER",
+      0.076
+     ]
+    ],
+    [
+     [
+      "VVI",
+      0.064
+     ],
+     [
+      "HEADING",
+      0.082
+     ],
+     [
+      "CLOCK",
+      0.057
+     ]
+    ],
+    [
+     [
+      "G_METER",
+      0.057
+     ],
+     [
+      "AOA",
+      0.05
+     ],
+     [
+      "RADAR_ALT",
+      0.057
+     ]
+    ]
+   ],
+   "centre_fill": [
+    [
+     [
+      "FILLER_OXYGEN",
+      0.044
+     ],
+     [
+      "FILLER_VOLTS",
+      0.044
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.044
+     ]
+    ]
+   ],
+   "left": [
+    [
+     [
+      "FUEL_QTY",
+      0.064
+     ],
+     [
+      "AMMO",
+      0.057
+     ]
+    ],
+    [
+     [
+      "MACH",
+      0.057
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.05
+     ]
+    ]
+   ],
+   "left_fill": [
+    [
+     [
+      "FILLER_VOLTS",
+      0.044
+     ],
+     [
+      "FILLER_TEMP",
+      0.044
+     ]
+    ]
+   ],
+   "right": [
+    [
+     [
+      "ENGINE_RPM",
+      0.057
+     ],
+     [
+      "ENGINE_RPM",
+      0.057
+     ]
+    ],
+    [
+     [
+      "EGT",
+      0.05
+     ],
+     [
+      "EGT",
+      0.05
+     ]
+    ],
+    [
+     [
+      "FILLER_OIL",
+      0.044
+     ],
+     [
+      "FILLER_TEMP",
+      0.044
+     ],
+     [
+      "FILLER_FUEL",
+      0.044
+     ]
+    ]
+   ],
+   "right_fill": [
+    [
+     [
+      "RWR",
+      0.057
+     ],
+     [
+      "FILLER_CLOCK",
+      0.044
+     ]
+    ]
+   ],
+   "hud": false,
+   "displays": "CRT",
+   "seat": "ejection",
+   "eyebrows": false,
+   "notes": "Q-5 / A-5C (MiG-19 derivative): a gyro gunsight on the coaming, no radar scope. Centre: airspeed, attitude, altimeter, with variometer, compass (HSI-type) and clock below; a lamp strip across the top. Twin WP6 engines give two tachometers and two EGT gauges on the right wing with fuel/oil below; fuel quantity and armament panel on the left.",
+   "sources": [
+    "/mnt/project-files/cockpit-refs/q_5/q_5_01.jpg (Bangladesh AF A-5C)",
+    "https://commons.wikimedia.org/wiki/File:56911_Bangladesh_Air_Force_A-5C_Fantan_cockpit_(26357474481).jpg"
+   ]
+  },
+  "saab_j_21a_1": {
+   "centre": [
+    [
+     [
+      "A:ww2",
+      0.125,
+      0.05
+     ]
+    ],
+    [
+     [
+      "AIRSPEED",
+      0.076
+     ],
+     [
+      "ATTITUDE",
+      0.082
+     ],
+     [
+      "VVI",
+      0.076
+     ]
+    ],
+    [
+     [
+      "ALTIMETER",
+      0.076
+     ],
+     [
+      "HEADING",
+      0.082
+     ],
+     [
+      "TURN_SLIP",
+      0.076
+     ]
+    ],
+    [
+     [
+      "CLOCK",
+      0.057
+     ],
+     [
+      "FILLER_OXYGEN",
+      0.05
+     ],
+     [
+      "FILLER_VOLTS",
+      0.05
+     ]
+    ]
+   ],
+   "centre_fill": [
+    [
+     [
+      "G_METER",
+      0.05
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.05
+     ]
+    ]
+   ],
+   "left": [
+    [
+     [
+      "FUEL_QTY",
+      0.064
+     ],
+     [
+      "AMMO",
+      0.057
+     ]
+    ],
+    [
+     [
+      "FILLER_FUEL",
+      0.05
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.05
+     ]
+    ]
+   ],
+   "left_fill": [
+    [
+     [
+      "FILLER_OXYGEN",
+      0.044
+     ]
+    ]
+   ],
+   "right": [
+    [
+     [
+      "ENGINE_RPM",
+      0.07
+     ],
+     [
+      "THROTTLE",
+      0.064
+     ]
+    ],
+    [
+     [
+      "FILLER_OIL",
+      0.05
+     ],
+     [
+      "FILLER_TEMP",
+      0.05
+     ]
+    ],
+    [
+     [
+      "EGT",
+      0.05
+     ],
+     [
+      "FILLER_VOLTS",
+      0.044
+     ]
+    ]
+   ],
+   "right_fill": [
+    [
+     [
+      "FILLER_CLOCK",
+      0.044
+     ]
+    ]
+   ],
+   "hud": false,
+   "displays": "CRT",
+   "seat": "ejection",
+   "eyebrows": false,
+   "notes": "Saab J 21A (no reference folder, web search unavailable in this run; from memory of Flygvapenmuseum cockpit photos): 1940s Swedish panel, reflector sight on the coaming, blind-flying six in the centre (airspeed, horizon, VVI; altimeter, compass, turn-and-bank), DB 605 engine group on the right (tachometer, boost/manifold pressure, oil and coolant temperatures), fuel gauges and gun counters on the left. Fitted with Saab's early ejection seat; bucket-style panel otherwise WWII.",
+   "sources": [
+    "memory only: no ref folder; web search quota exhausted in this run (Flygvapenmuseum Linkoping J 21A cockpit, Wikimedia Commons Saab 21 cockpit photos)"
+   ]
+  },
+  "su_30": {
+   "centre": [
+    [
+     [
+      "UFCP",
+      0.15
+     ]
+    ],
+    [
+     [
+      "D:RADAR",
+      0.215
+     ],
+     [
+      "D:PFD",
+      0.215
+     ]
+    ],
+    [
+     [
+      "AIRSPEED",
+      0.057
+     ],
+     [
+      "ATTITUDE",
+      0.064
+     ],
+     [
+      "ALTIMETER",
+      0.057
+     ],
+     [
+      "VVI",
+      0.05
+     ]
+    ]
+   ],
+   "centre_fill": [
+    [
+     [
+      "HEADING",
+      0.057
+     ],
+     [
+      "FUEL_QTY",
+      0.05
+     ],
+     [
+      "CLOCK",
+      0.044
+     ]
+    ]
+   ],
+   "left": [
+    [
+     [
+      "AOA",
+      0.05
+     ],
+     [
+      "G_METER",
+      0.05
+     ]
+    ],
+    [
+     [
+      "RWR",
+      0.064
+     ]
+    ]
+   ],
+   "left_fill": [
+    [
+     [
+      "AMMO",
+      0.044
+     ],
+     [
+      "FILLER_VOLTS",
+      0.044
+     ]
+    ]
+   ],
+   "right": [
+    [
+     [
+      "ENGINE_RPM",
+      0.05
+     ],
+     [
+      "EGT",
+      0.05
+     ]
+    ],
+    [
+     [
+      "RADAR_ALT",
+      0.05
+     ],
+     [
+      "MACH",
+      0.044
+     ]
+    ]
+   ],
+   "right_fill": [
+    [
+     [
+      "FILLER_OIL",
+      0.044
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.044
+     ]
+    ],
+    [
+     [
+      "FILLER_OXYGEN",
+      0.04
+     ],
+     [
+      "FILLER_TEMP",
+      0.04
+     ]
+    ]
+   ],
+   "hud": true,
+   "displays": "LCD",
+   "seat": "ejection",
+   "eyebrows": true,
+   "hinge_frac": 0.62,
+   "notes": "Su-30MK family front seat (no Su-30 folder; based on the Su-27SKM photo in the su_27 folder, which has the same modernised Sukhoi front panel, and memory of Su-30MKK/MKI front cockpits): HUD with a sight/nav control block under it, two large MFI-10 colour LCDs side by side top centre, a row of standby dials (airspeed, attitude, altimeter, VVI) below the displays, standby HSI and fuel lower; AOA/G and RWR on the left, engine and radar altimeter on the right; eyebrow warning panels.",
+   "sources": [
+    "/mnt/project-files/cockpit-refs/su_27/su_27_07.jpg (Su-27SKM, two MFDs)",
+    "https://commons.wikimedia.org/wiki/File:Cockpit_of_Sukhoi_Su-27SKM.jpg",
+    "memory: Su-30MKK/MKI front cockpit photos (web search quota exhausted in this run)"
+   ]
+  },
+  "supermarine_spitfire_griffon": {
+   "centre": [
+    [
+     [
+      "AIRSPEED",
+      0.076
+     ],
+     [
+      "ATTITUDE",
+      0.082
+     ],
+     [
+      "VVI",
+      0.076
+     ]
+    ],
+    [
+     [
+      "ALTIMETER",
+      0.076
+     ],
+     [
+      "HEADING",
+      0.082
+     ],
+     [
+      "TURN_SLIP",
+      0.076
+     ]
+    ]
+   ],
+   "centre_fill": [
+    [
+     [
+      "CLOCK",
+      0.057
+     ],
+     [
+      "FILLER_VOLTS",
+      0.044
+     ]
+    ]
+   ],
+   "left": [
+    [
+     [
+      "A:ww2",
+      0.1,
+      0.044
+     ]
+    ],
+    [
+     [
+      "FILLER_OXYGEN",
+      0.05
+     ],
+     [
+      "AMMO",
+      0.05
+     ]
+    ],
+    [
+     [
+      "FILLER_HYDRAULIC",
+      0.057
+     ]
+    ]
+   ],
+   "left_fill": [
+    [
+     [
+      "G_METER",
+      0.044
+     ]
+    ]
+   ],
+   "right": [
+    [
+     [
+      "ENGINE_RPM",
+      0.076
+     ]
+    ],
+    [
+     [
+      "THROTTLE",
+      0.07
+     ]
+    ],
+    [
+     [
+      "FILLER_OIL",
+      0.05
+     ],
+     [
+      "FILLER_TEMP",
+      0.05
+     ]
+    ],
+    [
+     [
+      "FUEL_QTY",
+      0.057
+     ],
+     [
+      "FILLER_FUEL",
+      0.05
+     ]
+    ]
+   ],
+   "right_fill": [
+    [
+     [
+      "FILLER_CLOCK",
+      0.044
+     ]
+    ]
+   ],
+   "hud": false,
+   "displays": "CRT",
+   "seat": "bucket",
+   "eyebrows": false,
+   "notes": "Spitfire (Merlin photo; the Griffon Mk XIV keeps the same RAF standard blind-flying panel): centre the six-pack (ASI, artificial horizon, VVI over altimeter, direction indicator, turn-and-slip), the gyro gunsight on the coaming, P-type compass under the panel. Left: oxygen, undercarriage UP/DOWN indicator (lamp strip), elevator trim and brake pressure. Right: RPM top, boost gauge below, then oil/radiator temperatures and fuel pressure/contents. No lamp strip across the centre.",
+   "sources": [
+    "/mnt/project-files/cockpit-refs/supermarine_spitfire_griffon/ (supermarine_spitfire_griffon_03 real panel; _01/_02 are a Mk26B replica, ignored; guide/ layout only)",
+    "https://commons.wikimedia.org/wiki/File:Spitifire_controls.jpg"
+   ]
+  },
+  "eurofighter_typhoon": {
+   "centre": [
+    [
+     [
+      "UFCP",
+      0.15
+     ]
+    ],
+    [
+     [
+      "D:PFD",
+      0.225
+     ]
+    ]
+   ],
+   "centre_fill": [],
+   "left": [
+    [
+     [
+      "D:RADAR",
+      0.17
+     ]
+    ]
+   ],
+   "left_fill": [
+    [
+     [
+      "FILLER_OXYGEN",
+      0.04
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.04
+     ]
+    ]
+   ],
+   "right": [
+    [
+     [
+      "D:STORES",
+      0.17
+     ]
+    ],
+    [
+     [
+      "ATTITUDE",
+      0.057
+     ],
+     [
+      "AIRSPEED",
+      0.05
+     ],
+     [
+      "ALTIMETER",
+      0.05
+     ]
+    ]
+   ],
+   "right_fill": [
+    [
+     [
+      "A:cw",
+      0.16,
+      0.044
+     ]
+    ],
+    [
+     [
+      "HEADING",
+      0.044
+     ],
+     [
+      "CLOCK",
+      0.044
+     ]
+    ]
+   ],
+   "hud": true,
+   "displays": "LCD",
+   "seat": "ejection",
+   "eyebrows": true,
+   "hinge_frac": 0.62,
+   "notes": "Three equal MHDDs in a row under the wide-angle HUD: left MHDD (PA/tactical -> D:RADAR on the left wing), centre MHDD (-> D:PFD, centre) and right MHDD (systems/stores -> D:STORES, right wing). The MDEF keypad sits top-left beside the left MHDD (-> UFCP top centre). Only reversionary instruments: a small standby ADI top right under the hinged right glareshield plus combined airspeed/altitude readouts (-> small ATTITUDE/AIRSPEED/ALTIMETER on the right wing); the Dedicated Warnings Panel is on the lower right (-> A:cw strip right). No conventional engine dials.",
+   "sources": [
+    "/mnt/project-files/cockpit-refs/eurofighter_typhoon/eurofighter_typhoon_01.jpg (https://commons.wikimedia.org/wiki/File:Eurofighter_Cockpit_cut.jpg)",
+    "/mnt/project-files/cockpit-refs/eurofighter_typhoon/eurofighter_typhoon_03.jpg (https://commons.wikimedia.org/wiki/File:Eurofighter_Cockpit.jpg)",
+    "/mnt/project-files/cockpit-refs/eurofighter_typhoon/eurofighter_typhoon_04.png (https://commons.wikimedia.org/wiki/File:Eurofighter_Typhoon_Cockpit.png)",
+    "https://en.wikipedia.org/wiki/Eurofighter_Typhoon (cockpit section: 3 MHDDs, DWP, reversionary instruments under hinged right glareshield, Mk.16A seat)"
+   ]
+  },
+  "f_104g": {
+   "centre": [
+    [
+     [
+      "MACH",
+      0.082
+     ],
+     [
+      "AOA",
+      0.057
+     ],
+     [
+      "VVI",
+      0.057
+     ],
+     [
+      "ATTITUDE",
+      0.082
+     ]
+    ],
+    [
+     [
+      "RADAR_ALT",
+      0.057
+     ],
+     [
+      "ALTIMETER",
+      0.076
+     ],
+     [
+      "HEADING",
+      0.082
+     ],
+     [
+      "TURN_SLIP",
+      0.057
+     ]
+    ],
+    [
+     [
+      "D:RADAR",
+      0.175
+     ]
+    ]
+   ],
+   "centre_fill": [
+    [
+     [
+      "CLOCK",
+      0.044
+     ],
+     [
+      "FILLER_OXYGEN",
+      0.044
+     ]
+    ]
+   ],
+   "left": [
+    [
+     [
+      "G_METER",
+      0.057
+     ],
+     [
+      "FILLER_TEMP",
+      0.044
+     ]
+    ],
+    [
+     [
+      "AMMO",
+      0.057
+     ],
+     [
+      "FILLER_OXYGEN",
+      0.044
+     ]
+    ]
+   ],
+   "left_fill": [
+    [
+     [
+      "FILLER_HYDRAULIC",
+      0.044
+     ],
+     [
+      "FILLER_VOLTS",
+      0.044
+     ]
+    ]
+   ],
+   "right": [
+    [
+     [
+      "ENGINE_RPM",
+      0.064
+     ],
+     [
+      "EGT",
+      0.057
+     ]
+    ],
+    [
+     [
+      "FILLER_OIL",
+      0.05
+     ],
+     [
+      "FILLER_TEMP",
+      0.05
+     ]
+    ],
+    [
+     [
+      "THROTTLE",
+      0.05
+     ],
+     [
+      "FUEL_QTY",
+      0.057
+     ]
+    ]
+   ],
+   "right_fill": [
+    [
+     [
+      "A:cw",
+      0.12,
+      0.044
+     ]
+    ],
+    [
+     [
+      "FILLER_HYDRAULIC",
+      0.044
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.044
+     ]
+    ],
+    [
+     [
+      "CLOCK",
+      0.05
+     ]
+    ]
+   ],
+   "hud": false,
+   "displays": "CRT",
+   "seat": "ejection",
+   "eyebrows": false,
+   "notes": "Upper panel, left to right: accelerometer, combined Mach/airspeed, AoA, vertical speed, ADI, then the engine column (RPM, TOT/EGT, oil pressure, inlet temp). Second row: radio altimeter, altimeter, PHI compass (HEADING), course/ILS indicator (-> TURN_SLIP), nozzle position (-> THROTTLE) and fuel flow. The NASARR radar scope sits under a hood in the lower centre pedestal (-> D:RADAR). Lower left: armament panel with rounds counter (-> AMMO); lower right: fuel quantity, hydraulic gauges, clearance altitude and a warning-light box (-> A:cw). Optical sight only, no HUD; C-2/Martin-Baker ejection seat.",
+   "sources": [
+    "/mnt/project-files/cockpit-refs/f_104g/f_104g_01.jpg (https://commons.wikimedia.org/wiki/File:Dashboard_F-104_(MAA).JPG)",
+    "/mnt/project-files/cockpit-refs/f_104g/f_104g_02.jpg (https://commons.wikimedia.org/wiki/File:Luftwaffe_F-104_Starfighter_cockpit_25%2B29_pic1.JPG)"
+   ]
+  },
+  "f_16c": {
+   "centre": [
+    [
+     [
+      "UFCP",
+      0.17
+     ]
+    ],
+    [
+     [
+      "AIRSPEED",
+      0.064
+     ],
+     [
+      "ATTITUDE",
+      0.076
+     ],
+     [
+      "ALTIMETER",
+      0.064
+     ]
+    ],
+    [
+     [
+      "AOA",
+      0.044
+     ],
+     [
+      "HEADING",
+      0.076
+     ],
+     [
+      "VVI",
+      0.044
+     ]
+    ],
+    [
+     [
+      "D:RADAR",
+      0.165
+     ],
+     [
+      "D:STORES",
+      0.165
+     ]
+    ]
+   ],
+   "centre_fill": [
+    [
+     [
+      "CLOCK",
+      0.044
+     ],
+     [
+      "FILLER_OXYGEN",
+      0.044
+     ]
+    ]
+   ],
+   "left": [
+    [
+     [
+      "RWR",
+      0.064
+     ],
+     [
+      "FILLER_VOLTS",
+      0.044
+     ]
+    ],
+    [
+     [
+      "G_METER",
+      0.044
+     ],
+     [
+      "CLOCK",
+      0.044
+     ]
+    ]
+   ],
+   "left_fill": [
+    [
+     [
+      "FILLER_HYDRAULIC",
+      0.044
+     ],
+     [
+      "FILLER_OXYGEN",
+      0.044
+     ]
+    ]
+   ],
+   "right": [
+    [
+     [
+      "ENGINE_RPM",
+      0.05
+     ],
+     [
+      "EGT",
+      0.05
+     ]
+    ],
+    [
+     [
+      "FUEL_QTY",
+      0.064
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.044
+     ]
+    ],
+    [
+     [
+      "FILLER_OIL",
+      0.044
+     ],
+     [
+      "THROTTLE",
+      0.044
+     ]
+    ]
+   ],
+   "right_fill": [
+    [
+     [
+      "FILLER_VOLTS",
+      0.044
+     ],
+     [
+      "CLOCK",
+      0.044
+     ]
+    ]
+   ],
+   "hud": true,
+   "displays": "LCD",
+   "seat": "ejection",
+   "eyebrows": true,
+   "hinge_frac": 0.62,
+   "notes": "Block 50: ICP keypad top centre under the HUD (-> UFCP) with the DED and fuel-flow readout on the right glareshield; a centre column of dials below it: airspeed/Mach and altimeter side by side, ADI flanked by AoA (left) and VVI (right) tapes, HSI at the bottom. Left MFD (-> D:RADAR) and right MFD (-> D:STORES) flank the column, with the ALR-56M threat azimuth scope (-> RWR) above the left MFD. The right wing holds the vertical engine column (oil pressure, nozzle position, RPM, FTIT) and the fuel quantity/hydraulic gauges. Eyebrow light panels either side of the HUD (threat warning prime left, caution/master caution right). Both MFDs are drawn on the centre panel below the standby dials, where the Block 50 has them, since the side wings are too short to hold them.",
+   "sources": [
+    "/mnt/project-files/cockpit-refs/f_16c/f_16c_01.jpg (https://commons.wikimedia.org/wiki/File:F16_Cockpit,_Asian_Aerospace_2006.JPG)",
+    "/mnt/project-files/cockpit-refs/f_16c/guide/p-013.jpg (layout reference only, https://assets.chucksguides.com/pdf/DCS%20F-16C%20Viper%20Guide.pdf)"
+   ]
+  },
+  "fa_18e": {
+   "centre": [
+    [
+     [
+      "UFCP",
+      0.17
+     ]
+    ],
+    [
+     [
+      "D:RADAR",
+      0.215
+     ],
+     [
+      "D:STORES",
+      0.215
+     ]
+    ],
+    [
+     [
+      "D:PFD",
+      0.225
+     ]
+    ]
+   ],
+   "centre_fill": [],
+   "left": [
+    [
+     [
+      "A:cw",
+      0.15,
+      0.044
+     ]
+    ],
+    [
+     [
+      "ENGINE_RPM",
+      0.044
+     ],
+     [
+      "EGT",
+      0.044
+     ],
+     [
+      "FUEL_QTY",
+      0.05
+     ]
+    ]
+   ],
+   "left_fill": [
+    [
+     [
+      "AMMO",
+      0.044
+     ],
+     [
+      "FILLER_OXYGEN",
+      0.044
+     ]
+    ]
+   ],
+   "right": [
+    [
+     [
+      "ATTITUDE",
+      0.057
+     ],
+     [
+      "ALTIMETER",
+      0.05
+     ]
+    ],
+    [
+     [
+      "AIRSPEED",
+      0.05
+     ],
+     [
+      "VVI",
+      0.05
+     ]
+    ]
+   ],
+   "right_fill": [
+    [
+     [
+      "CLOCK",
+      0.044
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.044
+     ]
+    ],
+    [
+     [
+      "RADAR_ALT",
+      0.044
+     ],
+     [
+      "FILLER_VOLTS",
+      0.044
+     ]
+    ]
+   ],
+   "hud": true,
+   "displays": "LCD",
+   "seat": "ejection",
+   "eyebrows": true,
+   "hinge_frac": 0.62,
+   "notes": "Super Hornet: touch-screen UFCD top centre under the HUD (-> UFCP), left and right DDIs flanking it (-> D:RADAR left, D:STORES right) and the large colour MPCD/tactical display in the lower centre above the stick (-> D:PFD). Lower left: IFEI engine/fuel readout (-> ENGINE_RPM, EGT, FUEL_QTY) under the left-side caution/fire light strip (-> A:cw). Lower right: standby ADI, altimeter, airspeed and VVI cluster (-> right wing dials) with hydraulic pressure and clock. Eyebrow warning lights both sides of the HUD. Layout family confirmed by the legacy F/A-18C guide; the E/F enlarges the lower centre display.",
+   "sources": [
+    "/mnt/project-files/cockpit-refs/fa_18e/fa_18e_01.jpg (https://commons.wikimedia.org/wiki/File:F-A-18F_Super_Hornet_Cockpit_(51613522112).jpg)",
+    "/mnt/project-files/cockpit-refs/fa_18e/fa_18e_02.jpg (US Navy 050619-N-6009S-002, public domain)",
+    "/mnt/project-files/cockpit-refs/fa_18e/guide/p-012.jpg (layout reference only, F/A-18C, https://assets.chucksguides.com/pdf/DCS%20FA-18C%20Hornet%20Guide.pdf)",
+    "https://en.wikipedia.org/wiki/Boeing_F/A-18E/F_Super_Hornet (up-front touchscreen control display, large multipurpose colour LCD)"
+   ]
+  },
+  "j_15d": {
+   "centre": [
+    [
+     [
+      "A:cw",
+      0.215,
+      0.044
+     ]
+    ],
+    [
+     [
+      "D:RADAR",
+      0.215
+     ],
+     [
+      "D:PFD",
+      0.215
+     ]
+    ]
+   ],
+   "centre_fill": [
+    [
+     [
+      "HEADING",
+      0.05
+     ],
+     [
+      "CLOCK",
+      0.044
+     ],
+     [
+      "FILLER_OXYGEN",
+      0.044
+     ]
+    ]
+   ],
+   "left": [
+    [
+     [
+      "AOA",
+      0.057
+     ],
+     [
+      "G_METER",
+      0.057
+     ]
+    ],
+    [
+     [
+      "FUEL_QTY",
+      0.057
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.044
+     ]
+    ]
+   ],
+   "left_fill": [
+    [
+     [
+      "FILLER_VOLTS",
+      0.044
+     ],
+     [
+      "FILLER_TEMP",
+      0.044
+     ]
+    ]
+   ],
+   "right": [
+    [
+     [
+      "RWR",
+      0.064
+     ],
+     [
+      "RADAR_ALT",
+      0.05
+     ]
+    ],
+    [
+     [
+      "D:STORES",
+      0.165
+     ]
+    ],
+    [
+     [
+      "ATTITUDE",
+      0.057
+     ],
+     [
+      "AIRSPEED",
+      0.05
+     ],
+     [
+      "ALTIMETER",
+      0.05
+     ]
+    ]
+   ],
+   "right_fill": [
+    [
+     [
+      "ENGINE_RPM",
+      0.044
+     ],
+     [
+      "EGT",
+      0.044
+     ],
+     [
+      "CLOCK",
+      0.044
+     ]
+    ]
+   ],
+   "hud": true,
+   "displays": "LCD",
+   "seat": "ejection",
+   "eyebrows": false,
+   "notes": "No J-15 cockpit photo available; modelled on the glass-cockpit Flanker family (Su-27SKM / Su-30MK2 panel, which the J-11B-derived J-15 cockpit follows): warning lamp strip top centre under the HUD, two large LCD MFDs side by side in the centre (-> D:RADAR, D:PFD), a third MFD on the right (-> D:STORES) above a standby ADI/airspeed/altimeter cluster, SPO-15 RWR scope top right (-> RWR), AoA/G and fuel gauges on the left. Tandem two-seat (J-15D), K-36-type ejection seat.",
+   "sources": [
+    "/mnt/project-files/cockpit-refs/su_27/su_27_07.jpg (Su-27SKM, https://commons.wikimedia.org/wiki/File:Cockpit_of_Sukhoi_Su-27SKM.jpg)",
+    "/mnt/project-files/cockpit-refs/su_27/su_27_01.jpg (Su-27 analog panel, https://commons.wikimedia.org/wiki/File:Cockpit_of_Sukhoi_Su-27_(2).jpg)",
+    "https://en.wikipedia.org/wiki/Shenyang_J-15 (J-11B glass cockpit with LCDs; J-15D two-seat EW variant)"
+   ]
+  },
+  "meteor_f_8": {
+   "centre": [
+    [
+     [
+      "AIRSPEED",
+      0.076
+     ],
+     [
+      "ATTITUDE",
+      0.082
+     ],
+     [
+      "VVI",
+      0.076
+     ]
+    ],
+    [
+     [
+      "ALTIMETER",
+      0.076
+     ],
+     [
+      "HEADING",
+      0.082
+     ],
+     [
+      "TURN_SLIP",
+      0.076
+     ]
+    ]
+   ],
+   "centre_fill": [
+    [
+     [
+      "CLOCK",
+      0.05
+     ],
+     [
+      "FILLER_OXYGEN",
+      0.044
+     ],
+     [
+      "FILLER_VOLTS",
+      0.044
+     ]
+    ]
+   ],
+   "left": [
+    [
+     [
+      "MACH",
+      0.064
+     ],
+     [
+      "G_METER",
+      0.057
+     ]
+    ],
+    [
+     [
+      "FUEL_QTY",
+      0.057
+     ],
+     [
+      "FILLER_FUEL",
+      0.05
+     ]
+    ]
+   ],
+   "left_fill": [
+    [
+     [
+      "AMMO",
+      0.05
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.044
+     ]
+    ]
+   ],
+   "right": [
+    [
+     [
+      "ENGINE_RPM",
+      0.057
+     ],
+     [
+      "ENGINE_RPM",
+      0.057
+     ]
+    ],
+    [
+     [
+      "EGT",
+      0.05
+     ],
+     [
+      "EGT",
+      0.05
+     ]
+    ],
+    [
+     [
+      "FILLER_OIL",
+      0.044
+     ],
+     [
+      "FILLER_OIL",
+      0.044
+     ]
+    ]
+   ],
+   "right_fill": [
+    [
+     [
+      "FILLER_TEMP",
+      0.044
+     ],
+     [
+      "FILLER_FUEL",
+      0.044
+     ]
+    ]
+   ],
+   "hud": false,
+   "displays": "CRT",
+   "seat": "ejection",
+   "eyebrows": false,
+   "notes": "RAF standard blind-flying panel in the centre (top: ASI, artificial horizon, rate of climb; bottom: altimeter, direction indicator, turn and slip), GGS Mk 4 gyro gunsight above it. Left: Machmeter, accelerometer, fuel contents and hydraulic/brake pressure gauges. Right: twin Derwent engine instruments in pairs (two RPM, two JPT, oil pressures). Martin-Baker ejection seat, no HUD.",
+   "sources": [
+    "/mnt/project-files/cockpit-refs/meteor_f_8/meteor_f_8_01.jpg (https://commons.wikimedia.org/wiki/File:Gloster_Meteor_F.8_Cockpit_(4746340408).jpg)",
+    "https://en.wikipedia.org/wiki/Gloster_Meteor (F.8: Martin-Baker ejection seat, Derwent 8 engines)"
+   ]
+  },
+  "mig_9": {
+   "centre": [
+    [
+     [
+      "A:ww2",
+      0.11,
+      0.04
+     ]
+    ],
+    [
+     [
+      "AIRSPEED",
+      0.076
+     ],
+     [
+      "ATTITUDE",
+      0.082
+     ],
+     [
+      "VVI",
+      0.076
+     ]
+    ],
+    [
+     [
+      "TURN_SLIP",
+      0.064
+     ],
+     [
+      "HEADING",
+      0.082
+     ],
+     [
+      "ALTIMETER",
+      0.076
+     ]
+    ]
+   ],
+   "centre_fill": [
+    [
+     [
+      "CLOCK",
+      0.05
+     ],
+     [
+      "FILLER_OXYGEN",
+      0.044
+     ],
+     [
+      "FILLER_VOLTS",
+      0.044
+     ]
+    ]
+   ],
+   "left": [
+    [
+     [
+      "FUEL_QTY",
+      0.057
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.05
+     ]
+    ],
+    [
+     [
+      "AMMO",
+      0.05
+     ],
+     [
+      "FILLER_FUEL",
+      0.044
+     ]
+    ]
+   ],
+   "left_fill": [
+    [
+     [
+      "G_METER",
+      0.044
+     ]
+    ]
+   ],
+   "right": [
+    [
+     [
+      "ENGINE_RPM",
+      0.057
+     ],
+     [
+      "ENGINE_RPM",
+      0.057
+     ]
+    ],
+    [
+     [
+      "EGT",
+      0.05
+     ],
+     [
+      "EGT",
+      0.05
+     ]
+    ],
+    [
+     [
+      "FILLER_OIL",
+      0.044
+     ],
+     [
+      "FILLER_TEMP",
+      0.044
+     ]
+    ]
+   ],
+   "right_fill": [
+    [
+     [
+      "THROTTLE",
+      0.044
+     ],
+     [
+      "FILLER_CLOCK",
+      0.044
+     ]
+    ]
+   ],
+   "hud": false,
+   "displays": "CRT",
+   "seat": "ejection",
+   "eyebrows": false,
+   "notes": "No MiG-9 panel photo or manual was reachable; layout is the Soviet late-1940s standard as seen on the MiG-15 (closest family), with flight instruments (KUS airspeed, AGK horizon, VAR variometer, GPK/KI compass, altimeter) in the centre, a lamp row above, fuel and pressure gauges left and twin RD-20 engine pairs (two tachometers, two JPT, oil) on the right. PKI/ASP reflector gunsight; production MiG-9 had an ejection seat.",
+   "sources": [
+    "/mnt/project-files/cockpit-refs/mig_15bis/mig_15bis_01.jpg (closest family, https://commons.wikimedia.org/wiki/File:Cockpit_MiG-15_(5718106817).jpg)",
+    "https://en.wikipedia.org/wiki/Mikoyan-Gurevich_MiG-9 (armament 1x N-37 40 rds + 2x NS-23, twin RD-20, ejection seats)"
+   ]
+  },
+  "rafale": {
+   "centre": [
+    [
+     [
+      "D:PFD",
+      0.225
+     ]
+    ],
+    [
+     [
+      "UFCP",
+      0.17
+     ]
+    ]
+   ],
+   "centre_fill": [
+    [
+     [
+      "ATTITUDE",
+      0.057
+     ],
+     [
+      "AIRSPEED",
+      0.05
+     ],
+     [
+      "ALTIMETER",
+      0.05
+     ]
+    ]
+   ],
+   "left": [
+    [
+     [
+      "D:RADAR",
+      0.17
+     ]
+    ]
+   ],
+   "left_fill": [
+    [
+     [
+      "FUEL_QTY",
+      0.044
+     ],
+     [
+      "ENGINE_RPM",
+      0.044
+     ],
+     [
+      "EGT",
+      0.044
+     ]
+    ]
+   ],
+   "right": [
+    [
+     [
+      "D:STORES",
+      0.17
+     ]
+    ]
+   ],
+   "right_fill": [
+    [
+     [
+      "A:cw",
+      0.15,
+      0.044
+     ]
+    ],
+    [
+     [
+      "CLOCK",
+      0.044
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.044
+     ]
+    ]
+   ],
+   "hud": true,
+   "displays": "LCD",
+   "seat": "ejection",
+   "eyebrows": true,
+   "hinge_frac": 0.62,
+   "notes": "Rafale C: wide-angle holographic HUD, below it the collimated head-level display in the top centre (-> D:PFD), two lateral colour touch displays lower left and right (-> D:RADAR, D:STORES), the keypad/control block and small standby ADI, airspeed and altimeter under the HLD (-> UFCP + small dials). Alarm panel on the right, glareshield warning lamps both sides; Martin-Baker Mk 16F seat reclined 29 deg, side-stick. No reference photo was available; built from the Wikipedia description and general knowledge of the type.",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Dassault_Rafale (cockpit: HUD, collimated central display, two lateral MFDs, Mk 16F seat reclined 29 deg)",
+    "https://fr.wikipedia.org/wiki/Dassault_Rafale (VTL lateral displays, side-stick)"
+   ]
+  },
+  "saab_jas_39_gripen": {
+   "centre": [
+    [
+     [
+      "UFCP",
+      0.17
+     ]
+    ],
+    [
+     [
+      "D:STORES",
+      0.225
+     ]
+    ]
+   ],
+   "centre_fill": [
+    [
+     [
+      "ATTITUDE",
+      0.05
+     ],
+     [
+      "AIRSPEED",
+      0.044
+     ],
+     [
+      "ALTIMETER",
+      0.044
+     ]
+    ]
+   ],
+   "left": [
+    [
+     [
+      "D:PFD",
+      0.17
+     ]
+    ]
+   ],
+   "left_fill": [
+    [
+     [
+      "FUEL_QTY",
+      0.044
+     ],
+     [
+      "AOA",
+      0.044
+     ]
+    ]
+   ],
+   "right": [
+    [
+     [
+      "D:RADAR",
+      0.17
+     ]
+    ]
+   ],
+   "right_fill": [
+    [
+     [
+      "A:cw",
+      0.15,
+      0.044
+     ]
+    ],
+    [
+     [
+      "ENGINE_RPM",
+      0.044
+     ],
+     [
+      "EGT",
+      0.044
+     ]
+    ]
+   ],
+   "hud": true,
+   "displays": "LCD",
+   "seat": "ejection",
+   "eyebrows": false,
+   "hinge_frac": 0.62,
+   "notes": "JAS 39C: data entry panel top centre under the wide HUD (-> UFCP), three equal portrait colour MFDs: left flight-data display with HSD/ADI/airspeed/altitude symbology (-> D:PFD), centre tactical map set slightly lower (-> D:STORES), right sensor/radar display (-> D:RADAR). Tiny standby ADI/airspeed/altimeter under the centre display; warning text panel lower right (-> A:cw). No analog engine gauges. No glareshield eyebrow lamps.",
+   "sources": [
+    "/mnt/project-files/cockpit-refs/saab_jas_39_gripen/saab_jas_39_gripen_01.jpg (https://commons.wikimedia.org/wiki/File:Saab_JAS-39C_Gripen_MFD_at_ADAS_2018.jpg)",
+    "https://en.wikipedia.org/wiki/Saab_JAS_39_Gripen (three MFDs, UFCP above the central display, wide FOV HUD)"
+   ]
+  },
+  "su_35": {
+   "centre": [
+    [
+     [
+      "A:cw",
+      0.215,
+      0.044
+     ]
+    ],
+    [
+     [
+      "D:RADAR",
+      0.225
+     ],
+     [
+      "D:PFD",
+      0.225
+     ]
+    ]
+   ],
+   "centre_fill": [
+    [
+     [
+      "ATTITUDE",
+      0.057
+     ],
+     [
+      "AIRSPEED",
+      0.05
+     ],
+     [
+      "ALTIMETER",
+      0.05
+     ],
+     [
+      "HEADING",
+      0.05
+     ]
+    ]
+   ],
+   "left": [
+    [
+     [
+      "UFCP",
+      0.15
+     ]
+    ]
+   ],
+   "left_fill": [
+    [
+     [
+      "AOA",
+      0.044
+     ],
+     [
+      "G_METER",
+      0.044
+     ]
+    ],
+    [
+     [
+      "FUEL_QTY",
+      0.05
+     ]
+    ]
+   ],
+   "right": [
+    [
+     [
+      "RWR",
+      0.064
+     ],
+     [
+      "RADAR_ALT",
+      0.05
+     ]
+    ],
+    [
+     [
+      "FUEL_QTY",
+      0.05
+     ],
+     [
+      "ENGINE_RPM",
+      0.044
+     ],
+     [
+      "EGT",
+      0.044
+     ]
+    ]
+   ],
+   "right_fill": [
+    [
+     [
+      "CLOCK",
+      0.044
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.044
+     ]
+    ]
+   ],
+   "hud": true,
+   "displays": "LCD",
+   "seat": "ejection",
+   "eyebrows": false,
+   "notes": "Su-35S: IKSh-1M wide-angle HUD, two large 9x12 in MFI-35 colour LCDs side by side filling the centre panel (-> D:RADAR, D:PFD), a Russian warning lamp strip above them, the MFPI-35 multifunction control panel on the left (-> UFCP) and a small standby ADI/airspeed/altimeter row under the displays. RWR indicator and small fuel/engine readouts on the right. K-36D-3.5 seat. No usable Commons cockpit photo (the reference index lists none); layout from the Wikipedia description plus the Su-27SKM glass-panel family photo.",
+   "sources": [
+    "https://en.wikipedia.org/wiki/Sukhoi_Su-35 (two 9 in x 12 in MFDs replacing the Su-27M CRTs, HUD, HOTAS)",
+    "/mnt/project-files/cockpit-refs/su_27/su_27_07.jpg (Su-27SKM family layout, https://commons.wikimedia.org/wiki/File:Cockpit_of_Sukhoi_Su-27SKM.jpg)"
+   ]
+  },
+  "yak_15p": {
+   "centre": [
+    [
+     [
+      "AIRSPEED",
+      0.076
+     ],
+     [
+      "ATTITUDE",
+      0.076
+     ],
+     [
+      "ALTIMETER",
+      0.076
+     ]
+    ],
+    [
+     [
+      "TURN_SLIP",
+      0.064
+     ],
+     [
+      "HEADING",
+      0.076
+     ],
+     [
+      "VVI",
+      0.064
+     ]
+    ],
+    [
+     [
+      "ENGINE_RPM",
+      0.064
+     ],
+     [
+      "EGT",
+      0.064
+     ],
+     [
+      "FILLER_OIL",
+      0.057
+     ]
+    ]
+   ],
+   "centre_fill": [
+    [
+     [
+      "FUEL_QTY",
+      0.05
+     ],
+     [
+      "CLOCK",
+      0.05
+     ],
+     [
+      "FILLER_VOLTS",
+      0.044
+     ]
+    ]
+   ],
+   "left": [
+    [
+     [
+      "AMMO",
+      0.05
+     ],
+     [
+      "FILLER_FUEL",
+      0.044
+     ]
+    ]
+   ],
+   "left_fill": [
+    [
+     [
+      "FILLER_OXYGEN",
+      0.044
+     ]
+    ]
+   ],
+   "right": [
+    [
+     [
+      "FILLER_TEMP",
+      0.05
+     ],
+     [
+      "THROTTLE",
+      0.044
+     ]
+    ]
+   ],
+   "right_fill": [
+    [
+     [
+      "FILLER_HYDRAULIC",
+      0.044
+     ],
+     [
+      "FILLER_CLOCK",
+      0.044
+     ]
+    ]
+   ],
+   "hud": false,
+   "displays": "CRT",
+   "seat": "bucket",
+   "eyebrows": false,
+   "notes": "Yak-15 keeps the Yak-3 fuselage and its small piston-era panel: a single black board with airspeed, horizon and altimeter on top, turn indicator, compass and variometer below, and the engine row (RD-10 tachometer, jet pipe temperature in place of the boost gauge, oil pressure) at the bottom; fuel/ammo on the left, PBP-1 reflector sight above. No ejection seat (bucket seat), no HUD. No Yak-15 panel photo was reachable; based on the Yak-9 panel photo and the Yak-3 heritage described on Wikipedia.",
+   "sources": [
+    "/mnt/project-files/cockpit-refs/yak_9u/yak_9u_01.jpg (Yak-9 panel, closest family, https://commons.wikimedia.org/wiki/File:Yakovlev_Yak-9_cockpit_(8740038058).jpg)",
+    "https://en.wikipedia.org/wiki/Yakovlev_Yak-15 (Yak-3 fuselage, 2x NS-23 60 rds each, no ejection seat on production aircraft)"
+   ]
+  },
+  "f2h_2": {
+   "centre": [
+    [
+     [
+      "A:cw",
+      0.18,
+      0.04
+     ]
+    ],
+    [
+     [
+      "AIRSPEED",
+      0.076
+     ],
+     [
+      "ATTITUDE",
+      0.082
+     ],
+     [
+      "ALTIMETER",
+      0.076
+     ]
+    ],
+    [
+     [
+      "TURN_SLIP",
+      0.076
+     ],
+     [
+      "HEADING",
+      0.082
+     ],
+     [
+      "VVI",
+      0.076
+     ]
+    ],
+    [
+     [
+      "G_METER",
+      0.057
+     ],
+     [
+      "CLOCK",
+      0.057
+     ],
+     [
+      "FILLER_OXYGEN",
+      0.05
+     ],
+     [
+      "FILLER_VOLTS",
+      0.05
+     ]
+    ]
+   ],
+   "centre_fill": [
+    [
+     [
+      "RADAR_ALT",
+      0.057
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.05
+     ]
+    ]
+   ],
+   "left": [
+    [
+     [
+      "AMMO",
+      0.057
+     ],
+     [
+      "FILLER_FUEL",
+      0.05
+     ]
+    ],
+    [
+     [
+      "FUEL_QTY",
+      0.064
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.05
+     ]
+    ]
+   ],
+   "left_fill": [
+    [
+     [
+      "FILLER_CLOCK",
+      0.044
+     ],
+     [
+      "FILLER_VOLTS",
+      0.044
+     ]
+    ]
+   ],
+   "right": [
+    [
+     [
+      "ENGINE_RPM",
+      0.064
+     ],
+     [
+      "ENGINE_RPM",
+      0.064
+     ]
+    ],
+    [
+     [
+      "EGT",
+      0.057
+     ],
+     [
+      "EGT",
+      0.057
+     ]
+    ],
+    [
+     [
+      "FILLER_OIL",
+      0.05
+     ],
+     [
+      "FILLER_OIL",
+      0.05
+     ]
+    ],
+    [
+     [
+      "FILLER_TEMP",
+      0.05
+     ],
+     [
+      "THROTTLE",
+      0.05
+     ]
+    ]
+   ],
+   "right_fill": [
+    [
+     [
+      "FILLER_FUEL",
+      0.044
+     ],
+     [
+      "FILLER_OXYGEN",
+      0.044
+     ]
+    ]
+   ],
+   "hud": false,
+   "displays": "CRT",
+   "seat": "ejection",
+   "eyebrows": false,
+   "notes": "F2H-2: classic late-1940s USN panel. Flight group (airspeed, gyro horizon, altimeter / turn-and-bank, directional gyro, rate of climb) in a 3x2 block centre; twin-engine Westinghouse J34 gauges (two tachs, two tailpipe temps, oil pressure/temp) paired down the right; fuel quantity, armament and rocket panel on the left; Mk 8 gunsight on the coaming. No reference folder: layout from general knowledge of the F2H flight handbook family (AN 01-245FBB-1); treat as moderate confidence.",
+   "sources": [
+    "(no ref folder; web search budget exhausted this turn) general knowledge of F2H-2 flight handbook AN 01-245FBB-1 panel diagram and NNAM Pensacola cockpit photos"
+   ]
+  },
+  "f_14a": {
+   "centre": [
+    [
+     [
+      "A:cw",
+      0.2,
+      0.04
+     ]
+    ],
+    [
+     [
+      "D:PFD",
+      0.215
+     ]
+    ],
+    [
+     [
+      "D:RADAR",
+      0.215
+     ]
+    ],
+    [
+     [
+      "FILLER_VOLTS",
+      0.044
+     ],
+     [
+      "FILLER_OXYGEN",
+      0.044
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.044
+     ]
+    ]
+   ],
+   "centre_fill": [
+    [
+     [
+      "CLOCK",
+      0.05
+     ],
+     [
+      "FILLER_CLOCK",
+      0.044
+     ]
+    ]
+   ],
+   "left": [
+    [
+     [
+      "AOA",
+      0.05
+     ],
+     [
+      "MACH",
+      0.064
+     ]
+    ],
+    [
+     [
+      "AIRSPEED",
+      0.07
+     ],
+     [
+      "ALTIMETER",
+      0.07
+     ]
+    ],
+    [
+     [
+      "VVI",
+      0.064
+     ],
+     [
+      "CLOCK",
+      0.057
+     ]
+    ],
+    [
+     [
+      "G_METER",
+      0.05
+     ],
+     [
+      "RADAR_ALT",
+      0.057
+     ]
+    ]
+   ],
+   "left_fill": [
+    [
+     [
+      "AMMO",
+      0.044
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.044
+     ]
+    ]
+   ],
+   "right": [
+    [
+     [
+      "ATTITUDE",
+      0.064
+     ],
+     [
+      "RWR",
+      0.064
+     ]
+    ],
+    [
+     [
+      "ENGINE_RPM",
+      0.057
+     ],
+     [
+      "ENGINE_RPM",
+      0.057
+     ]
+    ],
+    [
+     [
+      "EGT",
+      0.05
+     ],
+     [
+      "EGT",
+      0.05
+     ]
+    ],
+    [
+     [
+      "FUEL_QTY",
+      0.064
+     ],
+     [
+      "FILLER_OIL",
+      0.05
+     ]
+    ]
+   ],
+   "right_fill": [
+    [
+     [
+      "FILLER_HYDRAULIC",
+      0.044
+     ],
+     [
+      "FILLER_TEMP",
+      0.044
+     ]
+    ],
+    [
+     [
+      "FILLER_FUEL",
+      0.044
+     ],
+     [
+      "FILLER_VOLTS",
+      0.044
+     ]
+    ]
+   ],
+   "eyebrows": true,
+   "hud": true,
+   "displays": "CRT",
+   "seat": "ejection",
+   "hinge_frac": 0.6,
+   "notes": "F-14A front cockpit: HUD on the coaming with the AOA indexer and the gunsight/ACM panel above the left side; centre stack is the VDI (vertical display, CRT, mapped to D:PFD) over the HSD (horizontal situation display, CRT, mapped to D:RADAR). Left of the stack the AOA tape, Mach/airspeed, altimeter, VSI, clock and accelerometer; right of it the standby ADI, the twin TF30 engine column (two RPM, two TIT, fuel flow, oil/hyd pressure), the fuel quantity totaliser and the threat (RWR/ALR-45) scope on the right glareshield. Caution/advisory lamp panel sits right of the HSD (eyebrows).",
+   "sources": [
+    "/mnt/project-files/cockpit-refs/f_14a/f_14a_02.jpg (NASA F-14 front panel, VDI/HSD housings removed)",
+    "/mnt/project-files/cockpit-refs/f_14a/f_14a_03.jpeg (F-14A, HUD and left instrument column)",
+    "/mnt/project-files/cockpit-refs/f_14a/f_14a_01.jpeg",
+    "/mnt/project-files/cockpit-refs/f_14a/guide/p-026.jpg, p-029.jpg (DCS F-14B layout reference only)",
+    "https://commons.wikimedia.org/wiki/File:ECN-13222-small.jpg",
+    "https://commons.wikimedia.org/wiki/File:F-14A_DoD_Open_House_Airshow_-_1984.JPEG"
+   ]
+  },
+  "f_4c": {
+   "centre": [
+    [
+     [
+      "A:cw",
+      0.215,
+      0.044
+     ]
+    ],
+    [
+     [
+      "D:RADAR",
+      0.175
+     ]
+    ],
+    [
+     [
+      "AIRSPEED",
+      0.076
+     ],
+     [
+      "ATTITUDE",
+      0.082
+     ],
+     [
+      "ALTIMETER",
+      0.076
+     ]
+    ],
+    [
+     [
+      "AOA",
+      0.057
+     ],
+     [
+      "HEADING",
+      0.082
+     ],
+     [
+      "VVI",
+      0.064
+     ]
+    ]
+   ],
+   "centre_fill": [
+    [
+     [
+      "G_METER",
+      0.05
+     ],
+     [
+      "CLOCK",
+      0.05
+     ],
+     [
+      "TURN_SLIP",
+      0.044
+     ]
+    ]
+   ],
+   "left": [
+    [
+     [
+      "MACH",
+      0.057
+     ],
+     [
+      "RADAR_ALT",
+      0.057
+     ]
+    ],
+    [
+     [
+      "AMMO",
+      0.057
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.05
+     ]
+    ],
+    [
+     [
+      "FILLER_VOLTS",
+      0.044
+     ],
+     [
+      "FILLER_OXYGEN",
+      0.044
+     ]
+    ]
+   ],
+   "left_fill": [
+    [
+     [
+      "FILLER_CLOCK",
+      0.044
+     ],
+     [
+      "FILLER_FUEL",
+      0.044
+     ]
+    ]
+   ],
+   "right": [
+    [
+     [
+      "ENGINE_RPM",
+      0.057
+     ],
+     [
+      "ENGINE_RPM",
+      0.057
+     ]
+    ],
+    [
+     [
+      "EGT",
+      0.05
+     ],
+     [
+      "EGT",
+      0.05
+     ]
+    ],
+    [
+     [
+      "FILLER_OIL",
+      0.044
+     ],
+     [
+      "FILLER_OIL",
+      0.044
+     ]
+    ],
+    [
+     [
+      "FUEL_QTY",
+      0.064
+     ],
+     [
+      "RWR",
+      0.057
+     ]
+    ]
+   ],
+   "right_fill": [
+    [
+     [
+      "FILLER_HYDRAULIC",
+      0.044
+     ],
+     [
+      "FILLER_TEMP",
+      0.044
+     ]
+    ],
+    [
+     [
+      "FILLER_FUEL",
+      0.044
+     ],
+     [
+      "FILLER_VOLTS",
+      0.044
+     ]
+    ]
+   ],
+   "hud": false,
+   "displays": "CRT",
+   "seat": "ejection",
+   "eyebrows": false,
+   "notes": "F-4C front cockpit: the APQ-100 radar scope sits top centre under its hood with the optical sight on the coaming above it (no HUD). Below the scope the ADI with the HSI under it; airspeed/Mach, altimeter, AOA and accelerometer on the left; VVI and clock low centre. The right third is the twin J79 engine column (two tachs, two EGT, two nozzle/oil, fuel flow) with the fuel quantity gauge and the telelight warning panel; missile status panel is lower left. Photo set is F-4C/F-4D (same front panel).",
+   "sources": [
+    "/mnt/project-files/cockpit-refs/f_4c/f_4c_03.jpg (F-4D NMUSAF front panel)",
+    "/mnt/project-files/cockpit-refs/f_4c/f_4c_04.jpg",
+    "/mnt/project-files/cockpit-refs/f_4c/f_4c_01.jpg (Estonian F-4C)",
+    "/mnt/project-files/cockpit-refs/f_4c/guide/p-036.jpg (DCS F-4E, layout reference only)",
+    "https://commons.wikimedia.org/wiki/File:McDonnell_Douglas_F-4D_Phantom_II_Cockpit_FrontPanel_Wide_Cold_War_NMUSAF_26Sep09_(14598219054).jpg"
+   ]
+  },
+  "fiat_g_91": {
+   "centre": [
+    [
+     [
+      "A:cw",
+      0.16,
+      0.036
+     ]
+    ],
+    [
+     [
+      "HEADING",
+      0.076
+     ],
+     [
+      "AIRSPEED",
+      0.076
+     ],
+     [
+      "ATTITUDE",
+      0.076
+     ]
+    ],
+    [
+     [
+      "MACH",
+      0.057
+     ],
+     [
+      "ALTIMETER",
+      0.076
+     ],
+     [
+      "TURN_SLIP",
+      0.057
+     ],
+     [
+      "CLOCK",
+      0.05
+     ]
+    ],
+    [
+     [
+      "VVI",
+      0.064
+     ],
+     [
+      "G_METER",
+      0.057
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.05
+     ]
+    ]
+   ],
+   "centre_fill": [
+    [
+     [
+      "FILLER_OXYGEN",
+      0.044
+     ],
+     [
+      "FILLER_VOLTS",
+      0.044
+     ]
+    ]
+   ],
+   "left": [
+    [
+     [
+      "AMMO",
+      0.057
+     ],
+     [
+      "FILLER_FUEL",
+      0.05
+     ]
+    ],
+    [
+     [
+      "FILLER_HYDRAULIC",
+      0.05
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.05
+     ]
+    ]
+   ],
+   "left_fill": [
+    [
+     [
+      "FILLER_CLOCK",
+      0.044
+     ]
+    ]
+   ],
+   "right": [
+    [
+     [
+      "ENGINE_RPM",
+      0.064
+     ],
+     [
+      "EGT",
+      0.057
+     ]
+    ],
+    [
+     [
+      "FUEL_QTY",
+      0.064
+     ],
+     [
+      "FILLER_OIL",
+      0.05
+     ]
+    ],
+    [
+     [
+      "FILLER_TEMP",
+      0.05
+     ],
+     [
+      "FILLER_VOLTS",
+      0.05
+     ]
+    ]
+   ],
+   "right_fill": [
+    [
+     [
+      "RADAR_ALT",
+      0.05
+     ],
+     [
+      "FILLER_OXYGEN",
+      0.044
+     ]
+    ]
+   ],
+   "hud": false,
+   "displays": "CRT",
+   "seat": "ejection",
+   "eyebrows": false,
+   "notes": "G.91R: small flat panel with a Matra/Ferranti reflector sight on the coaming. Top row left to right: compass repeater, airspeed, gyro compass/attitude block; second row: Mach, altimeter, turn-and-bank, VSI; small clock and accelerometer. Right of the stick the J85/Orpheus engine column (RPM, JPT, fuel quantity, oil) with warning lamps, and the landing-gear position and hydraulic gauges low left.",
+   "sources": [
+    "/mnt/project-files/cockpit-refs/fiat_g_91/fiat_g_91_01.jpg",
+    "/mnt/project-files/cockpit-refs/fiat_g_91/fiat_g_91_02.jpg",
+    "https://commons.wikimedia.org/wiki/File:G.91cockpit.JPG",
+    "https://commons.wikimedia.org/wiki/File:G-91R1_cockpit.JPG"
+   ]
+  },
+  "j_2": {
+   "centre": [
+    [
+     [
+      "A:cw",
+      0.15,
+      0.036
+     ]
+    ],
+    [
+     [
+      "AIRSPEED",
+      0.076
+     ],
+     [
+      "ATTITUDE",
+      0.082
+     ],
+     [
+      "HEADING",
+      0.064
+     ]
+    ],
+    [
+     [
+      "ALTIMETER",
+      0.076
+     ],
+     [
+      "MACH",
+      0.064
+     ],
+     [
+      "ENGINE_RPM",
+      0.076
+     ]
+    ],
+    [
+     [
+      "VVI",
+      0.064
+     ],
+     [
+      "TURN_SLIP",
+      0.057
+     ],
+     [
+      "CLOCK",
+      0.057
+     ]
+    ]
+   ],
+   "centre_fill": [
+    [
+     [
+      "G_METER",
+      0.05
+     ],
+     [
+      "FILLER_VOLTS",
+      0.044
+     ]
+    ]
+   ],
+   "left": [
+    [
+     [
+      "RADAR_ALT",
+      0.057
+     ],
+     [
+      "FILLER_OXYGEN",
+      0.05
+     ]
+    ],
+    [
+     [
+      "AMMO",
+      0.057
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.05
+     ]
+    ]
+   ],
+   "left_fill": [
+    [
+     [
+      "FILLER_FUEL",
+      0.044
+     ]
+    ]
+   ],
+   "right": [
+    [
+     [
+      "EGT",
+      0.064
+     ],
+     [
+      "FUEL_QTY",
+      0.064
+     ]
+    ],
+    [
+     [
+      "FILLER_OIL",
+      0.05
+     ],
+     [
+      "FILLER_TEMP",
+      0.05
+     ]
+    ],
+    [
+     [
+      "FILLER_HYDRAULIC",
+      0.05
+     ],
+     [
+      "FILLER_VOLTS",
+      0.044
+     ]
+    ]
+   ],
+   "right_fill": [
+    [
+     [
+      "FILLER_CLOCK",
+      0.044
+     ],
+     [
+      "FILLER_OXYGEN",
+      0.044
+     ]
+    ]
+   ],
+   "hud": false,
+   "displays": "CRT",
+   "seat": "ejection",
+   "eyebrows": false,
+   "notes": "J-2 = MiG-15bis. Panel from the MiG-15bis/SBLim-2 photos: left block KUS airspeed over AGK-47B horizon (top), altimeter, Mach (M), VVI with turn/slip below; a vertical radio-compass course strip in the middle; right block tachometer, EGT, fuel quantity, oil/hydraulic pressures and the clock; ASP-3N gunsight on top. Lamp strip on the left side and oxygen gauge on the left console.",
+   "sources": [
+    "/mnt/project-files/cockpit-refs/mig_15bis/mig_15bis_02.jpg (SBLim-2 front panel)",
+    "/mnt/project-files/cockpit-refs/mig_15bis/mig_15bis_01.jpg",
+    "/mnt/project-files/cockpit-refs/mig_15bis/guide/p-014.jpg (DCS MiG-15bis, layout reference only)",
+    "https://commons.wikimedia.org/wiki/File:VH-DIE_PZL-Mielec_SBLim-2_Hempels_Aviation_(8310107744).jpg"
+   ]
+  },
+  "mig19": {
+   "centre": [
+    [
+     [
+      "A:cw",
+      0.16,
+      0.036
+     ]
+    ],
+    [
+     [
+      "AIRSPEED",
+      0.076
+     ],
+     [
+      "ATTITUDE",
+      0.082
+     ],
+     [
+      "ALTIMETER",
+      0.076
+     ]
+    ],
+    [
+     [
+      "MACH",
+      0.064
+     ],
+     [
+      "HEADING",
+      0.076
+     ],
+     [
+      "VVI",
+      0.064
+     ]
+    ],
+    [
+     [
+      "G_METER",
+      0.05
+     ],
+     [
+      "CLOCK",
+      0.057
+     ],
+     [
+      "TURN_SLIP",
+      0.05
+     ]
+    ]
+   ],
+   "centre_fill": [
+    [
+     [
+      "FILLER_OXYGEN",
+      0.044
+     ],
+     [
+      "FILLER_VOLTS",
+      0.044
+     ]
+    ]
+   ],
+   "left": [
+    [
+     [
+      "RADAR_ALT",
+      0.057
+     ],
+     [
+      "AOA",
+      0.05
+     ]
+    ],
+    [
+     [
+      "AMMO",
+      0.057
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.05
+     ]
+    ]
+   ],
+   "left_fill": [
+    [
+     [
+      "FILLER_FUEL",
+      0.044
+     ],
+     [
+      "FILLER_CLOCK",
+      0.044
+     ]
+    ]
+   ],
+   "right": [
+    [
+     [
+      "ENGINE_RPM",
+      0.057
+     ],
+     [
+      "ENGINE_RPM",
+      0.057
+     ]
+    ],
+    [
+     [
+      "EGT",
+      0.05
+     ],
+     [
+      "EGT",
+      0.05
+     ]
+    ],
+    [
+     [
+      "FUEL_QTY",
+      0.064
+     ],
+     [
+      "FILLER_OIL",
+      0.05
+     ]
+    ],
+    [
+     [
+      "FILLER_TEMP",
+      0.044
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.044
+     ]
+    ]
+   ],
+   "right_fill": [
+    [
+     [
+      "FILLER_VOLTS",
+      0.044
+     ],
+     [
+      "FILLER_OXYGEN",
+      0.044
+     ]
+    ]
+   ],
+   "hud": false,
+   "displays": "CRT",
+   "seat": "ejection",
+   "eyebrows": false,
+   "notes": "MiG-19S day fighter: ASP-5N gunsight on the coaming, no radar scope (the MiG-19P scope hood is absent on the S). Left/centre block: KUS airspeed, AGI-1 horizon, VD altimeter, Mach, KUSI/compass, VVI, accelerometer and clock; right block the twin RD-9B engine pairs (two tachs, two EGT) over fuel quantity and oil/hydraulic. RV-2 radio altimeter and rocket counter left. Layout taken from the MiG-19P sim guide (same panel minus the RP-5 scope); no photo of a real MiG-19S panel in the refs.",
+   "sources": [
+    "/mnt/project-files/cockpit-refs/mig_19s/guide/p-016.jpg, p-018.jpg, p-020.jpg (DCS MiG-19P, layout reference only)",
+    "/mnt/project-files/cockpit-refs/mig_19s/sources.md (no Commons photos)"
+   ]
+  },
+  "mirage_5": {
+   "centre": [
+    [
+     [
+      "A:cw",
+      0.2,
+      0.04
+     ]
+    ],
+    [
+     [
+      "AIRSPEED",
+      0.082
+     ],
+     [
+      "ATTITUDE",
+      0.082
+     ],
+     [
+      "HEADING",
+      0.076
+     ]
+    ],
+    [
+     [
+      "HEADING",
+      0.07
+     ],
+     [
+      "RADAR_ALT",
+      0.057
+     ],
+     [
+      "ALTIMETER",
+      0.076
+     ]
+    ],
+    [
+     [
+      "VVI",
+      0.064
+     ],
+     [
+      "AMMO",
+      0.057
+     ],
+     [
+      "FUEL_QTY",
+      0.064
+     ]
+    ]
+   ],
+   "centre_fill": [
+    [
+     [
+      "G_METER",
+      0.05
+     ],
+     [
+      "CLOCK",
+      0.05
+     ],
+     [
+      "FILLER_OXYGEN",
+      0.044
+     ]
+    ]
+   ],
+   "left": [
+    [
+     [
+      "MACH",
+      0.057
+     ],
+     [
+      "G_METER",
+      0.05
+     ]
+    ],
+    [
+     [
+      "ALTIMETER",
+      0.064
+     ],
+     [
+      "CLOCK",
+      0.05
+     ]
+    ]
+   ],
+   "left_fill": [
+    [
+     [
+      "FILLER_VOLTS",
+      0.044
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.044
+     ]
+    ]
+   ],
+   "right": [
+    [
+     [
+      "ENGINE_RPM",
+      0.064
+     ],
+     [
+      "EGT",
+      0.057
+     ]
+    ],
+    [
+     [
+      "FILLER_OIL",
+      0.05
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.05
+     ]
+    ],
+    [
+     [
+      "FILLER_TEMP",
+      0.044
+     ],
+     [
+      "FILLER_VOLTS",
+      0.044
+     ]
+    ]
+   ],
+   "right_fill": [
+    [
+     [
+      "FILLER_FUEL",
+      0.044
+     ],
+     [
+      "FILLER_OXYGEN",
+      0.044
+     ]
+    ]
+   ],
+   "hud": false,
+   "displays": "CRT",
+   "seat": "ejection",
+   "eyebrows": false,
+   "notes": "Mirage 5 uses the Mirage III panel without the Cyrano scope: SFOM/CSF collimator sight on the coaming, a large sphere ADI top centre with the big airspeed dial and Mach meter left of it and the radio altimeter, TACAN distance/heading repeater and altimeter right of it; CYCLOPE compass repeater and variometer below left, fuel quantity (combustible), Atar RPM (x100) and EGT (\u00b0C x100) in a column on the right; accelerometer and standby altimeter low left; warning lamp block top right. Photos are Mirage IIIC/IIIE/IIIR, which share the panel.",
+   "sources": [
+    "/mnt/project-files/cockpit-refs/mirage_5/mirage_5_04.jpg (Mirage IIIE front panel)",
+    "/mnt/project-files/cockpit-refs/mirage_5/mirage_5_01.jpg (IIIR)",
+    "/mnt/project-files/cockpit-refs/mirage_5/mirage_5_05.jpg",
+    "https://commons.wikimedia.org/wiki/File:Cockpit_Mirage_IIIE_(MAA).JPG",
+    "https://commons.wikimedia.org/wiki/File:Cockpit_Mirage_IIIR_01.jpg"
+   ]
+  },
+  "saab_29_tunnan": {
+   "centre": [
+    [
+     [
+      "AIRSPEED",
+      0.076
+     ],
+     [
+      "ATTITUDE",
+      0.082
+     ],
+     [
+      "ALTIMETER",
+      0.076
+     ]
+    ],
+    [
+     [
+      "TURN_SLIP",
+      0.064
+     ],
+     [
+      "HEADING",
+      0.082
+     ],
+     [
+      "VVI",
+      0.064
+     ]
+    ],
+    [
+     [
+      "ENGINE_RPM",
+      0.07
+     ],
+     [
+      "EGT",
+      0.064
+     ],
+     [
+      "FUEL_QTY",
+      0.064
+     ]
+    ]
+   ],
+   "centre_fill": [
+    [
+     [
+      "CLOCK",
+      0.05
+     ],
+     [
+      "FILLER_OIL",
+      0.05
+     ],
+     [
+      "FILLER_VOLTS",
+      0.044
+     ]
+    ]
+   ],
+   "left": [
+    [
+     [
+      "G_METER",
+      0.057
+     ],
+     [
+      "AMMO",
+      0.057
+     ]
+    ],
+    [
+     [
+      "MACH",
+      0.057
+     ],
+     [
+      "CLOCK",
+      0.05
+     ]
+    ]
+   ],
+   "left_fill": [
+    [
+     [
+      "FILLER_HYDRAULIC",
+      0.044
+     ],
+     [
+      "FILLER_OXYGEN",
+      0.044
+     ]
+    ]
+   ],
+   "right": [
+    [
+     [
+      "FILLER_TEMP",
+      0.05
+     ],
+     [
+      "FILLER_OIL",
+      0.05
+     ]
+    ],
+    [
+     [
+      "FILLER_VOLTS",
+      0.05
+     ],
+     [
+      "FILLER_OXYGEN",
+      0.05
+     ]
+    ]
+   ],
+   "right_fill": [
+    [
+     [
+      "FILLER_FUEL",
+      0.044
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.044
+     ]
+    ]
+   ],
+   "hud": false,
+   "displays": "CRT",
+   "seat": "ejection",
+   "eyebrows": false,
+   "notes": "J 29F: small flat green panel, no annunciator strip. Flight dials in two rows (airspeed, horizon, altimeter / turn-and-bank, gyro compass, variometer), with the Ghost engine group (RPM, exhaust temperature, fuel) in a third row and a bracketed clock/accelerometer on the left; the gunsight (Sikte 7) is mounted on the hood above. Single photo of a museum J 29F.",
+   "sources": [
+    "/mnt/project-files/cockpit-refs/saab_29_tunnan/saab_29_tunnan_01.jpg",
+    "https://commons.wikimedia.org/wiki/File:J_29F_cockpit.jpg"
+   ]
+  },
+  "sabre_mk_6": {
+   "centre": [
+    [
+     [
+      "A:cw",
+      0.15,
+      0.036
+     ]
+    ],
+    [
+     [
+      "AIRSPEED",
+      0.076
+     ],
+     [
+      "ATTITUDE",
+      0.082
+     ],
+     [
+      "ALTIMETER",
+      0.076
+     ]
+    ],
+    [
+     [
+      "MACH",
+      0.057
+     ],
+     [
+      "HEADING",
+      0.082
+     ],
+     [
+      "VVI",
+      0.064
+     ]
+    ],
+    [
+     [
+      "TURN_SLIP",
+      0.057
+     ],
+     [
+      "G_METER",
+      0.057
+     ],
+     [
+      "CLOCK",
+      0.057
+     ]
+    ]
+   ],
+   "centre_fill": [
+    [
+     [
+      "FILLER_OXYGEN",
+      0.044
+     ],
+     [
+      "FILLER_VOLTS",
+      0.044
+     ]
+    ]
+   ],
+   "left": [
+    [
+     [
+      "AMMO",
+      0.057
+     ],
+     [
+      "RADAR_ALT",
+      0.057
+     ]
+    ],
+    [
+     [
+      "FILLER_HYDRAULIC",
+      0.05
+     ],
+     [
+      "FILLER_FUEL",
+      0.05
+     ]
+    ]
+   ],
+   "left_fill": [
+    [
+     [
+      "FILLER_CLOCK",
+      0.044
+     ]
+    ]
+   ],
+   "right": [
+    [
+     [
+      "ENGINE_RPM",
+      0.064
+     ],
+     [
+      "EGT",
+      0.064
+     ]
+    ],
+    [
+     [
+      "FUEL_QTY",
+      0.064
+     ],
+     [
+      "FILLER_OIL",
+      0.05
+     ]
+    ],
+    [
+     [
+      "FILLER_TEMP",
+      0.05
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.05
+     ]
+    ]
+   ],
+   "right_fill": [
+    [
+     [
+      "FILLER_VOLTS",
+      0.044
+     ],
+     [
+      "FILLER_OXYGEN",
+      0.044
+     ]
+    ]
+   ],
+   "hud": false,
+   "displays": "CRT",
+   "seat": "ejection",
+   "eyebrows": false,
+   "notes": "Canadair Sabre Mk 6 (F-86F family): A-4 gunsight on the coaming. Flight group centre as in the Mk.1 photo (airspeed, direction/gyro compass, attitude on the top row; altimeter, turn-and-slip, climb below), accelerometer/volts/exhaust-temp small dials along the top edge, Orenda engine group (RPM, EGT, fuel quantity, oil and hydraulic pressure) right of the stick, oxygen/cabin gauges lower left. The Mk 6 panel is the F-86F-type arrangement; the Alberta photo is a Mk.1 (F-86A layout) and the Avon Sabre photos differ (Avon), so the row order follows the F-86F guide.",
+   "sources": [
+    "/mnt/project-files/cockpit-refs/sabre_mk_6/sabre_mk_6_01.jpg (Sabre Mk.1 front panel)",
+    "/mnt/project-files/cockpit-refs/sabre_mk_6/sabre_mk_6_06.jpg",
+    "/mnt/project-files/cockpit-refs/f_86k/guide/p-013.jpg (DCS F-86F, layout reference only)",
+    "https://commons.wikimedia.org/wiki/File:Canadair_Sabre_Mk._1_cockpit_at_the_Alberta_Aviation_Museum.JPG"
+   ]
+  },
+  "su_39": {
+   "centre": [
+    [
+     [
+      "A:cw",
+      0.2,
+      0.04
+     ]
+    ],
+    [
+     [
+      "AIRSPEED",
+      0.076
+     ],
+     [
+      "ATTITUDE",
+      0.082
+     ],
+     [
+      "VVI",
+      0.064
+     ]
+    ],
+    [
+     [
+      "ALTIMETER",
+      0.076
+     ],
+     [
+      "HEADING",
+      0.082
+     ],
+     [
+      "MACH",
+      0.064
+     ]
+    ],
+    [
+     [
+      "RADAR_ALT",
+      0.064
+     ],
+     [
+      "CLOCK",
+      0.057
+     ],
+     [
+      "AOA",
+      0.057
+     ]
+    ]
+   ],
+   "centre_fill": [
+    [
+     [
+      "TURN_SLIP",
+      0.044
+     ],
+     [
+      "FILLER_OXYGEN",
+      0.044
+     ],
+     [
+      "FILLER_VOLTS",
+      0.044
+     ]
+    ]
+   ],
+   "left": [
+    [
+     [
+      "G_METER",
+      0.057
+     ],
+     [
+      "AMMO",
+      0.057
+     ]
+    ],
+    [
+     [
+      "RWR",
+      0.064
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.05
+     ]
+    ]
+   ],
+   "left_fill": [
+    [
+     [
+      "FILLER_FUEL",
+      0.044
+     ],
+     [
+      "FILLER_CLOCK",
+      0.044
+     ]
+    ]
+   ],
+   "right": [
+    [
+     [
+      "D:RADAR",
+      0.165
+     ]
+    ],
+    [
+     [
+      "ENGINE_RPM",
+      0.05
+     ],
+     [
+      "ENGINE_RPM",
+      0.05
+     ]
+    ],
+    [
+     [
+      "EGT",
+      0.044
+     ],
+     [
+      "EGT",
+      0.044
+     ]
+    ]
+   ],
+   "right_fill": [
+    [
+     [
+      "FUEL_QTY",
+      0.057
+     ],
+     [
+      "FILLER_OIL",
+      0.044
+     ]
+    ]
+   ],
+   "eyebrows": true,
+   "hud": true,
+   "displays": "CRT",
+   "seat": "ejection",
+   "hinge_frac": 0.6,
+   "notes": "Su-39 (Su-25TM): Su-25 panel with the Shkval/Kopyo monitor added. Left: UUAP AOA/G combo top-left, KUS airspeed, VD altimeter, RV-15 radio altimeter and DME counter; centre: KPP/AGR attitude over the PNP/HSI; right: DA-200 VVI/turn, Mach, the \u0422\u041e\u041f\u041b\u0418\u0412\u041e fuel tape, twin R-195 tachs and EGT pairs, fire lamps; armament/warning lamp block on the upper right. The IT-23M TV monitor (Shkval image and the Kopyo-25 radar picture) sits top right of the panel (D:RADAR on the right wing); the ASP-17BTs-8 HUD is on the coaming. Layout from the Su-25 photo; the TM-specific display placement is from general knowledge, no TM photo in the refs.",
+   "sources": [
+    "/mnt/project-files/cockpit-refs/su_25/su_25_01.jpg (Su-25 front panel)",
+    "/mnt/project-files/cockpit-refs/su_25/su_25_02.jpg",
+    "https://commons.wikimedia.org/wiki/File:%D0%9F%D1%80%D0%B8%D0%B1%D0%BE%D1%80%D0%BD%D0%B0%D1%8F_%D0%BF%D0%B0%D0%BD%D0%B5%D0%BB%D1%8C_%D1%88%D1%82%D1%83%D1%80%D0%BC%D0%BE%D0%B2%D0%B8%D0%BA%D0%B0_%D0%A1%D1%83-25.jpg",
+    "(Su-25T/TM IT-23M monitor placement: general knowledge of the Su-25T cockpit; web search budget exhausted this turn)"
+   ]
+  },
+  "yak_3": {
+   "centre": [
+    [
+     [
+      "AIRSPEED",
+      0.076
+     ],
+     [
+      "TURN_SLIP",
+      0.076
+     ],
+     [
+      "ALTIMETER",
+      0.076
+     ]
+    ],
+    [
+     [
+      "HEADING",
+      0.07
+     ],
+     [
+      "ENGINE_RPM",
+      0.076
+     ],
+     [
+      "THROTTLE",
+      0.07
+     ]
+    ],
+    [
+     [
+      "FILLER_TEMP",
+      0.057
+     ],
+     [
+      "FILLER_OIL",
+      0.057
+     ],
+     [
+      "FUEL_QTY",
+      0.057
+     ]
+    ]
+   ],
+   "centre_fill": [
+    [
+     [
+      "CLOCK",
+      0.05
+     ],
+     [
+      "FILLER_VOLTS",
+      0.044
+     ]
+    ]
+   ],
+   "left": [
+    [
+     [
+      "CLOCK",
+      0.057
+     ],
+     [
+      "AMMO",
+      0.057
+     ]
+    ]
+   ],
+   "left_fill": [
+    [
+     [
+      "FILLER_OXYGEN",
+      0.044
+     ]
+    ]
+   ],
+   "right": [
+    [
+     [
+      "VVI",
+      0.057
+     ],
+     [
+      "FILLER_TEMP",
+      0.05
+     ]
+    ],
+    [
+     [
+      "FILLER_OXYGEN",
+      0.05
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.05
+     ]
+    ]
+   ],
+   "right_fill": [
+    [
+     [
+      "FILLER_FUEL",
+      0.044
+     ]
+    ]
+   ],
+   "hud": false,
+   "displays": "CRT",
+   "seat": "bucket",
+   "eyebrows": false,
+   "notes": "Yak-3: sparse black panel, no artificial horizon on the production day fighter. Left/centre: US-800 airspeed, the Pioner combined turn/slip/climb, VD altimeter, KI-11 magnetic compass; engine group for the VK-105PF to the right of centre: tachometer, manifold pressure (mapped to THROTTLE), 3-in-1 oil/water temperature and pressure, fuel gauge; PBP-1a reflector sight on top; clock and ammo counters left. No reference folder; from general knowledge of the Yak-3 technical description, moderate confidence.",
+   "sources": [
+    "(no ref folder; web search budget exhausted this turn) general knowledge of the Yak-3 technical description / Yak-1b-Yak-9 panel family"
+   ]
+  },
+  "f3h": {
+   "centre": [
+    [
+     [
+      "A:cw",
+      0.215,
+      0.044
+     ]
+    ],
+    [
+     [
+      "D:RADAR",
+      0.175
+     ]
+    ],
+    [
+     [
+      "AIRSPEED",
+      0.076
+     ],
+     [
+      "ATTITUDE",
+      0.082
+     ],
+     [
+      "ALTIMETER",
+      0.076
+     ]
+    ],
+    [
+     [
+      "TURN_SLIP",
+      0.064
+     ],
+     [
+      "HEADING",
+      0.082
+     ],
+     [
+      "VVI",
+      0.064
+     ]
+    ]
+   ],
+   "centre_fill": [
+    [
+     [
+      "CLOCK",
+      0.05
+     ],
+     [
+      "FILLER_OXYGEN",
+      0.044
+     ],
+     [
+      "FILLER_VOLTS",
+      0.044
+     ]
+    ]
+   ],
+   "left": [
+    [
+     [
+      "MACH",
+      0.064
+     ],
+     [
+      "AOA",
+      0.057
+     ]
+    ],
+    [
+     [
+      "G_METER",
+      0.057
+     ],
+     [
+      "AMMO",
+      0.057
+     ]
+    ],
+    [
+     [
+      "RADAR_ALT",
+      0.057
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.05
+     ]
+    ]
+   ],
+   "left_fill": [
+    [
+     [
+      "THROTTLE",
+      0.05
+     ],
+     [
+      "FILLER_TEMP",
+      0.05
+     ]
+    ]
+   ],
+   "right": [
+    [
+     [
+      "ENGINE_RPM",
+      0.064
+     ],
+     [
+      "EGT",
+      0.064
+     ]
+    ],
+    [
+     [
+      "FUEL_QTY",
+      0.064
+     ],
+     [
+      "FILLER_OIL",
+      0.05
+     ]
+    ],
+    [
+     [
+      "FILLER_FUEL",
+      0.05
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.05
+     ]
+    ]
+   ],
+   "right_fill": [
+    [
+     [
+      "FILLER_TEMP",
+      0.044
+     ],
+     [
+      "FILLER_CLOCK",
+      0.044
+     ]
+    ]
+   ],
+   "hud": false,
+   "displays": "CRT",
+   "seat": "ejection",
+   "eyebrows": false,
+   "notes": "F3H-2 all-weather fighter: AN/APG-51 scope under a rubber hood at top centre above the flight 'T' (airspeed / attitude / altimeter, turn-slip / BDHI / VSI); single J71 engine cluster (RPM, EGT, fuel flow, oil press) and fuel quantity on the right side, Mach, AoA, accelerometer and armament on the left. Layout follows 1950s USN single-seat radar-fighter practice (same arrangement as the F-86D/K interceptor panel and the early F-8); no F3H-specific photo or manual could be verified in this session (web search budget exhausted).",
+   "sources": [
+    "/mnt/project-files/cockpit-refs/f_86k/f_86k_01.jpg (F-86D interceptor panel, same era, radar scope hood top centre)",
+    "/mnt/project-files/cockpit-refs/f_8h/sources.md (F-8 panel, USN practice)",
+    "NAVAER 01-85FGA-501 F3H-2 NATOPS flight manual (not fetched; layout from memory of its panel figure)"
+   ]
+  },
+  "f_14d": {
+   "centre": [
+    [
+     [
+      "A:cw",
+      0.215,
+      0.044
+     ]
+    ],
+    [
+     [
+      "D:PFD",
+      0.215
+     ]
+    ],
+    [
+     [
+      "D:RADAR",
+      0.215
+     ]
+    ],
+    [
+     [
+      "AIRSPEED",
+      0.057
+     ],
+     [
+      "ATTITUDE",
+      0.064
+     ],
+     [
+      "ALTIMETER",
+      0.057
+     ],
+     [
+      "VVI",
+      0.05
+     ]
+    ]
+   ],
+   "centre_fill": [
+    [
+     [
+      "FILLER_HYDRAULIC",
+      0.044
+     ],
+     [
+      "FILLER_OXYGEN",
+      0.044
+     ],
+     [
+      "CLOCK",
+      0.044
+     ]
+    ]
+   ],
+   "left": [
+    [
+     [
+      "AOA",
+      0.05
+     ],
+     [
+      "G_METER",
+      0.05
+     ]
+    ],
+    [
+     [
+      "AIRSPEED",
+      0.064
+     ],
+     [
+      "MACH",
+      0.064
+     ]
+    ],
+    [
+     [
+      "ALTIMETER",
+      0.064
+     ],
+     [
+      "VVI",
+      0.057
+     ]
+    ]
+   ],
+   "left_fill": [
+    [
+     [
+      "AMMO",
+      0.044
+     ],
+     [
+      "FILLER_VOLTS",
+      0.044
+     ]
+    ]
+   ],
+   "right": [
+    [
+     [
+      "ATTITUDE",
+      0.064
+     ],
+     [
+      "RWR",
+      0.064
+     ]
+    ],
+    [
+     [
+      "ENGINE_RPM",
+      0.05
+     ],
+     [
+      "EGT",
+      0.05
+     ],
+     [
+      "FILLER_FUEL",
+      0.044
+     ]
+    ],
+    [
+     [
+      "FUEL_QTY",
+      0.064
+     ],
+     [
+      "RADAR_ALT",
+      0.05
+     ]
+    ]
+   ],
+   "right_fill": [
+    [
+     [
+      "FILLER_OIL",
+      0.044
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.044
+     ],
+     [
+      "CLOCK",
+      0.044
+     ]
+    ]
+   ],
+   "eyebrows": true,
+   "hud": true,
+   "displays": "CRT",
+   "seat": "ejection",
+   "hinge_frac": 0.62,
+   "notes": "F-14D pilot's panel: HUD on the glareshield, two stacked square displays in the centre (the upper MFD in the old VDI position, the lower one in the HSD position, each flanked by caution/advisory lamp columns); AoA indexer tape and accelerometer top left, airspeed-Mach and altimeter on the left wing, standby ADI, ALR-67 azimuth scope, twin-engine RPM/EGT/fuel-flow cluster, fuel quantity and radar altimeter on the right wing. Drawn from the F-14A photo of the same panel (ECN-13222) with the D's display substitution.",
+   "sources": [
+    "/mnt/project-files/cockpit-refs/f_14d/f_14d_03.jpg",
+    "/mnt/project-files/cockpit-refs/f_14d/sources.md",
+    "/mnt/project-files/cockpit-refs/f_14a/ (F-14 front cockpit photos, guide pages used as layout reference only)",
+    "https://commons.wikimedia.org/wiki/File:ECN-13222-small.jpg",
+    "NAVAIR 01-F14AAD-1 F-14D NATOPS (panel figure, from memory; not fetched)"
+   ]
+  },
+  "f_5a": {
+   "centre": [
+    [
+     [
+      "AIRSPEED",
+      0.076
+     ],
+     [
+      "ATTITUDE",
+      0.082
+     ],
+     [
+      "ALTIMETER",
+      0.076
+     ]
+    ],
+    [
+     [
+      "HEADING",
+      0.076
+     ],
+     [
+      "TURN_SLIP",
+      0.07
+     ],
+     [
+      "VVI",
+      0.076
+     ]
+    ],
+    [
+     [
+      "FILLER_OXYGEN",
+      0.057
+     ],
+     [
+      "CLOCK",
+      0.057
+     ],
+     [
+      "RADAR_ALT",
+      0.057
+     ]
+    ]
+   ],
+   "centre_fill": [
+    [
+     [
+      "FILLER_VOLTS",
+      0.044
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.044
+     ]
+    ]
+   ],
+   "left": [
+    [
+     [
+      "G_METER",
+      0.064
+     ],
+     [
+      "MACH",
+      0.057
+     ]
+    ],
+    [
+     [
+      "THROTTLE",
+      0.057
+     ],
+     [
+      "AMMO",
+      0.057
+     ]
+    ]
+   ],
+   "left_fill": [
+    [
+     [
+      "FILLER_TEMP",
+      0.044
+     ],
+     [
+      "FILLER_OXYGEN",
+      0.044
+     ]
+    ]
+   ],
+   "right": [
+    [
+     [
+      "ENGINE_RPM",
+      0.05
+     ],
+     [
+      "ENGINE_RPM",
+      0.05
+     ]
+    ],
+    [
+     [
+      "EGT",
+      0.05
+     ],
+     [
+      "EGT",
+      0.05
+     ]
+    ],
+    [
+     [
+      "FILLER_OIL",
+      0.05
+     ],
+     [
+      "FILLER_OIL",
+      0.05
+     ]
+    ],
+    [
+     [
+      "FILLER_FUEL",
+      0.05
+     ],
+     [
+      "FUEL_QTY",
+      0.05
+     ]
+    ]
+   ],
+   "right_fill": [
+    [
+     [
+      "FILLER_HYDRAULIC",
+      0.044
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.044
+     ]
+    ]
+   ],
+   "hud": false,
+   "displays": "CRT",
+   "seat": "ejection",
+   "eyebrows": false,
+   "notes": "F-5A: optical sight on the coaming, no HUD. Centre: accelerometer and elevator-trim dial top left, then airspeed/Mach - attitude - altimeter, below them course (ILS/TACAN) indicator - magnetic compass - VSI, cabin-pressure altimeter bottom. Right wing is the twin-engine column: 2x RPM, 2x EGT, 2x nozzle position, 2x oil pressure, 2x fuel flow, 2x fuel quantity with two small hydraulic gauges; left wing: armament panel, flap indicator, sight reticle controls.",
+   "sources": [
+    "/mnt/project-files/cockpit-refs/f_5a/f_5a_01.jpg",
+    "/mnt/project-files/cockpit-refs/f_5a/f_5a_04.jpg",
+    "/mnt/project-files/cockpit-refs/f_5a/f_5a_06.jpg",
+    "https://commons.wikimedia.org/wiki/File:Northrop_F-5A(G)_Freedom_Fighter_flight_deck.jpg",
+    "https://commons.wikimedia.org/wiki/File:Cockpit_of_F-5_Freedom_Fighter-Flight_instruments.jpg",
+    "https://commons.wikimedia.org/wiki/File:Cockpit-F5FreedomFighter.jpg"
+   ]
+  },
+  "ho_229": {
+   "centre": [
+    [
+     [
+      "AIRSPEED",
+      0.08
+     ],
+     [
+      "ALTIMETER",
+      0.08
+     ],
+     [
+      "VVI",
+      0.08
+     ]
+    ],
+    [
+     [
+      "TURN_SLIP",
+      0.08
+     ],
+     [
+      "HEADING",
+      0.08
+     ],
+     [
+      "CLOCK",
+      0.057
+     ]
+    ]
+   ],
+   "centre_fill": [
+    [
+     [
+      "FILLER_OXYGEN",
+      0.05
+     ],
+     [
+      "FILLER_VOLTS",
+      0.05
+     ]
+    ]
+   ],
+   "left": [
+    [
+     [
+      "FUEL_QTY",
+      0.057
+     ],
+     [
+      "AMMO",
+      0.057
+     ]
+    ]
+   ],
+   "left_fill": [
+    [
+     [
+      "FILLER_FUEL",
+      0.05
+     ]
+    ]
+   ],
+   "right": [
+    [
+     [
+      "ENGINE_RPM",
+      0.057
+     ],
+     [
+      "ENGINE_RPM",
+      0.057
+     ]
+    ],
+    [
+     [
+      "EGT",
+      0.057
+     ],
+     [
+      "EGT",
+      0.057
+     ]
+    ],
+    [
+     [
+      "FILLER_OIL",
+      0.05
+     ],
+     [
+      "FILLER_OIL",
+      0.05
+     ]
+    ]
+   ],
+   "right_fill": [
+    [
+     [
+      "FILLER_FUEL",
+      0.044
+     ],
+     [
+      "FILLER_FUEL",
+      0.044
+     ]
+    ]
+   ],
+   "hud": false,
+   "displays": "CRT",
+   "seat": "bucket",
+   "eyebrows": false,
+   "notes": "Ho 229 V3 as planned (Go 229 A-0 / Ho IX V2 drawings): a very small plate between the intakes with Revi 16B sight above it. Flight group: Fahrtmesser, Hoehenmesser, Variometer, Wendezeiger and repeater compass (AFN2/FK38) with a Borduhr; engine group for the two Jumo 004B on the right in pairs: Drehzahl, Abgastemperatur, Oeldruck/Kraftstoffdruck; fuel contents and gun (4x MK 103 planned) counter on the left. No attitude gyro and no warning-lamp strip. Reconstructed from the Horten/Gotha drawings and Ho IX V2 descriptions, not from a photo (the V3 shell at Udvar-Hazy was never fitted out).",
+   "sources": [
+    "Gothaer Waggonfabrik Go 229 cockpit drawings as reproduced in Shepelev & Ottens, 'Horten Ho 229 Spirit of Thuringia' (2006) (from memory; not fetched)",
+    "Smithsonian NASM Horten Ho 229 V3 object page https://airandspace.si.edu/collection-objects/horten-ho-229-v3 (not fetched this session: web budget exhausted)"
+   ]
+  },
+  "j_26": {
+   "centre": [
+    [
+     [
+      "FILLER_CLOCK",
+      0.07
+     ],
+     [
+      "CLOCK",
+      0.057
+     ],
+     [
+      "FILLER_VOLTS",
+      0.044
+     ],
+     [
+      "THROTTLE",
+      0.076
+     ]
+    ],
+    [
+     [
+      "AIRSPEED",
+      0.076
+     ],
+     [
+      "HEADING",
+      0.082
+     ],
+     [
+      "ATTITUDE",
+      0.082
+     ]
+    ],
+    [
+     [
+      "ALTIMETER",
+      0.076
+     ],
+     [
+      "TURN_SLIP",
+      0.076
+     ],
+     [
+      "VVI",
+      0.076
+     ]
+    ]
+   ],
+   "centre_fill": [
+    [
+     [
+      "FILLER_OXYGEN",
+      0.05
+     ],
+     [
+      "FUEL_QTY",
+      0.05
+     ]
+    ]
+   ],
+   "left": [
+    [
+     [
+      "FILLER_OXYGEN",
+      0.057
+     ],
+     [
+      "G_METER",
+      0.05
+     ]
+    ]
+   ],
+   "left_fill": [
+    [
+     [
+      "AMMO",
+      0.044
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.044
+     ]
+    ]
+   ],
+   "right": [
+    [
+     [
+      "FILLER_TEMP",
+      0.05
+     ],
+     [
+      "ENGINE_RPM",
+      0.076
+     ]
+    ],
+    [
+     [
+      "FILLER_TEMP",
+      0.05
+     ],
+     [
+      "FILLER_OIL",
+      0.076
+     ]
+    ]
+   ],
+   "right_fill": [
+    [
+     [
+      "FUEL_QTY",
+      0.05
+     ],
+     [
+      "FILLER_FUEL",
+      0.044
+     ]
+    ]
+   ],
+   "hud": false,
+   "displays": "CRT",
+   "seat": "bucket",
+   "eyebrows": false,
+   "notes": "J 26 = P-51D with US instrumentation, K-14 sight above the panel. One flat plate: top row remote-compass indicator, 8-day clock, suction gauge, manifold pressure; middle row airspeed - directional gyro - attitude gyro, with coolant temp and tachometer to the right; bottom row altimeter - turn & bank - vertical speed, carburettor air temp and the oil temp/oil press/fuel press triple gauge to the right. Oxygen flow/pressure lower left; fuel quantity gauges are not on the panel (wing-root floor gauges). The Swedish museum J 26 panel matches the USAAF P-51D photo.",
+   "sources": [
+    "/mnt/project-files/cockpit-refs/j_26/j_26_01.jpg",
+    "/mnt/project-files/cockpit-refs/p_51d/p_51d_01.jpg",
+    "/mnt/project-files/cockpit-refs/p_51d/p_51d_02.jpg",
+    "https://commons.wikimedia.org/wiki/File:J_26_North_American_P-51D_Mustang.jpg",
+    "https://commons.wikimedia.org/wiki/File:North_American_P-51D_Mustang_cockpit.jpg",
+    "https://commons.wikimedia.org/wiki/File:P-51_instrument_panel.jpg",
+    "AN 01-60JE-1 P-51D Pilot's Flight Operating Instructions, instrument panel figure (from memory)"
+   ]
+  },
+  "mig_15bis": {
+   "centre": [
+    [
+     [
+      "AIRSPEED",
+      0.082
+     ],
+     [
+      "ATTITUDE",
+      0.082
+     ],
+     [
+      "HEADING",
+      0.082
+     ]
+    ],
+    [
+     [
+      "ALTIMETER",
+      0.076
+     ],
+     [
+      "MACH",
+      0.064
+     ],
+     [
+      "FUEL_QTY",
+      0.064
+     ]
+    ],
+    [
+     [
+      "TURN_SLIP",
+      0.064
+     ],
+     [
+      "VVI",
+      0.076
+     ],
+     [
+      "CLOCK",
+      0.057
+     ]
+    ]
+   ],
+   "centre_fill": [
+    [
+     [
+      "FILLER_VOLTS",
+      0.044
+     ],
+     [
+      "FILLER_OXYGEN",
+      0.044
+     ]
+    ]
+   ],
+   "left": [
+    [
+     [
+      "FILLER_OXYGEN",
+      0.057
+     ],
+     [
+      "AMMO",
+      0.057
+     ]
+    ],
+    [
+     [
+      "RADAR_ALT",
+      0.05
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.05
+     ]
+    ]
+   ],
+   "left_fill": [
+    [
+     [
+      "G_METER",
+      0.044
+     ],
+     [
+      "THROTTLE",
+      0.044
+     ]
+    ]
+   ],
+   "right": [
+    [
+     [
+      "ENGINE_RPM",
+      0.07
+     ],
+     [
+      "FILLER_OIL",
+      0.064
+     ]
+    ],
+    [
+     [
+      "TURN_SLIP",
+      0.057
+     ],
+     [
+      "EGT",
+      0.064
+     ]
+    ],
+    [
+     [
+      "FILLER_TEMP",
+      0.057
+     ],
+     [
+      "FILLER_FUEL",
+      0.05
+     ]
+    ]
+   ],
+   "right_fill": [
+    [
+     [
+      "FILLER_VOLTS",
+      0.044
+     ],
+     [
+      "FILLER_CLOCK",
+      0.044
+     ]
+    ]
+   ],
+   "hud": false,
+   "displays": "CRT",
+   "seat": "ejection",
+   "eyebrows": false,
+   "notes": "MiG-15bis: ASP-3N sight on top, black panel split by the white vertical stripe (stick-centring mark). Left of the stripe: KUS-1200 airspeed top left, AGK-47B horizon top centre, VD-17 altimeter and M-0.95 Mach meter in the second row, VAR-75 VSI and radio-compass/turn indicators below; right of the stripe: DGMK-3 gyro-magnetic compass over the fuel-quantity gauge and warning lamps; the engine block further right: TE-15 tachometer, EMI-3R three-pointer oil/fuel, EUP-46 turn indicator, TVG exhaust temperature, oil temp. Oxygen (KP-14) and the ammunition counter on the left console panel; no annunciator strip.",
+   "sources": [
+    "/mnt/project-files/cockpit-refs/mig_15bis/mig_15bis_01.jpg",
+    "/mnt/project-files/cockpit-refs/mig_15bis/mig_15bis_02.jpg",
+    "https://commons.wikimedia.org/wiki/File:Cockpit_MiG-15_(5718106817).jpg",
+    "https://commons.wikimedia.org/wiki/File:VH-DIE_PZL-Mielec_SBLim-2_Hempels_Aviation_(8310107744).jpg",
+    "/mnt/project-files/cockpit-refs/mig_15bis/guide/ (layout reference only)"
+   ]
+  },
+  "mirage_f1": {
+   "centre": [
+    [
+     [
+      "A:cw",
+      0.215,
+      0.044
+     ]
+    ],
+    [
+     [
+      "AIRSPEED",
+      0.076
+     ],
+     [
+      "ATTITUDE",
+      0.082
+     ],
+     [
+      "ALTIMETER",
+      0.076
+     ]
+    ],
+    [
+     [
+      "MACH",
+      0.064
+     ],
+     [
+      "HEADING",
+      0.082
+     ],
+     [
+      "VVI",
+      0.064
+     ]
+    ],
+    [
+     [
+      "AOA",
+      0.057
+     ],
+     [
+      "G_METER",
+      0.057
+     ],
+     [
+      "FUEL_QTY",
+      0.064
+     ],
+     [
+      "CLOCK",
+      0.05
+     ]
+    ]
+   ],
+   "centre_fill": [
+    [
+     [
+      "TURN_SLIP",
+      0.044
+     ],
+     [
+      "FILLER_OXYGEN",
+      0.044
+     ],
+     [
+      "FILLER_VOLTS",
+      0.044
+     ]
+    ]
+   ],
+   "left": [
+    [
+     [
+      "ENGINE_RPM",
+      0.064
+     ],
+     [
+      "EGT",
+      0.064
+     ]
+    ],
+    [
+     [
+      "THROTTLE",
+      0.057
+     ],
+     [
+      "FILLER_OIL",
+      0.05
+     ]
+    ],
+    [
+     [
+      "AMMO",
+      0.057
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.05
+     ]
+    ]
+   ],
+   "left_fill": [
+    [
+     [
+      "FILLER_TEMP",
+      0.044
+     ],
+     [
+      "FILLER_FUEL",
+      0.044
+     ]
+    ]
+   ],
+   "right": [
+    [
+     [
+      "D:RADAR",
+      0.165
+     ]
+    ],
+    [
+     [
+      "RWR",
+      0.057
+     ],
+     [
+      "RADAR_ALT",
+      0.05
+     ]
+    ]
+   ],
+   "right_fill": [
+    [
+     [
+      "FILLER_HYDRAULIC",
+      0.044
+     ],
+     [
+      "FILLER_CLOCK",
+      0.044
+     ]
+    ]
+   ],
+   "hud": false,
+   "displays": "CRT",
+   "seat": "ejection",
+   "eyebrows": true,
+   "notes": "Mirage F1C: CSF-97 sight on the coaming (no HUD), the Cyrano IV radar scope under a long rubber hood on the RIGHT of the main panel, 'panne' warning lamp strip top left plus the main warning panel. Centre: airspeed-Mach - sphere horizon (with ILS bars) - altimeter, HSI under the horizon with VSI, AoA, accelerometer, fuel quantity and clock; left column: Atar 9K-50 tachometer, EGT, nozzle (tuyere) position, fuel flow/oil; radar altimeter and the RWR azimuth (later fit) on the right near the scope. The F1CT photo shows a HUD; the F1C has the sight.",
+   "sources": [
+    "/mnt/project-files/cockpit-refs/mirage_f1/mirage_f1_01.jpg",
+    "https://commons.wikimedia.org/wiki/File:Cockpit_Mirage_F1_CT_-_AAT.jpg",
+    "/mnt/project-files/cockpit-refs/mirage_f1/guide/p-021.jpg (F1CE whole-panel view, layout reference only)"
+   ]
+  },
+  "saab_32_lansen": {
+   "centre": [
+    [
+     [
+      "A:cw",
+      0.215,
+      0.044
+     ]
+    ],
+    [
+     [
+      "D:RADAR",
+      0.165
+     ]
+    ],
+    [
+     [
+      "AIRSPEED",
+      0.076
+     ],
+     [
+      "ATTITUDE",
+      0.082
+     ],
+     [
+      "ALTIMETER",
+      0.076
+     ]
+    ],
+    [
+     [
+      "TURN_SLIP",
+      0.064
+     ],
+     [
+      "HEADING",
+      0.082
+     ],
+     [
+      "VVI",
+      0.064
+     ]
+    ]
+   ],
+   "centre_fill": [
+    [
+     [
+      "MACH",
+      0.057
+     ],
+     [
+      "CLOCK",
+      0.05
+     ],
+     [
+      "FILLER_OXYGEN",
+      0.044
+     ]
+    ]
+   ],
+   "left": [
+    [
+     [
+      "MACH",
+      0.064
+     ],
+     [
+      "G_METER",
+      0.057
+     ]
+    ],
+    [
+     [
+      "AMMO",
+      0.057
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.05
+     ]
+    ]
+   ],
+   "left_fill": [
+    [
+     [
+      "RADAR_ALT",
+      0.05
+     ],
+     [
+      "FILLER_VOLTS",
+      0.044
+     ]
+    ]
+   ],
+   "right": [
+    [
+     [
+      "ENGINE_RPM",
+      0.064
+     ],
+     [
+      "EGT",
+      0.064
+     ]
+    ],
+    [
+     [
+      "FUEL_QTY",
+      0.064
+     ],
+     [
+      "FILLER_OIL",
+      0.05
+     ]
+    ],
+    [
+     [
+      "FILLER_FUEL",
+      0.05
+     ],
+     [
+      "FILLER_TEMP",
+      0.05
+     ]
+    ]
+   ],
+   "right_fill": [
+    [
+     [
+      "FILLER_HYDRAULIC",
+      0.044
+     ],
+     [
+      "FILLER_CLOCK",
+      0.044
+     ]
+    ]
+   ],
+   "hud": false,
+   "displays": "CRT",
+   "seat": "ejection",
+   "eyebrows": false,
+   "notes": "J 32B front cockpit: Saab 1950s practice (as on the J 35A panel in the reference set): Sikte 6A collimator sight above, the pilot's PS-42/A radar indicator under a hood top centre, the British-style flight group below it (fartmatare, horisontgyro, hojdmatare / svangindikator, kurs, variometer), RM 6A engine group (varvraknare, EGT, bransle) on the right, Mach, g-meter and the 30 mm Aden weapons panel on the left. No J 32B-specific photo could be verified in this session; the family evidence is the Saab 29F and 35A panels.",
+   "sources": [
+    "/mnt/project-files/cockpit-refs/saab_35_draken/saab_35_draken_02.jpg (J 35A panel, same Saab generation: radar hood top centre)",
+    "/mnt/project-files/cockpit-refs/saab_29_tunnan/saab_29_tunnan_01.jpg",
+    "SFI J 32B (Speciell forarinstruktion, Flygvapnet) panel figure (from memory; not fetched)"
+   ]
+  },
+  "su_17": {
+   "centre": [
+    [
+     [
+      "A:cw",
+      0.215,
+      0.044
+     ]
+    ],
+    [
+     [
+      "AIRSPEED",
+      0.076
+     ],
+     [
+      "ATTITUDE",
+      0.082
+     ],
+     [
+      "ALTIMETER",
+      0.076
+     ]
+    ],
+    [
+     [
+      "MACH",
+      0.057
+     ],
+     [
+      "HEADING",
+      0.082
+     ],
+     [
+      "VVI",
+      0.064
+     ]
+    ],
+    [
+     [
+      "RADAR_ALT",
+      0.064
+     ],
+     [
+      "CLOCK",
+      0.057
+     ],
+     [
+      "TURN_SLIP",
+      0.057
+     ]
+    ]
+   ],
+   "centre_fill": [
+    [
+     [
+      "FILLER_OXYGEN",
+      0.044
+     ],
+     [
+      "FILLER_VOLTS",
+      0.044
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.044
+     ]
+    ]
+   ],
+   "left": [
+    [
+     [
+      "AOA",
+      0.057
+     ],
+     [
+      "G_METER",
+      0.057
+     ]
+    ],
+    [
+     [
+      "AMMO",
+      0.057
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.05
+     ]
+    ]
+   ],
+   "left_fill": [
+    [
+     [
+      "THROTTLE",
+      0.05
+     ],
+     [
+      "FILLER_TEMP",
+      0.05
+     ]
+    ]
+   ],
+   "right": [
+    [
+     [
+      "RWR",
+      0.064
+     ],
+     [
+      "ENGINE_RPM",
+      0.064
+     ]
+    ],
+    [
+     [
+      "EGT",
+      0.057
+     ],
+     [
+      "FUEL_QTY",
+      0.064
+     ]
+    ],
+    [
+     [
+      "FILLER_OIL",
+      0.05
+     ],
+     [
+      "FILLER_TEMP",
+      0.05
+     ]
+    ]
+   ],
+   "right_fill": [
+    [
+     [
+      "D:RADAR",
+      0.15
+     ]
+    ],
+    [
+     [
+      "FILLER_FUEL",
+      0.044
+     ],
+     [
+      "FILLER_CLOCK",
+      0.044
+     ]
+    ]
+   ],
+   "hud": false,
+   "displays": "CRT",
+   "seat": "ejection",
+   "eyebrows": false,
+   "notes": "Su-17M3/M4: ASP-17 sight on the coaming (no HUD), Soviet 1970s-80s grey-blue panel in the same family as the Su-25/MiG-23: UUA/G combined AoA-accelerometer top left, KUS airspeed, KPP attitude top centre, VD altimeter, M Mach meter, PNP nav display under the KPP with DA-200 VSI/turn, RV-5 radar altimeter and AChS clock low centre; SPO-15 'Beryoza' RWR top right, R-29 tachometer, EGT, vertical fuel tape and oil/temp on the right. The optional right-side screen is the IT-23M TV monitor of the Su-17M4 (Kh-29T/KAB) and is left as a fill row. Layout taken from the Su-25 and MiG-23 photos/diagram of the same instrument generation; no Su-17-specific photo verified this session.",
+   "sources": [
+    "/mnt/project-files/cockpit-refs/su_25/su_25_01.jpg",
+    "/mnt/project-files/cockpit-refs/mig_23mld/mig_23mld_02.jpg",
+    "/mnt/project-files/cockpit-refs/mig_23mld/sources.md",
+    "Su-17M4 RLE (\u0420\u0443\u043a\u043e\u0432\u043e\u0434\u0441\u0442\u0432\u043e \u043f\u043e \u043b\u0451\u0442\u043d\u043e\u0439 \u044d\u043a\u0441\u043f\u043b\u0443\u0430\u0442\u0430\u0446\u0438\u0438), panel figure (from memory; not fetched)"
+   ]
+  },
+  "su_57": {
+   "centre": [
+    [
+     [
+      "UFCP",
+      0.17
+     ]
+    ],
+    [
+     [
+      "D:PFD",
+      0.225
+     ],
+     [
+      "D:RADAR",
+      0.225
+     ]
+    ],
+    [
+     [
+      "ATTITUDE",
+      0.057
+     ],
+     [
+      "AIRSPEED",
+      0.05
+     ],
+     [
+      "ALTIMETER",
+      0.05
+     ],
+     [
+      "FUEL_QTY",
+      0.05
+     ]
+    ]
+   ],
+   "centre_fill": [
+    [
+     [
+      "ENGINE_RPM",
+      0.044
+     ],
+     [
+      "EGT",
+      0.044
+     ],
+     [
+      "CLOCK",
+      0.044
+     ]
+    ]
+   ],
+   "left": [
+    [
+     [
+      "AOA",
+      0.044
+     ],
+     [
+      "G_METER",
+      0.044
+     ]
+    ]
+   ],
+   "left_fill": [
+    [
+     [
+      "AMMO",
+      0.04
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.04
+     ]
+    ]
+   ],
+   "right": [
+    [
+     [
+      "RWR",
+      0.05
+     ],
+     [
+      "RADAR_ALT",
+      0.044
+     ]
+    ]
+   ],
+   "right_fill": [
+    [
+     [
+      "FILLER_OXYGEN",
+      0.04
+     ],
+     [
+      "FILLER_VOLTS",
+      0.04
+     ]
+    ]
+   ],
+   "eyebrows": true,
+   "hud": true,
+   "displays": "LCD",
+   "seat": "ejection",
+   "hinge_frac": 0.62,
+   "notes": "Su-57: wide-angle HUD, two large 15-inch MFI-35 colour displays side by side filling the centre panel with a small control/entry panel between the HUD and the screens, a small standby electronic instrument block (attitude, airspeed, altitude) below them; almost no round dials, side facets carry only a few lamps/standby gauges. Family background: the Su-27SKM/Su-35 glass panel (two MFDs over a row of standby dials) in the reference set. No Su-57 cockpit photo could be fetched this session (web budget exhausted); display count and size from published MAKS-2011/2019 cockpit photos and the Sukhoi/KRET MFI-35 description, from memory.",
+   "sources": [
+    "/mnt/project-files/cockpit-refs/su_27/su_27_07.jpg (Su-27SKM glass panel, same Sukhoi design line)",
+    "/mnt/project-files/cockpit-refs/su_27/sources.md",
+    "https://commons.wikimedia.org/wiki/File:Cockpit_of_Sukhoi_Su-27SKM.jpg"
+   ]
+  },
+  "yak_9u": {
+   "centre": [
+    [
+     [
+      "ALTIMETER",
+      0.07
+     ],
+     [
+      "AIRSPEED",
+      0.076
+     ],
+     [
+      "TURN_SLIP",
+      0.076
+     ],
+     [
+      "VVI",
+      0.076
+     ]
+    ],
+    [
+     [
+      "HEADING",
+      0.07
+     ],
+     [
+      "THROTTLE",
+      0.076
+     ],
+     [
+      "ENGINE_RPM",
+      0.076
+     ],
+     [
+      "FILLER_OIL",
+      0.07
+     ]
+    ]
+   ],
+   "centre_fill": [
+    [
+     [
+      "FILLER_TEMP",
+      0.057
+     ],
+     [
+      "FILLER_VOLTS",
+      0.044
+     ]
+    ]
+   ],
+   "left": [
+    [
+     [
+      "CLOCK",
+      0.057
+     ],
+     [
+      "FILLER_OXYGEN",
+      0.05
+     ]
+    ],
+    [
+     [
+      "FUEL_QTY",
+      0.057
+     ]
+    ]
+   ],
+   "left_fill": [
+    [
+     [
+      "G_METER",
+      0.044
+     ]
+    ]
+   ],
+   "right": [
+    [
+     [
+      "FILLER_TEMP",
+      0.064
+     ],
+     [
+      "FILLER_FUEL",
+      0.05
+     ]
+    ],
+    [
+     [
+      "FILLER_VOLTS",
+      0.044
+     ],
+     [
+      "AMMO",
+      0.044
+     ]
+    ]
+   ],
+   "right_fill": [
+    [
+     [
+      "FILLER_CLOCK",
+      0.044
+     ]
+    ]
+   ],
+   "hud": false,
+   "displays": "CRT",
+   "seat": "bucket",
+   "eyebrows": false,
+   "notes": "Yak-9U (VK-107A): PBP-1A sight above, a small black panel of two rows with no artificial horizon. Top row: VD altimeter, US-800 airspeed ('skorost'), EUP turn & bank, VR-10 vertical speed ('podyom/spusk'); second row: KI-11 compass, MAN manifold pressure, TE-22 tachometer ('ob/min'), EMI oil temp/oil press three-pointer, water temperature further right; clock and oxygen indicator on the left, fuel quantity and gun counters on the side panels. The restored flyer in the reference photos keeps the Soviet instruments in these positions (western radios added at left).",
+   "sources": [
+    "/mnt/project-files/cockpit-refs/yak_9u/yak_9u_01.jpg",
+    "/mnt/project-files/cockpit-refs/yak_9u/yak_9u_02.jpg",
+    "https://commons.wikimedia.org/wiki/File:Yakovlev_Yak-9_cockpit_(8740038058).jpg",
+    "https://commons.wikimedia.org/wiki/File:Yakovlev_Yak-9_cockpit_(8739985256).jpg"
+   ]
+  },
+  "f8f_1": {
+   "centre": [
+    [
+     [
+      "A:ww2",
+      0.11,
+      0.044
+     ]
+    ],
+    [
+     [
+      "AIRSPEED",
+      0.076
+     ],
+     [
+      "ATTITUDE",
+      0.082
+     ],
+     [
+      "ALTIMETER",
+      0.076
+     ]
+    ],
+    [
+     [
+      "TURN_SLIP",
+      0.076
+     ],
+     [
+      "HEADING",
+      0.082
+     ],
+     [
+      "VVI",
+      0.076
+     ]
+    ],
+    [
+     [
+      "CLOCK",
+      0.057
+     ],
+     [
+      "FILLER_VOLTS",
+      0.05
+     ],
+     [
+      "FILLER_OXYGEN",
+      0.05
+     ]
+    ]
+   ],
+   "centre_fill": [
+    [
+     [
+      "FILLER_HYDRAULIC",
+      0.05
+     ],
+     [
+      "FILLER_FUEL",
+      0.05
+     ]
+    ]
+   ],
+   "left": [
+    [
+     [
+      "AMMO",
+      0.05
+     ],
+     [
+      "FILLER_FUEL",
+      0.05
+     ]
+    ]
+   ],
+   "left_fill": [
+    [
+     [
+      "FILLER_CLOCK",
+      0.044
+     ]
+    ]
+   ],
+   "right": [
+    [
+     [
+      "THROTTLE",
+      0.064
+     ],
+     [
+      "ENGINE_RPM",
+      0.064
+     ]
+    ],
+    [
+     [
+      "FILLER_TEMP",
+      0.057
+     ],
+     [
+      "FILLER_OIL",
+      0.057
+     ]
+    ]
+   ],
+   "right_fill": [
+    [
+     [
+      "FUEL_QTY",
+      0.057
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.05
+     ]
+    ]
+   ],
+   "hud": false,
+   "displays": "CRT",
+   "seat": "bucket",
+   "eyebrows": false,
+   "notes": "Late-WWII USN Grumman panel: basic flight group (airspeed / gyro horizon / altimeter over turn-and-bank / directional gyro / rate of climb) in the centre, clock and misc small gauges below, engine group (manifold pressure, tachometer, cylinder head temp, oil/fuel pressure cluster, fuel quantity) stacked on the right, gun/armament switches on the left. Built from memory of the F8F-1 Pilot's Handbook (AN 01-85FD-1) and F6F/F8F museum panels; no photo could be checked this session (web search budget exhausted, no ref folder), so treat as family-level evidence.",
+   "sources": [
+    "AN 01-85FD-1 Pilot's Handbook F8F-1 (from memory; not fetched this session)"
+   ]
+  },
+  "f_15c": {
+   "centre": [
+    [
+     [
+      "UFCP",
+      0.17
+     ]
+    ],
+    [
+     [
+      "AIRSPEED",
+      0.076
+     ],
+     [
+      "ATTITUDE",
+      0.082
+     ],
+     [
+      "ALTIMETER",
+      0.076
+     ]
+    ],
+    [
+     [
+      "AOA",
+      0.064
+     ],
+     [
+      "HEADING",
+      0.082
+     ],
+     [
+      "VVI",
+      0.064
+     ]
+    ],
+    [
+     [
+      "G_METER",
+      0.057
+     ],
+     [
+      "CLOCK",
+      0.05
+     ],
+     [
+      "TURN_SLIP",
+      0.044
+     ]
+    ]
+   ],
+   "centre_fill": [
+    [
+     [
+      "FILLER_OXYGEN",
+      0.044
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.044
+     ],
+     [
+      "FILLER_VOLTS",
+      0.044
+     ]
+    ]
+   ],
+   "left": [
+    [
+     [
+      "D:RADAR",
+      0.165
+     ]
+    ],
+    [
+     [
+      "AMMO",
+      0.064
+     ],
+     [
+      "FILLER_VOLTS",
+      0.044
+     ]
+    ]
+   ],
+   "left_fill": [
+    [
+     [
+      "FILLER_HYDRAULIC",
+      0.044
+     ],
+     [
+      "FILLER_TEMP",
+      0.044
+     ]
+    ]
+   ],
+   "right": [
+    [
+     [
+      "RWR",
+      0.064
+     ],
+     [
+      "RADAR_ALT",
+      0.05
+     ]
+    ],
+    [
+     [
+      "ENGINE_RPM",
+      0.05
+     ],
+     [
+      "ENGINE_RPM",
+      0.05
+     ]
+    ],
+    [
+     [
+      "EGT",
+      0.05
+     ],
+     [
+      "EGT",
+      0.05
+     ]
+    ],
+    [
+     [
+      "FUEL_QTY",
+      0.064
+     ],
+     [
+      "FILLER_OIL",
+      0.044
+     ]
+    ]
+   ],
+   "right_fill": [
+    [
+     [
+      "FILLER_HYDRAULIC",
+      0.044
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.044
+     ]
+    ]
+   ],
+   "eyebrows": true,
+   "hud": true,
+   "displays": "CRT",
+   "seat": "ejection",
+   "hinge_frac": 0.62,
+   "notes": "Pre-MSIP F-15C: HUD above, UHF/HUD control block top centre, VSD radar CRT top-left with the armament control panel below it, TEWS RWR scope top-right. Basic T in the centre (airspeed/Mach, ADI, altimeter over AOA, HSI, VVI), accelerometer and clock lower-left of the stick. Twin-engine column on the right: RPM x2, FTIT x2, fuel flow x2, nozzle x2, oil pressure, then the fuel quantity gauge; hydraulic/pneumatic gauges beneath.",
+   "sources": [
+    "/mnt/project-files/cockpit-refs/f_15c/f_15c_01.jpg",
+    "/mnt/project-files/cockpit-refs/f_15c/f_15c_02.jpg",
+    "https://commons.wikimedia.org/wiki/File:F-15_Eagle_Cockpit.jpg",
+    "https://commons.wikimedia.org/wiki/File:F-15C_Eagle_cockpit.jpg"
+   ]
+  },
+  "f_84f": {
+   "centre": [
+    [
+     [
+      "A:cw",
+      0.215,
+      0.044
+     ]
+    ],
+    [
+     [
+      "AIRSPEED",
+      0.076
+     ],
+     [
+      "HEADING",
+      0.076
+     ],
+     [
+      "ATTITUDE",
+      0.082
+     ]
+    ],
+    [
+     [
+      "MACH",
+      0.064
+     ],
+     [
+      "ALTIMETER",
+      0.076
+     ],
+     [
+      "TURN_SLIP",
+      0.064
+     ],
+     [
+      "VVI",
+      0.064
+     ]
+    ],
+    [
+     [
+      "G_METER",
+      0.057
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.057
+     ],
+     [
+      "CLOCK",
+      0.064
+     ],
+     [
+      "FILLER_OXYGEN",
+      0.044
+     ]
+    ]
+   ],
+   "centre_fill": [
+    [
+     [
+      "FILLER_VOLTS",
+      0.044
+     ],
+     [
+      "FILLER_TEMP",
+      0.044
+     ]
+    ]
+   ],
+   "left": [
+    [
+     [
+      "AMMO",
+      0.057
+     ],
+     [
+      "FILLER_VOLTS",
+      0.044
+     ]
+    ],
+    [
+     [
+      "FILLER_HYDRAULIC",
+      0.05
+     ],
+     [
+      "FILLER_TEMP",
+      0.044
+     ]
+    ]
+   ],
+   "left_fill": [
+    [
+     [
+      "FILLER_CLOCK",
+      0.044
+     ]
+    ]
+   ],
+   "right": [
+    [
+     [
+      "ENGINE_RPM",
+      0.064
+     ],
+     [
+      "EGT",
+      0.057
+     ]
+    ],
+    [
+     [
+      "FUEL_QTY",
+      0.064
+     ],
+     [
+      "FILLER_OIL",
+      0.05
+     ]
+    ],
+    [
+     [
+      "FILLER_FUEL",
+      0.05
+     ],
+     [
+      "FILLER_TEMP",
+      0.044
+     ]
+    ]
+   ],
+   "right_fill": [
+    [
+     [
+      "FILLER_OXYGEN",
+      0.044
+     ]
+    ]
+   ],
+   "hud": false,
+   "displays": "CRT",
+   "seat": "ejection",
+   "eyebrows": false,
+   "notes": "A-4 gunsight on top; a wide glareshield strip with sight dimmer/filament, radar-range knob, FIRE/OVERHEAT lamps and circuit test (A:cw). Row 1: radio compass, airspeed, gyro compass, attitude, tachometer (right). Row 2: Mach, altimeter, turn-and-slip, rate of climb, fuel flow, EGT. Row 3: accelerometer, hydraulic pressures, clock, total fuel quantity, oil pressure. Gear handle/position panel on the left, rocket counter box below centre.",
+   "sources": [
+    "/mnt/project-files/cockpit-refs/f_84f/f_84f_01.jpg",
+    "/mnt/project-files/cockpit-refs/f_84f/f_84f_02.jpg",
+    "/mnt/project-files/cockpit-refs/f_84f/f_84f_06.jpg",
+    "https://commons.wikimedia.org/wiki/File:Republic_F-84F_front_instrument_panel.jpg",
+    "https://commons.wikimedia.org/wiki/File:Instrumentenpaneel_in_de_cockpit_van_de_F-84F_(2157_007128).jpg"
+   ]
+  },
+  "il_10": {
+   "centre": [
+    [
+     [
+      "A:ww2",
+      0.11,
+      0.044
+     ]
+    ],
+    [
+     [
+      "AIRSPEED",
+      0.076
+     ],
+     [
+      "TURN_SLIP",
+      0.076
+     ],
+     [
+      "ALTIMETER",
+      0.076
+     ]
+    ],
+    [
+     [
+      "HEADING",
+      0.076
+     ],
+     [
+      "ATTITUDE",
+      0.082
+     ],
+     [
+      "VVI",
+      0.076
+     ]
+    ],
+    [
+     [
+      "ENGINE_RPM",
+      0.07
+     ],
+     [
+      "THROTTLE",
+      0.064
+     ],
+     [
+      "FILLER_OIL",
+      0.064
+     ]
+    ]
+   ],
+   "centre_fill": [
+    [
+     [
+      "FILLER_TEMP",
+      0.057
+     ],
+     [
+      "FILLER_TEMP",
+      0.057
+     ],
+     [
+      "CLOCK",
+      0.057
+     ]
+    ]
+   ],
+   "left": [
+    [
+     [
+      "AMMO",
+      0.057
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.05
+     ]
+    ]
+   ],
+   "left_fill": [
+    [
+     [
+      "FILLER_CLOCK",
+      0.044
+     ]
+    ]
+   ],
+   "right": [
+    [
+     [
+      "FUEL_QTY",
+      0.057
+     ],
+     [
+      "FILLER_TEMP",
+      0.05
+     ]
+    ]
+   ],
+   "right_fill": [
+    [
+     [
+      "FILLER_VOLTS",
+      0.044
+     ],
+     [
+      "FILLER_OXYGEN",
+      0.044
+     ]
+    ]
+   ],
+   "hud": false,
+   "displays": "CRT",
+   "seat": "bucket",
+   "eyebrows": false,
+   "notes": "Soviet late-war Ilyushin attack panel, same school as the Il-2: flight group (US-800 airspeed, Pioner turn-and-bank, VD altimeter over compass / AGK gyro horizon / VAR variometer) centre, engine group (TE tachometer, boost-pressure gauge, three-pointer oil/fuel gauge, water and oil temperature) below and right, fuel gauge and bomb/rocket armament boxes on the sides, PBP-1 sight above. No photo could be checked this session (web search budget exhausted, no ref folder): family-level evidence from memory of Il-2/Il-10 manuals.",
+   "sources": [
+    "Il-10 technical description / Il-2 \u0420\u041b\u042d family layout (from memory; not fetched this session)"
+   ]
+  },
+  "j_5": {
+   "centre": [
+    [
+     [
+      "A:cw",
+      0.12,
+      0.04
+     ]
+    ],
+    [
+     [
+      "AIRSPEED",
+      0.076
+     ],
+     [
+      "ATTITUDE",
+      0.082
+     ],
+     [
+      "HEADING",
+      0.076
+     ]
+    ],
+    [
+     [
+      "ALTIMETER",
+      0.076
+     ],
+     [
+      "MACH",
+      0.064
+     ],
+     [
+      "EGT",
+      0.064
+     ],
+     [
+      "FILLER_VOLTS",
+      0.044
+     ]
+    ],
+    [
+     [
+      "VVI",
+      0.07
+     ],
+     [
+      "TURN_SLIP",
+      0.064
+     ],
+     [
+      "ENGINE_RPM",
+      0.07
+     ]
+    ]
+   ],
+   "centre_fill": [
+    [
+     [
+      "CLOCK",
+      0.05
+     ],
+     [
+      "FILLER_OXYGEN",
+      0.044
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.044
+     ]
+    ]
+   ],
+   "left": [
+    [
+     [
+      "AMMO",
+      0.057
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.05
+     ]
+    ]
+   ],
+   "left_fill": [
+    [
+     [
+      "FILLER_CLOCK",
+      0.044
+     ],
+     [
+      "FILLER_VOLTS",
+      0.044
+     ]
+    ]
+   ],
+   "right": [
+    [
+     [
+      "FUEL_QTY",
+      0.064
+     ],
+     [
+      "FILLER_OIL",
+      0.057
+     ]
+    ],
+    [
+     [
+      "FILLER_TEMP",
+      0.05
+     ],
+     [
+      "FILLER_FUEL",
+      0.05
+     ]
+    ]
+   ],
+   "right_fill": [
+    [
+     [
+      "RADAR_ALT",
+      0.05
+     ]
+    ]
+   ],
+   "hud": false,
+   "displays": "CRT",
+   "seat": "ejection",
+   "eyebrows": false,
+   "notes": "J-5 is the licence MiG-17F; its panel is the MiG-15bis panel with an afterburner lamp and a 2.5 Mach meter, so the MiG-15bis/SBLim-2 references are used. Left block: KUS airspeed and AGI horizon on top, VD altimeter and Mach meter under them, variometer and turn/slip at the bottom, EUP/clock small dials; a vertical white strip divides it from the right block, which holds the DGMK remote compass, fuel gauge, RPM, EGT, oil/fuel three-pointer gauge. ASP-3N gunsight above the coaming; few lamps.",
+   "sources": [
+    "/mnt/project-files/cockpit-refs/mig_15bis/mig_15bis_01.jpg",
+    "/mnt/project-files/cockpit-refs/mig_15bis/mig_15bis_02.jpg",
+    "https://commons.wikimedia.org/wiki/File:Cockpit_MiG-15_(5718106817).jpg",
+    "https://commons.wikimedia.org/wiki/File:VH-DIE_PZL-Mielec_SBLim-2_Hempels_Aviation_(8310107744).jpg"
+   ]
+  },
+  "mig_19s": {
+   "centre": [
+    [
+     [
+      "A:cw",
+      0.18,
+      0.044
+     ]
+    ],
+    [
+     [
+      "CLOCK",
+      0.057
+     ],
+     [
+      "ATTITUDE",
+      0.082
+     ],
+     [
+      "RADAR_ALT",
+      0.057
+     ]
+    ],
+    [
+     [
+      "AIRSPEED",
+      0.076
+     ],
+     [
+      "ALTIMETER",
+      0.076
+     ],
+     [
+      "VVI",
+      0.076
+     ]
+    ],
+    [
+     [
+      "TURN_SLIP",
+      0.064
+     ],
+     [
+      "HEADING",
+      0.082
+     ],
+     [
+      "MACH",
+      0.064
+     ]
+    ]
+   ],
+   "centre_fill": [
+    [
+     [
+      "G_METER",
+      0.057
+     ],
+     [
+      "AOA",
+      0.05
+     ],
+     [
+      "FILLER_OXYGEN",
+      0.044
+     ]
+    ]
+   ],
+   "left": [
+    [
+     [
+      "AMMO",
+      0.057
+     ],
+     [
+      "FILLER_VOLTS",
+      0.05
+     ]
+    ],
+    [
+     [
+      "FILLER_OXYGEN",
+      0.05
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.05
+     ]
+    ]
+   ],
+   "left_fill": [
+    [
+     [
+      "FILLER_CLOCK",
+      0.044
+     ]
+    ]
+   ],
+   "right": [
+    [
+     [
+      "ENGINE_RPM",
+      0.064
+     ],
+     [
+      "ENGINE_RPM",
+      0.064
+     ]
+    ],
+    [
+     [
+      "EGT",
+      0.057
+     ],
+     [
+      "EGT",
+      0.057
+     ]
+    ],
+    [
+     [
+      "FUEL_QTY",
+      0.064
+     ],
+     [
+      "FILLER_OIL",
+      0.05
+     ]
+    ]
+   ],
+   "right_fill": [
+    [
+     [
+      "FILLER_HYDRAULIC",
+      0.044
+     ],
+     [
+      "FILLER_TEMP",
+      0.044
+     ]
+    ]
+   ],
+   "hud": false,
+   "displays": "CRT",
+   "seat": "ejection",
+   "eyebrows": false,
+   "notes": "MiG-19S (day fighter, no radar): ASP-5N gunsight centred on the coaming with the SRD-1 rangefinder, clock on the left coaming. Left/centre block: AGI-1 horizon top with clock beside it, KUS airspeed and VD altimeter under it, VAR variometer, EUP turn, DGMK/GIK compass lower; radio altimeter small dial. Right block: twin-engine stack (two RPM, two EGT), fuel, oil, hydraulic/pneumatic gauges, rocket-counter and armament panel on the lower left. The DCS MiG-19P guide (ref guide/) was used for the panel layout; the RP-5 scope right of the sight is a P-only item and is omitted for the S.",
+   "sources": [
+    "/mnt/project-files/cockpit-refs/mig_19s/guide/p-014.jpg",
+    "/mnt/project-files/cockpit-refs/mig_19s/guide/p-016.jpg",
+    "/mnt/project-files/cockpit-refs/mig_19s/guide/p-020.jpg",
+    "https://assets.chucksguides.com/pdf/DCS%20MiG-19P%20Guide.pdf"
+   ]
+  },
+  "p_51d": {
+   "centre": [
+    [
+     [
+      "FILLER_CLOCK",
+      0.064
+     ],
+     [
+      "CLOCK",
+      0.057
+     ],
+     [
+      "FILLER_VOLTS",
+      0.05
+     ],
+     [
+      "THROTTLE",
+      0.076
+     ]
+    ],
+    [
+     [
+      "AIRSPEED",
+      0.076
+     ],
+     [
+      "HEADING",
+      0.082
+     ],
+     [
+      "ATTITUDE",
+      0.082
+     ],
+     [
+      "FILLER_TEMP",
+      0.05
+     ]
+    ],
+    [
+     [
+      "ALTIMETER",
+      0.076
+     ],
+     [
+      "TURN_SLIP",
+      0.076
+     ],
+     [
+      "VVI",
+      0.076
+     ],
+     [
+      "FILLER_TEMP",
+      0.05
+     ]
+    ]
+   ],
+   "centre_fill": [
+    [
+     [
+      "FILLER_OXYGEN",
+      0.05
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.05
+     ]
+    ]
+   ],
+   "left": [
+    [
+     [
+      "AMMO",
+      0.05
+     ],
+     [
+      "FILLER_OXYGEN",
+      0.05
+     ]
+    ]
+   ],
+   "left_fill": [
+    [
+     [
+      "FILLER_HYDRAULIC",
+      0.044
+     ],
+     [
+      "FILLER_FUEL",
+      0.044
+     ]
+    ]
+   ],
+   "right": [
+    [
+     [
+      "ENGINE_RPM",
+      0.076
+     ]
+    ],
+    [
+     [
+      "FILLER_OIL",
+      0.07
+     ]
+    ]
+   ],
+   "right_fill": [
+    [
+     [
+      "FUEL_QTY",
+      0.057
+     ]
+    ]
+   ],
+   "hud": false,
+   "displays": "CRT",
+   "seat": "bucket",
+   "eyebrows": false,
+   "notes": "P-51D shield-shaped panel, K-14 sight on the coaming: top row remote compass indicator (left, stand-in FILLER_CLOCK), 8-day clock, suction gauge, manifold pressure (right). Middle row: airspeed, directional gyro, flight indicator (horizon), coolant temperature, tachometer at far right. Bottom row: altimeter, turn-and-bank, rate of climb, carburettor air temperature, engine (oil temp/oil press/fuel press) cluster at far right, hydraulic/oxygen small gauges low. No warning-lamp strip.",
+   "sources": [
+    "/mnt/project-files/cockpit-refs/p_51d/p_51d_01.jpg",
+    "/mnt/project-files/cockpit-refs/p_51d/p_51d_02.jpg",
+    "https://commons.wikimedia.org/wiki/File:North_American_P-51D_Mustang_cockpit.jpg",
+    "https://commons.wikimedia.org/wiki/File:P-51_instrument_panel.jpg"
+   ]
+  },
+  "saab_35_draken": {
+   "centre": [
+    [
+     [
+      "D:RADAR",
+      0.175
+     ]
+    ],
+    [
+     [
+      "ALTIMETER",
+      0.076
+     ],
+     [
+      "AIRSPEED",
+      0.064
+     ],
+     [
+      "MACH",
+      0.064
+     ],
+     [
+      "ATTITUDE",
+      0.064
+     ]
+    ],
+    [
+     [
+      "TURN_SLIP",
+      0.057
+     ],
+     [
+      "HEADING",
+      0.082
+     ],
+     [
+      "FUEL_QTY",
+      0.07
+     ],
+     [
+      "EGT",
+      0.057
+     ]
+    ]
+   ],
+   "centre_fill": [
+    [
+     [
+      "ENGINE_RPM",
+      0.064
+     ],
+     [
+      "G_METER",
+      0.057
+     ],
+     [
+      "CLOCK",
+      0.05
+     ],
+     [
+      "RADAR_ALT",
+      0.05
+     ]
+    ]
+   ],
+   "left": [
+    [
+     [
+      "A:cw",
+      0.15,
+      0.044
+     ]
+    ],
+    [
+     [
+      "G_METER",
+      0.057
+     ],
+     [
+      "AMMO",
+      0.057
+     ]
+    ],
+    [
+     [
+      "FILLER_OXYGEN",
+      0.05
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.05
+     ]
+    ]
+   ],
+   "left_fill": [
+    [
+     [
+      "FILLER_VOLTS",
+      0.044
+     ]
+    ]
+   ],
+   "right": [
+    [
+     [
+      "CLOCK",
+      0.057
+     ],
+     [
+      "RADAR_ALT",
+      0.057
+     ]
+    ],
+    [
+     [
+      "ENGINE_RPM",
+      0.064
+     ],
+     [
+      "FILLER_OIL",
+      0.05
+     ]
+    ]
+   ],
+   "right_fill": [
+    [
+     [
+      "FILLER_TEMP",
+      0.044
+     ],
+     [
+      "FILLER_VOLTS",
+      0.044
+     ]
+    ]
+   ],
+   "hud": false,
+   "displays": "CRT",
+   "seat": "ejection",
+   "eyebrows": false,
+   "notes": "J 35F: hooded PS-01 radar scope dominates the top centre with the sight collimator above it. Left of the scope: accelerometer (top), HOJD altimeter with mb counter, and the vertical Vi/M speed and Mach tape; right of the scope: AVST/HOJD radar range-height tape, clock, small standby horizon with counter. Bottom row across the knee panel: HUVUDVARN lamp, turn/slip, compass rose, BRANSLE % fuel gauge, EGT (x100), VARV % RPM. Warning lamp column and gear items on the left side panel.",
+   "sources": [
+    "/mnt/project-files/cockpit-refs/saab_35_draken/saab_35_draken_01.jpg",
+    "/mnt/project-files/cockpit-refs/saab_35_draken/saab_35_draken_03.jpg",
+    "/mnt/project-files/cockpit-refs/saab_35_draken/saab_35_draken_05.jpg",
+    "https://commons.wikimedia.org/wiki/File:Saab_J-35F_Draken_35528_-_instrument_panel_(7609617768).jpg",
+    "https://commons.wikimedia.org/wiki/File:J_35F_panel.jpg"
+   ]
+  },
+  "su_25": {
+   "centre": [
+    [
+     [
+      "A:cw",
+      0.215,
+      0.044
+     ]
+    ],
+    [
+     [
+      "AIRSPEED",
+      0.076
+     ],
+     [
+      "ATTITUDE",
+      0.082
+     ],
+     [
+      "VVI",
+      0.076
+     ]
+    ],
+    [
+     [
+      "ALTIMETER",
+      0.076
+     ],
+     [
+      "HEADING",
+      0.082
+     ],
+     [
+      "MACH",
+      0.076
+     ]
+    ],
+    [
+     [
+      "RADAR_ALT",
+      0.064
+     ],
+     [
+      "CLOCK",
+      0.057
+     ],
+     [
+      "AOA",
+      0.064
+     ]
+    ]
+   ],
+   "centre_fill": [
+    [
+     [
+      "TURN_SLIP",
+      0.05
+     ],
+     [
+      "FILLER_OXYGEN",
+      0.044
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.044
+     ]
+    ]
+   ],
+   "left": [
+    [
+     [
+      "G_METER",
+      0.064
+     ],
+     [
+      "AMMO",
+      0.057
+     ]
+    ],
+    [
+     [
+      "FILLER_HYDRAULIC",
+      0.05
+     ],
+     [
+      "FILLER_VOLTS",
+      0.05
+     ]
+    ]
+   ],
+   "left_fill": [
+    [
+     [
+      "FILLER_CLOCK",
+      0.044
+     ]
+    ]
+   ],
+   "right": [
+    [
+     [
+      "RWR",
+      0.064
+     ],
+     [
+      "FUEL_QTY",
+      0.064
+     ]
+    ],
+    [
+     [
+      "ENGINE_RPM",
+      0.07
+     ],
+     [
+      "FILLER_OIL",
+      0.05
+     ]
+    ],
+    [
+     [
+      "EGT",
+      0.057
+     ],
+     [
+      "EGT",
+      0.057
+     ]
+    ]
+   ],
+   "right_fill": [
+    [
+     [
+      "FILLER_TEMP",
+      0.044
+     ],
+     [
+      "FILLER_FUEL",
+      0.044
+     ]
+    ]
+   ],
+   "eyebrows": true,
+   "hud": true,
+   "displays": "CRT",
+   "seat": "ejection",
+   "hinge_frac": 0.62,
+   "notes": "Su-25: ASP-17 sight glass with its control box top centre, lamp blocks on both sides of the coaming, SPO-15 Beryoza RWR display top right. Far left: combined AOA/g (UUAP) dial. Left column: KUS airspeed, VD altimeter, RV radio altimeter, km counter. Centre: big KPP attitude with the DA-200 vario/turn to its right, NPP HSI below behind the stick. Right: M Mach meter, dual-needle % RPM, TOPLIVO fuel tape, two EGT (L, P) at the bottom with fire lamps.",
+   "sources": [
+    "/mnt/project-files/cockpit-refs/su_25/su_25_01.jpg",
+    "/mnt/project-files/cockpit-refs/su_25/su_25_02.jpg",
+    "https://commons.wikimedia.org/wiki/File:%D0%9F%D1%80%D0%B8%D0%B1%D0%BE%D1%80%D0%BD%D0%B0%D1%8F_%D0%BF%D0%B0%D0%BD%D0%B5%D0%BB%D1%8C_%D1%88%D1%82%D1%83%D1%80%D0%BC%D0%BE%D0%B2%D0%B8%D0%BA%D0%B0_%D0%A1%D1%83-25.jpg"
+   ]
+  },
+  "su_9": {
+   "centre": [
+    [
+     [
+      "A:cw",
+      0.215,
+      0.044
+     ]
+    ],
+    [
+     [
+      "D:RADAR",
+      0.165
+     ]
+    ],
+    [
+     [
+      "AIRSPEED",
+      0.076
+     ],
+     [
+      "ATTITUDE",
+      0.082
+     ],
+     [
+      "ALTIMETER",
+      0.076
+     ]
+    ],
+    [
+     [
+      "MACH",
+      0.064
+     ],
+     [
+      "HEADING",
+      0.082
+     ],
+     [
+      "VVI",
+      0.064
+     ]
+    ]
+   ],
+   "centre_fill": [
+    [
+     [
+      "RADAR_ALT",
+      0.057
+     ],
+     [
+      "TURN_SLIP",
+      0.057
+     ],
+     [
+      "CLOCK",
+      0.05
+     ],
+     [
+      "G_METER",
+      0.05
+     ]
+    ]
+   ],
+   "left": [
+    [
+     [
+      "AMMO",
+      0.057
+     ],
+     [
+      "FILLER_VOLTS",
+      0.05
+     ]
+    ],
+    [
+     [
+      "FILLER_OXYGEN",
+      0.05
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.05
+     ]
+    ]
+   ],
+   "left_fill": [
+    [
+     [
+      "FILLER_CLOCK",
+      0.044
+     ]
+    ]
+   ],
+   "right": [
+    [
+     [
+      "ENGINE_RPM",
+      0.07
+     ],
+     [
+      "EGT",
+      0.057
+     ]
+    ],
+    [
+     [
+      "FUEL_QTY",
+      0.064
+     ],
+     [
+      "FILLER_OIL",
+      0.05
+     ]
+    ]
+   ],
+   "right_fill": [
+    [
+     [
+      "FILLER_TEMP",
+      0.044
+     ],
+     [
+      "FILLER_FUEL",
+      0.044
+     ]
+    ]
+   ],
+   "hud": false,
+   "displays": "CRT",
+   "seat": "ejection",
+   "eyebrows": false,
+   "notes": "Su-9 interceptor (1959): hooded RP-9U (TsD-30) radar scope on top of the panel, missile-only armament panel (RS-2US) on the left. Instrument set is the standard Soviet late-1950s one also seen on the MiG-21F/PF: KUS-2000 airspeed, AGI/AGD horizon, VD-20 altimeter, M-2.5 Mach meter, KSI/NPP heading, VAR-75 variometer, EUP turn, RV-U radio altimeter; engine (AL-7F) RPM, EGT, oil and fuel on the right. No Su-9 photo could be checked this session (search budget exhausted, no ref folder): layout follows the family (MiG-21bis ref photo for style) and memory of the Su-9 \u0420\u041b\u042d; treat as family-level evidence.",
+   "sources": [
+    "/mnt/project-files/cockpit-refs/mig_21bis/mig_21bis_10.jpg (same-generation Soviet interceptor layout, for style)",
+    "Su-9 \u0420\u041b\u042d / Sukhoi interceptor descriptions (from memory; not fetched this session)"
+   ]
+  }
+ }
+}
