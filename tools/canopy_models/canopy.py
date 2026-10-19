@@ -285,6 +285,22 @@ def sweep(m, path, lateral, up, section, uvs, closed=False, caps=True):
         m.flat(list(rings[-1]), uvs[0], normal=path[-1] - path[-2])
 
 
+def sweep_var(m, path, lateral, up, sections, uvs, closed=False):
+    """sweep() with a section per path point (same corner count), for members that taper"""
+    k = len(path); ns = len(sections[0])
+    rings = [np.array([path[j] + lateral[j] * l + up[j] * u for l, u in sections[j]]) for j in range(k)]
+    for j in range(k - 1 + (1 if closed else 0)):
+        a, b = rings[j], rings[(j + 1) % k]
+        mid = (a.mean(0) + b.mean(0)) / 2
+        for i in range(ns):
+            i2 = (i + 1) % ns
+            q = [a[i], a[i2], b[i2], b[i]]
+            m.flat(q, uvs[i], normal=np.mean(q, 0) - mid)
+    if not closed:
+        m.flat(list(rings[0]), uvs[0], normal=path[0] - path[1])
+        m.flat(list(rings[-1]), uvs[0], normal=path[-1] - path[-2])
+
+
 def build(ac, tub, shape, spec, sw, paint):
     m = L.Mesh()
     E = tub.E
@@ -330,8 +346,17 @@ def build(ac, tub, shape, spec, sw, paint):
             l = -l
         lat.append(l); upv.append(np.array([0.0, 1.0, 0.0]))
     lat, upv = np.array(lat), np.array(upv)
-    section = [(0.006, -sd), (0.006, sh - sd), (-sw_in, sh - sd), (-sw_in, -sd)]
-    sweep(m, path, lat, upv, section, [outside, seal, inside, inside], closed=ring)
+    # a canopy that closes to a point at the front (a frameless forward transparency) is held there by a thin edge
+    # frame: the member tapers from the cockpit forward to a third of its size at the tip
+    taper = np.ones(len(path))
+    if shape.ends[1] == 'point':
+        z_start = E[2] + 0.25
+        for j, p in enumerate(path):
+            if p[2] > z_start:
+                taper[j] = 1.0 - 0.67 * min(1.0, (p[2] - z_start) / max(shape.front - z_start, 1e-6))
+    rings_sec = [[(0.006, -sd * k), (0.006, (sh - sd) * k), (-sw_in * k, (sh - sd) * k), (-sw_in * k, -sd * k)]
+                 for k in taper]
+    sweep_var(m, path, lat, upv, rings_sec, [outside, seal, inside, inside], closed=ring)
     # the transparency's sealed edge: a dark band on the glass just above the sill member
     band = spec.get('edge_band', 0.022)
     for phi0 in (0.0, math.pi):
