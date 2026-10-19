@@ -26,6 +26,7 @@ sys.path.insert(0, os.path.join(HERE, '..', 'cockpit_models'))
 import fleet as F  # noqa: E402
 
 ROOT = os.path.abspath(os.path.join(HERE, '..', '..'))
+COCKPITS_REF = os.environ.get('BVP_COCKPITS_REF', 'origin/claude/fleet-modeled-cockpits')
 REL = 'bvp/src/generated/resources/assets/berts_vehicle_pack/'
 
 
@@ -58,10 +59,38 @@ class Volume:
         self.rail = tub.sill + spec.get('rail_lift', 0.02)
         G = glass.reshape(-1, 3)
         self.glo, self.ghi = G.min(0) - 0.08, G.max(0) + 0.08
+        self.shape, self.panel_z = None, tub.Z
+        self.split = {}                       # {bone: set(poly)} faces to split along the canopy outline
+        self.holes = np.zeros((0, 3, 2))      # plan (x, z) triangles of removed top surfaces ahead of the panel
+        self.boxed = set()                    # faces the old-interior rules took (inside the box)
 
-    def in_well(self, V):
+    def over_hole(self, x, z):
+        """True when (x, z) lies under a removed upward-facing surface ahead of the panel (in plan)"""
+        if not len(self.holes):
+            return False
+        T = self.holes
+        q = np.array([x, z])
+        a, b, c = T[:, 0], T[:, 1], T[:, 2]
+        cr = lambda u, v: u[..., 0] * v[..., 1] - u[..., 1] * v[..., 0]
+        d1, d2, d3 = cr(b - a, q - a), cr(c - b, q - b), cr(a - c, q - c)
+        return bool((((d1 >= 0) & (d2 >= 0) & (d3 >= 0)) | ((d1 <= 0) & (d2 <= 0) & (d3 <= 0))).any())
+
+    def in_box(self, V):
         return bool(np.all(np.abs(V[:, 0] - self.x0) < self.half) and np.all(V[:, 2] > self.z0) and
                     np.all(V[:, 2] < self.z1) and np.all(V[:, 1] > self.floor))
+
+    def in_well(self, V):
+        if not self.in_box(V):
+            return False
+        # ahead of the panel the well narrows with the new canopy: only what its outline covers goes (the deck
+        # beside a pointed canopy nose stays)
+        if self.shape is not None:
+            for p in V:
+                if p[2] > self.panel_z:
+                    z = min(max(p[2], self.shape.rear), self.shape.front)
+                    if abs(p[0] - self.shape.x0) > self.shape.at(z)[0] + 0.01:
+                        return False
+        return True
 
     def in_footprint(self, V):
         """per corner: inside the canopy's plan outline (any height)"""
@@ -71,8 +100,9 @@ class Volume:
         return bool(np.all(V[:, 1] > self.rail) and self.in_footprint(V).all())
 
 
-def cut(ac, vol, tex, tub, glass):
-    """{bone: set(poly)} removed, and {rule: count}"""
+def cut(ac, vol, tex, tub, glass, canopy=True):
+    """{bone: set(poly)} removed, and {rule: count}. canopy=False: the cockpit interior only (the old canopy's
+    frames, posts and glass faces all stay)"""
     out, why = {}, {'well': 0, 'canopy part': 0, 'old glass face': 0}
     canopy_parts = set()
     for b in ac.bones:
@@ -85,13 +115,8 @@ def cut(ac, vol, tex, tub, glass):
         U = np.array(pm['uvs'], float)
         polys = pm['polys']
         verts = [P[[v[0] for v in p]] for p in polys]
-        sel = set()
-        for i, V in enumerate(verts):
-            if vol.in_well(V):
-                sel.add(i); why['well'] += 1
-            elif vol.in_canopy(V) and S._see_through(tex, U[[v[2] for v in polys[i]]]):
-                sel.add(i); why['old glass face'] += 1
-        # connected parts standing wholly above the rails in the canopy's footprint: hoops, frame bars, mirrors
+        # connected parts (faces sharing corners): ahead of the panel only parts lying wholly in the cut box go (an
+        # old glareshield, a sight block); a part reaching out of it is fuselage skin (the deck under a windscreen)
         parent = {}
         def root(x):
             while parent.setdefault(x, x) != x:
@@ -105,7 +130,22 @@ def cut(ac, vol, tex, tub, glass):
         parts = {}
         for i, p in enumerate(polys):
             parts.setdefault(root(key(p[0][0])), []).append(i)
-        for faces in parts.values():
+        part_of = {i: r for r, faces in parts.items() for i in faces}
+        boxed = {r: all(vol.in_box(verts[i]) for i in faces) for r, faces in parts.items()}
+        sel = set()
+        for i, V in enumerate(verts):
+            ahead = V[:, 2].max() > vol.panel_z
+            if ahead and not boxed[part_of[i]]:
+                continue                                  # fuselage skin ahead of the panel: never cut
+            if vol.in_well(V):
+                sel.add(i); why['well'] += 1
+            elif ahead and vol.in_box(V) and vol.shape is not None:
+                # ahead of the panel, straddling the new canopy's outline: split there (outside part stays)
+                vol.split.setdefault(b['name'], set()).add(i)
+            elif canopy and vol.in_canopy(V) and S._see_through(tex, U[[v[2] for v in polys[i]]]):
+                sel.add(i); why['old glass face'] += 1
+        # connected parts standing wholly above the rails in the canopy's footprint: hoops, frame bars, mirrors
+        for faces in (parts.values() if canopy else ()):
             if len(faces) > 400:
                 continue
             V = np.concatenate([verts[i] for i in faces])
@@ -119,14 +159,86 @@ def cut(ac, vol, tex, tub, glass):
             out[b['name']] = sel
     # old canopy frame members welded into the hull mesh: faces along the old glass (strip.py's test) that stand
     # wholly above the rails in the footprint; the rails themselves and the deck under the glass stay
-    along, _ = S.find(ac, tub, canopy=glass)
+    along, _ = S.find(ac, tub, canopy=glass) if canopy else ({}, None)
     for name, faces in along.items():
         pm = next(b for b in ac.bones if b['name'] == name)['poly_mesh']
         P = np.array(pm['positions'], float) * np.array([1, 1, -1]) / 16.0
         for i in faces:
             V = P[[v[0] for v in pm['polys'][i]]]
-            if vol.in_canopy(V) and i not in out.get(name, set()):
+            # wholly above the rails, or a tall member (a windscreen post) reaching down past them; never the rails
+            ax = np.linalg.svd(V - V.mean(0))[2] if len(V) >= 3 else np.eye(3)
+            ext = np.ptp((V - V.mean(0)) @ ax.T, axis=0)
+            thin = ext[0] > 0.12 and ext[1] < 0.07           # a bar: long one way, narrow the other
+            tall = vol.in_footprint(V).all() and V[:, 1].max() > vol.rail + 0.10 and \
+                V[:, 1].min() > vol.rail - (0.35 if thin else 0.15)
+            if (vol.in_canopy(V) or tall) and i not in out.get(name, set()):
                 out.setdefault(name, set()).add(i); why['canopy part'] += 1
+                if not vol.in_canopy(V):
+                    canopy_parts.add((name, i))
+    # old windscreen posts and sight struts: thin bars ahead of the panel, above its top, in the canopy's footprint
+    # (where the old glass never covered the windscreen, they do not lie along it)
+    for b in (ac.bones if canopy else ()):
+        if not L.is_interior_bone(b['name']):
+            continue
+        pm = b.get('poly_mesh')
+        if not pm or not pm.get('polys'):
+            continue
+        P = np.array(pm['positions'], float) * np.array([1, 1, -1]) / 16.0
+        for i, poly in enumerate(pm['polys']):
+            if i in out.get(b['name'], set()):
+                continue
+            V = P[[v[0] for v in poly]]
+            if len(V) < 3 or V[:, 2].min() < vol.panel_z - 0.15 or V[:, 1].max() < tub.top_c + 0.10 or \
+                    not vol.in_footprint(V).all():
+                continue                                  # (a post rises well above the panel top from near it)
+            ax = np.linalg.svd(V - V.mean(0))[2]
+            ext = np.ptp((V - V.mean(0)) @ ax.T, axis=0)
+            if ext[0] > 0.10 and ext[1] < 0.06:
+                out.setdefault(b['name'], set()).add(i); why['canopy part'] += 1
+                canopy_parts.add((b['name'], i))
+    # the glareshield zone ahead of the panel: the cockpit tool's old-interior rules (old decks, HUD housings and
+    # sight mounts under the glass, windscreen frames and thin members along the glass kept), inside the cut box
+    old_rm, old_clips = L.old_interior(ac, [tub])
+    why['old interior rule'] = 0
+    for b in ac.bones:
+        sel = old_rm.get(b['name'])
+        if not sel:
+            continue
+        P = np.array(b['poly_mesh']['positions'], float) * np.array([1, 1, -1]) / 16.0
+        for i in sel:
+            V = P[[v[0] for v in b['poly_mesh']['polys'][i]]]
+            # the cockpit tool's rules keep themselves to the tub and the glareshield zone (its own bounds), so all
+            # they select goes: an old panel shroud may reach past the cut box
+            if i not in out.get(b['name'], set()):
+                out.setdefault(b['name'], set()).add(i); why['old interior rule'] += 1
+                vol.boxed.add((b['name'], i))
+    # and its cuts: a deck running on under the windscreen keeps only its part ahead of the windscreen base
+    why['clipped'] = 0
+    for b in ac.bones:
+        for i, (axis, c) in old_clips.get(b['name'], {}).items():
+            if i not in out.get(b['name'], set()):
+                L.clip_keep(b['poly_mesh'], i, axis, c); why['clipped'] += 1
+    if not canopy:
+        # keeping the old canopy: its frames (faces along the old glass above the rails, windscreen posts) are
+        # protected from every rule above, the well's included (the well has no ceiling)
+        guard, _ = S.find(ac, tub, canopy=glass)
+        why['canopy kept'] = 0
+        for b in ac.bones:
+            pm = b.get('poly_mesh')
+            if not pm or b['name'] not in out:
+                continue
+            P = np.array(pm['positions'], float) * np.array([1, 1, -1]) / 16.0
+            for i in list(out[b['name']]):
+                V = P[[v[0] for v in pm['polys'][i]]]
+                frame = i in guard.get(b['name'], ()) and V[:, 1].max() > vol.rail
+                post = False
+                if len(V) >= 3 and V[:, 1].max() > tub.top_c + 0.10 and vol.in_footprint(V).all() and \
+                        V[:, 2].min() > vol.panel_z - 0.15:
+                    ax = np.linalg.svd(V - V.mean(0))[2]
+                    ext = np.ptp((V - V.mean(0)) @ ax.T, axis=0)
+                    post = ext[0] > 0.10 and ext[1] < 0.06
+                if frame or post:
+                    out[b['name']].discard(i); why['canopy kept'] += 1
     vol.parts = canopy_parts
     return out, why
 
@@ -140,9 +252,140 @@ def check(ac, rm, vol):
             P = np.array(b['poly_mesh']['positions'], float) * np.array([1, 1, -1]) / 16.0
             V = P[[v[0] for v in b['poly_mesh']['polys'][i]]]
             part = (b['name'], i) in vol.parts and vol.in_footprint(V).all()
-            if not (vol.in_well(V) or vol.in_canopy(V) or part):
+            boxed = (b['name'], i) in vol.boxed                  # the cockpit tool's own bounded rules
+            if not (vol.in_well(V) or vol.in_canopy(V) or part or boxed):
                 bad.append((b['name'], i))
     return bad
+
+
+class Skin:
+    """the fuselage's outer surface after the cut (hull bones, no new cockpit or canopy): its height over a point and
+    its side distance, for keeping new geometry inside it"""
+
+    def __init__(self, ac):
+        T = []
+        for b in ac.bones:
+            pm = b.get('poly_mesh')
+            if not pm or not pm.get('polys') or not L.is_interior_bone(b['name']) or \
+                    b['name'].endswith(('__cockpit', '__canopy')):
+                continue
+            P = np.array(pm['positions'], float) * np.array([1, 1, -1]) / 16.0
+            for poly in pm['polys']:
+                V = P[[v[0] for v in poly]]
+                for k in range(1, len(V) - 1):
+                    T.append(V[[0, k, k + 1]])
+        self.T = np.array(T).reshape(-1, 3, 3)
+
+    def _hits(self, q, ia, ib, ic):
+        """values of coordinate ic where the line through q (coordinates ia, ib) meets the triangles"""
+        T = self.T
+        a, b, c = T[:, 0][:, [ia, ib]], T[:, 1][:, [ia, ib]], T[:, 2][:, [ia, ib]]
+        cr = lambda u, v: u[..., 0] * v[..., 1] - u[..., 1] * v[..., 0]
+        d1, d2, d3 = cr(b - a, q - a), cr(c - b, q - b), cr(a - c, q - c)
+        area = cr(b - a, c - a)
+        m = (((d1 >= 0) & (d2 >= 0) & (d3 >= 0)) | ((d1 <= 0) & (d2 <= 0) & (d3 <= 0))) & (np.abs(area) > 1e-9)
+        w0, w2 = d2[m] / area[m], d3[m] / area[m]
+        return w0 * T[m, 0, ic] + (1 - w0 - w2) * T[m, 1, ic] + w2 * T[m, 2, ic]
+
+    def top(self, x, z, below=np.inf):
+        """the highest skin height over (x, z) under [below], or -inf"""
+        y = self._hits(np.array([x, z]), 0, 2, 1)
+        y = y[y < below]
+        return float(y.max()) if len(y) else -np.inf
+
+
+def keep_inside(mesh, skin, ac, E, margin=0.008):
+    """pulls new cockpit geometry back inside the fuselage: a corner outside the skin sideways moves in to it, one
+    above the top skin where no canopy glass covers it moves down under it. -> number of corners moved"""
+    moved = 0
+    new = []
+    for pts, uvs, n in mesh.faces:
+        P = np.array(pts, float)
+        for k, p in enumerate(P):
+            if abs(p[0] - E[0]) > 0.05:
+                d = skin._hits(np.array([p[1], p[2]]), 1, 2, 0) - E[0]
+                side = np.sign(p[0] - E[0])
+                walls = d[d * side > 0.02] * side
+                if len(walls):
+                    lim = walls.max()                 # the outermost skin that way
+                    if abs(p[0] - E[0]) > lim - margin:
+                        P[k, 0] = E[0] + side * (lim - margin); moved += 1
+            if ac.glass_above(p[0], p[2], p[1] - 0.05) is None:
+                top = skin.top(p[0], p[2])
+                if np.isfinite(top) and p[1] > top - margin and p[1] < top + 0.3:
+                    P[k, 1] = top - margin; moved += 1
+        new.append((P, uvs, n))
+    mesh.faces = new
+    return moved
+
+
+def _clip(poly, inside):
+    """Sutherland-Hodgman: poly = [(point3, uv2)], inside(point) -> signed value (>= 0 keeps); linear crossing"""
+    out = []
+    for k in range(len(poly)):
+        (p, u), (q, w) = poly[k], poly[(k + 1) % len(poly)]
+        a, b = inside(p), inside(q)
+        if a >= 0:
+            out.append((p, u))
+        if (a >= 0) != (b >= 0):
+            t = a / (a - b)
+            out.append((p + (q - p) * t, u + (w - u) * t))
+    return out
+
+
+def split_outline(pm, faces, shape, vol):
+    """replaces each face by its parts outside the new canopy's plan outline (|x - x0| > w(z), each side); the
+    pieces join the bone as new polys (the originals are removed by the caller) -> pieces added"""
+    P = np.array(pm['positions'], float) * np.array([1, 1, -1]) / 16.0
+    U = np.array(pm['uvs'], float)
+    added = 0
+    for i in faces:
+        poly = pm['polys'][i]
+        pts = [(P[v[0]], U[v[2]]) for v in poly]
+        ni = poly[0][1]
+        def width(z):
+            return shape.at(min(max(z, shape.rear), shape.front))[0] + 0.01
+        for side in (1, -1):
+            # the outside of one boundary, and (for the other side) nothing of the canopy's inside
+            piece = _clip(pts, lambda p, s=side: s * (p[0] - shape.x0) - width(p[2]))
+            # and only below the canopy's sill line: the old glareshield's walls do not stand up beside the new glass
+            # (6 mm under the deck panels that close the opening there, so the two never fight for the same pixels)
+            piece = _clip(piece, lambda p: float(shape.ys(min(max(p[2], shape.rear), shape.front))) - 0.006 - p[1]) \
+                if len(piece) >= 3 else piece
+            if len(piece) < 3:
+                continue
+            new = []
+            for p, u in piece:
+                pm['positions'].append([round(float(p[0]) * 16, 4) + 0.0, round(float(p[1]) * 16, 4) + 0.0,
+                                        round(-float(p[2]) * 16, 4) + 0.0])
+                pm['uvs'].append([round(float(u[0]), 6), round(float(u[1]), 6)])
+                new.append([len(pm['positions']) - 1, ni, len(pm['uvs']) - 1])
+            pm['polys'].append(new)
+            added += 1
+    return added
+
+
+def deck(m, vol, ac, shape, tub, uv, front, skin, step=0.01):
+    """closes the cut opening wherever the new canopy does not cover it (a pointed canopy nose narrower than the old
+    opening): flat panels at the canopy's sill line, in the aircraft's paint, only over holes (where the fuselage
+    has no skin near that height) -> number of panels"""
+    E = tub.E
+    n = 0
+    reach = vol.half + 0.15                      # the old opening may be wider than the cut (the old glass covered it)
+    xs = np.arange(-reach, reach - step + 1e-6, step)
+    for z in np.arange(max(vol.z0, vol.panel_z), front, step):
+        cz = z + step / 2
+        y = float(shape.ys(min(max(cz, shape.rear), shape.front)))
+        for x in xs:
+            cx = E[0] + x + step / 2
+            if abs(cx - shape.x0) <= shape.at(min(max(cz, shape.rear), shape.front))[0] - 0.03:
+                continue                                   # under the canopy (the panels tuck in under its sill frame)
+            if not vol.over_hole(cx, cz):
+                continue                                   # only where a removed top surface was: nowhere else
+            q = [[cx - step / 2, y, cz - step / 2], [cx + step / 2, y, cz - step / 2],
+                 [cx + step / 2, y, cz + step / 2], [cx - step / 2, y, cz + step / 2]]
+            m.flat(q, uv, normal=[0, 1, 0]); n += 1
+    return n
 
 
 def rebuild(vid, ref='origin/main', dry=False):
@@ -161,6 +404,8 @@ def rebuild(vid, ref='origin/main', dry=False):
     old = ac.glass.copy()
     spec = C.spec_for(vid, ac, tub.E, [tub.E], None)
     vol = Volume(tub, old, spec)
+    shape = C.Shape(old, spec, tub.E, sill_ref=(tub.back_z, tub.Z + 0.1, tub.sill))
+    vol.shape = shape
 
     # 1. cut
     rm, why = cut(ac, vol, tex, tub, old)
@@ -168,19 +413,56 @@ def rebuild(vid, ref='origin/main', dry=False):
     if bad:
         raise SystemExit(f'{vid}: cut check failed, {len(bad)} faces outside the volume: {bad[:5]}')
     paint = tuple(spec.get('paint_rgb') or C.frame_rgb(ac, rm, tub, tex) or C.paint_rgb(ac, tub, tex))
+    well_front = tub.ws_z                      # the front edge of the cut cockpit well
     for b in ac.bones:
         if b['name'] in rm:
-            b['poly_mesh']['polys'] = [p for i, p in enumerate(b['poly_mesh']['polys']) if i not in rm[b['name']]]
+            P = np.array(b['poly_mesh']['positions'], float) * np.array([1, 1, -1]) / 16.0
+            for i in rm[b['name']]:
+                if (b['name'], i) not in vol.parts:
+                    well_front = max(well_front, float(P[[v[0] for v in b['poly_mesh']['polys'][i]], 2].max()))
+    holes = []                                 # what the deck panels may close: removed top surfaces ahead of the panel
+    for b in ac.bones:
+        for i in rm.get(b['name'], set()) | vol.split.get(b['name'], set()):
+            P = np.array(b['poly_mesh']['positions'], float) * np.array([1, 1, -1]) / 16.0
+            V = P[[v[0] for v in b['poly_mesh']['polys'][i]]]
+            n = np.cross(V[1] - V[0], V[-1] - V[0]); ln = np.linalg.norm(n)
+            if ln < 1e-9 or abs(n[1]) / ln < 0.6 or V[:, 2].max() < vol.panel_z or (b['name'], i) in vol.parts:
+                continue
+            for k in range(1, len(V) - 1):
+                holes.append(V[[0, k, k + 1]][:, [0, 2]])
+    vol.holes = np.array(holes).reshape(-1, 3, 2)
+    n_split = 0
+    for b in ac.bones:
+        if b['name'] in vol.split:
+            n_split += split_outline(b['poly_mesh'], vol.split[b['name']] - rm.get(b['name'], set()), shape, vol)
+            rm.setdefault(b['name'], set()).update(vol.split[b['name']])
+    for b in ac.bones:
+        if b['name'] in rm:
+            b['poly_mesh']['polys'] = [p for i, p in enumerate(b['poly_mesh']['polys']) if i not in rm[b['name']] and p]
     ac.bones[:] = [b for b in ac.bones if not b['name'].endswith(('__cockpit', '__canopy'))]
+    skin = Skin(ac)
 
-    # 2. canopy
-    shape = C.Shape(old, spec, tub.E, sill_ref=(tub.back_z, tub.Z + 0.1, tub.sill))
+    # 2. canopy; its front ends where its crown meets the nose skin (no frame tip jutting out ahead of it)
+    for z in np.arange(shape.front, tub.E[2], -0.01):
+        w, ys, c = shape.at(z)
+        if c > skin.top(shape.x0, z, below=c + 0.5) + 0.01:
+            shape.front = float(z)
+            break
     cmesh, cglass = C.build(ac, tub, shape, spec, sw, paint)
     ac.glass = np.array(cglass, float).reshape(-1, 3, 3)
     ac.__dict__.pop('_skin', None); ac.__dict__.pop('_all', None)
 
-    # 3. cockpit, under the new canopy
+    # 3. cockpit, under the new canopy. The coaming reaches forward to the front of the cut (the opening's front
+    # edge), so no hole is left between it and the nose skin
+    if well_front > tub.ws_z:
+        g = ac.glass_above(tub.E[0], well_front - 0.02, tub.sill - 0.4)
+        tub.ws_z = float(well_front)
+        if g is not None:
+            tub.ws_y = float(min(tub.ws_y, g - 0.015))
     mesh, stick, gauges, displays, hud_glass, hud = cockpit(ac, tub, era, fspec, sw)
+    moved = keep_inside(mesh, skin, ac, tub.E)
+    skin = Skin(ac)                              # with the split pieces
+    decked = deck(cmesh, vol, ac, shape, tub, sw.uv(paint), well_front, skin)
     source = max(rm, key=lambda k: len(rm[k])) if rm else 'wreck_fuselage_1__hull'
     piece = source.split('__', 1)[0] if source.startswith('wreck_') else 'wreck_fuselage_1'
     hull = ac.bone('hull')
@@ -195,12 +477,57 @@ def rebuild(vid, ref='origin/main', dry=False):
                                'Triangles': [round(float(v), 4) + 0.0 for p in tri for v in p]}
     rep = (f'{vid} ({era}): cut {sum(len(v) for v in rm.values())} faces {why} from {sorted(rm)}; canopy z '
            f'{shape.rear:.2f}..{shape.front:.2f} paint {paint}; cockpit {len(mesh.faces)} faces, {len(gauges)} gauges, '
-           f'{len(displays)} displays, HUD {"yes" if hud else "no"}')
+           f'{len(displays)} displays, HUD {"yes" if hud else "no"}; {moved} corners pulled inside the skin, {n_split} split pieces kept, {decked} deck panels')
     if not dry:
         with open(ac.geo_path, 'w', newline='\n', encoding='utf-8') as f:
             json.dump(ac.geo, f, separators=(',', ':'))
         C.write_asset_lf(ac.asset_path, ac.asset)
     return ac, rm, vol, rep
+
+
+def interior_only(vid, ref='origin/main', dry=False):
+    """the cockpit rebuilt in its original canopy: only the cockpit interior is cut (the old canopy's frames, posts
+    and glass faces all stay), the detailed cockpit goes in its place, and the vehicle carries no CanopyGlass (the
+    old glass is used only to fit the cockpit under it)"""
+    # the base is the modelled-cockpit model (cockpit_models/fleet.py): its old interior is already gone by the
+    # cockpit tool's rules, and every frame of the original canopy is untouched. Its cockpit bone is replaced.
+    ac = load(vid, COCKPITS_REF)
+    orig = load(vid, ref)                     # the original model: the cockpit is measured on it, as fleet.py did
+    sw = L.Swatches(L.texture_path(vid))
+    fspec = F.FLEET['aircraft'].get(vid, {})
+    era = C.era_of(vid)
+    seat = fspec.get('seat', 0)
+    orig.drop_sight_glass(orig.eye(seat), fspec.get('tub', {}).get('s', 1.0))
+    tub_kw = dict(fspec.get('tub', {}))
+    tub_kw.setdefault('hinge_frac', L.ERAS[era].get('hinge_frac', 0.5))
+    tub = L.Tub(orig, seat, **tub_kw)
+    orig.drop_glass_inside(tub)
+    if not len(orig.glass):
+        raise SystemExit(f'{vid}: no canopy glass to fit the cockpit under')
+    ac.glass = orig.glass.copy()              # fitting only: the old glass is not written
+    rm, why = {}, {'old cockpit bone replaced': 1}
+    old_piece = next((b['name'].split('__', 1)[0] for b in ac.bones if b['name'].endswith('__cockpit')),
+                     'wreck_fuselage_1')       # the new cockpit breaks away with the same wreck piece
+    ac.bones[:] = [b for b in ac.bones if not b['name'].endswith(('__cockpit', '__canopy'))]
+    skin = Skin(ac)
+    ac.__dict__.pop('_skin', None); ac.__dict__.pop('_all', None)
+    mesh, stick, gauges, displays, hud_glass, hud = cockpit(ac, tub, era, fspec, sw)
+    moved = keep_inside(mesh, skin, ac, tub.E)
+    piece = old_piece
+    hull = ac.bone('hull')
+    at = next((i for i, b in enumerate(ac.bones) if b['name'] == piece + '__hull'), len(ac.bones) - 1) + 1
+    ac.bones.insert(at, {'name': piece + '__cockpit', 'parent': 'hull', 'pivot': list(hull['pivot']),
+                         'poly_mesh': mesh.poly_mesh()})
+    write_instruments(ac, seat, gauges, displays, hud, tub)
+    ac.asset.pop('CanopyGlass', None)
+    rep = (f'{vid} ({era}): {why}; old canopy kept, no glass; '
+           f'cockpit {len(mesh.faces)} faces, {len(gauges)} gauges, {len(displays)} displays, '
+           f'HUD {"yes" if hud else "no"}; {moved} corners pulled inside the skin')
+    if not dry:
+        with open(ac.geo_path, 'w', newline='\n', encoding='utf-8') as f:
+            json.dump(ac.geo, f, separators=(',', ':'))
+        C.write_asset_lf(ac.asset_path, ac.asset)
+    return ac, rm, None, rep
 
 
 def cockpit(ac, tub, era, fspec, sw):
@@ -267,8 +594,9 @@ def write_instruments(ac, seat, gauges, displays, hud, tub):
 def main(argv):
     ref = next((a.split('=', 1)[1] for a in argv if a.startswith('--ref=')), 'origin/main')
     dry = '--dry-run' in argv
+    run = interior_only if '--keep-canopy' in argv else rebuild
     for vid in [a for a in argv if not a.startswith('--')]:
-        print(rebuild(vid, ref, dry)[3], flush=True)
+        print(run(vid, ref, dry)[3], flush=True)
 
 
 if __name__ == '__main__':

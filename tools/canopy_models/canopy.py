@@ -323,8 +323,12 @@ def build(ac, tub, shape, spec, sw, paint):
     # sill member: along both lower edges, and round the front tip unless the canopy has a windscreen bow there
     sh, sd, sw_in = spec.get('sill_height', 0.075), spec.get('sill_drop', 0.03), spec.get('sill_width', 0.05)
     rail = []
+    # at a pointed end the rails stop where the canopy is still a few centimetres wide and a short bar closes them:
+    # run on to the point, the member's section would fold over itself into a hook
+    zr = [z for z in zs if shape.at(z)[0] > 0.035 or
+          not ((z > shape.front - 0.3 and shape.ends[1] == 'point') or (z < shape.rear + 0.3 and shape.ends[0] == 'point'))]
     for side, phi in ((1, 0.0), (-1, math.pi)):
-        pts = [shape.point(z, phi) for z in zs]
+        pts = [shape.point(z, phi) for z in zr]
         rail.append(pts)
     # one loop round the canopy: rear (+x side) -> front -> rear (-x side) -> back across the rear; ends that
     # close to a point give coincident corners, which are dropped
@@ -397,11 +401,22 @@ def build(ac, tub, shape, spec, sw, paint):
         z0 = E[2] + ws['dz']
         zz = [z for z in zs if z > z0] or [z0]
         zz = [z0] + zz
-        for phi in (math.pi / 2 - ws['posts'], math.pi / 2 + ws['posts']):
-            pts = np.array([shape.point(z, phi) for z in zz])
+        # the posts stand at a fixed distance either side of the centreline (where the flat front panel meets the side
+        # panels), running straight down to the windscreen base; they never converge across the view
+        dx = ws.get('post_frac', 0.42) * shape.at(z0)[0]
+        def phi_at(z, side):
+            w, ys, c = shape.at(z)
+            if w < 1e-4:
+                return None
+            u = min(dx / w, 0.97) ** (shape.n / 2.0)          # |cos phi| for that x on the superellipse
+            a = math.acos(u)
+            return a if side > 0 else math.pi - a
+        for side in (1, -1):
+            zz_s = [z for z in zz if phi_at(z, side) is not None]
+            pts = np.array([shape.point(z, phi_at(z, side)) for z in zz_s])
             if len(pts) < 2:
                 continue
-            nrm = np.array([shape.normal(z, phi) for z in zz])
+            nrm = np.array([shape.normal(z, phi_at(z, side)) for z in zz_s])
             tng = np.gradient(pts, axis=0)
             side = np.cross(tng, nrm); side /= np.maximum(np.linalg.norm(side, axis=1, keepdims=True), 1e-9)
             hw = ws.get('post_width', 0.035) / 2
