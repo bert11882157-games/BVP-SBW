@@ -539,16 +539,18 @@ ERAS = {
         right_fill=[[('FILLER_FUEL', .050), ('FILLER_CLOCK', .044)]],
         hud=False, displays='CRT', seat='ejection'),
     'COLD_WAR_RADAR': dict(
+        # the radar scope sits top centre under its hood, as on the F-4, F-104, F-86K, Draken, Viggen and MiG-21
         centre=[[('A:cw', .215, .044)],
+                [('D:RADAR', .175)],
                 [('AIRSPEED', .076), ('ATTITUDE', .082), ('ALTIMETER', .076)],
-                [('MACH', .064), ('HEADING', .082), ('VVI', .064)],
-                [('AOA', .057), ('G_METER', .057), ('RADAR_ALT', .057), ('CLOCK', .050)]],
-        centre_fill=[[('TURN_SLIP', .044), ('FILLER_OXYGEN', .044), ('FILLER_VOLTS', .044)]],
+                [('MACH', .064), ('HEADING', .082), ('VVI', .064)]],
+        centre_fill=[[('AOA', .057), ('G_METER', .057), ('RADAR_ALT', .057), ('CLOCK', .050)],
+                     [('TURN_SLIP', .044), ('FILLER_OXYGEN', .044), ('FILLER_VOLTS', .044)]],
         left=[[('ENGINE_RPM', .064), ('EGT', .064)], [('FUEL_QTY', .064), ('FILLER_OIL', .050)],
               [('AMMO', .057), ('FILLER_HYDRAULIC', .050)]],
         left_fill=[[('THROTTLE', .050), ('FILLER_TEMP', .050)]],
-        right=[[('D:RADAR', .195)], [('RWR', .064), ('TURN_SLIP', .050)], [('FILLER_OXYGEN', .044), ('FILLER_VOLTS', .044)]],
-        right_fill=[[('FILLER_TEMP', .044), ('FILLER_CLOCK', .044)]],
+        right=[[('RWR', .064), ('RADAR_ALT', .057)], [('AOA', .057), ('G_METER', .057)], [('TURN_SLIP', .050), ('CLOCK', .050)]],
+        right_fill=[[('FILLER_OXYGEN', .044), ('FILLER_VOLTS', .044)], [('FILLER_TEMP', .044), ('FILLER_CLOCK', .044)]],
         hud=False, displays='CRT', seat='ejection'),
     'GEN4_CRT': dict(
         centre=[[('UFCP', .170)], [('D:RADAR', .215), ('D:PFD', .215)],

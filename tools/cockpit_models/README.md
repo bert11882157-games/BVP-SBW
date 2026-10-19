@@ -116,7 +116,7 @@ MiG-29's generator turned into a fitted, parametric one:
   gear lever on the left). Live dials: the basic six, Mach, AoA, G, RWR, fuel quantity, radar altimeter, clock,
   turn and slip, engine RPM, EGT and the rounds counter (`FUEL_QTY`, `RADAR_ALT`, `CLOCK`, `TURN_SLIP`,
   `ENGINE_RPM`, `EGT`, `AMMO` in `GaugePainter`); the `FILLER_*` dials stand still. Steam eras get the basic six, turn
-  and slip, engine and systems dials; radar eras a radar scope with a hood and an RWR; the glass eras two large
+  and slip, engine and systems dials; radar eras a radar scope with a hood top centre under the caution strip (where the F-4, F-104, Draken, Viggen and MiG-21 carry theirs) and an RWR; the glass eras two large
   displays under an up-front control panel, a third on the left wing, standby dials and engine dials. A stores page
   gets the airframe planform for its diagram.
 - **Annunciators.** A caution and warning panel per aircraft, drawn and lit by the game (`Annunciator.kt`): a
