@@ -668,7 +668,7 @@ def face_tris(ac, tex, bones=None):
     return np.array(tris).reshape(-1, 3, 3), np.array(uvs).reshape(-1, 3, 2), own
 
 
-def seen_polys(tris, uvs, own, occ, centre, tex):
+def seen_polys(tris, uvs, own, occ, centre, tex, through_opening=True):
     """{(bone, poly)} of the polys seen from outside (vis.visible, alpha-tested against the texture)"""
     import vis as VS
     H, W = tex.shape[:2]
@@ -678,7 +678,7 @@ def seen_polys(tris, uvs, own, occ, centre, tex):
         return tex[ty, tx, 3] > 127
     radius = 4.0
     idx = np.arange(len(tris))         # all of it: geometry far along a view's depth still occludes
-    s = VS.visible(tris[idx], occ, centre, radius, alpha=lambda i, w: alpha(idx[i], w))
+    s = VS.visible(tris[idx], occ, centre, radius, alpha=lambda i, w: alpha(idx[i], w), through_opening=through_opening)
     return {own[idx[i]] for i in s}
 
 
@@ -797,11 +797,22 @@ def interior_strict(vid, ref='origin/main', dry=False):
     tris, uvs, own = face_tris(ac, tex)
     seen = seen_polys(tris, uvs, own, occ_glass, centre, tex)
     dropped = 0
+    kept_glass, ac.glass = ac.glass, all_glass        # the whole canopy for the poke-through test
+
+    def above_glass(V):
+        """a corner standing out above the canopy glass: glass under it in its column, none over it"""
+        for p in V:
+            if ac.glass_above(p[0], p[2], p[1]) is None and ac.glass_above(p[0], p[2], -1e9) is not None:
+                return True
+        return False
     for b in ac.bones:
         if b['name'] in new and b.get('poly_mesh'):
             bad = {i for (n, i) in seen if n == b['name']}
+            P = np.array(b['poly_mesh']['positions'], float) * np.array([1, 1, -1]) / 16.0
+            bad |= {i for i, p in enumerate(b['poly_mesh']['polys']) if above_glass(P[[v[0] for v in p]])}
             dropped += len(bad)
             b['poly_mesh']['polys'] = [p for i, p in enumerate(b['poly_mesh']['polys']) if i not in bad]
+    ac.glass = kept_glass
     write_instruments(ac, seat, gauges, displays, hud, tub)
     ac.asset.pop('CanopyGlass', None)
     rep = (f'{vid} ({era}): cut {sum(len(v) for v in rm.values())} hidden faces '
@@ -812,6 +823,12 @@ def interior_strict(vid, ref='origin/main', dry=False):
         with open(ac.geo_path, 'w', newline='\n', encoding='utf-8') as f:
             json.dump(ac.geo, f, separators=(',', ':'))
         C.write_asset_lf(ac.asset_path, ac.asset)
+        if getattr(ac, 'atlas', None) is not None:
+            tex_dir = os.path.join(ROOT, REL, 'textures')
+            ac.atlas.write(os.path.join(tex_dir, 'entity', vid + '.png'))
+            dead = os.path.join(tex_dir, 'entity_dead', vid + '.png')
+            if os.path.exists(dead):
+                ac.atlas.write(dead, dead=True)
     return ac, rm, well, rep
 
 
@@ -868,13 +885,22 @@ def cockpit(ac, tub, era, fspec, sw):
     rigged = bool(sticks) and rig and rig.get('Schema') == 2 and \
         any(sf.get('Bone') == 'control_stick_pitch' for sf in rig.get('Surfaces', []))
     side = fspec.get('side_stick')
-    foot = (np.array([E[0] - side * 0.30 * s, tub.console_y + 0.02 * s, E[2] + 0.28 * s]) if side
-            else np.array([E[0], E[1] - 0.92 * s, E[2] + 0.44 * s]))
-    mesh, stick, gauges, displays, glass, hud = L.build(ac, tub, era, fspec.get('palette', 'nato'), sw,
-                                                        hud=fspec.get('hud'), gunsight=fspec.get('gunsight', True),
-                                                        stick_foot=foot, side_stick=bool(side))
-    import detail as D
-    D.add(mesh, tub, D.colours(sw, fspec.get('palette', 'nato')), era, displays)
+    import authored
+    mod = authored.module(ac.vid)
+    if mod is not None:
+        # an authored cockpit (tools/cockpit_models/authored/<vid>.py): built from the type's references, its
+        # painted faces in a free area of the texture (written with the model)
+        from authored import lib as AL
+        ac.atlas = AL.Atlas(ac.vid)
+        mesh, stick, gauges, displays, glass, hud, foot = mod.build(ac, tub, sw, ac.atlas)
+    else:
+        foot = (np.array([E[0] - side * 0.30 * s, tub.console_y + 0.02 * s, E[2] + 0.28 * s]) if side
+                else np.array([E[0], E[1] - 0.92 * s, E[2] + 0.44 * s]))
+        mesh, stick, gauges, displays, glass, hud = L.build(ac, tub, era, fspec.get('palette', 'nato'), sw,
+                                                            hud=fspec.get('hud'), gunsight=fspec.get('gunsight', True),
+                                                            stick_foot=foot, side_stick=bool(side))
+        import detail as D
+        D.add(mesh, tub, D.colours(sw, fspec.get('palette', 'nato')), era, displays)
     if rigged:
         px = L.r5(foot * np.array([16.0, 16.0, -16.0]))
         for b in ac.bones:
