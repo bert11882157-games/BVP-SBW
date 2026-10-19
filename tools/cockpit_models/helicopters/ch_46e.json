@@ -1,5 +1,5 @@
 {
- "reference": "CH-46E Sea Knight (USMC): side-by-side pilot (right) and co-pilot (left) at a dark-grey steam-gauge panel: each pilot has the basic T (airspeed, ADI, altimeter; radar altimeter, HSI, VSI; clock, turn-and-slip) with the dual rotor tachometer, dual torque, Ng and TGT beside it toward the centre, engine/transmission dials on the centre panel between them (hook), centre cyclics, collectives on each pilot's left; the two T58-GE-16 engines' condition levers sit in the overhead quadrant in the real aircraft (here two power levers on the left console). NASM CH-46E Sea Knight collection page (airandspace.si.edu), Pima Air & Space CH-46E page, Academy 1/48 HH-46D kit reviews (modelingmadness.com, cybermodeler.com), model's own seat/canopy measurements. Caution-panel position is judgement (no photo could be downloaded).",
+ "reference": "CH-46E Sea Knight (USMC). Panels placed from photos cockpit-refs/ch_46e/ch_46e_01.jpg (Control panel of a CH-46, Looper5920, CC BY-SA 3.0: pilot panel with airspeed, ADI and radar altimeter over a multifunction display, CDI, vertical rotor-tach/torque tapes and clock inboard, altimeter, VVI and standby attitude outboard; co-pilot panel the mirror of it; centre panel with the caution grid at the top left, the engine dials under it and a grid of engine/transmission dials on the right) and ch_46e_03.jpg (USMC-11605, public domain: the same centre panel and co-pilot T); ch_46e_04.jpg (in flight) for the coaming only. Pilot right (seat 0), co-pilot left (seat 1). Each pilot's display drawn at about twice real (0.32 m). The centre panel's live parts sit on the two inner wings (co-pilot's: caution panel, Ng, TGT; pilot's: fuel, transmission dials, RWR), the hook draws its dial grid on the plate between them. Windscreen-base height overridden (ws_y) so the coaming no longer drops across the inner wings.",
  "palette": "nato",
  "stations": [
   {
@@ -11,14 +11,15 @@
    "pedals": true,
    "tub": {
     "W": 0.46,
-    "top_w": 1.81
+    "top_w": 1.81,
+    "ws_y": 1.93
    },
    "panel": {
     "centre": [
      [
       "AIRSPEED",
-      -0.098,
-      0.065,
+      -0.11,
+      0.066,
       0.08
      ],
      [
@@ -28,102 +29,98 @@
       0.1
      ],
      [
-      "ALTIMETER",
-      0.098,
-      0.065,
-      0.08
-     ],
-     [
       "RADAR_ALT",
-      -0.098,
-      0.165,
+      0.11,
+      0.066,
       0.08
      ],
      [
-      "HEADING",
+      "D:PFD",
       0,
-      0.188,
-      0.1
-     ],
-     [
-      "VVI",
-      0.098,
-      0.165,
-      0.08
-     ],
-     [
-      "CLOCK",
-      -0.098,
-      0.26,
-      0.06
-     ],
-     [
-      "TURN_SLIP",
-      0.098,
-      0.26,
-      0.06
-     ],
-     [
-      "B:SWITCHES",
-      0,
-      0.36,
-      0.3,
-      0.06
-     ],
-     [
-      "B:KNOBS",
-      0,
-      0.43,
-      0.2,
-      0.04
+      0.3305,
+      0.32
      ]
     ],
     "left": [
      [
-      "ROTOR_RPM",
-      0.06,
-      0.06,
+      "HEADING",
+      0.052,
+      0.078,
       0.08
+     ],
+     [
+      "ROTOR_RPM",
+      0.031,
+      0.17,
+      0.05
      ],
      [
       "TORQUE",
-      0.155,
-      0.065,
-      0.08
+      0.091,
+      0.17,
+      0.05
      ],
      [
-      "ENGINE_RPM",
-      0.06,
-      0.16,
-      0.06
+      "CLOCK",
+      0.05,
+      0.255,
+      0.05
      ],
      [
-      "EGT",
-      0.155,
-      0.16,
-      0.06
+      "FUEL_QTY",
+      0.153,
+      0.115,
+      0.05
      ],
      [
-      "A:heli",
-      0.13,
+      "FILLER_HYDRAULIC",
+      0.213,
+      0.14,
+      0.05
+     ],
+     [
+      "FILLER_OIL",
+      0.153,
+      0.18,
+      0.05
+     ],
+     [
+      "FILLER_TEMP",
+      0.213,
+      0.205,
+      0.05
+     ],
+     [
+      "RWR",
+      0.153,
+      0.25,
+      0.05
+     ],
+     [
+      "FILLER_VOLTS",
+      0.213,
       0.27,
-      0.2,
       0.05
      ]
     ],
     "right": [
      [
-      "RWR",
-      0.07,
-      0.06,
-      0.07
+      "ALTIMETER",
+      0.065,
+      0.075,
+      0.08
      ],
      [
-      "B:SWITCHES",
-      0.12,
+      "VVI",
+      0.065,
       0.17,
-      0.18,
-      0.07
+      0.08
+     ],
+     [
+      "ATTITUDE",
+      0.065,
+      0.265,
+      0.08
      ]
     ]
    }
@@ -143,14 +140,15 @@
    "pedals": true,
    "tub": {
     "W": 0.46,
-    "top_w": 1.81
+    "top_w": 1.81,
+    "ws_y": 1.93
    },
    "panel": {
     "centre": [
      [
       "AIRSPEED",
-      -0.098,
-      0.065,
+      0.11,
+      0.066,
       0.08
      ],
      [
@@ -160,102 +158,93 @@
       0.1
      ],
      [
-      "ALTIMETER",
-      0.098,
-      0.065,
-      0.08
-     ],
-     [
       "RADAR_ALT",
-      -0.098,
-      0.165,
+      -0.11,
+      0.066,
       0.08
      ],
      [
-      "HEADING",
+      "D:PFD",
       0,
-      0.188,
-      0.1
-     ],
-     [
-      "VVI",
-      0.098,
-      0.165,
-      0.08
-     ],
-     [
-      "CLOCK",
-      -0.098,
-      0.26,
-      0.06
-     ],
-     [
-      "TURN_SLIP",
-      0.098,
-      0.26,
-      0.06
-     ],
-     [
-      "B:SWITCHES",
-      0,
-      0.36,
-      0.3,
-      0.06
-     ],
-     [
-      "B:KNOBS",
-      0,
-      0.43,
-      0.2,
-      0.04
+      0.3305,
+      0.32
      ]
     ],
     "right": [
      [
-      "ROTOR_RPM",
-      0.06,
-      0.06,
+      "HEADING",
+      0.052,
+      0.078,
       0.08
+     ],
+     [
+      "ROTOR_RPM",
+      0.031,
+      0.17,
+      0.05
      ],
      [
       "TORQUE",
-      0.155,
-      0.065,
-      0.08
+      0.091,
+      0.17,
+      0.05
+     ],
+     [
+      "CLOCK",
+      0.05,
+      0.255,
+      0.05
+     ],
+     [
+      "A:heli",
+      0.181,
+      0.12,
+      0.12,
+      0.1
      ],
      [
       "ENGINE_RPM",
-      0.06,
-      0.16,
-      0.06
+      0.153,
+      0.215,
+      0.05
      ],
      [
       "EGT",
-      0.155,
-      0.16,
-      0.06
+      0.213,
+      0.235,
+      0.05
      ],
      [
-      "A:heli_small",
-      0.13,
-      0.27,
-      0.12,
+      "FILLER_OIL",
+      0.153,
+      0.28,
+      0.05
+     ],
+     [
+      "FILLER_TEMP",
+      0.213,
+      0.3,
       0.05
      ]
     ],
     "left": [
      [
-      "RWR",
-      0.07,
-      0.06,
-      0.07
+      "ALTIMETER",
+      0.065,
+      0.075,
+      0.08
      ],
      [
-      "B:SWITCHES",
-      0.12,
+      "VVI",
+      0.065,
       0.17,
-      0.18,
-      0.07
+      0.08
+     ],
+     [
+      "ATTITUDE",
+      0.065,
+      0.265,
+      0.08
      ]
     ]
    }

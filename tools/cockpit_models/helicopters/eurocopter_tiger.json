@@ -1,5 +1,5 @@
 {
- "reference": "Tiger HAP/HAD: NLR paper on the Tiger cockpit (https://dspace-erf.nlr.nl/bitstreams/bf0af652-e0bc-4278-9a1c-c45617881a4f/download: two MFDs with 6x6 in usable screens per cockpit, instrument panel centrally in front of each crewman inclined 22 deg, top limited by the 22 deg look-down line; one CDU (14-line display, alphanumeric keyboard) per cockpit in the desk between the instrument panel and the side console; a set of standby instruments; dedicated warning panel plus master warning and fire lights; HUD in the HAP pilot's (front) cockpit only; gunner's roof-mounted sight), https://www.army-technology.com/projects/tiger/, https://www.airbus.com/en/products-services/helicopters/military-helicopters/tiger. Pilot in front, gunner behind; dual controls. The mod's seat 0 is the rear (gunner's) seat and gets the Strix viewing head. MFDs drawn ~1.2x real for readability. Warning-panel position is judgement (no photo could be downloaded).",
+ "reference": "Tiger HAP/HAD. Panels placed from photos cockpit-refs/eurocopter_tiger/eurocopter_tiger_01.jpg (Tigre HAP front cockpit, Outisnn, CC BY-SA 3.0: two MFDs side by side, AFCS push-button block and the standby clock to their left, radio control panel and RFI under them, standby attitude, altimeter, airspeed and VVI right of the right MFD) and eurocopter_tiger_02.jpg (Gyrostat, CC BY-SA 4.0: RCP, RFI and the rotor RPM, T4 and torque dials in one row under the MFDs); _03.jpg (UHT side view) only for the canopy. No rear-cockpit photo exists on Commons: the rear seat repeats the front layout (NLR paper https://dspace-erf.nlr.nl/bitstreams/bf0af652-e0bc-4278-9a1c-c45617881a4f/download: the same two MFDs per cockpit, CDU in the side desk, HUD front only, gunner's roof sight). Warning strip at the top left of the centre facet, beside the HUD's control strip (the photos show no separate caution panel on the front face). MFDs 0.345 m (about twice real), kept. The mod's seat 0 is the rear (gunner's) seat and gets the Strix viewing head.",
  "palette": "modern",
  "remove": [
   [
@@ -47,120 +47,103 @@
    "panel": {
     "centre": [
      [
+      "A:heli",
+      -0.2,
+      0.018,
+      0.26,
+      0.03
+     ],
+     [
       "D:STORES",
       -0.2185,
-      0.2185,
+      0.2465,
       0.345
      ],
      [
       "D:RADAR",
       0.2185,
-      0.2185,
+      0.2465,
       0.345
      ],
      [
-      "AMMO",
-      -0.21,
-      0.47,
-      0.052
+      "B:KNOBS",
+      -0.2,
+      0.528,
+      0.24,
+      0.085
      ],
      [
-      "AIRSPEED",
-      -0.07,
-      0.47,
-      0.052
-     ],
-     [
-      "ATTITUDE",
-      0,
-      0.47,
-      0.064
-     ],
-     [
-      "ALTIMETER",
-      0.07,
-      0.47,
-      0.052
+      "B:KEYPAD",
+      0.03,
+      0.528,
+      0.14,
+      0.075
      ],
      [
       "ROTOR_RPM",
-      0.21,
-      0.47,
+      0.14,
+      0.528,
       0.052
      ],
      [
-      "HEADING",
-      -0.07,
-      0.537,
-      0.052
-     ],
-     [
-      "CLOCK",
-      0.07,
-      0.537,
-      0.052
-     ],
-     [
-      "A:heli_small",
-      -0.25,
-      0.537,
-      0.12,
-      0.045
-     ],
-     [
-      "UFCP",
-      0.25,
-      0.535,
-      0.17
-     ]
-    ],
-    "left": [
-     [
-      "RADAR_ALT",
-      0.075,
-      0.06,
+      "EGT",
+      0.205,
+      0.528,
       0.052
      ],
      [
       "TORQUE",
-      0.075,
-      0.13,
+      0.27,
+      0.528,
       0.052
-     ],
+     ]
+    ],
+    "left": [
      [
       "B:SWITCHES",
-      0.075,
-      0.22,
-      0.12,
+      0.077,
+      0.076,
+      0.13,
       0.08
      ],
      [
-      "B:KNOBS",
-      0.075,
-      0.29,
-      0.12,
-      0.04
+      "B:KEYPAD",
+      0.077,
+      0.195,
+      0.13,
+      0.13
+     ],
+     [
+      "CLOCK",
+      0.077,
+      0.32,
+      0.06
      ]
     ],
     "right": [
      [
-      "RWR",
-      0.075,
+      "ATTITUDE",
+      0.077,
       0.06,
-      0.06
+      0.064
      ],
      [
-      "FUEL_QTY",
-      0.075,
-      0.135,
+      "ALTIMETER",
+      0.042,
+      0.15,
       0.052
      ],
      [
-      "B:SWITCHES",
-      0.075,
-      0.22,
-      0.12,
-      0.08
+      "AIRSPEED",
+      0.112,
+      0.15,
+      0.052
+     ],
+     [
+      "VVI",
+      0.112,
+      0.225,
+      0.052
      ]
     ]
    }
@@ -189,137 +172,103 @@
    "panel": {
     "centre": [
      [
+      "A:heli",
+      -0.2,
+      0.018,
+      0.26,
+      0.03
+     ],
+     [
       "D:PFD",
       -0.2185,
-      0.2185,
+      0.2465,
       0.345
      ],
      [
       "D:STORES",
       0.2185,
-      0.2185,
+      0.2465,
       0.345
      ],
      [
-      "RADAR_ALT",
-      -0.21,
-      0.47,
-      0.052
+      "B:KNOBS",
+      -0.2,
+      0.528,
+      0.24,
+      0.085
      ],
      [
-      "AIRSPEED",
-      -0.07,
-      0.47,
-      0.052
-     ],
-     [
-      "ATTITUDE",
-      0,
-      0.47,
-      0.064
-     ],
-     [
-      "ALTIMETER",
-      0.07,
-      0.47,
-      0.052
-     ],
-     [
-      "VVI",
-      0.21,
-      0.47,
-      0.052
-     ],
-     [
-      "ENGINE_RPM",
-      -0.14,
-      0.537,
-      0.052
+      "B:KEYPAD",
+      0.03,
+      0.528,
+      0.14,
+      0.075
      ],
      [
       "ROTOR_RPM",
-      -0.07,
-      0.537,
-      0.052
-     ],
-     [
-      "HEADING",
-      0,
-      0.537,
-      0.052
-     ],
-     [
-      "TORQUE",
-      0.07,
-      0.537,
+      0.14,
+      0.528,
       0.052
      ],
      [
       "EGT",
-      0.14,
-      0.537,
+      0.205,
+      0.528,
       0.052
      ],
      [
-      "A:heli",
-      -0.32,
-      0.537,
-      0.2,
-      0.036
-     ],
-     [
-      "UFCP",
-      0.32,
-      0.535,
-      0.17
+      "TORQUE",
+      0.27,
+      0.528,
+      0.052
      ]
     ],
     "left": [
      [
-      "CLOCK",
-      0.075,
-      0.06,
-      0.052
-     ],
-     [
-      "FUEL_QTY",
-      0.075,
-      0.13,
-      0.052
-     ],
-     [
-      "G_METER",
-      0.075,
-      0.2,
-      0.052
-     ],
-     [
       "B:SWITCHES",
-      0.075,
-      0.29,
-      0.12,
+      0.077,
+      0.076,
+      0.13,
       0.08
+     ],
+     [
+      "B:KEYPAD",
+      0.077,
+      0.195,
+      0.13,
+      0.13
+     ],
+     [
+      "CLOCK",
+      0.077,
+      0.32,
+      0.06
      ]
     ],
     "right": [
      [
-      "RWR",
-      0.075,
+      "ATTITUDE",
+      0.077,
       0.06,
-      0.06
+      0.064
      ],
      [
-      "THROTTLE",
-      0.075,
-      0.135,
+      "ALTIMETER",
+      0.042,
+      0.15,
       0.052
      ],
      [
-      "B:SWITCHES",
-      0.075,
-      0.22,
-      0.12,
-      0.08
+      "AIRSPEED",
+      0.112,
+      0.15,
+      0.052
+     ],
+     [
+      "VVI",
+      0.112,
+      0.225,
+      0.052
      ]
     ]
    }

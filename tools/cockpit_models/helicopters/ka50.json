@@ -1,5 +1,5 @@
 {
- "reference": "Ka-50 (single seat). Panel layout from openflightschool.de Ka-50 cockpit overview (https://www.openflightschool.de/mod/book/tool/print/index.php?id=599: front panel left = flight instruments (speed, altitude, climb rate, attitude, course); middle = ILS-31 HUD, Shkval IT-23 screen, PUI-800 weapons status/control panel, target-display control panel, landing-light/voice panel; right = EKRAN warning display, EGT, engine speed, fuel quantity bottom right; PVI-800 on the right console, not the front panel), DCS forum thread 40290 (master warning light left of the VVI, above the G-meter, left side of the front panel), DCS Black Shark 2 flight manual figures (turquoise panels, IT-23 with hood top centre), https://en.wikipedia.org/wiki/Kamov_Ka-50. Photos could not be downloaded from this session (proxy blocks image hosts). IT-23 drawn 1.2x real for readability. The texture has no turquoise: the panel is its nearest blue.",
+ "reference": "Ka-50 (single seat). Panel placed from photos cockpit-refs/ka50/ka50_01.jpg (Ka-50 Black Shark cockpit, Alex Beltyukov, CC BY-SA 3.0: IT-23 with the ABRIS to its right, flight dials left) and the front-panel pages of Chuck's DCS Ka-50 guide (layout reference only: p-028 whole front panel, p-030/p-031 left flight block, p-034 caution-lights panel and master caution, p-044 EKRAN, SAI, ABRIS and engine dials). ka50_02..04.jpg are Ka-52 (different glass panel), not used. Left wing: column B (G-meter, airspeed, altimeter, blade angle) and outer column A (lamp-test switches, radar altimeter, rotor RPM, clock); centre: caution-lights panel over column C (VVI, ADI, HSI), the IT-23 under the ILS-31 HUD (0.31 m, kept), the PUI-800 below it (rounds counter, switches); right wing: EKRAN and the standby ADI over the ABRIS, with EGT, engine RPM and fuel below it (on the real panel they are a column right of the ABRIS: the 0.22 m wing has no room for both). The texture has no turquoise: the panel is its nearest blue.",
  "palette": "soviet",
  "stations": [
   {
@@ -17,159 +17,147 @@
     "wing": 35
    },
    "panel": {
-    "centre": [
+    "left": [
      [
-      "D:STORES",
-      0,
-      0.232,
-      0.31
-     ],
-     [
-      "AIRSPEED",
-      -0.234,
-      0.045,
+      "G_METER",
+      0.05,
+      0.1,
       0.06
      ],
      [
+      "AIRSPEED",
+      0.05,
+      0.19,
+      0.075
+     ],
+     [
       "ALTIMETER",
-      -0.234,
-      0.12,
+      0.05,
+      0.28,
+      0.075
+     ],
+     [
+      "FILLER_RPM",
+      0.05,
+      0.37,
+      0.065
+     ],
+     [
+      "B:SWITCHES",
+      0.145,
+      0.1,
+      0.07,
       0.06
      ],
      [
       "RADAR_ALT",
-      -0.234,
-      0.195,
-      0.06
-     ],
-     [
-      "B:SWITCHES",
-      -0.234,
-      0.29,
-      0.07,
-      0.1
+      0.145,
+      0.19,
+      0.075
      ],
      [
       "ROTOR_RPM",
-      0.234,
-      0.045,
-      0.06
+      0.145,
+      0.28,
+      0.075
      ],
      [
-      "ENGINE_RPM",
-      0.234,
-      0.12,
-      0.06
-     ],
-     [
-      "EGT",
-      0.234,
-      0.195,
-      0.06
-     ],
-     [
-      "THROTTLE",
-      0.234,
-      0.27,
-      0.055
-     ],
-     [
-      "B:SWITCHES",
-      0,
-      0.47,
-      0.22,
-      0.06
-     ],
-     [
-      "B:KNOBS",
-      0,
-      0.52,
-      0.18,
-      0.04
+      "CLOCK",
+      0.145,
+      0.37,
+      0.065
      ]
     ],
-    "left": [
+    "centre": [
+     [
+      "A:heli_small",
+      -0.215,
+      0.035,
+      0.1,
+      0.05
+     ],
+     [
+      "VVI",
+      -0.215,
+      0.105,
+      0.075
+     ],
      [
       "ATTITUDE",
-      0.065,
-      0.065,
+      -0.215,
+      0.205,
       0.09
      ],
      [
       "HEADING",
-      0.065,
-      0.175,
+      -0.215,
+      0.315,
       0.09
      ],
      [
-      "VVI",
-      0.165,
+      "B:KNOBS",
+      -0.215,
+      0.405,
+      0.09,
+      0.05
+     ],
+     [
+      "D:STORES",
       0.045,
-      0.06
+      0.205,
+      0.31
      ],
      [
-      "G_METER",
-      0.165,
-      0.12,
-      0.055
-     ],
-     [
-      "CLOCK",
-      0.165,
-      0.19,
+      "AMMO",
+      -0.07,
+      0.448,
       0.05
      ],
      [
       "B:SWITCHES",
-      0.11,
-      0.3,
-      0.18,
+      0.06,
+      0.448,
+      0.17,
       0.07
      ]
     ],
     "right": [
      [
       "A:heli",
-      0.1,
       0.06,
-      0.17,
+      0.042,
+      0.09,
       0.06
      ],
      [
-      "TORQUE",
-      0.06,
-      0.145,
+      "ATTITUDE",
+      0.165,
+      0.04,
+      0.058
+     ],
+     [
+      "D:RADAR",
+      0.112,
+      0.2,
+      0.177
+     ],
+     [
+      "EGT",
+      0.04,
+      0.358,
       0.06
      ],
      [
-      "FILLER_HYDRAULIC",
-      0.16,
-      0.145,
+      "ENGINE_RPM",
+      0.112,
+      0.358,
       0.06
-     ],
-     [
-      "RWR",
-      0.06,
-      0.23,
-      0.065
      ],
      [
       "FUEL_QTY",
-      0.16,
-      0.23,
+      0.184,
+      0.358,
       0.06
-     ],
-     [
-      "FILLER_VOLTS",
-      0.06,
-      0.315,
-      0.05
-     ],
-     [
-      "FILLER_OIL",
-      0.16,
-      0.315,
-      0.05
      ]
     ]
    }
