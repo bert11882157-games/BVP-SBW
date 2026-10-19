@@ -575,7 +575,8 @@
         "HydraS3Lau131",
         "HydraS3",
         "HydraS4Lau131",
-        "HydraS4"
+        "HydraS4",
+        "PassengerGun1"
       ],
       "CanRotateHead": true,
       "CameraPos": {
@@ -623,7 +624,15 @@
         5.375
       ],
       "Weapons": [
-        "PassengerGun1"
+        "PassengerGun1",
+        "HydraS1Lau131",
+        "HydraS1",
+        "HydraS2Lau131",
+        "HydraS2",
+        "HydraS3Lau131",
+        "HydraS3",
+        "HydraS4Lau131",
+        "HydraS4"
       ],
       "CanRotateHead": true,
       "CameraPos": {
@@ -708,11 +717,113 @@
       },
       "AmmoType": [
         {
-          "Ammo": "superbwarfare:small_shell_he",
+          "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
-              "Profile": "berts_vehicle_pack:aircraft_rounds/m197/m197_air_game"
+              "Profile": "berts_vehicle_pack:ah_1f/passengergun1/belt_ammo_wt_m197_hei_t"
+            },
+            "ShellType": "HE",
+            "Velocity": 64.375,
+            "ApDurability": 2,
+            "Damage": 166.66666666666666,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 3.333333333333333,
+            "TntEquivalentKg": 0.0081,
+            "Name": "Default",
+            "ProjectileBelt": {
+              "Name": "Default",
+              "Family": "GENERIC",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "m197_hei_t",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "RED"
+                },
+                {
+                  "Shots": 2,
+                  "Round": "m197_hef_i",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "m197_ap_i",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:ah_1f/passengergun1/belt_ammo_wt_m197_hei_t",
+              "ProjectileLife": 400
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_aa",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:ah_1f/passengergun1/belt_ammo_wt_m197_ap_i"
+            },
+            "ShellType": "AP",
+            "Velocity": 64.375,
+            "ApDurability": 40,
+            "Damage": 45,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "Universal",
+            "ProjectileBelt": {
+              "Name": "Universal",
+              "Family": "GENERIC",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "m197_hei_t",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "RED"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "m197_ap_i",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "m197_hef_i",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "m197_ap_i",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:ah_1f/passengergun1/belt_ammo_wt_m197_ap_i",
+              "ProjectileLife": 400
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:ah_1f/passengergun1/belt_ammo_wt_m197_hef_i"
             },
             "ShellType": "HE",
             "Velocity": 64.375,
@@ -721,73 +832,134 @@
             "ExplosionDamage": 0,
             "ExplosionRadius": 3.333333333333333,
             "TntEquivalentKg": 0.0117,
-            "Name": "Air Belt",
+            "Name": "Air targets",
             "ProjectileBelt": {
-              "Name": "Air Belt",
+              "Name": "Air targets",
+              "Family": "GENERIC",
               "Rounds": [
                 {
-                  "Shots": 3,
-                  "Round": "m197_air_game",
+                  "Shots": 1,
+                  "Round": "m197_hei_t",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "RED"
+                },
+                {
+                  "Shots": 2,
+                  "Round": "m197_hef_i",
                   "Ammo": "superbwarfare:small_shell_he",
                   "Tracer": "NONE"
                 },
                 {
                   "Shots": 1,
-                  "Round": "m197_ground_game",
-                  "Ammo": "superbwarfare:small_shell_ap",
-                  "Tracer": "RED"
+                  "Round": "m197_ap_i",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "NONE"
                 }
               ]
             },
             "NominalBallistics": {
               "Supported": true,
               "ProjectileType": "superbwarfare:small_cannon_shell",
-              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/m197/m197_air_game",
+              "ProjectileProfile": "berts_vehicle_pack:ah_1f/passengergun1/belt_ammo_wt_m197_hef_i",
               "ProjectileLife": 400
             }
-          },
-          "ConsumptionItem": "superbwarfare:small_autocannon_shell"
+          }
         },
         {
-          "Ammo": "superbwarfare:small_shell_ap",
+          "Ammo": "superbwarfare:small_shell_gs",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
-              "Profile": "berts_vehicle_pack:aircraft_rounds/m197/m197_ground_game"
+              "Profile": "berts_vehicle_pack:ah_1f/passengergun1/belt_ammo_wt_m197_hei_t"
             },
-            "ShellType": "AP",
+            "ShellType": "HE",
             "Velocity": 64.375,
-            "ApDurability": 40,
-            "Damage": 45,
+            "ApDurability": 2,
+            "Damage": 166.66666666666666,
             "ExplosionDamage": 0,
-            "ExplosionRadius": 0,
-            "TntEquivalentKg": 0.0,
-            "Name": "Ground Belt",
+            "ExplosionRadius": 3.333333333333333,
+            "TntEquivalentKg": 0.0081,
+            "Name": "Armored targets",
             "ProjectileBelt": {
-              "Name": "Ground Belt",
+              "Name": "Armored targets",
+              "Family": "GENERIC",
               "Rounds": [
                 {
-                  "Shots": 3,
-                  "Round": "m197_ground_game",
+                  "Shots": 1,
+                  "Round": "m197_hei_t",
                   "Ammo": "superbwarfare:small_shell_ap",
-                  "Tracer": "NONE"
+                  "Tracer": "RED"
                 },
                 {
-                  "Shots": 1,
-                  "Round": "m197_air_game",
-                  "Ammo": "superbwarfare:small_shell_he",
-                  "Tracer": "RED"
+                  "Shots": 3,
+                  "Round": "m197_ap_i",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "NONE"
                 }
               ]
             },
             "NominalBallistics": {
               "Supported": true,
               "ProjectileType": "superbwarfare:small_cannon_shell",
-              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/m197/m197_ground_game",
+              "ProjectileProfile": "berts_vehicle_pack:ah_1f/passengergun1/belt_ammo_wt_m197_hei_t",
               "ProjectileLife": 400
             }
-          },
-          "ConsumptionItem": "superbwarfare:small_autocannon_shell"
+          }
+        },
+        {
+          "Ammo": "superbwarfare:large_shell_ap",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:ah_1f/passengergun1/belt_ammo_wt_m197_hef_i"
+            },
+            "ShellType": "HE",
+            "Velocity": 64.375,
+            "ApDurability": 2,
+            "Damage": 166.66666666666666,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 3.333333333333333,
+            "TntEquivalentKg": 0.0117,
+            "Name": "Stealth",
+            "ProjectileBelt": {
+              "Name": "Stealth",
+              "Family": "GENERIC",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "m197_hef_i",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "m197_ap_i",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "m197_hef_i",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "m197_ap_i",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:ah_1f/passengergun1/belt_ammo_wt_m197_hef_i",
+              "ProjectileLife": 400
+            }
+          }
         }
       ],
       "ProjectileBeltAmmoType": [],
@@ -4221,12 +4393,12 @@
     60
   ],
   "PassengerWeaponStationYawRange": [
-    -60,
-    60
+    -100,
+    100
   ],
   "PassengerWeaponStationPitchRange": [
-    -10,
-    40
+    -50,
+    10
   ],
   "RemoteWeaponStation": true,
   "PassengerWeaponStationBinding": {

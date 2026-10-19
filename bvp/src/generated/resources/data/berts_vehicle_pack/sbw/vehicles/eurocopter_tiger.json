@@ -153,7 +153,16 @@
         1.66992125,
         3.58555875
       ],
-      "Weapons": [],
+      "Weapons": [
+        "FfarS2Fz225",
+        "M3PS2Hmp400",
+        "RmpS2Rmp",
+        "RmpS2RmpRockets",
+        "FfarS3Fz225",
+        "M3PS3Hmp400",
+        "RmpS3Rmp",
+        "RmpS3RmpRockets"
+      ],
       "CanRotateHead": true,
       "CameraPos": {
         "Transform": "Vehicle",
@@ -502,7 +511,7 @@
       "ProjectileAmount": 1,
       "Magazine": 400,
       "EmptyReloadTime": 400,
-      "Velocity": 30,
+      "Velocity": 47.2,
       "Damage": 22,
       "HeatPerShoot": 0,
       "NaturalCooldown": 1,
@@ -513,90 +522,261 @@
       "Name": "12.7 mm FN M3P",
       "AmmoType": [
         {
-          "Ammo": "superbwarfare:small_shell_ap",
+          "Ammo": "superbwarfare:small_shell_aa",
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
           "Override": {
             "Projectile": {
-              "Type": "superbwarfare:projectile",
-              "Profile": "berts_vehicle_pack:mi24v/cannon/ammo_00_yakb_iai"
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/fn_m3p/wt_m3p_m1_i"
             },
-            "ShellType": "HE",
-            "Velocity": 43,
-            "ApDurability": 3,
-            "Damage": 83.33333333333333,
+            "ShellType": "AP",
+            "Velocity": 47.2,
+            "ApDurability": 7,
+            "Damage": 22,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
-            "Name": "Air Belt",
+            "Name": "Default",
             "ShootShake": [
               8,
               10,
               6
             ],
             "ProjectileBelt": {
-              "Name": "Air Belt",
+              "Name": "Default",
+              "Family": "GENERIC",
               "Rounds": [
                 {
-                  "Shots": 3,
-                  "Round": "yakb_iai",
+                  "Shots": 1,
+                  "Round": "m3p_m20_api_t",
                   "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "RED"
+                },
+                {
+                  "Shots": 2,
+                  "Round": "m3p_m2_ap",
+                  "Ammo": "superbwarfare:small_shell_he",
                   "Tracer": "NONE"
                 },
                 {
                   "Shots": 1,
-                  "Round": "yakb_api_t",
+                  "Round": "m3p_m1_i",
                   "Ammo": "superbwarfare:small_shell_aa",
-                  "Tracer": "GREEN"
+                  "Tracer": "NONE"
                 }
               ]
             },
             "NominalBallistics": {
               "Supported": true,
-              "ProjectileType": "superbwarfare:projectile",
-              "ProjectileProfile": "berts_vehicle_pack:mi24v/cannon/ammo_00_yakb_iai",
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/fn_m3p/wt_m3p_m1_i",
               "ProjectileLife": 45
             }
-          },
-          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition"
+          }
         },
         {
           "Ammo": "superbwarfare:small_shell_gs",
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
           "Override": {
             "Projectile": {
-              "Type": "superbwarfare:projectile",
-              "Profile": "berts_vehicle_pack:mi24v/cannon/belt_ammo_00_yakb_ap"
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/fn_m3p/wt_m3p_m8_api"
             },
             "ShellType": "AP",
-            "Velocity": 40.9,
-            "ApDurability": 31,
+            "Velocity": 44.35,
+            "ApDurability": 28,
             "Damage": 22,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
-            "Name": "Ground Belt",
+            "Name": "Universal",
             "ShootShake": [
               8,
               10,
               6
             ],
             "ProjectileBelt": {
-              "Name": "Ground Belt",
+              "Name": "Universal",
+              "Family": "GENERIC",
               "Rounds": [
                 {
-                  "Shots": 3,
-                  "Round": "yakb_ap",
+                  "Shots": 2,
+                  "Round": "m3p_m8_api",
                   "Ammo": "superbwarfare:small_shell_gs",
                   "Tracer": "NONE"
                 },
                 {
                   "Shots": 1,
-                  "Round": "yakb_iai",
+                  "Round": "m3p_m20_api_t",
                   "Ammo": "superbwarfare:small_shell_ap",
-                  "Tracer": "GREEN"
+                  "Tracer": "RED"
+                },
+                {
+                  "Shots": 2,
+                  "Round": "m3p_m23_i",
+                  "Ammo": "superbwarfare:large_shell_ap",
+                  "Tracer": "NONE"
                 }
               ]
             },
             "NominalBallistics": {
               "Supported": true,
-              "ProjectileType": "superbwarfare:projectile",
-              "ProjectileProfile": "berts_vehicle_pack:mi24v/cannon/belt_ammo_00_yakb_ap",
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/fn_m3p/wt_m3p_m8_api",
+              "ProjectileLife": 45
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/fn_m3p/wt_m3p_m2_ap"
+            },
+            "ShellType": "AP",
+            "Velocity": 43.25,
+            "ApDurability": 30,
+            "Damage": 22,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "Ground targets",
+            "ShootShake": [
+              8,
+              10,
+              6
+            ],
+            "ProjectileBelt": {
+              "Name": "Ground targets",
+              "Family": "GENERIC",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "m3p_m20_api_t",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "RED"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "m3p_m23_i",
+                  "Ammo": "superbwarfare:large_shell_ap",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 2,
+                  "Round": "m3p_m2_ap",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 2,
+                  "Round": "m3p_m8_api",
+                  "Ammo": "superbwarfare:small_shell_gs",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/fn_m3p/wt_m3p_m2_ap",
+              "ProjectileLife": 45
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/fn_m3p/wt_m3p_m20_api_t"
+            },
+            "ShellType": "AP",
+            "Velocity": 44.95,
+            "ApDurability": 28,
+            "Damage": 22,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "Tracers",
+            "ShootShake": [
+              8,
+              10,
+              6
+            ],
+            "ProjectileBelt": {
+              "Name": "Tracers",
+              "Family": "GENERIC",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "m3p_m20_api_t",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "RED"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/fn_m3p/wt_m3p_m20_api_t",
+              "ProjectileLife": 45
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:large_shell_ap",
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/fn_m3p/wt_m3p_m23_i"
+            },
+            "ShellType": "AP",
+            "Velocity": 52.0,
+            "ApDurability": 7,
+            "Damage": 22,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "Stealth",
+            "ShootShake": [
+              8,
+              10,
+              6
+            ],
+            "ProjectileBelt": {
+              "Name": "Stealth",
+              "Family": "GENERIC",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "m3p_m8_api",
+                  "Ammo": "superbwarfare:small_shell_gs",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "m3p_m23_i",
+                  "Ammo": "superbwarfare:large_shell_ap",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "m3p_m8_api",
+                  "Ammo": "superbwarfare:small_shell_gs",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "m3p_m23_i",
+                  "Ammo": "superbwarfare:large_shell_ap",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/fn_m3p/wt_m3p_m23_i",
               "ProjectileLife": 45
             }
           }
@@ -634,53 +814,7 @@
       "AutoReload": true,
       "OverheatEnabled": false,
       "AmmoCostPerShoot": 1,
-      "ProjectileBeltAmmoType": [
-        {
-          "Ammo": "superbwarfare:small_shell_he",
-          "Override": {
-            "Projectile": {
-              "Type": "superbwarfare:projectile",
-              "Profile": "berts_vehicle_pack:mi24v/cannon/ammo_01_yakb_iai"
-            },
-            "ShellType": "HE",
-            "Velocity": 43,
-            "ApDurability": 3,
-            "Damage": 83.33333333333333,
-            "ExplosionDamage": 0,
-            "ExplosionRadius": 1.6666666666666665,
-            "TntEquivalentKg": 0.0032,
-            "Name": "HE Belt",
-            "ShootShake": [
-              8,
-              10,
-              6
-            ]
-          },
-          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition"
-        },
-        {
-          "Ammo": "superbwarfare:small_shell_aa",
-          "Override": {
-            "Projectile": {
-              "Type": "superbwarfare:projectile",
-              "Profile": "berts_vehicle_pack:mi24v/cannon/belt_ammo_01_yakb_api_t"
-            },
-            "ShellType": "AP",
-            "Velocity": 43.25,
-            "ApDurability": 29,
-            "Damage": 22,
-            "ExplosionDamage": 0,
-            "ExplosionRadius": 0,
-            "TntEquivalentKg": 0.0,
-            "Name": "API_T",
-            "ShootShake": [
-              8,
-              10,
-              6
-            ]
-          }
-        }
-      ],
+      "ProjectileBeltAmmoType": [],
       "ShootPos": {
         "Transform": "Vehicle",
         "ShootDirectionForHud": [
@@ -729,7 +863,7 @@
       "ProjectileAmount": 1,
       "Magazine": 250,
       "EmptyReloadTime": 400,
-      "Velocity": 30,
+      "Velocity": 47.2,
       "Damage": 22,
       "HeatPerShoot": 0,
       "NaturalCooldown": 1,
@@ -740,90 +874,261 @@
       "Name": "12.7 mm FN M3P",
       "AmmoType": [
         {
-          "Ammo": "superbwarfare:small_shell_ap",
+          "Ammo": "superbwarfare:small_shell_aa",
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
           "Override": {
             "Projectile": {
-              "Type": "superbwarfare:projectile",
-              "Profile": "berts_vehicle_pack:mi24v/cannon/ammo_00_yakb_iai"
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/fn_m3p/wt_m3p_m1_i"
             },
-            "ShellType": "HE",
-            "Velocity": 43,
-            "ApDurability": 3,
-            "Damage": 83.33333333333333,
+            "ShellType": "AP",
+            "Velocity": 47.2,
+            "ApDurability": 7,
+            "Damage": 22,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
-            "Name": "Air Belt",
+            "Name": "Default",
             "ShootShake": [
               8,
               10,
               6
             ],
             "ProjectileBelt": {
-              "Name": "Air Belt",
+              "Name": "Default",
+              "Family": "GENERIC",
               "Rounds": [
                 {
-                  "Shots": 3,
-                  "Round": "yakb_iai",
+                  "Shots": 1,
+                  "Round": "m3p_m20_api_t",
                   "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "RED"
+                },
+                {
+                  "Shots": 2,
+                  "Round": "m3p_m2_ap",
+                  "Ammo": "superbwarfare:small_shell_he",
                   "Tracer": "NONE"
                 },
                 {
                   "Shots": 1,
-                  "Round": "yakb_api_t",
+                  "Round": "m3p_m1_i",
                   "Ammo": "superbwarfare:small_shell_aa",
-                  "Tracer": "GREEN"
+                  "Tracer": "NONE"
                 }
               ]
             },
             "NominalBallistics": {
               "Supported": true,
-              "ProjectileType": "superbwarfare:projectile",
-              "ProjectileProfile": "berts_vehicle_pack:mi24v/cannon/ammo_00_yakb_iai",
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/fn_m3p/wt_m3p_m1_i",
               "ProjectileLife": 45
             }
-          },
-          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition"
+          }
         },
         {
           "Ammo": "superbwarfare:small_shell_gs",
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
           "Override": {
             "Projectile": {
-              "Type": "superbwarfare:projectile",
-              "Profile": "berts_vehicle_pack:mi24v/cannon/belt_ammo_00_yakb_ap"
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/fn_m3p/wt_m3p_m8_api"
             },
             "ShellType": "AP",
-            "Velocity": 40.9,
-            "ApDurability": 31,
+            "Velocity": 44.35,
+            "ApDurability": 28,
             "Damage": 22,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
-            "Name": "Ground Belt",
+            "Name": "Universal",
             "ShootShake": [
               8,
               10,
               6
             ],
             "ProjectileBelt": {
-              "Name": "Ground Belt",
+              "Name": "Universal",
+              "Family": "GENERIC",
               "Rounds": [
                 {
-                  "Shots": 3,
-                  "Round": "yakb_ap",
+                  "Shots": 2,
+                  "Round": "m3p_m8_api",
                   "Ammo": "superbwarfare:small_shell_gs",
                   "Tracer": "NONE"
                 },
                 {
                   "Shots": 1,
-                  "Round": "yakb_iai",
+                  "Round": "m3p_m20_api_t",
                   "Ammo": "superbwarfare:small_shell_ap",
-                  "Tracer": "GREEN"
+                  "Tracer": "RED"
+                },
+                {
+                  "Shots": 2,
+                  "Round": "m3p_m23_i",
+                  "Ammo": "superbwarfare:large_shell_ap",
+                  "Tracer": "NONE"
                 }
               ]
             },
             "NominalBallistics": {
               "Supported": true,
-              "ProjectileType": "superbwarfare:projectile",
-              "ProjectileProfile": "berts_vehicle_pack:mi24v/cannon/belt_ammo_00_yakb_ap",
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/fn_m3p/wt_m3p_m8_api",
+              "ProjectileLife": 45
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/fn_m3p/wt_m3p_m2_ap"
+            },
+            "ShellType": "AP",
+            "Velocity": 43.25,
+            "ApDurability": 30,
+            "Damage": 22,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "Ground targets",
+            "ShootShake": [
+              8,
+              10,
+              6
+            ],
+            "ProjectileBelt": {
+              "Name": "Ground targets",
+              "Family": "GENERIC",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "m3p_m20_api_t",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "RED"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "m3p_m23_i",
+                  "Ammo": "superbwarfare:large_shell_ap",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 2,
+                  "Round": "m3p_m2_ap",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 2,
+                  "Round": "m3p_m8_api",
+                  "Ammo": "superbwarfare:small_shell_gs",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/fn_m3p/wt_m3p_m2_ap",
+              "ProjectileLife": 45
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/fn_m3p/wt_m3p_m20_api_t"
+            },
+            "ShellType": "AP",
+            "Velocity": 44.95,
+            "ApDurability": 28,
+            "Damage": 22,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "Tracers",
+            "ShootShake": [
+              8,
+              10,
+              6
+            ],
+            "ProjectileBelt": {
+              "Name": "Tracers",
+              "Family": "GENERIC",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "m3p_m20_api_t",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "RED"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/fn_m3p/wt_m3p_m20_api_t",
+              "ProjectileLife": 45
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:large_shell_ap",
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/fn_m3p/wt_m3p_m23_i"
+            },
+            "ShellType": "AP",
+            "Velocity": 52.0,
+            "ApDurability": 7,
+            "Damage": 22,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "Stealth",
+            "ShootShake": [
+              8,
+              10,
+              6
+            ],
+            "ProjectileBelt": {
+              "Name": "Stealth",
+              "Family": "GENERIC",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "m3p_m8_api",
+                  "Ammo": "superbwarfare:small_shell_gs",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "m3p_m23_i",
+                  "Ammo": "superbwarfare:large_shell_ap",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "m3p_m8_api",
+                  "Ammo": "superbwarfare:small_shell_gs",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "m3p_m23_i",
+                  "Ammo": "superbwarfare:large_shell_ap",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/fn_m3p/wt_m3p_m23_i",
               "ProjectileLife": 45
             }
           }
@@ -861,53 +1166,7 @@
       "AutoReload": true,
       "OverheatEnabled": false,
       "AmmoCostPerShoot": 1,
-      "ProjectileBeltAmmoType": [
-        {
-          "Ammo": "superbwarfare:small_shell_he",
-          "Override": {
-            "Projectile": {
-              "Type": "superbwarfare:projectile",
-              "Profile": "berts_vehicle_pack:mi24v/cannon/ammo_01_yakb_iai"
-            },
-            "ShellType": "HE",
-            "Velocity": 43,
-            "ApDurability": 3,
-            "Damage": 83.33333333333333,
-            "ExplosionDamage": 0,
-            "ExplosionRadius": 1.6666666666666665,
-            "TntEquivalentKg": 0.0032,
-            "Name": "HE Belt",
-            "ShootShake": [
-              8,
-              10,
-              6
-            ]
-          },
-          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition"
-        },
-        {
-          "Ammo": "superbwarfare:small_shell_aa",
-          "Override": {
-            "Projectile": {
-              "Type": "superbwarfare:projectile",
-              "Profile": "berts_vehicle_pack:mi24v/cannon/belt_ammo_01_yakb_api_t"
-            },
-            "ShellType": "AP",
-            "Velocity": 43.25,
-            "ApDurability": 29,
-            "Damage": 22,
-            "ExplosionDamage": 0,
-            "ExplosionRadius": 0,
-            "TntEquivalentKg": 0.0,
-            "Name": "API_T",
-            "ShootShake": [
-              8,
-              10,
-              6
-            ]
-          }
-        }
-      ],
+      "ProjectileBeltAmmoType": [],
       "ShootPos": {
         "Transform": "Vehicle",
         "ShootDirectionForHud": [
@@ -1370,7 +1629,7 @@
       "ProjectileAmount": 1,
       "Magazine": 400,
       "EmptyReloadTime": 400,
-      "Velocity": 30,
+      "Velocity": 47.2,
       "Damage": 22,
       "HeatPerShoot": 0,
       "NaturalCooldown": 1,
@@ -1381,90 +1640,261 @@
       "Name": "12.7 mm FN M3P",
       "AmmoType": [
         {
-          "Ammo": "superbwarfare:small_shell_ap",
+          "Ammo": "superbwarfare:small_shell_aa",
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
           "Override": {
             "Projectile": {
-              "Type": "superbwarfare:projectile",
-              "Profile": "berts_vehicle_pack:mi24v/cannon/ammo_00_yakb_iai"
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/fn_m3p/wt_m3p_m1_i"
             },
-            "ShellType": "HE",
-            "Velocity": 43,
-            "ApDurability": 3,
-            "Damage": 83.33333333333333,
+            "ShellType": "AP",
+            "Velocity": 47.2,
+            "ApDurability": 7,
+            "Damage": 22,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
-            "Name": "Air Belt",
+            "Name": "Default",
             "ShootShake": [
               8,
               10,
               6
             ],
             "ProjectileBelt": {
-              "Name": "Air Belt",
+              "Name": "Default",
+              "Family": "GENERIC",
               "Rounds": [
                 {
-                  "Shots": 3,
-                  "Round": "yakb_iai",
+                  "Shots": 1,
+                  "Round": "m3p_m20_api_t",
                   "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "RED"
+                },
+                {
+                  "Shots": 2,
+                  "Round": "m3p_m2_ap",
+                  "Ammo": "superbwarfare:small_shell_he",
                   "Tracer": "NONE"
                 },
                 {
                   "Shots": 1,
-                  "Round": "yakb_api_t",
+                  "Round": "m3p_m1_i",
                   "Ammo": "superbwarfare:small_shell_aa",
-                  "Tracer": "GREEN"
+                  "Tracer": "NONE"
                 }
               ]
             },
             "NominalBallistics": {
               "Supported": true,
-              "ProjectileType": "superbwarfare:projectile",
-              "ProjectileProfile": "berts_vehicle_pack:mi24v/cannon/ammo_00_yakb_iai",
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/fn_m3p/wt_m3p_m1_i",
               "ProjectileLife": 45
             }
-          },
-          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition"
+          }
         },
         {
           "Ammo": "superbwarfare:small_shell_gs",
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
           "Override": {
             "Projectile": {
-              "Type": "superbwarfare:projectile",
-              "Profile": "berts_vehicle_pack:mi24v/cannon/belt_ammo_00_yakb_ap"
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/fn_m3p/wt_m3p_m8_api"
             },
             "ShellType": "AP",
-            "Velocity": 40.9,
-            "ApDurability": 31,
+            "Velocity": 44.35,
+            "ApDurability": 28,
             "Damage": 22,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
-            "Name": "Ground Belt",
+            "Name": "Universal",
             "ShootShake": [
               8,
               10,
               6
             ],
             "ProjectileBelt": {
-              "Name": "Ground Belt",
+              "Name": "Universal",
+              "Family": "GENERIC",
               "Rounds": [
                 {
-                  "Shots": 3,
-                  "Round": "yakb_ap",
+                  "Shots": 2,
+                  "Round": "m3p_m8_api",
                   "Ammo": "superbwarfare:small_shell_gs",
                   "Tracer": "NONE"
                 },
                 {
                   "Shots": 1,
-                  "Round": "yakb_iai",
+                  "Round": "m3p_m20_api_t",
                   "Ammo": "superbwarfare:small_shell_ap",
-                  "Tracer": "GREEN"
+                  "Tracer": "RED"
+                },
+                {
+                  "Shots": 2,
+                  "Round": "m3p_m23_i",
+                  "Ammo": "superbwarfare:large_shell_ap",
+                  "Tracer": "NONE"
                 }
               ]
             },
             "NominalBallistics": {
               "Supported": true,
-              "ProjectileType": "superbwarfare:projectile",
-              "ProjectileProfile": "berts_vehicle_pack:mi24v/cannon/belt_ammo_00_yakb_ap",
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/fn_m3p/wt_m3p_m8_api",
+              "ProjectileLife": 45
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/fn_m3p/wt_m3p_m2_ap"
+            },
+            "ShellType": "AP",
+            "Velocity": 43.25,
+            "ApDurability": 30,
+            "Damage": 22,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "Ground targets",
+            "ShootShake": [
+              8,
+              10,
+              6
+            ],
+            "ProjectileBelt": {
+              "Name": "Ground targets",
+              "Family": "GENERIC",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "m3p_m20_api_t",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "RED"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "m3p_m23_i",
+                  "Ammo": "superbwarfare:large_shell_ap",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 2,
+                  "Round": "m3p_m2_ap",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 2,
+                  "Round": "m3p_m8_api",
+                  "Ammo": "superbwarfare:small_shell_gs",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/fn_m3p/wt_m3p_m2_ap",
+              "ProjectileLife": 45
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/fn_m3p/wt_m3p_m20_api_t"
+            },
+            "ShellType": "AP",
+            "Velocity": 44.95,
+            "ApDurability": 28,
+            "Damage": 22,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "Tracers",
+            "ShootShake": [
+              8,
+              10,
+              6
+            ],
+            "ProjectileBelt": {
+              "Name": "Tracers",
+              "Family": "GENERIC",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "m3p_m20_api_t",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "RED"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/fn_m3p/wt_m3p_m20_api_t",
+              "ProjectileLife": 45
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:large_shell_ap",
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/fn_m3p/wt_m3p_m23_i"
+            },
+            "ShellType": "AP",
+            "Velocity": 52.0,
+            "ApDurability": 7,
+            "Damage": 22,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "Stealth",
+            "ShootShake": [
+              8,
+              10,
+              6
+            ],
+            "ProjectileBelt": {
+              "Name": "Stealth",
+              "Family": "GENERIC",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "m3p_m8_api",
+                  "Ammo": "superbwarfare:small_shell_gs",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "m3p_m23_i",
+                  "Ammo": "superbwarfare:large_shell_ap",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "m3p_m8_api",
+                  "Ammo": "superbwarfare:small_shell_gs",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "m3p_m23_i",
+                  "Ammo": "superbwarfare:large_shell_ap",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/fn_m3p/wt_m3p_m23_i",
               "ProjectileLife": 45
             }
           }
@@ -1502,53 +1932,7 @@
       "AutoReload": true,
       "OverheatEnabled": false,
       "AmmoCostPerShoot": 1,
-      "ProjectileBeltAmmoType": [
-        {
-          "Ammo": "superbwarfare:small_shell_he",
-          "Override": {
-            "Projectile": {
-              "Type": "superbwarfare:projectile",
-              "Profile": "berts_vehicle_pack:mi24v/cannon/ammo_01_yakb_iai"
-            },
-            "ShellType": "HE",
-            "Velocity": 43,
-            "ApDurability": 3,
-            "Damage": 83.33333333333333,
-            "ExplosionDamage": 0,
-            "ExplosionRadius": 1.6666666666666665,
-            "TntEquivalentKg": 0.0032,
-            "Name": "HE Belt",
-            "ShootShake": [
-              8,
-              10,
-              6
-            ]
-          },
-          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition"
-        },
-        {
-          "Ammo": "superbwarfare:small_shell_aa",
-          "Override": {
-            "Projectile": {
-              "Type": "superbwarfare:projectile",
-              "Profile": "berts_vehicle_pack:mi24v/cannon/belt_ammo_01_yakb_api_t"
-            },
-            "ShellType": "AP",
-            "Velocity": 43.25,
-            "ApDurability": 29,
-            "Damage": 22,
-            "ExplosionDamage": 0,
-            "ExplosionRadius": 0,
-            "TntEquivalentKg": 0.0,
-            "Name": "API_T",
-            "ShootShake": [
-              8,
-              10,
-              6
-            ]
-          }
-        }
-      ],
+      "ProjectileBeltAmmoType": [],
       "ShootPos": {
         "Transform": "Vehicle",
         "ShootDirectionForHud": [
@@ -1597,7 +1981,7 @@
       "ProjectileAmount": 1,
       "Magazine": 250,
       "EmptyReloadTime": 400,
-      "Velocity": 30,
+      "Velocity": 47.2,
       "Damage": 22,
       "HeatPerShoot": 0,
       "NaturalCooldown": 1,
@@ -1608,90 +1992,261 @@
       "Name": "12.7 mm FN M3P",
       "AmmoType": [
         {
-          "Ammo": "superbwarfare:small_shell_ap",
+          "Ammo": "superbwarfare:small_shell_aa",
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
           "Override": {
             "Projectile": {
-              "Type": "superbwarfare:projectile",
-              "Profile": "berts_vehicle_pack:mi24v/cannon/ammo_00_yakb_iai"
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/fn_m3p/wt_m3p_m1_i"
             },
-            "ShellType": "HE",
-            "Velocity": 43,
-            "ApDurability": 3,
-            "Damage": 83.33333333333333,
+            "ShellType": "AP",
+            "Velocity": 47.2,
+            "ApDurability": 7,
+            "Damage": 22,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
-            "Name": "Air Belt",
+            "Name": "Default",
             "ShootShake": [
               8,
               10,
               6
             ],
             "ProjectileBelt": {
-              "Name": "Air Belt",
+              "Name": "Default",
+              "Family": "GENERIC",
               "Rounds": [
                 {
-                  "Shots": 3,
-                  "Round": "yakb_iai",
+                  "Shots": 1,
+                  "Round": "m3p_m20_api_t",
                   "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "RED"
+                },
+                {
+                  "Shots": 2,
+                  "Round": "m3p_m2_ap",
+                  "Ammo": "superbwarfare:small_shell_he",
                   "Tracer": "NONE"
                 },
                 {
                   "Shots": 1,
-                  "Round": "yakb_api_t",
+                  "Round": "m3p_m1_i",
                   "Ammo": "superbwarfare:small_shell_aa",
-                  "Tracer": "GREEN"
+                  "Tracer": "NONE"
                 }
               ]
             },
             "NominalBallistics": {
               "Supported": true,
-              "ProjectileType": "superbwarfare:projectile",
-              "ProjectileProfile": "berts_vehicle_pack:mi24v/cannon/ammo_00_yakb_iai",
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/fn_m3p/wt_m3p_m1_i",
               "ProjectileLife": 45
             }
-          },
-          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition"
+          }
         },
         {
           "Ammo": "superbwarfare:small_shell_gs",
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
           "Override": {
             "Projectile": {
-              "Type": "superbwarfare:projectile",
-              "Profile": "berts_vehicle_pack:mi24v/cannon/belt_ammo_00_yakb_ap"
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/fn_m3p/wt_m3p_m8_api"
             },
             "ShellType": "AP",
-            "Velocity": 40.9,
-            "ApDurability": 31,
+            "Velocity": 44.35,
+            "ApDurability": 28,
             "Damage": 22,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
-            "Name": "Ground Belt",
+            "Name": "Universal",
             "ShootShake": [
               8,
               10,
               6
             ],
             "ProjectileBelt": {
-              "Name": "Ground Belt",
+              "Name": "Universal",
+              "Family": "GENERIC",
               "Rounds": [
                 {
-                  "Shots": 3,
-                  "Round": "yakb_ap",
+                  "Shots": 2,
+                  "Round": "m3p_m8_api",
                   "Ammo": "superbwarfare:small_shell_gs",
                   "Tracer": "NONE"
                 },
                 {
                   "Shots": 1,
-                  "Round": "yakb_iai",
+                  "Round": "m3p_m20_api_t",
                   "Ammo": "superbwarfare:small_shell_ap",
-                  "Tracer": "GREEN"
+                  "Tracer": "RED"
+                },
+                {
+                  "Shots": 2,
+                  "Round": "m3p_m23_i",
+                  "Ammo": "superbwarfare:large_shell_ap",
+                  "Tracer": "NONE"
                 }
               ]
             },
             "NominalBallistics": {
               "Supported": true,
-              "ProjectileType": "superbwarfare:projectile",
-              "ProjectileProfile": "berts_vehicle_pack:mi24v/cannon/belt_ammo_00_yakb_ap",
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/fn_m3p/wt_m3p_m8_api",
+              "ProjectileLife": 45
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/fn_m3p/wt_m3p_m2_ap"
+            },
+            "ShellType": "AP",
+            "Velocity": 43.25,
+            "ApDurability": 30,
+            "Damage": 22,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "Ground targets",
+            "ShootShake": [
+              8,
+              10,
+              6
+            ],
+            "ProjectileBelt": {
+              "Name": "Ground targets",
+              "Family": "GENERIC",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "m3p_m20_api_t",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "RED"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "m3p_m23_i",
+                  "Ammo": "superbwarfare:large_shell_ap",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 2,
+                  "Round": "m3p_m2_ap",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 2,
+                  "Round": "m3p_m8_api",
+                  "Ammo": "superbwarfare:small_shell_gs",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/fn_m3p/wt_m3p_m2_ap",
+              "ProjectileLife": 45
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/fn_m3p/wt_m3p_m20_api_t"
+            },
+            "ShellType": "AP",
+            "Velocity": 44.95,
+            "ApDurability": 28,
+            "Damage": 22,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "Tracers",
+            "ShootShake": [
+              8,
+              10,
+              6
+            ],
+            "ProjectileBelt": {
+              "Name": "Tracers",
+              "Family": "GENERIC",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "m3p_m20_api_t",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "RED"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/fn_m3p/wt_m3p_m20_api_t",
+              "ProjectileLife": 45
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:large_shell_ap",
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/fn_m3p/wt_m3p_m23_i"
+            },
+            "ShellType": "AP",
+            "Velocity": 52.0,
+            "ApDurability": 7,
+            "Damage": 22,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "Stealth",
+            "ShootShake": [
+              8,
+              10,
+              6
+            ],
+            "ProjectileBelt": {
+              "Name": "Stealth",
+              "Family": "GENERIC",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "m3p_m8_api",
+                  "Ammo": "superbwarfare:small_shell_gs",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "m3p_m23_i",
+                  "Ammo": "superbwarfare:large_shell_ap",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "m3p_m8_api",
+                  "Ammo": "superbwarfare:small_shell_gs",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "m3p_m23_i",
+                  "Ammo": "superbwarfare:large_shell_ap",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/fn_m3p/wt_m3p_m23_i",
               "ProjectileLife": 45
             }
           }
@@ -1729,53 +2284,7 @@
       "AutoReload": true,
       "OverheatEnabled": false,
       "AmmoCostPerShoot": 1,
-      "ProjectileBeltAmmoType": [
-        {
-          "Ammo": "superbwarfare:small_shell_he",
-          "Override": {
-            "Projectile": {
-              "Type": "superbwarfare:projectile",
-              "Profile": "berts_vehicle_pack:mi24v/cannon/ammo_01_yakb_iai"
-            },
-            "ShellType": "HE",
-            "Velocity": 43,
-            "ApDurability": 3,
-            "Damage": 83.33333333333333,
-            "ExplosionDamage": 0,
-            "ExplosionRadius": 1.6666666666666665,
-            "TntEquivalentKg": 0.0032,
-            "Name": "HE Belt",
-            "ShootShake": [
-              8,
-              10,
-              6
-            ]
-          },
-          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition"
-        },
-        {
-          "Ammo": "superbwarfare:small_shell_aa",
-          "Override": {
-            "Projectile": {
-              "Type": "superbwarfare:projectile",
-              "Profile": "berts_vehicle_pack:mi24v/cannon/belt_ammo_01_yakb_api_t"
-            },
-            "ShellType": "AP",
-            "Velocity": 43.25,
-            "ApDurability": 29,
-            "Damage": 22,
-            "ExplosionDamage": 0,
-            "ExplosionRadius": 0,
-            "TntEquivalentKg": 0.0,
-            "Name": "API_T",
-            "ShootShake": [
-              8,
-              10,
-              6
-            ]
-          }
-        }
-      ],
+      "ProjectileBeltAmmoType": [],
       "ShootPos": {
         "Transform": "Vehicle",
         "ShootDirectionForHud": [

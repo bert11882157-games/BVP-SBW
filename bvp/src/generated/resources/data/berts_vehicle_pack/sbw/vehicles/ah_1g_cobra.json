@@ -193,7 +193,19 @@
       "MaxPitch": 0,
       "MinYaw": -30,
       "MaxYaw": 30,
-      "Weapons": [],
+      "Weapons": [
+        "FfarS1Aero6a",
+        "FfarS1Aero7a",
+        "FfarS2Aero6a",
+        "FfarS2Aero7a",
+        "M134S2Xm18",
+        "M195S2Xm35",
+        "FfarS3Aero6a",
+        "FfarS3Aero7a",
+        "M134S3Xm18",
+        "FfarS4Aero6a",
+        "FfarS4Aero7a"
+      ],
       "DismountInfo": {
         "Transform": "Vehicle",
         "Position": [
@@ -1143,7 +1155,7 @@
       "ProjectileAmount": 1,
       "Magazine": 6000,
       "EmptyReloadTime": 400,
-      "Velocity": 30,
+      "Velocity": 42.65,
       "Damage": 22,
       "HeatPerShoot": 0,
       "NaturalCooldown": 1,
@@ -1155,10 +1167,11 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition",
           "Override": {
             "Projectile": {
-              "Type": "superbwarfare:projectile",
-              "Profile": "berts_vehicle_pack:ah_6j/cannon/ammo_00_m134_ap"
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/m134/wt_m134_ap"
             },
             "ShellType": "AP",
             "Velocity": 42.65,
@@ -1166,17 +1179,18 @@
             "Damage": 22,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
-            "Name": "AP Belt",
+            "Name": "Default",
             "ShootShake": [
               0,
               0,
               0
             ],
             "ProjectileBelt": {
-              "Name": "AP Belt",
+              "Name": "Default",
+              "Family": "GENERIC",
               "Rounds": [
                 {
-                  "Shots": 3,
+                  "Shots": 6,
                   "Round": "m134_ap",
                   "Ammo": "superbwarfare:small_shell_ap",
                   "Tracer": "NONE"
@@ -1191,12 +1205,11 @@
             },
             "NominalBallistics": {
               "Supported": true,
-              "ProjectileType": "superbwarfare:projectile",
-              "ProjectileProfile": "berts_vehicle_pack:ah_6j/cannon/ammo_00_m134_ap",
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/m134/wt_m134_ap",
               "ProjectileLife": 45
             }
-          },
-          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition"
+          }
         }
       ],
       "SoundInfo": {
@@ -1224,10 +1237,11 @@
       "ProjectileBeltAmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition",
           "Override": {
             "Projectile": {
-              "Type": "superbwarfare:projectile",
-              "Profile": "berts_vehicle_pack:ah_6j/cannon/belt_ammo_00_m134_t"
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/m134/wt_m134_t"
             },
             "ShellType": "AP",
             "Velocity": 41.75,
@@ -1301,7 +1315,7 @@
       "ProjectileAmount": 1,
       "Magazine": 950,
       "EmptyReloadTime": 400,
-      "Velocity": 30,
+      "Velocity": 51.5,
       "Damage": 22,
       "HeatPerShoot": 0,
       "NaturalCooldown": 1,
@@ -1312,11 +1326,64 @@
       "Name": "weapon.berts_vehicle_pack.20_mm_m195",
       "AmmoType": [
         {
-          "Ammo": "superbwarfare:small_shell_he",
+          "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:large_machine_gun_ammunition",
           "Override": {
             "Projectile": {
-              "Type": "superbwarfare:projectile",
-              "Profile": "berts_vehicle_pack:ah_1g_cobra/cannon/ammo_01_m195_hef_i"
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/m195/wt_m195_api_t"
+            },
+            "ShellType": "AP",
+            "Velocity": 51.5,
+            "ApDurability": 40,
+            "Damage": 22,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "Default",
+            "ShootShake": [
+              8,
+              10,
+              12
+            ],
+            "ProjectileBelt": {
+              "Name": "Default",
+              "Family": "GENERIC",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "m195_api_t",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "RED"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "m195_hef_i",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "m195_api_t",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "RED"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/m195/wt_m195_api_t",
+              "ProjectileLife": 45
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:large_machine_gun_ammunition",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/m195/wt_m195_hef_i"
             },
             "ShellType": "HE",
             "Velocity": 51.5,
@@ -1325,14 +1392,15 @@
             "ExplosionDamage": 0,
             "ExplosionRadius": 5,
             "TntEquivalentKg": 0.0117,
-            "Name": "Air Belt",
+            "Name": "Air targets",
             "ShootShake": [
               8,
               10,
               12
             ],
             "ProjectileBelt": {
-              "Name": "Air Belt",
+              "Name": "Air targets",
+              "Family": "GENERIC",
               "Rounds": [
                 {
                   "Shots": 3,
@@ -1350,19 +1418,19 @@
             },
             "NominalBallistics": {
               "Supported": true,
-              "ProjectileType": "superbwarfare:projectile",
-              "ProjectileProfile": "berts_vehicle_pack:ah_1g_cobra/cannon/ammo_01_m195_hef_i",
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/m195/wt_m195_hef_i",
               "ProjectileLife": 45
             }
-          },
-          "ConsumptionItem": "superbwarfare:large_machine_gun_ammunition"
+          }
         },
         {
-          "Ammo": "superbwarfare:small_shell_ap",
+          "Ammo": "superbwarfare:small_shell_aa",
+          "ConsumptionItem": "superbwarfare:large_machine_gun_ammunition",
           "Override": {
             "Projectile": {
-              "Type": "superbwarfare:projectile",
-              "Profile": "berts_vehicle_pack:ah_1g_cobra/cannon/ammo_00_m195_api_t"
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/m195/wt_m195_api_t"
             },
             "ShellType": "AP",
             "Velocity": 51.5,
@@ -1370,14 +1438,15 @@
             "Damage": 22,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
-            "Name": "Ground Belt",
+            "Name": "Armored targets",
             "ShootShake": [
               8,
               10,
               12
             ],
             "ProjectileBelt": {
-              "Name": "Ground Belt",
+              "Name": "Armored targets",
+              "Family": "GENERIC",
               "Rounds": [
                 {
                   "Shots": 3,
@@ -1389,18 +1458,17 @@
                   "Shots": 1,
                   "Round": "m195_hef_i",
                   "Ammo": "superbwarfare:small_shell_he",
-                  "Tracer": "RED"
+                  "Tracer": "NONE"
                 }
               ]
             },
             "NominalBallistics": {
               "Supported": true,
-              "ProjectileType": "superbwarfare:projectile",
-              "ProjectileProfile": "berts_vehicle_pack:ah_1g_cobra/cannon/ammo_00_m195_api_t",
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/m195/wt_m195_api_t",
               "ProjectileLife": 45
             }
-          },
-          "ConsumptionItem": "superbwarfare:large_machine_gun_ammunition"
+          }
         }
       ],
       "SoundInfo": {
@@ -1425,51 +1493,7 @@
         "ProjectileProfile": "berts_vehicle_pack:ah_1g_cobra/cannon/default",
         "ProjectileLife": 45
       },
-      "ProjectileBeltAmmoType": [
-        {
-          "Ammo": "superbwarfare:small_shell_gs",
-          "Override": {
-            "Projectile": {
-              "Type": "superbwarfare:projectile",
-              "Profile": "berts_vehicle_pack:ah_1g_cobra/cannon/belt_ammo_00_m195_api_t"
-            },
-            "ShellType": "AP",
-            "Velocity": 51.5,
-            "ApDurability": 40,
-            "Damage": 22,
-            "ExplosionDamage": 0,
-            "ExplosionRadius": 0,
-            "Name": "API_T",
-            "ShootShake": [
-              8,
-              10,
-              12
-            ]
-          }
-        },
-        {
-          "Ammo": "superbwarfare:small_shell_aa",
-          "Override": {
-            "Projectile": {
-              "Type": "superbwarfare:projectile",
-              "Profile": "berts_vehicle_pack:ah_1g_cobra/cannon/belt_ammo_01_m195_hef_i"
-            },
-            "ShellType": "HE",
-            "Velocity": 51.5,
-            "ApDurability": 5,
-            "Damage": 250,
-            "ExplosionDamage": 0,
-            "ExplosionRadius": 5,
-            "TntEquivalentKg": 0.0117,
-            "Name": "HEF_I",
-            "ShootShake": [
-              8,
-              10,
-              12
-            ]
-          }
-        }
-      ],
+      "ProjectileBeltAmmoType": [],
       "ShootShake": [
         8,
         10,
@@ -1989,7 +2013,7 @@
       "ProjectileAmount": 1,
       "Magazine": 6000,
       "EmptyReloadTime": 400,
-      "Velocity": 30,
+      "Velocity": 42.65,
       "Damage": 22,
       "HeatPerShoot": 0,
       "NaturalCooldown": 1,
@@ -2001,10 +2025,11 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition",
           "Override": {
             "Projectile": {
-              "Type": "superbwarfare:projectile",
-              "Profile": "berts_vehicle_pack:ah_6j/cannon/ammo_00_m134_ap"
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/m134/wt_m134_ap"
             },
             "ShellType": "AP",
             "Velocity": 42.65,
@@ -2012,17 +2037,18 @@
             "Damage": 22,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
-            "Name": "AP Belt",
+            "Name": "Default",
             "ShootShake": [
               0,
               0,
               0
             ],
             "ProjectileBelt": {
-              "Name": "AP Belt",
+              "Name": "Default",
+              "Family": "GENERIC",
               "Rounds": [
                 {
-                  "Shots": 3,
+                  "Shots": 6,
                   "Round": "m134_ap",
                   "Ammo": "superbwarfare:small_shell_ap",
                   "Tracer": "NONE"
@@ -2037,12 +2063,11 @@
             },
             "NominalBallistics": {
               "Supported": true,
-              "ProjectileType": "superbwarfare:projectile",
-              "ProjectileProfile": "berts_vehicle_pack:ah_6j/cannon/ammo_00_m134_ap",
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/m134/wt_m134_ap",
               "ProjectileLife": 45
             }
-          },
-          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition"
+          }
         }
       ],
       "SoundInfo": {
@@ -2070,10 +2095,11 @@
       "ProjectileBeltAmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition",
           "Override": {
             "Projectile": {
-              "Type": "superbwarfare:projectile",
-              "Profile": "berts_vehicle_pack:ah_6j/cannon/belt_ammo_00_m134_t"
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/m134/wt_m134_t"
             },
             "ShellType": "AP",
             "Velocity": 41.75,

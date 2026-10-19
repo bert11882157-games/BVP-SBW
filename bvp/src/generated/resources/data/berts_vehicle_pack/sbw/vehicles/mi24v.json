@@ -182,7 +182,8 @@
         "S8S5",
         "S24S5S24b",
         "Gsh23S5Upk23",
-        "GuvS5Guv8700"
+        "GuvS5Guv8700",
+        "Cannon"
       ],
       "DismountInfo": {
         "Transform": "Vehicle",
@@ -255,7 +256,7 @@
       "ProjectileAmount": 1,
       "Magazine": 1470,
       "EmptyReloadTime": 400,
-      "Velocity": 30,
+      "Velocity": 41.0,
       "Damage": 22,
       "HeatPerShoot": 0,
       "NaturalCooldown": 1,
@@ -267,55 +268,115 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
           "Override": {
             "Projectile": {
-              "Type": "superbwarfare:projectile",
-              "Profile": "berts_vehicle_pack:mi24v/cannon/ammo_00_yakb_iai"
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:mi24v/cannon/belt_ammo_wt_yakb_api"
             },
-            "ShellType": "HE",
-            "Velocity": 43,
-            "ApDurability": 3,
-            "Damage": 83.33333333333333,
+            "ShellType": "AP",
+            "Velocity": 41.0,
+            "ApDurability": 29,
+            "Damage": 22,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
-            "Name": "Air Belt",
+            "Name": "Default",
             "ShootShake": [
               8,
               10,
               6
             ],
             "ProjectileBelt": {
-              "Name": "Air Belt",
+              "Name": "Default",
+              "Family": "GENERIC",
               "Rounds": [
                 {
-                  "Shots": 3,
-                  "Round": "yakb_iai",
+                  "Shots": 1,
+                  "Round": "yakb_api",
                   "Ammo": "superbwarfare:small_shell_ap",
                   "Tracer": "NONE"
                 },
                 {
                   "Shots": 1,
                   "Round": "yakb_api_t",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "GREEN"
+                },
+                {
+                  "Shots": 4,
+                  "Round": "yakb_api",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:mi24v/cannon/belt_ammo_wt_yakb_api",
+              "ProjectileLife": 45
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_aa",
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:mi24v/cannon/belt_ammo_wt_yakb_iai"
+            },
+            "ShellType": "HE",
+            "Velocity": 43.0,
+            "ApDurability": 3,
+            "Damage": 83.33333333333333,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "Universal",
+            "ShootShake": [
+              8,
+              10,
+              6
+            ],
+            "ProjectileBelt": {
+              "Name": "Universal",
+              "Family": "GENERIC",
+              "Rounds": [
+                {
+                  "Shots": 2,
+                  "Round": "yakb_api",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 3,
+                  "Round": "yakb_iai",
                   "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "yakb_api_t",
+                  "Ammo": "superbwarfare:small_shell_he",
                   "Tracer": "GREEN"
                 }
               ]
             },
             "NominalBallistics": {
               "Supported": true,
-              "ProjectileType": "superbwarfare:projectile",
-              "ProjectileProfile": "berts_vehicle_pack:mi24v/cannon/ammo_00_yakb_iai",
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:mi24v/cannon/belt_ammo_wt_yakb_iai",
               "ProjectileLife": 45
             }
-          },
-          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition"
+          }
         },
         {
           "Ammo": "superbwarfare:small_shell_gs",
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
           "Override": {
             "Projectile": {
-              "Type": "superbwarfare:projectile",
-              "Profile": "berts_vehicle_pack:mi24v/cannon/belt_ammo_00_yakb_ap"
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:mi24v/cannon/belt_ammo_wt_yakb_ap"
             },
             "ShellType": "AP",
             "Velocity": 40.9,
@@ -323,15 +384,22 @@
             "Damage": 22,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
-            "Name": "Ground Belt",
+            "Name": "Ground targets",
             "ShootShake": [
               8,
               10,
               6
             ],
             "ProjectileBelt": {
-              "Name": "Ground Belt",
+              "Name": "Ground targets",
+              "Family": "GENERIC",
               "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "yakb_iai",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "NONE"
+                },
                 {
                   "Shots": 3,
                   "Round": "yakb_ap",
@@ -340,16 +408,74 @@
                 },
                 {
                   "Shots": 1,
-                  "Round": "yakb_iai",
-                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Round": "yakb_api_t",
+                  "Ammo": "superbwarfare:small_shell_he",
                   "Tracer": "GREEN"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "yakb_ap",
+                  "Ammo": "superbwarfare:small_shell_gs",
+                  "Tracer": "NONE"
                 }
               ]
             },
             "NominalBallistics": {
               "Supported": true,
-              "ProjectileType": "superbwarfare:projectile",
-              "ProjectileProfile": "berts_vehicle_pack:mi24v/cannon/belt_ammo_00_yakb_ap",
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:mi24v/cannon/belt_ammo_wt_yakb_ap",
+              "ProjectileLife": 45
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:mi24v/cannon/belt_ammo_wt_yakb_api_t"
+            },
+            "ShellType": "AP",
+            "Velocity": 43.25,
+            "ApDurability": 29,
+            "Damage": 22,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "Air targets",
+            "ShootShake": [
+              8,
+              10,
+              6
+            ],
+            "ProjectileBelt": {
+              "Name": "Air targets",
+              "Family": "GENERIC",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "yakb_iai",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "yakb_api_t",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "GREEN"
+                },
+                {
+                  "Shots": 4,
+                  "Round": "yakb_iai",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:mi24v/cannon/belt_ammo_wt_yakb_api_t",
               "ProjectileLife": 45
             }
           }
@@ -414,53 +540,7 @@
       "AutoReload": true,
       "OverheatEnabled": false,
       "AmmoCostPerShoot": 1,
-      "ProjectileBeltAmmoType": [
-        {
-          "Ammo": "superbwarfare:small_shell_he",
-          "Override": {
-            "Projectile": {
-              "Type": "superbwarfare:projectile",
-              "Profile": "berts_vehicle_pack:mi24v/cannon/ammo_01_yakb_iai"
-            },
-            "ShellType": "HE",
-            "Velocity": 43,
-            "ApDurability": 3,
-            "Damage": 83.33333333333333,
-            "ExplosionDamage": 0,
-            "ExplosionRadius": 1.6666666666666665,
-            "TntEquivalentKg": 0.0032,
-            "Name": "HE Belt",
-            "ShootShake": [
-              8,
-              10,
-              6
-            ]
-          },
-          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition"
-        },
-        {
-          "Ammo": "superbwarfare:small_shell_aa",
-          "Override": {
-            "Projectile": {
-              "Type": "superbwarfare:projectile",
-              "Profile": "berts_vehicle_pack:mi24v/cannon/belt_ammo_01_yakb_api_t"
-            },
-            "ShellType": "AP",
-            "Velocity": 43.25,
-            "ApDurability": 29,
-            "Damage": 22,
-            "ExplosionDamage": 0,
-            "ExplosionRadius": 0,
-            "TntEquivalentKg": 0.0,
-            "Name": "API_T",
-            "ShootShake": [
-              8,
-              10,
-              6
-            ]
-          }
-        }
-      ]
+      "ProjectileBeltAmmoType": []
     },
     "@Missile": {
       "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_atgm.png",
@@ -1410,7 +1490,7 @@
         "Profile": "berts_vehicle_pack:aircraft_rounds/gsh23l/gsh23l_air_game"
       },
       "ShellType": "HE",
-      "Velocity": 44.6875,
+      "Velocity": 44.375,
       "ApDurability": 4,
       "ExplosionRadius": 3.8333333333333335,
       "TntEquivalentKg": 0.0279,
@@ -1422,83 +1502,191 @@
       },
       "AmmoType": [
         {
-          "Ammo": "superbwarfare:small_shell_he",
-          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
-          "Override": {
-            "Projectile": {
-              "Type": "superbwarfare:small_cannon_shell",
-              "Profile": "berts_vehicle_pack:aircraft_rounds/gsh23l/gsh23l_air_game"
-            },
-            "ShellType": "HE",
-            "Velocity": 44.6875,
-            "ApDurability": 4,
-            "Damage": 191.66666666666669,
-            "ExplosionDamage": 0,
-            "ExplosionRadius": 3.8333333333333335,
-            "TntEquivalentKg": 0.0279,
-            "Name": "Air Belt",
-            "ProjectileBelt": {
-              "Name": "Air Belt",
-              "Rounds": [
-                {
-                  "Shots": 3,
-                  "Round": "gsh23l_air_game",
-                  "Ammo": "superbwarfare:small_shell_he",
-                  "Tracer": "NONE"
-                },
-                {
-                  "Shots": 1,
-                  "Round": "gsh23l_ground_game",
-                  "Ammo": "superbwarfare:small_shell_ap",
-                  "Tracer": "GREEN"
-                }
-              ]
-            },
-            "NominalBallistics": {
-              "Supported": true,
-              "ProjectileType": "superbwarfare:small_cannon_shell",
-              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/gsh23l/gsh23l_air_game",
-              "ProjectileLife": 400
-            }
-          }
-        },
-        {
           "Ammo": "superbwarfare:small_shell_ap",
           "ConsumptionItem": "superbwarfare:small_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
-              "Profile": "berts_vehicle_pack:aircraft_rounds/gsh23l/gsh23l_ground_game"
+              "Profile": "berts_vehicle_pack:aircraft_rounds/gsh23l/wt_gsh23_hefi_t"
             },
-            "ShellType": "AP",
-            "Velocity": 44.6875,
-            "ApDurability": 31,
-            "Damage": 45,
+            "ShellType": "HE",
+            "Velocity": 44.375,
+            "ApDurability": 4,
+            "Damage": 191.66666666666669,
             "ExplosionDamage": 0,
-            "ExplosionRadius": 0,
-            "TntEquivalentKg": 0.0,
-            "Name": "Ground Belt",
+            "ExplosionRadius": 3.8333333333333335,
+            "TntEquivalentKg": 0.0268,
+            "Name": "Default",
             "ProjectileBelt": {
-              "Name": "Ground Belt",
+              "Name": "Default",
+              "Family": "GENERIC",
               "Rounds": [
                 {
-                  "Shots": 3,
-                  "Round": "gsh23l_ground_game",
+                  "Shots": 1,
+                  "Round": "gsh23_hefi_t",
                   "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "GREEN"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "gsh23_api",
+                  "Ammo": "superbwarfare:small_shell_he",
                   "Tracer": "NONE"
                 },
                 {
                   "Shots": 1,
-                  "Round": "gsh23l_air_game",
-                  "Ammo": "superbwarfare:small_shell_he",
-                  "Tracer": "GREEN"
+                  "Round": "gsh23_hefi",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "NONE"
                 }
               ]
             },
             "NominalBallistics": {
               "Supported": true,
               "ProjectileType": "superbwarfare:small_cannon_shell",
-              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/gsh23l/gsh23l_ground_game",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/gsh23l/wt_gsh23_hefi_t",
+              "ProjectileLife": 400
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_aa",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/gsh23l/wt_gsh23_hefi"
+            },
+            "ShellType": "HE",
+            "Velocity": 43.75,
+            "ApDurability": 4,
+            "Damage": 191.66666666666669,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 3.8333333333333335,
+            "TntEquivalentKg": 0.0279,
+            "Name": "AP",
+            "ProjectileBelt": {
+              "Name": "AP",
+              "Family": "GENERIC",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "gsh23_hefi",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 3,
+                  "Round": "gsh23_api",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/gsh23l/wt_gsh23_hefi",
+              "ProjectileLife": 400
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/gsh23l/wt_gsh23_api"
+            },
+            "ShellType": "AP",
+            "Velocity": 44.375,
+            "ApDurability": 31,
+            "Damage": 45,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "Air targets",
+            "ProjectileBelt": {
+              "Name": "Air targets",
+              "Family": "GENERIC",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "gsh23_hefi_t",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "GREEN"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "gsh23_hefi",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "gsh23_hefi_t",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "GREEN"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "gsh23_hefi",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "gsh23_api",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/gsh23l/wt_gsh23_api",
+              "ProjectileLife": 400
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_gs",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/gsh23l/wt_gsh23_api"
+            },
+            "ShellType": "AP",
+            "Velocity": 44.375,
+            "ApDurability": 31,
+            "Damage": 45,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "Stealth",
+            "ProjectileBelt": {
+              "Name": "Stealth",
+              "Family": "GENERIC",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "gsh23_api",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 2,
+                  "Round": "gsh23_hefi",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/gsh23l/wt_gsh23_api",
               "ProjectileLife": 400
             }
           }
@@ -1555,7 +1743,7 @@
       "ProjectileAmount": 1,
       "Magazine": 750,
       "EmptyReloadTime": 400,
-      "Velocity": 30,
+      "Velocity": 41.0,
       "Damage": 22,
       "HeatPerShoot": 0,
       "NaturalCooldown": 1,
@@ -1567,89 +1755,52 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
           "Override": {
             "Projectile": {
-              "Type": "superbwarfare:projectile",
-              "Profile": "berts_vehicle_pack:mi24v/cannon/ammo_00_yakb_iai"
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/yakb/wt_yakb_guv_ap"
             },
-            "ShellType": "HE",
-            "Velocity": 43,
-            "ApDurability": 3,
-            "Damage": 83.33333333333333,
+            "ShellType": "AP",
+            "Velocity": 41.0,
+            "ApDurability": 29,
+            "Damage": 22,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
-            "Name": "Air Belt",
+            "Name": "Default",
             "ShootShake": [
               8,
               10,
               6
             ],
             "ProjectileBelt": {
-              "Name": "Air Belt",
+              "Name": "Default",
+              "Family": "GENERIC",
               "Rounds": [
                 {
-                  "Shots": 3,
-                  "Round": "yakb_iai",
+                  "Shots": 4,
+                  "Round": "yakb_guv_ap",
                   "Ammo": "superbwarfare:small_shell_ap",
                   "Tracer": "NONE"
                 },
                 {
                   "Shots": 1,
                   "Round": "yakb_api_t",
-                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Ammo": "superbwarfare:small_shell_he",
                   "Tracer": "GREEN"
-                }
-              ]
-            },
-            "NominalBallistics": {
-              "Supported": true,
-              "ProjectileType": "superbwarfare:projectile",
-              "ProjectileProfile": "berts_vehicle_pack:mi24v/cannon/ammo_00_yakb_iai",
-              "ProjectileLife": 45
-            }
-          },
-          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition"
-        },
-        {
-          "Ammo": "superbwarfare:small_shell_gs",
-          "Override": {
-            "Projectile": {
-              "Type": "superbwarfare:projectile",
-              "Profile": "berts_vehicle_pack:mi24v/cannon/belt_ammo_00_yakb_ap"
-            },
-            "ShellType": "AP",
-            "Velocity": 40.9,
-            "ApDurability": 31,
-            "Damage": 22,
-            "ExplosionDamage": 0,
-            "ExplosionRadius": 0,
-            "Name": "Ground Belt",
-            "ShootShake": [
-              8,
-              10,
-              6
-            ],
-            "ProjectileBelt": {
-              "Name": "Ground Belt",
-              "Rounds": [
-                {
-                  "Shots": 3,
-                  "Round": "yakb_ap",
-                  "Ammo": "superbwarfare:small_shell_gs",
-                  "Tracer": "NONE"
                 },
                 {
-                  "Shots": 1,
-                  "Round": "yakb_iai",
+                  "Shots": 3,
+                  "Round": "yakb_guv_ap",
                   "Ammo": "superbwarfare:small_shell_ap",
-                  "Tracer": "GREEN"
+                  "Tracer": "NONE"
                 }
               ]
             },
             "NominalBallistics": {
               "Supported": true,
-              "ProjectileType": "superbwarfare:projectile",
-              "ProjectileProfile": "berts_vehicle_pack:mi24v/cannon/belt_ammo_00_yakb_ap",
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/yakb/wt_yakb_guv_ap",
               "ProjectileLife": 45
             }
           }
@@ -1690,33 +1841,11 @@
       "ProjectileBeltAmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
           "Override": {
             "Projectile": {
-              "Type": "superbwarfare:projectile",
-              "Profile": "berts_vehicle_pack:mi24v/cannon/ammo_01_yakb_iai"
-            },
-            "ShellType": "HE",
-            "Velocity": 43,
-            "ApDurability": 3,
-            "Damage": 83.33333333333333,
-            "ExplosionDamage": 0,
-            "ExplosionRadius": 1.6666666666666665,
-            "TntEquivalentKg": 0.0032,
-            "Name": "HE Belt",
-            "ShootShake": [
-              8,
-              10,
-              6
-            ]
-          },
-          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition"
-        },
-        {
-          "Ammo": "superbwarfare:small_shell_aa",
-          "Override": {
-            "Projectile": {
-              "Type": "superbwarfare:projectile",
-              "Profile": "berts_vehicle_pack:mi24v/cannon/belt_ammo_01_yakb_api_t"
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/yakb/wt_yakb_api_t"
             },
             "ShellType": "AP",
             "Velocity": 43.25,
@@ -1724,8 +1853,7 @@
             "Damage": 22,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
-            "TntEquivalentKg": 0.0,
-            "Name": "API_T",
+            "Name": "API-T",
             "ShootShake": [
               8,
               10,
@@ -2697,7 +2825,7 @@
         "Profile": "berts_vehicle_pack:aircraft_rounds/gsh23l/gsh23l_air_game"
       },
       "ShellType": "HE",
-      "Velocity": 44.6875,
+      "Velocity": 44.375,
       "ApDurability": 4,
       "ExplosionRadius": 3.8333333333333335,
       "TntEquivalentKg": 0.0279,
@@ -2709,83 +2837,191 @@
       },
       "AmmoType": [
         {
-          "Ammo": "superbwarfare:small_shell_he",
-          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
-          "Override": {
-            "Projectile": {
-              "Type": "superbwarfare:small_cannon_shell",
-              "Profile": "berts_vehicle_pack:aircraft_rounds/gsh23l/gsh23l_air_game"
-            },
-            "ShellType": "HE",
-            "Velocity": 44.6875,
-            "ApDurability": 4,
-            "Damage": 191.66666666666669,
-            "ExplosionDamage": 0,
-            "ExplosionRadius": 3.8333333333333335,
-            "TntEquivalentKg": 0.0279,
-            "Name": "Air Belt",
-            "ProjectileBelt": {
-              "Name": "Air Belt",
-              "Rounds": [
-                {
-                  "Shots": 3,
-                  "Round": "gsh23l_air_game",
-                  "Ammo": "superbwarfare:small_shell_he",
-                  "Tracer": "NONE"
-                },
-                {
-                  "Shots": 1,
-                  "Round": "gsh23l_ground_game",
-                  "Ammo": "superbwarfare:small_shell_ap",
-                  "Tracer": "GREEN"
-                }
-              ]
-            },
-            "NominalBallistics": {
-              "Supported": true,
-              "ProjectileType": "superbwarfare:small_cannon_shell",
-              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/gsh23l/gsh23l_air_game",
-              "ProjectileLife": 400
-            }
-          }
-        },
-        {
           "Ammo": "superbwarfare:small_shell_ap",
           "ConsumptionItem": "superbwarfare:small_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
-              "Profile": "berts_vehicle_pack:aircraft_rounds/gsh23l/gsh23l_ground_game"
+              "Profile": "berts_vehicle_pack:aircraft_rounds/gsh23l/wt_gsh23_hefi_t"
             },
-            "ShellType": "AP",
-            "Velocity": 44.6875,
-            "ApDurability": 31,
-            "Damage": 45,
+            "ShellType": "HE",
+            "Velocity": 44.375,
+            "ApDurability": 4,
+            "Damage": 191.66666666666669,
             "ExplosionDamage": 0,
-            "ExplosionRadius": 0,
-            "TntEquivalentKg": 0.0,
-            "Name": "Ground Belt",
+            "ExplosionRadius": 3.8333333333333335,
+            "TntEquivalentKg": 0.0268,
+            "Name": "Default",
             "ProjectileBelt": {
-              "Name": "Ground Belt",
+              "Name": "Default",
+              "Family": "GENERIC",
               "Rounds": [
                 {
-                  "Shots": 3,
-                  "Round": "gsh23l_ground_game",
+                  "Shots": 1,
+                  "Round": "gsh23_hefi_t",
                   "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "GREEN"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "gsh23_api",
+                  "Ammo": "superbwarfare:small_shell_he",
                   "Tracer": "NONE"
                 },
                 {
                   "Shots": 1,
-                  "Round": "gsh23l_air_game",
-                  "Ammo": "superbwarfare:small_shell_he",
-                  "Tracer": "GREEN"
+                  "Round": "gsh23_hefi",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "NONE"
                 }
               ]
             },
             "NominalBallistics": {
               "Supported": true,
               "ProjectileType": "superbwarfare:small_cannon_shell",
-              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/gsh23l/gsh23l_ground_game",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/gsh23l/wt_gsh23_hefi_t",
+              "ProjectileLife": 400
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_aa",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/gsh23l/wt_gsh23_hefi"
+            },
+            "ShellType": "HE",
+            "Velocity": 43.75,
+            "ApDurability": 4,
+            "Damage": 191.66666666666669,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 3.8333333333333335,
+            "TntEquivalentKg": 0.0279,
+            "Name": "AP",
+            "ProjectileBelt": {
+              "Name": "AP",
+              "Family": "GENERIC",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "gsh23_hefi",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 3,
+                  "Round": "gsh23_api",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/gsh23l/wt_gsh23_hefi",
+              "ProjectileLife": 400
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/gsh23l/wt_gsh23_api"
+            },
+            "ShellType": "AP",
+            "Velocity": 44.375,
+            "ApDurability": 31,
+            "Damage": 45,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "Air targets",
+            "ProjectileBelt": {
+              "Name": "Air targets",
+              "Family": "GENERIC",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "gsh23_hefi_t",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "GREEN"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "gsh23_hefi",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "gsh23_hefi_t",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "GREEN"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "gsh23_hefi",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "gsh23_api",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/gsh23l/wt_gsh23_api",
+              "ProjectileLife": 400
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_gs",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/gsh23l/wt_gsh23_api"
+            },
+            "ShellType": "AP",
+            "Velocity": 44.375,
+            "ApDurability": 31,
+            "Damage": 45,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "Stealth",
+            "ProjectileBelt": {
+              "Name": "Stealth",
+              "Family": "GENERIC",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "gsh23_api",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 2,
+                  "Round": "gsh23_hefi",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/gsh23l/wt_gsh23_api",
               "ProjectileLife": 400
             }
           }
@@ -2842,7 +3078,7 @@
       "ProjectileAmount": 1,
       "Magazine": 750,
       "EmptyReloadTime": 400,
-      "Velocity": 30,
+      "Velocity": 41.0,
       "Damage": 22,
       "HeatPerShoot": 0,
       "NaturalCooldown": 1,
@@ -2854,89 +3090,52 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
           "Override": {
             "Projectile": {
-              "Type": "superbwarfare:projectile",
-              "Profile": "berts_vehicle_pack:mi24v/cannon/ammo_00_yakb_iai"
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/yakb/wt_yakb_guv_ap"
             },
-            "ShellType": "HE",
-            "Velocity": 43,
-            "ApDurability": 3,
-            "Damage": 83.33333333333333,
+            "ShellType": "AP",
+            "Velocity": 41.0,
+            "ApDurability": 29,
+            "Damage": 22,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
-            "Name": "Air Belt",
+            "Name": "Default",
             "ShootShake": [
               8,
               10,
               6
             ],
             "ProjectileBelt": {
-              "Name": "Air Belt",
+              "Name": "Default",
+              "Family": "GENERIC",
               "Rounds": [
                 {
-                  "Shots": 3,
-                  "Round": "yakb_iai",
+                  "Shots": 4,
+                  "Round": "yakb_guv_ap",
                   "Ammo": "superbwarfare:small_shell_ap",
                   "Tracer": "NONE"
                 },
                 {
                   "Shots": 1,
                   "Round": "yakb_api_t",
-                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Ammo": "superbwarfare:small_shell_he",
                   "Tracer": "GREEN"
-                }
-              ]
-            },
-            "NominalBallistics": {
-              "Supported": true,
-              "ProjectileType": "superbwarfare:projectile",
-              "ProjectileProfile": "berts_vehicle_pack:mi24v/cannon/ammo_00_yakb_iai",
-              "ProjectileLife": 45
-            }
-          },
-          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition"
-        },
-        {
-          "Ammo": "superbwarfare:small_shell_gs",
-          "Override": {
-            "Projectile": {
-              "Type": "superbwarfare:projectile",
-              "Profile": "berts_vehicle_pack:mi24v/cannon/belt_ammo_00_yakb_ap"
-            },
-            "ShellType": "AP",
-            "Velocity": 40.9,
-            "ApDurability": 31,
-            "Damage": 22,
-            "ExplosionDamage": 0,
-            "ExplosionRadius": 0,
-            "Name": "Ground Belt",
-            "ShootShake": [
-              8,
-              10,
-              6
-            ],
-            "ProjectileBelt": {
-              "Name": "Ground Belt",
-              "Rounds": [
-                {
-                  "Shots": 3,
-                  "Round": "yakb_ap",
-                  "Ammo": "superbwarfare:small_shell_gs",
-                  "Tracer": "NONE"
                 },
                 {
-                  "Shots": 1,
-                  "Round": "yakb_iai",
+                  "Shots": 3,
+                  "Round": "yakb_guv_ap",
                   "Ammo": "superbwarfare:small_shell_ap",
-                  "Tracer": "GREEN"
+                  "Tracer": "NONE"
                 }
               ]
             },
             "NominalBallistics": {
               "Supported": true,
-              "ProjectileType": "superbwarfare:projectile",
-              "ProjectileProfile": "berts_vehicle_pack:mi24v/cannon/belt_ammo_00_yakb_ap",
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/yakb/wt_yakb_guv_ap",
               "ProjectileLife": 45
             }
           }
@@ -2977,33 +3176,11 @@
       "ProjectileBeltAmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
           "Override": {
             "Projectile": {
-              "Type": "superbwarfare:projectile",
-              "Profile": "berts_vehicle_pack:mi24v/cannon/ammo_01_yakb_iai"
-            },
-            "ShellType": "HE",
-            "Velocity": 43,
-            "ApDurability": 3,
-            "Damage": 83.33333333333333,
-            "ExplosionDamage": 0,
-            "ExplosionRadius": 1.6666666666666665,
-            "TntEquivalentKg": 0.0032,
-            "Name": "HE Belt",
-            "ShootShake": [
-              8,
-              10,
-              6
-            ]
-          },
-          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition"
-        },
-        {
-          "Ammo": "superbwarfare:small_shell_aa",
-          "Override": {
-            "Projectile": {
-              "Type": "superbwarfare:projectile",
-              "Profile": "berts_vehicle_pack:mi24v/cannon/belt_ammo_01_yakb_api_t"
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/yakb/wt_yakb_api_t"
             },
             "ShellType": "AP",
             "Velocity": 43.25,
@@ -3011,8 +3188,7 @@
             "Damage": 22,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
-            "TntEquivalentKg": 0.0,
-            "Name": "API_T",
+            "Name": "API-T",
             "ShootShake": [
               8,
               10,
@@ -3984,7 +4160,7 @@
         "Profile": "berts_vehicle_pack:aircraft_rounds/gsh23l/gsh23l_air_game"
       },
       "ShellType": "HE",
-      "Velocity": 44.6875,
+      "Velocity": 44.375,
       "ApDurability": 4,
       "ExplosionRadius": 3.8333333333333335,
       "TntEquivalentKg": 0.0279,
@@ -3996,83 +4172,191 @@
       },
       "AmmoType": [
         {
-          "Ammo": "superbwarfare:small_shell_he",
-          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
-          "Override": {
-            "Projectile": {
-              "Type": "superbwarfare:small_cannon_shell",
-              "Profile": "berts_vehicle_pack:aircraft_rounds/gsh23l/gsh23l_air_game"
-            },
-            "ShellType": "HE",
-            "Velocity": 44.6875,
-            "ApDurability": 4,
-            "Damage": 191.66666666666669,
-            "ExplosionDamage": 0,
-            "ExplosionRadius": 3.8333333333333335,
-            "TntEquivalentKg": 0.0279,
-            "Name": "Air Belt",
-            "ProjectileBelt": {
-              "Name": "Air Belt",
-              "Rounds": [
-                {
-                  "Shots": 3,
-                  "Round": "gsh23l_air_game",
-                  "Ammo": "superbwarfare:small_shell_he",
-                  "Tracer": "NONE"
-                },
-                {
-                  "Shots": 1,
-                  "Round": "gsh23l_ground_game",
-                  "Ammo": "superbwarfare:small_shell_ap",
-                  "Tracer": "GREEN"
-                }
-              ]
-            },
-            "NominalBallistics": {
-              "Supported": true,
-              "ProjectileType": "superbwarfare:small_cannon_shell",
-              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/gsh23l/gsh23l_air_game",
-              "ProjectileLife": 400
-            }
-          }
-        },
-        {
           "Ammo": "superbwarfare:small_shell_ap",
           "ConsumptionItem": "superbwarfare:small_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
-              "Profile": "berts_vehicle_pack:aircraft_rounds/gsh23l/gsh23l_ground_game"
+              "Profile": "berts_vehicle_pack:aircraft_rounds/gsh23l/wt_gsh23_hefi_t"
             },
-            "ShellType": "AP",
-            "Velocity": 44.6875,
-            "ApDurability": 31,
-            "Damage": 45,
+            "ShellType": "HE",
+            "Velocity": 44.375,
+            "ApDurability": 4,
+            "Damage": 191.66666666666669,
             "ExplosionDamage": 0,
-            "ExplosionRadius": 0,
-            "TntEquivalentKg": 0.0,
-            "Name": "Ground Belt",
+            "ExplosionRadius": 3.8333333333333335,
+            "TntEquivalentKg": 0.0268,
+            "Name": "Default",
             "ProjectileBelt": {
-              "Name": "Ground Belt",
+              "Name": "Default",
+              "Family": "GENERIC",
               "Rounds": [
                 {
-                  "Shots": 3,
-                  "Round": "gsh23l_ground_game",
+                  "Shots": 1,
+                  "Round": "gsh23_hefi_t",
                   "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "GREEN"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "gsh23_api",
+                  "Ammo": "superbwarfare:small_shell_he",
                   "Tracer": "NONE"
                 },
                 {
                   "Shots": 1,
-                  "Round": "gsh23l_air_game",
-                  "Ammo": "superbwarfare:small_shell_he",
-                  "Tracer": "GREEN"
+                  "Round": "gsh23_hefi",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "NONE"
                 }
               ]
             },
             "NominalBallistics": {
               "Supported": true,
               "ProjectileType": "superbwarfare:small_cannon_shell",
-              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/gsh23l/gsh23l_ground_game",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/gsh23l/wt_gsh23_hefi_t",
+              "ProjectileLife": 400
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_aa",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/gsh23l/wt_gsh23_hefi"
+            },
+            "ShellType": "HE",
+            "Velocity": 43.75,
+            "ApDurability": 4,
+            "Damage": 191.66666666666669,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 3.8333333333333335,
+            "TntEquivalentKg": 0.0279,
+            "Name": "AP",
+            "ProjectileBelt": {
+              "Name": "AP",
+              "Family": "GENERIC",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "gsh23_hefi",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 3,
+                  "Round": "gsh23_api",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/gsh23l/wt_gsh23_hefi",
+              "ProjectileLife": 400
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/gsh23l/wt_gsh23_api"
+            },
+            "ShellType": "AP",
+            "Velocity": 44.375,
+            "ApDurability": 31,
+            "Damage": 45,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "Air targets",
+            "ProjectileBelt": {
+              "Name": "Air targets",
+              "Family": "GENERIC",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "gsh23_hefi_t",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "GREEN"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "gsh23_hefi",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "gsh23_hefi_t",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "GREEN"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "gsh23_hefi",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "gsh23_api",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/gsh23l/wt_gsh23_api",
+              "ProjectileLife": 400
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_gs",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/gsh23l/wt_gsh23_api"
+            },
+            "ShellType": "AP",
+            "Velocity": 44.375,
+            "ApDurability": 31,
+            "Damage": 45,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "Stealth",
+            "ProjectileBelt": {
+              "Name": "Stealth",
+              "Family": "GENERIC",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "gsh23_api",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 2,
+                  "Round": "gsh23_hefi",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/gsh23l/wt_gsh23_api",
               "ProjectileLife": 400
             }
           }
@@ -4129,7 +4413,7 @@
       "ProjectileAmount": 1,
       "Magazine": 750,
       "EmptyReloadTime": 400,
-      "Velocity": 30,
+      "Velocity": 41.0,
       "Damage": 22,
       "HeatPerShoot": 0,
       "NaturalCooldown": 1,
@@ -4141,89 +4425,52 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
           "Override": {
             "Projectile": {
-              "Type": "superbwarfare:projectile",
-              "Profile": "berts_vehicle_pack:mi24v/cannon/ammo_00_yakb_iai"
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/yakb/wt_yakb_guv_ap"
             },
-            "ShellType": "HE",
-            "Velocity": 43,
-            "ApDurability": 3,
-            "Damage": 83.33333333333333,
+            "ShellType": "AP",
+            "Velocity": 41.0,
+            "ApDurability": 29,
+            "Damage": 22,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
-            "Name": "Air Belt",
+            "Name": "Default",
             "ShootShake": [
               8,
               10,
               6
             ],
             "ProjectileBelt": {
-              "Name": "Air Belt",
+              "Name": "Default",
+              "Family": "GENERIC",
               "Rounds": [
                 {
-                  "Shots": 3,
-                  "Round": "yakb_iai",
+                  "Shots": 4,
+                  "Round": "yakb_guv_ap",
                   "Ammo": "superbwarfare:small_shell_ap",
                   "Tracer": "NONE"
                 },
                 {
                   "Shots": 1,
                   "Round": "yakb_api_t",
-                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Ammo": "superbwarfare:small_shell_he",
                   "Tracer": "GREEN"
-                }
-              ]
-            },
-            "NominalBallistics": {
-              "Supported": true,
-              "ProjectileType": "superbwarfare:projectile",
-              "ProjectileProfile": "berts_vehicle_pack:mi24v/cannon/ammo_00_yakb_iai",
-              "ProjectileLife": 45
-            }
-          },
-          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition"
-        },
-        {
-          "Ammo": "superbwarfare:small_shell_gs",
-          "Override": {
-            "Projectile": {
-              "Type": "superbwarfare:projectile",
-              "Profile": "berts_vehicle_pack:mi24v/cannon/belt_ammo_00_yakb_ap"
-            },
-            "ShellType": "AP",
-            "Velocity": 40.9,
-            "ApDurability": 31,
-            "Damage": 22,
-            "ExplosionDamage": 0,
-            "ExplosionRadius": 0,
-            "Name": "Ground Belt",
-            "ShootShake": [
-              8,
-              10,
-              6
-            ],
-            "ProjectileBelt": {
-              "Name": "Ground Belt",
-              "Rounds": [
-                {
-                  "Shots": 3,
-                  "Round": "yakb_ap",
-                  "Ammo": "superbwarfare:small_shell_gs",
-                  "Tracer": "NONE"
                 },
                 {
-                  "Shots": 1,
-                  "Round": "yakb_iai",
+                  "Shots": 3,
+                  "Round": "yakb_guv_ap",
                   "Ammo": "superbwarfare:small_shell_ap",
-                  "Tracer": "GREEN"
+                  "Tracer": "NONE"
                 }
               ]
             },
             "NominalBallistics": {
               "Supported": true,
-              "ProjectileType": "superbwarfare:projectile",
-              "ProjectileProfile": "berts_vehicle_pack:mi24v/cannon/belt_ammo_00_yakb_ap",
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/yakb/wt_yakb_guv_ap",
               "ProjectileLife": 45
             }
           }
@@ -4264,33 +4511,11 @@
       "ProjectileBeltAmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
           "Override": {
             "Projectile": {
-              "Type": "superbwarfare:projectile",
-              "Profile": "berts_vehicle_pack:mi24v/cannon/ammo_01_yakb_iai"
-            },
-            "ShellType": "HE",
-            "Velocity": 43,
-            "ApDurability": 3,
-            "Damage": 83.33333333333333,
-            "ExplosionDamage": 0,
-            "ExplosionRadius": 1.6666666666666665,
-            "TntEquivalentKg": 0.0032,
-            "Name": "HE Belt",
-            "ShootShake": [
-              8,
-              10,
-              6
-            ]
-          },
-          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition"
-        },
-        {
-          "Ammo": "superbwarfare:small_shell_aa",
-          "Override": {
-            "Projectile": {
-              "Type": "superbwarfare:projectile",
-              "Profile": "berts_vehicle_pack:mi24v/cannon/belt_ammo_01_yakb_api_t"
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/yakb/wt_yakb_api_t"
             },
             "ShellType": "AP",
             "Velocity": 43.25,
@@ -4298,8 +4523,7 @@
             "Damage": 22,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
-            "TntEquivalentKg": 0.0,
-            "Name": "API_T",
+            "Name": "API-T",
             "ShootShake": [
               8,
               10,
@@ -5271,7 +5495,7 @@
         "Profile": "berts_vehicle_pack:aircraft_rounds/gsh23l/gsh23l_air_game"
       },
       "ShellType": "HE",
-      "Velocity": 44.6875,
+      "Velocity": 44.375,
       "ApDurability": 4,
       "ExplosionRadius": 3.8333333333333335,
       "TntEquivalentKg": 0.0279,
@@ -5283,83 +5507,191 @@
       },
       "AmmoType": [
         {
-          "Ammo": "superbwarfare:small_shell_he",
-          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
-          "Override": {
-            "Projectile": {
-              "Type": "superbwarfare:small_cannon_shell",
-              "Profile": "berts_vehicle_pack:aircraft_rounds/gsh23l/gsh23l_air_game"
-            },
-            "ShellType": "HE",
-            "Velocity": 44.6875,
-            "ApDurability": 4,
-            "Damage": 191.66666666666669,
-            "ExplosionDamage": 0,
-            "ExplosionRadius": 3.8333333333333335,
-            "TntEquivalentKg": 0.0279,
-            "Name": "Air Belt",
-            "ProjectileBelt": {
-              "Name": "Air Belt",
-              "Rounds": [
-                {
-                  "Shots": 3,
-                  "Round": "gsh23l_air_game",
-                  "Ammo": "superbwarfare:small_shell_he",
-                  "Tracer": "NONE"
-                },
-                {
-                  "Shots": 1,
-                  "Round": "gsh23l_ground_game",
-                  "Ammo": "superbwarfare:small_shell_ap",
-                  "Tracer": "GREEN"
-                }
-              ]
-            },
-            "NominalBallistics": {
-              "Supported": true,
-              "ProjectileType": "superbwarfare:small_cannon_shell",
-              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/gsh23l/gsh23l_air_game",
-              "ProjectileLife": 400
-            }
-          }
-        },
-        {
           "Ammo": "superbwarfare:small_shell_ap",
           "ConsumptionItem": "superbwarfare:small_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
-              "Profile": "berts_vehicle_pack:aircraft_rounds/gsh23l/gsh23l_ground_game"
+              "Profile": "berts_vehicle_pack:aircraft_rounds/gsh23l/wt_gsh23_hefi_t"
             },
-            "ShellType": "AP",
-            "Velocity": 44.6875,
-            "ApDurability": 31,
-            "Damage": 45,
+            "ShellType": "HE",
+            "Velocity": 44.375,
+            "ApDurability": 4,
+            "Damage": 191.66666666666669,
             "ExplosionDamage": 0,
-            "ExplosionRadius": 0,
-            "TntEquivalentKg": 0.0,
-            "Name": "Ground Belt",
+            "ExplosionRadius": 3.8333333333333335,
+            "TntEquivalentKg": 0.0268,
+            "Name": "Default",
             "ProjectileBelt": {
-              "Name": "Ground Belt",
+              "Name": "Default",
+              "Family": "GENERIC",
               "Rounds": [
                 {
-                  "Shots": 3,
-                  "Round": "gsh23l_ground_game",
+                  "Shots": 1,
+                  "Round": "gsh23_hefi_t",
                   "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "GREEN"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "gsh23_api",
+                  "Ammo": "superbwarfare:small_shell_he",
                   "Tracer": "NONE"
                 },
                 {
                   "Shots": 1,
-                  "Round": "gsh23l_air_game",
-                  "Ammo": "superbwarfare:small_shell_he",
-                  "Tracer": "GREEN"
+                  "Round": "gsh23_hefi",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "NONE"
                 }
               ]
             },
             "NominalBallistics": {
               "Supported": true,
               "ProjectileType": "superbwarfare:small_cannon_shell",
-              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/gsh23l/gsh23l_ground_game",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/gsh23l/wt_gsh23_hefi_t",
+              "ProjectileLife": 400
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_aa",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/gsh23l/wt_gsh23_hefi"
+            },
+            "ShellType": "HE",
+            "Velocity": 43.75,
+            "ApDurability": 4,
+            "Damage": 191.66666666666669,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 3.8333333333333335,
+            "TntEquivalentKg": 0.0279,
+            "Name": "AP",
+            "ProjectileBelt": {
+              "Name": "AP",
+              "Family": "GENERIC",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "gsh23_hefi",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 3,
+                  "Round": "gsh23_api",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/gsh23l/wt_gsh23_hefi",
+              "ProjectileLife": 400
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/gsh23l/wt_gsh23_api"
+            },
+            "ShellType": "AP",
+            "Velocity": 44.375,
+            "ApDurability": 31,
+            "Damage": 45,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "Air targets",
+            "ProjectileBelt": {
+              "Name": "Air targets",
+              "Family": "GENERIC",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "gsh23_hefi_t",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "GREEN"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "gsh23_hefi",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "gsh23_hefi_t",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "GREEN"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "gsh23_hefi",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "gsh23_api",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/gsh23l/wt_gsh23_api",
+              "ProjectileLife": 400
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_gs",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/gsh23l/wt_gsh23_api"
+            },
+            "ShellType": "AP",
+            "Velocity": 44.375,
+            "ApDurability": 31,
+            "Damage": 45,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "Stealth",
+            "ProjectileBelt": {
+              "Name": "Stealth",
+              "Family": "GENERIC",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "gsh23_api",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 2,
+                  "Round": "gsh23_hefi",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/gsh23l/wt_gsh23_api",
               "ProjectileLife": 400
             }
           }
@@ -5416,7 +5748,7 @@
       "ProjectileAmount": 1,
       "Magazine": 750,
       "EmptyReloadTime": 400,
-      "Velocity": 30,
+      "Velocity": 41.0,
       "Damage": 22,
       "HeatPerShoot": 0,
       "NaturalCooldown": 1,
@@ -5428,89 +5760,52 @@
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
           "Override": {
             "Projectile": {
-              "Type": "superbwarfare:projectile",
-              "Profile": "berts_vehicle_pack:mi24v/cannon/ammo_00_yakb_iai"
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/yakb/wt_yakb_guv_ap"
             },
-            "ShellType": "HE",
-            "Velocity": 43,
-            "ApDurability": 3,
-            "Damage": 83.33333333333333,
+            "ShellType": "AP",
+            "Velocity": 41.0,
+            "ApDurability": 29,
+            "Damage": 22,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
-            "Name": "Air Belt",
+            "Name": "Default",
             "ShootShake": [
               8,
               10,
               6
             ],
             "ProjectileBelt": {
-              "Name": "Air Belt",
+              "Name": "Default",
+              "Family": "GENERIC",
               "Rounds": [
                 {
-                  "Shots": 3,
-                  "Round": "yakb_iai",
+                  "Shots": 4,
+                  "Round": "yakb_guv_ap",
                   "Ammo": "superbwarfare:small_shell_ap",
                   "Tracer": "NONE"
                 },
                 {
                   "Shots": 1,
                   "Round": "yakb_api_t",
-                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Ammo": "superbwarfare:small_shell_he",
                   "Tracer": "GREEN"
-                }
-              ]
-            },
-            "NominalBallistics": {
-              "Supported": true,
-              "ProjectileType": "superbwarfare:projectile",
-              "ProjectileProfile": "berts_vehicle_pack:mi24v/cannon/ammo_00_yakb_iai",
-              "ProjectileLife": 45
-            }
-          },
-          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition"
-        },
-        {
-          "Ammo": "superbwarfare:small_shell_gs",
-          "Override": {
-            "Projectile": {
-              "Type": "superbwarfare:projectile",
-              "Profile": "berts_vehicle_pack:mi24v/cannon/belt_ammo_00_yakb_ap"
-            },
-            "ShellType": "AP",
-            "Velocity": 40.9,
-            "ApDurability": 31,
-            "Damage": 22,
-            "ExplosionDamage": 0,
-            "ExplosionRadius": 0,
-            "Name": "Ground Belt",
-            "ShootShake": [
-              8,
-              10,
-              6
-            ],
-            "ProjectileBelt": {
-              "Name": "Ground Belt",
-              "Rounds": [
-                {
-                  "Shots": 3,
-                  "Round": "yakb_ap",
-                  "Ammo": "superbwarfare:small_shell_gs",
-                  "Tracer": "NONE"
                 },
                 {
-                  "Shots": 1,
-                  "Round": "yakb_iai",
+                  "Shots": 3,
+                  "Round": "yakb_guv_ap",
                   "Ammo": "superbwarfare:small_shell_ap",
-                  "Tracer": "GREEN"
+                  "Tracer": "NONE"
                 }
               ]
             },
             "NominalBallistics": {
               "Supported": true,
-              "ProjectileType": "superbwarfare:projectile",
-              "ProjectileProfile": "berts_vehicle_pack:mi24v/cannon/belt_ammo_00_yakb_ap",
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/yakb/wt_yakb_guv_ap",
               "ProjectileLife": 45
             }
           }
@@ -5551,33 +5846,11 @@
       "ProjectileBeltAmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
           "Override": {
             "Projectile": {
-              "Type": "superbwarfare:projectile",
-              "Profile": "berts_vehicle_pack:mi24v/cannon/ammo_01_yakb_iai"
-            },
-            "ShellType": "HE",
-            "Velocity": 43,
-            "ApDurability": 3,
-            "Damage": 83.33333333333333,
-            "ExplosionDamage": 0,
-            "ExplosionRadius": 1.6666666666666665,
-            "TntEquivalentKg": 0.0032,
-            "Name": "HE Belt",
-            "ShootShake": [
-              8,
-              10,
-              6
-            ]
-          },
-          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition"
-        },
-        {
-          "Ammo": "superbwarfare:small_shell_aa",
-          "Override": {
-            "Projectile": {
-              "Type": "superbwarfare:projectile",
-              "Profile": "berts_vehicle_pack:mi24v/cannon/belt_ammo_01_yakb_api_t"
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/yakb/wt_yakb_api_t"
             },
             "ShellType": "AP",
             "Velocity": 43.25,
@@ -5585,8 +5858,7 @@
             "Damage": 22,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
-            "TntEquivalentKg": 0.0,
-            "Name": "API_T",
+            "Name": "API-T",
             "ShootShake": [
               8,
               10,
@@ -5682,12 +5954,12 @@
     0
   ],
   "TurretTurnSpeed": [
-    15,
-    15
+    39,
+    52
   ],
   "TurretPitchRange": [
     -60,
-    10
+    20
   ],
   "HasDecoy": true,
   "UpStep": 1.1,
@@ -5778,8 +6050,8 @@
     ]
   ],
   "TurretYawRange": [
-    -110,
-    110
+    -60,
+    60
   ],
   "TurretControllerIndex": 1,
   "PassengerRenderScale": 0.75,

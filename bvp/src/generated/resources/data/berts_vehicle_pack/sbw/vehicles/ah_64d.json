@@ -103,7 +103,8 @@
         "HydraS2",
         "HydraS3",
         "HydraS4",
-        "HydraS5"
+        "HydraS5",
+        "M230"
       ],
       "CanRotateHead": true,
       "CameraPos": {
@@ -151,7 +152,11 @@
         2.4035
       ],
       "Weapons": [
-        "M230"
+        "M230",
+        "HydraS2",
+        "HydraS3",
+        "HydraS4",
+        "HydraS5"
       ],
       "CanRotateHead": true,
       "CameraPos": {
@@ -242,7 +247,7 @@
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
-              "Profile": "berts_vehicle_pack:aircraft_rounds/m230e1/m230e1_hedp"
+              "Profile": "berts_vehicle_pack:ah_64d/m230/belt_ammo_wt_m230e1_hedp"
             },
             "ShellType": "HE",
             "Velocity": 50.3125,
@@ -251,53 +256,29 @@
             "ExplosionDamage": 0,
             "ExplosionRadius": 1.5666915555555554,
             "TntEquivalentKg": 0.0282,
-            "Name": "Air Belt",
+            "Name": "Default",
             "ProjectileBelt": {
-              "Name": "Air Belt",
+              "Name": "Default",
+              "Family": "GENERIC",
               "Rounds": [
                 {
-                  "Shots": 3,
+                  "Shots": 1,
                   "Round": "m230e1_hedp",
                   "Ammo": "superbwarfare:small_shell_ap",
                   "Tracer": "NONE"
-                },
-                {
-                  "Shots": 1,
-                  "Round": "m230e1_hedp_t",
-                  "Ammo": "superbwarfare:small_shell_he",
-                  "Tracer": "RED"
                 }
               ]
             },
             "NominalBallistics": {
               "Supported": true,
               "ProjectileType": "superbwarfare:small_cannon_shell",
-              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/m230e1/m230e1_hedp",
+              "ProjectileProfile": "berts_vehicle_pack:ah_64d/m230/belt_ammo_wt_m230e1_hedp",
               "ProjectileLife": 400
             }
           }
         }
       ],
-      "ProjectileBeltAmmoType": [
-        {
-          "Ammo": "superbwarfare:small_shell_he",
-          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
-          "Override": {
-            "Projectile": {
-              "Type": "superbwarfare:small_cannon_shell",
-              "Profile": "berts_vehicle_pack:aircraft_rounds/m230e1/m230e1_hedp_t"
-            },
-            "ShellType": "HE",
-            "Velocity": 50.3125,
-            "ApDurability": 51,
-            "Damage": 78.33457777777778,
-            "ExplosionDamage": 0,
-            "ExplosionRadius": 1.5666915555555554,
-            "TntEquivalentKg": 0.0282,
-            "Name": "HEDP_T"
-          }
-        }
-      ],
+      "ProjectileBeltAmmoType": [],
       "BeltFed": true,
       "OverheatEnabled": false,
       "ShootPos": {
@@ -2673,12 +2654,12 @@
     60
   ],
   "PassengerWeaponStationYawRange": [
-    -60,
-    60
+    -110,
+    110
   ],
   "PassengerWeaponStationPitchRange": [
-    -10,
-    40
+    -60,
+    11
   ],
   "RemoteWeaponStation": true,
   "PassengerWeaponStationBinding": {
