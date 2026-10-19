@@ -1,5 +1,5 @@
 {
- "reference": "Mi-24A: common 'greenhouse' cockpit, navigator-operator in the nose (basic flight dials left of the Falanga/A-12.7 sight, weapon panel right, small light board), pilot behind on the offset seat with the Mi-24 steam panel (no RWR): flight group in the middle under the PKV sight, engine/rotor group with the light board on the right section, clock and system gauges left. Sources: 16va.be 'Combat Hinds' (https://www.16va.be/4.2_les_mi-24_part1_eng.html), airvectors.net (https://airvectors.net/avhind_1.html), Wikipedia Mil Mi-24 (https://en.wikipedia.org/wiki/Mil_Mi-24); no photos reachable from the build machine",
+ "reference": "Mi-24A, placed from cockpit-refs/mi_24a: pilot (seat 0) from the gauge holes of the stripped panel in mi_24a_02.jpg (three rows round the tall ADI slot, lamp strip top right, 2x3 lamp block under the right-hand group, map tray lower right; instrument identities assumed from the Mi-24/Mi-8 family since the dials are removed); operator (seat 1): mi_24a_01.jpg shows only the sight, panel per the Mi-24 operator layout of the Mi-24P guide p-109. Chuck's DCS Mi-24P guide (chucksguides.com), layout reference only",
  "palette": "soviet",
  "stations": [
   {
@@ -24,40 +24,165 @@
    },
    "panel": {
     "centre": [
-     ["AIRSPEED", -0.125, 0.06, 0.08],
-     ["ATTITUDE", 0, 0.1, 0.11],
-     ["ALTIMETER", 0.125, 0.06, 0.08],
-     ["VVI", -0.125, 0.155, 0.08],
-     ["HEADING", 0, 0.225, 0.1],
-     ["RADAR_ALT", 0.125, 0.155, 0.08],
-     ["G_METER", -0.125, 0.24, 0.06],
-     ["TURN_SLIP", 0.125, 0.24, 0.06],
-     ["B:KNOBS", 0, 0.305, 0.5, 0.04],
-     ["B:SWITCHES", 0, 0.363, 0.52, 0.07],
-     ["B:SWITCHES", -0.14, 0.44, 0.25, 0.06],
-     ["B:KNOBS", 0.14, 0.44, 0.25, 0.04],
-     ["FILLER_TEMP", 0.245, 0.05, 0.052]
+     [
+      "B:SWITCHES",
+      -0.137,
+      0.022,
+      0.08,
+      0.024
+     ],
+     [
+      "B:SWITCHES",
+      0.052,
+      0.022,
+      0.07,
+      0.024
+     ],
+     [
+      "A:heli",
+      0.155,
+      0.026,
+      0.11,
+      0.036
+     ],
+     [
+      "RADAR_ALT",
+      -0.208,
+      0.085,
+      0.08
+     ],
+     [
+      "AIRSPEED",
+      -0.102,
+      0.085,
+      0.08
+     ],
+     [
+      "ATTITUDE",
+      0.0,
+      0.092,
+      0.095
+     ],
+     [
+      "VVI",
+      0.098,
+      0.092,
+      0.07
+     ],
+     [
+      "TURN_SLIP",
+      0.17,
+      0.087,
+      0.055
+     ],
+     [
+      "CLOCK",
+      0.238,
+      0.087,
+      0.06
+     ],
+     [
+      "ENGINE_RPM",
+      -0.175,
+      0.2,
+      0.085
+     ],
+     [
+      "HEADING",
+      -0.06,
+      0.206,
+      0.095
+     ],
+     [
+      "ALTIMETER",
+      0.11,
+      0.2,
+      0.07
+     ],
+     [
+      "FILLER_TEMP",
+      0.185,
+      0.2,
+      0.055
+     ],
+     [
+      "FILLER_OIL",
+      0.248,
+      0.2,
+      0.052
+     ],
+     [
+      "TORQUE",
+      -0.19,
+      0.32,
+      0.075
+     ],
+     [
+      "EGT",
+      -0.1,
+      0.32,
+      0.07
+     ],
+     [
+      "FUEL_QTY",
+      -0.01,
+      0.32,
+      0.075
+     ],
+     [
+      "A:heli_small",
+      0.078,
+      0.265,
+      0.06,
+      0.045
+     ],
+     [
+      "FILLER_VOLTS",
+      0.147,
+      0.32,
+      0.06
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.215,
+      0.32,
+      0.055
+     ]
     ],
     "left": [
-     ["CLOCK", 0.084, 0.05, 0.06],
-     ["FILLER_VOLTS", 0.233, 0.05, 0.055],
-     ["FILLER_HYDRAULIC", 0.084, 0.125, 0.055],
-     ["FILLER_HYDRAULIC", 0.233, 0.125, 0.055],
-     ["FILLER_OXYGEN", 0.084, 0.195, 0.05],
-     ["FILLER_VOLTS", 0.233, 0.195, 0.05],
-     ["B:SWITCHES", 0.159, 0.265, 0.287, 0.06],
-     ["B:KNOBS", 0.159, 0.325, 0.277, 0.04]
+     [
+      "ROTOR_RPM",
+      0.06,
+      0.2,
+      0.09
+     ],
+     [
+      "THROTTLE",
+      0.06,
+      0.32,
+      0.085
+     ]
     ],
     "right": [
-     ["A:heli", 0.148, 0.038, 0.21, 0.048],
-     ["ROTOR_RPM", 0.084, 0.115, 0.08],
-     ["ENGINE_RPM", 0.233, 0.115, 0.08],
-     ["TORQUE", 0.084, 0.21, 0.072],
-     ["EGT", 0.233, 0.21, 0.072],
-     ["THROTTLE", 0.084, 0.29, 0.06],
-     ["FUEL_QTY", 0.233, 0.29, 0.06],
-     ["FILLER_OIL", 0.084, 0.36, 0.05],
-     ["FILLER_OIL", 0.233, 0.36, 0.05]
+     [
+      "FILLER_OIL",
+      0.05,
+      0.2,
+      0.055
+     ],
+     [
+      "FILLER_TEMP",
+      0.05,
+      0.32,
+      0.05
+     ],
+     [
+      "B:BLANK",
+      0.19,
+      0.33,
+      0.14,
+      0.12
+     ]
     ]
    }
   },
@@ -78,25 +203,80 @@
    },
    "panel": {
     "centre": [
-     ["AIRSPEED", -0.177, 0.05, 0.072],
-     ["ALTIMETER", -0.093, 0.05, 0.072],
-     ["VVI", -0.177, 0.128, 0.06],
-     ["RADAR_ALT", -0.093, 0.128, 0.06],
-     ["B:SWITCHES", 0.135, 0.13, 0.15, 0.09],
-     ["B:KNOBS", 0, 0.22, 0.38, 0.04],
-     ["B:SWITCHES", 0, 0.29, 0.34, 0.07],
-     ["CLOCK", 0.135, 0.045, 0.055]
+     [
+      "AIRSPEED",
+      -0.11,
+      0.07,
+      0.078
+     ],
+     [
+      "ATTITUDE",
+      0.0,
+      0.08,
+      0.112
+     ],
+     [
+      "ALTIMETER",
+      0.118,
+      0.068,
+      0.078
+     ],
+     [
+      "ROTOR_RPM",
+      -0.096,
+      0.2,
+      0.076
+     ],
+     [
+      "HEADING",
+      0.006,
+      0.205,
+      0.078
+     ],
+     [
+      "ENGINE_RPM",
+      0.108,
+      0.2,
+      0.076
+     ]
     ],
     "left": [
-     ["ATTITUDE", 0.124, 0.055, 0.08],
-     ["HEADING", 0.077, 0.146, 0.066],
-     ["TURN_SLIP", 0.182, 0.146, 0.055],
-     ["B:SWITCHES", 0.124, 0.215, 0.209, 0.05]
+     [
+      "B:SWITCHES",
+      0.12,
+      0.075,
+      0.2,
+      0.09
+     ],
+     [
+      "A:heli_small",
+      0.06,
+      0.18,
+      0.075,
+      0.045
+     ],
+     [
+      "B:KNOBS",
+      0.165,
+      0.18,
+      0.11,
+      0.045
+     ]
     ],
     "right": [
-     ["A:heli_small", 0.124, 0.05, 0.1, 0.06],
-     ["B:SWITCHES", 0.124, 0.13, 0.209, 0.07],
-     ["B:KNOBS", 0.124, 0.2, 0.209, 0.04]
+     [
+      "B:SWITCHES",
+      0.085,
+      0.12,
+      0.13,
+      0.16
+     ],
+     [
+      "AMMO",
+      0.2,
+      0.08,
+      0.05
+     ]
     ]
    }
   }

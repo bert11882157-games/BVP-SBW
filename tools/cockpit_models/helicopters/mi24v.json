@@ -1,5 +1,5 @@
 {
- "reference": "Mi-24V. Pilot (rear, seat 0): flight group in the middle under the ASP-17V sight (US-450 airspeed, KPP attitude director, VD-10 altimeter; VAR-30 VVI, PNP-72 HSI, RV-5 radar altimeter; AM-10 g-meter, turn/slip), SPO-10 RWR head top left of the centre, the right section the engine/rotor group (ITE-1T rotor tach, ITE-2T engine tachs, IR-117 power, 2UT-6K EGT, UP-21 pitch, fuel gauge, oil gauges) with the warning light board (tablo) above it, left section clock, voltmeter, hydraulic and oxygen gauges and switch rows; operator (front, seat 1): airspeed, altimeter, VVI, radar altimeter left of the KPS-53AV / Raduga-Sh sight, the weapon control panel (PUS) and ammunition counter right of it, attitude and heading on the left wing, his small light board on the right wing, the two-grip handle unit below. Laid out from the DCS Mi-24P manual / Chuck's DCS Mi-24P guide cockpit chapter (https://chucksguides.com/aircraft/dcs/mi-24p/; the V's panel is the P's) and 16va.be 'Combat Hinds' (https://www.16va.be/4.2_les_mi-24_part1_eng.html); photo hosts were unreachable from the build machine, so positions are from those layouts, not measured from photos",
+ "reference": "Mi-24V, placed from photos and guide pages in cockpit-refs/mi24v. Pilot (rear, seat 0): mi24v_02.jpg (Nigerian Mi-24V pilot panel) and mi24v_04.jpg (Mi-24P pilot panel), dial offsets measured on mi_24d_02.jpg, labels from guide p-055/p-056/p-058/p-059/p-060: DISS hover indicator, airspeed, PKP-72M ADI, VVI; radar altimeter, altimeter, PNP-72 HSI, standby horizon; rotor and engine tachs, UP-117 EPR, PTIT; warning light board, g-meter, blade pitch, hydraulics and gear panel on the left; clock and SPO-10 over the PA-4-3 map box on the right, doppler drift and fuel under it. Operator (front, seat 1): guide p-105/p-109 (airspeed, ADI, altimeter; rotor tach, HSI, engine tach; stores switches with the USLP lamp block left, missile panel right), mi24v_01.jpg for the sight. Chuck's DCS Mi-24P guide (chucksguides.com), layout reference only",
  "palette": "soviet",
  "stations": [
   {
@@ -19,40 +19,178 @@
    },
    "panel": {
     "centre": [
-     ["AIRSPEED", -0.112, 0.06, 0.08],
-     ["ATTITUDE", 0, 0.1, 0.11],
-     ["ALTIMETER", 0.112, 0.06, 0.08],
-     ["VVI", -0.112, 0.155, 0.08],
-     ["HEADING", 0, 0.225, 0.1],
-     ["RADAR_ALT", 0.112, 0.155, 0.08],
-     ["G_METER", -0.112, 0.24, 0.06],
-     ["TURN_SLIP", 0.112, 0.24, 0.06],
-     ["B:KNOBS", 0, 0.305, 0.4, 0.04],
-     ["B:SWITCHES", 0, 0.363, 0.42, 0.07],
-     ["B:SWITCHES", -0.115, 0.44, 0.2, 0.06],
-     ["B:KNOBS", 0.115, 0.44, 0.2, 0.04],
-     ["RWR", -0.195, 0.052, 0.06]
+     [
+      "FILLER_RPM",
+      -0.16699999999999998,
+      0.08,
+      0.096
+     ],
+     [
+      "AIRSPEED",
+      -0.065,
+      0.082,
+      0.08
+     ],
+     [
+      "ATTITUDE",
+      0.05,
+      0.095,
+      0.11
+     ],
+     [
+      "VVI",
+      0.16899999999999998,
+      0.085,
+      0.08
+     ],
+     [
+      "RADAR_ALT",
+      -0.15300000000000002,
+      0.19,
+      0.077
+     ],
+     [
+      "ALTIMETER",
+      -0.062,
+      0.19,
+      0.077
+     ],
+     [
+      "HEADING",
+      0.05,
+      0.207,
+      0.08
+     ],
+     [
+      "ATTITUDE",
+      0.16899999999999998,
+      0.183,
+      0.075
+     ],
+     [
+      "ROTOR_RPM",
+      -0.14800000000000002,
+      0.282,
+      0.075
+     ],
+     [
+      "ENGINE_RPM",
+      -0.056999999999999995,
+      0.282,
+      0.075
+     ],
+     [
+      "TORQUE",
+      0.024000000000000004,
+      0.29,
+      0.048
+     ],
+     [
+      "EGT",
+      0.14,
+      0.295,
+      0.075
+     ],
+     [
+      "B:SWITCHES",
+      0.0,
+      0.375,
+      0.24,
+      0.06
+     ],
+     [
+      "B:KNOBS",
+      0.0,
+      0.445,
+      0.2,
+      0.045
+     ]
     ],
     "left": [
-     ["CLOCK", 0.07, 0.05, 0.06],
-     ["FILLER_VOLTS", 0.19, 0.05, 0.055],
-     ["FILLER_HYDRAULIC", 0.07, 0.125, 0.055],
-     ["FILLER_HYDRAULIC", 0.19, 0.125, 0.055],
-     ["FILLER_OXYGEN", 0.07, 0.195, 0.05],
-     ["FILLER_VOLTS", 0.19, 0.195, 0.05],
-     ["B:SWITCHES", 0.13, 0.265, 0.23, 0.06],
-     ["B:KNOBS", 0.13, 0.325, 0.22, 0.04]
+     [
+      "G_METER",
+      0.045,
+      0.045,
+      0.057
+     ],
+     [
+      "A:heli",
+      0.165,
+      0.048,
+      0.17,
+      0.056
+     ],
+     [
+      "THROTTLE",
+      0.045,
+      0.135,
+      0.057
+     ],
+     [
+      "B:SWITCHES",
+      0.165,
+      0.135,
+      0.15,
+      0.045
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.045,
+      0.225,
+      0.045
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.105,
+      0.225,
+      0.045
+     ],
+     [
+      "FILLER_HYDRAULIC",
+      0.165,
+      0.225,
+      0.045
+     ],
+     [
+      "B:SWITCHES",
+      0.13,
+      0.32,
+      0.22,
+      0.08
+     ]
     ],
     "right": [
-     ["A:heli", 0.12, 0.038, 0.21, 0.048],
-     ["ROTOR_RPM", 0.07, 0.115, 0.08],
-     ["ENGINE_RPM", 0.19, 0.115, 0.08],
-     ["TORQUE", 0.07, 0.21, 0.072],
-     ["EGT", 0.19, 0.21, 0.072],
-     ["THROTTLE", 0.07, 0.29, 0.06],
-     ["FUEL_QTY", 0.19, 0.29, 0.06],
-     ["FILLER_OIL", 0.07, 0.36, 0.05],
-     ["FILLER_OIL", 0.19, 0.36, 0.05]
+     [
+      "CLOCK",
+      0.06,
+      0.045,
+      0.062
+     ],
+     [
+      "RWR",
+      0.17,
+      0.045,
+      0.055
+     ],
+     [
+      "B:BLANK",
+      0.13,
+      0.19,
+      0.24,
+      0.2
+     ],
+     [
+      "FILLER_RPM",
+      0.065,
+      0.355,
+      0.09
+     ],
+     [
+      "FUEL_QTY",
+      0.185,
+      0.355,
+      0.07
+     ]
     ]
    }
   },
@@ -78,25 +216,80 @@
    },
    "panel": {
     "centre": [
-     ["AIRSPEED", -0.174, 0.05, 0.072],
-     ["ALTIMETER", -0.09, 0.05, 0.072],
-     ["VVI", -0.174, 0.128, 0.06],
-     ["RADAR_ALT", -0.09, 0.128, 0.06],
-     ["B:SWITCHES", 0.131, 0.13, 0.15, 0.09],
-     ["B:KNOBS", 0, 0.22, 0.372, 0.04],
-     ["B:SWITCHES", 0, 0.29, 0.332, 0.07],
-     ["AMMO", 0.131, 0.045, 0.06]
+     [
+      "AIRSPEED",
+      -0.11,
+      0.07,
+      0.078
+     ],
+     [
+      "ATTITUDE",
+      0.0,
+      0.08,
+      0.112
+     ],
+     [
+      "ALTIMETER",
+      0.118,
+      0.068,
+      0.078
+     ],
+     [
+      "ROTOR_RPM",
+      -0.096,
+      0.2,
+      0.076
+     ],
+     [
+      "HEADING",
+      0.006,
+      0.205,
+      0.078
+     ],
+     [
+      "ENGINE_RPM",
+      0.108,
+      0.2,
+      0.076
+     ]
     ],
     "left": [
-     ["ATTITUDE", 0.122, 0.055, 0.08],
-     ["HEADING", 0.076, 0.146, 0.066],
-     ["CLOCK", 0.179, 0.146, 0.055],
-     ["B:SWITCHES", 0.122, 0.215, 0.205, 0.05]
+     [
+      "B:SWITCHES",
+      0.12,
+      0.075,
+      0.2,
+      0.09
+     ],
+     [
+      "A:heli_small",
+      0.06,
+      0.18,
+      0.075,
+      0.045
+     ],
+     [
+      "B:KNOBS",
+      0.165,
+      0.18,
+      0.11,
+      0.045
+     ]
     ],
     "right": [
-     ["A:heli_small", 0.122, 0.05, 0.1, 0.06],
-     ["B:SWITCHES", 0.122, 0.13, 0.205, 0.07],
-     ["B:KNOBS", 0.122, 0.2, 0.205, 0.04]
+     [
+      "B:SWITCHES",
+      0.085,
+      0.12,
+      0.13,
+      0.16
+     ],
+     [
+      "AMMO",
+      0.2,
+      0.08,
+      0.05
+     ]
     ]
    }
   }

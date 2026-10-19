@@ -1,5 +1,5 @@
 {
- "reference": "Mi-26 (izdeliye 90): commander left (seat 0), co-pilot right (seat 1), each with his own panel: flight group in the middle (PKP-77 attitude director, PNP-72 HSI, airspeed, altimeter, VVI, radar altimeter, g-meter, turn/slip, rotor tach, clock), the engine group (twin-engine tachs, torque, EGT, power, fuel, oil) and the light board on the inner section toward the centre, system gauges and switch rows on the outer section; real instrument size (tub s 1.0). Sources: airforce-technology.com Mi-26 project page, FAS Mi-26 page, the model's own seat/window measurements; no photos reachable from the build machine",
+ "reference": "Mi-26, placed from cockpit-refs/mi_26/mi_26_02.jpg (frontal flight deck), checked against mi_26_01/03/04: commander's panel airspeed, KPP ADI, VVI over radar altimeter, PNP HSI, altimeter, the square radar indicator to the right (drawn 2x real), clock and cargo-weight dial on top, blade pitch on the outer wing; co-pilot's the same flight group with the doppler drift dial and counters inboard; the centre panel's two engine lamp boards, standby horizon, power, engine and rotor tachs on the two inner wings",
  "palette": "soviet",
  "stations": [
   {
@@ -23,36 +23,128 @@
    },
    "panel": {
     "centre": [
-     ["AIRSPEED", -0.125, 0.06, 0.08],
-     ["ATTITUDE", 0, 0.075, 0.12],
-     ["ALTIMETER", 0.125, 0.06, 0.08],
-     ["VVI", -0.125, 0.156, 0.08],
-     ["HEADING", 0, 0.206, 0.1],
-     ["RADAR_ALT", 0.125, 0.156, 0.08],
-     ["G_METER", -0.125, 0.24, 0.06],
-     ["TURN_SLIP", 0.125, 0.24, 0.06],
-     ["ROTOR_RPM", -0.26, 0.06, 0.066],
-     ["CLOCK", 0.26, 0.06, 0.06],
-     ["B:KNOBS", 0, 0.3, 0.54, 0.04],
-     ["B:SWITCHES", 0, 0.37, 0.56, 0.08],
-     ["B:SWITCHES", 0, 0.46, 0.5, 0.06]
+     [
+      "B:SWITCHES",
+      -0.116,
+      0.058,
+      0.075,
+      0.04
+     ],
+     [
+      "FILLER_TEMP",
+      0.03,
+      0.05,
+      0.055
+     ],
+     [
+      "CLOCK",
+      0.11,
+      0.055,
+      0.06
+     ],
+     [
+      "AIRSPEED",
+      -0.242,
+      0.14,
+      0.08
+     ],
+     [
+      "ATTITUDE",
+      -0.13,
+      0.15,
+      0.11
+     ],
+     [
+      "VVI",
+      -0.018000000000000002,
+      0.145,
+      0.08
+     ],
+     [
+      "D:RADAR",
+      0.174,
+      0.22,
+      0.2
+     ],
+     [
+      "RADAR_ALT",
+      -0.24,
+      0.24,
+      0.08
+     ],
+     [
+      "HEADING",
+      -0.13,
+      0.282,
+      0.11
+     ],
+     [
+      "ALTIMETER",
+      -0.018000000000000002,
+      0.24,
+      0.08
+     ],
+     [
+      "FILLER_RPM",
+      -0.018000000000000002,
+      0.335,
+      0.08
+     ],
+     [
+      "B:SWITCHES",
+      0.13,
+      0.405,
+      0.12,
+      0.05
+     ]
     ],
     "left": [
-     ["FILLER_HYDRAULIC", 0.08, 0.05, 0.06],
-     ["FILLER_VOLTS", 0.22, 0.05, 0.06],
-     ["FILLER_TEMP", 0.08, 0.125, 0.055],
-     ["FILLER_OIL", 0.22, 0.125, 0.055],
-     ["B:SWITCHES", 0.15, 0.2, 0.27, 0.06],
-     ["B:KNOBS", 0.15, 0.265, 0.26, 0.04]
+     [
+      "THROTTLE",
+      0.06,
+      0.22,
+      0.08
+     ],
+     [
+      "B:SWITCHES",
+      0.17,
+      0.22,
+      0.08,
+      0.07
+     ]
     ],
     "right": [
-     ["A:heli", 0.15, 0.038, 0.24, 0.05],
-     ["ENGINE_RPM", 0.08, 0.117, 0.08],
-     ["TORQUE", 0.22, 0.117, 0.08],
-     ["EGT", 0.08, 0.208, 0.072],
-     ["THROTTLE", 0.22, 0.208, 0.072],
-     ["FUEL_QTY", 0.08, 0.287, 0.06],
-     ["FILLER_OIL", 0.22, 0.287, 0.06]
+     [
+      "A:heli",
+      0.12,
+      0.05,
+      0.17,
+      0.06
+     ],
+     [
+      "TORQUE",
+      0.05,
+      0.15,
+      0.065
+     ],
+     [
+      "ATTITUDE",
+      0.16,
+      0.15,
+      0.07
+     ],
+     [
+      "ENGINE_RPM",
+      0.05,
+      0.25,
+      0.06
+     ],
+     [
+      "ROTOR_RPM",
+      0.16,
+      0.25,
+      0.075
+     ]
     ]
    }
   },
@@ -77,36 +169,105 @@
    },
    "panel": {
     "centre": [
-     ["AIRSPEED", -0.125, 0.06, 0.08],
-     ["ATTITUDE", 0, 0.075, 0.12],
-     ["ALTIMETER", 0.125, 0.06, 0.08],
-     ["VVI", -0.125, 0.156, 0.08],
-     ["HEADING", 0, 0.206, 0.1],
-     ["RADAR_ALT", 0.125, 0.156, 0.08],
-     ["G_METER", -0.125, 0.24, 0.06],
-     ["TURN_SLIP", 0.125, 0.24, 0.06],
-     ["ROTOR_RPM", -0.26, 0.06, 0.066],
-     ["CLOCK", 0.26, 0.06, 0.06],
-     ["B:KNOBS", 0, 0.3, 0.54, 0.04],
-     ["B:SWITCHES", 0, 0.37, 0.56, 0.08],
-     ["B:SWITCHES", 0, 0.46, 0.5, 0.06]
+     [
+      "FILLER_CLOCK",
+      -0.14,
+      0.05,
+      0.05
+     ],
+     [
+      "B:SWITCHES",
+      0.033,
+      0.045,
+      0.085,
+      0.04
+     ],
+     [
+      "FILLER_RPM",
+      -0.16,
+      0.14,
+      0.09
+     ],
+     [
+      "AIRSPEED",
+      -0.065,
+      0.13,
+      0.075
+     ],
+     [
+      "ATTITUDE",
+      0.04,
+      0.13,
+      0.1
+     ],
+     [
+      "VVI",
+      0.145,
+      0.135,
+      0.075
+     ],
+     [
+      "B:BLANK",
+      -0.163,
+      0.22,
+      0.05,
+      0.03
+     ],
+     [
+      "ALTIMETER",
+      -0.065,
+      0.22,
+      0.075
+     ],
+     [
+      "HEADING",
+      0.04,
+      0.258,
+      0.1
+     ],
+     [
+      "RADAR_ALT",
+      0.145,
+      0.225,
+      0.075
+     ],
+     [
+      "FILLER_TEMP",
+      -0.07,
+      0.31,
+      0.055
+     ]
     ],
     "left": [
-     ["A:heli", 0.15, 0.038, 0.24, 0.05],
-     ["ENGINE_RPM", 0.08, 0.117, 0.08],
-     ["TORQUE", 0.22, 0.117, 0.08],
-     ["EGT", 0.08, 0.208, 0.072],
-     ["THROTTLE", 0.22, 0.208, 0.072],
-     ["FUEL_QTY", 0.08, 0.287, 0.06],
-     ["FILLER_OIL", 0.22, 0.287, 0.06]
+     [
+      "A:heli",
+      0.12,
+      0.05,
+      0.17,
+      0.06
+     ],
+     [
+      "B:SWITCHES",
+      0.05,
+      0.15,
+      0.05,
+      0.08
+     ],
+     [
+      "ENGINE_RPM",
+      0.16,
+      0.25,
+      0.06
+     ]
     ],
     "right": [
-     ["FILLER_HYDRAULIC", 0.08, 0.05, 0.06],
-     ["FILLER_VOLTS", 0.22, 0.05, 0.06],
-     ["FILLER_TEMP", 0.08, 0.125, 0.055],
-     ["FILLER_OIL", 0.22, 0.125, 0.055],
-     ["B:SWITCHES", 0.15, 0.2, 0.27, 0.06],
-     ["B:KNOBS", 0.15, 0.265, 0.26, 0.04]
+     [
+      "B:SWITCHES",
+      0.15,
+      0.25,
+      0.1,
+      0.06
+     ]
     ]
    }
   }
