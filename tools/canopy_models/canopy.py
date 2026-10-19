@@ -67,9 +67,12 @@ class Shape:
             vv = np.concatenate([[end_v], v_, [tip_v]])
             w = np.concatenate([[20.0], np.ones(len(z_)), [20.0]])
             return UnivariateSpline(zf, vv, w=w, k=3, s=s_mul * len(z_) * smooth)
+        # where the ends close: on the spine / nose at the given height, else at the last station's sill
+        end_y = lambda: spec.get('rear_y', ys[ok][0])
+        tip_y = lambda: spec.get('front_y', ys[ok][-1])
         for _ in range(len(zs) // 3):
-            f_y = fit(ys, ys[ok][0], ys[ok][-1], 0.0004, ok)
-            f_c = fit(cs, ys[ok][0] + 0.01, ys[ok][-1] + 0.01, 0.0002, ok)
+            f_y = fit(ys, end_y(), tip_y(), 0.0004, ok)
+            f_c = fit(cs, end_y() + 0.01, tip_y() + 0.01, 0.0002, ok)
             f_w = fit(ws, 0.0, 0.0, 0.0003, ok)
             res = np.maximum.reduce([np.abs(f_y(zs) - ys) / 0.03, np.abs(f_c(zs) - cs) / 0.03, np.abs(f_w(zs) - ws) / 0.04])
             res[~ok] = 0.0
@@ -208,9 +211,15 @@ def build(ac, tub, shape, spec, sw, paint):
         rail.append(pts)
     path = rail[0] + list(reversed(rail[1]))[1:]   # rear (+x side) -> front tip -> rear (-x side)
     path = np.array(path)
+    ring = shape.at(shape.rear)[0] < 1e-3            # closes on the spine too: one loop round the canopy
+    if ring:
+        path = path[:-1]
     lat, upv = [], []
     for j in range(len(path)):
-        a, b = path[max(0, j - 1)], path[min(len(path) - 1, j + 1)]
+        if ring:
+            a, b = path[j - 1], path[(j + 1) % len(path)]
+        else:
+            a, b = path[max(0, j - 1)], path[min(len(path) - 1, j + 1)]
         tng = b - a; tng[1] = 0.0
         if np.linalg.norm(tng) < 1e-9:
             tng = np.array([0.0, 0.0, 1.0])
@@ -221,7 +230,7 @@ def build(ac, tub, shape, spec, sw, paint):
         lat.append(l); upv.append(np.array([0.0, 1.0, 0.0]))
     lat, upv = np.array(lat), np.array(upv)
     section = [(0.006, -sd), (0.006, sh - sd), (-sw_in, sh - sd), (-sw_in, -sd)]
-    sweep(m, path, lat, upv, section, [outside, seal, inside, inside])
+    sweep(m, path, lat, upv, section, [outside, seal, inside, inside], closed=ring)
     # the transparency's sealed edge: a dark band on the glass just above the sill member
     band = spec.get('edge_band', 0.022)
     for phi0 in (0.0, math.pi):
@@ -242,8 +251,9 @@ def build(ac, tub, shape, spec, sw, paint):
 
     # bows and the rear arch: bands across the glass, bracketing it (inside the inner skin to outside the outer)
     arches = [dict(b, z=E[2] + b['dz']) for b in spec.get('bows', [])]
-    arches.append({'z': shape.rear + spec.get('rear_arch_inset', 0.05), 'width': spec.get('rear_arch_width', 0.06),
-                   'rear': True})
+    if spec.get('rear_arch', True):              # a canopy that tapers to a point on the spine has none
+        arches.append({'z': shape.rear + spec.get('rear_arch_inset', 0.05), 'width': spec.get('rear_arch_width', 0.06),
+                       'rear': True})
     for a in arches:
         z, hw = a['z'], a['width'] / 2
         ph = np.linspace(0, math.pi, SEG + 1)
@@ -255,7 +265,7 @@ def build(ac, tub, shape, spec, sw, paint):
         sweep(m, mid, lat, upz, sec, [outside, inside if a.get('rear') else outside, inside, outside])
     # hinge blocks under the rear arch, and the actuator yoke on the centre bow (F-16 style: an inverted V inside)
     if spec.get('hinges', True):
-        z = shape.rear + 0.05
+        z = shape.rear + spec.get('hinge_inset', 0.05)
         for phi in (0.25, math.pi - 0.25):
             p = shape.point(z, phi, -t_glass - 0.03)
             m.box(p + [0, -0.02, 0], ([1, 0, 0], [0, 1, 0], [0, 0, 1]), (0.025, 0.035, 0.05), inside)

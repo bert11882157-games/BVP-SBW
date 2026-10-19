@@ -5,6 +5,10 @@
       "glass_mm": 35,
       "exclude": [[0.38, 0.72]],
       "front": 4.0,
+      "rear": 0.86,
+      "rear_y": 2.52,
+      "rear_arch": false,
+      "hinge_inset": 0.5,
       "bows": [{"dz": -0.55, "width": 0.06, "proud": 0.008, "yoke": true}],
       "sill_height": 0.075,
       "sill_width": 0.05
