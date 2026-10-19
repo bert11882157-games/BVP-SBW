@@ -1,5 +1,5 @@
 {
- "reference": "AH-64D Longbow: TM 1-1520-251-10 cockpit figures; Chuck's DCS AH-64D guide (chucksguides.com/aircraft/dcs/ah-64d). Pilot: EUFD, two MPDs, standby airspeed/attitude/altimeter, centre cyclic, collective and two power levers on the left; CPG: two MPDs around the TEDAC/ORT, side-arm cyclic on the right console, collective and power levers on the left; Panel layout: gamepressure.com DCS AH-64D 'Pilot/CPG Cockpits and Controls' (pilot: fire detection/extinguishing unit, EUFD, two MPDs, armament panel, standby attitude/airspeed/altimeter, keyboard unit on the left of the panel; CPG: fire unit, armament panel, left MPD, TEDAC, EUFD, right MPD, keyboard on the left console, no standby instruments), DCS AH-64D Quick Start Manual fig. 19 'Pilot's Cockpit, Forward', dcs.man-sim.org AH-64D overview (standby instruments only in the pilot station). MPDs and TEDAC drawn about 2x real (6 x 6 in screens: pilot MPDs 0.345, CPG TEDAC 0.33 and MPDs 0.285, the most that fits above the consoles) so they dominate the panel; the CPG station is widened to the canopy to hold three; no photo could be downloaded in this environment, so positions within those lists are from memory of the cockpit.",
+ "reference": "AH-64D Longbow, placed from reference photos and guide pages (cockpit-refs/ah_64d): pilot from ah_64d_01.jpg and ah_64d_02.jpg (Paris Air Show pilot station) with Chuck's DCS AH-64D guide p-026 (pilot cockpit) and p-043/p-045 (fire panel, standby instruments): FIRE DET/EXTG panel top left, EUFD (its WCA field is the caution panel) top centre-right, two MPDs side by side, armament panel and keyboard unit on the left, standby attitude over standby airspeed and altimeter on the right, NVS/wiper panel under the MPDs; ah_64d_03.jpg for the MPD/EUFD proportions. CPG from guide p-077 and p-091: canopy jettison/fire/armament panel above the left MPD, EUFD above the right MPD, TEDAC display between them reaching the top row, keyboard below the left MPD and the wiper/processor panel below the right one; the CPG panel leans back 35 degrees so the top row fits above the MPDs under the low windscreen. MPDs and TEDAC drawn about 2x real (pilot MPDs 0.345, TEDAC 0.33, CPG MPDs 0.285). Controls: TM 1-1520-251-10 (pilot centre cyclic, CPG side-arm cyclic, collective and two power levers on the left).",
  "palette": "nato",
  "stations": [
   {
@@ -9,24 +9,27 @@
    "throttle": 2,
    "tub": {
     "ws_z": 1.85,
-    "ws_y": 2.8,
+    "ws_y": 2.86,
     "s": 0.937,
-    "W": 0.51,
-    "hinge": 0.43,
-    "wing": 32
+    "W": 0.53,
+    "hinge": 0.41,
+    "wing": 32,
+    "top_c": 2.86
    },
    "panel": {
     "centre": [
-     ["D:PFD", -0.2179, 0.22, 0.345],
-     ["D:RADAR", 0.2179, 0.22, 0.345],
-     ["UFCP", -0.2, 0.494, 0.15],
-     ["A:heli_small", 0.2, 0.494, 0.13, 0.05]
+     ["B:SWITCHES", -0.25, 0.037, 0.16, 0.06],
+     ["A:heli", 0.06, 0.037, 0.26, 0.06],
+     ["D:PFD", -0.2179, 0.29, 0.345],
+     ["D:RADAR", 0.2179, 0.29, 0.345],
+     ["B:SWITCHES", 0.0, 0.56, 0.12, 0.08]
     ],
     "left": [
-     ["B:KEYPAD", 0.05, 0.1, 0.08, 0.13],
-     ["B:SWITCHES", 0.05, 0.225, 0.08, 0.06]
+     ["B:SWITCHES", 0.06, 0.1, 0.09, 0.06],
+     ["B:KNOBS", 0.06, 0.17, 0.09, 0.05],
+     ["B:KEYPAD", 0.06, 0.32, 0.1, 0.14]
     ],
-    "right": [["ATTITUDE", 0.05, 0.07, 0.075], ["AIRSPEED", 0.05, 0.16, 0.056], ["ALTIMETER", 0.05, 0.23, 0.056], ["CLOCK", 0.05, 0.295, 0.048]]
+    "right": [["ATTITUDE", 0.063, 0.15, 0.075], ["AIRSPEED", 0.033, 0.25, 0.052], ["ALTIMETER", 0.093, 0.25, 0.052]]
    }
   },
   {
@@ -38,20 +41,22 @@
    "move_eye": true,
    "tub": {
     "s": 0.87,
-    "top_c": 2.52,
+    "top_c": 2.575,
     "panel_dz": 0.6,
     "sill": 2.44,
     "W": 0.565,
-    "hinge": 0.5
+    "hinge": 0.5,
+    "lean": 35
    },
    "panel": {
     "centre": [
-     ["D:STORES", -0.3893, 0.1807, 0.285],
+     ["B:SWITCHES", -0.39, 0.035, 0.22, 0.05],
+     ["A:heli", 0.39, 0.035, 0.26, 0.05],
+     ["D:STORES", -0.3893, 0.255, 0.285],
      ["D:PFD", 0.0, 0.2085, 0.33],
-     ["D:RADAR", 0.3893, 0.1807, 0.285],
-     ["A:heli_small", -0.13, 0.445, 0.12, 0.04],
-     ["B:SWITCHES", 0.0, 0.445, 0.1, 0.036],
-     ["UFCP", 0.13, 0.445, 0.1]
+     ["D:RADAR", 0.3893, 0.255, 0.285],
+     ["B:KEYPAD", -0.3, 0.5, 0.13, 0.09],
+     ["B:KNOBS", 0.3, 0.5, 0.13, 0.09]
     ]
    }
   }

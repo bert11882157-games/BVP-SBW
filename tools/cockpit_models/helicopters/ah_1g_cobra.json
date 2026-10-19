@@ -1,5 +1,5 @@
 {
- "reference": "AH-1G HueyCobra: TM 55-1520-221-10 cockpit figures (pilot and gunner instrument panels, controls); vietnamhelicopters.org AH-1 variant table (AH-1G sights: M73 reflex sight for the pilot, XM28 turret pantograph sight for the gunner). Pilot (rear): 1960s steam-gauge panel, centre cyclic, collective on the left with the twist-grip throttle (single T53), M73 rocket sight on the coaming; gunner (front): basic flight instruments, pantograph-mounted reflex sight with two handgrips in the middle, side-arm cyclic on the right console and side-arm collective on the left; Instrument set: TM 55-1520-221-10 lists (flight T with turn and slip and RMI, dual tach, torque, gas producer, EGT, engine/transmission oil, fuel quantity/pressure, DC volts, caution panel lower centre). No photo could be downloaded in this environment.",
+ "reference": "AH-1G HueyCobra, placed from reference photos (cockpit-refs/ah_1g_cobra): ah_1g_cobra_01.jpg and _02.jpg are period AH-1G views too partial to place from, so both stations follow the AH-1P, the closest surviving layout: pilot from ah_1g_cobra_03.jpg and _05.jpg (torque and the top-centre instrument over airspeed / attitude / altimeter, dual tach / HSI / VSI / clock below, six small engine dials stepped down the left wing, HSI control under the VSI, caution panel to the right; the AH-1P's radar warning scope slot holds the AH-1G's turn and slip and the radar altimeter slot is left empty as on the photo); gunner from ah_1g_cobra_04.jpg (armament panels and UHF radio left of the sight, empty hole / attitude / altimeter over dual tach / VSI and three small engine dials right of it, caution lamp display and ammunition counter at the right). Pilot M73 rocket sight on the coaming, gunner XM28 pantograph sight with its two handgrips (TM 55-1520-221-10).",
  "palette": "nato",
  "stations": [
   {
@@ -8,46 +8,38 @@
    "cyclic": "centre",
    "throttle": 0,
    "gunsight": true,
-   "eye": [
-    0,
-    3.55,
-    2.1
-   ],
+   "eye": [0, 3.55, 2.1],
    "move_eye": true,
    "tub": {
     "top_c": 3.17,
     "ws_z": 3.45,
     "ws_y": 3.12,
-    "top_w": 3.04
+    "top_w": 3.04,
+    "hinge": 0.31
    },
    "panel": {
     "centre": [
-     ["AIRSPEED", -0.098, 0.05, 0.078],
-     ["ATTITUDE", 0.0, 0.055, 0.085],
-     ["ALTIMETER", 0.098, 0.05, 0.078],
-     ["TURN_SLIP", -0.098, 0.145, 0.064],
-     ["HEADING", 0.0, 0.153, 0.078],
-     ["VVI", 0.098, 0.145, 0.078],
-     ["CLOCK", -0.12, 0.23, 0.052],
-     ["A:heli", 0.04, 0.245, 0.24, 0.055],
-     ["B:SWITCHES", 0.0, 0.33, 0.26, 0.05]
+     ["TORQUE", -0.1045, 0.064, 0.08],
+     ["TURN_SLIP", 0.0, 0.064, 0.08],
+     ["AIRSPEED", -0.1045, 0.17, 0.08],
+     ["ATTITUDE", 0.0, 0.17, 0.1],
+     ["ALTIMETER", 0.1045, 0.17, 0.08],
+     ["ROTOR_RPM", -0.1045, 0.289, 0.08],
+     ["HEADING", 0.0, 0.289, 0.1],
+     ["VVI", 0.1045, 0.289, 0.08],
+     ["CLOCK", 0.1975, 0.289, 0.06],
+     ["B:KNOBS", 0.12, 0.378, 0.11, 0.045],
+     ["B:SWITCHES", -0.12, 0.378, 0.13, 0.045]
     ],
     "left": [
-     ["ROTOR_RPM", 0.065, 0.066, 0.074],
-     ["TORQUE", 0.165, 0.066, 0.07],
-     ["ENGINE_RPM", 0.065, 0.146, 0.06],
-     ["EGT", 0.165, 0.141, 0.058],
-     ["FILLER_OIL", 0.065, 0.215, 0.048],
-     ["FILLER_TEMP", 0.16, 0.204, 0.044]
+     ["ENGINE_RPM", 0.035, 0.089, 0.052],
+     ["EGT", 0.035, 0.154, 0.052],
+     ["FILLER_OIL", 0.097, 0.124, 0.052],
+     ["FUEL_QTY", 0.035, 0.219, 0.052],
+     ["FILLER_TEMP", 0.097, 0.189, 0.052],
+     ["FILLER_VOLTS", 0.159, 0.16, 0.052]
     ],
-    "right": [
-     ["FUEL_QTY", 0.065, 0.058, 0.066],
-     ["FILLER_OIL", 0.165, 0.05, 0.058],
-     ["FILLER_TEMP", 0.065, 0.135, 0.054],
-     ["FILLER_VOLTS", 0.165, 0.13, 0.054],
-     ["FILLER_FUEL", 0.065, 0.205, 0.046],
-     ["FILLER_HYDRAULIC", 0.16, 0.195, 0.042]
-    ]
+    "right": [["B:SWITCHES", 0.05, 0.047, 0.07, 0.06], ["A:heli", 0.11, 0.198, 0.19, 0.075]]
    }
   },
   {
@@ -55,48 +47,35 @@
    "era": "HELO_GUNNER_SIGHT",
    "cyclic": "right",
    "throttle": 0,
-   "eye": [
-    0,
-    3.22,
-    4.25
-   ],
+   "eye": [0, 3.22, 4.25],
    "move_eye": true,
    "tub": {
     "top_c": 2.96,
     "ws_z": 5.3,
     "ws_y": 2.86,
-    "top_w": 2.83
+    "top_w": 2.83,
+    "hinge": 0.3
    },
    "panel": {
     "centre": [
-     ["AIRSPEED", -0.088, 0.085, 0.058],
-     ["ATTITUDE", 0.0, 0.11, 0.066],
-     ["ALTIMETER", 0.088, 0.085, 0.058],
-     ["B:SWITCHES", 0.0, 0.25, 0.32, 0.06],
-     ["B:KNOBS", -0.09, 0.315, 0.13, 0.04],
-     ["AMMO", 0.11, 0.33, 0.05],
-     ["A:heli_small", 0.11, 0.405, 0.12, 0.05]
+     ["B:SWITCHES", -0.13, 0.065, 0.13, 0.11],
+     ["B:SWITCHES", -0.13, 0.19, 0.13, 0.11],
+     ["B:BLANK", 0.09, 0.06, 0.08, 0.08],
+     ["ATTITUDE", 0.185, 0.06, 0.08],
+     ["ROTOR_RPM", 0.09, 0.155, 0.08],
+     ["ENGINE_RPM", 0.07, 0.25, 0.052],
+     ["FILLER_RPM", 0.135, 0.25, 0.052],
+     ["TORQUE", 0.2, 0.25, 0.052]
     ],
-    "left": [
-     ["ROTOR_RPM", 0.11, 0.06, 0.06],
-     ["TORQUE", 0.11, 0.145, 0.054]
-    ],
+    "left": [["B:KNOBS", 0.07, 0.106, 0.11, 0.15], ["B:SWITCHES", 0.07, 0.261, 0.1, 0.1]],
     "right": [
-     ["VVI", 0.11, 0.06, 0.054],
-     ["CLOCK", 0.11, 0.14, 0.048],
-     ["HEADING", 0.11, 0.215, 0.048]
+     ["ALTIMETER", 0.05, 0.069, 0.08],
+     ["VVI", 0.05, 0.164, 0.08],
+     ["A:heli_small", 0.07, 0.243, 0.11, 0.055],
+     ["AMMO", 0.06, 0.32, 0.05]
     ]
    }
   }
  ],
- "remove": [
-  [
-   -0.66,
-   -0.5,
-   2.6,
-   3.05,
-   2.44,
-   2.82
-  ]
- ]
+ "remove": [[-0.66, -0.5, 2.6, 3.05, 2.44, 2.82]]
 }

@@ -1,5 +1,5 @@
 {
- "reference": "AH-1F (Modernized) Cobra: TM 55-1520-236-10 cockpit figures; vietnamhelicopters.org/ah-1f-cobra-78-23107 (Step 3 upgrades: pilot HUD, gunner TSU and laser rangefinder, C-NITE); pilot: steam-gauge panel with the AN/APR-39 radar warning display, centre cyclic, collective on the left with the twist-grip throttle (single T53, no power levers), head-up display on the coaming; gunner (front): basic flight instruments around the telescopic sight unit (TSU) and its hand control, side-arm cyclic on the right console and side-arm collective on the left; Instrument lists: TM 1-1520-236-MTF (AH-1S/F maintenance test flight manual: pilot clock, altimeter, airspeed, VSI, attitude, HSI/RMI, radar warning display, radar altimeter, dual tach, N1, TGT, torque, engine and transmission oil, fuel quantity and pressure, volt/ammeter, FAT, pilot caution panel with master caution; gunner attitude, dual tach, torque, TGT, caution panel, master caution, standby compass). No photo could be downloaded in this environment.",
+ "reference": "AH-1F (AH-1S Modernized) Cobra, placed from reference photos (cockpit-refs/ah_1f): pilot from ah_1f_01.jpg (AH-1S pilot's instrument panel diagram) and the JGSDF AH-1S aft panel photos ah_1f_02.jpg-ah_1f_05.jpg: torque / radar warning display / radar altimeter over airspeed / attitude / altimeter / blank, dual tach / HSI / VSI / clock below, six small engine dials stepped down the left wing with switch panels under them, radio and HSI control panels under the grid, RECOIL COMP selector and the caution panel at the right; gunner from ah_1f_06.jpg-ah_1f_08.jpg (missile select panel, keyboard and UHF radio left of the TSU, airspeed beside it) and, for the right of the sight that those photos do not show, the AH-1P gunner panel (cockpit-refs/ah_1g_cobra/ah_1g_cobra_04.jpg: attitude, altimeter, VSI, dual tach, torque, caution lamps). Pilot: centre cyclic, collective with the twist-grip throttle on the left, head-up display on the coaming; gunner: side-arm cyclic on the right console and the TSU (TM 55-1520-236-10).",
  "palette": "nato",
  "stations": [
   {
@@ -13,40 +13,36 @@
     "ws_z": 4.75,
     "ws_y": 2.92,
     "W": 0.48,
-    "top_w": 2.86
+    "top_w": 2.86,
+    "hinge": 0.275
    },
    "panel": {
     "centre": [
-     ["AIRSPEED", -0.098, 0.055, 0.078],
-     ["ATTITUDE", 0.0, 0.06, 0.09],
-     ["ALTIMETER", 0.098, 0.055, 0.078],
-     ["RADAR_ALT", -0.098, 0.155, 0.078],
-     ["HEADING", 0.0, 0.165, 0.085],
-     ["VVI", 0.098, 0.155, 0.078],
-     ["CLOCK", -0.098, 0.245, 0.058],
-     ["TURN_SLIP", 0.098, 0.245, 0.058],
-     ["B:KEYPAD", 0.0, 0.29, 0.1, 0.07],
-     ["B:SWITCHES", 0.0, 0.385, 0.24, 0.06]
+     ["TORQUE", -0.1045, 0.066, 0.08],
+     ["RWR", 0.0, 0.066, 0.08],
+     ["RADAR_ALT", 0.1045, 0.066, 0.08],
+     ["AIRSPEED", -0.1045, 0.174, 0.08],
+     ["ATTITUDE", 0.0, 0.174, 0.1],
+     ["ALTIMETER", 0.1045, 0.174, 0.08],
+     ["B:BLANK", 0.1975, 0.174, 0.085, 0.085],
+     ["ROTOR_RPM", -0.1045, 0.293, 0.08],
+     ["HEADING", 0.0, 0.293, 0.1],
+     ["VVI", 0.1045, 0.293, 0.08],
+     ["CLOCK", 0.1975, 0.293, 0.06],
+     ["B:KNOBS", -0.07, 0.445, 0.14, 0.15],
+     ["B:KNOBS", 0.095, 0.425, 0.12, 0.11]
     ],
     "left": [
-     ["ROTOR_RPM", 0.06, 0.07, 0.078],
-     ["TORQUE", 0.162, 0.07, 0.078],
-     ["ENGINE_RPM", 0.06, 0.155, 0.064],
-     ["EGT", 0.162, 0.155, 0.064],
-     ["FILLER_OIL", 0.06, 0.23, 0.052],
-     ["FILLER_TEMP", 0.162, 0.225, 0.052],
-     ["FILLER_OIL", 0.06, 0.3, 0.052],
-     ["FILLER_TEMP", 0.15, 0.292, 0.048]
+     ["ENGINE_RPM", 0.035, 0.098, 0.052],
+     ["EGT", 0.035, 0.163, 0.052],
+     ["FILLER_OIL", 0.097, 0.132, 0.052],
+     ["FUEL_QTY", 0.035, 0.228, 0.052],
+     ["FILLER_TEMP", 0.097, 0.197, 0.052],
+     ["FILLER_VOLTS", 0.159, 0.167, 0.052],
+     ["B:SWITCHES", 0.08, 0.291, 0.14, 0.06],
+     ["B:SWITCHES", 0.08, 0.361, 0.14, 0.06]
     ],
-    "right": [
-     ["RWR", 0.07, 0.07, 0.078],
-     ["FUEL_QTY", 0.17, 0.055, 0.064],
-     ["FILLER_FUEL", 0.06, 0.153, 0.052],
-     ["FILLER_VOLTS", 0.15, 0.145, 0.052],
-     ["FILLER_HYDRAULIC", 0.06, 0.215, 0.048],
-     ["FILLER_TEMP", 0.145, 0.205, 0.046],
-     ["A:heli", 0.115, 0.285, 0.21, 0.06]
-    ]
+    "right": [["B:KNOBS", 0.07, 0.205, 0.09, 0.075], ["A:heli", 0.105, 0.333, 0.19, 0.1]]
    }
   },
   {
@@ -54,37 +50,28 @@
    "era": "HELO_GUNNER_SIGHT",
    "cyclic": "right",
    "throttle": 0,
-   "eye": [
-    0,
-    2.8,
-    5.35
-   ],
+   "eye": [0, 2.8, 5.35],
    "move_eye": true,
    "tub": {
     "panel_dz": 0.52,
     "ws_z": 6.02,
-    "ws_y": 2.6
+    "ws_y": 2.6,
+    "hinge": 0.29
    },
    "panel": {
     "centre": [
-     ["AIRSPEED", -0.08, 0.1, 0.058],
-     ["ATTITUDE", 0.0, 0.095, 0.07],
-     ["ALTIMETER", 0.08, 0.1, 0.058],
-     ["CLOCK", -0.08, 0.175, 0.046],
-     ["VVI", 0.08, 0.175, 0.046],
-     ["B:SWITCHES", 0.0, 0.27, 0.3, 0.06],
-     ["B:KNOBS", 0.0, 0.42, 0.2, 0.04],
-     ["B:SWITCHES", 0.0, 0.49, 0.3, 0.06]
+     ["B:SWITCHES", -0.18, 0.075, 0.105, 0.13],
+     ["AIRSPEED", -0.08, 0.058, 0.08],
+     ["B:KEYPAD", -0.175, 0.215, 0.1, 0.1],
+     ["B:KNOBS", -0.165, 0.375, 0.12, 0.11],
+     ["ATTITUDE", 0.08, 0.058, 0.08],
+     ["ALTIMETER", 0.177, 0.058, 0.07],
+     ["VVI", 0.08, 0.15, 0.07],
+     ["ROTOR_RPM", 0.177, 0.15, 0.07],
+     ["A:heli_small", 0.13, 0.24, 0.12, 0.055]
     ],
-    "left": [
-     ["ROTOR_RPM", 0.1, 0.086, 0.064],
-     ["TORQUE", 0.1, 0.158, 0.058],
-     ["AMMO", 0.1, 0.225, 0.05]
-    ],
-    "right": [
-     ["EGT", 0.1, 0.078, 0.058],
-     ["A:heli_small", 0.1, 0.14, 0.13, 0.055]
-    ]
+    "left": [["AMMO", 0.05, 0.232, 0.05]],
+    "right": [["TORQUE", 0.055, 0.172, 0.06], ["EGT", 0.055, 0.262, 0.055]]
    }
   }
  ]

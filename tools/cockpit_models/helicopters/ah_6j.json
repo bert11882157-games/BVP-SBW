@@ -1,14 +1,10 @@
 {
- "reference": "AH-6J / MH-6J Little Bird (MD 530-family): one small steam-gauge panel on a pedestal ahead of the two side-by-side pilots, a centre cyclic for each pilot, the collective on each pilot's left with the twist-grip throttle of the single Allison 250 (modelled as one lever); Kitty Hawk 1/35 AH-6J build review (cybermodeler.com/hobby/builds/kh/build_kh_50003.shtml), IPMS AH-6M/MH-6M review, model's own seat and canopy measurements; Panel: flight instruments ahead of the right-seat pilot, engine and drive-train dials (dual tach, torque, TOT, N1, fuel) and the caution panel in the middle of the panel, a FLIR/weapons display (drawn 3x, filling the left seat's centre panel, its centre panel widened for it) ahead of the left seat. No photo could be downloaded in this environment.",
+ "reference": "AH-6J Little Bird (MD 530 family). Reference photos (cockpit-refs/ah_6j) are civil Hughes/MD 500 panels, used for shape only: ah_6j_04.jpg (MD 500E panel: six columns of 2-3 in dials with the caution lamp strip along the top, radios and keypad below) and ah_6j_01.jpg / ah_6j_02.jpg (the panel as a pod between the two seats). Right seat (pilot): flight instruments ahead (airspeed / attitude / altimeter, dual tach / turn coordinator / VSI, clock / HSI / radar altimeter), the engine half of the centre pod on the inboard wing under the caution strip (torque, TOT, N1, oil pressure, fuel, DC amps); left seat: FLIR / weapons display drawn about 3x real ahead of it with standby dials under it, the other half of the pod inboard (caution strip, oil temperature and pressure, hydraulics, GPS, radio stack, keypad). Each pilot has a centre cyclic and the collective on his left with the twist-grip throttle of the single Allison 250.",
  "palette": "nato",
  "stations": [
   {
    "seat": 0,
-   "eye": [
-    -0.44,
-    2.42,
-    2.45
-   ],
+   "eye": [-0.44, 2.42, 2.45],
    "move_eye": true,
    "era": "HELO_STEAM",
    "cyclic": "centre",
@@ -21,36 +17,31 @@
    },
    "panel": {
     "centre": [
-     ["AIRSPEED", -0.092, 0.05, 0.074],
-     ["ATTITUDE", 0.0, 0.055, 0.085],
-     ["ALTIMETER", 0.092, 0.05, 0.074],
-     ["RADAR_ALT", -0.092, 0.143, 0.064],
-     ["HEADING", 0.0, 0.153, 0.08],
-     ["VVI", 0.092, 0.143, 0.064],
-     ["CLOCK", -0.092, 0.225, 0.05],
-     ["TURN_SLIP", 0.092, 0.225, 0.05]
+     ["AIRSPEED", -0.082, 0.05, 0.07],
+     ["ATTITUDE", 0.0, 0.05, 0.07],
+     ["ALTIMETER", 0.082, 0.05, 0.07],
+     ["ROTOR_RPM", -0.082, 0.134, 0.07],
+     ["TURN_SLIP", 0.0, 0.134, 0.07],
+     ["VVI", 0.082, 0.134, 0.07],
+     ["CLOCK", -0.082, 0.218, 0.058],
+     ["HEADING", 0.0, 0.218, 0.07],
+     ["RADAR_ALT", 0.082, 0.218, 0.07]
     ],
     "left": [
-     ["A:heli_small", 0.12, 0.064, 0.15, 0.05],
-     ["ROTOR_RPM", 0.07, 0.153, 0.064],
-     ["TORQUE", 0.17, 0.143, 0.064],
-     ["EGT", 0.07, 0.226, 0.056],
-     ["ENGINE_RPM", 0.17, 0.226, 0.056],
-     ["FUEL_QTY", 0.07, 0.298, 0.054],
-     ["FILLER_OIL", 0.17, 0.293, 0.05]
+     ["A:heli", 0.12, 0.077, 0.22, 0.04],
+     ["TORQUE", 0.06, 0.158, 0.058],
+     ["EGT", 0.13, 0.127, 0.058],
+     ["ENGINE_RPM", 0.06, 0.228, 0.058],
+     ["FILLER_OIL", 0.13, 0.197, 0.058],
+     ["FUEL_QTY", 0.06, 0.298, 0.058],
+     ["FILLER_VOLTS", 0.13, 0.267, 0.058]
     ],
-    "right": [
-     ["B:SWITCHES", 0.1, 0.06, 0.13, 0.05]
-    ]
+    "right": [["B:SWITCHES", 0.1, 0.06, 0.13, 0.05]]
    }
   },
   {
    "seat": 1,
-   "eye": [
-    0.44,
-    2.42,
-    2.45
-   ],
+   "eye": [0.44, 2.42, 2.45],
    "era": "HELO_STEAM",
    "cyclic": "centre",
    "collective": true,
@@ -69,74 +60,25 @@
      ["ALTIMETER", 0.08, 0.494, 0.058]
     ],
     "right": [
-     ["B:SWITCHES", 0.12, 0.07, 0.16, 0.045],
-     ["FILLER_TEMP", 0.07, 0.156, 0.058],
-     ["FILLER_VOLTS", 0.17, 0.14, 0.058],
-     ["B:KNOBS", 0.12, 0.224, 0.17, 0.045],
-     ["B:KEYPAD", 0.12, 0.29, 0.17, 0.065]
+     ["A:heli_small", 0.1, 0.074, 0.18, 0.04],
+     ["FILLER_TEMP", 0.06, 0.154, 0.058],
+     ["FILLER_OIL", 0.13, 0.118, 0.058],
+     ["FILLER_HYDRAULIC", 0.06, 0.224, 0.058],
+     ["B:KNOBS", 0.13, 0.188, 0.06, 0.06],
+     ["B:SWITCHES", 0.1, 0.278, 0.17, 0.045],
+     ["B:KEYPAD", 0.1, 0.348, 0.15, 0.07]
     ],
-    "left": [
-     ["B:SWITCHES", 0.1, 0.06, 0.13, 0.05]
-    ]
+    "left": [["B:SWITCHES", 0.1, 0.06, 0.13, 0.05]]
    }
   }
  ],
  "remove": [
-  [
-   -0.66,
-   0.66,
-   1.3,
-   2.75,
-   2.85,
-   3.75
-  ],
-  [
-   -0.95,
-   -0.57,
-   2.1,
-   2.5,
-   3.38,
-   3.47
-  ],
-  [
-   0.57,
-   0.95,
-   2.1,
-   2.5,
-   3.38,
-   3.47
-  ],
-  [
-   -0.95,
-   -0.2,
-   1.6,
-   2.6,
-   1.95,
-   2.96
-  ],
-  [
-   0.2,
-   0.95,
-   1.6,
-   2.6,
-   1.95,
-   2.96
-  ],
-  [
-   -0.95,
-   -0.7,
-   1.3,
-   1.7,
-   3.3,
-   3.7
-  ],
-  [
-   0.7,
-   0.95,
-   1.3,
-   1.7,
-   3.3,
-   3.7
-  ]
+  [-0.66, 0.66, 1.3, 2.75, 2.85, 3.75],
+  [-0.95, -0.57, 2.1, 2.5, 3.38, 3.47],
+  [0.57, 0.95, 2.1, 2.5, 3.38, 3.47],
+  [-0.95, -0.2, 1.6, 2.6, 1.95, 2.96],
+  [0.2, 0.95, 1.6, 2.6, 1.95, 2.96],
+  [-0.95, -0.7, 1.3, 1.7, 3.3, 3.7],
+  [0.7, 0.95, 1.3, 1.7, 3.3, 3.7]
  ]
 }
