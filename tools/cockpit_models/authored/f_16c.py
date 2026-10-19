@@ -250,6 +250,18 @@ def build(ac, tub, sw, atlas):
             displays.append({'Seat': sid, 'Center': L.r5(c + plane.N * L.DISPLAY_LIFT), 'Normal': L.r5(plane.N),
                              'Up': L.r5(plane.U), 'Width': round(e.m(size), 4), 'Depth': 0.035, 'Kind': kind[2:],
                              'Style': 'LCD'})
+            # its own black hood under the glareshield, as in the photos: a top plate reaching toward the pilot,
+            # sides tapering down to the housing's lower corners
+            R, U, N = plane.axes()
+            hw = e.m(size * (1 + 2 * L.DISPLAY_BEZEL) / 2 + 0.006)
+            d_top, d_bot = e.m(0.045), e.m(0.008)
+            m.box(c + U * (hw + e.m(0.003)) + N * d_top / 2, (R, U, N), (hw + e.m(0.004), e.m(0.003), d_top / 2),
+                  col['coaming'])
+            for sg_ in (-1, 1):
+                p0 = c + R * sg_ * (hw + e.m(0.002)) - U * hw; p1 = c + R * sg_ * (hw + e.m(0.002)) + U * hw
+                q1 = p1 + N * d_top; q0 = p0 + N * d_bot
+                m.flat([p0, p1, q1, q0], col['coaming'], normal=R * sg_)
+                m.flat([p0, p1, q1, q0], col['coaming'], normal=-R * sg_)
         elif kind.startswith('A:'):
             w, h = size
             spec = {'TWP': TWP, 'LG': GEAR, 'EPU': EPU, 'CAUTION': CAUTION}[kind[2:]]
@@ -441,10 +453,14 @@ def build(ac, tub, sw, atlas):
         # tile: s across from inboard to outboard, t from aft to forward
         uvs = [atlas.uv(rect, 0, 0), atlas.uv(rect, 1, 0), atlas.uv(rect, 1, 1), atlas.uv(rect, 0, 1)]
         m.face(top, uvs, normal=[0, 1, 0])
-        for (fa, fb) in CONSOLE_CONTROLS[sg]:
+        for k_, (fa, fb) in enumerate(CONSOLE_CONTROLS[sg]):
+            # each labelled control: a knob or a toggle at its painted marker, and on most panels a second, smaller
+            # toggle or push-button beside it, so the consoles read as densely packed as in the photos
             pl = Plane(e, e.p(sg * (CONSOLE_R0 + fa * (CONSOLE_R1 - CONSOLE_R0)), CONSOLE_U, fb), e.d(sg, 0, 0),
                        e.d(0, 0, 1))
-            switch(pl, 0, 0, 'knob' if (int(fb * 100) % 3) else 'toggle')
+            switch(pl, 0, 0, 'knob' if k_ % 3 else 'toggle')
+            if k_ % 4 != 3:
+                switch(pl, 0.0, -0.016, 'button' if k_ % 2 else 'toggle')
         m.flat([e.p(x_in, FLOOR_U, f0), e.p(x_in, FLOOR_U, f1), e.p(x_in, CONSOLE_U, f1), e.p(x_in, CONSOLE_U, f0)],
                col['gull_d'], normal=e.d(-sg, 0, 0))
         m.flat([e.p(x_in, FLOOR_U, f1), e.p(x_out, FLOOR_U, f1), e.p(x_out, CONSOLE_U, f1), e.p(x_in, CONSOLE_U, f1)],
@@ -453,8 +469,9 @@ def build(ac, tub, sw, atlas):
         sill_u = (tub.sill - E[1]) / k
         m.flat([e.p(x_out, CONSOLE_U, BACK_F), e.p(x_out, CONSOLE_U, 0.62), e.p(x_out, sill_u, 0.62),
                 e.p(x_out, sill_u, BACK_F)], col['gull'], normal=e.d(-sg, 0, 0))
-        m.box(e.p(sg * (CONSOLE_R1 - 0.02), sill_u + 0.01, (BACK_F + 0.62) / 2), (X, Y, Z),
-              (e.m(0.03), e.m(0.012), e.m((0.62 - BACK_F) / 2)), col['dgrey'])
+        # the sill: a broad grey ledge from the wall out to the canopy rail, closing the gap above the wall
+        m.box(e.p(sg * (CONSOLE_R1 + 0.03), sill_u + 0.01, (BACK_F + 0.62) / 2), (X, Y, Z),
+              (e.m(0.05), e.m(0.012), e.m((0.62 - BACK_F) / 2)), col['gull'])
         # footwell side from the console's front to the bulkhead
         m.flat([e.p(sg * 0.20, FLOOR_U, f1), e.p(sg * 0.20, FLOOR_U, 1.12), e.p(sg * 0.20, -0.70, 1.12),
                 e.p(sg * 0.20, -0.70, f1)], col['gull_d'], normal=e.d(-sg, 0, 0))
