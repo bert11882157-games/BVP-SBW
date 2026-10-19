@@ -1703,6 +1703,60 @@ def old_interior(ac, tubs, keep=()):
     return out, clips
 
 
+EXT_DIRS = 48          # rays per face for the exterior test
+EXT_MIN_RAYS = 2       # rays that must leave the glazed model for a face to count as exterior
+
+
+def fib_sphere(n):
+    i = np.arange(n) + 0.5
+    phi = np.arccos(1 - 2 * i / n); th = np.pi * (1 + 5 ** 0.5) * i
+    return np.stack([np.cos(th) * np.sin(phi), np.cos(phi), np.sin(th) * np.sin(phi)], 1)
+
+
+def exposure(ac, c, dirs=None):
+    """how many of the rays from c (one per row of dirs) leave the aircraft without meeting anything: the skin and
+    the canopy glass block, the face at c itself does not (hits nearer than 3 mm are ignored)"""
+    if not hasattr(ac, '_all'):
+        ac.escapes(np.zeros(3), np.array([0.0, 1.0, 0.0]))
+    T = ac._all
+    D = fib_sphere(EXT_DIRS) if dirs is None else dirs
+    e1, e2 = T[:, 1] - T[:, 0], T[:, 2] - T[:, 0]
+    sv = c - T[:, 0]
+    n = 0
+    for d in D:
+        h = np.cross(d, e2); a = (e1 * h).sum(1)
+        ok = np.abs(a) > 1e-12
+        f = np.where(ok, 1.0 / np.where(ok, a, 1.0), 0.0)
+        u = f * (sv * h).sum(1)
+        q = np.cross(sv, e1); v = f * (q @ d); t = f * (q * e2).sum(1)
+        if not (ok & (u >= 0) & (u <= 1) & (v >= 0) & (u + v <= 1) & (t > 0.003)).any():
+            n += 1
+    return n
+
+
+def keep_exterior(ac, rm, clips):
+    """drops from the removal / clip sets every face that can be seen from outside the aircraft with its canopy
+    glazed (EXT_MIN_RAYS of EXT_DIRS rays from its centre leave the model): the outside of the aircraft is never
+    changed by the cockpit work, whatever the interior rules selected. -> faces kept back"""
+    kept = 0
+    for b in ac.bones:
+        name = b['name']
+        if name not in rm and name not in clips:
+            continue
+        pm = b['poly_mesh']
+        P = np.array(pm['positions'], float) * np.array([1, 1, -1]) / 16.0
+        for i in sorted(set(rm.get(name, ())) | set(clips.get(name, {}))):
+            poly = pm['polys'][i]
+            if not poly:
+                continue
+            c = P[[v[0] for v in poly]].mean(0)
+            if exposure(ac, c) >= EXT_MIN_RAYS:
+                rm.get(name, set()).discard(i)
+                clips.get(name, {}).pop(i, None)
+                kept += 1
+    return kept
+
+
 def clip_forward(pm, index, zc):
     """cuts poly [index] of a poly mesh at vehicle-local z = zc, keeping the part ahead (z >= zc)"""
     clip_keep(pm, index, 2, zc)

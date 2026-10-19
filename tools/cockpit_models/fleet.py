@@ -60,8 +60,8 @@ def measure(ac, spec, era):
 
 
 def strip(ac, spec, tub):
-    """removes the old interior around the tub (and the hand-listed leftovers); -> (faces removed, faces cut,
-    removed per bone)"""
+    """removes the old interior around the tub (and the hand-listed leftovers), never a face that can be seen from
+    outside the glazed aircraft; -> (faces removed, faces cut, removed per bone, exterior faces kept back)"""
     E = tub.E
     rm, clips = L.old_interior(ac, [tub])
     # hand-listed leftovers: boxes relative to the eye (x left, y up, z forward) whose faces go too
@@ -77,6 +77,7 @@ def strip(ac, spec, tub):
                 if np.all(cc >= lo) and np.all(cc <= hi):
                     rm.setdefault(b['name'], set()).add(i)
                     clips.get(b['name'], {}).pop(i, None)
+    kept = L.keep_exterior(ac, rm, clips)       # nothing seen from outside the glazed aircraft goes
     removed, count = 0, {}
     for b in ac.bones:
         pm = b.get('poly_mesh')
@@ -87,7 +88,7 @@ def strip(ac, spec, tub):
             pm['polys'] = [p for i, p in enumerate(pm['polys']) if i not in gone and p]
             removed += len(gone)
             count[b['name']] = len(gone)
-    return removed, sum(map(len, clips.values())), count
+    return removed, sum(map(len, clips.values())), count, kept
 
 
 def empty_mesh():
@@ -140,7 +141,7 @@ def apply(vid, dry=False, stage=None, state=None):
         tub, sight_glass = measure(ac, spec, era)
         # drop what an earlier run added
         ac.bones[:] = [b for b in ac.bones if not b['name'].endswith('__cockpit')]
-        removed, cut, count = strip(ac, spec, tub)
+        removed, cut, count, kept = strip(ac, spec, tub)
         source = max(count, key=count.get) if count else 'wreck_fuselage_1__hull'
     E, s = tub.E, tub.s
     bone = cockpit_bone(ac, source)
@@ -155,7 +156,8 @@ def apply(vid, dry=False, stage=None, state=None):
             save_state(state, ac, tub, {'source': source, 'removed': removed, 'cut': cut, 'count': count,
                                     'sight_glass': sight_glass})
         return ac, tub, (f'{vid}: {era}, {tub.describe()}; removed {removed} old faces from {sorted(count)}, '
-                         f'cut {cut}, {sight_glass} old glass triangles dropped; cockpit bone {bone["name"]}')
+                         f'cut {cut}, {kept} exterior faces kept back, {sight_glass} old glass triangles dropped; '
+                         f'cockpit bone {bone["name"]}')
 
     # stick
     sticks = stick_bones(ac)
