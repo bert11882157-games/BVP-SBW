@@ -22,17 +22,19 @@ from authored import lib as A
 from authored.lib import L, unit, Plane, Painter, text, noisy, screws
 
 # ---------------------------------------------------------------- colours (FS 36231 dark gull grey tub, black panels)
-PANEL = (34, 35, 37)          # instrument panel and console panel faces: lusterless black-grey
-PANEL_D = (24, 25, 26)
-GULL = (98, 102, 104)         # tub walls, consoles' sides
-GULL_D = (74, 78, 80)
+# colours from the reference photos (research/f_16c_cockpit.md, "Reference images"): black panel and console faces,
+# a medium grey tub and sills, black floor, light grey seat structure with pale sage cushions
+PANEL = (30, 31, 33)          # instrument panel and console panel faces: lusterless black
+PANEL_D = (22, 23, 24)
+GULL = (118, 122, 122)        # tub walls, sills, consoles' sides (dark gull grey)
+GULL_D = (92, 96, 96)
 COAMING = (20, 20, 21)
-FLOOR = (56, 58, 58)
+FLOOR = (26, 26, 27)
 WHITE = (228, 230, 224)
 LETTER = (222, 224, 216)      # panel lettering
-SEAT_FRAME = (52, 56, 52)
-CUSHION = (74, 78, 64)        # sage green
-HEADBOX = (40, 42, 40)
+SEAT_FRAME = (132, 138, 132)  # ACES II structure: light grey
+CUSHION = (150, 156, 132)     # pale sage cushions
+HEADBOX = (112, 120, 108)
 YELLOW = (230, 190, 30)
 RED = (196, 36, 30)
 METAL = (130, 134, 136)
@@ -113,34 +115,35 @@ CAUTION = ('CAUTION', 4, [
     ('AFT FUEL|LOW', 'LOW_FUEL', 'amber'), ('', 'NONE', 'amber'), ('', 'NONE', 'amber'), ('', 'NONE', 'amber')])
 
 MAIN = [
-    # centre board, top row (under the glareshield lip, either side of the up-front controls)
-    ('centre', -0.165, -0.335, 'RWR', 0.072, 'RWR'),
-    ('centre', 0.135, -0.335, 'ATTITUDE', 0.060, 'SAI'),
-    ('centre', 0.212, -0.335, 'FILLER_FUEL', 0.046, 'FUEL FLOW'),
-    # the two MFDs
-    ('centre', -0.158, -0.468, 'D:RADAR', 0.112, None),
-    ('centre', 0.158, -0.468, 'D:STORES', 0.112, None),
-    # flight instruments between and under them
-    ('centre', -0.042, -0.488, 'AIRSPEED', 0.054, 'AIRSPEED/MACH'),
-    ('centre', 0.042, -0.488, 'ALTIMETER', 0.054, 'ALT'),
-    ('centre', -0.064, -0.562, 'AOA', 0.036, 'AOA'),
-    ('centre', 0.0, -0.562, 'ATTITUDE', 0.066, 'ADI'),
-    ('centre', 0.064, -0.562, 'VVI', 0.036, 'VVI'),
-    ('centre', 0.168, -0.566, 'G_METER', 0.042, 'G'),
-    ('centre', 0.215, -0.566, 'A:EPU', (0.040, 0.034), None),
-    ('centre', -0.172, -0.566, 'paint:MISC', (0.10, 0.044), None),
+    # Layout after the reference photos (Block 52 front panel; Falcon BMS Block 50 pilot's view): the ICP under the
+    # HUD in the middle; RWR scope upper left; the DED on its own bezel upper right with the standby ADI under it;
+    # the MFDs low either side; airspeed and altimeter under the ICP, the ADI under them with the AOA and VVI
+    # beside it, the EHSI on the pedestal; the engine column outboard of the right MFD; the arming switches down the
+    # left edge.
+    ('centre', -0.165, -0.360, 'RWR', 0.068, 'RWR'),
+    ('centre', 0.158, -0.336, 'paint:DED', (0.105, 0.046), None),
+    ('centre', 0.168, -0.398, 'ATTITUDE', 0.046, 'SAI'),
+    ('centre', -0.162, -0.500, 'D:RADAR', 0.104, None),
+    ('centre', 0.162, -0.500, 'D:STORES', 0.104, None),
+    ('centre', -0.044, -0.484, 'AIRSPEED', 0.048, 'AIRSPEED/MACH'),
+    ('centre', 0.044, -0.484, 'ALTIMETER', 0.048, 'ALT'),
+    ('centre', -0.064, -0.562, 'AOA', 0.030, 'AOA'),
+    ('centre', 0.0, -0.562, 'ATTITUDE', 0.056, 'ADI'),
+    ('centre', 0.064, -0.562, 'VVI', 0.030, 'VVI'),
     # pedestal
     ('pedestal', 0.0, -0.655, 'HEADING', 0.070, 'EHSI'),
     ('pedestal', -0.085, -0.655, 'paint:INSTR', (0.06, 0.05), None),
     ('pedestal', 0.085, -0.655, 'paint:FUELSEL', (0.06, 0.05), None),
-    # right wing: the engine instruments
-    ('right', 0.062, -0.360, 'FILLER_OIL', 0.044, 'OIL'),
-    ('right', 0.062, -0.425, 'FILLER_RPM', 0.044, 'NOZ POS'),
-    ('right', 0.062, -0.495, 'ENGINE_RPM', 0.050, 'RPM'),
-    ('right', 0.062, -0.565, 'EGT', 0.050, 'FTIT'),
-    # left wing: threat warning prime, the landing gear panel
-    ('left', -0.060, -0.345, 'A:TWP', (0.036, 0.085), None),
-    ('left', -0.060, -0.470, 'paint:TWA', (0.07, 0.05), None),
+    # right wing: fuel flow, then the engine column
+    ('right', 0.062, -0.335, 'FILLER_FUEL', 0.044, 'FUEL FLOW'),
+    ('right', 0.062, -0.395, 'FILLER_OIL', 0.044, 'OIL'),
+    ('right', 0.062, -0.450, 'FILLER_RPM', 0.044, 'NOZ POS'),
+    ('right', 0.062, -0.505, 'ENGINE_RPM', 0.046, 'RPM'),
+    ('right', 0.062, -0.562, 'EGT', 0.046, 'FTIT'),
+    # left wing: threat warning prime, the arming switches, the landing gear panel
+    ('left', -0.060, -0.335, 'A:TWP', (0.036, 0.075), None),
+    ('left', -0.060, -0.418, 'paint:MISC', (0.078, 0.046), None),
+    ('left', -0.060, -0.470, 'paint:MISC2', (0.078, 0.046), None),
     ('left', -0.060, -0.530, 'A:LG', (0.075, 0.020), None),
 ]
 RIGHT_AUX = [   # (a, b) on the right auxiliary console's plane
@@ -403,19 +406,19 @@ def build(ac, tub, sw, atlas):
         gc = [g_bot - X * g_hw, g_bot + X * g_hw, g_top + X * g_hw, g_top - X * g_hw]
         glass += [gc[0], gc[1], gc[2], gc[0], gc[2], gc[3]]
         hud = dict(centre=(g_bot + g_top) / 2, normal=-g_n, up=g_up, width=2 * g_hw, height=g_h)
-    # up-front controls: a housing under the HUD's aft end, its face leaning back 25 degrees: ICP keypad and the DED
-    ufc_lean = math.radians(25)
-    ufc = Plane(e, np.array([E[0], hy0 + e.m(0.005), hz0 - e.m(0.010)]), e.d(1, 0, 0),
-                e.d(0, math.cos(ufc_lean), math.sin(ufc_lean)))
+    # the integrated control panel: a box standing out of the panel's top centre under the HUD, its face toward the
+    # pilot, 12 degrees back (the DED is on its own bezel, upper right of the main panel)
+    ufc_lean = math.radians(12)
+    ufc = Plane(e, e.p(0, -0.322, 0.625), e.d(1, 0, 0), e.d(0, math.cos(ufc_lean), math.sin(ufc_lean)))
     R, U, N = ufc.axes()
-    us = UFC_S
-    m.box(ufc.at(0, 0) - N * e.m(0.05), (R, U, N), (e.m(0.15 * us), e.m(0.048 * us), e.m(0.05)), col['dgrey'])
-    icp = atlas.paint(int(0.30 * 1100), int(0.096 * 1100), p_icp)
-    A.plate(m, atlas, ufc, 0, 0, 0.30 * us, 0.096 * us, icp, proud=0.003, edge=col['dgrey'])
-    for i in range(4):                      # the keypad keys stand proud
-        for j in range(3):
-            c = ufc.at((-0.062 + j * 0.026) * us, (0.030 - i * 0.020) * us, 0.004)
-            m.box(c + N * e.m(0.003), (R, U, N), (e.m(0.0095 * us), e.m(0.007 * us), e.m(0.003)), col['mgrey'])
+    back_to_panel = max(e.m(0.04), float((ufc.o - cen.at(0, cb(-0.322, -0.45))) @ -N) + e.m(0.01))
+    m.box(ufc.at(0, 0) - N * back_to_panel / 2, (R, U, N),
+          (e.m(ICP_W / 2 + 0.006), e.m(ICP_H / 2 + 0.006), back_to_panel / 2), col['dgrey'])
+    icp = atlas.paint(int(ICP_W * 1500), int(ICP_H * 1500), p_icp)
+    A.plate(m, atlas, ufc, 0, 0, ICP_W, ICP_H, icp, proud=0.003, edge=col['dgrey'])
+    for a in (-0.083, 0.083):               # the rocker wheels' housings
+        for b in (0.016, -0.022):
+            m.box(ufc.at(a, b, 0.003) + N * e.m(0.004), (R, U, N), (e.m(0.006), e.m(0.014), e.m(0.004)), col['grip'])
 
     # -- eyebrow lights and the indexers on the glareshield either side of the HUD
     def brow(r, u, f, w, h, spec):
@@ -423,8 +426,8 @@ def build(ac, tub, sw, atlas):
         R, U, N = pl.axes()
         m.box(pl.at(0, 0) - N * e.m(0.03), (R, U, N), (e.m(w / 2 + 0.008), e.m(h / 2 + 0.008), e.m(0.03)), col['coaming'])
         annunciator(pl.at(0, 0, 0.002), pl, w, h, spec)
-    brow(-0.232, -0.305, 0.70, 0.050, 0.060, EYEBROW_L)
-    brow(0.238, -0.305, 0.70, 0.080, 0.075, EYEBROW_R)
+    brow(-0.236, -0.262, 0.74, 0.046, 0.050, EYEBROW_L)
+    brow(0.240, -0.262, 0.74, 0.074, 0.060, EYEBROW_R)
     brow(-0.120, -0.240, 0.72, 0.020, 0.045, AOA_IDX)
     brow(0.120, -0.240, 0.72, 0.024, 0.045, AR_IDX)
 
@@ -555,41 +558,67 @@ def aces_ii(m, e, col):
 
 # ---------------------------------------------------------------- painted parts
 
+ICP_W, ICP_H = 0.200, 0.110   # the integrated control panel's face, metres
+# ICP layout (plate metres from its centre): the override row on top, the 3 x 4 keypad, RCL / ENTR on the right, the
+# SYM and BRT wheels down the left edge, DRIFT C/O and WARN RESET on the right edge, the DCS rocker below the keypad
+ICP_TOP = [('COM1', -0.060), ('COM2', -0.036), ('IFF', -0.012), ('LIST', 0.012), ('A-A', 0.036), ('A-G', 0.060)]
+ICP_KEYS = [['1|T-ILS', '2|ALOW', '3'], ['4|STPT', '5|CRUS', '6|TIME'], ['7|MARK', '8|FIX', '9|A-CAL'],
+            ['', '0|M-SEL', '']]
+ICP_KX, ICP_KY = (-0.030, -0.004, 0.022), (0.022, 0.002, -0.018, -0.038)
+
+
 def p_icp(d, im):
-    S = im.width / 0.30                              # SS pixels per metre
+    S = im.width / ICP_W                             # SS pixels per metre
     def px(a, b):                                    # plate metres (centre origin) -> pixels
         return (im.width / 2 + a * S, im.height / 2 - b * S)
-    noisy(im, (40, 42, 44), 3, seed=5)
-    keys = [['1|T-ILS', '2|ALOW', '3'], ['4|STPT', '5|CRUS', '6|TIME'], ['7|MARK', '8|FIX', '9|A-CAL'],
-            ['RCL', '0|M-SEL', 'ENTR']]
-    for i, row in enumerate(keys):
+    noisy(im, (38, 40, 42), 3, seed=5)
+    for lab, a in ICP_TOP:
+        x, y = px(a, 0.046)
+        d.rounded_rectangle([x - 0.0105 * S, y - 0.0075 * S, x + 0.0105 * S, y + 0.0075 * S], 0.002 * S,
+                            fill=(66, 68, 70, 255))
+        text(d, (x, y), lab, 0.0040 * S, fill=WHITE)
+    for i, row in enumerate(ICP_KEYS):
         for j, k_ in enumerate(row):
-            x, y = px(-0.062 + j * 0.026, 0.030 - i * 0.020)
-            d.rectangle([x - 0.011 * S, y - 0.0085 * S, x + 0.011 * S, y + 0.0085 * S], fill=(70, 72, 74, 255))
+            if not k_:
+                continue
+            x, y = px(ICP_KX[j], ICP_KY[i])
+            d.rounded_rectangle([x - 0.0105 * S, y - 0.0085 * S, x + 0.0105 * S, y + 0.0085 * S], 0.002 * S,
+                                fill=(70, 72, 74, 255))
             parts = k_.split('|')
-            text(d, (x, y - (0.002 * S if len(parts) > 1 else 0)), parts[0], 0.0065 * S, fill=WHITE)
+            text(d, (x, y - (0.002 * S if len(parts) > 1 else 0)), parts[0], 0.0062 * S, fill=WHITE)
             if len(parts) > 1:
-                text(d, (x, y + 0.0045 * S), parts[1], 0.0032 * S, fill=WHITE)
-    # the override buttons along the top: COM1 COM2 IFF LIST, A-A A-G
-    for j, lab in enumerate(['COM1', 'COM2', 'IFF', 'LIST', 'A-A', 'A-G']):
-        x, y = px(-0.135 + (j % 2) * 0.030, 0.030 - (j // 2) * 0.022)
-        d.rectangle([x - 0.012 * S, y - 0.008 * S, x + 0.012 * S, y + 0.008 * S], fill=(62, 64, 66, 255))
-        text(d, (x, y), lab, 0.0042 * S, fill=WHITE)
-    # the DED: five green lines on the right
-    x0, y0 = px(0.020, 0.040); x1, y1 = px(0.140, -0.018)
-    d.rectangle([x0, y0, x1, y1], fill=(6, 14, 8, 255), outline=(70, 70, 70, 255), width=int(0.002 * S))
-    lines = ['  UHF 242.00  STPT  4', '               ', ' VHF  1     08:12:31', '        M1 3  C  4   ',
-             ' 12:00 MAN  T  75X  ']
-    for i, ln in enumerate(lines):
-        text(d, (x0 + 0.004 * S, y0 + (0.006 + i * 0.0105) * S), ln, 0.0065 * S, fill=GREEN_DED, anchor='lm', mono=True)
-    text(d, px(0.080, -0.026), 'DED', 0.004 * S, fill=WHITE)
-    # the FLIR / brightness wheels and the DCS rocker under the DED
-    for a in (0.03, 0.06, 0.10, 0.13):
-        x, y = px(a, -0.036)
-        d.ellipse([x - 0.007 * S, y - 0.007 * S, x + 0.007 * S, y + 0.007 * S], fill=(26, 26, 27, 255),
-                  outline=(110, 110, 110, 255), width=int(0.0012 * S))
-    for lab, a in (('SYM', 0.03), ('BRT', 0.06), ('DRIFT', 0.10), ('WX', 0.13)):
-        text(d, px(a, -0.045), lab, 0.0033 * S, fill=WHITE)
+                text(d, (x, y + 0.0045 * S), parts[1], 0.0030 * S, fill=WHITE)
+    for lab, b in (('RCL', 0.012), ('ENTR', -0.010)):
+        x, y = px(0.052, b)
+        d.rounded_rectangle([x - 0.0105 * S, y - 0.0085 * S, x + 0.0105 * S, y + 0.0085 * S], 0.002 * S,
+                            fill=(70, 72, 74, 255))
+        text(d, (x, y), lab, 0.0045 * S, fill=WHITE)
+    for a, labs in ((-0.083, ('SYM', 'BRT')), (0.083, ('DRIFT', 'WARN'))):
+        for k, (lab, b) in enumerate(zip(labs, (0.016, -0.022))):
+            x, y = px(a, b)
+            d.rectangle([x - 0.006 * S, y - 0.014 * S, x + 0.006 * S, y + 0.014 * S], fill=(24, 24, 25, 255),
+                        outline=(120, 120, 120, 255), width=max(1, int(0.001 * S)))
+            for t in range(5):
+                d.line([x - 0.005 * S, y + (-0.011 + t * 0.0055) * S, x + 0.005 * S, y + (-0.011 + t * 0.0055) * S],
+                       fill=(90, 90, 90, 255), width=max(1, int(0.0008 * S)))
+            text(d, (x, y + 0.020 * S), lab, 0.0034 * S, fill=WHITE)
+    x, y = px(0.0, -0.052)                           # the DCS (data control switch) rocker
+    d.rectangle([x - 0.016 * S, y - 0.005 * S, x + 0.016 * S, y + 0.005 * S], fill=(24, 24, 25, 255))
+    d.ellipse([x - 0.004 * S, y - 0.004 * S, x + 0.004 * S, y + 0.004 * S], fill=(110, 110, 110, 255))
+
+
+def p_ded(w, h):
+    """the data entry display on its own bezel: five lines of green text"""
+    def fn(d, im):
+        W, H = im.width, im.height
+        d.rectangle([0, 0, W, H], fill=(36, 38, 40, 255))
+        d.rectangle([W * .04, H * .10, W * .96, H * .90], fill=(6, 14, 8, 255), outline=(80, 80, 80, 255),
+                    width=max(1, int(H * .02)))
+        lines = ['UHF 242.00  STPT  4', '', 'VHF  1     08:12:31', '      M1 3  C  4', '12:00 MAN  T  75X']
+        for i, ln in enumerate(lines):
+            text(d, (W * .07, H * (.20 + i * .145)), ln, H * .13, fill=GREEN_DED, anchor='lm', mono=True)
+        screws(d, W, H, H * .08, H * .03)
+    return fn
 
 
 def p_label_panel(title, labels, knobs=0, toggles=0, title_top=True):
@@ -610,7 +639,9 @@ def p_label_panel(title, labels, knobs=0, toggles=0, title_top=True):
 
 
 PAINTERS = {
-    'MISC': p_label_panel('MISC', ['MASTER ARM', 'LASER ARM', 'RF', 'ALT REL']),
+    'MISC': p_label_panel('MASTER ARM', ['ARM', 'LASER ARM']),
+    'MISC2': p_label_panel('RF / ALT REL', ['NORM QUIET', 'ALT REL']),
+    'DED': p_ded,
     'INSTR': p_label_panel('INSTR MODE', ['TCN', 'NAV', 'ILS']),
     'FUELSEL': p_label_panel('FUEL QTY SEL', ['NORM', 'RSVR', 'INT', 'EXT']),
     'TWA': p_label_panel('TWA', ['SEARCH', 'ACT/PWR', 'LOW', 'SYS']),
@@ -619,7 +650,9 @@ PAINTERS = {
 }
 # controls modelled on the painted panels: (s, t) in the panel (-0.5..0.5 across, -0.5..0.5 up), kind
 SWITCHES = {
-    'MISC': [(-0.375, -0.02, 'guard'), (-0.125, -0.02, 'toggle'), (0.125, -0.02, 'knob'), (0.375, -0.02, 'toggle')],
+    'MISC': [(-0.25, -0.02, 'guard'), (0.25, -0.02, 'toggle')],
+    'MISC2': [(-0.25, -0.02, 'toggle'), (0.25, -0.02, 'button')],
+    'DED': [],
     'INSTR': [(0.0, -0.02, 'knob')],
     'FUELSEL': [(0.0, -0.02, 'knob')],
     'TWA': [(-0.375, -0.02, 'button'), (-0.125, -0.02, 'button'), (0.125, -0.02, 'button'), (0.375, -0.02, 'button')],
