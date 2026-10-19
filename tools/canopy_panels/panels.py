@@ -185,7 +185,9 @@ class Builder:
         # a flat windscreen's base: where a line from the arch top down at the rake angle meets the nose skin
         # (the loft's base runs on down a painted slope; a real armour-glass windscreen is short and steep)
         self.z_base = env.zf
-        if ws.get('type', 'curved') != 'integrated':
+        if 'base' in ws:
+            self.z_base = float(ws['base'])            # given outright: the model's own windscreen foot
+        elif ws.get('type', 'curved') != 'integrated':
             rake = math.radians(ws.get('rake', 45.0 if ws.get('type', 'curved') != 'curved' else 38.0))
             top = env.spine(self.z_arch) - ws.get('top_drop', 0.0)
             z = self.z_arch

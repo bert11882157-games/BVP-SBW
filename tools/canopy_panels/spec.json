@@ -230,7 +230,8 @@
  },
  "f_86k": {
   "windscreen": {
-   "type": "flat1"
+   "type": "flat1",
+   "base": 4.46
   },
   "hood": {
    "section": "round",
@@ -238,7 +239,22 @@
   },
   "rear": {
    "type": "fairing"
-  }
+  },
+  "remove_boxes": [
+   [
+    [
+     -0.65,
+     -0.36,
+     0.3
+    ],
+    [
+     0.65,
+     0.05,
+     1.5
+    ]
+   ]
+  ],
+  "_note": "Windscreen foot given: the model draws its armour-glass windscreen as a black wedge on the nose, which the loft read as skin; the wedge goes with remove_boxes."
  },
  "f_8h": {
   "windscreen": {

@@ -149,6 +149,14 @@ def old_canopy(ac, B, env, skip_bones):
                     sel.add(i); continue
             if z1 < z_back or z0 > z_front:
                 continue
+            # E. a face whose middle lies inside the canopy's volume (well inside the plan, above the sill or the
+            # nose skin, under the roof): an old post or divider standing in the glass, however far it reaches down
+            cx, cy, cz = V.mean(0)
+            czc = float(np.clip(cz, env.zr, env.zf))
+            if z_back <= cz <= z_front and abs(cx) < env.W(czc) - 0.05 and cy < env.spine(czc) + 0.05:
+                floor = env.lip(czc) + 0.02 if cz <= B.z_arch + 0.06 else ev.skin_at(float(cx), float(cz)) + 0.015
+                if cy > floor or V[:, 1].max() > floor + 0.08:
+                    sel.add(i); continue
             # A. inside the hood's plan, above the sill: old glass panes, bows, the headrest fairing's glazing
             lips = np.array([env.lip(float(z)) for z in V[:, 2]])
             if z1 <= B.z_arch + 0.06 and z0 >= z_back and np.all(V[:, 1] >= lips - 0.03):
@@ -192,6 +200,13 @@ def old_canopy(ac, B, env, skip_bones):
                     if V[:, 1].max() > skin.max() + 0.03 and \
                             V[:, 1].max() > env.lip(float(np.clip(V[:, 2].mean(), env.zr, env.zf))) - 0.60:
                         sel.add(i); grown = True
+        # F. hand-listed leftovers: boxes relative to the eye (x left, y up, z forward) in spec.json
+        for lo, hi in B.spec.get('remove_boxes', []):
+            lo, hi = np.array(lo, float) + ev.eye, np.array(hi, float) + ev.eye
+            for i, poly in enumerate(pm['polys']):
+                cc = Pp[[v[0] for v in poly]].mean(0)
+                if np.all(cc >= lo) and np.all(cc <= hi):
+                    sel.add(i)
         if sel:
             out[b['name']] = sel
     return out

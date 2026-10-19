@@ -13,12 +13,14 @@ glass has polygons where the real canopy has panes and nothing where it has fram
   - windscreen: `curved` (one lofted sheet: F-15, Su-27), `flat3` (flat armour-glass centre between two posts plus a
     flat quarter panel each side: Su-25, A-10, MiG-23, F-104, Ju 87), `flat1` (one flat plate between the posts,
     lofted sides: MiG-15/17/19, F-86, MiG-21), `integrated` (frameless with the hood: F-16); `rake` is the
-    windscreen angle, `centre_frac` the centre panel's share of the arch width.
+    windscreen angle, `centre_frac` the centre panel's share of the arch width, `base` the windscreen's foot (z)
+    where the loft cannot find it.
   - hood: `round`, `flatside` (flat sides to a shoulder, round top) or `flattop` (greenhouse), cut at each bow
     (`bows`, as fractions from the arch to the hood's end).
   - rear: `fairing` (solid behind the last bow), `glazed` (runs down the spine: F-16, F-15, Su-27) or `taper`
     (sliding bubble hoods: P-51, Spitfire, Sabre, F8F, Yaks).
-  - `loft`: overrides passed to the loft envelope; `skip: true` leaves hand-built glass alone (MiG-29).
+  - `loft`: overrides passed to the loft envelope; `skip: true` leaves hand-built glass alone (MiG-29);
+    `sill_rise` and `remove_boxes` are read by `tools/canopy_build/canopy.py`.
 - Every flat panel is one quad and every curved section a regular grid between two frame stations, so edges are
   shared and nothing is clipped or jagged.
 - `frames/<id>.json` lists the frame bars (posts, arch, bows) as segments; where it exists

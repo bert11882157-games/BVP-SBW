@@ -12,6 +12,10 @@ panes and their frame stations, from `spec.json`) and `tools/cockpit_models/flee
   the model's glass colour (a saturated cyan or blue that the texture uses almost only around the cockpit, so a
   blue camouflage is left alone) and the dark frame faces around those. The outer skin along the sills and the nose
   deck under the windscreen stay.
+- **Leftovers.** `remove_boxes` in `tools/canopy_panels/spec.json` lists, per aircraft, boxes relative to the
+  pilot's eye (x left, y up, z forward) whose faces go too, for parts the rules cannot tell from skin (the F-86K's
+  armour-glass windscreen drawn as a black wedge on the nose); `windscreen.base` there gives the windscreen's foot
+  outright where the loft could not find it.
 - **Sill line.** A hood's lower edge runs level, so along the hood the loft's rail is capped a little (`sill_rise`,
   0.08 m) above its lower part: where the model's own canopy was painted on as a solid hump merging into the
   fairing, or a windscreen block filled the opening, the rail rode over it and the glass floated.
