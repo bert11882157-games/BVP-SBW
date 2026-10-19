@@ -1,5 +1,8 @@
 """Ka-50: the shading hood of the IT-23 Shkval TV screen (the D:STORES item of the station's explicit panel, top centre) and
-the K-37-800 ejection seat's yellow-and-black firing handle between the pilot's knees."""
+the K-37-800 ejection seat's yellow-and-black firing handle between the pilot's knees, and a plain bulkhead plate where
+the old instrument panel painted on the nose bulkhead (z 4.106, ahead of the coaming, seen through the windscreen)
+was removed, and plain blocks for the old side consoles below the new ones (their painted switch rows showed
+through the windscreen ahead of the panel wings)."""
 import math
 import numpy as np
 import cockpit_lib as L
@@ -31,3 +34,8 @@ def extra(ac, tubs, stations, mesh, c):
         for sg in (1, -1):
             mesh.box([E[0] + sg * 0.06 * s, hy - 0.02 * s, E[2] + 0.19 * s], (X, Y, Z),
                      (0.006 * s, 0.022 * s, 0.006 * s), c['black'])
+    # the nose bulkhead in place of the old painted panel (the spec's remove box at z 4.09..4.12)
+    mesh.box([0, (1.108 + 2.405) / 2, 4.11], (X, Y, Z), (0.72, (2.405 - 1.108) / 2, 0.006), c['coaming'])
+    for sg in (1, -1):        # the old consoles' blocks, plain (the spec's remove boxes at x 0.43..0.80)
+        mesh.box([sg * 0.612, (1.036 + 1.612) / 2, (2.665 + 4.106) / 2], (X, Y, Z), (0.18, (1.612 - 1.036) / 2,
+                 (4.106 - 2.665) / 2), c['coaming'])

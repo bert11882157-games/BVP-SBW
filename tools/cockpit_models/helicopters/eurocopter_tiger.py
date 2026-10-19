@@ -1,5 +1,6 @@
 """Tiger HAP/HAD: the gunner's (rear seat's) Strix sight viewing head on the coaming, its binocular eyepiece facing
-him."""
+him; and a plain bulkhead behind the rear seat in place of the old armour pads and textured back wall removed by the
+spec's box at z 0.94..1.13."""
 import numpy as np
 import cockpit_lib as L
 
@@ -22,3 +23,5 @@ def extra(ac, tubs, stations, mesh, c):
                      c['black'], faces={(2, -1): c['bezel']})
         # rubber brow pad above the eyepieces
         mesh.box(hc + [0, 0.052 * s, -0.15 * s], (X, Y, Z), (0.055 * s, 0.008 * s, 0.02 * s), c['black'])
+    # the rear seat's bulkhead above the tub, where the old pads and wall were removed
+    mesh.box([0, (3.287 + 4.377) / 2, 1.0], (X, Y, Z), (0.62, (4.377 - 3.287) / 2, 0.012), c['wall'])
