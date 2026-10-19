@@ -23,7 +23,9 @@ W, H = 560, 385
 VIEWS = {'side': (lambda E: [E[0] + 3.4, E[1] + 0.5, E[2] + 0.2], -90, -8, 42),
          'quarter': (lambda E: [E[0] + 2.2, E[1] + 1.4, E[2] + 2.6], -140, -28, 45),
          'front': (lambda E: [E[0] + 0.9, E[1] + 0.9, E[2] + 3.6], -165, -20, 45),
-         'seat': (lambda E: [E[0], E[1], E[2]], 0, -12, 85)}
+         'seat': (lambda E: [E[0], E[1], E[2]], 0, -12, 85),
+         'down': (lambda E: [E[0], E[1], E[2]], 0, -48, 92),                      # the consoles and the panel foot
+         'open': (lambda E: [E[0] + 1.1, E[1] + 0.5, E[2] - 0.35], -75, -28, 75)}  # the cockpit with the canopy off
 
 
 def only(geo, pred):
@@ -78,7 +80,11 @@ def one(args):
         E = L.Aircraft(vid).eye(0)
         for k in VIEWS:
             f, yaw, pitch, fov = VIEWS[k]
-            EV.render(vid, os.path.join(out, f'{vid}_{k}.png'), eye=f(E), yaw=yaw, pitch=pitch, fov=fov, size=(W, H))
+            kw = {}
+            if k == 'open':
+                kw = dict(glass=False, skip=('pilot_view_occluder', 'canopy', 'wreck_fuselage_0__canopy',
+                                             'wreck_fuselage_1__canopy', 'wreck_fuselage_2__canopy'))
+            EV.render(vid, os.path.join(out, f'{vid}_{k}.png'), eye=f(E), yaw=yaw, pitch=pitch, fov=fov, size=(W, H), **kw)
         if orig_dir:
             red, orange = removed(vid, orig_dir)
             cur = json.load(open(os.path.join(L.GEO_DIR, vid + '.geo.json')))
@@ -111,7 +117,7 @@ def main(argv):
     with ProcessPoolExecutor(jobs) as ex:
         for r in ex.map(one, [(v, orig_dir, out) for v in vids]):
             print(r, flush=True)
-    cols = ['side', 'cut', 'quarter', 'front', 'seat'] if orig_dir else ['side', 'quarter', 'front', 'seat']
+    cols = ['side', 'cut', 'quarter', 'front', 'seat', 'down', 'open'] if orig_dir else ['side', 'quarter', 'front', 'seat', 'down', 'open']
     per = 6
     for n in range(0, len(vids), per):
         chunk = vids[n:n + per]
