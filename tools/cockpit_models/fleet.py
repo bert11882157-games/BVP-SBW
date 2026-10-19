@@ -77,7 +77,7 @@ def strip(ac, spec, tub):
                 if np.all(cc >= lo) and np.all(cc <= hi):
                     rm.setdefault(b['name'], set()).add(i)
                     clips.get(b['name'], {}).pop(i, None)
-    kept = L.keep_exterior(ac, rm, clips)       # nothing seen from outside the glazed aircraft goes
+    kept = L.keep_exterior(ac, rm, clips, [tub])   # nothing seen from outside the glazed aircraft goes
     removed, count = 0, {}
     for b in ac.bones:
         pm = b.get('poly_mesh')

@@ -1734,10 +1734,12 @@ def exposure(ac, c, dirs=None):
     return n
 
 
-def keep_exterior(ac, rm, clips):
+def keep_exterior(ac, rm, clips, tubs=()):
     """drops from the removal / clip sets every face that can be seen from outside the aircraft with its canopy
-    glazed (EXT_MIN_RAYS of EXT_DIRS rays from its centre leave the model): the outside of the aircraft is never
-    changed by the cockpit work, whatever the interior rules selected. -> faces kept back"""
+    glazed (EXT_MIN_RAYS of EXT_DIRS rays from its centre leave the model), unless it is interior all the same: in
+    a tub's canopy space (between the back of the tub and the windscreen, inside the canopy width, above the sill)
+    and not lying along the glass (a seat top or gunsight seen through a gap in the fitted glass goes with the old
+    interior; a canopy frame stays). The outside of the aircraft is never changed by the cockpit work. -> kept"""
     kept = 0
     for b in ac.bones:
         name = b['name']
@@ -1749,11 +1751,17 @@ def keep_exterior(ac, rm, clips):
             poly = pm['polys'][i]
             if not poly:
                 continue
-            c = P[[v[0] for v in poly]].mean(0)
-            if exposure(ac, c) >= EXT_MIN_RAYS:
-                rm.get(name, set()).discard(i)
-                clips.get(name, {}).pop(i, None)
-                kept += 1
+            V = P[[v[0] for v in poly]]
+            c = V.mean(0)
+            if exposure(ac, c) < EXT_MIN_RAYS:
+                continue
+            in_canopy = any(abs(c[0] - t.E[0]) < t.Wg - 0.01 and t.back_z - 0.05 < c[2] < t.ws_z and
+                            t.sill - 0.01 < c[1] < t.E[1] + 1.0 * t.s for t in tubs)
+            if in_canopy and not ac.hugs_glass(V):
+                continue
+            rm.get(name, set()).discard(i)
+            clips.get(name, {}).pop(i, None)
+            kept += 1
     return kept
 
 
