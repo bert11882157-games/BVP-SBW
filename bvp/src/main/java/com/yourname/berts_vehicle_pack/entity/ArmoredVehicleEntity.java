@@ -318,11 +318,9 @@ public abstract class ArmoredVehicleEntity extends GeoVehicleEntity implements V
         if (seatIndex < 0 || selectedWeaponIndex < 0) {
             return null;
         }
-        if (this instanceof Ka50Entity) {
-            return seatIndex == 0 && selectedWeaponIndex == 1 ? BVP_AIM_RETICLE : null;
-        }
-        if (this instanceof Mi24VEntity || this instanceof Mi28NEntity) {
-            return seatIndex == 1 && selectedWeaponIndex == 0 ? BVP_AIM_RETICLE : null;
+        if (this instanceof Mi24VEntity helicopter) {
+            // Mi-24V, Mi-28N (operator seat) and Ka-50 (pilot): the cannon in its own gun seat, found by name.
+            return helicopter.isAutocannonSeatWeapon(seatIndex, selectedWeaponIndex) ? BVP_AIM_RETICLE : null;
         }
         return BVP_AIM_RETICLE;
     }

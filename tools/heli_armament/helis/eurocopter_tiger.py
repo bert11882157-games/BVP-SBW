@@ -6,7 +6,8 @@ SPEC = {
     'wt': 'tiger_uht', 'payload': 1000, 'weapon_seat': 1,
     # The gunner guides HOT 3 / Trigat and fires the Stingers through the mast sight; both crew fire the rockets and
     # the gun pods. The UHT has no chin gun turret (that is the HAP).
-    'crew': {'unguided': [0, 1], 'guided': [1]},
+    # Guided stores: the gunner's (WeaponSeat), and the pilot's too so the store keys work from both seats (owner).
+    'crew': {'unguided': [0, 1], 'guided': [1, 0]},
     # three tube mouths of the old right-hand baked launcher were left in the hull
     'hull_remove': [[2.9, 3.2, 1.7, 2.1, 1.0, 1.3]],
     'slots': [

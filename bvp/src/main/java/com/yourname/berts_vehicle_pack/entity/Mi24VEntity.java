@@ -15,7 +15,6 @@ import net.minecraft.world.phys.Vec3;
 
 public class Mi24VEntity extends BvpHelicopterEntity {
     private static final int DEFAULT_AUTOCANNON_SEAT_INDEX = 1;
-    private static final int DEFAULT_AUTOCANNON_WEAPON_INDEX = 0;
     private static final String DEFAULT_AUTOCANNON_WEAPON_NAME = "Cannon";
 
     public Mi24VEntity(EntityType<Mi24VEntity> type, Level world) {
@@ -35,8 +34,15 @@ public class Mi24VEntity extends BvpHelicopterEntity {
         return DEFAULT_AUTOCANNON_SEAT_INDEX;
     }
 
+    /** The cannon's place in the gun seat's weapon list, resolved by name (-1 when that seat does not carry it). */
     protected int autocannonWeaponIndex() {
-        return DEFAULT_AUTOCANNON_WEAPON_INDEX;
+        return getWeaponIds(autocannonSeatIndex()).indexOf(DEFAULT_AUTOCANNON_WEAPON_NAME);
+    }
+
+    /** Whether the weapon at {@code weaponIndex} of {@code seatIndex} is the cannon fired from its own gun seat. */
+    protected boolean isAutocannonSeatWeapon(int seatIndex, int weaponIndex) {
+        return seatIndex == autocannonSeatIndex() && weaponIndex >= 0
+                && DEFAULT_AUTOCANNON_WEAPON_NAME.equals(getGunName(seatIndex, weaponIndex));
     }
 
     @Override
@@ -72,12 +78,6 @@ public class Mi24VEntity extends BvpHelicopterEntity {
                 .lockTolerance(bvpTurretAimToleranceDegrees())
                 .defaultMode(VehicleAimMode.PLAYER_LOOK_AIM)
                 .build();
-    }
-
-    /** Mi-24 and Mi-28: the pilot fires the operator's nose gun locked straight ahead. */
-    @Override
-    protected boolean pilotFiresTurretStowed() {
-        return true;
     }
 
     @Override
@@ -156,7 +156,9 @@ public class Mi24VEntity extends BvpHelicopterEntity {
 
     /** The operator's schedule, or the pilot's while only the pilot is firing the shared gun. */
     private VehicleWeaponScheduleSnapshot autocannonScheduleSnapshot() {
-        VehicleWeaponScheduleSnapshot operator = getWeaponScheduleSnapshot(autocannonSeatIndex(), autocannonWeaponIndex());
+        int operatorIndex = autocannonWeaponIndex();
+        VehicleWeaponScheduleSnapshot operator = operatorIndex < 0
+                ? null : getWeaponScheduleSnapshot(autocannonSeatIndex(), operatorIndex);
         if (operator != null && operator.getTriggerHeld() || autocannonSeatIndex() == 0) {
             return operator;
         }

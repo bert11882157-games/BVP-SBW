@@ -1,11 +1,12 @@
 # Mi-28N: WT mi_28n. Outboard (1, 4): four Igla, four or eight Ataka, B-8V20 or B-13L; inboard (2, 3): pods and
-# UPK-23-250. The operator fires the guided stores. Pylon points: tops of the baked stores.
+# UPK-23-250. The operator (and the pilot) fire the guided stores. Pylon points: tops of the baked stores.
 _OUT = ['igla_x4', 'b8v20_s8ko', 'b13l_s13of', 'ataka_x4', 'ataka_x8']
 SPEC = {
     'wt': 'mi_28n', 'payload': 2050, 'weapon_seat': 1,
-    # Pilot: rockets and gun pods, and the 2A42 locked straight ahead. Navigator-operator: the NPPU-28 turret, Ataka
+    # Pilot: rockets and gun pods, and the 2A42 (stowed straight ahead while he alone fires it). Navigator-operator: the NPPU-28 turret, Ataka
     # and Igla (Wikipedia, Mil Mi-28).
-    'crew': {'unguided': [0], 'guided': [1], 'guns': {'Cannon': [1, 0]}},
+    # Guided stores: the gunner's (WeaponSeat), and the pilot's too so the store keys work from both seats (owner).
+    'crew': {'unguided': [0], 'guided': [1, 0], 'guns': {'Cannon': [1, 0]}},
     # NPPU-28: ±110° azimuth (Wikipedia, Mil Mi-28), +13° / -40° elevation (the figure given for its sight)
     'gun': {'TurretYawRange': [-110, 110], 'TurretPitchRange': [-40, 13], 'TurretTurnSpeed': [39, 52]},
     'slots': [

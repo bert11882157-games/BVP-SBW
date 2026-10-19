@@ -5,8 +5,9 @@ _OUT = _ALL + ['tow_x2', 'tow2_x2', 'tow_x4', 'tow2_x4']
 SPEC = {
     'wt': 'ah_1f', 'payload': 1450, 'weapon_seat': 1,
     # The gunner aims the M197 turret and guides the TOWs through his telescopic sight unit; the pilot fires the rockets
-    # and fires the M197 with the turret stowed straight ahead. The gunner can fire the wing rockets as well.
-    'crew': {'unguided': [0, 1], 'guided': [1], 'guns': {'PassengerGun1': [1, 0]}},
+    # and fires the M197, the turret stowed straight ahead while he alone fires it. The gunner can fire the wing rockets as well.
+    # Guided stores: the gunner's (WeaponSeat), and the pilot's too so the store keys work from both seats (owner).
+    'crew': {'unguided': [0, 1], 'guided': [1, 0], 'guns': {'PassengerGun1': [1, 0]}},
     # M97A1 turret: 200° of azimuth (±100°) and 60° of elevation (+10° / -50°) (FAS, M197 20mm Gun)
     'gun': {'PassengerWeaponStationYawRange': [-100, 100], 'PassengerWeaponStationPitchRange': [-50, 10]},
     'slots': [

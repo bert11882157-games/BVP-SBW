@@ -41,26 +41,35 @@ keys in a spec's `gun` map and the armament documents; it leaves attachments, se
 
 | Munitions | Guidance | Who fires |
 | --- | --- | --- |
-| AGM-114K/B Hellfire, APKWS | Laser, designated by the gunner's sight | Gunner |
-| TOW / TOW-2, HOT 3, 9M114 Shturm, 9M120 Ataka, 9M17 Falanga, 9K121 Vikhr | SACLOS, flown to the gunner's crosshair | Gunner |
-| FIM-92 Stinger (ATAS), 9K38 Igla, R-60 / R-60M, PARS 3 LR (Trigat) | Infrared, locked before launch | Gunner |
+| AGM-114K/B Hellfire, APKWS | Laser, designated by the firing crew member's sight | Gunner (pilot too where `crew` lists him) |
+| TOW / TOW-2, HOT 3, 9M114 Shturm, 9M120 Ataka, 9M17 Falanga, 9K121 Vikhr | SACLOS, flown to the firing crew member's crosshair | Gunner (pilot too where `crew` lists him) |
+| FIM-92 Stinger (ATAS), 9K38 Igla, R-60 / R-60M, PARS 3 LR (Trigat) | Infrared, locked before launch by the seat that has it selected | Gunner (pilot too where `crew` lists him) |
 | Hydra, FFAR, S-5, S-8, S-13, S-24, gun pods, bombs | Unguided | Pilot |
 
 The table gives the default. A spec's `crew` map overrides it per helicopter:
 `{'unguided': [seats], 'guided': [seats], 'guns': {gun: [owner, *extra seats]}}`. The first guided seat is the
 `WeaponSeat` (it must equal `weapon_seat`); any further guided seats are written as `WeaponSeats`. A shared gun is one
-physical weapon: it keeps one magazine, the scheduler lets only one seat drive it at a time, and when the pilot fires
-it while the gunner is not steering, the mount stows to its forward boresight.
+physical weapon: it keeps one magazine and the scheduler lets only one seat drive it at a time. The movable mount
+follows the gunner's sight whatever either crew member has selected, like a ground vehicle turret; it stows to its
+forward boresight only while the gunner seat is empty, or while the pilot is firing the gun and the gunner is not (the
+pilot's burst goes forward, and the gun goes back to the gunner's sight when he lets go).
+
+Every guided seat has the fixed-wing store keys (I loadout view, L fire store, ] cycle, middle mouse designate); only
+the pilot edits the loadout. Gun pods appear as one selectable group on the pilot's seat and on any other seat that
+lists all of their channels (AH-1G, Tiger gunner). Weapon selection is the same as on aircraft and ground vehicles:
+number key N selects the Nth weapon the seat can currently fire (empty pylon channels are skipped), on every seat, and
+the mouse wheel cycles the same list. `build.py` also drops `WeaponPairs` entries (HUD primary/secondary metadata)
+that name a weapon the vehicle or that seat no longer has.
 
 | Helicopter | Unguided | Guided | Shared gun | Basis |
 | --- | --- | --- | --- | --- |
 | AH-64D | pilot, gunner | gunner, pilot | M230 | Either crew member can slave the gun to his helmet and fire any weapon (Wikipedia, Boeing AH-64 Apache) |
-| AH-1F | pilot, gunner | gunner | M197 | The pilot fires the turret gun stowed forward; the gunner has the TOW sight |
+| AH-1F | pilot, gunner | gunner, pilot | M197 | The pilot fires the turret gun stowed forward; the gunner has the TOW sight |
 | AH-1G | pilot, gunner | pilot | none | The pilot fires the wing stores; the gunner could also release them |
-| Tiger UHT | pilot, gunner | gunner | none | Gunner-operated sight for HOT/PARS; either seat fires the rockets |
-| Mi-24V | pilot | gunner | 9A624 / YakB | The pilot can fire the nose gun locked forward; the operator aims it (VSPU-24) |
-| Mi-24A, Mi-24D | pilot | gunner | A-12.7 / YakB | As the Mi-24V |
-| Mi-28N | pilot | gunner | 2A42 | The WSO aims the gun; the pilot fires it fixed forward |
+| Tiger UHT | pilot, gunner | gunner, pilot | none | Gunner-operated sight for HOT/PARS; either seat fires the rockets |
+| Mi-24V | pilot | gunner, pilot | 9A624 / YakB | The pilot can fire the nose gun locked forward; the operator aims it (VSPU-24) |
+| Mi-24A, Mi-24D | pilot | gunner, pilot | A-12.7 / YakB | As the Mi-24V |
+| Mi-28N | pilot | gunner, pilot | 2A42 | The WSO aims the gun; the pilot fires it fixed forward |
 
 Missiles leave the launcher one at a time, and each launcher shows its remaining rounds. Rocket and gun pods fire
 from their own tube mouths or muzzles through one native channel per pod, so the left and right pods alternate.

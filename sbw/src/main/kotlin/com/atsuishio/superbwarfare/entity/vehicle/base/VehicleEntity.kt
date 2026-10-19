@@ -1783,12 +1783,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         }
 
         val currentIndex = vehicleWeaponRuntime.resolvedPrimaryIndex(seatIndex, candidates)
-        val typeIndex = if (seatIndex == 0 &&
-            com.atsuishio.superbwarfare.api.aircraft.AircraftArmamentManager.definition(this) != null)
-            candidates.getOrNull(value.coerceIn(0, candidates.lastIndex))
-        else candidates.firstOrNull { it == value }
-            ?: candidates.getOrNull(value.coerceIn(0, candidates.lastIndex))
-        if (typeIndex == null) return
+        val typeIndex = weaponForSelectionKey(candidates, value) ?: return
         if (typeIndex == currentIndex) return
 
         val weapon = getGunData(seatIndex, typeIndex) ?: return
@@ -1801,6 +1796,17 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         if (sound != null) {
             this.level().playSound(null, this, sound, this.soundSource, 1f, 1f)
         }
+    }
+
+    /**
+     * The weapon a selection (number) key picks: key N selects the Nth weapon the seat can currently select, on every
+     * seat of every vehicle, so keys never land on an empty pylon channel and mean the same thing to pilot and gunner.
+     * Where every listed weapon is selectable (ground vehicles) this is the raw list index, as before. Keys past the
+     * end select the last weapon. The client uses this to decide whether a press changes anything.
+     */
+    fun selectionKeyWeaponIndex(seatIndex: Int, key: Int): Int? {
+        if (seatIndex < 0 || seatIndex >= this.maxPassengers) return null
+        return weaponForSelectionKey(vehicleWeaponRuntime.validWeaponIndices(seatIndex), key)
     }
 
     internal fun withdrawWeaponOnSelectionChange(seatIndex: Int, weaponIndex: Int) {
@@ -3717,8 +3723,9 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
     /**
      * Opt-in stowage: while true the channel's gun is held at its neutral (boresight forward) position by the server
      * aim tick instead of following anyone, and the native direct-angle servo leaves it alone. A two-seat
-     * helicopter stows its turret when no gunner steers it, so a pilot firing the gunner's gun shoots forward.
-     * Must depend only on state both sides know (occupants, synchronized weapon selection).
+     * helicopter stows its turret while the gunner seat is empty, or while the pilot alone fires the gunner's gun,
+     * so the pilot's rounds go forward. Must depend only on state both sides know (occupants, synchronized weapon
+     * selection, the synchronized weapon schedule snapshot).
      */
     open fun isVehicleAimChannelStowed(channel: VehicleAimChannel): Boolean = false
 

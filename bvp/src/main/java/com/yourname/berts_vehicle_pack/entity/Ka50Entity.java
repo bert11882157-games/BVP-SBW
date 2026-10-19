@@ -10,7 +10,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 
 public class Ka50Entity extends Mi24VEntity {
-    private static final int AUTOCANNON_WEAPON_INDEX = 1;
     private static final float AUTOCANNON_SOFT_YAW_LIMIT_DEGREES = 6.0F;
     private static final float AUTOCANNON_SOFT_PITCH_LIMIT_DEGREES = 5.0F;
     private VehicleAimProfile cameraLockedAutocannonAimProfile;
@@ -23,17 +22,6 @@ public class Ka50Entity extends Mi24VEntity {
     @Override
     protected int autocannonSeatIndex() {
         return 0;
-    }
-
-    @Override
-    protected int autocannonWeaponIndex() {
-        return AUTOCANNON_WEAPON_INDEX;
-    }
-
-    /** Single seat: the pilot aims the cannon himself (see createVehicleAimProfile). */
-    @Override
-    protected boolean pilotFiresTurretStowed() {
-        return false;
     }
 
     @Override
@@ -68,7 +56,7 @@ public class Ka50Entity extends Mi24VEntity {
                     .defaultMode(VehicleAimMode.PLAYER_LOOK_AIM)
                     .build();
         }
-        return selectedWeaponIndex == autocannonWeaponIndex()
+        return isAutocannonSeatWeapon(seatIndex, selectedWeaponIndex)
                 ? this.cameraLockedAutocannonAimProfile
                 : this.inactiveAutocannonAimProfile;
     }

@@ -39,12 +39,14 @@ object AircraftGunPodGroups {
     }
     /** Equipment identity includes empty feeds; filtering live ammo happens only at event admission. */
     fun bank(selection: VehicleWeaponSelection): List<String>? {
-        if (selection.seatIndex != 0) return null
         val vehicle = selection.vehicle
         val definition = AircraftArmamentManager.definition(vehicle) ?: return null
+        // a pod alias fires its pods from whichever seat selected it (AircraftStoreWeapons.ids offers it); the
+        // built-in gun bank stays the pilot's
+        if (isAlias(selection.weaponName)) return members(vehicle, selection.weaponName)
+        if (selection.seatIndex != 0) return null
         val builtIn = definition.getAsJsonArray("BuiltInWeapons")?.map { it.asString } ?: emptyList()
-        return if (isAlias(selection.weaponName)) members(vehicle, selection.weaponName)
-        else members(selection.weaponName, builtIn, emptyList())
+        return members(selection.weaponName, builtIn, emptyList())
     }
     internal fun members(trigger: String, builtIn: List<String>, pods: List<String>): List<String>? = when {
         trigger == GROUP -> pods.distinct()

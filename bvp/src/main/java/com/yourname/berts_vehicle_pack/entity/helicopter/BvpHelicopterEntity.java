@@ -1,7 +1,6 @@
 package com.yourname.berts_vehicle_pack.entity.helicopter;
 
 import com.atsuishio.superbwarfare.api.vehicle.aim.VehicleAimChannel;
-import com.atsuishio.superbwarfare.api.vehicle.aim.VehicleAimProfile;
 import com.atsuishio.superbwarfare.api.vehicle.camera.VehicleCameraMode;
 import com.atsuishio.superbwarfare.api.vehicle.flight.VehicleFlightInputContext;
 import com.atsuishio.superbwarfare.api.vehicle.flight.VehicleFlightInstrumentSnapshot;
@@ -129,13 +128,11 @@ public abstract class BvpHelicopterEntity extends ArmoredVehicleEntity implement
     }
 
     /**
-     * True where the pilot fires the gunner's movable gun locked straight ahead (AH-1, Mi-24, Mi-28): selecting the
-     * gun in the pilot's seat stows it. False where the pilot fires it wherever the gunner's sight points (AH-64).
+     * The gunner's movable gun follows the gunner's sight whatever either crew member has selected, as a ground
+     * vehicle turret does. It is held at boresight (straight ahead) only while no one sits at the gunner's sight, or
+     * while the pilot is firing the shared gun and the gunner is not, so the pilot's rounds go forward. Firing is read
+     * from the synchronized weapon schedule, which both sides know.
      */
-    protected boolean pilotFiresTurretStowed() {
-        return false;
-    }
-
     @Override
     public boolean isVehicleAimChannelStowed(VehicleAimChannel channel) {
         boolean turret = channel == VehicleAimChannel.TURRET;
@@ -143,26 +140,31 @@ public abstract class BvpHelicopterEntity extends ArmoredVehicleEntity implement
         if (!present) return false;
         int seat = turret ? getTurretControllerIndex() : getPassengerWeaponStationControllerIndex();
         if (seat < 0) return false;
-        Entity controller = getNthEntity(seat);
-        boolean steers = false;
-        if (controller instanceof Player) {
-            VehicleAimProfile profile = resolveVehicleAimProfile(seat, getSelectedWeapon(seat));
-            steers = profile != null && profile.getChannel() == channel;
-        }
-        boolean pilotStows = seat != 0 && pilotFiresTurretStowed();
-        return HelicopterGunStowPolicy.stowed(true, seat, controller != null, controller instanceof Player, steers,
-                pilotStows, pilotStows && pilotHoldsGunOf(channel));
+        boolean controllerPresent = getNthEntity(seat) != null;
+        boolean pilotFiring = seat != 0 && getNthEntity(0) != null && firesGunOf(0, channel);
+        return HelicopterGunStowPolicy.stowed(true, seat, controllerPresent, pilotFiring,
+                pilotFiring && controllerPresent && firesGunOf(seat, channel));
     }
 
-    private boolean pilotHoldsGunOf(VehicleAimChannel channel) {
-        if (!(getNthEntity(0) instanceof Player)) return false;
-        String name = getGunName(0, getSelectedWeapon(0));
+    /** Whether the seat's trigger is held on a selected weapon (either slot) that fires through the channel's gun. */
+    private boolean firesGunOf(int seat, VehicleAimChannel channel) {
+        int primary = getSelectedWeapon(seat);
+        Integer secondary = getSecondaryWeaponIndex(seat);
+        return firesGunOf(seat, primary, channel) || secondary != null && firesGunOf(seat, secondary, channel);
+    }
+
+    private boolean firesGunOf(int seat, int weaponIndex, VehicleAimChannel channel) {
+        if (weaponIndex < 0) return false;
+        String name = getGunName(seat, weaponIndex);
         GunData data = name == null ? null : getGunData(name);
         if (data == null || data.get(GunProp.SHOOT_POS) == null) return false;
         String transform = data.get(GunProp.SHOOT_POS).getTransform();
-        return channel == VehicleAimChannel.TURRET
+        boolean throughChannel = channel == VehicleAimChannel.TURRET
                 ? HelicopterGunStowPolicy.firesThroughTurret(transform)
                 : HelicopterGunStowPolicy.firesThroughStation(transform);
+        if (!throughChannel) return false;
+        var snapshot = getWeaponScheduleSnapshot(seat, weaponIndex);
+        return snapshot != null && snapshot.getTriggerHeld();
     }
 
     @Override

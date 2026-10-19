@@ -28,7 +28,8 @@ channels, 'guided' the seats that operate the released guided stores (the armame
 there are several), 'guns' maps a built-in gun to its seats, its own (turret controlling) seat first; the extra seats
 share the same gun (one GunData, one belt) and get it after their store channels. 'gun' sets the movable gun's limits
 and rates (TurretYawRange / PassengerWeaponStationPitchRange ...) in the vehicle file. Nothing else in the vehicle file
-is touched, so the cockpit driver's attachments, seats' eyes and cameras stay as they are.
+is touched, so the cockpit driver's attachments, seats' eyes and cameras stay as they are, except that WeaponPairs
+entries naming a weapon the vehicle or that seat no longer has are dropped.
 """
 import copy, json, math, os, sys
 import numpy as np
@@ -497,6 +498,7 @@ def build(vid, spec):
         for i in seats:
             if gun not in veh['Seats'][i]['Weapons']:
                 veh['Seats'][i]['Weapons'].append(gun)
+    prune_weapon_pairs(veh)
     for key, value in spec.get('gun', {}).items():
         veh[key] = copy.deepcopy(value)
     builtin = [w for w in arm.get('BuiltInWeapons', []) if w not in retire and w in veh['Weapons']]
@@ -510,6 +512,24 @@ def build(vid, spec):
     write_json(arm_path, doc)
     write_json(veh_path, veh)
     strip_baked(vid, spec.get('hull_remove', []))
+
+
+def prune_weapon_pairs(veh):
+    """drops the WeaponPairs entries (HUD primary/secondary metadata) that name a weapon the vehicle or that seat no
+    longer has: the earlier hand-made pairs (PilotMissile, S13PodInner ...) predate the slot channels"""
+    if 'WeaponPairs' not in veh:
+        return
+    seats = veh.get('Seats', [])
+
+    def live(pair):
+        seat = pair.get('Seat', -1)
+        listed = seats[seat].get('Weapons', []) if 0 <= seat < len(seats) else []
+        return all(pair[k] in veh['Weapons'] and pair[k] in listed for k in ('Primary', 'Secondary') if pair.get(k))
+    kept = [p for p in veh['WeaponPairs'] if live(p)]
+    if kept:
+        veh['WeaponPairs'] = kept
+    else:
+        veh.pop('WeaponPairs')
 
 
 def crew_of(spec, veh):
