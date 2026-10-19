@@ -974,6 +974,98 @@
         ],
         "Diameter": 0.0413,
         "Depth": 0.03
+      },
+      {
+        "Seat": 0,
+        "Kind": "ANNUNCIATOR",
+        "Center": [
+          -0.22182,
+          1.6587,
+          3.98002
+        ],
+        "Normal": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "Up": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "Diameter": 0.0911,
+        "Width": 0.0911,
+        "Height": 0.0926,
+        "Depth": 0.02,
+        "Columns": 3,
+        "Lamps": [
+          {
+            "Text": "FUEL|LOW",
+            "Condition": "LOW_FUEL",
+            "Colour": "amber"
+          },
+          {
+            "Text": "HYD|PRESS",
+            "Condition": "NONE",
+            "Colour": "amber"
+          },
+          {
+            "Text": "GEN",
+            "Condition": "NONE",
+            "Colour": "amber"
+          },
+          {
+            "Text": "OXY|LOW",
+            "Condition": "NONE",
+            "Colour": "amber"
+          },
+          {
+            "Text": "CANOPY",
+            "Condition": "NONE",
+            "Colour": "red"
+          },
+          {
+            "Text": "ENG|OUT",
+            "Condition": "ENGINE_OUT",
+            "Colour": "red"
+          },
+          {
+            "Text": "AMMO|LOW",
+            "Condition": "AMMO_LOW",
+            "Colour": "amber"
+          },
+          {
+            "Text": "DAMAGE",
+            "Condition": "DAMAGE",
+            "Colour": "amber"
+          },
+          {
+            "Text": "A/B",
+            "Condition": "AFTERBURNER",
+            "Colour": "green"
+          }
+        ]
+      },
+      {
+        "Seat": 0,
+        "Kind": "FILLER_OXYGEN",
+        "Center": [
+          -0.20349,
+          1.6607,
+          3.88719
+        ],
+        "Normal": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "Up": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "Diameter": 0.047,
+        "Depth": 0.03
       }
     ]
   },

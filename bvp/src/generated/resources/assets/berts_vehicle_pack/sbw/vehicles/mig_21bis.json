@@ -862,6 +862,98 @@
         ],
         "Diameter": 0.0459,
         "Depth": 0.03
+      },
+      {
+        "Seat": 0,
+        "Kind": "ANNUNCIATOR",
+        "Center": [
+          -0.30711,
+          1.91601,
+          3.31305
+        ],
+        "Normal": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "Up": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "Diameter": 0.1344,
+        "Width": 0.1344,
+        "Height": 0.1034,
+        "Depth": 0.02,
+        "Columns": 3,
+        "Lamps": [
+          {
+            "Text": "ОСТАТОК|ТОПЛ",
+            "Condition": "LOW_FUEL",
+            "Colour": "amber"
+          },
+          {
+            "Text": "ГИДРО",
+            "Condition": "NONE",
+            "Colour": "amber"
+          },
+          {
+            "Text": "ГЕНЕР",
+            "Condition": "NONE",
+            "Colour": "amber"
+          },
+          {
+            "Text": "КИСЛОР",
+            "Condition": "NONE",
+            "Colour": "amber"
+          },
+          {
+            "Text": "ФОНАРЬ",
+            "Condition": "NONE",
+            "Colour": "red"
+          },
+          {
+            "Text": "ОТКАЗ|ДВИГ",
+            "Condition": "ENGINE_OUT",
+            "Colour": "red"
+          },
+          {
+            "Text": "МАЛО|БОЕЗАП",
+            "Condition": "AMMO_LOW",
+            "Colour": "amber"
+          },
+          {
+            "Text": "ОТКАЗ",
+            "Condition": "DAMAGE",
+            "Colour": "amber"
+          },
+          {
+            "Text": "ФОРСАЖ",
+            "Condition": "AFTERBURNER",
+            "Colour": "green"
+          }
+        ]
+      },
+      {
+        "Seat": 0,
+        "Kind": "FILLER_OXYGEN",
+        "Center": [
+          -0.27018,
+          1.91801,
+          3.21055
+        ],
+        "Normal": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "Up": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "Diameter": 0.0522,
+        "Depth": 0.03
       }
     ]
   },

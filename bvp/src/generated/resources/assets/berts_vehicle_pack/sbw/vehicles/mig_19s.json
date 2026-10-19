@@ -1001,6 +1001,98 @@
         ],
         "Diameter": 0.0368,
         "Depth": 0.03
+      },
+      {
+        "Seat": 0,
+        "Kind": "ANNUNCIATOR",
+        "Center": [
+          -0.25225,
+          1.66665,
+          2.69214
+        ],
+        "Normal": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "Up": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "Diameter": 0.1094,
+        "Width": 0.1094,
+        "Height": 0.0812,
+        "Depth": 0.02,
+        "Columns": 3,
+        "Lamps": [
+          {
+            "Text": "ОСТАТОК|ТОПЛ",
+            "Condition": "LOW_FUEL",
+            "Colour": "amber"
+          },
+          {
+            "Text": "ГИДРО",
+            "Condition": "NONE",
+            "Colour": "amber"
+          },
+          {
+            "Text": "ГЕНЕР",
+            "Condition": "NONE",
+            "Colour": "amber"
+          },
+          {
+            "Text": "КИСЛОР",
+            "Condition": "NONE",
+            "Colour": "amber"
+          },
+          {
+            "Text": "ФОНАРЬ",
+            "Condition": "NONE",
+            "Colour": "red"
+          },
+          {
+            "Text": "ОТКАЗ|ДВИГ",
+            "Condition": "ENGINE_OUT",
+            "Colour": "red"
+          },
+          {
+            "Text": "МАЛО|БОЕЗАП",
+            "Condition": "AMMO_LOW",
+            "Colour": "amber"
+          },
+          {
+            "Text": "ОТКАЗ",
+            "Condition": "DAMAGE",
+            "Colour": "amber"
+          },
+          {
+            "Text": "ФОРСАЖ",
+            "Condition": "AFTERBURNER",
+            "Colour": "green"
+          }
+        ]
+      },
+      {
+        "Seat": 0,
+        "Kind": "FILLER_OXYGEN",
+        "Center": [
+          -0.22178,
+          1.66865,
+          2.60929
+        ],
+        "Normal": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "Up": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "Diameter": 0.0418,
+        "Depth": 0.03
       }
     ]
   },
