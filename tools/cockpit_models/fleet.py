@@ -227,7 +227,7 @@ def apply(vid, dry=False, stage=None, state=None):
     vol = L.loader_volume(pm)
     report = (f'{vid}: {era}, {tub.describe()}; removed {removed} old faces from {sorted(count)}, cut {cut}; '
               f'{len(pm["polys"])} new faces in {bone["name"]} (volume {vol:+.0f}; clipped to the skin: '
-              f'{mesh.clipped[0]} vertices moved, {mesh.clipped[1]} faces dropped), {len(gauges)} gauges, '
+              f'{mesh.clipped[0]} vertices moved, {mesh.clipped[1]} faces dropped; {mesh.roofed} deck plates), {len(gauges)} gauges, '
               f'{len(displays)} displays, {sight_glass} old glass triangles dropped, HUD {"yes" if hud else "no"}, stick {"rigged" if rigged else "fixed"}'
               f'{" side" if side else ""}; colour error up to {sw.worst:.0f}')
     if not dry:

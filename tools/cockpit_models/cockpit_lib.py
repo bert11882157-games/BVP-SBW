@@ -1016,8 +1016,8 @@ def build(ac, tub, era_name, pal_name, sw, hud=None, gunsight=True, stick_foot=N
         ctx['console'][side] = (xi, xw, zb, zf_i)        # the console panels: detail()
         ctx['wall_z'][side] = zw
         # sill cap (canopy rail ledge) along the wall top
-        m.box([xw - side * 0.015, t.sill + 0.01, (t.back_z + zf_o) / 2], (X, Y, Z),
-              (0.03, 0.012, (zf_o - t.back_z) / 2), c['dgrey'])
+        m.box([xw - side * 0.035, t.sill + 0.008, (t.back_z + zf_o) / 2], (X, Y, Z),
+              (0.03, 0.010, (zf_o - t.back_z) / 2), c['dgrey'])
     m.flat([[E[0] - xin, t.floor_y, t.back_z], [E[0] + xin, t.floor_y, t.back_z],
             [E[0] + xin, t.floor_y, t.front_z], [E[0] - xin, t.floor_y, t.front_z]], c['floor'], normal=[0, 1, 0])
     m.flat([[xlow[-1], t.floor_y, t.back_z], [xlow[1], t.floor_y, t.back_z], [E[0] + t.W, t.console_y, t.back_z],
@@ -1306,10 +1306,10 @@ def structure(m, ac, t, era, c, ctx):
               c['console'])
         # canopy sill fittings: a jettison handle (yellow) on the left, the lock lever on the right
         if side > 0:
-            m.box([xw - side * 0.015, t.sill + 0.03, t.back_z + 0.12 * s], (X, Y, Z), (0.012, 0.010 * s, 0.018 * s), c['yellow'])
-            m.box([xw - side * 0.015, t.sill + 0.03, t.back_z + 0.12 * s], (X, Y, Z), (0.013, 0.003 * s, 0.006 * s), c['black'])
+            m.box([xw - side * 0.035, t.sill + 0.026, t.back_z + 0.12 * s], (X, Y, Z), (0.012, 0.010 * s, 0.018 * s), c['yellow'])
+            m.box([xw - side * 0.035, t.sill + 0.026, t.back_z + 0.12 * s], (X, Y, Z), (0.013, 0.003 * s, 0.006 * s), c['black'])
         else:
-            m.box([xw - side * 0.015, t.sill + 0.028, t.back_z + 0.10 * s], (X, Y, Z), (0.006, 0.006, 0.030 * s), c['metal'])
+            m.box([xw - side * 0.035, t.sill + 0.024, t.back_z + 0.10 * s], (X, Y, Z), (0.006, 0.006, 0.030 * s), c['metal'])
     # the panel's chin lip under each facet
     for f in ctx['facets']:
         a0, a1 = f.extent()
@@ -1425,13 +1425,67 @@ def footprint_w(ac, E, z, band=0.05):
     return float(np.abs(low[:, 0] - E[0]).max())
 
 
+def cover_tris(ac, extra=()):
+    """what covers the cockpit from above: the skin, the canopy frames, and [extra] faces (the deck plates)"""
+    ac.skin_x(0.0, 0.0, 0.0)                                   # builds the skin triangles
+    cover = [ac._skin]
+    for b in ac.bones:
+        pm = b.get('poly_mesh')
+        if not b['name'].endswith('__canopy') or not pm or not pm.get('polys'):
+            continue
+        P = np.array(pm['positions'], float) * np.array([1, 1, -1]) / 16.0
+        for poly in pm['polys']:
+            V = P[[v[0] for v in poly]]
+            for k in range(1, len(V) - 1):
+                cover.append(V[[0, k, k + 1]][None])
+    for V in extra:
+        V = np.asarray(V, float)
+        for k in range(1, len(V) - 1):
+            cover.append(V[[0, k, k + 1]][None])
+    return np.concatenate(cover)
+
+
+def roof(m, ac, t, c, step=0.06):
+    """Deck plates at sill height over every part of the tub's footprint that neither the canopy glass nor the
+    skin covers from above (the decking the old interior took with it, the fairing behind a canopy narrower than
+    the cockpit), so nothing inside shows from outside and the clip pass has a cover to work to."""
+    E, s = t.E, t.s
+    skin = cover_tris(ac)
+    y0 = t.sill - 0.02
+    y = t.sill + 0.005
+    xs = np.arange(E[0] - t.W, E[0] + t.W + 1e-6, step)
+    zs = np.arange(t.back_z - 0.04, t.Z + 0.3 * s, step)
+    m.roof = []
+    for z in zs:
+        for x in xs:
+            cx, cz = x + step / 2, z + step / 2
+            if cover_y(ac.glass, cx, cz, y0) is not None or cover_y(skin, cx, cz, y0) is not None:
+                continue
+            # the plate goes at the highest level, from the sill down to the console, where the skin is at least
+            # as wide as the cell (a fuselage that narrows toward the sill gets a stepped deck inside it)
+            yp = None
+            for yy in np.arange(y, t.console_y, -0.02):
+                d = ac.skin_x(yy, cz, E[0])[0 if cx > E[0] else 1]
+                if np.isfinite(d) and d >= abs(cx - E[0]) + 0.004:
+                    yp = yy - 0.004
+                    break
+            if yp is None:
+                continue                                        # outside the aircraft altogether
+            x0, x1 = max(x, E[0] - t.W), min(x + step, E[0] + t.W)
+            if x1 - x0 < 0.005:
+                continue
+            quad = [[x0, yp, z], [x1, yp, z], [x1, yp, z + step], [x0, yp, z + step]]
+            m.flat(quad, c['wall'], normal=[0, 1, 0])
+            m.roof.append(quad)
+    return len(m.roof)
+
+
 def clip_to_skin(m, ac, t):
     """Nothing of the cockpit shows outside the aircraft: a vertex beyond the side skin is brought in behind it, a
     vertex that neither the canopy glass nor the skin covers from above is lowered until something does, and a
     face with a vertex that cannot be brought in is dropped. -> (vertices moved, faces dropped)"""
     E = t.E
-    ac.skin_x(0.0, 0.0, 0.0)                                   # builds the skin triangles
-    skin = ac._skin
+    skin = cover_tris(ac, getattr(m, 'roof', []))
     cache = {}
 
     def fix(p):
@@ -1441,17 +1495,27 @@ def clip_to_skin(m, ac, t):
         q = np.array(p, float)
         moved = False
         d = ac.skin_x(q[1], q[2], E[0])[0 if q[0] > E[0] else 1]
-        if np.isfinite(d) and abs(q[0] - E[0]) > d - 0.004:
+        if np.isfinite(d) and abs(q[0] - E[0]) > d + 0.002:        # beyond the side skin
             q[0] = E[0] + np.sign(q[0] - E[0]) * max(0.0, d - 0.004)
             moved = True
         if q[1] > t.floor_y + 0.05:
-            for _ in range(25):
-                if cover_y(ac.glass, q[0], q[2], q[1]) is not None or cover_y(skin, q[0], q[2], q[1]) is not None:
-                    break
-                q[1] -= 0.01
+            def covered(v):
+                return cover_y(ac.glass, v[0], v[2], v[1]) is not None or cover_y(skin, v[0], v[2], v[1]) is not None
+            if not covered(q):
                 moved = True
-            else:
-                q = None
+                y_start = q[1]
+                for _ in range(25):                                # down under the cover
+                    q[1] -= 0.01
+                    if covered(q):
+                        break
+                else:
+                    q[1] = y_start
+                    for _ in range(20):                            # or in toward the centre line (a seat's head box
+                        q[0] -= np.sign(q[0] - E[0]) * 0.01        # beside a narrow canopy tail)
+                        if covered(q) or abs(q[0] - E[0]) < 0.01:
+                            break
+                    else:
+                        q = None
         cache[key] = (q, moved)
         return cache[key]
 
@@ -1478,6 +1542,7 @@ def detail(m, ac, t, era, c, ctx, gauges, pal_name):
     structure(m, ac, t, era, c, ctx)
     seat_furniture(m, ac, t, era, c)
     rear_deck(m, ac, t, era, c)
+    m.roofed = roof(m, ac, t, c)
 
 
 # ---------------------------------------------------------------- removing the old interior
