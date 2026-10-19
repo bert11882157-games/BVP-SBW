@@ -42,9 +42,21 @@ TEX_DIR = os.path.join(GEN, 'assets/berts_vehicle_pack/textures/entity')
 
 
 def texture_path(vid):
-    """the aircraft's texture; BVP_TEX_DIR overrides the repository folder (where Git LFS files are pointers)"""
+    """the aircraft's texture: the repository's when it is a real file (a painted cockpit atlas lives there), else
+    BVP_TEX_DIR's copy (the repository's Git LFS files are pointers without a checkout)"""
+    repo = os.path.join(TEX_DIR, vid + '.png')
     d = os.environ.get('BVP_TEX_DIR')
-    return os.path.join(d, vid + '.png') if d else os.path.join(TEX_DIR, vid + '.png')
+    if d and not is_png(repo):
+        return os.path.join(d, vid + '.png')
+    return repo
+
+
+def is_png(path):
+    try:
+        with open(path, 'rb') as f:
+            return f.read(8) == b'\x89PNG\r\n\x1a\n'
+    except OSError:
+        return False
 
 
 def r5(v):

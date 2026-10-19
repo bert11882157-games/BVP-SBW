@@ -17,6 +17,18 @@ ASSET = os.path.join(GEN, 'assets/berts_vehicle_pack/sbw/vehicles')
 DATA = os.path.join(GEN, 'data/berts_vehicle_pack/sbw/vehicles')
 TEX = os.environ.get('BVP_TEX_DIR') or os.path.join(GEN, 'assets/berts_vehicle_pack/textures/entity')
 LIGHT = np.array([0.25, 0.9, 0.35]); LIGHT /= np.linalg.norm(LIGHT)
+REPO_TEX = os.path.join(GEN, 'assets/berts_vehicle_pack/textures/entity')
+
+
+def texture_path(vid):
+    """the repository's texture when it is a real file (painted cockpit atlas), else BVP_TEX_DIR's"""
+    repo = os.path.join(REPO_TEX, vid + '.png')
+    try:
+        with open(repo, 'rb') as f:
+            real = f.read(8) == b'\x89PNG\r\n\x1a\n'
+    except OSError:
+        real = False
+    return repo if real or not os.environ.get('BVP_TEX_DIR') else os.path.join(TEX, vid + '.png')
 
 
 def model_triangles(geo, skip=()):
@@ -249,7 +261,7 @@ def render(vid, out, eye=None, yaw=0.0, pitch=-12.0, fov=80.0, size=(1100, 760),
     if eye is None:
         seat = data['Seats'][0]; name = seat['CameraPos'].get('EyeAttachment')
         eye = data['Attachments'][name]['Position']
-    tex = np.asarray(Image.open(os.path.join(TEX, vid + '.png')).convert('RGBA')).astype(np.float32) / 255.0
+    tex = np.asarray(Image.open(texture_path(vid)).convert('RGBA')).astype(np.float32) / 255.0
     cam = Camera(eye, yaw, pitch, fov, *size)
     r = Raster(cam)
     tris, uvs, _, _ = model_triangles(geo, skip)

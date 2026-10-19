@@ -29,6 +29,7 @@ import numpy as np
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import cockpit_lib as L  # noqa: E402
+import structure as ST  # noqa: E402
 
 FLEET = json.load(open(os.path.join(HERE, 'fleet.json')))
 PRESETS = json.load(open(os.path.join(HERE, '..', 'cockpit_layout', 'presets.json')))['aircraft']
@@ -36,6 +37,7 @@ MARK = 'modelled_cockpit'          # glass triangles this tool added are tagged 
 
 
 FRAMES_DIR = os.path.join(HERE, '..', 'canopy_panels', 'frames')
+PLATES_DIR = os.path.join(HERE, 'plates')     # the structures' plates, for the instrument layouts and the previews
 
 
 def stick_bones(ac):
@@ -171,9 +173,17 @@ def apply(vid, dry=False, stage=None, state=None):
         foot = np.array([E[0], E[1] - 0.92 * s, E[2] + 0.44 * s])
 
     sw = L.Swatches(L.texture_path(vid))
-    mesh, stick, gauges, displays, glass, hud = L.build(ac, tub, era, spec.get('palette', 'nato'), sw,
-                                                        hud=spec.get('hud'), gunsight=spec.get('gunsight', True),
-                                                        stick_foot=foot, side_stick=bool(side))
+    plates, st_rep = None, ''
+    if ST.has(vid):
+        # the aircraft's own structure (structures/<vid>.py): stage 1 of the hand-built cockpits
+        mesh, stick, gauges, displays, glass, hud, st_foot, plates, st_rep = ST.build(vid, ac, tub, sw, spec,
+                                                                                      write_textures=not dry)
+        if st_foot is not None:
+            foot = np.array(st_foot, float)
+    else:
+        mesh, stick, gauges, displays, glass, hud = L.build(ac, tub, era, spec.get('palette', 'nato'), sw,
+                                                            hud=spec.get('hud'), gunsight=spec.get('gunsight', True),
+                                                            stick_foot=foot, side_stick=bool(side))
     if rigged:
         px = L.r5(foot * np.array([16.0, 16.0, -16.0]))
         for b in ac.bones:
@@ -231,11 +241,15 @@ def apply(vid, dry=False, stage=None, state=None):
               f'{len(pm["polys"])} new faces in {bone["name"]} (volume {vol:+.0f}; clipped to the skin: '
               f'{mesh.clipped[0]} vertices moved, {mesh.clipped[1]} faces dropped; {mesh.roofed} deck plates), {len(gauges)} gauges, '
               f'{len(displays)} displays, {sight_glass} old glass triangles dropped, HUD {"yes" if hud else "no"}, stick {"rigged" if rigged else "fixed"}'
-              f'{" side" if side else ""}; colour error up to {sw.worst:.0f}')
+              f'{" side" if side else ""}; colour error up to {sw.worst:.0f}' + (f'; structure: {st_rep}' if st_rep else ''))
     if not dry:
         with open(ac.geo_path, 'w') as f:
             json.dump(ac.geo, f, separators=(',', ':'))
         L.write_asset(ac.asset_path, ac.asset)
+        if plates is not None:
+            os.makedirs(PLATES_DIR, exist_ok=True)
+            json.dump({'vehicle': vid, 'seat': seat, 'eye': L.r5(E), 'plates': plates},
+                      open(os.path.join(PLATES_DIR, vid + '.json'), 'w'), indent=1)
     return ac, tub, report
 
 
