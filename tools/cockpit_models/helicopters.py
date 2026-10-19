@@ -506,10 +506,9 @@ def apply(vid, dry=False):
                               'Eye': L.r5(E)}
     else:
         a.pop('HeadUpDisplay', None)
-    if a.get('CanopyGlass'):
-        a['CanopyGlass']['Triangles'] = [round(float(v), 4) + 0.0 for v in ac.glass.reshape(-1)]
-    if glass:
-        L.add_glass(a, glass)
+    # No canopy glass for now (bert, 2026-10-19: original canopies, glass to be revisited later). The glass is still
+    # read above to measure the stations; the HUD picture draws on the combiner frame without a pane.
+    a.pop('CanopyGlass', None)
 
     vols = [L.loader_volume(b['poly_mesh']) for b in [ac.bone('cockpit')] + new_bones if b['poly_mesh']['polys']]
     report = (f'{vid}: ' + '; '.join(f"seat {st['seat']} {st['era']} {t.describe()}" for st, t in zip(stations, tubs)) +
