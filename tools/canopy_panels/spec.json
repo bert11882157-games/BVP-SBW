@@ -1,0 +1,851 @@
+{
+ "_comment": "Per-aircraft canopy construction (tools/canopy_panels/panels.py). windscreen.type: curved | flat3 (flat centre + flat quarter panels) | flat1 (flat plate, lofted sides) | integrated (one piece with the hood) | none; centre_frac = centre panel half-width as a share of the arch half-width, base_frac = base width share of the top, top_drop = panel top under the spine. hood.section: round | flatside | flattop (shoulder, tilt); hood.bows: bow stations as fractions from the arch (0) to the hood end (1). rear.type: fairing | glazed | taper. arch / hood_end: a z (blocks) or a fraction of the canopy length from the base. loft: {front, rear, halfwidth, spine, lip, ...} overrides the Loft envelope as in canopy_loft/loft.json. sources: the documents the layout follows. Research notes per aircraft: scratchpad canopy_research batch*.json (sources listed there).",
+ "a_10": {
+  "windscreen": {
+   "type": "flat3",
+   "rake": 40,
+   "centre_frac": 0.42
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "fairing"
+  }
+ },
+ "a_7d": {
+  "windscreen": {
+   "type": "flat1"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "fairing"
+  }
+ },
+ "eurofighter_typhoon": {
+  "windscreen": {
+   "type": "curved"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "fairing"
+  }
+ },
+ "f2h_2": {
+  "windscreen": {
+   "type": "flat1"
+  },
+  "hood": {
+   "section": "flatside",
+   "bows": [],
+   "shoulder": 0.6,
+   "tilt": 0.05
+  },
+  "rear": {
+   "type": "taper"
+  }
+ },
+ "f3h": {
+  "windscreen": {
+   "type": "flat1"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "fairing"
+  }
+ },
+ "f8f_1": {
+  "windscreen": {
+   "type": "flat3"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "taper"
+  }
+ },
+ "f9f_2": {
+  "windscreen": {
+   "type": "flat1"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "taper"
+  }
+ },
+ "f_100c": {
+  "windscreen": {
+   "type": "flat1"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "fairing"
+  }
+ },
+ "f_104g": {
+  "windscreen": {
+   "type": "flat3",
+   "rake": 28
+  },
+  "hood": {
+   "section": "flatside",
+   "bows": [],
+   "shoulder": 0.55,
+   "tilt": 0.1
+  },
+  "rear": {
+   "type": "taper"
+  }
+ },
+ "f_14a": {
+  "windscreen": {
+   "type": "flat1"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "fairing"
+  }
+ },
+ "f_14d": {
+  "windscreen": {
+   "type": "flat1"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "fairing"
+  }
+ },
+ "f_15c": {
+  "windscreen": {
+   "type": "curved"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "fairing"
+  }
+ },
+ "f_15e": {
+  "windscreen": {
+   "type": "curved"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "fairing"
+  }
+ },
+ "f_16b": {
+  "windscreen": {
+   "type": "integrated"
+  },
+  "hood": {
+   "section": "round",
+   "bows": [
+    0.55
+   ]
+  },
+  "rear": {
+   "type": "glazed"
+  }
+ },
+ "f_16c": {
+  "windscreen": {
+   "type": "integrated"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "glazed"
+  }
+ },
+ "f_4c": {
+  "windscreen": {
+   "type": "flat1"
+  },
+  "hood": {
+   "section": "round",
+   "bows": [
+    0.38,
+    0.55
+   ]
+  },
+  "rear": {
+   "type": "fairing"
+  }
+ },
+ "f_5a": {
+  "windscreen": {
+   "type": "curved"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "fairing"
+  }
+ },
+ "f_84f": {
+  "windscreen": {
+   "type": "flat1"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "fairing"
+  }
+ },
+ "f_86k": {
+  "windscreen": {
+   "type": "flat1"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "fairing"
+  }
+ },
+ "f_8h": {
+  "windscreen": {
+   "type": "flat1",
+   "rake": 40
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "fairing"
+  }
+ },
+ "fa_18e": {
+  "windscreen": {
+   "type": "curved"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "fairing"
+  }
+ },
+ "fiat_g_91": {
+  "windscreen": {
+   "type": "flat1"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "fairing"
+  }
+ },
+ "ho_229": {
+  "windscreen": {
+   "type": "curved"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "fairing"
+  }
+ },
+ "il_10": {
+  "windscreen": {
+   "type": "flat3",
+   "rake": 45
+  },
+  "hood": {
+   "section": "flattop",
+   "bows": [
+    0.5
+   ],
+   "shoulder": 0.65,
+   "tilt": 0.03
+  },
+  "rear": {
+   "type": "taper"
+  },
+  "lip_below_eye": 0.35
+ },
+ "j_10a": {
+  "windscreen": {
+   "type": "curved"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "fairing"
+  }
+ },
+ "j_11a": {
+  "windscreen": {
+   "type": "curved"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "fairing"
+  }
+ },
+ "j_15d": {
+  "windscreen": {
+   "type": "curved"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "fairing"
+  }
+ },
+ "j_2": {
+  "windscreen": {
+   "type": "flat1",
+   "centre_frac": 0.6
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "fairing"
+  }
+ },
+ "j_26": {
+  "windscreen": {
+   "type": "flat3",
+   "rake": 38
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "taper"
+  }
+ },
+ "j_5": {
+  "windscreen": {
+   "type": "flat1",
+   "centre_frac": 0.6
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "fairing"
+  }
+ },
+ "ju_87_b2": {
+  "windscreen": {
+   "type": "flat3",
+   "rake": 42
+  },
+  "hood": {
+   "section": "flattop",
+   "bows": [
+    0.2,
+    0.4,
+    0.6,
+    0.8
+   ],
+   "shoulder": 0.7,
+   "tilt": 0.03
+  },
+  "rear": {
+   "type": "taper"
+  },
+  "lip_below_eye": 0.35
+ },
+ "md_450_ouragan": {
+  "windscreen": {
+   "type": "flat1"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "taper"
+  }
+ },
+ "meteor_f_8": {
+  "windscreen": {
+   "type": "flat3"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "fairing"
+  }
+ },
+ "mig19": {
+  "windscreen": {
+   "type": "flat1",
+   "centre_frac": 0.6
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "fairing"
+  }
+ },
+ "mig_15bis": {
+  "windscreen": {
+   "type": "flat1",
+   "centre_frac": 0.6
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "fairing"
+  }
+ },
+ "mig_19s": {
+  "windscreen": {
+   "type": "flat1",
+   "centre_frac": 0.6
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "fairing"
+  }
+ },
+ "mig_21bis": {
+  "windscreen": {
+   "type": "flat1",
+   "centre_frac": 0.55
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "fairing"
+  }
+ },
+ "mig_23mld": {
+  "windscreen": {
+   "type": "flat3",
+   "rake": 36
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "fairing"
+  }
+ },
+ "mig_29": {
+  "skip": true,
+  "_note": "hand-built cockpit (mig_29.py); the existing curved windscreen + frameless bubble glass stays"
+ },
+ "mig_9": {
+  "windscreen": {
+   "type": "flat3"
+  },
+  "hood": {
+   "section": "flatside",
+   "bows": [],
+   "shoulder": 0.6,
+   "tilt": 0.06
+  },
+  "rear": {
+   "type": "taper"
+  }
+ },
+ "mirage_5": {
+  "windscreen": {
+   "type": "flat3"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "fairing"
+  }
+ },
+ "mirage_f1": {
+  "windscreen": {
+   "type": "flat3"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "fairing"
+  }
+ },
+ "p_51d": {
+  "windscreen": {
+   "type": "flat1"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "taper"
+  }
+ },
+ "panavia_tornado_ids_marineflieger": {
+  "windscreen": {
+   "type": "flat1"
+  },
+  "hood": {
+   "section": "round",
+   "bows": [
+    0.5
+   ]
+  },
+  "rear": {
+   "type": "fairing"
+  }
+ },
+ "q_5": {
+  "windscreen": {
+   "type": "flat1"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "fairing"
+  }
+ },
+ "rafale": {
+  "windscreen": {
+   "type": "curved"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "fairing"
+  }
+ },
+ "saab_29_tunnan": {
+  "windscreen": {
+   "type": "flat1"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "taper"
+  }
+ },
+ "saab_32_lansen": {
+  "windscreen": {
+   "type": "flat1"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "fairing"
+  }
+ },
+ "saab_35_draken": {
+  "windscreen": {
+   "type": "flat1"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "fairing"
+  }
+ },
+ "saab_37_viggen": {
+  "windscreen": {
+   "type": "flat3",
+   "rake": 35
+  },
+  "hood": {
+   "section": "flatside",
+   "bows": [],
+   "shoulder": 0.5,
+   "tilt": 0.1
+  },
+  "rear": {
+   "type": "fairing"
+  }
+ },
+ "saab_j_21a_1": {
+  "windscreen": {
+   "type": "flat3",
+   "rake": 40
+  },
+  "hood": {
+   "section": "flattop",
+   "bows": [],
+   "shoulder": 0.6,
+   "tilt": 0.05
+  },
+  "rear": {
+   "type": "taper"
+  }
+ },
+ "saab_jas_39_gripen": {
+  "windscreen": {
+   "type": "curved"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "fairing"
+  }
+ },
+ "sabre_mk_6": {
+  "windscreen": {
+   "type": "flat1"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "taper"
+  }
+ },
+ "su_17": {
+  "windscreen": {
+   "type": "flat3",
+   "rake": 38
+  },
+  "hood": {
+   "section": "flatside",
+   "bows": [],
+   "shoulder": 0.5,
+   "tilt": 0.08
+  },
+  "rear": {
+   "type": "fairing"
+  }
+ },
+ "su_25": {
+  "windscreen": {
+   "type": "flat3",
+   "rake": 40,
+   "centre_frac": 0.4
+  },
+  "hood": {
+   "section": "flatside",
+   "bows": [
+    0.45
+   ],
+   "shoulder": 0.5,
+   "tilt": 0.08
+  },
+  "rear": {
+   "type": "fairing"
+  }
+ },
+ "su_27": {
+  "windscreen": {
+   "type": "curved"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "fairing"
+  }
+ },
+ "su_30": {
+  "windscreen": {
+   "type": "curved"
+  },
+  "hood": {
+   "section": "round",
+   "bows": [
+    0.5
+   ]
+  },
+  "rear": {
+   "type": "fairing"
+  }
+ },
+ "su_35": {
+  "windscreen": {
+   "type": "curved"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "fairing"
+  }
+ },
+ "su_39": {
+  "windscreen": {
+   "type": "flat3",
+   "rake": 40,
+   "centre_frac": 0.4
+  },
+  "hood": {
+   "section": "flatside",
+   "bows": [
+    0.45
+   ],
+   "shoulder": 0.5,
+   "tilt": 0.08
+  },
+  "rear": {
+   "type": "fairing"
+  }
+ },
+ "su_57": {
+  "windscreen": {
+   "type": "curved"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "fairing"
+  }
+ },
+ "su_9": {
+  "windscreen": {
+   "type": "flat1"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "taper"
+  }
+ },
+ "super_mystere": {
+  "windscreen": {
+   "type": "flat1"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "fairing"
+  }
+ },
+ "supermarine_spitfire_griffon": {
+  "windscreen": {
+   "type": "flat1"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "taper"
+  }
+ },
+ "yak_15p": {
+  "windscreen": {
+   "type": "curved"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "taper"
+  }
+ },
+ "yak_3": {
+  "windscreen": {
+   "type": "curved"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "taper"
+  }
+ },
+ "yak_9u": {
+  "windscreen": {
+   "type": "flat3",
+   "rake": 40
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "taper"
+  }
+ }
+}

@@ -106,7 +106,21 @@
    "palette": "soviet"
   },
   "mig_9": {
-   "palette": "soviet_grey"
+   "palette": "soviet_grey",
+   "remove_boxes": [
+    [
+     [
+      -0.6,
+      -1.1,
+      0.45
+     ],
+     [
+      0.6,
+      -0.3,
+      0.9
+     ]
+    ]
+   ]
   },
   "mirage_5": {
    "palette": "nato"

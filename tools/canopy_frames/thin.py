@@ -52,7 +52,7 @@ def load_geo(vid):
 
 
 def load_texture(vid):
-    return np.asarray(Image.open(os.path.join(GEN, 'assets/berts_vehicle_pack/textures/entity', vid + '.png'))
+    return np.asarray(Image.open((os.path.join(os.environ['BVP_TEX_DIR'], vid + '.png') if os.environ.get('BVP_TEX_DIR') else os.path.join(GEN, 'assets/berts_vehicle_pack/textures/entity', vid + '.png')))
                       .convert('RGBA')).astype(np.float32) / 255.0
 
 
