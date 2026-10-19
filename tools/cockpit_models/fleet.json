@@ -1,5 +1,5 @@
 {
- "_comment": "Aircraft with a modelled cockpit built by fleet.py (cockpit_lib.py). era: a tools/cockpit_layout/presets.json preset (default: the aircraft's preset there); palette: cockpit_lib.PALETTES; hud: true for a head-up display where the era would not give one; side_stick: 1 = on the right console; tub: overrides of the measured cockpit dimensions (cockpit_lib.Tub). mig_29 is built by its own script, mig_29.py.",
+ "_comment": "Aircraft with a modelled cockpit built by fleet.py (cockpit_lib.py). era: a tools/cockpit_layout/presets.json preset (default: the aircraft's preset there); palette: cockpit_lib.PALETTES; hud: true for a head-up display where the era would not give one; side_stick: 1 = on the right console; tub: overrides of the measured cockpit dimensions (cockpit_lib.Tub). mig_29 is built by its own script, mig_29.py. hud: false keeps the reflector gunsight on types that only had a sight (Mirage F1C's CSF sight, the Su-25's ASP-17), not a projected HUD.",
  "aircraft": {
   "a_10": {
    "palette": "nato",
@@ -127,7 +127,7 @@
   },
   "mirage_f1": {
    "palette": "nato",
-   "hud": true
+   "hud": false
   },
   "p_51d": {
    "palette": "us_ww2"
@@ -164,7 +164,7 @@
   },
   "su_25": {
    "palette": "soviet",
-   "hud": true
+   "hud": false
   },
   "su_27": {
    "palette": "soviet",
