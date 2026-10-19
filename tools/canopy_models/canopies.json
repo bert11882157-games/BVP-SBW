@@ -1,0 +1,14 @@
+﻿{
+  "_comment": "Aircraft with a modelled canopy (canopy.py). Lengths in blocks (1 block = 1 m at these models' scale); dz relative to the pilot's eye (+ forward). glass_mm: transparency thickness. bows: frames across the glass ({dz, width, yoke}). front / rear: the canopy's ends (z) when the old glass's are wrong. profile: reference overrides {crown|sill|width: [[dz, value], ...]}. fullness: superellipse exponent of the sections (default: fitted). Sources per aircraft in tools/canopy_models/README.md.",
+  "aircraft": {
+    "f_16c": {
+      "glass_mm": 35,
+      "exclude": [[0.38, 0.72]],
+      "front": 4.0,
+      "bows": [{"dz": -0.55, "width": 0.06, "proud": 0.008, "yoke": true}],
+      "sill_height": 0.075,
+      "sill_width": 0.05
+    }
+  }
+}
+
