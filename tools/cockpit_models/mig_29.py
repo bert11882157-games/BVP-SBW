@@ -835,9 +835,15 @@ def build(atlas):
     lean = math.radians(22)                     # combiner top leans toward the pilot
     g_up = np.array([0, math.cos(lean), -math.sin(lean)])
     g_n = unit(np.cross(X, g_up))
-    g_bot = np.array([0, hud_y1 + 0.012, 3.85]); g_h = 0.165; g_hw = 0.074
+    g_h = 0.165; g_hw = 0.074
+    # the glass is centred on the pilot's straight-ahead line (the eye's height), so the projected picture's
+    # boresight sits in the middle of it
+    g_bot = np.array([0, EYE[1] - g_up[1] * g_h / 2, 3.85])
     g_top = g_bot + g_up * g_h
-    # bottom clamp bar and the two side posts
+    # stem from the body top, bottom clamp bar and the two side posts
+    stem = g_bot[1] - 0.006 - hud_y1
+    if stem > 0.004:
+        m.box([0, hud_y1 + stem / 2, g_bot[2]], (X, Y, Z), (g_hw + 0.008, stem / 2, 0.012), sw['dgrey'])
     m.box(g_bot - g_up * 0.006, (X, g_up, g_n), (g_hw + 0.008, 0.006, 0.012), sw['dgrey'])
     for s in (-1, 1):
         m.box((g_bot + g_top) / 2 + X * s * (g_hw + 0.004), (X, g_up, g_n), (0.004, g_h / 2, 0.005), sw['dgrey'])

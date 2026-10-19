@@ -81,6 +81,9 @@ BVP_TEX_DIR=DIR python3 tools/cockpit_models/fleet.py [--dry-run] [id...]   # ev
 `fleet.py` gives 65 more aircraft (jets and piston fighters) a modelled cockpit with `cockpit_lib.py`, the
 MiG-29's generator turned into a fitted, parametric one:
 
+- **Glass.** The canopy glass comes from `tools/canopy_panels` (panel by panel); where its frames file
+  `tools/canopy_panels/frames/<id>.json` exists the glass is kept whole. The canopy's frame members, sills and
+  thickness, and the removal of the model's old canopy, are `tools/canopy_build/canopy.py`, run after this tool.
 - **Fit.** From the pilot's eye and the canopy glass (`CanopyGlass`) it measures the tub: half width and sill height
   beside the eye, the windscreen base ahead, and a scale from the width. The canopy width clears the old interior; the
   new tub is narrowed to the fuselage skin beside the pilot (and again until the panel wings fit), so nothing pokes
@@ -102,7 +105,10 @@ MiG-29's generator turned into a fitted, parametric one:
 - **Cockpit.** Three-facet panel, coaming, side walls, consoles with switch blocks, sill caps, floor, rear bulkhead,
   footwell, rudder pedals, throttle, an ejection seat (jets) or armoured bucket seat (piston fighters), and a HUD
   (body, control strip, combiner and its glass, plus `HeadUpDisplay`) on HUD-equipped jets or a reflector gunsight
-  on the others. New faces go into `wreck_<piece>__cockpit` of the piece that held most of the old interior.
+  on the others. The combiner glass is centred on the pilot's straight-ahead line (the eye's height, directly ahead),
+  so the picture the game projects onto it (`HeadUpDisplay.kt`, boresight at the eye's +Z) sits in the middle of the
+  glass; where the windscreen comes down low over the HUD body (F-16) the glass moves back towards the pilot on a
+  shelf until it has room. New faces go into `wreck_<piece>__cockpit` of the piece that held most of the old interior.
 - **Stick.** A centre stick (or a side stick on the right console for the F-16 and Rafale) in the existing animated
   bone `<piece>__control_stick_pitch`; the stick bones' pivots and the `AircraftRig` stick surfaces move to the new
   stick's foot, so it pivots where it stands. Aircraft without a stick rig get a fixed stick.
@@ -113,7 +119,7 @@ MiG-29's generator turned into a fitted, parametric one:
   gear lever on the left). Live dials: the basic six, Mach, AoA, G, RWR, fuel quantity, radar altimeter, clock,
   turn and slip, engine RPM, EGT and the rounds counter (`FUEL_QTY`, `RADAR_ALT`, `CLOCK`, `TURN_SLIP`,
   `ENGINE_RPM`, `EGT`, `AMMO` in `GaugePainter`); the `FILLER_*` dials stand still. Steam eras get the basic six, turn
-  and slip, engine and systems dials; radar eras a radar scope with a hood and an RWR; the glass eras two large
+  and slip, engine and systems dials; radar eras a radar scope with a hood top centre under the caution strip (where the F-4, F-104, Draken, Viggen and MiG-21 carry theirs) and an RWR; the glass eras two large
   displays under an up-front control panel, a third on the left wing, standby dials and engine dials. A stores page
   gets the airframe planform for its diagram.
 - **Annunciators.** A caution and warning panel per aircraft, drawn and lit by the game (`Annunciator.kt`): a

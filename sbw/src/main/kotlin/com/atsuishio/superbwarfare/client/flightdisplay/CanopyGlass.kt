@@ -25,8 +25,9 @@ import kotlin.math.pow
 import kotlin.math.sqrt
 
 /**
- * Canopy glass: the dome tools/canopy_glass/glass.py fitted over each aircraft's canopy, drawn as a faint blue-grey
- * tint that thickens toward grazing angles (a cheap Fresnel), from inside and outside.
+ * Canopy glass: the glass tools/canopy_build builds over each aircraft's canopy (a solid: outer sheet, inner sheet
+ * and the edge between them), drawn as a blue-grey tint that thickens toward grazing angles (a cheap Fresnel), from
+ * inside and outside.
  *
  * The glass must not hide anything behind it, so it never writes depth and is drawn last: while the level renders,
  * each vehicle's glass is transformed into view space and collected; after particles it is drawn in one batch,
@@ -34,10 +35,12 @@ import kotlin.math.sqrt
  */
 @EventBusSubscriber(modid = Mod.MODID, value = [Dist.CLIENT])
 object CanopyGlass {
-    private const val BASE_ALPHA = 0.045f
-    private const val EDGE_ALPHA = 0.20f
-    private const val MAX_ALPHA = 0.28f
-    private const val TINT_R = 205; private const val TINT_G = 228; private const val TINT_B = 240
+    // The glass is a solid (outer sheet, inner sheet, edge), so a pane seen through both sheets is about twice
+    // BASE_ALPHA; the edge, seen end-on, reaches MAX_ALPHA and reads as the glass's thickness.
+    private const val BASE_ALPHA = 0.10f
+    private const val EDGE_ALPHA = 0.32f
+    private const val MAX_ALPHA = 0.50f
+    private const val TINT_R = 198; private const val TINT_G = 222; private const val TINT_B = 238
     private const val VERTEX_FLOATS = 7            // x y z (view space), r g b a
     private const val MAX_VERTICES = 300_000
 

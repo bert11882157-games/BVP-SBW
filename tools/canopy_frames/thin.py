@@ -47,12 +47,15 @@ def in_region(az, el):
 
 
 def load_geo(vid):
-    path = os.path.join(GEN, 'assets/berts_vehicle_pack/custom_geo', vid + '.geo.json')
+    """the model; BVP_GEO_DIR overrides the repository folder (a copy of the committed originals, for measuring a
+    model that later tools have already changed)"""
+    d = os.environ.get('BVP_GEO_DIR')
+    path = os.path.join(d, vid + '.geo.json') if d else os.path.join(GEN, 'assets/berts_vehicle_pack/custom_geo', vid + '.geo.json')
     return path, json.load(open(path))
 
 
 def load_texture(vid):
-    return np.asarray(Image.open(os.path.join(GEN, 'assets/berts_vehicle_pack/textures/entity', vid + '.png'))
+    return np.asarray(Image.open((os.path.join(os.environ['BVP_TEX_DIR'], vid + '.png') if os.environ.get('BVP_TEX_DIR') else os.path.join(GEN, 'assets/berts_vehicle_pack/textures/entity', vid + '.png')))
                       .convert('RGBA')).astype(np.float32) / 255.0
 
 
