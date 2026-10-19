@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """The whole canopy chain for an aircraft, from its committed originals:
 
-  1. the original geo and asset files are restored from REV (git checkout), and the original geo is copied aside;
+  1. the original geo and asset files are restored from REV into the working tree (not staged), and the original
+     geo is copied aside;
   2. tools/canopy_panels/panels.py --write   the panel glass and frame stations (measured on the original);
   3. tools/cockpit_models/fleet.py           the modelled cockpit (measures its tub on the original interior);
   4. tools/canopy_build/canopy.py --orig=    the old canopy cut out, the new frames and glass built, with the
@@ -62,7 +63,7 @@ def main(argv):
     os.makedirs(orig_dir, exist_ok=True)
     for vid in ids:                                   # git first, one process: the index takes one writer
         geo, asset = f'{GEN}/custom_geo/{vid}.geo.json', f'{GEN}/sbw/vehicles/{vid}.json'
-        git('checkout', rev, '--', geo, asset)
+        git('restore', '--source=' + rev, '--worktree', '--', geo, asset)   # the working tree only, not the index
         shutil.copy(os.path.join(ROOT, geo), os.path.join(orig_dir, vid + '.geo.json'))
     if jobs > 1 and len(ids) > 1:
         from concurrent.futures import ProcessPoolExecutor
