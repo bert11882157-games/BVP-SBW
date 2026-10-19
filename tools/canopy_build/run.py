@@ -4,9 +4,14 @@
   1. the original geo and asset files are restored from REV into the working tree (not staged), and the original
      geo is copied aside;
   2. tools/canopy_panels/panels.py --write   the panel glass and frame stations (measured on the original);
-  3. tools/cockpit_models/fleet.py           the modelled cockpit (measures its tub on the original interior);
-  4. tools/canopy_build/canopy.py --orig=    the old canopy cut out, the new frames and glass built, with the
-                                             envelope measured on the copied original, so frames and glass agree.
+  3. tools/cockpit_models/fleet.py strip     the tub measured on the original interior, the old interior removed;
+  4. tools/canopy_build/canopy.py --orig=    the old canopy cut out of the bare tub, the new frames and glass built,
+                                             with the envelope measured on the copied original, so frames and
+                                             glass agree;
+  5. tools/cockpit_models/fleet.py build     the modelled cockpit, from the tub measured in step 3.
+
+The interior goes before the canopy is cut so that neither cut takes the other's faces, and the cockpit is built
+last, inside the finished canopy.
 
 REV defaults to the merge base of HEAD and origin/main (the models as the pack ships them). Set BVP_TEX_DIR to a
 folder of real textures when the repository's are Git LFS pointers.
@@ -36,11 +41,16 @@ def one(vid, orig_dir):
         with contextlib.redirect_stdout(buf):
             P.main(['--write', vid])
         lines.append(buf.getvalue().rstrip())
-        if vid in F.FLEET['aircraft']:
-            _, _, rep = F.apply(vid)
+        cockpit = vid in F.FLEET['aircraft']
+        state = os.path.join(orig_dir, vid + '.tub.json')
+        if cockpit:
+            _, _, rep = F.apply(vid, stage='strip', state=state)
             lines.append(rep)
         _, rep = C.apply(vid, orig=orig_dir)
         lines.append(rep)
+        if cockpit:
+            _, _, rep = F.apply(vid, stage='build', state=state)
+            lines.append(rep)
     except Exception as failure:
         import traceback
         lines.append(f'{vid}: FAILED {failure!r}\n' + traceback.format_exc())
