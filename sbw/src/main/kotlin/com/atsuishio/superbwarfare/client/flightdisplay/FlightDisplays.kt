@@ -48,7 +48,7 @@ object FlightDisplays {
     private const val MAX_RENDER_DISTANCE_SQ = 96.0 * 96.0
     private const val DETAIL_DISTANCE_SQ = 32.0 * 32.0
     private const val CRT_DETAIL_DISTANCE_SQ = 10.0 * 10.0
-    private const val BEZEL = 0.2           // housing border around the screen, fraction of the screen width
+    private const val BEZEL = 0.12          // housing border around the screen, fraction of the screen width
     private const val FACE = 0.006f         // housing front stands this far proud of the screen, blocks
 
     /** A page on a screen technology: one texture each, live and still. */
@@ -93,6 +93,11 @@ object FlightDisplays {
             CockpitGauges.renderTick(event.renderTickTime)
         } catch (e: Throwable) {
             LOGGER.error("Cockpit gauges failed", e)
+        }
+        try {
+            Annunciator.renderTick(event.renderTickTime)
+        } catch (e: Throwable) {
+            LOGGER.error("Annunciator panels failed", e)
         }
         HeadUpDisplay.renderTick(event.renderTickTime)
         for (page in stillRequested.toList()) {
@@ -146,6 +151,7 @@ object FlightDisplays {
         // gauges and screens are a few pixels across beyond this: not drawn
         if (distanceSq > DETAIL_DISTANCE_SQ) return
         CockpitGauges.render(vehicle, poseStack, buffers, packedLight)
+        Annunciator.render(vehicle, poseStack, buffers, packedLight)
         HeadUpDisplay.render(vehicle, poseStack, buffers)
         if (failed) return
         // the curved CRT (dome, bloom rings, sheen: ~17k vertices a screen) only up close; a flat screen further out

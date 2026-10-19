@@ -3,7 +3,9 @@ package com.atsuishio.superbwarfare.client.flightdisplay
 import com.atsuishio.superbwarfare.api.vehicle.flight.FixedWingFlightStrategy
 import com.atsuishio.superbwarfare.client.overlay.weapon.FixedWingHudMetrics
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity
+import net.minecraft.client.Minecraft
 import net.minecraft.util.Mth
+import net.minecraft.world.level.levelgen.Heightmap
 import kotlin.math.atan2
 import kotlin.math.sqrt
 
@@ -32,6 +34,24 @@ data class FlightDisplayState(
     /** Rotorcraft only: rotor spool (engine N2) and collective torque, fractions 0..1. */
     val rotorRpm: Double? = null,
     val torque: Double? = null,
+    /** Fuel (the vehicle's energy store) remaining, 0..1; null without one. */
+    val fuel: Double? = null,
+    /** Height above the terrain under the aircraft, metres; null when unknown. */
+    val radarAltitude: Double? = null,
+    /** Yaw rate, degrees per second, nose right positive. */
+    val yawRate: Double = 0.0,
+    val engineRunning: Boolean = true,
+    val afterburner: Boolean = false,
+    /** Airbrake extension 0..1. */
+    val airbrake: Double = 0.0,
+    /** Landing gear extension 0..1 (1 down); null for an aircraft without retractable gear. */
+    val gear: Double? = null,
+    /** Hull health remaining, 0..1. */
+    val health: Double = 1.0,
+    /** Time of day in ticks (0..24000, 0 = 06:00); null when unknown. */
+    val dayTime: Long? = null,
+    /** Rounds left in the local crew member's selected weapon; null when there is none, Int.MAX_VALUE when unlimited. */
+    val ammo: Int? = null,
 ) {
     companion object {
         /** What other players see on this display: a powered, level, stationary picture. */
@@ -74,6 +94,14 @@ data class FlightDisplayState(
             val pathRight = if (moving) Math.toDegrees(atan2(-motion.x, motion.z)) else null
             // rotorcraft: the rotor spool and the collective from the presentation snapshot, once one arrived
             val rotor = if (!fixedWing) vehicle.getVehicleFlightPresentationSnapshot(partialTick).takeIf { it.sequence != 0 } else null
+            val surfaces = snapshot?.controlSurfaces
+            val level = vehicle.level()
+            val ground = level.getHeight(Heightmap.Types.MOTION_BLOCKING, Mth.floor(vehicle.x), Mth.floor(vehicle.z))
+            val energy = vehicle.getEnergyStorage()
+            val fuel = energy?.takeIf { it.maxEnergyStored > 0 }?.let { it.energyStored.toDouble() / it.maxEnergyStored }
+            val maxHealth = vehicle.getMaxHealth()
+            val rider = Minecraft.getInstance().player?.takeIf { it.vehicle === vehicle }
+            val ammo = rider?.let { vehicle.getAmmoCount(it) }?.takeIf { it >= 0 }
             return FlightDisplayState(
                 pitchUp = -pitch.toDouble(),
                 rollRight = roll.toDouble(),
@@ -89,6 +117,16 @@ data class FlightDisplayState(
                 pathRight = pathRight?.takeIf { it.isFinite() },
                 rotorRpm = rotor?.rotorLift?.takeIf { it.isFinite() }?.coerceIn(0.0, 1.0),
                 torque = rotor?.collective?.takeIf { it.isFinite() }?.coerceIn(0.0, 1.0),
+                fuel = fuel?.takeIf { it.isFinite() }?.coerceIn(0.0, 1.0),
+                radarAltitude = (y - ground).takeIf { it.isFinite() }?.coerceAtLeast(0.0),
+                yawRate = (Mth.wrapDegrees(vehicle.yRot - vehicle.yRotO) * 20.0).takeIf { it.isFinite() } ?: 0.0,
+                engineRunning = vehicle.engineRunning(),
+                afterburner = surfaces?.afterburnerActive ?: false,
+                airbrake = surfaces?.airbrake?.toDouble()?.takeIf { it.isFinite() }?.coerceIn(0.0, 1.0) ?: 0.0,
+                gear = if (vehicle.hasFixedWingLandingGear()) vehicle.synchedGearRot.toDouble().coerceIn(0.0, 1.0) else null,
+                health = if (maxHealth > 0f) (vehicle.health / maxHealth).toDouble().coerceIn(0.0, 1.0) else 1.0,
+                dayTime = level.dayTime % 24000L,
+                ammo = ammo,
             )
         }
     }

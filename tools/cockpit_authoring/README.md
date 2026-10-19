@@ -34,8 +34,9 @@ line up.
 | | Kinds |
 |---|---|
 | Displays | `PFD`, `RADAR`, `STORES`. Any other name is drawn as a PFD. |
-| Live gauges | `ATTITUDE`, `ALTIMETER`, `HEADING`, `THROTTLE` |
+| Live gauges | `ATTITUDE`, `ALTIMETER`, `HEADING`, `THROTTLE`, `AIRSPEED`, `MACH`, `AOA`, `VVI`, `G_METER`, `RWR`, `FUEL_QTY`, `RADAR_ALT`, `CLOCK`, `TURN_SLIP`, `ENGINE_RPM`, `EGT`, `AMMO` (and `ROTOR_RPM`, `TORQUE` on rotorcraft) |
 | Static filler dials | `FILLER_FUEL`, `FILLER_OIL`, `FILLER_RPM`, `FILLER_CLOCK`, `FILLER_TEMP`, `FILLER_VOLTS`, `FILLER_HYDRAULIC`, `FILLER_OXYGEN` |
+| Annunciator | `ANNUNCIATOR`: a rectangular panel of caption lights (`Width`, `Height`, `Columns`, `Lamps` with `Text`, `Condition`, `Colour`), lit by the game from the aircraft's state; see `tools/cockpit_models/README.md` |
 
 A new display takes the screen style of the aircraft's other displays: green CRT on older glass cockpits,
 colour LCD otherwise. With no other displays, it is LCD.

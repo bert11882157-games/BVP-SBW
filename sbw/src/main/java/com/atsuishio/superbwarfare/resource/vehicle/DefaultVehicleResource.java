@@ -278,7 +278,12 @@ public class DefaultVehicleResource implements IDBasedData<DefaultVehicleResourc
 
         public static final class Gauge {
             @SerializedName("Seat") public int seat;
-            /** ALTIMETER, ATTITUDE, HEADING, THROTTLE, AIRSPEED, MACH, AOA, VVI, G_METER, RWR (live for the pilot) or a FILLER_* dial (fixed). */
+            /**
+             * ALTIMETER, ATTITUDE, HEADING, THROTTLE, AIRSPEED, MACH, AOA, VVI, G_METER, RWR, FUEL_QTY, RADAR_ALT,
+             * CLOCK, TURN_SLIP, ENGINE_RPM, EGT, AMMO (live for the pilot), a FILLER_* dial (fixed), or ANNUNCIATOR: a
+             * rectangular panel of caption lights ({@link #width} x {@link #height}, {@link #lamps}) lit from the
+             * aircraft's state.
+             */
             @SerializedName("Kind") public String kind;
             /** Centre of the dial face. */
             @SerializedName("Center") public double[] center;
@@ -290,6 +295,23 @@ public class DefaultVehicleResource implements IDBasedData<DefaultVehicleResourc
             @SerializedName("Diameter") public double diameter;
             /** Depth of the case behind the dial, blocks. */
             @SerializedName("Depth") public double depth;
+            /** ANNUNCIATOR only: panel width and height along {@link #up} x normal and {@link #up}, blocks. */
+            @SerializedName("Width") public Double width;
+            @SerializedName("Height") public Double height;
+            /** ANNUNCIATOR only: lamps per row (default 3). */
+            @SerializedName("Columns") public Integer columns;
+            /** ANNUNCIATOR only: the caption lights, left to right then top to bottom. */
+            @SerializedName("Lamps") public Lamp[] lamps;
+        }
+
+        /** One caption light of an annunciator panel. */
+        public static final class Lamp {
+            /** The legend; "|" breaks it into two lines. */
+            @SerializedName("Text") public String text;
+            /** What lights it (see Annunciator.Condition), or NONE for a legend that never lights. */
+            @SerializedName("Condition") public @Nullable String condition;
+            /** "amber" (the default), "red", "green", "white" or "blue". */
+            @SerializedName("Colour") public @Nullable String colour;
         }
     }
 

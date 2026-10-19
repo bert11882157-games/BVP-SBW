@@ -40,7 +40,7 @@ object CockpitGauges {
     private val LOGGER = Mod.LOGGER
     private val ATLAS = Mod.loc("dynamic/cockpit_gauges")
     private val CASE_TEXTURE = Mod.loc("textures/misc/flight_display_housing.png")
-    private const val GRID = 6
+    private const val GRID = 7            // 49 cells: 2 for each live kind (live and still) and 1 per filler
     private const val SIZE = GaugePainter.CELL * GRID
 
     // Atlas cells: live kinds first, then still kinds, then fillers.
