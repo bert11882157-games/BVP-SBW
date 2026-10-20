@@ -1,0 +1,245 @@
+{
+ "vehicle": "su_25",
+ "seat": 0,
+ "eye": [
+  0.0,
+  2.6925,
+  3.29083
+ ],
+ "plates": [
+  {
+   "name": "left",
+   "label": "flight instruments: airspeed, VSI, altimeter, AoA / g, radio altimeter, gear lamps",
+   "centre": [
+    0.295,
+    2.31,
+    3.97706
+   ],
+   "right": [
+    -1.0,
+    0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.97815,
+    -0.20791
+   ],
+   "normal": [
+    0.0,
+    -0.20791,
+    -0.97815
+   ],
+   "width": 0.25,
+   "height": 0.4447
+  },
+  {
+   "name": "centre",
+   "label": "KPP attitude indicator over the NPP HSI, clock, sight base",
+   "centre": [
+    0.0,
+    2.31,
+    3.97706
+   ],
+   "right": [
+    -1.0,
+    0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.97815,
+    -0.20791
+   ],
+   "normal": [
+    0.0,
+    -0.20791,
+    -0.97815
+   ],
+   "width": 0.34,
+   "height": 0.4447
+  },
+  {
+   "name": "right",
+   "label": "engine instruments: RPM, EGTs, fuel tape, pressures; annunciator column at the far right",
+   "centre": [
+    -0.295,
+    2.31,
+    3.97706
+   ],
+   "right": [
+    -1.0,
+    0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.97815,
+    -0.20791
+   ],
+   "normal": [
+    0.0,
+    -0.20791,
+    -0.97815
+   ],
+   "width": 0.25,
+   "height": 0.4447
+  },
+  {
+   "name": "pus",
+   "label": "PUS weapon control box",
+   "centre": [
+    0.3,
+    2.47895,
+    3.9122
+   ],
+   "right": [
+    -1.0,
+    0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.97815,
+    -0.20791
+   ],
+   "normal": [
+    0.0,
+    -0.20791,
+    -0.97815
+   ],
+   "width": 0.13,
+   "height": 0.1
+  },
+  {
+   "name": "sight_ctrl",
+   "label": "ASP-17 sight control head",
+   "centre": [
+    0.0,
+    2.48518,
+    3.88286
+   ],
+   "right": [
+    -1.0,
+    0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.97815,
+    -0.20791
+   ],
+   "normal": [
+    0.0,
+    -0.20791,
+    -0.97815
+   ],
+   "width": 0.24,
+   "height": 0.1
+  },
+  {
+   "name": "signal",
+   "label": "gear and lights signal box",
+   "centre": [
+    -0.31,
+    2.47895,
+    3.9122
+   ],
+   "right": [
+    -1.0,
+    0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.97815,
+    -0.20791
+   ],
+   "normal": [
+    0.0,
+    -0.20791,
+    -0.97815
+   ],
+   "width": 0.11,
+   "height": 0.1
+  },
+  {
+   "name": "fire",
+   "label": "fire warning lamps",
+   "centre": [
+    -0.19,
+    2.49833,
+    3.9333
+   ],
+   "right": [
+    -1.0,
+    0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.97815,
+    -0.20791
+   ],
+   "normal": [
+    0.0,
+    -0.20791,
+    -0.97815
+   ],
+   "width": 0.1,
+   "height": 0.03
+  },
+  {
+   "name": "console_l",
+   "label": "left console",
+   "centre": [
+    0.3432,
+    2.0925,
+    3.41706
+   ],
+   "right": [
+    -1.0,
+    0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "normal": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "width": 0.1936,
+   "height": 1.2125
+  },
+  {
+   "name": "console_r",
+   "label": "right console",
+   "centre": [
+    -0.3432,
+    2.0925,
+    3.41706
+   ],
+   "right": [
+    -1.0,
+    0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "normal": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "width": 0.1936,
+   "height": 1.2125
+  }
+ ]
+}
