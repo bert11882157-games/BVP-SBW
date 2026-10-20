@@ -1,4 +1,4 @@
-﻿"""Blender: the cockpit structure generator for the fleet (the F-16C has its own script, f16c_structure.py, whose
+"""Blender: the cockpit structure generator for the fleet (the F-16C has its own script, f16c_structure.py, whose
 machinery this follows: a traced panel outline fitted to the hull, one formed panel body with cheeks to the walls, a
 padded hood glareshield following the windscreen, knee panels and a footwell, the seat and the structure behind it,
 then the fit to the hull, the clipping check and the 3 cm glass clearance).
@@ -62,7 +62,7 @@ def interior_cut():
             if not (f_lo < ff < f_hi and abs(fr) < 0.65 and -1.4 < uu < 0.6):
                 continue
             loc_, n_, i_, dg_ = gl.find_nearest(c)
-            if loc_ is not None and dg_ < 0.06 * k:
+            if loc_ is not None and dg_ < float(os.environ.get('CB_GLASSKEEP', '0.06')) * k:
                 continue
             # (1) inside the cavity: the hull (or glass) lies more than 3 cm beyond it to both sides, below and above
             inside = True
@@ -802,6 +802,20 @@ for o in cockpit:
         removed += len(bad)
 # a part that still crosses the hull after all that is dropped (and reported), so nothing ever clips
 bpy.context.view_layer.update()
+# faces with a vertex still within 3 cm of the glass after the fit are trimmed (the 3 cm clearance is a rule)
+glass_trim = 0
+for o in cockpit:
+    close = {v.index for v in o.data.vertices
+             if (lambda q: q[0] is not None and q[3] < 0.030 * k)(gl.find_nearest(o.matrix_world @ v.co))}
+    if close:
+        bm = bmesh.new(); bm.from_mesh(o.data); bm.verts.ensure_lookup_table()
+        faces = {f_ for i in close for f_ in bm.verts[i].link_faces}
+        bmesh.ops.delete(bm, geom=list(faces), context='FACES')
+        loose = [v for v in bm.verts if not v.link_faces]
+        bmesh.ops.delete(bm, geom=loose, context='VERTS')
+        bm.to_mesh(o.data); bm.free()
+        glass_trim += len(faces)
+print('GLASS_TRIM', glass_trim)
 dropped, trimmed = [], {}
 for o in list(cockpit):
     bad = {a for a, b_ in B.bvh_of([o]).overlap(skin)}
