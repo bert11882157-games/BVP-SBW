@@ -296,6 +296,17 @@ def p_console(colour, seed, heights, slot=None):
     return fn
 
 
+def rotated(fn):
+    """a painter for a tile laid on its side: [fn] paints the upright tile (its height the tile's width), the
+    result is turned a quarter left (the upright tile's top ends at the left). A face's uv (s, t) on the upright
+    tile is (1 - t, s) on the turned one"""
+    def g(d, im):
+        tmp = Image.new('RGBA', (im.height, im.width), (0, 0, 0, 255))
+        fn(ImageDraw.Draw(tmp), tmp)
+        im.paste(tmp.rotate(90, expand=True), (0, 0))
+    return g
+
+
 def p_wall(colour, line, seed):
     def fn(d, im):
         S, H = im.width, im.height
