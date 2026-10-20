@@ -298,8 +298,8 @@ def build_station(si, E, front_eye=None):
     # upper skin, or what the hull keeps under the windscreen) and the first station whose top and sides the pilot
     # can see from the eye is taken
     def ceiling(f):
-        h = hit(skin, P(0, -0.65, f), U)
-        return -0.65 + h / k if h is not None else 0.5
+        h = hit(skin, P(0, -0.40, f), U)           # from panel height: the old panel's own underside is no ceiling
+        return -0.40 + h / k if h is not None else 0.5
 
     def seen(p):
         dv = p - E
@@ -307,22 +307,37 @@ def build_station(si, E, front_eye=None):
         return h is None or h > dv.length - 0.02 * k
 
     choice = None
-    for i in range(14):
-        F_c = 0.80 - 0.035 * i
-        g0 = glass_over(0, F_c, -0.4)
-        top = min(-0.20, (g0 - 0.24) if g0 is not None else -0.20, ceiling(F_c + 0.05) - 0.05)
-        top = max(top, -0.55)
-        # the top edge goes down until the panel has room there (the glass and the sills close in above)
-        while top > max(-0.55, sill_u - 0.12) and min(reach_pt(lambda x, tp=top, fc=F_c: P(x, tp, fc), sd, clear=0.035)
-                                  for sd in (1, -1)) < 0.18:
-            top -= 0.02
-        mid = top - 0.17
-        free = min(ahead(u) for u in (top, mid, mid - 0.10))
-        if free < F_c + 0.06:
-            continue
-        pts = [P(0, top, F_c), P(0.18, top - 0.08, F_c), P(-0.18, top - 0.08, F_c), P(0, mid, F_c)]
-        if all(seen(q) for q in pts):
-            choice = (F_c, top, free)
+    # first every station at the natural height (under the glass and the hull's ceiling), stepping in toward the
+    # pilot; only when none fits is the top lowered (a panel stands closer before it ever goes down)
+    for lower in (False, True):
+        for i in range(14):
+            F_c = 0.80 - 0.035 * i
+            g0 = glass_over(0, F_c, -0.4)
+            top = min(-0.20, (g0 - 0.24) if g0 is not None else -0.20, ceiling(F_c) - 0.05)
+            top = max(top, -0.55)
+            room = lambda tp: min(reach_pt(lambda x, tp=tp, fc=F_c: P(x, tp, fc), sd, clear=0.035) for sd in (1, -1))
+            if lower:
+                while top > max(-0.55, sill_u - 0.12) and room(top) < 0.18:
+                    top -= 0.02
+            elif room(top) < 0.12:                 # a narrow top is fine: the panel's outline scales to it
+                if os.environ.get('CB_DEBUG'):
+                    print('DBG F', round(F_c, 3), 'top', round(top, 3), 'no room', round(room(top), 3))
+                continue
+            mid = top - 0.17
+            # free space ahead: at the top, either side of the centre line (a sight standing on the centre of the
+            # coaming does not push the panel down), and along the centre lower down
+            free = min([ahead(top - 0.02, r=sd * 0.15) for sd in (1, -1)] + [ahead(u) for u in (mid, mid - 0.10)])
+            if os.environ.get('CB_DEBUG'):
+                print('DBG free F', round(F_c, 3), 'top', round(top, 3), [round(ahead(top - 0.02, r=sd * 0.15), 3) for sd in (1, -1)], [round(ahead(u), 3) for u in (mid, mid - 0.10)])
+            if free < F_c + 0.06:
+                continue
+            pts = [P(0, top, F_c), P(0.18, top - 0.08, F_c), P(-0.18, top - 0.08, F_c), P(0, mid, F_c)]
+            if os.environ.get('CB_DEBUG'):
+                print('DBG F', round(F_c, 3), 'top', round(top, 3), 'room', round(room(top), 3), 'free', round(free, 3), 'seen', [seen(q) for q in pts])
+            if all(seen(q) for q in pts):
+                choice = (F_c, top, free)
+                break
+        if choice:
             break
     if choice is None:
         choice = (0.55, max(sill_u + 0.02, -0.30), ahead(-0.40))
@@ -354,7 +369,7 @@ def build_station(si, E, front_eye=None):
             au = -au
         return ar, au, n
 
-    TRACE = spec['trace']
+    TRACE = spec['rear_trace'] if rear and spec.get('rear_trace') else spec['trace']
     foot_floor = floor_u + 0.30
 
     def trace_fits(s):
@@ -413,7 +428,7 @@ def build_station(si, E, front_eye=None):
         sheet(f'panel_cheek_{sg}', rows if sg > 0 else [r_[::-1] for r_ in rows], M['panel'], solid=0.012)
     # ------------------------------------------------------------------ instruments on the panel
     panel_plates = []
-    for it in spec['items']:
+    for it in (spec['rear_items'] if rear and spec.get('rear_items') else spec['items']):
         kind, name = it[0], it[1]
         r, du = it[2] * S, it[3] * S
         if kind == 'mfd':

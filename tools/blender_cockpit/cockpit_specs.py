@@ -191,6 +191,68 @@ LAYOUTS['mig15'] = [
     ('gauge', 'oxygen', -0.213, -0.094, 0.026), ('gauge', 'oxy_press', -0.317, -0.200, 0.025),
     ('display', 'gear_ind', -0.230, -0.257, 0.070, 0.050)]
 
+# P-51D: DCS P-51D Flight Manual, figure 39 "P-51D cockpit instrument panel". Top row remote compass, clock, the
+# take-off / landing placard, suction, manifold pressure; middle row airspeed, directional gyro, artificial horizon,
+# coolant and carburettor temperature, RPM; bottom row altimeter, turn and bank, climb, accelerometer, the engine unit;
+# the K-14 gyro sight above (sight='reflector').
+OUTLINES['p51'] = [(-0.310, 0.0), (0.310, 0.0), (0.320, -0.030), (0.320, -0.340), (0.070, -0.360), (0.060, -0.400),
+                   (-0.060, -0.400), (-0.070, -0.360), (-0.320, -0.340), (-0.320, -0.030)]
+LAYOUTS['p51'] = [
+    ('gauge', 'compass', -0.178, -0.043, 0.042), ('gauge', 'clock', -0.093, -0.043, 0.031),
+    ('plate', 'placard', 0.0, -0.047, 0.105, 0.085), ('gauge', 'suction', 0.088, -0.041, 0.031),
+    ('gauge', 'manifold', 0.174, -0.041, 0.042), ('gauge', 'asi', -0.245, -0.162, 0.040),
+    ('gauge', 'dg', -0.110, -0.160, 0.035), ('gauge', 'horizon', 0.025, -0.168, 0.050),
+    ('gauge', 'coolant', 0.155, -0.137, 0.030), ('gauge', 'carb', 0.155, -0.216, 0.030),
+    ('gauge', 'rpm', 0.240, -0.160, 0.043), ('gauge', 'alt', -0.241, -0.274, 0.040),
+    ('gauge', 'turn_bank', -0.110, -0.301, 0.038), ('gauge', 'climb', 0.024, -0.301, 0.038),
+    ('gauge', 'accel', 0.140, -0.301, 0.038), ('gauge', 'engine_unit', 0.240, -0.274, 0.040)]
+
+# MiG-21bis: DCS MiG-21bis manual (RU), figure 6-3 "Instrument panel". The radar scope with its hood right of centre,
+# the KPP attitude indicator left of it with the NPP HSI under it, airspeed / altimeter / radar altimeter down the
+# left, the UUA AoA and climb gauges by the centre line, RPM / EGT / fuel down the right, the gyro and accelerometer
+# group top right, the weapons switch panel top left, the red armament button row and the SPO button panel across the
+# middle, the centre column with the warning display running down between the knees; the ASP-PFD sight on the coaming.
+OUTLINES['mig21'] = [(-0.240, 0.0), (0.240, 0.0), (0.290, -0.060), (0.290, -0.400), (0.080, -0.400), (0.070, -0.560),
+                     (-0.070, -0.560), (-0.080, -0.400), (-0.290, -0.400), (-0.290, -0.060)]
+LAYOUTS['mig21'] = [
+    ('scope', 'radar', 0.072, -0.270, 0.065), ('gauge', 'kpp_adi', -0.118, -0.234, 0.045),
+    ('gauge', 'npp_hsi', -0.105, -0.325, 0.045), ('gauge', 'ias', -0.214, -0.229, 0.035),
+    ('gauge', 'alt', -0.201, -0.296, 0.032), ('gauge', 'radalt', -0.193, -0.369, 0.030),
+    ('gauge', 'uua_aoa', -0.030, -0.239, 0.028), ('gauge', 'vvi', -0.030, -0.312, 0.030),
+    ('gauge', 'small_c', -0.030, -0.377, 0.028), ('gauge', 'rpm', 0.210, -0.239, 0.035),
+    ('gauge', 'egt', 0.197, -0.304, 0.030), ('gauge', 'fuel', 0.186, -0.361, 0.030),
+    ('gauge', 'gyro', 0.124, -0.042, 0.028), ('gauge', 'accel', 0.152, -0.104, 0.030),
+    ('gauge', 'top_r', 0.217, -0.107, 0.028), ('gauge', 'top_l1', -0.152, -0.039, 0.026),
+    ('gauge', 'top_l2', -0.147, -0.104, 0.028), ('plate', 'weapons', -0.235, -0.070, 0.110, 0.100),
+    ('plate', 'spo_buttons', 0.087, -0.177, 0.120, 0.045), ('plate', 'armament_row', -0.152, -0.177, 0.220, 0.050),
+    ('gauge', 'col_1', -0.043, -0.494, 0.026), ('gauge', 'col_2', 0.028, -0.515, 0.026),
+    ('display', 'warn_display', 0.025, -0.468, 0.060, 0.060)]
+
+# F-15E: DCS F-15E Flight Manual, 2.3 "Main panel overview" (front) and 3.1.2 "Rear main panel overview". Front: the
+# two MPDs either side of the up-front control panel, the HUD control panel under the UFC, the MPCD low in the centre,
+# the standby indicators left of it, clock / engine monitor / fuel quantity right of it, the fire warning and
+# armament panels on the left, hydraulic gauges and the caution lights on the right. Rear: four displays across
+# (MPCD, MPD, MPD, MPCD) with the rear UFC.
+OUTLINES['f15e'] = [(-0.220, 0.0), (0.220, 0.0), (0.310, -0.100), (0.330, -0.300), (0.100, -0.310), (0.090, -0.400),
+                    (-0.090, -0.400), (-0.100, -0.310), (-0.330, -0.300), (-0.310, -0.100)]
+LAYOUTS['f15e'] = [
+    ('mfd', 'mpd_l', -0.142, -0.082, 0.150), ('mfd', 'mpd_r', 0.139, -0.082, 0.150),
+    ('ufcp', 'ufc', 0.0, -0.060, 0.150, 0.120), ('plate', 'hud_control', 0.0, -0.126, 0.120, 0.030),
+    ('mfd', 'mpcd', 0.0, -0.195, 0.120), ('gauge', 'sb_1', -0.158, -0.171, 0.016),
+    ('gauge', 'sb_2', -0.124, -0.171, 0.016), ('gauge', 'sb_3', -0.084, -0.171, 0.016),
+    ('gauge', 'sb_4', -0.158, -0.210, 0.016), ('gauge', 'sb_5', -0.121, -0.210, 0.016),
+    ('gauge', 'clock', 0.079, -0.216, 0.018), ('display', 'engine_monitor', 0.131, -0.200, 0.070, 0.060),
+    ('gauge', 'fuel_qty', 0.197, -0.195, 0.028), ('plate', 'armament', -0.231, -0.163, 0.060, 0.080),
+    ('plate', 'fire_warning', -0.226, -0.089, 0.050, 0.060), ('gauge', 'hyd_1', 0.212, -0.121, 0.014),
+    ('gauge', 'hyd_2', 0.235, -0.121, 0.014), ('plate', 'caution_lights', 0.247, -0.252, 0.060, 0.070),
+    ('plate', 'gear_panel', -0.247, -0.274, 0.070, 0.060)]
+OUTLINES['f15e_rear'] = [(-0.340, 0.0), (0.340, 0.0), (0.360, -0.050), (0.360, -0.300), (0.100, -0.310),
+                         (0.090, -0.380), (-0.090, -0.380), (-0.100, -0.310), (-0.360, -0.300), (-0.360, -0.050)]
+LAYOUTS['f15e_rear'] = [
+    ('mfd', 'mpcd_l', -0.255, -0.140, 0.140), ('mfd', 'mpd_l', -0.090, -0.140, 0.150),
+    ('mfd', 'mpd_r', 0.090, -0.140, 0.150), ('mfd', 'mpcd_r', 0.255, -0.140, 0.140),
+    ('ufcp', 'ufc_rear', 0.0, -0.270, 0.150, 0.080), ('plate', 'caution_rear', 0.250, -0.270, 0.080, 0.050)]
+
 # what differs per aircraft (same-variant notes; the layouts are first-pass archetypes, refined type by type)
 AIRCRAFT = {
     'f_16b': dict(stick='side', recline=30, layout='radar'),          # F-16B Block 15: steam panel, side stick
@@ -202,6 +264,9 @@ AIRCRAFT = {
     'fa_18e': dict(layout='modern3'),                                   # three DDIs plus the UFCD
     'j_10a': dict(layout='modern3'),
     'j_15d': dict(layout='wide'),
+    'p_51d': dict(outline='p51', layout='p51'),                       # traced: DCS P-51D manual fig. 39
+    'mig_21bis': dict(outline='mig21', layout='mig21'),               # traced: DCS MiG-21bis manual fig. 6-3
+    'f_15e': dict(outline='f15e', layout='f15e', rear_outline='f15e_rear', rear_layout='f15e_rear'),   # DCS F-15E 2.3 / 3.1.2
     'f_15c': dict(sight='hud', outline='f15c', layout='f15c'),       # traced: DCS FC3 manual fig. 4-1
     'mig_15bis': dict(outline='mig15', layout='mig15'),             # traced: DCS MiG-15bis manual fig. 4.5
     'f_14a': dict(sight='hud'), 'a_7d': dict(sight='hud'),
@@ -223,4 +288,7 @@ def spec_for(vid, era, fleet):
     s.update(AIRCRAFT.get(vid, {}))
     s['trace'] = OUTLINES[s['outline']]
     s['items'] = LAYOUTS[s['layout']]
+    if s.get('rear_layout'):
+        s['rear_trace'] = OUTLINES[s['rear_outline']]
+        s['rear_items'] = LAYOUTS[s['rear_layout']]
     return s
