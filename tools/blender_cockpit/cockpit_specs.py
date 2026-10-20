@@ -1,4 +1,4 @@
-"""Cockpit structure specs for the fleet generator (cockpit_build.py).
+﻿"""Cockpit structure specs for the fleet generator (cockpit_build.py).
 
 Every aircraft starts from its era's layout (the panel outline, the instruments on it, the sight, the seat), then its
 own entry in AIRCRAFT overrides what differs. Outlines and positions are in metres at full size: r right of the centre
@@ -91,7 +91,7 @@ AIRCRAFT = {
     'j_15d': dict(layout='wide'),
     'f_15c': dict(sight='hud'), 'f_14a': dict(sight='hud'), 'a_7d': dict(sight='hud'),
     'a_10': dict(sight='hud', outline='radar', layout='radar'),
-    'su_27': dict(sight='hud'), 'su_25': dict(sight='hud'), 'su_39': dict(sight='hud'),
+    'su_27': dict(sight='hud'), 'su_25': dict(sight='gunsight'), 'su_39': dict(sight='hud'),   # Su-25: ASP-17 sight
     'mig_23mld': dict(sight='hud'), 'mirage_f1': dict(sight='hud'),
     'panavia_tornado_ids_marineflieger': dict(sight='hud'), 'saab_37_viggen': dict(sight='hud'),
 }

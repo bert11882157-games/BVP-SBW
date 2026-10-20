@@ -1,4 +1,4 @@
-"""Blender: the cockpit structure generator for the fleet (the F-16C has its own script, f16c_structure.py, whose
+﻿"""Blender: the cockpit structure generator for the fleet (the F-16C has its own script, f16c_structure.py, whose
 machinery this follows: a traced panel outline fitted to the hull, one formed panel body with cheeks to the walls, a
 padded hood glareshield following the windscreen, knee panels and a footwell, the seat and the structure behind it,
 then the fit to the hull, the clipping check and the 3 cm glass clearance).
@@ -137,6 +137,8 @@ for _attr, _val in (('surface_render_method', 'BLENDED'), ('blend_method', 'BLEN
         pass
 
 CUR_STATION = [0]
+FRONT_INDEX = [0]
+ANCHOR_U = {}
 
 
 def obj(name, bm, material, bevel=0.0, solid=0.0):
@@ -240,7 +242,7 @@ def build_station(si, E, front_eye=None):
         for _ in range(14):
             m = (lo + hi) / 2
             p = pt(side * m)
-            anchor = E + U * (-0.5 * k) + F * (p - E).dot(F)
+            anchor = E + U * (ANCHOR_U[si] * k) + F * (p - E).dot(F)
             dv = p - anchor
             L_ = dv.length
             blocked = any(h is not None for h in (hit(skin, anchor, dv, far=L_ + clear * k),
@@ -248,9 +250,17 @@ def build_station(si, E, front_eye=None):
             lo, hi = (lo, m) if blocked else (m, hi)
         return lo
 
-    eye_y = meta['eyes'][si][1]
+    eye_y = meta['eyes'][FRONT_INDEX[0]][1]          # the tub heights are the front cockpit's; a rear seat keeps them
+    #                                                  relative to its own eye
     sill_u = (tub['sill'] - eye_y) / k if tub.get('sill') else -0.42
     floor_u = max(-1.25, min(-0.80, (tub['floor_y'] - eye_y) / k)) if tub.get('floor_y') else -1.05
+    # the floor as the hull has it: straight down from just ahead of the seat (the tub's figure is a guess)
+    hd = hit(skin, P(0, -0.30, 0.25), -U)
+    if hd is not None:
+        floor_u = max(-1.25, min(floor_u, -0.30 - hd / k + 0.02))
+        floor_u = max(floor_u, -0.30 - hd / k + 0.02)
+    floor_u = min(floor_u, -0.55)
+    ANCHOR_U[si] = max(-0.55, min(-0.25, floor_u + 0.40))      # the fit's anchor sits well inside the tub
     con_u = max(floor_u + 0.30, min(sill_u - 0.18, (tub['console_y'] - eye_y) / k)) if tub.get('console_y') else -0.70
     rear = front_eye is not None
     gunner = rear and vid in ('ju_87_b2', 'il_10')
@@ -290,7 +300,11 @@ def build_station(si, E, front_eye=None):
         F_c = 0.80 - 0.035 * i
         g0 = glass_over(0, F_c, -0.4)
         top = min(-0.20, (g0 - 0.24) if g0 is not None else -0.20, ceiling(F_c + 0.05) - 0.05)
-        top = max(top, sill_u + 0.02, -0.55)
+        top = max(top, -0.55)
+        # the top edge goes down until the panel has room there (the glass and the sills close in above)
+        while top > max(-0.55, sill_u - 0.12) and min(reach_pt(lambda x, tp=top, fc=F_c: P(x, tp, fc), sd, clear=0.035)
+                                  for sd in (1, -1)) < 0.18:
+            top -= 0.02
         mid = top - 0.17
         free = min(ahead(u) for u in (top, mid, mid - 0.10))
         if free < F_c + 0.06:
@@ -306,7 +320,7 @@ def build_station(si, E, front_eye=None):
     F_PANEL = F_PANEL - abs(U_TOP - U_MID) * math.tan(lean) * 0.0
     if rear:
         fs = (front_eye - E).dot(F) / k          # the front seat's back is about 0.35 m behind the front eye
-        F_PANEL = min(F_PANEL, fs - 0.40)
+        F_PANEL = min(F_PANEL, fs - 0.55)
     pn = (F * -math.cos(lean) + U * math.sin(lean)).normalized()
     upl = (U * math.cos(lean) + F * math.sin(lean)).normalized()
 
@@ -343,6 +357,13 @@ def build_station(si, E, front_eye=None):
         return True
 
     S = next((s / 100 for s in range(110, 40, -1) if trace_fits(s / 100)), 0.4)
+    if os.environ.get('CB_DEBUG'):
+        for r, du in TRACE:
+            u = U_TOP + du * 0.6
+            print('DBG trace', r, du, 'u', round(u, 3), 'reach', round(reach(u, 1 if r >= 0 else -1, clear=0.035), 3),
+                  'foot_floor', round(foot_floor, 3), 'anchor', ANCHOR_U[si])
+    if rear:
+        ws_f = min(ws_f, F_PANEL + 0.16)
     rep.update(F_PANEL=round(F_PANEL, 3), U_TOP=round(U_TOP, 3), scale=S, sill=round(sill_u, 3),
                floor=round(floor_u, 3), console=round(con_u, 3))
     bm = bmesh.new()
@@ -689,6 +710,7 @@ def build_gunner_seat(si, E, P, floor_u):
 
 # ======================================================================== the stations
 order = sorted(range(len(EYES)), key=lambda i: -(EYES[i] - EYES[0]).dot(F))      # front first
+FRONT_INDEX[0] = order[0]
 front = None
 for si in order:
     build_station(si, EYES[si], None if front is None else front)
@@ -706,7 +728,7 @@ def base(name):
 
 def anchor_of(o, p):
     E = EYES[station_of.get(o.name, 0)]
-    return E + U * (-0.5 * k) + F * (p - E).dot(F)
+    return E + U * (ANCHOR_U[station_of.get(o.name, 0)] * k) + F * (p - E).dot(F)
 
 
 moved = 0
