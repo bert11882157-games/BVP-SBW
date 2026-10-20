@@ -1,0 +1,894 @@
+{
+ "_comment": "Per-aircraft canopy construction (tools/canopy_panels/panels.py). windscreen.type: curved | flat3 (flat centre + flat quarter panels) | flat1 (flat plate, lofted sides) | integrated (one piece with the hood) | none; centre_frac = centre panel half-width as a share of the arch half-width, base_frac = base width share of the top, top_drop = panel top under the spine. hood.section: round | flatside | flattop (shoulder, tilt); hood.bows: bow stations as fractions from the arch (0) to the hood end (1). rear.type: fairing | glazed | taper. arch / hood_end: a z (blocks) or a fraction of the canopy length from the base. loft: {front, rear, halfwidth, spine, lip, ...} overrides the Loft envelope as in canopy_loft/loft.json. sources: the documents the layout follows. Research notes per aircraft: scratchpad canopy_research batch*.json (sources listed there).",
+ "a_10": {
+  "windscreen": {
+   "type": "flat3",
+   "rake": 40,
+   "centre_frac": 0.42
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "fairing"
+  },
+  "_ref": "FlightGear A-10: windscreen frame 1.24 m (flat centre, flat quarter panels), clamshell hood 2.3 m with no bow across, width 1.06 m, glass 0.84 m high"
+ },
+ "a_7d": {
+  "windscreen": {
+   "type": "flat1"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "fairing"
+  }
+ },
+ "eurofighter_typhoon": {
+  "windscreen": {
+   "type": "curved"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "fairing"
+  },
+  "_ref": "FlightGear EF2000: one-piece curved windscreen 1.37 m, hood 2.46 m with no bow, width 0.94 m, 0.72 m high"
+ },
+ "f2h_2": {
+  "windscreen": {
+   "type": "flat1"
+  },
+  "hood": {
+   "section": "flatside",
+   "bows": [],
+   "shoulder": 0.6,
+   "tilt": 0.05
+  },
+  "rear": {
+   "type": "taper"
+  }
+ },
+ "f3h": {
+  "windscreen": {
+   "type": "flat1"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "fairing"
+  }
+ },
+ "f8f_1": {
+  "windscreen": {
+   "type": "flat3"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "taper"
+  }
+ },
+ "f9f_2": {
+  "windscreen": {
+   "type": "flat1"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "taper"
+  }
+ },
+ "f_100c": {
+  "windscreen": {
+   "type": "flat1"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "fairing"
+  }
+ },
+ "f_104g": {
+  "windscreen": {
+   "type": "flat3",
+   "rake": 28
+  },
+  "hood": {
+   "section": "flatside",
+   "bows": [],
+   "shoulder": 0.55,
+   "tilt": 0.1
+  },
+  "rear": {
+   "type": "taper"
+  }
+ },
+ "f_14a": {
+  "windscreen": {
+   "type": "flat3"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "fairing"
+  },
+  "_ref": "FlightGear F-14: three-panel windscreen 1.0 m long, one 3.5 m hood over both seats with no bow, width 0.94 m"
+ },
+ "f_14d": {
+  "windscreen": {
+   "type": "flat3"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "fairing"
+  },
+  "_ref": "as the F-14A"
+ },
+ "f_15c": {
+  "windscreen": {
+   "type": "curved"
+  },
+  "hood": {
+   "section": "round",
+   "bows": [
+    0.33
+   ]
+  },
+  "rear": {
+   "type": "fairing"
+  },
+  "_ref": "FlightGear F-15: windscreen 1.1 m with an arch, hood 3.1 m with one bow about a third of the way back, no bow at the rear; width 1.06 m tapering aft"
+ },
+ "f_15e": {
+  "windscreen": {
+   "type": "curved"
+  },
+  "hood": {
+   "section": "round",
+   "bows": [
+    0.33
+   ]
+  },
+  "rear": {
+   "type": "fairing"
+  },
+  "_ref": "as the F-15C: one bow a third of the way back over the two seats"
+ },
+ "f_16b": {
+  "windscreen": {
+   "type": "integrated"
+  },
+  "hood": {
+   "section": "round",
+   "bows": [
+    0.55
+   ]
+  },
+  "rear": {
+   "type": "glazed"
+  },
+  "_ref": "FlightGear F-16D: the F-16 bubble stretched over two seats with one bow between them"
+ },
+ "f_16c": {
+  "windscreen": {
+   "type": "integrated"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "glazed"
+  },
+  "frame": {
+   "bow_w": 0.14,
+   "rail_w": 0.09
+  },
+  "_ref": "FlightGear F-16 (GPL): canopy 2.9 m long, 0.68 m wide, 0.57 m above the sill at the bow; one-piece bubble, no windscreen bow; the hinge frame behind the seat is a wide band (~0.2 m); glass ~10 mm"
+ },
+ "f_4c": {
+  "windscreen": {
+   "type": "flat1"
+  },
+  "hood": {
+   "section": "round",
+   "bows": [
+    0.38,
+    0.55
+   ]
+  },
+  "rear": {
+   "type": "fairing"
+  }
+ },
+ "f_5a": {
+  "windscreen": {
+   "type": "curved"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "fairing"
+  }
+ },
+ "f_84f": {
+  "windscreen": {
+   "type": "flat1"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "fairing"
+  }
+ },
+ "f_86k": {
+  "windscreen": {
+   "type": "flat1",
+   "base": 4.46
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "fairing"
+  },
+  "cut": [
+   [
+    [
+     -0.65,
+     -0.36,
+     0.3
+    ],
+    [
+     0.65,
+     0.05,
+     1.5
+    ]
+   ]
+  ],
+  "_note": "Windscreen foot given: the model draws its armour-glass windscreen as a black wedge on the nose, which the loft read as skin; the wedge goes with remove_boxes."
+ },
+ "f_8h": {
+  "windscreen": {
+   "type": "flat1",
+   "rake": 40
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "fairing"
+  }
+ },
+ "fa_18e": {
+  "windscreen": {
+   "type": "curved"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "fairing"
+  }
+ },
+ "fiat_g_91": {
+  "windscreen": {
+   "type": "flat1"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "fairing"
+  },
+  "_ref": "FlightGear G.91: windscreen 0.64 m, hood 1.26 m (frame 1.5 m), width 0.82 m"
+ },
+ "ho_229": {
+  "windscreen": {
+   "type": "curved"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "fairing"
+  }
+ },
+ "il_10": {
+  "windscreen": {
+   "type": "flat3",
+   "rake": 45
+  },
+  "hood": {
+   "section": "flattop",
+   "bows": [
+    0.5
+   ],
+   "shoulder": 0.65,
+   "tilt": 0.03
+  },
+  "rear": {
+   "type": "taper"
+  },
+  "lip_below_eye": 0.35
+ },
+ "j_10a": {
+  "windscreen": {
+   "type": "curved"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "fairing"
+  }
+ },
+ "j_11a": {
+  "windscreen": {
+   "type": "curved"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "fairing"
+  }
+ },
+ "j_15d": {
+  "windscreen": {
+   "type": "curved"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "fairing"
+  }
+ },
+ "j_2": {
+  "windscreen": {
+   "type": "flat1",
+   "centre_frac": 0.6
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "fairing"
+  }
+ },
+ "j_26": {
+  "windscreen": {
+   "type": "flat3",
+   "rake": 38
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "taper"
+  }
+ },
+ "j_5": {
+  "windscreen": {
+   "type": "flat1",
+   "centre_frac": 0.6
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "fairing"
+  }
+ },
+ "ju_87_b2": {
+  "windscreen": {
+   "type": "flat3",
+   "rake": 42
+  },
+  "hood": {
+   "section": "flattop",
+   "bows": [
+    0.2,
+    0.4,
+    0.6,
+    0.8
+   ],
+   "shoulder": 0.7,
+   "tilt": 0.03
+  },
+  "rear": {
+   "type": "taper"
+  },
+  "lip_below_eye": 0.35,
+  "_ref": "FlightGear Ju 87: greenhouse of flat panels 2.6 m long over two seats with many frames; the pilot's sliding section 0.9 m, width 0.76 m"
+ },
+ "md_450_ouragan": {
+  "windscreen": {
+   "type": "flat1"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "taper"
+  }
+ },
+ "meteor_f_8": {
+  "windscreen": {
+   "type": "flat3"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "taper",
+   "tail": 0.6
+  },
+  "_ref": "FlightGear Meteor: hood frame 0.83 m inside 2.1 m of glazing: windscreen, hood and a long fixed rear glazing tapering onto the spine"
+ },
+ "mig19": {
+  "windscreen": {
+   "type": "flat1",
+   "centre_frac": 0.6
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "fairing"
+  }
+ },
+ "mig_15bis": {
+  "windscreen": {
+   "type": "flat1",
+   "centre_frac": 0.6
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "fairing"
+  },
+  "_ref": "FlightGear MiG-15bis: flat armour-glass windscreen 0.43 m between posts, sliding hood 1.49 m with no bow, width 0.82 m"
+ },
+ "mig_19s": {
+  "windscreen": {
+   "type": "flat1",
+   "centre_frac": 0.6
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "fairing"
+  }
+ },
+ "mig_21bis": {
+  "windscreen": {
+   "type": "flat1",
+   "centre_frac": 0.55
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "taper",
+   "tail": 0.3
+  },
+  "_ref": "FlightGear MiG-21bis: windscreen 0.64 m (flat plate, curved sides), hood 0.97 m, a short glazed tail on the headrest fairing, width 0.82 m"
+ },
+ "mig_23mld": {
+  "windscreen": {
+   "type": "flat3",
+   "rake": 36
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "fairing"
+  }
+ },
+ "mig_29": {
+  "skip": true,
+  "_note": "hand-built cockpit (mig_29.py); the existing curved windscreen + frameless bubble glass stays"
+ },
+ "mig_9": {
+  "windscreen": {
+   "type": "flat3"
+  },
+  "hood": {
+   "section": "flatside",
+   "bows": [],
+   "shoulder": 0.6,
+   "tilt": 0.06
+  },
+  "rear": {
+   "type": "taper"
+  }
+ },
+ "mirage_5": {
+  "windscreen": {
+   "type": "flat3"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "fairing"
+  }
+ },
+ "mirage_f1": {
+  "windscreen": {
+   "type": "flat3"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "fairing"
+  }
+ },
+ "p_51d": {
+  "windscreen": {
+   "type": "flat1"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "taper"
+  },
+  "_ref": "FlightGear P-51D: flat armour-glass windscreen 0.42 m with its frame 0.76 m wide at the base; sliding bubble hood, no bow"
+ },
+ "panavia_tornado_ids_marineflieger": {
+  "windscreen": {
+   "type": "flat1"
+  },
+  "hood": {
+   "section": "round",
+   "bows": [
+    0.5
+   ]
+  },
+  "rear": {
+   "type": "fairing"
+  },
+  "_ref": "FlightGear Tornado: windscreen 1.13 m with a flat centre panel, hood 2.74 m over two seats with one bow between them, width 0.94 m tapering aft"
+ },
+ "q_5": {
+  "windscreen": {
+   "type": "flat1"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "fairing"
+  }
+ },
+ "rafale": {
+  "windscreen": {
+   "type": "curved"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "fairing"
+  }
+ },
+ "saab_29_tunnan": {
+  "windscreen": {
+   "type": "flat1"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "taper"
+  }
+ },
+ "saab_32_lansen": {
+  "windscreen": {
+   "type": "flat1"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "fairing"
+  }
+ },
+ "saab_35_draken": {
+  "windscreen": {
+   "type": "flat1"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "fairing"
+  }
+ },
+ "saab_37_viggen": {
+  "windscreen": {
+   "type": "flat3",
+   "rake": 35
+  },
+  "hood": {
+   "section": "flatside",
+   "bows": [],
+   "shoulder": 0.5,
+   "tilt": 0.1
+  },
+  "rear": {
+   "type": "fairing"
+  },
+  "_ref": "FlightGear JA 37: hood 1.18 m with flat-sided section, width 0.72 m, 0.6 m high"
+ },
+ "saab_j_21a_1": {
+  "windscreen": {
+   "type": "flat3",
+   "rake": 40
+  },
+  "hood": {
+   "section": "flattop",
+   "bows": [],
+   "shoulder": 0.6,
+   "tilt": 0.05
+  },
+  "rear": {
+   "type": "taper"
+  }
+ },
+ "saab_jas_39_gripen": {
+  "windscreen": {
+   "type": "curved"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "fairing"
+  }
+ },
+ "sabre_mk_6": {
+  "windscreen": {
+   "type": "flat1"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "taper"
+  },
+  "_ref": "FlightGear F-86: flat armour-glass windscreen 0.38 m between posts, sliding hood 1.81 m, width 0.86 m"
+ },
+ "su_17": {
+  "windscreen": {
+   "type": "flat3",
+   "rake": 38
+  },
+  "hood": {
+   "section": "flatside",
+   "bows": [],
+   "shoulder": 0.5,
+   "tilt": 0.08
+  },
+  "rear": {
+   "type": "fairing"
+  }
+ },
+ "su_25": {
+  "windscreen": {
+   "type": "flat3",
+   "rake": 40,
+   "centre_frac": 0.4
+  },
+  "hood": {
+   "section": "flatside",
+   "bows": [],
+   "shoulder": 0.5,
+   "tilt": 0.08
+  },
+  "rear": {
+   "type": "fairing"
+  },
+  "_ref": "FlightGear Su-25: flat armour windscreen 1.21 m long, short side-hinged hood 0.88 m with no bow across, width 0.80 m, heavy frames"
+ },
+ "su_27": {
+  "windscreen": {
+   "type": "curved"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "fairing"
+  },
+  "_ref": "FlightGear Su-27: windscreen part of the fuselage mesh; rear canopy 1.88 m, width 0.94 m tapering to 0.70 m aft, 0.52 m high"
+ },
+ "su_30": {
+  "windscreen": {
+   "type": "curved"
+  },
+  "hood": {
+   "section": "round",
+   "bows": [
+    0.5
+   ]
+  },
+  "rear": {
+   "type": "fairing"
+  }
+ },
+ "su_35": {
+  "windscreen": {
+   "type": "curved"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "fairing"
+  }
+ },
+ "su_39": {
+  "windscreen": {
+   "type": "flat3",
+   "rake": 40,
+   "centre_frac": 0.4
+  },
+  "hood": {
+   "section": "flatside",
+   "bows": [],
+   "shoulder": 0.5,
+   "tilt": 0.08
+  },
+  "rear": {
+   "type": "fairing"
+  },
+  "_ref": "as the Su-25"
+ },
+ "su_57": {
+  "windscreen": {
+   "type": "curved"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "fairing"
+  }
+ },
+ "su_9": {
+  "windscreen": {
+   "type": "flat1"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "taper"
+  }
+ },
+ "super_mystere": {
+  "windscreen": {
+   "type": "flat1"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "fairing"
+  }
+ },
+ "supermarine_spitfire_griffon": {
+  "windscreen": {
+   "type": "flat1"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "taper"
+  },
+  "_ref": "FlightGear Spitfire: flat armour-glass plate 0.25 m wide with curved quarter panels, sliding hood 0.57 m, fixed rear glazing 0.4 m tapering to the spine, width 0.58 m"
+ },
+ "yak_15p": {
+  "windscreen": {
+   "type": "curved"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "taper"
+  }
+ },
+ "yak_3": {
+  "windscreen": {
+   "type": "curved"
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "taper"
+  }
+ },
+ "yak_9u": {
+  "windscreen": {
+   "type": "flat3",
+   "rake": 40
+  },
+  "hood": {
+   "section": "round",
+   "bows": []
+  },
+  "rear": {
+   "type": "taper"
+  }
+ }
+}

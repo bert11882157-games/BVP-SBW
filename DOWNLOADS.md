@@ -13,7 +13,23 @@ No stable release is currently published in this repository. See [all releases](
 for the complete release history.
 The `0.9.19beta` source tag currently has no GitHub Release or compiled download assets.
 
-## Latest published testing build: 0.11.122beta
+## Latest published testing build: 0.11.124beta
+
+[Modelled cockpits for all 65 fixed-wing aircraft and the MiG-29: era-matched instrument panels, eyebrow annunciators on the panel lip, larger displays, every HUD combiner on the pilot's straight-ahead line](https://github.com/bert11882157-games/BVP-SBW/releases/tag/v0.11.124beta).
+Install all three matching JARs on clients and servers, replacing older active copies:
+
+| Component | Mod JAR | Checksum |
+| --- | --- | --- |
+| BVP 0.11.124beta | [JAR](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.11.124beta/bvp-main-v0.11.124beta.jar) | [SHA-256](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.11.124beta/bvp-main-v0.11.124beta.jar.sha256) |
+| SBW 0.11.124beta | [JAR](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.11.124beta/bvp_superbwarfare-v0.11.124beta.jar) | [SHA-256](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.11.124beta/bvp_superbwarfare-v0.11.124beta.jar.sha256) |
+| FFA 1.0.6-bvp.21 | [JAR](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.11.124beta/fire-from-above-1.0.6-bvp.21.jar) | [SHA-256](https://github.com/bert11882157-games/BVP-SBW/releases/download/v0.11.124beta/fire-from-above-1.0.6-bvp.21.jar.sha256) |
+
+Cockpit geometry and vehicle data for 66 aircraft plus the flight-display code that draws the gauges, annunciators and HUD.
+The source build and the SBW unit tests passed (the six known failures predate this build), all 66 aircraft spawned in the
+isolated test runtime, and the F-16C and MiG-29 cockpits were checked in seat view. 0.11.123beta was an internal build with
+unpacked MiG-29 textures and was never published.
+
+## Earlier published testing build: 0.11.122beta
 
 [Helicopter canopy glass: AH-1G, AH-6J front bubble, Mi-24V gunner, Tiger left windows, Mi-26 windscreen and roof windows; AH-1G and AH-6J pilot views inside the cockpit](https://github.com/bert11882157-games/BVP-SBW/releases/tag/v0.11.122beta).
 Install all three matching JARs on clients and servers, replacing older active copies:

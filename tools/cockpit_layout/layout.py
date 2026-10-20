@@ -10,9 +10,10 @@
     vehicle-local blocks) for the stores diagram.
 
 Writes "FlightDisplays" and "CockpitGauges" into the asset vehicle JSON (and removes them when the preset has
-none). Usage: python3 tools/cockpit_layout/layout.py [--write] [--sheet out.png] [id...]
+none). Aircraft with a modelled cockpit (tools/cockpit_models/fleet.json and the MiG-29) are skipped: their cockpit
+tools place their instruments. Usage: python3 tools/cockpit_layout/layout.py [--write] [--sheet out.png] [id...]
 """
-import json, math, os, sys
+import glob, json, math, os, sys
 import numpy as np
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -25,6 +26,9 @@ G = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(G)
 
 PRESETS = json.load(open(os.path.join(HERE, 'presets.json')))
+# Aircraft with a modelled cockpit lay out their own instruments (tools/cockpit_models): left alone here.
+MODELLED = set(json.load(open(os.path.join(HERE, '..', 'cockpit_models', 'fleet.json')))['aircraft']) | {'mig_29'} | \
+    {os.path.basename(p)[:-5] for p in glob.glob(os.path.join(HERE, '..', 'cockpit_models', 'helicopters', '*.json'))}
 GAP = 0.012
 
 
@@ -325,6 +329,9 @@ def main(argv):
     ids = [a for a in argv if not a.startswith('--') and a != out_sheet] or sorted(PRESETS['aircraft'])
     entries = []
     for vid in ids:
+        if vid in MODELLED:
+            print(f"{vid:34s} modelled cockpit (tools/cockpit_models), skipped")
+            continue
         preset, scene, displays, gauges, outline = layout(vid)
         kinds = [f"{d['kind']}/{d['style']}@{d['seat']}" for d in displays]
         print(f"{vid:34s} {preset:15s} displays {kinds} gauges {len(gauges or [])}"
