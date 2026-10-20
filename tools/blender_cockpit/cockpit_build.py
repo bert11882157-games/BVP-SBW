@@ -118,10 +118,20 @@ def mat(name, rgb, rough=0.7, metal=0.0):
     return m
 
 
-wwii = spec['outline'] == 'wwii'
-M = dict(panel=mat('panel', (34, 35, 37)), coaming=mat('coaming', (22, 22, 23), 0.8),
-         tub=mat('tub', (112, 116, 116) if not wwii else (96, 104, 92)), tub_d=mat('tub_d', (88, 92, 92)),
-         floor=mat('floor', (28, 28, 29)), console=mat('console', (36, 37, 39)),
+wwii = spec['outline'] == 'wwii' or meta.get('era') == 'WWII_STEAM'
+# interior colours by the airframe's palette: (panel, console, tub, tub dark)
+PALETTE = {
+    'soviet': ((70, 150, 150), (64, 138, 140), (82, 160, 160), (66, 134, 136)),          # the turquoise cockpits
+    'soviet_grey': ((34, 35, 37), (40, 42, 44), (104, 112, 104), (88, 96, 90)),          # early jets: black panel
+    'us_ww2': ((30, 30, 30), (36, 36, 36), (96, 110, 62), (82, 94, 54)),                # interior green
+    'rlm66': ((48, 51, 53), (52, 55, 57), (60, 63, 65), (52, 55, 57)),                   # RLM 66 schwarzgrau
+    'ussr_ww2': ((40, 40, 42), (46, 46, 48), (120, 124, 120), (100, 104, 100)),
+    'raf': ((26, 26, 26), (32, 32, 32), (100, 110, 95), (86, 94, 82)),                  # RAF grey-green
+}
+_pal = PALETTE.get((meta.get('fleet') or {}).get('palette'), ((34, 35, 37), (36, 37, 39), (112, 116, 116), (88, 92, 92)))
+M = dict(panel=mat('panel', _pal[0]), coaming=mat('coaming', (22, 22, 23), 0.8),
+         tub=mat('tub', _pal[2]), tub_d=mat('tub_d', _pal[3]),
+         floor=mat('floor', (28, 28, 29)), console=mat('console', _pal[1]),
          seat=mat('seat_frame', (128, 134, 128), 0.5), cushion=mat('cushion', (150, 156, 132), 0.9),
          headbox=mat('headbox', (108, 116, 104)), black=mat('black', (16, 16, 17), 0.6),
          metal=mat('metal', (140, 144, 146), 0.35, 0.8), yellow=mat('yellow', (230, 190, 30)),

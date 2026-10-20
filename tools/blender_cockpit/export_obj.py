@@ -49,8 +49,29 @@ def write_obj(path, mtl_name, bones):
     open(path, 'w', encoding='utf-8').write('\n'.join(lines) + '\n')
 
 
+def write_glass(path, g):
+    with open(path, 'w') as f:
+        f.write('o canopy_glass\n')
+        for t in g:
+            for p in t:
+                f.write(f'v {p[0]:.5f} {p[1]:.5f} {p[2]:.5f}\n')
+        for i in range(len(g)):
+            f.write(f'f {3 * i + 3} {3 * i + 2} {3 * i + 1}\n')
+
+
 def main(argv):
     out, vid = argv[0], argv[1]
+    if '--glass-ref' in argv:
+        # only the canopy glass, from another branch (e.g. the cloud's rebuilt glass): glass.obj is replaced, the
+        # previous one kept as glass_prev.obj
+        ref = argv[argv.index('--glass-ref') + 1]
+        d = os.path.join(out, vid)
+        g = RB.load(vid, ref).glass
+        if os.path.isfile(os.path.join(d, 'glass.obj')) and not os.path.isfile(os.path.join(d, 'glass_prev.obj')):
+            shutil.copy(os.path.join(d, 'glass.obj'), os.path.join(d, 'glass_prev.obj'))
+        write_glass(os.path.join(d, 'glass.obj'), g)
+        print('glass', vid, 'from', ref, len(g), 'triangles')
+        return
     cut = '--cut' in argv
     d = os.path.join(out, vid)
     os.makedirs(d, exist_ok=True)
