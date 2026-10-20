@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """The Blender cockpit structure into the game: geo, vehicle asset and textures.
 
 Reads STRUCTDIR/game_export.json (written by game_export.py at the end of cockpit_build.py / f16c_structure.py) and
@@ -339,7 +339,7 @@ def convert(vid, sdir, dry=False):
         with open(ac.geo_path, 'w') as fh:
             json.dump(ac.geo, fh, separators=(',', ':'))
         L.write_asset(ac.asset_path, ac.asset)
-        tex = L.texture_path(vid)
+        tex = os.path.normpath(L.texture_path(vid))
         atlas.write(tex)
         dead = tex.replace(os.sep + 'entity' + os.sep, os.sep + 'entity_dead' + os.sep)
         if os.path.isfile(dead):
