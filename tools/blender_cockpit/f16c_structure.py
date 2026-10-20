@@ -1,4 +1,4 @@
-﻿"""Blender: the F-16C Block 50/52 cockpit structure (no instruments yet), modelled inside the real model.
+"""Blender: the F-16C Block 50/52 cockpit structure (no instruments yet), modelled inside the real model.
 
 References (all Block 50/52; see research/f_16c_cockpit.md):
   1. "F16 Cockpit, Asian Aerospace 2006" (Block 52): panel layout, the ICP tower, the MFD hoods, the engine
@@ -172,9 +172,9 @@ PANEL_FOOT = -0.585
 # from the MFD bezel's 162 mm): (right, down from the glareshield lip), symmetrical, the centre column left out
 # (it is its own part below); the shoulders slope in under the glareshield, the sides step out at the foot into the
 # two "wings", and on the right the engine-instrument column runs on below the wing
-TRACE = [(-0.238, 0.0), (0.238, 0.0), (0.352, -0.1175), (0.355, -0.295), (0.428, -0.300), (0.428, -0.307),
-         (0.357, -0.309), (0.354, -0.350), (0.282, -0.350), (0.280, -0.2875), (-0.281, -0.2875), (-0.289, -0.3375),
-         (-0.421, -0.3375), (-0.428, -0.307), (-0.428, -0.300), (-0.355, -0.295), (-0.352, -0.1175)]
+TRACE = [(-0.238, 0.0), (0.238, 0.0), (0.352, -0.1175), (0.355, -0.309), (0.354, -0.350), (0.282, -0.350),
+         (0.280, -0.2875), (-0.281, -0.2875), (-0.289, -0.3375), (-0.355, -0.3375), (-0.355, -0.309), (-0.352, -0.1175)]
+# (the drawing's two "wings" at the foot are the side shelves seen from above, so they are left off)
 
 
 def trace_fits(s):
@@ -295,26 +295,45 @@ def outboard(side, u, hw, lift, pref):
 
 c = panel_pt(-0.156 * TRACE_S, U_TOP - 0.069 * TRACE_S, 0.03)
 framed('rwr_scope', c, facing(c), 0.084, 0.084, 0.022, 0.062, 0.062, M['panel'])
-c = panel_pt(outboard(-1, -0.335, 0.026, 0.025, 0.285), -0.335, 0.025)
-box('threat_prime', c, facing(c, yaw=25), (0.026, 0.05, 0.016), M['panel'], bevel=0.003)
-# left outboard, stepping back and down toward the console: the MISC panel, then the landing gear panel
-for nm, u, lift, hw, hh, yaw in (('misc_panel', -0.440, 0.012, 0.026, 0.060, 30),
-                                 ('arm_panel', -0.545, 0.008, 0.026, 0.036, 30)):
-    c = panel_pt(outboard(-1, u, hw, lift, 0.314 * TRACE_S), u, lift)
-    box(nm, c, facing(c, yaw=yaw), (hw, hh, 0.012), M['panel'], bevel=0.003)
-    print('MEASURE', nm, 'r', round((c - E).dot(R) / k, 3))
+def facet(name, side, u_top, u_bot, yaw=25):
+    """the panel's outboard facet: one plane hinged on the MFD's outer edge (just clear of the bezel) and turned
+    `yaw` degrees toward the pilot, out to the traced side or the wall, whichever is nearer; returns
+    (centre, (right, up, normal), half width, half height) for the details laid on it"""
+    r_in = MFD_EDGE + 0.006
+    corners = []
+    for u in (u_top, u_bot):
+        r_out = min(0.352 * TRACE_S, reach(u, side, clear=0.045) - 0.01)
+        lift_out = (r_out - r_in) * math.tan(math.radians(yaw))
+        corners.append((panel_pt(side * r_in, u, 0.004), panel_pt(side * r_out, u, 0.004 + lift_out)))
+    (ti, to), (bi, bo) = corners
+    rows = [[ti, to], [bi, bo]] if side > 0 else [[to, ti], [bo, bi]]
+    sheet(name, rows, M['panel'], solid=0.012)
+    c = (ti + to + bi + bo) / 4
+    ar = (to - ti).normalized() * side
+    au = (ti - bi).normalized()
+    n = ar.cross(au).normalized() if side > 0 else au.cross(ar).normalized() * -1
+    if n.dot(E - c) < 0:
+        n = -n
+    hw = min((to - ti).length, (bo - bi).length) / k / 2
+    return c, (ar, au, n), hw, (ti - bi).length / k / 2
 
-# right outboard: the upright engine instrument strip, angled toward the pilot, four gauge recesses
-# (FTIT, RPM, nozzle, oil) and the fuel flow window; the right aux panel stepped back below it
-ENG_U = U_TOP - 0.150 * TRACE_S
-c = panel_pt(outboard(1, ENG_U, 0.024, 0.012, 0.3175 * TRACE_S), ENG_U, 0.012)
-print('MEASURE engine strip r', round((c - E).dot(R) / k, 3))
-ax = facing(c, yaw=25)
-box('engine_strip', c - ax[2] * 0.010 * k, ax, (0.026, 0.125, 0.012), M['panel'], bevel=0.003)
-for i, du in enumerate((0.093, 0.031, -0.031, -0.093)):
-    q = c + ax[1] * du * k + ax[2] * 0.003 * k
-    cyl(f'engine_gauge_rim_{i}', q, ax[2], 0.023, 0.004, M['grip'])
-    cyl(f'engine_gauge_face_{i}', q + ax[2] * 0.0035 * k, ax[2], 0.019, 0.0012, M['black'])
+
+# left: the threat warning prime / MISC / master arm facet from the shoulder down to the panel's foot
+c, ax, hw, hh = facet('left_facet', -1, U_TOP - 0.125 * TRACE_S, U_TOP - 0.330 * TRACE_S)
+print('MEASURE left facet half width', round(hw, 3))
+for i, (du, h_) in enumerate(((0.62, 0.030), (0.15, 0.050), (-0.55, 0.034))):   # three switch plates, flush
+    box(f'left_facet_plate_{i}', c + ax[1] * du * hh * k + ax[2] * 0.0015 * k, ax, (hw - 0.006, h_, 0.0015),
+        M['console'], bevel=0.001)
+
+# right: the engine instrument facet beside the right MFD: four gauges (FTIT, RPM, nozzle, oil) in a column
+ENG_TOP, ENG_BOT = U_TOP - 0.120 * TRACE_S, U_TOP - 0.345 * TRACE_S
+c, ax, hw, hh = facet('engine_facet', 1, ENG_TOP, ENG_BOT)
+print('MEASURE engine facet half width', round(hw, 3))
+g_r = min(0.022, hw - 0.004)
+for i in range(4):
+    q = c + ax[1] * (hh - (2 * i + 1) * hh / 4) * k + ax[2] * 0.004 * k
+    cyl(f'engine_gauge_rim_{i}', q, ax[2], g_r, 0.004, M['grip'])
+    cyl(f'engine_gauge_face_{i}', q + ax[2] * 0.0035 * k, ax[2], g_r - 0.004, 0.0012, M['black'])
 # (the right aux panel is the sloping aux console below, by the knee)
 
 # the centre column: narrow, from under the ICP down between the knees, flanked by the dark V-flanks that slope
@@ -372,16 +391,6 @@ for t in (0.35, 0.7, 1.0):
                 q[0] *= s_
     rows.append([P(*q) for q in row])
 sheet('glareshield', rows, M['coaming'], solid=0.015)
-# its two side skirts: from the glareshield's outer edge down to the sill, laid inside the fit, so no gap shows
-# between the glareshield's ends and the hull
-for sgn, idx in ((-1, 0), (1, -1)):
-    top_edge = [rows[i][idx] for i in range(len(rows))]
-    low_edge = []
-    for q in top_edge:
-        f_q = (q - E).dot(F) / k
-        w_low = reach(-0.39, sgn, clear=0.03, pt=lambda x, f_q=f_q: P(x, -0.39, f_q))
-        low_edge.append(P(sgn * w_low, -0.39, f_q))
-    sheet(f'glareshield_side_{sgn}', [top_edge, low_edge], M['coaming'], solid=0.01)
 # its lip face down to the panel top
 sheet('glareshield_lip', [lip, [panel_pt((p - E).dot(R) / k, U_TOP) for p in lip]], M['coaming'], solid=0.01)
 # the glareshield's cheeks (ref. 1): black wedges from the lip's outer ends back along the canopy rails to above the
@@ -446,10 +455,10 @@ for sg, nm in ((-1, 'aoa_indexer'), (1, 'ar_status_indicator')):
 # the eyebrow lamp strips (master caution / threat warning on the left, the warning lamps on the right): slim
 # housings along the panel's sloping shoulders, as on the traced drawing
 for sg in (-1, 1):
-    a_ = panel_pt(sg * 0.250 * TRACE_S, U_TOP - 0.012 * TRACE_S, 0.012)
-    b_ = panel_pt(sg * 0.340 * TRACE_S, U_TOP - 0.105 * TRACE_S, 0.012)
+    a_ = panel_pt(sg * 0.246 * TRACE_S, U_TOP - 0.014 * TRACE_S, 0.006)
+    b_ = panel_pt(sg * 0.336 * TRACE_S, U_TOP - 0.108 * TRACE_S, 0.006)
     ax_ = (b_ - a_).normalized()
-    box(f'eyebrow_{sg}', (a_ + b_) / 2, (ax_, ax_.cross(pn).normalized(), pn), ((b_ - a_).length / k / 2, 0.011, 0.010),
+    box(f'eyebrow_{sg}', (a_ + b_) / 2, (ax_, ax_.cross(pn).normalized(), pn), ((b_ - a_).length / k / 2, 0.010, 0.005),
         M['coaming'], bevel=0.002)
 
 # ======================================================================== tub, consoles, aux consoles
@@ -528,7 +537,7 @@ f16c_controls.build(dict(P=P, R=R, U=U, F=F, E=E, k=k, M=M, box=box, cyl=cyl, ob
 # centre line at its own height and station until it is
 MARGIN = 0.015
 TUB_PARTS = ('wall_', 'sill_', 'floor', 'rear_bulkhead', 'aft_deck', 'headbox_back', 'console_side_', 'pedal_')
-EDGE_PARTS = ('panel_board', 'glareshield_side', 'threat_prime', 'misc_panel', 'arm_panel', 'gear_panel', 'engine_strip', 'right_aux_panel',
+EDGE_PARTS = ('panel_board', 'left_facet', 'engine_facet', 'gear_panel', 'right_aux_panel',
               'mfd_hood')                                                              # parts that meet the walls
 
 
