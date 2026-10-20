@@ -639,6 +639,8 @@ def cut_well(ac, well, glass):
 
 OUTBOARD = 0.6                            # of the canopy half-width at the sill
 FORMED = False                            # --formed: the cockpit shaped to the measured space, canopy glass kept
+DETAILED = False                          # --detailed: the detailed generator cockpit (0.11.129's), canopy glass kept,
+                                          # leftovers in front of the pilot cleared
 PART_RULE = os.environ.get('BVP_PART_RULE') == '1'   # off: it kept old shelves joined to the frames
 HIGH = 0.15                               # blocks above the eye
 DEBUG = {}                                # interior_strict's kept faces, for the review renders
@@ -728,7 +730,7 @@ def interior_strict(vid, ref='origin/main', dry=False):
     _mod = authored.module(vid)
     cut_boxes = list(getattr(_mod, 'CUT_BOXES', [])) if _mod is not None else []
     under_canopy = None
-    if FORMED and not cut_boxes:
+    if (FORMED or DETAILED) and not cut_boxes:
         # the formed cockpit clears the old interior in front of the pilot even where gaps in the windscreen glass
         # let an outside view see it, as long as every corner is under the canopy glass (the nose deck ahead of
         # the windscreen and the sills stay)
@@ -837,7 +839,7 @@ def interior_strict(vid, ref='origin/main', dry=False):
             b['poly_mesh']['polys'] = [p for i, p in enumerate(b['poly_mesh']['polys']) if i not in bad]
     ac.glass = kept_glass
     write_instruments(ac, seat, gauges, displays, hud, tub)
-    if FORMED and ac.asset.get('CanopyGlass'):
+    if (FORMED or DETAILED) and ac.asset.get('CanopyGlass'):
         # the canopy's own glass stays; the old sight and display glass inside the cockpit goes with the old
         # interior, and the new combiner glass is added
         cg = ac.asset['CanopyGlass']
@@ -926,7 +928,7 @@ def cockpit(ac, tub, era, fspec, sw):
         mesh, stick, gauges, displays, glass, hud, foot = FM.build(ac, tub, sw, ac.atlas, era,
                                                                    fspec.get('palette', 'nato'), hud=fspec.get('hud'),
                                                                    side_stick=bool(side))
-    elif mod is not None:
+    elif mod is not None and not DETAILED:
         # an authored cockpit (tools/cockpit_models/authored/<vid>.py): built from the type's references, its
         # painted faces in a free area of the texture (written with the model)
         from authored import lib as AL
@@ -989,9 +991,10 @@ def write_instruments(ac, seat, gauges, displays, hud, tub):
 def main(argv):
     ref = next((a.split('=', 1)[1] for a in argv if a.startswith('--ref=')), 'origin/main')
     dry = '--dry-run' in argv
-    global FORMED
+    global FORMED, DETAILED
     FORMED = '--formed' in argv
-    run = interior_strict if ('--interior' in argv or FORMED) else interior_only if '--keep-canopy' in argv else rebuild
+    DETAILED = '--detailed' in argv
+    run = interior_strict if ('--interior' in argv or FORMED or DETAILED) else interior_only if '--keep-canopy' in argv else rebuild
     failed = 0
     for vid in [a for a in argv if not a.startswith('--')]:
         try:
