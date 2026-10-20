@@ -1,4 +1,4 @@
-"""Blender: the F-16C Block 50/52 cockpit structure (no instruments yet), modelled inside the real model.
+﻿"""Blender: the F-16C Block 50/52 cockpit structure (no instruments yet), modelled inside the real model.
 
 References (all Block 50/52; see research/f_16c_cockpit.md):
   1. "F16 Cockpit, Asian Aerospace 2006" (Block 52): panel layout, the ICP tower, the MFD hoods, the engine
@@ -196,7 +196,17 @@ for f_ in bm.faces:                  # face the pilot, so the thickness goes beh
     f_.normal_update()
     if f_.normal.dot(pn) < 0:
         f_.normal_flip()
-obj('panel_board', bm, M['panel'], solid=0.025)
+obj('panel_board', bm, M['panel'], solid=0.025, bevel=0.004)
+bm = bmesh.new()
+front_v = [bm.verts.new(panel_pt(r * TRACE_S, U_TOP + du * TRACE_S, -0.024)) for r, du in TRACE]
+back_v = [bm.verts.new(panel_pt(r * TRACE_S, U_TOP + du * TRACE_S, -0.30)) for r, du in TRACE]
+bm.faces.new(front_v); bm.faces.new(back_v[::-1])
+for i in range(len(TRACE)):
+    j = (i + 1) % len(TRACE)
+    bm.faces.new([front_v[j], front_v[i], back_v[i], back_v[j]])
+bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+bmesh.ops.triangulate(bm, faces=[f_ for f_ in bm.faces if len(f_.verts) > 4])
+obj('panel_body', bm, M['coaming'])
 json.dump(dict(trace=TRACE, scale=TRACE_S), open(os.path.join(out, 'trace.json'), 'w'))
 
 
@@ -355,18 +365,24 @@ for sg in (-1, 1):
 # the pedestal: leaning back 50 degrees between the knees, from the column's foot toward the floor
 ped_top = panel_pt(0, -0.66, 0.045)
 ped_ax_u = (U * math.cos(math.radians(50)) + F * math.sin(math.radians(50))).normalized()
+ped_len = ((ped_top - E).dot(U) / k + 1.10) / ped_ax_u.dot(U)          # down the 50 degree slope to the floor
 ped_rows = [[ped_top + R * r * k for r in (-0.11, 0.11)],
-            [ped_top - ped_ax_u * 0.16 * k + R * r * k for r in (-0.095, 0.095)]]
+            [ped_top - ped_ax_u * ped_len * 0.5 * k + R * r * k for r in (-0.10, 0.10)],
+            [ped_top - ped_ax_u * ped_len * k + R * r * k for r in (-0.095, 0.095)]]
 sheet('pedestal', ped_rows, M['panel'], solid=0.05)
 
 # ======================================================================== glareshield
 # from the panel's top edge forward to the windscreen base, a crowned surface under the glass; its lip stands
 # 5 cm toward the pilot over the panel
 lip, front = [], []
-for r in [x / 10 for x in range(-4, 5)]:   # r: position across, as a share of 0.4
-    w = min(reach(U_TOP, 1 if r >= 0 else -1, lift=0.05, clear=0.045), 0.40)
-    rr = r / 0.4 * w                     # spread over the trimmed width (no bunched, doubled points)
-    lip.append(panel_pt(rr, U_TOP, 0.05) + U * 0.015 * k)
+# the lip follows the panel's traced top edge and its sloping shoulders, so the glareshield is a hood over the whole
+# panel: flat across the top, falling away at the sides (xflight.de drawing)
+LIP_PATH = [(-0.352, -0.1175), (-0.305, -0.069), (-0.265, -0.028), (-0.238, 0.0), (-0.12, 0.0), (0.0, 0.0),
+            (0.12, 0.0), (0.238, 0.0), (0.265, -0.028), (0.305, -0.069), (0.352, -0.1175)]
+lip_du = []
+for r, du in LIP_PATH:
+    lip.append(panel_pt(r * TRACE_S, U_TOP + du * TRACE_S, 0.05) + U * 0.015 * k)
+    lip_du.append(du * TRACE_S)
 rows = [lip]
 for t in (0.35, 0.7, 1.0):
     row = []
@@ -375,10 +391,10 @@ for t in (0.35, 0.7, 1.0):
         u0 = (p - E).dot(U) / k
         f0 = (p - E).dot(F) / k
         f = f0 + (ws_f - f0) * t
-        u = u0 + 0.035 * math.sin(math.pi * t) * (1 - (r / 0.4) ** 2) - 0.02 * t
+        u = u0 + 0.030 * math.sin(math.pi * t) * max(0.0, 1 - (r / 0.36) ** 2) - 0.02 * t
         g = glass_over(r, f, u - 0.3)
-        if g is not None:
-            u = min(u, g - 0.045)               # 4.5 cm under the windscreen
+        if g is not None:                       # forward, the hood follows the windscreen line, 4.5 cm under it
+            u = min(u * (1 - t) + (g - 0.045) * t, g - 0.045)
         row.append([r, u, f])
     # each half of the row shrinks evenly to what the fit allows at its outer end (no bunched points)
     for sgn in (-1, 1):
@@ -390,9 +406,10 @@ for t in (0.35, 0.7, 1.0):
             for q in half:
                 q[0] *= s_
     rows.append([P(*q) for q in row])
-sheet('glareshield', rows, M['coaming'], solid=0.015)
+sheet('glareshield', rows, M['coaming'], solid=0.028, bevel=0.010)
 # its lip face down to the panel top
-sheet('glareshield_lip', [lip, [panel_pt((p - E).dot(R) / k, U_TOP) for p in lip]], M['coaming'], solid=0.01)
+sheet('glareshield_lip', [lip, [panel_pt((p - E).dot(R) / k, U_TOP + du) for p, du in zip(lip, lip_du)]], M['coaming'],
+      solid=0.03, bevel=0.012)
 # the glareshield's cheeks (ref. 1): black wedges from the lip's outer ends back along the canopy rails to above the
 # side consoles, sloping down to the sill
 for sg, end in ((1, lip[-1]), (-1, lip[0])):
@@ -410,24 +427,25 @@ for sg, end in ((1, lip[-1]), (-1, lip[0])):
     # sheet(f'glareshield_cheek_{sg}', rows, M['coaming'], solid=0.012)
 
 # ======================================================================== ICP tower and HUD
-icp_c = P(0, -0.322, 0.625)
-icp_n = (F * -math.cos(math.radians(12)) + U * math.sin(math.radians(12))).normalized()
-icp_u = (U * math.cos(math.radians(12)) + F * math.sin(math.radians(12))).normalized()
-box('icp_housing', icp_c - icp_n * 0.05 * k, (R, icp_u, icp_n), (0.083, 0.050, 0.05), M['panel'], bevel=0.008)
-box('icp_face', icp_c + icp_n * 0.002 * k, (R, icp_u, icp_n), (0.077, 0.044, 0.003), M['console'], bevel=0.002)
+# the ICP stands a few cm proud of the panel at the top centre, under the HUD (drawing: 166 x 128 mm); the DED sits
+# right of it on the panel's top edge
+icp_n, icp_u = pn, up15
+icp_c = panel_pt(0, U_TOP - 0.064 * TRACE_S, 0.050)
+box('icp_housing', icp_c - icp_n * 0.026 * k, (R, icp_u, icp_n), (0.083, 0.062, 0.026), M['panel'], bevel=0.006)
+box('icp_face', icp_c + icp_n * 0.002 * k, (R, icp_u, icp_n), (0.077, 0.056, 0.003), M['console'], bevel=0.002)
 for sg in (-1, 1):                     # the rocker-wheel housings either side of the keypad
-    box(f'icp_rocker_{sg}', icp_c + R * sg * 0.064 * k + icp_n * 0.006 * k, (R, icp_u, icp_n), (0.007, 0.034, 0.006),
+    box(f'icp_rocker_{sg}', icp_c + R * sg * 0.064 * k + icp_n * 0.006 * k, (R, icp_u, icp_n), (0.007, 0.040, 0.006),
         M['grip'], bevel=0.003)
-# the DED bezel immediately right of the ICP, on the same upfront face
-ded_c = icp_c + R * 0.165 * k - icp_n * 0.012 * k
-framed('ded', ded_c, (R, icp_u, icp_n), 0.118, 0.062, 0.03, 0.098, 0.040, M['panel'], recess=0.008)
-# the HUD body sits on the glareshield over the ICP (the ICP housing is on its face); two dark side frames rise from
-# it, leaning back 20 degrees, with the clear combiner glass held between them
-hud_base = P(0, U_TOP + 0.040, 0.70)
-box('hud_body', hud_base, (R, U, F), (0.085, 0.040, 0.075), M['hud'], bevel=0.012)
+ded_c = panel_pt(0.158 * TRACE_S, U_TOP - 0.042 * TRACE_S, 0.030)
+framed('ded', ded_c, facing(ded_c, half=True), 0.105, 0.052, 0.024, 0.090, 0.036, M['panel'], recess=0.008)
+# the HUD body sits on the glareshield just forward of the lip, over the ICP; two dark side frames rise from it,
+# leaning back 20 degrees, with the clear combiner glass held between them
+lip_f = (panel_pt(0, U_TOP, 0.05) - E).dot(F) / k
+hud_base = P(0, U_TOP + 0.050, lip_f + 0.060)
+box('hud_body', hud_base, (R, U, F), (0.085, 0.045, 0.070), M['hud'], bevel=0.012)
 g_lean = math.radians(20)
 g_up = (U * math.cos(g_lean) - F * math.sin(g_lean)).normalized()
-g_bot = P(0, U_TOP + 0.080, 0.665)
+g_bot = P(0, U_TOP + 0.095, lip_f + 0.005)
 def hud_clear(h):                                 # 3 cm under the windscreen at the frames' tops (and the middle)
     for r_ in (-0.085, 0.0, 0.085):
         top = g_bot + g_up * h * k + R * r_ * k
@@ -449,7 +467,7 @@ print('MEASURE combiner height', round(g_h, 3))
 # the AOA indexer (left) and the AR status / NWS indicator (right): small upright posts on the glareshield either
 # side of the HUD (xflight.de arrangement drawing)
 for sg, nm in ((-1, 'aoa_indexer'), (1, 'ar_status_indicator')):
-    pc = P(sg * 0.135, U_TOP + 0.040, 0.715)
+    pc = P(sg * 0.135, U_TOP + 0.058, lip_f + 0.025)
     box(nm, pc, (R, U, F), (0.013, 0.040, 0.013), M['hud'], bevel=0.003)
     box(f'{nm}_lamps', pc - F * 0.0135 * k + U * 0.008 * k, (R, U, F), (0.009, 0.026, 0.001), M['black'], bevel=0.0)
 # the eyebrow lamp strips (master caution / threat warning on the left, the warning lamps on the right): slim
@@ -532,12 +550,45 @@ box('canopy_actuator_mount', a0, (R, U, F), (0.05, 0.015, 0.04), M['tub_d'], bev
 import f16c_controls
 f16c_controls.build(dict(P=P, R=R, U=U, F=F, E=E, k=k, M=M, box=box, cyl=cyl, obj=obj, CON_U=CON_U))
 
+# ======================================================================== panel cheeks
+# the panel face carried on sideways from its traced edge to the cockpit wall, shoulder to foot, so no gap shows
+# between the panel and the walls
+for sg in (-1, 1):
+    rows = []
+    for du in (-0.1175, -0.17, -0.23, -0.29, -0.35):
+        u = U_TOP + du * TRACE_S
+        r_e = 0.354 * TRACE_S
+        r_w = max(r_e + 0.004, reach(u, sg, clear=0.03))
+        rows.append([panel_pt(sg * r_e, u, -0.002), panel_pt(sg * r_w, u, -0.012)])
+    sheet(f'panel_cheek_{sg}', rows if sg > 0 else [r_[::-1] for r_ in rows], M['panel'], solid=0.012)
+
+# ======================================================================== footwell and knee panels
+F_FW = 1.08                                             # the footwell's forward bulkhead, behind the pedals
+rows = []
+for u in (-1.12, -0.98, -0.84, -0.72, -0.64):
+    w = min(span(u, F_FW, 1, cap=0.40), span(u, F_FW, -1, cap=0.40))
+    rows.append([P(x * w, u, F_FW) for x in (-1, -0.5, 0, 0.5, 1)])
+sheet('footwell_front', rows, M['tub_d'], solid=0.01)
+for sg in (-1, 1):
+    # the footwell side linings, from the side consoles' front forward to the bulkhead
+    rows = []
+    for f in (0.59, 0.75, 0.92, F_FW):
+        w_lo = span(-1.10, f, sg, cap=0.40); w_hi = span(-0.70, f, sg, cap=0.40)
+        rows.append([P(sg * w_lo, -1.10, f), P(sg * w_hi, -0.70, f)])
+    sheet(f'footwell_side_{sg}', rows if sg > 0 else [r_[::-1] for r_ in rows], M['tub_d'], solid=0.01)
+    # the knee panel: from the main panel's foot (beside the centre column) forward and down to the bulkhead
+    foot_u = U_TOP - 0.2875 * TRACE_S
+    r0, r1 = 0.115, min(0.33, span(foot_u, F_PANEL, sg, cap=0.40))
+    top = [panel_pt(sg * x, foot_u, -0.02) for x in (r0, (r0 + r1) / 2, r1)]
+    bot = [P(sg * x, -0.70, F_FW) for x in (r0, (r0 + r1) / 2, min(r1, span(-0.70, F_FW, sg, cap=0.40)))]
+    sheet(f'knee_panel_{sg}', [top, bot] if sg > 0 else [top[::-1], bot[::-1]], M['coaming'], solid=0.012)
+
 # ======================================================================== keep inside: every vertex inside the fuselage
 # (or under the canopy glass), at least MARGIN from the skin; a vertex that is not is moved toward the cockpit's
 # centre line at its own height and station until it is
 MARGIN = 0.015
-TUB_PARTS = ('wall_', 'sill_', 'floor', 'rear_bulkhead', 'aft_deck', 'headbox_back', 'console_side_', 'pedal_')
-EDGE_PARTS = ('panel_board', 'left_facet', 'engine_facet', 'gear_panel', 'right_aux_panel',
+TUB_PARTS = ('wall_', 'sill_', 'floor', 'rear_bulkhead', 'aft_deck', 'headbox_back', 'footwell_', 'console_side_', 'pedal_')
+EDGE_PARTS = ('panel_board', 'panel_body', 'panel_cheek', 'knee_panel', 'left_facet', 'engine_facet', 'gear_panel', 'right_aux_panel',
               'mfd_hood')                                                              # parts that meet the walls
 
 
