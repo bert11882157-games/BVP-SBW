@@ -506,9 +506,8 @@ def apply(vid, dry=False):
                               'Eye': L.r5(E)}
     else:
         a.pop('HeadUpDisplay', None)
-    # No canopy glass for now (bert, 2026-10-19: original canopies, glass to be revisited later). The glass is still
-    # read above to measure the stations; the HUD picture draws on the combiner frame without a pane.
-    a.pop('CanopyGlass', None)
+    # CanopyGlass belongs to the canopy-glass rebuild (fitted in Blender): it is read above to measure the stations
+    # and left exactly as it is. The HUD picture draws on the combiner frame without a pane of its own.
 
     vols = [L.loader_volume(b['poly_mesh']) for b in [ac.bone('cockpit')] + new_bones if b['poly_mesh']['polys']]
     report = (f'{vid}: ' + '; '.join(f"seat {st['seat']} {st['era']} {t.describe()}" for st, t in zip(stations, tubs)) +
