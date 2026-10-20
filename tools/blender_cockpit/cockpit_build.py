@@ -1,4 +1,4 @@
-"""Blender: the cockpit structure generator for the fleet (the F-16C has its own script, f16c_structure.py, whose
+﻿"""Blender: the cockpit structure generator for the fleet (the F-16C has its own script, f16c_structure.py, whose
 machinery this follows: a traced panel outline fitted to the hull, one formed panel body with cheeks to the walls, a
 padded hood glareshield following the windscreen, knee panels and a footwell, the seat and the structure behind it,
 then the fit to the hull, the clipping check and the 3 cm glass clearance).
@@ -127,7 +127,8 @@ M = dict(panel=mat('panel', (34, 35, 37)), coaming=mat('coaming', (22, 22, 23), 
          metal=mat('metal', (140, 144, 146), 0.35, 0.8), yellow=mat('yellow', (230, 190, 30)),
          grip=mat('grip', (26, 26, 27), 0.6), hud=mat('hud', (40, 42, 44), 0.5),
          hudglass=mat('hudglass', (150, 190, 170), 0.05), loop_black=mat('loop_black', (20, 20, 20), 0.6),
-         chute=mat('chute', (96, 104, 92), 0.8), armour=mat('armour', (70, 74, 70), 0.5, 0.4))
+         chute=mat('chute', (96, 104, 92), 0.8), armour=mat('armour', (70, 74, 70), 0.5, 0.4),
+         harness=mat('harness', (84, 88, 70), 0.9))
 _hb = next(n for n in M['hudglass'].node_tree.nodes if n.type == 'BSDF_PRINCIPLED')
 _hb.inputs['Alpha'].default_value = 0.22
 for _attr, _val in (('surface_render_method', 'BLENDED'), ('blend_method', 'BLEND')):
@@ -401,6 +402,7 @@ def build_station(si, E, front_eye=None):
             rows.append([panel_pt(sg * r_e, u, -0.002), panel_pt(sg * r_w, u, -0.012)])
         sheet(f'panel_cheek_{sg}', rows if sg > 0 else [r_[::-1] for r_ in rows], M['panel'], solid=0.012)
     # ------------------------------------------------------------------ instruments on the panel
+    panel_plates = []
     for it in spec['items']:
         kind, name = it[0], it[1]
         r, du = it[2] * S, it[3] * S
@@ -438,6 +440,7 @@ def build_station(si, E, front_eye=None):
             w, h = it[4] * S, it[5] * S
             c = panel_pt(r, U_TOP + du, 0.002)
             box(name, c, facing(c), (w / 2, h / 2, 0.0025), M['console'], bevel=0.001)
+            panel_plates.append((c, facing(c), w, h))
         elif kind == 'ufcp':
             w, h = it[4] * min(1.0, S), it[5] * min(1.0, S)
             c = panel_pt(r, U_TOP + du, 0.045)
@@ -595,6 +598,13 @@ def build_station(si, E, front_eye=None):
 
     # ------------------------------------------------------------------ controls and seat
     build_controls(si, E, P, hip, con_u, floor_u, F_FW)
+    import cockpit_details
+    cockpit_details.add(dict(P=P, R=R, U=U, F=F, k=k, M=M, E=E, obj=obj, seed=f'{vid}{si}', era=meta.get('era'),
+                             wwii=wwii, con_u=con_u, CON_R0=CON_R0, st_back=st_back, st_front=st_front, hip=hip,
+                             s_up=s_up, s_fw=s_fw, stick=spec['stick'], wall=wall, sill_u=sill_u, floor_u=floor_u,
+                             panel_plates=panel_plates, pn=pn,
+                             lip_pt=(lambda x: panel_pt(x * S, U_TOP - 0.02, 0.072)) if not rear else None,
+                             pedal_pos=lambda sg: P(sg * 0.10, floor_u + 0.20, F_FW - 0.12)))
     build_seat(si, E, P, hip, s_up, s_fw)
     REPORT['stations'].append(rep)
 
@@ -878,6 +888,8 @@ for nm, loc, energy, size in (('key', P0(0.15, 0.25, -0.15), 6, 0.6), ('fill', P
 bpy.ops.wm.save_as_mainfile(filepath=os.path.join(out, 'structure.blend'))
 views = dict(pilot_eye=(E0, P0(0, -0.40, 0.80), 24), panel_straight=(P0(0.0, -0.30, -0.05), P0(0.0, -0.42, 0.80), 26),
              seat_back=(P0(0, -0.08, 0.45), P0(0, -0.45, -0.1), 18),
+             console_left=(P0(0.10, 0.02, -0.10), P0(-0.27, -0.62, 0.20), 22),
+             console_right=(P0(-0.10, 0.02, -0.10), P0(0.27, -0.62, 0.20), 22),
              outside=(E0 + B.g2b([2.0, 1.2, 3.0]), P0(0, -0.2, 0.2), 30))
 for name, (loc, tgt, lens) in views.items():
     B.render_view(os.path.join(out, f'{name}.png'), loc, tgt, lens=lens, w=1280, h=800)

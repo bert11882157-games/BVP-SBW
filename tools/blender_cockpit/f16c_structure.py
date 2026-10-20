@@ -1,4 +1,4 @@
-﻿"""Blender: the F-16C Block 50/52 cockpit structure (no instruments yet), modelled inside the real model.
+"""Blender: the F-16C Block 50/52 cockpit structure (no instruments yet), modelled inside the real model.
 
 References (all Block 50/52; see research/f_16c_cockpit.md):
   1. "F16 Cockpit, Asian Aerospace 2006" (Block 52): panel layout, the ICP tower, the MFD hoods, the engine
@@ -549,6 +549,20 @@ box('canopy_actuator_mount', a0, (R, U, F), (0.05, 0.015, 0.04), M['tub_d'], bev
 # ======================================================================== side-stick, throttle, pedals, ACES II seat
 import f16c_controls
 f16c_controls.build(dict(P=P, R=R, U=U, F=F, E=E, k=k, M=M, box=box, cyl=cyl, obj=obj, CON_U=CON_U))
+# the detail pass shared with the fleet generator: console switch panels (clear of the throttle and the side stick),
+# wall breakers, the caution panel, master caution lamps, the harness, pedal arms, canopy handle, oxygen regulator
+import cockpit_details
+_rec = math.radians(30)
+_s_up = (U * math.cos(_rec) - F * math.sin(_rec)).normalized()
+_s_fw = _s_up.cross(R).normalized()
+if _s_fw.dot(F) < 0:
+    _s_fw = -_s_fw
+M['harness'] = mat('harness', (84, 88, 70), 0.9)
+cockpit_details.add(dict(P=P, R=R, U=U, F=F, k=k, M=M, E=E, obj=obj, seed='f_16c', era='MODERN_GLASS', wwii=False,
+                         con_u=CON_U, CON_R0=CON_R0, st_back=-0.40, st_front=0.59, hip=P(0, -0.72, -0.035),
+                         s_up=_s_up, s_fw=_s_fw, stick='side', wall=wall, sill_u=-0.40, floor_u=-1.12,
+                         panel_plates=[], pn=pn, lip_pt=lambda x: panel_pt(x * TRACE_S, U_TOP - 0.02, 0.072),
+                         pedal_pos=lambda sg: P(sg * 0.10, -0.92, 0.96)))
 
 # ======================================================================== panel cheeks
 # the panel face carried on sideways from its traced edge to the cockpit wall, shoulder to foot, so no gap shows
