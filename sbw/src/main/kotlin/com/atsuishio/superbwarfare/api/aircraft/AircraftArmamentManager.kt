@@ -912,7 +912,9 @@ object AircraftArmamentManager {
             weapon to store
         }
         val channels = active.map { it.first }.toSet()
-        (lease.seekChannels - channels).forEach { AircraftMissileLauncher.clear(vehicle, it) }
+        // a lock another crew member still has selected (both helicopter seats on the same store) stays his
+        (lease.seekChannels - channels).filter { !seekingElsewhere(vehicle, player, it) }
+            .forEach { AircraftMissileLauncher.clear(vehicle, it) }
         lease.seekChannels = channels
         val primaryWeapon = vehicle.getGunName(seat)
         val displayChannel = AircraftSeekerDisplayPolicy.choose(active.map { (weapon, store) ->
@@ -926,7 +928,11 @@ object AircraftArmamentManager {
             addProperty("ConeDegrees", 0); addProperty("Range", 0); addProperty("LockTicks", 0)
         }
         for ((weapon, store) in active) {
-            val status = AircraftMissileLauncher.update(vehicle, player, weapon, store)
+            // One seeker per store: when two crew members select the same store, the lower seat drives its dwell
+            // (two updates a tick would lock it twice as fast) and the other reads the same lock.
+            val status = if (lockDriverSeat(vehicle, weapon).let { it < 0 || it == seat })
+                AircraftMissileLauncher.update(vehicle, player, weapon, store)
+            else sharedLockStatus(AircraftMissileLauncher.state(vehicle, weapon))
             val selectedDisplay = displayChannel ?: continue
             if (weapon != selectedDisplay.weaponId) continue
             val state = AircraftMissileLauncher.state(vehicle, weapon)
@@ -963,6 +969,40 @@ object AircraftArmamentManager {
         }
     }
 
+    /** Whether another seated operator's seeker currently follows [channel] on [vehicle]. */
+    private fun seekingElsewhere(vehicle: VehicleEntity, player: ServerPlayer, channel: String): Boolean =
+        leases.any { (other, lease) -> other !== player && lease.vehicle === vehicle && channel in lease.seekChannels &&
+            other.vehicle === vehicle && other.isAlive }
+
+    /** The lowest occupied operator seat (pilot or weapon seat) with [channel] in a weapon slot; -1 when none. */
+    private fun lockDriverSeat(vehicle: VehicleEntity, channel: String): Int {
+        val seats = (listOf(0) + AircraftMissileLaunchers.weaponSeats(definition(vehicle))).distinct().sorted()
+        return seats.firstOrNull { seat ->
+            val occupant = vehicle.getNthEntity(seat) as? ServerPlayer
+            occupant != null && occupant.isAlive && (vehicle.getGunName(seat) == channel ||
+                vehicle.getSecondaryWeaponIndex(seat)?.let { vehicle.getGunName(seat, it) } == channel)
+        } ?: -1
+    }
+
+    /** The lock status (as AircraftMissileLauncher.update returns it) another seat's seeker holds on a channel. */
+    private fun sharedLockStatus(state: net.minecraft.nbt.CompoundTag): Int {
+        val progress = state.getDouble("Progress")
+        val target = state.hasUUID("TargetUUID") || state.getString("TargetType") == "BLOCK"
+        return when {
+            target && progress >= 1.0 -> 2
+            target || progress > 0.0 -> 1
+            else -> 0
+        }
+    }
+
+    /** Ends [player]'s seeker lease: every lock, unless another crew member still flies the vehicle's seekers. */
+    private fun releaseSeekers(player: ServerPlayer, lease: Lease) {
+        val shared = leases.any { (other, l) -> other !== player && l.vehicle === lease.vehicle }
+        if (!shared) { AircraftMissileLauncher.clear(lease.vehicle); return }
+        lease.seekChannels.filter { !seekingElsewhere(lease.vehicle, player, it) }
+            .forEach { AircraftMissileLauncher.clear(lease.vehicle, it) }
+    }
+
     private const val TRACK_PUBLISH_TICKS = 5
     private const val TRACK_PUBLISH_MOVE_SQR = 0.5 * 0.5
 
@@ -982,7 +1022,7 @@ object AircraftArmamentManager {
         val player = event.player as? ServerPlayer ?: return
         val vehicle = player.vehicle as? VehicleEntity
         if (vehicle == null || definition(vehicle) == null || !pilot(player, vehicle) && !operator(player, vehicle)) {
-            leases.remove(player)?.let { AircraftMissileLauncher.clear(it.vehicle) }; return
+            leases[player]?.let { releaseSeekers(player, it) }; leases.remove(player); return
         }
         val old = leases[player]
         if (old?.vehicle === vehicle && old.catalogue == AircraftArmamentRegistry.revision) {
@@ -990,12 +1030,14 @@ object AircraftArmamentManager {
             if (player.tickCount % TRACK_PUBLISH_TICKS == 0) followPaintedVehicle(vehicle)
             return
         }
-        old?.let { AircraftMissileLauncher.clear(it.vehicle) }
+        old?.let { releaseSeekers(player, it) }
         val lease = Lease(vehicle, nextEpoch++, AircraftArmamentRegistry.revision)
         leases[player] = lease; updateSeeker(player, lease, false); reply(player, lease)
     }
     @SubscribeEvent fun mounted(event: EntityMountEvent) {
-        (event.entityMounting as? ServerPlayer)?.let { leases.remove(it)?.let { lease -> AircraftMissileLauncher.clear(lease.vehicle) } }
+        (event.entityMounting as? ServerPlayer)?.let { player ->
+            leases[player]?.let { releaseSeekers(player, it) }; leases.remove(player)
+        }
     }
     @SubscribeEvent fun tracking(event: PlayerEvent.StartTracking) {
         val vehicle = event.target as? VehicleEntity ?: return
@@ -1011,7 +1053,7 @@ object AircraftArmamentManager {
     }
     @SubscribeEvent fun logout(event: PlayerEvent.PlayerLoggedOutEvent) {
         val player = event.entity as? ServerPlayer ?: return
-        leases.remove(player)?.let { AircraftMissileLauncher.clear(it.vehicle) }; sequences.remove(player.connection.connection)
+        leases[player]?.let { releaseSeekers(player, it) }; leases.remove(player); sequences.remove(player.connection.connection)
         farReceipts.remove(player)
         watchers.values.forEach { it.remove(player) }
     }

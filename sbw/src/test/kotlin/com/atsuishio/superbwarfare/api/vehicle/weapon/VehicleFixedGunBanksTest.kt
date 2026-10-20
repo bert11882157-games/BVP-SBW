@@ -49,17 +49,19 @@ class VehicleFixedGunBanksTest {
     }
 
     @Test
-    fun `one physical gun is driven by one seat at a time`() {
+    fun `one physical gun is one schedule whichever seat fires it`() {
         val gunner = VehicleWeaponScheduler.ScheduleKey(1, 0, "M230")
         val pilot = VehicleWeaponScheduler.ScheduleKey(0, 6, "M230")
         val pilotRockets = VehicleWeaponScheduler.ScheduleKey(0, 0, "HydraS2")
-        assertTrue(VehicleWeaponScheduler.admitsPhysicalWeapon(emptyList(), pilot))
-        assertFalse(VehicleWeaponScheduler.admitsPhysicalWeapon(listOf(gunner), pilot), "gunner already firing it")
-        assertTrue(VehicleWeaponScheduler.admitsPhysicalWeapon(listOf(gunner), pilotRockets))
-        assertTrue(VehicleWeaponScheduler.admitsPhysicalWeapon(listOf(pilot), pilot.copy()),
-            "the same seat's own key is handled by the duplicate-key check, not refused here")
-        // two independent guns, one per seat, never block each other
-        assertTrue(VehicleWeaponScheduler.admitsPhysicalWeapon(listOf(pilotRockets), gunner))
+        // both seats may hold the same gun selected: they fire the same physical weapon
+        assertEquals(VehicleWeaponScheduler.physicalWeapon(gunner), VehicleWeaponScheduler.physicalWeapon(pilot))
+        assertNotEquals(VehicleWeaponScheduler.physicalWeapon(pilot), VehicleWeaponScheduler.physicalWeapon(pilotRockets))
+        // once one holder spent the gun's cadence slot this tick, the other seat's hold waits for the next one
+        assertTrue(VehicleWeaponScheduler.admitsSharedAttempt(emptySet(), pilot))
+        assertFalse(VehicleWeaponScheduler.admitsSharedAttempt(setOf("M230"), pilot), "gunner already fired it")
+        assertTrue(VehicleWeaponScheduler.admitsSharedAttempt(setOf("M230"), pilotRockets))
+        // two independent weapons, one per seat, never block each other
+        assertTrue(VehicleWeaponScheduler.admitsSharedAttempt(setOf("HydraS2"), gunner))
     }
 
     @Test

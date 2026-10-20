@@ -180,9 +180,17 @@
         "AimCameraMode": "AIRCRAFT_FREELOOK",
         "UseAircraftCamera": false,
         "EyeAttachment": "gunner_eye",
-        "ZoomEyeAttachment": "gunner_eye",
+        "ZoomEyeAttachment": "gunner_sight",
         "DirectionAttachment": "gunner_eye",
-        "ZoomDirectionAttachment": "gunner_eye"
+        "ZoomDirectionAttachment": "gunner_sight",
+        "ZoomYawRange": [
+          -120,
+          120
+        ],
+        "ZoomPitchRange": [
+          -45,
+          30
+        ]
       },
       "DismountInfo": {
         "Transform": "Vehicle",
@@ -216,7 +224,7 @@
         "Profile": "berts_vehicle_pack:ah_1g_cobra/rocket/default"
       },
       "Spread": 0.25,
-      "Name": "weapon.superbwarfare.80mm_rocket",
+      "Name": "2.75 in FFAR",
       "RPM": 600,
       "Damage": 100,
       "ExplosionDamage": 0,
@@ -507,7 +515,7 @@
       },
       "AddShooterDeltaMovement": true,
       "DefaultZoom": 3,
-      "RPM": 4500,
+      "RPM": 1025,
       "ProjectileAmount": 1,
       "Magazine": 400,
       "EmptyReloadTime": 400,
@@ -859,7 +867,7 @@
       },
       "AddShooterDeltaMovement": true,
       "DefaultZoom": 3,
-      "RPM": 4500,
+      "RPM": 1025,
       "ProjectileAmount": 1,
       "Magazine": 250,
       "EmptyReloadTime": 400,
@@ -1223,7 +1231,7 @@
         "Profile": "berts_vehicle_pack:ah_1g_cobra/rocket/default"
       },
       "Spread": 0.25,
-      "Name": "weapon.superbwarfare.80mm_rocket",
+      "Name": "2.75 in FFAR",
       "RPM": 600,
       "Damage": 100,
       "ExplosionDamage": 0,
@@ -1334,7 +1342,7 @@
         "Profile": "berts_vehicle_pack:ah_1g_cobra/rocket/default"
       },
       "Spread": 0.25,
-      "Name": "weapon.superbwarfare.80mm_rocket",
+      "Name": "2.75 in FFAR",
       "RPM": 600,
       "Damage": 100,
       "ExplosionDamage": 0,
@@ -1625,7 +1633,7 @@
       },
       "AddShooterDeltaMovement": true,
       "DefaultZoom": 3,
-      "RPM": 4500,
+      "RPM": 1025,
       "ProjectileAmount": 1,
       "Magazine": 400,
       "EmptyReloadTime": 400,
@@ -1977,7 +1985,7 @@
       },
       "AddShooterDeltaMovement": true,
       "DefaultZoom": 3,
-      "RPM": 4500,
+      "RPM": 1025,
       "ProjectileAmount": 1,
       "Magazine": 250,
       "EmptyReloadTime": 400,
@@ -2341,7 +2349,7 @@
         "Profile": "berts_vehicle_pack:ah_1g_cobra/rocket/default"
       },
       "Spread": 0.25,
-      "Name": "weapon.superbwarfare.80mm_rocket",
+      "Name": "2.75 in FFAR",
       "RPM": 600,
       "Damage": 100,
       "ExplosionDamage": 0,
@@ -2519,6 +2527,19 @@
         0.0,
         2.9,
         3.65
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "gunner_sight": {
+      "Parent": "Vehicle",
+      "Position": [
+        0.0,
+        6.88,
+        0.55
       ],
       "Direction": [
         0,

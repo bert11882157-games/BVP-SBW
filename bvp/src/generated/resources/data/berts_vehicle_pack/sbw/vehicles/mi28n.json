@@ -218,18 +218,36 @@
           0
         ],
         "EyeAttachment": "seat_2_camera",
-        "ZoomEyeAttachment": "seat_2_camera",
+        "ZoomEyeAttachment": "gunner_sight",
         "DirectionAttachment": "Default",
-        "ZoomDirectionAttachment": "Default",
+        "ZoomDirectionAttachment": "gunner_sight",
         "CameraMode": "PLAYER_LOOK_AIM",
-        "AimCameraMode": "PLAYER_LOOK_AIM"
+        "AimCameraMode": "PLAYER_LOOK_AIM",
+        "ZoomYawRange": [
+          -110,
+          110
+        ],
+        "ZoomPitchRange": [
+          -60,
+          20
+        ]
       },
       "MinPitch": -60,
       "MaxPitch": 15,
       "MinYaw": -110,
       "MaxYaw": 110,
       "Weapons": [
-        "Cannon"
+        "Cannon",
+        "S8S1",
+        "S13S1B13l",
+        "S8S2",
+        "S13S2B13l",
+        "Gsh23S2Upk23",
+        "S8S3",
+        "S13S3B13l",
+        "Gsh23S3Upk23",
+        "S8S4",
+        "S13S4B13l"
       ],
       "DismountInfo": {
         "Transform": "Vehicle",
@@ -3972,6 +3990,19 @@
         0.0,
         3.92,
         3.45
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "gunner_sight": {
+      "Parent": "Vehicle",
+      "Position": [
+        0.0,
+        2.75,
+        6.76
       ],
       "Direction": [
         0,

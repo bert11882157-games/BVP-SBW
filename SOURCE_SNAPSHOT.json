@@ -238,8 +238,8 @@
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/custom_geo/ah_1g_cobra.geo.json",
-      "size": 1173819,
-      "sha256": "dab9d259985e30857b4c0de033351a5bd1179a967ca064363c1a82b321d3071f"
+      "size": 1187782,
+      "sha256": "6a272670312e328eb7c42e00632ddb69549abd4c97d19426c83837e7f35046ee"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/custom_geo/ah_1g_cobra_turret_wreck.geo.json",
@@ -11378,8 +11378,8 @@
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/ah_1g_cobra.json",
-      "size": 2720,
-      "sha256": "0531c954de6819c4a71a9662290ca721f1c470947b007bc2f855c1984b252585"
+      "size": 2795,
+      "sha256": "f5a4859875ec5ec01324fa2130f2044952102a301e99b7dd2fbe0abaa24a17e2"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/ah_64d.json",
@@ -11603,8 +11603,8 @@
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/mi24v.json",
-      "size": 4841,
-      "sha256": "e9fa66f8d1562a3c2b5378fc5491c13ac8ee6088ff791d756ef1ef3932d66b23"
+      "size": 5463,
+      "sha256": "e76ec3d1a84b3086fa343ec5ba86d7716ec4310580d54613eb3ec68ff81ceadb"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_armaments/mi28n.json",
@@ -12130,6 +12130,11 @@
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/heli/r60_x2.json",
       "size": 1238,
       "sha256": "3548bc60725333a8629b9b3274cb0e4d2c2750d3a085c77c58ef6c7d56d3c1b0"
+    },
+    {
+      "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/heli/r60m_x1.json",
+      "size": 838,
+      "sha256": "e31acf0f043fea2bd6147731ed486a83c3ec4b59fff1d7d465d2e42e96192067"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/aircraft_stores/heli/r60m_x2.json",
@@ -13427,6 +13432,26 @@
       "sha256": "930b39d1f6184e6aed7a20eda2b40e32c0ec401e25cfee457f68b50b5680487c"
     },
     {
+      "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/ah_1g_cobra/m129turret/default.json",
+      "size": 819,
+      "sha256": "ce724d6f3242fc0164b7969fafbcf4c266141f015ff3a7d7e1a3706492874bbb"
+    },
+    {
+      "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/ah_1g_cobra/m129turret/m129_hedp.json",
+      "size": 819,
+      "sha256": "ce724d6f3242fc0164b7969fafbcf4c266141f015ff3a7d7e1a3706492874bbb"
+    },
+    {
+      "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/ah_1g_cobra/m134turret/belt_ammo_wt_m134_ap.json",
+      "size": 1238,
+      "sha256": "0438d5f6ea2e956626405daa4f5ed4f2dc1f2f82161537cfc21e21780378ff27"
+    },
+    {
+      "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/ah_1g_cobra/m134turret/belt_ammo_wt_m134_t.json",
+      "size": 2567,
+      "sha256": "606dc6e23f3ffb116e825959d2a386c56c85c90f75e0ccb8758f526373ec4559"
+    },
+    {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/ah_1g_cobra/rocket/default.json",
       "size": 1997,
       "sha256": "5efd53e839ae69d54bb574d7679b3b58297169815309c0017ecf74370ca654bd"
@@ -14515,6 +14540,16 @@
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/aircraft_rounds/ubs/ubs_ground_game.json",
       "size": 2550,
       "sha256": "d321cdc11394cbac1539a737209c18e60989796a548e647f456f6bf62654c966"
+    },
+    {
+      "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/aircraft_rounds/yakb/wt_gshg_ap.json",
+      "size": 1234,
+      "sha256": "fecff75f61f7899bd3de7e196e615ae1c5762991f08afec915f60f1a10a7c87c"
+    },
+    {
+      "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/aircraft_rounds/yakb/wt_gshg_api_t.json",
+      "size": 2565,
+      "sha256": "9d9255044bb819e1e386117453bce42e4cd2f994672322b5de933aeec764f827"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/projectile_profiles/aircraft_rounds/yakb/wt_yakb_api_t.json",
@@ -18308,23 +18343,23 @@
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/ah_1f.json",
-      "size": 87001,
-      "sha256": "dbd1f0d8f95b08abbe9684d9b2db446d06b6c3e25841f652211b22ed1ad134e4"
+      "size": 87320,
+      "sha256": "14bc2b47e72f33f1df0e0eea9e4d2a8b96d5d9174dca87776fda4d794bd59bf4"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/ah_1g_cobra.json",
-      "size": 87797,
-      "sha256": "af79187ce24581a7afcca25ae3b615cb7aa64a519b680f3f4b9bcec4062ee069"
+      "size": 95804,
+      "sha256": "cafa386b0669777ebd2140dd512262f8efd099a9275a8c6be3cde9a8e2644f92"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/ah_64d.json",
-      "size": 52431,
-      "sha256": "53db8757537e829275e60e5c287ba25055e004b1b539c3894130cd6169bdfe90"
+      "size": 52751,
+      "sha256": "1196ac93d611ed83dbb603add9dacfd9fca3af8080f268c113b2df1b99079e6b"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/ah_6j.json",
       "size": 58873,
-      "sha256": "8becd807497d5fd8aaa2db91ce31141938a1e48c4b4564b0d8af6c1cd6aeabda"
+      "sha256": "1ba16e067801cd2af9bd89769e22c7760183dfd6f7d02f7fa3f94640e34b2cd5"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/an_12b.json",
@@ -18433,8 +18468,8 @@
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/eurocopter_tiger.json",
-      "size": 80673,
-      "sha256": "0b07d0f2ff89fd4abe5236f2ad8ccd59c782b1516d16ac120fc4c08a37d490a2"
+      "size": 80917,
+      "sha256": "6d156a9e1d6e3f0937d35679cb94c16600adb8757c0f02d46b1998f70e170b90"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/eurofighter_typhoon.json",
@@ -18618,8 +18653,8 @@
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/ka50.json",
-      "size": 107573,
-      "sha256": "f9c40209562d5f4731e1f2753be2dc29ebbffa125f3c668a31a5c60fb7cd6db1"
+      "size": 107894,
+      "sha256": "1a357a6bd6a3a5820e26067aa01f6aeef09e02ac2f8832902dabfbec48989fd3"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/kamaz4310.json",
@@ -18768,23 +18803,23 @@
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/mi24v.json",
-      "size": 198979,
-      "sha256": "38cd28feb70c0de936dddf4964356cf6535bf4fef0e178edb4a5bf98f2f2faa1"
+      "size": 236421,
+      "sha256": "00a0da4a44acec3cae681a052603696a394da2e55e5b5043e34bfd562e80ee4e"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/mi28n.json",
-      "size": 108035,
-      "sha256": "78afa0a4ba463e007141acc53e449980555912cd3c704357142b24d652c54cd8"
+      "size": 108555,
+      "sha256": "d7b6b7697f73b155ca080652a814106fe9a17a551713295fdd4b22704d869af7"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/mi_24a.json",
-      "size": 126937,
-      "sha256": "9916f05688996dfd556c71975fbd2acc440273b274d05c0ab8ef5d368b6658fa"
+      "size": 127436,
+      "sha256": "4953e88f4ce33daccd8a339f2fa5a632e0157a253cfda07792962b6a8670a713"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/mi_24d.json",
-      "size": 139163,
-      "sha256": "5c3620e88ed92b6475f8d6b8a1c6cdeedbc132f7a69ec5e28877cb450470eddb"
+      "size": 139745,
+      "sha256": "91ca38d38421987edbb02e2d8297b258e30ea6f5c06020c72194c3b3b660d8f7"
     },
     {
       "path": "bvp/src/generated/resources/data/berts_vehicle_pack/sbw/vehicles/mi_26.json",
@@ -20093,8 +20128,8 @@
     },
     {
       "path": "bvp/src/main/java/com/yourname/berts_vehicle_pack/entity/ArmoredVehicleEntity.java",
-      "size": 34197,
-      "sha256": "09ecae6e6963ca449a4997071bf211d57502f8c7b8e888a4ba033695a802ed05"
+      "size": 35210,
+      "sha256": "91b75d949cc02fe08489e5b7801c325fe58bf0ce4a5876736db187936d75fb99"
     },
     {
       "path": "bvp/src/main/java/com/yourname/berts_vehicle_pack/entity/Bmp1amEntity.java",
@@ -33308,8 +33343,8 @@
     },
     {
       "path": "sbw/src/main/java/com/atsuishio/superbwarfare/data/vehicle/subdata/CameraPos.kt",
-      "size": 1825,
-      "sha256": "ba728b08855e22e52a1be40de9b8786fe0188b657def867a46f383b5741a0ac1"
+      "size": 2319,
+      "sha256": "112205c4d004a5964fa7e8b385fea77fec1d43421a41d92497b194a47d0b0e09"
     },
     {
       "path": "sbw/src/main/java/com/atsuishio/superbwarfare/data/vehicle/subdata/CollisionLevel.kt",
@@ -34203,8 +34238,8 @@
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/api/aircraft/AircraftArmamentManager.kt",
-      "size": 69095,
-      "sha256": "d5428b61c29d82cd2ad0e1c6945876e29bcfc687d8b4050efcaeb3197bbc0c1c"
+      "size": 71681,
+      "sha256": "d0caf8dae330855dee444cefca449c5bf830f02c75fc75e4f85722eb70014fe0"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/api/aircraft/AircraftArmamentRegistry.kt",
@@ -34283,8 +34318,8 @@
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/api/aircraft/AircraftGunPodGroups.kt",
-      "size": 3529,
-      "sha256": "2f6e853360b4daff14a9dc7dadda7cd19a0237fdbe02403a677316ffa0c2bb8a"
+      "size": 4151,
+      "sha256": "76866c40fb155e085d340ce6fa7ded59ee7131988147c7ec01fe159ea62e829d"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/api/aircraft/AircraftHitRules.kt",
@@ -35268,8 +35303,8 @@
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/api/vehicle/weapon/VehicleFixedGunBanks.kt",
-      "size": 8562,
-      "sha256": "93aed3f1d98dfac4f7741938fb1b8342c501084caafdf1e35f2627dc0b4873d0"
+      "size": 8598,
+      "sha256": "3f5ffd0fa564fe256cf4d85c0e1b25e75e7c97f736afcfe85fa8b5d72d44020b"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/api/vehicle/weapon/VehicleMuzzleFrame.kt",
@@ -35323,8 +35358,8 @@
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/api/vehicle/weapon/VehicleWeaponScheduler.kt",
-      "size": 24751,
-      "sha256": "3e44b8d059944610335444d6cbefa0257088f6146e600d89ce355fab0372ca55"
+      "size": 29902,
+      "sha256": "d3fe8bbb03463a2e8e9e9164ba179fd52c209b9987996bb7cf5b91ac52fc5d4c"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/api/vehicle/weapon/VehicleWeaponShotDiagnostics.kt",
@@ -38693,8 +38728,8 @@
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/base/VehicleEntity.kt",
-      "size": 339648,
-      "sha256": "787435801fc9f19fafeeba49e851e6742f30a9f723458f2b56d24f723706f303"
+      "size": 342447,
+      "sha256": "49d1161d2c339480e0b60ca63ba662df9d724e8ce4184acb583b9206d839c962"
     },
     {
       "path": "sbw/src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/base/VehicleEntityContacts.kt",
@@ -53348,8 +53383,8 @@
     },
     {
       "path": "sbw/src/test/kotlin/com/atsuishio/superbwarfare/api/vehicle/weapon/VehicleFixedGunBanksTest.kt",
-      "size": 9352,
-      "sha256": "56d8fb0d3353b12a7d00c1992fa08da37893ff25e793b8698b9777c5c11ba3af"
+      "size": 9601,
+      "sha256": "ecb3a48015e642cf4dd4038bd59e02109a69ac05781d78d97f133a9a4cfa4bce"
     },
     {
       "path": "sbw/src/test/kotlin/com/atsuishio/superbwarfare/api/vehicle/weapon/VehicleWeaponDamagePolicyTest.kt",
@@ -53358,8 +53393,8 @@
     },
     {
       "path": "sbw/src/test/kotlin/com/atsuishio/superbwarfare/api/vehicle/weapon/VehicleWeaponTriggerCadenceTest.kt",
-      "size": 7259,
-      "sha256": "6f3f2278ea75970b0362f963f6a4dbd0b67eef5e49c41c0cd8ff47d7d606b39e"
+      "size": 10790,
+      "sha256": "fd7190ba8545aea25352291b3f4503fd0ed154dd67d17640896590cf3177c187"
     },
     {
       "path": "sbw/src/test/kotlin/com/atsuishio/superbwarfare/api/vehicle/weapon/prediction/VehicleRangeBallisticsTest.kt",

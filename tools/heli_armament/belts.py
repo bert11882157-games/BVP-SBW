@@ -118,17 +118,23 @@ GUNS = {
                    't_ball': ('m134_t', 'ah_6j/cannon/belt_ammo_00_m134_t')},
         'ap': {'Damage': 22}, 'shake': [0, 0, 0], 'item': 'superbwarfare:small_machine_gun_ammunition'},
 }
+GUNS['gungshg_guv'] = {
+    'rounds': {'ap_ball': ('gshg_ap', 'ah_6j/cannon/ammo_00_m134_ap'),
+               'ap_i_t_ball': ('gshg_api_t', 'ah_6j/cannon/belt_ammo_00_m134_t')},
+    'ap': {'Damage': 22}, 'shake': [0, 0, 0], 'item': 'superbwarfare:small_machine_gun_ammunition'}
 GUNS['cannongsh_23l_upk_23_250'] = GUNS['cannongsh_23l']
 GUNS['gunfn_m3p_cwp'] = GUNS['gunfn_m3p']
 
 # built-in guns: (vehicle, weapon) -> WT gun
 BUILTIN = {('ah_64d', 'M230'): 'cannonm230e1', ('ah_1f', 'PassengerGun1'): 'cannonm197',
            ('ka50', 'Cannon'): 'cannon2a42', ('mi28n', 'Cannon'): 'cannon2a42', ('mi24v', 'Cannon'): 'gunyak_b',
-           ('mi_24d', 'PassengerGun1'): 'gunyak_b', ('mi_24a', 'PassengerGun1'): 'guna_12_7'}
+           ('mi_24d', 'PassengerGun1'): 'gunyak_b', ('mi_24a', 'PassengerGun1'): 'guna_12_7',
+           ('ah_1g_cobra', 'M134Turret'): 'gunm134_minigun'}
 # gun pods: build.py family -> (WT gun candidates, shared profile folder under aircraft_rounds/)
 PODS = {'m134': (['gunm134_minigun'], 'm134'), 'm195': (['cannonm195'], 'm195'), 'gau19': (['gungau_19'], 'gau19'),
         'm3p': (['gunfn_m3p'], 'fn_m3p'), 'rmp': (['gunfn_m3p_cwp'], 'fn_m3p'),
-        'gsh23': (['cannongsh_23l_upk_23_250', 'cannongsh_23l'], 'gsh23l'), 'guv': (['gunyak_b_guv'], 'yakb')}
+        'gsh23': (['cannongsh_23l_upk_23_250', 'cannongsh_23l'], 'gsh23l'), 'guv': (['gunyak_b_guv'], 'yakb'),
+        'gshg': (['gungshg_guv'], 'yakb')}
 
 
 def is_he(r):

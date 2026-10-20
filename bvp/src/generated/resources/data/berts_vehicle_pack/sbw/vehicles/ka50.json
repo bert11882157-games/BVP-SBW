@@ -117,11 +117,19 @@
           -17.94
         ],
         "EyeAttachment": "seat_1_camera",
-        "ZoomEyeAttachment": "seat_1_camera",
+        "ZoomEyeAttachment": "shkval_sight",
         "DirectionAttachment": "Default",
-        "ZoomDirectionAttachment": "Default",
+        "ZoomDirectionAttachment": "shkval_sight",
         "CameraMode": "AIRCRAFT_FREELOOK",
-        "AimCameraMode": "PLAYER_LOOK_AIM"
+        "AimCameraMode": "PLAYER_LOOK_AIM",
+        "ZoomYawRange": [
+          -35,
+          35
+        ],
+        "ZoomPitchRange": [
+          -80,
+          15
+        ]
       },
       "CanRotateHead": false,
       "Weapons": [
@@ -3887,6 +3895,19 @@
         0,
         3.04199,
         2.77109
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "shkval_sight": {
+      "Parent": "Vehicle",
+      "Position": [
+        0.0,
+        1.85,
+        7.5
       ],
       "Direction": [
         0,

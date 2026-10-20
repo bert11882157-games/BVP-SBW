@@ -168,21 +168,29 @@
         "S24S2S24b",
         "Gsh23S2Upk23",
         "GuvS2Guv8700",
+        "GuvS2Guv8700Gshg1",
+        "GuvS2Guv8700Gshg2",
         "S5S3Ub32",
         "S8S3",
         "S24S3S24b",
         "Gsh23S3Upk23",
         "GuvS3Guv8700",
+        "GuvS3Guv8700Gshg1",
+        "GuvS3Guv8700Gshg2",
         "S5S4Ub32",
         "S8S4",
         "S24S4S24b",
         "Gsh23S4Upk23",
         "GuvS4Guv8700",
+        "GuvS4Guv8700Gshg1",
+        "GuvS4Guv8700Gshg2",
         "S5S5Ub32",
         "S8S5",
         "S24S5S24b",
         "Gsh23S5Upk23",
         "GuvS5Guv8700",
+        "GuvS5Guv8700Gshg1",
+        "GuvS5Guv8700Gshg2",
         "Cannon"
       ],
       "DismountInfo": {
@@ -217,18 +225,54 @@
           0
         ],
         "EyeAttachment": "seat_2_camera",
-        "ZoomEyeAttachment": "seat_2_camera",
+        "ZoomEyeAttachment": "gunner_sight",
         "DirectionAttachment": "Default",
-        "ZoomDirectionAttachment": "Default",
+        "ZoomDirectionAttachment": "gunner_sight",
         "CameraMode": "PLAYER_LOOK_AIM",
-        "AimCameraMode": "PLAYER_LOOK_AIM"
+        "AimCameraMode": "PLAYER_LOOK_AIM",
+        "ZoomYawRange": [
+          -60,
+          60
+        ],
+        "ZoomPitchRange": [
+          -60,
+          20
+        ]
       },
       "MinPitch": -60,
       "MaxPitch": 10,
       "MinYaw": -110,
       "MaxYaw": 110,
       "Weapons": [
-        "Cannon"
+        "Cannon",
+        "S5S2Ub32",
+        "S8S2",
+        "S24S2S24b",
+        "Gsh23S2Upk23",
+        "GuvS2Guv8700",
+        "GuvS2Guv8700Gshg1",
+        "GuvS2Guv8700Gshg2",
+        "S5S3Ub32",
+        "S8S3",
+        "S24S3S24b",
+        "Gsh23S3Upk23",
+        "GuvS3Guv8700",
+        "GuvS3Guv8700Gshg1",
+        "GuvS3Guv8700Gshg2",
+        "S5S4Ub32",
+        "S8S4",
+        "S24S4S24b",
+        "Gsh23S4Upk23",
+        "GuvS4Guv8700",
+        "GuvS4Guv8700Gshg1",
+        "GuvS4Guv8700Gshg2",
+        "S5S5Ub32",
+        "S8S5",
+        "S24S5S24b",
+        "Gsh23S5Upk23",
+        "GuvS5Guv8700",
+        "GuvS5Guv8700Gshg1",
+        "GuvS5Guv8700Gshg2"
       ],
       "DismountInfo": {
         "Transform": "Vehicle",
@@ -608,7 +652,7 @@
       },
       "AddShooterDeltaMovement": true,
       "Spread": 0,
-      "Name": "weapon.berts_vehicle_pack.s_8ko_rockets",
+      "Name": "weapon.berts_vehicle_pack.s_5_rocket_pod",
       "RPM": 600,
       "Damage": 100,
       "ExplosionDamage": 0,
@@ -1874,12 +1918,334 @@
             2.8093,
             1.2871,
             -0.1119
-          ],
+          ]
+        ],
+        "Directions": [
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "MuzzleAttachments": [
+          "GuvS2Guv8700_left_0"
+        ],
+        "MuzzleDirectionAttachments": [
+          "Default"
+        ],
+        "EffectAttachments": [
+          "GuvS2Guv8700_left_0"
+        ],
+        "EffectDirectionAttachments": [
+          "Default"
+        ]
+      }
+    },
+    "GuvS2Guv8700Gshg1": {
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "Projectile": {
+        "Type": "superbwarfare:projectile",
+        "Profile": "berts_vehicle_pack:ah_6j/cannon/default"
+      },
+      "DefaultZoom": 3,
+      "RPM": 6000,
+      "ProjectileAmount": 1,
+      "Magazine": 1800,
+      "EmptyReloadTime": 400,
+      "Velocity": 40.875,
+      "Damage": 22,
+      "HeatPerShoot": 0,
+      "NaturalCooldown": 1,
+      "RecoilTime": 8,
+      "RecoilForce": 0.16,
+      "Spread": 0.42,
+      "ProjectileLife": 45,
+      "Name": "7.62 mm GShG-7.62 (GUV)",
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/yakb/wt_gshg_ap"
+            },
+            "ShellType": "AP",
+            "Velocity": 40.875,
+            "ApDurability": 13,
+            "Damage": 22,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "Default",
+            "ShootShake": [
+              0,
+              0,
+              0
+            ],
+            "ProjectileBelt": {
+              "Name": "Default",
+              "Family": "GENERIC",
+              "Rounds": [
+                {
+                  "Shots": 3,
+                  "Round": "gshg_ap",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "gshg_api_t",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "GREEN"
+                },
+                {
+                  "Shots": 4,
+                  "Round": "gshg_ap",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/yakb/wt_gshg_ap",
+              "ProjectileLife": 45
+            }
+          }
+        }
+      ],
+      "SoundInfo": {
+        "Fire1PGain": 0.5,
+        "Fire3PGain": 0.5,
+        "Fire3PFarGain": 0.5,
+        "Fire3PVeryFarGain": 0.5,
+        "Fire1P": "berts_vehicle_pack:tap_minigun",
+        "Fire3P": "berts_vehicle_pack:tap_minigun",
+        "Fire3PFar": "berts_vehicle_pack:tap_minigun",
+        "Fire3PVeryFar": "berts_vehicle_pack:tap_minigun",
+        "Change": "superbwarfare:into_cannon",
+        "Volume": 1.0
+      },
+      "Crosshair": "@Empty",
+      "CrosshairColor": "0xFFC700",
+      "SoundRadius": 8,
+      "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/gun_12_7mm.png",
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "superbwarfare:projectile",
+        "ProjectileProfile": "berts_vehicle_pack:ah_6j/cannon/default",
+        "ProjectileLife": 45
+      },
+      "ProjectileBeltAmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/yakb/wt_gshg_api_t"
+            },
+            "ShellType": "AP",
+            "Velocity": 43.25,
+            "ApDurability": 9,
+            "Damage": 22,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "API-T",
+            "ShootShake": [
+              0,
+              0,
+              0
+            ]
+          }
+        }
+      ],
+      "ShootShake": [
+        0,
+        0,
+        0
+      ],
+      "BeltFed": true,
+      "NormalReloadTime": 400,
+      "AutoReload": true,
+      "OverheatEnabled": false,
+      "AmmoCostPerShoot": 1,
+      "ShootPos": {
+        "Transform": "Vehicle",
+        "ShootDirectionForHud": [
+          0,
+          0,
+          1
+        ],
+        "Positions": [
           [
             2.9193,
             1.3071,
             -0.1119
-          ],
+          ]
+        ],
+        "Directions": [
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "MuzzleAttachments": [
+          "GuvS2Guv8700Gshg1_left_0"
+        ],
+        "MuzzleDirectionAttachments": [
+          "Default"
+        ],
+        "EffectAttachments": [
+          "GuvS2Guv8700Gshg1_left_0"
+        ],
+        "EffectDirectionAttachments": [
+          "Default"
+        ]
+      }
+    },
+    "GuvS2Guv8700Gshg2": {
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "Projectile": {
+        "Type": "superbwarfare:projectile",
+        "Profile": "berts_vehicle_pack:ah_6j/cannon/default"
+      },
+      "DefaultZoom": 3,
+      "RPM": 6000,
+      "ProjectileAmount": 1,
+      "Magazine": 1800,
+      "EmptyReloadTime": 400,
+      "Velocity": 40.875,
+      "Damage": 22,
+      "HeatPerShoot": 0,
+      "NaturalCooldown": 1,
+      "RecoilTime": 8,
+      "RecoilForce": 0.16,
+      "Spread": 0.42,
+      "ProjectileLife": 45,
+      "Name": "7.62 mm GShG-7.62 (GUV)",
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/yakb/wt_gshg_ap"
+            },
+            "ShellType": "AP",
+            "Velocity": 40.875,
+            "ApDurability": 13,
+            "Damage": 22,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "Default",
+            "ShootShake": [
+              0,
+              0,
+              0
+            ],
+            "ProjectileBelt": {
+              "Name": "Default",
+              "Family": "GENERIC",
+              "Rounds": [
+                {
+                  "Shots": 3,
+                  "Round": "gshg_ap",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "gshg_api_t",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "GREEN"
+                },
+                {
+                  "Shots": 4,
+                  "Round": "gshg_ap",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/yakb/wt_gshg_ap",
+              "ProjectileLife": 45
+            }
+          }
+        }
+      ],
+      "SoundInfo": {
+        "Fire1PGain": 0.5,
+        "Fire3PGain": 0.5,
+        "Fire3PFarGain": 0.5,
+        "Fire3PVeryFarGain": 0.5,
+        "Fire1P": "berts_vehicle_pack:tap_minigun",
+        "Fire3P": "berts_vehicle_pack:tap_minigun",
+        "Fire3PFar": "berts_vehicle_pack:tap_minigun",
+        "Fire3PVeryFar": "berts_vehicle_pack:tap_minigun",
+        "Change": "superbwarfare:into_cannon",
+        "Volume": 1.0
+      },
+      "Crosshair": "@Empty",
+      "CrosshairColor": "0xFFC700",
+      "SoundRadius": 8,
+      "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/gun_12_7mm.png",
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "superbwarfare:projectile",
+        "ProjectileProfile": "berts_vehicle_pack:ah_6j/cannon/default",
+        "ProjectileLife": 45
+      },
+      "ProjectileBeltAmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/yakb/wt_gshg_api_t"
+            },
+            "ShellType": "AP",
+            "Velocity": 43.25,
+            "ApDurability": 9,
+            "Damage": 22,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "API-T",
+            "ShootShake": [
+              0,
+              0,
+              0
+            ]
+          }
+        }
+      ],
+      "ShootShake": [
+        0,
+        0,
+        0
+      ],
+      "BeltFed": true,
+      "NormalReloadTime": 400,
+      "AutoReload": true,
+      "OverheatEnabled": false,
+      "AmmoCostPerShoot": 1,
+      "ShootPos": {
+        "Transform": "Vehicle",
+        "ShootDirectionForHud": [
+          0,
+          0,
+          1
+        ],
+        "Positions": [
           [
             2.6993,
             1.3071,
@@ -1891,30 +2257,16 @@
             0,
             0,
             1
-          ],
-          [
-            0,
-            0,
-            1
-          ],
-          [
-            0,
-            0,
-            1
           ]
         ],
         "MuzzleAttachments": [
-          "GuvS2Guv8700_left_0",
-          "GuvS2Guv8700_left_1",
-          "GuvS2Guv8700_left_2"
+          "GuvS2Guv8700Gshg2_left_0"
         ],
         "MuzzleDirectionAttachments": [
           "Default"
         ],
         "EffectAttachments": [
-          "GuvS2Guv8700_left_0",
-          "GuvS2Guv8700_left_1",
-          "GuvS2Guv8700_left_2"
+          "GuvS2Guv8700Gshg2_left_0"
         ],
         "EffectDirectionAttachments": [
           "Default"
@@ -1943,7 +2295,7 @@
       },
       "AddShooterDeltaMovement": true,
       "Spread": 0,
-      "Name": "weapon.berts_vehicle_pack.s_8ko_rockets",
+      "Name": "weapon.berts_vehicle_pack.s_5_rocket_pod",
       "RPM": 600,
       "Damage": 100,
       "ExplosionDamage": 0,
@@ -3209,12 +3561,334 @@
             2.017,
             1.3952,
             -0.0723
-          ],
+          ]
+        ],
+        "Directions": [
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "MuzzleAttachments": [
+          "GuvS3Guv8700_left_0"
+        ],
+        "MuzzleDirectionAttachments": [
+          "Default"
+        ],
+        "EffectAttachments": [
+          "GuvS3Guv8700_left_0"
+        ],
+        "EffectDirectionAttachments": [
+          "Default"
+        ]
+      }
+    },
+    "GuvS3Guv8700Gshg1": {
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "Projectile": {
+        "Type": "superbwarfare:projectile",
+        "Profile": "berts_vehicle_pack:ah_6j/cannon/default"
+      },
+      "DefaultZoom": 3,
+      "RPM": 6000,
+      "ProjectileAmount": 1,
+      "Magazine": 1800,
+      "EmptyReloadTime": 400,
+      "Velocity": 40.875,
+      "Damage": 22,
+      "HeatPerShoot": 0,
+      "NaturalCooldown": 1,
+      "RecoilTime": 8,
+      "RecoilForce": 0.16,
+      "Spread": 0.42,
+      "ProjectileLife": 45,
+      "Name": "7.62 mm GShG-7.62 (GUV)",
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/yakb/wt_gshg_ap"
+            },
+            "ShellType": "AP",
+            "Velocity": 40.875,
+            "ApDurability": 13,
+            "Damage": 22,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "Default",
+            "ShootShake": [
+              0,
+              0,
+              0
+            ],
+            "ProjectileBelt": {
+              "Name": "Default",
+              "Family": "GENERIC",
+              "Rounds": [
+                {
+                  "Shots": 3,
+                  "Round": "gshg_ap",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "gshg_api_t",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "GREEN"
+                },
+                {
+                  "Shots": 4,
+                  "Round": "gshg_ap",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/yakb/wt_gshg_ap",
+              "ProjectileLife": 45
+            }
+          }
+        }
+      ],
+      "SoundInfo": {
+        "Fire1PGain": 0.5,
+        "Fire3PGain": 0.5,
+        "Fire3PFarGain": 0.5,
+        "Fire3PVeryFarGain": 0.5,
+        "Fire1P": "berts_vehicle_pack:tap_minigun",
+        "Fire3P": "berts_vehicle_pack:tap_minigun",
+        "Fire3PFar": "berts_vehicle_pack:tap_minigun",
+        "Fire3PVeryFar": "berts_vehicle_pack:tap_minigun",
+        "Change": "superbwarfare:into_cannon",
+        "Volume": 1.0
+      },
+      "Crosshair": "@Empty",
+      "CrosshairColor": "0xFFC700",
+      "SoundRadius": 8,
+      "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/gun_12_7mm.png",
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "superbwarfare:projectile",
+        "ProjectileProfile": "berts_vehicle_pack:ah_6j/cannon/default",
+        "ProjectileLife": 45
+      },
+      "ProjectileBeltAmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/yakb/wt_gshg_api_t"
+            },
+            "ShellType": "AP",
+            "Velocity": 43.25,
+            "ApDurability": 9,
+            "Damage": 22,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "API-T",
+            "ShootShake": [
+              0,
+              0,
+              0
+            ]
+          }
+        }
+      ],
+      "ShootShake": [
+        0,
+        0,
+        0
+      ],
+      "BeltFed": true,
+      "NormalReloadTime": 400,
+      "AutoReload": true,
+      "OverheatEnabled": false,
+      "AmmoCostPerShoot": 1,
+      "ShootPos": {
+        "Transform": "Vehicle",
+        "ShootDirectionForHud": [
+          0,
+          0,
+          1
+        ],
+        "Positions": [
           [
             2.127,
             1.4152,
             -0.0723
-          ],
+          ]
+        ],
+        "Directions": [
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "MuzzleAttachments": [
+          "GuvS3Guv8700Gshg1_left_0"
+        ],
+        "MuzzleDirectionAttachments": [
+          "Default"
+        ],
+        "EffectAttachments": [
+          "GuvS3Guv8700Gshg1_left_0"
+        ],
+        "EffectDirectionAttachments": [
+          "Default"
+        ]
+      }
+    },
+    "GuvS3Guv8700Gshg2": {
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "Projectile": {
+        "Type": "superbwarfare:projectile",
+        "Profile": "berts_vehicle_pack:ah_6j/cannon/default"
+      },
+      "DefaultZoom": 3,
+      "RPM": 6000,
+      "ProjectileAmount": 1,
+      "Magazine": 1800,
+      "EmptyReloadTime": 400,
+      "Velocity": 40.875,
+      "Damage": 22,
+      "HeatPerShoot": 0,
+      "NaturalCooldown": 1,
+      "RecoilTime": 8,
+      "RecoilForce": 0.16,
+      "Spread": 0.42,
+      "ProjectileLife": 45,
+      "Name": "7.62 mm GShG-7.62 (GUV)",
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/yakb/wt_gshg_ap"
+            },
+            "ShellType": "AP",
+            "Velocity": 40.875,
+            "ApDurability": 13,
+            "Damage": 22,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "Default",
+            "ShootShake": [
+              0,
+              0,
+              0
+            ],
+            "ProjectileBelt": {
+              "Name": "Default",
+              "Family": "GENERIC",
+              "Rounds": [
+                {
+                  "Shots": 3,
+                  "Round": "gshg_ap",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "gshg_api_t",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "GREEN"
+                },
+                {
+                  "Shots": 4,
+                  "Round": "gshg_ap",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/yakb/wt_gshg_ap",
+              "ProjectileLife": 45
+            }
+          }
+        }
+      ],
+      "SoundInfo": {
+        "Fire1PGain": 0.5,
+        "Fire3PGain": 0.5,
+        "Fire3PFarGain": 0.5,
+        "Fire3PVeryFarGain": 0.5,
+        "Fire1P": "berts_vehicle_pack:tap_minigun",
+        "Fire3P": "berts_vehicle_pack:tap_minigun",
+        "Fire3PFar": "berts_vehicle_pack:tap_minigun",
+        "Fire3PVeryFar": "berts_vehicle_pack:tap_minigun",
+        "Change": "superbwarfare:into_cannon",
+        "Volume": 1.0
+      },
+      "Crosshair": "@Empty",
+      "CrosshairColor": "0xFFC700",
+      "SoundRadius": 8,
+      "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/gun_12_7mm.png",
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "superbwarfare:projectile",
+        "ProjectileProfile": "berts_vehicle_pack:ah_6j/cannon/default",
+        "ProjectileLife": 45
+      },
+      "ProjectileBeltAmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/yakb/wt_gshg_api_t"
+            },
+            "ShellType": "AP",
+            "Velocity": 43.25,
+            "ApDurability": 9,
+            "Damage": 22,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "API-T",
+            "ShootShake": [
+              0,
+              0,
+              0
+            ]
+          }
+        }
+      ],
+      "ShootShake": [
+        0,
+        0,
+        0
+      ],
+      "BeltFed": true,
+      "NormalReloadTime": 400,
+      "AutoReload": true,
+      "OverheatEnabled": false,
+      "AmmoCostPerShoot": 1,
+      "ShootPos": {
+        "Transform": "Vehicle",
+        "ShootDirectionForHud": [
+          0,
+          0,
+          1
+        ],
+        "Positions": [
           [
             1.907,
             1.4152,
@@ -3226,30 +3900,16 @@
             0,
             0,
             1
-          ],
-          [
-            0,
-            0,
-            1
-          ],
-          [
-            0,
-            0,
-            1
           ]
         ],
         "MuzzleAttachments": [
-          "GuvS3Guv8700_left_0",
-          "GuvS3Guv8700_left_1",
-          "GuvS3Guv8700_left_2"
+          "GuvS3Guv8700Gshg2_left_0"
         ],
         "MuzzleDirectionAttachments": [
           "Default"
         ],
         "EffectAttachments": [
-          "GuvS3Guv8700_left_0",
-          "GuvS3Guv8700_left_1",
-          "GuvS3Guv8700_left_2"
+          "GuvS3Guv8700Gshg2_left_0"
         ],
         "EffectDirectionAttachments": [
           "Default"
@@ -3278,7 +3938,7 @@
       },
       "AddShooterDeltaMovement": true,
       "Spread": 0,
-      "Name": "weapon.berts_vehicle_pack.s_8ko_rockets",
+      "Name": "weapon.berts_vehicle_pack.s_5_rocket_pod",
       "RPM": 600,
       "Damage": 100,
       "ExplosionDamage": 0,
@@ -4544,12 +5204,334 @@
             -2.017,
             1.3952,
             -0.0723
-          ],
+          ]
+        ],
+        "Directions": [
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "MuzzleAttachments": [
+          "GuvS4Guv8700_right_0"
+        ],
+        "MuzzleDirectionAttachments": [
+          "Default"
+        ],
+        "EffectAttachments": [
+          "GuvS4Guv8700_right_0"
+        ],
+        "EffectDirectionAttachments": [
+          "Default"
+        ]
+      }
+    },
+    "GuvS4Guv8700Gshg1": {
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "Projectile": {
+        "Type": "superbwarfare:projectile",
+        "Profile": "berts_vehicle_pack:ah_6j/cannon/default"
+      },
+      "DefaultZoom": 3,
+      "RPM": 6000,
+      "ProjectileAmount": 1,
+      "Magazine": 1800,
+      "EmptyReloadTime": 400,
+      "Velocity": 40.875,
+      "Damage": 22,
+      "HeatPerShoot": 0,
+      "NaturalCooldown": 1,
+      "RecoilTime": 8,
+      "RecoilForce": 0.16,
+      "Spread": 0.42,
+      "ProjectileLife": 45,
+      "Name": "7.62 mm GShG-7.62 (GUV)",
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/yakb/wt_gshg_ap"
+            },
+            "ShellType": "AP",
+            "Velocity": 40.875,
+            "ApDurability": 13,
+            "Damage": 22,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "Default",
+            "ShootShake": [
+              0,
+              0,
+              0
+            ],
+            "ProjectileBelt": {
+              "Name": "Default",
+              "Family": "GENERIC",
+              "Rounds": [
+                {
+                  "Shots": 3,
+                  "Round": "gshg_ap",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "gshg_api_t",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "GREEN"
+                },
+                {
+                  "Shots": 4,
+                  "Round": "gshg_ap",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/yakb/wt_gshg_ap",
+              "ProjectileLife": 45
+            }
+          }
+        }
+      ],
+      "SoundInfo": {
+        "Fire1PGain": 0.5,
+        "Fire3PGain": 0.5,
+        "Fire3PFarGain": 0.5,
+        "Fire3PVeryFarGain": 0.5,
+        "Fire1P": "berts_vehicle_pack:tap_minigun",
+        "Fire3P": "berts_vehicle_pack:tap_minigun",
+        "Fire3PFar": "berts_vehicle_pack:tap_minigun",
+        "Fire3PVeryFar": "berts_vehicle_pack:tap_minigun",
+        "Change": "superbwarfare:into_cannon",
+        "Volume": 1.0
+      },
+      "Crosshair": "@Empty",
+      "CrosshairColor": "0xFFC700",
+      "SoundRadius": 8,
+      "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/gun_12_7mm.png",
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "superbwarfare:projectile",
+        "ProjectileProfile": "berts_vehicle_pack:ah_6j/cannon/default",
+        "ProjectileLife": 45
+      },
+      "ProjectileBeltAmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/yakb/wt_gshg_api_t"
+            },
+            "ShellType": "AP",
+            "Velocity": 43.25,
+            "ApDurability": 9,
+            "Damage": 22,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "API-T",
+            "ShootShake": [
+              0,
+              0,
+              0
+            ]
+          }
+        }
+      ],
+      "ShootShake": [
+        0,
+        0,
+        0
+      ],
+      "BeltFed": true,
+      "NormalReloadTime": 400,
+      "AutoReload": true,
+      "OverheatEnabled": false,
+      "AmmoCostPerShoot": 1,
+      "ShootPos": {
+        "Transform": "Vehicle",
+        "ShootDirectionForHud": [
+          0,
+          0,
+          1
+        ],
+        "Positions": [
           [
             -1.907,
             1.4152,
             -0.0723
-          ],
+          ]
+        ],
+        "Directions": [
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "MuzzleAttachments": [
+          "GuvS4Guv8700Gshg1_right_0"
+        ],
+        "MuzzleDirectionAttachments": [
+          "Default"
+        ],
+        "EffectAttachments": [
+          "GuvS4Guv8700Gshg1_right_0"
+        ],
+        "EffectDirectionAttachments": [
+          "Default"
+        ]
+      }
+    },
+    "GuvS4Guv8700Gshg2": {
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "Projectile": {
+        "Type": "superbwarfare:projectile",
+        "Profile": "berts_vehicle_pack:ah_6j/cannon/default"
+      },
+      "DefaultZoom": 3,
+      "RPM": 6000,
+      "ProjectileAmount": 1,
+      "Magazine": 1800,
+      "EmptyReloadTime": 400,
+      "Velocity": 40.875,
+      "Damage": 22,
+      "HeatPerShoot": 0,
+      "NaturalCooldown": 1,
+      "RecoilTime": 8,
+      "RecoilForce": 0.16,
+      "Spread": 0.42,
+      "ProjectileLife": 45,
+      "Name": "7.62 mm GShG-7.62 (GUV)",
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/yakb/wt_gshg_ap"
+            },
+            "ShellType": "AP",
+            "Velocity": 40.875,
+            "ApDurability": 13,
+            "Damage": 22,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "Default",
+            "ShootShake": [
+              0,
+              0,
+              0
+            ],
+            "ProjectileBelt": {
+              "Name": "Default",
+              "Family": "GENERIC",
+              "Rounds": [
+                {
+                  "Shots": 3,
+                  "Round": "gshg_ap",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "gshg_api_t",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "GREEN"
+                },
+                {
+                  "Shots": 4,
+                  "Round": "gshg_ap",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/yakb/wt_gshg_ap",
+              "ProjectileLife": 45
+            }
+          }
+        }
+      ],
+      "SoundInfo": {
+        "Fire1PGain": 0.5,
+        "Fire3PGain": 0.5,
+        "Fire3PFarGain": 0.5,
+        "Fire3PVeryFarGain": 0.5,
+        "Fire1P": "berts_vehicle_pack:tap_minigun",
+        "Fire3P": "berts_vehicle_pack:tap_minigun",
+        "Fire3PFar": "berts_vehicle_pack:tap_minigun",
+        "Fire3PVeryFar": "berts_vehicle_pack:tap_minigun",
+        "Change": "superbwarfare:into_cannon",
+        "Volume": 1.0
+      },
+      "Crosshair": "@Empty",
+      "CrosshairColor": "0xFFC700",
+      "SoundRadius": 8,
+      "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/gun_12_7mm.png",
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "superbwarfare:projectile",
+        "ProjectileProfile": "berts_vehicle_pack:ah_6j/cannon/default",
+        "ProjectileLife": 45
+      },
+      "ProjectileBeltAmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/yakb/wt_gshg_api_t"
+            },
+            "ShellType": "AP",
+            "Velocity": 43.25,
+            "ApDurability": 9,
+            "Damage": 22,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "API-T",
+            "ShootShake": [
+              0,
+              0,
+              0
+            ]
+          }
+        }
+      ],
+      "ShootShake": [
+        0,
+        0,
+        0
+      ],
+      "BeltFed": true,
+      "NormalReloadTime": 400,
+      "AutoReload": true,
+      "OverheatEnabled": false,
+      "AmmoCostPerShoot": 1,
+      "ShootPos": {
+        "Transform": "Vehicle",
+        "ShootDirectionForHud": [
+          0,
+          0,
+          1
+        ],
+        "Positions": [
           [
             -2.127,
             1.4152,
@@ -4561,30 +5543,16 @@
             0,
             0,
             1
-          ],
-          [
-            0,
-            0,
-            1
-          ],
-          [
-            0,
-            0,
-            1
           ]
         ],
         "MuzzleAttachments": [
-          "GuvS4Guv8700_right_0",
-          "GuvS4Guv8700_right_1",
-          "GuvS4Guv8700_right_2"
+          "GuvS4Guv8700Gshg2_right_0"
         ],
         "MuzzleDirectionAttachments": [
           "Default"
         ],
         "EffectAttachments": [
-          "GuvS4Guv8700_right_0",
-          "GuvS4Guv8700_right_1",
-          "GuvS4Guv8700_right_2"
+          "GuvS4Guv8700Gshg2_right_0"
         ],
         "EffectDirectionAttachments": [
           "Default"
@@ -4613,7 +5581,7 @@
       },
       "AddShooterDeltaMovement": true,
       "Spread": 0,
-      "Name": "weapon.berts_vehicle_pack.s_8ko_rockets",
+      "Name": "weapon.berts_vehicle_pack.s_5_rocket_pod",
       "RPM": 600,
       "Damage": 100,
       "ExplosionDamage": 0,
@@ -5879,12 +6847,334 @@
             -2.8093,
             1.2871,
             -0.1119
-          ],
+          ]
+        ],
+        "Directions": [
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "MuzzleAttachments": [
+          "GuvS5Guv8700_right_0"
+        ],
+        "MuzzleDirectionAttachments": [
+          "Default"
+        ],
+        "EffectAttachments": [
+          "GuvS5Guv8700_right_0"
+        ],
+        "EffectDirectionAttachments": [
+          "Default"
+        ]
+      }
+    },
+    "GuvS5Guv8700Gshg1": {
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "Projectile": {
+        "Type": "superbwarfare:projectile",
+        "Profile": "berts_vehicle_pack:ah_6j/cannon/default"
+      },
+      "DefaultZoom": 3,
+      "RPM": 6000,
+      "ProjectileAmount": 1,
+      "Magazine": 1800,
+      "EmptyReloadTime": 400,
+      "Velocity": 40.875,
+      "Damage": 22,
+      "HeatPerShoot": 0,
+      "NaturalCooldown": 1,
+      "RecoilTime": 8,
+      "RecoilForce": 0.16,
+      "Spread": 0.42,
+      "ProjectileLife": 45,
+      "Name": "7.62 mm GShG-7.62 (GUV)",
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/yakb/wt_gshg_ap"
+            },
+            "ShellType": "AP",
+            "Velocity": 40.875,
+            "ApDurability": 13,
+            "Damage": 22,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "Default",
+            "ShootShake": [
+              0,
+              0,
+              0
+            ],
+            "ProjectileBelt": {
+              "Name": "Default",
+              "Family": "GENERIC",
+              "Rounds": [
+                {
+                  "Shots": 3,
+                  "Round": "gshg_ap",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "gshg_api_t",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "GREEN"
+                },
+                {
+                  "Shots": 4,
+                  "Round": "gshg_ap",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/yakb/wt_gshg_ap",
+              "ProjectileLife": 45
+            }
+          }
+        }
+      ],
+      "SoundInfo": {
+        "Fire1PGain": 0.5,
+        "Fire3PGain": 0.5,
+        "Fire3PFarGain": 0.5,
+        "Fire3PVeryFarGain": 0.5,
+        "Fire1P": "berts_vehicle_pack:tap_minigun",
+        "Fire3P": "berts_vehicle_pack:tap_minigun",
+        "Fire3PFar": "berts_vehicle_pack:tap_minigun",
+        "Fire3PVeryFar": "berts_vehicle_pack:tap_minigun",
+        "Change": "superbwarfare:into_cannon",
+        "Volume": 1.0
+      },
+      "Crosshair": "@Empty",
+      "CrosshairColor": "0xFFC700",
+      "SoundRadius": 8,
+      "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/gun_12_7mm.png",
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "superbwarfare:projectile",
+        "ProjectileProfile": "berts_vehicle_pack:ah_6j/cannon/default",
+        "ProjectileLife": 45
+      },
+      "ProjectileBeltAmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/yakb/wt_gshg_api_t"
+            },
+            "ShellType": "AP",
+            "Velocity": 43.25,
+            "ApDurability": 9,
+            "Damage": 22,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "API-T",
+            "ShootShake": [
+              0,
+              0,
+              0
+            ]
+          }
+        }
+      ],
+      "ShootShake": [
+        0,
+        0,
+        0
+      ],
+      "BeltFed": true,
+      "NormalReloadTime": 400,
+      "AutoReload": true,
+      "OverheatEnabled": false,
+      "AmmoCostPerShoot": 1,
+      "ShootPos": {
+        "Transform": "Vehicle",
+        "ShootDirectionForHud": [
+          0,
+          0,
+          1
+        ],
+        "Positions": [
           [
             -2.6993,
             1.3071,
             -0.1119
-          ],
+          ]
+        ],
+        "Directions": [
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "MuzzleAttachments": [
+          "GuvS5Guv8700Gshg1_right_0"
+        ],
+        "MuzzleDirectionAttachments": [
+          "Default"
+        ],
+        "EffectAttachments": [
+          "GuvS5Guv8700Gshg1_right_0"
+        ],
+        "EffectDirectionAttachments": [
+          "Default"
+        ]
+      }
+    },
+    "GuvS5Guv8700Gshg2": {
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "Projectile": {
+        "Type": "superbwarfare:projectile",
+        "Profile": "berts_vehicle_pack:ah_6j/cannon/default"
+      },
+      "DefaultZoom": 3,
+      "RPM": 6000,
+      "ProjectileAmount": 1,
+      "Magazine": 1800,
+      "EmptyReloadTime": 400,
+      "Velocity": 40.875,
+      "Damage": 22,
+      "HeatPerShoot": 0,
+      "NaturalCooldown": 1,
+      "RecoilTime": 8,
+      "RecoilForce": 0.16,
+      "Spread": 0.42,
+      "ProjectileLife": 45,
+      "Name": "7.62 mm GShG-7.62 (GUV)",
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/yakb/wt_gshg_ap"
+            },
+            "ShellType": "AP",
+            "Velocity": 40.875,
+            "ApDurability": 13,
+            "Damage": 22,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "Default",
+            "ShootShake": [
+              0,
+              0,
+              0
+            ],
+            "ProjectileBelt": {
+              "Name": "Default",
+              "Family": "GENERIC",
+              "Rounds": [
+                {
+                  "Shots": 3,
+                  "Round": "gshg_ap",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "gshg_api_t",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "GREEN"
+                },
+                {
+                  "Shots": 4,
+                  "Round": "gshg_ap",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/yakb/wt_gshg_ap",
+              "ProjectileLife": 45
+            }
+          }
+        }
+      ],
+      "SoundInfo": {
+        "Fire1PGain": 0.5,
+        "Fire3PGain": 0.5,
+        "Fire3PFarGain": 0.5,
+        "Fire3PVeryFarGain": 0.5,
+        "Fire1P": "berts_vehicle_pack:tap_minigun",
+        "Fire3P": "berts_vehicle_pack:tap_minigun",
+        "Fire3PFar": "berts_vehicle_pack:tap_minigun",
+        "Fire3PVeryFar": "berts_vehicle_pack:tap_minigun",
+        "Change": "superbwarfare:into_cannon",
+        "Volume": 1.0
+      },
+      "Crosshair": "@Empty",
+      "CrosshairColor": "0xFFC700",
+      "SoundRadius": 8,
+      "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/gun_12_7mm.png",
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "superbwarfare:projectile",
+        "ProjectileProfile": "berts_vehicle_pack:ah_6j/cannon/default",
+        "ProjectileLife": 45
+      },
+      "ProjectileBeltAmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/yakb/wt_gshg_api_t"
+            },
+            "ShellType": "AP",
+            "Velocity": 43.25,
+            "ApDurability": 9,
+            "Damage": 22,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "API-T",
+            "ShootShake": [
+              0,
+              0,
+              0
+            ]
+          }
+        }
+      ],
+      "ShootShake": [
+        0,
+        0,
+        0
+      ],
+      "BeltFed": true,
+      "NormalReloadTime": 400,
+      "AutoReload": true,
+      "OverheatEnabled": false,
+      "AmmoCostPerShoot": 1,
+      "ShootPos": {
+        "Transform": "Vehicle",
+        "ShootDirectionForHud": [
+          0,
+          0,
+          1
+        ],
+        "Positions": [
           [
             -2.9193,
             1.3071,
@@ -5896,30 +7186,16 @@
             0,
             0,
             1
-          ],
-          [
-            0,
-            0,
-            1
-          ],
-          [
-            0,
-            0,
-            1
           ]
         ],
         "MuzzleAttachments": [
-          "GuvS5Guv8700_right_0",
-          "GuvS5Guv8700_right_1",
-          "GuvS5Guv8700_right_2"
+          "GuvS5Guv8700Gshg2_right_0"
         ],
         "MuzzleDirectionAttachments": [
           "Default"
         ],
         "EffectAttachments": [
-          "GuvS5Guv8700_right_0",
-          "GuvS5Guv8700_right_1",
-          "GuvS5Guv8700_right_2"
+          "GuvS5Guv8700Gshg2_right_0"
         ],
         "EffectDirectionAttachments": [
           "Default"
@@ -6519,6 +7795,19 @@
         0.0,
         1.85,
         5.15
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "gunner_sight": {
+      "Parent": "Vehicle",
+      "Position": [
+        0.3,
+        0.92,
+        6.42
       ],
       "Direction": [
         0,
@@ -7241,7 +8530,7 @@
         1
       ]
     },
-    "GuvS2Guv8700_left_1": {
+    "GuvS2Guv8700Gshg1_left_0": {
       "Parent": "Vehicle",
       "Position": [
         2.9193,
@@ -7254,7 +8543,7 @@
         1
       ]
     },
-    "GuvS2Guv8700_left_2": {
+    "GuvS2Guv8700Gshg2_left_0": {
       "Parent": "Vehicle",
       "Position": [
         2.6993,
@@ -7982,7 +9271,7 @@
         1
       ]
     },
-    "GuvS3Guv8700_left_1": {
+    "GuvS3Guv8700Gshg1_left_0": {
       "Parent": "Vehicle",
       "Position": [
         2.127,
@@ -7995,7 +9284,7 @@
         1
       ]
     },
-    "GuvS3Guv8700_left_2": {
+    "GuvS3Guv8700Gshg2_left_0": {
       "Parent": "Vehicle",
       "Position": [
         1.907,
@@ -8723,7 +10012,7 @@
         1
       ]
     },
-    "GuvS4Guv8700_right_1": {
+    "GuvS4Guv8700Gshg1_right_0": {
       "Parent": "Vehicle",
       "Position": [
         -1.907,
@@ -8736,7 +10025,7 @@
         1
       ]
     },
-    "GuvS4Guv8700_right_2": {
+    "GuvS4Guv8700Gshg2_right_0": {
       "Parent": "Vehicle",
       "Position": [
         -2.127,
@@ -9464,7 +10753,7 @@
         1
       ]
     },
-    "GuvS5Guv8700_right_1": {
+    "GuvS5Guv8700Gshg1_right_0": {
       "Parent": "Vehicle",
       "Position": [
         -2.6993,
@@ -9477,7 +10766,7 @@
         1
       ]
     },
-    "GuvS5Guv8700_right_2": {
+    "GuvS5Guv8700Gshg2_right_0": {
       "Parent": "Vehicle",
       "Position": [
         -2.9193,

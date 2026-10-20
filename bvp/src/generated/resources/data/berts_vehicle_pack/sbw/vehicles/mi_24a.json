@@ -624,7 +624,15 @@
         6.9375
       ],
       "Weapons": [
-        "PassengerGun1"
+        "PassengerGun1",
+        "S5S2Ub32",
+        "Gsh23S2Upk23",
+        "S5S3Ub32",
+        "Gsh23S3Upk23",
+        "S5S4Ub32",
+        "Gsh23S4Upk23",
+        "S5S5Ub32",
+        "Gsh23S5Upk23"
       ],
       "CanRotateHead": true,
       "CameraPos": {
@@ -643,9 +651,17 @@
         "AimCameraMode": "PLAYER_LOOK_AIM",
         "UseAircraftCamera": false,
         "EyeAttachment": "gunner_eye",
-        "ZoomEyeAttachment": "gunner_optic",
+        "ZoomEyeAttachment": "gunner_sight",
         "DirectionAttachment": "gunner_eye",
-        "ZoomDirectionAttachment": "gunner_optic"
+        "ZoomDirectionAttachment": "gunner_sight",
+        "ZoomYawRange": [
+          -60,
+          60
+        ],
+        "ZoomPitchRange": [
+          -60,
+          20
+        ]
       },
       "DismountInfo": {
         "Transform": "Vehicle",
@@ -1127,7 +1143,7 @@
       },
       "AddShooterDeltaMovement": true,
       "Spread": 0,
-      "Name": "weapon.berts_vehicle_pack.s_8ko_rockets",
+      "Name": "weapon.berts_vehicle_pack.s_5_rocket_pod",
       "RPM": 600,
       "Damage": 100,
       "ExplosionDamage": 0,
@@ -1865,7 +1881,7 @@
       },
       "AddShooterDeltaMovement": true,
       "Spread": 0,
-      "Name": "weapon.berts_vehicle_pack.s_8ko_rockets",
+      "Name": "weapon.berts_vehicle_pack.s_5_rocket_pod",
       "RPM": 600,
       "Damage": 100,
       "ExplosionDamage": 0,
@@ -2603,7 +2619,7 @@
       },
       "AddShooterDeltaMovement": true,
       "Spread": 0,
-      "Name": "weapon.berts_vehicle_pack.s_8ko_rockets",
+      "Name": "weapon.berts_vehicle_pack.s_5_rocket_pod",
       "RPM": 600,
       "Damage": 100,
       "ExplosionDamage": 0,
@@ -3341,7 +3357,7 @@
       },
       "AddShooterDeltaMovement": true,
       "Spread": 0,
-      "Name": "weapon.berts_vehicle_pack.s_8ko_rockets",
+      "Name": "weapon.berts_vehicle_pack.s_5_rocket_pod",
       "RPM": 600,
       "Damage": 100,
       "ExplosionDamage": 0,
@@ -4223,6 +4239,19 @@
         0,
         0.09375,
         1.1129999999999995
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "gunner_sight": {
+      "Parent": "Vehicle",
+      "Position": [
+        0.15,
+        3.08,
+        7.85
       ],
       "Direction": [
         0,

@@ -7,9 +7,13 @@ SPEC = {
     'wt': 'mi_24d', 'payload': 3017, 'weapon_seat': 1,
     # Pilot: rockets, bombs, gun pods, and the nose gun (stowed straight ahead while he alone fires it). Operator: the nose gun and the Falanga.
     # Guided stores: the gunner's (WeaponSeat), and the pilot's too so the store keys work from both seats (owner).
-    'crew': {'unguided': [0], 'guided': [1, 0], 'guns': {'PassengerGun1': [1, 0]}},
+    # Owner 2026-10-20: both crew members may select and fire every weapon (the operator the pods and bombs too);
+    # a weapon both select is one weapon, fired at its own rate.
+    'crew': {'unguided': [0, 1], 'guided': [1, 0], 'guns': {'PassengerGun1': [1, 0]}},
     # VSPU-24 YaK-B-12.7: 60° either side, +20° / -60° (Wikipedia, YakB-12.7)
     'gun': {'PassengerWeaponStationYawRange': [-60, 60], 'PassengerWeaponStationPitchRange': [-60, 20]},
+    # WT mi_24d: 64 flares (countermeasure_split_launcher_jet); the vehicle had no decoys
+    'vehicle': {'HasDecoy': True},
     'hull_remove': [[1.9, 2.7, 1.9, 2.65, -1.5, 1.9]],
     'slots': [
         {'id': 'slot_1', 'name': 'Left wingtip', 'pos': [4.5938, 2.25, 0.0781], 'stores': ['falanga_x2']},

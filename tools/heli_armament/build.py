@@ -26,7 +26,10 @@ are written.
 Crew (helis/<vid>.py 'crew'): which seats fire what. 'unguided' lists the seats that get the rocket and gun pod
 channels, 'guided' the seats that operate the released guided stores (the armament's WeaponSeat, then WeaponSeats when
 there are several), 'guns' maps a built-in gun to its seats, its own (turret controlling) seat first; the extra seats
-share the same gun (one GunData, one belt) and get it after their store channels. 'gun' sets the movable gun's limits
+share the same gun (one GunData, one belt) and get it after their store channels. Without a 'crew' map the pilot and
+the weapon seat both get everything (owner's rule: every crew member fires every munition; the scheduler keeps one
+cadence, heat and magazine per weapon whichever seat fires it). 'turret_guns' adds Barrel-transform built-in guns
+(the AH-1G's M28) on the gun's controller seat, and 'turret_model' draws their mount into the airframe. 'gun' sets the movable gun's limits
 and rates (TurretYawRange / PassengerWeaponStationPitchRange ...) in the vehicle file. Nothing else in the vehicle file
 is touched, so the cockpit driver's attachments, seats' eyes and cameras stay as they are, except that WeaponPairs
 entries naming a weapon the vehicle or that seat no longer has are dropped.
@@ -299,7 +302,17 @@ def r60(m):
     return out
 
 
-# reused single-copy stores: R-60 / R-60M on APU-60-1 (the existing fixed-wing R-60 store)
+def r60m_single():
+    """one R-60M on an APU-60-1 (WT r60m_x1): the fixed-wing R-60 store with the R-60M warhead, one per pylon"""
+    doc = copy.deepcopy(load(os.path.join(DATA, 'aircraft_stores', 'r60.json')))
+    doc.update({'Name': 'APU-60-1 · R-60M', 'TntEquivalentKg': 1.35, 'MaxPerPylon': 1})
+    doc.pop('RackSpacing', None)
+    return doc
+
+
+STORES['r60m_x1'] = (r60m_single, None)
+
+# reused single-copy stores: R-60 on APU-60-1 (the existing fixed-wing R-60 store)
 EXISTING = {'r60_x1': f'{NS}:r60'}
 
 
@@ -389,11 +402,18 @@ def write_profiles():
 
 # ------------------------------------------------------------------------------------------------ helicopters
 FAMILY_NAMES = {'hydra': 'Hydra', 'ffar': 'Ffar', 's8': 'S8', 's5': 'S5', 's13': 'S13', 's24': 'S24', 'm134': 'M134',
-                'm195': 'M195', 'gau19': 'Gau19', 'm3p': 'M3P', 'rmp': 'Rmp', 'gsh23': 'Gsh23', 'guv': 'Guv'}
-GUN_TEMPLATES = {'m134': ('m134', 6000, None), 'm195': ('m195', 950, None), 'gau19': ('yakb', 1200, '12.7 mm GAU-19/B'),
-                 'm3p': ('yakb', 400, '12.7 mm FN M3P'), 'rmp': ('yakb', 250, '12.7 mm FN M3P'),
-                 'gsh23': ('gsh23', 250, '23 mm GSh-23L (UPK-23-250)'), 'guv': ('yakb', 750, '12.7 mm YaK-B (GUV)')}
+                'm195': 'M195', 'gau19': 'Gau19', 'm3p': 'M3P', 'rmp': 'Rmp', 'gsh23': 'Gsh23', 'guv': 'Guv',
+                'gshg': 'Guv'}
+# gun pod family -> (template, title or None, War Thunder rate of fire in rounds/min: the gun's shotFreq x 60 in
+# wt_slots.json). The magazine is the store's own Capacity (the rounds WT loads into that pod), the GUV's GShG 1800.
+GUN_TEMPLATES = {'m134': ('m134', None, 4000), 'm195': ('m195', None, 850), 'gau19': ('yakb', '12.7 mm GAU-19/B', 2000),
+                 'm3p': ('yakb', '12.7 mm FN M3P', 1025), 'rmp': ('yakb', '12.7 mm FN M3P', 1025),
+                 'gsh23': ('gsh23', '23 mm GSh-23L (UPK-23-250)', 3400), 'guv': ('yakb', '12.7 mm YaK-B (GUV)', 4500),
+                 'gshg': ('m134', '7.62 mm GShG-7.62 (GUV)', 6000)}
+GSHG_ROUNDS = 1800
 ROCKET_TEMPLATES = {'hydra': 'hydra', 'ffar': 'ffar', 's8': 's8', 's5': 's5', 's13': 's13', 's24': 's13'}
+# the rocket templates' borrowed names: the FFAR template was named after the S-8KO 80 mm, the S-5 after the S-8KO
+ROCKET_NAMES = {'ffar': '2.75 in FFAR', 's5': 'weapon.berts_vehicle_pack.s_5_rocket_pod'}
 
 
 PROFILES = {}   # projectile profile id -> document of the guns' WT rounds (belts.py), written after the builds
@@ -403,25 +423,32 @@ def side(x):
     return 'left' if x >= 0 else 'right'
 
 
-def channel(vid, mount, key, family):
-    """(name, weapon, attachments) of the native channel of pod `key` on `mount`"""
-    p = part(STORES[key][0]()['Model'].rsplit('/', 1)[1].replace('.geo.json', ''))
-    name = f"{FAMILY_NAMES[family]}{mount['Id'].replace('slot_', 'S')}{'' if key in ('m261_m247', 'b8v20_s8ko') else key.split('_')[0].capitalize()}"
+def channel(vid, mount, key, family, suffix='', pick=None):
+    """(name, weapon, attachments) of the native channel of pod `key` on `mount`; `pick` the muzzle indices it fires
+    from (all of them by default)"""
+    store = STORES[key][0]()
+    p = part(store['Model'].rsplit('/', 1)[1].replace('.geo.json', ''))
+    name = f"{FAMILY_NAMES[family]}{mount['Id'].replace('slot_', 'S')}{'' if key in ('m261_m247', 'b8v20_s8ko') else key.split('_')[0].capitalize()}{suffix}"
     pos = np.array(mount['Position'], float)
     muzzles = [pos + np.array(m) for m in p.muzzles]
+    if pick is not None:
+        muzzles = [muzzles[i] for i in pick]
     if family in ROCKET_TEMPLATES:
         w = copy.deepcopy(TEMPLATES[ROCKET_TEMPLATES[family]]['weapon'])
         w['Magazine'] = len(muzzles)
+        if family in ROCKET_NAMES:
+            w['Name'] = ROCKET_NAMES[family]
         if family == 's24':
             w['Name'] = 'S-24B rocket'
             w['Damage'] = 500; w['ExplosionRadius'] = 10; w['TntEquivalentKg'] = 25.5 * 1.2
     else:
-        t, rounds, title = GUN_TEMPLATES[family]
+        t, title, rpm = GUN_TEMPLATES[family]
         w = copy.deepcopy(TEMPLATES[t]['weapon'])
-        w['Magazine'] = rounds
+        w['Magazine'] = GSHG_ROUNDS if family == 'gshg' else store['Capacity']
+        w['RPM'] = rpm
         if title:
             w['Name'] = title
-        if family == 'rmp':
+        if family in ('rmp', 'guv') and pick is None:    # the gun's own muzzle; the rest are its rockets / GShG
             muzzles = muzzles[:1]
         gun = B.pod_gun(vid, family, w)
         if gun is None:
@@ -474,15 +501,27 @@ def build(vid, spec):
                 veh['Weapons'][rname] = rw
                 veh['Attachments'].update({rname + '_' + a.split('_', 1)[1]: v for a, v in list(ratt.items())[1:]})
                 ids.append(rname)
+            if family == 'guv':          # the pod's two 7.62 mm GShG, each its own gun (WT: 1800 rounds, 6000 rpm)
+                for k in (1, 2):
+                    gname, gw, gatt = channel(vid, mount, key, 'gshg', f'Gshg{k}', [k])
+                    veh['Weapons'][gname] = gw
+                    veh['Attachments'].update(gatt)
+                    ids.append(gname)
             natives[store_id(key)] = ids if len(ids) > 1 else ids[0]
             channels += ids
         if natives:
             mount['NativeWeaponIds'] = natives
         singles.append(mount)
+    turret = turret_guns(vid, spec, veh)
     for wn, w in veh['Weapons'].items():
         gun = B.builtin_gun(vid, wn, w)
         if gun:
             gun.apply(w, DATA, PROFILES)
+    for name, seats in spec.get('crew', {}).get('guns', {}).items():
+        own = veh['Seats'][seats[0]]
+        if name in turret:
+            front = [t for t in turret if spec['crew']['guns'].get(t, [None])[0] == seats[0]]
+            own['Weapons'] = front + [w for w in own.get('Weapons', []) if w not in front]
     crew = crew_of(spec, veh)
     for i, seat in enumerate(veh['Seats']):
         seat['Weapons'] = [w for w in seat.get('Weapons', []) if w not in retire and w in veh['Weapons']
@@ -499,9 +538,10 @@ def build(vid, spec):
             if gun not in veh['Seats'][i]['Weapons']:
                 veh['Seats'][i]['Weapons'].append(gun)
     prune_weapon_pairs(veh)
-    for key, value in spec.get('gun', {}).items():
+    for key, value in list(spec.get('gun', {}).items()) + list(spec.get('vehicle', {}).items()):
         veh[key] = copy.deepcopy(value)
     builtin = [w for w in arm.get('BuiltInWeapons', []) if w not in retire and w in veh['Weapons']]
+    builtin += [w for w in turret if w not in builtin]
     doc = {'Schema': 1, 'Name': arm['Name'], 'BuiltInWeapons': builtin, 'SuspendedWeapons': channels,
            'Pairs': [], 'Singles': singles, 'MaxPayloadKg': spec['payload'], 'MaxPylonMassKg': spec.get('pylon_kg', 1000),
            'MaxWeaponsPerPylon': 12, 'WeaponSeat': crew['guided'][0]}
@@ -512,6 +552,8 @@ def build(vid, spec):
     write_json(arm_path, doc)
     write_json(veh_path, veh)
     strip_baked(vid, spec.get('hull_remove', []))
+    if spec.get('turret_model'):
+        fit_turret_model(vid, spec)
 
 
 def prune_weapon_pairs(veh):
@@ -535,8 +577,10 @@ def prune_weapon_pairs(veh):
 def crew_of(spec, veh):
     """the seat map of helis/<vid>.py 'crew', checked against the vehicle (see the module docstring)"""
     crew = spec.get('crew', {})
-    out = {'unguided': list(crew.get('unguided', [0])),
-           'guided': list(crew.get('guided', [spec['weapon_seat']])),
+    # default: the pilot and the weapon seat both fire everything (one seat when the pilot is the weapon seat)
+    both = [spec['weapon_seat']] + ([0] if spec['weapon_seat'] != 0 else [])
+    out = {'unguided': list(crew.get('unguided', sorted(both))),
+           'guided': list(crew.get('guided', both)),
            'guns': {g: list(s) for g, s in crew.get('guns', {}).items()}}
     if out['guided'][0] != spec['weapon_seat']:
         raise ValueError(f"{veh['ID']}: weapon_seat {spec['weapon_seat']} is not the first guided seat {out['guided']}")
@@ -551,6 +595,91 @@ def crew_of(spec, veh):
         if gun not in veh['Seats'][listed[0]].get('Weapons', []):
             raise ValueError(f"{veh['ID']}: {gun} is not on its own seat {listed[0]}")
     return out
+
+
+TURRET_MAGAZINE_RPM = {'m134': (4000, 4000), 'm129': (300, 350)}   # WT ah_1g slot 0: rounds, shotFreq x 60
+
+
+def turret_guns(vid, spec, veh):
+    """the spec's 'turret_guns' (a chin turret's guns, Transform Barrel: they follow the turret's yaw and pitch):
+    [{name, kind (m134 | m129), title, muzzle (barrel-local blocks)}]; returns their names"""
+    names = []
+    for g in spec.get('turret_guns', []):
+        name, kind = g['name'], g['kind']
+        rounds, rpm = TURRET_MAGAZINE_RPM[kind]
+        w = copy.deepcopy(TEMPLATES[kind]['weapon'])
+        w.update({'Name': g['title'], 'Magazine': rounds, 'RPM': rpm})
+        if kind == 'm129':
+            m129_profiles(vid, name, w)
+        att = f'{name}_muzzle'
+        muzzle = [round(float(c), 4) for c in g['muzzle']]
+        veh.setdefault('Attachments', {})[att] = {'Parent': 'Barrel', 'Position': muzzle, 'Direction': [0, 0, 1]}
+        shoot = {'Transform': 'Barrel', 'Positions': [muzzle], 'Directions': ['Barrel'], 'MuzzleAttachments': [att],
+                 'MuzzleDirectionAttachments': ['Barrel'], 'EffectAttachments': [att],
+                 'EffectDirectionAttachments': ['Barrel'], 'SeekAttachment': att}
+        w['ShootPos'] = shoot
+        veh['Weapons'][name] = w
+        names.append(name)
+    return names
+
+
+def m129_profiles(vid, name, w):
+    """40 mm M129 (WT grenade_launcher_m129: 0.245 kg, 244 m/s, 38 g RDX x 1.6 TNT, HEDP jet 50.8 mm) on the
+    AG-30 grenade launcher's ballistics (bmp2m), its speed scaled by 244 / 185 m/s"""
+    folder = f'{vid}/{name.lower()}'
+    base = os.path.join(DATA, 'projectile_profiles', 'bmp2m', 'grenadelauncher')
+    for src, dst, rid in (('default', 'default', 'm129_hedp'), ('ammo_00_30mm_vog_30', 'm129_hedp', 'm129_hedp')):
+        prof = copy.deepcopy(load(os.path.join(base, src + '.json')))
+        c = prof['Combat']
+        c.update({'WeaponId': f'{NS}:{folder}', 'RoundId': f'{NS}:{rid}', 'CaliberMm': 40, 'DiameterMm': 40,
+                  'PenetrationMm': 50.8})
+        PROFILES[f'{folder}/{dst}'] = prof
+    tnt = round(0.038 * 1.6, 4)
+    w['Velocity'] = round(6 * 244 / 185, 2)
+    w['TntEquivalentKg'] = tnt
+    w['Projectile']['Profile'] = f'{NS}:{folder}/default'
+    w['NominalBallistics']['ProjectileProfile'] = f'{NS}:{folder}/default'
+    for e in w['AmmoType']:
+        o = e['Override']
+        o['Projectile']['Profile'] = f'{NS}:{folder}/m129_hedp'
+        o['NominalBallistics']['ProjectileProfile'] = f'{NS}:{folder}/m129_hedp'
+        o['TntEquivalentKg'] = tnt
+
+
+def fit_turret_model(vid, spec):
+    """draws the spec's 'turret_model' into the airframe's empty turret / barell bones and puts their pivots on the
+    vehicle's TurretPos (yaw) and TurretPos + BarrelPos (pitch); the colours are uv points of the airframe texture"""
+    tm = spec['turret_model']
+    path = os.path.join(ASSETS, 'custom_geo', vid + '.geo.json')
+    raw = open(path, encoding='utf-8').read()
+    geo = json.loads(raw)
+    bones = {b['name']: b for b in geo['minecraft:geometry'][0]['bones']}
+    pivot = np.array(spec['gun']['TurretPos'], float)
+    barrel = pivot + np.array(spec['gun'].get('BarrelPos', [0, 0, 0]), float)
+    frame = np.array([16.0, 16.0, -16.0])
+    for bone, mesh, origin in (('turret', getattr(C, tm['turret'])(), pivot),
+                               ('barell', getattr(C, tm['barrel'])(), barrel)):
+        b = bones[bone]
+        b['pivot'] = [round(float(c), 5) for c in origin * frame]
+        P = (np.array(mesh.v, float) + origin) * frame
+        uv_of = {c: i for i, c in enumerate(tm['uv'])}
+        normals, polys = [], []
+        for idx, colour in mesh.f:
+            q = np.array(mesh.v, float)[idx]
+            n = np.zeros(3)
+            for k in range(1, len(idx) - 1):
+                n += np.cross(q[k] - q[0], q[k + 1] - q[0])
+            L = np.linalg.norm(n)
+            n = (n / L if L > 1e-12 else np.array([0, 1.0, 0])) * np.array([1.0, 1.0, -1.0])
+            normals.append([round(float(x), 5) for x in n])
+            polys.append([[i, len(normals) - 1, uv_of[colour]] for i in idx])
+        b['poly_mesh'] = {'normalized_uvs': True, 'positions': P.round(5).tolist(), 'normals': normals,
+                          'uvs': [list(tm['uv'][c]) for c in tm['uv']], 'polys': polys}
+    with open(path, 'w', encoding='utf-8', newline='\n') as f:
+        json.dump(geo, f, indent=None if '\n' not in raw.strip() else 2,
+                  separators=(',', ':') if '\n' not in raw.strip() else None)
+        if raw.endswith('\n'):
+            f.write('\n')
 
 
 def strip_baked(vid, boxes=()):

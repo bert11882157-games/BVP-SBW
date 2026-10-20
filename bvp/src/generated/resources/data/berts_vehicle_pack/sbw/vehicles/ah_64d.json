@@ -175,9 +175,17 @@
         "AimCameraMode": "PLAYER_LOOK_AIM",
         "UseAircraftCamera": false,
         "EyeAttachment": "gunner_eye",
-        "ZoomEyeAttachment": "gunner_optic",
+        "ZoomEyeAttachment": "gunner_sight",
         "DirectionAttachment": "gunner_eye",
-        "ZoomDirectionAttachment": "gunner_optic"
+        "ZoomDirectionAttachment": "gunner_sight",
+        "ZoomYawRange": [
+          -120,
+          120
+        ],
+        "ZoomPitchRange": [
+          -60,
+          30
+        ]
       },
       "DismountInfo": {
         "Transform": "Vehicle",
@@ -1642,6 +1650,19 @@
         0,
         -0.20899999999999996,
         1.8287499999999994
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "gunner_sight": {
+      "Parent": "Vehicle",
+      "Position": [
+        0.0,
+        1.67,
+        5.15
       ],
       "Direction": [
         0,

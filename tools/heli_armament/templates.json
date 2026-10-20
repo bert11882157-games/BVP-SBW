@@ -940,5 +940,120 @@
    "BeltFed": true,
    "OverheatEnabled": false
   }
+ },
+ "m129": {
+  "source": "bmp2m/GrenadeLauncher",
+  "weapon": {
+   "Icon": "superbwarfare:textures/gun_icon/m_79_icon.png",
+   "DefaultFireMode": "Auto",
+   "AvailableFireModes": "Auto",
+   "DefaultZoom": 3,
+   "RPM": 240,
+   "Magazine": 300,
+   "NormalReloadTime": 400,
+   "EmptyReloadTime": 400,
+   "AmmoCostPerShoot": 1,
+   "Projectile": {
+    "Type": "superbwarfare:gun_grenade",
+    "Profile": "berts_vehicle_pack:bmp2m/grenadelauncher/default"
+   },
+   "AmmoType": [
+    {
+     "Ammo": "superbwarfare:grenade_40mm",
+     "ConsumptionItem": "superbwarfare:grenade_ammunition",
+     "Override": {
+      "Projectile": {
+       "Type": "superbwarfare:gun_grenade",
+       "Profile": "berts_vehicle_pack:bmp2m/grenadelauncher/ammo_00_30mm_vog_30"
+      },
+      "ShootShake": [
+       8,
+       10,
+       12
+      ],
+      "NominalBallistics": {
+       "Supported": false,
+       "ProjectileType": "superbwarfare:gun_grenade",
+       "ProjectileProfile": "berts_vehicle_pack:bmp2m/grenadelauncher/ammo_00_30mm_vog_30"
+      },
+      "TntEquivalentKg": 0.0647
+     }
+    }
+   ],
+   "ShellType": "HE",
+   "Velocity": 6,
+   "Damage": 35,
+   "ExplosionDamage": 45,
+   "ExplosionRadius": 6,
+   "TntEquivalentKg": 0.0647,
+   "ProjectileLife": 100,
+   "RecoilTime": 16,
+   "RecoilForce": 0.08,
+   "ShootAnimationTime": 2,
+   "Spread": 1.25,
+   "Crosshair": "@VehicleRuApc",
+   "CrosshairColor": "0x66FF00",
+   "Name": "weapon.berts_vehicle_pack.30_mm_ag_30",
+   "SoundInfo": {
+    "Fire1PGain": 1.0,
+    "Fire3PGain": 1.0,
+    "Fire3PFarGain": 1.0,
+    "Fire3PVeryFarGain": 1.0,
+    "Fire1P": "bvp_audio:weapon/mk19_1p",
+    "Fire3P": "bvp_audio:weapon/mk19_3p",
+    "Fire3PFar": "bvp_audio:weapon/mk19_far",
+    "Fire3PVeryFar": "bvp_audio:weapon/mk19_far",
+    "Volume": 0.55,
+    "VehicleReload": "superbwarfare:m_2_hb_reload_empty",
+    "VehicleReloadClipDurationTicks": 127
+   },
+   "SoundRadius": 12,
+   "ShootPos": {
+    "Transform": "Turret",
+    "Positions": [
+     [
+      0.20999,
+      0.49181,
+      0.48343
+     ]
+    ],
+    "Directions": [
+     "Turret"
+    ],
+    "ViewPosition": [
+     0.17999,
+     0.42155,
+     0.41437
+    ],
+    "MuzzleAttachments": [
+     "grenade_launcher_muzzle"
+    ],
+    "MuzzleDirectionAttachments": [
+     "grenade_launcher_muzzle"
+    ],
+    "HudOriginAttachment": "grenade_launcher_muzzle",
+    "HudDirectionAttachment": "grenade_launcher_muzzle",
+    "ViewAttachment": "grenade_launcher_muzzle",
+    "ViewDirectionAttachment": "grenade_launcher_muzzle",
+    "SeekAttachment": "grenade_launcher_muzzle",
+    "SeekDirectionAttachment": "grenade_launcher_muzzle",
+    "EffectAttachments": [
+     "grenade_launcher_muzzle"
+    ],
+    "EffectDirectionAttachments": [
+     "grenade_launcher_muzzle"
+    ]
+   },
+   "NominalBallistics": {
+    "Supported": false,
+    "ProjectileType": "superbwarfare:gun_grenade",
+    "ProjectileProfile": "berts_vehicle_pack:bmp2m/grenadelauncher/default"
+   },
+   "ShootShake": [
+    8,
+    10,
+    12
+   ]
+  }
  }
 }

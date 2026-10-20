@@ -515,3 +515,26 @@ def ltc_dispenser():
     for z in (-0.15, 0.05):
         cbox((0, -0.145, z), (0.08, 0.012, 0.14), 'black', m)
     return Part(m, axis=(0, -0.08, 0), length=0.9)
+
+
+# ------------------------------------------------------------------------------------------------ chin turrets
+def m28_turret():
+    """AH-1G M28 chin turret, the yawing housing (colours are the airframe's: build.py fit_turret_model): a 0.5 m
+    housing under the nose on a neck up into the fuselage, its origin the turret's yaw pivot"""
+    m = Mesh()
+    cbox((0, 0.13, 0), (0.30, 0.30, 0.30), 'olive', m)
+    cbox((0, -0.12, 0.02), (0.50, 0.26, 0.52), 'olive', m)
+    return m
+
+
+def m28_guns():
+    """the M28's guns on their elevating cradle (origin the pitch pivot): the 7.62 mm M134 on the left (+x), six
+    barrels to 0.80 m, and the 40 mm M129 on the right, its single barrel to 0.62 m"""
+    m = Mesh()
+    cbox((0.13, -0.08, 0.20), (0.12, 0.12, 0.40), 'dark', m)
+    for k in range(6):
+        a = 2 * math.pi * k / 6
+        cylinder(0.30, 0.80, 0.008, 'dark', (0.13 + 0.03 * math.cos(a), -0.08 + 0.03 * math.sin(a)), 6, m)
+    cbox((-0.13, -0.08, 0.17), (0.13, 0.13, 0.35), 'dark', m)
+    cylinder(0.30, 0.62, 0.035, 'grey', (-0.13, -0.08), 10, m)
+    return m

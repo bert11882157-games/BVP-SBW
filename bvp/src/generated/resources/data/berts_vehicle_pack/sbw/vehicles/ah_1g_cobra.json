@@ -143,7 +143,9 @@
         "FfarS3Aero7a",
         "M134S3Xm18",
         "FfarS4Aero6a",
-        "FfarS4Aero7a"
+        "FfarS4Aero7a",
+        "M134Turret",
+        "M129Turret"
       ],
       "DismountInfo": {
         "Transform": "Vehicle",
@@ -183,17 +185,27 @@
         ],
         "ZoomDirection": "Barrel",
         "EyeAttachment": "seat_2_camera",
-        "ZoomEyeAttachment": "seat_2_zoom",
+        "ZoomEyeAttachment": "gunner_sight",
         "DirectionAttachment": "Default",
-        "ZoomDirectionAttachment": "Barrel",
+        "ZoomDirectionAttachment": "gunner_sight",
         "CameraMode": "PLAYER_LOOK_AIM",
-        "AimCameraMode": "PLAYER_LOOK_AIM"
+        "AimCameraMode": "PLAYER_LOOK_AIM",
+        "ZoomYawRange": [
+          -107,
+          107
+        ],
+        "ZoomPitchRange": [
+          -50,
+          17.5
+        ]
       },
       "MinPitch": -30,
       "MaxPitch": 0,
       "MinYaw": -30,
       "MaxYaw": 30,
       "Weapons": [
+        "M134Turret",
+        "M129Turret",
         "FfarS1Aero6a",
         "FfarS1Aero7a",
         "FfarS2Aero6a",
@@ -219,6 +231,260 @@
     }
   ],
   "Weapons": {
+    "M134Turret": {
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "Projectile": {
+        "Type": "superbwarfare:projectile",
+        "Profile": "berts_vehicle_pack:ah_6j/cannon/default"
+      },
+      "DefaultZoom": 3,
+      "RPM": 4000,
+      "ProjectileAmount": 1,
+      "Magazine": 4000,
+      "EmptyReloadTime": 400,
+      "Velocity": 42.65,
+      "Damage": 22,
+      "HeatPerShoot": 0,
+      "NaturalCooldown": 1,
+      "RecoilTime": 8,
+      "RecoilForce": 0.16,
+      "Spread": 0.42,
+      "ProjectileLife": 45,
+      "Name": "7.62 mm M134 (M28 turret)",
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:ah_1g_cobra/m134turret/belt_ammo_wt_m134_ap"
+            },
+            "ShellType": "AP",
+            "Velocity": 42.65,
+            "ApDurability": 13,
+            "Damage": 22,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "Default",
+            "ShootShake": [
+              0,
+              0,
+              0
+            ],
+            "ProjectileBelt": {
+              "Name": "Default",
+              "Family": "GENERIC",
+              "Rounds": [
+                {
+                  "Shots": 6,
+                  "Round": "m134_ap",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "m134_t",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "RED"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:ah_1g_cobra/m134turret/belt_ammo_wt_m134_ap",
+              "ProjectileLife": 45
+            }
+          }
+        }
+      ],
+      "SoundInfo": {
+        "Fire1PGain": 0.5,
+        "Fire3PGain": 0.5,
+        "Fire3PFarGain": 0.5,
+        "Fire3PVeryFarGain": 0.5,
+        "Fire1P": "berts_vehicle_pack:tap_minigun",
+        "Fire3P": "berts_vehicle_pack:tap_minigun",
+        "Fire3PFar": "berts_vehicle_pack:tap_minigun",
+        "Fire3PVeryFar": "berts_vehicle_pack:tap_minigun",
+        "Change": "superbwarfare:into_cannon",
+        "Volume": 1.0
+      },
+      "Crosshair": "@Empty",
+      "CrosshairColor": "0xFFC700",
+      "SoundRadius": 8,
+      "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/gun_12_7mm.png",
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "superbwarfare:projectile",
+        "ProjectileProfile": "berts_vehicle_pack:ah_6j/cannon/default",
+        "ProjectileLife": 45
+      },
+      "ProjectileBeltAmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:small_machine_gun_ammunition",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:ah_1g_cobra/m134turret/belt_ammo_wt_m134_t"
+            },
+            "ShellType": "AP",
+            "Velocity": 41.75,
+            "ApDurability": 5,
+            "Damage": 22,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "T",
+            "ShootShake": [
+              0,
+              0,
+              0
+            ]
+          }
+        }
+      ],
+      "ShootShake": [
+        0,
+        0,
+        0
+      ],
+      "BeltFed": true,
+      "NormalReloadTime": 400,
+      "AutoReload": true,
+      "OverheatEnabled": false,
+      "AmmoCostPerShoot": 1,
+      "ShootPos": {
+        "Transform": "Barrel",
+        "Positions": [
+          [
+            0.13,
+            -0.08,
+            0.8
+          ]
+        ],
+        "Directions": [
+          "Barrel"
+        ],
+        "MuzzleAttachments": [
+          "M134Turret_muzzle"
+        ],
+        "MuzzleDirectionAttachments": [
+          "Barrel"
+        ],
+        "EffectAttachments": [
+          "M134Turret_muzzle"
+        ],
+        "EffectDirectionAttachments": [
+          "Barrel"
+        ],
+        "SeekAttachment": "M134Turret_muzzle"
+      }
+    },
+    "M129Turret": {
+      "Icon": "superbwarfare:textures/gun_icon/m_79_icon.png",
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "DefaultZoom": 3,
+      "RPM": 350,
+      "Magazine": 300,
+      "NormalReloadTime": 400,
+      "EmptyReloadTime": 400,
+      "AmmoCostPerShoot": 1,
+      "Projectile": {
+        "Type": "superbwarfare:gun_grenade",
+        "Profile": "berts_vehicle_pack:ah_1g_cobra/m129turret/default"
+      },
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:grenade_40mm",
+          "ConsumptionItem": "superbwarfare:grenade_ammunition",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:gun_grenade",
+              "Profile": "berts_vehicle_pack:ah_1g_cobra/m129turret/m129_hedp"
+            },
+            "ShootShake": [
+              8,
+              10,
+              12
+            ],
+            "NominalBallistics": {
+              "Supported": false,
+              "ProjectileType": "superbwarfare:gun_grenade",
+              "ProjectileProfile": "berts_vehicle_pack:ah_1g_cobra/m129turret/m129_hedp"
+            },
+            "TntEquivalentKg": 0.0608
+          }
+        }
+      ],
+      "ShellType": "HE",
+      "Velocity": 7.91,
+      "Damage": 35,
+      "ExplosionDamage": 45,
+      "ExplosionRadius": 6,
+      "TntEquivalentKg": 0.0608,
+      "ProjectileLife": 100,
+      "RecoilTime": 16,
+      "RecoilForce": 0.08,
+      "ShootAnimationTime": 2,
+      "Spread": 1.25,
+      "Crosshair": "@VehicleRuApc",
+      "CrosshairColor": "0x66FF00",
+      "Name": "40 mm M129 (M28 turret)",
+      "SoundInfo": {
+        "Fire1PGain": 1.0,
+        "Fire3PGain": 1.0,
+        "Fire3PFarGain": 1.0,
+        "Fire3PVeryFarGain": 1.0,
+        "Fire1P": "bvp_audio:weapon/mk19_1p",
+        "Fire3P": "bvp_audio:weapon/mk19_3p",
+        "Fire3PFar": "bvp_audio:weapon/mk19_far",
+        "Fire3PVeryFar": "bvp_audio:weapon/mk19_far",
+        "Volume": 0.55,
+        "VehicleReload": "superbwarfare:m_2_hb_reload_empty",
+        "VehicleReloadClipDurationTicks": 127
+      },
+      "SoundRadius": 12,
+      "ShootPos": {
+        "Transform": "Barrel",
+        "Positions": [
+          [
+            -0.13,
+            -0.08,
+            0.62
+          ]
+        ],
+        "Directions": [
+          "Barrel"
+        ],
+        "MuzzleAttachments": [
+          "M129Turret_muzzle"
+        ],
+        "MuzzleDirectionAttachments": [
+          "Barrel"
+        ],
+        "EffectAttachments": [
+          "M129Turret_muzzle"
+        ],
+        "EffectDirectionAttachments": [
+          "Barrel"
+        ],
+        "SeekAttachment": "M129Turret_muzzle"
+      },
+      "NominalBallistics": {
+        "Supported": false,
+        "ProjectileType": "superbwarfare:gun_grenade",
+        "ProjectileProfile": "berts_vehicle_pack:ah_1g_cobra/m129turret/default"
+      },
+      "ShootShake": [
+        8,
+        10,
+        12
+      ]
+    },
     "FfarS1Aero6a": {
       "AmmoType": [
         {
@@ -240,7 +506,7 @@
         "Profile": "berts_vehicle_pack:ah_1g_cobra/rocket/default"
       },
       "Spread": 0.25,
-      "Name": "weapon.superbwarfare.80mm_rocket",
+      "Name": "2.75 in FFAR",
       "RPM": 600,
       "Damage": 100,
       "ExplosionDamage": 0,
@@ -399,7 +665,7 @@
         "Profile": "berts_vehicle_pack:ah_1g_cobra/rocket/default"
       },
       "Spread": 0.25,
-      "Name": "weapon.superbwarfare.80mm_rocket",
+      "Name": "2.75 in FFAR",
       "RPM": 600,
       "Damage": 100,
       "ExplosionDamage": 0,
@@ -702,7 +968,7 @@
         "Profile": "berts_vehicle_pack:ah_1g_cobra/rocket/default"
       },
       "Spread": 0.25,
-      "Name": "weapon.superbwarfare.80mm_rocket",
+      "Name": "2.75 in FFAR",
       "RPM": 600,
       "Damage": 100,
       "ExplosionDamage": 0,
@@ -861,7 +1127,7 @@
         "Profile": "berts_vehicle_pack:ah_1g_cobra/rocket/default"
       },
       "Spread": 0.25,
-      "Name": "weapon.superbwarfare.80mm_rocket",
+      "Name": "2.75 in FFAR",
       "RPM": 600,
       "Damage": 100,
       "ExplosionDamage": 0,
@@ -1151,9 +1417,9 @@
         "Profile": "berts_vehicle_pack:ah_6j/cannon/default"
       },
       "DefaultZoom": 3,
-      "RPM": 8000,
+      "RPM": 4000,
       "ProjectileAmount": 1,
-      "Magazine": 6000,
+      "Magazine": 1500,
       "EmptyReloadTime": 400,
       "Velocity": 42.65,
       "Damage": 22,
@@ -1311,7 +1577,7 @@
         "Profile": "berts_vehicle_pack:ah_1g_cobra/cannon/default"
       },
       "DefaultZoom": 3,
-      "RPM": 750,
+      "RPM": 850,
       "ProjectileAmount": 1,
       "Magazine": 950,
       "EmptyReloadTime": 400,
@@ -1560,7 +1826,7 @@
         "Profile": "berts_vehicle_pack:ah_1g_cobra/rocket/default"
       },
       "Spread": 0.25,
-      "Name": "weapon.superbwarfare.80mm_rocket",
+      "Name": "2.75 in FFAR",
       "RPM": 600,
       "Damage": 100,
       "ExplosionDamage": 0,
@@ -1719,7 +1985,7 @@
         "Profile": "berts_vehicle_pack:ah_1g_cobra/rocket/default"
       },
       "Spread": 0.25,
-      "Name": "weapon.superbwarfare.80mm_rocket",
+      "Name": "2.75 in FFAR",
       "RPM": 600,
       "Damage": 100,
       "ExplosionDamage": 0,
@@ -2009,9 +2275,9 @@
         "Profile": "berts_vehicle_pack:ah_6j/cannon/default"
       },
       "DefaultZoom": 3,
-      "RPM": 8000,
+      "RPM": 4000,
       "ProjectileAmount": 1,
-      "Magazine": 6000,
+      "Magazine": 1500,
       "EmptyReloadTime": 400,
       "Velocity": 42.65,
       "Damage": 22,
@@ -2182,7 +2448,7 @@
         "Profile": "berts_vehicle_pack:ah_1g_cobra/rocket/default"
       },
       "Spread": 0.25,
-      "Name": "weapon.superbwarfare.80mm_rocket",
+      "Name": "2.75 in FFAR",
       "RPM": 600,
       "Damage": 100,
       "ExplosionDamage": 0,
@@ -2341,7 +2607,7 @@
         "Profile": "berts_vehicle_pack:ah_1g_cobra/rocket/default"
       },
       "Spread": 0.25,
-      "Name": "weapon.superbwarfare.80mm_rocket",
+      "Name": "2.75 in FFAR",
       "RPM": 600,
       "Damage": 100,
       "ExplosionDamage": 0,
@@ -2642,21 +2908,21 @@
   },
   "TurretPos": [
     0,
-    2.49456,
-    2.98942
+    1.55,
+    4.9
   ],
   "BarrelPos": [
     0,
     0,
-    -9.47253
+    0
   ],
   "TurretTurnSpeed": [
-    15,
-    15
+    39,
+    52
   ],
   "TurretPitchRange": [
-    -60,
-    10
+    -50,
+    21
   ],
   "HasDecoy": true,
   "UpStep": 1.1,
@@ -2747,8 +3013,8 @@
     ]
   ],
   "TurretYawRange": [
-    -110,
-    110
+    -107,
+    107
   ],
   "TurretControllerIndex": 1,
   "PassengerRenderScale": 0.75,
@@ -2917,6 +3183,45 @@
         0,
         1.1158,
         5.9066
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "M134Turret_muzzle": {
+      "Parent": "Barrel",
+      "Position": [
+        0.13,
+        -0.08,
+        0.8
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "M129Turret_muzzle": {
+      "Parent": "Barrel",
+      "Position": [
+        -0.13,
+        -0.08,
+        0.62
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "gunner_sight": {
+      "Parent": "Vehicle",
+      "Position": [
+        0.0,
+        3.17,
+        4.55
       ],
       "Direction": [
         0,

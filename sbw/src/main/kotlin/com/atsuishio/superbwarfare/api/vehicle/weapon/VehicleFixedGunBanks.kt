@@ -30,8 +30,8 @@ internal object VehicleFixedGunBanks {
     /**
      * A bank member must be listed exactly once on the bank's own seat. The same physical gun may also be listed on
      * other seats (a two-seat attack helicopter whose pilot can fire the gunner's turret gun): its GunData, ammunition
-     * and muzzles are shared by name, and the scheduler lets only one seat drive one gun at a time, so a second
-     * listing can neither double its cadence nor claim its muzzles twice.
+     * and muzzles are shared by name, and the scheduler keeps one cadence and heat state per gun name whichever seats
+     * hold its trigger, so a second listing can neither double its cadence nor claim its muzzles twice.
      */
     internal fun ownsMember(seatWeapons: List<List<String>>, bankSeat: Int, name: String): Boolean {
         val own = seatWeapons.getOrNull(bankSeat) ?: return false

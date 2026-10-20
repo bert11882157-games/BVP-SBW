@@ -1,7 +1,10 @@
 {
   "Schema": 1,
   "Name": "AH-1G Cobra",
-  "BuiltInWeapons": [],
+  "BuiltInWeapons": [
+    "M134Turret",
+    "M129Turret"
+  ],
   "SuspendedWeapons": [
     "FfarS1Aero6a",
     "FfarS1Aero7a",
@@ -103,5 +106,9 @@
   "MaxPayloadKg": 1450,
   "MaxPylonMassKg": 1000,
   "MaxWeaponsPerPylon": 12,
-  "WeaponSeat": 0
+  "WeaponSeat": 0,
+  "WeaponSeats": [
+    0,
+    1
+  ]
 }

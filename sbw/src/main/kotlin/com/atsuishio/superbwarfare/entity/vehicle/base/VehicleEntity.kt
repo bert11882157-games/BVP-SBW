@@ -1811,6 +1811,10 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
 
     internal fun withdrawWeaponOnSelectionChange(seatIndex: Int, weaponIndex: Int) {
         if (weaponIndex < 0) return
+        // A weapon listed on several seats (a helicopter's pilot and gunner) is one physical weapon: while another
+        // seat still has it selected, this seat switching away must not cancel its reload or unload its magazine.
+        val name = getGunName(seatIndex, weaponIndex) ?: return
+        if (selectedOnAnotherSeat(seatIndex, name)) return
         getGunName(seatIndex, weaponIndex)?.let { weaponIdentity ->
             com.atsuishio.superbwarfare.api.weapon.VehicleReloadAudio.cancel(
                 this,
@@ -1823,6 +1827,17 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
                 gunData.withdrawAmmo(ammoSupplier)
             }
         }
+    }
+
+    /** Whether an occupied seat other than [seatIndex] has [weaponName] in its primary or secondary slot. */
+    private fun selectedOnAnotherSeat(seatIndex: Int, weaponName: String): Boolean {
+        for (seat in 0 until maxPassengers) {
+            if (seat == seatIndex || getNthEntity(seat) == null) continue
+            if (getGunName(seat) == weaponName) return true
+            val secondary = getSecondaryWeaponIndex(seat) ?: continue
+            if (getGunName(seat, secondary) == weaponName) return true
+        }
+        return false
     }
 
     internal fun notifyWeaponContextChanged(
@@ -3921,6 +3936,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
     override fun onPassengerTurned(entity: Entity) {
         val seatIndex = getSeatIndex(entity)
         if (seatIndex >= 0) {
+            clampZoomSightRotation(entity, seatIndex)
             val weaponIndex = getSelectedWeapon(seatIndex)
             val aimMode = getVehicleAimPresentationMode(seatIndex, weaponIndex)
             // A weapon controller's free look is an aim contract, not a successfully resolved
@@ -3934,6 +3950,35 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
             }
         }
         this.clampRotation(entity)
+    }
+
+    /**
+     * A seat sight with its own field of regard (CameraPos ZoomYawRange / ZoomPitchRange, e.g. a helicopter
+     * gunner's nose turret) holds the local rider's look inside that field while the vehicle zoom (the sight view)
+     * is held. The limits are measured from the vehicle's forward axis in the seat clamp's conventions (yaw positive
+     * to the right, pitch positive up). The plain head view, and every seat without these ranges, is unaffected.
+     * Only the local client's own turn input is held; the server takes the rider's look from that client.
+     */
+    private fun clampZoomSightRotation(entity: Entity, seatIndex: Int) {
+        if (!level().isClientSide || entity !== Minecraft.getInstance().player) return
+        if (!com.atsuishio.superbwarfare.event.ClientEventHandler.zoomVehicle) return
+        val camera = computed().seats().getOrNull(seatIndex)?.cameraPos ?: return
+        val yawRange = camera.zoomYawRange
+        val pitchRange = camera.zoomPitchRange
+        if (yawRange == null && pitchRange == null) return
+        val forward = getTransformDirectionFromString(1f, entity, "Vehicle")
+        if (pitchRange != null && pitchRange.x <= pitchRange.y) {
+            val relative = Mth.wrapDegrees(entity.xRot - -getXRotFromVector(forward)).toFloat()
+            val clamped = Mth.clamp(relative, -pitchRange.y, -pitchRange.x)
+            entity.xRotO += clamped - relative
+            entity.xRot = entity.xRot + clamped - relative
+        }
+        if (yawRange != null && yawRange.x <= yawRange.y) {
+            val relative = Mth.wrapDegrees(entity.yRot - -getYRotFromVector(forward)).toFloat()
+            val clamped = Mth.clamp(relative, yawRange.x, yawRange.y)
+            entity.yRotO += clamped - relative
+            entity.yRot = entity.yRot + clamped - relative
+        }
     }
 
     open val customTurretMinPitch: Float

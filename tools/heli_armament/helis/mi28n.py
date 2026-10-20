@@ -6,7 +6,9 @@ SPEC = {
     # Pilot: rockets and gun pods, and the 2A42 (stowed straight ahead while he alone fires it). Navigator-operator: the NPPU-28 turret, Ataka
     # and Igla (Wikipedia, Mil Mi-28).
     # Guided stores: the gunner's (WeaponSeat), and the pilot's too so the store keys work from both seats (owner).
-    'crew': {'unguided': [0], 'guided': [1, 0], 'guns': {'Cannon': [1, 0]}},
+    # Owner 2026-10-20: both crew members may select and fire every weapon (the operator the pods and bombs too);
+    # a weapon both select is one weapon, fired at its own rate.
+    'crew': {'unguided': [0, 1], 'guided': [1, 0], 'guns': {'Cannon': [1, 0]}},
     # NPPU-28: ±110° azimuth (Wikipedia, Mil Mi-28), +13° / -40° elevation (the figure given for its sight)
     'gun': {'TurretYawRange': [-110, 110], 'TurretPitchRange': [-40, 13], 'TurretTurnSpeed': [39, 52]},
     'slots': [
