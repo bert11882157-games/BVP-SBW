@@ -42,9 +42,21 @@ TEX_DIR = os.path.join(GEN, 'assets/berts_vehicle_pack/textures/entity')
 
 
 def texture_path(vid):
-    """the aircraft's texture; BVP_TEX_DIR overrides the repository folder (where Git LFS files are pointers)"""
+    """the aircraft's texture: the repository's when it is a real file (a painted cockpit atlas lives there), else
+    BVP_TEX_DIR's copy (the repository's Git LFS files are pointers without a checkout)"""
+    repo = os.path.join(TEX_DIR, vid + '.png')
     d = os.environ.get('BVP_TEX_DIR')
-    return os.path.join(d, vid + '.png') if d else os.path.join(TEX_DIR, vid + '.png')
+    if d and not is_png(repo):
+        return os.path.join(d, vid + '.png')
+    return repo
+
+
+def is_png(path):
+    try:
+        with open(path, 'rb') as f:
+            return f.read(8) == b'\x89PNG\r\n\x1a\n'
+    except OSError:
+        return False
 
 
 def r5(v):
@@ -1701,6 +1713,68 @@ def old_interior(ac, tubs, keep=()):
         for i in out.get(name, ()):
             cl.pop(i, None)
     return out, clips
+
+
+EXT_DIRS = 48          # rays per face for the exterior test
+EXT_MIN_RAYS = 2       # rays that must leave the glazed model for a face to count as exterior
+
+
+def fib_sphere(n):
+    i = np.arange(n) + 0.5
+    phi = np.arccos(1 - 2 * i / n); th = np.pi * (1 + 5 ** 0.5) * i
+    return np.stack([np.cos(th) * np.sin(phi), np.cos(phi), np.sin(th) * np.sin(phi)], 1)
+
+
+def exposure(ac, c, dirs=None):
+    """how many of the rays from c (one per row of dirs) leave the aircraft without meeting anything: the skin and
+    the canopy glass block, the face at c itself does not (hits nearer than 3 mm are ignored)"""
+    if not hasattr(ac, '_all'):
+        ac.escapes(np.zeros(3), np.array([0.0, 1.0, 0.0]))
+    T = ac._all
+    D = fib_sphere(EXT_DIRS) if dirs is None else dirs
+    e1, e2 = T[:, 1] - T[:, 0], T[:, 2] - T[:, 0]
+    sv = c - T[:, 0]
+    n = 0
+    for d in D:
+        h = np.cross(d, e2); a = (e1 * h).sum(1)
+        ok = np.abs(a) > 1e-12
+        f = np.where(ok, 1.0 / np.where(ok, a, 1.0), 0.0)
+        u = f * (sv * h).sum(1)
+        q = np.cross(sv, e1); v = f * (q @ d); t = f * (q * e2).sum(1)
+        if not (ok & (u >= 0) & (u <= 1) & (v >= 0) & (u + v <= 1) & (t > 0.003)).any():
+            n += 1
+    return n
+
+
+def keep_exterior(ac, rm, clips, tubs=()):
+    """drops from the removal / clip sets every face that can be seen from outside the aircraft with its canopy
+    glazed (EXT_MIN_RAYS of EXT_DIRS rays from its centre leave the model), unless it is interior all the same: in
+    a tub's canopy space (between the back of the tub and the windscreen, inside the canopy width, above the sill)
+    and not lying along the glass (a seat top or gunsight seen through a gap in the fitted glass goes with the old
+    interior; a canopy frame stays). The outside of the aircraft is never changed by the cockpit work. -> kept"""
+    kept = 0
+    for b in ac.bones:
+        name = b['name']
+        if name not in rm and name not in clips:
+            continue
+        pm = b['poly_mesh']
+        P = np.array(pm['positions'], float) * np.array([1, 1, -1]) / 16.0
+        for i in sorted(set(rm.get(name, ())) | set(clips.get(name, {}))):
+            poly = pm['polys'][i]
+            if not poly:
+                continue
+            V = P[[v[0] for v in poly]]
+            c = V.mean(0)
+            if exposure(ac, c) < EXT_MIN_RAYS:
+                continue
+            in_canopy = any(abs(c[0] - t.E[0]) < t.Wg - 0.01 and t.back_z - 0.05 < c[2] < t.ws_z and
+                            t.sill - 0.01 < c[1] < t.E[1] + 1.0 * t.s for t in tubs)
+            if in_canopy and not ac.hugs_glass(V):
+                continue
+            rm.get(name, set()).discard(i)
+            clips.get(name, {}).pop(i, None)
+            kept += 1
+    return kept
 
 
 def clip_forward(pm, index, zc):
