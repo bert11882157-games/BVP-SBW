@@ -1,4 +1,4 @@
-﻿"""Cockpit structure specs for the fleet generator (cockpit_build.py).
+"""Cockpit structure specs for the fleet generator (cockpit_build.py).
 
 Every aircraft starts from its era's layout (the panel outline, the instruments on it, the sight, the seat), then its
 own entry in AIRCRAFT overrides what differs. Outlines and positions are in metres at full size: r right of the centre
@@ -256,6 +256,7 @@ LAYOUTS['f15e_rear'] = [
 # what differs per aircraft (same-variant notes; the layouts are first-pass archetypes, refined type by type)
 AIRCRAFT = {
     'f_16b': dict(stick='side', recline=30, layout='radar'),          # F-16B Block 15: steam panel, side stick
+    'f_16c': dict(stick='side', recline=30, sight='hud'),             # F-16C Block 50: two MFDs and the ICP, side stick
     'rafale': dict(stick='side', layout='wide'),                        # Rafale: side stick, wide head-level displays
     'su_57': dict(layout='wide'),                                       # two large MFDs
     'su_35': dict(layout='wide'),                                       # two large MFI-35 displays

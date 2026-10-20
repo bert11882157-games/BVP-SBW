@@ -1,4 +1,4 @@
-﻿"""Blender: the cockpit structure generator for the fleet (the F-16C has its own script, f16c_structure.py, whose
+"""Blender: the cockpit structure generator for the fleet (the F-16C has its own script, f16c_structure.py, whose
 machinery this follows: a traced panel outline fitted to the hull, one formed panel body with cheeks to the walls, a
 padded hood glareshield following the windscreen, knee panels and a footwell, the seat and the structure behind it,
 then the fit to the hull, the clipping check and the 3 cm glass clearance).
@@ -148,6 +148,12 @@ for _attr, _val in (('surface_render_method', 'BLENDED'), ('blend_method', 'BLEN
         pass
 
 CUR_STATION = [0]
+# the simple build (default): rigid parts only (a flat panel with its instruments, a slab hood, block consoles, the
+# sight, the controls and the seat); no tub linings, and the fit never bends a part: one that clips is shrunk whole or
+# dropped. CB_SIMPLE=0 builds the old lined tub with the per-vertex fit.
+SIMPLE = os.environ.get('CB_SIMPLE', '1') == '1'
+PANEL_PARTS = set()                 # the panel board and everything on it: these shrink together, about the board
+PIVOT = {}                          # part name -> the point the rigid fit shrinks it toward, where not the default
 INSTR, STATIONS = [], {}
 FRONT_INDEX = [0]
 ANCHOR_U = {}
@@ -223,6 +229,22 @@ def loft(name, rings, material, bevel=0.0):
     bm.faces.new(V[0][::-1]); bm.faces.new(V[-1])
     bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
     return obj(name, bm, material, bevel=bevel)
+
+
+def convex_hull(pts):
+    """the convex hull of 2-D points (monotone chain), counter-clockwise"""
+    pts = sorted(set(map(tuple, pts)))
+    if len(pts) < 3:
+        return pts
+
+    def half(seq):
+        h = []
+        for p in seq:
+            while len(h) >= 2 and (h[-1][0] - h[-2][0]) * (p[1] - h[-2][1]) - (h[-1][1] - h[-2][1]) * (p[0] - h[-2][0]) <= 0:
+                h.pop()
+            h.append(p)
+        return h[:-1]
+    return half(pts) + half(pts[::-1])
 
 
 tub = meta.get('tub') or {}
@@ -312,7 +334,7 @@ def build_station(si, E, front_eye=None):
     # pilot; only when none fits is the top lowered (a panel stands closer before it ever goes down)
     for lower in (False, True):
         for i in range(14):
-            F_c = 0.80 - 0.035 * i
+            F_c = (0.80 if not SIMPLE else 0.72) - 0.035 * i
             g0 = glass_over(0, F_c, -0.4)
             top = min(-0.20, (g0 - 0.24) if g0 is not None else -0.20, ceiling(F_c) - 0.05)
             top = max(top, -0.55)
@@ -371,6 +393,8 @@ def build_station(si, E, front_eye=None):
         return ar, au, n
 
     TRACE = spec['rear_trace'] if rear and spec.get('rear_trace') else spec['trace']
+    if SIMPLE:                                # the outline's convex hull: a clean panel edge, no notches or steps
+        TRACE = convex_hull(TRACE)
     foot_floor = floor_u + 0.30
 
     def trace_fits(s):
@@ -402,23 +426,25 @@ def build_station(si, E, front_eye=None):
         if f_.normal.dot(pn) < 0:
             f_.normal_flip()
     obj('panel_board', bm, M['panel'], solid=0.025, bevel=0.004)
-    bm = bmesh.new()
-    fv = [bm.verts.new(panel_pt(r * S, U_TOP + du * S, -0.024)) for r, du in TRACE]
-    depth = max(0.06, min(0.30, free - F_PANEL - 0.06))   # into the nose, short of what the hull keeps there
-    bv = [bm.verts.new(panel_pt(r * S, U_TOP + du * S, -depth)) for r, du in TRACE]
-    bm.faces.new(fv); bm.faces.new(bv[::-1])
-    for i in range(len(TRACE)):
-        j = (i + 1) % len(TRACE)
-        bm.faces.new([fv[j], fv[i], bv[i], bv[j]])
-    bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
-    bmesh.ops.triangulate(bm, faces=[f_ for f_ in bm.faces if len(f_.verts) > 4])
-    obj('panel_body', bm, M['coaming'])
+    panel_group = [len(cockpit) - 1]
+    if not SIMPLE:
+        bm = bmesh.new()
+        fv = [bm.verts.new(panel_pt(r * S, U_TOP + du * S, -0.024)) for r, du in TRACE]
+        depth = max(0.06, min(0.30, free - F_PANEL - 0.06))   # into the nose, short of what the hull keeps there
+        bv = [bm.verts.new(panel_pt(r * S, U_TOP + du * S, -depth)) for r, du in TRACE]
+        bm.faces.new(fv); bm.faces.new(bv[::-1])
+        for i in range(len(TRACE)):
+            j = (i + 1) % len(TRACE)
+            bm.faces.new([fv[j], fv[i], bv[i], bv[j]])
+        bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+        bmesh.ops.triangulate(bm, faces=[f_ for f_ in bm.faces if len(f_.verts) > 4])
+        obj('panel_body', bm, M['coaming'])
     # side cheeks from the traced sides to the walls
     side_pts = sorted([(r, du) for r, du in TRACE if r > 0.2], key=lambda q: -q[1])
     top_side = max(du for r, du in side_pts) if side_pts else -0.05
     foot_side = min(du for r, du in side_pts) if side_pts else -0.30
     r_side = max(r for r, du in side_pts) if side_pts else 0.30
-    for sg in (-1, 1):
+    for sg in ((-1, 1) if not SIMPLE else ()):
         rows = []
         for t in (0.0, 0.25, 0.5, 0.75, 1.0):
             du = top_side + (foot_side - top_side) * t
@@ -482,6 +508,7 @@ def build_station(si, E, front_eye=None):
             box(f'{name}_face', c + pn * 0.002 * k, (R, upl, pn), (w / 2 - 0.006, h / 2 - 0.006, 0.003), M['console'],
                 bevel=0.002)
             overlays.append((c + pn * 0.0053 * k, (R, upl, pn), w - 0.014, h - 0.014, 'keypad'))
+    PANEL_PARTS.update(o.name for o in cockpit[panel_group[0]:])
 
     # ------------------------------------------------------------------ the centre pedestal down to the floor
     bottom = min(du for r, du in TRACE)
@@ -498,37 +525,47 @@ def build_station(si, E, front_eye=None):
     # ------------------------------------------------------------------ glareshield: a padded hood over the panel
     top_path = [(r, du) for r, du in TRACE if du >= top_side - 1e-6]
     top_path = sorted(top_path, key=lambda q: q[0])
+    if SIMPLE:
+        # one flat hood: a slab over the panel's top edge, from 5 cm proud of the panel forward toward the windscreen
+        hood_w = max(abs(r) for r, du in top_path) * S + 0.01
+        f0 = (panel_pt(0, U_TOP) - E).dot(F) / k
+        lip_f = f0 - 0.05
+        f1 = max(f0 + 0.06, min(f0 + 0.24, ws_f - 0.08))
+        box('glareshield', P(0, U_TOP + 0.016, (lip_f + f1) / 2), (R, U, F), (hood_w, 0.016, (f1 - lip_f) / 2),
+            M['coaming'], bevel=0.004)
+        PIVOT[cockpit[-1].name] = P(0, U_TOP + 0.016, lip_f)       # the fit shrinks it toward its aft edge
     lip, lip_du = [], []
-    for r, du in top_path:
+    for r, du in (top_path if not SIMPLE else ()):
         lip.append(panel_pt(r * S, U_TOP + du * S, 0.05) + U * 0.015 * k)
         lip_du.append(du * S)
-    rows = [lip]
-    hood_w = max(abs(r) for r, du in top_path) * S
-    for t in (0.35, 0.7, 1.0):
-        row = []
-        for p in lip:
-            r = (p - E).dot(R) / k
-            u0 = (p - E).dot(U) / k
-            f0 = (p - E).dot(F) / k
-            f = f0 + max(0.03, ws_f - 0.06 - f0) * t
-            u = u0 + 0.028 * math.sin(math.pi * t) * max(0.0, 1 - (r / max(0.1, hood_w)) ** 2) - 0.02 * t
-            g = glass_over(r, f, u - 0.3)
-            if g is not None:
-                u = min(u * (1 - t) + (g - 0.045) * t, g - 0.045)
-            row.append([r, u, f])
-        for sgn in (-1, 1):
-            half = [q for q in row if q[0] * sgn > 1e-6]
-            if half:
-                r_o, u_o, f_o = max(half, key=lambda q: abs(q[0]))
-                w = reach_pt(lambda x, u_o=u_o, f_o=f_o: P(x, u_o, f_o), sgn, clear=0.035)
-                s_ = min(1.0, w / abs(r_o))
-                for q in half:
-                    q[0] *= s_
-        rows.append([P(*q) for q in row])
-    sheet('glareshield', rows, M['coaming'], solid=0.028 if not wwii else 0.015, bevel=0.010)
-    sheet('glareshield_lip', [lip, [panel_pt((p - E).dot(R) / k, U_TOP + du_) for p, du_ in zip(lip, lip_du)]],
-          M['coaming'], solid=0.03 if not wwii else 0.015, bevel=0.012)
-    lip_f = (panel_pt(0, U_TOP, 0.05) - E).dot(F) / k
+    if not SIMPLE:
+        rows = [lip]
+        hood_w = max(abs(r) for r, du in top_path) * S
+        for t in (0.35, 0.7, 1.0):
+            row = []
+            for p in lip:
+                r = (p - E).dot(R) / k
+                u0 = (p - E).dot(U) / k
+                f0 = (p - E).dot(F) / k
+                f = f0 + max(0.03, ws_f - 0.06 - f0) * t
+                u = u0 + 0.028 * math.sin(math.pi * t) * max(0.0, 1 - (r / max(0.1, hood_w)) ** 2) - 0.02 * t
+                g = glass_over(r, f, u - 0.3)
+                if g is not None:
+                    u = min(u * (1 - t) + (g - 0.045) * t, g - 0.045)
+                row.append([r, u, f])
+            for sgn in (-1, 1):
+                half = [q for q in row if q[0] * sgn > 1e-6]
+                if half:
+                    r_o, u_o, f_o = max(half, key=lambda q: abs(q[0]))
+                    w = reach_pt(lambda x, u_o=u_o, f_o=f_o: P(x, u_o, f_o), sgn, clear=0.035)
+                    s_ = min(1.0, w / abs(r_o))
+                    for q in half:
+                        q[0] *= s_
+            rows.append([P(*q) for q in row])
+        sheet('glareshield', rows, M['coaming'], solid=0.028 if not wwii else 0.015, bevel=0.010)
+        sheet('glareshield_lip', [lip, [panel_pt((p - E).dot(R) / k, U_TOP + du_) for p, du_ in zip(lip, lip_du)]],
+              M['coaming'], solid=0.03 if not wwii else 0.015, bevel=0.012)
+        lip_f = (panel_pt(0, U_TOP, 0.05) - E).dot(F) / k
 
     # ------------------------------------------------------------------ the sight
     sight = spec['sight'] if not rear else None
@@ -576,7 +613,19 @@ def build_station(si, E, front_eye=None):
     st_front = F_PANEL - 0.22
     CON_R0 = max(0.13, min(0.20, 0.5 * wall(con_u + 0.05, 0.2, 1)))
     st = [st_back + (st_front - st_back) * i / 8 for i in range(9)]
-    for sg in (-1, 1):
+    if SIMPLE:
+        # the consoles as three plain blocks a side, each as wide as the hull allows along its length
+        bot = max(floor_u + 0.02, con_u - 0.30)
+        for sg in (-1, 1):
+            for j in range(3):
+                fa, fb = st[j * 3], st[j * 3 + 3] if j < 2 else st[8]
+                outer = min(0.40, min(wall(u_, f_, sg) for u_ in (con_u + 0.02, bot + 0.02)
+                                      for f_ in (fa, (fa + fb) / 2, fb)) - 0.025)
+                if outer < CON_R0 + 0.04:
+                    continue
+                box(f'console_{sg}_{j}', P(sg * (CON_R0 + outer) / 2, (con_u + bot) / 2, (fa + fb) / 2), (R, U, F),
+                    ((outer - CON_R0) / 2, (con_u - bot) / 2, (fb - fa) / 2 - 0.004), M['console'], bevel=0.003)
+    for sg in ((-1, 1) if not SIMPLE else ()):
         outer = [max(CON_R0 + 0.02, min(wall(con_u + 0.02, f, sg) - 0.012, 0.42)) for f in st]
         sheet(f'console_top_{sg}', [[P(sg * CON_R0, con_u, f) for f in st], [P(sg * w, con_u, f) for w, f in zip(outer, st)]],
               M['console'], solid=0.012)
@@ -589,7 +638,8 @@ def build_station(si, E, front_eye=None):
             (0.035, 0.012, (st_front - st_back) / 2), M['tub'])
     F_FW = min(F_PANEL + 0.28, ahead(floor_u + 0.15) - 0.04)
     fw = max(0.12, min(0.22, wall(floor_u + 0.05, 0.3, 1) - 0.02))
-    sheet('floor', [[P(r, floor_u, f) for r in (-fw, fw)] for f in (st_back, F_FW)], M['floor'], solid=0.01)
+    if not SIMPLE:
+        sheet('floor', [[P(r, floor_u, f) for r in (-fw, fw)] for f in (st_back, F_FW)], M['floor'], solid=0.01)
 
     def span(u, f, side, cap=0.45, clear=0.03):
         return min(cap, reach_pt(lambda x: P(x, u, f), side, clear=clear, cap=cap))
@@ -597,43 +647,44 @@ def build_station(si, E, front_eye=None):
     # footwell and knee panels
     foot_u = U_TOP + bottom * S
     side_foot_u = U_TOP + foot_side * S
-    rows = []
-    for t in (0.0, 0.25, 0.5, 0.75, 1.0):
-        u = floor_u + (side_foot_u - floor_u) * t
-        w = min(span(u, F_FW, 1, cap=0.40), span(u, F_FW, -1, cap=0.40))
-        rows.append([P(x * w, u, F_FW) for x in (-1, -0.5, 0, 0.5, 1)])
-    sheet('footwell_front', rows, M['tub_d'], solid=0.01)
-    for sg in (-1, 1):
+    if not SIMPLE:
         rows = []
-        for f in (st_front, (st_front + F_FW) / 2, F_FW):
-            rows.append([P(sg * span(floor_u + 0.02, f, sg, cap=0.40), floor_u + 0.02, f),
-                         P(sg * span(con_u, f, sg, cap=0.40), con_u, f)])
-        sheet(f'footwell_side_{sg}', rows if sg > 0 else [r_[::-1] for r_ in rows], M['tub_d'], solid=0.01)
-        r0 = 0.10 * S
-        r1 = max(r0 + 0.05, min(r_side * S, span(side_foot_u, F_PANEL, sg, cap=0.40)))
-        top = [panel_pt(sg * x, side_foot_u, -0.02) for x in (r0, (r0 + r1) / 2, r1)]
-        bot_u = max(floor_u + 0.25, side_foot_u - 0.20)
-        f_kb = min(F_FW, F_PANEL + 0.12)
-        bot = [P(sg * x, bot_u, f_kb) for x in (r0, (r0 + r1) / 2, min(r1, span(bot_u, f_kb, sg, cap=0.40)))]
-        sheet(f'knee_panel_{sg}', [top, bot] if sg > 0 else [top[::-1], bot[::-1]], M['coaming'], solid=0.012)
+        for t in (0.0, 0.25, 0.5, 0.75, 1.0):
+            u = floor_u + (side_foot_u - floor_u) * t
+            w = min(span(u, F_FW, 1, cap=0.40), span(u, F_FW, -1, cap=0.40))
+            rows.append([P(x * w, u, F_FW) for x in (-1, -0.5, 0, 0.5, 1)])
+        sheet('footwell_front', rows, M['tub_d'], solid=0.01)
+        for sg in (-1, 1):
+            rows = []
+            for f in (st_front, (st_front + F_FW) / 2, F_FW):
+                rows.append([P(sg * span(floor_u + 0.02, f, sg, cap=0.40), floor_u + 0.02, f),
+                             P(sg * span(con_u, f, sg, cap=0.40), con_u, f)])
+            sheet(f'footwell_side_{sg}', rows if sg > 0 else [r_[::-1] for r_ in rows], M['tub_d'], solid=0.01)
+            r0 = 0.10 * S
+            r1 = max(r0 + 0.05, min(r_side * S, span(side_foot_u, F_PANEL, sg, cap=0.40)))
+            top = [panel_pt(sg * x, side_foot_u, -0.02) for x in (r0, (r0 + r1) / 2, r1)]
+            bot_u = max(floor_u + 0.25, side_foot_u - 0.20)
+            f_kb = min(F_FW, F_PANEL + 0.12)
+            bot = [P(sg * x, bot_u, f_kb) for x in (r0, (r0 + r1) / 2, min(r1, span(bot_u, f_kb, sg, cap=0.40)))]
+            sheet(f'knee_panel_{sg}', [top, bot] if sg > 0 else [top[::-1], bot[::-1]], M['coaming'], solid=0.012)
 
-    # ------------------------------------------------------------------ behind the seat: bulkhead and deck
-    F_BH = (head - E).dot(F) / k - 0.16
-    U_DECK = max(sill_u + 0.06, -0.30)
-    rows = []
-    for t in (0.0, 0.2, 0.4, 0.6, 0.8, 1.0):
-        u = floor_u + (U_DECK - floor_u) * t
-        w = min(span(u, F_BH, 1), span(u, F_BH, -1))
-        rows.append([P(x * w, u, F_BH) for x in (-1, -0.5, 0, 0.5, 1)])
-    sheet('rear_bulkhead', rows, M['tub'], solid=0.01)
-    rows = []
-    for f in (F_BH, F_BH - 0.12, F_BH - 0.24, F_BH - 0.36, F_BH - 0.48):
-        w = min(span(U_DECK, f, 1), span(U_DECK, f, -1))
-        rows.append([P(x * w, U_DECK, f) for x in (-1, -0.6, -0.2, 0.2, 0.6, 1)])
-    sheet('aft_deck', rows[::-1], M['tub_d'], solid=0.01)
+        # ------------------------------------------------------------------ behind the seat: bulkhead and deck
+        F_BH = (head - E).dot(F) / k - 0.16
+        U_DECK = max(sill_u + 0.06, -0.30)
+        rows = []
+        for t in (0.0, 0.2, 0.4, 0.6, 0.8, 1.0):
+            u = floor_u + (U_DECK - floor_u) * t
+            w = min(span(u, F_BH, 1), span(u, F_BH, -1))
+            rows.append([P(x * w, u, F_BH) for x in (-1, -0.5, 0, 0.5, 1)])
+        sheet('rear_bulkhead', rows, M['tub'], solid=0.01)
+        rows = []
+        for f in (F_BH, F_BH - 0.12, F_BH - 0.24, F_BH - 0.36, F_BH - 0.48):
+            w = min(span(U_DECK, f, 1), span(U_DECK, f, -1))
+            rows.append([P(x * w, U_DECK, f) for x in (-1, -0.6, -0.2, 0.2, 0.6, 1)])
+        sheet('aft_deck', rows[::-1], M['tub_d'], solid=0.01)
 
     # ------------------------------------------------------------------ controls and seat
-    STATIONS[si]['stick_foot'] = build_controls(si, E, P, hip, con_u, floor_u, F_FW)
+    STATIONS[si]['stick_foot'] = build_controls(si, E, P, hip, con_u, floor_u, F_FW, CON_R0)
     import cockpit_details
     cockpit_details.add(dict(P=P, R=R, U=U, F=F, k=k, M=M, E=E, obj=obj, seed=f'{vid}{si}', era=meta.get('era'),
                              wwii=wwii, con_u=con_u, CON_R0=CON_R0, st_back=st_back, st_front=st_front, hip=hip,
@@ -655,7 +706,7 @@ def framed(name, c, axes, w, h, depth, open_w, open_h, recess=0.012):
     box(f'{name}_floor', c - an * (recess + 0.002) * k, axes, (open_w / 2, open_h / 2, 0.002), M['black'], bevel=0.0)
 
 
-def build_controls(si, E, P, hip, con_u, floor_u, F_FW):
+def build_controls(si, E, P, hip, con_u, floor_u, F_FW, con_r=0.22):
     hip_f = (hip - E).dot(F) / k
     if spec['stick'] == 'side':
         base = P(0.30, con_u, hip_f + 0.42)
@@ -675,6 +726,9 @@ def build_controls(si, E, P, hip, con_u, floor_u, F_FW):
     else:
         # the centre stick: a boot on the floor, the column, the grip with its trigger
         sf = hip_f + (0.36 if not wwii else 0.32)
+        hd = hit(skin, P(0, -0.50, sf), -U)            # the floor under the stick, as the hull has it there
+        if SIMPLE and hd is not None:
+            floor_u = max(floor_u, -0.50 - hd / k + 0.01)
         base = P(0, floor_u, sf)
         top_u = (hip - E).dot(U) / k + 0.26
         cyl('stick_boot', base + U * 0.025 * k, U, 0.05, 0.025, M['black'])
@@ -688,7 +742,7 @@ def build_controls(si, E, P, hip, con_u, floor_u, F_FW):
         box('stick_trigger', g0 + s_ax * 0.06 * k - F * -0.022 * k, (R, s_ax, F), (0.005, 0.012, 0.004), M['metal'])
         foot = base
     # throttle on the left console's forward end (WWII: on the left wall above it)
-    tq = P(-0.29, con_u + 0.012, hip_f + 0.28)
+    tq = P(-0.29 if not SIMPLE else -min(0.29, con_r + 0.07), con_u + 0.012, hip_f + 0.28)
     box('throttle_quadrant', tq, (R, U, F), (0.028, 0.012, 0.10), M['grip'], bevel=0.003)
     t_ax = (U * math.cos(math.radians(20)) + F * math.sin(math.radians(20))).normalized()
     lever = tq + U * 0.012 * k + F * 0.02 * k
@@ -765,6 +819,18 @@ for si in order:
     build_station(si, EYES[si], None if front is None else front)
     front = EYES[si] if front is None else front
 
+D26 = [Vector((x, y, z)).normalized() for x in (-1, 0, 1) for y in (-1, 0, 1) for z in (-1, 0, 1) if (x, y, z) != (0, 0, 0)]
+
+
+def outside(p):
+    """outside the hull: a quick test on the six axis rays first, then 12 or more of the 26 rays from the point get out
+    past the hull and the glass. The models leak (small holes, the gap between the glass and the sill), so a few rays
+    getting out is still inside; tools/blender_cockpit/inside_grid.py maps the counts"""
+    if sum(hit(skin, p, dv) is None and hit(gl, p, dv) is None for dv in (R, -R, U, -U, F, -F)) < 2:
+        return False
+    return sum(hit(skin, p, dv, far=40.0 * k) is None and hit(gl, p, dv, far=40.0 * k) is None for dv in D26) >= 12
+
+
 # ======================================================================== fit to the hull (as f16c_structure.py)
 MARGIN = 0.015
 TUB_PARTS = ('wall_', 'sill_', 'floor', 'rear_bulkhead', 'aft_deck', 'footwell_', 'console_side_', 'pedal_', 'gunner_floor')
@@ -780,108 +846,206 @@ def anchor_of(o, p):
     return E + U * (ANCHOR_U[station_of.get(o.name, 0)] * k) + F * (p - E).dot(F)
 
 
-moved = 0
-bpy.context.view_layer.update()
-for o in cockpit:
-    nm = base(o.name)
-    for m_ in list(o.modifiers):
-        bpy.context.view_layer.objects.active = o
-        bpy.ops.object.modifier_apply(modifier=m_.name)
-    bm = bmesh.new(); bm.from_mesh(o.data)
-    lim = (0.08 if nm.startswith(TUB_PARTS) else 0.10 if nm.startswith(EDGE_PARTS) else 99) * k
-    for _ in range(2):
-        long_edges = [e for e in bm.edges if e.calc_length() > lim]
-        if long_edges:
-            bmesh.ops.subdivide_edges(bm, edges=long_edges, cuts=1, use_grid_fill=True)
-    bm.to_mesh(o.data); bm.free()
-    marg = MARGIN if nm.startswith(TUB_PARTS) else 0.045 if nm.startswith(EDGE_PARTS) else 0.03
-    for v in [v for _ in range(2) for v in o.data.vertices]:
-        p = o.matrix_world @ v.co
-        anchor = anchor_of(o, p)
-        dvec = p - anchor
-        L_ = dvec.length
-        if L_ < 1e-6:
+if SIMPLE:
+    # the rigid fit: no vertex is ever moved on its own. A part that crosses the hull, comes within 3 cm of the glass
+    # or has a vertex outside the walls is scaled whole toward a point inside the cockpit (the centre line at its own
+    # height and station; seat and control parts about their own centre), 8 % a step, up to ten steps; one that still
+    # does not fit is dropped. The panel board and its instruments shrink together about the board's centre.
+    moved = nudged = removed = glass_trim = 0
+    dropped, trimmed, shrunk = [], {}, {}
+    bpy.context.view_layer.update()
+    for o in cockpit:
+        for m_ in list(o.modifiers):
+            bpy.context.view_layer.objects.active = o
+            bpy.ops.object.modifier_apply(modifier=m_.name)
+    SELF_PIVOT = ('seat_', 'stick_', 'throttle_', 'pedal_', 'gunner_')
+
+    def clips(objs):
+        bpy.context.view_layer.update()
+        for o in objs:
+            if B.bvh_of([o]).overlap(skin):
+                if os.environ.get('CB_DEBUG'):
+                    print('DBG clip hull', o.name, len(B.bvh_of([o]).overlap(skin)))
+                return True
+            mw = o.matrix_world
+            for v in o.data.vertices:
+                p = mw @ v.co
+                loc_, n_, i_, dist_ = gl.find_nearest(p)
+                if loc_ is not None and dist_ < 0.030 * k:
+                    if os.environ.get('CB_DEBUG'):
+                        print('DBG clip glass', o.name, [round(x / k, 3) for x in (p - EYES[0])])
+                    return True
+                if outside(p):
+                    if os.environ.get('CB_DEBUG'):
+                        print('DBG clip outside', o.name, [round(x / k, 3) for x in (p - EYES[0])])
+                    return True
+        return False
+
+    def centre(objs):
+        pts = [o.matrix_world @ v.co for o in objs for v in o.data.vertices]
+        return sum(pts, Vector()) / max(1, len(pts))
+
+    def scale_about(objs, pivot, s):
+        for o in objs:
+            mi = o.matrix_world.inverted()
+            for v in o.data.vertices:
+                p = o.matrix_world @ v.co
+                v.co = mi @ (pivot + (p - pivot) * s)
+
+    def drop(o):
+        dropped.append(o.name)
+        cockpit.remove(o)
+        bpy.data.objects.remove(o)
+
+    PANEL_FIT = {}
+    for si in order:
+        grp = [o for o in cockpit if o.name in PANEL_PARTS and station_of.get(o.name) == si]
+        board = [o for o in grp if base(o.name) == 'panel_board']
+        if not board:
             continue
-        dn = dvec / L_
-        GM = max(marg, 0.036)
-        hs = hit(skin, anchor, dn, far=L_ + marg * k)
-        hg = hit(gl, anchor, dn, far=L_ + GM * k)
-        stops = [h - m_ * k for h, m_ in ((hs, marg), (hg, GM)) if h is not None]
-        if stops and min(stops) < L_:
-            v.co = o.matrix_world.inverted() @ (anchor + dn * max(0.0, min(stops)))
-            moved += 1
-nudged = 0
-for o in cockpit:
-    if base(o.name).startswith(TUB_PARTS):
-        continue
-    for _ in range(25):
+        pivot = centre(board)
+        f_ = 1.0
+        for _ in range(10):
+            if not clips(grp):
+                break
+            scale_about(grp, pivot, 0.92)
+            f_ *= 0.92
+        PANEL_FIT[si] = f_
+        if f_ < 1.0:
+            shrunk[board[0].name] = round(f_, 3)
+    for it in INSTR:
+        it['fit'] = PANEL_FIT.get(it['station'], 1.0)
+    for o in list(cockpit):
+        if not clips([o]):
+            continue
+        if o.name in PANEL_PARTS:
+            drop(o)
+            continue
+        c = centre([o])
+        co0 = [v.co.copy() for v in o.data.vertices]
+        pivots = [PIVOT[o.name]] if o.name in PIVOT else []
+        pivots.append(c if base(o.name).startswith(SELF_PIVOT) else anchor_of(o, c))
+        fitted = None
+        for pivot in pivots:                  # a part's own pivot first; failing that, the default one
+            for v, c0 in zip(o.data.vertices, co0):
+                v.co = c0
+            f_ = 1.0
+            for _ in range(10):
+                scale_about([o], pivot, 0.92)
+                f_ *= 0.92
+                if not clips([o]):
+                    fitted = f_
+                    break
+            if fitted:
+                break
+        if not fitted:
+            drop(o)
+            continue
+        shrunk[o.name] = round(fitted, 3)
+    print('SHRUNK', json.dumps(shrunk))
+else:
+    moved = 0
+    bpy.context.view_layer.update()
+    for o in cockpit:
+        nm = base(o.name)
+        for m_ in list(o.modifiers):
+            bpy.context.view_layer.objects.active = o
+            bpy.ops.object.modifier_apply(modifier=m_.name)
+        bm = bmesh.new(); bm.from_mesh(o.data)
+        lim = (0.08 if nm.startswith(TUB_PARTS) else 0.10 if nm.startswith(EDGE_PARTS) else 99) * k
+        for _ in range(2):
+            long_edges = [e for e in bm.edges if e.calc_length() > lim]
+            if long_edges:
+                bmesh.ops.subdivide_edges(bm, edges=long_edges, cuts=1, use_grid_fill=True)
+        bm.to_mesh(o.data); bm.free()
+        marg = MARGIN if nm.startswith(TUB_PARTS) else 0.045 if nm.startswith(EDGE_PARTS) else 0.03
+        for v in [v for _ in range(2) for v in o.data.vertices]:
+            p = o.matrix_world @ v.co
+            anchor = anchor_of(o, p)
+            dvec = p - anchor
+            L_ = dvec.length
+            if L_ < 1e-6:
+                continue
+            dn = dvec / L_
+            GM = max(marg, 0.036)
+            hs = hit(skin, anchor, dn, far=L_ + marg * k)
+            hg = hit(gl, anchor, dn, far=L_ + GM * k)
+            stops = [h - m_ * k for h, m_ in ((hs, marg), (hg, GM)) if h is not None]
+            if stops and min(stops) < L_:
+                v.co = o.matrix_world.inverted() @ (anchor + dn * max(0.0, min(stops)))
+                moved += 1
+    nudged = 0
+    for o in cockpit:
+        if base(o.name).startswith(TUB_PARTS):
+            continue
+        for _ in range(25):
+            bpy.context.view_layer.update()
+            bad = {a for a, b_ in B.bvh_of([o]).overlap(skin)}
+            if not bad:
+                break
+            vids = {i for f in bad if f < len(o.data.polygons) for i in o.data.polygons[f].vertices}
+            for i in vids:
+                v = o.data.vertices[i]
+                p = o.matrix_world @ v.co
+                d_ = p - anchor_of(o, p)
+                if d_.length > 0.02 * k:
+                    v.co = o.matrix_world.inverted() @ (p - d_.normalized() * 0.015 * k)
+                    nudged += 1
+    for o in cockpit:
+        for v in o.data.vertices:
+            for _ in range(10):
+                p = o.matrix_world @ v.co
+                loc_, n_, i_, dist_ = gl.find_nearest(p)
+                if loc_ is None or dist_ >= 0.032 * k:
+                    break
+                d_ = p - anchor_of(o, p)
+                if d_.length < 0.02 * k:
+                    break
+                v.co = o.matrix_world.inverted() @ (p - d_.normalized() * (0.034 * k - dist_ + 0.002 * k))
+    removed = 0
+    for o in cockpit:
+        if not base(o.name).startswith(TUB_PARTS):
+            continue
         bpy.context.view_layer.update()
         bad = {a for a, b_ in B.bvh_of([o]).overlap(skin)}
-        if not bad:
-            break
-        vids = {i for f in bad if f < len(o.data.polygons) for i in o.data.polygons[f].vertices}
-        for i in vids:
-            v = o.data.vertices[i]
-            p = o.matrix_world @ v.co
-            d_ = p - anchor_of(o, p)
-            if d_.length > 0.02 * k:
-                v.co = o.matrix_world.inverted() @ (p - d_.normalized() * 0.015 * k)
-                nudged += 1
-for o in cockpit:
-    for v in o.data.vertices:
-        for _ in range(10):
-            p = o.matrix_world @ v.co
-            loc_, n_, i_, dist_ = gl.find_nearest(p)
-            if loc_ is None or dist_ >= 0.032 * k:
-                break
-            d_ = p - anchor_of(o, p)
-            if d_.length < 0.02 * k:
-                break
-            v.co = o.matrix_world.inverted() @ (p - d_.normalized() * (0.034 * k - dist_ + 0.002 * k))
-removed = 0
-for o in cockpit:
-    if not base(o.name).startswith(TUB_PARTS):
-        continue
+        if bad:
+            bm = bmesh.new(); bm.from_mesh(o.data); bm.faces.ensure_lookup_table()
+            bmesh.ops.delete(bm, geom=[bm.faces[i] for i in bad if i < len(bm.faces)], context='FACES')
+            bm.to_mesh(o.data); bm.free()
+            removed += len(bad)
+    # a part that still crosses the hull after all that is dropped (and reported), so nothing ever clips
     bpy.context.view_layer.update()
-    bad = {a for a, b_ in B.bvh_of([o]).overlap(skin)}
-    if bad:
-        bm = bmesh.new(); bm.from_mesh(o.data); bm.faces.ensure_lookup_table()
-        bmesh.ops.delete(bm, geom=[bm.faces[i] for i in bad if i < len(bm.faces)], context='FACES')
-        bm.to_mesh(o.data); bm.free()
-        removed += len(bad)
-# a part that still crosses the hull after all that is dropped (and reported), so nothing ever clips
-bpy.context.view_layer.update()
-# faces with a vertex still within 3 cm of the glass after the fit are trimmed (the 3 cm clearance is a rule)
-glass_trim = 0
-for o in cockpit:
-    close = {v.index for v in o.data.vertices
-             if (lambda q: q[0] is not None and q[3] < 0.030 * k)(gl.find_nearest(o.matrix_world @ v.co))}
-    if close:
-        bm = bmesh.new(); bm.from_mesh(o.data); bm.verts.ensure_lookup_table()
-        faces = {f_ for i in close for f_ in bm.verts[i].link_faces}
-        bmesh.ops.delete(bm, geom=list(faces), context='FACES')
-        loose = [v for v in bm.verts if not v.link_faces]
-        bmesh.ops.delete(bm, geom=loose, context='VERTS')
-        bm.to_mesh(o.data); bm.free()
-        glass_trim += len(faces)
-print('GLASS_TRIM', glass_trim)
-dropped, trimmed = [], {}
-for o in list(cockpit):
-    bad = {a for a, b_ in B.bvh_of([o]).overlap(skin)}
-    if not bad:
-        continue
-    n_all = len(o.data.polygons)
-    if len(bad) < 0.5 * n_all:            # trim the few faces that still cross the hull; the rest of the part stays
-        bm = bmesh.new(); bm.from_mesh(o.data); bm.faces.ensure_lookup_table()
-        bmesh.ops.delete(bm, geom=[bm.faces[i] for i in bad if i < len(bm.faces)], context='FACES')
-        bm.to_mesh(o.data); bm.free()
-        trimmed[o.name] = len(bad)
-        bpy.context.view_layer.update()
-        if not B.bvh_of([o]).overlap(skin):
+    # faces with a vertex still within 3 cm of the glass after the fit are trimmed (the 3 cm clearance is a rule)
+    glass_trim = 0
+    for o in cockpit:
+        close = {v.index for v in o.data.vertices
+                 if (lambda q: q[0] is not None and q[3] < 0.030 * k)(gl.find_nearest(o.matrix_world @ v.co))}
+        if close:
+            bm = bmesh.new(); bm.from_mesh(o.data); bm.verts.ensure_lookup_table()
+            faces = {f_ for i in close for f_ in bm.verts[i].link_faces}
+            bmesh.ops.delete(bm, geom=list(faces), context='FACES')
+            loose = [v for v in bm.verts if not v.link_faces]
+            bmesh.ops.delete(bm, geom=loose, context='VERTS')
+            bm.to_mesh(o.data); bm.free()
+            glass_trim += len(faces)
+    print('GLASS_TRIM', glass_trim)
+    dropped, trimmed = [], {}
+    for o in list(cockpit):
+        bad = {a for a, b_ in B.bvh_of([o]).overlap(skin)}
+        if not bad:
             continue
-    dropped.append(o.name)
-    cockpit.remove(o)
-    bpy.data.objects.remove(o)
+        n_all = len(o.data.polygons)
+        if len(bad) < 0.5 * n_all:            # trim the few faces that still cross the hull; the rest of the part stays
+            bm = bmesh.new(); bm.from_mesh(o.data); bm.faces.ensure_lookup_table()
+            bmesh.ops.delete(bm, geom=[bm.faces[i] for i in bad if i < len(bm.faces)], context='FACES')
+            bm.to_mesh(o.data); bm.free()
+            trimmed[o.name] = len(bad)
+            bpy.context.view_layer.update()
+            if not B.bvh_of([o]).overlap(skin):
+                continue
+        dropped.append(o.name)
+        cockpit.remove(o)
+        bpy.data.objects.remove(o)
 
 # ======================================================================== check
 bpy.context.view_layer.update()
@@ -899,7 +1063,7 @@ for o in cockpit:
         if any(math.isnan(c) for c in p):
             inside_fail += 1
             continue
-        if (hit(skin, p, R) is None and hit(gl, p, R) is None) or (hit(skin, p, -R) is None and hit(gl, p, -R) is None):
+        if outside(p):
             inside_fail += 1
             outside_parts[o.name] = outside_parts.get(o.name, 0) + 1
         loc_, n_, i_, dist_ = gl.find_nearest(p)
@@ -907,7 +1071,7 @@ for o in cockpit:
             min_glass = min(min_glass, dist_ / k)
 check = dict(face_pairs_touching_fuselage=sum(clip.values()), clipping_parts=clip, vertices_outside_walls=inside_fail, outside_parts=outside_parts,
              min_glass_clearance_m=round(min_glass, 4), dropped_parts=dropped, trimmed_faces=trimmed, moved=moved, nudged=nudged,
-             tub_faces_removed=removed, report=REPORT)
+             tub_faces_removed=removed, shrunk=shrunk if SIMPLE else {}, report=REPORT)
 json.dump(check, open(os.path.join(out, 'check.json'), 'w'), indent=1)
 print('CHECK', json.dumps({k_: v for k_, v in check.items() if k_ != 'report'}))
 print('REPORT', json.dumps(REPORT))

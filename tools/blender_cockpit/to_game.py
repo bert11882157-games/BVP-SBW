@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 """The Blender cockpit structure into the game: geo, vehicle asset and textures.
 
 Reads STRUCTDIR/game_export.json (written by game_export.py at the end of cockpit_build.py / f16c_structure.py) and
@@ -13,7 +13,7 @@ the aircraft's committed files, then:
   * CockpitGauges (live dials and annunciator panels), FlightDisplays (MFDs and radar scopes) and HeadUpDisplay are
     written from the instruments' fitted positions; the parts the game draws itself (dial faces and bezels, display
     housings and option keys) are left out of the mesh;
-  * the HUD combiner and gunsight glass join CanopyGlass.
+  * no glass for now: CanopyGlass is removed from the asset and the HUD / gunsight glass is not written.
 
 Usage: python3 tools/blender_cockpit/to_game.py VID STRUCTDIR [--dry-run]
 """
@@ -219,7 +219,8 @@ def convert(vid, sdir, dry=False):
     for it in d['instruments']:
         kind, name, si = it['kind'], it['name'], int(it['station'])
         size = it['size_m']
-        sc = min(1.0, float(it.get('scale', 1.0)))
+        fit = float(it.get('fit', 1.0))             # the rigid fit's shrink of the whole panel
+        sc = min(1.0, float(it.get('scale', 1.0))) * fit
         pref = f's{si}_' if len(d['stations']) > 1 else ''
         c, n, up = np.array(it['center']), np.array(it['normal']), np.array(it['up'])
         if kind in ('gauge', 'scope'):
@@ -247,7 +248,7 @@ def convert(vid, sdir, dry=False):
             drawn.update(f for f in {fc['part'] for fc in d['faces']} if f.startswith(pref + name + '_osb'))
         elif kind == 'plate' and any(a in name.lower() for a in ANNUNC):
             cols, lamps = L.lamps_of('ww2' if era == 'WWII_STEAM' else 'cw', pal)
-            w, h = size[0] * float(it.get('scale', 1.0)), size[1] * float(it.get('scale', 1.0))
+            w, h = size[0] * float(it.get('scale', 1.0)) * fit, size[1] * float(it.get('scale', 1.0)) * fit
             gauges.append({'Seat': si, 'Kind': 'ANNUNCIATOR', 'Center': L.r5(c + n * 0.004 * k), 'Normal': L.r5(n),
                            'Up': L.r5(up), 'Diameter': round(w * k, 4), 'Width': round(w * k, 4),
                            'Height': round(h * k, 4), 'Depth': 0.02, 'Columns': cols, 'Lamps': lamps})
@@ -327,8 +328,8 @@ def convert(vid, sdir, dry=False):
                               'Width': round(h['width'] * k, 5), 'Height': round(h['height'] * k, 5), 'Eye': L.r5(eye)}
     else:
         a.pop('HeadUpDisplay', None)
-    if d['glass']:
-        L.add_glass(a, [p for t in d['glass'] for p in t])
+    # no glass for now (the owner's call, 2026-10-20): the canopy glass and the HUD / gunsight glass are left out
+    a.pop('CanopyGlass', None)
 
     vol = L.loader_volume(pm)
     rep = (f'{vid}: removed {sum(removed.values())} old faces from {len(removed)} bones; {len(pm["polys"])} faces in '
