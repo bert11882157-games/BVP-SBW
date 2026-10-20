@@ -168,11 +168,32 @@ rows = []
 # ends a little under the MFDs, the centre column alone runs on down between the knees, and the aux consoles stand
 # apart at the sides lower down
 PANEL_FOOT = -0.585
-for u in (PANEL_FOOT, -0.55, -0.52, -0.48, -0.44, -0.40, -0.36, -0.33, -0.305, U_TOP):
-    w = min(reach(u, 1), reach(u, -1), 0.40)
-    rows.append([panel_pt(r * w, u) for r in (-1.0, -0.62, -0.30, 0.30, 0.62, 1.0)])
-print('MEASURE board half widths', [round(min(reach(u, 1), reach(u, -1)), 3) for u in (PANEL_FOOT, -0.48, -0.36, U_TOP)])
-sheet('panel_board', rows[::-1], M['panel'], solid=0.025)
+# the main panel's outline traced off that drawing (metres at the drawing's scale, 1 px = 1.25 mm at 1400 px wide,
+# from the MFD bezel's 162 mm): (right, down from the glareshield lip), symmetrical, the centre column left out
+# (it is its own part below); the shoulders slope in under the glareshield, the sides step out at the foot into the
+# two "wings", and on the right the engine-instrument column runs on below the wing
+TRACE = [(-0.238, 0.0), (0.238, 0.0), (0.352, -0.1175), (0.355, -0.295), (0.428, -0.300), (0.428, -0.307),
+         (0.357, -0.309), (0.354, -0.350), (0.282, -0.350), (0.280, -0.2875), (-0.281, -0.2875), (-0.289, -0.3375),
+         (-0.421, -0.3375), (-0.428, -0.307), (-0.428, -0.300), (-0.355, -0.295), (-0.352, -0.1175)]
+
+
+def trace_fits(s):
+    for r, du in TRACE:
+        if abs(r) < 0.05:
+            continue
+        if abs(r) * s > reach(U_TOP + du * s, 1 if r > 0 else -1, clear=0.035):
+            return False
+    return True
+
+
+TRACE_S = next((s / 100 for s in range(100, 60, -1) if trace_fits(s / 100)), 0.6)
+print('MEASURE trace scale', TRACE_S)
+bm = bmesh.new()
+vs = [bm.verts.new(panel_pt(r * TRACE_S, U_TOP + du * TRACE_S)) for r, du in TRACE]
+bm.faces.new(vs)
+bmesh.ops.triangulate(bm, faces=bm.faces[:])
+obj('panel_board', bm, M['panel'], solid=0.025)
+json.dump(dict(trace=TRACE, scale=TRACE_S), open(os.path.join(out, 'trace.json'), 'w'))
 
 
 def housing(name, a, u, w, h, proud, open_w=None, open_h=None, material=None):
@@ -229,7 +250,8 @@ def cyl(name, c, axis, radius, half_len, material, segs=20):
 
 # -- the upfront row (ref. p-013, f_16c_01): ICP centre under the HUD, DED right of it, RWR scope and the threat
 # prime block upper left; the MFDs side by side below, either side of a narrow centre column
-MFD_U, MFD_R, MFD_W, MFD_OPEN = -0.468, 0.200, 0.162, 0.102     # centres 1.25 bezel widths out (drawing)
+# positions off the traced drawing, at its fitted scale; the bezels keep their real 162 mm
+MFD_U, MFD_R, MFD_W, MFD_OPEN = U_TOP - 0.214 * TRACE_S, 0.191 * TRACE_S, 0.162, 0.102
 for sg in (-1, 1):
     c = panel_pt(sg * MFD_R, MFD_U, 0.035)
     ax = facing(c)
@@ -265,20 +287,21 @@ def outboard(side, u, hw, lift, pref):
     return side * max(r, MFD_EDGE + hw + 0.006)
 
 
-c = panel_pt(-0.180, -0.330, 0.03)
+c = panel_pt(-0.156 * TRACE_S, U_TOP - 0.069 * TRACE_S, 0.03)
 framed('rwr_scope', c, facing(c), 0.084, 0.084, 0.022, 0.062, 0.062, M['panel'])
 c = panel_pt(outboard(-1, -0.335, 0.026, 0.025, 0.285), -0.335, 0.025)
 box('threat_prime', c, facing(c, yaw=25), (0.026, 0.05, 0.016), M['panel'], bevel=0.003)
 # left outboard, stepping back and down toward the console: the MISC panel, then the landing gear panel
 for nm, u, lift, hw, hh, yaw in (('misc_panel', -0.440, 0.012, 0.026, 0.060, 30),
                                  ('arm_panel', -0.545, 0.008, 0.026, 0.036, 30)):
-    c = panel_pt(outboard(-1, u, hw, lift, 0.31), u, lift)
+    c = panel_pt(outboard(-1, u, hw, lift, 0.314 * TRACE_S), u, lift)
     box(nm, c, facing(c, yaw=yaw), (hw, hh, 0.012), M['panel'], bevel=0.003)
     print('MEASURE', nm, 'r', round((c - E).dot(R) / k, 3))
 
 # right outboard: the upright engine instrument strip, angled toward the pilot, four gauge recesses
 # (FTIT, RPM, nozzle, oil) and the fuel flow window; the right aux panel stepped back below it
-c = panel_pt(outboard(1, -0.43, 0.024, 0.012, 0.32), -0.430, 0.012)
+ENG_U = U_TOP - 0.150 * TRACE_S
+c = panel_pt(outboard(1, ENG_U, 0.024, 0.012, 0.3175 * TRACE_S), ENG_U, 0.012)
 print('MEASURE engine strip r', round((c - E).dot(R) / k, 3))
 ax = facing(c, yaw=25)
 box('engine_strip', c - ax[2] * 0.010 * k, ax, (0.026, 0.125, 0.012), M['panel'], bevel=0.003)
@@ -391,9 +414,14 @@ for sg, nm in ((-1, 'aoa_indexer'), (1, 'ar_status_indicator')):
     pc = P(sg * 0.135, U_TOP + 0.040, 0.715)
     box(nm, pc, (R, U, F), (0.013, 0.040, 0.013), M['hud'], bevel=0.003)
     box(f'{nm}_lamps', pc - F * 0.0135 * k + U * 0.008 * k, (R, U, F), (0.009, 0.026, 0.001), M['black'], bevel=0.0)
-# eyebrow light housings on the glareshield corners (ref. 2)
-for sg, w in ((-1, 0.05), (1, 0.08)):
-    box(f'eyebrow_{sg}', P(sg * 0.238, -0.262, 0.73), (R, U, F), (w / 2 + 0.008, 0.035, 0.03), M['coaming'])
+# the eyebrow lamp strips (master caution / threat warning on the left, the warning lamps on the right): slim
+# housings along the panel's sloping shoulders, as on the traced drawing
+for sg in (-1, 1):
+    a_ = panel_pt(sg * 0.250 * TRACE_S, U_TOP - 0.012 * TRACE_S, 0.012)
+    b_ = panel_pt(sg * 0.340 * TRACE_S, U_TOP - 0.105 * TRACE_S, 0.012)
+    ax_ = (b_ - a_).normalized()
+    box(f'eyebrow_{sg}', (a_ + b_) / 2, (ax_, ax_.cross(pn).normalized(), pn), ((b_ - a_).length / k / 2, 0.011, 0.010),
+        M['coaming'], bevel=0.002)
 
 # ======================================================================== tub, consoles, aux consoles
 CON_U, CON_R0 = -0.76, 0.20
