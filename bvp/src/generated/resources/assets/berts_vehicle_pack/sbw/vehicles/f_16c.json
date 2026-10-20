@@ -1346,17 +1346,17 @@
         "Columns": 1,
         "Lamps": [
           {
-            "Text": "â–¼",
+            "Text": "▼",
             "Condition": "STALL",
             "Colour": "green"
           },
           {
-            "Text": "â—‹",
+            "Text": "○",
             "Condition": "NONE",
             "Colour": "amber"
           },
           {
-            "Text": "â–²",
+            "Text": "▲",
             "Condition": "NONE",
             "Colour": "red"
           }

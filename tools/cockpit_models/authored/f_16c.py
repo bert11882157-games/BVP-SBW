@@ -99,7 +99,7 @@ EYEBROW_R = ('EYEBROW_R', 2, [('ENG FIRE', 'FIRE', 'red'), ('ENGINE', 'ENGINE_OU
                               ('HYD/OIL|PRESS', 'DAMAGE', 'red'), ('FLCS', 'NONE', 'red'),
                               ('DBU ON', 'NONE', 'amber'), ('TO/LDG|CONFIG', 'GEAR_TRANSIT', 'red'),
                               ('CANOPY', 'NONE', 'red'), ('OXY LOW', 'NONE', 'red')])
-AOA_IDX = ('AOA', 1, [('â–¼', 'STALL', 'green'), ('â—‹', 'NONE', 'amber'), ('â–²', 'NONE', 'red')])
+AOA_IDX = ('AOA', 1, [('▼', 'STALL', 'green'), ('○', 'NONE', 'amber'), ('▲', 'NONE', 'red')])
 AR_IDX = ('AR', 1, [('RDY', 'NONE', 'green'), ('AR/NWS', 'NONE', 'green'), ('DISC', 'NONE', 'amber')])
 CAUTION = ('CAUTION', 4, [
     ('FLCS FAULT', 'DAMAGE', 'amber'), ('ENGINE|FAULT', 'ENGINE_OUT', 'amber'), ('AVIONICS|FAULT', 'NONE', 'amber'),

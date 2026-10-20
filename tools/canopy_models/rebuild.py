@@ -723,6 +723,9 @@ def interior_strict(vid, ref='origin/main', dry=False):
         if pm and pm.get('polys') and not b['name'].endswith('__cockpit'):
             P = np.array(pm['positions'], float) * np.array([1, 1, -1]) / 16.0
             kept_by_tool.update(pkey(P, p) for p in pm['polys'])
+    import authored
+    _mod = authored.module(vid)
+    cut_boxes = list(getattr(_mod, 'CUT_BOXES', [])) if _mod is not None else []
     rm, kept_frame, n_split = {}, 0, 0
     hulls = footprints(ac.glass)
     for b in ac.bones:                    # the cut: polys in the well's plan box that no outside view can see
@@ -735,6 +738,17 @@ def interior_strict(vid, ref='origin/main', dry=False):
         verts = [P[[v[0] for v in p]] for p in pm['polys']]
         sel = {i for i, V in enumerate(verts) if (b['name'], i) not in seen and well._plan(V)
                and pkey(P, pm['polys'][i]) not in kept_by_tool}
+        # an authored cockpit may name boxes (metres from the eye, r right, u up, f forward) where the old interior
+        # the cockpit tool found goes even though an outside view sees it: the model's glass leaves the windscreen
+        # open there, so the old panel counts as outside
+        for r0, r1, u0, u1, f0, f1 in cut_boxes:
+            for i, V in enumerate(verts):
+                if pkey(P, pm['polys'][i]) in kept_by_tool:
+                    continue
+                rr, uu, ff = -(V[:, 0] - tub.E[0]) / tub.s, (V[:, 1] - tub.E[1]) / tub.s, (V[:, 2] - tub.E[2]) / tub.s
+                if (rr.min() >= r0 and rr.max() <= r1 and uu.min() >= u0 and uu.max() <= u1 and ff.min() >= f0
+                        and ff.max() <= f1):
+                    sel.add(i)
         # canopy frames, rails and the windscreen frame lie along the glass: a face whose centre is within FRAME of it
         # stays, and so does a loose part (up to 400 faces) with half of its faces within 1.5 FRAME
         near = {i for i in sel if FRAME > 0 and ac.touches_glass([verts[i].mean(0)], gap=FRAME)}
