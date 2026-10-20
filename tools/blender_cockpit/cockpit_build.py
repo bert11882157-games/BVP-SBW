@@ -128,7 +128,7 @@ PALETTE = {
     'ussr_ww2': ((40, 40, 42), (46, 46, 48), (120, 124, 120), (100, 104, 100)),
     'raf': ((26, 26, 26), (32, 32, 32), (100, 110, 95), (86, 94, 82)),                  # RAF grey-green
 }
-_pal = PALETTE.get((meta.get('fleet') or {}).get('palette'), ((34, 35, 37), (36, 37, 39), (112, 116, 116), (88, 92, 92)))
+_pal = PALETTE.get((meta.get('fleet') or {}).get('palette'), ((56, 58, 61), (60, 62, 65), (112, 116, 116), (88, 92, 92)))
 M = dict(panel=mat('panel', _pal[0]), coaming=mat('coaming', (22, 22, 23), 0.8),
          tub=mat('tub', _pal[2]), tub_d=mat('tub_d', _pal[3]),
          floor=mat('floor', (28, 28, 29)), console=mat('console', _pal[1]),
@@ -148,6 +148,7 @@ for _attr, _val in (('surface_render_method', 'BLENDED'), ('blend_method', 'BLEN
         pass
 
 CUR_STATION = [0]
+INSTR, STATIONS = [], {}
 FRONT_INDEX = [0]
 ANCHOR_U = {}
 
@@ -162,13 +163,13 @@ def obj(name, bm, material, bevel=0.0, solid=0.0):
     if solid:
         s = o.modifiers.new('solid', 'SOLIDIFY'); s.thickness = solid * k; s.offset = -1
     if bevel:
-        b = o.modifiers.new('bevel', 'BEVEL'); b.width = bevel * k; b.segments = 2; b.limit_method = 'ANGLE'
+        b = o.modifiers.new('bevel', 'BEVEL'); b.width = bevel * k; b.segments = 1; b.limit_method = 'ANGLE'
     cockpit.append(o)
     station_of[o.name] = CUR_STATION[0]
     return o
 
 
-def box(name, centre, axes, half, material, bevel=0.004):
+def box(name, centre, axes, half, material, bevel=0.0):
     bm = bmesh.new()
     c = Vector(centre)
     A = [a.normalized() * h * k for a, h in zip(axes, half)]
@@ -427,9 +428,14 @@ def build_station(si, E, front_eye=None):
             rows.append([panel_pt(sg * r_e, u, -0.002), panel_pt(sg * r_w, u, -0.012)])
         sheet(f'panel_cheek_{sg}', rows if sg > 0 else [r_[::-1] for r_ in rows], M['panel'], solid=0.012)
     # ------------------------------------------------------------------ instruments on the panel
-    panel_plates = []
+    panel_plates, overlays = [], []
+    pref = f's{si}_' if len(EYES) > 1 else ''
+    STATIONS[si] = dict(seat=si, stick=spec['stick'])
     for it in (spec['rear_items'] if rear and spec.get('rear_items') else spec['items']):
         kind, name = it[0], it[1]
+        face_obj = {'mfd': '_floor', 'display': '_floor', 'gauge': '_face', 'scope': '_face', 'ufcp': '_face'}.get(kind, '')
+        size = list(it[4:])
+        INSTR.append(dict(station=si, kind=kind, name=name, object=pref + name + face_obj, size_m=size, scale=S))
         r, du = it[2] * S, it[3] * S
         if kind == 'mfd':
             size = it[4] * min(1.0, S)
@@ -448,7 +454,10 @@ def build_station(si, E, front_eye=None):
         elif kind == 'display':
             w, h = it[4] * min(1.0, S), it[5] * min(1.0, S)
             c = panel_pt(r, U_TOP + du, 0.030)
-            framed(name, c, facing(c), w, h, 0.024, w * 0.86, h * 0.80)
+            ax_ = facing(c)
+            framed(name, c, ax_, w, h, 0.024, w * 0.86, h * 0.80)
+            if not any(s_ in name.lower() for s_ in ('vsd', 'hdd', 'ci_radar', 'wide', 'lower', 'tv_monitor', 'mpd', 'mpcd', 'mfd', 'radar')):      # a text window: painted readout
+                overlays.append((c - ax_[2] * 0.0135 * k, ax_, w * 0.86, h * 0.80, 'text_window'))
         elif kind in ('gauge', 'scope'):
             rad = it[4] * min(1.0, S)
             c = panel_pt(r, U_TOP + du, 0.004)
@@ -472,6 +481,7 @@ def build_station(si, E, front_eye=None):
             box(f'{name}_housing', c - pn * 0.024 * k, (R, upl, pn), (w / 2, h / 2, 0.024), M['panel'], bevel=0.006)
             box(f'{name}_face', c + pn * 0.002 * k, (R, upl, pn), (w / 2 - 0.006, h / 2 - 0.006, 0.003), M['console'],
                 bevel=0.002)
+            overlays.append((c + pn * 0.0053 * k, (R, upl, pn), w - 0.014, h - 0.014, 'keypad'))
 
     # ------------------------------------------------------------------ the centre pedestal down to the floor
     bottom = min(du for r, du in TRACE)
@@ -545,6 +555,7 @@ def build_station(si, E, front_eye=None):
                 bevel=0.002)
             box('hud_combiner', g_bot + g_up * g_h / 2 * k, (R, g_up, g_n), (0.062, g_h / 2 - 0.006, 0.0015),
                 M['hudglass'], bevel=0.0)
+            STATIONS[si].update(hud_object=pref + 'hud_combiner', hud_w=0.124, hud_h=g_h - 0.012)
         rep['combiner'] = g_h
     elif sight in ('gunsight', 'reflector'):
         # the gyro gunsight (jets) or the reflector sight (WWII): a body on the coaming and a tilted glass plate
@@ -622,12 +633,12 @@ def build_station(si, E, front_eye=None):
     sheet('aft_deck', rows[::-1], M['tub_d'], solid=0.01)
 
     # ------------------------------------------------------------------ controls and seat
-    build_controls(si, E, P, hip, con_u, floor_u, F_FW)
+    STATIONS[si]['stick_foot'] = build_controls(si, E, P, hip, con_u, floor_u, F_FW)
     import cockpit_details
     cockpit_details.add(dict(P=P, R=R, U=U, F=F, k=k, M=M, E=E, obj=obj, seed=f'{vid}{si}', era=meta.get('era'),
                              wwii=wwii, con_u=con_u, CON_R0=CON_R0, st_back=st_back, st_front=st_front, hip=hip,
                              s_up=s_up, s_fw=s_fw, stick=spec['stick'], wall=wall, sill_u=sill_u, floor_u=floor_u,
-                             panel_plates=panel_plates, pn=pn,
+                             panel_plates=panel_plates, overlays=overlays, pn=pn,
                              lip_pt=(lambda x: panel_pt(x * S, U_TOP - 0.02, 0.072)) if not rear else None,
                              pedal_pos=lambda sg: P(sg * 0.10, floor_u + 0.20, F_FW - 0.12)))
     build_seat(si, E, P, hip, s_up, s_fw)
@@ -660,6 +671,7 @@ def build_controls(si, E, P, hip, con_u, floor_u, F_FW):
         rings = [ring(P(0.30, con_u + h / 2, f), R, U, w * k, h / 2 * k, n=14, sq=3.5)
                  for f, h, w in ((hip_f + 0.05, 0.05, 0.04), (hip_f + 0.20, 0.065, 0.047), (hip_f + 0.36, 0.08, 0.042))]
         loft('stick_armrest', rings, M['tub_d'], bevel=0.003)
+        foot = base
     else:
         # the centre stick: a boot on the floor, the column, the grip with its trigger
         sf = hip_f + (0.36 if not wwii else 0.32)
@@ -674,6 +686,7 @@ def build_controls(si, E, P, hip, con_u, floor_u, F_FW):
                  ((0.0, 0.017, 0.020), (0.05, 0.016, 0.019), (0.09, 0.019, 0.024), (0.12, 0.018, 0.022), (0.135, 0.012, 0.015))]
         loft('stick_grip', rings, M['grip'], bevel=0.002)
         box('stick_trigger', g0 + s_ax * 0.06 * k - F * -0.022 * k, (R, s_ax, F), (0.005, 0.012, 0.004), M['metal'])
+        foot = base
     # throttle on the left console's forward end (WWII: on the left wall above it)
     tq = P(-0.29, con_u + 0.012, hip_f + 0.28)
     box('throttle_quadrant', tq, (R, U, F), (0.028, 0.012, 0.10), M['grip'], bevel=0.003)
@@ -687,6 +700,7 @@ def build_controls(si, E, P, hip, con_u, floor_u, F_FW):
         p_ax = (U * math.cos(math.radians(-25)) + F * math.sin(math.radians(-25))).normalized()
         box(f'pedal_{sg}', P(sg * 0.10, floor_u + 0.20, F_FW - 0.12), (R, p_ax, R.cross(p_ax)), (0.038, 0.06, 0.012),
             M['metal'])
+    return foot
 
 
 def build_seat(si, E, P, hip, s_up, s_fw):
@@ -774,7 +788,7 @@ for o in cockpit:
         bpy.context.view_layer.objects.active = o
         bpy.ops.object.modifier_apply(modifier=m_.name)
     bm = bmesh.new(); bm.from_mesh(o.data)
-    lim = (0.04 if nm.startswith(TUB_PARTS) else 0.08 if nm.startswith(EDGE_PARTS) else 99) * k
+    lim = (0.08 if nm.startswith(TUB_PARTS) else 0.10 if nm.startswith(EDGE_PARTS) else 99) * k
     for _ in range(2):
         long_edges = [e for e in bm.edges if e.calc_length() > lim]
         if long_edges:
@@ -897,6 +911,10 @@ check = dict(face_pairs_touching_fuselage=sum(clip.values()), clipping_parts=cli
 json.dump(check, open(os.path.join(out, 'check.json'), 'w'), indent=1)
 print('CHECK', json.dumps({k_: v for k_, v in check.items() if k_ != 'report'}))
 print('REPORT', json.dumps(REPORT))
+import game_export
+_n = game_export.export(os.path.join(out, 'game_export.json'), cockpit, model, INSTR, STATIONS,
+                        lambda si: EYES[si], k=k)
+print('GAME_EXPORT faces/glass/instruments', _n)
 
 # ======================================================================== save and render
 E0 = EYES[order[0]]

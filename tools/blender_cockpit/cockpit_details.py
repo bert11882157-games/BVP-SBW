@@ -1,4 +1,4 @@
-﻿"""Cockpit detail pass for the structure generator (and the F-16C): what fills a real cockpit beyond the big parts.
+"""Cockpit detail pass for the structure generator (and the F-16C): what fills a real cockpit beyond the big parts.
 
   - switch panels along both side consoles, each with toggles, rotary knobs or a small display window;
   - circuit-breaker strips on the cockpit walls above the consoles;
@@ -17,6 +17,15 @@ import bmesh
 from mathutils import Vector, Matrix
 
 
+TILES = ['none']            # painted texture tiles by id (0 = none); the game side paints each kind (to_game.py)
+
+
+def tile_id(name):
+    if name not in TILES:
+        TILES.append(name)
+    return TILES.index(name)
+
+
 class Group:
     """many small solids gathered into one mesh"""
 
@@ -31,10 +40,25 @@ class Group:
         m.translation = c
         return m
 
-    def box(self, c, axes, half):
+    def box(self, c, axes, half, tile=None):
+        """an oriented box; tile = the name of a painted texture tile laid over its face along +axes[2] (the game
+        export maps that face's uvs into the tile, see TILES and to_game.py)"""
         k = self.ctx['k']
         m = self._basis(c, axes) @ Matrix.Diagonal((half[0] * 2 * k, half[1] * 2 * k, half[2] * 2 * k, 1.0))
-        bmesh.ops.create_cube(self.bm, size=1.0, matrix=m)
+        res = bmesh.ops.create_cube(self.bm, size=1.0, matrix=m)
+        if tile:
+            tl = self.bm.faces.layers.int.get('tile') or self.bm.faces.layers.int.new('tile')
+            uvl = self.bm.loops.layers.uv.get('UVMap') or self.bm.loops.layers.uv.new('UVMap')
+            an = axes[2].normalized()
+            inv = m.inverted()
+            vs = set(res['verts'])
+            for f in {f for v in vs for f in v.link_faces}:
+                f.normal_update()
+                if f.normal.dot(an) > 0.9:
+                    f[tl] = tile_id(tile)
+                    for lp in f.loops:
+                        q = inv @ lp.vert.co
+                        lp[uvl].uv = (q.x + 0.5, q.y + 0.5)
         self.n += 1
 
     def cyl(self, c, axis, radius, half_len, segs=10):
@@ -54,10 +78,9 @@ class Group:
 
 
 def toggle(g_base, g_bat, c, n, up, k, tilt=20):
-    """a toggle switch: a round base on the surface and the bat leaning `tilt` degrees"""
-    g_base.cyl(c + n * 0.002 * k, n, 0.0055, 0.002)
+    """a toggle switch: the bat leaning `tilt` degrees (its round base is painted on the plate's tile)"""
     bat = (n * math.cos(math.radians(tilt)) + up * math.sin(math.radians(tilt))).normalized()
-    g_bat.cyl(c + n * 0.004 * k + bat * 0.009 * k, bat, 0.0018, 0.009, segs=6)
+    g_bat.cyl(c + n * 0.002 * k + bat * 0.009 * k, bat, 0.002, 0.009, segs=4)
 
 
 def add(ctx):
@@ -101,11 +124,11 @@ def add(ctx):
             r_mid = sg * (CON_R0 + w_out) / 2
             hw = (w_out - CON_R0) / 2 - 0.008
             c = P(r_mid, con_u + 0.0025, f + ln / 2)
-            plates.box(c, (R, F, U), (hw, ln / 2 - 0.004, 0.002))
             kind = rng.choice(('toggles', 'toggles', 'knobs', 'window', 'mixed'))
+            plates.box(c, (R, F, U), (hw, ln / 2 - 0.004, 0.002), tile=f'switchpanel_{kind}_{i % 3}')
             top = c + U * 0.002 * k
             if kind == 'toggles':
-                nx = max(2, int(hw * 2 / 0.022))
+                nx = max(2, min(3, int(hw * 2 / 0.022)))
                 for j in range(nx):
                     x = -hw + 0.012 + j * (2 * hw - 0.024) / max(1, nx - 1)
                     toggle(bases, bats, top + R * x * k + F * (rng.choice((-1, 1)) * 0.012) * k, U, F, k,
@@ -113,14 +136,14 @@ def add(ctx):
             elif kind == 'knobs':
                 for j in range(2):
                     x = (j - 0.5) * hw
-                    knobs.cyl(top + R * x * k + U * 0.005 * k, U, 0.010, 0.005)
+                    knobs.cyl(top + R * x * k + U * 0.005 * k, U, 0.010, 0.005, segs=8)
                     knobs.box(top + R * x * k + U * 0.011 * k, (R, F, U), (0.002, 0.008, 0.001))
             elif kind == 'window':
                 windows.box(top + U * 0.0012 * k, (R, F, U), (hw * 0.6, ln * 0.22, 0.0012))
                 for j in range(3):
                     toggle(bases, bats, top + R * (j - 1) * hw * 0.5 * k - F * ln * 0.3 * k, U, F, k)
             else:
-                knobs.cyl(top + R * (-hw * 0.5) * k + U * 0.005 * k, U, 0.009, 0.005)
+                knobs.cyl(top + R * (-hw * 0.5) * k + U * 0.005 * k, U, 0.009, 0.005, segs=8)
                 toggle(bases, bats, top + R * (hw * 0.4) * k, U, F, k)
                 toggle(bases, bats, top + R * (hw * 0.4) * k + F * 0.025 * k, U, F, k, tilt=-22)
             f += ln + 0.008
@@ -131,12 +154,8 @@ def add(ctx):
             w_out = min(wall(con_u + 0.02, f, 1) - 0.022, 0.40)
             if w_out - CON_R0 > 0.07:
                 c = P((CON_R0 + w_out) / 2, con_u + 0.004, f)
-                plates.box(c, (R, F, U), ((w_out - CON_R0) / 2 - 0.008, 0.035, 0.0035))
-                for a in range(4):
-                    for b in range(3):
-                        lamps.box(c + U * 0.004 * k + R * ((a - 1.5) * 0.022) * k + F * ((b - 1) * 0.020) * k,
-                                  (R, F, U), (0.009, 0.007, 0.0012))
-    plates.done(bevel=0.001); bases.done(); bats.done(); knobs.done(bevel=0.001); windows.done()
+                plates.box(c, (R, F, U), ((w_out - CON_R0) / 2 - 0.008, 0.035, 0.0035), tile='caution_panel')
+    plates.done(); bases.done(); bats.done(); knobs.done(bevel=0.001); windows.done()
 
     # ------------------------------------------------------------------ circuit breakers on the walls
     cbs = Group(ctx, 'circuit_breakers', M['black'])
@@ -153,25 +172,24 @@ def add(ctx):
                     continue
                 n_in = R * -sg                       # the wall faces inboard
                 c = P(sg * rw, um, f)
-                cb_plates.box(c, (F, U, n_in), (0.050, (u_hi - u_lo) / 2, 0.0015))
-                rows = max(1, int((u_hi - u_lo) / 0.022))
-                for a in range(rows):
-                    for b in range(6):
-                        q = c + U * ((a - (rows - 1) / 2) * 0.020) * k + F * ((b - 2.5) * 0.016) * k + n_in * 0.002 * k
-                        cbs.cyl(q, n_in, 0.0045, 0.003, segs=8)
+                cb_plates.box(c, (F, U, n_in), (0.050, (u_hi - u_lo) / 2, 0.0015), tile='breakers')
     cbs.done(); cb_plates.done()
 
     # ------------------------------------------------------------------ toggles on the main panel's switch plates
     pb, pt = Group(ctx, 'panel_switch_bases', M['metal']), Group(ctx, 'panel_switch_bats', M['metal'])
     pk = Group(ctx, 'panel_knobs', M['grip'])
-    for c, ax, w, h in ctx.get('panel_plates', []):
+    po = Group(ctx, 'panel_plate_faces', M['console'])
+    for j, (c, ax, w, h) in enumerate(ctx.get('panel_plates', [])):
         ar, au, an = ax
-        n = max(2, min(5, int(w / 0.024)))
+        po.box(c + an * 0.0027 * k, ax, (w / 2, h / 2, 0.0003), tile=f'panelplate_{j % 3}')
+        n = max(2, min(3, int(w / 0.024)))
         for j in range(n):
             x = -w / 2 + 0.012 + j * (w - 0.024) / max(1, n - 1)
             toggle(pb, pt, c + ar * x * k + au * (h * 0.2) * k + an * 0.0025 * k, an, au, k)
-            pk.cyl(c + ar * x * k - au * (h * 0.25) * k + an * 0.006 * k, an, 0.0065, 0.004)
-    pb.done(); pt.done(); pk.done()
+            pk.cyl(c + ar * x * k - au * (h * 0.25) * k + an * 0.006 * k, an, 0.0065, 0.004, segs=8)
+    for j, (c, ax, w, h, tl) in enumerate(ctx.get('overlays', [])):
+        po.box(c, ax, (w / 2, h / 2, 0.0003), tile=tl)
+    pb.done(); pt.done(); pk.done(); po.done()
 
     # ------------------------------------------------------------------ master caution / warning on the lip
     if not wwii and ctx.get('lip_pt'):

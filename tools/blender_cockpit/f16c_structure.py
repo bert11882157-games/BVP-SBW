@@ -1,4 +1,4 @@
-"""Blender: the F-16C Block 50/52 cockpit structure (no instruments yet), modelled inside the real model.
+﻿"""Blender: the F-16C Block 50/52 cockpit structure (no instruments yet), modelled inside the real model.
 
 References (all Block 50/52; see research/f_16c_cockpit.md):
   1. "F16 Cockpit, Asian Aerospace 2006" (Block 52): panel layout, the ICP tower, the MFD hoods, the engine
@@ -36,6 +36,7 @@ model = [o for o in model if 'control_stick' not in o.name]
 skin = B.bvh_of(model)
 gl = B.bvh_of([glass])
 cockpit = []                                 # every part object
+INSTR, OVERLAYS = [], []                     # for the game export
 
 
 def P(r, u, f):
@@ -73,9 +74,9 @@ def mat(name, rgb, rough=0.7, metal=0.0):
     b.inputs['Metallic'].default_value = metal
     return m
 
-M = dict(panel=mat('panel', (34, 35, 37)), coaming=mat('coaming', (22, 22, 23), 0.8),
+M = dict(panel=mat('panel', (56, 58, 61)), coaming=mat('coaming', (22, 22, 23), 0.8),
          tub=mat('tub', (112, 116, 116)), tub_d=mat('tub_d', (88, 92, 92)), floor=mat('floor', (28, 28, 29)),
-         console=mat('console', (36, 37, 39)), seat=mat('seat_frame', (128, 134, 128), 0.5),
+         console=mat('console', (60, 62, 65)), seat=mat('seat_frame', (128, 134, 128), 0.5),
          cushion=mat('cushion', (150, 156, 132), 0.9), headbox=mat('headbox', (108, 116, 104)),
          black=mat('black', (16, 16, 17), 0.6), metal=mat('metal', (140, 144, 146), 0.35, 0.8),
          yellow=mat('yellow', (230, 190, 30)), grip=mat('grip', (26, 26, 27), 0.6),
@@ -100,12 +101,12 @@ def obj(name, bm, material, bevel=0.0, solid=0.0):
     if solid:
         s = o.modifiers.new('solid', 'SOLIDIFY'); s.thickness = solid * k; s.offset = -1
     if bevel:
-        b = o.modifiers.new('bevel', 'BEVEL'); b.width = bevel * k; b.segments = 2; b.limit_method = 'ANGLE'
+        b = o.modifiers.new('bevel', 'BEVEL'); b.width = bevel * k; b.segments = 1; b.limit_method = 'ANGLE'
     cockpit.append(o)
     return o
 
 
-def box(name, centre, axes, half, material, bevel=0.004):
+def box(name, centre, axes, half, material, bevel=0.0):
     """an oriented box: centre, three unit axes (Vectors), half sizes in metres"""
     bm = bmesh.new()
     c = Vector(centre)
@@ -272,6 +273,7 @@ for sg in (-1, 1):
     c = panel_pt(sg * MFD_R, MFD_U, 0.045)
     ax = facing(c, half=True)
     framed(f'mfd_{sg}', c, ax, MFD_W, MFD_W, 0.03, MFD_OPEN, MFD_OPEN, M['panel'])
+    INSTR.append(dict(station=0, kind='mfd', name=f'mfd_{sg}', object=f'mfd_{sg}_floor', size_m=[MFD_W], scale=1.0))
     ar, au, an = ax
     # five raised OSB blanks on each edge of the bezel, rocker blanks across each corner
     pitch = 0.020
@@ -305,6 +307,7 @@ def outboard(side, u, hw, lift, pref):
 
 c = panel_pt(-0.156 * TRACE_S, U_TOP - 0.069 * TRACE_S, 0.03)
 framed('rwr_scope', c, facing(c), 0.084, 0.084, 0.022, 0.062, 0.062, M['panel'])
+INSTR.append(dict(station=0, kind='gauge', name='rwr_scope', object='rwr_scope_floor', size_m=[0.031], scale=1.0))
 def facet(name, side, u_top, u_bot, yaw=25):
     """the panel's outboard facet: one plane hinged on the MFD's outer edge (just clear of the bezel) and turned
     `yaw` degrees toward the pilot, out to the traced side or the wall, whichever is nearer; returns
@@ -344,6 +347,8 @@ for i in range(4):
     q = c + ax[1] * (hh - (2 * i + 1) * hh / 4) * k + ax[2] * 0.004 * k
     cyl(f'engine_gauge_rim_{i}', q, ax[2], g_r, 0.004, M['grip'])
     cyl(f'engine_gauge_face_{i}', q + ax[2] * 0.0035 * k, ax[2], g_r - 0.004, 0.0012, M['black'])
+    INSTR.append(dict(station=0, kind='gauge', name=('ftit', 'rpm', 'nozzle_oil', 'oil_press')[i], object=f'engine_gauge_face_{i}',
+                      size_m=[g_r], scale=1.0, parts=[f'engine_gauge_rim_{i}', f'engine_gauge_face_{i}']))
 # (the right aux panel is the sloping aux console below, by the knee)
 
 # the centre column: narrow, from under the ICP down between the knees, flanked by the dark V-flanks that slope
@@ -354,9 +359,18 @@ for sg in (-1, 1):                   # standby airspeed (left) and altimeter (ri
     q = panel_pt(sg * 0.049 * TRACE_S, U_TOP - 0.209 * TRACE_S, 0.004)
     cyl(f'standby_rim_{sg}', q, pn, 0.040, 0.004, M['grip'])
     cyl(f'standby_face_{sg}', q + pn * 0.0045 * k, pn, 0.034, 0.0008, M['black'])
+    INSTR.append(dict(station=0, kind='gauge', name=('asi' if sg < 0 else 'alt') + '_standby', object=f'standby_face_{sg}',
+                      size_m=[0.036], scale=1.0, parts=[f'standby_rim_{sg}', f'standby_face_{sg}']))
 for row in col:
     row[0] = row[0] - pn * 0.025 * k; row[3] = row[3] - pn * 0.025 * k
 sheet('centre_column', col, M['panel'], solid=0.035)
+for nm, r_, du_, rad in (('adi', 0.0, -0.350, 0.040), ('hsi', 0.0, -0.4525, 0.040), ('aoa', -0.074, -0.350, 0.016),
+                         ('vvi', 0.074, -0.350, 0.016)):
+    q = panel_pt(r_ * TRACE_S, U_TOP + du_ * TRACE_S, 0.084)            # in front of the column's 3.5 cm body
+    cyl(f'col_{nm}_rim', q, pn, rad + 0.004, 0.004, M['grip'])
+    cyl(f'col_{nm}_face', q + pn * 0.0045 * k, pn, rad, 0.0008, M['black'])
+    INSTR.append(dict(station=0, kind='gauge', name=nm, object=f'col_{nm}_face', size_m=[rad], scale=1.0,
+                      parts=[f'col_{nm}_rim', f'col_{nm}_face']))
 for sg in (-1, 1):
     top_in, bot_in = panel_pt(sg * 0.100, COL_TOP, 0.02), panel_pt(sg * 0.100, -0.66, 0.02)
     top_out, bot_out = panel_pt(sg * 0.112, COL_TOP, 0.0), panel_pt(sg * 0.150, -0.66, 0.0)
@@ -438,6 +452,9 @@ for sg in (-1, 1):                     # the rocker-wheel housings either side o
         M['grip'], bevel=0.003)
 ded_c = panel_pt(0.158 * TRACE_S, U_TOP - 0.042 * TRACE_S, 0.030)
 framed('ded', ded_c, facing(ded_c, half=True), 0.105, 0.052, 0.024, 0.090, 0.036, M['panel'], recess=0.008)
+_ax = facing(ded_c, half=True)
+OVERLAYS.append((ded_c - _ax[2] * 0.0095 * k, _ax, 0.090, 0.036, 'text_window'))
+OVERLAYS.append((icp_c + icp_n * 0.0053 * k, (R, icp_u, icp_n), 0.150, 0.100, 'keypad'))
 # the HUD body sits on the glareshield just forward of the lip, over the ICP; two dark side frames rise from it,
 # leaning back 20 degrees, with the clear combiner glass held between them
 lip_f = (panel_pt(0, U_TOP, 0.05) - E).dot(F) / k
@@ -561,7 +578,7 @@ M['harness'] = mat('harness', (84, 88, 70), 0.9)
 cockpit_details.add(dict(P=P, R=R, U=U, F=F, k=k, M=M, E=E, obj=obj, seed='f_16c', era='MODERN_GLASS', wwii=False,
                          con_u=CON_U, CON_R0=CON_R0, st_back=-0.40, st_front=0.59, hip=P(0, -0.72, -0.035),
                          s_up=_s_up, s_fw=_s_fw, stick='side', wall=wall, sill_u=-0.40, floor_u=-1.12,
-                         panel_plates=[], pn=pn, lip_pt=lambda x: panel_pt(x * TRACE_S, U_TOP - 0.02, 0.072),
+                         panel_plates=[], overlays=OVERLAYS, pn=pn, lip_pt=lambda x: panel_pt(x * TRACE_S, U_TOP - 0.02, 0.072),
                          pedal_pos=lambda sg: P(sg * 0.10, -0.92, 0.96)))
 
 # ======================================================================== panel cheeks
@@ -630,7 +647,7 @@ for o in cockpit:
         bpy.ops.object.modifier_apply(modifier=m_.name)
     # large faces are cut up first so the fit can follow a curving skin (a face spanning a hollow would cross it)
     bm = bmesh.new(); bm.from_mesh(o.data)
-    lim = (0.04 if o.name.startswith(TUB_PARTS) else 0.08 if o.name.startswith(EDGE_PARTS + ('glareshield', 'aft_', 'gear_panel', 'right_aux')) else 99) * k
+    lim = (0.08 if o.name.startswith(TUB_PARTS) else 0.10 if o.name.startswith(EDGE_PARTS + ('glareshield', 'aft_', 'gear_panel', 'right_aux')) else 99) * k
     for _ in range(2):
         long_edges = [e for e in bm.edges if e.calc_length() > lim]
         if long_edges:
@@ -740,6 +757,11 @@ check = dict(face_pairs_touching_fuselage=len(pairs), clipping_parts=clip_parts,
              parts=sorted({o.name for o in cockpit}))
 json.dump(check, open(os.path.join(out, 'check.json'), 'w'), indent=1)
 print('CHECK', json.dumps({k_: v for k_, v in check.items() if k_ != 'parts'}))
+import game_export
+STATIONS = {0: dict(seat=0, stick='side', stick_foot=P(0.300, CON_U, 0.455), hud_object='hud_combiner',
+                    hud_w=0.132, hud_h=g_h - 0.012)}
+print('GAME_EXPORT', game_export.export(os.path.join(out, 'game_export.json'), cockpit, model, INSTR, STATIONS,
+                                        lambda si: E, k=k))
 
 # ======================================================================== save and render
 # cockpit lighting for the previews: a soft area light over the pilot's shoulder and a fill from the panel, so
