@@ -16,7 +16,9 @@ Run it on the committed originals (git checkout the aircraft's geo and asset fil
 the old interior, so a run on top of an earlier one fits slightly differently and removes a few more faces.
 tools/cockpit_layout/layout.py leaves the aircraft listed here alone.
 
-Usage: python3 tools/cockpit_models/fleet.py [--dry-run] [--sheet DIR] [id...]   (no ids: all of fleet.json)
+Usage: python3 tools/cockpit_models/fleet.py [--dry-run] [--exact] [--sheet DIR] [id...]   (no ids: all of fleet.json)
+       --exact: every colour gets its own exact swatch in the texture's free area (texture and wreck texture are
+       written), instead of the nearest uniform block the texture already has
 """
 import json, math, os, sys
 import numpy as np
@@ -27,6 +29,9 @@ import cockpit_lib as L  # noqa: E402
 
 FLEET = json.load(open(os.path.join(HERE, 'fleet.json')))
 PRESETS = json.load(open(os.path.join(HERE, '..', 'cockpit_layout', 'presets.json')))['aircraft']
+sys.path.insert(0, os.path.join(HERE, 'authored'))
+import lib as A  # noqa: E402
+
 MARK = 'modelled_cockpit'          # glass triangles this tool added are tagged by position: see glass_drop()
 
 
@@ -38,12 +43,30 @@ def piece_of(name):
     return name.split('__', 1)[0] if name.startswith('wreck_') else None
 
 
-def apply(vid, dry=False):
+class ExactSwatches:
+    """Swatches' interface over the texture's free area: each wanted colour is painted as its own swatch"""
+
+    def __init__(self, vid):
+        self.atlas = A.Atlas(vid)
+        self.cache = {}
+        self.worst = 0.0
+
+    def uv(self, rgb):
+        key = tuple(int(c) for c in rgb)
+        if key not in self.cache:
+            self.cache[key] = self.atlas.flat(self.atlas.swatch(key))
+        return self.cache[key]
+
+    def got(self, rgb):
+        return tuple(int(c) for c in rgb)
+
+
+def apply(vid, dry=False, exact=False):
     spec = FLEET['aircraft'][vid]
     era = spec.get('era') or PRESETS.get(vid)
     era = era if isinstance(era, str) else era.get('preset')
     ac = L.Aircraft(vid)
-    sw = L.Swatches(L.texture_path(vid))
+    sw = ExactSwatches(vid) if exact else L.Swatches(L.texture_path(vid))
     seat = spec.get('seat', 0)
     sight_glass = ac.drop_sight_glass(ac.eye(seat), spec.get('tub', {}).get('s', 1.0))
     tub_kw = dict(spec.get('tub', {}))
@@ -162,6 +185,12 @@ def apply(vid, dry=False):
         with open(ac.geo_path, 'w') as f:
             json.dump(ac.geo, f, separators=(',', ':'))
         L.write_asset(ac.asset_path, ac.asset)
+        if exact:
+            tex = os.path.normpath(L.texture_path(vid))
+            sw.atlas.write(tex)
+            dead = tex.replace(os.sep + 'entity' + os.sep, os.sep + 'entity_dead' + os.sep)
+            if os.path.isfile(dead):
+                sw.atlas.write(dead, dead=True)
     return ac, tub, report
 
 
@@ -180,7 +209,7 @@ def main(argv):
         out = argv[argv.index('--sheet') + 1]
     ids = [a for a in argv if not a.startswith('--') and a != out] or sorted(FLEET['aircraft'])
     for vid in ids:
-        _, _, rep = apply(vid, dry)
+        _, _, rep = apply(vid, dry, exact='--exact' in argv)
         print(rep)
     if out and not dry:
         sheet(ids, out)
