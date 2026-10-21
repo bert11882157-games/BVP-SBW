@@ -56,7 +56,7 @@ def build(atlas, E, skin):
     C.bow(m, sh, E, 1.18, 0.04, 0.025, out, inner)
     C.member(m, sh, E, 0.0, SPLIT + 0.05, 1.20, 0.05, 0.04, out, inner)
     # the deck under the windscreen ahead of the coaming, closing off the nose bay seen through the glass
-    C.deck(m, sh, E, 0.95, 1.20, inner)
+    C.deck(m, sh, E, 0.95, 1.20, atlas.swatch((24, 25, 26)))
     return m, glass
 
 

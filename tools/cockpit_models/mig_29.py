@@ -792,7 +792,7 @@ def build(atlas):
     lip_edge = [p + f.N * 0.045 + np.array([0, 0.03, 0]) for p, f in pts]
     panel_top = [p for p, f in pts]
     # front line under the windscreen base, and a crown line between
-    front_z, front_y, front_x = 4.40, 3.045, 0.40
+    front_z, front_y, front_x = 4.18, 3.14, 0.26          # (inside the windscreen's foot, under its glass: one smooth cover)
     rows = []
     for t in (0.0, 0.35, 0.7, 1.0):
         row = []
