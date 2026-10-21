@@ -926,8 +926,8 @@ def build(atlas):
     m.box([0, 2.90, 2.80], seat_back_ax, (0.19, 0.33, 0.03), sw['cushion'],
           front=(2, 1, back, X, seat_back_ax[1]))                                           # back cushion
     m.box([0, 2.90, 2.74], seat_back_ax, (0.205, 0.36, 0.035), sw['frame'])                  # back shell
-    m.box([0, 3.41, 2.72], (X, Y, Z), (0.16, 0.20, 0.10), sw['frame'])                       # headbox
-    m.box([0, 3.42, 2.835], (X, Y, Z), (0.11, 0.11, 0.015), sw['cushion'],
+    m.box([0, 3.37, 2.72], (X, Y, Z), (0.16, 0.16, 0.10), sw['frame'])                       # headbox (its top 13 cm over the eye, under the canopy)
+    m.box([0, 3.40, 2.835], (X, Y, Z), (0.11, 0.10, 0.015), sw['cushion'],
           front=(2, 1, headbox, X, Y))                                                       # seen from ahead                                                      # headrest pad
     # ejection handles between the knees (yellow and black)
     for s in (1, -1):
