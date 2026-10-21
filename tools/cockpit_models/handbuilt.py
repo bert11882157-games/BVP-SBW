@@ -350,6 +350,89 @@ def p_label_plate(label, bg=(20, 22, 22)):
     return fn
 
 
+def remove_sight_clutter(ac, E, reach=1.2):
+    """the model's own old HUD or gunsight left in the pilot's line of sight: interior-bone faces wholly in the box
+    ahead of the eye (|x| < 0.30, 0.40 below to 0.22 above the eye, inside the canopy, 0.25 m to [reach] ahead) that do not lie along
+    the canopy glass (its frame stays); returns how many went"""
+    e = np.array(E, float)
+    n = 0
+    G = ac.glass
+
+    def behind_glass(c):                       # outside the canopy: the glass lies between the eye and it
+        if not len(G):
+            return False
+        d = c - e; L_ = np.linalg.norm(d); d = d / L_
+        e1, e2 = G[:, 1] - G[:, 0], G[:, 2] - G[:, 0]
+        h = np.cross(d, e2); a = (e1 * h).sum(1)
+        ok = np.abs(a) > 1e-12
+        f = np.where(ok, 1.0 / np.where(ok, a, 1.0), 0.0)
+        s = e - G[:, 0]; u = f * (s * h).sum(1)
+        q = np.cross(s, e1); v = f * (q @ d); tt = f * (q * e2).sum(1)
+        return bool((ok & (u >= 0) & (u <= 1) & (v >= 0) & (u + v <= 1) & (tt > 0) & (tt < L_ - 0.01)).any())
+
+    for b in ac.bones:
+        pm = b.get('poly_mesh')
+        if not pm or not pm.get('polys') or not L.is_interior_bone(b['name']) or b['name'].endswith('__cockpit'):
+            continue
+        P = np.array(pm['positions'], float) * np.array([1, 1, -1]) / 16.0
+        out = []
+        for poly in pm['polys']:
+            if poly:
+                V = P[[v[0] for v in poly]]
+                d = V - e
+                if (np.all(np.abs(d[:, 0]) < 0.30) and np.all(d[:, 1] > -0.40) and np.all(d[:, 1] < 0.22)
+                        and np.all(d[:, 2] > 0.25) and np.all(d[:, 2] < reach) and not ac.hugs_glass(V, 0.04)
+                        and not behind_glass(V.mean(0))):
+                    n += 1
+                    continue
+            out.append(poly)
+        pm['polys'] = out
+    return n
+
+
+def view_ceiling(ac, E, dz, half_w=0.05, reach=4.0):
+    """how far above the eye (metres, at dz ahead of it) the pilot sees forward over the nose before the model's
+    own structure (the windscreen bow, the canopy frame) cuts the view: the lowest blocked elevation, scanned up from
+    level at the glass's centre and both edges, as a height at dz. A HUD or sight glass taller than twice this would
+    have its top hidden behind the bow"""
+    T = []
+    for b in ac.bones:
+        pm = b.get('poly_mesh')
+        if not pm or not pm.get('polys') or b['name'].endswith('__cockpit') or not L.is_interior_bone(b['name']):
+            continue                             # the airframe only (not the propeller disc, not the weapons)
+        P = np.array(pm['positions'], float) * np.array([1, 1, -1]) / 16.0
+        for poly in pm['polys']:
+            if poly:
+                V = P[[v[0] for v in poly]]
+                for k in range(1, len(V) - 1):
+                    T.append(V[[0, k, k + 1]])
+    T = np.array(T)
+    c = T.mean(1)
+    near = np.all(np.abs(c - E) < reach + 1.0, axis=1)
+    T = T[near]
+    e1, e2 = T[:, 1] - T[:, 0], T[:, 2] - T[:, 0]
+
+    def hits(p, d):
+        h = np.cross(d, e2); a = (e1 * h).sum(1)
+        ok = np.abs(a) > 1e-12
+        f = np.where(ok, 1.0 / np.where(ok, a, 1.0), 0.0)
+        s = p - T[:, 0]; u = f * (s * h).sum(1)
+        q = np.cross(s, e1); v = f * (q @ d); t = f * (q * e2).sum(1)
+        return bool((ok & (u >= 0) & (u <= 1) & (v >= 0) & (u + v <= 1) & (t > dz * 0.5) & (t < reach)).any())
+    best = 1.0
+    for x in (-half_w, 0.0, half_w):
+        clear = False                            # the first block above a clear view (the nose below is not it)
+        for k in range(-10, 61):
+            el = math.radians(k * 0.5)
+            d = np.array([x / dz, math.tan(el), 1.0]); d /= np.linalg.norm(d)
+            blocked = hits(np.array(E, float), d)
+            if blocked and clear and k > 0:
+                best = min(best, dz * math.tan(el))
+                break
+            clear = clear or not blocked
+    return best
+
+
 # ---------------------------------------------------------------- writing into the aircraft
 
 def remove_faces(ac, keep_out):

@@ -65,6 +65,7 @@ FRONT_Z = 0.88                 # the glareshield runs forward to the windscreen 
 FRONT_Y_C, FRONT_Y_W = -0.400, -0.470
 SEAT_DY = 0.0
 
+HUD_TOP = [1.0]                # how far above the eye the view under the bow reaches at the glass (main sets it)
 R_C = np.array([-1.0, 0, 0])                                   # pilot's right
 U_C = np.array([0, math.cos(LEAN), math.sin(LEAN)])
 N_C = np.array([0, math.sin(LEAN), -math.cos(LEAN)])           # toward the pilot
@@ -420,11 +421,13 @@ def build(atlas, E):
     g_up = np.array([0, math.cos(g_lean), -math.sin(g_lean)])
     g_n = H.unit(np.cross(X, g_up))
     g_h, g_hw = 0.190, 0.095                   # a little larger than the real glass, for the game
+    g_h = min(g_h, 2 * HUD_TOP[0] - 0.012)        # its top under the windscreen bow
     g_bot = np.array([E[0], E[1] - g_up[1] * g_h / 2, hud_z0 + 0.02])
     g_top = g_bot + g_up * g_h
     stem = g_bot[1] - 0.006 - hud_y1
-    if stem > 0.004:
-        m.box([E[0], hud_y1 + stem / 2, g_bot[2]], (X, Y, Z), (g_hw + 0.008, stem / 2, 0.012), sw['dgrey'])
+    if stem > 0.004:                               # two thin posts: the view under the glass stays open
+        for s in (-1, 1):
+            m.box([E[0] + s * (g_hw + 0.004), hud_y1 + stem / 2, g_bot[2]], (X, Y, Z), (0.004, stem / 2, 0.005), sw['dgrey'])
     m.box(g_bot - g_up * 0.006, (X, g_up, g_n), (g_hw + 0.008, 0.006, 0.012), sw['dgrey'])
     for s in (-1, 1):
         m.box((g_bot + g_top) / 2 + X * s * (g_hw + 0.004), (X, g_up, g_n), (0.004, g_h / 2, 0.005), sw['dgrey'])
@@ -542,6 +545,8 @@ def main(argv):
     ac = L.Aircraft(VID)
     E = ac.eye(0)
     removed = H.remove_faces(ac, old_interior(E))
+    removed['old sight in the view'] = H.remove_sight_clutter(ac, E)
+    HUD_TOP[0] = H.view_ceiling(ac, ac.eye(0), PANEL_Z + 0.06)
     atlas = H.A.Atlas(VID)
     mesh, stick, gauges, displays, hud = build(atlas, E)
     pm = H.install(ac, mesh, stick, SOURCE_BONE, STICK_BONE, gauges, displays, hud, E)

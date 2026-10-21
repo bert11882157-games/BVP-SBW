@@ -6,7 +6,7 @@ Draws, on one sheet, the model cut by planes: transverse cuts (x-y, at the given
 orange; the eye is a red cross. A grid every 5 cm (bold every 25 cm) is labelled in metres from the eye.
 
 Usage: sections.py VID OUT.png [--z dz1,dz2,...]   (dz: metres ahead of the eye; default -0.6..1.6 every 0.2)
-       [--geo path] [--asset path]   (another geo / asset file, e.g. the original from git)
+       [--seat N] [--geo path] [--asset path]   (another geo / asset file, e.g. the original from git)
 """
 import json, os, sys
 import numpy as np
@@ -63,7 +63,7 @@ def main():
     ac = L.Aircraft(vid)
     geo = json.load(open(arg('--geo'))) if arg('--geo') else ac.geo
     asset = json.load(open(arg('--asset'))) if arg('--asset') else ac.asset
-    E = ac.eye(0)
+    E = ac.eye(int(arg('--seat', '0')))
     tris = triangles(geo)
     cg = asset.get('CanopyGlass')
     if cg:

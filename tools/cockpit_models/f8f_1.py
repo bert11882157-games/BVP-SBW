@@ -63,6 +63,7 @@ BOT_C, BOT_W = -0.660, -0.620
 FRONT_Z = 0.76                 # the coaming runs forward to the windscreen
 FRONT_Y_C, FRONT_Y_W = -0.270, -0.300
 
+HUD_TOP = [1.0]                # how far above the eye the view under the bow reaches at the glass (main sets it)
 R_C = np.array([-1.0, 0, 0])                                   # pilot's right
 U_C = np.array([0, math.cos(LEAN), math.sin(LEAN)])
 N_C = np.array([0, math.sin(LEAN), -math.cos(LEAN)])           # toward the pilot
@@ -348,18 +349,20 @@ def build(atlas, E):
     # the reflector glass (its frame only, no glass) is centred on the pilot's straight-ahead line, so from the seat
     # the projected reticle sits at the boresight; the body stands under it on the coaming
     g_h, g_hw = 0.120, 0.065
+    g_h = min(g_h, 2 * HUD_TOP[0] - 0.012)        # its top under the windscreen bow
     lean = math.radians(35)
     g_up = np.array([0, math.cos(lean), -math.sin(lean)])
     g_n = H.unit(np.cross(X, g_up))
     base_y = E[1] + TOP_C + 0.045                                  # the coaming's top
     g_c = np.array([E[0], E[1], E[2] + PANEL_Z + 0.14])
     g_bot, g_top = g_c - g_up * g_h / 2, g_c + g_up * g_h / 2
-    body_top = max(base_y + 0.035, g_bot[1] - 0.008)
+    body_top = base_y + 0.07                                       # the sight head's own height
     body_c = np.array([E[0], (base_y + body_top) / 2, E[2] + PANEL_Z + 0.11])
     m.box(body_c, (X, Y, Z), (0.065, (body_top - base_y) / 2, 0.10), sw['dgrey'], front=(2, -1, sight, -X, Y))
-    if g_bot[1] - 0.006 > body_top + 0.003:                        # the stem up to the glass's lower clamp
-        m.box([E[0], (body_top + g_bot[1] - 0.006) / 2, g_bot[2]], (X, Y, Z), (0.03, (g_bot[1] - 0.006 - body_top) / 2, 0.012),
-              sw['dgrey'])
+    if g_bot[1] - 0.006 > body_top + 0.003:                        # two thin posts up to the glass's lower clamp
+        for s in (-1, 1):
+            m.box([E[0] + s * (g_hw + 0.004), (body_top + g_bot[1] - 0.006) / 2, g_bot[2]], (X, Y, Z),
+                  (0.004, (g_bot[1] - 0.006 - body_top) / 2, 0.005), sw['dgrey'])
     m.box(g_bot - g_up * 0.005, (X, g_up, g_n), (g_hw + 0.008, 0.005, 0.010), sw['dgrey'])
     for s in (-1, 1):
         m.box(g_c + X * s * (g_hw + 0.004), (X, g_up, g_n), (0.004, g_h / 2, 0.005), sw['dgrey'])
@@ -469,6 +472,8 @@ def main(argv):
     ac = L.Aircraft(VID)
     E = ac.eye(0)
     removed = H.remove_faces(ac, old_interior(E))
+    removed['old sight in the view'] = H.remove_sight_clutter(ac, E)
+    HUD_TOP[0] = H.view_ceiling(ac, ac.eye(0), PANEL_Z + 0.06)
     atlas = H.A.Atlas(VID)
     mesh, stick, gauges, displays, hud = build(atlas, E)
     pm = H.install(ac, mesh, stick, SOURCE_BONE, STICK_BONE, gauges, displays, hud, E)
