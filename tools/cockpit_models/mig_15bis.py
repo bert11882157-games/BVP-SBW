@@ -365,7 +365,7 @@ def build(atlas, E):
     for side in (1, -1):                                            # +1 = left (x > 0)
         xi, xo = E[0] + CONSOLE_IN * side, E[0] + CONSOLE_OUT * side
         cy, fy = E[1] + CONSOLE_Y, E[1] + FLOOR_Y + 0.02
-        zb, zf = E[2] + BACK_Z + 0.06, E[2] + PANEL_Z - 0.06
+        zb, zf = E[2] + BACK_Z + 0.06, E[2] + PANEL_Z + 0.08     # the consoles run on under the panel to the bulkhead
         con = atlas.paint(72, 300, H.p_console(WALLC, 20 + side, [0.11, 0.08, 0.13, 0.07, 0.12, 0.09, 0.10, 0.08] if side > 0
                                                else [0.09, 0.12, 0.08, 0.11, 0.10, 0.09, 0.13, 0.08],
                                                slot=(0.30, 0.30, 0.42, 0.62) if side > 0 else None))
@@ -378,7 +378,8 @@ def build(atlas, E):
         xs, xc = E[0] + 0.355 * side, E[0] + (CONSOLE_OUT - 0.01) * side
         ys, yc = E[1] + SILL_Y - 0.01, E[1] + CONSOLE_Y + 0.005
         lining = atlas.paint(150, 60, H.p_wall(WALLC_D, WALLC, 40 + side))
-        q = [[xc, yc, zb - 0.06], [xc, yc, zf], [xs, ys, zf], [xs, ys, zb - 0.06]]
+        zl = E[2] + PANEL_Z + 0.08                                  # the lining runs on to the bulkhead
+        q = [[xc, yc, zb - 0.06], [xc, yc, zl], [xs, ys, zl], [xs, ys, zb - 0.06]]
         m.quad_tex(q if side > 0 else [q[1], q[0], q[3], q[2]], lining, toward=[E[0], E[1] - 0.3, (zb + zf) / 2])
     # under the centre facet: its lower closing face back to the footwell
     bl, br = centre.at(HINGE, E[1] + BOT_C), centre.at(-HINGE, E[1] + BOT_C)
@@ -392,6 +393,10 @@ def build(atlas, E):
     m.flat([P(-fw, FLOOR_Y + 0.006, BACK_Z), P(fw, FLOOR_Y + 0.006, BACK_Z),
             P(fw, FLOOR_Y + 0.006, PANEL_Z + 0.06), P(-fw, FLOOR_Y + 0.006, PANEL_Z + 0.06)], sw['floor'],
            normal=[0, 1, 0])
+    # the bulkhead just behind the main panel, the fuselage's own cross-section there: no skin shows round the panel
+    half = [(0.37, -0.27), (0.66, -0.62), (0.66, -1.06), (0.0, -1.06)]
+    ring_ = [(x, y) for x, y in half] + [(-x, y) for x, y in reversed(half)]
+    m.flat([P(x, y, PANEL_Z + 0.08) for x, y in ring_], atlas.swatch((28, 30, 30)), normal=[0, 0, -1])
     # rudder pedals under the panel
     for s in (1, -1):
         m.box(P(s * 0.12, -0.97, 0.56), (X, H.unit([0, 1, -0.35]), H.unit([0, 0.35, 1])), (0.045, 0.07, 0.01), sw['mgrey'])
