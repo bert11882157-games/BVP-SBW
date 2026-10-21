@@ -62,6 +62,16 @@ class Shape:
         x, y = sec[i] * (1 - f) + sec[i + 1] * f
         return np.array([x * side, y, z])
 
+    def s_at_x(self, z, x):
+        """the position s across the section at z where the surface stands x out from the centre line (s from the
+        sill up, the first point at or inside x): for posts and members set by their width, not by arc length"""
+        sec = self.section(z)
+        for i in range(N - 1):
+            a, b = sec[i][0], sec[i + 1][0]
+            if (a - x) * (b - x) <= 0 and a != b:
+                return (i + (a - x) / (a - b)) / (N - 1)
+        return 1.0 if sec[0][0] > x else 0.0
+
     def normal(self, z, s, side=1):
         """outward normal of the surface at (z, s): across the section, and along it"""
         e = 1e-3
@@ -109,14 +119,16 @@ def bow(m, shape, E, z, width, depth, rect_out, rect_in, s0=0.0, s1=1.0, proud=0
 
 
 def member(m, shape, E, s, z0, z1, width, depth, rect_out, rect_in, sides=(1, -1), proud=0.004, steps=10):
-    """a longitudinal frame along the shape at position s from z0 to z1, [width] across the surface"""
+    """a longitudinal frame along the shape at position s from z0 to z1, [width] across the surface (s may be a
+    function of z, e.g. lambda z: shape.s_at_x(z, 0.12) for a post standing a set width out)"""
     zs = np.linspace(z0, z1, steps + 1)
     for side in sides:
         for i in range(steps):
             q = []
             for zc in (zs[i], zs[i + 1]):
-                p = shape.point(zc, s, side); n = shape.normal(zc, s, side)
-                t = shape.point(zc, min(1, s + 0.02), side) - shape.point(zc, max(0, s - 0.02), side)
+                sc = s(zc) if callable(s) else s
+                p = shape.point(zc, sc, side); n = shape.normal(zc, sc, side)
+                t = shape.point(zc, min(1, sc + 0.02), side) - shape.point(zc, max(0, sc - 0.02), side)
                 t = t / (np.linalg.norm(t) or 1)
                 for o in (-1, 1):
                     q.append((p + t * o * width / 2 + n * proud + E, p + t * o * width / 2 - n * depth + E))
@@ -163,6 +175,90 @@ def install(ac, mesh, source, glass_pts, old_glass):
     if glass_pts:
         L.add_glass(ac.asset, [list(map(float, p)) for p in glass_pts])
     return n, len(pm['polys'])
+
+
+def periscope(m, shape, E, z, out, dark):
+    """the rear-view periscope housing on the canopy's top at station z, sitting on the glass"""
+    top = shape.point(z, 1.0) + E
+    X, Y, Z = np.array([1.0, 0, 0]), np.array([0, 1.0, 0]), np.array([0, 0, 1.0])
+    m.box(top + np.array([0, 0.012, 0]), (X, Y, Z), (0.028, 0.022, 0.06), out)
+    m.box(top + np.array([0, 0.014, -0.0615]), (X, Y, Z), (0.02, 0.014, 0.002), dark)
+
+
+def skin(m, shape, E, z0, z1, rect, nz=6, ns=10):
+    """a solid (metal) part of the canopy over [z0, z1], both halves, facing out: e.g. a faired rear section"""
+    zs, ss = np.linspace(z0, z1, nz + 1), np.linspace(0, 1, ns + 1)
+    for side in (1, -1):
+        for i in range(nz):
+            for j in range(ns):
+                q = [shape.point(zs[a], ss[b], side) + E for a, b in ((i, j), (i + 1, j), (i + 1, j + 1), (i, j + 1))]
+                c = sum(q) / 4
+                m.flat(q, rect, toward=c + shape.normal((zs[i] + zs[i + 1]) / 2, (ss[j] + ss[j + 1]) / 2, side))
+
+
+def clear_box(ac, E, lo, hi):
+    """the model's own faces (not the new cockpit or canopy) whose centres lie in the eye-relative box lo..hi"""
+    n = 0
+    lo, hi = np.array(lo, float), np.array(hi, float)
+    for b in ac.bones:
+        pm = b.get('poly_mesh')
+        if not pm or not pm.get('polys') or b['name'].endswith('__cockpit') or b['name'].endswith('__canopy'):
+            continue
+        P = np.array(pm['positions'], float) * np.array([1, 1, -1]) / 16.0 - E
+        keep = [p for p in pm['polys'] if not p or not np.all((lo <= P[[v[0] for v in p]].mean(0)) & (P[[v[0] for v in p]].mean(0) <= hi))]
+        n += len(pm['polys']) - len(keep)
+        pm['polys'] = keep
+    return n
+
+
+def clear_skin(ac, shape, E, z0, z1, depth=0.07, above=0.03):
+    """the model's own faces left against the new canopy (old frame slabs and side plates strip.find missed): every
+    face of a model bone whose centre lies within [depth] of the canopy's surface, inside or out, between z0 and z1 and
+    more than [above] over the sill; returns how many went"""
+    from matplotlib.path import Path
+    n = 0
+    for b in ac.bones:
+        pm = b.get('poly_mesh')
+        if not pm or not pm.get('polys') or b['name'].endswith('__cockpit') or b['name'].endswith('__canopy'):
+            continue
+        P = np.array(pm['positions'], float) * np.array([1, 1, -1]) / 16.0 - E
+        keep = []
+        for poly in pm['polys']:
+            c = P[[v[0] for v in poly]].mean(0) if poly else None
+            if c is None or not z0 <= c[2] <= z1:
+                keep.append(poly)
+                continue
+            sec = shape.section(c[2])
+            if c[1] < sec[0][1] + above:
+                keep.append(poly)
+                continue
+            d = np.min(np.hypot(sec[:, 0] - abs(c[0]), sec[:, 1] - c[1]))
+            outline = np.r_[sec, sec[::-1] * np.array([-1, 1])]
+            inside = Path(outline).contains_point((c[0], c[1]))
+            if d < depth or (inside and d < depth * 1.6):
+                n += 1
+            else:
+                keep.append(poly)
+        pm['polys'] = keep
+    return n
+
+
+def run(vid, source, build, argv, colour=None, clear=None, boxes=()):
+    """the aircraft file's canopy put in: build(atlas, E, skin) -> (mesh, glass points); the frames in [colour], or
+    the spine's own paint; [clear] = (shape, z0, z1) also clears the model's leftover faces against that canopy"""
+    ac = L.Aircraft(vid)
+    E = ac.eye(0)
+    old = original_glass(vid)
+    atlas = atlas_for(vid)
+    m, glass = build(atlas, E, colour or frame_colour(ac))
+    n_old, n_new = install(ac, m, source, glass, old)
+    if clear:
+        n_old += clear_skin(ac, clear[0], E, clear[1], clear[2])
+    for lo, hi in boxes:                                 # old frame pieces standing clear of the glass
+        n_old += clear_box(ac, E, lo, hi)
+    print(f'{vid} canopy: {n_old} old frame faces removed; {n_new} frame faces, {len(glass) // 3} glass triangles')
+    if '--dry-run' not in argv:
+        H.write(ac, atlas)
 
 
 def frame_colour(ac, rm_faces=None):
