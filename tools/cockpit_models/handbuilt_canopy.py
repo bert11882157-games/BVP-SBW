@@ -345,18 +345,31 @@ def skin(m, shape, E, z0, z1, rect, nz=6, ns=10):
                 m.flat(q, rect, toward=c + shape.normal((zs[i] + zs[i + 1]) / 2, (ss[j] + ss[j + 1]) / 2, side))
 
 
-def deck(m, shape, E, z0, z1, rect, drop=0.03, inset=0.006, nz=8):
-    """a closed floor under the windscreen over [z0, z1], from sill to sill a little under the sill line, facing up:
-    what shows through the glass ahead of the panel's coaming is a deck, not the open nose bay under it"""
-    zs = np.linspace(z0, z1, nz + 1)
+def deck(m, shape, E, z0, z1, rect, drop=0.008, reach=0.015, skirt=0.15, front=0.06, x_in=0.0, nz=8):
+    """a closed tub under the windscreen over [z0, z1]: a floor just under the sill line reaching [reach] past the sill
+    (under the fuselage skin), skirts down from its outer edges and a front wall [front] past z1, all facing in and up:
+    what shows through the glass ahead of the panel's coaming is an enclosed deck, not the open nose bay under it.
+    With x_in > 0 only the outer bands (|x| > x_in) are floored, beside a panel that stands in the middle."""
+    zs = np.linspace(z0, z1 + front, nz + 1)
+    edge = []
+    for z in zs:
+        sx, sy = shape.section(min(z, z1))[0]
+        edge.append((z, sx + reach, sy - drop))
     for i in range(nz):
-        q = []
-        for z in (zs[i], zs[i + 1]):
-            sx, sy = shape.section(z)[0]
-            q.append((z, sx - inset, sy - drop))
-        (za, xa, ya), (zb, xb, yb) = q
-        pts = [E + [-xa, ya, za], E + [xa, ya, za], E + [xb, yb, zb], E + [-xb, yb, zb]]
-        m.flat(pts, rect, normal=[0, 1, 0])
+        (za, xa, ya), (zb, xb, yb) = edge[i], edge[i + 1]
+        if x_in > 0:
+            for s in (1, -1):
+                m.flat([E + [s * x_in, ya, za], E + [s * xa, ya, za], E + [s * xb, yb, zb], E + [s * x_in, yb, zb]], rect,
+                       normal=[0, 1, 0])
+        else:
+            m.flat([E + [-xa, ya, za], E + [xa, ya, za], E + [xb, yb, zb], E + [-xb, yb, zb]], rect, normal=[0, 1, 0])
+        for s in (1, -1):                                   # the skirts, down from the floor's outer edges
+            m.flat([E + [s * xa, ya, za], E + [s * xb, yb, zb], E + [s * xb, yb - skirt, zb], E + [s * xa, ya - skirt, za]],
+                   rect, normal=[-s, 0, 0])
+    if front <= 0:
+        return
+    (z, x, y) = edge[-1]                                    # the front wall
+    m.flat([E + [-x, y, z], E + [x, y, z], E + [x, y - skirt, z], E + [-x, y - skirt, z]], rect, normal=[0, 0, -1])
 
 
 def clear_box(ac, E, lo, hi):

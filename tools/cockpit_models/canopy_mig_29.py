@@ -53,6 +53,7 @@ def build(atlas, E, skin):
     C.member(m, sh, E, 0.0, SPLIT + 0.05, 1.24, 0.03, 0.003, out, inner, steps=8, proud=0.008)   # (on the outside: deeper, it stood as a block inside beside the HUD)
     # the deck under the windscreen ahead of the coaming, closing off the nose bay seen through the glass
     C.deck(m, sh, E, 0.80, 1.24, inner)
+    C.deck(m, sh, E, SPLIT + 0.03, 0.80, inner, x_in=0.30, front=0.0, nz=4)     # beside the panel, back to the joint
     return m, glass
 
 
