@@ -330,8 +330,8 @@ def periscope(m, shape, E, z, out, dark):
     """the rear-view periscope housing on the canopy's top at station z, sitting on the glass"""
     top = shape.point(z, 1.0) + E
     X, Y, Z = np.array([1.0, 0, 0]), np.array([0, 1.0, 0]), np.array([0, 0, 1.0])
-    m.box(top + np.array([0, 0.012, 0]), (X, Y, Z), (0.028, 0.022, 0.06), out)
-    m.box(top + np.array([0, 0.014, -0.0615]), (X, Y, Z), (0.02, 0.014, 0.002), dark)
+    m.box(top + np.array([0, 0.0, 0]), (X, Y, Z), (0.028, 0.022, 0.06), out)          # its foot sunk 22 mm through the glass
+    m.box(top + np.array([0, 0.006, -0.0615]), (X, Y, Z), (0.02, 0.014, 0.002), dark)
 
 
 def skin(m, shape, E, z0, z1, rect, nz=6, ns=10):

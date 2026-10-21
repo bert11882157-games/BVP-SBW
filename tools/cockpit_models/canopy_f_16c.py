@@ -48,7 +48,7 @@ def build(atlas, E, skin):
 
 
 def main(argv):
-    C.run(VID, SOURCE_BONE, build, argv)
+    C.run(VID, SOURCE_BONE, build, argv, colour=(46, 48, 50))   # the frames black, as on the type (reference views)
 
 
 if __name__ == '__main__':
