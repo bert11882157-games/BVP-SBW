@@ -158,7 +158,7 @@ def install(ac, mesh, source, glass_pts, old_glass):
     ac.glass = old_glass
     tub = L.Tub(ac, 0)
     tex = np.array(Image.open(L.texture_path(ac.vid)).convert('RGBA'))
-    rm, _ = S.find(ac, tub, canopy=old_glass, tex=tex)
+    rm = S.find(ac, tub, canopy=old_glass, tex=tex)[0] if len(old_glass) else {}   # no old glass: clear_skin does it
     n = 0
     for b in ac.bones:
         if b['name'] in rm:
@@ -211,10 +211,10 @@ def clear_box(ac, E, lo, hi):
     return n
 
 
-def clear_skin(ac, shape, E, z0, z1, depth=0.07, above=0.03):
+def clear_skin(ac, shape, E, z0, z1, depth=0.07, above=0.03, outside=0.0):
     """the model's own faces left against the new canopy (old frame slabs and side plates strip.find missed): every
     face of a model bone whose centre lies within [depth] of the canopy's surface, inside or out, between z0 and z1 and
-    more than [above] over the sill; returns how many went"""
+    more than [above] over the sill (and, with [outside], anything up to that far outside it: an old canopy standing clear of the new one); returns how many went"""
     from matplotlib.path import Path
     n = 0
     for b in ac.bones:
@@ -235,7 +235,7 @@ def clear_skin(ac, shape, E, z0, z1, depth=0.07, above=0.03):
             d = np.min(np.hypot(sec[:, 0] - abs(c[0]), sec[:, 1] - c[1]))
             outline = np.r_[sec, sec[::-1] * np.array([-1, 1])]
             inside = Path(outline).contains_point((c[0], c[1]))
-            if d < depth or (inside and d < depth * 1.6):
+            if d < depth or (inside and d < depth * 1.6) or (not inside and d < outside):
                 n += 1
             else:
                 keep.append(poly)
@@ -245,7 +245,7 @@ def clear_skin(ac, shape, E, z0, z1, depth=0.07, above=0.03):
 
 def run(vid, source, build, argv, colour=None, clear=None, boxes=()):
     """the aircraft file's canopy put in: build(atlas, E, skin) -> (mesh, glass points); the frames in [colour], or
-    the spine's own paint; [clear] = (shape, z0, z1) also clears the model's leftover faces against that canopy"""
+    the spine's own paint; [clear] = (shape, z0, z1[, outside]) also clears the model's leftover faces against that canopy"""
     ac = L.Aircraft(vid)
     E = ac.eye(0)
     old = original_glass(vid)
@@ -253,7 +253,7 @@ def run(vid, source, build, argv, colour=None, clear=None, boxes=()):
     m, glass = build(atlas, E, colour or frame_colour(ac))
     n_old, n_new = install(ac, m, source, glass, old)
     if clear:
-        n_old += clear_skin(ac, clear[0], E, clear[1], clear[2])
+        n_old += clear_skin(ac, clear[0], E, clear[1], clear[2], outside=clear[3] if len(clear) > 3 else 0.0)
     for lo, hi in boxes:                                 # old frame pieces standing clear of the glass
         n_old += clear_box(ac, E, lo, hi)
     print(f'{vid} canopy: {n_old} old frame faces removed; {n_new} frame faces, {len(glass) // 3} glass triangles')
