@@ -343,7 +343,10 @@ def p_stripes(d, im):
 def p_label_plate(label, bg=(20, 22, 22)):
     def fn(d, im):
         d.rectangle([0, 0, im.width, im.height], fill=tuple(bg) + (255,))
-        text(d, (im.width / 2, im.height / 2), label, im.height * .5)
+        lines = label.split('|')
+        px = min(im.height * .5 / len(lines), im.width * 1.6 / max(len(s) for s in lines))
+        for k, s in enumerate(lines):
+            text(d, (im.width / 2, im.height * (k + .5) / len(lines)), s, px)
     return fn
 
 
