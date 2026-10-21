@@ -942,12 +942,12 @@ def build(atlas):
           front=(1, 1, cushion, -X, Z))                                                      # seat pan cushion
     for s in (1, -1):
         m.box([s * 0.212, 2.52, 3.02], (X, Y, Z), (0.012, 0.15, 0.24), sw['frame'])          # bucket sides
-        m.box([s * 0.17, 3.0, 2.63], seat_back_ax, (0.02, 0.62, 0.025), sw['frame'])         # guide beams
+        m.box([s * 0.17, 2.93, 2.63], seat_back_ax, (0.02, 0.53, 0.025), sw['frame'])        # guide beams (their tops under the glass)
     m.box([0, 2.90, 2.80], seat_back_ax, (0.19, 0.33, 0.03), sw['cushion'],
           front=(2, 1, back, X, seat_back_ax[1]))                                           # back cushion
     m.box([0, 2.90, 2.74], seat_back_ax, (0.205, 0.36, 0.035), sw['frame'])                  # back shell
-    m.box([0, 3.37, 2.72], (X, Y, Z), (0.16, 0.16, 0.10), sw['frame'])                       # headbox (its top 13 cm over the eye, under the canopy)
-    m.box([0, 3.40, 2.835], (X, Y, Z), (0.11, 0.10, 0.015), sw['cushion'],
+    m.box([0, 3.33, 2.72], (X, Y, Z), (0.16, 0.14, 0.10), sw['frame'])                       # headbox (its top 13 cm over the eye, under the canopy)
+    m.box([0, 3.36, 2.835], (X, Y, Z), (0.11, 0.09, 0.015), sw['cushion'],
           front=(2, 1, headbox, X, Y))                                                       # seen from ahead                                                      # headrest pad
     # the K-36 ejection handle between the knees: a red double loop on the seat front (as on the reference views)
     red = atlas.swatch((178, 34, 30))

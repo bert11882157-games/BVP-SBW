@@ -56,13 +56,13 @@ FLOOR_Y = -0.97
 BACK_Z = -0.55                 # behind the seat
 CONSOLE_Y = -0.70
 CONSOLE_IN = 0.27
-PANEL_Z = 0.72                 # centre facet reference plane (the reference views: the panel 0.7-0.8 m ahead)
-LEAN = math.radians(12)
-HINGE = 0.21                   # centre facet half width
-WING = math.radians(28)
+PANEL_Z = 0.57                 # centre facet reference plane (measured off the reference model: 0.57 m ahead)
+LEAN = math.radians(8)         # the reference panel's lean (0.05 m back over its height)
+HINGE = 0.32                   # centre facet half width: the reference panel is flat across +-0.32 m
+WING = math.radians(30)
 WING_LEN = (WALL_X - HINGE) / math.cos(WING)
 TOP_C, TOP_W = -0.140, -0.410  # centre facet top, wing top at the wall (3 cm under the side glass)
-BOT_C, BOT_W = -0.720, CONSOLE_Y
+BOT_C, BOT_W = -0.640, CONSOLE_Y   # the reference panel's foot; the footwell under it
 FRONT_Z = 1.05                 # the coaming runs forward down the nose deck
 FRONT_Y_C, FRONT_Y_W = -0.320, -0.460
 
@@ -91,33 +91,34 @@ def top_of(side, a):
 
 # Instrument layout after the DCS Su-27 manual, figure 20. facet: 0 centre (a: metres to the pilot's right of the
 # centre line), +1 right wing, -1 left wing (a: metres outward from the hinge). y: from the eye.
-LAYOUT = [
-    # centre facet
-    ('caution',  0, -0.170, -0.190, ('paint_disc', 0.026), 'master caution lamp'),
-    ('adi',      0, -0.065, -0.320, ('game', 'ATTITUDE', 0.095), 'KPP attitude director'),
-    ('hsi',      0, -0.065, -0.442, ('game', 'HEADING', 0.095), 'PNP horizontal situation'),
-    ('vvi',      0,     0.060, -0.310, ('game', 'VVI', 0.064), 'VAR-300 vertical speed'),
-    ('alt',      0,     0.060, -0.405, ('game', 'ALTIMETER', 0.066), 'VM-15 altimeter'),
-    ('radalt',   0,     0.060, -0.500, ('game', 'RADAR_ALT', 0.058), 'radio altimeter'),
-    ('clock',    0,     0.150, -0.205, ('game', 'CLOCK', 0.046), 'AChS-1 clock'),
-    ('mach',     0,     0.150, -0.290, ('game', 'MACH', 0.058), 'Machmeter'),
-    ('fuel',     0,     0.150, -0.400, ('game', 'FUEL_QTY', 0.058), 'fuel quantity'),
-    ('ekran',    0,     0.000, -0.585, ('annunciator', 0.170, 0.075), 'Ekran warning panel'),
-    ('afcs',     0,     0.000, -0.668, ('paint_rect', 0.170, 0.040), 'autopilot push-lights'),
-    # left wing
-    ('aoa',     -1,     0.060, -0.272, ('game', 'AOA', 0.056), 'UAP-14 AoA'),
-    ('g',       -1,     0.060, -0.336, ('game', 'G_METER', 0.050), 'UAP-14 accelerometer'),
-    ('ias',     -1,     0.160, -0.380, ('game', 'AIRSPEED', 0.064), 'KUS-3 airspeed'),
-    ('weapons', -1,     0.124, -0.463, ('paint_rect', 0.150, 0.080), 'weapons control panel'),
-    ('gear',    -1,     0.236, -0.480, ('paint_rect', 0.050, 0.100), 'gear control panel'),
-    # right wing
-    ('hdd',      1,     0.136, -0.424, ('display', 'RADAR', 0.105), 'IPV head-down display (hooded)'),
-    ('spo15',    1,     0.034, -0.405, ('game', 'RWR', 0.046), 'SPO-15 Beryoza'),
-    ('rpm',      1,     0.237, -0.434, ('game', 'ENGINE_RPM', 0.044), 'twin tachometer'),
-    ('egt',      1,     0.080, -0.518, ('game', 'EGT', 0.036), 'exhaust gas temperature'),
-    ('hyd',      1,     0.200, -0.516, ('game', 'FILLER_HYDRAULIC', 0.032), 'hydraulic pressures'),
-    ('oxy',      1,     0.140, -0.580, ('game', 'FILLER_OXYGEN', 0.030), 'oxygen'),
+LAYOUT = [   # positions measured off the reference model's panel (a: right of the centre line on the centre facet)
+    # centre facet: the upper-left switch block, airspeed / altimeter / clock column, AoA / G, the KPP over the PNP,
+    # VVI / Mach / radio altimeter, the IPV display high on the right in its raised housing, SPO-15 and fuel under it
+    ('weapons',  0, -0.215, -0.228, ('paint_rect', 0.150, 0.060), 'weapons control panel (the raised upper-left block)'),
+    ('caution',  0, -0.100, -0.272, ('paint_disc', 0.022), 'master caution lamp'),
+    ('ias',      0, -0.245, -0.330, ('game', 'AIRSPEED', 0.064), 'KUS-3 airspeed'),
+    ('alt',      0, -0.245, -0.430, ('game', 'ALTIMETER', 0.066), 'VM-15 altimeter'),
+    ('clock',    0, -0.245, -0.530, ('game', 'CLOCK', 0.046), 'AChS-1 clock'),
+    ('aoa',      0, -0.149, -0.315, ('game', 'AOA', 0.054), 'UAP-14 AoA'),
+    ('g',        0, -0.145, -0.405, ('game', 'G_METER', 0.050), 'UAP-14 accelerometer'),
+    ('adi',      0, -0.026, -0.335, ('game', 'ATTITUDE', 0.095), 'KPP attitude director'),
+    ('hsi',      0, -0.030, -0.455, ('game', 'HEADING', 0.095), 'PNP horizontal situation'),
+    ('vvi',      0,   0.080, -0.330, ('game', 'VVI', 0.060), 'VAR-300 vertical speed'),
+    ('mach',     0,   0.080, -0.420, ('game', 'MACH', 0.056), 'Machmeter'),
+    ('radalt',   0,   0.080, -0.500, ('game', 'RADAR_ALT', 0.050), 'radio altimeter'),
+    ('hdd',      0,   0.218, -0.290, ('display', 'RADAR', 0.130), 'IPV head-down display, in its raised housing'),
+    ('spo15',    0,   0.175, -0.430, ('game', 'RWR', 0.050), 'SPO-15 Beryoza'),
+    ('fuel',     0,   0.262, -0.430, ('game', 'FUEL_QTY', 0.050), 'fuel quantity'),
+    ('ekran',    0, -0.060, -0.575, ('annunciator', 0.150, 0.055), 'Ekran warning panel'),
+    ('afcs',     0,   0.200, -0.540, ('paint_rect', 0.140, 0.040), 'autopilot push-lights'),
+    # the short wings
+    ('gear',    -1,   0.070, -0.450, ('paint_rect', 0.050, 0.100), 'gear control panel'),
+    ('rpm',      1,   0.065, -0.380, ('game', 'ENGINE_RPM', 0.044), 'twin tachometer'),
+    ('egt',      1,   0.065, -0.470, ('game', 'EGT', 0.036), 'exhaust gas temperature'),
+    ('hyd',      1,   0.065, -0.550, ('game', 'FILLER_HYDRAULIC', 0.032), 'hydraulic pressures'),
+    ('oxy',      1,   0.065, -0.315, ('game', 'FILLER_OXYGEN', 0.030), 'oxygen'),
 ]
+HDD_PROUD = 0.058              # the IPV's face stands this far proud of the panel, on its housing (the reference)
 
 
 # ---------------------------------------------------------------- painted faces
@@ -314,6 +315,8 @@ def build(atlas, E):
             m.frame_rect(c, f.N, f.U, w, h, 0.005, 0.008, sw['bezel'])
         elif kind == 'display':
             w = spec[2]
+            if name == 'hdd':
+                c = c + f.N * HDD_PROUD                                # on the face of its raised housing
             displays.append({'Seat': 0, 'Center': H.r5(c + f.N * H.DISPLAY_LIFT), 'Normal': H.r5(f.N), 'Up': H.r5(f.U),
                              'Width': w, 'Depth': 0.035, 'Kind': spec[1], 'Style': 'CRT'})
             m.frame_rect(c, f.N, f.U, w, w, 0.014, 0.008, sw['black'])
@@ -407,7 +410,7 @@ def build(atlas, E):
     # the reference views: the HUD's control unit standing on the centre facet's top under the HUD, black, its knobs
     # toward the pilot; the IPV display on the right wing under a hood
     H.facet_box(m, centre, 0.0, E[1] - 0.188, 0.235, 0.09, 0.045, sw['black'], front=ctrl)
-    H.hood(m, right, 0.136, E[1] - 0.424, 0.105, 0.079, 0.045, sw['black'])
+    H.facet_box(m, centre, 0.218, E[1] - 0.290, 0.130 + 0.036, 0.130 + 0.036, HDD_PROUD - 0.003, sw['black'])   # the IPV's raised housing
 
     # -- side walls, consoles, the closing faces under the panel
     for side in (1, -1):                                            # +1 = left (x > 0)
