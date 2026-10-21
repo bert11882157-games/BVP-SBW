@@ -281,8 +281,8 @@ WING_LEN = (0.44 - HINGE) / math.cos(WING)  # wings reach the cockpit walls
 TOP_C = 3.235                               # centre facet top (under the coaming lip)
 TOP_W = 3.13                                # wing top at the wall (canopy sill)
 BOT_C = 2.70
-BOT_W = 2.80                                # wings end on the side consoles
-CONSOLE_Y = 2.80
+BOT_W = 2.72                                # wings end on the side consoles
+CONSOLE_Y = 2.72                            # the reference's deeper tub: consoles 0.68 m under the eye
 FLOOR_Y = 2.30
 WALL_X = 0.44
 
@@ -910,13 +910,26 @@ def build(atlas):
         m.box([s * 0.12, 2.42, 3.76], (X, unit([0, 1, -0.35]), unit([0, 0.35, 1])), (0.045, 0.07, 0.01), sw['mgrey'])
         m.box([s * 0.12, 2.36, 3.82], (X, Y, Z), (0.012, 0.03, 0.06), sw['dgrey'])
 
-    # -- throttle (RUD) on the left console
-    m.box([0.345, CONSOLE_Y + 0.055, 3.27], (X, unit([0, 1, 0.25]), unit([0, -0.25, 1])), (0.009, 0.06, 0.009),
-          sw['metal'])
+    # -- throttle (RUD) on the left console, after the reference views: the twin levers in their quadrant and the
+    # big black grip across both, its thumb buttons toward the pilot
+    lev_ax = (X, unit([0, 1, 0.25]), unit([0, -0.25, 1]))
+    m.box([0.362, CONSOLE_Y + 0.012, 3.24], (X, Y, Z), (0.05, 0.012, 0.13), sw['dgrey'])                 # quadrant
+    for xl in (0.335, 0.39):
+        m.box([xl, CONSOLE_Y + 0.07, 3.27], lev_ax, (0.008, 0.06, 0.009), sw['metal'])
     grip_ax = (X, unit([0, 1, 0.3]), unit([0, -0.3, 1]))
-    m.box([0.345, CONSOLE_Y + 0.135, 3.29], grip_ax, (0.03, 0.045, 0.04), sw['black'])
-    m.box([0.345, CONSOLE_Y + 0.185, 3.30], grip_ax, (0.026, 0.01, 0.032), sw['dgrey'])
-    m.box([0.322, CONSOLE_Y + 0.15, 3.315], grip_ax, (0.004, 0.008, 0.008), sw['red'])
+    m.box([0.362, CONSOLE_Y + 0.155, 3.295], grip_ax, (0.062, 0.042, 0.045), sw['black'])
+    m.box([0.362, CONSOLE_Y + 0.203, 3.305], grip_ax, (0.056, 0.008, 0.038), sw['dgrey'])
+    for k, xl in enumerate((0.325, 0.348, 0.375)):
+        m.box([xl, CONSOLE_Y + 0.17, 3.252], grip_ax, (0.006, 0.006, 0.004), sw['red'] if k == 0 else sw['metal'])
+    # switch rows on both console tops (the reference consoles are dense with toggles and knobs)
+    for s in (1, -1):
+        for zr in (2.86, 2.96, 3.06, 3.14, 3.40, 3.48):                                       # beside and ahead of the pilot
+            if s > 0 and 3.08 < zr < 3.40:
+                continue                                                                          # the throttle
+            for xc in (0.285, 0.315, 0.345, 0.375, 0.405):
+                m.box([s * xc, CONSOLE_Y + 0.005, zr], (X, Y, Z), (0.011, 0.005, 0.011), sw['metal'])
+                m.box([s * xc, CONSOLE_Y + 0.022, zr - 0.004], (X, unit([0, 1, -0.3]), unit([0, 0.3, 1])),
+                      (0.003, 0.014, 0.003), sw['black'])
 
     # -- K-36DM ejection seat
     cushion = atlas.paint(64, 64, p_cushion(CUSHION))
@@ -952,7 +965,7 @@ def build(atlas):
     stick.box([0, 2.69, 3.468], col_ax, (0.011, 0.215, 0.011), sw['metal'])
     grip_ax = (X, unit([0, 1, 0.21]), unit([0, -0.21, 1]))
     gc = np.array([0, 2.955, 3.462])
-    stick.box(gc, grip_ax, (0.021, 0.062, 0.027), sw['black'])
+    stick.box(gc, grip_ax, (0.026, 0.07, 0.032), sw['black'])                    # the RUS grip, as thick as the reference's
     stick.box(gc + grip_ax[1] * 0.066, grip_ax, (0.017, 0.006, 0.022), sw['dgrey'])                 # top cap
     stick.box(gc + grip_ax[1] * 0.07 + grip_ax[2] * 0.010, grip_ax, (0.006, 0.004, 0.006), sw['red'])
     stick.box(gc + grip_ax[2] * 0.031 + grip_ax[1] * 0.015, grip_ax, (0.008, 0.012, 0.005), sw['metal'])  # trigger
