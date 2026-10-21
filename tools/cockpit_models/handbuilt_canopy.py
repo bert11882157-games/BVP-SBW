@@ -386,6 +386,21 @@ def clear_skin(ac, shape, E, z0, z1, depth=0.07, above=0.03, outside=0.0):
     return n
 
 
+def mirrors(m, shape, E, z, depth, rect_back, rect_glass, at=(1.0, 0.62), size=(0.11, 0.035)):
+    """rear-view mirrors on the inside of a bow at station z: one at the top (s = 1) and a pair at s = at[1] on the
+    sides, standing a little inside the bow, their glass toward the pilot"""
+    X, Y, Z = np.array([1.0, 0, 0]), np.array([0, 1.0, 0]), np.array([0, 0, 1.0])
+    spots = [(at[0], 1)] + [(at[1], s) for s in (1, -1)]
+    for s_, side in spots:
+        p = shape.point(z, s_, side); n = shape.normal(z, s_, side)
+        c = p - n * (depth + 0.016) + E
+        t = shape.point(z, min(1, s_ + 0.02), side) - shape.point(z, max(0, s_ - 0.02), side)
+        t = t / (np.linalg.norm(t) or 1)
+        w = np.cross(n, Z); w = w / (np.linalg.norm(w) or 1)
+        m.box(c, (w, np.cross(Z, w), Z), (size[0] / 2, size[1] / 2, 0.006), rect_back)
+        m.box(c - Z * 0.0065, (w, np.cross(Z, w), Z), (size[0] / 2 - 0.006, size[1] / 2 - 0.005, 0.0008), rect_glass)
+
+
 def run(vid, source, build, argv, colour=None, clear=None, boxes=()):
     """the aircraft file's canopy put in: build(atlas, E, skin) -> (mesh, glass points); the frames in [colour], or
     the spine's own paint; [clear] = (shape, z0, z1[, outside]) also clears the model's leftover faces against that canopy"""

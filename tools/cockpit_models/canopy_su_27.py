@@ -2,10 +2,11 @@
 """Su-27 canopy, made by hand: the shape from the model's old glass (glass_sections.py), cleaned up into smooth
 sections, and the real frame layout.
 
-The Su-27 canopy (side views and photos of the type): a fixed windscreen of a flat armoured front pane between two
-curved side panes, its two posts running down to the base frame on the nose, its arch at the rear over the HUD; the
-canopy one large blown transparency with no bow across it, hinged at the back and lifting up and aft, held by the
-frame round its edge (the front bow against the windscreen arch, the sill rails, the frame at its tail on the spine).
+The Su-27 canopy (side views and photos of the type): a fixed one-piece windscreen, no posts (reference views of the
+type, work/reference/su_27), held by its base frame on the nose and its arch at the rear over the HUD; the
+canopy one large blown transparency hinged at the back, with one hoop across it just behind the headrest (the glass
+running on behind it to the spine), held by the frame round its edge (the thick front bow against the windscreen arch,
+carrying three mirrors, the sill rails, the frame at its tail on the spine).
 
 Run after the cockpit (su_27.py), on its output. Usage: python3 tools/cockpit_models/canopy_su_27.py
 """
@@ -34,21 +35,23 @@ SECTIONS = [
     (1.50, [(0.288, -0.48), (0.27, -0.43), (0.199, -0.379), (0.121, -0.352), (0.069, -0.342), (0.0, -0.342)]),
 ]
 SPLIT = 0.60                     # the canopy's front edge, against the windscreen arch over the HUD
-FRONT_PANE_S = 0.80              # the flat front pane's edges across the windscreen's sections
+HOOP_Z = -0.62                  # the canopy's hoop just behind the headrest (the glass runs on behind it)
 
 
 def build(atlas, E, skin):
     m = H.Mesh(atlas)
     out, inner = atlas.swatch(skin), atlas.swatch((40, 42, 44))
+    mback, mglass = atlas.swatch((34, 36, 38)), atlas.swatch((150, 170, 180))
     sh = C.Shape(SECTIONS)
     glass = C.glass_triangles(sh, E, -1.20, SPLIT, nz=20) + C.glass_triangles(sh, E, SPLIT + 0.05, 1.50, nz=10)
-    # the canopy: its tail frame, its front bow, the sill rails
+    # the canopy: its tail frame, the hoop behind the headrest, the thick front bow with its three mirrors, the sill rails
     C.bow(m, sh, E, -1.18, 0.04, 0.03, out, inner)
-    C.bow(m, sh, E, SPLIT - 0.005, 0.03, 0.018, out, inner)
+    C.bow(m, sh, E, HOOP_Z, 0.05, 0.035, out, inner)
+    C.bow(m, sh, E, SPLIT - 0.01, 0.055, 0.04, out, inner)
+    C.mirrors(m, sh, E, SPLIT - 0.01, 0.04, mback, mglass)
     C.member(m, sh, E, 0.0, -1.20, SPLIT, 0.05, 0.035, out, inner, steps=20)
-    # the windscreen: the arch, the front pane's two posts, the base frame on the nose, the side rails
+    # the windscreen, one piece (no posts): the arch, the base frame on the nose, the side rails
     C.bow(m, sh, E, SPLIT + 0.03, 0.04, 0.02, out, inner)
-    C.member(m, sh, E, FRONT_PANE_S, 0.95, 1.50, 0.03, 0.022, out, inner)
     C.bow(m, sh, E, 1.48, 0.04, 0.025, out, inner)
     C.member(m, sh, E, 0.0, SPLIT + 0.05, 1.50, 0.05, 0.035, out, inner)
     return m, glass
