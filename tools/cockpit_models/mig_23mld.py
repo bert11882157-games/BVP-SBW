@@ -90,30 +90,30 @@ def top_of(side, a):
 # line), +1 right wing, -1 left wing (a: metres outward from the hinge). y: from the eye.
 LAYOUT = [
     # centre facet
-    ('ipv',      0,  0.000, -0.258, ('display', 'RADAR', 0.125), 'IPV radar repeater'),
+    ('ipv',      0,   0.000, -0.258, ('display', 'RADAR', 0.144), 'IPV radar repeater'),
     ('caution',  0, -0.175, -0.205, ('paint_disc', 0.026), 'master caution lamp'),
     ('adi',      0, -0.100, -0.410, ('game', 'ATTITUDE', 0.090), 'KPP attitude director'),
     ('hsi',      0, -0.100, -0.520, ('game', 'HEADING', 0.088), 'NPP horizontal situation'),
-    ('aoa',      0,  0.005, -0.405, ('game', 'AOA', 0.054), 'UUA AoA'),
-    ('vvi',      0,  0.005, -0.482, ('game', 'VVI', 0.058), 'VAR-300 vertical speed'),
-    ('clock',    0,  0.005, -0.560, ('game', 'CLOCK', 0.050), 'AChS-1 clock'),
-    ('sweep',    0,  0.112, -0.410, ('paint_rect', 0.075, 0.075), 'UKV wing sweep indicator'),
-    ('mach',     0,  0.112, -0.500, ('game', 'MACH', 0.058), 'KSI Machmeter'),
+    ('aoa',      0,   0.005, -0.405, ('game', 'AOA', 0.054), 'UUA AoA'),
+    ('vvi',      0,   0.005, -0.482, ('game', 'VVI', 0.058), 'VAR-300 vertical speed'),
+    ('clock',    0,   0.005, -0.560, ('game', 'CLOCK', 0.050), 'AChS-1 clock'),
+    ('sweep',    0,   0.112, -0.410, ('paint_rect', 0.075, 0.075), 'UKV wing sweep indicator'),
+    ('mach',     0,   0.112, -0.500, ('game', 'MACH', 0.058), 'KSI Machmeter'),
     ('radalt',   0, -0.100, -0.625, ('game', 'RADAR_ALT', 0.056), 'RV-5 radio altimeter'),
-    ('fuel',     0,  0.112, -0.600, ('game', 'FUEL_QTY', 0.058), 'fuel quantity'),
+    ('fuel',     0,   0.112, -0.600, ('game', 'FUEL_QTY', 0.058), 'fuel quantity'),
     # left wing
-    ('ias',     -1,  0.075, -0.275, ('game', 'AIRSPEED', 0.066), 'KUS airspeed'),
-    ('alt',     -1,  0.075, -0.372, ('game', 'ALTIMETER', 0.064), 'VD-20 altimeter'),
-    ('g',       -1,  0.175, -0.320, ('game', 'G_METER', 0.050), 'accelerometer'),
-    ('weapons', -1,  0.150, -0.470, ('paint_rect', 0.150, 0.080), 'weapons panel'),
-    ('gear',    -1,  0.250, -0.400, ('paint_rect', 0.050, 0.100), 'gear control panel'),
+    ('ias',     -1,   0.075, -0.275, ('game', 'AIRSPEED', 0.066), 'KUS airspeed'),
+    ('alt',     -1,   0.075, -0.372, ('game', 'ALTIMETER', 0.064), 'VD-20 altimeter'),
+    ('g',       -1,   0.175, -0.320, ('game', 'G_METER', 0.050), 'accelerometer'),
+    ('weapons', -1,   0.139, -0.470, ('paint_rect', 0.150, 0.080), 'weapons panel'),
+    ('gear',    -1,   0.251, -0.400, ('paint_rect', 0.050, 0.100), 'gear control panel'),
     # right wing
-    ('spo15',    1,  0.075, -0.270, ('game', 'RWR', 0.060), 'SPO-15 Beryoza'),
-    ('rpm',      1,  0.075, -0.365, ('game', 'ENGINE_RPM', 0.066), 'ITE-2 tachometer'),
-    ('egt',      1,  0.180, -0.380, ('game', 'EGT', 0.058), 'exhaust gas temperature'),
-    ('hyd',      1,  0.075, -0.475, ('game', 'FILLER_HYDRAULIC', 0.046), 'hydraulic pressures'),
-    ('warning',  1,  0.180, -0.505, ('annunciator', 0.100, 0.090), 'warning lights'),
-    ('oxy',      1,  0.075, -0.560, ('game', 'FILLER_OXYGEN', 0.044), 'oxygen'),
+    ('spo15',    1,   0.075, -0.270, ('game', 'RWR', 0.060), 'SPO-15 Beryoza'),
+    ('rpm',      1,   0.075, -0.365, ('game', 'ENGINE_RPM', 0.066), 'ITE-2 tachometer'),
+    ('egt',      1,   0.180, -0.380, ('game', 'EGT', 0.058), 'exhaust gas temperature'),
+    ('hyd',      1,   0.075, -0.475, ('game', 'FILLER_HYDRAULIC', 0.046), 'hydraulic pressures'),
+    ('warning',  1,   0.180, -0.505, ('annunciator', 0.100, 0.090), 'warning lights'),
+    ('oxy',      1,   0.075, -0.560, ('game', 'FILLER_OXYGEN', 0.044), 'oxygen'),
 ]
 
 

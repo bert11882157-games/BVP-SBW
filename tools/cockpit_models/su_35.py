@@ -54,7 +54,7 @@ CONSOLE_Y = -0.62
 CONSOLE_IN = 0.27
 PANEL_Z = 0.66                 # centre facet reference plane
 LEAN = math.radians(12)
-HINGE = 0.25                   # centre facet half width: the two displays side by side
+HINGE = 0.275                  # centre facet half width: the two displays side by side
 WING = math.radians(25)
 WING_LEN = (WALL_X - HINGE) / math.cos(WING)
 TOP_C, TOP_W = -0.120, -0.320  # centre facet top, wing top at the wall (3 cm under the side glass)
@@ -89,23 +89,23 @@ def top_of(side, a):
 # +1 right wing, -1 left wing (a: metres outward from the hinge). y: from the eye.
 LAYOUT = [
     # centre facet: the two MFI-35s, the PUI under them, the standby row, the Ekran
-    ('mfi_l',    0, -0.122, -0.300, ('display', 'RADAR', 0.200), 'MFI-35 left (tactical)'),
-    ('mfi_r',    0,  0.122, -0.300, ('display', 'STORES', 0.200), 'MFI-35 right (systems / stores)'),
-    ('pui',      0,  0.000, -0.468, ('paint_rect', 0.240, 0.060), 'PUI control panel'),
-    ('sb_adi',   0, -0.160, -0.565, ('game', 'ATTITUDE', 0.060), 'standby attitude'),
-    ('sb_ias',   0, -0.080, -0.565, ('game', 'AIRSPEED', 0.050), 'standby airspeed'),
-    ('sb_alt',   0,  0.000, -0.565, ('game', 'ALTIMETER', 0.050), 'standby altimeter'),
-    ('sb_vvi',   0,  0.080, -0.565, ('game', 'VVI', 0.050), 'standby VVI'),
-    ('clock',    0,  0.160, -0.565, ('game', 'CLOCK', 0.046), 'clock'),
-    ('ekran',    0,  0.000, -0.645, ('annunciator', 0.220, 0.050), 'Ekran warning panel'),
-    ('caution',  0, -0.225, -0.165, ('paint_disc', 0.026), 'master caution lamp'),
+    ('mfi_l',    0, -0.127, -0.306, ('display', 'RADAR', 0.212), 'MFI-35 left (tactical)'),
+    ('mfi_r',    0,     0.127, -0.300, ('display', 'STORES', 0.212), 'MFI-35 right (systems / stores)'),
+    ('pui',      0,     0.000, -0.468, ('paint_rect', 0.135, 0.034), 'PUI control panel'),
+    ('sb_adi',   0, -0.160, -0.565, ('game', 'ATTITUDE', 0.034), 'standby attitude'),
+    ('sb_ias',   0, -0.080, -0.565, ('game', 'AIRSPEED', 0.029), 'standby airspeed'),
+    ('sb_alt',   0,     0.000, -0.565, ('game', 'ALTIMETER', 0.029), 'standby altimeter'),
+    ('sb_vvi',   0,     0.080, -0.565, ('game', 'VVI', 0.029), 'standby VVI'),
+    ('clock',    0,     0.160, -0.565, ('game', 'CLOCK', 0.026), 'clock'),
+    ('ekran',    0,     0.000, -0.645, ('annunciator', 0.124, 0.029), 'Ekran warning panel'),
+    ('caution',  0, -0.225, -0.158, ('paint_disc', 0.015), 'master caution lamp'),
     # left wing
-    ('weapons', -1,  0.110, -0.395, ('paint_rect', 0.130, 0.080), 'weapons control panel'),
-    ('gear',    -1,  0.110, -0.525, ('paint_rect', 0.050, 0.100), 'gear control panel'),
+    ('weapons', -1,     0.106, -0.395, ('paint_rect', 0.130, 0.080), 'weapons control panel'),
+    ('gear',    -1,     0.110, -0.525, ('paint_rect', 0.050, 0.100), 'gear control panel'),
     # right wing
-    ('fuel',     1,  0.105, -0.330, ('game', 'FUEL_QTY', 0.052), 'fuel quantity'),
-    ('rpm',      1,  0.105, -0.425, ('game', 'ENGINE_RPM', 0.052), 'engine tachometer'),
-    ('hyd',      1,  0.105, -0.515, ('game', 'FILLER_HYDRAULIC', 0.044), 'hydraulic pressures'),
+    ('fuel',     1,     0.105, -0.330, ('game', 'FUEL_QTY', 0.052), 'fuel quantity'),
+    ('rpm',      1,     0.105, -0.425, ('game', 'ENGINE_RPM', 0.052), 'engine tachometer'),
+    ('hyd',      1,     0.105, -0.515, ('game', 'FILLER_HYDRAULIC', 0.044), 'hydraulic pressures'),
 ]
 
 

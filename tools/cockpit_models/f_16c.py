@@ -90,22 +90,22 @@ def top_of(side, a):
 # Instrument layout of the F-16C Block 50 front panel. facet: 0 centre (a: metres to the pilot's right of the centre
 # line), +1 right wing, -1 left wing (a: metres outward from the hinge). y: from the eye.
 LAYOUT = [
-    ('icp',      0,  0.000, -0.335, ('paint_rect', 0.150, 0.090), 'integrated control panel (ICP) and DED'),
-    ('mfd_l',    0, -0.152, -0.470, ('display', 'RADAR', 0.140), 'left MFD (radar)'),
-    ('mfd_r',    0,  0.152, -0.470, ('display', 'STORES', 0.140), 'right MFD (stores)'),
-    ('adi',      0,  0.000, -0.445, ('game', 'ATTITUDE', 0.062), 'standby attitude'),
-    ('hsi',      0,  0.000, -0.530, ('game', 'HEADING', 0.064), 'HSI'),
-    ('vvi',      0,  0.000, -0.610, ('game', 'VVI', 0.050), 'vertical velocity'),
+    ('icp',      0,    0.000, -0.325, ('paint_rect', 0.150, 0.090), 'integrated control panel (ICP) and DED'),
+    ('mfd_l',    0, -0.143, -0.477, ('display', 'RADAR', 0.161), 'left MFD (radar)'),
+    ('mfd_r',    0,    0.143, -0.474, ('display', 'STORES', 0.161), 'right MFD (stores)'),
+    ('adi',      0,    0.000, -0.445, ('game', 'ATTITUDE', 0.062), 'standby attitude'),
+    ('hsi',      0,    0.000, -0.530, ('game', 'HEADING', 0.064), 'HSI'),
+    ('vvi',      0,    0.000, -0.610, ('game', 'VVI', 0.050), 'vertical velocity'),
     ('caution',  0, -0.205, -0.305, ('paint_disc', 0.024), 'master caution'),
-    ('ias',     -1,  0.045, -0.445, ('game', 'AIRSPEED', 0.054), 'airspeed / Mach'),
-    ('alt',     -1,  0.045, -0.515, ('game', 'ALTIMETER', 0.054), 'altimeter'),
-    ('aoa',     -1,  0.045, -0.580, ('game', 'AOA', 0.040), 'AoA indexer'),
-    ('gear',    -1,  0.045, -0.675, ('paint_rect', 0.050, 0.080), 'landing gear panel'),
-    ('rwr',      1,  0.045, -0.445, ('game', 'RWR', 0.052), 'RWR azimuth indicator'),
-    ('fuel',     1,  0.045, -0.515, ('game', 'FUEL_QTY', 0.048), 'fuel quantity'),
-    ('rpm',      1,  0.045, -0.575, ('game', 'ENGINE_RPM', 0.044), 'engine rpm'),
-    ('ftit',     1,  0.045, -0.630, ('game', 'EGT', 0.044), 'FTIT'),
-    ('warning',  1,  0.045, -0.690, ('annunciator', 0.060, 0.050), 'caution light panel'),
+    ('ias',     -1,    0.045, -0.473, ('game', 'AIRSPEED', 0.036), 'airspeed / Mach'),
+    ('alt',     -1,    0.045, -0.519, ('game', 'ALTIMETER', 0.036), 'altimeter'),
+    ('aoa',     -1,    0.045, -0.580, ('game', 'AOA', 0.030), 'AoA indexer'),
+    ('gear',    -1,    0.045, -0.675, ('paint_rect', 0.038, 0.060), 'landing gear panel'),
+    ('rwr',      1,    0.045, -0.473, ('game', 'RWR', 0.036), 'RWR azimuth indicator'),
+    ('fuel',     1,    0.045, -0.516, ('game', 'FUEL_QTY', 0.034), 'fuel quantity'),
+    ('rpm',      1,    0.045, -0.575, ('game', 'ENGINE_RPM', 0.033), 'engine rpm'),
+    ('ftit',     1,    0.045, -0.630, ('game', 'EGT', 0.033), 'FTIT'),
+    ('warning',  1,    0.045, -0.690, ('annunciator', 0.045, 0.038), 'caution light panel'),
 ]
 
 

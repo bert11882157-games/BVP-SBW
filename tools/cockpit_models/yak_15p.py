@@ -90,20 +90,20 @@ def top_of(side, a):
 # right wing, -1 left wing (a: metres outward from the hinge). y: from the eye.
 LAYOUT = [
     ('ias',      0, -0.100, -0.310, ('game', 'AIRSPEED', 0.066), 'KUS-1200 airspeed'),
-    ('agk',      0,  0.000, -0.310, ('game', 'ATTITUDE', 0.074), 'AGK-47 horizon'),
-    ('alt',      0,  0.100, -0.310, ('game', 'ALTIMETER', 0.066), 'VD-12 altimeter'),
+    ('agk',      0,   0.000, -0.310, ('game', 'ATTITUDE', 0.074), 'AGK-47 horizon'),
+    ('alt',      0,   0.100, -0.310, ('game', 'ALTIMETER', 0.066), 'VD-12 altimeter'),
     ('turn',     0, -0.100, -0.405, ('game', 'TURN_SLIP', 0.060), 'turn and slip'),
-    ('dg',       0,  0.000, -0.410, ('game', 'HEADING', 0.064), 'GPK-48 gyro compass'),
-    ('vvi',      0,  0.100, -0.405, ('game', 'VVI', 0.060), 'VAR-75 climb'),
+    ('dg',       0,   0.000, -0.410, ('game', 'HEADING', 0.064), 'GPK-48 gyro compass'),
+    ('vvi',      0,   0.100, -0.405, ('game', 'VVI', 0.060), 'VAR-75 climb'),
     ('clock',    0, -0.100, -0.500, ('game', 'CLOCK', 0.050), 'clock'),
-    ('mach',     0,  0.000, -0.505, ('game', 'MACH', 0.054), 'Machmeter'),
-    ('g',        0,  0.100, -0.500, ('game', 'G_METER', 0.050), 'accelerometer'),
-    ('rpm',      1,  0.065, -0.330, ('game', 'ENGINE_RPM', 0.056), 'tachometer'),
-    ('egt',      1,  0.065, -0.415, ('game', 'EGT', 0.050), 'exhaust gas temperature'),
-    ('fuel',     1,  0.065, -0.495, ('game', 'FUEL_QTY', 0.050), 'fuel quantity'),
-    ('oil',      1,  0.065, -0.570, ('game', 'FILLER_OIL', 0.040), 'oil pressure'),
-    ('oxygen',  -1,  0.065, -0.340, ('game', 'FILLER_OXYGEN', 0.046), 'oxygen'),
-    ('gear',    -1,  0.065, -0.470, ('paint_rect', 0.050, 0.090), 'gear indicator'),
+    ('mach',     0,   0.000, -0.505, ('game', 'MACH', 0.054), 'Machmeter'),
+    ('g',        0,   0.100, -0.500, ('game', 'G_METER', 0.050), 'accelerometer'),
+    ('rpm',      1,   0.065, -0.330, ('game', 'ENGINE_RPM', 0.056), 'tachometer'),
+    ('egt',      1,   0.065, -0.415, ('game', 'EGT', 0.050), 'exhaust gas temperature'),
+    ('fuel',     1,   0.065, -0.495, ('game', 'FUEL_QTY', 0.050), 'fuel quantity'),
+    ('oil',      1,   0.065, -0.570, ('game', 'FILLER_OIL', 0.040), 'oil pressure'),
+    ('oxygen',  -1,   0.065, -0.340, ('game', 'FILLER_OXYGEN', 0.046), 'oxygen'),
+    ('gear',    -1,   0.065, -0.470, ('paint_rect', 0.050, 0.090), 'gear indicator'),
 ]
 
 

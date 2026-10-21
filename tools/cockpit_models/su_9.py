@@ -89,22 +89,22 @@ def top_of(side, a):
 # Instrument layout of the Su-9 panel. facet: 0 centre (a: metres to the pilot's right of the centre line), +1 right
 # wing, -1 left wing (a: metres outward from the hinge). y: from the eye.
 LAYOUT = [
-    ('radar',    0,  0.000, -0.330, ('display', 'RADAR', 0.110), 'TsD-30 radar scope'),
+    ('radar',    0,   0.000, -0.330, ('display', 'RADAR', 0.127), 'TsD-30 radar scope'),
     ('agd',      0, -0.130, -0.340, ('game', 'ATTITUDE', 0.070), 'AGD horizon'),
     ('kus',      0, -0.130, -0.440, ('game', 'AIRSPEED', 0.066), 'KUS-2000 airspeed'),
     ('alt',      0, -0.130, -0.535, ('game', 'ALTIMETER', 0.066), 'VD-20 altimeter'),
     ('vvi',      0, -0.040, -0.450, ('game', 'VVI', 0.056), 'VAR-150 climb'),
     ('mach',     0, -0.040, -0.540, ('game', 'MACH', 0.056), 'M-2.5 Machmeter'),
-    ('ksi',      0,  0.060, -0.470, ('game', 'HEADING', 0.070), 'KSI compass'),
-    ('clock',    0,  0.060, -0.570, ('game', 'CLOCK', 0.050), 'clock'),
-    ('rpm',      0,  0.150, -0.330, ('game', 'ENGINE_RPM', 0.060), 'tachometer'),
-    ('egt',      0,  0.150, -0.425, ('game', 'EGT', 0.058), 'exhaust gas temperature'),
-    ('fuel',     0,  0.150, -0.515, ('game', 'FUEL_QTY', 0.058), 'fuel quantity'),
-    ('oxygen',  -1,  0.070, -0.370, ('game', 'FILLER_OXYGEN', 0.050), 'oxygen'),
-    ('gear',    -1,  0.070, -0.490, ('paint_rect', 0.050, 0.090), 'gear control panel'),
-    ('hyd',      1,  0.070, -0.370, ('game', 'FILLER_HYDRAULIC', 0.044), 'hydraulic pressure'),
-    ('volts',    1,  0.070, -0.455, ('game', 'FILLER_VOLTS', 0.044), 'voltmeter'),
-    ('warning',  1,  0.070, -0.555, ('annunciator', 0.070, 0.080), 'warning lights'),
+    ('ksi',      0,   0.060, -0.470, ('game', 'HEADING', 0.070), 'KSI compass'),
+    ('clock',    0,   0.060, -0.570, ('game', 'CLOCK', 0.050), 'clock'),
+    ('rpm',      0,   0.148, -0.330, ('game', 'ENGINE_RPM', 0.060), 'tachometer'),
+    ('egt',      0,   0.149, -0.425, ('game', 'EGT', 0.058), 'exhaust gas temperature'),
+    ('fuel',     0,   0.149, -0.515, ('game', 'FUEL_QTY', 0.058), 'fuel quantity'),
+    ('oxygen',  -1,   0.070, -0.370, ('game', 'FILLER_OXYGEN', 0.050), 'oxygen'),
+    ('gear',    -1,   0.070, -0.490, ('paint_rect', 0.050, 0.090), 'gear control panel'),
+    ('hyd',      1,   0.070, -0.370, ('game', 'FILLER_HYDRAULIC', 0.044), 'hydraulic pressure'),
+    ('volts',    1,   0.070, -0.455, ('game', 'FILLER_VOLTS', 0.044), 'voltmeter'),
+    ('warning',  1,   0.070, -0.555, ('annunciator', 0.070, 0.080), 'warning lights'),
 ]
 
 
