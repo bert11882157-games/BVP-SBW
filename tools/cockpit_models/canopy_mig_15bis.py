@@ -32,8 +32,8 @@ SECTIONS = [
     (0.60, [(0.265, -0.247), (0.262, -0.158), (0.228, -0.079), (0.154, -0.038), (0.094, -0.018), (0.043, -0.013), (0.0, -0.009)]),
     (0.74, [(0.20, -0.245), (0.19, -0.19), (0.15, -0.15), (0.09, -0.13), (0.0, -0.12)]),
 ]
-SPLIT = 0.30                     # the canopy's front edge, against the windscreen arch
-FRONT_PANE_X = 0.09              # the flat front pane's edges, out from the centre line
+SPLIT = 0.40                     # the canopy's front edge, against the windscreen arch (the DCS reference's joint, 0.42 m ahead of the eye)
+FRONT_PANE_X = 0.10              # the flat front pane's edges, out from the centre line (the reference's)
 
 
 def build(atlas, E, skin):
