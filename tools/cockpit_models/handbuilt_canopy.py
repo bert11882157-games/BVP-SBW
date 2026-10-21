@@ -266,17 +266,23 @@ def atlas_for(vid):
     return at
 
 
-def at_canopy(ac, glass_pts, E, near=0.07, below=0.05):
+def at_canopy(ac, glass_pts, E, near=0.07, below=0.05, old_glass=None):
     """keep(bone, poly) -> True for a face the canopy step may take: within [near] of the new glass, or inside the
-    new canopy's volume (under its surface, no more than [below] under the sill). Anything else is the model's
-    exterior skin (the nose deck ahead of the windscreen, the spine behind the canopy, the fuselage sides) and stays."""
+    new canopy's volume (under its surface, no more than [below] under the sill), or a piece of the old canopy: near
+    the old glass, standing over the new canopy's sill line within its length. Anything else is the model's exterior
+    skin (the nose deck ahead of the windscreen, the spine behind the canopy, the fuselage sides) and stays."""
     from matplotlib.path import Path
     G = np.array(glass_pts, float).reshape(-1, 3, 3) - E if len(glass_pts) else np.zeros((0, 3, 3))
     pts = np.concatenate([G.reshape(-1, 3), G.mean(1)]) if len(G) else np.zeros((0, 3))
     shapes = [(sh, z0, z1) for sh, z0, z1, *_ in _GLASS]
+    O = (np.asarray(old_glass, float).reshape(-1, 3) - E) if old_glass is not None and len(old_glass) else np.zeros((0, 3))
     def ok(c):
         if len(pts) and np.min(np.linalg.norm(pts - c, axis=1)) < near:
             return True
+        if len(O) and np.min(np.linalg.norm(O - c, axis=1)) < 0.10:
+            for sh, z0, z1 in shapes:
+                if z0 - 0.05 <= c[2] <= z1 + 0.05 and c[1] > sh.section(c[2])[0][1] + 0.03:
+                    return True
         for sh, z0, z1 in shapes:
             if z0 <= c[2] <= z1:
                 sec = sh.section(c[2])
@@ -296,7 +302,7 @@ def install(ac, mesh, source, glass_pts, old_glass):
     tex = np.array(Image.open(L.texture_path(ac.vid)).convert('RGBA'))
     rm = S.find(ac, tub, canopy=old_glass, tex=tex)[0] if len(old_glass) else {}   # no old glass: clear_skin does it
     E = ac.eye(0)
-    ok = at_canopy(ac, glass_pts, E)
+    ok = at_canopy(ac, glass_pts, E, old_glass=old_glass)
     for b in ac.bones:                                  # only what lies at the new canopy goes; the skin stays
         if b['name'] in rm:
             P = np.array(b['poly_mesh']['positions'], float) * np.array([1, 1, -1]) / 16.0 - E

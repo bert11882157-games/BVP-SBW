@@ -3,8 +3,9 @@
 sections, and the real frame layout.
 
 The F-15C canopy (side views and photos of the type): a fixed one-piece windscreen, no centre post, held by its base
-frame on the nose and the heavy arch at its rear just behind the HUD; the canopy one long blown transparency with no
-bow across it, hinged at the back, held by the frame round its edge (the front bow against the windscreen arch, the
+frame on the nose and the heavy arch at its rear just behind the HUD; the canopy one long blown transparency hinged at
+the back, with one bow across it just behind the headrest (reference views of the type, work/reference/f_15c), the
+glass running on behind it to the spine, held by the frame round its edge (the front bow against the windscreen arch, the
 sill rails along both sides, the frame at its tail on the spine).
 
 Run after the cockpit (f_15c.py), on its output. Usage: python3 tools/cockpit_models/canopy_f_15c.py
@@ -36,6 +37,7 @@ SECTIONS = [
     (1.20, [(0.143, -0.435), (0.145, -0.385), (0.125, -0.342), (0.103, -0.307), (0.072, -0.282), (0.035, -0.272), (0.0, -0.269)]),
     (1.26, [(0.11, -0.43), (0.105, -0.39), (0.09, -0.35), (0.06, -0.322), (0.03, -0.31), (0.0, -0.306)]),
 ]
+HOOP_Z = -0.62                   # the bow just behind the headrest
 SPLIT = 0.46                     # the canopy's front edge, against the windscreen arch behind the HUD
 
 
@@ -44,7 +46,8 @@ def build(atlas, E, skin):
     out, inner = atlas.swatch(skin), atlas.swatch((40, 42, 44))
     sh = C.Shape(SECTIONS)
     glass = C.glass_triangles(sh, E, -2.85, SPLIT, nz=26) + C.glass_triangles(sh, E, SPLIT + 0.05, 1.26, nz=10)
-    # the canopy: its tail frame, its front bow, the sill rails
+    # the canopy: its tail frame, the bow behind the headrest, its front bow, the sill rails
+    C.bow(m, sh, E, HOOP_Z, 0.045, 0.035, out, inner)
     C.bow(m, sh, E, -2.83, 0.04, 0.03, out, inner)
     C.bow(m, sh, E, SPLIT - 0.005, 0.03, 0.018, out, inner)
     C.member(m, sh, E, 0.0, -2.85, SPLIT, 0.05, 0.035, out, inner, steps=26)
@@ -56,7 +59,8 @@ def build(atlas, E, skin):
 
 
 def main(argv):
-    C.run(VID, SOURCE_BONE, build, argv)
+    C.run(VID, SOURCE_BONE, build, argv,
+          boxes=[((0.32, -0.20, -1.28), (0.50, 0.35, -1.02)), ((-0.50, -0.20, -1.28), (-0.32, 0.35, -1.02))])   # the old canopy posts
 
 
 if __name__ == '__main__':
