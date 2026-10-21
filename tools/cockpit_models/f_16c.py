@@ -413,8 +413,8 @@ def build(atlas, E):
     g_lean = math.radians(22)
     g_up = np.array([0, math.cos(g_lean), -math.sin(g_lean)])
     g_n = H.unit(np.cross(X, g_up))
-    g_h, g_hw = 0.115, 0.072                   # under the F-16's low canopy
-    g_bot = np.array([E[0], hud_y1 + 0.012, hud_z0 + 0.02])            # standing on the body
+    g_h, g_hw = 0.160, 0.085                   # a little larger than the real glass, for the game
+    g_bot = np.array([E[0], E[1] - g_up[1] * g_h / 2, hud_z0 + 0.02])
     g_top = g_bot + g_up * g_h
     stem = g_bot[1] - 0.006 - hud_y1
     if stem > 0.004:

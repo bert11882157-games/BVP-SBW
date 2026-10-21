@@ -358,16 +358,26 @@ def build(atlas, E):
 
     # -- PBP-1 reflector sight on the coaming: the body, its aft face, the reflector frame (no glass)
     sight = atlas.paint(80, 60, p_sight)
-    top_c = E[1] + TOP_C + 0.025 + 0.02
-    body_c = np.array([E[0], top_c + 0.05, E[2] + PANEL_Z + 0.11])
-    m.box(body_c, (X, Y, Z), (0.065, 0.05, 0.10), sw['dgrey'], front=(2, -1, sight, -X, Y))
-    lean = math.radians(40)
+    # the reflector glass (its frame only, no glass) is centred on the pilot's straight-ahead line, so from the seat
+    # the projected reticle sits at the boresight; the body stands under it on the coaming
+    g_h, g_hw = 0.120, 0.065
+    lean = math.radians(35)
     g_up = np.array([0, math.cos(lean), -math.sin(lean)])
     g_n = H.unit(np.cross(X, g_up))
-    g_bot = body_c + np.array([0, 0.05, 0.03])
+    base_y = E[1] + TOP_C + 0.045                                  # the coaming's top
+    g_c = np.array([E[0], E[1], E[2] + PANEL_Z + 0.14])
+    g_bot, g_top = g_c - g_up * g_h / 2, g_c + g_up * g_h / 2
+    body_top = max(base_y + 0.035, g_bot[1] - 0.008)
+    body_c = np.array([E[0], (base_y + body_top) / 2, E[2] + PANEL_Z + 0.11])
+    m.box(body_c, (X, Y, Z), (0.065, (body_top - base_y) / 2, 0.10), sw['dgrey'], front=(2, -1, sight, -X, Y))
+    if g_bot[1] - 0.006 > body_top + 0.003:                        # the stem up to the glass's lower clamp
+        m.box([E[0], (body_top + g_bot[1] - 0.006) / 2, g_bot[2]], (X, Y, Z), (0.03, (g_bot[1] - 0.006 - body_top) / 2, 0.012),
+              sw['dgrey'])
+    m.box(g_bot - g_up * 0.005, (X, g_up, g_n), (g_hw + 0.008, 0.005, 0.010), sw['dgrey'])
     for s in (-1, 1):
-        m.box(g_bot + X * s * 0.052 + g_up * 0.045, (X, g_up, g_n), (0.004, 0.045, 0.006), sw['dgrey'])
-    m.box(g_bot + g_up * 0.09, (X, g_up, g_n), (0.056, 0.004, 0.006), sw['dgrey'])
+        m.box(g_c + X * s * (g_hw + 0.004), (X, g_up, g_n), (0.004, g_h / 2, 0.005), sw['dgrey'])
+    m.box(g_top + g_up * 0.004, (X, g_up, g_n), (g_hw + 0.008, 0.004, 0.005), sw['dgrey'])
+    hud = dict(centre=g_c, normal=-g_n, up=g_up, width=2 * g_hw, height=g_h, style='REFLECTOR')
 
     sw['wall_d'] = atlas.swatch(WALLC_D)
     # -- side walls, consoles, the closing faces under the panel
@@ -460,7 +470,7 @@ def build(atlas, E):
     stick.box(gc + g_ax[2] * 0.031 + g_ax[1] * 0.015, g_ax, (0.008, 0.012, 0.005), sw['metal'])
     stick.box(gc - g_ax[2] * 0.034 + g_ax[1] * 0.01, g_ax, (0.012, 0.035, 0.004), sw['metal'])
     foot = PF(0, -0.92, sz)
-    return m, (stick, foot), gauges, displays
+    return m, (stick, foot), gauges, displays, hud
 
 
 def old_interior(E):
@@ -477,8 +487,8 @@ def main(argv):
     E = ac.eye(0)
     removed = H.remove_faces(ac, old_interior(E))
     atlas = H.A.Atlas(VID)
-    mesh, stick, gauges, displays = build(atlas, E)
-    pm = H.install(ac, mesh, stick, SOURCE_BONE, STICK_BONE, gauges, displays, None, E)
+    mesh, stick, gauges, displays, hud = build(atlas, E)
+    pm = H.install(ac, mesh, stick, SOURCE_BONE, STICK_BONE, gauges, displays, hud, E)
     print(f'{VID}: removed {removed}; new cockpit {len(pm["polys"])} faces, {len(gauges)} gauges')
     if not dry:
         H.write(ac, atlas)

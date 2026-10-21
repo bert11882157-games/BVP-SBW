@@ -396,7 +396,7 @@ def build(atlas, E):
     g_lean = math.radians(22)
     g_up = np.array([0, math.cos(g_lean), -math.sin(g_lean)])
     g_n = H.unit(np.cross(X, g_up))
-    g_h, g_hw = 0.19, 0.095                    # the IKSh-1M's wide field of view
+    g_h, g_hw = 0.220, 0.110                   # a little larger than the real glass, for the game
     g_bot = np.array([E[0], E[1] - g_up[1] * g_h / 2, hud_z0 + 0.02])
     g_top = g_bot + g_up * g_h
     stem = g_bot[1] - 0.006 - hud_y1

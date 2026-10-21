@@ -536,5 +536,33 @@
         "Depth": 0.03
       }
     ]
+  },
+  "HeadUpDisplay": {
+    "Schema": 1,
+    "Frame": "VEHICLE_LOCAL_BLOCKS",
+    "Seat": 0,
+    "Center": [
+      0.0,
+      2.01625,
+      0.93716
+    ],
+    "Normal": [
+      0.0,
+      -0.57358,
+      -0.81915
+    ],
+    "Up": [
+      0.0,
+      0.81915,
+      -0.57358
+    ],
+    "Width": 0.13,
+    "Height": 0.12,
+    "Eye": [
+      0.0,
+      2.01625,
+      0.31716
+    ],
+    "Style": "REFLECTOR"
   }
 }

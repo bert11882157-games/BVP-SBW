@@ -411,6 +411,8 @@ def install(ac, mesh, stick, source, stick_bone, gauges, displays, hud, eye, sea
                               'Center': r5(hud['centre']), 'Normal': r5(hud['normal']), 'Up': r5(hud['up']),
                               'Width': round(float(hud['width']), 5), 'Height': round(float(hud['height']), 5),
                               'Eye': r5(eye)}
+        if hud.get('style'):                    # a gunsight's reticle instead of HUD symbology (GYRO, REFLECTOR)
+            a['HeadUpDisplay']['Style'] = hud['style']
     else:
         a.pop('HeadUpDisplay', None)
     a.pop('CanopyGlass', None)                  # no glass for now (the owner's call, 2026-10-20)
