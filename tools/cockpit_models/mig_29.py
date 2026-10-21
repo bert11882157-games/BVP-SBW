@@ -278,8 +278,8 @@ P0 = np.array([0.0, 2.97, 3.85])            # centre facet reference point (0.82
 HINGE = 0.22                                # centre facet half width
 WING = math.radians(28)                     # wings turned toward the pilot
 WING_LEN = (0.44 - HINGE) / math.cos(WING)  # wings reach the cockpit walls
-TOP_C = 3.235                               # centre facet top (under the coaming lip)
-TOP_W = 3.13                                # wing top at the wall (canopy sill)
+TOP_C = 3.205                               # centre facet top (under the coaming lip; 3 cm lower, the view over the nose)
+TOP_W = 3.00                                # wing top at the wall: under the windscreen's sill there (higher, the wings stood out of the glass)
 BOT_C = 2.70
 BOT_W = 2.72                                # wings end on the side consoles
 CONSOLE_Y = 2.72                            # the reference's deeper tub: consoles 0.68 m under the eye
@@ -323,38 +323,38 @@ CENTRE, RIGHT, LEFT = Facet(0), Facet(1), Facet(-1)
 # 'paint' ones are painted faces.
 LAYOUT = [
     # centre facet, top row (beside the HUD body)
-    ('aoa',      CENTRE, -0.190, 3.190, ('game', 'AOA', 0.040), 'UAP-14 angle of attack'),
-    ('g',        CENTRE, -0.143, 3.190, ('game', 'G_METER', 0.040), 'UAP-14 g-meter'),
-    ('caution',  CENTRE, -0.100, 3.196, ('paint_disc', 0.024), 'master caution lamp'),
-    ('flares',   CENTRE,  0.150, 3.194, ('paint_rect', 0.060, 0.030), 'countermeasure counter'),
+    ('aoa',      CENTRE, -0.190, 3.160, ('game', 'AOA', 0.040), 'UAP-14 angle of attack'),
+    ('g',        CENTRE, -0.143, 3.160, ('game', 'G_METER', 0.040), 'UAP-14 g-meter'),
+    ('caution',  CENTRE, -0.100, 3.166, ('paint_disc', 0.024), 'master caution lamp'),
+    ('flares',   CENTRE,  0.150, 3.164, ('paint_rect', 0.060, 0.030), 'countermeasure counter'),
     # row 1: the T's top line
-    ('adi',      CENTRE, -0.155, 3.075, ('game', 'ATTITUDE', 0.085), 'KPP attitude director (ADI)'),
-    ('vvi',      CENTRE, -0.050, 3.075, ('game', 'VVI', 0.065), 'VAR vertical velocity'),
-    ('radalt',   CENTRE,  0.055, 3.075, ('paint_dial', 0.065), 'radio altimeter'),
-    ('tach',     CENTRE,  0.150, 3.075, ('game', 'THROTTLE', 0.065), 'ITE-2T twin tachometer (engine %)'),
+    ('adi',      CENTRE, -0.155, 3.045, ('game', 'ATTITUDE', 0.085), 'KPP attitude director (ADI)'),
+    ('vvi',      CENTRE, -0.050, 3.045, ('game', 'VVI', 0.065), 'VAR vertical velocity'),
+    ('radalt',   CENTRE,  0.055, 3.045, ('paint_dial', 0.065), 'radio altimeter'),
+    ('tach',     CENTRE,  0.150, 3.045, ('game', 'THROTTLE', 0.065), 'ITE-2T twin tachometer (engine %)'),
     # row 2
-    ('hsi',      CENTRE, -0.155, 2.963, ('game', 'HEADING', 0.085), 'PNP-72 horizontal situation (HSI)'),
-    ('mach',     CENTRE, -0.050, 2.970, ('game', 'MACH', 0.065), 'KUS true airspeed / Mach'),
-    ('egt_l',    CENTRE,  0.060, 2.975, ('paint_dial', 0.050), 'ITG gas temperature, left engine'),
-    ('egt_r',    CENTRE,  0.130, 2.975, ('paint_dial', 0.050), 'ITG gas temperature, right engine'),
+    ('hsi',      CENTRE, -0.155, 2.933, ('game', 'HEADING', 0.085), 'PNP-72 horizontal situation (HSI)'),
+    ('mach',     CENTRE, -0.050, 2.940, ('game', 'MACH', 0.065), 'KUS true airspeed / Mach'),
+    ('egt_l',    CENTRE,  0.060, 2.945, ('paint_dial', 0.050), 'ITG gas temperature, left engine'),
+    ('egt_r',    CENTRE,  0.130, 2.945, ('paint_dial', 0.050), 'ITG gas temperature, right engine'),
     # row 3
-    ('afcs',     CENTRE, -0.155, 2.862, ('paint_rect', 0.100, 0.040), 'SAU autopilot push-lights'),
-    ('clock',    CENTRE, -0.050, 2.862, ('game', 'FILLER_CLOCK', 0.058), 'AChS-1 clock'),
-    ('ramps',    CENTRE,  0.095, 2.870, ('paint_rect', 0.075, 0.045), 'air intake ramp positions'),
+    ('afcs',     CENTRE, -0.155, 2.832, ('paint_rect', 0.100, 0.040), 'SAU autopilot push-lights'),
+    ('clock',    CENTRE, -0.050, 2.832, ('game', 'FILLER_CLOCK', 0.058), 'AChS-1 clock'),
+    ('ramps',    CENTRE,  0.095, 2.840, ('paint_rect', 0.075, 0.045), 'air intake ramp positions'),
     # left wing: airspeed / altimeter / mechanisation column, warning lights, gear handle
-    ('weapons',  LEFT,    0.075, 3.160, ('paint_rect', 0.110, 0.034), 'weapon control panel'),
-    ('ias',      LEFT,    0.070, 3.075, ('game', 'AIRSPEED', 0.068), 'KUS indicated airspeed'),
-    ('alt',      LEFT,    0.070, 2.975, ('game', 'ALTIMETER', 0.068), 'VD-20 barometric altimeter'),
-    ('gear_ind', LEFT,    0.070, 2.875, ('paint_dial', 0.058), 'IP-52 gear / flaps / airbrake indicator'),
-    ('ekran',    LEFT,    0.160, 3.005, ('paint_rect', 0.060, 0.046), 'Ekran warning display'),
+    ('weapons',  LEFT,    0.075, 2.775, ('paint_rect', 0.110, 0.034), 'weapon control panel'),
+    ('ias',      LEFT,    0.070, 3.045, ('game', 'AIRSPEED', 0.068), 'KUS indicated airspeed'),
+    ('alt',      LEFT,    0.070, 2.945, ('game', 'ALTIMETER', 0.068), 'VD-20 barometric altimeter'),
+    ('gear_ind', LEFT,    0.070, 2.845, ('paint_dial', 0.058), 'IP-52 gear / flaps / airbrake indicator'),
+    ('ekran',    LEFT,    0.160, 2.975, ('paint_rect', 0.060, 0.046), 'Ekran warning display'),
     # right wing: IT-23M up top, fuel and Ekran, SPO-15, hydraulics / oxygen / volts
-    ('hdd',      RIGHT,   0.078, 3.112, ('display', 'RADAR', 0.105), 'IT-23M head-down display'),
-    ('fuel',     RIGHT,   0.056, 2.995, ('game', 'FILLER_FUEL', 0.058), 'fuel quantity'),
-    ('signals',  RIGHT,   0.180, 2.950, ('paint_rect', 0.050, 0.190), 'signal lights column (on the right, as on the type)'),
-    ('spo15',    RIGHT,   0.100, 2.904, ('game', 'RWR', 0.064), 'SPO-15 Beryoza radar warning'),
-    ('hyd',      RIGHT,   0.045, 2.832, ('game', 'FILLER_HYDRAULIC', 0.042), 'IKG hydraulic pressures'),
-    ('oxy',      RIGHT,   0.110, 2.832, ('game', 'FILLER_OXYGEN', 0.042), 'oxygen'),
-    ('volts',    RIGHT,   0.175, 2.832, ('game', 'FILLER_VOLTS', 0.042), 'voltmeter'),
+    ('hdd',      RIGHT,   0.070, 3.040, ('display', 'RADAR', 0.105), 'IT-23M head-down display'),
+    ('fuel',     RIGHT,   0.056, 2.930, ('game', 'FILLER_FUEL', 0.058), 'fuel quantity'),
+    ('signals',  RIGHT,   0.180, 2.920, ('paint_rect', 0.050, 0.190), 'signal lights column (on the right, as on the type)'),
+    ('spo15',    RIGHT,   0.100, 2.860, ('game', 'RWR', 0.064), 'SPO-15 Beryoza radar warning'),
+    ('hyd',      RIGHT,   0.045, 2.802, ('game', 'FILLER_HYDRAULIC', 0.042), 'IKG hydraulic pressures'),
+    ('oxy',      RIGHT,   0.110, 2.802, ('game', 'FILLER_OXYGEN', 0.042), 'oxygen'),
+    ('volts',    RIGHT,   0.175, 2.802, ('game', 'FILLER_VOLTS', 0.042), 'voltmeter'),
 ]
 
 RIM = 0.16                     # game gauge bezel width (CockpitGauges.RIM)
@@ -449,7 +449,7 @@ def panel_paint(facet, rect_px, ppm):
     def fn(d, im):
         noisy(d, im, TURQ, 5, seed=3 + facet.side)
         # sub-panel seams: Soviet panels are made of screwed plates
-        seams_y = [2.92, 3.02, 3.13] if facet.side == 0 else [2.93, 3.04]
+        seams_y = {0: [2.88, 2.99, 3.11], -1: [2.893, 2.995], 1: [2.973]}[facet.side]   # (between the instrument rows)
         for y in seams_y:
             x0, yy = to_px(a0, y); x1, _ = to_px(a1, y)
             d.line([x0, yy, x1, yy], fill=TURQ_D + (255,), width=SS * 2)
@@ -824,7 +824,7 @@ def build(atlas):
             m.flat([p, q, [q[0], 2.95, q[2]], [p[0], 2.95, p[2]]], sw['black'], toward=[0, 2.95, (p[2] + q[2]) / 2])
 
     # -- ILS-31 HUD: body under the coaming, aft control strip, lens, combiner frame and glass
-    hud_z0, hud_z1, hud_y0, hud_y1, hud_hw = 3.83, 4.12, 3.20, 3.232, 0.08   # a low body under the sight line
+    hud_z0, hud_z1, hud_y0, hud_y1, hud_hw = 3.83, 4.12, 3.17, 3.202, 0.08   # a low body under the sight line
     X, Y, Z = np.array([1.0, 0, 0]), np.array([0, 1.0, 0]), np.array([0, 0, 1.0])
     ctrl = atlas.paint(160, 40, p_hud_ctrl)
     lens = atlas.paint(64, 64, p_hud_lens)
