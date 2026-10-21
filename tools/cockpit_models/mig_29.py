@@ -49,9 +49,9 @@ FONT_B = '/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf'
 
 # ---------------------------------------------------------------- colours
 
-TURQ = (74, 150, 154)          # Soviet cockpit turquoise
-TURQ_D = (52, 112, 116)
-TURQ_L = (96, 170, 172)
+TURQ = (98, 108, 112)          # the reference cockpit's blue-grey (was the Soviet turquoise)
+TURQ_D = (66, 74, 78)
+TURQ_L = (128, 136, 140)
 BLACK = (24, 25, 26)
 DGREY = (44, 46, 48)
 MGREY = (88, 92, 94)
