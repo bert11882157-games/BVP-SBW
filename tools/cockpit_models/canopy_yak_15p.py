@@ -20,6 +20,7 @@ SOURCE_BONE = 'wreck_fuselage_1__hull'
 
 # the canopy's and windscreen's sections, metres from the eye: z, then the right half from the sill up over the top
 SECTIONS = [
+    (-0.75, [(0.16, -0.17), (0.15, -0.12), (0.12, -0.095), (0.06, -0.085), (0.0, -0.082)]),   # the fairing's end on the deck behind
     (-0.45, [(0.16, -0.17), (0.185, -0.12), (0.158, -0.054), (0.138, -0.007), (0.112, 0.031), (0.075, 0.09), (0.0, 0.12)]),
     (-0.20, [(0.331, -0.225), (0.306, -0.101), (0.263, -0.011), (0.211, 0.059), (0.148, 0.115), (0.084, 0.167), (0.0, 0.2)]),
     (0.00, [(0.418, -0.305), (0.391, -0.155), (0.343, -0.037), (0.277, 0.056), (0.187, 0.12), (0.101, 0.169), (0.0, 0.2)]),
@@ -38,6 +39,12 @@ def build(atlas, E, skin):
     sh = C.Shape(SECTIONS)
     glass = C.glass_triangles(sh, E, -0.45, SPLIT, nz=12) + C.glass_triangles(sh, E, SPLIT + 0.045, 0.76, nz=8)
     # the canopy: its tail frame, its front bow, the sill rails
+    C.skin(m, sh, E, -0.75, -0.45, out)             # the metal fairing from the canopy's open rear down onto the deck
+    sec = sh.section(-0.44)                         # the bulkhead closing the canopy's rear
+    for (xa, ya), (xb, yb) in zip(sec[:-1], sec[1:]):
+        for sd in (1, -1):
+            m.flat([E + [sd * xa, ya, -0.44], E + [sd * xb, yb, -0.44], E + [0.0, yb, -0.44], E + [0.0, ya, -0.44]], inner,
+                   normal=[0, 0, 1])
     C.bow(m, sh, E, -0.43, 0.035, 0.025, out, inner)
     C.bow(m, sh, E, SPLIT - 0.005, 0.028, 0.018, out, inner)
     C.member(m, sh, E, 0.0, -0.45, SPLIT, 0.04, 0.03, out, inner)
@@ -50,4 +57,4 @@ def build(atlas, E, skin):
 
 
 if __name__ == '__main__':
-    C.run(VID, SOURCE_BONE, build, sys.argv[1:])
+    C.run(VID, SOURCE_BONE, build, sys.argv[1:], colour=(121, 153, 150))   # the airframe grey-green (the sample caught a white stripe)
