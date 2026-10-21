@@ -56,7 +56,7 @@ FLOOR_Y = -0.97
 BACK_Z = -0.55                 # behind the seat
 CONSOLE_Y = -0.70
 CONSOLE_IN = 0.27
-PANEL_Z = 0.60                 # centre facet reference plane
+PANEL_Z = 0.72                 # centre facet reference plane (the reference views: the panel 0.7-0.8 m ahead)
 LEAN = math.radians(12)
 HINGE = 0.21                   # centre facet half width
 WING = math.radians(28)
@@ -96,27 +96,27 @@ LAYOUT = [
     ('caution',  0, -0.170, -0.190, ('paint_disc', 0.026), 'master caution lamp'),
     ('adi',      0, -0.065, -0.320, ('game', 'ATTITUDE', 0.095), 'KPP attitude director'),
     ('hsi',      0, -0.065, -0.442, ('game', 'HEADING', 0.095), 'PNP horizontal situation'),
-    ('vvi',      0,    0.060, -0.310, ('game', 'VVI', 0.064), 'VAR-300 vertical speed'),
-    ('alt',      0,    0.060, -0.405, ('game', 'ALTIMETER', 0.066), 'VM-15 altimeter'),
-    ('radalt',   0,    0.060, -0.500, ('game', 'RADAR_ALT', 0.058), 'radio altimeter'),
-    ('clock',    0,    0.150, -0.205, ('game', 'CLOCK', 0.046), 'AChS-1 clock'),
-    ('mach',     0,    0.150, -0.290, ('game', 'MACH', 0.058), 'Machmeter'),
-    ('fuel',     0,    0.150, -0.400, ('game', 'FUEL_QTY', 0.058), 'fuel quantity'),
-    ('ekran',    0,    0.000, -0.585, ('annunciator', 0.170, 0.075), 'Ekran warning panel'),
-    ('afcs',     0,    0.000, -0.668, ('paint_rect', 0.170, 0.040), 'autopilot push-lights'),
+    ('vvi',      0,     0.060, -0.310, ('game', 'VVI', 0.064), 'VAR-300 vertical speed'),
+    ('alt',      0,     0.060, -0.405, ('game', 'ALTIMETER', 0.066), 'VM-15 altimeter'),
+    ('radalt',   0,     0.060, -0.500, ('game', 'RADAR_ALT', 0.058), 'radio altimeter'),
+    ('clock',    0,     0.150, -0.205, ('game', 'CLOCK', 0.046), 'AChS-1 clock'),
+    ('mach',     0,     0.150, -0.290, ('game', 'MACH', 0.058), 'Machmeter'),
+    ('fuel',     0,     0.150, -0.400, ('game', 'FUEL_QTY', 0.058), 'fuel quantity'),
+    ('ekran',    0,     0.000, -0.585, ('annunciator', 0.170, 0.075), 'Ekran warning panel'),
+    ('afcs',     0,     0.000, -0.668, ('paint_rect', 0.170, 0.040), 'autopilot push-lights'),
     # left wing
-    ('aoa',     -1,    0.060, -0.272, ('game', 'AOA', 0.056), 'UAP-14 AoA'),
-    ('g',       -1,    0.060, -0.336, ('game', 'G_METER', 0.050), 'UAP-14 accelerometer'),
-    ('ias',     -1,    0.160, -0.380, ('game', 'AIRSPEED', 0.064), 'KUS-3 airspeed'),
-    ('weapons', -1,    0.124, -0.463, ('paint_rect', 0.150, 0.080), 'weapons control panel'),
-    ('gear',    -1,    0.236, -0.480, ('paint_rect', 0.050, 0.100), 'gear control panel'),
+    ('aoa',     -1,     0.060, -0.272, ('game', 'AOA', 0.056), 'UAP-14 AoA'),
+    ('g',       -1,     0.060, -0.336, ('game', 'G_METER', 0.050), 'UAP-14 accelerometer'),
+    ('ias',     -1,     0.160, -0.380, ('game', 'AIRSPEED', 0.064), 'KUS-3 airspeed'),
+    ('weapons', -1,     0.124, -0.463, ('paint_rect', 0.150, 0.080), 'weapons control panel'),
+    ('gear',    -1,     0.236, -0.480, ('paint_rect', 0.050, 0.100), 'gear control panel'),
     # right wing
-    ('hdd',      1,    0.136, -0.424, ('display', 'RADAR', 0.105), 'IPV head-down display'),
-    ('spo15',    1,    0.034, -0.405, ('game', 'RWR', 0.046), 'SPO-15 Beryoza'),
-    ('rpm',      1,    0.237, -0.434, ('game', 'ENGINE_RPM', 0.044), 'twin tachometer'),
-    ('egt',      1,    0.080, -0.518, ('game', 'EGT', 0.036), 'exhaust gas temperature'),
-    ('hyd',      1,    0.200, -0.516, ('game', 'FILLER_HYDRAULIC', 0.032), 'hydraulic pressures'),
-    ('oxy',      1,    0.140, -0.580, ('game', 'FILLER_OXYGEN', 0.030), 'oxygen'),
+    ('hdd',      1,     0.136, -0.424, ('display', 'RADAR', 0.105), 'IPV head-down display (hooded)'),
+    ('spo15',    1,     0.034, -0.405, ('game', 'RWR', 0.046), 'SPO-15 Beryoza'),
+    ('rpm',      1,     0.237, -0.434, ('game', 'ENGINE_RPM', 0.044), 'twin tachometer'),
+    ('egt',      1,     0.080, -0.518, ('game', 'EGT', 0.036), 'exhaust gas temperature'),
+    ('hyd',      1,     0.200, -0.516, ('game', 'FILLER_HYDRAULIC', 0.032), 'hydraulic pressures'),
+    ('oxy',      1,     0.140, -0.580, ('game', 'FILLER_OXYGEN', 0.030), 'oxygen'),
 ]
 
 
@@ -404,6 +404,10 @@ def build(atlas, E):
         m.box((g_bot + g_top) / 2 + X * s * (g_hw + 0.004), (X, g_up, g_n), (0.004, g_h / 2, 0.005), sw['dgrey'])
     m.box(g_top + g_up * 0.004, (X, g_up, g_n), (g_hw + 0.008, 0.004, 0.005), sw['dgrey'])
     hud = dict(centre=(g_bot + g_top) / 2, normal=-g_n, up=g_up, width=2 * g_hw, height=g_h)
+    # the reference views: the HUD's control unit standing on the centre facet's top under the HUD, black, its knobs
+    # toward the pilot; the IPV display on the right wing under a hood
+    H.facet_box(m, centre, 0.0, E[1] - 0.188, 0.235, 0.09, 0.045, sw['black'], front=ctrl)
+    H.hood(m, right, 0.136, E[1] - 0.424, 0.105, 0.079, 0.045, sw['black'])
 
     # -- side walls, consoles, the closing faces under the panel
     for side in (1, -1):                                            # +1 = left (x > 0)
@@ -472,9 +476,8 @@ def build(atlas, E):
     m.box(P(0, -0.502, -0.294), ax_b, (0.205, 0.36, 0.035), sw['frame'])
     m.box(P(0, 0.008, -0.314), (X, Y, Z), (0.16, 0.20, 0.10), sw['frame'])
     m.box(P(0, 0.018, -0.199), (X, Y, Z), (0.11, 0.11, 0.015), sw['cushion'], front=(2, 1, headbox, X, Y))
-    for s in (1, -1):
-        m.box(P(s * 0.05, -0.817, 0.256), (X, Y, Z), (0.008, 0.035, 0.0075), sw['yellow'])
-    m.box(P(0, -0.782, 0.256), (X, Y, Z), (0.058, 0.008, 0.008), sw['yellow'], front=(2, -1, stripes, -X, Y))
+    red = atlas.swatch((178, 34, 30))                                 # the K-36 handle: a red double loop
+    H.k36_handle(m, lambda x, y: P(x, -0.852 + y, 0.256), red, sw['black'])
 
     # -- control stick (RUS): the boot stays with the cockpit, the rest goes into the stick bone
     sz = 0.40

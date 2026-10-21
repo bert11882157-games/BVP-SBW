@@ -186,6 +186,32 @@ class Facet:
         return self.o + self.R * a + self.U * v + self.N * lift
 
 
+def facet_box(m, f, a, y, w, h, depth, rect, front=None, lift=0.0025):
+    """a box standing on facet f at (a, y): w x h across the panel, [depth] toward the pilot, its back face [lift]
+    off the panel face (so nothing lies on the panel); front: a rect for the face toward the pilot"""
+    m.box(f.at(a, y, lift + depth / 2), (f.R, f.U, f.N), (w / 2, h / 2, depth / 2), rect,
+          front=(2, 1, front, f.R, f.U) if front is not None else None)
+
+
+def hood(m, f, a, y, w, h, depth, rect, t=0.004, lift=0.0025):
+    """a hood over a display w x h at (a, y) on facet f: a top plate and two cheeks [depth] toward the pilot, just
+    outside the display's bezel"""
+    facet_box(m, f, a, y + h / 2 + 0.008 + t / 2, w + 0.016 + 2 * t, t, depth, rect, lift=lift)
+    for s in (-1, 1):
+        facet_box(m, f, a + s * (w / 2 + 0.008 + t / 2), y + h * 0.2, t, h * 0.6, depth, rect, lift=lift)
+
+
+def k36_handle(m, at, red, black):
+    """the K-36 ejection handle on the seat front: a red double loop over a black root block; at(x, y) gives the
+    vehicle point x metres across and y metres up from the handle's root, on the seat front"""
+    X, Y, Z = np.array([1.0, 0, 0]), np.array([0, 1.0, 0]), np.array([0, 0, 1.0])
+    for s in (1, -1):
+        for xl in (0.018, 0.088):
+            m.box(at(s * xl, 0.033), (X, Y, Z), (0.007, 0.032, 0.006), red)
+        m.box(at(s * 0.053, 0.07), (X, Y, Z), (0.042, 0.007, 0.0065), red)
+    m.box(at(0, 0.0), (X, Y, Z), (0.03, 0.01, 0.009), black)
+
+
 # ---------------------------------------------------------------- painting
 
 def font(px, bold=False):

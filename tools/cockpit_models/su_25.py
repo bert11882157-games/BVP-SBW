@@ -421,9 +421,8 @@ def build(atlas, E):
     m.box(P(0, -0.502, -0.294), ax_b, (0.205, 0.36, 0.035), sw['frame'])
     m.box(P(0, 0.008, -0.314), (X, Y, Z), (0.16, 0.20, 0.10), sw['frame'])
     m.box(P(0, 0.018, -0.199), (X, Y, Z), (0.11, 0.11, 0.015), sw['cushion'], front=(2, 1, headbox, X, Y))
-    for s in (1, -1):
-        m.box(P(s * 0.05, -0.817, 0.256), (X, Y, Z), (0.008, 0.035, 0.0075), sw['yellow'])
-    m.box(P(0, -0.782, 0.256), (X, Y, Z), (0.058, 0.008, 0.008), sw['yellow'], front=(2, -1, stripes, -X, Y))
+    red = atlas.swatch((178, 34, 30))                                 # the K-36 handle: a red double loop
+    H.k36_handle(m, lambda x, y: P(x, -0.852 + y, 0.256), red, sw['black'])
 
     # -- control stick (RUS): the boot stays with the cockpit, the rest goes into the stick bone
     sz = 0.40

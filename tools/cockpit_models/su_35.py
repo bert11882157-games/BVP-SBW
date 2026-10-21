@@ -52,7 +52,7 @@ FLOOR_Y = -0.91
 BACK_Z = -0.55                 # behind the seat
 CONSOLE_Y = -0.62
 CONSOLE_IN = 0.27
-PANEL_Z = 0.66                 # centre facet reference plane
+PANEL_Z = 0.74                 # centre facet reference plane (the Su-27 reference views: the panel 0.7-0.8 m ahead)
 LEAN = math.radians(12)
 HINGE = 0.275                  # centre facet half width: the two displays side by side
 WING = math.radians(25)
@@ -410,6 +410,8 @@ def build(atlas, E):
         m.box((g_bot + g_top) / 2 + X * s * (g_hw + 0.004), (X, g_up, g_n), (0.004, g_h / 2, 0.005), sw['dgrey'])
     m.box(g_top + g_up * 0.004, (X, g_up, g_n), (g_hw + 0.008, 0.004, 0.005), sw['dgrey'])
     hud = dict(centre=(g_bot + g_top) / 2, normal=-g_n, up=g_up, width=2 * g_hw, height=g_h)
+    # the HUD's control unit on the centre facet's top under the HUD (the Su-27 reference views), black, knobs aft
+    H.facet_box(m, centre, 0.0, E[1] - 0.152, 0.235, 0.055, 0.04, sw['black'], front=ctrl)
 
     # -- side walls, consoles, the closing faces under the panel
     for side in (1, -1):                                            # +1 = left (x > 0)
@@ -479,9 +481,8 @@ def build(atlas, E):
     m.box(PS(0, -0.502, -0.294), ax_b, (0.205, 0.36, 0.035), sw['frame'])
     m.box(PS(0, 0.008, -0.314), (X, Y, Z), (0.16, 0.20, 0.10), sw['frame'])
     m.box(PS(0, 0.018, -0.199), (X, Y, Z), (0.11, 0.11, 0.015), sw['cushion'], front=(2, 1, headbox, X, Y))
-    for s in (1, -1):
-        m.box(PS(s * 0.05, -0.817, 0.256), (X, Y, Z), (0.008, 0.035, 0.0075), sw['yellow'])
-    m.box(PS(0, -0.782, 0.256), (X, Y, Z), (0.058, 0.008, 0.008), sw['yellow'], front=(2, -1, stripes, -X, Y))
+    red = atlas.swatch((178, 34, 30))                                 # the K-36 handle: a red double loop
+    H.k36_handle(m, lambda x, y: PS(x, -0.852 + y, 0.256), red, sw['black'])
 
     # -- control stick (RUS): the boot stays with the cockpit, the rest goes into the stick bone
     sz = 0.40
