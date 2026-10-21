@@ -1,6 +1,6 @@
 {
   "_comment": "Aircraft with a modelled canopy (canopy.py). Lengths in blocks (1 block = 1 m at these models' scale); dz relative to the pilot's eye (+ forward). glass_mm: transparency thickness. bows: frames across the glass ({dz, width, yoke}). front / rear: the canopy's ends (z) when the old glass's are wrong. profile: reference overrides {crown|sill|width: [[dz, value], ...]}. fullness: superellipse exponent of the sections (default: fitted). Sources per aircraft in tools/canopy_models/README.md.",
-  "pending": ["a_10", "eurofighter_typhoon", "f_84f", "j_15d", "j_2", "ju_87_b2", "mig19", "mig_15bis", "mig_21bis",
+  "pending": ["a_10", "eurofighter_typhoon", "f_84f", "j_15d", "j_2", "ju_87_b2", "mig_15bis", "mig_21bis",
               "mig_23mld", "p_51d", "rafale", "saab_37_viggen", "saab_jas_39_gripen", "su_25", "su_27", "su_30", "su_39",
               "supermarine_spitfire_griffon"],
   "_pending": "Aircraft the generic fit does not yet get right (wavy sills, windscreens the old glass never covered, frames left standing); --fleet leaves them with their old canopy until each has its own entry.",

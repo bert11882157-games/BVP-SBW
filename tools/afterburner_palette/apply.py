@@ -34,7 +34,6 @@ ENGINES = {
     'f_100c': 'EARLY',           # J57-P-21
     'f_8h': 'EARLY',             # J57-P-20A
     'j_5': 'EARLY',              # WP-5 (VK-1F)
-    'mig19': 'EARLY',            # RD-9B
     'mig_19s': 'EARLY',          # RD-9B
     'super_mystere': 'EARLY',    # Atar 101G
     'saab_32_lansen': 'EARLY',   # RM6A (Avon)

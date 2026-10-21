@@ -35,7 +35,6 @@ import com.yourname.berts_vehicle_pack.entity.Marder1A1Entity;
 import com.yourname.berts_vehicle_pack.entity.Marder1A2Entity;
 import com.yourname.berts_vehicle_pack.entity.Mi24VEntity;
 import com.yourname.berts_vehicle_pack.entity.Mi28NEntity;
-import com.yourname.berts_vehicle_pack.entity.Mig19Entity;
 import com.yourname.berts_vehicle_pack.entity.MilanTripodEntity;
 import com.yourname.berts_vehicle_pack.entity.T55AEntity;
 import com.yourname.berts_vehicle_pack.entity.T62AEntity;
@@ -219,8 +218,6 @@ public class ModEntities {
             ENTITIES.register("kiev", () -> carrier("kiev", 0.82f));
     public static final RegistryObject<EntityType<TowTripodEntity>> TOW_TRIPOD =
             ENTITIES.register("tow_tripod", () -> vehicle(TowTripodEntity::new, 2.4f, 2.0f, "tow_tripod"));
-    public static final RegistryObject<EntityType<Mig19Entity>> MIG19 =
-            ENTITIES.register("mig19", () -> vehicle(Mig19Entity::new, 11.0f, 4.0f, "mig19"));
 
     public static final RegistryObject<EntityType<AuthoredFixedWingAircraft>> YAK_3 =
             ENTITIES.register("yak_3", () -> vehicle(

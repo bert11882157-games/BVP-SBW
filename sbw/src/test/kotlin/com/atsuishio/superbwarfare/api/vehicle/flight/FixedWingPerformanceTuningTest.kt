@@ -7,7 +7,7 @@ import kotlin.math.*
 /** Owner's speed balance, 2026-09-28: Mach 1 = 400 km/h, shared soft cap 650, hard cap 750, slow transonic gains. */
 class FixedWingPerformanceTuningTest {
     @Test fun allHandlingProfilesShareCapsAndJetsFlyOnReferenceThrust() {
-        for (h in listOf(FixedWingHandlingProfile.GAME_JET, MiG19FixedWingProfile.HANDLING,
+        for (h in listOf(FixedWingHandlingProfile.GAME_JET, ReferenceJetFixture.HANDLING,
             FixedWingHandlingProfile.GAME_JET.copy(dryAccelerationMps2 = 2.0, maximumSpeedMps = 30.0))) {
             assertEquals(650.0, h.softSpeedLimitMps * 3.6, 1e-9)
             assertEquals(750.0, h.hardSpeedLimitMps * 3.6, 1e-9)
@@ -24,7 +24,7 @@ class FixedWingPerformanceTuningTest {
         assertEquals(h.softSpeedLimitMps, h.effectiveSoftSpeedLimitMps, 0.0)
         assertEquals(300.0 / 3.6, h.copy(firstSoftSpeedLimitMps = 300.0 / 3.6).effectiveSoftSpeedLimitMps, 1e-12)
         assertEquals(h.softSpeedLimitMps, h.copy(firstSoftSpeedLimitMps = 700.0 / 3.6).effectiveSoftSpeedLimitMps, 0.0)
-        assertEquals(350.0, MiG19FixedWingProfile.HANDLING.effectiveSoftSpeedLimitMps * 3.6, 1e-9)
+        assertEquals(350.0, ReferenceJetFixture.HANDLING.effectiveSoftSpeedLimitMps * 3.6, 1e-9)
     }
 
     @Test fun transonicSurplusShareFallsFromFullToTheFloor() {
@@ -45,7 +45,7 @@ class FixedWingPerformanceTuningTest {
         assertEquals(1.0, jet.lowSpeedSurplusMultiplier(300.0), 1e-12)
         assertEquals(1.0, jet.lowSpeedSurplusMultiplier(600.0), 1e-12)
         assertEquals(1.0, FixedWingHandlingProfile.GAME_JET.lowSpeedSurplusMultiplier(100.0), 0.0)
-        assertEquals(1.8, MiG19FixedWingProfile.HANDLING.lowSpeedSurplusBoost, 0.0)
+        assertEquals(1.8, ReferenceJetFixture.HANDLING.lowSpeedSurplusBoost, 0.0)
         // a boosted jet out-accelerates the same jet without the boost from 100 km/h, and ends at the same top speed
         fun run(h: FixedWingHandlingProfile, ticks: Int): Double {
             val m = FixedWingFlightModel(h)
@@ -81,7 +81,7 @@ class FixedWingPerformanceTuningTest {
 
     @Test fun aStalledJetDropsItsNoseAndGetsItsControlsBack() {
         // owner 2026-09-28: pitched up until all speed was gone, the jet hung nose-high with no control authority
-        for (h in listOf(FixedWingHandlingProfile.GAME_JET, MiG19FixedWingProfile.HANDLING)) {
+        for (h in listOf(FixedWingHandlingProfile.GAME_JET, ReferenceJetFixture.HANDLING)) {
             val m = FixedWingFlightModel(h)
             m.reset(0.0, -80.0, 0.0)                  // nose 80 degrees up
             var vx = 0.0; var vy = 1.0; var vz = 2.0     // almost no airspeed left
@@ -148,7 +148,7 @@ class FixedWingPerformanceTuningTest {
     }
 
     @Test fun realMigDiveCrossesItsFirstSoftCapAndNeverPassesTheHardCap() {
-        val model = warmed(MiG19FixedWingProfile.HANDLING, 70.0)
+        val model = warmed(ReferenceJetFixture.HANDLING, 70.0)
         var speed = 330.0 / 3.6
         var vy = -sin(70.0 * PI / 180.0) * speed
         var vz = cos(70.0 * PI / 180.0) * speed
@@ -183,7 +183,7 @@ class FixedWingPerformanceTuningTest {
     }
 
     @Test fun hardCapClampsCombinedVelocityIncludingAfterburnerAndDives() {
-        for (h in listOf(FixedWingHandlingProfile.GAME_JET, MiG19FixedWingProfile.HANDLING)) {
+        for (h in listOf(FixedWingHandlingProfile.GAME_JET, ReferenceJetFixture.HANDLING)) {
             val model = warmed(h, 45.0)
             assertTrue(model.step(100, 140.0, -150.0, 160.0, false, true, afterburnerRequested = true))
             assertEquals(750.0 / 3.6, model.speedMps, 1e-9)

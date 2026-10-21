@@ -46,7 +46,7 @@ object AircraftSurfaceTestScenario {
 
     @SubscribeEvent fun register(e: RegisterCommandsEvent) {
         val root = Commands.literal("sbw_aircraft_surface_test").requires { it.hasPermission(2) }
-        for ((name, type) in mapOf("start" to "berts_vehicle_pack:mig19", "start_native" to "superbwarfare:a_10a")) {
+        for ((name, type) in mapOf("start" to "berts_vehicle_pack:mig_19s", "start_native" to "superbwarfare:a_10a")) {
             root.then(Commands.literal(name).executes {
                 val p=it.source.playerOrException
                 if (!allowed(p) || active != null || EliteDiagnostics.isServerEnabled()) return@executes 0

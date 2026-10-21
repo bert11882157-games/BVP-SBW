@@ -314,7 +314,7 @@ class FixedWingMouseAimControllerTest {
     }
 
     @Test fun rotationGateHasDensityScalingAndGroundContactHysteresis() {
-        for (h in listOf(FixedWingHandlingProfile.GAME_JET,MiG19FixedWingProfile.HANDLING,
+        for (h in listOf(FixedWingHandlingProfile.GAME_JET,ReferenceJetFixture.HANDLING,
             FixedWingReferenceHandling.scale(FixedWingHandlingProfile.GAME_JET,0.5))) {
             for (density in listOf(0.2,0.5,1.0,1.2)) {
                 val g=FixedWingGroundControlGate(h); val r=g.rotationReferenceSpeedMps/sqrt(density)
@@ -735,7 +735,7 @@ class FixedWingMouseAimControllerTest {
     }
 
     @Test fun gradualVerticalRetargetCanInvertWithScaledJetHandling() {
-        val handling=MiG19FixedWingProfile.HANDLING
+        val handling=ReferenceJetFixture.HANDLING
         for (bank in listOf(-0.02,0.02)) {
             val m=FixedWingFlightModel(handling); m.reset(0.0,0.0,bank)
             val c=FixedWingMouseAimController(handling)

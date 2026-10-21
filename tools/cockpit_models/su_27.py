@@ -36,8 +36,8 @@ VID = 'su_27'
 SOURCE_BONE = 'wreck_fuselage_0__hull'
 STICK_BONE = 'wreck_fuselage_0__control_stick_pitch'
 
-TURQ = (74, 150, 154)          # Soviet cockpit turquoise
-TURQ_D = (52, 112, 116)
+TURQ = (84, 98, 98)            # the reference cockpit's dark grey-green (was the Soviet turquoise)
+TURQ_D = (58, 68, 68)
 BLACK = (24, 25, 26)
 DGREY = (44, 46, 48)
 MGREY = (88, 92, 94)
@@ -474,11 +474,11 @@ def build(atlas, E):
     m.box(P(0, -0.887, 0.026), (X, Y, Z), (0.19, 0.035, 0.21), sw['cushion'], front=(1, 1, cushion, -X, Z))
     for s in (1, -1):
         m.box(P(s * 0.212, -0.882, -0.014), (X, Y, Z), (0.012, 0.15, 0.24), sw['frame'])
-        m.box(P(s * 0.17, -0.402, -0.404), ax_b, (0.02, 0.62, 0.025), sw['frame'])
+        m.box(P(s * 0.17, -0.44, -0.404), ax_b, (0.02, 0.54, 0.025), sw['frame'])   # guide beams, their tops under the glass
     m.box(P(0, -0.502, -0.234), ax_b, (0.19, 0.33, 0.03), sw['cushion'], front=(2, 1, back, X, ax_b[1]))
     m.box(P(0, -0.502, -0.294), ax_b, (0.205, 0.36, 0.035), sw['frame'])
-    m.box(P(0, 0.008, -0.314), (X, Y, Z), (0.16, 0.20, 0.10), sw['frame'])
-    m.box(P(0, 0.018, -0.199), (X, Y, Z), (0.11, 0.11, 0.015), sw['cushion'], front=(2, 1, headbox, X, Y))
+    m.box(P(0, -0.03, -0.314), (X, Y, Z), (0.16, 0.15, 0.10), sw['frame'])   # headbox, under the glass
+    m.box(P(0, -0.02, -0.199), (X, Y, Z), (0.11, 0.09, 0.015), sw['cushion'], front=(2, 1, headbox, X, Y))
     red = atlas.swatch((178, 34, 30))                                 # the K-36 handle: a red double loop
     H.k36_handle(m, lambda x, y: P(x, -0.852 + y, 0.256), red, sw['black'])
 

@@ -180,7 +180,7 @@ public final class BvpFixedWingScenario {
     }
 
     private static final class Plan {
-        String vehicleId = BertsVehiclePack.MODID + ":mig19";
+        String vehicleId = BertsVehiclePack.MODID + ":mig_19s";
         boolean clientInput;
         boolean worldAim;
         boolean horizontalInitialVelocity;
