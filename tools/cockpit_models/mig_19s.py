@@ -60,7 +60,7 @@ LEAN = math.radians(10)
 HINGE = 0.180                  # centre facet half width
 WING = math.radians(18)
 WING_LEN = (WALL_X - HINGE) / math.cos(WING)
-TOP_C, TOP_W = -0.170, -0.310  # centre facet top, wing top at its end
+TOP_C, TOP_W = -0.170, -0.325  # centre facet top, wing top at its end
 BOT_C, BOT_W = -0.660, -0.660
 FRONT_Z = 1.13                 # the coaming runs forward to the windscreen base
 FRONT_Y_C, FRONT_Y_W = -0.240, -0.300
@@ -93,20 +93,20 @@ def top_of(side, a):
 LAYOUT = [
     ('caution',  0, -0.150, -0.200, ('paint_disc', 0.026), 'master caution lamp'),
     ('kus',      0, -0.100, -0.270, ('game', 'AIRSPEED', 0.066), 'KUS-1500 airspeed'),
-    ('agi',      0,   0.000, -0.270, ('game', 'ATTITUDE', 0.080), 'AGI-1 horizon'),
-    ('vvi',      0,   0.100, -0.270, ('game', 'VVI', 0.066), 'VAR-150 climb'),
+    ('agi',      0,    0.000, -0.270, ('game', 'ATTITUDE', 0.080), 'AGI-1 horizon'),
+    ('vvi',      0,    0.100, -0.270, ('game', 'VVI', 0.066), 'VAR-150 climb'),
     ('alt',      0, -0.100, -0.370, ('game', 'ALTIMETER', 0.066), 'VD-17 altimeter'),
-    ('ksi',      0,   0.000, -0.375, ('game', 'HEADING', 0.070), 'KSI compass'),
-    ('mach',     0,   0.100, -0.370, ('game', 'MACH', 0.060), 'Machmeter'),
+    ('ksi',      0,    0.000, -0.375, ('game', 'HEADING', 0.070), 'KSI compass'),
+    ('mach',     0,    0.100, -0.370, ('game', 'MACH', 0.060), 'Machmeter'),
     ('clock',    0, -0.100, -0.470, ('game', 'CLOCK', 0.054), 'clock'),
-    ('g',        0,   0.000, -0.470, ('game', 'G_METER', 0.050), 'accelerometer'),
-    ('fuel',     0,   0.100, -0.470, ('game', 'FUEL_QTY', 0.058), 'fuel quantity'),
-    ('oxygen',  -1,   0.070, -0.330, ('game', 'FILLER_OXYGEN', 0.050), 'oxygen'),
-    ('gear',    -1,   0.070, -0.450, ('paint_rect', 0.050, 0.090), 'gear control panel'),
-    ('rpm',      1,   0.070, -0.315, ('game', 'ENGINE_RPM', 0.056), 'twin tachometer'),
-    ('egt',      1,   0.070, -0.400, ('game', 'EGT', 0.050), 'twin EGT'),
-    ('hyd',      1,   0.070, -0.490, ('game', 'FILLER_HYDRAULIC', 0.044), 'hydraulic pressure'),
-    ('warning',  1,   0.070, -0.580, ('annunciator', 0.070, 0.060), 'warning lights'),
+    ('g',        0,    0.000, -0.470, ('game', 'G_METER', 0.050), 'accelerometer'),
+    ('fuel',     0,    0.100, -0.470, ('game', 'FUEL_QTY', 0.058), 'fuel quantity'),
+    ('oxygen',  -1,    0.070, -0.330, ('game', 'FILLER_OXYGEN', 0.050), 'oxygen'),
+    ('gear',    -1,    0.070, -0.450, ('paint_rect', 0.050, 0.090), 'gear control panel'),
+    ('rpm',      1,    0.070, -0.326, ('game', 'ENGINE_RPM', 0.056), 'twin tachometer'),
+    ('egt',      1,    0.070, -0.400, ('game', 'EGT', 0.050), 'twin EGT'),
+    ('hyd',      1,    0.070, -0.490, ('game', 'FILLER_HYDRAULIC', 0.044), 'hydraulic pressure'),
+    ('warning',  1,    0.070, -0.580, ('annunciator', 0.070, 0.060), 'warning lights'),
 ]
 
 
@@ -324,7 +324,7 @@ def build(atlas, E):
         row = []
         for le in lip_edge:
             s = (le[0] - E[0]) / max(abs(lip_edge[0][0] - E[0]), 1e-6)
-            xf = E[0] + s * (WALL_X - 0.04)
+            xf = E[0] + s * (WALL_X - 0.07)
             yf = E[1] + FRONT_Y_C + (FRONT_Y_W - FRONT_Y_C) * s * s
             z = le[2] + (E[2] + FRONT_Z - le[2]) * t
             x = le[0] + (xf - le[0]) * t
@@ -390,11 +390,13 @@ def build(atlas, E):
         ys, yc = E[1] + SILL_Y - 0.01, E[1] + CONSOLE_Y + 0.005
         lining = atlas.paint(150, 60, H.p_wall(WALLC_D, WALLC, 40 + side))
         q = [[xc, yc, zb - 0.06], [xc, yc, zf], [xs, ys, zf], [xs, ys, zb - 0.06]]
+        q = [[v[0] - side * 0.004, v[1] + 0.003, v[2]] for v in q]   # inside the fuselage's own side
         m.quad_tex(q if side > 0 else [q[1], q[0], q[3], q[2]], lining, toward=[E[0], E[1] - 0.3, (zb + zf) / 2])
     # under the centre facet: its lower closing face back to the footwell
     bl, br = centre.at(HINGE, E[1] + BOT_C), centre.at(-HINGE, E[1] + BOT_C)
     m.flat([bl, br, br + np.array([0, 0, 0.12]), bl + np.array([0, 0, 0.12])], sw['turq_d'], normal=[0, -1, 0])
-    for s in (1, -1):                                               # the footwell sides under the wings
+    for s in ((1, -1) if CONSOLE_IN - HINGE > 0.02 else ()):   # the footwell sides under the wings (none
+        #                                                         where the console meets the hinge: it would lie on the facet)
         e = centre.at(-HINGE * s, E[1] + BOT_C)
         m.flat([e, centre.at(-HINGE * s, E[1] + BOT_W), [E[0] + s * CONSOLE_IN, E[1] + BOT_W, e[2]],
                 [E[0] + s * CONSOLE_IN, E[1] + BOT_C, e[2]]], sw['turq_d'], normal=[0, 0, -1])
@@ -422,7 +424,7 @@ def build(atlas, E):
     headbox = atlas.paint(64, 64, p_headbox)
     stripes = atlas.paint(64, 16, H.p_stripes)
     ax_b = (X, H.unit([0, 1, -0.14]), H.unit([0, 0.14, 1]))
-    m.box(P(0, -1.002, -0.004), (X, Y, Z), (0.20, 0.08, 0.22), sw['frame'])
+    m.box(P(0, -1.002, -0.004), (X, Y, Z), (0.196, 0.08, 0.22), sw['frame'])
     m.box(P(0, -0.887, 0.026), (X, Y, Z), (0.19, 0.035, 0.21), sw['cushion'], front=(1, 1, cushion, -X, Z))
     for s in (1, -1):
         m.box(P(s * 0.212, -0.882, -0.014), (X, Y, Z), (0.012, 0.15, 0.24), sw['frame'])
@@ -432,7 +434,7 @@ def build(atlas, E):
     m.box(P(0, 0.008, -0.314), (X, Y, Z), (0.16, 0.20, 0.10), sw['frame'])
     m.box(P(0, 0.018, -0.199), (X, Y, Z), (0.11, 0.11, 0.015), sw['cushion'], front=(2, 1, headbox, X, Y))
     for s in (1, -1):
-        m.box(P(s * 0.05, -0.817, 0.256), (X, Y, Z), (0.008, 0.035, 0.008), sw['yellow'])
+        m.box(P(s * 0.05, -0.817, 0.256), (X, Y, Z), (0.008, 0.035, 0.0075), sw['yellow'])
     m.box(P(0, -0.782, 0.256), (X, Y, Z), (0.058, 0.008, 0.008), sw['yellow'], front=(2, -1, stripes, -X, Y))
 
     # -- control stick (RUS): the boot stays with the cockpit, the rest goes into the stick bone

@@ -267,15 +267,15 @@ def build(atlas, E):
     for name, side, a, y, spec, _ in LAYOUT:
         f = fac[side]; c = at(side, a, y)
         if spec[0] in ('game', 'paint_disc'):
-            m.disc(c + f.N * 0.001, f.N, f.U, spec[-1] / 2 * (1 + H.RIM) + 0.004, recess, seg=16)
+            m.disc(c + f.N * 0.0028, f.N, f.U, spec[-1] / 2 * (1 + H.RIM) + 0.004, recess, seg=16)
         else:
             w, h = (spec[2], spec[2]) if spec[0] == 'display' else (spec[1], spec[2])
-            m.rect_tex(c + f.N * 0.001, f.N, f.U, w + 0.012, h + 0.012, recess)
+            m.rect_tex(c + f.N * 0.0028, f.N, f.U, w + 0.012, h + 0.012, recess)
     for side, ys in ((0, (-0.36, -0.455, -0.55)), (-1, (-0.42,)), (1, (-0.45,))):
         a0, a1 = ext[side]
         for y in ys:
             p0, p1 = at(side, a0 + 0.004, y), at(side, a1 - 0.004, y)
-            n = fac[side].N * 0.0012; u = fac[side].U * 0.0015
+            n = fac[side].N * 0.0015; u = fac[side].U * 0.0015
             m.flat([p0 - u + n, p1 - u + n, p1 + u + n, p0 + u + n], sw['turq_d'], normal=fac[side].N)
     # -- instruments
     cols, lamps = L.lamps_of('cw', 'soviet')
@@ -414,7 +414,8 @@ def build(atlas, E):
     # under the centre facet: its lower closing face back to the footwell
     bl, br = centre.at(HINGE, E[1] + BOT_C), centre.at(-HINGE, E[1] + BOT_C)
     m.flat([bl, br, br + np.array([0, 0, 0.12]), bl + np.array([0, 0, 0.12])], sw['wall_d'], normal=[0, -1, 0])
-    for s in (1, -1):                                               # the footwell sides under the wings
+    for s in ((1, -1) if CONSOLE_IN - HINGE > 0.02 else ()):   # the footwell sides under the wings (none
+        #                                                         where the console meets the hinge: it would lie on the facet)
         e = centre.at(-HINGE * s, E[1] + BOT_C)
         m.flat([e, centre.at(-HINGE * s, E[1] + BOT_W), [E[0] + s * CONSOLE_IN, E[1] + BOT_W, e[2]],
                 [E[0] + s * CONSOLE_IN, E[1] + BOT_C, e[2]]], sw['wall_d'], normal=[0, 0, -1])
@@ -442,7 +443,7 @@ def build(atlas, E):
     headbox = atlas.paint(64, 64, p_headbox)
     stripes = atlas.paint(64, 16, H.p_stripes)
     ax_b = (X, H.unit([0, 1, -0.14]), H.unit([0, 0.14, 1]))
-    m.box(P(0, -1.002, -0.004), (X, Y, Z), (0.20, 0.08, 0.22), sw['frame'])
+    m.box(P(0, -1.002, -0.004), (X, Y, Z), (0.196, 0.08, 0.22), sw['frame'])
     m.box(P(0, -0.887, 0.026), (X, Y, Z), (0.19, 0.035, 0.21), sw['cushion'], front=(1, 1, cushion, -X, Z))
     for s in (1, -1):
         m.box(P(s * 0.212, -0.882, -0.014), (X, Y, Z), (0.012, 0.15, 0.24), sw['frame'])

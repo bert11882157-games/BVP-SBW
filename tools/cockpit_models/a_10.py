@@ -464,7 +464,8 @@ def build(atlas, E):
     # under the centre facet: its lower closing face back to the footwell
     bl, br = centre.at(HINGE, E[1] + BOT_C), centre.at(-HINGE, E[1] + BOT_C)
     m.flat([bl, br, br + np.array([0, 0, 0.12]), bl + np.array([0, 0, 0.12])], sw['turq_d'], normal=[0, -1, 0])
-    for s in (1, -1):                                               # the footwell sides under the wings
+    for s in ((1, -1) if CONSOLE_IN - HINGE > 0.02 else ()):   # the footwell sides under the wings (none
+        #                                                         where the console meets the hinge: it would lie on the facet)
         e = centre.at(-HINGE * s, E[1] + BOT_C)
         m.flat([e, centre.at(-HINGE * s, E[1] + BOT_W), [E[0] + s * CONSOLE_IN, E[1] + BOT_W, e[2]],
                 [E[0] + s * CONSOLE_IN, E[1] + BOT_C, e[2]]], sw['turq_d'], normal=[0, 0, -1])
@@ -498,7 +499,7 @@ def build(atlas, E):
     stripes = atlas.paint(64, 16, H.p_stripes)
     ax_b = (X, H.unit([0, 1, -0.14]), H.unit([0, 0.14, 1]))
     base_top = -0.94 + SEAT_DY                                       # the seat's base down to the floor
-    m.box(P(0, (base_top + FLOOR_Y) / 2, -0.004), (X, Y, Z), (0.20, (base_top - FLOOR_Y) / 2, 0.22), sw['frame'])
+    m.box(P(0, (base_top + FLOOR_Y) / 2, -0.004), (X, Y, Z), (0.196, (base_top - FLOOR_Y) / 2, 0.22), sw['frame'])
     m.box(PS(0, -0.887, 0.026), (X, Y, Z), (0.19, 0.035, 0.21), sw['cushion'], front=(1, 1, cushion, -X, Z))
     for s in (1, -1):
         m.box(PS(s * 0.212, -0.882, -0.014), (X, Y, Z), (0.012, 0.15, 0.24), sw['frame'])
@@ -508,7 +509,7 @@ def build(atlas, E):
     m.box(PS(0, 0.008, -0.314), (X, Y, Z), (0.16, 0.20, 0.10), sw['frame'])
     m.box(PS(0, 0.018, -0.199), (X, Y, Z), (0.11, 0.11, 0.015), sw['cushion'], front=(2, 1, headbox, X, Y))
     for s in (1, -1):
-        m.box(PS(s * 0.05, -0.817, 0.256), (X, Y, Z), (0.008, 0.035, 0.008), sw['yellow'])
+        m.box(PS(s * 0.05, -0.817, 0.256), (X, Y, Z), (0.008, 0.035, 0.0075), sw['yellow'])
     m.box(PS(0, -0.782, 0.256), (X, Y, Z), (0.058, 0.008, 0.008), sw['yellow'], front=(2, -1, stripes, -X, Y))
 
     # -- control stick: the boot stays with the cockpit, the rest goes into the stick bone
