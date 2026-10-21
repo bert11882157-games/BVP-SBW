@@ -167,7 +167,7 @@ def p_weapons(d, im):
         x = S * (0.09 + k * 0.165)
         H.lamp(d, [x - 16, Hh * .14, x + 16, Hh * .38], (210, 210, 200), None, lit=(k == 0))
         d.rectangle([x - 4, Hh * .48, x + 4, Hh * .70], fill=(190, 190, 190, 255))
-        H.text(d, (x, Hh * .86), lab, Hh * .085)
+        H.text(d, (x, Hh * .86), lab, Hh * .2)
 
 
 def p_gear(d, im):
@@ -244,13 +244,13 @@ def p_hud_ctrl(d, im):
     for k, lab in enumerate(['SYM', 'BRT', 'DAY/NT', 'DECLT']):
         x = S * (0.13 + k * 0.245)
         if k == 1:
-            d.ellipse([x - 22, Hh * .5 - 22, x + 22, Hh * .5 + 22], fill=(20, 20, 20, 255), outline=(110, 110, 110, 255),
+            d.ellipse([x - Hh * .24, Hh * .38 - Hh * .24, x + Hh * .24, Hh * .38 + Hh * .24], fill=(20, 20, 20, 255), outline=(110, 110, 110, 255),
                       width=3)
         elif k == 3:
-            H.lamp(d, [x - 22, Hh * .3, x + 22, Hh * .7], (60, 170, 70), None)
+            H.lamp(d, [x - Hh * .28, Hh * .14, x + Hh * .28, Hh * .62], (60, 170, 70), None)
         else:
-            d.rectangle([x - 6, Hh * .25, x + 6, Hh * .65], fill=(170, 170, 170, 255))
-        H.text(d, (x, Hh * .86), lab, Hh * .085)
+            d.rectangle([x - 3, Hh * .14, x + 3, Hh * .62], fill=(170, 170, 170, 255))
+        H.text(d, (x, Hh * .86), lab, Hh * .2)
 
 
 def p_hud_lens(d, im):
@@ -411,8 +411,8 @@ def build(atlas, E):
     # glass); the picture the game projects (HeadUpDisplay) fills the frame, centred on the pilot's line of sight
     hud_z0, hud_z1 = E[2] + PANEL_Z + 0.02, E[2] + PANEL_Z + 0.26
     hud_y0 = E[1] + TOP_C + 0.025
-    hud_y1 = hud_y0 + 0.10
-    ctrl = atlas.paint(128, 80, p_hud_ctrl)
+    hud_y1 = hud_y0 + 0.032                      # a low body: its control strip stays under the sight line
+    ctrl = atlas.paint(160, 40, p_hud_ctrl)
     lens = atlas.paint(64, 64, p_hud_lens)
     m.box([E[0], (hud_y0 + hud_y1) / 2, (hud_z0 + hud_z1) / 2], (X, Y, Z), (0.100, (hud_y1 - hud_y0) / 2, (hud_z1 - hud_z0) / 2),
           sw['dgrey'], front=(2, -1, ctrl, -X, Y))

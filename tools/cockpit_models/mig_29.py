@@ -591,13 +591,13 @@ def p_hud_ctrl(d, im):
     for k, lab in enumerate(['ФИЛЬТР', 'ЯРК', 'ДН/НЧ', 'КОНТР']):
         x = S * (0.13 + k * 0.245)
         if k == 1:
-            d.ellipse([x - 22, H * .5 - 22, x + 22, H * .5 + 22], fill=(20, 20, 20, 255), outline=(110, 110, 110, 255),
+            d.ellipse([x - H * .24, H * .38 - H * .24, x + H * .24, H * .38 + H * .24], fill=(20, 20, 20, 255), outline=(110, 110, 110, 255),
                       width=3)
         elif k == 3:
-            lamp(d, [x - 22, H * .3, x + 22, H * .7], (60, 170, 70), None)
+            lamp(d, [x - H * .28, H * .14, x + H * .28, H * .62], (60, 170, 70), None)
         else:
-            d.rectangle([x - 6, H * .25, x + 6, H * .65], fill=(170, 170, 170, 255))
-        text(d, (x, H * .86), lab, H * .085)
+            d.rectangle([x - 3, H * .14, x + 3, H * .62], fill=(170, 170, 170, 255))
+        text(d, (x, H * .86), lab, H * .2)
 
 
 def p_hud_lens(d, im):
@@ -824,9 +824,9 @@ def build(atlas):
             m.flat([p, q, [q[0], 2.95, q[2]], [p[0], 2.95, p[2]]], sw['black'], toward=[0, 2.95, (p[2] + q[2]) / 2])
 
     # -- ILS-31 HUD: body under the coaming, aft control strip, lens, combiner frame and glass
-    hud_z0, hud_z1, hud_y0, hud_y1, hud_hw = 3.83, 4.12, 3.20, 3.30, 0.08
+    hud_z0, hud_z1, hud_y0, hud_y1, hud_hw = 3.83, 4.12, 3.20, 3.232, 0.08   # a low body under the sight line
     X, Y, Z = np.array([1.0, 0, 0]), np.array([0, 1.0, 0]), np.array([0, 0, 1.0])
-    ctrl = atlas.paint(128, 80, p_hud_ctrl)
+    ctrl = atlas.paint(160, 40, p_hud_ctrl)
     lens = atlas.paint(64, 64, p_hud_lens)
     m.box([0, (hud_y0 + hud_y1) / 2, (hud_z0 + hud_z1) / 2], (X, Y, Z),
           (hud_hw, (hud_y1 - hud_y0) / 2, (hud_z1 - hud_z0) / 2), sw['dgrey'],
@@ -840,10 +840,11 @@ def build(atlas):
     # boresight sits in the middle of it
     g_bot = np.array([0, EYE[1] - g_up[1] * g_h / 2, 3.85])
     g_top = g_bot + g_up * g_h
-    # stem from the body top, bottom clamp bar and the two side posts
+    # two thin posts from the body top (the view under the glass stays open), bottom clamp bar and the two side posts
     stem = g_bot[1] - 0.006 - hud_y1
     if stem > 0.004:
-        m.box([0, hud_y1 + stem / 2, g_bot[2]], (X, Y, Z), (g_hw + 0.008, stem / 2, 0.012), sw['dgrey'])
+        for s in (-1, 1):
+            m.box([s * (g_hw + 0.004), hud_y1 + stem / 2, g_bot[2]], (X, Y, Z), (0.004, stem / 2, 0.005), sw['dgrey'])
     m.box(g_bot - g_up * 0.006, (X, g_up, g_n), (g_hw + 0.008, 0.006, 0.012), sw['dgrey'])
     for s in (-1, 1):
         m.box((g_bot + g_top) / 2 + X * s * (g_hw + 0.004), (X, g_up, g_n), (0.004, g_h / 2, 0.005), sw['dgrey'])
@@ -878,7 +879,7 @@ def build(atlas):
         m.flat([[xi, FLOOR_Y, zf_i], [xo, FLOOR_Y, zf_o], [xo, CONSOLE_Y, zf_o], [xi, CONSOLE_Y, zf_i]], sw['turq_d'],
                normal=[0, 0, 1])
         # wall strip beside the seat, behind the console, down to the floor
-        m.flat([[xw, FLOOR_Y, 2.45], [xw, FLOOR_Y, 2.55], [xw, CONSOLE_Y, 2.55], [xw, CONSOLE_Y, 2.45]], sw['turq_d'],
+        m.flat([[xw, FLOOR_Y, 2.45], [xw, FLOOR_Y, 2.55], [xw, CONSOLE_Y - 0.02, 2.55], [xw, CONSOLE_Y - 0.02, 2.45]], sw['turq_d'],   # up to the wall's foot, not over it
                normal=[-side, 0, 0])
         # sill cap (canopy rail ledge) along the wall top
         m.box([side * (WALL_X - 0.015), 3.14, 3.20], (X, Y, Z), (0.03, 0.012, 0.76), sw['dgrey'])
@@ -930,7 +931,7 @@ def build(atlas):
           front=(2, 1, headbox, X, Y))                                                       # seen from ahead                                                      # headrest pad
     # ejection handles between the knees (yellow and black)
     for s in (1, -1):
-        m.box([s * 0.05, 2.585, 3.29], (X, Y, Z), (0.008, 0.035, 0.008), sw['yellow'])
+        m.box([s * 0.05, 2.585, 3.29], (X, Y, Z), (0.008, 0.035, 0.006), sw['yellow'])   # a little thinner than the bar
     m.box([0, 2.62, 3.29], (X, Y, Z), (0.058, 0.008, 0.008), sw['yellow'], front=(2, -1, stripes, -X, Y))
 
     # -- control stick (RUS): column, grip leaning forward, trigger, red button, wheel-brake lever; the rubber boot
