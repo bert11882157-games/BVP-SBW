@@ -55,8 +55,8 @@ def build(atlas, E, skin):
     # the periscope housing on the canopy's top
     top = can.point(0.12, 1.0) + E
     X, Y, Z = np.array([1.0, 0, 0]), np.array([0, 1.0, 0]), np.array([0, 0, 1.0])
-    m.box(top + np.array([0, 0.03, 0]), (X, Y, Z), (0.03, 0.03, 0.06), out)
-    m.box(top + np.array([0, 0.03, -0.061]), (X, Y, Z), (0.022, 0.018, 0.002), dark)
+    m.box(top + np.array([0, 0.012, 0]), (X, Y, Z), (0.028, 0.022, 0.06), out)        # sitting on the glass
+    m.box(top + np.array([0, 0.014, -0.0615]), (X, Y, Z), (0.02, 0.014, 0.002), dark)
     return m, glass
 
 
