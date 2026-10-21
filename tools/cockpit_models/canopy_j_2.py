@@ -32,7 +32,7 @@ SECTIONS = [
     (0.80, [(0.258, -0.13), (0.24, -0.09), (0.174, -0.038), (0.1, -0.018), (0.0, -0.01)]),
 ]
 SPLIT = 0.38                     # the canopy's front edge, against the windscreen arch
-FRONT_PANE_X = 0.09              # the flat front pane's edges, out from the centre line
+FRONT_PANE_X = 0.10              # the flat front pane's edges, out from the centre line (the DCS MiG-15bis reference's)
 
 
 def build(atlas, E, skin):
@@ -46,7 +46,7 @@ def build(atlas, E, skin):
     C.member(m, sh, E, 0.0, -0.85, SPLIT, 0.04, 0.03, out, inner, steps=16)
     # the windscreen: the arch, the front pane's two posts, the base frame on the nose, the side rails
     C.bow(m, sh, E, SPLIT + 0.027, 0.035, 0.02, out, inner)
-    C.member(m, sh, E, lambda z: sh.s_at_x(z, FRONT_PANE_X), 0.52, 0.80, 0.025, 0.02, out, inner)
+    C.member(m, sh, E, lambda z: sh.s_at_x(z, FRONT_PANE_X), SPLIT + 0.045, 0.80, 0.025, 0.02, out, inner)
     C.bow(m, sh, E, 0.785, 0.03, 0.02, out, inner)
     C.member(m, sh, E, 0.0, SPLIT + 0.045, 0.80, 0.04, 0.03, out, inner)
     return m, glass
