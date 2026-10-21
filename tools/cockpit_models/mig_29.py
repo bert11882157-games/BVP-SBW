@@ -346,11 +346,11 @@ LAYOUT = [
     ('ias',      LEFT,    0.070, 3.075, ('game', 'AIRSPEED', 0.068), 'KUS indicated airspeed'),
     ('alt',      LEFT,    0.070, 2.975, ('game', 'ALTIMETER', 0.068), 'VD-20 barometric altimeter'),
     ('gear_ind', LEFT,    0.070, 2.875, ('paint_dial', 0.058), 'IP-52 gear / flaps / airbrake indicator'),
-    ('signals',  LEFT,    0.162, 2.990, ('paint_rect', 0.052, 0.230), 'signal lights panel'),
+    ('ekran',    LEFT,    0.160, 3.005, ('paint_rect', 0.060, 0.046), 'Ekran warning display'),
     # right wing: IT-23M up top, fuel and Ekran, SPO-15, hydraulics / oxygen / volts
     ('hdd',      RIGHT,   0.078, 3.112, ('display', 'RADAR', 0.105), 'IT-23M head-down display'),
     ('fuel',     RIGHT,   0.056, 2.995, ('game', 'FILLER_FUEL', 0.058), 'fuel quantity'),
-    ('ekran',    RIGHT,   0.150, 2.995, ('paint_rect', 0.078, 0.046), 'Ekran warning display'),
+    ('signals',  RIGHT,   0.180, 2.950, ('paint_rect', 0.050, 0.190), 'signal lights column (on the right, as on the type)'),
     ('spo15',    RIGHT,   0.100, 2.904, ('game', 'RWR', 0.064), 'SPO-15 Beryoza radar warning'),
     ('hyd',      RIGHT,   0.045, 2.832, ('game', 'FILLER_HYDRAULIC', 0.042), 'IKG hydraulic pressures'),
     ('oxy',      RIGHT,   0.110, 2.832, ('game', 'FILLER_OXYGEN', 0.042), 'oxygen'),
@@ -832,6 +832,13 @@ def build(atlas):
           (hud_hw, (hud_y1 - hud_y0) / 2, (hud_z1 - hud_z0) / 2), sw['dgrey'],
           front=(2, -1, ctrl, -X, Y))
     m.rect_tex([0, hud_y1 + 0.001, 3.97], [0, 1, 0], [0, 0, 1], 0.10, 0.10, lens)
+    # the hood over the IT-23M display on the right wing (the reference views): a top plate and two cheeks
+    hc = RIGHT.at(0.078, 3.112 + 0.052, lift=0.0)
+    for k, (dx, dy, hw, hh) in enumerate(((0.0, 0.004, 0.075, 0.004), (-0.072, -0.036, 0.004, 0.04), (0.072, -0.036, 0.004, 0.04))):
+        m.box(hc + RIGHT.R * dx + RIGHT.U * dy + RIGHT.N * 0.0305, (RIGHT.R, RIGHT.U, RIGHT.N), (hw, hh, 0.028), sw['black'])   # 2.5 mm off the panel
+    # the two black blocks either side of the HUD body on the glareshield (the reference views)
+    for s in (-1, 1):
+        m.box([s * (hud_hw + 0.045), hud_y0 + 0.035, 3.96], (X, Y, Z), (0.035, 0.035, 0.10), sw['black'])
     lean = math.radians(22)                     # combiner top leans toward the pilot
     g_up = np.array([0, math.cos(lean), -math.sin(lean)])
     g_n = unit(np.cross(X, g_up))
@@ -929,10 +936,13 @@ def build(atlas):
     m.box([0, 3.37, 2.72], (X, Y, Z), (0.16, 0.16, 0.10), sw['frame'])                       # headbox (its top 13 cm over the eye, under the canopy)
     m.box([0, 3.40, 2.835], (X, Y, Z), (0.11, 0.10, 0.015), sw['cushion'],
           front=(2, 1, headbox, X, Y))                                                       # seen from ahead                                                      # headrest pad
-    # ejection handles between the knees (yellow and black)
+    # the K-36 ejection handle between the knees: a red double loop on the seat front (as on the reference views)
+    red = atlas.swatch((178, 34, 30))
     for s in (1, -1):
-        m.box([s * 0.05, 2.585, 3.29], (X, Y, Z), (0.008, 0.035, 0.006), sw['yellow'])   # a little thinner than the bar
-    m.box([0, 2.62, 3.29], (X, Y, Z), (0.058, 0.008, 0.008), sw['yellow'], front=(2, -1, stripes, -X, Y))
+        for xl in (0.018, 0.088):
+            m.box([s * xl, 2.585, 3.29], (X, Y, Z), (0.007, 0.032, 0.006), red)
+        m.box([s * 0.053, 2.622, 3.29], (X, Y, Z), (0.042, 0.007, 0.0065), red)
+    m.box([0, 2.552, 3.29], (X, Y, Z), (0.03, 0.01, 0.009), sw['black'])                   # the handle's root block
 
     # -- control stick (RUS): column, grip leaning forward, trigger, red button, wheel-brake lever; the rubber boot
     # stays with the cockpit, the rest goes into the animated stick bone
