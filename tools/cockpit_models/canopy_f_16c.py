@@ -13,7 +13,6 @@ import os, sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
-import cockpit_lib as L          # noqa: E402
 import handbuilt as H            # noqa: E402
 import handbuilt_canopy as C     # noqa: E402
 
@@ -49,15 +48,7 @@ def build(atlas, E, skin):
 
 
 def main(argv):
-    ac = L.Aircraft(VID)
-    E = ac.eye(0)
-    old = C.original_glass(VID)
-    atlas = C.atlas_for(VID)
-    m, glass = build(atlas, E, C.frame_colour(ac))
-    n_old, n_new = C.install(ac, m, SOURCE_BONE, glass, old)
-    print(f'{VID} canopy: {n_old} old frame faces removed; {n_new} frame faces, {len(glass) // 3} glass triangles')
-    if '--dry-run' not in argv:
-        H.write(ac, atlas)
+    C.run(VID, SOURCE_BONE, build, argv)
 
 
 if __name__ == '__main__':

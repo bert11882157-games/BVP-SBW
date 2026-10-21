@@ -58,4 +58,4 @@ def build(atlas, E, skin):
 if __name__ == '__main__':
     C.run(VID, SOURCE_BONE, build, sys.argv[1:], colour=(120, 124, 128),       # the frames in the airframe grey
           clear=(C.Shape(SECTIONS), 0.42, 1.45),                                # the old open windscreen's posts
-          boxes=[((-0.40, 0.12, -1.30), (0.40, 0.50, -0.36))])                  # its old frame blocks over the bulkhead
+          boxes=[((-0.40, 0.05, -1.30), (0.40, 0.50, -0.25))])                  # its old frame blocks over the bulkhead

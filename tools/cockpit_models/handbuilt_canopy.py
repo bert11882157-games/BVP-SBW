@@ -21,6 +21,8 @@ import free_atlas as FA      # noqa: E402
 import lib as A              # noqa: E402
 
 N = 18                        # points per resampled half-section, sill to top
+_FRAMES = []                  # every bow and member placed this run: the glass is cut round them (cut_glass)
+_GLASS = []                   # every glass patch asked for this run
 BASE = 'be357476'             # the commit holding the models' original canopy glass
 
 
@@ -62,6 +64,11 @@ class Shape:
         x, y = sec[i] * (1 - f) + sec[i + 1] * f
         return np.array([x * side, y, z])
 
+    def arclen(self, z):
+        """the half-section's length at z, sill to top (metres per unit of s)"""
+        sec = self.section(z)
+        return float(np.linalg.norm(np.diff(sec, axis=0), axis=1).sum())
+
     def s_at_x(self, z, x):
         """the position s across the section at z where the surface stands x out from the centre line (s from the
         sill up, the first point at or inside x): for posts and members set by their width, not by arc length"""
@@ -86,7 +93,9 @@ class Shape:
 
 
 def glass_triangles(shape, E, z0, z1, s0=0.0, s1=1.0, nz=12, ns=10, sides=(1, -1)):
-    """the glass over [z0, z1] x [s0, s1] of the shape, vehicle-local, both halves; flat list of points"""
+    """the glass over [z0, z1] x [s0, s1] of the shape, vehicle-local, both halves; flat list of points (run() then
+    remakes it with the frames cut out of it: cut_glass)"""
+    _GLASS.append((shape, z0, z1, s0, s1, nz, ns, tuple(sides)))
     out = []
     zs = np.linspace(z0, z1, nz + 1)
     ss = np.linspace(s0, s1, ns + 1)
@@ -102,6 +111,7 @@ def glass_triangles(shape, E, z0, z1, s0=0.0, s1=1.0, nz=12, ns=10, sides=(1, -1
 def bow(m, shape, E, z, width, depth, rect_out, rect_in, s0=0.0, s1=1.0, proud=0.004):
     """a transverse frame at station z over the shape from s0 to s1 on both sides (one arch over the top), [width]
     along the aircraft, [depth] deep inward, standing [proud] outside the glass"""
+    _FRAMES.append((shape, 'bow', z, width))
     ss = np.linspace(s0, s1, 12)
     for side in (1, -1):
         for zz in ((z - width / 2, z + width / 2),):
@@ -121,6 +131,7 @@ def bow(m, shape, E, z, width, depth, rect_out, rect_in, s0=0.0, s1=1.0, proud=0
 def member(m, shape, E, s, z0, z1, width, depth, rect_out, rect_in, sides=(1, -1), proud=0.004, steps=10):
     """a longitudinal frame along the shape at position s from z0 to z1, [width] across the surface (s may be a
     function of z, e.g. lambda z: shape.s_at_x(z, 0.12) for a post standing a set width out)"""
+    _FRAMES.append((shape, 'member', s, z0, z1, width))
     zs = np.linspace(z0, z1, steps + 1)
     for side in sides:
         for i in range(steps):
@@ -139,6 +150,111 @@ def member(m, shape, E, s, z0, z1, width, depth, rect_out, rect_in, sides=(1, -1
             m.flat([b0, d0, d1, b1], rect_in, toward=(b0 + d1) / 2 + (b0 - a0))
 
 
+def cut_glass(E, pad=0.006):
+    """the glass patches asked for, remade with every frame cut out of them: the glass stops at each bow's and
+    member's edge (less [pad], as the frames' faces lean out over their footprint where the glass curves) instead of
+    running on under it, so no frame face lies a few millimetres over the glass (they flicker through each other)"""
+    out = []
+    for sh, z0, z1, s0, s1, nz, ns, sides in _GLASS:
+        frames = [f for f in _FRAMES if f[0] is sh]
+        bows = [(f[2] - f[3] / 2 - pad, f[2] + f[3] / 2 + pad) for f in frames if f[1] == 'bow']
+        mems = [f for f in frames if f[1] == 'member']
+        zb = set(np.linspace(z0, z1, nz + 1).tolist())
+        for a, b in bows:
+            zb |= {a, b}
+        for f in mems:
+            zb |= {f[3] - pad, f[4] + pad}
+        zb = sorted(z for z in zb if z0 - 1e-9 <= z <= z1 + 1e-9)
+        for i in range(len(zb) - 1):
+            za, zc = zb[i], zb[i + 1]
+            if zc - za < 1e-6:
+                continue
+            zm = (za + zc) / 2
+            if any(a - 1e-6 <= zm <= b + 1e-6 for a, b in bows):
+                continue                                   # under a bow: no glass
+            live = [f for f in mems if f[3] - pad - 1e-6 <= zm <= f[4] + pad + 1e-6]
+            def mid(f, z):
+                return f[2](z) if callable(f[2]) else f[2]
+            live.sort(key=lambda f: mid(f, zm))
+            def bounds(z):
+                L = sh.arclen(z) or 1.0
+                b, prev = [], s0
+                for f in live:
+                    h = (f[5] / 2 + pad) / L
+                    lo, hi = mid(f, z) - h, mid(f, z) + h
+                    b.append((prev, max(prev, min(lo, s1))))
+                    prev = min(s1, max(prev, hi))
+                b.append((prev, s1))
+                return b
+            ba, bc = bounds(za), bounds(zc)
+            for (la, ha), (lc, hc) in zip(ba, bc):
+                w = max(ha - la, hc - lc)
+                if w <= 1e-4:
+                    continue
+                k = max(1, int(round(ns * w / max(1e-6, s1 - s0))))
+                for j in range(k):
+                    sa0, sa1 = la + (ha - la) * j / k, la + (ha - la) * (j + 1) / k
+                    sc0, sc1 = lc + (hc - lc) * j / k, lc + (hc - lc) * (j + 1) / k
+                    for side in sides:
+                        a, b = sh.point(za, sa0, side), sh.point(zc, sc0, side)
+                        c, d = sh.point(zc, sc1, side), sh.point(za, sa1, side)
+                        out += [a + E, b + E, c + E, a + E, c + E, d + E]
+    return out
+
+
+def clear_under_glass(ac, glass_pts, E, gap=0.015):
+    """the model's own faces lying within [gap] of the new glass, parallel to it and under it (old canopy panes and
+    plates): seen through the glass they flicker against it, so they go"""
+    G = np.array(glass_pts, float).reshape(-1, 3, 3)
+    if not len(G):
+        return 0
+    n = np.cross(G[:, 1] - G[:, 0], G[:, 2] - G[:, 0])
+    ln = np.linalg.norm(n, axis=1)
+    G, n = G[ln > 1e-10], n[ln > 1e-10] / ln[ln > 1e-10, None]
+    glo, ghi = G.min(1) - gap, G.max(1) + gap
+    def overlap2d(a, b):
+        def shrink(t):
+            c = t.mean(0)
+            return c + (t - c) * 0.96
+        a, b = shrink(a), shrink(b)
+        for tt in (a, b):
+            for i in range(len(tt)):
+                e = tt[(i + 1) % len(tt)] - tt[i]
+                nn = np.array([-e[1], e[0]])
+                pa, pb = a @ nn, b @ nn
+                if pa.max() <= pb.min() or pb.max() <= pa.min():
+                    return False
+        return True
+    total = 0
+    for bone in ac.bones:
+        pm = bone.get('poly_mesh')
+        if not pm or not pm.get('polys') or bone['name'].endswith('__cockpit') or bone['name'].endswith('__canopy'):
+            continue
+        P = np.array(pm['positions'], float) * np.array([1, 1, -1]) / 16.0
+        keep = []
+        for poly in pm['polys']:
+            V = P[[v[0] for v in poly]] if poly else None
+            hit = False
+            if V is not None and len(V) >= 3:
+                fn = np.cross(V[1] - V[0], V[2] - V[0])
+                if np.linalg.norm(fn) > 1e-10:
+                    fn = fn / np.linalg.norm(fn)
+                    lo, hi = V.min(0), V.max(0)
+                    for i in np.where(np.all(glo <= hi, axis=1) & np.all(ghi >= lo, axis=1))[0]:
+                        if abs(n[i] @ fn) < math.cos(math.radians(8)) or np.abs((V - G[i][0]) @ n[i]).max() > gap:
+                            continue
+                        ax = np.argsort(np.abs(n[i]))[:2]
+                        if overlap2d(G[i][:, ax], V[:, ax]):
+                            hit = True
+                            break
+            if hit:
+                total += 1
+            else:
+                keep.append(poly)
+        pm['polys'] = keep
+    return total
+
+
 def atlas_for(vid):
     """an atlas in the texture's free area, the cockpit's tiles counted as used"""
     at = A.Atlas.__new__(A.Atlas)
@@ -150,6 +266,26 @@ def atlas_for(vid):
     return at
 
 
+def at_canopy(ac, glass_pts, E, near=0.07, below=0.05):
+    """keep(bone, poly) -> True for a face the canopy step may take: within [near] of the new glass, or inside the
+    new canopy's volume (under its surface, no more than [below] under the sill). Anything else is the model's
+    exterior skin (the nose deck ahead of the windscreen, the spine behind the canopy, the fuselage sides) and stays."""
+    from matplotlib.path import Path
+    G = np.array(glass_pts, float).reshape(-1, 3, 3) - E if len(glass_pts) else np.zeros((0, 3, 3))
+    pts = np.concatenate([G.reshape(-1, 3), G.mean(1)]) if len(G) else np.zeros((0, 3))
+    shapes = [(sh, z0, z1) for sh, z0, z1, *_ in _GLASS]
+    def ok(c):
+        if len(pts) and np.min(np.linalg.norm(pts - c, axis=1)) < near:
+            return True
+        for sh, z0, z1 in shapes:
+            if z0 <= c[2] <= z1:
+                sec = sh.section(c[2])
+                if c[1] >= sec[0][1] - below and Path(np.r_[sec, sec[::-1] * np.array([-1, 1])]).contains_point((c[0], c[1])):
+                    return True
+        return False
+    return ok
+
+
 def install(ac, mesh, source, glass_pts, old_glass):
     """the old canopy frame faces go (strip.find against the old glass), the frames into <piece>__canopy (parent
     hull), the new glass into CanopyGlass"""
@@ -159,6 +295,13 @@ def install(ac, mesh, source, glass_pts, old_glass):
     tub = L.Tub(ac, 0)
     tex = np.array(Image.open(L.texture_path(ac.vid)).convert('RGBA'))
     rm = S.find(ac, tub, canopy=old_glass, tex=tex)[0] if len(old_glass) else {}   # no old glass: clear_skin does it
+    E = ac.eye(0)
+    ok = at_canopy(ac, glass_pts, E)
+    for b in ac.bones:                                  # only what lies at the new canopy goes; the skin stays
+        if b['name'] in rm:
+            P = np.array(b['poly_mesh']['positions'], float) * np.array([1, 1, -1]) / 16.0 - E
+            polys = b['poly_mesh']['polys']
+            rm[b['name']] = {i for i in rm[b['name']] if polys[i] and ok(P[[v[0] for v in polys[i]]].mean(0))}
     n = 0
     for b in ac.bones:
         if b['name'] in rm:
@@ -235,7 +378,7 @@ def clear_skin(ac, shape, E, z0, z1, depth=0.07, above=0.03, outside=0.0):
             d = np.min(np.hypot(sec[:, 0] - abs(c[0]), sec[:, 1] - c[1]))
             outline = np.r_[sec, sec[::-1] * np.array([-1, 1])]
             inside = Path(outline).contains_point((c[0], c[1]))
-            if d < depth or (inside and d < depth * 1.6) or (not inside and d < outside):
+            if (inside and d < depth * 1.6) or (not inside and d < max(0.025, outside)):   # outside: only what hugs it
                 n += 1
             else:
                 keep.append(poly)
@@ -250,8 +393,12 @@ def run(vid, source, build, argv, colour=None, clear=None, boxes=()):
     E = ac.eye(0)
     old = original_glass(vid)
     atlas = atlas_for(vid)
+    _FRAMES.clear(); _GLASS.clear()
     m, glass = build(atlas, E, colour or frame_colour(ac))
+    if _GLASS:
+        glass = cut_glass(E)                             # the frames cut out of the glass
     n_old, n_new = install(ac, m, source, glass, old)
+    n_old += clear_under_glass(ac, glass, E)
     if clear:
         n_old += clear_skin(ac, clear[0], E, clear[1], clear[2], outside=clear[3] if len(clear) > 3 else 0.0)
     for lo, hi in boxes:                                 # old frame pieces standing clear of the glass

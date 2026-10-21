@@ -56,6 +56,36 @@ def overlap2d(a, b):
     return True
 
 
+def glass_clashes(ac, E, B, gap):
+    """faces (B, eye-relative) lying within [gap] of the canopy glass and overlapping it"""
+    G = np.array((ac.asset.get('CanopyGlass') or {}).get('Triangles', []), float).reshape(-1, 3, 3)
+    if not len(G):
+        return []
+    G = G - E
+    n = np.cross(G[:, 1] - G[:, 0], G[:, 2] - G[:, 0])
+    ln = np.linalg.norm(n, axis=1)
+    ok = ln > 1e-10
+    G, n = G[ok], n[ok] / ln[ok, None]
+    nb = np.cross(B[:, 1] - B[:, 0], B[:, 2] - B[:, 0])
+    lb = np.linalg.norm(nb, axis=1)
+    okb = lb > 1e-10
+    nb[okb] /= lb[okb, None]
+    lo_b, hi_b = B.min(1), B.max(1)
+    out = []
+    for i in range(len(G)):
+        lo, hi = G[i].min(0) - gap, G[i].max(0) + gap
+        cand = np.where(okb & np.all(lo_b <= hi, axis=1) & np.all(hi_b >= lo, axis=1))[0]
+        for j in cand:
+            if abs(n[i] @ nb[j]) < math.cos(math.radians(8)):
+                continue
+            if np.abs((B[j] - G[i][0]) @ n[i]).max() > gap:
+                continue
+            ax = np.argsort(np.abs(n[i]))[:2]
+            if overlap2d(G[i][:, ax], B[j][:, ax]):
+                out.append((B[j].mean(0), j))
+    return out
+
+
 def check(vid, gap):
     ac = L.Aircraft(vid)
     E = ac.eye(0)
@@ -107,7 +137,22 @@ def check(vid, gap):
 
 def main():
     gap = float(arg('--gap', '0.0015'))
-    for vid in [a for a in sys.argv[1:] if not a.startswith('--') and a != arg('--gap')]:
+    gg = arg('--glass')
+    for vid in [a for a in sys.argv[1:] if not a.startswith('--') and a not in (arg('--gap'), gg)]:
+        if gg:
+            ac = L.Aircraft(vid)
+            E = ac.eye(0)
+            na = len(tris_of(ac, E, True, []))
+            B = np.concatenate([tris_of(ac, E, True, []), tris_of(ac, E, False, [])])
+            gc = glass_clashes(ac, E, B, float(gg))
+            own = sum(1 for _, j in gc if j < na)
+            print(f'{vid}: {len(gc)} faces under the glass ({own} new frames / cockpit, {len(gc) - own} model)')
+            seen = set()
+            for c, j in gc:
+                k = tuple(np.round(c, 1))
+                if k not in seen and len(seen) < 8:
+                    seen.add(k)
+                    print(f'   {"own  " if j < na else "model"} at {np.round(c, 3).tolist()}')
         cl = check(vid, gap)
         own = sum(1 for c in cl if not c[1]); model = sum(1 for c in cl if c[1])
         print(f'{vid}: {len(cl)} clashes ({own} within the new cockpit / canopy, {model} against the model)')
