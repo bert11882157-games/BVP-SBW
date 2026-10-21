@@ -836,9 +836,7 @@ def build(atlas):
     hc = RIGHT.at(0.078, 3.112 + 0.052, lift=0.0)
     for k, (dx, dy, hw, hh) in enumerate(((0.0, 0.004, 0.075, 0.004), (-0.072, -0.036, 0.004, 0.04), (0.072, -0.036, 0.004, 0.04))):
         m.box(hc + RIGHT.R * dx + RIGHT.U * dy + RIGHT.N * 0.0305, (RIGHT.R, RIGHT.U, RIGHT.N), (hw, hh, 0.028), sw['black'])   # 2.5 mm off the panel
-    # the two black blocks either side of the HUD body on the glareshield (the reference views)
-    for s in (-1, 1):
-        m.box([s * (hud_hw + 0.045), hud_y0 + 0.035, 3.96], (X, Y, Z), (0.035, 0.035, 0.10), sw['black'])
+    # (no blocks beside the HUD body: they stood against the windscreen frame, in the way)
     lean = math.radians(22)                     # combiner top leans toward the pilot
     g_up = np.array([0, math.cos(lean), -math.sin(lean)])
     g_n = unit(np.cross(X, g_up))
@@ -888,8 +886,8 @@ def build(atlas):
         # wall strip beside the seat, behind the console, down to the floor
         m.flat([[xw, FLOOR_Y, 2.45], [xw, FLOOR_Y, 2.55], [xw, CONSOLE_Y - 0.02, 2.55], [xw, CONSOLE_Y - 0.02, 2.45]], sw['turq_d'],   # up to the wall's foot, not over it
                normal=[-side, 0, 0])
-        # sill cap (canopy rail ledge) along the wall top
-        m.box([side * (WALL_X - 0.015), 3.14, 3.20], (X, Y, Z), (0.03, 0.012, 0.76), sw['dgrey'])
+        # (no sill cap along the wall top: the canopy's own sill rails sit there, and a ledge stood out of the
+        # fuselage side where it narrows behind the seat)
     m.flat([[-0.25, FLOOR_Y, 2.45], [0.25, FLOOR_Y, 2.45], [0.25, FLOOR_Y, 4.02], [-0.25, FLOOR_Y, 4.02]], sw['floor'],
            normal=[0, 1, 0])
     m.flat([[-WALL_X, FLOOR_Y, 2.45], [WALL_X, FLOOR_Y, 2.45], [WALL_X, 3.16, 2.45], [-WALL_X, 3.16, 2.45]],

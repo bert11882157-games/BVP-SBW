@@ -345,6 +345,20 @@ def skin(m, shape, E, z0, z1, rect, nz=6, ns=10):
                 m.flat(q, rect, toward=c + shape.normal((zs[i] + zs[i + 1]) / 2, (ss[j] + ss[j + 1]) / 2, side))
 
 
+def deck(m, shape, E, z0, z1, rect, drop=0.03, inset=0.006, nz=8):
+    """a closed floor under the windscreen over [z0, z1], from sill to sill a little under the sill line, facing up:
+    what shows through the glass ahead of the panel's coaming is a deck, not the open nose bay under it"""
+    zs = np.linspace(z0, z1, nz + 1)
+    for i in range(nz):
+        q = []
+        for z in (zs[i], zs[i + 1]):
+            sx, sy = shape.section(z)[0]
+            q.append((z, sx - inset, sy - drop))
+        (za, xa, ya), (zb, xb, yb) = q
+        pts = [E + [-xa, ya, za], E + [xa, ya, za], E + [xb, yb, zb], E + [-xb, yb, zb]]
+        m.flat(pts, rect, normal=[0, 1, 0])
+
+
 def clear_box(ac, E, lo, hi):
     """the model's own faces (not the new cockpit or canopy) whose centres lie in the eye-relative box lo..hi"""
     n = 0

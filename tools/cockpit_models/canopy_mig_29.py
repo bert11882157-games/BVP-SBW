@@ -23,7 +23,7 @@ SOURCE_BONE = 'wreck_fuselage_1__hull'
 
 # the canopy's and windscreen's sections, metres from the eye: z, then the right half from the sill up over the top
 SECTIONS = [   # measured from the reference model (its eye at the origin), widths x0.96 to our fuselage, down to our sill
-    (-0.74, [(0.345, -0.226), (0.336, -0.15), (0.325, -0.11), (0.31, -0.07), (0.288, -0.03), (0.258, 0.01), (0.219, 0.05), (0.19, 0.075), (0.16, 0.093), (0.0, 0.128)]),   # ends on the spine fairing's front, just over it
+    (-0.74, [(0.345, -0.226), (0.342, -0.17), (0.304, -0.093), (0.264, -0.031), (0.225, -0.002), (0.164, 0.041), (0.082, 0.073), (0.0, 0.074)]),   # ends on the spine fairing's front, its own outline 5 mm over it (no gap above it)
     (-0.42, [(0.368, -0.235), (0.365, -0.15), (0.356, -0.11), (0.342, -0.07), (0.324, -0.03), (0.30, 0.01), (0.268, 0.05), (0.226, 0.09), (0.164, 0.13), (0.0, 0.166)]),
     (-0.12, [(0.384, -0.25), (0.382, -0.19), (0.377, -0.15), (0.37, -0.11), (0.357, -0.07), (0.34, -0.03), (0.316, 0.01), (0.286, 0.05), (0.246, 0.09), (0.191, 0.13), (0.099, 0.17), (0.0, 0.18)]),
     (0.18, [(0.386, -0.25), (0.384, -0.19), (0.378, -0.15), (0.369, -0.11), (0.353, -0.07), (0.333, -0.03), (0.308, 0.01), (0.274, 0.05), (0.228, 0.09), (0.163, 0.13), (0.0, 0.163)]),
@@ -50,7 +50,9 @@ def build(atlas, E, skin):
              proud=0.002)                                                            # the seal, beside the rail
     # the windscreen, one piece: the base frame on the nose deck, the side rails
     C.bow(m, sh, E, 1.225, 0.03, 0.02, out, inner)
-    C.member(m, sh, E, 0.0, SPLIT + 0.05, 1.24, 0.045, 0.035, out, inner, steps=8)
+    C.member(m, sh, E, 0.0, SPLIT + 0.05, 1.24, 0.03, 0.003, out, inner, steps=8, proud=0.008)   # (on the outside: deeper, it stood as a block inside beside the HUD)
+    # the deck under the windscreen ahead of the coaming, closing off the nose bay seen through the glass
+    C.deck(m, sh, E, 0.80, 1.24, inner)
     return m, glass
 
 
