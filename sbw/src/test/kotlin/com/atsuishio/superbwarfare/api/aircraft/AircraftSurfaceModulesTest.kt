@@ -10,35 +10,6 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
 class AircraftSurfaceModulesTest {
-    @Test fun `MiG19 wing root is not hidden by its coarse terrain contact volume`() {
-        val source = requireNotNull(javaClass.getResourceAsStream("/aircraft_mig19_surface_regression.json"))
-            .bufferedReader().use { it.readText().removePrefix("\uFEFF") }
-        val json = kotlinx.serialization.json.Json
-        val data = json.parseToJsonElement(source) as kotlinx.serialization.json.JsonObject
-        val modules = json.decodeFromJsonElement(kotlinx.serialization.builtins.ListSerializer(
-            AircraftSurfaceModuleInfo.serializer()), data.getValue("AircraftSurfaceModules"))
-        val authored = json.decodeFromJsonElement(kotlinx.serialization.builtins.ListSerializer(
-            com.atsuishio.superbwarfare.data.vehicle.subdata.OBBInfo.serializer()), data.getValue("OBB"))
-        val wing = modules.first { it.id == AircraftSurfaceModules.WING_LEFT.toString() }
-        val box = wing.hitboxes.maxBy { (it.max.x-it.min.x)*(it.max.y-it.min.y)*(it.max.z-it.min.z) }
-        val center = box.min.add(box.max).scale(.5)
-        val direction = center.normalize().scale(-1.0)
-        val start = center.add(direction.scale(-6.0))
-        val terrain = (data.getValue("AircraftTerrainContact") as kotlinx.serialization.json.JsonObject)
-            .getValue("Fuselage") as kotlinx.serialization.json.JsonObject
-        fun vector(key: String): Vec3 {
-            val coordinates = terrain.getValue(key) as kotlinx.serialization.json.JsonArray
-            return Vec3(coordinates[0].toString().toDouble(),coordinates[1].toString().toDouble(),coordinates[2].toString().toDouble())
-        }
-        val phantom = net.minecraft.world.phys.AABB(vector("Min"),vector("Max")).clip(start,center).orElseThrow()
-        assertNull(AircraftSurfaceModules.nearest(modules,start,phantom.add(direction.scale(.05))))
-        val boxes = authored.map { info -> info.getOBB().also { it.center.set(info.position.x,info.position.y,info.position.z) } }
-        val hull = com.atsuishio.superbwarfare.world.phys.ProjectileHitSelection.nearestObb(boxes,start,center,0.0)
-        val hit = AircraftSurfaceModules.clipGeometry(modules,Matrix4d(),{Matrix4d()},hull,start,center)
-        assertNotNull(hit)
-        assertEquals(AircraftSurfaceModules.WING_LEFT, AircraftSurfaceModules.nearest(modules,
-            start,hit!!.point().add(direction.scale(.05))))
-    }
     private fun module(id:String,x:Double,z:Double,bone:String="hull")=AircraftSurfaceModuleInfo().apply {
         this.id="superbwarfare:$id";maxHealthFraction=if(id.startsWith("wing")) .2 else .15
         hitboxes=listOf(AircraftSurfaceBox().apply { this.bone=bone;min=Vec3(x,0.0,z);max=Vec3(x+1,1.0,z+1) })

@@ -1,11 +1,12 @@
 package com.atsuishio.superbwarfare.api.vehicle.flight
 
 /**
- * Baseline MiG-19S flight profile. Public performance values are separate from the strategy
- * so authored profiles can replace this object without changing the flight model or
- * the VehicleEntity integration.
+ * Test-only reference jet (a 1950s single-seat fighter class). It is the fixed-wing profile and
+ * quarter-distance handling that the flight-model tests were written against; no vehicle uses it.
+ * Public performance values are separate from the strategy so tests can swap profiles without
+ * changing the flight model.
  */
-object MiG19FixedWingProfile {
+object ReferenceJetFixture {
     const val OFFICIAL_MAX_IAS_KMH = 1260.0
     const val OFFICIAL_MAX_SPEED_AT_ALTITUDE_KMH_RB_REFERENCE = 1451.0
     const val OFFICIAL_BASE_MASS_KG_RB_REFERENCE = 5550.0
@@ -32,12 +33,12 @@ object MiG19FixedWingProfile {
 
     /**
      * The aerodynamic/control coefficients below are explicit tuning surfaces, not claims that
-     * War Thunder publishes a complete MiG-19 coefficient table.  They are deliberately bounded
+     * War Thunder publishes a complete coefficient table.  They are deliberately bounded
      * defaults pending calibration against a primary flight-model data set.
      */
     @JvmField
     val PROFILE = FixedWingFlightProfile(
-        id = "mig-19s",
+        id = "reference-jet-fixture",
         massKg = FULL_FUEL_REFERENCE_MASS_KG,
         referenceWingAreaM2 = REFERENCE_WING_AREA_M2,
         liftSlopePerRadian = 5.4,
@@ -121,7 +122,7 @@ object MiG19FixedWingProfile {
             waveDragOnsetMach = 0.82,
             waveDragWidthMach = 0.25,
             waveDragPerMetre = REFERENCE_WAVE_DRAG_PER_METRE,
-            // owner's balance (2026-09-28): Mach 1.35 fighter, first soft cap 350 km/h (same as the MiG-19S)
+            // owner's balance (2026-09-28): Mach 1.35 fighter, first soft cap 350 km/h
             firstSoftSpeedLimitMps = 350.0 / 3.6,
             lowSpeedSurplusBoost = FixedWingHandlingProfile.JET_LOW_SPEED_BOOST,
         ),

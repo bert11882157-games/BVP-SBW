@@ -203,8 +203,6 @@ public class ModEntityRenderers {
                 "custom_geo/kiev.geo.json", "textures/entity/kiev.png", "KievRenderer"));
         registerVehicle(event, ModEntities.TOW_TRIPOD, "tow_tripod", standardVehicle(
                 "custom_geo/tow_tripod.geo.json", "textures/entity/tow_tripod.png", "TowTripodRenderer"));
-        registerVehicle(event, ModEntities.MIG19, "mig19", standardVehicle(
-                "custom_geo/mig19.geo.json", "textures/entity/mig19.png", "Mig19Renderer"));
         registerVehicle(event, ModEntities.YAK_3, "yak_3", standardVehicle(
                 "custom_geo/yak_3.geo.json", "textures/entity/yak_3.png",
                 "yak_3"));

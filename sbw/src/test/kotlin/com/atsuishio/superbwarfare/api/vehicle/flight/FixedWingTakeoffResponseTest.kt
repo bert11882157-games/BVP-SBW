@@ -157,7 +157,7 @@ class FixedWingTakeoffResponseTest {
 
     @Test fun mouseTakeoffFromRestRemovesGroundAssistAtLiftoff() {
         for ((name, profile) in listOf("game_jet" to handling,
-            "mig19" to MiG19FixedWingProfile.HANDLING,
+            "reference_jet" to ReferenceJetFixture.HANDLING,
             "scaled_jet" to FixedWingReferenceHandling.scale(handling, 0.25))) {
             val model = FixedWingFlightModel(profile)
             val controller = FixedWingMouseAimController(profile)

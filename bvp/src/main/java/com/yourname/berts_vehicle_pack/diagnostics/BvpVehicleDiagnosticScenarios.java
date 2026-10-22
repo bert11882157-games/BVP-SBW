@@ -219,7 +219,7 @@ public final class BvpVehicleDiagnosticScenarios {
                 VehicleEntity helicopter = spawn("mi28n", origin.x + 35, origin.y + 45, origin.z + 640);
                 helicopter.setNoGravity(true);
                 distant.add(helicopter);
-                VehicleEntity aircraft = spawn("mig19", origin.x - 40, origin.y + 75, origin.z + 680);
+                VehicleEntity aircraft = spawn("mig_19s",origin.x - 40, origin.y + 75, origin.z + 680);
                 aircraft.setNoGravity(true);
                 distant.add(aircraft);
                 observer.teleportTo(level, origin.x, origin.y + 4, origin.z, 0, -2);
