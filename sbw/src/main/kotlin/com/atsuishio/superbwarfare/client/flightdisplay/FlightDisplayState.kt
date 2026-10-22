@@ -61,6 +61,16 @@ data class FlightDisplayState(
         private var smoothedVs = 0.0
         private var smoothedFor = -1
 
+        /**
+         * The local player's seat in [vehicle], or -1 when they are not aboard it. Instruments, displays and the HUD
+         * run live only for the crew member at their own seat; everyone else sees the still picture.
+         */
+        @JvmStatic
+        fun crewSeat(vehicle: VehicleEntity): Int {
+            val player = Minecraft.getInstance().player ?: return -1
+            return if (player.vehicle === vehicle) vehicle.getSeatIndex(player) else -1
+        }
+
         /** Live state of [vehicle] at [partialTick], or null when its attitude is not yet known. */
         @JvmStatic
         fun sample(vehicle: VehicleEntity, partialTick: Float): FlightDisplayState? {

@@ -78,6 +78,7 @@ object FlightDisplays {
     private val stillRequested = HashSet<Page>()
     private val livePages = HashSet<Page>()
     private var liveVehicleId = -1
+    private var liveSeat = -1
     private var failed = false
     private var loggedFirstLive = false
     private var paintsLogged = 0
@@ -118,14 +119,19 @@ object FlightDisplays {
         val vehicle = player.vehicle as? VehicleEntity ?: run { liveVehicleId = -1; return }
         val resource = displays(vehicle) ?: run { liveVehicleId = -1; return }
         if (resource.displays.isNullOrEmpty() || vehicle.isWreck) { liveVehicleId = -1; return }
+        // only the screens at the local player's own seat run live (a passenger's view stays still, unpainted)
+        val seat = FlightDisplayState.crewSeat(vehicle)
+        val mine = resource.displays.filter { it.seat == seat }
+        if (mine.isEmpty()) { liveVehicleId = -1; return }
         val state = FlightDisplayState.sample(vehicle, event.renderTickTime) ?: return
-        val pages = resource.displays.map(Page::of).toSet()
+        val pages = mine.map(Page::of).toSet()
         val radar = if (pages.any { it.radar }) RadarDisplayState.sample(vehicle, event.renderTickTime) else RadarDisplayState.STILL
         val stores = if (pages.any { it.stores }) StoresDisplayState.sample(vehicle, planform(resource)) else StoresDisplayState.STILL
         try {
             for (page in pages) paint(live.getOrPut(page) { create(page.liveTexture) }, page, state, radar, stores)
             livePages.clear(); livePages.addAll(pages)
             liveVehicleId = vehicle.id
+            liveSeat = seat
             if (!loggedFirstLive) {
                 loggedFirstLive = true
                 LOGGER.info("Live flight displays active for {}: {}", VehicleResource.getDefault(vehicle).id, pages)
@@ -165,7 +171,7 @@ object FlightDisplays {
             val quad = Quad.of(display) ?: continue
             val page = Page.of(display)
             // The still picture is painted at the start of the next frame, never in the middle of the world pass.
-            val texture = if (isLive && page in livePages) page.liveTexture
+            val texture = if (isLive && display.seat == liveSeat && page in livePages) page.liveTexture
                 else if (page in stillPainted) page.stillTexture else { stillRequested.add(page); null }
             housing(buffers.getBuffer(RenderType.entityCutoutNoCull(HOUSING_TEXTURE)), pose, quad, packedLight)
             if (texture != null) {
