@@ -1,10 +1,10 @@
 {
   "schema": 1,
   "policyVersion": 4,
-  "label": "fleet-cockpits-20261019-r114",
+  "label": "canopy-f16-20261019-r115",
   "status": "release-candidate",
-  "createdAt": "2026-10-19T03:25:15.988Z",
-  "treeSha256": "b929ecd5de3d509718739165f98c6e1dbec77f41de432b8262d3d9ff7259d76b",
+  "createdAt": "2026-10-19T08:38:44.517Z",
+  "treeSha256": "111cb0693ded1f82f475939d31a45f1a7f196b718b492b4f5db69a3bb4ad9056",
   "files": [
     {
       "path": ".editorconfig",
@@ -1468,8 +1468,8 @@
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/custom_geo/f_16c.geo.json",
-      "size": 1940304,
-      "sha256": "c2ae56df8b4bd08dbc1b6950fd2d9299dde798303a869d544d79dfb3e0b38ff7"
+      "size": 2179971,
+      "sha256": "f9788505c0d6154411e92d38db4f22f5cd8583e9b4a78dc0041e2a5875eb9479"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/custom_geo/f_16c_turret_wreck.geo.json",
@@ -3893,8 +3893,8 @@
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/f_16c.json",
-      "size": 85075,
-      "sha256": "7de7213b110a03789205fac2fb6566ae1f1cac61b3e5b5b0562e61b094631ab3"
+      "size": 490240,
+      "sha256": "90519c46bf301b4c701940ad247a4ddff28f35d8f17f6596d8cf068b80e9ffc2"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/f_4c.json",
@@ -53109,14 +53109,14 @@
   ],
   "release": {
     "schema": 1,
-    "buildRecordSha256": "604044eba3c004b3ab351c73982e80dc6dd452003f945b05403ef71a873ecf72",
+    "buildRecordSha256": "7fca3eddf1a50ee41991fdcc6b1019f92e00ab3676fc383ca2fc480ac25a652e",
     "artifacts": [
       {
         "id": "bvp",
         "version": "0.1.0",
         "filename": "berts_vehicle_pack-0.1.0.jar",
-        "size": 250020966,
-        "sha256": "d5adcfc6b5ccdfc0ca38d43cab942f63012d0d3a9385a379bc22c4c45d73d458"
+        "size": 250102226,
+        "sha256": "af1989117794c1a8c932a4dc634ba7861ec58cc23c096129385af64648ac8bfb"
       },
       {
         "id": "sbw",
@@ -54017,11 +54017,11 @@
         "sha256": "ed24dc77caa01a715021b0f47217ba46296949ea6b92046986c1be0573f0a93a"
       },
       {
-        "id": "net.minecraftforge:forge:1.20.1-47.2.0_mapped_parchment_2023.08.13-1.20.1_at_fd420094fa091253276672f5de393a695c6d3ac1:194a0a413672",
+        "id": "net.minecraftforge:forge:1.20.1-47.2.0_mapped_parchment_2023.08.13-1.20.1_at_fd420094fa091253276672f5de393a695c6d3ac1:d779e25006ae",
         "version": "1.20.1-47.2.0_mapped_parchment_2023.08.13-1.20.1_at_fd420094fa091253276672f5de393a695c6d3ac1",
         "filename": "forge-1.20.1-47.2.0_mapped_parchment_2023.08.13-1.20.1.jar",
         "size": 19157979,
-        "sha256": "194a0a4136721da40058ea15fcde6ef5c0513d1775f10dc41d7421858c133e18"
+        "sha256": "d779e25006ae977a31acdea13d9a7e3f9e4ec89ea6ad3efe0450be3a8c2f39c1"
       },
       {
         "id": "net.minecraftforge:forgespi:7.0.1:2298eaba25d0",
