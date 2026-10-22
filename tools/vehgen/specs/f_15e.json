@@ -2,161 +2,387 @@
   "id": "f_15e",
   "name": "F-15E Strike Eagle",
   "entityClass": "AuthoredFixedWingAircraft",
-  "template": "f_15c",
+  "template": "f_15e",
   "source": "F-15E.mtb",
-  "note": "Two-seat strike Eagle on the F-15C airframe data (span and wing trailing edge match the template exactly). Baked stores dropped: texture rows < 128 outside the cockpit and outer wing panels, wing pylon tanks, centerline tank; the conformal tanks stay.",
+  "note": "Model swap redo (Elite Expansion 2): F-15E.mtb on the existing f_15e id and data (two seats), now at real size on the model's own gear, rigged like the F-15C (same airframe coordinates in both sources). Source nose is toolbox -x (yaw180). The source has only the closed canopy (part 17). Baked stores cut out (AIM-120A x4, Mk 82 LDGP x10 and GBU-12 x2 in toolbox groups) and kept in work/elite_expansion_2/f15e/stores; the conformal tanks, their stub pylons, the wing pylons and the centreline pylon (Hardpoint groups) stay. Originals in tools/vehgen/replaced/f_15e (the earlier pass built on the F-15C template gear).",
   "yaw180": true,
+  "scale": 0.72298,
+  "note_scale": "Real size: the source is 430 units nose to tail = 19.43 m (F-15E overall length) at 16 px/m.",
   "lengthParts": [
     0,
     1,
-    2,
-    4,
-    5,
-    8,
-    12,
-    14,
-    15
+    2
   ],
   "templateLengthBones": [
     "wreck_fuselage_0__hull",
     "wreck_fuselage_1__hull",
     "wreck_fuselage_2__hull",
-    "wreck_fuselage_3__hull",
-    "wreck_wing_left__hull",
-    "wreck_wing_right__hull",
-    "wreck_fuselage_3__elevator_0",
-    "wreck_fuselage_3__elevator_1",
-    "wreck_fuselage_1__landing_gear_12"
+    "wreck_fuselage_3__hull"
   ],
-  "excludeParts": [
-    24,
+  "groundParts": [
     12,
     14,
     15
   ],
-  "storeTextureV": 128,
-  "keepBoxes": [
-    [
-      [
-        -10,
-        28,
-        -110
-      ],
-      [
-        10,
-        60,
-        -40
-      ]
-    ],
-    [
-      [
-        55,
-        30,
-        -150
-      ],
-      [
-        110,
-        42,
-        150
-      ]
-    ],
-    [
-      [
-        -110,
-        30,
-        -150
-      ],
-      [
-        -55,
-        42,
-        150
-      ]
-    ]
+  "excludeParts": [
+    24
   ],
+  "storeTextureV": -1,
+  "dropGroups": [
+    "Import aim120a",
+    "Import mk_82_ldgp",
+    "Import GBU-12"
+  ],
+  "keepBoxes": [],
   "fuselageCuts": [
-    -73,
+    -72,
     -2,
-    62
+    48
   ],
   "parts": {
-    "0": "fuselage",
+    "0": [
+      {
+        "bone": "wing",
+        "if": {
+          "frame": "source",
+          "absXMin": 50
+        }
+      }
+    ],
     "1": "fuselage",
-    "2": "wreck_fuselage_3__hull",
+    "2": [
+      {
+        "bone": "side:wreck_fuselage_3__elevator_0,wreck_fuselage_3__elevator_1",
+        "if": {
+          "frame": "source",
+          "absXMin": 33,
+          "yMax": 38.5,
+          "zMin": 125
+        }
+      },
+      {
+        "bone": "wreck_fuselage_3__hull",
+        "if": {}
+      }
+    ],
+    "3": "wreck_fuselage_2__hull",
     "4": "wing",
     "5": "wing",
     "7": {
       "bone": "side:wreck_fuselage_3__rudder_0,wreck_fuselage_3__rudder_1",
       "if": {
-        "zMin": 100
+        "frame": "source",
+        "zMin": 0
       },
       "else": "drop"
     },
     "8": "side:wreck_fuselage_3__elevator_0,wreck_fuselage_3__elevator_1",
-    "10": "side:wreck_wing_left__aileron_10,wreck_wing_right__aileron_11",
-    "11": "side:wreck_wing_left__aileron_10,wreck_wing_right__aileron_11"
+    "9": "side:wreck_fuselage_3__elevator_0,wreck_fuselage_3__elevator_1",
+    "10": [
+      {
+        "bone": "wreck_wing_left__aileron_10",
+        "if": {
+          "frame": "source",
+          "absXMin": 88
+        }
+      },
+      {
+        "bone": "wreck_wing_left__flap_left",
+        "if": {}
+      }
+    ],
+    "11": [
+      {
+        "bone": "wreck_wing_right__aileron_11",
+        "if": {
+          "frame": "source",
+          "absXMin": 88
+        }
+      },
+      {
+        "bone": "wreck_wing_right__flap_right",
+        "if": {}
+      }
+    ],
+    "12": [
+      {
+        "bone": "wreck_fuselage_1__gear_wheel_0",
+        "if": {
+          "frame": "source",
+          "yMax": 0,
+          "zMin": -78,
+          "zMax": -65
+        }
+      },
+      {
+        "bone": "wreck_fuselage_1__gear_steer_0",
+        "if": {
+          "frame": "source",
+          "yMax": 15,
+          "absXMax": 3
+        }
+      },
+      {
+        "bone": "wreck_fuselage_1__landing_gear_12",
+        "if": {}
+      }
+    ],
+    "14": [
+      {
+        "bone": "wreck_fuselage_2__gear_wheel_1",
+        "if": {
+          "frame": "source",
+          "absXMin": 29
+        }
+      },
+      {
+        "bone": "wreck_fuselage_2__landing_gear_14",
+        "if": {}
+      }
+    ],
+    "15": [
+      {
+        "bone": "wreck_fuselage_2__gear_wheel_2",
+        "if": {
+          "frame": "source",
+          "absXMin": 29
+        }
+      },
+      {
+        "bone": "wreck_fuselage_2__landing_gear_15",
+        "if": {}
+      }
+    ],
+    "17": "wreck_fuselage_0__canopy"
   },
-  "keepTemplateBones": [
-    "landing_gear_12",
-    "landing_gear_14",
-    "landing_gear_15",
-    "gear_wheel_0",
-    "gear_wheel_1",
-    "gear_wheel_2",
-    "control_stick_pitch",
-    "suspended_f_15c_0",
-    "suspended_f_15c_1",
-    "suspended_f_15c_2",
-    "suspended_f_15c_3",
-    "suspended_f_15c_4"
-  ],
-  "attachments": {
-    "pilot2_eye": [
-      0,
-      53.3,
-      -53.5
-    ]
-  },
-  "seatPositions": {},
-  "addSeats": [
+  "addBones": [
     {
-      "note": "WSO: cushion 38.8, seat back z -49..-44",
-      "copyOf": 0,
-      "remove": [
-        "Weapons",
-        "FixedGunBank"
-      ],
-      "at": [
+      "name": "flap_left",
+      "parent": "hull",
+      "pivot": [
         0,
-        27.4,
-        -53.5
-      ],
-      "eye": "pilot2_eye"
-    }
-  ],
-  "removeClientKeys": [
-    "CanopyGlass"
-  ],
-  "flightReference": {
-    "baseMassKg": 15200,
-    "mainFuelMassKg": 10200,
-    "fullFuelMassKg": 25400,
-    "fullFuelWingLoadingKgPerSquareMetre": 450,
-    "dryThrustKgfPerEngine": 8050,
-    "afterburnerThrustKgfPerEngine": 13200,
-    "climbMetresPerSecond": 254,
-    "turnSeconds": 24,
-    "maximumTrueAirspeedKmh": 2655
-  },
-  "dropRules": [
-    {
-      "absXMin": 38,
-      "absXMax": 56,
-      "yMax": 31,
-      "zMax": 85
+        0,
+        0
+      ]
     },
     {
-      "absXMax": 6,
-      "yMax": 16
+      "name": "wreck_wing_left__flap_left",
+      "parent": "flap_left",
+      "pivot": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "flap_right",
+      "parent": "hull",
+      "pivot": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "wreck_wing_right__flap_right",
+      "parent": "flap_right",
+      "pivot": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "wreck_fuselage_0__canopy",
+      "parent": "hull",
+      "pivot": [
+        0,
+        0,
+        0
+      ]
     }
-  ]
+  ],
+  "rigAdd": {
+    "Flaps": [
+      {
+        "Bone": "flap_left",
+        "Parent": "hull",
+        "Pivot": [
+          0,
+          0,
+          0
+        ],
+        "Axis": [
+          1,
+          0,
+          0
+        ],
+        "Input": "PRESENTED_LANDING_GEAR_EXTENSION",
+        "AngleSign": 1,
+        "MaxDeflectionDegrees": 30
+      },
+      {
+        "Bone": "flap_right",
+        "Parent": "hull",
+        "Pivot": [
+          0,
+          0,
+          0
+        ],
+        "Axis": [
+          1,
+          0,
+          0
+        ],
+        "Input": "PRESENTED_LANDING_GEAR_EXTENSION",
+        "AngleSign": 1,
+        "MaxDeflectionDegrees": 30
+      }
+    ]
+  },
+  "sweeps": {
+    "aileron_10": {
+      "pivot": [
+        63.62,
+        40.13,
+        77.14
+      ],
+      "axis": [
+        -0.9231,
+        0.0195,
+        -0.3844
+      ],
+      "maxDegrees": 20
+    },
+    "aileron_11": {
+      "pivot": [
+        -63.62,
+        40.13,
+        77.14
+      ],
+      "axis": [
+        -0.9231,
+        -0.0195,
+        0.3844
+      ],
+      "maxDegrees": 20
+    },
+    "flap_left": {
+      "pivot": [
+        33.26,
+        40.67,
+        77.14
+      ],
+      "axis": [
+        -0.99984,
+        0.0178,
+        0
+      ]
+    },
+    "flap_right": {
+      "pivot": [
+        -33.26,
+        40.67,
+        77.14
+      ],
+      "axis": [
+        -0.99984,
+        -0.0178,
+        0
+      ]
+    },
+    "elevator_0": {
+      "pivot": [
+        24.58,
+        33.98,
+        130.0
+      ],
+      "axis": [
+        -1,
+        0,
+        0
+      ],
+      "maxDegrees": 25
+    },
+    "elevator_1": {
+      "pivot": [
+        -24.58,
+        33.98,
+        130.0
+      ],
+      "axis": [
+        -1,
+        0,
+        0
+      ],
+      "maxDegrees": 25
+    },
+    "rudder_0": {
+      "pivot": [
+        27.47,
+        44.82,
+        129.19
+      ],
+      "axis": [
+        0,
+        -0.9755,
+        -0.2202
+      ],
+      "maxDegrees": 30
+    },
+    "rudder_1": {
+      "pivot": [
+        -27.47,
+        44.82,
+        129.19
+      ],
+      "axis": [
+        0,
+        -0.9755,
+        -0.2202
+      ],
+      "maxDegrees": 30
+    },
+    "gear_wheel_0": {
+      "pivot": [
+        0,
+        4.34,
+        -46.85
+      ]
+    },
+    "gear_steer_0": {
+      "pivot": [
+        0,
+        4.34,
+        -46.85
+      ]
+    },
+    "gear_wheel_1": {
+      "pivot": [
+        23.5,
+        6.51,
+        42.07
+      ]
+    },
+    "gear_wheel_2": {
+      "pivot": [
+        -23.5,
+        6.51,
+        42.07
+      ]
+    }
+  },
+  "note_rig": "Rig on the model's own hinges: ailerons (outer part 10/11 element) and the new flaps (inner element; down with the gear, 30 deg) on their leading-edge hinge lines; all-moving stabilators (parts 8/9 plus the stab panels of part 2) on a lateral spindle at about 40% chord, +-25 deg, 0.2 roll weight; both rudders on their swept leading edges, +-30 deg; wheel rotors at the model's own wheel centres (nose r 4.34 px, mains r 6.51 px).",
+  "clientSet": {
+    "AircraftRig.Surfaces.Bone=elevator_0.ControlWeights.RightRoll": 0.2,
+    "AircraftRig.Surfaces.Bone=elevator_1.ControlWeights.RightRoll": -0.2,
+    "AircraftRig.Rotors.Bone=gear_wheel_0.DegreesPerTickAtFullSpeed": 211.24,
+    "AircraftRig.Rotors.Bone=gear_wheel_1.DegreesPerTickAtFullSpeed": 140.83,
+    "AircraftRig.Rotors.Bone=gear_wheel_2.DegreesPerTickAtFullSpeed": 140.83
+  },
+  "keepTemplateBones": [],
+  "attachments": {},
+  "seatPositions": {},
+  "addSeats": [],
+  "note_parts": "Part 0 elements beyond |x| 50 are wing root; the conformal tanks (to |x| 49.5) stay fuselage."
 }

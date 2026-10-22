@@ -142,18 +142,18 @@
         "Bone": "elevator_0",
         "Parent": "hull",
         "Pivot": [
-          48.51852,
-          29.11111,
-          118.77334
+          24.58,
+          33.98,
+          130.0
         ],
         "Axis": [
-          -0.7002086339541564,
+          -1,
           0,
-          -0.7139382809011254
+          0
         ],
         "ControlWeights": {
           "ElevatorUp": 1,
-          "RightRoll": 0,
+          "RightRoll": 0.2,
           "RudderRight": 0
         },
         "MaxDeflectionDegrees": 25
@@ -162,18 +162,18 @@
         "Bone": "elevator_1",
         "Parent": "hull",
         "Pivot": [
-          -48.51852,
-          29.11111,
-          118.7733
+          -24.58,
+          33.98,
+          130.0
         ],
         "Axis": [
-          -0.7002093412614377,
+          -1,
           0,
-          0.713937587195284
+          0
         ],
         "ControlWeights": {
           "ElevatorUp": 1,
-          "RightRoll": 0,
+          "RightRoll": -0.2,
           "RudderRight": 0
         },
         "MaxDeflectionDegrees": 25
@@ -182,81 +182,81 @@
         "Bone": "aileron_10",
         "Parent": "hull",
         "Pivot": [
-          57.05777,
-          34.54519,
-          77.62963
+          63.62,
+          40.13,
+          77.14
         ],
         "Axis": [
-          -0.98230901927638,
-          0.02068015482745421,
-          -0.1861217930404411
+          -0.9231,
+          0.0195,
+          -0.3844
         ],
         "ControlWeights": {
           "ElevatorUp": 0,
           "RightRoll": 1,
           "RudderRight": 0
         },
-        "MaxDeflectionDegrees": 25
+        "MaxDeflectionDegrees": 20
       },
       {
         "Bone": "aileron_11",
         "Parent": "hull",
         "Pivot": [
-          -57.05777,
-          34.54519,
-          77.62963
+          -63.62,
+          40.13,
+          77.14
         ],
         "Axis": [
-          -0.98230901927638,
-          -0.02068015482745421,
-          0.1861217930404411
+          -0.9231,
+          -0.0195,
+          0.3844
         ],
         "ControlWeights": {
           "ElevatorUp": 0,
           "RightRoll": -1,
           "RudderRight": 0
         },
-        "MaxDeflectionDegrees": 25
+        "MaxDeflectionDegrees": 20
       },
       {
         "Bone": "rudder_0",
         "Parent": "hull",
         "Pivot": [
-          26.78222,
-          50.45926,
-          124.20741
+          27.47,
+          44.82,
+          129.19
         ],
         "Axis": [
           0,
-          -1,
-          0
+          -0.9755,
+          -0.2202
         ],
         "ControlWeights": {
           "ElevatorUp": 0,
           "RightRoll": 0,
           "RudderRight": -1
         },
-        "MaxDeflectionDegrees": 25
+        "MaxDeflectionDegrees": 30
       },
       {
         "Bone": "rudder_1",
         "Parent": "hull",
         "Pivot": [
-          -26.78222,
-          50.45926,
-          124.20741
+          -27.47,
+          44.82,
+          129.19
         ],
         "Axis": [
           0,
-          -1,
-          0
+          -0.9755,
+          -0.2202
         ],
         "ControlWeights": {
           "ElevatorUp": 0,
           "RightRoll": 0,
           "RudderRight": -1
         },
-        "MaxDeflectionDegrees": 25
+        "MaxDeflectionDegrees": 30
       },
       {
         "Bone": "control_stick_roll",
@@ -305,8 +305,8 @@
         "Parent": "gear_steer_0",
         "Pivot": [
           0.0,
-          4.65778,
-          -50.45926
+          4.34,
+          -46.85
         ],
         "Axis": [
           1,
@@ -315,15 +315,15 @@
         ],
         "SpeedChannel": "groundRoll",
         "Direction": -1,
-        "DegreesPerTickAtFullSpeed": 196.817
+        "DegreesPerTickAtFullSpeed": 211.24
       },
       {
         "Bone": "gear_wheel_1",
         "Parent": "landing_gear_14",
         "Pivot": [
-          27.17037,
-          5.82222,
-          45.41334
+          23.5,
+          6.51,
+          42.07
         ],
         "Axis": [
           1,
@@ -332,15 +332,15 @@
         ],
         "SpeedChannel": "groundRoll",
         "Direction": -1,
-        "DegreesPerTickAtFullSpeed": 157.454
+        "DegreesPerTickAtFullSpeed": 140.83
       },
       {
         "Bone": "gear_wheel_2",
         "Parent": "landing_gear_15",
         "Pivot": [
-          -27.17037,
-          5.82222,
-          45.41334
+          -23.5,
+          6.51,
+          42.07
         ],
         "Axis": [
           1,
@@ -349,7 +349,7 @@
         ],
         "SpeedChannel": "groundRoll",
         "Direction": -1,
-        "DegreesPerTickAtFullSpeed": 157.454
+        "DegreesPerTickAtFullSpeed": 140.83
       }
     ],
     "Gear": [
@@ -366,7 +366,42 @@
         "Parent": "hull"
       }
     ],
-    "Flaps": [],
+    "Flaps": [
+      {
+        "Bone": "flap_left",
+        "Parent": "hull",
+        "Pivot": [
+          33.26,
+          40.67,
+          77.14
+        ],
+        "Axis": [
+          -0.99984,
+          0.0178,
+          0
+        ],
+        "Input": "PRESENTED_LANDING_GEAR_EXTENSION",
+        "AngleSign": 1,
+        "MaxDeflectionDegrees": 30
+      },
+      {
+        "Bone": "flap_right",
+        "Parent": "hull",
+        "Pivot": [
+          -33.26,
+          40.67,
+          77.14
+        ],
+        "Axis": [
+          -0.99984,
+          -0.0178,
+          0
+        ],
+        "Input": "PRESENTED_LANDING_GEAR_EXTENSION",
+        "AngleSign": 1,
+        "MaxDeflectionDegrees": 30
+      }
+    ],
     "Sweeps": [],
     "NoseSteering": [
       {
@@ -374,8 +409,8 @@
         "Parent": "landing_gear_12",
         "Pivot": [
           0.0,
-          4.65778,
-          -50.45926
+          4.34,
+          -46.85
         ],
         "Axis": [
           0,
