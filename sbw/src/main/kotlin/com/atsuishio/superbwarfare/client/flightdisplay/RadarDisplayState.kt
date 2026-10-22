@@ -71,8 +71,8 @@ data class RadarDisplayState(
                 out.add(Contact(bearing, horizontal, dy, air, target === locked, closing))
             }
             val time = net.minecraft.Util.getMillis() / 50.0 // monotonic: server time packets step the level clock
-            // Scan bar: +-60 degrees and back every 2 seconds.
-            val phase = (time % 80.0) / 40.0
+            // Scan bar: +-60 degrees one way in a second, and back.
+            val phase = (time % 40.0) / 20.0
             val sweep = if (phase < 1.0) -AZIMUTH_LIMIT + phase * 2 * AZIMUTH_LIMIT else AZIMUTH_LIMIT - (phase - 1.0) * 2 * AZIMUTH_LIMIT
             // Automatic range scale: the smallest that keeps the farthest contact in the upper part of the scope.
             val farthest = out.maxOfOrNull { it.range } ?: 0.0

@@ -9,7 +9,6 @@ import com.yourname.berts_vehicle_pack.entity.ArmoredVehicleEntity;
 import com.yourname.berts_vehicle_pack.entity.Bmp2Entity;
 import com.yourname.berts_vehicle_pack.entity.BmptEntity;
 import com.yourname.berts_vehicle_pack.entity.Btr80AEntity;
-import com.yourname.berts_vehicle_pack.entity.Mig19Entity;
 import com.yourname.berts_vehicle_pack.entity.ToyotaJihadDshkEntity;
 import com.yourname.berts_vehicle_pack.entity.ToyotaJihadSpg9Entity;
 import net.minecraft.util.Mth;
@@ -29,14 +28,6 @@ final class VehicleBonePoseController {
     static void apply(GeoVehicleEntity entity, float entityYaw, PolyMeshModel loadedModel, float partialTicks,
                       VehicleRenderPartSnapshot renderParts) {
         if (AircraftRigAnimator.apply(entity, loadedModel, partialTicks, renderParts)) {
-            return;
-        }
-        if (entity instanceof Mig19Entity) {
-            var controls = entity.getVehicleFlightControlSurfaceSnapshot(partialTicks);
-            Mig19ControlSurfaceAnimator.apply(loadedModel,
-                    controls == null ? 0 : controls.getElevator(),
-                    controls == null ? 0 : controls.getAileron(),
-                    controls == null ? 0 : controls.getRudder());
             return;
         }
         BedrockBone turret = loadedModel.getBone("turret");

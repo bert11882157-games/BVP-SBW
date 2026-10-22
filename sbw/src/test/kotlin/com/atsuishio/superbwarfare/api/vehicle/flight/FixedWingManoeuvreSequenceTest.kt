@@ -11,8 +11,8 @@ class FixedWingManoeuvreSequenceTest {
         FixedWingPilotIntent(-sin(yaw*rad)*cos(pitch*rad),-sin(pitch*rad),cos(yaw*rad)*cos(pitch*rad),
             0,side,inversionRequested=lower)
     private class Flight {
-        val model=FixedWingFlightModel(MiG19FixedWingProfile.HANDLING)
-        val controller=FixedWingMouseAimController(MiG19FixedWingProfile.HANDLING)
+        val model=FixedWingFlightModel(ReferenceJetFixture.HANDLING)
+        val controller=FixedWingMouseAimController(ReferenceJetFixture.HANDLING)
         var vx=0.0;var vy=0.0;var vz=110.0;var tick=0L
         var invertedPull=0;var peakBank=0.0;var maximumStep=0.0
         init {model.reset(0.0,0.0,0.0)}

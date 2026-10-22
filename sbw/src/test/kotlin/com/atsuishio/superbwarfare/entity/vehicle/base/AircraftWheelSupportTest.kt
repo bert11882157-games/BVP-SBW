@@ -180,8 +180,8 @@ class AircraftWheelSupportTest {
     }
 
     @Test fun allReviewedFleetLayoutsReachRealSecondarySupportGradually() {
-        assertEquals(32, fits.size)   // saab_105, su_17 removed
-        assertEquals(158, fits.values.sumOf { it.wheelContacts.size })
+        assertEquals(31, fits.size)   // saab_105, su_17 and the green MiG-19 removed
+        assertEquals(155, fits.values.sumOf { it.wheelContacts.size })
         val scene = Scene(listOf(floor))
         for ((id, data) in fits) {
             val group = if (data.wheelContacts.any { it.group == nose }) nose else tail
@@ -305,7 +305,7 @@ class AircraftWheelSupportTest {
     }
 
     @Test fun exactPointsOutsideBroadVolumesRemainTerrainSamples() {
-        for ((id, group) in listOf("mig19" to nose, "il_76m" to nose, "m_50a" to main)) {
+        for ((id, group) in listOf("il_76m" to nose, "m_50a" to main)) {
             val data = fits.getValue(id)
             val outside = data.wheelContacts.filter { it.group == group }.first {
                 it.position.x !in data.landingGear.minimum.x..data.landingGear.maximum.x ||
@@ -319,7 +319,7 @@ class AircraftWheelSupportTest {
     }
 
     @Test fun wheelBackedHalfAndFullBlockTraversalRetainsMomentumAndHouseDamage() {
-        for (id in listOf("mig_15bis", "mig_19s", "il_76m", "mig19")) {
+        for (id in listOf("mig_15bis", "mig_19s", "il_76m")) {
             val data = fits.getValue(id)
             val scene = Scene(listOf(floor))
             var settled = mainSupported(data)
@@ -416,7 +416,7 @@ class AircraftWheelSupportTest {
 
     @Test fun speedBlendKeepsHigherSpeedAttitudeAndSmoothlyEnablesSlowSettling() {
         val handling = FixedWingHandlingProfile.GAME_JET
-        val strategy = FixedWingFlightStrategy(MiG19FixedWingProfile.PROFILE, handling)
+        val strategy = FixedWingFlightStrategy(ReferenceJetFixture.PROFILE, handling)
         val reference = handling.takeoffHandling?.referenceSpeedMps ?: handling.liftReferenceSpeedMps
         assertEquals(1.0, strategy.groundGearSettleWeight(0.0))
         assertEquals(1.0, strategy.groundGearSettleWeight(reference * 0.35), 1e-10)

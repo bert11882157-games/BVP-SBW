@@ -74,7 +74,7 @@ public final class BvpAircraftBeltDiagnosticScenarios {
         int elapsed, checks, failures;
         Run(ServerPlayer observer) { this.observer=observer; server=observer.server; level=observer.serverLevel(); }
         void prepare() {
-            String[][] selections={{"yak_3","Cannon"},{"yak_3","MachineGunLeft"},{"mig19","Cannon"},{"mi_24d","PassengerGun1"}};
+            String[][] selections={{"yak_3","Cannon"},{"yak_3","MachineGunLeft"},{"mig_19s","CannonLeft"},{"mi_24d","PassengerGun1"}};
             for (int index=0; index<selections.length; index++) {
                 Vec3 position=observer.position().add((index-1.5)*18,60,40);
                 ChunkPos chunk=new ChunkPos((int)Math.floor(position.x)>>4,(int)Math.floor(position.z)>>4);

@@ -50,7 +50,7 @@ public final class BvpAircraftFlightProfilesTest {
             near(h.getDryAccelerationMps2(), engineering.get("staticOrEquivalentThrustNewtons").getAsDouble()
                     / binding.reference().getMassKg() * 0.25, 1e-10, id + " acceleration scaled once");
             reject(resource, value -> value.addProperty("lengthScale", 1.0));
-            reject(resource, value -> value.addProperty("handlingProfileId", "berts_vehicle_pack:flight_handling/mig19"));
+            reject(resource, value -> value.addProperty("handlingProfileId", "berts_vehicle_pack:flight_handling/removed_aircraft"));
             reject(resource, value -> value.getAsJsonObject("engineering").addProperty("sideDragPerMetre", Double.NaN));
             reject(resource, value -> value.getAsJsonObject("reference").addProperty("fullFuelMassKg", -1));
             reject(resource, value -> value.getAsJsonObject("reference").addProperty("engineCount", 1.5));

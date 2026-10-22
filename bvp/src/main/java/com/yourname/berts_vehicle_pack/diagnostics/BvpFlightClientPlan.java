@@ -22,7 +22,7 @@ public final class BvpFlightClientPlan {
     public double yaw;
     public double pitch;
     public double roll;
-    public String vehicleId = "berts_vehicle_pack:mig19";
+    public String vehicleId = "berts_vehicle_pack:mig_19s";
     public List<Stage> stages;
 
     public enum Throttle { UP, HOLD, DOWN }

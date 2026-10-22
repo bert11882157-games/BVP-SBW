@@ -179,7 +179,7 @@ object FarProjectileTestScenario {
                 put(BlockPos(X + x, Y - 1, Z + offset + z), Blocks.BEDROCK.defaultBlockState())
             if (wall) for (x in -5..5) for (y in -1..32)
                 put(BlockPos(X + x, Y + y, Z + 384), Blocks.BEDROCK.defaultBlockState())
-            val prototype = vehicle(if (aircraft) "berts_vehicle_pack:mig19" else "t_90a")
+            val prototype = vehicle(if (aircraft) "berts_vehicle_pack:mig_19s" else "t_90a")
             check(!aircraft || prototype.isFixedWingFlightVehicle()) { "Aircraft wake test requires the fixed-wing provider" }
             prototype.moveTo(X + .5, Y.toDouble(), Z + DISTANCE + .5, 180f, 0f)
             prototype.setNoGravity(true)
@@ -193,7 +193,7 @@ object FarProjectileTestScenario {
             check(level.addFreshEntity(target)) { "Target rejected" }
             weapon = vehicle(when (kind) {
                 "rocket" -> "ah_6"
-                "aircraft_cannon", "aircraft_tracer", "aircraft_tracer_remote", "aircraft_tracer_pause" -> "berts_vehicle_pack:mig19"
+                "aircraft_cannon", "aircraft_tracer", "aircraft_tracer_remote", "aircraft_tracer_pause" -> "berts_vehicle_pack:yak_3"
                 else -> "t_90a"
             })
             weapon.moveTo(X + 4.5, Y.toDouble(), Z + .5, 0f, 0f)

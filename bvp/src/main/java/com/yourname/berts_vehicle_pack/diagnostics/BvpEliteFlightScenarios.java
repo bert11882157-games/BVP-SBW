@@ -167,7 +167,7 @@ public final class BvpEliteFlightScenarios {
             }
             level.setDayTime(2000);
             level.setWeatherParameters(6000, 0, false, false);
-            String[] ids = {"mi28n", "ka50", "mig19", "leo2a6"};
+            String[] ids = {"mi28n", "ka50", "mig_19s", "leo2a6"};
             for (int index = 0; index < ids.length; index++) {
                 // The ground fixture needs physical support on both server and client. Pinning
                 // a tank in midair bypasses server gravity while the ordinary client still falls.

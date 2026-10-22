@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
 class AircraftTerrainMotionSolverTest {
-    @Test fun authoredMig19sDivingGearCannotShieldFuselageAndLevelGearTakesTheCrashItself() {
+    @Test fun authoredFighterDivingGearCannotShieldFuselageAndLevelGearTakesTheCrashItself() {
         for (pitch in listOf(0.0, 60.0)) {
             val rotation = Quaterniond().rotateX(Math.toRadians(pitch))
             fun box(min: Vec3, max: Vec3): OBB {
