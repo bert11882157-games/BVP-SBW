@@ -433,13 +433,13 @@
   "seatPositions": {},
   "addSeats": [],
   "flightReference": {
-    "baseMassKg": 9031,
-    "mainFuelMassKg": 3310,
-    "fullFuelWingLoadingKgPerSquareMetre": 442.8059,
-    "dryThrustKgfPerEngine": 7781.4,
-    "afterburnerThrustKgfPerEngine": 13381.0
+    "baseMassKg": 9031.0,
+    "mainFuelMassKg": 3310.0,
+    "dryThrustKgfPerEngine": 6960.0,
+    "afterburnerThrustKgfPerEngine": 11480.0,
+    "fullFuelWingLoadingKgPerSquareMetre": 442.8059
   },
-  "note_flight": "War Thunder f_16c_block_50: empty 9,031 kg, internal fuel 3,310 kg; F110-GE-129 17,155 / 29,500 lbf (GE nameplate; WT fm has no labelled split); wing 27.87 m2.",
+  "note_flight": "War Thunder f_16c_block_50: empty 9,031 kg, internal fuel 3,310 kg, wing 27.87 m2. Thrust stays the pack's 6,960 / 11,480 kgf (dry within 1% of WT's static ThrustMax 7,030; WT gives no labelled afterburner figure).",
   "armamentOverrides": {
     "Name": "F-16C",
     "MaxPayloadKg": 5420,
