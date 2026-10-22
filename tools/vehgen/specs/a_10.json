@@ -4,98 +4,82 @@
   "entityClass": "AuthoredFixedWingAircraft",
   "template": "a_10",
   "source": "A-10C.mtb",
-  "note": "Model replacement: A-10C.mtb on the existing A-10 data (span and wing chord match the old model). Originals kept in tools/vehgen/replaced/a_10. Baked stores dropped: texture rows 1024-1151 (the store atlas), the left ECM pod and the centerline pod.",
+  "note": "Model swap (Elite Expansion 2): A-10C.mtb on the existing A-10C id and data, redone at real size on the model's own gear. Source nose is toolbox -x (yaw180). Closed state: the boarding ladder (part 16, deployed with its open bay panels) is left out; part 17 is the closed ladder door. Baked stores cut out (AIM-9M x2 with their LAU-105 rails, GBU-38 x2, LAU-88/AGM-65H x2, GBU-31 x2, GBU-24 x2 in toolbox groups; the 600 gal centreline tank and the left ECM pod by position) and kept in work/elite_expansion_2/a10c/stores; the pylons stay. Flap bones added; nose wheel and steering bones added (the template has none).",
   "yaw180": true,
-  "lengthParts": [
-    0,
-    1,
-    2,
-    4,
-    5,
-    8,
-    9,
-    12,
-    14,
-    15
-  ],
-  "templateLengthBones": [
-    "wreck_fuselage_0__hull",
-    "wreck_fuselage_1__hull",
-    "wreck_fuselage_2__hull",
-    "wreck_fuselage_3__hull",
-    "wreck_wing_left__hull",
-    "wreck_wing_right__hull",
-    "wreck_fuselage_3__elevator_left",
-    "wreck_fuselage_3__elevator_right",
-    "wreck_fuselage_3__rudder_left",
-    "wreck_fuselage_3__rudder_right",
-    "wreck_fuselage_0__landing_gear_12"
-  ],
-  "excludeParts": [
-    24,
-    12,
-    14,
-    15
-  ],
+  "scale": 0.7993,
+  "note_scale": "Real size: the source is 325.5 units nose to tail = 16.26 m (A-10C overall length) at 16 px/m; the span then comes out 17.58 m (real 17.53 m).",
+  "lengthParts": [0, 1, 2],
+  "templateLengthBones": ["wreck_fuselage_0__hull", "wreck_fuselage_1__hull", "wreck_fuselage_2__hull", "wreck_fuselage_3__hull"],
+  "groundParts": [12, 14, 15],
+  "excludeParts": [16, 24],
   "storeTextureV": -1,
+  "dropGroups": ["Import aim9m", "Import gbu38_jdam", "Import agm65h", "Import gbu31_jdam", "Import gbu24"],
   "keepBoxes": [],
-  "fuselageCuts": [
-    -64,
-    -17,
-    65
-  ],
+  "fuselageCuts": [-64, -17, 65],
   "parts": {
-    "0": "fuselage",
+    "0": [{"bone": "drop", "if": {"frame": "source", "absXMax": 7.5, "yMax": 12.5}}],
     "1": "fuselage",
     "2": "wreck_fuselage_3__hull",
-    "3": "fuselage",
-    "4": "wing",
-    "5": "wing",
-    "7": {
-      "bone": "side:wreck_fuselage_3__rudder_left,wreck_fuselage_3__rudder_right",
-      "if": {
-        "zMin": 90
-      },
-      "else": "fuselage"
-    },
+    "4": [{"bone": "drop", "if": {"frame": "source", "absXMin": 113, "absXMax": 125, "yMax": 24.5}}, {"bone": "wing", "if": {}}],
+    "5": [{"bone": "drop", "if": {"frame": "source", "absXMin": 113, "absXMax": 125, "yMax": 24.5}}, {"bone": "wing", "if": {}}],
+    "7": {"bone": "side:wreck_fuselage_3__rudder_left,wreck_fuselage_3__rudder_right", "if": {"frame": "source", "zMin": 90}, "else": "fuselage"},
     "8": "side:wreck_fuselage_3__elevator_left,wreck_fuselage_3__elevator_right",
     "9": "side:wreck_fuselage_3__elevator_left,wreck_fuselage_3__elevator_right",
-    "10": "side:wreck_wing_left__aileron_left,wreck_wing_right__aileron_right",
-    "11": "side:wreck_wing_left__aileron_left,wreck_wing_right__aileron_right",
-    "16": "fuselage",
+    "10": [{"bone": "wreck_wing_left__aileron_left", "if": {"frame": "source", "absXMin": 60}}, {"bone": "wreck_wing_left__flap_left", "if": {}}],
+    "11": [{"bone": "wreck_wing_right__aileron_right", "if": {"frame": "source", "absXMin": 60}}, {"bone": "wreck_wing_right__flap_right", "if": {}}],
+    "12": [{"bone": "wreck_fuselage_0__gear_wheel_2", "if": {"frame": "source", "yMax": -1, "zMin": -102, "zMax": -92}},
+           {"bone": "wreck_fuselage_0__gear_steer_0", "if": {"frame": "source", "absXMax": 9, "zMin": -102, "zMax": -86}},
+           {"bone": "wreck_fuselage_0__landing_gear_12", "if": {}}],
+    "14": [{"bone": "wreck_wing_left__gear_wheel_0", "if": {"frame": "source", "absXMin": 56, "yMax": 6}},
+           {"bone": "wreck_wing_left__landing_gear_14", "if": {}}],
+    "15": [{"bone": "wreck_wing_right__gear_wheel_1", "if": {"frame": "source", "absXMin": 56, "yMax": 6}},
+           {"bone": "wreck_wing_right__landing_gear_15", "if": {}}],
     "17": "fuselage"
   },
-  "keepTemplateBones": [
-    "gear_wheel_0",
-    "gear_wheel_1",
-    "landing_gear_12",
-    "landing_gear_14",
-    "landing_gear_15",
-    "turbine_fan_1",
-    "turbine_fan_2"
+  "addBones": [
+    {"name": "flap_left", "parent": "hull", "pivot": [0, 0, 0]},
+    {"name": "wreck_wing_left__flap_left", "parent": "flap_left", "pivot": [0, 0, 0]},
+    {"name": "flap_right", "parent": "hull", "pivot": [0, 0, 0]},
+    {"name": "wreck_wing_right__flap_right", "parent": "flap_right", "pivot": [0, 0, 0]},
+    {"name": "gear_steer_0", "parent": "landing_gear_12", "pivot": [0, 0, 0]},
+    {"name": "wreck_fuselage_0__gear_steer_0", "parent": "gear_steer_0", "pivot": [0, 0, 0]},
+    {"name": "gear_wheel_2", "parent": "gear_steer_0", "pivot": [0, 0, 0]},
+    {"name": "wreck_fuselage_0__gear_wheel_2", "parent": "gear_wheel_2", "pivot": [0, 0, 0]}
   ],
+  "rigAdd": {
+    "Flaps": [
+      {"Bone": "flap_left", "Parent": "hull", "Pivot": [0, 0, 0], "Axis": [1, 0, 0], "Input": "PRESENTED_LANDING_GEAR_EXTENSION", "AngleSign": 1, "MaxDeflectionDegrees": 30},
+      {"Bone": "flap_right", "Parent": "hull", "Pivot": [0, 0, 0], "Axis": [1, 0, 0], "Input": "PRESENTED_LANDING_GEAR_EXTENSION", "AngleSign": 1, "MaxDeflectionDegrees": 30}
+    ],
+    "Rotors": [
+      {"Bone": "gear_wheel_2", "Parent": "gear_steer_0", "Pivot": [0, 0, 0], "Axis": [1, 0, 0], "SpeedChannel": "groundRoll", "Direction": -1, "DegreesPerTickAtFullSpeed": 100}
+    ],
+    "NoseSteering": [
+      {"Bone": "gear_steer_0", "Parent": "landing_gear_12", "Pivot": [0, 0, 0], "Axis": [0, -1, 0], "MaxDeflectionDegrees": 45.0}
+    ]
+  },
+  "sweeps": {
+    "aileron_left": {"pivot": [67.14, 29.175, 20.888], "axis": [-1, 0, 0], "maxDegrees": 25},
+    "aileron_right": {"pivot": [-67.14, 29.175, 20.888], "axis": [-1, 0, 0], "maxDegrees": 25},
+    "flap_left": {"pivot": [29.97, 27.176, 20.888], "axis": [-1, 0, 0]},
+    "flap_right": {"pivot": [-29.97, 27.176, 20.888], "axis": [-1, 0, 0]},
+    "elevator_left": {"pivot": [25.98, 30.773, 113.607], "axis": [-1, 0, 0], "maxDegrees": 25},
+    "elevator_right": {"pivot": [-25.98, 30.773, 113.607], "axis": [-1, 0, 0], "maxDegrees": 25},
+    "rudder_left": {"pivot": [45.56, 49.557, 115.205], "axis": [0, 1, 0], "maxDegrees": 25},
+    "rudder_right": {"pivot": [-45.56, 49.557, 115.205], "axis": [0, 1, 0], "maxDegrees": 25},
+    "gear_wheel_0": {"pivot": [45.16, 5.995, 3.703]},
+    "gear_wheel_1": {"pivot": [-45.16, 5.995, 3.703]},
+    "gear_steer_0": {"pivot": [-4.396, 3.597, -77.43]},
+    "gear_wheel_2": {"pivot": [-4.396, 3.597, -77.43]}
+  },
+  "note_rig": "Rig on the model's own hinges (geo px = source x 0.7993 + [0, 7.993, 0.106]): ailerons (outer part 10/11 element) and the new flaps (inner element; down with the gear, 30 deg) on their leading edges, +-25 deg; elevators (parts 8/9) on their leading edge, +-25 deg; rudders (part 7 fin elements) on their leading edges, vertical hinge, +-25 deg; mains at the model's own wheel centres (r 5.995 px), the offset nose wheel (r 3.597 px, 0.44 m right of the centreline as on the real aircraft) on a new steering bone.",
+  "clientSet": {
+    "AircraftRig.Rotors.Bone=gear_wheel_0.DegreesPerTickAtFullSpeed": 152.93,
+    "AircraftRig.Rotors.Bone=gear_wheel_1.DegreesPerTickAtFullSpeed": 152.93,
+    "AircraftRig.Rotors.Bone=gear_wheel_2.DegreesPerTickAtFullSpeed": 254.88
+  },
+  "keepTemplateBones": [],
   "attachments": {},
   "seatPositions": {},
-  "addSeats": [],
-  "flightReference": {},
-  "storeTextureRanges": [
-    [
-      1024,
-      1152
-    ]
-  ],
-  "dropRules": [
-    {
-      "absXMin": 85,
-      "absXMax": 105,
-      "yMax": 25
-    },
-    {
-      "absXMax": 7,
-      "yMax": 17
-    }
-  ],
-  "removeClientKeys": [
-    "CanopyGlass"
-  ]
+  "addSeats": []
 }
