@@ -120,7 +120,8 @@ function makeCorners(fields) {
   }
   if (local) {
     // Native Trapezoid taper, consistent with its stored corners.
-  } else if (fields[5] === 'Shapebox' || fields[5] === 'Trapezoid') {
+  } else if (fields[5] === 'Shapebox' || fields[5] === 'Trapezoid' || fields[5] === 'FlexTrapezoid') {
+    // FlexTrapezoid (ModelRendererTurbo.addFlexTrapezoid): the toolbox stores its resulting shapebox corner offsets.
     const corner = (index) => [
       parseMtbNumber(fields[20 + index], `corner ${index} X`),
       parseMtbNumber(fields[28 + index], `corner ${index} Y`),
@@ -178,7 +179,64 @@ function faceUvs(textureX, textureY, width, height, depth, textureWidth, texture
   ];
 }
 
+// Shape (ModelRendererTurbo.addShape3D, the toolbox's default facing): the outline (x list at fields 58.., y list at
+// 78.., count at 98) lies in the element's x/y plane, mirrored in x about the offset. Its front plane is at the
+// NEGATED z offset and it is extruded by the depth toward -z. (Checked on the Elite Expansion 2 sources: only this
+// puts the Strela-10M2, Avro Vulcan and M113A3 wheel pairs symmetric about the hull; +z from +offset leaves the
+// Strela's wheels 11 units off to one side. tools/mtb_wheels/mtb.py still uses +offset/+z; it agrees only when the
+// offset is -depth/2.) Textures: the outline at the texture offset (front) and mirrored beside it (back); the sides
+// as one strip below, each edge taking its share of the outline's length.
+function shapeFaces(fields, textureWidth, textureHeight) {
+  const count = parseMtbNumber(fields[98], 'Shape point count');
+  if (!Number.isInteger(count) || count < 3 || count > 20) {
+    throw new Error(`Shape ${fields[3]} has an invalid point count ${fields[98]}`);
+  }
+  const points = Array.from({ length: count }, (_, index) => [
+    parseMtbNumber(fields[58 + index], 'Shape point X'),
+    parseMtbNumber(fields[78 + index], 'Shape point Y'),
+  ]);
+  const off = [15, 16, 17].map((index) => parseMtbNumber(fields[index], 'offset'));
+  const depth = parseMtbNumber(fields[11], 'depth');
+  const shapeWidth = fmtUvDimension(parseMtbNumber(fields[9], 'UV width'));
+  const shapeHeight = fmtUvDimension(parseMtbNumber(fields[10], 'UV height'));
+  const textureX = parseMtbNumber(fields[18], 'texture X');
+  const textureY = parseMtbNumber(fields[19], 'texture Y');
+  const uv = (x, y) => [x / textureWidth, 1 - y / textureHeight];
+  const front = points.map(([x, y]) => transformPoint([off[0] - x, off[1] + y, -off[2]], fields));
+  const back = points.map(([x, y]) => transformPoint([off[0] - x, off[1] + y, -off[2] - depth], fields));
+  // Caps and sides are wound like this exporter's box faces (checked by tools winding_check.py in elite_expansion_2).
+  const faces = [
+    {
+      positions: [...front].reverse(),
+      uvs: points.map(([x, y]) => uv(textureX + x, textureY + y)).reverse(),
+    },
+    { positions: back, uvs: points.map(([x, y]) => uv(textureX + shapeWidth * 2 - x, textureY + y)) },
+  ];
+  const lengths = points.map((point, index) => Math.hypot(
+    points[(index + 1) % count][0] - point[0],
+    points[(index + 1) % count][1] - point[1]
+  ));
+  const total = lengths.reduce((sum, length) => sum + length, 0) || 1;
+  const v0 = textureY + shapeHeight;
+  const v1 = v0 + fmtUvDimension(depth);
+  let along = 0;
+  for (let index = 0; index < count; index += 1) {
+    const next = (index + 1) % count;
+    const u0 = textureX + along;
+    along += lengths[index];
+    const u1 = textureX + along;
+    faces.push({
+      positions: [front[index], front[next], back[next], back[index]],
+      uvs: [uv(u0, v0), uv(u1, v0), uv(u1, v1), uv(u0, v1)],
+    });
+  }
+  return faces;
+}
+
 function elementFaces(fields, textureWidth, textureHeight) {
+  if (fields[5] === 'Shape') {
+    return shapeFaces(fields, textureWidth, textureHeight);
+  }
   const corners = makeCorners(fields);
   const textureX = parseMtbNumber(fields[18], 'texture X');
   const textureY = parseMtbNumber(fields[19], 'texture Y');
@@ -296,7 +354,10 @@ async function main() {
         if (fields.length < 44) {
           throw new Error(`Element ${index} has only ${fields.length} fields`);
         }
-        if (!['Box', 'Shapebox', 'Trapezoid'].includes(fields[5])) {
+        if (fields[5] === 'Shape' && fields.length < 99) {
+          throw new Error(`Shape element ${index} has only ${fields.length} fields`);
+        }
+        if (!['Box', 'Shapebox', 'Trapezoid', 'FlexTrapezoid', 'Shape'].includes(fields[5])) {
           throw new Error(`Element ${index} has unsupported type ${fields[5]}`);
         }
         if (fields[5] === 'Trapezoid' && fields.length < 46) {
@@ -384,7 +445,7 @@ async function main() {
     await fs.writeFile(mtlPath, mtl.join('\n'), 'utf8');
     await fs.copyFile(embeddedTexturePath, texturePath);
     const report = {
-      method: 'SMP Toolbox V2 MTB -> FMT-compatible OBJ (Box, Shapebox, native Trapezoid)',
+      method: 'SMP Toolbox V2 MTB -> FMT-compatible OBJ (Box, Shapebox, native Trapezoid, FlexTrapezoid, Shape)',
       source: resolvedInput,
       sourceSha256: sha256(archiveBytes),
       embeddedTextureSha256: sha256(textureBytes),
