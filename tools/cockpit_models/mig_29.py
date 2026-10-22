@@ -348,13 +348,13 @@ LAYOUT = [
     ('gear_ind', LEFT,    0.070, 2.845, ('paint_dial', 0.058), 'IP-52 gear / flaps / airbrake indicator'),
     ('ekran',    LEFT,    0.160, 2.975, ('paint_rect', 0.060, 0.046), 'Ekran warning display'),
     # right wing: IT-23M up top, fuel and Ekran, SPO-15, hydraulics / oxygen / volts
-    ('hdd',      RIGHT,   0.070, 3.040, ('display', 'RADAR', 0.105), 'IT-23M head-down display'),
-    ('fuel',     RIGHT,   0.056, 2.930, ('game', 'FILLER_FUEL', 0.058), 'fuel quantity'),
+    ('hdd',      RIGHT,   0.072, 3.018, ('display', 'RADAR', 0.125), 'IT-23M head-down display'),
+    ('fuel',     RIGHT,   0.056, 2.918, ('game', 'FILLER_FUEL', 0.058), 'fuel quantity'),
     ('signals',  RIGHT,   0.180, 2.920, ('paint_rect', 0.050, 0.190), 'signal lights column (on the right, as on the type)'),
-    ('spo15',    RIGHT,   0.100, 2.860, ('game', 'RWR', 0.064), 'SPO-15 Beryoza radar warning'),
-    ('hyd',      RIGHT,   0.045, 2.802, ('game', 'FILLER_HYDRAULIC', 0.042), 'IKG hydraulic pressures'),
-    ('oxy',      RIGHT,   0.110, 2.802, ('game', 'FILLER_OXYGEN', 0.042), 'oxygen'),
-    ('volts',    RIGHT,   0.175, 2.802, ('game', 'FILLER_VOLTS', 0.042), 'voltmeter'),
+    ('spo15',    RIGHT,   0.100, 2.852, ('game', 'RWR', 0.064), 'SPO-15 Beryoza radar warning'),
+    ('hyd',      RIGHT,   0.045, 2.795, ('game', 'FILLER_HYDRAULIC', 0.042), 'IKG hydraulic pressures'),
+    ('oxy',      RIGHT,   0.110, 2.795, ('game', 'FILLER_OXYGEN', 0.042), 'oxygen'),
+    ('volts',    RIGHT,   0.175, 2.795, ('game', 'FILLER_VOLTS', 0.042), 'voltmeter'),
 ]
 
 RIM = 0.16                     # game gauge bezel width (CockpitGauges.RIM)
@@ -824,32 +824,31 @@ def build(atlas):
             m.flat([p, q, [q[0], 2.95, q[2]], [p[0], 2.95, p[2]]], sw['black'], toward=[0, 2.95, (p[2] + q[2]) / 2])
 
     # -- ILS-31 HUD: body under the coaming, aft control strip, lens, combiner frame and glass
-    hud_z0, hud_z1, hud_y0, hud_y1, hud_hw = 3.83, 4.12, 3.17, 3.202, 0.08   # a low body under the sight line
+    hud_z0, hud_z1, hud_y0, hud_hw = 3.83, 4.12, 3.17, 0.09   # one body under the combiner (its top meets the glass's clamp)
     X, Y, Z = np.array([1.0, 0, 0]), np.array([0, 1.0, 0]), np.array([0, 0, 1.0])
     ctrl = atlas.paint(160, 40, p_hud_ctrl)
     lens = atlas.paint(64, 64, p_hud_lens)
-    m.box([0, (hud_y0 + hud_y1) / 2, (hud_z0 + hud_z1) / 2], (X, Y, Z),
-          (hud_hw, (hud_y1 - hud_y0) / 2, (hud_z1 - hud_z0) / 2), sw['dgrey'],
-          front=(2, -1, ctrl, -X, Y))
-    m.rect_tex([0, hud_y1 + 0.001, 3.97], [0, 1, 0], [0, 0, 1], 0.10, 0.10, lens)
-    # the hood over the IT-23M display on the right wing (the reference views): a top plate and two cheeks
-    hc = RIGHT.at(0.078, 3.112 + 0.052, lift=0.0)
-    for k, (dx, dy, hw, hh) in enumerate(((0.0, 0.004, 0.075, 0.004), (-0.072, -0.036, 0.004, 0.04), (0.072, -0.036, 0.004, 0.04))):
+    # the hood over the IT-23M display on the right wing (the reference views): a top plate and two cheeks, on the display
+    _, _, h_a, h_y, (_, _, h_s), _ = next(it for it in LAYOUT if it[0] == 'hdd')
+    hc = RIGHT.at(h_a, h_y + h_s / 2 + 0.012, lift=0.0)                    # (its top plate just over the display's frame)
+    hw_, hh_ = h_s / 2 + 0.022, h_s / 2 + 0.008
+    for k, (dx, dy, hw, hh) in enumerate(((0.0, 0.004, hw_, 0.004), (-hw_ + 0.003, -hh_, 0.004, hh_), (hw_ - 0.003, -hh_, 0.004, hh_))):
         m.box(hc + RIGHT.R * dx + RIGHT.U * dy + RIGHT.N * 0.0305, (RIGHT.R, RIGHT.U, RIGHT.N), (hw, hh, 0.028), sw['black'])   # 2.5 mm off the panel
     # (no blocks beside the HUD body: they stood against the windscreen frame, in the way)
     lean = math.radians(22)                     # combiner top leans toward the pilot
     g_up = np.array([0, math.cos(lean), -math.sin(lean)])
     g_n = unit(np.cross(X, g_up))
-    g_h = 0.165; g_hw = 0.074
+    g_h = 0.19; g_hw = 0.085                    # (a little bigger)
     # the glass is centred on the pilot's straight-ahead line (the eye's height), so the projected picture's
     # boresight sits in the middle of it
     g_bot = np.array([0, EYE[1] - g_up[1] * g_h / 2, 3.85])
     g_top = g_bot + g_up * g_h
-    # two thin posts from the body top (the view under the glass stays open), bottom clamp bar and the two side posts
-    stem = g_bot[1] - 0.006 - hud_y1
-    if stem > 0.004:
-        for s in (-1, 1):
-            m.box([s * (g_hw + 0.004), hud_y1 + stem / 2, g_bot[2]], (X, Y, Z), (0.004, stem / 2, 0.005), sw['dgrey'])
+    # one unit: the body up to the glass's bottom clamp (no gap, no second box), the clamp, the two side posts
+    hud_y1 = g_bot[1] - 0.010
+    m.box([0, (hud_y0 + hud_y1) / 2, (hud_z0 + hud_z1) / 2], (X, Y, Z),
+          (hud_hw, (hud_y1 - hud_y0) / 2, (hud_z1 - hud_z0) / 2), sw['dgrey'],
+          front=(2, -1, ctrl, -X, Y))
+    m.rect_tex([0, hud_y1 + 0.001, 3.97], [0, 1, 0], [0, 0, 1], 0.10, 0.10, lens)
     m.box(g_bot - g_up * 0.006, (X, g_up, g_n), (g_hw + 0.008, 0.006, 0.012), sw['dgrey'])
     for s in (-1, 1):
         m.box((g_bot + g_top) / 2 + X * s * (g_hw + 0.004), (X, g_up, g_n), (0.004, g_h / 2, 0.005), sw['dgrey'])
