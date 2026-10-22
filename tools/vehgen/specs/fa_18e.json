@@ -20,7 +20,7 @@
     "0": [{"bone": "wing", "if": {"frame": "source", "absXMin": 44}}],
     "1": "fuselage",
     "2": "wreck_fuselage_3__hull",
-    "3": [{"bone": "wreck_fuselage_2__hull", "if": {"frame": "source", "yMin": 12}}, {"bone": "drop", "if": {}}],
+    "3": [{"bone": "wreck_fuselage_2__hull", "if": {"frame": "source", "yMin": 14}}, {"bone": "drop", "if": {}}],
     "4": [{"bone": "drop", "if": {"frame": "source", "absXMin": 45.5, "absXMax": 60.5, "yMax": 21.5}}, {"bone": "wing", "if": {}}],
     "5": [{"bone": "drop", "if": {"frame": "source", "absXMin": 45.5, "absXMax": 60.5, "yMax": 21.5}}, {"bone": "wing", "if": {}}],
     "7": "side:wreck_fuselage_3__rudder_0,wreck_fuselage_3__rudder_1",
