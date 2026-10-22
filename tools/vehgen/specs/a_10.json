@@ -17,7 +17,8 @@
   "keepBoxes": [],
   "fuselageCuts": [-64, -17, 65],
   "parts": {
-    "0": [{"bone": "drop", "if": {"frame": "source", "absXMax": 7.5, "yMax": 12.5}}],
+    "0": [{"bone": "drop", "if": {"frame": "source", "absXMax": 7.5, "yMax": 12.5}},
+          {"bone": "drop", "if": {"frame": "source", "absXMin": 113, "absXMax": 125, "yMax": 24.5}}],
     "1": "fuselage",
     "2": "wreck_fuselage_3__hull",
     "4": [{"bone": "drop", "if": {"frame": "source", "absXMin": 113, "absXMax": 125, "yMax": 24.5}}, {"bone": "wing", "if": {}}],
