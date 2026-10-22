@@ -1,10 +1,10 @@
 {
   "schema": 1,
   "policyVersion": 4,
-  "label": "handbuilt-ru3-20261021-r127",
+  "label": "handbuilt-ru4-20261021-r128",
   "status": "release-candidate",
-  "createdAt": "2026-10-21T00:38:51.488Z",
-  "treeSha256": "6ad4cf75916bd14639ddbac5d4e8e2a35f359f798e37e5b724fbd6999fb34173",
+  "createdAt": "2026-10-21T00:58:42.710Z",
+  "treeSha256": "e44536a36f69bd6c699c5bdf22dae47a519bf0cc8a13cf8b2fbf820a615f9507",
   "files": [
     {
       "path": ".editorconfig",
@@ -2003,8 +2003,8 @@
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/custom_geo/mig19.geo.json",
-      "size": 2656716,
-      "sha256": "7b827d39e7a186911922e6e9d9f6878ac8fe0ecd154a3302713646b41abe862d"
+      "size": 1687102,
+      "sha256": "be8b5e8043fe2981cfb1f83e78af61eaf64f19903bdb8ea5248262f486a4151b"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/custom_geo/mig19_turret_wreck.geo.json",
@@ -2023,8 +2023,8 @@
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/custom_geo/mig_19s.geo.json",
-      "size": 2289379,
-      "sha256": "299140dfd506b3c7c0d0543190753f31efe0295d3180eb30640bdba967a98f1e"
+      "size": 1460897,
+      "sha256": "10f7adb03d0aa4c3f07d1abc110f014fe314c70cf5c7bff09b2931a872bdb76e"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/custom_geo/mig_19s_turret_wreck.geo.json",
@@ -2668,8 +2668,8 @@
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/custom_geo/yak_15p.geo.json",
-      "size": 1885012,
-      "sha256": "1254e04f78c1b1ae69333077a19879151ea2c05c9e2824e3427a0051a6959ecf"
+      "size": 1096360,
+      "sha256": "0097e61539ea3e2769499a2959e243331be45ad14a9dbbd6f68eb477979e224f"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/custom_geo/yak_15p_turret_wreck.geo.json",
@@ -2678,8 +2678,8 @@
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/custom_geo/yak_3.geo.json",
-      "size": 1488736,
-      "sha256": "f98d9613142a525f2612665ce8a8674812fab04d3ec9f7dab8152153ef79bbe4"
+      "size": 888019,
+      "sha256": "bb14b292a12ccd14d9f89fb2b8be27d23adcf816afd6a24f5802bdaa42e3b5a4"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/custom_geo/yak_3_turret_wreck.geo.json",
@@ -2688,8 +2688,8 @@
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/custom_geo/yak_9u.geo.json",
-      "size": 2677270,
-      "sha256": "7d622f884e54ddb58ab0fd8696cff905292eb1611b2a2652fac6de28b172ca18"
+      "size": 2072331,
+      "sha256": "b24c2f76ff4ac8c4459fd9bb5592279c9d09bfd59222bdc919178cea0fe8e1f3"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/custom_geo/yak_9u_turret_wreck.geo.json",
@@ -4153,8 +4153,8 @@
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/mig19.json",
-      "size": 7620,
-      "sha256": "e1dd311af1430a8f3278665f9f4f67baae0bf67134feee7b83354f62a8803555"
+      "size": 10365,
+      "sha256": "88f14d42223e96e62596f1c4de82e527497c0ec271b044781c10cffbd8d18fd2"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/mig_15bis.json",
@@ -4163,8 +4163,8 @@
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/mig_19s.json",
-      "size": 11452,
-      "sha256": "fe3c2d9de17d40a3d9d2742d3b298fd9a4ff360af6cf521ef271e6a2132a9e08"
+      "size": 14182,
+      "sha256": "4b47384360aa7e6cd6d1b79efb728b85349ff8d8965b251c22dfb5e521273b80"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/mig_21bis.json",
@@ -4468,18 +4468,18 @@
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/yak_15p.json",
-      "size": 10037,
-      "sha256": "43dd9458bbb2544553b239e2a4db1f288ba1d3a2d311d3089d9b89304832fb0c"
+      "size": 11056,
+      "sha256": "c5932ecc4960e26c3e9d8bee1e5d7c9262ef30a9f8310f1de8279f79ff67a266"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/yak_3.json",
-      "size": 10158,
-      "sha256": "acb57f2a8914897bcbbd775aefc3de2312513a3eabe7b7fe10da927ff5f6cbb4"
+      "size": 11181,
+      "sha256": "5d9c949390293dffa0e7436e19843caa0526788fba56ec8afb5fd58ed3713b48"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/yak_9u.json",
-      "size": 9583,
-      "sha256": "69d4f580be4ab1134c927c2b0580d76387f79c86ce2e82069ced7417f4170024"
+      "size": 10617,
+      "sha256": "62a72ede0dccf196d1a5ed4f2cf1f9da193c4086531861d0715520e2bb3c2f7e"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/zbd_09.json",
@@ -7323,8 +7323,8 @@
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/textures/entity/mig19.png",
-      "size": 150613,
-      "sha256": "3ff8f81741684fea95edd812384f279c788ba07b826d43e17a20fe9b9524555f"
+      "size": 307999,
+      "sha256": "da323be8e37d39ab7ca0437b9982adc2f5eacd53b917e685b0a20d2c7a2e3c64"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/textures/entity/mig_15bis.png",
@@ -7333,8 +7333,8 @@
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/textures/entity/mig_19s.png",
-      "size": 46763,
-      "sha256": "fc877c492d4eabe3f310ba8ecf907b7a424a16baccaeafdbb239effdc4fd0d70"
+      "size": 154708,
+      "sha256": "81e20f982704f6c97132d1d2355f6c17553a5bb46c81d9f5d5d5547eee67758a"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/textures/entity/mig_21bis.png",
@@ -7658,18 +7658,18 @@
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/textures/entity/yak_15p.png",
-      "size": 33855,
-      "sha256": "ec881adc896fff03e98f5ef6457f51010cd1431e52189fed6f48086242368554"
+      "size": 51354,
+      "sha256": "cde0134c76927f42f8a1ae9f96d8596efd860a0a5d92557f37fde10ecf3a3bef"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/textures/entity/yak_3.png",
-      "size": 177593,
-      "sha256": "c2c31ecd6100c2a2f6e8383e8a2ecc817492b3fe04526d5496f1d4ea3e8261f8"
+      "size": 206127,
+      "sha256": "fe5b10ee634a53d7d759686d258a49525fe5da28396e8bf991f42131323873f6"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/textures/entity/yak_9u.png",
-      "size": 37512,
-      "sha256": "72e7b2a873ddfda98bd74cf62d29707eaf8d58a9b9adabb2cf08c49943e946d7"
+      "size": 45516,
+      "sha256": "b429e7993db021c6ad6b527c4a5d11a9f8a0f92f7c8ef29f1b34514343888c84"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/textures/entity/zbd_09.png",
@@ -8188,8 +8188,8 @@
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/textures/entity_dead/mig19.png",
-      "size": 104740,
-      "sha256": "1936c46739ae949efb3e147fc64d90dd9fd22f727680a15de2a074aa302f683a"
+      "size": 267090,
+      "sha256": "45d73161d3e3feabf894dfc6c7ba0b3882b571f24a159cbfa40e27b59abf2ded"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/textures/entity_dead/mig_15bis.png",
@@ -8198,8 +8198,8 @@
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/textures/entity_dead/mig_19s.png",
-      "size": 40659,
-      "sha256": "acb9e96d7cc16464b33b25d13e0f3cb8bb6ba8cc2882f476a1115c1a3224f11d"
+      "size": 151780,
+      "sha256": "a6fd79208027f541b6ec79f5cb9355000e83f60ee4c312ec452014820b857b33"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/textures/entity_dead/mig_21bis.png",
@@ -8508,18 +8508,18 @@
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/textures/entity_dead/yak_15p.png",
-      "size": 28737,
-      "sha256": "40e63b9d315d12e7d3838a2f3fe46ed484167d3fe20532013e1698ebf8f0bbab"
+      "size": 46574,
+      "sha256": "292004cabd40e96c2534279ed910d76633ae3e981b451f5efec5dcd313a11531"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/textures/entity_dead/yak_3.png",
-      "size": 126473,
-      "sha256": "df9012a592cdf46f6cbeff932dc824313151d047ba2ace8c6e00644b215f1352"
+      "size": 152427,
+      "sha256": "bc3531cb80019069c90b45d04fd523277468a3a4ebff32394e02fc00c9b5ec22"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/textures/entity_dead/yak_9u.png",
-      "size": 31534,
-      "sha256": "eb6985b9df13cd88b0ff13a6c7b049e5d08b5151a7227a04c32d805cd36d6bfc"
+      "size": 39578,
+      "sha256": "e554ae2eb5d8a42ee0dbc214c4688751de660b8a369f03d6af6d713806cbaccd"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/textures/entity_dead/zbd_09.png",
@@ -53109,14 +53109,14 @@
   ],
   "release": {
     "schema": 1,
-    "buildRecordSha256": "6427de959e0641829da1a48181f5091c90ee048979ef9495a5348cb8a83df535",
+    "buildRecordSha256": "767623afa54bdcc67168137e3d64ad113740426a7c033c166f7166e542b9cfe7",
     "artifacts": [
       {
         "id": "bvp",
         "version": "0.1.0",
         "filename": "berts_vehicle_pack-0.1.0.jar",
-        "size": 258723321,
-        "sha256": "729dbd6ba592c320bda0213c5c5fe146fcfde996f7be1ceea464d911918baece"
+        "size": 258874653,
+        "sha256": "120af3714a886ebe05e81306ac4a6f14a722a848452eb4d307a83f5e79ef22ae"
       },
       {
         "id": "sbw",
