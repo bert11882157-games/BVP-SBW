@@ -36,7 +36,6 @@ SECTIONS = [
 ]
 SPLIT = 0.60                     # the canopy's front edge, against the windscreen arch over the HUD
 HOOP_Z = -0.62                  # the canopy's hoop just behind the headrest (the glass runs on behind it)
-PAINT_FOOTPRINT = True           # (work/handbuilt lower_skin.py: the model's skin round the windscreen in the nose's anti-glare)
 NOSE_RGB = (24, 25, 26)          # (lower_skin.py: that anti-glare is the shell's black; the nose's darkest texel is the IRST ball)
 
 
@@ -52,12 +51,10 @@ def build(atlas, E, skin):
     C.bow(m, sh, E, SPLIT - 0.01, 0.055, 0.04, out, inner)
     C.mirrors(m, sh, E, SPLIT - 0.01, 0.04, mback, mglass)
     C.member(m, sh, E, 0.0, -1.20, SPLIT, 0.05, 0.035, out, inner, steps=20)
-    # the windscreen, one piece (no posts): the arch, the base frame on the nose, the side rails; the base frame and
-    # rails in the nose's dark anti-glare
-    ag = atlas.swatch((30, 31, 33))
+    # the windscreen, one piece (no posts): the arch, the base frame on the nose, the side rails
     C.bow(m, sh, E, SPLIT + 0.03, 0.04, 0.02, out, inner)
-    C.bow(m, sh, E, 1.48, 0.04, 0.025, ag, inner)
-    C.member(m, sh, E, 0.0, SPLIT + 0.05, 1.50, 0.05, 0.035, ag, inner)
+    C.bow(m, sh, E, 1.48, 0.04, 0.025, out, inner)
+    C.member(m, sh, E, 0.0, SPLIT + 0.05, 1.50, 0.05, 0.035, out, inner)
     # one smooth shell under the windscreen ahead of the coaming, 3 cm inside the glass, its top under the sight line
     # over the coaming's front edge (1.05 m ahead, 0.32 m under the eye): the nose under the glass one dark deck
     C.shell(m, sh, E, 1.02, 1.48, atlas.swatch((24, 25, 26)), sight=lambda z: -0.32 / 1.05 * z - 0.012,

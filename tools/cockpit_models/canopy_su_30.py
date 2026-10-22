@@ -44,13 +44,14 @@ SECTIONS = [
 ]
 SPLIT = 0.46                     # the canopy's front edge, against the windscreen arch over the HUD
 FRONT_PANE_S = 0.80              # the flat front pane's edges across the windscreen's sections
+NOSE_RGB = (24, 25, 26)          # (lower_skin.py: that anti-glare is the shell's black)
 
 
 def build(atlas, E, skin):
     m = H.Mesh(atlas)
     out, inner = atlas.swatch(skin), atlas.swatch((40, 42, 44))
     sh = C.Shape(SECTIONS)
-    glass = C.glass_triangles(sh, E, -2.75, SPLIT, nz=34) + C.glass_triangles(sh, E, SPLIT + 0.05, 0.92, nz=8)
+    glass = C.glass_triangles(sh, E, -2.75, SPLIT, nz=34) + C.glass_triangles(sh, E, SPLIT + 0.05, 0.90, nz=8)     # (ends under the base frame: the nose tip's skin lies at its edge)
     # the canopy: its tail frame, its front bow, the sill rails
     C.bow(m, sh, E, -2.73, 0.04, 0.03, out, inner)
     C.bow(m, sh, E, SPLIT - 0.005, 0.03, 0.018, out, inner)
@@ -60,6 +61,9 @@ def build(atlas, E, skin):
     C.member(m, sh, E, FRONT_PANE_S, 0.66, 0.92, 0.03, 0.022, out, inner)
     C.bow(m, sh, E, 0.905, 0.03, 0.02, out, inner)
     C.member(m, sh, E, 0.0, SPLIT + 0.05, 0.92, 0.05, 0.035, out, inner)
+    # one smooth shell under the windscreen ahead of the coaming, inside the glass, its top under the sight line over
+    # the coaming's front edge (0.80 m ahead, 0.30 m under the eye): the nose under the glass one dark deck
+    C.shell(m, sh, E, 0.80, 0.905, atlas.swatch((24, 25, 26)), sight=lambda z: -0.30 / 0.80 * z - 0.012, inset=0.045, nz=4)
     return m, glass
 
 
