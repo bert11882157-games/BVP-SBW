@@ -95,9 +95,25 @@ def main(argv):
         c = np.array([g(q) for q in mtbgeo.mtb.box_corners(f)])
         return (c.min(0) + c.max(0)) / 2
 
+    def source_centre(f):
+        """Element centre in the source model's own units (geo axes, scale 1, no offset): rules with
+        "frame": "source" use it, so they do not depend on the alignment."""
+        c = np.array([frame1.geo(q) for q in mtbgeo.mtb.box_corners(f)])
+        return (c.min(0) + c.max(0)) / 2
+
     drop_rules = spec.get('dropRules', [])     # [{"absXMin": .., "yMax": .., "absXMax": .., "zMin": ..}] (all given hold)
+    # toolbox groups (element field 99, 'Group|<id>|<name>' records) whose elements are baked stores
+    group_names = {}
+    import zipfile
+    for line in zipfile.ZipFile(os.path.join(sources, spec['source'])).read('Model.txt').decode(
+            'utf-8', 'replace').splitlines():
+        if line.startswith('Group|'):
+            group_names[line.split('|')[1]] = line.split('|')[2]
+    drop_groups = set(spec.get('dropGroups', []))
 
     def is_store(f, part=None):
+        if drop_groups and len(f) > 99 and f[99] not in ('0', '1') and group_names.get(f[99]) in drop_groups:
+            return True
         c = centre(f)
         for r in drop_rules:
             if 'parts' in r and part not in r['parts']:
@@ -122,10 +138,12 @@ def main(argv):
             if is_store(f, p):
                 dropped += 1
                 continue
-            c = centre(f)
+            c_geo, c_src = centre(f), source_centre(f)
+            c = c_geo
             bone = None
 
             def holds(cond):
+                c = c_src if cond.get('frame') == 'source' else c_geo
                 return (cond.get('zMin', -1e9) <= c[2] <= cond.get('zMax', 1e9)
                         and cond.get('yMin', -1e9) <= c[1] <= cond.get('yMax', 1e9)
                         and cond.get('absXMin', -1e9) <= abs(c[0]) <= cond.get('absXMax', 1e9)
@@ -182,6 +200,11 @@ def main(argv):
     gg['description']['texture_width'] = W
     gg['description']['texture_height'] = H
     keep = set(spec['keepTemplateBones'])
+    # new bones the template lacks (e.g. flaperons): {"name", "parent", "pivot"} (geo px); a rig entry for them comes
+    # through clientSet
+    for nb in spec.get('addBones', []):
+        if nb['name'] not in {b['name'] for b in gg['bones']}:
+            gg['bones'].append({'name': nb['name'], 'parent': nb['parent'], 'pivot': list(nb['pivot'])})
     unknown = set(assign) - {b['name'] for b in gg['bones']}
     if unknown:
         raise SystemExit(f'bones not in the template: {sorted(unknown)}')
@@ -258,14 +281,22 @@ def main(argv):
         node[keys[-1]] = value
     out.json(os.path.join(DATA, 'sbw', 'vehicles', f'{vid}.json'), data)
     client = renamed(load(TPL(os.path.join(ASSETS, 'sbw', 'vehicles', f'{tid}.json'))))
+    rig = client.get('AircraftRig', {})
+    for key, entries in spec.get('rigAdd', {}).items():     # rig entries for addBones, e.g. {"Surfaces": [...]}
+        have = {s['Bone'] for s in rig.get(key) or []}
+        rig.setdefault(key, []).extend(e for e in entries if e['Bone'] not in have)
     sweeps.apply_client(client, spec.get('sweeps', {}), sweep_pivots)
     for k in spec.get('removeClientKeys', []):
         client.pop(k, None)
     for path, value in spec.get('clientSet', {}).items():     # dotted path, e.g. AfterburnerPresentation.Outlets
         node = client
-        keys = path.split('.')
+        # a list step may be an index or Bone=<name> (e.g. AircraftRig.Surfaces.Bone=elevator_0.ControlWeights)
+        keys = [int(k) if k.isdigit() else k for k in path.split('.')]
         for k in keys[:-1]:
-            node = node[k]
+            if isinstance(k, str) and k.startswith('Bone='):
+                node = next(s for s in node if s['Bone'] == k[5:])
+            else:
+                node = node[k]
         node[keys[-1]] = value
     out.json(os.path.join(ASSETS, 'sbw', 'vehicles', f'{vid}.json'), client)
     for rel in ('armor', 'flight_reference'):
