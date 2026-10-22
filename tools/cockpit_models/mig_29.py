@@ -824,27 +824,25 @@ def build(atlas):
             m.flat([p, q, [q[0], 2.95, q[2]], [p[0], 2.95, p[2]]], sw['black'], toward=[0, 2.95, (p[2] + q[2]) / 2])
 
     # -- ILS-31 HUD: body under the coaming, aft control strip, lens, combiner frame and glass
-    hud_z0, hud_z1, hud_y0, hud_hw = 3.83, 4.12, 3.17, 0.09   # one body under the combiner (its top meets the glass's clamp)
+    hud_z0, hud_z1, hud_y0, hud_y1, hud_hw = 3.83, 4.12, 3.17, 3.235, 0.09   # one low body; the combiner's clamp sits right on it
     X, Y, Z = np.array([1.0, 0, 0]), np.array([0, 1.0, 0]), np.array([0, 0, 1.0])
     ctrl = atlas.paint(160, 40, p_hud_ctrl)
     lens = atlas.paint(64, 64, p_hud_lens)
     # the hood over the IT-23M display on the right wing (the reference views): a top plate and two cheeks, on the display
     _, _, h_a, h_y, (_, _, h_s), _ = next(it for it in LAYOUT if it[0] == 'hdd')
-    hc = RIGHT.at(h_a, h_y + h_s / 2 + 0.012, lift=0.0)                    # (its top plate just over the display's frame)
-    hw_, hh_ = h_s / 2 + 0.022, h_s / 2 + 0.008
-    for k, (dx, dy, hw, hh) in enumerate(((0.0, 0.004, hw_, 0.004), (-hw_ + 0.003, -hh_, 0.004, hh_), (hw_ - 0.003, -hh_, 0.004, hh_))):
+    hc = RIGHT.at(h_a, h_y, lift=0.0)                                       # the display's centre: a square frame round it
+    o_ = h_s / 2 + 0.014                                                    # (the frame's bars, centred this far out)
+    for k, (dx, dy, hw, hh) in enumerate(((0.0, o_, o_ + 0.004, 0.004), (0.0, -o_, o_ + 0.004, 0.004), (-o_, 0.0, 0.004, o_), (o_, 0.0, 0.004, o_))):
         m.box(hc + RIGHT.R * dx + RIGHT.U * dy + RIGHT.N * 0.0305, (RIGHT.R, RIGHT.U, RIGHT.N), (hw, hh, 0.028), sw['black'])   # 2.5 mm off the panel
     # (no blocks beside the HUD body: they stood against the windscreen frame, in the way)
     lean = math.radians(22)                     # combiner top leans toward the pilot
     g_up = np.array([0, math.cos(lean), -math.sin(lean)])
     g_n = unit(np.cross(X, g_up))
     g_h = 0.19; g_hw = 0.085                    # (a little bigger)
-    # the glass is centred on the pilot's straight-ahead line (the eye's height), so the projected picture's
-    # boresight sits in the middle of it
-    g_bot = np.array([0, EYE[1] - g_up[1] * g_h / 2, 3.85])
+    # the glass stands on the body (its clamp right on the body's top) and reaches up past the pilot's eye line
+    g_bot = np.array([0, hud_y1 + 0.012, 3.85])
     g_top = g_bot + g_up * g_h
     # one unit: the body up to the glass's bottom clamp (no gap, no second box), the clamp, the two side posts
-    hud_y1 = g_bot[1] - 0.010
     m.box([0, (hud_y0 + hud_y1) / 2, (hud_z0 + hud_z1) / 2], (X, Y, Z),
           (hud_hw, (hud_y1 - hud_y0) / 2, (hud_z1 - hud_z0) / 2), sw['dgrey'],
           front=(2, -1, ctrl, -X, Y))
