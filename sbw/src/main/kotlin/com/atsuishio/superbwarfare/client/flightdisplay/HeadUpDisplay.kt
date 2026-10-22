@@ -48,10 +48,11 @@ object HeadUpDisplay {
     private const val LIFT = 0.0015f          // the picture sits this far in front of the glass, blocks
     private const val MAX_STILLS = 16
     private const val DEFAULT_RGB = 0x4CFF6A
+    private const val SIGHT_RGB = 0xFF9A3C          // a gunsight's reticle lamp: amber
 
     /** A combiner fitted from a resource: its corners in the model frame and the picture's mapping onto it. */
     private class Combiner(val points: Array<Array<Vector3f>>, val uvs: Array<Array<FloatArray>>, val frame: HudPainter.Frame,
-                           val rgb: Int)
+                           val rgb: Int, val style: String)
 
     private val combiners = IdentityHashMap<HeadUpDisplayResource, Combiner?>()
     private val stills = IdentityHashMap<HeadUpDisplayResource, Pair<RenderTarget, ResourceLocation>>()
@@ -191,7 +192,8 @@ object HeadUpDisplay {
                 Vector3f(-p.x.toFloat(), p.y.toFloat(), -p.z.toFloat())
             }
         }
-        return Combiner(points, uvs, frame, r.color ?: DEFAULT_RGB)
+        val style = r.style?.uppercase() ?: "HUD"
+        return Combiner(points, uvs, frame, r.color ?: (if (style == "HUD") DEFAULT_RGB else SIGHT_RGB), style)
     }
 
     private fun vec(a: DoubleArray?): Vector3d? =
@@ -227,7 +229,11 @@ object HeadUpDisplay {
             RenderSystem.defaultBlendFunc()
             val buffers = MultiBufferSource.immediate(Tesselator.getInstance().builder)
             val graphics = GuiGraphics(mc, buffers)
-            HudPainter.paint(graphics, state, c.frame, alerts, c.rgb)
+            when (c.style) {
+                "GYRO", "REFLECTOR" -> GunsightPainter.paint(graphics, state, c.frame, c.rgb, c.style == "GYRO",
+                    state !== FlightDisplayState.STILL)
+                else -> HudPainter.paint(graphics, state, c.frame, alerts, c.rgb)
+            }
             graphics.flush()
         } finally {
             RenderSystem.disableScissor()
