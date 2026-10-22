@@ -8,62 +8,354 @@
   "yaw180": true,
   "scale": 0.72336,
   "note_scale": "Real size: the source is 405 units nose to stabilator tips = 18.31 m (F/A-18E overall length) at 16 px/m.",
-  "lengthParts": [0, 1, 2],
-  "templateLengthBones": ["wreck_fuselage_0__hull", "wreck_fuselage_1__hull", "wreck_fuselage_2__hull", "wreck_fuselage_3__hull"],
-  "groundParts": [12, 14, 15],
-  "excludeParts": [13, 16, 24],
+  "lengthParts": [
+    0,
+    1,
+    2
+  ],
+  "templateLengthBones": [
+    "wreck_fuselage_0__hull",
+    "wreck_fuselage_1__hull",
+    "wreck_fuselage_2__hull",
+    "wreck_fuselage_3__hull"
+  ],
+  "groundParts": [
+    12,
+    14,
+    15
+  ],
+  "excludeParts": [
+    13,
+    16,
+    24
+  ],
   "storeTextureV": -1,
-  "dropGroups": ["Import aim9x", "Import aim120a", "Import aim7m"],
+  "dropGroups": [
+    "Import aim9x",
+    "Import aim120a",
+    "Import aim7m"
+  ],
   "keepBoxes": [],
-  "fuselageCuts": [-70, -5, 55],
+  "fuselageCuts": [
+    -70,
+    -5,
+    55
+  ],
   "parts": {
-    "0": [{"bone": "wing", "if": {"frame": "source", "absXMin": 44}}],
+    "0": [
+      {
+        "bone": "wing",
+        "if": {
+          "frame": "source",
+          "absXMin": 44
+        }
+      }
+    ],
     "1": "fuselage",
     "2": "wreck_fuselage_3__hull",
-    "3": [{"bone": "wreck_fuselage_2__hull", "if": {"frame": "source", "yMin": 14}}, {"bone": "drop", "if": {}}],
-    "4": [{"bone": "drop", "if": {"frame": "source", "absXMin": 45.5, "absXMax": 60.5, "yMax": 21.5}}, {"bone": "wing", "if": {}}],
-    "5": [{"bone": "drop", "if": {"frame": "source", "absXMin": 45.5, "absXMax": 60.5, "yMax": 21.5}}, {"bone": "wing", "if": {}}],
+    "3": [
+      {
+        "bone": "wreck_fuselage_2__hull",
+        "if": {
+          "frame": "source",
+          "yMin": 14
+        }
+      },
+      {
+        "bone": "drop",
+        "if": {}
+      }
+    ],
+    "4": [
+      {
+        "bone": "drop",
+        "if": {
+          "frame": "source",
+          "absXMin": 45.5,
+          "absXMax": 60.5,
+          "yMax": 21.5
+        }
+      },
+      {
+        "bone": "wing",
+        "if": {}
+      }
+    ],
+    "5": [
+      {
+        "bone": "drop",
+        "if": {
+          "frame": "source",
+          "absXMin": 45.5,
+          "absXMax": 60.5,
+          "yMax": 21.5
+        }
+      },
+      {
+        "bone": "wing",
+        "if": {}
+      }
+    ],
     "7": "side:wreck_fuselage_3__rudder_0,wreck_fuselage_3__rudder_1",
     "8": "side:wreck_fuselage_3__elevator_left,wreck_fuselage_3__elevator_right",
     "9": "side:wreck_fuselage_3__elevator_left,wreck_fuselage_3__elevator_right",
     "10": "side:wreck_wing_left__aileron_left,wreck_wing_right__aileron_right",
-    "12": [{"bone": "wreck_fuselage_1__gear_wheel_0", "if": {"frame": "source", "xMin": 3}},
-           {"bone": "wreck_fuselage_1__gear_wheel_1", "if": {"frame": "source", "xMax": -3}},
-           {"bone": "wreck_fuselage_1__gear_steer_0", "if": {"frame": "source", "zMin": -88, "zMax": -69, "yMax": 11}},
-           {"bone": "wreck_fuselage_1__landing_gear_12", "if": {}}],
-    "14": [{"bone": "wreck_fuselage_2__gear_wheel_2", "if": {"frame": "source", "xMin": 34}},
-           {"bone": "side:wreck_fuselage_2__landing_gear_14,wreck_fuselage_2__landing_gear_15", "if": {}}],
-    "15": [{"bone": "wreck_fuselage_2__gear_wheel_3", "if": {"frame": "source", "xMax": -34}},
-           {"bone": "side:wreck_fuselage_2__landing_gear_14,wreck_fuselage_2__landing_gear_15", "if": {}}],
+    "12": [
+      {
+        "bone": "wreck_fuselage_1__gear_wheel_0",
+        "if": {
+          "frame": "source",
+          "xMin": 3
+        }
+      },
+      {
+        "bone": "wreck_fuselage_1__gear_wheel_1",
+        "if": {
+          "frame": "source",
+          "xMax": -3
+        }
+      },
+      {
+        "bone": "wreck_fuselage_1__gear_steer_0",
+        "if": {
+          "frame": "source",
+          "zMin": -88,
+          "zMax": -69,
+          "yMax": 11
+        }
+      },
+      {
+        "bone": "wreck_fuselage_1__landing_gear_12",
+        "if": {}
+      }
+    ],
+    "14": [
+      {
+        "bone": "wreck_fuselage_2__gear_wheel_2",
+        "if": {
+          "frame": "source",
+          "xMin": 34
+        }
+      },
+      {
+        "bone": "side:wreck_fuselage_2__landing_gear_14,wreck_fuselage_2__landing_gear_15",
+        "if": {}
+      }
+    ],
+    "15": [
+      {
+        "bone": "wreck_fuselage_2__gear_wheel_3",
+        "if": {
+          "frame": "source",
+          "xMax": -34
+        }
+      },
+      {
+        "bone": "side:wreck_fuselage_2__landing_gear_14,wreck_fuselage_2__landing_gear_15",
+        "if": {}
+      }
+    ],
     "17": "wreck_fuselage_1__canopy",
     "19": "wreck_fuselage_3__hull",
     "20": "wing",
     "22": "wing"
   },
   "addBones": [
-    {"name": "rudder_0", "parent": "hull", "pivot": [0, 0, 0]},
-    {"name": "wreck_fuselage_3__rudder_0", "parent": "rudder_0", "pivot": [0, 0, 0]},
-    {"name": "rudder_1", "parent": "hull", "pivot": [0, 0, 0]},
-    {"name": "wreck_fuselage_3__rudder_1", "parent": "rudder_1", "pivot": [0, 0, 0]}
+    {
+      "name": "rudder_0",
+      "parent": "hull",
+      "pivot": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "wreck_fuselage_3__rudder_0",
+      "parent": "rudder_0",
+      "pivot": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "rudder_1",
+      "parent": "hull",
+      "pivot": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "wreck_fuselage_3__rudder_1",
+      "parent": "rudder_1",
+      "pivot": [
+        0,
+        0,
+        0
+      ]
+    }
   ],
   "rigAdd": {
     "Surfaces": [
-      {"Bone": "rudder_0", "Parent": "hull", "Pivot": [0, 0, 0], "Axis": [0, -1, 0], "ControlWeights": {"ElevatorUp": 0, "RightRoll": 0, "RudderRight": -1}, "MaxDeflectionDegrees": 30},
-      {"Bone": "rudder_1", "Parent": "hull", "Pivot": [0, 0, 0], "Axis": [0, -1, 0], "ControlWeights": {"ElevatorUp": 0, "RightRoll": 0, "RudderRight": -1}, "MaxDeflectionDegrees": 30}
+      {
+        "Bone": "rudder_0",
+        "Parent": "hull",
+        "Pivot": [
+          0,
+          0,
+          0
+        ],
+        "Axis": [
+          0,
+          -1,
+          0
+        ],
+        "ControlWeights": {
+          "ElevatorUp": 0,
+          "RightRoll": 0,
+          "RudderRight": -1
+        },
+        "MaxDeflectionDegrees": 30
+      },
+      {
+        "Bone": "rudder_1",
+        "Parent": "hull",
+        "Pivot": [
+          0,
+          0,
+          0
+        ],
+        "Axis": [
+          0,
+          -1,
+          0
+        ],
+        "ControlWeights": {
+          "ElevatorUp": 0,
+          "RightRoll": 0,
+          "RudderRight": -1
+        },
+        "MaxDeflectionDegrees": 30
+      }
     ]
   },
   "sweeps": {
-    "aileron_left": {"pivot": [26.04, 35.81, 52.29], "axis": [-0.9962, 0.043, -0.0777], "maxDegrees": 25},
-    "aileron_right": {"pivot": [-26.04, 35.81, 52.29], "axis": [-0.9962, -0.043, 0.0777], "maxDegrees": 25},
-    "elevator_left": {"pivot": [15.91, 32.55, 108.0], "axis": [-1, 0, 0], "maxDegrees": 25},
-    "elevator_right": {"pivot": [-15.91, 32.55, 108.0], "axis": [-1, 0, 0], "maxDegrees": 25},
-    "rudder_0": {"pivot": [16.5, 39.8, 88.46], "axis": [-0.324, -0.865, -0.384], "maxDegrees": 30},
-    "rudder_1": {"pivot": [-16.5, 39.8, 88.46], "axis": [0.324, -0.865, -0.384], "maxDegrees": 30},
-    "gear_wheel_0": {"pivot": [3.98, 4.34, -60.56]},
-    "gear_wheel_1": {"pivot": [-3.98, 4.34, -60.56]},
-    "gear_steer_0": {"pivot": [0, 4.34, -60.56]},
-    "gear_wheel_2": {"pivot": [27.13, 5.43, 34.2]},
-    "gear_wheel_3": {"pivot": [-27.13, 5.43, 34.2]}
+    "aileron_left": {
+      "pivot": [
+        26.04,
+        35.81,
+        52.29
+      ],
+      "axis": [
+        -0.9962,
+        0.043,
+        -0.0777
+      ],
+      "maxDegrees": 25
+    },
+    "aileron_right": {
+      "pivot": [
+        -26.04,
+        35.81,
+        52.29
+      ],
+      "axis": [
+        -0.9962,
+        -0.043,
+        0.0777
+      ],
+      "maxDegrees": 25
+    },
+    "elevator_left": {
+      "pivot": [
+        15.91,
+        32.55,
+        108.0
+      ],
+      "axis": [
+        -1,
+        0,
+        0
+      ],
+      "maxDegrees": 25
+    },
+    "elevator_right": {
+      "pivot": [
+        -15.91,
+        32.55,
+        108.0
+      ],
+      "axis": [
+        -1,
+        0,
+        0
+      ],
+      "maxDegrees": 25
+    },
+    "rudder_0": {
+      "pivot": [
+        16.5,
+        39.8,
+        88.46
+      ],
+      "axis": [
+        -0.324,
+        -0.865,
+        -0.384
+      ],
+      "maxDegrees": 30
+    },
+    "rudder_1": {
+      "pivot": [
+        -16.5,
+        39.8,
+        88.46
+      ],
+      "axis": [
+        0.324,
+        -0.865,
+        -0.384
+      ],
+      "maxDegrees": 30
+    },
+    "gear_wheel_0": {
+      "pivot": [
+        3.98,
+        4.34,
+        -60.56
+      ]
+    },
+    "gear_wheel_1": {
+      "pivot": [
+        -3.98,
+        4.34,
+        -60.56
+      ]
+    },
+    "gear_steer_0": {
+      "pivot": [
+        0,
+        4.34,
+        -60.56
+      ]
+    },
+    "gear_wheel_2": {
+      "pivot": [
+        27.13,
+        5.43,
+        34.2
+      ]
+    },
+    "gear_wheel_3": {
+      "pivot": [
+        -27.13,
+        5.43,
+        34.2
+      ]
+    }
   },
   "note_rig": "Rig on the model's own hinges: the trailing-edge surfaces (part 10, one element a side) on their leading edge, +-25 deg roll; flat all-moving stabilators on a lateral spindle near mid root chord, +-25 deg, 0.2 roll; the canted rudders (new bones) on their leading edges, +-30 deg; twin nose wheels and mains at the model's own centres (nose r 4.34 px, mains r 5.43 px).",
   "clientSet": {
@@ -77,5 +369,352 @@
   "keepTemplateBones": [],
   "attachments": {},
   "seatPositions": {},
-  "addSeats": []
+  "addSeats": [],
+  "armamentOverrides": {
+    "Name": "F/A-18E",
+    "MaxPayloadKg": 8050,
+    "SuspendedWeapons": [
+      "Lau61Outer",
+      "Lau10Outer",
+      "Lau61Inner",
+      "Lau10Inner"
+    ],
+    "Pairs": [
+      {
+        "Id": "wingtip",
+        "Name": "Stations 1/11 · wingtip rail",
+        "Left": [
+          6.8041,
+          1.9892,
+          -2.5898
+        ],
+        "LeftStations": [
+          {
+            "Point": [
+              6.8041,
+              1.9892,
+              -2.5898
+            ],
+            "Face": "left"
+          }
+        ],
+        "Right": [
+          -6.8041,
+          1.9892,
+          -2.5898
+        ],
+        "RightStations": [
+          {
+            "Point": [
+              -6.8041,
+              1.9892,
+              -2.5898
+            ],
+            "Face": "right"
+          }
+        ],
+        "AllowedStores": [
+          "berts_vehicle_pack:fa18e/aim9m"
+        ],
+        "MaxWeaponsPerPylon": 1,
+        "MaxPylonMassKg": 150
+      },
+      {
+        "Id": "outer",
+        "Name": "Stations 2/10 · outer wing",
+        "Left": [
+          4.521,
+          1.5823,
+          -2.2734
+        ],
+        "LeftStations": [
+          {
+            "Point": [
+              4.521,
+              1.5823,
+              -2.2734
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "Right": [
+          -4.521,
+          1.5823,
+          -2.2734
+        ],
+        "RightStations": [
+          {
+            "Point": [
+              -4.521,
+              1.5823,
+              -2.2734
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "AllowedStores": [
+          "berts_vehicle_pack:fa18e/aim9m",
+          "berts_vehicle_pack:munition/aim7p",
+          "berts_vehicle_pack:munition/aim120c5",
+          "berts_vehicle_pack:munition/aim120d",
+          "berts_vehicle_pack:munition/mk82",
+          "berts_vehicle_pack:munition/mk83",
+          "berts_vehicle_pack:munition/gbu12",
+          "berts_vehicle_pack:munition/gbu16",
+          "berts_vehicle_pack:munition/gbu38",
+          "berts_vehicle_pack:munition/lau131_apkws",
+          "berts_vehicle_pack:munition/agm65e",
+          "berts_vehicle_pack:munition/agm65f",
+          "berts_vehicle_pack:munition/agm88c",
+          "berts_vehicle_pack:munition/agm88g",
+          "berts_vehicle_pack:munition/lau61_hydra",
+          "berts_vehicle_pack:munition/lau10_zuni"
+        ],
+        "MaxWeaponsPerPylon": 1,
+        "MaxPylonMassKg": 700,
+        "NativeWeaponIds": {
+          "berts_vehicle_pack:munition/lau61_hydra": "Lau61Outer",
+          "berts_vehicle_pack:munition/lau10_zuni": "Lau10Outer"
+        }
+      },
+      {
+        "Id": "mid",
+        "Name": "Stations 3/9 · mid wing",
+        "Left": [
+          3.662,
+          1.3563,
+          -1.3692
+        ],
+        "LeftStations": [
+          {
+            "Point": [
+              3.662,
+              1.3563,
+              -1.3692
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "Right": [
+          -3.662,
+          1.3563,
+          -1.3692
+        ],
+        "RightStations": [
+          {
+            "Point": [
+              -3.662,
+              1.3563,
+              -1.3692
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "AllowedStores": [
+          "berts_vehicle_pack:fa18e/aim9m_x2",
+          "berts_vehicle_pack:munition/aim7p",
+          "berts_vehicle_pack:munition/aim120c5_x2",
+          "berts_vehicle_pack:munition/aim120d_x2",
+          "berts_vehicle_pack:munition/mk82_x2",
+          "berts_vehicle_pack:munition/mk83_x2",
+          "berts_vehicle_pack:munition/mk84",
+          "berts_vehicle_pack:munition/mk82_snakeeye_x2",
+          "berts_vehicle_pack:munition/mk83_air_x2",
+          "berts_vehicle_pack:munition/mk77_x2",
+          "berts_vehicle_pack:munition/gbu12_x2",
+          "berts_vehicle_pack:munition/gbu16",
+          "berts_vehicle_pack:munition/gbu10",
+          "berts_vehicle_pack:munition/gbu24",
+          "berts_vehicle_pack:munition/gbu38_x2",
+          "berts_vehicle_pack:munition/gbu53_x2",
+          "berts_vehicle_pack:munition/gbu54_x2",
+          "berts_vehicle_pack:munition/gbu32_x2",
+          "berts_vehicle_pack:munition/gbu31",
+          "berts_vehicle_pack:munition/gbu62_x2",
+          "berts_vehicle_pack:munition/gbu64",
+          "berts_vehicle_pack:munition/agm154a_x2",
+          "berts_vehicle_pack:munition/agm65e",
+          "berts_vehicle_pack:munition/agm65f",
+          "berts_vehicle_pack:munition/agm84h",
+          "berts_vehicle_pack:munition/agm84d",
+          "berts_vehicle_pack:munition/agm88c",
+          "berts_vehicle_pack:munition/agm88g",
+          "berts_vehicle_pack:munition/tank_480gal",
+          "berts_vehicle_pack:munition/walleye2"
+        ],
+        "MaxWeaponsPerPylon": 1,
+        "MaxPylonMassKg": 2300
+      },
+      {
+        "Id": "inner",
+        "Name": "Stations 4/8 · inner wing",
+        "Left": [
+          2.3961,
+          1.3563,
+          -1.3692
+        ],
+        "LeftStations": [
+          {
+            "Point": [
+              2.3961,
+              1.3563,
+              -1.3692
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "Right": [
+          -2.3961,
+          1.3563,
+          -1.3692
+        ],
+        "RightStations": [
+          {
+            "Point": [
+              -2.3961,
+              1.3563,
+              -1.3692
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "AllowedStores": [
+          "berts_vehicle_pack:fa18e/aim9m_x2",
+          "berts_vehicle_pack:munition/aim7p",
+          "berts_vehicle_pack:munition/aim120c5_x2",
+          "berts_vehicle_pack:munition/aim120d_x2",
+          "berts_vehicle_pack:munition/mk82_x2",
+          "berts_vehicle_pack:munition/mk83_x2",
+          "berts_vehicle_pack:munition/mk84",
+          "berts_vehicle_pack:munition/mk82_snakeeye_x2",
+          "berts_vehicle_pack:munition/mk83_air_x2",
+          "berts_vehicle_pack:munition/mk77_x2",
+          "berts_vehicle_pack:munition/gbu12_x2",
+          "berts_vehicle_pack:munition/gbu16",
+          "berts_vehicle_pack:munition/gbu10",
+          "berts_vehicle_pack:munition/gbu24",
+          "berts_vehicle_pack:munition/gbu38_x2",
+          "berts_vehicle_pack:munition/gbu53_x2",
+          "berts_vehicle_pack:munition/gbu54_x2",
+          "berts_vehicle_pack:munition/gbu32_x2",
+          "berts_vehicle_pack:munition/gbu31",
+          "berts_vehicle_pack:munition/gbu62_x2",
+          "berts_vehicle_pack:munition/gbu64",
+          "berts_vehicle_pack:munition/agm154a_x2",
+          "berts_vehicle_pack:munition/agm65e",
+          "berts_vehicle_pack:munition/agm65f",
+          "berts_vehicle_pack:munition/agm84h",
+          "berts_vehicle_pack:munition/agm84d",
+          "berts_vehicle_pack:munition/agm88c",
+          "berts_vehicle_pack:munition/agm88g",
+          "berts_vehicle_pack:munition/tank_480gal",
+          "berts_vehicle_pack:munition/lau61_hydra",
+          "berts_vehicle_pack:munition/lau10_zuni"
+        ],
+        "MaxWeaponsPerPylon": 1,
+        "MaxPylonMassKg": 2300,
+        "NativeWeaponIds": {
+          "berts_vehicle_pack:munition/lau61_hydra": "Lau61Inner",
+          "berts_vehicle_pack:munition/lau10_zuni": "Lau10Inner"
+        }
+      }
+    ],
+    "Singles": [
+      {
+        "Id": "fuselage_right",
+        "Name": "Station 5 · right fuselage (ATFLIR)",
+        "Position": [
+          -1.1755,
+          0.9946,
+          -1.9117
+        ],
+        "Stations": [
+          {
+            "Point": [
+              -1.1755,
+              0.9946,
+              -1.9117
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "Internal": false,
+        "AllowedStores": [
+          "berts_vehicle_pack:munition/aim7p",
+          "berts_vehicle_pack:munition/aim120c5",
+          "berts_vehicle_pack:munition/aim120d",
+          "berts_vehicle_pack:sensor/atflir"
+        ],
+        "MaxWeaponsPerPylon": 1,
+        "MaxPylonMassKg": 250
+      },
+      {
+        "Id": "fuselage_left",
+        "Name": "Station 7 · left fuselage",
+        "Position": [
+          1.1755,
+          0.9946,
+          -1.9117
+        ],
+        "Stations": [
+          {
+            "Point": [
+              1.1755,
+              0.9946,
+              -1.9117
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "Internal": false,
+        "AllowedStores": [
+          "berts_vehicle_pack:munition/aim7p",
+          "berts_vehicle_pack:munition/aim120c5",
+          "berts_vehicle_pack:munition/aim120d"
+        ],
+        "MaxWeaponsPerPylon": 1,
+        "MaxPylonMassKg": 250
+      },
+      {
+        "Id": "centreline",
+        "Name": "Station 6 · centreline",
+        "Position": [
+          0.0,
+          0.9494,
+          -0.5102
+        ],
+        "Stations": [
+          {
+            "Point": [
+              0.0,
+              0.9494,
+              -0.5102
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "Internal": false,
+        "AllowedStores": [
+          "berts_vehicle_pack:munition/mk82",
+          "berts_vehicle_pack:munition/mk83",
+          "berts_vehicle_pack:munition/mk82_snakeeye",
+          "berts_vehicle_pack:munition/tank_480gal"
+        ],
+        "MaxWeaponsPerPylon": 1,
+        "MaxPylonMassKg": 1600
+      }
+    ],
+    "StoreGroups": {}
+  },
+  "note_armament": "War Thunder fa_18e_block_2 stations (work/elite_expansion_2/fa18e/WT-fa18e.md), written by work/elite_expansion_2/tools/fa18e_armament.py; points on the model's own pylons.",
+  "flightReference": {
+    "baseMassKg": 14500.0,
+    "mainFuelMassKg": 6670.0,
+    "fullFuelWingLoadingKgPerSquareMetre": 455.759,
+    "dryThrustKgfPerEngine": 6025.0,
+    "afterburnerThrustKgfPerEngine": 9979.0,
+    "maximumTrueAirspeedKmh": 1801.0,
+    "referenceAltitudeMetres": 11430.0
+  },
+  "note_flight": "War Thunder fa_18e_block_2: empty 14,500 kg, ThrustMax 6,025 kgf per engine dry, wing 46.5 m2, top speed 1,801 km/h at 11,430 m (wiki); internal fuel 6,670 kg (wiki main fuel); afterburner 9,979 kgf (F414-GE-400 rating, 22,000 lbf: WT has no labelled AB figure). The pack's old reference (11,130 kg, 3,724/6,479 kgf, 38 m2, 2,375 km/h) did not match."
 }
