@@ -75,6 +75,15 @@
         }
       },
       {
+        "bone": "drop",
+        "if": {
+          "frame": "source",
+          "absXMin": 71.5,
+          "absXMax": 82.5,
+          "yMax": 18.5
+        }
+      },
+      {
         "bone": "wing",
         "if": {}
       }
@@ -87,6 +96,15 @@
           "absXMin": 113,
           "absXMax": 125,
           "yMax": 24.5
+        }
+      },
+      {
+        "bone": "drop",
+        "if": {
+          "frame": "source",
+          "absXMin": 71.5,
+          "absXMax": 82.5,
+          "yMax": 18.5
         }
       },
       {
@@ -805,5 +823,6 @@
     ],
     "StoreGroups": {}
   },
-  "note_armament": "War Thunder a_10c stations (work/elite_expansion_2/a10c/WT-a10c.md), written by work/elite_expansion_2/tools/a10c_armament.py; points on the model's own pylons."
+  "note_armament": "War Thunder a_10c stations (work/elite_expansion_2/a10c/WT-a10c.md), written by work/elite_expansion_2/tools/a10c_armament.py; points on the model's own pylons.",
+  "note_ter": "Stations 3/9 carried a baked triple-rack frame (LAU-88/TER crossbar and hangers under the pylon, |x| 71.5..82.5 below y 18.5): dropped; the rack stores bring their own adapters."
 }
