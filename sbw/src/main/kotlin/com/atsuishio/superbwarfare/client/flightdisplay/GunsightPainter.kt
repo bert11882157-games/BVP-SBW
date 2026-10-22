@@ -37,11 +37,11 @@ internal object GunsightPainter {
         val by = f.boreY
         if (!gyro) {
             DisplayDraw.shapes(g) {
-                disc(bx, by, (50 * MIL * k).toFloat() + 1.5f, (50 * MIL * k).toFloat() - 1.5f, color, 64)
+                disc(bx, by, (50 * MIL * k).toFloat() + 2.5f, (50 * MIL * k).toFloat() - 2.5f, color, 64)
                 disc(bx, by, 3.5f, 0f, color, 16)
                 val r0 = (8 * MIL * k).toFloat(); val r1 = (40 * MIL * k).toFloat()
-                line(bx - r1, by, bx - r0, by, 2.5f, color); line(bx + r0, by, bx + r1, by, 2.5f, color)
-                line(bx, by - r1, bx, by - r0, 2.5f, color); line(bx, by + r0, bx, by + r1, 2.5f, color)
+                line(bx - r1, by, bx - r0, by, 3.5f, color); line(bx + r0, by, bx + r1, by, 3.5f, color)
+                line(bx, by - r1, bx, by - r0, 3.5f, color); line(bx, by + r0, bx, by + r1, 3.5f, color)
             }
             return
         }
@@ -62,7 +62,7 @@ internal object GunsightPainter {
             lastNanos = now
             lastPitch = s.pitchUp
         }
-        val ringR = (35 * MIL * k).toFloat()
+        val ringR = (50 * MIL * k).toFloat()
         // the pipper stays on the glass with its ring
         val px = (if (live) (bx + leadRight * k).toFloat() else bx).coerceIn(f.left + ringR + 6, f.right - ringR - 6)
         val py = (if (live) (by - leadUp * k).toFloat() else (by + GRAVITY_DROP * k).toFloat())
@@ -70,14 +70,14 @@ internal object GunsightPainter {
         DisplayDraw.shapes(g) {
             // the fixed cross on the boresight
             val c0 = (6 * MIL * k).toFloat(); val c1 = (18 * MIL * k).toFloat()
-            line(bx - c1, by, bx - c0, by, 2f, color); line(bx + c0, by, bx + c1, by, 2f, color)
-            line(bx, by - c1, bx, by - c0, 2f, color); line(bx, by + c0, bx, by + c1, 2f, color)
+            line(bx - c1, by, bx - c0, by, 3.5f, color); line(bx + c0, by, bx + c1, by, 3.5f, color)
+            line(bx, by - c1, bx, by - c0, 3.5f, color); line(bx, by + c0, bx, by + c1, 3.5f, color)
             // the pipper and its ring of eight diamonds
-            disc(px, py, 3.5f, 0f, color, 16)
+            disc(px, py, 5f, 0f, color, 16)
             for (i in 0 until 8) {
                 val a = Math.toRadians(i * 45.0)
                 val x = px + (ringR * cos(a)).toFloat(); val y = py + (ringR * sin(a)).toFloat()
-                val d = 4.5f
+                val d = 9f
                 poly(floatArrayOf(x, y - d, x + d, y, x, y + d, x - d, y), color)
             }
         }
