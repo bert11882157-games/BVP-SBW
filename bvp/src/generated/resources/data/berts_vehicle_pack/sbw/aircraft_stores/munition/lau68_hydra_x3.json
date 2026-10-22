@@ -1,0 +1,39 @@
+{
+  "Schema": 1,
+  "Name": "LAU-131A · 3 x 7 Hydra 70 · TER-9A",
+  "Category": "ROCKET_POD",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/lau68_hydra_x3.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.1425,
+    0.0
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.2635,
+      0.0,
+      0.0
+    ],
+    "Right": [
+      -0.2635,
+      0.0,
+      0.0
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    -0.0779,
+    0.0
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/lau68_hydra_x3.png",
+  "Capacity": 21,
+  "Scale": 1,
+  "MassKg": 16.9,
+  "AmmoItem": "superbwarfare:small_unguided_rocket",
+  "LaunchOffset": [
+    0.0,
+    -0.2204,
+    0.0
+  ]
+}

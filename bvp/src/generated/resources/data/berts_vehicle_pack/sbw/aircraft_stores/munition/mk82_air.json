@@ -1,0 +1,48 @@
+{
+  "Schema": 1,
+  "Name": "Mk 82 AIR · 500 lb ballute retarded",
+  "Category": "BOMB",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/mk82_air.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.1605,
+    -0.05
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.1365,
+      0.0,
+      -0.05
+    ],
+    "Right": [
+      -0.1365,
+      0.0,
+      -0.05
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    -0.05
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/mk82_air.png",
+  "Capacity": 1,
+  "MassKg": 233.0,
+  "Bomb": {
+    "Mode": "DUMB",
+    "Gravity": 0.08,
+    "DragMultiplier": 5,
+    "TurnDegreesPerTick": 0,
+    "BlastRadius": 7,
+    "TntEquivalentKg": 117.585,
+    "BlastDamage": 450
+  },
+  "AmmoItem": "superbwarfare:small_freefall_bomb",
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_bombs/mk82_air",
+  "LaunchOffset": [
+    0.0,
+    -0.1605,
+    0.0
+  ]
+}

@@ -1,0 +1,89 @@
+{
+  "Schema": 1,
+  "Name": "AIM-9L Sidewinder · all-aspect infrared · LAU-105 dual rail",
+  "Category": "AIR_TO_AIR",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/aim9l.geo.json",
+  "ModelForward": "+Z",
+  "MountAnchor": [
+    0,
+    0.0673,
+    -0.4018
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      -0.0673,
+      0.0,
+      -0.4018
+    ],
+    "Right": [
+      0.0673,
+      0.0,
+      -0.4018
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    -0.4018
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/aim9l.png",
+  "Capacity": 1,
+  "MassKg": 84.5,
+  "Guidance": {
+    "Mode": "INFRARED",
+    "LockTicks": 50,
+    "Range": 1000,
+    "ConeDegrees": 32,
+    "CountermeasureVulnerability": 1
+  },
+  "Flight": {
+    "InitialSpeed": 0.5,
+    "MaxSpeed": 5,
+    "AccelerationPerTick": 0.1,
+    "TurnDegreesPerSecond": 88,
+    "Damage": 30,
+    "BlastRadius": 3,
+    "TntEquivalentKg": 4.5824
+  },
+  "AmmoItem": "superbwarfare:small_air_to_air_missile",
+  "MaxPerPylon": 2,
+  "FixedRackCount": 2,
+  "RackAdapter": {
+    "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/rack_lau105_x2.geo.json",
+    "Texture": "berts_vehicle_pack:textures/aircraft_stores/rack_lau105_x2.png",
+    "MountAnchor": [
+      0.0,
+      0.025,
+      0.0
+    ],
+    "Stations": [
+      {
+        "Point": [
+          -0.2748,
+          -0.025,
+          0.0
+        ],
+        "Face": "left"
+      },
+      {
+        "Point": [
+          0.2748,
+          -0.025,
+          0.0
+        ],
+        "Face": "right"
+      }
+    ]
+  },
+  "RackSpacing": [
+    0.7,
+    0.35,
+    0
+  ],
+  "RackMassKg": 25.0,
+  "LaunchOffset": [
+    0.0,
+    -0.0673,
+    0.0
+  ]
+}

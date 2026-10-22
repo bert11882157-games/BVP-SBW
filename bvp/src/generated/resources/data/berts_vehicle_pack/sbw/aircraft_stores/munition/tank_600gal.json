@@ -1,0 +1,37 @@
+{
+  "Schema": 1,
+  "Name": "600 US gal A-10C fuel tank",
+  "Category": "VISUAL_ONLY",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/tank_600gal.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.3497,
+    0.0205
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.3497,
+      0.0,
+      0.0205
+    ],
+    "Right": [
+      -0.3497,
+      0.0,
+      0.0205
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    0.0205
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/tank_600gal.png",
+  "Capacity": 1,
+  "MassKg": 1992.0,
+  "LaunchOffset": [
+    0.0,
+    -0.3497,
+    0.0
+  ]
+}
