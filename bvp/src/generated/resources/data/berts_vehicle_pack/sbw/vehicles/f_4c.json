@@ -625,7 +625,14 @@
         5.65
       ],
       "Weapons": [
-        "CenterlineGAU4"
+        "CenterlineGAU4",
+        "WingGAU4",
+        "FfarOuter",
+        "ZuniOuter",
+        "FfarInner",
+        "ZuniInner",
+        "FfarCentre",
+        "ZuniCentre"
       ],
       "CanRotateHead": true,
       "FixedGunBank": [
@@ -725,85 +732,44 @@
       "Spread": 0.12,
       "SoundRadius": 8,
       "ExplosionDamage": 0,
-      "Name": "20 mm GAU-4",
+      "Name": "20 mm GAU-4 (SUU-23/A, centreline)",
       "RPM": 6000,
       "Magazine": 1200,
-      "Damage": 166.66666666666666,
+      "Damage": 45,
       "SoundInfo": {
-        "Fire1PGain": 0.5,
-        "Fire3PGain": 0.5,
-        "Fire3PFarGain": 0.5,
-        "Fire3PVeryFarGain": 0.5,
-        "Fire1P": "berts_vehicle_pack:f_4c_gun_jetshoot",
-        "Fire3P": "berts_vehicle_pack:f_4c_gun_jetshoot",
-        "Fire3PFar": "berts_vehicle_pack:f_4c_gun_jetshoot",
-        "Fire3PVeryFar": "berts_vehicle_pack:f_4c_gun_jetshoot",
+        "Fire1PGain": 1.0,
+        "Fire3PGain": 1.0,
+        "Fire3PFarGain": 1.0,
+        "Fire3PVeryFarGain": 1.0,
+        "Fire1P": "bvp_audio:weapon/m61_1p",
+        "Fire3P": "bvp_audio:weapon/m61_3p",
+        "Fire3PFar": "bvp_audio:weapon/m61_3p",
+        "Fire3PVeryFar": "bvp_audio:weapon/m61_3p",
         "Volume": 1.0
       },
       "Projectile": {
         "Type": "superbwarfare:small_cannon_shell",
-        "Profile": "berts_vehicle_pack:aircraft_rounds/gau4/gau4_air_game"
+        "Profile": "berts_vehicle_pack:aircraft_rounds/m61a1/m61_apit"
       },
-      "ShellType": "HE",
+      "ShellType": "AP",
       "Velocity": 64.375,
-      "ApDurability": 5,
-      "ExplosionRadius": 3.333333333333333,
-      "TntEquivalentKg": 0.0117,
+      "ApDurability": 40,
+      "ExplosionRadius": 0,
+      "TntEquivalentKg": 0.0,
       "NominalBallistics": {
         "Supported": true,
         "ProjectileType": "superbwarfare:small_cannon_shell",
-        "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/gau4/gau4_air_game",
+        "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/m61a1/m61_apit",
         "ProjectileLife": 400
       },
       "AmmoType": [
-        {
-          "Ammo": "superbwarfare:small_shell_he",
-          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
-          "Override": {
-            "Projectile": {
-              "Type": "superbwarfare:small_cannon_shell",
-              "Profile": "berts_vehicle_pack:aircraft_rounds/gau4/gau4_air_game"
-            },
-            "ShellType": "HE",
-            "Velocity": 64.375,
-            "ApDurability": 5,
-            "Damage": 166.66666666666666,
-            "ExplosionDamage": 0,
-            "ExplosionRadius": 3.333333333333333,
-            "TntEquivalentKg": 0.0117,
-            "Name": "Air Belt",
-            "ProjectileBelt": {
-              "Name": "Air Belt",
-              "Rounds": [
-                {
-                  "Shots": 3,
-                  "Round": "gau4_air_game",
-                  "Ammo": "superbwarfare:small_shell_he",
-                  "Tracer": "NONE"
-                },
-                {
-                  "Shots": 1,
-                  "Round": "gau4_ground_game",
-                  "Ammo": "superbwarfare:small_shell_ap",
-                  "Tracer": "RED"
-                }
-              ]
-            },
-            "NominalBallistics": {
-              "Supported": true,
-              "ProjectileType": "superbwarfare:small_cannon_shell",
-              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/gau4/gau4_air_game",
-              "ProjectileLife": 400
-            }
-          }
-        },
         {
           "Ammo": "superbwarfare:small_shell_ap",
           "ConsumptionItem": "superbwarfare:small_autocannon_shell",
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
-              "Profile": "berts_vehicle_pack:aircraft_rounds/gau4/gau4_ground_game"
+              "Profile": "berts_vehicle_pack:aircraft_rounds/m61a1/m61_apit"
             },
             "ShellType": "AP",
             "Velocity": 64.375,
@@ -812,20 +778,126 @@
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
             "TntEquivalentKg": 0.0,
-            "Name": "Ground Belt",
+            "Name": "Default",
             "ProjectileBelt": {
-              "Name": "Ground Belt",
+              "Name": "Default",
               "Rounds": [
                 {
-                  "Shots": 3,
-                  "Round": "gau4_ground_game",
+                  "Shots": 1,
+                  "Round": "api_t",
                   "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "RED"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "ap_i",
+                  "Ammo": "superbwarfare:small_shell_gs",
                   "Tracer": "NONE"
                 },
                 {
                   "Shots": 1,
-                  "Round": "gau4_air_game",
+                  "Round": "hef_i",
                   "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/m61a1/m61_apit",
+              "ProjectileLife": 400
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/m61a1/m61_hefi"
+            },
+            "ShellType": "HE",
+            "Velocity": 64.375,
+            "ApDurability": 5,
+            "Damage": 166.66666666666666,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 3.333333333333333,
+            "TntEquivalentKg": 0.0117,
+            "Name": "Air targets",
+            "ProjectileBelt": {
+              "Name": "Air targets",
+              "Rounds": [
+                {
+                  "Shots": 2,
+                  "Round": "hef_i",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "api_t",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "RED"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "hef_i",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "ap_i",
+                  "Ammo": "superbwarfare:small_shell_gs",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/m61a1/m61_hefi",
+              "ProjectileLife": 400
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_gs",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/m61a1/m61_api"
+            },
+            "ShellType": "AP",
+            "Velocity": 64.375,
+            "ApDurability": 40,
+            "Damage": 45,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "TntEquivalentKg": 0.0,
+            "Name": "Armored targets",
+            "ProjectileBelt": {
+              "Name": "Armored targets",
+              "Rounds": [
+                {
+                  "Shots": 3,
+                  "Round": "ap_i",
+                  "Ammo": "superbwarfare:small_shell_gs",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "hef_i",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "api_t",
+                  "Ammo": "superbwarfare:small_shell_ap",
                   "Tracer": "RED"
                 }
               ]
@@ -833,7 +905,48 @@
             "NominalBallistics": {
               "Supported": true,
               "ProjectileType": "superbwarfare:small_cannon_shell",
-              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/gau4/gau4_ground_game",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/m61a1/m61_api",
+              "ProjectileLife": 400
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_aa",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/m61a1/m61_hefi"
+            },
+            "ShellType": "HE",
+            "Velocity": 64.375,
+            "ApDurability": 5,
+            "Damage": 166.66666666666666,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 3.333333333333333,
+            "TntEquivalentKg": 0.0117,
+            "Name": "Stealth",
+            "ProjectileBelt": {
+              "Name": "Stealth",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "hef_i",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 3,
+                  "Round": "ap_i",
+                  "Ammo": "superbwarfare:small_shell_gs",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/m61a1/m61_hefi",
               "ProjectileLife": 400
             }
           }
@@ -844,9 +957,9 @@
         "Transform": "Vehicle",
         "Positions": [
           [
-            0,
-            0.8,
-            1.9775
+            0.0,
+            0.9563,
+            4.157
           ]
         ],
         "Directions": [
@@ -857,9 +970,9 @@
           ]
         ],
         "ViewPosition": [
-          0,
-          0.8,
-          1.9775
+          0.0,
+          0.9563,
+          4.157
         ],
         "MuzzleAttachments": [
           "CenterlineGAU4_muzzle"
@@ -876,6 +989,861 @@
       },
       "BeltFed": true,
       "OverheatEnabled": false
+    },
+    "WingGAU4": {
+      "Crosshair": "@VehicleCommonGun",
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "ProjectileAmount": 1,
+      "AmmoCostPerShoot": 1,
+      "NormalReloadTime": 400,
+      "EmptyReloadTime": 400,
+      "AutoReload": true,
+      "WithdrawAmmoWhenChangeSlot": false,
+      "Gravity": 0.05,
+      "ProjectileLife": 400,
+      "AddShooterDeltaMovement": true,
+      "HeatPerShoot": 0,
+      "Spread": 0.12,
+      "SoundRadius": 8,
+      "ExplosionDamage": 0,
+      "Name": "20 mm GAU-4 (SUU-23/A, outer pylons)",
+      "RPM": 6000,
+      "Magazine": 2400,
+      "Damage": 45,
+      "SoundInfo": {
+        "Fire1PGain": 1.0,
+        "Fire3PGain": 1.0,
+        "Fire3PFarGain": 1.0,
+        "Fire3PVeryFarGain": 1.0,
+        "Fire1P": "bvp_audio:weapon/m61_1p",
+        "Fire3P": "bvp_audio:weapon/m61_3p",
+        "Fire3PFar": "bvp_audio:weapon/m61_3p",
+        "Fire3PVeryFar": "bvp_audio:weapon/m61_3p",
+        "Volume": 1.0
+      },
+      "Projectile": {
+        "Type": "superbwarfare:small_cannon_shell",
+        "Profile": "berts_vehicle_pack:aircraft_rounds/m61a1/m61_apit"
+      },
+      "ShellType": "AP",
+      "Velocity": 64.375,
+      "ApDurability": 40,
+      "ExplosionRadius": 0,
+      "TntEquivalentKg": 0.0,
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "superbwarfare:small_cannon_shell",
+        "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/m61a1/m61_apit",
+        "ProjectileLife": 400
+      },
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/m61a1/m61_apit"
+            },
+            "ShellType": "AP",
+            "Velocity": 64.375,
+            "ApDurability": 40,
+            "Damage": 45,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "TntEquivalentKg": 0.0,
+            "Name": "Default",
+            "ProjectileBelt": {
+              "Name": "Default",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "api_t",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "RED"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "ap_i",
+                  "Ammo": "superbwarfare:small_shell_gs",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "hef_i",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/m61a1/m61_apit",
+              "ProjectileLife": 400
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/m61a1/m61_hefi"
+            },
+            "ShellType": "HE",
+            "Velocity": 64.375,
+            "ApDurability": 5,
+            "Damage": 166.66666666666666,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 3.333333333333333,
+            "TntEquivalentKg": 0.0117,
+            "Name": "Air targets",
+            "ProjectileBelt": {
+              "Name": "Air targets",
+              "Rounds": [
+                {
+                  "Shots": 2,
+                  "Round": "hef_i",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "api_t",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "RED"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "hef_i",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "ap_i",
+                  "Ammo": "superbwarfare:small_shell_gs",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/m61a1/m61_hefi",
+              "ProjectileLife": 400
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_gs",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/m61a1/m61_api"
+            },
+            "ShellType": "AP",
+            "Velocity": 64.375,
+            "ApDurability": 40,
+            "Damage": 45,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "TntEquivalentKg": 0.0,
+            "Name": "Armored targets",
+            "ProjectileBelt": {
+              "Name": "Armored targets",
+              "Rounds": [
+                {
+                  "Shots": 3,
+                  "Round": "ap_i",
+                  "Ammo": "superbwarfare:small_shell_gs",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "hef_i",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "api_t",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "RED"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/m61a1/m61_api",
+              "ProjectileLife": 400
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_aa",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/m61a1/m61_hefi"
+            },
+            "ShellType": "HE",
+            "Velocity": 64.375,
+            "ApDurability": 5,
+            "Damage": 166.66666666666666,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 3.333333333333333,
+            "TntEquivalentKg": 0.0117,
+            "Name": "Stealth",
+            "ProjectileBelt": {
+              "Name": "Stealth",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "hef_i",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 3,
+                  "Round": "ap_i",
+                  "Ammo": "superbwarfare:small_shell_gs",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/m61a1/m61_hefi",
+              "ProjectileLife": 400
+            }
+          }
+        }
+      ],
+      "ProjectileBeltAmmoType": [],
+      "ShootPos": {
+        "Transform": "Vehicle",
+        "Positions": [
+          [
+            3.3383,
+            0.8895,
+            1.4418
+          ],
+          [
+            -3.3383,
+            0.8895,
+            1.4418
+          ]
+        ],
+        "Directions": [
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "ViewPosition": [
+          3.3383,
+          0.8895,
+          1.4418
+        ],
+        "MuzzleAttachments": [
+          "WingGAU4_0",
+          "WingGAU4_1"
+        ],
+        "MuzzleDirectionAttachments": [
+          "WingGAU4_0",
+          "WingGAU4_1"
+        ],
+        "EffectAttachments": [
+          "WingGAU4_0",
+          "WingGAU4_1"
+        ],
+        "EffectDirectionAttachments": [
+          "WingGAU4_0",
+          "WingGAU4_1"
+        ]
+      },
+      "BeltFed": true,
+      "OverheatEnabled": false
+    },
+    "FfarOuter": {
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_rocket",
+          "ConsumptionItem": "superbwarfare:small_unguided_rocket",
+          "Override": {
+            "TntEquivalentKg": 1.1921
+          }
+        }
+      ],
+      "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_small_rocket.png",
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "Magazine": 114,
+      "EmptyReloadTime": 200,
+      "Projectile": {
+        "Type": "berts_vehicle_pack:s8ko_rocket",
+        "Profile": "berts_vehicle_pack:ah_1g_cobra/rocket/default"
+      },
+      "AddShooterDeltaMovement": true,
+      "Spread": 0.25,
+      "Name": "2.75 in FFAR (LAU-3/A, outer)",
+      "RPM": 600,
+      "Damage": 100,
+      "ExplosionDamage": 0,
+      "ExplosionRadius": 6,
+      "TntEquivalentKg": 1.1921,
+      "Gravity": 0.02,
+      "Velocity": 9,
+      "ProjectileLife": 100,
+      "Crosshair": "@Empty",
+      "SoundRadius": 16,
+      "SoundInfo": {
+        "Fire1PGain": 1.0,
+        "Fire3PGain": 1.0,
+        "Fire3PFarGain": 1.0,
+        "Fire3PVeryFarGain": 1.0,
+        "Fire1P": "bvp_audio:weapon/hydra_1p",
+        "Fire3P": "bvp_audio:weapon/hydra_3p",
+        "Fire3PFar": "bvp_audio:weapon/hydra_far",
+        "Fire3PVeryFar": "bvp_audio:weapon/hydra_far",
+        "Change": "superbwarfare:into_missile",
+        "Volume": 1.2
+      },
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "berts_vehicle_pack:s8ko_rocket",
+        "ProjectileProfile": "berts_vehicle_pack:ah_1g_cobra/rocket/default",
+        "ProjectileLife": 100
+      },
+      "ShootPos": {
+        "Transform": "Vehicle",
+        "Positions": [
+          [
+            3.3383,
+            0.7695,
+            -0.3382
+          ],
+          [
+            -3.3383,
+            0.7695,
+            -0.3382
+          ]
+        ],
+        "Directions": [
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "ViewPosition": [
+          3.3383,
+          0.7695,
+          -0.3382
+        ],
+        "MuzzleAttachments": [
+          "FfarOuter_0",
+          "FfarOuter_1"
+        ],
+        "MuzzleDirectionAttachments": [
+          "FfarOuter_0",
+          "FfarOuter_1"
+        ],
+        "EffectAttachments": [
+          "FfarOuter_0",
+          "FfarOuter_1"
+        ],
+        "EffectDirectionAttachments": [
+          "FfarOuter_0",
+          "FfarOuter_1"
+        ]
+      }
+    },
+    "ZuniOuter": {
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_rocket",
+          "ConsumptionItem": "superbwarfare:small_unguided_rocket",
+          "Override": {
+            "TntEquivalentKg": 5.9
+          }
+        }
+      ],
+      "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_small_rocket.png",
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "Magazine": 8,
+      "EmptyReloadTime": 200,
+      "Projectile": {
+        "Type": "berts_vehicle_pack:s8ko_rocket",
+        "Profile": "berts_vehicle_pack:ah_1g_cobra/rocket/default"
+      },
+      "AddShooterDeltaMovement": true,
+      "Spread": 0.25,
+      "Name": "Zuni (LAU-10/A, outer)",
+      "RPM": 600,
+      "Damage": 100,
+      "ExplosionDamage": 0,
+      "ExplosionRadius": 9,
+      "TntEquivalentKg": 5.9,
+      "Gravity": 0.02,
+      "Velocity": 9,
+      "ProjectileLife": 100,
+      "Crosshair": "@Empty",
+      "SoundRadius": 16,
+      "SoundInfo": {
+        "Fire1PGain": 1.0,
+        "Fire3PGain": 1.0,
+        "Fire3PFarGain": 1.0,
+        "Fire3PVeryFarGain": 1.0,
+        "Fire1P": "bvp_audio:weapon/hydra_1p",
+        "Fire3P": "bvp_audio:weapon/hydra_3p",
+        "Fire3PFar": "bvp_audio:weapon/hydra_far",
+        "Fire3PVeryFar": "bvp_audio:weapon/hydra_far",
+        "Change": "superbwarfare:into_missile",
+        "Volume": 1.2
+      },
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "berts_vehicle_pack:s8ko_rocket",
+        "ProjectileProfile": "berts_vehicle_pack:ah_1g_cobra/rocket/default",
+        "ProjectileLife": 100
+      },
+      "ShootPos": {
+        "Transform": "Vehicle",
+        "Positions": [
+          [
+            3.3383,
+            0.9795,
+            0.4118
+          ],
+          [
+            -3.3383,
+            0.9795,
+            0.4118
+          ]
+        ],
+        "Directions": [
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "ViewPosition": [
+          3.3383,
+          0.9795,
+          0.4118
+        ],
+        "MuzzleAttachments": [
+          "ZuniOuter_0",
+          "ZuniOuter_1"
+        ],
+        "MuzzleDirectionAttachments": [
+          "ZuniOuter_0",
+          "ZuniOuter_1"
+        ],
+        "EffectAttachments": [
+          "ZuniOuter_0",
+          "ZuniOuter_1"
+        ],
+        "EffectDirectionAttachments": [
+          "ZuniOuter_0",
+          "ZuniOuter_1"
+        ]
+      }
+    },
+    "FfarInner": {
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_rocket",
+          "ConsumptionItem": "superbwarfare:small_unguided_rocket",
+          "Override": {
+            "TntEquivalentKg": 1.1921
+          }
+        }
+      ],
+      "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_small_rocket.png",
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "Magazine": 114,
+      "EmptyReloadTime": 200,
+      "Projectile": {
+        "Type": "berts_vehicle_pack:s8ko_rocket",
+        "Profile": "berts_vehicle_pack:ah_1g_cobra/rocket/default"
+      },
+      "AddShooterDeltaMovement": true,
+      "Spread": 0.25,
+      "Name": "2.75 in FFAR (LAU-3/A, inner)",
+      "RPM": 600,
+      "Damage": 100,
+      "ExplosionDamage": 0,
+      "ExplosionRadius": 6,
+      "TntEquivalentKg": 1.1921,
+      "Gravity": 0.02,
+      "Velocity": 9,
+      "ProjectileLife": 100,
+      "Crosshair": "@Empty",
+      "SoundRadius": 16,
+      "SoundInfo": {
+        "Fire1PGain": 1.0,
+        "Fire3PGain": 1.0,
+        "Fire3PFarGain": 1.0,
+        "Fire3PVeryFarGain": 1.0,
+        "Fire1P": "bvp_audio:weapon/hydra_1p",
+        "Fire3P": "bvp_audio:weapon/hydra_3p",
+        "Fire3PFar": "bvp_audio:weapon/hydra_far",
+        "Fire3PVeryFar": "bvp_audio:weapon/hydra_far",
+        "Change": "superbwarfare:into_missile",
+        "Volume": 1.2
+      },
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "berts_vehicle_pack:s8ko_rocket",
+        "ProjectileProfile": "berts_vehicle_pack:ah_1g_cobra/rocket/default",
+        "ProjectileLife": 100
+      },
+      "ShootPos": {
+        "Transform": "Vehicle",
+        "Positions": [
+          [
+            2.0475,
+            0.5692,
+            2.2657
+          ],
+          [
+            -2.0475,
+            0.5692,
+            2.2657
+          ]
+        ],
+        "Directions": [
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "ViewPosition": [
+          2.0475,
+          0.5692,
+          2.2657
+        ],
+        "MuzzleAttachments": [
+          "FfarInner_0",
+          "FfarInner_1"
+        ],
+        "MuzzleDirectionAttachments": [
+          "FfarInner_0",
+          "FfarInner_1"
+        ],
+        "EffectAttachments": [
+          "FfarInner_0",
+          "FfarInner_1"
+        ],
+        "EffectDirectionAttachments": [
+          "FfarInner_0",
+          "FfarInner_1"
+        ]
+      }
+    },
+    "ZuniInner": {
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_rocket",
+          "ConsumptionItem": "superbwarfare:small_unguided_rocket",
+          "Override": {
+            "TntEquivalentKg": 5.9
+          }
+        }
+      ],
+      "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_small_rocket.png",
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "Magazine": 8,
+      "EmptyReloadTime": 200,
+      "Projectile": {
+        "Type": "berts_vehicle_pack:s8ko_rocket",
+        "Profile": "berts_vehicle_pack:ah_1g_cobra/rocket/default"
+      },
+      "AddShooterDeltaMovement": true,
+      "Spread": 0.25,
+      "Name": "Zuni (LAU-10/A, inner)",
+      "RPM": 600,
+      "Damage": 100,
+      "ExplosionDamage": 0,
+      "ExplosionRadius": 9,
+      "TntEquivalentKg": 5.9,
+      "Gravity": 0.02,
+      "Velocity": 9,
+      "ProjectileLife": 100,
+      "Crosshair": "@Empty",
+      "SoundRadius": 16,
+      "SoundInfo": {
+        "Fire1PGain": 1.0,
+        "Fire3PGain": 1.0,
+        "Fire3PFarGain": 1.0,
+        "Fire3PVeryFarGain": 1.0,
+        "Fire1P": "bvp_audio:weapon/hydra_1p",
+        "Fire3P": "bvp_audio:weapon/hydra_3p",
+        "Fire3PFar": "bvp_audio:weapon/hydra_far",
+        "Fire3PVeryFar": "bvp_audio:weapon/hydra_far",
+        "Change": "superbwarfare:into_missile",
+        "Volume": 1.2
+      },
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "berts_vehicle_pack:s8ko_rocket",
+        "ProjectileProfile": "berts_vehicle_pack:ah_1g_cobra/rocket/default",
+        "ProjectileLife": 100
+      },
+      "ShootPos": {
+        "Transform": "Vehicle",
+        "Positions": [
+          [
+            2.0475,
+            0.7792,
+            3.0157
+          ],
+          [
+            -2.0475,
+            0.7792,
+            3.0157
+          ]
+        ],
+        "Directions": [
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "ViewPosition": [
+          2.0475,
+          0.7792,
+          3.0157
+        ],
+        "MuzzleAttachments": [
+          "ZuniInner_0",
+          "ZuniInner_1"
+        ],
+        "MuzzleDirectionAttachments": [
+          "ZuniInner_0",
+          "ZuniInner_1"
+        ],
+        "EffectAttachments": [
+          "ZuniInner_0",
+          "ZuniInner_1"
+        ],
+        "EffectDirectionAttachments": [
+          "ZuniInner_0",
+          "ZuniInner_1"
+        ]
+      }
+    },
+    "FfarCentre": {
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_rocket",
+          "ConsumptionItem": "superbwarfare:small_unguided_rocket",
+          "Override": {
+            "TntEquivalentKg": 1.1921
+          }
+        }
+      ],
+      "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_small_rocket.png",
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "Magazine": 57,
+      "EmptyReloadTime": 200,
+      "Projectile": {
+        "Type": "berts_vehicle_pack:s8ko_rocket",
+        "Profile": "berts_vehicle_pack:ah_1g_cobra/rocket/default"
+      },
+      "AddShooterDeltaMovement": true,
+      "Spread": 0.25,
+      "Name": "2.75 in FFAR (LAU-3/A, centreline)",
+      "RPM": 600,
+      "Damage": 100,
+      "ExplosionDamage": 0,
+      "ExplosionRadius": 6,
+      "TntEquivalentKg": 1.1921,
+      "Gravity": 0.02,
+      "Velocity": 9,
+      "ProjectileLife": 100,
+      "Crosshair": "@Empty",
+      "SoundRadius": 16,
+      "SoundInfo": {
+        "Fire1PGain": 1.0,
+        "Fire3PGain": 1.0,
+        "Fire3PFarGain": 1.0,
+        "Fire3PVeryFarGain": 1.0,
+        "Fire1P": "bvp_audio:weapon/hydra_1p",
+        "Fire3P": "bvp_audio:weapon/hydra_3p",
+        "Fire3PFar": "bvp_audio:weapon/hydra_far",
+        "Fire3PVeryFar": "bvp_audio:weapon/hydra_far",
+        "Change": "superbwarfare:into_missile",
+        "Volume": 1.2
+      },
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "berts_vehicle_pack:s8ko_rocket",
+        "ProjectileProfile": "berts_vehicle_pack:ah_1g_cobra/rocket/default",
+        "ProjectileLife": 100
+      },
+      "ShootPos": {
+        "Transform": "Vehicle",
+        "Positions": [
+          [
+            0.0,
+            0.8363,
+            2.377
+          ]
+        ],
+        "Directions": [
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "ViewPosition": [
+          0.0,
+          0.8363,
+          2.377
+        ],
+        "MuzzleAttachments": [
+          "FfarCentre_muzzle"
+        ],
+        "MuzzleDirectionAttachments": [
+          "FfarCentre_muzzle"
+        ],
+        "EffectAttachments": [
+          "FfarCentre_muzzle"
+        ],
+        "EffectDirectionAttachments": [
+          "FfarCentre_muzzle"
+        ]
+      }
+    },
+    "ZuniCentre": {
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_rocket",
+          "ConsumptionItem": "superbwarfare:small_unguided_rocket",
+          "Override": {
+            "TntEquivalentKg": 5.9
+          }
+        }
+      ],
+      "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_small_rocket.png",
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "Magazine": 4,
+      "EmptyReloadTime": 200,
+      "Projectile": {
+        "Type": "berts_vehicle_pack:s8ko_rocket",
+        "Profile": "berts_vehicle_pack:ah_1g_cobra/rocket/default"
+      },
+      "AddShooterDeltaMovement": true,
+      "Spread": 0.25,
+      "Name": "Zuni (LAU-10/A, centreline)",
+      "RPM": 600,
+      "Damage": 100,
+      "ExplosionDamage": 0,
+      "ExplosionRadius": 9,
+      "TntEquivalentKg": 5.9,
+      "Gravity": 0.02,
+      "Velocity": 9,
+      "ProjectileLife": 100,
+      "Crosshair": "@Empty",
+      "SoundRadius": 16,
+      "SoundInfo": {
+        "Fire1PGain": 1.0,
+        "Fire3PGain": 1.0,
+        "Fire3PFarGain": 1.0,
+        "Fire3PVeryFarGain": 1.0,
+        "Fire1P": "bvp_audio:weapon/hydra_1p",
+        "Fire3P": "bvp_audio:weapon/hydra_3p",
+        "Fire3PFar": "bvp_audio:weapon/hydra_far",
+        "Fire3PVeryFar": "bvp_audio:weapon/hydra_far",
+        "Change": "superbwarfare:into_missile",
+        "Volume": 1.2
+      },
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "berts_vehicle_pack:s8ko_rocket",
+        "ProjectileProfile": "berts_vehicle_pack:ah_1g_cobra/rocket/default",
+        "ProjectileLife": 100
+      },
+      "ShootPos": {
+        "Transform": "Vehicle",
+        "Positions": [
+          [
+            0.0,
+            1.0463,
+            3.127
+          ]
+        ],
+        "Directions": [
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "ViewPosition": [
+          0.0,
+          1.0463,
+          3.127
+        ],
+        "MuzzleAttachments": [
+          "ZuniCentre_muzzle"
+        ],
+        "MuzzleDirectionAttachments": [
+          "ZuniCentre_muzzle"
+        ],
+        "EffectAttachments": [
+          "ZuniCentre_muzzle"
+        ],
+        "EffectDirectionAttachments": [
+          "ZuniCentre_muzzle"
+        ]
+      }
     }
   },
   "HUDColor": "0xFFC700",
@@ -941,9 +1909,9 @@
     "CenterlineGAU4_muzzle": {
       "Parent": "Vehicle",
       "Position": [
-        0,
-        0.8,
-        1.9775
+        0.0,
+        0.9563,
+        4.157
       ],
       "Direction": [
         0,
@@ -970,6 +1938,162 @@
         0,
         2.8709375,
         4.05
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "WingGAU4_0": {
+      "Parent": "Vehicle",
+      "Position": [
+        3.3383,
+        0.8895,
+        1.4418
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "WingGAU4_1": {
+      "Parent": "Vehicle",
+      "Position": [
+        -3.3383,
+        0.8895,
+        1.4418
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "FfarOuter_0": {
+      "Parent": "Vehicle",
+      "Position": [
+        3.3383,
+        0.7695,
+        -0.3382
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "FfarOuter_1": {
+      "Parent": "Vehicle",
+      "Position": [
+        -3.3383,
+        0.7695,
+        -0.3382
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "ZuniOuter_0": {
+      "Parent": "Vehicle",
+      "Position": [
+        3.3383,
+        0.9795,
+        0.4118
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "ZuniOuter_1": {
+      "Parent": "Vehicle",
+      "Position": [
+        -3.3383,
+        0.9795,
+        0.4118
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "FfarInner_0": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.0475,
+        0.5692,
+        2.2657
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "FfarInner_1": {
+      "Parent": "Vehicle",
+      "Position": [
+        -2.0475,
+        0.5692,
+        2.2657
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "ZuniInner_0": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.0475,
+        0.7792,
+        3.0157
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "ZuniInner_1": {
+      "Parent": "Vehicle",
+      "Position": [
+        -2.0475,
+        0.7792,
+        3.0157
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "FfarCentre_muzzle": {
+      "Parent": "Vehicle",
+      "Position": [
+        0.0,
+        0.8363,
+        2.377
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "ZuniCentre_muzzle": {
+      "Parent": "Vehicle",
+      "Position": [
+        0.0,
+        1.0463,
+        3.127
       ],
       "Direction": [
         0,
