@@ -1,548 +1,1030 @@
 #!/usr/bin/env python3
-"""F-16C Block 50 cockpit, built by hand for this model (as mig_29.py), from the real panel layout.
+"""F-16C Block 50/52 cockpit, built by hand for the F-16C.mtb airframe (as mig_29.py): one standalone script.
 
-Measured off the model with sections.py and eyeview.py (all heights and distances from the pilot's eye at
-(0, 2.603, 2.8695); 1 block = 1 m on this model):
-  * a box cockpit: the walls' inner faces at x +-0.34 from the floor (y -1.12) up to where the canopy glass meets
-    them (y -0.42 beside the seat, -0.47 0.6 m ahead, the glass narrowing to x +-0.30 there);
-  * the old panel block's face stands 0.60 m ahead, the glareshield top at y -0.25 running forward to y -0.36 at
-    1.05 m ahead; the seat's back 0.45 m behind the eye.
-Built:
-  * a dark grey three-facet main panel 0.58 m ahead, 12 degrees back, its narrow wings turned 25 degrees to the
-    walls, their tops sloping down under the glass (as the real panel's shoulders): after the "F16 Cockpit, Asian
-    Aerospace 2006" Block 52 photograph and the xflight.de Block 50/52 drawing (work/cockpit_diagrams): the ICP
-    under the HUD, the two MFDs either side of the centre column with the standby attitude, HSI and VVI in it;
-    airspeed / altimeter / AoA and the gear panel on the left; the RWR scope, fuel, engine rpm and FTIT on the right,
-    the caution light panel low on the right;
-  * the black glareshield forward to the windscreen, the wide-angle HUD on it (the game projects the picture);
-  * grey side consoles, side walls, rudder pedals, the throttle on the left console, the side stick on the right
-    console (into the stick bone), an ACES II seat.
-Instruments the game draws (CockpitGauges, FlightDisplays, HeadUpDisplay) are live. No glass.
+The airframe (commit 8aa61f30) brought its own interior: an ACES II seat, a panel, a coaming, a HUD, all a little
+rough and none of them in the layout of the type. This script cuts exactly that interior out of the hull pieces (a
+tub-shaped region inside the walls, floor and sill, from behind the seat to the windscreen base; the walls, floor,
+sill bands, spine and the nose are kept, so the exterior stays as it was) and puts a modelled cockpit in its place:
 
-Run on the committed originals (git checkout be357476 -- the f_16c geo, asset and both textures first).
-Usage: python3 tools/cockpit_models/f_16c.py [--dry-run]
+  * the main instrument panel in three flat facets (centre 8 degrees back, the wings turned 28 degrees toward the
+    pilot, tops sloping down under the glass), laid out after the Block 50/52 drawing (work/cockpit_diagrams/f_16c):
+    the ICP / DED under the HUD, the two MFDs either side of the centre column (airspeed and altimeter, the standby
+    attitude with the AoA and vertical-speed tapes, the HSI), the RWR scope and MISC panel on the left wing, the
+    engine gauges and the caution panel on the right wing;
+  * the black coaming running from the panel lip forward to the windscreen base, one smooth deck that meets the nose;
+  * the wide-angle HUD on it: one unit with its control strip low on the pilot's face, two side posts, and the
+    combiner glass (added to CanopyGlass) centred on the neutral eye line, slightly larger than life;
+  * side consoles (throttle on the left, the fixed-stick armrest and side stick on the right), liners, floor, kick
+    panel, rudder pedals;
+  * an ACES II seat reclined 30 degrees at its real place, with the rails, the headbox, the ejection handles, and a
+    rear bulkhead behind it.
+
+Paint lives in a free area of textures/entity/f_16c.png (no UV of the model, the native fallback or the wreck lands
+there; the burnt copy goes to entity_dead). The instruments the game draws are written to CockpitGauges and
+FlightDisplays, the HUD picture to HeadUpDisplay; the stick bones' pivots (geo and AircraftRig) go to the new foot of
+the side stick, and the seat and eye attachments are written into the vehicle data.
+
+Order: git checkout the airframe's files, run canopy_f_16c.py, then this script (it appends the HUD combiner glass
+to the canopy's CanopyGlass). Running it again rebuilds the same result.
+
+Frames: everything below is eye-relative blocks (x left, y up, z forward; 1 block = 1 m on this model); the mesh is
+written in model pixels (x, y, -z) * 16.
+
+Usage: python tools/cockpit_models/f_16c.py [--dry-run]
 """
-import math, os, sys
+import json, math, os, sys
 import numpy as np
+from PIL import Image, ImageDraw, ImageFont
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, HERE)
-import cockpit_lib as L   # noqa: E402
-import handbuilt as H     # noqa: E402
+GEN = os.path.join(HERE, '..', '..', 'bvp', 'src', 'generated', 'resources')
+GEO = os.path.join(GEN, 'assets/berts_vehicle_pack/custom_geo/f_16c.geo.json')
+ASSET = os.path.join(GEN, 'assets/berts_vehicle_pack/sbw/vehicles/f_16c.json')
+DATA = os.path.join(GEN, 'data/berts_vehicle_pack/sbw/vehicles/f_16c.json')
+TEX = os.path.join(GEN, 'assets/berts_vehicle_pack/textures/entity/f_16c.png')
+TEX_DEAD = os.path.join(GEN, 'assets/berts_vehicle_pack/textures/entity_dead/f_16c.png')
 
-VID = 'f_16c'
-SOURCE_BONE = 'wreck_fuselage_1__hull'
+BONE = 'wreck_fuselage_1__cockpit'
+SOURCE_BONES = ('wreck_fuselage_1__hull', 'wreck_fuselage_0__hull')
 STICK_BONE = 'wreck_fuselage_1__control_stick_pitch'
+ATLAS = [(0, 600, 2048, 1400)]        # free texture area (x, y, w, h): no UV of the model, its fallback or the wreck lands here
+TW, TH = 2048, 4096
 
-TURQ = (58, 60, 63)            # the F-16's dark grey panel and consoles
-TURQ_D = (44, 46, 48)
-BLACK = (24, 25, 26)
+
+def _font_files():
+    out = [r'C:\Windows\Fonts\arialbd.ttf', r'C:\Windows\Fonts\arial.ttf', '/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf',
+           '/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf']
+    try:
+        import matplotlib
+        d = os.path.join(os.path.dirname(matplotlib.__file__), 'mpl-data', 'fonts', 'ttf')
+        out += [os.path.join(d, 'DejaVuSans-Bold.ttf'), os.path.join(d, 'DejaVuSans.ttf')]
+    except ImportError:
+        pass
+    return out
+
+
+FONT_FILES = _font_files()
+
+# ---------------------------------------------------------------- colours
+
+PANEL = (56, 58, 62)           # the F-16's dark grey panel and consoles
+PANEL_D = (40, 42, 45)
+PANEL_L = (92, 96, 100)
+BLACK = (22, 23, 25)
 DGREY = (44, 46, 48)
 MGREY = (88, 92, 94)
-FRAME = (62, 68, 64)           # K-36 seat structure
-CUSHION = (58, 62, 52)
-HEADPAD = (92, 96, 88)
+LGREY = (150, 154, 156)
+FRAME = (50, 54, 52)           # ACES II structure
+CUSHION = (62, 66, 58)
+HEADPAD = (96, 100, 92)
 YELLOW = (226, 186, 30)
 RED = (196, 36, 30)
 METAL = (128, 132, 134)
-FLOOR = (46, 50, 50)
+FLOOR = (44, 47, 48)
+WHITE = (226, 228, 220)
+GREEN_LAMP = (60, 150, 70)
+AMBER = (214, 140, 30)
+DED = (80, 220, 100)
+
+
+# ---------------------------------------------------------------- texture atlas
+
+class Atlas:
+    """Shelf-packed rectangles in the free texture area. paint(w, h, fn) -> rect; fn(draw, img) paints an RGBA tile
+    at SS x resolution, downsampled for clean edges."""
+    SS = 4
+
+    def __init__(self):
+        self.free = [tuple(a) for a in ATLAS]
+        self.tiles = []                      # (rect, image)
+
+    def alloc(self, w, h):
+        best = None
+        for i, (x, y, fw, fh) in enumerate(self.free):
+            if w <= fw and h <= fh:
+                score = min(fw - w, fh - h)
+                if best is None or score < best[0]:
+                    best = (score, i)
+        if best is None:
+            raise SystemExit(f'atlas full: no room for {w}x{h}')
+        x, y, fw, fh = self.free.pop(best[1])
+        if fw - w < fh - h:
+            self.free += [(x + w, y, fw - w, h), (x, y + h, fw, fh - h)]
+        else:
+            self.free += [(x + w, y, fw - w, fh), (x, y + h, w, fh - h)]
+        self.free = [r for r in self.free if r[2] > 0 and r[3] > 0]
+        return (x, y, w, h)
+
+    def used(self):
+        return sum(r[2] * r[3] for r, _ in self.tiles)
+
+    def paint(self, w, h, fn, bg=(0, 0, 0, 255)):
+        r = self.alloc(w, h)
+        img = Image.new('RGBA', (w * self.SS, h * self.SS), bg)
+        fn(ImageDraw.Draw(img), img)
+        self.tiles.append((r, img.resize((w, h), Image.LANCZOS)))
+        return r
+
+    def swatch(self, colour):
+        return self.paint(8, 8, lambda d, im: None, bg=tuple(colour) + (255,))
+
+    def write(self, path, dead=False):
+        base = Image.open(path).convert('RGBA')
+        for x, y, w, h in ATLAS:
+            base.paste((0, 0, 0, 0), (x, y, x + w, y + h))
+        for (rx, ry, rw, rh), img in self.tiles:
+            if dead:
+                a = np.asarray(img).astype(np.float32)
+                g = a[..., :3].mean(-1, keepdims=True)
+                a[..., :3] = (a[..., :3] * 0.25 + g * 0.15) * 0.9          # soot: dark, mostly grey
+                img = Image.fromarray(np.clip(a, 0, 255).astype(np.uint8))
+            base.paste(img, (rx, ry))
+        base.save(path, optimize=True)
+
+
+def uv_of(rect, s, t):
+    """normalized texture uv of (s, t) in a rect: s right, t up, both 0..1, kept half a texel inside"""
+    x, y, w, h = rect
+    s = 0.5 / w + s * (1 - 1.0 / w); t = 0.5 / h + t * (1 - 1.0 / h)
+    return [(x + s * w) / TW, 1.0 - (y + (1 - t) * h) / TH]
+
+
+def uv_flat(rect):
+    return uv_of(rect, 0.5, 0.5)
+
+
+# ---------------------------------------------------------------- mesh (eye-relative in, vehicle-local out)
+
+EYE = np.zeros(3)                           # filled from the vehicle data: the mesh is built eye-relative
+
+
+class Mesh:
+    def __init__(self):
+        self.faces = []                      # (points k x 3 vehicle-local, uvs k x 2, normal 3)
+
+    def face(self, pts, uvs, toward=None, normal=None):
+        P = np.array(pts, float) + EYE
+        n = np.zeros(3)
+        for i in range(len(P)):              # Newell normal
+            a, b = P[i], P[(i + 1) % len(P)]
+            n += np.array([(a[1] - b[1]) * (a[2] + b[2]), (a[2] - b[2]) * (a[0] + b[0]), (a[0] - b[0]) * (a[1] + b[1])])
+        ln = np.linalg.norm(n)
+        if ln < 1e-12:
+            return
+        n /= ln
+        want = None
+        if normal is not None:
+            want = np.array(normal, float)
+        elif toward is not None:
+            want = np.array(toward, float) + EYE - P.mean(0)
+        uvs = [list(u) for u in uvs]
+        if want is not None and n @ want < 0:
+            P = P[::-1]; uvs = uvs[::-1]; n = -n
+        if len(P) > 4:                       # fan into triangles
+            for k in range(1, len(P) - 1):
+                self.faces.append((P[[0, k, k + 1]], [uvs[0], uvs[k], uvs[k + 1]], n))
+        else:
+            self.faces.append((P, uvs, n))
+
+    def quad_tex(self, corners, rect, toward=None, normal=None):
+        """corners: bottom-left, bottom-right, top-right, top-left as seen from the front"""
+        self.face(corners, [uv_of(rect, 0, 0), uv_of(rect, 1, 0), uv_of(rect, 1, 1), uv_of(rect, 0, 1)],
+                  toward=toward, normal=normal)
+
+    def flat(self, pts, rect, toward=None, normal=None):
+        u = uv_flat(rect)
+        self.face(pts, [u] * len(pts), toward=toward, normal=normal)
+
+    def box(self, centre, axes, half, rect, front=None):
+        """oriented box; axes = 3 unit vectors, half sizes; front = (axis index, sign, rect, right, up): a textured face"""
+        c = np.array(centre, float); A = [np.array(a, float) for a in axes]
+        for k in range(3):
+            for s in (-1, 1):
+                i, j = [m for m in range(3) if m != k]
+                fc = c + A[k] * half[k] * s
+                pts = [fc - A[i] * half[i] - A[j] * half[j], fc + A[i] * half[i] - A[j] * half[j],
+                       fc + A[i] * half[i] + A[j] * half[j], fc - A[i] * half[i] + A[j] * half[j]]
+                if front and front[0] == k and front[1] == s:
+                    _, _, r, right, up = front
+                    R = np.array(right, float); U = np.array(up, float)
+                    pts = [fc - R * half_along(A, half, R) - U * half_along(A, half, U),
+                           fc + R * half_along(A, half, R) - U * half_along(A, half, U),
+                           fc + R * half_along(A, half, R) + U * half_along(A, half, U),
+                           fc - R * half_along(A, half, R) + U * half_along(A, half, U)]
+                    self.quad_tex(pts, r, normal=A[k] * s)
+                else:
+                    self.flat(pts, rect, normal=A[k] * s)
+
+    def ring(self, centre, normal, up, r0, r1, proud, rect, seg=20, back=0.0):
+        c, n, u, rr = frame(centre, normal, up)
+        for k in range(seg):
+            a0 = 2 * math.pi * k / seg; a1 = 2 * math.pi * (k + 1) / seg
+            d0 = rr * math.cos(a0) + u * math.sin(a0); d1 = rr * math.cos(a1) + u * math.sin(a1)
+            f = c + n * proud
+            self.flat([f + d0 * r0, f + d0 * r1, f + d1 * r1, f + d1 * r0], rect, normal=n)
+            self.flat([f + d0 * r1, c + d0 * r1 - n * back, c + d1 * r1 - n * back, f + d1 * r1], rect,
+                      normal=(d0 + d1) / 2)
+            self.flat([f + d0 * r0, c + d0 * r0, c + d1 * r0, f + d1 * r0], rect, normal=-(d0 + d1) / 2)
+
+    def disc(self, centre, normal, up, radius, rect, seg=20):
+        c, n, u, rr = frame(centre, normal, up)
+        pts, uvs = [], []
+        for k in range(seg):
+            a = 2 * math.pi * k / seg
+            pts.append(c + (rr * math.cos(a) + u * math.sin(a)) * radius)
+            uvs.append(uv_of(rect, 0.5 + 0.5 * math.cos(a), 0.5 + 0.5 * math.sin(a)))
+        cuv = uv_of(rect, 0.5, 0.5)
+        for k in range(seg):
+            self.face([c, pts[k], pts[(k + 1) % seg]], [cuv, uvs[k], uvs[(k + 1) % seg]], normal=n)
+
+    def rect_tex(self, centre, normal, up, w, h, rect):
+        c, n, u, rr = frame(centre, normal, up)
+        self.quad_tex([c - rr * w / 2 - u * h / 2, c + rr * w / 2 - u * h / 2, c + rr * w / 2 + u * h / 2,
+                       c - rr * w / 2 + u * h / 2], rect, normal=n)
+
+    def frame_rect(self, centre, normal, up, w, h, t, proud, rect):
+        """rectangular bezel (four bars) around a w x h opening"""
+        c, n, u, rr = frame(centre, normal, up)
+        for (cx, cy, hw, hh) in ((0, h / 2 + t / 2, w / 2 + t, t / 2), (0, -h / 2 - t / 2, w / 2 + t, t / 2),
+                                 (w / 2 + t / 2, 0, t / 2, h / 2), (-w / 2 - t / 2, 0, t / 2, h / 2)):
+            self.box(c + rr * cx + u * cy + n * proud / 2, (rr, u, n), (hw, hh, proud / 2), rect)
+
+    def poly_mesh(self):
+        P, N, U, polys = [], [], [], []
+        for pts, uvs, n in self.faces:
+            px = [[float(p[0]) * 16, float(p[1]) * 16, -float(p[2]) * 16] for p in pts]
+            npx = np.array([n[0], n[1], -n[2]])
+            a, b, c = (np.array(q) for q in px[:3])
+            # The mesh loader mirrors X and takes (p1 - p0) x (p2 - p0) of the mirrored points as the face normal, so
+            # in file pixels a face winds clockwise seen from its front (the hull's own faces do the same); the stored
+            # normal follows the file-pixel winding, as the hull's does.
+            if np.cross(b - a, c - a) @ npx > 0:
+                px = px[::-1]; uvs = uvs[::-1]
+            ni = len(N); N.append([round(float(x), 5) + 0.0 for x in -npx])
+            poly = []
+            for p, uv in zip(px, uvs):
+                poly.append([len(P), ni, len(U)])
+                P.append([round(x, 4) + 0.0 for x in p]); U.append([round(uv[0], 6), round(uv[1], 6)])
+            polys.append(poly)
+        return {'normalized_uvs': True, 'positions': P, 'normals': N, 'uvs': U, 'polys': polys}
+
+
+def half_along(A, half, d):
+    return sum(abs(float(a @ d)) * h for a, h in zip(A, half))
+
+
+def frame(centre, normal, up):
+    """(c, n, u, r): r = the right-hand direction seen from in front of the face (looking along -n)"""
+    n = np.array(normal, float); n /= np.linalg.norm(n)
+    u = np.array(up, float); u = u - n * (u @ n); u /= np.linalg.norm(u)
+    r = np.cross(u, n)
+    return np.array(centre, float), n, u, r
+
+
+def unit(v):
+    v = np.array(v, float); return v / np.linalg.norm(v)
+
+
+def r5(v):
+    return [round(float(x), 5) + 0.0 for x in v]
+
+
+X, Y, Z = np.array([1.0, 0, 0]), np.array([0, 1.0, 0]), np.array([0, 0, 1.0])
 
 # ---------------------------------------------------------------- the measured cockpit (metres from the eye)
-WALL_X = 0.330                 # panel wings and consoles end here (the walls at 0.34)
-SILL_Y = -0.43
-FLOOR_Y = -1.12
-BACK_Z = -0.45                 # behind the seat
-CONSOLE_Y = -0.74
-CONSOLE_IN = 0.235                 # clear of the seat's bucket sides
-PANEL_Z = 0.58                 # centre facet reference plane
-LEAN = math.radians(12)
-HINGE = 0.250                  # centre facet half width: the two MFDs and the centre column
-WING = math.radians(25)
-WING_LEN = (WALL_X - HINGE) / math.cos(WING)
-TOP_C, TOP_W = -0.270, -0.490  # centre facet top; the wings' tops slope down under the narrowing glass
-BOT_C, BOT_W = -0.720, CONSOLE_Y
-FRONT_Z = 1.00                 # the glareshield runs forward to the windscreen base
-FRONT_Y_C, FRONT_Y_W = -0.330, -0.440
-SEAT_DY = -0.10                # the floor sits 3 cm lower under the eye than the MiG-29's, the seat 10 cm lower
+# Absolute heights of the airframe: floor top 1.68, hull sill 2.22, side walls at x 0.50 below 2.08 leaning in to 0.41
+# at 2.22, the canopy rails 2.29 high; the eye at y 2.603, z 2.869 (canopy top 0.34 over it, the rear arch 0.62 behind).
 
-HUD_TOP = [1.0]                # how far above the eye the view under the bow reaches at the glass (main sets it)
-R_C = np.array([-1.0, 0, 0])                                   # pilot's right
+FLOOR_Y = -0.900                # the floor liner, 2 cm over the old floor
+SILL_Y = -0.383                 # the hull's sill
+CONSOLE_Y = -0.503              # console tops (abs 2.10)
+CON_IN, CON_OUT = 0.255, 0.470  # the consoles' inner side and outer edge
+BACK_Z = -0.45                  # the rear bulkhead behind the seat (abs 2.42)
+
+LEAN = math.radians(8)          # panel top leans away from the pilot
 U_C = np.array([0, math.cos(LEAN), math.sin(LEAN)])
-N_C = np.array([0, math.sin(LEAN), -math.cos(LEAN)])           # toward the pilot
+N_C = np.array([0, math.sin(LEAN), -math.cos(LEAN)])
+R_C = np.array([-1.0, 0, 0])    # pilot's right
+P0 = np.array([0.0, -0.40, 0.70])
+HINGE = 0.250                   # centre facet half width
+WING = math.radians(28)         # wings turned toward the pilot
+WALL_END = 0.395                # wings end here (under the canopy rail)
+WING_LEN = (WALL_END - HINGE) / math.cos(WING)
+TOP_C = -0.152                  # centre facet top: the coaming's lip
+TOP_H, TOP_W = -0.157, -0.343   # wing top at the hinge and at the wall (sloping down under the glass)
+BOT_C = -0.680
+BOT_W = CONSOLE_Y               # wings stand on the consoles
 
 
-def facets(E):
-    o = E + np.array([0, (TOP_C + BOT_C) / 2, PANEL_Z])
-    centre = H.Facet(o, R_C, U_C, N_C)
-    wings = {}
-    for side in (1, -1):                                       # +1: the pilot's right wing
-        R = R_C * side * math.cos(WING) + N_C * math.sin(WING)
-        N = N_C * math.cos(WING) - R_C * side * math.sin(WING)
-        hinge = o + R_C * side * HINGE
-        f = H.Facet(hinge, R, U_C, N)                          # a: metres outward from the hinge
-        wings[side] = f
-    return centre, wings[1], wings[-1]
+def wall_x(y_abs):
+    """inner face of the hull's side wall at absolute height y (the old tub's)"""
+    return 0.495 if y_abs <= 2.08 else max(0.41, 0.5 - (y_abs - 2.08) * 0.643)
 
 
-def top_of(side, a):
-    return TOP_C if side == 0 else TOP_C + (TOP_W - TOP_C) * a / WING_LEN
+class Facet:
+    def __init__(self, side):
+        self.side = side                    # 0 centre, +1 right wing, -1 left wing
+        if side == 0:
+            self.R, self.N = R_C, N_C
+        else:
+            self.R = R_C * side * math.cos(WING) + N_C * math.sin(WING)
+            self.N = N_C * math.cos(WING) - R_C * side * math.sin(WING)
+        self.U = U_C
+
+    def at(self, a, y, lift=0.0):
+        """panel point: a = metres right of the centre line (centre) or along the wing from the hinge (wings)"""
+        v = (y - P0[1]) / math.cos(LEAN)
+        if self.side == 0:
+            p = P0 + R_C * a + U_C * v
+        else:
+            p = P0 + R_C * (self.side * HINGE) + U_C * v + self.R * a
+        return p + self.N * lift
+
+    def top(self, a):
+        return TOP_C if self.side == 0 else TOP_H + (TOP_W - TOP_H) * a / WING_LEN
+
+    def bottom(self):
+        return BOT_C if self.side == 0 else BOT_W
+
+    def extent(self):
+        return (-HINGE, HINGE) if self.side == 0 else (0.0, WING_LEN)
 
 
-# Instrument layout of the F-16C Block 50 front panel. facet: 0 centre (a: metres to the pilot's right of the centre
-# line), +1 right wing, -1 left wing (a: metres outward from the hinge). y: from the eye.
+CENTRE, RIGHT, LEFT = Facet(0), Facet(1), Facet(-1)
+
+# Instrument layout of the F-16C Block 50/52 panel (the xflight.de drawing, work/cockpit_diagrams/f_16c). Positions:
+# facet, a (see Facet.at), y (height from the eye). Sizes: dial diameter, or w x h. 'game': drawn by the game.
 LAYOUT = [
-    ('icp',      0,    0.000, -0.325, ('paint_rect', 0.150, 0.090), 'integrated control panel (ICP) and DED'),
-    ('mfd_l',    0, -0.143, -0.477, ('display', 'RADAR', 0.161), 'left MFD (radar)'),
-    ('mfd_r',    0,    0.143, -0.474, ('display', 'STORES', 0.161), 'right MFD (stores)'),
-    ('adi',      0,    0.000, -0.445, ('game', 'ATTITUDE', 0.062), 'standby attitude'),
-    ('hsi',      0,    0.000, -0.530, ('game', 'HEADING', 0.064), 'HSI'),
-    ('vvi',      0,    0.000, -0.610, ('game', 'VVI', 0.050), 'vertical velocity'),
-    ('caution',  0, -0.205, -0.305, ('paint_disc', 0.024), 'master caution'),
-    ('ias',     -1,    0.045, -0.473, ('game', 'AIRSPEED', 0.036), 'airspeed / Mach'),
-    ('alt',     -1,    0.045, -0.519, ('game', 'ALTIMETER', 0.036), 'altimeter'),
-    ('aoa',     -1,    0.045, -0.580, ('game', 'AOA', 0.030), 'AoA indexer'),
-    ('gear',    -1,    0.045, -0.675, ('paint_rect', 0.038, 0.060), 'landing gear panel'),
-    ('rwr',      1,    0.045, -0.473, ('game', 'RWR', 0.036), 'RWR azimuth indicator'),
-    ('fuel',     1,    0.045, -0.516, ('game', 'FUEL_QTY', 0.034), 'fuel quantity'),
-    ('rpm',      1,    0.045, -0.575, ('game', 'ENGINE_RPM', 0.033), 'engine rpm'),
-    ('ftit',     1,    0.045, -0.630, ('game', 'EGT', 0.033), 'FTIT'),
-    ('warning',  1,    0.045, -0.690, ('annunciator', 0.045, 0.038), 'caution light panel'),
+    ('icp',     CENTRE, 0.000, -0.200, ('paint_rect', 0.150, 0.075), 'integrated control panel (ICP) with the DED'),
+    ('mfd_l',   CENTRE, -0.155, -0.350, ('display', 'RADAR', 0.140), 'left MFD (radar)'),
+    ('mfd_r',   CENTRE, 0.155, -0.350, ('display', 'STORES', 0.140), 'right MFD (stores)'),
+    ('ias',     CENTRE, -0.036, -0.322, ('game', 'AIRSPEED', 0.044), 'airspeed / Mach indicator'),
+    ('alt',     CENTRE, 0.036, -0.322, ('game', 'ALTIMETER', 0.044), 'altimeter'),
+    ('aoa',     CENTRE, -0.088, -0.497, ('game', 'AOA', 0.040), 'angle of attack'),
+    ('adi',     CENTRE, 0.000, -0.468, ('game', 'ATTITUDE', 0.072), 'standby attitude / ADI'),
+    ('vvi',     CENTRE, 0.088, -0.497, ('game', 'VVI', 0.044), 'vertical velocity'),
+    ('hsi',     CENTRE, 0.000, -0.585, ('game', 'HEADING', 0.082), 'HSI'),
+    ('instr',   CENTRE, -0.095, -0.585, ('paint_rect', 0.056, 0.070), 'instrument mode panel'),
+    ('fuelsel', CENTRE, 0.095, -0.585, ('paint_rect', 0.056, 0.070), 'fuel quantity selector'),
+    ('pedal',   CENTRE, 0.000, -0.658, ('paint_rect', 0.100, 0.022), 'pedal adjust plate'),
+    ('rwr',     LEFT,   0.082, -0.350, ('game', 'RWR', 0.070), 'threat warning (RWR) scope'),
+    ('misc',    LEFT,   0.082, -0.455, ('paint_rect', 0.110, 0.070), 'MISC panel: master arm, roll and pitch hold'),
+    ('gear',    LEFT,   0.082, -0.560, ('paint_rect', 0.100, 0.060), 'landing gear handle and lights'),
+    ('rpm',     RIGHT,  0.082, -0.310, ('game', 'ENGINE_RPM', 0.050), 'engine rpm'),
+    ('ftit',    RIGHT,  0.082, -0.375, ('game', 'EGT', 0.050), 'FTIT'),
+    ('fuel',    RIGHT,  0.082, -0.440, ('game', 'FUEL_QTY', 0.050), 'fuel quantity'),
+    ('warning', RIGHT,  0.082, -0.530, ('annunciator', 0.115, 0.070), 'caution panel'),
 ]
 
+GAUGE_LIFT = 0.004
+DISPLAY_LIFT = 0.003
+RIM = 0.16
 
-# ---------------------------------------------------------------- painted faces
 
-def panel_paint(side, W_, H_, a0, a1, yb, yt):
+# ---------------------------------------------------------------- painting helpers
+
+def font(px, bold=False):
+    for f in (FONT_FILES if bold else FONT_FILES[1:2] + FONT_FILES[0:1] + FONT_FILES[2:]):
+        try:
+            return ImageFont.truetype(f, max(4, int(px)))
+        except OSError:
+            continue
+    return ImageFont.load_default()
+
+
+def noisy(d, im, colour, amount=6, seed=1):
+    rng = np.random.default_rng(seed)
+    a = np.zeros((im.height, im.width, 4), np.float32)
+    a[..., :3] = colour; a[..., 3] = 255
+    n = rng.normal(0, amount, (im.height // 8 + 1, im.width // 8 + 1))
+    n = np.kron(n, np.ones((8, 8)))[:im.height, :im.width]
+    a[..., :3] += n[..., None]
+    im.paste(Image.fromarray(np.clip(a, 0, 255).astype(np.uint8)), (0, 0))
+
+
+def text(d, xy, s, px, fill=WHITE, anchor='mm', bold=False):
+    d.text(xy, s, font=font(px, bold), fill=fill, anchor=anchor)
+
+
+def lamp(d, box, colour, label=None, lit=False, px=None):
+    x0, y0, x1, y1 = box
+    base = tuple(int(c * (1.0 if lit else 0.45)) for c in colour)
+    d.rectangle(box, fill=base + (255,), outline=(10, 10, 10, 255), width=2)
+    if label:
+        text(d, ((x0 + x1) / 2, (y0 + y1) / 2), label, px or (y1 - y0) * .42, fill=(20, 20, 20))
+
+
+def dial_face(d, im, title, lo, hi, step, label_step, value, start=-135, sweep=270, labels=None, red=None):
+    S = im.width; c = S / 2; R = S / 2 - S * 0.02
+    d.ellipse([c - R, c - R, c + R, c + R], fill=(14, 15, 16, 255))
+
+    def ang(v):
+        return math.radians(start + (v - lo) / (hi - lo) * sweep)
+    if red:
+        for v0 in np.arange(red[0], red[1], (hi - lo) / 200):
+            a = ang(v0)
+            d.line([c + (R * .80) * math.sin(a), c - (R * .80) * math.cos(a), c + R * .93 * math.sin(a),
+                    c - R * .93 * math.cos(a)], fill=RED + (255,), width=int(S * .02))
+    v = lo; k = 0
+    while v <= hi + 1e-9:
+        a = ang(v)
+        major = abs((v - lo) / label_step - round((v - lo) / label_step)) < 1e-6
+        r0 = R * (0.78 if major else 0.86)
+        d.line([c + r0 * math.sin(a), c - r0 * math.cos(a), c + R * .95 * math.sin(a), c - R * .95 * math.cos(a)],
+               fill=WHITE + (255,), width=int(S * (0.022 if major else 0.011)))
+        if major:
+            lab = labels[k] if labels else (str(int(v)) if float(v).is_integer() else f'{v:g}')
+            k += 1
+            text(d, (c + R * .60 * math.sin(a), c - R * .60 * math.cos(a)), lab, S * .11)
+        v += step
+    if title:
+        text(d, (c, c + R * .36), title, S * .085)
+    a = ang(value)
+    d.line([c - .15 * R * math.sin(a), c + .15 * R * math.cos(a), c + .80 * R * math.sin(a), c - .80 * R * math.cos(a)],
+           fill=(240, 240, 232, 255), width=int(S * .045))
+    d.ellipse([c - S * .05, c - S * .05, c + S * .05, c + S * .05], fill=(60, 60, 60, 255))
+
+
+def panel_paint(facet, rect_px):
+    """the facet face: dark grey, seams, screws and the dark recesses behind every instrument"""
+    a0, a1 = facet.extent()
+    W, H = rect_px
+    y_bot = facet.bottom(); y_top = max(facet.top(a0), facet.top(a1))
+    SS = Atlas.SS
+
+    def to_px(a, y):
+        s = (a - a0) / (a1 - a0)
+        if facet.side == -1:
+            s = 1 - s
+        return (s * W * SS, (1 - (y - y_bot) / (y_top - y_bot)) * H * SS)
+
     def fn(d, im):
-        SS = H.A.Atlas.SS
-        H.noisy(d, im, TURQ, 5, seed=3 + side)
-
-        def to_px(a, y):
-            s = (a - a0) / (a1 - a0)
-            if side == -1:
-                s = 1 - s
-            return s * W_ * SS, (1 - (y - yb) / (yt - yb)) * H_ * SS
-        for y in ((-0.30, -0.40, -0.50) if side == 0 else (-0.27, -0.38, -0.48)):
-            x0, yy = to_px(a0, y); x1, _ = to_px(a1, y)
-            d.line([x0, yy, x1, yy], fill=TURQ_D + (255,), width=SS * 2)
-        for a, y in ((a0 + 0.012, yb + 0.012), (a1 - 0.012, yb + 0.012), (a0 + 0.012, yt - 0.02), (a1 - 0.012, yt - 0.02)):
-            x, yy = to_px(a, y); r = SS * 2.2
+        noisy(d, im, PANEL, 4, seed=3 + facet.side)
+        for (a, y) in [(a0 + 0.010, y_bot + 0.010), (a1 - 0.010, y_bot + 0.010), (a0 + 0.010, y_top - 0.016),
+                       (a1 - 0.010, y_top - 0.016)]:
+            x, yy = to_px(a, y); r = SS * 1.8
             d.ellipse([x - r, yy - r, x + r, yy + r], fill=MGREY + (255,), outline=(30, 30, 30, 255))
         for name, f, a, y, spec, _ in LAYOUT:
-            if f != side:
+            if f is not facet:
                 continue
+            kind = spec[0]
             x, yy = to_px(a, y)
-            px_m = W_ * SS / (a1 - a0)
-            if spec[0] in ('game', 'paint_disc'):
+            if kind in ('game', 'paint_disc'):
                 dia = spec[-1]
-                r = (dia / 2 * (1 + H.RIM) + 0.004) * px_m
-                d.ellipse([x - r, yy - r, x + r, yy + r], fill=(20, 26, 26, 255))
-                if dia > 0.04:
-                    pw, ph = dia * 0.55 * px_m, 0.007 * px_m
-                    py = yy + r + ph * 0.9
-                    d.rectangle([x - pw / 2, py - ph / 2, x + pw / 2, py + ph / 2], fill=(18, 18, 18, 255))
-            else:
-                w, h = (spec[2], spec[2]) if spec[0] == 'display' else (spec[1], spec[2])
-                sx, sy = (w / 2 + 0.006) * px_m, (h / 2 + 0.006) * px_m
-                d.rectangle([x - sx, yy - sy, x + sx, yy + sy], fill=(20, 26, 26, 255))
-        if side == 0:
-            for k, lab in enumerate(['BRAKES', 'EMER JETT']):
-                x, yy = to_px(-0.16 + k * 0.32, -0.700)
-                d.rectangle([x - 70, yy - 14, x + 70, yy + 14], fill=(18, 18, 18, 255))
-                H.text(d, (x, yy), lab, 18)
+                r = (dia / 2 * (1 + RIM) + 0.004) / (a1 - a0) * W * SS
+                d.ellipse([x - r, yy - r, x + r, yy + r], fill=(18, 22, 22, 255))
+            elif kind in ('paint_rect', 'display', 'annunciator'):
+                if kind == 'display':
+                    w = h = spec[2] + 0.060
+                else:
+                    w, h = spec[1] + 0.012, spec[2] + 0.012
+                sx = (w / 2) / (a1 - a0) * W * SS; sy = (h / 2) / (y_top - y_bot) * H * SS * math.cos(LEAN)
+                d.rectangle([x - sx, yy - sy, x + sx, yy + sy], fill=(18, 22, 22, 255))
+        if facet.side == 0:
+            d.line([0, to_px(0, -0.640)[1], W * SS, to_px(0, -0.640)[1]], fill=PANEL_D + (255,), width=SS * 2)
+        return None
     return fn
 
 
-def p_weapons(d, im):
-    S, Hh = im.width, im.height
-    d.rectangle([0, 0, S, Hh], fill=(20, 22, 22, 255))
-    labs = ['ПУШКА', 'НАР', 'УР', 'БОМБ', 'ПОДВ', 'ЗАЛП']
+# ---------------------------------------------------------------- painted instrument faces
+
+def p_icp(d, im):
+    S, H = im.width, im.height
+    d.rectangle([0, 0, S, H], fill=(16, 17, 18, 255))
+    d.rectangle([S * .06, H * .06, S * .94, H * .40], fill=(6, 14, 8, 255), outline=(60, 62, 60, 255), width=3)
+    text(d, (S * .5, H * .16), 'STPT  12   AUTO   030\u00b0015', H * .13, fill=DED + (255,))
+    text(d, (S * .5, H * .30), 'VHF  295.00   T1234', H * .12, fill=DED + (255,))
+    labs = ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'ENTR', '0', 'RCL']
+    kw = S * .86 / 6
     for k, lab in enumerate(labs):
-        x = S * (0.09 + k * 0.165)
-        H.lamp(d, [x - 16, Hh * .14, x + 16, Hh * .38], (210, 210, 200), None, lit=(k == 0))
-        d.rectangle([x - 4, Hh * .48, x + 4, Hh * .70], fill=(190, 190, 190, 255))
-        H.text(d, (x, Hh * .86), lab, Hh * .2)
+        r, c = k // 6, k % 6
+        x0 = S * .07 + c * kw + 3; y0 = H * (.46 + r * .26)
+        d.rectangle([x0, y0, x0 + kw - 6, y0 + H * .21], fill=(70, 74, 80, 255), outline=(10, 10, 10, 255), width=2)
+        text(d, (x0 + kw / 2 - 3, y0 + H * .105), lab, H * .12, fill=(235, 235, 228))
+
+
+def p_hud_ctrl(d, im):
+    S, H = im.width, im.height
+    noisy(d, im, DGREY, 3, seed=9)
+    for k, lab in enumerate(['PRI', 'DAY', 'BRT', 'CONT', 'TEST']):
+        x = S * (0.11 + k * 0.195)
+        if k in (2, 3):
+            d.ellipse([x - H * .20, H * .30 - H * .20, x + H * .20, H * .30 + H * .20], fill=(18, 18, 18, 255),
+                      outline=(120, 120, 120, 255), width=3)
+        else:
+            d.rectangle([x - H * .26, H * .10, x + H * .26, H * .46], fill=(150, 150, 150, 255), outline=(20, 20, 20, 255), width=2)
+        text(d, (x, H * .70), lab, H * .2)
+
+
+def p_instr(d, im):
+    S, H = im.width, im.height
+    d.rectangle([0, 0, S, H], fill=(16, 17, 18, 255))
+    text(d, (S * .5, H * .12), 'INSTR MODE', H * .1)
+    d.ellipse([S * .22, H * .24, S * .78, H * .70], fill=(34, 34, 36, 255), outline=(140, 140, 140, 255), width=3)
+    d.line([S * .5, H * .47, S * .64, H * .32], fill=WHITE + (255,), width=6)
+    for k, lab in enumerate(['TCN', 'NAV', 'ILS']):
+        text(d, (S * (0.18 + 0.32 * k), H * .84), lab, H * .09)
+
+
+def p_fuelsel(d, im):
+    S, H = im.width, im.height
+    d.rectangle([0, 0, S, H], fill=(16, 17, 18, 255))
+    text(d, (S * .5, H * .12), 'FUEL QTY SEL', H * .09)
+    d.ellipse([S * .22, H * .24, S * .78, H * .70], fill=(34, 34, 36, 255), outline=(140, 140, 140, 255), width=3)
+    d.line([S * .5, H * .47, S * .36, H * .34], fill=WHITE + (255,), width=6)
+    for k, lab in enumerate(['TEST', 'NORM', 'RSVR']):
+        text(d, (S * (0.18 + 0.32 * k), H * .84), lab, H * .09)
+
+
+def p_pedal(d, im):
+    S, H = im.width, im.height
+    d.rectangle([0, 0, S, H], fill=(180, 184, 188, 255), outline=(60, 60, 60, 255), width=3)
+    text(d, (S * .5, H * .5), 'PEDAL ADJ', H * .62, fill=(30, 30, 30), bold=True)
+
+
+def p_misc(d, im):
+    S, H = im.width, im.height
+    d.rectangle([0, 0, S, H], fill=(16, 17, 18, 255))
+    for k, lab in enumerate(['LASER', 'ARM', 'ALT']):
+        x = S * (0.18 + 0.32 * k)
+        d.rectangle([x - 8, H * .22, x + 8, H * .52], fill=(170, 170, 170, 255))
+        d.ellipse([x - 14, H * .12, x + 14, H * .28], fill=(200, 200, 200, 255))
+        text(d, (x, H * .72), lab, H * .12)
+    d.rectangle([S * .74, H * .15, S * .94, H * .55], fill=RED + (255,), outline=(10, 10, 10, 255), width=3)
+    text(d, (S * .5, H * .92), 'MISC', H * .1)
 
 
 def p_gear(d, im):
-    S, Hh = im.width, im.height
-    d.rectangle([0, 0, S, Hh], fill=(20, 22, 22, 255))
-    for k in range(3):
-        y = Hh * (0.12 + 0.11 * k)
-        H.lamp(d, [S * .2, y, S * .8, y + Hh * .08], (60, 150, 70), None, lit=True)
-    H.text(d, (S / 2, Hh * .55), 'GEAR', S * .16)
-    d.rectangle([S * .4, Hh * .62, S * .6, Hh * .95], fill=(140, 140, 140, 255))
-
-
-def p_afcs(d, im):
-    S, Hh = im.width, im.height
-    d.rectangle([0, 0, S, Hh], fill=(20, 22, 22, 255))
-    labs = ['ДЕМПФ', 'КРЕН', 'ВЫСОТА', 'ПРИВЕД', 'ОТКЛ']
-    for k, lab in enumerate(labs):
-        w = S / len(labs)
-        H.lamp(d, [k * w + 6, Hh * .14, (k + 1) * w - 6, Hh * .86], (210, 210, 200) if k < 4 else (200, 60, 50),
-               lab, lit=(k == 0), px=Hh * .22)
-
-
-def p_buttons(labels):
-    def fn(d, im):
-        S, Hh = im.width, im.height
-        d.rectangle([0, 0, S, Hh], fill=(20, 22, 22, 255))
-        w = S / len(labels)
-        for k, lab in enumerate(labels):
-            H.lamp(d, [k * w + 5, Hh * .12, (k + 1) * w - 5, Hh * .70], (200, 200, 190), None, lit=False)
-            H.text(d, ((k + .5) * w, Hh * .86), lab, Hh * .2)
-    return fn
+    S, H = im.width, im.height
+    d.rectangle([0, 0, S, H], fill=(16, 17, 18, 255))
+    d.rectangle([S * .06, H * .1, S * .30, H * .9], fill=(226, 186, 30, 255), outline=(10, 10, 10, 255), width=3)
+    d.ellipse([S * .10, H * .5, S * .26, H * .78], fill=(30, 30, 30, 255))
+    text(d, (S * .18, H * .30), 'LG', H * .2, fill=(20, 20, 20), bold=True)
+    for k, (x, y) in enumerate([(0.62, 0.30), (0.46, 0.62), (0.78, 0.62)]):
+        d.ellipse([S * x - 10, H * y - 10, S * x + 10, H * y + 10], fill=(40, 130, 56, 255), outline=(10, 10, 10, 255), width=3)
+    text(d, (S * .62, H * .86), 'WHEELS', H * .12)
 
 
 def p_disc_red(d, im):
     S = im.width
-    d.ellipse([0, 0, S - 1, S - 1], fill=(120, 18, 14, 255))
+    d.ellipse([0, 0, S - 1, S - 1], fill=(130, 20, 14, 255))
     d.ellipse([S * .18, S * .14, S * .55, S * .4], fill=(220, 90, 80, 255))
 
 
-def p_icp(d, im):
-    """the ICP: the DED's green text window on top, the keypad under it, the rocker and wheels beside"""
-    S, Hh = im.width, im.height
-    d.rectangle([0, 0, S, Hh], fill=(40, 42, 44, 255))
-    d.rectangle([S * .20, Hh * .05, S * .80, Hh * .32], fill=(10, 24, 14, 255), outline=(80, 80, 80, 255), width=3)
-    H.text(d, (S * .5, Hh * .13), 'UHF 305.00  STPT 1', Hh * .08, fill=(110, 220, 120))
-    H.text(d, (S * .5, Hh * .24), '12:34:56   HACK', Hh * .08, fill=(110, 220, 120))
-    labs = ['1', '2', '3', 'COM', '4', '5', '6', 'IFF', '7', '8', '9', 'LIST', 'RCL', '0', 'ENTR', 'A-A']
-    for k, lab in enumerate(labs):
-        cx, cy = k % 4, k // 4
-        x0, y0 = S * (0.18 + cx * 0.16), Hh * (0.38 + cy * 0.15)
-        d.rectangle([x0, y0, x0 + S * .13, y0 + Hh * .12], fill=(70, 72, 74, 255), outline=(10, 10, 10, 255), width=2)
-        H.text(d, (x0 + S * .065, y0 + Hh * .06), lab, Hh * .06)
-    for x in (S * .06, S * .94):
-        d.ellipse([x - S * .04, Hh * .45, x + S * .04, Hh * .62], fill=(20, 20, 20, 255), outline=(120, 120, 120, 255), width=2)
+def p_eyebrow(label, colour):
+    def fn(d, im):
+        S, H = im.width, im.height
+        d.rectangle([0, 0, S, H], fill=(16, 17, 18, 255))
+        n = 3
+        for k in range(n):
+            lamp(d, [k * S / n + 3, H * .14, (k + 1) * S / n - 3, H * .86], colour, None, lit=False)
+        text(d, (S * .5, H * .5), label, H * .34, fill=(160, 150, 130))
+    return fn
 
 
-def p_pui(d, im):
-    """the PUI: two rows of push buttons either side of a small text window"""
-    S, Hh = im.width, im.height
-    d.rectangle([0, 0, S, Hh], fill=(22, 24, 26, 255))
-    d.rectangle([S * .38, Hh * .18, S * .62, Hh * .62], fill=(10, 30, 16, 255), outline=(80, 80, 80, 255), width=3)
-    H.text(d, (S * .5, Hh * .40), 'НАВ  ВОЗД', Hh * .16, fill=(110, 220, 120))
-    for row in range(2):
-        for k in range(5):
-            for side in (0, 1):
-                x = S * ((0.04 + k * 0.066) if side == 0 else (0.66 + k * 0.066))
-                y = Hh * (0.14 + row * 0.42)
-                d.rectangle([x, y, x + S * .05, y + Hh * .30], fill=(60, 62, 64, 255), outline=(10, 10, 10, 255), width=2)
+def p_console(side):
+    def fn(d, im):
+        S, H = im.width, im.height
+        noisy(d, im, PANEL, 4, seed=20 + side)
+        rng = np.random.default_rng(40 + side)
+        y = H * 0.02
+        heights = [0.12, 0.10, 0.14, 0.09, 0.15, 0.10, 0.12, 0.09] if side > 0 else \
+                  [0.10, 0.14, 0.09, 0.13, 0.11, 0.12, 0.13, 0.09]
+        for k, hgt in enumerate(heights):
+            y1 = y + hgt * H
+            d.rectangle([S * .06, y + 4, S * .94, y1 - 4], fill=(20, 22, 22, 255))
+            n = int(rng.integers(2, 5))
+            for j in range(n):
+                x = S * (0.15 + 0.7 * (j + 0.5) / n); yy = (y + y1) / 2
+                if rng.random() < 0.5:
+                    d.ellipse([x - 12, yy - 12, x + 12, yy + 12], fill=(30, 30, 30, 255), outline=(150, 150, 150, 255), width=3)
+                else:
+                    d.rectangle([x - 5, yy - 16, x + 5, yy + 6], fill=(180, 180, 180, 255))
+            y = y1
+        if side > 0:                      # the throttle's slot on the left console
+            d.rectangle([S * .40, H * .36, S * .60, H * .66], fill=(8, 8, 8, 255))
+    return fn
 
 
-def p_hud_ctrl(d, im):
-    S, Hh = im.width, im.height
-    H.noisy(d, im, DGREY, 4, seed=9)
-    for k, lab in enumerate(['SYM', 'BRT', 'DAY/NT', 'DECLT']):
-        x = S * (0.13 + k * 0.245)
-        if k == 1:
-            d.ellipse([x - Hh * .24, Hh * .38 - Hh * .24, x + Hh * .24, Hh * .38 + Hh * .24], fill=(20, 20, 20, 255), outline=(110, 110, 110, 255),
-                      width=3)
-        elif k == 3:
-            H.lamp(d, [x - Hh * .28, Hh * .14, x + Hh * .28, Hh * .62], (60, 170, 70), None)
-        else:
-            d.rectangle([x - 3, Hh * .14, x + 3, Hh * .62], fill=(170, 170, 170, 255))
-        H.text(d, (x, Hh * .86), lab, Hh * .2)
+def p_cushion(colour, straps=False):
+    def fn(d, im):
+        S, H = im.width, im.height
+        noisy(d, im, colour, 5, seed=50)
+        for k in range(1, 4):
+            d.line([0, H * k / 4, S, H * k / 4], fill=tuple(c - 16 for c in colour) + (255,), width=4)
+        if straps:
+            for x in (S * .28, S * .72):
+                d.rectangle([x - S * .05, 0, x + S * .05, H], fill=(66, 70, 60, 255))
+            d.rectangle([S * .38, H * .55, S * .62, H * .70], fill=(150, 150, 150, 255))
+    return fn
 
 
-def p_hud_lens(d, im):
-    S, Hh = im.width, im.height
-    d.rectangle([0, 0, S, Hh], fill=(16, 22, 26, 255))
-    d.ellipse([S * .1, Hh * .1, S * .9, Hh * .9], fill=(30, 46, 56, 255))
-    d.ellipse([S * .25, Hh * .2, S * .5, Hh * .4], fill=(90, 120, 140, 255))
-
-
-def p_sight(d, im):
-    """the ASP-PFD's aft face: the reticle unit's window, the brightness / base / range knobs"""
-    S, Hh = im.width, im.height
-    H.noisy(d, im, DGREY, 4, seed=9)
-    d.rectangle([S * .22, Hh * .12, S * .78, Hh * .62], fill=(16, 22, 26, 255), outline=(90, 90, 90, 255), width=4)
-    d.ellipse([S * .38, Hh * .2, S * .62, Hh * .54], fill=(34, 48, 58, 255))
-    for k, lab in enumerate(['ЯРК', 'БАЗА', 'ДАЛЬН']):
-        x = S * (0.2 + k * 0.3)
-        d.ellipse([x - 14, Hh * .74 - 14, x + 14, Hh * .74 + 14], fill=(22, 22, 22, 255), outline=(140, 140, 140, 255),
-                  width=3)
-        H.text(d, (x, Hh * .93), lab, Hh * .09)
+def p_stripes(d, im):
+    S, H = im.width, im.height
+    d.rectangle([0, 0, S, H], fill=YELLOW + (255,))
+    for k in range(-H, S, 24):
+        d.polygon([(k, H), (k + 12, H), (k + 12 + H, 0), (k + H, 0)], fill=(20, 20, 20, 255))
 
 
 def p_headbox(d, im):
-    S, Hh = im.width, im.height
-    H.noisy(d, im, HEADPAD, 5, seed=60)
-    d.rectangle([S * .1, Hh * .1, S * .9, Hh * .9], outline=(60, 62, 58, 255), width=6)
-    H.text(d, (S * .5, Hh * .5), 'ACES II', Hh * .2, fill=(40, 40, 40), bold=True)
+    S, H = im.width, im.height
+    noisy(d, im, HEADPAD, 4, seed=60)
+    d.rectangle([S * .1, H * .1, S * .9, H * .9], outline=(60, 62, 58, 255), width=6)
+    text(d, (S * .5, H * .5), 'ACES II', H * .2, fill=(40, 40, 40), bold=True)
+
+
+def p_bulkhead(d, im):
+    S, H = im.width, im.height
+    noisy(d, im, PANEL_D, 4, seed=70)
+    for k in range(4):
+        x = S * (0.08 + k * 0.23)
+        d.rectangle([x, H * .15, x + S * .18, H * .55], fill=(20, 22, 22, 255), outline=(70, 72, 72, 255), width=3)
+        for j in range(3):
+            d.ellipse([x + S * .03 + j * S * .05, H * .3, x + S * .06 + j * S * .05, H * .4], fill=(150, 150, 150, 255))
+    d.rectangle([S * .08, H * .66, S * .92, H * .8], fill=(30, 32, 33, 255))
+
+
+def bar_h(d, im):
+    S, H = im.width, im.height
+    d.rectangle([0, 0, S, H], fill=(20, 20, 22, 255))
+    for k in range(5):
+        x = S * (0.1 + k * 0.2)
+        d.rectangle([x - S * .06, H * .22, x + S * .06, H * .78], fill=(84, 90, 96, 255))
+
+
+def bar_v(d, im):
+    S, H = im.width, im.height
+    d.rectangle([0, 0, S, H], fill=(20, 20, 22, 255))
+    for k in range(5):
+        y = H * (0.1 + k * 0.2)
+        d.rectangle([S * .22, y - H * .06, S * .78, y + H * .06], fill=(84, 90, 96, 255))
 
 
 # ---------------------------------------------------------------- build
 
-def build(atlas, E):
-    m = H.Mesh(atlas)
-    sw = {k: atlas.swatch(c) for k, c in dict(turq=TURQ, turq_d=TURQ_D, black=BLACK, dgrey=DGREY, mgrey=MGREY,
-                                                frame=FRAME, cushion=CUSHION, yellow=YELLOW, red=RED, metal=METAL,
-                                                floor=FLOOR, bezel=(30, 31, 32)).items()}
-    X, Y, Z = np.array([1.0, 0, 0]), np.array([0, 1.0, 0]), np.array([0, 0, 1.0])
-    P = lambda x, y, z: E + np.array([x, y, z], float)          # noqa: E731  eye-relative point
-    gauges, displays = [], []
-    centre, right, left = facets(E)
-    fac = {0: centre, 1: right, -1: left}
-    ext = {0: (-HINGE, HINGE), 1: (0.0, WING_LEN), -1: (0.0, WING_LEN)}
-    bot = {0: BOT_C, 1: BOT_W, -1: BOT_W}
+def build(atlas, lamps, cols):
+    m = Mesh()
+    sw = {k: atlas.swatch(c) for k, c in dict(panel=PANEL, panel_d=PANEL_D, black=BLACK, dgrey=DGREY, mgrey=MGREY,
+                                                lgrey=LGREY, frame=FRAME, cushion=CUSHION, yellow=YELLOW, red=RED,
+                                                metal=METAL, floor=FLOOR, bezel=(30, 31, 33),
+                                                coaming=(20, 21, 22)).items()}
+    gauges, displays, glass = [], [], []
+    TOWARD = np.array([0, 0.3, -1.0])
 
-    def at(side, a, y):
-        return fac[side].at(a, E[1] + y)
-
-    # -- the main panel: three facets, each a 2 cm slab with its painted face
-    ppm = 600
-    for side in (0, -1, 1):
-        a0, a1 = ext[side]
-        yt = max(top_of(side, a0), top_of(side, a1)); yb = bot[side]
-        W_ = int(round((a1 - a0) * ppm)); H_ = int(round((yt - yb) / math.cos(LEAN) * ppm))
-        rect = atlas.paint(W_, H_, panel_paint(side, W_, H_, a0, a1, yb, yt))
+    # -- main panel facets (front face painted, slab 2 cm deep)
+    ppm = 700
+    for f in (CENTRE, LEFT, RIGHT):
+        a0, a1 = f.extent()
+        y_top = max(f.top(a0), f.top(a1))
+        W = int(round((a1 - a0) * ppm)); Hh = int(round((y_top - f.bottom()) / math.cos(LEAN) * ppm))
+        rect = atlas.paint(W, Hh, panel_paint(f, (W, Hh)))
         n = 6
         for k in range(n):
             s0, s1 = k / n, (k + 1) / n
             aa0, aa1 = a0 + (a1 - a0) * s0, a0 + (a1 - a0) * s1
-            t0, t1 = (top_of(side, aa0) - yb) / (yt - yb), (top_of(side, aa1) - yb) / (yt - yb)
-            pts = [at(side, aa0, yb), at(side, aa1, yb), at(side, aa1, top_of(side, aa1)), at(side, aa0, top_of(side, aa0))]
-            su = (lambda s: 1 - s) if side == -1 else (lambda s: s)
-            m.face(pts, [m.uv(rect, su(s0), 0), m.uv(rect, su(s1), 0), m.uv(rect, su(s1), t1), m.uv(rect, su(s0), t0)],
-                   normal=fac[side].N)
-        back = -fac[side].N * 0.02
-        corners = [at(side, a0, yb), at(side, a1, yb), at(side, a1, top_of(side, a1)), at(side, a0, top_of(side, a0))]
-        m.flat([c + back for c in corners], sw['turq_d'], normal=-fac[side].N)
+            yb = f.bottom()
+            t0 = (f.top(aa0) - yb) / (y_top - yb); t1 = (f.top(aa1) - yb) / (y_top - yb)
+            pts = [f.at(aa0, yb), f.at(aa1, yb), f.at(aa1, f.top(aa1)), f.at(aa0, f.top(aa0))]
+            if f.side == -1:
+                uvs = [uv_of(rect, 1 - s0, 0), uv_of(rect, 1 - s1, 0), uv_of(rect, 1 - s1, t1), uv_of(rect, 1 - s0, t0)]
+            else:
+                uvs = [uv_of(rect, s0, 0), uv_of(rect, s1, 0), uv_of(rect, s1, t1), uv_of(rect, s0, t0)]
+            m.face(pts, uvs, normal=f.N)
+        back = -f.N * 0.02
+        corners = [f.at(a0, f.bottom()), f.at(a1, f.bottom()), f.at(a1, f.top(a1)), f.at(a0, f.top(a0))]
+        m.flat([c + back for c in corners], sw['panel_d'], normal=-f.N)
         mid0 = np.mean(corners, 0)
         for i in range(4):
             p, q = corners[i], corners[(i + 1) % 4]
             mid = (p + q) / 2
-            m.flat([p, q, q + back, p + back], sw['turq_d'], toward=mid + (mid - mid0))
+            m.flat([p, q, q + back, p + back], sw['panel_d'], toward=mid + (mid - mid0))
 
     # -- instruments
-    cols, lamps = L.lamps_of('cw', 'nato')
     cache = {}
-    for name, side, a, y, spec, _ in LAYOUT:
-        f = fac[side]
-        c = at(side, a, y)
+    painters = {'icp': p_icp, 'instr': p_instr, 'fuelsel': p_fuelsel, 'pedal': p_pedal, 'misc': p_misc, 'gear': p_gear}
+    bar_h_r = atlas.paint(96, 16, bar_h); bar_v_r = atlas.paint(16, 96, bar_v)
+    for name, f, a, y, spec, label in LAYOUT:
         kind = spec[0]
+        c = f.at(a, y)
         if kind == 'game':
-            gauges.append({'Seat': 0, 'Kind': spec[1], 'Center': H.r5(c + f.N * H.GAUGE_LIFT), 'Normal': H.r5(f.N),
-                           'Up': H.r5(f.U), 'Diameter': spec[2], 'Depth': 0.03})
+            gauges.append({'Seat': 0, 'Kind': spec[1], 'Center': r5(c + EYE + f.N * GAUGE_LIFT), 'Normal': r5(f.N),
+                           'Up': r5(f.U), 'Diameter': spec[2], 'Depth': 0.03})
+            m.ring(c, f.N, f.U, spec[2] / 2, spec[2] / 2 * (1 + RIM), GAUGE_LIFT + 0.006, sw['bezel'], back=0.0)
         elif kind == 'annunciator':
             w, h = spec[1], spec[2]
-            gauges.append({'Seat': 0, 'Kind': 'ANNUNCIATOR', 'Center': H.r5(c + f.N * 0.004), 'Normal': H.r5(f.N),
-                           'Up': H.r5(f.U), 'Diameter': w, 'Width': w, 'Height': h, 'Depth': 0.02, 'Columns': cols,
+            gauges.append({'Seat': 0, 'Kind': 'ANNUNCIATOR', 'Center': r5(c + EYE + f.N * 0.004), 'Normal': r5(f.N),
+                           'Up': r5(f.U), 'Diameter': w, 'Width': w, 'Height': h, 'Depth': 0.02, 'Columns': cols,
                            'Lamps': lamps})
             m.frame_rect(c, f.N, f.U, w, h, 0.005, 0.008, sw['bezel'])
         elif kind == 'display':
-            # the MFI-35: an LCD in a flat bezel with a row of option keys along each edge
             w = spec[2]
-            displays.append({'Seat': 0, 'Center': H.r5(c + f.N * H.DISPLAY_LIFT), 'Normal': H.r5(f.N), 'Up': H.r5(f.U),
+            displays.append({'Seat': 0, 'Center': r5(c + EYE + f.N * DISPLAY_LIFT), 'Normal': r5(f.N), 'Up': r5(f.U),
                              'Width': w, 'Depth': 0.035, 'Kind': spec[1], 'Style': 'LCD'})
-            m.frame_rect(c, f.N, f.U, w, w, 0.022, 0.012, sw['black'])
-            _, n_, u_, r_ = H.frame(c, f.N, f.U)
-            off = w / 2 + 0.011
-            for k in range(5):
-                o_ = (k - 2) * w / 5.5
-                for q in (c + u_ * off + r_ * o_, c - u_ * off + r_ * o_):
-                    m.box(q + n_ * 0.014, (r_, u_, n_), (0.008, 0.005, 0.003), sw['mgrey'])
-                for q in (c + r_ * off + u_ * o_, c - r_ * off + u_ * o_):
-                    m.box(q + n_ * 0.014, (r_, u_, n_), (0.005, 0.008, 0.003), sw['mgrey'])
-        elif kind == 'paint_disc':
-            rect = atlas.paint(32, 32, p_disc_red)
-            m.disc(c + f.N * 0.008, f.N, f.U, spec[1] / 2, rect, seg=12)
-            m.ring(c, f.N, f.U, spec[1] / 2, spec[1] / 2 + 0.004, 0.008, sw['bezel'], seg=12)
+            # the MFD: a flat bezel with a row of option keys along each edge
+            _, n_, u_, r_ = frame(c, f.N, f.U)
+            t = 0.022; pr = 0.010
+            m.rect_tex(c + u_ * (w / 2 + t / 2) + n_ * pr, f.N, f.U, w + 2 * t, t, bar_h_r)
+            m.rect_tex(c - u_ * (w / 2 + t / 2) + n_ * pr, f.N, f.U, w + 2 * t, t, bar_h_r)
+            m.rect_tex(c + r_ * (w / 2 + t / 2) + n_ * pr, f.N, f.U, t, w, bar_v_r)
+            m.rect_tex(c - r_ * (w / 2 + t / 2) + n_ * pr, f.N, f.U, t, w, bar_v_r)
+            for sgn in (-1, 1):                               # the bezel's outer walls
+                m.box(c + u_ * sgn * (w / 2 + t) + n_ * (pr - 0.002) / 2, (r_, u_, n_), (w / 2 + t, 0.0015, (pr - 0.002) / 2), sw['black'])
+                m.box(c + r_ * sgn * (w / 2 + t) + n_ * (pr - 0.002) / 2, (r_, u_, n_), (0.0015, w / 2 + t, (pr - 0.002) / 2), sw['black'])
         elif kind == 'paint_rect':
             w, h = spec[1], spec[2]
-            painter = {'gear': p_gear, 'icp': p_icp}[name]
-            pw = 160 if w >= h else 56
+            pw = 160 if w >= h else 80
             ph = max(16, int(round(pw * h / w)))
-            rect = cache.get(name) or atlas.paint(pw, ph, painter)
+            rect = cache.get(name) or atlas.paint(pw, ph, painters[name])
+            cache[name] = rect
             m.rect_tex(c + f.N * 0.004, f.N, f.U, w, h, rect)
             m.frame_rect(c, f.N, f.U, w, h, 0.004, 0.006, sw['bezel'])
-            if name == 'gear':                                     # the gear lever stands out of its panel
-                m.box(c + f.N * 0.04 - f.U * 0.02, (f.R, f.U, f.N), (0.006, 0.006, 0.035), sw['metal'])
-                m.box(c + f.N * 0.075 - f.U * 0.02, (f.R, f.U, f.N), (0.012, 0.012, 0.010), sw['red'])
 
-    # -- coaming: lofted from the panel lip forward to the windscreen base
-    lip = []
-    for side, aa in ((-1, np.linspace(WING_LEN, 0, 4)), (0, np.linspace(HINGE, -HINGE, 7)), (1, np.linspace(0, WING_LEN, 4))):
-        for a in aa:
-            p = at(side, a, top_of(side, a))
-            if lip and np.linalg.norm(lip[-1][0] - p) < 1e-6:
-                continue
-            lip.append((p, fac[side]))
-    lip.sort(key=lambda q: -q[0][0])
-    lip_edge = [p + f.N * 0.045 + np.array([0, 0.025, 0]) for p, f in lip]
-    panel_top = [p for p, f in lip]
-    rows = []
-    for t in (0.0, 0.35, 0.7, 1.0):
-        row = []
-        for le in lip_edge:
-            s = (le[0] - E[0]) / max(abs(lip_edge[0][0] - E[0]), 1e-6)
-            xf = E[0] + s * (WALL_X - 0.04)
-            yf = E[1] + FRONT_Y_C + (FRONT_Y_W - FRONT_Y_C) * s * s
-            z = le[2] + (E[2] + FRONT_Z - le[2]) * t
-            x = le[0] + (xf - le[0]) * t
-            y = le[1] + (yf - le[1]) * t + 0.03 * math.sin(math.pi * t) * (1 - s * s)
-            row.append(np.array([x, y, z]))
-        rows.append(row)
+    # -- the coaming: the visor over the panel, then one smooth deck down to the windscreen base. Heights in absolute
+    # blocks: the lip 2.458, the deck meeting the nose (4.30) at 2.285; the edges tuck under the canopy's rails.
+    Ea = EYE
+    stations = [  # (z abs, half width of the deck there, centre height)
+        (3.545, 0.395, 2.458), (3.60, 0.385, 2.458), (3.70, 0.372, 2.447), (3.80, 0.356, 2.428), (3.93, 0.338, 2.398),
+        (4.05, 0.312, 2.360), (4.18, 0.275, 2.322), (4.30, 0.240, 2.288)]
+    EDGE_Y = 2.265
+    SZ_, SHW, SYC = [s[0] for s in stations], [s[1] for s in stations], [s[2] for s in stations]
+    cs = sw['coaming']
+
+    def deck_y(x, z):
+        """the coaming's height: the panel's top across the middle and down its wings, falling away to the edge that
+        tucks under the canopy's rail"""
+        hw = float(np.interp(z, SZ_, SHW)); yc = float(np.interp(z, SZ_, SYC))
+        ax_ = abs(x)
+        yp = 2.603 + TOP_C if ax_ <= HINGE else 2.603 + TOP_H + (TOP_W - TOP_H) * ((ax_ - HINGE) / math.cos(WING)) / WING_LEN
+        return min(yc, yp + 0.007, EDGE_Y + 1.5 * (hw - ax_))
+
+    def deck_row(z):
+        hw = float(np.interp(z, SZ_, SHW))
+        xs = np.linspace(-hw, hw, 13)
+        return [np.array([x, deck_y(x, z), z]) - Ea for x in xs]
+    rows = [deck_row(z) for z in SZ_]
+    NJ = 12
     for i in range(len(rows) - 1):
-        for j in range(len(rows[i]) - 1):
-            m.flat([rows[i][j], rows[i][j + 1], rows[i + 1][j + 1], rows[i + 1][j]], sw['black'], normal=[0, 1, 0])
-    for j in range(len(lip_edge) - 1):
-        a, b = lip_edge[j], lip_edge[j + 1]
-        da, db = a - [0, 0.012, 0], b - [0, 0.012, 0]
-        m.flat([a, b, db, da], sw['black'], toward=E)
-        m.flat([da, db, panel_top[j + 1], panel_top[j]], sw['black'], normal=[0, -1, 0])
-    for j in (0, len(lip_edge) - 1):                                # the coaming's side ends down to the sill
-        col = [rows[i][j] for i in range(len(rows))]
-        for i in range(len(col) - 1):
-            p, q = col[i], col[i + 1]
-            yb_ = E[1] + SILL_Y - 0.06
-            m.flat([p, q, [q[0], yb_, q[2]], [p[0], yb_, p[2]]], sw['black'], toward=[E[0], yb_, (p[2] + q[2]) / 2])
-
-    # -- the HUD: the body on the coaming, its aft control strip, the lens, the combiner posts and frame (no
-    # glass); the picture the game projects (HeadUpDisplay) fills the frame, centred on the pilot's line of sight
-    hud_z0, hud_z1 = E[2] + PANEL_Z + 0.02, E[2] + PANEL_Z + 0.26
-    hud_y0 = E[1] + TOP_C + 0.025
-    hud_y1 = hud_y0 + 0.032                      # a low body: its control strip stays under the sight line
-    ctrl = atlas.paint(160, 40, p_hud_ctrl)
-    lens = atlas.paint(64, 64, p_hud_lens)
-    m.box([E[0], (hud_y0 + hud_y1) / 2, (hud_z0 + hud_z1) / 2], (X, Y, Z), (0.100, (hud_y1 - hud_y0) / 2, (hud_z1 - hud_z0) / 2),
-          sw['dgrey'], front=(2, -1, ctrl, -X, Y))
-    m.rect_tex([E[0], hud_y1 + 0.001, (hud_z0 + hud_z1) / 2 + 0.03], [0, 1, 0], [0, 0, 1], 0.10, 0.10, lens)
-    g_lean = math.radians(22)
-    g_up = np.array([0, math.cos(g_lean), -math.sin(g_lean)])
-    g_n = H.unit(np.cross(X, g_up))
-    g_h, g_hw = 0.160, 0.085                   # a little larger than the real glass, for the game
-    g_h = min(g_h, 2 * HUD_TOP[0] - 0.012)        # its top under the windscreen bow
-    g_bot = np.array([E[0], E[1] - g_up[1] * g_h / 2, hud_z0 + 0.02])
+        for j in range(NJ):
+            m.flat([rows[i][j], rows[i][j + 1], rows[i + 1][j + 1], rows[i + 1][j]], cs, normal=[0, 1, 0])
+    # the visor's lip over the panel: a front strip and the underside back to the panel top
+    lip = rows[0]
+    for j in range(NJ):
+        a, b = lip[j], lip[j + 1]
+        da, db = a - [0, 0.014, 0], b - [0, 0.014, 0]
+        m.flat([a, b, db, da], cs, normal=[0, 0, -1])
+        m.flat([da, db, db + [0, 0, 0.05], da + [0, 0, 0.05]], cs, normal=[0, -1, 0])
+    # the deck's closed ends at the sides (down to the sill), so nothing is open under the glass
+    for j in (0, NJ):
+        for i in range(len(rows) - 1):
+            p, q = rows[i][j], rows[i + 1][j]
+            m.flat([p, q, [q[0], 2.222 - Ea[1], q[2]], [p[0], 2.222 - Ea[1], p[2]]], cs, toward=[0, 0.3, 0])
+    # -- the HUD: one unit (the housing on the coaming with its control strip low on the pilot's face, two side posts)
+    # and the combiner glass centred on the neutral eye line, leaning back toward the pilot
+    hz0, hz1, hy0, hy1, hhw = 0.690, 0.840, -0.152, -0.092, 0.118
+    ctrl = atlas.paint(200, 44, p_hud_ctrl)
+    m.box([0, (hy0 + hy1) / 2, (hz0 + hz1) / 2], (X, Y, Z), (hhw, (hy1 - hy0) / 2, (hz1 - hz0) / 2), sw['dgrey'],
+          front=(2, -1, ctrl, -X, Y))
+    lean = math.radians(20)
+    g_up = np.array([0, math.cos(lean), -math.sin(lean)])
+    g_n = unit(np.cross(X, g_up))
+    g_h, g_hw = 0.190, 0.105
+    g_bot = np.array([0, -0.0875, 0.760])
     g_top = g_bot + g_up * g_h
-    stem = g_bot[1] - 0.006 - hud_y1
-    if stem > 0.004:                               # two thin posts: the view under the glass stays open
-        for s in (-1, 1):
-            m.box([E[0] + s * (g_hw + 0.004), hud_y1 + stem / 2, g_bot[2]], (X, Y, Z), (0.004, stem / 2, 0.005), sw['dgrey'])
-    m.box(g_bot - g_up * 0.006, (X, g_up, g_n), (g_hw + 0.008, 0.006, 0.012), sw['dgrey'])
+    m.box(g_bot - g_up * 0.004 + [0, 0.002, 0], (X, g_up, g_n), (g_hw + 0.010, 0.005, 0.010), sw['dgrey'])
     for s in (-1, 1):
-        m.box((g_bot + g_top) / 2 + X * s * (g_hw + 0.004), (X, g_up, g_n), (0.004, g_h / 2, 0.005), sw['dgrey'])
-    m.box(g_top + g_up * 0.004, (X, g_up, g_n), (g_hw + 0.008, 0.004, 0.005), sw['dgrey'])
-    hud = dict(centre=(g_bot + g_top) / 2, normal=-g_n, up=g_up, width=2 * g_hw, height=g_h)
+        m.box((g_bot + g_top) / 2 + X * s * (g_hw + 0.007), (X, g_up, g_n), (0.005, g_h / 2 + 0.004, 0.006), sw['dgrey'])
+    corners = [g_bot - X * g_hw, g_bot + X * g_hw, g_top + X * g_hw, g_top - X * g_hw]
+    glass += [corners[0] + Ea, corners[1] + Ea, corners[2] + Ea, corners[0] + Ea, corners[2] + Ea, corners[3] + Ea]
+    hud = dict(centre=(g_bot + g_top) / 2 + Ea, normal=-g_n, up=g_up, width=2 * g_hw, height=g_h)
+    # eyebrow caution lamps on the coaming either side of the HUD
+    for sgn, lab, col in ((1, 'MASTER', AMBER), (-1, 'FIRE', RED)):
+        rect = atlas.paint(96, 28, p_eyebrow(lab, col))
+        yd = deck_y(sgn * 0.215, 2.869 + 0.80) - Ea[1]
+        m.box([sgn * 0.215, yd + 0.0035, 0.80], (X, Y, Z), (0.045, 0.0035, 0.014), sw['black'])
+        m.rect_tex([sgn * 0.215, yd + 0.0075, 0.80], [0, 1, 0], [0, 0, 1], 0.088, 0.026, rect)
 
-    # -- side walls, consoles, the closing faces under the panel
-    for side in (1, -1):                                            # +1 = left (x > 0)
-        xw = E[0] + WALL_X * side
-        wall = atlas.paint(180, 100, H.p_wall(TURQ_D, TURQ, 30 + side))
-        z0, z1 = E[2] + BACK_Z, E[2] + PANEL_Z - 0.10
-        q = [[xw, E[1] + CONSOLE_Y - 0.02, z0], [xw, E[1] + CONSOLE_Y - 0.02, z1], [xw, E[1] + SILL_Y - 0.01, z1],
-             [xw, E[1] + SILL_Y - 0.01, z0]]
-        m.quad_tex(q if side > 0 else [q[1], q[0], q[3], q[2]], wall, normal=[-side, 0, 0])
-        wing = left if side > 0 else right
+    # -- side walls' liners, consoles, floor, rear bulkhead, kick panel
+    fy = FLOOR_Y
+    wall_t = lambda ya: wall_x(ya) - 0.010           # (liner just inside the hull's wall)
+    z_back, z_front = BACK_Z, 0.63
+    bulk = atlas.paint(180, 100, p_bulkhead)
+    for sgn in (1, -1):
+        # liner above the console, along the leaning wall to the sill
+        ya0, ya1 = 2.603 + CONSOLE_Y, 2.215
+        qs = [[sgn * wall_t(ya0), CONSOLE_Y, z_back], [sgn * wall_t(ya0), CONSOLE_Y, z_front],
+              [sgn * wall_t(ya1), ya1 - 2.603, z_front], [sgn * wall_t(ya1), ya1 - 2.603, z_back]]
+        m.flat(qs, sw['panel_d'], normal=[-sgn, 0.3, 0])
+        # console: top, inner side, front, back
+        wing = LEFT if sgn > 0 else RIGHT
 
         def wing_bottom_z(x):
             a = (abs(x) - HINGE) / math.cos(WING)
-            return wing.at(a, E[1] + BOT_W)[2]
-        xi, xo = E[0] + CONSOLE_IN * side, E[0] + WALL_X * side
-        zf_i, zf_o = wing_bottom_z(CONSOLE_IN), wing_bottom_z(WALL_X)
-        cy, fy = E[1] + CONSOLE_Y, E[1] + FLOOR_Y + 0.02
-        zb = E[2] + BACK_Z + 0.06
-        con = atlas.paint(56, 300, H.p_console(TURQ, 20 + side, [0.11, 0.08, 0.13, 0.07, 0.12, 0.09, 0.10, 0.08] if side > 0
-                                               else [0.09, 0.12, 0.08, 0.11, 0.10, 0.09, 0.13, 0.08],
-                                               slot=(0.44, 0.30, 0.56, 0.62) if side > 0 else None))
-        top = [[xi, cy, zb], [xo, cy, zb], [xo, cy, zf_o], [xi, cy, zf_i]]
-        m.face(top, [m.uv(con, 0, 0), m.uv(con, 1, 0), m.uv(con, 1, 1), m.uv(con, 0, 1)], normal=[0, 1, 0])
-        m.flat([[xi, fy, zb], [xi, fy, zf_i], [xi, cy, zf_i], [xi, cy, zb]], sw['turq_d'], normal=[-side, 0, 0])
-        m.flat([[xi, fy, zb], [xo, fy, zb], [xo, cy, zb], [xi, cy, zb]], sw['turq_d'], normal=[0, 0, -1])
-        m.box([xw - side * 0.015, E[1] + SILL_Y - 0.005, E[2] + (BACK_Z + PANEL_Z - 0.1) / 2], (X, Y, Z),
-              (0.03, 0.01, (PANEL_Z - 0.1 - BACK_Z) / 2), sw['dgrey'])                     # canopy rail ledge
-    # under the centre facet: its lower closing face back to the footwell
-    bl, br = centre.at(HINGE, E[1] + BOT_C), centre.at(-HINGE, E[1] + BOT_C)
-    m.flat([bl, br, br + np.array([0, 0, 0.12]), bl + np.array([0, 0, 0.12])], sw['turq_d'], normal=[0, -1, 0])
-    for s in ((1, -1) if CONSOLE_IN - HINGE > 0.02 else ()):   # the footwell sides under the wings (none
-        #                                                         where the console meets the hinge: it would lie on the facet)
-        e = centre.at(-HINGE * s, E[1] + BOT_C)
-        m.flat([e, centre.at(-HINGE * s, E[1] + BOT_W), [E[0] + s * CONSOLE_IN, E[1] + BOT_W, e[2]],
-                [E[0] + s * CONSOLE_IN, E[1] + BOT_C, e[2]]], sw['turq_d'], normal=[0, 0, -1])
-    # the floor: a dark plate over the model's own (white) floor, from behind the seat to the pedals
-    fw = CONSOLE_IN + 0.04                                          # under the consoles' inner faces too
-    m.flat([P(-fw, FLOOR_Y + 0.006, BACK_Z), P(fw, FLOOR_Y + 0.006, BACK_Z),
-            P(fw, FLOOR_Y + 0.006, PANEL_Z + 0.06), P(-fw, FLOOR_Y + 0.006, PANEL_Z + 0.06)], sw['floor'],
-           normal=[0, 1, 0])
-    # the bulkhead just behind the main panel, the fuselage's own cross-section there: no skin shows round the panel
-    half = [(0.0, -0.68), (0.33, -0.68), (0.33, -1.12), (0.0, -1.12)]
-    ring_ = [(x, y) for x, y in half] + [(-x, y) for x, y in reversed(half)]
-    m.flat([P(x, y, PANEL_Z + 0.08) for x, y in ring_], atlas.swatch((28, 30, 30)), normal=[0, 0, -1])
-    # rudder pedals under the panel
+            return wing.at(a, BOT_W)[2]
+        xi, xo = CON_IN * sgn, CON_OUT * sgn
+        zf_i, zf_o = wing_bottom_z(CON_IN), wing_bottom_z(CON_OUT)
+        con = atlas.paint(64, 340, p_console(sgn))
+        top = [[xi, CONSOLE_Y, z_back + 0.05], [xo, CONSOLE_Y, z_back + 0.05], [xo, CONSOLE_Y, zf_o], [xi, CONSOLE_Y, zf_i]]
+        m.face(top, [uv_of(con, 0, 0), uv_of(con, 1, 0), uv_of(con, 1, 1), uv_of(con, 0, 1)], normal=[0, 1, 0])
+        m.flat([[xi, fy, z_back + 0.05], [xi, fy, zf_i], [xi, CONSOLE_Y, zf_i], [xi, CONSOLE_Y, z_back + 0.05]], sw['panel_d'],
+               normal=[-sgn, 0, 0])
+        m.flat([[xi, fy, z_back + 0.05], [xo, fy, z_back + 0.05], [xo, CONSOLE_Y, z_back + 0.05], [xi, CONSOLE_Y, z_back + 0.05]],
+               sw['panel_d'], normal=[0, 0, -1])
+        m.flat([[xi, fy, zf_i], [xo, fy, zf_o], [xo, CONSOLE_Y, zf_o], [xi, CONSOLE_Y, zf_i]], sw['panel_d'], normal=[0, 0, 1])
+        m.flat([[xo, fy, z_back + 0.05], [xo, fy, zf_o], [xo, CONSOLE_Y, zf_o], [xo, CONSOLE_Y, z_back + 0.05]], sw['panel_d'],
+               normal=[-sgn, 0, 0])
+    # floor liner, rear bulkhead and the kick panel under the panel
+    zk = CENTRE.at(0, BOT_C)[2]
+    m.flat([[-CON_IN, fy, z_back], [CON_IN, fy, z_back], [CON_IN, fy, zk], [-CON_IN, fy, zk]], sw['floor'], normal=[0, 1, 0])
+    m.quad_tex([[CON_OUT, fy, z_back], [-CON_OUT, fy, z_back], [-CON_OUT, SILL_Y, z_back], [CON_OUT, SILL_Y, z_back]], bulk,
+               normal=[0, 0, 1])
+    m.flat([[-CON_IN, fy, zk], [CON_IN, fy, zk], [CON_IN, BOT_C, CENTRE.at(0, BOT_C)[2]], [-CON_IN, BOT_C, CENTRE.at(0, BOT_C)[2]]],
+           sw['panel_d'], normal=[0, 0, -1])
+    # rudder pedals
     for s in (1, -1):
-        m.box(P(s * 0.12, FLOOR_Y + 0.14, PANEL_Z - 0.02), (X, H.unit([0, 1, -0.35]), H.unit([0, 0.35, 1])), (0.045, 0.07, 0.01), sw['mgrey'])
-        m.box(P(s * 0.12, FLOOR_Y + 0.035, PANEL_Z + 0.02), (X, Y, Z), (0.012, 0.03, 0.06), sw['dgrey'])
+        m.box([s * 0.13, -0.66, 0.54], (X, unit([0, 1, -0.35]), unit([0, 0.35, 1])), (0.050, 0.075, 0.010), sw['mgrey'])
+        m.box([s * 0.13, -0.72, 0.58], (X, Y, Z), (0.014, 0.035, 0.07), sw['dgrey'])
 
-    # -- throttle on the left console
-    tz = 0.20
-    m.box(P(0.265, CONSOLE_Y + 0.055, tz), (X, H.unit([0, 1, 0.25]), H.unit([0, -0.25, 1])), (0.009, 0.06, 0.009), sw['metal'])
-    grip_ax = (X, H.unit([0, 1, 0.3]), H.unit([0, -0.3, 1]))
-    m.box(P(0.265, CONSOLE_Y + 0.135, tz + 0.02), grip_ax, (0.03, 0.045, 0.04), sw['black'])
-    m.box(P(0.265, CONSOLE_Y + 0.185, tz + 0.03), grip_ax, (0.026, 0.01, 0.032), sw['dgrey'])
-    m.box(P(0.242, CONSOLE_Y + 0.15, tz + 0.045), grip_ax, (0.004, 0.008, 0.008), sw['red'])
+    # -- throttle (left console): quadrant, lever and the grip with its thumb switches
+    tz = 0.34
+    m.box([0.345, CONSOLE_Y + 0.011, tz], (X, Y, Z), (0.050, 0.011, 0.14), sw['dgrey'])
+    lev = (X, unit([0, 1, 0.25]), unit([0, -0.25, 1]))
+    m.box([0.345, CONSOLE_Y + 0.07, tz + 0.04], lev, (0.009, 0.060, 0.010), sw['metal'])
+    gax = (X, unit([0, 1, 0.45]), unit([0, -0.45, 1]))
+    m.box([0.345, CONSOLE_Y + 0.140, tz + 0.075], gax, (0.026, 0.044, 0.036), sw['black'])
+    m.box([0.345, CONSOLE_Y + 0.188, tz + 0.090], gax, (0.022, 0.008, 0.030), sw['dgrey'])
+    for k, xl in enumerate((0.331, 0.345, 0.359)):
+        m.box(np.array([xl, CONSOLE_Y + 0.140, tz + 0.075]) - gax[2] * 0.038 + gax[1] * 0.012, gax, (0.006, 0.006, 0.004), sw['red'] if k == 0 else sw['metal'])
+    # switch rows on both console tops
+    for s in (1, -1):
+        for zr in (-0.20, -0.13, -0.06, 0.40, 0.47, 0.54):
+            if s > 0 and 0.15 < zr < 0.55:
+                continue
+            for xc in (0.285, 0.315, 0.345, 0.375, 0.405):
+                m.box([s * xc, CONSOLE_Y + 0.005, zr], (X, Y, Z), (0.009, 0.005, 0.009), sw['metal'])
+                m.box([s * xc, CONSOLE_Y + 0.020, zr - 0.003], (X, unit([0, 1, -0.3]), unit([0, 0.3, 1])),
+                      (0.0025, 0.012, 0.0025), sw['black'])
 
-    # -- ACES II ejection seat, on this model's floor
-    PS = lambda x, y, z: P(x, y + SEAT_DY, z)   # noqa: E731 (the MiG-29 seat's dimensions: the floor sits at the same depth under the eye)
-    cushion = atlas.paint(64, 64, H.p_cushion(CUSHION))
-    back = atlas.paint(64, 96, H.p_cushion(CUSHION, straps=True))
+    # -- the fixed armrest and the side stick on the right console (the grip goes into the stick bone)
+    SX, SZ = -0.285, 0.22
+    m.box([SX, CONSOLE_Y + 0.012, SZ - 0.14], (X, Y, Z), (0.062, 0.012, 0.095), sw['cushion'])        # armrest pad
+    m.box([SX, CONSOLE_Y + 0.006, SZ], (X, Y, Z), (0.045, 0.006, 0.045), sw['dgrey'])                 # base plate
+    m.box([SX, CONSOLE_Y + 0.020, SZ], (X, Y, Z), (0.026, 0.014, 0.026), sw['black'])                 # rubber boot
+    stick = Mesh()
+    col_ax = (X, unit([0, 1, 0.08]), unit([0, -0.08, 1]))
+    stick.box([SX, CONSOLE_Y + 0.075, SZ + 0.006], col_ax, (0.010, 0.062, 0.010), sw['metal'])
+    g_ax = (X, unit([0, 1, 0.25]), unit([0, -0.25, 1]))
+    gc = np.array([SX, CONSOLE_Y + 0.165, SZ + 0.026])
+    stick.box(gc, g_ax, (0.022, 0.058, 0.030), sw['black'])                                           # the grip
+    stick.box(gc + g_ax[1] * 0.056, g_ax, (0.016, 0.006, 0.022), sw['dgrey'])                         # top cap / hat
+    stick.box(gc + g_ax[1] * 0.052 + g_ax[2] * 0.008, g_ax, (0.005, 0.004, 0.005), sw['red'])
+    stick.box(gc + g_ax[2] * 0.030 + g_ax[1] * 0.012, g_ax, (0.008, 0.012, 0.005), sw['metal'])       # trigger
+    stick.box(gc - g_ax[2] * 0.031 + g_ax[1] * 0.025, g_ax, (0.014, 0.020, 0.003), sw['dgrey'])       # pinky switch
+    foot = np.array([SX, CONSOLE_Y + 0.008, SZ])
+
+    # -- ACES II ejection seat, reclined 30 degrees, its back through the headrest behind the head
+    cushion = atlas.paint(64, 64, p_cushion(CUSHION))
+    backt = atlas.paint(64, 96, p_cushion(CUSHION, straps=True))
     headbox = atlas.paint(64, 64, p_headbox)
-    stripes = atlas.paint(64, 16, H.p_stripes)
-    ax_b = (X, H.unit([0, 1, -0.14]), H.unit([0, 0.14, 1]))
-    base_top = -0.94 + SEAT_DY                                       # the seat's base down to the floor
-    m.box(P(0, (base_top + FLOOR_Y) / 2, -0.004), (X, Y, Z), (0.196, (base_top - FLOOR_Y) / 2, 0.22), sw['frame'])
-    m.box(PS(0, -0.887, 0.026), (X, Y, Z), (0.19, 0.035, 0.21), sw['cushion'], front=(1, 1, cushion, -X, Z))
+    stripes = atlas.paint(64, 16, p_stripes)
+    rec = math.radians(30)
+    BU = np.array([0, math.cos(rec), -math.sin(rec)])            # up the seat back
+    BN = np.array([0, math.sin(rec), math.cos(rec)])             # out of the back, toward the pilot's front
+    pan_y = -0.74
+    Q0 = np.array([0, pan_y, (-0.17) + (-0.05 - pan_y) * math.tan(rec)])    # back line at the pan: through the headrest face
+    ax = (X, BU, BN)
+    m.box([0, pan_y - 0.105, Q0[2] + 0.08], (X, Y, Z), (0.185, 0.050, 0.200), sw['frame'])           # survival kit / base
+    m.box([0, pan_y - 0.030, Q0[2] + 0.17], (X, Y, Z), (0.200, 0.030, 0.175), sw['cushion'],
+          front=(1, 1, cushion, -X, Z))                                                              # seat pan cushion
     for s in (1, -1):
-        m.box(PS(s * 0.212, -0.882, -0.014), (X, Y, Z), (0.012, 0.15, 0.24), sw['frame'])
-        m.box(PS(s * 0.17, -0.402, -0.404), ax_b, (0.02, 0.62, 0.025), sw['frame'])
-    m.box(PS(0, -0.502, -0.234), ax_b, (0.19, 0.33, 0.03), sw['cushion'], front=(2, 1, back, X, ax_b[1]))
-    m.box(PS(0, -0.502, -0.294), ax_b, (0.205, 0.36, 0.035), sw['frame'])
-    m.box(PS(0, 0.008, -0.314), (X, Y, Z), (0.16, 0.20, 0.10), sw['frame'])
-    m.box(PS(0, 0.018, -0.199), (X, Y, Z), (0.11, 0.11, 0.015), sw['cushion'], front=(2, 1, headbox, X, Y))
-    for s in (1, -1):
-        m.box(PS(s * 0.05, -0.817, 0.256), (X, Y, Z), (0.008, 0.035, 0.0075), sw['yellow'])
-    m.box(PS(0, -0.782, 0.256), (X, Y, Z), (0.058, 0.008, 0.008), sw['yellow'], front=(2, -1, stripes, -X, Y))
-
-    # -- the side stick on the right console's forward end, with the forearm rest behind it: the base stays with the
-    # cockpit, the grip goes into the stick bone (pivot at its foot)
-    sx, sz = -0.265, 0.12
-    m.box(P(sx, CONSOLE_Y + 0.015, sz), (X, Y, Z), (0.035, 0.015, 0.045), sw['black'])
-    m.box(P(sx, CONSOLE_Y + 0.04, sz - 0.20), (X, Y, Z), (0.045, 0.04, 0.12), sw['dgrey'])           # forearm rest
-    stick = H.Mesh(atlas)
-    g_ax = (X, H.unit([0, 1, 0.23]), H.unit([0, -0.23, 1]))
-    gc = P(sx, CONSOLE_Y + 0.085, sz + 0.01)
-    stick.box(gc, g_ax, (0.019, 0.055, 0.026), sw['black'])
-    stick.box(gc + g_ax[1] * 0.058, g_ax, (0.016, 0.006, 0.022), sw['dgrey'])
-    stick.box(gc + g_ax[1] * 0.062 + g_ax[2] * 0.008, g_ax, (0.005, 0.004, 0.005), sw['red'])
-    stick.box(gc + g_ax[2] * 0.028 + g_ax[1] * 0.012, g_ax, (0.007, 0.011, 0.005), sw['metal'])
-    foot = P(sx, CONSOLE_Y + 0.03, sz)
-    return m, (stick, foot), gauges, displays, hud
+        m.box([s * 0.215, pan_y + 0.02, Q0[2] + 0.17], (X, Y, Z), (0.012, 0.065, 0.185), sw['frame'])  # bucket sides
+        m.box(Q0 + BU * 0.37 + X * s * 0.175 - BN * 0.055, ax, (0.018, 0.57, 0.024), sw['frame'])      # guide rails
+    m.box(Q0 + BU * 0.40 - BN * 0.02, ax, (0.18, 0.40, 0.030), sw['cushion'],
+          front=(2, 1, backt, X, BU))                                                                # back cushion
+    m.box(Q0 + BU * 0.42 - BN * 0.085, ax, (0.205, 0.42, 0.030), sw['frame'])                        # back shell
+    m.box(Q0 + BU * 0.92 - BN * 0.045, ax, (0.150, 0.110, 0.095), sw['frame'],
+          front=(2, 1, headbox, X, BU))                                                              # headbox (parachute container)
+    m.box(Q0 + BU * 0.80 + BN * 0.012, ax, (0.090, 0.065, 0.020), sw['cushion'])                     # headrest pad
+    for s in (1, -1):                                        # the ejection handles on the pan's front corners
+        m.box([s * 0.245, pan_y + 0.01, Q0[2] + 0.31], (X, Y, Z), (0.020, 0.020, 0.050), sw['yellow'],
+              front=(1, 1, stripes, -X, Z))
+        m.box([s * 0.245, pan_y - 0.02, Q0[2] + 0.36], (X, Y, Z), (0.010, 0.010, 0.012), sw['black'])
+    m.box(Q0 + BU * 0.55 - BN * 0.115, ax, (0.075, 0.095, 0.045), sw['dgrey'])                       # the seat's oxygen / kit pack
+    return m, gauges, displays, glass, stick, hud, foot
 
 
-def old_interior(E):
-    """boxes (vehicle-local lo, hi) of the old cockpit: the tub inside the walls above the floor from behind the
-    seat to the old panel, the old panel block and glareshield up to the windscreen base, the old seat"""
-    e = np.array(E)
-    return [(e + [-0.335, -1.11, BACK_Z - 0.20], e + [0.335, SILL_Y - 0.005, 0.62]),
-            (e + [-0.32, -0.80, 0.50], e + [0.32, -0.20, 1.06]),
-            (e + [-0.16, -0.30, -0.65], e + [0.16, 0.25, -0.30])]
+def old_interior(geo):
+    """{bone: set(poly index)} of the airframe's own interior: faces of the hull pieces lying wholly inside the tub
+    (inside the walls and the sill line, above the floor) from behind the seat to the windscreen base: the old seat,
+    panel, coaming, HUD and the wedge under the windscreen. The walls, floor, sill bands, spine and nose stay."""
+    out = {}
+    for b in geo['minecraft:geometry'][0]['bones']:
+        if b['name'] not in SOURCE_BONES:
+            continue
+        pm = b.get('poly_mesh')
+        if not pm or not pm.get('polys'):
+            continue
+        P = np.array(pm['positions'], float) * np.array([1, 1, -1]) / 16.0
+        sel = set()
+        for i, poly in enumerate(pm['polys']):
+            if not poly:
+                continue
+            c = P[[v[0] for v in poly]].mean(0)
+            if not (2.46 <= c[2] <= 4.30 and 1.70 < c[1] < 3.05):
+                continue
+            xw = wall_x(c[1]) - 0.005 if c[1] <= 2.22 else (0.405 if c[1] <= 2.35 else 0.55)
+            if abs(c[0]) < xw:
+                sel.add(i)
+        if sel:
+            out[b['name']] = sel
+    return out
+
+
+# ---------------------------------------------------------------- main
+
+def write_json(path, obj, indent):
+    text_ = json.dumps(obj, indent=indent, ensure_ascii=False) if indent else json.dumps(obj, separators=(',', ':'))
+    with open(path, 'w', encoding='utf-8', newline='\n') as f:
+        f.write(text_ + ('\n' if indent else ''))
+
+
+def write_asset(path, asset):
+    """the asset keeps its layout: indented, with the canopy glass triangle list on one line at the end"""
+    glass_json = asset.pop('CanopyGlass', None)
+    text_ = json.dumps(asset, indent=2, ensure_ascii=False)
+    if glass_json is not None:
+        text_ = text_[:-2] + ',\n  "CanopyGlass": ' + json.dumps(glass_json, separators=(',', ':')) + '\n}'
+        asset['CanopyGlass'] = glass_json
+    with open(path, 'w', encoding='utf-8', newline='\n') as f:
+        f.write(text_ + '\n')
 
 
 def main(argv):
+    global EYE
     dry = '--dry-run' in argv
-    ac = L.Aircraft(VID)
-    E = ac.eye(0)
-    removed = H.remove_faces(ac, old_interior(E))
-    removed['old sight in the view'] = H.remove_sight_clutter(ac, E)
-    HUD_TOP[0] = H.view_ceiling(ac, ac.eye(0), PANEL_Z + 0.06)
-    atlas = H.A.Atlas(VID)
-    mesh, stick, gauges, displays, hud = build(atlas, E)
-    pm = H.install(ac, mesh, stick, SOURCE_BONE, STICK_BONE, gauges, displays, hud, E)
-    print(f'{VID}: removed {removed}; new cockpit {len(pm["polys"])} faces, {len(gauges)} gauges')
-    if not dry:
-        H.write(ac, atlas)
+    geo = json.load(open(GEO, encoding='utf-8'))
+    asset = json.load(open(ASSET, encoding='utf-8'))
+    data = json.load(open(DATA, encoding='utf-8'))
+    seat = data['Seats'][0]
+    EYE = np.array(data['Attachments'][seat['CameraPos']['EyeAttachment']]['Position'], float)
+    g = geo['minecraft:geometry'][0]
+    rm = old_interior(geo)
+    removed = 0
+    for b in g['bones']:
+        if b['name'] in rm:
+            pm = b['poly_mesh']
+            pm['polys'] = [p for i, p in enumerate(pm['polys']) if i not in rm[b['name']]]
+            removed += len(rm[b['name']])
+    old_g = next((x for x in (asset.get('CockpitGauges') or {}).get('Gauges', []) if x['Kind'] == 'ANNUNCIATOR'), None)
+    lamps = old_g['Lamps'] if old_g else []
+    cols = old_g['Columns'] if old_g else 3
+    atlas = Atlas()
+    mesh, gauges, displays, glass, stick, hud, foot = build(atlas, lamps, cols)
+    pm = mesh.poly_mesh()
+    bones = [b for b in g['bones'] if b['name'] != BONE]
+    hull = next(b for b in bones if b['name'] == 'hull')
+    at = next(i for i, b in enumerate(bones) if b['name'] == SOURCE_BONES[0]) + 1
+    bones.insert(at, {'name': BONE, 'parent': 'hull', 'pivot': list(hull['pivot']), 'poly_mesh': pm})
+    g['bones'] = bones
+    # the stick: its three bones' pivots to the side stick's foot (model pixels)
+    foot_px = [round(float((foot + EYE)[0]) * 16, 5), round(float((foot + EYE)[1]) * 16, 5),
+               round(-float((foot + EYE)[2]) * 16, 5)]
+    for b in g['bones']:
+        if b['name'] in ('control_stick_roll', 'control_stick_pitch', STICK_BONE):
+            b['pivot'] = list(foot_px)
+        if b['name'] == STICK_BONE:
+            b['poly_mesh'] = stick.poly_mesh()
+    for s in asset['AircraftRig']['Surfaces']:
+        if s['Bone'] in ('control_stick_roll', 'control_stick_pitch'):
+            s['Pivot'] = list(foot_px)
+    asset['CockpitGauges'] = {'Schema': 1, 'Frame': 'VEHICLE_LOCAL_BLOCKS', 'Gauges': gauges}
+    old_fd = asset.get('FlightDisplays') or {}
+    fd = {'Schema': 1, 'Frame': 'VEHICLE_LOCAL_BLOCKS', 'Displays': displays}
+    if 'Planform' in old_fd:
+        fd['Planform'] = old_fd['Planform']
+    asset['FlightDisplays'] = fd
+    asset['HeadUpDisplay'] = {'Schema': 1, 'Frame': 'VEHICLE_LOCAL_BLOCKS', 'Seat': 0,
+                              'Center': r5(hud['centre']), 'Normal': r5(hud['normal']), 'Up': r5(hud['up']),
+                              'Width': round(float(hud['width']), 5), 'Height': round(float(hud['height']), 5),
+                              'Eye': r5(EYE)}
+    cg = asset.get('CanopyGlass')
+    if cg and cg.get('Schema') == 1:
+        t = np.array(cg['Triangles'], float).reshape(-1, 3, 3)
+        c = t.mean(1) - EYE                                  # (an earlier combiner of this script goes)
+        keep = ~((np.abs(c[:, 0]) < 0.14) & (c[:, 1] > -0.12) & (c[:, 1] < 0.12) & (c[:, 2] > 0.55) & (c[:, 2] < 0.85))
+        tri = [list(map(float, p)) for p in t[keep].reshape(-1, 3)]
+        G = [list(map(float, p)) for p in glass]
+        both = G + [G[i] for k in range(0, len(G), 3) for i in (k, k + 2, k + 1)]
+        cg['Triangles'] = [round(v, 4) + 0.0 for p in tri + both for v in p]
+    # the pilot's seat and eye (vehicle data: x left, y up, z forward, blocks): the eye above the seat as built
+    print(f'f_16c: {removed} old interior faces removed; new cockpit {len(pm["polys"])} faces, {len(gauges)} game gauges, '
+          f'{len(displays)} display(s), HUD combiner {len(glass) // 3} triangles; stick foot {foot_px} px; '
+          f'atlas {atlas.used()} of {sum(a[2] * a[3] for a in ATLAS)} texels')
+    if dry:
+        return
+    write_json(GEO, geo, None)
+    write_asset(ASSET, asset)
+    atlas.write(TEX)
+    atlas.write(TEX_DEAD, dead=True)
 
 
 if __name__ == '__main__':
