@@ -1,10 +1,10 @@
 {
   "schema": 1,
   "policyVersion": 4,
-  "label": "simple-cockpits-20261020-r123",
+  "label": "su27-redo-20261020-r124",
   "status": "release-candidate",
-  "createdAt": "2026-10-20T19:33:04.378Z",
-  "treeSha256": "aed344a4adb24d1c30761e77e0a0b350d6ff4d153774650f8a328557bcaa0673",
+  "createdAt": "2026-10-20T23:16:34.484Z",
+  "treeSha256": "7f7fdebe164e83fdc4d97f5e43ab4ffc432fa438bb9ca412ad46cf1fe2436dea",
   "files": [
     {
       "path": ".editorconfig",
@@ -2308,8 +2308,8 @@
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/custom_geo/su_27.geo.json",
-      "size": 5320454,
-      "sha256": "af07b739988775e595d564363783f953dbe349974682608792cfea3713caaf9d"
+      "size": 4462926,
+      "sha256": "3e64f0d2fc0afe82ef25faf4afe90c2f031bd31109340da11d39a091bc4047c3"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/custom_geo/su_27_turret_wreck.geo.json",
@@ -4298,8 +4298,8 @@
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/su_27.json",
-      "size": 15842,
-      "sha256": "76e470c80965110a8b45bf6221288fe81ef917aec8848720bf46c2a44f98d6ac"
+      "size": 17922,
+      "sha256": "238b6293c172566e9cc28ac74b844116f9411b96943d1af54d106375a8d9f582"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/sbw/vehicles/su_30.json",
@@ -7468,8 +7468,8 @@
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/textures/entity/su_27.png",
-      "size": 610988,
-      "sha256": "60f3947580ee626202aa1fb86d0b4e5b10b1a1e16b57b09bccf72f6df0c9225f"
+      "size": 588233,
+      "sha256": "7a6b0a88bfa2a312bec063d0e19b62fc5cc8c2ddd00b818f59b22e59816820cd"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/textures/entity/su_30.png",
@@ -8333,8 +8333,8 @@
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/textures/entity_dead/su_27.png",
-      "size": 77287,
-      "sha256": "26fb353449f60974da719d3f986e87e8213208a4babfdebb448f3bf61909d458"
+      "size": 58445,
+      "sha256": "d3e5e8316b33ba88de6a16048ed8a634e72aa9bd07372ceb257d26b160eca983"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/textures/entity_dead/su_30.png",
@@ -53109,14 +53109,14 @@
   ],
   "release": {
     "schema": 1,
-    "buildRecordSha256": "80dc34972455e61a2a7cd118ce9144024b9f19e26af4b089ee084ad2018a69c4",
+    "buildRecordSha256": "17c5522f6e08e71df6d94f8d9251d1c4c364f0d47c10ed03cba8b097be81d6ab",
     "artifacts": [
       {
         "id": "bvp",
         "version": "0.1.0",
         "filename": "berts_vehicle_pack-0.1.0.jar",
-        "size": 257014052,
-        "sha256": "31b3ae283b1a50f072a57ee88b57d0b216999b1dbac2e7407e70e424ab8713a1"
+        "size": 256852048,
+        "sha256": "7bdd34856f836e8d6a55e2f098f7283ec3c485d996b235390c4b74c943ff7e8f"
       },
       {
         "id": "sbw",
