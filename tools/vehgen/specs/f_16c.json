@@ -439,5 +439,290 @@
     "dryThrustKgfPerEngine": 7781.4,
     "afterburnerThrustKgfPerEngine": 13381.0
   },
-  "note_flight": "War Thunder f_16c_block_50: empty 9,031 kg, internal fuel 3,310 kg; F110-GE-129 17,155 / 29,500 lbf (GE nameplate; WT fm has no labelled split); wing 27.87 m2."
+  "note_flight": "War Thunder f_16c_block_50: empty 9,031 kg, internal fuel 3,310 kg; F110-GE-129 17,155 / 29,500 lbf (GE nameplate; WT fm has no labelled split); wing 27.87 m2.",
+  "armamentOverrides": {
+    "Name": "F-16C",
+    "MaxPayloadKg": 5420,
+    "Pairs": [
+      {
+        "Id": "wingtip",
+        "Name": "Stations 1/9 · wingtip launcher",
+        "Left": [
+          4.943,
+          1.721,
+          -2.5
+        ],
+        "LeftStations": [
+          {
+            "Point": [
+              4.943,
+              1.721,
+              -2.5
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "Right": [
+          -4.943,
+          1.721,
+          -2.5
+        ],
+        "RightStations": [
+          {
+            "Point": [
+              -4.943,
+              1.721,
+              -2.5
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "AllowedStores": [
+          "berts_vehicle_pack:munition/aim9l",
+          "berts_vehicle_pack:fa18e/aim9m",
+          "berts_vehicle_pack:fa18e/aim120"
+        ],
+        "MaxWeaponsPerPylon": 1,
+        "MaxPylonMassKg": 193
+      },
+      {
+        "Id": "outer",
+        "Name": "Stations 2/8 · outer wing",
+        "Left": [
+          4.2123,
+          1.4268,
+          -2.7247
+        ],
+        "LeftStations": [
+          {
+            "Point": [
+              4.2123,
+              1.4268,
+              -2.7247
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "Right": [
+          -4.2123,
+          1.4268,
+          -2.7247
+        ],
+        "RightStations": [
+          {
+            "Point": [
+              -4.2123,
+              1.4268,
+              -2.7247
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "AllowedStores": [
+          "berts_vehicle_pack:munition/aim9l",
+          "berts_vehicle_pack:fa18e/aim9m",
+          "berts_vehicle_pack:fa18e/aim120"
+        ],
+        "MaxWeaponsPerPylon": 1,
+        "MaxPylonMassKg": 318
+      },
+      {
+        "Id": "middle",
+        "Name": "Stations 3/7 · middle wing",
+        "Left": [
+          3.2159,
+          1.3362,
+          -2.1359
+        ],
+        "LeftStations": [
+          {
+            "Point": [
+              3.2159,
+              1.3362,
+              -2.1359
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "Right": [
+          -3.2159,
+          1.3362,
+          -2.1359
+        ],
+        "RightStations": [
+          {
+            "Point": [
+              -3.2159,
+              1.3362,
+              -2.1359
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "AllowedStores": [
+          "berts_vehicle_pack:munition/aim9l",
+          "berts_vehicle_pack:fa18e/aim9m",
+          "berts_vehicle_pack:munition/aim7m",
+          "berts_vehicle_pack:fa18e/aim120",
+          "berts_vehicle_pack:fa18e/agm65d",
+          "berts_vehicle_pack:munition/agm65g",
+          "berts_vehicle_pack:munition/agm65d_x3",
+          "berts_vehicle_pack:munition/agm84d",
+          "berts_vehicle_pack:munition/agm88c",
+          "berts_vehicle_pack:munition/mk82_x3",
+          "berts_vehicle_pack:munition/mk82_snakeeye_x3",
+          "berts_vehicle_pack:munition/mk84",
+          "berts_vehicle_pack:munition/gbu12_x2",
+          "berts_vehicle_pack:munition/gbu24",
+          "berts_vehicle_pack:munition/gbu38_x2",
+          "berts_vehicle_pack:munition/gbu31",
+          "berts_vehicle_pack:munition/gbu39_x4",
+          "berts_vehicle_pack:munition/gbu53_x4",
+          "berts_vehicle_pack:munition/gbu62_x2",
+          "berts_vehicle_pack:munition/gbu64",
+          "berts_vehicle_pack:munition/gbu54_x2",
+          "berts_vehicle_pack:munition/gbu62l_x2",
+          "berts_vehicle_pack:munition/blu27_x2",
+          "berts_vehicle_pack:munition/lau131_apkws"
+        ],
+        "MaxWeaponsPerPylon": 1,
+        "MaxPylonMassKg": 1588
+      },
+      {
+        "Id": "inner",
+        "Name": "Stations 4/6 · inner wing",
+        "Left": [
+          1.9929,
+          1.4268,
+          -1.5018
+        ],
+        "LeftStations": [
+          {
+            "Point": [
+              1.9929,
+              1.4268,
+              -1.5018
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "Right": [
+          -1.9929,
+          1.4268,
+          -1.5018
+        ],
+        "RightStations": [
+          {
+            "Point": [
+              -1.9929,
+              1.4268,
+              -1.5018
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "AllowedStores": [
+          "berts_vehicle_pack:fa18e/agm65d",
+          "berts_vehicle_pack:munition/agm65g",
+          "berts_vehicle_pack:munition/gbu12",
+          "berts_vehicle_pack:munition/gbu24",
+          "berts_vehicle_pack:munition/gbu38",
+          "berts_vehicle_pack:munition/gbu31",
+          "berts_vehicle_pack:munition/gbu53",
+          "berts_vehicle_pack:munition/gbu62",
+          "berts_vehicle_pack:munition/gbu62l",
+          "berts_vehicle_pack:munition/gbu64",
+          "berts_vehicle_pack:munition/gbu54",
+          "berts_vehicle_pack:munition/mk82_x3",
+          "berts_vehicle_pack:munition/mk82_x6",
+          "berts_vehicle_pack:munition/mk82_snakeeye_x3",
+          "berts_vehicle_pack:munition/mk84",
+          "berts_vehicle_pack:munition/blu27",
+          "berts_vehicle_pack:munition/agm88c",
+          "berts_vehicle_pack:munition/tank_370gal"
+        ],
+        "MaxWeaponsPerPylon": 1,
+        "MaxPylonMassKg": 2041
+      }
+    ],
+    "Singles": [
+      {
+        "Id": "centreline",
+        "Name": "Station 5 · centreline",
+        "Position": [
+          0.0,
+          0.6568,
+          -1.9548
+        ],
+        "Stations": [
+          {
+            "Point": [
+              0.0,
+              0.6568,
+              -1.9548
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "Internal": false,
+        "AllowedStores": [
+          "berts_vehicle_pack:munition/tank_300gal"
+        ],
+        "MaxWeaponsPerPylon": 1,
+        "MaxPylonMassKg": 998
+      },
+      {
+        "Id": "inlet_left",
+        "Name": "Station 5L · left inlet (HTS)",
+        "Position": [
+          0.4,
+          0.97,
+          1.6
+        ],
+        "Stations": [
+          {
+            "Point": [
+              0.4,
+              0.97,
+              1.6
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "Internal": false,
+        "AllowedStores": [
+          "berts_vehicle_pack:sensor/asq213_hts"
+        ],
+        "MaxWeaponsPerPylon": 1,
+        "MaxPylonMassKg": 250
+      },
+      {
+        "Id": "inlet_right",
+        "Name": "Station 5R · right inlet (Sniper)",
+        "Position": [
+          -0.4,
+          0.97,
+          1.6
+        ],
+        "Stations": [
+          {
+            "Point": [
+              -0.4,
+              0.97,
+              1.6
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "Internal": false,
+        "AllowedStores": [
+          "berts_vehicle_pack:sensor/sniper_pod"
+        ],
+        "MaxWeaponsPerPylon": 1,
+        "MaxPylonMassKg": 250
+      }
+    ],
+    "StoreGroups": {}
+  },
+  "note_armament": "War Thunder f_16c_block_50 stations (work/elite_expansion_2/f16c/WT-f16c.md): AAMs on the tips and outer pylons; the middle pylons carry the full air-to-ground list; the inner pylons the heavy stores and the 370 gal tanks; the 300 gal tank on the centreline; the HTS and Sniper pods on the inlet stations. Points are the pylon bottoms of this airframe."
 }

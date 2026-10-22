@@ -7,229 +7,289 @@
   "SuspendedWeapons": [],
   "Pairs": [
     {
-      "Id": "inner",
-      "Name": "Inner wing pylon",
-      "Left": [
-        1.9294,
-        1.3606,
-        -1.7069
-      ],
-      "LeftStations": [
-        {
-          "Point": [
-            1.9295,
-            1.3605,
-            -1.7068
-          ],
-          "Face": "bottom"
-        }
-      ],
-      "Right": [
-        -1.9294,
-        1.3606,
-        -1.7069
-      ],
-      "RightStations": [
-        {
-          "Point": [
-            -1.9295,
-            1.3605,
-            -1.7068
-          ],
-          "Face": "bottom"
-        }
-      ],
-      "AllowedStores": [
-        "berts_vehicle_pack:fa18e/agm65d",
-        "berts_vehicle_pack:fa18e/agm65",
-        "berts_vehicle_pack:fa18e/agm88",
-        "berts_vehicle_pack:munition/agm158",
-        "berts_vehicle_pack:munition/mk82",
-        "berts_vehicle_pack:munition/mk82_snakeeye",
-        "berts_vehicle_pack:munition/mk84",
-        "berts_vehicle_pack:munition/gbu12",
-        "berts_vehicle_pack:munition/blu109_jdam",
-        "berts_vehicle_pack:munition/gbu10",
-        "berts_vehicle_pack:munition/gbu16",
-        "berts_vehicle_pack:munition/blu109",
-        "berts_vehicle_pack:munition/mk83",
-        "berts_vehicle_pack:munition/cbu87",
-        "berts_vehicle_pack:munition/cbu97"
-      ],
-      "MaxWeaponsPerPylon": 1,
-      "MaxPylonMassKg": 1100
-    },
-    {
-      "Id": "middle",
-      "Name": "Middle wing pylon",
-      "Left": [
-        3.0675,
-        1.3113,
-        -2.1272
-      ],
-      "LeftStations": [
-        {
-          "Point": [
-            3.0674,
-            1.3111,
-            -2.1274
-          ],
-          "Face": "bottom"
-        }
-      ],
-      "Right": [
-        -3.0675,
-        1.3113,
-        -2.1272
-      ],
-      "RightStations": [
-        {
-          "Point": [
-            -3.0674,
-            1.3111,
-            -2.1274
-          ],
-          "Face": "bottom"
-        }
-      ],
-      "AllowedStores": [
-        "berts_vehicle_pack:munition/aim9l",
-        "berts_vehicle_pack:fa18e/aim9m",
-        "berts_vehicle_pack:fa18e/aim120",
-        "berts_vehicle_pack:fa18e/agm65d",
-        "berts_vehicle_pack:fa18e/agm65",
-        "berts_vehicle_pack:fa18e/agm88",
-        "berts_vehicle_pack:munition/agm158",
-        "berts_vehicle_pack:munition/mk82",
-        "berts_vehicle_pack:munition/mk82_snakeeye",
-        "berts_vehicle_pack:munition/mk84",
-        "berts_vehicle_pack:munition/gbu12",
-        "berts_vehicle_pack:munition/blu109_jdam",
-        "berts_vehicle_pack:munition/gbu10",
-        "berts_vehicle_pack:munition/gbu16",
-        "berts_vehicle_pack:munition/blu109",
-        "berts_vehicle_pack:munition/mk83",
-        "berts_vehicle_pack:munition/cbu87",
-        "berts_vehicle_pack:munition/cbu97",
-        "berts_vehicle_pack:munition/aim9x"
-      ],
-      "MaxWeaponsPerPylon": 1,
-      "MaxPylonMassKg": 1100
-    },
-    {
-      "Id": "outer",
-      "Name": "Outer wing pylon",
-      "Left": [
-        4.1556,
-        1.3113,
-        -2.7703
-      ],
-      "LeftStations": [
-        {
-          "Point": [
-            4.1558,
-            1.3111,
-            -2.7705
-          ],
-          "Face": "bottom"
-        }
-      ],
-      "Right": [
-        -4.1556,
-        1.3113,
-        -2.7703
-      ],
-      "RightStations": [
-        {
-          "Point": [
-            -4.1558,
-            1.3111,
-            -2.7705
-          ],
-          "Face": "bottom"
-        }
-      ],
-      "AllowedStores": [
-        "berts_vehicle_pack:munition/aim9l",
-        "berts_vehicle_pack:fa18e/aim9m",
-        "berts_vehicle_pack:fa18e/aim120",
-        "berts_vehicle_pack:munition/aim9x"
-      ],
-      "MaxWeaponsPerPylon": 1,
-      "MaxPylonMassKg": 250
-    },
-    {
       "Id": "wingtip",
-      "Name": "Wingtip launcher",
+      "Name": "Stations 1/9 · wingtip launcher",
       "Left": [
-        4.825,
-        1.755,
-        -2.6
+        4.943,
+        1.721,
+        -2.5
       ],
       "LeftStations": [
         {
           "Point": [
-            4.95,
-            1.755,
-            -2.6
+            4.8917,
+            1.7212,
+            -2.507
           ],
-          "Face": "right"
+          "Face": "bottom"
         }
       ],
       "Right": [
-        -4.825,
-        1.755,
-        -2.6
+        -4.943,
+        1.721,
+        -2.5
       ],
       "RightStations": [
         {
           "Point": [
-            -4.95,
-            1.755,
-            -2.6
+            -4.8917,
+            1.7212,
+            -2.507
           ],
-          "Face": "left"
+          "Face": "bottom"
         }
       ],
       "AllowedStores": [
         "berts_vehicle_pack:munition/aim9l",
         "berts_vehicle_pack:fa18e/aim9m",
-        "berts_vehicle_pack:munition/aim9x",
         "berts_vehicle_pack:fa18e/aim120"
       ],
       "MaxWeaponsPerPylon": 1,
-      "MaxPylonMassKg": 200
+      "MaxPylonMassKg": 193
+    },
+    {
+      "Id": "outer",
+      "Name": "Stations 2/8 · outer wing",
+      "Left": [
+        4.2123,
+        1.4268,
+        -2.7247
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            4.2123,
+            1.4268,
+            -2.7247
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Right": [
+        -4.2123,
+        1.4268,
+        -2.7247
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -4.2123,
+            1.4268,
+            -2.7247
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/aim9l",
+        "berts_vehicle_pack:fa18e/aim9m",
+        "berts_vehicle_pack:fa18e/aim120"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 318
+    },
+    {
+      "Id": "middle",
+      "Name": "Stations 3/7 · middle wing",
+      "Left": [
+        3.2159,
+        1.3362,
+        -2.1359
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            3.2159,
+            1.3362,
+            -2.1359
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Right": [
+        -3.2159,
+        1.3362,
+        -2.1359
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -3.2159,
+            1.3362,
+            -2.1359
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/aim9l",
+        "berts_vehicle_pack:fa18e/aim9m",
+        "berts_vehicle_pack:munition/aim7m",
+        "berts_vehicle_pack:fa18e/aim120",
+        "berts_vehicle_pack:fa18e/agm65d",
+        "berts_vehicle_pack:munition/agm65g",
+        "berts_vehicle_pack:munition/agm65d_x3",
+        "berts_vehicle_pack:munition/agm84d",
+        "berts_vehicle_pack:munition/agm88c",
+        "berts_vehicle_pack:munition/mk82_x3",
+        "berts_vehicle_pack:munition/mk82_snakeeye_x3",
+        "berts_vehicle_pack:munition/mk84",
+        "berts_vehicle_pack:munition/gbu12_x2",
+        "berts_vehicle_pack:munition/gbu24",
+        "berts_vehicle_pack:munition/gbu38_x2",
+        "berts_vehicle_pack:munition/gbu31",
+        "berts_vehicle_pack:munition/gbu39_x4",
+        "berts_vehicle_pack:munition/gbu53_x4",
+        "berts_vehicle_pack:munition/gbu62_x2",
+        "berts_vehicle_pack:munition/gbu64",
+        "berts_vehicle_pack:munition/gbu54_x2",
+        "berts_vehicle_pack:munition/gbu62l_x2",
+        "berts_vehicle_pack:munition/blu27_x2",
+        "berts_vehicle_pack:munition/lau131_apkws"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 1588
+    },
+    {
+      "Id": "inner",
+      "Name": "Stations 4/6 · inner wing",
+      "Left": [
+        1.9929,
+        1.4268,
+        -1.5018
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            1.9929,
+            1.4268,
+            -1.5018
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Right": [
+        -1.9929,
+        1.4268,
+        -1.5018
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -1.9929,
+            1.4268,
+            -1.5018
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:fa18e/agm65d",
+        "berts_vehicle_pack:munition/agm65g",
+        "berts_vehicle_pack:munition/gbu12",
+        "berts_vehicle_pack:munition/gbu24",
+        "berts_vehicle_pack:munition/gbu38",
+        "berts_vehicle_pack:munition/gbu31",
+        "berts_vehicle_pack:munition/gbu53",
+        "berts_vehicle_pack:munition/gbu62",
+        "berts_vehicle_pack:munition/gbu62l",
+        "berts_vehicle_pack:munition/gbu64",
+        "berts_vehicle_pack:munition/gbu54",
+        "berts_vehicle_pack:munition/mk82_x3",
+        "berts_vehicle_pack:munition/mk82_x6",
+        "berts_vehicle_pack:munition/mk82_snakeeye_x3",
+        "berts_vehicle_pack:munition/mk84",
+        "berts_vehicle_pack:munition/blu27",
+        "berts_vehicle_pack:munition/agm88c",
+        "berts_vehicle_pack:munition/tank_370gal"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 2041
     }
   ],
-  "StoreGroups": {
-    "berts_vehicle_pack:modeled_store/f_16c/assembly_0": [
-      "suspended_f_16c_0"
-    ],
-    "berts_vehicle_pack:modeled_store/f_16c/assembly_1": [
-      "suspended_f_16c_1"
-    ],
-    "berts_vehicle_pack:modeled_store/f_16c/assembly_2": [
-      "suspended_f_16c_2"
-    ],
-    "berts_vehicle_pack:modeled_store/f_16c/assembly_3": [
-      "suspended_f_16c_3"
-    ],
-    "berts_vehicle_pack:modeled_store/f_16c/assembly_4": [
-      "suspended_f_16c_4"
-    ],
-    "berts_vehicle_pack:modeled_store/f_16c/assembly_5": [
-      "suspended_f_16c_5"
-    ],
-    "berts_vehicle_pack:modeled_store/f_16c/assembly_6": [
-      "suspended_f_16c_6"
-    ]
-  },
-  "MaxPayloadKg": 5443,
+  "StoreGroups": {},
+  "MaxPayloadKg": 5420,
   "Radar": {
     "Enabled": true,
     "Range": 2000
   },
   "MaxPylonMassKg": 1000,
   "MaxWeaponsPerPylon": 12,
-  "Singles": []
+  "Singles": [
+    {
+      "Id": "centreline",
+      "Name": "Station 5 · centreline",
+      "Position": [
+        0.0,
+        0.6568,
+        -1.9548
+      ],
+      "Stations": [
+        {
+          "Point": [
+            0.0,
+            0.6568,
+            -1.9548
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Internal": false,
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/tank_300gal"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 998
+    },
+    {
+      "Id": "inlet_left",
+      "Name": "Station 5L · left inlet (HTS)",
+      "Position": [
+        0.4,
+        0.97,
+        1.6
+      ],
+      "Stations": [
+        {
+          "Point": [
+            0.4,
+            0.96,
+            1.6
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Internal": false,
+      "AllowedStores": [
+        "berts_vehicle_pack:sensor/asq213_hts"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 250
+    },
+    {
+      "Id": "inlet_right",
+      "Name": "Station 5R · right inlet (Sniper)",
+      "Position": [
+        -0.4,
+        0.97,
+        1.6
+      ],
+      "Stations": [
+        {
+          "Point": [
+            -0.4,
+            0.96,
+            1.6
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Internal": false,
+      "AllowedStores": [
+        "berts_vehicle_pack:sensor/sniper_pod"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 250
+    }
+  ]
 }

@@ -5,26 +5,26 @@
   "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/lau3a_ffar.geo.json",
   "ModelForward": "-Z",
   "MountAnchor": [
-    0.0,
-    0.214,
-    0.0
+    0.21,
+    0.2,
+    -0.0065
   ],
   "SideMountAnchors": {
     "Left": [
       0.41,
-      -0.1749,
-      0.0
+      0.0,
+      -0.0065
     ],
     "Right": [
-      -0.41,
-      -0.1749,
-      0.0
+      -0.01,
+      0.0,
+      -0.0065
     ]
   },
   "MountAxis": [
+    0.21,
     0.0,
-    -0.1749,
-    0.0
+    -0.0065
   ],
   "Texture": "berts_vehicle_pack:textures/aircraft_stores/lau3a_ffar.png",
   "Capacity": 57,
