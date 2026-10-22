@@ -12,10 +12,14 @@
     "Hydra7Inner",
     "Hydra21Inner"
   ],
+  "StoreGroups": {},
+  "MaxPayloadKg": 7257,
+  "MaxPylonMassKg": 1600,
+  "MaxWeaponsPerPylon": 3,
   "Pairs": [
     {
       "Id": "st1_11",
-      "Name": "Stations 1/11 \u00c2\u00b7 wingtip (LAU-105)",
+      "Name": "Stations 1/11 · wingtip (LAU-105)",
       "Left": [
         5.9448,
         1.6236,
@@ -48,18 +52,14 @@
       ],
       "AllowedStores": [
         "berts_vehicle_pack:munition/aim9l",
-        "berts_vehicle_pack:munition/aim9l_x2_lau105",
-        "berts_vehicle_pack:munition/aim9m_x2_lau105",
-        "berts_vehicle_pack:munition/mk82",
-        "berts_vehicle_pack:munition/mk82_air",
-        "berts_vehicle_pack:munition/gbu12"
+        "berts_vehicle_pack:munition/aim9l_x2_lau105"
       ],
       "MaxWeaponsPerPylon": 1,
       "MaxPylonMassKg": 300
     },
     {
       "Id": "st3_9",
-      "Name": "Stations 3/9 \u00c2\u00b7 mid wing",
+      "Name": "Stations 3/9 · mid wing",
       "Left": [
         3.8466,
         1.3738,
@@ -93,25 +93,13 @@
       "AllowedStores": [
         "berts_vehicle_pack:munition/lau68_hydra",
         "berts_vehicle_pack:munition/lau68_hydra_x3",
-        "berts_vehicle_pack:munition/lau131_apkws_x1",
-        "berts_vehicle_pack:munition/lau131_apkws",
-        "berts_vehicle_pack:munition/agm65l",
-        "berts_vehicle_pack:munition/agm65g",
         "berts_vehicle_pack:munition/agm65d_x3",
         "berts_vehicle_pack:munition/mk82",
         "berts_vehicle_pack:munition/mk82_x3",
-        "berts_vehicle_pack:munition/mk82_air",
-        "berts_vehicle_pack:munition/mk82_air_x3",
+        "berts_vehicle_pack:munition/mk82_snakeeye",
+        "berts_vehicle_pack:munition/mk82_snakeeye_x3",
         "berts_vehicle_pack:munition/mk84",
-        "berts_vehicle_pack:munition/mk84_air",
-        "berts_vehicle_pack:munition/gbu12",
-        "berts_vehicle_pack:munition/gbu12_x3",
-        "berts_vehicle_pack:munition/gbu10",
-        "berts_vehicle_pack:munition/gbu38",
-        "berts_vehicle_pack:munition/gbu62",
-        "berts_vehicle_pack:munition/gbu31",
-        "berts_vehicle_pack:munition/gbu64",
-        "berts_vehicle_pack:munition/gbu39_x4"
+        "berts_vehicle_pack:munition/mk84_air"
       ],
       "MaxWeaponsPerPylon": 1,
       "MaxPylonMassKg": 1000,
@@ -122,7 +110,7 @@
     },
     {
       "Id": "st4_8",
-      "Name": "Stations 4/8 \u00c2\u00b7 inner wing",
+      "Name": "Stations 4/8 · inner wing",
       "Left": [
         1.8484,
         1.2739,
@@ -156,26 +144,15 @@
       "AllowedStores": [
         "berts_vehicle_pack:munition/lau68_hydra",
         "berts_vehicle_pack:munition/lau68_hydra_x3",
-        "berts_vehicle_pack:munition/lau131_apkws_x1",
-        "berts_vehicle_pack:munition/lau131_apkws",
         "berts_vehicle_pack:munition/mk82",
         "berts_vehicle_pack:munition/mk82_x3",
-        "berts_vehicle_pack:munition/mk82_air",
-        "berts_vehicle_pack:munition/mk82_air_x3",
+        "berts_vehicle_pack:munition/mk82_snakeeye",
+        "berts_vehicle_pack:munition/mk82_snakeeye_x3",
         "berts_vehicle_pack:munition/mk84",
-        "berts_vehicle_pack:munition/mk84_air",
-        "berts_vehicle_pack:munition/gbu12",
-        "berts_vehicle_pack:munition/gbu12_x3",
-        "berts_vehicle_pack:munition/gbu10",
-        "berts_vehicle_pack:munition/gbu38",
-        "berts_vehicle_pack:munition/gbu62",
-        "berts_vehicle_pack:munition/gbu31",
-        "berts_vehicle_pack:munition/gbu64",
-        "berts_vehicle_pack:munition/gbu39_x4",
-        "berts_vehicle_pack:munition/tank_600gal"
+        "berts_vehicle_pack:munition/mk84_air"
       ],
       "MaxWeaponsPerPylon": 1,
-      "MaxPylonMassKg": 2100,
+      "MaxPylonMassKg": 1000,
       "NativeWeaponIds": {
         "berts_vehicle_pack:munition/lau68_hydra": "Hydra7Inner",
         "berts_vehicle_pack:munition/lau68_hydra_x3": "Hydra21Inner"
@@ -183,7 +160,7 @@
     },
     {
       "Id": "st5_7",
-      "Name": "Stations 5/7 \u00c2\u00b7 fuselage side",
+      "Name": "Stations 5/7 · fuselage side",
       "Left": [
         0.5495,
         1.2239,
@@ -216,16 +193,9 @@
       ],
       "AllowedStores": [
         "berts_vehicle_pack:munition/mk82",
-        "berts_vehicle_pack:munition/mk82_air",
+        "berts_vehicle_pack:munition/mk82_snakeeye",
         "berts_vehicle_pack:munition/mk84",
-        "berts_vehicle_pack:munition/mk84_air",
-        "berts_vehicle_pack:munition/gbu12",
-        "berts_vehicle_pack:munition/gbu10",
-        "berts_vehicle_pack:munition/gbu38",
-        "berts_vehicle_pack:munition/gbu62",
-        "berts_vehicle_pack:munition/gbu31",
-        "berts_vehicle_pack:munition/gbu64",
-        "berts_vehicle_pack:munition/gbu39_x4"
+        "berts_vehicle_pack:munition/mk84_air"
       ],
       "MaxWeaponsPerPylon": 1,
       "MaxPylonMassKg": 1000
@@ -234,7 +204,7 @@
   "Singles": [
     {
       "Id": "st2",
-      "Name": "Station 2 \u00c2\u00b7 left outer wing",
+      "Name": "Station 2 · left outer wing",
       "Position": [
         4.8957,
         1.4737,
@@ -253,10 +223,8 @@
       "Internal": false,
       "AllowedStores": [
         "berts_vehicle_pack:munition/lau68_hydra",
-        "berts_vehicle_pack:munition/lau131_apkws_x1",
         "berts_vehicle_pack:munition/mk82",
-        "berts_vehicle_pack:munition/mk82_air",
-        "berts_vehicle_pack:munition/gbu12"
+        "berts_vehicle_pack:munition/mk82_snakeeye"
       ],
       "MaxWeaponsPerPylon": 1,
       "MaxPylonMassKg": 300,
@@ -266,7 +234,7 @@
     },
     {
       "Id": "st10",
-      "Name": "Station 10 \u00c2\u00b7 right outer wing (Sniper)",
+      "Name": "Station 10 · right outer wing",
       "Position": [
         -4.8957,
         1.4737,
@@ -285,46 +253,14 @@
       "Internal": false,
       "AllowedStores": [
         "berts_vehicle_pack:munition/lau68_hydra",
-        "berts_vehicle_pack:munition/lau131_apkws_x1",
         "berts_vehicle_pack:munition/mk82",
-        "berts_vehicle_pack:munition/mk82_air",
-        "berts_vehicle_pack:munition/gbu12",
-        "berts_vehicle_pack:sensor/sniper_pod"
+        "berts_vehicle_pack:munition/mk82_snakeeye"
       ],
       "MaxWeaponsPerPylon": 1,
       "MaxPylonMassKg": 300,
       "NativeWeaponIds": {
         "berts_vehicle_pack:munition/lau68_hydra": "Hydra7St10"
       }
-    },
-    {
-      "Id": "st6",
-      "Name": "Station 6 \u00c2\u00b7 centreline",
-      "Position": [
-        0.0,
-        1.124,
-        -0.0066
-      ],
-      "Stations": [
-        {
-          "Point": [
-            0.0,
-            1.124,
-            -0.0066
-          ],
-          "Face": "bottom"
-        }
-      ],
-      "Internal": false,
-      "AllowedStores": [
-        "berts_vehicle_pack:munition/tank_600gal"
-      ],
-      "MaxWeaponsPerPylon": 1,
-      "MaxPylonMassKg": 2100
     }
-  ],
-  "StoreGroups": {},
-  "MaxPayloadKg": 7257,
-  "MaxPylonMassKg": 1600,
-  "MaxWeaponsPerPylon": 3
+  ]
 }
