@@ -306,30 +306,30 @@
       "Name": "30 mm GAU-8/A Avenger",
       "RPM": 4200,
       "Magazine": 1174,
-      "Damage": 45,
+      "Damage": 257.77777777777777,
       "SoundInfo": {
-        "Fire1PGain": 0.5,
-        "Fire3PGain": 0.5,
-        "Fire3PFarGain": 0.5,
-        "Fire3PVeryFarGain": 0.5,
-        "Fire1P": "berts_vehicle_pack:a_10_gau8_fire",
-        "Fire3P": "berts_vehicle_pack:a_10_gau8_fire",
-        "Fire3PFar": "berts_vehicle_pack:a_10_gau8_fire",
-        "Fire3PVeryFar": "berts_vehicle_pack:a_10_gau8_fire",
+        "Fire1PGain": 1.0,
+        "Fire3PGain": 1.0,
+        "Fire3PFarGain": 1.0,
+        "Fire3PVeryFarGain": 1.0,
+        "Fire1P": "bvp_audio:weapon/gau8_1p",
+        "Fire3P": "bvp_audio:weapon/gau8_3p",
+        "Fire3PFar": "bvp_audio:weapon/gau8_far",
+        "Fire3PVeryFar": "bvp_audio:weapon/gau8_veryfar",
         "Volume": 1.0
       },
       "Projectile": {
         "Type": "superbwarfare:small_cannon_shell",
-        "Profile": "berts_vehicle_pack:aircraft_rounds/gau8a/gau8a_hvapt"
+        "Profile": "berts_vehicle_pack:aircraft_rounds/gau8a/gau8a_hei"
       },
-      "ShellType": "AP",
-      "Velocity": 61.25,
-      "ApDurability": 79,
-      "ExplosionRadius": 0,
+      "ShellType": "HE",
+      "Velocity": 63.75,
+      "ApDurability": 4,
+      "ExplosionRadius": 5.155555555555555,
       "NominalBallistics": {
         "Supported": true,
         "ProjectileType": "superbwarfare:small_cannon_shell",
-        "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/gau8a/gau8a_hvapt",
+        "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/gau8a/gau8a_hei",
         "ProjectileLife": 400
       },
       "AmmoType": [
@@ -348,19 +348,31 @@
             "ExplosionDamage": 0,
             "ExplosionRadius": 5.155555555555555,
             "TntEquivalentKg": 0.0928,
-            "Name": "Air Belt",
+            "Name": "Default",
             "ProjectileBelt": {
-              "Name": "Air Belt",
+              "Name": "Default",
               "Rounds": [
                 {
-                  "Shots": 3,
-                  "Round": "gau8a_hei",
+                  "Shots": 1,
+                  "Round": "hei",
                   "Ammo": "superbwarfare:small_shell_he",
                   "Tracer": "NONE"
                 },
                 {
                   "Shots": 1,
-                  "Round": "gau8a_hvapt",
+                  "Round": "hvap_t",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "RED"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "hei",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "hvap_t",
                   "Ammo": "superbwarfare:small_shell_ap",
                   "Tracer": "RED"
                 }
@@ -388,21 +400,122 @@
             "Damage": 45,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
-            "Name": "Ground Belt",
+            "TntEquivalentKg": 0.0,
+            "Name": "Ground targets",
             "ProjectileBelt": {
-              "Name": "Ground Belt",
+              "Name": "Ground targets",
               "Rounds": [
                 {
-                  "Shots": 3,
-                  "Round": "gau8a_hvapt",
+                  "Shots": 1,
+                  "Round": "hvap_t",
                   "Ammo": "superbwarfare:small_shell_ap",
                   "Tracer": "RED"
                 },
                 {
                   "Shots": 1,
-                  "Round": "gau8a_hei",
+                  "Round": "hei",
                   "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 2,
+                  "Round": "hvap",
+                  "Ammo": "superbwarfare:small_shell_gs",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/gau8a/gau8a_hvapt",
+              "ProjectileLife": 400
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_aa",
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/gau8a/gau8a_hvapt"
+            },
+            "ShellType": "AP",
+            "Velocity": 61.25,
+            "ApDurability": 79,
+            "Damage": 45,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "TntEquivalentKg": 0.0,
+            "Name": "Air targets",
+            "ProjectileBelt": {
+              "Name": "Air targets",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "hvap_t",
+                  "Ammo": "superbwarfare:small_shell_aa",
                   "Tracer": "RED"
+                },
+                {
+                  "Shots": 3,
+                  "Round": "hei",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/gau8a/gau8a_hvapt",
+              "ProjectileLife": 400
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_gs",
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/gau8a/gau8a_hvapt"
+            },
+            "ShellType": "AP",
+            "Velocity": 61.25,
+            "ApDurability": 79,
+            "Damage": 45,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "TntEquivalentKg": 0.0,
+            "Name": "Stealth",
+            "ProjectileBelt": {
+              "Name": "Stealth",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "hvap",
+                  "Ammo": "superbwarfare:small_shell_gs",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "hei",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "hvap",
+                  "Ammo": "superbwarfare:small_shell_gs",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "hei",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
                 }
               ]
             },
@@ -451,7 +564,8 @@
         "EffectDirectionAttachments": [
           "avenger_muzzle"
         ]
-      }
+      },
+      "TntEquivalentKg": 0.0928
     }
   },
   "HUDColor": "0xFFC700",
