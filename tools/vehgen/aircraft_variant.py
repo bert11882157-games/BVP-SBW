@@ -142,8 +142,12 @@ def main(argv):
             c = c_geo
             bone = None
 
+            group = group_names.get(f[99]) if len(f) > 99 and f[99] not in ('0', '1') else None
+
             def holds(cond):
                 c = c_src if cond.get('frame') == 'source' else c_geo
+                if 'group' in cond and cond['group'] != group:     # toolbox group name ('Import Hardpoint1'), or null
+                    return False
                 return (cond.get('zMin', -1e9) <= c[2] <= cond.get('zMax', 1e9)
                         and cond.get('yMin', -1e9) <= c[1] <= cond.get('yMax', 1e9)
                         and cond.get('absXMin', -1e9) <= abs(c[0]) <= cond.get('absXMax', 1e9)
