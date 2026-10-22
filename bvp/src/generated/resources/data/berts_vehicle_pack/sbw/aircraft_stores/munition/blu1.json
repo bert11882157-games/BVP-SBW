@@ -1,0 +1,48 @@
+{
+  "Schema": 1,
+  "Name": "BLU-1 · 750 lb fire bomb",
+  "Category": "BOMB",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/blu1.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.259,
+    0.0
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.235,
+      0.0,
+      0.0
+    ],
+    "Right": [
+      -0.235,
+      0.0,
+      0.0
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/blu1.png",
+  "Capacity": 1,
+  "MassKg": 320.0,
+  "Bomb": {
+    "Mode": "DUMB",
+    "Gravity": 0.08,
+    "DragMultiplier": 1,
+    "TurnDegreesPerTick": 0,
+    "BlastRadius": 9,
+    "TntEquivalentKg": 56,
+    "BlastDamage": 250
+  },
+  "AmmoItem": "superbwarfare:medium_freefall_bomb",
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_bombs/blu1",
+  "LaunchOffset": [
+    0.0,
+    -0.259,
+    0.0
+  ]
+}

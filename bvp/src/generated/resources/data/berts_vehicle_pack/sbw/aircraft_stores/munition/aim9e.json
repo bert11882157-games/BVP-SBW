@@ -1,0 +1,55 @@
+{
+  "Schema": 1,
+  "Name": "AIM-9E Sidewinder · improved infrared",
+  "Category": "AIR_TO_AIR",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/aim9e.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.0668,
+    0.4175
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.0668,
+      0.0,
+      0.4175
+    ],
+    "Right": [
+      -0.0668,
+      0.0,
+      0.4175
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    0.4175
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/aim9e.png",
+  "Capacity": 1,
+  "MassKg": 76.4,
+  "Guidance": {
+    "Mode": "INFRARED",
+    "LockTicks": 62,
+    "Range": 850,
+    "ConeDegrees": 24,
+    "CountermeasureVulnerability": 1.2
+  },
+  "Flight": {
+    "InitialSpeed": 0.5,
+    "MaxSpeed": 4.8,
+    "AccelerationPerTick": 0.1,
+    "TurnDegreesPerSecond": 46,
+    "Damage": 25,
+    "BlastRadius": 2.5,
+    "TntEquivalentKg": 7.6204
+  },
+  "AmmoItem": "superbwarfare:small_air_to_air_missile",
+  "MaxPerPylon": 1,
+  "LaunchOffset": [
+    0.0,
+    -0.0668,
+    0.0
+  ]
+}

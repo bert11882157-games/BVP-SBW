@@ -1,0 +1,48 @@
+{
+  "Schema": 1,
+  "Name": "M117 · 750 lb general purpose",
+  "Category": "BOMB",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/m117.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.228,
+    -0.04
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.204,
+      0.0,
+      -0.04
+    ],
+    "Right": [
+      -0.204,
+      0.0,
+      -0.04
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    -0.04
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/m117.png",
+  "Capacity": 1,
+  "MassKg": 362.4,
+  "Bomb": {
+    "Mode": "DUMB",
+    "Gravity": 0.08,
+    "DragMultiplier": 1,
+    "TurnDegreesPerTick": 0,
+    "BlastRadius": 9,
+    "TntEquivalentKg": 234.9,
+    "BlastDamage": 600
+  },
+  "AmmoItem": "superbwarfare:medium_freefall_bomb",
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_bombs/m117",
+  "LaunchOffset": [
+    0.0,
+    -0.228,
+    0.0
+  ]
+}
