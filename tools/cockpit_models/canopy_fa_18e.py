@@ -1,61 +1,289 @@
 #!/usr/bin/env python3
-"""F/A-18E canopy, made by hand: the shape from the model's old glass (glass_sections.py), cleaned up into smooth
-sections, and the real frame layout.
+"""F/A-18E canopy, fitted to the FA-18E.mtb airframe: the glass for the source's own canopy frame.
 
-The F/A-18E canopy (side views and photos of the type): a fixed one-piece windscreen with no posts, held by its base
-frame on the nose and the arch at its rear over the HUD; the canopy one blown transparency with no bow across it,
-hinged at the back, held by the frame round its edge (the front bow against the windscreen arch, the sill rails along
-both sides, the frame at its tail on the spine).
+The Super Hornet's canopy (side views and photos of the Block II): one blown bubble running aft from the windscreen over
+the pilot along two slim sill rails, merging into the spine behind the seat, with the fixed windscreen ahead of it: the
+windscreen arch (bow) rising from the sills over the HUD, and the glass sloping from the arch down to the nose deck.
 
-Run after the cockpit (fa_18e.py), on its output. Usage: python3 tools/cockpit_models/canopy_fa_18e.py
+The airframe already carries that frame (bone wreck_fuselage_1__canopy: the two sill rails that rise toward the rear, the
+closing piece where they meet the spine, a centre strip along the crown, and the front arch whose top bar sits in
+wreck_fuselage_0__hull), so this script keeps it as THE frame, never adds a second one, and fits the glass to it:
+
+  * two glass patches: the bubble (from the closing piece at the spine to the rear face of the arch) and the windscreen (from
+    the front face of the arch to the nose deck). Every row starts on the inner top edge of the sill rail (or the nose deck),
+    and each patch stops at the face of the frame member it meets, never running under it;
+  * the section at every station is a super-ellipse from the rail up to the crown, the crown line taken from the frame's own
+    centre strip (3.165 over the seat, falling to 2.92 where it meets the spine); the windscreen's crown follows the
+    airframe's own windscreen stand-in down to the nose deck (3.0 at the arch, 2.53 at its foot);
+  * the airframe's stand-ins for glass are removed, since the real glass takes their place: the long opaque centre strip of the
+    frame (flat quads along the crown) and the narrow slab on the nose in front of the arch.
+
+CANOPY (eye-relative sections, the right half from the sill up over the top) is what the checks in
+work/elite_expansion_2/checks read for the canopy outline. Frames: vehicle-local blocks, model pixels (x, y, -z) * 16.
+
+Run first (on the airframe's files); the cockpit script fa_18e.py then appends the HUD combiner to CanopyGlass.
+Usage: python tools/cockpit_models/canopy_fa_18e.py [--dry-run]
 """
-import os, sys
+import json, os, sys
+import numpy as np
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
-import handbuilt as H            # noqa: E402
-import handbuilt_canopy as C     # noqa: E402
 
-VID = 'fa_18e'
-SOURCE_BONE = 'wreck_fuselage_1__hull'
+GEN = os.path.join(HERE, '..', '..', 'bvp', 'src', 'generated', 'resources')
+GEO = os.path.join(GEN, 'assets/berts_vehicle_pack/custom_geo/fa_18e.geo.json')
+ASSET = os.path.join(GEN, 'assets/berts_vehicle_pack/sbw/vehicles/fa_18e.json')
+DATA = os.path.join(GEN, 'data/berts_vehicle_pack/sbw/vehicles/fa_18e.json')
+CANOPY_BONE = 'wreck_fuselage_1__canopy'
+HULL_BONE = 'wreck_fuselage_0__hull'
 
-# the canopy's and windscreen's sections, metres from the eye: z, then the right half from the sill up over the top
-SECTIONS = [
-    (-1.20, [(0.20, -0.24), (0.214, -0.209), (0.18, -0.146), (0.129, -0.109), (0.072, -0.101), (0.031, -0.104), (0.0, -0.108)]),
-    (-1.00, [(0.306, -0.285), (0.297, -0.182), (0.261, -0.093), (0.217, -0.018), (0.159, 0.04), (0.076, 0.058), (0.0, 0.06)]),
-    (-0.80, [(0.315, -0.32), (0.289, -0.148), (0.262, -0.059), (0.24, 0.031), (0.206, 0.139), (0.113, 0.204), (0.0, 0.225)]),
-    (-0.60, [(0.30, -0.358), (0.302, -0.26), (0.28, -0.153), (0.264, -0.064), (0.24, 0.026), (0.217, 0.148), (0.131, 0.25), (0.0, 0.28)]),
-    (-0.40, [(0.29, -0.393), (0.288, -0.28), (0.272, -0.178), (0.263, -0.09), (0.249, 0.006), (0.217, 0.122), (0.137, 0.242), (0.0, 0.271)]),
-    (-0.20, [(0.31, -0.426), (0.313, -0.318), (0.298, -0.208), (0.288, -0.112), (0.27, -0.008), (0.231, 0.112), (0.142, 0.229), (0.0, 0.253)]),
-    (0.00, [(0.37, -0.456), (0.369, -0.369), (0.349, -0.239), (0.324, -0.129), (0.299, -0.016), (0.256, 0.118), (0.144, 0.209), (0.0, 0.228)]),
-    (0.20, [(0.40, -0.48), (0.405, -0.411), (0.375, -0.27), (0.347, -0.148), (0.306, -0.037), (0.262, 0.096), (0.143, 0.18), (0.0, 0.201)]),
-    (0.40, [(0.406, -0.495), (0.41, -0.438), (0.377, -0.29), (0.35, -0.171), (0.315, -0.055), (0.258, 0.071), (0.137, 0.139), (0.0, 0.162)]),
-    (0.60, [(0.392, -0.501), (0.4, -0.453), (0.365, -0.309), (0.335, -0.196), (0.299, -0.086), (0.24, 0.027), (0.128, 0.091), (0.0, 0.114)]),
-    (0.80, [(0.345, -0.48), (0.31, -0.325), (0.283, -0.229), (0.257, -0.133), (0.204, -0.039), (0.111, 0.022), (0.0, 0.045)]),
-    (1.00, [(0.227, -0.451), (0.212, -0.371), (0.187, -0.307), (0.169, -0.244), (0.134, -0.183), (0.07, -0.152), (0.0, -0.15)]),
-    (1.12, [(0.15, -0.44), (0.13, -0.36), (0.10, -0.28), (0.05, -0.24), (0.0, -0.235)]),
-]
-SPLIT = 0.40                     # the canopy's front edge, against the windscreen arch over the HUD
+# ---- the frame's measurements (absolute blocks)
+# the sill rails' inner top edge: z, x of the inner edge, y of the top (the rails rise toward the spine)
+RAIL = [(2.40, 0.200, 2.916), (2.60, 0.250, 2.865), (2.835, 0.280, 2.825), (3.15, 0.315, 2.780), (3.47, 0.340, 2.735),
+        (3.80, 0.360, 2.700), (4.10, 0.375, 2.667), (4.40, 0.375, 2.667), (4.71, 0.345, 2.667)]
+# the crown line over the centre (z, y): the frame's centre strip
+CROWN = [(2.40, 2.916), (2.655, 2.984), (3.152, 3.074), (3.92, 3.165), (4.463, 3.165), (4.734, 3.074), (4.80, 3.045),
+         (4.915, 3.000)]
+NEXP = 2.2                       # the sections' super-ellipse exponent
+
+Z_AFT = 2.40                     # the closing piece's front face: the bubble starts here, on the spine
 
 
-def build(atlas, E, skin):
-    m = H.Mesh(atlas)
-    out, inner = atlas.swatch(skin), atlas.swatch((40, 42, 44))
-    sh = C.Shape(SECTIONS)
-    glass = C.glass_triangles(sh, E, -1.20, SPLIT, nz=18) + C.glass_triangles(sh, E, SPLIT + 0.05, 1.12, nz=8)
-    # the canopy: its tail frame, its front bow, the sill rails
-    C.bow(m, sh, E, -1.18, 0.04, 0.03, out, inner)
-    C.bow(m, sh, E, SPLIT - 0.005, 0.03, 0.018, out, inner)
-    C.member(m, sh, E, 0.0, -1.20, SPLIT, 0.05, 0.035, out, inner, steps=18)
-    # the windscreen: the arch, the base frame on the nose and its side rails
-    C.bow(m, sh, E, SPLIT + 0.03, 0.04, 0.02, out, inner)
-    C.bow(m, sh, E, 1.105, 0.03, 0.02, out, inner)
-    C.member(m, sh, E, 0.0, SPLIT + 0.05, 1.12, 0.05, 0.035, out, inner)
-    return m, glass
+def z_front_rear(y):
+    """the arch's rear face (its legs rise from the rail, the top bar leans forward over the HUD)"""
+    return 4.712 + 0.045 * min(1.0, max(0.0, (y - 2.60) / 0.15)) + 0.035 * min(1.0, max(0.0, (y - 2.85) / 0.15))
+
+
+def z_front_front(y):
+    """the arch's front face: where the windscreen glass begins"""
+    return 4.757 + 0.158 * min(1.0, max(0.0, (y - 2.55) / 0.40))
+
+
+# the windscreen: from the arch (z 4.915) to the nose deck: half width of its foot and the crown's height (the stand-in's top)
+WS_Z = (4.915, 5.86)
+WS_X = (0.335, 0.200)
+WSC = [(4.757, 3.040), (4.915, 3.000), (5.231, 2.848), (5.864, 2.532)]
+
+# the nose deck's top surface (absolute y) at |x| and z, sampled from the airframe: a hair lower under the glass's foot
+_SK_Z = [4.757, 5.0, 5.2, 5.4, 5.6, 5.8, 5.9]
+_SK_X = [0.0, 0.1, 0.2, 0.3, 0.4]
+_SK = [[2.70, 2.70, 2.68, 2.62, 2.47],
+       [2.735, 2.688, 2.674, 2.651, 2.424],
+       [2.651, 2.651, 2.626, 2.559, 2.392],
+       [2.613, 2.607, 2.601, 2.497, 2.367],
+       [2.576, 2.576, 2.576, 2.487, 2.341],
+       [2.542, 2.527, 2.505, 2.396, 2.306],
+       [2.526, 2.503, 2.458, 2.375, 2.288]]
+
+SILL_Y = 2.60                    # the outline the checks read starts here (the rails' lower edge)
+
+_EYE = np.array([0.0, 2.86, 4.12])
+
+
+def _eye():
+    try:
+        d = json.load(open(DATA, encoding='utf-8'))
+        s = d['Seats'][0]
+        return np.array(d['Attachments'][s['CameraPos']['EyeAttachment']]['Position'], float)
+    except (OSError, KeyError):
+        return _EYE
+
+
+def skin_y(x, z):
+    """the nose deck's height at |x| beside / ahead of the arch (the skin under the glass's foot, a hair lower)"""
+    zz = min(max(z, _SK_Z[0]), _SK_Z[-1])
+    row = [float(np.interp(zz, _SK_Z, [r[i] for r in _SK])) for i in range(len(_SK_X))]
+    return float(np.interp(abs(x), _SK_X, row)) - 0.012
+
+
+def base_crown(z):
+    """(x of the glass's foot, y of the foot, y of the crown) at station z: on the rail, or on the nose deck for the windscreen"""
+    zs = [r[0] for r in RAIL]
+    if z <= RAIL[-1][0]:
+        zc = [c[0] for c in CROWN]
+        return (float(np.interp(z, zs, [r[1] for r in RAIL])), float(np.interp(z, zs, [r[2] for r in RAIL])),
+                float(np.interp(z, zc, [c[1] for c in CROWN])))
+    if z >= WS_Z[0]:
+        t = (z - WS_Z[0]) / (WS_Z[1] - WS_Z[0])
+        xb = WS_X[0] + (WS_X[1] - WS_X[0]) * t
+        return (xb, skin_y(xb, z), float(np.interp(z, [c[0] for c in WSC], [c[1] for c in WSC])))
+    # over the front arch: between the rail's end and the windscreen's start
+    t = (z - RAIL[-1][0]) / (WS_Z[0] - RAIL[-1][0])
+    a, b = base_crown(RAIL[-1][0]), base_crown(WS_Z[0])
+    return tuple(a[i] + (b[i] - a[i]) * t for i in range(3))
+
+
+def section(z, n=22):
+    """the right half-section at station z: absolute (x, y) points from the foot up to the crown (x = 0)"""
+    xb, yb, yt = base_crown(z)
+    us = np.linspace(0, 1, n)
+    pts = [(xb * (1 - u ** NEXP) ** (1 / NEXP), yb + (yt - yb) * u) for u in us]
+    pts[-1] = (0.0, yt)
+    return pts
+
+
+STATIONS = [2.40, 2.50, 2.60, 2.80, 3.00, 3.20, 3.40, 3.60, 3.80, 4.00, 4.20, 4.40, 4.60, 4.71, 4.80, 4.915, 5.00, 5.10,
+            5.20, 5.40, 5.60, 5.80, 5.86]
+
+
+def sections_rel(eye):
+    """the canopy outline the checks read: from the sill line straight up the foot's inner face, then the glass"""
+    out = []
+    for z in STATIONS:
+        pts = section(z)
+        if pts[0][1] > SILL_Y + 0.004:
+            pts = [(pts[0][0], SILL_Y)] + pts
+        out.append((z - eye[2], [(x, y - eye[1]) for x, y in pts]))
+    return out
+
+
+CANOPY = sections_rel(_eye())            # eye-relative, as handbuilt_canopy.Shape wants it (the checks read this)
+
+
+def resample(pts, k):
+    p = np.array(pts, float)
+    d = np.r_[0, np.cumsum(np.linalg.norm(np.diff(p, axis=0), axis=1))]
+    t = np.linspace(0, d[-1], k)
+    return np.c_[np.interp(t, d, p[:, 0]), np.interp(t, d, p[:, 1])]
+
+
+def edge(zf, j, z, ns, lo, hi):
+    """the station where row j of the section meets the frame face zf(y): the row's height depends on the station, so
+    the face is found by iterating (the faces lean slowly, a few passes settle it)"""
+    for _ in range(5):
+        y = resample(section(z), ns + 1)[j][1]
+        z = min(hi, max(lo, zf(y)))
+    return z
+
+
+def patch(zf0, zf1, z_lo, z_hi, nz, ns=14):
+    """one glass patch, both sides: row j of the arc-length resampled section runs from the frame face zf0 to the face zf1
+    it stops at (both found at the row's own height), so the cut leans with the frame member; z_lo / z_hi clamp the cut"""
+    ends = [(edge(zf0, j, z_lo, ns, z_lo, z_hi), edge(zf1, j, z_hi, ns, z_lo, z_hi)) for j in range(ns + 1)]
+    out = []
+    for side in (1, -1):
+        grid = []
+        for i in range(nz + 1):
+            row = []
+            for j in range(ns + 1):
+                a, b = ends[j]
+                z = a + (b - a) * i / nz
+                x, y = resample(section(z), ns + 1)[j]
+                row.append(np.array([side * x, y, z]))
+            grid.append(row)
+        for i in range(nz):
+            for j in range(ns):
+                a, b, c, d = grid[i][j], grid[i + 1][j], grid[i + 1][j + 1], grid[i][j + 1]
+                for tri in ((a, b, c), (a, c, d)):
+                    if np.linalg.norm(np.cross(tri[1] - tri[0], tri[2] - tri[0])) > 1e-10:
+                        out.append(list(tri))
+    return out
+
+
+def glass_triangles():
+    tris = patch(lambda y: Z_AFT, z_front_rear, Z_AFT, 4.80, 34)               # the bubble: the spine -> the arch
+    tris += patch(z_front_front, lambda y: WS_Z[1], 4.757, WS_Z[1], 14)         # the windscreen: the arch -> nose deck
+    return tris
+
+
+def _overlap2d(a, b):
+    """separating-axis test of two triangles in 2-D (shrunk a little so touching edges do not count)"""
+    def shrink(t):
+        c = t.mean(0)
+        return c + (t - c) * 0.96
+    a, b = shrink(a), shrink(b)
+    for t in (a, b):
+        for i in range(3):
+            e = t[(i + 1) % 3] - t[i]
+            n = np.array([-e[1], e[0]])
+            pa, pb = a @ n, b @ n
+            if pa.max() <= pb.min() or pb.max() <= pa.min():
+                return False
+    return True
+
+
+def drop_buried(bones, gap=0.002):
+    """Faces of the frame that lie in the same plane as another face of the airframe (same way round, overlapping): the
+    frame's doubled corner pieces, which the source builds twice. The twin stays; the frame's copy goes (it only
+    z-fights, nothing shows through its place). Returns how many."""
+    tris = []                                    # (bone, poly index, triangle 3x3)
+    for b in bones:
+        pm = b.get('poly_mesh')
+        if not pm or not pm.get('polys') or b['name'] not in (CANOPY_BONE, HULL_BONE, 'wreck_fuselage_1__hull'):
+            continue
+        P = np.array(pm['positions'], float) * np.array([1, 1, -1]) / 16.0
+        for i, poly in enumerate(pm['polys']):
+            V = P[[v[0] for v in poly]]
+            for k in range(1, len(V) - 1):
+                T = V[[0, k, k + 1]]
+                c = T.mean(0)
+                if abs(c[0]) < 0.75 and 2.3 < c[2] < 5.7 and 1.0 < c[1] < 3.4:
+                    tris.append((b['name'], i, T))
+    gone = set()
+    n = len(tris)
+    N = []
+    for _, _, T in tris:
+        v = np.cross(T[1] - T[0], T[2] - T[0]); ln = np.linalg.norm(v)
+        N.append(v / ln if ln > 1e-10 else v * 0)
+    for i in range(n):
+        bi, pi, Ti = tris[i]
+        if bi != CANOPY_BONE or (bi, pi) in gone or not N[i].any():
+            continue
+        for j in range(n):
+            bj, pj, Tj = tris[j]
+            if j == i or (bj, pj) == (bi, pi) or (bj, pj) in gone or not N[j].any():
+                continue
+            if bj == CANOPY_BONE and j < i:
+                continue                        # (twins inside the frame: the earlier one stays)
+            if N[i] @ N[j] < np.cos(np.radians(2.5)):
+                continue
+            if abs((Tj.mean(0) - Ti.mean(0)) @ N[i]) > gap:
+                continue
+            ax = np.argsort(np.abs(N[i]))[:2]
+            if _overlap2d(Ti[:, ax], Tj[:, ax]):
+                gone.add((bi, pi)); break
+    for b in bones:
+        if b['name'] == CANOPY_BONE:
+            b['poly_mesh']['polys'] = [p for i, p in enumerate(b['poly_mesh']['polys']) if (CANOPY_BONE, i) not in gone]
+    return len(gone)
 
 
 def main(argv):
-    C.run(VID, SOURCE_BONE, build, argv, colour=(150, 154, 158))      # the fuselage grey (the spine behind is the black anti-glare)
+    dry = '--dry-run' in argv
+    geo = json.load(open(GEO, encoding='utf-8'))
+    asset = json.load(open(ASSET, encoding='utf-8'))
+    bones = geo['minecraft:geometry'][0]['bones']
+    gone = 0
+    # the stand-ins: the frame's centre strip pieces (over the crown), and the nose's slab ahead of the arch
+    for name, test in ((CANOPY_BONE, lambda V: np.abs(V[:, 0]).max() <= 0.165 and np.ptp(V[:, 2]) > 0.2 and V[:, 1].min() > 2.85
+                        and V[:, 2].max() < 4.83),
+                       (HULL_BONE, lambda V: np.abs(V[:, 0]).max() <= 0.165 and np.ptp(V[:, 2]) > 0.3 and V[:, 1].min() > 2.5
+                        and V[:, 2].min() > 4.9 and V[:, 2].max() < 5.9)):
+        bone = next(b for b in bones if b['name'] == name)
+        pm = bone['poly_mesh']
+        P = np.array(pm['positions'], float) * np.array([1, 1, -1]) / 16.0
+        keep = []
+        for poly in pm['polys']:
+            if poly and test(P[[v[0] for v in poly]]):
+                gone += 1
+                continue
+            keep.append(poly)
+        pm['polys'] = keep
+    gone_twin = drop_buried(bones)
+    tris = glass_triangles()
+    both = [list(map(float, p)) for t in tris for p in t] + [list(map(float, t[k])) for t in tris for k in (0, 2, 1)]
+    asset['CanopyGlass'] = {'Schema': 1, 'Frame': 'VEHICLE_LOCAL_BLOCKS', 'Triangles': [round(v, 4) + 0.0 for p in both for v in p]}
+    print(f'fa_18e canopy: {gone} stand-in faces removed (frame centre strip, nose slab), {gone_twin} doubled frame faces dropped; {len(tris)} glass triangles (x2 windings)')
+    if dry:
+        return
+    with open(GEO, 'w', encoding='utf-8', newline='\n') as f:
+        json.dump(geo, f, separators=(',', ':'))
+        f.write('\n')
+    glass_json = asset.pop('CanopyGlass')
+    text = json.dumps(asset, indent=2, ensure_ascii=False)
+    text = text[:-2] + ',\n  "CanopyGlass": ' + json.dumps(glass_json, separators=(',', ':')) + '\n}'
+    with open(ASSET, 'w', encoding='utf-8', newline='\n') as f:
+        f.write(text + '\n')
 
 
 if __name__ == '__main__':
