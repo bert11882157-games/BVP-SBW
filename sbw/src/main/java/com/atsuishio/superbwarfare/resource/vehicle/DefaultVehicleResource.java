@@ -343,8 +343,14 @@ public class DefaultVehicleResource implements IDBasedData<DefaultVehicleResourc
         @SerializedName("Height") public double height;
         /** Design eye the symbology is collimated for; the pilot's eye position. */
         @SerializedName("Eye") public double[] eye;
-        /** Symbol colour as 0xRRGGBB; green (0x4CFF6A) when absent. */
+        /** Symbol colour as 0xRRGGBB; green (0x4CFF6A) for a HUD, amber (0xFF9A3C) for a gunsight when absent. */
         @SerializedName("Color") public @Nullable Integer color;
+        /**
+         * What the glass shows: "HUD" (the default: flight symbology), "GYRO" (a gyro gunsight's reticle: the fixed
+         * cross and the pipper with its ranging ring, led by the aircraft's turn) or "REFLECTOR" (a fixed reflector
+         * sight's ring and cross).
+         */
+        @SerializedName("Style") public @Nullable String style;
     }
 
     @SerializedName("EngineExhaust")

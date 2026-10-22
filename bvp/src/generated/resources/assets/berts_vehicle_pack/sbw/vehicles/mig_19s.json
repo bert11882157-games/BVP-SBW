@@ -709,5 +709,33 @@
         ]
       }
     ]
+  },
+  "HeadUpDisplay": {
+    "Schema": 1,
+    "Frame": "VEHICLE_LOCAL_BLOCKS",
+    "Seat": 0,
+    "Center": [
+      0.0,
+      2.16,
+      2.92
+    ],
+    "Normal": [
+      0.0,
+      -0.57358,
+      -0.81915
+    ],
+    "Up": [
+      0.0,
+      0.81915,
+      -0.57358
+    ],
+    "Width": 0.13,
+    "Height": 0.12,
+    "Eye": [
+      0.0,
+      2.16,
+      2.25
+    ],
+    "Style": "GYRO"
   }
 }
