@@ -375,5 +375,11 @@
   "attachments": {},
   "seatPositions": {},
   "addSeats": [],
-  "note_rig": "Rig on the model's own hinges (geo px = source x 0.71218 + [0, 7.1218, -21.135]): ailerons (outer part 10/11 element) and new flaps (inner element; down with the gear, 30 deg) on their leading edges; the anhedral all-moving stabilators on a spindle along their 23 deg droop at mid chord, +-25 deg; the rudder on its leading edge, +-30 deg; twin nose wheels (r 3.205 px) and mains (r 5.341 px) at the model's own centres."
+  "note_rig": "Rig on the model's own hinges (geo px = source x 0.71218 + [0, 7.1218, -21.135]): ailerons (outer part 10/11 element) and new flaps (inner element; down with the gear, 30 deg) on their leading edges; the anhedral all-moving stabilators on a spindle along their 23 deg droop at mid chord, +-25 deg; the rudder on its leading edge, +-30 deg; twin nose wheels (r 3.205 px) and mains (r 5.341 px) at the model's own centres.",
+  "flightReference": {
+    "baseMassKg": 13190.0,
+    "mainFuelMassKg": 7714.0,
+    "fullFuelWingLoadingKgPerSquareMetre": 424.9
+  },
+  "note_flight": "War Thunder f-4c (fm/f-4c): empty 13,190 kg, fuel 7,714 kg, wing 49.2 m2, ThrustMax 4,910 kgf (the pack's dry figure already matched); afterburner kept at 7,560 kgf."
 }
