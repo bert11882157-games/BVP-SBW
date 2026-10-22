@@ -1,10 +1,10 @@
 {
   "schema": 1,
   "policyVersion": 4,
-  "label": "dashcover-20261021-r145",
+  "label": "rearfix-20261021-r146",
   "status": "release-candidate",
-  "createdAt": "2026-10-21T22:05:19.621Z",
-  "treeSha256": "9f05633516d756e651449666e6064b6ec1a788ad39b2bce80ad4c27433d74ae5",
+  "createdAt": "2026-10-21T23:55:35.274Z",
+  "treeSha256": "db71c44b0289b5fee4a5a141e3db9f0a025d0f8f8c450d05f9b0c627f78d5a3f",
   "files": [
     {
       "path": ".editorconfig",
@@ -1573,8 +1573,8 @@
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/custom_geo/ho_229.geo.json",
-      "size": 1890389,
-      "sha256": "5e6d4043f8a993d3b2329a7016f86f6b01fe12c8a5af549d4c9d3caf0614442f"
+      "size": 1890720,
+      "sha256": "21ba4ad09e251af26458b0e21ca609c13a367e269914266f8c88f7c256f1cb95"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/custom_geo/ho_229_turret_wreck.geo.json",
@@ -2658,8 +2658,8 @@
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/custom_geo/yak_15p.geo.json",
-      "size": 1254035,
-      "sha256": "d3e49b7641e5705691111f8f7e3dc4bcdf175ff5276ab2e87d04e90133844244"
+      "size": 1293861,
+      "sha256": "637144b1e12f83b28b6f27f555b61dce52bc191d2466c8dbd5ae41543abcd3dc"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/custom_geo/yak_15p_turret_wreck.geo.json",
@@ -7618,8 +7618,8 @@
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/textures/entity/yak_15p.png",
-      "size": 51372,
-      "sha256": "1af8d18255f1cbac95091b90d74c2ae0de0a89f794a957e8012e4f72fcf21482"
+      "size": 51373,
+      "sha256": "6813484a5fbd22930246afd708bf3e62dce178e78bdf470646ec174f51d88eea"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/textures/entity/yak_3.png",
@@ -8463,8 +8463,8 @@
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/textures/entity_dead/yak_15p.png",
-      "size": 46605,
-      "sha256": "dda08ba75d7b20fb86ad4cf5f5b02574d129dd5bb8879c740d2643bdaa6febb9"
+      "size": 46601,
+      "sha256": "5b4460c6f51551d11f02c2e3867c09c9d726aa0803c227ae483309cbef982be3"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/textures/entity_dead/yak_3.png",
@@ -52974,14 +52974,14 @@
   ],
   "release": {
     "schema": 1,
-    "buildRecordSha256": "54f542f1d3db944f0cdb51141ae3c3bf343952e6daa6756e82d4dcc9d95dfb6f",
+    "buildRecordSha256": "bbe746b56105dcc59672ab44205b95cfa79c953bd4e8d5c5b0fe234c40e11833",
     "artifacts": [
       {
         "id": "bvp",
         "version": "0.1.0",
         "filename": "berts_vehicle_pack-0.1.0.jar",
-        "size": 259378910,
-        "sha256": "5bdeec7d51ae11c151db23b63eb51f87f117686746bc6fbda0a6321f4b596644"
+        "size": 259385426,
+        "sha256": "159c5424f07d608bbdc60c2357761b692e55a1339912b0140e9d7451cfc3347f"
       },
       {
         "id": "sbw",
