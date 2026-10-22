@@ -372,6 +372,27 @@ def deck(m, shape, E, z0, z1, rect, drop=0.008, reach=0.015, skirt=0.15, front=0
     m.flat([E + [-x, y, z], E + [x, y, z], E + [x, y - skirt, z], E + [-x, y - skirt, z]], rect, normal=[0, 0, -1])
 
 
+def shell(m, shape, E, z0, z1, rect, sight, inset=0.03, nz=10):
+    """one smooth surface under a windscreen over [z0, z1]: the glass's own sections set [inset] inside it, from sill to
+    sill, its top held under the pilot's sight line over the coaming (y = sight(z)), facing up and out: under the glass
+    the nose reads as one homogeneous deck instead of the parts and old skin below it"""
+    zs = np.linspace(z0, z1, nz + 1)
+    rows = []
+    for z in zs:
+        row = []
+        for x, y in shape.section(z):
+            row.append((max(x - inset, 0.0), min(y - inset * 0.5, sight(z))))
+        row[0] = (row[0][0], shape.section(z)[0][1] - 0.004)     # (its edge just under the sill line, on the skin)
+        rows.append((z, row))
+    for (za, ra), (zb, rb) in zip(rows[:-1], rows[1:]):
+        for j in range(len(ra) - 1):
+            for s in (1, -1):
+                q = [E + [s * ra[j][0], ra[j][1], za], E + [s * ra[j + 1][0], ra[j + 1][1], za],
+                     E + [s * rb[j + 1][0], rb[j + 1][1], zb], E + [s * rb[j][0], rb[j][1], zb]]
+                c = sum(q) / 4
+                m.flat(q, rect, toward=c + np.array([s * 0.3, 1.0, 0.0]))
+
+
 def clear_box(ac, E, lo, hi):
     """the model's own faces (not the new cockpit or canopy) whose centres lie in the eye-relative box lo..hi"""
     n = 0

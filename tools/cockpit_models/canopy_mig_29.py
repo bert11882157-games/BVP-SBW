@@ -36,6 +36,7 @@ SECTIONS = [   # measured from the reference model (its eye at the origin), widt
 ]
 SPLIT = 0.56                     # the canopy's front edge, against the windscreen arch (the reference's joint)
 SEAL = (122, 66, 52)             # the red-brown seal round the canopy frame's inner edge
+PAINT_FOOTPRINT = True           # (work/handbuilt lower_skin.py: the model's skin round the windscreen in the nose's anti-glare)
 
 def build(atlas, E, skin):
     m = H.Mesh(atlas)
@@ -48,11 +49,15 @@ def build(atlas, E, skin):
     C.member(m, sh, E, 0.03, -0.74, SPLIT, 0.044, 0.035, out, inner, steps=20)     # just up the glass: off the model's sill
     C.member(m, sh, E, lambda z: 0.03 + 0.042 / sh.arclen(z), -0.71, SPLIT - 0.035, 0.012, 0.008, seal, seal, steps=20,
              proud=0.002)                                                            # the seal, beside the rail
-    # the windscreen, one piece: the base frame on the nose deck, the side rails
-    C.bow(m, sh, E, 1.225, 0.03, 0.02, out, inner)
-    C.member(m, sh, E, 0.0, SPLIT + 0.05, 1.24, 0.03, 0.003, out, inner, steps=8, proud=0.008)   # (on the outside: deeper, it stood as a block inside beside the HUD)
+    # the windscreen, one piece: the base frame on the nose deck, the side rails, in the nose's dark anti-glare (in the
+    # airframe grey they stood out as light strips on it)
+    ag = atlas.swatch((30, 31, 33))
+    C.bow(m, sh, E, 1.225, 0.03, 0.02, ag, inner)
+    C.member(m, sh, E, 0.0, SPLIT + 0.05, 1.24, 0.03, 0.003, ag, inner, steps=8, proud=0.008)   # (on the outside: deeper, it stood as a block inside beside the HUD)
     # the deck under the windscreen ahead of the coaming, closing off the nose bay seen through the glass
-    C.deck(m, sh, E, 0.86, 1.24, atlas.swatch((24, 25, 26)))                                         # (from behind the panel's face at sill height)
+    # one smooth shell under the windscreen, 3 cm inside the glass, its top under the sight line over the coaming
+    # (the coaming's front edge 1.15 m ahead, 0.26 m under the eye): the nose under the glass one homogeneous deck
+    C.shell(m, sh, E, 0.86, 1.24, atlas.swatch((24, 25, 26)), sight=lambda z: -0.26 / 1.15 * z - 0.012)
     C.deck(m, sh, E, SPLIT + 0.03, 0.86, atlas.swatch((24, 25, 26)), x_in=0.40, front=0.0, nz=4)     # beside the panel by the walls, back to the joint (over the wing tops)
     return m, glass
 
