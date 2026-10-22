@@ -33,6 +33,7 @@ SECTIONS = [
     (0.74, [(0.20, -0.245), (0.19, -0.19), (0.15, -0.15), (0.09, -0.13), (0.0, -0.12)]),
 ]
 SPLIT = 0.40                     # the canopy's front edge, against the windscreen arch (the DCS reference's joint, 0.42 m ahead of the eye)
+NOSE_RGB = (70, 78, 72)          # (work/handbuilt lower_skin.py: lowered skin in the cockpit linings' grey-green, not the red nose)
 FRONT_PANE_X = 0.10              # the flat front pane's edges, out from the centre line (the reference's)
 
 
