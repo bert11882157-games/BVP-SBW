@@ -12,8 +12,8 @@
    "label": "centre column: flight instruments",
    "centre": [
     0.0,
-    2.1959,
-    3.45487
+    2.17293,
+    3.45892
    ],
    "right": [
     -1.0,
@@ -30,16 +30,16 @@
     -0.17365,
     -0.98481
    ],
-   "width": 0.2021,
-   "height": 0.2752
+   "width": 0.2297,
+   "height": 0.3219
   },
   {
    "name": "icp",
    "label": "ICP keypad",
    "centre": [
     0.0,
-    2.39754,
-    3.43777
+    2.38835,
+    3.43939
    ],
    "right": [
     -1.0,
@@ -63,9 +63,9 @@
    "name": "ded",
    "label": "DED window",
    "centre": [
-    -0.18836,
-    2.4194,
-    3.46222
+    -0.20674,
+    2.42513,
+    3.42972
    ],
    "right": [
     -1.0,
@@ -74,13 +74,13 @@
    ],
    "up": [
     0.0,
-    0.74314,
-    0.66913
+    0.98481,
+    -0.17365
    ],
    "normal": [
     0.0,
-    0.66913,
-    -0.74314
+    -0.17365,
+    -0.98481
    ],
    "width": 0.0965,
    "height": 0.0413
@@ -89,9 +89,9 @@
    "name": "mfd_r",
    "label": "right MFD",
    "centre": [
-    -0.18201,
-    2.25889,
-    3.48889
+    -0.19153,
+    2.26319,
+    3.48978
    ],
    "right": [
     -0.92718,
@@ -108,16 +108,16 @@
     -0.16234,
     -0.92069
    ],
-   "width": 0.1746,
-   "height": 0.1746
+   "width": 0.1654,
+   "height": 0.1654
   },
   {
    "name": "under_r",
-   "label": "right lower panel",
+   "label": "hydraulics, EPU fuel, clock",
    "centre": [
-    -0.18201,
-    2.10667,
-    3.54436
+    -0.19153,
+    2.11097,
+    3.54525
    ],
    "right": [
     -0.92718,
@@ -134,16 +134,16 @@
     -0.16234,
     -0.92069
    ],
-   "width": 0.1746,
-   "height": 0.1213
+   "width": 0.1654,
+   "height": 0.1306
   },
   {
    "name": "above_r",
-   "label": "DED, fuel flow, standby ADI",
+   "label": "fuel flow, DED switches",
    "centre": [
-    -0.18201,
-    2.39853,
-    3.46427
+    -0.19153,
+    2.39823,
+    3.46597
    ],
    "right": [
     -0.92718,
@@ -160,16 +160,16 @@
     -0.16234,
     -0.92069
    ],
-   "width": 0.1746,
+   "width": 0.1654,
    "height": 0.0839
   },
   {
    "name": "eng",
    "label": "engine instruments column",
    "centre": [
-    -0.30517,
-    2.33582,
-    3.40383
+    -0.30394,
+    2.18519,
+    3.43988
    ],
    "right": [
     -0.70711,
@@ -186,42 +186,16 @@
     -0.12654,
     -0.71767
    ],
-   "width": 0.1194,
-   "height": 0.2418
-  },
-  {
-   "name": "aux_r",
-   "label": "hydraulics, EPU fuel, clock, cabin pressure",
-   "centre": [
-    -0.30517,
-    2.14097,
-    3.43819
-   ],
-   "right": [
-    -0.70711,
-    0.12279,
-    -0.69636
-   ],
-   "up": [
-    0.0,
-    0.98481,
-    -0.17365
-   ],
-   "normal": [
-    0.68479,
-    -0.12654,
-    -0.71767
-   ],
-   "width": 0.1194,
-   "height": 0.1539
+   "width": 0.1011,
+   "height": 0.2472
   },
   {
    "name": "mfd_l",
    "label": "left MFD",
    "centre": [
-    0.18201,
-    2.25889,
-    3.48889
+    0.19153,
+    2.26319,
+    3.48978
    ],
    "right": [
     -0.92718,
@@ -238,16 +212,16 @@
     -0.16234,
     -0.92069
    ],
-   "width": 0.1746,
-   "height": 0.1746
+   "width": 0.1654,
+   "height": 0.1654
   },
   {
    "name": "under_l",
-   "label": "left lower panel",
+   "label": "ECM panel",
    "centre": [
-    0.18201,
-    2.10667,
-    3.54436
+    0.19153,
+    2.11097,
+    3.54525
    ],
    "right": [
     -0.92718,
@@ -264,16 +238,16 @@
     -0.16234,
     -0.92069
    ],
-   "width": 0.1746,
-   "height": 0.1213
+   "width": 0.1654,
+   "height": 0.1306
   },
   {
    "name": "above_l",
-   "label": "RWR scope, threat warning aux",
+   "label": "RWR scope, threat warning prime",
    "centre": [
-    0.18201,
-    2.39853,
-    3.46427
+    0.19153,
+    2.39823,
+    3.46597
    ],
    "right": [
     -0.92718,
@@ -290,16 +264,16 @@
     -0.16234,
     -0.92069
    ],
-   "width": 0.1746,
+   "width": 0.1654,
    "height": 0.0839
   },
   {
    "name": "misc_l",
    "label": "MISC panel (master arm, laser arm, alt release)",
    "centre": [
-    0.30517,
-    2.38176,
-    3.39573
+    0.30394,
+    2.26788,
+    3.4253
    ],
    "right": [
     -0.70711,
@@ -316,16 +290,16 @@
     -0.12654,
     -0.71767
    ],
-   "width": 0.1194,
-   "height": 0.1485
+   "width": 0.1011,
+   "height": 0.0793
   },
   {
    "name": "gear",
    "label": "landing gear panel",
    "centre": [
-    0.30517,
-    2.18691,
-    3.43009
+    0.30394,
+    2.14614,
+    3.44676
    ],
    "right": [
     -0.70711,
@@ -342,15 +316,15 @@
     -0.12654,
     -0.71767
    ],
-   "width": 0.1194,
-   "height": 0.2472
+   "width": 0.1011,
+   "height": 0.1679
   },
   {
    "name": "eyebrow_l",
    "label": "left eyebrow lamps (TF fail, master caution)",
    "centre": [
-    0.15161,
-    2.47992,
+    0.15391,
+    2.48008,
     3.45253
    ],
    "right": [
@@ -373,10 +347,10 @@
   },
   {
    "name": "eyebrow_r",
-   "label": "right eyebrow lamps (threat warning prime)",
+   "label": "right eyebrow warning lamps (eng fire, engine, hyd/oil, FLCS...)",
    "centre": [
-    -0.15161,
-    2.47992,
+    -0.16998,
+    2.48376,
     3.45253
    ],
    "right": [
@@ -394,8 +368,8 @@
     0.34202,
     -0.93969
    ],
-   "width": 0.0689,
-   "height": 0.0294
+   "width": 0.1011,
+   "height": 0.0368
   },
   {
    "name": "console_l",
@@ -403,7 +377,7 @@
    "centre": [
     0.31213,
     2.05169,
-    2.96553
+    2.97203
    ],
    "right": [
     -1.0,
@@ -421,7 +395,7 @@
     0.0
    ],
    "width": 0.1659,
-   "height": 1.0742
+   "height": 1.0872
   },
   {
    "name": "console_r",
@@ -429,7 +403,7 @@
    "centre": [
     -0.31213,
     2.05169,
-    2.96553
+    2.97203
    ],
    "right": [
     -1.0,
@@ -447,7 +421,33 @@
     0.0
    ],
    "width": 0.1659,
-   "height": 1.0742
+   "height": 1.0872
+  },
+  {
+   "name": "aoa_indexer",
+   "label": "AOA indexer on the HUD post",
+   "centre": [
+    0.07718,
+    2.58625,
+    3.30659
+   ],
+   "right": [
+    -1.0,
+    0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    0.9703,
+    -0.24192
+   ],
+   "normal": [
+    0.0,
+    -0.24192,
+    -0.9703
+   ],
+   "width": 0.0221,
+   "height": 0.1378
   }
  ]
 }

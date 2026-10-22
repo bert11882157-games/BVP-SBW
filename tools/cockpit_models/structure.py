@@ -719,10 +719,20 @@ def build(vid, ac, tub, sw, spec, write_textures=True):
         print(f'{vid}: no atlas ({failure!r})')
     S = Station(ac, tub, sw, colours, atlas)
     mod.build(S)
+    S.space = []
+    if hasattr(mod, 'instruments'):                         # stage 2: the instruments on the plates
+        mod.instruments(S)
+        import instruments as I
+        S.space = I.space_report(S)
+        S.instruments = I.describe(S)
     m, stick, gauges, displays, glass, hud = finish(S)
     rep = 'colours from the texture'
+    if S.space:
+        rep = f'{len(S.space)} points out of the space: ' + '; '.join(f'{n} {f} at {p}' for n, f, p in S.space[:8]) + '. '
+    else:
+        rep = f'{len(gauges)} gauges and {len(displays)} displays all inside the space. '
     if atlas:
-        rep = f'{len(atlas.tiles)} atlas tiles in {len(atlas.areas)} free areas ({atlas.used()} texels)'
+        rep += f'{len(atlas.tiles)} atlas tiles in {len(atlas.areas)} free areas ({atlas.used()} texels)'
         if write_textures:
             tex = os.path.join(L.TEX_DIR, vid + '.png')
             dead = os.path.join(L.TEX_DIR, '..', 'entity_dead', vid + '.png')
