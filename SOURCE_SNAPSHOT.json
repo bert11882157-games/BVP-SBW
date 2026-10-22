@@ -1,10 +1,10 @@
 {
   "schema": 1,
   "policyVersion": 4,
-  "label": "skinfix-20261022-r148",
+  "label": "mig29shell-20261022-r149",
   "status": "release-candidate",
-  "createdAt": "2026-10-22T00:34:47.092Z",
-  "treeSha256": "4e2c35309ab4d76b02e5df7a27923f16ff073fad4e3659a199b746ccba1641fd",
+  "createdAt": "2026-10-22T04:27:55.335Z",
+  "treeSha256": "a1e34e805002f678447174769315b096226b15f6592c4d75d2a94364d1e7f8d8",
   "files": [
     {
       "path": ".editorconfig",
@@ -2043,8 +2043,8 @@
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/custom_geo/mig_29.geo.json",
-      "size": 3943578,
-      "sha256": "3dc979e3b54d462506c7e26151c4c1ffbd7f26bd35c46ad8ac1c6402bb5ccd4d"
+      "size": 4030050,
+      "sha256": "95455062cfd8ea57286c0ed28d07851074f5b0196b7134a0b8c1e909c8bb5e0d"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/custom_geo/mig_29_turret_wreck.geo.json",
@@ -7308,8 +7308,8 @@
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/textures/entity/mig_29.png",
-      "size": 494574,
-      "sha256": "e13233d73c709c275e01daf2f107e8ee40a248f2c0dc3223e34e5b61855f882c"
+      "size": 494591,
+      "sha256": "81f8472bb8602c8aaacbbefcada17416afb4bd85053af27fef422746cf71359e"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/textures/entity/mig_9.png",
@@ -8168,8 +8168,8 @@
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/textures/entity_dead/mig_29.png",
-      "size": 233732,
-      "sha256": "7d4d339cfa0fc734e9402f30eaa29d02f5532ca3bcf84bd8f13ca2251aff3bd3"
+      "size": 233745,
+      "sha256": "11963dee0f0a20753bf55d90dd09683e036d859475819373fd8f171375b77c35"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/textures/entity_dead/mig_9.png",
@@ -52974,14 +52974,14 @@
   ],
   "release": {
     "schema": 1,
-    "buildRecordSha256": "322e1394d525b2feeb0f16c158a9c8c0599b301240beebc8dc23e6124f2a4c72",
+    "buildRecordSha256": "7169724a18822e50117d98b0c09869594110c5a1e41531ac657de7267d31351c",
     "artifacts": [
       {
         "id": "bvp",
         "version": "0.1.0",
         "filename": "berts_vehicle_pack-0.1.0.jar",
-        "size": 259386366,
-        "sha256": "180e0073d02485f5caec82423ed35653c73a0d59b7a269465e2713ed05a67b1a"
+        "size": 259396782,
+        "sha256": "50211972603483df5cbd25161f71dfb88764a6baab3e8813db1da9e805f10afd"
       },
       {
         "id": "sbw",
