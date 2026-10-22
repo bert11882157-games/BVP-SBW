@@ -23,6 +23,13 @@ import lib as A              # noqa: E402
 N = 18                        # points per resampled half-section, sill to top
 _FRAMES = []                  # every bow and member placed this run: the glass is cut round them (cut_glass)
 _GLASS = []                   # every glass patch asked for this run
+_EXTRA = []                   # free-standing glass (extra_glass): not cut by the frames, not used to clear old faces
+
+
+def extra_glass(points):
+    """glass triangles (flat list of vehicle-local points) that stand apart from the canopy's skin, e.g. an armoured
+    plate inside the windscreen; they go into CanopyGlass as they are"""
+    _EXTRA.extend(points)
 BASE = 'be357476'             # the commit holding the models' original canopy glass
 
 
@@ -462,11 +469,11 @@ def run(vid, source, build, argv, colour=None, clear=None, boxes=()):
     E = ac.eye(0)
     old = original_glass(vid)
     atlas = atlas_for(vid)
-    _FRAMES.clear(); _GLASS.clear()
+    _FRAMES.clear(); _GLASS.clear(); _EXTRA.clear()
     m, glass = build(atlas, E, colour or frame_colour(ac))
     if _GLASS:
         glass = cut_glass(E)                             # the frames cut out of the glass
-    n_old, n_new = install(ac, m, source, glass, old)
+    n_old, n_new = install(ac, m, source, glass + _EXTRA, old)
     n_old += clear_under_glass(ac, glass, E)
     if clear:
         n_old += clear_skin(ac, clear[0], E, clear[1], clear[2], outside=clear[3] if len(clear) > 3 else 0.0)
