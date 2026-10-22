@@ -56,6 +56,9 @@ def build(atlas, E, skin):
     C.bow(m, sh, E, -0.24, 0.045, 0.035, out, inner)
     C.bow(m, sh, E, SPLIT - 0.005, 0.035, 0.022, out, inner)
     C.member(m, sh, E, 0.0, -0.40, SPLIT, 0.05, 0.04, out, inner)
+    # the hood's top frame bar: the longitudinal separator along the glass's centre line from the rear bow to the front
+    # bow (the DCS Su-25T's hood), in the airframe colour; the glass stops at its edges
+    C.member(m, sh, E, 1.0, -0.24, SPLIT - 0.005, 0.05, 0.03, out, inner, sides=(1,), steps=14)
     C.periscope(m, sh, E, 0.10, out, dark)
     # the windscreen: the arch, the armoured front pane's two heavy posts, the base frame on the nose, the side rails
     C.bow(m, sh, E, SPLIT + 0.035, 0.045, 0.025, out, inner)
