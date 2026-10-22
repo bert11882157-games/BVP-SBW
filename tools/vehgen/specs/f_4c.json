@@ -1,0 +1,379 @@
+{
+  "id": "f_4c",
+  "name": "F-4C Phantom II",
+  "entityClass": "AuthoredFixedWingAircraft",
+  "template": "f_4c",
+  "source": "F-4C.mtb",
+  "note": "Model swap (Elite Expansion 2): F-4C.mtb on the existing f_4c id and data. Source nose is toolbox -x (yaw180). Closed states: both canopies are modelled closed; the arrestor hook is stowed (part 19; part 18 = the hook lowered, left out). Baked stores cut out (AIM-9E x6 and the SUU-16/A GAU-4 gun pod in toolbox groups) and kept in work/elite_expansion_2/f4c/stores; the pylons and LAU-7 rails stay. The model's own gear and wheels. Originals in tools/vehgen/replaced/f_4c.",
+  "yaw180": true,
+  "scale": 0.71218,
+  "note_scale": "Real size: the source is 399 units nose to tail = 17.76 m (F-4C overall length) at 16 px/m; the span then comes out 11.57 m (real 11.71 m).",
+  "lengthParts": [
+    0,
+    1,
+    2
+  ],
+  "templateLengthBones": [
+    "wreck_fuselage_0__hull",
+    "wreck_fuselage_1__hull",
+    "wreck_fuselage_2__hull",
+    "wreck_fuselage_3__hull"
+  ],
+  "groundParts": [
+    12,
+    14,
+    15
+  ],
+  "excludeParts": [
+    18,
+    24
+  ],
+  "storeTextureV": -1,
+  "dropGroups": [
+    "Import aim9e",
+    "Import gau4"
+  ],
+  "keepBoxes": [],
+  "fuselageCuts": [
+    -70,
+    -5,
+    60
+  ],
+  "parts": {
+    "0": "fuselage",
+    "1": "fuselage",
+    "2": "wreck_fuselage_3__hull",
+    "4": "wing",
+    "5": "wing",
+    "7": {
+      "bone": "wreck_fuselage_3__rudder_0",
+      "if": {
+        "frame": "source",
+        "zMin": 170
+      },
+      "else": "fuselage"
+    },
+    "8": "side:wreck_fuselage_3__elevator_0,wreck_fuselage_3__elevator_1",
+    "9": "side:wreck_fuselage_3__elevator_0,wreck_fuselage_3__elevator_1",
+    "10": [
+      {
+        "bone": "wreck_wing_left__aileron_10",
+        "if": {
+          "frame": "source",
+          "absXMin": 59
+        }
+      },
+      {
+        "bone": "wreck_wing_left__flap_left",
+        "if": {}
+      }
+    ],
+    "11": [
+      {
+        "bone": "wreck_wing_right__aileron_11",
+        "if": {
+          "frame": "source",
+          "absXMin": 59
+        }
+      },
+      {
+        "bone": "wreck_wing_right__flap_right",
+        "if": {}
+      }
+    ],
+    "12": [
+      {
+        "bone": "wreck_fuselage_0__gear_wheel_0",
+        "if": {
+          "frame": "source",
+          "xMin": 0.4,
+          "absXMax": 4,
+          "yMax": -1,
+          "zMin": -124,
+          "zMax": -113
+        }
+      },
+      {
+        "bone": "wreck_fuselage_0__gear_wheel_1",
+        "if": {
+          "frame": "source",
+          "xMax": -0.4,
+          "absXMax": 4,
+          "yMax": -1,
+          "zMin": -124,
+          "zMax": -113
+        }
+      },
+      {
+        "bone": "wreck_fuselage_0__gear_steer_0",
+        "if": {
+          "frame": "source",
+          "absXMax": 5,
+          "zMin": -127,
+          "zMax": -113
+        }
+      },
+      {
+        "bone": "wreck_fuselage_0__landing_gear_12",
+        "if": {}
+      }
+    ],
+    "14": [
+      {
+        "bone": "wreck_fuselage_0__gear_steer_0",
+        "if": {
+          "frame": "source",
+          "absXMax": 5
+        }
+      },
+      {
+        "bone": "wreck_wing_left__gear_wheel_2",
+        "if": {
+          "frame": "source",
+          "absXMin": 55.5,
+          "absXMax": 62.5,
+          "yMax": 5.5,
+          "zMin": 31,
+          "zMax": 48
+        }
+      },
+      {
+        "bone": "wreck_wing_left__landing_gear_14",
+        "if": {}
+      }
+    ],
+    "15": [
+      {
+        "bone": "wreck_wing_right__gear_wheel_3",
+        "if": {
+          "frame": "source",
+          "absXMin": 55.5,
+          "absXMax": 62.5,
+          "yMax": 5.5,
+          "zMin": 31,
+          "zMax": 48
+        }
+      },
+      {
+        "bone": "wreck_wing_right__landing_gear_15",
+        "if": {}
+      }
+    ],
+    "19": "wreck_fuselage_3__hull",
+    "20": "wing",
+    "22": "wing"
+  },
+  "addBones": [
+    {
+      "name": "flap_left",
+      "parent": "hull",
+      "pivot": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "wreck_wing_left__flap_left",
+      "parent": "flap_left",
+      "pivot": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "flap_right",
+      "parent": "hull",
+      "pivot": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "wreck_wing_right__flap_right",
+      "parent": "flap_right",
+      "pivot": [
+        0,
+        0,
+        0
+      ]
+    }
+  ],
+  "rigAdd": {
+    "Flaps": [
+      {
+        "Bone": "flap_left",
+        "Parent": "hull",
+        "Pivot": [
+          0,
+          0,
+          0
+        ],
+        "Axis": [
+          1,
+          0,
+          0
+        ],
+        "Input": "PRESENTED_LANDING_GEAR_EXTENSION",
+        "AngleSign": 1,
+        "MaxDeflectionDegrees": 30
+      },
+      {
+        "Bone": "flap_right",
+        "Parent": "hull",
+        "Pivot": [
+          0,
+          0,
+          0
+        ],
+        "Axis": [
+          1,
+          0,
+          0
+        ],
+        "Input": "PRESENTED_LANDING_GEAR_EXTENSION",
+        "AngleSign": 1,
+        "MaxDeflectionDegrees": 30
+      }
+    ]
+  },
+  "sweeps": {
+    "aileron_10": {
+      "pivot": [
+        53.057,
+        23.502,
+        32.991
+      ],
+      "axis": [
+        -0.955,
+        0,
+        -0.296
+      ],
+      "maxDegrees": 25
+    },
+    "aileron_11": {
+      "pivot": [
+        -53.057,
+        23.502,
+        32.991
+      ],
+      "axis": [
+        -0.955,
+        0,
+        0.296
+      ],
+      "maxDegrees": 25
+    },
+    "flap_left": {
+      "pivot": [
+        27.775,
+        23.146,
+        28.005
+      ],
+      "axis": [
+        -0.9798,
+        0,
+        -0.2
+      ]
+    },
+    "flap_right": {
+      "pivot": [
+        -27.775,
+        23.146,
+        28.005
+      ],
+      "axis": [
+        -0.9798,
+        0,
+        0.2
+      ]
+    },
+    "elevator_0": {
+      "pivot": [
+        21.009,
+        33.117,
+        96.375
+      ],
+      "axis": [
+        -0.918,
+        0.396,
+        0
+      ],
+      "maxDegrees": 25
+    },
+    "elevator_1": {
+      "pivot": [
+        -21.009,
+        33.117,
+        96.375
+      ],
+      "axis": [
+        -0.918,
+        -0.396,
+        0
+      ],
+      "maxDegrees": 25
+    },
+    "rudder_0": {
+      "pivot": [
+        0,
+        61.248,
+        109.194
+      ],
+      "axis": [
+        0,
+        -1,
+        0
+      ],
+      "maxDegrees": 30
+    },
+    "gear_steer_0": {
+      "pivot": [
+        0,
+        3.205,
+        -105.528
+      ]
+    },
+    "gear_wheel_0": {
+      "pivot": [
+        1.424,
+        3.205,
+        -105.528
+      ]
+    },
+    "gear_wheel_1": {
+      "pivot": [
+        -1.424,
+        3.205,
+        -105.528
+      ]
+    },
+    "gear_wheel_2": {
+      "pivot": [
+        42.019,
+        5.341,
+        6.996
+      ]
+    },
+    "gear_wheel_3": {
+      "pivot": [
+        -42.019,
+        5.341,
+        6.996
+      ]
+    }
+  },
+  "clientSet": {
+    "AircraftRig.Rotors.Bone=gear_wheel_0.DegreesPerTickAtFullSpeed": 286.06,
+    "AircraftRig.Rotors.Bone=gear_wheel_1.DegreesPerTickAtFullSpeed": 286.06,
+    "AircraftRig.Rotors.Bone=gear_wheel_2.DegreesPerTickAtFullSpeed": 171.65,
+    "AircraftRig.Rotors.Bone=gear_wheel_3.DegreesPerTickAtFullSpeed": 171.65
+  },
+  "keepTemplateBones": [],
+  "attachments": {},
+  "seatPositions": {},
+  "addSeats": [],
+  "note_rig": "Rig on the model's own hinges (geo px = source x 0.71218 + [0, 7.1218, -21.135]): ailerons (outer part 10/11 element) and new flaps (inner element; down with the gear, 30 deg) on their leading edges; the anhedral all-moving stabilators on a spindle along their 23 deg droop at mid chord, +-25 deg; the rudder on its leading edge, +-30 deg; twin nose wheels (r 3.205 px) and mains (r 5.341 px) at the model's own centres."
+}
