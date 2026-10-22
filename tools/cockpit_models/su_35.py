@@ -22,6 +22,7 @@ Usage: python3 tools/cockpit_models/su_35.py [--dry-run]
 """
 import math, os, sys
 import numpy as np
+from PIL import Image
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
@@ -34,12 +35,13 @@ STICK_BONE = 'wreck_fuselage_0__control_stick_pitch'
 
 TURQ = (92, 102, 110)          # the Su-35S cockpit's blue-grey (it is not turquoise like the earlier types)
 TURQ_D = (66, 74, 80)
+DECK = (52, 58, 64)            # the model's old turquoise tub and the rim skin inside the canopy, repainted
 BLACK = (24, 25, 26)
 DGREY = (44, 46, 48)
 MGREY = (88, 92, 94)
-FRAME = (62, 68, 64)           # K-36 seat structure
-CUSHION = (58, 62, 52)
-HEADPAD = (92, 96, 88)
+FRAME = (70, 76, 82)           # the K-36D-3.5's blue-grey structure
+CUSHION = (56, 62, 70)         # its dark blue-grey cushions
+HEADPAD = (36, 38, 42)
 YELLOW = (226, 186, 30)
 RED = (196, 36, 30)
 METAL = (128, 132, 134)
@@ -93,7 +95,8 @@ LAYOUT = [
     ('mfi_l',    0, -0.122, -0.300, ('display', 'RADAR', 0.212), 'MFI-35 left (tactical)'),
     ('mfi_r',    0,  0.122, -0.300, ('display', 'STORES', 0.212), 'MFI-35 right (systems / stores)'),
     ('pui',      0,     0.000, -0.468, ('paint_rect', 0.135, 0.034), 'PUI control panel'),
-    ('sb_adi',   0, -0.160, -0.565, ('game', 'ATTITUDE', 0.034), 'standby attitude'),
+    ('ksei',     0, -0.200, -0.585, ('display', 'PFD', 0.085), 'KSEI standby display (it replaces the standby horizon)'),
+    ('engines',  0,   0.225, -0.590, ('paint_rect', 0.070, 0.080), 'engine strip: N2 / EGT bars for both engines'),
     ('sb_ias',   0, -0.080, -0.565, ('game', 'AIRSPEED', 0.029), 'standby airspeed'),
     ('sb_alt',   0,     0.000, -0.565, ('game', 'ALTIMETER', 0.029), 'standby altimeter'),
     ('sb_vvi',   0,     0.080, -0.565, ('game', 'VVI', 0.029), 'standby VVI'),
@@ -101,13 +104,16 @@ LAYOUT = [
     ('ekran',    0,     0.000, -0.645, ('annunciator', 0.124, 0.029), 'Ekran warning panel'),
     ('caution',  0, -0.225, -0.158, ('paint_disc', 0.015), 'master caution lamp'),
     # left wing
+    ('lights',  -1,     0.100, -0.300, ('paint_rect', 0.100, 0.046), 'emergency jettison / lights block'),
     ('weapons', -1,     0.106, -0.395, ('paint_rect', 0.130, 0.080), 'weapons control panel'),
     ('gear',    -1,     0.110, -0.525, ('paint_rect', 0.050, 0.100), 'gear control panel'),
     # right wing
     ('fuel',     1,     0.105, -0.330, ('game', 'FUEL_QTY', 0.052), 'fuel quantity'),
     ('rpm',      1,     0.105, -0.425, ('game', 'ENGINE_RPM', 0.052), 'engine tachometer'),
     ('hyd',      1,     0.105, -0.515, ('game', 'FILLER_HYDRAULIC', 0.044), 'hydraulic pressures'),
+    ('oxy',      1,     0.105, -0.588, ('game', 'FILLER_OXYGEN', 0.028), 'oxygen'),
 ]
+PLACARD = {'fuel': 'ТОПЛИВО', 'rpm': 'ОБОРОТЫ', 'hyd': 'ГИДРО', 'mfi_l': 'МФИ-35', 'mfi_r': 'МФИ-35', 'ksei': 'КСЭИ'}
 
 
 # ---------------------------------------------------------------- painted faces
@@ -137,10 +143,12 @@ def panel_paint(side, W_, H_, a0, a1, yb, yt):
                 dia = spec[-1]
                 r = (dia / 2 * (1 + H.RIM) + 0.004) * px_m
                 d.ellipse([x - r, yy - r, x + r, yy + r], fill=(20, 26, 26, 255))
-                if dia > 0.04:
-                    pw, ph = dia * 0.55 * px_m, 0.007 * px_m
-                    py = yy + r + ph * 0.9
-                    d.rectangle([x - pw / 2, py - ph / 2, x + pw / 2, py + ph / 2], fill=(18, 18, 18, 255))
+                if name in PLACARD:                                 # the white-on-black placard under the dial
+                    lab = PLACARD[name]
+                    ph = 0.010 * px_m; pw = max(dia * 0.6, 0.010 * 0.62 * len(lab)) * px_m
+                    py = yy + r + ph * 0.7
+                    d.rectangle([x - pw / 2, py - ph / 2, x + pw / 2, py + ph / 2], fill=(16, 18, 20, 255))
+                    H.text(d, (x, py), lab, ph * 0.78)
             else:
                 w, h = (spec[2], spec[2]) if spec[0] == 'display' else (spec[1], spec[2])
                 sx, sy = (w / 2 + 0.006) * px_m, (h / 2 + 0.006) * px_m
@@ -156,12 +164,14 @@ def panel_paint(side, W_, H_, a0, a1, yb, yt):
 def p_weapons(d, im):
     S, Hh = im.width, im.height
     d.rectangle([0, 0, S, Hh], fill=(20, 22, 22, 255))
-    labs = ['ПУШКА', 'НАР', 'УР', 'БОМБ', 'ПОДВ', 'ЗАЛП']
+    labs = ['ГЛАВН', 'ПУШКА', 'УР', 'СБРОС']                  # the Su-35S master arm block: master, gun, missiles, jettison
     for k, lab in enumerate(labs):
-        x = S * (0.09 + k * 0.165)
-        H.lamp(d, [x - 16, Hh * .14, x + 16, Hh * .38], (210, 210, 200), None, lit=(k == 0))
-        d.rectangle([x - 4, Hh * .48, x + 4, Hh * .70], fill=(190, 190, 190, 255))
-        H.text(d, (x, Hh * .86), lab, Hh * .2)
+        x = S * (0.13 + k * 0.245)
+        H.lamp(d, [x - 14, Hh * .1, x + 14, Hh * .3], (210, 210, 200), None, lit=(k == 0))
+        d.rectangle([x - 4, Hh * .4, x + 4, Hh * .66], fill=(190, 190, 190, 255))
+        if k in (0, 3):
+            d.rectangle([x - 13, Hh * .36, x + 13, Hh * .7], outline=(180, 34, 28, 255), width=5)
+        H.text(d, (x, Hh * .86), lab, Hh * .13)
 
 
 def p_gear(d, im):
@@ -195,6 +205,31 @@ def p_buttons(labels):
     return fn
 
 
+def p_engines(d, im):
+    """the engine strip beside the standby row: two pairs of vertical bars (N2 and EGT, left and right engine)"""
+    S, Hh = im.width, im.height
+    d.rectangle([0, 0, S, Hh], fill=(10, 12, 14, 255))
+    for k, (lev, col) in enumerate(((.78, (110, 220, 120)), (.80, (110, 220, 120)), (.62, (230, 190, 90)), (.60, (230, 190, 90)))):
+        x0 = S * (0.1 + k * 0.215)
+        d.rectangle([x0, Hh * .12, x0 + S * .14, Hh * .82], outline=(80, 90, 90, 255), width=2)
+        d.rectangle([x0 + 3, Hh * (.82 - .7 * lev), x0 + S * .14 - 3, Hh * .82 - 3], fill=col + (255,))
+    H.text(d, (S * .26, Hh * .92), 'N2', Hh * .08, fill=(170, 200, 170))
+    H.text(d, (S * .72, Hh * .92), 'T', Hh * .08, fill=(220, 200, 150))
+
+
+def p_lights(d, im):
+    """the emergency jettison and lights block: a red guarded jettison button, two toggles"""
+    S, Hh = im.width, im.height
+    d.rectangle([0, 0, S, Hh], fill=(20, 22, 24, 255))
+    d.rectangle([S * .06, Hh * .15, S * .36, Hh * .7], fill=(170, 30, 26, 255), outline=(60, 10, 8, 255), width=3)
+    H.text(d, (S * .21, Hh * .86), 'АВАР.СБР', Hh * .16)
+    for k, lab in enumerate(['ФАРА', 'АНО']):
+        x = S * (0.56 + k * 0.26)
+        d.ellipse([x - 7, Hh * .45 - 7, x + 7, Hh * .45 + 7], fill=(120, 122, 118, 255))
+        d.rectangle([x - 3, Hh * .14, x + 3, Hh * .45], fill=(205, 205, 200, 255))
+        H.text(d, (x, Hh * .86), lab, Hh * .16)
+
+
 def p_disc_red(d, im):
     S = im.width
     d.ellipse([0, 0, S - 1, S - 1], fill=(120, 18, 14, 255))
@@ -216,18 +251,33 @@ def p_pui(d, im):
 
 
 def p_hud_ctrl(d, im):
+    """the IKSh-1M body's aft edge: a plain dark strip with its two fixing screws"""
     S, Hh = im.width, im.height
-    H.noisy(d, im, DGREY, 4, seed=9)
-    for k, lab in enumerate(['ФИЛЬТР', 'ЯРК', 'ДН/НЧ', 'КОНТР']):
-        x = S * (0.13 + k * 0.245)
-        if k == 1:
-            d.ellipse([x - Hh * .24, Hh * .38 - Hh * .24, x + Hh * .24, Hh * .38 + Hh * .24], fill=(20, 20, 20, 255), outline=(110, 110, 110, 255),
-                      width=3)
-        elif k == 3:
-            H.lamp(d, [x - Hh * .28, Hh * .14, x + Hh * .28, Hh * .62], (60, 170, 70), None)
-        else:
-            d.rectangle([x - 3, Hh * .14, x + 3, Hh * .62], fill=(170, 170, 170, 255))
-        H.text(d, (x, Hh * .86), lab, Hh * .2)
+    d.rectangle([0, 0, S, Hh], fill=(30, 32, 34, 255))
+    d.line([0, Hh * .5, S, Hh * .5], fill=(18, 18, 20, 255), width=3)
+    for x in (.08, .92):
+        d.ellipse([S * x - 5, Hh * .5 - 5, S * x + 5, Hh * .5 + 5], fill=(80, 82, 84, 255))
+
+
+def p_iksh_face(d, im):
+    """the IKSh-1M's control strip toward the pilot (Su-35S photos): a row of square mode keys with white legends
+    either side of the brightness and contrast rotaries, the mode window in the middle"""
+    S, Hh = im.width, im.height
+    d.rectangle([0, 0, S, Hh], fill=(26, 28, 30, 255))
+    d.rectangle([S * .02, Hh * .08, S * .98, Hh * .92], outline=(58, 60, 64, 255), width=3)
+    keys = ['ДЛЬН', 'БЛЖ', 'ОПТ', 'ЗЕМ', 'ПРИБ', 'ВОЗВ']
+    for k, lab in enumerate(keys):
+        x = S * (0.06 + k * 0.058) if k < 3 else S * (0.66 + (k - 3) * 0.1)
+        d.rectangle([x, Hh * .2, x + S * .048, Hh * .62], fill=(58, 60, 62, 255), outline=(12, 12, 12, 255), width=2)
+        H.text(d, (x + S * .024, Hh * .41), lab, Hh * .13)
+    for x, lab in ((.30, 'ЯРК'), (.56, 'КОНТР')):                    # the two rotaries
+        cx, cy, r = S * x, Hh * .42, Hh * .22
+        d.ellipse([cx - r, cy - r, cx + r, cy + r], fill=(12, 12, 13, 255), outline=(110, 110, 110, 255), width=3)
+        d.line([cx, cy, cx + r * .7, cy - r * .5], fill=(230, 230, 220, 255), width=3)
+        H.text(d, (cx, Hh * .8), lab, Hh * .13)
+    d.rectangle([S * .38, Hh * .24, S * .48, Hh * .58], fill=(10, 30, 16, 255), outline=(80, 80, 80, 255), width=2)
+    H.text(d, (S * .43, Hh * .41), 'НАВ', Hh * .14, fill=(110, 220, 120))
+    H.text(d, (S * .43, Hh * .8), 'ИКШ-1М', Hh * .13, bold=True)
 
 
 def p_hud_lens(d, im):
@@ -248,6 +298,157 @@ def p_sight(d, im):
         d.ellipse([x - 14, Hh * .74 - 14, x + 14, Hh * .74 + 14], fill=(22, 22, 22, 255), outline=(140, 140, 140, 255),
                   width=3)
         H.text(d, (x, Hh * .93), lab, Hh * .09)
+
+
+# the Su-35S side consoles, front to back: (share of the length, title, kind)
+CONSOLE_L = [(0.09, 'ЗАПУСК', 'guarded'), (0.08, 'ТОПЛИВО', 'toggles'), (0.24, 'РУД', 'throttle'),
+             (0.12, 'Р-862', 'freq'), (0.10, 'ПУ САУ', 'lamps'), (0.10, 'ОСВЕЩ', 'rotary'), (0.12, 'ШАССИ ТОРМ', 'toggles'),
+             (0.13, 'КИСЛОРОД', 'rotary')]
+CONSOLE_R = [(0.12, 'ПУИ ОЛС', 'keys'), (0.10, 'ВООРУЖ', 'guarded'), (0.10, 'ГОСУДАРСТВ', 'freq'),
+             (0.14, 'ЭЛЕКТРОПИТАНИЕ', 'toggles'), (0.13, 'АЗС', 'breakers'), (0.10, 'КОНДИЦ', 'rotary'),
+             (0.10, 'БРЭО', 'lamps'), (0.19, 'ФОНАРЬ', 'guarded')]
+
+
+def p_su35_console(rows, mirror):
+    """a console top from above (tile top = forward): black sub-panels with Cyrillic titles, each its own kind of
+    controls; mirror for the left console (its tile runs inner to outer, the pilot's right to left)"""
+    def paint(d, im):
+        S, Hh = im.width, im.height
+        d.rectangle([0, 0, S, Hh], fill=TURQ + (255,))
+        y = Hh * 0.01
+        for share, title, kind in rows:
+            y1 = y + share * Hh
+            if kind == 'throttle':                                  # the throttle quadrant: twin slots and the scale
+                d.rectangle([S * .08, y + 3, S * .92, y1 - 3], fill=(34, 38, 42, 255))
+                for x0 in (.36, .52):
+                    d.rectangle([S * x0, y + Hh * .02, S * (x0 + .1), y1 - Hh * .02], fill=(8, 8, 8, 255))
+                for j in range(6):
+                    yy = y + Hh * .025 + (y1 - y - Hh * .05) * j / 5
+                    d.line([S * .66, yy, S * .8, yy], fill=(220, 220, 210, 255), width=2)
+                for j, lab in enumerate(['ФОРС', 'МАКС', 'МГ', 'СТОП']):
+                    H.text(d, (S * .2, y + Hh * .03 + (y1 - y - Hh * .06) * j / 3), lab, S * .09)
+                y = y1
+                continue
+            d.rectangle([S * .07, y + 3, S * .93, y1 - 3], fill=(22, 24, 27, 255), outline=(64, 70, 76, 255), width=2)
+            for sx in (.12, .88):
+                for sy in (y + 9, y1 - 9):
+                    d.ellipse([S * sx - 3, sy - 3, S * sx + 3, sy + 3], fill=(84, 88, 92, 255))
+            H.text(d, (S * .5, y + Hh * .012), title, min(S * .1, Hh * .011))
+            cy, top = (y + y1) / 2 + Hh * .006, y + Hh * .024
+            if kind == 'guarded':
+                for j in range(3):
+                    x = S * (0.24 + 0.26 * j)
+                    d.rectangle([x - S * .07, cy - Hh * .016, x + S * .07, cy + Hh * .016], fill=(170, 30, 26, 255),
+                                outline=(60, 10, 8, 255), width=2)
+                    d.line([x - S * .05, cy, x + S * .05, cy], fill=(110, 14, 12, 255), width=3)
+            elif kind == 'rotary':
+                for j in range(2):
+                    x, r = S * (0.3 + 0.4 * j), S * .11
+                    for a in range(-120, 121, 40):
+                        t = math.radians(a)
+                        d.line([x + r * 1.3 * math.sin(t), cy - r * 1.3 * math.cos(t), x + r * 1.6 * math.sin(t),
+                                cy - r * 1.6 * math.cos(t)], fill=(210, 210, 200, 255), width=2)
+                    d.ellipse([x - r, cy - r, x + r, cy + r], fill=(10, 10, 11, 255), outline=(110, 110, 110, 255), width=2)
+                    d.line([x, cy, x + r * .8 * math.sin(.7 * (j + 1)), cy - r * .8 * math.cos(.7 * (j + 1))],
+                           fill=(235, 235, 225, 255), width=3)
+            elif kind == 'freq':                                    # the LCD channel window and its two knobs
+                d.rectangle([S * .18, top + Hh * .004, S * .82, top + Hh * .022], fill=(10, 30, 16, 255), outline=(90, 90, 90, 255))
+                H.text(d, (S * .5, top + Hh * .013), 'К 12', Hh * .014, fill=(110, 220, 120))
+                for x in (.3, .7):
+                    d.ellipse([S * x - S * .09, cy + Hh * .012 - S * .09, S * x + S * .09, cy + Hh * .012 + S * .09],
+                              fill=(14, 14, 15, 255), outline=(120, 120, 120, 255), width=2)
+            elif kind == 'keys':                                    # square push keys with legends
+                for r_ in range(2):
+                    for j in range(3):
+                        x0 = S * (0.16 + 0.24 * j); yy = top + (y1 - top) * (0.08 + 0.46 * r_)
+                        d.rectangle([x0, yy, x0 + S * .2, yy + (y1 - top) * .36], fill=(58, 60, 62, 255),
+                                    outline=(12, 12, 12, 255), width=2)
+            elif kind == 'toggles':
+                nrow = max(1, int((y1 - top) / (Hh * .03)))
+                for r_ in range(nrow):
+                    yy = top + (y1 - top) * (r_ + .5) / nrow
+                    for j in range(4):
+                        x = S * (0.2 + 0.2 * j)
+                        d.ellipse([x - 5, yy - 5, x + 5, yy + 5], fill=(120, 122, 118, 255))
+                        d.rectangle([x - 2, yy - Hh * .011, x + 2, yy], fill=(205, 205, 200, 255))
+            elif kind == 'breakers':
+                for r_ in range(3):
+                    yy = top + (y1 - top) * (r_ + .5) / 3
+                    for j in range(5):
+                        x = S * (0.17 + 0.165 * j)
+                        d.ellipse([x - 6, yy - 6, x + 6, yy + 6], fill=(6, 6, 6, 255), outline=(150, 150, 140, 255), width=2)
+            elif kind == 'lamps':
+                for r_ in range(2):
+                    for j in range(3):
+                        x0 = S * (0.14 + 0.25 * j); yy = top + (y1 - top) * (r_ * .45 + .1)
+                        H.lamp(d, [x0, yy, x0 + S * .2, yy + (y1 - top) * .33], (210, 190, 120) if j else (190, 60, 50), None)
+            y = y1
+        if mirror:
+            im.paste(im.transpose(Image.FLIP_LEFT_RIGHT))
+    return paint
+
+
+def p_su35_wall(side):
+    """a cockpit side wall: the panel seams and rivet rows; left the emergency gear and brake handles, right the
+    breaker panel and the oxygen hose port"""
+    def paint(d, im):
+        S, Hh = im.width, im.height
+        d.rectangle([0, 0, S, Hh], fill=TURQ_D + (255,))
+        for x in (S * .3, S * .62):
+            d.line([x, 0, x, Hh], fill=(50, 56, 62, 255), width=3)
+        for y in (Hh * .1, Hh * .9):
+            for x in range(6, S, 14):
+                d.ellipse([x - 2, y - 2, x + 2, y + 2], fill=(96, 104, 112, 255))
+        d.rectangle([S * .38, Hh * .3, S * .54, Hh * .66], fill=(22, 24, 27, 255), outline=(76, 80, 86, 255), width=2)
+        if side > 0:
+            d.rectangle([S * .405, Hh * .4, S * .445, Hh * .6], fill=(190, 160, 30, 255))
+            d.rectangle([S * .475, Hh * .4, S * .515, Hh * .6], fill=(170, 30, 26, 255))
+            H.text(d, (S * .46, Hh * .35), 'АВАР. ВЫПУСК', Hh * .045)
+        else:
+            for r_ in range(4):
+                for j in range(6):
+                    x, y = S * (0.38 + 0.04 * j), Hh * (0.32 + 0.11 * r_)
+                    d.ellipse([x - 3, y - 3, x + 3, y + 3], fill=(6, 6, 6, 255), outline=(140, 140, 130, 255))
+            H.text(d, (S * .47, Hh * .27), 'АЗС', Hh * .07)
+            d.ellipse([S * .12, Hh * .35, S * .2, Hh * .55], fill=(30, 32, 36, 255), outline=(100, 104, 110, 255), width=3)
+        d.rectangle([0, Hh * .8, S, Hh * .84], fill=(50, 56, 62, 255))
+    return paint
+
+
+def p_k35_cushion(is_back):
+    """the K-36D-3.5's blue-grey cushion: stitched in vertical bolsters; the back with the harness's grey straps"""
+    def fn(d, im):
+        S, Hh = im.width, im.height
+        d.rectangle([0, 0, S, Hh], fill=CUSHION + (255,))
+        dark = tuple(c - 18 for c in CUSHION) + (255,)
+        for x in (S * .22, S * .78):
+            d.line([x, 0, x, Hh], fill=dark, width=4)
+        for k in range(1, 5 if is_back else 3):
+            y = Hh * k / (5 if is_back else 3)
+            d.line([S * .22, y, S * .78, y], fill=tuple(c - 9 for c in CUSHION) + (255,), width=2)
+        d.rectangle([2, 2, S - 3, Hh - 3], outline=dark, width=3)
+        if is_back:
+            for x in (S * .36, S * .64):
+                d.rectangle([x - S * .05, 0, x + S * .05, Hh * .7], fill=(96, 100, 104, 255))
+            d.rectangle([S * .42, Hh * .62, S * .58, Hh * .74], fill=(160, 162, 160, 255))
+            H.text(d, (S * .5, Hh * .9), 'К-36Д-3,5', Hh * .065, fill=(20, 22, 24), bold=True)
+    return fn
+
+
+def p_k35_stripes(d, im):
+    S, Hh = im.width, im.height
+    d.rectangle([0, 0, S, Hh], fill=(220, 180, 28, 255))
+    for k in range(-Hh, S, 14):
+        d.polygon([(k, Hh), (k + 7, Hh), (k + 7 + Hh, 0), (k + Hh, 0)], fill=(18, 18, 18, 255))
+
+
+def p_k35_headpad(d, im):
+    S, Hh = im.width, im.height
+    d.rectangle([0, 0, S, Hh], fill=(28, 30, 33, 255))
+    for k in range(3):
+        y0 = Hh * (0.1 + k * 0.28)
+        d.rounded_rectangle([S * .1, y0, S * .9, y0 + Hh * .24], radius=S * .06, fill=(44, 46, 50, 255),
+                            outline=(16, 16, 18, 255), width=2)
 
 
 def p_headbox(d, im):
@@ -321,6 +522,13 @@ def build(atlas, E):
             w = spec[2]
             displays.append({'Seat': 0, 'Center': H.r5(c + f.N * H.DISPLAY_LIFT), 'Normal': H.r5(f.N), 'Up': H.r5(f.U),
                              'Width': w, 'Depth': 0.035, 'Kind': spec[1], 'Style': 'LCD'})
+            if name == 'ksei':                                      # the KSEI: a small LCD in a plain bezel, four keys under it
+                m.frame_rect(c, f.N, f.U, w, w, 0.010, 0.010, sw['black'])
+                _, n_, u_, r_ = H.frame(c, f.N, f.U)
+                for k in range(4):
+                    m.box(c - u_ * (w / 2 + 0.005) + r_ * (k - 1.5) * w / 4.2 + n_ * 0.012, (r_, u_, n_),
+                          (0.007, 0.003, 0.003), sw['mgrey'])
+                continue
             m.frame_rect(c, f.N, f.U, w, w, 0.022, 0.012, sw['black'])
             _, n_, u_, r_ = H.frame(c, f.N, f.U)
             off = w / 2 + 0.011
@@ -336,7 +544,7 @@ def build(atlas, E):
             m.ring(c, f.N, f.U, spec[1] / 2, spec[1] / 2 + 0.004, 0.008, sw['bezel'], seg=12)
         elif kind == 'paint_rect':
             w, h = spec[1], spec[2]
-            painter = {'weapons': p_weapons, 'gear': p_gear, 'pui': p_pui}[name]
+            painter = {'weapons': p_weapons, 'gear': p_gear, 'pui': p_pui, 'engines': p_engines, 'lights': p_lights}[name]
             pw = 160 if w >= h else 56
             ph = max(16, int(round(pw * h / w)))
             rect = cache.get(name) or atlas.paint(pw, ph, painter)
@@ -411,12 +619,17 @@ def build(atlas, E):
     m.box(g_top + g_up * 0.004, (X, g_up, g_n), (g_hw + 0.008, 0.004, 0.005), sw['dgrey'])
     hud = dict(centre=(g_bot + g_top) / 2, normal=-g_n, up=g_up, width=2 * g_hw, height=g_h)
     # the HUD's control unit on the centre facet's top under the HUD (the Su-27 reference views), black, knobs aft
-    H.facet_box(m, centre, 0.0, E[1] - 0.152, 0.235, 0.055, 0.04, sw['black'], front=ctrl)
+    face = atlas.paint(320, 76, p_iksh_face)
+    H.facet_box(m, centre, 0.0, E[1] - 0.152, 0.235, 0.055, 0.04, sw['black'], front=face)
+    # the IKSh-1M's housing under its body, down into the coaming (from outside one block, not a slab over the nose)
+    hb = E[1] - 0.25
+    m.box([E[0], (hb + hud_y0 - 0.002) / 2, (hud_z0 + 0.03 + hud_z1) / 2], (X, Y, Z),
+          (0.098, (hud_y0 - 0.002 - hb) / 2, (hud_z1 - hud_z0 - 0.03) / 2), sw['black'])
 
     # -- side walls, consoles, the closing faces under the panel
     for side in (1, -1):                                            # +1 = left (x > 0)
         xw = E[0] + WALL_X * side
-        wall = atlas.paint(180, 100, H.p_wall(TURQ_D, TURQ, 30 + side))
+        wall = atlas.paint(200, 110, p_su35_wall(side))
         z0, z1 = E[2] + BACK_Z, E[2] + PANEL_Z - 0.10
         q = [[xw, E[1] + CONSOLE_Y - 0.02, z0], [xw, E[1] + CONSOLE_Y - 0.02, z1], [xw, E[1] + SILL_Y - 0.01, z1],
              [xw, E[1] + SILL_Y - 0.01, z0]]
@@ -430,9 +643,8 @@ def build(atlas, E):
         zf_i, zf_o = wing_bottom_z(CONSOLE_IN), wing_bottom_z(WALL_X)
         cy, fy = E[1] + CONSOLE_Y, E[1] + FLOOR_Y + 0.02
         zb = E[2] + BACK_Z + 0.06
-        con = atlas.paint(56, 300, H.p_console(TURQ, 20 + side, [0.11, 0.08, 0.13, 0.07, 0.12, 0.09, 0.10, 0.08] if side > 0
-                                               else [0.09, 0.12, 0.08, 0.11, 0.10, 0.09, 0.13, 0.08],
-                                               slot=(0.44, 0.30, 0.56, 0.62) if side > 0 else None))
+        con = atlas.paint(72, 400, p_su35_console(CONSOLE_L if side > 0 else CONSOLE_R, side > 0))
+
         top = [[xi, cy, zb], [xo, cy, zb], [xo, cy, zf_o], [xi, cy, zf_i]]
         m.face(top, [m.uv(con, 0, 0), m.uv(con, 1, 0), m.uv(con, 1, 1), m.uv(con, 0, 1)], normal=[0, 1, 0])
         m.flat([[xi, fy, zb], [xi, fy, zf_i], [xi, cy, zf_i], [xi, cy, zb]], sw['turq_d'], normal=[-side, 0, 0])
@@ -448,9 +660,9 @@ def build(atlas, E):
         m.flat([e, centre.at(-HINGE * s, E[1] + BOT_W), [E[0] + s * CONSOLE_IN, E[1] + BOT_W, e[2]],
                 [E[0] + s * CONSOLE_IN, E[1] + BOT_C, e[2]]], sw['turq_d'], normal=[0, 0, -1])
     # the floor: a dark plate over the model's own (white) floor, from behind the seat to the pedals
-    fw = CONSOLE_IN + 0.04                                          # under the consoles' inner faces too
-    m.flat([P(-fw, FLOOR_Y + 0.006, BACK_Z), P(fw, FLOOR_Y + 0.006, BACK_Z),
-            P(fw, FLOOR_Y + 0.006, PANEL_Z + 0.06), P(-fw, FLOOR_Y + 0.006, PANEL_Z + 0.06)], sw['floor'],
+    fw = WALL_X - 0.005                                             # wall to wall (under the consoles, ahead of them)
+    m.flat([P(-fw, FLOOR_Y + 0.012, BACK_Z), P(fw, FLOOR_Y + 0.012, BACK_Z),
+            P(fw, FLOOR_Y + 0.012, PANEL_Z + 0.30), P(-fw, FLOOR_Y + 0.012, PANEL_Z + 0.30)], sw['floor'],
            normal=[0, 1, 0])
     # rudder pedals under the panel
     for s in (1, -1):
@@ -467,22 +679,33 @@ def build(atlas, E):
 
     # -- K-36D-3.5 ejection seat, raised to this model's floor
     PS = lambda x, y, z: P(x, y + SEAT_DY, z)   # noqa: E731 (the MiG-29 seat's dimensions: the floor sits at the same depth under the eye)
-    cushion = atlas.paint(64, 64, H.p_cushion(CUSHION))
-    back = atlas.paint(64, 96, H.p_cushion(CUSHION, straps=True))
-    headbox = atlas.paint(64, 64, p_headbox)
-    stripes = atlas.paint(64, 16, H.p_stripes)
+    # (the K-36D-3.5: blue-grey, bolstered cushions, a headbox with side wings and a three-pad headrest, the striped
+    # canopy breakers on its top, the red double loop between the knees on a striped root)
+    pan = atlas.paint(72, 72, p_k35_cushion(False))
+    back = atlas.paint(72, 108, p_k35_cushion(True))
+    headpad = atlas.paint(56, 64, p_k35_headpad)
+    stripes = atlas.paint(64, 12, p_k35_stripes)
     ax_b = (X, H.unit([0, 1, -0.14]), H.unit([0, 0.14, 1]))
     m.box(PS(0, -0.915, -0.004), (X, Y, Z), (0.196, 0.025, 0.22), sw['frame'])          # base on the higher floor
-    m.box(PS(0, -0.887, 0.026), (X, Y, Z), (0.19, 0.035, 0.21), sw['cushion'], front=(1, 1, cushion, -X, Z))
+    m.box(PS(0, -0.887, 0.026), (X, Y, Z), (0.19, 0.035, 0.21), sw['cushion'], front=(1, 1, pan, -X, Z))
     for s in (1, -1):
         m.box(PS(s * 0.212, -0.882, -0.014), (X, Y, Z), (0.012, 0.15, 0.24), sw['frame'])
         m.box(PS(s * 0.17, -0.44, -0.404), ax_b, (0.02, 0.54, 0.025), sw['frame'])   # guide beams, their tops under the glass
+        m.box(PS(s * 0.192, -0.82, 0.20), (X, Y, Z), (0.006, 0.06, 0.04), sw['black'])    # the leg-restraint guides
+        m.box(PS(s * 0.188, -0.03, -0.27), (X, Y, Z), (0.025, 0.12, 0.05), sw['frame'])   # the headbox's side wings
     m.box(PS(0, -0.502, -0.234), ax_b, (0.19, 0.33, 0.03), sw['cushion'], front=(2, 1, back, X, ax_b[1]))
     m.box(PS(0, -0.502, -0.294), ax_b, (0.205, 0.36, 0.035), sw['frame'])
     m.box(PS(0, -0.03, -0.314), (X, Y, Z), (0.16, 0.15, 0.10), sw['frame'])   # headbox, under the glass
-    m.box(PS(0, -0.02, -0.199), (X, Y, Z), (0.11, 0.09, 0.015), sw['cushion'], front=(2, 1, headbox, X, Y))
-    red = atlas.swatch((178, 34, 30))                                 # the K-36 handle: a red double loop
-    H.k36_handle(m, lambda x, y: PS(x, -0.852 + y, 0.256), red, sw['black'])
+    m.box(PS(0, -0.02, -0.199), (X, Y, Z), (0.11, 0.09, 0.015), sw['black'], front=(2, 1, headpad, X, Y))
+    m.box(PS(0, 0.122, -0.300), (X, Y, Z), (0.15, 0.004, 0.075), sw['black'], front=(1, 1, stripes, X, -Z))
+    m.box(PS(0, -0.835, 0.10), (X, Y, Z), (0.17, 0.006, 0.02), sw['mgrey'])                # the lap belt and buckle
+    m.box(PS(0, -0.828, 0.10), (X, Y, Z), (0.03, 0.008, 0.026), sw['metal'])
+    red = atlas.swatch((178, 34, 30))                                 # the ejection handle: a red double loop
+    for s in (1, -1):
+        for xl in (0.02, 0.09):
+            m.box(PS(s * xl, -0.818, 0.256), (X, Y, Z), (0.007, 0.034, 0.007), red)
+        m.box(PS(s * 0.055, -0.780, 0.256), (X, Y, Z), (0.042, 0.007, 0.007), red)
+    m.box(PS(0, -0.852, 0.256), (X, Y, Z), (0.032, 0.01, 0.01), sw['black'], front=(2, 1, stripes, X, Y))
 
     # -- control stick (RUS): the boot stays with the cockpit, the rest goes into the stick bone
     sz = 0.40
@@ -512,6 +735,44 @@ def old_interior(E):
             (e + [-0.30, -0.905, 0.30], e + [0.30, -0.62, 1.00])]
 
 
+SILL_Z = [-1.00, -0.80, -0.60, -0.40, -0.20, 0.00, 0.20, 0.40, 0.60, 0.80, 1.00]     # the canopy's sill (canopy_su_35.SECTIONS)
+SILL_X = [0.338, 0.444, 0.465, 0.491, 0.53, 0.526, 0.502, 0.487, 0.47, 0.448, 0.424]
+SILL_YS = [-0.04, -0.15, -0.194, -0.225, -0.24, -0.249, -0.257, -0.27, -0.29, -0.325, -0.374]
+
+
+def repaint_tub(ac, atlas, E):
+    """the model's old turquoise tub left round the new cockpit, and its light skin inside the canopy's sill line
+    (the rim beside the panel that stood up as white spikes, the spine under the canopy behind the seat): repainted
+    in the dark blue-grey of the cockpit's deck instead of removed (they close the fuselage)"""
+    tex = Image.open(L.texture_path(VID)).convert('RGB')
+    TW, TH = tex.size
+    deck, floor = atlas.swatch(DECK), atlas.swatch(FLOOR)
+    lo, hi = np.array([-0.75, -1.30, -1.40]), np.array([0.75, 0.45, 1.00])
+    n = 0
+    for b in ac.bones:
+        pm = b.get('poly_mesh')
+        if not pm or not pm.get('polys') or b['name'].endswith('__cockpit') or 'stick' in b['name']:
+            continue
+        P = np.array(pm['positions'], float) * np.array([1, 1, -1]) / 16.0 - E
+        for poly in pm['polys']:
+            if not poly:
+                continue
+            c = P[[v[0] for v in poly]].mean(0)
+            if not (np.all(c >= lo) and np.all(c <= hi)):
+                continue
+            u, v = np.mean([pm['uvs'][q[2]] for q in poly], axis=0)
+            r, g, bl = tex.getpixel((min(int(u * TW), TW - 1), min(int((1 - v) * TH), TH - 1)))
+            sx, sy = np.interp(c[2], SILL_Z, SILL_X), np.interp(c[2], SILL_Z, SILL_YS)
+            inside = -0.98 < c[2] < 0.85 and abs(c[0]) < sx - 0.01 and c[1] < sy + 0.02 and r + g + bl > 200
+            if (r < 70 and g > 110 and bl > 120) or inside:
+                pm['uvs'].append(atlas.flat(floor if c[1] < FLOOR_Y + 0.05 else deck))
+                k = len(pm['uvs']) - 1
+                for q in poly:
+                    q[2] = k
+                n += 1
+    return n
+
+
 def main(argv):
     dry = '--dry-run' in argv
     ac = L.Aircraft(VID)
@@ -520,6 +781,7 @@ def main(argv):
     removed['old sight in the view'] = H.remove_sight_clutter(ac, E)
     HUD_TOP[0] = H.view_ceiling(ac, ac.eye(0), PANEL_Z + 0.06)
     atlas = H.A.Atlas(VID)
+    removed['faces repainted'] = repaint_tub(ac, atlas, E)
     mesh, stick, gauges, displays, hud = build(atlas, E)
     pm = H.install(ac, mesh, stick, SOURCE_BONE, STICK_BONE, gauges, displays, hud, E)
     print(f'{VID}: removed {removed}; new cockpit {len(pm["polys"])} faces, {len(gauges)} gauges')
