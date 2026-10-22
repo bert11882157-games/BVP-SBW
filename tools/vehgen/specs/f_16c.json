@@ -583,10 +583,16 @@
           "berts_vehicle_pack:munition/gbu54_x2",
           "berts_vehicle_pack:munition/gbu62l_x2",
           "berts_vehicle_pack:munition/blu27_x2",
-          "berts_vehicle_pack:munition/lau131_apkws"
+          "berts_vehicle_pack:munition/lau131_apkws",
+          "berts_vehicle_pack:munition/lau3a_ffar",
+          "berts_vehicle_pack:munition/lau61_hydra"
         ],
         "MaxWeaponsPerPylon": 1,
-        "MaxPylonMassKg": 1588
+        "MaxPylonMassKg": 1588,
+        "NativeWeaponIds": {
+          "berts_vehicle_pack:munition/lau61_hydra": "Lau61Middle",
+          "berts_vehicle_pack:munition/lau3a_ffar": "Lau3aMiddle"
+        }
       },
       {
         "Id": "inner",
@@ -722,7 +728,11 @@
         "MaxPylonMassKg": 250
       }
     ],
-    "StoreGroups": {}
+    "StoreGroups": {},
+    "SuspendedWeapons": [
+      "Lau61Middle",
+      "Lau3aMiddle"
+    ]
   },
   "note_armament": "War Thunder f_16c_block_50 stations (work/elite_expansion_2/f16c/WT-f16c.md): AAMs on the tips and outer pylons; the middle pylons carry the full air-to-ground list; the inner pylons the heavy stores and the 370 gal tanks; the 300 gal tank on the centreline; the HTS and Sniper pods on the inlet stations. Points are the pylon bottoms of this airframe."
 }

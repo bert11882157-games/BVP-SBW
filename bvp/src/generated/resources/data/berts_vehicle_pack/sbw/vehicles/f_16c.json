@@ -721,7 +721,9 @@
         2.86947375
       ],
       "Weapons": [
-        "Vulcan"
+        "Vulcan",
+        "Lau61Middle",
+        "Lau3aMiddle"
       ],
       "CanRotateHead": true,
       "FixedGunBank": [
@@ -1037,6 +1039,204 @@
       },
       "BeltFed": true,
       "OverheatEnabled": false
+    },
+    "Lau61Middle": {
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_rocket",
+          "ConsumptionItem": "superbwarfare:small_unguided_rocket",
+          "Override": {
+            "TntEquivalentKg": 1.1921
+          }
+        }
+      ],
+      "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_small_rocket.png",
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "Magazine": 38,
+      "EmptyReloadTime": 200,
+      "Projectile": {
+        "Type": "berts_vehicle_pack:s8ko_rocket",
+        "Profile": "berts_vehicle_pack:ah_1g_cobra/rocket/default"
+      },
+      "AddShooterDeltaMovement": true,
+      "Spread": 0.25,
+      "Name": "Hydra 70 (LAU-61, 2 x 19)",
+      "RPM": 600,
+      "Damage": 100,
+      "ExplosionDamage": 0,
+      "ExplosionRadius": 6,
+      "TntEquivalentKg": 1.1921,
+      "Gravity": 0.02,
+      "Velocity": 9,
+      "ProjectileLife": 100,
+      "Crosshair": "@Empty",
+      "SoundRadius": 16,
+      "SoundInfo": {
+        "Fire1PGain": 1.0,
+        "Fire3PGain": 1.0,
+        "Fire3PFarGain": 1.0,
+        "Fire3PVeryFarGain": 1.0,
+        "Fire1P": "bvp_audio:weapon/hydra_1p",
+        "Fire3P": "bvp_audio:weapon/hydra_3p",
+        "Fire3PFar": "bvp_audio:weapon/hydra_far",
+        "Fire3PVeryFar": "bvp_audio:weapon/hydra_far",
+        "Change": "superbwarfare:into_missile",
+        "Volume": 1.2
+      },
+      "ShootPos": {
+        "Transform": "Vehicle",
+        "Positions": [
+          [
+            3.2159,
+            1.1312,
+            -1.2459
+          ],
+          [
+            -3.2159,
+            1.1312,
+            -1.2459
+          ]
+        ],
+        "Directions": [
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "ViewPosition": [
+          3.2159,
+          1.1312,
+          -1.2459
+        ],
+        "MuzzleAttachments": [
+          "Lau61Middle_left",
+          "Lau61Middle_right"
+        ],
+        "MuzzleDirectionAttachments": [
+          "Lau61Middle_left",
+          "Lau61Middle_right"
+        ],
+        "EffectAttachments": [
+          "Lau61Middle_left",
+          "Lau61Middle_right"
+        ],
+        "EffectDirectionAttachments": [
+          "Lau61Middle_left",
+          "Lau61Middle_right"
+        ]
+      },
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "berts_vehicle_pack:s8ko_rocket",
+        "ProjectileProfile": "berts_vehicle_pack:ah_1g_cobra/rocket/default",
+        "ProjectileLife": 100
+      }
+    },
+    "Lau3aMiddle": {
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_rocket",
+          "ConsumptionItem": "superbwarfare:small_unguided_rocket",
+          "Override": {
+            "TntEquivalentKg": 1.1921
+          }
+        }
+      ],
+      "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_small_rocket.png",
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "Magazine": 114,
+      "EmptyReloadTime": 200,
+      "Projectile": {
+        "Type": "berts_vehicle_pack:s8ko_rocket",
+        "Profile": "berts_vehicle_pack:ah_1g_cobra/rocket/default"
+      },
+      "AddShooterDeltaMovement": true,
+      "Spread": 0.25,
+      "Name": "2.75 in FFAR (LAU-3A, 2 x 57)",
+      "RPM": 600,
+      "Damage": 100,
+      "ExplosionDamage": 0,
+      "ExplosionRadius": 6,
+      "TntEquivalentKg": 1.1921,
+      "Gravity": 0.02,
+      "Velocity": 9,
+      "ProjectileLife": 100,
+      "Crosshair": "@Empty",
+      "SoundRadius": 16,
+      "SoundInfo": {
+        "Fire1PGain": 1.0,
+        "Fire3PGain": 1.0,
+        "Fire3PFarGain": 1.0,
+        "Fire3PVeryFarGain": 1.0,
+        "Fire1P": "bvp_audio:weapon/hydra_1p",
+        "Fire3P": "bvp_audio:weapon/hydra_3p",
+        "Fire3PFar": "bvp_audio:weapon/hydra_far",
+        "Fire3PVeryFar": "bvp_audio:weapon/hydra_far",
+        "Change": "superbwarfare:into_missile",
+        "Volume": 1.2
+      },
+      "ShootPos": {
+        "Transform": "Vehicle",
+        "Positions": [
+          [
+            3.2159,
+            0.9262,
+            -1.4359
+          ],
+          [
+            -3.2159,
+            0.9262,
+            -1.4359
+          ]
+        ],
+        "Directions": [
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "ViewPosition": [
+          3.2159,
+          0.9262,
+          -1.4359
+        ],
+        "MuzzleAttachments": [
+          "Lau3aMiddle_left",
+          "Lau3aMiddle_right"
+        ],
+        "MuzzleDirectionAttachments": [
+          "Lau3aMiddle_left",
+          "Lau3aMiddle_right"
+        ],
+        "EffectAttachments": [
+          "Lau3aMiddle_left",
+          "Lau3aMiddle_right"
+        ],
+        "EffectDirectionAttachments": [
+          "Lau3aMiddle_left",
+          "Lau3aMiddle_right"
+        ]
+      },
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "berts_vehicle_pack:s8ko_rocket",
+        "ProjectileProfile": "berts_vehicle_pack:ah_1g_cobra/rocket/default",
+        "ProjectileLife": 100
+      }
     }
   },
   "HUDColor": "0xFFC700",
@@ -1118,6 +1318,58 @@
         0,
         2.60299,
         2.86947375
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "Lau61Middle_left": {
+      "Parent": "Vehicle",
+      "Position": [
+        3.2159,
+        1.1312,
+        -1.2459
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "Lau61Middle_right": {
+      "Parent": "Vehicle",
+      "Position": [
+        -3.2159,
+        1.1312,
+        -1.2459
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "Lau3aMiddle_left": {
+      "Parent": "Vehicle",
+      "Position": [
+        3.2159,
+        0.9262,
+        -1.4359
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "Lau3aMiddle_right": {
+      "Parent": "Vehicle",
+      "Position": [
+        -3.2159,
+        0.9262,
+        -1.4359
       ],
       "Direction": [
         0,

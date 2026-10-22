@@ -4,7 +4,10 @@
   "BuiltInWeapons": [
     "Vulcan"
   ],
-  "SuspendedWeapons": [],
+  "SuspendedWeapons": [
+    "Lau61Middle",
+    "Lau3aMiddle"
+  ],
   "Pairs": [
     {
       "Id": "wingtip",
@@ -145,10 +148,16 @@
         "berts_vehicle_pack:munition/gbu54_x2",
         "berts_vehicle_pack:munition/gbu62l_x2",
         "berts_vehicle_pack:munition/blu27_x2",
-        "berts_vehicle_pack:munition/lau131_apkws"
+        "berts_vehicle_pack:munition/lau131_apkws",
+        "berts_vehicle_pack:munition/lau3a_ffar",
+        "berts_vehicle_pack:munition/lau61_hydra"
       ],
       "MaxWeaponsPerPylon": 1,
-      "MaxPylonMassKg": 1588
+      "MaxPylonMassKg": 1588,
+      "NativeWeaponIds": {
+        "berts_vehicle_pack:munition/lau61_hydra": "Lau61Middle",
+        "berts_vehicle_pack:munition/lau3a_ffar": "Lau3aMiddle"
+      }
     },
     {
       "Id": "inner",
