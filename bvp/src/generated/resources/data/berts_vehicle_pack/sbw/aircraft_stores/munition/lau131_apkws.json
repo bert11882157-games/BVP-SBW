@@ -1,0 +1,41 @@
+{
+  "Schema": 1,
+  "Name": "LAU-131 · 3 x 7 APKWS II laser rockets",
+  "Category": "LASER_GUIDED",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/lau131_apkws.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.1425,
+    0.0
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.2635,
+      -0.1099,
+      0.0
+    ],
+    "Right": [
+      -0.2635,
+      -0.1099,
+      0.0
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    -0.1099,
+    0.0
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/lau131_apkws.png",
+  "Capacity": 21,
+  "Scale": 1,
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_stores/apkws",
+  "LaunchGunProfile": "berts_vehicle_pack:aircraft_stores/apkws",
+  "MassKg": 20.66,
+  "AmmoItem": "superbwarfare:small_atgm",
+  "LaunchOffset": [
+    0.0,
+    -0.2524,
+    0.0
+  ]
+}

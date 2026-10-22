@@ -1,0 +1,55 @@
+{
+  "Schema": 1,
+  "Name": "AIM-7M Sparrow · semi-active radar",
+  "Category": "AIR_TO_AIR",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/aim7e.geo.json",
+  "ModelForward": "+Z",
+  "MountAnchor": [
+    0,
+    0.1116,
+    -0.5124
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      -0.1116,
+      0.0,
+      -0.5124
+    ],
+    "Right": [
+      0.1116,
+      0.0,
+      -0.5124
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    -0.5124
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/aim7e.png",
+  "Capacity": 1,
+  "MassKg": 231.3,
+  "Guidance": {
+    "Mode": "SEMI_ACTIVE_RADAR",
+    "LockTicks": 0,
+    "Range": 3500,
+    "ConeDegrees": 25,
+    "CountermeasureVulnerability": 0.85
+  },
+  "Flight": {
+    "InitialSpeed": 0.5,
+    "MaxSpeed": 12,
+    "AccelerationPerTick": 0.1,
+    "TurnDegreesPerSecond": 40,
+    "Damage": 55,
+    "BlastRadius": 5,
+    "TntEquivalentKg": 14.148
+  },
+  "AmmoItem": "superbwarfare:medium_air_to_air_missile",
+  "MaxPerPylon": 1,
+  "LaunchOffset": [
+    0.0,
+    -0.1116,
+    0.0
+  ]
+}

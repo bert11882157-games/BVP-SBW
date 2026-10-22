@@ -1,0 +1,45 @@
+{
+  "Schema": 1,
+  "Name": "AN/AAQ-33 Sniper ATP · targeting pod",
+  "Category": "TARGETING_POD",
+  "Item": "minecraft:spyglass",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/sniper_pod.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.174,
+    0.0
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.15,
+      0.0,
+      0.0
+    ],
+    "Right": [
+      -0.15,
+      0.0,
+      0.0
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/sniper_pod.png",
+  "Capacity": 1,
+  "MassKg": 202.0,
+  "TargetingPod": {
+    "Eye": [
+      0.0,
+      0.0,
+      -1.227
+    ],
+    "YawLimit": 150,
+    "PitchMin": -15,
+    "PitchMax": 90,
+    "MaxZoom": 24,
+    "Range": 8192
+  }
+}

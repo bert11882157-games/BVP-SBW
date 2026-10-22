@@ -1,0 +1,39 @@
+{
+  "Schema": 1,
+  "Name": "LAU-61 · 19 x Hydra 70",
+  "Category": "ROCKET_POD",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/lau61_hydra.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.229,
+    0.0
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.205,
+      0.0,
+      0.0
+    ],
+    "Right": [
+      -0.205,
+      0.0,
+      0.0
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/lau61_hydra.png",
+  "Capacity": 19,
+  "Scale": 1,
+  "MassKg": 13.48,
+  "AmmoItem": "superbwarfare:small_unguided_rocket",
+  "LaunchOffset": [
+    0.0,
+    -0.229,
+    0.0
+  ]
+}
