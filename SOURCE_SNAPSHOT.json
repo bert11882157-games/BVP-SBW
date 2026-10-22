@@ -1,10 +1,10 @@
 {
   "schema": 1,
   "policyVersion": 4,
-  "label": "fleet-cockpits-20261019-r113",
+  "label": "fleet-cockpits-20261019-r114",
   "status": "release-candidate",
-  "createdAt": "2026-10-19T02:56:33.570Z",
-  "treeSha256": "64d0c3499be0a56b0bb4781c4122de43adcee5f36e95ad83f76e2502f0131541",
+  "createdAt": "2026-10-19T03:25:15.988Z",
+  "treeSha256": "b929ecd5de3d509718739165f98c6e1dbec77f41de432b8262d3d9ff7259d76b",
   "files": [
     {
       "path": ".editorconfig",
@@ -7348,8 +7348,8 @@
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/textures/entity/mig_29.png",
-      "size": 131,
-      "sha256": "f45cae77f3f7291df0a1dc5e9f1733d97fbee4db0cb287c09cc53409d5bd5906"
+      "size": 548891,
+      "sha256": "1c9ee10fbf0dbae04d060db80d523c619c357cd95a94ae597b151c3534b6dac5"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/textures/entity/mig_9.png",
@@ -8213,8 +8213,8 @@
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/textures/entity_dead/mig_29.png",
-      "size": 131,
-      "sha256": "d28ba932e4255b4fb4cca56df1f93a603fea996ca10378a0ba79ad648b69bbd7"
+      "size": 264878,
+      "sha256": "bce1d73c8d3d1ef8d306bcc82f345d41886f582226587e0b9896476fa6c82929"
     },
     {
       "path": "bvp/src/generated/resources/assets/berts_vehicle_pack/textures/entity_dead/mig_9.png",
@@ -53109,14 +53109,14 @@
   ],
   "release": {
     "schema": 1,
-    "buildRecordSha256": "13c959db51eb7302e2d4cada2dd412fa5b8c2009423d98f81ce7598f16a66c29",
+    "buildRecordSha256": "604044eba3c004b3ab351c73982e80dc6dd452003f945b05403ef71a873ecf72",
     "artifacts": [
       {
         "id": "bvp",
         "version": "0.1.0",
         "filename": "berts_vehicle_pack-0.1.0.jar",
-        "size": 249233096,
-        "sha256": "96b5b9581e771476ece5154d1e3856437da8e9e324ef040525e9baa1ddb33bed"
+        "size": 250020966,
+        "sha256": "d5adcfc6b5ccdfc0ca38d43cab942f63012d0d3a9385a379bc22c4c45d73d458"
       },
       {
         "id": "sbw",
@@ -54017,11 +54017,11 @@
         "sha256": "ed24dc77caa01a715021b0f47217ba46296949ea6b92046986c1be0573f0a93a"
       },
       {
-        "id": "net.minecraftforge:forge:1.20.1-47.2.0_mapped_parchment_2023.08.13-1.20.1_at_fd420094fa091253276672f5de393a695c6d3ac1:d98ab9c44a5e",
+        "id": "net.minecraftforge:forge:1.20.1-47.2.0_mapped_parchment_2023.08.13-1.20.1_at_fd420094fa091253276672f5de393a695c6d3ac1:194a0a413672",
         "version": "1.20.1-47.2.0_mapped_parchment_2023.08.13-1.20.1_at_fd420094fa091253276672f5de393a695c6d3ac1",
         "filename": "forge-1.20.1-47.2.0_mapped_parchment_2023.08.13-1.20.1.jar",
         "size": 19157979,
-        "sha256": "d98ab9c44a5e8dfd18196ff9812c38788fd0d87584096b341828cd563db1a319"
+        "sha256": "194a0a4136721da40058ea15fcde6ef5c0513d1775f10dc41d7421858c133e18"
       },
       {
         "id": "net.minecraftforge:forgespi:7.0.1:2298eaba25d0",
