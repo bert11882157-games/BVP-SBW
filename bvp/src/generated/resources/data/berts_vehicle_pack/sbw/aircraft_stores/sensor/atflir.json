@@ -1,0 +1,45 @@
+{
+  "Schema": 1,
+  "Name": "AN/ASQ-228 ATFLIR · targeting pod",
+  "Category": "TARGETING_POD",
+  "Item": "minecraft:spyglass",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/atflir.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.189,
+    0.0915
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.165,
+      0.0,
+      0.0915
+    ],
+    "Right": [
+      -0.165,
+      0.0,
+      0.0915
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    0.0915
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/atflir.png",
+  "Capacity": 1,
+  "MassKg": 191.0,
+  "TargetingPod": {
+    "Eye": [
+      0.0,
+      0.0,
+      -0.895
+    ],
+    "YawLimit": 150,
+    "PitchMin": -30,
+    "PitchMax": 90,
+    "MaxZoom": 16,
+    "Range": 8192
+  }
+}
