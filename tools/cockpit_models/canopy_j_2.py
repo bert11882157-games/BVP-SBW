@@ -32,6 +32,7 @@ SECTIONS = [
     (0.80, [(0.258, -0.13), (0.24, -0.09), (0.174, -0.038), (0.1, -0.018), (0.0, -0.01)]),
 ]
 SPLIT = 0.38                     # the canopy's front edge, against the windscreen arch
+NOSE_RGB = (70, 78, 72)          # (work/handbuilt lower_skin.py: lowered skin in the cockpit linings' grey-green, not the red nose)
 FRONT_PANE_X = 0.10              # the flat front pane's edges, out from the centre line (the DCS MiG-15bis reference's)
 
 
