@@ -4,18 +4,20 @@ real F-14's layout, replacing the model's own frame-only arches.
 
 The real Tomcat (the F-14A/B/D share it; the F-14C was a never-built F-14B with new avionics, so nothing about the canopy
 changes) has ONE rigid windscreen frame carrying a flat bulletproof centre pane between two flat side panes, and ONE
-blown (curved) canopy over both crew, hinged at the rear, with a transverse bow between the pilot's and the RIO's heads.
-The windscreen's rear arch IS the canopy's front bow: one member.
+blown (curved) clamshell canopy over both crew, hinged at the rear, with NO frame member between the pilot and the RIO
+(owner's rule for this pass; the references found were ambiguous, so: Decision taken: no mid bow. The model's mid arch at z 3.575
+was the old model's frame-only arch and is cut out and not replaced). The windscreen's rear arch IS the canopy's front bow:
+one member.
 
   * windscreen: a flat centre pane (|x| <= 0.145 between two slim posts, sloping 23 degrees from the arch down to the deck)
     and a flat side pane each side (a plane through the posts' outer edge dropping 1.2 per block of x outward, so each is a
     triangle-like wedge tapering to the deck). Every pane stops at its member's edge: the arch behind, the posts between,
     a sill strip along the outside and a base bar at the deck;
-  * canopy glass: one blown shell, a super-ellipse section from the sill rail's top up to a crown that rises to the bow
-    between the crews, in two patches either side of that one slim bow; the rear ends on a closed rear bow (the hinge
+  * canopy glass: one blown shell in one unbroken piece from the front bow to the rear bow, a super-ellipse section from the
+    sill rail's top up to a crown; the rear ends on a closed rear bow (the hinge
     fairing) that stands on the model's own spine steps, so the canopy rear seals on the fuselage;
   * frames (bone frame_bars__canopy, all closed solids, 4 to 5 cm): the sill rails, the front arch (windscreen arch + canopy
-    front bow, ruled between the glass edges it joins), the mid bow, the rear bow, the two posts, the side sill strips and
+    front bow, ruled between the glass edges it joins), the rear bow, the two posts, the side sill strips and
     the base bar.
 
 Model numbers (NOTES.md section 7 of work/elite_expansion_2/f14c): sill y 2.625 (the model's rail foot), roof y 3.41, half
@@ -54,7 +56,6 @@ CUT_RUNS = [(H0, 54, 101, (0.0, 2.68, 5.018), (0.394, 3.183, 6.068)),           
 # ---- the canopy
 SILL_Y = 2.82                  # the sill rail's top: the glass foot, and where the checks' outline starts
 Z_REAR = 1.745                 # the glass ends on the rear bow's front face
-Z_MID = (3.550, 3.600)         # the bow between the crews (5 cm)
 Z_ARCH = (5.070, 5.120)        # the windscreen arch = the canopy front bow
 Z_REAR_BACK = 1.620            # the rear bow (a closed fairing) stands from here to Z_REAR
 NEXP = 2.4                     # the sections' super-ellipse exponent
@@ -381,7 +382,6 @@ def windscreen_bars(b):
 def frame_bars():
     b = Bars(UV_FRAME)
     rail_bars(b)
-    bow_bars(b, 0.5 * (Z_MID[0] + Z_MID[1]))
     arch_bars(b)
     rear_bow(b)
     windscreen_bars(b)
@@ -424,8 +424,7 @@ def cut_frame(bones, already):
 
 
 def glass_triangles():
-    tris = shell_patch(Z_REAR, Z_MID[0], 14)                   # the rear half: rear bow -> mid bow
-    tris += shell_patch(Z_MID[1], Z_ARCH[0], 14)               # the front half: mid bow -> arch
+    tris = shell_patch(Z_REAR, Z_ARCH[0], 30)                  # one unbroken shell: rear bow -> front arch
     tris += windscreen_glass()                                 # the windscreen's three flat panes
     return [np.array(t) for t in tris]
 
@@ -446,7 +445,7 @@ def main(argv):
     both = [list(map(float, p)) for t in tris for p in t] + [list(map(float, t[k])) for t in tris for k in (0, 2, 1)]
     asset['CanopyGlass'] = {'Schema': 1, 'Frame': 'VEHICLE_LOCAL_BLOCKS', 'Triangles': [round(v, 4) + 0.0 for p in both for v in p]}
     print(f'f_14c canopy: the model\'s frame cut out ({cut} faces), {len(bars.polys)} faces of slim frames; '
-          f'{len(tris)} glass triangles (x2 windings): blown canopy rear / front halves, windscreen panes')
+          f'{len(tris)} glass triangles (x2 windings): one unbroken blown canopy, windscreen panes')
     if dry:
         return
     with open(GEO, 'w', encoding='utf-8', newline='\n') as f:
