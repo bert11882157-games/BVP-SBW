@@ -21,8 +21,7 @@ frame_bars__canopy) on the same lines, then fits the glass to it:
 What was measured on this model (the longer gun nose does not touch the cockpit): the F-4E.mtb's crew tubs, seats and canopy
 frame are the F-4C.mtb's, scaled uniformly by 1.01019 about the model's origin (z also +0.00445): 1672 face pairs (both
 tubs, both seats, the two block arches and rails) fit with a residual of 0.000 m, and the two cut runs of the block arch and
-rails sit at the same face indices (340-387, 788-835) in the hull piece. The nose is longer only ahead of the windscreen's
-foot (the gun nose, from z 7.1 on); the deck from the windscreen's base forward is the F-4C's deck scaled.
+rails sit at the same face indices (340-387, 788-835) in the hull piece. The longer gun nose lies ahead of the windscreen; the nose check (no cockpit vertex ahead of it) confirms the cockpit does not reach it.
 So the frame's lines below are the F-4C's (canopy_f_4c.py, read off sections of that frame), carried over by T() as they are
 written, and the eye-relative CANOPY sections the checks read are in this model's own frame.
 
