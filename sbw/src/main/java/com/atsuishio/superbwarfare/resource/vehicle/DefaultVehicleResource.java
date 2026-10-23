@@ -260,6 +260,8 @@ public class DefaultVehicleResource implements IDBasedData<DefaultVehicleResourc
         @SerializedName("Apex") public double[] apex;
         @SerializedName("Rings") public int rings;
         @SerializedName("Spokes") public double[][] spokes;
+        /** Optional glass colour {r, g, b}, 0-255; absent (or malformed) keeps the pack's blue-grey tint. Alpha is unchanged. */
+        @SerializedName("Tint") public int[] tint;
     }
 
     @SerializedName("CockpitGauges")

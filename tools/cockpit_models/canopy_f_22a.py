@@ -27,6 +27,7 @@ import numpy as np
 from PIL import Image
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+GOLD_TINT = [240, 190, 70]      # r, g, b (0-255) of CanopyGlass "Tint"; the pack default is [205, 228, 240]
 
 GEN = os.path.join(HERE, '..', '..', 'bvp', 'src', 'generated', 'resources')
 GEO = os.path.join(GEN, 'assets/berts_vehicle_pack/custom_geo/f_22a.geo.json')
@@ -266,6 +267,8 @@ def main(argv):
     tris = glass_triangles()
     both = [list(map(float, p)) for t in tris for p in t] + [list(map(float, t[k])) for t in tris for k in (0, 2, 1)]
     asset['CanopyGlass'] = {'Schema': 1, 'Frame': 'VEHICLE_LOCAL_BLOCKS', 'Triangles': [round(v, 4) + 0.0 for p in both for v in p]}
+    # the real Raptor canopy's gold indium-tin-oxide coating: only the colour shifts, the game keeps its alpha rule
+    asset['CanopyGlass']['Tint'] = GOLD_TINT
     print(f'f_22a canopy: the airframe\'s {gone} frame faces dropped; {len(bone["poly_mesh"]["polys"])} faces of the one-piece frame; '
           f'{len(tris)} glass triangles (x2 windings)')
     if dry:
