@@ -128,11 +128,12 @@ internal class VehicleDamageLifecycleService(
 
             if (part != null) {
                 when (part) {
-                    TURRET -> vehicle.turretHealth -= amount
-                    WHEEL_LEFT -> vehicle.leftWheelHealth -= amount
-                    WHEEL_RIGHT -> vehicle.rightWheelHealth -= amount
-                    MAIN_ENGINE -> vehicle.mainEngineHealth -= amount
-                    SUB_ENGINE -> vehicle.subEngineHealth -= amount
+                    // Clamp at 0 like the module service does, so overkill doesn't stretch the repair time
+                    TURRET -> vehicle.turretHealth = (vehicle.turretHealth - amount).coerceAtLeast(0f)
+                    WHEEL_LEFT -> vehicle.leftWheelHealth = (vehicle.leftWheelHealth - amount).coerceAtLeast(0f)
+                    WHEEL_RIGHT -> vehicle.rightWheelHealth = (vehicle.rightWheelHealth - amount).coerceAtLeast(0f)
+                    MAIN_ENGINE -> vehicle.mainEngineHealth = (vehicle.mainEngineHealth - amount).coerceAtLeast(0f)
+                    SUB_ENGINE -> vehicle.subEngineHealth = (vehicle.subEngineHealth - amount).coerceAtLeast(0f)
                     else -> Unit
                 }
             }
