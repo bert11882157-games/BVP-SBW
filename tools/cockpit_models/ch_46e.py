@@ -61,6 +61,37 @@ def station(ac, seat):
                 PEDAL_Y=-0.90, PEDAL_HANG=False, FLOOR_Y=-1.00, COLLECTIVE_X=0.25)
 
 
+PEDESTAL_ROWS = [(0.16, 'UHF-1', 'freq'), (0.14, 'VHF', 'freq'), (0.14, 'TACAN', 'freq'), (0.16, 'AFCS', 'lamps'),
+                 (0.12, 'IFF', 'rotary'), (0.14, 'ICS', 'rotary'), (0.14, 'LIGHTS', 'toggles')]
+
+
+def pedestal(m, atlas, E0, E1):
+    """the centre pedestal between the seats, built by hand: its top sloping up from behind the seats to under the panel
+    halves (the radio, navigation, AFCS, IFF, intercom and lighting panels painted on it), its sides and front face down
+    to the floor; the two speed-trim levers stand on its front"""
+    import numpy as np
+    X, Y, Z = np.array([1.0, 0, 0]), np.array([0, 1.0, 0]), np.array([0, 0, 1.0])
+    c = (np.array(E0) + np.array(E1)) / 2                           # the centre line at the pilots' eye height and station
+    hw = 0.17                                                       # half width (the seats' inboard sides 0.34 out)
+    zb, zf = c[2] - 0.15, c[2] + 0.62                               # its back behind the seats, its front under the panels
+    yb, yf, fl = c[1] - 0.66, c[1] - 0.52, c[1] - 0.99              # its top behind and in front, the floor
+    top = atlas.paint(60, 300, HS.p_console(PEDESTAL_ROWS, False, COLOURS['panel']))
+    q = [[c[0] - hw, yb, zb], [c[0] + hw, yb, zb], [c[0] + hw, yf, zf], [c[0] - hw, yf, zf]]
+    m.face(q, [m.uv(top, 0, 0), m.uv(top, 1, 0), m.uv(top, 1, 1), m.uv(top, 0, 1)], normal=[0, 1, 0])
+    wall = atlas.swatch(COLOURS['wall']); dark = atlas.swatch(COLOURS['panel_d'])
+    for s in (1, -1):                                               # its sides, down to the floor
+        x = c[0] + s * hw
+        m.flat([[x, fl, zb], [x, fl, zf], [x, yf, zf], [x, yb, zb]], wall, normal=[s, 0, 0])
+    m.flat([[c[0] - hw, fl, zf], [c[0] + hw, fl, zf], [c[0] + hw, yf, zf], [c[0] - hw, yf, zf]], dark, normal=[0, 0, 1])
+    m.flat([[c[0] - hw, fl, zb], [c[0] + hw, fl, zb], [c[0] + hw, yb, zb], [c[0] - hw, yb, zb]], dark, normal=[0, 0, -1])
+    metal, black = atlas.swatch((128, 132, 134)), atlas.swatch((24, 25, 26))
+    up = np.array([0, 1.0, -0.15]); up /= np.linalg.norm(up)
+    for s in (1, -1):                                               # the speed-trim levers near its front
+        foot = np.array([c[0] + s * 0.06, yf - 0.01 + (yb - yf) * 0.12, zf - 0.09])
+        m.box(foot + up * 0.06, (X, up, np.cross(X, up)), (0.006, 0.06, 0.006), metal)
+        m.box(foot + up * 0.125, (X, up, np.cross(X, up)), (0.016, 0.014, 0.016), black)
+
+
 def main(argv):
     dry = '--dry-run' in argv
     ac = L.Aircraft(VID)
@@ -70,6 +101,7 @@ def main(argv):
         boxes += [(E, (-0.30, -1.00, -0.40), (0.30, 0.40, 0.62), 0.30, -1.00),   # the old seat and controls
                   (E, (-0.55, -1.00, 0.55), (0.55, -0.15, 1.25), 0.55, -0.15),   # the old panel under its glareshield
                   (E, (-0.55, -0.15, 0.55), (0.55, 0.05, 1.25), 0.55, -0.15)]    # and the glareshield's top
+    boxes.append((E0, (0.30, -1.00, -0.45), (0.74, -0.40, 1.10), 0.74, -0.40))   # the old centre pedestal
     removed = {'old interior': HS.remove_old(ac, boxes)}
     atlas = H.A.Atlas(VID)
     removed['floor faces repainted'] = HS.repaint_floor(ac, atlas, FLOOR, [
@@ -79,6 +111,7 @@ def main(argv):
     for seat in (0, 1):
         g, d, h = HS.build(m, atlas, station(ac, seat))
         gauges += g; displays += d
+    pedestal(m, atlas, E0, E1)
     pm, line = HS.install(ac, m, gauges, displays, [], [E0, E1])
     print(f'{VID}: removed {removed}; new cockpit {len(pm["polys"])} faces, {len(gauges)} gauges, '
           f'{len(displays)} displays; {line}')
