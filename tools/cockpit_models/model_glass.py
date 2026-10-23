@@ -254,7 +254,9 @@ def glaze(ac):
     """the windows' glass for a cockpit script to call after its install: the original glass (fit) and panes in the
     openings it leaves (panes); returns a one-line summary"""
     kept, dropped = fit(ac)
-    extra, info = panes(ac, range(len(ac.data['Seats'])))
+    seats = [k for k, s in enumerate(ac.data['Seats'])          # (a seat without an eye of its own sees nothing)
+             if (s.get('CameraPos') or {}).get('EyeAttachment') in ac.data.get('Attachments', {})]
+    extra, info = panes(ac, seats)
     if len(extra):
         L.add_glass(ac.asset, [list(map(float, p)) for t in extra for p in t])
     return (f'{kept} original glass triangles kept, {dropped} dropped (on a frame or skin face), '
