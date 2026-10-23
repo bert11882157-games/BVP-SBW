@@ -978,6 +978,7 @@ def build(atlas):
         m.flat([p3 - Z * out, p2 - Z * out, p2, p3], sw['rubber'], normal=(d0 + d1) / 2)
         m.flat([p0 - Z * out, p0, p1, p1 - Z * out], sw['rubber'], normal=-(d0 + d1) / 2)
     m.rect_tex(ecen - Z * 0.003, -Z, Y, 0.075, 0.075, vf)
+    tsu = dict(centre=ecen - Z * 0.003, normal=-Z, up=Y, width=0.075, height=0.075)          # the gunner's live sight (seat 1)
     # the hood's control strip, on top toward the gunner
     sc2 = atlas.paint(150, 30, p_sight_ctrl)
     m.rect_tex([0, hy1 + 0.0015, (hz0 + hz1) / 2 - 0.05], Y, -Z, 0.18, 0.05, sc2)
@@ -1037,7 +1038,7 @@ def build(atlas):
     pl = atlas.paint(120, 36, p_placard(['EMERGENCY EXIT', 'PULL HANDLE'], bg=RED, fg=(240, 240, 232)))
     for s in (1, -1):
         m.rect_tex([s * 0.508, 2.15, 4.85], [-s, 0, 0], Y, 0.20, 0.06, pl)
-    return m, gauges, displays, glass, hud
+    return m, gauges, displays, glass, hud, tsu
 
 
 def _components(pm):
@@ -1127,7 +1128,7 @@ def main(argv):
     bones[:] = [b for b in bones if b['name'] != BONE]
     removed = cut_old_interior(bones)
     atlas = Atlas()
-    mesh, gauges, displays, glass, hud = build(atlas)
+    mesh, gauges, displays, glass, hud, tsu = build(atlas)
     pm = mesh.poly_mesh()
     hull = next(b for b in bones if b['name'] == HULL_BONE)
     at = [b['name'] for b in bones].index('hull__canopy') + 1 if any(b['name'] == 'hull__canopy' for b in bones) else bones.index(hull) + 1
@@ -1138,6 +1139,12 @@ def main(argv):
                               'Center': r5(hud['centre']), 'Normal': r5(hud['normal']), 'Up': r5(hud['up']),
                               'Width': round(float(hud['width']), 5), 'Height': round(float(hud['height']), 5),
                               'Eye': r5(EYE_P), 'Style': 'HUD'}
+    # the gunner's TSU viewfinder: a live reflector-style reticle for seat 1 only (HeadUpDisplays, one sight per seat;
+    # the lone HeadUpDisplay above stays the pilot's for code that does not read the list yet)
+    asset['HeadUpDisplays'] = [{'Schema': 1, 'Frame': 'VEHICLE_LOCAL_BLOCKS', 'Seat': 1,
+                                'Center': r5(tsu['centre']), 'Normal': r5(tsu['normal']), 'Up': r5(tsu['up']),
+                                'Width': tsu['width'], 'Height': tsu['height'],
+                                'Eye': r5(EYE_G), 'Style': 'REFLECTOR'}]
     cg = asset.get('CanopyGlass')
     if cg and cg.get('Schema') == 1:
         t = np.array(cg['Triangles'], float).reshape(-1, 3, 3)
