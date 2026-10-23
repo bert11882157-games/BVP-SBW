@@ -61,7 +61,7 @@ HULL_FACES = 8521
 
 X, Y, Z = np.array([1.0, 0, 0]), np.array([0, 1.0, 0]), np.array([0, 0, 1.0])
 R_TUBE = 0.018
-GLASS_GAP = 0.004
+GLASS_GAP = -0.001                               # the glass ends 10 mm inside the member's silhouette, hidden in it (no see-through seam beside the frames)
 SLAB = 0.012
 
 
@@ -471,6 +471,122 @@ def frames(m, uv_frame):
     box(m, p + np.array([0.022, 0.030, 0.0]), (X, Y, Z), (0.010, 0.020, 0.040), uv_frame)
 
 
+
+HULL_TRIS = None
+
+
+def load_hull_tris(bones):
+    global HULL_TRIS
+    hull = next(b for b in bones if b['name'] == HULL_BONE)
+    pm = hull['poly_mesh']
+    P = np.array(pm['positions'], float) * np.array([1, 1, -1]) / 16.0
+    T = []
+    for poly in pm['polys']:
+        idx = [v[0] for v in poly]
+        for k in range(1, len(idx) - 1):
+            T.append(P[[idx[0], idx[k], idx[k + 1]]])
+    HULL_TRIS = np.array(T)
+
+
+def hull_target(p, reach=0.45):
+    """the point 1.5 cm inside the hull's surface nearest below and outboard of p (the same side), in the cross-section z = p[2]"""
+    s = 1.0 if p[0] >= 0 else -1.0
+    T = HULL_TRIS
+    z = p[2]
+    m = (T[:, :, 2].min(1) <= z) & (T[:, :, 2].max(1) >= z) & ((T[:, :, 0] * s).max(1) > 0.2) & (T[:, :, 1].min(1) < p[1] + 0.05)
+    best, bp = reach, None
+    for t in T[m]:
+        d = t[:, 2] - z
+        q = []
+        for i in range(3):
+            a_, b_ = t[i], t[(i + 1) % 3]
+            if (d[i] > 0) != (d[(i + 1) % 3] > 0):
+                f = d[i] / (d[i] - d[(i + 1) % 3])
+                q.append((a_ + (b_ - a_) * f)[:2])
+        if len(q) != 2:
+            continue
+        a_, b_ = q
+        if min(a_[0] * s, b_[0] * s) < p[0] * s - 0.03 or min(a_[1], b_[1]) > p[1] + 0.02:
+            continue
+        ab = b_ - a_
+        L2 = float(ab @ ab)
+        u = 0.0 if L2 < 1e-12 else float(np.clip(((p[:2] - a_) @ ab) / L2, 0, 1))
+        c = a_ + ab * u
+        if c[0] * s < p[0] * s - 0.03 or c[1] > p[1] + 0.02:
+            continue
+        dd = float(np.linalg.norm(c - p[:2]))
+        if dd < best:
+            best, bp = dd, c
+    if bp is None:
+        return np.array([p[0], p[1] - 0.04, p[2]])
+    dv_ = bp - p[:2]
+    dirv = dv_ / np.linalg.norm(dv_) if np.linalg.norm(dv_) > 1e-6 else np.array([0.0, -1.0])
+    t = bp + dirv * 0.027
+    return np.array([t[0], t[1], z])
+
+
+def ribbon_skirt(m, top, bot, uv_out, uv_in, thick=0.037):
+    """one closed solid along a run: the outer strip from `top` (a frame member's centre line) down to `bot` (inside the hull), an inner
+    strip `thick` inboard of it (3.7 cm: no face lies within 12 mm of the member tube's flats) and the closing top, bottom and end faces.
+    All stations share vertices, so the strip is one welded part that touches the frame."""
+    keep = [0] + [k for k in range(1, len(top)) if np.linalg.norm(np.array(top[k], float) - np.array(top[k - 1], float)) > 1e-4]
+    top = [np.array(top[k], float) for k in keep]
+    bot = [np.array(bot[k], float) for k in keep]
+    n_st = len(top)
+    N = []
+    for k in range(n_st):
+        t = top[min(k + 1, n_st - 1)] - top[max(k - 1, 0)]
+        nn = np.cross(t, bot[k] - top[k])
+        ln_ = np.linalg.norm(nn)
+        nn = nn / ln_ if ln_ > 1e-9 else (N[-1] if N else np.array([1.0 if top[k][0] >= 0 else -1.0, 0.0, 0.0]))
+        if nn[0] * (1.0 if top[k][0] >= 0 else -1.0) < 0:
+            nn = -nn
+        N.append(nn)
+    itop = [top[k] - N[k] * thick for k in range(n_st)]
+    ibot = [bot[k] - N[k] * thick for k in range(n_st)]
+    for k in range(n_st - 1):
+        nm = N[k] + N[k + 1]
+        nm = nm / np.linalg.norm(nm) if np.linalg.norm(nm) > 1e-9 else N[k]
+        m.face([top[k], top[k + 1], bot[k + 1], bot[k]], uv_out, nm)
+        m.face([itop[k], itop[k + 1], ibot[k + 1], ibot[k]], uv_in, -nm)
+        m.face([top[k], top[k + 1], itop[k + 1], itop[k]], uv_out, np.array([0.0, 1.0, 0.0]))
+        m.face([bot[k], bot[k + 1], ibot[k + 1], ibot[k]], uv_out, np.array([0.0, -1.0, 0.0]))
+    for k, sg in ((0, -1.0), (n_st - 1, 1.0)):
+        t = top[min(k + 1, n_st - 1)] - top[max(k - 1, 0)]
+        t = t / np.linalg.norm(t)
+        m.face([top[k], bot[k], ibot[k], itop[k]], uv_out, t * sg)
+
+
+def skirts(m, uv_out, uv_in):
+    """sill skirts: a closed solid from each sill rail's centre line to the nearest hull surface below and outside it (airframe colour
+    outside, dark inside, 3.7 cm thick so no face lies within 12 mm of the rail tube's flats): the bubbles' bottom edges never leave a slot"""
+    L_ = [OB_RINGS[k][0] for k in range(len(OB_RINGS))] + [PB_RINGS[k][0] for k in range(len(PB_RINGS))]
+    L_ = sorted(L_, key=lambda p: -p[2])
+    for s in (1, -1):
+        sg = np.array([s, 1, 1])
+        path = [p * sg for p in L_]
+        pts = []
+        for a, b in zip(path[:-1], path[1:]):
+            n_st = max(1, int(math.ceil(float(np.linalg.norm(b - a)) / 0.12)))
+            pts += [a + (b - a) * (k / n_st) for k in range(n_st)]
+        pts.append(path[-1])
+        # stop 3 cm short of the rear arch's plane (the end cap would lie in it)
+        z_stop = Z_END + 0.03
+        keep = [p for p in pts if p[2] > z_stop + 1e-6]
+        a_, b_ = keep[-1], pts[-1]
+        keep.append(a_ + (b_ - a_) * ((a_[2] - z_stop) / (a_[2] - b_[2])))
+        pts = keep
+        ribbon_skirt(m, pts, [hull_target(p) for p in pts], uv_out, uv_in)
+
+def rear_mirror(m, uv_frame, uv_glass):
+    """the pilot's outside rear-view mirror: a short stalk from the left A pillar out and forward into a framed plate facing the pilot (rearward);
+    the glass plate's back face is the frame's front face (no two faces 1-2 mm apart)"""
+    p = lerp(PB_S0, PB_BL, 0.80)
+    c = p + np.array([0.115, 0.045, -0.040])
+    tube(m, p, c + np.array([0.0, 0.0, 0.004]), 0.009, uv_frame, seg=6)
+    box(m, c + np.array([0.0, 0.0, -0.006]), (X, Y, Z), (0.062, 0.044, 0.006), uv_frame)
+    box(m, c + np.array([0.0, 0.0, -0.0145]), (X, Y, Z), (0.056, 0.038, 0.0025), uv_glass)
+
 def build(uv_frame):
     m = Mesh()
     glass = []
@@ -535,8 +651,12 @@ def main(argv):
     cut = cut_old(bones)
     sw = L.Swatches(L.texture_path(VID))
     uv_out, uv_in, uv_frame = sw.uv((128, 128, 96)), sw.uv((24, 26, 22)), sw.uv((46, 52, 40))
+    uv_mirror = sw.uv((120, 138, 146))
+    load_hull_tris(bones)
     m, glass = build(uv_frame)
     hump(m, uv_out, uv_in)
+    # skirts(m, uv_out, uv_in)
+    rear_mirror(m, uv_frame, uv_mirror)
     hull = next(b for b in bones if b['name'] == HULL_BONE)
     pm = m.poly_mesh()
     bones.insert(bones.index(hull) + 1, {'name': CANOPY_BONE, 'parent': 'hull', 'pivot': list(hull['pivot']), 'poly_mesh': pm})

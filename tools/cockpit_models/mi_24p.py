@@ -184,7 +184,7 @@ class Mesh:
         c, n, u, rr = frame(centre, normal, up)
         for (cx, cy, hw, hh) in ((0, h / 2 + t / 2, w / 2 + t, t / 2), (0, -h / 2 - t / 2, w / 2 + t, t / 2),
                                  (w / 2 + t / 2, 0, t / 2, h / 2), (-w / 2 - t / 2, 0, t / 2, h / 2)):
-            self.box(c + rr * cx + u * cy + n * proud / 2, (rr, u, n), (hw, hh, proud / 2), rect)
+            self.box(c + rr * cx + u * cy + n * (proud / 2 + 0.0012), (rr, u, n), (hw, hh, proud / 2), rect)     # (stands 1.2 mm off the panel: its back face would lie in the panel's plane)
 
     def poly_mesh(self):
         P, N, U, polys = [], [], [], []
@@ -268,8 +268,8 @@ class Atlas:
 
 
 # ---------------------------------------------------------------- colours (a Soviet blue-green cockpit: dark green-grey panels, black dials)
-PANEL = (44, 56, 54)
-PANEL_D = (24, 30, 29)
+PANEL = (26, 124, 116)                     # the Hind's cockpit is painted turquoise (blue-green); the instrument faces are black
+PANEL_D = (16, 86, 82)
 BLACK = (18, 19, 21)
 DGREY = (36, 40, 40)
 MGREY = (84, 92, 90)
@@ -280,8 +280,8 @@ HARNESS = (96, 98, 76)
 YELLOW = (226, 186, 30)
 RED = (196, 36, 30)
 METAL = (128, 134, 134)
-FLOOR = (46, 56, 52)
-CONSOLE = (58, 74, 70)
+FLOOR = (30, 38, 36)                       # (the deck is dark metal)
+CONSOLE = (30, 134, 126)
 AMBER = (214, 140, 30)
 RUBBER = (14, 14, 15)
 ARMOUR = (52, 60, 52)
@@ -391,28 +391,46 @@ PF = Facet(6.280, 2.400)                   # the pilot's instrument panel face (
 GF = Facet(7.440, 1.900)                   # the operator's panel face
 PANEL_TOP_P, PANEL_BOT_P = 2.720, 2.120
 PANEL_TOP_G, PANEL_BOT_G = 2.120, 1.640
-HALF_P, HALF_G = 0.37, 0.27
+HALF_P, HALF_G = 0.55, 0.27
+# the pilot's panel follows the canopy's narrowing: a wide lower band (the breaker banks, radio, caution grid) under the upper band of
+# flight and engine instruments: (bottom y, top y, half width)
+PILOT_BANDS = [(2.120, 2.420, 0.55), (2.420, 2.720, 0.43)]
 
 # (name, a, y, spec, caption) spec: ('game', KIND, diameter) | ('paint_disc', KIND, diameter) | ('annunciator', w, h) |
 # ('paint_rect', w, h) | ('display', KIND, width, style)
 PILOT_LAYOUT = [
-    ('ias',   -0.255, 2.640, ('game', 'AIRSPEED', 0.085), 'УС'),
+    # upper band: the flight instruments, then two rows of engine and rotor dials
+    ('ias',   -0.325, 2.640, ('game', 'AIRSPEED', 0.085), 'УС'),
+    ('alt',   -0.215, 2.640, ('game', 'ALTIMETER', 0.085), 'ВД'),
     ('adi',   -0.085, 2.640, ('game', 'ATTITUDE', 0.115), 'КПП'),
     ('hsi',    0.085, 2.640, ('game', 'HEADING', 0.115), 'НПП'),
-    ('alt',    0.255, 2.640, ('game', 'ALTIMETER', 0.085), 'ВД'),
-    ('vsi',   -0.255, 2.510, ('game', 'VVI', 0.065), 'ВАР'),
-    ('ralt',  -0.060, 2.505, ('game', 'RADAR_ALT', 0.058), 'РВ'),
-    ('clock',  0.060, 2.505, ('game', 'CLOCK', 0.058), ''),
-    ('turn',   0.255, 2.510, ('game', 'TURN_SLIP', 0.065), 'ЭУП'),
-    ('nr',    -0.285, 2.370, ('game', 'ROTOR_RPM', 0.070), 'НВ'),
-    ('n1l',   -0.170, 2.370, ('game', 'ENGINE_RPM', 0.070), 'ЛЕВ'),
-    ('n1r',   -0.055, 2.370, ('game', 'ENGINE_RPM', 0.070), 'ПРАВ'),
-    ('tgl',    0.060, 2.370, ('game', 'EGT', 0.070), 'T ЛЕВ'),
-    ('tgr',    0.175, 2.370, ('game', 'EGT', 0.070), 'T ПРАВ'),
-    ('tq',     0.290, 2.370, ('game', 'TORQUE', 0.070), 'МОМЕНТ'),
-    ('fuel',  -0.300, 2.240, ('game', 'FUEL_QTY', 0.060), 'ТОПЛ'),
-    ('caution', 0.0, 2.240, ('annunciator', 0.460, 0.070), ''),
-    ('ammo',   0.300, 2.240, ('game', 'AMMO', 0.060), 'БК'),
+    ('vsi',    0.215, 2.640, ('game', 'VVI', 0.085), 'ВАР'),
+    ('turn',   0.325, 2.640, ('game', 'TURN_SLIP', 0.075), 'ЭУП'),
+    ('nr',    -0.350, 2.505, ('game', 'ROTOR_RPM', 0.070), 'НВ'),
+    ('n1l',   -0.250, 2.505, ('game', 'ENGINE_RPM', 0.070), 'ЛЕВ'),
+    ('n1r',   -0.150, 2.505, ('game', 'ENGINE_RPM', 0.070), 'ПРАВ'),
+    ('tgl',   -0.050, 2.505, ('game', 'EGT', 0.070), 'T ЛЕВ'),
+    ('tgr',    0.050, 2.505, ('game', 'EGT', 0.070), 'T ПРАВ'),
+    ('tq',     0.150, 2.505, ('game', 'TORQUE', 0.070), 'МОМЕНТ'),
+    ('fuel',   0.250, 2.505, ('game', 'FUEL_QTY', 0.070), 'ТОПЛ'),
+    ('ralt',   0.350, 2.505, ('game', 'RADAR_ALT', 0.070), 'РВ'),
+    ('d1',    -0.350, 2.447, ('paint_disc', 'OIL', 0.040), ''),
+    ('d2',    -0.250, 2.447, ('paint_disc', 'XMSN', 0.040), ''),
+    ('d3',    -0.150, 2.447, ('paint_disc', 'HYD', 0.040), ''),
+    ('d4',    -0.050, 2.447, ('paint_disc', 'XMSNT', 0.040), ''),
+    ('d5',     0.050, 2.447, ('paint_disc', 'OIL', 0.040), ''),
+    ('d6',     0.150, 2.447, ('paint_disc', 'XMSN', 0.040), ''),
+    ('d7',     0.250, 2.447, ('paint_disc', 'HYD', 0.040), ''),
+    ('d8',     0.350, 2.447, ('paint_disc', 'XMSNT', 0.040), ''),
+    # lower band: breaker banks either side, radio, the caution grid, clock and rounds, armament and engine panels
+    ('cbl',   -0.410, 2.275, ('paint_rect', 0.260, 0.240), ''),
+    ('rad',   -0.175, 2.325, ('paint_rect', 0.190, 0.115), ''),
+    ('caution', -0.175, 2.195, ('annunciator', 0.200, 0.100), ''),
+    ('clock',  0.000, 2.345, ('game', 'CLOCK', 0.060), ''),
+    ('ammo',   0.000, 2.215, ('game', 'AMMO', 0.060), 'БК'),
+    ('arm',    0.135, 2.305, ('paint_rect', 0.200, 0.120), ''),
+    ('engp',   0.135, 2.185, ('paint_rect', 0.200, 0.075), ''),
+    ('cbr',    0.410, 2.275, ('paint_rect', 0.260, 0.240), ''),
 ]
 GUNNER_LAYOUT = [
     ('g_ias', -0.195, 2.030, ('game', 'AIRSPEED', 0.085), 'УС'),
@@ -441,7 +459,7 @@ LAMPS = [{"Text": "ВНИМ|ОТКАЗ", "Condition": "MASTER_CAUTION", "Colour"
          {"Text": "МАЛО|БК", "Condition": "AMMO_LOW", "Colour": "amber"},
          {"Text": "РАЗРУШ", "Condition": "DAMAGE", "Colour": "red"},
          {"Text": "ОПАСН|ВЫС", "Condition": "LOW_ALT", "Colour": "amber"}]
-LAMP_COLUMNS = 8
+LAMP_COLUMNS = 4
 LAMPS_G = [LAMPS[0], LAMPS[2], LAMPS[3], LAMPS[12], LAMPS[13], LAMPS[14]]
 LAMP_COLUMNS_G = 6
 
@@ -646,9 +664,88 @@ def p_kick(d, im):
         d.rectangle([S * (.10 + k * .30), H * .30, S * (.34 + k * .30), H * .70], fill=(20, 24, 24, 255), outline=(70, 76, 76, 255), width=3)
 
 
+# ---------------------------------------------------------------- the dense panels (painted: black boxes, white Russian legends, toggles, knobs)
+def p_dial_static(kind):
+    def fn(d, im):
+        if kind == 'XMSN':
+            dial_face(d, im, '', 0, 8, 1, 2, 4.0, labels=['0', '2', '4', '6', '8'], red=(7, 8))
+        elif kind == 'HYD':
+            dial_face(d, im, '', 0, 100, 10, 20, 60.0, labels=['0', '20', '40', '60', '80', '100'], red=(0, 10))
+        elif kind == 'XMSNT':
+            dial_face(d, im, '', 0, 150, 10, 30, 80.0, labels=['0', '30', '60', '90', '120', '150'], red=(120, 150))
+        else:
+            dial_face(d, im, '', 0, 10, 1, 2, 5.0, labels=['0', '2', '4', '6', '8', '10'], red=(0, 1))
+    return fn
+
+
+def _bg(d, im):
+    S, H = im.width, im.height
+    d.rectangle([0, 0, S, H], fill=(18, 20, 21, 255), outline=(60, 66, 66, 255), width=3)
+
+
+def p_cb(seed, labels):
+    """a breaker / switch bank: rows of small toggles with Russian legends"""
+    def fn(d, im):
+        S, H = im.width, im.height
+        _bg(d, im)
+        rng = np.random.default_rng(seed)
+        cols, rows = 6, 6
+        for r in range(rows):
+            for c in range(cols):
+                x = S * (0.09 + 0.82 * c / (cols - 1)); y = H * (0.08 + 0.84 * r / (rows - 1))
+                k = (r * cols + c) % len(labels)
+                if rng.random() < 0.7:
+                    toggle(d, x, y - H * 0.02, H * 0.38)
+                else:
+                    d.rectangle([x - S * .04, y - H * .04, x + S * .04, y + H * .03], fill=(150, 40, 30, 255) if rng.random() < 0.3 else (36, 40, 40, 255),
+                                outline=(150, 150, 146, 255), width=2)
+                text(d, (x, y + H * 0.065), labels[k], H * 0.045)
+    return fn
+
+
+def p_sw(seed, labels, rows=2):
+    def fn(d, im):
+        S, H = im.width, im.height
+        _bg(d, im)
+        rng = np.random.default_rng(seed)
+        n = len(labels)
+        per = (n + rows - 1) // rows
+        for k, lab in enumerate(labels):
+            r, c = divmod(k, per)
+            x = S * (0.10 + 0.80 * (c + 0.5) / per)
+            y = H * (0.30 + 0.42 * r) if rows > 1 else H * 0.40
+            if rng.random() < 0.6:
+                toggle(d, x, y, H * 0.8)
+            else:
+                knob(d, x, y, H * 0.10, ang=float(rng.random() * 2))
+            text(d, (x, y + H * 0.24), lab, H * 0.10)
+    return fn
+
+
+def p_radio(d, im):
+    S, H = im.width, im.height
+    _bg(d, im)
+    text(d, (S * .5, H * .09), 'Р-828   РАДИОСТАНЦИЯ', H * .10, bold=True)
+    d.rectangle([S * .08, H * .20, S * .50, H * .40], fill=(64, 82, 64, 255), outline=(10, 10, 10, 255), width=2)
+    text(d, (S * .29, H * .30), '45,50', H * .13, fill=(20, 40, 20))
+    for k, lab in enumerate(['ГРОМК', 'ШУМ', 'КАНАЛ']):
+        knob(d, S * (0.62 + 0.14 * k), H * .30, H * .09, ang=0.5 + 0.5 * k)
+        text(d, (S * (0.62 + 0.14 * k), H * .48), lab, H * .08)
+    for k, lab in enumerate(['ПРД', 'ПРМ', 'ТЛГ', 'ТЛФ']):
+        x = S * (0.15 + 0.23 * k)
+        toggle(d, x, H * .70, H * .9)
+        text(d, (x, H * .90), lab, H * .09)
+
+
+PAINTERS = {'cbl': p_cb(21, ['АЗС', 'ПУ', 'НВ', 'ЗАП', 'ОСВ', 'ГИДР', 'ТОПЛ', 'ГЕН', 'ПТУ']),
+            'cbr': p_cb(22, ['РЕЗ', 'КОНТ', 'ПИТ', 'СВЯЗЬ', 'ЛЕВ', 'ПРАВ', 'АВТ', 'ТЛВ', 'ОБОГР']),
+            'rad': p_radio, 'arm': p_arm_pilot,
+            'engp': p_sw(23, ['ЗАПУСК', 'ХОЛ.ПР.', 'ЛЕВ', 'ПРАВ', 'ПОЖАР', 'КРАН', 'РТ'])}
+
+
 # ---------------------------------------------------------------- geometry
 FLOOR_G, FLOOR_P = 1.58, 1.90
-SLAB_BOT = 1.36                            # the floors reach down here (the cut region's lowest faces)
+SLAB_BOT = 1.375                           # the floors reach down here (the cut region's lowest faces)
 LIFT = 0.003
 
 
@@ -667,27 +764,33 @@ def build(atlas):
         m.box([0, (SLAB_BOT + FLOOR_G) / 2, (za + zb) / 2], (X, Y, Z), (xh, (FLOOR_G - SLAB_BOT) / 2, (zb - za) / 2), sw['floor'])
     m.box([0, (SLAB_BOT + FLOOR_P) / 2, (4.74 + PF.z(FLOOR_P)) / 2], (X, Y, Z), (WALL + 0.015, (FLOOR_P - SLAB_BOT) / 2, (PF.z(FLOOR_P) - 4.74) / 2), sw['floor'])
     HUMP_TOP = 2.60
-    m.yz_prism([(FLOOR_P, PF.z(FLOOR_P)), (2.25, PF.z(2.25)), (2.25, 6.66), (FLOOR_G, 6.66), (FLOOR_G, PF.z(FLOOR_P) + 0.01)], -0.60, 0.60, sw['panel_d'])
-    m.yz_prism([(2.25, PF.z(2.25)), (PANEL_TOP_P, PF.z(PANEL_TOP_P)), (HUMP_TOP, PF.z(HUMP_TOP)), (HUMP_TOP, 6.60), (2.25, 6.66)], -0.34, 0.34, sw['panel_d'])   # the hump's body (the operator's seat back stands against it)
-    # ---- pilot's panel
-    a0, a1 = -HALF_P, HALF_P
+    m.yz_prism([(FLOOR_P, PF.z(FLOOR_P)), (2.30, PF.z(2.30)), (2.30, 6.66), (FLOOR_G, 6.66), (FLOOR_G, PF.z(FLOOR_P) + 0.01)], -0.60, 0.60, sw['panel_d'])
+    m.yz_prism([(2.28, PF.z(2.28) + 0.004), (2.34, PF.z(2.34) + 0.004), (2.34, 6.66), (2.28, 6.66)], -0.60, 0.60, sw['panel_d'])
+    m.yz_prism([(2.34, PF.z(2.34) + 0.004), (2.42, PF.z(2.42) + 0.004), (2.42, 6.66), (2.34, 6.66)], -0.574, 0.574, sw['panel_d'])             # (the canopy narrows over the sill)
+    m.yz_prism([(2.42, PF.z(2.42)), (PANEL_TOP_P, PF.z(PANEL_TOP_P)), (2.66, 6.50), (2.42, 6.66)], -0.42, 0.42, sw['panel_d'])           # (convex: a fan over a dented profile would overlap itself)   # the hump's body (the operator's seat back stands against it)
+    # ---- pilot's panel: two bands (PILOT_BANDS), each its own painted face, the wide one under the narrow one
     ppm = 760
-    W_ = int(round((a1 - a0) * ppm)); H_ = int(round((PANEL_TOP_P - PANEL_BOT_P) / cos_s * ppm))
-    rect = atlas.paint(W_, H_, panel_paint(PILOT_LAYOUT, PF, PANEL_TOP_P, PANEL_BOT_P, HALF_P, (W_, H_), 3))
-    m.quad_tex([PF.at(a0, PANEL_BOT_P, LIFT), PF.at(a1, PANEL_BOT_P, LIFT), PF.at(a1, PANEL_TOP_P, LIFT), PF.at(a0, PANEL_TOP_P, LIFT)],
-               rect, normal=PF.N)
     kick = atlas.paint(220, 70, p_kick)
-    m.quad_tex([PF.at(a0, FLOOR_P + 0.004, LIFT), PF.at(a1, FLOOR_P + 0.004, LIFT), PF.at(a1, PANEL_BOT_P, LIFT), PF.at(a0, PANEL_BOT_P, LIFT)], kick, normal=PF.N)
     xp = lambda y: min(0.60, 0.62 - 0.379 * (y - 2.30) - 0.01)           # follows the A pillar (the canopy's outline at the panel)
-    for s in (1, -1):
-        for ya, yb in ((FLOOR_P + 0.004, 2.30), (2.30, PANEL_TOP_P)):
-            m.flat([PF.at(s * a1, ya, LIFT), PF.at(s * xp(ya), ya, LIFT), PF.at(s * xp(yb), yb, LIFT), PF.at(s * a1, yb, LIFT)], sw['panel_d'], normal=PF.N)
+    for bi, (bot, top, half) in enumerate(PILOT_BANDS):
+        lay = [e for e in PILOT_LAYOUT if bot <= e[2] < top]
+        W_ = int(round(2 * half * ppm)); H_ = int(round((top - bot) / cos_s * ppm))
+        rect = atlas.paint(W_, H_, panel_paint(lay, PF, top, bot, half, (W_, H_), 3 + bi))
+        m.quad_tex([PF.at(-half, bot, LIFT), PF.at(half, bot, LIFT), PF.at(half, top, LIFT), PF.at(-half, top, LIFT)], rect, normal=PF.N)
+        for s_ in (1, -1):
+            m.flat([PF.at(s_ * half, bot, LIFT), PF.at(s_ * xp(bot), bot, LIFT), PF.at(s_ * xp(top), top, LIFT), PF.at(s_ * half, top, LIFT)],
+                   sw['panel_d'], normal=PF.N)
+    hw0 = PILOT_BANDS[0][2]
+    m.quad_tex([PF.at(-hw0, FLOOR_P + 0.004, LIFT), PF.at(hw0, FLOOR_P + 0.004, LIFT), PF.at(hw0, PANEL_BOT_P, LIFT), PF.at(-hw0, PANEL_BOT_P, LIFT)], kick, normal=PF.N)
+    for s_ in (1, -1):
+        m.flat([PF.at(s_ * hw0, FLOOR_P + 0.004, LIFT), PF.at(s_ * xp(FLOOR_P + 0.004), FLOOR_P + 0.004, LIFT), PF.at(s_ * xp(PANEL_BOT_P), PANEL_BOT_P, LIFT),
+                PF.at(s_ * hw0, PANEL_BOT_P, LIFT)], sw['panel_d'], normal=PF.N)
     zt = PF.z(PANEL_TOP_P)
     y_visor = 2.82
     m.box([0, (PANEL_TOP_P + y_visor) / 2 - 0.0, (zt - 0.12 + 6.38) / 2], (X, Y, Z), (0.40, (y_visor - PANEL_TOP_P) / 2, (6.38 - zt + 0.12) / 2), sw['black'])   # the coaming / visor
     # the canopy jettison handle on the pilot's kick panel
     pl = atlas.paint(150, 40, p_placard(['АВАР. СБРОС', 'ФОНАРЯ'], bg=RED, fg=(240, 240, 232)))
-    m.rect_tex(PF.at(0.0, 2.17, LIFT + 0.002), PF.N, PF.U, 0.200, 0.040, pl)
+    m.rect_tex(PF.at(0.0, 2.04, LIFT + 0.002), PF.N, PF.U, 0.200, 0.040, pl)
 
     # ===================================================================== PILOT
     for name, a, y, spec, cap in PILOT_LAYOUT:
@@ -702,6 +805,18 @@ def build(atlas):
             gauges.append({'Seat': 0, 'Kind': 'ANNUNCIATOR', 'Center': r5(c + PF.N * 0.0045), 'Normal': r5(PF.N), 'Up': r5(PF.U),
                            'Diameter': w, 'Width': w, 'Height': h, 'Depth': 0.02, 'Columns': LAMP_COLUMNS, 'Lamps': LAMPS})
             m.frame_rect(c + PF.N * LIFT, PF.N, PF.U, w, h, 0.005, 0.008 - LIFT, sw['bezel'])
+        elif kind == 'paint_disc':
+            dia = spec[2]
+            r_ = cache.get(spec[1]) or atlas.paint(96, 96, p_dial_static(spec[1]))
+            cache[spec[1]] = r_
+            m.rect_tex(c + PF.N * PAINT_LIFT, PF.N, PF.U, dia, dia, r_)
+            m.ring(c + PF.N * LIFT, PF.N, PF.U, dia / 2, dia / 2 * (1 + RIM), 0.010 - LIFT, sw['bezel'])
+        elif kind == 'paint_rect':
+            w, h = spec[1], spec[2]
+            pw = int(round(w * 1400))
+            r_ = atlas.paint(pw, int(round(pw * h / w)), PAINTERS[name])
+            m.rect_tex(c + PF.N * PAINT_LIFT, PF.N, PF.U, w, h, r_)
+            m.frame_rect(c + PF.N * LIFT, PF.N, PF.U, w, h, 0.004, 0.007 - LIFT, sw['bezel'])
 
     # -- the ASP-17V gyro gunsight on the coaming: a head with its control strip toward the pilot, and the combiner glass on two struts,
     # centred on the eye line (a little larger than the real unit), a chamfered plate in a thin frame
@@ -944,6 +1059,43 @@ def build(atlas):
     return m, gauges, displays, glass, hud, tsu
 
 
+OLD_TINT = (54, 66, 62)                    # the interior swatch the earlier pass pointed the old teal faces at
+NEW_TINT = (22, 104, 98)                   # the Hind's turquoise, shaded for the tub's lining
+
+
+def find_tint_texels(geo):
+    """texels (x, y) the hull faces re-coloured by an earlier run point at (every vertex on ONE uv whose texel is OLD_TINT)"""
+    hull = next(b for b in geo['minecraft:geometry'][0]['bones'] if b['name'] == HULL_BONE)
+    pm = hull['poly_mesh']
+    tex = np.asarray(Image.open(L.texture_path(VID)).convert('RGB')).astype(int)
+    H, W = tex.shape[:2]
+    seen = {}
+    for poly in pm['polys']:
+        ids = {v[2] for v in poly}
+        if len(ids) != 1:
+            continue
+        u, vv = pm['uvs'][next(iter(ids))]
+        x, y = min(W - 1, max(0, int(u * W))), min(H - 1, max(0, int((1 - vv) * H)))
+        if np.abs(tex[y, x] - np.array(OLD_TINT)).max() <= 3:
+            seen[(x, y)] = 1
+    return sorted(seen)
+
+
+def repaint_texels(path, texels, colour, dead=False):
+    img = Image.open(path).convert('RGBA')
+    c = np.array(colour, np.float32)
+    if dead:
+        g = c.mean()
+        c = (c * 0.25 + g * 0.15) * 0.9
+    c = tuple(int(round(v)) for v in c) + (255,)
+    px = img.load()
+    for (x, y) in texels:
+        for dx in (-1, 0, 1):
+            for dy in (-1, 0, 1):
+                px[x + dx, y + dy] = c
+    img.save(path, optimize=True)
+
+
 def line_teal(geo, atlas):
     """old teal tub faces still standing in the cockpit (rim lining, side blocks) are re-coloured in the cockpit's interior green-grey: their
     uvs point at a swatch of the interior colour (positions untouched)"""
@@ -953,10 +1105,8 @@ def line_teal(geo, atlas):
     H, W = tex.shape[:2]
     P = np.array(pm['positions'], float) * np.array([1, 1, -1]) / 16.0
     U = pm['uvs']
-    rect = atlas.swatch((54, 66, 62))
-    ui = len(U)
-    U.append([round(v, 6) for v in atlas.uv(rect, 0.5, 0.5)])
-    n = 0
+    rect = atlas.swatch(NEW_TINT)
+    hits = []
     for poly in pm['polys']:
         c = P[[v[0] for v in poly]].mean(0)
         if abs(c[0]) > 0.64 or not 4.7 < c[2] < 7.66 or c[1] < 1.45 or c[1] > 3.7:
@@ -966,11 +1116,17 @@ def line_teal(geo, atlas):
             u, vv = U[v[2]]
             cs.append(tex[min(H - 1, max(0, int((1 - vv) * H))), min(W - 1, max(0, int(u * W)))])
         r, g, b = np.mean(cs, 0)
+        if min(abs(np.array([r, g, b]) - np.array(NEW_TINT)).max(), abs(np.array([r, g, b]) - np.array(OLD_TINT)).max()) <= 6:
+            continue                                      # (already re-coloured by an earlier run: the swatch texels are repainted in place)
         if b > r + 25 and g > r + 25:
+            hits.append(poly)
+    if hits:                                              # (no uv is added when nothing is re-coloured: a rerun leaves the hull piece as it is)
+        ui = len(U)
+        U.append([round(v, 6) for v in atlas.uv(rect, 0.5, 0.5)])
+        for poly in hits:
             for v in poly:
                 v[2] = ui
-            n += 1
-    return n
+    return len(hits)
 
 
 def planform(geo):
@@ -1016,6 +1172,7 @@ def main(argv):
     mesh, gauges, displays, glass, hud, tsu = build(atlas)
     lined = line_teal(geo, atlas)
     pm = mesh.poly_mesh()
+    tint_texels = find_tint_texels(geo)
     hull = next(b for b in bones if b['name'] == HULL_BONE)
     at = [b['name'] for b in bones].index('hull__canopy') + 1 if any(b['name'] == 'hull__canopy' for b in bones) else bones.index(hull) + 1
     bones.insert(at, {'name': BONE, 'parent': 'hull', 'pivot': list(hull['pivot']), 'poly_mesh': pm})
@@ -1036,7 +1193,10 @@ def main(argv):
     cg = asset.get('CanopyGlass')
     if cg and cg.get('Schema') == 1:
         t = np.array(cg['Triangles'], float).reshape(-1, 3, 3)
-        tri = [list(map(float, p)) for p in t.reshape(-1, 3)]
+        c = t.mean(1)
+        gc = np.array(hud['centre'])
+        keep = ~((np.abs(c[:, 0]) < 0.12) & (np.abs(c[:, 1] - gc[1]) < 0.08) & (c[:, 2] > 5.84) & (c[:, 2] < 5.97))   # (an earlier run's gunsight glass goes)
+        tri = [list(map(float, p)) for p in t[keep].reshape(-1, 3)]
         G = [list(map(float, p)) for p in glass]
         both = G + [G[i] for k in range(0, len(G), 3) for i in (k, k + 2, k + 1)]
         cg['Triangles'] = [round(v, 4) + 0.0 for p in tri + both for v in p]
@@ -1048,9 +1208,11 @@ def main(argv):
     write_asset(ASSET, asset)
     tex = os.path.normpath(L.texture_path(VID))
     atlas.write(tex)
+    repaint_texels(tex, tint_texels, NEW_TINT)
     dead = tex.replace(os.sep + 'entity' + os.sep, os.sep + 'entity_dead' + os.sep)
     if os.path.isfile(dead):
         atlas.write(dead, dead=True)
+        repaint_texels(dead, tint_texels, NEW_TINT, dead=True)
 
 
 if __name__ == '__main__':
