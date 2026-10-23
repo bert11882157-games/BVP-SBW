@@ -1,0 +1,31 @@
+{
+  "Name": "Nord AA.20 · manual radio command (AI)",
+  "AmmoType": "superbwarfare:medium_air_to_ground_missile",
+  "DefaultFireMode": "Semi",
+  "AvailableFireModes": "Semi",
+  "Magazine": 1,
+  "EmptyReloadTime": 400,
+  "RPM": 30,
+  "Projectile": {
+    "Type": "superbwarfare:wire_guide_missile",
+    "Profile": "berts_vehicle_pack:aircraft_stores/aa20"
+  },
+  "ProjectileAmount": 1,
+  "AddShooterDeltaMovement": true,
+  "Velocity": 1.5,
+  "Gravity": 0.0125,
+  "ProjectileLife": 560,
+  "Spread": 0,
+  "Damage": 140,
+  "ExplosionDamage": 140,
+  "ExplosionRadius": 3,
+  "TntEquivalentKg": 10.6,
+  "ShellType": "HE",
+  "ApDurability": 0,
+  "Crosshair": "@Empty",
+  "SoundRadius": 24,
+  "SoundInfo": {
+    "Fire1P": "superbwarfare:bmp_2_missile_fire_1p",
+    "Fire3P": "superbwarfare:bmp_2_missile_fire_3p"
+  }
+}
