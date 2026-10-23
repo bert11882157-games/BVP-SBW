@@ -1579,11 +1579,11 @@ def write_report(results, outdir, paths=None, tool_hash='', commit='', validatio
     ok = [r for r in results if not r.get('error')]
     w('## Per aircraft')
     w('')
-    w('| id | gaps (rim / sky) | internal slits | stray | jag | z-fight (new parts) | z-fight (original airframe, visible) | worst item |')
-    w('|---|---:|---:|---:|---:|---:|---:|---|')
+    w('| id | gaps (rim / sky) | internal slits | stray | jag | z-fight (new parts) | z-fight (original airframe, visible) | worst gap | worst other item |')
+    w('|---|---:|---:|---:|---:|---:|---:|---|---|')
     for r in results:
         if r.get('error'):
-            w(f'| {r["vid"]} | ERROR | | | | | | {r["error"].splitlines()[0]} |')
+            w(f'| {r["vid"]} | ERROR | | | | | | {r["error"].splitlines()[0]} | |')
             continue
         S = [f for f in r['findings'] if significant(f)]
         gr = sum(1 for f in S if f['cat'] == 'gaps' and f['kind'] in ('rim gap', 'sky hole'))
@@ -1592,14 +1592,15 @@ def write_report(results, outdir, paths=None, tool_hash='', commit='', validatio
         jg = sum(1 for f in S if f['cat'] == 'jag')
         zf = sum(1 for f in S if f['cat'] == 'zfight')
         air = sum(1 for f in r['findings'] if f['cat'] == 'zfight' and f.get('scope') == 'airframe' and not f.get('harmless'))
-        best = sorted(S, key=lambda f: -f['score'])[:1]
-        cell = ''
-        if best:
-            f = best[0]
-            cell = f'{f["cat"]} {f["score"]:.1f}: {f["text"][:110]}'
-            if f.get('image'):
-                cell = f'[{cell}]({f["image"]})'
-        w(f'| {r["vid"]} | {gr} | {gi} | {st} | {jg} | {zf} | {air} | {cell} |')
+        def cell_of(fs):
+            fs = sorted(fs, key=lambda f: -f['score'])[:1]
+            if not fs:
+                return ''
+            f = fs[0]
+            c = f'{f["cat"]} {f["score"]:.1f}: {f["text"][:100]}'.replace('|', '/')
+            return f'[{c}]({f["image"]})' if f.get('image') else c
+        w(f'| {r["vid"]} | {gr} | {gi} | {st} | {jg} | {zf} | {air} | {cell_of([f for f in S if f["cat"] == "gaps"])} | '
+          f'{cell_of([f for f in S if f["cat"] != "gaps"])} |')
     w('')
     w('## Worst items per aircraft')
     w('')
@@ -1635,6 +1636,18 @@ def write_report(results, outdir, paths=None, tool_hash='', commit='', validatio
         img = f.get('top_image') or f.get('image') or ''
         w(f'{k}. **{f["id"]}** {f["cat"]} / {f["kind"]} (score {f["score"]:.1f}) at {tuple(f["pos"])}: {f["text"]}' +
           (f'  \n   ![{f["id"]}]({img})' if img else ''))
+    w('')
+    w('## Reading the numbers')
+    w('')
+    w('- Counts are findings, not cracks: a symmetric defect appears once per side, and a long crack can be several findings. The worst-ten list counts '
+      'mirror twins once, at most 3 per aircraft and 5 per category.')
+    w('- `gaps` are seen by cameras (crew eyes: six faces each, first three crew seats inside the cockpit; outside: 25 cameras at 12, 40 and 68 degrees '
+      'elevation every 30 degrees of azimuth plus one overhead). Nothing looks up at the underside. Glass is drawn opaque in the buffers.')
+    w('- A rim gap is a dark or see-through line only if the crack really is open to something deeper; "opening seen" is what a camera sees of it, '
+      '"gap" is the clearance between the two parts near it (about +-30%).')
+    w('- `leftover in cabin` is a low-confidence heuristic (an airframe piece seen from the eye under the glass); `open view` is a wide opening '
+      '(an open helicopter cabin), listed in the internal column, not a crack.')
+    w('- Winding is not used. z-fight clashes inside the original airframe are counted apart: they are not part of the cockpit work but they sit at the sills.')
     w('')
     if validation_md:
         w(validation_md.rstrip())
