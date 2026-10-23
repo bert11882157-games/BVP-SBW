@@ -607,11 +607,21 @@ RUSSIAN = {
 }
 
 
+GERMAN = {
+    'MASTER|CAUTION': 'ACHTUNG', 'GEAR|DOWN': 'FAHRWERK|AUS', 'GEAR|UNSAFE': 'FAHRWERK|ZWISCH', 'FUEL|LOW': 'KRAFTST|REST',
+    'OIL|PRESS': 'ÖLDRUCK', 'ENGINE|FIRE': 'BRAND|MOTOR', 'GEN': 'GENERATOR', 'FIRE': 'BRAND', 'ENG|OUT': 'MOTOR|AUS',
+    'HYD|PRESS': 'HYDRAULIK', 'STALL': 'ÜBERZIEHEN', 'OVER G': 'ÜBERLAST', 'LOW|ALT': 'HÖHE', 'DAMAGE': 'SCHADEN',
+    'OVER|SPEED': 'HÖCHST|FAHRT', 'SPD|BRK': 'STURZ|BREMSE', 'AMMO|LOW': 'MUNITION',
+}
+
+
 def lamps_of(name, pal_name):
+    """the lamp set [name] with its legends in the cockpit's language: Russian for the Soviet palettes, German for the
+    Luftwaffe's, else English"""
     spec = LAMP_SETS[name]
     cyr = pal_name.startswith('soviet') or pal_name == 'ussr_ww2'
-    return spec['columns'], [{'Text': RUSSIAN.get(t, t) if cyr else t, 'Condition': c, 'Colour': k}
-                             for t, c, k in spec['lamps']]
+    lang = RUSSIAN if cyr else GERMAN if pal_name.startswith('luftwaffe') else {}
+    return spec['columns'], [{'Text': lang.get(t, t), 'Condition': c, 'Colour': k} for t, c, k in spec['lamps']]
 
 
 RIM = 0.16                     # game gauge bezel width (CockpitGauges.RIM)

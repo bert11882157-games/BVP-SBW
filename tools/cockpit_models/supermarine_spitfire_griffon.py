@@ -281,7 +281,7 @@ def build(atlas, E):
             n = fac[side].N * 0.0015; u = fac[side].U * 0.0015
             m.flat([p0 - u + n, p1 - u + n, p1 + u + n, p0 + u + n], sw['turq_d'], normal=fac[side].N)
     # -- instruments
-    cols, lamps = L.lamps_of('cw', 'soviet')
+    cols, lamps = L.lamps_of('ww2', 'nato')        # (the wartime lamp set, its legends in the cockpit's language)
     cache = {}
     for name, side, a, y, spec, _ in LAYOUT:
         f = fac[side]

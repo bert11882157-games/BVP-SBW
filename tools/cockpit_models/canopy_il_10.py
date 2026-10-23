@@ -54,7 +54,7 @@ def build(atlas, E, skin):
     C.bow(m, sh, E, SPLIT + 0.025, 0.04, 0.025, out, inner)
     C.member(m, sh, E, lambda z: sh.s_at_x(z, FRONT_PANE_X), SPLIT + 0.06, 0.70, 0.035, 0.025, out, inner, steps=6)
     C.bow(m, sh, E, 0.685, 0.03, 0.02, out, inner)
-    C.member(m, sh, E, 0.0, SPLIT + 0.04, 0.70, 0.045, 0.035, out, inner, steps=6)
+    C.member(m, sh, E, 0.0, SPLIT + 0.04, 0.70, 0.045, 0.035, out, inner, steps=16)
     return m, glass
 
 

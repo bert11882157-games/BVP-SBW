@@ -635,62 +635,62 @@
         "Columns": 6,
         "Lamps": [
           {
-            "Text": "ВНИМАНИЕ",
+            "Text": "MASTER|CAUTION",
             "Condition": "MASTER_CAUTION",
             "Colour": "amber"
           },
           {
-            "Text": "ШАССИ|ВЫП",
+            "Text": "GEAR|DOWN",
             "Condition": "GEAR_DOWN",
             "Colour": "green"
           },
           {
-            "Text": "ШАССИ|ПРОМЕЖ",
+            "Text": "GEAR|UNSAFE",
             "Condition": "GEAR_TRANSIT",
             "Colour": "red"
           },
           {
-            "Text": "ОСТАТОК|ТОПЛ",
+            "Text": "FUEL|LOW",
             "Condition": "LOW_FUEL",
             "Colour": "amber"
           },
           {
-            "Text": "ПОЖАР",
+            "Text": "FIRE",
             "Condition": "FIRE",
             "Colour": "red"
           },
           {
-            "Text": "ОТКАЗ|ДВИГ",
+            "Text": "ENG|OUT",
             "Condition": "ENGINE_OUT",
             "Colour": "red"
           },
           {
-            "Text": "ГИДРО",
+            "Text": "HYD|PRESS",
             "Condition": "NONE",
             "Colour": "amber"
           },
           {
-            "Text": "ГЕНЕР",
+            "Text": "GEN",
             "Condition": "NONE",
             "Colour": "amber"
           },
           {
-            "Text": "УГОЛ|ОПАСН",
+            "Text": "STALL",
             "Condition": "STALL",
             "Colour": "red"
           },
           {
-            "Text": "ПЕРЕГР",
+            "Text": "OVER G",
             "Condition": "OVER_G",
             "Colour": "amber"
           },
           {
-            "Text": "ОБЛУЧ",
+            "Text": "RWR|LOCK",
             "Condition": "RWR_LOCK",
             "Colour": "amber"
           },
           {
-            "Text": "ПУСК",
+            "Text": "LAUNCH",
             "Condition": "MISSILE_LAUNCH",
             "Colour": "red"
           }

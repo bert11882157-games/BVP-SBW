@@ -498,7 +498,7 @@ def build(atlas, E):
             m.flat([p, q, q + back, p + back], sw['turq_d'], toward=mid + (mid - mid0))
 
     # -- instruments
-    cols, lamps = L.lamps_of('cw', 'soviet')
+    cols, lamps = L.lamps_of('cw', 'nato')        # (English legends, not the Soviet set)
     cache = {}
     for name, side, a, y, spec, _ in LAYOUT:
         f = fac[side]

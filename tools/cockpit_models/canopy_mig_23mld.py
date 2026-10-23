@@ -3,7 +3,8 @@
 old glass stops short of both), and the real frame layout.
 
 The MiG-23 canopy (side views and photos of the type): a long sloping windscreen of a flat armoured front pane between
-two side panes, its two posts down to the base frame on the nose and its arch at the rear; the canopy hinged at the
+two side panes (the pane a flat rectangle, not the earlier MiGs' oval), its two straight posts from the arch down to the
+base frame on the nose; the canopy hinged at the
 back and lifting up, one blown transparency held by its frame (the front bow against the windscreen arch, the rear
 bow over the bulkhead behind the seat, the sill rails) with the rear-view periscope housing on top.
 
@@ -32,12 +33,14 @@ SECTIONS = [
 ]
 SPLIT = 0.40                     # the canopy's front edge, against the windscreen arch
 FRONT_PANE_X = 0.13              # the flat front pane's edges, out from the centre line
+# the flat armoured front pane (flat_pane): from the arch to the base frame, straight-sided, its corners barely rounded
+PANE = (SPLIT + 0.05, 1.00, FRONT_PANE_X, 0.01, 0.028)
 
 
 def build(atlas, E, skin):
     m = H.Mesh(atlas)
     out, inner, dark = atlas.swatch(skin), atlas.swatch((40, 42, 44)), atlas.swatch((26, 27, 28))
-    sh = C.Shape(SECTIONS)
+    sh = C.Shape(C.flat_pane(SECTIONS, *PANE))     # the windscreen made flat round its front pane
     glass = C.glass_triangles(sh, E, -0.60, SPLIT, nz=12) + C.glass_triangles(sh, E, SPLIT + 0.05, 1.00, nz=8)
     # the canopy: its rear bow, its front bow, the sill rails, the periscope
     C.bow(m, sh, E, -0.58, 0.045, 0.03, out, inner)
@@ -46,7 +49,7 @@ def build(atlas, E, skin):
     C.periscope(m, sh, E, 0.05, out, dark)
     # the windscreen: the arch, the front pane's two posts, the base frame on the nose, the side rails
     C.bow(m, sh, E, SPLIT + 0.03, 0.04, 0.022, out, inner)
-    C.member(m, sh, E, lambda z: sh.s_at_x(z, FRONT_PANE_X), 0.62, 1.00, 0.028, 0.022, out, inner, sides=(1, -1))
+    C.member(m, sh, E, lambda z: sh.s_at_x(z, FRONT_PANE_X), SPLIT + 0.05, 1.00, 0.028, 0.022, out, inner, sides=(1, -1))
     C.bow(m, sh, E, 0.985, 0.03, 0.02, out, inner)
     C.member(m, sh, E, 0.0, SPLIT + 0.05, 1.00, 0.045, 0.035, out, inner)
     return m, glass
