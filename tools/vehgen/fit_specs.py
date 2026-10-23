@@ -194,6 +194,9 @@ SPECS = {
         'muzzles': {'Missile': ['missileMuzzle_1']},
         # one missile on the launcher arm, reloaded from inside after every shot (wt_reloads.py sets the reload)
         'weaponSet': {'Missile': {'Magazine': 1, 'RPM': 60}},
+        # MT-LB: engine front right, outlet on the right (-x) hull side face forward (model px, +Z = rear; exhaust_check.py EXITS).
+        # The model has no visible outlet there: a placed point, UNVERIFIED
+        'exhaust': [[-23.75, 27.0, -17.0]],
         'obb': [
             {'bone': 'hull'},
             {'box': [[-8.0, 12.0, -50.0], [8.0, 32.0, -30.0]], 'part': 'MainEngine'},

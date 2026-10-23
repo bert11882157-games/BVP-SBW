@@ -33,7 +33,8 @@ ASSETS = os.path.join(REPO, 'bvp', 'src', 'generated', 'resources', 'assets', 'b
 DATA = os.path.join(REPO, 'bvp', 'src', 'generated', 'resources', 'data', 'berts_vehicle_pack')
 MAX_M = 0.2
 # front-engined vehicles: the hull-front-half rule does not apply (their exhaust may sit forward, but still on a grille)
-FRONT_ENGINE = {'m1128', 'puma_ifv'}
+FRONT_ENGINE = {'m1128', 'puma_ifv', 'bmp2', 'bmp2m', 'bmp_1am', 'marder_1a1', 'marder_1a2', 'm2_bradley', 'vbci', 'ztl_09',
+                'strv_103', '9p149_shturm'}
 BAND = 6.0
 OUT_PX = 0.25            # --fix: origin this far outside the louvre face
 
@@ -53,6 +54,48 @@ EXITS = {
     # Puma: MTU 10V 890 front right, outlet on the right (-x) hull side face forward (x -34.438, the side module face), at
     # the engine deck height. The model has no visible outlet: UNVERIFIED, a decision. Set in puma_build.py (EXHAUST)
     'puma_ifv': [(-34.438, -34.438, 18.1, 25.7, -42.75, -33.25)],
+    # ---- Elite Expansion 2 ground pass (exhaust_audit.csv): rear plate louvres / grilles, model px, +Z = rear ----
+    # BTR-90: the seven engine-deck vents behind the turret ring (roof, y 35.94, x +-17.3, z 52.7 .. 64.5); the model has no side pipe
+    'btr_90': [(-17.3, 17.3, 35.94, 35.94, 52.7, 64.5)],
+    # Challenger 2: the two recessed exhaust grilles of the lower rear plate (dark cut-outs, x 2.3 .. 13.7, y 19.2 .. 23.6)
+    'challenger_2': [(-13.7, -2.3, 19.2, 23.6, 72.9), (2.3, 13.7, 19.2, 23.6, 72.9)],
+    # Leclerc: the horizontal slat bank across the rear plate (hull elements 414-465, slats x +-22, y 21.5 .. 28.8, face z 68.4)
+    'leclerc_s1': [(-22.0, 22.0, 21.5, 28.8, 68.4)],
+    # Leopard 1A1A1: banded rear-plate panel x 3.5 .. 19.5, y 21.2 .. 28.8, z 73.3 (heuristic hit) and its mirror; the mirror is UNVERIFIED
+    'leopard_1a1a1': [(-19.5, -3.5, 21.2, 28.8, 73.3), (3.5, 19.5, 21.2, 28.8, 73.3)],
+    # Leopard 2A4: the two rectangular grilles of the rear plate, x +-(3.4 .. 12.1), y 19.6 .. 24.5, panel face z 72.6
+    'leopard_2a4': [(-12.1, -3.4, 19.6, 24.5, 72.6), (3.4, 12.1, 19.6, 24.5, 72.6)],
+    # Strv 103: front-engined; the comb of louvres along the front edge of the engine deck (y 31.1, z -53.3 .. -49.3, x +-(6.7 .. 27.3))
+    'strv_103': [(-27.3, -6.7, 31.1, 31.1, -53.3, -49.3), (6.7, 27.3, 31.1, 31.1, -53.3, -49.3)],
+    # T-80BVM: the louvred rear-plate window, x +-7.8, y 18.2 .. 22.8, outer face z 58.5
+    't80bvm_obr2022': [(-7.8, 7.8, 18.2, 22.8, 58.5)],
+    # VT-4A1: the two slat panels of the rear plate, x +-(1.3 .. 15.7), y 19.8 .. 28.6, slat face z 63.7
+    'vt_4a1': [(-15.7, -1.3, 19.8, 28.6, 63.7), (1.3, 15.7, 19.8, 28.6, 63.7)],
+    # T-64A: the louvred rear-plate grille (same design as the T-64BV): x -8.9 .. 12.3, y 24.7 .. 28.1, face z 60.3
+    't64a': [(-8.9, 12.3, 24.7, 28.1, 60.3)],
+    # K2: the full-width louvre bank of the rear plate, x +-16.4, y 20.5 .. 27.3, stepped slats to z 68.0
+    'k2a1_black_panther': [(-16.4, 16.4, 20.5, 27.3, 68.0)],
+    # Cheonma 2: the two open rear flank bays (no louvre modelled), x +-(18.5 .. 27.5), y 18.5 .. 26.5, rear plane z 67.9. UNVERIFIED
+    'cheonma_2': [(-27.5, -18.5, 18.5, 26.5, 67.9), (18.5, 27.5, 18.5, 26.5, 67.9)],
+    # BMD-1 and BTR-ZD (same hull): the banded rear-plate panels either side of the centre, x 10.8 .. 22.5, y 15.9 .. 21.2
+    'bmd_1': [(-22.4, -10.8, 15.9, 21.2, 45.1, 46.85), (11.0, 22.6, 15.9, 21.2, 45.1, 46.85)],
+    'btr_zd': [(-21.2, -10.2, 15.1, 22.7, 53.64, 56.18), (10.4, 21.4, 15.1, 22.7, 53.64, 56.18)],
+    # PT-76B: the two louvred fan-shaped grilles of the rear plate, x +-(9.5 .. 19.1), y 18.0 .. 24.9, face z 58.6
+    'pt76b': [(-19.1, -9.5, 18.0, 24.9, 58.6), (9.5, 19.1, 18.0, 24.9, 58.6)],
+    # QN-506: the two dark louvre panels of the rear engine deck (roof y 30.8, x +-(1.3 .. 16.7), z 46.1 .. 52.1); no side outlet modelled
+    'qn_506model': [(-16.9, -1.3, 30.8, 30.8, 46.1, 52.1), (1.3, 16.5, 30.8, 30.8, 46.1, 52.1)],
+    # ---- front-engined (FRONT_ENGINE), outlet on the right (-x) hull side face forward at engine height. The models have no
+    # visible outlet there: placed points, UNVERIFIED decisions (the m1128 / puma_ifv precedent) ----
+    'bmp2': [(-29.05, -29.05, 29.5, 33.5, -26.0, -17.0)],
+    'bmp2m': [(-29.05, -29.05, 29.5, 33.5, -26.0, -17.0)],
+    'bmp_1am': [(-29.05, -29.05, 29.5, 33.5, -26.0, -17.0)],
+    'marder_1a1': [(-29.0, -29.0, 22.5, 25.5, -27.0, -17.0)],
+    'marder_1a2': [(-26.3, -26.3, 21.0, 25.5, -33.0, -23.0)],
+    'm2_bradley': [(-20.77, -20.77, 31.5, 34.0, -40.0, -30.0)],
+    'vbci': [(-24.95, -24.95, 30.0, 36.0, -48.0, -38.0)],
+    'ztl_09': [(-23.59, -23.59, 26.0, 31.0, -35.0, -25.0)],
+    # 9P149 (MT-LB): the side slopes from x -21.7 (y 14) to -24.2 (y 31); at y 27 about -23.5. Set in fit_specs.py ('exhaust')
+    '9p149_shturm': [(-23.5, -23.5, 24.0, 30.0, -24.0, -10.0)],
 }
 
 
@@ -177,6 +220,19 @@ def barrel_tip_px(geo):
             tip = P[P[:, 2] <= P[:, 2].min() + 1.0]
             return tip.mean(0)
     return None
+
+
+def outside(b):
+    """--fix origin of a grille box: its centre, pushed OUT_PX outside the box along its thinnest axis (rear plate: +/-Z by the
+    sign of z, side face: +/-X by the sign of x, roof: +Y)."""
+    x0, x1, y0, y1, z0, z1 = box(b)
+    p = [(x0 + x1) / 2, (y0 + y1) / 2, (z0 + z1) / 2]
+    ext = [x1 - x0, y1 - y0, z1 - z0]
+    a = int(np.argmin(ext))
+    if ext[a] <= 2.5:
+        lo, hi = (x0, y0, z0)[a], (x1, y1, z1)[a]
+        p[a] = hi + OUT_PX if (a == 1 or hi > 0) else lo - OUT_PX
+    return p
 
 
 def check(vid, fix=False):
