@@ -157,6 +157,31 @@ def pilot_details(m, atlas, st):
     return clock
 
 
+def operator_details(m, atlas, st):
+    """the navigator-operator's sighting gear (Samara and Monino photos, the 16va description): the Falanga guidance
+    sight hanging from the roof frame on the centre line, its rubber eyecup at his eye 0.4 m ahead with the live
+    reflector reticle in its window, two brown grips under it; the A-12.7 gun mount's grey box and grips low at the
+    front left. Returns his sight (the HeadUpDisplays entry)"""
+    import numpy as np
+    E = np.array(st['E'], float)
+    X, Y, Z = np.array([1.0, 0, 0]), np.array([0, 1.0, 0]), np.array([0, 0, 1.0])
+    dgrey, black, grey, brown = (atlas.swatch(c) for c in ((44, 46, 48), (24, 25, 26), (108, 112, 108), (110, 66, 38)))
+    P = lambda x, y, z: E + np.array([x, y, z])
+    m.box(P(0, 0.02, 0.50), (X, Y, Z), (0.055, 0.075, 0.065), dgrey)              # the sight body
+    m.box(P(0, 0.30, 0.52), (X, Y, Z), (0.016, 0.205, 0.016), dgrey)              # its hanger up to the roof frame
+    m.ring(P(0, 0, 0.432), -Z, Y, 0.032, 0.045, 0.03, black, seg=16)              # the rubber eyecup toward him
+    for s in (1, -1):                                                               # the two brown grips under it
+        m.box(P(s * 0.085, -0.10, 0.46), (X, Y, Z), (0.018, 0.055, 0.022), brown)
+        m.box(P(s * 0.05, -0.05, 0.47), (X, Y, Z), (0.035, 0.008, 0.012), dgrey)
+    m.box(P(0.20, -0.36, 0.56), (X, Y, Z), (0.06, 0.09, 0.13), grey)              # the A-12.7 mount's box, front left
+    for z in (0.40, 0.46):
+        m.box(P(0.20, -0.24, z), (X, Y, Z), (0.012, 0.035, 0.012), black)         # its two grips
+    g_up, g_n = Y, Z
+    c = P(0, 0, 0.418)                  # (in the eyecup, ahead of the body's face at 0.435)
+    H.combiner(m, c - g_up * 0.03, g_up, -g_n, 0.05, 0.06, 'rect', 0.0, ('bottom', 'side'), 0.004, black)
+    return dict(centre=c, normal=-g_n, up=g_up, width=0.05, height=0.06, seat=st['seat'], style='REFLECTOR')
+
+
 def remove_inner(ac, boxes):
     """the model's faces (not the new cockpit's) whose centre lies in an eye-relative (E, lo, hi) box, except those
     facing out to the right (stored normal within 45 degrees of -x) at least 1.40 m out from the eye: the skin"""
@@ -197,9 +222,8 @@ def stations(ac):
                     BOT_C=-0.900, BOT_W=-0.870, FRONT_Z=0.82, FRONT_Y_C=-0.470, FRONT_Y_W=-0.490, COAMING_X=0.24,
                     CONSOLE_Y=-0.620, CONSOLE_IN=0.23, CONSOLE_OUT=0.32, CONSOLE_FRONT=0.40, CONSOLE_FOOT=-0.95,
                     CONSOLE_BACK=-0.08, CUSHION_Y=-0.80, SEAT_Z=0.02, SEAT_FOOT=-1.03, BACK_TOP=0.02,
-                    seat_kind='armoured', seat_label='Ми-24А', STICK_Z=None, COLLECTIVE=False, FLOOR_Y=-1.05,
-                    sight=dict(z=0.50, y=-0.110, w=0.085, h=0.065, d=0.085,   # the PKV head as at Monino: modest, grey
-                               glass=dict(z=0.42, w=0.075, h=0.065, lean=25, style='REFLECTOR')))
+                    seat_kind='armoured', seat_label='Ми-24А', STICK_Z=0.30, STICK_FOOT=-1.03, COLLECTIVE=False,
+                    FLOOR_Y=-1.05, sight=None)    # (his own stick in its boot, as photographed; his sight: operator_details)
     return pilot, operator
 
 def main(argv):
@@ -234,6 +258,7 @@ def main(argv):
         g, d, h = HS.build(m, atlas, st, painters=painters)
         gauges += g; displays += d; huds.append(h)
     gauges.append(pilot_details(m, atlas, pilot))
+    huds[1] = operator_details(m, atlas, operator)
     cabin_panels(m, atlas, E0)
     pm, line = HS.install(ac, m, gauges, displays, huds, [E0, E1])
     print(f'{VID}: removed {removed}; new cockpit {len(pm["polys"])} faces, {len(gauges)} gauges, '
