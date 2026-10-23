@@ -54,6 +54,9 @@ SEEDS = {}
 # rear-most ring of the tailpipe's vertices. mig_25pd: the rear plane z -9.5725 of wreck_fuselage_3__hull, vertices x 0.0678 .. 1.537
 # (half width 0.7346), y 1.6048 .. 3.2548 (half height 0.825, the fin-root bump at y 3.39 left out): centre (0.8024, 2.4298).
 EXITS = {'mig_25pd': [(0.8024, 2.4298, -9.5725, 0.780)],
+         # Yak-141: the main nozzle is the octagonal box between the tail booms (part 2 walls, source |x| 13 at y 25..35, top y 43, bottom y 17); exit
+         # plane z 119: 26 x 26 units, centre y 30, half width and height 13 units x 0.05 m = 0.65; px = source * 0.8 + [0, 5.6, -8.0]
+         'yak_141': [(0.0, 1.85, -5.45, 0.650)],
          # F-102A: the J57 burner can ends at source z 195; the exit petals run on to the tail plane z 209 around a hole of 12 units (0.60 m) radius, centre y 40.1 px
          'f_102a': [(0.0, 2.508, -9.4912, 0.620)],
          # Yak-38M: the R-28V-300's two swivelling nozzles sit at the fuselage sides under the wing trailing edge (nozzle box source x 12..19, y 12..18,
