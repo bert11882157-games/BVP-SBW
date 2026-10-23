@@ -32,6 +32,9 @@ Usage: python3 tools/cockpit_models/vulcan_b2.py [--dry-run]
 """
 import json, math, os, sys
 import numpy as np
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import throttle_lib
+THR = []                                 # the throttle levers (throttle_lib), one bone each
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
@@ -850,14 +853,13 @@ def flight_deck(m, atlas, sw, gauges, displays):
         m.flat([[s * px1, F_Y + 0.002, pz0], [s * px1, F_Y + 0.002, pz1], [s * px1, py, pz1], [s * px1, py, pz0]], sw['panel_d'], normal=[s, 0, 0])
     m.flat([[px0, F_Y + 0.002, pz0], [px1, F_Y + 0.002, pz0], [px1, py, pz0], [px0, py, pz0]], sw['panel_d'], normal=[0, 0, -1])
     m.flat([[px0, F_Y + 0.002, pz1], [px1, F_Y + 0.002, pz1], [px1, py, pz1], [px0, py, pz1]], sw['panel_d'], normal=[0, 0, 1])
-    # the four throttle levers: stalks and black grips leaning back, one per slot (the tile's slots stand at 0.19 + 0.206 k of its width)
-    for k in range(4):
-        tx = px1 - (px1 - px0) * (0.19 + 0.206 * k)
-        tz = pz1 - (pz1 - pz0) * 0.36
-        ax = (X, unit([0, 1, -0.25]), unit([0, 0.25, 1]))
-        m.box([tx, py + 0.045, tz], ax, (0.004, 0.050, 0.004), sw['metal'])
-        m.box([tx, py + 0.108, tz + 0.012], ax, (0.013, 0.030, 0.021), sw['black'])
-        m.box([tx, py + 0.141, tz + 0.016], ax, (0.011, 0.005, 0.018), sw['dgrey'])
+    # The four engine levers are their own bones (throttle_lever_1 .. _4, engine 1 on the left), hinged under the pedestal top,
+    # at idle (aft end of the painted slots); the pedestal is shared by both pilots, so there is one set.
+    L_ = pz1 - pz0
+    THR.clear()
+    THR.extend(throttle_lib.jet_levers(m, lambda: Mesh(atlas), sw, 'bomber', x=0.0, top_y=py, z_idle=pz1 - 0.58 * L_, n=4,
+                                       pitch=(px1 - px0) * 0.206, lean0=-30.0, ab=30.0, depth=min(0.34 * L_ / 1.155, py - F_Y - 0.02),
+                                       rise=0.07, k=0.85, plate=False))
     m.box([0.0, py + 0.012, pz0 + 0.08], (X, Y, Z), (0.050, 0.012, 0.030), sw['dgrey'])          # the throttles' friction / HP cock box
     m.box([0.0, py + 0.034, pz0 + 0.08], (X, Y, Z), (0.006, 0.014, 0.006), sw['red'])
     for s in (1, -1):                                    # the airbrake lever on the left of the pedestal
@@ -1109,6 +1111,8 @@ def install(ac, mesh, sticks, gauges, displays):
         cb = {'name': COCKPIT_BONE, 'parent': 'hull', 'pivot': list(hull['pivot'])}
         ac.bones.insert(at, cb)
     cb['poly_mesh'] = pm
+    thr = throttle_lib.add_bones(ac.bones, THR, COCKPIT_BONE)
+    print(f'vulcan_b2 throttle bones {[(n, p) for n, p, _ in thr]}')
     rig = ac.asset.get('AircraftRig')
     (stick_c, foot_c), (stick_p, foot_p) = sticks
     px_c = r5(np.array(foot_c) * np.array([16.0, 16.0, -16.0]))

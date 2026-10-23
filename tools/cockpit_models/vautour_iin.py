@@ -36,6 +36,9 @@ Usage: python3 tools/cockpit_models/vautour_iin.py [--dry-run]
 """
 import json, math, os, sys
 import numpy as np
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import throttle_lib
+THR = []                                 # the throttle levers (throttle_lib), one bone each
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
@@ -1013,13 +1016,10 @@ def build(atlas, E0, E1):
         m.box(P(s * 0.13, -0.955, 0.45), (X, unit([0, 1, -0.35]), unit([0, 0.35, 1])), (0.045, 0.07, 0.01), sw['mgrey'])
         m.box(P(s * 0.13, -1.030, 0.49), (X, Y, Z), (0.012, 0.03, 0.06), sw['dgrey'])
     cy = st['console_y']
-    for tx in (0.31, 0.375):
-        tz = -0.08
-        m.box(P(tx, cy + 0.055, tz), (X, unit([0, 1, 0.25]), unit([0, -0.25, 1])), (0.007, 0.06, 0.007), sw['metal'])
-        grip_ax = (X, unit([0, 1, 0.3]), unit([0, -0.3, 1]))
-        m.box(P(tx, cy + 0.135, tz + 0.02), grip_ax, (0.017, 0.042, 0.030), sw['black'])
-        m.box(P(tx, cy + 0.183, tz + 0.03), grip_ax, (0.014, 0.009, 0.026), sw['dgrey'])
-        m.box(P(tx, cy + 0.15, tz + 0.045), grip_ax, (0.003, 0.008, 0.008), sw['red'])
+    # The two Atar levers are their own bones (throttle_lever_1 / _2), hinged under the console top, at idle.
+    THR.clear()
+    THR.extend(throttle_lib.jet_levers(m, lambda: Mesh(atlas), sw, 'ball', x=E[0] + 0.3425, top_y=E[1] + cy,
+                                       z_idle=E[2] - 0.08 - 0.06, n=2, pitch=0.065, hx=0.065, friction=False))
     seat_mesh(m, atlas, sw, P, X, Y, Z)
 
     # control stick: the boot stays with the cockpit, the rest goes into the stick bone
@@ -1078,6 +1078,8 @@ def install(ac, mesh, stick, gauges, displays, hud, eye, seat=0):
         cb = {'name': COCKPIT_BONE, 'parent': 'hull', 'pivot': list(hull['pivot'])}
         ac.bones.insert(at, cb)
     cb['poly_mesh'] = pm
+    thr = throttle_lib.add_bones(ac.bones, THR, COCKPIT_BONE)
+    print(f'vautour_iin throttle bones {[(n, p) for n, p, _ in thr]}')
     rig = ac.asset.get('AircraftRig')
     mesh_s, foot = stick
     px = r5(np.array(foot) * np.array([16.0, 16.0, -16.0]))
