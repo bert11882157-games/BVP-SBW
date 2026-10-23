@@ -1,0 +1,749 @@
+{
+  "id": "f_22a",
+  "name": "F-22A Raptor",
+  "entityClass": "AuthoredFixedWingAircraft",
+  "template": "f_15c",
+  "source": "F-22A.mtb",
+  "note": "New vehicle (Elite Expansion 2): F-22A.mtb on the F-15C rig (twin-engine single-seater with ailerons, stabilators and twin rudders; closest in size, 18.9 m against 19.43 m). Orphan id f_22a: its armaments and flight_reference already existed, nothing was registered. Source nose is toolbox -x (yaw180). Canopy closed (part 17; part 16 = the same frame raised, left out; part 24 = a gunsight box in the cockpit, left out). The weapon bays are modelled closed (flat painted doors), nothing to close. Baked stores cut out (two AIM-260-labelled missiles and a 600 gal-class tank a side) and kept in work/elite_expansion_2/f22a/stores; the wing pylons stay. The model's own gear and wheels; the F-15C cockpit data is not carried over.",
+  "yaw180": true,
+  "scale": 0.723,
+  "lengthParts": [
+    0,
+    1,
+    2
+  ],
+  "templateLengthBones": [
+    "wreck_fuselage_0__hull",
+    "wreck_fuselage_1__hull",
+    "wreck_fuselage_2__hull",
+    "wreck_fuselage_3__hull"
+  ],
+  "groundParts": [
+    12,
+    14,
+    15
+  ],
+  "excludeParts": [
+    16,
+    24
+  ],
+  "storeTextureV": -1,
+  "keepBoxes": [],
+  "fuselageCuts": [
+    -72,
+    -2,
+    48
+  ],
+  "keepTemplateBones": [],
+  "attachments": {
+    "pilot_eye": [
+      0.0,
+      47.718,
+      -86.97748
+    ],
+    "Vulcan_muzzle": [
+      -28.92,
+      32.535,
+      -53.71948
+    ]
+  },
+  "seatPositions": {
+    "0": [
+      0.0,
+      21.818,
+      -86.97748
+    ]
+  },
+  "addSeats": [],
+  "note_scale": "Real size: 418.5 source units nose to tail = 18.9 m and 300 units span = 13.56 m at 16 px/m (0.7226 and 0.7232 px per unit).",
+  "dropGroups": [
+    "Import aim260"
+  ],
+  "removeClientKeys": [
+    "CanopyGlass",
+    "CockpitGauges",
+    "FlightDisplays",
+    "HeadUpDisplay"
+  ],
+  "parts": {
+    "4": "wing",
+    "5": "wing",
+    "7": {
+      "bone": "side:wreck_fuselage_3__rudder_0,wreck_fuselage_3__rudder_1",
+      "if": {
+        "frame": "source",
+        "zMin": 0
+      },
+      "else": "drop"
+    },
+    "8": {
+      "bone": "side:wreck_fuselage_3__elevator_0,wreck_fuselage_3__elevator_1",
+      "if": {
+        "frame": "source",
+        "absXMin": 35
+      },
+      "else": "side:wreck_fuselage_3__nozzle_0,wreck_fuselage_3__nozzle_1"
+    },
+    "9": {
+      "bone": "side:wreck_fuselage_3__elevator_0,wreck_fuselage_3__elevator_1",
+      "if": {
+        "frame": "source",
+        "absXMin": 35
+      },
+      "else": "side:wreck_fuselage_3__nozzle_0,wreck_fuselage_3__nozzle_1"
+    },
+    "10": [
+      {
+        "bone": "wreck_wing_left__aileron_10",
+        "if": {
+          "frame": "source",
+          "absXMin": 104
+        }
+      },
+      {
+        "bone": "wreck_wing_left__flaperon_0",
+        "if": {}
+      }
+    ],
+    "11": [
+      {
+        "bone": "wreck_wing_right__aileron_11",
+        "if": {
+          "frame": "source",
+          "absXMin": 104
+        }
+      },
+      {
+        "bone": "wreck_wing_right__flaperon_1",
+        "if": {}
+      }
+    ],
+    "12": [
+      {
+        "bone": "wreck_fuselage_1__gear_wheel_0",
+        "if": {
+          "frame": "source",
+          "yMax": 3.2
+        }
+      },
+      {
+        "bone": "wreck_fuselage_1__gear_steer_0",
+        "if": {
+          "frame": "source",
+          "absXMax": 3.2
+        }
+      },
+      {
+        "bone": "wreck_fuselage_1__landing_gear_12",
+        "if": {}
+      }
+    ],
+    "14": [
+      {
+        "bone": "wreck_fuselage_2__gear_wheel_1",
+        "if": {
+          "frame": "source",
+          "absXMin": 31,
+          "absXMax": 39
+        }
+      },
+      {
+        "bone": "wreck_fuselage_2__landing_gear_14",
+        "if": {}
+      }
+    ],
+    "15": [
+      {
+        "bone": "wreck_fuselage_2__gear_wheel_2",
+        "if": {
+          "frame": "source",
+          "absXMin": 31,
+          "absXMax": 39
+        }
+      },
+      {
+        "bone": "wreck_fuselage_2__landing_gear_15",
+        "if": {}
+      }
+    ],
+    "17": "wreck_fuselage_0__canopy",
+    "21": [
+      {
+        "bone": "drop",
+        "if": {
+          "frame": "source",
+          "yMax": 19.5
+        }
+      },
+      {
+        "bone": "wing",
+        "if": {}
+      }
+    ],
+    "23": [
+      {
+        "bone": "drop",
+        "if": {
+          "frame": "source",
+          "yMax": 19.5
+        }
+      },
+      {
+        "bone": "wing",
+        "if": {}
+      }
+    ]
+  },
+  "addBones": [
+    {
+      "name": "flaperon_0",
+      "parent": "hull",
+      "pivot": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "wreck_wing_left__flaperon_0",
+      "parent": "flaperon_0",
+      "pivot": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "flaperon_1",
+      "parent": "hull",
+      "pivot": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "wreck_wing_right__flaperon_1",
+      "parent": "flaperon_1",
+      "pivot": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "nozzle_0",
+      "parent": "hull",
+      "pivot": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "wreck_fuselage_3__nozzle_0",
+      "parent": "nozzle_0",
+      "pivot": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "nozzle_1",
+      "parent": "hull",
+      "pivot": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "wreck_fuselage_3__nozzle_1",
+      "parent": "nozzle_1",
+      "pivot": [
+        0,
+        0,
+        0
+      ]
+    }
+  ],
+  "sweeps": {
+    "elevator_0": {
+      "pivot": [
+        44.826,
+        33.6195,
+        114.01652
+      ],
+      "axis": [
+        -1,
+        0,
+        0
+      ],
+      "maxDegrees": 25
+    },
+    "rudder_0": {
+      "pivot": [
+        37.05375,
+        60.62355,
+        94.49552
+      ],
+      "axis": [
+        -0.43414,
+        -0.82131,
+        0.37009
+      ],
+      "maxDegrees": 30
+    },
+    "elevator_1": {
+      "pivot": [
+        -44.826,
+        33.6195,
+        114.01652
+      ],
+      "axis": [
+        -1,
+        0,
+        0
+      ],
+      "maxDegrees": 25
+    },
+    "rudder_1": {
+      "pivot": [
+        -37.05375,
+        60.62355,
+        94.49552
+      ],
+      "axis": [
+        0.43414,
+        -0.82131,
+        0.37009
+      ],
+      "maxDegrees": 30
+    },
+    "aileron_10": {
+      "pivot": [
+        85.314,
+        32.6796,
+        73.52852
+      ],
+      "axis": [
+        -0.97758,
+        0.07821,
+        0.19552
+      ],
+      "maxDegrees": 25
+    },
+    "aileron_11": {
+      "pivot": [
+        -85.314,
+        32.6796,
+        73.52852
+      ],
+      "axis": [
+        -0.97758,
+        -0.07821,
+        -0.19552
+      ],
+      "maxDegrees": 25
+    },
+    "flaperon_0": {
+      "pivot": [
+        57.84,
+        33.6195,
+        77.86652
+      ],
+      "axis": [
+        -0.99015,
+        0.0198,
+        0.13862
+      ],
+      "maxDegrees": 25
+    },
+    "flaperon_1": {
+      "pivot": [
+        -57.84,
+        33.6195,
+        77.86652
+      ],
+      "axis": [
+        -0.99015,
+        -0.0198,
+        -0.13862
+      ],
+      "maxDegrees": 25
+    },
+    "nozzle_0": {
+      "pivot": [
+        10.4835,
+        32.535,
+        104.61752
+      ],
+      "axis": [
+        1,
+        0,
+        0
+      ],
+      "maxDegrees": 20
+    },
+    "nozzle_1": {
+      "pivot": [
+        -10.4835,
+        32.535,
+        104.61752
+      ],
+      "axis": [
+        1,
+        0,
+        0
+      ],
+      "maxDegrees": 20
+    },
+    "gear_wheel_0": {
+      "pivot": [
+        0.0,
+        4.338,
+        -60.22648
+      ]
+    },
+    "gear_steer_0": {
+      "pivot": [
+        0.0,
+        4.338,
+        -60.22648
+      ]
+    },
+    "gear_wheel_1": {
+      "pivot": [
+        25.305,
+        6.507,
+        36.65552
+      ]
+    },
+    "gear_wheel_2": {
+      "pivot": [
+        -25.305,
+        6.507,
+        36.65552
+      ]
+    }
+  },
+  "rigAdd": {
+    "Surfaces": [
+      {
+        "Bone": "flaperon_0",
+        "Parent": "hull",
+        "Pivot": [
+          0,
+          0,
+          0
+        ],
+        "Axis": [
+          1,
+          0,
+          0
+        ],
+        "ControlWeights": {
+          "ElevatorUp": 0,
+          "RightRoll": 0.8,
+          "RudderRight": 0
+        },
+        "MaxDeflectionDegrees": 25
+      },
+      {
+        "Bone": "flaperon_1",
+        "Parent": "hull",
+        "Pivot": [
+          0,
+          0,
+          0
+        ],
+        "Axis": [
+          1,
+          0,
+          0
+        ],
+        "ControlWeights": {
+          "ElevatorUp": 0,
+          "RightRoll": -0.8,
+          "RudderRight": 0
+        },
+        "MaxDeflectionDegrees": 25
+      },
+      {
+        "Bone": "nozzle_0",
+        "Parent": "hull",
+        "Pivot": [
+          0,
+          0,
+          0
+        ],
+        "Axis": [
+          1,
+          0,
+          0
+        ],
+        "ControlWeights": {
+          "ElevatorUp": 1,
+          "RightRoll": 0,
+          "RudderRight": 0
+        },
+        "MaxDeflectionDegrees": 20
+      },
+      {
+        "Bone": "nozzle_1",
+        "Parent": "hull",
+        "Pivot": [
+          0,
+          0,
+          0
+        ],
+        "Axis": [
+          1,
+          0,
+          0
+        ],
+        "ControlWeights": {
+          "ElevatorUp": 1,
+          "RightRoll": 0,
+          "RudderRight": 0
+        },
+        "MaxDeflectionDegrees": 20
+      }
+    ]
+  },
+  "clientSet": {
+    "AircraftRig.Flaps": [],
+    "AircraftRig.Surfaces.Bone=elevator_0.ControlWeights.RightRoll": 0.3,
+    "AircraftRig.Surfaces.Bone=elevator_1.ControlWeights.RightRoll": -0.3,
+    "AircraftRig.Rotors.Bone=gear_wheel_0.DegreesPerTickAtFullSpeed": 211.24,
+    "AircraftRig.Rotors.Bone=gear_wheel_1.DegreesPerTickAtFullSpeed": 140.83,
+    "AircraftRig.Rotors.Bone=gear_wheel_2.DegreesPerTickAtFullSpeed": 140.83,
+    "AfterburnerPresentation.Outlets": [
+      {
+        "Id": "afterburner_0",
+        "Position": [
+          0.65522,
+          2.03344,
+          -7.35197
+        ],
+        "Direction": [
+          0,
+          0,
+          -1
+        ],
+        "NozzleRadiusBlocks": 0.4
+      },
+      {
+        "Id": "afterburner_1",
+        "Position": [
+          -0.65522,
+          2.03344,
+          -7.35197
+        ],
+        "Direction": [
+          0,
+          0,
+          -1
+        ],
+        "NozzleRadiusBlocks": 0.4
+      }
+    ]
+  },
+  "note_rig": "Rig on the model's own hinges (geo px = source x 0.723 + [0, 7.23, 0.5055]): ailerons (outer part 10/11 element) +-25 deg; flaperons (inner element) as roll surfaces +-25 deg at 0.8 roll weight; all-moving stabilators on a lateral spindle at 40% chord, +-25 deg, 0.3 roll; canted twin rudders on their forward-raked hinge lines, +-30 deg; the two 2-D nozzle flap sets (parts 8/9 centre elements) pitch with the elevator, +-20 deg (visual thrust vectoring: the pack's flight model has none); wheel rotors at the model's own centres. No leading-edge flaps: the wing is not split there and the rig has only gear- and airbrake-driven flaps.",
+  "flightReference": {},
+  "armamentOverrides": {
+    "Name": "F-22A Raptor",
+    "MaxPayloadKg": 6000,
+    "Pairs": [
+      {
+        "Id": "wing_pylon",
+        "Name": "Stations 3/7 · wing pylons (600 gal tank)",
+        "Left": [
+          3.3439,
+          1.3782,
+          -1.5207
+        ],
+        "LeftStations": [
+          {
+            "Point": [
+              3.3439,
+              1.3782,
+              -1.5207
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "Right": [
+          -3.3439,
+          1.3782,
+          -1.5207
+        ],
+        "RightStations": [
+          {
+            "Point": [
+              -3.3439,
+              1.3782,
+              -1.5207
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "AllowedStores": [
+          "berts_vehicle_pack:munition/tank_600gal"
+        ],
+        "MaxWeaponsPerPylon": 1,
+        "MaxPylonMassKg": 2268
+      },
+      {
+        "Id": "wing_shoulders",
+        "Name": "Stations 3/7 · pylon beam AAM rails",
+        "Left": [
+          3.7273,
+          1.5906,
+          -1.3691
+        ],
+        "LeftStations": [
+          {
+            "Point": [
+              3.7273,
+              1.5906,
+              -1.3691
+            ],
+            "Face": "left"
+          },
+          {
+            "Point": [
+              2.9605,
+              1.5906,
+              -1.3691
+            ],
+            "Face": "right"
+          }
+        ],
+        "Right": [
+          -3.7273,
+          1.5906,
+          -1.3691
+        ],
+        "RightStations": [
+          {
+            "Point": [
+              -3.7273,
+              1.5906,
+              -1.3691
+            ],
+            "Face": "right"
+          },
+          {
+            "Point": [
+              -2.9605,
+              1.5906,
+              -1.3691
+            ],
+            "Face": "left"
+          }
+        ],
+        "AllowedStores": [
+          "berts_vehicle_pack:munition/aim120c5",
+          "berts_vehicle_pack:munition/aim120d",
+          "berts_vehicle_pack:munition/aim9x"
+        ],
+        "MaxWeaponsPerPylon": 2,
+        "MaxPylonMassKg": 350
+      }
+    ],
+    "Singles": [
+      {
+        "Id": "bay_main",
+        "Name": "Main bay · 6 AIM-120",
+        "Position": [
+          0.0,
+          1.0393,
+          -3.1947
+        ],
+        "Internal": true,
+        "AllowedStores": [
+          "berts_vehicle_pack:munition/aim120c5",
+          "berts_vehicle_pack:munition/aim120d"
+        ],
+        "MaxPylonMassKg": 1000,
+        "QuantitySelectable": true,
+        "ExclusiveWith": [
+          "bay_bombs",
+          "bay_aam_pair"
+        ]
+      },
+      {
+        "Id": "bay_bombs",
+        "Name": "Main bay · 2 GBU-32 JDAM or 8 GBU-39 SDB",
+        "Position": [
+          0.0,
+          1.0393,
+          -3.1947
+        ],
+        "Internal": true,
+        "AllowedStores": [
+          "berts_vehicle_pack:munition/gbu32",
+          "berts_vehicle_pack:munition/gbu39_x4"
+        ],
+        "MaxPylonMassKg": 1000,
+        "QuantitySelectable": true,
+        "ExclusiveWith": [
+          "bay_main"
+        ]
+      },
+      {
+        "Id": "bay_aam_pair",
+        "Name": "Main bay · 2 AIM-120 with the bombs",
+        "Position": [
+          0.0,
+          1.0393,
+          -3.1947
+        ],
+        "Internal": true,
+        "AllowedStores": [
+          "berts_vehicle_pack:munition/aim120c5",
+          "berts_vehicle_pack:munition/aim120d"
+        ],
+        "MaxPylonMassKg": 330,
+        "QuantitySelectable": true,
+        "ExclusiveWith": [
+          "bay_main"
+        ]
+      },
+      {
+        "Id": "side_bay_left",
+        "Name": "Left side bay · AIM-9X",
+        "Position": [
+          1.7171,
+          1.5364,
+          1.55
+        ],
+        "Internal": true,
+        "AllowedStores": [
+          "berts_vehicle_pack:munition/aim9x"
+        ],
+        "MaxPylonMassKg": 90,
+        "QuantitySelectable": true
+      },
+      {
+        "Id": "side_bay_right",
+        "Name": "Right side bay · AIM-9X",
+        "Position": [
+          -1.7171,
+          1.5364,
+          1.55
+        ],
+        "Internal": true,
+        "AllowedStores": [
+          "berts_vehicle_pack:munition/aim9x"
+        ],
+        "MaxPylonMassKg": 90,
+        "QuantitySelectable": true
+      }
+    ],
+    "StoreGroups": {}
+  },
+  "note_armament": "No War Thunder F-22 (flightmodels has f_117 but no f_22*): the real USAF load, written by work/elite_expansion_2/f22a/f22a_armament.py."
+}
