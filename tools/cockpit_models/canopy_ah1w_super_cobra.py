@@ -348,12 +348,9 @@ def build(uv_out, uv_in):
     tube(m, [J2, mirror(J2)], R_TUBE, uv_out)    # header
     tube(m, [J3, mirror(J3)], R_TUBE, uv_out)    # the bow between the windscreen and the overhead plate
     tube(m, [J4, mirror(J4)], R_TUBE, uv_out)    # the windscreen's foot on the nose deck
-    # pilot overhead plate's frame (in the roof plane)
-    rf = []
-    for (zz, xx) in ((ROOF_Z[0], ROOF_X), (ROOF_Z[0], -ROOF_X), (ROOF_Z[1], -ROOF_X), (ROOF_Z[1], ROOF_X)):
-        rf.append(np.array([xx, rail_y(zz), zz]))
-    for i in range(4):
-        tube(m, [rf[i], rf[(i + 1) % 4]], R_SMALL, uv_out, seg=6)
+    # the pilot's roof: a slim centre spine and the rear bow (the header and the rails frame the two roof plates)
+    tube(m, [np.array([0.0, rail_y(Z1), Z1]), np.array([0.0, rail_y(Z2), Z2])], R_TUBE, uv_out)
+    tube(m, [np.array([RX, rail_y(Z1), Z1]), np.array([-RX, rail_y(Z1), Z1])], R_TUBE, uv_out)
 
     # --- glass panes
     def pane(name, poly, r=R_TUBE):
@@ -366,7 +363,9 @@ def build(uv_out, uv_in):
         pane('gunner quarter plate', [S(J3, s), S(J4, s), S(QF, s), S(QM, s), S(CB, s)])
     pane('gunner windscreen', [J3, J4, mirror(J4), mirror(J3)])
     pane('gunner overhead plate', [J2, J3, mirror(J3), mirror(J2)])
-    pane('pilot overhead plate', rf, R_SMALL)
+    for s in sides:                              # the pilot's roof: one flat plate each side of the spine, in the roof plane
+        pane('pilot roof plate', [np.array([0.0, rail_y(Z1), Z1]), np.array([s * RX, rail_y(Z1), Z1]),
+                                  np.array([s * RX, rail_y(Z2), Z2]), np.array([0.0, rail_y(Z2), Z2])])
 
     # --- opaque parts: the roof skin, the rear wall (airframe colour outside, dark inside)
     def slab(poly, normal, thick):
@@ -382,24 +381,6 @@ def build(uv_out, uv_in):
                 out = -out
             m.face([a, b, b - n * thick, a - n * thick], uv_out, out)
 
-    def roof_quad(z0, z1, x0, x1):
-        slab([[x0, rail_y(z0), z0], [x1, rail_y(z0), z0], [x1, rail_y(z1), z1], [x0, rail_y(z1), z1]], [0, 1, 0.1], 0.012)
-    # the door sills: a wall from each door's bottom edge down to the sill rail's top, closing the slot under the glass frame
-    for chain in (PILOT_BOTTOM, [PB, CB, QM, QF]):
-        for a, b in zip(chain[:-1], chain[1:]):
-            for s in sides:
-                A, B = S(a, s), S(b, s)
-                low = lambda p: np.array([p[0], rail_top(p[2]) - 0.01, p[2]])
-                poly = [A, B, low(B), low(A)]
-                n = unit(np.cross(B - A, [0, 1, 0]))
-                if n[0] * np.mean([p[0] for p in poly]) < 0:
-                    n = -n
-                slab(poly, n, 0.012)
-    xe = RX - 0.004
-    roof_quad(Z1, ROOF_Z[0], -xe, xe)
-    roof_quad(ROOF_Z[1], Z2, -xe, xe)
-    roof_quad(ROOF_Z[0], ROOF_Z[1], ROOF_X + 0.004, xe)
-    roof_quad(ROOF_Z[0], ROOF_Z[1], -xe, -ROOF_X - 0.004)
     # the rear wall in the plane z = Z1 - 0.012: from the roof's rear edge down the rear door posts to the old bulkhead's top (y 3.13)
     zr = Z1 - 0.014
     yb = 3.12

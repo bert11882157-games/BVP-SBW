@@ -1,11 +1,11 @@
 {
-  "why": "Real AH-1W (and AH-1S/AH-1F) tandem canopy: flat acrylic plates in a light frame, no curved glass. Gunner (front): a raked flat windscreen between the two A-pillars, a small flat overhead plate, a door plate and a quarter plate each side; pilot (rear): a flat door plate each side and a small flat overhead plate in the roof; the pilot looks forward over the gunner's canopy. Layout from the War Thunder ah_1w model and AH-1W photographs (the AH-1Z's different canopy was not used). The pilot's reflector-sight combiner (also in CanopyGlass) is excluded by the box ranges.",
+  "why": "Real AH-1W (and AH-1S/AH-1F) tandem canopy: flat acrylic plates in a light frame, no curved glass. Gunner (front): a raked flat windscreen between the two A-pillars, a small flat overhead plate, a door plate and a quarter plate each side; pilot (rear): a flat door plate each side and a flat roof plate each side of a slim centre spine; the pilot looks forward over the gunner's canopy. Layout from the War Thunder ah_1w model and AH-1W photographs (the AH-1Z's different canopy was not used). The pilot's reflector-sight combiner (also in CanopyGlass) is excluded by the box ranges.",
   "panes": [
     {"name": "pilot side plate", "box": [[0.40, 2.75, 3.10], [0.52, 3.04, 4.20]], "mirror": true},
     {"name": "gunner door plate", "box": [[0.40, 2.60, 4.85], [0.52, 2.87, 5.15]], "mirror": true},
     {"name": "gunner quarter plate", "box": [[0.35, 2.43, 5.40], [0.48, 2.57, 5.75]], "mirror": true},
     {"name": "gunner windscreen", "box": [[-0.20, 2.60, 5.45], [0.20, 2.95, 5.80]]},
     {"name": "gunner overhead plate", "box": [[-0.20, 3.10, 4.95], [0.20, 3.25, 5.20]]},
-    {"name": "pilot overhead plate", "box": [[-0.10, 3.30, 3.40], [0.10, 3.40, 3.70]]}
+    {"name": "pilot roof plate", "box": [[0.02, 3.20, 3.05], [0.32, 3.45, 4.90]], "mirror": true}
   ]
 }
