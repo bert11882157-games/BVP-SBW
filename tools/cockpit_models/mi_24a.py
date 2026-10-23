@@ -97,6 +97,32 @@ def cabin_panels(m, atlas, E0):
     m.box(c, (X, Y, Z), half, wall, front=(2, 1, face, X, Y))       # the electrical rack behind him, its face forward
 
 
+def remove_inner(ac, boxes):
+    """the model's faces (not the new cockpit's) whose centre lies in an eye-relative (E, lo, hi) box, except those
+    facing out to the right (stored normal within 45 degrees of -x): the skin"""
+    import numpy as np
+    n = 0
+    for b in ac.bones:
+        pm = b.get('poly_mesh')
+        if not pm or not pm.get('polys') or b['name'].endswith('__cockpit') or b['name'] != 'hull':
+            continue
+        P = np.array(pm['positions'], float) * np.array([1, 1, -1]) / 16.0
+        N = np.array(pm['normals'], float) * np.array([1, 1, -1])
+        out = []
+        for poly in pm['polys']:
+            if poly:
+                c = P[[v[0] for v in poly]].mean(0)
+                nv = N[[v[1] for v in poly]].mean(0)
+                nv = nv / (np.linalg.norm(nv) or 1)
+                inside = any(np.all(c - np.array(E) >= lo) and np.all(c - np.array(E) <= hi) for E, lo, hi in boxes)
+                if inside and nv[0] > -0.7:
+                    n += 1
+                    continue
+            out.append(poly)
+        pm['polys'] = out
+    return n
+
+
 def stations(ac):
     pilot = dict(seat=0, E=ac.eye(0), S=1.25, colours=COLOURS, layout=PILOT_LAYOUT, consoles=CONSOLES_PILOT,
                  PANEL_Z=0.66, LEAN=12, HINGE=0.18, WING=30, WALL_X=0.44, TOP_C=-0.330, TOP_W=-0.370,
@@ -125,10 +151,14 @@ def main(argv):
         (E0, (-0.36, -0.55, -0.62), (0.36, 0.30, 0.95), 0.36, -0.55),     # his old seat, panel and sight above it
         (E1, (-0.40, -1.03, -0.60), (0.40, -0.55, 0.95), 0.40, -0.55),    # the operator's nose up to its sill
         (E1, (-0.62, -1.03, -0.60), (0.62, -0.58, 0.40), 0.62, -0.58),    # its old consoles where the cabin is wider
-        (E1, (-0.30, -0.55, -0.60), (0.30, 0.20, 0.70), 0.30, -0.55),     # his old seat and sight above it
-        (E0, (-1.72, -1.33, -0.62), (-1.36, 0.22, 1.25), 2.0, 0.0),      # the old right-hand cabin panels
-        (E0, (-1.71, -1.65, -1.25), (-0.70, 0.45, -0.55), 2.0, 0.0),      # the old rack behind him
-        (E0, (-1.36, -1.33, -0.62), (-0.40, 0.56, 1.25), 2.0, 0.0)])}    # and the old boxes between
+        (E1, (-0.30, -0.55, -0.60), (0.30, 0.20, 0.70), 0.30, -0.55)])}   # his old seat and sight above it
+    # the old right-hand cabin panels, the rack behind him and the boxes between, but not the cabin's right wall:
+    # that side is built of boxes whose outer faces are the fuselage skin (1.44-1.69 m out), so every face facing out
+    # to the right stays (bert's rule: the exterior never changes)
+    removed['old right-hand cabin'] = remove_inner(ac, [
+        (E0, (-1.72, -1.33, -0.62), (-1.36, 0.22, 1.25)),
+        (E0, (-1.71, -1.65, -1.25), (-0.70, 0.45, -0.55)),
+        (E0, (-1.36, -1.33, -0.62), (-0.40, 0.56, 1.25))])
     pilot, operator = stations(ac)
     atlas = H.A.Atlas(VID)
     removed['floor faces repainted'] = HS.repaint_floor(ac, atlas, FLOOR, [
