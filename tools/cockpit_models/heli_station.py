@@ -7,7 +7,7 @@ A station is a dict, distances in metres from that crewman's eye (x to his left,
   seat (index), E (eye, vehicle-local), S (the model's scale round the cockpit: seat, controls and pedals grow by it),
   PANEL_Z, LEAN (deg), HINGE, WING (deg), WALL_X, TOP_C, TOP_W, BOT_C, BOT_W, FRONT_Z, FRONT_Y_C, FRONT_Y_W, COAMING_X,
   CONSOLE_Y, CONSOLE_IN, CONSOLE_OUT, CONSOLE_FRONT, CONSOLE_FOOT, CONSOLE_BACK, CUSHION_Y, SEAT_Z, BACK_TOP (the head
-  pad's top), seat_kind ('ejection' or 'armoured'), seat_label, STICK_Z, STICK_FOOT, COLLECTIVE (True/False),
+  pad's top), seat_kind ('ejection', 'armoured' or 'plain'), seat_label, STICK_Z, STICK_FOOT, COLLECTIVE (True/False),
   PEDAL_Z, PEDAL_Y, PEDAL_HANG (pedals hung from the panel instead of standing on the floor), layout (list as in
   ka50.py), labels (placards painted on the centre facet: [(a, y, text)]), consoles ((left rows, right rows)),
   hud (None, or dict(z, w, h, lean, body_top)), sight (None, or dict(z, y, w, h, d): a sight head with its eyepiece
@@ -521,7 +521,7 @@ def build(m, atlas, st, ppm=400, painters=None):
               front=(1, 1, stripes, X, -ax_b[2]))
     else:                                                           # an armoured crew seat: side plates and head pad
         m.box(head - Z * 0.02, (X, Y, Z), (0.12 * sc, 0.09 * sc, 0.035), sw['black'], front=(2, 1, plate, X, Y))
-        for s in (1, -1):
+        for s in ((1, -1) if st.get('seat_kind') != 'plain' else ()):       # ('plain': a crew seat without them)
             m.box(bc + X * s * 0.235 * sc - ax_b[1] * 0.05, ax_b, (0.008, back_len / 2 * 0.8, 0.07 * sc), sw['frame'])
     m.box(P(0, cu + 0.05 * sc, sz + 0.10 * sc), (X, Y, Z), (0.18 * sc, 0.006, 0.02), sw['mgrey'])
     m.box(P(0, cu + 0.057 * sc, sz + 0.10 * sc), (X, Y, Z), (0.03, 0.008, 0.026), sw['metal'])
@@ -555,6 +555,17 @@ def build(m, atlas, st, ppm=400, painters=None):
         m.box(p1 + d_ * 0.10 + up_ * 0.01, (X, up_, d_), (0.03, 0.03, 0.025), sw['dgrey'])
         m.box(p1 + d_ * 0.10 + up_ * 0.043, (X, up_, d_), (0.006, 0.004, 0.006), sw['red'])
     return gauges, displays, hud
+
+
+def bezels(m, atlas, st):
+    """a raised bezel round every instrument of a station's layout (the panel then reads as a panel, not a board)"""
+    S = Station(st)
+    rim = atlas.swatch((30, 31, 32))
+    for name, side, a, y, spec, _ in st['layout']:
+        if spec[0] == 'game':
+            f = S.fac[side]
+            r0 = spec[2] / 2 * 1.06
+            m.ring(S.at(side, a, y), f.N, f.U, r0, r0 + 0.009, 0.007, rim, seg=20)
 
 
 def remove_old(ac, boxes, glass_gap=0.04, min_index=0):
