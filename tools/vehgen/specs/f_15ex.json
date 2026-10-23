@@ -398,7 +398,7 @@
     "Pairs": [
       {
         "Id": "wing_shoulders",
-        "Name": "Stations 1/3 and 11/13 · wing pylon shoulder rails",
+        "Name": "Stations 2/8 · wing pylon LAU-128 rails",
         "Left": [
           3.0953,
           2.1012,
@@ -441,6 +441,63 @@
               -2.417,
               2.1012,
               -1.2541
+            ],
+            "Face": "left"
+          }
+        ],
+        "AllowedStores": [
+          "berts_vehicle_pack:munition/aim9x",
+          "berts_vehicle_pack:munition/aim120c5",
+          "berts_vehicle_pack:munition/aim120d"
+        ],
+        "MaxWeaponsPerPylon": 2,
+        "MaxPylonMassKg": 350
+      },
+      {
+        "Id": "wing_outer",
+        "Name": "Stations 1/9 · outboard wing pylon LAU-128 rails",
+        "Left": [
+          4.675,
+          1.9887,
+          -2.8854
+        ],
+        "LeftStations": [
+          {
+            "Point": [
+              4.675,
+              1.9887,
+              -2.8854
+            ],
+            "Face": "left"
+          },
+          {
+            "Point": [
+              4.0,
+              1.9887,
+              -2.8854
+            ],
+            "Face": "right"
+          }
+        ],
+        "Right": [
+          -4.675,
+          1.9887,
+          -2.8854
+        ],
+        "RightStations": [
+          {
+            "Point": [
+              -4.675,
+              1.9887,
+              -2.8854
+            ],
+            "Face": "right"
+          },
+          {
+            "Point": [
+              -4.0,
+              1.9887,
+              -2.8854
             ],
             "Face": "left"
           }
@@ -776,5 +833,5 @@
     ],
     "StoreGroups": {}
   },
-  "note_armament": "No WT F-15EX: the F-15E stations with AIM-9X / AIM-120C-5/D (owner decision pending); f_15e stations (work/elite_expansion_2/f15e/WT-f15e.md), written by work/elite_expansion_2/tools/f15e_armament.py."
+  "note_armament": "No WT F-15EX: the F-15E stations with AIM-9X / AIM-120C-5/D (owner approved 12 AAM: 4 CFT-corner AIM-120 + 2 a side on stations 2/8 + 2 a side on the outboard stations 1/9); f_15e stations (work/elite_expansion_2/f15e/WT-f15e.md), written by work/elite_expansion_2/tools/f15e_armament.py."
 }
