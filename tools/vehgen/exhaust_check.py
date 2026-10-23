@@ -34,7 +34,7 @@ DATA = os.path.join(REPO, 'bvp', 'src', 'generated', 'resources', 'data', 'berts
 MAX_M = 0.2
 # front-engined vehicles: the hull-front-half rule does not apply (their exhaust may sit forward, but still on a grille)
 FRONT_ENGINE = {'m1128', 'puma_ifv', 'bmp2', 'bmp2m', 'bmp_1am', 'marder_1a1', 'marder_1a2', 'm2_bradley', 'vbci', 'ztl_09',
-                'strv_103', '9p149_shturm', 'm113a3', 'strela_10m2', 'zbd_05', 'pgz_95', 'm142_himars'}
+                'strv_103', '9p149_shturm', 'm113a3', 'strela_10m2', 'zbd_05', 'pgz_95', 'm142_himars', 'scud_b'}
 BAND = 6.0
 OUT_PX = 0.25            # --fix: origin this far outside the louvre face
 
@@ -118,6 +118,9 @@ EXITS = {
     # M142 HIMARS (FMTV, engine under the cab: FRONT_ENGINE): the model's vertical exhaust stack behind the cab on the left,
     # its top elbow (elements 89 / 90: toolbox x 22.5 .. 28, z 14 .. 23, top y -42); model px. Set in himars_build.py
     'm142_himars': [(12.32, 20.24, 45.76, 45.76, -24.64, -19.8)],
+    # Scud-B (MAZ-543, front engine: FRONT_ENGINE): the model has no pipe; element 70 behind the left cab is taken as the muffler
+    # stack (toolbox x 3.5 .. 6, top y -29.5, z 18 .. 24); model px, origin 0.25 px over the top face. Set in scud_build.py
+    'scud_b': [(19.008, 25.344, 40.656, 40.656, -6.336, -3.696)],
 }
 
 

@@ -1,0 +1,95 @@
+{
+  "Combat": {
+    "WeaponId": "berts_vehicle_pack:scud_b/rocket",
+    "RoundId": "berts_vehicle_pack:8k14",
+    "MunitionType": "berts_vehicle_pack:rocket",
+    "DamageType": "berts_vehicle_pack:kinetic",
+    "CaliberMm": 885,
+    "DiameterMm": 885,
+    "HullDamageClass": "HE",
+    "HullDamage": 1000,
+    "ModuleDamage": 100,
+    "AmmoRackDamage": 1000,
+    "PenetrationMm": 442.5,
+    "RicochetCurve": {
+      "IncidenceAnglesDegrees": [
+        0,
+        79,
+        80,
+        81,
+        90
+      ],
+      "Probability": [
+        0,
+        0,
+        0.5,
+        1,
+        1
+      ]
+    },
+    "Tandem": false
+  },
+  "VisualProfile": "berts_vehicle_pack:medium_rocket",
+  "MotionSync": "NONE",
+  "Luminance": 12,
+  "TrailMode": "REPLACE",
+  "RenderScale": 1.0,
+  "Extensions": {
+    "berts_vehicle_pack:projectile_effect_v1": {
+      "Schema": 1,
+      "Trail": {
+        "Emitter": {
+          "Flame": "berts_vehicle_pack:rocket_flame",
+          "Smoke": "berts_vehicle_pack:rocket_smoke"
+        },
+        "Phases": [
+          {
+            "Name": "BOOST",
+            "StartTick": 0,
+            "EndTickExclusive": 100,
+            "Flame": true,
+            "Smoke": true,
+            "Scale": 1.6,
+            "Orbit": null
+          },
+          {
+            "Name": "COAST",
+            "StartTick": 100,
+            "EndTickExclusive": 2147483647,
+            "Flame": false,
+            "Smoke": true,
+            "Scale": 2.4,
+            "Orbit": null
+          }
+        ],
+        "SpacingBlocks": 0.25,
+        "RatePerTick": null,
+        "LifetimeTicks": {
+          "Flame": 6,
+          "Smoke": 20
+        },
+        "WidthBlocks": 0.6,
+        "AttachmentOffset": [
+          0,
+          0,
+          0
+        ],
+        "VelocityInheritance": 0,
+        "RandomScale": [
+          0.8,
+          1.3
+        ]
+      },
+      "Impact": {
+        "Explosion": "large",
+        "WaterExplosion": "same"
+      }
+    },
+    "berts_vehicle_pack:projectile_mesh_v1": {
+      "Model": "berts_vehicle_pack:custom_geo/atgm/scud_b.geo.json",
+      "Texture": "berts_vehicle_pack:textures/entity/scud_b.png",
+      "ForwardYaw": 0,
+      "SpinDegreesPerTick": 0
+    }
+  }
+}
