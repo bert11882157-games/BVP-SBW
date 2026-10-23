@@ -20,7 +20,7 @@ object AircraftChaseCameraOffset {
     /** Left offset as a fraction of the (scaled) distance behind the aircraft. */
     const val HELICOPTER_LEFT_PER_BACK = 0.2
 
-    fun chase(type: VehicleType, authored: Vec3): Vec3 = when (type) {
+    fun chase(type: VehicleType?, authored: Vec3): Vec3 = when (type) {
         VehicleType.AIRPLANE -> authored.scale(FIXED_WING_DISTANCE_SCALE)
         VehicleType.HELICOPTER -> {
             val back = -authored.z * HELICOPTER_DISTANCE_SCALE
@@ -37,7 +37,7 @@ object AircraftChaseCameraOffset {
      * Same policy for seats that use the plain vanilla third-person camera, whose authored
      * `ThirdPersonCameraPos` is (+x left, +y up, +z distance behind).
      */
-    fun thirdPerson(type: VehicleType, authored: Vec3): Vec3 {
+    fun thirdPerson(type: VehicleType?, authored: Vec3): Vec3 {
         val chase = chase(type, Vec3(authored.x, authored.y, -authored.z))
         return Vec3(chase.x, chase.y, -chase.z)
     }

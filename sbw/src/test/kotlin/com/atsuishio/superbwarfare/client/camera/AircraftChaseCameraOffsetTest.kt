@@ -25,6 +25,7 @@ class AircraftChaseCameraOffsetTest {
     @Test fun groundVehiclesKeepAuthoredOffsets() {
         val authored = Vec3(0.0, 2.2, -6.6)
         assertSame(authored, AircraftChaseCameraOffset.chase(VehicleType.TANK, authored))
+        assertSame(authored, AircraftChaseCameraOffset.chase(null, authored))
     }
 
     @Test fun vanillaThirdPersonFrameUsesPositiveDistance() {
