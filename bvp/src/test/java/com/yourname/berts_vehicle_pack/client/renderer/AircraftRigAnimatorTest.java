@@ -60,6 +60,8 @@ public final class AircraftRigAnimatorTest {
         gearVisibilityAndRestore();
         gearDoorHingeAndRestore();
         invalidGearAtomicity();
+        retractingGearSwingSlideAndDoors();
+        invalidRetractingGear();
         landingFlapStateAndRestore();
         invalidLandingFlapAtomicity();
         helicopterLeversAndControlLag();
@@ -262,6 +264,97 @@ public final class AircraftRigAnimatorTest {
                     {"Bone":"gear_left","Parent":"hull"},
                     {"Bone":"gear_right","Parent":"hull"}]}}
                 """, DefaultVehicleResource.class).getAircraftRig();
+    }
+
+    private static PolyMeshModel wellModel() {
+        String source = MODEL.replace("{\"name\":\"tail\"", """
+                {"name":"gear_nose","parent":"hull","pivot":[2,-3,20]},
+                {"name":"gear_slide_0","parent":"gear_nose","pivot":[2,-9,21]},
+                {"name":"gear_door_0","parent":"hull","pivot":[4,-6,20]},
+                {"name":"tail"
+                """.strip());
+        return new PolyMeshModel(GSON.fromJson(source, BedrockModelPOJO.class),
+                JsonParser.parseString(source).getAsJsonObject());
+    }
+
+    private static AircraftRigResource wellResource() {
+        return GSON.fromJson("""
+                {"AircraftRig":{"Schema":2,"Frame":"GENERATED_MODEL_PIXELS",
+                  "Surfaces":[],"Rotors":[],"Sweeps":[],"Gear":[
+                    {"Bone":"gear_nose","Parent":"hull","Retract":{"Pivot":[2,-3,20],"Axis":[1,0,0],
+                      "AngleDegrees":90,"Slide":{"Bone":"gear_slide_0","Pivot":[2,-9,21],"Direction":[0,2,0],"DistancePx":4,
+                      "TwistDegrees":90}}}],
+                  "GearDoors":[{"Bone":"gear_door_0","Parent":"hull","Pivot":[4,-6,20],"Axis":[0,0,1],
+                    "OpenAngleDegrees":90}]}}
+                """, DefaultVehicleResource.class).getAircraftRig();
+    }
+
+    private static void retractingGearSwingSlideAndDoors() {
+        var model = wellModel();
+        var leg = model.getBone("gear_nose");
+        var slide = model.getBone("gear_slide_0");
+        var door = model.getBone("gear_door_0");
+        var legNeutral = new Quaternionf(leg.rotation);
+        var doorNeutral = new Quaternionf(door.rotation);
+        var slideBase = new Vector3f(slide.x, slide.y, slide.z);
+        var slideNeutral = new Quaternionf(slide.rotation);
+        var binding = AircraftRigAnimator.bind(wellResource(), model::getBone);
+        close(AircraftRigAnimator.legTravel(0), 0, "leg down at zero travel");
+        close(AircraftRigAnimator.legTravel(AircraftRigAnimator.LEG_SPAN), 1, "leg stowed before the doors shut");
+        close(AircraftRigAnimator.doorOpening(AircraftRigAnimator.LEG_SPAN), 1, "doors open while the leg moves");
+        close(AircraftRigAnimator.doorOpening(1), 0, "doors shut at full retraction");
+        for (double travel : new double[]{0, .2, .4, .8, .9, 1, .6, 0}) {
+            double fraction = travel == 1 ? 1 : travel == 0 ? 0 : .5;
+            binding.applyGear(fraction, travel);
+            double legs = AircraftRigAnimator.legTravel(travel);
+            check(leg.visible && slide.visible, "a retracting leg is never hidden, even fully up");
+            quaternion(leg.rotation, new Quaternionf().rotationX((float) Math.toRadians(90 * legs)).mul(legNeutral),
+                    "leg swings about its hinge with the eased travel");
+            close(new Vector3f(slide.x, slide.y, slide.z).distance(slideBase.x, slideBase.y + 4 * (float) legs,
+                    slideBase.z), 0, "oleo closes up the leg by the normalized direction");
+            // the leg's vertical axis reflects to -Y in the renderer's basis
+            quaternion(slide.rotation, new Quaternionf().rotationAxis((float) Math.toRadians(90 * legs), 0, -1, 0)
+                    .mul(slideNeutral), "wheel twists about the leg axis as the leg stows");
+            double open = AircraftRigAnimator.doorOpening(travel);
+            quaternion(door.rotation, new Quaternionf().rotationZ((float) Math.toRadians(-90 * open)).mul(doorNeutral),
+                    "well door stands open until the leg is stowed");
+            binding.restore();
+            quaternion(leg.rotation, legNeutral, "leg restores neutral pose");
+            quaternion(door.rotation, doorNeutral, "door restores neutral pose");
+            close(new Vector3f(slide.x, slide.y, slide.z).distance(slideBase), 0, "slide restores base position");
+            quaternion(slide.rotation, slideNeutral, "slide restores neutral twist");
+        }
+        binding.applyGear(.5, Double.NaN);
+        quaternion(leg.rotation, legNeutral, "nonfinite travel keeps the gear down");
+        binding.restore();
+    }
+
+    private static void invalidRetractingGear() {
+        for (int failure = 0; failure < 11; failure++) {
+            var model = wellModel();
+            var data = wellResource();
+            var retract = data.gear[0].retract;
+            switch (failure) {
+                case 0 -> retract.angleDegrees = 0.0;
+                case 1 -> retract.pivot = new double[]{2, -3, 21};
+                case 2 -> retract.slide.bone = "gear_door_0";
+                case 3 -> { retract.slide.distancePx = 0.0; retract.slide.twistDegrees = null; }
+                case 4 -> retract.slide.direction = new double[]{0, 0, 0};
+                case 5 -> data.gear[0].visibleWhen = "RETRACTED";
+                case 6 -> data.gearDoors[0].closedAngleDegrees = 90.0;
+                case 7 -> data.gearDoors[0].openAngleDegrees = Double.NaN;
+                case 8 -> retract.slide.pivot = new double[]{2, -8, 21};
+                case 9 -> retract.slide.distancePx = -1.0;
+                case 10 -> retract.slide.twistDegrees = Double.POSITIVE_INFINITY;
+            }
+            boolean rejected = false;
+            try {
+                AircraftRigAnimator.bind(data, model::getBone);
+            } catch (IllegalArgumentException expected) {
+                rejected = true;
+            }
+            check(rejected, "invalid retracting gear rejected (" + failure + ")");
+        }
     }
 
     private static void gearDoorHingeAndRestore() {

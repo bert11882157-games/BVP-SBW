@@ -79,11 +79,35 @@ public class DefaultVehicleResource implements IDBasedData<DefaultVehicleResourc
         @SerializedName("Flaps") public Flap[] flaps;
         @SerializedName("NoseSteering") public NoseSteering[] noseSteering;
 
-        /** Whole source subtrees, visibility only; no invented retraction axis or angle. */
+        /**
+         * Whole source subtrees. Without Retract a leg is shown or hidden by the travel fraction; with Retract it
+         * swings about its hinge into a modelled gear well (and optionally telescopes) as the gear travels.
+         */
         public static final class Gear {
             @SerializedName("Bone") public String bone;
             @SerializedName("Parent") public String parent;
             @SerializedName("VisibleWhen") public String visibleWhen;
+            @SerializedName("Retract") public GearRetract retract;
+        }
+
+        /** The leg's swing: its hinge (the leg bone's pivot), axis and full-travel angle. */
+        public static final class GearRetract {
+            @SerializedName("Pivot") public double[] pivot;
+            @SerializedName("Axis") public double[] axis;
+            @SerializedName("AngleDegrees") public Double angleDegrees;
+            @SerializedName("Slide") public GearSlide slide;
+        }
+
+        /**
+         * A child bone of the leg (wheel, fork, lower strut) that slides up the leg as it swings, like an oleo
+         * closing, and may twist about the leg's axis through its pivot, so the wheel lies flat in the well.
+         */
+        public static final class GearSlide {
+            @SerializedName("Bone") public String bone;
+            @SerializedName("Pivot") public double[] pivot;
+            @SerializedName("Direction") public double[] direction;
+            @SerializedName("DistancePx") public Double distancePx;
+            @SerializedName("TwistDegrees") public Double twistDegrees;
         }
 
         public static class Part {
@@ -93,9 +117,14 @@ public class DefaultVehicleResource implements IDBasedData<DefaultVehicleResourc
             @SerializedName("Axis") public double[] axis;
         }
 
-        /** Source-neutral open door, rotated about its authored hinge as the gear retracts. */
+        /**
+         * A gear door rotated about its authored hinge. ClosedAngleDegrees: modelled open, it closes as the gear
+         * retracts. OpenAngleDegrees: modelled closed (the skin cut from a gear well), it stands open while the
+         * gear is down or moving and shuts at the end of retraction.
+         */
         public static final class GearDoor extends Part {
             @SerializedName("ClosedAngleDegrees") public Double closedAngleDegrees;
+            @SerializedName("OpenAngleDegrees") public Double openAngleDegrees;
         }
 
         /**
