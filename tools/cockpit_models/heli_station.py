@@ -642,3 +642,19 @@ def install(ac, mesh, gauges, displays, hud, eyes):
     if comb:
         L.add_glass(a, comb)
     return pm, line
+
+def drop_glass(ac, boxes):
+    """glass triangles of the asset whose centre lies in any (E, lo, hi) box (eye-relative): an old display's or
+    sight's pane left floating inside the cabin once its housing has gone; returns how many went"""
+    cg = ac.asset.get('CanopyGlass')
+    if not cg:
+        return 0
+    T = np.array(cg['Triangles'], float).reshape(-1, 3, 3)
+    keep = []
+    for t in T:
+        c = t.mean(0)
+        if any(np.all(c - np.array(E, float) >= lo) and np.all(c - np.array(E, float) <= hi) for E, lo, hi in boxes):
+            continue
+        keep.append(t)
+    cg['Triangles'] = [float(v) for t in keep for p in t for v in p]
+    return len(T) - len(keep)
