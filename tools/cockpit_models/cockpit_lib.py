@@ -29,7 +29,8 @@ import numpy as np
 from PIL import Image
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-GEN = os.path.join(HERE, '..', '..', 'bvp', 'src', 'generated', 'resources')
+# BVP_GEN: another resources tree (a scratch copy holding another branch's files, to rerun a script on them)
+GEN = os.environ.get('BVP_GEN') or os.path.join(HERE, '..', '..', 'bvp', 'src', 'generated', 'resources')
 GEO_DIR = os.path.join(GEN, 'assets/berts_vehicle_pack/custom_geo')
 ASSET_DIR = os.path.join(GEN, 'assets/berts_vehicle_pack/sbw/vehicles')
 DATA_DIR = os.path.join(GEN, 'data/berts_vehicle_pack/sbw/vehicles')
@@ -1134,7 +1135,12 @@ SKIP_BONES = ('canopy', 'pilot_view_occluder', 'gear', 'landing', 'suspended', '
               'aileron', 'elevator', 'rudder', 'flap', 'airbrake', 'control_stick', 'turret', 'barell')
 
 
+INTERIOR_BONES = set()        # plain bones that hold the cockpit too (a helicopter's single 'hull'; its script adds it)
+
+
 def is_interior_bone(name):
+    if name in INTERIOR_BONES:
+        return True
     if not name.startswith('wreck_'):
         return False
     tail = name.split('__', 1)[1] if '__' in name else name
