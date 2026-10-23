@@ -67,6 +67,34 @@ CONSOLES_OPERATOR = ([(0.22, 'ОРУЖИЕ', 'guarded'), (0.22, 'ПУЛЕМЕТ'
                       (0.28, 'СПУ', 'rotary')],
                      [(0.24, 'РАДУГА', 'toggles'), (0.22, 'АЗС', 'breakers'), (0.26, 'СИГНАЛ', 'lamps'),
                       (0.28, 'КИСЛОРОД', 'rotary')])
+CABIN_CONSOLE = [(0.16, 'ЗАПУСК АИ-9', 'guarded'), (0.16, 'ПОЖАРН', 'guarded'), (0.18, 'ТОПЛИВО', 'toggles'),
+                 (0.16, 'ПРОТИВООБЛЕД', 'toggles'), (0.16, 'АРК-15', 'freq'), (0.16, 'ОСВЕЩ', 'rotary')]
+CABIN_WALL = [(0.18, 'ЭЛЕКТРОПИТАНИЕ', 'toggles'), (0.22, 'АЗС', 'breakers'), (0.20, 'АЗС', 'breakers'),
+              (0.18, 'СИГНАЛИЗАЦИЯ', 'lamps'), (0.20, 'ГЕНЕРАТОРЫ', 'rotary')]
+
+
+def cabin_panels(m, atlas, E0):
+    """the right-hand side of the pilot's cabin (the flight technician's side), built by hand: a console along the
+    wall (engine start, fire, fuel, de-icing, ARK-15, lighting) under the side window, and behind him the electrical
+    rack facing forward (power, the circuit breakers, the warning lamps and the generators), where the old panels
+    were"""
+    import numpy as np
+    x_in, x_wall = E0[0] - 1.40, E0[0] - 1.66                       # the console's inner face, the cabin wall
+    cy, fy = E0[1] - 0.70, E0[1] - 1.33                             # the console top, the cabin floor (lower here)
+    zb, zf = E0[2] - 0.55, E0[2] + 0.90
+    top = atlas.paint(70, 360, HS.p_console(CABIN_CONSOLE, False, COLOURS['panel']))
+    m.face([[x_in, cy, zb], [x_wall, cy, zb], [x_wall, cy, zf], [x_in, cy, zf]],
+           [m.uv(top, 0, 0), m.uv(top, 1, 0), m.uv(top, 1, 1), m.uv(top, 0, 1)], normal=[0, 1, 0])
+    wall, dark = atlas.swatch(COLOURS['wall']), atlas.swatch(COLOURS['panel_d'])
+    m.flat([[x_in, fy, zb], [x_in, fy, zf], [x_in, cy, zf], [x_in, cy, zb]], wall, normal=[1, 0, 0])
+    m.flat([[x_in, fy, zb], [x_wall, fy, zb], [x_wall, cy, zb], [x_in, cy, zb]], wall, normal=[0, 0, -1])
+    m.flat([[x_in, fy, zf], [x_wall, fy, zf], [x_wall, cy, zf], [x_in, cy, zf]], wall, normal=[0, 0, 1])
+    X, Y, Z = np.array([1.0, 0, 0]), np.array([0, 1.0, 0]), np.array([0, 0, 1.0])
+    rack = (E0[0] - 1.58, E0[0] - 0.75, E0[1] - 1.30, E0[1] - 0.12, E0[2] - 0.98, E0[2] - 0.57)
+    face = atlas.paint(220, 280, HS.p_console(CABIN_WALL, False, COLOURS['panel']))   # its rows top to bottom
+    c = [(rack[0] + rack[1]) / 2, (rack[2] + rack[3]) / 2, (rack[4] + rack[5]) / 2]
+    half = ((rack[1] - rack[0]) / 2, (rack[3] - rack[2]) / 2, (rack[5] - rack[4]) / 2)
+    m.box(c, (X, Y, Z), half, wall, front=(2, 1, face, X, Y))       # the electrical rack behind him, its face forward
 
 
 def stations(ac):
@@ -97,11 +125,15 @@ def main(argv):
         (E0, (-0.36, -0.55, -0.62), (0.36, 0.30, 0.95), 0.36, -0.55),     # his old seat, panel and sight above it
         (E1, (-0.40, -1.03, -0.60), (0.40, -0.55, 0.95), 0.40, -0.55),    # the operator's nose up to its sill
         (E1, (-0.62, -1.03, -0.60), (0.62, -0.58, 0.40), 0.62, -0.58),    # its old consoles where the cabin is wider
-        (E1, (-0.30, -0.55, -0.60), (0.30, 0.20, 0.70), 0.30, -0.55)])}   # his old seat and sight above it
+        (E1, (-0.30, -0.55, -0.60), (0.30, 0.20, 0.70), 0.30, -0.55),     # his old seat and sight above it
+        (E0, (-1.72, -1.33, -0.62), (-1.36, 0.22, 1.25), 2.0, 0.0),      # the old right-hand cabin panels
+        (E0, (-1.71, -1.65, -1.25), (-0.70, 0.45, -0.55), 2.0, 0.0),      # the old rack behind him
+        (E0, (-1.36, -1.33, -0.62), (-0.40, 0.56, 1.25), 2.0, 0.0)])}    # and the old boxes between
     pilot, operator = stations(ac)
     atlas = H.A.Atlas(VID)
     removed['floor faces repainted'] = HS.repaint_floor(ac, atlas, FLOOR, [
-        (E0 + [-0.5, -1.33, -0.6], E0 + [0.5, -1.10, 1.0]), (E1 + [-0.4, -1.17, -0.6], E1 + [0.4, -0.93, 0.9])])
+        (E0 + [-0.5, -1.33, -0.6], E0 + [0.5, -1.10, 1.0]), (E1 + [-0.4, -1.17, -0.6], E1 + [0.4, -0.93, 0.9]),
+        (E0 + [-1.7, -1.45, -0.6], E0 + [-0.4, -1.25, 1.25])])
     m = H.Mesh(atlas)
     painters = {'weapons': HS.p_buttons('ВООРУЖЕНИЕ', ['НАР', 'УР', 'БОМБ'], lit=0),
                 'guidance': HS.p_buttons('ФАЛАНГА-М', ['ПУСК', 'НАВЕД', 'ГОТОВ', 'СБРОС'], lit=2),
@@ -110,6 +142,7 @@ def main(argv):
     for st in (pilot, operator):
         g, d, h = HS.build(m, atlas, st, painters=painters)
         gauges += g; displays += d; huds.append(h)
+    cabin_panels(m, atlas, E0)
     pm, line = HS.install(ac, m, gauges, displays, huds, [E0, E1])
     print(f'{VID}: removed {removed}; new cockpit {len(pm["polys"])} faces, {len(gauges)} gauges, '
           f'{len(displays)} displays, {len([h for h in huds if h])} sights; {line}')
