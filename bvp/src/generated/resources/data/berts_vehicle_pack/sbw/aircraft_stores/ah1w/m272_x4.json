@@ -1,0 +1,41 @@
+{
+  "Schema": 1,
+  "Name": "M272 · 4 × AGM-114B Hellfire",
+  "Category": "LASER_GUIDED",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/ah1w_m272_x4.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    -0.2933,
+    -0.0655,
+    -0.2385
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      -0.1704,
+      -0.213,
+      -0.2385
+    ],
+    "Right": [
+      -0.4161,
+      -0.213,
+      -0.2385
+    ]
+  },
+  "MountAxis": [
+    -0.2933,
+    -0.213,
+    -0.2385
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/ah1w_m272_x4.png",
+  "Capacity": 4,
+  "Scale": 1,
+  "MassKg": 49.625,
+  "AmmoItem": "superbwarfare:small_atgm",
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_stores/agm114b_ah1w",
+  "LaunchGunProfile": "berts_vehicle_pack:aircraft_stores/agm114b_ah1w",
+  "LaunchOffset": [
+    0.0,
+    -0.1474,
+    0.0
+  ]
+}

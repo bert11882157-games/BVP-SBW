@@ -430,6 +430,8 @@ public class ModEntityRenderers {
                 "custom_geo/mi_26.geo.json", "textures/entity/mi_26.png", "mi_26"));
         registerVehicle(event, ModEntities.AH_1F, "ah_1f", standardVehicle(
                 "custom_geo/ah_1f.geo.json", "textures/entity/ah_1f.png", "ah_1f"));
+        registerVehicle(event, ModEntities.AH1W_SUPER_COBRA, "ah1w_super_cobra", standardVehicle(
+                "custom_geo/ah1w_super_cobra.geo.json", "textures/entity/ah1w_super_cobra.png", "ah1w_super_cobra"));
         // Tracked like the Leclerc: standardVehicle has no tracked animator (links stuck in the rest pose, the
         // broken-track slabs showing under the tracks); the fitted ground renderer runs the running gear.
         registerVehicle(event, ModEntities.CHALLENGER_2, "challenger_2", context ->

@@ -46,6 +46,8 @@ public final class HelicopterFlightProfile {
     private static final double AH6J_KMH = 282.0D, AH6J_CLIMB = 10.0D;
     private static final double AH1G_KMH = 277.0D, AH1G_CLIMB = 6.9D;
     private static final double AH1F_KMH = 277.0D, AH1F_CLIMB = 8.0D;
+    // War Thunder ah_1w: 309 km/h at 1,000 m (wiki), maxClimbRateNom 17.3 m/s (fm/ah_1w).
+    private static final double AH1W_KMH = 309.0D, AH1W_CLIMB = 17.3D;
     private static final double MI26_KMH = 295.0D, MI26_CLIMB = 7.5D;
     private static final double TIGER_KMH = 315.0D, TIGER_CLIMB = 10.7D;
     private static final double AH64D_KMH = 293.0D, AH64D_CLIMB = 12.7D;
@@ -129,6 +131,15 @@ public final class HelicopterFlightProfile {
             lin(0.040D, 69.25D, AH1F_KMH), quad(0.004229106199018914D, 69.25D, AH1F_KMH), 0.130D, 0.0110D,
             0.050D, 0.0075D, 0.9D * climb(AH1F_CLIMB, 2.05D), climb(AH1F_CLIMB, 2.05D),
             new HelicopterPhysicalControls(.33D, 1.10D, .40D, .32D, cap(AH1F_KMH), true,
+                    new HelicopterAttitudeProfile(28.0D, 28.0D, 42.0D, 4.0D, 65.0D, 80.0D, 8.0D)));
+    // AH-1W: War Thunder fm/ah_1w EmptyMass 4,898 kg + MaxFuelMass0 879 kg; two T700-GE-401 (the AH-1F's rotor and
+    // control tuning, rotor force scaled to the mass at 14 m/s2 like the Tiger / Apache).
+    private static final HelicopterFlightProfile AH1W = new HelicopterFlightProfile(
+            soft(AH1W_KMH), cap(AH1W_KMH), 5777.0D, 81000.0D * POWER_UPLIFT / 163300.0D, 0.12D,
+            HelicopterHandlingProfile.of(1.05D, 1.05D, 0.98D, 1.04D, 1.08D, 1.04D),
+            lin(0.040D, 69.25D, AH1W_KMH), quad(0.004229106199018914D, 69.25D, AH1W_KMH), 0.130D, 0.0110D,
+            0.050D, 0.0075D, 0.9D * climb(AH1W_CLIMB, 2.05D), climb(AH1W_CLIMB, 2.05D),
+            new HelicopterPhysicalControls(.33D, 1.10D, .40D, .32D, cap(AH1W_KMH), true,
                     new HelicopterAttitudeProfile(28.0D, 28.0D, 42.0D, 4.0D, 65.0D, 80.0D, 8.0D)));
     private static final HelicopterFlightProfile MI26 = new HelicopterFlightProfile(
             soft(MI26_KMH), cap(MI26_KMH), 56000.0D, 650000.0D * POWER_UPLIFT / 163300.0D, 0.0D,
@@ -262,6 +273,10 @@ public final class HelicopterFlightProfile {
 
     public static HelicopterFlightProfile ah1f() {
         return AH1F;
+    }
+
+    public static HelicopterFlightProfile ah1w() {
+        return AH1W;
     }
 
     public static HelicopterFlightProfile mi26() {

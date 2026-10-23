@@ -696,6 +696,10 @@ public class ModEntities {
             ENTITIES.register("ah_1f", () -> vehicle(
                     (type, level) -> new AuthoredHelicopter(type, level, "ah_1f"),
                     20.75f, 5.75f, "ah_1f"));
+    public static final RegistryObject<EntityType<AuthoredHelicopter>> AH1W_SUPER_COBRA =
+            ENTITIES.register("ah1w_super_cobra", () -> vehicle(
+                    (type, level) -> new AuthoredHelicopter(type, level, "ah1w_super_cobra"),
+                    20.75f, 5.75f, "ah1w_super_cobra"));
 
     public static void register(IEventBus eventBus) {
         ENTITIES.register(eventBus);
