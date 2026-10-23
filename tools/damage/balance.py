@@ -58,7 +58,7 @@ GROUND = {  # combat weight (t), class
     't80b_obr1976': (42.5, 'MBT'), 't80u_obr1985': (46, 'MBT'), 't90a': (46.5, 'MBT'), 't90m': (48, 'MBT'),
     't_62a': (37.5, 'MBT'), 'type_90': (50.2, 'MBT'), 'vt_4a1': (52, 'MBT'), 'ztz99a': (55, 'MBT'),
     'bmpt': (47.5, 'MBT_CHASSIS'), 'gepard': (47.5, 'MBT_CHASSIS'), 'pzh_2000': (55, 'MBT_CHASSIS'),
-    'm109a7_paladin': (35, 'MBT_CHASSIS'), 'qn_506model': (36, 'MBT_CHASSIS'),
+    'm109a7_paladin': (35, 'MBT_CHASSIS'), 'qn_506model': (36, 'MBT_CHASSIS'), 'tos_1a': (45.3, 'MBT_CHASSIS'),
     'bmp2': (14.3, 'IFV'), 'bmp2m': (14.6, 'IFV'), 'bmp3m_elite': (18.7, 'IFV'), 'bmp_1am': (14, 'IFV'), 'zbd_05': (22.9, 'IFV'),
     'cv9040_no_net': (23, 'IFV'), 'm2_bradley': (30, 'IFV'), 'marder_1a1': (28, 'IFV'),
     'marder_1a2': (28.5, 'IFV'), 'marder_1a5': (37.4, 'IFV'), 'puma_ifv': (43, 'IFV'), 'pgz_95': (22.5, 'IFV'), '9k22_tunguska': (34, 'IFV'), 'zsu23_4': (21, 'IFV'),

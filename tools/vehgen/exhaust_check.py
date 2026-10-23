@@ -112,6 +112,9 @@ EXITS = {
     # a 1 px plate at y -20.2 .. -19.2), here as model px: x -14.5 .. 0, y 28.2 .. 29.2, z -28.25 .. -6.25 (+Z = rear). The two glacis
     # pads (elements 10, 11) are intakes; the model has no pipe. Set in pgz95_build.py (EXHAUST)
     'pgz_95': [(-14.5, 0.0, 28.2, 29.2, -28.25, -6.25)],
+    # TOS-1A (T-72A hull): the T-72's exhaust louvre on the left rear fender, the model's element 365 (toolbox x -48 .. -36,
+    # y -21.5 .. -19.2, outer face z 34.97, turned -10 deg); model px, the side face at x 30.774. Set in tos1a_build.py
+    'tos_1a': [(30.774, 30.774, 26.116, 28.14, 31.68, 42.24)],
 }
 
 

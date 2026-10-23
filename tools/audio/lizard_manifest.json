@@ -407,6 +407,11 @@
       "scimitar",
       null,
       "warrior"
+    ],
+    "tos_1a": [
+      "t72",
+      "t72",
+      "t90"
     ]
   },
   "_weapons_doc": "weapon families: [1p, 3p, far, veryfar] sources (vehicles/... or weapons:...). Automatic-fire files are trimmed to their first shot cycle plus a faded tail (tailSeconds); single-shot cannons keep their full reverb. weapon_map assigns families by the weapon's current Fire3P event or by '<vehicle>.<weapon>' (overrides).",

@@ -1,0 +1,341 @@
+{
+  "id": "tos_1a",
+  "model_scale": 0.7544,
+  "ap_penetration_mm": 425,
+  "chemical_penetration_mm": 700,
+  "fallback_incoming_penetration_mm": 500,
+  "atgm_tandem": false,
+  "impact_tolerance": 0.25,
+  "internal_ray_length": 10,
+  "unboxed_hits_penetrate": true,
+  "min_armor_mm": 16,
+  "plates": [
+    {
+      "name": "make_50mm_89",
+      "center": [
+        0.01309,
+        1.65366,
+        -1.38677
+      ],
+      "half_size": [
+        1.24695,
+        0.01722,
+        0.45874
+      ],
+      "rotation": [
+        -4,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 50
+    },
+    {
+      "name": "make_50mm_90",
+      "center": [
+        0.00262,
+        1.74685,
+        1.87922
+      ],
+      "half_size": [
+        1.18696,
+        0.0436,
+        0.9401
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 50
+    },
+    {
+      "name": "make_50mm_91",
+      "center": [
+        0.00211,
+        1.22369,
+        2.69936
+      ],
+      "half_size": [
+        1.18545,
+        0.57513,
+        0.02108
+      ],
+      "rotation": [
+        15,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 40.0
+    },
+    {
+      "name": "make_80mm_92",
+      "center": [
+        1.24153,
+        1.50101,
+        0.4431
+      ],
+      "half_size": [
+        0.04208,
+        0.18389,
+        2.28747
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 80.0
+    },
+    {
+      "name": "make_80mm_93",
+      "center": [
+        1.24213,
+        0.98264,
+        -0.13664
+      ],
+      "half_size": [
+        0.04229,
+        0.33346,
+        2.69535
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 80.0
+    },
+    {
+      "name": "make_80mm_94",
+      "center": [
+        1.1361,
+        1.30928,
+        -2.3493
+      ],
+      "half_size": [
+        0.1469,
+        0.16454,
+        0.60639
+      ],
+      "rotation": [
+        -18,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 335.0
+    },
+    {
+      "name": "make_80mm_95",
+      "center": [
+        1.13682,
+        0.98439,
+        -2.8853
+      ],
+      "half_size": [
+        0.1476,
+        0.24116,
+        0.21452
+      ],
+      "rotation": [
+        -30,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 80.0
+    },
+    {
+      "name": "make_80mm_96",
+      "center": [
+        -1.11043,
+        1.30786,
+        -2.35371
+      ],
+      "half_size": [
+        0.17036,
+        0.16464,
+        0.61251
+      ],
+      "rotation": [
+        -18,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 335.0
+    },
+    {
+      "name": "make_80mm_97",
+      "center": [
+        -1.10388,
+        0.99931,
+        -2.89365
+      ],
+      "half_size": [
+        0.17146,
+        0.24044,
+        0.21203
+      ],
+      "rotation": [
+        -29,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 80.0
+    },
+    {
+      "name": "make_80mm_98",
+      "center": [
+        -1.23688,
+        1.48818,
+        0.42864
+      ],
+      "half_size": [
+        0.04511,
+        0.18675,
+        2.27301
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 80.0
+    },
+    {
+      "name": "make_80mm_99",
+      "center": [
+        -1.23628,
+        0.97602,
+        -0.14077
+      ],
+      "half_size": [
+        0.04471,
+        0.33559,
+        2.69104
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 80.0
+    },
+    {
+      "name": "make_100mm_100",
+      "center": [
+        0.00283,
+        0.85347,
+        -3.05839
+      ],
+      "half_size": [
+        1.28663,
+        0.29698,
+        0.04906
+      ],
+      "rotation": [
+        137,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 110.0
+    },
+    {
+      "name": "make_220mm_101",
+      "center": [
+        0.00293,
+        1.36674,
+        -2.563
+      ],
+      "half_size": [
+        1.28552,
+        0.8441,
+        0.04589
+      ],
+      "rotation": [
+        71,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 220
+    },
+    {
+      "name": "ufp_composite_00",
+      "center": [
+        0.01782,
+        1.38686,
+        -2.70353
+      ],
+      "half_size": [
+        1.17737,
+        0.03017,
+        0.84051
+      ],
+      "rotation": [
+        -19.654,
+        0,
+        0
+      ],
+      "frame": "hull",
+      "armor_mm": 112.7
+    }
+  ],
+  "sensitive_internals": [],
+  "engines": [
+    {
+      "name": "engine_core_00",
+      "center": [
+        0.01782,
+        1.13554,
+        1.80594
+      ],
+      "half_size": [
+        0.95665,
+        0.31116,
+        0.42267
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "hull"
+    }
+  ],
+  "ammo_racks": [
+    {
+      "name": "launcher_rockets_00",
+      "center": [
+        -0.0,
+        3.13375,
+        -0.385
+      ],
+      "half_size": [
+        1.21275,
+        0.56925,
+        1.7325
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "frame": "barrel"
+    }
+  ],
+  "tracks": [],
+  "modules": [],
+  "explosive_reactive_armor": [],
+  "sbw_obb": []
+}
