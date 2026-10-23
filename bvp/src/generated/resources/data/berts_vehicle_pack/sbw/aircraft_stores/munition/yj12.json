@@ -1,0 +1,56 @@
+{
+  "Schema": 1,
+  "Name": "YJ-12 · supersonic active-radar anti-ship (AI)",
+  "Category": "CRUISE",
+  "Generated": true,
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/yj12.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.374,
+    -0.05
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.35,
+      0.0,
+      -0.05
+    ],
+    "Right": [
+      -0.35,
+      0.0,
+      -0.05
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    -0.05
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/yj12.png",
+  "Capacity": 1,
+  "MassKg": 2500,
+  "Guidance": {
+    "Mode": "ACTIVE_SURFACE_RADAR",
+    "LockTicks": 80,
+    "Range": 1200,
+    "ConeDegrees": 30,
+    "CountermeasureVulnerability": 0.25
+  },
+  "Flight": {
+    "InitialSpeed": 1,
+    "MaxSpeed": 9.5,
+    "AccelerationPerTick": 0.2,
+    "TurnDegreesPerSecond": 20,
+    "Damage": 900,
+    "BlastRadius": 14,
+    "TntEquivalentKg": 300.0,
+    "Range": 1200
+  },
+  "AmmoItem": "superbwarfare:large_cruise_missile",
+  "LaunchOffset": [
+    0.0,
+    -0.374,
+    0.0
+  ]
+}
