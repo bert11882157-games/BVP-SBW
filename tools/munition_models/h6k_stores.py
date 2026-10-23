@@ -11,10 +11,8 @@ Built here, in the pack's aircraft-store format (nose -Z, one bone 'store', 1 bl
   yj12     YJ-12 supersonic anti-ship missile: integral ramjet / booster, BeiDou with mid-course updates and active radar terminal homing,
            Mach 2.5 to 4, range 460 to 500 km, warhead 205 to 500 kg (Wikipedia, YJ-12). Body 6.5 m x 0.70 m, two ramjet intakes, four short wings,
            X tail: dimensions, 2,500 kg and the 300 kg warhead are GUESSES. Pack numbers: scaled from the Kh-32 (Mach 4.6 = speed 14).
-Cut from the supplied model (not generated, unmarked):
-  c201     the H-6K model's own inner baked store (toolbox group "Import c201", four of them), cut by work/elite_expansion_2/tools/cut_stores.py:
-           a turbojet anti-ship missile (ventral intake, cranked mid wings, X tail). Identified by the modeller's tag as the C-201 (HY-2 family,
-           C-201W turbojet version); the figures (2,400 kg, 500 kg warhead, 400 km, subsonic, active radar) are GUESSES.
+The model's baked stores (C-201 x4, tag KD-88 x2) are catalogued in work/elite_expansion_2/h6k/STORES.md; the C-201 is NOT shipped (not a real H-6K weapon,
+identification by tag only; the cut stays in work/elite_expansion_2/h6k/stores_work/out).
 The outer baked store (toolbox group "Import KD-88") is the pack's own munition/kd88 (and kd88_ir): nothing is cut for it.
 Nuclear weapons are left out (owner brief 2026-10-23).
 
@@ -22,7 +20,6 @@ Usage: python tools/munition_models/h6k_stores.py [--write]
 Then:  python tools/munition_models/fix_winding.py <the new geo files>   (and --check)
 """
 import os
-import shutil
 import sys
 from collections import OrderedDict
 
@@ -35,7 +32,6 @@ NS, STORES, SBW, GEO, TEX = F.NS, F.STORES, F.SBW, F.GEO, F.TEX
 OD = OrderedDict
 DOT = '·'
 NEW_GEO_FILES = ['cj10a', 'cj10a_flight', 'yj12', 'yj12_flight']
-CUT_DIR = os.environ.get('H6K_CUT_SOURCE', r'C:\Users\udstu\Documents\Superb warfare\work\elite_expansion_2\h6k\stores_work\out')
 
 
 def build_cj10a(L=6.0, d=0.52):
@@ -79,31 +75,6 @@ def build_yj12(L=6.5, d=0.70):
     return centred(m, L), L
 
 
-def recentre_cut(name, z_probe=-2.0):
-    """Put the body axis of the cut c201 on x = y = 0 (F.recentre's body-axis fit is thrown off by the ventral engine and the wings): the axis is the
-    middle of the body's section at z_probe (a plain cylinder stretch, x +-0.38, y -0.78..0.13 before the shift), then write the flight model."""
-    import json
-    import numpy as np
-    path = os.path.join(GEO, name + '.geo.json')
-    g = json.load(open(path, encoding='utf-8'))
-    pm = g['minecraft:geometry'][0]['bones'][0]['poly_mesh']
-    P = np.array(pm['positions'], float)
-    pts = []
-    for poly in pm['polys']:
-        idx = [v[0] for v in poly]
-        for a, b in zip(idx, idx[1:] + idx[:1]):
-            pa, pb = P[a], P[b]
-            if (pa[2] - z_probe * 16) * (pb[2] - z_probe * 16) < 0:
-                t = (z_probe * 16 - pa[2]) / (pb[2] - pa[2])
-                pts.append(pa + t * (pb - pa))
-    pts = np.array(pts)
-    cx, cy = (pts[:, 0].min() + pts[:, 0].max()) / 2, (pts[:, 1].min() + pts[:, 1].max()) / 2
-    pm['positions'] = [[round(p[0] - cx, 4), round(p[1] - cy, 4), p[2]] for p in pm['positions']]
-    F.write_json_compact(path, g)
-    F.write_json_compact(os.path.join(GEO, name + '_flight.geo.json'), F.flight_geo(g, name + '_flight'))
-    print(name, 'body axis moved by', round(cx / 16, 4), round(cy / 16, 4), 'm')
-
-
 def load(rel):
     import json
     with open(os.path.join(STORES, rel + '.json'), encoding='utf-8') as fh:
@@ -139,21 +110,7 @@ def main(argv):
                                      Guidance=guid, Flight=flight, AmmoItem='superbwarfare:large_cruise_missile', LaunchOffset=launch))
     print('yj12 anchors', a['MountAnchor'], a['MountAxis'], 'launch', launch)
 
-    # ---- C-201: the model's own inner baked store, cut from H-6K.mtb (human-made: not generated, not marked)
-    shutil.copyfile(os.path.join(CUT_DIR, 'h6k_inner', 'h6k_inner.geo.json'), os.path.join(GEO, 'c201.geo.json'))
-    shutil.copyfile(os.path.join(CUT_DIR, 'h6k_inner', 'h6k_inner.png'), os.path.join(TEX, 'c201.png'))
-    recentre_cut('c201')
-    # the anchors are set by hand: the body radius is 0.4539 m (the automatic fit reads the cranked wing root at the lug station as the body)
-    R_C201, Z_C201 = 0.4539, 0.0       # the baked store hung with its centre under the pylon (pylon z -106..-26, store z -146..17), so the anchor is the centre
-    a, launch, g = F.anchors_for('c201', missile=True, manual={'top': [0, R_C201, Z_C201], 'left': [R_C201, 0, Z_C201],
-                                                                'right': [-R_C201, 0, Z_C201], 'axis': [0, 0, Z_C201]})
-    guid = OD([('Mode', 'ACTIVE_SURFACE_RADAR'), ('LockTicks', 60), ('Range', 820), ('ConeDegrees', 30), ('CountermeasureVulnerability', 0.6)])
-    flight = OD([('InitialSpeed', 0.3), ('MaxSpeed', 3.0), ('AccelerationPerTick', 0.03), ('TurnDegreesPerSecond', 24), ('Damage', 150),
-                 ('BlastRadius', 12), ('TntEquivalentKg', 500.0), ('Range', 820)])
-    cat.add('munition/c201', F.store(f'C-201 {DOT} active-radar anti-ship cruise missile', 'CRUISE', 'c201', a, Capacity=1, MassKg=2400,
-                                     Guidance=guid, Flight=flight, AmmoItem='superbwarfare:large_cruise_missile', LaunchOffset=launch))
-    print('c201 anchors', a['MountAnchor'], a['MountAxis'], 'launch', launch)
-    print('written; new generated geo files:', ' '.join(NEW_GEO_FILES), '; cut: c201 (+ c201_flight)')
+    print('written; new generated geo files:', ' '.join(NEW_GEO_FILES))
 
 
 if __name__ == '__main__':
