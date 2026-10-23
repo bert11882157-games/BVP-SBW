@@ -5,7 +5,9 @@
 The flat panes of each aircraft are listed in flat_panes/<vid>.json beside this script:
   {"why": "<the reference the layout comes from>",
    "panes": [{"name": "centre windscreen", "box": [[x0, y0, z0], [x1, y1, z1]], "mirror": true}]}
-A pane is the CanopyGlass triangles whose centroid falls inside its box (vehicle-local blocks, the frame CanopyGlass is in);
+A pane is the CanopyGlass triangles whose centroid falls inside its box (vehicle-local blocks, the frame CanopyGlass is in),
+or inside any of its "boxes" (a pane no single box can hold, e.g. between converging posts: all its triangles are still
+fitted to one plane together, never slice by slice);
 with "mirror" the box is read as |x| and the right and left panes are checked each on their own. An aircraft with no
 flat panes (the F-16's one-piece bubble) has "panes": [] so it counts as audited.
 
@@ -95,13 +97,15 @@ def check(vid, cfg, tol, show_pieces):
         print(f'{vid}: NOT AUDITED (no flat_panes/{vid}.json)')
         bad += 1
     for p in cfg.get(vid, []):
-        lo, hi = np.array(p['box'][0], float), np.array(p['box'][1], float)
+        boxes = [np.array(b, float) for b in (p['boxes'] if 'boxes' in p else [p['box']])]
         sides = (1, -1) if p.get('mirror') else (0,)
         for s in sides:
             Q = C.copy()
             if s:
                 Q[:, 0] *= s
-            sel = np.all((Q >= lo) & (Q <= hi), axis=1)
+            sel = np.zeros(len(Q), bool)
+            for b in boxes:
+                sel |= np.all((Q >= b[0]) & (Q <= b[1]), axis=1)
             name = p['name'] + ({1: ' (right)', -1: ' (left)'}.get(s, ''))
             if not sel.any():
                 print(f'{vid}: FAIL {name}: no glass in its box')
