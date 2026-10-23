@@ -53,6 +53,8 @@ Frames: everything below is eye-relative blocks of its station (x left, y up, z 
 Usage: python tools/cockpit_models/f_14c.py [--dry-run]"""
 import json, math, os, sys
 import numpy as np
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import throttle_lib
 from PIL import Image, ImageDraw, ImageFont
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -66,6 +68,7 @@ TEX_DEAD = os.path.join(GEN, 'assets/berts_vehicle_pack/textures/entity_dead/f_1
 
 BONE_F = 'wreck_fuselage_0__cockpit'          # the pilot's station breaks away with the forward fuselage
 BONE_R = 'wreck_fuselage_1__cockpit'          # the RIO's stays with the middle one
+THR = []                                 # the throttle levers (throttle_lib), one bone each
 STICK_BONES = ('control_stick_roll', 'control_stick_pitch', 'wreck_fuselage_0__control_stick_pitch')
 STICK_BONE = 'wreck_fuselage_0__control_stick_pitch'
 HULL0, HULL1 = 'wreck_fuselage_0__hull', 'wreck_fuselage_1__hull'
@@ -950,14 +953,13 @@ def tub(m, atlas, sw, panel, eye, z_back_abs, seed, shaft=None, throttle=None, h
         tz = throttle
         tx = 0.335
         plate = atlas.paint(60, 80, p_throttle_plate)
+        m.box([tx, cy + 0.011, tz], (X, Y, Z), (0.085, 0.011, 0.140), sw['dgrey'])
         m.rect_tex([tx, cy + 0.0225, tz], Y, Z, 0.17, 0.28, plate)
-        for xl in (tx - 0.030, tx + 0.030):
-            lev = (X, unit([0, 1, 0.25]), unit([0, -0.25, 1]))
-            m.box([xl, cy + 0.07, tz + 0.04], lev, (0.008, 0.060, 0.010), sw['metal'])
-            gax = (X, unit([0, 1, 0.45]), unit([0, -0.45, 1]))
-            m.box([xl, cy + 0.140, tz + 0.075], gax, (0.017, 0.044, 0.030), sw['black'])
-            m.box([xl, cy + 0.188, tz + 0.090], gax, (0.014, 0.008, 0.026), sw['dgrey'])
-            m.box(np.array([xl, cy + 0.152, tz + 0.075]) - unit([0, -0.45, 1]) * 0.034, (X, Y, Z), (0.006, 0.006, 0.004), sw['red'])
+        # The two levers are their own bones (throttle_lever_1 / _2) hinged under the console top, modelled at idle
+        # (throttle_lib); the plate and its gate decal stay.
+        THR.clear()
+        THR.extend(throttle_lib.jet_levers(m, lambda: Mesh(eye), sw, 'f14', x=tx, top_y=cy, z_idle=tz - 0.04, n=2, pitch=0.060,
+                                           depth=0.12, plate=False))
         m.box([tx + 0.080, cy + 0.025, tz - 0.07], (X, Y, Z), (0.020, 0.012, 0.030), sw['metal'])
     if hand is not None:                                      # the RIO's hand controller on the right console
         zc, top_tex = hand
@@ -1166,6 +1168,7 @@ def main(argv):
             b['pivot'] = list(foot_px)
         if b['name'] == STICK_BONE:
             b['poly_mesh'] = stick.poly_mesh()
+    thr = throttle_lib.add_bones(g['bones'], THR, BONE_F, EYE_F)
     for s in asset['AircraftRig']['Surfaces']:
         if s['Bone'] in ('control_stick_roll', 'control_stick_pitch'):
             s['Pivot'] = list(foot_px)
@@ -1190,7 +1193,7 @@ def main(argv):
         cg['Triangles'] = [round(v, 4) + 0.0 for p in tri + both for v in p]
     print(f'f_14c: {removed} old interior faces removed; front {len(pms[BONE_F]["polys"])} faces, rear {len(pms[BONE_R]["polys"])} faces; '
           f'{len(gf) + len(gr)} gauges ({len(gr)} rear), {len(df) + len(dr)} displays ({len(dr)} rear), HUD combiner {len(glass) // 3} triangles; '
-          f'stick foot {foot_px} px; atlas {atlas.used()} of {sum(a[2] * a[3] for a in ATLAS)} texels')
+          f'stick foot {foot_px} px; throttle bones {[(n, p) for n, p, _ in thr]}; atlas {atlas.used()} of {sum(a[2] * a[3] for a in ATLAS)} texels')
     if dry:
         return
     write_json(GEO, geo, None)

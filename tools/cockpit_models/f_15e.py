@@ -46,6 +46,8 @@ Usage: python tools/cockpit_models/f_15e.py [--dry-run]
 """
 import json, math, os, sys
 import numpy as np
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import throttle_lib
 from PIL import Image, ImageDraw, ImageFont
 from scipy.sparse import coo_matrix
 from scipy.sparse.csgraph import connected_components
@@ -61,6 +63,7 @@ TEX_DEAD = os.path.join(GEN, 'assets/berts_vehicle_pack/textures/entity_dead/f_1
 
 BONE_F = 'wreck_fuselage_0__cockpit'          # the front station breaks away with the forward fuselage
 BONE_R = 'wreck_fuselage_1__cockpit'          # the rear station stays with the middle one
+THR = []                                 # the throttle levers (throttle_lib), one bone each
 SOURCE_BONES = ('wreck_fuselage_0__hull', 'wreck_fuselage_1__hull')
 STICK_BONES = ('control_stick_roll', 'control_stick_pitch', 'wreck_fuselage_0__control_stick_pitch')
 STICK_BONE = 'wreck_fuselage_0__control_stick_pitch'
@@ -1113,15 +1116,15 @@ def throttles(m, sw, eye, tz, scale=1.0, hat=True):
     cy = CONSOLE_ABS - eye[1]
     s = scale
     m.box([0.410, cy + 0.011, tz], (X, Y, Z), (0.085, 0.011, 0.140 * s), sw['dgrey'])
-    for xl in (0.385, 0.435):
-        lev = (X, unit([0, 1, 0.25]), unit([0, -0.25, 1]))
-        m.box([xl, cy + 0.07 * s, tz + 0.04 * s], lev, (0.008, 0.060 * s, 0.010), sw['metal'])
-        gax = (X, unit([0, 1, 0.45]), unit([0, -0.45, 1]))
-        m.box([xl, cy + 0.140 * s, tz + 0.075 * s], gax, (0.017, 0.044 * s, 0.030), sw['black'])
-        if hat:
-            m.box([xl, cy + 0.188 * s, tz + 0.090 * s], gax, (0.014, 0.008, 0.026), sw['dgrey'])
-            m.box(np.array([xl, cy + 0.152 * s, tz + 0.075 * s]) - gax[2] * 0.034 + gax[1] * 0.010, gax, (0.006, 0.006, 0.004),
-                  sw['red'] if xl < 0.4 else sw['metal'])
+    # The pilot's two levers are their own bones (throttle_lever_1 / _2) hinged under the console top, modelled at idle
+    # (throttle_lib); the rear seat's quadrant gets the same shaped levers as fixed mesh. The plate and its gate decal stay.
+    levers = throttle_lib.jet_levers(m, lambda: Mesh(eye), sw, 'f15', x=0.410, top_y=cy, z_idle=tz - 0.04, n=2, pitch=0.050,
+                                     depth=0.12, plate=False)
+    if hat:
+        THR.clear()
+        THR.extend(levers)
+    else:
+        throttle_lib.make_static(m, levers)
     m.box([0.465, cy + 0.020, tz - 0.07], (X, Y, Z), (0.020, 0.012, 0.030), sw['metal'])      # speed brake switch
 
 
@@ -1474,6 +1477,7 @@ def main(argv):
             bone = {'name': name, 'parent': 'hull', 'pivot': list(hull['pivot'])}
             g['bones'].insert(at, bone)
         bone['poly_mesh'] = pms[name]
+    thr = throttle_lib.add_bones(g['bones'], THR, BONE_F, EYE_F)
     # the stick: its three bones' pivots to the centre stick's foot (model pixels)
     fv = foot + np.array(EYE_F)
     foot_px = [round(float(fv[0]) * 16, 5), round(float(fv[1]) * 16, 5), round(-float(fv[2]) * 16, 5)]
@@ -1506,7 +1510,7 @@ def main(argv):
         cg['Triangles'] = [round(v, 4) + 0.0 for p in tri + both for v in p]
     print(f'f_15e: {removed} old interior faces removed; front {len(pms[BONE_F]["polys"])} faces, rear {len(pms[BONE_R]["polys"])} faces; '
           f'{len(gf) + len(gr)} gauges ({len(gr)} rear), {len(df) + len(dr)} displays ({len(dr)} rear), HUD combiner {len(glass) // 3} triangles; '
-          f'stick foot {foot_px} px; atlas {atlas.used()} of {sum(a[2] * a[3] for a in ATLAS)} texels')
+          f'stick foot {foot_px} px; throttle bones {[(n, p) for n, p, _ in thr]}; atlas {atlas.used()} of {sum(a[2] * a[3] for a in ATLAS)} texels')
     if dry:
         return
     write_json(GEO, geo, None)

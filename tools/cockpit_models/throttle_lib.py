@@ -34,21 +34,23 @@ class Lever:
     def __init__(self, name, mesh, hinge, info):
         self.name, self.mesh, self.hinge, self.info = name, mesh, np.array(hinge, float), info
 
-    def pivot_px(self, offset=(0, 0, 0)):
+    def pivot_px(self, offset=(0, 0, 0), xform=None):
         h = self.hinge + np.array(offset, float)
+        if xform is not None:
+            h = np.array(xform(h), float)
         return [round(float(h[0]) * 16, 5), round(float(h[1]) * 16, 5), round(-float(h[2]) * 16, 5)]
 
 
-def add_bones(bones, levers, parent, offset=(0, 0, 0), mesh=True):
+def add_bones(bones, levers, parent, offset=(0, 0, 0), mesh=True, xform=None):
     """put one bone per lever into the geo bone list (after its parent); a rerun replaces them"""
     bones[:] = [b for b in bones if not b['name'].startswith(PREFIX)]
     at = next(i for i, b in enumerate(bones) if b['name'] == parent) + 1
     for k, lv in enumerate(levers):
-        b = {'name': lv.name, 'parent': parent, 'pivot': lv.pivot_px(offset)}
+        b = {'name': lv.name, 'parent': parent, 'pivot': lv.pivot_px(offset, xform)}
         if mesh:
             b['poly_mesh'] = lv.mesh.poly_mesh()
         bones.insert(at + k, b)
-    return [(lv.name, lv.pivot_px(offset), lv.info) for lv in levers]
+    return [(lv.name, lv.pivot_px(offset, xform), lv.info) for lv in levers]
 
 
 # ---------------------------------------------------------------- solids
@@ -294,7 +296,8 @@ def lever(m_unused, Mesh_, sw, name, x, top_y, z_idle, grip, lean0=-28.0, rise=0
     mesh = Mesh_()
     tube(mesh, _col(sw, 'metal'), hinge + a0 * (depth - 0.012), tip, arm_r, arm_r * .85, seg=8)
     GRIP_FN[grip](mesh, sw, tip, side)
-    info = dict(arm=round(La, 3), lean_idle=lean0, lean_mil=mil, lean_ab=ab, hinge=[round(float(v), 4) for v in hinge],
+    mil = math.degrees(math.atan(math.tan(L0) + 0.72 * (math.tan(math.radians(ab)) - math.tan(L0))))      # MIL at 72% of the travel to the detent
+    info = dict(arm=round(La, 3), lean_idle=lean0, lean_mil=round(mil, 1), lean_ab=ab, hinge=[round(float(v), 4) for v in hinge],
                 grip=grip, travel_z=round(float(depth * (math.tan(math.radians(ab)) - math.tan(L0))), 3))
     return Lever(name, mesh, hinge, info)
 
@@ -350,3 +353,9 @@ def collective(m, Mesh_, sw, name, x, base_y, z_hinge, length=0.40, rest_deg=4.0
     info = dict(arm=round(length, 3), lean_idle=rest_deg, lean_mil=rest_deg + up_deg * .6, lean_ab=rest_deg + up_deg,
                 hinge=[round(float(v), 4) for v in hinge], grip='twist', travel_z=0.0)
     return Lever(name, mesh, hinge, info)
+
+
+def make_static(m, levers):
+    """merge levers into the static mesh m (a station whose lever is not the throttle: it gets no bone)"""
+    for lv in levers:
+        m.faces += lv.mesh.faces

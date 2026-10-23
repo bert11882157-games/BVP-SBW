@@ -58,6 +58,8 @@ cockpit's own eye; the mesh is written in model pixels (x, y, -z) * 16 after T()
 Usage: python tools/cockpit_models/f_4e.py [--dry-run]"""
 import json, math, os, sys
 import numpy as np
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import throttle_lib
 from PIL import Image, ImageDraw, ImageFont
 
 # The airframe's cockpit region is the F-4C's, scaled uniformly (measured: 1672 face pairs of the two crew tubs, the seats and the
@@ -79,6 +81,7 @@ TEX = os.path.join(GEN, 'assets/berts_vehicle_pack/textures/entity/f_4e.png')
 TEX_DEAD = os.path.join(GEN, 'assets/berts_vehicle_pack/textures/entity_dead/f_4e.png')
 
 BONE = 'wreck_fuselage_0__cockpit'
+THR = []                                 # the throttle levers (throttle_lib), one bone each
 STICK_BONES = ('control_stick_roll', 'control_stick_pitch', 'wreck_fuselage_0__control_stick_pitch')
 STICK_BONE = 'wreck_fuselage_0__control_stick_pitch'
 # free texture area (x, y, w, h): the model's UVs all lie in the lower half (v <= 0.5); the native fallback's box UVs
@@ -907,15 +910,20 @@ def add_tub(m, atlas, sw, panel, cfg):
     # the throttles (left console): quadrant, two levers with grips and thumb switches, speed brake switch
     tz = cfg['throttle_z']
     tx = 0.385
-    m.box([tx, console_y + 0.011, tz], (X, Y, Z), (0.085, 0.011, 0.150), sw['dgrey'])
-    for xl in (tx - 0.025, tx + 0.025):
-        lev = (X, unit([0, 1, 0.25]), unit([0, -0.25, 1]))
-        m.box([xl, console_y + 0.07, tz + 0.04], lev, (0.008, 0.060, 0.010), sw['metal'])
-        gax = (X, unit([0, 1, 0.45]), unit([0, -0.45, 1]))
-        m.box([xl, console_y + 0.140, tz + 0.075], gax, (0.016, 0.044, 0.030), sw['black'])
-        m.box([xl, console_y + 0.188, tz + 0.090], gax, (0.013, 0.008, 0.026), sw['dgrey'])
-    m.box([tx + 0.075, console_y + 0.020, tz - 0.07], (X, Y, Z), (0.020, 0.012, 0.030), sw['metal'])
-    m.box(np.array([tx - 0.025, console_y + 0.152, tz + 0.075]) - unit([0, -0.45, 1]) * 0.034, (X, Y, Z), (0.006, 0.006, 0.004), sw['red'])
+
+    def lever_mesh():
+        lm = Mesh()
+        lm.eye = m.eye
+        return lm
+    # The pilot's two levers are their own bones (throttle_lever_1 / _2) hinged under the console top, modelled at idle
+    # (throttle_lib); the back seat's levers are the same shape as fixed mesh.
+    levers = throttle_lib.jet_levers(m, lever_mesh, sw, 'f4', x=tx, top_y=console_y, z_idle=tz - 0.07, n=2, pitch=0.050)
+    if np.allclose(m.eye, EYE_F):
+        THR.clear()
+        THR.extend(levers)
+    else:
+        throttle_lib.make_static(m, levers)
+    m.box([tx + 0.075, console_y + 0.020, tz - 0.07], (X, Y, Z), (0.020, 0.012, 0.030), sw['metal'])      # speed brake switch
     # switch rows on both console tops
     for s in (1, -1):
         for zr in cfg['switch_z']:
@@ -1134,6 +1142,7 @@ def main(argv):
             b['pivot'] = list(foot_px)
         if b['name'] == STICK_BONE:
             b['poly_mesh'] = stick.poly_mesh()
+    thr = throttle_lib.add_bones(g['bones'], THR, BONE, EYE_F, xform=T)
     for s in asset['AircraftRig']['Surfaces']:
         if s['Bone'] in ('control_stick_roll', 'control_stick_pitch'):
             s['Pivot'] = list(foot_px)
@@ -1164,7 +1173,7 @@ def main(argv):
         cg['Triangles'] = [round(v, 4) + 0.0 for p in tri + both for v in p]
     move_eyes(data)
     print(f'f_4e: {removed} old interior faces removed; new cockpits {len(pm["polys"])} faces, {len(gauges)} game gauges, '
-          f'{len(displays)} display(s), LCOSS glass {len(glass) // 3} triangles; stick foot {foot_px} px; '
+          f'{len(displays)} display(s), LCOSS glass {len(glass) // 3} triangles; stick foot {foot_px} px; throttle bones {[(n, p) for n, p, _ in thr]}; '
           f'atlas {atlas.used()} of {sum(a[2] * a[3] for a in ATLAS)} texels')
     if dry:
         return
