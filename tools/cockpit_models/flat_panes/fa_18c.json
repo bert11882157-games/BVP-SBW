@@ -1,16 +1,4 @@
 {
-  "why": "Hornet (Lot 20) windscreen: a flat centre pane (the plate behind the HUD combiner) between two slim posts, with curved quarter panes beyond the posts, the windscreen arch (bow) behind it and a blown one-piece canopy bubble over the seat with a rear bow (DCS F/A-18C Lot 20 and War Thunder external models, photos). Only the centre pane is flat; its triangles are selected by z slices because the posts converge forward, and fitted to one plane together, and the HUD combiner (under the pane) is excluded by the slices' y range.",
-  "panes": [
-    {
-      "name": "centre windscreen",
-      "boxes": [[
-          [-0.256, 3.041, 4.93], [0.256, 3.158, 5.08]],
-        [[-0.241, 2.964, 5.08], [0.241, 3.081, 5.23]],
-        [[-0.226, 2.887, 5.23], [0.226, 3.004, 5.38]],
-        [[-0.211, 2.81, 5.38], [0.211, 2.927, 5.53]],
-        [[-0.196, 2.733, 5.53], [0.196, 2.85, 5.68]],
-        [[-0.184, 2.692, 5.68], [0.184, 2.773, 5.76]]
-      ]
-    }
-  ]
+  "why": "One-piece curved wraparound windscreen, no flat panes (owner's correction 2026-10-23). F/A-18E and F/A-18C: the Hornet windscreen is a single curved pane from the base strip to the arch; the canopy is a blown bubble.",
+  "panes": []
 }

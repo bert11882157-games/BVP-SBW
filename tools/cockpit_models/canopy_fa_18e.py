@@ -19,13 +19,8 @@ wreck_fuselage_0__hull), so this script keeps it as THE frame, never adds a seco
     frame (flat quads along the crown) and the narrow slab on the nose in front of the arch.
 
 Retrofit (owner standard: framing as in life): the added frame members (own bone frame_bars__canopy, rebuilt every run) are the
-rear canopy bow behind the seat with the opaque spine fairing aft of it (the glass ends at the bow's front face), the two
-quarter-pane posts along the windscreen that split the front panel from the quarter panes, and the windscreen's base frame
-along the nose deck. The front arch and the canopy bow just aft of it are the airframe's one member (they meet).
-
-Flat panes (owner rule: framing as on the real aircraft, never bend glass to fit a frame): the windscreen's centre pane is ONE PLANE (canopy_flat_ws.py,
-checked by planarity_check.py against flat_panes/fa_18e.json); the posts, arch, foot strips and front cap are built around it, the curved quarter panes
-beyond the posts are the only curved windscreen glass.
+rear canopy bow behind the seat with the opaque spine fairing aft of it (the glass ends at the bow's front face), and the
+windscreen's slim base strip along the nose deck. The windscreen itself is ONE curved wraparound pane (no centre plate, no posts, no flat panes: owner's correction 2026-10-23), from the base strip up to the arch. The front arch and the canopy bow just aft of it are the airframe's one member (they meet).
 
 CANOPY (eye-relative sections, the right half from the sill up over the top) is what the checks in
 work/elite_expansion_2/checks read for the canopy outline. Frames: vehicle-local blocks, model pixels (x, y, -z) * 16.
@@ -38,7 +33,6 @@ import numpy as np
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
-from canopy_flat_ws import FlatWS
 
 GEN = os.path.join(HERE, '..', '..', 'bvp', 'src', 'generated', 'resources')
 GEO = os.path.join(GEN, 'assets/berts_vehicle_pack/custom_geo/fa_18e.geo.json')
@@ -106,10 +100,6 @@ def skin_y(x, z):
     return float(np.interp(abs(x), _SK_X, row)) + 0.010
 
 
-# the windscreen's centre pane is ONE PLANE (flat on the real Hornet: the plate behind the HUD combiner): the line through the arch's
-# front face crown and the nose deck's edge; posts at 60% of the foot's half width, quarter panes curved beyond them
-WS = FlatWS(WS_Z[0], WS_Z[1], ((4.915, 3.000), (5.864, 2.532)), WS_X, skin_y, z_front_front)
-
 def base_crown(z):
     """(x of the glass's foot, y of the foot, y of the crown) at station z: on the rail, or on the nose deck for the windscreen"""
     zs = [r[0] for r in RAIL]
@@ -118,7 +108,9 @@ def base_crown(z):
         return (float(np.interp(z, zs, [r[1] for r in RAIL])), float(np.interp(z, zs, [r[2] for r in RAIL])),
                 float(np.interp(z, zc, [c[1] for c in CROWN])))
     if z >= WS_Z[0]:
-        return (WS.XB(z), WS.YB(z), WS.YT(z))
+        t = (z - WS_Z[0]) / (WS_Z[1] - WS_Z[0])
+        xb = WS_X[0] + (WS_X[1] - WS_X[0]) * t
+        return (xb, skin_y(xb, z), float(np.interp(z, [c[0] for c in WSC], [c[1] for c in WSC])))
     # over the front arch: between the rail's end and the windscreen's start
     t = (z - RAIL[-1][0]) / (WS_Z[0] - RAIL[-1][0])
     a, b = base_crown(RAIL[-1][0]), base_crown(WS_Z[0])
@@ -127,8 +119,6 @@ def base_crown(z):
 
 def section(z, n=22):
     """the right half-section at station z: absolute (x, y) points from the foot up to the crown (x = 0)"""
-    if z >= WS_Z[0]:
-        return WS.section(z, n - 1)             # the windscreen: flat centre pane, post, curved quarter pane
     xb, yb, yt = base_crown(z)
     us = np.linspace(0, 1, n)
     pts = [(xb * (1 - u ** NEXP) ** (1 / NEXP), yb + (yt - yb) * u) for u in us]
@@ -199,11 +189,12 @@ def patch(zf0, zf1, z_lo, z_hi, nz, ns=14, jr=None):
 # ---- the Super Hornet's frame members added to the airframe's own (its sill rails and the windscreen arch):
 #  * the rear canopy bow behind the pilot's seat: a slim hoop over the sills at Z_BOW (the canopy glass ends at its front
 #    face; behind it the spine fairing runs back to the closing piece, opaque, on the glass's old surface)
-#  * the quarter-pane posts: one slim diagonal post each side along the windscreen, from the arch down to the nose deck,
-#    splitting the large front panel from the small quarter panes beside it
+#  * the windscreen's base strip along the nose deck (the windscreen itself is ONE curved wraparound pane, no posts)
 Z_BOW = (3.56, 3.62)
 BOW_OUT, BOW_IN = 0.012, 0.030               # the hoop stands this far out of the glass surface and this far in
-POST_OUT, POST_IN = 0.008, 0.018
+WS_NS = 28
+BASE_ROWS = (0, 2)                          # the windscreen's base frame along the nose deck fills this band
+BASE_OUT, BASE_IN = 0.008, 0.018
 BARS_BONE = 'frame_bars__canopy'             # (the name ends in __canopy: the checks count it as the canopy's own)
 
 
@@ -288,14 +279,21 @@ def frame_bars(uv):
         # the spine fairing behind it, to the closing piece (the glass's old surface, opaque)
         zs = np.linspace(Z_AFT, Z_BOW[0], 12)
         b.skin([[_pt(z, j, side, ns) for j in range(ns + 1)] for z in zs])
-    # the windscreen's posts, foot strips and front cap (canopy_flat_ws.py): built around the flat centre pane
-    WS.add_bars(b, (POST_OUT, POST_IN))
+    # the windscreen's base strip along the nose deck (the windscreen's rows are finer: its own ring set)
+    for side in (1, -1):
+        n = 14
+        k0, k1 = BASE_ROWS
+        g0 = [edge(z_front_front, j, 4.757, WS_NS, 4.757, WS_Z[1]) for j in (k0, k1)]
+        g1 = [edge(lambda y: WS_Z[1], j, WS_Z[1], WS_NS, 4.757, WS_Z[1]) for j in (k0, k1)]
+        A = [_pt(g0[0] + (g1[0] - g0[0]) * i / n, k0, side, WS_NS) for i in range(n + 1)]
+        B = [_pt(g0[1] + (g1[1] - g0[1]) * i / n, k1, side, WS_NS) for i in range(n + 1)]
+        b.bar(A, B, BASE_OUT, BASE_IN)
     return b
 
 
 def glass_triangles():
     tris = patch(lambda y: Z_BOW[1], z_front_rear, Z_BOW[1], 4.80, 26)          # the bubble: the rear bow -> the arch
-    tris += WS.glass()                                                          # the windscreen: centre pane (one plane), quarter panes
+    tris += patch(z_front_front, lambda y: WS_Z[1], 4.757, WS_Z[1], 14, ns=WS_NS, jr=(BASE_ROWS[1], WS_NS))   # the windscreen: one curved wraparound pane, base strip to arch
     return tris
 
 
