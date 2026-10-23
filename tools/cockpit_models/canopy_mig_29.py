@@ -53,7 +53,11 @@ def build(atlas, E, skin):
     # airframe grey they stood out as light strips on it)
     ag = atlas.swatch((30, 31, 33))
     C.bow(m, sh, E, 1.225, 0.03, 0.02, ag, inner)
-    C.member(m, sh, E, 0.0, SPLIT + 0.05, 1.24, 0.03, 0.003, ag, inner, steps=8, proud=0.008)   # (on the outside: deeper, it stood as a block inside beside the HUD)
+    C.member(m, sh, E, 0.0, SPLIT + 0.05, 1.24, 0.03, 0.003, ag, inner, steps=8, proud=0.008)
+    # the windscreen's two thin posts from the arch down to the base frame, a little closer together ahead
+    # (bert's War Thunder reference, 2026-10-23: head-on and from above)
+    C.member(m, sh, E, lambda z: sh.s_at_x(z, 0.17 - 0.04 * (z - SPLIT) / (1.22 - SPLIT)), SPLIT + 0.05, 1.21, 0.016, 0.01,
+             out, inner, steps=12, proud=0.002)   # (on the outside: deeper, it stood as a block inside beside the HUD)
     # the deck under the windscreen ahead of the coaming, closing off the nose bay seen through the glass
     # one smooth shell under the windscreen, 3 cm inside the glass, its top under the sight line over the coaming
     # (the coaming's front edge 1.15 m ahead, 0.26 m under the eye): the nose under the glass one homogeneous deck
