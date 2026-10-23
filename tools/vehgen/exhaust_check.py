@@ -33,7 +33,7 @@ ASSETS = os.path.join(REPO, 'bvp', 'src', 'generated', 'resources', 'assets', 'b
 DATA = os.path.join(REPO, 'bvp', 'src', 'generated', 'resources', 'data', 'berts_vehicle_pack')
 MAX_M = 0.2
 # front-engined vehicles: the hull-front-half rule does not apply (their exhaust may sit forward, but still on a grille)
-FRONT_ENGINE = {'m1128'}
+FRONT_ENGINE = {'m1128', 'puma_ifv'}
 BAND = 6.0
 OUT_PX = 0.25            # --fix: origin this far outside the louvre face
 
@@ -44,6 +44,15 @@ EXITS = {
     'm1a1_tusk': [(-17.632, -8.352, 20.524, 27.948, 76.560), (4.640, 17.632, 20.524, 27.948, 76.560)],
     # banded rear panel (texture std 56) 3.5 px inside the rear overhang, so the box spans z 33.8 .. 37.3 (hull end)
     'fv721_fox': [(-10.6, 10.6, 15.4, 22.9, 33.8, 37.3)],
+    # the model's louvred grille on the rear plate (part 0 elements 156-159, 206-215): slats x -8.96 .. 12.37 px,
+    # y 24.2 .. 28.4 px, outer face z 59.03 px
+    't64bv': [(-8.96, 12.37, 24.2, 28.4, 59.03)],
+    # Stryker: C7 engine front right, outlet on the right (-x) hull side forward. The model has no visible outlet there: this is the
+    # right side face (x -28.5) at engine-deck height abreast the roof louvre panel (z -43.7). UNVERIFIED, a decision, not a measurement
+    'm1128': [(-28.5, -28.5, 28.0, 36.0, -47.5, -39.9)],
+    # Puma: MTU 10V 890 front right, outlet on the right (-x) hull side face forward (x -34.438, the side module face), at
+    # the engine deck height. The model has no visible outlet: UNVERIFIED, a decision. Set in puma_build.py (EXHAUST)
+    'puma_ifv': [(-34.438, -34.438, 18.1, 25.7, -42.75, -33.25)],
 }
 
 
@@ -254,7 +263,8 @@ def sheet(ids, out):
             fh.write(MARK_VIEW)
         H = np.array(bone_mesh(load(f['geo'])['minecraft:geometry'][0], hull_name(load(f['geo'])['minecraft:geometry'][0]))
                      ['positions'])
-        cy, cz = -(H[:, 2].min() + H[:, 2].max()) / 32, (H[:, 1].min() + H[:, 1].max()) / 32\n        scale = (H[:, 2].max() - H[:, 2].min()) / 16 * 1.05 + 2.0       # the whole hull in the tile
+        cy, cz = -(H[:, 2].min() + H[:, 2].max()) / 32, (H[:, 1].min() + H[:, 1].max()) / 32
+        scale = (H[:, 2].max() - H[:, 2].min()) / 16 * 1.05 + 2.0       # the whole hull in the tile
         az = '140' if '--front' not in sys.argv else '40'
         subprocess.run([blender, '-b', '--factory-startup', '-P', script, '--', obj, png, az, '30', f'{scale:.2f}', '0',
                         f'{cy:.2f}', f'{cz:.2f}', '800', json.dumps(marks)], check=True, capture_output=True)
