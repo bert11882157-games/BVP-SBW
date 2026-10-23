@@ -36,6 +36,9 @@ Imports only cockpit_lib and free_atlas (the building blocks are inlined). Run o
 Usage: python tools/cockpit_models/ah_56a.py [--dry-run]"""
 import json, math, os, sys
 import numpy as np
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import throttle_lib
+THR = []                                 # the throttle levers (throttle_lib), one bone each
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
@@ -835,14 +838,13 @@ def build(atlas):
     # the collective: base on the console, the lever running forward and up, the twist grip
     P0c = np.array([0.40, 3.115, 5.20])
     G0 = np.array([0.385, 3.30, 5.62])
-    lev = unit(G0 - P0c)
-    m.cyl(P0c - lev * 0.01, G0, 0.011, sw['metal'], seg=6)
-    m.box(P0c - [0, 0.013, 0], (X, Y, Z), (0.030, 0.012, 0.030), sw['dgrey'])
-    gdir = unit([0, 0.20, 1.0])
-    m.cyl(G0, G0 + gdir * 0.23, 0.021, sw['black'], seg=8)
-    m.cyl(G0 + gdir * 0.23, G0 + gdir * 0.245, 0.017, sw['dgrey'], seg=8)
-    m.box(G0 + gdir * 0.07 + [0.0, 0.026, 0.0], (X, unit([0, 1, -0.2]), unit([0, 0.2, 1])), (0.012, 0.007, 0.028), sw['mgrey'])
-    m.box(G0 + gdir * 0.15 + [-0.018, 0.012, 0.0], (X, unit([0, 1, -0.2]), unit([0, 0.2, 1])), (0.005, 0.005, 0.008), sw['red'])
+    m.box(P0c - [0, 0.013, 0], (X, Y, Z), (0.030, 0.012, 0.030), sw['dgrey'])                       # the pivot block
+    # The collective (the "throttle" lever) is its own bone (throttle_lever), hinged on the pivot block, modelled full down
+    # (throttle_lib.collective); the twist grip is the throttle.
+    arm = G0 - P0c
+    THR.clear()
+    THR.append(throttle_lib.collective(lambda: Mesh(atlas), sw, 'throttle_lever', P0c, float(math.hypot(arm[1], arm[2])), 8.0,
+                                       math.degrees(math.atan2(0.20, 1.0)), grip_len=0.245, travel=24.0, lateral=float(arm[0])))
     # rudder pedals
     for s in (1, -1):
         zk = PF.z(FLOOR_P + 0.12) - 0.075
@@ -977,11 +979,11 @@ def build(atlas):
     GP0 = np.array([0.430, SH + 0.017, 7.25])
     GG0 = np.array([0.408, SH + 0.105, 7.57])
     m.box(GP0, (X, Y, Z), (0.028, 0.012, 0.028), sw['dgrey'])
-    m.cyl(GP0, GG0, 0.010, sw['metal'], seg=6)
-    gd2 = unit([0, 0.12, 1.0])
-    m.cyl(GG0, GG0 + gd2 * 0.16, 0.019, sw['black'], seg=8)
-    m.cyl(GG0 + gd2 * 0.16, GG0 + gd2 * 0.173, 0.015, sw['dgrey'], seg=8)
-    m.box(GG0 + gd2 * 0.05 + [0.0, 0.022, 0.0], (X, Y, Z), (0.010, 0.006, 0.022), sw['mgrey'])
+    # the gunner's collective: the same shaped lever, fixed (only the pilot's is the throttle bone)
+    garm = GG0 - GP0
+    throttle_lib.make_static(m, [throttle_lib.collective(lambda: Mesh(atlas), sw, 'collective_g', GP0, float(math.hypot(garm[1], garm[2])),
+                                                         math.degrees(math.atan2(garm[1], garm[2])), math.degrees(math.atan2(0.12, 1.0)),
+                                                         grip_len=0.173, lateral=float(garm[0]))])
     for s in (1, -1):                                                                                        # pedals
         zk = GF.z(FLOOR_G + 0.12) - 0.21
         m.box([s * 0.13, FLOOR_G + 0.15, zk], (X, unit([0, 1, -0.35]), unit([0, 0.35, 1])), (0.050, 0.075, 0.010), sw['mgrey'])
@@ -1046,6 +1048,8 @@ def main(argv):
     hull = next(b for b in bones if b['name'] == HULL_BONE)
     at = [b['name'] for b in bones].index('hull__canopy') + 1 if any(b['name'] == 'hull__canopy' for b in bones) else bones.index(hull) + 1
     bones.insert(at, {'name': BONE, 'parent': 'hull', 'pivot': list(hull['pivot']), 'poly_mesh': pm})
+    thr = throttle_lib.add_bones(bones, THR, BONE)
+    print(f'{VID} throttle bones {[(n, p) for n, p, _ in thr]}')
     asset['CockpitGauges'] = {'Schema': 1, 'Frame': 'VEHICLE_LOCAL_BLOCKS', 'Gauges': gauges}
     asset['FlightDisplays'] = {'Schema': 1, 'Frame': 'VEHICLE_LOCAL_BLOCKS', 'Displays': displays, 'Planform': planform(geo)}
     asset['HeadUpDisplay'] = {'Schema': 1, 'Frame': 'VEHICLE_LOCAL_BLOCKS', 'Seat': 0,

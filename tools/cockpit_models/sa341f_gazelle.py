@@ -27,6 +27,9 @@ Usage: python3 tools/cockpit_models/sa341f_gazelle.py [--dry-run]
 """
 import json, math, os, sys
 import numpy as np
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import throttle_lib
+THR = []                                 # the throttle levers (throttle_lib), one bone each
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
@@ -756,12 +759,12 @@ def build(atlas):
     CB = np.array([xc + 0.265, FLOOR + 0.030, 3.30])
     CG = np.array([xc + 0.265, FLOOR + 0.375, 3.62])
     m.box(CB - [0, 0.012, 0], (X, Y, Z), (0.030, 0.026, 0.030), sw['dgrey'])
-    m.cyl(CB, CG, 0.011, sw['metal'], seg=6)
-    gd = unit([0, 0.20, 1.0])
-    m.cyl(CG, CG + gd * 0.20, 0.021, sw['black'], seg=8)
-    m.cyl(CG + gd * 0.20, CG + gd * 0.215, 0.017, sw['dgrey'], seg=8)
-    m.box(CG + gd * 0.07 + [0.0, 0.026, 0.0], (X, unit([0, 1, -0.2]), unit([0, 0.2, 1])), (0.012, 0.007, 0.028), sw['mgrey'])
-    m.box(CG + gd * 0.14 + [0.018, 0.012, 0.0], (X, unit([0, 1, -0.2]), unit([0, 0.2, 1])), (0.005, 0.005, 0.008), sw['red'])
+    # The collective (the "throttle" lever) is its own bone (throttle_lever), hinged on its floor base, modelled full down
+    # (throttle_lib.collective); the twist grip is the throttle.
+    arm = CG - CB
+    THR.clear()
+    THR.append(throttle_lib.collective(lambda: Mesh(atlas), sw, 'throttle_lever', CB, float(math.hypot(arm[1], arm[2])), 30.0,
+                                       math.degrees(math.atan2(0.20, 1.0)), grip_len=0.215, travel=30.0, lateral=float(arm[0])))
     # rudder pedals (both seats get the dual set, the pilot's the working one)
     for xs_ in (xc, SEAT_X):
         for s in (1, -1):
@@ -838,6 +841,8 @@ def install(ac, mesh, gauges, displays):
         cb = {'name': COCKPIT_BONE, 'parent': 'hull', 'pivot': list(hull['pivot'])}
         ac.bones.insert(at, cb)
     cb['poly_mesh'] = pm
+    thr = throttle_lib.add_bones(ac.bones, THR, COCKPIT_BONE)
+    print(f'sa341f_gazelle throttle bones {[(n, p) for n, p, _ in thr]}')
     a = ac.asset
     a['CockpitGauges'] = {'Schema': 1, 'Frame': 'VEHICLE_LOCAL_BLOCKS', 'Gauges': gauges}
     a['FlightDisplays'] = {'Schema': 1, 'Frame': 'VEHICLE_LOCAL_BLOCKS', 'Displays': displays, 'Planform': planform(ac.geo)}

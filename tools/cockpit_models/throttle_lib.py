@@ -339,35 +339,34 @@ def jet_levers(m, Mesh_, sw, style, x, top_y, z_idle, n=1, pitch=0.050, hx=None,
     return out
 
 
-def collective(m, Mesh_, sw, name, x, base_y, z_hinge, length=0.40, rest_deg=4.0, up_deg=28.0, base_h=0.03, rise=0.03,
-               twist_len=0.135, twist_r=0.0215, height=0.0):
-    """a helicopter collective: the lever hinged on a base block at the rear, running forward, at rest (full down) at
-    `rest_deg` above the horizontal; the grip with its twist throttle at the front end"""
-    hinge = np.array([x, base_y + base_h + rise, z_hinge])
-    m.box([x, base_y + base_h / 2, z_hinge + 0.02], (X, Y, Z), (0.045, base_h / 2, 0.075), _col(sw, 'dgrey'))
-    m.box([x + 0.052, base_y + 0.012, z_hinge + 0.02], (X, Y, Z), (0.008, 0.012, 0.018), _col(sw, 'metal'))   # friction knob
-    r = math.radians(rest_deg)
-    a0 = np.array([0, math.sin(r), math.cos(r)])
-    tip = hinge + a0 * length
+def collective(Mesh_, sw, name, hinge, arm_len, arm_deg, grip_deg, grip_len=0.20, twist_r=0.0205, travel=25.0, lateral=0.0):
+    """a helicopter collective as the "throttle" lever: the arm from its hinge (absolute point; the script keeps its own
+    pivot block) rising `arm_deg` above the horizontal for `arm_len`, then the grip along `grip_deg` for `grip_len`: a head
+    with the switch plate and the twist-throttle sleeve with its end cap. Modelled full down (idle); `travel` degrees of
+    raise about the hinge (X axis, tip rising) to full up. `lateral` is the sideways step of the grip (x, toward the
+    seat) over the arm."""
+    hinge = np.array(hinge, float)
+    ra, rg = math.radians(arm_deg), math.radians(grip_deg)
+    a0 = np.array([0, math.sin(ra), math.cos(ra)])
+    elbow = hinge + a0 * arm_len + np.array([lateral, 0, 0])
     mesh = Mesh_()
-    boss0 = hinge - a0 * 0.02
-    tube(mesh, _col(sw, 'metal'), boss0, hinge + a0 * (length - twist_len - 0.01), 0.0125, 0.0105, seg=8)
-    tube(mesh, _col(sw, 'dgrey'), hinge - X * 0.014, hinge + X * 0.014, 0.0165, 0.0165, seg=8, ref=Y)         # the hinge boss
-    F = Fr(hinge + a0 * (length - twist_len), a0)
-    # the grip: a head with the switch block, then the twist throttle sleeve
-    body(mesh, _col(sw, 'black'), F, [(-0.012, .0160, .0170), (.012, .0230, .0250), (.045, .0240, .0260), (.062, .0200, .0215)], n=2.4)
-    fbox(mesh, _col(sw, 'dgrey'), F, 0.030, 0.0275, 0, 0.026, 0.0030, 0.0150)                                  # the switch plate
+    tube(mesh, _col(sw, 'metal'), hinge - a0 * 0.012, elbow, 0.0115, 0.0100, seg=8)
+    tube(mesh, _col(sw, 'dgrey'), hinge - X * 0.016, hinge + X * 0.016, 0.0165, 0.0165, seg=8, ref=Y)         # the hinge boss
+    F = Fr(elbow, [0, math.sin(rg), math.cos(rg)])
+    body(mesh, _col(sw, 'black'), F, [(-0.012, .0150, .0160), (.012, .0215, .0235), (.045, .0230, .0245), (.066, .0200, .0210)], n=2.4)
+    fbox(mesh, _col(sw, 'dgrey'), F, 0.032, 0.0258, 0, 0.024, 0.0030, 0.0150)                                  # the switch plate
     for k in range(3):
-        fbox(mesh, _col(sw, 'red' if k == 0 else 'metal'), F, 0.014 + 0.014 * k, 0.0315, (k - 1) * 0.006, 0.0035, 0.0030, 0.0035)
-    fbox(mesh, _col(sw, 'metal'), F, 0.050, -0.0262, 0, 0.012, 0.0030, 0.012)                                  # the trigger
-    body(mesh, _col(sw, 'black'), F, [(.062, twist_r * .92, twist_r * .92), (.080, twist_r, twist_r), (twist_len - 0.010, twist_r, twist_r),
-                                      (twist_len, twist_r * .72, twist_r * .72)], n=2.0, seg=12)
-    for s in (0.070, 0.092, 0.114):
-        body(mesh, _col(sw, 'dgrey'), F, [(s, twist_r * 1.03, twist_r * 1.03), (s + 0.006, twist_r * 1.03, twist_r * 1.03)], n=2.0, seg=12)
-    info = dict(arm=round(length, 3), lean_idle=rest_deg, lean_mil=rest_deg + up_deg * .6, lean_ab=rest_deg + up_deg,
+        fbox(mesh, _col(sw, 'red' if k == 0 else 'metal'), F, 0.014 + 0.016 * k, 0.0295, (k - 1) * 0.006, 0.0035, 0.0030, 0.0035)
+    fbox(mesh, _col(sw, 'metal'), F, 0.052, -0.0250, 0, 0.012, 0.0030, 0.012)                                  # the trigger / speed switch
+    s0 = 0.066
+    body(mesh, _col(sw, 'black'), F, [(s0, twist_r * .92, twist_r * .92), (s0 + .018, twist_r, twist_r),
+                                      (grip_len - 0.014, twist_r, twist_r), (grip_len, twist_r * .72, twist_r * .72)], n=2.0, seg=12)
+    for s in (s0 + 0.012, s0 + 0.034, s0 + 0.056):
+        if s < grip_len - 0.016:
+            body(mesh, _col(sw, 'dgrey'), F, [(s, twist_r * 1.04, twist_r * 1.04), (s + 0.006, twist_r * 1.04, twist_r * 1.04)], n=2.0, seg=12)
+    info = dict(arm=round(arm_len, 3), lean_idle=arm_deg, lean_mil=round(arm_deg + travel * 0.5, 1), lean_ab=round(arm_deg + travel, 1),
                 hinge=[round(float(v), 4) for v in hinge], grip='twist', travel_z=0.0)
     return Lever(name, mesh, hinge, info)
-
 
 def make_static(m, levers):
     """merge levers into the static mesh m (a station whose lever is not the throttle: it gets no bone)"""

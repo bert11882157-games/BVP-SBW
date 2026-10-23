@@ -30,6 +30,9 @@ Usage: python3 tools/cockpit_models/mi_8amtsh.py [--dry-run]
 """
 import json, math, os, sys
 import numpy as np
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import throttle_lib
+THR = []                                 # the throttle levers (throttle_lib), one bone each
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
@@ -818,12 +821,17 @@ def build(atlas):
         cb = np.array([xc + s_out * 0.405, FLOOR + 0.20, 5.90])
         cg = np.array([xc + s_out * 0.405, FLOOR + 0.44, 6.38])
         m.box(cb - [0, 0.15, 0], (X, Y, Z), (0.035, 0.15, 0.04), sw['dgrey'])
-        m.cyl(cb, cg, 0.012, sw['metal'], seg=6)
+        # The captain's collective (the "throttle" lever) is its own bone (throttle_lever), hinged on the base, modelled full down
+        # (throttle_lib.collective); the co-pilot's is the same lever, fixed.
         gd = unit([0, 0.10, 1.0])
-        m.cyl(cg, cg + gd * 0.20, 0.022, sw['black'], seg=8)
-        m.cyl(cg + gd * 0.20, cg + gd * 0.215, 0.018, sw['dgrey'], seg=8)
-        m.box(cg + gd * 0.07 + [0.0, 0.028, 0.0], (X, unit([0, 1, -0.1]), unit([0, 0.1, 1])), (0.012, 0.007, 0.030), sw['mgrey'])
-        m.box(cg + gd * 0.14 + [s_out * -0.020, 0.014, 0.0], (X, unit([0, 1, -0.1]), unit([0, 0.1, 1])), (0.005, 0.005, 0.009), sw['red'])
+        arm = cg - cb
+        lv = throttle_lib.collective(lambda: Mesh(atlas), sw, 'throttle_lever', cb, float(math.hypot(arm[1], arm[2])), 12.0,
+                                     math.degrees(math.atan2(0.10, 1.0)), grip_len=0.215, travel=25.0)
+        if tag == 'p':
+            THR.clear()
+            THR.append(lv)
+        else:
+            throttle_lib.make_static(m, [lv])
         m.box(cg - gd * 0.10 + [0.0, 0.0, 0.0] + [s_out * 0.04, 0.0, 0.0], (X, Y, Z), (0.012, 0.016, 0.012), sw['mgrey'])    # friction lock
         # rudder pedals: a plate each (heel on the floor, the top leaning to the dash), a rod to the kick plate
         for s in (1, -1):
@@ -929,6 +937,8 @@ def install(ac, mesh, gauges, displays, hud):
         cb = {'name': COCKPIT_BONE, 'parent': 'hull', 'pivot': list(hull['pivot'])}
         ac.bones.insert(at, cb)
     cb['poly_mesh'] = pm
+    thr = throttle_lib.add_bones(ac.bones, THR, COCKPIT_BONE)
+    print(f'mi_8amtsh throttle bones {[(n, p) for n, p, _ in thr]}')
     a = ac.asset
     a['CockpitGauges'] = {'Schema': 1, 'Frame': 'VEHICLE_LOCAL_BLOCKS', 'Gauges': gauges}
     a['FlightDisplays'] = {'Schema': 1, 'Frame': 'VEHICLE_LOCAL_BLOCKS', 'Displays': displays, 'Planform': planform(ac.geo)}
