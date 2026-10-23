@@ -475,6 +475,8 @@ public class ModEntityRenderers {
                 "custom_geo/ah_1f.geo.json", "textures/entity/ah_1f.png", "ah_1f"));
         registerVehicle(event, ModEntities.SA341F_GAZELLE, "sa341f_gazelle", standardVehicle(
                 "custom_geo/sa341f_gazelle.geo.json", "textures/entity/sa341f_gazelle.png", "sa341f_gazelle"));
+        registerVehicle(event, ModEntities.AH_56A, "ah_56a", standardVehicle(
+                "custom_geo/ah_56a.geo.json", "textures/entity/ah_56a.png", "ah_56a"));
         registerVehicle(event, ModEntities.AH1W_SUPER_COBRA, "ah1w_super_cobra", standardVehicle(
                 "custom_geo/ah1w_super_cobra.geo.json", "textures/entity/ah1w_super_cobra.png", "ah1w_super_cobra"));
         // Tracked like the Leclerc: standardVehicle has no tracked animator (links stuck in the rest pose, the

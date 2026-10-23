@@ -1,0 +1,103 @@
+{
+  "ID": "berts_vehicle_pack:ah_56a",
+  "Model": {
+    "GeometryBackend": "berts_vehicle_pack:vehicle/ah_56a",
+    "Model": "berts_vehicle_pack:geo/native_fallback/ah_56a.geo.json",
+    "Texture": "berts_vehicle_pack:textures/entity/ah_56a.png",
+    "WreckTexture": "berts_vehicle_pack:textures/entity_dead/ah_56a.png"
+  },
+  "MouseSpeed": [
+    0.2,
+    0.2
+  ],
+  "AircraftRig": {
+    "Schema": 1,
+    "Frame": "GENERATED_MODEL_PIXELS",
+    "Surfaces": [],
+    "Rotors": [
+      {
+        "Bone": "main_rotor",
+        "Parent": "hull",
+        "Pivot": [
+          0.0,
+          85.305,
+          -27.018
+        ],
+        "Axis": [
+          0,
+          -1,
+          0
+        ],
+        "SpeedChannel": "engineSpool",
+        "Direction": 1,
+        "DegreesPerTickAtFullSpeed": 80
+      },
+      {
+        "Bone": "tail_rotor",
+        "Parent": "hull",
+        "Pivot": [
+          39.809,
+          47.564,
+          163.238
+        ],
+        "Axis": [
+          1,
+          0,
+          0
+        ],
+        "SpeedChannel": "engineSpool",
+        "Direction": 1,
+        "DegreesPerTickAtFullSpeed": 392
+      },
+      {
+        "Bone": "pusher_prop",
+        "Parent": "hull",
+        "Pivot": [
+          0.0,
+          48.081,
+          168.408
+        ],
+        "Axis": [
+          0,
+          0,
+          1
+        ],
+        "SpeedChannel": "engineSpool",
+        "Direction": 1,
+        "DegreesPerTickAtFullSpeed": 190
+      }
+    ]
+  },
+  "DefensiveStationPresentation": {
+    "Schema": 1,
+    "Frame": "GENERATED_MODEL_PIXELS",
+    "Yaw": {
+      "Bone": "passengerWeaponStationYaw",
+      "Parent": "hull",
+      "Pivot": [
+        0.0,
+        31.02,
+        -158.336
+      ],
+      "Axis": [
+        0,
+        -1,
+        0
+      ]
+    },
+    "Pitch": {
+      "Bone": "passengerWeaponStationPitch",
+      "Parent": "passengerWeaponStationYaw",
+      "Pivot": [
+        0.0,
+        39.809,
+        -158.336
+      ],
+      "Axis": [
+        -1,
+        0,
+        0
+      ]
+    }
+  }
+}

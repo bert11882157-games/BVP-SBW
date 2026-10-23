@@ -21,6 +21,7 @@ public final class AuthoredHelicopter extends BvpHelicopterEntity {
             case "ah_1f" -> HelicopterFlightProfile.ah1f();
             case "ah1w_super_cobra" -> HelicopterFlightProfile.ah1w();
             case "sa341f_gazelle" -> HelicopterFlightProfile.ah1f();
+            case "ah_56a" -> HelicopterFlightProfile.ah56a();
             case "eurocopter_tiger" -> HelicopterFlightProfile.eurocopterTiger();
             case "ah_64d" -> HelicopterFlightProfile.ah64d();
             case "ch_46e" -> HelicopterFlightProfile.ch46e();

@@ -1,0 +1,113 @@
+{
+  "Schema": 1,
+  "Name": "AH-56A Cheyenne",
+  "BuiltInWeapons": [
+    "PassengerGun1",
+    "PassengerGun2",
+    "PassengerGun3"
+  ],
+  "SuspendedWeapons": [
+    "Lau3aInner",
+    "Lau3aOuter",
+    "Ter3Outer"
+  ],
+  "Pairs": [
+    {
+      "Id": "inner",
+      "Name": "Inner station (WT slots 2 / 3)",
+      "Left": [
+        2.1972,
+        2.0266,
+        1.2039
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            2.1972,
+            2.0266,
+            1.2039
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Right": [
+        -2.1972,
+        2.0266,
+        1.2039
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -2.1972,
+            2.0266,
+            1.2039
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:ah56a/lau3a",
+        "berts_vehicle_pack:ah56a/tow_x3"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 1250,
+      "NativeWeaponIds": {
+        "berts_vehicle_pack:ah56a/lau3a": "Lau3aInner"
+      }
+    },
+    {
+      "Id": "outer",
+      "Name": "Outer station (WT slots 1 / 4)",
+      "Left": [
+        3.8775,
+        2.2554,
+        1.1716
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            3.8775,
+            2.2554,
+            1.1716
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Right": [
+        -3.8775,
+        2.2554,
+        1.1716
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -3.8775,
+            2.2554,
+            1.1716
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:ah56a/lau3a",
+        "berts_vehicle_pack:ah56a/lau3a_x3"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 1250,
+      "NativeWeaponIds": {
+        "berts_vehicle_pack:ah56a/lau3a": "Lau3aOuter",
+        "berts_vehicle_pack:ah56a/lau3a_x3": "Ter3Outer"
+      }
+    }
+  ],
+  "StoreGroups": {},
+  "MaxPayloadKg": 5000,
+  "MaxPylonMassKg": 1250,
+  "MaxWeaponsPerPylon": 1,
+  "Singles": [],
+  "WeaponSeat": 1,
+  "WeaponSeats": [
+    1,
+    0
+  ]
+}
