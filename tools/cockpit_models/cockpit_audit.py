@@ -24,13 +24,16 @@ Usage:  cockpit_audit.py VID [VID...] [--all] [--only gaps,stray,jag,zfight] [--
                          [--report DIR [--per-id 4] [--commit HASH] [--no-images]] [--images DIR]
         --all runs every Elite Expansion 2 hand-built cockpit (FLEET). --report writes DIR/REPORT.md and the pictures in
         DIR/img (and includes DIR/validation.md when it exists). --geo audits another geo json (a deliberately broken copy)
-        for the one id given. Read-only on the repository: it never writes a vehicle file.
+        for the one id given. Read-only on the repository: it never writes a vehicle file. COCKPIT_AUDIT_GEN=DIR reads the
+        geo / asset / data json from a copy of bvp/src/generated/resources instead (a frozen snapshot).
 """
 import json, math, os, sys, time
 import numpy as np
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-GEN = os.path.join(HERE, '..', '..', 'bvp', 'src', 'generated', 'resources')
+# COCKPIT_AUDIT_GEN points at a copy of bvp/src/generated/resources (a frozen snapshot of the aircraft, so a re-audit is
+# repeatable while other work edits the repository); BVP_TEX_DIR keeps pointing at the real textures
+GEN = os.environ.get('COCKPIT_AUDIT_GEN') or os.path.join(HERE, '..', '..', 'bvp', 'src', 'generated', 'resources')
 GEO = os.path.join(GEN, 'assets/berts_vehicle_pack/custom_geo')
 ASSET = os.path.join(GEN, 'assets/berts_vehicle_pack/sbw/vehicles')
 DATA = os.path.join(GEN, 'data/berts_vehicle_pack/sbw/vehicles')
@@ -138,7 +141,8 @@ class Model:
         """the aircraft's texture (uint8 H x W x 4) or None when it is missing or not a real PNG (an LFS pointer)"""
         if not hasattr(self, '_tex'):
             self._tex = None
-            d = os.environ.get('BVP_TEX_DIR') or os.path.join(GEN, 'assets/berts_vehicle_pack/textures/entity')
+            d = os.environ.get('BVP_TEX_DIR') or os.path.join(HERE, '..', '..', 'bvp', 'src', 'generated', 'resources',
+                                                              'assets/berts_vehicle_pack/textures/entity')
             p = os.path.join(d, self.vid + '.png')
             try:
                 from PIL import Image
@@ -1551,9 +1555,11 @@ def write_report(results, outdir, paths=None, tool_hash='', commit='', validatio
     w('')
     w(f'Tool: `tools/cockpit_models/cockpit_audit.py`, sha256 `{tool_hash}`' + (f', commit `{commit}`' if commit else ''))
     w('')
-    w('Nothing in the vehicle files was changed. Every number below comes from the generated geo and asset json on branch '
-      '`elite-expansion-2` as checked out when the audit ran. Units are metres (1 block = 1 m); positions are '
-      'vehicle-local (x left, y up, z forward).')
+    w('Nothing in the vehicle files was changed. Every number below comes from the generated geo and asset json of branch '
+      '`elite-expansion-2`' + (f', read from the frozen copy `{os.environ["COCKPIT_AUDIT_GEN"]}` of the working tree '
+                              '(other threads were editing the repository while the audit ran; `snapshot.txt` lists what was copied)'
+                              if os.environ.get('COCKPIT_AUDIT_GEN') else ' as checked out when the audit ran') +
+      '. Units are metres (1 block = 1 m); positions are vehicle-local (x left, y up, z forward).')
     w('')
     w('## What it measures')
     w('')
