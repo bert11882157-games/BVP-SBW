@@ -1,0 +1,37 @@
+{
+  "Schema": 1,
+  "Name": "PTB-5280 5,280 l centreline drop tank (AI)",
+  "Category": "VISUAL_ONLY",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/tank_5280l.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.315,
+    -0.2372
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.291,
+      0.0,
+      -0.2372
+    ],
+    "Right": [
+      -0.291,
+      0.0,
+      -0.2372
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    -0.2372
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/tank_5280l.png",
+  "Capacity": 1,
+  "MassKg": 4368.0,
+  "LaunchOffset": [
+    0.0,
+    -0.315,
+    0.0
+  ]
+}

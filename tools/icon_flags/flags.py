@@ -111,7 +111,31 @@ def kr(im):
     im.paste(big.resize((W, H), Image.LANCZOS), (0, 0))
 
 
+def su(im):
+    """Soviet flag, drawn on a 6x supersampled field: red, a gold hammer and sickle with the gold-edged star in the upper hoist corner
+    (hammer and sickle reduced to a sickle arc, a hammer bar and a handle at this size)."""
+    import math
+    k = 6
+    w, h = W * k, H * k
+    big = Image.new('RGBA', (w, h), (204, 0, 0, 255))
+    d = ImageDraw.Draw(big)
+    gold = (255, 215, 0, 255)
+    cx, cy, R = w * 0.22, h * 0.30, h * 0.20                       # star above the emblem
+    pts = []
+    for i in range(10):
+        a = math.radians(-90 + 36 * i)
+        rr = R if i % 2 == 0 else R * 0.40
+        pts.append((cx + rr * math.cos(a), cy + rr * math.sin(a)))
+    d.polygon(pts, fill=gold)
+    ex, ey, er = w * 0.22, h * 0.70, h * 0.17                      # emblem: sickle arc, handle, hammer
+    d.arc([ex - er, ey - er, ex + er, ey + er], 200, 20, fill=gold, width=max(2, round(h * 0.07)))
+    d.line([ex - er * 0.9, ey + er * 0.9, ex + er * 0.7, ey - er * 0.6], fill=gold, width=max(2, round(h * 0.06)))
+    d.rectangle([ex + er * 0.35, ey - er * 0.95, ex + er * 1.05, ey - er * 0.55], fill=gold)
+    im.paste(big.resize((W, H), Image.LANCZOS), (0, 0))
+
+
 FLAGS = {
+    'SU': su,
     'KR': kr,
     'GB': gb,
     'US': usa,

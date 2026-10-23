@@ -1,5 +1,5 @@
 {
-  "_doc": "vehicle id -> nation code of the flag on its icon (nation of origin; an export variant: the nation it was exported to). Codes: US, FR, DE, RU, UA, IT, GB, KR (flags.py draws these).",
+  "_doc": "vehicle id -> nation code of the flag on its icon (nation of origin; an export variant: the nation it was exported to). Codes: US, FR, DE, RU, UA, IT, GB, KR, SU (flags.py draws these).",
   "f_16c": {
     "nation": "US",
     "note": "F-16C Block 50, USAF (War Thunder f_16c_block_50, USA tree); the model carries USAF markings (AZ tail code)"
@@ -71,5 +71,9 @@
   "f_14c": {
     "nation": "US",
     "note": "F-14C Tomcat (never-built Grumman proposal, US Navy; War Thunder has no F-14C, the F-14D is USA tree); the supplied model wears US Navy markings (black scheme)"
+  },
+  "mig_25pd": {
+    "nation": "SU",
+    "note": "MiG-25PD Foxbat-E interceptor, Soviet Air Defence Forces (War Thunder USSR tree mig_25pd); the supplied model wears Soviet red stars, number 16"
   }
 }
