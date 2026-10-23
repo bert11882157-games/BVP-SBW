@@ -665,6 +665,24 @@
       }
     ]
   },
+  "tap_mtlbengine": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/mtlbengine",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "tap_mtlbidle": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:tap_fleet_shared/mtlbidle",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
   "tap_t72engine": {
     "sounds": [
       {

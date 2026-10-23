@@ -258,6 +258,11 @@
       "bmp1",
       "bmp"
     ],
+    "strela_10m2": [
+      "bmp1",
+      "bmp1",
+      "bmp"
+    ],
     "bmp2": [
       "bmp1",
       "bmp1",
@@ -622,6 +627,15 @@
       ],
       "auto": false
     },
+    "igla": {
+      "src": [
+        "weapons:stationary/igla_djigit/sounds/igla_fire.ogg",
+        "weapons:stationary/igla_djigit/sounds/igla_fire.ogg",
+        "weapons:common/sounds/stationary/distantsounds/at4_distant.ogg",
+        "weapons:common/sounds/stationary/distantsounds/rpg_distant.ogg"
+      ],
+      "auto": false
+    },
     "mk19": {
       "src": [
         "weapons:stationary/us_agl_mk19/sounds/mk19_fire_1p.wav",
@@ -758,6 +772,8 @@
     "lav25.Missile": "tow",
     "marder_1a5.Missile": "tow",
     "puma_ifv.MainMachineGun": "mg4",
+    "strela_10m2.Missile": "igla",
+    "strela_10m2.PKMB": "pkt",
     "m113a3.PassengerMachineGun": "m2hb",
     "pgz_95.Cannon": "type87_25",
     "leopard_2a4.MachineGun": "mg3",
