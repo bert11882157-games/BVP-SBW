@@ -224,11 +224,12 @@ internal object VehicleCameraResolver {
             thirdPersonFlight?.applyOrbitRotation(transform,
                 ClientMouseHandler.freeCameraYaw, ClientMouseHandler.freeCameraPitch)
         }
+        val chaseOffset = AircraftChaseCameraOffset.chase(vehicle.vehicleType, data.aircraftCameraPos)
         val maxCameraPosition = vehicle.transformPosition(
             transform,
-            data.aircraftCameraPos.x,
-            data.aircraftCameraPos.y + 0.1 * ClientMouseHandler.custom3pDistanceLerp,
-            data.aircraftCameraPos.z - ClientMouseHandler.custom3pDistanceLerp,
+            chaseOffset.x,
+            chaseOffset.y + 0.1 * ClientMouseHandler.custom3pDistanceLerp,
+            chaseOffset.z - ClientMouseHandler.custom3pDistanceLerp,
         )
         if (vehicle.isFixedWingFlightVehicle() && heldView == null) {
             val offset = FixedWingDynamicCamera.offset(vehicle, partialTicks)
