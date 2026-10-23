@@ -455,11 +455,11 @@ public class ModEntityRenderers {
         registerVehicle(event, ModEntities.GAZ_3937_VODNIK_AA, "gaz_3937_vodnik_aa", context ->
                 new FittedGroundVehicleRenderer(context, bvp("custom_geo/gaz_3937_vodnik_aa.geo.json"),
                         bvp("textures/entity/gaz_3937_vodnik_aa.png"), "gaz_3937_vodnik_aa"));
-        registerVehicle(event, ModEntities.BMD_1, "bmd_1", context ->
-                new FittedGroundVehicleRenderer(context, bvp("custom_geo/bmd_1.geo.json"),
         registerVehicle(event, ModEntities.FV721_FOX, "fv721_fox", context ->
                 new FittedGroundVehicleRenderer(context, bvp("custom_geo/fv721_fox.geo.json"),
                         bvp("textures/entity/fv721_fox.png"), "fv721_fox"));
+        registerVehicle(event, ModEntities.BMD_1, "bmd_1", context ->
+                new FittedGroundVehicleRenderer(context, bvp("custom_geo/bmd_1.geo.json"),
                         bvp("textures/entity/bmd_1.png"), "bmd_1"));
         registerVehicle(event, ModEntities.BTR_ZD, "btr_zd", context ->
                 new FittedGroundVehicleRenderer(context, bvp("custom_geo/btr_zd.geo.json"),
