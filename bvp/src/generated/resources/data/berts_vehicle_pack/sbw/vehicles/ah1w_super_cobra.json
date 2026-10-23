@@ -487,9 +487,11 @@
         "Aero6aInner",
         "Aero7aInner",
         "ZuniInner",
+        "GpuInner",
         "Aero6aOuter",
         "Aero7aOuter",
-        "ZuniOuter"
+        "ZuniOuter",
+        "GpuOuter"
       ],
       "CanRotateHead": true,
       "CameraPos": {
@@ -1494,6 +1496,632 @@
         "ProjectileProfile": "berts_vehicle_pack:ah_1g_cobra/rocket/default",
         "ProjectileLife": 100
       }
+    },
+    "GpuInner": {
+      "Crosshair": "@VehicleCommonGun",
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "ProjectileAmount": 1,
+      "AmmoCostPerShoot": 1,
+      "NormalReloadTime": 400,
+      "EmptyReloadTime": 400,
+      "AutoReload": true,
+      "WithdrawAmmoWhenChangeSlot": false,
+      "Gravity": 0.05,
+      "ProjectileLife": 400,
+      "AddShooterDeltaMovement": true,
+      "HeatPerShoot": 0,
+      "Spread": 0.2,
+      "ExplosionDamage": 0,
+      "Name": "20 mm M197 (GPU-2/A pods, inner stations)",
+      "RPM": 750,
+      "Magazine": 600,
+      "Damage": 166.66666666666666,
+      "SoundInfo": {
+        "Fire1PGain": 1.0,
+        "Fire3PGain": 1.0,
+        "Fire3PFarGain": 1.0,
+        "Fire3PVeryFarGain": 1.0,
+        "Fire1P": "bvp_audio:weapon/m197_1p",
+        "Fire3P": "bvp_audio:weapon/m197_3p",
+        "Fire3PFar": "bvp_audio:weapon/m197_3p",
+        "Fire3PVeryFar": "bvp_audio:weapon/m197_3p",
+        "Volume": 1.0
+      },
+      "Projectile": {
+        "Type": "superbwarfare:small_cannon_shell",
+        "Profile": "berts_vehicle_pack:aircraft_rounds/m197/m197_hei_t"
+      },
+      "ShellType": "HE",
+      "Velocity": 64.375,
+      "ApDurability": 5,
+      "ExplosionRadius": 3.333333333333333,
+      "TntEquivalentKg": 0.0117,
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "superbwarfare:small_cannon_shell",
+        "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/m197/m197_hei_t",
+        "ProjectileLife": 400
+      },
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/m197/m197_hei_t"
+            },
+            "ShellType": "HE",
+            "Velocity": 64.375,
+            "ApDurability": 5,
+            "Damage": 166.66666666666666,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 3.333333333333333,
+            "TntEquivalentKg": 0.0117,
+            "Name": "Default / Air targets",
+            "ProjectileBelt": {
+              "Name": "Default / Air targets",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "hei_t",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "RED"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "hef_i",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "hef_i",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "ap_i",
+                  "Ammo": "superbwarfare:small_shell_gs",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/m197/m197_hei_t",
+              "ProjectileLife": 400
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_gs",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/m197/m197_ap_i"
+            },
+            "ShellType": "AP",
+            "Velocity": 64.375,
+            "ApDurability": 40,
+            "Damage": 45,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0.0,
+            "TntEquivalentKg": 0.0,
+            "Name": "Universal",
+            "ProjectileBelt": {
+              "Name": "Universal",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "hei_t",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "RED"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "ap_i",
+                  "Ammo": "superbwarfare:small_shell_gs",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "hef_i",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "ap_i",
+                  "Ammo": "superbwarfare:small_shell_gs",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/m197/m197_ap_i",
+              "ProjectileLife": 400
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/m197/m197_ap_i"
+            },
+            "ShellType": "AP",
+            "Velocity": 64.375,
+            "ApDurability": 40,
+            "Damage": 45,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0.0,
+            "TntEquivalentKg": 0.0,
+            "Name": "Armored targets",
+            "ProjectileBelt": {
+              "Name": "Armored targets",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "hei_t",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "RED"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "ap_i",
+                  "Ammo": "superbwarfare:small_shell_gs",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "ap_i",
+                  "Ammo": "superbwarfare:small_shell_gs",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "ap_i",
+                  "Ammo": "superbwarfare:small_shell_gs",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/m197/m197_ap_i",
+              "ProjectileLife": 400
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_aa",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/m197/m197_hef_i"
+            },
+            "ShellType": "HE",
+            "Velocity": 64.375,
+            "ApDurability": 5,
+            "Damage": 166.66666666666666,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 3.333333333333333,
+            "TntEquivalentKg": 0.0117,
+            "Name": "Stealth",
+            "ProjectileBelt": {
+              "Name": "Stealth",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "hef_i",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "ap_i",
+                  "Ammo": "superbwarfare:small_shell_gs",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "hef_i",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "ap_i",
+                  "Ammo": "superbwarfare:small_shell_gs",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/m197/m197_hef_i",
+              "ProjectileLife": 400
+            }
+          }
+        }
+      ],
+      "ProjectileBeltAmmoType": [],
+      "ShootPos": {
+        "Transform": "Vehicle",
+        "Positions": [
+          [
+            1.3388,
+            1.4616,
+            3.0738
+          ],
+          [
+            -1.3388,
+            1.4616,
+            3.0738
+          ]
+        ],
+        "Directions": [
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "ViewPosition": [
+          1.3388,
+          1.4616,
+          3.0738
+        ],
+        "MuzzleAttachments": [
+          "GpuInner_left",
+          "GpuInner_right"
+        ],
+        "MuzzleDirectionAttachments": [
+          "GpuInner_left",
+          "GpuInner_right"
+        ],
+        "EffectAttachments": [
+          "GpuInner_left",
+          "GpuInner_right"
+        ],
+        "EffectDirectionAttachments": [
+          "GpuInner_left",
+          "GpuInner_right"
+        ]
+      },
+      "SoundRadius": 8,
+      "BeltFed": true,
+      "OverheatEnabled": false
+    },
+    "GpuOuter": {
+      "Crosshair": "@VehicleCommonGun",
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "ProjectileAmount": 1,
+      "AmmoCostPerShoot": 1,
+      "NormalReloadTime": 400,
+      "EmptyReloadTime": 400,
+      "AutoReload": true,
+      "WithdrawAmmoWhenChangeSlot": false,
+      "Gravity": 0.05,
+      "ProjectileLife": 400,
+      "AddShooterDeltaMovement": true,
+      "HeatPerShoot": 0,
+      "Spread": 0.2,
+      "ExplosionDamage": 0,
+      "Name": "20 mm M197 (GPU-2/A pods, outer stations)",
+      "RPM": 750,
+      "Magazine": 600,
+      "Damage": 166.66666666666666,
+      "SoundInfo": {
+        "Fire1PGain": 1.0,
+        "Fire3PGain": 1.0,
+        "Fire3PFarGain": 1.0,
+        "Fire3PVeryFarGain": 1.0,
+        "Fire1P": "bvp_audio:weapon/m197_1p",
+        "Fire3P": "bvp_audio:weapon/m197_3p",
+        "Fire3PFar": "bvp_audio:weapon/m197_3p",
+        "Fire3PVeryFar": "bvp_audio:weapon/m197_3p",
+        "Volume": 1.0
+      },
+      "Projectile": {
+        "Type": "superbwarfare:small_cannon_shell",
+        "Profile": "berts_vehicle_pack:aircraft_rounds/m197/m197_hei_t"
+      },
+      "ShellType": "HE",
+      "Velocity": 64.375,
+      "ApDurability": 5,
+      "ExplosionRadius": 3.333333333333333,
+      "TntEquivalentKg": 0.0117,
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "superbwarfare:small_cannon_shell",
+        "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/m197/m197_hei_t",
+        "ProjectileLife": 400
+      },
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/m197/m197_hei_t"
+            },
+            "ShellType": "HE",
+            "Velocity": 64.375,
+            "ApDurability": 5,
+            "Damage": 166.66666666666666,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 3.333333333333333,
+            "TntEquivalentKg": 0.0117,
+            "Name": "Default / Air targets",
+            "ProjectileBelt": {
+              "Name": "Default / Air targets",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "hei_t",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "RED"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "hef_i",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "hef_i",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "ap_i",
+                  "Ammo": "superbwarfare:small_shell_gs",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/m197/m197_hei_t",
+              "ProjectileLife": 400
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_gs",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/m197/m197_ap_i"
+            },
+            "ShellType": "AP",
+            "Velocity": 64.375,
+            "ApDurability": 40,
+            "Damage": 45,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0.0,
+            "TntEquivalentKg": 0.0,
+            "Name": "Universal",
+            "ProjectileBelt": {
+              "Name": "Universal",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "hei_t",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "RED"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "ap_i",
+                  "Ammo": "superbwarfare:small_shell_gs",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "hef_i",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "ap_i",
+                  "Ammo": "superbwarfare:small_shell_gs",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/m197/m197_ap_i",
+              "ProjectileLife": 400
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/m197/m197_ap_i"
+            },
+            "ShellType": "AP",
+            "Velocity": 64.375,
+            "ApDurability": 40,
+            "Damage": 45,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0.0,
+            "TntEquivalentKg": 0.0,
+            "Name": "Armored targets",
+            "ProjectileBelt": {
+              "Name": "Armored targets",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "hei_t",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "RED"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "ap_i",
+                  "Ammo": "superbwarfare:small_shell_gs",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "ap_i",
+                  "Ammo": "superbwarfare:small_shell_gs",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "ap_i",
+                  "Ammo": "superbwarfare:small_shell_gs",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/m197/m197_ap_i",
+              "ProjectileLife": 400
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_aa",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/m197/m197_hef_i"
+            },
+            "ShellType": "HE",
+            "Velocity": 64.375,
+            "ApDurability": 5,
+            "Damage": 166.66666666666666,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 3.333333333333333,
+            "TntEquivalentKg": 0.0117,
+            "Name": "Stealth",
+            "ProjectileBelt": {
+              "Name": "Stealth",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "hef_i",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "ap_i",
+                  "Ammo": "superbwarfare:small_shell_gs",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "hef_i",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "ap_i",
+                  "Ammo": "superbwarfare:small_shell_gs",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/m197/m197_hef_i",
+              "ProjectileLife": 400
+            }
+          }
+        }
+      ],
+      "ProjectileBeltAmmoType": [],
+      "ShootPos": {
+        "Transform": "Vehicle",
+        "Positions": [
+          [
+            2.1994,
+            1.6529,
+            3.01
+          ],
+          [
+            -2.1994,
+            1.6529,
+            3.01
+          ]
+        ],
+        "Directions": [
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "ViewPosition": [
+          2.1994,
+          1.6529,
+          3.01
+        ],
+        "MuzzleAttachments": [
+          "GpuOuter_left",
+          "GpuOuter_right"
+        ],
+        "MuzzleDirectionAttachments": [
+          "GpuOuter_left",
+          "GpuOuter_right"
+        ],
+        "EffectAttachments": [
+          "GpuOuter_left",
+          "GpuOuter_right"
+        ],
+        "EffectDirectionAttachments": [
+          "GpuOuter_left",
+          "GpuOuter_right"
+        ]
+      },
+      "SoundRadius": 8,
+      "BeltFed": true,
+      "OverheatEnabled": false
     }
   },
   "HUDColor": "0xFFC700",
@@ -1790,6 +2418,58 @@
       "Position": [
         -2.1994,
         1.6329,
+        3.01
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "GpuInner_left": {
+      "Parent": "Vehicle",
+      "Position": [
+        1.3388,
+        1.4616,
+        3.0738
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "GpuInner_right": {
+      "Parent": "Vehicle",
+      "Position": [
+        -1.3388,
+        1.4616,
+        3.0738
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "GpuOuter_left": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.1994,
+        1.6529,
+        3.01
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "GpuOuter_right": {
+      "Parent": "Vehicle",
+      "Position": [
+        -2.1994,
+        1.6529,
         3.01
       ],
       "Direction": [

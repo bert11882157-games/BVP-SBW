@@ -124,9 +124,11 @@
       "Aero6aInner",
       "Aero7aInner",
       "ZuniInner",
+      "GpuInner",
       "Aero6aOuter",
       "Aero7aOuter",
-      "ZuniOuter"
+      "ZuniOuter",
+      "GpuOuter"
     ],
     "BuiltInWeapons": [
       "PassengerGun1"
@@ -169,14 +171,16 @@
           "berts_vehicle_pack:ah1w/hydra7",
           "berts_vehicle_pack:ah1w/rocket19",
           "berts_vehicle_pack:ah1w/zuni4",
-          "berts_vehicle_pack:munition/lau131_apkws_x1"
+          "berts_vehicle_pack:munition/lau131_apkws_x1",
+          "berts_vehicle_pack:gun_pod/gpu2a"
         ],
         "MaxWeaponsPerPylon": 1,
         "MaxPylonMassKg": 725,
         "NativeWeaponIds": {
           "berts_vehicle_pack:ah1w/hydra7": "Aero6aInner",
           "berts_vehicle_pack:ah1w/rocket19": "Aero7aInner",
-          "berts_vehicle_pack:ah1w/zuni4": "ZuniInner"
+          "berts_vehicle_pack:ah1w/zuni4": "ZuniInner",
+          "berts_vehicle_pack:gun_pod/gpu2a": "GpuInner"
         }
       },
       {
@@ -217,6 +221,7 @@
           "berts_vehicle_pack:ah1w/rocket19",
           "berts_vehicle_pack:ah1w/zuni4",
           "berts_vehicle_pack:munition/lau131_apkws_x1",
+          "berts_vehicle_pack:gun_pod/gpu2a",
           "berts_vehicle_pack:ah1w/tow_x4",
           "berts_vehicle_pack:ah1w/tow_x2",
           "berts_vehicle_pack:ah1w/m272_x4",
@@ -229,7 +234,8 @@
         "NativeWeaponIds": {
           "berts_vehicle_pack:ah1w/hydra7": "Aero6aOuter",
           "berts_vehicle_pack:ah1w/rocket19": "Aero7aOuter",
-          "berts_vehicle_pack:ah1w/zuni4": "ZuniOuter"
+          "berts_vehicle_pack:ah1w/zuni4": "ZuniOuter",
+          "berts_vehicle_pack:gun_pod/gpu2a": "GpuOuter"
         }
       }
     ],
