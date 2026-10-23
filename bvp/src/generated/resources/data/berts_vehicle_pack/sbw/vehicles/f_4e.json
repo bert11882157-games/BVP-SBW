@@ -621,8 +621,8 @@
       "BodyAttachment": "Vehicle",
       "Position": [
         0,
-        1.5,
-        5.66
+        1.5317928,
+        5.7221254
       ],
       "Weapons": [
         "Vulcan",
@@ -669,7 +669,7 @@
         "Position": [
           2.5,
           0.2,
-          5.66
+          5.7221254
         ]
       }
     },
@@ -680,8 +680,8 @@
       "BodyAttachment": "Vehicle",
       "Position": [
         0,
-        1.68,
-        4.19
+        1.713627,
+        4.2371461
       ],
       "Weapons": [],
       "CanRotateHead": true,
@@ -710,7 +710,7 @@
         "Position": [
           2.5,
           0.2,
-          4.19
+          4.2371461
         ]
       }
     }
@@ -1866,7 +1866,7 @@
       "Name": "20 mm M61A1",
       "RPM": 6000,
       "Magazine": 640,
-      "Damage": 166.66666666666666,
+      "Damage": 45,
       "SoundInfo": {
         "Fire1PGain": 1.0,
         "Fire3PGain": 1.0,
@@ -1880,20 +1880,67 @@
       },
       "Projectile": {
         "Type": "superbwarfare:small_cannon_shell",
-        "Profile": "berts_vehicle_pack:aircraft_rounds/m61a1/m61_hefi"
+        "Profile": "berts_vehicle_pack:aircraft_rounds/m61a1/m61_apit"
       },
-      "ShellType": "HE",
+      "ShellType": "AP",
       "Velocity": 64.375,
-      "ApDurability": 5,
-      "ExplosionRadius": 3.333333333333333,
-      "TntEquivalentKg": 0.0117,
+      "ApDurability": 40,
+      "ExplosionRadius": 0,
+      "TntEquivalentKg": 0.0,
       "NominalBallistics": {
         "Supported": true,
         "ProjectileType": "superbwarfare:small_cannon_shell",
-        "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/m61a1/m61_hefi",
+        "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/m61a1/m61_apit",
         "ProjectileLife": 400
       },
       "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/m61a1/m61_apit"
+            },
+            "ShellType": "AP",
+            "Velocity": 64.375,
+            "ApDurability": 40,
+            "Damage": 45,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "TntEquivalentKg": 0.0,
+            "Name": "Default",
+            "ProjectileBelt": {
+              "Name": "Default",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "api_t",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "RED"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "ap_i",
+                  "Ammo": "superbwarfare:small_shell_gs",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "hef_i",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/m61a1/m61_apit",
+              "ProjectileLife": 400
+            }
+          }
+        },
         {
           "Ammo": "superbwarfare:small_shell_he",
           "ConsumptionItem": "superbwarfare:small_autocannon_shell",
@@ -1909,12 +1956,12 @@
             "ExplosionDamage": 0,
             "ExplosionRadius": 3.333333333333333,
             "TntEquivalentKg": 0.0117,
-            "Name": "Air Belt",
+            "Name": "Air targets",
             "ProjectileBelt": {
-              "Name": "Air Belt",
+              "Name": "Air targets",
               "Rounds": [
                 {
-                  "Shots": 3,
+                  "Shots": 2,
                   "Round": "hef_i",
                   "Ammo": "superbwarfare:small_shell_he",
                   "Tracer": "NONE"
@@ -1924,6 +1971,18 @@
                   "Round": "api_t",
                   "Ammo": "superbwarfare:small_shell_ap",
                   "Tracer": "RED"
+                },
+                {
+                  "Shots": 2,
+                  "Round": "hef_i",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "ap_i",
+                  "Ammo": "superbwarfare:small_shell_gs",
+                  "Tracer": "NONE"
                 }
               ]
             },
@@ -1950,9 +2009,9 @@
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
             "TntEquivalentKg": 0.0,
-            "Name": "Ground Belt",
+            "Name": "Armored targets",
             "ProjectileBelt": {
-              "Name": "Ground Belt",
+              "Name": "Armored targets",
               "Rounds": [
                 {
                   "Shots": 3,
@@ -1962,8 +2021,14 @@
                 },
                 {
                   "Shots": 1,
-                  "Round": "hef_i_t",
+                  "Round": "hef_i",
                   "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "api_t",
+                  "Ammo": "superbwarfare:small_shell_ap",
                   "Tracer": "RED"
                 }
               ]
@@ -1972,6 +2037,47 @@
               "Supported": true,
               "ProjectileType": "superbwarfare:small_cannon_shell",
               "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/m61a1/m61_api",
+              "ProjectileLife": 400
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_aa",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/m61a1/m61_hefi"
+            },
+            "ShellType": "HE",
+            "Velocity": 64.375,
+            "ApDurability": 5,
+            "Damage": 166.66666666666666,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 3.333333333333333,
+            "TntEquivalentKg": 0.0117,
+            "Name": "Stealth",
+            "ProjectileBelt": {
+              "Name": "Stealth",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "hef_i",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 2,
+                  "Round": "ap_i",
+                  "Ammo": "superbwarfare:small_shell_gs",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/m61a1/m61_hefi",
               "ProjectileLife": 400
             }
           }
@@ -2080,8 +2186,8 @@
       "Parent": "Vehicle",
       "Position": [
         0.0,
-        3.12,
-        5.66
+        3.1517928,
+        5.7221254
       ],
       "Direction": [
         0,
@@ -2093,8 +2199,8 @@
       "Parent": "Vehicle",
       "Position": [
         0.0,
-        3.3,
-        4.19
+        3.3336269999999995,
+        4.2371461
       ],
       "Direction": [
         0,
