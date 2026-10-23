@@ -1,0 +1,142 @@
+{
+  "Schema": 1,
+  "SuspendedWeapons": [
+    "Lau32Outer",
+    "Jl100rInner"
+  ],
+  "Pairs": [
+    {
+      "Id": "outer",
+      "Name": "Stations 1/7 · outer wing pylons",
+      "Left": [
+        3.2207,
+        0.9927,
+        -3.6773
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            3.2207,
+            0.9927,
+            -3.6773
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Right": [
+        -3.2207,
+        0.9927,
+        -3.6773
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -3.2207,
+            0.9927,
+            -3.6773
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/aim9b",
+        "berts_vehicle_pack:munition/r550_magic",
+        "berts_vehicle_pack:munition/lau32_fz49"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 300,
+      "NativeWeaponIds": {
+        "berts_vehicle_pack:munition/lau32_fz49": "Lau32Outer"
+      }
+    },
+    {
+      "Id": "inner",
+      "Name": "Stations 2/6 · inner wing pylons",
+      "Left": [
+        2.3383,
+        1.0589,
+        -2.6626
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            2.3383,
+            1.0589,
+            -2.6626
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Right": [
+        -2.3383,
+        1.0589,
+        -2.6626
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -2.3383,
+            1.0589,
+            -2.6626
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/tank_1700l",
+        "berts_vehicle_pack:munition/jl100r"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 1500,
+      "NativeWeaponIds": {
+        "berts_vehicle_pack:munition/jl100r": "Jl100rInner"
+      }
+    }
+  ],
+  "StoreGroups": {},
+  "Name": "Mirage IIIE",
+  "BuiltInWeapons": [
+    "Gun1",
+    "Gun2"
+  ],
+  "MaxPayloadKg": 3500,
+  "MaxPylonMassKg": 1500,
+  "MaxWeaponsPerPylon": 2,
+  "Singles": [
+    {
+      "Id": "centerline",
+      "Name": "Station 4 · centreline",
+      "Position": [
+        0.0,
+        0.8603,
+        -0.589
+      ],
+      "Stations": [
+        {
+          "Point": [
+            0.0,
+            0.8603,
+            -0.589
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Internal": false,
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/r530",
+        "berts_vehicle_pack:munition/r530_radar",
+        "berts_vehicle_pack:munition/as30",
+        "berts_vehicle_pack:munition/samp25_x2",
+        "berts_vehicle_pack:munition/samp21_x2",
+        "berts_vehicle_pack:munition/samp25_200_x2",
+        "berts_vehicle_pack:munition/samp21_200_x2"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 900
+    }
+  ],
+  "Radar": {
+    "Enabled": true,
+    "Range": 2000
+  }
+}
