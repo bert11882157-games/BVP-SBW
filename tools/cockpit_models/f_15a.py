@@ -837,6 +837,15 @@ def build(atlas):
         # break the strip where the wall steps from 0.72 to 0.81 so the quad stays planar
         lift = np.array([0, 0.004, 0])             # (a visor: 4 mm over the panel's top edge, so the two never share a plane)
         m.flat([pts[i] + lift, pts[i + 1] + lift, fwd[i + 1] + lift, fwd[i] + lift], cs, normal=[0, 1, 0])
+    # the airframe's dash block shows its patchwork texture above the visor (the rear wall's top 4 cm at z 0.72 and the hump's
+    # sloping top out to z 0.901, plus the two shoulders beside it): covered with the same dark coaming, 4 mm clear of the old
+    # faces, ending at the block's front edge, well behind the windscreen glass
+    zr, zf = 0.716, 0.905
+    m.flat([[-0.181, -0.141, zr], [0.181, -0.141, zr], [0.181, -0.098, zr], [-0.181, -0.098, zr]], cs, normal=[0, 0, -1])
+    m.flat([[-0.181, -0.098, zr], [0.181, -0.098, zr], [0.181, -0.143, zf], [-0.181, -0.143, zf]], cs, normal=[0, 1, 0])
+    for sg in (1, -1):
+        m.flat([[sg * 0.181, -0.143, 0.806], [sg * 0.361, -0.188, 0.806], [sg * 0.361, -0.188, zf], [sg * 0.181, -0.143, zf]], cs,
+               normal=[0, 1, 0])
     # -- the HUD: one unit (the housing on the glareshield's hump with its control strip low on the pilot's face, two
     # side posts) and the combiner glass centred on the neutral eye line, leaning back toward the pilot
     # The F-15A's HUD (McDonnell Douglas / Hughes unit of the 1970s, before the MSIP Kaiser combiner): ONE flat combiner glass,
