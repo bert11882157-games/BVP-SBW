@@ -1,0 +1,9 @@
+{
+  "why": "Su-15 / Su-15TM windscreen (weaponsandwarfare.com Su-15 entry, hyperscale / Trumpeter kit descriptions; no dimensioned drawing found): the fixed windscreen has ONE elliptical, optically flat, bullet-resistant (silicate glass) front pane in a heavy metal frame, steeply raked, flanked by small CURVED triangular Perspex side lights; behind it ONE blown (curved) Perspex canopy sliding aft, jettisonable, with no posts. Only the armoured front pane is flat: the side lights (cones from the plate corner to the arch curve) and the canopy are curved and are not listed. The pane is the ellipse (half width 0.175, half length 0.235 along z, centre z 3.477) in the plane y = YC0 - 0.574 (z - 3.195) from the windscreen arch's front face to the base bar; its box |x| <= 0.125, z >= 3.25 holds only its own fan triangles (the side lights' centroids lie at |x| >= 0.13, the sight's glass at z < 3.25).",
+  "panes": [
+    {
+      "name": "elliptical armoured front pane",
+      "box": [[-0.125, 2.30, 3.25], [0.125, 2.75, 3.74]]
+    }
+  ]
+}
