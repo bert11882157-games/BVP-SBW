@@ -216,6 +216,23 @@ def p_dial_static(kind):
     return fn
 
 
+def p_switch_panel(seed):
+    """a side console's sloped switch plate seen from above: a dark plate with a row of captions under every switch"""
+    def fn(d, im):
+        S, Hh = im.width, im.height
+        H.noisy(d, im, PANEL_D, 4, seed=seed)
+        rng = np.random.default_rng(seed)
+        n = 20
+        for k in range(n):
+            y = Hh * (k + 0.5) / n
+            d.line([S * .06, y - Hh / n / 2, S * .94, y - Hh / n / 2], fill=(60, 64, 68, 255), width=2)
+            for fx in (0.22, 0.50, 0.78):
+                w = S * (0.07 + 0.05 * rng.random())
+                d.rectangle([S * fx - w / 2, y + Hh / n * 0.18, S * fx + w / 2, y + Hh / n * 0.30], fill=(196, 196, 188, 255))
+        d.rectangle([S * .03, 0, S * .97, Hh - 1], outline=(10, 10, 10, 255), width=3)
+    return fn
+
+
 def p_weapons(d, im):
     S, Hh = im.width, im.height
     d.rectangle([0, 0, S, Hh], fill=(20, 22, 24, 255))
@@ -497,6 +514,51 @@ def build(atlas, E):
         m.flat([[xi, cy, zs], [xf, cy, zs], [xf, cy, z1], [xi, cy, z1]], sw['panel'], normal=[0, 1, 0])
         m.flat([[xi, fy, zb], [xi, fy, z1], [xi, cy, z1], [xi, cy, zb]], sw['panel_d'], normal=[-side, 0, 0])
         m.flat([[xi, fy, zb], [xb, fy, zb], [xb, cy, zb], [xi, cy, zb]], sw['panel_d'], normal=[0, 0, -1])
+        # the switch-dense side panel: a sloped plate along the outer half of the console top, rows of toggle switches, rotary
+        # knobs and a guarded switch or two (the left one stops behind the throttle lever's sweep)
+        pa, pb = (E[2] - 0.640, E[2] - 0.270) if side > 0 else (E[2] - 0.640, E[2] + 0.150)
+        xp_i, xp_o = E[0] + (WALL_B - 0.090) * side, E[0] + (WALL_B - 0.004) * side
+        yp_i, yp_o = cy + 0.004, cy + 0.070
+        plate = [np.array(q, float) for q in ([xp_i, yp_i, pa], [xp_o, yp_o, pa], [xp_o, yp_o, pb], [xp_i, yp_i, pb])]
+        across = H.unit(plate[1] - plate[0]); along = Z
+        pn = H.unit(np.cross(along, across))
+        if pn[1] < 0:
+            pn = -pn
+        sp = atlas.paint(96, 240, p_switch_panel(40 + side))
+        m.face(plate, [m.uv(sp, 0, 0), m.uv(sp, 1, 0), m.uv(sp, 1, 1), m.uv(sp, 0, 1)], normal=pn)
+        for zc_, nn in ((pa, -1.0), (pb, 1.0)):                      # the plate's two end caps and its outer wall
+            m.flat([[xp_i, cy, zc_], [xp_o, cy, zc_], [xp_o, yp_o, zc_]] if nn > 0 else [[xp_i, cy, zc_], [xp_o, yp_o, zc_], [xp_o, cy, zc_]],
+                   sw['panel_d'], normal=[0, 0, nn])
+        m.flat([[xp_o, cy, pa], [xp_o, yp_o, pa], [xp_o, yp_o, pb], [xp_o, cy, pb]], sw['panel_d'], normal=[side, 0, 0])
+        rows = np.arange(pa + 0.030, pb - 0.012, 0.029)
+        for ri, zr_ in enumerate(rows):
+            for ci, fr in enumerate((0.22, 0.50, 0.78)):
+                base = plate[0] + (plate[1] - plate[0]) * fr
+                base = np.array([base[0], base[1], zr_])
+                key = (ri * 3 + ci + (5 if side > 0 else 0)) % 11
+                if key == 4:                                          # a guarded switch: a red cover
+                    m.box(base + pn * 0.0030, (along, across, pn), (0.0060, 0.0060, 0.0050), sw['red'])
+                elif key == 8:                                        # a rotary knob
+                    m.box(base + pn * 0.0040, (along, across, pn), (0.0095, 0.0095, 0.0060), sw['black'])
+                    m.box(base + pn * 0.0105, (along, across, pn), (0.0014, 0.0075, 0.0020), sw['metal'])
+                else:                                                 # a toggle, leaning a little forward or back
+                    tilt = 0.004 * (1 if (ri + ci) % 2 else -1)
+                    m.box(base + pn * 0.0065 + along * tilt * 0.5, (along, across, pn), (0.0028, 0.0028, 0.0085), sw['metal'])
+        # the lower sub-panel on the console's inner wall, facing the pilot's knee: a black plate, three round dials, a row of
+        # toggles under them
+        xq = E[0] + (CONSOLE_IN - 0.0075) * side
+        za, zb2 = E[2] + 0.20, E[2] + 0.40
+        m.box([E[0] + (CONSOLE_IN - 0.003) * side, E[1] - 0.8075, 0.5 * (za + zb2)], (X, Y, Z), (0.0045, 0.1675, 0.5 * (zb2 - za)), sw['black'])
+        for dk, dy in zip(('HYD', 'VOLT', 'CARB') if side > 0 else ('OXY', 'CABINE', 'FREIN'), (-0.700, -0.770, -0.840)):
+            rect = dial_cache.get(dk) or atlas.paint(96, 96, p_dial_static(dk))
+            dial_cache[dk] = rect
+            cd = np.array([xq, E[1] + dy, E[2] + 0.30])
+            m.rect_tex(cd + np.array([-side * 0.003, 0, 0]), [-side, 0, 0], Y, 0.052, 0.052, rect)
+            m.ring(cd, [-side, 0, 0], Y, 0.026, 0.026 * (1 + H.RIM), 0.008, sw['bezel'])
+        for k in range(5):
+            tz = E[2] + 0.23 + 0.037 * k
+            m.box([xq - side * 0.007, E[1] - 0.925, tz], (Z, Y, [-side, 0, 0]), (0.0028, 0.0028, 0.007), sw['metal'])
+            m.box([xq - side * 0.0145, E[1] - 0.925, tz], (Z, Y, [-side, 0, 0]), (0.0040, 0.0040, 0.0025), sw['mgrey'])
     # the rear bulkhead: the spine fairing's front closed from the floor up over the top (inside the rear bow)
     sec = CM.section(CM.Z_RB[0] + 0.01)
     out_r = [(WALL_B, FLOOR_Y + 0.01), (WALL_B, SILL_Y - 0.01)] + [(max(x - 0.012, 0.0), y - 0.006) for x, y in sec[3:-1]] + [(0.0, sec[-1][1] - 0.01)]
@@ -518,7 +580,7 @@ def build(atlas, E):
     # rudder pedals under the panel
     for s in (1, -1):
         m.box(P(s * 0.12, -0.935, 0.43), (X, H.unit([0, 1, -0.35]), H.unit([0, 0.35, 1])), (0.045, 0.07, 0.01), sw['mgrey'])
-        m.box(P(s * 0.12, -1.000, 0.47), (X, Y, Z), (0.012, 0.03, 0.06), sw['dgrey'])
+        m.box(P(s * 0.12, -1.000, 0.47), (X, Y, Z), (0.0105, 0.03, 0.06), sw['dgrey'])
 
     # -- the Atar's single throttle lever on the left console
     # The Atar's throttle lever is its own bone (throttle_lever), hinged under the console top, at idle.

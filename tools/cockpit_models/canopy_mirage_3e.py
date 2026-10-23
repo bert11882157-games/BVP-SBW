@@ -64,7 +64,7 @@ CUT_BOX = ((-0.51, -1.135, -0.795), (0.51, 0.155, 1.375))
 
 # ---- the canopy (eye-relative z)
 Z_FAIR = -0.79                            # the spine fairing's front face
-Z_RB = (-0.785, -0.745)                   # rear bow (4 cm, 5 mm clear of the fairing)
+Z_RB = (-0.800, -0.745)                   # rear bow (5.5 cm; its rear 1 cm is buried in the fairing's front face)
 Z_ARCH = (0.585, 0.625)                   # front bow = windscreen arch
 NEXP0, NEXP1 = 1.9, 2.3                   # the sections' super-ellipse exponent, rear to front
 CROWN = [(-0.79, 0.154), (-0.40, 0.152), (0.0, 0.145), (0.30, 0.130), (0.585, 0.110)]    # the crown's height over the centre line
@@ -96,7 +96,7 @@ def section(z, n=24):
 
 
 # ---- the windscreen: a flat centre pane and two flat quarter panes between slim members
-Z_BASE = (1.325, 1.370)                   # the base bar on the nose deck
+Z_BASE = (1.325, 1.385)                   # the base bar on the nose deck (its front 1.5 cm is buried in the deck)
 Z_WS = (Z_ARCH[1], Z_BASE[0])             # the panes run from the arch's front face to the base bar's rear face
 POST_IN, POST_OUT = 0.085, 0.130
 SIDE_SLOPE = 1.5                          # the quarter panes' plane drops 1.5 per block of |x| out from the posts' outer edge
@@ -301,7 +301,7 @@ def rail_bars(b):
         def line(dx, dy):
             return [V(side * (foot_x(min(z, Z_ARCH[0])) + dx), foot_y(min(z, Z_ARCH[0])) + dy, z) for z in zs]
         A, B = line(-0.035, 0.0), line(0.030, 0.0)
-        C, D = line(0.030, -0.045), line(-0.035, -0.045)
+        C, D = line(0.045, -0.075), line(-0.028, -0.075)
         b.sweep(A, B, C, D)
 
 
