@@ -264,7 +264,9 @@ M2_BELTS = [('AP Belt', [('western_127_m2_ap', 2, 'NONE'), ('western_127_m20_api
             ('APIT Belt', [('western_127_m20_api_t_1', 1, 'T')])]
 WT = {
     'Mass': 61.23,                     # WT us_m1a1_hc_abrams: empty 60,000 kg + 1,230 kg fuel
-    'TurretTurnSpeed': [40.0, 24.0],   # WT speedYaw 40, speedPitch 24 deg/s
+    # the field is [pitch, yaw] and the getters (VehicleEntity.turretTurnXSpeed / YSpeed) multiply by 1.15: WT speedPitch
+    # 24 and speedYaw 40 deg/s are stored divided by 1.15
+    'TurretTurnSpeed': [round(24 / 1.15, 2), round(40 / 1.15, 2)],
     'MaxBackwardSpeedRate': 0.1088,    # WT maxRevSpeed 10 against maxFwdSpeed 75 (the template's 0.816)
 }
 
