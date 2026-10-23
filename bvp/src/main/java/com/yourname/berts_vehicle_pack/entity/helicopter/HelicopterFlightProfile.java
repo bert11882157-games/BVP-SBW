@@ -54,6 +54,9 @@ public final class HelicopterFlightProfile {
     private static final double AH56A_KMH = 393.0D, AH56A_CLIMB = 17.3D;
     // War Thunder mi_24p: 335 km/h (wiki; fm/mi_24p maxSpeedNom 349.6 km/h at sea level), climb 11.2 m/s (wiki, UNVERIFIED which of its four figures).
     private static final double MI24P_KMH = 335.0D, MI24P_CLIMB = 11.2D;
+    // War Thunder mi_8amtsh: 285 km/h (wiki, the figures run together: UNVERIFIED which of them is the arcade value; fm/mi_8amtsh speedMax0 250 IAS,
+    // maxSpeedNom 349.6 km/h at sea level is the Mi-24P's copied table), climb 11.5 m/s (wiki, UNVERIFIED; fm maxClimbRateNom 17.3 is a default).
+    private static final double MI8AMTSH_KMH = 285.0D, MI8AMTSH_CLIMB = 11.5D;
     private static final double MI26_KMH = 295.0D, MI26_CLIMB = 7.5D;
     private static final double TIGER_KMH = 315.0D, TIGER_CLIMB = 10.7D;
     private static final double AH64D_KMH = 293.0D, AH64D_CLIMB = 12.7D;
@@ -139,6 +142,15 @@ public final class HelicopterFlightProfile {
             lin(0.030D, 83.75D, MI24P_KMH), quad(0.0007727918703541040D, 83.75D, MI24P_KMH), 0.145D, 0.0130D,
             0.060D, 0.0090D, 0.9D * climb(MI24P_CLIMB, 2.80D), climb(MI24P_CLIMB, 2.80D),
             new HelicopterPhysicalControls(.24D, .95D, .28D, .20D, cap(MI24P_KMH), true,
+                    new HelicopterAttitudeProfile(20.0D, 18.0D, 30.0D, 3.2D, 60.0D, 75.0D, 8.0D)));
+    // Mi-8AMTSh: War Thunder fm/mi_8amtsh EmptyMass 6,900 kg + MaxFuelMass0 2,092 kg; two TV3-117VM (the Mi-24D's rotor acceleration of 12.2 m/s2,
+    // drag, control and attitude tuning, the rotational inertia scaled to the 16 % lower mass).
+    private static final HelicopterFlightProfile MI8AMTSH = new HelicopterFlightProfile(
+            soft(MI8AMTSH_KMH), cap(MI8AMTSH_KMH), 8992.0D, 109300.0D * POWER_UPLIFT / 163300.0D, 0.20D,
+            HelicopterHandlingProfile.of(0.97D, 0.92D, 0.78D, 0.92D, 0.76D, 0.99D),
+            lin(0.030D, 83.75D, MI8AMTSH_KMH), quad(0.0007727918703541040D, 83.75D, MI8AMTSH_KMH), 0.145D, 0.0130D,
+            0.060D, 0.0090D, 0.9D * climb(MI8AMTSH_CLIMB, 2.80D), climb(MI8AMTSH_CLIMB, 2.80D),
+            new HelicopterPhysicalControls(.24D, .95D, .28D, .20D, cap(MI8AMTSH_KMH), true,
                     new HelicopterAttitudeProfile(20.0D, 18.0D, 30.0D, 3.2D, 60.0D, 75.0D, 8.0D)));
     private static final HelicopterFlightProfile AH1F = new HelicopterFlightProfile(
             soft(AH1F_KMH), cap(AH1F_KMH), 3990.0D, 52000.0D * POWER_UPLIFT / 163300.0D, 0.12D,
@@ -307,6 +319,10 @@ public final class HelicopterFlightProfile {
 
     public static HelicopterFlightProfile mi24p() {
         return MI24P;
+    }
+
+    public static HelicopterFlightProfile mi8amtsh() {
+        return MI8AMTSH;
     }
 
     public static HelicopterFlightProfile ah1f() {

@@ -124,10 +124,11 @@ def modifiers(cls):
 # ---------------------------------------------------------------- aircraft hull HP
 HELI_MASS = {'mi24_hind_a': 11500, 'mi_24a': 11500, 'mi_24d': 11500, 'mi24v': 11500, 'mi28n': 11500, 'ka50': 10800,
              'ah_64d': 9500, 'eurocopter_tiger': 6000, 'ah1w_super_cobra': 6700, 'ah_1f': 4500, 'ah_1g_cobra': 4300,
-             'ah_6j': 1600, 'sa341f_gazelle': 1443, 'uh1d_huey': 4300, 'ch_46e': 10400, 'mi_26': 56000, 'ah_56a': 7170, 'mi_24p': 10480}
+             'ah_6j': 1600, 'sa341f_gazelle': 1443, 'uh1d_huey': 4300, 'ch_46e': 10400, 'mi_26': 56000, 'ah_56a': 7170, 'mi_24p': 10480,
+             'mi_8amtsh': 8992}
 ARMOURED = {'a_10': 1.35, 'su_25': 1.35, 'su_39': 1.35, 'il_10': 1.35, 'mi24_hind_a': 1.25, 'mi_24a': 1.25,
             'mi_24d': 1.25, 'mi24v': 1.25, 'mi28n': 1.25, 'ka50': 1.25, 'ah_64d': 1.25, 'eurocopter_tiger': 1.25,
-            'ah1w_super_cobra': 1.25, 'ah_56a': 1.25, 'mi_24p': 1.25}
+            'ah1w_super_cobra': 1.25, 'ah_56a': 1.25, 'mi_24p': 1.25, 'mi_8amtsh': 1.25}
 MASS_ALIAS = {}
 WING_IDS = {'superbwarfare:wing_left', 'superbwarfare:wing_right'}
 WING_FRACTION = 0.4
