@@ -122,6 +122,9 @@ def boat_geo(model, template_geo, bones):
     if bones.get('barell'):
         ids, piv = bones['barell']
         geo['bones'].append({'name': 'barell', 'parent': 'turret', 'pivot': E.r5(model.geo(piv)), 'poly_mesh': model.mesh(ids)})
+    if not bones.get('turret'):                  # no station: the empty turret / barell bones stay at the origin (the pack's rig)
+        geo['bones'] += [{'name': 'turret', 'parent': 'hull', 'pivot': [0, 0, 0]},
+                         {'name': 'barell', 'parent': 'turret', 'pivot': [0, 0, 0]}]
     E.set_bounds(geo)
     return g
 
@@ -137,7 +140,7 @@ def write_vehicle(vid, geo, data, client_hint_vid, wreck_from='m142_himars', arm
     out.json(paths['geo'], geo, compact=True)
     src = fit_existing.files_of(wreck_from)
     wreck = fit_existing.build_wreck(geo, E.load(src['wreck'])) if any(
-        b['name'] == 'turret' for b in geo['minecraft:geometry'][0]['bones']) else None
+        b['name'] == 'turret' and b.get('poly_mesh') for b in geo['minecraft:geometry'][0]['bones']) else None
     if wreck is not None:
         out.json(paths['wreck'], wreck, compact=True)
 

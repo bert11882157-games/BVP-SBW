@@ -556,6 +556,8 @@ public class ModEntityRenderers {
                         bvp("textures/entity/gaz_tigr.png"), "gaz_tigr"));
         registerVehicle(event, ModEntities.DV15, "dv15", standardVehicle(
                 "custom_geo/dv15.geo.json", "textures/entity/dv15.png", "Dv15Renderer"));
+        registerVehicle(event, ModEntities.LCAC, "lcac", standardVehicle(
+                "custom_geo/lcac.geo.json", "textures/entity/lcac.png", "LcacRenderer"));
         registerVehicle(event, ModEntities.LEOPARD_1A1A1, "leopard_1a1a1", profileTrackedVehicle(
                 "custom_geo/leopard_1a1a1.geo.json", "textures/entity/leopard_1a1a1.png",
                 "Leopard1a1a1Renderer"));
