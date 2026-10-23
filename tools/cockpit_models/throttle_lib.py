@@ -155,7 +155,7 @@ def _thumb(m, sw, F, a, u, l, hat=True, n=3, red=False):
 def grip_f16(m, sw, tip, side=0):
     """F-16 throttle handle: a tubular palm grip with the thumb cluster on top, the finger lift under the front and
     the antenna wheel on the left face"""
-    F = Fr(tip + np.array([0, 0.010, 0.0]), [0, math.sin(math.radians(8)), math.cos(math.radians(8))])
+    F = Fr(tip + np.array([0, 0.010, 0.0]), [0, math.sin(math.radians(18)), math.cos(math.radians(18))])
     fbox(m, _col(sw, 'metal'), F, 0.004, -0.004, 0, 0.012, 0.010, 0.010)                 # the neck
     body(m, _col(sw, 'black'), F, [(0.0, .014, .017), (.022, .020, .025), (.060, .0225, .0275), (.100, .0215, .026),
                                    (.132, .0155, .019)], n=2.4)
@@ -286,12 +286,12 @@ GRIP_FN = {'f16': grip_f16, 'f15': grip_pair('f15'), 'f18': grip_pair('f18'), 'f
 
 # ---------------------------------------------------------------- levers
 
-def quadrant(m, sw, x, top_y, z, hx, hz, slots=(0.0,), slot_hz=None, gate_dz=None, height=0.008, friction=True):
+def quadrant(m, sw, x, top_y, z, hx, hz, slots=(0.0,), slot_hz=None, gate_dz=None, height=0.008, friction=True, slot_t=0.0006):
     """the static quadrant: a low plate on the console top with a black slot per lever, the afterburner gate and the friction knob"""
     slot_hz = hz * .86 if slot_hz is None else slot_hz
     m.box([x, top_y + height / 2, z], (X, Y, Z), (hx, height / 2, hz), _col(sw, 'dgrey'))
     for dx in slots:
-        m.box([x + dx, top_y + height + 0.0006, z], (X, Y, Z), (0.0065, 0.0006, slot_hz), _col(sw, 'black'))
+        m.box([x + dx, top_y + height + slot_t, z], (X, Y, Z), (0.0065, slot_t, slot_hz), _col(sw, 'black'))
         if gate_dz is not None:
             m.box([x + dx + 0.011, top_y + height + 0.0020, z + gate_dz], (X, Y, Z), (0.0035, 0.0020, 0.006), _col(sw, 'metal'))
     if friction:
@@ -321,7 +321,7 @@ def names(n):
 
 
 def jet_levers(m, Mesh_, sw, style, x, top_y, z_idle, n=1, pitch=0.050, hx=None, hz=None, z_plate=None, sides=None,
-               lean0=-28.0, rise=0.115, depth=0.10, mil=22.0, ab=30.0, gate=True, plate=True, k=1.0, friction=True):
+               lean0=-28.0, rise=0.115, depth=0.10, mil=22.0, ab=30.0, gate=True, plate=True, k=1.0, friction=True, slot_t=0.0006):
     """a jet throttle quadrant at (x, top_y): `n` levers `pitch` apart centred on x (lever 1 on the pilot's left,
     +x), the plate and slots into `m`. style: f16 f15 f18 f22 a10 f4 f14 rud ball pistol bomber"""
     grip = {'f15': 'f15', 'f18': 'f18', 'f22': 'f22', 'a10': 'a10', 'f4': 'f4', 'f14': 'f14'}.get(style, style)
@@ -331,7 +331,7 @@ def jet_levers(m, Mesh_, sw, style, x, top_y, z_idle, n=1, pitch=0.050, hx=None,
     zp = z_idle + trav / 2 if z_plate is None else z_plate
     hz = trav / 2 + 0.035 if hz is None else hz
     if plate:
-        quadrant(m, sw, x, top_y, zp, hx, hz, slots=[xx - x for xx in xs], gate_dz=(hz * .55 if gate else None), friction=friction)
+        quadrant(m, sw, x, top_y, zp, hx, hz, slots=[xx - x for xx in xs], gate_dz=(hz * .55 if gate else None), friction=friction, slot_t=slot_t)
     out = []
     for i, (nm, xx) in enumerate(zip(names(n), xs)):
         sd = 0 if n == 1 else (1 if i == 0 else -1)

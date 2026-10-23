@@ -811,7 +811,7 @@ def build(atlas, E):
     # The two RUD levers (two R-15B-300) are their own bones (throttle_lever_1 / _2), hinged under the console top, at idle.
     tz = 0.16
     THR.clear()
-    THR.extend(throttle_lib.jet_levers(m, lambda: Mesh(atlas), sw, 'rud', x=E[0] + 0.330, top_y=E[1] + CONSOLE_Y,
+    THR.extend(throttle_lib.jet_levers(m, lambda: Mesh(atlas), sw, 'rud', x=E[0] + 0.303, top_y=E[1] + CONSOLE_Y,
                                        z_idle=E[2] + tz - 0.06, n=2, pitch=0.050, k=0.8, hx=0.062, friction=False))
     # -- KM-1 ejection seat: an armoured back shield, headrest pad (no head deflector), arm rests, the handles at the
     # front centre; at the K-36 group's place in the model (back z -0.425, headbox front face z -0.245, top y +0.09)

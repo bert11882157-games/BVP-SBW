@@ -833,7 +833,8 @@ def build(atlas):
     # Each lever is its own bone (throttle_lever_1 / _2) hinged under the console top, modelled at idle (throttle_lib).
     tz = 0.22
     THR.clear()
-    THR.extend(throttle_lib.jet_levers(m, Mesh, sw, 'f18', x=0.375, top_y=CONSOLE_Y, z_idle=tz - 0.05, n=2, pitch=0.055))
+    THR.extend(throttle_lib.jet_levers(m, Mesh, sw, 'f18', x=0.332, top_y=CONSOLE_Y, z_idle=tz - 0.05, n=2, pitch=0.050,
+                                       hx=0.052, friction=False))
     m.box([0.440, CONSOLE_Y + 0.020, tz - 0.07], (X, Y, Z), (0.020, 0.012, 0.030), sw['metal'])      # flap switch
     # switch rows on both console tops
     for s in (1, -1):

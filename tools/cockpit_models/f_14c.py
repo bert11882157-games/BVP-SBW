@@ -958,7 +958,7 @@ def tub(m, atlas, sw, panel, eye, z_back_abs, seed, shaft=None, throttle=None, h
         # The two levers are their own bones (throttle_lever_1 / _2) hinged under the console top, modelled at idle
         # (throttle_lib); the plate and its gate decal stay.
         THR.clear()
-        THR.extend(throttle_lib.jet_levers(m, lambda: Mesh(eye), sw, 'f14', x=tx, top_y=cy, z_idle=tz - 0.04, n=2, pitch=0.060,
+        THR.extend(throttle_lib.jet_levers(m, lambda: Mesh(eye), sw, 'f14', x=tx - 0.012, top_y=cy, z_idle=tz - 0.04, n=2, pitch=0.060,
                                            depth=0.12, plate=False))
         m.box([tx + 0.080, cy + 0.025, tz - 0.07], (X, Y, Z), (0.020, 0.012, 0.030), sw['metal'])
     if hand is not None:                                      # the RIO's hand controller on the right console

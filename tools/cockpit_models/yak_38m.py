@@ -847,7 +847,7 @@ def build(atlas, E):
     # (yellow, behind it) stays as it was (not part of the throttle pass).
     THR.clear()
     THR.extend(throttle_lib.jet_levers(m, lambda: Mesh(atlas), sw, 'rud', x=E[0] + tx, top_y=E[1] + CONSOLE_Y,
-                                       z_idle=E[2] - 0.03 - 0.06, k=0.75, plate=False))
+                                       z_idle=E[2] - 0.03 - 0.06, k=0.75, ab=12.0, plate=False))
     for tz, th, col in ((0.105, 0.045, 'yellow'),):
         m.box(P(tx, CONSOLE_Y + 0.5 * th, tz), (X, unit([0, 1, 0.25]), unit([0, -0.25, 1])), (0.007, th, 0.007), sw['metal'])
         grip_ax = (X, unit([0, 1, 0.3]), unit([0, -0.3, 1]))

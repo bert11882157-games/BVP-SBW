@@ -1141,7 +1141,7 @@ def throttles(m, sw, eye, tz, scale=1.0, hat=True):
     # The pilot's two levers are their own bones (throttle_lever_1 / _2) hinged under the console top, modelled at idle
     # (throttle_lib); the rear seat's quadrant gets the same shaped levers as fixed mesh. The plate and its gate decal stay.
     levers = throttle_lib.jet_levers(m, lambda: Mesh(eye), sw, 'f15', x=0.410, top_y=cy, z_idle=tz - 0.04, n=2, pitch=0.050,
-                                     depth=0.12, plate=False)
+                                     depth=0.12, ab=18.0, plate=False)
     if hat:
         THR.clear()
         THR.extend(levers)

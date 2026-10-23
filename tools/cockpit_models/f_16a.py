@@ -905,7 +905,8 @@ def build(atlas, lamps, cols):
     # The lever is its own bone (throttle_lever), hinged under the console top, modelled at idle (throttle_lib).
     tz = 0.34
     THR.clear()
-    THR.extend(throttle_lib.jet_levers(m, Mesh, sw, 'f16', x=0.345, top_y=CONSOLE_Y, z_idle=tz - 0.07))
+    THR.extend(throttle_lib.jet_levers(m, Mesh, sw, 'f16', x=0.345, top_y=CONSOLE_Y, z_idle=tz - 0.07,
+                                       lean0=-20.0, ab=22.0))
     # switch rows on both console tops
     for s in (1, -1):
         for zr in (-0.20, -0.13, -0.06, 0.40, 0.47, 0.54):

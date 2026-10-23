@@ -1018,7 +1018,7 @@ def build(atlas, E0, E1):
     cy = st['console_y']
     # The two Atar levers are their own bones (throttle_lever_1 / _2), hinged under the console top, at idle.
     THR.clear()
-    THR.extend(throttle_lib.jet_levers(m, lambda: Mesh(atlas), sw, 'ball', x=E[0] + 0.3425, top_y=E[1] + cy,
+    THR.extend(throttle_lib.jet_levers(m, lambda: Mesh(atlas), sw, 'ball', x=E[0] + 0.318, top_y=E[1] + cy,
                                        z_idle=E[2] - 0.08 - 0.06, n=2, pitch=0.065, hx=0.065, friction=False))
     seat_mesh(m, atlas, sw, P, X, Y, Z)
 
