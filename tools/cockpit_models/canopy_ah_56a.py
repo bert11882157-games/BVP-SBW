@@ -273,7 +273,7 @@ def pieces():
 
 
 R_TUBE = 0.020
-GLASS_GAP = 0.004
+GLASS_GAP = -0.016              # the glass ends 4 mm from the member's centre line, hidden in the tube (no see-through seam beside the frames)
 SLAB = 0.012
 
 # ---------------------------------------------------------------- mesh (absolute blocks in, model pixels out)
@@ -652,13 +652,23 @@ def flat_panes_json():
         entry = {'name': name, 'mirror': mirror}
         if not clash:
             entry['box'] = [[round(float(v), 4) for v in lo], [round(float(v), 4) for v in hi]]
+            out.append(entry)
+        elif mirror:
+            # one small box per triangle, each side its own entry (the glass of neighbouring panes now reaches into this pane's bounding box)
+            for side_name, pick in ((' (right)', lambda t: t.mean(0)[0] > 1e-6), (' (left)', lambda t: t.mean(0)[0] < -1e-6)):
+                boxes = []
+                for t in T[name]:
+                    if pick(t):
+                        c = t.mean(0)
+                        boxes.append([[round(float(v) - 0.0004, 4) for v in c], [round(float(v) + 0.0004, 4) for v in c]])
+                out.append({'name': name + side_name, 'mirror': False, 'boxes': boxes})
         else:
             boxes = []
             for t in use:
                 c = sel(t.mean(0))
                 boxes.append([[round(float(v) - 0.0004, 4) for v in c], [round(float(v) + 0.0004, 4) for v in c]])
             entry['boxes'] = boxes
-        out.append(entry)
+            out.append(entry)
     return {'why': ('AH-56A Cheyenne canopy: tandem crew sections of flat panes in slim frames (the real Cheyenne has flat plates, a V-shaped '
                     'windscreen centre post, flat side panes and separate raised rear and lower front sections). Layout from the model\'s own '
                     'frame bars (canopy_ah_56a.py): every pane is a face of one convex canopy solid, so each is one exact plane; pane count '

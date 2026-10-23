@@ -699,9 +699,10 @@ def build(atlas):
 
     # ===================================================================== floors and the bulkhead block between the crews
     zr = PF.z
-    m.box([0, (TUB_P + FLOOR_P) / 2, (4.78 + 6.40) / 2], (X, Y, Z), (WALL - 0.005, (FLOOR_P - TUB_P) / 2, (6.40 - 4.78) / 2), sw['floor'])    # pilot's raised floor
-    m.box([0, (TUB_G + FLOOR_G) / 2, (7.00 + 8.20) / 2], (X, Y, Z), (WALL - 0.005, (FLOOR_G - TUB_G) / 2, (8.20 - 7.00) / 2), sw['floor'])    # gunner's floor
-    yb = TUB_G + 0.005
+    LIFT_TUB = 0.006                           # the floors stand 6 mm above the model's own tub floors (their bottoms lay on them: z-fights)
+    m.box([0, (TUB_P + LIFT_TUB + FLOOR_P) / 2, (4.78 + 6.40) / 2], (X, Y, Z), (WALL - 0.005, (FLOOR_P - TUB_P - LIFT_TUB) / 2, (6.40 - 4.78) / 2), sw['floor'])    # pilot's raised floor
+    m.box([0, (TUB_G + LIFT_TUB + FLOOR_G) / 2, (7.00 + 8.20) / 2], (X, Y, Z), (WALL - 0.005, (FLOOR_G - TUB_G - LIFT_TUB) / 2, (8.20 - 7.00) / 2), sw['floor'])    # gunner's floor
+    yb = TUB_G + 0.012
     for ya, yc, half in ((yb, 3.12, WALL), (3.12, 3.45, 0.64), (3.45, 3.93, 0.62)):
         m.yz_prism([(ya, zr(ya)), (yc, zr(yc)), (yc, BLOCK_FRONT), (ya, BLOCK_FRONT)], -half, half, sw['panel_d'])
     ppm = 760
@@ -933,8 +934,8 @@ def build(atlas):
         m.box([s * 0.150, hy0 + 0.04, 7.92], (X, Y, Z), (0.045, 0.012, 0.012), sw['black'])
         m.cyl([s * 0.190, hy0 - 0.12, 7.90], [s * 0.190, hy0 + 0.07, 7.90], 0.020, sw['black'], seg=8)
         m.cyl([s * 0.190, hy0 + 0.07, 7.90], [s * 0.190, hy0 + 0.085, 7.90], 0.016, sw['dgrey'], seg=8)
-        m.box([s * 0.190, hy0 - 0.02, 7.865], (X, Y, Z), (0.006, 0.020, 0.006), sw['metal'])                   # trigger on the grip's face
-        m.box([s * 0.190, hy0 + 0.065, 7.932], (X, Y, Z), (0.010, 0.005, 0.006), sw['red'])                   # thumb switch
+        m.box([s * 0.190, hy0 - 0.02, 7.878], (X, Y, Z), (0.006, 0.020, 0.006), sw['metal'])                   # trigger on the grip's face
+        m.box([s * 0.190, hy0 + 0.060, 7.914], (X, Y, Z), (0.010, 0.005, 0.006), sw['red'])                   # thumb switch
 
     # -- the gunner's seat: base, pan, back on its frame against the block, headrest
     gcus = atlas.paint(64, 96, p_cushion(CUSHION, straps=True))
@@ -967,7 +968,7 @@ def build(atlas):
         m.flat([[xi, FLOOR_G, z0], [xi, FLOOR_G, z1], [xi, SH, z1], [xi, SH, z0]], sw['panel_d'], normal=[-s, 0, 0])
         m.flat([[xi, FLOOR_G, z1], [xo, FLOOR_G, z1], [xo, SH, z1], [xi, SH, z1]], sw['panel_d'], normal=[0, 0, 1])
         m.flat([[xi, FLOOR_G, z0], [xo, FLOOR_G, z0], [xo, SH, z0], [xi, SH, z0]], sw['panel_d'], normal=[0, 0, -1])
-    SF = np.array([-0.415, SH + 0.005, 7.55])
+    SF = np.array([-0.415, SH - 0.001, 7.55])
     m.box(SF + [0, 0.012, 0], (X, Y, Z), (0.045, 0.012, 0.045), sw['dgrey'])
     st_ax = (X, unit([0, 1, 0.25]), unit([0, -0.25, 1]))
     m.box(SF + st_ax[1] * 0.100, st_ax, (0.010, 0.085, 0.010), sw['metal'])
