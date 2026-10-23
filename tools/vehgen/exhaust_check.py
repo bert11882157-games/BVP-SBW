@@ -121,6 +121,9 @@ EXITS = {
     # Scud-B (MAZ-543, front engine: FRONT_ENGINE): the model has no pipe; element 70 behind the left cab is taken as the muffler
     # stack (toolbox x 3.5 .. 6, top y -29.5, z 18 .. 24); model px, origin 0.25 px over the top face. Set in scud_build.py
     'scud_b': [(19.008, 25.344, 40.656, 40.656, -6.336, -3.696)],
+    # GAZ Tigr: the model has no pipe; the tail pipe is taken under the rear left corner, the bottom edge of the rear left plate (element 82:
+    # toolbox x -45.6 .. -45.4, y 1, z 13 .. 19); model px, +Z = rear. Set in tigr_build.py
+    'gaz_tigr': [(12.355, 18.058, 9.029, 9.029, 43.148, 43.338)],
 }
 
 
