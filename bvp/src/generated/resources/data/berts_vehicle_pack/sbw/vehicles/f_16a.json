@@ -846,12 +846,6 @@
                 },
                 {
                   "Shots": 1,
-                  "Round": "saphei",
-                  "Ammo": "superbwarfare:small_shell_aa",
-                  "Tracer": "NONE"
-                },
-                {
-                  "Shots": 1,
                   "Round": "hef_i",
                   "Ammo": "superbwarfare:small_shell_he",
                   "Tracer": "NONE"
@@ -898,7 +892,7 @@
                   "Tracer": "RED"
                 },
                 {
-                  "Shots": 2,
+                  "Shots": 1,
                   "Round": "hef_i",
                   "Ammo": "superbwarfare:small_shell_he",
                   "Tracer": "NONE"
@@ -934,9 +928,9 @@
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
             "TntEquivalentKg": 0.0,
-            "Name": "Stealth",
+            "Name": "Armored targets",
             "ProjectileBelt": {
-              "Name": "Stealth",
+              "Name": "Armored targets",
               "Rounds": [
                 {
                   "Shots": 3,
@@ -946,15 +940,15 @@
                 },
                 {
                   "Shots": 1,
-                  "Round": "saphei",
-                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Round": "hef_i",
+                  "Ammo": "superbwarfare:small_shell_he",
                   "Tracer": "NONE"
                 },
                 {
                   "Shots": 1,
-                  "Round": "hef_i",
-                  "Ammo": "superbwarfare:small_shell_he",
-                  "Tracer": "NONE"
+                  "Round": "api_t",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "RED"
                 }
               ]
             },
@@ -972,23 +966,29 @@
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
-              "Profile": "berts_vehicle_pack:aircraft_rounds/m61a1/m61_saphei"
+              "Profile": "berts_vehicle_pack:aircraft_rounds/m61a1/m61_hefi"
             },
             "ShellType": "HE",
-            "Velocity": 64.96,
-            "ApDurability": 20,
-            "Damage": 120,
+            "Velocity": 64.375,
+            "ApDurability": 5,
+            "Damage": 166.66666666666666,
             "ExplosionDamage": 0,
-            "ExplosionRadius": 2.0,
-            "TntEquivalentKg": 0.0024,
-            "Name": "Armored targets",
+            "ExplosionRadius": 3.333333333333333,
+            "TntEquivalentKg": 0.0117,
+            "Name": "Stealth",
             "ProjectileBelt": {
-              "Name": "Armored targets",
+              "Name": "Stealth",
               "Rounds": [
                 {
                   "Shots": 1,
-                  "Round": "saphei",
+                  "Round": "hef_i",
                   "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 3,
+                  "Round": "ap_i",
+                  "Ammo": "superbwarfare:small_shell_gs",
                   "Tracer": "NONE"
                 }
               ]
@@ -996,7 +996,7 @@
             "NominalBallistics": {
               "Supported": true,
               "ProjectileType": "superbwarfare:small_cannon_shell",
-              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/m61a1/m61_saphei",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/m61a1/m61_hefi",
               "ProjectileLife": 400
             }
           }
