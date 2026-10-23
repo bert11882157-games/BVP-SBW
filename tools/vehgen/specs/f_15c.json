@@ -375,7 +375,37 @@
     "AircraftRig.Surfaces.Bone=elevator_1.ControlWeights.RightRoll": -0.2,
     "AircraftRig.Rotors.Bone=gear_wheel_0.DegreesPerTickAtFullSpeed": 211.24,
     "AircraftRig.Rotors.Bone=gear_wheel_1.DegreesPerTickAtFullSpeed": 140.83,
-    "AircraftRig.Rotors.Bone=gear_wheel_2.DegreesPerTickAtFullSpeed": 140.83
+    "AircraftRig.Rotors.Bone=gear_wheel_2.DegreesPerTickAtFullSpeed": 140.83,
+    "AfterburnerPresentation.Outlets": [
+      {
+        "Id": "afterburner_0",
+        "Position": [
+          0.678,
+          2.167,
+          -8.752
+        ],
+        "Direction": [
+          0,
+          0,
+          -1
+        ],
+        "NozzleRadiusBlocks": 0.474
+      },
+      {
+        "Id": "afterburner_1",
+        "Position": [
+          -0.678,
+          2.167,
+          -8.752
+        ],
+        "Direction": [
+          0,
+          0,
+          -1
+        ],
+        "NozzleRadiusBlocks": 0.474
+      }
+    ]
   },
   "keepTemplateBones": [],
   "attachments": {},

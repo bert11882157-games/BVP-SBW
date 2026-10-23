@@ -426,6 +426,22 @@
         "Direction": -1,
         "DegreesPerTickAtFullSpeed": 210.76
       }
+    ],
+    "AfterburnerPresentation.Outlets": [
+      {
+        "Id": "afterburner_0",
+        "Position": [
+          0.009,
+          1.731,
+          -7.073
+        ],
+        "Direction": [
+          0,
+          0,
+          -1
+        ],
+        "NozzleRadiusBlocks": 0.343
+      }
     ]
   },
   "keepTemplateBones": [],

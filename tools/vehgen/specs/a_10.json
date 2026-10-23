@@ -486,7 +486,37 @@
   "clientSet": {
     "AircraftRig.Rotors.Bone=gear_wheel_0.DegreesPerTickAtFullSpeed": 152.93,
     "AircraftRig.Rotors.Bone=gear_wheel_1.DegreesPerTickAtFullSpeed": 152.93,
-    "AircraftRig.Rotors.Bone=gear_wheel_2.DegreesPerTickAtFullSpeed": 254.88
+    "AircraftRig.Rotors.Bone=gear_wheel_2.DegreesPerTickAtFullSpeed": 254.88,
+    "AfterburnerPresentation.Outlets": [
+      {
+        "Id": "engine_0",
+        "Position": [
+          1.383,
+          2.844,
+          -4.702
+        ],
+        "Direction": [
+          0,
+          0,
+          -1
+        ],
+        "NozzleRadiusBlocks": 0.482
+      },
+      {
+        "Id": "engine_1",
+        "Position": [
+          -1.383,
+          2.844,
+          -4.702
+        ],
+        "Direction": [
+          0,
+          0,
+          -1
+        ],
+        "NozzleRadiusBlocks": 0.482
+      }
+    ]
   },
   "keepTemplateBones": [],
   "attachments": {},

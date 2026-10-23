@@ -370,7 +370,37 @@
     "AircraftRig.Rotors.Bone=gear_wheel_0.DegreesPerTickAtFullSpeed": 283.9,
     "AircraftRig.Rotors.Bone=gear_wheel_1.DegreesPerTickAtFullSpeed": 283.9,
     "AircraftRig.Rotors.Bone=gear_wheel_2.DegreesPerTickAtFullSpeed": 170.35,
-    "AircraftRig.Rotors.Bone=gear_wheel_3.DegreesPerTickAtFullSpeed": 170.35
+    "AircraftRig.Rotors.Bone=gear_wheel_3.DegreesPerTickAtFullSpeed": 170.35,
+    "AfterburnerPresentation.Outlets": [
+      {
+        "Id": "afterburner_0",
+        "Position": [
+          0.65,
+          1.574,
+          -4.407
+        ],
+        "Direction": [
+          0,
+          0,
+          -1
+        ],
+        "NozzleRadiusBlocks": 0.338
+      },
+      {
+        "Id": "afterburner_1",
+        "Position": [
+          -0.65,
+          1.574,
+          -4.407
+        ],
+        "Direction": [
+          0,
+          0,
+          -1
+        ],
+        "NozzleRadiusBlocks": 0.338
+      }
+    ]
   },
   "removeClientKeys": [
     "CockpitGauges",
