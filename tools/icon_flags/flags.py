@@ -83,7 +83,36 @@ def gb(im):
     im.paste(big.resize((W, H), Image.LANCZOS), (0, 0))
 
 
+def kr(im):
+    """Taegukgi, drawn on a 6x supersampled field: white, red/blue taegeuk (rotated as on the flag), black trigram bars in the corners."""
+    import math
+    k = 6
+    w, h = W * k, H * k
+    big = Image.new('RGBA', (w, h), WHITE + (255,))
+    d = ImageDraw.Draw(big)
+    cx, cy, r = w / 2, h / 2, h * 0.25
+    box = [cx - r, cy - r, cx + r, cy + r]
+    d.pieslice(box, 180 + 34, 360 + 34, fill=(205, 46, 58))          # red half, upper left to lower right
+    d.pieslice(box, 34, 180 + 34, fill=(0, 71, 160))
+    rr = r / 2
+    a = math.radians(34 + 90)
+    dx, dy = math.cos(a) * rr, math.sin(a) * rr
+    d.ellipse([cx - dx - rr, cy - dy - rr, cx - dx + rr, cy - dy + rr], fill=(205, 46, 58))   # S-curve lobes
+    d.ellipse([cx + dx - rr, cy + dy - rr, cx + dx + rr, cy + dy + rr], fill=(0, 71, 160))
+    black = (0, 0, 0, 255)
+    for sx, sy, ang in ((0.17, 0.2, 34), (0.83, 0.2, -34), (0.17, 0.8, -34), (0.83, 0.8, 34)):   # trigram bars at the corners
+        ca, sa = math.cos(math.radians(ang + 90)), math.sin(math.radians(ang + 90))
+        for off in (-0.09, 0.0, 0.09):
+            ox, oy = (sx - 0.5) * w + cx + off * h * ca * -1, (sy - 0.5) * h + cy + off * h * sa * -1
+            ux, uy = -sa, ca
+            L, T = h * 0.17, h * 0.03
+            d.polygon([(ox + ux * L - ca * T, oy + uy * L - sa * T), (ox + ux * L + ca * T, oy + uy * L + sa * T),
+                       (ox - ux * L + ca * T, oy - uy * L + sa * T), (ox - ux * L - ca * T, oy - uy * L - sa * T)], fill=black)
+    im.paste(big.resize((W, H), Image.LANCZOS), (0, 0))
+
+
 FLAGS = {
+    'KR': kr,
     'GB': gb,
     'US': usa,
     'FR': stripes_v([(0, 35, 149), WHITE, (237, 41, 57)]),

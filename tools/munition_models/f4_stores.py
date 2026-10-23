@@ -8,7 +8,8 @@ Built here, in the pack's aircraft-store format (nose -Z, one bone 'store', 1 bl
   aim7e2         the pack's AIM-7E airframe with the AIM-7E-2 mass (WT 193.7 kg)
   agm65b / agm65b_x3, agm65a / agm65a_x3   AGM-65A/B (TV): the pack's AGM-65 airframe and LAU-88 rack, TV presentation
   m118           built: M118 3,000 lb demolition bomb (3.35 m x 0.61 m, public figures; size and effects GUESS)
-Not built: AIM-9P (not on WT's F-4E), AIM-7F (not on WT's F-4E), LAU-34 / AGM-45B-9/-10 (AGM-45A offered), M117 x5 rack.
+  aim7f, aim9p (+_x2)   built: real-world extras beyond WT (owner decision 2026-10-23), see WT-f4e.md "Real-world extras"
+Not built: LAU-34 / AGM-45B-9/-10 (AGM-45A offered), M117 x5 rack.
 Dimensions and numbers: work/elite_expansion_2/f4e/WT-f4e.md, f4d/WT-f4d.md, f4b/WT-f4b.md; guesses are marked GUESS.
 
 Usage: python tools/munition_models/f4_stores.py [--write]
@@ -118,6 +119,41 @@ def main(argv):
     d['Guidance']['Range'] = 1400          # GUESS: the dogfight round trades range for a shorter minimum range
     d['Flight']['TurnDegreesPerSecond'] = 40
     cat.add('munition/aim7e2', d)
+
+    # ============================================================== AIM-7F (real-world extra, not in WT's F-4E; WT-f4e.md "Real-world extras")
+    # Same 3.66 m x 0.203 m airframe as the E; Hercules MK 58 dual-thrust motor, solid-state AN/DSQ-35 guidance, 39 kg MK 71 warhead,
+    # 231 kg (designation-systems.net m-7; Wikipedia AIM-7: 70 km vs 50 km for the E). Wing span 1.02 m. Store numbers: the AIM-7E's with
+    # Range x1.4 (the +40 % range of the F over the E) and the dual-thrust MaxSpeed 8 (E 7, M 12): GUESS. Warhead TNT-eq scaled 39/30.
+    build_missile('aim7f', dict(length=3.66, diameter=0.203, nose=0.62, boattail=0.05, tail_r=0.92,
+                                bands=[(0.28, 0.30, 'yellow'), (0.36, 0.38, 'brown')], radome=0.40,
+                                wings=[dict(root=(1.55, 2.20), tip=(1.78, 2.14), span=1.02 / 2, roll=45)],
+                                fins=[dict(root=(2.98, 3.62), tip=(3.22, 3.62), span=0.62 / 2, roll=45)]))
+    a, launch, g = F.anchors_for('aim7f', missile=True)
+    guid = OD([('Mode', 'SEMI_ACTIVE_RADAR'), ('LockTicks', 0), ('Range', 2100), ('ConeDegrees', 25), ('CountermeasureVulnerability', 0.8)])
+    flight = OD([('InitialSpeed', 0.5), ('MaxSpeed', 8), ('AccelerationPerTick', 0.1), ('TurnDegreesPerSecond', 40), ('Damage', 52),
+                 ('BlastRadius', 4.5), ('TntEquivalentKg', 12.38)])
+    cat.add('munition/aim7f', F.store(f'AIM-7F Sparrow {DOT} dual-thrust, semi-active radar', 'AIR_TO_AIR', 'aim7f', a, Capacity=1,
+                                      MassKg=231.0, Guidance=guid, Flight=flight, AmmoItem='superbwarfare:medium_air_to_air_missile',
+                                      MaxPerPylon=1, LaunchOffset=launch))
+
+    # ============================================================== AIM-9P (real-world extra, not in WT's F-4E)
+    # USAF export development of the AIM-9J/N: same 3.05 m x 0.127 m airframe, square-tipped double-delta canards and 0.58 m fins
+    # (designation-systems.net m-9), new motor, fuze and solid-state reliability; still rear-aspect. Mass 84 kg GUESS (J 76.9, P-4/5 86).
+    # Store numbers between the J and the L: Range 900, LockTicks 52, Turn 68, MaxSpeed 5.0, vulnerability 1.0: GUESS.
+    build_missile('aim9p', dict(length=3.05, diameter=0.127, nose=0.42, boattail=0.06, tail_r=0.8, bands=[(0.30, 0.31, 'yellow')],
+                                radome=0.20, wings=[dict(root=(0.52, 0.76), tip=(0.56, 0.74), span=0.30 / 2, roll=45)],
+                                fins=[dict(root=(2.42, 3.00), tip=(2.66, 3.00), span=0.58 / 2, roll=45)]))
+    a, launch, g = F.anchors_for('aim9p', missile=True)
+    guid = OD([('Mode', 'INFRARED'), ('LockTicks', 52), ('Range', 900), ('ConeDegrees', 28), ('CountermeasureVulnerability', 1.0)])
+    flight = OD([('InitialSpeed', 0.5), ('MaxSpeed', 5.0), ('AccelerationPerTick', 0.1), ('TurnDegreesPerSecond', 68), ('Damage', 25),
+                 ('BlastRadius', 2.5), ('TntEquivalentKg', 7.6204)])
+    cat.add('munition/aim9p', F.store(f'AIM-9P Sidewinder {DOT} rear-aspect infrared', 'AIR_TO_AIR', 'aim9p', a, Capacity=1, MassKg=84.0,
+                                      Guidance=guid, Flight=flight, AmmoItem='superbwarfare:small_air_to_air_missile', MaxPerPylon=1,
+                                      LaunchOffset=launch))
+    cat.add('munition/aim9p_x2', F.store(f'AIM-9P Sidewinder {DOT} rear-aspect infrared {DOT} twin LAU-7 rails', 'AIR_TO_AIR', 'aim9p', a,
+                                         Capacity=1, MassKg=84.0, Guidance=guid, Flight=flight,
+                                         AmmoItem='superbwarfare:small_air_to_air_missile', MaxPerPylon=2, FixedRackCount=2,
+                                         RackSpacing=[0.66, 0.35, 0], LaunchOffset=launch))
 
     # ============================================================== AGM-65A / AGM-65B (TV): the pack's AGM-65 airframe and LAU-88 rack
     # WT us_agm_65b: mass 210.467 kg, comp_b 39.08 kg (x1.33 = 51.97 kg TNT), seeker fov 0.1, machMax 0.9. The AGM-65A has the same

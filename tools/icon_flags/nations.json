@@ -1,5 +1,5 @@
 {
-  "_doc": "vehicle id -> nation code of the flag on its icon (nation of origin; an export variant: the nation it was exported to). Codes: US, FR, DE, RU, UA, IT, GB (flags.py draws these).",
+  "_doc": "vehicle id -> nation code of the flag on its icon (nation of origin; an export variant: the nation it was exported to). Codes: US, FR, DE, RU, UA, IT, GB, KR (flags.py draws these).",
   "f_16c": {
     "nation": "US",
     "note": "F-16C Block 50, USAF (War Thunder f_16c_block_50, USA tree); the model carries USAF markings (AZ tail code)"
@@ -25,8 +25,8 @@
     "note": "F-4C Phantom II, USAF (War Thunder USA tree); the supplied model wears US Navy markings, also US"
   },
   "f_4e": {
-    "nation": "US",
-    "note": "F-4E Phantom II, USAF (War Thunder USA tree); the supplied model appears to wear Republic of Korea Air Force style markings (round fuselage roundel, grey camouflage, red stars on the nose), a US-built export airframe: US flag as the unit"
+    "nation": "KR",
+    "note": "F-4E Phantom II (ROKAF): owner decision 2026-10-23, a Republic of Korea Air Force airframe (US-built export; War Thunder f-4e stats). The model wears ROKAF style markings (round fuselage roundel, grey camouflage, red stars on the nose); South Korean flag as the exported-to nation"
   },
   "f_4d": {
     "nation": "US",

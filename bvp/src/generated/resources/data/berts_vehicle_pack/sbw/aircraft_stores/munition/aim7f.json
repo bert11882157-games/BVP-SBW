@@ -1,0 +1,55 @@
+{
+  "Schema": 1,
+  "Name": "AIM-7F Sparrow · dual-thrust, semi-active radar",
+  "Category": "AIR_TO_AIR",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/aim7f.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.1015,
+    0.5124
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.1015,
+      0.0,
+      0.5124
+    ],
+    "Right": [
+      -0.1015,
+      0.0,
+      0.5124
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    0.5124
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/aim7f.png",
+  "Capacity": 1,
+  "MassKg": 231.0,
+  "Guidance": {
+    "Mode": "SEMI_ACTIVE_RADAR",
+    "LockTicks": 0,
+    "Range": 2100,
+    "ConeDegrees": 25,
+    "CountermeasureVulnerability": 0.8
+  },
+  "Flight": {
+    "InitialSpeed": 0.5,
+    "MaxSpeed": 8,
+    "AccelerationPerTick": 0.1,
+    "TurnDegreesPerSecond": 40,
+    "Damage": 52,
+    "BlastRadius": 4.5,
+    "TntEquivalentKg": 12.38
+  },
+  "AmmoItem": "superbwarfare:medium_air_to_air_missile",
+  "MaxPerPylon": 1,
+  "LaunchOffset": [
+    0.0,
+    -0.1015,
+    0.0
+  ]
+}
