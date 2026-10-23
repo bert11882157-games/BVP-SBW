@@ -63,10 +63,10 @@ internal object GunsightPainter {
             lastPitch = s.pitchUp
         }
         val ringR = (50 * MIL * k).toFloat()
-        // the pipper stays on the glass with its ring
-        val px = (if (live) (bx + leadRight * k).toFloat() else bx).coerceIn(f.left + ringR + 6, f.right - ringR - 6)
-        val py = (if (live) (by - leadUp * k).toFloat() else (by + GRAVITY_DROP * k).toFloat())
-            .coerceIn(f.top + ringR + 6, f.bottom - ringR - 6)
+        // the pipper stays on the glass with its ring (on a glass too small for the ring, at the glass's middle)
+        val px = keepOn(if (live) (bx + leadRight * k).toFloat() else bx, f.left + ringR + 6, f.right - ringR - 6)
+        val py = keepOn(if (live) (by - leadUp * k).toFloat() else (by + GRAVITY_DROP * k).toFloat(),
+            f.top + ringR + 6, f.bottom - ringR - 6)
         DisplayDraw.shapes(g) {
             // the fixed cross on the boresight
             val c0 = (6 * MIL * k).toFloat(); val c1 = (18 * MIL * k).toFloat()
@@ -82,4 +82,7 @@ internal object GunsightPainter {
             }
         }
     }
+
+    /** v kept within [lo, hi]; the middle of the two when the range is empty (coerceIn would throw) */
+    private fun keepOn(v: Float, lo: Float, hi: Float): Float = if (lo <= hi) v.coerceIn(lo, hi) else (lo + hi) / 2
 }
