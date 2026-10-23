@@ -129,22 +129,29 @@ abstract class MissileProjectile : DestroyableProjectile, CustomSyncMotionEntity
     override fun updateRotation() {
     }
 
+    /** Server-steered: every missile's client plays back the server's flight (see [interpolatesFlight]). */
+    override fun interpolatesFlight(): Boolean = true
+
+    /**
+     * Turns the nose toward [vec3] by 95% of the remaining angle, at most [turnSpeed] degrees this tick, as one
+     * rotation about the axis between the two directions. (Separate yaw and pitch clamps flipped the yaw by up to
+     * 180 degrees whenever the missile or its target direction passed near vertical, which made diving and
+     * top-attack missiles spin about their own axis.) The bleed of speed with the commanded angle is unchanged.
+     */
     fun turn(vec3: Vec3, turnSpeed: Float) {
         var vec3 = vec3
         val v0 = deltaMovement.normalize()
 
         vec3 = vec3.add(v0.scale(-0.4))
 
-        val d0 = vec3.horizontalDistance()
-        val targetAngleY = (-Mth.atan2(vec3.x, vec3.z) * (180f / Math.PI.toFloat()).toDouble()).toFloat()
-        val targetAngleX = (-Mth.atan2(vec3.y, d0) * (180f / Math.PI.toFloat()).toDouble()).toFloat()
-
-        val diffY = Mth.wrapDegrees(targetAngleY - this.yRot)
-        val diffX = Mth.wrapDegrees(targetAngleX - this.xRot)
-
         deltaMovement = deltaMovement.scale(1 - 0.0004 * VehicleVecUtils.calculateAngle(vec3, v0))
-        this.yRot += (0.95f * diffY).coerceIn(-turnSpeed, turnSpeed)
-        this.xRot += (0.95f * diffX).coerceIn(-turnSpeed, turnSpeed)
+        val facing = MissileTurn.rotateToward(lookAngle, vec3, turnSpeed.toDouble()) ?: return
+        val horizontal = facing.horizontalDistance()
+        // Straight up or down the yaw is undefined: keep it rather than let atan2 of rounding noise pick one.
+        if (horizontal > MissileTurn.MIN_HORIZONTAL_FOR_YAW) {
+            this.yRot = (-Mth.atan2(facing.x, facing.z) * (180.0 / Math.PI)).toFloat()
+        }
+        this.xRot = (-Mth.atan2(facing.y, horizontal) * (180.0 / Math.PI)).toFloat()
     }
 
 

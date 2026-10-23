@@ -182,16 +182,9 @@ open class WireGuideMissileEntity(type: EntityType<out WireGuideMissileEntity>, 
             // a TV cruise missile folds the carrier's momentum into its own at ignition
             guidedInheritedMotion = effectiveInheritedMotion()
         } else {
+            // Position, velocity and heading on the client come from the server's flight stream; this only keeps
+            // the vanilla fallback plausible until the first streamed state arrives.
             if (isGuidedPropulsionThrusting()) applyGuidedPropulsionMagnitude(guidedPropulsionSpeed())
-            // Smoothed flight ignores tracker rotations: head along the client's own relative motion, so the
-            // renderer can blend the heading between ticks.
-            if (smoothsBallisticFlight()) {
-                val relative = deltaMovement.subtract(guidedInheritedMotion)
-                if (relative.lengthSqr() > 1.0e-10) {
-                    yRot = Math.toDegrees(kotlin.math.atan2(-relative.x, relative.z)).toFloat()
-                    xRot = Math.toDegrees(kotlin.math.atan2(-relative.y, relative.horizontalDistance())).toFloat()
-                }
-            }
         }
         mediumTrail()
 
@@ -293,17 +286,6 @@ open class WireGuideMissileEntity(type: EntityType<out WireGuideMissileEntity>, 
     }
 
     override fun deferTickSynchronization(): Boolean = true
-
-    /**
-     * Guided missiles fly on the client with step-aligned, blended corrections (like bullets) instead of snapping to
-     * every tracker position: guidance and the corkscrew are server-only, so each tick's correction is small and is
-     * spread over a few ticks rather than teleporting the missile mid-frame.
-     */
-    override fun smoothsBallisticFlight(): Boolean = hasGuidedPropulsion()
-
-    /** While thrusting the motor holds the missile-relative speed; otherwise the plain air step applies. */
-    override fun ballisticStep(velocity: Vec3): Vec3 =
-        if (isGuidedPropulsionThrusting()) velocity else super.ballisticStep(velocity)
 
     override fun isNoGravity(): Boolean = guidedPropulsionPhase() != GuidedPropulsionPhase.EJECTION
 
