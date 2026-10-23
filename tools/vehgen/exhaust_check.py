@@ -34,7 +34,7 @@ DATA = os.path.join(REPO, 'bvp', 'src', 'generated', 'resources', 'data', 'berts
 MAX_M = 0.2
 # front-engined vehicles: the hull-front-half rule does not apply (their exhaust may sit forward, but still on a grille)
 FRONT_ENGINE = {'m1128', 'puma_ifv', 'bmp2', 'bmp2m', 'bmp_1am', 'marder_1a1', 'marder_1a2', 'm2_bradley', 'vbci', 'ztl_09',
-                'strv_103', '9p149_shturm', 'm113a3', 'strela_10m2', 'zbd_05', 'pgz_95'}
+                'strv_103', '9p149_shturm', 'm113a3', 'strela_10m2', 'zbd_05', 'pgz_95', 'm142_himars'}
 BAND = 6.0
 OUT_PX = 0.25            # --fix: origin this far outside the louvre face
 
@@ -115,6 +115,9 @@ EXITS = {
     # TOS-1A (T-72A hull): the T-72's exhaust louvre on the left rear fender, the model's element 365 (toolbox x -48 .. -36,
     # y -21.5 .. -19.2, outer face z 34.97, turned -10 deg); model px, the side face at x 30.774. Set in tos1a_build.py
     'tos_1a': [(30.774, 30.774, 26.116, 28.14, 31.68, 42.24)],
+    # M142 HIMARS (FMTV, engine under the cab: FRONT_ENGINE): the model's vertical exhaust stack behind the cab on the left,
+    # its top elbow (elements 89 / 90: toolbox x 22.5 .. 28, z 14 .. 23, top y -42); model px. Set in himars_build.py
+    'm142_himars': [(12.32, 20.24, 45.76, 45.76, -24.64, -19.8)],
 }
 
 

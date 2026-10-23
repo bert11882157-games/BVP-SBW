@@ -27,7 +27,8 @@
     "pickup": "civilian/civ_jep_technical/sounds/mono/civi_pickup_start_idle_stop.wav",
     "scimitar": "land/gb_ifv_scimitar/sounds/scim_start_idle_stop.wav",
     "m113": "land/idf_apc_m113/sounds/m113_start_idle_stop.wav",
-    "puma": "land/ger_ifv_puma/sounds/puma_power.wav"
+    "puma": "land/ger_ifv_puma/sounds/puma_power.wav",
+    "ustruck": "land/us_trk_logistics/sounds/start_idle_stop2.wav"
   },
   "tracks": {
     "t90": "land/ru_tnk_t90/sounds/t90_tracks.wav",
@@ -412,6 +413,11 @@
       "t72",
       "t72",
       "t90"
+    ],
+    "m142_himars": [
+      "ustruck",
+      null,
+      "generic"
     ]
   },
   "_weapons_doc": "weapon families: [1p, 3p, far, veryfar] sources (vehicles/... or weapons:...). Automatic-fire files are trimmed to their first shot cycle plus a faded tail (tailSeconds); single-shot cannons keep their full reverb. weapon_map assigns families by the weapon's current Fire3P event or by '<vehicle>.<weapon>' (overrides).",

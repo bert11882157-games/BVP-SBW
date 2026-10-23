@@ -545,6 +545,9 @@ public class ModEntityRenderers {
         registerVehicle(event, ModEntities.TOS_1A, "tos_1a", context ->
                 new FittedGroundVehicleRenderer(context, bvp("custom_geo/tos_1a.geo.json"),
                         bvp("textures/entity/tos_1a.png"), "tos_1a"));
+        registerVehicle(event, ModEntities.M142_HIMARS, "m142_himars", context ->
+                new FittedGroundVehicleRenderer(context, bvp("custom_geo/m142_himars.geo.json"),
+                        bvp("textures/entity/m142_himars.png"), "m142_himars"));
         registerVehicle(event, ModEntities.LEOPARD_1A1A1, "leopard_1a1a1", profileTrackedVehicle(
                 "custom_geo/leopard_1a1a1.geo.json", "textures/entity/leopard_1a1a1.png",
                 "Leopard1a1a1Renderer"));

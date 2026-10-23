@@ -1772,6 +1772,33 @@
       }
     ]
   },
+  "engine/ustruck_idle": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/ustruck_idle",
+        "stream": false
+      }
+    ]
+  },
+  "engine/ustruck_start": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/ustruck_start",
+        "stream": false
+      }
+    ]
+  },
+  "engine/ustruck_stop": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/ustruck_stop",
+        "stream": false
+      }
+    ]
+  },
   "engine/vab_idle": {
     "category": "neutral",
     "sounds": [
