@@ -186,7 +186,7 @@
       "ExplosionDamage": 0,
       "Name": "20 mm M61A2",
       "RPM": 6000,
-      "Magazine": 412,
+      "Magazine": 578,
       "Damage": 45,
       "SoundInfo": {
         "Fire1PGain": 1.0,
@@ -248,6 +248,12 @@
                 },
                 {
                   "Shots": 1,
+                  "Round": "saphei",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
                   "Round": "hef_i",
                   "Ammo": "superbwarfare:small_shell_he",
                   "Tracer": "NONE"
@@ -294,7 +300,7 @@
                   "Tracer": "RED"
                 },
                 {
-                  "Shots": 1,
+                  "Shots": 2,
                   "Round": "hef_i",
                   "Ammo": "superbwarfare:small_shell_he",
                   "Tracer": "NONE"
@@ -330,9 +336,9 @@
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
             "TntEquivalentKg": 0.0,
-            "Name": "Armored targets",
+            "Name": "Stealth",
             "ProjectileBelt": {
-              "Name": "Armored targets",
+              "Name": "Stealth",
               "Rounds": [
                 {
                   "Shots": 3,
@@ -342,15 +348,15 @@
                 },
                 {
                   "Shots": 1,
-                  "Round": "hef_i",
-                  "Ammo": "superbwarfare:small_shell_he",
+                  "Round": "saphei",
+                  "Ammo": "superbwarfare:small_shell_aa",
                   "Tracer": "NONE"
                 },
                 {
                   "Shots": 1,
-                  "Round": "api_t",
-                  "Ammo": "superbwarfare:small_shell_ap",
-                  "Tracer": "RED"
+                  "Round": "hef_i",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
                 }
               ]
             },
@@ -368,29 +374,23 @@
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:small_cannon_shell",
-              "Profile": "berts_vehicle_pack:aircraft_rounds/m61a1/m61_hefi"
+              "Profile": "berts_vehicle_pack:aircraft_rounds/m61a1/m61_saphei"
             },
             "ShellType": "HE",
-            "Velocity": 64.375,
-            "ApDurability": 5,
-            "Damage": 166.66666666666666,
+            "Velocity": 64.96,
+            "ApDurability": 20,
+            "Damage": 120,
             "ExplosionDamage": 0,
-            "ExplosionRadius": 3.333333333333333,
-            "TntEquivalentKg": 0.0117,
-            "Name": "Stealth",
+            "ExplosionRadius": 2.0,
+            "TntEquivalentKg": 0.0024,
+            "Name": "Armored targets",
             "ProjectileBelt": {
-              "Name": "Stealth",
+              "Name": "Armored targets",
               "Rounds": [
                 {
                   "Shots": 1,
-                  "Round": "hef_i",
+                  "Round": "saphei",
                   "Ammo": "superbwarfare:small_shell_aa",
-                  "Tracer": "NONE"
-                },
-                {
-                  "Shots": 3,
-                  "Round": "ap_i",
-                  "Ammo": "superbwarfare:small_shell_gs",
                   "Tracer": "NONE"
                 }
               ]
@@ -398,7 +398,7 @@
             "NominalBallistics": {
               "Supported": true,
               "ProjectileType": "superbwarfare:small_cannon_shell",
-              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/m61a1/m61_hefi",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/m61a1/m61_saphei",
               "ProjectileLife": 400
             }
           }
@@ -463,7 +463,7 @@
       },
       "AddShooterDeltaMovement": true,
       "Spread": 0.25,
-      "Name": "Hydra 70 (LAU-61, outer pair)",
+      "Name": "Hydra 70 (LAU-61, outboard pair)",
       "RPM": 600,
       "Damage": 100,
       "ExplosionDamage": 0,
@@ -490,14 +490,14 @@
         "Transform": "Vehicle",
         "Positions": [
           [
-            4.521,
-            1.3773,
-            -1.3834
+            3.0945,
+            1.292,
+            -0.1102
           ],
           [
-            -4.521,
-            1.3773,
-            -1.3834
+            -3.0945,
+            1.292,
+            -0.1102
           ]
         ],
         "Directions": [
@@ -513,9 +513,9 @@
           ]
         ],
         "ViewPosition": [
-          4.521,
-          1.3773,
-          -1.3834
+          3.0945,
+          1.292,
+          -0.1102
         ],
         "MuzzleAttachments": [
           "Lau61Outer_left",
@@ -562,7 +562,7 @@
       },
       "AddShooterDeltaMovement": true,
       "Spread": 0.25,
-      "Name": "Zuni (LAU-10, outer pair)",
+      "Name": "Zuni (LAU-10, outboard pair)",
       "RPM": 600,
       "Damage": 100,
       "ExplosionDamage": 0,
@@ -589,14 +589,14 @@
         "Transform": "Vehicle",
         "Positions": [
           [
-            4.521,
-            1.3823,
-            -0.8234
+            3.0945,
+            1.297,
+            0.4498
           ],
           [
-            -4.521,
-            1.3823,
-            -0.8234
+            -3.0945,
+            1.297,
+            0.4498
           ]
         ],
         "Directions": [
@@ -612,9 +612,9 @@
           ]
         ],
         "ViewPosition": [
-          4.521,
-          1.3823,
-          -0.8234
+          3.0945,
+          1.297,
+          0.4498
         ],
         "MuzzleAttachments": [
           "Lau10Outer_left",
@@ -661,7 +661,7 @@
       },
       "AddShooterDeltaMovement": true,
       "Spread": 0.25,
-      "Name": "Hydra 70 (LAU-61, inner pair)",
+      "Name": "Hydra 70 (LAU-61, inboard pair)",
       "RPM": 600,
       "Damage": 100,
       "ExplosionDamage": 0,
@@ -688,14 +688,14 @@
         "Transform": "Vehicle",
         "Positions": [
           [
-            2.3961,
-            1.1513,
-            -0.4792
+            2.1002,
+            1.3143,
+            0.1803
           ],
           [
-            -2.3961,
-            1.1513,
-            -0.4792
+            -2.1002,
+            1.3143,
+            0.1803
           ]
         ],
         "Directions": [
@@ -711,9 +711,9 @@
           ]
         ],
         "ViewPosition": [
-          2.3961,
-          1.1513,
-          -0.4792
+          2.1002,
+          1.3143,
+          0.1803
         ],
         "MuzzleAttachments": [
           "Lau61Inner_left",
@@ -760,7 +760,7 @@
       },
       "AddShooterDeltaMovement": true,
       "Spread": 0.25,
-      "Name": "Zuni (LAU-10, inner pair)",
+      "Name": "Zuni (LAU-10, inboard pair)",
       "RPM": 600,
       "Damage": 100,
       "ExplosionDamage": 0,
@@ -787,14 +787,14 @@
         "Transform": "Vehicle",
         "Positions": [
           [
-            2.3961,
-            1.1563,
-            0.0808
+            2.1002,
+            1.3193,
+            0.7403
           ],
           [
-            -2.3961,
-            1.1563,
-            0.0808
+            -2.1002,
+            1.3193,
+            0.7403
           ]
         ],
         "Directions": [
@@ -810,9 +810,9 @@
           ]
         ],
         "ViewPosition": [
-          2.3961,
-          1.1563,
-          0.0808
+          2.1002,
+          1.3193,
+          0.7403
         ],
         "MuzzleAttachments": [
           "Lau10Inner_left",
@@ -928,9 +928,9 @@
     "Lau61Outer_left": {
       "Parent": "Vehicle",
       "Position": [
-        4.521,
-        1.3773,
-        -1.3834
+        3.0945,
+        1.292,
+        -0.1102
       ],
       "Direction": [
         0,
@@ -941,9 +941,9 @@
     "Lau61Outer_right": {
       "Parent": "Vehicle",
       "Position": [
-        -4.521,
-        1.3773,
-        -1.3834
+        -3.0945,
+        1.292,
+        -0.1102
       ],
       "Direction": [
         0,
@@ -954,9 +954,9 @@
     "Lau10Outer_left": {
       "Parent": "Vehicle",
       "Position": [
-        4.521,
-        1.3823,
-        -0.8234
+        3.0945,
+        1.297,
+        0.4498
       ],
       "Direction": [
         0,
@@ -967,9 +967,9 @@
     "Lau10Outer_right": {
       "Parent": "Vehicle",
       "Position": [
-        -4.521,
-        1.3823,
-        -0.8234
+        -3.0945,
+        1.297,
+        0.4498
       ],
       "Direction": [
         0,
@@ -980,9 +980,9 @@
     "Lau61Inner_left": {
       "Parent": "Vehicle",
       "Position": [
-        2.3961,
-        1.1513,
-        -0.4792
+        2.1002,
+        1.3143,
+        0.1803
       ],
       "Direction": [
         0,
@@ -993,9 +993,9 @@
     "Lau61Inner_right": {
       "Parent": "Vehicle",
       "Position": [
-        -2.3961,
-        1.1513,
-        -0.4792
+        -2.1002,
+        1.3143,
+        0.1803
       ],
       "Direction": [
         0,
@@ -1006,9 +1006,9 @@
     "Lau10Inner_left": {
       "Parent": "Vehicle",
       "Position": [
-        2.3961,
-        1.1563,
-        0.0808
+        2.1002,
+        1.3193,
+        0.7403
       ],
       "Direction": [
         0,
@@ -1019,9 +1019,9 @@
     "Lau10Inner_right": {
       "Parent": "Vehicle",
       "Position": [
-        -2.3961,
-        1.1563,
-        0.0808
+        -2.1002,
+        1.3193,
+        0.7403
       ],
       "Direction": [
         0,
