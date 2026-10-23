@@ -52,7 +52,11 @@ NEXP = 2.2                       # the sections' super-ellipse exponent
 # the windscreen: from the arch's front face (z 5.29) to the deck (z 6.24): the foot on the nose deck (x, y) and the crown
 WS = [(5.29, 0.460, 2.930), (5.55, 0.400, 2.820), (5.90, 0.330, 2.820), (6.24, 0.270, 2.780)]
 WS_END = 6.24
-BAR_IN, BAR_OUT = 0.145, 0.205   # the centre pane's half width and where the quarter panes start (the bars stand between)
+BAR_IN, BAR_OUT = 0.140, 0.210   # the centre pane's half width and where the quarter panes start (the posts stand between: 7 cm)
+# (the airframe's windscreen bars are cut out as POST_BOX and rebuilt slim on the same line, 7 cm wide and thin in depth, from the arch
+# down to the nose deck, one member with the arch bow; the glass stops at their edges)
+POST_BOX = ((0.09, 5.28, 2.74), (0.22, 6.25, 3.60))   # lo, hi (|x|, z, y): the airframe's two bars, a 5 cm and a 10 cm member
+POST_OUT, POST_IN_T = 0.012, 0.018
 
 
 def ws_crown(z):
@@ -299,13 +303,13 @@ def frame_bars(uv):
         A = [_pt(edge(z_rear_arch, j, ARCH_REAR[-1], ns, 4.9, 5.4), j, side, ns) for j in range(ns + 1)]
         B = [_pt(edge(z_front_arch, j, ARCH_FRONT[-1], ns, 4.9, 5.4), j, side, ns) for j in range(ns + 1)]
         b.bar(A, B, ARCH_OUT, ARCH_IN, axis_y=3.20)
-        # the windscreen bars' upper ends: from the arch's front face to where the bars' own members start
-        n = 8
+        # the windscreen posts: one slim member from the arch's front face down to the nose deck (the airframe's two bars are cut)
+        n = 44
         za = z_front_arch(height_at(0.175, 5.25))
-        zs = [za + (BAR_END - za) * i / n for i in range(n + 1)]
+        zs = [za + (WS_END - za) * i / n for i in range(n + 1)]
         A = [np.array([side * BAR_IN, height_at(BAR_IN, z), z]) for z in zs]
         B = [np.array([side * BAR_OUT, height_at(BAR_OUT, z), z]) for z in zs]
-        b.bar(A, B, ARCH_OUT, ARCH_IN, axis_y=3.20)
+        b.bar(A, B, POST_OUT, POST_IN_T, axis_y=3.20)
         # the rear canopy bow (the hinge frame) and the dorsal fairing aft of it, on the glass's old surface
         A = [_pt(Z_BOW[0], j, side, ns) for j in range(ns + 1)]
         B = [_pt(Z_BOW[1], j, side, ns) for j in range(ns + 1)]
@@ -319,6 +323,7 @@ def cut_arch_block(geo_bones):
     """removes the airframe's block arch (and the crown strip over the bars' upper ends) from the hull piece; returns
     (faces removed, the uv of one of its faces: the frame's own texel)"""
     zlo, zhi, ylo, yhi, xhi = ARCH_BOX
+    plo, phi = np.array(POST_BOX[0]), np.array(POST_BOX[1])
     uv = None
     n = 0
     for bone in geo_bones:
@@ -332,6 +337,12 @@ def cut_arch_block(geo_bones):
             if V is not None and V[:, 2].min() >= zlo and V[:, 2].max() <= zhi and V[:, 1].min() >= ylo and \
                     V[:, 1].max() <= yhi and np.abs(V[:, 0]).max() <= xhi and \
                     not (np.ptp(V[:, 2]) < 1e-3 and V[0, 2] >= 5.38):
+                n += 1
+                if uv is None:
+                    uv = list(pm['uvs'][poly[0][2]])
+                continue
+            if V is not None and np.all(np.abs(V[:, 0]) >= plo[0]) and np.all(np.abs(V[:, 0]) <= phi[0]) and \
+                    np.all(V[:, 2] >= plo[1]) and np.all(V[:, 2] <= phi[1]) and np.all(V[:, 1] >= plo[2]) and np.all(V[:, 1] <= phi[2]):
                 n += 1
                 if uv is None:
                     uv = list(pm['uvs'][poly[0][2]])
