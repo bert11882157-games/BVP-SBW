@@ -22,7 +22,8 @@ Built (the Tu-22M3's cockpits as photographed and described):
     and the warning panel under it, a small flight set, the heading indicator, clock and the navigation / attack panel;
     their consoles, walls, seats and a console between them.
 Instruments the game draws (CockpitGauges) are live, each to its own seat; the warning lights are ANNUNCIATOR panels.
-No canopy is made: the model keeps its own glazing and window frames, which are the type's (no glass, as before).
+No canopy is made: the model keeps its own glazing and window frames, which are the type's; its windows get glass
+(model_glass.glaze: the model's original panes, and flat panes in the openings they leave).
 
 Run on the committed originals (git checkout be357476 -- the tu_22m geo, asset and both textures first).
 Usage: python3 tools/cockpit_models/tu_22m.py [--dry-run]
@@ -750,6 +751,9 @@ def main(argv):
     pm = H.install(ac, mesh, (stick, foot), SOURCE_BONE, STICK_BONE, gauges + gauges_n, displays + displays_n, h, E[0])
     print(f'{VID}: removed {removed}; new cockpit {len(pm["polys"])} faces, {len(gauges)} + {len(gauges_n)} gauges, '
           f'{len(displays_n)} displays')
+    import model_glass as MG                                          # the windows' glass (the frames stay the model's)
+    line, _ = MG.glaze(ac)
+    print(f'{VID}: {line}')
     if not dry:
         H.write(ac, atlas)
 
