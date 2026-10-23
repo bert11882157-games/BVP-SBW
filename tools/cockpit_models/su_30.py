@@ -260,10 +260,8 @@ def make_hud(m, atlas, sw, E, X, Y, Z):
     if stem > 0.004:                               # two thin posts: the view under the glass stays open
         for s in (-1, 1):
             m.box([E[0] + s * (g_hw + 0.004), foot + stem / 2, g_bot[2]], (X, Y, Z), (0.004, stem / 2, 0.005), sw['dgrey'])
-    m.box(g_bot - g_up * 0.006, (X, g_up, g_n), (g_hw + 0.008, 0.006, 0.012), sw['dgrey'])
-    for s in (-1, 1):
-        m.box((g_bot + g_top) / 2 + X * s * (g_hw + 0.004), (X, g_up, g_n), (0.004, g_h / 2, 0.005), sw['dgrey'])
-    m.box(g_top + g_up * 0.004, (X, g_up, g_n), (g_hw + 0.008, 0.004, 0.005), sw['dgrey'])
+    # the ILS-31's one tall glass: its top corners cut, held along its foot and up both sides, the top edge bare (the glass into the canopy glass, the symbology over it)
+    H.combiner(m, g_bot, g_up, -g_n, 2 * g_hw, g_h, 'chamfer', 0.035, ('bottom', 'side'), 0.010, sw['dgrey'])
     # the housing under the body, down into the coaming (from outside one block, not a slab over the nose)
     hb = E[1] + TOP_C - 0.10
     m.box([E[0], (hb + hud_y0 - 0.002) / 2, (hud_z0 + 0.03 + hud_z1) / 2], (X, Y, Z),

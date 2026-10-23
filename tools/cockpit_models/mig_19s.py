@@ -507,10 +507,8 @@ def build(atlas, E):
         for s in (-1, 1):
             m.box([E[0] + s * (g_hw + 0.004), (body_top + g_bot[1] - 0.006) / 2, g_bot[2]], (X, Y, Z),
                   (0.004, (g_bot[1] - 0.006 - body_top) / 2, 0.005), sw['dgrey'])
-    m.box(g_bot - g_up * 0.005, (X, g_up, g_n), (g_hw + 0.008, 0.005, 0.010), sw['dgrey'])
-    for s in (-1, 1):
-        m.box(g_c + X * s * (g_hw + 0.004), (X, g_up, g_n), (0.004, g_h / 2, 0.005), sw['dgrey'])
-    m.box(g_top + g_up * 0.004, (X, g_up, g_n), (g_hw + 0.008, 0.004, 0.005), sw['dgrey'])
+    # the ASP-5N's reflector: a plain upright glass with its top corners cut, held only in its foot clamp (the glass into the canopy glass, the symbology over it)
+    H.combiner(m, g_bot, g_up, -g_n, 2 * g_hw, g_h, 'chamfer', 0.025, ('bottom',), 0.010, sw['dgrey'])
     hud = dict(centre=g_c, normal=-g_n, up=g_up, width=2 * g_hw, height=g_h, style='GYRO')
 
     # -- consoles over the fuselage's sloping sides (those sides are the cockpit walls: no walls of our own)

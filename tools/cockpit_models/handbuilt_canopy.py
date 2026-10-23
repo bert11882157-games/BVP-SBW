@@ -470,6 +470,8 @@ def run(vid, source, build, argv, colour=None, clear=None, boxes=()):
     old = original_glass(vid)
     atlas = atlas_for(vid)
     _FRAMES.clear(); _GLASS.clear(); _EXTRA.clear()
+    comb = ac.asset.pop('CombinerGlass', None) or []   # the cockpit step's HUD / sight glass (handbuilt.combiner)
+    _EXTRA.extend(np.array(p, float) for p in comb)
     m, glass = build(atlas, E, colour or frame_colour(ac))
     if _GLASS:
         glass = cut_glass(E)                             # the frames cut out of the glass
