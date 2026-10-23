@@ -30,10 +30,23 @@ SECTIONS = [   # measured from the reference model (its eye at the origin), widt
     (0.38, [(0.38, -0.25), (0.378, -0.19), (0.369, -0.15), (0.355, -0.11), (0.338, -0.07), (0.313, -0.03), (0.282, 0.01), (0.242, 0.05), (0.185, 0.09), (0.084, 0.13), (0.0, 0.136)]),
     (0.56, [(0.378, -0.27), (0.372, -0.19), (0.362, -0.15), (0.35, -0.11), (0.33, -0.07), (0.305, -0.03), (0.27, 0.01), (0.225, 0.05), (0.16, 0.085), (0.0, 0.10)]),
     (0.68, [(0.378, -0.33), (0.372, -0.25), (0.362, -0.17), (0.342, -0.09), (0.30, -0.02), (0.25, 0.04), (0.18, 0.085), (0.09, 0.105), (0.0, 0.11)]),   # raised over the HUD: its glass centred on the eye
-    (0.88, [(0.36, -0.37), (0.356, -0.30), (0.346, -0.22), (0.318, -0.14), (0.255, -0.06), (0.20, 0.0), (0.13, 0.04), (0.06, 0.055), (0.0, 0.06)]),
-    (1.08, [(0.31, -0.40), (0.30, -0.35), (0.27, -0.28), (0.23, -0.21), (0.175, -0.15), (0.10, -0.115), (0.0, -0.10)]),
-    (1.24, [(0.24, -0.40), (0.20, -0.36), (0.13, -0.32), (0.0, -0.28)]),   # its foot on the nose deck
 ]
+# the windscreen ahead of the HUD (bert's War Thunder shots 010128/010132/010136, 2026-10-23: the old one was too
+# stubby): its top a straight line from over the HUD down to the nose deck, its foot 1.42 m ahead (it was 1.24),
+# the 0.88 m section's shape carried down onto sills that follow the deck's edges
+BASE = 1.42
+WS_SILLS = [(0.88, 0.36, -0.37), (1.08, 0.335, -0.41), (1.24, 0.30, -0.43), (BASE, 0.26, -0.45)]
+WS_SHAPE = [(0.36, -0.37), (0.356, -0.30), (0.346, -0.22), (0.318, -0.14), (0.255, -0.06), (0.20, 0.0), (0.13, 0.04),
+            (0.06, 0.055), (0.0, 0.06)]                     # (the old 0.88 m section: its shape, as fractions below)
+PROFILE = [(x / 0.36, (y + 0.37) / 0.43) for x, y in WS_SHAPE]
+
+
+def windscreen(z, sx, sy):
+    top = 0.11 + (-0.37 - 0.11) * (z - 0.68) / (BASE - 0.68)    # straight from over the HUD to the deck
+    return [(u * sx, sy + v * (top - sy)) for u, v in PROFILE]
+
+
+SECTIONS += [(z, windscreen(z, sx, sy)) for z, sx, sy in WS_SILLS]
 SPLIT = 0.56                     # the canopy's front edge, against the windscreen arch (the reference's joint)
 SEAL = (122, 66, 52)             # the red-brown seal round the canopy frame's inner edge
 PAINT_FOOTPRINT = True           # (work/handbuilt lower_skin.py: the model's skin round the windscreen in the nose's anti-glare)
@@ -42,7 +55,7 @@ def build(atlas, E, skin):
     m = H.Mesh(atlas)
     out, inner, seal = atlas.swatch(skin), atlas.swatch((58, 60, 62)), atlas.swatch(SEAL)
     sh = C.Shape(SECTIONS)
-    glass = C.glass_triangles(sh, E, -0.74, SPLIT, nz=18) + C.glass_triangles(sh, E, SPLIT + 0.05, 1.24, nz=10)
+    glass = C.glass_triangles(sh, E, -0.74, SPLIT, nz=18) + C.glass_triangles(sh, E, SPLIT + 0.05, BASE, nz=14)
     # the canopy: the rear bow over the headrest, the thick front bow, the sill rails; the seal a thin line along them
     C.bow(m, sh, E, -0.725, 0.035, 0.03, out, inner, proud=0.002)                              # the rear bow, on the fairing's front edge
     C.bow(m, sh, E, SPLIT + 0.015, 0.07, 0.04, out, inner, proud=0.002)       # one thick frame at the joint (canopy bow and windscreen arch together)
@@ -52,16 +65,16 @@ def build(atlas, E, skin):
     # the windscreen, one piece: the base frame on the nose deck, the side rails, in the nose's dark anti-glare (in the
     # airframe grey they stood out as light strips on it)
     ag = atlas.swatch((30, 31, 33))
-    C.bow(m, sh, E, 1.225, 0.03, 0.02, ag, inner)
-    C.member(m, sh, E, 0.0, SPLIT + 0.05, 1.24, 0.03, 0.003, ag, inner, steps=8, proud=0.008)
+    C.bow(m, sh, E, BASE - 0.015, 0.03, 0.02, ag, inner)
+    C.member(m, sh, E, 0.0, SPLIT + 0.05, BASE, 0.03, 0.003, ag, inner, steps=10, proud=0.008)
     # the windscreen's two thin posts from the arch down to the base frame, a little closer together ahead
     # (bert's War Thunder reference, 2026-10-23: head-on and from above)
-    C.member(m, sh, E, lambda z: sh.s_at_x(z, 0.17 - 0.04 * (z - SPLIT) / (1.22 - SPLIT)), SPLIT + 0.05, 1.21, 0.016, 0.01,
+    C.member(m, sh, E, lambda z: sh.s_at_x(z, 0.17 - 0.04 * (z - SPLIT) / (BASE - 0.02 - SPLIT)), SPLIT + 0.05, BASE - 0.03, 0.016, 0.01,
              out, inner, steps=12, proud=0.002)   # (on the outside: deeper, it stood as a block inside beside the HUD)
     # the deck under the windscreen ahead of the coaming, closing off the nose bay seen through the glass
     # one smooth shell under the windscreen, 3 cm inside the glass, its top under the sight line over the coaming
     # (the coaming's front edge 1.15 m ahead, 0.26 m under the eye): the nose under the glass one homogeneous deck
-    C.shell(m, sh, E, 0.86, 1.24, atlas.swatch((24, 25, 26)), sight=lambda z: -0.26 / 1.15 * z - 0.012)
+    C.shell(m, sh, E, 0.86, BASE, atlas.swatch((24, 25, 26)), sight=lambda z: -0.26 / 1.15 * z - 0.012)
     C.deck(m, sh, E, SPLIT + 0.03, 0.86, atlas.swatch((24, 25, 26)), x_in=0.40, front=0.0, nz=4)     # beside the panel by the walls, back to the joint (over the wing tops)
     return m, glass
 
