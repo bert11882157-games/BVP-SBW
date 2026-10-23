@@ -110,9 +110,12 @@ def main(argv):
         if line.startswith('Group|'):
             group_names[line.split('|')[1]] = line.split('|')[2]
     drop_groups = set(spec.get('dropGroups', []))
+    drop_group_ids = {str(i) for i in spec.get('dropGroupIds', [])}     # toolbox groups that carry no name in the file
 
     def is_store(f, part=None):
         if drop_groups and len(f) > 99 and f[99] not in ('0', '1') and group_names.get(f[99]) in drop_groups:
+            return True
+        if drop_group_ids and len(f) > 99 and f[99] in drop_group_ids:
             return True
         c = centre(f)
         for r in drop_rules:
