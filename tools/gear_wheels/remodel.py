@@ -10,7 +10,7 @@ texture is edited.
 
 Shape, as a section through the axle from the outer face inwards:
     tread band at the full radius, a chamfered shoulder down to a flat sidewall, a rim wall stepping into the
-    recessed hub disc, and a raised hexagonal hub boss with a dark axle cap.
+    recessed hub disc, and a raised hub boss (half the sides) with a dark axle cap.
 The number of sides scales with the radius (see TIERS), so a nose wheel costs ~100 polygons and a big main wheel
 ~140. A gear bone whose wheel already has 16 or more sides (a hand-made round wheel) is left alone.
 
@@ -34,15 +34,15 @@ import find as F  # noqa: E402
 TEX = os.path.join(F.GEN, 'assets/berts_vehicle_pack/textures/entity')
 PREFIX = 'gear_wheel_'
 ROUND_ALREADY = 16          # sides; wheels at least this round are kept
-# (largest radius in px, sides, hub boss sides or 0)
-TIERS = ((4.5, 10, 6), (9.0, 12, 6), (math.inf, 16, 6))
+# (largest radius in px, sides); the hub boss has half as many
+TIERS = ((4.5, 10), (9.0, 12), (math.inf, 16))
 
 
 def tier(radius, crowded):
     i = next(k for k, t in enumerate(TIERS) if radius < t[0])
     if crowded and i:           # bombers with a dozen wheels drop a tier
         i -= 1
-    return TIERS[i][1:]
+    return TIERS[i][1]
 
 
 # ------------------------------------------------------------------------------------------------ old wheel
@@ -110,7 +110,7 @@ def dark(pm, poly, img, tyre):
 
 
 def tyres(polys, centre, radius, is_tyre):
-    """(x ranges of the tyres side by side on the axle, polygons that are not tyre: axles and hub stubs)
+    """(x ranges of the tyres side by side on the axle, polygons that are not wheel: axles, forks, mudguards)
 
     A tyre is a run of tyre-coloured boxes reaching the full radius (a painted hub drum between twin wheels
     is not one); touching runs with different x spans are separate tyres
@@ -132,8 +132,35 @@ def tyres(polys, centre, radius, is_tyre):
             merged[-1][1] = max(merged[-1][1], b)
         else:
             merged.append([a, b])
-    inside = lambda lo, hi: any(lo >= a - 0.06 and hi <= b + 0.06 for a, b in merged)
-    rest = [(pm, poly) for pm, poly, _ in polys if not inside(*span(pm, poly))]
+    # whole connected pieces go one way or the other: a piece mostly in a tyre's width and within its rim is old
+    # wheel (box-built octagons reach up to the corners of their square, 1.41 radii); anything else (axle stub,
+    # fork, mudguard) is not
+    key = lambda pm, v: tuple(round(c, 3) for c in pm['positions'][v[0]])
+    parent = list(range(len(polys)))
+
+    def root(i):
+        while parent[i] != i:
+            parent[i] = parent[parent[i]]; i = parent[i]
+        return i
+    owner = {}
+    for i, (pm, poly, _) in enumerate(polys):
+        for v in poly:
+            k = key(pm, v)
+            if k in owner:
+                parent[root(i)] = root(owner[k])
+            else:
+                owner[k] = i
+    pieces = {}
+    for i in range(len(polys)):
+        pieces.setdefault(root(i), []).append(i)
+    rest = []
+    for members in pieces.values():
+        lo = min(span(*polys[i][:2])[0] for i in members); hi = max(span(*polys[i][:2])[1] for i in members)
+        within = sum(max(0.0, min(hi, b) - max(lo, a)) for a, b in merged)
+        flat_in = hi - lo < 1e-3 and any(a - 0.06 <= lo <= b + 0.06 for a, b in merged)
+        in_width = flat_in or hi - lo >= 1e-3 and within >= 0.5 * (hi - lo)
+        if not (in_width and max(reach(*polys[i][:2]) for i in members) <= 1.45 * radius):
+            rest += [polys[i][:2] for i in sorted(members)]
     return merged, rest
 
 
@@ -201,7 +228,7 @@ class Lathe:
         self.faces = out
 
 
-def build(x0, x1, cy, cz, radius, sides, boss):
+def build(x0, x1, cy, cz, radius, sides):
     """one tyre from x0 to x1 (px) with its outer radius (apothem) on the axle (cy, cz)"""
     m = Lathe(cy, cz)
     xc, h = (x0 + x1) / 2, (x1 - x0) / 2
@@ -221,19 +248,23 @@ def build(x0, x1, cy, cz, radius, sides, boss):
         m.band(r['shoulder'], r['tread'], 'tyre')              # shoulder chamfer
         m.band(r['rim_out'], r['shoulder'], 'tyre')            # flat sidewall
         m.band(r['rim_in'], r['rim_out'], 'hub', recess=True)  # rim wall down into the hub recess
-        m.cap(r['rim_in'], 'hub')                              # hub disc
-        if boss:
-            br, bp = BOSS * R, math.pi / boss
-            base = m.ring(xc + s * hub * h, br, boss, bp)
-            top = m.ring(xc + s * 0.85 * h, br, boss, bp)
-            m.band(top, base, 'hub')
-            m.cap(top, 'tyre')                                 # dark axle cap
+        # hub disc: a ring from the rim to the boss, whose corners line up with every other rim corner, so the
+        # boss is joined to the wheel (one connected piece) and nothing is hidden under it
+        base = m.ring(xc + s * hub * h, BOSS * R, sides // 2, ph)
+        top = m.ring(xc + s * 0.85 * h, BOSS * R, sides // 2, ph)
+        o = r['rim_in']
+        for k in range(sides // 2):
+            m.faces.append(([base[k], o[2 * k], o[2 * k + 1]], 'hub', False))
+            quad = [base[k], o[2 * k + 1], o[(2 * k + 2) % sides], base[(k + 1) % (sides // 2)]]
+            m.faces.append((quad, 'hub', False))
+        m.band(top, base, 'hub')                               # boss
+        m.cap(top, 'tyre')                                     # dark axle cap
     m.orient(xc)
     return m
 
 
 def keep(pm, rest):
-    """copies old polygons (axles, hub stubs) into the new wheel mesh unchanged"""
+    """copies old polygons (axles, forks, hub stubs) into a mesh unchanged"""
     for src, poly in rest:
         out = []
         for vert in poly:
@@ -272,8 +303,9 @@ def to_poly_mesh(parts, uv_of, normalized):
 # ------------------------------------------------------------------------------------------------ aircraft
 
 
-def rebuild(polys, centre, img, leg, crowded, name, notes):
-    """new poly_mesh for one old wheel (polys: (poly_mesh, poly, normal)) on the axle centre, or None"""
+def rebuild(polys, centre, img, leg, crowded, name, notes, dark_only=False):
+    """(new wheel poly_mesh, old polygons that are not wheel) for one old wheel (polys: (poly_mesh, poly, normal))
+    on the axle centre, or None"""
     tw, th = img.size
     P = np.array([pm['positions'][v[0]] for pm, poly, _ in polys for v in poly], float)
     lo, hi = P.min(0), P.max(0)
@@ -289,20 +321,21 @@ def rebuild(polys, centre, img, leg, crowded, name, notes):
     tyre_t, hub_t = colours(polys, img)
     if tyre_t is None:
         notes.append(f'{name}: no texels, kept'); return None
+    if dark_only and sum(img.getpixel(tuple(tyre_t))[:3]) > 3 * 90:
+        return None                # a round light piece (brake drum, wheel cover) is not a tyre
     if hub_t is None:          # a plain black wheel: the hub takes the gear leg's paint
         hub_t = colours(polys + leg, img, neutral=True)[1] if leg else None
         notes.append(f'{name}: hub in the gear leg colour' if hub_t else f'{name}: hub in tyre colour')
     uv_of = {'tyre': texel_uv(*tyre_t, tw, th), 'hub': texel_uv(*(hub_t or tyre_t), tw, th)}
     radius = float(max(hi[1] - centre[1], centre[1] - lo[1], hi[2] - centre[2], centre[2] - lo[2]))
-    sides, boss = tier(radius, crowded)
+    sides = tier(radius, crowded)
     tyre_rgb = img.getpixel(tuple(tyre_t))[:3]
     runs, rest = tyres(polys, centre, radius, lambda pm, poly: dark(pm, poly, img, tyre_rgb))
     if not runs:
         notes.append(f'{name}: no tyre found, kept'); return None
-    parts = [build(x0, x1, centre[1], centre[2], radius, sides, boss) for x0, x1 in runs]
+    parts = [build(x0, x1, centre[1], centre[2], radius, sides) for x0, x1 in runs]
     new = to_poly_mesh(parts, uv_of, True)
-    keep(new, rest)
-    return new
+    return new, rest
 
 
 def subtree(bones, roots):
@@ -362,10 +395,24 @@ def remodel(vid):
                  for p in b['poly_mesh']['polys']]
         leg = [(b['poly_mesh'], p, [1, 0, 0]) for b in wheel_bones(bones, rotor['Parent'])
                for p in b['poly_mesh']['polys']]
-        new = rebuild(polys, rotor['Pivot'], img, leg, len(rotors) >= 8, name, notes)
-        if new is None:
+        built = rebuild(polys, rotor['Pivot'], img, leg, len(rotors) >= 8, name, notes)
+        if built is None:
             continue
+        new, rest = built
         target = max(holders, key=lambda b: len(b['poly_mesh']['polys']))
+        if rest:
+            # what is not wheel would spin with it: it moves to the leg's mesh in the same wreck piece
+            # (tools/gear_check/wheel_check.py on the cockpit line does the same)
+            piece = target['name'][:-len(name)]
+            leg_name = piece + rotor['Parent'] if piece else rotor['Parent']
+            leg_bone = next((b for b in bones if b['name'] == leg_name), None)
+            if leg_bone is None:
+                pivot = next(b['pivot'] for b in bones if b['name'] == rotor['Parent'])
+                leg_bone = {'name': leg_name, 'parent': rotor['Parent'], 'pivot': list(pivot)}
+                bones.insert(bones.index(target), leg_bone)
+            if not leg_bone.get('poly_mesh'):
+                leg_bone['poly_mesh'] = {'normalized_uvs': True, 'positions': [], 'normals': [], 'uvs': [], 'polys': []}
+            keep(leg_bone['poly_mesh'], rest)
         for b in holders:
             if b is not target:
                 b['poly_mesh'] = {k: ([] if isinstance(v, list) else v) for k, v in b['poly_mesh'].items()}
@@ -381,9 +428,12 @@ def remodel(vid):
         for idx, centre in found:
             polys = [(pm, pm['polys'][i], pm['normals'][pm['polys'][i][0][1]]) for i in idx]
             leg = [(pm, p, [1, 0, 0]) for k, p in enumerate(pm['polys']) if k not in idx]
-            new = rebuild(polys, centre.tolist(), img, leg, len(found) >= 8, b['name'] + ' (static)', notes)
-            if new is None:
+            built = rebuild(polys, centre.tolist(), img, leg, len(found) >= 8, b['name'] + ' (static)', notes,
+                            dark_only=True)
+            if built is None:
                 continue
+            new, rest = built
+            keep(new, rest)
             drop.update(idx)
             base = [len(pm['positions']), len(pm['normals']), len(pm['uvs'])]
             for key in ('positions', 'normals', 'uvs'):
