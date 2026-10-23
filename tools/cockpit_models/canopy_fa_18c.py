@@ -228,27 +228,37 @@ class Bars:
                 self.P.append([round(x, 4) + 0.0 for x in p])
             self.polys.append(poly)
 
-    def bar(self, A, B, t_out, t_in, axis_y=2.95):
-        """a bar whose two long edges lie on the glass surface along A[i] and B[i]: a skin t_out over the surface, one t_in
-        under it, and the two side walls between"""
-        for i in range(len(A) - 1):
-            q = [A[i], A[i + 1], B[i + 1], B[i]]
-            n = np.cross(B[i] - A[i], A[i + 1] - A[i])
-            if np.linalg.norm(n) < 1e-12:
-                continue
-            n /= np.linalg.norm(n)
-            c = np.mean(q, 0)
-            if n @ (c - np.array([0.0, axis_y, c[2]])) < 0:
+    def bar(self, A, B, t_out, t_in, axis_y=2.85, caps=True):
+        """a bar whose two long edges lie on the glass surface along the paths A[i] and B[i]: a skin t_out over the surface,
+        one t_in under it, and the two side walls between. The offsets are taken along a normal averaged at every point
+        (shared by the neighbouring faces), so the member is one continuous strip with no steps between its faces."""
+        n_pts = len(A)
+        axis = lambda c: np.array([0.0, axis_y, c[2]])
+        N = []
+        for i in range(n_pts):
+            d = A[min(i + 1, n_pts - 1)] - A[max(i - 1, 0)]
+            w = B[i] - A[i]
+            n = np.cross(w, d)
+            ln = np.linalg.norm(n)
+            n = n / ln if ln > 1e-12 else np.array([0.0, 1.0, 0.0])
+            if n @ ((A[i] + B[i]) / 2 - axis((A[i] + B[i]) / 2)) < 0:
                 n = -n
-            top = [p + n * t_out for p in q]
-            bot = [p - n * t_in for p in q]
-            self.face(top, n)
-            self.face(bot, -n)
-            for (p0, p1) in ((0, 1), (2, 3)):
-                w = [top[p0], top[p1], bot[p1], bot[p0]]
-                wn = np.cross(w[1] - w[0], w[3] - w[0])
-                if np.linalg.norm(wn) > 1e-12:
-                    self.face(w, wn / np.linalg.norm(wn))
+            N.append(n)
+        At = [A[i] + N[i] * t_out for i in range(n_pts)]; Ab = [A[i] - N[i] * t_in for i in range(n_pts)]
+        Bt = [B[i] + N[i] * t_out for i in range(n_pts)]; Bb = [B[i] - N[i] * t_in for i in range(n_pts)]
+        for i in range(n_pts - 1):
+            nn = (N[i] + N[i + 1]); nn = nn / np.linalg.norm(nn)
+            self.face([At[i], At[i + 1], Bt[i + 1], Bt[i]], nn)
+            self.face([Ab[i], Ab[i + 1], Bb[i + 1], Bb[i]], -nn)
+            for P0, P1, sgn in ((At, Ab, -1), (Bt, Bb, 1)):
+                w = (B[i] - A[i]) + (B[i + 1] - A[i + 1]); w = w - nn * (w @ nn)
+                if np.linalg.norm(w) > 1e-12:
+                    self.face([P0[i], P0[i + 1], P1[i + 1], P1[i]], sgn * w / np.linalg.norm(w))
+        if caps:
+            for i, s in ((0, -1), (n_pts - 1, 1)):
+                d = (A[min(i + 1, n_pts - 1)] - A[max(i - 1, 0)]); d = d / np.linalg.norm(d)
+                self.face([At[i], Bt[i], Bb[i], Ab[i]], s * d)
+
 
     def skin(self, rows):
         """an opaque sheet on the surface: rows[i] = the points of one section ring, consecutive rings are joined"""
@@ -271,13 +281,18 @@ class Bars:
         return {'normalized_uvs': True, 'positions': self.P, 'normals': self.N, 'uvs': self.U, 'polys': self.polys}
 
 
+def _full(rowfn, ns):
+    """a path over the whole section, sill to sill: rowfn(side, j) for the left side up to the crown, then the right side down"""
+    return [rowfn(1, j) for j in range(ns + 1)] + [rowfn(-1, j) for j in range(ns - 1, -1, -1)]
+
+
 def frame_bars(uv):
     b = Bars(uv)
+    # the rear bow: ONE hoop from sill to sill, the section's rows at the bow's two faces, from the sill up to the crown
+    A = _full(lambda s, j: _pt(Z_BOW[0], j, s, NS), NS)
+    B = _full(lambda s, j: _pt(Z_BOW[1], j, s, NS), NS)
+    b.bar(A, B, BOW_OUT, BOW_IN)
     for side in (1, -1):
-        # the rear bow: the section's rows at the bow's two faces, from the sill up to the crown
-        A = [_pt(Z_BOW[0], j, side, NS) for j in range(NS + 1)]
-        B = [_pt(Z_BOW[1], j, side, NS) for j in range(NS + 1)]
-        b.bar(A, B, BOW_OUT, BOW_IN)
         # the spine fairing behind it, back to where the glass's old surface dies into the turtleback (opaque)
         zs = np.linspace(Z_AFT, Z_BOW[0], 14)
         b.skin([[_pt(z, j, side, NS) for j in range(NS + 1)] for z in zs])
@@ -289,13 +304,12 @@ def frame_bars(uv):
         A = [_pt(zr0[0] + (zr1[0] - zr0[0]) * i / n, r0, side, NS) for i in range(n + 1)]
         B = [_pt(zr0[1] + (zr1[1] - zr0[1]) * i / n, r1, side, NS) for i in range(n + 1)]
         b.bar(A, B, BOW_OUT * 0.7, BOW_IN * 0.7)
-    # the windscreen arch: one member from sill to sill, between the rear face (the bubble's glass) and the front face
+    # the windscreen arch: ONE member from sill to sill, between the rear face (the bubble's glass) and the front face
     # (the windscreen's glass); it follows the section from the foot up over the crown
-    arch_rows = NS
-    for side in (1, -1):
-        A = [_pt(edge(z_front_rear, j, ARCH_REAR, arch_rows, 4.7, 5.0), j, side, arch_rows) for j in range(arch_rows + 1)]
-        B = [_pt(edge(z_front_front, j, ARCH_FRONT, arch_rows, 4.88, 5.2), j, side, arch_rows) for j in range(arch_rows + 1)]
-        b.bar(A, B, ARCH_OUT, ARCH_IN)
+    za = lambda zf, j: edge(zf, j, ARCH_REAR, NS, 4.7, 5.2)
+    A = _full(lambda s, j: _pt(za(z_front_rear, j), j, s, NS), NS)
+    B = _full(lambda s, j: _pt(za(z_front_front, j), j, s, NS), NS)
+    b.bar(A, B, ARCH_OUT, ARCH_IN)
     # the windscreen's base strip along the cowl (the windscreen's rows are finer: its own ring set)
     for side in (1, -1):
         n = 14

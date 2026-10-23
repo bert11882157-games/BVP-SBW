@@ -277,6 +277,47 @@ class Mesh:
         return {'normalized_uvs': True, 'positions': P, 'normals': N, 'uvs': U, 'polys': polys}
 
 
+HULL = np.zeros((0, 3, 3))                 # the airframe's own hull triangles (vehicle-local blocks), read in main()
+
+
+def deck_y(x, z, ymax, default):
+    """the height (vehicle-local) of the hull's highest face under y = ymax at (x, z) (vehicle-local), else default"""
+    best = None
+    for a_, b_, c_ in HULL:
+        d = (b_[2] - c_[2]) * (a_[0] - c_[0]) + (c_[0] - b_[0]) * (a_[2] - c_[2])
+        if abs(d) < 1e-12:
+            continue
+        l1 = ((b_[2] - c_[2]) * (x - c_[0]) + (c_[0] - b_[0]) * (z - c_[2])) / d
+        l2 = ((c_[2] - a_[2]) * (x - c_[0]) + (a_[0] - c_[0]) * (z - c_[2])) / d
+        l3 = 1 - l1 - l2
+        if min(l1, l2, l3) < -1e-9:
+            continue
+        y = l1 * a_[1] + l2 * b_[1] + l3 * c_[1]
+        if y <= ymax and (best is None or y > best):
+            best = y
+    return default if best is None else best
+
+
+def top_under(m, x, z, ymax):
+    """eye-relative (x, z): the height (eye-relative) of the highest face of the mesh built so far under y = ymax there"""
+    best = -9.0
+    for P, _, _ in m.faces:
+        for k in range(1, len(P) - 1):
+            a_, b_, c_ = P[0] - EYE, P[k] - EYE, P[k + 1] - EYE
+            d = (b_[2] - c_[2]) * (a_[0] - c_[0]) + (c_[0] - b_[0]) * (a_[2] - c_[2])
+            if abs(d) < 1e-12:
+                continue
+            l1 = ((b_[2] - c_[2]) * (x - c_[0]) + (c_[0] - b_[0]) * (z - c_[2])) / d
+            l2 = ((c_[2] - a_[2]) * (x - c_[0]) + (a_[0] - c_[0]) * (z - c_[2])) / d
+            l3 = 1 - l1 - l2
+            if min(l1, l2, l3) < -1e-9:
+                continue
+            y = l1 * a_[1] + l2 * b_[1] + l3 * c_[1]
+            if y <= ymax + 1e-9 and y > best:
+                best = y
+    return best + EYE[1]
+
+
 def half_along(A, half, d):
     return sum(abs(float(a @ d)) * h for a, h in zip(A, half))
 
@@ -748,6 +789,11 @@ def build(atlas):
     lift = np.array([0, 0.004, 0])             # (a visor: 4 mm over the panel's top edge, so the two never share a plane)
     for i in range(len(pts) - 1):
         m.flat([pts[i] + lift, pts[i + 1] + lift, fwd[i + 1] + lift, fwd[i] + lift], cs, normal=[0, 1, 0])
+        # a skirt down its front edge to the dash deck (which falls away forward), so no slit opens under the strip
+        lo = [np.array([f_[0], deck_y(f_[0] + EYE[0], f_[2] + EYE[2], f_[1] + EYE[1] + 0.05, f_[1] + EYE[1] - 0.03) - EYE[1] - 0.004, f_[2]])
+              for f_ in (fwd[i], fwd[i + 1])]
+        if min(fwd[i][1], fwd[i + 1][1]) + 0.004 - max(lo[0][1], lo[1][1]) > 0.003:
+            m.flat([fwd[i] + lift, fwd[i + 1] + lift, lo[1], lo[0]], cs, normal=[0, 0, 1])
 
     # -- the HUD: one unit. The Hornet's HUD (Kaiser wide-angle unit, DCS F/A-18C Lot 20 and the C's photographs): ONE combiner
     # glass leaning far back toward the pilot, a rectangle that does not taper (unlike the F-16's), straight sides, the top
@@ -802,8 +848,13 @@ def build(atlas):
     hud = dict(centre=q3(0, 0.155) + EYE, normal=-g_n, up=g_up, width=0.200, height=0.200)
     # the AoA indexer: a small lit column on the glareshield, left of the HUD
     aoa_r = atlas.paint(40, 100, p_aoa_indexer)
-    ax_, ay_, az_ = 0.215, -0.105, 0.765
-    m.box([ax_, ay_ + 0.0, az_], (X, Y, Z), (0.017, 0.044, 0.012), sw['dgrey'], front=(2, -1, aoa_r, -X, Y))
+    # (owner 2026-10-23: on the glareshield on its own small mount, left of the HUD; the mount sits on the visor strip)
+    ax_, az_ = 0.215, 0.765
+    lip = deck_y(ax_ + EYE[0], az_ + EYE[2], EYE[1] + 0.05, EYE[1] - 0.2) - EYE[1]      # the dash deck's height under it (eye-relative)
+    m.box([ax_, lip + 0.002, az_ + 0.004], (X, Y, Z), (0.026, 0.016, 0.026), sw['dgrey'])                    # the mount's block
+    m.box([ax_, lip + 0.018 + 0.006, az_ + 0.004], (X, Y, Z), (0.014, 0.006, 0.014), sw['black'])           # its neck
+    ay_ = lip + 0.024 + 0.044
+    m.box([ax_, ay_, az_], (X, Y, Z), (0.017, 0.044, 0.012), sw['dgrey'], front=(2, -1, aoa_r, -X, Y))
 
     # -- side walls' liners, consoles, floor, rear bulkhead, kick panel
     fy = FLOOR_Y
@@ -1014,6 +1065,16 @@ def main(argv):
     asset = json.load(open(ASSET, encoding='utf-8'))
     data = json.load(open(DATA, encoding='utf-8'))
     EYE = np.array(EYE_NEW, float)
+    global HULL
+    tr = []
+    for b_ in geo['minecraft:geometry'][0]['bones']:
+        pm_ = b_.get('poly_mesh')
+        if pm_ and b_['name'] in SOURCE_BONES:
+            P_ = np.array(pm_['positions'], float) * np.array([1, 1, -1]) / 16.0
+            for poly in pm_['polys']:
+                for k in range(1, len(poly) - 1):
+                    tr.append(P_[[poly[0][0], poly[k][0], poly[k + 1][0]]])
+    HULL = np.array(tr) if tr else HULL
     g = geo['minecraft:geometry'][0]
     rm = old_interior(geo)
     removed = 0
