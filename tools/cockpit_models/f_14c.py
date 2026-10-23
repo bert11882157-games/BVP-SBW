@@ -116,8 +116,8 @@ FONT_FILES = _font_files()
 
 # ---------------------------------------------------------------- colours (the Tomcat's dark grey-black panels)
 
-PANEL = (50, 52, 54)
-PANEL_D = (30, 31, 33)
+PANEL = (94, 98, 100)  # FS 36231 grey (a touch lighter, as the game's light shows it); dial faces stay black
+PANEL_D = (68, 71, 73)
 BLACK = (18, 19, 20)
 DGREY = (38, 40, 42)
 MGREY = (84, 88, 90)
@@ -125,8 +125,8 @@ LGREY = (150, 154, 156)
 YELLOW = (226, 186, 30)
 RED = (196, 36, 30)
 METAL = (128, 132, 134)
-FLOOR = (36, 38, 40)
-CONSOLE = (62, 65, 66)
+FLOOR = (60, 62, 64)
+CONSOLE = (110, 114, 116)
 WHITE = (226, 228, 220)
 GREEN_LAMP = (60, 150, 70)
 AMBER = (214, 140, 30)
@@ -435,6 +435,39 @@ LAYOUT_F = [
     ('noz_l',   F_R,  0.105, -0.405, ('paint_disc', 'NOZ', 0.034), 'left nozzle position'),
     ('noz_r',   F_R,  0.045, -0.405, ('paint_disc', 'NOZ', 0.034), 'right nozzle position'),
 ]
+# painted (not live) dials: key -> title, lo, hi, step, label step, needle value, labels
+STATIC_DIALS = {
+    'FF': ('FF', 0, 10, 1, 2, 4.0, ['0', '2', '4', '6', '8', '10']),
+    'NOZ': ('NOZ', 0, 10, 1, 2, 3.0, ['0', '2', '4', '6', '8', '10']),
+    'OIL': ('OIL', 0, 100, 10, 20, 62.0, ['0', '20', '40', '60', '80', '100']),
+    'HYD': ('HYD', 0, 4000, 500, 1000, 3000.0, ['0', '1', '2', '3', '4']),
+    'CABIN': ('CAB', 0, 50, 5, 10, 12.0, ['0', '10', '20', '30', '40', '50']),
+    'FUELP': ('FUEL P', 0, 40, 5, 10, 22.0, ['0', '10', '20', '30', '40']),
+    'LOXQ': ('LOX', 0, 10, 1, 2, 6.0, ['0', '2', '4', '6', '8', '10']),
+    'OXYP': ('OXY', 0, 500, 50, 100, 380.0, ['0', '1', '2', '3', '4', '5']),
+    'BRAKE': ('BRAKE', 0, 3000, 500, 1000, 2000.0, ['0', '1', '2', '3']),
+    'VOLT': ('VOLT', 0, 30, 5, 10, 28.0, ['0', '10', '20', '30']),
+    'AMP': ('AMP', 0, 300, 50, 100, 140.0, ['0', '1', '2', '3']),
+}
+DIAL_POOL = ['CABIN', 'FUELP', 'LOXQ', 'OXYP', 'BRAKE', 'VOLT', 'AMP', 'HYD', 'OIL', 'FF', 'NOZ']
+
+
+def _dials(prefix, facet, pts, dia, k0=0):
+    out = []
+    for k, (a, y) in enumerate(pts):
+        key = DIAL_POOL[(k0 + k) % len(DIAL_POOL)]
+        out.append((f'{prefix}{k}', facet, a, y, ('paint_disc', key, dia), key.lower()))
+    return out
+
+
+# the pilot's panel: the VDI (a large CRT) top centre, the HSD under it, and the gauges packed round both
+_v = [e for e in LAYOUT_F if e[0] in ('vdi', 'hsd')]
+LAYOUT_F[:] = [e for e in LAYOUT_F if e[0] not in ('vdi', 'hsd')]
+LAYOUT_F += [('vdi', F_C, 0.000, -0.190, ('display', 'PFD', 0.175, 'CRT'), 'vertical display indicator (VDI)'),
+             ('hsd', F_C, 0.000, -0.405, ('display', 'RADAR', 0.135, 'CRT'), 'horizontal situation display (HSD)')]
+LAYOUT_F += _dials('fa', F_C, [(s * 0.222, y) for s in (-1, 1) for y in (-0.125, -0.165, -0.205, -0.245, -0.285, -0.325, -0.365, -0.405, -0.445, -0.485, -0.525)], 0.026) \
+    + _dials('fb', F_C, [(s * 0.123, y) for s in (-1, 1) for y in (-0.345, -0.385, -0.425, -0.465)], 0.024, 3)
+
 R_C, R_R, R_L = PANEL_R.centre, PANEL_R.right, PANEL_R.left
 LAYOUT_R = [
     ('tid',     R_C,  0.035, -0.200, ('display', 'RADAR', 0.200, 'CRT', 'round'), 'tactical information display (TID)'),
@@ -701,14 +734,8 @@ def p_aoa(d, im):
 
 def p_dial_static(kind):
     def fn(d, im):
-        if kind == 'FF':
-            dial_face(d, im, 'FF', 0, 10, 1, 2, 4.0, labels=['0', '2', '4', '6', '8', '10'])
-        elif kind == 'NOZ':
-            dial_face(d, im, 'NOZ', 0, 10, 1, 2, 3.0, labels=['0', '2', '4', '6', '8', '10'])
-        elif kind == 'OIL':
-            dial_face(d, im, 'OIL', 0, 100, 10, 20, 62.0, labels=['0', '20', '40', '60', '80', '100'])
-        else:
-            dial_face(d, im, 'HYD', 0, 4000, 500, 1000, 3000.0, labels=['0', '1', '2', '3', '4'])
+        t_, lo, hi, st, ls, val, labs = STATIC_DIALS[kind]
+        dial_face(d, im, t_, lo, hi, st, ls, val, labels=labs)
     return fn
 
 
@@ -1036,6 +1063,92 @@ def hud_unit(m, atlas, sw):
     return tris, dict(centre=centre + m.eye, normal=-g_n, up=g_up, width=2 * hw, height=h)
 
 
+# ---------------------------------------------------------------- seats: face-curtain loops
+
+# The seat tops' bright handle assembly (a red bar, two chunky yellow rings and a striped post per seat) is cut from the hull piece:
+# boxes around each headbox top; faces whose texel is yellow or red go
+HANDLE_BOXES = [(HULL1, (-0.26, 2.86, 4.05), (0.26, 3.35, 4.60)), (HULL1, (-0.26, 2.86, 2.50), (0.26, 3.42, 2.90))]
+
+
+def drop_orphans(pm, lo, hi):
+    """small welded pieces of the seat (a strap buckle or two) left floating by the cut: components of under 25 faces and 30 cm
+    whose centre lies in the handle box go too"""
+    P = np.array(pm['positions'], float) * np.array([1, 1, -1]) / 16.0
+    polys = pm['polys']
+    parent = {}
+
+    def find(a):
+        while parent.setdefault(a, a) != a:
+            parent[a] = parent[parent[a]]
+            a = parent[a]
+        return a
+    key = lambda i: tuple(np.round(P[i], 4))
+    for p in polys:
+        ks = [key(q[0]) for q in p]
+        for k in ks[1:]:
+            parent[find(k)] = find(ks[0])
+    comp = {}
+    for n, p in enumerate(polys):
+        comp.setdefault(find(key(p[0][0])), []).append(n)
+    drop = set()
+    for ids in comp.values():
+        if len(ids) > 24:
+            continue
+        V = np.vstack([P[[q[0] for q in polys[n]]] for n in ids])
+        if np.linalg.norm(V.max(0) - V.min(0)) < 0.30 and np.all(V.mean(0) >= lo) and np.all(V.mean(0) <= hi):
+            drop.update(ids)
+    pm['polys'] = [p for n, p in enumerate(polys) if n not in drop]
+    return len(drop)
+
+
+def cut_handles(geo):
+    tex = np.asarray(Image.open(TEX).convert('RGB'))
+    th, tw = tex.shape[:2]
+    cut = 0
+    for b in geo['minecraft:geometry'][0]['bones']:
+        boxes = [(np.array(lo), np.array(hi)) for n, lo, hi in HANDLE_BOXES if n == b['name']]
+        if not boxes:
+            continue
+        pm = b['poly_mesh']
+        P = np.array(pm['positions'], float) * np.array([1, 1, -1]) / 16.0
+        U = np.array(pm['uvs'], float)
+        keep = []
+        for p in pm['polys']:
+            c = P[[q[0] for q in p]].mean(0)
+            if any(np.all(c >= lo) and np.all(c <= hi) for lo, hi in boxes):
+                uv = U[[q[2] for q in p]].mean(0)
+                r, g, bl = (int(v) for v in tex[min(th - 1, int((1 - uv[1]) * th)), min(tw - 1, int(uv[0] * tw))])
+                if r > 200 and bl < 90 and (g > 180 or g < 90):
+                    cut += 1
+                    continue
+            keep.append(p)
+        pm['polys'] = keep
+        for lo, hi in boxes:
+            cut += drop_orphans(pm, lo, hi)
+    print(f'seat handles: {cut} bright block faces cut')
+    return cut
+
+
+def face_curtain(m, sw, top_y, z_abs):
+    """Martin-Baker GRU-7A face-curtain handles: a pair of thin striped (yellow and black) webbing loops lying just ahead of the
+    headbox cap with the red fitting between them, at real size (a loop about 10 x 9 cm, webbing 2 cm)"""
+    Zt = np.array([0.0, math.sin(math.radians(10)), math.cos(math.radians(10))])
+    Nt = np.cross(Zt, X)
+    c0 = np.array([0.0, top_y, z_abs]) - m.eye
+    m.box(c0 - Z * 0.040, (X, Y, Z), (0.022, 0.012, 0.020), sw['red'])
+    for sx in (-1, 1):
+        cen = c0 + X * sx * 0.095
+        n = 14
+        pts = [cen + X * (0.052 * math.cos(2 * math.pi * k / n)) + Zt * (0.046 * math.sin(2 * math.pi * k / n)) for k in range(n + 1)]
+        for k in range(n):
+            p0, p1 = pts[k], pts[k + 1]
+            t = unit(p1 - p0)
+            r = unit(np.cross(Nt, t))
+            m.box((p0 + p1) / 2, (t, r, Nt), (np.linalg.norm(p1 - p0) / 2, 0.012, 0.005 if k % 2 == 0 else 0.003),
+                  sw['yellow'] if k % 2 == 0 else sw['black'])
+        m.box(c0 + X * sx * 0.0325 - Z * 0.020, (X, Y, Z), (0.0105, 0.004, 0.010), sw['black'])
+
+
 def build_pilot(atlas, sw):
     m = Mesh(EYE_F)
     stick = Mesh(EYE_F)
@@ -1056,6 +1169,7 @@ def build_pilot(atlas, sw):
     stick_mesh(stick, sw, foot)
     m.box(foot + [0, 0.010, 0], (X, Y, Z), (0.045, 0.010, 0.045), sw['dgrey'])                   # base plate
     m.box(foot + [0, 0.035, 0], (X, Y, Z), (0.024, 0.026, 0.024), sw['black'])                   # rubber boot
+    face_curtain(m, sw, 3.200, 4.337)
     return m, stick, gauges, displays, glass, hud, foot + m.eye
 
 
@@ -1072,16 +1186,17 @@ def build_rear(atlas, sw):
     z0, z1 = 3.49, 4.06
     blk =lambda y0, y1, hx: m.box([0, (y0 + y1) / 2 - EYE_R[1], (z0 + z1) / 2 - EYE_R[2]], (X, Y, Z),
                                     (hx, (y1 - y0) / 2, (z1 - z0) / 2), sw['coaming'])
-    blk(2.494, SILL_ABS, 0.420)
+    blk(2.480, SILL_ABS, 0.420)
     blk(SILL_ABS, 3.108, 0.400)
     # coaming strip over the panel's top edge, back to the block's rear top edge
     coaming(m, sw, PANEL_R, z0 - EYE_R[2] - 0.001, 3.108 - EYE_R[1], x_in=0.92)
+    face_curtain(m, sw, 3.243, 2.762)
     return m, gauges, displays
 
 
 def swatches(atlas):
     cols = dict(panel=PANEL, panel_d=PANEL_D, black=BLACK, dgrey=DGREY, mgrey=MGREY, lgrey=LGREY, yellow=YELLOW, red=RED,
-                metal=METAL, floor=FLOOR, bezel=(30, 31, 33), coaming=(20, 21, 22), console=CONSOLE, liner=(40, 46, 48),
+                metal=METAL, floor=FLOOR, bezel=(30, 31, 33), coaming=(20, 21, 22), console=CONSOLE, liner=(74, 78, 80),
                 combiner_frame=(34, 36, 38))
     return {k: atlas.swatch(c) for k, c in cols.items()}
 
@@ -1148,6 +1263,7 @@ def main(argv):
     asset = json.load(open(ASSET, encoding='utf-8'))
     g = geo['minecraft:geometry'][0]
     removed = remove_old(geo)
+    cut_handles(geo)
     atlas = Atlas()
     sw = swatches(atlas)
     mf, stick, gf, df, glass, hud, foot = build_pilot(atlas, sw)
