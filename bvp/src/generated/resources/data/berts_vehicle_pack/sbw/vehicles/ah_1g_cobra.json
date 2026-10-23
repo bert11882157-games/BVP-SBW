@@ -506,7 +506,7 @@
         "Profile": "berts_vehicle_pack:ah_1g_cobra/rocket/default"
       },
       "Spread": 0.25,
-      "Name": "2.75 in FFAR",
+      "Name": "2.75 in FFAR (AI)",
       "RPM": 600,
       "Damage": 100,
       "ExplosionDamage": 0,
@@ -665,7 +665,7 @@
         "Profile": "berts_vehicle_pack:ah_1g_cobra/rocket/default"
       },
       "Spread": 0.25,
-      "Name": "2.75 in FFAR",
+      "Name": "2.75 in FFAR (AI)",
       "RPM": 600,
       "Damage": 100,
       "ExplosionDamage": 0,
@@ -968,7 +968,7 @@
         "Profile": "berts_vehicle_pack:ah_1g_cobra/rocket/default"
       },
       "Spread": 0.25,
-      "Name": "2.75 in FFAR",
+      "Name": "2.75 in FFAR (AI)",
       "RPM": 600,
       "Damage": 100,
       "ExplosionDamage": 0,
@@ -1127,7 +1127,7 @@
         "Profile": "berts_vehicle_pack:ah_1g_cobra/rocket/default"
       },
       "Spread": 0.25,
-      "Name": "2.75 in FFAR",
+      "Name": "2.75 in FFAR (AI)",
       "RPM": 600,
       "Damage": 100,
       "ExplosionDamage": 0,
@@ -1429,7 +1429,7 @@
       "RecoilForce": 0.16,
       "Spread": 0.42,
       "ProjectileLife": 45,
-      "Name": "weapon.berts_vehicle_pack.7_62_mm_minigun",
+      "Name": "7.62 mm minigun (AI)",
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_ap",
@@ -1589,7 +1589,7 @@
       "RecoilForce": 0.16,
       "Spread": 0.42,
       "ProjectileLife": 45,
-      "Name": "weapon.berts_vehicle_pack.20_mm_m195",
+      "Name": "20 mm M195 (AI)",
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_ap",
@@ -1826,7 +1826,7 @@
         "Profile": "berts_vehicle_pack:ah_1g_cobra/rocket/default"
       },
       "Spread": 0.25,
-      "Name": "2.75 in FFAR",
+      "Name": "2.75 in FFAR (AI)",
       "RPM": 600,
       "Damage": 100,
       "ExplosionDamage": 0,
@@ -1985,7 +1985,7 @@
         "Profile": "berts_vehicle_pack:ah_1g_cobra/rocket/default"
       },
       "Spread": 0.25,
-      "Name": "2.75 in FFAR",
+      "Name": "2.75 in FFAR (AI)",
       "RPM": 600,
       "Damage": 100,
       "ExplosionDamage": 0,
@@ -2287,7 +2287,7 @@
       "RecoilForce": 0.16,
       "Spread": 0.42,
       "ProjectileLife": 45,
-      "Name": "weapon.berts_vehicle_pack.7_62_mm_minigun",
+      "Name": "7.62 mm minigun (AI)",
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_ap",
@@ -2448,7 +2448,7 @@
         "Profile": "berts_vehicle_pack:ah_1g_cobra/rocket/default"
       },
       "Spread": 0.25,
-      "Name": "2.75 in FFAR",
+      "Name": "2.75 in FFAR (AI)",
       "RPM": 600,
       "Damage": 100,
       "ExplosionDamage": 0,
@@ -2607,7 +2607,7 @@
         "Profile": "berts_vehicle_pack:ah_1g_cobra/rocket/default"
       },
       "Spread": 0.25,
-      "Name": "2.75 in FFAR",
+      "Name": "2.75 in FFAR (AI)",
       "RPM": 600,
       "Damage": 100,
       "ExplosionDamage": 0,
@@ -3209,6 +3209,19 @@
         -0.13,
         -0.08,
         0.62
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "gunner_sight": {
+      "Parent": "Vehicle",
+      "Position": [
+        0.0,
+        3.17,
+        4.55
       ],
       "Direction": [
         0,
@@ -4600,19 +4613,6 @@
         -2.3702,
         2.0132,
         0.5119
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
-    "gunner_sight": {
-      "Parent": "Vehicle",
-      "Position": [
-        0.0,
-        3.17,
-        4.55
       ],
       "Direction": [
         0,

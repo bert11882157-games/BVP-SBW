@@ -1058,7 +1058,7 @@
         "Profile": "berts_vehicle_pack:ah_6j/rocket/default"
       },
       "Spread": 0.25,
-      "Name": "weapon.superbwarfare.70mm_rocket",
+      "Name": "HYDRA 70MM ROCKET %1$s (AI)",
       "RPM": 600,
       "Damage": 100,
       "ExplosionDamage": 0,
@@ -1217,7 +1217,7 @@
         "Profile": "berts_vehicle_pack:ah_6j/rocket/default"
       },
       "Spread": 0.25,
-      "Name": "weapon.superbwarfare.70mm_rocket",
+      "Name": "HYDRA 70MM ROCKET %1$s (AI)",
       "RPM": 600,
       "Damage": 100,
       "ExplosionDamage": 0,
@@ -1520,7 +1520,7 @@
         "Profile": "berts_vehicle_pack:ah_6j/rocket/default"
       },
       "Spread": 0.25,
-      "Name": "weapon.superbwarfare.70mm_rocket",
+      "Name": "HYDRA 70MM ROCKET %1$s (AI)",
       "RPM": 600,
       "Damage": 100,
       "ExplosionDamage": 0,
@@ -1679,7 +1679,7 @@
         "Profile": "berts_vehicle_pack:ah_6j/rocket/default"
       },
       "Spread": 0.25,
-      "Name": "weapon.superbwarfare.70mm_rocket",
+      "Name": "HYDRA 70MM ROCKET %1$s (AI)",
       "RPM": 600,
       "Damage": 100,
       "ExplosionDamage": 0,
@@ -1982,7 +1982,7 @@
         "Profile": "berts_vehicle_pack:ah_6j/rocket/default"
       },
       "Spread": 0.25,
-      "Name": "weapon.superbwarfare.70mm_rocket",
+      "Name": "HYDRA 70MM ROCKET %1$s (AI)",
       "RPM": 600,
       "Damage": 100,
       "ExplosionDamage": 0,
@@ -2141,7 +2141,7 @@
         "Profile": "berts_vehicle_pack:ah_6j/rocket/default"
       },
       "Spread": 0.25,
-      "Name": "weapon.superbwarfare.70mm_rocket",
+      "Name": "HYDRA 70MM ROCKET %1$s (AI)",
       "RPM": 600,
       "Damage": 100,
       "ExplosionDamage": 0,
@@ -2444,7 +2444,7 @@
         "Profile": "berts_vehicle_pack:ah_6j/rocket/default"
       },
       "Spread": 0.25,
-      "Name": "weapon.superbwarfare.70mm_rocket",
+      "Name": "HYDRA 70MM ROCKET %1$s (AI)",
       "RPM": 600,
       "Damage": 100,
       "ExplosionDamage": 0,
@@ -2603,7 +2603,7 @@
         "Profile": "berts_vehicle_pack:ah_6j/rocket/default"
       },
       "Spread": 0.25,
-      "Name": "weapon.superbwarfare.70mm_rocket",
+      "Name": "HYDRA 70MM ROCKET %1$s (AI)",
       "RPM": 600,
       "Damage": 100,
       "ExplosionDamage": 0,
@@ -3025,6 +3025,19 @@
         0,
         0.09375,
         1.9087500000000004
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "gunner_sight": {
+      "Parent": "Vehicle",
+      "Position": [
+        0.0,
+        1.75,
+        7.2
       ],
       "Direction": [
         0,
@@ -4377,19 +4390,6 @@
         -1.8605,
         1.4609,
         2.3088
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
-    "gunner_sight": {
-      "Parent": "Vehicle",
-      "Position": [
-        0.0,
-        1.75,
-        7.2
       ],
       "Direction": [
         0,

@@ -161,6 +161,15 @@ channels: its YaK-B from the first muzzle and its two GShG-7.62 guns (1800 round
 Gun pods use WT's rate of fire and the store's own magazine: XM18 1500 rds / 4000 rpm, M134D 4000 rpm, GAU-19
 2000 rpm, FN M3P / RMP 1025 rpm, XM35 M195 850 rpm, GSh-23L 3400 rpm, YaK-B 4500 rpm.
 
+## Generated models are marked "(AI)"
+
+Every store whose model (or launcher) is one of the `heli_` models generated here has " (AI)" at the end of its
+in-game name, and so does every weapon that fires from one: the guided rounds flown on a `heli_` flight model and
+the native rocket and gun channels of the `heli_` pods. That is bert's rule (2026-10-23), so generated models can be
+told apart from human-made ones. Stores built on the pack's own fixed-wing models (AGM-114, Falanga, R-60,
+PARS 3 rounds) keep their names. A lang-key name is resolved to its English text before the mark is added.
+`build.py` refuses to finish if any store showing a `heli_` model lacks the mark.
+
 ## The texture
 
 All the generated models share one 64×64 palette texture, an LFS file at
