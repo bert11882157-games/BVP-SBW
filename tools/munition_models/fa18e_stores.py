@@ -156,6 +156,7 @@ def main(argv):
     mesh, Lpx, rpx = generate.build(spec)
     F.write_json_compact(os.path.join(GEO, 'agm65e.geo.json'), generate.geo(mesh, 'geometry.aircraft_store.agm65e', False, Lpx))
     generate.texture().save(os.path.join(TEX, 'agm65e.png'))
+    F.mark_generated('agm65e')
     # AGM-88G AARGM-ER: 4.06 m, 0.29 m, strakes instead of wings (GUESS strake and fin sizes)
     spec = dict(length=4.06, diameter=0.29, nose=0.60, boattail=0.08, tail_r=0.85, bands=[(0.17, 0.18, 'yellow'), (0.19, 0.20, 'brown')],
                 radome=0.48, wings=[dict(root=(1.40, 2.60), tip=(2.05, 2.60), span=0.20, roll=45)],
@@ -163,6 +164,7 @@ def main(argv):
     mesh, Lpx, rpx = generate.build(spec)
     F.write_json_compact(os.path.join(GEO, 'agm88g.geo.json'), generate.geo(mesh, 'geometry.aircraft_store.agm88g', False, Lpx))
     generate.texture().save(os.path.join(TEX, 'agm88g.png'))
+    F.mark_generated('agm88g')
 
     # ============================================================== racks (BRU-33 / BRU-55 twin racks)
     def rack_two(name, model, fin_lat, write=True):
@@ -217,7 +219,7 @@ def main(argv):
         ('ForwardYaw', 0), ('SpinDegreesPerTick', 0)])
     F.write_json(os.path.join(prof_dir, 'aircraft_stores/agm65e_maverick.json'), prof)
     gun = json.load(open(os.path.join(SBW, 'guns/aircraft_stores/agm65e.json'), encoding='utf-8'), object_pairs_hook=OD)
-    gun['Name'] = 'AGM-65E Maverick · laser'
+    gun['Name'] = F.ai_name('AGM-65E Maverick · laser')
     gun['Projectile']['Profile'] = f'{NS}:aircraft_stores/agm65e_maverick'
     F.write_json(os.path.join(SBW, 'guns/aircraft_stores/agm65e_maverick.json'), gun)
     cat.add('munition/agm65e', F.store('AGM-65E Maverick · laser-guided', 'LASER_GUIDED', 'agm65e', a, Capacity=1, MassKg=291.2,

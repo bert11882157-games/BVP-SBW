@@ -189,7 +189,7 @@ def main(argv):
     prof['Combat']['RoundId'] = f'{NS}:munition/agm65l'
     F.write_json(os.path.join(prof_dir, 'aircraft_stores/agm65l_maverick.json'), prof)
     gun = json.load(open(os.path.join(gun_dir, 'agm65e_maverick.json'), encoding='utf-8'), object_pairs_hook=OD)
-    gun['Name'] = 'AGM-65L Maverick · laser'
+    gun['Name'] = F.ai_name('AGM-65L Maverick · laser')
     gun['Projectile']['Profile'] = f'{NS}:aircraft_stores/agm65l_maverick'
     F.write_json(os.path.join(gun_dir, 'agm65l_maverick.json'), gun)
     a, launch, g = F.anchors_for('agm65e', missile=True)

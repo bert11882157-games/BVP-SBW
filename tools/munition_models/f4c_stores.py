@@ -158,6 +158,7 @@ def main(argv):
     F.write_json_compact(os.path.join(GEO, 'agm12c.geo.json'), generate.geo(mesh, 'geometry.aircraft_store.agm12c', False, Lpx))
     F.write_json_compact(os.path.join(GEO, 'agm12c_flight.geo.json'), generate.geo(mesh, 'geometry.aircraft_store.agm12c_flight', True, Lpx))
     generate.texture().save(os.path.join(TEX, 'agm12c.png'))
+    F.mark_generated('agm12c', 'agm12c_flight')
     # M117 750 lb: 2.18 m x 0.408 m (the brief's 3.25 m is longer than a Mk 83, so the public 86 in is used: DEVIATION from the task text);
     # fin reach and band positions GUESS
     m, L = build_ldgp(2.18, 0.408, 0.55, 1.55, 0.17, (1.72, 2.16), 0.27, (0.95, 1.03), 1.05); F.save_model('m117', m)
@@ -220,7 +221,7 @@ def main(argv):
     prof['Extensions']['superbwarfare:heavy_warhead_blast_v1']['OuterRadius'] = 8
     F.write_json(os.path.join(prof_dir, 'aircraft_stores/agm12c.json'), prof)
     gun = json.load(open(os.path.join(gun_dir, 'agm12b.json'), encoding='utf-8'), object_pairs_hook=OD)
-    gun['Name'] = f'AGM-12C Bullpup B {DOT} manual radio command'
+    gun['Name'] = F.ai_name(f'AGM-12C Bullpup B {DOT} manual radio command')
     gun['Projectile']['Profile'] = f'{NS}:aircraft_stores/agm12c'
     gun['ProjectileLife'] = 1000                                                     # GUESS: WT operatedDist 16,000 against the B's 8,000
     gun['Damage'] = 1800; gun['ExplosionDamage'] = 1800; gun['ExplosionRadius'] = 5; gun['TntEquivalentKg'] = 136.5   # WT tnt 136.5 kg; the rest GUESS

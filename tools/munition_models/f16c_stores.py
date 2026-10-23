@@ -39,6 +39,47 @@ NS = 'berts_vehicle_pack'
 PX = 16.0
 SEG = 16
 
+# Owner rule 2026-10-23: a store whose geometry a script generated is marked " (AI)" in every name a player sees, and carries
+# "Generated": true. ai_models.json lists the generated geo models; the builders below register what they write, Catalogue.add
+# marks the store (its Model or RackAdapter model is generated), and tools/munition_models/ai_name_check.py verifies the lot.
+AI_SUFFIX = ' (AI)'
+AI_MODELS = os.path.join(HERE, 'ai_models.json')
+
+
+def _ai_models():
+    with open(AI_MODELS, encoding='utf-8') as fh:
+        return json.load(fh)
+
+
+def mark_generated(*names):
+    """Register geo models written by a generator (not cut from a supplied model) in ai_models.json."""
+    doc = _ai_models()
+    new = sorted(set(doc['models']) | set(names))
+    if new != doc['models']:
+        doc['models'] = new
+        with open(AI_MODELS, 'w', encoding='utf-8', newline='\n') as fh:
+            fh.write(json.dumps(doc, indent=2, ensure_ascii=False) + '\n')
+
+
+def ai_name(name):
+    return name if name.endswith(AI_SUFFIX) else name + AI_SUFFIX
+
+
+def mark_store(d):
+    """Add the AI suffix and the provenance field to a store whose Model or RackAdapter model is generated; drop a stale mark otherwise."""
+    models = set(_ai_models()['models'])
+    base = lambda ref: os.path.basename(ref).replace('.geo.json', '') if ref else ''
+    generated = base(d.get('Model')) in models or base((d.get('RackAdapter') or {}).get('Model')) in models
+    out = OrderedDict()
+    for k, v in d.items():
+        if k == 'Generated':
+            continue
+        out[k] = ai_name(v) if (k == 'Name' and generated) else v
+        if k == 'Category' and generated:
+            out['Generated'] = True
+    return out
+
+
 PAL = OrderedDict([
     ('olive', (84, 92, 58)), ('grey', (150, 155, 158)), ('dgrey', (88, 92, 96)), ('white', (226, 226, 220)),
     ('yellow', (214, 176, 40)), ('black', (32, 32, 34)), ('alu', (176, 180, 184)), ('red', (158, 40, 34)),
@@ -407,8 +448,10 @@ def save_model(name, m, flight=False):
     g = geo_json(m, name)
     write_json_compact(os.path.join(GEO, name + '.geo.json'), g)
     palette_png().save(os.path.join(TEX, name + '.png'))
+    mark_generated(name)
     if flight:
         write_json_compact(os.path.join(GEO, name + '_flight.geo.json'), flight_geo(g, name + '_flight'))
+        mark_generated(name + '_flight')
     return name
 
 
@@ -469,6 +512,7 @@ def rack_model(name, boxes):
         'bones': [{'name': 'store', 'pivot': [0, 0, 0], 'poly_mesh': {
             'normalized_uvs': True, 'positions': positions, 'normals': normals, 'uvs': uvs, 'polys': polys}}]}]}
     write_json(os.path.join(GEO, name + '.geo.json'), out)
+    mark_generated(name)
     return name
 
 
@@ -497,6 +541,7 @@ class Catalogue:
         self.items = OrderedDict()
 
     def add(self, rel, d):
+        d = mark_store(d)
         self.items[rel] = d
         write_json(os.path.join(STORES, rel + '.json'), d)
 
@@ -570,6 +615,7 @@ def main(argv):
     write_json_compact(os.path.join(GEO, 'agm84d_flight.geo.json'), generate.geo(mesh, 'geometry.aircraft_store.agm84d_flight', True, Lpx))
     generate.texture().save(os.path.join(TEX, 'agm84d.png'))
     models['agm84d'] = 'agm84d'
+    mark_generated('agm84d', 'agm84d_flight')
     # ready-made F-16C source models
     for src, name, flt in (('agm65d', 'agm65g', True), ('tank_370gal', 'tank_370gal', False), ('tank_300gal', 'tank_300gal', False)):
         import_source(src, name)
@@ -825,7 +871,7 @@ def apkws_profile():
 
 def apkws_gun():
     w = OrderedDict
-    return w([('Name', 'APKWS II laser rocket'), ('AmmoType', 'superbwarfare:small_atgm'), ('DefaultFireMode', 'Semi'),
+    return w([('Name', ai_name('APKWS II laser rocket')), ('AmmoType', 'superbwarfare:small_atgm'), ('DefaultFireMode', 'Semi'),
               ('AvailableFireModes', 'Semi'), ('Magazine', 1), ('EmptyReloadTime', 400), ('RPM', 30),
               ('Projectile', w([('Type', 'superbwarfare:wire_guide_missile'), ('Profile', f'{NS}:aircraft_stores/apkws')])),
               ('ProjectileAmount', 1), ('AddShooterDeltaMovement', True), ('Velocity', 2), ('Gravity', 0.0125), ('ProjectileLife', 800),

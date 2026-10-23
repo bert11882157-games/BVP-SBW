@@ -108,7 +108,7 @@ def main(argv):
     d = F.store('GPU-2/A · 20 mm M197 gun pod', 'GUN_POD', NAME, a, MassKg=96.3)
     for k in ('SideMountAnchors', 'MountAxis'):
         d.pop(k, None)       # a gun pod hangs from its top lugs only, as the SUU-23/A
-    F.write_json(os.path.join(F.STORES, 'gun_pod', NAME + '.json'), d)
+    F.write_json(os.path.join(F.STORES, 'gun_pod', NAME + '.json'), F.mark_store(d))
     print('anchor', a['MountAnchor'], 'axis', a.get('MountAxis'))
 
 

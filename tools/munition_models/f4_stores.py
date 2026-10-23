@@ -51,6 +51,7 @@ def build_missile(name, spec):
     F.write_json_compact(os.path.join(GEO, name + '_flight.geo.json'), generate.geo(mesh, f'geometry.aircraft_store.{name}_flight', True, Lpx))
     generate.texture().save(os.path.join(TEX, name + '.png'))
     NEW_GEO.extend([name, name + '_flight'])
+    F.mark_generated(name, name + '_flight')
 
 
 def main(argv):
