@@ -996,7 +996,8 @@ def build_pilot(m, atlas, sw, gauges, displays, glass):
     lift = np.array([0, 0.004, 0])
     for i in range(len(uniq) - 1):
         a, b = uniq[i], uniq[i + 1]
-        m.flat([a + lift, b + lift, np.array([b[0] * 0.86, b[1], z_wall]) + lift, np.array([a[0] * 0.86, a[1], z_wall]) + lift], sw['coaming'], normal=[0, 1, 0])
+        tuck = np.array([0, -0.012, 0.0]) if max(abs(a[0]), abs(b[0])) < 0.13 else np.zeros(3)           # the strip's rear edge slides under the panel's top lip (no sky slit between them)
+        m.flat([a + lift + tuck, b + lift + tuck, np.array([b[0] * 0.86, b[1], z_wall]) + lift, np.array([a[0] * 0.86, a[1], z_wall]) + lift], sw['coaming'], normal=[0, 1, 0])
     # -- the LCOSS: head on the glareshield (control face toward the pilot), two struts to the reflector glass
     sight = atlas.paint(160, 100, p_sight)
     lean = math.radians(35)
@@ -1150,7 +1151,7 @@ def cut_handles(geo):
 def face_curtains(m, sw):
     """Martin-Baker Mk 7 face-curtain handles: a pair of thin striped (yellow and black) webbing loops lying just ahead of the cap of
     each headbox with the red fitting between them, at real size (a loop about 10 x 9 cm, webbing 2 cm)"""
-    tilt = math.radians(10)
+    tilt = math.radians(4)
     Zt = np.array([0.0, math.sin(tilt), math.cos(tilt)])
     Nt = np.cross(Zt, X)
     for eye, top, zc in CURTAIN_TOPS:
@@ -1168,6 +1169,9 @@ def face_curtains(m, sw):
                 m.box((p0 + p1) / 2, (t, r, Nt), (np.linalg.norm(p1 - p0) / 2, 0.012, 0.005 if k % 2 == 0 else 0.003),
                       sw['yellow'] if k % 2 == 0 else sw['black'])
             m.box(c0 + X * sx * 0.0325 - Z * 0.020, (X, Y, Z), (0.0105, 0.004, 0.010), sw['black'])
+            # the canvas of the curtain closes the loop's eye (two faces 4 mm apart, inside the webbing's thickness)
+            m.flat([q + Nt * 0.002 for q in pts[:-1]], sw['dgrey'], normal=Nt)
+            m.flat([q - Nt * 0.002 for q in pts[:-1]], sw['dgrey'], normal=-Nt)
 
 
 def bow_infill(m, sw):
