@@ -63,9 +63,7 @@ def build(atlas, E, skin):
     C.bow(m, can, E, -0.28, 0.05, 0.03, out, inner)
     C.bow(m, can, E, 0.662, 0.074, 0.022, out, inner)      # the canopy's front bow, butting the windscreen's arch: one bar
     C.member(m, can, E, 0.0, -0.30, 0.66, 0.045, 0.035, out, inner)
-    # the frame along the canopy's top centre line, bow to bow: the two halves of the transparency meet on it, the
-    # periscope stands on it
-    C.member(m, can, E, 1.0, -0.28, 0.645, 0.035, 0.022, out, inner, sides=(1,), steps=14)
+    # (no frame along the canopy's top: its transparency is one piece, bert 2026-10-23)
     # the windscreen: its arch against the canopy, the front pane's arched frame, the base frame, the side rails
     C.bow(m, ws, E, 0.7165, 0.031, 0.022, out, inner)      # the arch, on from the canopy's bow (one bar, bert)
     ov = C.oval_pane(m, ws, E, PANE_TOP, PANE_FOOT, PANE_W, 0.04, 0.025, out, inner, n=2.0, n_bot=8.0)
@@ -79,8 +77,10 @@ def build(atlas, E, skin):
     # the periscope housing on the canopy's top
     top = can.point(0.12, 1.0) + E
     X, Y, Z = np.array([1.0, 0, 0]), np.array([0, 1.0, 0]), np.array([0, 0, 1.0])
-    m.box(top + np.array([0, 0.0, 0]), (X, Y, Z), (0.028, 0.022, 0.06), out)          # its foot sunk 22 mm through the glass
-    m.box(top + np.array([0, 0.006, -0.0615]), (X, Y, Z), (0.02, 0.014, 0.002), dark)
+    # its foot a short frame on the glass (the glass cut away under it), the housing on that
+    C.member(m, can, E, 1.0, 0.06, 0.18, 0.05, 0.02, out, inner, sides=(1,), steps=4)
+    m.box(top + np.array([0, 0.024, 0]), (X, Y, Z), (0.028, 0.022, 0.06), out)
+    m.box(top + np.array([0, 0.030, -0.0615]), (X, Y, Z), (0.02, 0.014, 0.002), dark)
     return m, glass
 
 
