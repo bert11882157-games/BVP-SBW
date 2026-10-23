@@ -24,6 +24,14 @@
     ],
     "note": "bert's expansion rule (PLAN item 11): the ground driver camera sits where the gunner's optic really is. SPz Puma: the gunner's sight windows on the turret front (source elements 189-190, x 26.5-27.5, y -38.5..-33.5), eye just ahead of the frame at the turret rest pose (tools/vehgen/puma_build.py writes the attachment; seat 0 is the pack's controller seat on gunnerCamera, seat 2 is the driver looking out of the same point, fixed to the hull)."
   },
+  "m113a3": {
+    "eye": [
+      0.7735,
+      2.23425,
+      1.59757
+    ],
+    "note": "bert's expansion rule (PLAN item 11) applied to a vehicle without a gunner's optic: the ground driver camera sits where the driver's eyes really are. M113A3: the driver's hatch is front left (source elements 15-17, x 7..19, y 23..26, z -26..-14 geo units); the eye is on the hatch centre line, 2 units ahead of its front edge and 2 over it, looking over the glacis (tools/vehgen/m113a3_build.py writes the attachment; seat 0 is the driver and the pack's controller seat, the commander M2HB is the passenger weapon station on seat 1)."
+  },
   "pgz_95": {
     "eye": [
       0.0,

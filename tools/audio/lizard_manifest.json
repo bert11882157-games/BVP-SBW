@@ -26,6 +26,7 @@
     "uaz": "land/mec_jep_uaz/sounds/mec_jeep_start_idle_stop.wav",
     "pickup": "civilian/civ_jep_technical/sounds/mono/civi_pickup_start_idle_stop.wav",
     "scimitar": "land/gb_ifv_scimitar/sounds/scim_start_idle_stop.wav",
+    "m113": "land/idf_apc_m113/sounds/m113_start_idle_stop.wav",
     "puma": "land/ger_ifv_puma/sounds/puma_power.wav"
   },
   "tracks": {
@@ -40,6 +41,7 @@
     "m48": "land/us_tnk_m48a1/sounds/m48a1_tracks.wav",
     "rubber": "land/gb_apc_warrior/sounds/tracks_rubber.wav",
     "tunguska": "land/ru_aav_tunguska/sounds/mono/tracks.wav",
+    "m113": "land/idf_apc_m113/sounds/m113_tracks.wav",
     "puma": "land/ger_ifv_puma/sounds/puma_tracks.wav"
   },
   "turret": {
@@ -155,6 +157,11 @@
       "puma",
       "puma",
       "warrior"
+    ],
+    "m113a3": [
+      "m113",
+      "m113",
+      null
     ],
     "pgz_95": [
       "type98",
@@ -751,6 +758,7 @@
     "lav25.Missile": "tow",
     "marder_1a5.Missile": "tow",
     "puma_ifv.MainMachineGun": "mg4",
+    "m113a3.PassengerMachineGun": "m2hb",
     "pgz_95.Cannon": "type87_25",
     "leopard_2a4.MachineGun": "mg3",
     "leopard_2a4.PassengerMachineGun": "mg3",

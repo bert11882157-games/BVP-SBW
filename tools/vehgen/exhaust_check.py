@@ -34,7 +34,7 @@ DATA = os.path.join(REPO, 'bvp', 'src', 'generated', 'resources', 'data', 'berts
 MAX_M = 0.2
 # front-engined vehicles: the hull-front-half rule does not apply (their exhaust may sit forward, but still on a grille)
 FRONT_ENGINE = {'m1128', 'puma_ifv', 'bmp2', 'bmp2m', 'bmp_1am', 'marder_1a1', 'marder_1a2', 'm2_bradley', 'vbci', 'ztl_09',
-                'strv_103', '9p149_shturm', 'zbd_05', 'pgz_95'}
+                'strv_103', '9p149_shturm', 'm113a3', 'zbd_05', 'pgz_95'}
 BAND = 6.0
 OUT_PX = 0.25            # --fix: origin this far outside the louvre face
 
@@ -88,6 +88,10 @@ EXITS = {
     'pt76b': [(-19.1, -9.5, 18.0, 24.9, 58.6), (9.5, 19.1, 18.0, 24.9, 58.6)],
     # QN-506: the two dark louvre panels of the rear engine deck (roof y 30.8, x +-(1.3 .. 16.7), z 46.1 .. 52.1); no side outlet modelled
     'qn_506model': [(-16.9, -1.3, 30.8, 30.8, 46.1, 52.1), (1.3, 16.5, 30.8, 30.8, 46.1, 52.1)],
+    # M113A3: Detroit 6V53T front right; the outlet is the louvre grille on the right (-x) half of the front deck (part 0 element 322,
+    # Box 699, x -22.7 .. -12.2, z -28.6 .. -15.6 units; the left panel, element 321, is the air intake). Box = that panel's roof face, model px
+    # (+Z = rear), written by m113a3_build.py. The model has no pipe: placing the outlet on the grille is a decision, UNVERIFIED
+    'm113a3': [(-21.61, -11.614, 33.844, 33.844, -26.132, -13.756)],
     # ---- front-engined (FRONT_ENGINE), outlet on the right (-x) hull side face forward at engine height. The models have no
     # visible outlet there: placed points, UNVERIFIED decisions (the m1128 / puma_ifv precedent) ----
     'bmp2': [(-29.05, -29.05, 29.5, 33.5, -26.0, -17.0)],

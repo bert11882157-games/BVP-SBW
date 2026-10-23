@@ -1322,6 +1322,33 @@
       }
     ]
   },
+  "engine/m113_idle": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/m113_idle",
+        "stream": false
+      }
+    ]
+  },
+  "engine/m113_start": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/m113_start",
+        "stream": false
+      }
+    ]
+  },
+  "engine/m113_stop": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/m113_stop",
+        "stream": false
+      }
+    ]
+  },
   "engine/m1a2_idle": {
     "category": "neutral",
     "sounds": [
@@ -1831,6 +1858,15 @@
     "sounds": [
       {
         "name": "bvp_audio:tracks/leo",
+        "stream": false
+      }
+    ]
+  },
+  "tracks/m113": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:tracks/m113",
         "stream": false
       }
     ]

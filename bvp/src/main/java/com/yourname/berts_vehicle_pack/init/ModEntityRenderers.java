@@ -533,6 +533,9 @@ public class ModEntityRenderers {
         registerVehicle(event, ModEntities.T64BV, "t64bv", context ->
                 new FittedGroundVehicleRenderer(context, bvp("custom_geo/t64bv.geo.json"),
                         bvp("textures/entity/t64bv.png"), "t64bv"));
+        registerVehicle(event, ModEntities.M113A3, "m113a3", context ->
+                new FittedGroundVehicleRenderer(context, bvp("custom_geo/m113a3.geo.json"),
+                        bvp("textures/entity/m113a3.png"), "m113a3"));
         registerVehicle(event, ModEntities.M1A1_TUSK, "m1a1_tusk", context ->
                 new FittedGroundVehicleRenderer(context, bvp("custom_geo/m1a1_tusk.geo.json"),
                         bvp("textures/entity/m1a1_tusk.png"), "m1a1_tusk"));

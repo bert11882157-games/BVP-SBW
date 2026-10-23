@@ -62,7 +62,8 @@ WT_MG = {('fv721_fox', 'MachineGun'): (8.0, 'WT L37A2, 100-round belt, aced (bas
          ('puma_ifv', 'MainMachineGun'): (8.0, 'WT MG4, 1,000-round belt, aced (basic crew 10.4 s)'),
          ('pgz_95', 'Missile'): (15.0, 'WT PGZ04A 72mm_HN_6 launcher, 4 rounds, reloadTime 15.0 (QW-2 is not in WT)'),
          ('m1a1_tusk', 'MachineGun'): (8.0, 'WT M240, 200-round belt (reloadTime 8.0)'),
-         ('m1a1_tusk', 'MainMachineGun'): (8.0, 'WT M2HB (TUSK CSAMM), 100-round belt (reloadTime 8.0)')}
+         ('m1a1_tusk', 'MainMachineGun'): (8.0, 'WT M2HB (TUSK CSAMM), 100-round belt (reloadTime 8.0)'),
+         ('m113a3', 'PassengerMachineGun'): (8.0, 'WT it_m113a1_tow M2HB, 100-round belt, aced (basic crew 10.4 s)')}
 # Guns whose reload is too short for any crew reload clip: no clip is set.
 NO_CLIP = {('fv721_fox', 'Cannon'), ('puma_ifv', 'Cannon'), ('pgz_95', 'Cannon'), ('t64bv', 'PassengerMachineGun')}
 RULE = {'LMG': 20.0, 'HMG': 10.0, 'AUTOCANNON': 20.0, 'ATGM': 12.0}
