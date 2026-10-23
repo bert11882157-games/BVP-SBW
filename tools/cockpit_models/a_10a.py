@@ -315,12 +315,16 @@ BOT = -0.60                     # panel bottom (the console tops)
 
 
 def panel_top(a):
-    """the panel's top edge: the dash block's top over the middle, stepping down along the sill rail band that leans in"""
+    """the panel's top edge: the dash block's top over the middle, stepping down along the flat quarter panes (they fall 2.35 m per m\n    outboard from the post: canopy_a_10.py) and the sill rail band that leans in"""
     a = abs(a)
-    if a <= 0.44:
+    if a <= 0.34:
         return -0.10
+    if a <= 0.40:
+        return -0.15
+    if a <= 0.44:
+        return -0.24
     if a <= 0.48:
-        return -0.34
+        return -0.35
     return -0.50
 
 
@@ -707,7 +711,7 @@ def build(atlas):
     y_top = panel_top(0)
     W = int(round((a1 - a0) * ppm)); Hh = int(round((y_top - BOT) / math.cos(LEAN) * ppm))
     rect = atlas.paint(W, Hh, panel_paint((W, Hh)))
-    cuts = sorted(set([a0 + (a1 - a0) * k / 12 for k in range(13)] + [-0.48, -0.44, 0.44, 0.48]))
+    cuts = sorted(set([a0 + (a1 - a0) * k / 12 for k in range(13)] + [-0.48, -0.44, -0.40, -0.34, 0.34, 0.40, 0.44, 0.48]))
     loop_top, loop_bot = [], []
     for aa0, aa1 in zip(cuts[:-1], cuts[1:]):
         s0, s1 = (aa0 - a0) / (a1 - a0), (aa1 - a0) / (a1 - a0)
@@ -838,8 +842,8 @@ def build(atlas):
     # -- the TV monitor's control box: tilted on the left of the glareshield, beside the windscreen bar (a painted face)
     tvc = atlas.paint(220, 130, p_tvctl)
     ax_ = (X, unit([0, 1, -0.55]), unit([0, 0.55, 1]))
-    ac_ = np.array([0.325, 3.083 - 3.20, 5.40 - EZ])
-    m.box(ac_, ax_, (0.095, 0.010, 0.060), sw['black'], front=(1, 1, tvc, -X, ax_[2]))
+    ac_ = np.array([0.240, 3.083 - 3.20, 5.40 - EZ])      # (inside the flat quarter pane: its plane falls 2.35 m per m outboard of the post)
+    m.box(ac_, ax_, (0.080, 0.010, 0.0505), sw['black'], front=(1, 1, tvc, -X, ax_[2]))
     # -- the sill liners' feet and the console tops
     fy = FLOOR_Y
     z_back = BACK_Z
