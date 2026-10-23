@@ -8,9 +8,15 @@ Measured off the model with sections.py and glass_sections.py (1 block = 1 m on 
     its top at y -0.25; the windscreen narrowing to the nose 1.05 m ahead.
   * Rear seat (eye 1.139 m behind and 0.19 m above the front eye): the glass comes down to y -0.40 at x +-0.30, the
     sides sloping out under it; the consoles at y -0.96; the floor at y -1.21; the front seat's back 0.55 m ahead.
-Built, for each seat: a three-facet main panel with its instruments, the black coaming, side consoles with switch
-panels and linings over the sloping sides, rudder pedals, the throttle, a K-36DM seat and a stick; English placards
-(the game's fonts have no Chinese). Front: the ILS HUD, the stick into the stick bone. Rear: a fixed stick.
+Built, for each seat: a three-facet main panel, the black coaming, side consoles with switch panels and linings over
+the sloping sides, rudder pedals, the throttle, a K-36DM seat and a stick; English placards (the game's fonts have no
+Chinese). The panels are the J-15D's own glass cockpits (the J-16 / J-15S family; references are thin: the J-15D's
+described as a wide-angle narrow-frame holographic HUD in front and a single-piece panoramic colour LCD in the rear):
+  * Front: the wide-angle HUD with its up-front control panel under it; a large centre MFD flanked by two MFDs, the
+    standby instruments and the warning panel under them, the key and EW panels and the gear lever low on the wings.
+    The stick goes into the stick bone.
+  * Rear (the EW officer's): the up-front control panel, the panoramic display (two live windows in one bezel), the
+    standby set, the warning panel and the jammer control panel; a fixed stick.
 Instruments the game draws (CockpitGauges, FlightDisplays, HeadUpDisplay) are live for both seats. No glass.
 
 Run on the committed originals (git checkout be357476 -- the j_15d geo, asset and both textures first).
@@ -53,8 +59,8 @@ STATIONS = {
                   TOP_C=-0.240, TOP_W=-0.480, BOT_C=-0.720, BOT_W=-0.740, FRONT_Z=0.76, FRONT_Y_C=-0.320,
                   FRONT_Y_W=-0.480, FRONT_X=0.290, SEAT_DY=0.0, HAS_HUD=True, LIN=((0.45, -0.38), (0.67, -0.73))),
     'rear': dict(SEAT=1, WALL_X=0.300, CONSOLE_OUT=0.685, SILL_Y=-0.42, FLOOR_Y=-1.21, BACK_Z=-0.55, CONSOLE_Y=-0.94,
-                 CONSOLE_IN=0.25, PANEL_Z=0.55, LEAN=math.radians(12), HINGE=0.16, WING=math.radians(25),
-                 TOP_C=-0.300, TOP_W=-0.440, BOT_C=-0.900, BOT_W=-0.960, FRONT_Z=0.62, FRONT_Y_C=-0.280,
+                 CONSOLE_IN=0.25, PANEL_Z=0.55, LEAN=math.radians(12), HINGE=0.19, WING=math.radians(25),
+                 TOP_C=-0.300, TOP_W=-0.440, BOT_C=-0.900, BOT_W=-0.940, FRONT_Z=0.62, FRONT_Y_C=-0.280,
                  FRONT_Y_W=-0.420, FRONT_X=0.260, SEAT_DY=-0.05, HAS_HUD=False, LIN=((0.31, -0.43), (0.62, -0.80))),
 }
 
@@ -92,49 +98,40 @@ def top_of(side, a):
     return TOP_C if side == 0 else TOP_C + (TOP_W - TOP_C) * a / WING_LEN
 
 
-# Front seat: the instrument layout after the DCS Su-27 manual, figure 20. facet: 0 centre (a: metres to the pilot's right of the
-# centre line), +1 right wing, -1 left wing (a: metres outward from the hinge). y: from the eye.
+# Front seat: the J-16 / J-15D layout. facet: 0 centre (a: metres to the pilot's right of the centre line), +1 right
+# wing, -1 left wing (a: metres outward from the hinge). y: from the eye.
 LAYOUT_FRONT = [
-    # centre facet
-    ('caution',  0, -0.170, -0.190, ('paint_disc', 0.026), 'master caution lamp'),
-    ('adi',      0, -0.065, -0.320, ('game', 'ATTITUDE', 0.095), 'KPP attitude director'),
-    ('hsi',      0, -0.065, -0.442, ('game', 'HEADING', 0.095), 'PNP horizontal situation'),
-    ('vvi',      0,    0.060, -0.310, ('game', 'VVI', 0.064), 'VAR-300 vertical speed'),
-    ('alt',      0,    0.060, -0.405, ('game', 'ALTIMETER', 0.066), 'VM-15 altimeter'),
-    ('radalt',   0,    0.060, -0.500, ('game', 'RADAR_ALT', 0.058), 'radio altimeter'),
-    ('clock',    0,    0.150, -0.205, ('game', 'CLOCK', 0.046), 'AChS-1 clock'),
-    ('mach',     0,    0.150, -0.290, ('game', 'MACH', 0.058), 'Machmeter'),
-    ('fuel',     0,    0.150, -0.400, ('game', 'FUEL_QTY', 0.058), 'fuel quantity'),
-    ('ekran',    0,    0.000, -0.585, ('annunciator', 0.170, 0.075), 'Ekran warning panel'),
-    ('afcs',     0,    0.000, -0.668, ('paint_rect', 0.170, 0.040), 'autopilot push-lights'),
+    # centre facet (the up-front control panel stands on its top, under the HUD: make_hud)
+    ('caution',  0, -0.165, -0.315, ('paint_disc', 0.024), 'master caution lamp'),
+    ('mfd_c',    0,  0.000, -0.430, ('display', 'RADAR', 0.190), 'centre MFD'),
+    ('sb_ias',   0, -0.130, -0.620, ('game', 'AIRSPEED', 0.050), 'standby airspeed'),
+    ('sb_adi',   0, -0.045, -0.620, ('game', 'ATTITUDE', 0.058), 'standby attitude'),
+    ('sb_alt',   0,  0.045, -0.620, ('game', 'ALTIMETER', 0.050), 'standby altimeter'),
+    ('clock',    0,  0.135, -0.620, ('game', 'CLOCK', 0.040), 'clock'),
+    ('ekran',    0,  0.000, -0.690, ('annunciator', 0.200, 0.040), 'warning panel'),
     # left wing
-    ('aoa',     -1,    0.060, -0.261, ('game', 'AOA', 0.056), 'UAP-14 AoA'),
-    ('g',       -1,    0.060, -0.325, ('game', 'G_METER', 0.050), 'UAP-14 accelerometer'),
-    ('ias',     -1,    0.160, -0.368, ('game', 'AIRSPEED', 0.064), 'KUS-3 airspeed'),
-    ('weapons', -1,    0.117, -0.455, ('paint_rect', 0.150, 0.080), 'weapons control panel'),
-    ('gear',    -1,    0.229, -0.480, ('paint_rect', 0.050, 0.100), 'gear control panel'),
+    ('mfd_l',   -1,  0.125, -0.470, ('display', 'STORES', 0.150), 'left MFD'),
+    ('keys',    -1,  0.125, -0.615, ('paint_rect', 0.150, 0.040), 'option key panel'),
+    ('gear',    -1,  0.190, -0.690, ('paint_rect', 0.040, 0.060), 'gear control panel'),
     # right wing
-    ('hdd',      1,    0.132, -0.408, ('display', 'RADAR', 0.105), 'IPV head-down display'),
-    ('spo15',    1,    0.032, -0.405, ('game', 'RWR', 0.043), 'SPO-15 Beryoza'),
-    ('rpm',      1,    0.233, -0.416, ('game', 'ENGINE_RPM', 0.043), 'twin tachometer'),
-    ('egt',      1,    0.080, -0.503, ('game', 'EGT', 0.037), 'exhaust gas temperature'),
-    ('hyd',      1,    0.200, -0.501, ('game', 'FILLER_HYDRAULIC', 0.034), 'hydraulic pressures'),
-    ('oxy',      1,    0.140, -0.580, ('game', 'FILLER_OXYGEN', 0.032), 'oxygen'),
+    ('mfd_r',    1,  0.125, -0.470, ('display', 'RADAR', 0.150), 'right MFD'),
+    ('ew',       1,  0.125, -0.615, ('paint_rect', 0.150, 0.040), 'countermeasures panel'),
+    ('fuel',     1,  0.125, -0.690, ('game', 'FUEL_QTY', 0.045), 'fuel quantity'),
 ]
-# Rear seat: the flight group, the engine and fuel pair, the multi-function display and the Ekran
+# Rear seat (the EW officer's): the up-front control panel, the panoramic display, the standby set, the jammer panel
 LAYOUT_REAR = [
-    ('caution',  0, -0.135, -0.315, ('paint_disc', 0.024), 'master caution lamp'),
-    ('clock',    0,    0.130, -0.320, ('game', 'CLOCK', 0.040), 'clock'),
-    ('adi',      0, -0.060, -0.405, ('game', 'ATTITUDE', 0.088), 'attitude director'),
-    ('hsi',      0, -0.060, -0.520, ('game', 'HEADING', 0.088), 'horizontal situation'),
-    ('vvi',      0,    0.065, -0.405, ('game', 'VVI', 0.060), 'vertical speed'),
-    ('alt',      0,    0.065, -0.500, ('game', 'ALTIMETER', 0.062), 'altimeter'),
-    ('mfd',      0,    0.000, -0.660, ('display', 'STORES', 0.138), 'multi-function display'),
-    ('ekran',    0,    0.000, -0.790, ('annunciator', 0.160, 0.050), 'Ekran warning panel'),
-    ('ias',     -1,    0.070, -0.405, ('game', 'AIRSPEED', 0.060), 'airspeed'),
-    ('aoa',     -1,    0.070, -0.495, ('game', 'AOA', 0.050), 'AoA'),
-    ('rpm',      1,    0.070, -0.405, ('game', 'ENGINE_RPM', 0.056), 'twin tachometer'),
-    ('fuel',     1,    0.070, -0.495, ('game', 'FUEL_QTY', 0.050), 'fuel quantity'),
+    ('caution',  0, -0.160, -0.350, ('paint_disc', 0.022), 'master caution lamp'),
+    ('ufcp_r',   0,  0.010, -0.355, ('paint_rect', 0.240, 0.060), 'up-front control panel'),
+    ('pano',     0,  0.000, -0.520, ('panorama', 0.360, 0.190), 'single-piece panoramic colour display'),
+    ('clock',    0, -0.140, -0.690, ('game', 'CLOCK', 0.040), 'clock'),
+    ('sb_adi',   0, -0.055, -0.690, ('game', 'ATTITUDE', 0.055), 'standby attitude'),
+    ('sb_alt',   0,  0.030, -0.690, ('game', 'ALTIMETER', 0.045), 'standby altimeter'),
+    ('sb_ias',   0,  0.110, -0.690, ('game', 'AIRSPEED', 0.045), 'standby airspeed'),
+    ('ekran',    0,  0.000, -0.770, ('annunciator', 0.240, 0.045), 'warning panel'),
+    ('ew_r',     0,  0.000, -0.850, ('paint_rect', 0.300, 0.050), 'jammer control panel'),
+    ('keys_r',  -1,  0.060, -0.560, ('paint_rect', 0.080, 0.100), 'option key panel'),
+    ('fuel',     1,  0.060, -0.540, ('game', 'FUEL_QTY', 0.045), 'fuel quantity'),
+    ('rpm',      1,  0.060, -0.640, ('game', 'ENGINE_RPM', 0.045), 'twin tachometer'),
 ]
 
 
@@ -170,7 +167,7 @@ def panel_paint(side, W_, H_, a0, a1, yb, yt):
                     py = yy + r + ph * 0.9
                     d.rectangle([x - pw / 2, py - ph / 2, x + pw / 2, py + ph / 2], fill=(18, 18, 18, 255))
             else:
-                w, h = (spec[2], spec[2]) if spec[0] == 'display' else (spec[1], spec[2])
+                w, h = (spec[2], spec[2]) if spec[0] == 'display' else (spec[1], spec[2])   # (panorama: w x h)
                 sx, sy = (w / 2 + 0.006) * px_m, (h / 2 + 0.006) * px_m
                 d.rectangle([x - sx, yy - sy, x + sx, yy + sy], fill=(20, 26, 26, 255))
         if side == 0:
@@ -225,6 +222,41 @@ def p_buttons(labels):
     return fn
 
 
+def p_keypanel(labels, rows=1):
+    """a black panel of square push keys with legends (the MFD option keys, the countermeasures and jammer panels)"""
+    def fn(d, im):
+        S, Hh = im.width, im.height
+        d.rectangle([0, 0, S, Hh], fill=(20, 22, 22, 255))
+        per = (len(labels) + rows - 1) // rows
+        w, hh = S / per, Hh / rows
+        for k, lab in enumerate(labels):
+            r, c_ = divmod(k, per)
+            x0, y0 = c_ * w, r * hh
+            H.lamp(d, [x0 + 5, y0 + hh * .12, x0 + w - 5, y0 + hh * .62], (200, 200, 190) if '*' not in lab else (90, 200, 90),
+                   None, lit=('*' in lab))
+            H.text(d, (x0 + w / 2, y0 + hh * .82), lab.strip('*'), min(hh * .2, w * .2))
+    return fn
+
+
+def p_ufcp(d, im):
+    """the up-front control panel: its two-line LCD window over a keypad, the mode keys either side"""
+    S, Hh = im.width, im.height
+    d.rectangle([0, 0, S, Hh], fill=(20, 22, 22, 255))
+    d.rectangle([S * .28, Hh * .08, S * .72, Hh * .38], fill=(14, 40, 26, 255), outline=(70, 72, 74, 255), width=3)
+    H.text(d, (S * .5, Hh * .23), 'NAV  000', Hh * .14, fill=(110, 230, 140))
+    for r in range(2):
+        for c_ in range(5):
+            x, y = S * (0.31 + c_ * 0.095), Hh * (0.5 + r * 0.24)
+            d.rectangle([x - S * .035, y - Hh * .08, x + S * .035, y + Hh * .08], fill=(46, 48, 50, 255))
+            H.text(d, (x, y), str((r * 5 + c_ + 1) % 10), Hh * .1)
+    for k, lab in enumerate(['A/A', 'A/G', 'NAV', 'EW']):
+        for x in (S * .12, S * .88):
+            y = Hh * (0.18 + k * 0.21)
+            H.lamp(d, [x - S * .08, y - Hh * .07, x + S * .08, y + Hh * .07], (200, 200, 190), None, lit=False)
+        H.text(d, (S * .12, Hh * (0.18 + k * 0.21)), lab, Hh * .09)
+        H.text(d, (S * .88, Hh * (0.18 + k * 0.21)), ['TCN', 'ILS', 'IFF', 'DATA'][k], Hh * .09)
+
+
 def p_disc_red(d, im):
     S = im.width
     d.ellipse([0, 0, S - 1, S - 1], fill=(120, 18, 14, 255))
@@ -232,7 +264,7 @@ def p_disc_red(d, im):
 
 
 def make_hud(m, atlas, sw, E, X, Y, Z):
-    """the ILS-31 HUD on the front coaming; returns the HeadUpDisplay picture (the frame's face)"""
+    """the wide-angle holographic HUD on the front coaming; returns the HeadUpDisplay picture (the frame's face)"""
     hud_z0, hud_z1 = E[2] + PANEL_Z + 0.02, E[2] + PANEL_Z + 0.18     # (short: the windscreen comes down close ahead)
     hud_y0 = E[1] + TOP_C + 0.025
     hud_y1 = hud_y0 + 0.032                      # a low body: its control strip stays under the sight line
@@ -246,17 +278,19 @@ def make_hud(m, atlas, sw, E, X, Y, Z):
     g_n = H.unit(np.cross(X, g_up))
     # this model's windscreen comes down low and close: the combiner stands 3 cm behind the panel's face, over its
     # control unit, where the glass still clears its top (0.09 m over the eye line there)
-    g_h, g_hw = 0.170, 0.090
+    g_h, g_hw = 0.170, 0.110                   # wide-angle: a wide glass
     g_h = min(g_h, 2 * HUD_TOP[0] - 0.012)        # its top under the windscreen bow
     g_bot = np.array([E[0], E[1] - g_up[1] * g_h / 2, E[2] + PANEL_Z - 0.03])
+    g_c, g_h = H.fit_sight_under(VID, E, g_bot + g_up * g_h / 2, g_up, g_h, g_hw)   # (its top corners under the glass)
+    g_bot = g_c - g_up * g_h / 2
     g_top = g_bot + g_up * g_h
     foot = E[1] + TOP_C - 0.004                    # (the control unit's top)
     stem = g_bot[1] - 0.006 - foot
     if stem > 0.004:                               # two thin posts: the view under the glass stays open
         for s in (-1, 1):
             m.box([E[0] + s * (g_hw + 0.004), foot + stem / 2, g_bot[2]], (X, Y, Z), (0.004, stem / 2, 0.005), sw['dgrey'])
-    # the ILS-31's one tall glass: its top corners cut, held along its foot and up both sides, the top edge bare (the glass into the canopy glass, the symbology over it)
-    H.combiner(m, g_bot, g_up, -g_n, 2 * g_hw, g_h, 'chamfer', 0.035, ('bottom', 'side'), 0.010, sw['dgrey'])
+    # the holographic HUD's one wide glass in a narrow frame: rounded top corners, held thinly at its foot and sides
+    H.combiner(m, g_bot, g_up, -g_n, 2 * g_hw, g_h, 'rounded', 0.025, ('bottom', 'side'), 0.005, sw['dgrey'])
     # the housing under the body, down into the coaming (from outside one block, not a slab over the nose)
     hb = E[1] + TOP_C - 0.10
     m.box([E[0], (hb + hud_y0 - 0.002) / 2, (hud_z0 + 0.03 + hud_z1) / 2], (X, Y, Z),
@@ -509,7 +543,7 @@ def build(atlas, E):
             m.flat([p, q, q + back, p + back], sw['turq_d'], toward=mid + (mid - mid0))
 
     # -- instruments
-    cols, lamps = L.lamps_of('cw', 'soviet')
+    cols, lamps = L.lamps_of('cw', 'prc')        # (English legends: the game's fonts have no Chinese)
     cache = {}
     for name, side, a, y, spec, _ in LAYOUT:
         f = fac[side]
@@ -525,24 +559,44 @@ def build(atlas, E):
                            'Lamps': lamps})
             m.frame_rect(c, f.N, f.U, w, h, 0.005, 0.008, sw['bezel'])
         elif kind == 'display':
+            # an LCD in a flat bezel with a row of option keys along each edge
             w = spec[2]
             displays.append({'Seat': SEAT, 'Center': H.r5(c + f.N * H.DISPLAY_LIFT), 'Normal': H.r5(f.N), 'Up': H.r5(f.U),
-                             'Width': w, 'Depth': 0.035, 'Kind': spec[1], 'Style': 'CRT'})
-            m.frame_rect(c, f.N, f.U, w, w, 0.014, 0.008, sw['black'])
-            _, n_, u_, r_ = H.frame(c, f.N, f.U)                     # the scope's rubber hood: deep on top
-            hw = w / 2 + 0.014
-            for s in (-1, 1):
-                p0 = c + r_ * s * hw - u_ * hw; p1 = c + r_ * s * hw + u_ * hw
-                m.flat([p0, p1, p1 + n_ * 0.07, p0 + n_ * 0.02], sw['black'], normal=r_ * s)
-                m.flat([p0, p1, p1 + n_ * 0.07, p0 + n_ * 0.02], sw['black'], normal=-r_ * s)
-            m.box(c + u_ * (hw + 0.003) + n_ * 0.035, (r_, u_, n_), (hw + 0.004, 0.003, 0.035), sw['black'])
+                             'Width': w, 'Depth': 0.035, 'Kind': spec[1], 'Style': 'LCD'})
+            m.frame_rect(c, f.N, f.U, w, w, 0.022, 0.012, sw['black'])
+            _, n_, u_, r_ = H.frame(c, f.N, f.U)
+            off = w / 2 + 0.011
+            for k in range(5):
+                o_ = (k - 2) * w / 5.5
+                for q in (c + u_ * off + r_ * o_, c - u_ * off + r_ * o_):
+                    m.box(q + n_ * 0.014, (r_, u_, n_), (0.008, 0.005, 0.003), sw['mgrey'])
+                for q in (c + r_ * off + u_ * o_, c - r_ * off + u_ * o_):
+                    m.box(q + n_ * 0.014, (r_, u_, n_), (0.005, 0.008, 0.003), sw['mgrey'])
+        elif kind == 'panorama':
+            # the rear seat's single-piece panoramic LCD: one wide bezel, the picture in two windows side by side
+            # (the game draws square displays), the tactical picture left, the stores / EW page right
+            w, h = spec[1], spec[2]
+            m.frame_rect(c, f.N, f.U, w, h, 0.014, 0.012, sw['black'])
+            _, n_, u_, r_ = H.frame(c, f.N, f.U)
+            ws = min(h - 0.012, w / 2 - 0.008)
+            for k, kd in ((-1, 'RADAR'), (1, 'STORES')):
+                cc = c + r_ * (k * (w / 4 - 0.002))
+                displays.append({'Seat': SEAT, 'Center': H.r5(cc + f.N * H.DISPLAY_LIFT), 'Normal': H.r5(f.N),
+                                 'Up': H.r5(f.U), 'Width': ws, 'Depth': 0.03, 'Kind': kd, 'Style': 'LCD'})
+            for k in range(8):                                     # its option keys along the bottom edge
+                m.box(c - u_ * (h / 2 + 0.007) + r_ * (k - 3.5) * w / 8.6 + n_ * 0.012, (r_, u_, n_), (0.009, 0.004, 0.003),
+                      sw['mgrey'])
         elif kind == 'paint_disc':
             rect = atlas.paint(32, 32, p_disc_red)
             m.disc(c + f.N * 0.008, f.N, f.U, spec[1] / 2, rect, seg=12)
             m.ring(c, f.N, f.U, spec[1] / 2, spec[1] / 2 + 0.004, 0.008, sw['bezel'], seg=12)
         elif kind == 'paint_rect':
             w, h = spec[1], spec[2]
-            painter = {'weapons': p_weapons, 'gear': p_gear, 'afcs': p_afcs}[name]
+            painter = {'weapons': p_weapons, 'gear': p_gear, 'afcs': p_afcs, 'ufcp_r': p_ufcp,
+                       'keys': p_keypanel(['MENU', 'SMS', 'RDR', 'TSD', 'FCS', 'ENG']),
+                       'keys_r': p_keypanel(['MENU', 'ESM', 'JAM', 'TSD', 'DATA', 'REC'], rows=3),
+                       'ew': p_keypanel(['*ON', 'CHAFF', 'FLARE', 'AUTO', 'JETT']),
+                       'ew_r': p_keypanel(['*POD L', '*POD R', 'ESM', 'JAM', 'STBY', 'EMCON'])}[name]
             pw = 160 if w >= h else 56
             ph = max(16, int(round(pw * h / w)))
             rect = cache.get(name) or atlas.paint(pw, ph, painter)
@@ -595,8 +649,8 @@ def build(atlas, E):
     hud = None
     if HAS_HUD:
         hud = make_hud(m, atlas, sw, E, X, Y, Z)
-        H.facet_box(m, centre, 0.0, E[1] + TOP_C - 0.026, 0.20, 0.045, 0.04, sw['black'],
-                    front=atlas.paint(220, 50, p_ils_face))              # its control unit on the panel's top
+        H.facet_box(m, centre, 0.0, E[1] + TOP_C - 0.030, 0.24, 0.055, 0.04, sw['black'],
+                    front=atlas.paint(240, 56, p_ufcp))                  # the up-front control panel under it
 
 
     # -- consoles under the sloping sides, and grey-green linings over the slopes (no walls of our own)
