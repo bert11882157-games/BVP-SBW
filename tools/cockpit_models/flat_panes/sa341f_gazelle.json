@@ -1,34 +1,18 @@
 {
-  "why": "SA 341F Gazelle glasshouse: a light cage of few slim members round big panes (the model's own frame cage, kept as the outer mould line). Curved on the real aircraft, so NOT listed: the two windscreen panes (a wrap-round bubble either side of a slim centre post), the chin windows below them, and the shoulder strips (the roof window band under the roof rail). Flat, so listed: the door windows (the front and rear doors of each side, a lower and an upper band; the door glass is flat in its frame, in two planes per side, the lower band leaning out 5.6 degrees, the upper band in 8 degrees, the planes of the model's own sill, belt and upper rails), and the pilot's overhead window over the right seat (the model's roof is open there; two panes round a slim cross bar, one roof plane). Frame layout from the model's own members (checks/orig, source rows 982 / 1003 / 910 / 934); the real Gazelle's pane sizes are not documented with dimensions, so the layout is the model's own and UNVERIFIED against the real aircraft.",
+  "why": "SA 341F Gazelle glasshouse, slim-frame pass: the real SA 341/342 glasshouse is a clear bubble on few slim members (a centre post between two curved windscreen panes, the A pillars, B pillars, one post splitting each door window, the roof arch). Curved on the real aircraft, so NOT listed: the windscreen and chin windows (one wrap-round pane each side of the centre post), the front door pane (it wraps round the leaning A pillar toward the nose), the shoulder strips and the rear quarter windows (small ruled panes). Flat, so listed: the rear door windows (one vertical plane each side between the B pillar and the door post) and the pilot's overhead window (the model's roof is open over the right seat; one pane in one roof plane). References were thin (see canopy_sa341f_gazelle.py): layout is the model's own member lines, UNVERIFIED against photographs.",
   "panes": [
     {
-      "name": "door windows, lower band",
+      "name": "rear door windows",
       "box": [
         [
           0.83,
           0.7,
-          2.8
-        ],
-        [
-          0.97,
-          1.16,
-          3.87
-        ]
-      ],
-      "mirror": true
-    },
-    {
-      "name": "door windows, upper band",
-      "box": [
-        [
-          0.83,
-          1.2,
           2.7
         ],
         [
           0.97,
-          1.62,
-          3.87
+          1.66,
+          3.25
         ]
       ],
       "mirror": true

@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """SA 341F Gazelle cockpit, built by hand for the Aerospatiale Gazelle.mtb airframe (commits aeff8294, b9b6bfc7), from the real layout.
 
 Side by side, as on the real Gazelle: the PILOT in the RIGHT seat (x < 0), the OBSERVER / gunner in the LEFT seat (x > 0), under the glazed
@@ -341,7 +341,7 @@ Z_PAN = 3.900                            # face z at y = PAN_BOT
 U_PAN = unit([0, math.cos(LEAN), math.sin(LEAN)])
 N_PAN = unit([0, math.sin(LEAN), -math.cos(LEAN)])     # toward the crew
 COWL_Y = 1.298                           # the glareshield's top
-BELT_A = CM.BELT[0]                      # the belt bar's outer end (the A pillar), left side
+BELT_A = CM.A_at(1.330)                      # the belt bar's outer end (the A pillar), left side
 BELT_W = CM.WEDGE                        # ... the keel wedge corner
 
 
@@ -349,13 +349,26 @@ def z_face(y):
     return Z_PAN + TAN * (y - PAN_BOT)
 
 
+def _glass_line():
+    """(x, z) of the windscreen glass where it crosses the glareshield's height, x >= 0, sorted by x"""
+    pts = []
+    for t in CM.nose_panes():
+        for i in range(3):
+            a, b = np.array(t[i]), np.array(t[(i + 1) % 3])
+            if (a[1] - COWL_Y) * (b[1] - COWL_Y) < 0:
+                f = (COWL_Y - a[1]) / (b[1] - a[1])
+                q = a + (b - a) * f
+                pts.append((q[0], q[2]))
+    pts.sort()
+    return np.array(pts)
+
+
+_GL = _glass_line()
+
+
 def z_chord(x):
-    """z of the windscreen's belt line at |x| (A pillar -> keel wedge), the glareshield's front edge"""
-    x = abs(x)
-    if x >= BELT_W[0]:
-        t = (BELT_A[0] - x) / (BELT_A[0] - BELT_W[0])
-        return float(BELT_A[2] + t * (BELT_W[2] - BELT_A[2]))
-    return float(BELT_W[2] - 0.02)
+    """z of the glass at the glareshield's height at |x| (the cowl's front edge stops short of it)"""
+    return float(np.interp(abs(x), _GL[:, 0], _GL[:, 1]))
 
 
 def pan_at(x, y, lift=0.0):
@@ -639,9 +652,9 @@ def build(atlas):
            sw['panel_d'], normal=[0, 0, 1])
     # the glareshield: a black plate over the panel (its top at COWL_Y) from the panel's top edge out to the belt line, with a lip
     xs = [PAN_HALF, 0.60, 0.50, 0.40, 0.30, BELT_W[0] + 0.03, 0.0]
-    top = [(x, z_chord(x) - 0.030) for x in xs]
+    top = [(x, z_chord(x) - 0.045) for x in xs]
     zt = z_face(COWL_Y)
-    cowl = [[-PAN_HALF, COWL_Y, zt]] + [[-x, COWL_Y, z] for x, z in top[:-1]] + [[0.0, COWL_Y, z_chord(0.0) - 0.060]] \
+    cowl = [[-PAN_HALF, COWL_Y, zt]] + [[-x, COWL_Y, z] for x, z in top[:-1]] + [[0.0, COWL_Y, z_chord(0.0) - 0.045]] \
         + [[x, COWL_Y, z] for x, z in top[:-1][::-1]] + [[PAN_HALF, COWL_Y, zt]]
     # cowl polygon: from the left panel corner along the front edge to the right panel corner (convex enough for a fan)
     m.flat(cowl, sw['black'], normal=[0, 1, 0])

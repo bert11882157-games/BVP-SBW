@@ -1,5 +1,11 @@
-#!/usr/bin/env python3
-"""SA 341F Gazelle glasshouse, hand-built for the Aerospatiale Gazelle.mtb airframe (commits aeff8294, b9b6bfc7): the model's own frame
+﻿#!/usr/bin/env python3
+"""SLIM-FRAME PASS (supersedes the layout text below where it differs): the real Gazelle is a clear bubble on few slim members, so the model's
+thick cage members (belt rail, upper rail, mid post, A / B pillars, door posts, centre post and its braces) are cut and only these are rebuilt
+slim (4 cm, along the model's own lines): centre post, A pillars, B pillars, one post splitting each door window; the belt, chin and keel bars
+and the roof window's cross bar are gone. Glass: rear door (flat), front door (wraps the A pillar), shoulder strips, rear quarter windows,
+the overhead window, and one wrap-round windscreen-and-chin pane each side of the centre post. Roof, sill and rear structure are body skin and stay.
+
+SA 341F Gazelle glasshouse, hand-built for the Aerospatiale Gazelle.mtb airframe (commits aeff8294, b9b6bfc7): the model's own frame
 cage, glazed.
 
 The model's cabin is a cage of slim members (5 x 10 cm boxes: sill rails, B pillar, door post, a belt rail, an upper rail, the roof rail, the
@@ -61,6 +67,22 @@ CENTRE = np.array([0.0, EYE[1], EYE[2]])       # the glasshouse axis at the eye'
 # consoles, from z 2.585 forward, minus the nose keel's base 537, the rear sill post 548 and the rear block 356 / 357 / 361). EXPECT_CUT is the face count
 # the first run must find (the airframe must be the committed one); a second run finds none.
 CUT_BOXES = [
+    (0.827, 0.724, 2.721, 0.930, 1.240, 2.928), (0.827, 1.240, 2.670, 0.930, 1.602, 2.825),
+    (0.724, 1.602, 2.618, 0.879, 1.809, 2.773), (0.724, 0.724, 3.807, 0.879, 1.240, 4.117),
+    (0.724, 1.240, 3.703, 0.879, 1.602, 3.962), (0.672, 1.602, 3.652, 0.827, 1.706, 3.858),
+    (0.817, 1.137, 3.341, 0.930, 1.240, 3.817), (0.879, 1.137, 2.825, 0.930, 1.240, 3.341),
+    (0.827, 0.724, 3.186, 0.930, 1.137, 3.341), (0.749, 1.602, 3.290, 0.879, 1.654, 3.703),
+    (0.801, 1.602, 2.757, 0.879, 1.654, 3.290), (0.827, 1.240, 3.186, 0.930, 1.602, 3.341),
+    (0.000, 1.757, 3.755, 0.052, 1.912, 4.065), (0.000, 1.602, 4.065, 0.052, 1.809, 4.324),
+    (0.000, 1.292, 4.272, 0.052, 1.654, 4.685), (0.791, 1.240, 3.548, 0.894, 1.602, 3.703),
+    (-0.930, 0.724, 2.721, -0.827, 1.240, 2.928), (-0.930, 1.240, 2.670, -0.827, 1.602, 2.825),
+    (-0.879, 1.602, 2.618, -0.724, 1.809, 2.773), (-0.879, 0.724, 3.807, -0.724, 1.240, 4.117),
+    (-0.879, 1.240, 3.703, -0.724, 1.602, 3.962), (-0.827, 1.602, 3.652, -0.672, 1.706, 3.858),
+    (-0.930, 1.137, 3.341, -0.817, 1.240, 3.817), (-0.930, 1.137, 2.825, -0.879, 1.240, 3.341),
+    (-0.930, 0.724, 3.186, -0.827, 1.137, 3.341), (-0.879, 1.602, 3.290, -0.749, 1.654, 3.703),
+    (-0.879, 1.602, 2.757, -0.801, 1.654, 3.290), (-0.930, 1.240, 3.186, -0.827, 1.602, 3.341),
+    (-0.052, 1.757, 3.755, 0.000, 1.912, 4.065), (-0.052, 1.602, 4.065, 0.000, 1.809, 4.324),
+    (-0.052, 1.292, 4.272, 0.000, 1.654, 4.685), (-0.894, 1.240, 3.548, -0.791, 1.602, 3.703),
     (-0.672, 0.569, 3.238, -0.620, 0.724, 3.548), (-0.724, 0.724, 3.186, -0.207, 0.775, 3.652),
     (-0.724, 0.724, 3.652, -0.207, 0.775, 3.703), (-0.724, 0.775, 3.135, -0.207, 1.085, 3.238),
     (-0.724, 1.085, 3.083, -0.207, 1.447, 3.186), (-0.724, 1.447, 3.083, -0.207, 1.499, 3.135),
@@ -90,40 +112,48 @@ CUT_BOXES = [
     (-0.413, 1.473, 4.091, -0.362, 1.628, 4.246), (-0.413, 1.473, 4.091, -0.362, 1.525, 4.246),
     (-0.388, 1.396, 4.065, -0.233, 1.654, 4.065), (-0.026, 0.712, 3.515, 0.026, 0.875, 3.600),
     (-0.078, 0.886, 3.474, 0.078, 0.946, 3.576), (-0.078, 0.843, 3.474, 0.078, 0.903, 3.576),
-    (-0.155, 0.672, 4.789, 0.155, 1.085, 4.840), (-0.155, 1.396, 4.065, 0.103, 1.499, 4.168),
-    (-0.517, 0.879, 2.773, -0.465, 0.930, 2.825), (-0.620, 0.879, 2.721, -0.569, 0.930, 2.773),
-    (-0.620, 0.930, 2.618, -0.569, 0.982, 2.773), (-0.517, 0.930, 2.618, -0.465, 0.982, 2.825),
-    (-0.155, 0.982, 2.566, -0.103, 1.034, 2.825), (-0.282, 0.982, 2.659, -0.194, 1.034, 2.821),
-    (-0.775, 0.930, 2.566, -0.103, 0.982, 2.618), (-0.508, 0.930, 2.596, -0.194, 0.982, 2.721),
-    (0.775, 0.672, 2.721, 0.827, 0.930, 2.825), (-0.775, 0.672, 2.721, -0.724, 0.930, 2.825),
-    (-0.078, 1.861, 3.316, 0.078, 1.912, 3.367), (-0.078, 1.861, 3.264, 0.078, 1.912, 3.316),
-    (-0.078, 1.861, 3.212, 0.078, 1.912, 3.264), (-0.155, 1.809, 3.445, 0.155, 1.861, 3.755),
-    (0.052, 1.757, 3.600, 0.103, 1.809, 3.652), (-0.052, 1.706, 3.600, 0.000, 1.809, 3.652),
+    (-0.005, 1.551, 4.396, 0.005, 1.706, 4.406), (0.052, 1.499, 4.143, 0.103, 1.809, 4.453),
+    (0.052, 1.240, 4.324, 0.207, 1.654, 4.685), (-0.103, 1.499, 4.143, -0.052, 1.809, 4.453),
+    (-0.207, 1.240, 4.324, -0.052, 1.654, 4.685), (0.905, 1.163, 2.773, 0.956, 1.215, 2.980),
+    (-0.956, 1.163, 2.773, -0.905, 1.215, 2.980), (-0.155, 0.672, 4.789, 0.155, 1.085, 4.840),
+    (-0.155, 1.396, 4.065, 0.103, 1.499, 4.168), (-0.517, 0.879, 2.773, -0.465, 0.930, 2.825),
+    (-0.620, 0.879, 2.721, -0.569, 0.930, 2.773), (-0.620, 0.930, 2.618, -0.569, 0.982, 2.773),
+    (-0.517, 0.930, 2.618, -0.465, 0.982, 2.825), (-0.155, 0.982, 2.566, -0.103, 1.034, 2.825),
+    (-0.282, 0.982, 2.659, -0.194, 1.034, 2.821), (-0.775, 0.930, 2.566, -0.103, 0.982, 2.618),
+    (-0.508, 0.930, 2.596, -0.194, 0.982, 2.721), (0.775, 0.672, 2.721, 0.827, 0.930, 2.825),
+    (-0.775, 0.672, 2.721, -0.724, 0.930, 2.825), (-0.078, 1.861, 3.316, 0.078, 1.912, 3.367),
+    (-0.078, 1.861, 3.264, 0.078, 1.912, 3.316), (-0.078, 1.861, 3.212, 0.078, 1.912, 3.264),
+    (-0.155, 1.809, 3.445, 0.155, 1.861, 3.755), (0.052, 1.757, 3.600, 0.103, 1.809, 3.652),
+    (-0.052, 1.706, 3.600, 0.000, 1.809, 3.652),
 ]
 KEEP_BOXES = [
     (0.724, 0.569, 3.341, 0.879, 0.724, 3.858), (0.827, 0.569, 2.825, 0.879, 0.724, 3.341),
     (0.827, 0.569, 2.153, 0.879, 0.724, 2.825), (0.000, 0.413, 2.825, 0.879, 0.569, 3.341),
-    (0.000, 1.861, 3.031, 0.672, 2.016, 3.445), (0.000, 0.413, 3.341, 0.879, 0.569, 3.858),
-    (0.000, 0.465, 3.858, 0.775, 0.569, 4.220), (0.827, 0.724, 2.256, 0.930, 1.240, 2.825),
-    (0.827, 0.724, 2.721, 0.930, 1.240, 2.928), (0.000, 1.809, 3.445, 0.672, 1.964, 3.652),
-    (0.000, 1.861, 3.652, 0.517, 1.938, 3.755), (0.000, 1.757, 3.755, 0.052, 1.912, 4.065),
-    (0.000, 1.292, 4.272, 0.052, 1.654, 4.685), (0.000, 1.085, 4.634, 0.207, 1.292, 4.840),
+    (0.000, 1.861, 3.031, 0.672, 2.016, 3.445), (0.620, 1.757, 2.153, 0.775, 1.912, 2.618),
+    (0.620, 1.809, 2.618, 0.775, 1.912, 3.031), (0.000, 0.413, 3.341, 0.879, 0.569, 3.858),
+    (0.000, 0.465, 3.858, 0.775, 0.569, 4.220), (0.620, 0.569, 3.858, 0.827, 0.724, 4.220),
+    (0.827, 0.724, 2.256, 0.930, 1.240, 2.825), (0.620, 1.706, 3.445, 0.775, 1.861, 3.652),
+    (0.000, 1.809, 3.445, 0.672, 1.964, 3.652), (0.569, 1.706, 3.652, 0.775, 1.809, 3.807),
+    (0.000, 1.861, 3.652, 0.517, 1.938, 3.755), (0.000, 1.085, 4.634, 0.207, 1.292, 4.840),
     (0.000, 0.879, 4.789, 0.207, 1.085, 4.892), (0.000, 0.724, 4.840, 0.207, 0.879, 4.892),
     (0.000, 0.569, 4.737, 0.207, 0.724, 4.892), (0.000, 0.413, 4.530, 0.207, 0.620, 4.789),
-    (-0.879, 0.569, 3.341, -0.724, 0.724, 3.858), (-0.879, 0.413, 2.825, 0.000, 0.569, 3.341),
-    (-0.207, 1.861, 3.031, 0.000, 2.016, 3.445), (-0.879, 0.413, 3.341, 0.000, 0.569, 3.858),
+    (-0.879, 0.569, 3.341, -0.724, 0.724, 3.858), (-0.879, 0.569, 2.825, -0.827, 0.724, 3.341),
+    (-0.879, 0.569, 2.153, -0.827, 0.724, 2.825), (-0.879, 0.413, 2.825, 0.000, 0.569, 3.341),
+    (-0.207, 1.861, 3.031, 0.000, 2.016, 3.445), (-0.775, 1.757, 2.153, -0.620, 1.912, 2.618),
+    (-0.775, 1.809, 2.618, -0.620, 1.912, 3.031), (-0.879, 0.413, 3.341, 0.000, 0.569, 3.858),
     (-0.775, 0.465, 3.858, 0.000, 0.569, 4.220), (-0.827, 0.569, 3.858, -0.620, 0.724, 4.220),
-    (-0.207, 1.861, 3.445, 0.000, 1.964, 3.652), (-0.517, 1.861, 3.652, 0.000, 1.938, 3.755),
-    (-0.052, 1.757, 3.755, 0.000, 1.912, 4.065), (-0.052, 1.292, 4.272, 0.000, 1.654, 4.685),
-    (-0.207, 1.085, 4.634, 0.000, 1.292, 4.840), (-0.207, 0.879, 4.789, 0.000, 1.085, 4.892),
-    (-0.207, 0.724, 4.840, 0.000, 0.879, 4.892), (-0.207, 0.569, 4.737, 0.000, 0.724, 4.892),
-    (-0.207, 0.413, 4.530, 0.000, 0.620, 4.789), (-0.775, 0.569, 2.153, 0.827, 0.672, 2.825),
-    (-0.775, 0.672, 2.153, 0.827, 0.930, 2.721), (-0.672, 0.930, 2.153, 0.724, 1.292, 2.566),
-    (0.052, 1.499, 4.143, 0.103, 1.809, 4.453), (0.052, 1.240, 4.324, 0.207, 1.654, 4.685),
-    (-0.103, 1.499, 4.143, -0.052, 1.809, 4.453), (-0.207, 1.240, 4.324, -0.052, 1.654, 4.685),
-    (-0.155, 0.413, 4.220, 0.155, 0.569, 4.737), (-0.827, 0.569, 2.566, -0.775, 0.982, 2.618),
+    (-0.930, 0.724, 2.256, -0.827, 1.240, 2.825), (-0.775, 1.706, 3.445, -0.620, 1.861, 3.652),
+    (-0.207, 1.861, 3.445, 0.000, 1.964, 3.652), (-0.775, 1.706, 3.652, -0.569, 1.809, 3.807),
+    (-0.517, 1.861, 3.652, 0.000, 1.938, 3.755), (-0.207, 1.085, 4.634, 0.000, 1.292, 4.840),
+    (-0.207, 0.879, 4.789, 0.000, 1.085, 4.892), (-0.207, 0.724, 4.840, 0.000, 0.879, 4.892),
+    (-0.207, 0.569, 4.737, 0.000, 0.724, 4.892), (-0.207, 0.413, 4.530, 0.000, 0.620, 4.789),
+    (-0.775, 0.569, 2.153, 0.827, 0.672, 2.825), (-0.775, 0.672, 2.153, 0.827, 0.930, 2.721),
+    (-0.672, 0.930, 2.153, 0.724, 1.292, 2.566), (-1.602, 0.724, 2.514, -0.879, 0.930, 2.773),
+    (-0.026, 1.912, 3.497, 0.026, 2.119, 4.117), (-0.026, 1.912, 3.703, 0.181, 2.016, 3.910),
+    (-0.181, 1.912, 3.703, 0.026, 2.016, 3.910), (-0.155, 0.413, 4.220, 0.155, 0.569, 4.737),
+    (-0.827, 0.569, 2.566, -0.775, 0.982, 2.618),
 ]
-EXPECT_CUT = 429
+EXPECT_CUT = 641
 CUT_TOL = 0.004
 
 # ---- the model's frame lines (blocks), read off the source elements' corners
@@ -152,16 +182,6 @@ A_REAR = [(0.724, 3.858), (1.240, 3.807), (1.602, 3.703), (1.706, 3.652)]       
 A_FRONT = [(0.698, 1.706, 3.807), (0.750, 1.602, 3.858), (0.800, 1.240, 3.962), (0.750, 0.724, 4.117)]
 
 
-def xl(y):
-    """the lower band's plane (x of the glass at height y): through the sill rail's and the door frame's mid-planes"""
-    return 0.853 + 0.0988 * (y - 0.724)
-
-
-def xu(y):
-    """the upper band's plane"""
-    return 0.9045 - 0.141 * (y - 1.240)
-
-
 def A_at(y):
     """the A pillar's front edge at height y: (x, y, z)"""
     ys = [p[1] for p in A_FRONT][::-1]
@@ -170,43 +190,68 @@ def A_at(y):
     return np.array([np.interp(y, ys, xs), y, np.interp(y, ys, zs)])
 
 
-def side_openings():
-    """name -> [(x, y, z) corners] of the flat door windows on the left (x > 0); each in one plane by construction"""
-    out = {}
+# ---- the slim members that stay (the real Gazelle's layout: the centre post, the A pillars, the B pillars, one post splitting each
+# door window; no belt rail, no upper rail, no windscreen bars): centre lines, 4 cm square, rebuilt along the model's own member lines
+HW = BAR / 2
+XS = 0.880                                      # the door glass plane (vertical), the model's sill / door-frame mid-plane
+B_MID = [(0.724, 2.8765), (1.240, 2.773), (1.602, 2.721), (1.809, 2.6695)]      # B pillar: z over y
+D_MID = [(0.724, 3.315), (1.654, 3.212)]                                         # the door post splitting the door window
+A_MID = [(0.698, 1.706, 3.7295), (0.800, 1.240, 3.8845), (0.750, 0.724, 3.9875)]   # A pillar centre line (x, y, z), top to foot
+Y_TOP = 1.654                                    # the door glass's upper edge (under the shoulder strip)
 
-    def pane(name, plane, y0, y1, left, right, n=1):
-        ys = [y0, y1]
-        pts = [(plane(y0), y0, lerp_pl(left, y0)), (plane(y0), y0, lerp_pl(right, y0)),
-               (plane(y1), y1, lerp_pl(right, y1)), (plane(y1), y1, lerp_pl(left, y1))]
-        out[name] = [np.array(p) for p in pts]
 
-    pane('rear door lower', xl, 0.724, 1.137, B_FRONT, D_REAR_L)
-    pane('rear door upper', xu, 1.240, 1.602, B_FRONT, D_REAR_U)
-    pane('front door lower', xl, 0.724, 1.137, D_FRONT_L, A_REAR)
-    pane('front door upper', xu, 1.240, 1.602, D_FRONT_U, M_REAR)
-    pane('front door quarter', xu, 1.240, 1.602, M_FRONT, A_REAR)
+def bx(y):
+    """the B pillar's x at height y (vertical in the door plane, then in to the roof rail)"""
+    return XS if y <= 1.602 else float(np.interp(y, [1.602, 1.809], [XS, 0.76]))
+
+
+def A_x_at(y):
+    ys = [p[1] for p in A_MID][::-1]
+    return float(np.interp(y, ys, [p[0] for p in A_MID][::-1])), float(np.interp(y, ys, [p[2] for p in A_MID][::-1]))
+
+
+def ruled(left, right):
+    """triangles of a strip between two polylines of 3D points with the same count (rows)"""
+    out = []
+    for i in range(len(left) - 1):
+        out.append((left[i], right[i], right[i + 1]))
+        out.append((left[i], right[i + 1], left[i + 1]))
     return out
 
 
-# the shoulder strip: a ruled strip from the upper rail's top edge (x 0.853, y 1.654) to the roof rail's lower edge (x 0.7495)
-SH_BOT = [(2.760, 1.654), (3.031, 1.654), (3.445, 1.654), (3.677, 1.654)]
-SH_TOP = [(2.721, 1.809), (3.031, 1.809), (3.445, 1.757), (3.652, 1.706)]
+def rear_door():
+    """flat: between the B pillar and the door post, sill to the shoulder strip, in the plane x = XS"""
+    ys = [0.724, Y_TOP]
+    L_ = [np.array([XS, y, lerp_pl(B_MID, y) + HW]) for y in ys]
+    R_ = [np.array([XS, y, lerp_pl(D_MID, y) - HW]) for y in ys]
+    return ruled(L_, R_)
+
+
+def front_door():
+    """between the door post and the A pillar (which leans in toward the nose, so the pane is a ruled quad, not flat)"""
+    ys = [0.724, 1.24, Y_TOP]
+    L_ = [np.array([XS, y, lerp_pl(D_MID, y) + HW]) for y in ys]
+    R_ = []
+    for y in ys:
+        x, z = A_x_at(y)
+        R_.append(np.array([x + 0.03, y, z - HW]))
+    return ruled(L_, R_)
+
+
+# the shoulder strip (the roof window band): from the door glass's top edge to the roof rail's lower edge (x 0.7495)
+SH_Z = [2.74, 3.031, 3.445, 3.70]
+SH_TOPY = [1.809, 1.809, 1.757, 1.708]
 
 
 def shoulder_strip():
-    b = [np.array([0.853, y, z]) for z, y in SH_BOT]
-    t = [np.array([0.7495, y, z]) for z, y in SH_TOP]
-    tris = []
-    for i in range(len(b) - 1):
-        tris.append((b[i], b[i + 1], t[i + 1]))
-        tris.append((b[i], t[i + 1], t[i]))
-    return tris
+    b = [np.array([XS, Y_TOP, z]) for z in SH_Z]
+    t = [np.array([0.7495, y, z - (0.04 if i in (0, 3) else 0.0) * (1 if i == 0 else -1)]) for i, (z, y) in enumerate(zip(SH_Z, SH_TOPY))]
+    return ruled(b, t)
 
 
-# the rear quarter window behind the B pillar (z 2.256 .. 2.72): between the posts at z 2.256, the lower rear panel's top edge (x 0.9045,
-# y 1.24), the B pillar's rear edge and the roof rail's lower edge (x 0.75): a small ruled pane
-RQ_BOT = [(2.256, 1.240), (2.721, 1.240)]
-RQ_TOP = [(2.256, 1.757), (2.618, 1.809)]
+# the rear quarter window behind the B pillar (z 2.256 .. 2.75): a small ruled pane
+RQ_BOT = [(2.256, 1.240), (2.750, 1.240)]
+RQ_TOP = [(2.256, 1.757), (2.650, 1.809)]
 
 
 def rear_quarter():
@@ -215,10 +260,9 @@ def rear_quarter():
     return [(b[0], b[1], t[1]), (b[0], t[1], t[0])]
 
 
-# the pilot's overhead window (right roof, x < 0): one plane y = ROOF_Y0 + ROOF_K (x + 0.31), two panes round a cross bar at z 3.031
+# the pilot's overhead window (right roof, x < 0): one pane in one roof plane y = ROOF_Y0 + ROOF_K (x + 0.31), no bar
 ROOF_Y0, ROOF_K = 1.99, 0.27
 RW_X_OUT = -0.62
-CROSS_Z = 3.031
 
 
 def roof_y(x):
@@ -226,25 +270,22 @@ def roof_y(x):
 
 
 def roof_window():
-    """triangles of the overhead window: rear pane, front pane, the small step piece (all in the roof plane)"""
     def quad(x0, x1, z0, z1):
         p = [np.array([x, roof_y(x), z]) for x, z in ((x0, z0), (x1, z0), (x1, z1), (x0, z1))]
         return [(p[0], p[1], p[2]), (p[0], p[2], p[3])]
-    hb = BAR / 2
-    return (quad(-0.31, RW_X_OUT, 2.618, CROSS_Z - hb) + quad(-0.31, RW_X_OUT, CROSS_Z + hb, 3.652)
-            + quad(-0.207, -0.31, CROSS_Z, 3.652))
+    return quad(-0.31, RW_X_OUT, 2.618, 3.031) + quad(-0.31, RW_X_OUT, 3.031, 3.652) + quad(-0.207, -0.31, 3.031, 3.652)
 
 
-# ---- the nose: the windscreen and the chin windows (left side; the right is the mirror)
-POST_FOOT = np.array([0.052, 1.292, 4.634])              # the centre post's lower end
-WEDGE = np.array([0.207, 1.292, 4.664])                  # the keel wedge's top corner (the belt bar's inner end)
+# ---- the nose: the windscreen (one pane each side of the centre post, running down into the chin window; no bars)
+POST_X = HW                                              # the centre post's half width: the glass stops here
+POST_PTS = [(0.052, 1.861, 3.755), (0.052, 1.757, 4.065), (0.052, 1.602, 4.324), (0.052, 1.292, 4.634)]   # the model's post (outline)
+POST_MID = [(3.755, 1.886), (4.065, 1.783), (4.298, 1.628), (4.660, 1.292)]          # the slim post's centre line (z, y) at x 0
+POST_FOOT = np.array([POST_X, 1.292, 4.640])
+WEDGE = np.array([0.207, 1.292, 4.664])                  # the keel wedge's top corner
 KEEL_BOT = np.array([0.207, 0.724, 4.790])               # the keel's bottom corner
-KEEP_X = 0.207                                           # (the keel wedge's outer face)
-POST_PTS = [(0.052, 1.861, 3.755), (0.052, 1.757, 4.065), (0.052, 1.602, 4.324), (0.052, 1.292, 4.634)]
-ROOF_FRONT = [(0.052, 1.861, 3.755), (0.517, 1.861, 3.755), (0.620, 1.809, 3.755), (0.698, 1.706, 3.807)]
-BELT = [A_at(1.330), WEDGE, POST_FOOT]                    # belt bar's centre line: A pillar -> keel wedge -> centre post
-CHIN_BAR = [A_at(0.740), KEEL_BOT + np.array([0.0, 0.016, 0.0])]   # chin bar's centre line (y 0.74)
-BULGE_UP, BULGE_CHIN = 0.05, 0.07
+KEEP_X = 0.207
+ROOF_FRONT = [(POST_X, 1.861, 3.755), (0.517, 1.861, 3.755), (0.620, 1.809, 3.755), (0.698, 1.706, 3.807)]
+BULGE = 0.05
 OUT_N = np.array([0.779, 0.0, 0.627])                    # plan direction out and forward from the nose chord
 
 
@@ -280,24 +321,15 @@ def coons(B, T, Lc, Rc, nu, nv, bulge, amp):
 
 
 def nose_panes():
-    """(upper windscreen pane, chin pane) triangle lists on the left"""
-    up = np.array([0.0, GAP, 0.0])
-    a_belt = BELT[0]
-    # windscreen: bottom (centre post foot -> keel wedge -> A pillar, just over the belt bar), top (the roof front edge), left (the
-    # centre post), right (the A pillar's front edge)
-    B = [POST_FOOT + up, WEDGE + up, a_belt + up]
-    Lc = [POST_FOOT + up] + [np.array(p) for p in POST_PTS][::-1][1:]
-    Rc = [a_belt + up] + [A_at(y) for y in np.linspace(1.350, 1.706, 6)][1:]
-    T = [np.array(p) for p in ROOF_FRONT]
-    T[-1] = Rc[-1]
-    upper = coons(B, T, Lc, Rc, 10, 8, True, BULGE_UP)
-    # chin: bottom (keel -> A foot, just over the chin bar), top (just under the belt bar), left (the keel's side), right (the A pillar)
+    """the windscreen and chin pane on the left (one patch from the roof's front edge down to the chin floor)"""
     kb = np.array([KEEP_X, 0.760, KEEL_BOT[2] - 0.001])
     foot = A_at(0.760)
-    Tc = [WEDGE - up, a_belt - up]
-    Rcc = [foot] + [A_at(y) for y in np.linspace(0.760, 1.310, 6)][1:-1] + [a_belt - up]
-    chin = coons([kb, foot], Tc, [kb, WEDGE - up], Rcc, 10, 6, True, BULGE_CHIN)
-    return upper, chin
+    a_pts = [foot] + [A_at(y) + np.array([0.0, 0.0, HW]) for y in np.linspace(0.80, 1.706, 10)]
+    a_pts[-1] = np.array(ROOF_FRONT[-1])
+    Lc = [kb, np.array([KEEP_X, 1.0, 4.74]), WEDGE, POST_FOOT] + [np.array([POST_X, y, z]) for z, y in POST_MID[::-1][1:]]
+    Lc[-1] = np.array(ROOF_FRONT[0])
+    T = [np.array(p) for p in ROOF_FRONT]
+    return coons([kb, foot], T, Lc, a_pts, 12, 16, True, BULGE)
 
 
 def mir(p):
@@ -307,13 +339,11 @@ def mir(p):
 def glass_polys():
     """name -> (triangles on the left, flat on the real aircraft, 'both' sides or the 'right' only)"""
     out = {}
-    for name, c in side_openings().items():
-        out['door ' + name] = ([(c[0], c[1], c[2]), (c[0], c[2], c[3])], True, 'both')
+    out['door rear'] = (rear_door(), True, 'both')
+    out['door front'] = (front_door(), False, 'both')
     out['shoulder strip'] = (shoulder_strip(), False, 'both')
     out['rear quarter window'] = (rear_quarter(), False, 'both')
-    up, chin = nose_panes()
-    out['windscreen'] = (up, False, 'both')
-    out['chin window'] = (chin, False, 'both')
+    out['windscreen and chin window'] = (nose_panes(), False, 'both')
     out['overhead window'] = (roof_window(), True, 'right')
     return out
 
@@ -462,21 +492,20 @@ def build_solids(uv_l, uv_r, uv_floor):
         s.obox(c, (u, (0, 1, 0), nrm), (np.linalg.norm(p1 - p0) / 2, (SKIRT_TOP - FLOOR_TOP) / 2, 0.006), uv)
     for side, uv in ((1, uv_l), (-1, uv_r)):
         M = (lambda p: np.array(p, float)) if side > 0 else mir
-        # belt bar: A pillar -> keel wedge -> centre post
-        pts = [M(p) for p in BELT]
-        for a, b in zip(pts[:-1], pts[1:]):
-            s.beam(a, b, BAR, BAR, uv, ext=0.012)
-        # chin bar over the sill front and the nose keel
-        s.beam(M(CHIN_BAR[0]), M(CHIN_BAR[1]), BAR, BAR, uv, ext=0.012)
-        # the keel post bar (the chin window's inner edge), flush behind the glass edge at x 0.207
-        k0 = np.array([KEEP_X - BAR / 2, 0.724, KEEL_BOT[2] - 0.001])
-        k1 = np.array([KEEP_X - BAR / 2, 1.292, WEDGE[2]])
-        s.beam(M(k0), M(k1), BAR, BAR, uv, up=(1, 0, 0), ext=0.0)
-    # the overhead window's cross bar (right roof): across the window at CROSS_Z, centred on the roof plane
-    xa, xb = RW_X_OUT, -0.31
-    pa = np.array([xa, roof_y(xa), CROSS_Z])
-    pb = np.array([xb, roof_y(xb), CROSS_Z])
-    s.beam(pa, pb, BAR, BAR, uv_r, up=(0, 1, 0), ext=0.0)
+        # the A pillar: along its centre line, foot to roof
+        ap = [np.array(p) for p in [(x, y, z) for (x, y, z) in A_MID][::-1]]
+        for a_, b_ in zip(ap[:-1], ap[1:]):
+            s.beam(M(a_), M(b_), BAR, BAR, uv, ext=0.01)
+        # the B pillar: sill to roof rail
+        bp = [np.array([bx(y), y, lerp_pl(B_MID, y)]) for y in (0.724, 1.24, 1.602, 1.809)]
+        for a_, b_ in zip(bp[:-1], bp[1:]):
+            s.beam(M(a_), M(b_), BAR, BAR, uv, up=(1, 0, 0), ext=0.01)
+        # the door post that splits each door window
+        s.beam(M(np.array([XS, 0.724, D_MID[0][1]])), M(np.array([XS, 1.654, D_MID[1][1]])), BAR, BAR, uv, up=(1, 0, 0), ext=0.01)
+    # the centre post: one slim member on the centre line from the roof's front edge to the keel
+    pp = [np.array([0.0, y, z]) for z, y in POST_MID]
+    for a_, b_ in zip(pp[:-1], pp[1:]):
+        s.beam(a_, b_, BAR, BAR, uv_l, up=(1, 0, 0), ext=0.01)
     return s
 
 
