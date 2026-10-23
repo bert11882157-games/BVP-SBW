@@ -36,7 +36,7 @@ NOSE_RGB = (70, 78, 72)          # (work/handbuilt lower_skin.py: lowered skin i
 FRONT_PANE_X = 0.10              # the flat front pane's edges, out from the centre line (the DCS MiG-15bis reference's)
 
 
-PANE = (0.425, 0.8, 0.14, 0.06, 0.03, 0.77, 2.6)   # the flat armoured front pane: apex z, foot z, half width, (radius), frame width, frame foot z, oval n
+PANE = (0.425, 0.8, 0.11, 0.06, 0.035, 0.77, 2.4, 5.0)   # the flat armoured front pane: apex z, foot z, half width, (radius), frame width, frame foot z, oval n
 
 
 def build(atlas, E, skin):
@@ -49,10 +49,12 @@ def build(atlas, E, skin):
     C.bow(m, sh, E, -0.83, 0.035, 0.025, out, inner)
     C.bow(m, sh, E, SPLIT - 0.005, 0.028, 0.018, out, inner)
     C.member(m, sh, E, 0.0, -0.85, SPLIT, 0.04, 0.03, out, inner, steps=16)
+    # the bar along the canopy's top, its full length (the MiG-15bis's, bert's top-down reference)
+    C.member(m, sh, E, 1.0, -0.83, SPLIT - 0.005, 0.03, 0.022, out, inner, sides=(1,), steps=20)
     # the windscreen: the arch, the front pane's two posts, the base frame on the nose, the side rails
     C.bow(m, sh, E, SPLIT + 0.027, 0.035, 0.02, out, inner)
     # the MiG-15's armoured front pane: wide, its top corners well rounded (photos of the type head-on: its round top reaches the windscreen's top frame)
-    C.oval_pane(m, sh, E, 0.425, 0.77, 0.14, 0.03, 0.02, out, inner, n=2.6)
+    C.oval_pane(m, sh, E, 0.425, 0.77, 0.11, 0.035, 0.022, out, inner, n=2.4, n_bot=5.0)   # the MiG-15bis's, bert's War Thunder reference (2026-10-23): tall, round top, rounded lower corners, a flat foot, a thick ring
     C.bow(m, sh, E, 0.785, 0.03, 0.02, out, inner)
     C.member(m, sh, E, 0.0, SPLIT + 0.045, 0.80, 0.04, 0.03, out, inner)
     return m, glass

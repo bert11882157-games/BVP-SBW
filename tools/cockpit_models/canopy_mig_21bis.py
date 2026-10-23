@@ -36,11 +36,21 @@ WINDSCREEN = [
 ]
 # the flat armoured front pane (photos of the type head-on): a tall window with straight sides and a round arched top,
 # its apex just ahead of the windscreen arch, its sides running down to the nose, in a thick frame
-PANE_W = 0.20                    # its half width, metres (the side panes only narrow strips at its foot)
+PANE_W = 0.17                    # its half width (bert's head-on reference: the pane nearly as tall as wide, 0.8)
 PANE_TOP = 0.733                 # the apex of its arch: it reaches the windscreen's top frame (the arch at 0.715)
 
 
-PANE = (PANE_TOP, 1.42, PANE_W, PANE_W, 0.04, 1.38, 2.0)   # the flat armoured front pane (flat_pane)
+PANE_FOOT = 1.32                 # its frame's foot: under it the windscreen is solid metal to the base frame
+# the flat armoured front pane (flat_pane): bert's head-on reference (War Thunder, 2026-10-23): an arch, its top
+# fully round to the top frame, its sides straight, its foot flat (n_bot 8: small lower corners), on a metal band
+PANE = (PANE_TOP, 1.42, PANE_W, PANE_W, 0.04, PANE_FOOT, 2.0, 8.0)
+
+
+def side_floor(z):
+    """the side panes' lower edge (the reference's side views: each side pane a triangle): metal under it, rising
+    from just above the sill at the arch to the front pane's frame 0.42 m further forward"""
+    t = (z - 0.735) / (1.15 - 0.735)
+    return -0.24 + 0.20 * min(1.0, max(0.0, t))
 
 
 def build(atlas, E, skin):
@@ -58,7 +68,12 @@ def build(atlas, E, skin):
     C.member(m, can, E, 1.0, -0.28, 0.645, 0.035, 0.022, out, inner, sides=(1,), steps=14)
     # the windscreen: its arch against the canopy, the front pane's arched frame, the base frame, the side rails
     C.bow(m, ws, E, 0.715, 0.035, 0.022, out, inner)
-    C.oval_pane(m, ws, E, PANE_TOP, 1.38, PANE_W, 0.04, 0.025, out, inner, n=2.0)
+    ov = C.oval_pane(m, ws, E, PANE_TOP, PANE_FOOT, PANE_W, 0.04, 0.025, out, inner, n=2.0, n_bot=8.0)
+    # the solid metal: under the side panes' rising lower edge, and the whole band under the front pane's foot
+    def side_top(z):                                     # (up to the front pane's frame, not over it)
+        return min(ws.s_at_y(z, side_floor(z)), ws.s_at_x(z, ov.env(z, 0.04 / 2 + 0.008)) - 0.004)
+    C.fill(m, ws, E, 0.735, PANE_FOOT, side_top, out, inner, steps=40)
+    C.fill(m, ws, E, PANE_FOOT, 1.38, lambda z: 1.0, out, inner, steps=8)
     C.bow(m, ws, E, 1.40, 0.04, 0.025, out, inner)
     C.member(m, ws, E, 0.0, 0.70, 1.42, 0.045, 0.035, out, inner)
     # the periscope housing on the canopy's top

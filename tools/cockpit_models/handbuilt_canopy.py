@@ -86,6 +86,15 @@ class Shape:
                 return (i + (a - x) / (a - b)) / (N - 1)
         return 1.0 if sec[0][0] > x else 0.0
 
+    def s_at_y(self, z, y):
+        """the position s across the section at z where the surface first rises to height y (from the sill up)"""
+        sec = self.section(z)
+        for i in range(N - 1):
+            a, b = sec[i][1], sec[i + 1][1]
+            if (a - y) * (b - y) <= 0 and a != b:
+                return (i + (y - a) / (b - a)) / (N - 1)
+        return 0.0 if sec[0][1] > y else 1.0
+
     def normal(self, z, s, side=1):
         """outward normal of the surface at (z, s): across the section, and along it"""
         e = 1e-3
@@ -174,14 +183,16 @@ class Oval:
     outer edge touching z_top at the apex and z_end at the foot, the frame [width] wide round it. env(z, r): how far
     out from the centre line the outline offset outward by r (r < 0: inward) reaches at station z, 0 off its ends"""
 
-    def __init__(self, z_top, z_end, half_w, width, slope, n=2.0, k=2400):
+    def __init__(self, z_top, z_end, half_w, width, slope, n=2.0, k=2400, n_bot=None):
         self.c, self.width = math.cos(slope), width
         self.z_top = z_top
         d0, d1 = width / 2 + 0.001, (z_end - z_top) / self.c - width / 2 - 0.001   # the frame's centre line's ends
         dc, b = (d0 + d1) / 2, (d1 - d0) / 2
         t = np.linspace(0, 2 * math.pi, k, endpoint=False)
         ct, st = np.cos(t), np.sin(t)
-        self.P = np.c_[half_w * np.sign(ct) * np.abs(ct) ** (2 / n), dc - b * np.sign(st) * np.abs(st) ** (2 / n)]
+        # (n_bot: the lower half's own exponent, e.g. 8 for an arch with a flat foot and small corners)
+        nn = np.where(st < 0, n_bot or n, n)
+        self.P = np.c_[half_w * np.sign(ct) * np.abs(ct) ** (2 / nn), dc - b * np.sign(st) * np.abs(st) ** (2 / nn)]
         tg = np.roll(self.P, -1, 0) - np.roll(self.P, 1, 0)
         nrm = np.c_[-tg[:, 1], tg[:, 0]]
         nrm /= np.linalg.norm(nrm, axis=1)[:, None]
@@ -209,7 +220,7 @@ class Oval:
         return float(np.interp(self.d(z), grid, xs, left=0.0, right=0.0))
 
 
-def flat_pane(sections, z_top, z_base, half_w, radius, width, z_end=None, n=2.0, step=0.025):
+def flat_pane(sections, z_top, z_base, half_w, radius, width, z_end=None, n=2.0, n_bot=None, step=0.025):
     """the windscreen sections remade so the armoured front pane's region is one flat plane (a flat slab, as the real
     one): across x level, along z straight from the windscreen's top at z_top to its top at z_base; up to the outer
     edge of the pane's frame the sections lie on that plane, outboard the side panes are bent down to meet it
@@ -222,7 +233,7 @@ def flat_pane(sections, z_top, z_base, half_w, radius, width, z_end=None, n=2.0,
         x_at = pane_x(z_top, half_w, radius, slope)
         reach = lambda z: x_at(z) + width / 2 + 0.025                       # noqa: E731
     else:
-        ov = Oval(z_top, z_end, half_w, width, slope, n)
+        ov = Oval(z_top, z_end, half_w, width, slope, n, n_bot=n_bot)
         z_mid = (z_top + z_end) / 2                 # below its widest the plane stays full width down to the base
         reach = lambda z: max(0.03, ov.env(min(z, z_mid), width / 2 + 0.025))   # noqa: E731
     out = [(z, p) for z, p in sections if z < z_top - 1e-6 or z > z_base + 1e-6]
@@ -272,7 +283,35 @@ def arched_pane(m, shape, E, z_top, z_base, half_w, radius, width, depth, rect_o
     return x_at
 
 
-def oval_pane(m, shape, E, z_top, z_end, half_w, width, depth, rect_out, rect_in, n=2.0):
+def fill(m, shape, E, z0, z1, top, rect_out, rect_in, steps=24, proud=0.003, depth=0.015):
+    """a solid metal panel in the windscreen's surface where the real one has no glass (the MiG-21's filled lower
+    corners and the band under its front pane): over [z0, z1], from the sill (s = 0) up to top(z) (an s), on both
+    sides, standing [proud] out of the surface and [depth] in, its top edge closed; the glass is cut away under it"""
+    _FRAMES.append((shape, 'fill', top, z0, z1))
+    zs = np.linspace(z0, z1, steps + 1)
+    for side in (1, -1):
+        for i in range(steps):
+            za, zb = zs[i], zs[i + 1]
+            ta, tb = top(za), top(zb)
+            ss_a, ss_b = np.linspace(0, ta, 7), np.linspace(0, tb, 7)
+            for j in range(6):
+                q = []
+                for z, s in ((za, ss_a[j]), (zb, ss_b[j]), (zb, ss_b[j + 1]), (za, ss_a[j + 1])):
+                    p = shape.point(z, s, side); nrm = shape.normal(z, s, side)
+                    q.append((p + nrm * proud + E, p - nrm * depth + E))
+                o = [a for a, b in q]; i_ = [b for a, b in q]
+                c_o = np.mean(o, 0); c_i = np.mean(i_, 0)
+                m.flat(o, rect_out, toward=c_o + (c_o - c_i))
+                m.flat(i_, rect_in, toward=c_i + (c_i - c_o))
+            # the top edge, where the glass begins
+            pa, pb = shape.point(za, ta, side), shape.point(zb, tb, side)
+            na, nb = shape.normal(za, ta, side), shape.normal(zb, tb, side)
+            e = [pa + na * proud + E, pb + nb * proud + E, pb - nb * depth + E, pa - na * depth + E]
+            up = shape.point((za + zb) / 2, min(1, (ta + tb) / 2 + 0.05), side) + E
+            m.flat(e, rect_in, toward=up)
+
+
+def oval_pane(m, shape, E, z_top, z_end, half_w, width, depth, rect_out, rect_in, n=2.0, n_bot=None):
     """the Soviet armoured front pane as it is: one flat sheet whose outline, seen from ahead, is an oval (rounded
     at its foot as well as its top: Oval), in a frame of even [width] all round it; the frame's apex touching the
     windscreen arch at z_top, its foot the base frame at z_end. The shape must be flat_pane'd with the same oval.
@@ -280,7 +319,7 @@ def oval_pane(m, shape, E, z_top, z_end, half_w, width, depth, rect_out, rect_in
     frame's inside, on the plane"""
     p0, p1 = shape.point(z_top, 1.0, 1), shape.point(z_top + 0.1, 1.0, 1)
     slope = math.atan2(p0[1] - p1[1], 0.1)
-    ov = Oval(z_top, z_end, half_w, width, slope, n)
+    ov = Oval(z_top, z_end, half_w, width, slope, n, n_bot=n_bot)
     T = np.array([0, -math.sin(slope), math.cos(slope)])            # down the plane
     Nn = np.array([0, math.cos(slope), math.sin(slope)])            # out of it
     top = p0 + E
@@ -329,6 +368,7 @@ def cut_glass(E, pad=0.006):
         bows = [(f[2] - f[3] / 2 - pad, f[2] + f[3] / 2 + pad, f[4], f[5]) for f in frames if f[1] == 'bow']
         mems = [f for f in frames if f[1] == 'member']
         panes = [f for f in frames if f[1] == 'pane']
+        fills = [f for f in frames if f[1] == 'fill']
         zb = set(np.linspace(z0, z1, nz + 1).tolist())
         for a, b, _, _ in bows:
             zb |= {a, b}
@@ -336,8 +376,8 @@ def cut_glass(E, pad=0.006):
             zb |= {f[3] - pad, f[4] + pad}
             if callable(f[2]):                         # a curving frame: the glass's edge follows it every 5 mm
                 zb |= set(np.arange(f[3], f[4], 0.005).tolist())
-        for f in panes:                                # an oval pane's frame likewise
-            zb |= set(np.arange(f[3], f[4], 0.005).tolist())
+        for f in panes + fills:                        # an oval pane's frame and a metal fill likewise
+            zb |= set(np.arange(f[3], f[4], 0.005).tolist()) | {f[3] - pad, f[4] + pad}
         zb = sorted(z for z in zb if z0 - 1e-9 <= z <= z1 + 1e-9)
         for i in range(len(zb) - 1):
             za, zc = zb[i], zb[i + 1]
@@ -353,7 +393,9 @@ def cut_glass(E, pad=0.006):
             # what the glass stops short of: the members here, and the bows that cross only part of the section
             cuts = [('m', f) for f in live] + [('b', sb) for sb in here]
             cuts += [('p', f) for f in panes if f[3] - 1e-6 <= zm <= f[4] + pad + 1e-6]   # a flat pane's inside
-            cuts.sort(key=lambda c: mid(c[1], zm) if c[0] == 'm' else ((c[1][0] + c[1][1]) / 2 if c[0] == 'b' else 1.0))
+            cuts += [('f', f) for f in fills if f[3] - pad - 1e-6 <= zm <= f[4] + pad + 1e-6]   # a metal fill from the sill up
+            cuts.sort(key=lambda c: mid(c[1], zm) if c[0] == 'm' else ((c[1][0] + c[1][1]) / 2 if c[0] == 'b' else
+                                                                         (0.0 if c[0] == 'f' else 1.0)))
             def bounds(z):
                 L = sh.arclen(z) or 1.0
                 b, prev = [], s0
@@ -363,6 +405,8 @@ def cut_glass(E, pad=0.006):
                         lo, hi = mid(f, z) - h, mid(f, z) + h
                     elif kind == 'b':
                         lo, hi = f[0] - pad / L, f[1] + pad / L
+                    elif kind == 'f':
+                        lo, hi = s0, min(1.0, f[2](min(max(z, f[3]), f[4])) + pad / L)
                     else:
                         lo, hi = sh.s_at_x(z, max(f[2](z), 0.0)), 1.0 + pad / L
                     b.append((prev, max(prev, min(lo, s1))))
