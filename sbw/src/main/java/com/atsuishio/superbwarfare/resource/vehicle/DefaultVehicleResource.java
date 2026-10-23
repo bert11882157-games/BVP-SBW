@@ -323,6 +323,17 @@ public class DefaultVehicleResource implements IDBasedData<DefaultVehicleResourc
         return headUpDisplay;
     }
 
+    @SerializedName("HeadUpDisplays")
+    private HeadUpDisplayResource[] headUpDisplays;
+
+    /**
+     * More crew stations' sights or head-up displays, one per seat (a helicopter's gunner beside its pilot); each is
+     * drawn live for the crewman in its own seat as [getHeadUpDisplay] is. Null when the vehicle has none.
+     */
+    public @Nullable HeadUpDisplayResource[] getHeadUpDisplays() {
+        return headUpDisplays;
+    }
+
     /**
      * VEHICLE_LOCAL_BLOCKS (+X left, +Y up, +Z forward) head-up display. The combiner is a flat rectangle; the
      * symbology is drawn on it as seen from the design eye, so the pitch ladder and flight path marker overlay the

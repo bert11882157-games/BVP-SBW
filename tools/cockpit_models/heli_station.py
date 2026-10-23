@@ -261,6 +261,7 @@ def build(m, atlas, st, ppm=400, painters=None):
     """the station into mesh m; returns (gauges, displays, hud)"""
     S = Station(st)
     g = st.get
+    ppm = g('ppm', ppm)
     seat = st['seat']
     sc = g('S', 1.0)
     cols = st['colours']
@@ -327,7 +328,7 @@ def build(m, atlas, st, ppm=400, painters=None):
             m.ring(c, f.N, f.U, spec[1] / 2, spec[1] / 2 + 0.004, 0.008, sw['bezel'], seg=12)
         elif kind == 'paint_rect':
             w, h = spec[1], spec[2]
-            pw = 200 if w >= h else 60
+            pw = int(min(200, max(40, w * ppm * 1.6)))           # (about 1.6 times the panel's own density)
             ph = max(16, int(round(pw * h / w)))
             rect = atlas.paint(pw, ph, painters[name])
             m.rect_tex(c + f.N * 0.004, f.N, f.U, w, h, rect)
@@ -438,6 +439,21 @@ def build(m, atlas, st, ppm=400, painters=None):
         for k, (lx, ly) in enumerate(((-1, 1), (1, 1))):                 # the two grip handles either side
             m.box(P(lx * (sg['w'] / 2 + 0.04), sg['y'] - 0.02, sg['z'] - sg['d'] / 2 + 0.02), (X, Y, Z),
                   (0.02, 0.05, 0.02), sw['black'])
+        if sg.get('glass'):                       # a collimator sight: its reflector glass over the head, centred on the
+            gl = sg['glass']                      # crewman's straight-ahead line, the reticle projected onto it
+            lean = math.radians(gl.get('lean', 25))
+            g_up = np.array([0, math.cos(lean), -math.sin(lean)])
+            g_n = H.unit(np.cross(X, g_up))
+            g_c = P(0, 0, gl['z'])
+            g_bot = g_c - g_up * gl['h'] / 2
+            top = E[1] + sg['y'] + sg['h'] / 2
+            if g_bot[1] - 0.004 > top:            # two posts from the head up to the glass's foot
+                for s in (-1, 1):
+                    m.box([E[0] + s * (gl['w'] / 2 + 0.006), (top + g_bot[1]) / 2, g_bot[2]], (X, Y, Z),
+                          (0.004, (g_bot[1] - top) / 2, 0.006), sw['dgrey'])
+            H.combiner(m, g_bot, g_up, -g_n, gl['w'], gl['h'], 'rect', 0.0, ('bottom', 'side'), 0.006, sw['black'])
+            hud = dict(centre=g_c, normal=-g_n, up=g_up, width=gl['w'], height=gl['h'], seat=seat,
+                       style=gl.get('style', 'REFLECTOR'))
 
     # -- side consoles, their inner, back and front faces down to the console foot
     left_rows, right_rows = st['consoles']
@@ -449,7 +465,8 @@ def build(m, atlas, st, ppm=400, painters=None):
         xi, xo = E[0] + st['CONSOLE_IN'] * side, E[0] + st['CONSOLE_OUT'] * side
         cy, fy = E[1] + st['CONSOLE_Y'], E[1] + st['CONSOLE_FOOT']
         zb = E[2] + st['CONSOLE_BACK']
-        tile = atlas.paint(60, 300, p_console(left_rows if side > 0 else right_rows, side > 0, cols['panel']))
+        tw, th = g('console_tile', (60, 300))
+        tile = atlas.paint(tw, th, p_console(left_rows if side > 0 else right_rows, side > 0, cols['panel']))
         top = [[xi, cy, zb], [xo, cy, zb], [xo, cy, zf], [xi, cy, zf]]
         m.face(top, [m.uv(tile, 0, 0), m.uv(tile, 1, 0), m.uv(tile, 1, 1), m.uv(tile, 0, 1)], normal=[0, 1, 0])
         m.flat([[xi, fy, zb], [xi, fy, zf], [xi, cy, zf], [xi, cy, zb]], sw['wall'], normal=[-side, 0, 0])
@@ -595,12 +612,25 @@ def repaint_floor(ac, atlas, colour, boxes):
 
 def install(ac, mesh, gauges, displays, hud, eyes):
     """the cockpit bone into the hull, every seat's instruments (replacing whatever the asset held for any seat), the
-    HUD for its seat, then the windows' glass (model_glass.glaze) and the HUD's combiner glass; returns (poly mesh,
-    glaze summary)"""
+    HUDs and sights (one dict or a list, one per seat: the first is "HeadUpDisplay", the others "HeadUpDisplays"), then
+    the windows' glass (model_glass.glaze) and the combiners' glass; returns (poly mesh, glaze summary)"""
     import model_glass as MG
-    seat = hud['seat'] if hud else 0
-    pm = H.install(ac, mesh, None, 'hull', None, gauges, displays, hud, eyes[seat], seat=seat)
+    huds = [h for h in (hud if isinstance(hud, list) else [hud]) if h]
+    first = huds[0] if huds else None
+    seat = first['seat'] if first else 0
+    pm = H.install(ac, mesh, None, 'hull', None, gauges, displays, first, eyes[seat], seat=seat)
     a = ac.asset
+    a.pop('HeadUpDisplays', None)
+    more = []
+    for h in huds[1:]:
+        e = {'Schema': 1, 'Frame': 'VEHICLE_LOCAL_BLOCKS', 'Seat': h['seat'], 'Center': H.r5(h['centre']),
+             'Normal': H.r5(h['normal']), 'Up': H.r5(h['up']), 'Width': round(float(h['width']), 5),
+             'Height': round(float(h['height']), 5), 'Eye': H.r5(eyes[h['seat']])}
+        if h.get('style'):
+            e['Style'] = h['style']
+        more.append(e)
+    if more:
+        a['HeadUpDisplays'] = more
     a['CockpitGauges'] = {'Schema': 1, 'Frame': 'VEHICLE_LOCAL_BLOCKS', 'Gauges': gauges}
     if displays:
         a['FlightDisplays'] = {'Schema': 1, 'Frame': 'VEHICLE_LOCAL_BLOCKS', 'Displays': displays}

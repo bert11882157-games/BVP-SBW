@@ -26,6 +26,8 @@ def used_mask(geo, w, h, skip=()):
             continue
         U = np.array(pm['uvs'], float)
         for p in pm['polys']:
+            if len(p) < 3:                        # (an empty or degenerate polygon samples nothing)
+                continue
             pts = [(float(U[v[2]][0]) * w, (1 - float(U[v[2]][1])) * h) for v in p]
             d.polygon(pts, fill=255, outline=255)
     a = np.asarray(m) > 0
