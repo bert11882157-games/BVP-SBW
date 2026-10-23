@@ -44,6 +44,15 @@ PANE_FOOT = 1.35                 # its frame's foot: under it a narrow metal ban
 # the flat armoured front pane (flat_pane): bert's head-on reference (War Thunder, 2026-10-23): an arch, its top
 # fully round to the top frame, its sides straight, its foot flat (n_bot 8: small lower corners), on a metal band
 PANE = (PANE_TOP, 1.42, PANE_W, PANE_W, 0.04, PANE_FOOT, 2.0, 8.0)
+# the armoured front pane's glass, exactly (2026-10-23 trace from 71 windscreen photos and bert's War Thunder shots):
+# flat, raked 65 degrees, a tall egg 245 mm wide and 600 mm up the slope with a 184 mm straight foot; seen head-on the
+# rake shortens it to the round arch. mm in the pane's plane, origin the middle of its foot, +X to the pilot's right
+OUTLINE = [(0, 0), (92, 0), (103, 4), (107, 15), (110, 42), (116, 90), (118, 150), (122, 210), (122, 270), (120, 324),
+           (116, 372), (106, 420), (97, 462), (84, 498), (72, 528), (60, 552), (48, 570), (34, 585), (21, 594), (0, 600),
+           (-21, 594), (-34, 585), (-48, 570), (-60, 552), (-72, 528), (-84, 498), (-97, 462), (-106, 420), (-116, 372),
+           (-120, 324), (-122, 270), (-122, 210), (-118, 150), (-116, 90), (-110, 42), (-107, 15), (-103, 4), (-92, 0)]
+SCALE = 1.0                      # (our windscreen carries it at life size: its frame's foot lands at 1.356, the old 1.35)
+METAL_X = 0.19                   # the solid metal under the pane's foot: out to here, the side panes' glass beyond it
 
 
 def side_floor(z):
@@ -58,7 +67,7 @@ def build(atlas, E, skin):
     m = H.Mesh(atlas)
     out, inner, dark = atlas.swatch(skin), atlas.swatch((40, 42, 44)), atlas.swatch((26, 27, 28))
     # the armoured front pane is a flat slab: the windscreen made flat round it
-    can, ws = C.Shape(CANOPY), C.Shape(C.flat_pane(WINDSCREEN, *PANE))
+    can, ws = C.Shape(CANOPY), C.Shape(C.flat_pane(WINDSCREEN, *PANE, outline=OUTLINE, scale=SCALE))
     glass = C.glass_triangles(can, E, -0.30, 0.66) + C.glass_triangles(ws, E, 0.70, 1.42)
     # the canopy's frame: rear bow, front bow, sill rails
     C.bow(m, can, E, -0.28, 0.05, 0.03, out, inner)
@@ -67,12 +76,13 @@ def build(atlas, E, skin):
     # (no frame along the canopy's top: its transparency is one piece, bert 2026-10-23)
     # the windscreen: its arch against the canopy, the front pane's arched frame, the base frame, the side rails
     C.bow(m, ws, E, 0.7165, 0.031, 0.022, out, inner)      # the arch, on from the canopy's bow (one bar, bert)
-    ov = C.oval_pane(m, ws, E, PANE_TOP, PANE_FOOT, PANE_W, 0.04, 0.025, out, inner, n=2.0, n_bot=8.0)
+    ov = C.oval_pane(m, ws, E, PANE_TOP, PANE_FOOT, PANE_W, 0.04, 0.025, out, inner, n=2.0, n_bot=8.0,
+                     outline=OUTLINE, scale=SCALE)
     # the solid metal: under the side panes' rising lower edge, and the whole band under the front pane's foot
     def side_top(z):                                     # (up to the front pane's frame, not over it)
         return min(ws.s_at_y(z, side_floor(z)), ws.s_at_x(z, ov.env(z, 0.04 / 2 + 0.008)) - 0.004)
     C.fill(m, ws, E, 0.735, PANE_FOOT, side_top, out, inner, steps=40)
-    C.fill(m, ws, E, PANE_FOOT, 1.38, lambda z: 1.0, out, inner, steps=8)
+    C.cap(m, ws, E, PANE_FOOT, 1.38, lambda z: ws.s_at_x(z, METAL_X), out, inner, steps=8)   # (centre only, the trace)
     C.bow(m, ws, E, 1.40, 0.04, 0.025, out, inner)
     C.member(m, ws, E, 0.0, 0.70, 1.42, 0.045, 0.035, out, inner)
     # the periscope housing on the canopy's top

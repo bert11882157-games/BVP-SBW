@@ -190,9 +190,29 @@ class Oval:
     outer edge touching z_top at the apex and z_end at the foot, the frame [width] wide round it. env(z, r): how far
     out from the centre line the outline offset outward by r (r < 0: inward) reaches at station z, 0 off its ends"""
 
-    def __init__(self, z_top, z_end, half_w, width, slope, n=2.0, k=2400, n_bot=None):
+    def __init__(self, z_top, z_end, half_w, width, slope, n=2.0, k=2400, n_bot=None, outline=None, scale=1.0):
         self.c, self.width = math.cos(slope), width
         self.z_top = z_top
+        if outline is not None:
+            # the glass's own edge traced from photographs (mm in the pane's plane, origin the middle of its flat
+            # foot, Y up the pane): its apex [width] + 7 mm down from z_top, the frame's centre line round it
+            G = np.array(outline, float) / 1000.0 * scale
+            G = np.vstack([G, G[:1]])
+            s = np.r_[0, np.cumsum(np.linalg.norm(np.diff(G, axis=0), axis=1))]
+            u = np.linspace(0, s[-1], k, endpoint=False)
+            G = np.c_[np.interp(u, s, G[:, 0]), np.interp(u, s, G[:, 1])]
+            apex = width + 0.007
+            gd = np.c_[G[:, 0], apex + (G[:, 1].max() - G[:, 1])]
+            dc = gd[:, 1].mean()
+            tg = np.roll(gd, -1, 0) - np.roll(gd, 1, 0)
+            nrm = np.c_[-tg[:, 1], tg[:, 0]]
+            nrm /= np.linalg.norm(nrm, axis=1)[:, None]
+            if (nrm * (gd - [0, dc])).sum(1).mean() < 0:
+                nrm = -nrm
+            self.N = nrm
+            self.P = gd + nrm * (width / 2 + 0.006)
+            self._env = {}
+            return
         d0, d1 = width / 2 + 0.001, (z_end - z_top) / self.c - width / 2 - 0.001   # the frame's centre line's ends
         dc, b = (d0 + d1) / 2, (d1 - d0) / 2
         t = np.linspace(0, 2 * math.pi, k, endpoint=False)
@@ -207,6 +227,10 @@ class Oval:
             nrm = -nrm
         self.N = nrm
         self._env = {}
+
+    def foot_d(self):
+        """how far down the plane from z_top the frame's outer edge reaches at the foot"""
+        return float((self.P + self.N * self.width / 2)[:, 1].max())
 
     def d(self, z):
         return (z - self.z_top) / self.c
@@ -227,7 +251,8 @@ class Oval:
         return float(np.interp(self.d(z), grid, xs, left=0.0, right=0.0))
 
 
-def flat_pane(sections, z_top, z_base, half_w, radius, width, z_end=None, n=2.0, n_bot=None, step=0.025):
+def flat_pane(sections, z_top, z_base, half_w, radius, width, z_end=None, n=2.0, n_bot=None, step=0.025, outline=None,
+              scale=1.0):
     """the windscreen sections remade so the armoured front pane's region is one flat plane (a flat slab, as the real
     one): across x level, along z straight from the windscreen's top at z_top to its top at z_base; up to the outer
     edge of the pane's frame the sections lie on that plane, outboard the side panes are bent down to meet it
@@ -240,7 +265,7 @@ def flat_pane(sections, z_top, z_base, half_w, radius, width, z_end=None, n=2.0,
         x_at = pane_x(z_top, half_w, radius, slope)
         reach = lambda z: x_at(z) + width / 2 + 0.025                       # noqa: E731
     else:
-        ov = Oval(z_top, z_end, half_w, width, slope, n, n_bot=n_bot)
+        ov = Oval(z_top, z_end, half_w, width, slope, n, n_bot=n_bot, outline=outline, scale=scale)
         z_mid = (z_top + z_end) / 2                 # below its widest the plane stays full width down to the base
         reach = lambda z: max(0.03, ov.env(min(z, z_mid), width / 2 + 0.025))   # noqa: E731
     out = [(z, p) for z, p in sections if z < z_top - 1e-6 or z > z_base + 1e-6]
@@ -329,7 +354,8 @@ def fill(m, shape, E, z0, z1, top, rect_out, rect_in, steps=24, proud=0.003, dep
             m.flat(e, rect_in, toward=up)
 
 
-def oval_pane(m, shape, E, z_top, z_end, half_w, width, depth, rect_out, rect_in, n=2.0, n_bot=None):
+def oval_pane(m, shape, E, z_top, z_end, half_w, width, depth, rect_out, rect_in, n=2.0, n_bot=None, outline=None,
+              scale=1.0):
     """the Soviet armoured front pane as it is: one flat sheet whose outline, seen from ahead, is an oval (rounded
     at its foot as well as its top: Oval), in a frame of even [width] all round it; the frame's apex touching the
     windscreen arch at z_top, its foot the base frame at z_end. The shape must be flat_pane'd with the same oval.
@@ -337,7 +363,7 @@ def oval_pane(m, shape, E, z_top, z_end, half_w, width, depth, rect_out, rect_in
     frame's inside, on the plane"""
     p0, p1 = shape.point(z_top, 1.0, 1), shape.point(z_top + 0.1, 1.0, 1)
     slope = math.atan2(p0[1] - p1[1], 0.1)
-    ov = Oval(z_top, z_end, half_w, width, slope, n, n_bot=n_bot)
+    ov = Oval(z_top, z_end, half_w, width, slope, n, n_bot=n_bot, outline=outline, scale=scale)
     T = np.array([0, -math.sin(slope), math.cos(slope)])            # down the plane
     Nn = np.array([0, math.cos(slope), math.sin(slope)])            # out of it
     top = p0 + E
