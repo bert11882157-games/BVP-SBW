@@ -1,0 +1,25 @@
+{
+  "Schema": 1,
+  "Name": "XM35 · 20 mm M195 (950 rds)",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/heli_xm35.geo.json",
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/heli_stores.png",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "MountAxis": [
+    0.0,
+    -0.21,
+    0.0
+  ],
+  "LaunchOffset": [
+    0.0,
+    -0.21,
+    0.0
+  ],
+  "Category": "GUN_POD",
+  "Capacity": 950,
+  "MassKg": 0.2526
+}

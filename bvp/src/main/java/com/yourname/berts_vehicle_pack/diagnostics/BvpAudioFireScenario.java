@@ -83,7 +83,7 @@ public final class BvpAudioFireScenario {
                                     if (weapon.equals(vehicle.getGunName(s, i))) { seat = s; slot = i; break; }
                             if (seat < 0) return 0;
                             if (vehicle.getSeatIndex(player) != seat) vehicle.changeSeat(player, seat);
-                            vehicle.changeWeapon(seat, slot, false);
+                            vehicle.setWeaponIndex(seat, slot);
                             var ahead = net.minecraft.world.phys.Vec3.directionFromRotation(0, vehicle.getYRot());
                             player.lookAt(net.minecraft.commands.arguments.EntityAnchorArgument.Anchor.EYES,
                                     player.getEyePosition().add(ahead.scale(200)));

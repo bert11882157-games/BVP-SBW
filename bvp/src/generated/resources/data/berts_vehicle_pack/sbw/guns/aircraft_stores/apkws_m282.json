@@ -1,0 +1,31 @@
+{
+  "Name": "APKWS II (M282 multi-purpose)",
+  "AmmoType": "superbwarfare:small_atgm",
+  "DefaultFireMode": "Semi",
+  "AvailableFireModes": "Semi",
+  "Magazine": 1,
+  "EmptyReloadTime": 400,
+  "RPM": 30,
+  "Projectile": {
+    "Type": "superbwarfare:wire_guide_missile",
+    "Profile": "berts_vehicle_pack:aircraft_stores/apkws_m282"
+  },
+  "ProjectileAmount": 1,
+  "AddShooterDeltaMovement": true,
+  "Velocity": 1.5,
+  "Gravity": 0.0125,
+  "ProjectileLife": 1000,
+  "Spread": 0,
+  "Damage": 260,
+  "ExplosionDamage": 260,
+  "ExplosionRadius": 0.5,
+  "TntEquivalentKg": 0.528,
+  "ShellType": "HE",
+  "ApDurability": 0,
+  "Crosshair": "@Empty",
+  "SoundRadius": 24,
+  "SoundInfo": {
+    "Fire1P": "superbwarfare:bmp_2_missile_fire_1p",
+    "Fire3P": "superbwarfare:bmp_2_missile_fire_3p"
+  }
+}

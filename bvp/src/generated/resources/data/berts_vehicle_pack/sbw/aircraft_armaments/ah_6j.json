@@ -3,70 +3,104 @@
   "Name": "AH-6J",
   "BuiltInWeapons": [],
   "SuspendedWeapons": [
-    "Cannon",
-    "Rocket"
+    "HydraS1Lau131",
+    "HydraS1",
+    "Gau19S1Gau19",
+    "M134S2M134d",
+    "M134S3M134d",
+    "HydraS4Lau131",
+    "HydraS4",
+    "Gau19S4Gau19"
   ],
-  "Pairs": [
+  "Pairs": [],
+  "Singles": [
     {
-      "Id": "inner",
-      "Name": "Inner mount",
-      "Left": [
-        1.1237,
-        2.2605,
-        1.9881
-      ],
-      "Right": [
-        -1.0769,
-        2.2605,
-        1.9881
-      ],
-      "AllowedStores": [
-        "berts_vehicle_pack:heli/m134_pods"
-      ],
-      "StoreGroups": {
-        "berts_vehicle_pack:heli/m134_pods": [
-          "suspended_inner_l",
-          "suspended_inner_r"
-        ]
-      },
-      "MaxWeaponsPerPylon": 1,
-      "MaxPylonMassKg": 1000,
-      "NativeWeaponIds": {
-        "berts_vehicle_pack:heli/m134_pods": "Cannon"
-      }
-    },
-    {
-      "Id": "outer",
-      "Name": "Outer mount",
-      "Left": [
+      "Id": "slot_1",
+      "Name": "Left outboard",
+      "Position": [
         1.999,
         1.306,
         1.6838
       ],
-      "Right": [
+      "AllowedStores": [
+        "berts_vehicle_pack:heli/lau131_m247",
+        "berts_vehicle_pack:heli/m261_m247",
+        "berts_vehicle_pack:heli/lau131_apkws_m151",
+        "berts_vehicle_pack:heli/lau131_apkws_m282",
+        "berts_vehicle_pack:heli/m279_agm114b",
+        "berts_vehicle_pack:heli/m279_agm114k",
+        "berts_vehicle_pack:heli/gau19"
+      ],
+      "MaxPylonMassKg": 1000,
+      "MaxWeaponsPerPylon": 12,
+      "NativeWeaponIds": {
+        "berts_vehicle_pack:heli/lau131_m247": "HydraS1Lau131",
+        "berts_vehicle_pack:heli/m261_m247": "HydraS1",
+        "berts_vehicle_pack:heli/gau19": "Gau19S1Gau19"
+      }
+    },
+    {
+      "Id": "slot_2",
+      "Name": "Left inboard",
+      "Position": [
+        1.15,
+        1.31,
+        1.9
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:heli/m134d"
+      ],
+      "MaxPylonMassKg": 1000,
+      "MaxWeaponsPerPylon": 12,
+      "NativeWeaponIds": {
+        "berts_vehicle_pack:heli/m134d": "M134S2M134d"
+      }
+    },
+    {
+      "Id": "slot_3",
+      "Name": "Right inboard",
+      "Position": [
+        -1.15,
+        1.31,
+        1.9
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:heli/m134d"
+      ],
+      "MaxPylonMassKg": 1000,
+      "MaxWeaponsPerPylon": 12,
+      "NativeWeaponIds": {
+        "berts_vehicle_pack:heli/m134d": "M134S3M134d"
+      }
+    },
+    {
+      "Id": "slot_4",
+      "Name": "Right outboard",
+      "Position": [
         -1.999,
         1.306,
         1.6838
       ],
       "AllowedStores": [
-        "berts_vehicle_pack:heli/m260"
+        "berts_vehicle_pack:heli/lau131_m247",
+        "berts_vehicle_pack:heli/m261_m247",
+        "berts_vehicle_pack:heli/lau131_apkws_m151",
+        "berts_vehicle_pack:heli/lau131_apkws_m282",
+        "berts_vehicle_pack:heli/m279_agm114b",
+        "berts_vehicle_pack:heli/m279_agm114k",
+        "berts_vehicle_pack:heli/gau19"
       ],
-      "StoreGroups": {
-        "berts_vehicle_pack:heli/m260": [
-          "suspended_outer_l",
-          "suspended_outer_r"
-        ]
-      },
-      "MaxWeaponsPerPylon": 1,
       "MaxPylonMassKg": 1000,
+      "MaxWeaponsPerPylon": 12,
       "NativeWeaponIds": {
-        "berts_vehicle_pack:heli/m260": "Rocket"
+        "berts_vehicle_pack:heli/lau131_m247": "HydraS4Lau131",
+        "berts_vehicle_pack:heli/m261_m247": "HydraS4",
+        "berts_vehicle_pack:heli/gau19": "Gau19S4Gau19"
       }
     }
   ],
-  "StoreGroups": {},
-  "MaxPayloadKg": 600,
+  "MaxPayloadKg": 815,
   "MaxPylonMassKg": 1000,
-  "MaxWeaponsPerPylon": 1,
-  "Singles": []
+  "MaxWeaponsPerPylon": 12,
+  "WeaponSeat": 0
 }

@@ -1,72 +1,114 @@
 {
   "Schema": 1,
   "Name": "AH-1G Cobra",
-  "BuiltInWeapons": [],
-  "SuspendedWeapons": [
-    "Cannon",
-    "Rocket"
+  "BuiltInWeapons": [
+    "M134Turret",
+    "M129Turret"
   ],
-  "Pairs": [
+  "SuspendedWeapons": [
+    "FfarS1Aero6a",
+    "FfarS1Aero7a",
+    "FfarS2Aero6a",
+    "FfarS2Aero7a",
+    "M134S2Xm18",
+    "M195S2Xm35",
+    "FfarS3Aero6a",
+    "FfarS3Aero7a",
+    "M134S3Xm18",
+    "FfarS4Aero6a",
+    "FfarS4Aero7a"
+  ],
+  "Pairs": [],
+  "Singles": [
     {
-      "Id": "inner",
-      "Name": "Inner pylon",
-      "Left": [
+      "Id": "slot_1",
+      "Name": "Left outboard",
+      "Position": [
+        2.4492,
+        2.1164,
+        -0.2881
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:heli/aero6a_ffar",
+        "berts_vehicle_pack:heli/aero7a_ffar"
+      ],
+      "MaxPylonMassKg": 1000,
+      "MaxWeaponsPerPylon": 12,
+      "NativeWeaponIds": {
+        "berts_vehicle_pack:heli/aero6a_ffar": "FfarS1Aero6a",
+        "berts_vehicle_pack:heli/aero7a_ffar": "FfarS1Aero7a"
+      }
+    },
+    {
+      "Id": "slot_2",
+      "Name": "Left inboard",
+      "Position": [
         1.7288,
         2.1164,
         0.3152
       ],
-      "Right": [
+      "AllowedStores": [
+        "berts_vehicle_pack:heli/aero6a_ffar",
+        "berts_vehicle_pack:heli/aero7a_ffar",
+        "berts_vehicle_pack:heli/xm18_m134",
+        "berts_vehicle_pack:heli/xm35_m195"
+      ],
+      "MaxPylonMassKg": 1000,
+      "MaxWeaponsPerPylon": 12,
+      "NativeWeaponIds": {
+        "berts_vehicle_pack:heli/aero6a_ffar": "FfarS2Aero6a",
+        "berts_vehicle_pack:heli/aero7a_ffar": "FfarS2Aero7a",
+        "berts_vehicle_pack:heli/xm18_m134": "M134S2Xm18",
+        "berts_vehicle_pack:heli/xm35_m195": "M195S2Xm35"
+      }
+    },
+    {
+      "Id": "slot_3",
+      "Name": "Right inboard",
+      "Position": [
         -1.7288,
         2.1164,
         0.3152
       ],
       "AllowedStores": [
-        "berts_vehicle_pack:heli/m195_pods"
+        "berts_vehicle_pack:heli/aero6a_ffar",
+        "berts_vehicle_pack:heli/aero7a_ffar",
+        "berts_vehicle_pack:heli/xm18_m134"
       ],
-      "StoreGroups": {
-        "berts_vehicle_pack:heli/m195_pods": [
-          "suspended_inner_l",
-          "suspended_inner_r"
-        ]
-      },
-      "MaxWeaponsPerPylon": 1,
       "MaxPylonMassKg": 1000,
+      "MaxWeaponsPerPylon": 12,
       "NativeWeaponIds": {
-        "berts_vehicle_pack:heli/m195_pods": "Cannon"
+        "berts_vehicle_pack:heli/aero6a_ffar": "FfarS3Aero6a",
+        "berts_vehicle_pack:heli/aero7a_ffar": "FfarS3Aero7a",
+        "berts_vehicle_pack:heli/xm18_m134": "M134S3Xm18"
       }
     },
     {
-      "Id": "outer",
-      "Name": "Outer pylon",
-      "Left": [
-        2.4492,
-        2.1164,
-        -0.2881
-      ],
-      "Right": [
+      "Id": "slot_4",
+      "Name": "Right outboard",
+      "Position": [
         -2.4492,
         2.1164,
         -0.2881
       ],
       "AllowedStores": [
-        "berts_vehicle_pack:heli/xm158"
+        "berts_vehicle_pack:heli/aero6a_ffar",
+        "berts_vehicle_pack:heli/aero7a_ffar"
       ],
-      "StoreGroups": {
-        "berts_vehicle_pack:heli/xm158": [
-          "suspended_outer_l",
-          "suspended_outer_r"
-        ]
-      },
-      "MaxWeaponsPerPylon": 1,
       "MaxPylonMassKg": 1000,
+      "MaxWeaponsPerPylon": 12,
       "NativeWeaponIds": {
-        "berts_vehicle_pack:heli/xm158": "Rocket"
+        "berts_vehicle_pack:heli/aero6a_ffar": "FfarS4Aero6a",
+        "berts_vehicle_pack:heli/aero7a_ffar": "FfarS4Aero7a"
       }
     }
   ],
-  "StoreGroups": {},
-  "MaxPayloadKg": 1000,
+  "MaxPayloadKg": 1450,
   "MaxPylonMassKg": 1000,
-  "MaxWeaponsPerPylon": 1,
-  "Singles": []
+  "MaxWeaponsPerPylon": 12,
+  "WeaponSeat": 0,
+  "WeaponSeats": [
+    0,
+    1
+  ]
 }

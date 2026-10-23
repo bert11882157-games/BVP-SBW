@@ -71,6 +71,9 @@ class AircraftPylonRacksTest {
         assertEquals(1, limit(category = "CRUISE"))
         assertEquals(1, limit(category = "ROCKET_POD"))
         assertEquals(2, limit(category = "AIR_TO_AIR", store = 2, mass = 85.0))
+        // helicopter missile racks: four Hellfires on one launcher, each released on its own
+        assertEquals(4, limit(category = "LASER_GUIDED", store = 4, mass = 49.0))
+        assertEquals(4, limit(category = "COMMAND_GUIDED", store = 4, mass = 45.0))
     }
 
     @Test fun pairedLaunchesAlternateSidesAndConsumeEachRackPosition() {

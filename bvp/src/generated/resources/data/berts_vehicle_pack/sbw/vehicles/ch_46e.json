@@ -115,8 +115,8 @@
         "UseAircraftCamera": true,
         "AircraftCameraPos": [
           0,
-          3.5,
-          -9
+          3.98,
+          -18.72
         ],
         "EyeAttachment": "pilot_eye",
         "ZoomEyeAttachment": "pilot_eye",
@@ -970,9 +970,9 @@
     "SympatheticDetonationChance": 0.55
   },
   "ThirdPersonCameraPos": [
-    0.86696,
-    1.5,
-    5
+    0,
+    6.3,
+    12.6
   ],
   "VehicleIcon": "berts_vehicle_pack:textures/vehicle_icon/ch_46e.png",
   "ContainerIcon": "superbwarfare:textures/gui/vehicle/type/aircraft.png",
@@ -997,9 +997,9 @@
     "copilot_eye": {
       "Parent": "Vehicle",
       "Position": [
-        0.517514375,
-        1.7077975,
-        4.0366125
+        0.52,
+        2.1,
+        4.04
       ],
       "Direction": [
         0,

@@ -8,6 +8,9 @@ import kotlin.math.min
 object AircraftPylonRacks {
     const val MAX_COPIES = 12
     const val MAX_BAY_COPIES = 512
+    /** Stores that may hang as several fixed copies on one mount (helicopter missile racks carry laser and
+     *  command-guided rounds, each released and drawn one by one). */
+    val FIXED_RACK_CATEGORIES = setOf("BOMB", "AIR_TO_AIR", "AIR_TO_GROUND", "LASER_GUIDED", "COMMAND_GUIDED")
     /** Client loadout edits may retain fitted copies, but cannot choose a new copy count. */
     fun fixedSelectionCopies(currentStore: String?, chosenStore: String, currentCopies: Int,
                              requestedCopies: Int?, authoredCopies: Int? = null): Int {
@@ -34,7 +37,7 @@ object AircraftPylonRacks {
             return if (massKg > 0.0 && maxPylonMassKg.isFinite())
                 (maxPylonMassKg / (massKg * capacity.coerceAtLeast(1))).toInt().coerceIn(1, MAX_BAY_COPIES)
             else 1
-        if (category !in setOf("BOMB", "AIR_TO_AIR", "AIR_TO_GROUND")) return 1
+        if (category !in FIXED_RACK_CATEGORIES) return 1
         val rounds = capacity.coerceAtLeast(1)
         val weaponLimit = min(aircraftLimit, min(mountLimit, storeLimit)).coerceIn(1, MAX_COPIES)
         val massLimit = if (massKg > 0.0 && maxPylonMassKg.isFinite())

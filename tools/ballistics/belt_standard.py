@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """The owner's belt standard (2026-09-28) for every belted weapon wt_belts.py does not rebuild from WT tables
-(aircraft and helicopter guns, machine guns).
+(aircraft guns, machine guns). Helicopter guns carry War Thunder's belts instead (wt_belts.HELI_ARMAMENT,
+tools/heli_armament/belts.py).
 
     python3 tools/ballistics/belt_standard.py [--check]
 
@@ -189,7 +190,7 @@ def main(argv):
         before = json.dumps(d, sort_keys=True)
         notes = []
         for wn, w in (d.get('Weapons') or {}).items():
-            if (vid, wn) in W.WEAPONS or not isinstance(w, dict):
+            if (vid, wn) in W.WEAPONS or vid in W.HELI_ARMAMENT or not isinstance(w, dict):
                 continue
             p = plan(w, lang, d.get('Type') in ('Airplane', 'Helicopter'))
             if not p:

@@ -14,7 +14,7 @@ object AircraftManualCommand {
     private val inputs = WeakHashMap<VehicleEntity, Sample>()
 
     fun accept(vehicle: VehicleEntity, player: ServerPlayer, body: JsonObject, tick: Long) {
-        require(player.vehicle === vehicle && vehicle.getSeatIndex(player) == AircraftMissileLaunchers.weaponSeat(vehicle))
+        require(player.vehicle === vehicle && AircraftMissileLaunchers.isWeaponSeat(vehicle, vehicle.getSeatIndex(player)))
         val yaw = body["Yaw"].asBigDecimal.intValueExact()
         val pitch = body["Pitch"].asBigDecimal.intValueExact()
         require(yaw in -1..1 && pitch in -1..1)

@@ -14,12 +14,22 @@ import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.floor
 
-/** Server-owned cadence, catch-up, and fixed-window heat lifecycle for addon-profiled vehicle weapons. */
+/**
+ * Server-owned cadence, catch-up, and fixed-window heat lifecycle for addon-profiled vehicle weapons.
+ *
+ * Cadence, catch-up credit and heat belong to the physical weapon (its channel name: one GunData, one magazine), not
+ * to the seat that fires it. A weapon listed on several seats (a helicopter's pilot and gunner both selecting the same
+ * gun, pod or store) is one schedule: whichever seats hold the trigger, rounds come at that weapon's own rate and heat
+ * builds once. Trigger state (who is holding it) stays per seat for presentation and the gun-stow rule.
+ */
 class VehicleWeaponScheduler(private val vehicle: VehicleEntity) {
     private val triggerIntents = LinkedHashMap<UUID, TriggerIntent>()
     private val secondaryTriggerIntents = LinkedHashMap<UUID, TriggerIntent>()
-    private val states = LinkedHashMap<ScheduleKey, RuntimeState>()
+    /** Per physical weapon ([physicalWeapon] of a key). */
+    private val states = LinkedHashMap<String, RuntimeState>()
     private val activeTriggers = LinkedHashMap<ScheduleKey, ActiveTrigger>()
+    /** The last tick each seat's own trigger held a weapon (per-seat presentation within the release grace). */
+    private val lastSeatHoldTicks = HashMap<ScheduleKey, Int>()
     private val snapshotBuffer = ArrayList<VehicleWeaponScheduleSnapshot>()
     private var executingProfile: VehicleWeaponScheduleProfile? = null
     private var lastSyncedPayload = ""
@@ -98,13 +108,21 @@ class VehicleWeaponScheduler(private val vehicle: VehicleEntity) {
 
     private fun releaseIntentEdge(controller: LivingEntity, selection: VehicleWeaponSelection?,
                                   slot: VehicleWeaponSlot) {
-        selection?.let { states[it.scheduleKey()]?.releaseEdge() }
+        // A weapon another seat is still firing keeps its trigger held: one seat letting go does not re-arm it.
+        selection?.let { releaseUnlessHeldByOther(physicalWeapon(it.scheduleKey()), controller) }
         // Fixed banks may fan one held slot into several independent weapon schedules.
         for ((key, trigger) in activeTriggers) {
             if (trigger.slot == slot && trigger.origin.controller.uuid == controller.uuid) {
-                states[key]?.releaseEdge()
+                releaseUnlessHeldByOther(physicalWeapon(key), controller)
             }
         }
+    }
+
+    private fun releaseUnlessHeldByOther(weapon: String, controller: LivingEntity) {
+        val others = activeTriggers.entries.any { (key, trigger) ->
+            physicalWeapon(key) == weapon && trigger.origin.controller.uuid != controller.uuid
+        }
+        if (!others) states[weapon]?.releaseEdge()
     }
 
     fun tick() {
@@ -112,16 +130,25 @@ class VehicleWeaponScheduler(private val vehicle: VehicleEntity) {
 
         val tick = vehicle.tickCount
         refreshActiveTriggers()
-        val removedStaleState = states.keys.removeAll {
-            vehicle.getGunName(it.seatIndex, it.weaponIndex) != it.weaponName
+        val removedStaleState = states.keys.removeAll { vehicle.getGunData(it) == null }
+        for (key in activeTriggers.keys) lastSeatHoldTicks[key] = tick
+        lastSeatHoldTicks.entries.removeIf { (key, at) ->
+            tick - at > SEAT_HOLD_MEMORY_TICKS || vehicle.getGunName(key.seatIndex, key.weaponIndex) != key.weaponName
         }
         if (activeTriggers.isEmpty() && states.values.all { it.isStableIdle() }) {
             if (removedStaleState) syncSnapshots()
             return
         }
 
-        states.forEach { (key, state) -> state.tick(tick, key in activeTriggers) }
-        activeTriggers.forEach { (key, trigger) -> processTrigger(key, trigger, tick) }
+        val held = activeTriggers.keys.mapTo(HashSet()) { physicalWeapon(it) }
+        states.forEach { (weapon, state) -> state.tick(tick, weapon in held) }
+        // One physical weapon fires at most its own cadence per tick, however many seats hold it: the first holder
+        // spends the shared credits; a later holder only tries when the earlier one could not fire for a reason of
+        // its own (a stale selection), never for a second round in the same cadence slot.
+        val fired = HashSet<String>()
+        activeTriggers.forEach { (key, trigger) ->
+            if (admitsSharedAttempt(fired, key)) processTrigger(key, trigger, tick, fired)
+        }
         syncSnapshots()
     }
 
@@ -214,11 +241,18 @@ class VehicleWeaponScheduler(private val vehicle: VehicleEntity) {
             val key = resolved.selection.scheduleKey()
             // PRIMARY is visited first. An overlapping SECONDARY hold cannot double the rate.
             if (activeTriggers.containsKey(key)) continue
+            // Every seat holding the weapon is active; they share the weapon's one RuntimeState (tick()).
             activeTriggers[key] = ActiveTrigger(
                 resolved, intent, origin, slot, definition, fixedBank,
             )
-            if (states[key]?.matches(resolved.profile) != true) {
-                states[key] = RuntimeState(resolved.profile)
+            val weapon = physicalWeapon(key)
+            val state = states[weapon]
+            when {
+                state == null -> states[weapon] = RuntimeState(resolved.profile)
+                // Two seats may resolve the same weapon with different profiles (a fixed bank on one seat, the
+                // plain channel on the other). The weapon keeps its credits, cooldown and heat: a handover between
+                // seats can never mint a fresh ready shot.
+                !state.matches(resolved.profile) -> state.retarget(resolved.profile)
             }
         }
         return true
@@ -250,17 +284,24 @@ class VehicleWeaponScheduler(private val vehicle: VehicleEntity) {
         return VehicleFixedGunBanks.permitsEvent(selection, trigger.resolved.profile)
     }
 
-    private fun processTrigger(key: ScheduleKey, trigger: ActiveTrigger, tick: Int) {
-        val state = states[key] ?: return
+    private fun processTrigger(key: ScheduleKey, trigger: ActiveTrigger, tick: Int, fired: MutableSet<String>) {
+        val state = states[physicalWeapon(key)] ?: return
         repeat(trigger.resolved.profile.maxCatchUpEvents) {
-            if (!state.canAttempt()) return
+            if (!state.canAttempt()) {
+                // The cadence slot is spent (or the trigger idle): no other seat may try this tick.
+                fired.add(physicalWeapon(key))
+                return
+            }
             state.consumeCredit()
 
             val result = execute(trigger)
             if (!result.isAccepted()) {
                 state.recordRejected(result)
+                // Ammunition, reload and launch admission belong to the weapon: another seat cannot do better.
+                if (result.reason != ShotRejectionReason.NO_WEAPON) fired.add(physicalWeapon(key))
                 return
             }
+            fired.add(physicalWeapon(key))
 
             notifyAcceptedShot(trigger, result, state, key, tick)
         }
@@ -302,7 +343,14 @@ class VehicleWeaponScheduler(private val vehicle: VehicleEntity) {
     fun snapshot(seatIndex: Int, weaponIndex: Int): VehicleWeaponScheduleSnapshot? {
         val name = vehicle.getGunName(seatIndex, weaponIndex) ?: return null
         val key = ScheduleKey(seatIndex, weaponIndex, name)
-        return states[key]?.snapshot(key)
+        return states[physicalWeapon(key)]?.snapshot(key, seatHolds(key))
+    }
+
+    /** Whether this seat's own trigger is (or within the weapon's release grace was) holding the weapon. */
+    private fun seatHolds(key: ScheduleKey): Boolean {
+        if (key in activeTriggers) return true
+        val state = states[physicalWeapon(key)] ?: return false
+        return heldWithinGrace(lastSeatHoldTicks[key], vehicle.tickCount, state.releaseGraceTicks())
     }
 
     fun clientSnapshot(
@@ -357,8 +405,15 @@ class VehicleWeaponScheduler(private val vehicle: VehicleEntity) {
 
     private fun syncSnapshots() {
         snapshotBuffer.clear()
-        for ((key, state) in states) {
-            snapshotBuffer.add(state.snapshot(key))
+        // One entry per seat listing each scheduled weapon: the shared cadence and heat, that seat's own trigger.
+        val lists = if (states.isEmpty()) emptyList() else List(vehicle.maxPassengers) { vehicle.getWeaponIds(it) }
+        for ((weapon, state) in states) {
+            for (seat in lists.indices) {
+                val index = lists[seat].indexOf(weapon)
+                if (index < 0) continue
+                val key = ScheduleKey(seat, index, weapon)
+                snapshotBuffer.add(state.snapshot(key, seatHolds(key)))
+            }
         }
         val payload = VehicleWeaponScheduleSnapshots.encode(snapshotBuffer)
         if (payload == lastSyncedPayload) return
@@ -405,7 +460,29 @@ class VehicleWeaponScheduler(private val vehicle: VehicleEntity) {
     private fun VehicleWeaponSelection.scheduleKey() =
         ScheduleKey(seatIndex, weaponIndex, weaponName)
 
-    internal class RuntimeState(private val profile: VehicleWeaponScheduleProfile) {
+    internal companion object {
+        /** How long a released seat trigger is remembered for its presentation (longer than any release grace). */
+        private const val SEAT_HOLD_MEMORY_TICKS = 40
+
+        /**
+         * The physical weapon a schedule key fires: its channel name. Every seat that lists the channel fires the
+         * same gun (one GunData, magazine, reload and heat), so they share one cadence state.
+         */
+        @JvmStatic
+        internal fun physicalWeapon(key: ScheduleKey): String = key.weaponName
+
+        /** False once an earlier holder spent this tick's cadence slot of the same physical weapon. */
+        @JvmStatic
+        internal fun admitsSharedAttempt(fired: Set<String>, candidate: ScheduleKey): Boolean =
+            physicalWeapon(candidate) !in fired
+
+        /** A seat counts as holding the trigger while it holds it, and for [grace] ticks after it let go. */
+        @JvmStatic
+        internal fun heldWithinGrace(lastHeldTick: Int?, tick: Int, grace: Int): Boolean =
+            lastHeldTick != null && tick - lastHeldTick <= grace
+    }
+
+    internal class RuntimeState(private var profile: VehicleWeaponScheduleProfile) {
         private val recentProjectileTicks = ArrayDeque<Int>()
         private var lastCreditTick = Int.MIN_VALUE
         private var lastTriggerActivityTick = Int.MIN_VALUE
@@ -500,14 +577,21 @@ class VehicleWeaponScheduler(private val vehicle: VehicleEntity) {
             return false
         }
 
-        fun snapshot(key: ScheduleKey): VehicleWeaponScheduleSnapshot {
+        fun snapshot(key: ScheduleKey): VehicleWeaponScheduleSnapshot = snapshot(key, true)
+
+        /**
+         * The shared cadence and heat as seen from [key]'s seat; [seatHolding] false shows that seat's trigger as
+         * released while another seat fires the weapon.
+         */
+        fun snapshot(key: ScheduleKey, seatHolding: Boolean): VehicleWeaponScheduleSnapshot {
             val heat = heatFraction()
-            val spinning = triggerHeld && overheatTicks <= 0
+            val held = triggerHeld && seatHolding
+            val spinning = held && overheatTicks <= 0
             return VehicleWeaponScheduleSnapshot(
                 profileId = profile.id,
                 seatIndex = key.seatIndex,
                 weaponIndex = key.weaponIndex,
-                triggerHeld = triggerHeld,
+                triggerHeld = held,
                 visualStage = if (spinning) 4 else -1,
                 currentRpm = if (spinning) profile.bulletRpm else 0,
                 maxRpm = profile.bulletRpm,
@@ -606,5 +690,18 @@ class VehicleWeaponScheduler(private val vehicle: VehicleEntity) {
                     recentProjectileTicks.isEmpty()
 
         fun matches(profile: VehicleWeaponScheduleProfile): Boolean = this.profile == profile
+
+        fun releaseGraceTicks(): Int = profile.releaseGraceTicks
+
+        /**
+         * Continue under [next] (the same weapon resolved for another seat or bank) keeping the credits, their
+         * timestamp, heat and overheat: a seat handover never resets the weapon's cooldown. Credits above the new
+         * catch-up bound are dropped.
+         */
+        fun retarget(next: VehicleWeaponScheduleProfile) {
+            if (next == profile) return
+            profile = next
+            shotCredits = min(shotCredits, max(1.0, next.maxCatchUpEvents.toDouble()))
+        }
     }
 }

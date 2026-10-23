@@ -2,68 +2,113 @@
   "Schema": 1,
   "Name": "EC-665 Tiger UHT",
   "BuiltInWeapons": [],
-  "SuspendedWeapons": [],
-  "Pairs": [
+  "SuspendedWeapons": [
+    "FfarS2Fz225",
+    "M3PS2Hmp400",
+    "RmpS2Rmp",
+    "RmpS2RmpRockets",
+    "FfarS3Fz225",
+    "M3PS3Hmp400",
+    "RmpS3Rmp",
+    "RmpS3RmpRockets"
+  ],
+  "Pairs": [],
+  "Singles": [
     {
-      "Id": "inner",
-      "Name": "Inner pylon",
-      "Left": [
+      "Id": "slot_1",
+      "Name": "Left outboard",
+      "Position": [
+        2.8122,
+        2.4433,
+        0.4921
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:heli/atas_stinger_tiger",
+        "berts_vehicle_pack:heli/trigat_x2"
+      ],
+      "MaxPylonMassKg": 1000,
+      "MaxWeaponsPerPylon": 12
+    },
+    {
+      "Id": "slot_2",
+      "Name": "Left inboard",
+      "Position": [
         1.7928,
         2.1972,
         0.2109
       ],
-      "Right": [
+      "AllowedStores": [
+        "berts_vehicle_pack:heli/fz225_ffar",
+        "berts_vehicle_pack:heli/lau131_apkws_m151",
+        "berts_vehicle_pack:heli/lau131_apkws_m282",
+        "berts_vehicle_pack:heli/hot3_x2",
+        "berts_vehicle_pack:heli/hot3_x4",
+        "berts_vehicle_pack:heli/trigat_x4",
+        "berts_vehicle_pack:heli/hmp400",
+        "berts_vehicle_pack:heli/rmp_lc"
+      ],
+      "MaxPylonMassKg": 1000,
+      "MaxWeaponsPerPylon": 12,
+      "NativeWeaponIds": {
+        "berts_vehicle_pack:heli/fz225_ffar": "FfarS2Fz225",
+        "berts_vehicle_pack:heli/hmp400": "M3PS2Hmp400",
+        "berts_vehicle_pack:heli/rmp_lc": [
+          "RmpS2Rmp",
+          "RmpS2RmpRockets"
+        ]
+      }
+    },
+    {
+      "Id": "slot_3",
+      "Name": "Right inboard",
+      "Position": [
         -1.7928,
         2.1972,
         0.2109
       ],
       "AllowedStores": [
-        "berts_vehicle_pack:heli/hot3_quad",
-        "berts_vehicle_pack:eurocopter_tiger/hot3_proxy",
-        "berts_vehicle_pack:munition/pars3_lr"
+        "berts_vehicle_pack:heli/fz225_ffar",
+        "berts_vehicle_pack:heli/lau131_apkws_m151",
+        "berts_vehicle_pack:heli/lau131_apkws_m282",
+        "berts_vehicle_pack:heli/hot3_x2",
+        "berts_vehicle_pack:heli/hot3_x4",
+        "berts_vehicle_pack:heli/trigat_x4",
+        "berts_vehicle_pack:heli/hmp400",
+        "berts_vehicle_pack:heli/rmp_lc"
       ],
-      "StoreGroups": {
-        "berts_vehicle_pack:heli/hot3_quad": [
-          "suspended_inner_l",
-          "suspended_inner_r"
+      "MaxPylonMassKg": 1000,
+      "MaxWeaponsPerPylon": 12,
+      "NativeWeaponIds": {
+        "berts_vehicle_pack:heli/fz225_ffar": "FfarS3Fz225",
+        "berts_vehicle_pack:heli/hmp400": "M3PS3Hmp400",
+        "berts_vehicle_pack:heli/rmp_lc": [
+          "RmpS3Rmp",
+          "RmpS3RmpRockets"
         ]
-      },
-      "MaxWeaponsPerPylon": 1,
-      "MaxPylonMassKg": 1000
+      }
     },
     {
-      "Id": "outer",
-      "Name": "Outer pylon",
-      "Left": [
-        2.8122,
+      "Id": "slot_4",
+      "Name": "Right outboard",
+      "Position": [
+        -2.8122,
         2.4433,
         0.4921
       ],
-      "Right": [
-        -2.8122,
-        2.4433,
-        0.0615
-      ],
       "AllowedStores": [
-        "berts_vehicle_pack:heli/tiger_tanks",
-        "berts_vehicle_pack:eurocopter_tiger/hot3_proxy",
-        "berts_vehicle_pack:eurocopter_tiger/aim92",
-        "berts_vehicle_pack:munition/pars3_lr_dual"
+        "berts_vehicle_pack:heli/atas_stinger_tiger",
+        "berts_vehicle_pack:heli/trigat_x2"
       ],
-      "StoreGroups": {
-        "berts_vehicle_pack:heli/tiger_tanks": [
-          "suspended_outer_l",
-          "suspended_outer_r"
-        ]
-      },
-      "MaxWeaponsPerPylon": 1,
-      "MaxPylonMassKg": 1000
+      "MaxPylonMassKg": 1000,
+      "MaxWeaponsPerPylon": 12
     }
   ],
-  "Singles": [],
-  "StoreGroups": {},
-  "MaxPayloadKg": 1200,
+  "MaxPayloadKg": 1000,
   "MaxPylonMassKg": 1000,
-  "MaxWeaponsPerPylon": 1,
-  "WeaponSeat": 1
+  "MaxWeaponsPerPylon": 12,
+  "WeaponSeat": 1,
+  "WeaponSeats": [
+    1,
+    0
+  ]
 }

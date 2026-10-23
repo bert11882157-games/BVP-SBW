@@ -85,7 +85,6 @@ A42M = [('Ground Belt', [('3ubr11_apfsds', 1)]), A42[1]]
 BTR90 = [('APFSDS Belt', [('3ubr11_apfsds', 1)])] + A42
 A72 = A42
 BMP3 = A42
-A42_HELI = air_first(A42)
 A38 = air_first(std('3uof8_hef_i', '3ubr6_ap_t', '3ubr6_ap_t', '3uor6_hef_t'))      # 2A38: no APDS
 ZU23 = air_first(std('23mm_hei', '23mm_apit', '23mm_apit', '23mm_hei_2'))
 M242 = std('m792_hei_t_1', 'm791_apds', 'm791_apds', 'm792_hei_t_1')
@@ -102,7 +101,6 @@ WEAPONS = {
     ('btr_90', 'Cannon'): ('TWO_A42', BTR90),
     ('btr80a', 'Cannon'): ('TWO_A42', A72), ('bmp3m_elite', 'DualCannon'): ('TWO_A42', BMP3),
     ('9k22_tunguska', 'Cannon'): ('TWO_A42', A38),
-    ('ka50', 'Cannon'): ('TWO_A42', A42_HELI), ('mi28n', 'Cannon'): ('TWO_A42', A42_HELI),
     ('zu23_2', 'Cannon'): ('ZU23', ZU23), ('zsu23_4', 'Cannon'): ('ZU23', ZU23),
     ('m2_bradley', 'Cannon'): ('M242', M242), ('lav25', 'Cannon'): ('M242', M242_LAV),
     ('vbci', 'Cannon'): ('M242', M811),
@@ -111,6 +109,11 @@ WEAPONS = {
     ('gepard', 'Cannon'): ('GENERIC', KDA), ('cv9040_no_net', 'Cannon'): ('GENERIC', BOFORS),
     ('qn_506model', 'Cannon'): ('GENERIC', ZPT99), ('zbd_09', 'Cannon'): ('GENERIC', ZPT99),
 }
+# Helicopter guns (built in and gun pods) carry War Thunder's own belts for that gun on that helicopter (user,
+# 2026-10-18), written by tools/heli_armament/build.py from wt_guns.json (tools/heli_armament/belts.py). The tools here
+# leave their belts alone; their tracers already follow tracer_nations.
+HELI_ARMAMENT = {'ah_1f', 'ah_1g_cobra', 'ah_64d', 'ah_6j', 'eurocopter_tiger', 'ka50', 'mi24v', 'mi28n', 'mi_24a',
+                 'mi_24d'}
 # tracer-only fixes, by round id: 12.7 mm BZT-44 is red in WT (the pack had green); PKT/Type 86 API-T red,
 # PKTM (BMP-2M) pink; 14.5 mm KPVT BZT the same Soviet red composition as the 12.7 mm BZT-44
 TRACER_ONLY = {
@@ -358,6 +361,8 @@ def main(argv):
         before = json.dumps(d, sort_keys=True)
         notes = []
         for wn, w in (d.get('Weapons') or {}).items():
+            if vid in HELI_ARMAMENT:
+                continue
             if (vid, wn) in WEAPONS:
                 family, belts = WEAPONS[(vid, wn)]
                 rebuild(vid, wn, w, family, belts, cat, writes, notes)
