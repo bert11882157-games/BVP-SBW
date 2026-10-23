@@ -36,6 +36,7 @@ Usage: python tools/cockpit_models/f_16c.py [--dry-run]
 """
 import json, math, os, sys
 import numpy as np
+import throttle_lib
 from PIL import Image, ImageDraw, ImageFont
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -47,6 +48,7 @@ TEX = os.path.join(GEN, 'assets/berts_vehicle_pack/textures/entity/f_16c.png')
 TEX_DEAD = os.path.join(GEN, 'assets/berts_vehicle_pack/textures/entity_dead/f_16c.png')
 
 BONE = 'wreck_fuselage_1__cockpit'
+THR = []                                 # the throttle levers (throttle_lib), one bone each
 SOURCE_BONES = ('wreck_fuselage_1__hull', 'wreck_fuselage_0__hull')
 STICK_BONE = 'wreck_fuselage_1__control_stick_pitch'
 ATLAS = [(0, 600, 2048, 1400)]        # free texture area (x, y, w, h): no UV of the model, its fallback or the wreck lands here
@@ -873,15 +875,10 @@ def build(atlas, lamps, cols):
         m.box([s * 0.13, -0.72, 0.58], (X, Y, Z), (0.014, 0.035, 0.07), sw['dgrey'])
 
     # -- throttle (left console): quadrant, lever and the grip with its thumb switches
+    # The lever is its own bone (throttle_lever), hinged under the console top, modelled at idle (throttle_lib).
     tz = 0.34
-    m.box([0.345, CONSOLE_Y + 0.011, tz], (X, Y, Z), (0.050, 0.011, 0.14), sw['dgrey'])
-    lev = (X, unit([0, 1, 0.25]), unit([0, -0.25, 1]))
-    m.box([0.345, CONSOLE_Y + 0.07, tz + 0.04], lev, (0.009, 0.060, 0.010), sw['metal'])
-    gax = (X, unit([0, 1, 0.45]), unit([0, -0.45, 1]))
-    m.box([0.345, CONSOLE_Y + 0.140, tz + 0.075], gax, (0.026, 0.044, 0.036), sw['black'])
-    m.box([0.345, CONSOLE_Y + 0.188, tz + 0.090], gax, (0.022, 0.008, 0.030), sw['dgrey'])
-    for k, xl in enumerate((0.331, 0.345, 0.359)):
-        m.box(np.array([xl, CONSOLE_Y + 0.140, tz + 0.075]) - gax[2] * 0.038 + gax[1] * 0.012, gax, (0.006, 0.006, 0.004), sw['red'] if k == 0 else sw['metal'])
+    THR.clear()
+    THR.extend(throttle_lib.jet_levers(m, Mesh, sw, 'f16', x=0.345, top_y=CONSOLE_Y, z_idle=tz - 0.07))
     # switch rows on both console tops
     for s in (1, -1):
         for zr in (-0.20, -0.13, -0.06, 0.40, 0.47, 0.54):
@@ -1013,6 +1010,7 @@ def main(argv):
     at = next(i for i, b in enumerate(bones) if b['name'] == SOURCE_BONES[0]) + 1
     bones.insert(at, {'name': BONE, 'parent': 'hull', 'pivot': list(hull['pivot']), 'poly_mesh': pm})
     g['bones'] = bones
+    thr = throttle_lib.add_bones(g['bones'], THR, BONE, EYE)
     # the stick: its three bones' pivots to the side stick's foot (model pixels)
     foot_px = [round(float((foot + EYE)[0]) * 16, 5), round(float((foot + EYE)[1]) * 16, 5),
                round(-float((foot + EYE)[2]) * 16, 5)]
@@ -1045,7 +1043,7 @@ def main(argv):
         cg['Triangles'] = [round(v, 4) + 0.0 for p in tri + both for v in p]
     # the pilot's seat and eye (vehicle data: x left, y up, z forward, blocks): the eye above the seat as built
     print(f'f_16c: {removed} old interior faces removed; new cockpit {len(pm["polys"])} faces, {len(gauges)} game gauges, '
-          f'{len(displays)} display(s), HUD combiner {len(glass) // 3} triangles; stick foot {foot_px} px; '
+          f'{len(displays)} display(s), HUD combiner {len(glass) // 3} triangles; stick foot {foot_px} px; throttle bones {[(n, p) for n, p, _ in thr]}; '
           f'atlas {atlas.used()} of {sum(a[2] * a[3] for a in ATLAS)} texels')
     if dry:
         return
