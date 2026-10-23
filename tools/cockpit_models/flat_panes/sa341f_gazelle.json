@@ -1,0 +1,52 @@
+{
+  "why": "SA 341F Gazelle glasshouse: a light cage of few slim members round big panes (the model's own frame cage, kept as the outer mould line). Curved on the real aircraft, so NOT listed: the two windscreen panes (a wrap-round bubble either side of a slim centre post), the chin windows below them, and the shoulder strips (the roof window band under the roof rail). Flat, so listed: the door windows (the front and rear doors of each side, a lower and an upper band; the door glass is flat in its frame, in two planes per side, the lower band leaning out 5.6 degrees, the upper band in 8 degrees, the planes of the model's own sill, belt and upper rails), and the pilot's overhead window over the right seat (the model's roof is open there; two panes round a slim cross bar, one roof plane). Frame layout from the model's own members (checks/orig, source rows 982 / 1003 / 910 / 934); the real Gazelle's pane sizes are not documented with dimensions, so the layout is the model's own and UNVERIFIED against the real aircraft.",
+  "panes": [
+    {
+      "name": "door windows, lower band",
+      "box": [
+        [
+          0.83,
+          0.7,
+          2.8
+        ],
+        [
+          0.97,
+          1.16,
+          3.87
+        ]
+      ],
+      "mirror": true
+    },
+    {
+      "name": "door windows, upper band",
+      "box": [
+        [
+          0.83,
+          1.2,
+          2.7
+        ],
+        [
+          0.97,
+          1.62,
+          3.87
+        ]
+      ],
+      "mirror": true
+    },
+    {
+      "name": "pilot overhead window",
+      "box": [
+        [
+          -0.64,
+          1.86,
+          2.6
+        ],
+        [
+          -0.19,
+          2.06,
+          3.67
+        ]
+      ]
+    }
+  ]
+}
