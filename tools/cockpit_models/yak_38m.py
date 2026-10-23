@@ -866,12 +866,12 @@ def build(atlas, E):
         m.box(P(s * 0.215, -0.895, 0.215 + SH), (X, Y, Z), (0.014, 0.014, 0.030), sw['yellow'], front=(0, s, stripes, Z, Y))   # handle
     m.box(P(0, -0.60, -0.375 + SH), ax_b, (0.19, 0.40, 0.018), sw['metal'], front=(2, 1, armour, X, ax_b[1]))   # the armoured shield
     m.box(P(0, -0.59, -0.345 + SH), ax_b, (0.16, 0.37, 0.016), sw['cushion'], front=(2, 1, back, X, ax_b[1]))
-    m.box(P(0, -0.060, -0.335 + SH), (X, Y, Z), (0.16, 0.130, 0.09), sw['frame'])                    # headbox (top +0.07)
-    m.box(P(0, -0.045, -0.2455 + SH), (X, Y, Z), (0.11, 0.085, 0.0045), sw['cushion'], front=(2, 1, headbox, X, Y))
+    m.box(P(0, -0.075, -0.335 + SH), (X, Y, Z), (0.14, 0.115, 0.09), sw['frame'])                    # headbox (top +0.04, 11 cm under the glass)
+    m.box(P(0, -0.060, -0.2455 + SH), (X, Y, Z), (0.11, 0.085, 0.0045), sw['cushion'], front=(2, 1, headbox, X, Y))
     for s in (1, -1):                                                                                # the K-36's head wings
-        m.box(P(s * 0.145, -0.060, -0.255 + SH), (X, Y, Z), (0.012, 0.100, 0.060), sw['frame'])
-    m.box(P(0, 0.095, -0.335 + SH), (X, Y, Z), (0.12, 0.016, 0.06), sw['dgrey'])                     # the face-blind's housing
-    m.box(P(0, 0.095, -0.2745 + SH), (X, Y, Z), (0.045, 0.011, 0.006), sw['yellow'], front=(2, 1, stripes, X, Y))   # its handle
+        m.box(P(s * 0.125, -0.075, -0.255 + SH), (X, Y, Z), (0.012, 0.095, 0.060), sw['frame'])
+    m.box(P(0, 0.062, -0.335 + SH), (X, Y, Z), (0.10, 0.014, 0.06), sw['dgrey'])                     # the face-blind's housing
+    m.box(P(0, 0.062, -0.2745 + SH), (X, Y, Z), (0.045, 0.011, 0.006), sw['yellow'], front=(2, 1, stripes, X, Y))   # its handle
     for s in (1, -1):
         m.box(P(s * 0.035, -0.915, 0.355 + SH), (X, Y, Z), (0.006, 0.05, 0.006), sw['metal'])
     m.box(P(0, -0.855, 0.355 + SH), (X, Y, Z), (0.045, 0.011, 0.009), sw['yellow'], front=(2, 1, stripes, X, Y))      # the pan handle
