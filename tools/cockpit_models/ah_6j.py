@@ -10,8 +10,10 @@ eye is main's (-0.44, 2.42, 2.45).
 Built (the AH-6J's cockpit as photographed and described): a compact panel before the pilot with two multifunction
 displays (the flight page and the stores / map page, live), the standby attitude, airspeed and altimeter, engine and
 rotor speed, gas temperature, fuel and the caution panel; the reflex gunsight on its top (its reticle live for the
-pilot); a crew seat, the cyclic, the collective and the pedals. The left seat stays the model's (it carries no
-crewman's camera). No canopy is made: the bubble keeps its frames and gets glass (model_glass.glaze).
+pilot); a crew seat, the cyclic, the collective and the pedals. The left seat gets its own station too (a display,
+the standby dials and the caution panel, a seat and full controls), built about the pilot's eye mirrored across the
+centre line since that seat has no camera of its own; the old central panel pod, its backboard, the centre console and
+both old seats are gone. No canopy is made: the bubble keeps its frames and gets glass (model_glass.glaze).
 
 Run on the committed originals (work/handbuilt/run_heli.ps1 restores them first).
 Usage: python3 tools/cockpit_models/ah_6j.py [--dry-run]
@@ -47,6 +49,30 @@ CONSOLES = ([(0.30, 'ARMAMENT', 'guarded'), (0.36, 'RADIO', 'freq'), (0.34, 'LIG
             [(0.34, 'ELEC', 'toggles'), (0.33, 'CB', 'breakers'), (0.33, 'ICS', 'rotary')])
 
 
+LEFT_LAYOUT = [
+    ('mfd',      0,  0.000, -0.250, ('display', 'PFD', 0.120, 'LCD'), 'multifunction display'),
+    ('warning',  0,  0.000, -0.420, ('annunciator', 0.180, 0.050), 'caution panel'),
+    ('adi',     -1,  0.060, -0.230, ('game', 'ATTITUDE', 0.058), 'standby attitude'),
+    ('ias',     -1,  0.060, -0.340, ('game', 'AIRSPEED', 0.050), 'airspeed'),
+    ('alt',      1,  0.060, -0.230, ('game', 'ALTIMETER', 0.050), 'altimeter'),
+    ('clock',    1,  0.060, -0.340, ('game', 'CLOCK', 0.042), 'clock'),
+]
+
+
+def left_eye(ac):
+    """the left seat's eye: it has no camera of its own (no crewman's view), so the pilot's eye mirrored across the
+    centre line, over the left seat (seat 1 sits at the mirror of seat 0)"""
+    e = ac.eye(0).copy()
+    e[0] = -e[0]
+    return e
+
+
+def left_station(ac):
+    st = station(ac)
+    st.update(seat=1, E=left_eye(ac), layout=LEFT_LAYOUT, hud=None)
+    return st
+
+
 def station(ac):
     return dict(seat=0, E=ac.eye(0), S=1.0, colours=COLOURS, layout=LAYOUT, consoles=CONSOLES, lamp_palette='nato',
                 PANEL_Z=0.86, LEAN=12, HINGE=0.14, WING=32, WALL_X=0.26, TOP_C=-0.130, TOP_W=-0.150,
@@ -67,15 +93,21 @@ def main(argv):
         (E0, (-0.42, -1.02, -0.55), (0.62, -0.30, 1.20), 0.62, -0.30),    # the pilot's side and the centre console
         (E0, (-0.40, -0.30, 0.65), (0.75, 0.30, 1.20), 0.75, -0.30),      # the old central panel pod and its sight
         (E0, (-0.30, -0.30, 0.30), (0.30, 0.10, 0.70), 0.30, -0.30),      # the old cyclic's grip
+        (left_eye(ac), (-0.42, -1.02, -0.55), (0.42, -0.30, 1.20), 0.42, -0.30),   # the left seat, its controls and
+        (left_eye(ac), (-0.40, -0.30, -0.60), (0.40, 0.30, 1.20), 0.40, -0.30),    # its old stick column and grip
+        (E0, (-0.11, -0.35, 1.20), (0.99, 0.11, 1.55), 0.99, -0.35),     # the old panel's backboard and housing on the
+        #                                                              centre line (the windscreen's centre post above it stays)
+        (E0, (0.29, -1.02, 0.95), (0.59, -0.30, 1.45), 0.59, -0.30),     # the old centre console's front column
         (E0, (-0.40, -0.30, -0.60), (0.62, 0.30, -0.05), 0.62, -0.30)],   # the old seats' backs and the plate between
         glass_gap=0.005)}                       # (the old sight's own glass lies against it: only true frames stay)
     atlas = H.A.Atlas(VID)
     removed['floor faces repainted'] = HS.repaint_floor(ac, atlas, FLOOR, [
-        (E0 + [-0.45, -1.15, -0.5], E0 + [0.45, -0.90, 1.2])])
+        (E0 + [-0.45, -1.15, -0.5], E0 + [0.45, -0.90, 1.2]), (left_eye(ac) + [-0.45, -1.15, -0.5], left_eye(ac) + [0.45, -0.90, 1.2])])
     m = H.Mesh(atlas)
     g, d, h = HS.build(m, atlas, station(ac))
-    pm, line = HS.install(ac, m, g, d, [h], [E0])
-    print(f'{VID}: removed {removed}; new cockpit {len(pm["polys"])} faces, {len(g)} gauges, {len(d)} displays; '
+    g1, d1, _ = HS.build(m, atlas, left_station(ac))           # the left seat: its own panel, seat and controls
+    pm, line = HS.install(ac, m, g + g1, d + d1, [h], [E0, left_eye(ac)])
+    print(f'{VID}: removed {removed}; new cockpit {len(pm["polys"])} faces, {len(g + g1)} gauges, {len(d + d1)} displays; '
           f'{line}')
     if not dry:
         H.write(ac, atlas)
