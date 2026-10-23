@@ -1298,6 +1298,10 @@ def build_front(atlas, sw, geo):
     gauges, displays = [], []
     for q in deck_cover(geo, EYE_F, (4.98, 5.22), (2.93, 3.26), (0.18, 0.545), need_up=0.3):
         m.flat(q, sw['coaming'], toward=[0, 0, 0])
+    # the EX's dash block has its rear wall at z 4.939 (the F-15E's at 4.984): its top shows above the panel wings with the old patchwork
+    # texture, so that wall is covered with the same dark coaming, 4 mm toward the eye
+    for q in deck_cover(geo, EYE_F, (4.93, 4.95), (2.93, 3.26), (0.0, 0.545)):
+        m.flat(q, sw['coaming'], toward=[0, 0, 0])
     cache = {'bar_h': atlas.paint(96, 16, bar_h), 'bar_v': atlas.paint(16, 96, bar_v)}
     P = PANEL_F
     build_panel(m, atlas, sw, P, LAYOUT_F, 'ufc_f', 0, gauges, displays, 3, cache, lip=(0.642, 0.724))
