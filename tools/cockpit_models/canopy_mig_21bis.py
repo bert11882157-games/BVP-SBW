@@ -40,7 +40,7 @@ PANE_W = 0.20                    # its half width, metres (the side panes only n
 PANE_TOP = 0.733                 # the apex of its arch: it reaches the windscreen's top frame (the arch at 0.715)
 
 
-PANE = (PANE_TOP, 1.42, PANE_W, PANE_W, 0.04)   # the flat armoured front pane (flat_pane)
+PANE = (PANE_TOP, 1.42, PANE_W, PANE_W, 0.04, 1.38, 2.0)   # the flat armoured front pane (flat_pane)
 
 
 def build(atlas, E, skin):
@@ -58,7 +58,7 @@ def build(atlas, E, skin):
     C.member(m, can, E, 1.0, -0.28, 0.645, 0.035, 0.022, out, inner, sides=(1,), steps=14)
     # the windscreen: its arch against the canopy, the front pane's arched frame, the base frame, the side rails
     C.bow(m, ws, E, 0.715, 0.035, 0.022, out, inner)
-    C.arched_pane(m, ws, E, PANE_TOP, 1.42, PANE_W, PANE_W, 0.04, 0.025, out, inner, flat_to=1.37)
+    C.oval_pane(m, ws, E, PANE_TOP, 1.38, PANE_W, 0.04, 0.025, out, inner, n=2.0)
     C.bow(m, ws, E, 1.40, 0.04, 0.025, out, inner)
     C.member(m, ws, E, 0.0, 0.70, 1.42, 0.045, 0.035, out, inner)
     # the periscope housing on the canopy's top

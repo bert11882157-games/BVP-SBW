@@ -36,7 +36,7 @@ NOSE_RGB = (70, 78, 72)          # (work/handbuilt lower_skin.py: lowered skin i
 FRONT_PANE_X = 0.10              # the flat front pane's edges, out from the centre line (the DCS MiG-15bis reference's)
 
 
-PANE = (0.425, 0.8, 0.14, 0.06, 0.03)   # the flat armoured front pane: apex z, foot z, half width, corner radius, frame width
+PANE = (0.425, 0.8, 0.14, 0.06, 0.03, 0.77, 2.6)   # the flat armoured front pane: apex z, foot z, half width, (radius), frame width, frame foot z, oval n
 
 
 def build(atlas, E, skin):
@@ -52,7 +52,7 @@ def build(atlas, E, skin):
     # the windscreen: the arch, the front pane's two posts, the base frame on the nose, the side rails
     C.bow(m, sh, E, SPLIT + 0.027, 0.035, 0.02, out, inner)
     # the MiG-15's armoured front pane: wide, its top corners well rounded (photos of the type head-on: its round top reaches the windscreen's top frame)
-    C.arched_pane(m, sh, E, 0.425, 0.8, 0.14, 0.06, 0.03, 0.02, out, inner, flat_to=0.76)
+    C.oval_pane(m, sh, E, 0.425, 0.77, 0.14, 0.03, 0.02, out, inner, n=2.6)
     C.bow(m, sh, E, 0.785, 0.03, 0.02, out, inner)
     C.member(m, sh, E, 0.0, SPLIT + 0.045, 0.80, 0.04, 0.03, out, inner)
     return m, glass

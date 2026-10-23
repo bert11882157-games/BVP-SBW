@@ -168,20 +168,68 @@ def pane_x(z_top, half_w, radius, slope):
     return x_at
 
 
-def flat_pane(sections, z_top, z_base, half_w, radius, width, step=0.025):
+class Oval:
+    """the outline of an oval flat pane on a windscreen whose top line falls at [slope] (radians): in the pane's plane
+    a superellipse (n = 2: an ellipse; larger n: straighter sides, as a rounded window) [half_w] wide, its frame's
+    outer edge touching z_top at the apex and z_end at the foot, the frame [width] wide round it. env(z, r): how far
+    out from the centre line the outline offset outward by r (r < 0: inward) reaches at station z, 0 off its ends"""
+
+    def __init__(self, z_top, z_end, half_w, width, slope, n=2.0, k=2400):
+        self.c, self.width = math.cos(slope), width
+        self.z_top = z_top
+        d0, d1 = width / 2 + 0.001, (z_end - z_top) / self.c - width / 2 - 0.001   # the frame's centre line's ends
+        dc, b = (d0 + d1) / 2, (d1 - d0) / 2
+        t = np.linspace(0, 2 * math.pi, k, endpoint=False)
+        ct, st = np.cos(t), np.sin(t)
+        self.P = np.c_[half_w * np.sign(ct) * np.abs(ct) ** (2 / n), dc - b * np.sign(st) * np.abs(st) ** (2 / n)]
+        tg = np.roll(self.P, -1, 0) - np.roll(self.P, 1, 0)
+        nrm = np.c_[-tg[:, 1], tg[:, 0]]
+        nrm /= np.linalg.norm(nrm, axis=1)[:, None]
+        if (nrm * (self.P - [0, dc])).sum(1).mean() < 0:
+            nrm = -nrm
+        self.N = nrm
+        self._env = {}
+
+    def d(self, z):
+        return (z - self.z_top) / self.c
+
+    def env(self, z, r=0.0):
+        if r not in self._env:
+            Q = self.P + self.N * r
+            grid = np.arange(Q[:, 1].min() - 0.002, Q[:, 1].max() + 0.002, 0.001)
+            xs = np.zeros(len(grid))
+            for a, b in zip(Q, np.roll(Q, -1, 0)):                 # every segment, at every grid line it spans
+                lo, hi = sorted((a[1], b[1]))
+                i0, i1 = int(math.ceil((lo - grid[0]) / 0.001)), int(math.floor((hi - grid[0]) / 0.001))
+                for i in range(max(0, i0), min(len(grid) - 1, i1) + 1):
+                    f = 0.5 if hi - lo < 1e-12 else (grid[i] - a[1]) / (b[1] - a[1])
+                    xs[i] = max(xs[i], a[0] + (b[0] - a[0]) * f, 0.0)
+            self._env[r] = (grid, xs)
+        grid, xs = self._env[r]
+        return float(np.interp(self.d(z), grid, xs, left=0.0, right=0.0))
+
+
+def flat_pane(sections, z_top, z_base, half_w, radius, width, z_end=None, n=2.0, step=0.025):
     """the windscreen sections remade so the armoured front pane's region is one flat plane (a flat slab, as the real
     one): across x level, along z straight from the windscreen's top at z_top to its top at z_base; up to the outer
     edge of the pane's frame the sections lie on that plane, outboard the side panes are bent down to meet it
-    (the change fading out to nothing at the sill). Stations every [step] over the pane; the others unchanged."""
+    (the change fading out to nothing at the sill). Stations every [step] over the pane; the others unchanged.
+    z_end given: the pane an oval (Oval, its frame's foot at z_end), else round-topped with straight sides."""
     sh = Shape(sections)
     y0, y1 = sh.point(z_top, 1.0)[1], sh.point(z_base, 1.0)[1]
     slope = math.atan2(y0 - y1, z_base - z_top)
-    x_at = pane_x(z_top, half_w, radius, slope)
+    if z_end is None:
+        x_at = pane_x(z_top, half_w, radius, slope)
+        reach = lambda z: x_at(z) + width / 2 + 0.025                       # noqa: E731
+    else:
+        ov = Oval(z_top, z_end, half_w, width, slope, n)
+        z_mid = (z_top + z_end) / 2                 # below its widest the plane stays full width down to the base
+        reach = lambda z: max(0.03, ov.env(min(z, z_mid), width / 2 + 0.025))   # noqa: E731
     out = [(z, p) for z, p in sections if z < z_top - 1e-6 or z > z_base + 1e-6]
     for z in list(np.arange(z_top, z_base - 1e-6, step)) + [z_base]:
         sec = sh.section(z)
         yp = y0 + (y1 - y0) * (z - z_top) / (z_base - z_top)
-        xf = min(x_at(z) + width / 2 + 0.025, sec[0][0] - 0.03)   # (flat a little past the frame's outer edge)
+        xf = min(reach(z), sec[0][0] - 0.03)   # (flat a little past the frame's outer edge)
         xs, ys = sec[::-1, 0], sec[::-1, 1]
         dy = yp - float(np.interp(xf, xs, ys))
         x_sill = sec[0][0]
@@ -223,6 +271,54 @@ def arched_pane(m, shape, E, z_top, z_base, half_w, radius, width, depth, rect_o
             _EXTRA.extend([a + E, c + E, d + E, a + E, d + E, b + E])
     return x_at
 
+
+def oval_pane(m, shape, E, z_top, z_end, half_w, width, depth, rect_out, rect_in, n=2.0):
+    """the Soviet armoured front pane as it is: one flat sheet whose outline, seen from ahead, is an oval (rounded
+    at its foot as well as its top: Oval), in a frame of even [width] all round it; the frame's apex touching the
+    windscreen arch at z_top, its foot the base frame at z_end. The shape must be flat_pane'd with the same oval.
+    The windscreen's own glass is cut away under the frame and inside it (cut_glass); the pane's glass fills the
+    frame's inside, on the plane"""
+    p0, p1 = shape.point(z_top, 1.0, 1), shape.point(z_top + 0.1, 1.0, 1)
+    slope = math.atan2(p0[1] - p1[1], 0.1)
+    ov = Oval(z_top, z_end, half_w, width, slope, n)
+    T = np.array([0, -math.sin(slope), math.cos(slope)])            # down the plane
+    Nn = np.array([0, math.cos(slope), math.sin(slope)])            # out of it
+    top = p0 + E
+
+    def at(x, d):                                                   # a point on the plane
+        return top + np.array([x, 0, 0]) + T * d
+    _FRAMES.append((shape, 'pane', lambda z: ov.env(z, width / 2 + 0.006), z_top - 0.002, z_end + 0.002))
+    P, Nv = ov.P, ov.N
+    k = len(P)
+    step = max(1, k // 160)
+    idx = list(range(0, k, step)) + [0]
+    for i, j in zip(idx[:-1], idx[1:]):
+        q = []
+        for t in (i, j):
+            for o in (-1, 1):
+                x, d = P[t] + Nv[t] * o * width / 2
+                b = at(x, d)
+                q.append((b + Nn * 0.004, b - Nn * depth))
+        (a0, a1), (b0, b1), (c0, c1), (d0, d1) = q      # (i, in), (i, out), (j, in), (j, out)
+        m.flat([a0, b0, d0, c0], rect_out, toward=(a0 + d0) / 2 + (a0 - a1))
+        m.flat([a1, b1, d1, c1], rect_in, toward=(a1 + d1) / 2 + (a1 - a0))
+        m.flat([a0, c0, c1, a1], rect_in, toward=(a0 + c1) / 2 + (a0 - b0))
+        m.flat([b0, d0, d1, b1], rect_in, toward=(b0 + d1) / 2 + (b0 - a0))
+    # the pane: the glass inside the frame, on the plane, rows across it
+    r_in = -(width / 2 + 0.006)
+    Q = P + Nv * r_in
+    dmin, dmax = Q[:, 1].min(), Q[:, 1].max()
+    zs = [z_top + d * ov.c for d in np.linspace(dmin + 1e-4, dmax - 1e-4, 60)]
+    rows = []
+    for z in zs:
+        xin = ov.env(z, r_in)
+        d = ov.d(z)
+        rows.append((at(xin, d), at(-xin, d)))
+    for (a, b), (c, d) in zip(rows[:-1], rows[1:]):
+        _EXTRA.extend([a, c, d, a, d, b])
+    return ov
+
+
 def cut_glass(E, pad=0.006):
     """the glass patches asked for, remade with every frame cut out of them: the glass stops at each bow's and
     member's edge (less [pad], as the frames' faces lean out over their footprint where the glass curves) instead of
@@ -240,6 +336,8 @@ def cut_glass(E, pad=0.006):
             zb |= {f[3] - pad, f[4] + pad}
             if callable(f[2]):                         # a curving frame: the glass's edge follows it every 5 mm
                 zb |= set(np.arange(f[3], f[4], 0.005).tolist())
+        for f in panes:                                # an oval pane's frame likewise
+            zb |= set(np.arange(f[3], f[4], 0.005).tolist())
         zb = sorted(z for z in zb if z0 - 1e-9 <= z <= z1 + 1e-9)
         for i in range(len(zb) - 1):
             za, zc = zb[i], zb[i + 1]
