@@ -66,7 +66,7 @@ GROUND = {  # combat weight (t), class
     'btr_60pb': (10.3, 'WHEELED'), 'zbd_09': (21, 'WHEELED'), 'zsl_92': (15.8, 'WHEELED'), 'ztl_09': (23, 'WHEELED'),
     'm1128': (18.8, 'WHEELED'), '9p148': (7, 'WHEELED'), 'gaz_3937_vodnik_aa': (7.5, 'WHEELED'),
     'fv721_fox': (6.12, 'WHEELED'), 'm142_himars': (16.25, 'WHEELED'),
-    'scud_b': (37.4, 'WHEELED'), 'gaz_tigr': (7.2, 'WHEELED'),
+    'scud_b': (37.4, 'WHEELED'), 'gaz_tigr': (7.2, 'WHEELED'), 'dv15': (12.0, 'LIGHT'), 'lcac': (185, 'WHEELED'),
     'bmd_1': (7.5, 'LIGHT'), 'btr_zd': (8.5, 'LIGHT'), '9p149_shturm': (12, 'LIGHT'), 'strela_10m2': (12.3, 'LIGHT'), 'm551a1': (15.8, 'LIGHT'),
     'm113a3': (12.34, 'LIGHT'),
     'toyota_jihad_bmp1': (2.5, 'CAR'), 'toyota_jihad_dshk': (2.3, 'CAR'), 'toyota_jihad_s5': (2.3, 'CAR'),

@@ -2,6 +2,7 @@ package com.yourname.berts_vehicle_pack.init;
 
 import com.yourname.berts_vehicle_pack.BertsVehiclePack;
 import com.yourname.berts_vehicle_pack.entity.Ags30Entity;
+import com.yourname.berts_vehicle_pack.entity.FittedBoatEntity;
 import com.yourname.berts_vehicle_pack.entity.T80BvmObr2022Entity;
 import com.yourname.berts_vehicle_pack.entity.T64AEntity;
 import com.yourname.berts_vehicle_pack.entity.LavAdEntity;
@@ -729,6 +730,10 @@ public class ModEntities {
             ENTITIES.register("gaz_tigr", () -> vehicle(
                     (type, level) -> new FittedGroundVehicleEntity(type, level, "gaz_tigr"),
                     2.7f, 2.6f, "gaz_tigr"));
+    public static final RegistryObject<EntityType<FittedBoatEntity>> DV15 =
+            ENTITIES.register("dv15", () -> vehicle(
+                    (type, level) -> new FittedBoatEntity(type, level, "dv15"),
+                    3.4f, 2.6f, "dv15"));
     public static final RegistryObject<EntityType<Leopard1A1A1Entity>> LEOPARD_1A1A1 =
             ENTITIES.register("leopard_1a1a1", () -> vehicle(Leopard1A1A1Entity::new, 3.94f, 2.6f, "leopard_1a1a1"));
     public static final RegistryObject<EntityType<FittedGroundVehicleEntity>> T14_ARMATA =
