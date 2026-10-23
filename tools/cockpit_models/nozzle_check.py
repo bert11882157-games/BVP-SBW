@@ -55,7 +55,10 @@ SEEDS = {}
 # (half width 0.7346), y 1.6048 .. 3.2548 (half height 0.825, the fin-root bump at y 3.39 left out): centre (0.8024, 2.4298).
 EXITS = {'mig_25pd': [(0.8024, 2.4298, -9.5725, 0.780)],
          # F-102A: the J57 burner can ends at source z 195; the exit petals run on to the tail plane z 209 around a hole of 12 units (0.60 m) radius, centre y 40.1 px
-         'f_102a': [(0.0, 2.508, -9.4912, 0.620)]}
+         'f_102a': [(0.0, 2.508, -9.4912, 0.620)],
+         # Yak-38M: the R-28V-300's two swivelling nozzles sit at the fuselage sides under the wing trailing edge (nozzle box source x 12..19, y 12..18,
+         # z 64..78; the end ring z 76..78 is 6 x 6 units), exit plane z 78: centre (16, 15, 78) source units x 0.7987 px / 16
+         'yak_38m': [(0.7987, 1.2480, -5.6207, 0.150)]}
 
 
 def load_bones(vid):

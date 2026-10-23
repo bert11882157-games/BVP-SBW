@@ -1,0 +1,134 @@
+{
+  "Schema": 1,
+  "Name": "Yak-38M Forger-A",
+  "BuiltInWeapons": [
+    "Vspu36"
+  ],
+  "SuspendedWeapons": [
+    "Ub16Inner",
+    "Ub32Inner",
+    "B8Inner",
+    "S24Inner",
+    "Ub16Outer",
+    "S24Outer",
+    "UpkInner",
+    "UpkOuter"
+  ],
+  "Pairs": [
+    {
+      "Id": "inner",
+      "Name": "Stations 1/4 · inner wing pylons",
+      "Left": [
+        1.4476,
+        1.248,
+        -2.3261
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            1.4476,
+            1.248,
+            -2.3261
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Right": [
+        -1.4476,
+        1.248,
+        -2.3261
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -1.4476,
+            1.248,
+            -2.3261
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:r60",
+        "berts_vehicle_pack:munition/kh23m",
+        "berts_vehicle_pack:munition/ub16_57",
+        "berts_vehicle_pack:munition/ub32a_24",
+        "berts_vehicle_pack:su25_s8ko_pod",
+        "berts_vehicle_pack:munition/s24b",
+        "berts_vehicle_pack:fab_100_x3",
+        "berts_vehicle_pack:fab_250",
+        "berts_vehicle_pack:fab_500",
+        "berts_vehicle_pack:munition/zb500",
+        "berts_vehicle_pack:gun_pod/upk23_250"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 520,
+      "NativeWeaponIds": {
+        "berts_vehicle_pack:munition/ub16_57": "Ub16Inner",
+        "berts_vehicle_pack:munition/ub32a_24": "Ub32Inner",
+        "berts_vehicle_pack:su25_s8ko_pod": "B8Inner",
+        "berts_vehicle_pack:munition/s24b": "S24Inner",
+        "berts_vehicle_pack:gun_pod/upk23_250": "UpkInner"
+      }
+    },
+    {
+      "Id": "outer",
+      "Name": "Stations 2/3 · outer wing pylons",
+      "Left": [
+        1.9968,
+        1.1481,
+        -2.4759
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            1.9968,
+            1.1481,
+            -2.4759
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Right": [
+        -1.9968,
+        1.1481,
+        -2.4759
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -1.9968,
+            1.1481,
+            -2.4759
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:r60_x2",
+        "berts_vehicle_pack:munition/ub16_57",
+        "berts_vehicle_pack:munition/s24b",
+        "berts_vehicle_pack:sensor/delta_ng",
+        "berts_vehicle_pack:fab_100",
+        "berts_vehicle_pack:fab_250",
+        "berts_vehicle_pack:gun_pod/upk23_250"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 300,
+      "NativeWeaponIds": {
+        "berts_vehicle_pack:munition/ub16_57": "Ub16Outer",
+        "berts_vehicle_pack:munition/s24b": "S24Outer",
+        "berts_vehicle_pack:gun_pod/upk23_250": "UpkOuter"
+      }
+    }
+  ],
+  "StoreGroups": {},
+  "MaxPayloadKg": 1460,
+  "Radar": {
+    "Enabled": true,
+    "Range": 2000
+  },
+  "MaxPylonMassKg": 1000,
+  "MaxWeaponsPerPylon": 12,
+  "Singles": []
+}
