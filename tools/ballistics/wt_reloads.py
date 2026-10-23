@@ -48,11 +48,14 @@ MAIN = {
     'bmp_1am': (6.0, 'WT BMP-1 73 mm 2A28 autoloader'), 'bmd_1': (6.0, 'WT BMP-1 73 mm 2A28 autoloader'),
     'toyota_jihad_bmp1': (8.0, 'estimate: 2A28 on a technical, hand-loaded'),
     'fv721_fox': (0.8, 'WT FV721 Fox 30 mm L21A1 RARDEN, 3-round clip, aced'),
+    'm1a1_tusk': (5.0, 'WT M1A1 HC 120 mm M256, aced'),
 }
 MAIN_WEAPON = {'bmp3m_elite': 'Cannon', 'toyota_jihad_bmp1': 'BMP1Cannon'}
 
 # Machine guns whose reload is WT's own (aced belt change), not the 20 s rule of thumb.
-WT_MG = {('fv721_fox', 'MachineGun'): (8.0, 'WT L37A2, 100-round belt, aced (basic crew 10.4 s)')}
+WT_MG = {('fv721_fox', 'MachineGun'): (8.0, 'WT L37A2, 100-round belt, aced (basic crew 10.4 s)'),
+         ('m1a1_tusk', 'MachineGun'): (8.0, 'WT M240, 200-round belt (reloadTime 8.0)'),
+         ('m1a1_tusk', 'PassengerMachineGun'): (8.0, 'WT M2HB, 100-round belt (reloadTime 8.0)')}
 # Guns whose reload is too short for any crew reload clip: no clip is set.
 NO_CLIP = {('fv721_fox', 'Cannon')}
 RULE = {'LMG': 20.0, 'HMG': 10.0, 'AUTOCANNON': 20.0, 'ATGM': 12.0}
@@ -74,7 +77,8 @@ COAX = {
     't14_armata': 'PKT', 't64b_obr1976': 'PKT', 't72a': 'PKT', 't72b': 'PKT', 't72b3': 'PKT', 't72b3_ubh_cope': 'PKT',
     't80b_obr1976': 'PKT', 't80u_obr1985': 'PKT', 't90a': 'PKT', 't90m': 'PKT', 't_62a': 'PKT', 't55a_2_0': 'SGMT',
     'ztz99a': 'TYPE86', 'cv9040_no_net': 'KSP', 'leo2a6': 'MG3',
-    'm1_abrams_elite': 'M240', 'm1a1_abrams': 'M240', 'm1a2_abrams_sep_v2': 'M240', 'm2_bradley': 'M240',
+    'm1_abrams_elite': 'M240', 'm1a1_abrams': 'M240', 'm1a1_tusk': 'M240', 'm1a2_abrams_sep_v2': 'M240',
+    'm2_bradley': 'M240',
     'm48a3_elite': 'M73', 'm551a1': 'M73', 'm60a1': 'M73',
 }
 

@@ -52,6 +52,7 @@ GROUND = {  # combat weight (t), class
     'challenger_2': (62.5, 'MBT'), 'k2a1_black_panther': (55, 'MBT'), 'leclerc_s1': (56.5, 'MBT'),
     'leo2a6': (62.3, 'MBT'), 'leopard_2a4': (55.2, 'MBT'), 'm1_abrams_elite': (54.5, 'MBT'),
     'm1a1_abrams': (57, 'MBT'), 'm1a2_abrams_sep_v2': (64.6, 'MBT'), 'm48a3_elite': (47, 'MBT'),
+    'm1a1_tusk': (61.2, 'MBT'),
     'm60a1': (52.6, 'MBT'), 't14_armata': (55, 'MBT'), 't55a_2_0': (36, 'MBT'), 't64b_obr1976': (42.4, 'MBT'),
     't72a': (41.5, 'MBT'), 't72b': (44.5, 'MBT'), 't72b3': (46, 'MBT'), 't72b3_ubh_cope': (48, 'MBT'),
     't80b_obr1976': (42.5, 'MBT'), 't80u_obr1985': (46, 'MBT'), 't90a': (46.5, 'MBT'), 't90m': (48, 'MBT'),

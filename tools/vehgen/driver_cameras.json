@@ -8,6 +8,14 @@
     ],
     "note": "driver centred under the gun, hatch just ahead of the turret face (turret front z 2.6, roof 1.89, glacis from z 4.0) (x0.86764 with the model fitted to the M1A2 size, fit_existing.py)"
   },
+  "m1a1_tusk": {
+    "eye": [
+      -0.87,
+      2.73275,
+      0.8468
+    ],
+    "note": "bert's expansion rule (PLAN item 11): the ground driver camera sits where the gunner's optic really is. M1A1 TUSK II: the gunner's GPS housing is the open-fronted box on the right of the turret roof, front (source part 3 elements 3-6, x 1-14, y -39.5..-33.5, z -20.5..-9.5); the eye is just in front of it on its axis, at the turret rest pose (tools/vehgen/tusk_build.py writes the attachment; the seat is the pack's controller seat and uses the same point as gunner1_camera)."
+  },
   "t14_armata": {
     "eye": [
       0.5,
