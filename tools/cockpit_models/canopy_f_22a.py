@@ -15,6 +15,10 @@ the crown standing in for glass and a heavy rear bow) is not the real frame, so 
     mitred corners, they are not separate bars), a 4 cm band outside the glass edge, 3.4 cm through the glass surface,
     painted with its own swatch. The glass stops at the member's inner face, never runs under it.
 
+Behind the rear arch the airframe's spine fairing is painted near-black over a wedge (texel 26,26,26), which read as a
+black hole behind the canopy: those faces take the spine's own grey (regrey_spine), and a skin strip (the rear fairing,
+in the frame colour, drawn both sides) runs from the arch's outer edge back to the spine's crest, never below the hull.
+
 CANOPY (eye-relative sections, the right half from the sill up over the top) is what the checks in
 work/elite_expansion_2/checks read for the canopy outline. Frames: vehicle-local blocks, model pixels (x, y, -z) * 16.
 The frame swatch is painted into the texture at SWATCH (outside the cockpit script's own free area).
@@ -50,6 +54,7 @@ CROWN = [(3.95, 3.020), (4.20, 3.140), (4.60, 3.220), (5.00, 3.260), (5.50, 3.26
          (6.55, 2.860), (6.80, 2.640), (6.93, 2.520)]
 NEXP = 2.4                                  # the sections' super-ellipse exponent
 Z_REAR, Z_FRONT = 3.95, 6.93
+Z_CREST = 3.70                              # the spine's crest, where the rear fairing strip starts
 W = 0.040                                   # the frame's band along the surface, outside the glass edge
 H_IN, H_OUT = 0.024, 0.010                  # the frame stands this far under / over the glass surface
 SILL_Y = 2.40                               # (not used by the checks directly: the outline starts at the skin, see sections_rel)
@@ -126,6 +131,45 @@ def glass_triangles(ns=14):
                     if np.linalg.norm(np.cross(tri[1] - tri[0], tri[2] - tri[0])) > 1e-10:
                         out.append(list(tri))
     return out
+
+
+# ---------------------------------------------------------------- the skin under the frame
+
+_HULL = []
+
+
+def hull_top(x, z, ymin=2.2, ymax=3.1):
+    """top of the airframe's hull pieces at (x, z) (absolute blocks), or None: the skin the frame has to sit on"""
+    if not _HULL:
+        geo = json.load(open(GEO, encoding='utf-8'))
+        T = []
+        for b in geo['minecraft:geometry'][0]['bones']:
+            if b['name'] not in ('wreck_fuselage_0__hull', 'wreck_fuselage_1__hull'):
+                continue
+            pm = b.get('poly_mesh')
+            if not pm:
+                continue
+            P = np.array(pm['positions'], float) * np.array([1, 1, -1]) / 16.0
+            for poly in pm['polys']:
+                idx = [v[0] for v in poly]
+                for k in range(1, len(idx) - 1):
+                    T.append(P[[idx[0], idx[k], idx[k + 1]]])
+        T = np.array(T)
+        A, B, C = T[:, 0], T[:, 1], T[:, 2]
+        d = (B[:, 2] - C[:, 2]) * (A[:, 0] - C[:, 0]) + (C[:, 0] - B[:, 0]) * (A[:, 2] - C[:, 2])
+        _HULL.extend([A, B, C, d])
+    A, B, C, d = _HULL
+    ok = np.abs(d) > 1e-9
+    ds = np.where(ok, d, 1)
+    l1 = ((B[:, 2] - C[:, 2]) * (x - C[:, 0]) + (C[:, 0] - B[:, 0]) * (z - C[:, 2])) / ds
+    l2 = ((C[:, 2] - A[:, 2]) * (x - C[:, 0]) + (A[:, 0] - C[:, 0]) * (z - C[:, 2])) / ds
+    l3 = 1 - l1 - l2
+    hit = ok & (l1 >= -1e-6) & (l2 >= -1e-6) & (l3 >= -1e-6)
+    if not hit.any():
+        return None
+    y = l1[hit] * A[hit, 1] + l2[hit] * B[hit, 1] + l3[hit] * C[hit, 1]
+    y = y[(y < ymax) & (y > ymin)]
+    return float(y.max()) if len(y) else None
 
 
 # ---------------------------------------------------------------- the frame: one closed member round the glass edge
@@ -241,7 +285,69 @@ def frame_mesh(uv):
         add([ii0, oi0, oi1, ii1], c)           # bottom
         add([oo0, oi0, oi1, oo1], c)           # outer wall
         add([io0, ii0, ii1, io1], c)           # inner wall (against the glass edge)
+    # the rear fairing: the spine falls away into the rear arch (the airframe's own fairing leaves a black wedge open behind
+    # it), so a skin strip runs from the arch's outer edge back to the spine's crest at z 3.70, both sides drawn
+    rear = [k for k, (kd, _) in enumerate(L) if kd == 'rear']
+    seq = [k for k in rear if abs(P[k][0]) < 0.47]
+    NR = 6
+    cols = []
+    for k in seq:
+        A = C[k][3]
+        yb = hull_top(float(A[0]), Z_CREST)
+        yb = (yb if yb is not None else A[1] - 0.05)
+        col = []
+        for r in range(NR + 1):
+            f = r / NR
+            z = Z_CREST + (A[2] - Z_CREST) * f
+            line = (yb + 0.004) + (A[1] - (yb + 0.004)) * f
+            ht = hull_top(float(A[0]), z)
+            if ht is not None and r < NR and k in (seq[0], seq[-1]):    # the strip's two ends lie on the skin: no step there
+                col.append(np.array([A[0], ht, z]))
+                continue
+            col.append(np.array([A[0], max(line, ht + 0.004) if (ht is not None and r < NR) else line, z]))
+        cols.append(col)
+    for c0, c1 in zip(cols[:-1], cols[1:]):
+        for r in range(NR):
+            quad = [c0[r], c1[r], c1[r + 1], c0[r + 1]]
+            mid = np.mean(quad, 0)
+            add(quad, mid - np.array([0.0, 0.2, 0.0]))        # (outward = up)
+            add(quad, mid + np.array([0.0, 0.2, 0.0]))        # (and the underside)
     return {'normalized_uvs': True, 'positions': pm_P, 'normals': pm_N, 'uvs': pm_U, 'polys': polys}
+
+
+# the spine skin's own grey texel (right half / left half of the mirrored UV layout)
+SPINE_UV = {1: (0.0829, 0.0258), -1: (0.0829, 0.0203)}
+
+
+def regrey_spine(geo):
+    """The airframe's spine fairing behind the rear arch is painted near-black (texel 26,26,26) over a wedge of about 18
+    faces: it reads as a black hole behind the canopy. Those faces (hull pieces, z 3.6-4.1 above the shoulder) take the
+    spine's own grey instead. Returns the number of faces changed."""
+    im = Image.open(TEX).convert('RGBA')
+    TWp, THp = im.size
+    n = 0
+    for b in geo['minecraft:geometry'][0]['bones']:
+        if b['name'] not in ('wreck_fuselage_0__hull', 'wreck_fuselage_1__hull'):
+            continue
+        pm = b.get('poly_mesh')
+        if not pm:
+            continue
+        P = np.array(pm['positions'], float) * np.array([1, 1, -1]) / 16.0
+        U = pm['uvs']
+        for poly in pm['polys']:
+            c = P[[v[0] for v in poly]].mean(0)
+            if not (abs(c[0]) < 0.45 and 3.6 < c[2] < 4.1 and c[1] > 2.75):
+                continue
+            m = np.mean([U[v[2]] for v in poly], 0)
+            px = im.getpixel((int(m[0] * TWp) % TWp, int((1 - m[1]) * THp) % THp))
+            if max(px[:3]) > 40:
+                continue
+            uv = list(SPINE_UV[1 if c[0] > 0 else -1])
+            U.append([round(uv[0], 6), round(uv[1], 6)])
+            for v in poly:
+                v[2] = len(U) - 1
+            n += 1
+    return n
 
 
 def paint_swatch(path, dead=False):
@@ -264,12 +370,13 @@ def main(argv):
     bone = next(b for b in geo['minecraft:geometry'][0]['bones'] if b['name'] == CANOPY_BONE)
     gone = len(bone['poly_mesh']['polys'])
     bone['poly_mesh'] = frame_mesh(swatch_uv())
+    regreyed = regrey_spine(geo)
     tris = glass_triangles()
     both = [list(map(float, p)) for t in tris for p in t] + [list(map(float, t[k])) for t in tris for k in (0, 2, 1)]
     asset['CanopyGlass'] = {'Schema': 1, 'Frame': 'VEHICLE_LOCAL_BLOCKS', 'Triangles': [round(v, 4) + 0.0 for p in both for v in p]}
     # the real Raptor canopy's gold indium-tin-oxide coating: only the colour shifts, the game keeps its alpha rule
     asset['CanopyGlass']['Tint'] = GOLD_TINT
-    print(f'f_22a canopy: the airframe\'s {gone} frame faces dropped; {len(bone["poly_mesh"]["polys"])} faces of the one-piece frame; '
+    print(f'f_22a canopy: {regreyed} black spine faces regreyed; the airframe\'s {gone} frame faces dropped; {len(bone["poly_mesh"]["polys"])} faces of the one-piece frame; '
           f'{len(tris)} glass triangles (x2 windings)')
     if dry:
         return

@@ -9,13 +9,14 @@ in its place:
 
   * the main instrument panel in three facets (centre 8 degrees back, the wings turned 28 degrees toward the pilot),
     laid out after the F-22A's all-glass panel: the integrated control panel (ICP) under the HUD with an up-front
-    display (UFD) either side of it; below them the 8 x 8 in primary multifunction display (PMFD) in the middle with a
-    6.25 in secondary MFD (SMFD) left and right of it and the third SMFD under it; the standby flight group (airspeed,
-    attitude, altitude) left of the lower SMFD; the landing gear panel on the left wing;
+    display (UFD) either side of it, under a deep black glareshield hood that stands out over them; below them the 8 x 8 in
+    primary multifunction display (PMFD) in the middle with a 6.25 in secondary MFD (SMFD) left and right of it and the
+    third SMFD under it; ONE small square digital standby display (a live PFD page) left of the lower SMFD; the landing gear
+    panel on the left wing;
   * the black coaming running from the panel lip forward to the windscreen base, one smooth deck that meets the nose;
-  * the wide-angle HUD: ONE tall combiner glass, wider at the top than at the foot, top corners cut, in a thin frame, on
-    a low housing with its brightness strip; nothing stands beside the glass; the glass (added to CanopyGlass) is
-    centred on the neutral eye line and HeadUpDisplay is the picture rectangle inside it;
+  * the wide-angle HUD: ONE large combiner glass, roughly square with rounded corners, in a thin frame, on a big box
+    housing with its brightness strip; nothing stands beside the glass; the glass (added to CanopyGlass) is centred on the
+    neutral eye line and HeadUpDisplay is the picture rectangle inside it (its corners clear of the rounded corners);
   * side consoles: the throttle quadrant with two levers on the left, the fixed armrest and the SIDE STICK on the
     right (its grip goes into the stick bone, whose pivots, in the geometry and in AircraftRig, move to the stick's foot),
     liners, floor, kick panel, rudder pedals, the rear bulkhead;
@@ -25,6 +26,9 @@ Paint lives in a free area of textures/entity/f_22a.png (no UV of the model, the
 there; the burnt copy goes to entity_dead). The instruments the game draws are written to CockpitGauges and
 FlightDisplays (PMFD radar page, SMFDs PFD / stores / radar), the UFDs are annunciator panels, the HUD picture goes to
 HeadUpDisplay (the client keys the airframe pass removed).
+
+The cut also drops the small loose airframe pieces left in and beside the cabin (stub ribs, isolated faces: welded
+components under 35 cm in the cockpit zone).
 
 Order: restore the airframe's files, run canopy_f_22a.py, then this script (it appends the HUD combiner glass to the
 canopy's CanopyGlass). Running it again rebuilds the same result.
@@ -310,6 +314,40 @@ def hud_combiner(m, rect, bot, up, n, H, hb, ht, ch, bw, bw_top, bt):
     return tris
 
 
+def rounded_outline(w, h, r, k=5):
+    """outline of a w x h rectangle with corner radius r, as (right, up) points from the foot centre line, counter-clockwise from the
+    bottom edge: the F-22A's combiner is one roughly square glass with rounded corners"""
+    pts = []
+    for cx, cy, a0 in ((w / 2 - r, r, -90), (w / 2 - r, h - r, 0), (-w / 2 + r, h - r, 90), (-w / 2 + r, r, 180)):
+        for i in range(k + 1):
+            a = math.radians(a0 + 90 * i / k)
+            pts.append((cx + r * math.cos(a), cy + r * math.sin(a)))
+    return pts
+
+
+def hud_combiner_round(m, rect, bot, up, n, w, h, r, bw, bt):
+    """The F-22A's wide-angle HUD combiner: ONE large glass, roughly square with rounded corners (w x h, corner radius r),
+    standing on its foot at `bot` (eye-relative) and leaning along `up` (n = the glass normal). The frame is a bar bt thick
+    and bw wide all round the glass edge, always outside the glass, and a base plate under the foot; nothing stands beside
+    or in front of the glass. Returns the glass triangles (eye-relative points, three per triangle) for CanopyGlass."""
+    ol = rounded_outline(w, h, r)
+    P = [bot + X * x + up * v for x, v in ol]
+    c0 = bot + up * h / 2
+    tris = []
+    for i in range(len(P)):
+        tris += [c0, P[i], P[(i + 1) % len(P)]]
+    for i in range(len(P)):
+        a, b = P[i].copy(), P[(i + 1) % len(P)].copy()
+        d = unit(b - a)
+        p = unit(np.cross(n, d))
+        if (a + b) @ p / 2 - c0 @ p < 0:
+            p = -p                               # outward in the glass plane
+        ln = float(np.linalg.norm(b - a))
+        m.box((a + b) / 2 + p * bw / 2, (d, p, n), (ln / 2 + bw / 2, bw / 2, bt / 2), rect)
+    m.box(bot - up * 0.008, (X, up, n), (w / 2 - r + 0.012, 0.008, bt / 2), rect)
+    return tris
+
+
 X, Y, Z = np.array([1.0, 0, 0]), np.array([0, 1.0, 0]), np.array([0, 0, 1.0])
 
 # ---------------------------------------------------------------- the measured cockpit (metres from the eye)
@@ -385,9 +423,7 @@ LAYOUT = [
     ('pmfd',    CENTRE,  0.000, -0.382, ('display', 'RADAR', 0.205), 'primary MFD (tactical)'),
     ('smfd_r',  CENTRE,  0.233, -0.357, ('display', 'STORES', 0.160), 'right SMFD (stores)'),
     ('smfd_c',  CENTRE,  0.000, -0.621, ('display', 'RADAR', 0.160), 'lower SMFD (defensive)'),
-    ('asi',     CENTRE, -0.305, -0.585, ('game', 'AIRSPEED', 0.050), 'standby airspeed'),
-    ('adi',     CENTRE, -0.222, -0.600, ('game', 'ATTITUDE', 0.070), 'standby attitude'),
-    ('alt',     CENTRE, -0.145, -0.585, ('game', 'ALTIMETER', 0.050), 'standby altimeter'),
+    ('sby',     CENTRE, -0.232, -0.600, ('display', 'PFD', 0.080, 'thin'), 'standby flight display (one small square digital unit: speed, attitude, altitude)'),
     ('emerg',   CENTRE,  0.175, -0.610, ('paint_rect', 0.085, 0.070), 'emergency brake / jettison panel'),
     ('ecs',     CENTRE,  0.268, -0.610, ('paint_rect', 0.075, 0.070), 'ECS / OBOGS panel'),
     ('gear',    LEFT,    0.075, -0.470, ('paint_rect', 0.075, 0.095), 'landing gear handle and lights'),
@@ -454,7 +490,7 @@ def panel_paint(facet, rect_px):
                 d.ellipse([x - r, yy - r, x + r, yy + r], fill=(18, 22, 22, 255))
             elif kind in ('paint_rect', 'display', 'annunciator'):
                 if kind == 'display':
-                    w = h = spec[2] * 1.24 + 0.012
+                    w = h = (spec[2] + 0.030) if len(spec) > 3 else spec[2] * 1.24 + 0.012
                 else:
                     w, h = spec[1] + 0.012, spec[2] + 0.012
                 sx = (w / 2) / (a1 - a0) * W * SS; sy = (h / 2) / (y_top - y_bot) * H * SS * math.cos(LEAN)
@@ -728,6 +764,9 @@ def build(atlas, lamp_sets, nose_y):
             w = spec[2]
             displays.append({'Seat': 0, 'Center': r5(c + EYE + f.N * DISPLAY_LIFT), 'Normal': r5(f.N), 'Up': r5(f.U),
                              'Width': w, 'Depth': 0.035, 'Kind': spec[1], 'Style': 'LCD'})
+            if len(spec) > 3:                                 # the standby unit: a thin plain bezel, no key rows
+                m.frame_rect(c, f.N, f.U, w, w, 0.009, 0.010, sw['bezel'])
+                continue
             # the MFD: a flat bezel with a row of option keys along each edge
             _, n_, u_, r_ = frame(c, f.N, f.U)
             t = 0.022; pr = 0.010
@@ -750,20 +789,29 @@ def build(atlas, lamp_sets, nose_y):
     # -- the coaming: the visor over the panel, then one smooth deck down to the windscreen base
     build_deck(m, sw, nose_y)
 
-    # -- the HUD: a low housing on the coaming with its brightness strip, and ONE tall combiner glass on it, centred on the
-    # neutral eye line and leaning back toward the pilot. The Raptor's wide-angle HUD glass is wider at the top than at the
-    # foot, top corners cut, in a thin frame; nothing stands beside it above the housing.
-    hz0, hz1, hy0, hy1, hhw = 0.700, 0.870, -0.205, -0.112, 0.115
+    # -- the glareshield hood: a deep black hood over the ICP and the two UFDs (it stands 10 cm out over them, its underside
+    # just above their tops so the lamps stay in view from the eye), with the two side cheeks curving down to the panel.
+    hood_y0, hood_y1, hood_z0, hood_z1, hood_hw = -0.150, -0.105, 0.545, 0.68, 0.215
+    m.box([0, (hood_y0 + hood_y1) / 2, (hood_z0 + hood_z1) / 2], (X, Y, Z),
+          (hood_hw, (hood_y1 - hood_y0) / 2, (hood_z1 - hood_z0) / 2), sw['coaming'])
+    for s in (1, -1):
+        m.box([s * (hood_hw - 0.006), hood_y0 - 0.026, 0.6125], (X, Y, Z), (0.006, 0.026, 0.0675), sw['coaming'])
+
+    # -- the HUD: a big box housing on the coaming behind the hood (with its brightness strip), and ONE large combiner glass on
+    # it, roughly square with rounded corners, centred on the neutral eye line and leaning back toward the pilot. Nothing
+    # stands beside the glass above the housing.
+    hz0, hz1, hy0, hy1, hhw = 0.665, 0.905, -0.215, -0.100, 0.160
     ctrl = atlas.paint(320, 54, p_hud_ctrl)
-    m.box([0, (hy0 + hy1) / 2, (hz0 + hz1) / 2], (X, Y, Z), (hhw, (hy1 - hy0) / 2, (hz1 - hz0) / 2), sw['dgrey'],
+    m.box([0, (hy0 + hy1) / 2, (hz0 + hz1) / 2], (X, Y, Z), (hhw, (hy1 - hy0) / 2, (hz1 - hz0) / 2), sw['coaming'],
           front=(2, -1, ctrl, -X, Y))
-    lean = math.radians(22)
+    lean = math.radians(26)
     g_up = np.array([0, math.cos(lean), -math.sin(lean)])
     g_n = unit(np.cross(X, g_up))
-    g_h = 0.200
-    g_bot = np.array([0, hy1, 0.745])
-    glass += [p + EYE for p in hud_combiner(m, sw['dgrey'], g_bot, g_up, g_n, g_h, 0.095, 0.130, 0.028, 0.011, 0.010, 0.014)]
-    hud = dict(centre=g_bot + g_up * g_h / 2 + EYE, normal=-g_n, up=g_up, width=0.172, height=0.150)
+    g_w, g_h, g_r = 0.226, 0.190, 0.038
+    g_bot = np.array([0, hy1, 0.800])
+    glass += [p + EYE for p in hud_combiner_round(m, sw['dgrey'], g_bot, g_up, g_n, g_w, g_h, g_r, 0.011, 0.014)]
+    # the picture: the rectangle inside the glass, its corners clear of the rounded corners
+    hud = dict(centre=g_bot + g_up * g_h / 2 + EYE, normal=-g_n, up=g_up, width=0.182, height=0.152)
 
     # -- side liners, consoles, floor, rear bulkhead, kick panel
     fy = FLOOR_Y
@@ -908,6 +956,54 @@ def old_interior(geo):
     return out
 
 
+def small_leftovers(geo, removed, diag=0.35):
+    """The airframe also leaves small loose pieces inside and beside the cabin: welded components of the hull pieces
+    under 35 cm across that lie in the cockpit zone (under the glass, between the rear bulkhead and the windscreen base,
+    inside the sill band) and touch nothing else (stub ribs, an isolated pair of faces). They go. Returns {bone: set(poly
+    index)}; they are added to `removed` as well."""
+    gone = {}
+    for b in geo['minecraft:geometry'][0]['bones']:
+        if b['name'] not in SOURCE_BONES:
+            continue
+        pm = b.get('poly_mesh')
+        if not pm or not pm.get('polys'):
+            continue
+        P = np.array(pm['positions'], float) * np.array([1, 1, -1]) / 16.0
+        key = {}
+        for i, q in enumerate(P):
+            key.setdefault(tuple(np.round(q, 3)), []).append(i)
+        parent = list(range(len(P)))
+
+        def find(a):
+            while parent[a] != a:
+                parent[a] = parent[parent[a]]; a = parent[a]
+            return a
+        for ids in key.values():
+            for j in ids[1:]:
+                parent[find(j)] = find(ids[0])
+        polys = pm['polys']
+        comp = {}
+        for i, poly in enumerate(polys):
+            if not poly or i in removed.get(b['name'], ()):
+                continue
+            for v in poly:
+                parent_ = find(v[0])
+                comp.setdefault(find(poly[0][0]), set()).add(i)
+                break
+        # merge the components that share a vertex (find() already unified by position)
+        for r, idxs in comp.items():
+            V = np.array([P[v[0]] for i in idxs for v in polys[i]])
+            lo, hi = V.min(0), V.max(0)
+            c = (lo + hi) / 2
+            if np.linalg.norm(hi - lo) >= diag:
+                continue
+            if 4.4 < c[2] < 6.9 and np.abs(V[:, 0]).max() < 0.52 and abs(c[0]) < 0.505 and 2.30 < c[1] < 3.05:
+                gone.setdefault(b['name'], set()).update(idxs)
+    for bn, s in gone.items():
+        removed.setdefault(bn, set()).update(s)
+    return gone
+
+
 def drop_twins(geo, removed):
     """The airframe builds several faces of its rear shelf and tub twice or on top of each other (faces in one plane, one
     way round, a smaller one lying on a bigger one): they z-fight where they show, under the glass behind the seat. A face
@@ -1035,6 +1131,8 @@ def main(argv):
     g = geo['minecraft:geometry'][0]
     rm = old_interior(geo)
     twins = drop_twins(geo, rm)
+    loose = small_leftovers(geo, rm)
+    print('f_22a: loose airframe pieces dropped:', {k: len(v) for k, v in loose.items()})
     nose_y = make_nose_y(geo, rm)
     removed = 0
     for b in g['bones']:
