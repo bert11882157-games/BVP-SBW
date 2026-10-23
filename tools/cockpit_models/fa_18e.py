@@ -726,23 +726,56 @@ def build(atlas):
         m.flat([pts[i] + lift, pts[i + 1] + lift, fwd[i + 1] + lift, fwd[i] + lift], cs, normal=[0, 1, 0])
 
     # -- the HUD: one unit (the housing on the glareshield with its control strip low on the pilot's face, two side posts)
-    # and the combiner glass centred on the neutral eye line, leaning back toward the pilot
-    hz0, hz1, hy0, hy1, hhw = 0.775, 0.895, -0.143, -0.086, 0.118
+    # -- the HUD: one unit. The Super Hornet's combiner (DCS F/A-18C Lot 20 model, measured in the gamemodels3d viewer; the
+    # E's HUD is the same unit): ONE glass leaning far back toward the pilot, outline narrow along the top edge, widest over
+    # the upper two thirds, straight sides, bottom corners cut in. Here ~18% wider than life, centred on the neutral eye
+    # line (the glass centre at the eye's height, 0.79 ahead), in a slim bezel with two side posts standing on the housing;
+    # the housing has its control strip low on the pilot's face (3.5 cm, below the glass, never covering it)
+    hz0, hz1, hy0, hy1, hhw = 0.800, 0.950, -0.143, -0.108, 0.135
     ctrl = atlas.paint(200, 44, p_hud_ctrl)
     m.box([0, (hy0 + hy1) / 2, (hz0 + hz1) / 2], (X, Y, Z), (hhw, (hy1 - hy0) / 2, (hz1 - hz0) / 2), sw['dgrey'],
           front=(2, -1, ctrl, -X, Y))
-    lean = math.radians(20)
+    lean = math.radians(45)                                    # the real combiner leans ~50 degrees from the vertical
     g_up = np.array([0, math.cos(lean), -math.sin(lean)])
-    g_n = unit(np.cross(X, g_up))
-    g_h, g_hw = 0.190, 0.105
-    g_bot = np.array([0, -0.092, 0.815])
+    g_n = unit(np.cross(X, g_up))                              # (away from the pilot)
+    g_h = 0.330                                                # slant length of the glass
+    g_bot = np.array([0, -0.112, 0.905])
     g_top = g_bot + g_up * g_h
-    m.box(g_bot - g_up * 0.004 + [0, 0.002, 0], (X, g_up, g_n), (g_hw + 0.010, 0.005, 0.010), sw['dgrey'])
+    # outline (half width, height) from the bottom edge: bottom corners cut in, straight sides, top corners cut in
+    OUTLINE = [(0.066, 0.0), (0.103, 0.029), (0.103, 0.261), (0.033, 0.330)]
+    poly2 = [(u, v) for u, v in ([(-OUTLINE[0][0], 0.0), (OUTLINE[0][0], 0.0)] + [(u, v) for u, v in OUTLINE[1:]]
+                                 + [(-u, v) for u, v in OUTLINE[:0:-1]])]
+    q3 = lambda u, v, d=0.0: g_bot + X * u + g_up * v + g_n * d
+    glass_pts = [q3(u, v) for u, v in poly2]
+    for k in range(1, len(glass_pts) - 1):
+        glass += [glass_pts[0] + EYE, glass_pts[k] + EYE, glass_pts[k + 1] + EYE]
+    # the bezel: a mitred ring round the glass (1.4 cm wide, 1.2 cm deep, centred on the glass plane); the bottom edge sits
+    # in the housing and is left open
+    rim, dep = 0.014, 0.006
+    nP = len(poly2)
+    outn = []
+    for i in range(nP):
+        a, b = np.array(poly2[i]), np.array(poly2[(i + 1) % nP])
+        e = b - a; e /= np.linalg.norm(e)
+        outn.append(np.array([e[1], -e[0]]))                  # (the polygon runs counter-clockwise: right of the edge is out)
+    outer2 = []
+    for i in range(nP):
+        n1, n2 = outn[i - 1], outn[i]
+        outer2.append(np.array(poly2[i]) + (n1 + n2) / (1 + n1 @ n2) * rim)
+    for i in range(1, nP):                                     # (edge 0 is the bottom edge)
+        j = (i + 1) % nP
+        a, b = q3(*poly2[i]), q3(*poly2[j])
+        a2, b2 = q3(*outer2[i]), q3(*outer2[j])
+        on = X * outn[i][0] + g_up * outn[i][1]
+        m.flat([a - g_n * dep, b - g_n * dep, b2 - g_n * dep, a2 - g_n * dep], sw['dgrey'], normal=-g_n)
+        m.flat([a + g_n * dep, b + g_n * dep, b2 + g_n * dep, a2 + g_n * dep], sw['dgrey'], normal=g_n)
+        m.flat([a2 - g_n * dep, b2 - g_n * dep, b2 + g_n * dep, a2 + g_n * dep], sw['dgrey'], normal=on)
+        m.flat([a - g_n * dep, b - g_n * dep, b + g_n * dep, a + g_n * dep], sw['dgrey'], normal=-on)
+    # the two side posts: slim struts standing on the housing beside the bezel, leaning with the glass up to its shoulders
     for s in (-1, 1):
-        m.box((g_bot + g_top) / 2 + X * s * (g_hw + 0.007), (X, g_up, g_n), (0.005, g_h / 2 + 0.004, 0.006), sw['dgrey'])
-    corners = [g_bot - X * g_hw, g_bot + X * g_hw, g_top + X * g_hw, g_top - X * g_hw]
-    glass += [corners[0] + EYE, corners[1] + EYE, corners[2] + EYE, corners[0] + EYE, corners[2] + EYE, corners[3] + EYE]
-    hud = dict(centre=(g_bot + g_top) / 2 + EYE, normal=-g_n, up=g_up, width=2 * g_hw, height=g_h)
+        base = q3(s * (0.103 + rim + 0.012), 0.0)
+        m.box(base + g_up * 0.130, (X, g_up, g_n), (0.006, 0.130, 0.007), sw['dgrey'])
+    hud = dict(centre=q3(0, 0.165) + EYE, normal=-g_n, up=g_up, width=0.190, height=0.200)
     # the AoA indexer: a small lit column on the glareshield, left of the HUD
     aoa_r = atlas.paint(40, 100, p_aoa_indexer)
     ax_, ay_, az_ = 0.215, -0.108, 0.845

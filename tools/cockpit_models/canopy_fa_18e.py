@@ -18,6 +18,11 @@ wreck_fuselage_0__hull), so this script keeps it as THE frame, never adds a seco
   * the airframe's stand-ins for glass are removed, since the real glass takes their place: the long opaque centre strip of the
     frame (flat quads along the crown) and the narrow slab on the nose in front of the arch.
 
+Retrofit (owner standard: framing as in life): the added frame members (own bone frame_bars__canopy, rebuilt every run) are the
+rear canopy bow behind the seat with the opaque spine fairing aft of it (the glass ends at the bow's front face), the two
+quarter-pane posts along the windscreen that split the front panel from the quarter panes, and the windscreen's base frame
+along the nose deck. The front arch and the canopy bow just aft of it are the airframe's one member (they meet).
+
 CANOPY (eye-relative sections, the right half from the sill up over the top) is what the checks in
 work/elite_expansion_2/checks read for the canopy outline. Frames: vehicle-local blocks, model pixels (x, y, -z) * 16.
 
@@ -64,7 +69,7 @@ WS_Z = (4.915, 5.86)
 WS_X = (0.335, 0.200)
 WSC = [(4.757, 3.040), (4.915, 3.000), (5.231, 2.848), (5.864, 2.532)]
 
-# the nose deck's top surface (absolute y) at |x| and z, sampled from the airframe: a hair lower under the glass's foot
+# the nose deck's top surface (absolute y) at |x| and z, sampled from the airframe: the glass's foot a hair above it
 _SK_Z = [4.757, 5.0, 5.2, 5.4, 5.6, 5.8, 5.9]
 _SK_X = [0.0, 0.1, 0.2, 0.3, 0.4]
 _SK = [[2.70, 2.70, 2.68, 2.62, 2.47],
@@ -90,10 +95,10 @@ def _eye():
 
 
 def skin_y(x, z):
-    """the nose deck's height at |x| beside / ahead of the arch (the skin under the glass's foot, a hair lower)"""
+    """the nose deck's height at |x| beside / ahead of the arch (the skin under the glass's foot, a hair above it)"""
     zz = min(max(z, _SK_Z[0]), _SK_Z[-1])
     row = [float(np.interp(zz, _SK_Z, [r[i] for r in _SK])) for i in range(len(_SK_X))]
-    return float(np.interp(abs(x), _SK_X, row)) - 0.012
+    return float(np.interp(abs(x), _SK_X, row)) + 0.010
 
 
 def base_crown(z):
@@ -156,23 +161,25 @@ def edge(zf, j, z, ns, lo, hi):
     return z
 
 
-def patch(zf0, zf1, z_lo, z_hi, nz, ns=14):
+def patch(zf0, zf1, z_lo, z_hi, nz, ns=14, jr=None):
     """one glass patch, both sides: row j of the arc-length resampled section runs from the frame face zf0 to the face zf1
-    it stops at (both found at the row's own height), so the cut leans with the frame member; z_lo / z_hi clamp the cut"""
+    it stops at (both found at the row's own height), so the cut leans with the frame member; z_lo / z_hi clamp the cut;
+    jr = (first row, last row) keeps only that band of the section (the rest is a frame member or another pane)"""
     ends = [(edge(zf0, j, z_lo, ns, z_lo, z_hi), edge(zf1, j, z_hi, ns, z_lo, z_hi)) for j in range(ns + 1)]
+    j0, j1 = jr or (0, ns)
     out = []
     for side in (1, -1):
         grid = []
         for i in range(nz + 1):
             row = []
-            for j in range(ns + 1):
+            for j in range(j0, j1 + 1):
                 a, b = ends[j]
                 z = a + (b - a) * i / nz
                 x, y = resample(section(z), ns + 1)[j]
                 row.append(np.array([side * x, y, z]))
             grid.append(row)
         for i in range(nz):
-            for j in range(ns):
+            for j in range(j1 - j0):
                 a, b, c, d = grid[i][j], grid[i + 1][j], grid[i + 1][j + 1], grid[i][j + 1]
                 for tri in ((a, b, c), (a, c, d)):
                     if np.linalg.norm(np.cross(tri[1] - tri[0], tri[2] - tri[0])) > 1e-10:
@@ -180,9 +187,125 @@ def patch(zf0, zf1, z_lo, z_hi, nz, ns=14):
     return out
 
 
+# ---- the Super Hornet's frame members added to the airframe's own (its sill rails and the windscreen arch):
+#  * the rear canopy bow behind the pilot's seat: a slim hoop over the sills at Z_BOW (the canopy glass ends at its front
+#    face; behind it the spine fairing runs back to the closing piece, opaque, on the glass's old surface)
+#  * the quarter-pane posts: one slim diagonal post each side along the windscreen, from the arch down to the nose deck,
+#    splitting the large front panel from the small quarter panes beside it
+Z_BOW = (3.56, 3.62)
+BOW_OUT, BOW_IN = 0.012, 0.030               # the hoop stands this far out of the glass surface and this far in
+WS_NS = 28
+POST_ROWS = (12, 14)                         # the post fills this band of the windscreen section (rows of WS_NS)
+BASE_ROWS = (0, 2)                          # the windscreen's base frame along the nose deck fills this band
+POST_OUT, POST_IN = 0.008, 0.018
+BARS_BONE = 'frame_bars__canopy'             # (the name ends in __canopy: the checks count it as the canopy's own)
+
+
+def _pt(z, j, side, ns):
+    x, y = resample(section(z), ns + 1)[j]
+    return np.array([side * x, y, z])
+
+
+class Bars:
+    """quads of the added frame members, as a poly mesh in model pixels; every face is written with both windings"""
+    def __init__(self, uv):
+        self.P, self.N, self.U, self.polys, self.uv = [], [], [], [], uv
+
+    def face(self, pts, n):
+        for nn, pp in ((n, pts), (-np.array(n), pts[::-1])):
+            px = [[float(p[0]) * 16, float(p[1]) * 16, -float(p[2]) * 16] for p in pp]
+            npx = np.array([nn[0], nn[1], -nn[2]])
+            a, b, c = (np.array(q) for q in px[:3])
+            if np.cross(b - a, c - a) @ npx > 0:
+                px = px[::-1]
+            ni = len(self.N)
+            self.N.append([round(float(x), 5) + 0.0 for x in -npx])
+            ui = len(self.U)
+            self.U.append(list(self.uv))
+            poly = []
+            for p in px:
+                poly.append([len(self.P), ni, ui])
+                self.P.append([round(x, 4) + 0.0 for x in p])
+            self.polys.append(poly)
+
+    def bar(self, A, B, t_out, t_in, axis_y=2.85):
+        """a bar whose two long edges lie on the glass surface along A[i] and B[i]: a skin t_out over the surface, one t_in
+        under it, and the two side walls between"""
+        for i in range(len(A) - 1):
+            q = [A[i], A[i + 1], B[i + 1], B[i]]
+            n = np.cross(B[i] - A[i], A[i + 1] - A[i])
+            if np.linalg.norm(n) < 1e-12:
+                continue
+            n /= np.linalg.norm(n)
+            c = np.mean(q, 0)
+            if n @ (c - np.array([0.0, axis_y, c[2]])) < 0:
+                n = -n
+            top = [p + n * t_out for p in q]
+            bot = [p - n * t_in for p in q]
+            self.face(top, n)
+            self.face(bot, -n)
+            for (p0, p1) in ((0, 1), (2, 3)):
+                w = [top[p0], top[p1], bot[p1], bot[p0]]
+                wn = np.cross(w[1] - w[0], w[3] - w[0])
+                if np.linalg.norm(wn) > 1e-12:
+                    self.face(w, wn / np.linalg.norm(wn))
+
+    def skin(self, rows):
+        """an opaque sheet on the surface: rows[i] = the points of one section ring, consecutive rings are joined"""
+        for i in range(len(rows) - 1):
+            for j in range(len(rows[i]) - 1):
+                q = [rows[i][j], rows[i + 1][j], rows[i + 1][j + 1], rows[i][j + 1]]
+                n = np.cross(q[1] - q[0], q[3] - q[0])
+                if np.linalg.norm(n) < 1e-12:
+                    q = [q[0], q[1], q[2]]
+                    n = np.cross(q[1] - q[0], q[2] - q[0])
+                    if np.linalg.norm(n) < 1e-12:
+                        continue
+                n /= np.linalg.norm(n)
+                c = np.mean(q, 0)
+                if n @ (c - np.array([0.0, 2.85, c[2]])) < 0:
+                    n = -n
+                self.face(q, n)
+
+    def mesh(self):
+        return {'normalized_uvs': True, 'positions': self.P, 'normals': self.N, 'uvs': self.U, 'polys': self.polys}
+
+
+def frame_bars(uv):
+    b = Bars(uv)
+    ns = 14
+    for side in (1, -1):
+        # the rear bow: the section's rows at the bow's two faces, from the sill up to the crown
+        A = [_pt(Z_BOW[0], j, side, ns) for j in range(ns + 1)]
+        B = [_pt(Z_BOW[1], j, side, ns) for j in range(ns + 1)]
+        b.bar(A, B, BOW_OUT, BOW_IN)
+        # the spine fairing behind it, to the closing piece (the glass's old surface, opaque)
+        zs = np.linspace(Z_AFT, Z_BOW[0], 12)
+        b.skin([[_pt(z, j, side, ns) for j in range(ns + 1)] for z in zs])
+    # the quarter-pane posts (the windscreen's rows are finer: its own ring set)
+    for side in (1, -1):
+        j0, j1 = POST_ROWS
+        e0 = [edge(z_front_front, j, 4.757, WS_NS, 4.757, WS_Z[1]) for j in (j0, j1)]
+        e1 = [edge(lambda y: WS_Z[1], j, WS_Z[1], WS_NS, 4.757, WS_Z[1]) for j in (j0, j1)]
+        n = 14
+        A = [_pt(e0[0] + (e1[0] - e0[0]) * i / n, j0, side, WS_NS) for i in range(n + 1)]
+        B = [_pt(e0[1] + (e1[1] - e0[1]) * i / n, j1, side, WS_NS) for i in range(n + 1)]
+        b.bar(A, B, POST_OUT, POST_IN)
+        # the base frame along the nose deck (the glass starts above it)
+        k0, k1 = BASE_ROWS
+        g0 = [edge(z_front_front, j, 4.757, WS_NS, 4.757, WS_Z[1]) for j in (k0, k1)]
+        g1 = [edge(lambda y: WS_Z[1], j, WS_Z[1], WS_NS, 4.757, WS_Z[1]) for j in (k0, k1)]
+        A = [_pt(g0[0] + (g1[0] - g0[0]) * i / n, k0, side, WS_NS) for i in range(n + 1)]
+        B = [_pt(g0[1] + (g1[1] - g0[1]) * i / n, k1, side, WS_NS) for i in range(n + 1)]
+        b.bar(A, B, POST_OUT, POST_IN)
+    return b
+
+
 def glass_triangles():
-    tris = patch(lambda y: Z_AFT, z_front_rear, Z_AFT, 4.80, 34)               # the bubble: the spine -> the arch
-    tris += patch(z_front_front, lambda y: WS_Z[1], 4.757, WS_Z[1], 14)         # the windscreen: the arch -> nose deck
+    tris = patch(lambda y: Z_BOW[1], z_front_rear, Z_BOW[1], 4.80, 26)          # the bubble: the rear bow -> the arch
+    j0, j1 = POST_ROWS
+    tris += patch(z_front_front, lambda y: WS_Z[1], 4.757, WS_Z[1], 14, ns=WS_NS, jr=(BASE_ROWS[1], j0))   # quarter panes
+    tris += patch(z_front_front, lambda y: WS_Z[1], 4.757, WS_Z[1], 14, ns=WS_NS, jr=(j1, WS_NS))        # front panel
     return tris
 
 
@@ -270,10 +393,18 @@ def main(argv):
             keep.append(poly)
         pm['polys'] = keep
     gone_twin = drop_buried(bones)
+    # the added frame members: their own bone (dropped and rebuilt on every run), painted with the frame's own texel
+    bones[:] = [b for b in bones if b['name'] != BARS_BONE]
+    cb = next(b for b in bones if b['name'] == CANOPY_BONE)
+    cpm = cb['poly_mesh']
+    uv = cpm['uvs'][cpm['polys'][0][0][2]]
+    bars = frame_bars(uv)
+    bones.insert(bones.index(cb) + 1, {'name': BARS_BONE, 'parent': cb['parent'], 'pivot': list(cb['pivot']),
+                                       'poly_mesh': bars.mesh()})
     tris = glass_triangles()
     both = [list(map(float, p)) for t in tris for p in t] + [list(map(float, t[k])) for t in tris for k in (0, 2, 1)]
     asset['CanopyGlass'] = {'Schema': 1, 'Frame': 'VEHICLE_LOCAL_BLOCKS', 'Triangles': [round(v, 4) + 0.0 for p in both for v in p]}
-    print(f'fa_18e canopy: {gone} stand-in faces removed (frame centre strip, nose slab), {gone_twin} doubled frame faces dropped; {len(tris)} glass triangles (x2 windings)')
+    print(f'fa_18e canopy: {gone} stand-in faces removed (frame centre strip, nose slab), {gone_twin} doubled frame faces dropped; {len(tris)} glass triangles (x2 windings), {len(bars.polys)} faces of added frame members')
     if dry:
         return
     with open(GEO, 'w', encoding='utf-8', newline='\n') as f:
