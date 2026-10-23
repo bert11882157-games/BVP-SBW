@@ -743,11 +743,15 @@ def mirrors(m, shape, E, z, depth, rect_back, rect_glass, at=(1.0, 0.62), size=(
         m.box(c - Z * 0.0065, (w, np.cross(Z, w), Z), (size[0] / 2 - 0.006, size[1] / 2 - 0.005, 0.0008), rect_glass)
 
 
-def run(vid, source, build, argv, colour=None, clear=None, boxes=()):
+def run(vid, source, build, argv, colour=None, clear=None, boxes=(), centre_line=False):
     """the aircraft file's canopy put in: build(atlas, E, skin) -> (mesh, glass points); the frames in [colour], or
-    the spine's own paint; [clear] = (shape, z0, z1[, outside]) also clears the model's leftover faces against that canopy"""
+    the spine's own paint; [clear] = (shape, z0, z1[, outside]) also clears the model's leftover faces against that canopy.
+    centre_line: E on the aircraft's centre line at the pilot's eye height and station (a side-by-side cockpit, whose
+    canopy is symmetric about the centre line, not about either crewman)"""
     ac = L.Aircraft(vid)
     E = ac.eye(0)
+    if centre_line:
+        E = np.array([0.0, E[1], E[2]])
     old = original_glass(vid)
     atlas = atlas_for(vid)
     _FRAMES.clear(); _GLASS.clear(); _EXTRA.clear()
