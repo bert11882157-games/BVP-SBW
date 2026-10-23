@@ -1,0 +1,537 @@
+{
+  "id": "f_14c",
+  "name": "F-14C Tomcat",
+  "entityClass": "AuthoredFixedWingAircraft",
+  "template": "f_14d",
+  "source": "F-14C.mtb",
+  "note": "New vehicle (Elite Expansion 2): F-14C.mtb (VX-4 black Tomcat) on the F-14D airframe data. See work/elite_expansion_2/f14c/NOTES.md. Extended wings (parts 20/22) go into the sweep bones; swept copies (21/23) dropped. Open canopy (part 16) and lowered hook (part 13) dropped; closed canopy (17) and stowed hook (19) kept. Baked stores (groups aim9l, aim7m, gbu38_jdam; parts 4/5 are whole stores) cut out; pylons (Hardpoint2/3) kept.",
+  "yaw180": true,
+  "lengthParts": [
+    0,
+    1,
+    2
+  ],
+  "templateLengthBones": [
+    "wreck_fuselage_0__hull",
+    "wreck_fuselage_1__hull",
+    "wreck_fuselage_2__hull",
+    "wreck_fuselage_3__hull"
+  ],
+  "groundParts": [
+    0,
+    1,
+    2,
+    12,
+    14,
+    15
+  ],
+  "excludeParts": [
+    12,
+    13,
+    14,
+    15,
+    16,
+    21,
+    23,
+    24
+  ],
+  "storeTextureV": -1,
+  "storeTextureRanges": [],
+  "keepBoxes": [],
+  "fuselageCuts": [
+    -72.7,
+    2.7,
+    70
+  ],
+  "parts": {
+    "0": [
+      {
+        "bone": "wing",
+        "if": {
+          "absXMin": 32
+        }
+      }
+    ],
+    "1": "fuselage",
+    "3": "fuselage",
+    "2": [
+      {
+        "bone": "side:wreck_fuselage_3__stabilator_left,wreck_fuselage_3__stabilator_right",
+        "if": {
+          "frame": "source",
+          "absXMin": 45.5,
+          "yMax": 30.5
+        }
+      }
+    ],
+    "4": "drop",
+    "5": "drop",
+    "7": [
+      {
+        "bone": "side:wreck_fuselage_3__rudder_left,wreck_fuselage_3__rudder_right",
+        "if": {
+          "frame": "source",
+          "zMin": 150
+        }
+      },
+      {
+        "bone": "wreck_fuselage_0__control_stick_pitch",
+        "if": {}
+      }
+    ],
+    "8": "side:wreck_fuselage_3__stabilator_left,wreck_fuselage_3__stabilator_right",
+    "9": "side:wreck_fuselage_3__stabilator_left,wreck_fuselage_3__stabilator_right",
+    "17": "fuselage",
+    "19": "fuselage",
+    "20": "wreck_wing_left__sweep_left",
+    "22": "wreck_wing_right__sweep_right"
+  },
+  "keepTemplateBones": [
+    "gear_wheel_0",
+    "gear_wheel_1",
+    "gear_wheel_2",
+    "gear_wheel_3",
+    "landing_gear_12",
+    "landing_gear_14",
+    "landing_gear_15"
+  ],
+  "attachments": {
+    "pilot_eye": [
+      0,
+      46.2,
+      -72.0
+    ],
+    "rio_eye": [
+      0,
+      50.0,
+      -46.7
+    ]
+  },
+  "seatPositions": {
+    "0": [
+      0,
+      23.6,
+      -72.0
+    ],
+    "1": [
+      0,
+      27.4,
+      -46.7
+    ]
+  },
+  "addSeats": [],
+  "flightReference": {
+    "dryThrustKgfPerEngine": 6260.0,
+    "afterburnerThrustKgfPerEngine": 10660.0
+  },
+  "sweeps": {
+    "sweep_left": {
+      "pivot": [
+        51.1,
+        null,
+        23.305
+      ],
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "maxDegrees": 48
+    },
+    "sweep_right": {
+      "pivot": [
+        -51.1,
+        null,
+        23.305
+      ],
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "maxDegrees": 48
+    },
+    "stabilator_left": {
+      "pivot": [
+        40.0,
+        25.55,
+        109.6
+      ],
+      "axis": [
+        -0.776,
+        0,
+        -0.631
+      ],
+      "maxDegrees": 25
+    },
+    "stabilator_right": {
+      "pivot": [
+        -40.0,
+        25.55,
+        109.6
+      ],
+      "axis": [
+        -0.776,
+        0,
+        0.631
+      ],
+      "maxDegrees": 25
+    },
+    "rudder_left": {
+      "pivot": [
+        23.45,
+        35.0,
+        122.7
+      ],
+      "axis": [
+        0,
+        -1,
+        0
+      ],
+      "maxDegrees": 30
+    },
+    "rudder_right": {
+      "pivot": [
+        -23.45,
+        35.0,
+        122.7
+      ],
+      "axis": [
+        0,
+        -1,
+        0
+      ],
+      "maxDegrees": 30
+    }
+  },
+  "dropGroups": [
+    "Import aim9l",
+    "Import aim7m",
+    "Import gbu38_jdam"
+  ],
+  "removeClientKeys": [
+    "CockpitGauges",
+    "FlightDisplays",
+    "HeadUpDisplay",
+    "CanopyGlass"
+  ],
+  "dataSet": {
+    "AircraftSurfaceTransforms.sweep_left.Pivot": [
+      3.19375,
+      2.0798,
+      -1.45656
+    ],
+    "AircraftSurfaceTransforms.sweep_left.Axis": [
+      0,
+      -1,
+      0
+    ],
+    "AircraftSurfaceTransforms.sweep_left.MaxDeflectionDegrees": 48,
+    "AircraftSurfaceTransforms.sweep_right.Pivot": [
+      -3.19375,
+      2.0798,
+      -1.45656
+    ],
+    "AircraftSurfaceTransforms.sweep_right.Axis": [
+      0,
+      -1,
+      0
+    ],
+    "AircraftSurfaceTransforms.sweep_right.MaxDeflectionDegrees": 48,
+    "AircraftSurfaceTransforms.stabilator_left.Pivot": [
+      2.5,
+      1.59688,
+      -6.85
+    ],
+    "AircraftSurfaceTransforms.stabilator_left.Axis": [
+      0.776,
+      0,
+      -0.631
+    ],
+    "AircraftSurfaceTransforms.stabilator_left.MaxDeflectionDegrees": 25,
+    "AircraftSurfaceTransforms.stabilator_right.Pivot": [
+      -2.5,
+      1.59688,
+      -6.85
+    ],
+    "AircraftSurfaceTransforms.stabilator_right.Axis": [
+      0.776,
+      0,
+      0.631
+    ],
+    "AircraftSurfaceTransforms.stabilator_right.MaxDeflectionDegrees": 25,
+    "AircraftSurfaceTransforms.rudder_left.Pivot": [
+      1.46562,
+      2.1875,
+      -7.66875
+    ],
+    "AircraftSurfaceTransforms.rudder_left.Axis": [
+      0,
+      1,
+      0
+    ],
+    "AircraftSurfaceTransforms.rudder_left.MaxDeflectionDegrees": 30,
+    "AircraftSurfaceTransforms.rudder_right.Pivot": [
+      -1.46562,
+      2.1875,
+      -7.66875
+    ],
+    "AircraftSurfaceTransforms.rudder_right.Axis": [
+      0,
+      1,
+      0
+    ],
+    "AircraftSurfaceTransforms.rudder_right.MaxDeflectionDegrees": 30
+  },
+  "note_rig": "Control surfaces fitted to this model: sweep about the root leading-edge corner (model swept pose = extended wing turned 48 deg about source (+-73, z 27), fit residual 0; range 48 = real 20-68); stabilators on a spindle along their quarter-chord line (inboard end, axis 0.776/0.631); rudders hinge on the leading edge of the rudder box (part 7) about a vertical axis. The template data-side sweep transform (axis [0,0,1], stale pivot) is replaced by the same pivot/axis.",
+  "armamentOverrides": {
+    "Name": "F-14C Tomcat",
+    "MaxPayloadKg": 6580,
+    "SuspendedWeapons": [
+      "ZuniGlove"
+    ],
+    "Pairs": [
+      {
+        "Id": "glove_outer",
+        "Name": "Stations 1/8 · glove pylon AIM-9 shoulders",
+        "Left": [
+          3.4125,
+          1.9687,
+          -0.6253
+        ],
+        "LeftStations": [
+          {
+            "Point": [
+              3.4125,
+              1.9687,
+              -0.6253
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "Right": [
+          -3.4125,
+          1.9687,
+          -0.6253
+        ],
+        "RightStations": [
+          {
+            "Point": [
+              -3.4125,
+              1.9687,
+              -0.6253
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "AllowedStores": [
+          "berts_vehicle_pack:fa18e/aim9m",
+          "berts_vehicle_pack:munition/aim9l",
+          "berts_vehicle_pack:munition/aim120b"
+        ],
+        "MaxWeaponsPerPylon": 1,
+        "MaxPylonMassKg": 500
+      },
+      {
+        "Id": "glove_inner",
+        "Name": "Stations 1B/8B · glove pylons",
+        "Left": [
+          2.8,
+          1.6625,
+          -0.5816
+        ],
+        "LeftStations": [
+          {
+            "Point": [
+              2.8,
+              1.6625,
+              -0.5816
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "Right": [
+          -2.8,
+          1.6625,
+          -0.5816
+        ],
+        "RightStations": [
+          {
+            "Point": [
+              -2.8,
+              1.6625,
+              -0.5816
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "AllowedStores": [
+          "berts_vehicle_pack:munition/aim7m",
+          "berts_vehicle_pack:munition/aim54a",
+          "berts_vehicle_pack:munition/aim54c_plus",
+          "berts_vehicle_pack:munition/aim120b",
+          "berts_vehicle_pack:munition/aim120b_x2",
+          "berts_vehicle_pack:fa18e/aim9m",
+          "berts_vehicle_pack:munition/aim9l",
+          "berts_vehicle_pack:munition/lau10_zuni",
+          "berts_vehicle_pack:sensor/lantirn_pod"
+        ],
+        "MaxWeaponsPerPylon": 1,
+        "MaxPylonMassKg": 1000,
+        "NativeWeaponIds": {
+          "berts_vehicle_pack:munition/lau10_zuni": "ZuniGlove"
+        }
+      },
+      {
+        "Id": "tunnel_forward",
+        "Name": "Stations 3/6 · forward tunnel pair",
+        "Left": [
+          0.3937,
+          1.3234,
+          0.6872
+        ],
+        "LeftStations": [
+          {
+            "Point": [
+              0.3937,
+              1.3234,
+              0.6872
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "Right": [
+          -0.3937,
+          1.3234,
+          0.6872
+        ],
+        "RightStations": [
+          {
+            "Point": [
+              -0.3937,
+              1.3234,
+              0.6872
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "AllowedStores": [
+          "berts_vehicle_pack:munition/aim7m",
+          "berts_vehicle_pack:munition/aim54a",
+          "berts_vehicle_pack:munition/aim54c_plus",
+          "berts_vehicle_pack:munition/aim120b",
+          "berts_vehicle_pack:munition/mk82_x3",
+          "berts_vehicle_pack:munition/mk82_air_x3",
+          "berts_vehicle_pack:munition/mk83",
+          "berts_vehicle_pack:munition/mk83_air",
+          "berts_vehicle_pack:munition/mk84",
+          "berts_vehicle_pack:munition/mk84_air",
+          "berts_vehicle_pack:munition/gbu38",
+          "berts_vehicle_pack:munition/gbu31",
+          "berts_vehicle_pack:munition/gbu12",
+          "berts_vehicle_pack:munition/gbu16",
+          "berts_vehicle_pack:munition/gbu24"
+        ],
+        "MaxWeaponsPerPylon": 1,
+        "MaxPylonMassKg": 1050
+      },
+      {
+        "Id": "tunnel_aft",
+        "Name": "Stations 4/5 · aft tunnel pair",
+        "Left": [
+          0.3937,
+          1.3234,
+          -4.0378
+        ],
+        "LeftStations": [
+          {
+            "Point": [
+              0.3937,
+              1.3234,
+              -4.0378
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "Right": [
+          -0.3937,
+          1.3234,
+          -4.0378
+        ],
+        "RightStations": [
+          {
+            "Point": [
+              -0.3937,
+              1.3234,
+              -4.0378
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "AllowedStores": [
+          "berts_vehicle_pack:munition/aim7m",
+          "berts_vehicle_pack:munition/aim54a",
+          "berts_vehicle_pack:munition/aim54c_plus",
+          "berts_vehicle_pack:munition/aim120b",
+          "berts_vehicle_pack:munition/mk82_x4",
+          "berts_vehicle_pack:munition/mk82_air_x3",
+          "berts_vehicle_pack:munition/mk83",
+          "berts_vehicle_pack:munition/mk83_air",
+          "berts_vehicle_pack:munition/mk84",
+          "berts_vehicle_pack:munition/mk84_air",
+          "berts_vehicle_pack:munition/gbu38",
+          "berts_vehicle_pack:munition/gbu31",
+          "berts_vehicle_pack:munition/gbu12",
+          "berts_vehicle_pack:munition/gbu16",
+          "berts_vehicle_pack:munition/gbu24",
+          "berts_vehicle_pack:munition/gbu10"
+        ],
+        "MaxWeaponsPerPylon": 1,
+        "MaxPylonMassKg": 1050
+      },
+      {
+        "Id": "nacelle_tank",
+        "Name": "Nacelle tank pylons",
+        "Left": [
+          1.5094,
+          0.6343,
+          -1.3253
+        ],
+        "LeftStations": [
+          {
+            "Point": [
+              1.5094,
+              0.6343,
+              -1.3253
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "Right": [
+          -1.5094,
+          0.6343,
+          -1.3253
+        ],
+        "RightStations": [
+          {
+            "Point": [
+              -1.5094,
+              0.6343,
+              -1.3253
+            ],
+            "Face": "bottom"
+          }
+        ],
+        "AllowedStores": [
+          "berts_vehicle_pack:munition/tank_280gal"
+        ],
+        "MaxWeaponsPerPylon": 1,
+        "MaxPylonMassKg": 1000
+      }
+    ],
+    "Singles": [],
+    "StoreGroups": {}
+  },
+  "note_crew": "Eyes: pilot 10.6 px over the front seat cushion (cushion top y 41 source = 35.7 px), 4 px ahead of the headrest; RIO eye 3 px higher than that (the RIO instrument panel stands up to the eye line at the same height). Seats are the model's own Martin-Baker Mk 7 groups.",
+  "note_flight": "Base: the pack F-14D (War Thunder f_14d: base 19,600 kg, 7,350 kg main fuel, 518 kg/m2, 2,215 km/h, 6,200 / 10,230 kgf per engine). The F-14C was a projected variant of the initial F-14B (Pratt & Whitney F401-PW-400, program ended April 1974) with advanced multi-mission avionics (Wikipedia, Grumman F-14 Tomcat, projected variants). F401-PW-400 vs F110-GE-400 (both Wikipedia): military 16,489 vs 16,333 lbf (x1.0096), afterburner 28,089 vs 26,950 lbf (x1.0423), so the D thrust is scaled by those ratios: 6,260 dry / 10,660 afterburner kgf per engine. Mass, fuel, wing and drag stay the D values (the F401 is 346 kg per engine lighter than the F110; not applied)."
+}

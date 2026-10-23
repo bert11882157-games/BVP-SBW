@@ -1,0 +1,258 @@
+{
+  "Schema": 1,
+  "Name": "F-14C Tomcat",
+  "BuiltInWeapons": [
+    "Vulcan"
+  ],
+  "SuspendedWeapons": [
+    "ZuniGlove"
+  ],
+  "Pairs": [
+    {
+      "Id": "glove_outer",
+      "Name": "Stations 1/8 · glove pylon AIM-9 shoulders",
+      "Left": [
+        3.4125,
+        1.9687,
+        -0.6253
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            3.4125,
+            1.9687,
+            -0.6253
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Right": [
+        -3.4125,
+        1.9687,
+        -0.6253
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -3.4125,
+            1.9687,
+            -0.6253
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:fa18e/aim9m",
+        "berts_vehicle_pack:munition/aim9l",
+        "berts_vehicle_pack:munition/aim120b"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 500
+    },
+    {
+      "Id": "glove_inner",
+      "Name": "Stations 1B/8B · glove pylons",
+      "Left": [
+        2.8,
+        1.6625,
+        -0.5816
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            2.8,
+            1.6625,
+            -0.5816
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Right": [
+        -2.8,
+        1.6625,
+        -0.5816
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -2.8,
+            1.6625,
+            -0.5816
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/aim7m",
+        "berts_vehicle_pack:munition/aim54a",
+        "berts_vehicle_pack:munition/aim54c_plus",
+        "berts_vehicle_pack:munition/aim120b",
+        "berts_vehicle_pack:munition/aim120b_x2",
+        "berts_vehicle_pack:fa18e/aim9m",
+        "berts_vehicle_pack:munition/aim9l",
+        "berts_vehicle_pack:munition/lau10_zuni",
+        "berts_vehicle_pack:sensor/lantirn_pod"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 1000,
+      "NativeWeaponIds": {
+        "berts_vehicle_pack:munition/lau10_zuni": "ZuniGlove"
+      }
+    },
+    {
+      "Id": "tunnel_forward",
+      "Name": "Stations 3/6 · forward tunnel pair",
+      "Left": [
+        0.3937,
+        1.3234,
+        0.6872
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            0.3937,
+            1.3234,
+            0.6872
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Right": [
+        -0.3937,
+        1.3234,
+        0.6872
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -0.3937,
+            1.3234,
+            0.6872
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/aim7m",
+        "berts_vehicle_pack:munition/aim54a",
+        "berts_vehicle_pack:munition/aim54c_plus",
+        "berts_vehicle_pack:munition/aim120b",
+        "berts_vehicle_pack:munition/mk82_x3",
+        "berts_vehicle_pack:munition/mk82_air_x3",
+        "berts_vehicle_pack:munition/mk83",
+        "berts_vehicle_pack:munition/mk83_air",
+        "berts_vehicle_pack:munition/mk84",
+        "berts_vehicle_pack:munition/mk84_air",
+        "berts_vehicle_pack:munition/gbu38",
+        "berts_vehicle_pack:munition/gbu31",
+        "berts_vehicle_pack:munition/gbu12",
+        "berts_vehicle_pack:munition/gbu16",
+        "berts_vehicle_pack:munition/gbu24"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 1050
+    },
+    {
+      "Id": "tunnel_aft",
+      "Name": "Stations 4/5 · aft tunnel pair",
+      "Left": [
+        0.3937,
+        1.3234,
+        -4.0378
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            0.3937,
+            1.3234,
+            -4.0378
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Right": [
+        -0.3937,
+        1.3234,
+        -4.0378
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -0.3937,
+            1.3234,
+            -4.0378
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/aim7m",
+        "berts_vehicle_pack:munition/aim54a",
+        "berts_vehicle_pack:munition/aim54c_plus",
+        "berts_vehicle_pack:munition/aim120b",
+        "berts_vehicle_pack:munition/mk82_x4",
+        "berts_vehicle_pack:munition/mk82_air_x3",
+        "berts_vehicle_pack:munition/mk83",
+        "berts_vehicle_pack:munition/mk83_air",
+        "berts_vehicle_pack:munition/mk84",
+        "berts_vehicle_pack:munition/mk84_air",
+        "berts_vehicle_pack:munition/gbu38",
+        "berts_vehicle_pack:munition/gbu31",
+        "berts_vehicle_pack:munition/gbu12",
+        "berts_vehicle_pack:munition/gbu16",
+        "berts_vehicle_pack:munition/gbu24",
+        "berts_vehicle_pack:munition/gbu10"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 1050
+    },
+    {
+      "Id": "nacelle_tank",
+      "Name": "Nacelle tank pylons",
+      "Left": [
+        1.5094,
+        0.6343,
+        -1.3253
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            1.5094,
+            0.6343,
+            -1.3253
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Right": [
+        -1.5094,
+        0.6343,
+        -1.3253
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -1.5094,
+            0.6343,
+            -1.3253
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/tank_280gal"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 1000
+    }
+  ],
+  "Singles": [],
+  "StoreGroups": {},
+  "MaxPayloadKg": 6580,
+  "Radar": {
+    "Enabled": true,
+    "Range": 3000
+  },
+  "MaxPylonMassKg": 500,
+  "MaxWeaponsPerPylon": 1
+}
