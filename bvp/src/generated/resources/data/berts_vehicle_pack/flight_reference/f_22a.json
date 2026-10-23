@@ -61,6 +61,11 @@
     "hpToWatts": 735.49875,
     "normalPowerThrottleFraction": null,
     "controlReferenceSpeedMps": 112.78322414755515,
-    "firstSoftCapKmh": 460
+    "firstSoftCapKmh": 460,
+    "thrustVectoring": {
+      "pitchDeg": 20,
+      "armM": 7.5,
+      "gyrationM": 2.8
+    }
   }
 }
