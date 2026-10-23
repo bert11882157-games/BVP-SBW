@@ -51,6 +51,7 @@ RAIL = [(3.25, 0.340, 3.235), (3.50, 0.380, 3.190), (3.75, 0.400, 3.145), (4.00,
 CROWN = [(3.25, 3.245), (3.30, 3.290), (3.45, 3.415), (3.60, 3.520), (3.80, 3.600), (4.00, 3.640), (4.30, 3.665),
          (4.60, 3.650), (4.85, 3.600), (5.05, 3.545), (5.14, 3.515), (5.22, 3.490)]
 NEXP = 2.2                       # the sections' super-ellipse exponent
+ZM0, ZM1 = 4.75, 5.03            # the bubble morphs into the arch's profile from ZM0 (w 0) to ZM1 (w 1)
 
 # the windscreen: from the arch's front face (z 5.29) to the deck (z 6.24): the foot on the nose deck (x, y) and the crown
 WS = [(5.29, 0.460, 2.930), (5.55, 0.400, 2.820), (5.90, 0.330, 2.820), (6.24, 0.270, 2.780)]
@@ -166,6 +167,13 @@ def base_crown(z):
     return tuple(a[i] + (b[i] - a[i]) * t for i in range(3))
 
 
+def resample(pts, k):
+    p = np.array(pts, float)
+    d = np.r_[0, np.cumsum(np.linalg.norm(np.diff(p, axis=0), axis=1))]
+    t = np.linspace(0, d[-1], k)
+    return np.c_[np.interp(t, d, p[:, 0]), np.interp(t, d, p[:, 1])]
+
+
 def section(z, n=22):
     """the right half-section at station z: absolute (x, y) points from the foot up to the crown (x = 0)"""
     if z >= WS[0][0]:
@@ -174,7 +182,24 @@ def section(z, n=22):
     us = np.linspace(0, 1, n)
     pts = [(xb * (1 - u ** NEXP) ** (1 / NEXP), yb + (yt - yb) * u) for u in us]
     pts[-1] = (0.0, yt)
+    if z > ZM0:
+        # the bubble's last stretch morphs into the flat panes' top-edge profile, so the arch is a uniform slim bow
+        w = min(1.0, (z - ZM0) / (ZM1 - ZM0))
+        w = w * w * (3 - 2 * w)
+        pts = [tuple(p) for p in (1 - w) * resample(pts, 40) + w * resample(end_profile(), 40)]
     return pts
+
+
+_END = []
+
+
+def end_profile():
+    """the bubble's section at the arch: the panes' top edge (pane_top) from the rail's inner top edge up over the quarter panes,
+    the post and the centre pane to the centre line"""
+    if not _END:
+        xs = np.linspace(0.0, 0.48, 49)
+        _END.extend([(0.48, 2.92)] + [(float(x), pane_top(float(x))[1]) for x in xs[::-1]])
+    return _END
 
 
 STATIONS = [3.25, 3.30, 3.40, 3.55, 3.70, 3.85, 4.00, 4.15, 4.30, 4.45, 4.60, 4.75, 4.90, 5.05, 5.14, 5.22, 5.29,
@@ -193,13 +218,6 @@ def sections_rel(eye):
 
 
 CANOPY = sections_rel(_eye())            # eye-relative (the checks read this)
-
-
-def resample(pts, k):
-    p = np.array(pts, float)
-    d = np.r_[0, np.cumsum(np.linalg.norm(np.diff(p, axis=0), axis=1))]
-    t = np.linspace(0, d[-1], k)
-    return np.c_[np.interp(t, d, p[:, 0]), np.interp(t, d, p[:, 1])]
 
 
 def edge(zf, j, z, ns, lo, hi):
@@ -344,13 +362,19 @@ def frame_bars(uv):
     b = Bars(uv)
     ns = 14
     for side in (1, -1):
-        # the arch: ONE bow with the posts' tops. Its rear edge is the bubble's front section (curved, as before); its front edge
-        # is the flat panes' top edge (pane_top at the same x), so the glass stops at the bow and no pane runs under it. Over the
-        # quarter panes the plane is below the bubble's boxy section, so the bow is deeper there (a bevel from the bubble's
-        # edge down to the pane's top edge).
+        # the arch: ONE slim bow with the posts' tops, a uniform 8 cm deep all round. The bubble's last stretch morphs into the
+        # panes' top-edge profile (section()), so its rear edge is that profile at the rear face and its front edge the same
+        # profile 8 cm on, at the front face: the flat panes' top edge, so the glass stops at the bow.
         A = [_pt(edge(z_rear_arch, j, ARCH_REAR[-1], ns, 4.9, 5.4), j, side, ns) for j in range(ns + 1)]
-        B = [np.array([side * pane_top(abs(a[0]))[0], pane_top(abs(a[0]))[1], pane_top(abs(a[0]))[2]]) for a in A]
+        B = [np.array([a[0], a[1], z_front_arch(a[1])]) for a in A]
         b.bar(A, B, ARCH_OUT, ARCH_IN, axis_y=3.20)
+        # the sill closure: where the quarter plane's top corner stands above the rail (z 5.11 to 5.30) a short member under the
+        # glass's outer edge, flush with the plane and 6 cm deep, so the glass meets frame all along its edge
+        zc0 = pane_top(0.48)[2]
+        zs = np.linspace(zc0, 5.30, 12)
+        A = [np.array([side * x_out(z), flat_h(x_out(z), z), z]) for z in zs]
+        B = [np.array([side * (x_out(z) + 0.035), flat_h(x_out(z) + 0.035, z), z]) for z in zs]
+        b.bar(A, B, 0.004, 0.060, axis_y=3.20)
         # the windscreen posts: one slim member from the arch's front face down to the nose deck (the airframe's two bars are cut);
         # its top face lies in the centre plane
         n = 44
