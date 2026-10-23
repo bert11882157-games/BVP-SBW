@@ -12,8 +12,10 @@ sill bands, spine and the nose are kept, so the exterior stays as it was) and pu
     attitude with the AoA and vertical-speed tapes, the HSI), the RWR scope and MISC panel on the left wing, the
     engine gauges and the caution panel on the right wing;
   * the black coaming running from the panel lip forward to the windscreen base, one smooth deck that meets the nose;
-  * the wide-angle HUD on it: one unit with its control strip low on the pilot's face, two side posts, and the
-    combiner glass (added to CanopyGlass) centred on the neutral eye line, slightly larger than life;
+  * the wide-angle HUD on it: one unit with its control strip low on the pilot's face (4.6 cm), and the Marconi / GEC
+    wide-angle combiner: one tall glass, wider at the top than at the foot, top corners cut, in a thin frame whose side
+    members run down as the two posts; the glass (added to CanopyGlass) is centred on the neutral eye line, slightly
+    larger than life, and HeadUpDisplay is the picture rectangle inside it;
   * side consoles (throttle on the left, the fixed-stick armrest and side stick on the right), liners, floor, kick
     panel, rudder pedals;
   * an ACES II seat reclined 30 degrees at its real place, with the rails, the headbox, the ejection handles, and a
@@ -289,6 +291,33 @@ def r5(v):
     return [round(float(x), 5) + 0.0 for x in v]
 
 
+def hud_combiner(m, rect, bot, up, n, H, hb, ht, ch, bw, bw_top, bt):
+    """A HUD combiner standing on its foot at `bot` (eye-relative), leaning along `up` (n = the glass normal): the glass
+    outline is H high, half hb wide at the foot and ht at the top, the top corners cut off by ch. The frame is a bar
+    bt thick round the sides and top (bw wide, bw_top on the top edge), always outside the glass edge, with the two side
+    bars running 16 mm further down as the posts, and a base plate under the foot. Returns the glass triangles
+    (eye-relative points, three per triangle) for CanopyGlass."""
+    ol = [(-hb, 0.0), (hb, 0.0), (ht, H - ch), (ht - ch, H), (-(ht - ch), H), (-ht, H - ch)]
+    P = [bot + X * r + up * v for r, v in ol]
+    tris = [P[0], P[1], P[2], P[0], P[2], P[3], P[0], P[3], P[4], P[0], P[4], P[5]]
+    centre = bot + up * H / 2
+    for i in range(1, 6):
+        a, b = P[i].copy(), P[(i + 1) % 6].copy()
+        d = unit(b - a)
+        if i == 1:
+            a = a - d * 0.016                    # the right post
+        if i == 5:
+            b = b + d * 0.016                    # the left post
+        w = bw_top if i == 3 else bw
+        p = unit(np.cross(n, d))
+        if (a + b) @ p / 2 - centre @ p < 0:
+            p = -p                               # outward in the glass plane
+        ln = float(np.linalg.norm(b - a))
+        m.box((a + b) / 2 + p * w / 2, (d, p, n), (ln / 2 + w / 2, w / 2, bt / 2), rect)
+    m.box(bot - up * 0.008, (X, up, n), (hb + bw + 0.002, 0.008, bt / 2), rect)
+    return tris
+
+
 X, Y, Z = np.array([1.0, 0, 0]), np.array([0, 1.0, 0]), np.array([0, 0, 1.0])
 
 # ---------------------------------------------------------------- the measured cockpit (metres from the eye)
@@ -509,11 +538,11 @@ def p_hud_ctrl(d, im):
     for k, lab in enumerate(['PRI', 'DAY', 'BRT', 'CONT', 'TEST']):
         x = S * (0.11 + k * 0.195)
         if k in (2, 3):
-            d.ellipse([x - H * .20, H * .30 - H * .20, x + H * .20, H * .30 + H * .20], fill=(18, 18, 18, 255),
+            d.ellipse([x - H * .17, H * .22 - H * .17, x + H * .17, H * .22 + H * .17], fill=(18, 18, 18, 255),
                       outline=(120, 120, 120, 255), width=3)
         else:
-            d.rectangle([x - H * .26, H * .10, x + H * .26, H * .46], fill=(150, 150, 150, 255), outline=(20, 20, 20, 255), width=2)
-        text(d, (x, H * .70), lab, H * .2)
+            d.rectangle([x - H * .24, H * .06, x + H * .24, H * .38], fill=(150, 150, 150, 255), outline=(20, 20, 20, 255), width=2)
+        text(d, (x, H * .62), lab, H * .19)
 
 
 def p_instr(d, im):
@@ -780,22 +809,21 @@ def build(atlas, lamps, cols):
             m.flat([p, q, [q[0], 2.222 - Ea[1], q[2]], [p[0], 2.222 - Ea[1], p[2]]], cs, toward=[0, 0.3, 0])
     # -- the HUD: one unit (the housing on the coaming with its control strip low on the pilot's face, two side posts)
     # and the combiner glass centred on the neutral eye line, leaning back toward the pilot
-    hz0, hz1, hy0, hy1, hhw = 0.690, 0.840, -0.152, -0.092, 0.118
-    ctrl = atlas.paint(200, 44, p_hud_ctrl)
+    # The Marconi / GEC wide-angle HUD of the Block 40/50: ONE tall combiner glass, wider at the top than at the foot with
+    # its top corners cut off, held by a thin frame whose two side members run on down as the posts into the unit's
+    # housing. The housing is a low strip (4.6 cm) on the coaming; nothing of it stands in front of the glass.
+    hz0, hz1, hy0, hy1, hhw = 0.700, 0.860, -0.158, -0.112, 0.136
+    ctrl = atlas.paint(320, 54, p_hud_ctrl)
     m.box([0, (hy0 + hy1) / 2, (hz0 + hz1) / 2], (X, Y, Z), (hhw, (hy1 - hy0) / 2, (hz1 - hz0) / 2), sw['dgrey'],
           front=(2, -1, ctrl, -X, Y))
     lean = math.radians(20)
     g_up = np.array([0, math.cos(lean), -math.sin(lean)])
     g_n = unit(np.cross(X, g_up))
-    g_h, g_hw = 0.190, 0.105
-    g_bot = np.array([0, -0.0875, 0.760])
-    g_top = g_bot + g_up * g_h
-    m.box(g_bot - g_up * 0.004 + [0, 0.002, 0], (X, g_up, g_n), (g_hw + 0.010, 0.005, 0.010), sw['dgrey'])
-    for s in (-1, 1):
-        m.box((g_bot + g_top) / 2 + X * s * (g_hw + 0.007), (X, g_up, g_n), (0.005, g_h / 2 + 0.004, 0.006), sw['dgrey'])
-    corners = [g_bot - X * g_hw, g_bot + X * g_hw, g_top + X * g_hw, g_top - X * g_hw]
-    glass += [corners[0] + Ea, corners[1] + Ea, corners[2] + Ea, corners[0] + Ea, corners[2] + Ea, corners[3] + Ea]
-    hud = dict(centre=(g_bot + g_top) / 2 + Ea, normal=-g_n, up=g_up, width=2 * g_hw, height=g_h)
+    g_h = 0.250
+    g_bot = np.array([0, hy1, 0.790])
+    glass += [p + Ea for p in hud_combiner(m, sw['dgrey'], g_bot, g_up, g_n, g_h, 0.088, 0.118, 0.030, 0.012, 0.010, 0.014)]
+    # the picture: the rectangle inside the glass (the foot is its narrowest part, 0.176)
+    hud = dict(centre=g_bot + g_up * g_h / 2 + Ea, normal=-g_n, up=g_up, width=0.170, height=0.210)
     # eyebrow caution lamps on the coaming either side of the HUD
     for sgn, lab, col in ((1, 'MASTER', AMBER), (-1, 'FIRE', RED)):
         rect = atlas.paint(96, 28, p_eyebrow(lab, col))
@@ -1010,7 +1038,7 @@ def main(argv):
     if cg and cg.get('Schema') == 1:
         t = np.array(cg['Triangles'], float).reshape(-1, 3, 3)
         c = t.mean(1) - EYE                                  # (an earlier combiner of this script goes)
-        keep = ~((np.abs(c[:, 0]) < 0.14) & (c[:, 1] > -0.12) & (c[:, 1] < 0.12) & (c[:, 2] > 0.55) & (c[:, 2] < 0.85))
+        keep = ~((np.abs(c[:, 0]) < 0.16) & (c[:, 1] > -0.14) & (c[:, 1] < 0.14) & (c[:, 2] > 0.55) & (c[:, 2] < 0.90))
         tri = [list(map(float, p)) for p in t[keep].reshape(-1, 3)]
         G = [list(map(float, p)) for p in glass]
         both = G + [G[i] for k in range(0, len(G), 3) for i in (k, k + 2, k + 1)]

@@ -5,6 +5,9 @@ The F-16 canopy (side views and photos of the type): a one-piece bubble with no 
 the transparency running clear from the nose to the single transverse bow just behind the seat's headrest, the frame
 along the sills and across the rear, and a slim edge at the nose where the glass seals against the skin.
 
+(Retrofit check against the owner's framing standard: a one-piece bubble with NO windscreen bow and no overhead bar,
+only the rear arch and the two sill rails; the airframe's frame is exactly that, so it stays, with nothing added.)
+
 The airframe already carries exactly that frame (bone wreck_fuselage_1__canopy, one connected piece: the two sill
 rails, the rear arch that leans back over the top, the front edge), so this script keeps it as THE frame, never adds a
 second one, and fits the glass to it:
