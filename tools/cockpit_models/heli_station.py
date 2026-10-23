@@ -403,6 +403,25 @@ def build(m, atlas, st, ppm=400, painters=None):
         if hd.get('style'):
             hud['style'] = hd['style']
 
+    # -- an IHADSS-style monocle instead: a small combiner just ahead of the crewman's eye on his straight-ahead line
+    # (the picture's boresight), its thin housing and the CRT arm back to his right toward the helmet
+    if g('monocle'):
+        mo = st['monocle']
+        c = P(0, 0, mo['z'])
+        w, h = mo['w'], mo['h']
+        t = 0.003
+        for (cx, cy, hw, hh) in ((0, h / 2 + t / 2, w / 2 + t, t / 2), (0, -h / 2 - t / 2, w / 2 + t, t / 2),
+                                 (w / 2 + t / 2, 0, t / 2, h / 2), (-w / 2 - t / 2, 0, t / 2, h / 2)):
+            m.box(c + X * cx + Y * cy, (X, Y, Z), (hw, hh, 0.002), sw['black'])
+        arm0 = c + X * (-w / 2 - t) + Y * (h / 2)
+        arm1 = P(-mo.get('arm_x', 0.07), mo.get('arm_y', 0.03), mo.get('arm_z', -0.02))
+        d_ = H.unit(arm1 - arm0); up_ = H.unit(np.cross(d_, X)) if abs(d_ @ X) < 0.95 else Y
+        m.box((arm0 + arm1) / 2, (np.cross(up_, d_), up_, d_), (0.005, 0.005, np.linalg.norm(arm1 - arm0) / 2), sw['black'])
+        g_bot = c - Y * h / 2
+        H.COMBINER.extend([g_bot + X * w / 2 - Z * 0.0, c + X * w / 2 + Y * h / 2, c - X * w / 2 + Y * h / 2,
+                           g_bot + X * w / 2, c - X * w / 2 + Y * h / 2, g_bot - X * w / 2])
+        hud = dict(centre=c, normal=np.array([0, 0, -1.0]), up=Y.copy(), width=w, height=h, seat=seat)
+
     # -- a sight head on the coaming: its body, the eyepiece face and the rubber hood round it toward the crewman
     if g('sight'):
         sg = st['sight']
@@ -509,7 +528,8 @@ def build(m, atlas, st, ppm=400, painters=None):
     # -- the collective on the left
     if g('COLLECTIVE', True):
         cx_ = 0.30 * sc
-        p0, p1 = P(cx_, cu - 0.12 * sc, sz - 0.10 * sc), P(cx_, cu + 0.12 * sc, sz + 0.32 * sc)
+        y0 = max(cu - 0.12 * sc, st['FLOOR_Y'] + 0.07) if 'FLOOR_Y' in st else cu - 0.12 * sc   # (its pivot over the floor)
+        p0, p1 = P(cx_, y0, sz - 0.10 * sc), P(cx_, cu + 0.12 * sc, sz + 0.32 * sc)
         d_ = H.unit(p1 - p0); up_ = H.unit(np.cross(d_, X))
         m.box(p0 - d_ * 0.02, (X, Y, Z), (0.03, 0.04, 0.05), sw['dgrey'])
         m.box((p0 + p1) / 2, (X, up_, d_), (0.014, 0.014, np.linalg.norm(p1 - p0) / 2), sw['metal'])
