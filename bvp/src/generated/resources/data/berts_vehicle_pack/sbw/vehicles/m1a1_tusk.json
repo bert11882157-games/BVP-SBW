@@ -104,7 +104,8 @@
       ],
       "Weapons": [
         "Cannon",
-        "MachineGun"
+        "MachineGun",
+        "MainMachineGun"
       ],
       "CanRotateHead": false,
       "MinPitch": -10,
@@ -129,7 +130,7 @@
       "HidePassenger": true,
       "Transform": "Turret",
       "CameraPos": {
-        "Transform": "WeaponStationBarrel",
+        "Transform": "Turret",
         "UseFixedCameraPos": true,
         "Position": [
           0,
@@ -141,11 +142,11 @@
           0,
           0
         ],
-        "Direction": "WeaponStationBarrel",
+        "Direction": "Turret",
         "EyeAttachment": "gunner2_camera",
         "ZoomEyeAttachment": "gunner2_camera",
-        "DirectionAttachment": "hmg_muzzle",
-        "ZoomDirectionAttachment": "hmg_muzzle",
+        "DirectionAttachment": "main_muzzle",
+        "ZoomDirectionAttachment": "main_muzzle",
         "CameraMode": "PLAYER_LOOK_AIM",
         "AimCameraMode": "PLAYER_LOOK_AIM"
       },
@@ -153,9 +154,6 @@
         -0.58,
         -0.145,
         -0.899
-      ],
-      "Weapons": [
-        "PassengerMachineGun"
       ],
       "CanRotateHead": false,
       "MinPitch": -9,
@@ -542,7 +540,7 @@
         0
       ]
     },
-    "PassengerMachineGun": {
+    "MainMachineGun": {
       "Icon": "superbwarfare:textures/overlay/vehicle/weapon/icons/gun_12_7mm.png",
       "DefaultFireMode": "Auto",
       "AvailableFireModes": "Auto",
@@ -550,7 +548,7 @@
       "CrosshairColor": "0xFFC700",
       "Projectile": {
         "Type": "superbwarfare:projectile",
-        "Profile": "berts_vehicle_pack:m1a1_tusk/passengermachinegun/default"
+        "Profile": "berts_vehicle_pack:m1a1_tusk/mainmachinegun/default"
       },
       "DefaultZoom": 3,
       "RPM": 575,
@@ -569,7 +567,7 @@
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:projectile",
-              "Profile": "berts_vehicle_pack:m1a1_tusk/passengermachinegun/belt_ammo_01_western_127_m2_ap"
+              "Profile": "berts_vehicle_pack:m1a1_tusk/mainmachinegun/belt_ammo_01_western_127_m2_ap"
             },
             "ShellType": "AP",
             "Velocity": 44.7,
@@ -604,7 +602,7 @@
             "NominalBallistics": {
               "Supported": true,
               "ProjectileType": "superbwarfare:projectile",
-              "ProjectileProfile": "berts_vehicle_pack:m1a1_tusk/passengermachinegun/belt_ammo_01_western_127_m2_ap",
+              "ProjectileProfile": "berts_vehicle_pack:m1a1_tusk/mainmachinegun/belt_ammo_01_western_127_m2_ap",
               "ProjectileLife": 40
             }
           }
@@ -615,7 +613,7 @@
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:projectile",
-              "Profile": "berts_vehicle_pack:m1a1_tusk/passengermachinegun/belt_ammo_02_western_127_m20_api_t_2"
+              "Profile": "berts_vehicle_pack:m1a1_tusk/mainmachinegun/belt_ammo_02_western_127_m20_api_t_2"
             },
             "ShellType": "AP",
             "Velocity": 46.45,
@@ -662,7 +660,7 @@
             "NominalBallistics": {
               "Supported": true,
               "ProjectileType": "superbwarfare:projectile",
-              "ProjectileProfile": "berts_vehicle_pack:m1a1_tusk/passengermachinegun/belt_ammo_02_western_127_m20_api_t_2",
+              "ProjectileProfile": "berts_vehicle_pack:m1a1_tusk/mainmachinegun/belt_ammo_02_western_127_m20_api_t_2",
               "ProjectileLife": 40
             }
           }
@@ -673,7 +671,7 @@
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:projectile",
-              "Profile": "berts_vehicle_pack:m1a1_tusk/passengermachinegun/ammo_00_western_127_m20_api_t_1"
+              "Profile": "berts_vehicle_pack:m1a1_tusk/mainmachinegun/ammo_00_western_127_m20_api_t_1"
             },
             "ShellType": "AP",
             "Velocity": 46.45,
@@ -702,28 +700,28 @@
             "NominalBallistics": {
               "Supported": true,
               "ProjectileType": "superbwarfare:projectile",
-              "ProjectileProfile": "berts_vehicle_pack:m1a1_tusk/passengermachinegun/ammo_00_western_127_m20_api_t_1",
+              "ProjectileProfile": "berts_vehicle_pack:m1a1_tusk/mainmachinegun/ammo_00_western_127_m20_api_t_1",
               "ProjectileLife": 40
             }
           }
         }
       ],
       "ShootPos": {
-        "Transform": "WeaponStationBarrel",
+        "Transform": "Barrel",
         "Positions": [
           [
-            0.0,
-            0.0,
-            -1.189
+            -0.058,
+            0.435,
+            -1.682
           ]
         ],
         "Directions": [
-          "WeaponStationBarrel"
+          "Barrel"
         ],
         "ViewPosition": [
-          0.0,
-          0.0,
-          -1.189
+          -0.058,
+          0.435,
+          -1.682
         ],
         "MuzzleAttachments": [
           "hmg_muzzle"
@@ -771,7 +769,7 @@
           "Override": {
             "Projectile": {
               "Type": "superbwarfare:projectile",
-              "Profile": "berts_vehicle_pack:m1a1_tusk/passengermachinegun/belt_ammo_00_western_127_m1_i"
+              "Profile": "berts_vehicle_pack:m1a1_tusk/mainmachinegun/belt_ammo_00_western_127_m1_i"
             },
             "ShellType": "AP",
             "Velocity": 47.2,
@@ -791,7 +789,7 @@
       "NominalBallistics": {
         "Supported": true,
         "ProjectileType": "superbwarfare:projectile",
-        "ProjectileProfile": "berts_vehicle_pack:m1a1_tusk/passengermachinegun/default",
+        "ProjectileProfile": "berts_vehicle_pack:m1a1_tusk/mainmachinegun/default",
         "ProjectileLife": 400
       },
       "ShootShake": [
@@ -992,37 +990,6 @@
       2.146
     ]
   ],
-  "PassengerWeaponStationControllerIndex": 1,
-  "PassengerWeaponStationBinding": {
-    "Schema": "berts_vehicle_pack:passenger_bed_weapon_station/v1",
-    "Parent": "TURRET",
-    "WeaponId": "PassengerMachineGun",
-    "WeaponKind": "HEAVY_MACHINE_GUN",
-    "CameraAttachment": "gunner2_camera",
-    "MuzzleAttachment": "hmg_muzzle"
-  },
-  "PassengerWeaponStationPos": [
-    -0.058,
-    0.464,
-    2.552
-  ],
-  "PassengerWeaponStationBarrelPos": [
-    0.0,
-    0.087,
-    -0.029
-  ],
-  "PassengerWeaponStationTurnSpeed": [
-    90,
-    90
-  ],
-  "PassengerWeaponStationPitchRange": [
-    -9,
-    65
-  ],
-  "PassengerWeaponStationYawRange": [
-    -110,
-    110
-  ],
   "Attachments": {
     "gunner1_camera": {
       "Parent": "Turret",
@@ -1051,11 +1018,11 @@
       ]
     },
     "gunner2_camera": {
-      "Parent": "WeaponStationBarrel",
+      "Parent": "Turret",
       "Position": [
-        0.0,
-        0.319,
-        -0.406
+        -0.609,
+        1.479,
+        -0.899
       ],
       "Direction": [
         0,
@@ -1090,11 +1057,11 @@
       ]
     },
     "hmg_muzzle": {
-      "Parent": "WeaponStationBarrel",
+      "Parent": "Barrel",
       "Position": [
-        0.0,
-        0.0,
-        1.189
+        -0.058,
+        0.435,
+        1.682
       ],
       "Direction": [
         0,

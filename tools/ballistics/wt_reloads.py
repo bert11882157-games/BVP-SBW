@@ -55,7 +55,7 @@ MAIN_WEAPON = {'bmp3m_elite': 'Cannon', 'toyota_jihad_bmp1': 'BMP1Cannon'}
 # Machine guns whose reload is WT's own (aced belt change), not the 20 s rule of thumb.
 WT_MG = {('fv721_fox', 'MachineGun'): (8.0, 'WT L37A2, 100-round belt, aced (basic crew 10.4 s)'),
          ('m1a1_tusk', 'MachineGun'): (8.0, 'WT M240, 200-round belt (reloadTime 8.0)'),
-         ('m1a1_tusk', 'PassengerMachineGun'): (8.0, 'WT M2HB, 100-round belt (reloadTime 8.0)')}
+         ('m1a1_tusk', 'MainMachineGun'): (8.0, 'WT M2HB (TUSK CSAMM), 100-round belt (reloadTime 8.0)')}
 # Guns whose reload is too short for any crew reload clip: no clip is set.
 NO_CLIP = {('fv721_fox', 'Cannon')}
 RULE = {'LMG': 20.0, 'HMG': 10.0, 'AUTOCANNON': 20.0, 'ATGM': 12.0}

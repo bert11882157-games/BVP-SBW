@@ -38,7 +38,6 @@ WHEEL_BOTTOM = 1.5       # px: the pack Abrams' wheels sit 1.5 px over the groun
 SOURCE = 'M1A1 Abrams TUSK II.mtb'
 TEX_H = 1152             # the model's 1024 rows plus the 128 the Abrams' track-link bones sample (x 0-127, y 1024-1151)
 GUN_SHIFT = (35.0, -27.5, 0.0)       # part 17 is authored at the origin; the mantlet pivot is where it belongs
-M2_YAW = {6, 7, 8, 9, 88, 89, 90, 91}  # part 4 elements: cradle plates and the side bracket (the rest of 6..102 is the gun)
 
 
 def load(path):
@@ -124,34 +123,21 @@ def build_geo(model, tpl):
     tur = model.els(3)
     bones['turret']['poly_mesh'] = model.mesh(tur)
     bones['turret']['pivot'] = pivot_of(model, tur)
-    # gun: the mantlet (part 4 elements outside the M2) and the tube (part 17, moved onto the mantlet pivot)
+    # gun: the mantlet, the tube (part 17, moved onto the mantlet pivot) and the M2HB with its shield and cradle on top
+    # of it (TUSK's Counter Sniper / Anti-Materiel Mount, CSAMM): one bone, so the M2 elevates and traverses with the gun
     p4 = model.src.parts[4]
-    m2 = [f for i, f in enumerate(p4) if 6 <= i <= 102]
-    mantlet = [f for i, f in enumerate(p4) if not 6 <= i <= 102]
     gun_pivot = mtbgeo.Source.rotation_point(p4)
     tube = model.mesh(model.els(17), GUN_SHIFT)
-    ment = model.mesh(mantlet)
+    ment = model.mesh(p4)
     off = len(ment['positions'])
-    for key in ('positions', 'normals', 'uvs'):
-        pass
-    # merge the two meshes into one poly_mesh
     merged = {'normalized_uvs': True, 'positions': ment['positions'] + tube['positions'],
               'normals': ment['normals'] + tube['normals'], 'uvs': ment['uvs'] + tube['uvs'], 'polys': list(ment['polys'])}
     for poly in tube['polys']:
         merged['polys'].append([[v[0] + off, v[1] + len(ment['normals']), v[2] + len(ment['uvs'])] for v in poly])
     bones['barell']['poly_mesh'] = merged
     bones['barell']['pivot'] = [round(float(v), 5) for v in model.geo(gun_pivot)]
-    # the commander's M2HB on the mantlet: yaw bone (cradle) and pitch bone (the gun)
-    yaw_els = [f for i, f in enumerate(p4) if i in M2_YAW]
-    gun_els = [f for i, f in enumerate(p4) if 6 <= i <= 102 and i not in M2_YAW]
-    bones['passengerWeaponStationYaw']['poly_mesh'] = model.mesh(yaw_els)
-    bones['passengerWeaponStationPitch']['poly_mesh'] = model.mesh(gun_els)
-    yaw_pt = model.geo(M2_YAW_PIVOT)
-    pitch_pt = model.geo(M2_PITCH_PIVOT)
-    for name, pt in (('passengerWeaponStation', yaw_pt), ('passengerWeaponStationYaw', yaw_pt),
-                     ('passengerWeaponStationPitch', pitch_pt)):
-        bones[name]['pivot'] = [round(float(v), 5) for v in pt]
-
+    # no passenger weapon station: the template's station bones go
+    geo['bones'] = [b for b in geo['bones'] if not b['name'].startswith('passengerWeaponStation')]
     # running gear: road wheels (rear to front), idler and sprocket per side
     for side, part, sign in (('L', 9, 1), ('R', 10, -1)):
         groups = wheel_groups(model, part)
@@ -194,9 +180,8 @@ def build_geo(model, tpl):
 
 
 TRACK_X = {}
+M2_MUZZLE = (64.0, -35.0, -1.0)         # toolbox: front of the M2 barrel
 EXHAUST = (-72.0, -17.0, 0.0)            # toolbox: over the rear grille, behind the turret
-M2_YAW_PIVOT = (44.0, -33.5, -1.0)      # toolbox: the cradle's base on the mantlet top, under the M2 barrel
-M2_PITCH_PIVOT = (43.5, -35.0, -1.0)    # the M2 receiver's trunnion
 
 
 def bounds_of(geo):
@@ -242,12 +227,11 @@ def make_spec(model):
             # y -39.5..-33.5, z -20.5..-9.5), on its axis
             'gunner1_camera': {'parent': 'Turret', 'at': t(14.6, -36.5, -15.0)},
             'gunner1_zoom': {'parent': 'Turret', 'at': t(14.6, -36.5, -15.0)},
-            # commander at the M2: head over and behind the receiver
-            'gunner2_camera': {'parent': 'WeaponStationBarrel', 'at': t(36.5, -40.5, -1.0)},
+            # commander: head over his closed cupola ring (right, rear of the turret roof); no weapon of his own
+            'gunner2_camera': {'parent': 'Turret', 'at': t(-15.5, -51.0, -10.5)},
             'main_muzzle': {'parent': 'Barrel', 'at': t(111.0, -27.5, 0.5)},
             # coax: the tube stub in the mantlet right of the gun (part 4 elements 1-3), muzzle at its front end
             'coax_muzzle': {'parent': 'Barrel', 'at': t(47.5, -30.75, -5.25)},
-            'hmg_muzzle': {'parent': 'WeaponStationBarrel', 'at': t(64.0, -35.0, -1.0)},
         },
         'seats': [
             {'frame': 'Turret', 'at': t(2.0, -23.0, -15.0)},       # gunner, right front under the GPS
@@ -255,7 +239,9 @@ def make_spec(model):
             {'frame': 'Turret', 'at': t(-15.5, -23.0, 10.0)},      # loader, left rear
         ],
         'muzzleRename': {'roof_coax_muzzle': 'coax_muzzle'},
-        'dropData': ['RoofCoaxPitch'],
+        'dropData': ['RoofCoaxPitch', 'PassengerWeaponStationControllerIndex', 'PassengerWeaponStationBinding',
+                     'PassengerWeaponStationPos', 'PassengerWeaponStationBarrelPos', 'PassengerWeaponStationTurnSpeed',
+                     'PassengerWeaponStationPitchRange', 'PassengerWeaponStationYawRange'],
     }
 
 
@@ -294,8 +280,24 @@ def finish(model, spec):
     d['Mass'] = WT['Mass']
     d['TurretTurnSpeed'] = WT['TurretTurnSpeed']
     d['EngineInfo']['MaxBackwardSpeedRate'] = WT['MaxBackwardSpeedRate']
-    # M2HB on the mantlet cradle: it cannot fire back into the turret's own front, so its arc is the forward half
-    d['PassengerWeaponStationYawRange'] = [-110, 110]
+    # CSAMM: the M2HB is a gunner weapon fixed on the gun (key MainMachineGun, the pack's coax-class reticle); the
+    # commander has no weapon (the model has none on the cupola) and looks over his cupola
+    d['Weapons']['MainMachineGun'] = d['Weapons'].pop('PassengerMachineGun')
+    d['Seats'][0]['Weapons'] = ['Cannon', 'MachineGun', 'MainMachineGun']
+    cmd = d['Seats'][1]
+    cmd.pop('Weapons', None)
+    cam = cmd['CameraPos']
+    cam.update({'Transform': 'Turret', 'Direction': 'Turret', 'EyeAttachment': 'gunner2_camera',
+                'ZoomEyeAttachment': 'gunner2_camera', 'DirectionAttachment': 'main_muzzle',
+                'ZoomDirectionAttachment': 'main_muzzle'})
+    # M2 muzzle in the barrel frame, like the coax's ShootPos (z negated there)
+    barrel_origin = np.array(d['TurretPos']) + np.array(d['BarrelPos'])
+    muzzle = mtbgeo.geo_to_data(np.array(px(model, M2_MUZZLE))) - barrel_origin
+    d['Attachments']['hmg_muzzle'] = {'Parent': 'Barrel', 'Position': [round(float(v), 5) for v in muzzle],
+                                      'Direction': [0, 0, 1]}
+    sp = d['Weapons']['MainMachineGun']['ShootPos']
+    shoot = [round(float(muzzle[0]), 5), round(float(muzzle[1]), 5), round(float(-muzzle[2]), 5)]
+    sp.update({'Transform': 'Barrel', 'Directions': ['Barrel'], 'Positions': [shoot], 'ViewPosition': shoot})
     t, cls = balance.GROUND[VID]
     d['MaxHealth'] = balance.ground_hp(VID)
     d['DeathChargeKg'] = balance.death_charge_kg(VID)
@@ -305,12 +307,12 @@ def finish(model, spec):
     wt_belts.ROUNDS.update(BELT_ROUNDS)
     notes = []
     for wn, family, belts, mag in (('MachineGun', 'WESTERN_COAX_762', COAX_BELTS, 200),
-                                   ('PassengerMachineGun', 'WESTERN_127', M2_BELTS, 100)):
+                                   ('MainMachineGun', 'WESTERN_127', M2_BELTS, 100)):
         w = d['Weapons'][wn]
         wt_belts.rebuild(VID, wn, w, family, belts, {}, {}, notes)
         w['Magazine'] = mag
         w['NormalReloadTime'] = w['EmptyReloadTime'] = 160
-    for wn in ('MachineGun', 'PassengerMachineGun'):         # round entries are named for the round, not a belt
+    for wn in ('MachineGun', 'MainMachineGun'):         # round entries are named for the round, not a belt
         for e in d['Weapons'][wn].get('ProjectileBeltAmmoType', []):
             rid = os.path.basename(e['Override']['Projectile']['Profile'])
             e['Override']['Name'] = {'belt_ammo_00_western_127_m1_i': 'I', 'belt_ammo_00_western_762_t': 'T'}.get(rid, e['Override']['Name'])
@@ -323,8 +325,21 @@ def finish(model, spec):
     d.setdefault('Attachments', {})['driver_camera'] = {'Parent': 'VehicleCustomPitch',
                                                         'Position': [round(float(v), 5) for v in eye],
                                                         'Direction': [0, 0, 1]}
+    # the M2's profiles follow its new weapon key (WeaponId and file names)
+    text = json.dumps(d, indent=2).replace(f'{VID}/passengermachinegun', f'{VID}/mainmachinegun')
     with open(path, 'w') as fh:
-        fh.write(json.dumps(d, indent=2) + '\n')
+        fh.write(text + '\n')
+    base = os.path.join(vehgen.DATA, 'sbw', 'projectile_profiles', VID)
+    old = os.path.join(base, 'passengermachinegun')
+    if os.path.isdir(old):
+        new = os.path.join(base, 'mainmachinegun')
+        os.makedirs(new, exist_ok=True)
+        for name in os.listdir(old):
+            body = open(os.path.join(old, name)).read().replace(f'{VID}/passengermachinegun', f'{VID}/mainmachinegun')
+            with open(os.path.join(new, name), 'w') as fh:
+                fh.write(body)
+            os.remove(os.path.join(old, name))
+        os.rmdir(old)
     # exhaust: the AGT-1500 grille on the rear deck (the Abrams template's origin is at the glacis)
     cpath = fit_existing.files_of(VID)['client']
     c = load(cpath)
