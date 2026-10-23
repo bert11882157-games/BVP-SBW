@@ -357,6 +357,9 @@ public class ModEntityRenderers {
         registerVehicle(event, ModEntities.F_4C, "f_4c", standardVehicle(
                 "custom_geo/f_4c.geo.json", "textures/entity/f_4c.png",
                 "f_4c"));
+        registerVehicle(event, ModEntities.F_4B, "f_4b", standardVehicle(
+                "custom_geo/f_4b.geo.json", "textures/entity/f_4b.png",
+                "f_4b"));
         registerVehicle(event, ModEntities.F_4D, "f_4d", standardVehicle(
                 "custom_geo/f_4d.geo.json", "textures/entity/f_4d.png",
                 "f_4d"));
