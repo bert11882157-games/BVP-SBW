@@ -536,7 +536,37 @@
       -9.5725
     ],
     "AfterburnerPresentation.Outlets.0.NozzleRadiusBlocks": 0.7,
-    "AfterburnerPresentation.Outlets.1.NozzleRadiusBlocks": 0.7
+    "AfterburnerPresentation.Outlets.1.NozzleRadiusBlocks": 0.7,
+    "AfterburnerPresentation.Outlets": [
+      {
+        "Id": "afterburner_left",
+        "Position": [
+          0.802,
+          2.43,
+          -9.572
+        ],
+        "Direction": [
+          0,
+          0,
+          -1
+        ],
+        "NozzleRadiusBlocks": 0.78
+      },
+      {
+        "Id": "afterburner_right",
+        "Position": [
+          -0.802,
+          2.43,
+          -9.572
+        ],
+        "Direction": [
+          0,
+          0,
+          -1
+        ],
+        "NozzleRadiusBlocks": 0.78
+      }
+    ]
   },
   "removeClientKeys": [
     "CockpitGauges",

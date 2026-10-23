@@ -49,6 +49,12 @@ LAYER = 0.06                # a nozzle ring lies within this depth (blocks)
 # the mirror engine is derived. Read off the rear view.
 SEEDS = {}
 
+# Exits measured by hand for models whose nozzle is not a circle of vertices (a boxy low-poly tailpipe the ring fit cannot find):
+# vid -> [(x, y, z, r)] in blocks for the +X engine (the mirror engine is derived), r = (half width + half height) / 2 of the
+# rear-most ring of the tailpipe's vertices. mig_25pd: the rear plane z -9.5725 of wreck_fuselage_3__hull, vertices x 0.0678 .. 1.537
+# (half width 0.7346), y 1.6048 .. 3.2548 (half height 0.825, the fin-root bump at y 3.39 left out): centre (0.8024, 2.4298).
+EXITS = {'mig_25pd': [(0.8024, 2.4298, -9.5725, 0.780)]}
+
 
 def load_bones(vid):
     """{bone name: (vertices Nx3 in client/data blocks, used by triangles)}"""
@@ -149,6 +155,11 @@ def measure(vid, bones):
             w = float(hi[0] - lo[0])
             out.append({'x': float((lo[0] + hi[0]) / 2), 'y': float((aft[:, 1].max() + aft[:, 1].min()) / 2),
                         'z': float(aft[:, 2].mean()), 'w': w, 'h': h, 'r': (w + h) / 4, 'how': 'rig bone ' + n})
+        return out
+    if vid in EXITS:                                        # a hand measurement instead of the ring fit
+        for x, y, z, r in EXITS[vid]:
+            for s in ((1, -1) if abs(x) > 0.15 else (1,)):
+                out.append({'x': s * x, 'y': y, 'z': z, 'w': 2 * r, 'h': 2 * r, 'r': r, 'how': 'measured by hand (EXITS)'})
         return out
     allp = np.concatenate(list(bones.values()))
     seeds = [(x, y, None) for x, y, z in SEEDS.get(vid, [])]
