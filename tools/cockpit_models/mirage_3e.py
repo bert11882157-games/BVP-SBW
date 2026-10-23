@@ -29,6 +29,9 @@ Usage: python3 tools/cockpit_models/mirage_3e.py [--dry-run]
 """
 import json, math, os, sys
 import numpy as np
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import throttle_lib
+THR = []                                 # the throttle levers (throttle_lib), one bone each
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
@@ -431,13 +434,11 @@ def build(atlas, E):
         m.box(P(s * 0.12, -1.000, 0.47), (X, Y, Z), (0.012, 0.03, 0.06), sw['dgrey'])
 
     # -- the Atar's single throttle lever on the left console
+    # The Atar's throttle lever is its own bone (throttle_lever), hinged under the console top, at idle.
     tz, tx = -0.08, 0.28
-    m.box(P(tx, CONSOLE_Y + 0.055, tz), (X, H.unit([0, 1, 0.25]), H.unit([0, -0.25, 1])), (0.007, 0.06, 0.007), sw['metal'])
-    grip_ax = (X, H.unit([0, 1, 0.3]), H.unit([0, -0.3, 1]))
-    m.box(P(tx, CONSOLE_Y + 0.135, tz + 0.02), grip_ax, (0.019, 0.042, 0.034), sw['black'])
-    m.box(P(tx, CONSOLE_Y + 0.183, tz + 0.03), grip_ax, (0.016, 0.009, 0.028), sw['dgrey'])
-    m.box(P(tx, CONSOLE_Y + 0.15, tz + 0.045), grip_ax, (0.003, 0.008, 0.008), sw['red'])
-
+    THR.clear()
+    THR.extend(throttle_lib.jet_levers(m, lambda: H.Mesh(atlas), sw, 'ball', x=E[0] + tx, top_y=E[1] + CONSOLE_Y,
+                                       z_idle=E[2] + tz - 0.06, hx=0.040, friction=False))
     # -- Martin-Baker RM4 ejection seat: bucket and pan, a parachute back, headbox, the face-blind handle above, the lower
     # handle between the knees; at the model's old seat group (headrest front face z -0.265, headbox top y +0.10)
     cushion = atlas.paint(64, 64, H.p_cushion(CUSHION))
@@ -490,6 +491,8 @@ def install(ac, mesh, stick, gauges, displays, hud, eye, seat=0):
     hull = ac.bone('hull')
     at = next(i for i, b in enumerate(ac.bones) if b['name'] == SOURCE_BONE) + 1
     ac.bones.insert(at, {'name': piece + '__cockpit', 'parent': 'hull', 'pivot': list(hull['pivot']), 'poly_mesh': pm})
+    thr = throttle_lib.add_bones(ac.bones, THR, piece + '__cockpit')
+    print(f'{piece} throttle bones {[(n, p) for n, p, _ in thr]}')
     rig = ac.asset.get('AircraftRig')
     mesh_s, foot = stick
     px = H.r5(np.array(foot) * np.array([16.0, 16.0, -16.0]))

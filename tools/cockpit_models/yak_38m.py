@@ -31,6 +31,9 @@ Usage: python3 tools/cockpit_models/yak_38m.py [--dry-run]
 """
 import json, math, os, sys
 import numpy as np
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import throttle_lib
+THR = []                                 # the throttle levers (throttle_lib), one bone each
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
@@ -840,13 +843,16 @@ def build(atlas, E):
 
     # -- the R-28V-300 throttle and the nozzle lever on the left console (the VTOL handles of the Yak-38)
     tx = 0.246                                                      # (the console is 4 cm wide: the two levers stand one behind the other)
-    for tz, th, col in ((-0.03, 0.060, 'black'), (0.105, 0.045, 'yellow')):
+    # The R-28V-300 throttle is its own bone (throttle_lever), hinged under the console top, at idle; the nozzle lever
+    # (yellow, behind it) stays as it was (not part of the throttle pass).
+    THR.clear()
+    THR.extend(throttle_lib.jet_levers(m, lambda: Mesh(atlas), sw, 'rud', x=E[0] + tx, top_y=E[1] + CONSOLE_Y,
+                                       z_idle=E[2] - 0.03 - 0.06, k=0.75, plate=False))
+    for tz, th, col in ((0.105, 0.045, 'yellow'),):
         m.box(P(tx, CONSOLE_Y + 0.5 * th, tz), (X, unit([0, 1, 0.25]), unit([0, -0.25, 1])), (0.007, th, 0.007), sw['metal'])
         grip_ax = (X, unit([0, 1, 0.3]), unit([0, -0.3, 1]))
         m.box(P(tx, CONSOLE_Y + th + 0.045, tz + 0.02), grip_ax, (0.016, 0.040, 0.030), sw[col])
         m.box(P(tx, CONSOLE_Y + th + 0.090, tz + 0.03), grip_ax, (0.014, 0.008, 0.026), sw['dgrey'])
-    m.box(P(tx, CONSOLE_Y + 0.115, -0.03 + 0.05), grip_ax, (0.003, 0.008, 0.008), sw['red'])
-
     # -- K-36VM ejection seat (the Yak-38's seat, with its automatic ejection): an armoured back shield, a shaped headbox with
     # side wings and the face-blind handle on top, arm rests with the ejection handles, the pan handle at the front centre;
     # at the model's seat group's place (back z -0.50, headrest face z -0.30, head top y +0.05)
@@ -966,6 +972,8 @@ def install(ac, mesh, stick, gauges, displays, hud, eye, seat=0):
     hull = ac.bone('hull')
     at = next(i for i, b in enumerate(ac.bones) if b['name'] == SOURCE_BONE) + 1
     ac.bones.insert(at, {'name': piece + '__cockpit', 'parent': 'hull', 'pivot': list(hull['pivot']), 'poly_mesh': pm})
+    thr = throttle_lib.add_bones(ac.bones, THR, piece + '__cockpit')
+    print(f'{piece} throttle bones {[(n, p) for n, p, _ in thr]}')
     rig = ac.asset.get('AircraftRig')
     mesh_s, foot = stick
     px = r5(np.array(foot) * np.array([16.0, 16.0, -16.0]))

@@ -124,6 +124,20 @@ def fcyl(m, col, F, a, u, l, r, h, axis='b', seg=8):
     c = F.p(a, u, l)
     tube(m, col, c - ax * h, c + ax * h, r, r, seg)
 
+class _Scaled:
+    """draws a grip scaled by k about the arm's tip (the grips are built relative to it)"""
+
+    def __init__(self, m, tip, k):
+        self.m, self.tip, self.k = m, np.array(tip, float), k
+
+    def _p(self, p):
+        return self.tip + (np.array(p, float) - self.tip) * self.k
+
+    def flat(self, pts, col, toward=None, normal=None):
+        self.m.flat([self._p(p) for p in pts], col, toward=toward, normal=normal)
+
+    def box(self, centre, axes, half, col):
+        self.m.box(self._p(centre), axes, [h * self.k for h in half], col)
 
 # ---------------------------------------------------------------- grips (all at rest, from the arm's tip)
 
@@ -285,7 +299,7 @@ def quadrant(m, sw, x, top_y, z, hx, hz, slots=(0.0,), slot_hz=None, gate_dz=Non
 
 
 def lever(m_unused, Mesh_, sw, name, x, top_y, z_idle, grip, lean0=-28.0, rise=0.115, depth=0.10, arm_r=0.0085, side=0,
-          mil=22.0, ab=30.0):
+          mil=22.0, ab=30.0, k=1.0):
     """one jet throttle: arm hinged `depth` under the console top, leaning back `lean0` degrees at idle (crossing the top
     plane at z_idle), rising `rise` above the plane to the grip"""
     L0 = math.radians(lean0)
@@ -294,8 +308,8 @@ def lever(m_unused, Mesh_, sw, name, x, top_y, z_idle, grip, lean0=-28.0, rise=0
     hinge = np.array([x, top_y - depth, z_idle - depth * math.tan(L0)])
     tip = hinge + a0 * La
     mesh = Mesh_()
-    tube(mesh, _col(sw, 'metal'), hinge + a0 * (depth - 0.012), tip, arm_r, arm_r * .85, seg=8)
-    GRIP_FN[grip](mesh, sw, tip, side)
+    tube(mesh, _col(sw, 'metal'), hinge + a0 * (depth - 0.012), tip, arm_r * k, arm_r * k * .85, seg=8)
+    GRIP_FN[grip](mesh if k == 1.0 else _Scaled(mesh, tip, k), sw, tip, side)
     mil = math.degrees(math.atan(math.tan(L0) + 0.72 * (math.tan(math.radians(ab)) - math.tan(L0))))      # MIL at 72% of the travel to the detent
     info = dict(arm=round(La, 3), lean_idle=lean0, lean_mil=round(mil, 1), lean_ab=ab, hinge=[round(float(v), 4) for v in hinge],
                 grip=grip, travel_z=round(float(depth * (math.tan(math.radians(ab)) - math.tan(L0))), 3))
@@ -307,21 +321,21 @@ def names(n):
 
 
 def jet_levers(m, Mesh_, sw, style, x, top_y, z_idle, n=1, pitch=0.050, hx=None, hz=None, z_plate=None, sides=None,
-               lean0=-28.0, rise=0.115, depth=0.10, mil=22.0, ab=30.0, gate=True, plate=True):
+               lean0=-28.0, rise=0.115, depth=0.10, mil=22.0, ab=30.0, gate=True, plate=True, k=1.0, friction=True):
     """a jet throttle quadrant at (x, top_y): `n` levers `pitch` apart centred on x (lever 1 on the pilot's left,
     +x), the plate and slots into `m`. style: f16 f15 f18 f22 a10 f4 f14 rud ball pistol bomber"""
     grip = {'f15': 'f15', 'f18': 'f18', 'f22': 'f22', 'a10': 'a10', 'f4': 'f4', 'f14': 'f14'}.get(style, style)
-    xs = [x + (n - 1) * pitch / 2 - k * pitch for k in range(n)]
+    xs = [x + (n - 1) * pitch / 2 - i * pitch for i in range(n)]
     hx = hx if hx is not None else (n - 1) * pitch / 2 + 0.035
     trav = depth * (math.tan(math.radians(ab)) - math.tan(math.radians(lean0)))
     zp = z_idle + trav / 2 if z_plate is None else z_plate
     hz = trav / 2 + 0.035 if hz is None else hz
     if plate:
-        quadrant(m, sw, x, top_y, zp, hx, hz, slots=[xx - x for xx in xs], gate_dz=(hz * .55 if gate else None))
+        quadrant(m, sw, x, top_y, zp, hx, hz, slots=[xx - x for xx in xs], gate_dz=(hz * .55 if gate else None), friction=friction)
     out = []
-    for k, (nm, xx) in enumerate(zip(names(n), xs)):
-        sd = 0 if n == 1 else (1 if k == 0 else -1)
-        out.append(lever(m, Mesh_, sw, nm, xx, top_y, z_idle, grip, lean0, rise, depth, 0.0085, sd, mil, ab))
+    for i, (nm, xx) in enumerate(zip(names(n), xs)):
+        sd = 0 if n == 1 else (1 if i == 0 else -1)
+        out.append(lever(m, Mesh_, sw, nm, xx, top_y, z_idle, grip, lean0, rise, depth, 0.0085, sd, mil, ab, k))
     return out
 
 
