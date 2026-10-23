@@ -95,8 +95,8 @@ def arc(xs, ys, yt, z, bulge=0.04, n=NP):
 # operator windscreen: a flat trapezoid on the nose deck, leaning back 18 degrees (measured: the old front hoop's foot (z 7.76, y 1.87), its
 # top bow (z 7.49, y 2.50))
 OB_BL = np.array([0.40, 1.70, 7.63])             # bottom outer corner (on the nose deck)
-OB_TL = np.array([0.31, 2.56, 7.38])             # top outer corner
-OB_TM = np.array([0.0, 2.56, 7.38])
+OB_TL = np.array([0.31, 2.60, 7.38])             # top outer corner
+OB_TM = np.array([0.0, 2.60, 7.38])
 # pilot windscreen: a flat trapezoid standing on the hump behind the operator, leaning back 41 degrees from the horizontal
 # (measured: the old frame from (z 6.34, y 2.88) to (z 5.85, y 3.46))
 PB_S0 = np.array([0.62, 2.30, 6.34])             # the side window's front foot on the sill (the A pillar runs from here to the pane's corner)
@@ -111,7 +111,7 @@ def ring0_ob():
 
 
 def ring0_pb():
-    return np.array([PB_S0, PB_BL, lerp(PB_BL, PB_TL, 0.5), PB_TL, lerp(PB_TL, PB_TM, 0.5), PB_TM])
+    return np.array([PB_S0, PB_BL, lerp(PB_BL, PB_TL, 0.33), lerp(PB_BL, PB_TL, 0.66), PB_TL, PB_TM])
 
 
 def rear_ring():
@@ -124,8 +124,12 @@ def rear_ring():
 
 _P4 = rear_ring()
 _P2 = arc(0.62, 2.43, 3.54, 5.38)
-OB_RINGS = [ring0_ob(), arc(0.52, 1.96, 2.68, 7.20), arc(0.56, 2.05, 2.76, 6.92), arc(0.59, 2.13, 2.78, 6.74), arc(0.60, 2.20, 2.79, 6.58)]
-PB_RINGS = [ring0_pb(), arc(0.62, 2.38, 3.54, 5.62), _P2, lerp(_P2, _P4, 0.5), _P4]
+_P1 = arc(0.62, 2.38, 3.54, 5.62)
+for _r, _y in ((_P1, 3.52), (_P2, 3.52), (_P4, 3.50)):             # a flat, full crown: the shoulder line runs level from the windscreen's top corner to the rear arch
+    _r[4][0], _r[4][1] = 0.30, _y
+_P4[4][2] = 4.72 + 0.96 * (3.50 - 3.06)
+OB_RINGS = [ring0_ob(), arc(0.52, 1.96, 2.67, 7.20), arc(0.56, 2.05, 2.76, 6.92), arc(0.59, 2.13, 2.78, 6.74), arc(0.60, 2.20, 2.79, 6.58)]
+PB_RINGS = [ring0_pb(), _P1, _P2, lerp(_P2, _P4, 0.5), _P4]
 S33 = lerp(PB_S0, PB_BL, 1 / 3)
 S66 = lerp(PB_S0, PB_BL, 2 / 3)
 TIE_FAR = np.array([PB_S0, S33, S66, PB_BL, [0.20, 2.88, 6.34], [0.0, 2.88, 6.34]])

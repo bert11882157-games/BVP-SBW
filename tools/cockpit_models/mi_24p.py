@@ -942,6 +942,35 @@ def build(atlas):
     return m, gauges, displays, glass, hud, tsu
 
 
+def line_teal(geo, atlas):
+    """old teal tub faces still standing in the cockpit (rim lining, side blocks) are re-coloured in the cockpit's interior green-grey: their
+    uvs point at a swatch of the interior colour (positions untouched)"""
+    hull = next(b for b in geo['minecraft:geometry'][0]['bones'] if b['name'] == HULL_BONE)
+    pm = hull['poly_mesh']
+    tex = np.asarray(Image.open(L.texture_path(VID)).convert('RGB')).astype(int)
+    H, W = tex.shape[:2]
+    P = np.array(pm['positions'], float) * np.array([1, 1, -1]) / 16.0
+    U = pm['uvs']
+    rect = atlas.swatch((54, 66, 62))
+    ui = len(U)
+    U.append([round(v, 6) for v in atlas.uv(rect, 0.5, 0.5)])
+    n = 0
+    for poly in pm['polys']:
+        c = P[[v[0] for v in poly]].mean(0)
+        if abs(c[0]) > 0.64 or not 4.7 < c[2] < 7.66 or c[1] < 1.45 or c[1] > 3.7:
+            continue
+        cs = []
+        for v in poly:
+            u, vv = U[v[2]]
+            cs.append(tex[min(H - 1, max(0, int((1 - vv) * H))), min(W - 1, max(0, int(u * W)))])
+        r, g, b = np.mean(cs, 0)
+        if b > r + 25 and g > r + 25:
+            for v in poly:
+                v[2] = ui
+            n += 1
+    return n
+
+
 def planform(geo):
     """a top-down outline of the airframe for the stores page: the hull's widest |x| per z, as one closed polyline"""
     hull = next(b for b in geo['minecraft:geometry'][0]['bones'] if b['name'] == HULL_BONE)
@@ -983,6 +1012,7 @@ def main(argv):
     bones[:] = [b for b in bones if b['name'] != BONE]
     atlas = Atlas(VID)
     mesh, gauges, displays, glass, hud, tsu = build(atlas)
+    lined = line_teal(geo, atlas)
     pm = mesh.poly_mesh()
     hull = next(b for b in bones if b['name'] == HULL_BONE)
     at = [b['name'] for b in bones].index('hull__canopy') + 1 if any(b['name'] == 'hull__canopy' for b in bones) else bones.index(hull) + 1
@@ -1006,7 +1036,7 @@ def main(argv):
         G = [list(map(float, p)) for p in glass]
         both = G + [G[i] for k in range(0, len(G), 3) for i in (k, k + 2, k + 1)]
         cg['Triangles'] = [round(v, 4) + 0.0 for p in tri + both for v in p]
-    print(f'{VID}: new cockpits {len(pm["polys"])} faces, {len(gauges)} gauges, {len(displays)} display(s), gunsight glass '
+    print(f'{VID}: {lined} old teal faces re-coloured, new cockpits {len(pm["polys"])} faces, {len(gauges)} gauges, {len(displays)} display(s), gunsight glass '
           f'{len(glass) // 3} triangles; atlas {atlas.used()} of {sum(a[2] * a[3] for a in atlas.areas)} texels')
     if dry:
         return
