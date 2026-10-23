@@ -34,11 +34,16 @@ public final class BvpCoordinateMissileRenderer {
         flight("kh59mk"),
         // 2026-10-02 (afternoon) owner's models
         flight("asraam"), flight("iris_t"), flight("r550_magic"), flight("r530"), flight("super_530d"),
-        flight("armat"), flight("martel"));
+        flight("armat"), flight("martel"),
+        // helicopter infrared missiles (tools/heli_armament), textured from the shared helicopter store palette
+        flight("heli_stinger", "heli_stores"), flight("heli_igla", "heli_stores"));
     private static java.util.Map.Entry<String, MissileAsset> flight(String id) {
+        return flight(id, id);
+    }
+    private static java.util.Map.Entry<String, MissileAsset> flight(String id, String texture) {
         return java.util.Map.entry(id, new MissileAsset(
             new ResourceLocation("berts_vehicle_pack", "custom_geo/aircraft_stores/" + id + "_flight.geo.json"),
-            new ResourceLocation("berts_vehicle_pack", "textures/aircraft_stores/" + id + ".png"), id));
+            new ResourceLocation("berts_vehicle_pack", "textures/aircraft_stores/" + texture + ".png"), id));
     }
     private BvpCoordinateMissileRenderer() { }
 

@@ -1,0 +1,93 @@
+{
+  "Schema": 1,
+  "Name": "APU-6 · 6 × 9M127 Vikhr (AI)",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/heli_vikhr.geo.json",
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/heli_stores.png",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "MountAxis": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "LaunchOffset": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "Capacity": 1,
+  "MassKg": 47.0,
+  "MaxPerPylon": 6,
+  "FixedRackCount": 6,
+  "RackMassKg": 90.0,
+  "RackAdapter": {
+    "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/heli_vikhr_x6.geo.json",
+    "Texture": "berts_vehicle_pack:textures/aircraft_stores/heli_stores.png",
+    "MountAnchor": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "Stations": [
+      {
+        "Point": [
+          0.165,
+          -0.191,
+          0.0
+        ],
+        "Face": "bottom"
+      },
+      {
+        "Point": [
+          0.0,
+          -0.191,
+          0.0
+        ],
+        "Face": "bottom"
+      },
+      {
+        "Point": [
+          -0.165,
+          -0.191,
+          0.0
+        ],
+        "Face": "bottom"
+      },
+      {
+        "Point": [
+          0.165,
+          -0.356,
+          0.0
+        ],
+        "Face": "bottom"
+      },
+      {
+        "Point": [
+          0.0,
+          -0.356,
+          0.0
+        ],
+        "Face": "bottom"
+      },
+      {
+        "Point": [
+          -0.165,
+          -0.356,
+          0.0
+        ],
+        "Face": "bottom"
+      }
+    ]
+  },
+  "Category": "COMMAND_GUIDED",
+  "CommandGuidance": {
+    "Mode": "SACLOS"
+  },
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_stores/vikhr_9m127",
+  "LaunchGunProfile": "berts_vehicle_pack:aircraft_stores/vikhr_9m127",
+  "AmmoItem": "superbwarfare:small_atgm"
+}

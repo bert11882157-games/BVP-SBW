@@ -1,0 +1,74 @@
+{
+  "Schema": 1,
+  "Name": "M272 · 4 × AGM-114K Hellfire II (AI)",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/agm114.geo.json",
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/agm114.png",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.1232,
+    -0.2339
+  ],
+  "MountAxis": [
+    0.0,
+    -0.0213,
+    -0.2339
+  ],
+  "LaunchOffset": [
+    0.0,
+    -0.14450000000000002,
+    0.0
+  ],
+  "Capacity": 1,
+  "MassKg": 45.1,
+  "MaxPerPylon": 4,
+  "FixedRackCount": 4,
+  "RackMassKg": 64.0,
+  "RackAdapter": {
+    "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/heli_m272.geo.json",
+    "Texture": "berts_vehicle_pack:textures/aircraft_stores/heli_stores.png",
+    "MountAnchor": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "Stations": [
+      {
+        "Point": [
+          0.2,
+          -0.26,
+          0.3
+        ],
+        "Face": "bottom"
+      },
+      {
+        "Point": [
+          -0.2,
+          -0.26,
+          0.3
+        ],
+        "Face": "bottom"
+      },
+      {
+        "Point": [
+          0.2,
+          -0.68,
+          0.3
+        ],
+        "Face": "bottom"
+      },
+      {
+        "Point": [
+          -0.2,
+          -0.68,
+          0.3
+        ],
+        "Face": "bottom"
+      }
+    ]
+  },
+  "Category": "LASER_GUIDED",
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_stores/agm114k_ah64d",
+  "LaunchGunProfile": "berts_vehicle_pack:aircraft_stores/agm114k_ah64d",
+  "AmmoItem": "superbwarfare:small_atgm"
+}

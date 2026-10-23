@@ -1,0 +1,26 @@
+{
+  "Schema": 1,
+  "Name": "FZ225 · 19 × 68 mm rockets (AI)",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/heli_fz225.geo.json",
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/heli_stores.png",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "MountAxis": [
+    0.0,
+    -0.24,
+    0.0
+  ],
+  "LaunchOffset": [
+    0.0,
+    -0.24,
+    0.0
+  ],
+  "Category": "ROCKET_POD",
+  "Capacity": 19,
+  "MassKg": 11.0853,
+  "AmmoItem": "superbwarfare:small_unguided_rocket"
+}

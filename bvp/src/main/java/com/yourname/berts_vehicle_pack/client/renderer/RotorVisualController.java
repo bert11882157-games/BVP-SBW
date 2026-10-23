@@ -20,7 +20,7 @@ public final class RotorVisualController {
     }
 
     public static void apply(GeoVehicleEntity entity, PolyMeshModel loadedModel, float partialTicks) {
-        if (AircraftRigAnimator.owns(loadedModel)) {
+        if (AircraftRigAnimator.owns(loadedModel) && !AircraftRigAnimator.cockpitOnly(loadedModel)) {
             return;
         }
         BedrockBone mainRotor = loadedModel.getBone("propeller");

@@ -1,0 +1,64 @@
+{
+  "Schema": 1,
+  "Name": "ATAS · 2 × FIM-92 Stinger (AI)",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/heli_stinger.geo.json",
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/heli_stores.png",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "MountAxis": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "LaunchOffset": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "Capacity": 1,
+  "MassKg": 10.1,
+  "MaxPerPylon": 2,
+  "FixedRackCount": 2,
+  "RackMassKg": 18.0,
+  "RackAdapter": {
+    "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/heli_atas_tiger.geo.json",
+    "Texture": "berts_vehicle_pack:textures/aircraft_stores/heli_stores.png",
+    "MountAnchor": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "Stations": [
+      {
+        "Point": [
+          0.05,
+          -0.14,
+          0.0
+        ],
+        "Face": "bottom"
+      },
+      {
+        "Point": [
+          -0.05,
+          -0.14,
+          0.0
+        ],
+        "Face": "bottom"
+      }
+    ]
+  },
+  "Category": "AIR_TO_AIR",
+  "AmmoItem": "superbwarfare:small_air_to_air_missile",
+  "TntEquivalentKg": 0.45,
+  "Guidance": {
+    "Mode": "INFRARED",
+    "LockTicks": 40,
+    "Range": 1000,
+    "ConeDegrees": 25,
+    "CountermeasureVulnerability": 1.0
+  }
+}

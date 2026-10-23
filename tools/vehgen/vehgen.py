@@ -430,10 +430,12 @@ def register(b, out):
 def main(argv):
     write = '--write' in argv
     args = [a for a in argv if not a.startswith('--')]
-    sources = '/tmp/claude-0/exp/elite additions'
+    sources = os.environ.get('BVP_VEHGEN_SOURCES')
     if '--sources' in argv:
         sources = argv[argv.index('--sources') + 1]
         args.remove(sources)
+    if not sources:
+        sys.exit('pass --sources DIR (the owner''s MTB/Blockbench sources) or set BVP_VEHGEN_SOURCES')
     spec = load(args[0])
     b = Build(spec, sources)
     out = Output(write)

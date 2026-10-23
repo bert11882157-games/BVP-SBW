@@ -29,7 +29,7 @@ data class FireKeyMessage(val type: Int, val power: Double, val zoom: Boolean) :
             data.item.onFireKeyPress(data, player, zoom)
         } else if (type == 1) {
             // 松开开火
-            data.item.onFireKeyRelease(data, player, power, zoom)
+            data.item.onFireKeyRelease(data, player, if (power.isNaN()) 0.0 else power.coerceIn(0.0, 1.0), zoom)
             queueServerWork(4) { handleGunBolt(player, stack) }
         }
 

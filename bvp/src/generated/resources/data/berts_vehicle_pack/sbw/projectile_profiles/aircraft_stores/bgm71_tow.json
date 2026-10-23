@@ -1,34 +1,34 @@
 {
   "Combat": {
-    "WeaponId": "berts_vehicle_pack:aircraft_stores/falanga_9m17m",
-    "RoundId": "berts_vehicle_pack:falanga_9m17m",
+    "WeaponId": "berts_vehicle_pack:aircraft_stores/bgm71_tow",
+    "RoundId": "berts_vehicle_pack:bgm71_tow",
     "MunitionType": "berts_vehicle_pack:atgm",
     "DamageType": "berts_vehicle_pack:chemical",
-    "CaliberMm": 142,
-    "DiameterMm": 142,
+    "CaliberMm": 127,
+    "DiameterMm": 127,
     "HullDamageClass": "ATGM",
-    "HullDamage": 95,
-    "ModuleDamage": 57,
-    "AmmoRackDamage": 440,
-    "PenetrationMm": 650,
+    "HullDamage": 90,
+    "ModuleDamage": 54,
+    "AmmoRackDamage": 414,
+    "PenetrationMm": 630,
     "Tandem": false
   },
   "VisualProfile": "berts_vehicle_pack:authored_missile",
   "ImpactVisualProfile": "berts_vehicle_pack:atgm",
   "MotionSync": "INHERIT",
   "Collision": {
-    "Width": 0.142,
-    "Height": 0.142
+    "Width": 0.127,
+    "Height": 0.127
   },
   "Luminance": 9,
   "TrailMode": "REPLACE",
   "RenderScale": 1,
   "GuidedPropulsion": {
     "InitialSpeed": 0.6,
-    "MaxSpeed": 4,
+    "MaxSpeed": 5.1,
     "AccelerationPerTick": 0.08,
     "ThrustDurationTicks": 100,
-    "MaxTurnRateDegreesPerSecond": 55,
+    "MaxTurnRateDegreesPerSecond": 45,
     "GuidanceLookAheadTicks": 12,
     "IgnitionDelayTicks": 3,
     "EjectionSpeed": 0.6,
@@ -36,8 +36,8 @@
   },
   "Extensions": {
     "berts_vehicle_pack:projectile_mesh_v1": {
-      "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/falanga_flight.geo.json",
-      "Texture": "berts_vehicle_pack:textures/aircraft_stores/falanga.png",
+      "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/heli_tow_flight.geo.json",
+      "Texture": "berts_vehicle_pack:textures/aircraft_stores/heli_stores.png",
       "ForwardYaw": 0,
       "SpinDegreesPerTick": 0,
       "ForwardAxis": "Y",
@@ -103,6 +103,11 @@
         "Explosion": "large",
         "WaterExplosion": "same"
       }
+    },
+    "berts_vehicle_pack:physical_wire_v1": {
+      "Schema": 1,
+      "Enabled": true,
+      "WireCount": 1
     }
   }
 }

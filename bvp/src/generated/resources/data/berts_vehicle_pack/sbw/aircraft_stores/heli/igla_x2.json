@@ -1,0 +1,64 @@
+{
+  "Schema": 1,
+  "Name": "9M39 Igla-V · 2 tubes (AI)",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/heli_igla.geo.json",
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/heli_stores.png",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "MountAxis": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "LaunchOffset": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "Capacity": 1,
+  "MassKg": 10.6,
+  "MaxPerPylon": 2,
+  "FixedRackCount": 2,
+  "RackMassKg": 20.0,
+  "RackAdapter": {
+    "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/heli_igla_x2.geo.json",
+    "Texture": "berts_vehicle_pack:textures/aircraft_stores/heli_stores.png",
+    "MountAnchor": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "Stations": [
+      {
+        "Point": [
+          0.055,
+          -0.14,
+          0.0
+        ],
+        "Face": "bottom"
+      },
+      {
+        "Point": [
+          -0.055,
+          -0.14,
+          0.0
+        ],
+        "Face": "bottom"
+      }
+    ]
+  },
+  "Category": "AIR_TO_AIR",
+  "AmmoItem": "superbwarfare:small_air_to_air_missile",
+  "TntEquivalentKg": 0.4,
+  "Guidance": {
+    "Mode": "INFRARED",
+    "LockTicks": 40,
+    "Range": 800,
+    "ConeDegrees": 25,
+    "CountermeasureVulnerability": 1.0
+  }
+}

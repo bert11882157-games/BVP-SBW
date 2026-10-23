@@ -123,7 +123,7 @@ class ResearchingRecipe(
         }
 
         fun getItemByIndex(index: Int): ItemStack {
-            if (this.isRandom() && this.getResultList().size > index) {
+            if (this.isRandom() && index in this.getResultList().indices) {
                 return ItemStack(this.getResultList()[index], count)
             }
             return this.getResult()

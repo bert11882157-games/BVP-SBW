@@ -1,0 +1,48 @@
+{
+  "Schema": 1,
+  "Name": "APU-60-1 · R-60M",
+  "Category": "AIR_TO_AIR",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/r60.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0,
+    0.0,
+    0.308
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.05,
+      -0.05,
+      0.308
+    ],
+    "Right": [
+      -0.05,
+      -0.05,
+      0.308
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    -0.05,
+    0.308
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/r60.png",
+  "Capacity": 1,
+  "Scale": 1,
+  "LaunchOffset": [
+    0.0,
+    -0.05,
+    0.0
+  ],
+  "Guidance": {
+    "Mode": "INFRARED",
+    "LockTicks": 60,
+    "Range": 2048,
+    "ConeDegrees": 25,
+    "CountermeasureVulnerability": 1
+  },
+  "MassKg": 44,
+  "TntEquivalentKg": 1.35,
+  "AmmoItem": "superbwarfare:small_air_to_air_missile",
+  "MaxPerPylon": 1
+}

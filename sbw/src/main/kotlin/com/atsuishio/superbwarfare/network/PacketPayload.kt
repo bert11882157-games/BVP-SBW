@@ -1,5 +1,6 @@
 package com.atsuishio.superbwarfare.network
 
+import com.atsuishio.superbwarfare.Mod
 import net.minecraft.network.chat.Component
 import net.minecraft.server.level.ServerPlayer
 import net.minecraftforge.api.distmarker.Dist
@@ -52,6 +53,9 @@ abstract class ServerPacketPayload : PacketPayload() {
             val startedAt = System.nanoTime()
             try {
                 with(message) { context.handler() }
+            } catch (t: Throwable) {
+                // enqueueWork hides a failed task inside its future; log it so a broken handler is visible
+                PacketFailureLog.report("server", message, t)
             } finally {
                 NetworkTelemetry.recordHandled(registered, queuedAt, startedAt)
             }
@@ -84,10 +88,30 @@ abstract class ClientPacketPayload : PacketPayload() {
                 DistExecutor.unsafeRunWhenOn(Dist.CLIENT) {
                     DistExecutor.SafeRunnable { with(message) { context.handler() } }
                 }
+            } catch (t: Throwable) {
+                // enqueueWork hides a failed task inside its future; log it so a broken handler is visible
+                PacketFailureLog.report("client", message, t)
             } finally {
                 NetworkTelemetry.recordHandled(registered, queuedAt, startedAt)
             }
         }
         networkContext.packetHandled = true
+    }
+}
+
+/** Logs a failing packet handler at most once per message type every 10 s, so a handler that throws every tick cannot flood the log. */
+private object PacketFailureLog {
+    private const val INTERVAL_NANOS = 10_000_000_000L
+    private val last = java.util.concurrent.ConcurrentHashMap<Class<*>, Long>()
+
+    fun report(side: String, message: PacketPayload, failure: Throwable) {
+        val now = System.nanoTime()
+        val previous = last[message.javaClass]
+        if (previous != null && now - previous < INTERVAL_NANOS) return
+        last[message.javaClass] = now
+        Mod.LOGGER.error(
+            "Superb Warfare {} packet handler {} failed (repeats suppressed for 10 s)",
+            side, message.javaClass.simpleName, failure
+        )
     }
 }

@@ -1,0 +1,25 @@
+{
+  "Schema": 1,
+  "Name": "RMP-LC · 12.7 mm M3P + 3 × 70 mm (AI)",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/heli_rmp_lc.geo.json",
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/heli_stores.png",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "MountAxis": [
+    0.0,
+    -0.2,
+    0.0
+  ],
+  "LaunchOffset": [
+    0.0,
+    -0.2,
+    0.0
+  ],
+  "Category": "GUN_POD",
+  "Capacity": 250,
+  "MassKg": 0.64
+}

@@ -674,15 +674,6 @@ public class ModEntityRenderers {
                 context, bvp(modelPath), bvp(texturePath), debugName);
     }
 
-    private static VehicleRenderBackendProvider standardTrackedVehicle(
-            String modelPath, String texturePath, int roadWheelCount,
-            float trackYCenter, float trackRadius, float trackZRear, float trackZFront,
-            int trackLinkCount, String debugName) {
-        return context -> new StandardTrackedVehicleBackend(
-                context, bvp(modelPath), bvp(texturePath), roadWheelCount,
-                trackYCenter, trackRadius, trackZRear, trackZFront, trackLinkCount, debugName);
-    }
-
     private static VehicleRenderBackendProvider standardTank(
             String modelPath, String texturePath, int roadWheelCount,
             float trackYCenter, float trackRadius, float trackZRear, float trackZFront,
@@ -717,15 +708,6 @@ public class ModEntityRenderers {
                                               float trackZFront, String debugName) {
             super(context, modelLocation, textureLocation, roadWheelCount, trackYCenter,
                     trackRadius, trackZRear, trackZFront, debugName);
-        }
-
-        private StandardTrackedVehicleBackend(EntityRendererProvider.Context context,
-                                              ResourceLocation modelLocation,
-                                              ResourceLocation textureLocation, int roadWheelCount,
-                                              float trackYCenter, float trackRadius, float trackZRear,
-                                              float trackZFront, int trackLinkCount, String debugName) {
-            super(context, modelLocation, textureLocation, roadWheelCount, trackYCenter,
-                    trackRadius, trackZRear, trackZFront, trackLinkCount, debugName);
         }
     }
 

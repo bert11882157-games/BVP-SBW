@@ -172,4 +172,77 @@ class VehicleWeaponTriggerCadenceTest {
         assertEquals(0, fire(gun, 31, false))
         assertEquals(1, fire(gun, 32, true))
     }
+
+    /**
+     * Two seats (pilot and gunner) holding the same physical weapon: the scheduler runs one shared RuntimeState and
+     * lets the second holder try only while the first could not use the slot (admitsSharedAttempt).
+     */
+    private fun fireShared(state: VehicleWeaponScheduler.RuntimeState, tick: Int, holders: Int): Int {
+        state.tick(tick, holders > 0)
+        val fired = HashSet<String>()
+        var shots = 0
+        for (seat in 0 until holders) {
+            val key = VehicleWeaponScheduler.ScheduleKey(seat, seat * 3, "Cannon")
+            if (!VehicleWeaponScheduler.admitsSharedAttempt(fired, key)) continue
+            while (true) {
+                if (!state.canAttempt()) { fired.add(VehicleWeaponScheduler.physicalWeapon(key)); break }
+                assertTrue(++shots <= 8, "scheduler exceeded its bounded event budget")
+                state.consumeCredit()
+                state.recordAccepted(tick)
+                fired.add(VehicleWeaponScheduler.physicalWeapon(key))
+            }
+        }
+        return shots
+    }
+
+    @Test
+    fun `two seats holding one weapon fire it at its own cadence`() {
+        for (rpm in listOf(120, 550, 625, 1100, 4500)) {
+            val one = state(rpm)
+            val two = state(rpm)
+            var single = 0
+            var shared = 0
+            for (tick in 0..1200) {
+                single += fire(one, tick, true)
+                shared += fireShared(two, tick, 2)
+                assertTrue(shared <= 1 + floor(tick * rpm / 1200.0).toInt(), "$rpm RPM doubled at tick $tick")
+            }
+            assertEquals(single, shared, "$rpm RPM: two holders must fire exactly as one")
+        }
+    }
+
+    @Test
+    fun `a seat handover keeps the weapon cooldown`() {
+        // pilot fires, lets go, and the gunner presses at once: the gun is still cycling
+        val gun = state(120, grace = 0)
+        assertEquals(1, fireShared(gun, 0, 1))
+        gun.releaseEdge()
+        for (tick in 1..9) assertEquals(0, fireShared(gun, tick, 1), "handover at tick $tick minted a shot")
+        assertEquals(1, (10..11).sumOf { fireShared(gun, it, 1) }, "the next round comes at the gun's own cadence")
+    }
+
+    @Test
+    fun `a retargeted profile keeps credits and heat`() {
+        val bank = VehicleWeaponScheduler.RuntimeState(VehicleWeaponScheduleProfile(
+            id = ResourceLocation("test", "bank"), bulletRpm = 600, eventRpm = 600, projectilesPerEvent = 1,
+            soundIntervalProjectiles = 1, releaseGraceTicks = 0, preserveAcceptedCadenceAcrossPresses = true,
+            maxCatchUpEvents = 2,
+        ))
+        assertEquals(1, fire(bank, 0, true))
+        // the other seat resolves the same gun without the bank: same weapon, its cooldown carries over
+        bank.retarget(VehicleWeaponScheduleProfile(
+            id = ResourceLocation("test", "plain"), bulletRpm = 600, eventRpm = 600, projectilesPerEvent = 1,
+            soundIntervalProjectiles = 1, releaseGraceTicks = 0, maxCatchUpEvents = 2,
+        ))
+        assertEquals(0, fire(bank, 1, true), "retarget must not hand out a fresh ready shot")
+        assertEquals(1, fire(bank, 2, true))
+    }
+
+    @Test
+    fun `a seat counts as holding only within its release grace`() {
+        assertFalse(VehicleWeaponScheduler.heldWithinGrace(null, 10, 4))
+        assertTrue(VehicleWeaponScheduler.heldWithinGrace(10, 10, 0))
+        assertTrue(VehicleWeaponScheduler.heldWithinGrace(6, 10, 4))
+        assertFalse(VehicleWeaponScheduler.heldWithinGrace(5, 10, 4))
+    }
 }

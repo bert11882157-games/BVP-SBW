@@ -1,7 +1,7 @@
 {
   "Combat": {
     "WeaponId": "berts_vehicle_pack:aircraft_stores/hot3_uht",
-    "RoundId": "berts_vehicle_pack:eurocopter_tiger/hot3_proxy",
+    "RoundId": "berts_vehicle_pack:hot3",
     "MunitionType": "berts_vehicle_pack:atgm",
     "DamageType": "berts_vehicle_pack:chemical",
     "CaliberMm": 150,
@@ -9,60 +9,45 @@
     "HullDamageClass": "ATGM",
     "HullDamage": 110,
     "ModuleDamage": 66,
-    "AmmoRackDamage": 505,
-    "PenetrationMm": 900,
+    "AmmoRackDamage": 506,
+    "PenetrationMm": 1250,
     "Tandem": true
   },
   "VisualProfile": "berts_vehicle_pack:authored_missile",
   "ImpactVisualProfile": "berts_vehicle_pack:atgm",
   "MotionSync": "INHERIT",
   "Collision": {
-    "Width": 0.16,
-    "Height": 0.16
+    "Width": 0.15,
+    "Height": 0.15
   },
   "Luminance": 9,
   "TrailMode": "REPLACE",
-  "RenderScale": 0.45,
+  "RenderScale": 1,
   "GuidedPropulsion": {
-    "InitialSpeed": 2,
-    "MaxSpeed": 5,
+    "InitialSpeed": 0.6,
+    "MaxSpeed": 4.31,
     "AccelerationPerTick": 0.08,
-    "ThrustDurationTicks": 80,
-    "MaxTurnRateDegreesPerSecond": 65,
-    "GuidanceLookAheadTicks": 10,
-    "IgnitionDelayTicks": 6,
-    "EjectionSpeed": 2,
+    "ThrustDurationTicks": 100,
+    "MaxTurnRateDegreesPerSecond": 45,
+    "GuidanceLookAheadTicks": 12,
+    "IgnitionDelayTicks": 3,
+    "EjectionSpeed": 0.6,
     "EjectionGravityPerTick": 0.0125
   },
   "Extensions": {
     "berts_vehicle_pack:projectile_mesh_v1": {
-      "Model": "berts_vehicle_pack:custom_geo/projectiles/kh29l.geo.json",
-      "Texture": "berts_vehicle_pack:textures/aircraft_stores/kh29l.png",
-      "ForwardYaw": 180,
-      "SpinDegreesPerTick": 0
-    },
-    "superbwarfare:guided_maneuver_v1": {
-      "MaxLoadFactorG": 12,
-      "SeekerConeDegrees": 30,
-      "SeekerRateDegreesPerSecond": 32,
-      "BodyTurnLimitScale": 2
-    },
-    "superbwarfare:warhead_fragments_v1": {
-      "Count": 24,
-      "Range": 1,
-      "Damage": 4,
-      "MaxHitsPerTarget": 2
+      "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/heli_hot3_flight.geo.json",
+      "Texture": "berts_vehicle_pack:textures/aircraft_stores/heli_stores.png",
+      "ForwardYaw": 0,
+      "SpinDegreesPerTick": 0,
+      "ForwardAxis": "Y",
+      "Origin": "TAIL"
     },
     "superbwarfare:heavy_warhead_blast_v1": {
-      "InnerRadius": 0.5,
-      "OuterRadius": 1,
-      "HeavyDamageFraction": 0.1,
+      "InnerRadius": 1.5,
+      "OuterRadius": 3,
+      "HeavyDamageFraction": 0.12,
       "LightDamageFraction": 0.2
-    },
-    "berts_vehicle_pack:physical_wire_v1": {
-      "Schema": 1,
-      "Enabled": true,
-      "WireCount": 1
     },
     "berts_vehicle_pack:projectile_effect_v1": {
       "Schema": 1,
@@ -118,6 +103,11 @@
         "Explosion": "large",
         "WaterExplosion": "same"
       }
+    },
+    "berts_vehicle_pack:physical_wire_v1": {
+      "Schema": 1,
+      "Enabled": true,
+      "WireCount": 1
     }
   }
 }

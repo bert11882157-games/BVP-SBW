@@ -38,6 +38,33 @@ class VehicleFixedGunBanksTest {
     }
 
     @Test
+    fun `a bank gun may also be listed on another seat but must sit once on the bank seat`() {
+        // AH-64D: the gunner's single-gun M230 bank, the same gun also selectable by the pilot
+        val seats = listOf(listOf("HydraS2", "HydraS3", "M230"), listOf("M230", "HydraS2"))
+        assertTrue(VehicleFixedGunBanks.ownsMember(seats, 1, "M230"))
+        assertTrue(VehicleFixedGunBanks.ownsMember(seats, 0, "M230"))
+        assertFalse(VehicleFixedGunBanks.ownsMember(seats, 1, "Missing"))
+        assertFalse(VehicleFixedGunBanks.ownsMember(seats, 2, "M230"), "no such seat")
+        assertFalse(VehicleFixedGunBanks.ownsMember(listOf(listOf("M230", "M230")), 0, "M230"), "duplicate on own seat")
+    }
+
+    @Test
+    fun `one physical gun is one schedule whichever seat fires it`() {
+        val gunner = VehicleWeaponScheduler.ScheduleKey(1, 0, "M230")
+        val pilot = VehicleWeaponScheduler.ScheduleKey(0, 6, "M230")
+        val pilotRockets = VehicleWeaponScheduler.ScheduleKey(0, 0, "HydraS2")
+        // both seats may hold the same gun selected: they fire the same physical weapon
+        assertEquals(VehicleWeaponScheduler.physicalWeapon(gunner), VehicleWeaponScheduler.physicalWeapon(pilot))
+        assertNotEquals(VehicleWeaponScheduler.physicalWeapon(pilot), VehicleWeaponScheduler.physicalWeapon(pilotRockets))
+        // once one holder spent the gun's cadence slot this tick, the other seat's hold waits for the next one
+        assertTrue(VehicleWeaponScheduler.admitsSharedAttempt(emptySet(), pilot))
+        assertFalse(VehicleWeaponScheduler.admitsSharedAttempt(setOf("M230"), pilot), "gunner already fired it")
+        assertTrue(VehicleWeaponScheduler.admitsSharedAttempt(setOf("M230"), pilotRockets))
+        // two independent weapons, one per seat, never block each other
+        assertTrue(VehicleWeaponScheduler.admitsSharedAttempt(setOf("HydraS2"), gunner))
+    }
+
+    @Test
     fun `assembly rate determines bounded event capacity without projectile multiplication`() {
         assertEquals(1, VehicleFixedGunBanks.eventCapacity(850))
         assertEquals(3, VehicleFixedGunBanks.eventCapacity(3000))

@@ -3245,5 +3245,32 @@
         "stream": false
       }
     ]
+  },
+  "ah_1f_gun_jetshoot": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft_guns/ah_1f/ah_1f_gun_jetshoot",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "mi_24a_gun_shoot_gun_kord": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft_guns/mi_24a/mi_24a_gun_shoot_gun_kord",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "mi_24d_gun_shoot_gun_yakb": {
+    "sounds": [
+      {
+        "name": "berts_vehicle_pack:aircraft_guns/mi_24d/mi_24d_gun_shoot_gun_yakb",
+        "stream": false,
+        "attenuation_distance": 96
+      }
+    ]
   }
 }

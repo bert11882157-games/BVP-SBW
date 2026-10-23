@@ -1,0 +1,61 @@
+{
+  "Schema": 1,
+  "Name": "9M17M Falanga · 2 rails (AI)",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/falanga.geo.json",
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/falanga.png",
+  "ModelForward": "+Z",
+  "MountAnchor": [
+    0,
+    0.1055,
+    -0.1624
+  ],
+  "MountAxis": [
+    0.0,
+    0.0,
+    -0.1624
+  ],
+  "LaunchOffset": [
+    0.0,
+    -0.1055,
+    0.0
+  ],
+  "Capacity": 1,
+  "MassKg": 31.5,
+  "MaxPerPylon": 2,
+  "FixedRackCount": 2,
+  "RackMassKg": 25.0,
+  "RackAdapter": {
+    "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/heli_falanga_x2.geo.json",
+    "Texture": "berts_vehicle_pack:textures/aircraft_stores/heli_stores.png",
+    "MountAnchor": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "Stations": [
+      {
+        "Point": [
+          0.0,
+          -0.125,
+          0.12
+        ],
+        "Face": "bottom"
+      },
+      {
+        "Point": [
+          0.0,
+          -0.505,
+          0.12
+        ],
+        "Face": "bottom"
+      }
+    ]
+  },
+  "Category": "COMMAND_GUIDED",
+  "CommandGuidance": {
+    "Mode": "SACLOS"
+  },
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_stores/falanga_9m17m",
+  "LaunchGunProfile": "berts_vehicle_pack:aircraft_stores/falanga_9m17m",
+  "AmmoItem": "superbwarfare:large_atgm"
+}
