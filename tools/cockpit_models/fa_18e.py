@@ -771,10 +771,11 @@ def build(atlas):
         m.flat([a + g_n * dep, b + g_n * dep, b2 + g_n * dep, a2 + g_n * dep], sw['dgrey'], normal=g_n)
         m.flat([a2 - g_n * dep, b2 - g_n * dep, b2 + g_n * dep, a2 + g_n * dep], sw['dgrey'], normal=on)
         m.flat([a - g_n * dep, b - g_n * dep, b + g_n * dep, a + g_n * dep], sw['dgrey'], normal=-on)
-    # the two side posts: slim struts standing on the housing beside the bezel, leaning with the glass up to its shoulders
+    # the two side posts: short slim brackets standing on the housing beside the bezel's foot, leaning with the glass, 9 cm
+    # (owner 2026-10-23: shortened; nothing stands beside the glass above them)
     for s in (-1, 1):
         base = q3(s * (0.103 + rim + 0.012), 0.0)
-        m.box(base + g_up * 0.130, (X, g_up, g_n), (0.006, 0.130, 0.007), sw['dgrey'])
+        m.box(base + g_up * 0.045, (X, g_up, g_n), (0.006, 0.045, 0.007), sw['dgrey'])
     hud = dict(centre=q3(0, 0.165) + EYE, normal=-g_n, up=g_up, width=0.190, height=0.200)
     # the AoA indexer: a small lit column on the glareshield, left of the HUD
     aoa_r = atlas.paint(40, 100, p_aoa_indexer)
