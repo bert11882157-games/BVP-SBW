@@ -50,11 +50,11 @@ def build(atlas, E, skin):
     # the canopy: its tail frame, the hoop behind the headrest, the thick front bow with its three mirrors, the sill rails
     C.bow(m, sh, E, -1.58, 0.04, 0.03, out, inner)
     C.bow(m, sh, E, HOOP_Z, 0.05, 0.035, out, inner)
-    C.bow(m, sh, E, SPLIT - 0.01, 0.055, 0.04, out, inner)
-    C.mirrors(m, sh, E, SPLIT - 0.01, 0.04, mback, mglass)
+    # the canopy's front bow and the windscreen's arch: one thick bar (the Su-27's, bert's War Thunder reference)
+    C.bow(m, sh, E, SPLIT + 0.02, 0.095, 0.045, out, inner)
+    C.mirrors(m, sh, E, SPLIT + 0.0, 0.045, mback, mglass)
     C.member(m, sh, E, 0.0, -1.60, SPLIT, 0.05, 0.035, out, inner, steps=24)
-    # the windscreen, one piece (no posts): the arch, the base frame on the nose, the side rails
-    C.bow(m, sh, E, SPLIT + 0.03, 0.04, 0.02, out, inner)
+    # the windscreen, one piece (no posts): the base frame on the nose, the side rails
     C.bow(m, sh, E, 0.98, 0.04, 0.025, out, inner)
     C.member(m, sh, E, 0.0, SPLIT + 0.05, 1.00, 0.05, 0.035, out, inner)
     # one smooth shell under the windscreen ahead of the coaming, inside the glass, its top under the sight line over
