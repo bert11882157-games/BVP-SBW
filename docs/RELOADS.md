@@ -15,7 +15,7 @@ The value comes from the War Thunder datamine (gszabi99/War-Thunder-Datamine, `g
 | Vehicle | s | Source |
 |---|---|---|
 | T-72A, T-72B, T-72B3, T-90A, T-90M | 7.0 | WT autoloader |
-| T-80B, T-80U, T-64B | 6.0 | WT autoloader |
+| T-80B, T-80U, T-64B, T-64BV | 6.0 | WT autoloader |
 | T-14 | 5.5 | Estimate: not in WT; faster than the T-80 |
 | T-55A / T-62 | 7.5 / 8.0 | WT, aced |
 | M1, M1A1, M1A1 TUSK II, M1A2 SEP v2, Challenger 2 | 5.0 | WT, aced |

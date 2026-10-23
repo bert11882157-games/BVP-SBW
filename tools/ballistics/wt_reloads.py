@@ -48,16 +48,19 @@ MAIN = {
     'bmp_1am': (6.0, 'WT BMP-1 73 mm 2A28 autoloader'), 'bmd_1': (6.0, 'WT BMP-1 73 mm 2A28 autoloader'),
     'toyota_jihad_bmp1': (8.0, 'estimate: 2A28 on a technical, hand-loaded'),
     'fv721_fox': (0.8, 'WT FV721 Fox 30 mm L21A1 RARDEN, 3-round clip, aced'),
+    't64bv': (6.0, 'WT T-64B (1984) 125 mm 2A46 autoloader (shotFreq 0.16666)'),
     'm1a1_tusk': (5.0, 'WT M1A1 HC 120 mm M256, aced'),
 }
 MAIN_WEAPON = {'bmp3m_elite': 'Cannon', 'toyota_jihad_bmp1': 'BMP1Cannon'}
 
 # Machine guns whose reload is WT's own (aced belt change), not the 20 s rule of thumb.
 WT_MG = {('fv721_fox', 'MachineGun'): (8.0, 'WT L37A2, 100-round belt, aced (basic crew 10.4 s)'),
+         ('t64bv', 'MachineGun'): (8.0, 'WT PKT, 250-round belt (reloadTime 8.0)'),
+         ('t64bv', 'PassengerMachineGun'): (5.0, 'WT NSVT, 150-round belt (reloadTime 5.0)'),
          ('m1a1_tusk', 'MachineGun'): (8.0, 'WT M240, 200-round belt (reloadTime 8.0)'),
          ('m1a1_tusk', 'MainMachineGun'): (8.0, 'WT M2HB (TUSK CSAMM), 100-round belt (reloadTime 8.0)')}
 # Guns whose reload is too short for any crew reload clip: no clip is set.
-NO_CLIP = {('fv721_fox', 'Cannon')}
+NO_CLIP = {('fv721_fox', 'Cannon'), ('t64bv', 'PassengerMachineGun')}
 RULE = {'LMG': 20.0, 'HMG': 10.0, 'AUTOCANNON': 20.0, 'ATGM': 12.0}
 # autocannon belt change by how much of the belt was fired: [fraction fired, seconds]; the fixed reload times are
 # set to the empty-belt value (12 s) as the fallback
@@ -74,7 +77,7 @@ RPM = {
 # Nation of the generic "7.62 mm coax" per vehicle.
 COAX = {
     'bmp2': 'PKT', 'bmp2m': 'PKT', 'bmp3m_elite': 'PKT', 'bmp_1am': 'PKT', 'btr80a': 'PKT', 'btr_60pb': 'PKT',
-    't14_armata': 'PKT', 't64b_obr1976': 'PKT', 't72a': 'PKT', 't72b': 'PKT', 't72b3': 'PKT', 't72b3_ubh_cope': 'PKT',
+    't14_armata': 'PKT', 't64b_obr1976': 'PKT', 't64bv': 'PKT', 't72a': 'PKT', 't72b': 'PKT', 't72b3': 'PKT', 't72b3_ubh_cope': 'PKT',
     't80b_obr1976': 'PKT', 't80u_obr1985': 'PKT', 't90a': 'PKT', 't90m': 'PKT', 't_62a': 'PKT', 't55a_2_0': 'SGMT',
     'ztz99a': 'TYPE86', 'cv9040_no_net': 'KSP', 'leo2a6': 'MG3',
     'm1_abrams_elite': 'M240', 'm1a1_abrams': 'M240', 'm1a1_tusk': 'M240', 'm1a2_abrams_sep_v2': 'M240',
@@ -184,7 +187,7 @@ MAIN_CLIP = {
     't90a': 'berts_vehicle_pack:soviet_125mm_autoloader', 't90m': 'berts_vehicle_pack:soviet_125mm_autoloader',
     'm1128': 'berts_vehicle_pack:soviet_125mm_autoloader',
     't80b_obr1976': 'superbwarfare:t_90a_reload', 't80u_obr1985': 'superbwarfare:t_90a_reload',
-    't64b_obr1976': 'superbwarfare:t_90a_reload', 't14_armata': 'superbwarfare:t_90a_reload',
+    't64b_obr1976': 'superbwarfare:t_90a_reload', 't64bv': 'superbwarfare:t_90a_reload', 't14_armata': 'superbwarfare:t_90a_reload',
     'bmp_1am': 'superbwarfare:t_90a_reload', 'bmd_1': 'superbwarfare:t_90a_reload',
     'vt_4a1': 'superbwarfare:ztz_99a_reload', 'ztz99a': 'superbwarfare:ztz_99a_reload',
     'leopard_2a4': 'superbwarfare:m_1a_2_reload', 'leo2a6': 'superbwarfare:m_1a_2_reload',
