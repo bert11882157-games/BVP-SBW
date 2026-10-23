@@ -160,7 +160,28 @@ def cn(im):
     im.paste(big.resize((W, H), Image.LANCZOS), (0, 0))
 
 
+def jp(im):
+    """Japan: a red disc (diameter 3/5 of the height) on white, drawn on a 6x supersampled field."""
+    k = 6
+    w, h = W * k, H * k
+    big = Image.new('RGBA', (w, h), WHITE + (255,))
+    d = ImageDraw.Draw(big)
+    r = h * 0.3
+    d.ellipse([w / 2 - r, h / 2 - r, w / 2 + r, h / 2 + r], fill=(188, 0, 45, 255))
+    im.paste(big.resize((W, H), Image.LANCZOS), (0, 0))
+
+
+def se(im):
+    """Sweden: yellow Nordic cross on blue (cross offset towards the hoist, arm width 2 px), on a 15 x 10 field."""
+    d = ImageDraw.Draw(im)
+    d.rectangle([0, 0, W - 1, H - 1], fill=(0, 106, 167))
+    d.rectangle([4, 0, 5, H - 1], fill=(254, 204, 0))
+    d.rectangle([0, 4, W - 1, 5], fill=(254, 204, 0))
+
+
 FLAGS = {
+    'JP': jp,
+    'SE': se,
     'CN': cn,
     'SU': su,
     'KR': kr,
@@ -187,7 +208,9 @@ def apply(path, code, original):
     f = flag_image(code)
     if icon.size != (64, 64):
         s = icon.height / 64              # by height: the ground vehicles' HUD icons are 256 x 64
-        f = f.resize((max(3, round(f.width * s)), max(3, round(f.height * s))), Image.NEAREST)
+        # NEAREST is exact at 1x or more and at exactly half size (the 32 px icons); at the other reductions (the 16 px and
+        # 46-48 px icons) it would drop whole stripes, so those are averaged instead
+        f = f.resize((max(3, round(f.width * s)), max(3, round(f.height * s))), Image.NEAREST if s >= 1 or s == 0.5 else Image.BOX)
     icon.alpha_composite(f, (round(icon.height / 64), round(icon.height / 64)))
     return icon
 
