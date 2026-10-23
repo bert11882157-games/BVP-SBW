@@ -34,7 +34,10 @@ WINDSCREEN = [
     (1.25, [(0.30, -0.25), (0.27, -0.15), (0.20, -0.12), (0.10, -0.12), (0.0, -0.12)]),
     (1.42, [(0.26, -0.26), (0.24, -0.19), (0.17, -0.18), (0.10, -0.18), (0.0, -0.18)]),
 ]
-FRONT_PANE_S = 0.80              # the flat front pane's edges (x about 0.10) across the windscreen's sections
+# the flat armoured front pane (photos of the type head-on): a tall window with straight sides and a round arched top,
+# its apex just ahead of the windscreen arch, its sides running down to the nose, in a thick frame
+PANE_W = 0.20                    # its half width, metres (the side panes only narrow strips at its foot)
+PANE_TOP = 0.733                 # the apex of its arch: it reaches the windscreen's top frame (the arch at 0.715)
 
 
 def build(atlas, E, skin):
@@ -49,9 +52,9 @@ def build(atlas, E, skin):
     # the frame along the canopy's top centre line, bow to bow: the two halves of the transparency meet on it, the
     # periscope stands on it
     C.member(m, can, E, 1.0, -0.28, 0.645, 0.035, 0.022, out, inner, sides=(1,), steps=14)
-    # the windscreen: its arch against the canopy, the front pane's two posts, the base frame, the side rails
+    # the windscreen: its arch against the canopy, the front pane's arched frame, the base frame, the side rails
     C.bow(m, ws, E, 0.715, 0.035, 0.022, out, inner)
-    C.member(m, ws, E, FRONT_PANE_S, 0.95, 1.42, 0.03, 0.025, out, inner)
+    C.arched_pane(m, ws, E, PANE_TOP, 1.42, PANE_W, PANE_W, 0.04, 0.025, out, inner)
     C.bow(m, ws, E, 1.40, 0.04, 0.025, out, inner)
     C.member(m, ws, E, 0.0, 0.70, 1.42, 0.045, 0.035, out, inner)
     # the periscope housing on the canopy's top
@@ -59,43 +62,7 @@ def build(atlas, E, skin):
     X, Y, Z = np.array([1.0, 0, 0]), np.array([0, 1.0, 0]), np.array([0, 0, 1.0])
     m.box(top + np.array([0, 0.0, 0]), (X, Y, Z), (0.028, 0.022, 0.06), out)          # its foot sunk 22 mm through the glass
     m.box(top + np.array([0, 0.006, -0.0615]), (X, Y, Z), (0.02, 0.014, 0.002), dark)
-    armour_glass(m, E, dark)
     return m, glass
-
-
-ARMOUR = dict(z=0.86, y=-0.20, lean=15, width=0.24, height=0.27, frame=0.014)   # metres from the eye
-
-
-def armour_glass(m, E, dark):
-    """the armoured glass inside the windscreen, ahead of the sight: a thick flat plate with straight sides and an
-    oval top, leaning back, in a narrow dark frame (the glass stops at the frame's inner edge)"""
-    a = ARMOUR
-    t = math.radians(a['lean'])
-    U = np.array([1.0, 0, 0]); V = np.array([0, math.cos(t), -math.sin(t)]); N = np.cross(U, V)
-    base = E + np.array([0, a['y'], a['z']])
-    hw, hh, fw = a['width'] / 2, a['height'], a['frame']
-
-    def outline(inset):
-        w, side_h = hw - inset, hh * 0.5
-        pts = [(-w, inset), (w, inset), (w, side_h)]
-        for k in range(1, 12):                                  # the oval top: half an ellipse over the sides
-            th = math.pi * k / 12
-            pts.append((w * math.cos(th), side_h + (hh - inset - side_h) * math.sin(th)))
-        pts.append((-w, side_h))
-        return [base + U * u + V * v for u, v in pts]
-    inner_pts, outer_pts = outline(fw), outline(0.0)
-    c = base + V * hh * 0.5
-    tri = []
-    for i in range(len(inner_pts)):
-        tri += [c, inner_pts[i], inner_pts[(i + 1) % len(inner_pts)]]
-    C.extra_glass(tri)
-    for i in range(len(outer_pts)):                                # the frame: a band between the outlines
-        p0, p1 = outer_pts[i], outer_pts[(i + 1) % len(outer_pts)]
-        q0, q1 = inner_pts[i], inner_pts[(i + 1) % len(inner_pts)]
-        for s in (1, -1):
-            m.flat([p0 + N * s * 0.015, p1 + N * s * 0.015, q1 + N * s * 0.015, q0 + N * s * 0.015], dark,
-                   toward=(p0 + q1) / 2 + N * s)
-        m.flat([p0 + N * 0.015, p1 + N * 0.015, p1 - N * 0.015, p0 - N * 0.015], dark, toward=(p0 + p1) / 2 + ((p0 + p1) / 2 - c))
 
 
 def main(argv):

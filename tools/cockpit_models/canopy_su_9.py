@@ -48,7 +48,8 @@ def build(atlas, E, skin):
     C.periscope(m, sh, E, 0.10, out, dark)
     # the windscreen: the arch, the front pane's two posts, the base frame on the nose, the side rails
     C.bow(m, sh, E, SPLIT + 0.027, 0.035, 0.02, out, inner)
-    C.member(m, sh, E, lambda z: sh.s_at_x(z, FRONT_PANE_X), 0.66, 1.10, 0.025, 0.02, out, inner)
+    # the Su-7 family's armoured front pane: tall, its top one round arch (photos of the type head-on: its round top reaches the windscreen's top frame)
+    C.arched_pane(m, sh, E, 0.495, 1.1, 0.11, 0.11, 0.03, 0.02, out, inner)
     C.bow(m, sh, E, 1.085, 0.03, 0.02, out, inner)
     C.member(m, sh, E, 0.0, SPLIT + 0.045, 1.10, 0.04, 0.03, out, inner)
     return m, glass

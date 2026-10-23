@@ -48,7 +48,8 @@ def build(atlas, E, skin):
     C.member(m, sh, E, 0.0, -0.95, SPLIT, 0.04, 0.03, out, inner, steps=16)
     # the windscreen: the arch, the front pane's two posts, the base frame on the nose, the side rails
     C.bow(m, sh, E, SPLIT + 0.027, 0.035, 0.02, out, inner)
-    C.member(m, sh, E, lambda z: sh.s_at_x(z, FRONT_PANE_X), 0.45, 0.74, 0.025, 0.02, out, inner)
+    # the MiG-15's armoured front pane: wide, its top corners well rounded (photos of the type head-on: its round top reaches the windscreen's top frame)
+    C.arched_pane(m, sh, E, 0.445, 0.74, 0.13, 0.06, 0.03, 0.02, out, inner)
     C.bow(m, sh, E, 0.725, 0.03, 0.02, out, inner)
     C.member(m, sh, E, 0.0, SPLIT + 0.045, 0.74, 0.04, 0.03, out, inner)
     return m, glass

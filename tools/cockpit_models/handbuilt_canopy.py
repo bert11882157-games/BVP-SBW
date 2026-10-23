@@ -118,7 +118,7 @@ def glass_triangles(shape, E, z0, z1, s0=0.0, s1=1.0, nz=12, ns=10, sides=(1, -1
 def bow(m, shape, E, z, width, depth, rect_out, rect_in, s0=0.0, s1=1.0, proud=0.004):
     """a transverse frame at station z over the shape from s0 to s1 on both sides (one arch over the top), [width]
     along the aircraft, [depth] deep inward, standing [proud] outside the glass"""
-    _FRAMES.append((shape, 'bow', z, width))
+    _FRAMES.append((shape, 'bow', z, width, s0, s1))
     ss = np.linspace(s0, s1, 12)
     for side in (1, -1):
         for zz in ((z - width / 2, z + width / 2),):
@@ -157,6 +157,26 @@ def member(m, shape, E, s, z0, z1, width, depth, rect_out, rect_in, sides=(1, -1
             m.flat([b0, d0, d1, b1], rect_in, toward=(b0 + d1) / 2 + (b0 - a0))
 
 
+def arched_pane(m, shape, E, z_top, z_base, half_w, radius, width, depth, rect_out, rect_in, steps=28):
+    """the frame round a windscreen's flat front pane whose top is rounded (the Soviet armoured front panes: the
+    MiG-21's round arch, the Su-7 family's tall round-topped pane, the MiG-15/17's rounded corners): straight sides
+    [half_w] out from the centre line, the top corners rounded with [radius] (radius == half_w: one round arch), the
+    top at z_top, down to z_base. A short bow across the top joins the two sides."""
+    p0, p1 = shape.point(z_top, 1.0, 1), shape.point(z_top + 0.1, 1.0, 1)
+    slope = math.atan2(p0[1] - p1[1], 0.1)
+
+    def x_at(z):
+        d = max(0.0, (z - z_top) / math.cos(slope))
+        if d >= radius:
+            return half_w
+        return half_w - radius + math.sqrt(max(0.0, radius ** 2 - (radius - d) ** 2))
+    z_cap = z_top + width * 0.35
+    bow(m, shape, E, z_cap, width * 0.7, depth, rect_out, rect_in, s0=shape.s_at_x(z_cap, max(x_at(z_cap), 0.03)))   # (its ends inside the sides' frame)
+    member(m, shape, E, lambda z: shape.s_at_x(z, max(x_at(z), 0.02)), z_cap, z_base, width, depth, rect_out, rect_in,
+           steps=steps)
+    return x_at
+
+
 def cut_glass(E, pad=0.006):
     """the glass patches asked for, remade with every frame cut out of them: the glass stops at each bow's and
     member's edge (less [pad], as the frames' faces lean out over their footprint where the glass curves) instead of
@@ -164,31 +184,39 @@ def cut_glass(E, pad=0.006):
     out = []
     for sh, z0, z1, s0, s1, nz, ns, sides in _GLASS:
         frames = [f for f in _FRAMES if f[0] is sh]
-        bows = [(f[2] - f[3] / 2 - pad, f[2] + f[3] / 2 + pad) for f in frames if f[1] == 'bow']
+        bows = [(f[2] - f[3] / 2 - pad, f[2] + f[3] / 2 + pad, f[4], f[5]) for f in frames if f[1] == 'bow']
         mems = [f for f in frames if f[1] == 'member']
         zb = set(np.linspace(z0, z1, nz + 1).tolist())
-        for a, b in bows:
+        for a, b, _, _ in bows:
             zb |= {a, b}
         for f in mems:
             zb |= {f[3] - pad, f[4] + pad}
+            if callable(f[2]):                         # a curving frame: the glass's edge follows it every 5 mm
+                zb |= set(np.arange(f[3], f[4], 0.005).tolist())
         zb = sorted(z for z in zb if z0 - 1e-9 <= z <= z1 + 1e-9)
         for i in range(len(zb) - 1):
             za, zc = zb[i], zb[i + 1]
             if zc - za < 1e-6:
                 continue
             zm = (za + zc) / 2
-            if any(a - 1e-6 <= zm <= b + 1e-6 for a, b in bows):
+            here = [(bs0, bs1) for a, b, bs0, bs1 in bows if a - 1e-6 <= zm <= b + 1e-6]
+            if any(bs0 <= 1e-6 and bs1 >= 1 - 1e-6 for bs0, bs1 in here):
                 continue                                   # under a bow: no glass
             live = [f for f in mems if f[3] - pad - 1e-6 <= zm <= f[4] + pad + 1e-6]
             def mid(f, z):
                 return f[2](z) if callable(f[2]) else f[2]
-            live.sort(key=lambda f: mid(f, zm))
+            # what the glass stops short of: the members here, and the bows that cross only part of the section
+            cuts = [('m', f) for f in live] + [('b', sb) for sb in here]
+            cuts.sort(key=lambda c: mid(c[1], zm) if c[0] == 'm' else (c[1][0] + c[1][1]) / 2)
             def bounds(z):
                 L = sh.arclen(z) or 1.0
                 b, prev = [], s0
-                for f in live:
-                    h = (f[5] / 2 + pad) / L
-                    lo, hi = mid(f, z) - h, mid(f, z) + h
+                for kind, f in cuts:
+                    if kind == 'm':
+                        h = (f[5] / 2 + (2 * pad if callable(f[2]) else pad)) / L   # (a curving frame leans further over)
+                        lo, hi = mid(f, z) - h, mid(f, z) + h
+                    else:
+                        lo, hi = f[0] - pad / L, f[1] + pad / L
                     b.append((prev, max(prev, min(lo, s1))))
                     prev = min(s1, max(prev, hi))
                 b.append((prev, s1))
