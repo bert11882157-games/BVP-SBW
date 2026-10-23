@@ -1,0 +1,40 @@
+{
+  "Schema": 1,
+  "Name": "Matra JL-100R · 18 x SNEB 68 mm + tank (AI)",
+  "Category": "ROCKET_POD",
+  "Generated": true,
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/jl100r.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.274,
+    0.0
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.25,
+      0.0,
+      0.0
+    ],
+    "Right": [
+      -0.25,
+      0.0,
+      0.0
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/jl100r.png",
+  "Capacity": 18,
+  "Scale": 1,
+  "MassKg": 12.83,
+  "AmmoItem": "superbwarfare:small_unguided_rocket",
+  "LaunchOffset": [
+    0.0,
+    -0.274,
+    0.0
+  ]
+}

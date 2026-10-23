@@ -1,0 +1,44 @@
+{
+  "Schema": 1,
+  "Name": "Nord AS.30 · manual command (AI)",
+  "Category": "COMMAND_GUIDED",
+  "Generated": true,
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/as30.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.171,
+    0.5439
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.171,
+      0.0,
+      0.5439
+    ],
+    "Right": [
+      -0.171,
+      0.0,
+      0.5439
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    0.5439
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/as30.png",
+  "Capacity": 1,
+  "MassKg": 520.0,
+  "CommandGuidance": {
+    "Mode": "MCLOS"
+  },
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_stores/as30",
+  "LaunchGunProfile": "berts_vehicle_pack:aircraft_stores/as30",
+  "LaunchOffset": [
+    0.0,
+    -0.171,
+    0.0
+  ],
+  "AmmoItem": "superbwarfare:medium_air_to_ground_missile"
+}
