@@ -71,18 +71,22 @@ final class AircraftRigAnimator {
             if (data != null) {
                 try {
                     entry.binding = bind(data, model::getBone);
-                    var station = resource.getDefensiveStationPresentation();
-                    if (station != null) entry.station = bindStation(station, entry.binding, model::getBone);
-                    // A cockpit-only rig leaves the turret to the legacy poser, which still runs for it.
-                    if (entity instanceof BvpHelicopterEntity && entity.hasTurret() && !cockpitOnly(entry))
-                        entry.turret = bindTurret(entry.binding, entry.station, model::getBone);
                 } catch (IllegalArgumentException invalid) {
-                    if (warningsRemaining > 0) {
-                        warningsRemaining--;
-                        LogUtils.getLogger().warn("Aircraft rig skipped for {}: {}",
-                                entry.resourceId, invalid.getMessage());
+                    warn("Aircraft rig skipped for {}: {}", entry.resourceId, invalid);
+                }
+                var station = resource.getDefensiveStationPresentation();
+                // A bad station must not take the main turret down with it: each binds on its own.
+                if (entry.binding != null && station != null) {
+                    try {
+                        entry.station = bindStation(station, entry.binding, model::getBone);
+                    } catch (IllegalArgumentException invalid) {
+                        warn("Defensive station skipped for {}: {}", entry.resourceId, invalid);
                     }
                 }
+                // A cockpit-only rig leaves the turret to the legacy poser, which still runs for it.
+                if (entry.binding != null && entity instanceof BvpHelicopterEntity && entity.hasTurret()
+                        && !cockpitOnly(entry))
+                    entry.turret = bindTurret(entry.binding, entry.station, model::getBone);
             }
         }
         if (!entry.explicit) return false;
@@ -314,6 +318,13 @@ final class AircraftRigAnimator {
         PHASES.clear();
         world = null;
         warningsRemaining = 8;
+    }
+
+    private static void warn(String message, String resourceId, IllegalArgumentException invalid) {
+        if (warningsRemaining > 0) {
+            warningsRemaining--;
+            LogUtils.getLogger().warn(message, resourceId, invalid.getMessage());
+        }
     }
 
     private static <K, V> void trim(Map<K, V> cache) {
