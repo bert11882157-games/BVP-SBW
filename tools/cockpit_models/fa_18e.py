@@ -44,6 +44,7 @@ import json, math, os, sys
 import numpy as np
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import throttle_lib
+import canopy_fa_18e as CAN          # (the windscreen arch's faces, for the mirror on it)
 from PIL import Image, ImageDraw, ImageFont
 from scipy.sparse import coo_matrix
 from scipy.sparse.csgraph import connected_components
@@ -369,7 +370,7 @@ CENTRE, RIGHT, LEFT = Facet(0), Facet(1), Facet(-1)
 # metres: x right of the centre line, y from the eye). Positions: facet, a (see Facet.at), y (height from the eye).
 # Sizes: dial diameter, or w x h. 'game': drawn by the game.
 LAYOUT = [
-    ('ufcd',    CENTRE,  0.000, -0.235, ('paint_rect', 0.150, 0.075), 'up-front control display (UFCD) under the HUD'),
+    ('ufcd',    CENTRE,  0.000, -0.2365, ('paint_rect', 0.125, 0.125), 'large touch up-front control display (UFCD, Block II) under the HUD'),
     ('ddi_l',   CENTRE, -0.205, -0.340, ('display', 'RADAR', 0.130, 'LCD'), 'left digital display indicator (DDI, radar)'),
     ('ddi_r',   CENTRE,  0.205, -0.340, ('display', 'STORES', 0.130, 'LCD'), 'right DDI (stores)'),
     ('mpcd',    CENTRE,  0.000, -0.460, ('display', 'PFD', 0.180, 'LCD'), 'large multipurpose colour display'),
@@ -479,23 +480,25 @@ def panel_paint(facet, rect_px):
 # ---------------------------------------------------------------- painted instrument faces
 
 def p_ufcd(d, im):
-    """the UFCD: a screen with its scratchpad and COMM lines, an option-key column each side, the knobs below"""
+    """the Block II's large touch UFCD (DDI size, no hard keys): a COMM page with the scratchpad line, two radio columns and
+    the touch buttons along the bottom. No live FlightDisplays kind exists for it (PFD / RADAR / STORES only), so it is painted."""
     S, H = im.width, im.height
-    d.rectangle([0, 0, S, H], fill=(16, 17, 18, 255))
-    d.rectangle([S * .17, H * .07, S * .83, H * .72], fill=(6, 14, 8, 255), outline=(70, 72, 70, 255), width=3)
-    text(d, (S * .27, H * .20), 'COMM 1', H * .11, fill=GREEN_TXT + (255,))
-    text(d, (S * .68, H * .20), 'COMM 2', H * .11, fill=GREEN_TXT + (255,))
-    text(d, (S * .27, H * .38), '127.500', H * .15, fill=GREEN_TXT + (255,), bold=True)
-    text(d, (S * .70, H * .38), '251.000', H * .15, fill=GREEN_TXT + (255,), bold=True)
-    text(d, (S * .5, H * .58), 'MAN   GRCV   G   CHAN', H * .09, fill=GREEN_TXT + (255,))
-    for k in range(5):
-        y = H * (0.09 + k * 0.13)
-        d.rectangle([S * .03, y, S * .13, y + H * .09], fill=(140, 142, 140, 255), outline=(10, 10, 10, 255), width=2)
-        d.rectangle([S * .87, y, S * .97, y + H * .09], fill=(140, 142, 140, 255), outline=(10, 10, 10, 255), width=2)
-    for k, lab in enumerate(['BRT', 'COM1', 'COM2', 'SYM', 'IFF']):
-        x = S * (0.10 + k * 0.20)
-        d.ellipse([x - H * .10, H * .78, x + H * .10, H * .98], fill=(40, 40, 42, 255), outline=(150, 150, 146, 255), width=3)
-        d.line([x, H * .88, x + H * .035, H * .81], fill=WHITE + (255,), width=4)
+    d.rectangle([0, 0, S, H], fill=(6, 12, 8, 255))
+    d.rectangle([S * .03, H * .03, S * .97, H * .97], outline=(60, 120, 70, 255), width=3)
+    text(d, (S * .5, H * .09), 'UFC   COMM', H * .075, fill=GREEN_TXT + (255,), bold=True)
+    d.rectangle([S * .06, H * .16, S * .94, H * .28], outline=(80, 180, 100, 255), width=2)
+    text(d, (S * .09, H * .22), '>', H * .08, fill=GREEN_TXT + (255,), anchor='lm')
+    text(d, (S * .5, H * .22), '127.500', H * .085, fill=GREEN_TXT + (255,), bold=True)
+    for k, (lab, f, mode) in enumerate((('COMM 1', '127.500', 'MAN'), ('COMM 2', '251.000', 'GRCV'))):
+        x0 = S * (0.06 + k * 0.45)
+        d.rectangle([x0, H * .34, x0 + S * .43, H * .62], outline=(60, 140, 80, 255), width=2)
+        text(d, (x0 + S * .215, H * .40), lab, H * .07, fill=GREEN_TXT + (255,))
+        text(d, (x0 + S * .215, H * .50), f, H * .105, fill=GREEN_TXT + (255,), bold=True)
+        text(d, (x0 + S * .215, H * .58), mode + '   CHAN ' + str(k + 1), H * .06, fill=GREEN_TXT + (255,))
+    for k, lab in enumerate(['IFF', 'TCN', 'ILS', 'DATA', 'MENU']):
+        x0 = S * (0.05 + k * 0.186)
+        d.rectangle([x0, H * .72, x0 + S * .16, H * .90], fill=(24, 40, 28, 255), outline=(90, 190, 110, 255), width=2)
+        text(d, (x0 + S * .08, H * .81), lab, H * .065, fill=GREEN_TXT + (255,))
 
 
 def p_hud_ctrl(d, im):
@@ -704,7 +707,7 @@ def build(atlas):
                 m.box(c + r_ * sgn * (w / 2 + t) + n_ * (pr - 0.002) / 2, (r_, u_, n_), (0.0015, w / 2 + t, (pr - 0.002) / 2), sw['black'])
         elif kind == 'paint_rect':
             w, h = spec[1], spec[2]
-            pw = 240 if w >= 0.14 else 160 if w >= h else 80
+            pw = 256 if w >= 0.12 and h >= 0.12 else 240 if w >= 0.14 else 160 if w >= h else 80
             ph = max(16, int(round(pw * h / w)))
             rect = cache.get(name) or atlas.paint(pw, ph, painters[name])
             cache[name] = rect
@@ -782,8 +785,13 @@ def build(atlas):
     hud = dict(centre=q3(0, 0.165) + EYE, normal=-g_n, up=g_up, width=0.190, height=0.200)
     # the AoA indexer: a small lit column on the glareshield, left of the HUD
     aoa_r = atlas.paint(40, 100, p_aoa_indexer)
-    ax_, ay_, az_ = 0.215, -0.108, 0.845
-    m.box([ax_, ay_ + 0.0, az_], (X, Y, Z), (0.017, 0.044, 0.012), sw['dgrey'], front=(2, -1, aoa_r, -X, Y))
+    # (owner 2026-10-23: on the glareshield on its own small mount, left of the HUD; the mount's foot sinks into the deck)
+    ax_, az_ = 0.215, 0.845
+    deck = CAN.skin_y(ax_, az_ + EYE_NEW[2]) - 0.010 - EYE_NEW[1]         # the nose deck's height under it (eye-relative)
+    m.box([ax_, deck + 0.002, az_ + 0.004], (X, Y, Z), (0.026, 0.016, 0.026), sw['dgrey'])                   # the mount's block
+    m.box([ax_, deck + 0.018 + 0.006, az_ + 0.004], (X, Y, Z), (0.014, 0.006, 0.014), sw['black'])          # its neck
+    ay_ = deck + 0.024 + 0.044
+    m.box([ax_, ay_, az_], (X, Y, Z), (0.017, 0.044, 0.012), sw['dgrey'], front=(2, -1, aoa_r, -X, Y))
 
     # -- side walls' liners, consoles, floor, rear bulkhead, kick panel
     fy = FLOOR_Y

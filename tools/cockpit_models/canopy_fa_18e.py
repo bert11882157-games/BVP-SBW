@@ -58,9 +58,14 @@ def z_front_rear(y):
     return 4.712 + 0.045 * min(1.0, max(0.0, (y - 2.60) / 0.15)) + 0.035 * min(1.0, max(0.0, (y - 2.85) / 0.15))
 
 
+ARCH_W = 0.060                   # the windscreen frame's depth along the surface (a slim ring; the airframe's box chain was 12 cm)
+ARCH_NS = 12                     # arch rows per side: 24 segments over the whole arch, a smooth curve
+ARCH_OUT, ARCH_IN = 0.022, 0.032
+
+
 def z_front_front(y):
     """the arch's front face: where the windscreen glass begins"""
-    return 4.757 + 0.158 * min(1.0, max(0.0, (y - 2.55) / 0.40))
+    return z_front_rear(y) + ARCH_W
 
 
 # the windscreen: from the arch (z 4.915) to the nose deck: half width of its foot and the crown's height (the stand-in's top)
@@ -225,27 +230,37 @@ class Bars:
                 self.P.append([round(x, 4) + 0.0 for x in p])
             self.polys.append(poly)
 
-    def bar(self, A, B, t_out, t_in, axis_y=2.85):
-        """a bar whose two long edges lie on the glass surface along A[i] and B[i]: a skin t_out over the surface, one t_in
-        under it, and the two side walls between"""
-        for i in range(len(A) - 1):
-            q = [A[i], A[i + 1], B[i + 1], B[i]]
-            n = np.cross(B[i] - A[i], A[i + 1] - A[i])
-            if np.linalg.norm(n) < 1e-12:
-                continue
-            n /= np.linalg.norm(n)
-            c = np.mean(q, 0)
-            if n @ (c - np.array([0.0, axis_y, c[2]])) < 0:
+    def bar(self, A, B, t_out, t_in, axis_y=2.85, caps=True):
+        """a bar whose two long edges lie on the glass surface along the paths A[i] and B[i]: a skin t_out over the surface,
+        one t_in under it, and the two side walls between. The offsets are taken along a normal averaged at every point
+        (shared by the neighbouring faces), so the member is one continuous strip with no steps between its faces."""
+        n_pts = len(A)
+        axis = lambda c: np.array([0.0, axis_y, c[2]])
+        N = []
+        for i in range(n_pts):
+            d = A[min(i + 1, n_pts - 1)] - A[max(i - 1, 0)]
+            w = B[i] - A[i]
+            n = np.cross(w, d)
+            ln = np.linalg.norm(n)
+            n = n / ln if ln > 1e-12 else np.array([0.0, 1.0, 0.0])
+            if n @ ((A[i] + B[i]) / 2 - axis((A[i] + B[i]) / 2)) < 0:
                 n = -n
-            top = [p + n * t_out for p in q]
-            bot = [p - n * t_in for p in q]
-            self.face(top, n)
-            self.face(bot, -n)
-            for (p0, p1) in ((0, 1), (2, 3)):
-                w = [top[p0], top[p1], bot[p1], bot[p0]]
-                wn = np.cross(w[1] - w[0], w[3] - w[0])
-                if np.linalg.norm(wn) > 1e-12:
-                    self.face(w, wn / np.linalg.norm(wn))
+            N.append(n)
+        At = [A[i] + N[i] * t_out for i in range(n_pts)]; Ab = [A[i] - N[i] * t_in for i in range(n_pts)]
+        Bt = [B[i] + N[i] * t_out for i in range(n_pts)]; Bb = [B[i] - N[i] * t_in for i in range(n_pts)]
+        for i in range(n_pts - 1):
+            nn = (N[i] + N[i + 1]); nn = nn / np.linalg.norm(nn)
+            self.face([At[i], At[i + 1], Bt[i + 1], Bt[i]], nn)
+            self.face([Ab[i], Ab[i + 1], Bb[i + 1], Bb[i]], -nn)
+            for P0, P1, sgn in ((At, Ab, -1), (Bt, Bb, 1)):
+                w = (B[i] - A[i]) + (B[i + 1] - A[i + 1]); w = w - nn * (w @ nn)
+                if np.linalg.norm(w) > 1e-12:
+                    self.face([P0[i], P0[i + 1], P1[i + 1], P1[i]], sgn * w / np.linalg.norm(w))
+        if caps:
+            for i, s in ((0, -1), (n_pts - 1, 1)):
+                d = (A[min(i + 1, n_pts - 1)] - A[max(i - 1, 0)]); d = d / np.linalg.norm(d)
+                self.face([At[i], Bt[i], Bb[i], Ab[i]], s * d)
+
 
     def skin(self, rows):
         """an opaque sheet on the surface: rows[i] = the points of one section ring, consecutive rings are joined"""
@@ -268,22 +283,33 @@ class Bars:
         return {'normalized_uvs': True, 'positions': self.P, 'normals': self.N, 'uvs': self.U, 'polys': self.polys}
 
 
+def _full(rowfn, ns):
+    """a path over the whole section, sill to sill: rowfn(side, j) for the left side up to the crown, then the right side down"""
+    return [rowfn(1, j) for j in range(ns + 1)] + [rowfn(-1, j) for j in range(ns - 1, -1, -1)]
+
+
 def frame_bars(uv):
     b = Bars(uv)
     ns = 14
+    # the rear bow: ONE hoop from sill to sill, the section's rows at the bow's two faces
+    A = _full(lambda s, j: _pt(Z_BOW[0], j, s, ns), ns)
+    B = _full(lambda s, j: _pt(Z_BOW[1], j, s, ns), ns)
+    b.bar(A, B, BOW_OUT, BOW_IN)
     for side in (1, -1):
-        # the rear bow: the section's rows at the bow's two faces, from the sill up to the crown
-        A = [_pt(Z_BOW[0], j, side, ns) for j in range(ns + 1)]
-        B = [_pt(Z_BOW[1], j, side, ns) for j in range(ns + 1)]
-        b.bar(A, B, BOW_OUT, BOW_IN)
         # the spine fairing behind it, to the closing piece (the glass's old surface, opaque)
-        zs = np.linspace(Z_AFT, Z_BOW[0], 12)
-        b.skin([[_pt(z, j, side, ns) for j in range(ns + 1)] for z in zs])
+        zs = np.linspace(Z_AFT - 0.02, Z_BOW[0], 12)
+        b.skin([[_pt(max(z, Z_AFT), j, side, ns) for j in range(ns + 1)] for z in zs])
+    # the windscreen arch: ONE slim ring from sill to sill (24 segments), between the bubble's glass (rear face) and the
+    # windscreen's (front face); it follows the section from the foot up over the crown. The airframe's own box chain is cut away.
+    za = lambda zf, s, j: edge(zf, j, 4.80, ARCH_NS, 4.6, 5.1)
+    A = _full(lambda s, j: _pt(za(z_front_rear, s, j), j, s, ARCH_NS), ARCH_NS)
+    B = _full(lambda s, j: _pt(za(z_front_front, s, j), j, s, ARCH_NS), ARCH_NS)
+    b.bar(A, B, ARCH_OUT, ARCH_IN, axis_y=2.85)
     # the windscreen's base strip along the nose deck (the windscreen's rows are finer: its own ring set)
     for side in (1, -1):
         n = 14
         k0, k1 = BASE_ROWS
-        g0 = [edge(z_front_front, j, 4.757, WS_NS, 4.757, WS_Z[1]) for j in (k0, k1)]
+        g0 = [edge(z_front_front, j, 4.80, WS_NS, 4.757, WS_Z[1]) for j in (k0, k1)]
         g1 = [edge(lambda y: WS_Z[1], j, WS_Z[1], WS_NS, 4.757, WS_Z[1]) for j in (k0, k1)]
         A = [_pt(g0[0] + (g1[0] - g0[0]) * i / n, k0, side, WS_NS) for i in range(n + 1)]
         B = [_pt(g0[1] + (g1[1] - g0[1]) * i / n, k1, side, WS_NS) for i in range(n + 1)]
@@ -359,6 +385,23 @@ def drop_buried(bones, gap=0.002):
     return len(gone)
 
 
+def drop_airframe_arch(bones):
+    """the airframe's own windscreen arch: a chain of boxes over the HUD, its posts and the two slabs (mirrors) standing on
+    the posts, and a plate on the crown (a centre plate); the slim ring built in frame_bars takes their place"""
+    cb = next(b for b in bones if b['name'] == CANOPY_BONE)
+    pm = cb['poly_mesh']
+    P = np.array(pm['positions'], float) * np.array([1, 1, -1]) / 16.0
+    keep, n = [], 0
+    for poly in pm['polys']:
+        c = P[[v[0] for v in poly]].mean(0)
+        if poly and c[2] >= 4.70 and c[1] >= 2.50 and abs(c[0]) < 0.46:
+            n += 1
+            continue
+        keep.append(poly)
+    pm['polys'] = keep
+    return n
+
+
 def main(argv):
     dry = '--dry-run' in argv
     geo = json.load(open(GEO, encoding='utf-8'))
@@ -380,6 +423,7 @@ def main(argv):
                 continue
             keep.append(poly)
         pm['polys'] = keep
+    gone += drop_airframe_arch(bones)
     gone_twin = drop_buried(bones)
     # the added frame members: their own bone (dropped and rebuilt on every run), painted with the frame's own texel
     bones[:] = [b for b in bones if b['name'] != BARS_BONE]
