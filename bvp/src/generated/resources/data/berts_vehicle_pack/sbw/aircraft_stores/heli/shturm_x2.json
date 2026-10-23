@@ -1,0 +1,61 @@
+{
+  "Schema": 1,
+  "Name": "9M114 Shturm · 2 tubes",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/heli_shturm.geo.json",
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/heli_stores.png",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "MountAxis": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "LaunchOffset": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "Capacity": 1,
+  "MassKg": 31.4,
+  "MaxPerPylon": 2,
+  "FixedRackCount": 2,
+  "RackMassKg": 40.0,
+  "RackAdapter": {
+    "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/heli_shturm_x2.geo.json",
+    "Texture": "berts_vehicle_pack:textures/aircraft_stores/heli_stores.png",
+    "MountAnchor": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "Stations": [
+      {
+        "Point": [
+          0.09,
+          -0.173,
+          0.0
+        ],
+        "Face": "bottom"
+      },
+      {
+        "Point": [
+          -0.09,
+          -0.173,
+          0.0
+        ],
+        "Face": "bottom"
+      }
+    ]
+  },
+  "Category": "COMMAND_GUIDED",
+  "CommandGuidance": {
+    "Mode": "SACLOS"
+  },
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_stores/shturm_9m114",
+  "LaunchGunProfile": "berts_vehicle_pack:aircraft_stores/shturm_9m114",
+  "AmmoItem": "superbwarfare:small_atgm"
+}

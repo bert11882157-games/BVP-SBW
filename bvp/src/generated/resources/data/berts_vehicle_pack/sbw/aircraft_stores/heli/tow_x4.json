@@ -1,0 +1,77 @@
+{
+  "Schema": 1,
+  "Name": "M65 · 4 × BGM-71 TOW",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/heli_tow.geo.json",
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/heli_stores.png",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "MountAxis": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "LaunchOffset": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "Capacity": 1,
+  "MassKg": 19.1,
+  "MaxPerPylon": 4,
+  "FixedRackCount": 4,
+  "RackMassKg": 55.0,
+  "RackAdapter": {
+    "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/heli_tow_x4.geo.json",
+    "Texture": "berts_vehicle_pack:textures/aircraft_stores/heli_stores.png",
+    "MountAnchor": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "Stations": [
+      {
+        "Point": [
+          0.1175,
+          -0.205,
+          0.0
+        ],
+        "Face": "bottom"
+      },
+      {
+        "Point": [
+          -0.1175,
+          -0.205,
+          0.0
+        ],
+        "Face": "bottom"
+      },
+      {
+        "Point": [
+          0.1175,
+          -0.44,
+          0.0
+        ],
+        "Face": "bottom"
+      },
+      {
+        "Point": [
+          -0.1175,
+          -0.44,
+          0.0
+        ],
+        "Face": "bottom"
+      }
+    ]
+  },
+  "Category": "COMMAND_GUIDED",
+  "CommandGuidance": {
+    "Mode": "SACLOS"
+  },
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_stores/bgm71_tow",
+  "LaunchGunProfile": "berts_vehicle_pack:aircraft_stores/bgm71_tow",
+  "AmmoItem": "superbwarfare:small_atgm"
+}

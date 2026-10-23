@@ -1,0 +1,24 @@
+{
+  "Schema": 1,
+  "Name": "Wingtip countermeasure dispenser",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/heli_ltc.geo.json",
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/heli_stores.png",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "MountAxis": [
+    0.0,
+    -0.08,
+    0.0
+  ],
+  "LaunchOffset": [
+    0.0,
+    -0.08,
+    0.0
+  ],
+  "Category": "VISUAL_ONLY",
+  "MassKg": 20.0
+}

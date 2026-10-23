@@ -9,7 +9,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.yourname.berts_vehicle_pack.BertsVehiclePack;
 import com.yourname.berts_vehicle_pack.armor.VehicleModuleHealth;
 import com.yourname.berts_vehicle_pack.entity.ArmoredVehicleEntity;
-import com.yourname.berts_vehicle_pack.entity.Ka50Entity;
 import com.yourname.berts_vehicle_pack.entity.Mi24VEntity;
 import com.yourname.berts_vehicle_pack.entity.armored.damage.BvpFieldRepairAction;
 import com.yourname.berts_vehicle_pack.entity.helicopter.BvpHelicopterEntity;
@@ -120,8 +119,7 @@ public final class BvpHudRenderer {
     }
 
     private static void renderAutocannonHeatHud(GuiGraphics graphics, ArmoredVehicleEntity vehicle, Player player) {
-        if (!(vehicle instanceof Mi24VEntity helicopter)
-                || helicopterWeaponMode(vehicle, player) != HelicopterWeaponMode.AUTOCANNON) {
+        if (!(vehicle instanceof Mi24VEntity helicopter) || !selectsAutocannon(helicopter, player)) {
             return;
         }
         Minecraft minecraft = Minecraft.m_91087_();
@@ -220,41 +218,12 @@ public final class BvpHudRenderer {
         return 0xFF8C98A0;
     }
 
-    private static HelicopterWeaponMode helicopterWeaponMode(ArmoredVehicleEntity vehicle, Player player) {
-        if (!(vehicle instanceof Mi24VEntity) || player == null) {
-            return HelicopterWeaponMode.OTHER;
-        }
-        int seat = vehicle.getSeatIndex(player);
-        int selectedWeapon = vehicle.getSelectedWeapon(seat);
-        if (vehicle instanceof Ka50Entity) {
-            if (seat == 0 && selectedWeapon == 0) {
-                return HelicopterWeaponMode.ROCKET;
-            }
-            if (seat == 0 && selectedWeapon == 1) {
-                return HelicopterWeaponMode.AUTOCANNON;
-            }
-            if (seat == 0 && selectedWeapon == 2) {
-                return HelicopterWeaponMode.ATGM;
-            }
-            return HelicopterWeaponMode.OTHER;
-        }
-        if (seat == 1 && selectedWeapon == 0) {
-            return HelicopterWeaponMode.AUTOCANNON;
-        }
-        if ((seat == 1 && selectedWeapon == 1) || (seat == 0 && selectedWeapon == 2)) {
-            return HelicopterWeaponMode.ATGM;
-        }
-        if (seat == 0 && (selectedWeapon == 0 || selectedWeapon == 1)) {
-            return HelicopterWeaponMode.ROCKET;
-        }
-        return HelicopterWeaponMode.OTHER;
-    }
-
-    private enum HelicopterWeaponMode {
-        AUTOCANNON,
-        ATGM,
-        ROCKET,
-        OTHER
+    /** The rider has the nose cannon selected, from its gun seat or the pilot's, found by weapon name. */
+    private static boolean selectsAutocannon(Mi24VEntity helicopter, Player player) {
+        if (player == null) return false;
+        int seat = helicopter.getSeatIndex(player);
+        if (seat < 0) return false;
+        return helicopter.isBvpAutocannonSelection(seat, helicopter.getGunName(seat, helicopter.getSelectedWeapon(seat)));
     }
 
     private static void renderFieldRepairHud(GuiGraphics graphics, ArmoredVehicleEntity vehicle) {

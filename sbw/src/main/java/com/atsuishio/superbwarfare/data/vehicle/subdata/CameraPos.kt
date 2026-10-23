@@ -44,6 +44,17 @@ class CameraPos {
     @SerialName("ZoomDirection")
     var zoomDirection: StringOrVec3? = null
 
+    /**
+     * Field of regard of the zoomed sight view, [min, max] degrees from the vehicle's forward axis: yaw positive to
+     * the right (as the seat's MinYaw/MaxYaw), pitch positive up (as MinPitch/MaxPitch). Null leaves that axis
+     * unclamped. Applied by VehicleEntity while the local rider holds the vehicle zoom.
+     */
+    @SerialName("ZoomYawRange")
+    var zoomYawRange: SerializedVec2? = null
+
+    @SerialName("ZoomPitchRange")
+    var zoomPitchRange: SerializedVec2? = null
+
     @SerialName("UseFixedCameraPos")
     var useFixedCameraPos: Boolean = false
 

@@ -1,0 +1,58 @@
+{
+  "Schema": 1,
+  "Name": "M279 · 2 × AGM-114B Hellfire",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/agm114.geo.json",
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/agm114.png",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.1232,
+    -0.2339
+  ],
+  "MountAxis": [
+    0.0,
+    -0.0213,
+    -0.2339
+  ],
+  "LaunchOffset": [
+    0.0,
+    -0.14450000000000002,
+    0.0
+  ],
+  "Capacity": 1,
+  "MassKg": 45.1,
+  "MaxPerPylon": 2,
+  "FixedRackCount": 2,
+  "RackMassKg": 40.0,
+  "RackAdapter": {
+    "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/heli_m279.geo.json",
+    "Texture": "berts_vehicle_pack:textures/aircraft_stores/heli_stores.png",
+    "MountAnchor": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "Stations": [
+      {
+        "Point": [
+          0.2,
+          -0.26,
+          0.3
+        ],
+        "Face": "bottom"
+      },
+      {
+        "Point": [
+          -0.2,
+          -0.26,
+          0.3
+        ],
+        "Face": "bottom"
+      }
+    ]
+  },
+  "Category": "LASER_GUIDED",
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_stores/agm114b",
+  "LaunchGunProfile": "berts_vehicle_pack:aircraft_stores/agm114b",
+  "AmmoItem": "superbwarfare:small_atgm"
+}

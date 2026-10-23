@@ -62,6 +62,7 @@ public final class AircraftRigAnimatorTest {
         invalidGearAtomicity();
         landingFlapStateAndRestore();
         invalidLandingFlapAtomicity();
+        helicopterLeversAndControlLag();
         noseSteeringOnTheGround();
         invalidNoseSteering();
         if (args.length == 1) actualLandingFlapMesh(args[0]);
@@ -112,6 +113,34 @@ public final class AircraftRigAnimatorTest {
         phase.advance(0, 0, .5, 0);
         phase.advance(1, 0, .5, 0);
         close(phase.degrees[0], 0, "airborne wheels do not follow airspeed");
+    }
+
+    private static void helicopterLeversAndControlLag() {
+        var model = gearModel();
+        var binding = AircraftRigAnimator.bind(GSON.fromJson("""
+                {"AircraftRig":{"Schema":2,"Frame":"GENERATED_MODEL_PIXELS",
+                  "Surfaces":[],"Rotors":[],"Sweeps":[],"Flaps":[
+                    {"Bone":"surface","Parent":"hull","Pivot":[7,8,9],"Axis":[1,0,0],
+                     "Input":"PRESENTED_COLLECTIVE","AngleSign":1,"MaxDeflectionDegrees":20}]}}
+                """, DefaultVehicleResource.class).getAircraftRig(), model::getBone);
+        var bone = model.getBone("surface");
+        for (double collective : new double[]{0, .5, 1}) {
+            binding.applyLevers(collective, 1);
+            quaternion(bone.rotation, new Quaternionf().rotateX((float) Math.toRadians(20 * collective)),
+                    "collective lever travel");
+        }
+        binding.applyLevers(Double.NaN, 0);
+        quaternion(bone.rotation, new Quaternionf(), "invalid collective rests the lever down");
+        binding.restore();
+        quaternion(bone.rotation, new Quaternionf(), "lever shared-model restoration");
+        var phase = new AircraftRigAnimator.Phase(binding);
+        double[] first = phase.controls(10, 1, -1, .5, 1, 1);
+        close(first[0], 1, "first sample installs the control at once");
+        double[] lagged = phase.controls(11.5, 0, 0, 0, 0, 0);
+        close(lagged[0], Math.exp(-1), "controls glide toward a new input");
+        close(lagged[1], -Math.exp(-1), "lag is per axis");
+        phase.reset();
+        close(phase.controls(12, .25, 0, 0, 0, 0)[0], .25, "reset reinstalls the next sample");
     }
 
     private static AircraftRigResource flapResource() {

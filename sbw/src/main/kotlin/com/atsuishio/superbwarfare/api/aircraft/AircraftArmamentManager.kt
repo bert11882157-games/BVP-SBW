@@ -273,8 +273,10 @@ object AircraftArmamentManager {
     @JvmStatic fun groupMembers(vehicle: VehicleEntity, representative: String): List<String>? =
         fittedGroups(vehicle).firstOrNull { it.representative == representative }?.members
 
-    internal fun gunPodAliases(vehicle: VehicleEntity): List<String> = fittedGroups(vehicle)
-        .filter { it.category == "GUN_POD" }.map { it.representative }
+    /** The pod aliases [seat] selects: all of them for the pilot, else the groups whose channels the seat lists. */
+    internal fun gunPodAliases(vehicle: VehicleEntity, seat: Int, native: List<String>): List<String> = fittedGroups(vehicle)
+        .filter { it.category == "GUN_POD" && (seat == 0 || it.members.isNotEmpty() && native.containsAll(it.members)) }
+        .map { it.representative }
     /** All gun-pod channels of a definition (equippedOnly = false) for the store catalogue they were read from. */
     private class PodChannelMemo(val stores: Any?, val channels: List<String>)
     private val podChannelMemo: MutableMap<JsonObject, PodChannelMemo> =
@@ -334,10 +336,14 @@ object AircraftArmamentManager {
         return AircraftWeaponPresentation(category, store["Name"].asString, ammo, capacity,
             AircraftGuidanceLabels.short(AircraftGuidanceLabels.mode(store)))
     }
-    private fun selectGuns(vehicle: VehicleEntity) {
+    /** Back to the built-in gun on [seats] (each seat that lists one; a helicopter's shared gun is on both crew). */
+    private fun selectGuns(vehicle: VehicleEntity, seats: Iterable<Int> = 0 until vehicle.maxPassengers) {
         val builtIn = definition(vehicle)?.getAsJsonArray("BuiltInWeapons")?.map { it.asString } ?: return
-        val index = vehicle.getWeaponIds(0).indexOfFirst { it in builtIn && vehicle.getGunData(it) != null }
-        if (index >= 0) vehicle.setWeaponIndex(0, index)
+        for (seat in seats) {
+            if (seat < 0 || seat >= vehicle.maxPassengers) continue
+            val index = vehicle.getWeaponIds(seat).indexOfFirst { it in builtIn && vehicle.getGunData(it) != null }
+            if (index >= 0) vehicle.setWeaponIndex(seat, index)
+        }
     }
     @JvmStatic fun tryFireStore(vehicle: VehicleEntity, controller: net.minecraft.world.entity.LivingEntity?, weaponId: String): com.atsuishio.superbwarfare.api.weapon.ShotResult? {
         val key = AircraftStoreWeapons.mountId(weaponId) ?: return null
@@ -536,9 +542,9 @@ object AircraftArmamentManager {
         while (sent.size > 256) sent.remove(sent.keys.first())
     }
     private fun pilot(player: ServerPlayer, vehicle: VehicleEntity) = seated(player, vehicle, 0)
-    /** The occupant of the seat that operates the released guided stores (AircraftMissileLaunchers.WEAPON_SEAT). */
+    /** The occupant of a seat that operates the released guided stores (AircraftMissileLaunchers.WEAPON_SEAT(S)). */
     private fun operator(player: ServerPlayer, vehicle: VehicleEntity) =
-        seated(player, vehicle, AircraftMissileLaunchers.weaponSeat(definition(vehicle)))
+        AircraftMissileLaunchers.weaponSeats(definition(vehicle)).any { seated(player, vehicle, it) }
     private fun seated(player: ServerPlayer, vehicle: VehicleEntity, seat: Int) = player.vehicle === vehicle &&
         vehicle.getSeatIndex(player) == seat && player.isAlive && !player.isSpectator && vehicle.isAlive && !vehicle.isWreck
     /** Loadout editing is the pilot's; firing, designating and steering are the weapon operator's too. */
@@ -726,7 +732,8 @@ object AircraftArmamentManager {
             return
         }
         val weaponId = AircraftStoreWeapons.PREFIX + pair["Id"].asString
-        val seat = AircraftMissileLaunchers.weaponSeat(definition(vehicle))
+        // the release reads the slot of the operator who pressed it (either crew member on a two-seat launcher)
+        val seat = AircraftMissileLaunchers.releasingSeat(definition(vehicle), vehicle.getSeatIndex(player))
         val equipped = listOfNotNull(vehicle.getGunName(seat), vehicle.getSecondaryWeaponIndex(seat)?.let { vehicle.getGunName(seat, it) })
         val selectedGroup = groupFor(vehicle, weaponId)?.representative ?: weaponId
         require(selectedGroup in equipped) { "Select this store in a weapon slot first." }
@@ -764,7 +771,7 @@ object AircraftArmamentManager {
         }) { "Munition release failed or launch conditions changed." }
         fired.putInt(key, used + 1); state.put("Fired", fired); times.putLong(key, now); state.put("LastFire", times)
         state.putLong("Revision", state.getLong("Revision") + 1)
-        if (!guidedMissile && !bomb && !cruise) selectGuns(vehicle)
+        if (!guidedMissile && !bomb && !cruise) selectGuns(vehicle, listOf(vehicle.getSeatIndex(player)))
     }
 
     private fun designateAsync(player: ServerPlayer, vehicle: VehicleEntity, lease: Lease, body: JsonObject, stabilizeOnly: Boolean = false) {
@@ -893,8 +900,10 @@ object AircraftArmamentManager {
     /** Each equipped slot owns continuous dwell; editor selection and client packets grant no lock time. */
     private fun updateSeeker(player: ServerPlayer, lease: Lease, send: Boolean = true) {
         val vehicle = lease.vehicle
-        val equipped = listOfNotNull(vehicle.getGunName(0),
-            vehicle.getSecondaryWeaponIndex(0)?.let { vehicle.getGunName(0, it) }).distinct()
+        // the seeker follows what this operator has selected (the pilot, or a helicopter gunner in his own seat)
+        val seat = vehicle.getSeatIndex(player).takeIf { it >= 0 } ?: 0
+        val equipped = listOfNotNull(vehicle.getGunName(seat),
+            vehicle.getSecondaryWeaponIndex(seat)?.let { vehicle.getGunName(seat, it) }).distinct()
         val active = equipped.mapNotNull { weapon ->
             val mount = AircraftStoreWeapons.mountId(weapon) ?: return@mapNotNull null
             val store = equippedStore(vehicle, mount) ?: return@mapNotNull null
@@ -903,9 +912,11 @@ object AircraftArmamentManager {
             weapon to store
         }
         val channels = active.map { it.first }.toSet()
-        (lease.seekChannels - channels).forEach { AircraftMissileLauncher.clear(vehicle, it) }
+        // a lock another crew member still has selected (both helicopter seats on the same store) stays his
+        (lease.seekChannels - channels).filter { !seekingElsewhere(vehicle, player, it) }
+            .forEach { AircraftMissileLauncher.clear(vehicle, it) }
         lease.seekChannels = channels
-        val primaryWeapon = vehicle.getGunName(0)
+        val primaryWeapon = vehicle.getGunName(seat)
         val displayChannel = AircraftSeekerDisplayPolicy.choose(active.map { (weapon, store) ->
             AircraftSeekerDisplayPolicy.Channel(weapon, store["Category"]?.asString ?: "",
                 store.getAsJsonObject("Guidance")?.get("Mode")?.asString ?: "",
@@ -917,7 +928,11 @@ object AircraftArmamentManager {
             addProperty("ConeDegrees", 0); addProperty("Range", 0); addProperty("LockTicks", 0)
         }
         for ((weapon, store) in active) {
-            val status = AircraftMissileLauncher.update(vehicle, player, weapon, store)
+            // One seeker per store: when two crew members select the same store, the lower seat drives its dwell
+            // (two updates a tick would lock it twice as fast) and the other reads the same lock.
+            val status = if (lockDriverSeat(vehicle, weapon).let { it < 0 || it == seat })
+                AircraftMissileLauncher.update(vehicle, player, weapon, store)
+            else sharedLockStatus(AircraftMissileLauncher.state(vehicle, weapon))
             val selectedDisplay = displayChannel ?: continue
             if (weapon != selectedDisplay.weaponId) continue
             val state = AircraftMissileLauncher.state(vehicle, weapon)
@@ -954,6 +969,40 @@ object AircraftArmamentManager {
         }
     }
 
+    /** Whether another seated operator's seeker currently follows [channel] on [vehicle]. */
+    private fun seekingElsewhere(vehicle: VehicleEntity, player: ServerPlayer, channel: String): Boolean =
+        leases.any { (other, lease) -> other !== player && lease.vehicle === vehicle && channel in lease.seekChannels &&
+            other.vehicle === vehicle && other.isAlive }
+
+    /** The lowest occupied operator seat (pilot or weapon seat) with [channel] in a weapon slot; -1 when none. */
+    private fun lockDriverSeat(vehicle: VehicleEntity, channel: String): Int {
+        val seats = (listOf(0) + AircraftMissileLaunchers.weaponSeats(definition(vehicle))).distinct().sorted()
+        return seats.firstOrNull { seat ->
+            val occupant = vehicle.getNthEntity(seat) as? ServerPlayer
+            occupant != null && occupant.isAlive && (vehicle.getGunName(seat) == channel ||
+                vehicle.getSecondaryWeaponIndex(seat)?.let { vehicle.getGunName(seat, it) } == channel)
+        } ?: -1
+    }
+
+    /** The lock status (as AircraftMissileLauncher.update returns it) another seat's seeker holds on a channel. */
+    private fun sharedLockStatus(state: net.minecraft.nbt.CompoundTag): Int {
+        val progress = state.getDouble("Progress")
+        val target = state.hasUUID("TargetUUID") || state.getString("TargetType") == "BLOCK"
+        return when {
+            target && progress >= 1.0 -> 2
+            target || progress > 0.0 -> 1
+            else -> 0
+        }
+    }
+
+    /** Ends [player]'s seeker lease: every lock, unless another crew member still flies the vehicle's seekers. */
+    private fun releaseSeekers(player: ServerPlayer, lease: Lease) {
+        val shared = leases.any { (other, l) -> other !== player && l.vehicle === lease.vehicle }
+        if (!shared) { AircraftMissileLauncher.clear(lease.vehicle); return }
+        lease.seekChannels.filter { !seekingElsewhere(lease.vehicle, player, it) }
+            .forEach { AircraftMissileLauncher.clear(lease.vehicle, it) }
+    }
+
     private const val TRACK_PUBLISH_TICKS = 5
     private const val TRACK_PUBLISH_MOVE_SQR = 0.5 * 0.5
 
@@ -973,7 +1022,7 @@ object AircraftArmamentManager {
         val player = event.player as? ServerPlayer ?: return
         val vehicle = player.vehicle as? VehicleEntity
         if (vehicle == null || definition(vehicle) == null || !pilot(player, vehicle) && !operator(player, vehicle)) {
-            leases.remove(player)?.let { AircraftMissileLauncher.clear(it.vehicle) }; return
+            leases[player]?.let { releaseSeekers(player, it) }; leases.remove(player); return
         }
         val old = leases[player]
         if (old?.vehicle === vehicle && old.catalogue == AircraftArmamentRegistry.revision) {
@@ -981,12 +1030,14 @@ object AircraftArmamentManager {
             if (player.tickCount % TRACK_PUBLISH_TICKS == 0) followPaintedVehicle(vehicle)
             return
         }
-        old?.let { AircraftMissileLauncher.clear(it.vehicle) }
+        old?.let { releaseSeekers(player, it) }
         val lease = Lease(vehicle, nextEpoch++, AircraftArmamentRegistry.revision)
         leases[player] = lease; updateSeeker(player, lease, false); reply(player, lease)
     }
     @SubscribeEvent fun mounted(event: EntityMountEvent) {
-        (event.entityMounting as? ServerPlayer)?.let { leases.remove(it)?.let { lease -> AircraftMissileLauncher.clear(lease.vehicle) } }
+        (event.entityMounting as? ServerPlayer)?.let { player ->
+            leases[player]?.let { releaseSeekers(player, it) }; leases.remove(player)
+        }
     }
     @SubscribeEvent fun tracking(event: PlayerEvent.StartTracking) {
         val vehicle = event.target as? VehicleEntity ?: return
@@ -1002,7 +1053,7 @@ object AircraftArmamentManager {
     }
     @SubscribeEvent fun logout(event: PlayerEvent.PlayerLoggedOutEvent) {
         val player = event.entity as? ServerPlayer ?: return
-        leases.remove(player)?.let { AircraftMissileLauncher.clear(it.vehicle) }; sequences.remove(player.connection.connection)
+        leases[player]?.let { releaseSeekers(player, it) }; leases.remove(player); sequences.remove(player.connection.connection)
         farReceipts.remove(player)
         watchers.values.forEach { it.remove(player) }
     }

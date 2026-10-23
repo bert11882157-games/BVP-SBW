@@ -75,4 +75,17 @@ class VehicleSeatTransactionTest {
         assertEquals(VehicleWeaponSlots(listOf(0), listOf(1)), before)
         assertEquals(VehicleWeaponSlots(listOf(2), listOf(1)), before.select(valid, 0, 2, 1))
     }
+
+    @Test fun `number keys pick the nth selectable weapon on every seat`() {
+        // all weapons selectable (ground vehicles): the key is the raw list index, as before
+        assertEquals(0, weaponForSelectionKey(listOf(0, 1, 2), 0))
+        assertEquals(2, weaponForSelectionKey(listOf(0, 1, 2), 2))
+        // empty pylon channels filtered out (helicopter pilot or gunner, aircraft): the Nth selectable one
+        assertEquals(4, weaponForSelectionKey(listOf(1, 4, 9), 1))
+        assertEquals(9, weaponForSelectionKey(listOf(1, 4, 9), 2))
+        // keys past the end select the last weapon; no selectable weapon, no selection
+        assertEquals(9, weaponForSelectionKey(listOf(1, 4, 9), 8))
+        assertNull(weaponForSelectionKey(emptyList(), 0))
+        assertNull(weaponForSelectionKey(listOf(0, 1), -1))
+    }
 }

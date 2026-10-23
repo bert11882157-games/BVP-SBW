@@ -22,6 +22,13 @@ internal fun permitsLandingGearShot(required: Boolean, gearUp: Boolean, retracti
     !required || (gearUp && retraction.isFinite() && retraction == 1F)
 
 /**
+ * The weapon a selection (number) key picks from a seat's selectable weapons in list order: key N is the Nth of them,
+ * keys past the end the last one. Where every listed weapon is selectable this is the raw list index.
+ */
+internal fun weaponForSelectionKey(candidates: List<Int>, key: Int): Int? =
+    if (candidates.isEmpty() || key < 0) null else candidates[key.coerceAtMost(candidates.lastIndex)]
+
+/**
  * Owns vehicle GunData, deterministic slot policy, and the accepted-shot transaction.
  *
  * Replicated selections, persistence, world effects, aim notifications, and the public ABI remain

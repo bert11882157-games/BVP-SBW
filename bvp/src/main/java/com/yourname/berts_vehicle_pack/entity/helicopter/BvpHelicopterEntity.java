@@ -1,5 +1,6 @@
 package com.yourname.berts_vehicle_pack.entity.helicopter;
 
+import com.atsuishio.superbwarfare.api.vehicle.aim.VehicleAimChannel;
 import com.atsuishio.superbwarfare.api.vehicle.camera.VehicleCameraMode;
 import com.atsuishio.superbwarfare.api.vehicle.flight.VehicleFlightInputContext;
 import com.atsuishio.superbwarfare.api.vehicle.flight.VehicleFlightInstrumentSnapshot;
@@ -7,6 +8,8 @@ import com.atsuishio.superbwarfare.api.vehicle.flight.VehicleFlightStrategy;
 import com.atsuishio.superbwarfare.api.vehicle.flight.VehicleFlightStrategyProvider;
 import com.atsuishio.superbwarfare.api.vehicle.flight.VehicleFlightTickResult;
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity;
+import com.atsuishio.superbwarfare.data.gun.GunData;
+import com.atsuishio.superbwarfare.data.gun.GunProp;
 import com.atsuishio.superbwarfare.data.vehicle.subdata.EngineInfo;
 import net.minecraft.world.entity.player.Player;
 import com.atsuishio.superbwarfare.entity.vehicle.utils.VehicleVecUtils;
@@ -122,6 +125,46 @@ public abstract class BvpHelicopterEntity extends ArmoredVehicleEntity implement
             return VehicleCameraMode.AIRCRAFT_FREELOOK;
         }
         return super.bvpSeatDefaultCameraMode(passenger, seatIndex, selectedWeaponIndex);
+    }
+
+    /**
+     * The gunner's movable gun follows the gunner's sight whatever either crew member has selected, as a ground
+     * vehicle turret does. It is held at boresight (straight ahead) only while no one sits at the gunner's sight, or
+     * while the pilot is firing the shared gun and the gunner is not, so the pilot's rounds go forward. Firing is read
+     * from the synchronized weapon schedule, which both sides know.
+     */
+    @Override
+    public boolean isVehicleAimChannelStowed(VehicleAimChannel channel) {
+        boolean turret = channel == VehicleAimChannel.TURRET;
+        boolean present = turret ? hasTurret() : hasPassengerWeaponStation();
+        if (!present) return false;
+        int seat = turret ? getTurretControllerIndex() : getPassengerWeaponStationControllerIndex();
+        if (seat < 0) return false;
+        boolean controllerPresent = getNthEntity(seat) != null;
+        boolean pilotFiring = seat != 0 && getNthEntity(0) != null && firesGunOf(0, channel);
+        return HelicopterGunStowPolicy.stowed(true, seat, controllerPresent, pilotFiring,
+                pilotFiring && controllerPresent && firesGunOf(seat, channel));
+    }
+
+    /** Whether the seat's trigger is held on a selected weapon (either slot) that fires through the channel's gun. */
+    private boolean firesGunOf(int seat, VehicleAimChannel channel) {
+        int primary = getSelectedWeapon(seat);
+        Integer secondary = getSecondaryWeaponIndex(seat);
+        return firesGunOf(seat, primary, channel) || secondary != null && firesGunOf(seat, secondary, channel);
+    }
+
+    private boolean firesGunOf(int seat, int weaponIndex, VehicleAimChannel channel) {
+        if (weaponIndex < 0) return false;
+        String name = getGunName(seat, weaponIndex);
+        GunData data = name == null ? null : getGunData(name);
+        if (data == null || data.get(GunProp.SHOOT_POS) == null) return false;
+        String transform = data.get(GunProp.SHOOT_POS).getTransform();
+        boolean throughChannel = channel == VehicleAimChannel.TURRET
+                ? HelicopterGunStowPolicy.firesThroughTurret(transform)
+                : HelicopterGunStowPolicy.firesThroughStation(transform);
+        if (!throughChannel) return false;
+        var snapshot = getWeaponScheduleSnapshot(seat, weaponIndex);
+        return snapshot != null && snapshot.getTriggerHeld();
     }
 
     @Override
@@ -519,6 +562,31 @@ public abstract class BvpHelicopterEntity extends ArmoredVehicleEntity implement
 
     public double getBvpRawVerticalSpeedMps() {
         return this.helicopterLastRawVerticalMps;
+    }
+
+    /**
+     * Cockpit presentation of the pilot's cyclic and pedals, -1..1, from the synchronized inputs the attitude law
+     * reads (so every client shows the same stick): mouse Y is the pitch command (positive = nose down = cyclic
+     * forward), the bank keys less a quarter of mouse X the roll command, and mouse X the yaw command.
+     */
+    public double presentedCyclicForward() {
+        return presentedAxis(getMouseMoveSpeedY());
+    }
+
+    public double presentedCyclicRight() {
+        double keyboard = leftInputDown() == rightInputDown() ? 0.0D : rightInputDown() ? 1.0D : -1.0D;
+        return clamp(keyboard - 0.25D * presentedAxis(getMouseMoveSpeedX()), -1.0D, 1.0D);
+    }
+
+    public double presentedPedalRight() {
+        return presentedAxis(getMouseMoveSpeedX());
+    }
+
+    private double presentedAxis(double mouse) {
+        HelicopterPhysicalControls controls = this.flightProfile.physicalControls();
+        double fullScale = controls == null || controls.attitudeProfile() == null ? 8.0D
+                : controls.attitudeProfile().fullScaleMouseSample();
+        return getFirstPassenger() == null || !Double.isFinite(mouse) ? 0.0D : clamp(mouse / fullScale, -1.0D, 1.0D);
     }
 
     public int getBvpRawInputBits() {

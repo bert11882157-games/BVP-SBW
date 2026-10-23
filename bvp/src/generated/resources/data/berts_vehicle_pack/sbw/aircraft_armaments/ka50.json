@@ -5,70 +5,105 @@
     "Cannon"
   ],
   "SuspendedWeapons": [
-    "S8PodInner",
-    "PilotMissile"
+    "S8S1",
+    "Gsh23S1Upk23",
+    "S8S2",
+    "Gsh23S2Upk23",
+    "S8S3",
+    "Gsh23S3Upk23",
+    "S8S4",
+    "Gsh23S4Upk23"
   ],
-  "Pairs": [
+  "Pairs": [],
+  "Singles": [
     {
-      "Id": "inner",
-      "Name": "Inner pylon",
-      "Left": [
+      "Id": "slot_1",
+      "Name": "Left outboard",
+      "Position": [
+        3.9979,
+        1.7562,
+        0.0
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:heli/igla_x2",
+        "berts_vehicle_pack:heli/b8v20_s8ko",
+        "berts_vehicle_pack:heli/ofab250",
+        "berts_vehicle_pack:heli/upk23",
+        "berts_vehicle_pack:heli/vikhr_x6"
+      ],
+      "MaxPylonMassKg": 1000,
+      "MaxWeaponsPerPylon": 12,
+      "NativeWeaponIds": {
+        "berts_vehicle_pack:heli/b8v20_s8ko": "S8S1",
+        "berts_vehicle_pack:heli/upk23": "Gsh23S1Upk23"
+      }
+    },
+    {
+      "Id": "slot_2",
+      "Name": "Left inboard",
+      "Position": [
         2.6293,
         1.6842,
         0.2701
       ],
-      "Right": [
+      "AllowedStores": [
+        "berts_vehicle_pack:heli/b8v20_s8ko",
+        "berts_vehicle_pack:heli/ofab250",
+        "berts_vehicle_pack:heli/upk23",
+        "berts_vehicle_pack:heli/fab500_m62"
+      ],
+      "MaxPylonMassKg": 1000,
+      "MaxWeaponsPerPylon": 12,
+      "NativeWeaponIds": {
+        "berts_vehicle_pack:heli/b8v20_s8ko": "S8S2",
+        "berts_vehicle_pack:heli/upk23": "Gsh23S2Upk23"
+      }
+    },
+    {
+      "Id": "slot_3",
+      "Name": "Right inboard",
+      "Position": [
         -2.6293,
         1.6842,
         0.2701
       ],
       "AllowedStores": [
-        "berts_vehicle_pack:heli/b8v20"
+        "berts_vehicle_pack:heli/b8v20_s8ko",
+        "berts_vehicle_pack:heli/ofab250",
+        "berts_vehicle_pack:heli/upk23",
+        "berts_vehicle_pack:heli/fab500_m62"
       ],
-      "StoreGroups": {
-        "berts_vehicle_pack:heli/b8v20": [
-          "suspended_inner_l",
-          "suspended_inner_r"
-        ]
-      },
-      "MaxWeaponsPerPylon": 1,
       "MaxPylonMassKg": 1000,
+      "MaxWeaponsPerPylon": 12,
       "NativeWeaponIds": {
-        "berts_vehicle_pack:heli/b8v20": "S8PodInner"
+        "berts_vehicle_pack:heli/b8v20_s8ko": "S8S3",
+        "berts_vehicle_pack:heli/upk23": "Gsh23S3Upk23"
       }
     },
     {
-      "Id": "outer",
-      "Name": "Outer pylon",
-      "Left": [
-        3.9979,
-        1.7562,
-        0.0
-      ],
-      "Right": [
+      "Id": "slot_4",
+      "Name": "Right outboard",
+      "Position": [
         -3.9979,
         1.7562,
         0.0
       ],
       "AllowedStores": [
-        "berts_vehicle_pack:heli/vikhr_launcher"
+        "berts_vehicle_pack:heli/b8v20_s8ko",
+        "berts_vehicle_pack:heli/ofab250",
+        "berts_vehicle_pack:heli/upk23",
+        "berts_vehicle_pack:heli/vikhr_x6"
       ],
-      "StoreGroups": {
-        "berts_vehicle_pack:heli/vikhr_launcher": [
-          "suspended_outer_l",
-          "suspended_outer_r"
-        ]
-      },
-      "MaxWeaponsPerPylon": 1,
       "MaxPylonMassKg": 1000,
+      "MaxWeaponsPerPylon": 12,
       "NativeWeaponIds": {
-        "berts_vehicle_pack:heli/vikhr_launcher": "PilotMissile"
+        "berts_vehicle_pack:heli/b8v20_s8ko": "S8S4",
+        "berts_vehicle_pack:heli/upk23": "Gsh23S4Upk23"
       }
     }
   ],
-  "StoreGroups": {},
-  "MaxPayloadKg": 2500,
+  "MaxPayloadKg": 3017,
   "MaxPylonMassKg": 1000,
-  "MaxWeaponsPerPylon": 1,
-  "Singles": []
+  "MaxWeaponsPerPylon": 12,
+  "WeaponSeat": 0
 }

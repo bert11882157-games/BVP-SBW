@@ -1783,12 +1783,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         }
 
         val currentIndex = vehicleWeaponRuntime.resolvedPrimaryIndex(seatIndex, candidates)
-        val typeIndex = if (seatIndex == 0 &&
-            com.atsuishio.superbwarfare.api.aircraft.AircraftArmamentManager.definition(this) != null)
-            candidates.getOrNull(value.coerceIn(0, candidates.lastIndex))
-        else candidates.firstOrNull { it == value }
-            ?: candidates.getOrNull(value.coerceIn(0, candidates.lastIndex))
-        if (typeIndex == null) return
+        val typeIndex = weaponForSelectionKey(candidates, value) ?: return
         if (typeIndex == currentIndex) return
 
         val weapon = getGunData(seatIndex, typeIndex) ?: return
@@ -1803,8 +1798,23 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         }
     }
 
+    /**
+     * The weapon a selection (number) key picks: key N selects the Nth weapon the seat can currently select, on every
+     * seat of every vehicle, so keys never land on an empty pylon channel and mean the same thing to pilot and gunner.
+     * Where every listed weapon is selectable (ground vehicles) this is the raw list index, as before. Keys past the
+     * end select the last weapon. The client uses this to decide whether a press changes anything.
+     */
+    fun selectionKeyWeaponIndex(seatIndex: Int, key: Int): Int? {
+        if (seatIndex < 0 || seatIndex >= this.maxPassengers) return null
+        return weaponForSelectionKey(vehicleWeaponRuntime.validWeaponIndices(seatIndex), key)
+    }
+
     internal fun withdrawWeaponOnSelectionChange(seatIndex: Int, weaponIndex: Int) {
         if (weaponIndex < 0) return
+        // A weapon listed on several seats (a helicopter's pilot and gunner) is one physical weapon: while another
+        // seat still has it selected, this seat switching away must not cancel its reload or unload its magazine.
+        val name = getGunName(seatIndex, weaponIndex) ?: return
+        if (selectedOnAnotherSeat(seatIndex, name)) return
         getGunName(seatIndex, weaponIndex)?.let { weaponIdentity ->
             com.atsuishio.superbwarfare.api.weapon.VehicleReloadAudio.cancel(
                 this,
@@ -1817,6 +1827,17 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
                 gunData.withdrawAmmo(ammoSupplier)
             }
         }
+    }
+
+    /** Whether an occupied seat other than [seatIndex] has [weaponName] in its primary or secondary slot. */
+    private fun selectedOnAnotherSeat(seatIndex: Int, weaponName: String): Boolean {
+        for (seat in 0 until maxPassengers) {
+            if (seat == seatIndex || getNthEntity(seat) == null) continue
+            if (getGunName(seat) == weaponName) return true
+            val secondary = getSecondaryWeaponIndex(seat) ?: continue
+            if (getGunName(seat, secondary) == weaponName) return true
+        }
+        return false
     }
 
     internal fun notifyWeaponContextChanged(
@@ -2518,7 +2539,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
             vehicleActionController.consumeClient(entityData.get(VEHICLE_ACTION_SNAPSHOT))
         }
 
-        if (!isFixedWingFlightVehicle() && hasTurret()) {
+        if (!isFixedWingFlightVehicle() && hasTurret() && !isVehicleAimChannelStowed(VehicleAimChannel.TURRET)) {
             val turretController = getNthEntity(this.turretControllerIndex)
             if (turretController is Player &&
                 !vehicleAimController.handles(turretController, VehicleAimChannel.TURRET)
@@ -2535,7 +2556,9 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
             }
         }
 
-        if (!isFixedWingFlightVehicle() && hasPassengerWeaponStation()) {
+        if (!isFixedWingFlightVehicle() && hasPassengerWeaponStation() &&
+            !isVehicleAimChannelStowed(VehicleAimChannel.PASSENGER_WEAPON)
+        ) {
             val passengerWeaponStationController = getNthEntity(this.passengerWeaponStationControllerIndex)
             if ((passengerWeaponStationController is Player &&
                         !vehicleAimController.handles(
@@ -3712,6 +3735,15 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
         return index.takeIf { it >= 0 && getGunData(seatIndex, it) != null }
     }
 
+    /**
+     * Opt-in stowage: while true the channel's gun is held at its neutral (boresight forward) position by the server
+     * aim tick instead of following anyone, and the native direct-angle servo leaves it alone. A two-seat
+     * helicopter stows its turret while the gunner seat is empty, or while the pilot alone fires the gunner's gun,
+     * so the pilot's rounds go forward. Must depend only on state both sides know (occupants, synchronized weapon
+     * selection, the synchronized weapon schedule snapshot).
+     */
+    open fun isVehicleAimChannelStowed(channel: VehicleAimChannel): Boolean = false
+
     /** One immutable profile per configuration/context; null retains native direct-angle behavior. */
     fun resolveVehicleAimProfile(seatIndex: Int, selectedWeaponIndex: Int): VehicleAimProfile? {
         val data = computed()
@@ -3904,6 +3936,7 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
     override fun onPassengerTurned(entity: Entity) {
         val seatIndex = getSeatIndex(entity)
         if (seatIndex >= 0) {
+            clampZoomSightRotation(entity, seatIndex)
             val weaponIndex = getSelectedWeapon(seatIndex)
             val aimMode = getVehicleAimPresentationMode(seatIndex, weaponIndex)
             // A weapon controller's free look is an aim contract, not a successfully resolved
@@ -3917,6 +3950,35 @@ abstract class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity
             }
         }
         this.clampRotation(entity)
+    }
+
+    /**
+     * A seat sight with its own field of regard (CameraPos ZoomYawRange / ZoomPitchRange, e.g. a helicopter
+     * gunner's nose turret) holds the local rider's look inside that field while the vehicle zoom (the sight view)
+     * is held. The limits are measured from the vehicle's forward axis in the seat clamp's conventions (yaw positive
+     * to the right, pitch positive up). The plain head view, and every seat without these ranges, is unaffected.
+     * Only the local client's own turn input is held; the server takes the rider's look from that client.
+     */
+    private fun clampZoomSightRotation(entity: Entity, seatIndex: Int) {
+        if (!level().isClientSide || entity !== Minecraft.getInstance().player) return
+        if (!com.atsuishio.superbwarfare.event.ClientEventHandler.zoomVehicle) return
+        val camera = computed().seats().getOrNull(seatIndex)?.cameraPos ?: return
+        val yawRange = camera.zoomYawRange
+        val pitchRange = camera.zoomPitchRange
+        if (yawRange == null && pitchRange == null) return
+        val forward = getTransformDirectionFromString(1f, entity, "Vehicle")
+        if (pitchRange != null && pitchRange.x <= pitchRange.y) {
+            val relative = Mth.wrapDegrees(entity.xRot - -getXRotFromVector(forward)).toFloat()
+            val clamped = Mth.clamp(relative, -pitchRange.y, -pitchRange.x)
+            entity.xRotO += clamped - relative
+            entity.xRot = entity.xRot + clamped - relative
+        }
+        if (yawRange != null && yawRange.x <= yawRange.y) {
+            val relative = Mth.wrapDegrees(entity.yRot - -getYRotFromVector(forward)).toFloat()
+            val clamped = Mth.clamp(relative, yawRange.x, yawRange.y)
+            entity.yRotO += clamped - relative
+            entity.yRot = entity.yRot + clamped - relative
+        }
     }
 
     open val customTurretMinPitch: Float

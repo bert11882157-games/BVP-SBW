@@ -318,11 +318,9 @@ public abstract class ArmoredVehicleEntity extends GeoVehicleEntity implements V
         if (seatIndex < 0 || selectedWeaponIndex < 0) {
             return null;
         }
-        if (this instanceof Ka50Entity) {
-            return seatIndex == 0 && selectedWeaponIndex == 1 ? BVP_AIM_RETICLE : null;
-        }
-        if (this instanceof Mi24VEntity || this instanceof Mi28NEntity) {
-            return seatIndex == 1 && selectedWeaponIndex == 0 ? BVP_AIM_RETICLE : null;
+        if (this instanceof Mi24VEntity helicopter) {
+            // Mi-24V, Mi-28N (operator seat) and Ka-50 (pilot): the cannon in its own gun seat, found by name.
+            return helicopter.isAutocannonSeatWeapon(seatIndex, selectedWeaponIndex) ? BVP_AIM_RETICLE : null;
         }
         return BVP_AIM_RETICLE;
     }
@@ -339,11 +337,28 @@ public abstract class ArmoredVehicleEntity extends GeoVehicleEntity implements V
         if (hasPassengerWeaponStation() && seatIndex == getPassengerWeaponStationControllerIndex()) {
             return VehicleAimReticleRole.PASSENGER_HMG;
         }
+        if (this instanceof com.yourname.berts_vehicle_pack.entity.helicopter.BvpHelicopterEntity
+                && hasSeparateSightEye(opticSeat)) {
+            // A helicopter crew sight (TADS, TSU, Shkval, a mast sight...) is its own physical eye anchor, authored
+            // as the seat's ZoomEyeAttachment: the zoomed view looks from it instead of only narrowing the field of
+            // view at the crew member's eye. It keeps the cannon role's camera-command reticle.
+            return VehicleAimReticleRole.EMPLACEMENT_OPTIC;
+        }
         String weaponId = getGunName(seatIndex, selectedWeaponIndex);
         if ("MachineGun".equals(weaponId) || "MainMachineGun".equals(weaponId)) {
             return VehicleAimReticleRole.COAX;
         }
         return VehicleAimReticleRole.MAIN_CANNON;
+    }
+
+    /** The seat's zoomed view has an eye anchor of its own, apart from the crew member's eye. */
+    private static boolean hasSeparateSightEye(SeatInfo seat) {
+        CameraPos camera = seat == null ? null : seat.getCameraPos();
+        if (camera == null) {
+            return false;
+        }
+        String zoomEye = camera.getZoomEyeAttachment();
+        return zoomEye != null && !zoomEye.isBlank() && !zoomEye.equals(camera.getEyeAttachment());
     }
 
     @Override

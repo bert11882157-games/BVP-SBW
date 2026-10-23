@@ -5,70 +5,112 @@
     "Cannon"
   ],
   "SuspendedWeapons": [
-    "S8PodInner",
-    "PassengerMissile"
+    "S8S1",
+    "S13S1B13l",
+    "S8S2",
+    "S13S2B13l",
+    "Gsh23S2Upk23",
+    "S8S3",
+    "S13S3B13l",
+    "Gsh23S3Upk23",
+    "S8S4",
+    "S13S4B13l"
   ],
-  "Pairs": [
+  "Pairs": [],
+  "Singles": [
     {
-      "Id": "inner",
-      "Name": "Inner pylon",
-      "Left": [
+      "Id": "slot_1",
+      "Name": "Left outboard",
+      "Position": [
+        3.5657,
+        2.0804,
+        -1.5127
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:heli/igla_x4",
+        "berts_vehicle_pack:heli/b8v20_s8ko",
+        "berts_vehicle_pack:heli/b13l_s13of",
+        "berts_vehicle_pack:heli/ataka_x4",
+        "berts_vehicle_pack:heli/ataka_x8"
+      ],
+      "MaxPylonMassKg": 1000,
+      "MaxWeaponsPerPylon": 12,
+      "NativeWeaponIds": {
+        "berts_vehicle_pack:heli/b8v20_s8ko": "S8S1",
+        "berts_vehicle_pack:heli/b13l_s13of": "S13S1B13l"
+      }
+    },
+    {
+      "Id": "slot_2",
+      "Name": "Left inboard",
+      "Position": [
         2.5572,
         2.1706,
         -1.2426
       ],
-      "Right": [
+      "AllowedStores": [
+        "berts_vehicle_pack:heli/b8v20_s8ko",
+        "berts_vehicle_pack:heli/b13l_s13of",
+        "berts_vehicle_pack:heli/upk23"
+      ],
+      "MaxPylonMassKg": 1000,
+      "MaxWeaponsPerPylon": 12,
+      "NativeWeaponIds": {
+        "berts_vehicle_pack:heli/b8v20_s8ko": "S8S2",
+        "berts_vehicle_pack:heli/b13l_s13of": "S13S2B13l",
+        "berts_vehicle_pack:heli/upk23": "Gsh23S2Upk23"
+      }
+    },
+    {
+      "Id": "slot_3",
+      "Name": "Right inboard",
+      "Position": [
         -2.5572,
         2.1706,
         -1.2426
       ],
       "AllowedStores": [
-        "berts_vehicle_pack:heli/b8v20"
+        "berts_vehicle_pack:heli/b8v20_s8ko",
+        "berts_vehicle_pack:heli/b13l_s13of",
+        "berts_vehicle_pack:heli/upk23"
       ],
-      "StoreGroups": {
-        "berts_vehicle_pack:heli/b8v20": [
-          "suspended_inner_l",
-          "suspended_inner_r"
-        ]
-      },
-      "MaxWeaponsPerPylon": 1,
       "MaxPylonMassKg": 1000,
+      "MaxWeaponsPerPylon": 12,
       "NativeWeaponIds": {
-        "berts_vehicle_pack:heli/b8v20": "S8PodInner"
+        "berts_vehicle_pack:heli/b8v20_s8ko": "S8S3",
+        "berts_vehicle_pack:heli/b13l_s13of": "S13S3B13l",
+        "berts_vehicle_pack:heli/upk23": "Gsh23S3Upk23"
       }
     },
     {
-      "Id": "outer",
-      "Name": "Outer pylon",
-      "Left": [
-        3.5657,
-        2.0804,
-        -1.5127
-      ],
-      "Right": [
+      "Id": "slot_4",
+      "Name": "Right outboard",
+      "Position": [
         -3.5657,
         2.0804,
         -1.5127
       ],
       "AllowedStores": [
-        "berts_vehicle_pack:heli/ataka_launcher"
+        "berts_vehicle_pack:heli/igla_x4",
+        "berts_vehicle_pack:heli/b8v20_s8ko",
+        "berts_vehicle_pack:heli/b13l_s13of",
+        "berts_vehicle_pack:heli/ataka_x4",
+        "berts_vehicle_pack:heli/ataka_x8"
       ],
-      "StoreGroups": {
-        "berts_vehicle_pack:heli/ataka_launcher": [
-          "suspended_outer_l",
-          "suspended_outer_r"
-        ]
-      },
-      "MaxWeaponsPerPylon": 1,
       "MaxPylonMassKg": 1000,
+      "MaxWeaponsPerPylon": 12,
       "NativeWeaponIds": {
-        "berts_vehicle_pack:heli/ataka_launcher": "PassengerMissile"
+        "berts_vehicle_pack:heli/b8v20_s8ko": "S8S4",
+        "berts_vehicle_pack:heli/b13l_s13of": "S13S4B13l"
       }
     }
   ],
-  "StoreGroups": {},
-  "MaxPayloadKg": 2300,
+  "MaxPayloadKg": 2050,
   "MaxPylonMassKg": 1000,
-  "MaxWeaponsPerPylon": 1,
-  "Singles": []
+  "MaxWeaponsPerPylon": 12,
+  "WeaponSeat": 1,
+  "WeaponSeats": [
+    1,
+    0
+  ]
 }

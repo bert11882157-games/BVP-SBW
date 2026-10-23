@@ -1,0 +1,1409 @@
+{
+ "belt_names": {
+  "2A42_air_targets": "Air targets",
+  "2A42_armor_targets": "Armored targets",
+  "2A42_ground_targets": "Ground targets",
+  "50cal_ground_targets": "Ground targets",
+  "50cal_stealth": "Stealth",
+  "50cal_tracers": "Tracers",
+  "50cal_universal": "Universal",
+  "GAU_19_ground_targets": "Ground targets",
+  "M195_air_targets": "Air targets",
+  "M195_armor_targets": "Armored targets",
+  "YaK-B_air_targets": "Air targets",
+  "YaK-B_ground_targets": "Ground targets",
+  "YaK-B_universal": "Universal",
+  "default": "Default",
+  "ns23_air_targets": "Air targets",
+  "ns23_armor_targets": "AP",
+  "ns23_stealth": "Stealth",
+  "t_160_air_targets": "Air targets",
+  "t_160_armor_targets": "Armored targets",
+  "t_160_stealth": "Stealth",
+  "t_160_universal": "Universal"
+ },
+ "guns": {
+  "cannon2a42": {
+   "belts": {
+    "2A42_air_targets": [
+     "he_frag_t",
+     "ap_t",
+     "he_frag_i",
+     "he_frag_i"
+    ],
+    "2A42_armor_targets": [
+     "apds_autocannon"
+    ],
+    "2A42_ground_targets": [
+     "apds_autocannon",
+     "ap_t",
+     "he_frag_i",
+     "he_frag_i"
+    ],
+    "default": [
+     "ap_t",
+     "he_frag_i"
+    ]
+   },
+   "blk": "gamedata/weapons/cannon2a42.blkx",
+   "name": "30 mm 2A42 cannon",
+   "rounds": {
+    "ap_t": {
+     "Cx": 0.25687,
+     "bulletType": "ap_t",
+     "caliber": 0.03,
+     "demarre": {
+      "demarreCaliberPow": 1.07,
+      "demarreMassPow": 0.71,
+      "demarrePenetrationK": 0.9,
+      "demarreSpeedPow": 1.43
+     },
+     "mass": 0.4,
+     "speed": 970.0,
+     "tracer": "30mmRed"
+    },
+    "apds_autocannon": {
+     "Cx": 0.12,
+     "ballisticCaliber": 0.018,
+     "bulletType": "apds_autocannon",
+     "caliber": 0.03,
+     "damageCaliber": 0.018,
+     "damageMass": 0.304,
+     "demarre": {
+      "demarreCaliberPow": 1.07,
+      "demarreMassPow": 0.71,
+      "demarrePenetrationK": 0.65,
+      "demarreSpeedPow": 1.43
+     },
+     "mass": 0.304,
+     "speed": 1120.0,
+     "tracer": "30mmDarkRed"
+    },
+    "he_frag_i": {
+     "Cx": 0.29841,
+     "bulletType": "he_frag_i",
+     "caliber": 0.03,
+     "demarre": {
+      "demarreCaliberPow": 1.07,
+      "demarreMassPow": 0.71,
+      "demarrePenetrationK": 0.15,
+      "demarreSpeedPow": 1.43
+     },
+     "explosiveMass": 0.049,
+     "explosiveType": "a_ix_2",
+     "mass": 0.389,
+     "speed": 960.0,
+     "tntKg": 0.07546,
+     "tracer": null
+    },
+    "he_frag_t": {
+     "Cx": 0.29841,
+     "bulletType": "he_frag_t",
+     "caliber": 0.03,
+     "demarre": {
+      "demarreCaliberPow": 1.07,
+      "demarreMassPow": 0.71,
+      "demarrePenetrationK": 0.15,
+      "demarreSpeedPow": 1.43
+     },
+     "explosiveMass": 0.0116,
+     "explosiveType": "a_ix_2",
+     "mass": 0.385,
+     "speed": 960.0,
+     "tntKg": 0.01786,
+     "tracer": "30mmBrightRed"
+    }
+   }
+  },
+  "cannongsh_23l": {
+   "belts": {
+    "default": [
+     "he_frag_i_t",
+     "ap_i",
+     "he_frag_i"
+    ],
+    "ns23_air_targets": [
+     "he_frag_i_t",
+     "he_frag_i",
+     "he_frag_i_t",
+     "he_frag_i",
+     "ap_i"
+    ],
+    "ns23_armor_targets": [
+     "he_frag_i",
+     "ap_i",
+     "ap_i",
+     "ap_i"
+    ],
+    "ns23_stealth": [
+     "ap_i",
+     "he_frag_i",
+     "he_frag_i"
+    ]
+   },
+   "blk": "gamedata/weapons/cannongsh_23l.blkx",
+   "name": "23 mm GSh-23L cannon",
+   "rounds": {
+    "ap_i": {
+     "Cx": 0.36,
+     "bulletType": "ap_i",
+     "caliber": 0.023,
+     "demarre": {
+      "demarreCaliberPow": 1.07,
+      "demarreMassPow": 0.71,
+      "demarrePenetrationK": 0.9,
+      "demarreSpeedPow": 1.43
+     },
+     "mass": 0.175,
+     "speed": 710.0,
+     "tracer": null
+    },
+    "he_frag_i": {
+     "Cx": 0.36,
+     "bulletType": "he_frag_i",
+     "caliber": 0.023,
+     "demarre": {
+      "demarreCaliberPow": 1.07,
+      "demarreMassPow": 0.71,
+      "demarrePenetrationK": 0.15,
+      "demarreSpeedPow": 1.43
+     },
+     "explosiveMass": 0.0181,
+     "explosiveType": "a_ix_2",
+     "mass": 0.174,
+     "speed": 700.0,
+     "tntKg": 0.02787,
+     "tracer": null
+    },
+    "he_frag_i_t": {
+     "Cx": 0.36,
+     "bulletType": "he_frag_i_t",
+     "caliber": 0.023,
+     "demarre": {
+      "demarreCaliberPow": 1.07,
+      "demarreMassPow": 0.71,
+      "demarrePenetrationK": 0.15,
+      "demarreSpeedPow": 1.43
+     },
+     "explosiveMass": 0.0174,
+     "explosiveType": "a_ix_2",
+     "mass": 0.176,
+     "speed": 710.0,
+     "tntKg": 0.0268,
+     "tracer": "20mmBrightRed"
+    }
+   }
+  },
+  "cannongsh_23l_upk_23_250": {
+   "belts": {
+    "default": [
+     "he_frag_i_t",
+     "ap_i",
+     "he_frag_i"
+    ],
+    "ns23_air_targets": [
+     "he_frag_i_t",
+     "he_frag_i",
+     "he_frag_i_t",
+     "he_frag_i",
+     "ap_i"
+    ],
+    "ns23_armor_targets": [
+     "he_frag_i_t",
+     "ap_i",
+     "ap_i",
+     "ap_i"
+    ],
+    "ns23_stealth": [
+     "ap_i",
+     "he_frag_i",
+     "he_frag_i"
+    ]
+   },
+   "blk": "gamedata/weapons/cannongsh_23l_upk_23_250.blkx",
+   "name": "23 mm GSh-23L cannon",
+   "rounds": {
+    "ap_i": {
+     "Cx": 0.36,
+     "bulletType": "ap_i",
+     "caliber": 0.023,
+     "demarre": {
+      "demarreCaliberPow": 1.07,
+      "demarreMassPow": 0.71,
+      "demarrePenetrationK": 0.9,
+      "demarreSpeedPow": 1.43
+     },
+     "mass": 0.175,
+     "speed": 710.0,
+     "tracer": null
+    },
+    "he_frag_i": {
+     "Cx": 0.36,
+     "bulletType": "he_frag_i",
+     "caliber": 0.023,
+     "demarre": {
+      "demarreCaliberPow": 1.07,
+      "demarreMassPow": 0.71,
+      "demarrePenetrationK": 0.15,
+      "demarreSpeedPow": 1.43
+     },
+     "explosiveMass": 0.0181,
+     "explosiveType": "a_ix_2",
+     "mass": 0.174,
+     "speed": 700.0,
+     "tntKg": 0.02787,
+     "tracer": null
+    },
+    "he_frag_i_t": {
+     "Cx": 0.36,
+     "bulletType": "he_frag_i_t",
+     "caliber": 0.023,
+     "demarre": {
+      "demarreCaliberPow": 1.07,
+      "demarreMassPow": 0.71,
+      "demarrePenetrationK": 0.15,
+      "demarreSpeedPow": 1.43
+     },
+     "explosiveMass": 0.0174,
+     "explosiveType": "a_ix_2",
+     "mass": 0.176,
+     "speed": 710.0,
+     "tntKg": 0.0268,
+     "tracer": "20mmBrightRed"
+    }
+   }
+  },
+  "cannonm195": {
+   "belts": {
+    "M195_air_targets": [
+     "he_frag_i",
+     "he_frag_i",
+     "he_frag_i",
+     "ap_i_t"
+    ],
+    "M195_armor_targets": [
+     "ap_i_t",
+     "ap_i_t",
+     "ap_i_t",
+     "he_frag_i"
+    ],
+    "default": [
+     "ap_i_t",
+     "he_frag_i",
+     "ap_i_t"
+    ]
+   },
+   "blk": "gamedata/weapons/cannonm195.blkx",
+   "name": "20 mm M195 cannon",
+   "rounds": {
+    "ap_i_t": {
+     "Cx": 0.46979,
+     "bulletType": "ap_i_t",
+     "caliber": 0.02,
+     "demarre": {
+      "demarreCaliberPow": 1.07,
+      "demarreMassPow": 0.71,
+      "demarrePenetrationK": 0.9,
+      "demarreSpeedPow": 1.43
+     },
+     "mass": 0.09979,
+     "speed": 1030.0,
+     "tracer": "20mmRed"
+    },
+    "he_frag_i": {
+     "Cx": 0.46979,
+     "bulletType": "he_frag_i",
+     "caliber": 0.02,
+     "demarre": {
+      "demarreCaliberPow": 1.07,
+      "demarreMassPow": 0.71,
+      "demarrePenetrationK": 0.15,
+      "demarreSpeedPow": 1.43
+     },
+     "explosiveMass": 0.0107,
+     "explosiveType": "h761",
+     "mass": 0.09979,
+     "speed": 1030.0,
+     "tntKg": 0.01166,
+     "tracer": null
+    }
+   }
+  },
+  "cannonm197": {
+   "belts": {
+    "default": [
+     "he_i_t",
+     "he_frag_i",
+     "he_frag_i",
+     "ap_i"
+    ],
+    "t_160_air_targets": [
+     "he_i_t",
+     "he_frag_i",
+     "he_frag_i",
+     "ap_i"
+    ],
+    "t_160_armor_targets": [
+     "he_i_t",
+     "ap_i",
+     "ap_i",
+     "ap_i"
+    ],
+    "t_160_stealth": [
+     "he_frag_i",
+     "ap_i",
+     "he_frag_i",
+     "ap_i"
+    ],
+    "t_160_universal": [
+     "he_i_t",
+     "ap_i",
+     "he_frag_i",
+     "ap_i"
+    ]
+   },
+   "blk": "gamedata/weapons/cannonm197.blkx",
+   "name": "20 mm M197 cannon",
+   "rounds": {
+    "ap_i": {
+     "Cx": 0.46979,
+     "bulletType": "ap_i",
+     "caliber": 0.02,
+     "demarre": {
+      "demarreCaliberPow": 1.07,
+      "demarreMassPow": 0.71,
+      "demarrePenetrationK": 0.9,
+      "demarreSpeedPow": 1.43
+     },
+     "mass": 0.09979,
+     "speed": 1030.0,
+     "tracer": null
+    },
+    "he_frag_i": {
+     "Cx": 0.46979,
+     "bulletType": "he_frag_i",
+     "caliber": 0.02,
+     "demarre": {
+      "demarreCaliberPow": 1.07,
+      "demarreMassPow": 0.71,
+      "demarrePenetrationK": 0.15,
+      "demarreSpeedPow": 1.43
+     },
+     "explosiveMass": 0.0107,
+     "explosiveType": "h761",
+     "mass": 0.09979,
+     "speed": 1030.0,
+     "tntKg": 0.01166,
+     "tracer": null
+    },
+    "he_i_t": {
+     "Cx": 0.417,
+     "bulletType": "he_i_t",
+     "caliber": 0.02,
+     "demarre": {
+      "demarreCaliberPow": 1.07,
+      "demarreMassPow": 0.71,
+      "demarrePenetrationK": 0.15,
+      "demarreSpeedPow": 1.43
+     },
+     "explosiveMass": 0.00745,
+     "explosiveType": "h761",
+     "mass": 0.101,
+     "speed": 1030.0,
+     "tntKg": 0.00812,
+     "tracer": "20mmRed"
+    }
+   }
+  },
+  "cannonm230e1": {
+   "belts": {
+    "default": [
+     "he_dp"
+    ]
+   },
+   "blk": "gamedata/weapons/cannonm230e1.blkx",
+   "name": "30 mm M230E-1 cannon",
+   "rounds": {
+    "he_dp": {
+     "Cx": 0.52,
+     "bulletType": "he_dp",
+     "caliber": 0.03,
+     "cumulativeMm": 51.0,
+     "explosiveMass": 0.0220316,
+     "explosiveType": "pbxn_5",
+     "mass": 0.229,
+     "speed": 805.0,
+     "tntKg": 0.0282,
+     "tracer": null
+    }
+   }
+  },
+  "guna_12_7": {
+   "belts": {
+    "YaK-B_air_targets": [
+     "he_i_ball",
+     "ap_i_t_ball",
+     "he_i_ball",
+     "he_i_ball"
+    ],
+    "YaK-B_ground_targets": [
+     "he_i_ball",
+     "ap_ball",
+     "ap_i_t_ball",
+     "ap_ball"
+    ],
+    "YaK-B_universal": [
+     "ap_i_ball",
+     "ap_i_ball",
+     "he_i_ball",
+     "ap_i_t_ball"
+    ],
+    "default": [
+     "ap_i_ball",
+     "ap_i_t_ball",
+     "ap_i_ball"
+    ]
+   },
+   "blk": "gamedata/weapons/guna_12_7.blkx",
+   "name": "12.7 mm A-12.7 machine gun",
+   "rounds": {
+    "ap_ball": {
+     "Cx": 0.34135,
+     "bulletType": "ap_ball",
+     "caliber": 0.0127,
+     "demarre": {
+      "demarreCaliberPow": 1.07,
+      "demarreMassPow": 0.71,
+      "demarrePenetrationK": 0.9,
+      "demarreSpeedPow": 1.43
+     },
+     "mass": 0.0558,
+     "speed": 818.0,
+     "tracer": null
+    },
+    "ap_i_ball": {
+     "Cx": 0.34135,
+     "bulletType": "ap_i_ball",
+     "caliber": 0.0127,
+     "demarre": {
+      "demarreCaliberPow": 1.07,
+      "demarreMassPow": 0.71,
+      "demarrePenetrationK": 0.9,
+      "demarreSpeedPow": 1.43
+     },
+     "mass": 0.0495,
+     "speed": 820.0,
+     "tracer": null
+    },
+    "ap_i_t_ball": {
+     "Cx": 0.34135,
+     "bulletType": "ap_i_t_ball",
+     "caliber": 0.0127,
+     "demarre": {
+      "demarreCaliberPow": 1.07,
+      "demarreMassPow": 0.71,
+      "demarrePenetrationK": 0.9,
+      "demarreSpeedPow": 1.43
+     },
+     "mass": 0.0456,
+     "speed": 865.0,
+     "tracer": "12mmRed"
+    },
+    "he_i_ball": {
+     "Cx": 0.409,
+     "armorpower": [
+      [
+       5.0,
+       3.5
+      ],
+      [
+       100.0,
+       3.3
+      ],
+      [
+       500.0,
+       3.2
+      ],
+      [
+       1000.0,
+       3.0
+      ],
+      [
+       1450.0,
+       0.1
+      ],
+      [
+       1500.0,
+       0.0
+      ]
+     ],
+     "bulletType": "he_i_ball",
+     "caliber": 0.0127,
+     "explosiveMass": 0.0019,
+     "explosiveType": "petn",
+     "mass": 0.04425,
+     "speed": 860.0,
+     "tntKg": 0.00323,
+     "tracer": null
+    }
+   }
+  },
+  "gunfn_m3p": {
+   "belts": {
+    "50cal_ground_targets": [
+     "ap_i_t_ball_M20",
+     "i_ball_M23",
+     "ap_ball_M2",
+     "ap_ball_M2",
+     "ap_i_ball_M8",
+     "ap_i_ball_M8"
+    ],
+    "50cal_stealth": [
+     "ap_i_ball_M8",
+     "i_ball_M23",
+     "ap_i_ball_M8",
+     "i_ball_M23"
+    ],
+    "50cal_tracers": [
+     "ap_i_t_ball_M20"
+    ],
+    "50cal_universal": [
+     "ap_i_ball_M8",
+     "ap_i_ball_M8",
+     "ap_i_t_ball_M20",
+     "i_ball_M23",
+     "i_ball_M23"
+    ],
+    "default": [
+     "ap_i_t_ball_M20",
+     "ap_ball_M2",
+     "ap_ball_M2",
+     "i_ball_M1"
+    ]
+   },
+   "blk": "gamedata/weapons/gunfn_m3p.blkx",
+   "name": "12.7 mm FN M3P machine gun",
+   "rounds": {
+    "ap_ball_M2": {
+     "Cx": 0.335,
+     "bulletType": "ap_ball_M2",
+     "caliber": 0.0127,
+     "demarre": {
+      "demarreCaliberPow": 1.07,
+      "demarreMassPow": 0.71,
+      "demarrePenetrationK": 0.9,
+      "demarreSpeedPow": 1.43
+     },
+     "mass": 0.045877624,
+     "speed": 865.0,
+     "tracer": null
+    },
+    "ap_i_ball_M8": {
+     "Cx": 0.335,
+     "bulletType": "ap_i_ball_M8",
+     "caliber": 0.0127,
+     "demarre": {
+      "demarreCaliberPow": 1.07,
+      "demarreMassPow": 0.71,
+      "demarrePenetrationK": 0.9,
+      "demarreSpeedPow": 1.43
+     },
+     "mass": 0.040304918,
+     "speed": 887.0,
+     "tracer": null
+    },
+    "ap_i_t_ball_M20": {
+     "Cx": 0.335,
+     "bulletType": "ap_i_t_ball_M20",
+     "caliber": 0.0127,
+     "demarre": {
+      "demarreCaliberPow": 1.07,
+      "demarreMassPow": 0.71,
+      "demarrePenetrationK": 0.9,
+      "demarreSpeedPow": 1.43
+     },
+     "mass": 0.03965693,
+     "speed": 899.0,
+     "tracer": "12mmRed"
+    },
+    "i_ball_M1": {
+     "Cx": 0.335,
+     "armorpower": [
+      [
+       10.0,
+       7.0
+      ],
+      [
+       500.0,
+       6.0
+      ],
+      [
+       1200.0,
+       5.0
+      ],
+      [
+       1450.0,
+       0.1
+      ],
+      [
+       1500.0,
+       0.0
+      ]
+     ],
+     "bulletType": "i_ball_M1",
+     "caliber": 0.0127,
+     "mass": 0.041017707,
+     "speed": 944.0,
+     "tracer": null
+    },
+    "i_ball_M23": {
+     "Cx": 0.335,
+     "armorpower": [
+      [
+       10.0,
+       7.0
+      ],
+      [
+       500.0,
+       6.0
+      ],
+      [
+       1200.0,
+       5.0
+      ],
+      [
+       1450.0,
+       0.1
+      ],
+      [
+       1500.0,
+       0.0
+      ]
+     ],
+     "bulletType": "i_ball_M23",
+     "caliber": 0.0127,
+     "mass": 0.033177037,
+     "speed": 1040.0,
+     "tracer": null
+    }
+   }
+  },
+  "gunfn_m3p_cwp": {
+   "belts": {
+    "50cal_ground_targets": [
+     "ap_i_t_ball_M20",
+     "i_ball_M23",
+     "ap_ball_M2",
+     "ap_ball_M2",
+     "ap_i_ball_M8",
+     "ap_i_ball_M8"
+    ],
+    "50cal_stealth": [
+     "ap_i_ball_M8",
+     "i_ball_M23",
+     "ap_i_ball_M8",
+     "i_ball_M23"
+    ],
+    "50cal_tracers": [
+     "ap_i_t_ball_M20"
+    ],
+    "50cal_universal": [
+     "ap_i_ball_M8",
+     "ap_i_ball_M8",
+     "ap_i_t_ball_M20",
+     "i_ball_M23",
+     "i_ball_M23"
+    ],
+    "default": [
+     "ap_i_t_ball_M20",
+     "ap_ball_M2",
+     "ap_ball_M2",
+     "i_ball_M1"
+    ]
+   },
+   "blk": "gamedata/weapons/gunfn_m3p_cwp.blkx",
+   "name": "12.7 mm FN M3P machine gun",
+   "rounds": {
+    "ap_ball_M2": {
+     "Cx": 0.335,
+     "bulletType": "ap_ball_M2",
+     "caliber": 0.0127,
+     "demarre": {
+      "demarreCaliberPow": 1.07,
+      "demarreMassPow": 0.71,
+      "demarrePenetrationK": 0.9,
+      "demarreSpeedPow": 1.43
+     },
+     "mass": 0.045877624,
+     "speed": 865.0,
+     "tracer": null
+    },
+    "ap_i_ball_M8": {
+     "Cx": 0.335,
+     "bulletType": "ap_i_ball_M8",
+     "caliber": 0.0127,
+     "demarre": {
+      "demarreCaliberPow": 1.07,
+      "demarreMassPow": 0.71,
+      "demarrePenetrationK": 0.9,
+      "demarreSpeedPow": 1.43
+     },
+     "mass": 0.040304918,
+     "speed": 887.0,
+     "tracer": null
+    },
+    "ap_i_t_ball_M20": {
+     "Cx": 0.335,
+     "bulletType": "ap_i_t_ball_M20",
+     "caliber": 0.0127,
+     "demarre": {
+      "demarreCaliberPow": 1.07,
+      "demarreMassPow": 0.71,
+      "demarrePenetrationK": 0.9,
+      "demarreSpeedPow": 1.43
+     },
+     "mass": 0.03965693,
+     "speed": 899.0,
+     "tracer": "12mmRed"
+    },
+    "i_ball_M1": {
+     "Cx": 0.335,
+     "armorpower": [
+      [
+       10.0,
+       7.0
+      ],
+      [
+       500.0,
+       6.0
+      ],
+      [
+       1200.0,
+       5.0
+      ],
+      [
+       1450.0,
+       0.1
+      ],
+      [
+       1500.0,
+       0.0
+      ]
+     ],
+     "bulletType": "i_ball_M1",
+     "caliber": 0.0127,
+     "mass": 0.041017707,
+     "speed": 944.0,
+     "tracer": null
+    },
+    "i_ball_M23": {
+     "Cx": 0.335,
+     "armorpower": [
+      [
+       10.0,
+       7.0
+      ],
+      [
+       500.0,
+       6.0
+      ],
+      [
+       1200.0,
+       5.0
+      ],
+      [
+       1450.0,
+       0.1
+      ],
+      [
+       1500.0,
+       0.0
+      ]
+     ],
+     "bulletType": "i_ball_M23",
+     "caliber": 0.0127,
+     "mass": 0.033177037,
+     "speed": 1040.0,
+     "tracer": null
+    }
+   }
+  },
+  "gungau_19": {
+   "belts": {
+    "GAU_19_ground_targets": [
+     "slap_t",
+     "slap",
+     "slap",
+     "slap"
+    ],
+    "default": [
+     "slap",
+     "slap_t"
+    ]
+   },
+   "blk": "gamedata/weapons/gungau_19.blkx",
+   "name": "12.7 mm GAU-19 machine gun",
+   "rounds": {
+    "slap": {
+     "Cx": 0.45184,
+     "ballisticCaliber": 0.00762,
+     "bulletType": "slap",
+     "caliber": 0.0127,
+     "damageCaliber": 0.00762,
+     "damageMass": 0.023327,
+     "demarre": {
+      "demarreCaliberPow": 1.07,
+      "demarreMassPow": 0.71,
+      "demarrePenetrationK": 0.85,
+      "demarreSpeedPow": 1.43
+     },
+     "mass": 0.023327,
+     "speed": 1219.2,
+     "tracer": null
+    },
+    "slap_t": {
+     "Cx": 0.45184,
+     "ballisticCaliber": 0.00762,
+     "bulletType": "slap_t",
+     "caliber": 0.0127,
+     "damageCaliber": 0.00762,
+     "damageMass": 0.023327,
+     "demarre": {
+      "demarreCaliberPow": 1.07,
+      "demarreMassPow": 0.71,
+      "demarrePenetrationK": 0.85,
+      "demarreSpeedPow": 1.43
+     },
+     "mass": 0.023327,
+     "speed": 1173.0,
+     "tracer": "7mmRed"
+    }
+   }
+  },
+  "gungshg_guv": {
+   "belts": {
+    "default": [
+     "ap_ball",
+     "ap_ball",
+     "ap_ball",
+     "ap_i_t_ball",
+     "ap_ball",
+     "ap_ball",
+     "ap_ball",
+     "ap_ball"
+    ]
+   },
+   "blk": "gamedata/weapons/gungshg_guv.blkx",
+   "name": "7.62 mm GShG-7.62 machine gun",
+   "rounds": {
+    "ap_ball": {
+     "Cx": 0.35262,
+     "armorpower": [
+      [
+       10.0,
+       13.0
+      ],
+      [
+       100.0,
+       12.0
+      ],
+      [
+       300.0,
+       9.0
+      ],
+      [
+       600.0,
+       6.0
+      ],
+      [
+       1000.0,
+       3.0
+      ],
+      [
+       1500.0,
+       1.5
+      ],
+      [
+       1600.0,
+       0.0
+      ]
+     ],
+     "bulletType": "ap_ball",
+     "caliber": 0.00762,
+     "mass": 0.00995,
+     "speed": 817.5,
+     "tracer": null
+    },
+    "ap_i_t_ball": {
+     "Cx": 0.35262,
+     "armorpower": [
+      [
+       10.0,
+       9.0
+      ],
+      [
+       100.0,
+       8.0
+      ],
+      [
+       500.0,
+       6.0
+      ],
+      [
+       1000.0,
+       3.0
+      ],
+      [
+       1450.0,
+       1.0
+      ],
+      [
+       1500.0,
+       0.0
+      ]
+     ],
+     "bulletType": "ap_i_t_ball",
+     "caliber": 0.00762,
+     "mass": 0.0091,
+     "speed": 865.0,
+     "tracer": "7mmWhite"
+    }
+   }
+  },
+  "gunm134_minigun": {
+   "belts": {
+    "default": [
+     "ap_ball",
+     "ap_ball",
+     "ap_ball",
+     "ap_ball",
+     "ap_ball",
+     "ap_ball",
+     "t_ball"
+    ]
+   },
+   "blk": "gamedata/weapons/gunm134_minigun.blkx",
+   "name": "7.62 mm M134 Minigun machine gun",
+   "rounds": {
+    "ap_ball": {
+     "Cx": 0.4,
+     "armorpower": [
+      [
+       10.0,
+       13.0
+      ],
+      [
+       100.0,
+       12.0
+      ],
+      [
+       300.0,
+       9.0
+      ],
+      [
+       600.0,
+       6.0
+      ],
+      [
+       1000.0,
+       3.0
+      ],
+      [
+       1500.0,
+       1.5
+      ],
+      [
+       1600.0,
+       0.0
+      ]
+     ],
+     "bulletType": "ap_ball",
+     "caliber": 0.00762,
+     "mass": 0.01073718,
+     "speed": 853.0,
+     "tracer": null
+    },
+    "t_ball": {
+     "Cx": 0.4,
+     "armorpower": [
+      [
+       5.0,
+       5.0
+      ],
+      [
+       100.0,
+       4.0
+      ],
+      [
+       500.0,
+       2.0
+      ],
+      [
+       1000.0,
+       1.0
+      ],
+      [
+       1450.0,
+       0.1
+      ],
+      [
+       1500.0,
+       0.0
+      ]
+     ],
+     "bulletType": "t_ball",
+     "caliber": 0.00762,
+     "mass": 0.009849433,
+     "speed": 835.0,
+     "tracer": "7mmRed"
+    }
+   }
+  },
+  "gunyak_b": {
+   "belts": {
+    "YaK-B_air_targets": [
+     "he_i_ball",
+     "ap_i_t_ball",
+     "he_i_ball",
+     "he_i_ball",
+     "he_i_ball",
+     "he_i_ball"
+    ],
+    "YaK-B_ground_targets": [
+     "he_i_ball",
+     "ap_ball",
+     "ap_ball",
+     "ap_ball",
+     "ap_i_t_ball",
+     "ap_ball"
+    ],
+    "YaK-B_universal": [
+     "ap_i_ball",
+     "ap_i_ball",
+     "he_i_ball",
+     "he_i_ball",
+     "he_i_ball",
+     "ap_i_t_ball"
+    ],
+    "default": [
+     "ap_i_ball",
+     "ap_i_t_ball",
+     "ap_i_ball",
+     "ap_i_ball",
+     "ap_i_ball",
+     "ap_i_ball"
+    ]
+   },
+   "blk": "gamedata/weapons/gunyak_b.blkx",
+   "name": "12.7 mm YaK-B machine gun",
+   "rounds": {
+    "ap_ball": {
+     "Cx": 0.34135,
+     "bulletType": "ap_ball",
+     "caliber": 0.0127,
+     "demarre": {
+      "demarreCaliberPow": 1.07,
+      "demarreMassPow": 0.71,
+      "demarrePenetrationK": 0.9,
+      "demarreSpeedPow": 1.43
+     },
+     "mass": 0.0558,
+     "speed": 818.0,
+     "tracer": null
+    },
+    "ap_i_ball": {
+     "Cx": 0.34135,
+     "bulletType": "ap_i_ball",
+     "caliber": 0.0127,
+     "demarre": {
+      "demarreCaliberPow": 1.07,
+      "demarreMassPow": 0.71,
+      "demarrePenetrationK": 0.9,
+      "demarreSpeedPow": 1.43
+     },
+     "mass": 0.0495,
+     "speed": 820.0,
+     "tracer": null
+    },
+    "ap_i_t_ball": {
+     "Cx": 0.34135,
+     "bulletType": "ap_i_t_ball",
+     "caliber": 0.0127,
+     "demarre": {
+      "demarreCaliberPow": 1.07,
+      "demarreMassPow": 0.71,
+      "demarrePenetrationK": 0.9,
+      "demarreSpeedPow": 1.43
+     },
+     "mass": 0.0456,
+     "speed": 865.0,
+     "tracer": "12mmRed"
+    },
+    "he_i_ball": {
+     "Cx": 0.409,
+     "armorpower": [
+      [
+       5.0,
+       3.5
+      ],
+      [
+       100.0,
+       3.3
+      ],
+      [
+       500.0,
+       3.2
+      ],
+      [
+       1000.0,
+       3.0
+      ],
+      [
+       1450.0,
+       0.1
+      ],
+      [
+       1500.0,
+       0.0
+      ]
+     ],
+     "bulletType": "he_i_ball",
+     "caliber": 0.0127,
+     "explosiveMass": 0.0019,
+     "explosiveType": "petn",
+     "mass": 0.04425,
+     "speed": 860.0,
+     "tntKg": 0.00323,
+     "tracer": null
+    }
+   }
+  },
+  "gunyak_b_guv": {
+   "belts": {
+    "default": [
+     "ap_ball",
+     "ap_ball",
+     "ap_ball",
+     "ap_ball",
+     "ap_i_t_ball",
+     "ap_ball",
+     "ap_ball",
+     "ap_ball"
+    ]
+   },
+   "blk": "gamedata/weapons/gunyak_b_guv.blkx",
+   "name": "12.7 mm YaK-B machine gun",
+   "rounds": {
+    "ap_ball": {
+     "Cx": 0.34135,
+     "bulletType": "ap_ball",
+     "caliber": 0.0127,
+     "demarre": {
+      "demarreCaliberPow": 1.07,
+      "demarreMassPow": 0.71,
+      "demarrePenetrationK": 0.9,
+      "demarreSpeedPow": 1.43
+     },
+     "mass": 0.0495,
+     "speed": 820.0,
+     "tracer": null
+    },
+    "ap_i_t_ball": {
+     "Cx": 0.34135,
+     "bulletType": "ap_i_t_ball",
+     "caliber": 0.0127,
+     "demarre": {
+      "demarreCaliberPow": 1.07,
+      "demarreMassPow": 0.71,
+      "demarrePenetrationK": 0.9,
+      "demarreSpeedPow": 1.43
+     },
+     "mass": 0.0456,
+     "speed": 865.0,
+     "tracer": "12mmRed"
+    }
+   }
+  }
+ },
+ "round_names": {
+  "ap_ball": "AP",
+  "ap_ball_M2": "AP",
+  "ap_i": "AP-I",
+  "ap_i_ball": "AP-I",
+  "ap_i_ball_M8": "AP-I",
+  "ap_i_t": "API-T",
+  "ap_i_t_ball": "API-T",
+  "ap_i_t_ball_M20": "API-T",
+  "ap_t": "AP-T",
+  "apds_autocannon": "APDS",
+  "he_dp": "HEDP",
+  "he_frag_i": "HEF-I",
+  "he_frag_i_t": "HEFI-T",
+  "he_frag_t": "HEF-T",
+  "he_i_ball": "IAI",
+  "he_i_t": "HEI-T",
+  "i_ball_M1": "I",
+  "i_ball_M23": "I",
+  "slap": "SLAP",
+  "slap_t": "SLAP-T",
+  "t_ball": "T"
+ },
+ "source": "https://raw.githubusercontent.com/gszabi99/War-Thunder-Datamine/master/aces.vromfs.bin_u/",
+ "units": {
+  "ah_1f": {
+   "guns": {
+    "cannonm197": [
+     "default",
+     "t_160_universal",
+     "t_160_air_targets",
+     "t_160_armor_targets",
+     "t_160_stealth"
+    ]
+   },
+   "wt_unit": "ah_1f"
+  },
+  "ah_1g_cobra": {
+   "guns": {
+    "cannonm195": [
+     "default",
+     "M195_air_targets",
+     "M195_armor_targets"
+    ],
+    "gunm134_minigun": [
+     "default"
+    ]
+   },
+   "wt_unit": "ah_1g"
+  },
+  "ah_64d": {
+   "guns": {
+    "cannonm230e1": [
+     "default"
+    ]
+   },
+   "wt_unit": "ah_64d"
+  },
+  "ah_6j": {
+   "guns": {
+    "gungau_19": [
+     "default",
+     "GAU_19_ground_targets"
+    ],
+    "gunm134_minigun": [
+     "default"
+    ]
+   },
+   "wt_unit": "ah_6m"
+  },
+  "eurocopter_tiger": {
+   "guns": {
+    "gunfn_m3p": [
+     "default",
+     "50cal_universal",
+     "50cal_ground_targets",
+     "50cal_tracers",
+     "50cal_stealth"
+    ],
+    "gunfn_m3p_cwp": [
+     "default",
+     "50cal_universal",
+     "50cal_ground_targets",
+     "50cal_tracers",
+     "50cal_stealth"
+    ]
+   },
+   "wt_unit": "tiger_uht"
+  },
+  "ka50": {
+   "guns": {
+    "cannon2a42": [
+     "default",
+     "2A42_ground_targets",
+     "2A42_armor_targets",
+     "2A42_air_targets"
+    ],
+    "cannongsh_23l_upk_23_250": [
+     "default",
+     "ns23_armor_targets",
+     "ns23_air_targets",
+     "ns23_stealth"
+    ]
+   },
+   "wt_unit": "ka_50"
+  },
+  "mi24v": {
+   "guns": {
+    "cannongsh_23l": [
+     "default",
+     "ns23_armor_targets",
+     "ns23_air_targets",
+     "ns23_stealth"
+    ],
+    "gungshg_guv": [
+     "default"
+    ],
+    "gunyak_b": [
+     "default",
+     "YaK-B_universal",
+     "YaK-B_ground_targets",
+     "YaK-B_air_targets"
+    ],
+    "gunyak_b_guv": [
+     "default"
+    ]
+   },
+   "wt_unit": "mi_24v"
+  },
+  "mi28n": {
+   "guns": {
+    "cannon2a42": [
+     "default",
+     "2A42_ground_targets",
+     "2A42_armor_targets",
+     "2A42_air_targets"
+    ],
+    "cannongsh_23l_upk_23_250": [
+     "default",
+     "ns23_armor_targets",
+     "ns23_air_targets",
+     "ns23_stealth"
+    ]
+   },
+   "wt_unit": "mi_28n"
+  },
+  "mi_24a": {
+   "guns": {
+    "cannongsh_23l": [
+     "default",
+     "ns23_armor_targets",
+     "ns23_air_targets",
+     "ns23_stealth"
+    ],
+    "guna_12_7": [
+     "default",
+     "YaK-B_universal",
+     "YaK-B_ground_targets",
+     "YaK-B_air_targets"
+    ]
+   },
+   "wt_unit": "mi_24a"
+  },
+  "mi_24d": {
+   "guns": {
+    "cannongsh_23l": [
+     "default",
+     "ns23_armor_targets",
+     "ns23_air_targets",
+     "ns23_stealth"
+    ],
+    "gunyak_b": [
+     "default",
+     "YaK-B_universal",
+     "YaK-B_ground_targets",
+     "YaK-B_air_targets"
+    ]
+   },
+   "wt_unit": "mi_24d"
+  }
+ }
+}
