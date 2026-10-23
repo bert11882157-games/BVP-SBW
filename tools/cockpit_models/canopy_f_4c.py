@@ -91,8 +91,12 @@ def wq_in(z):                    # the posts' outer edge
     return POST_OUT
 
 
-def wq_out(z):                   # the fairing's edge (x, y)
-    return 0.292 - 0.08 * (z - 6.20), 2.80 - 0.16 * (z - 6.20)
+QP_SLOPE = 2.70                  # the quarter panes are flat: the plane drops 2.7 per unit x out from the post's outer edge
+
+
+def wq_out(z):                   # the pane's outer edge: at the fairing's x, on the quarter pane's plane (flat, so y follows)
+    x = 0.292 - 0.08 * (z - 6.20)
+    return x, ws_y(z) - QP_SLOPE * (x - POST_OUT)
 
 SILL_Y = 2.937                   # the hull's sill: the outline the checks read starts here
 
@@ -224,7 +228,7 @@ def windscreen(nz=10, ns=6):
             xo, yo = wq_out(z)
             x = wq_in(z) + (xo - wq_in(z)) * f
             y0 = ws_y(z)
-            return np.array([side * x, y0 + (yo - y0) * f, z])
+            return np.array([side * x, ws_y(z) - QP_SLOPE * (x - POST_OUT), z])
         starts = []
         for j in range(ns + 1):
             z = WQ_Z[0]
@@ -315,10 +319,26 @@ def post_bars(b, nz=8):
         b.box_sweep(top_in, top_out, bot_out, bot_in, [np.array([side * 0.135, ws_y(z) - 0.008, z]) for z in zs])
 
 
+def sill_bars(b, nz=8, w=0.04):
+    """the quarter panes' outer members: a strip along each pane's outer edge, its inner edge is the glass's edge and it runs
+    on out along the pane's plane into the fairing (the glass is flat, so the fairing meets it here and not the other way)"""
+    zs = np.linspace(WQ_Z[0] + 0.03, WQ_Z[1], nz + 1)
+    for side in (1, -1):
+        def pt(z, dx, dy):
+            x, y = wq_out(z)
+            return np.array([side * (x + dx), y - QP_SLOPE * dx + dy, z])
+        top_in = [pt(z, 0.0, 0.012) for z in zs]
+        top_out = [pt(z, w, 0.012) for z in zs]
+        bot_out = [pt(z, w, -0.028) for z in zs]
+        bot_in = [pt(z, 0.0, -0.028) for z in zs]
+        b.box_sweep(top_in, top_out, bot_out, bot_in, [pt(z, w / 2, -0.008) for z in zs])
+
+
 def frame_bars():
     b = Bars(UV_FRAME)
     arch_bars(b)
     post_bars(b)
+    sill_bars(b)
     return b
 
 
