@@ -25,23 +25,25 @@ VID = 'mig_23mld'
 SOURCE_BONE = 'wreck_fuselage_1__hull'
 
 SPLIT = 0.25                     # the arch: the hood's front edge, the windscreen's top
-TOP = 0.30                       # the hood's top at the arch
-BASE = 1.45                      # the windscreen's foot on the flat nose deck (its top there at -0.27): the reference's
-                                 # windscreen runs long and low, about 25 deg, nearly as long as the hood
+TOP = 0.22                       # the hood's top at the arch (2026-10-23 trace: the windscreen rises about 0.4 m at
+                                 # life size from the deck to the arch; the model's arch stood 0.30 over the eye, too
+                                 # tall for the 67 deg rake; lowered, the hood's front blended down to it)
+BASE = 1.40                      # the windscreen's foot on the flat nose deck (its top there at -0.27): long and low,
+                                 # its top line 67 deg from vertical as the trace has it
 
 # the hood's sections, metres from the eye: z, then the right half from the sill up over the top
 HOOD = [
     (-0.60, [(0.42, -0.25), (0.40, -0.05), (0.36, 0.10), (0.28, 0.20), (0.15, 0.255), (0.0, 0.27)]),
     (-0.20, [(0.44, -0.25), (0.43, -0.08), (0.40, 0.08), (0.33, 0.19), (0.18, 0.26), (0.0, 0.285)]),
-    (0.00, [(0.45, -0.25), (0.44, -0.10), (0.40, 0.06), (0.33, 0.18), (0.20, 0.26), (0.0, 0.30)]),
-    (0.20, [(0.44, -0.25), (0.42, -0.10), (0.38, 0.05), (0.30, 0.18), (0.17, 0.265), (0.0, 0.30)]),
+    (0.00, [(0.45, -0.25), (0.44, -0.10), (0.40, 0.05), (0.33, 0.165), (0.20, 0.24), (0.0, 0.275)]),
+    (0.20, [(0.44, -0.25), (0.42, -0.11), (0.38, 0.02), (0.30, 0.13), (0.17, 0.195), (0.0, 0.22)]),
 ]
 # the windscreen's sills (on the model's cockpit sills) and its foot's flat section
 SILLS = [(0.40, 0.42, -0.25), (0.60, 0.40, -0.25), (0.80, 0.37, -0.265), (1.00, 0.34, -0.28), (1.20, 0.30, -0.28),
-         (1.45, 0.25, -0.28)]
-FOOT = (1.45, [(0.25, -0.28), (0.22, -0.275), (0.15, -0.272), (0.0, -0.27)])
+         (1.40, 0.26, -0.28)]
+FOOT = (1.40, [(0.26, -0.28), (0.23, -0.275), (0.15, -0.272), (0.0, -0.27)])
 # the hood's cross-section shape (its 0.20 station), as fractions of the sill's x and of the height over the sill
-PROFILE = [(x / 0.44, (y + 0.25) / 0.55) for x, y in HOOD[-1][1]]
+PROFILE = [(x / 0.44, (y + 0.25) / (TOP + 0.25)) for x, y in HOOD[-1][1]]
 
 
 def windscreen(z):
@@ -52,13 +54,25 @@ def windscreen(z):
     return [(u * sx, sy + v * (top - sy)) for u, v in PROFILE]
 
 
-SECTIONS = HOOD + [(z, windscreen(z)) for z in (0.30, 0.45, 0.60, 0.75, 0.90, 1.05, 1.20, 1.35)] + [FOOT]
+SECTIONS = HOOD + [(z, windscreen(z)) for z in (0.30, 0.45, 0.60, 0.75, 0.90, 1.05, 1.20, 1.30)] + [FOOT]
 
-PANE_TOP = SPLIT + 0.045         # the front pane's frame's apex, just ahead of the arch
-PANE_FOOT = BASE - 0.025         # its pointed foot, on the base frame
-PANE_W = 0.18                    # its half width (about half the windscreen's width at the arch, the reference's head-on view)
-RING = 0.04                      # its frame, even all round
-PANE = (PANE_TOP, BASE, PANE_W, PANE_W, RING, PANE_FOOT, 2.2, 1.5)    # (n_bot 1.5: the almond's point)
+# the armoured front pane's glass, exactly (2026-10-23 trace from 71 windscreen photos and bert's War Thunder shots):
+# flat, raked 67 degrees, an ellipse 315 mm wide and 836 mm up the slope with its bottom 76 mm cut off by a 148 mm
+# straight foot (head-on the rake shortens it to the round look); mm in the pane's plane, origin the foot's middle
+OUTLINE = [(0, 0), (74, 0), (81, 3), (84, 10), (98, 19), (114, 53), (128, 114), (144, 190), (153, 266), (157, 342),
+           (155, 410), (151, 471), (142, 532), (130, 585), (117, 631), (102, 669), (83, 699), (68, 722), (49, 741),
+           (34, 752), (0, 760), (-34, 752), (-49, 741), (-68, 722), (-83, 699), (-102, 669), (-117, 631), (-130, 585),
+           (-142, 532), (-151, 471), (-155, 410), (-157, 342), (-153, 266), (-144, 190), (-128, 114), (-114, 53),
+           (-98, 19), (-84, 10), (-81, 3), (-74, 0)]
+SCALE = 1.12                     # (between this model's windscreen length, 1.25 times life, and its narrower width:
+                                 # the ring about half the canopy's width head-on and from above, as bert's shots)
+RING = 0.05 * SCALE              # its ring, 50 mm at life size
+PANE_TOP = SPLIT + 0.04          # the ring's apex, just ahead of the arch
+_SLOPE = math.atan2(TOP - FOOT[1][-1][1], BASE - SPLIT)
+PANE_FOOT = PANE_TOP + C.Oval(PANE_TOP, BASE, 0.1, RING, _SLOPE, outline=OUTLINE, scale=SCALE).foot_d() * math.cos(_SLOPE)
+PANE_W = 0.157 * SCALE + RING    # (the ring's outer half width; used where the old code asks for one)
+PANE = (PANE_TOP, BASE, PANE_W, PANE_W, RING, PANE_FOOT, 2.2, 1.5)
+WEDGE_X = (0.157 * SCALE + RING, 0.237 * SCALE)   # the solid wedge under the ring: its edge at the ring, at the sill
 
 HOOD_REAR = -0.58                # the rear bow
 BOW_W = 0.07                     # the arch and the rear bow, as thick as the reference's
@@ -102,7 +116,7 @@ def periscope_fin(m, sh, E, out, dark):
 def build(atlas, E, skin):
     m = H.Mesh(atlas)
     out, inner, dark = atlas.swatch(skin), atlas.swatch((40, 42, 44)), atlas.swatch((26, 27, 28))
-    sh = C.Shape(C.flat_pane(SECTIONS, *PANE))     # the windscreen made flat round its front pane
+    sh = C.Shape(C.flat_pane(SECTIONS, *PANE, outline=OUTLINE, scale=SCALE))   # the windscreen made flat round its front pane
     # (the windscreen's glass from under the arch, so none of the windscreen is left open between them)
     glass = C.glass_triangles(sh, E, -0.60, SPLIT, nz=14) + C.glass_triangles(sh, E, SPLIT, BASE, nz=18)
     # the hood: the rear bow, the sill rails and the band above them, the bar along the top; each pane's corners
@@ -118,7 +132,11 @@ def build(atlas, E, skin):
     # the arch: the hood's front bow and the windscreen's top in one thick bar
     C.bow(m, sh, E, SPLIT, BOW_W, 0.024, out, inner)
     # the windscreen: the almond front pane in its ring, the base frame on the nose, the slim side rails
-    C.oval_pane(m, sh, E, PANE_TOP, PANE_FOOT, PANE_W, RING, 0.022, out, inner, n=PANE[6], n_bot=PANE[7])
+    C.oval_pane(m, sh, E, PANE_TOP, PANE_FOOT, PANE_W, RING, 0.022, out, inner, n=PANE[6], n_bot=PANE[7],
+                outline=OUTLINE, scale=SCALE)
+    # the solid wedge under the ring, flaring out to the sill (the trace)
+    C.cap(m, sh, E, PANE_FOOT - 0.01, BASE - 0.03, lambda z: sh.s_at_x(z, float(np.interp(z, [PANE_FOOT, BASE], WEDGE_X))),
+          out, inner, steps=10)
     C.bow(m, sh, E, BASE - 0.015, 0.03, 0.02, out, inner)
     C.member(m, sh, E, 0.0, SPLIT + BOW_W / 2, BASE, 0.03, 0.03, out, inner)
     return m, glass
