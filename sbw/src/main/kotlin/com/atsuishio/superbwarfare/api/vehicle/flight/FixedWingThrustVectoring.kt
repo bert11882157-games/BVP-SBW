@@ -50,17 +50,46 @@ data class FixedWingThrustVectoring(
         }
 
         /**
+         * Swings a vehicle-local (y up, z forward) pair about the lateral hinge axis by [nozzleDegrees], nose-up
+         * positive: an aft-pointing vector (0, -1) turns upward, a point behind the hinge rises. Writes [out] =
+         * [y, z]. The afterburner renderer uses it so the flame, heat haze and TaP emitters follow the nozzle.
+         */
+        @JvmStatic
+        fun swingPitch(y: Double, z: Double, nozzleDegrees: Double, out: DoubleArray) {
+            val radians = nozzleDegrees * PI / 180.0
+            val c = cos(radians)
+            val s = sin(radians)
+            out[0] = y * c - z * s
+            out[1] = y * s + z * c
+        }
+
+        /**
          * Pitch-up authority left near a very high angle of attack, so vectoring cannot wind the nose into a
          * flat spin: full to [FULL_AUTHORITY_ALPHA], none from [NO_AUTHORITY_ALPHA]. Pitch-down is never limited.
          */
         const val FULL_AUTHORITY_ALPHA = 45.0
         const val NO_AUTHORITY_ALPHA = 70.0
+        const val SURFACES_WORKING_AIRFLOW = 0.5
 
         @JvmStatic
-        fun alphaAuthority(alphaDegrees: Double, nozzleDegrees: Double): Double {
+        fun alphaAuthority(alphaDegrees: Double, nozzleDegrees: Double): Double =
+            alphaAuthority(alphaDegrees, nozzleDegrees, 0.0, FULL_AUTHORITY_ALPHA)
+
+        /**
+         * As above, with the surfaces' own airflow authority [airflow] (0..1) scheduling the limit, as a flight control
+         * system blends vectoring with the surfaces: with no airflow the push runs to [FULL_AUTHORITY_ALPHA] / [NO_AUTHORITY_ALPHA]
+         * (the post-stall envelope), but where the surfaces work it fades out at the aircraft's stall angle
+         * [stallAlphaDegrees] (none 12 degrees past it) so a full pull at speed cannot drive the nose deep into the stall.
+         */
+        @JvmStatic
+        fun alphaAuthority(alphaDegrees: Double, nozzleDegrees: Double, airflow: Double, stallAlphaDegrees: Double): Double {
             if (!(alphaDegrees * nozzleDegrees > 0.0)) return 1.0
-            val t = ((abs(alphaDegrees) - FULL_AUTHORITY_ALPHA) / (NO_AUTHORITY_ALPHA - FULL_AUTHORITY_ALPHA))
-                .coerceIn(0.0, 1.0)
+            // the surfaces count as working from half authority up
+            val flow = if (airflow.isFinite()) (airflow / SURFACES_WORKING_AIRFLOW).coerceIn(0.0, 1.0) else 0.0
+            val blend = flow * flow * (3.0 - 2.0 * flow)
+            val full = FULL_AUTHORITY_ALPHA + (stallAlphaDegrees - FULL_AUTHORITY_ALPHA) * blend
+            val none = NO_AUTHORITY_ALPHA + (stallAlphaDegrees + 12.0 - NO_AUTHORITY_ALPHA) * blend
+            val t = ((abs(alphaDegrees) - full) / (none - full)).coerceIn(0.0, 1.0)
             return 1.0 - t * t * (3.0 - 2.0 * t)
         }
     }

@@ -532,7 +532,13 @@
           0,
           -1
         ],
-        "NozzleRadiusBlocks": 0.305
+        "NozzleRadiusBlocks": 0.305,
+        "VectorPitchDegrees": 20,
+        "VectorPivot": [
+          0.655,
+          2.033,
+          -6.5386
+        ]
       },
       {
         "Id": "afterburner_1",
@@ -546,7 +552,13 @@
           0,
           -1
         ],
-        "NozzleRadiusBlocks": 0.305
+        "NozzleRadiusBlocks": 0.305,
+        "VectorPitchDegrees": 20,
+        "VectorPivot": [
+          -0.655,
+          2.033,
+          -6.5386
+        ]
       }
     ]
   },

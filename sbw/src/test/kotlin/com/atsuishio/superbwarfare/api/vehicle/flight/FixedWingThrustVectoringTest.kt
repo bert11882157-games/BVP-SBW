@@ -124,6 +124,25 @@ class FixedWingThrustVectoringTest {
     }
 
     @Test
+    fun theAlphaLimitFollowsTheSurfacesAirflowAndPitchDownAndTheNozzleSwingAreUnaffected() {
+        // no airflow: the post-stall envelope (full to 45, none from 70); working surfaces: fading out at the stall angle (24 here) to 12 past it
+        assertEquals(1.0, FixedWingThrustVectoring.alphaAuthority(40.0, 20.0, 0.0, 24.0), 0.0)
+        assertEquals(0.0, FixedWingThrustVectoring.alphaAuthority(36.0, 20.0, 0.5, 24.0), 1.0E-12)
+        assertEquals(1.0, FixedWingThrustVectoring.alphaAuthority(24.0, 20.0, 1.0, 24.0), 0.0)
+        assertEquals(1.0, FixedWingThrustVectoring.alphaAuthority(80.0, -20.0, 1.0, 24.0), 0.0)
+        assertTrue(FixedWingThrustVectoring.alphaAuthority(30.0, 20.0, 0.25, 24.0) > FixedWingThrustVectoring.alphaAuthority(30.0, 20.0, 0.5, 24.0))
+        // the two-argument form is the no-airflow case
+        assertEquals(FixedWingThrustVectoring.alphaAuthority(60.0, 20.0), FixedWingThrustVectoring.alphaAuthority(60.0, 20.0, 0.0, 24.0), 0.0)
+        // nozzle swing: exhaust-up for nose-up, a point behind the hinge rises, a vector pointing aft turns up
+        val out = DoubleArray(2)
+        FixedWingThrustVectoring.swingPitch(0.0, -1.0, 20.0, out)
+        assertEquals(sin(20.0 * PI / 180), out[0], 1.0E-12)
+        assertEquals(-Math.cos(20.0 * PI / 180), out[1], 1.0E-12)
+        FixedWingThrustVectoring.swingPitch(0.0, -0.72, 0.0, out)
+        assertEquals(-0.72, out[1], 0.0)
+    }
+
+    @Test
     fun rejectsOutOfRangeData() {
         assertThrows(IllegalArgumentException::class.java) { FixedWingThrustVectoring(0.0, 7.5, 2.8) }
         assertThrows(IllegalArgumentException::class.java) { FixedWingThrustVectoring(60.0, 7.5, 2.8) }

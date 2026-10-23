@@ -193,6 +193,13 @@ public class DefaultVehicleResource implements IDBasedData<DefaultVehicleResourc
             @SerializedName("Direction") public double[] direction;
             /** Exit radius of the nozzle in blocks (measured from the model); drives the afterburner plume size. */
             @SerializedName("NozzleRadiusBlocks") public Double nozzleRadiusBlocks;
+            /**
+             * Opt-in pitch thrust vectoring: the largest nozzle swing in degrees (the flight reference's
+             * thrustVectoring.pitchDeg). The flame, haze and TaP emitters of this outlet turn by accepted elevator x this.
+             */
+            @SerializedName("VectorPitchDegrees") public Double vectorPitchDegrees;
+            /** Hinge of the vectoring nozzle in vehicle-local blocks (the rig bone's pivot); absent turns about the outlet. */
+            @SerializedName("VectorPivot") public double[] vectorPivot;
         }
 
         public static final class Stream {

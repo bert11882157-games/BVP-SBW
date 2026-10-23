@@ -517,7 +517,8 @@ class FixedWingFlightModel(
         val vectoringActive = vectoring != null && !grounded
         val vectorTarget = if (vectoring != null && vectoringActive) {
             vectoring.pitchAccelerationRadPerS2(thrustAccelerationMps2 / handling.simulationLengthScale, nozzleDegrees) *
-                FixedWingThrustVectoring.alphaAuthority(previousAlpha, nozzleDegrees) /
+                FixedWingThrustVectoring.alphaAuthority(
+                    previousAlpha, nozzleDegrees, pitchAirflow, handling.stallAngleDegrees) /
                 RADIANS / handling.angularResponsePerSecond
         } else 0.0
         thrustVectorPitchRateDegreesPerSecond += (vectorTarget - thrustVectorPitchRateDegreesPerSecond) * response(handling.angularResponsePerSecond)
