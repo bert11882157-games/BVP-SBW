@@ -246,6 +246,9 @@ public class ModEntityRenderers {
         registerVehicle(event, ModEntities.SU_15TM, "su_15tm", standardVehicle(
                 "custom_geo/su_15tm.geo.json", "textures/entity/su_15tm.png",
                 "su_15tm"));
+        registerVehicle(event, ModEntities.VAUTOUR_IIN, "vautour_iin", standardVehicle(
+                "custom_geo/vautour_iin.geo.json", "textures/entity/vautour_iin.png",
+                "vautour_iin"));
         registerVehicle(event, ModEntities.YAK_38M, "yak_38m", standardVehicle(
                 "custom_geo/yak_38m.geo.json", "textures/entity/yak_38m.png",
                 "yak_38m"));

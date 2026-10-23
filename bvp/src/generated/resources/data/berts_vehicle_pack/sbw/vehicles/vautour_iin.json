@@ -1,0 +1,3276 @@
+{
+  "ID": "berts_vehicle_pack:vautour_iin",
+  "Gravity": 0.024516625,
+  "Mass": 11.52,
+  "UpStep": 0,
+  "InertiaRotateRate": 0,
+  "RotateOffsetHeight": 1.7,
+  "MaxHealth": 707,
+  "MaxEnergy": 10000000,
+  "AllowFreeCam": true,
+  "OBB": [
+    {
+      "Size": [
+        0.18106,
+        1.0863,
+        0.15088
+      ],
+      "Position": [
+        0.0,
+        1.8105,
+        -7.07604
+      ]
+    },
+    {
+      "Size": [
+        0.54315,
+        1.67471,
+        0.9656
+      ],
+      "Position": [
+        0.0,
+        1.65208,
+        -6.50271
+      ]
+    },
+    {
+      "Size": [
+        0.81473,
+        1.59928,
+        0.93543
+      ],
+      "Position": [
+        0.0,
+        1.6898,
+        -5.49185
+      ]
+    },
+    {
+      "Size": [
+        0.98733,
+        1.53893,
+        0.51298
+      ],
+      "Position": [
+        0.0,
+        1.71997,
+        -4.48099
+      ]
+    },
+    {
+      "Size": [
+        1.26735,
+        1.65963,
+        0.40736
+      ],
+      "Position": [
+        0.0,
+        1.65963,
+        -3.50784
+      ]
+    },
+    {
+      "Size": [
+        1.4484,
+        1.71998,
+        0.40736
+      ],
+      "Position": [
+        0.0,
+        1.62945,
+        -2.69312
+      ]
+    },
+    {
+      "Size": [
+        1.48381,
+        1.78033,
+        0.0
+      ],
+      "Position": [
+        0.0,
+        1.61436,
+        -1.59928
+      ]
+    },
+    {
+      "Size": [
+        1.51921,
+        1.84068,
+        0.0
+      ],
+      "Position": [
+        0.0,
+        1.59928,
+        -0.70911
+      ]
+    },
+    {
+      "Size": [
+        1.5691,
+        1.91611,
+        0.66385
+      ],
+      "Position": [
+        0.0,
+        1.59173,
+        0.51298
+      ]
+    },
+    {
+      "Size": [
+        1.5691,
+        1.9312,
+        0.0
+      ],
+      "Position": [
+        0.0,
+        1.59928,
+        1.50875
+      ]
+    },
+    {
+      "Size": [
+        1.38805,
+        1.94629,
+        0.81473
+      ],
+      "Position": [
+        0.0,
+        1.60682,
+        2.57996
+      ]
+    },
+    {
+      "Size": [
+        1.41823,
+        1.99155,
+        0.99578
+      ],
+      "Position": [
+        0.0,
+        1.62945,
+        3.5003
+      ]
+    },
+    {
+      "Size": [
+        1.4484,
+        1.88594,
+        0.91447
+      ],
+      "Position": [
+        0.0,
+        1.59173,
+        4.47638
+      ]
+    },
+    {
+      "Size": [
+        1.4484,
+        1.4484,
+        0.76946
+      ],
+      "Position": [
+        0.0,
+        1.4484,
+        5.45413
+      ]
+    },
+    {
+      "Size": [
+        1.14343,
+        1.16174,
+        0.95051
+      ],
+      "Position": [
+        0.0,
+        1.41068,
+        6.49517
+      ]
+    },
+    {
+      "Size": [
+        0.66385,
+        0.54315,
+        0.27158
+      ],
+      "Position": [
+        0.0,
+        1.35788,
+        7.19674
+      ]
+    },
+    {
+      "Size": [
+        0.27158,
+        1.58419,
+        0.78455
+      ],
+      "Position": [
+        0.0,
+        3.82468,
+        -7.39288
+      ]
+    },
+    {
+      "Size": [
+        0.27158,
+        1.55401,
+        0.63368
+      ],
+      "Position": [
+        0.0,
+        3.80959,
+        -6.65359
+      ]
+    },
+    {
+      "Size": [
+        0.21123,
+        0.67894,
+        0.69905
+      ],
+      "Position": [
+        0.0,
+        3.37206,
+        -5.58992
+      ]
+    },
+    {
+      "Size": [
+        0.09052,
+        0.0,
+        0.0
+      ],
+      "Position": [
+        0.0,
+        3.03259,
+        -4.5866
+      ]
+    },
+    {
+      "Size": [
+        0.68799,
+        0.40736,
+        4.00475
+      ],
+      "Position": [
+        1.02293,
+        1.60682,
+        0.8039
+      ]
+    },
+    {
+      "Size": [
+        0.68799,
+        0.85704,
+        3.79811
+      ],
+      "Position": [
+        1.71092,
+        1.35443,
+        0.4113
+      ]
+    },
+    {
+      "Size": [
+        0.68799,
+        1.21225,
+        6.06518
+      ],
+      "Position": [
+        2.39891,
+        1.14927,
+        -0.04526
+      ]
+    },
+    {
+      "Size": [
+        0.68799,
+        1.10893,
+        5.7936
+      ],
+      "Position": [
+        3.0869,
+        1.17338,
+        0.06789
+      ]
+    },
+    {
+      "Size": [
+        0.68799,
+        0.32865,
+        3.19396
+      ],
+      "Position": [
+        3.77489,
+        1.53204,
+        -0.78225
+      ]
+    },
+    {
+      "Size": [
+        0.68799,
+        0.57464,
+        2.91648
+      ],
+      "Position": [
+        4.46288,
+        1.37362,
+        -1.18666
+      ]
+    },
+    {
+      "Size": [
+        0.68799,
+        0.30306,
+        2.72953
+      ],
+      "Position": [
+        5.15087,
+        1.47989,
+        -1.54581
+      ]
+    },
+    {
+      "Size": [
+        0.68799,
+        0.28929,
+        2.59177
+      ],
+      "Position": [
+        5.83886,
+        1.45726,
+        -1.92956
+      ]
+    },
+    {
+      "Size": [
+        0.68799,
+        0.2519,
+        2.38514
+      ],
+      "Position": [
+        6.52685,
+        1.43856,
+        -2.31429
+      ]
+    },
+    {
+      "Size": [
+        0.68799,
+        0.2086,
+        2.20409
+      ],
+      "Position": [
+        7.21484,
+        1.41691,
+        -2.70001
+      ]
+    },
+    {
+      "Size": [
+        1.4484,
+        0.13579,
+        2.21786
+      ],
+      "Position": [
+        0.76946,
+        3.00996,
+        -6.58569
+      ]
+    },
+    {
+      "Size": [
+        1.4484,
+        0.1,
+        1.6511
+      ],
+      "Position": [
+        2.21786,
+        3.00996,
+        -7.41223
+      ]
+    },
+    {
+      "Size": [
+        0.68799,
+        0.40736,
+        4.00475
+      ],
+      "Position": [
+        -1.02293,
+        1.60682,
+        0.8039
+      ]
+    },
+    {
+      "Size": [
+        0.68799,
+        0.85704,
+        3.79811
+      ],
+      "Position": [
+        -1.71092,
+        1.35443,
+        0.4113
+      ]
+    },
+    {
+      "Size": [
+        0.68799,
+        1.21225,
+        6.06518
+      ],
+      "Position": [
+        -2.39891,
+        1.14927,
+        -0.04526
+      ]
+    },
+    {
+      "Size": [
+        0.68799,
+        1.10893,
+        5.7936
+      ],
+      "Position": [
+        -3.0869,
+        1.17338,
+        0.06789
+      ]
+    },
+    {
+      "Size": [
+        0.68799,
+        0.32865,
+        3.19396
+      ],
+      "Position": [
+        -3.77489,
+        1.53204,
+        -0.78225
+      ]
+    },
+    {
+      "Size": [
+        0.68799,
+        0.57464,
+        2.91648
+      ],
+      "Position": [
+        -4.46288,
+        1.37362,
+        -1.18666
+      ]
+    },
+    {
+      "Size": [
+        0.68799,
+        0.30306,
+        2.72953
+      ],
+      "Position": [
+        -5.15087,
+        1.47989,
+        -1.54581
+      ]
+    },
+    {
+      "Size": [
+        0.68799,
+        0.28929,
+        2.59177
+      ],
+      "Position": [
+        -5.83886,
+        1.45726,
+        -1.92956
+      ]
+    },
+    {
+      "Size": [
+        0.68799,
+        0.2519,
+        2.38514
+      ],
+      "Position": [
+        -6.52685,
+        1.43856,
+        -2.31429
+      ]
+    },
+    {
+      "Size": [
+        0.68799,
+        0.2086,
+        2.20409
+      ],
+      "Position": [
+        -7.21484,
+        1.41691,
+        -2.70001
+      ]
+    },
+    {
+      "Size": [
+        1.4484,
+        0.13579,
+        2.21786
+      ],
+      "Position": [
+        -0.76946,
+        3.00996,
+        -6.58569
+      ]
+    },
+    {
+      "Size": [
+        1.4484,
+        0.1,
+        1.6511
+      ],
+      "Position": [
+        -2.21786,
+        3.00996,
+        -7.41223
+      ]
+    },
+    {
+      "Size": [
+        0.4221,
+        0.47263,
+        0.40736
+      ],
+      "Position": [
+        2.8968,
+        0.23631,
+        0.18105
+      ],
+      "LandingGear": true
+    },
+    {
+      "Size": [
+        0.4221,
+        0.47263,
+        0.40736
+      ],
+      "Position": [
+        -2.8968,
+        0.23631,
+        0.18105
+      ],
+      "LandingGear": true
+    },
+    {
+      "Size": [
+        0.60315,
+        0.56315,
+        0.54315
+      ],
+      "Position": [
+        0.0,
+        0.28158,
+        2.76101
+      ],
+      "LandingGear": true
+    },
+    {
+      "Size": [
+        0.60315,
+        0.56315,
+        0.54315
+      ],
+      "Position": [
+        0.0,
+        0.28158,
+        -2.48944
+      ],
+      "LandingGear": true
+    }
+  ],
+  "Seats": [
+    {
+      "HidePassenger": false,
+      "BanHand": true,
+      "Transform": "Vehicle",
+      "BodyAttachment": "Vehicle",
+      "Position": [
+        0.0,
+        0.88556,
+        3.9831
+      ],
+      "Weapons": [
+        "Gun1",
+        "Gun2",
+        "Gun3",
+        "Gun4",
+        "Matra116Inner",
+        "Matra116Outer",
+        "T10HeInner",
+        "T10HeOuter",
+        "T10HeatInner",
+        "T10HeatOuter",
+        "Matra104Bay"
+      ],
+      "CanRotateHead": true,
+      "CameraPos": {
+        "Transform": "Vehicle",
+        "Position": [
+          0,
+          0,
+          0
+        ],
+        "ZoomPosition": [
+          0,
+          0,
+          0
+        ],
+        "CameraMode": "AIRCRAFT_FREELOOK",
+        "AimCameraMode": "AIRCRAFT_FREELOOK",
+        "UseAircraftCamera": true,
+        "AircraftCameraPos": [
+          0,
+          2.9,
+          -15.5
+        ],
+        "EyeAttachment": "pilot_eye",
+        "ZoomEyeAttachment": "pilot_eye",
+        "DirectionAttachment": "pilot_eye",
+        "ZoomDirectionAttachment": "pilot_eye"
+      },
+      "DismountInfo": {
+        "Transform": "Vehicle",
+        "Position": [
+          8.1,
+          0.2,
+          4.3381
+        ]
+      },
+      "FixedGunBank": [
+        "Gun1",
+        "Gun2",
+        "Gun3",
+        "Gun4"
+      ]
+    },
+    {
+      "HidePassenger": false,
+      "BanHand": true,
+      "Transform": "Vehicle",
+      "BodyAttachment": "Vehicle",
+      "Position": [
+        0.0,
+        1.06661,
+        2.76101
+      ],
+      "CanRotateHead": true,
+      "CameraPos": {
+        "Transform": "Vehicle",
+        "Position": [
+          0,
+          0,
+          0
+        ],
+        "ZoomPosition": [
+          0,
+          0,
+          0
+        ],
+        "CameraMode": "AIRCRAFT_FREELOOK",
+        "AimCameraMode": "AIRCRAFT_FREELOOK",
+        "UseAircraftCamera": true,
+        "AircraftCameraPos": [
+          0,
+          2.9,
+          -15.5
+        ],
+        "EyeAttachment": "nav_eye",
+        "ZoomEyeAttachment": "nav_eye",
+        "DirectionAttachment": "nav_eye",
+        "ZoomDirectionAttachment": "nav_eye"
+      },
+      "DismountInfo": {
+        "Transform": "Vehicle",
+        "Position": [
+          8.1,
+          0.2,
+          3.11601
+        ]
+      }
+    }
+  ],
+  "Weapons": {
+    "Gun1": {
+      "Crosshair": "@VehicleCommonGun",
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "ProjectileAmount": 1,
+      "AmmoCostPerShoot": 1,
+      "NormalReloadTime": 400,
+      "EmptyReloadTime": 400,
+      "AutoReload": true,
+      "WithdrawAmmoWhenChangeSlot": false,
+      "Gravity": 0.05,
+      "ProjectileLife": 400,
+      "AddShooterDeltaMovement": true,
+      "HeatPerShoot": 0,
+      "Spread": 0.12,
+      "SoundRadius": 8,
+      "ExplosionDamage": 0,
+      "Name": "30 mm DEFA 552",
+      "RPM": 1200,
+      "Magazine": 100,
+      "Damage": 45,
+      "SoundInfo": {
+        "Fire1PGain": 0.5,
+        "Fire3PGain": 0.5,
+        "Fire3PFarGain": 0.5,
+        "Fire3PVeryFarGain": 0.5,
+        "Fire1P": "berts_vehicle_pack:mirage_5_gun_warthunder30mm",
+        "Fire3P": "berts_vehicle_pack:mirage_5_gun_warthunder30mm",
+        "Fire3PFar": "berts_vehicle_pack:mirage_5_gun_warthunder30mm",
+        "Fire3PVeryFar": "berts_vehicle_pack:mirage_5_gun_warthunder30mm",
+        "Volume": 1.0
+      },
+      "Projectile": {
+        "Type": "superbwarfare:small_cannon_shell",
+        "Profile": "berts_vehicle_pack:aircraft_rounds/defa552a/defa552a_apit"
+      },
+      "ShellType": "AP",
+      "Velocity": 47.5,
+      "ApDurability": 35,
+      "ExplosionRadius": 0,
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "superbwarfare:small_cannon_shell",
+        "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/defa552a/defa552a_apit",
+        "ProjectileLife": 400
+      },
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/defa552a/defa552a_hei"
+            },
+            "ShellType": "HE",
+            "Velocity": 51.25,
+            "ApDurability": 4,
+            "Damage": 250,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 5,
+            "TntEquivalentKg": 0.085,
+            "Name": "Air Belt",
+            "ProjectileBelt": {
+              "Name": "Air Belt",
+              "Rounds": [
+                {
+                  "Shots": 3,
+                  "Round": "defa552a_hei",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "defa552a_apit",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "RED"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/defa552a/defa552a_hei",
+              "ProjectileLife": 400
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/defa552a/defa552a_apit"
+            },
+            "ShellType": "AP",
+            "Velocity": 47.5,
+            "ApDurability": 35,
+            "Damage": 45,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "Ground Belt",
+            "ProjectileBelt": {
+              "Name": "Ground Belt",
+              "Rounds": [
+                {
+                  "Shots": 3,
+                  "Round": "defa552a_apit",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "RED"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "defa552a_hei",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "RED"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/defa552a/defa552a_apit",
+              "ProjectileLife": 400
+            }
+          }
+        }
+      ],
+      "ProjectileBeltAmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_gs",
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/defa552a/defa552a_hef"
+            },
+            "ShellType": "HE",
+            "Velocity": 51.25,
+            "ApDurability": 4,
+            "Damage": 250,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 5,
+            "TntEquivalentKg": 0.0476,
+            "Name": "HEF"
+          }
+        }
+      ],
+      "BeltFed": true,
+      "OverheatEnabled": false,
+      "ShootPos": {
+        "Transform": "Vehicle",
+        "Positions": [
+          [
+            0.1584,
+            1.041,
+            5.341
+          ]
+        ],
+        "Directions": [
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "ViewPosition": [
+          0.1584,
+          1.041,
+          5.341
+        ],
+        "MuzzleAttachments": [
+          "gun1_muzzle"
+        ],
+        "MuzzleDirectionAttachments": [
+          "gun1_muzzle"
+        ],
+        "EffectAttachments": [
+          "gun1_muzzle"
+        ],
+        "EffectDirectionAttachments": [
+          "gun1_muzzle"
+        ]
+      }
+    },
+    "Gun2": {
+      "Crosshair": "@VehicleCommonGun",
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "ProjectileAmount": 1,
+      "AmmoCostPerShoot": 1,
+      "NormalReloadTime": 400,
+      "EmptyReloadTime": 400,
+      "AutoReload": true,
+      "WithdrawAmmoWhenChangeSlot": false,
+      "Gravity": 0.05,
+      "ProjectileLife": 400,
+      "AddShooterDeltaMovement": true,
+      "HeatPerShoot": 0,
+      "Spread": 0.12,
+      "SoundRadius": 8,
+      "ExplosionDamage": 0,
+      "Name": "30 mm DEFA 552",
+      "RPM": 1200,
+      "Magazine": 100,
+      "Damage": 45,
+      "SoundInfo": {
+        "Fire1PGain": 0.5,
+        "Fire3PGain": 0.5,
+        "Fire3PFarGain": 0.5,
+        "Fire3PVeryFarGain": 0.5,
+        "Fire1P": "berts_vehicle_pack:mirage_5_gun_warthunder30mm",
+        "Fire3P": "berts_vehicle_pack:mirage_5_gun_warthunder30mm",
+        "Fire3PFar": "berts_vehicle_pack:mirage_5_gun_warthunder30mm",
+        "Fire3PVeryFar": "berts_vehicle_pack:mirage_5_gun_warthunder30mm",
+        "Volume": 1.0
+      },
+      "Projectile": {
+        "Type": "superbwarfare:small_cannon_shell",
+        "Profile": "berts_vehicle_pack:aircraft_rounds/defa552a/defa552a_apit"
+      },
+      "ShellType": "AP",
+      "Velocity": 47.5,
+      "ApDurability": 35,
+      "ExplosionRadius": 0,
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "superbwarfare:small_cannon_shell",
+        "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/defa552a/defa552a_apit",
+        "ProjectileLife": 400
+      },
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/defa552a/defa552a_hei"
+            },
+            "ShellType": "HE",
+            "Velocity": 51.25,
+            "ApDurability": 4,
+            "Damage": 250,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 5,
+            "TntEquivalentKg": 0.085,
+            "Name": "Air Belt",
+            "ProjectileBelt": {
+              "Name": "Air Belt",
+              "Rounds": [
+                {
+                  "Shots": 3,
+                  "Round": "defa552a_hei",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "defa552a_apit",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "RED"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/defa552a/defa552a_hei",
+              "ProjectileLife": 400
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/defa552a/defa552a_apit"
+            },
+            "ShellType": "AP",
+            "Velocity": 47.5,
+            "ApDurability": 35,
+            "Damage": 45,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "Ground Belt",
+            "ProjectileBelt": {
+              "Name": "Ground Belt",
+              "Rounds": [
+                {
+                  "Shots": 3,
+                  "Round": "defa552a_apit",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "RED"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "defa552a_hei",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "RED"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/defa552a/defa552a_apit",
+              "ProjectileLife": 400
+            }
+          }
+        }
+      ],
+      "ProjectileBeltAmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_gs",
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/defa552a/defa552a_hef"
+            },
+            "ShellType": "HE",
+            "Velocity": 51.25,
+            "ApDurability": 4,
+            "Damage": 250,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 5,
+            "TntEquivalentKg": 0.0476,
+            "Name": "HEF"
+          }
+        }
+      ],
+      "BeltFed": true,
+      "OverheatEnabled": false,
+      "ShootPos": {
+        "Transform": "Vehicle",
+        "Positions": [
+          [
+            -0.1584,
+            1.041,
+            5.341
+          ]
+        ],
+        "Directions": [
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "ViewPosition": [
+          -0.1584,
+          1.041,
+          5.341
+        ],
+        "MuzzleAttachments": [
+          "gun2_muzzle"
+        ],
+        "MuzzleDirectionAttachments": [
+          "gun2_muzzle"
+        ],
+        "EffectAttachments": [
+          "gun2_muzzle"
+        ],
+        "EffectDirectionAttachments": [
+          "gun2_muzzle"
+        ]
+      }
+    },
+    "Gun3": {
+      "Crosshair": "@VehicleCommonGun",
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "ProjectileAmount": 1,
+      "AmmoCostPerShoot": 1,
+      "NormalReloadTime": 400,
+      "EmptyReloadTime": 400,
+      "AutoReload": true,
+      "WithdrawAmmoWhenChangeSlot": false,
+      "Gravity": 0.05,
+      "ProjectileLife": 400,
+      "AddShooterDeltaMovement": true,
+      "HeatPerShoot": 0,
+      "Spread": 0.12,
+      "SoundRadius": 8,
+      "ExplosionDamage": 0,
+      "Name": "30 mm DEFA 552",
+      "RPM": 1200,
+      "Magazine": 100,
+      "Damage": 45,
+      "SoundInfo": {
+        "Fire1PGain": 0.5,
+        "Fire3PGain": 0.5,
+        "Fire3PFarGain": 0.5,
+        "Fire3PVeryFarGain": 0.5,
+        "Fire1P": "berts_vehicle_pack:mirage_5_gun_warthunder30mm",
+        "Fire3P": "berts_vehicle_pack:mirage_5_gun_warthunder30mm",
+        "Fire3PFar": "berts_vehicle_pack:mirage_5_gun_warthunder30mm",
+        "Fire3PVeryFar": "berts_vehicle_pack:mirage_5_gun_warthunder30mm",
+        "Volume": 1.0
+      },
+      "Projectile": {
+        "Type": "superbwarfare:small_cannon_shell",
+        "Profile": "berts_vehicle_pack:aircraft_rounds/defa552a/defa552a_apit"
+      },
+      "ShellType": "AP",
+      "Velocity": 47.5,
+      "ApDurability": 35,
+      "ExplosionRadius": 0,
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "superbwarfare:small_cannon_shell",
+        "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/defa552a/defa552a_apit",
+        "ProjectileLife": 400
+      },
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/defa552a/defa552a_hei"
+            },
+            "ShellType": "HE",
+            "Velocity": 51.25,
+            "ApDurability": 4,
+            "Damage": 250,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 5,
+            "TntEquivalentKg": 0.085,
+            "Name": "Air Belt",
+            "ProjectileBelt": {
+              "Name": "Air Belt",
+              "Rounds": [
+                {
+                  "Shots": 3,
+                  "Round": "defa552a_hei",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "defa552a_apit",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "RED"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/defa552a/defa552a_hei",
+              "ProjectileLife": 400
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/defa552a/defa552a_apit"
+            },
+            "ShellType": "AP",
+            "Velocity": 47.5,
+            "ApDurability": 35,
+            "Damage": 45,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "Ground Belt",
+            "ProjectileBelt": {
+              "Name": "Ground Belt",
+              "Rounds": [
+                {
+                  "Shots": 3,
+                  "Round": "defa552a_apit",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "RED"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "defa552a_hei",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "RED"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/defa552a/defa552a_apit",
+              "ProjectileLife": 400
+            }
+          }
+        }
+      ],
+      "ProjectileBeltAmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_gs",
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/defa552a/defa552a_hef"
+            },
+            "ShellType": "HE",
+            "Velocity": 51.25,
+            "ApDurability": 4,
+            "Damage": 250,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 5,
+            "TntEquivalentKg": 0.0476,
+            "Name": "HEF"
+          }
+        }
+      ],
+      "BeltFed": true,
+      "OverheatEnabled": false,
+      "ShootPos": {
+        "Transform": "Vehicle",
+        "Positions": [
+          [
+            0.3847,
+            1.041,
+            5.341
+          ]
+        ],
+        "Directions": [
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "ViewPosition": [
+          0.3847,
+          1.041,
+          5.341
+        ],
+        "MuzzleAttachments": [
+          "gun3_muzzle"
+        ],
+        "MuzzleDirectionAttachments": [
+          "gun3_muzzle"
+        ],
+        "EffectAttachments": [
+          "gun3_muzzle"
+        ],
+        "EffectDirectionAttachments": [
+          "gun3_muzzle"
+        ]
+      }
+    },
+    "Gun4": {
+      "Crosshair": "@VehicleCommonGun",
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "ProjectileAmount": 1,
+      "AmmoCostPerShoot": 1,
+      "NormalReloadTime": 400,
+      "EmptyReloadTime": 400,
+      "AutoReload": true,
+      "WithdrawAmmoWhenChangeSlot": false,
+      "Gravity": 0.05,
+      "ProjectileLife": 400,
+      "AddShooterDeltaMovement": true,
+      "HeatPerShoot": 0,
+      "Spread": 0.12,
+      "SoundRadius": 8,
+      "ExplosionDamage": 0,
+      "Name": "30 mm DEFA 552",
+      "RPM": 1200,
+      "Magazine": 100,
+      "Damage": 45,
+      "SoundInfo": {
+        "Fire1PGain": 0.5,
+        "Fire3PGain": 0.5,
+        "Fire3PFarGain": 0.5,
+        "Fire3PVeryFarGain": 0.5,
+        "Fire1P": "berts_vehicle_pack:mirage_5_gun_warthunder30mm",
+        "Fire3P": "berts_vehicle_pack:mirage_5_gun_warthunder30mm",
+        "Fire3PFar": "berts_vehicle_pack:mirage_5_gun_warthunder30mm",
+        "Fire3PVeryFar": "berts_vehicle_pack:mirage_5_gun_warthunder30mm",
+        "Volume": 1.0
+      },
+      "Projectile": {
+        "Type": "superbwarfare:small_cannon_shell",
+        "Profile": "berts_vehicle_pack:aircraft_rounds/defa552a/defa552a_apit"
+      },
+      "ShellType": "AP",
+      "Velocity": 47.5,
+      "ApDurability": 35,
+      "ExplosionRadius": 0,
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "superbwarfare:small_cannon_shell",
+        "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/defa552a/defa552a_apit",
+        "ProjectileLife": 400
+      },
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/defa552a/defa552a_hei"
+            },
+            "ShellType": "HE",
+            "Velocity": 51.25,
+            "ApDurability": 4,
+            "Damage": 250,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 5,
+            "TntEquivalentKg": 0.085,
+            "Name": "Air Belt",
+            "ProjectileBelt": {
+              "Name": "Air Belt",
+              "Rounds": [
+                {
+                  "Shots": 3,
+                  "Round": "defa552a_hei",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "defa552a_apit",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "RED"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/defa552a/defa552a_hei",
+              "ProjectileLife": 400
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/defa552a/defa552a_apit"
+            },
+            "ShellType": "AP",
+            "Velocity": 47.5,
+            "ApDurability": 35,
+            "Damage": 45,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "Ground Belt",
+            "ProjectileBelt": {
+              "Name": "Ground Belt",
+              "Rounds": [
+                {
+                  "Shots": 3,
+                  "Round": "defa552a_apit",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "RED"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "defa552a_hei",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "RED"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/defa552a/defa552a_apit",
+              "ProjectileLife": 400
+            }
+          }
+        }
+      ],
+      "ProjectileBeltAmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_gs",
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/defa552a/defa552a_hef"
+            },
+            "ShellType": "HE",
+            "Velocity": 51.25,
+            "ApDurability": 4,
+            "Damage": 250,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 5,
+            "TntEquivalentKg": 0.0476,
+            "Name": "HEF"
+          }
+        }
+      ],
+      "BeltFed": true,
+      "OverheatEnabled": false,
+      "ShootPos": {
+        "Transform": "Vehicle",
+        "Positions": [
+          [
+            -0.3847,
+            1.041,
+            5.341
+          ]
+        ],
+        "Directions": [
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "ViewPosition": [
+          -0.3847,
+          1.041,
+          5.341
+        ],
+        "MuzzleAttachments": [
+          "gun4_muzzle"
+        ],
+        "MuzzleDirectionAttachments": [
+          "gun4_muzzle"
+        ],
+        "EffectAttachments": [
+          "gun4_muzzle"
+        ],
+        "EffectDirectionAttachments": [
+          "gun4_muzzle"
+        ]
+      }
+    },
+    "Matra116Inner": {
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_rocket",
+          "ConsumptionItem": "superbwarfare:small_unguided_rocket",
+          "Override": {
+            "TntEquivalentKg": 0.5
+          }
+        }
+      ],
+      "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_small_rocket.png",
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "Magazine": 38,
+      "EmptyReloadTime": 200,
+      "Projectile": {
+        "Type": "berts_vehicle_pack:s8ko_rocket",
+        "Profile": "berts_vehicle_pack:ah_1g_cobra/rocket/default"
+      },
+      "AddShooterDeltaMovement": true,
+      "Spread": 0.25,
+      "Name": "Matra Type 116 19 x SNEB 68 mm (inner) (AI)",
+      "RPM": 600,
+      "Damage": 100,
+      "ExplosionDamage": 0,
+      "ExplosionRadius": 3,
+      "TntEquivalentKg": 0.5,
+      "Gravity": 0.02,
+      "Velocity": 9,
+      "ProjectileLife": 100,
+      "Crosshair": "@Empty",
+      "SoundRadius": 16,
+      "SoundInfo": {
+        "Fire1PGain": 1.0,
+        "Fire3PGain": 1.0,
+        "Fire3PFarGain": 1.0,
+        "Fire3PVeryFarGain": 1.0,
+        "Fire1P": "bvp_audio:weapon/hydra_1p",
+        "Fire3P": "bvp_audio:weapon/hydra_3p",
+        "Fire3PFar": "bvp_audio:weapon/hydra_far",
+        "Fire3PVeryFar": "bvp_audio:weapon/hydra_far",
+        "Change": "superbwarfare:into_missile",
+        "Volume": 1.2
+      },
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "berts_vehicle_pack:s8ko_rocket",
+        "ProjectileProfile": "berts_vehicle_pack:ah_1g_cobra/rocket/default",
+        "ProjectileLife": 100
+      },
+      "ShootPos": {
+        "Transform": "Vehicle",
+        "Positions": [
+          [
+            1.4484,
+            0.9026,
+            1.9268
+          ],
+          [
+            -1.4484,
+            0.9026,
+            1.9268
+          ]
+        ],
+        "Directions": [
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "ViewPosition": [
+          1.4484,
+          0.9026,
+          1.9268
+        ],
+        "MuzzleAttachments": [
+          "Matra116Inner_0",
+          "Matra116Inner_1"
+        ],
+        "MuzzleDirectionAttachments": [
+          "Matra116Inner_0",
+          "Matra116Inner_1"
+        ],
+        "EffectAttachments": [
+          "Matra116Inner_0",
+          "Matra116Inner_1"
+        ],
+        "EffectDirectionAttachments": [
+          "Matra116Inner_0",
+          "Matra116Inner_1"
+        ]
+      }
+    },
+    "Matra116Outer": {
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_rocket",
+          "ConsumptionItem": "superbwarfare:small_unguided_rocket",
+          "Override": {
+            "TntEquivalentKg": 0.5
+          }
+        }
+      ],
+      "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_small_rocket.png",
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "Magazine": 38,
+      "EmptyReloadTime": 200,
+      "Projectile": {
+        "Type": "berts_vehicle_pack:s8ko_rocket",
+        "Profile": "berts_vehicle_pack:ah_1g_cobra/rocket/default"
+      },
+      "AddShooterDeltaMovement": true,
+      "Spread": 0.25,
+      "Name": "Matra Type 116 19 x SNEB 68 mm (outer) (AI)",
+      "RPM": 600,
+      "Damage": 100,
+      "ExplosionDamage": 0,
+      "ExplosionRadius": 3,
+      "TntEquivalentKg": 0.5,
+      "Gravity": 0.02,
+      "Velocity": 9,
+      "ProjectileLife": 100,
+      "Crosshair": "@Empty",
+      "SoundRadius": 16,
+      "SoundInfo": {
+        "Fire1PGain": 1.0,
+        "Fire3PGain": 1.0,
+        "Fire3PFarGain": 1.0,
+        "Fire3PVeryFarGain": 1.0,
+        "Fire1P": "bvp_audio:weapon/hydra_1p",
+        "Fire3P": "bvp_audio:weapon/hydra_3p",
+        "Fire3PFar": "bvp_audio:weapon/hydra_far",
+        "Fire3PVeryFar": "bvp_audio:weapon/hydra_far",
+        "Change": "superbwarfare:into_missile",
+        "Volume": 1.2
+      },
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "berts_vehicle_pack:s8ko_rocket",
+        "ProjectileProfile": "berts_vehicle_pack:ah_1g_cobra/rocket/default",
+        "ProjectileLife": 100
+      },
+      "ShootPos": {
+        "Transform": "Vehicle",
+        "Positions": [
+          [
+            4.5263,
+            0.8573,
+            -0.11
+          ],
+          [
+            -4.5263,
+            0.8573,
+            -0.11
+          ]
+        ],
+        "Directions": [
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "ViewPosition": [
+          4.5263,
+          0.8573,
+          -0.11
+        ],
+        "MuzzleAttachments": [
+          "Matra116Outer_0",
+          "Matra116Outer_1"
+        ],
+        "MuzzleDirectionAttachments": [
+          "Matra116Outer_0",
+          "Matra116Outer_1"
+        ],
+        "EffectAttachments": [
+          "Matra116Outer_0",
+          "Matra116Outer_1"
+        ],
+        "EffectDirectionAttachments": [
+          "Matra116Outer_0",
+          "Matra116Outer_1"
+        ]
+      }
+    },
+    "T10HeInner": {
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_rocket",
+          "ConsumptionItem": "superbwarfare:small_unguided_rocket",
+          "Override": {
+            "TntEquivalentKg": 2.52
+          }
+        }
+      ],
+      "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_small_rocket.png",
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "Magazine": 12,
+      "EmptyReloadTime": 200,
+      "Projectile": {
+        "Type": "berts_vehicle_pack:s8ko_rocket",
+        "Profile": "berts_vehicle_pack:ah_1g_cobra/rocket/default"
+      },
+      "AddShooterDeltaMovement": true,
+      "Spread": 0.25,
+      "Name": "Matra T10 140 6 x 120 mm HE (inner) (AI)",
+      "RPM": 300,
+      "Damage": 160,
+      "ExplosionDamage": 0,
+      "ExplosionRadius": 5,
+      "TntEquivalentKg": 2.52,
+      "Gravity": 0.02,
+      "Velocity": 5,
+      "ProjectileLife": 190,
+      "Crosshair": "@Empty",
+      "SoundRadius": 16,
+      "SoundInfo": {
+        "Fire1PGain": 1.0,
+        "Fire3PGain": 1.0,
+        "Fire3PFarGain": 1.0,
+        "Fire3PVeryFarGain": 1.0,
+        "Fire1P": "bvp_audio:weapon/hydra_1p",
+        "Fire3P": "bvp_audio:weapon/hydra_3p",
+        "Fire3PFar": "bvp_audio:weapon/hydra_far",
+        "Fire3PVeryFar": "bvp_audio:weapon/hydra_far",
+        "Change": "superbwarfare:into_missile",
+        "Volume": 1.2
+      },
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "berts_vehicle_pack:s8ko_rocket",
+        "ProjectileProfile": "berts_vehicle_pack:ah_1g_cobra/rocket/default",
+        "ProjectileLife": 100
+      },
+      "ShootPos": {
+        "Transform": "Vehicle",
+        "Positions": [
+          [
+            1.4484,
+            0.9076,
+            2.0518
+          ],
+          [
+            -1.4484,
+            0.9076,
+            2.0518
+          ]
+        ],
+        "Directions": [
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "ViewPosition": [
+          1.4484,
+          0.9076,
+          2.0518
+        ],
+        "MuzzleAttachments": [
+          "T10HeInner_0",
+          "T10HeInner_1"
+        ],
+        "MuzzleDirectionAttachments": [
+          "T10HeInner_0",
+          "T10HeInner_1"
+        ],
+        "EffectAttachments": [
+          "T10HeInner_0",
+          "T10HeInner_1"
+        ],
+        "EffectDirectionAttachments": [
+          "T10HeInner_0",
+          "T10HeInner_1"
+        ]
+      }
+    },
+    "T10HeOuter": {
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_rocket",
+          "ConsumptionItem": "superbwarfare:small_unguided_rocket",
+          "Override": {
+            "TntEquivalentKg": 2.52
+          }
+        }
+      ],
+      "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_small_rocket.png",
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "Magazine": 12,
+      "EmptyReloadTime": 200,
+      "Projectile": {
+        "Type": "berts_vehicle_pack:s8ko_rocket",
+        "Profile": "berts_vehicle_pack:ah_1g_cobra/rocket/default"
+      },
+      "AddShooterDeltaMovement": true,
+      "Spread": 0.25,
+      "Name": "Matra T10 140 6 x 120 mm HE (outer) (AI)",
+      "RPM": 300,
+      "Damage": 160,
+      "ExplosionDamage": 0,
+      "ExplosionRadius": 5,
+      "TntEquivalentKg": 2.52,
+      "Gravity": 0.02,
+      "Velocity": 5,
+      "ProjectileLife": 190,
+      "Crosshair": "@Empty",
+      "SoundRadius": 16,
+      "SoundInfo": {
+        "Fire1PGain": 1.0,
+        "Fire3PGain": 1.0,
+        "Fire3PFarGain": 1.0,
+        "Fire3PVeryFarGain": 1.0,
+        "Fire1P": "bvp_audio:weapon/hydra_1p",
+        "Fire3P": "bvp_audio:weapon/hydra_3p",
+        "Fire3PFar": "bvp_audio:weapon/hydra_far",
+        "Fire3PVeryFar": "bvp_audio:weapon/hydra_far",
+        "Change": "superbwarfare:into_missile",
+        "Volume": 1.2
+      },
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "berts_vehicle_pack:s8ko_rocket",
+        "ProjectileProfile": "berts_vehicle_pack:ah_1g_cobra/rocket/default",
+        "ProjectileLife": 100
+      },
+      "ShootPos": {
+        "Transform": "Vehicle",
+        "Positions": [
+          [
+            4.5263,
+            0.8623,
+            0.015
+          ],
+          [
+            -4.5263,
+            0.8623,
+            0.015
+          ]
+        ],
+        "Directions": [
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "ViewPosition": [
+          4.5263,
+          0.8623,
+          0.015
+        ],
+        "MuzzleAttachments": [
+          "T10HeOuter_0",
+          "T10HeOuter_1"
+        ],
+        "MuzzleDirectionAttachments": [
+          "T10HeOuter_0",
+          "T10HeOuter_1"
+        ],
+        "EffectAttachments": [
+          "T10HeOuter_0",
+          "T10HeOuter_1"
+        ],
+        "EffectDirectionAttachments": [
+          "T10HeOuter_0",
+          "T10HeOuter_1"
+        ]
+      }
+    },
+    "T10HeatInner": {
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_rocket",
+          "ConsumptionItem": "superbwarfare:small_unguided_rocket",
+          "Override": {
+            "TntEquivalentKg": 2.26
+          }
+        }
+      ],
+      "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_small_rocket.png",
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "Magazine": 12,
+      "EmptyReloadTime": 200,
+      "Projectile": {
+        "Type": "berts_vehicle_pack:s8ko_rocket",
+        "Profile": "berts_vehicle_pack:ah_1g_cobra/rocket/default"
+      },
+      "AddShooterDeltaMovement": true,
+      "Spread": 0.25,
+      "Name": "Matra T10 151 6 x 120 mm HEAT (inner) (AI)",
+      "RPM": 300,
+      "Damage": 160,
+      "ExplosionDamage": 0,
+      "ExplosionRadius": 4,
+      "TntEquivalentKg": 2.26,
+      "Gravity": 0.02,
+      "Velocity": 5,
+      "ProjectileLife": 190,
+      "Crosshair": "@Empty",
+      "SoundRadius": 16,
+      "SoundInfo": {
+        "Fire1PGain": 1.0,
+        "Fire3PGain": 1.0,
+        "Fire3PFarGain": 1.0,
+        "Fire3PVeryFarGain": 1.0,
+        "Fire1P": "bvp_audio:weapon/hydra_1p",
+        "Fire3P": "bvp_audio:weapon/hydra_3p",
+        "Fire3PFar": "bvp_audio:weapon/hydra_far",
+        "Fire3PVeryFar": "bvp_audio:weapon/hydra_far",
+        "Change": "superbwarfare:into_missile",
+        "Volume": 1.2
+      },
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "berts_vehicle_pack:s8ko_rocket",
+        "ProjectileProfile": "berts_vehicle_pack:ah_1g_cobra/rocket/default",
+        "ProjectileLife": 100
+      },
+      "ApDurability": 300,
+      "ShellType": "HEAT",
+      "ShootPos": {
+        "Transform": "Vehicle",
+        "Positions": [
+          [
+            1.4484,
+            0.9076,
+            2.0518
+          ],
+          [
+            -1.4484,
+            0.9076,
+            2.0518
+          ]
+        ],
+        "Directions": [
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "ViewPosition": [
+          1.4484,
+          0.9076,
+          2.0518
+        ],
+        "MuzzleAttachments": [
+          "T10HeatInner_0",
+          "T10HeatInner_1"
+        ],
+        "MuzzleDirectionAttachments": [
+          "T10HeatInner_0",
+          "T10HeatInner_1"
+        ],
+        "EffectAttachments": [
+          "T10HeatInner_0",
+          "T10HeatInner_1"
+        ],
+        "EffectDirectionAttachments": [
+          "T10HeatInner_0",
+          "T10HeatInner_1"
+        ]
+      }
+    },
+    "T10HeatOuter": {
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_rocket",
+          "ConsumptionItem": "superbwarfare:small_unguided_rocket",
+          "Override": {
+            "TntEquivalentKg": 2.26
+          }
+        }
+      ],
+      "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_small_rocket.png",
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "Magazine": 12,
+      "EmptyReloadTime": 200,
+      "Projectile": {
+        "Type": "berts_vehicle_pack:s8ko_rocket",
+        "Profile": "berts_vehicle_pack:ah_1g_cobra/rocket/default"
+      },
+      "AddShooterDeltaMovement": true,
+      "Spread": 0.25,
+      "Name": "Matra T10 151 6 x 120 mm HEAT (outer) (AI)",
+      "RPM": 300,
+      "Damage": 160,
+      "ExplosionDamage": 0,
+      "ExplosionRadius": 4,
+      "TntEquivalentKg": 2.26,
+      "Gravity": 0.02,
+      "Velocity": 5,
+      "ProjectileLife": 190,
+      "Crosshair": "@Empty",
+      "SoundRadius": 16,
+      "SoundInfo": {
+        "Fire1PGain": 1.0,
+        "Fire3PGain": 1.0,
+        "Fire3PFarGain": 1.0,
+        "Fire3PVeryFarGain": 1.0,
+        "Fire1P": "bvp_audio:weapon/hydra_1p",
+        "Fire3P": "bvp_audio:weapon/hydra_3p",
+        "Fire3PFar": "bvp_audio:weapon/hydra_far",
+        "Fire3PVeryFar": "bvp_audio:weapon/hydra_far",
+        "Change": "superbwarfare:into_missile",
+        "Volume": 1.2
+      },
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "berts_vehicle_pack:s8ko_rocket",
+        "ProjectileProfile": "berts_vehicle_pack:ah_1g_cobra/rocket/default",
+        "ProjectileLife": 100
+      },
+      "ApDurability": 300,
+      "ShellType": "HEAT",
+      "ShootPos": {
+        "Transform": "Vehicle",
+        "Positions": [
+          [
+            4.5263,
+            0.8623,
+            0.015
+          ],
+          [
+            -4.5263,
+            0.8623,
+            0.015
+          ]
+        ],
+        "Directions": [
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "ViewPosition": [
+          4.5263,
+          0.8623,
+          0.015
+        ],
+        "MuzzleAttachments": [
+          "T10HeatOuter_0",
+          "T10HeatOuter_1"
+        ],
+        "MuzzleDirectionAttachments": [
+          "T10HeatOuter_0",
+          "T10HeatOuter_1"
+        ],
+        "EffectAttachments": [
+          "T10HeatOuter_0",
+          "T10HeatOuter_1"
+        ],
+        "EffectDirectionAttachments": [
+          "T10HeatOuter_0",
+          "T10HeatOuter_1"
+        ]
+      }
+    },
+    "Matra104Bay": {
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_rocket",
+          "ConsumptionItem": "superbwarfare:small_unguided_rocket",
+          "Override": {
+            "TntEquivalentKg": 0.5
+          }
+        }
+      ],
+      "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_small_rocket.png",
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "Magazine": 112,
+      "EmptyReloadTime": 200,
+      "Projectile": {
+        "Type": "berts_vehicle_pack:s8ko_rocket",
+        "Profile": "berts_vehicle_pack:ah_1g_cobra/rocket/default"
+      },
+      "AddShooterDeltaMovement": true,
+      "Spread": 0.25,
+      "Name": "Matra 104 bay pack 112 x SNEB 68 mm (AI)",
+      "RPM": 600,
+      "Damage": 100,
+      "ExplosionDamage": 0,
+      "ExplosionRadius": 3,
+      "TntEquivalentKg": 0.5,
+      "Gravity": 0.02,
+      "Velocity": 9,
+      "ProjectileLife": 100,
+      "Crosshair": "@Empty",
+      "SoundRadius": 16,
+      "SoundInfo": {
+        "Fire1PGain": 1.0,
+        "Fire3PGain": 1.0,
+        "Fire3PFarGain": 1.0,
+        "Fire3PVeryFarGain": 1.0,
+        "Fire1P": "bvp_audio:weapon/hydra_1p",
+        "Fire3P": "bvp_audio:weapon/hydra_3p",
+        "Fire3PFar": "bvp_audio:weapon/hydra_far",
+        "Fire3PVeryFar": "bvp_audio:weapon/hydra_far",
+        "Change": "superbwarfare:into_missile",
+        "Volume": 1.2
+      },
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "berts_vehicle_pack:s8ko_rocket",
+        "ProjectileProfile": "berts_vehicle_pack:ah_1g_cobra/rocket/default",
+        "ProjectileLife": 100
+      },
+      "ShootPos": {
+        "Transform": "Vehicle",
+        "Positions": [
+          [
+            0.0,
+            0.6619,
+            1.5263
+          ]
+        ],
+        "Directions": [
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "ViewPosition": [
+          0.0,
+          0.6619,
+          1.5263
+        ],
+        "MuzzleAttachments": [
+          "Matra104Bay_muzzle"
+        ],
+        "MuzzleDirectionAttachments": [
+          "Matra104Bay_muzzle"
+        ],
+        "EffectAttachments": [
+          "Matra104Bay_muzzle"
+        ],
+        "EffectDirectionAttachments": [
+          "Matra104Bay_muzzle"
+        ]
+      }
+    }
+  },
+  "HUDColor": "0xFFC700",
+  "HudType": "@Aircraft",
+  "EngineType": "Empty",
+  "EngineInfo": {
+    "EngineStartSound": "berts_vehicle_pack:mirage_5_engine_start",
+    "EngineSoundVolume": 0.7,
+    "HasGear": true
+  },
+  "HasDecoy": false,
+  "DamageModifiers": [
+    "minecraft:arrow 0",
+    "minecraft:trident 0",
+    "minecraft:mob_attack 0",
+    "minecraft:mob_attack_no_aggro 0",
+    "minecraft:mob_projectile 0",
+    "minecraft:player_attack 0",
+    "#superbwarfare:projectile 0",
+    "All - 20",
+    "minecraft:lava + 20",
+    "minecraft:lava * 10",
+    "@minecraft:tnt * 4",
+    "@minecraft:tnt_minecart * 4",
+    "@#superbwarfare:aerial_bomb * 12",
+    "All * 0.23",
+    "superbwarfare:vehicle_strike * 2.5",
+    "minecraft:explosion * 2",
+    "superbwarfare:custom_explosion * 0.65",
+    "superbwarfare:projectile_explosion * 0.65",
+    "superbwarfare:mine * 0.5",
+    "superbwarfare:lunge_mine * 0.5",
+    "superbwarfare:projectile_hit * 1.3",
+    "#superbwarfare:projectile_absolute * 0.15",
+    "@#superbwarfare:aa_missile * 0.3",
+    "@superbwarfare:small_cannon_shell * 0.25",
+    "@superbwarfare:c4 * 4",
+    "@#superbwarfare:at_rocket * 1.1",
+    "@superbwarfare:gun_grenade * 1.25",
+    "@superbwarfare:mortar_shell * 1.25",
+    "@superbwarfare:tm_62 * 2.5"
+  ],
+  "DestroyInfo": {
+    "ParticleType": "Giant",
+    "ExplosionDamage": 160,
+    "ExplosionRadius": 13,
+    "SympatheticDetonation": true,
+    "SympatheticDetonationForce": 2,
+    "SympatheticDetonationChance": 0.55
+  },
+  "ThirdPersonCameraPos": [
+    0.7,
+    1.4,
+    5
+  ],
+  "VehicleIcon": "berts_vehicle_pack:textures/vehicle_icon/vautour_iin.png",
+  "ContainerIcon": "superbwarfare:textures/gui/vehicle/type/aircraft.png",
+  "VehicleContainerType": "Large",
+  "Type": "Airplane",
+  "Afterburner": false,
+  "TerrainCompat": [],
+  "Attachments": {
+    "pilot_eye": {
+      "Parent": "Vehicle",
+      "Position": [
+        0.0,
+        2.46681,
+        3.9831
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "nav_eye": {
+      "Parent": "Vehicle",
+      "Position": [
+        0.0,
+        2.64786,
+        2.76101
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "gun1_muzzle": {
+      "Parent": "Vehicle",
+      "Position": [
+        0.1584,
+        1.041,
+        5.341
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "gun2_muzzle": {
+      "Parent": "Vehicle",
+      "Position": [
+        -0.1584,
+        1.041,
+        5.341
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "gun3_muzzle": {
+      "Parent": "Vehicle",
+      "Position": [
+        0.3847,
+        1.041,
+        5.341
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "gun4_muzzle": {
+      "Parent": "Vehicle",
+      "Position": [
+        -0.3847,
+        1.041,
+        5.341
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "Matra116Inner_0": {
+      "Parent": "Vehicle",
+      "Position": [
+        1.4484,
+        0.9026,
+        1.9268
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "Matra116Inner_1": {
+      "Parent": "Vehicle",
+      "Position": [
+        -1.4484,
+        0.9026,
+        1.9268
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "Matra116Outer_0": {
+      "Parent": "Vehicle",
+      "Position": [
+        4.5263,
+        0.8573,
+        -0.11
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "Matra116Outer_1": {
+      "Parent": "Vehicle",
+      "Position": [
+        -4.5263,
+        0.8573,
+        -0.11
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "T10HeInner_0": {
+      "Parent": "Vehicle",
+      "Position": [
+        1.4484,
+        0.9076,
+        2.0518
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "T10HeInner_1": {
+      "Parent": "Vehicle",
+      "Position": [
+        -1.4484,
+        0.9076,
+        2.0518
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "T10HeOuter_0": {
+      "Parent": "Vehicle",
+      "Position": [
+        4.5263,
+        0.8623,
+        0.015
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "T10HeOuter_1": {
+      "Parent": "Vehicle",
+      "Position": [
+        -4.5263,
+        0.8623,
+        0.015
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "T10HeatInner_0": {
+      "Parent": "Vehicle",
+      "Position": [
+        1.4484,
+        0.9076,
+        2.0518
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "T10HeatInner_1": {
+      "Parent": "Vehicle",
+      "Position": [
+        -1.4484,
+        0.9076,
+        2.0518
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "T10HeatOuter_0": {
+      "Parent": "Vehicle",
+      "Position": [
+        4.5263,
+        0.8623,
+        0.015
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "T10HeatOuter_1": {
+      "Parent": "Vehicle",
+      "Position": [
+        -4.5263,
+        0.8623,
+        0.015
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "Matra104Bay_muzzle": {
+      "Parent": "Vehicle",
+      "Position": [
+        0.0,
+        0.6619,
+        1.5263
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    }
+  },
+  "EngineSound": "berts_vehicle_pack:mirage_5_engine_loop",
+  "EngineSoundMode": "CUSTOM",
+  "CustomSoundProfileId": "berts_vehicle_pack:aircraft_engine/mirage_5/idle",
+  "Countermeasures": {
+    "Flares": false,
+    "Chaff": false,
+    "RadarWarningReceiver": false,
+    "FlaresPerSecond": 8,
+    "FlaresPerBurst": 12,
+    "FlareLeftPos": [
+      0.6,
+      1.7,
+      -6.0
+    ],
+    "FlareRightPos": [
+      -0.6,
+      1.7,
+      -6.0
+    ],
+    "FlareEjectionSpeed": 0.7
+  },
+  "AircraftTerrainContact": {
+    "Fuselage": {
+      "Min": [
+        -0.7742,
+        0.6337,
+        -3.7
+      ],
+      "Max": [
+        0.7742,
+        2.6252,
+        2.4
+      ]
+    },
+    "LandingGear": {
+      "Min": [
+        -3.478,
+        0,
+        -3.061
+      ],
+      "Max": [
+        3.478,
+        1.4,
+        3.333
+      ]
+    },
+    "RetractableGear": true,
+    "BodyParts": [
+      {
+        "Min": [
+          -0.7742,
+          0.6337,
+          -3.7
+        ],
+        "Max": [
+          0.7742,
+          2.6252,
+          2.4
+        ]
+      },
+      {
+        "Min": [
+          -0.54194,
+          0.6337,
+          2.4
+        ],
+        "Max": [
+          0.54194,
+          2.36268,
+          7.3325
+        ]
+      },
+      {
+        "Min": [
+          -0.7742,
+          0.6337,
+          -7.1515
+        ],
+        "Max": [
+          0.7742,
+          4.6167750000000005,
+          -3.7
+        ]
+      },
+      {
+        "Min": [
+          0.67894,
+          1.40314,
+          -1.19847
+        ],
+        "Max": [
+          1.36693,
+          1.8105,
+          2.80628
+        ]
+      },
+      {
+        "Min": [
+          1.36693,
+          0.92591,
+          -1.48776
+        ],
+        "Max": [
+          2.05492,
+          1.78295,
+          2.31036
+        ]
+      },
+      {
+        "Min": [
+          2.05492,
+          0.54315,
+          -3.07785
+        ],
+        "Max": [
+          2.74291,
+          1.7554,
+          2.98732
+        ]
+      },
+      {
+        "Min": [
+          2.74291,
+          0.61892,
+          -2.82891
+        ],
+        "Max": [
+          3.4309,
+          1.72785,
+          2.96469
+        ]
+      },
+      {
+        "Min": [
+          3.4309,
+          1.36771,
+          -2.37923
+        ],
+        "Max": [
+          4.11889,
+          1.69636,
+          0.81473
+        ]
+      },
+      {
+        "Min": [
+          4.11889,
+          1.0863,
+          -2.6449
+        ],
+        "Max": [
+          4.80688,
+          1.66094,
+          0.27158
+        ]
+      },
+      {
+        "Min": [
+          4.80688,
+          1.32836,
+          -2.91058
+        ],
+        "Max": [
+          5.49487,
+          1.63142,
+          -0.18105
+        ]
+      },
+      {
+        "Min": [
+          5.49487,
+          1.31261,
+          -3.22545
+        ],
+        "Max": [
+          6.18286,
+          1.6019,
+          -0.63367
+        ]
+      },
+      {
+        "Min": [
+          6.18286,
+          1.31261,
+          -3.50686
+        ],
+        "Max": [
+          6.87085,
+          1.56451,
+          -1.12172
+        ]
+      },
+      {
+        "Min": [
+          6.87085,
+          1.31261,
+          -3.80205
+        ],
+        "Max": [
+          7.55884,
+          1.52121,
+          -1.59796
+        ]
+      },
+      {
+        "Min": [
+          -1.36693,
+          1.40314,
+          -1.19847
+        ],
+        "Max": [
+          -0.67894,
+          1.8105,
+          2.80628
+        ]
+      },
+      {
+        "Min": [
+          -2.05492,
+          0.92591,
+          -1.48776
+        ],
+        "Max": [
+          -1.36693,
+          1.78295,
+          2.31036
+        ]
+      },
+      {
+        "Min": [
+          -2.74291,
+          0.54315,
+          -3.07785
+        ],
+        "Max": [
+          -2.05492,
+          1.7554,
+          2.98732
+        ]
+      },
+      {
+        "Min": [
+          -3.4309,
+          0.61892,
+          -2.82891
+        ],
+        "Max": [
+          -2.74291,
+          1.72785,
+          2.96469
+        ]
+      },
+      {
+        "Min": [
+          -4.11889,
+          1.36771,
+          -2.37923
+        ],
+        "Max": [
+          -3.4309,
+          1.69636,
+          0.81473
+        ]
+      },
+      {
+        "Min": [
+          -4.80688,
+          1.0863,
+          -2.6449
+        ],
+        "Max": [
+          -4.11889,
+          1.66094,
+          0.27158
+        ]
+      },
+      {
+        "Min": [
+          -5.49487,
+          1.32836,
+          -2.91058
+        ],
+        "Max": [
+          -4.80688,
+          1.63142,
+          -0.18105
+        ]
+      },
+      {
+        "Min": [
+          -6.18286,
+          1.31261,
+          -3.22545
+        ],
+        "Max": [
+          -5.49487,
+          1.6019,
+          -0.63367
+        ]
+      },
+      {
+        "Min": [
+          -6.87085,
+          1.31261,
+          -3.50686
+        ],
+        "Max": [
+          -6.18286,
+          1.56451,
+          -1.12172
+        ]
+      },
+      {
+        "Min": [
+          -7.55884,
+          1.31261,
+          -3.80205
+        ],
+        "Max": [
+          -6.87085,
+          1.52121,
+          -1.59796
+        ]
+      }
+    ],
+    "WheelContacts": [
+      {
+        "Id": "landing_gear_0_0",
+        "Group": "MAIN",
+        "Position": [
+          2.8968,
+          0,
+          0.18105
+        ],
+        "Bounds": {
+          "Min": [
+            2.71575,
+            0,
+            -0.02263
+          ],
+          "Max": [
+            3.07785,
+            0.375679,
+            0.38473
+          ]
+        }
+      },
+      {
+        "Id": "landing_gear_1_0",
+        "Group": "MAIN",
+        "Position": [
+          -2.8968,
+          0,
+          0.18105
+        ],
+        "Bounds": {
+          "Min": [
+            -3.07785,
+            0,
+            -0.02263
+          ],
+          "Max": [
+            -2.71575,
+            0.375679,
+            0.38473
+          ]
+        }
+      },
+      {
+        "Id": "landing_gear_2_0",
+        "Group": "NOSE",
+        "Position": [
+          0.0,
+          0,
+          2.76101
+        ],
+        "Bounds": {
+          "Min": [
+            -0.27158,
+            0,
+            2.48944
+          ],
+          "Max": [
+            0.27158,
+            0.271575,
+            3.03259
+          ]
+        }
+      },
+      {
+        "Id": "landing_gear_3_0",
+        "Group": "MAIN",
+        "Position": [
+          0.0,
+          0,
+          -2.48944
+        ],
+        "Bounds": {
+          "Min": [
+            -0.27158,
+            0,
+            -2.76101
+          ],
+          "Max": [
+            0.27158,
+            0.450815,
+            -2.21786
+          ]
+        }
+      }
+    ],
+    "WreckSections": [
+      {
+        "Min": [
+          -0.7242,
+          0.67894,
+          3.9831
+        ],
+        "Max": [
+          0.7242,
+          2.48944,
+          7.33253
+        ]
+      },
+      {
+        "Min": [
+          -0.76946,
+          0.63367,
+          0.18105
+        ],
+        "Max": [
+          0.76946,
+          2.62523,
+          4.54888
+        ]
+      },
+      {
+        "Min": [
+          -0.7242,
+          0.63367,
+          -6.20096
+        ],
+        "Max": [
+          0.7242,
+          2.5347,
+          0.18105
+        ]
+      },
+      {
+        "Min": [
+          -0.35456,
+          0.81472,
+          -7.78515
+        ],
+        "Max": [
+          0.35456,
+          4.61678,
+          -3.71152
+        ]
+      }
+    ]
+  },
+  "AircraftSurfaceModules": [
+    {
+      "Id": "superbwarfare:wing_left",
+      "MaxHealthFraction": 0.4,
+      "Hitboxes": [
+        {
+          "Bone": "hull",
+          "Min": [
+            0.67894,
+            1.38314,
+            -1.21847
+          ],
+          "Max": [
+            1.36693,
+            1.8305,
+            2.82628
+          ]
+        },
+        {
+          "Bone": "hull",
+          "Min": [
+            1.36693,
+            0.90591,
+            -1.50776
+          ],
+          "Max": [
+            2.05492,
+            1.80295,
+            2.33036
+          ]
+        },
+        {
+          "Bone": "hull",
+          "Min": [
+            2.05492,
+            0.52315,
+            -3.09785
+          ],
+          "Max": [
+            2.74291,
+            1.7754,
+            3.00733
+          ]
+        },
+        {
+          "Bone": "hull",
+          "Min": [
+            2.74291,
+            0.59892,
+            -2.84891
+          ],
+          "Max": [
+            3.4309,
+            1.74785,
+            2.98469
+          ]
+        },
+        {
+          "Bone": "hull",
+          "Min": [
+            3.4309,
+            1.34771,
+            -2.39923
+          ],
+          "Max": [
+            4.11889,
+            1.71636,
+            0.83473
+          ]
+        },
+        {
+          "Bone": "hull",
+          "Min": [
+            4.11889,
+            1.0663,
+            -2.6649
+          ],
+          "Max": [
+            4.80688,
+            1.68094,
+            0.29158
+          ]
+        },
+        {
+          "Bone": "hull",
+          "Min": [
+            4.80688,
+            1.30836,
+            -2.93058
+          ],
+          "Max": [
+            5.49487,
+            1.65142,
+            -0.16105
+          ]
+        },
+        {
+          "Bone": "hull",
+          "Min": [
+            5.49487,
+            1.29261,
+            -3.24545
+          ],
+          "Max": [
+            6.18286,
+            1.6219,
+            -0.61367
+          ]
+        },
+        {
+          "Bone": "hull",
+          "Min": [
+            6.18286,
+            1.29261,
+            -3.52686
+          ],
+          "Max": [
+            6.87085,
+            1.58451,
+            -1.10172
+          ]
+        },
+        {
+          "Bone": "hull",
+          "Min": [
+            6.87085,
+            1.29261,
+            -3.82205
+          ],
+          "Max": [
+            7.55884,
+            1.54121,
+            -1.57796
+          ]
+        }
+      ]
+    },
+    {
+      "Id": "superbwarfare:wing_right",
+      "MaxHealthFraction": 0.4,
+      "Hitboxes": [
+        {
+          "Bone": "hull",
+          "Min": [
+            -1.36693,
+            1.38314,
+            -1.21847
+          ],
+          "Max": [
+            -0.67894,
+            1.8305,
+            2.82628
+          ]
+        },
+        {
+          "Bone": "hull",
+          "Min": [
+            -2.05492,
+            0.90591,
+            -1.50776
+          ],
+          "Max": [
+            -1.36693,
+            1.80295,
+            2.33036
+          ]
+        },
+        {
+          "Bone": "hull",
+          "Min": [
+            -2.74291,
+            0.52315,
+            -3.09785
+          ],
+          "Max": [
+            -2.05492,
+            1.7754,
+            3.00733
+          ]
+        },
+        {
+          "Bone": "hull",
+          "Min": [
+            -3.4309,
+            0.59892,
+            -2.84891
+          ],
+          "Max": [
+            -2.74291,
+            1.74785,
+            2.98469
+          ]
+        },
+        {
+          "Bone": "hull",
+          "Min": [
+            -4.11889,
+            1.34771,
+            -2.39923
+          ],
+          "Max": [
+            -3.4309,
+            1.71636,
+            0.83473
+          ]
+        },
+        {
+          "Bone": "hull",
+          "Min": [
+            -4.80688,
+            1.0663,
+            -2.6649
+          ],
+          "Max": [
+            -4.11889,
+            1.68094,
+            0.29158
+          ]
+        },
+        {
+          "Bone": "hull",
+          "Min": [
+            -5.49487,
+            1.30836,
+            -2.93058
+          ],
+          "Max": [
+            -4.80688,
+            1.65142,
+            -0.16105
+          ]
+        },
+        {
+          "Bone": "hull",
+          "Min": [
+            -6.18286,
+            1.29261,
+            -3.24545
+          ],
+          "Max": [
+            -5.49487,
+            1.6219,
+            -0.61367
+          ]
+        },
+        {
+          "Bone": "hull",
+          "Min": [
+            -6.87085,
+            1.29261,
+            -3.52686
+          ],
+          "Max": [
+            -6.18286,
+            1.58451,
+            -1.10172
+          ]
+        },
+        {
+          "Bone": "hull",
+          "Min": [
+            -7.55884,
+            1.29261,
+            -3.82205
+          ],
+          "Max": [
+            -6.87085,
+            1.54121,
+            -1.57796
+          ]
+        }
+      ]
+    }
+  ],
+  "AircraftSurfaceTransforms": {
+    "aileron_left": {
+      "Parent": "hull",
+      "Pivot": [
+        5.929387,
+        1.4484,
+        -2.71575
+      ],
+      "Axis": [
+        0.9062,
+        0.0,
+        -0.4229
+      ],
+      "ControlWeights": [
+        0,
+        1,
+        0
+      ],
+      "MaxDeflectionDegrees": 20
+    },
+    "aileron_right": {
+      "Parent": "hull",
+      "Pivot": [
+        -5.929387,
+        1.4484,
+        -2.71575
+      ],
+      "Axis": [
+        0.9062,
+        -0.0,
+        0.4229
+      ],
+      "ControlWeights": [
+        0,
+        -1,
+        0
+      ],
+      "MaxDeflectionDegrees": 20
+    },
+    "stabilator_left": {
+      "Parent": "hull",
+      "Pivot": [
+        0.045262,
+        3.009956,
+        -6.33675
+      ],
+      "Axis": [
+        1.0,
+        -0.0,
+        0.0
+      ],
+      "ControlWeights": [
+        1,
+        0.2,
+        0
+      ],
+      "MaxDeflectionDegrees": 25
+    },
+    "stabilator_right": {
+      "Parent": "hull",
+      "Pivot": [
+        -0.045262,
+        3.009956,
+        -6.33675
+      ],
+      "Axis": [
+        1.0,
+        -0.0,
+        0.0
+      ],
+      "ControlWeights": [
+        1,
+        -0.2,
+        0
+      ],
+      "MaxDeflectionDegrees": 25
+    },
+    "rudder": {
+      "Parent": "hull",
+      "Pivot": [
+        0.0,
+        2.35365,
+        -6.200963
+      ],
+      "Axis": [
+        -0.0,
+        -0.8904,
+        0.4551
+      ],
+      "ControlWeights": [
+        0,
+        0,
+        1
+      ],
+      "MaxDeflectionDegrees": 25
+    }
+  },
+  "DamageClass": "AIRPLANE",
+  "DeathChargeKg": 38.7
+}
