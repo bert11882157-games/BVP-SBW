@@ -1,0 +1,40 @@
+{
+  "Schema": 1,
+  "Name": "B-13L · 5 x S-13OF rockets (AI)",
+  "Category": "ROCKET_POD",
+  "Generated": true,
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/b13l.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.214,
+    0.0
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.19,
+      0.0,
+      0.0
+    ],
+    "Right": [
+      -0.19,
+      0.0,
+      0.0
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/b13l.png",
+  "Capacity": 5,
+  "Scale": 1,
+  "MassKg": 101.0,
+  "AmmoItem": "superbwarfare:small_unguided_rocket",
+  "LaunchOffset": [
+    0.0,
+    -0.214,
+    0.0
+  ]
+}

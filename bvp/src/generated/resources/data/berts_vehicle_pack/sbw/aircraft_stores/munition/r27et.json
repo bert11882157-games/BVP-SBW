@@ -1,0 +1,56 @@
+{
+  "Schema": 1,
+  "Name": "R-27ET · extended-range infrared (AI)",
+  "Category": "AIR_TO_AIR",
+  "Generated": true,
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/r27et.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.13,
+    0.63
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.13,
+      0.0,
+      0.63
+    ],
+    "Right": [
+      -0.13,
+      0.0,
+      0.63
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    0.63
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/r27et.png",
+  "Capacity": 1,
+  "MassKg": 343.0,
+  "Guidance": {
+    "Mode": "INFRARED",
+    "LockTicks": 65,
+    "Range": 1841,
+    "ConeDegrees": 30,
+    "CountermeasureVulnerability": 1
+  },
+  "Flight": {
+    "InitialSpeed": 0.5,
+    "MaxSpeed": 7.2,
+    "AccelerationPerTick": 0.1,
+    "TurnDegreesPerSecond": 65,
+    "Damage": 45,
+    "BlastRadius": 4,
+    "TntEquivalentKg": 24.0
+  },
+  "AmmoItem": "superbwarfare:medium_air_to_air_missile",
+  "MaxPerPylon": 1,
+  "LaunchOffset": [
+    0.0,
+    -0.13,
+    0.0
+  ]
+}
