@@ -40,15 +40,15 @@ CANOPY_BONE = 'wreck_fuselage_1__canopy'
 # ---- the frame's measurements (absolute blocks)
 # the rear arch's front face from the sill up over the top: (x of its inner edge, y, z of its front face)
 ARCH = [(0.340, 2.446, 2.439), (0.340, 2.514, 2.382), (0.317, 2.650, 2.337), (0.272, 2.740, 2.292), (0.181, 2.820, 2.246),
-        (0.0, 2.887, 2.212)]
+        (0.136, 2.842, 2.2125)]
 # the sill rails' inner top edge: z, x, y; the front edge's rear face at z 4.364
 RAIL = [(2.439, 0.340, 2.446), (2.700, 0.352, 2.400), (2.982, 0.362, 2.355), (3.300, 0.350, 2.325), (3.600, 0.338, 2.305),
-        (3.933, 0.317, 2.287), (4.183, 0.255, 2.287), (4.364, 0.150, 2.287)]
+        (3.933, 0.317, 2.287), (4.183, 0.255, 2.287), (4.364, 0.159, 2.287), (4.386, 0.068, 2.3340)]
 # the crown line over the centre (z, y): the frame's centre strip, smoothed
 CROWN = [(2.212, 2.887), (2.30, 2.915), (2.44, 2.935), (2.62, 2.944), (3.00, 2.945), (3.20, 2.935), (3.50, 2.875),
-         (3.75, 2.775), (4.00, 2.620), (4.20, 2.470), (4.364, 2.335)]
+         (3.75, 2.775), (4.00, 2.620), (4.20, 2.470), (4.364, 2.335), (4.386, 2.3340)]
 NEXP = 2.6                       # the sections' super-ellipse exponent
-Z_FRONT = 4.364
+Z_FRONT = 4.386
 
 # the eye (from the vehicle data), set by main(); the module also loads without it for the checks
 _EYE = np.array([0.0, 2.60299, 2.86947375])
@@ -86,7 +86,7 @@ def section(z, n=22):
 
 
 STATIONS = [2.2125, 2.225, 2.245, 2.27, 2.30, 2.33, 2.36, 2.39, 2.42, 2.439, 2.50, 2.60, 2.70, 2.85, 2.982, 3.14, 3.30,
-            3.45, 3.60, 3.77, 3.933, 4.06, 4.183, 4.28, 4.364]
+            3.45, 3.60, 3.77, 3.933, 4.06, 4.183, 4.28, 4.364, 4.375, 4.386]
 
 
 def sections_rel(eye):
@@ -122,6 +122,17 @@ def glass_triangles(eye, ns=12):
                 for tri in ((a, b, c), (a, c, d)):
                     if np.linalg.norm(np.cross(tri[1] - tri[0], tri[2] - tri[0])) > 1e-10:
                         out.append([t for t in tri])
+        # the frame's inner edge turns at its vertices, which fall between two stations: a triangle fills each corner the
+        # chord between the stations' base points would leave (a sliver that showed the sky)
+        for xv, yv, zv in ARCH[1:-1]:
+            below = [z for z in STATIONS if z < zv - 1e-6]; above = [z for z in STATIONS if z > zv + 1e-6]
+            if not below or not above or any(abs(z - zv) < 0.004 for z in STATIONS):
+                continue
+            za, zb = below[-1], above[0]
+            (xa, ya), (xb, yb) = section(za)[0], section(zb)[0]
+            tri = [np.array([side * xa, ya, za]), np.array([side * xv, yv, zv]), np.array([side * xb, yb, zb])]
+            if np.linalg.norm(np.cross(tri[1] - tri[0], tri[2] - tri[0])) > 1e-10:
+                out.append(tri)
     return out
 
 def main(argv):

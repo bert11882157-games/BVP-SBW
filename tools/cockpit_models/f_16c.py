@@ -338,12 +338,16 @@ U_C = np.array([0, math.cos(LEAN), math.sin(LEAN)])
 N_C = np.array([0, math.sin(LEAN), -math.cos(LEAN)])
 R_C = np.array([-1.0, 0, 0])    # pilot's right
 P0 = np.array([0.0, -0.40, 0.70])
-HINGE = 0.250                   # centre facet half width
-WING = math.radians(28)         # wings turned toward the pilot
-WALL_END = 0.395                # wings end here (under the canopy rail)
-WING_LEN = (WALL_END - HINGE) / math.cos(WING)
+HINGE = 0.100                   # centre facet half width: the narrow centre column
+WING = math.radians(22)         # the MFD facets, turned toward the pilot
+WING2 = math.radians(30)        # the outer facets (RWR, gear, engine gauges), turned further in
+WALL_END = 0.395                # facets end here (under the canopy rail)
+WING_LEN = 0.205                # inner facet length (one 0.184 m MFD with its bezel and a margin)
+X_END1 = HINGE + WING_LEN * math.cos(WING)
+WING2_LEN = (WALL_END - X_END1) / math.cos(WING2)
 TOP_C = -0.152                  # centre facet top: the coaming's lip
-TOP_H, TOP_W = -0.157, -0.343   # wing top at the hinge and at the wall (sloping down under the glass)
+TOP_X0 = 0.250                  # the top stays level to here, then slopes down to the wall (as the deck's edge always did)
+TOP_H, TOP_W = -0.157, -0.343   # facet top at the hinge and at the wall (sloping down under the glass)
 BOT_C = -0.680
 BOT_W = CONSOLE_Y               # wings stand on the consoles
 
@@ -353,60 +357,97 @@ def wall_x(y_abs):
     return 0.495 if y_abs <= 2.08 else max(0.41, 0.5 - (y_abs - 2.08) * 0.643)
 
 
+def top_at_x(x):
+    """panel top over a facet at |x| from the centre line (the wing tops slope down toward the wall)"""
+    return TOP_H + (TOP_W - TOP_H) * max(0.0, abs(x) - TOP_X0) / (WALL_END - TOP_X0)
+
+
 class Facet:
-    def __init__(self, side):
-        self.side = side                    # 0 centre, +1 right wing, -1 left wing
+    def __init__(self, side, kind=None):
+        self.side = side                    # 0 centre, +1 right, -1 left
+        self.kind = 0 if side == 0 else (kind or 1)      # 1 = inner (MFD) facet, 2 = outer facet
+        ang = {0: 0.0, 1: WING, 2: WING2}[self.kind]
         if side == 0:
             self.R, self.N = R_C, N_C
         else:
-            self.R = R_C * side * math.cos(WING) + N_C * math.sin(WING)
-            self.N = N_C * math.cos(WING) - R_C * side * math.sin(WING)
+            self.R = R_C * side * math.cos(ang) + N_C * math.sin(ang)
+            self.N = N_C * math.cos(ang) - R_C * side * math.sin(ang)
         self.U = U_C
+        self.origin = P0.copy()
+        if self.kind >= 1:
+            self.origin = P0 + R_C * (side * HINGE)
+        if self.kind == 2:
+            r1 = R_C * side * math.cos(WING) + N_C * math.sin(WING)
+            self.origin = self.origin + r1 * WING_LEN
 
     def at(self, a, y, lift=0.0):
-        """panel point: a = metres right of the centre line (centre) or along the wing from the hinge (wings)"""
+        """panel point: a = metres right of the centre line (centre) or along the facet from its inner edge (wings)"""
         v = (y - P0[1]) / math.cos(LEAN)
-        if self.side == 0:
-            p = P0 + R_C * a + U_C * v
-        else:
-            p = P0 + R_C * (self.side * HINGE) + U_C * v + self.R * a
+        p = self.origin + self.R * a + U_C * v
         return p + self.N * lift
 
+    def x_abs(self, a):
+        return abs(float((self.origin + self.R * a)[0]))
+
     def top(self, a):
-        return TOP_C if self.side == 0 else TOP_H + (TOP_W - TOP_H) * a / WING_LEN
+        return TOP_C if self.side == 0 else top_at_x(self.x_abs(a))
 
     def bottom(self):
         return BOT_C if self.side == 0 else BOT_W
 
     def extent(self):
-        return (-HINGE, HINGE) if self.side == 0 else (0.0, WING_LEN)
+        if self.side == 0:
+            return (-HINGE, HINGE)
+        return (0.0, WING_LEN if self.kind == 1 else WING2_LEN)
 
 
-CENTRE, RIGHT, LEFT = Facet(0), Facet(1), Facet(-1)
+CENTRE = Facet(0)
+RIGHT, LEFT = Facet(1, 1), Facet(-1, 1)           # the MFD facets
+RIGHT2, LEFT2 = Facet(1, 2), Facet(-1, 2)         # the outer facets
+FACETS = (CENTRE, LEFT, RIGHT, LEFT2, RIGHT2)
 
-# Instrument layout of the F-16C Block 50/52 panel (the xflight.de drawing, work/cockpit_diagrams/f_16c). Positions:
-# facet, a (see Facet.at), y (height from the eye). Sizes: dial diameter, or w x h. 'game': drawn by the game.
+
+def face_z(x, y):
+    """z (eye-relative) of the panel's face at lateral position x (+ left) and height y"""
+    if abs(x) <= HINGE:
+        return float(CENTRE.at(0, y)[2])
+    return panel_z(1 if x > 0 else -1, abs(x), y)
+
+
+def panel_z(sgn, x, y):
+    """z (eye-relative) of the panel's face at |x| = x on the side sgn (+1 left) at height y, past the last facet too"""
+    w1, w2 = (LEFT, LEFT2) if sgn > 0 else (RIGHT, RIGHT2)
+    if x <= X_END1:
+        return float(w1.at((x - HINGE) / math.cos(WING), y)[2])
+    return float(w2.at((x - X_END1) / math.cos(WING2), y)[2])
+
+
+# Instrument layout of the F-16C Block 50/52 panel (the xflight.de drawing, work/cockpit_diagrams/f_16c): the ICP and
+# the DED under the HUD, a narrow centre column (airspeed and altimeter, the ADI with the AoA and vertical-speed
+# indicators, the HSI), the two MFDs low on the inner facets angled in toward the pilot, the RWR / gear panel and the
+# engine gauges on the outer facets. Positions: facet, a (see Facet.at), y (height from the eye). Sizes: dial
+# diameter, or w x h. 'game': drawn by the game.
 LAYOUT = [
-    ('icp',     CENTRE, 0.000, -0.200, ('paint_rect', 0.150, 0.075), 'integrated control panel (ICP) with the DED'),
-    ('mfd_l',   CENTRE, -0.155, -0.350, ('display', 'RADAR', 0.140), 'left MFD (radar)'),
-    ('mfd_r',   CENTRE, 0.155, -0.350, ('display', 'STORES', 0.140), 'right MFD (stores)'),
-    ('ias',     CENTRE, -0.036, -0.322, ('game', 'AIRSPEED', 0.044), 'airspeed / Mach indicator'),
-    ('alt',     CENTRE, 0.036, -0.322, ('game', 'ALTIMETER', 0.044), 'altimeter'),
-    ('aoa',     CENTRE, -0.088, -0.497, ('game', 'AOA', 0.040), 'angle of attack'),
-    ('adi',     CENTRE, 0.000, -0.468, ('game', 'ATTITUDE', 0.072), 'standby attitude / ADI'),
-    ('vvi',     CENTRE, 0.088, -0.497, ('game', 'VVI', 0.044), 'vertical velocity'),
-    ('hsi',     CENTRE, 0.000, -0.585, ('game', 'HEADING', 0.082), 'HSI'),
-    ('instr',   CENTRE, -0.095, -0.585, ('paint_rect', 0.056, 0.070), 'instrument mode panel'),
-    ('fuelsel', CENTRE, 0.095, -0.585, ('paint_rect', 0.056, 0.070), 'fuel quantity selector'),
+    ('icp',     CENTRE, 0.000, -0.215, ('paint_rect', 0.196, 0.100), 'integrated control panel (ICP): COM1/COM2/IFF/LIST/A-A/A-G, keypad, rockers'),
+    ('ded',     CENTRE, 0.000, -0.292, ('paint_rect', 0.170, 0.044), 'data entry display (DED)'),
+    ('ias',     CENTRE, -0.036, -0.370, ('game', 'AIRSPEED', 0.044), 'airspeed / Mach indicator'),
+    ('alt',     CENTRE, 0.036, -0.370, ('game', 'ALTIMETER', 0.044), 'altimeter'),
+    ('aoa',     CENTRE, -0.070, -0.462, ('game', 'AOA', 0.034), 'angle of attack'),
+    ('adi',     CENTRE, 0.000, -0.462, ('game', 'ATTITUDE', 0.072), 'standby attitude / ADI'),
+    ('vvi',     CENTRE, 0.070, -0.462, ('game', 'VVI', 0.034), 'vertical velocity'),
+    ('hsi',     CENTRE, 0.000, -0.570, ('game', 'HEADING', 0.082), 'HSI'),
     ('pedal',   CENTRE, 0.000, -0.658, ('paint_rect', 0.100, 0.022), 'pedal adjust plate'),
-    ('rwr',     LEFT,   0.082, -0.350, ('game', 'RWR', 0.070), 'threat warning (RWR) scope'),
-    ('misc',    LEFT,   0.082, -0.455, ('paint_rect', 0.110, 0.070), 'MISC panel: master arm, roll and pitch hold'),
-    ('gear',    LEFT,   0.082, -0.560, ('paint_rect', 0.100, 0.060), 'landing gear handle and lights'),
-    ('rpm',     RIGHT,  0.082, -0.310, ('game', 'ENGINE_RPM', 0.050), 'engine rpm'),
-    ('ftit',    RIGHT,  0.082, -0.375, ('game', 'EGT', 0.050), 'FTIT'),
-    ('fuel',    RIGHT,  0.082, -0.440, ('game', 'FUEL_QTY', 0.050), 'fuel quantity'),
-    ('warning', RIGHT,  0.082, -0.530, ('annunciator', 0.115, 0.070), 'caution panel'),
+    ('mfd_l',   LEFT,   0.102, -0.400, ('display', 'RADAR', 0.140), 'left MFD (radar)'),
+    ('mfd_r',   RIGHT,  0.102, -0.400, ('display', 'STORES', 0.140), 'right MFD (stores)'),
+    ('misc',    LEFT,   0.102, -0.265, ('paint_rect', 0.130, 0.040), 'MISC panel: master arm, roll and pitch hold'),
+    ('warning', RIGHT,  0.102, -0.265, ('annunciator', 0.130, 0.040), 'caution panel'),
+    ('rwr',     LEFT2,  0.088, -0.375, ('game', 'RWR', 0.070), 'threat warning (RWR) scope'),
+    ('gear',    LEFT2,  0.088, -0.463, ('paint_rect', 0.095, 0.048), 'landing gear handle and lights'),
+    ('rpm',     RIGHT2, 0.088, -0.345, ('game', 'ENGINE_RPM', 0.046), 'engine rpm'),
+    ('ftit',    RIGHT2, 0.088, -0.405, ('game', 'EGT', 0.046), 'FTIT'),
+    ('fuel',    RIGHT2, 0.088, -0.465, ('game', 'FUEL_QTY', 0.046), 'fuel quantity'),
 ]
+PAINT_PX = {'icp': 420, 'ded': 340}     # texture width (px) of the painted panels that need more detail
 
 GAUGE_LIFT = 0.004
 DISPLAY_LIFT = 0.003
@@ -521,32 +562,63 @@ def panel_paint(facet, rect_px):
 # ---------------------------------------------------------------- painted instrument faces
 
 def p_icp(d, im):
+    """the integrated control panel: the COM1 / COM2 / IFF / LIST / A-A / A-G keys on top, the 3 x 4 keypad in the middle
+    and a rocker switch pair either side (left: DRIFT C/O and WARN RESET; right: SYM / FLIR (UNVERIFIED labels))"""
     S, H = im.width, im.height
     d.rectangle([0, 0, S, H], fill=(16, 17, 18, 255))
-    d.rectangle([S * .06, H * .06, S * .94, H * .40], fill=(6, 14, 8, 255), outline=(60, 62, 60, 255), width=3)
-    text(d, (S * .5, H * .16), 'STPT  12   AUTO   030\u00b0015', H * .13, fill=DED + (255,))
-    text(d, (S * .5, H * .30), 'VHF  295.00   T1234', H * .12, fill=DED + (255,))
-    labs = ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'ENTR', '0', 'RCL']
-    kw = S * .86 / 6
-    for k, lab in enumerate(labs):
-        r, c = k // 6, k % 6
-        x0 = S * .07 + c * kw + 3; y0 = H * (.46 + r * .26)
-        d.rectangle([x0, y0, x0 + kw - 6, y0 + H * .21], fill=(70, 74, 80, 255), outline=(10, 10, 10, 255), width=2)
-        text(d, (x0 + kw / 2 - 3, y0 + H * .105), lab, H * .12, fill=(235, 235, 228))
+    key = (70, 74, 80, 255); edge = (8, 8, 8, 255); ink = (235, 235, 228)
+    top = ['COM1', 'COM2', 'IFF', 'LIST', 'A-A', 'A-G']
+    kw = S * .90 / 6
+    for k, lab in enumerate(top):
+        x0 = S * .05 + k * kw + 3
+        d.rectangle([x0, H * .04, x0 + kw - 6, H * .20], fill=key, outline=edge, width=2)
+        text(d, (x0 + kw / 2 - 3, H * .12), lab, H * .085, fill=ink)
+    rows = [['1', '2', '3'], ['4', '5', '6'], ['7', '8', '9'], ['RCL', '0', 'ENTR']]
+    sub = [['T-ILS', 'ALOW', ''], ['STPT', 'CRUS', 'TIME'], ['MARK', 'FIX', 'A-CAL'], ['', 'M-SEL', '']]
+    cx0, cx1 = S * .25, S * .75
+    cw = (cx1 - cx0) / 3
+    rh = H * .185
+    for r in range(4):
+        for c in range(3):
+            x0 = cx0 + c * cw + 3; y0 = H * .25 + r * (rh + H * .012)
+            d.rectangle([x0, y0, x0 + cw - 6, y0 + rh], fill=key, outline=edge, width=2)
+            text(d, (x0 + cw / 2 - 3, y0 + rh * .40), rows[r][c], H * .090 if len(rows[r][c]) < 3 else H * .062, fill=ink, bold=True)
+            if sub[r][c]:
+                text(d, (x0 + cw / 2 - 3, y0 + rh * .80), sub[r][c], H * .045, fill=(200, 200, 190))
+    # the rocker switches either side of the keypad
+    for side, labs in ((0, ('DRIFT', 'C/O', 'WARN', 'RESET')), (1, ('SYM', '', 'FLIR', ''))):
+        xc = S * (.115 if side == 0 else .885)
+        for k in range(2):
+            y0 = H * (.27 + k * .36)
+            d.rounded_rectangle([xc - S * .055, y0, xc + S * .055, y0 + H * .30], radius=6, fill=(30, 31, 33, 255),
+                                outline=(150, 150, 150, 255), width=3)
+            d.rectangle([xc - S * .040, y0 + H * .03, xc + S * .040, y0 + H * .15], fill=(120, 124, 128, 255))
+            d.rectangle([xc - S * .040, y0 + H * .15, xc + S * .040, y0 + H * .27], fill=(60, 62, 66, 255))
+            text(d, (xc, y0 + H * .35), labs[k * 2] + (' ' + labs[k * 2 + 1] if labs[k * 2 + 1] else ''), H * .05)
 
 
-def p_hud_ctrl(d, im):
+def p_ded(d, im):
+    """the data entry display: five lines of the DED in green on black"""
+    S, H = im.width, im.height
+    d.rectangle([0, 0, S, H], fill=(16, 17, 18, 255))
+    d.rectangle([S * .03, H * .08, S * .97, H * .92], fill=(5, 14, 7, 255), outline=(60, 62, 60, 255), width=3)
+    text(d, (S * .5, H * .30), 'STPT 12  AUTO  030\u00b0 015', H * .26, fill=DED + (255,))
+    text(d, (S * .5, H * .68), 'VHF 295.00   T1234', H * .24, fill=DED + (255,))
+
+
+def p_hudpanel(d, im):
+    """the HUD remote control strip on the right aux console (laid along the console: top = forward): PRI, DAY,
+    BRT, CONT, TEST"""
     S, H = im.width, im.height
     noisy(d, im, DGREY, 3, seed=9)
     for k, lab in enumerate(['PRI', 'DAY', 'BRT', 'CONT', 'TEST']):
-        x = S * (0.11 + k * 0.195)
+        y = H * (0.10 + k * 0.18)
         if k in (2, 3):
-            d.ellipse([x - H * .17, H * .22 - H * .17, x + H * .17, H * .22 + H * .17], fill=(18, 18, 18, 255),
+            d.ellipse([S * .12, y - S * .20, S * .12 + S * .40, y + S * .20], fill=(18, 18, 18, 255),
                       outline=(120, 120, 120, 255), width=3)
         else:
-            d.rectangle([x - H * .24, H * .06, x + H * .24, H * .38], fill=(150, 150, 150, 255), outline=(20, 20, 20, 255), width=2)
-        text(d, (x, H * .62), lab, H * .19)
-
+            d.rectangle([S * .10, y - S * .14, S * .50, y + S * .14], fill=(150, 150, 150, 255), outline=(20, 20, 20, 255), width=2)
+        text(d, (S * .76, y), lab, S * .16)
 
 def p_instr(d, im):
     S, H = im.width, im.height
@@ -705,7 +777,7 @@ def build(atlas, lamps, cols):
 
     # -- main panel facets (front face painted, slab 2 cm deep)
     ppm = 700
-    for f in (CENTRE, LEFT, RIGHT):
+    for f in FACETS:
         a0, a1 = f.extent()
         y_top = max(f.top(a0), f.top(a1))
         W = int(round((a1 - a0) * ppm)); Hh = int(round((y_top - f.bottom()) / math.cos(LEAN) * ppm))
@@ -731,9 +803,14 @@ def build(atlas, lamps, cols):
             mid = (p + q) / 2
             m.flat([p, q, q + back, p + back], sw['panel_d'], toward=mid + (mid - mid0))
 
+    # -- the kick panels under the inner facets, between the centre column and the consoles
+    for f in (LEFT, RIGHT):
+        a_end = (CON_IN - HINGE) / math.cos(WING)
+        m.flat([f.at(0, BOT_C), f.at(a_end, BOT_C), f.at(a_end, BOT_W), f.at(0, BOT_W)], sw['panel_d'], normal=f.N)
+
     # -- instruments
     cache = {}
-    painters = {'icp': p_icp, 'instr': p_instr, 'fuelsel': p_fuelsel, 'pedal': p_pedal, 'misc': p_misc, 'gear': p_gear}
+    painters = {'icp': p_icp, 'ded': p_ded, 'instr': p_instr, 'fuelsel': p_fuelsel, 'pedal': p_pedal, 'misc': p_misc, 'gear': p_gear}
     bar_h_r = atlas.paint(96, 16, bar_h); bar_v_r = atlas.paint(16, 96, bar_v)
     for name, f, a, y, spec, label in LAYOUT:
         kind = spec[0]
@@ -764,7 +841,7 @@ def build(atlas, lamps, cols):
                 m.box(c + r_ * sgn * (w / 2 + t) + n_ * (pr - 0.002) / 2, (r_, u_, n_), (0.0015, w / 2 + t, (pr - 0.002) / 2), sw['black'])
         elif kind == 'paint_rect':
             w, h = spec[1], spec[2]
-            pw = 160 if w >= h else 80
+            pw = PAINT_PX.get(name, 160 if w >= h else 80)
             ph = max(16, int(round(pw * h / w)))
             rect = cache.get(name) or atlas.paint(pw, ph, painters[name])
             cache[name] = rect
@@ -786,7 +863,7 @@ def build(atlas, lamps, cols):
         tucks under the canopy's rail"""
         hw = float(np.interp(z, SZ_, SHW)); yc = float(np.interp(z, SZ_, SYC))
         ax_ = abs(x)
-        yp = 2.603 + TOP_C if ax_ <= HINGE else 2.603 + TOP_H + (TOP_W - TOP_H) * ((ax_ - HINGE) / math.cos(WING)) / WING_LEN
+        yp = 2.603 + TOP_C if ax_ <= HINGE else 2.603 + top_at_x(ax_)
         return min(yc, yp + 0.007, EDGE_Y + 1.5 * (hw - ax_))
 
     def deck_row(z):
@@ -804,7 +881,9 @@ def build(atlas, lamps, cols):
         a, b = lip[j], lip[j + 1]
         da, db = a - [0, 0.014, 0], b - [0, 0.014, 0]
         m.flat([a, b, db, da], cs, normal=[0, 0, -1])
-        m.flat([da, db, db + [0, 0, 0.05], da + [0, 0, 0.05]], cs, normal=[0, -1, 0])
+        # (the underside runs back to the panel's face at each point, which falls away toward the wall)
+        za = max(0.05, face_z(a[0], a[1] - 0.012) - a[2] + 0.003); zb = max(0.05, face_z(b[0], b[1] - 0.012) - b[2] + 0.003)
+        m.flat([da, db, db + [0, 0, zb], da + [0, 0, za]], cs, normal=[0, -1, 0])
     # the deck's closed ends at the sides (down to the sill), so nothing is open under the glass
     for j in (0, NJ):
         for i in range(len(rows) - 1):
@@ -816,9 +895,7 @@ def build(atlas, lamps, cols):
     # its top corners cut off, held by a thin frame whose two side members run on down as the posts into the unit's
     # housing. The housing is a low strip (4.6 cm) on the coaming; nothing of it stands in front of the glass.
     hz0, hz1, hy0, hy1, hhw = 0.700, 0.860, -0.158, -0.112, 0.136
-    ctrl = atlas.paint(320, 54, p_hud_ctrl)
-    m.box([0, (hy0 + hy1) / 2, (hz0 + hz1) / 2], (X, Y, Z), (hhw, (hy1 - hy0) / 2, (hz1 - hz0) / 2), sw['dgrey'],
-          front=(2, -1, ctrl, -X, Y))
+    m.box([0, (hy0 + hy1) / 2, (hz0 + hz1) / 2], (X, Y, Z), (hhw, (hy1 - hy0) / 2, (hz1 - hz0) / 2), sw['dgrey'])
     lean = math.radians(20)
     g_up = np.array([0, math.cos(lean), -math.sin(lean)])
     g_n = unit(np.cross(X, g_up))
@@ -846,21 +923,21 @@ def build(atlas, lamps, cols):
               [sgn * wall_t(ya1), ya1 - 2.603, z_front], [sgn * wall_t(ya1), ya1 - 2.603, z_back]]
         m.flat(qs, sw['panel_d'], normal=[-sgn, 0.3, 0])
         # console: top, inner side, front, back
-        wing = LEFT if sgn > 0 else RIGHT
-
-        def wing_bottom_z(x):
-            a = (abs(x) - HINGE) / math.cos(WING)
-            return wing.at(a, BOT_W)[2]
+        def wing_bottom_z(x, sgn=sgn):
+            return panel_z(sgn, abs(x), BOT_W)
         xi, xo = CON_IN * sgn, CON_OUT * sgn
         zf_i, zf_o = wing_bottom_z(CON_IN), wing_bottom_z(CON_OUT)
         con = atlas.paint(64, 340, p_console(sgn))
-        top = [[xi, CONSOLE_Y, z_back + 0.05], [xo, CONSOLE_Y, z_back + 0.05], [xo, CONSOLE_Y, zf_o], [xi, CONSOLE_Y, zf_i]]
-        m.face(top, [uv_of(con, 0, 0), uv_of(con, 1, 0), uv_of(con, 1, 1), uv_of(con, 0, 1)], normal=[0, 1, 0])
+        # (the front edge follows the facets' bottom line, with its kink where the inner facet ends)
+        xm = X_END1 * sgn; zf_m = wing_bottom_z(X_END1); fm = (X_END1 - CON_IN) / (CON_OUT - CON_IN)
+        top = [[xi, CONSOLE_Y, z_back + 0.05], [xo, CONSOLE_Y, z_back + 0.05], [xo, CONSOLE_Y, zf_o], [xm, CONSOLE_Y, zf_m], [xi, CONSOLE_Y, zf_i]]
+        m.face(top, [uv_of(con, 0, 0), uv_of(con, 1, 0), uv_of(con, 1, 1), uv_of(con, fm, 1), uv_of(con, 0, 1)], normal=[0, 1, 0])
         m.flat([[xi, fy, z_back + 0.05], [xi, fy, zf_i], [xi, CONSOLE_Y, zf_i], [xi, CONSOLE_Y, z_back + 0.05]], sw['panel_d'],
                normal=[-sgn, 0, 0])
         m.flat([[xi, fy, z_back + 0.05], [xo, fy, z_back + 0.05], [xo, CONSOLE_Y, z_back + 0.05], [xi, CONSOLE_Y, z_back + 0.05]],
                sw['panel_d'], normal=[0, 0, -1])
-        m.flat([[xi, fy, zf_i], [xo, fy, zf_o], [xo, CONSOLE_Y, zf_o], [xi, CONSOLE_Y, zf_i]], sw['panel_d'], normal=[0, 0, 1])
+        m.flat([[xi, fy, zf_i], [xm, fy, zf_m], [xm, CONSOLE_Y, zf_m], [xi, CONSOLE_Y, zf_i]], sw['panel_d'], normal=[0, 0, 1])
+        m.flat([[xm, fy, zf_m], [xo, fy, zf_o], [xo, CONSOLE_Y, zf_o], [xm, CONSOLE_Y, zf_m]], sw['panel_d'], normal=[0, 0, 1])
         m.flat([[xo, fy, z_back + 0.05], [xo, fy, zf_o], [xo, CONSOLE_Y, zf_o], [xo, CONSOLE_Y, z_back + 0.05]], sw['panel_d'],
                normal=[-sgn, 0, 0])
     # floor liner, rear bulkhead and the kick panel under the panel
@@ -890,6 +967,11 @@ def build(atlas, lamps, cols):
                 m.box([s * xc, CONSOLE_Y + 0.005, zr], (X, Y, Z), (0.009, 0.005, 0.009), sw['metal'])
                 m.box([s * xc, CONSOLE_Y + 0.020, zr - 0.003], (X, unit([0, 1, -0.3]), unit([0, 0.3, 1])),
                       (0.0025, 0.012, 0.0025), sw['black'])
+
+    # -- the HUD remote control strip (PRI / DAY / BRT / CONT / TEST) on the right aux console, outboard of the armrest
+    hp = atlas.paint(64, 320, p_hudpanel)
+    m.box([-0.438, CONSOLE_Y + 0.004, 0.10], (X, Y, Z), (0.024, 0.004, 0.108), sw['bezel'])
+    m.rect_tex([-0.438, CONSOLE_Y + 0.0095, 0.10], [0, 1, 0], [0, 0, 1], 0.040, 0.200, hp)
 
     # -- the fixed armrest and the side stick on the right console (the grip goes into the stick bone)
     SX, SZ = -0.285, 0.22
