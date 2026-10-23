@@ -3,7 +3,13 @@
 and against the model's own faces round the cockpit) that lie in nearly the same plane (normals within 2.5 degrees,
 planes within GAP) and overlap. Prints each clash's position from the eye, so it can be fixed in the aircraft's file.
 
-Usage: zfight_check.py VID [VID...] [--gap 0.0015]
+Faces back to back are checked as well as face to face: the vehicle model is drawn without back-face culling.
+
+--strict (bert, 2026-10-23: z-fighting still shows in game): what flickers at the distances the game is seen from
+(third person, 10-20 m) rather than from the seat: planes within 4 mm, normals within 6 degrees, everything within
+4 m of the eye (the whole canopy and the skin round it).
+
+Usage: zfight_check.py VID [VID...] [--gap 0.0015] [--angle 2.5] [--reach 2.5] [--strict]
 """
 import json, math, os, sys
 import numpy as np
@@ -15,6 +21,11 @@ import cockpit_lib as L  # noqa: E402
 
 def arg(name, default=None):
     return sys.argv[sys.argv.index(name) + 1] if name in sys.argv else default
+
+
+STRICT = '--strict' in sys.argv
+ANGLE = float(arg('--angle', 6.0 if STRICT else 2.5))     # normals within this many degrees count as one plane
+REACH = float(arg('--reach', 4.0 if STRICT else 2.5))     # faces this far from the eye are checked
 
 
 def tris_of(ac, E, mine, uvs_out):
@@ -31,7 +42,7 @@ def tris_of(ac, E, mine, uvs_out):
         for poly in pm['polys']:
             if poly:
                 V = P[[v[0] for v in poly]]
-                if np.abs(V.mean(0)).max() > 2.5:
+                if np.abs(V.mean(0)).max() > REACH:
                     continue
                 uv = U[[v[2] for v in poly]]
                 for k in range(1, len(V) - 1):
@@ -118,11 +129,10 @@ def check(vid, gap):
                     np.abs(UV[i].mean(0) - UV[j].mean(0)).max() < 0.004:
                 continue                         # both within one swatch, the same colour: no visible fighting
             c = abs(na[i] @ nb[j])
-            if c < math.cos(math.radians(2.5)):
+            if c < math.cos(math.radians(ANGLE)):
                 continue
-            s = 1 if na[i] @ nb[j] > 0 else -1
-            if s < 0:
-                continue                         # back to back: each shows from its own side only
+            # back to back counts too: the vehicle model is drawn without back-face culling (GeckoLib's default
+            # entityCutoutNoCull), so each face also shows from behind and fights the other (bert, 2026-10-23)
             # the planes' distance measured at the triangles themselves (not from the origin)
             if abs((B[j].mean(0) - A[i].mean(0)) @ na[i]) > gap:
                 continue
@@ -136,9 +146,9 @@ def check(vid, gap):
 
 
 def main():
-    gap = float(arg('--gap', '0.0015'))
+    gap = float(arg('--gap', '0.004' if STRICT else '0.0015'))
     gg = arg('--glass')
-    for vid in [a for a in sys.argv[1:] if not a.startswith('--') and a not in (arg('--gap'), gg)]:
+    for vid in [a for a in sys.argv[1:] if not a.startswith('--') and a not in (arg('--gap'), gg, arg('--angle'), arg('--reach'))]:
         if gg:
             ac = L.Aircraft(vid)
             E = ac.eye(0)
