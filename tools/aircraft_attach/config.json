@@ -14,6 +14,14 @@
         "skip": "hand-set on the outboard pylon launcher rail faces (elite_expansion_2/tools/f15ex_armament.py)"
       }
     },
+    "f_22a": {
+      "wing_pylon": {
+        "skip": "hand-set on the model's own wing pylon bottom (elite_expansion_2/f22a/f22a_armament.py)"
+      },
+      "wing_shoulders": {
+        "skip": "hand-set on the model's own AAM axes beside the pylon beam (elite_expansion_2/f22a/f22a_armament.py)"
+      }
+    },
     "f_16c": {
       "inlet_left": {
         "layout": "skin",
