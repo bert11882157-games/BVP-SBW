@@ -30,7 +30,6 @@ import numpy as np
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
-import handbuilt_canopy as C     # noqa: E402
 
 GEN = os.path.join(HERE, '..', '..', 'bvp', 'src', 'generated', 'resources')
 GEO = os.path.join(GEN, 'assets/berts_vehicle_pack/custom_geo/f_16c.geo.json')
