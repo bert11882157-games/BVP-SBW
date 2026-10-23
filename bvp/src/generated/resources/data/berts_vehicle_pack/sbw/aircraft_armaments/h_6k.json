@@ -1,0 +1,219 @@
+{
+  "Schema": 1,
+  "Name": "Xi'an H-6K",
+  "BuiltInWeapons": [],
+  "SuspendedWeapons": [],
+  "Pairs": [
+    {
+      "Id": "outer",
+      "Name": "Outer wing pylons · cruise / anti-ship missiles",
+      "Left": [
+        10.7856,
+        1.7892,
+        -1.9152
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            10.7856,
+            1.8144,
+            -1.9152
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Right": [
+        -10.7856,
+        1.7892,
+        -1.9152
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -10.7856,
+            1.8144,
+            -1.9152
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/cj10a",
+        "berts_vehicle_pack:munition/yj12",
+        "berts_vehicle_pack:munition/kd88",
+        "berts_vehicle_pack:munition/kd88_ir",
+        "berts_vehicle_pack:munition/c201"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 2600
+    },
+    {
+      "Id": "mid",
+      "Name": "Middle wing pylons · cruise / anti-ship missiles",
+      "Left": [
+        7.0056,
+        1.5372,
+        -0.3528
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            7.0056,
+            1.5372,
+            -0.3528
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Right": [
+        -7.0056,
+        1.5372,
+        -0.3528
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -7.0056,
+            1.5372,
+            -0.3528
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/cj10a",
+        "berts_vehicle_pack:munition/yj12",
+        "berts_vehicle_pack:munition/kd88",
+        "berts_vehicle_pack:munition/kd88_ir",
+        "berts_vehicle_pack:munition/c201"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 2600
+    },
+    {
+      "Id": "inner",
+      "Name": "Inner wing pylons · cruise / anti-ship missiles",
+      "Left": [
+        3.2256,
+        1.7892,
+        2.5704
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            3.2256,
+            1.7892,
+            2.5704
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Right": [
+        -3.2256,
+        1.7892,
+        2.5704
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -3.2256,
+            1.7892,
+            2.5704
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/cj10a",
+        "berts_vehicle_pack:munition/yj12",
+        "berts_vehicle_pack:munition/kd88",
+        "berts_vehicle_pack:munition/kd88_ir",
+        "berts_vehicle_pack:munition/c201"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 2600
+    }
+  ],
+  "StoreGroups": {},
+  "MaxPayloadKg": 12000,
+  "Radar": {
+    "Enabled": true,
+    "Range": 3500
+  },
+  "MaxPylonMassKg": 3000,
+  "MaxWeaponsPerPylon": 6,
+  "Singles": [
+    {
+      "Id": "bay_1",
+      "Name": "Bomb bay carrier 1 · up to 6 bombs",
+      "Position": [
+        0.0,
+        3.3768,
+        2.268
+      ],
+      "Internal": true,
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/fab500sh",
+        "berts_vehicle_pack:munition/ofab250sh",
+        "berts_vehicle_pack:munition/ls6_500"
+      ],
+      "MaxWeaponsPerPylon": 6,
+      "MaxPylonMassKg": 3000,
+      "QuantitySelectable": true
+    },
+    {
+      "Id": "bay_2",
+      "Name": "Bomb bay carrier 2 · up to 6 bombs",
+      "Position": [
+        0.0,
+        3.3768,
+        0.252
+      ],
+      "Internal": true,
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/fab500sh",
+        "berts_vehicle_pack:munition/ofab250sh",
+        "berts_vehicle_pack:munition/ls6_500"
+      ],
+      "MaxWeaponsPerPylon": 6,
+      "MaxPylonMassKg": 3000,
+      "QuantitySelectable": true
+    },
+    {
+      "Id": "bay_3",
+      "Name": "Bomb bay carrier 3 · up to 6 bombs",
+      "Position": [
+        0.0,
+        3.3768,
+        -1.764
+      ],
+      "Internal": true,
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/fab500sh",
+        "berts_vehicle_pack:munition/ofab250sh",
+        "berts_vehicle_pack:munition/ls6_500"
+      ],
+      "MaxWeaponsPerPylon": 6,
+      "MaxPylonMassKg": 3000,
+      "QuantitySelectable": true
+    },
+    {
+      "Id": "bay_4",
+      "Name": "Bomb bay carrier 4 · up to 6 bombs",
+      "Position": [
+        0.0,
+        3.3768,
+        -3.78
+      ],
+      "Internal": true,
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/fab500sh",
+        "berts_vehicle_pack:munition/ofab250sh",
+        "berts_vehicle_pack:munition/ls6_500"
+      ],
+      "MaxWeaponsPerPylon": 6,
+      "MaxPylonMassKg": 3000,
+      "QuantitySelectable": true
+    }
+  ]
+}

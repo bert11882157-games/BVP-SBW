@@ -61,7 +61,10 @@ EXITS = {'mig_25pd': [(0.8024, 2.4298, -9.5725, 0.780)],
          'f_102a': [(0.0, 2.508, -9.4912, 0.620)],
          # Yak-38M: the R-28V-300's two swivelling nozzles sit at the fuselage sides under the wing trailing edge (nozzle box source x 12..19, y 12..18,
          # z 64..78; the end ring z 76..78 is 6 x 6 units), exit plane z 78: centre (16, 15, 78) source units x 0.7987 px / 16
-         'yak_38m': [(0.7987, 1.2480, -5.6207, 0.150)]}
+         'yak_38m': [(0.7987, 1.2480, -5.6207, 0.150)],
+         # H-6K: the D-30KP-2 exits are the round holes at the rear of the wing-root nacelle lobes (rear plane z -4.032, x 1.008..2.268, y 2.016..3.276,
+         # a 1.26 m square frame round an octagonal hole of about 0.58 m radius), centre (1.638, 2.646)
+         'h_6k': [(1.638, 2.646, -4.032, 0.580)]}
 
 
 def load_bones(vid):
