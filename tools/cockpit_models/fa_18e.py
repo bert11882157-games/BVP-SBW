@@ -308,7 +308,8 @@ X, Y, Z = np.array([1.0, 0, 0]), np.array([0, 1.0, 0]), np.array([0, 0, 1.0])
 FLOOR_Y = -0.952                # the floor liner, 8 mm over the old floor
 SILL_Y = -0.260                 # the liners' top (abs 2.60)
 CONSOLE_Y = -0.600              # console tops (abs 2.26)
-CON_IN, CON_OUT = 0.280, 0.475  # the consoles' inner side and outer edge
+CON_IN, CON_OUT = 0.280, 0.440  # the consoles' inner side and outer edge (inside the leaning wall: 0.452 at the top)
+BULK_X = 0.475                  # the rear bulkhead panel's half width (wall to wall; the consoles end inside the wall)
 BACK_Z = -0.170                 # the rear bulkhead panel (abs 3.970, 4 mm ahead of the hull's own)
 
 LEAN = math.radians(10)         # panel top leans away from the pilot
@@ -829,7 +830,7 @@ def build(atlas):
     # floor liner, rear bulkhead and the kick panel under the panel
     zk = CENTRE.at(0, BOT_C)[2]
     m.flat([[-CON_IN, fy, z_back], [CON_IN, fy, z_back], [CON_IN, fy, zk], [-CON_IN, fy, zk]], sw['floor'], normal=[0, 1, 0])
-    m.quad_tex([[CON_OUT, fy, z_back], [-CON_OUT, fy, z_back], [-CON_OUT, -0.240, z_back], [CON_OUT, -0.240, z_back]], bulk,
+    m.quad_tex([[BULK_X, fy, z_back], [-BULK_X, fy, z_back], [-BULK_X, -0.240, z_back], [BULK_X, -0.240, z_back]], bulk,
                normal=[0, 0, 1])
     m.quad_tex([[CON_IN, fy, zk], [-CON_IN, fy, zk], [-CON_IN, BOT_C, zk], [CON_IN, BOT_C, zk]], kick, normal=[0, 0, -1])
     # rudder pedals (arms to the floor, the plates tilted toward the pilot)
@@ -843,13 +844,13 @@ def build(atlas):
     THR.clear()
     THR.extend(throttle_lib.jet_levers(m, Mesh, sw, 'f18', x=0.332, top_y=CONSOLE_Y, z_idle=tz - 0.05, n=2, pitch=0.050,
                                        hx=0.052, friction=False))
-    m.box([0.440, CONSOLE_Y + 0.020, tz - 0.07], (X, Y, Z), (0.020, 0.012, 0.030), sw['metal'])      # flap switch
+    m.box([0.415, CONSOLE_Y + 0.011, tz - 0.07], (X, Y, Z), (0.020, 0.012, 0.030), sw['metal'])      # flap switch
     # switch rows on both console tops
     for s in (1, -1):
         for zr in (-0.12, -0.05, 0.02, 0.50, 0.56):
             if s > 0 and 0.06 < zr < 0.42:
                 continue
-            for xc in (0.305, 0.335, 0.365, 0.395, 0.425, 0.455)[:6 if zr > 0.4 else 6]:
+            for xc in (0.300, 0.326, 0.352, 0.378, 0.404, 0.428):
                 m.box([s * xc, CONSOLE_Y + 0.005, zr], (X, Y, Z), (0.009, 0.005, 0.009), sw['metal'])
                 m.box([s * xc, CONSOLE_Y + 0.020, zr - 0.003], (X, unit([0, 1, -0.3]), unit([0, 0.3, 1])),
                       (0.0025, 0.012, 0.0025), sw['black'])
@@ -885,7 +886,7 @@ def build(atlas):
     m.box([0, pan_y - 0.030, Q0[2] + 0.17], (X, Y, Z), (0.200, 0.030, 0.175), sw['cushion'],
           front=(1, 1, cushion, -X, Z))                                                              # seat pan cushion
     for s in (1, -1):
-        m.box([s * 0.215, pan_y + 0.02, Q0[2] + 0.17], (X, Y, Z), (0.012, 0.065, 0.185), sw['frame'])  # bucket sides
+        m.box([s * 0.2095, pan_y + 0.02, Q0[2] + 0.17], (X, Y, Z), (0.012, 0.065, 0.185), sw['frame'])  # bucket sides (5 mm clear of the hull's inner panel at 0.2265)
         m.box(Q0 + BU * 0.37 + X * s * 0.175 - BN * 0.055, ax, (0.018, 0.57, 0.024), sw['frame'])      # guide rails
     m.box(Q0 + BU * 0.40 - BN * 0.02, ax, (0.18, 0.40, 0.030), sw['cushion'],
           front=(2, 1, backt, X, BU))                                                                # back cushion

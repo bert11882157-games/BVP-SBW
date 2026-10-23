@@ -44,7 +44,7 @@ HULL_BONE = 'wreck_fuselage_0__hull'
 # ---- the frame's measurements (absolute blocks)
 # the sill rails' inner top edge: z, x of the inner edge, y of the top (the rails rise toward the spine)
 RAIL = [(2.40, 0.200, 2.916), (2.60, 0.250, 2.865), (2.835, 0.280, 2.825), (3.15, 0.315, 2.780), (3.47, 0.340, 2.735),
-        (3.80, 0.360, 2.700), (4.10, 0.375, 2.667), (4.40, 0.375, 2.667), (4.71, 0.345, 2.667)]
+        (3.80, 0.360, 2.700), (4.10, 0.373, 2.667), (4.40, 0.3785, 2.642), (4.71, 0.384, 2.614)]    # (the last rail box slopes down toward the arch)
 # the crown line over the centre (z, y): the frame's centre strip
 CROWN = [(2.40, 2.916), (2.655, 2.984), (3.152, 3.074), (3.92, 3.165), (4.463, 3.165), (4.734, 3.074), (4.80, 3.045),
          (4.915, 3.000)]
@@ -196,10 +196,10 @@ def patch(zf0, zf1, z_lo, z_hi, nz, ns=14, jr=None):
 #    face; behind it the spine fairing runs back to the closing piece, opaque, on the glass's old surface)
 #  * the windscreen's base strip along the nose deck (the windscreen itself is ONE curved wraparound pane, no posts)
 Z_BOW = (3.56, 3.62)
-BOW_OUT, BOW_IN = 0.012, 0.030               # the hoop stands this far out of the glass surface and this far in
+BOW_OUT, BOW_IN = 0.020, 0.030               # the hoop stands this far out of the glass surface and this far in
 WS_NS = 28
 BASE_ROWS = (0, 2)                          # the windscreen's base frame along the nose deck fills this band
-BASE_OUT, BASE_IN = 0.008, 0.018
+BASE_OUT, BASE_IN = ARCH_OUT, ARCH_IN          # (the strip sinks into the deck: the sampled skin is a few mm off)
 BARS_BONE = 'frame_bars__canopy'             # (the name ends in __canopy: the checks count it as the canopy's own)
 
 
@@ -279,6 +279,25 @@ class Bars:
                     n = -n
                 self.face(q, n)
 
+    def prism(self, stations):
+        """a closed solid through stations of four corners each (inner top, outer top, outer bottom, inner bottom)"""
+        S = [[np.array(c, float) for c in st] for st in stations]
+        cen = np.mean([c for st in S for c in st], 0)
+
+        def quad(pts):
+            n = np.cross(pts[1] - pts[0], pts[3] - pts[0]); ln = np.linalg.norm(n)
+            if ln < 1e-12:
+                return
+            n /= ln
+            if n @ (np.mean(pts, 0) - cen) < 0:
+                n = -n
+            self.face(list(pts), n)
+        for a, b in zip(S[:-1], S[1:]):
+            for k in range(4):
+                quad([a[k], b[k], b[(k + 1) % 4], a[(k + 1) % 4]])
+        quad([S[0][0], S[0][1], S[0][2], S[0][3]])
+        quad([S[-1][0], S[-1][1], S[-1][2], S[-1][3]])
+
     def mesh(self):
         return {'normalized_uvs': True, 'positions': self.P, 'normals': self.N, 'uvs': self.U, 'polys': self.polys}
 
@@ -297,21 +316,30 @@ def frame_bars(uv):
     b.bar(A, B, BOW_OUT, BOW_IN)
     for side in (1, -1):
         # the spine fairing behind it, to the closing piece (the glass's old surface, opaque)
-        zs = np.linspace(Z_AFT - 0.02, Z_BOW[0], 12)
-        b.skin([[_pt(max(z, Z_AFT), j, side, ns) for j in range(ns + 1)] for z in zs])
+        zs = np.linspace(Z_AFT - 0.03, Z_BOW[0], 12)          # (starts 3 cm inside the closing piece, on the same surface)
+        b.skin([[_pt(z, j, side, ns) - np.array([0, 0.5 * max(0.0, Z_AFT - z), 0]) for j in range(ns + 1)] for z in zs])
     # the windscreen arch: ONE slim ring from sill to sill (24 segments), between the bubble's glass (rear face) and the
     # windscreen's (front face); it follows the section from the foot up over the crown. The airframe's own box chain is cut away.
     za = lambda zf, s, j: edge(zf, j, 4.80, ARCH_NS, 4.6, 5.1)
     A = _full(lambda s, j: _pt(za(z_front_rear, s, j), j, s, ARCH_NS), ARCH_NS)
     B = _full(lambda s, j: _pt(za(z_front_front, s, j), j, s, ARCH_NS), ARCH_NS)
+    # the legs run on straight down past the sill into the nose deck: the rail's last box stops at z 4.757, and without this
+    # the wall under the arch's feet stays open (one member, so no step where a separate block would meet the ring)
+    def run_on(P, end, ds=(0.24, 0.12)):
+        u = P[end] - P[1 if end == 0 else -2]                  # (on along the path's own direction: no kink at the foot)
+        u = u / np.linalg.norm(u)
+        return [P[end] + u * d for d in ds]
+    A0, B0, A1, B1 = run_on(A, 0), run_on(B, 0), run_on(A, -1), run_on(B, -1)
+    A = A0 + A + A1[::-1]
+    B = B0 + B + B1[::-1]
     b.bar(A, B, ARCH_OUT, ARCH_IN, axis_y=2.85)
     # the windscreen's base strip along the nose deck (the windscreen's rows are finer: its own ring set)
     for side in (1, -1):
         n = 14
         k0, k1 = BASE_ROWS
-        g0 = [edge(z_front_front, j, 4.80, WS_NS, 4.757, WS_Z[1]) for j in (k0, k1)]
+        g0 = [edge(lambda y: z_front_front(y) - 0.002, j, 4.80, WS_NS, 4.70, WS_Z[1]) for j in (k0, k1)]      # (the strip carries on from the ring's front face)
         g1 = [edge(lambda y: WS_Z[1], j, WS_Z[1], WS_NS, 4.757, WS_Z[1]) for j in (k0, k1)]
-        A = [_pt(g0[0] + (g1[0] - g0[0]) * i / n, k0, side, WS_NS) for i in range(n + 1)]
+        A = [_pt(g0[0] + (g1[0] - g0[0]) * i / n, k0, side, WS_NS) - np.array([0.0, 0.05, 0.0]) for i in range(n + 1)]   # (down into the deck)
         B = [_pt(g0[1] + (g1[1] - g0[1]) * i / n, k1, side, WS_NS) for i in range(n + 1)]
         b.bar(A, B, BASE_OUT, BASE_IN)
     return b
