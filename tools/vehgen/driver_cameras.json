@@ -24,6 +24,22 @@
     ],
     "note": "bert's expansion rule (PLAN item 11): the ground driver camera sits where the gunner's optic really is. SPz Puma: the gunner's sight windows on the turret front (source elements 189-190, x 26.5-27.5, y -38.5..-33.5), eye just ahead of the frame at the turret rest pose (tools/vehgen/puma_build.py writes the attachment; seat 0 is the pack's controller seat on gunnerCamera, seat 2 is the driver looking out of the same point, fixed to the hull)."
   },
+  "pgz_95": {
+    "eye": [
+      0.0,
+      2.46875,
+      0.82812
+    ],
+    "note": "bert's expansion rule (PLAN item 11): the ground driver camera sits where the gunner's optic really is. PGZ-95: the electro-optical sight head on the turret front (source elements 84-90, front face x 29.5, y -32.5..-29.5), eye just ahead of it at the turret rest pose (tools/vehgen/pgz95_build.py writes the attachment; seat 0 is the pack's controller seat on gunnerCamera, seat 2 is the driver looking out of the same point, fixed to the hull)."
+  },
+  "strela_10m2": {
+    "eye": [
+      0.01991,
+      3.61303,
+      -0.06371
+    ],
+    "note": "bert's expansion rule (PLAN item 11): the ground driver camera sits where the gunner's optic really is. Strela-10M2: the operator's IR / optical head between the containers of the launcher (source part 4 elements 398-412, front plates x -1.8, y -38.2..-31.8), eye one unit ahead of the plates on its axis at the launcher's rest pose (tools/vehgen/strela_build.py writes the attachment; seat 0 is the pack's controller seat on gunnerCamera, seat 1 is the driver looking out of the same point, fixed to the hull)."
+  },
   "t14_armata": {
     "eye": [
       0.5,

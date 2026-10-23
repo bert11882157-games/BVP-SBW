@@ -156,6 +156,11 @@
       "puma",
       "warrior"
     ],
+    "pgz_95": [
+      "type98",
+      "tunguska",
+      "tunguska"
+    ],
     "m1a1_tusk": [
       "m1a2",
       "m1a2",
@@ -574,6 +579,15 @@
       ],
       "auto": true
     },
+    "type87_25": {
+      "src": [
+        "land/ch_apc_wz551/sound/wz551_cannon_1p.wav",
+        "land/ch_apc_wz551/sound/wz551_cannon_3p.wav",
+        "land/us_apc_lav25/sounds/25mm_distant_02.wav",
+        "land/us_apc_lav25/sounds/25mm_distant_03.wav"
+      ],
+      "auto": true
+    },
     "china_mg": {
       "src": [
         "weapons:armament/coaxial_mgs/sounds/china_coax_1p_fire.wav",
@@ -737,6 +751,7 @@
     "lav25.Missile": "tow",
     "marder_1a5.Missile": "tow",
     "puma_ifv.MainMachineGun": "mg4",
+    "pgz_95.Cannon": "type87_25",
     "leopard_2a4.MachineGun": "mg3",
     "leopard_2a4.PassengerMachineGun": "mg3",
     "gepard.Cannon": "rh202_20",

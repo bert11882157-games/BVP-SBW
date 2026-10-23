@@ -51,6 +51,7 @@ MAIN = {
     't64bv': (6.0, 'WT T-64B (1984) 125 mm 2A46 autoloader (shotFreq 0.16666)'),
     'm1a1_tusk': (5.0, 'WT M1A1 HC 120 mm M256, aced'),
     'puma_ifv': (0.2, 'WT Puma 30 mm MK 30-2/ABM, 100-round cartridge reloadTime 0.2, aced (basic 0.3 s)'),
+    'pgz_95': (4.0, 'WT PGZ04A (no PGZ-95 in WT) 4 x 25 mm PG87, 258-round belts, unit reloadTime 4.0'),
 }
 MAIN_WEAPON = {'bmp3m_elite': 'Cannon', 'toyota_jihad_bmp1': 'BMP1Cannon'}
 
@@ -59,10 +60,11 @@ WT_MG = {('fv721_fox', 'MachineGun'): (8.0, 'WT L37A2, 100-round belt, aced (bas
          ('t64bv', 'MachineGun'): (8.0, 'WT PKT, 250-round belt (reloadTime 8.0)'),
          ('t64bv', 'PassengerMachineGun'): (5.0, 'WT NSVT, 150-round belt (reloadTime 5.0)'),
          ('puma_ifv', 'MainMachineGun'): (8.0, 'WT MG4, 1,000-round belt, aced (basic crew 10.4 s)'),
+         ('pgz_95', 'Missile'): (15.0, 'WT PGZ04A 72mm_HN_6 launcher, 4 rounds, reloadTime 15.0 (QW-2 is not in WT)'),
          ('m1a1_tusk', 'MachineGun'): (8.0, 'WT M240, 200-round belt (reloadTime 8.0)'),
          ('m1a1_tusk', 'MainMachineGun'): (8.0, 'WT M2HB (TUSK CSAMM), 100-round belt (reloadTime 8.0)')}
 # Guns whose reload is too short for any crew reload clip: no clip is set.
-NO_CLIP = {('fv721_fox', 'Cannon'), ('puma_ifv', 'Cannon'), ('t64bv', 'PassengerMachineGun')}
+NO_CLIP = {('fv721_fox', 'Cannon'), ('puma_ifv', 'Cannon'), ('pgz_95', 'Cannon'), ('t64bv', 'PassengerMachineGun')}
 RULE = {'LMG': 20.0, 'HMG': 10.0, 'AUTOCANNON': 20.0, 'ATGM': 12.0}
 # autocannon belt change by how much of the belt was fired: [fraction fired, seconds]; the fixed reload times are
 # set to the empty-belt value (12 s) as the fallback

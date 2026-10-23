@@ -689,6 +689,10 @@ public class ModEntities {
             ENTITIES.register("zbd_05", () -> vehicle(
                     (type, level) -> new FittedGroundVehicleEntity(type, level, "zbd_05"),
                     3.5f, 2.9f, "zbd_05"));
+    public static final RegistryObject<EntityType<FittedGroundVehicleEntity>> PGZ_95 =
+            ENTITIES.register("pgz_95", () -> vehicle(
+                    (type, level) -> new FittedGroundVehicleEntity(type, level, "pgz_95"),
+                    3.4f, 3.0f, "pgz_95"));
     public static final RegistryObject<EntityType<FittedGroundVehicleEntity>> PUMA_IFV =
             ENTITIES.register("puma_ifv", () -> vehicle(
                     (type, level) -> new FittedGroundVehicleEntity(type, level, "puma_ifv"),

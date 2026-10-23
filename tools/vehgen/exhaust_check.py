@@ -34,7 +34,7 @@ DATA = os.path.join(REPO, 'bvp', 'src', 'generated', 'resources', 'data', 'berts
 MAX_M = 0.2
 # front-engined vehicles: the hull-front-half rule does not apply (their exhaust may sit forward, but still on a grille)
 FRONT_ENGINE = {'m1128', 'puma_ifv', 'bmp2', 'bmp2m', 'bmp_1am', 'marder_1a1', 'marder_1a2', 'm2_bradley', 'vbci', 'ztl_09',
-                'strv_103', '9p149_shturm', 'zbd_05'}
+                'strv_103', '9p149_shturm', 'zbd_05', 'pgz_95'}
 BAND = 6.0
 OUT_PX = 0.25            # --fix: origin this far outside the louvre face
 
@@ -100,6 +100,10 @@ EXITS = {
     'ztl_09': [(-23.59, -23.59, 26.0, 31.0, -35.0, -25.0)],
     # 9P149 (MT-LB): the side slopes from x -21.7 (y 14) to -24.2 (y 31); at y 27 about -23.5. Set in fit_specs.py ('exhaust')
     '9p149_shturm': [(-23.5, -23.5, 24.0, 30.0, -24.0, -10.0)],
+    # PGZ-95: the engine is at the front. The model's louvred roof pad of the mid deck (source element 20, x 24..46, z -14.5..0,
+    # a 1 px plate at y -20.2 .. -19.2), here as model px: x -14.5 .. 0, y 28.2 .. 29.2, z -28.25 .. -6.25 (+Z = rear). The two glacis
+    # pads (elements 10, 11) are intakes; the model has no pipe. Set in pgz95_build.py (EXHAUST)
+    'pgz_95': [(-14.5, 0.0, 28.2, 29.2, -28.25, -6.25)],
 }
 
 

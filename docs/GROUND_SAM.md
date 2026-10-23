@@ -55,6 +55,7 @@ entity type id.
 |---|---|---|---|
 | tunguska, 9k22_tunguska | 9M311 | SEMI_ACTIVE_RADAR proxy for radio command guidance; 1RL144 radar 1200 | NATIVE (optical command-guided missile) |
 | gaz_3937_vodnik_aa | 9M336 | INFRARED, 40-tick dwell | REFUSE |
+| pgz_95 | QW-2, 4 ready on the turret cradle; CLC-1 radar 1000 | INFRARED, 40-tick dwell, 15 degree cone (WT PGZ04A's HN-6 seeker) | REFUSE |
 | lav_ad (SBW) | FIM-92 | INFRARED, 60-tick dwell (AIM-92 tuning) | REFUSE |
 | lav_ad (BVP, `berts_vehicle_pack:lav_ad`) | FIM-92, 2 × 4 ready on the Blazer turret | INFRARED, 60-tick dwell, as SBW's | REFUSE |
 
