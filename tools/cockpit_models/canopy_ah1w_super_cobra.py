@@ -134,7 +134,7 @@ QF = np.array([x_on(plane_gq, rail_top(5.89) + 0.05, 5.89), rail_top(5.89) + 0.0
 
 R_TUBE = 0.020          # main frame tubes
 R_SMALL = 0.014         # the overhead plate's frame
-GLASS_GAP = 0.005       # the glass stops this far from the tube's surface (in its plane)
+GLASS_GAP = -0.016      # the glass ends 12 mm inside the tube's silhouette, hidden in it (the audit's 5 mm slits beside every member were see-through seams)
 ROOF_Z = (3.30, 3.78)   # pilot overhead plate: z range of its frame centre line
 ROOF_X = 0.17           # ... and half width
 
@@ -326,6 +326,88 @@ def add_pane(name, poly, r):
 # ---------------------------------------------------------------- the canopy
 
 
+HULL_TRIS = None
+
+
+def load_hull_tris(bones):
+    global HULL_TRIS
+    hull = next(b for b in bones if b['name'] == HULL_BONE)
+    pm = hull['poly_mesh']
+    P = np.array(pm['positions'], float) * np.array([1, 1, -1]) / 16.0
+    T = []
+    for poly in pm['polys']:
+        idx = [v[0] for v in poly]
+        for k in range(1, len(idx) - 1):
+            T.append(P[[idx[0], idx[k], idx[k + 1]]])
+    HULL_TRIS = np.array(T)
+
+
+def hull_target(p, reach=0.40):
+    """the point 1.5 cm inside the hull's surface nearest below and outboard of p (the same side), in the cross-section z = p[2]"""
+    s = 1.0 if p[0] >= 0 else -1.0
+    T = HULL_TRIS
+    z = p[2]
+    m = (T[:, :, 2].min(1) <= z) & (T[:, :, 2].max(1) >= z)
+    segs = []
+    for t in T[m]:
+        d = t[:, 2] - z
+        q = []
+        for i in range(3):
+            a_, b_ = t[i], t[(i + 1) % 3]
+            if (d[i] > 0) != (d[(i + 1) % 3] > 0):
+                f = d[i] / (d[i] - d[(i + 1) % 3])
+                q.append(a_ + (b_ - a_) * f)
+        if len(q) == 2:
+            segs.append((q[0][:2], q[1][:2]))
+    best, bp = reach, None
+    for a_, b_ in segs:
+        if min(a_[0] * s, b_[0] * s) < p[0] * s - 0.03 or min(a_[1], b_[1]) > p[1] + 0.02:
+            continue
+        ab = b_ - a_
+        L2 = float(ab @ ab)
+        u = 0.0 if L2 < 1e-12 else float(np.clip(((p[:2] - a_) @ ab) / L2, 0, 1))
+        c = a_ + ab * u
+        if c[0] * s < p[0] * s - 0.03 or c[1] > p[1] + 0.02:
+            continue
+        d = float(np.linalg.norm(c - p[:2]))
+        if d < best and d > 0.012:
+            best, bp = d, c
+    if bp is None:
+        return np.array([p[0], p[1] - 0.04, p[2]])
+    dirv = (bp - p[:2]) / np.linalg.norm(bp - p[:2])
+    t = bp + dirv * 0.027
+    return np.array([t[0], t[1], z])
+
+def ribbon_skirt(m, top, bot, uv_out, uv_in, thick=0.037):
+    """one closed solid along a run: the outer strip from `top` (a frame member's centre line) down to `bot` (inside the hull), an inner
+    strip `thick` inboard of it (3.7 cm: no face lies within 12 mm of the member tube's flats) and the closing top, bottom and end faces.
+    All stations share vertices, so the strip is one welded part that touches the frame."""
+    top = [np.array(p, float) for p in top]
+    bot = [np.array(p, float) for p in bot]
+    n_st = len(top)
+    N = []
+    for k in range(n_st):
+        t = top[min(k + 1, n_st - 1)] - top[max(k - 1, 0)]
+        nn = np.cross(t, bot[k] - top[k])
+        nn = nn / np.linalg.norm(nn)
+        if nn[0] * (1.0 if top[k][0] >= 0 else -1.0) < 0:
+            nn = -nn
+        N.append(nn)
+    itop = [top[k] - N[k] * thick for k in range(n_st)]
+    ibot = [bot[k] - N[k] * thick for k in range(n_st)]
+    for k in range(n_st - 1):
+        nm = N[k] + N[k + 1]
+        nm = nm / np.linalg.norm(nm)
+        m.face([top[k], top[k + 1], bot[k + 1], bot[k]], uv_out, nm)
+        m.face([itop[k], itop[k + 1], ibot[k + 1], ibot[k]], uv_in, -nm)
+        m.face([top[k], top[k + 1], itop[k + 1], itop[k]], uv_out, np.array([0.0, 1.0, 0.0]))
+        m.face([bot[k], bot[k + 1], ibot[k + 1], ibot[k]], uv_out, np.array([0.0, -1.0, 0.0]))
+    for k, sg in ((0, -1.0), (n_st - 1, 1.0)):
+        t = top[min(k + 1, n_st - 1)] - top[max(k - 1, 0)]
+        t = t / np.linalg.norm(t)
+        m.face([top[k], bot[k], ibot[k], itop[k]], uv_out, t * sg)
+
+
 def build(uv_out, uv_in):
     m = Mesh()
     glass = []                                   # triangles, one winding
@@ -382,11 +464,36 @@ def build(uv_out, uv_in):
             m.face([a, b, b - n * thick, a - n * thick], uv_out, out)
 
     # the rear wall in the plane z = Z1 - 0.012: from the roof's rear edge down the rear door posts to the old bulkhead's top (y 3.13)
-    zr = Z1 - 0.014
+    # The wall is a 14 cm bulkhead block whose rear face stands 2 cm INSIDE the airframe's rear block (face z 2.962), so no slit shows between
+    # them, and whose front face is 1.3 cm clear of the rear bow's and posts' flats (no sawtooth steps against them).
+    zr = 2.94
     yb = 3.12
     xb = RX + (rail_y(Z1) - yb) / K_S
     wall = [[RX, rail_y(Z1), zr], [-RX, rail_y(Z1), zr], [-xb, yb, zr], [xb, yb, zr]]
-    slab(wall, [0, 0, -1], 0.012)
+    slab(wall, [0, 0, -1], 0.141)
+
+    # --- the sill skirts: the door plates' bottom frames stand up to 15 cm over the sill rails (the planes lean out), so each side gets an
+    # opaque strip from the bottom frame's centre line to the nearest hull surface below and outside it (1.5 cm into it): airframe colour
+    # outside, dark inside; no slot to the sky. The hull's surface is found in the cross-section at every 8 cm of the frame's run.
+    path = [PILOT_BOTTOM[4], PILOT_BOTTOM[3], PILOT_BOTTOM[2], PILOT_BOTTOM[1], PB, CB, QM, QF, J4]
+    for s in sides:
+        pts = []
+        for a, b in zip(path[:-1], path[1:]):
+            n_st = max(1, int(math.ceil(float(np.linalg.norm(b - a)) / 0.12)))
+            pts += [S(a + (b - a) * (k / n_st), s) for k in range(n_st)]
+        pts.append(S(path[-1], s))
+        ribbon_skirt(m, pts, [hull_target(p) for p in pts], uv_out, uv_in)
+    # the rear posts' fairing: between the airframe's rear block (face z 2.962) and the posts (z 3.05) a 3.7 cm plate each side closes the
+    # slit that showed from behind the posts
+    for s in sides:
+        ys = [PILOT_BOTTOM[4][1], rail_y(Z1)]
+        xs = [x_on(plane_s, y, Z1) for y in ys]
+        quad = [np.array([s * xs[0], ys[0], 2.94]), np.array([s * xs[0], ys[0], Z1]), np.array([s * xs[1], ys[1], Z1]), np.array([s * xs[1], ys[1], 2.94])]
+        dx, dy = xs[1] - xs[0], ys[1] - ys[0]
+        nn = unit([-dy * s, dx * s, 0.0])
+        if nn[0] * s < 0:
+            nn = -nn
+        slab(quad, nn, 0.037)
     return m, glass
 
 
@@ -448,6 +555,7 @@ def main(argv):
     bones = geo['minecraft:geometry'][0]['bones']
     bones[:] = [b for b in bones if b['name'] != CANOPY_BONE]
     cut, _ = cut_old_frame(bones)
+    load_hull_tris(bones)
     m, glass = build(UV_GREY, UV_DARK)
     hull = next(b for b in bones if b['name'] == HULL_BONE)
     pm = m.poly_mesh()

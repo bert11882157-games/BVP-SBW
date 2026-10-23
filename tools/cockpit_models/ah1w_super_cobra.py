@@ -91,9 +91,9 @@ FONT_FILES = _font_files()
 
 # ---------------------------------------------------------------- colours (the Cobra's cockpit is dark grey and black, olive seats)
 
-PANEL = (46, 48, 50)
-PANEL_D = (28, 29, 31)
-BLACK = (18, 19, 21)
+PANEL = (66, 70, 72)           # panel fields, consoles and liners are the Cobra's grey (FS 36231 dark gull gray), the instrument faces black
+PANEL_D = (50, 53, 55)
+BLACK = (16, 17, 19)
 DGREY = (36, 38, 40)
 MGREY = (84, 88, 90)
 LGREY = (150, 154, 156)
@@ -103,8 +103,8 @@ HARNESS = (82, 86, 64)
 YELLOW = (226, 186, 30)
 RED = (196, 36, 30)
 METAL = (128, 132, 134)
-FLOOR = (34, 36, 37)
-CONSOLE = (54, 56, 58)
+FLOOR = (44, 46, 47)
+CONSOLE = (84, 88, 90)
 WHITE = (226, 228, 220)
 AMBER = (214, 140, 30)
 GREEN_TXT = (80, 220, 100)
@@ -240,11 +240,13 @@ class Mesh:
         u = uv_flat(rect)
         self.face(pts, [u] * len(pts), toward=toward, normal=normal)
 
-    def box(self, centre, axes, half, rect, front=None):
+    def box(self, centre, axes, half, rect, front=None, skip=()):
         """oriented box; axes = 3 unit vectors, half sizes; front = (axis index, sign, rect, right, up): a textured face"""
         c = np.array(centre, float); A = [np.array(a, float) for a in axes]
         for k in range(3):
             for s in (-1, 1):
+                if (k, s) in skip:
+                    continue
                 i, j = [m for m in range(3) if m != k]
                 fc = c + A[k] * half[k] * s
                 pts = [fc - A[i] * half[i] - A[j] * half[j], fc + A[i] * half[i] - A[j] * half[j],
@@ -378,61 +380,91 @@ HALF_P, HALF_G = 0.40, 0.40
 # ('game', Kind, diameter) is drawn by the game; ('paint_disc', caption, d) and ('paint_rect', w, h) are painted faces;
 # ('annunciator', w, h) is lit by the game; ('display', Kind, width, style) is a FlightDisplays page
 PILOT_LAYOUT = [
-    ('adi',    0.000, 2.690, ('game', 'ATTITUDE', 0.105), 'attitude indicator (ADI)'),
-    ('hsi',    0.000, 2.545, ('game', 'HEADING', 0.105), 'horizontal situation indicator (HSI)'),
-    ('ias',   -0.135, 2.700, ('game', 'AIRSPEED', 0.076), 'airspeed indicator'),
-    ('alt',    0.135, 2.700, ('game', 'ALTIMETER', 0.076), 'barometric altimeter'),
-    ('turn',  -0.135, 2.585, ('game', 'TURN_SLIP', 0.062), 'turn and slip'),
-    ('vsi',    0.135, 2.585, ('game', 'VVI', 0.062), 'vertical speed indicator'),
-    ('nr',    -0.245, 2.700, ('game', 'ROTOR_RPM', 0.070), 'rotor rpm (NR / NP)'),
-    ('tq',     0.245, 2.700, ('game', 'TORQUE', 0.070), 'torque'),
-    ('n1l',   -0.346, 2.590, ('game', 'ENGINE_RPM', 0.052), 'engine 1 gas generator (N1)'),
-    ('n1r',   -0.274, 2.590, ('game', 'ENGINE_RPM', 0.052), 'engine 2 gas generator (N1)'),
-    ('tgl',   -0.346, 2.505, ('game', 'EGT', 0.052), 'engine 1 turbine gas temperature'),
-    ('tgr',   -0.274, 2.505, ('game', 'EGT', 0.052), 'engine 2 turbine gas temperature'),
-    ('fuel',   0.235, 2.590, ('game', 'FUEL_QTY', 0.052), 'fuel quantity'),
-    ('ralt',   0.305, 2.590, ('game', 'RADAR_ALT', 0.052), 'radar altimeter'),
-    ('clock',  0.305, 2.505, ('game', 'CLOCK', 0.048), 'clock'),
-    ('oil1',   0.235, 2.505, ('paint_disc', 'XMSN', 0.050), 'transmission oil'),
-    ('hyd',   -0.185, 2.505, ('paint_disc', 'HYD', 0.046), 'hydraulic pressure'),
-    ('oil2',   0.165, 2.505, ('paint_disc', 'OIL', 0.046), 'engine oil'),
-    ('caution', 0.000, 2.402, ('annunciator', 0.300, 0.085), 'caution / warning panel'),
-    ('arm',   -0.255, 2.262, ('paint_rect', 0.170, 0.095), 'armament panel'),
-    ('eng',    0.255, 2.262, ('paint_rect', 0.170, 0.095), 'engine / fuel panel'),
-    ('fire',   0.000, 2.262, ('paint_rect', 0.150, 0.085), 'fire / extinguisher'),
+    # the three main columns: torque / airspeed / rotor rpm, the standby compass over the ADI over the HSI, radar altimeter / altimeter / vertical speed
+    ('comp',    0.000, 2.710, ('paint_disc', 'COMP', 0.066), 'standby compass'),
+    ('adi',     0.000, 2.580, ('game', 'ATTITUDE', 0.108), 'attitude indicator (ADI)'),
+    ('hsi',     0.000, 2.450, ('game', 'HEADING', 0.108), 'horizontal situation indicator (HSI)'),
+    ('tq',     -0.150, 2.705, ('game', 'TORQUE', 0.096), 'torque'),
+    ('ias',    -0.150, 2.575, ('game', 'AIRSPEED', 0.108), 'airspeed indicator'),
+    ('nr',     -0.150, 2.445, ('game', 'ROTOR_RPM', 0.108), 'rotor rpm (NR / NP)'),
+    ('ralt',    0.150, 2.705, ('game', 'RADAR_ALT', 0.096), 'radar altimeter'),
+    ('alt',     0.150, 2.575, ('game', 'ALTIMETER', 0.108), 'barometric altimeter'),
+    ('vsi',     0.150, 2.445, ('game', 'VVI', 0.108), 'vertical speed indicator'),
+    # the engine and systems cluster, two columns of small round gauges on the left
+    ('n1l',    -0.355, 2.700, ('game', 'ENGINE_RPM', 0.056), 'engine 1 gas generator (N1)'),
+    ('n1r',    -0.285, 2.700, ('game', 'ENGINE_RPM', 0.056), 'engine 2 gas generator (N1)'),
+    ('tgl',    -0.355, 2.630, ('game', 'EGT', 0.056), 'engine 1 turbine gas temperature'),
+    ('tgr',    -0.285, 2.630, ('game', 'EGT', 0.056), 'engine 2 turbine gas temperature'),
+    ('fuel',   -0.355, 2.560, ('game', 'FUEL_QTY', 0.056), 'fuel quantity'),
+    ('oil1',   -0.285, 2.560, ('paint_disc', 'XMSN', 0.056), 'transmission oil pressure'),
+    ('xmt',    -0.355, 2.490, ('paint_disc', 'XMSNT', 0.056), 'transmission oil temperature'),
+    ('hyd',    -0.285, 2.490, ('paint_disc', 'HYD', 0.056), 'hydraulic pressure'),
+    ('oil2',   -0.355, 2.420, ('paint_disc', 'OIL', 0.056), 'engine 1 oil pressure'),
+    ('oil3',   -0.285, 2.420, ('paint_disc', 'OIL', 0.056), 'engine 2 oil pressure'),
+    # far right: turn and slip, accelerometer, the red RWR scope, the clock
+    ('turn',    0.280, 2.705, ('game', 'TURN_SLIP', 0.078), 'turn and slip'),
+    ('accel',   0.360, 2.705, ('paint_disc', 'ACCEL', 0.050), 'accelerometer'),
+    ('rwr',     0.300, 2.575, ('paint_disc', 'RWR', 0.100), 'radar warning scope'),
+    ('clock',   0.300, 2.445, ('game', 'CLOCK', 0.070), 'clock'),
+    # the lower panels: radio, navigation controls, armament; the caution light grid at the lower right
+    ('uhf',    -0.275, 2.300, ('paint_rect', 0.170, 0.105), 'UHF / FM radio'),
+    ('nav',    -0.095, 2.300, ('paint_rect', 0.150, 0.105), 'navigation control panel'),
+    ('arm',     0.085, 2.300, ('paint_rect', 0.150, 0.105), 'armament panel'),
+    ('ccl',     0.285, 2.357, ('paint_rect', 0.170, 0.030), 'caution reset / test / brightness'),
+    ('caution', 0.285, 2.200, ('annunciator', 0.170, 0.250), 'caution / warning panel'),
+    ('ics',    -0.275, 2.170, ('paint_rect', 0.170, 0.070), 'ICS / comm select'),
+    ('jett',   -0.095, 2.170, ('paint_rect', 0.150, 0.070), 'jettison select'),
+    ('fire',    0.085, 2.170, ('paint_rect', 0.150, 0.070), 'fire / extinguisher'),
+    ('eng',    -0.275, 2.088, ('paint_rect', 0.170, 0.058), 'engine controls'),
+    ('fuelp',  -0.095, 2.088, ('paint_rect', 0.150, 0.058), 'fuel controls'),
+    ('elec',    0.085, 2.088, ('paint_rect', 0.150, 0.058), 'electrical'),
 ]
 GUNNER_LAYOUT = [
-    ('g_arm', -0.255, 2.180, ('paint_rect', 0.170, 0.120), 'gunner weapons control panel'),
-    ('g_ammo', 0.000, 2.200, ('game', 'AMMO', 0.056), 'rounds remaining (gun)'),
-    ('g_ias',  0.135, 2.310, ('game', 'AIRSPEED', 0.056), 'airspeed indicator'),
-    ('g_alt',  0.250, 2.310, ('game', 'ALTIMETER', 0.056), 'altimeter'),
-    ('g_tq',   0.135, 2.195, ('game', 'TORQUE', 0.056), 'torque'),
-    ('g_sto',  0.255, 2.180, ('display', 'STORES', 0.095, 'CRT'), 'stores display'),
-    ('g_cau',  0.000, 2.110, ('annunciator', 0.150, 0.050), 'caution lamps'),
+    ('g_icp',  -0.265, 2.355, ('paint_rect', 0.200, 0.095), 'integrated control panel (keypad)'),
+    ('g_uhf',  -0.265, 2.215, ('paint_rect', 0.200, 0.125), 'UHF radio'),
+    ('g_ics',  -0.265, 2.100, ('paint_rect', 0.200, 0.070), 'ICS / comm select'),
+    ('g_jtsn', -0.265, 1.998, ('paint_rect', 0.200, 0.062), 'jettison select / emergency hydraulic pump'),
+    ('g_sw3',  -0.265, 1.905, ('paint_rect', 0.200, 0.070), 'switch bank'),
+    ('g_arm',  -0.040, 2.335, ('paint_rect', 0.185, 0.120), 'gunner weapons control panel'),
+    ('g_tsu',  -0.040, 2.200, ('paint_rect', 0.185, 0.115), 'TSU control panel'),
+    ('g_cau',  -0.040, 2.105, ('annunciator', 0.185, 0.045), 'caution lamps'),
+    ('g_sw1',  -0.040, 1.995, ('paint_rect', 0.185, 0.085), 'switch bank'),
+    ('g_sw2',  -0.040, 1.890, ('paint_rect', 0.185, 0.080), 'switch bank'),
+    ('g_ias',   0.165, 2.340, ('game', 'AIRSPEED', 0.090), 'airspeed indicator'),
+    ('g_tq',    0.280, 2.340, ('game', 'TORQUE', 0.080), 'torque'),
+    ('g_alt',   0.165, 2.215, ('game', 'ALTIMETER', 0.080), 'altimeter'),
+    ('g_ammo',  0.280, 2.215, ('game', 'AMMO', 0.070), 'rounds remaining (gun)'),
+    ('g_sto',   0.225, 2.035, ('display', 'STORES', 0.095, 'CRT'), 'stores display'),
+    ('g_sw4',   0.225, 1.895, ('paint_rect', 0.160, 0.070), 'switch bank'),
 ]
 GAUGE_LIFT = 0.004
 PAINT_LIFT = 0.0055                         # painted faces stand 2.5 mm over the panel's painted quad (the z-fight gap is 1.5 mm)
 DISPLAY_LIFT = 0.003
 RIM = 0.16
 
-LAMPS = [{"Text": "MASTER|CAUTION", "Condition": "MASTER_CAUTION", "Colour": "amber"},
-         {"Text": "ENG|OUT", "Condition": "ENGINE_OUT", "Colour": "red"},
-         {"Text": "FIRE", "Condition": "FIRE", "Colour": "red"},
-         {"Text": "LOW|FUEL", "Condition": "LOW_FUEL", "Colour": "amber"},
-         {"Text": "ROTOR|LOW", "Condition": "ROTOR_RPM_LOW", "Colour": "red"},
-         {"Text": "ROTOR|HIGH", "Condition": "ROTOR_RPM_HIGH", "Colour": "amber"},
-         {"Text": "TORQUE|HIGH", "Condition": "TORQUE_HIGH", "Colour": "amber"},
-         {"Text": "ENG|RUN", "Condition": "ENGINE_RUN", "Colour": "green"},
-         {"Text": "XMSN|OIL", "Condition": "NONE", "Colour": "amber"},
-         {"Text": "HYD|PRESS", "Condition": "NONE", "Colour": "amber"},
-         {"Text": "GEN", "Condition": "NONE", "Colour": "amber"},
-         {"Text": "RWR|LOCK", "Condition": "RWR_LOCK", "Colour": "amber"},
-         {"Text": "MSL|LAUNCH", "Condition": "MISSILE_LAUNCH", "Colour": "red"},
-         {"Text": "LOW|AMMO", "Condition": "AMMO_LOW", "Colour": "amber"},
-         {"Text": "DAMAGE", "Condition": "DAMAGE", "Colour": "red"},
-         {"Text": "LOW|ALT", "Condition": "LOW_ALT", "Colour": "amber"}]
-LAMP_COLUMNS = 8
-LAMPS_G = [LAMPS[0], LAMPS[1], LAMPS[2], LAMPS[3], LAMPS[12], LAMPS[13]]
+LAMPS16 = [{"Text": "MASTER|CAUTION", "Condition": "MASTER_CAUTION", "Colour": "amber"},
+           {"Text": "ENG|OUT", "Condition": "ENGINE_OUT", "Colour": "red"},
+           {"Text": "FIRE", "Condition": "FIRE", "Colour": "red"},
+           {"Text": "LOW|FUEL", "Condition": "LOW_FUEL", "Colour": "amber"},
+           {"Text": "ROTOR|LOW", "Condition": "ROTOR_RPM_LOW", "Colour": "red"},
+           {"Text": "ROTOR|HIGH", "Condition": "ROTOR_RPM_HIGH", "Colour": "amber"},
+           {"Text": "TORQUE|HIGH", "Condition": "TORQUE_HIGH", "Colour": "amber"},
+           {"Text": "ENG|RUN", "Condition": "ENGINE_RUN", "Colour": "green"},
+           {"Text": "XMSN|OIL", "Condition": "NONE", "Colour": "amber"},
+           {"Text": "HYD|PRESS", "Condition": "NONE", "Colour": "amber"},
+           {"Text": "GEN", "Condition": "NONE", "Colour": "amber"},
+           {"Text": "RWR|LOCK", "Condition": "RWR_LOCK", "Colour": "amber"},
+           {"Text": "MSL|LAUNCH", "Condition": "MISSILE_LAUNCH", "Colour": "red"},
+           {"Text": "LOW|AMMO", "Condition": "AMMO_LOW", "Colour": "amber"},
+           {"Text": "DAMAGE", "Condition": "DAMAGE", "Colour": "red"},
+           {"Text": "LOW|ALT", "Condition": "LOW_ALT", "Colour": "amber"}]
+# the pilot's caution grid: 4 columns x 6 rows (the real AH-1 grid is the lower right block of the panel); the last two rows are legends only
+LAMPS = LAMPS16[:8] + [LAMPS16[11], LAMPS16[12], LAMPS16[13], LAMPS16[14], LAMPS16[15], LAMPS16[8], LAMPS16[9], LAMPS16[10]] + \
+    [{"Text": t, "Condition": "NONE", "Colour": c} for t, c in
+     (("ENG|CHIP", "amber"), ("XMSN|CHIP", "amber"), ("FUEL|FILTER", "amber"), ("FUEL|PUMP", "amber"),
+      ("ENG|ICING", "amber"), ("BATT|HOT", "amber"), ("OIL|BYPASS", "amber"), ("AUX|FUEL", "green"))]
+LAMP_COLUMNS = 4
+LAMPS_G = [LAMPS16[0], LAMPS16[1], LAMPS16[2], LAMPS16[3], LAMPS16[12], LAMPS16[13]]
 LAMP_COLUMNS_G = 6
 
 
@@ -552,6 +584,23 @@ def p_dial_static(kind):
             dial_face(d, im, 'XMSN', 0, 120, 10, 20, 70.0, labels=['0', '20', '40', '60', '80', '100', '120'], red=(105, 120))
         elif kind == 'HYD':
             dial_face(d, im, 'HYD', 0, 3000, 250, 500, 1700.0, labels=['0', '5', '10', '15', '20', '25', '30'], red=(0, 300))
+        elif kind == 'XMSNT':
+            dial_face(d, im, 'TEMP', 0, 150, 10, 30, 80.0, labels=['0', '30', '60', '90', '120', '150'], red=(120, 150))
+        elif kind == 'ACCEL':
+            dial_face(d, im, 'G', -3, 4, 0.5, 1, 1.0, labels=['-3', '-2', '-1', '0', '1', '2', '3', '4'])
+        elif kind == 'COMP':
+            d.ellipse([0, 0, im.width, im.height], fill=(206, 206, 198, 255), outline=(20, 20, 20, 255), width=int(im.width * .06))
+            for k, lab in enumerate(['N', 'E', 'S', 'W']):
+                a = math.radians(90 * k)
+                text(d, (im.width / 2 + im.width * .34 * math.sin(a), im.height / 2 - im.height * .34 * math.cos(a)), lab, im.width * .16, fill=(20, 20, 20), bold=True)
+            d.line([im.width / 2, im.height * .2, im.width / 2, im.height * .8], fill=(160, 40, 30, 255), width=int(im.width * .03))
+        elif kind == 'RWR':
+            c = im.width / 2
+            d.ellipse([0, 0, im.width, im.height], fill=(150, 42, 34, 255), outline=(20, 20, 20, 255), width=int(im.width * .05))
+            for rr in (0.2, 0.4, 0.6, 0.8):
+                d.ellipse([c - c * rr, c - c * rr, c + c * rr, c + c * rr], outline=(100, 24, 20, 255), width=int(im.width * .015))
+            d.line([c, im.height * .08, c, im.height * .92], fill=(100, 24, 20, 255), width=int(im.width * .015))
+            d.line([im.width * .08, c, im.width * .92, c], fill=(100, 24, 20, 255), width=int(im.width * .015))
         else:
             dial_face(d, im, 'OIL', 0, 100, 10, 20, 55.0, labels=['0', '20', '40', '60', '80', '100'], red=(0, 12))
     return fn
@@ -723,13 +772,154 @@ def p_kick(d, im):
         d.rectangle([S * (.10 + k * .30), H * .30, S * (.34 + k * .30), H * .70], fill=(20, 22, 22, 255), outline=(70, 72, 72, 255), width=3)
 
 
+# ---------------------------------------------------------------- the dense panels (painted: black boxes, white legends, toggles, knobs, push buttons)
+
+def _bg(d, im, seed=0):
+    S, H = im.width, im.height
+    d.rectangle([0, 0, S, H], fill=(20, 21, 23, 255), outline=(70, 72, 74, 255), width=3)
+    for (x, y) in ((S * .03, H * .08), (S * .97, H * .08), (S * .03, H * .92), (S * .97, H * .92)):
+        d.ellipse([x - 3, y - 3, x + 3, y + 3], fill=(120, 122, 120, 255))
+
+
+def _toggles(d, im, y, labels, x0=0.10, x1=0.90, size=1.0, lab_dy=0.20):
+    S, H = im.width, im.height
+    n = len(labels)
+    for k, lab in enumerate(labels):
+        x = S * (x0 + (x1 - x0) * (k + 0.5) / n)
+        toggle(d, x, H * y, H * 0.9 * size)
+        text(d, (x, H * (y + lab_dy)), lab, H * 0.11)
+
+
+def _knobs(d, im, y, labels, x0=0.15, x1=0.85, r=0.14):
+    S, H = im.width, im.height
+    n = len(labels)
+    for k, lab in enumerate(labels):
+        x = S * (x0 + (x1 - x0) * (k + 0.5) / n)
+        knob(d, x, H * y, H * r, ang=0.4 + 0.7 * k)
+        text(d, (x, H * (y + r + 0.12)), lab, H * 0.11)
+
+
+def _buttons(d, im, y0, rows, cols, x0=0.08, x1=0.92, h=0.14, lit=()):
+    S, H = im.width, im.height
+    w = (x1 - x0) / cols
+    for r in range(rows):
+        for c in range(cols):
+            x = S * (x0 + w * c + 0.1 * w)
+            y = H * (y0 + (h + 0.04) * r)
+            d.rectangle([x, y, x + S * w * 0.8, y + H * h], fill=(200, 196, 150, 255) if (r, c) in lit else (36, 38, 40, 255),
+                        outline=(150, 150, 146, 255), width=2)
+
+
+def p_radio(d, im):
+    S, H = im.width, im.height
+    _bg(d, im)
+    text(d, (S * .5, H * .08), 'UHF   FREQ (MHz)', H * .10, bold=True)
+    d.rectangle([S * .10, H * .17, S * .52, H * .36], fill=(66, 84, 66, 255), outline=(10, 10, 10, 255), width=2)
+    text(d, (S * .31, H * .27), '251.40', H * .13, fill=(20, 40, 20))
+    for k, lab in enumerate(['VOL', 'SQ', 'TONE']):
+        knob(d, S * (0.66 + 0.14 * k), H * .27, H * .09, ang=0.5 + 0.5 * k)
+        text(d, (S * (0.66 + 0.14 * k), H * .43), lab, H * .08)
+    _knobs(d, im, 0.64, ['MAN', 'PRST', 'CHAN', 'T/R+G', 'ADF'], x0=0.10, x1=0.90, r=0.12)
+
+
+def p_nav(d, im):
+    S, H = im.width, im.height
+    _bg(d, im)
+    text(d, (S * .5, H * .08), 'NAV CONT   HSI', H * .10, bold=True)
+    _knobs(d, im, 0.42, ['BRG PTR 1', 'BRG PTR 2'], x0=0.20, x1=0.80, r=0.20)
+    _knobs(d, im, 0.80, ['FM HOME'], x0=0.35, x1=0.65, r=0.13)
+    text(d, (S * .14, H * .20), 'ADF', H * .08); text(d, (S * .86, H * .20), 'VOR', H * .08)
+
+
+def p_icp(d, im):
+    S, H = im.width, im.height
+    _bg(d, im)
+    d.rectangle([S * .06, H * .10, S * .46, H * .34], fill=(58, 76, 58, 255), outline=(10, 10, 10, 255), width=2)
+    text(d, (S * .26, H * .22), 'DISPLAY', H * .12, fill=(20, 40, 20))
+    for r in range(4):
+        for c in range(3):
+            x = S * (0.52 + 0.14 * c); y = H * (0.10 + 0.21 * r)
+            d.rectangle([x, y, x + S * .12, y + H * .17], fill=(40, 42, 44, 255), outline=(160, 160, 156, 255), width=2)
+            text(d, (x + S * .06, y + H * .085), '123456789*0#'[r * 3 + c], H * .12)
+    knob(d, S * .16, H * .62, H * .15, ang=0.9)
+    text(d, (S * .16, H * .90), 'MODE', H * .09)
+    _toggles(d, im, 0.62, ['CLR', 'ENT'], x0=0.28, x1=0.44, size=0.6)
+
+
+def p_ics(d, im):
+    S, H = im.width, im.height
+    _bg(d, im)
+    text(d, (S * .5, H * .12), 'ICS   HOT MIC  FM VHF UHF HF', H * .13, bold=True)
+    _toggles(d, im, 0.50, ['HOT MIC', 'FM', 'VHF', 'UHF', 'HF'], x0=0.34, x1=0.96, size=0.7)
+    _toggles(d, im, 0.78, ['ADF', 'VOR', 'AUX'], x0=0.46, x1=0.96, size=0.7, lab_dy=0.0)
+    knob(d, S * .13, H * .58, H * .22, ang=0.6); knob(d, S * .26, H * .58, H * .20, ang=1.4)
+
+
+def p_jtsn(d, im):
+    S, H = im.width, im.height
+    _bg(d, im)
+    d.rectangle([S * .06, H * .14, S * .24, H * .62], fill=(190, 60, 40, 255), outline=(10, 10, 10, 255), width=2)
+    text(d, (S * .5, H * .16), 'JTSN SEL   OUTBD / BOTH / INBD', H * .15, bold=True)
+    _toggles(d, im, 0.60, ['OUTBD', 'BOTH', 'INBD'], x0=0.34, x1=0.72, size=0.8, lab_dy=0.26)
+    toggle(d, S * .88, H * .52, H * 1.0); text(d, (S * .88, H * .84), 'EMER HYD', H * .10)
+
+
+def p_tsu(d, im):
+    S, H = im.width, im.height
+    _bg(d, im)
+    text(d, (S * .5, H * .08), 'TSU CONTROL', H * .10, bold=True)
+    _knobs(d, im, 0.34, ['BF / LRD', 'CAMERA', 'LASER ARM', 'MODE SEL'], x0=0.10, x1=0.92, r=0.13)
+    _toggles(d, im, 0.74, ['LASER', 'RANGE', 'DISPLAY', 'TEST'], x0=0.10, x1=0.92, size=0.7)
+    for k, c in enumerate([(210, 140, 30), (210, 140, 30), (210, 140, 30), (60, 170, 70)]):
+        x = S * (0.15 + 0.2 * k)
+        d.ellipse([x - 5, H * .93 - 5, x + 5, H * .93 + 5], fill=c + (255,))
+
+
+def p_ccl(d, im):
+    S, H = im.width, im.height
+    _bg(d, im)
+    text(d, (S * .30, H * .50), 'CAUTION  RESET', H * .46, bold=True)
+    toggle(d, S * .62, H * .50, H * 1.2); toggle(d, S * .80, H * .50, H * 1.2)
+    text(d, (S * .70, H * .90), 'TEST  BRIGHT', H * .28)
+
+
+def p_sw(seed, labels, rows=2):
+    def fn(d, im):
+        S, H = im.width, im.height
+        _bg(d, im)
+        rng = np.random.default_rng(seed)
+        n = len(labels)
+        per = (n + rows - 1) // rows
+        for k, lab in enumerate(labels):
+            r, c = divmod(k, per)
+            x = S * (0.10 + 0.80 * (c + 0.5) / per)
+            y = H * (0.28 + 0.42 * r) if rows > 1 else H * 0.38
+            if rng.random() < 0.6:
+                toggle(d, x, y, H * 0.8)
+            else:
+                knob(d, x, y, H * 0.10, ang=float(rng.random() * 2))
+            text(d, (x, y + H * 0.22), lab, H * 0.09)
+        text(d, (S * .5, H * .07), labels[0] + ' ...', H * .09)
+    return fn
+
+
+PAINTERS = {'uhf': p_radio, 'nav': p_nav, 'arm': p_arm, 'ccl': p_ccl, 'ics': p_ics, 'jett': p_jtsn, 'fire': p_fire,
+            'eng': p_sw(31, ['FUEL', 'ENG 1', 'ENG 2', 'ENG ST', 'GOV', 'BOOST']),
+            'fuelp': p_sw(32, ['XFER', 'BOOST', 'EMER', 'FLT', 'DUMP', 'PRIME']),
+            'elec': p_sw(33, ['BAT', 'GEN', 'INV', 'BUS', 'NVG', 'HTR']),
+            'g_icp': p_icp, 'g_uhf': p_radio, 'g_ics': p_ics, 'g_jtsn': p_jtsn, 'g_arm': p_gun_arm, 'g_tsu': p_tsu,
+            'g_sw1': p_sw(41, ['MASTER', 'STBY', 'ARM', 'TURRET', 'LOCK', 'STOW']),
+            'g_sw2': p_sw(42, ['LIGHTS', 'PITOT', 'HTR', 'DEFOG', 'VENT', 'HYD']),
+            'g_sw3': p_sw(43, ['COMM 1', 'COMM 2', 'IFF', 'NAV', 'ILL', 'TEST']),
+            'g_sw4': p_sw(44, ['RNG', 'FLT', 'MODE', 'BIT'], rows=1)}
+
 # ---------------------------------------------------------------- build
 
 def build(atlas):
     m = Mesh()
     sw = {k: atlas.swatch(c) for k, c in dict(panel=PANEL, panel_d=PANEL_D, black=BLACK, dgrey=DGREY, mgrey=MGREY,
                                                 lgrey=LGREY, frame=FRAME, cushion=CUSHION, harness=HARNESS, yellow=YELLOW,
-                                                red=RED, metal=METAL, floor=FLOOR, bezel=(26, 27, 29), console=CONSOLE,
+                                                red=RED, metal=METAL, floor=FLOOR, bezel=(14, 15, 17), console=CONSOLE,
                                                 rubber=RUBBER, pale=(120, 124, 120)).items()}
     gauges, displays, glass = [], [], []
     cache = {}
@@ -796,10 +986,9 @@ def build(atlas):
             m.frame_rect(c + PF.N * lift, PF.N, PF.U, w, h, 0.005, 0.008 - lift, sw['bezel'])
         elif kind == 'paint_rect':
             w, h = spec[1], spec[2]
-            pw = 200
+            pw = int(round(w * 1400))
             ph = max(16, int(round(pw * h / w)))
-            fn = {'arm': p_arm, 'eng': p_eng, 'fire': p_fire}[name]
-            rect_ = atlas.paint(pw, ph, fn)
+            rect_ = atlas.paint(pw, ph, PAINTERS[name])
             m.rect_tex(c + PF.N * PAINT_LIFT, PF.N, PF.U, w, h, rect_)
             m.frame_rect(c + PF.N * lift, PF.N, PF.U, w, h, 0.004, 0.007 - lift, sw['bezel'])
 
@@ -814,6 +1003,7 @@ def build(atlas):
     g_n = unit(np.cross(X, g_up))                              # (away from the pilot)
     g_h = 0.125                                                # slant length of the glass
     g_bot = np.array([0, ey - g_h / 2 * math.cos(lean), 4.325 + g_h / 2 * math.sin(lean)])
+    m.box([0, g_bot[1], g_bot[2]], (X, Y, Z), (0.095, 0.014, 0.030), sw['dgrey'])                  # the combiner's housing: the frame bars stand in it
     m.box([0, (sy0 + 0.055 + g_bot[1] + 0.004) / 2, 4.33], (X, Y, Z), (0.040, (g_bot[1] + 0.004 - sy0 - 0.055) / 2, 0.035), sw['dgrey'])   # pedestal
     # the glass: a rectangle, 0.17 wide, with the lower corners eased, centred on the eye line (y at the eye's height)
     q3 = lambda u, v, d=0.0: g_bot + X * u + g_up * v + g_n * d
@@ -850,17 +1040,18 @@ def build(atlas):
     zb = lambda y: 3.115 - 0.0696 * (y - 1.86)
     ax_b = (X, unit([0, 1, -0.0696]), unit([0, 0.0696, 1]))
     yc = 2.75
-    m.box([0, yc, zb(yc) + 0.035 - 0.002], ax_b, (0.185, 0.36, 0.035), sw['cushion'], front=(2, 1, backt, -X, ax_b[1]))
+    m.box([0, yc, zb(yc) + 0.035 - 0.002], ax_b, (0.185, 0.36, 0.035), sw['cushion'], front=(2, 1, backt, -X, ax_b[1]),
+          skip=((2, -1),))                                   # (the rear face lay 2 mm off the old back plate: omitted)
     yh = 2.975
-    m.box([0, yh, zb(yh) + 0.038], ax_b, (0.095, 0.115, 0.040), sw['cushion'])                       # headrest pad
+    m.box([0, yh, zb(yh) + 0.038], ax_b, (0.095, 0.115, 0.040), sw['cushion'], skip=((2, -1),))                       # headrest pad
     m.box([0, 2.14, 3.34], (X, Y, Z), (0.215, 0.205, 0.225), sw['frame'])                           # the armoured base (y 1.935 - 2.345)
     m.box([0, 2.362, 3.35], (X, Y, Z), (0.200, 0.018, 0.215), sw['cushion'], front=(1, 1, cushion, -X, Z))   # seat pan cushion
     for s in (1, -1):
         m.box([s * 0.213, 2.50, 3.22], (X, Y, Z), (0.012, 0.135, 0.100), sw['frame'])                # bolsters
         m.box([s * 0.213, 2.40, 3.40], (X, Y, Z), (0.012, 0.040, 0.100), sw['frame'])
         m.box([s * 0.09, 2.70, zb(2.70) + 0.077], (X, unit([0, 1, 0.3]), unit([0, -0.3, 1])), (0.025, 0.200, 0.003), sw['harness'])   # shoulder straps
-        m.box([s * 0.12, 2.386, 3.43], (X, Y, Z), (0.045, 0.004, 0.010), sw['harness'])              # lap belt halves
-    m.box([0, 2.392, 3.45], (X, Y, Z), (0.030, 0.006, 0.014), sw['metal'])                           # the buckle
+        m.box([s * 0.12, 2.383, 3.43], (X, Y, Z), (0.045, 0.004, 0.010), sw['harness'])              # lap belt halves
+    m.box([0, 2.384, 3.45], (X, Y, Z), (0.030, 0.006, 0.014), sw['metal'])                           # the buckle
 
     # -- the cyclic: boot on the floor between the knees, the column leaning back, the grip with trigger and hat
     FOOT = np.array([0.0, FLOOR_P + 0.005, 3.90])
@@ -955,7 +1146,8 @@ def build(atlas):
                 m.box(c + r_ * sgn * (w / 2 + t) + n_ * (pr - 0.002) / 2, (r_, u_, n_), (0.0015, w / 2 + t, (pr - 0.002) / 2), sw['black'])
         elif kind == 'paint_rect':
             w, h = spec[1], spec[2]
-            rect_ = atlas.paint(220, int(round(220 * h / w)), p_gun_arm)
+            pw = int(round(w * 1400))
+            rect_ = atlas.paint(pw, int(round(pw * h / w)), PAINTERS[name])
             m.rect_tex(c + GF.N * PAINT_LIFT, GF.N, GF.U, w, h, rect_)
             m.frame_rect(c + GF.N * lift, GF.N, GF.U, w, h, 0.004, 0.007 - lift, sw['bezel'])
 
@@ -997,8 +1189,8 @@ def build(atlas):
         m.box([s * 0.213, 2.08, 4.72], (X, Y, Z), (0.012, 0.135, 0.100), sw['frame'])
         m.box([s * 0.213, 1.99, 4.92], (X, Y, Z), (0.012, 0.040, 0.100), sw['frame'])
         m.box([s * 0.09, 2.40, 4.572], (X, unit([0, 1, 0.1]), unit([0, -0.1, 1])), (0.025, 0.200, 0.003), sw['harness'])
-        m.box([s * 0.12, 1.955, 4.93], (X, Y, Z), (0.045, 0.004, 0.010), sw['harness'])
-    m.box([0, 1.962, 4.95], (X, Y, Z), (0.030, 0.006, 0.014), sw['metal'])
+        m.box([s * 0.12, 1.945, 4.93], (X, Y, Z), (0.045, 0.004, 0.010), sw['harness'])
+    m.box([0, 1.946, 4.95], (X, Y, Z), (0.030, 0.006, 0.014), sw['metal'])
 
     # -- the gunner's hand controllers on his side shelves: the short side-stick cyclic on the right, the collective on the left
     cons_g = atlas.paint(160, 240, p_console(1, 0.6, ['ICS / COMM', 'IFF', 'LIGHTS']))
