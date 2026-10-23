@@ -15,8 +15,12 @@ Built:
     situation indicator, Mach / airspeed and altimeter, climb rate, clock (centre); airspeed, g-meter, the armament panel and
     the landing-gear panel on the left wing; the Atar's rev counter and exhaust temperature, fuel, radar warning and the warning
     lights on the right wing; French placards (CYRANO II, ARMEMENT, TRAIN, MOTEUR, ALARMES);
-  * the black coaming forward to the windscreen's base, closed against the nose skin under the quarter panes;
-  * the CSF 97 reflector sight on the coaming (HeadUpDisplay Style REFLECTOR, seat 0; the Mirage IIIE has no head-up display);
+  * about 30 round dials in all (the real panel is packed with them): the live ones in an inner column on each wing, a second
+    column and the free rows filled with painted small dials (STATIC_DIALS);
+  * the black coaming forward to the windscreen's base, closed against the nose skin under the quarter panes, wrapped at both
+    sides in a curved hood that rolls inward over the wing facets;
+  * the CSF 97 reflector sight on the coaming, a big box (19 x 20 cm) with its reflector frame standing on the aft edge
+    (HeadUpDisplay Style REFLECTOR, seat 0; the Mirage IIIE has no head-up display);
   * low side consoles with switch panels, side walls, rudder pedals, the Atar's throttle lever on the left console, a Martin-Baker
     RM4 ejection seat (seat pan and bucket, parachute back, headbox with the face-blind handle, the lower handle between the
     knees) and the control stick (into the stick bone), the rear bulkhead closing the spine fairing's front and a floor.
@@ -113,17 +117,55 @@ LAYOUT = [
     ('vvi',      0, -0.047, -0.635, ('game', 'VVI', 0.062), 'variometer'),
     ('clock',    0,  0.047, -0.635, ('game', 'CLOCK', 0.060), 'clock'),
     ('warning',  0,   0.000, -0.735, ('annunciator', 0.190, 0.056), 'warning lights'),
-    # left wing
-    ('ias',     -1,   0.066, -0.430, ('game', 'AIRSPEED', 0.070), 'airspeed indicator'),
-    ('g',       -1,   0.066, -0.520, ('game', 'G_METER', 0.050), 'accelerometer'),
+    # left wing: the live dials in the inner column (a 0.043), painted ones beside and above them
+    ('ias',     -1,   0.043, -0.430, ('game', 'AIRSPEED', 0.060), 'airspeed indicator'),
+    ('g',       -1,   0.043, -0.497, ('game', 'G_METER', 0.046), 'accelerometer'),
     ('weapons', -1,   0.066, -0.610, ('paint_rect', 0.105, 0.052), 'ARMEMENT panel'),
     ('gear',    -1,   0.066, -0.685, ('paint_rect', 0.090, 0.040), 'TRAIN panel'),
     # right wing
-    ('rpm',      1,   0.066, -0.430, ('game', 'ENGINE_RPM', 0.070), 'Atar rev counter'),
-    ('egt',      1,   0.066, -0.520, ('game', 'EGT', 0.050), 'exhaust gas temperature'),
-    ('fuel',     1,   0.066, -0.595, ('game', 'FUEL_QTY', 0.050), 'fuel quantity'),
-    ('rwr',      1,   0.066, -0.670, ('game', 'RWR', 0.050), 'radar warning'),
+    ('rpm',      1,   0.043, -0.430, ('game', 'ENGINE_RPM', 0.060), 'Atar rev counter'),
+    ('egt',      1,   0.043, -0.497, ('game', 'EGT', 0.046), 'exhaust gas temperature'),
+    ('fuel',     1,   0.043, -0.560, ('game', 'FUEL_QTY', 0.046), 'fuel quantity'),
+    ('rwr',      1,   0.043, -0.623, ('game', 'RWR', 0.046), 'radar warning'),
 ]
+
+# painted (not live) round dials: key -> title, lo, hi, step, label step, needle value, labels. The real panel is packed with
+# about 25 black round dials in tight rows (photos of the IIIE's panel), so the wings carry a second column and the free
+# rows above and below the live dials are filled with small ones.
+STATIC_DIALS = {
+    'TEMP': ('T7', 0, 10, 1, 2, 6.0, ['0', '2', '4', '6', '8', '10']),
+    'HUILE': ('HUILE', 0, 10, 1, 2, 4.0, ['0', '2', '4', '6', '8', '10']),
+    'CARB': ('CARB', 0, 50, 5, 10, 32.0, ['0', '10', '20', '30', '40', '50']),
+    'TUYERE': ('TUY', 0, 10, 1, 2, 3.0, ['0', '2', '4', '6', '8', '10']),
+    'OXY': ('OXY', 0, 5, 1, 1, 3.5, ['0', '1', '2', '3', '4', '5']),
+    'CABINE': ('CAB', 0, 50, 5, 10, 12.0, ['0', '10', '20', '30', '40', '50']),
+    'HYD': ('HYD', 0, 4, 1, 1, 3.0, ['0', '1', '2', '3', '4']),
+    'VOLT': ('VOLT', 0, 30, 5, 10, 28.0, ['0', '10', '20', '30']),
+    'FREIN': ('FREIN', 0, 3, 1, 1, 2.0, ['0', '1', '2', '3']),
+    'AMP': ('AMP', 0, 300, 50, 100, 140.0, ['0', '1', '2', '3']),
+}
+DIAL_POOL = ['TEMP', 'HUILE', 'CARB', 'TUYERE', 'OXY', 'CABINE', 'HYD', 'VOLT', 'FREIN', 'AMP']
+
+
+DIAL_KEY = {}                          # item name -> its painted face (STATIC_DIALS key)
+
+
+def _dials(prefix, side, pts, dia, k0=0):
+    out = []
+    for k, (a, y) in enumerate(pts):
+        key = DIAL_POOL[(k0 + k) % len(DIAL_POOL)]
+        DIAL_KEY[f'{prefix}{k}'] = key
+        out.append((f'{prefix}{k}', side, a, y, ('paint_disc', dia), key.lower()))
+    return out
+
+
+# left wing: a 2 x 2 block above the airspeed dial, a second column beside the live dials, a row between the g-meter and the
+# ARMEMENT panel; right wing: the same block and a second column down the wing, a last row under the radar warning
+LAYOUT += _dials('la', -1, [(0.040, -0.335), (0.090, -0.335), (0.040, -0.375), (0.090, -0.375)], 0.026) \
+    + _dials('lb', -1, [(0.103, -0.428), (0.103, -0.497), (0.043, -0.548), (0.103, -0.548)], 0.034, 4) \
+    + _dials('ra', 1, [(0.040, -0.335), (0.090, -0.335), (0.040, -0.375), (0.090, -0.375)], 0.026, 2) \
+    + _dials('rb', 1, [(0.103, -0.428), (0.103, -0.497), (0.103, -0.560), (0.103, -0.623), (0.043, -0.684), (0.103, -0.684)],
+             0.034, 6)
 
 LAMPS = (3, [{'Text': t, 'Condition': c, 'Colour': k} for t, c, k in [
     ('ALARME|GENERALE', 'MASTER_CAUTION', 'amber'), ('TRAIN|SORTI', 'GEAR_DOWN', 'green'),
@@ -164,6 +206,13 @@ def panel_paint(side, W_, H_, a0, a1, yb, yt):
                 w, h = (spec[2], spec[2]) if spec[0] == 'display' else (spec[1], spec[2])
                 sx, sy = (w / 2 + 0.006) * px_m, (h / 2 + 0.006) * px_m
                 d.rectangle([x - sx, yy - sy, x + sx, yy + sy], fill=(20, 24, 26, 255))
+    return fn
+
+
+def p_dial_static(kind):
+    def fn(d, im):
+        t, lo, hi, st, ls, val, labs = STATIC_DIALS[kind]
+        H.dial_face(d, im, t, '', lo, hi, st, ls, val, labels=labs)
     return fn
 
 
@@ -262,6 +311,7 @@ def build(atlas, E):
             m.flat([p, q, q + back, p + back], sw['panel_d'], toward=mid + (mid - mid0))
 
     # -- instruments
+    dial_cache = {}
     cols, lamps = LAMPS
     for name, side, a, y, spec, _ in LAYOUT:
         f = fac[side]
@@ -270,6 +320,12 @@ def build(atlas, E):
         if kind == 'game':
             gauges.append({'Seat': 0, 'Kind': spec[1], 'Center': H.r5(c + f.N * H.GAUGE_LIFT), 'Normal': H.r5(f.N),
                            'Up': H.r5(f.U), 'Diameter': spec[2], 'Depth': 0.03})
+        elif kind == 'paint_disc':                                 # a painted round dial in a thin bezel
+            dia, key = spec[1], DIAL_KEY[name]
+            rect = dial_cache.get(key) or atlas.paint(96, 96, p_dial_static(key))
+            dial_cache[key] = rect
+            m.rect_tex(c + f.N * 0.004, f.N, f.U, dia, dia, rect)
+            m.ring(c, f.N, f.U, dia / 2, dia / 2 * (1 + H.RIM), 0.010, sw['bezel'])
         elif kind == 'annunciator':
             w, h = spec[1], spec[2]
             gauges.append({'Seat': 0, 'Kind': 'ANNUNCIATOR', 'Center': H.r5(c + f.N * 0.004), 'Normal': H.r5(f.N),
@@ -356,23 +412,54 @@ def build(atlas, E):
             yb_ = E[1] + SILL_Y - 0.15
             m.flat([p, q, [q[0], yb_, q[2]], [p[0], yb_, p[2]]], sw['black'], toward=[E[0], yb_, (p[2] + q[2]) / 2])
 
+    # -- the coaming's two curved side hoods (the real coaming wraps the panel in them): from the panel's outer corners forward
+    # along the coaming's edge, a thin shell that rises 9.5 cm, rolls inward over the wing facets and dies away toward the
+    # windscreen's base
+    HOOD_H, HOOD_W, HOOD_T = 0.095, 0.075, 0.008
+    t_rows = np.linspace(0, 1, len(rows))
+    stations = np.linspace(0, 0.80, 9)
+    thetas = np.linspace(0, math.pi / 2, 7)
+    for j in (0, len(lip_edge) - 1):
+        edge = np.array([rows[i][j] for i in range(len(rows))])
+        sgn = 1.0 if edge[0][0] > E[0] else -1.0                    # +1: the left side (x > 0)
+        O, Iq = [], []
+        for t in stations:
+            p = np.array([np.interp(t, t_rows, edge[:, k]) for k in range(3)])
+            h = HOOD_H * (1 - t / 0.80) ** 0.7
+            o_ring, i_ring = [], []
+            for th in thetas:
+                q = p + np.array([-sgn * (0.012 + HOOD_W * (1 - math.cos(th))), 0.002 + h * math.sin(th), 0.0])
+                nrm = H.unit([sgn * math.cos(th) / HOOD_W, math.sin(th) / max(h, 0.004), 0.0])
+                o_ring.append(q); i_ring.append(q - nrm * HOOD_T)
+            O.append(o_ring); Iq.append(i_ring)
+        for k in range(len(stations) - 1):
+            for i in range(len(thetas) - 1):
+                th = (thetas[i] + thetas[i + 1]) / 2
+                nrm = H.unit([sgn * math.cos(th) / HOOD_W, math.sin(th) / HOOD_H, 0.0])
+                m.flat([O[k][i], O[k][i + 1], O[k + 1][i + 1], O[k + 1][i]], sw['black'], normal=nrm)
+                m.flat([Iq[k][i], Iq[k][i + 1], Iq[k + 1][i + 1], Iq[k + 1][i]], sw['black'], normal=-nrm)
+            m.flat([O[k][-1], O[k + 1][-1], Iq[k + 1][-1], Iq[k][-1]], sw['black'], normal=[-sgn, 0, 0])
+        for i in range(len(thetas) - 1):                            # the rear end, toward the pilot
+            m.flat([O[0][i], O[0][i + 1], Iq[0][i + 1], Iq[0][i]], sw['black'], normal=[0, 0, -1])
+
     # -- CSF 97 reflector sight on the coaming: the body, its aft face, the reflector frame and its glass
     sight = atlas.paint(96, 64, p_sight)
-    g_h, g_hw = 0.100, 0.060
+    # (the real one is a big box on top of the coaming at the centre, the most visible thing from the seat: about 19 cm wide
+    # and 20 cm long, its reflector frame standing on the box's aft edge, leaning back to the pilot)
+    g_h, g_hw = 0.110, 0.072
     g_h = min(g_h, 2 * HUD_TOP[0] - 0.012)
     lean = math.radians(35)
     g_up = np.array([0, math.cos(lean), -math.sin(lean)])
     g_n = H.unit(np.cross(X, g_up))
-    base_y = E[1] + TOP_C + 0.045                                  # the coaming's top at the lip
-    g_c = np.array([E[0], E[1] - 0.005, E[2] + PANEL_Z - 0.05])
-    g_bot, g_top = g_c - g_up * g_h / 2, g_c + g_up * g_h / 2
-    body_top = base_y + 0.055
-    body_c = np.array([E[0], (base_y + body_top) / 2, E[2] + PANEL_Z - 0.035])
-    m.box(body_c, (X, Y, Z), (0.060, (body_top - base_y) / 2, 0.085), sw['dgrey'], front=(2, -1, sight, -X, Y))
-    if g_bot[1] - 0.006 > body_top + 0.003:
-        for s in (-1, 1):
-            m.box([E[0] + s * (g_hw + 0.004), (body_top + g_bot[1] - 0.006) / 2, g_bot[2]], (X, Y, Z),
-                  (0.004, (g_bot[1] - 0.006 - body_top) / 2, 0.005), sw['dgrey'])
+    base_y = E[1] + TOP_C - 0.020                                  # the box's foot, sunk into the coaming at the lip
+    body_top = E[1] - 0.040                                        # its top, 4 cm under the eye line
+    body_z0, body_z1 = E[2] + 0.527, E[2] + 0.727
+    body_c = np.array([E[0], (base_y + body_top) / 2, (body_z0 + body_z1) / 2])
+    m.box(body_c, (X, Y, Z), (0.090, (body_top - base_y) / 2, (body_z1 - body_z0) / 2), sw['dgrey'], front=(2, -1, sight, -X, Y))
+    g_bot = np.array([E[0], body_top + 0.012, body_z0 + 0.024])    # the reflector frame's foot on the box's aft edge
+    g_c = g_bot + g_up * g_h / 2
+    g_top = g_c + g_up * g_h / 2
+    m.box(np.array([E[0], body_top + 0.0115, body_z1 - 0.050]), (X, Y, Z), (0.070, 0.0135, 0.050), sw['black'])   # the lens hood at its front
     m.box(g_bot - g_up * 0.005, (X, g_up, g_n), (g_hw + 0.008, 0.005, 0.010), sw['dgrey'])
     for s in (-1, 1):
         m.box(g_c + X * s * (g_hw + 0.004), (X, g_up, g_n), (0.004, g_h / 2, 0.005), sw['dgrey'])
