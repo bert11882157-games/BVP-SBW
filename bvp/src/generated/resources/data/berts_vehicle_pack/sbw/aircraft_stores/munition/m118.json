@@ -1,0 +1,48 @@
+{
+  "Schema": 1,
+  "Name": "M118 · 3,000 lb demolition",
+  "Category": "BOMB",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/m118.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.329,
+    -0.075
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.305,
+      0.0,
+      -0.075
+    ],
+    "Right": [
+      -0.305,
+      0.0,
+      -0.075
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    -0.075
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/m118.png",
+  "Capacity": 1,
+  "MassKg": 1369.8,
+  "Bomb": {
+    "Mode": "DUMB",
+    "Gravity": 0.08,
+    "DragMultiplier": 1,
+    "TurnDegreesPerTick": 0,
+    "BlastRadius": 17,
+    "TntEquivalentKg": 1040.0,
+    "BlastDamage": 1080
+  },
+  "AmmoItem": "superbwarfare:large_freefall_bomb",
+  "ProjectileProfile": "berts_vehicle_pack:aircraft_bombs/m118",
+  "LaunchOffset": [
+    0.0,
+    -0.329,
+    0.0
+  ]
+}

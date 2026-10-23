@@ -1,0 +1,61 @@
+{
+  "Schema": 1,
+  "Name": "AIM-9J Sidewinder · improved infrared · twin LAU-7 rails",
+  "Category": "AIR_TO_AIR",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/aim9j.geo.json",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.0673,
+    0.4333
+  ],
+  "SideMountAnchors": {
+    "Left": [
+      0.0673,
+      0.0,
+      0.4333
+    ],
+    "Right": [
+      -0.0673,
+      0.0,
+      0.4333
+    ]
+  },
+  "MountAxis": [
+    0.0,
+    0.0,
+    0.4333
+  ],
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/aim9j.png",
+  "Capacity": 1,
+  "MassKg": 76.9,
+  "Guidance": {
+    "Mode": "INFRARED",
+    "LockTicks": 56,
+    "Range": 850,
+    "ConeDegrees": 28,
+    "CountermeasureVulnerability": 1.1
+  },
+  "Flight": {
+    "InitialSpeed": 0.5,
+    "MaxSpeed": 4.8,
+    "AccelerationPerTick": 0.1,
+    "TurnDegreesPerSecond": 63,
+    "Damage": 25,
+    "BlastRadius": 2.5,
+    "TntEquivalentKg": 7.6204
+  },
+  "AmmoItem": "superbwarfare:small_air_to_air_missile",
+  "MaxPerPylon": 2,
+  "FixedRackCount": 2,
+  "RackSpacing": [
+    0.66,
+    0.35,
+    0
+  ],
+  "LaunchOffset": [
+    0.0,
+    -0.0673,
+    0.0
+  ]
+}
