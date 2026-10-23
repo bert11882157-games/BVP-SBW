@@ -45,8 +45,19 @@ HULL_BONE = 'wreck_fuselage_0__hull'
 
 # ---- the frame's measurements (absolute blocks)
 # the sill rails' inner top edge: z, x of the inner edge, y of the top (the rails rise toward the dorsal fairing)
-RAIL = [(3.25, 0.340, 3.235), (3.50, 0.380, 3.190), (3.75, 0.400, 3.145), (4.00, 0.420, 3.100), (4.30, 0.435, 3.070),
-        (4.60, 0.450, 3.000), (4.90, 0.460, 2.955), (5.10, 0.470, 2.930), (5.22, 0.480, 2.920)]
+# (y = the hull's own rail top, ray cast down on the hull pieces every 5 cm, less 4 mm: the glass foot is buried in the rail and no
+# slit shows under it; the hand-set table of the first pass stood up to 2 cm over the rail)
+RAIL = [(3.25, 0.340, 3.2408), (3.30, 0.348, 3.2283), (3.35, 0.356, 3.2158), (3.40, 0.364, 3.2033), (3.45, 0.372, 3.1917),
+        (3.50, 0.380, 3.1840), (3.55, 0.384, 3.1763), (3.60, 0.388, 3.1686), (3.65, 0.392, 3.1609), (3.70, 0.396, 3.1533),
+        (3.75, 0.400, 3.1456), (3.80, 0.404, 3.1379), (3.85, 0.408, 3.1302), (3.90, 0.412, 3.1225), (3.95, 0.416, 3.1148),
+        (4.00, 0.420, 3.1071), (4.05, 0.422, 3.0994), (4.10, 0.425, 3.0910), (4.15, 0.427, 3.0799), (4.20, 0.430, 3.0688),
+        (4.25, 0.432, 3.0577), (4.30, 0.435, 3.0466), (4.35, 0.437, 3.0355), (4.40, 0.440, 3.0244), (4.45, 0.442, 3.0132),
+        (4.50, 0.445, 3.0021), (4.55, 0.447, 2.9922), (4.60, 0.450, 2.9866), (4.65, 0.452, 2.9811), (4.70, 0.453, 2.9755),
+        (4.75, 0.455, 2.9700), (4.80, 0.457, 2.9644), (4.85, 0.458, 2.9589), (4.90, 0.460, 2.9533), (4.95, 0.462, 2.9478),
+        (5.00, 0.465, 2.9414), (5.05, 0.467, 2.9323), (5.10, 0.470, 2.9232), (5.15, 0.474, 2.9141), (5.22, 0.480, 2.8971)]
+# the hull behind the dome's rear end (z 3.25): the deck's trough between the rails (|x| < 0.305) and the rails' ridge beyond
+RAIL = [(z, x + (0.012 if z < 4.95 else 0.0), y) for z, x, y in RAIL]   # (the foot stands mid-way on the rail top, not on its inner edge)
+REAR_TROUGH_Y, REAR_RIDGE_X, REAR_RIDGE_Y = 3.171, 0.305, 3.245
 # the crown line over the centre (z, y)
 CROWN = [(3.25, 3.245), (3.30, 3.290), (3.45, 3.415), (3.60, 3.520), (3.80, 3.600), (4.00, 3.640), (4.30, 3.665),
          (4.60, 3.650), (4.85, 3.600), (5.05, 3.545), (5.14, 3.515), (5.22, 3.490)]
@@ -55,7 +66,11 @@ ZM0, ZM1 = 4.75, 5.03            # the bubble morphs into the arch's profile fro
 
 # the windscreen: from the arch's front face (z 5.29) to the deck (z 6.24): the foot on the nose deck (x, y) and the crown
 WS = [(5.29, 0.460, 2.930), (5.55, 0.400, 2.820), (5.90, 0.330, 2.820), (6.24, 0.270, 2.780)]
-WS_END = 6.24
+WS_END = 6.24                    # the panes' base frame starts here; the posts run on into it
+GLASS_END = 6.25                 # the glass runs 1 cm into the base frame
+FOOT_START = 6.20                # (the old model has a cross-bar face at z 6.238: the bar starts well behind it)
+FOOT_END = 6.31                  # the base frame's front edge
+FOOT_OUT, FOOT_IN = 0.012, 0.045 # 12 mm over the pane's plane, 45 mm under it (the nose deck is 27 mm under the plane)
 BAR_IN, BAR_OUT = 0.140, 0.210   # the centre pane's half width and where the quarter panes start (the posts stand between: 7 cm)
 # (the airframe's windscreen bars are cut out as POST_BOX and rebuilt slim on the same line, 7 cm wide and thin in depth, from the arch
 # down to the nose deck, one member with the arch bow; the glass stops at their edges)
@@ -75,8 +90,11 @@ def ws_crown(z):
 # skin (found by ray casts on the airframe's hull; the table is that line, a hair outboard so the glass edge is buried in the skin
 # and leaves no slit); its top edge is the arch's front face, its inner edge the post.
 QK = 2.35
-QOUT = [(5.10, 0.480), (5.26, 0.480), (5.30, 0.465), (5.35, 0.450), (5.40, 0.430), (5.50, 0.395), (5.60, 0.375), (5.70, 0.350),
-        (5.80, 0.340), (5.90, 0.315), (6.00, 0.290), (6.10, 0.270), (6.24, 0.240)]
+QOUT = [(5.10, 0.480), (5.26, 0.480), (5.30, 0.466), (5.35, 0.454), (5.40, 0.436), (5.45, 0.402), (5.50, 0.368), (5.55, 0.346),
+        (5.60, 0.346), (5.65, 0.348), (5.70, 0.350), (5.75, 0.352), (5.80, 0.342), (5.85, 0.328), (5.90, 0.314), (5.95, 0.302),
+        (6.00, 0.290), (6.05, 0.280), (6.10, 0.268), (6.15, 0.258), (6.20, 0.248), (6.25, 0.244), (6.32, 0.244)]
+# (from z 5.30 on: where the pane's plane has sunk 3 mm under the hull's own top, ray cast on the hull; the first pass's hand-set
+# table stood 1 to 3 cm off the nose between z 5.45 and 5.70)
 
 
 def pc(z):
@@ -123,6 +141,7 @@ ARCH_REAR = [5.025, 5.075, 5.125, 5.175, 5.175]
 ARCH_FRONT = [5.105, 5.155, 5.205, 5.255, 5.255]
 ARCH_BOX = (4.93, 5.40, 2.89, 3.56, 0.55)     # z lo, z hi, y lo, y hi, |x| hi: the block's region in the hull piece (the bars' own ends at z 5.389 stay)
 BAR_END = 5.389                                # where the windscreen bars' own members start
+Z_DOME0 = 3.06                                # the dome's rear end (it is closed onto the deck there)
 Z_BOW = (3.58, 3.64)                          # the rear canopy bow (the hinge frame) and the dorsal fairing aft of it
 BOW_OUT, BOW_IN = 0.012, 0.030
 ARCH_OUT, ARCH_IN = 0.030, 0.030
@@ -130,11 +149,12 @@ BARS_BONE = 'frame_bars__canopy'             # (the name ends in __canopy: the c
 
 
 def z_rear_arch(y):
-    return float(np.interp(y, ARCH_Y, ARCH_REAR))
+    # (a smooth fit through the table: its kinks made saw-tooth steps along the bow)
+    return float(np.polyval([-0.004136, 0.257031, 4.312097], y))
 
 
 def z_front_arch(y):
-    return float(np.interp(y, ARCH_Y, ARCH_FRONT))
+    return float(np.polyval([-0.004136, 0.257031, 4.392097], y))
 
 
 SILL_Y = 2.85                    # the outline the checks read starts here (the leaning rail band's inner face under the rail)
@@ -229,7 +249,10 @@ def edge(zf, j, z, ns, lo, hi):
     return z
 
 
-def bubble(nz=34, ns=14):
+NS = 20                          # segments round the bubble's half section (glass, arch bow and rear bow share the rows)
+
+
+def bubble(nz=34, ns=NS):
     """the bubble, both sides: row j of the arc-length resampled section runs from the dorsal end (z 3.25) to the arch's
     rear face (found at the row's own height)"""
     z0, z_hi = Z_BOW[1], ARCH_REAR[-1]
@@ -315,9 +338,9 @@ class Bars:
                 self.P.append([round(x, 4) + 0.0 for x in p])
             self.polys.append(poly)
 
-    def bar(self, A, B, t_out, t_in, axis_y=2.85):
+    def bar(self, A, B, t_out, t_in, axis_y=2.85, caps=True, up=False):
         """a bar whose two long edges lie on the glass surface along A[i] and B[i]: a skin t_out over the surface, one t_in
-        under it, and the two side walls between"""
+        under it, and the two side walls between, and a cap across each end (a closed member: no hollow shows at a joint)"""
         for i in range(len(A) - 1):
             q = [A[i], A[i + 1], B[i + 1], B[i]]
             n = np.cross(B[i] - A[i], A[i + 1] - A[i])
@@ -325,13 +348,20 @@ class Bars:
                 continue
             n /= np.linalg.norm(n)
             c = np.mean(q, 0)
-            if n @ (c - np.array([0.0, axis_y, c[2]])) < 0:
+            if (n[1] < 0) if up else (n @ (c - np.array([0.0, axis_y, c[2]])) < 0):
                 n = -n
             top = [p + n * t_out for p in q]
             bot = [p - n * t_in for p in q]
             self.face(top, n)
             self.face(bot, -n)
             for (p0, p1) in ((0, 1), (2, 3)):
+                w = [top[p0], top[p1], bot[p1], bot[p0]]
+                wn = np.cross(w[1] - w[0], w[3] - w[0])
+                if np.linalg.norm(wn) > 1e-12:
+                    self.face(w, wn / np.linalg.norm(wn))
+            cs, ce = caps if isinstance(caps, tuple) else (caps, caps)
+            if (cs and i == 0) or (ce and i == len(A) - 2):
+                p0, p1 = (0, 3) if i == 0 and cs else (1, 2)
                 w = [top[p0], top[p1], bot[p1], bot[p0]]
                 wn = np.cross(w[1] - w[0], w[3] - w[0])
                 if np.linalg.norm(wn) > 1e-12:
@@ -358,37 +388,74 @@ class Bars:
         return {'normalized_uvs': True, 'positions': self.P, 'normals': self.N, 'uvs': self.U, 'polys': self.polys}
 
 
+BOW_RAMP = 0.035                 # the rear bow's raised band eases up over this length (no step on the skin)
+REAR_SKIN_Y = 0.006              # the closing wall's foot is sunk this far into the deck
+
+
+def bow_off(z):
+    """how far the dome's skin stands over the glass's surface at station z: 0 aft of the ramp, BOW_OUT on the band (z 3.58 to 3.64)"""
+    z0 = Z_BOW[0]
+    if z >= z0:
+        return BOW_OUT
+    s = min(1.0, max(0.0, (z - (z0 - BOW_RAMP)) / BOW_RAMP))
+    return BOW_OUT * s * s * (3 - 2 * s)
+
+
+def _ring(z, side, ns, off):
+    """the section ring at station z pushed out along the section's outward normal by off"""
+    pts = resample(section(z), ns + 1)
+    t = np.gradient(pts, axis=0)
+    nr = np.c_[t[:, 1], -t[:, 0]]
+    nr /= np.maximum(np.linalg.norm(nr, axis=1), 1e-12)[:, None]
+    nr[-1] = (0.0, 1.0)                  # (the crown's normal is straight up: both halves meet on the centre line)
+    q = pts + nr * off
+    return [np.array([side * x, y, z]) for x, y in q]
+
+
 def frame_bars(uv):
     b = Bars(uv)
-    ns = 14
+    ns = NS
     for side in (1, -1):
         # the arch: ONE slim bow with the posts' tops, a uniform 8 cm deep all round. The bubble's last stretch morphs into the
         # panes' top-edge profile (section()), so its rear edge is that profile at the rear face and its front edge the same
-        # profile 8 cm on, at the front face: the flat panes' top edge, so the glass stops at the bow.
+        # profile 8 cm on, at the front face: the flat panes' top edge, so the glass stops at the bow. A cap closes its foot end.
         A = [_pt(edge(z_rear_arch, j, ARCH_REAR[-1], ns, 4.9, 5.4), j, side, ns) for j in range(ns + 1)]
+        a0 = A[0] + (A[0] - A[1]) * (0.04 / np.linalg.norm(A[0] - A[1]))      # (the foot runs 4 cm on into the rail band)
+        A = [a0] + A
         B = [np.array([a[0], a[1], z_front_arch(a[1])]) for a in A]
-        b.bar(A, B, ARCH_OUT, ARCH_IN, axis_y=3.20)
+        b.bar(A, B, ARCH_OUT, ARCH_IN, axis_y=3.20, caps=(True, False))
         # the sill closure: where the quarter plane's top corner stands above the rail (z 5.11 to 5.30) a short member under the
-        # glass's outer edge, flush with the plane and 6 cm deep, so the glass meets frame all along its edge
-        zc0 = pane_top(0.48)[2]
+        # glass's outer edge, flush with the plane and 8.5 cm deep (it runs into the rail and into the arch's foot)
+        zc0 = pane_top(0.48)[2] - 0.02
         zs = np.linspace(zc0, 5.30, 12)
         A = [np.array([side * x_out(z), flat_h(x_out(z), z), z]) for z in zs]
-        B = [np.array([side * (x_out(z) + 0.035), flat_h(x_out(z) + 0.035, z), z]) for z in zs]
-        b.bar(A, B, 0.004, 0.060, axis_y=3.20)
-        # the windscreen posts: one slim member from the arch's front face down to the nose deck (the airframe's two bars are cut);
-        # its top face lies in the centre plane
+        B = [np.array([side * (x_out(z) + 0.040), flat_h(x_out(z) + 0.040, z), z]) for z in zs]
+        b.bar(A, B, 0.004, 0.12, axis_y=3.20)
+        # the windscreen posts: one slim member from inside the arch bow down into the base frame (the airframe's two bars
+        # are cut); its top face lies in the centre plane
         n = 44
-        za = pane_top(0.175)[2]
-        zs = [za + (WS_END - za) * i / n for i in range(n + 1)]
+        za = pane_top(0.175)[2] - 0.02
+        zb = WS_END - 0.005             # (inside the base frame, clear of the nose slope that starts at z 6.238)
+        zs = [za + (zb - za) * i / n for i in range(n + 1)]
         A = [np.array([side * BAR_IN, flat_h(BAR_IN, z), z]) for z in zs]
         B = [np.array([side * BAR_OUT, flat_h(BAR_OUT, z), z]) for z in zs]
-        b.bar(A, B, POST_OUT, POST_IN_T, axis_y=3.20)
-        # the rear canopy bow (the hinge frame) and the dorsal fairing aft of it, on the glass's old surface
-        A = [_pt(Z_BOW[0], j, side, ns) for j in range(ns + 1)]
-        B = [_pt(Z_BOW[1], j, side, ns) for j in range(ns + 1)]
-        b.bar(A, B, BOW_OUT, BOW_IN, axis_y=3.20)
-        zs = np.linspace(3.25, Z_BOW[0], 10)
-        b.skin([[_pt(z, j, side, ns) for j in range(ns + 1)] for z in zs])
+        b.bar(A, B, POST_OUT, POST_IN_T, axis_y=3.20, up=True)
+        # the rear dome (the dorsal fairing aft of the canopy and the hinge band): ONE sheet from the deck at z 3.25 to the band's
+        # front edge, a smooth surface with the band eased up on it, so nothing steps or saws along the rear arch
+        zs = sorted(set(np.round(np.r_[np.linspace(Z_DOME0, Z_BOW[0] - BOW_RAMP, 10), np.linspace(Z_BOW[0] - BOW_RAMP, Z_BOW[1], 12)], 5)))
+        b.skin([_ring(z, side, ns, bow_off(z)) for z in zs])
+        # the band's front lip (the glass's rear edge stands against it): from the band's top down 12 mm under the glass's surface
+        b.skin([_ring(Z_BOW[1], side, ns, BOW_OUT), _ring(Z_BOW[1], side, ns, -BOW_OUT)])
+        # the wall that closes the dome onto the deck at its rear end
+        top = _ring(Z_DOME0, side, ns, 0.0)
+        bot = [np.array([p[0], (REAR_TROUGH_Y if abs(p[0]) < REAR_RIDGE_X else REAR_RIDGE_Y) - REAR_SKIN_Y, Z_DOME0]) for p in top]
+        b.skin([top, bot])
+    # the base frame: one cross-bar under the lower edge of the three panes, 12 mm proud of the plane and sunk 45 mm into the nose
+    xo = x_out(FOOT_START) + 0.02
+    xs = sorted(set(np.round(np.r_[np.linspace(-xo, xo, 25), -BAR_OUT, -BAR_IN, BAR_IN, BAR_OUT], 5)))
+    A = [np.array([x, flat_h(x, FOOT_START), FOOT_START]) for x in xs]
+    B = [np.array([x, flat_h(x, FOOT_END), FOOT_END]) for x in xs]
+    b.bar(A, B, FOOT_OUT, FOOT_IN, axis_y=3.20, up=True)
     return b
 
 
@@ -427,9 +494,9 @@ def cut_arch_block(geo_bones):
 def glass_triangles():
     tris = bubble()
     # the centre pane: ONE plane between the posts
-    tris += pane(0.0, lambda z: BAR_IN, WS_END)
+    tris += pane(0.0, lambda z: BAR_IN, GLASS_END)
     # the two quarter panes: ONE plane each, outside the posts, down to where the plane meets the nose's skin
-    tris += pane(BAR_OUT, x_out, WS_END, ns=10)
+    tris += pane(BAR_OUT, x_out, GLASS_END, ns=10)
     return tris
 
 
@@ -438,10 +505,11 @@ def main(argv):
     geo = json.load(open(GEO, encoding='utf-8'))
     asset = json.load(open(ASSET, encoding='utf-8'))
     bones = geo['minecraft:geometry'][0]['bones']
+    old_uv = next((b['poly_mesh']['uvs'][0] for b in bones if b['name'] == BARS_BONE and b.get('poly_mesh', {}).get('uvs')), None)
     bones[:] = [b for b in bones if b['name'] != BARS_BONE]
     cut, uv = cut_arch_block(bones)
     if uv is None:
-        uv = UV_FRAME                        # (a re-run on the already retrofitted geo: the block is gone)
+        uv = old_uv or UV_FRAME              # (a re-run on the already retrofitted geo: the block is gone; keep the frame's own texel)
     hull = next(b for b in bones if b['name'] == HULL_BONE)
     bars = frame_bars(uv)
     bones.insert(bones.index(hull) + 1, {'name': BARS_BONE, 'parent': hull.get('parent', 'hull'), 'pivot': list(hull['pivot']),

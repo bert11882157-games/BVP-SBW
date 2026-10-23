@@ -45,6 +45,7 @@ from scipy.sparse import coo_matrix
 from scipy.sparse.csgraph import connected_components
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import throttle_lib
+import canopy_a_10a as CAN
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 GEN = os.path.join(HERE, '..', '..', 'bvp', 'src', 'generated', 'resources')
@@ -83,10 +84,11 @@ def _font_files():
 
 FONT_FILES = _font_files()
 
-# ---------------------------------------------------------------- colours (the A-10's cockpit is dark grey and black)
+# ---------------------------------------------------------------- colours (consoles, sills and the panel body are the A-10's
+# FS 36231 grey; the instrument faces, bezels and the glareshield pad are black)
 
-PANEL = (50, 52, 54)
-PANEL_D = (30, 31, 33)
+PANEL = (106, 111, 115)
+PANEL_D = (74, 78, 82)
 BLACK = (20, 21, 23)
 DGREY = (38, 40, 42)
 MGREY = (84, 88, 90)
@@ -97,8 +99,8 @@ HEADPAD = (96, 100, 90)
 YELLOW = (226, 186, 30)
 RED = (196, 36, 30)
 METAL = (128, 132, 134)
-FLOOR = (36, 38, 39)
-CONSOLE = (58, 60, 62)
+FLOOR = (74, 78, 81)
+CONSOLE = (112, 117, 121)
 WHITE = (226, 228, 220)
 GREEN_LAMP = (60, 150, 70)
 AMBER = (214, 140, 30)
@@ -317,18 +319,65 @@ PANEL_HALF = 0.585              # the panel's half width (the lowest steps reach
 BOT = -0.60                     # panel bottom (the console tops)
 
 
-def panel_top(a):
-    """the panel's top edge: the dash block's top over the middle, stepping down along the flat quarter panes (they fall 2.35 m per m\n    outboard from the post: canopy_a_10.py) and the sill rail band that leans in"""
+# The glareshield (the old dash block's top, rebuilt as an arch): its rear top edge is flat over the middle (the HUD pedestal
+# stands on it, so the HUD rises from the middle), rounds over smoothly beyond the MFCD corners and falls along the quarter panes
+# to the old chamfer line at the sills. Absolute y of the edge at the block's rear wall (z 5.239); the top slopes forward 0.1 m
+# over the block's 0.3 m, as the old top did.
+DASH_Z0, DASH_Z1 = 5.239, 5.539
+DASH_BASE = 2.648
+CHAMFER_SLOPE = (3.097 - 2.648) / (0.599 - 0.35)           # the old chamfer's fall at the rear wall (1.80 m per m)
+
+
+def arch_rear(a):
     a = abs(a)
     if a <= 0.34:
-        return -0.10
-    if a <= 0.40:
-        return -0.15
-    if a <= 0.44:
-        return -0.24
-    if a <= 0.48:
-        return -0.35
-    return -0.50
+        return 3.097 - 0.012 * (a / 0.34) ** 2
+    if a >= 0.46:
+        return 3.097 - CHAMFER_SLOPE * (a - 0.35)
+    h = 0.12
+    t = (a - 0.34) / h
+    h00, h10, h01, h11 = 2 * t ** 3 - 3 * t ** 2 + 1, t ** 3 - 2 * t ** 2 + t, -2 * t ** 3 + 3 * t ** 2, t ** 3 - t ** 2
+    return h00 * (3.097 - 0.012) + h10 * h * (-0.1) + h01 * (3.097 - CHAMFER_SLOPE * 0.11) + h11 * h * (-CHAMFER_SLOPE)
+
+
+def arch_front(a):
+    a = abs(a)
+    if a >= 0.46:
+        return 2.997 - 1.745 * (a - 0.35)                   # the old chamfer at the front wall
+    return arch_rear(a) - 0.1 + 0.0063 * max(0.0, a - 0.35) / 0.11
+
+
+def dash_y(a, z):
+    """the glareshield's top surface (absolute y) at a metres off the centre line and station z, kept 22 mm under the windscreen (the plane is steep: 22 mm up is 8 mm across)'s
+    flat glass where the glass stands over it"""
+    t = (z - DASH_Z0) / (DASH_Z1 - DASH_Z0)
+    y = arch_rear(a) * (1 - t) + arch_front(a) * t
+    if z >= 5.27 and abs(a) < CAN.x_out(z) - 0.0005:
+        y = min(y, CAN.flat_h(a, z) - 0.022)
+    return y
+
+
+def dash_faces(P, polys, N):
+    """indices of the old dash block's faces in the hull piece (rear wall, top, the two chamfers, the front wall): the glareshield
+    is rebuilt in the cockpit mesh with the arch"""
+    out = set()
+    for i, poly in enumerate(polys):
+        if not poly:
+            continue
+        V = P[[v[0] for v in poly]]
+        if V[:, 2].min() < DASH_Z0 - 0.002 or V[:, 2].max() > DASH_Z1 + 0.002 or np.abs(V[:, 0]).max() > 0.6 \
+                or V[:, 1].min() < DASH_BASE - 0.002 or V[:, 1].max() < 2.95:
+            continue
+        walls = np.all(np.abs(V[:, 2] - DASH_Z0) < 0.002) or np.all(np.abs(V[:, 2] - DASH_Z1) < 0.002)
+        n = N[poly[0][1]]
+        if walls or (n[1] > 0.4 and np.ptp(V[:, 2]) > 0.25):
+            out.add(i)
+    return out
+
+
+def panel_top(a):
+    """the panel's top edge (from the eye): the glareshield's arch at the rear wall"""
+    return arch_rear(a) - 3.20
 
 
 class Facet:
@@ -352,19 +401,20 @@ def panel_front_z(y):
 # (the panel's top edge is the dash block's top (y -0.10) over |a| < 0.44 and steps down beyond it)
 ENG_L, ENG_R = 0.285, 0.352     # the engine stack's two columns (left engine, right engine)
 LAYOUT = [
-    ('arm',    -0.375, -0.215, ('paint_rect', 0.110, 0.140), 'armament control panel: station select, master arm'),
+    ('ejett',  -0.385, -0.255, ('paint_rect', 0.075, 0.045), 'emergency store jettison guard (the glareshield ear, left)'),
     ('aoa',    -0.268, -0.205, ('game', 'AOA', 0.070), 'angle of attack indicator'),
-    ('ias',    -0.150, -0.220, ('game', 'AIRSPEED', 0.095), 'airspeed / Mach indicator'),
+    ('rwr',    -0.128, -0.170, ('game', 'RWR', 0.080), 'radar warning (ALR-46/69) scope: the round green scope at the top left of the ADI'),
+    ('ias',    -0.165, -0.285, ('game', 'AIRSPEED', 0.090), 'airspeed / Mach indicator'),
     ('adi',     0.000, -0.225, ('game', 'ATTITUDE', 0.115), 'attitude director indicator (ADI)'),
     ('alt',     0.150, -0.220, ('game', 'ALTIMETER', 0.095), 'barometric altimeter'),
-    ('tv',      0.315, -0.210, ('display', 'STORES', 0.105, 'CRT'), 'TV monitor (AGM-65 video)'),
+    ('tv',      0.285, -0.222, ('display', 'STORES', 0.095, 'CRT'), 'TV monitor (AGM-65 video)'),
     ('gmeter', -0.150, -0.385, ('game', 'G_METER', 0.080), 'accelerometer'),
-    ('rwr',    -0.268, -0.385, ('game', 'RWR', 0.070), 'radar warning (ALR-69) scope'),
     ('hsi',     0.000, -0.385, ('game', 'HEADING', 0.115), 'horizontal situation indicator (HSI)'),
     ('vvi',     0.150, -0.385, ('game', 'VVI', 0.080), 'vertical velocity indicator'),
     ('clock',  -0.375, -0.380, ('game', 'CLOCK', 0.060), 'clock'),
-    ('gear',   -0.350, -0.520, ('paint_rect', 0.150, 0.095), 'landing gear handle and lights'),
-    ('flaps',  -0.200, -0.525, ('paint_rect', 0.090, 0.070), 'flap position indicator'),
+    ('gear',   -0.455, -0.525, ('paint_rect', 0.120, 0.095), 'landing gear handle and lights'),
+    ('flaps',  -0.345, -0.530, ('paint_rect', 0.085, 0.070), 'flap position indicator'),
+    ('arm',    -0.190, -0.525, ('paint_rect', 0.210, 0.115), 'armament control panel: the dense switch panel (station select, master arm, mode and release switches)'),
     ('warning', 0.000, -0.530, ('annunciator', 0.140, 0.085), 'caution panel'),
     ('fuelq',   0.150, -0.520, ('game', 'FUEL_QTY', 0.075), 'fuel quantity indicator'),
     ('fan_l',   ENG_L, -0.328, ('game', 'ENGINE_RPM', 0.048), 'left fan speed (N1)'),
@@ -565,21 +615,50 @@ def p_flaps(d, im):
     d.polygon([(S * .60, H * .30), (S * .55, H * .22), (S * .65, H * .22)], fill=AMBER + (255,))
 
 
-def p_arm(d, im):
+def p_ejett(d, im):
     S, H = im.width, im.height
     d.rectangle([0, 0, S, H], fill=(14, 15, 16, 255))
-    d.rectangle([S * .08, H * .06, S * .92, H * .34], fill=RED + (255,), outline=(10, 10, 10, 255), width=3)
-    text(d, (S * .5, H * .20), 'EMER JETT', H * .13, fill=(235, 235, 228), bold=True)
-    for k, lab in enumerate(['A/A', 'A/G', 'GUN']):
-        x = S * (0.20 + k * 0.30)
-        d.rectangle([x - S * .11, H * .42, x + S * .11, H * .60], fill=(40, 130, 56, 255) if k == 1 else (24, 52, 28, 255),
-                    outline=(10, 10, 10, 255), width=3)
-        text(d, (x, H * .51), lab, H * .09, fill=(10, 30, 10))
-    for k, lab in enumerate(['L OUTBD', 'L INBD', 'FUS', 'R INBD', 'R OUTBD']):
-        x = S * (0.12 + 0.19 * k)
-        d.rectangle([x - S * .07, H * .68, x + S * .07, H * .88], fill=(176, 176, 172, 255), outline=(10, 10, 10, 255), width=2)
-        text(d, (x, H * .78), lab.split()[0][:3], H * .055, fill=(20, 20, 20))
-    text(d, (S * .5, H * .96), 'STATION SELECT', H * .06)
+    d.rectangle([S * .06, H * .12, S * .94, H * .88], fill=RED + (255,), outline=(10, 10, 10, 255), width=3)
+    text(d, (S * .5, H * .26), 'EMER', H * .24, fill=(235, 235, 228), bold=True)
+    text(d, (S * .5, H * .62), 'JETT', H * .24, fill=(235, 235, 228), bold=True)
+
+
+def p_arm(d, im):
+    """the A-10A's armament control panel, a dense switch panel: two rows of station-select pushbuttons, the master arm and the
+    delivery-mode switches, the pylon jettison and release controls, the counters and the guarded switches"""
+    S, H = im.width, im.height
+    d.rectangle([0, 0, S, H], fill=(16, 17, 18, 255))
+    # row 1: eleven station-select pushbuttons (grey caps, black legends) under a legend strip
+    text(d, (S * .5, H * .035), 'STATION SELECT', H * .05, fill=(200, 200, 194))
+    for k in range(11):
+        x0 = S * (0.025 + k * 0.0875)
+        d.rectangle([x0, H * .08, x0 + S * .078, H * .21], fill=(176, 178, 172, 255), outline=(8, 8, 8, 255), width=2)
+        text(d, (x0 + S * .039, H * .145), str(k + 1), H * .07, fill=(24, 24, 24))
+    for k in range(11):
+        x0 = S * (0.025 + k * 0.0875)
+        lit = k in (2, 5)
+        d.rectangle([x0, H * .23, x0 + S * .078, H * .34], fill=(70, 150, 76, 255) if lit else (30, 52, 32, 255), outline=(8, 8, 8, 255), width=2)
+    # row 2: digital counters, master arm, jettison
+    d.rectangle([S * .025, H * .39, S * .27, H * .55], fill=(6, 10, 6, 255), outline=(90, 94, 90, 255), width=2)
+    text(d, (S * .15, H * .47), 'CH 60  FL 30', H * .075, fill=GREEN_TXT + (255,))
+    d.rectangle([S * .29, H * .39, S * .47, H * .55], fill=RED + (255,), outline=(8, 8, 8, 255), width=3)
+    text(d, (S * .38, H * .47), 'MASTER ARM', H * .075, fill=(235, 235, 228), bold=True)
+    for k, lab in enumerate(['GUN', 'A-G', 'A-A']):
+        x = S * (0.55 + k * 0.10)
+        toggle(d, x, H * .46, S * 1.5)
+        text(d, (x, H * .565), lab, H * .055)
+    d.rectangle([S * .86, H * .39, S * .975, H * .55], fill=(190, 150, 24, 255), outline=(8, 8, 8, 255), width=3)
+    text(d, (S * .9175, H * .47), 'JETT', H * .08, fill=(20, 20, 20), bold=True)
+    # row 3: rows of small toggles (arming, fuzing, release mode) with legends
+    for r_, labs in enumerate((['ARM', 'NOSE', 'TAIL', 'SAFE', 'SEL', 'MULT', 'SGL', 'PAIRS', 'TRAIN'],
+                               ['RIPPLE', 'INTVL', 'CMBT', 'LASER', 'TGP', 'MAV', 'CAGE', 'GUN', 'RATE'])):
+        for k, lab in enumerate(labs):
+            x = S * (0.06 + k * 0.105)
+            y = H * (0.69 + r_ * 0.17)
+            toggle(d, x, y, S * 1.25)
+            text(d, (x, y + H * .085), lab, H * .045)
+    knob(d, S * .965, H * .70, H * .06, ang=1.0)
+    knob(d, S * .965, H * .87, H * .06, ang=0.2)
 
 
 def p_dial_static(kind):
@@ -714,23 +793,15 @@ def build(atlas):
     y_top = panel_top(0)
     W = int(round((a1 - a0) * ppm)); Hh = int(round((y_top - BOT) / math.cos(LEAN) * ppm))
     rect = atlas.paint(W, Hh, panel_paint((W, Hh)))
-    cuts = sorted(set([a0 + (a1 - a0) * k / 12 for k in range(13)] + [-0.48, -0.44, -0.40, -0.34, 0.34, 0.40, 0.44, 0.48]))
-    loop_top, loop_bot = [], []
+    cuts = [float(c) for c in np.linspace(a0, a1, 49)]
     for aa0, aa1 in zip(cuts[:-1], cuts[1:]):
         s0, s1 = (aa0 - a0) / (a1 - a0), (aa1 - a0) / (a1 - a0)
-        top = panel_top((aa0 + aa1) / 2)
-        t = (top - BOT) / (y_top - BOT)
-        pts = [f.at(aa0, BOT), f.at(aa1, BOT), f.at(aa1, top), f.at(aa0, top)]
-        m.face(pts, [uv_of(rect, s0, 0), uv_of(rect, s1, 0), uv_of(rect, s1, t), uv_of(rect, s0, t)], normal=f.N)
-        loop_bot.append((aa0, aa1))
+        t0, t1 = (panel_top(aa0) - BOT) / (y_top - BOT), (panel_top(aa1) - BOT) / (y_top - BOT)
+        pts = [f.at(aa0, BOT), f.at(aa1, BOT), f.at(aa1, panel_top(aa1)), f.at(aa0, panel_top(aa0))]
+        m.face(pts, [uv_of(rect, s0, 0), uv_of(rect, s1, 0), uv_of(rect, s1, t1), uv_of(rect, s0, t0)], normal=f.N)
     back = -f.N * 0.02
-    # slab back and edges: the outline (bottom left to right, up the right edge, along the stepped top, down the left edge)
-    top_pts = []
-    for aa0, aa1 in zip(cuts[:-1], cuts[1:]):
-        top = panel_top((aa0 + aa1) / 2)
-        top_pts += [(aa0, top), (aa1, top)]
-    top_pts = [p for i, p in enumerate(top_pts) if i == 0 or abs(p[0] - top_pts[i - 1][0]) > 1e-9 or abs(p[1] - top_pts[i - 1][1]) > 1e-9]
-    outline = [f.at(a0, BOT), f.at(a1, BOT)] + [f.at(a, y) for a, y in reversed(top_pts)]
+    # slab back and edges: the outline (bottom left to right, up the right edge, along the arched top, down the left edge)
+    outline = [f.at(a0, BOT), f.at(a1, BOT)] + [f.at(a, panel_top(a)) for a in reversed(cuts)]
     m.flat([c + back for c in outline], sw['panel_d'], normal=-f.N)
     mid0 = np.mean(outline, 0)
     for i in range(len(outline)):
@@ -738,9 +809,36 @@ def build(atlas):
         mid = (p + q) / 2
         m.flat([p, q, q + back, p + back], sw['panel_d'], toward=mid + (mid - mid0))
 
+
+    # -- the glareshield: the old dash block's top, rear wall, chamfers and front wall rebuilt with the arch (black pad)
+    zs_ = [DASH_Z0, 5.30, 5.39, 5.48, DASH_Z1 + 0.003]       # (the front wall stands 3 mm ahead of the hull's own face at z 5.539)
+    # columns across (the pad ends 3 cm inside the rail band, which closes it); a column stands exactly on the glass's outer edge
+    # (where the windscreen meets the nose) and none within 2 cm inboard of it: from there the pad meets the glass edge as one skin
+    seams_ = [CAN.x_out(z) for z in zs_ if z >= 5.28 and CAN.x_out(z) < 0.46]
+    bands_ = [(v - 0.02, v) for v in seams_]
+    cols_ = sorted({round(float(v), 5) for v in np.linspace(0, 0.47, 31) if not any(lo < v < hi for lo, hi in bands_)} | {round(v, 5) for v in seams_})
+    us_ = [-v for v in cols_[:0:-1]] + cols_
+    G = [[np.array([a, dash_y(a, z), z]) - EYE for a in us_] for z in zs_]
+    for i in range(len(zs_) - 1):
+        for k in range(len(us_) - 1):
+            a, b, c, d = G[i][k], G[i][k + 1], G[i + 1][k + 1], G[i + 1][k]
+            m.flat([a, b, c], sw['black'], normal=[0, 1, 0.3])
+            m.flat([a, c, d], sw['black'], normal=[0, 1, 0.3])
+    for row, nrm in ((G[0], [0, 0, -1]), (G[-1], [0, 0, -1]), (G[-1], [0, 0, 1])):
+        for k in range(len(us_) - 1):
+            a, b = row[k], row[k + 1]
+            lo_a, lo_b = np.array([a[0], DASH_BASE - 3.20 + 0.0, a[2]]), np.array([b[0], DASH_BASE - 3.20, b[2]])
+            m.flat([lo_a, lo_b, b, a], sw['black'], normal=nrm)
+    for s_ in (-1, 1):                                          # the pad's two ends (inside the rail band)
+        for i in range(len(zs_) - 1):
+            a, b = G[i][0 if s_ < 0 else -1], G[i + 1][0 if s_ < 0 else -1]
+            lo_a, lo_b = np.array([a[0], DASH_BASE - 3.20, a[2]]), np.array([b[0], DASH_BASE - 3.20, b[2]])
+            m.flat([lo_a, lo_b, b, a], sw['black'], normal=[s_, 0, 0])
+            m.flat([lo_a, lo_b, b, a], sw['black'], normal=[-s_, 0, 0])
+
     # -- instruments
     cache = {}
-    painters = {'flaps': p_flaps, 'arm': p_arm, 'gear': p_gear}
+    painters = {'flaps': p_flaps, 'arm': p_arm, 'gear': p_gear, 'ejett': p_ejett}
     for name, a, y, spec, label in LAYOUT:
         kind = spec[0]
         c = f.at(a, y)
@@ -777,7 +875,7 @@ def build(atlas):
                 m.box(c + r_ * sgn * (w / 2 + t) + n_ * (pr - 0.002) / 2, (r_, u_, n_), (0.0015, w / 2 + t, (pr - 0.002) / 2), sw['black'])
         elif kind == 'paint_rect':
             w, h = spec[1], spec[2]
-            pw = 200 if w >= 0.14 else 140
+            pw = max(140, int(round(w * 1400)))
             ph = max(16, int(round(pw * h / w)))
             rect_ = cache.get(name) or atlas.paint(pw, ph, painters[name])
             cache[name] = rect_
@@ -839,13 +937,13 @@ def build(atlas):
         m.flat([a - g_n * dep, b - g_n * dep, b + g_n * dep, a + g_n * dep], sw['dgrey'], normal=-on)
     for s in (-1, 1):                                          # the two side posts, up the glass's sides to the shoulders
         base = q3(s * (0.105 + rim + 0.012), 0.0)
-        m.box(base + g_up * 0.110, (X, g_up, g_n), (0.006, 0.110, 0.007), sw['dgrey'])
+        m.box(base + g_up * 0.0975, (X, g_up, g_n), (0.006, 0.1225, 0.007), sw['dgrey'])
     hud = dict(centre=q3(0, 0.135) + EYE, normal=-g_n, up=g_up, width=0.170, height=0.190)
 
     # -- the TV monitor's control box: tilted on the left of the glareshield, beside the windscreen bar (a painted face)
     tvc = atlas.paint(220, 130, p_tvctl)
     ax_ = (X, unit([0, 1, -0.55]), unit([0, 0.55, 1]))
-    ac_ = np.array([0.240, 3.083 - 3.20, 5.40 - EZ])      # (inside the flat quarter pane: its plane falls 2.35 m per m outboard of the post)
+    ac_ = np.array([0.240, 3.071 - 3.20, 5.40 - EZ])      # (inside the flat quarter pane: its plane falls 2.35 m per m outboard of the post)
     m.box(ac_, ax_, (0.080, 0.010, 0.0505), sw['black'], front=(1, 1, tvc, -X, ax_[2]))
     # -- the sill liners' feet and the console tops
     fy = FLOOR_Y
@@ -987,6 +1085,7 @@ def old_interior(geo):
                 sel.update(fl)
         if b['name'] == SOURCE_BONES[0]:
             N = np.array(pm['normals'], float) * np.array([1, 1, -1])
+            sel.update(dash_faces(P, pm['polys'], N))      # (the old dash block: rebuilt as the arched glareshield)
             for i, poly in enumerate(pm['polys']):
                 if i in sel or not poly:
                     continue
