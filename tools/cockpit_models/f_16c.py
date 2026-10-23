@@ -341,7 +341,7 @@ P0 = np.array([0.0, -0.40, 0.70])
 HINGE = 0.100                   # centre facet half width: the narrow centre column
 WING = math.radians(22)         # the MFD facets, turned toward the pilot
 WING2 = math.radians(30)        # the outer facets (RWR, gear, engine gauges), turned further in
-WALL_END = 0.395                # facets end here (under the canopy rail)
+WALL_END = 0.402                # facets end here (under the canopy rail)
 WING_LEN = 0.205                # inner facet length (one 0.184 m MFD with its bezel and a margin)
 X_END1 = HINGE + WING_LEN * math.cos(WING)
 WING2_LEN = (WALL_END - X_END1) / math.cos(WING2)
@@ -889,6 +889,14 @@ def build(atlas, lamps, cols):
         for i in range(len(rows) - 1):
             p, q = rows[i][j], rows[i + 1][j]
             m.flat([p, q, [q[0], 2.222 - Ea[1], q[2]], [p[0], 2.222 - Ea[1], p[2]]], cs, toward=[0, 0.3, 0])
+    # ... and back along the side from the lip's front to the panel's face (the outer facet ends behind the lip), both sides drawn
+    for j in (0, NJ):
+        p = rows[0][j]; sg = 1.0 if p[0] > 0 else -1.0
+        zp = face_z(p[0], p[1] - 0.012)
+        if zp < p[2] - 0.003:
+            wall = [[p[0], p[1] - 0.014, p[2]], [p[0], p[1] - 0.014, zp], [p[0], 2.222 - Ea[1], zp], [p[0], 2.222 - Ea[1], p[2]]]
+            m.flat(wall, cs, normal=[sg, 0, 0])
+            m.flat(wall, cs, normal=[-sg, 0, 0])
     # -- the HUD: one unit (the housing on the coaming with its control strip low on the pilot's face, two side posts)
     # and the combiner glass centred on the neutral eye line, leaning back toward the pilot
     # The Marconi / GEC wide-angle HUD of the Block 40/50: ONE tall combiner glass, wider at the top than at the foot with
