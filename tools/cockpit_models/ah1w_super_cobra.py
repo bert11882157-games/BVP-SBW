@@ -13,8 +13,9 @@ PILOT (rear, eye (0, 3.062, 3.345)):
     analogue panel: ADI over the HSI in the centre, airspeed and altimeter either side of them, vertical speed and turn / slip
     under those, rotor rpm and torque in the outer columns, twin engine N1 and gas temperature (left), fuel quantity,
     radar altimeter and clock (right), the caution / warning annunciator and the armament panel (painted) underneath;
-  * the pilot's gunsight: a reflector unit on the glareshield with its combiner (AH-1W pilot's sight; style REFLECTOR in
-    HeadUpDisplay, the game paints the ring and cross on it), centred on the eye line;
+  * the pilot's head-up display (owner: the AH-1W pilot has a HUD): one unit on the glareshield, a low control box with its strip toward
+    the pilot under a narrow pedestal, and ONE combiner (15% over life size, slim bezel, nothing beside it) centred on the eye line;
+    HeadUpDisplay style HUD, the game paints the symbology on it;
   * the armoured seat (back cushion on the old back plate, pan, bolsters, harness), the cyclic between the knees, the
     collective on the left console with its twist grip, two consoles, the rudder pedals, a rear liner.
 GUNNER (front, eye (0, 2.62, 4.684): 0.44 m lower than the pilot's, over a floor 0.46 m lower, the real stepped tandem layout):
@@ -683,6 +684,15 @@ def p_hood_side(d, im):
     text(d, (S * .5, H * .5), 'TSU', H * .5, fill=(120, 124, 120), bold=True)
 
 
+def p_hud_ctrl(d, im):
+    S, H = im.width, im.height
+    noisy(d, im, DGREY, 3, seed=9)
+    for k, lab in enumerate(['BRT', 'CONT', 'MODE', 'TEST']):
+        x = S * (0.14 + k * 0.24)
+        d.ellipse([x - H * .20, H * .34 - H * .20, x + H * .20, H * .34 + H * .20], fill=(18, 18, 18, 255), outline=(120, 120, 120, 255), width=3)
+        text(d, (x, H * .80), lab, H * .18)
+
+
 def p_sight_ctrl(d, im):
     S, H = im.width, im.height
     noisy(d, im, DGREY, 3, seed=9)
@@ -790,26 +800,26 @@ def build(atlas):
             m.rect_tex(c + PF.N * PAINT_LIFT, PF.N, PF.U, w, h, rect_)
             m.frame_rect(c + PF.N * lift, PF.N, PF.U, w, h, 0.004, 0.007 - lift, sw['bezel'])
 
-    # -- the pilot's sight: a reflector unit on the glareshield (the visor's top), its combiner centred on the eye line
+    # -- the pilot's HUD: one unit on the glareshield (the visor's top): a low control box (2.5 cm strip toward the pilot) and a narrow
+    # pedestal carrying ONE combiner, 15% over life size, centred on the eye line; no posts or wings beside the glass
     ex, ey, ez = EYE_P
-    sz0, sz1 = 4.26, 4.36                       # the unit's body, on the visor (top y 2.808)
-    sy0, sy1 = PANEL_TOP_P + 0.028, 2.950
-    sc = atlas.paint(150, 30, p_sight_ctrl)
-    m.box([0, (sy0 + sy1) / 2, (sz0 + sz1) / 2], (X, Y, Z), (0.085, (sy1 - sy0) / 2, (sz1 - sz0) / 2), sw['dgrey'],
-          front=(2, -1, sc, -X, Y))
+    sy0 = PANEL_TOP_P + 0.028
+    sc = atlas.paint(150, 30, p_hud_ctrl)
+    m.box([0, sy0 + 0.0275, 4.30], (X, Y, Z), (0.085, 0.0275, 0.055), sw['dgrey'], front=(2, -1, sc, -X, Y))   # control box, strip 5.5 cm tall
     lean = math.radians(25)
     g_up = np.array([0, math.cos(lean), -math.sin(lean)])
     g_n = unit(np.cross(X, g_up))                              # (away from the pilot)
-    g_h = 0.200                                                # slant length of the glass
-    g_bot = np.array([0, ey - 0.015 - g_h / 2 * math.cos(lean), 4.325 + g_h / 2 * math.sin(lean)])
+    g_h = 0.125                                                # slant length of the glass
+    g_bot = np.array([0, ey - g_h / 2 * math.cos(lean), 4.325 + g_h / 2 * math.sin(lean)])
+    m.box([0, (sy0 + 0.055 + g_bot[1] + 0.004) / 2, 4.33], (X, Y, Z), (0.040, (g_bot[1] + 0.004 - sy0 - 0.055) / 2, 0.035), sw['dgrey'])   # pedestal
     # the glass: a rectangle, 0.17 wide, with the lower corners eased, centred on the eye line (y at the eye's height)
     q3 = lambda u, v, d=0.0: g_bot + X * u + g_up * v + g_n * d
-    hw = 0.085
+    hw = 0.075
     poly2 = [(-hw, 0.0), (hw, 0.0), (hw, g_h), (-hw, g_h)]
     gp = [q3(u, v) for u, v in poly2]
     for k in range(1, len(gp) - 1):
         glass += [gp[0], gp[k], gp[k + 1]]
-    rim, dep = 0.012, 0.005
+    rim, dep = 0.010, 0.005
     outn = []
     nP = len(poly2)
     for i in range(nP):
@@ -1127,7 +1137,7 @@ def main(argv):
     asset['HeadUpDisplay'] = {'Schema': 1, 'Frame': 'VEHICLE_LOCAL_BLOCKS', 'Seat': 0,
                               'Center': r5(hud['centre']), 'Normal': r5(hud['normal']), 'Up': r5(hud['up']),
                               'Width': round(float(hud['width']), 5), 'Height': round(float(hud['height']), 5),
-                              'Eye': r5(EYE_P), 'Style': 'REFLECTOR'}
+                              'Eye': r5(EYE_P), 'Style': 'HUD'}
     cg = asset.get('CanopyGlass')
     if cg and cg.get('Schema') == 1:
         t = np.array(cg['Triangles'], float).reshape(-1, 3, 3)
