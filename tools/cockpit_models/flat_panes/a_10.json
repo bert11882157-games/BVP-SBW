@@ -1,0 +1,17 @@
+{
+  "why": "Real A-10A/A-10C windscreen: one flat armoured centre pane between two posts, a flat quarter pane each side (canted outward), the arch bow above; the frameless blown bubble aft stays curved (War Thunder / DCS A-10C external models, A-10 photographs; the layout is the one the canopy script was built on). The HUD combiner (also in CanopyGlass) is excluded by the box z ranges.",
+  "panes": [
+    {
+      "name": "centre windscreen",
+      "boxes": [[
+          [-0.15, 3.35, 5.25], [0.15, 3.6, 5.4]],
+        [[-0.15, 2.7, 5.4], [0.15, 3.6, 6.26]]
+      ]
+    },
+    {
+      "name": "quarter windscreen",
+      "box": [[0.2, 2.6, 5.2], [0.6, 3.7, 6.26]],
+      "mirror": true
+    }
+  ]
+}

@@ -15,12 +15,15 @@ adds a second one, and fits the glass to:
   * the bubble: from the dorsal fairing (z 3.25, where the glass tapers to nothing on the deck) forward to the rear face of
     the arch. Every row starts on the inner top edge of the sill rail and the patch stops at the arch's rear face (the arch
     leans, so the cut leans with it), never running under it;
-  * the windscreen: the centre pane between the bars (|x| < 0.145) and one quarter pane each side outside them
-    (0.205 out to the foot on the nose deck), all from the arch's front face down to the deck at the bars' lower cross-bar
-    (z 6.24); the glass leaves the 5 cm where each bar stands bare, so it never runs under the bar;
-  * the section at every station is a super-ellipse from the rail (or the deck) up to the crown; the crown over the bubble
-    peaks at 3.665 over the headrest and falls to the arch's top (3.49), and over the windscreen follows the bars' slope
-    (3.51 at the arch, 2.84 at the deck).
+  * the windscreen, FLAT glass as on the real jet (owner rule 2026-10-22: a pane that is flat on the aircraft is truly flat, the
+    frame is built around it; planarity_check.py reads flat_panes/a_10.json): the centre pane is ONE plane between the posts
+    (|x| < 0.14), each quarter pane ONE plane outside them (0.21 out to where the plane meets the nose's skin), all from the
+    arch's front face down to the deck at the bars' lower cross-bar (z 6.24). The posts are 7 cm strips lying in the centre
+    plane; the quarter plane folds down from the post's outer edge. The arch is one bow with the posts' tops: its rear edge is
+    the bubble's front section, its front edge the panes' top edge, so the glass stops at the bow;
+  * the section at every bubble station is a super-ellipse from the rail up to the crown (the bubble stays curved); the crown
+    over the bubble peaks at 3.665 over the headrest and falls to the arch's top (3.49), and over the windscreen the sections
+    are the flat panes' (3.52 at the arch, 2.82 at the deck on the centre line).
 
 CANOPY (eye-relative sections, the right half from the sill up over the top) is what the checks in
 work/elite_expansion_2/checks read for the canopy outline. Frames: vehicle-local blocks, model pixels (x, y, -z) * 16.
@@ -61,6 +64,54 @@ POST_OUT, POST_IN_T = 0.012, 0.018
 
 def ws_crown(z):
     return 3.435 - 0.706 * (z - 5.39)
+
+
+# ---- the flat windscreen panes (the real A-10's armoured centre pane and its two quarter panes are flat glass)
+# centre pane: ONE plane, sloping down forward along the old crown line (12 mm under it, so that the pane sits inside the arch's
+# thickness at its top edge); the posts' faces lie in this plane (they are 7 cm strips of it).
+# quarter pane: ONE plane per side, folded down along the post's outer edge (x 0.21) at QK metres of drop per metre outboard
+# (the old quarter pane's average drop to its foot was 2.1); the glass runs down to where this plane meets the nose's own
+# skin (found by ray casts on the airframe's hull; the table is that line, a hair outboard so the glass edge is buried in the skin
+# and leaves no slit); its top edge is the arch's front face, its inner edge the post.
+QK = 2.35
+QOUT = [(5.10, 0.480), (5.26, 0.480), (5.30, 0.465), (5.35, 0.450), (5.40, 0.430), (5.50, 0.395), (5.60, 0.375), (5.70, 0.350),
+        (5.80, 0.340), (5.90, 0.315), (6.00, 0.290), (6.10, 0.270), (6.24, 0.240)]
+
+
+def pc(z):
+    """the centre plane's height at station z (x does not matter: the plane has no side slope)"""
+    return ws_crown(z) - 0.012
+
+
+def x_out(z):
+    """the quarter pane's outer edge (|x|) at station z"""
+    return float(np.interp(z, [q[0] for q in QOUT], [q[1] for q in QOUT]))
+
+
+def flat_h(x, z):
+    """the flat panes' surface height at (x, z): the centre plane up to the post's outer edge, the quarter plane outside it"""
+    ax = abs(x)
+    return pc(z) if ax <= BAR_OUT else pc(z) - QK * (ax - BAR_OUT)
+
+
+def pane_top(ax):
+    """(|x|, y, z) of the pane's top edge at |x| = ax: where the flat surface meets the arch's front face (the face leans with
+    the height, so the station is found by iterating); outboard of the quarter pane's edge it stops at the edge"""
+    z = 5.25
+    for _ in range(8):
+        a = min(ax, x_out(z))
+        z = z_front_arch(flat_h(a, z))
+    a = min(ax, x_out(z))
+    return a, flat_h(a, z), z
+
+
+def flat_section(z):
+    """the windscreen's right half-section at station z (what the checks read): the quarter pane's foot, up its plane to the
+    post, across the post and the centre pane to the centre line"""
+    xo = x_out(z)
+    h = pc(z)
+    pts = [(xo + (BAR_OUT - xo) * t, flat_h(xo + (BAR_OUT - xo) * t, z)) for t in np.linspace(0, 1, 8)]
+    return pts + [(BAR_IN, h), (0.0, h)]
 
 
 # the arch's faces (y -> z): the rear face the bubble stops at, the front face the windscreen starts at
@@ -117,18 +168,13 @@ def base_crown(z):
 
 def section(z, n=22):
     """the right half-section at station z: absolute (x, y) points from the foot up to the crown (x = 0)"""
+    if z >= WS[0][0]:
+        return flat_section(z)               # (the windscreen's panes are flat, not super-ellipses)
     xb, yb, yt = base_crown(z)
     us = np.linspace(0, 1, n)
     pts = [(xb * (1 - u ** NEXP) ** (1 / NEXP), yb + (yt - yb) * u) for u in us]
     pts[-1] = (0.0, yt)
     return pts
-
-
-def height_at(x, z):
-    """the glass surface's height at (x, z): the section's super-ellipse"""
-    xb, yb, yt = base_crown(z)
-    u = (1 - min(1.0, abs(x) / xb) ** NEXP) ** (1 / NEXP) if xb > 0 else 0.0
-    return yb + (yt - yb) * u
 
 
 STATIONS = [3.25, 3.30, 3.40, 3.55, 3.70, 3.85, 4.00, 4.15, 4.30, 4.45, 4.60, 4.75, 4.90, 5.05, 5.14, 5.22, 5.29,
@@ -197,9 +243,9 @@ def quads(grid):
     return out
 
 
-def pane(x_lo, x_hi_of_z, z_start_of_y, z_end, nz=14, ns=6):
-    """one windscreen pane, both sides: column j runs across the pane at constant fraction between x_lo and x_hi(z); its rows
-    start at the arch's front face (found at the row's own height) and run to z_end"""
+def pane(x_lo, x_hi_of_z, z_end, nz=14, ns=6):
+    """one FLAT windscreen pane, both sides: column j runs across the pane at constant fraction between x_lo and x_hi(z); its
+    rows start at the arch's front face (found at the row's own height) and run to z_end. Every vertex is on flat_h's plane."""
     out = []
     for side in (1, -1):
         grid = []
@@ -207,10 +253,10 @@ def pane(x_lo, x_hi_of_z, z_start_of_y, z_end, nz=14, ns=6):
         starts = []
         for j in range(ns + 1):
             f = j / ns
-            z = WS[0][0]
-            for _ in range(4):
+            z = 5.25
+            for _ in range(8):
                 x = x_lo + (x_hi_of_z(z) - x_lo) * f
-                z = max(WS[0][0], z_start_of_y(height_at(x, z)))
+                z = z_front_arch(flat_h(x, z))
             starts.append(z)
         for i in range(nz + 1):
             row = []
@@ -218,7 +264,7 @@ def pane(x_lo, x_hi_of_z, z_start_of_y, z_end, nz=14, ns=6):
                 f = j / ns
                 z = starts[j] + (z_end - starts[j]) * i / nz
                 x = x_lo + (x_hi_of_z(z) - x_lo) * f
-                row.append(np.array([side * x, height_at(x, z), z]))
+                row.append(np.array([side * x, flat_h(x, z), z]))
             grid.append(row)
         out += quads(grid)
     return out
@@ -298,17 +344,20 @@ def frame_bars(uv):
     b = Bars(uv)
     ns = 14
     for side in (1, -1):
-        # the arch: a slim bow on the line of the old block, the section's rows between its rear and front faces (they
-        # lean with the arch, found at each row's own height)
+        # the arch: ONE bow with the posts' tops. Its rear edge is the bubble's front section (curved, as before); its front edge
+        # is the flat panes' top edge (pane_top at the same x), so the glass stops at the bow and no pane runs under it. Over the
+        # quarter panes the plane is below the bubble's boxy section, so the bow is deeper there (a bevel from the bubble's
+        # edge down to the pane's top edge).
         A = [_pt(edge(z_rear_arch, j, ARCH_REAR[-1], ns, 4.9, 5.4), j, side, ns) for j in range(ns + 1)]
-        B = [_pt(edge(z_front_arch, j, ARCH_FRONT[-1], ns, 4.9, 5.4), j, side, ns) for j in range(ns + 1)]
+        B = [np.array([side * pane_top(abs(a[0]))[0], pane_top(abs(a[0]))[1], pane_top(abs(a[0]))[2]]) for a in A]
         b.bar(A, B, ARCH_OUT, ARCH_IN, axis_y=3.20)
-        # the windscreen posts: one slim member from the arch's front face down to the nose deck (the airframe's two bars are cut)
+        # the windscreen posts: one slim member from the arch's front face down to the nose deck (the airframe's two bars are cut);
+        # its top face lies in the centre plane
         n = 44
-        za = z_front_arch(height_at(0.175, 5.25))
+        za = pane_top(0.175)[2]
         zs = [za + (WS_END - za) * i / n for i in range(n + 1)]
-        A = [np.array([side * BAR_IN, height_at(BAR_IN, z), z]) for z in zs]
-        B = [np.array([side * BAR_OUT, height_at(BAR_OUT, z), z]) for z in zs]
+        A = [np.array([side * BAR_IN, flat_h(BAR_IN, z), z]) for z in zs]
+        B = [np.array([side * BAR_OUT, flat_h(BAR_OUT, z), z]) for z in zs]
         b.bar(A, B, POST_OUT, POST_IN_T, axis_y=3.20)
         # the rear canopy bow (the hinge frame) and the dorsal fairing aft of it, on the glass's old surface
         A = [_pt(Z_BOW[0], j, side, ns) for j in range(ns + 1)]
@@ -353,10 +402,10 @@ def cut_arch_block(geo_bones):
 
 def glass_triangles():
     tris = bubble()
-    # the centre pane: between the bars (the arch's crown strip ends at z 5.39 where the bars start)
-    tris += pane(0.0, lambda z: BAR_IN, z_front_arch, WS_END)
-    # the two quarter panes: outside the bars, to the foot on the nose deck (a hair inside it)
-    tris += pane(BAR_OUT, lambda z: base_crown(z)[0] - 0.004, z_front_arch, WS_END)
+    # the centre pane: ONE plane between the posts
+    tris += pane(0.0, lambda z: BAR_IN, WS_END)
+    # the two quarter panes: ONE plane each, outside the posts, down to where the plane meets the nose's skin
+    tris += pane(BAR_OUT, x_out, WS_END, ns=10)
     return tris
 
 
