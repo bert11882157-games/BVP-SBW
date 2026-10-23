@@ -57,7 +57,34 @@ def usa(im):
         d.point((x, y), fill=WHITE)
 
 
+def gb(im):
+    """Union Jack, drawn on a 6x supersampled 90 x 60 field and reduced (3:2 field, crosses 1/3 and 1/5 of the height)."""
+    k = 6
+    big = Image.new('RGBA', (W * k, H * k), (0, 40, 104, 255))
+    d = ImageDraw.Draw(big)
+    w, h = W * k, H * k
+
+    def diag(x0, y0, x1, y1, width, colour):
+        import math
+        dx, dy = x1 - x0, y1 - y0
+        n = math.hypot(dx, dy)
+        nx, ny = -dy / n * width / 2, dx / n * width / 2
+        d.polygon([(x0 + nx, y0 + ny), (x1 + nx, y1 + ny), (x1 - nx, y1 - ny), (x0 - nx, y0 - ny)], fill=colour)
+    for x0, y0, x1, y1 in ((0, 0, w, h), (0, h, w, 0)):
+        diag(x0, y0, x1, y1, h / 5, WHITE)
+    # St Patrick's saltire: the red diagonals are 1/15 of the height (centred; the real flag offsets them)
+    q = h / 15
+    for x0, y0, x1, y1 in ((0, 0, w, h), (0, h, w, 0)):
+        diag(x0, y0, x1, y1, q, RED)
+    d.rectangle([0, h / 2 - h / 6, w, h / 2 + h / 6], fill=WHITE)
+    d.rectangle([w / 2 - h / 6, 0, w / 2 + h / 6, h], fill=WHITE)
+    d.rectangle([0, h / 2 - h / 10, w, h / 2 + h / 10], fill=RED)
+    d.rectangle([w / 2 - h / 10, 0, w / 2 + h / 10, h], fill=RED)
+    im.paste(big.resize((W, H), Image.LANCZOS), (0, 0))
+
+
 FLAGS = {
+    'GB': gb,
     'US': usa,
     'FR': stripes_v([(0, 35, 149), WHITE, (237, 41, 57)]),
     'DE': stripes_h([(0, 0, 0), (221, 0, 0), (255, 206, 0)]),
@@ -79,9 +106,9 @@ def apply(path, code, original):
     icon = Image.open(original).convert('RGBA')
     f = flag_image(code)
     if icon.size != (64, 64):
-        s = icon.width / 64
+        s = icon.height / 64              # by height: the ground vehicles' HUD icons are 256 x 64
         f = f.resize((max(3, round(f.width * s)), max(3, round(f.height * s))), Image.NEAREST)
-    icon.alpha_composite(f, (round(icon.width / 64), round(icon.height / 64)))
+    icon.alpha_composite(f, (round(icon.height / 64), round(icon.height / 64)))
     return icon
 
 

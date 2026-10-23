@@ -1,0 +1,255 @@
+{
+  "id": "fv721_fox",
+  "name": "FV721 Fox",
+  "entityClass": "FittedGroundVehicleEntity",
+  "template": "gaz_3937_vodnik_aa",
+  "manualRegistration": true,
+  "note": "Model swap of the orphan Fox data: FV721 Fox.mtb on the Vodnik's 4x4 bone rig (hull, turret, barell, steered front wheels). Scale 0.88 px/unit = 0.0501 m/unit x1.1 (the pack's ground vehicles are 10% over real); hull width 42.5 units = 2.13 m real. Points are toolbox (x fwd, y down, z left) converted by [z*s, -y*s+8.8, -x*s]. Registration is by hand in the Fitted pattern. The driver camera is the driver_camera reference attachment (tools/vehgen/driver_cameras.json), at the gunner's sight lens (bert's rule); the controller seat's camera is the sight too.",
+  "source": "FV721 Fox.mtb",
+  "scale": 0.88,
+  "hitbox": [
+    2.45,
+    2.55
+  ],
+  "anchor": {
+    "parts": [
+      5,
+      7,
+      8
+    ],
+    "geoZ": 0.0
+  },
+  "bones": {
+    "hull": [
+      0
+    ],
+    "turret": [
+      3
+    ],
+    "barell": [
+      4
+    ],
+    "wheelL0": [
+      5
+    ],
+    "wheelL1": [
+      7
+    ],
+    "wheelR0": [
+      {
+        "part": 8,
+        "rotX": 27.5
+      },
+      6
+    ],
+    "wheelR1": [
+      {
+        "part": 8,
+        "rotX": -20.75
+      }
+    ]
+  },
+  "keepBones": [],
+  "pivots": {
+    "turret": {
+      "part": 3,
+      "at": "rotation"
+    },
+    "barell": {
+      "part": 4,
+      "at": "rotation"
+    },
+    "wheelL0": {
+      "part": 5,
+      "at": "rotation"
+    },
+    "steer_wheelL0": {
+      "part": 5,
+      "at": "rotation"
+    },
+    "wheelL1": {
+      "part": 7,
+      "at": "rotation"
+    },
+    "wheelR0": {
+      "parts": [
+        {
+          "part": 8,
+          "rotX": 27.5
+        }
+      ],
+      "at": "rotation"
+    },
+    "steer_wheelR0": {
+      "parts": [
+        {
+          "part": 8,
+          "rotX": 27.5
+        }
+      ],
+      "at": "rotation"
+    },
+    "wheelR1": {
+      "parts": [
+        {
+          "part": 8,
+          "rotX": -20.75
+        }
+      ],
+      "at": "rotation"
+    }
+  },
+  "clientSet": {},
+  "seats": [
+    {
+      "note": "gunner, the pack's controller seat (drives and fires, like the LAV-25): right of the gun behind the sight, feet on the hull floor (-4.5), eye 25.9 px up = turret roof",
+      "at": [
+        -6.16,
+        12.76,
+        -1.76
+      ],
+      "frame": "Turret",
+      "set": {
+        "Weapons": [
+          "Cannon",
+          "MachineGun"
+        ],
+        "MinPitch": -14,
+        "MaxPitch": 41
+      }
+    },
+    {
+      "note": "driver, front centre of the hull; feet on the floor (-6.5)",
+      "at": [
+        0.0,
+        14.52,
+        -22.0
+      ]
+    },
+    {
+      "note": "commander/loader, left of the gun in the turret",
+      "at": [
+        6.16,
+        12.76,
+        -1.76
+      ],
+      "frame": "Turret"
+    }
+  ],
+  "attachments": {
+    "gunnerCamera": {
+      "note": "same point on the turret: just in front of the sight lens (x 25.5)",
+      "at": [
+        -4.84,
+        33.44,
+        -23.32
+      ]
+    },
+    "gunnerSeat": {
+      "at": [
+        -6.16,
+        12.76,
+        -1.76
+      ]
+    },
+    "passengerSeat_1": {
+      "at": [
+        0.0,
+        14.52,
+        -22.0
+      ]
+    },
+    "turretPivot": {
+      "at": [
+        0.0,
+        38.72,
+        0.0
+      ]
+    },
+    "barrelPivot": {
+      "at": [
+        0.0,
+        33.44,
+        -14.08
+      ]
+    },
+    "mainMuzzle": {
+      "note": "RARDEN flash-hider front (part 4 x 63.5)",
+      "at": [
+        0.0,
+        33.44,
+        -55.88
+      ]
+    }
+  },
+  "attachmentsAdd": {
+    "passengerSeat_2": {
+      "Parent": "Turret",
+      "at": [
+        6.16,
+        12.76,
+        -1.76
+      ]
+    },
+    "coaxMuzzle": {
+      "note": "L37A2 tube in the mantlet, left of the gun (part 4 box 14)",
+      "Parent": "Barrel",
+      "at": [
+        3.08,
+        33.44,
+        -20.68
+      ]
+    }
+  },
+  "removeAttachments": [
+    "driverCamera",
+    "missileMuzzle_2",
+    "missileMuzzle_3",
+    "missileMuzzle_4",
+    "missileMuzzle_5",
+    "missileMuzzle_6",
+    "missileMuzzle_7",
+    "missileMuzzle_8"
+  ],
+  "points": {
+    "exhaust": [
+      -10.56,
+      19.36,
+      34.32
+    ]
+  },
+  "obbSections": [
+    [
+      -40,
+      -15,
+      8.5
+    ],
+    [
+      -15,
+      12,
+      8.5
+    ],
+    [
+      12,
+      36,
+      8.5
+    ]
+  ],
+  "wheelObb": "side",
+  "contactY": 0,
+  "keepData": [
+    "Weapons",
+    "MaxHealth",
+    "Mass",
+    "TurretTurnSpeed",
+    "TurretPitchRange",
+    "EngineInfo",
+    "HUDColor",
+    "HudType",
+    "VehicleIcon",
+    "DeathChargeKg",
+    "EngineSound",
+    "DamageClass",
+    "DamageModifiers"
+  ]
+}

@@ -1,5 +1,5 @@
 {
-  "_doc": "vehicle id -> nation code of the flag on its icon (nation of origin; an export variant: the nation it was exported to). Codes: US, FR, DE, RU, UA, IT (flags.py draws these).",
+  "_doc": "vehicle id -> nation code of the flag on its icon (nation of origin; an export variant: the nation it was exported to). Codes: US, FR, DE, RU, UA, IT, GB (flags.py draws these).",
   "f_16c": {
     "nation": "US",
     "note": "F-16C Block 50, USAF (War Thunder f_16c_block_50, USA tree); the model carries USAF markings (AZ tail code)"
@@ -43,5 +43,9 @@
   "fa_18e": {
     "nation": "US",
     "note": "F/A-18E Super Hornet, US Navy (War Thunder USA tree); the model carries US Navy markings"
+  },
+  "fv721_fox": {
+    "nation": "GB",
+    "note": "FV721 Fox (CVR(W)), British Army (War Thunder Great Britain tree uk_fv721_fox); desert tan model"
   }
 }

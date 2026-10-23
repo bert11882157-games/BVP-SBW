@@ -1457,6 +1457,33 @@
       }
     ]
   },
+  "engine/scimitar_idle": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/scimitar_idle",
+        "stream": false
+      }
+    ]
+  },
+  "engine/scimitar_start": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/scimitar_start",
+        "stream": false
+      }
+    ]
+  },
+  "engine/scimitar_stop": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/scimitar_stop",
+        "stream": false
+      }
+    ]
+  },
   "engine/stryker_idle": {
     "category": "neutral",
     "sounds": [
@@ -2632,6 +2659,33 @@
     "sounds": [
       {
         "name": "bvp_audio:weapon/pkt_veryfar",
+        "stream": false
+      }
+    ]
+  },
+  "weapon/rarden_30_1p": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:weapon/rarden_30_1p",
+        "stream": false
+      }
+    ]
+  },
+  "weapon/rarden_30_3p": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:weapon/rarden_30_3p",
+        "stream": false
+      }
+    ]
+  },
+  "weapon/rarden_30_far": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:weapon/rarden_30_far",
         "stream": false
       }
     ]

@@ -24,7 +24,8 @@
     "gtk": "land/nl_apc_boxer/sounds/gtk_engine_start_idle_stop.wav",
     "vab": "land/fr_apc_vab/sounds/vab_start_idle_stop.wav",
     "uaz": "land/mec_jep_uaz/sounds/mec_jeep_start_idle_stop.wav",
-    "pickup": "civilian/civ_jep_technical/sounds/mono/civi_pickup_start_idle_stop.wav"
+    "pickup": "civilian/civ_jep_technical/sounds/mono/civi_pickup_start_idle_stop.wav",
+    "scimitar": "land/gb_ifv_scimitar/sounds/scim_start_idle_stop.wav"
   },
   "tracks": {
     "t90": "land/ru_tnk_t90/sounds/t90_tracks.wav",
@@ -363,6 +364,11 @@
       "uaz",
       null,
       "hmmwv"
+    ],
+    "fv721_fox": [
+      "scimitar",
+      null,
+      "warrior"
     ]
   },
   "_weapons_doc": "weapon families: [1p, 3p, far, veryfar] sources (vehicles/... or weapons:...). Automatic-fire files are trimmed to their first shot cycle plus a faded tail (tailSeconds); single-shot cannons keep their full reverb. weapon_map assigns families by the weapon's current Fire3P event or by '<vehicle>.<weapon>' (overrides).",
@@ -618,6 +624,15 @@
         "air/us_jet_a10a/sounds/distant/gau8_dist_01.ogg"
       ],
       "auto": true
+    },
+    "rarden_30": {
+      "src": [
+        "land/gb_apc_warrior/sounds/warrior_firing_30mm_90rpm_3p.wav",
+        "land/gb_apc_warrior/sounds/warrior_firing_30mm_90rpm_3p.wav",
+        "weapons:common/sounds/distantshots/30mm_cannon.ogg",
+        null
+      ],
+      "auto": true
     }
   },
   "weapon_map": {
@@ -710,7 +725,9 @@
     "marder_1a1.MainMachineGun": "mg3",
     "marder_1a5.MainMachineGun": "mg3",
     "leo2a6.MachineGun": "mg3",
-    "leo2a6.PassengerMachineGun": "mg3"
+    "leo2a6.PassengerMachineGun": "mg3",
+    "fv721_fox.Cannon": "rarden_30",
+    "fv721_fox.MachineGun": "m240"
   },
   "_air_doc": "Aircraft (Lizardpyle BF2 archive, objects_vehicles_client/vehicles/...). air_engine: start_idle_stop sets by kind (jet/prop/heli). air_layer: loops by role (boost = low-frequency roar and afterburner, distant = far sound, rotor = blades, interior = cockpit ambience, crew only). aircraft: entity type -> kind, engine set, layers and a pitch factor that tells aircraft sharing a set apart. No interior layer: the BF2 cockpit ambience loops carry radio chatter (owner, 2026-09-28).",
   "air_engine": {

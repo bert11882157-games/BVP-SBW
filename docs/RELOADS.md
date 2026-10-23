@@ -27,6 +27,7 @@ The value comes from the War Thunder datamine (gszabi99/War-Thunder-Datamine, `g
 | M109A7 | 10.0 | Estimate: WT's M109A1 is 13.3 s; the A7 has a powered rammer |
 | K2 | 4.0 | Estimate: not in WT; rated 15 rounds/min |
 | BMP-3 100 mm / BMP-1, BMD-1 73 mm | 4.0 / 6.0 | WT autoloader |
+| FV721 Fox 30 mm L21A1 RARDEN | 0.8 | WT, aced: 3-round clip fired at 80 rounds/min, then the clip is reloaded; no crew reload sound (too short) |
 
 A magazine-fed main gun gets `RPM 60`, so that its reload sets the interval between shots and the fire-rate gate does
 not. Before this, the Type 90's RPM of 10 held its 4 s autoloader to 6 s.
@@ -54,6 +55,8 @@ Machine-gun fire rates follow WT for the same gun:
 | NSVT / Kord | 700 |
 | DShK | 600 |
 | M85 | 625 |
+
+The Fox's coax is the exception to the 20 s rule: its 100-round L37A2 belt takes WT's 8 s (aced; basic crew 10.4 s), by owner's item 9 of the Elite Expansion 2 plan (reloads per War Thunder). `WT_MG` in `wt_reloads.py`.
 
 The generic "7.62 mm coax" is matched to the vehicle's nation. Twin mounts count both guns. The ZU-23-2 is 2 × 800 =
 1600.

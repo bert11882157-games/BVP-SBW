@@ -83,5 +83,13 @@
       ],
       "note": "was inside the gunner's sight housing (top 2.82) at the turret front left; in game its walls framed the view as two dark pillars; now 0.1 over it"
     }
+  },
+  "fv721_fox": {
+    "eye": [
+      -0.3025,
+      2.09,
+      1.27188
+    ],
+    "note": "bert's expansion rule (PLAN item 11): the ground driver camera sits where the gunner's optic really is. FV721: the gunner's sight is the box on the right of the gun in the turret front (source parts 3/50-54, x 16-25.5, z -8..-3); the eye is just in front of its lens, on its axis (y 28 units over the floor line), at the turret rest pose. The pack's controller seat (seat 0, drives and fires) uses the same point as its sight camera (gunnerCamera, turret frame)."
   }
 }

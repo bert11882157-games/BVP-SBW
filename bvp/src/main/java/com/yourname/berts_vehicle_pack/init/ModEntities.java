@@ -601,6 +601,10 @@ public class ModEntities {
             ENTITIES.register("gaz_3937_vodnik_aa", () -> vehicle(
                     (type, level) -> new FittedGroundVehicleEntity(type, level, "gaz_3937_vodnik_aa"),
                     3.08f, 4.04f, "gaz_3937_vodnik_aa"));
+    public static final RegistryObject<EntityType<FittedGroundVehicleEntity>> FV721_FOX =
+            ENTITIES.register("fv721_fox", () -> vehicle(
+                    (type, level) -> new FittedGroundVehicleEntity(type, level, "fv721_fox"),
+                    2.45f, 2.55f, "fv721_fox"));
     public static final RegistryObject<EntityType<FittedGroundVehicleEntity>> BMD_1 =
             ENTITIES.register("bmd_1", () -> vehicle(
                     (type, level) -> new FittedGroundVehicleEntity(type, level, "bmd_1"),

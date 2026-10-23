@@ -47,9 +47,14 @@ MAIN = {
     'bmp3m_elite': (4.0, 'WT BMP-3 100 mm 2A70 autoloader'),
     'bmp_1am': (6.0, 'WT BMP-1 73 mm 2A28 autoloader'), 'bmd_1': (6.0, 'WT BMP-1 73 mm 2A28 autoloader'),
     'toyota_jihad_bmp1': (8.0, 'estimate: 2A28 on a technical, hand-loaded'),
+    'fv721_fox': (0.8, 'WT FV721 Fox 30 mm L21A1 RARDEN, 3-round clip, aced'),
 }
 MAIN_WEAPON = {'bmp3m_elite': 'Cannon', 'toyota_jihad_bmp1': 'BMP1Cannon'}
 
+# Machine guns whose reload is WT's own (aced belt change), not the 20 s rule of thumb.
+WT_MG = {('fv721_fox', 'MachineGun'): (8.0, 'WT L37A2, 100-round belt, aced (basic crew 10.4 s)')}
+# Guns whose reload is too short for any crew reload clip: no clip is set.
+NO_CLIP = {('fv721_fox', 'Cannon')}
 RULE = {'LMG': 20.0, 'HMG': 10.0, 'AUTOCANNON': 20.0, 'ATGM': 12.0}
 # autocannon belt change by how much of the belt was fired: [fraction fired, seconds]; the fixed reload times are
 # set to the empty-belt value (12 s) as the fallback
@@ -131,7 +136,7 @@ def plan(vid, weapon, v, name, typ):
     cls = classify(vid, weapon, v, name)
     if cls is None:
         return None, {}
-    secs = MAIN[vid][0] if cls == 'MAIN' else RULE[cls]
+    secs = MAIN[vid][0] if cls == 'MAIN' else WT_MG[(vid, weapon)][0] if (vid, weapon) in WT_MG else RULE[cls]
     depletion = cls == 'AUTOCANNON' and not GRENADE.search(name) and weapon != 'GrenadeLauncher'
     if depletion:
         secs = DEPLETION[-1][1]
@@ -194,6 +199,8 @@ EXTRA_CLIP = {('9p149_shturm', 'Missile'): 'superbwarfare:medium_missile_reload'
 
 def sound_plan(vid, weapon, cls, v):
     """SoundInfo changes (None deletes a key): one crew reload clip, timed to end with the reload."""
+    if (vid, weapon) in NO_CLIP:
+        return {}
     si = v.get('SoundInfo') or {}
     current = si.get('VehicleReload') or si.get('VehicleReload3p')
     if cls == 'MAIN':
