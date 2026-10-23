@@ -11,22 +11,21 @@ the pilots (the arch lumps, rails, the old centre bars and sight), its interiors
 (CUT_BOXES; faces that also lie in a kept element's box stay). The shoulders, the pilots' floor, the rear floor and the nose
 block are exterior and stay.
 
-The real Vulcan B.2 (photographs and type descriptions; no drawing with dimensions was found, so every number is the model's own
-line, UNVERIFIED against the real jet): the two pilots sit side by side under a canopy that is mostly metal, a smooth fairing blended
-into the dorsal hump, with small thick heavily framed windows (descriptions: a five-panel windscreen with its framing and small round
-side windows; pilots complained about the view). Here the canopy keeps the model's own mould line, the outer envelope of its frame
-lumps (crown 5.72 at the hump falling to 5.45 at the windscreen's top, 0.86 half width on the sills), as an opaque skin in the hump's
-grey, with small windows cut into it:
+The real Vulcan B.2 (descriptions: a five-panel windscreen with its framing and small round side windows; small thick heavily framed
+panes; pilots complained about the view; no photograph of the pane layout was reachable, so every number is the model's own line,
+UNVERIFIED against the real jet): a mostly metal fairing blended into the dorsal hump with a wrapping row of small panes. Here the
+canopy takes its layout from the original model's own frame lumps (checks/orig):
 
-  * windscreen: a flat raked plane (rake 32 degrees, between the arch at z 12.10 and the base bar on the nose deck, z 12.90; the model's own windscreen bar lies on it) with one
-    small flat pane in front of each pilot either side of a broad metal centre structure and a centre rib; the vertical side facet
-    beside it carries one small flat quarter pane each side, the plan chamfers in at the base;
-  * one small round flat side window each side (the direct-vision panels), tangent to the fairing;
-  * NO roof (eyebrow) windows (none found in the descriptions; the first version had them);
-  * the arch IS the front bow of the canopy, across the crease where the roof meets the windscreen; the rear bow stands against the
-    hump's front face (z 11.155), so the canopy rear seals on the spine fairing;
-  * frames (bone wreck_fuselage_1__canopy, closed solids, 5 to 7 cm, airframe grey): sill rails, rear bow, arch, centre rib, window
-    frames, base bar; glass stops at every frame edge.
+  * mould line: the model's own crown line (5.72 at the hump falling to 5.43 at the arch, z 12.12) as a smooth superellipse skin in the
+    hump's grey, cut by the windscreen row's facets, which follow the model's own windscreen bars (element 125 at x 0.19 .. 0.24, y 5.43
+    at z 12.12 to 5.09 at 12.66; elements 124 / 122 at x 0.58 .. 0.73) and its rounded plan: the footprint narrows round the nose;
+  * windscreen: FIVE flat panes in a wrapping row, each in its own plane (a parallelogram of a post line and a horizontal-ish
+    direction, planar by construction): the centre opening between the two inner posts (x +-0.215), the pane in front of each pilot
+    (the captain's eye stands in the middle of his), and a corner pane each side wrapping round; opaque cowl below on the same planes;
+  * one small flat side opening each side: the slit the original leaves between its rail and its shoulder lumps (z 11.45 .. 11.80);
+  * NO roof windows (the original has none);
+  * frames (bone wreck_fuselage_1__canopy, closed solids, 6 cm, airframe grey): a slim bar round every pane (the posts, the arch along
+    the tops, the lower edges), sill rails, the rear bow; glass stops half a frame inside each outline.
 
 CANOPY (eye-relative sections, the right half from the sill up over the top, windscreen included) is what the checks in
 work/elite_expansion_2/checks read. The checks measure from the pilot's eye: here the captain's eye stands 0.4365 off the canopy
@@ -270,48 +269,36 @@ KEEP_BOXES = [
 EXPECT_CUT = 1464
 CUT_TOL = 0.004
 
-# ---- the canopy (vehicle blocks): the model's own mould line, windows cut into it
-Y_B = 4.965                                # sill / base height
+# ---- the canopy (vehicle blocks): the model's own mould line, its windscreen's openings as flat panes
+Y_B = 4.965                                # sill height
 XF = 0.86                                  # the canopy's foot half width
 Z_R = 11.20                                # the canopy's rear (a 5.5 cm rear bow stands here: 11.20 .. 11.255; the hump's front face is at 11.155)
-Z_A = 12.10                                # the arch (front bow): where the roof meets the windscreen's raked plane (the model's own frame line)
-Z_C = 12.60                                # the plan starts to chamfer here
-Z_B = 12.90                                # the base bar's line (the nose block's rear face)
-Y_T = 5.45                                 # the arch's height
-K_SCR = (Y_T - Y_B) / (Z_B - Z_A)          # the windscreen's rake: rises this much per block back from the base
-# the crown line (centre line height) over the pilots: the model's own top line there (its frame lumps, elements 104-118), read at x = 0;
-# the windscreen's plane runs on along the model's own windscreen bar (element 125: y 5.43 at z 12.12 to 5.09 at 12.66)
-CROWN = [(11.20, 5.716), (11.30, 5.70), (11.60, 5.63), (11.90, 5.54), (12.10, Y_T)]
-CHAMFER = 0.47                             # the plan narrows by this much per block from z 12.60 to the base (a flat vertical facet each side)
-R_FRONT = 0.05                             # the front's corner radius (the flat raked top runs out to this far inside the wall)
-NS = 30                                    # points per half section
-STEP = 0.05                                # section spacing
-RG = 0.075                                 # the round side window's glass radius
-SW_C = (5.17, 11.80)                       # its centre (y, z)
-FP_X = (0.29, 0.57)                        # the front panes' outline in x (each side) ...
-FP_Z = (12.15, 12.55)                      # ... and z, on the raked plane
-QP_Z = (12.15, 12.45)                      # the quarter panes' outline z on the vertical side facet
-QP_Y0 = 5.03                               # and the lower edge
-BAR_W = 0.055                              # window frame width
+Z_A = 12.12                                # the arch: the front of the crown line, the windscreen's top
+Z_E = 12.85                                # the canopy's front end on the nose deck
+Z_B = 12.90                                # the dash / nose block's rear face (the last section the checks read)
+# the crown line over the pilots: the model's own top line there (its frame lumps, elements 104-118), read at x = 0
+CROWN = [(11.20, 5.716), (11.30, 5.70), (11.60, 5.63), (11.90, 5.54), (Z_A, 5.43)]
+NS = 20                                    # points per half section
+ROWS = [11.20, 11.50, 11.80, 12.00, 12.12, 12.30, 12.50, 12.70, Z_E]
+BAR_W = 0.06                               # frame width round the panes
+INSET = 0.03                               # the glass stops half a frame inside each outline
+CENTRE_POST = False                        # the model's centre opening has no post (True splits it in two by a slim post)
 
-
-def H(z):
-    return crown(z)
-
-
-def y_scr(z):
-    """the windscreen's raked plane: independent of x"""
-    return Y_B + K_SCR * (Z_B - z)
-
-
-def crown(z):
-    if z <= Z_A + 1e-9:
-        return float(np.interp(z, [c[0] for c in CROWN], [c[1] for c in CROWN]))
-    return y_scr(z)
-
-
-def xf(z):
-    return XF if z <= Z_C + 1e-9 else max(XF - CHAMFER * (z - Z_C), 0.60)
+# The windscreen row, read off the model's frame lumps (checks/orig): the posts are the old windscreen bars (element 125 at x 0.19 .. 0.24,
+# running from y 5.43 at z 12.12 to 5.09 at 12.66; element 124 / 122 at x 0.58 .. 0.73 from (z 12.03, y 5.34) down to the sill block at
+# z 12.71), between them three openings on each side of a centre one: the centre opening between the two inner posts, the opening
+# in front of each pilot, and the wrapping quarter opening at each corner. Each opening is one flat parallelogram: the inner post's
+# line and a horizontal-ish direction D (the plane contains both: planar by construction), so the row wraps round the rounded plan.
+POST_I = 0.215
+TC = np.array([POST_I, 5.43, Z_A])         # the centre / pilot post's top ...
+BC = np.array([POST_I, 5.12, 12.62])       # ... and the glass's lower edge on it
+V_POST = BC - TC
+D_M = np.array([0.405, -0.09, -0.09])      # pilot pane: from the inner post to the next post, falling and sweeping back a little
+D_Q = np.array([0.22, -0.03, -0.14])       # quarter pane: wraps round the corner (turned about 33 degrees)
+T_M, B_M = TC + D_M, BC + D_M              # the second post's top and bottom
+T_Q, B_Q = T_M + D_Q, B_M + D_Q            # the quarter pane's outer edge
+SW_Z = (11.45, 11.80)                      # the side opening (the original's slit between the rail and the shoulder lumps)
+SW_Y = (5.13, 5.25)
 
 
 def R(x, y, z):
@@ -327,37 +314,60 @@ def unit(v):
     return v / np.linalg.norm(v)
 
 
-def resample(pts, k):
-    p = np.array(pts, float)
-    d = np.r_[0, np.cumsum(np.linalg.norm(np.diff(p, axis=0), axis=1))]
-    if d[-1] < 1e-9:
-        return np.repeat(p[:1], k, axis=0)
-    t = np.linspace(0, d[-1], k)
-    return np.c_[np.interp(t, d, p[:, 0]), np.interp(t, d, p[:, 1])]
-
-
-def raw_section(z, front=None, k=NS + 1):
-    """the right half-section at z (absolute): from the sill foot up the wall over the shoulder to the crown at x = 0. Behind the
-    arch a superellipse (the smooth fairing, blending to a fuller one toward the arch); from the arch on a vertical wall, a small
-    corner radius and the FLAT raked top (so the windscreen's panes are flat on it)"""
-    if front is None:
-        front = z > Z_A + 1e-9
-    X = xf(z)
-    h = max(crown(z) - Y_B, 0.0)
-    if h < 1e-6:
-        return np.array([(X, Y_B)] * k)
-    if not front:
-        e = float(np.interp(z, [11.2, 11.7, Z_A], [2.4, 2.4, 6.0]))
-        phi = np.linspace(0, math.pi / 2, 80)
-        pts = [(X * math.cos(p) ** (2 / e), Y_B + h * math.sin(p) ** (2 / e)) for p in phi]
+def facet_y(x, z):
+    """the windscreen row's surface: three flat facets (centre, pilot's, corner), the height at (|x|, z)"""
+    x = abs(x)
+    if x <= POST_I:
+        P0, d = TC, np.array([1.0, 0.0, 0.0])
+    elif x <= T_M[0]:
+        P0, d = TC, D_M
     else:
-        r = min(R_FRONT, h * 0.5)
-        pts = [(X, Y_B), (X, Y_B + h - r)]
-        for a in np.linspace(0, math.pi / 2, 12)[1:]:
-            pts.append((X - r + r * math.cos(a), Y_B + h - r + r * math.sin(a)))
-        pts.append((0.0, Y_B + h))
-    pts[-1] = (0.0, pts[-1][1])
-    return resample(pts, k)
+        P0, d = T_M, D_Q
+    b = (x - P0[0]) / d[0]
+    a = (z - P0[2] - b * d[2]) / V_POST[2]
+    return float(P0[1] + a * V_POST[1] + b * d[1])
+
+
+def crown(z):
+    if z <= Z_A + 1e-9:
+        return float(np.interp(z, [c[0] for c in CROWN], [c[1] for c in CROWN]))
+    return max(facet_y(0.0, z), Y_B)
+
+
+def x_edge(z):
+    """the half width of the canopy's footprint at z: the foot's 0.86, cut short where the facets fall to the sill"""
+    X = XF if z <= 12.30 else max(XF - 0.13 * (z - 12.30) / 0.55, 0.73)
+    lo, hi = 0.0, X
+    if min(facet_y(X, z), crown(z)) > Y_B + 0.004:
+        return X
+    for _ in range(40):
+        mid = 0.5 * (lo + hi)
+        if facet_y(mid, z) > Y_B + 0.004:
+            lo = mid
+        else:
+            hi = mid
+    return max(lo, 0.02)
+
+
+def raw_section(z, k=NS + 1):
+    """the right half-section at z (absolute): from the sill foot up the wall over the shoulder to the crown at x = 0: a superellipse
+    (smooth fairing, fuller toward the arch) cut by the windscreen row's flat facets; the facet ridges (posts) are section points"""
+    X = x_edge(z)
+    h = max(crown(z) - Y_B, 0.0)
+    e = float(np.interp(z, [11.2, 11.7, Z_A], [2.4, 2.4, 6.0]))
+    phi = np.linspace(0, math.pi / 2, k)
+    xs = np.array([X * math.cos(p) ** (2 / e) if p < math.pi / 2 - 1e-9 else 0.0 for p in phi])
+    for xr in (POST_I, T_M[0]):                 # snap the nearest interior point onto each ridge
+        if X > xr + 0.01:
+            j = 1 + int(np.argmin(np.abs(xs[1:-1] - xr)))
+            xs[j] = xr
+    pts = []
+    for x in xs:
+        y_roof = Y_B + h * (max(1 - (x / X) ** e, 0.0)) ** (1 / e) if X > 1e-6 else Y_B
+        y = max(min(y_roof, facet_y(x, z)), Y_B)
+        pts.append((float(x), float(y)))
+    pts[0] = (pts[0][0], Y_B)
+    return np.array(pts)
 
 
 def section_abs(z):
@@ -365,10 +375,9 @@ def section_abs(z):
 
 
 def section_y(z, x):
-    """the (rear-type) section's outer height at |x| (z at or behind the arch)"""
-    s = raw_section(z, front=False, k=80)
-    xs, ys = s[::-1, 0], s[::-1, 1]
-    return float(np.interp(x, xs, ys))
+    """the section's outer height at |x|"""
+    s = raw_section(z, k=80)
+    return float(np.interp(x, s[::-1, 0], s[::-1, 1]))
 
 
 HUMP = {          # the dorsal hump over the rear crew compartment (the model's own outer skin, read off checks/orig): z -> (x of the skin at y 4.50, [(x, top y)])
@@ -389,9 +398,8 @@ def outline_rel():
     out = []
     for z, (xo, pts) in sorted(HUMP.items()):
         out.append((z - CENTRE[2], [(xo - CENTRE[0], 4.50 - CENTRE[1])] + [(x - CENTRE[0], y - CENTRE[1]) for x, y in pts]))
-    stations = [Z_R, 11.6, 12.0, 12.3, Z_A, Z_A + 0.02, 12.5, 12.6, 12.7, 12.8, Z_B]
-    for z in stations:
-        pts = section_abs(z) if z != Z_A else [tuple(p) for p in raw_section(z, front=False, k=18)]
+    for z in [Z_R, 11.6, 12.0, Z_A, 12.3, 12.5, 12.7, Z_E, Z_B]:
+        pts = section_abs(min(z, Z_E))
         out.append((z - CENTRE[2], [(x - CENTRE[0], y - CENTRE[1]) for x, y in pts]))
     return out
 
@@ -493,7 +501,7 @@ class Solids:
         return {'normalized_uvs': True, 'positions': self.P, 'normals': self.N, 'uvs': self.U, 'polys': self.polys}
 
 
-# ---------------------------------------------------------------- the glass: planes, insets
+# ---------------------------------------------------------------- the panes: outlines, glass
 
 def inset_poly(P, d):
     """a convex planar polygon with edge i (P[i] -> P[i+1]) moved in by d[i]; returns the new corners"""
@@ -516,22 +524,21 @@ def inset_poly(P, d):
     return out
 
 
-def quarter_outline(s=1):
-    """the quarter pane: on the vertical side facet x = XF, the top edge parallel to the windscreen's slope"""
-    y1 = lambda z: y_scr(z) - 0.085          # noqa: E731
-    pts = [R(xf(QP_Z[0]), QP_Y0, QP_Z[0]), R(xf(QP_Z[1]), QP_Y0, QP_Z[1]), R(xf(QP_Z[1]), y1(QP_Z[1]), QP_Z[1]), R(xf(QP_Z[0]), y1(QP_Z[0]), QP_Z[0])]
-    return [R(s * p[0], p[1], p[2]) for p in pts]
+def pane_outlines(s=1):
+    """the flat panes on one side (s = +1 left, -1 right): name -> four corners (top-inner, top-outer, bottom-outer, bottom-inner)"""
+    sx = lambda p: R(s * p[0], p[1], p[2])      # noqa: E731
+    out = {'pilot': [sx(TC), sx(T_M), sx(B_M), sx(BC)], 'quarter': [sx(T_M), sx(T_Q), sx(B_Q), sx(B_M)]}
+    return out
 
 
-def front_outline(s=1):
-    pts = [R(FP_X[0], y_scr(FP_Z[0]), FP_Z[0]), R(FP_X[1], y_scr(FP_Z[0]), FP_Z[0]), R(FP_X[1], y_scr(FP_Z[1]), FP_Z[1]), R(FP_X[0], y_scr(FP_Z[1]), FP_Z[1])]
-    return [R(s * p[0], p[1], p[2]) for p in pts]
+def centre_outline():
+    return [R(-POST_I, TC[1], TC[2]), R(POST_I, TC[1], TC[2]), R(POST_I, BC[1], BC[2]), R(-POST_I, BC[1], BC[2])]
 
 
 def side_plane():
-    """the round side window's plane: x = x0 + sl (y - yc), tangent to the section there"""
-    yc, zc = SW_C
-    s = raw_section(zc, front=False, k=200)
+    """the side opening's plane: x = x0 + sl (y - yc), tangent to the section there"""
+    yc, zc = 0.5 * sum(SW_Y), 0.5 * sum(SW_Z)
+    s = raw_section(zc, k=200)
     order = np.argsort(s[:, 1])
     ysort, xsort = s[order, 1], s[order, 0]
     x0 = float(np.interp(yc, ysort, xsort))
@@ -539,34 +546,32 @@ def side_plane():
     return x0, (x2 - x1) / 0.10
 
 
-def side_disc(s=1, r=RG, n=16):
+def side_outline(s=1):
     x0, sl = side_plane()
-    yc, zc = SW_C
-    out = []
-    for k in range(n):
-        a = 2 * math.pi * k / n
-        y, z = yc + r * math.cos(a), zc + r * math.sin(a)
-        out.append(R(s * (x0 + sl * (y - yc)), y, z))
-    return out
+    yc = 0.5 * sum(SW_Y)
+    pts = [(SW_Z[0], SW_Y[0]), (SW_Z[1], SW_Y[0]), (SW_Z[1], SW_Y[1]), (SW_Z[0], SW_Y[1])]
+    return [R(s * (x0 + sl * (y - yc)), y, z) for z, y in pts]
 
 
 def glass_triangles():
     tris = []
+    quads = [centre_outline()]
+    if CENTRE_POST:
+        c = centre_outline()
+        quads = [[c[0], R(0, c[0][1], c[0][2]), R(0, c[3][1], c[3][2]), c[3]], [R(0, c[0][1], c[0][2]), c[1], c[2], R(0, c[3][1], c[3][2])]]
     for s in (1, -1):
-        for o, e in ((front_outline(s), [0.0275] * 4), (quarter_outline(s), [0.0275] * 4)):
-            if s < 0:
-                o = o[::-1]
-            g = inset_poly(o, e)
-            tris.append([g[0], g[1], g[2]])
-            tris.append([g[0], g[2], g[3]])
-        d = side_disc(s)
-        c = np.mean(d, 0)
-        for k in range(len(d)):
-            tris.append([c, d[k], d[(k + 1) % len(d)]])
+        for o in pane_outlines(s).values():
+            quads.append(o[::-1] if s < 0 else o)
+        o = side_outline(s)
+        quads.append(o[::-1] if s < 0 else o)
+    for o in quads:
+        g = inset_poly(o, [INSET] * 4)
+        tris.append([g[0], g[1], g[2]])
+        tris.append([g[0], g[2], g[3]])
     return tris
 
 
-# ---------------------------------------------------------------- skin (the smooth fairing with the windows cut out) and frames
+# ---------------------------------------------------------------- skin (the smooth fairing with the panes cut out) and frames
 
 def point_in_poly(p, poly):
     x, y = p
@@ -579,78 +584,90 @@ def point_in_poly(p, poly):
     return inside
 
 
-def in_window(c):
-    """a point (right half, x >= 0) inside one of the windows' holes"""
-    x, y, z = c
-    if FP_X[0] <= x <= FP_X[1] and FP_Z[0] <= z <= FP_Z[1] and z > Z_A:
-        return True
-    if x > 0.6 and z > Z_A:
-        q = [(p[2], p[1]) for p in quarter_outline(1)]
-        if point_in_poly((z, y), q):
-            return True
-    if x > 0.6 and (y - SW_C[0]) ** 2 + (z - SW_C[1]) ** 2 <= (RG + 0.02) ** 2:      # (the ring frame, 5.5 cm wide, covers the margin)
-        return True
-    return False
-
-
-WIN_BOXES = [((FP_X[0], 5.0, FP_Z[0]), (FP_X[1], 5.5, FP_Z[1])), ((0.84, 5.0, QP_Z[0]), (0.9, 5.4, QP_Z[1])),
-             ((0.70, SW_C[0] - RG, SW_C[1] - RG), (0.92, SW_C[0] + RG, SW_C[1] + RG))]
-
-
-def near_window(tri, m=0.015):
-    P = np.abs(np.array(tri)) * np.array([1, 1, 1])
-    lo, hi = P.min(0), P.max(0)
-    lo, hi = np.array([abs(tri[0][0]), 0, 0]) * 0 + np.array([min(abs(p[0]) for p in tri), min(p[1] for p in tri), min(p[2] for p in tri)]), \
-        np.array([max(abs(p[0]) for p in tri), max(p[1] for p in tri), max(p[2] for p in tri)])
-    for (wl, wh) in WIN_BOXES:
-        if np.all(lo <= np.array(wh) + m) and np.all(hi >= np.array(wl) - m):
-            return True
-    return False
-
-
-def cut_tri(tri, depth=0):
-    """a skin triangle with the windows' holes cut out: those wholly inside a window go, those touching a window's outline are split
-    in four down to about 1 cm, then kept or dropped by their centroid"""
-    a, b, c = tri
-    ins = [in_window((abs(p[0]), p[1], p[2])) for p in tri]
-    if all(ins):
-        return []
-    if not near_window(tri):
-        return [tri]
-    size = max(np.linalg.norm(a - b), np.linalg.norm(b - c), np.linalg.norm(c - a))
-    if size < 0.022 or depth > 4:
-        cen = (a + b + c) / 3
-        return [] if in_window((abs(cen[0]), cen[1], cen[2])) else [tri]
-    ab, bc, ca = (a + b) / 2, (b + c) / 2, (c + a) / 2
+def _clip_half(poly, n, d):
+    """Sutherland-Hodgman: the part of the 2-D polygon with n . p - d >= 0"""
     out = []
-    for t in ((a, ab, ca), (ab, b, bc), (ca, bc, c), (ab, bc, ca)):
-        out += cut_tri(t, depth + 1)
+    for i in range(len(poly)):
+        a, b = poly[i], poly[(i + 1) % len(poly)]
+        da, db = n @ a - d, n @ b - d
+        if da >= 0:
+            out.append(a)
+        if (da >= 0) != (db >= 0):
+            out.append(a + (b - a) * (da / (da - db)))
     return out
 
 
-def skin_stations():
-    zs = [round(Z_R + STEP * k, 4) for k in range(int(round((Z_B - Z_R) / STEP)) + 1)]
-    rows = []
-    for z in zs:
-        if abs(z - Z_A) < 1e-6:
-            rows.append((z, raw_section(z, front=False)))
-            rows.append((z, raw_section(z, front=True)))
-        else:
-            rows.append((z, raw_section(z)))
-    return rows
+def window_polys():
+    """the openings as convex polygons in the projection each lies best in: ('xz', pts) for the windscreen row, ('zy', pts) for the side slit"""
+    w = [('xz', [np.array([p[0], p[2]]) for p in centre_outline()])]
+    for o in pane_outlines(1).values():
+        w.append(('xz', [np.array([p[0], p[2]]) for p in o]))
+    w.append(('zy', [np.array([p[2], p[1]]) for p in side_outline(1)]))
+    return w
+
+
+def cut_tris(tri, windows):
+    """a skin triangle (right half or mirrored: |x| is used) minus the openings: exact, by clipping against each opening's edges"""
+    pieces = [list(tri)]
+    for kind, poly in windows:
+        nxt = []
+        P = poly if (poly[1] - poly[0])[0] * (poly[2] - poly[1])[1] - (poly[1] - poly[0])[1] * (poly[2] - poly[1])[0] > 0 else poly[::-1]
+        lo, hi = np.min(P, axis=0), np.max(P, axis=0)
+        for pc in pieces:
+            pts = np.array([[abs(q[0]), q[2]] if kind == 'xz' else [q[2], q[1]] for q in pc])
+            if len(pc) < 3 or (kind == 'zy' and min(abs(q[0]) for q in pc) < 0.5):
+                nxt.append(pc); continue
+            if np.any(pts.max(0) < lo - 1e-6) or np.any(pts.min(0) > hi + 1e-6):
+                nxt.append(pc); continue
+            sgn = 1 if np.mean([q[0] for q in pc]) >= 0 else -1
+            cur = [np.array(p) for p in pts]
+            lift = pc
+            # barycentric lift from the 2-D projection of the three corners (pc is a triangle or a convex polygon: lift by its first three corners)
+            A_ = np.array([[pts[0][0], pts[1][0], pts[2][0]], [pts[0][1], pts[1][1], pts[2][1]], [1, 1, 1]])
+            if abs(np.linalg.det(A_)) < 1e-12:
+                nxt.append(pc); continue
+            Ainv = np.linalg.inv(A_)
+            def up(q):
+                w_ = Ainv @ np.array([q[0], q[1], 1.0])
+                return w_[0] * lift[0] + w_[1] * lift[1] + w_[2] * lift[2]
+            rest = cur
+            for i in range(len(P)):
+                a, b = P[i], P[(i + 1) % len(P)]
+                e = b - a
+                nrm = np.array([-e[1], e[0]]) / max(np.linalg.norm(e), 1e-12)     # inward (left of a CCW edge)
+                dd = nrm @ a
+                outside = _clip_half(rest, -nrm, -dd)
+                if len(outside) >= 3:
+                    nxt.append([up(q) for q in outside])
+                rest = _clip_half(rest, nrm, dd)
+                if len(rest) < 3:
+                    break
+        pieces = nxt
+    out = []
+    for pc in pieces:
+        for k in range(1, len(pc) - 1):
+            ta, tb, tc = pc[0], pc[k], pc[k + 1]
+            if np.linalg.norm(np.cross(tb - ta, tc - ta)) > 1e-9:
+                out.append((ta, tb, tc))
+    return out
+
+
+def skin_rows():
+    return [(z, raw_section(z)) for z in ROWS]
+
+
+def facet_normal(d):
+    n = unit(np.cross(V_POST, d))
+    return n if n[1] > 0 else -n
 
 
 def build_solids():
     b = Solids(UV_FRAME)
     sk = UV_PANEL
-    n_scr = unit([0, 1.0, K_SCR])
-    # -- skin: the section rows joined by triangles, both sides, the windows cut out; each triangle an outer and an inner face 12 mm apart
-    rows = skin_stations()
-    zr = Z_R + 0.012
+    rows = skin_rows()
+    WINDOWS = window_polys()
     for s in (1, -1):
         for (z0, S0), (z1, S1) in zip(rows[:-1], rows[1:]):
-            if z1 <= zr or (z1 - z0) < 1e-9 and False:
-                continue
             for k in range(len(S0) - 1):
                 p00 = R(s * S0[k][0], S0[k][1], z0); p01 = R(s * S0[k + 1][0], S0[k + 1][1], z0)
                 p10 = R(s * S1[k][0], S1[k][1], z1); p11 = R(s * S1[k + 1][0], S1[k + 1][1], z1)
@@ -659,23 +676,39 @@ def build_solids():
                     if np.linalg.norm(np.cross(bb - a, c - a)) < 1e-9:
                         continue
                     n0 = unit(np.cross(bb - a, c - a))
-                    for ta, tb, tc in cut_tri((a, bb, c)):
+                    for ta, tb, tc in cut_tris((a, bb, c), WINDOWS):
                         out = (ta + tb + tc) / 3 - R(0.0, Y_B + 0.12, (ta[2] + tb[2] + tc[2]) / 3)
                         n = n0 if n0 @ out >= 0 else -n0
                         b.face([ta, tb, tc], n, sk)
                         b.face([ta - n * 0.012, tb - n * 0.012, tc - n * 0.012][::-1], -n, sk)
-    # -- the arch = the front bow across the crease, the centre rib down the windscreen's middle
-    b.bar(R(-0.78, Y_T, Z_A), R(0.78, Y_T, Z_A), 0.05, unit(n_scr + [0, 1.0, 0.15]), t=0.055, po=0.016, ext=0.025)
-    b.bar(R(0, Y_T, Z_A), R(0, Y_B, Z_B), 0.05, n_scr, t=0.05, po=0.015)
-    # -- sill rails and the base bar
+    # -- frames on the panes' outlines: posts, the arch along the tops, the lower edges
+    nC = facet_normal(np.array([1.0, 0.0, 0.0]))
+    nM = facet_normal(D_M)
+    nQ = facet_normal(D_Q)
+    c = centre_outline()
+    b.bar(c[0], c[1], BAR_W, nC, t=0.05, po=0.018, ext=BAR_W / 2)           # the centre opening's top (the arch) and bottom
+    b.bar(c[3], c[2], BAR_W, nC, t=0.05, po=0.018, ext=BAR_W / 2)
+    if CENTRE_POST:
+        b.bar(R(0, TC[1], TC[2]), R(0, BC[1], BC[2]), 0.045, nC, t=0.05, po=0.018)
     for s in (1, -1):
-        b.bar(R(s * XF, Y_B, Z_R), R(s * XF, Y_B, Z_C + 0.021), 0.07, unit([s * 0.7, 0.7, 0]), t=0.06, po=0.02, ext=0.0)
-        b.bar(R(s * XF, Y_B, Z_C), R(s * xf(Z_B), Y_B, Z_B), 0.07, unit([s * 0.7, 0.7, 0.2]), t=0.06, po=0.02, ext=0.0)
-    b.bar(R(-xf(Z_B), Y_B, Z_B), R(xf(Z_B), Y_B, Z_B), 0.06, n_scr, t=0.065, po=0.014, ext=0.0)
+        po_, qo_ = pane_outlines(s)['pilot'], pane_outlines(s)['quarter']
+        nm = np.array([s * nM[0], nM[1], nM[2]])
+        nq = np.array([s * nQ[0], nQ[1], nQ[2]])
+        for i in range(4):                       # the pilot's pane: top (arch), outer post, bottom, inner post
+            b.bar(po_[i], po_[(i + 1) % 4], BAR_W, nm, t=0.05, po=0.018, ext=BAR_W / 2)
+        for i in (0, 1, 2):                      # the quarter pane: top (arch), outer edge, bottom (its inner edge is the pilot pane's outer post)
+            b.bar(qo_[i], qo_[(i + 1) % 4], BAR_W, nq, t=0.05, po=0.018, ext=BAR_W / 2)
+    # -- sill rails along the foot (the footprint's edge) and the nose end
+    foot = [(x_edge(z), z) for z in ROWS]
+    for s in (1, -1):
+        for (xa, za), (xb, zb) in zip(foot[:-1], foot[1:]):
+            b.bar(R(s * xa, Y_B, za), R(s * xb, Y_B, zb), 0.07, unit([s * 0.7, 0.7, 0.0]), t=0.06, po=0.02, ext=0.01)
+    xe = foot[-1][0]
+    b.bar(R(-xe, Y_B, Z_E), R(xe, Y_B, Z_E), 0.06, unit([0, 1.0, 0.3]), t=0.065, po=0.014, ext=0.0)
     # -- the rear bow against the hump's front face: along the section at Z_R (5.5 cm deep in z, 6 cm radially, 1.2 cm proud)
     zr0, zr1 = Z_R, Z_R + 0.055
     zc = 0.5 * (zr0 + zr1)
-    sec = [tuple(p) for p in raw_section(zc, front=False, k=9)]
+    sec = [tuple(p) for p in raw_section(zc, k=9)]
     for k in range(len(sec) - 1):
         (x0, y0), (x1, y1) = sec[k], sec[k + 1]
         u2 = unit([x1 - x0, y1 - y0, 0.0])
@@ -689,16 +722,12 @@ def build_solids():
             sdir = np.cross(u, o)
             cc = (q0 + q1) / 2 + o * (0.012 - 0.03)
             b.obox(cc, (u, sdir, o), (np.linalg.norm(q1 - q0) / 2 + 0.02, (zr1 - zr0) / 2, 0.03))
-    # -- the windows' frames: bars on the outlines (the glass is inset by half a bar)
+    # -- the side opening's frame
     for s in (1, -1):
-        for o, nn in ((front_outline(s), n_scr), (quarter_outline(s), unit([s * 1.0, 0.0, 0.0]))):
-            for i in range(4):
-                b.bar(o[i], o[(i + 1) % 4], BAR_W, nn, t=0.055, po=0.0185, ext=BAR_W / 2)
-        d = side_disc(s, RG + BAR_W / 2)
-        x0, sl = side_plane()
-        nn = unit([s * 1.0, -sl, 0.0])
-        for k in range(len(d)):
-            b.bar(d[k], d[(k + 1) % len(d)], BAR_W, nn, t=0.045, po=0.012, ext=0.012)
+        o = side_outline(s)
+        nn = unit([s * 1.0, -side_plane()[1], 0.0])
+        for i in range(4):
+            b.bar(o[i], o[(i + 1) % 4], 0.045, nn, t=0.045, po=0.014, ext=0.02)
     return b
 
 
@@ -756,7 +785,7 @@ def main(argv):
     both = [list(map(float, p)) for t in tris for p in t] + [list(map(float, t[k])) for t in tris for k in (0, 2, 1)]
     asset['CanopyGlass'] = {'Schema': 1, 'Frame': 'VEHICLE_LOCAL_BLOCKS', 'Triangles': [round(v, 4) + 0.0 for p in both for v in p]}
     print(f"vulcan_b2 canopy: the model's frames, interiors and seats cut out ({cut} faces), {len(solids.polys)} faces of frames and skin; "
-          f'{len(tris)} glass triangles (x2 windings): two flat front panes, two flat quarter panes and two round flat side windows in the smooth fairing')
+          f'{len(tris)} glass triangles (x2 windings): five flat windscreen panes (centre, a pilot pane and a corner pane each side) and two small flat side windows in the smooth fairing')
     if dry:
         return
     with open(GEO, 'w', encoding='utf-8', newline='\n') as f:
@@ -771,5 +800,6 @@ def main(argv):
 
 if __name__ == '__main__':
     main(sys.argv[1:])
+
 
 
