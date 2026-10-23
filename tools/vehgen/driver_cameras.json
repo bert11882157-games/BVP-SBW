@@ -115,5 +115,13 @@
       1.04493
     ],
     "note": "bert's expansion rule (PLAN item 11): the ground driver camera sits where the gunner's optic really is. T-64BV: the gunner's sight head is the box on the left of the turret front roof (source part 3 elements 181-186, glass x 17-18, z 11.6-14.6) recessed in the stepped turret front; the eye is on its axis over the front slab (y -38, x 19.6 toolbox units), at the turret rest pose (tools/vehgen/t64bv_build.py writes the attachment; seat 0 is the pack's controller seat and uses the same point as gunner1_camera)."
+  },
+  "zbd_05": {
+    "eye": [
+      0.43562,
+      2.73025,
+      -0.4715
+    ],
+    "note": "bert's expansion rule (PLAN item 11): the ground driver camera sits where the gunner's optic really is. ZBD-05: the gunner's sight head is the block on the left of the turret roof, ahead of the left hatch (source part 3, x -37..-29, y -44..-40, z 5..11.4 toolbox units); the eye is on its front glass, on its axis (toolbox -28.2, -42.2, 8.5), at the turret rest pose (tools/vehgen/zbd05_build.py writes the attachment; seat 0 is the pack's controller seat and uses the same point as gunner1_camera)."
   }
 }

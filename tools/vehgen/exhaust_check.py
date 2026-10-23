@@ -34,7 +34,7 @@ DATA = os.path.join(REPO, 'bvp', 'src', 'generated', 'resources', 'data', 'berts
 MAX_M = 0.2
 # front-engined vehicles: the hull-front-half rule does not apply (their exhaust may sit forward, but still on a grille)
 FRONT_ENGINE = {'m1128', 'puma_ifv', 'bmp2', 'bmp2m', 'bmp_1am', 'marder_1a1', 'marder_1a2', 'm2_bradley', 'vbci', 'ztl_09',
-                'strv_103', '9p149_shturm'}
+                'strv_103', '9p149_shturm', 'zbd_05'}
 BAND = 6.0
 OUT_PX = 0.25            # --fix: origin this far outside the louvre face
 
@@ -54,6 +54,10 @@ EXITS = {
     # Puma: MTU 10V 890 front right, outlet on the right (-x) hull side face forward (x -34.438, the side module face), at
     # the engine deck height. The model has no visible outlet: UNVERIFIED, a decision. Set in puma_build.py (EXHAUST)
     'puma_ifv': [(-34.438, -34.438, 18.1, 25.7, -42.75, -33.25)],
+    # ZBD-05: engine front right; the model's louvred panel on the right deck edge (part 0 elements 83-88, toolbox x 11..33,
+    # z -29.5..-19.5, y -30..-26) is the exhaust grille (the lattice grille beside it is the air intake). Top vent: the box
+    # is its footprint at the roof face (model px, written by zbd05_build.py)
+    'zbd_05': [(-24.6, -15.58, 30.4, 33.885, -43.05, -24.19)],
     # ---- Elite Expansion 2 ground pass (exhaust_audit.csv): rear plate louvres / grilles, model px, +Z = rear ----
     # BTR-90: the seven engine-deck vents behind the turret ring (roof, y 35.94, x +-17.3, z 52.7 .. 64.5); the model has no side pipe
     'btr_90': [(-17.3, 17.3, 35.94, 35.94, 52.7, 64.5)],
