@@ -86,6 +86,8 @@ data class FixedWingHandlingProfile(
      * [FIGHTER_GROUND_BRAKE_GAIN] up to [FIGHTER_MAX_MASS_KG], [HEAVY_GROUND_BRAKE_GAIN] above.
      */
     val groundBrakeGain: Double = 1.0,
+    /** Opt-in pitch thrust vectoring (see [FixedWingThrustVectoring]); null = a fixed nozzle. */
+    val thrustVectoring: FixedWingThrustVectoring? = null,
 ) {
     /** Small shared gameplay tuning; reference specifications remain unchanged. */
     val gamePitchRateDegreesPerSecond: Double get() = pitchRateDegreesPerSecond * 1.10 * 1.12
