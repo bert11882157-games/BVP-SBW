@@ -251,6 +251,13 @@ mixin {
 
 tasks.test {
     useJUnitPlatform()
+    // ContractSnapshotTest (docs/development/CONTRACT_TESTS.md): -Pcontract.strict=true fails on additions too,
+    // -Pcontract.update=true regenerates the golden files
+    for (name in listOf("contract.strict", "contract.update")) {
+        val value = project.findProperty(name)?.toString() ?: "false"
+        inputs.property(name, value)
+        systemProperty(name, value)
+    }
 }
 
 // MixinGradle writes these annotation-processor products under compileJava's
