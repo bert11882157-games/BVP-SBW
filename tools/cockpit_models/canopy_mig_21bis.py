@@ -61,13 +61,13 @@ def build(atlas, E, skin):
     glass = C.glass_triangles(can, E, -0.30, 0.66) + C.glass_triangles(ws, E, 0.70, 1.42)
     # the canopy's frame: rear bow, front bow, sill rails
     C.bow(m, can, E, -0.28, 0.05, 0.03, out, inner)
-    C.bow(m, can, E, 0.645, 0.04, 0.022, out, inner)
+    C.bow(m, can, E, 0.662, 0.074, 0.022, out, inner)      # the canopy's front bow, butting the windscreen's arch: one bar
     C.member(m, can, E, 0.0, -0.30, 0.66, 0.045, 0.035, out, inner)
     # the frame along the canopy's top centre line, bow to bow: the two halves of the transparency meet on it, the
     # periscope stands on it
     C.member(m, can, E, 1.0, -0.28, 0.645, 0.035, 0.022, out, inner, sides=(1,), steps=14)
     # the windscreen: its arch against the canopy, the front pane's arched frame, the base frame, the side rails
-    C.bow(m, ws, E, 0.715, 0.035, 0.022, out, inner)
+    C.bow(m, ws, E, 0.7165, 0.031, 0.022, out, inner)      # the arch, on from the canopy's bow (one bar, bert)
     ov = C.oval_pane(m, ws, E, PANE_TOP, PANE_FOOT, PANE_W, 0.04, 0.025, out, inner, n=2.0, n_bot=8.0)
     # the solid metal: under the side panes' rising lower edge, and the whole band under the front pane's foot
     def side_top(z):                                     # (up to the front pane's frame, not over it)
