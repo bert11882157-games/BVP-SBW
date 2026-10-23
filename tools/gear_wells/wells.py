@@ -43,7 +43,9 @@ CONFIG = os.path.join(HERE, 'config.json')
 
 MARGIN = 0.25         # px between the stowed gear and the well walls / ceiling
 DOOR_CLEAR = 0.15     # px the stowed gear must sit above the closed doors
-STEEP = 1.5           # px of rise per px across the skin under a well (about 56 degrees)
+STEEP = 2.5           # px of rise per px across the skin under a well (about 68 degrees)
+CEIL_MARGIN = 0.15    # px between the stowed gear and the well ceiling over it
+TYRE_RATIO = 0.25     # tyre width / diameter the wheels are narrowed to (real fighter tyres: about 0.25 to 0.35)
 TOP_SKIN = 0.25       # px of airframe that must remain over a well ceiling
 SKIN_LIFT = 0.25      # px of skin under a wall's foot before the wall counts as starting on the skin
 OPEN_DEG = 90.0
@@ -141,7 +143,7 @@ def wheels_of(m, leg):
         if not pts:
             continue
         pts = np.array(pts)
-        out.append({'bone': r['Bone'], 'pivot': np.array(r['Pivot'], float),
+        out.append({'bone': r['Bone'], 'pivot': np.array(r['Pivot'], float), 'axis': unit(r.get('Axis', [1, 0, 0])),
                     'lo': pts.min(0), 'hi': pts.max(0),
                     'radius': (pts[:, 1].max() - pts[:, 1].min()) / 2})
     return out
@@ -156,7 +158,7 @@ class Gear:
 
     ATTACH = 0.8
 
-    def __init__(self, m, entry, loose, claimed):
+    def __init__(self, m, entry, loose, claimed, tyre_ratio=TYRE_RATIO):
         self.m = m
         self.leg = entry['Bone']
         self.entry = entry
@@ -169,6 +171,7 @@ class Gear:
         self.leg_mesh = max(wrecks, key=lambda k: len(m.polys.get(k, []))) if wrecks else None
         self.wheels = wheels_of(m, self.leg)
         self.wheel_bones = {n for w in self.wheels for n in m.subtree(w['bone'])}
+        self.slimmed = self._slim_tyres(tyre_ratio) if tyre_ratio else set()
         self.dropped = 0
         self.taken = 0
         self._pts = {}
@@ -194,6 +197,50 @@ class Gear:
         legp = [c for p in self.mesh.get(self.leg_mesh, []) for c in p]
         self.strut_uv = max(self.mesh.get(self.leg_mesh, []) or [[(0, 0, np.array([0.5, 0.5]))]],
                             key=lambda p: M.area(p) if len(p) > 2 else 0)[0][2] if legp else np.array([0.5, 0.5])
+
+    def _slim_tyres(self, ratio):
+        """Narrows each tyre along its axle, about its own centre, to `ratio` of its diameter (real fighter tyres
+        run about 0.25 to 0.35; the models' are often twice that, too thick to stow in a thin wing). A rotor bone
+        may hold twin tyres side by side: each is narrowed about its own centre, small pieces (hubs) go with the
+        tyre they sit in, and a piece spanning both (an axle) stays as it is. Returns the bones whose meshes
+        changed; tyres already that slim are left alone."""
+        changed = set()
+        for w in self.wheels:
+            ax = w['axis']
+            pieces = []                  # (bone, polygon indices, along-axle lo, hi, height)
+            for n in self.m.subtree(w['bone']):
+                polys = self.m.polys.get(n)
+                if not polys:
+                    continue
+                for comp in components(polys):
+                    pts = np.array([c[0] for i in comp for c in polys[i]])
+                    along = pts @ ax
+                    pieces.append((n, comp, along.min(), along.max(), np.ptp(pts[:, 1])))
+            if not pieces:
+                continue
+            tall = max(p[4] for p in pieces)
+            tyres = []                   # merged along-axle ranges of the tall pieces
+            for p in sorted((p for p in pieces if p[4] >= 0.7 * tall), key=lambda p: p[2]):
+                if tyres and p[2] <= tyres[-1][1] + 0.05:
+                    tyres[-1] = [tyres[-1][0], max(tyres[-1][1], p[3]), max(tyres[-1][2], p[4])]
+                else:
+                    tyres.append([p[2], p[3], p[4]])
+            for lo, hi, height in tyres:
+                width = hi - lo
+                if width <= ratio * height + 0.05:
+                    continue
+                k = ratio * height / width
+                centre = (lo + hi) / 2
+                for n, comp, plo, phi, _ in pieces:
+                    if plo < lo - 0.05 or phi > hi + 0.05:
+                        continue         # outside this tyre, or spanning a pair
+                    polys = self.m.polys[n]
+                    for i in comp:
+                        polys[i] = [(c[0] - ax * ((c[0] @ ax - centre) * (1 - k)), c[1], c[2]) for c in polys[i]]
+                    changed.add(n)
+            pts = np.array([c[0] for n in self.m.subtree(w['bone']) for p in self.m.polys.get(n, []) for c in p])
+            w['lo'], w['hi'] = pts.min(0), pts.max(0)
+        return changed
 
     def _attach(self, loose, claimed):
         comps = []                     # (source bone, polygons, lo, hi)
@@ -365,15 +412,23 @@ def loose_pieces(m):
     return out
 
 
-def sample(polys):
+def sample(polys, step=0.75):
+    """Points covering the polygons: corners, points along edges and inside faces about `step` px apart, so the
+    well's cells follow a strut or a wheel face lying flat."""
     pts = []
     for p in polys:
         pts += [c[0] for c in p]
-        for i in range(len(p)):          # points along long edges, so a box around them follows a strut
+        for i in range(len(p)):
             a, b = p[i][0], p[(i + 1) % len(p)][0]
             L = np.linalg.norm(b - a)
-            for t in np.arange(2.0, L, 2.0):
+            for t in np.arange(step, L, step):
                 pts.append(a + (b - a) * (t / L))
+        for k in range(1, len(p) - 1):   # inside each fan triangle
+            a, b, c = p[0][0], p[k][0], p[k + 1][0]
+            n = int(max(np.linalg.norm(b - a), np.linalg.norm(c - a)) / step)
+            for u in range(1, n):
+                for v in range(1, n - u):
+                    pts.append(a + (b - a) * (u / n) + (c - a) * (v / n))
     return np.array(pts).reshape(-1, 3)
 
 
@@ -404,7 +459,11 @@ class Skin:
 
     def column(self, x, z, y0=-200.0, which='tris'):
         """Heights at which a vertical line at (x, z) crosses the skin (or the `fixed` parts), bottom first."""
-        return self._dedupe(y0 + M.ray_hits(getattr(self, which), [x, y0, z], [0, 1.0, 0]))
+        key = (round(float(x), 4), round(float(z), 4), y0, which)
+        cache = self.__dict__.setdefault('_columns', {})
+        if key not in cache:
+            cache[key] = self._dedupe(y0 + M.ray_hits(getattr(self, which), [x, y0, z], [0, 1.0, 0]))
+        return cache[key]
 
     def inside(self, p, reach=60.0):
         """A point is inside the airframe when the airframe is found above it and to both sides."""
@@ -445,41 +504,78 @@ def swing_axis(v, s, ideal):
     return a, ang
 
 
-def make_slabs(st, s_axis, s_lo, s_hi, step=2.0, jump=2.0, most=4):
-    """Splits the well along its length into at most `most` sections, each with a flat ceiling just over the
-    stowed gear beneath it: a deep pocket for the wheel, a shallow one for the strut in a thin wing."""
-    edges = list(np.arange(s_lo, s_hi - 0.5, step)) + [s_hi]
-    bins = []
-    for i in range(len(edges) - 1):
-        a, b = edges[i], edges[i + 1]
-        sel = st[(st[:, s_axis] >= a - MARGIN) & (st[:, s_axis] <= b + MARGIN)]
-        top = (sel[:, 1].max() if len(sel) else st[:, 1].min()) + MARGIN
-        bins.append([a, b, top])
-    slabs = [bins[0]]
-    for a, b, t in bins[1:]:
-        if abs(t - slabs[-1][2]) <= jump:
-            slabs[-1][1] = b; slabs[-1][2] = max(slabs[-1][2], t)
-        else:
-            slabs.append([a, b, t])
-    while len(slabs) > most:
-        k = min(range(len(slabs) - 1), key=lambda i: abs(slabs[i][2] - slabs[i + 1][2]))
-        slabs[k] = [slabs[k][0], slabs[k + 1][1], max(slabs[k][2], slabs[k + 1][2])]
-        del slabs[k + 1]
-    return [tuple(float(v) for v in x) for x in slabs]
+class Well:
+    """The well as a heightfield on a 1 px grid: each cell under the stowed gear (grown by MARGIN) gets its own
+    ceiling just over the gear above it, so the pocket follows the gear (deep for the wheel, shallow for the
+    strut) and the airframe keeps its thickness everywhere else."""
 
+    def __init__(self, st):
+        self.x0 = math.floor(st[:, 0].min() - MARGIN) - 1
+        self.z0 = math.floor(st[:, 2].min() - MARGIN) - 1
+        cells = {}
+        for p in st:
+            for i in range(math.floor(p[0] - MARGIN - self.x0), math.floor(p[0] + MARGIN - self.x0 - 1e-9) + 1):
+                for j in range(math.floor(p[2] - MARGIN - self.z0), math.floor(p[2] + MARGIN - self.z0 - 1e-9) + 1):
+                    cells[(i, j)] = max(cells.get((i, j), -1e9), p[1] + CEIL_MARGIN)
+        # close small gaps along rows and columns (between a strut and a wheel rim), so no thin wall stands
+        # inside the pocket
+        for _ in range(2):
+            for axis in (0, 1):
+                lines = {}
+                for (i, j) in cells:
+                    lines.setdefault(j if axis == 0 else i, []).append(i if axis == 0 else j)
+                for k, vals in lines.items():
+                    vals.sort()
+                    for a, b in zip(vals, vals[1:]):
+                        if 1 < b - a <= 4:
+                            ta = cells[(a, k) if axis == 0 else (k, a)]
+                            tb = cells[(b, k) if axis == 0 else (k, b)]
+                            for v in range(a + 1, b):
+                                cells[(v, k) if axis == 0 else (k, v)] = max(ta, tb)
+        self.cells = {c: math.ceil(t * 4) / 4 for c, t in cells.items()}
 
-def slab_top(slabs, s_axis, p):
-    for s0, s1, t in slabs:
-        if s0 - 1e-6 <= p[s_axis] <= s1 + 1e-6:
-            return t
-    return -1e9
+    def rect(self, c):
+        i, j = c
+        return self.x0 + i, self.x0 + i + 1, self.z0 + j, self.z0 + j + 1
+
+    def cell_at(self, x, z):
+        return (math.floor(x - self.x0), math.floor(z - self.z0))
+
+    def top_at(self, x, z):
+        return self.cells.get(self.cell_at(x, z))
+
+    def bounds(self):
+        ii = [c[0] for c in self.cells]; jj = [c[1] for c in self.cells]
+        return (self.x0 + min(ii), self.x0 + max(ii) + 1, self.z0 + min(jj), self.z0 + max(jj) + 1)
+
+    def boxes(self):
+        """The cells merged into rectangles of one ceiling: (x0, x1, z0, z1, top)."""
+        runs = {}
+        for j in sorted({c[1] for c in self.cells}):
+            row = sorted(i for i, jj in self.cells if jj == j)
+            k = 0
+            while k < len(row):
+                t = self.cells[(row[k], j)]; e = k
+                while e + 1 < len(row) and row[e + 1] == row[e] + 1 and self.cells[(row[e + 1], j)] == t:
+                    e += 1
+                runs[(row[k], row[e], j)] = t
+                k = e + 1
+        out, used = [], set()
+        for (a, b, j), t in sorted(runs.items(), key=lambda r: (r[0][2], r[0][0])):
+            if (a, b, j) in used:
+                continue
+            j1 = j
+            while (a, b, j1 + 1) in runs and runs[(a, b, j1 + 1)] == t:
+                j1 += 1; used.add((a, b, j1))
+            out.append((self.x0 + a, self.x0 + b + 1, self.z0 + j, self.z0 + j1 + 1, t))
+        return out
 
 
 def in_well(plan, p):
-    lo, hi = plan['lo'], plan['hi']
-    if not (lo[0] - 1e-6 <= p[0] <= hi[0] + 1e-6 and lo[2] - 1e-6 <= p[2] <= hi[2] + 1e-6 and p[1] >= lo[1]):
+    if p[1] < plan['lo'][1]:
         return False
-    return p[1] <= slab_top(plan['slabs'], plan['s_axis'], p) + 1e-6
+    t = plan['well'].top_at(p[0], p[2])
+    return t is not None and p[1] <= t + 1e-6
 
 
 def plan_leg(g, skin, direction, others, cfg, accept=None):
@@ -556,52 +652,46 @@ def check_plan(g, skin, direction, s, H, a, ang, st, d, others, D=0.0, tw=0.0, u
     m = g.m
     s_axis = 2 if abs(s[2]) > 0.5 else 0           # the well runs along the swing
     c_axis = 2 - s_axis
-    lo = st.min(0) - MARGIN; hi = st.max(0) + MARGIN
-    slabs = make_slabs(st, s_axis, lo[s_axis], hi[s_axis])
+    well = Well(st)
     skin_min = 1e9
     inner = 0
-    cs = np.linspace(lo[c_axis], hi[c_axis], max(3, int((hi[c_axis] - lo[c_axis]) / 1.0) + 1))
-    for si, (s0, s1, top) in enumerate(slabs):
-        ss = np.linspace(s0, s1, max(2, int((s1 - s0) / 1.0) + 1))
-        for sv in ss:
-            for cv in cs:
-                x, z = (cv, sv) if s_axis == 2 else (sv, cv)
-                col = skin.column(x, z)
-                if not len(col):
-                    return None, f'no skin under the well at ({x:.1f},{z:.1f})'
-                allc = skin.column(x, z, which='all')
-                if allc[-1] < top + TOP_SKIN:
-                    return None, f'the well breaks through the top of the airframe at ({x:.1f},{z:.1f})'
-                if col[0] > top - 0.5:
-                    return None, f'skin above the ceiling at ({x:.1f},{z:.1f})'
-                fx = skin.column(x, z, which='fixed')
-                fx = fx[(fx > col[0] - 0.1) & (fx < top + 0.3)]
-                if len(fx):
-                    return None, f'the well reaches into a fixed part (cockpit, canopy) at ({x:.1f},{fx[0]:.1f},{z:.1f})'
-                inner += int(np.sum((col[1:] < top + 0.3)))
-                skin_min = min(skin_min, col[0])
-                edge = cv in (cs[0], cs[-1]) or (si == 0 and sv == ss[0]) or (si == len(slabs) - 1 and sv == ss[-1])
-                if edge and not skin.inside(np.array([x, top - 0.05, z])):
-                    return None, f'the well wall at ({x:.1f},{z:.1f}) would stand outside the airframe'
-    # the doors are cut from the skin under the well: it must be one gently curved surface, not a nacelle's side
-    # or a step, or a door would carry a wall with it
-    grid = {}
-    for s0, s1, top in slabs:
-        for sv in np.arange(s0, s1 + 1e-6, 1.0):
-            for cv in np.arange(lo[c_axis], hi[c_axis] + 1e-6, 1.0):
-                x, z = (cv, sv) if s_axis == 2 else (sv, cv)
-                col = skin.column(x, z)
-                grid[(round(sv, 3), round(cv, 3))] = col[0] if len(col) else None
-    for (sv, cv), y in grid.items():
-        for nb in ((round(sv + 1.0, 3), cv), (sv, round(cv + 1.0, 3))):
-            y2 = grid.get(nb)
-            if y is not None and y2 is not None and abs(y2 - y) > STEEP:
-                x, z = (cv, sv) if s_axis == 2 else (sv, cv)
-                return None, f'the skin under the well is too steep at ({x:.1f},{z:.1f}) for a door'
-    lo[1] = skin_min - 1.0
-    hi[1] = max(t for _, _, t in slabs)
+    for c, top in well.cells.items():
+        x0, x1, z0, z1 = well.rect(c)
+        for x, z in ((x0 + .5, z0 + .5), (x0 + .05, z0 + .05), (x1 - .05, z0 + .05), (x0 + .05, z1 - .05),
+                     (x1 - .05, z1 - .05)):
+            col = skin.column(x, z)
+            if not len(col):
+                return None, f'no skin under the well at ({x:.1f},{z:.1f})'
+            allc = skin.column(x, z, which='all')
+            if allc[-1] < top + TOP_SKIN:
+                return None, f'the well breaks through the top of the airframe at ({x:.1f},{z:.1f})'
+            if col[0] > top - 0.5:
+                return None, f'skin above the ceiling at ({x:.1f},{z:.1f})'
+            fx = skin.column(x, z, which='fixed')
+            fx = fx[(fx > col[0] - 0.1) & (fx < top + 0.3)]
+            if len(fx):
+                return None, f'the well reaches into a fixed part (cockpit, canopy) at ({x:.1f},{fx[0]:.1f},{z:.1f})'
+            inner += int(np.sum((col[1:] < top + 0.3)))
+            skin_min = min(skin_min, col[0])
+        # a side with no well cell beyond it is a wall: it must stand inside the airframe
+        i, j = c
+        for (di, dj), (x, z) in (((-1, 0), (x0 + .05, z0 + .5)), ((1, 0), (x1 - .05, z0 + .5)),
+                                 ((0, -1), (x0 + .5, z0 + .05)), ((0, 1), (x0 + .5, z1 - .05))):
+            if (i + di, j + dj) not in well.cells and not skin.inside(np.array([x, top - 0.05, z])):
+                return None, f'the well wall at ({x:.1f},{z:.1f}) would stand outside the airframe'
+        # the doors are cut from the skin under the well: it must be one gently curved surface, not a nacelle's
+        # side or a step, or a door would carry a wall with it
+        y = skin.skin_y(x0 + .5, z0 + .5)
+        for di, dj in ((1, 0), (0, 1)):
+            if (i + di, j + dj) in well.cells:
+                y2 = skin.skin_y(x0 + .5 + di, z0 + .5 + dj)
+                if y is not None and y2 is not None and abs(y2 - y) > STEEP:
+                    return None, f'the skin under the well is too steep at ({x0 + .5:.1f},{z0 + .5:.1f}) for a door'
+    bx0, bx1, bz0, bz1 = well.bounds()
+    lo = np.array([bx0, skin_min - 1.0, bz0]); hi = np.array([bx1, max(well.cells.values()), bz1])
+    boxes = [(np.array([b[0], lo[1], b[2]]), np.array([b[1], b[4], b[3]])) for b in well.boxes()]
     plan = {'leg': g.leg, 'dir': direction, 'H': H, 'axis': a, 'angle': ang, 'lo': lo, 'hi': hi,
-            'depth': d, 's': s, 'stowed': st, 'inner': inner, 'slabs': slabs, 's_axis': s_axis,
+            'depth': d, 's': s, 'stowed': st, 'inner': inner, 'well': well, 'boxes': boxes, 's_axis': s_axis,
             'c_axis': c_axis, 'slide': D, 'twist': tw, 'up': np.asarray(u, float)}
     # stores, control surfaces and other wells must stay clear
     for n, polys in m.polys.items():
@@ -610,15 +700,16 @@ def check_plan(g, skin, direction, s, H, a, ang, st, d, others, D=0.0, tw=0.0, u
         if 'suspended' in n or any(n in m.subtree(p['Bone']) for p in (m.rig.get('Surfaces') or [])
                                     + (m.rig.get('Flaps') or [])):
             for p in polys:
-                if M.overlaps_box(p, lo, hi, pad=0.1):
+                if any(M.overlaps_box(p, blo, bhi, pad=0.1) for blo, bhi in boxes):
                     return None, f'{n} intrudes into the well'
     for o in others:
-        if np.all(o['hi'] >= lo) and np.all(o['lo'] <= hi):
+        if any(np.all(ohi >= blo - 0.3) and np.all(olo <= bhi + 0.3) for olo, ohi in o['boxes'] for blo, bhi in boxes):
             return None, f'overlaps the well of {o["leg"]}'
     if not g.nose:          # a main gear's well stays on its own side of the centreline
         if (g.axle[0] >= 0 and lo[0] < 0.3) or (g.axle[0] < 0 and hi[0] > -0.3):
             return None, 'the well crosses the centreline'
-    # the swing: intermediate poses may hang below the skin or sit in the well, nowhere else
+    # the swing: intermediate poses may hang below the skin, sit in the well or pass hidden inside the airframe;
+    # gear poking out through the top or the side of the airframe is refused
     bad = 0
     for k in range(1, 8):
         Rk = rot(a, ang * k / 8)
@@ -626,8 +717,12 @@ def check_plan(g, skin, direction, s, H, a, ang, st, d, others, D=0.0, tw=0.0, u
             if in_well(plan, p):
                 continue
             y = skin.skin_y(p[0], p[2])
-            if y is not None and p[1] > y + 0.2:
-                bad += 1
+            if y is None or p[1] <= y + 0.2:
+                continue                         # below the skin, in the open air
+            bad += 1
+            allc = skin.column(round(p[0] * 2) / 2, round(p[2] * 2) / 2, which='all')
+            if not len(allc) or p[1] > allc[-1] - 0.1:
+                return None, f'the gear pokes out of the airframe mid-swing at {np.round(p, 1).tolist()}'
     plan['swing_clip'] = bad
     return plan, None
 
@@ -640,6 +735,27 @@ def preferences(g, cfg):
 
 
 # ------------------------------------------------------------------------------------------------ building
+
+def outermost(skin, poly):
+    """A skin piece inside a well is a door when it is the bottom layer of the skin anywhere over its area
+    (where the wing root runs into the fuselage, pieces overlap and each is the bottom only in places), or faces
+    the open air; pieces with skin below them all over (duct floors, bulkheads) are internal. A doubtful piece
+    stays a door: an extra panel inside an open well is harmless, a missing one is a hole."""
+    pts = np.array([q[0] for q in poly])
+    c = pts.mean(0)
+    col = skin.column(c[0], c[2])
+    if len(col) and col[0] > pts[:, 1].min() - 0.1:
+        return True
+    tris = M.tri_array([poly])
+    for p in [c] + [c + (v - c) * 0.85 for v in pts]:
+        h = M.ray_hits(tris, [p[0], -200.0, p[2]], [0, 1.0, 0])
+        if not len(h):
+            continue
+        col = skin.column(p[0], p[2])
+        if len(col) and h[0] - 200.0 < col[0] + 0.05:
+            return True
+    return skin.exterior(poly)
+
 
 def well_uv(vid):
     """A texel in a flat, dark-grey patch of the skin texture, for the well walls and ceiling."""
@@ -678,12 +794,8 @@ def build(m, plans, gears, skin):
         g = gears[plan['leg']]
         lo, hi = plan['lo'], plan['hi']
         sa, ca = plan['s_axis'], plan['c_axis']
-        slabs = plan['slabs']
-        boxes = []
-        for s0, s1, top in slabs:
-            blo, bhi = lo.copy(), hi.copy()
-            blo[sa], bhi[sa], bhi[1] = s0, s1, top
-            boxes.append((blo, bhi))
+        cells = plan['well']
+        boxes = plan['boxes']
         inside = []              # (bone, polygon) pieces of skin inside the well
         for n in skin_bones:
             for blo, bhi in boxes:
@@ -700,42 +812,63 @@ def build(m, plans, gears, skin):
                         cut_points += [c[0] for c in ins]
                 new_polys[n] = kept
         # pieces facing the open air become the doors; internal faces inside the well go
-        doors = [(n, p) for n, p in inside if skin.exterior(p)]
+        doors = [(n, p) for n, p in inside if outermost(skin, p)]
         dropped_inner = len(inside) - len(doors)
         piece = max(((AIRFRAME.match(n).group(1), M.area(p)) for n, p in doors), key=lambda t: t[1])[0] \
             if doors else AIRFRAME.match(skin_bones[0]).group(1)
+        # each door piece cut along the grid, so every edge on the outline borders a single cell
+        for axis, v0, v1 in ((0, lo[0], hi[0]), (2, lo[2], hi[2])):
+            for gv in np.arange(math.ceil(v0 - 1e-6), v1 + 1e-6, 1.0):
+                nxt = []
+                for n, p in doors:
+                    for q in M.split(p, axis, gv, False):
+                        if q is not None and M.area(q) > 1e-6:
+                            nxt.append((n, q))
+                doors = nxt
         # walls: from each door edge lying on the well's outline up to the ceiling over it
         well = []
         centre = (lo + hi) / 2
-        outline = [(ca, lo[ca]), (ca, hi[ca]), (sa, slabs[0][0]), (sa, slabs[-1][1])]
         for n, p in doors:
             k = len(p)
             for j in range(k):
                 a, b = p[j][0], p[(j + 1) % k][0]
-                for axis, val in outline:
-                    if abs(a[axis] - val) < 1e-6 and abs(b[axis] - val) < 1e-6:
-                        top = slab_top(slabs, sa, (a + b) / 2)
-                        if top - max(a[1], b[1]) < 1e-4:
-                            continue
-                        nrm = np.zeros(3); nrm[axis] = 1.0 if centre[axis] > val else -1.0
-                        at, bt = a.copy(), b.copy(); at[1] = top; bt[1] = top
-                        well.append([(b, nrm, uv), (a, nrm, uv), (at, nrm, uv), (bt, nrm, uv)])
+                for axis in (0, 2):
+                    gv = round(a[axis])
+                    if abs(a[axis] - gv) > 1e-6 or abs(b[axis] - gv) > 1e-6:
+                        continue
+                    mid = (a + b) / 2
+                    lo_side, hi_side = mid.copy(), mid.copy()
+                    lo_side[axis] -= 0.5; hi_side[axis] += 0.5
+                    tl, th = cells.top_at(lo_side[0], lo_side[2]), cells.top_at(hi_side[0], hi_side[2])
+                    if (tl is None) == (th is None):
+                        continue                 # an inner grid line, or not on the well at all
+                    top = tl if tl is not None else th
+                    if top - max(a[1], b[1]) < 1e-4:
+                        continue
+                    nrm = np.zeros(3); nrm[axis] = -1.0 if tl is not None else 1.0
+                    at, bt = a.copy(), b.copy(); at[1] = top; bt[1] = top
+                    well.append([(b, nrm, uv), (a, nrm, uv), (at, nrm, uv), (bt, nrm, uv)])
         dn = np.array([0, -1.0, 0])
-        for i, ((s0, s1, top), (blo, bhi)) in enumerate(zip(slabs, boxes)):
+        for blo, bhi in boxes:
+            top = bhi[1]
             q = [np.array([blo[0], top, blo[2]]), np.array([bhi[0], top, blo[2]]),
                  np.array([bhi[0], top, bhi[2]]), np.array([blo[0], top, bhi[2]])]
             well.append([(v, dn, uv) for v in q])
-            if i + 1 < len(slabs):           # the step between this ceiling and the next one
-                t2 = slabs[i + 1][2]
-                if abs(t2 - top) > 1e-4:
-                    y0, y1 = min(top, t2), max(top, t2)
-                    nrm = np.zeros(3); nrm[sa] = 1.0 if t2 > top else -1.0
-                    c0, c1 = lo[ca], hi[ca]
-                    r = []
-                    for cv, yv in ((c0, y0), (c1, y0), (c1, y1), (c0, y1)):
-                        v = np.zeros(3); v[sa] = s1; v[ca] = cv; v[1] = yv
-                        r.append((v, nrm, uv))
-                    well.append(r)
+        # risers: the steps between neighbouring cells' ceilings
+        for (i, j), t in cells.cells.items():
+            x0, x1, z0, z1 = cells.rect((i, j))
+            for di, dj in ((1, 0), (0, 1)):
+                t2 = cells.cells.get((i + di, j + dj))
+                if t2 is None or abs(t2 - t) < 1e-4:
+                    continue
+                y0, y1 = min(t, t2), max(t, t2)
+                if di:
+                    nrm = np.array([1.0 if t2 > t else -1.0, 0, 0])
+                    vs = [(x1, y0, z0), (x1, y0, z1), (x1, y1, z1), (x1, y1, z0)]
+                else:
+                    nrm = np.array([0, 0, 1.0 if t2 > t else -1.0])
+                    vs = [(x0, y0, z1), (x1, y0, z1), (x1, y1, z1), (x0, y1, z1)]
+                well.append([(np.array(v, float), nrm, uv) for v in vs])
         well = [w for w in (M.clean(w) for w in well) if w]
         new_polys['wreck_%s__hull' % piece] = new_polys.get('wreck_%s__hull' % piece, []) + well
         cut_points += [c[0] for w in well for c in w]
@@ -751,9 +884,9 @@ def build(m, plans, gears, skin):
         for k, polys in halves.items():
             if not polys:
                 continue
-            edge = lo[ca] if k == 0 else hi[ca]
-            on = [c[0] for p in polys for c in p if abs(c[0][ca] - edge) < 1e-6]
             pts = np.array([c[0] for p in polys for c in p])
+            edge = pts[:, ca].min() if k == 0 else pts[:, ca].max()      # the half's own outer edge
+            on = [c[0] for p in polys for c in p if abs(c[0][ca] - edge) < 1e-6]
             pivot = np.zeros(3)
             pivot[ca] = edge
             pivot[1] = float(np.mean([q[1] for q in on])) if on else float(pts[:, 1].max())
@@ -774,7 +907,7 @@ def build(m, plans, gears, skin):
                                  'Axis': [float(v) for v in axis], 'OpenAngleDegrees': best[0] * OPEN_DEG})
         retracts[g.leg] = plan
         report.append(f"{g.leg}: {plan['dir']} {plan['angle']:+.0f} deg, shortens {plan['slide']:g} px, wheel twist {plan['twist']:+.0f}, hinge {np.round(plan['H'], 1).tolist()}, "
-                      f"well {np.round(lo, 1).tolist()}..{np.round(hi, 1).tolist()} in {len(slabs)} section(s); "
+                      f"well {np.round(lo, 1).tolist()}..{np.round(hi, 1).tolist()} in {len(boxes)} box(es); "
                       f"{len(doors)} skin pieces -> 2 doors, {dropped_inner} inner faces removed, "
                       f"{g.dropped} open-door faces dropped, {g.taken} strut faces taken from old door bones, "
                       f"{len(well)} well faces, swing clips {plan['swing_clip']}")
@@ -822,7 +955,9 @@ def apply(m, new_polys, new_bones, door_entries, retracts, gears):
                         e['Parent'] = slide
         for n in g.mesh_bones:
             if n in g.wheel_bones:
-                continue                         # the wheels themselves stay exactly as they are
+                if n in g.slimmed:               # narrowed tyres; otherwise the wheels stay exactly as they are
+                    M.write_polys(m.bones[n]['poly_mesh'], [q for p in m.polys[n] for q in M.triangulate(p)])
+                continue
             if n in g.direct:
                 polys = upper.get(n, []) if slide else upper.get(n, []) + lower.get(n, [])
                 clipped = []
@@ -901,7 +1036,7 @@ def run(vid, do_write=False, cfg_all=None, out_dir=None):
         return None, ['already has retracting gear']
     skin = Skin(m)
     loose, claimed = loose_pieces(m), set()
-    gears = {e['Bone']: Gear(m, e, loose, claimed) for e in legs}
+    gears = {e['Bone']: Gear(m, e, loose, claimed, cfg.get('tyre_ratio', TYRE_RATIO)) for e in legs}
     plans, notes = [], []
 
     def mirror_of(g):
@@ -950,6 +1085,11 @@ def run(vid, do_write=False, cfg_all=None, out_dir=None):
             done.add(twin.leg)
     new_polys, new_bones, doors, retracts, report = build(m, plans, gears, skin)
     apply(m, new_polys, new_bones, doors, retracts, gears)
+    import holes                         # the finished model is checked for gaps before anything is written
+    gaps = holes.check(vid, geo=m.geo, asset=m.asset)
+    if gaps:
+        return None, notes + report + [f'refused: {len(gaps)} point(s) where the well shows through the shut '
+                                       f'doors, e.g. {gaps[0]}']
     if do_write or out_dir:
         write(m, out_dir)
     return m, notes + report
