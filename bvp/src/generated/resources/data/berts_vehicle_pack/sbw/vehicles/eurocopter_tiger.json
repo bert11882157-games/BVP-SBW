@@ -224,7 +224,7 @@
         "Profile": "berts_vehicle_pack:ah_1g_cobra/rocket/default"
       },
       "Spread": 0.25,
-      "Name": "2.75 in FFAR",
+      "Name": "2.75 in FFAR (AI)",
       "RPM": 600,
       "Damage": 100,
       "ExplosionDamage": 0,
@@ -527,7 +527,7 @@
       "RecoilForce": 0.16,
       "Spread": 0.42,
       "ProjectileLife": 45,
-      "Name": "12.7 mm FN M3P",
+      "Name": "12.7 mm FN M3P (AI)",
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_aa",
@@ -879,7 +879,7 @@
       "RecoilForce": 0.16,
       "Spread": 0.42,
       "ProjectileLife": 45,
-      "Name": "12.7 mm FN M3P",
+      "Name": "12.7 mm FN M3P (AI)",
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_aa",
@@ -1231,7 +1231,7 @@
         "Profile": "berts_vehicle_pack:ah_1g_cobra/rocket/default"
       },
       "Spread": 0.25,
-      "Name": "2.75 in FFAR",
+      "Name": "2.75 in FFAR (AI)",
       "RPM": 600,
       "Damage": 100,
       "ExplosionDamage": 0,
@@ -1342,7 +1342,7 @@
         "Profile": "berts_vehicle_pack:ah_1g_cobra/rocket/default"
       },
       "Spread": 0.25,
-      "Name": "2.75 in FFAR",
+      "Name": "2.75 in FFAR (AI)",
       "RPM": 600,
       "Damage": 100,
       "ExplosionDamage": 0,
@@ -1645,7 +1645,7 @@
       "RecoilForce": 0.16,
       "Spread": 0.42,
       "ProjectileLife": 45,
-      "Name": "12.7 mm FN M3P",
+      "Name": "12.7 mm FN M3P (AI)",
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_aa",
@@ -1997,7 +1997,7 @@
       "RecoilForce": 0.16,
       "Spread": 0.42,
       "ProjectileLife": 45,
-      "Name": "12.7 mm FN M3P",
+      "Name": "12.7 mm FN M3P (AI)",
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_shell_aa",
@@ -2349,7 +2349,7 @@
         "Profile": "berts_vehicle_pack:ah_1g_cobra/rocket/default"
       },
       "Spread": 0.25,
-      "Name": "2.75 in FFAR",
+      "Name": "2.75 in FFAR (AI)",
       "RPM": 600,
       "Damage": 100,
       "ExplosionDamage": 0,
@@ -2527,6 +2527,19 @@
         0.0,
         2.9,
         3.65
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "gunner_sight": {
+      "Parent": "Vehicle",
+      "Position": [
+        0.0,
+        6.88,
+        0.55
       ],
       "Direction": [
         0,
@@ -3151,19 +3164,6 @@
         -1.8928,
         1.9072,
         1.1309
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
-    "gunner_sight": {
-      "Parent": "Vehicle",
-      "Position": [
-        0.0,
-        6.88,
-        0.55
       ],
       "Direction": [
         0,

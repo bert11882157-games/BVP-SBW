@@ -34,7 +34,7 @@ and rates (TurretYawRange / PassengerWeaponStationPitchRange ...) in the vehicle
 is touched, so the cockpit driver's attachments, seats' eyes and cameras stay as they are, except that WeaponPairs
 entries naming a weapon the vehicle or that seat no longer has are dropped.
 """
-import copy, json, math, os, sys
+import copy, json, math, os, re, sys
 import numpy as np
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -44,6 +44,7 @@ import catalog as C
 import meshlib
 from meshlib import anchor
 
+REPO = os.path.join(HERE, '..', '..')
 GEN = os.path.join(HERE, '..', '..', 'bvp', 'src', 'generated', 'resources')
 ASSETS = os.path.join(GEN, 'assets', 'berts_vehicle_pack')
 DATA = os.path.join(GEN, 'data', 'berts_vehicle_pack', 'sbw')
@@ -316,13 +317,49 @@ STORES['r60m_x1'] = (r60m_single, None)
 EXISTING = {'r60_x1': f'{NS}:r60'}
 
 
+# bert (2026-10-23): a munition model we generated is marked " (AI)" in its in-game name, so generated models can be
+# told apart from human-made ones. The heli_ models are generated here; the reused fixed-wing models are not.
+AI_MARK = ' (AI)'
+
+
+def generated(model):
+    return model.rsplit('/', 1)[-1].startswith('heli_')
+
+
+def ai(name):
+    """`name` marked as a generated model; a lang key is resolved to its English text first"""
+    if re.fullmatch(r'[a-z0-9_]+(\.[a-z0-9_]+)+', name):
+        ns = name.split('.')[1]
+        lang = (os.path.join(ASSETS, 'lang', 'en_us.json') if ns == NS else
+                os.path.join(REPO, 'sbw', 'src', 'main', 'resources', 'assets', ns, 'lang', 'en_us.json'))
+        name = load(lang)[name]
+    return name if name.endswith(AI_MARK) else name + AI_MARK
+
+
+def store_generated(doc):
+    return generated(doc['Model']) or generated(doc.get('RackAdapter', {}).get('Model', ''))
+
+
+def check_ai_marks():
+    """every store showing a generated model carries the mark, wherever it was written from"""
+    root = os.path.join(DATA, 'aircraft_stores')
+    for d, _, names in os.walk(root):
+        for n in names:
+            doc = load(os.path.join(d, n))
+            if n.endswith('.json') and 'Model' in doc and store_generated(doc) and not doc['Name'].endswith(AI_MARK):
+                raise ValueError(f'{os.path.relpath(os.path.join(d, n), root)}: generated model, name lacks{AI_MARK}')
+
+
 def store_id(key):
     return EXISTING.get(key) or f'{NS}:heli/{key}'
 
 
 def write_stores():
     for key, (fn, _) in STORES.items():
-        write_json(os.path.join(DATA, 'aircraft_stores', 'heli', key + '.json'), fn())
+        doc = fn()
+        if store_generated(doc):
+            doc['Name'] = ai(doc['Name'])
+        write_json(os.path.join(DATA, 'aircraft_stores', 'heli', key + '.json'), doc)
 
 
 # ------------------------------------------------------------------------------------------------ profiles
@@ -335,7 +372,7 @@ def profile(name, title, weapon_id, round_id, calibre_mm, pen, tandem, speed_mps
             sound=None, tnt=None, damage=None, base='falanga_9m17m', propulsion=None):
     g = load(os.path.join(DATA, 'guns', 'aircraft_stores', base + '.json'))
     p = load(os.path.join(DATA, 'projectile_profiles', 'aircraft_stores', base + '.json'))
-    g['Name'] = title
+    g['Name'] = ai(title) if generated(model) else title
     g['Projectile']['Profile'] = f'{NS}:aircraft_stores/{name}'
     if damage:
         g['Damage'] = g['ExplosionDamage'] = damage
@@ -454,6 +491,8 @@ def channel(vid, mount, key, family, suffix='', pick=None):
         if gun is None:
             raise ValueError(f'{vid}: no War Thunder gun for the {family} pod')
         gun.apply(w, DATA, PROFILES)
+    if generated(store['Model']):
+        w['Name'] = ai(w['Name'])
     s = side(pos[0])
     att = {f'{name}_{s}_{k}': {'Parent': 'Vehicle', 'Position': [round(float(c), 4) for c in m],
                                'Direction': [0, 0, 1]} for k, m in enumerate(muzzles)}
@@ -736,6 +775,7 @@ def main(argv):
         build(vid, HELIS[vid])
         print('built', vid)
     B.write_profiles(PROFILES, DATA, write_json)
+    check_ai_marks()
 
 
 if __name__ == '__main__':

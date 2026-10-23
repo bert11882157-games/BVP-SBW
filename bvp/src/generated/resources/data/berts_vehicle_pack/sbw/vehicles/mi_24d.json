@@ -1193,7 +1193,7 @@
       },
       "AddShooterDeltaMovement": true,
       "Spread": 0,
-      "Name": "weapon.berts_vehicle_pack.s_5_rocket_pod",
+      "Name": "S-5 rocket pod (AI)",
       "RPM": 600,
       "Damage": 100,
       "ExplosionDamage": 0,
@@ -1654,7 +1654,7 @@
       },
       "AddShooterDeltaMovement": true,
       "Spread": 0.32,
-      "Name": "S-24B rocket",
+      "Name": "S-24B rocket (AI)",
       "RPM": 600,
       "Damage": 500,
       "ExplosionDamage": 115,
@@ -1738,7 +1738,7 @@
       "Spread": 0.12,
       "SoundRadius": 8,
       "ExplosionDamage": 0,
-      "Name": "23 mm GSh-23L (UPK-23-250)",
+      "Name": "23 mm GSh-23L (UPK-23-250) (AI)",
       "RPM": 3400,
       "Magazine": 250,
       "Damage": 191.66666666666669,
@@ -2020,7 +2020,7 @@
       },
       "AddShooterDeltaMovement": true,
       "Spread": 0,
-      "Name": "weapon.berts_vehicle_pack.s_5_rocket_pod",
+      "Name": "S-5 rocket pod (AI)",
       "RPM": 600,
       "Damage": 100,
       "ExplosionDamage": 0,
@@ -2481,7 +2481,7 @@
       },
       "AddShooterDeltaMovement": true,
       "Spread": 0.32,
-      "Name": "S-24B rocket",
+      "Name": "S-24B rocket (AI)",
       "RPM": 600,
       "Damage": 500,
       "ExplosionDamage": 115,
@@ -2565,7 +2565,7 @@
       "Spread": 0.12,
       "SoundRadius": 8,
       "ExplosionDamage": 0,
-      "Name": "23 mm GSh-23L (UPK-23-250)",
+      "Name": "23 mm GSh-23L (UPK-23-250) (AI)",
       "RPM": 3400,
       "Magazine": 250,
       "Damage": 191.66666666666669,
@@ -2847,7 +2847,7 @@
       },
       "AddShooterDeltaMovement": true,
       "Spread": 0,
-      "Name": "weapon.berts_vehicle_pack.s_5_rocket_pod",
+      "Name": "S-5 rocket pod (AI)",
       "RPM": 600,
       "Damage": 100,
       "ExplosionDamage": 0,
@@ -3308,7 +3308,7 @@
       },
       "AddShooterDeltaMovement": true,
       "Spread": 0.32,
-      "Name": "S-24B rocket",
+      "Name": "S-24B rocket (AI)",
       "RPM": 600,
       "Damage": 500,
       "ExplosionDamage": 115,
@@ -3392,7 +3392,7 @@
       "Spread": 0.12,
       "SoundRadius": 8,
       "ExplosionDamage": 0,
-      "Name": "23 mm GSh-23L (UPK-23-250)",
+      "Name": "23 mm GSh-23L (UPK-23-250) (AI)",
       "RPM": 3400,
       "Magazine": 250,
       "Damage": 191.66666666666669,
@@ -3674,7 +3674,7 @@
       },
       "AddShooterDeltaMovement": true,
       "Spread": 0,
-      "Name": "weapon.berts_vehicle_pack.s_5_rocket_pod",
+      "Name": "S-5 rocket pod (AI)",
       "RPM": 600,
       "Damage": 100,
       "ExplosionDamage": 0,
@@ -4135,7 +4135,7 @@
       },
       "AddShooterDeltaMovement": true,
       "Spread": 0.32,
-      "Name": "S-24B rocket",
+      "Name": "S-24B rocket (AI)",
       "RPM": 600,
       "Damage": 500,
       "ExplosionDamage": 115,
@@ -4219,7 +4219,7 @@
       "Spread": 0.12,
       "SoundRadius": 8,
       "ExplosionDamage": 0,
-      "Name": "23 mm GSh-23L (UPK-23-250)",
+      "Name": "23 mm GSh-23L (UPK-23-250) (AI)",
       "RPM": 3400,
       "Magazine": 250,
       "Damage": 191.66666666666669,
@@ -4684,6 +4684,19 @@
         0,
         0.09375,
         0.8462499999999995
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "gunner_sight": {
+      "Parent": "Vehicle",
+      "Position": [
+        -0.62,
+        0.78,
+        8.1
       ],
       "Direction": [
         0,
@@ -6452,19 +6465,6 @@
         -3.1875,
         2.0338,
         2.0088
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
-    "gunner_sight": {
-      "Parent": "Vehicle",
-      "Position": [
-        -0.62,
-        0.78,
-        8.1
       ],
       "Direction": [
         0,

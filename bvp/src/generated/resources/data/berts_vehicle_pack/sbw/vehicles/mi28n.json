@@ -581,7 +581,7 @@
       },
       "AddShooterDeltaMovement": true,
       "Spread": 0,
-      "Name": "weapon.berts_vehicle_pack.s_8ko_rockets",
+      "Name": "S-8KO rockets (AI)",
       "RPM": 600,
       "Damage": 100,
       "ExplosionDamage": 0,
@@ -898,7 +898,7 @@
       },
       "AddShooterDeltaMovement": true,
       "Spread": 0.32,
-      "Name": "weapon.berts_vehicle_pack.s_13_rockets",
+      "Name": "S-13 (AI)",
       "RPM": 600,
       "Damage": 175,
       "ExplosionDamage": 115,
@@ -1035,7 +1035,7 @@
       },
       "AddShooterDeltaMovement": true,
       "Spread": 0,
-      "Name": "weapon.berts_vehicle_pack.s_8ko_rockets",
+      "Name": "S-8KO rockets (AI)",
       "RPM": 600,
       "Damage": 100,
       "ExplosionDamage": 0,
@@ -1352,7 +1352,7 @@
       },
       "AddShooterDeltaMovement": true,
       "Spread": 0.32,
-      "Name": "weapon.berts_vehicle_pack.s_13_rockets",
+      "Name": "S-13 (AI)",
       "RPM": 600,
       "Damage": 175,
       "ExplosionDamage": 115,
@@ -1484,7 +1484,7 @@
       "Spread": 0.12,
       "SoundRadius": 8,
       "ExplosionDamage": 0,
-      "Name": "23 mm GSh-23L (UPK-23-250)",
+      "Name": "23 mm GSh-23L (UPK-23-250) (AI)",
       "RPM": 3400,
       "Magazine": 250,
       "Damage": 191.66666666666669,
@@ -1766,7 +1766,7 @@
       },
       "AddShooterDeltaMovement": true,
       "Spread": 0,
-      "Name": "weapon.berts_vehicle_pack.s_8ko_rockets",
+      "Name": "S-8KO rockets (AI)",
       "RPM": 600,
       "Damage": 100,
       "ExplosionDamage": 0,
@@ -2083,7 +2083,7 @@
       },
       "AddShooterDeltaMovement": true,
       "Spread": 0.32,
-      "Name": "weapon.berts_vehicle_pack.s_13_rockets",
+      "Name": "S-13 (AI)",
       "RPM": 600,
       "Damage": 175,
       "ExplosionDamage": 115,
@@ -2215,7 +2215,7 @@
       "Spread": 0.12,
       "SoundRadius": 8,
       "ExplosionDamage": 0,
-      "Name": "23 mm GSh-23L (UPK-23-250)",
+      "Name": "23 mm GSh-23L (UPK-23-250) (AI)",
       "RPM": 3400,
       "Magazine": 250,
       "Damage": 191.66666666666669,
@@ -2497,7 +2497,7 @@
       },
       "AddShooterDeltaMovement": true,
       "Spread": 0,
-      "Name": "weapon.berts_vehicle_pack.s_8ko_rockets",
+      "Name": "S-8KO rockets (AI)",
       "RPM": 600,
       "Damage": 100,
       "ExplosionDamage": 0,
@@ -2814,7 +2814,7 @@
       },
       "AddShooterDeltaMovement": true,
       "Spread": 0.32,
-      "Name": "weapon.berts_vehicle_pack.s_13_rockets",
+      "Name": "S-13 (AI)",
       "RPM": 600,
       "Damage": 175,
       "ExplosionDamage": 115,
@@ -3990,6 +3990,19 @@
         0.0,
         3.92,
         3.45
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "gunner_sight": {
+      "Parent": "Vehicle",
+      "Position": [
+        0.0,
+        2.75,
+        6.76
       ],
       "Direction": [
         0,
@@ -5316,19 +5329,6 @@
         -3.4277,
         1.8404,
         0.2673
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
-    "gunner_sight": {
-      "Parent": "Vehicle",
-      "Position": [
-        0.0,
-        2.75,
-        6.76
       ],
       "Direction": [
         0,

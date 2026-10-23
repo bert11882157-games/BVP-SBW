@@ -480,7 +480,7 @@
       },
       "AddShooterDeltaMovement": true,
       "Spread": 0,
-      "Name": "weapon.berts_vehicle_pack.s_8ko_rockets",
+      "Name": "S-8KO rockets (AI)",
       "RPM": 600,
       "Damage": 100,
       "ExplosionDamage": 0,
@@ -792,7 +792,7 @@
       "Spread": 0.12,
       "SoundRadius": 8,
       "ExplosionDamage": 0,
-      "Name": "23 mm GSh-23L (UPK-23-250)",
+      "Name": "23 mm GSh-23L (UPK-23-250) (AI)",
       "RPM": 3400,
       "Magazine": 250,
       "Damage": 191.66666666666669,
@@ -1074,7 +1074,7 @@
       },
       "AddShooterDeltaMovement": true,
       "Spread": 0,
-      "Name": "weapon.berts_vehicle_pack.s_8ko_rockets",
+      "Name": "S-8KO rockets (AI)",
       "RPM": 600,
       "Damage": 100,
       "ExplosionDamage": 0,
@@ -1386,7 +1386,7 @@
       "Spread": 0.12,
       "SoundRadius": 8,
       "ExplosionDamage": 0,
-      "Name": "23 mm GSh-23L (UPK-23-250)",
+      "Name": "23 mm GSh-23L (UPK-23-250) (AI)",
       "RPM": 3400,
       "Magazine": 250,
       "Damage": 191.66666666666669,
@@ -1668,7 +1668,7 @@
       },
       "AddShooterDeltaMovement": true,
       "Spread": 0,
-      "Name": "weapon.berts_vehicle_pack.s_8ko_rockets",
+      "Name": "S-8KO rockets (AI)",
       "RPM": 600,
       "Damage": 100,
       "ExplosionDamage": 0,
@@ -1980,7 +1980,7 @@
       "Spread": 0.12,
       "SoundRadius": 8,
       "ExplosionDamage": 0,
-      "Name": "23 mm GSh-23L (UPK-23-250)",
+      "Name": "23 mm GSh-23L (UPK-23-250) (AI)",
       "RPM": 3400,
       "Magazine": 250,
       "Damage": 191.66666666666669,
@@ -2262,7 +2262,7 @@
       },
       "AddShooterDeltaMovement": true,
       "Spread": 0,
-      "Name": "weapon.berts_vehicle_pack.s_8ko_rockets",
+      "Name": "S-8KO rockets (AI)",
       "RPM": 600,
       "Damage": 100,
       "ExplosionDamage": 0,
@@ -2574,7 +2574,7 @@
       "Spread": 0.12,
       "SoundRadius": 8,
       "ExplosionDamage": 0,
-      "Name": "23 mm GSh-23L (UPK-23-250)",
+      "Name": "23 mm GSh-23L (UPK-23-250) (AI)",
       "RPM": 3400,
       "Magazine": 250,
       "Damage": 191.66666666666669,
@@ -3902,6 +3902,19 @@
         1
       ]
     },
+    "shkval_sight": {
+      "Parent": "Vehicle",
+      "Position": [
+        0.0,
+        1.85,
+        7.5
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
     "S8S1_left_0": {
       "Parent": "Vehicle",
       "Position": [
@@ -4987,19 +5000,6 @@
         -3.9979,
         1.4462,
         1.79
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
-    "shkval_sight": {
-      "Parent": "Vehicle",
-      "Position": [
-        0.0,
-        1.85,
-        7.5
       ],
       "Direction": [
         0,
