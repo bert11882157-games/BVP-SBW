@@ -52,9 +52,9 @@ GRIP_R = (-13.5, -38.4, -1.4)
 STAND = (-12.0, -17.0, 0.0)         # the gunner's feet on a platform: his eye (27.3 units up) comes to the sight eye
 EYE_UP = 13.9 / SCALE               # a seated rider's eye is 25.9 px over the feet, the pelvis 12 px
 SEATS = {                           # pelvis points of seated riders (toolbox)
-    'driver': (6.0, -9.5, 10.0), 'commander': (6.0, -9.5, -10.0),
-    'rear_l1': (-16.0, -9.5, 12.0), 'rear_r1': (-16.0, -9.5, -12.0),
-    'rear_l2': (-32.0, -9.5, 12.0), 'rear_r2': (-32.0, -9.5, -12.0),
+    'driver': (6.0, -14.5, 10.0), 'commander': (6.0, -14.5, -10.0),
+    'rear_l1': (-16.0, -14.5, 12.0), 'rear_r1': (-16.0, -14.5, -12.0),
+    'rear_l2': (-32.0, -14.5, 12.0), 'rear_r2': (-32.0, -14.5, -12.0),
 }
 ENGINE_TB = ((20.0, -20.0, -17.0), (52.0, 4.0, 17.0))
 # exhaust: the model has no pipe. The tail pipe leaves under the rear left corner: the bottom edge of the rear left plate (element 82:
