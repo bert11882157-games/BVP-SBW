@@ -53,7 +53,9 @@ SEEDS = {}
 # vid -> [(x, y, z, r)] in blocks for the +X engine (the mirror engine is derived), r = (half width + half height) / 2 of the
 # rear-most ring of the tailpipe's vertices. mig_25pd: the rear plane z -9.5725 of wreck_fuselage_3__hull, vertices x 0.0678 .. 1.537
 # (half width 0.7346), y 1.6048 .. 3.2548 (half height 0.825, the fin-root bump at y 3.39 left out): centre (0.8024, 2.4298).
-EXITS = {'mig_25pd': [(0.8024, 2.4298, -9.5725, 0.780)]}
+EXITS = {'mig_25pd': [(0.8024, 2.4298, -9.5725, 0.780)],
+         # F-102A: the J57 burner can ends at source z 195; the exit petals run on to the tail plane z 209 around a hole of 12 units (0.60 m) radius, centre y 40.1 px
+         'f_102a': [(0.0, 2.508, -9.4912, 0.620)]}
 
 
 def load_bones(vid):
