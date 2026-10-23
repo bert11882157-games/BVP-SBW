@@ -36,6 +36,8 @@ Usage: python tools/cockpit_models/f_22a.py [--dry-run]
 """
 import json, math, os, sys
 import numpy as np
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import throttle_lib
 from PIL import Image, ImageDraw, ImageFont
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -51,6 +53,7 @@ TEX = os.path.join(GEN, 'assets/berts_vehicle_pack/textures/entity/f_22a.png')
 TEX_DEAD = os.path.join(GEN, 'assets/berts_vehicle_pack/textures/entity_dead/f_22a.png')
 
 BONE = 'wreck_fuselage_0__cockpit'
+THR = []                                 # the throttle levers (throttle_lib), one bone each
 SOURCE_BONES = ('wreck_fuselage_0__hull', 'wreck_fuselage_1__hull')
 STICK_BONE = 'wreck_fuselage_0__control_stick_pitch'
 ATLAS = [(0, 700, 2048, 2200)]        # free texture area (x, y, w, h): no UV of the model, its fallback or the wreck lands here
@@ -807,15 +810,10 @@ def build(atlas, lamp_sets, nose_y):
         m.box([s * 0.13, -0.86, 0.54], (X, Y, Z), (0.014, 0.035, 0.07), sw['dgrey'])
 
     # -- throttles (left console): the quadrant with two levers and the grips with their thumb switches
+    # The two levers are their own bones (throttle_lever_1 / _2) hinged under the console top, modelled at idle (throttle_lib).
     tz = 0.28
-    m.box([0.378, CONSOLE_Y + 0.011, tz], (X, Y, Z), (0.080, 0.011, 0.15), sw['dgrey'])
-    lev = (X, unit([0, 1, 0.25]), unit([0, -0.25, 1]))
-    gax = (X, unit([0, 1, 0.45]), unit([0, -0.45, 1]))
-    for xl in (0.345, 0.405):
-        m.box([xl, CONSOLE_Y + 0.07, tz + 0.04], lev, (0.009, 0.060, 0.010), sw['metal'])
-        m.box([xl, CONSOLE_Y + 0.140, tz + 0.075], gax, (0.020, 0.044, 0.034), sw['black'])
-        m.box([xl, CONSOLE_Y + 0.188, tz + 0.090], gax, (0.017, 0.008, 0.028), sw['dgrey'])
-        m.box(np.array([xl, CONSOLE_Y + 0.152, tz + 0.075]) - gax[2] * 0.036 + gax[1] * 0.012, gax, (0.006, 0.006, 0.004), sw['red'])
+    THR.clear()
+    THR.extend(throttle_lib.jet_levers(m, Mesh, sw, 'f22', x=0.378, top_y=CONSOLE_Y, z_idle=tz - 0.07, n=2, pitch=0.060))
     # switch rows on both console tops
     for s in (1, -1):
         for zr in (-0.30, -0.22, -0.14, -0.06, 0.50, 0.57):
@@ -1052,6 +1050,7 @@ def main(argv):
     at = next(i for i, b in enumerate(bones) if b['name'] == SOURCE_BONES[0]) + 1
     bones.insert(at, {'name': BONE, 'parent': 'hull', 'pivot': list(hull['pivot']), 'poly_mesh': pm})
     g['bones'] = bones
+    thr = throttle_lib.add_bones(g['bones'], THR, BONE, EYE)
     # the stick: its three bones' pivots to the side stick's foot (model pixels)
     foot_px = [round(float((foot + EYE)[0]) * 16, 5), round(float((foot + EYE)[1]) * 16, 5),
                round(-float((foot + EYE)[2]) * 16, 5)]
@@ -1079,7 +1078,7 @@ def main(argv):
         tri = [list(map(float, p)) for p in t[keep].reshape(-1, 3)]
         cg['Triangles'] = [round(v, 4) + 0.0 for p in tri + both for v in p]
     print(f'f_22a: {removed} old interior faces removed (of them {sum(len(v) for v in twins.values())} doubled faces); new cockpit {len(pm["polys"])} faces, {len(gauges)} game gauges, '
-          f'{len(displays)} display(s), HUD combiner {len(glass) // 3} triangles; stick foot {foot_px} px; '
+          f'{len(displays)} display(s), HUD combiner {len(glass) // 3} triangles; stick foot {foot_px} px; throttle bones {[(n, p) for n, p, _ in thr]}; '
           f'atlas {atlas.used()} of {sum(a[2] * a[3] for a in ATLAS)} texels')
     if dry:
         return
