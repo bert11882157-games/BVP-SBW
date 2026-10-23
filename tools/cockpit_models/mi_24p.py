@@ -394,18 +394,18 @@ PANEL_TOP_G, PANEL_BOT_G = 2.120, 1.640
 HALF_P, HALF_G = 0.55, 0.27
 # the pilot's panel follows the canopy's narrowing: a wide lower band (the breaker banks, radio, caution grid) under the upper band of
 # flight and engine instruments: (bottom y, top y, half width)
-PILOT_BANDS = [(2.120, 2.420, 0.55), (2.420, 2.720, 0.43)]
+PILOT_BANDS = [(2.120, 2.420, 0.55), (2.420, 2.720, 0.34)]
 
 # (name, a, y, spec, caption) spec: ('game', KIND, diameter) | ('paint_disc', KIND, diameter) | ('annunciator', w, h) |
 # ('paint_rect', w, h) | ('display', KIND, width, style)
 PILOT_LAYOUT = [
     # upper band: the flight instruments, then two rows of engine and rotor dials
-    ('ias',   -0.325, 2.640, ('game', 'AIRSPEED', 0.085), 'УС'),
+    ('ias',   -0.300, 2.640, ('game', 'AIRSPEED', 0.085), 'УС'),
     ('alt',   -0.215, 2.640, ('game', 'ALTIMETER', 0.085), 'ВД'),
     ('adi',   -0.085, 2.640, ('game', 'ATTITUDE', 0.115), 'КПП'),
     ('hsi',    0.085, 2.640, ('game', 'HEADING', 0.115), 'НПП'),
     ('vsi',    0.215, 2.640, ('game', 'VVI', 0.085), 'ВАР'),
-    ('turn',   0.325, 2.640, ('game', 'TURN_SLIP', 0.075), 'ЭУП'),
+    ('turn',   0.300, 2.640, ('game', 'TURN_SLIP', 0.075), 'ЭУП'),
     ('nr',    -0.350, 2.505, ('game', 'ROTOR_RPM', 0.070), 'НВ'),
     ('n1l',   -0.250, 2.505, ('game', 'ENGINE_RPM', 0.070), 'ЛЕВ'),
     ('n1r',   -0.150, 2.505, ('game', 'ENGINE_RPM', 0.070), 'ПРАВ'),
@@ -765,20 +765,20 @@ def build(atlas):
     m.box([0, (SLAB_BOT + FLOOR_P) / 2, (4.74 + PF.z(FLOOR_P)) / 2], (X, Y, Z), (WALL + 0.015, (FLOOR_P - SLAB_BOT) / 2, (PF.z(FLOOR_P) - 4.74) / 2), sw['floor'])
     HUMP_TOP = 2.60
     m.yz_prism([(FLOOR_P, PF.z(FLOOR_P)), (2.30, PF.z(2.30)), (2.30, 6.66), (FLOOR_G, 6.66), (FLOOR_G, PF.z(FLOOR_P) + 0.01)], -0.60, 0.60, sw['panel_d'])
-    m.yz_prism([(2.28, PF.z(2.28) + 0.004), (2.34, PF.z(2.34) + 0.004), (2.34, 6.66), (2.28, 6.66)], -0.60, 0.60, sw['panel_d'])
-    m.yz_prism([(2.34, PF.z(2.34) + 0.004), (2.42, PF.z(2.42) + 0.004), (2.42, 6.66), (2.34, 6.66)], -0.574, 0.574, sw['panel_d'])             # (the canopy narrows over the sill)
-    m.yz_prism([(2.42, PF.z(2.42)), (PANEL_TOP_P, PF.z(PANEL_TOP_P)), (2.66, 6.50), (2.42, 6.66)], -0.42, 0.42, sw['panel_d'])           # (convex: a fan over a dented profile would overlap itself)   # the hump's body (the operator's seat back stands against it)
+    m.yz_prism([(2.28, PF.z(2.28) + 0.004), (2.34, PF.z(2.34) + 0.004), (2.34, 6.56), (2.28, 6.66)], -0.60, 0.60, sw['panel_d'])
+    m.yz_prism([(2.34, PF.z(2.34) + 0.004), (2.42, PF.z(2.42) + 0.004), (2.42, 6.56), (2.34, 6.56)], -0.574, 0.574, sw['panel_d'])             # (the canopy narrows over the sill)
+    m.yz_prism([(2.42, PF.z(2.42)), (PANEL_TOP_P, PF.z(PANEL_TOP_P)), (2.66, 6.46), (2.42, 6.56)], -0.42, 0.42, sw['panel_d'])           # (convex: a fan over a dented profile would overlap itself)   # the hump's body (the operator's seat back stands against it)
     # ---- pilot's panel: two bands (PILOT_BANDS), each its own painted face, the wide one under the narrow one
     ppm = 760
     kick = atlas.paint(220, 70, p_kick)
-    xp = lambda y: min(0.60, 0.62 - 0.379 * (y - 2.30) - 0.01)           # follows the A pillar (the canopy's outline at the panel)
+    xp = lambda y: min(0.60, 0.44 - 0.75 * (y - 2.57))                    # follows the windscreen hoop's leg and the hump's side wall (canopy_mi_24p.py)
     for bi, (bot, top, half) in enumerate(PILOT_BANDS):
         lay = [e for e in PILOT_LAYOUT if bot <= e[2] < top]
         W_ = int(round(2 * half * ppm)); H_ = int(round((top - bot) / cos_s * ppm))
         rect = atlas.paint(W_, H_, panel_paint(lay, PF, top, bot, half, (W_, H_), 3 + bi))
         m.quad_tex([PF.at(-half, bot, LIFT), PF.at(half, bot, LIFT), PF.at(half, top, LIFT), PF.at(-half, top, LIFT)], rect, normal=PF.N)
         for s_ in (1, -1):
-            m.flat([PF.at(s_ * half, bot, LIFT), PF.at(s_ * xp(bot), bot, LIFT), PF.at(s_ * xp(top), top, LIFT), PF.at(s_ * half, top, LIFT)],
+            m.flat([PF.at(s_ * half, bot, LIFT), PF.at(s_ * max(xp(bot), half), bot, LIFT), PF.at(s_ * max(xp(top), half), top, LIFT), PF.at(s_ * half, top, LIFT)],
                    sw['panel_d'], normal=PF.N)
     hw0 = PILOT_BANDS[0][2]
     m.quad_tex([PF.at(-hw0, FLOOR_P + 0.004, LIFT), PF.at(hw0, FLOOR_P + 0.004, LIFT), PF.at(hw0, PANEL_BOT_P, LIFT), PF.at(-hw0, PANEL_BOT_P, LIFT)], kick, normal=PF.N)
@@ -787,7 +787,7 @@ def build(atlas):
                 PF.at(s_ * hw0, PANEL_BOT_P, LIFT)], sw['panel_d'], normal=PF.N)
     zt = PF.z(PANEL_TOP_P)
     y_visor = 2.82
-    m.box([0, (PANEL_TOP_P + y_visor) / 2 - 0.0, (zt - 0.12 + 6.38) / 2], (X, Y, Z), (0.40, (y_visor - PANEL_TOP_P) / 2, (6.38 - zt + 0.12) / 2), sw['black'])   # the coaming / visor
+    m.box([0, (PANEL_TOP_P + y_visor) / 2 - 0.0, (zt - 0.12 + 6.22) / 2], (X, Y, Z), (0.26, (y_visor - PANEL_TOP_P) / 2, (6.22 - zt + 0.12) / 2), sw['black'])   # the coaming / visor
     # the canopy jettison handle on the pilot's kick panel
     pl = atlas.paint(150, 40, p_placard(['АВАР. СБРОС', 'ФОНАРЯ'], bg=RED, fg=(240, 240, 232)))
     m.rect_tex(PF.at(0.0, 2.04, LIFT + 0.002), PF.N, PF.U, 0.200, 0.040, pl)
@@ -822,7 +822,7 @@ def build(atlas):
     # centred on the eye line (a little larger than the real unit), a chamfered plate in a thin frame
     sc = atlas.paint(150, 40, p_asp)
     head_top = y_visor + 0.14
-    zh = 6.13
+    zh = 6.07
     m.box([0, (y_visor + head_top) / 2, zh], (X, Y, Z), (0.085, (head_top - y_visor) / 2, 0.065), sw['dgrey'], front=(2, -1, sc, -X, Y))
     m.box([0, head_top + 0.008, zh + 0.012], (X, Y, Z), (0.060, 0.008, 0.040), sw['dgrey'])
     lean = math.radians(30)
@@ -921,17 +921,18 @@ def build(atlas):
     eg = EYE_G
     zg = GF.z
     # the dash block and the wedge under the windscreen (closed, so the nose bay cannot be seen into)
+    WEDGE_Z = 7.64                                                       # (the nose bay's own front wall stands at z 7.651: the wedge ends in front of it)
     pane_z = lambda y: CM.OB_BL[2] - (y - CM.OB_BL[1]) * (CM.OB_BL[2] - CM.OB_TL[2]) / (CM.OB_TL[1] - CM.OB_BL[1])
-    m.yz_prism([(FLOOR_G, zg(FLOOR_G)), (PANEL_TOP_G, zg(PANEL_TOP_G)), (PANEL_TOP_G, pane_z(PANEL_TOP_G) - 0.004), (CM.OB_BL[1] - 0.004, CM.OB_BL[2] - 0.004),
-                (FLOOR_G, CM.OB_BL[2] - 0.004)], -0.44, 0.44, sw['panel_d'])
-    m.box([0, PANEL_TOP_G + 0.012, (zg(PANEL_TOP_G) - 0.10 + pane_z(PANEL_TOP_G)) / 2], (X, Y, Z), (0.44, 0.012, (pane_z(PANEL_TOP_G) - zg(PANEL_TOP_G) + 0.10) / 2 - 0.002), sw['black'])   # coaming
+    m.yz_prism([(FLOOR_G, zg(FLOOR_G)), (PANEL_TOP_G, zg(PANEL_TOP_G)), (PANEL_TOP_G, pane_z(PANEL_TOP_G) - 0.004), (CM.OB_BL[1] - 0.004, min(CM.OB_BL[2] - 0.004, WEDGE_Z)),
+                (FLOOR_G, min(CM.OB_BL[2] - 0.004, WEDGE_Z))], -0.30, 0.30, sw['panel_d'])
+    m.box([0, PANEL_TOP_G + 0.012, (zg(PANEL_TOP_G) - 0.10 + pane_z(PANEL_TOP_G)) / 2], (X, Y, Z), (0.30, 0.012, (pane_z(PANEL_TOP_G) - zg(PANEL_TOP_G) + 0.10) / 2 - 0.012), sw['black'])   # coaming
     a0, a1 = -HALF_G, HALF_G
     Wg = int(round((a1 - a0) * ppm)); Hg = int(round((PANEL_TOP_G - PANEL_BOT_G) / cos_s * ppm))
     rect_g = atlas.paint(Wg, Hg, panel_paint(GUNNER_LAYOUT, GF, PANEL_TOP_G, PANEL_BOT_G, HALF_G, (Wg, Hg), 5))
     m.quad_tex([GF.at(a0, PANEL_BOT_G, LIFT), GF.at(a1, PANEL_BOT_G, LIFT), GF.at(a1, PANEL_TOP_G, LIFT), GF.at(a0, PANEL_TOP_G, LIFT)],
                rect_g, normal=GF.N)
     m.quad_tex([GF.at(a0, FLOOR_G + 0.004, LIFT), GF.at(a1, FLOOR_G + 0.004, LIFT), GF.at(a1, PANEL_BOT_G, LIFT), GF.at(a0, PANEL_BOT_G, LIFT)], kick, normal=GF.N)
-    for xa, xb in ((a1, 0.44), (-0.44, a0)):
+    for xa, xb in ((a1, 0.30), (-0.30, a0)):
         m.flat([GF.at(xa, FLOOR_G + 0.004, LIFT), GF.at(xb, FLOOR_G + 0.004, LIFT), GF.at(xb, PANEL_TOP_G, LIFT), GF.at(xa, PANEL_TOP_G, LIFT)], sw['panel_d'], normal=GF.N)
     arm_op = atlas.paint(220, 180, p_arm_op)
     for name, a, y, spec, cap in GUNNER_LAYOUT:
@@ -975,7 +976,7 @@ def build(atlas):
     for s in (1, -1):
         m.rect_tex([s * (hw_ + 0.0015), (hy0 + hy1) / 2, (hz0 + hz1) / 2 + 0.01], [s, 0, 0], Y, 0.15, 0.045, side)
     # the periscope tube: from the body's rear top up and back to the cup
-    cup_c = np.array([0.0, eg[1] - 0.045, eg[2] + 0.18])
+    cup_c = np.array([0.0, eg[1] - 0.070, eg[2] + 0.18])
     tube0 = np.array([0.0, hy1 - 0.06, hz0 + 0.02])
     m.cyl(tube0, cup_c + np.array([0, 0, 0.012]), 0.020, sw['dgrey'], seg=8)
     vf = atlas.paint(96, 96, p_eyepiece)
@@ -1027,10 +1028,10 @@ def build(atlas):
         m.flat([[xi, FLOOR_G, z1], [xo, FLOOR_G, z1], [xo, SH, z1], [xi, SH, z1]], sw['panel_d'], normal=[0, 0, 1])
         m.flat([[xi, FLOOR_G, z0], [xo, FLOOR_G, z0], [xo, SH, z0], [xi, SH, z0]], sw['panel_d'], normal=[0, 0, -1])
     # the Raduga-Sh box (left console)
-    m.box([0.43, SH + 0.045, 7.17], (X, Y, Z), (0.075, 0.045, 0.100), sw['dgrey'])
-    m.rect_tex([0.43, SH + 0.0905, 7.17], Y, -Z, 0.14, 0.18, radug)
+    m.box([0.38, SH + 0.045, 7.17], (X, Y, Z), (0.075, 0.045, 0.100), sw['dgrey'])
+    m.rect_tex([0.38, SH + 0.0905, 7.17], Y, -Z, 0.14, 0.18, radug)
     # the Shturm hand controller (right console): a base, a column, the pistol grip with trigger and thumb switch
-    HC = np.array([-0.43, SH + 0.006, 7.14])
+    HC = np.array([-0.38, SH + 0.006, 7.14])
     m.box(HC + [0, 0.012, 0], (X, Y, Z), (0.040, 0.012, 0.040), sw['dgrey'])
     st_ax = (X, unit([0, 1, 0.20]), unit([0, -0.20, 1]))
     m.box(HC + st_ax[1] * 0.085, st_ax, (0.010, 0.075, 0.010), sw['metal'])
@@ -1039,7 +1040,7 @@ def build(atlas):
     m.box(sg + st_ax[1] * 0.047, st_ax, (0.016, 0.004, 0.022), sw['dgrey'])
     m.box(sg + st_ax[2] * 0.028 + st_ax[1] * 0.012, st_ax, (0.006, 0.015, 0.004), sw['metal'])             # trigger on the grip's front
     m.box(sg + st_ax[1] * 0.056 - st_ax[2] * 0.004, st_ax, (0.008, 0.004, 0.008), sw['red'])               # thumb switch
-    m.box(sg + st_ax[1] * 0.030 - st_ax[2] * 0.021, st_ax, (0.010, 0.012, 0.004), sw['mgrey'])
+    m.box(sg + st_ax[1] * 0.030 - st_ax[2] * 0.0245, st_ax, (0.010, 0.012, 0.004), sw['mgrey'])
     # the operator's short cyclic between the knees and the pedals
     FOOTG = np.array([0.0, FLOOR_G + 0.005, 7.22])
     m.box(FOOTG + [0, 0.014, 0], (X, Y, Z), (0.050, 0.014, 0.050), sw['dgrey'])
@@ -1055,7 +1056,7 @@ def build(atlas):
         m.box([s * 0.13, FLOOR_G + 0.09, zk + 0.025], (X, Y, Z), (0.014, 0.055, 0.025), sw['dgrey'])
     # the operator's emergency exit placard on his left console's side
     pl2 = atlas.paint(120, 36, p_placard(['АВАР. ВЫХОД', 'ПОТЯНИ'], bg=RED, fg=(240, 240, 232)))
-    m.rect_tex([0.40, SH + 0.0015, 6.98], Y, -Z, 0.16, 0.05, pl2)
+    m.rect_tex([0.36, SH + 0.0015, 6.98], Y, -Z, 0.16, 0.05, pl2)
     return m, gauges, displays, glass, hud, tsu
 
 
@@ -1111,6 +1112,8 @@ def line_teal(geo, atlas):
         c = P[[v[0] for v in poly]].mean(0)
         if abs(c[0]) > 0.64 or not 4.7 < c[2] < 7.66 or c[1] < 1.45 or c[1] > 3.7:
             continue
+        if 6.1 < c[2] < 6.6 and c[1] > 2.42:
+            continue                                      # (the model's own hump between the crews stays as modelled: seen from outside)
         cs = []
         for v in poly:
             u, vv = U[v[2]]

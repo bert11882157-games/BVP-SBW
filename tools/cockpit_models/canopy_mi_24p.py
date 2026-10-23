@@ -1,28 +1,32 @@
 #!/usr/bin/env python3
-"""Mil Mi-24P canopies, hand-built on the Mi-24P.mtb airframe's own frame lines: TWO separate bubble canopies, the operator's in the
-nose (low) and the pilot's behind and above it, each with ONE flat armoured windscreen, curved side blisters and roof, slim frames.
+"""Mil Mi-24P canopies, rebuilt to the exact envelope of the Mi-24P.mtb model's own canopies, in flat glass.
 
-Measured off the untouched model (checks/orig/mi_24p.geo.json, vehicle blocks, x to the left, y up, z forward; 1 block = 0.87 m): the skin's
-top edge at the cockpit rim (the sill, |x| 0.5 .. 0.62) stands at y 1.7 (z 7.6) .. 2.2 (z 6.6), 2.3 over the hump between the crews (z 6.3) and
-rises to y 2.53 behind the pilot (z 4.7); the old frames were thick open skeletons (oval hoops at both windscreens, roof rails at y 2.75 over
-the operator and 3.53 over the pilot, the pilot's rear wall raked from (z 4.71, y 3.06) to (z 5.15, y 3.52) under the engine fairing).
-All of that, both seat groups, panels and the tub interior are cut out (CUT_RANGES, found by mi24p/gen_cut.py: faces and the elements
-that are mostly in the cockpit column); the skin at and below the rim, the nose, the engine fairing and the floors stay.
+The original model carries two open-frame canopies (no glass): the operator's in the nose (low): one raked oval windscreen hoop, a sill rail
+along each side, a roof rail; the pilot's behind and above it: one raked oval windscreen hoop, a beltline rail rising to the rear, a B post and
+its roof rails. The oval hoops are flat to 6 mm (the author built them flat). That canopy is the MOULD here: its frame members (the hoops, the
+sill and beltline rails, the roof rails, the B post, the wipers) are cut out of the `hull` piece completely (CUT_RANGES, with the old seat
+groups, panels, tub interior and the partition between the crews; mi24p/gen_cut.py minus mi24p/frame_sets.py), and the two canopies are built
+new from the member centre lines, which are the corners below (the model's element numbers in the comments). The skin outside the canopy (the
+sill planks, the side walls beside the pilot, the nose) stays as modelled.
 
-Layout (checked against Mi-24V/P photographs from memory, UNVERIFIED against drawings: the pane sizes and the door layout):
-  OPERATOR (front, low): one flat armoured windscreen leaning back 16 degrees (trapezoid, 0.68 wide at the deck, 0.54 at the top bow), a curved
-  one-piece side blister and roof on each side (the whole canopy hinges to the RIGHT: hinge barrels on the right shoulder rail, a latch on the
-  left sill), a rear arch against the cockpit hump.
-  PILOT (rear, raised): a narrow flat armoured windscreen leaning back 37 degrees from the vertical, standing on the hump behind the operator,
-  curved side blisters and roof; the DOOR is on the RIGHT (its outline in frame bars: sill, front post (the A pillar), rear post, header; two hinge
-  barrels on the front post, a handle on the rear post); the left side is a fixed window. The rear arch lies on the engine fairing's raked front face.
-  Frames are slim 3.6 cm round members, one polyline member per run (bows and the windscreen frames are single members, mitred),
-  the glass stops 4 mm short of every member.
+  OPERATOR  windscreen (1 flat pane in the hoop's outline), a side window each side (sill rail up to the roof rail, cut into 3 flat facets), a roof
+            pane between the roof rails, a small corner facet where the hoop's top meets the roof rail;
+  PILOT     windscreen (1 flat pane in the hoop's outline), the side window each side cut at the B post (front, rear; 3 and 2 flat facets), a roof
+            pane, a corner facet at each top corner of the hoop.
 
-CANOPY (eye-relative sections of the union, the left half from the sill up over the top) is what the checks in work/elite_expansion_2/checks
-read; the pilot's eye is the reference (seat 0).
+EVERY glass facet is exactly one plane (printed: flat to 0.000 mm; planarity_check 0.01 to 0.08 mm after the file's rounding) and every
+opening has exactly ONE glass layer. Facets share their corners: solve_corners() moves the corners (by at most 10 cm at the B post, 6.6 cm
+elsewhere, against the model's member centre lines: the original side windows are not plane, flat ones are what the pack's Mi-24 family uses)
+so that each facet is planar and the facets of a window still meet edge to edge. Slim 4 cm round frame members run along the outlines of
+the windows; where two facets of one window meet (a crease) there is no member, the glass meets the glass. The hump between the crews is
+opaque skin (hump()). The pilot's outside rear-view mirror stands on the left of the windscreen hoop.
+Photographs (work/cockpit-refs mi24v and mi_24d): tandem flat armoured windscreens raked back, the long side glass rising to the rear, the pilot
+canopy higher and behind. UNVERIFIED: the facet layout of the side windows (a modelling choice), the pane sizes against drawings.
 
-Run first (on the airframe's files); the cockpit script mi_24p.py follows.
+CANOPY (eye-relative sections of the glass, the half from the sill up over the top) is what the checks in work/elite_expansion_2/checks read;
+it is cut from the panes below. OB_BL / OB_TL (the operator windscreen's bottom corner and top centre) are read by mi_24p.py.
+
+Run first (on the airframe's files); the cockpit script mi_24p.py follows (mi24p/run_mi24p_cockpit.ps1).
 Usage: python tools/cockpit_models/canopy_mi_24p.py [--dry-run]"""
 import json, math, os, sys
 import numpy as np
@@ -42,27 +46,22 @@ CANOPY_BONE = 'hull__canopy'
 EYE_P = np.array([0.0, 3.2342, 5.2595])          # the pilot's eye (data: pilot_eye)
 EYE_G = np.array([0.0, 2.5004, 7.0532])          # the operator's eye (data: gunner_eye)
 
-# faces of the hull piece that the new canopies and cockpits replace (the untouched hull has HULL_FACES faces), from mi24p/gen_cut.py
+# faces of the hull piece that the new cockpits replace (the untouched hull has HULL_FACES faces), from mi24p/gen_cut.py minus the frame members
 CUT_RANGES = [
-    (459, 459), (465, 465), (471, 471), (477, 477), (479, 480), (482, 486), (488, 489), (494, 494), (500, 503), (505, 506), (508, 510), (512, 512),
-    (555, 558), (560, 560), (563, 563), (569, 569), (633, 642), (644, 648), (650, 654), (656, 656), (659, 659), (680, 680), (686, 686), (692, 692),
-    (708, 708), (714, 714), (720, 720), (726, 726), (782, 784), (786, 786), (851, 851), (857, 857), (863, 863), (881, 885), (992, 992), (998, 998),
-    (1004, 1047), (1317, 1317), (1319, 1319), (1321, 1325), (1327, 1328), (1330, 1333), (1375, 1434), (1453, 1455), (1457, 1497), (1499, 1500), (1502,
-    1502), (2410, 2410), (2416, 2416), (2422, 2422), (2428, 2428), (2431, 2432), (2434, 2438), (2440, 2441), (2445, 2445), (2451, 2451), (2453, 2455),
-    (2457, 2458), (2460, 2463), (2507, 2511), (2515, 2515), (2521, 2521), (2585, 2595), (2597, 2601), (2603, 2607), (2611, 2611), (2640, 2643), (2709,
-    2713), (2820, 2820), (2826, 2826), (2832, 2875), (3163, 3222), (3241, 3243), (3245, 3264), (3711, 3908), (3912, 3912), (3918, 3918), (3924, 3924),
-    (3945, 3946), (3948, 4063), (4072, 4072), (4078, 4078), (4082, 4084), (4086, 4108), (4110, 4279), (4282, 4282), (4288, 4288), (4294, 4294), (4298,
-    4299), (4303, 4305), (4307, 4311), (4313, 4314), (4317, 4317), (4323, 4323), (4327, 4362), (4387, 4478), (4549, 4549), (4555, 4560), (4777, 4872),
-    (5309, 5326), (5369, 5369), (5375, 5375), (5381, 5381), (5397, 5397), (5403, 5403), (5409, 5409), (5415, 5415), (5463, 5463), (5469, 5469), (5475,
-    5475), (5489, 5489), (5491, 5491), (5493, 5495), (5499, 5499), (5523, 5642), (5644, 5690), (5692, 5696), (5698, 5702), (5704, 5713), (5715, 5718),
-    (5720, 5784), (5797, 5797), (5799, 5803), (5805, 5805), (5807, 5811), (5813, 5814), (5821, 5821), (5823, 5827), (5829, 5829), (5831, 5835), (5837,
-    5922), (8217, 8262)]
+    (459, 459), (465, 465), (471, 471), (477, 477), (484, 485), (508, 510), (512, 512), (555, 558), (560, 560), (563, 563), (569, 569), (633, 642),
+    (644, 648), (650, 654), (656, 656), (659, 659), (680, 680), (686, 686), (692, 692), (708, 708), (714, 714), (720, 720), (726, 726), (782, 784),
+    (786, 786), (857, 857), (863, 863), (881, 885), (992, 992), (998, 998), (1004, 1004), (1015, 1016), (1018, 1018), (1021, 1047), (1376, 1434),
+    (1453, 1455), (1457, 1497), (1499, 1500), (1502, 1502), (2410, 2410), (2416, 2416), (2422, 2422), (2428, 2428), (2431, 2431), (2453, 2453), (2455,
+    2455), (2460, 2463), (2507, 2511), (2515, 2515), (2521, 2521), (2585, 2595), (2597, 2601), (2603, 2607), (2611, 2611), (2640, 2643), (2709, 2713),
+    (2820, 2820), (2826, 2826), (2837, 2837), (2849, 2875), (3163, 3222), (3241, 3243), (3245, 3264), (3711, 3908), (3912, 3912), (3918, 3918), (3924,
+    3924), (3945, 3946), (3948, 4063), (4072, 4072), (4078, 4078), (4082, 4084), (4086, 4108), (4110, 4279), (4282, 4282), (4288, 4288), (4294, 4294),
+    (4298, 4299), (4303, 4305), (4307, 4311), (4313, 4314), (4317, 4317), (4323, 4323), (4327, 4362), (4387, 4478), (4549, 4549), (4555, 4560), (4777,
+    4872), (5309, 5326), (5369, 5369), (5375, 5375), (5381, 5381), (5397, 5397), (5403, 5403), (5409, 5409), (5415, 5415), (5469, 5469), (5475, 5475),
+    (5523, 5642), (5644, 5690), (5692, 5696), (5698, 5702), (5704, 5713), (5715, 5718), (5720, 5784), (5797, 5797), (5799, 5803), (5805, 5805), (5807,
+    5811), (5813, 5814), (5821, 5821), (5823, 5827), (5829, 5829), (5831, 5835), (5837, 5922), (8217, 8262)]
 HULL_FACES = 8521
 
 X, Y, Z = np.array([1.0, 0, 0]), np.array([0, 1.0, 0]), np.array([0, 0, 1.0])
-R_TUBE = 0.018
-GLASS_GAP = -0.001                               # the glass ends 10 mm inside the member's silhouette, hidden in it (no see-through seam beside the frames)
-SLAB = 0.012
 
 
 def unit(v):
@@ -74,71 +73,304 @@ def lerp(a, b, t):
     return np.array(a, float) * (1 - t) + np.array(b, float) * t
 
 
-# ---------------------------------------------------------------- the two bubbles: rings of 6 points (the LEFT half, x >= 0), mirrored
-NP = 6
+# ---------------------------------------------------------------- the panes
+# Corners: vehicle blocks (x to the left, y up, z forward), the centres of the model's own frame members (Mi-24P.mtb element numbers in the
+# comments; the x > 0 side is the mirror image where the model has members on one side only). x < 0 is the right of the helicopter. A facet's corners
+# are moved by solve_corners() so that every facet is exactly planar.
+def mx(p):
+    return np.array([-p[0], p[1], p[2]], float)
 
 
-def arc(xs, ys, yt, z, bulge=0.04, n=NP):
-    """the half section of a blister: an ellipse arc from the sill point (xs, ys) out by [bulge], up over the shoulder to the top centre (0, yt)"""
-    a = xs + bulge
-    s0 = -math.sqrt(1 - (xs / a) ** 2)
-    yc = (ys - s0 * yt) / (1 - s0)
-    b = yt - yc
-    phi0 = math.asin(s0)
-    out = []
+def sym(half):
+    """a loop that is symmetric about x = 0, from the half at x > 0 listed bottom to top (the last point on the axis)"""
+    h = [np.array(p, float) for p in half]
+    return h[:-1] + [h[-1]] + [mx(p) for p in h[:-1][::-1]]
+
+
+OP_WS_HALF = [(0.330, 1.660, 7.770),                          # (ring foot: the hoop's bottom bar 282 / 692 sits just under it)
+              (0.367, 1.946, 7.700), (0.334, 2.142, 7.646),  # 297, 298
+              (0.264, 2.286, 7.591), (0.158, 2.356, 7.570),  # 299, 300
+              (0.000, 2.378, 7.570)]                         # 301 / 711
+PIL_WS_HALF = [(0.114, 2.821, 6.309),                         # 989 (the bar across the foot of the ring)
+               (0.285, 2.772, 6.292), (0.345, 2.924, 6.200),  # 288, 290
+               (0.367, 3.120, 6.083), (0.334, 3.256, 5.993),  # 291, 292
+               (0.239, 3.354, 5.925), (0.122, 3.424, 5.878),  # 293, 294
+               (0.000, 3.452, 5.857)]                         # 295 / 705
+
+# x < 0 side windows (the other side is the mirror image)
+OP_SIDE = [(-0.330, 1.660, 7.770),                           # ring foot
+           (-0.367, 1.946, 7.700), (-0.334, 2.142, 7.646),   # 707, 708 (the hoop's outer leg)
+           (-0.264, 2.286, 7.591), (-0.217, 2.397, 7.510),   # 709, 712
+           (-0.258, 2.460, 7.407), (-0.272, 2.598, 7.064),   # 844, 845 (roof rail)
+           (-0.272, 2.693, 6.672), (-0.236, 2.691, 6.488),   # 846, 644 (the arch over the hump)
+           (-0.308, 2.568, 6.443), (-0.582, 2.234, 6.591),   # 642, 1794 (sill rail)
+           (-0.581, 2.086, 6.863), (-0.571, 1.921, 7.198),   # 1795, 1797
+           (-0.448, 1.719, 7.604)]                           # 1799
+OP_ROOF = [(-0.217, 2.397, 7.510), (-0.258, 2.460, 7.407),   # 712, 844
+           (-0.272, 2.598, 7.064), (-0.272, 2.693, 6.672),   # 845, 846
+           (-0.163, 2.745, 6.445), (0.163, 2.745, 6.445),    # 645, m645 (the arch over the hump)
+           (0.272, 2.693, 6.672), (0.272, 2.598, 7.064),
+           (0.258, 2.460, 7.407), (0.217, 2.397, 7.510),
+           (0.158, 2.356, 7.570), (0.000, 2.378, 7.570),     # 300, 301 (the hoop's top bow: the roof starts on the windscreen's top edge)
+           (-0.158, 2.356, 7.570)]
+OP_CORNER = [(-0.264, 2.286, 7.591), (-0.158, 2.356, 7.570), (-0.217, 2.397, 7.510)]     # 709, 710, 712: closes the hoop's top corner
+PIL_SIDE_FRONT = [(-0.440, 2.571, 6.200), (-0.285, 2.772, 6.292),   # 696, 698
+                  (-0.345, 2.924, 6.200),                           # 700
+                  (-0.367, 3.120, 6.083), (-0.334, 3.256, 5.993),   # 701, 702
+                  (-0.239, 3.354, 5.925), (-0.193, 3.446, 5.788),   # 703, 988
+                  (-0.283, 3.484, 5.613), (-0.467, 3.343, 5.613),   # 985 (the post's head, on the roof rail), 981
+                  (-0.538, 3.153, 5.613), (-0.582, 2.903, 5.613),   # 980, 979
+                  (-0.587, 2.740, 5.602), (-0.566, 2.673, 5.595),   # 978, 977
+                  (-0.522, 2.549, 5.906)]                           # 640 (beltline rail)
+PIL_SIDE_REAR = [(-0.566, 2.673, 5.595), (-0.587, 2.740, 5.602),    # 977, 978
+                 (-0.582, 2.903, 5.613), (-0.538, 3.153, 5.613),    # 979, 980
+                 (-0.467, 3.343, 5.613), (-0.283, 3.484, 5.613),    # 981, 985
+                 (-0.279, 3.486, 5.395), (-0.272, 3.452, 5.187),    # 986, 987 (roof rail)
+                 (-0.270, 3.450, 5.140),                            # (tucked into the engine fairing's raked front)
+                 (-0.530, 2.994, 4.680),                            # (the beltline's end against the fairing)
+                 (-0.530, 2.935, 4.865), (-0.546, 2.723, 5.384)]    # 638, 639 (beltline rail)
+PIL_ROOF = [(0.000, 3.452, 5.857), (-0.122, 3.424, 5.878),          # 705, 704 (the hoop's top bow: the roof starts on the windscreen's top edge)
+            (-0.193, 3.446, 5.788), (-0.283, 3.484, 5.613),         # 988, 985
+            (-0.279, 3.486, 5.395), (-0.272, 3.452, 5.187),         # 986, 987
+            (-0.270, 3.450, 5.140),                                 # (the fairing)
+            (0.270, 3.450, 5.140), (0.272, 3.452, 5.187),
+            (0.279, 3.486, 5.395), (0.283, 3.484, 5.613),
+            (0.193, 3.446, 5.788), (0.122, 3.424, 5.878)]
+PIL_CORNER = [(-0.239, 3.354, 5.925), (-0.122, 3.424, 5.878), (-0.193, 3.446, 5.788)]    # 703, 704, 988: closes the hoop's top corner
+
+# Each side window of a bubble is cut into flat facets along chords between its corners (indices into the corner list; no frame member runs
+# along a chord): a window whose corners do not lie in one plane within 3 cm is split so that every facet is one plane.
+FACETS = {'operator side right': [[7, 8, 9, 10], [10, 11, 12, 2, 3, 4, 5, 6, 7], [12, 13, 0, 1, 2]],
+          'pilot side front right': [[4, 5, 6, 7, 8], [12, 13, 0, 1], [1, 2, 3, 4, 8, 9, 10, 11, 12]],
+          'pilot side rear right': [[3, 4, 5, 6, 7, 8, 9], [9, 10, 11, 0, 1, 2, 3]]}
+BASE_PANES = [('operator windscreen', sym(OP_WS_HALF)),
+              ('operator side right', [np.array(p, float) for p in OP_SIDE]),
+              ('operator roof', [np.array(p, float) for p in OP_ROOF]),
+              ('operator corner right', [np.array(p, float) for p in OP_CORNER]),
+              ('pilot windscreen', sym(PIL_WS_HALF)),
+              ('pilot side front right', [np.array(p, float) for p in PIL_SIDE_FRONT]),
+              ('pilot side rear right', [np.array(p, float) for p in PIL_SIDE_REAR]),
+              ('pilot roof', [np.array(p, float) for p in PIL_ROOF]),
+              ('pilot corner right', [np.array(p, float) for p in PIL_CORNER])]
+
+
+def fit_plane(P):
+    P = np.array(P, float)
+    c = P.mean(0)
+    _, _, vt = np.linalg.svd(P - c)
+    n = vt[2]
+    return c, n
+
+
+def ear_clip(P2):
+    """triangulates a simple polygon given as 2-D points (any winding): index triples"""
+    n = len(P2)
+    idx = list(range(n))
+    area = 0.0
     for i in range(n):
-        f = phi0 + (math.pi / 2 - phi0) * i / (n - 1)
-        out.append([a * math.cos(f) if i < n - 1 else 0.0, yc + b * math.sin(f), z])
-    return np.array(out)
+        a, b = P2[i], P2[(i + 1) % n]
+        area += a[0] * b[1] - b[0] * a[1]
+    sgn = 1.0 if area > 0 else -1.0
+
+    def cross(o, a, b):
+        return (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0])
+
+    def inside(p, a, b, c):
+        return cross(a, b, p) * sgn >= -1e-12 and cross(b, c, p) * sgn >= -1e-12 and cross(c, a, p) * sgn >= -1e-12
+    out = []
+    guard = 0
+    while len(idx) > 3 and guard < 10000:
+        guard += 1
+        for k in range(len(idx)):
+            i0, i1, i2 = idx[k - 1], idx[k], idx[(k + 1) % len(idx)]
+            a, b, c = P2[i0], P2[i1], P2[i2]
+            if cross(a, b, c) * sgn <= 1e-12:
+                continue
+            if any(inside(P2[j], a, b, c) for j in idx if j not in (i0, i1, i2)):
+                continue
+            out.append((i0, i1, i2))
+            idx.pop(k)
+            break
+        else:
+            break
+    if len(idx) == 3:
+        out.append(tuple(idx))
+    return out
 
 
-# operator windscreen: a flat trapezoid on the nose deck, leaning back 18 degrees (measured: the old front hoop's foot (z 7.76, y 1.87), its
-# top bow (z 7.49, y 2.50))
-OB_BL = np.array([0.40, 1.70, 7.63])             # bottom outer corner (on the nose deck)
-OB_TL = np.array([0.31, 2.60, 7.38])             # top outer corner
-OB_TM = np.array([0.0, 2.60, 7.38])
-# pilot windscreen: a flat trapezoid standing on the hump behind the operator, leaning back 41 degrees from the horizontal
-# (measured: the old frame from (z 6.34, y 2.88) to (z 5.85, y 3.46))
-PB_S0 = np.array([0.62, 2.30, 6.34])             # the side window's front foot on the sill (the A pillar runs from here to the pane's corner)
-PB_BL = np.array([0.40, 2.88, 6.34])
-PB_TL = np.array([0.34, 3.54, 5.84])
-PB_TM = np.array([0.0, 3.54, 5.84])
-DECK_OP = 1.66                                   # the nose deck's top at the operator's windscreen
+Z_FAIRING_FILL = (4.72, 5.09)
+PANES = {}             # name -> {'poly': Nx3 (on the plane), 'tris': [..], 'dev': max corner shift, 'normal': n}
+EDGES = []             # unique frame edges (pairs of corners) of the facets
+CORNERS = {}           # key -> corner after the solve
 
 
-def ring0_ob():
-    return np.array([OB_BL, lerp(OB_BL, OB_TL, 0.5), OB_TL, lerp(OB_TL, OB_TM, 0.34), lerp(OB_TL, OB_TM, 0.67), OB_TM])
+def _key(p):
+    return tuple(float(v) for v in np.round(p, 3))
 
 
-def ring0_pb():
-    return np.array([PB_S0, PB_BL, lerp(PB_BL, PB_TL, 0.33), lerp(PB_BL, PB_TL, 0.66), PB_TL, PB_TM])
+def _facets():
+    """[(name, [corner keys])] of every flat facet, both sides"""
+    out = []
+    for name, pts in BASE_PANES:
+        pts = [np.array(p, float) for p in pts]
+        sides = [(name, pts)]
+        if name.endswith(' right'):
+            sides.append((name[:-6] + ' left', [mx(p) for p in pts][::-1]))
+        for nm, pp in sides:
+            if name in FACETS:
+                idx = FACETS[name]
+                if nm != name:
+                    n = len(pts)
+                    idx = [[n - 1 - k for k in f][::-1] for f in idx]
+                    nm_list = [f'{nm} {i + 1}' for i in range(len(idx))]
+                else:
+                    nm_list = [f'{nm} {i + 1}' for i in range(len(idx))]
+                for f, n_ in zip(idx, nm_list):
+                    out.append((n_, [pp[k] for k in f]))
+            else:
+                out.append((nm, pp))
+    return out
 
 
-def rear_ring():
-    """the pilot's rear arch lies on the engine fairing's sloping front face (z 4.72 up to the sill's rear wall, then raked to z 5.16 at the roof)"""
-    r = arc(0.60, 2.53, 3.52, 4.72)
-    for p in r:
-        p[2] = 4.72 + 0.96 * max(0.0, p[1] - 3.06)
-    return r
+def solve_corners(facets, iters=300):
+    """moves the shared corners so that every facet is exactly planar: planes are fitted to the facets, each corner is moved (minimum distance) onto the
+    planes of all facets that share it, repeated until nothing moves"""
+    V, orig, users = {}, {}, {}
+    ids = []
+    for fi, (nm, pts) in enumerate(facets):
+        keys = []
+        for p in pts:
+            k = _key(p)
+            V.setdefault(k, np.array(p, float))
+            orig[k] = np.array(p, float)
+            users.setdefault(k, []).append(fi)
+            keys.append(k)
+        ids.append(keys)
+    for _ in range(iters):
+        planes = [fit_plane([V[k] for k in ks]) for ks in ids]
+        move = 0.0
+        for k, fl in users.items():
+            N = np.array([planes[f][1] for f in fl])
+            c = np.array([planes[f][0] for f in fl])
+            r = -np.einsum('ij,ij->i', N, V[k] - c)
+            dv = N.T @ np.linalg.lstsq(N @ N.T, r, rcond=1e-3)[0]
+            V[k] = V[k] + 0.6 * dv
+            move = max(move, float(np.abs(dv).max()))
+        if move < 1e-7:
+            break
+    return V, orig, ids
 
 
-_P4 = rear_ring()
-_P2 = arc(0.62, 2.43, 3.54, 5.38)
-_P1 = arc(0.62, 2.38, 3.54, 5.62)
-for _r, _y in ((_P1, 3.52), (_P2, 3.52), (_P4, 3.50)):             # a flat, full crown: the shoulder line runs level from the windscreen's top corner to the rear arch
-    _r[4][0], _r[4][1] = 0.30, _y
-_P4[4][2] = 4.72 + 0.96 * (3.50 - 3.06)
-OB_RINGS = [ring0_ob(), arc(0.52, 1.96, 2.67, 7.20), arc(0.56, 2.05, 2.76, 6.92), arc(0.59, 2.13, 2.78, 6.74), arc(0.60, 2.20, 2.79, 6.58)]
-PB_RINGS = [ring0_pb(), _P1, _P2, lerp(_P2, _P4, 0.5), _P4]
-S33 = lerp(PB_S0, PB_BL, 1 / 3)
-S66 = lerp(PB_S0, PB_BL, 2 / 3)
-TIE_FAR = np.array([PB_S0, S33, S66, PB_BL, [0.20, 2.88, 6.34], [0.0, 2.88, 6.34]])
-OB_BOWS = [4]
-PB_BOWS = [3, 4]
-Z_END = 4.72
+def build_glass():
+    facets = _facets()
+    V, orig, ids = solve_corners(facets)
+    CORNERS.clear()
+    CORNERS.update(V)
+    PANES.clear()
+    EDGES.clear()
+    glass, uses, order = [], {}, []
+    for (nm, _), ks in zip(facets, ids):
+        Q = np.array([V[k] for k in ks])
+        c, n = fit_plane(Q)
+        u = unit(np.cross(n, Y if abs(n @ Y) < 0.9 else X))
+        v = np.cross(n, u)
+        P2 = [((q - c) @ u, (q - c) @ v) for q in Q]
+        tris = [[Q[i], Q[j], Q[k]] for i, j, k in ear_clip(P2)]
+        shift = max(float(np.linalg.norm(V[k] - orig[k])) for k in ks)
+        PANES[nm] = {'poly': Q, 'tris': tris, 'dev': shift, 'normal': n, 'flat': float(np.abs((Q - c) @ n).max())}
+        glass += tris
+        base = nm.rsplit(' ', 1)[0] if nm.rsplit(' ', 1)[-1].isdigit() else nm
+        for i in range(len(ks)):
+            a, b = ks[i], ks[(i + 1) % len(ks)]
+            e = frozenset((a, b))
+            if e not in uses:
+                order.append((a, b))
+            uses.setdefault(e, []).append(base)
+    # frame members run along the window outlines; the creases between two facets of one window carry no member (glass meets glass there)
+    EDGES.extend(ed for ed in order if not (len(uses[frozenset(ed)]) == 2 and uses[frozenset(ed)][0] == uses[frozenset(ed)][1]))
+    return glass
+
+
+# ---------------------------------------------------------------- CANOPY: the glass's cross-sections (what the checks read)
+def _slice(tri, z):
+    """the segment where the triangle meets the plane at z: ((x, y), (x, y)) or None"""
+    d = [p[2] - z for p in tri]
+    pts = []
+    for i in range(3):
+        a, b = tri[i], tri[(i + 1) % 3]
+        if (d[i] > 0) != (d[(i + 1) % 3] > 0):
+            f = d[i] / (d[i] - d[(i + 1) % 3])
+            q = a + (b - a) * f
+            pts.append((float(q[0]), float(q[1])))
+    return (pts[0], pts[1]) if len(pts) == 2 else None
+
+
+# the untouched skin's rim (the sill) at station z: half width and height (measured off the model, vehicle blocks)
+SILL_X = [(4.60, 0.60), (5.0, 0.61), (5.4, 0.62), (5.8, 0.62), (6.34, 0.62), (6.6, 0.60), (6.8, 0.58), (7.05, 0.54), (7.20, 0.52), (7.35, 0.48), (7.63, 0.40), (7.9, 0.30)]
+SILL_Y = [(4.60, 2.53), (4.72, 2.53), (5.05, 2.48), (5.38, 2.43), (5.62, 2.38), (6.00, 2.33), (6.34, 2.30), (6.58, 2.20), (6.80, 2.10), (7.05, 2.00), (7.20, 1.96),
+          (7.35, 1.90), (7.63, 1.70)]
+
+
+def outline_at(z):
+    if Z_FAIRING_FILL[0] <= z < Z_FAIRING_FILL[1]:                # behind the roof pane: the engine fairing's raked front closes the top; keep the roof's section
+        z = Z_FAIRING_FILL[1] + 0.001
+    """the glass's section at station z as [(|x|, y), ...] from the sill up to the top on the axis (None if the glass does not reach z)"""
+    segs = []
+    for pane in PANES.values():
+        for t in pane['tris']:
+            s = _slice(t, z)
+            if s:
+                segs.append(s)
+    if 6.28 <= z <= 6.58:                                          # the hump between the crews (the model's own, opaque): its section
+        return [(0.62, 2.30), (0.62, 2.55), (0.42, 2.76), (0.30, 2.84), (0.0, 2.84)]
+    if not segs:
+        return None
+    ys = [p[1] for s in segs for p in s]
+    y_lo, y_hi = min(ys), max(ys)
+    # a lone windscreen station: the glass is a single line at one height; stand the section on the deck / the hump
+    if y_hi - y_lo < 0.15:
+        w = max(abs(p[0]) for s in segs for p in s)
+        if z > 6.9:
+            return [(w, 1.66), (w, y_hi), (0.0, y_hi)]
+        return [(0.62, 2.30), (0.62, 2.55), (0.42, 2.76), (w, y_hi), (0.0, y_hi)]               # (the pilot's windscreen stands on the hump: wide at the sill)
+    levels = np.linspace(y_lo, y_hi, 7)
+    pts = []
+    for y in levels:
+        xs = []
+        for (a, b) in segs:
+            if (a[1] - y) * (b[1] - y) <= 0 and abs(a[1] - b[1]) > 1e-9:
+                f = (y - a[1]) / (b[1] - a[1])
+                xs.append(abs(a[0] + (b[0] - a[0]) * f))
+            elif abs(a[1] - b[1]) <= 1e-9 and abs(a[1] - y) < 1e-6:
+                xs += [abs(a[0]), abs(b[0])]
+        if xs:
+            pts.append((max(xs), float(y)))
+    if not pts:
+        return None
+    ys_ = float(np.interp(z, [q[0] for q in SILL_Y], [q[1] for q in SILL_Y]))
+    if pts[0][1] > ys_ + 0.02:                                  # the glass starts above the sill (a beltline rail): the section starts at the rim
+        xs_ = float(np.interp(z, [q[0] for q in SILL_X], [q[1] for q in SILL_X]))
+        pts[0:0] = [(xs_, ys_), (xs_, pts[0][1])]                # (the skin's wall up to the glass)
+    pts.append((0.0, y_hi))
+    # strictly from the sill up, x not growing (a pane's overhang folded away)
+    out = [pts[0]]
+    for p in pts[1:]:
+        out.append((min(p[0], out[-1][0]), p[1]))
+    return out
+
+
+def sections_rel():
+    out = []
+    zs = sorted(set([4.725] + [round(4.80 + 0.02 * k, 3) for k in range(0, 149)] + [7.765]))
+    for z in zs:
+        sec = outline_at(z)
+        if sec is None:
+            continue
+        out.append((z - EYE_P[2], [(max(0.0, x), y - EYE_P[1]) for x, y in sec]))
+    return out
+
 
 # ---------------------------------------------------------------- mesh (absolute blocks in, model pixels out)
-
 class Mesh:
     def __init__(self):
         self.faces = []
@@ -198,41 +430,6 @@ def tube(m, a, b, r, uv, seg=8):
     m.face(B_, uv, t)
 
 
-def polytube(m, pts, r, uv, seg=8):
-    """ONE member along a polyline: the cross-section at every vertex lies in the plane that bisects the two segments (mitred joints)"""
-    P = [np.array(p, float) for p in pts]
-    n = len(P)
-    tang = []
-    for i in range(n):
-        if i == 0:
-            t = unit(P[1] - P[0])
-        elif i == n - 1:
-            t = unit(P[-1] - P[-2])
-        else:
-            t = unit(unit(P[i] - P[i - 1]) + unit(P[i + 1] - P[i]))
-        tang.append(t)
-    rings = []
-    ref0 = Y if abs(tang[0] @ Y) < 0.9 else X
-    u_prev = unit(np.cross(tang[0], ref0))
-    for i in range(n):
-        t = tang[i]
-        u = u_prev - t * (u_prev @ t)
-        if np.linalg.norm(u) < 1e-6:
-            u = unit(np.cross(t, Y if abs(t @ Y) < 0.9 else X))
-        u = unit(u)
-        v = unit(np.cross(t, u))
-        u_prev = u
-        ring = [P[i] + r * (u * math.cos(2 * math.pi * j / seg) + v * math.sin(2 * math.pi * j / seg)) for j in range(seg)]
-        rings.append(ring)
-    for i in range(n - 1):
-        for j in range(seg):
-            j2 = (j + 1) % seg
-            q = [rings[i][j], rings[i][j2], rings[i + 1][j2], rings[i + 1][j]]
-            m.face(q, uv, np.mean(q, 0) - (P[i] + P[i + 1]) / 2)
-    m.face(rings[0], uv, -tang[0])
-    m.face(rings[-1], uv, tang[-1])
-
-
 def box(m, centre, axes, half, uv):
     c = np.array(centre, float)
     A_ = [unit(a) for a in axes]
@@ -244,368 +441,14 @@ def box(m, centre, axes, half, uv):
                     fc + A_[i] * half[i] + A_[j] * half[j], fc - A_[i] * half[i] + A_[j] * half[j]], uv, A_[k] * s)
 
 
-def plane_normal(poly3):
-    P = np.array(poly3, float)
-    nn = np.zeros(3)
-    for i in range(len(P)):
-        a, b = P[i], P[(i + 1) % len(P)]
-        nn += np.array([(a[1] - b[1]) * (a[2] + b[2]), (a[2] - b[2]) * (a[0] + b[0]), (a[0] - b[0]) * (a[1] + b[1])])
-    return unit(nn)
-
-
-def inset_polygon(poly3, normal, d):
-    P = np.array(poly3, float)
-    c = P.mean(0)
-    n = unit(normal)
-    m = len(P)
-    lines = []
-    for i in range(m):
-        a, b = P[i], P[(i + 1) % m]
-        e = unit(b - a)
-        inward = unit(np.cross(n, e))
-        if inward @ (c - a) < 0:
-            inward = -inward
-        lines.append((a + inward * d, e))
-    out = []
-    for i in range(m):
-        (p0, e0), (p1, e1) = lines[i - 1], lines[i]
-        A_ = np.array([e0, -e1]).T
-        sol, *_ = np.linalg.lstsq(A_, p1 - p0, rcond=None)
-        out.append(p0 + sol[0] * e0)
-    return np.array(out)
-
-
-def slab_poly(m, poly, normal, uv_out, uv_in):
-    P = [np.array(p, float) for p in poly]
-    n = unit(normal)
-    m.face(P, uv_out, n)
-    m.face([p - n * SLAB for p in P][::-1], uv_in, -n)
-    cen = np.mean(P, 0)
-    for i in range(len(P)):
-        a, b = P[i], P[(i + 1) % len(P)]
-        out = unit(np.cross(b - a, n))
-        if out @ ((a + b) / 2 - cen) < 0:
-            out = -out
-        m.face([a, b, b - n * SLAB, a - n * SLAB], uv_out, out)
-
-
-def warped_quad(m, q, cen, uv_out, uv_in):
-    """a (not exactly planar) quad as two triangles, each facing away from cen, with a dark lining a slab's thickness inside"""
-    for tri in ((q[0], q[1], q[2]), (q[0], q[2], q[3])):
-        n = np.cross(tri[1] - tri[0], tri[2] - tri[0])
-        if np.linalg.norm(n) < 1e-12:
-            continue
-        n = unit(n)
-        if n @ (np.mean(tri, 0) - cen) < 0:
-            n = -n
-        m.face(list(tri), uv_out, n)
-        m.face([p - n * SLAB for p in tri][::-1], uv_in, -n)
-
-
-def mirror_pts(P):
-    return np.array(P, float) * np.array([-1, 1, 1])
-
-
-# ---------------------------------------------------------------- loft surfaces between rings (left half; mirrored for the right)
-
-class Loft:
-    """rings: list of (NP x 3) arrays from front to rear; surface(u, v): u in [0, NP-1] along the profile (sill to top), v in [0, len-1] along z"""
-
-    def __init__(self, rings):
-        self.R = [np.array(r, float) for r in rings]
-
-    def pt(self, u, v):
-        k = int(min(len(self.R) - 2, math.floor(v)))
-        f = v - k
-        i = int(min(NP - 2, math.floor(u)))
-        g = u - i
-        a = lerp(self.R[k][i], self.R[k][i + 1], g)
-        b = lerp(self.R[k + 1][i], self.R[k + 1][i + 1], g)
-        return lerp(a, b, f)
-
-    def seg_len_u(self, i, v):
-        return float(np.linalg.norm(self.pt(i + 1, v) - self.pt(i, v)))
-
-    def patch(self, u0, u1, v0, v1, nu_extra=0):
-        """triangles of the sub-surface u0..u1, v0..v1 (sampled at every ring and profile point inside)"""
-        us = sorted(set([u0, u1] + [float(i) for i in range(int(math.ceil(u0 + 1e-9)), int(math.floor(u1 - 1e-9)) + 1)]))
-        vs = sorted(set([v0, v1] + [float(k) for k in range(int(math.ceil(v0 + 1e-9)), int(math.floor(v1 - 1e-9)) + 1)]))
-        tris = []
-        for a, b in zip(vs[:-1], vs[1:]):
-            for c, d in zip(us[:-1], us[1:]):
-                p00, p10, p11, p01 = self.pt(c, a), self.pt(d, a), self.pt(d, b), self.pt(c, b)
-                tris.append([p00, p10, p11])
-                tris.append([p00, p11, p01])
-        return tris
-
-
-def dv_for(loft, u, v, dist, direction):
-    """the v offset that moves [dist] along the z direction from ring line v (direction +1 toward the rear)"""
-    k = int(min(len(loft.R) - 2, math.floor(v if direction > 0 else v - 1e-9)))
-    L_ = float(np.linalg.norm(loft.pt(u, k + 1) - loft.pt(u, k)))
-    return dist / max(L_, 1e-6)
-
-
-def du_for(loft, i, v, dist):
-    return dist / max(loft.seg_len_u(i, v), 1e-6)
-
-
-# ---------------------------------------------------------------- the pieces
-def tri_of_poly(poly):
-    return [[poly[0], poly[k], poly[k + 1]] for k in range(1, len(poly) - 1)]
-
-
-def window_ring(rings, k):
-    """the whole bow at ring k as one polyline from the left sill over the top to the right sill"""
-    return [p for p in rings[k]] + [mirror_pts(p) for p in rings[k][::-1][1:]]
-
-
-def outline_at(z):
-    """the canopies' union section at station z: the left half from the sill up to the top at x = 0, as [(x, y), ...] (None if not covered)"""
-    def ring_sec(rings, zq, z0):
-        zs = [z0] + [float(np.mean(r[:, 2])) for r in rings[1:]]
-        if zq > zs[0] or zq < zs[-1]:
-            return None
-        for i in range(len(rings) - 1):
-            if zs[i] >= zq >= zs[i + 1]:
-                f = (zs[i] - zq) / max(zs[i] - zs[i + 1], 1e-9)
-                return [(float(p[0]), float(p[1])) for p in lerp(rings[i], rings[i + 1], f)]
-        return None
-    if z > OB_BL[2]:
-        return None
-    if OB_TL[2] < z <= OB_BL[2]:
-        f = (OB_BL[2] - z) / (OB_BL[2] - OB_TL[2])
-        y = OB_BL[1] + f * (OB_TL[1] - OB_BL[1])
-        x = OB_BL[0] + f * (OB_TL[0] - OB_BL[0])
-        return [(x, DECK_OP), (x, y), (0.0, y)]
-    if z <= OB_TL[2] and z >= OB_RINGS[-1][0][2]:
-        return ring_sec(OB_RINGS, z, OB_TL[2])
-    if PB_BL[2] < z < OB_RINGS[-1][0][2]:
-        f = (OB_RINGS[-1][0][2] - z) / (OB_RINGS[-1][0][2] - PB_BL[2])
-        return [(float(p[0]), float(p[1])) for p in lerp(OB_RINGS[-1], TIE_FAR, f)]
-    if PB_TL[2] < z <= PB_BL[2]:
-        f = (PB_BL[2] - z) / (PB_BL[2] - PB_TL[2])
-        y = PB_BL[1] + f * (PB_TL[1] - PB_BL[1])
-        x = PB_BL[0] + f * (PB_TL[0] - PB_BL[0])
-        return [(PB_S0[0], PB_S0[1]), (x, y), (0.0, y)]
-    zmin = float(np.mean(PB_RINGS[-1][:, 2]))
-    if z >= zmin:
-        return ring_sec(PB_RINGS, z, PB_TL[2])
-    if Z_END <= z < zmin:
-        return [(float(p[0]), float(p[1])) for p in PB_RINGS[-1]]
-    return None
-
-
-def sections_rel():
-    out = []
-    zs = [Z_END + 0.005, 4.85, 5.00, 5.15, 5.30, 5.45, 5.60, 5.75, 5.85, 5.95, 6.10, 6.25, 6.34, 6.40, 6.50, 6.58, 6.70, 6.85, 7.05, 7.20, 7.35, 7.47, 7.55, 7.63, 7.72]
-    for z in zs:
-        sec = outline_at(z)
-        if sec is None:
-            continue
-        out.append((z - EYE_P[2], [(max(0.0, x), y - EYE_P[1]) for x, y in sec]))
-    return out
-
-
-CANOPY = sections_rel()
-PANES = {}
-
-
-def flat_pane(name, bl, tl):
-    quad = [bl, mirror_pts(bl), mirror_pts(tl), tl]
-    n = plane_normal(quad)
-    g = inset_polygon(quad, n, R_TUBE + GLASS_GAP)
-    PANES[name] = [g]
-    return tri_of_poly(list(g))
-
-
-def blister_glass(rings, bows, door_side=None, door_bays=None):
-    """curved side and roof glass: one lofted bay between neighbouring bows per side; the door side (x < 0) is split at the header (u = 3)
-    in the bays listed in door_bays"""
-    loft = Loft(rings)
-    d = R_TUBE + GLASS_GAP
-    last = len(rings) - 1
-    bw = sorted(set([0] + list(bows) + [last]))
-    out = []
-    for s in (1, -1):
-        sg = np.array([s, 1, 1])
-        for a, b in zip(bw[:-1], bw[1:]):
-            va = a + dv_for(loft, 0.5, a, d, +1)
-            vb = b - dv_for(loft, 0.5, b - 1e-6, d, +1)
-            u0 = du_for(loft, 0, a, d)
-            if door_side == s and (a, b) in (door_bays or []):
-                u3 = 3.0
-                parts = [(u0, u3 - du_for(loft, 2, a, d)), (u3 + du_for(loft, 3, a, d), NP - 1.0)]
-            else:
-                parts = [(u0, NP - 1.0)]
-            for ua, ub in parts:
-                for t in loft.patch(ua, ub, va, vb):
-                    out.append([p * sg for p in t])
-    return out
-
-
-def frames(m, uv_frame):
-    # the two windscreen frames: one closed member round each pane
-    for bl, tl in ((OB_BL, OB_TL), (PB_BL, PB_TL)):
-        polytube(m, [bl, tl, mirror_pts(tl), mirror_pts(bl), bl], R_TUBE, uv_frame)
-    for rings, bows in ((OB_RINGS, OB_BOWS), (PB_RINGS, PB_BOWS)):
-        for k in bows:
-            polytube(m, window_ring(rings, k), R_TUBE, uv_frame)
-        for s in (1, -1):                                       # sill rails
-            polytube(m, [r[0] * np.array([s, 1, 1]) for r in rings], R_TUBE, uv_frame)
-    for s in (1, -1):                                           # the pilot's A pillars
-        tube(m, PB_S0 * np.array([s, 1, 1]), PB_BL * np.array([s, 1, 1]), R_TUBE, uv_frame)
-    # the pilot's door, on the RIGHT (x < 0): the header along the shoulder (u = 3) from the A pillar to the rear post (ring 3 is the post)
-    polytube(m, [PB_RINGS[k][3] * np.array([-1, 1, 1]) for k in range(0, 4)], R_TUBE, uv_frame)
-    # hinges on the A pillar and the latch on the rear post
-    for t in (0.22, 0.78):
-        p = lerp(PB_S0, PB_BL, t) * np.array([-1, 1, 1])
-        tube(m, p + np.array([-0.020, 0, -0.045]), p + np.array([-0.020, 0, 0.045]), 0.012, uv_frame)
-    p = PB_RINGS[3][1] * np.array([-1, 1, 1])
-    box(m, p + np.array([-0.020, -0.02, 0.0]), (X, Y, Z), (0.012, 0.030, 0.012), uv_frame)
-    # the operator's canopy hinges to the RIGHT: hinge barrels on the right shoulder rail, a latch on the left sill
-    for k in (1, 3):
-        p = OB_RINGS[k][1] * np.array([-1, 1, 1])
-        tube(m, p + np.array([-0.020, 0.0, -0.05]), p + np.array([-0.020, 0.0, 0.05]), 0.012, uv_frame)
-    p = OB_RINGS[2][0]
-    box(m, p + np.array([0.022, 0.030, 0.0]), (X, Y, Z), (0.010, 0.020, 0.040), uv_frame)
-
-
-
-HULL_TRIS = None
-
-
-def load_hull_tris(bones):
-    global HULL_TRIS
-    hull = next(b for b in bones if b['name'] == HULL_BONE)
-    pm = hull['poly_mesh']
-    P = np.array(pm['positions'], float) * np.array([1, 1, -1]) / 16.0
-    T = []
-    for poly in pm['polys']:
-        idx = [v[0] for v in poly]
-        for k in range(1, len(idx) - 1):
-            T.append(P[[idx[0], idx[k], idx[k + 1]]])
-    HULL_TRIS = np.array(T)
-
-
-def hull_target(p, reach=0.45):
-    """the point 1.5 cm inside the hull's surface nearest below and outboard of p (the same side), in the cross-section z = p[2]"""
-    s = 1.0 if p[0] >= 0 else -1.0
-    T = HULL_TRIS
-    z = p[2]
-    m = (T[:, :, 2].min(1) <= z) & (T[:, :, 2].max(1) >= z) & ((T[:, :, 0] * s).max(1) > 0.2) & (T[:, :, 1].min(1) < p[1] + 0.05)
-    best, bp = reach, None
-    for t in T[m]:
-        d = t[:, 2] - z
-        q = []
-        for i in range(3):
-            a_, b_ = t[i], t[(i + 1) % 3]
-            if (d[i] > 0) != (d[(i + 1) % 3] > 0):
-                f = d[i] / (d[i] - d[(i + 1) % 3])
-                q.append((a_ + (b_ - a_) * f)[:2])
-        if len(q) != 2:
-            continue
-        a_, b_ = q
-        if min(a_[0] * s, b_[0] * s) < p[0] * s - 0.03 or min(a_[1], b_[1]) > p[1] + 0.02:
-            continue
-        ab = b_ - a_
-        L2 = float(ab @ ab)
-        u = 0.0 if L2 < 1e-12 else float(np.clip(((p[:2] - a_) @ ab) / L2, 0, 1))
-        c = a_ + ab * u
-        if c[0] * s < p[0] * s - 0.03 or c[1] > p[1] + 0.02:
-            continue
-        dd = float(np.linalg.norm(c - p[:2]))
-        if dd < best:
-            best, bp = dd, c
-    if bp is None:
-        return np.array([p[0], p[1] - 0.04, p[2]])
-    dv_ = bp - p[:2]
-    dirv = dv_ / np.linalg.norm(dv_) if np.linalg.norm(dv_) > 1e-6 else np.array([0.0, -1.0])
-    t = bp + dirv * 0.027
-    return np.array([t[0], t[1], z])
-
-
-def ribbon_skirt(m, top, bot, uv_out, uv_in, thick=0.037):
-    """one closed solid along a run: the outer strip from `top` (a frame member's centre line) down to `bot` (inside the hull), an inner
-    strip `thick` inboard of it (3.7 cm: no face lies within 12 mm of the member tube's flats) and the closing top, bottom and end faces.
-    All stations share vertices, so the strip is one welded part that touches the frame."""
-    keep = [0] + [k for k in range(1, len(top)) if np.linalg.norm(np.array(top[k], float) - np.array(top[k - 1], float)) > 1e-4]
-    top = [np.array(top[k], float) for k in keep]
-    bot = [np.array(bot[k], float) for k in keep]
-    n_st = len(top)
-    N = []
-    for k in range(n_st):
-        t = top[min(k + 1, n_st - 1)] - top[max(k - 1, 0)]
-        nn = np.cross(t, bot[k] - top[k])
-        ln_ = np.linalg.norm(nn)
-        nn = nn / ln_ if ln_ > 1e-9 else (N[-1] if N else np.array([1.0 if top[k][0] >= 0 else -1.0, 0.0, 0.0]))
-        if nn[0] * (1.0 if top[k][0] >= 0 else -1.0) < 0:
-            nn = -nn
-        N.append(nn)
-    itop = [top[k] - N[k] * thick for k in range(n_st)]
-    ibot = [bot[k] - N[k] * thick for k in range(n_st)]
-    for k in range(n_st - 1):
-        nm = N[k] + N[k + 1]
-        nm = nm / np.linalg.norm(nm) if np.linalg.norm(nm) > 1e-9 else N[k]
-        m.face([top[k], top[k + 1], bot[k + 1], bot[k]], uv_out, nm)
-        m.face([itop[k], itop[k + 1], ibot[k + 1], ibot[k]], uv_in, -nm)
-        m.face([top[k], top[k + 1], itop[k + 1], itop[k]], uv_out, np.array([0.0, 1.0, 0.0]))
-        m.face([bot[k], bot[k + 1], ibot[k + 1], ibot[k]], uv_out, np.array([0.0, -1.0, 0.0]))
-    for k, sg in ((0, -1.0), (n_st - 1, 1.0)):
-        t = top[min(k + 1, n_st - 1)] - top[max(k - 1, 0)]
-        t = t / np.linalg.norm(t)
-        m.face([top[k], bot[k], ibot[k], itop[k]], uv_out, t * sg)
-
-
-def skirts(m, uv_out, uv_in):
-    """sill skirts: a closed solid from each sill rail's centre line to the nearest hull surface below and outside it (airframe colour
-    outside, dark inside, 3.7 cm thick so no face lies within 12 mm of the rail tube's flats): the bubbles' bottom edges never leave a slot"""
-    L_ = [OB_RINGS[k][0] for k in range(len(OB_RINGS))] + [PB_RINGS[k][0] for k in range(len(PB_RINGS))]
-    L_ = sorted(L_, key=lambda p: -p[2])
-    for s in (1, -1):
-        sg = np.array([s, 1, 1])
-        path = [p * sg for p in L_]
-        pts = []
-        for a, b in zip(path[:-1], path[1:]):
-            n_st = max(1, int(math.ceil(float(np.linalg.norm(b - a)) / 0.12)))
-            pts += [a + (b - a) * (k / n_st) for k in range(n_st)]
-        pts.append(path[-1])
-        # stop 3 cm short of the rear arch's plane (the end cap would lie in it)
-        z_stop = Z_END + 0.03
-        keep = [p for p in pts if p[2] > z_stop + 1e-6]
-        a_, b_ = keep[-1], pts[-1]
-        keep.append(a_ + (b_ - a_) * ((a_[2] - z_stop) / (a_[2] - b_[2])))
-        pts = keep
-        ribbon_skirt(m, pts, [hull_target(p) for p in pts], uv_out, uv_in)
-
 def rear_mirror(m, uv_frame, uv_glass):
-    """the pilot's outside rear-view mirror: a short stalk from the left A pillar out and forward into a framed plate facing the pilot (rearward);
-    the glass plate's back face is the frame's front face (no two faces 1-2 mm apart)"""
-    p = lerp(PB_S0, PB_BL, 0.80)
+    """the pilot's outside rear-view mirror: a short stalk from the left side of the pilot's windscreen hoop out and forward into a framed plate
+    facing the pilot (rearward); the glass plate's back face is the frame's front face (no two faces 1-2 mm apart)"""
+    p = np.array([0.367, 3.120, 6.083])                 # the hoop's leg (member 291)
     c = p + np.array([0.115, 0.045, -0.040])
     tube(m, p, c + np.array([0.0, 0.0, 0.004]), 0.009, uv_frame, seg=6)
     box(m, c + np.array([0.0, 0.0, -0.006]), (X, Y, Z), (0.062, 0.044, 0.006), uv_frame)
     box(m, c + np.array([0.0, 0.0, -0.0145]), (X, Y, Z), (0.056, 0.038, 0.0025), uv_glass)
-
-def build(uv_frame):
-    m = Mesh()
-    glass = []
-    glass += flat_pane('operator windscreen', OB_BL, OB_TL)
-    glass += flat_pane('pilot windscreen', PB_BL, PB_TL)
-    glass += blister_glass(OB_RINGS, OB_BOWS)
-    glass += blister_glass(PB_RINGS, PB_BOWS, door_side=-1, door_bays=[(0, 3)])
-    frames(m, uv_frame)
-    return m, glass
-
-
-def hump(m, uv_out, uv_in):
-    """the opaque hump between the crews: from the operator's rear arch up to the pilot's windscreen foot"""
-    cen = np.array([0.0, 2.4, 6.46])
-    for s in (1, -1):
-        sg = np.array([s, 1, 1])
-        for j in range(NP - 1):
-            q = [OB_RINGS[-1][j] * sg, OB_RINGS[-1][j + 1] * sg, TIE_FAR[j + 1] * sg, TIE_FAR[j] * sg]
-            warped_quad(m, q, cen, uv_out, uv_in)
 
 
 def cut_old(bones):
@@ -625,21 +468,98 @@ def cut_old(bones):
 
 
 def flat_panes_json():
-    """one entry per windscreen: its glass triangles are selected one by one (a box round each centroid, so the gunsight glass inside the
-    pane's bounding box is not taken for part of it), and all are fitted to one plane together"""
+    """one entry per pane: its glass triangles are selected one by one (a box round each centroid) and all are fitted to one plane together"""
     out = []
-    for name, polys in sorted(PANES.items()):
+    for name, pane in PANES.items():
         boxes = []
-        for g in polys:
-            for k in range(1, len(g) - 1):
-                c = (g[0] + g[k] + g[k + 1]) / 3
-                boxes.append([[round(float(v) - 0.0004, 4) for v in c], [round(float(v) + 0.0004, 4) for v in c]])
+        for g in pane['tris']:
+            c = (g[0] + g[1] + g[2]) / 3
+            boxes.append([[round(float(v) - 0.0004, 4) for v in c], [round(float(v) + 0.0004, 4) for v in c]])
         out.append({'name': name, 'mirror': False, 'boxes': boxes})
-    return {'why': ('Mi-24P canopies: two separate bubbles, each with ONE flat armoured windscreen (operator: lower, leaning back 16 degrees from the vertical; '
-                    'pilot: raised on the hump, leaning back 37 degrees from the vertical). Only these two windscreens are flat on the real '
-                    'helicopter; the side blisters and the roofs of both canopies are curved (lofted, not listed). Pane sizes UNVERIFIED '
-                    'against drawings (canopy_mi_24p.py).'),
+    return {'why': ('Mi-24P canopies: the model\'s own frames (two raked oval windscreen hoops, sill and beltline rails, roof rails, the pilot\'s B posts) '
+                    'glazed with flat panes: each windscreen, each side window and each roof pane is ONE planar polygon with its corners on frame '
+                    'members (canopy_mi_24p.py). Listed: every pane.'),
             'panes': out}
+
+
+R_TUBE = 0.020
+
+
+def frame_members():
+    """straight members along the unique edges of the facets (collinear neighbours joined): [(a, b)] in blocks. The edges that run into the engine
+    fairing's front (the glass's rear edges) are hidden in it and get no member."""
+    nb = {}
+    for a, b in EDGES:
+        va, vb = CORNERS[a], CORNERS[b]
+        if max(va[2], vb[2]) <= 5.17 and max(va[1], vb[1]) > 3.3:
+            continue
+        nb.setdefault(a, []).append(b)
+        nb.setdefault(b, []).append(a)
+    used = set()
+    out = []
+
+    def straight(p, q, r):
+        d1, d2 = unit(CORNERS[q] - CORNERS[p]), unit(CORNERS[r] - CORNERS[q])
+        return float(d1 @ d2) > math.cos(math.radians(4.0))
+    for a, b in EDGES:
+        if frozenset((a, b)) in used or b not in nb.get(a, []):
+            continue
+        chain = [a, b]
+        used.add(frozenset((a, b)))
+        for end in (1, 0):
+            while True:
+                cur, prev = (chain[-1], chain[-2]) if end else (chain[0], chain[1])
+                nxt = [n for n in nb[cur] if n != prev and frozenset((cur, n)) not in used]
+                if len(nb[cur]) == 2 and len(nxt) == 1 and straight(prev, cur, nxt[0]):
+                    used.add(frozenset((cur, nxt[0])))
+                    if end:
+                        chain.append(nxt[0])
+                    else:
+                        chain.insert(0, nxt[0])
+                else:
+                    break
+        out.append((CORNERS[chain[0]], CORNERS[chain[-1]]))
+    return out
+
+
+# The hump between the crews is opaque skin (the model's own old partition and its arch plates are cut with the rest of the old interior, because
+# the pilot's panel stands in front of them): a top strip from the pilot windscreen's lower edge to the operator roof's rear edge, and a side wall
+# on each side from the pilot's side window to the operator's. Corners are the glass's own corners (coordinates as in the tables above) and the
+# rim point of the skin (-0.61, 2.28, 6.40).
+HUMP_TOP = [(-0.285, 2.772, 6.292), (-0.114, 2.821, 6.309), (0.114, 2.821, 6.309), (0.285, 2.772, 6.292),
+            (0.236, 2.691, 6.488), (0.163, 2.745, 6.445), (-0.163, 2.745, 6.445), (-0.236, 2.691, 6.488)]
+HUMP_WALL = [(-0.285, 2.772, 6.292), (-0.440, 2.571, 6.200), (-0.520, 2.520, 6.120), (-0.620, 2.300, 6.120), (-0.610, 2.280, 6.400),
+             (-0.582, 2.234, 6.591), (-0.308, 2.568, 6.443), (-0.236, 2.691, 6.488)]
+
+
+def fill(m, pts, uv, normal):
+    """an opaque polygon (not necessarily flat): ear-clipped in its mean plane, every triangle facing [normal]"""
+    P = [np.array(q, float) for q in pts]
+    n = unit(normal)
+    u = unit(np.cross(n, Y if abs(n @ Y) < 0.9 else X))
+    v = np.cross(n, u)
+    c = np.mean(P, 0)
+    for i, j, k in ear_clip([((q - c) @ u, (q - c) @ v) for q in P]):
+        m.face([P[i], P[j], P[k]], uv, n)
+
+
+def hump(m, uv):
+    cor = lambda q: CORNERS.get(_key(q), np.array(q, float))
+    fill(m, [cor(q) for q in HUMP_TOP], uv, Y)
+    for sgn in (1, -1):
+        wall = [cor(q) for q in HUMP_WALL]
+        if sgn == 1:
+            wall = [mx(w) for w in wall]
+        fill(m, wall, uv, np.array([sgn, 0.0, 0.0]))
+
+
+def build_frames(uv_frame, uv_mirror, uv_skin):
+    m = Mesh()
+    hump(m, uv_skin)
+    for a, b in frame_members():
+        tube(m, a, b, R_TUBE, uv_frame)
+    rear_mirror(m, uv_frame, uv_mirror)
+    return m.poly_mesh()
 
 
 def main(argv):
@@ -650,20 +570,18 @@ def main(argv):
     bones[:] = [b for b in bones if b['name'] != CANOPY_BONE]
     cut = cut_old(bones)
     sw = L.Swatches(L.texture_path(VID))
-    uv_out, uv_in, uv_frame = sw.uv((128, 128, 96)), sw.uv((24, 26, 22)), sw.uv((46, 52, 40))
+    uv_frame = sw.uv((128, 128, 96))
     uv_mirror = sw.uv((120, 138, 146))
-    load_hull_tris(bones)
-    m, glass = build(uv_frame)
-    hump(m, uv_out, uv_in)
-    # skirts(m, uv_out, uv_in)
-    rear_mirror(m, uv_frame, uv_mirror)
+    glass = build_glass()
+    pm = build_frames(uv_frame, uv_mirror, sw.uv((128, 128, 96)))
     hull = next(b for b in bones if b['name'] == HULL_BONE)
-    pm = m.poly_mesh()
     bones.insert(bones.index(hull) + 1, {'name': CANOPY_BONE, 'parent': 'hull', 'pivot': list(hull['pivot']), 'poly_mesh': pm})
     both = [list(map(float, p)) for t in glass for p in t] + [list(map(float, t[k])) for t in glass for k in (0, 2, 1)]
     asset['CanopyGlass'] = {'Schema': 1, 'Frame': 'VEHICLE_LOCAL_BLOCKS', 'Triangles': [round(v, 4) + 0.0 for p in both for v in p]}
-    print(f'{VID} canopy: {cut} old interior and frame faces cut, {len(pm["polys"])} faces of frame and hump; '
-          f'{len(glass)} glass triangles; swatch error {sw.worst:.0f}')
+    print(f'{VID} canopy: {cut} old canopy and interior faces cut, {len(pm["polys"])} faces of frame members and mirror; '
+          f'{len(PANES)} flat panes, {len(glass)} glass triangles; swatch error {sw.worst:.0f}')
+    for name, pane in PANES.items():
+        print(f'   {name:24s} {len(pane["poly"]):2d} corners, flat to {pane["flat"] * 1000:.3f} mm, corners moved from the model frame by up to {pane["dev"] * 1000:.0f} mm')
     if dry:
         return
     with open(GEO, 'w', encoding='utf-8', newline='\n') as f:
@@ -678,6 +596,19 @@ def main(argv):
         json.dump(flat_panes_json(), f, indent=2)
         f.write('\n')
 
+
+CANOPY = None
+
+
+def _init():
+    global CANOPY, OB_BL, OB_TL
+    build_glass()
+    ws = PANES['operator windscreen']['poly']          # the cockpit script's reference: the operator windscreen's bottom and top (y, z used)
+    OB_BL, OB_TL = ws[0], ws[5]
+    CANOPY = sections_rel()
+
+
+_init()
 
 if __name__ == '__main__':
     main(sys.argv[1:])
