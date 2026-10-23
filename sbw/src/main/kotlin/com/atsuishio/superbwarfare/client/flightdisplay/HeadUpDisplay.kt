@@ -69,17 +69,8 @@ object HeadUpDisplay {
     private var failed = false
     private var logged = false
 
-    /** The vehicle's HUDs and sights: "HeadUpDisplay" and any more crew stations' in "HeadUpDisplays". */
-    private fun resources(vehicle: VehicleEntity): List<HeadUpDisplayResource> {
-        val res = VehicleResource.getDefault(vehicle)
-        val more = res.headUpDisplays
-        val one = res.headUpDisplay
-        if (more == null) return if (one != null && one.frame == "VEHICLE_LOCAL_BLOCKS") listOf(one) else emptyList()
-        val all = ArrayList<HeadUpDisplayResource>(more.size + 1)
-        if (one != null) all.add(one)
-        for (r in more) if (r != null) all.add(r)
-        return all.filter { it.frame == "VEHICLE_LOCAL_BLOCKS" }
-    }
+    /** The vehicle's HUDs and sights (see [HudSeats]). */
+    private fun resources(vehicle: VehicleEntity): List<HeadUpDisplayResource> = HudSeats.of(VehicleResource.getDefault(vehicle))
 
     private fun combiner(r: HeadUpDisplayResource): Combiner? = combiners.getOrPut(r) { fit(r) }
 
@@ -132,7 +123,7 @@ object HeadUpDisplay {
             val vehicle = Minecraft.getInstance().player?.vehicle as? VehicleEntity ?: run { liveVehicleId = -1; return }
             // live only for the crewman at a HUD's own seat (first or third person); the others show the still picture
             val seat = FlightDisplayState.crewSeat(vehicle)
-            val r = resources(vehicle).firstOrNull { it.seat == seat } ?: run { liveVehicleId = -1; return }
+            val r = HudSeats.liveFor(seat, resources(vehicle)) ?: run { liveVehicleId = -1; return }
             if (vehicle.isWreck) { liveVehicleId = -1; return }
             val c = liveCombiner(vehicle, r) ?: run { liveVehicleId = -1; return }
             val state = FlightDisplayState.sample(vehicle, partialTick) ?: return

@@ -480,8 +480,8 @@ def build(m, atlas, st, ppm=400, painters=None):
         m.flat([a, b, b + np.array([0, 0, 0.10]), a + np.array([0, 0, 0.10])], sw['panel_d'], normal=[0, -1, 0])
 
     # -- pedals
-    pz, py = st['PEDAL_Z'], st['PEDAL_Y']
-    for s in (1, -1):
+    pz, py = st.get('PEDAL_Z'), st.get('PEDAL_Y')
+    for s in ((1, -1) if pz is not None else ()):
         m.box(P(s * 0.13 * sc, py, pz), (X, H.unit([0, 1, -0.35]), H.unit([0, 0.35, 1])), (0.05 * sc, 0.08 * sc, 0.012),
               sw['mgrey'])
         if g('PEDAL_HANG', True):
@@ -490,7 +490,7 @@ def build(m, atlas, st, ppm=400, painters=None):
         else:
             fl = st['FLOOR_Y']
             m.box(P(s * 0.13 * sc, (py + fl) / 2, pz + 0.04), (X, Y, Z), (0.014, max(0.01, (py - fl) / 2), 0.04), sw['dgrey'])
-    if g('PEDAL_HANG', True):
+    if pz is not None and g('PEDAL_HANG', True):
         m.box(P(0, py + 0.29 * sc, pz + 0.12 * sc), (X, Y, Z), (0.20 * sc, 0.02, 0.025), sw['dgrey'])
 
     # -- the seat
