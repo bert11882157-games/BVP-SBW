@@ -134,7 +134,34 @@ def su(im):
     im.paste(big.resize((W, H), Image.LANCZOS), (0, 0))
 
 
+def cn(im):
+    """People's Republic of China, drawn on a 6x supersampled field: red, one large yellow star in the upper hoist corner and the
+    four small stars on an arc to its right, each turned to face the large one."""
+    import math
+    k = 6
+    w, h = W * k, H * k
+    big = Image.new('RGBA', (w, h), (222, 41, 16, 255))
+    d = ImageDraw.Draw(big)
+    gold = (255, 222, 0, 255)
+
+    def star(cx, cy, R, face=None):
+        # point up unless a point to face is given; inner radius 0.382 R (regular pentagram)
+        rot = -90 if face is None else math.degrees(math.atan2(face[1] - cy, face[0] - cx))
+        pts = []
+        for i in range(10):
+            a = math.radians(rot + 36 * i)
+            rr = R if i % 2 == 0 else R * 0.382
+            pts.append((cx + rr * math.cos(a), cy + rr * math.sin(a)))
+        d.polygon(pts, fill=gold)
+    big_c = (w * 5 / 30, h * 5 / 20)                    # flag grid 30 x 20: large star centre (5, 5), radius 3
+    star(*big_c, h * 3 / 20)
+    for gx, gy in ((10, 2), (12, 4), (12, 7), (10, 9)):   # small stars, radius 1
+        star(w * gx / 30, h * gy / 20, h * 1 / 20, face=big_c)
+    im.paste(big.resize((W, H), Image.LANCZOS), (0, 0))
+
+
 FLAGS = {
+    'CN': cn,
     'SU': su,
     'KR': kr,
     'GB': gb,
