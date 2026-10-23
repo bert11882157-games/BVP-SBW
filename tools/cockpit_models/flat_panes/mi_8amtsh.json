@@ -1,0 +1,20 @@
+{
+  "why": "Real Mi-8 / Mi-17 flight deck (Mi-8AMTSh, photographs and the model's own frame lines): the windscreen is two large flat armoured panes (one in front of each pilot) meeting at a slim centre post, each with its own wiper; a flat side-front pane sits between the corner pillar and the pillar in front of the sliding side window; the roof carries a flat eyebrow window over each side window. The sliding side windows are bulged (blisters) and the chin windows follow the curved nose skin, so those are NOT listed. UNVERIFIED against a photograph taken from the same angle: the layout is the one the model's own pillars and posts give, with its centre gap closed by one post on the centre line.",
+  "panes": [
+    {
+      "name": "windscreen",
+      "box": [[0.0, 2.2, 6.9], [0.74, 3.2, 7.6]],
+      "mirror": true
+    },
+    {
+      "name": "side-front pane",
+      "box": [[0.76, 2.3, 6.28], [1.12, 3.1, 7.3]],
+      "mirror": true
+    },
+    {
+      "name": "roof eyebrow window",
+      "box": [[0.85, 3.05, 5.7], [1.25, 3.45, 6.3]],
+      "mirror": true
+    }
+  ]
+}
