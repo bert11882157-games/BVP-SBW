@@ -4,6 +4,7 @@ import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.math.sqrt
 import net.minecraft.client.gui.GuiGraphics
+import org.joml.Quaterniond
 
 /**
  * A gunsight's reticle, painted into the head-up display's target in place of [HudPainter]'s symbology (HUD Style
@@ -24,8 +25,10 @@ internal object GunsightPainter {
     private const val LAG = 0.25                 // s, the gyro's time constant
     private const val MIL = 0.0573               // degrees per mil
 
+    private const val MAX_GAP = 0.2              // s; a longer pause between frames restarts the rate measurement
+
     private var lastNanos = 0L
-    private var lastPitch = 0.0
+    private val lastPose = Quaterniond()
     private var leadRight = 0.0
     private var leadUp = -GRAVITY_DROP
 
@@ -45,14 +48,22 @@ internal object GunsightPainter {
             }
             return
         }
-        // the lead: rates from the change in attitude, smoothed with the gyro's lag
+        // the lead: the body's own pitch and yaw rates, as the gyro senses them (from the change in orientation between
+        // frames, so a banked pull or a loop reads right where Euler angles would flip), smoothed with the gyro's lag
         val now = System.nanoTime()
-        if (live) {
-            val dt = if (lastNanos == 0L) 0.0 else ((now - lastNanos) / 1e9).coerceIn(0.0, 0.2)
-            if (dt > 1e-4) {
-                val pitchRate = (s.pitchUp - lastPitch) / dt
-                val wantRight = (-s.yawRate * TIME_OF_FLIGHT).coerceIn(-MAX_LEAD, MAX_LEAD)
-                val wantUp = (-pitchRate * TIME_OF_FLIGHT - GRAVITY_DROP).coerceIn(-MAX_LEAD, MAX_LEAD)
+        val pose = s.pose
+        if (live && pose != null) {
+            val q = FlightDisplayState.orientation(pose[0], pose[1], pose[2])
+            val dt = if (lastNanos == 0L) 0.0 else (now - lastNanos) / 1e9
+            if (dt > 1e-4 && dt < MAX_GAP) {
+                // the turn since the last frame in the body frame (+X left, +Y up): +X turns the nose down, +Y left
+                val d = Quaterniond(lastPose).conjugate().mul(q)
+                if (d.w < 0) d.set(-d.x, -d.y, -d.z, -d.w)
+                val k = Math.toDegrees(2.0) / dt
+                val pitchUpRate = -d.x * k
+                val yawRightRate = -d.y * k
+                val wantRight = (-yawRightRate * TIME_OF_FLIGHT).coerceIn(-MAX_LEAD, MAX_LEAD)
+                val wantUp = (-pitchUpRate * TIME_OF_FLIGHT - GRAVITY_DROP).coerceIn(-MAX_LEAD, MAX_LEAD)
                 val a = (dt / (LAG + dt))
                 leadRight += (wantRight - leadRight) * a
                 leadUp += (wantUp - leadUp) * a
@@ -60,8 +71,8 @@ internal object GunsightPainter {
                 if (l > MAX_LEAD) { leadRight *= MAX_LEAD / l; leadUp *= MAX_LEAD / l }
             }
             lastNanos = now
-            lastPitch = s.pitchUp
-        }
+            lastPose.set(q)
+        } else lastNanos = 0L
         val ringR = (50 * MIL * k).toFloat()
         // the pipper stays on the glass with its ring (on a glass too small for the ring, at the glass's middle)
         val px = keepOn(if (live) (bx + leadRight * k).toFloat() else bx, f.left + ringR + 6, f.right - ringR - 6)

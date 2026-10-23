@@ -77,21 +77,26 @@ object HeadUpDisplay {
     private var liveFit: Combiner? = null
     private var liveFitFor: HeadUpDisplayResource? = null
     private val liveFitEye = Vector3d()
+    /**
+     * The camera in the vehicle frame, measured in the world pass where the camera and the vehicle's pose belong to
+     * the same frame. The frame's start (where the picture is painted) still holds the last frame's camera, which
+     * against this frame's pose put the eye off by the distance flown per frame: the picture refitted every frame and
+     * the symbols slid about, and flipped back to the design eye once that passed [MAX_EYE_SHIFT].
+     */
+    private val measuredEye = Vector3d(Double.NaN, Double.NaN, Double.NaN)
+    private var measuredFor = -1
 
     /**
      * The pilot's picture, collimated for where their eye actually is: in first person the camera's position in the
      * vehicle frame (a zoom or seat camera can sit off the design eye, and the symbols would then slide off the
      * boresight), refitted when it moves; otherwise, or when the camera is not near the seat, the design eye.
      */
-    private fun liveCombiner(vehicle: VehicleEntity, r: HeadUpDisplayResource, partialTick: Float): Combiner? {
+    private fun liveCombiner(vehicle: VehicleEntity, r: HeadUpDisplayResource): Combiner? {
         val mc = Minecraft.getInstance()
         val design = vec(r.eye) ?: return combiner(r)
         var eye = design
-        if (mc.options.cameraType.isFirstPerson) {
-            val cam = vehicle.worldToVehicleLocal(mc.gameRenderer.mainCamera.position, partialTick)
-            val local = Vector3d(cam.x, cam.y, cam.z)
-            if (local.isFinite && local.distance(design) < MAX_EYE_SHIFT) eye = local
-        }
+        if (mc.options.cameraType.isFirstPerson && measuredFor == vehicle.id && measuredEye.isFinite
+            && measuredEye.distance(design) < MAX_EYE_SHIFT) eye = Vector3d(measuredEye)
         if (eye === design) return combiner(r)
         if (liveFitFor !== r || liveFit == null || liveFitEye.distance(eye) > REFIT_DISTANCE) {
             liveFit = fit(r, eye) ?: return combiner(r)
@@ -119,7 +124,7 @@ object HeadUpDisplay {
             val r = resource(vehicle) ?: run { liveVehicleId = -1; return }
             // live only for the pilot at the HUD's own seat (first or third person); passengers see the still picture
             if (vehicle.isWreck || FlightDisplayState.crewSeat(vehicle) != r.seat) { liveVehicleId = -1; return }
-            val c = liveCombiner(vehicle, r, partialTick) ?: run { liveVehicleId = -1; return }
+            val c = liveCombiner(vehicle, r) ?: run { liveVehicleId = -1; return }
             val state = FlightDisplayState.sample(vehicle, partialTick) ?: return
             val flags = vehicle.getIncomingMissileWarning()
             val alerts = HudPainter.Alerts(locked = vehicle.getAircraftThreatLevel() > 0,
@@ -143,7 +148,13 @@ object HeadUpDisplay {
     fun render(vehicle: VehicleEntity, poseStack: PoseStack, buffers: MultiBufferSource) {
         if (failed) return
         val r = resource(vehicle) ?: return
-        val isLive = liveVehicleId == vehicle.id && liveFor === r && Minecraft.getInstance().player?.vehicle === vehicle
+        val mc = Minecraft.getInstance()
+        if (mc.player?.vehicle === vehicle && FlightDisplayState.crewSeat(vehicle) == r.seat) {
+            val cam = vehicle.worldToVehicleLocal(mc.gameRenderer.mainCamera.position, mc.frameTime)
+            measuredEye.set(cam.x, cam.y, cam.z)
+            measuredFor = vehicle.id
+        }
+        val isLive = liveVehicleId == vehicle.id && liveFor === r && mc.player?.vehicle === vehicle
         val c = (if (isLive && liveFitFor === r) liveFit else null) ?: combiner(r) ?: return
         val texture = if (isLive) LIVE_TEXTURE else stills[r]?.second ?: run { stillRequested.add(r); return }
         val matrix = poseStack.last().pose()

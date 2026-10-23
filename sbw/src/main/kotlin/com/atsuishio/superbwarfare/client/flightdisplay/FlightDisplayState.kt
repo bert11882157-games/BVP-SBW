@@ -6,6 +6,10 @@ import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity
 import net.minecraft.client.Minecraft
 import net.minecraft.util.Mth
 import net.minecraft.world.level.levelgen.Heightmap
+import org.joml.Quaterniond
+import org.joml.Vector3d
+import kotlin.math.abs
+import kotlin.math.asin
 import kotlin.math.atan2
 import kotlin.math.sqrt
 
@@ -52,6 +56,8 @@ data class FlightDisplayState(
     val dayTime: Long? = null,
     /** Rounds left in the local crew member's selected weapon; null when there is none, Int.MAX_VALUE when unlimited. */
     val ammo: Int? = null,
+    /** The render pose this state was read from (engine yaw, pitch, roll in degrees); null for the still picture. */
+    val pose: DoubleArray? = null,
 ) {
     companion object {
         /** What other players see on this display: a powered, level, stationary picture. */
@@ -79,10 +85,18 @@ data class FlightDisplayState(
             val snapshot = if (strategy != null && partialTick.isFinite()) {
                 FixedWingHudMetrics.acceptedSnapshot(vehicle.getVehicleFlightPresentationSnapshot(partialTick))
             } else null
-            val yaw = snapshot?.bodyYaw ?: FixedWingHudMetrics.angle(vehicle.yRotO, vehicle.yRot, partialTick) ?: return null
-            val pitch = snapshot?.bodyPitch ?: FixedWingHudMetrics.angle(vehicle.xRotO, vehicle.xRot, partialTick) ?: return null
-            val roll = snapshot?.bodyRoll ?: FixedWingHudMetrics.angle(vehicle.prevRoll, vehicle.roll, partialTick) ?: return null
+            // The attitude the camera and the model are drawn with (FixedWingCockpitCamera, VehicleRenderer): the
+            // entity's render pose at this partial tick. The instrument snapshot runs on its own receipt clock and is
+            // only accepted on some frames, so a horizon painted from it lagged, led and jumped against the real one.
+            if (!partialTick.isFinite()) return null
+            val yaw = (if (fixedWing) vehicle.getResolvedChassisYaw(partialTick)
+                else FixedWingHudMetrics.angle(vehicle.yRotO, vehicle.yRot, partialTick)) ?: return null
+            val pitch = (if (fixedWing) vehicle.getPitch(partialTick)
+                else FixedWingHudMetrics.angle(vehicle.xRotO, vehicle.xRot, partialTick)) ?: return null
+            val roll = (if (fixedWing) vehicle.getRoll(partialTick)
+                else FixedWingHudMetrics.angle(vehicle.prevRoll, vehicle.roll, partialTick)) ?: return null
             if (!yaw.isFinite() || !pitch.isFinite() || !roll.isFinite()) return null
+            val attitude = attitude(yaw.toDouble(), pitch.toDouble(), roll.toDouble())
 
             val speed = (if (fixedWing) FixedWingHudMetrics.speedKmh(snapshot) else null) ?: (vehicle.absoluteSpeed * 72.0)
             val y = Mth.lerp(partialTick.toDouble(), vehicle.yo, vehicle.y)
@@ -113,9 +127,9 @@ data class FlightDisplayState(
             val rider = Minecraft.getInstance().player?.takeIf { it.vehicle === vehicle }
             val ammo = rider?.let { vehicle.getAmmoCount(it) }?.takeIf { it >= 0 }
             return FlightDisplayState(
-                pitchUp = -pitch.toDouble(),
-                rollRight = roll.toDouble(),
-                heading = Mth.positiveModulo(yaw.toDouble() + 180.0, 360.0),
+                pitchUp = attitude[0],
+                rollRight = attitude[1],
+                heading = Mth.positiveModulo(attitude[2] + 180.0, 360.0),
                 speedKmh = speed.takeIf { it.isFinite() } ?: 0.0,
                 altitude = y,
                 verticalSpeed = smoothedVs.takeIf { it.isFinite() } ?: 0.0,
@@ -137,7 +151,30 @@ data class FlightDisplayState(
                 health = if (maxHealth > 0f) (vehicle.health / maxHealth).toDouble().coerceIn(0.0, 1.0) else 1.0,
                 dayTime = level.dayTime % 24000L,
                 ammo = ammo,
+                pose = doubleArrayOf(yaw.toDouble(), pitch.toDouble(), roll.toDouble()),
             )
+        }
+
+        /** The body orientation of an engine pose (degrees): Ry(-yaw) Rx(pitch) Rz(roll), +X left, +Y up, +Z forward. */
+        @JvmStatic
+        fun orientation(yaw: Double, pitch: Double, roll: Double): Quaterniond = Quaterniond()
+            .rotateY(Math.toRadians(-yaw)).rotateX(Math.toRadians(pitch)).rotateZ(Math.toRadians(roll))
+
+        /**
+         * Pitch up, bank right and yaw (degrees) read off the body axes of an engine pose, so they stay continuous and
+         * in range through a loop or a roll over the vertical (pitch never past 90, the bank going to 180 instead).
+         */
+        internal fun attitude(yaw: Double, pitch: Double, roll: Double): DoubleArray {
+            val q = orientation(yaw, pitch, roll)
+            val forward = q.transform(Vector3d(0.0, 0.0, 1.0))
+            val left = q.transform(Vector3d(1.0, 0.0, 0.0))
+            val up = q.transform(Vector3d(0.0, 1.0, 0.0))
+            val pitchUp = Math.toDegrees(asin(forward.y.coerceIn(-1.0, 1.0)))
+            // straight up or down the bank and heading are undefined: keep the pose's own
+            val vertical = abs(forward.y) > 0.9995
+            val bank = if (vertical) roll else Math.toDegrees(atan2(left.y, up.y))
+            val heading = if (vertical) yaw else Math.toDegrees(atan2(-forward.x, forward.z))
+            return doubleArrayOf(pitchUp, bank, heading)
         }
     }
 }
