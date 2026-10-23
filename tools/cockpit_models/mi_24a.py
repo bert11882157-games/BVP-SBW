@@ -177,9 +177,9 @@ def operator_details(m, atlas, st):
     for z in (0.40, 0.46):
         m.box(P(0.20, -0.24, z), (X, Y, Z), (0.012, 0.035, 0.012), black)         # its two grips
     g_up, g_n = Y, Z
-    c = P(0, 0, 0.418)                  # (in the eyecup, ahead of the body's face at 0.435)
-    H.combiner(m, c - g_up * 0.03, g_up, -g_n, 0.05, 0.06, 'rect', 0.0, ('bottom', 'side'), 0.004, black)
-    return dict(centre=c, normal=-g_n, up=g_up, width=0.05, height=0.06, seat=st['seat'], style='REFLECTOR')
+    c = P(0, 0, 0.418)                  # (in the eyecup, within its opening as seen from his eye)
+    H.combiner(m, c - g_up * 0.025, g_up, -g_n, 0.045, 0.05, 'rect', 0.0, (), 0.004, black)   # (no frame: the eyecup is its frame)
+    return dict(centre=c, normal=-g_n, up=g_up, width=0.045, height=0.05, seat=st['seat'], style='REFLECTOR')
 
 
 def remove_inner(ac, boxes):
