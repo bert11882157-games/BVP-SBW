@@ -184,7 +184,7 @@ def p_headbox(d, im):
     S, Hh = im.width, im.height
     H.noisy(d, im, HEADPAD, 5, seed=60)
     d.rectangle([S * .1, Hh * .1, S * .9, Hh * .9], outline=(60, 62, 58, 255), width=6)
-    H.text(d, (S * .5, Hh * .5), 'NAA', Hh * .2, fill=(40, 40, 40), bold=True)
+    H.text(d, (S * .5, Hh * .5), 'GAEC', Hh * .2, fill=(40, 40, 40), bold=True)
 
 
 # ---------------------------------------------------------------- build
