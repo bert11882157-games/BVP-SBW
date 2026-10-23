@@ -61,7 +61,7 @@ GROUND = {  # combat weight (t), class
     'm109a7_paladin': (35, 'MBT_CHASSIS'), 'qn_506model': (36, 'MBT_CHASSIS'),
     'bmp2': (14.3, 'IFV'), 'bmp2m': (14.6, 'IFV'), 'bmp3m_elite': (18.7, 'IFV'), 'bmp_1am': (14, 'IFV'),
     'cv9040_no_net': (23, 'IFV'), 'm2_bradley': (30, 'IFV'), 'marder_1a1': (28, 'IFV'),
-    'marder_1a2': (28.5, 'IFV'), 'marder_1a5': (37.4, 'IFV'), '9k22_tunguska': (34, 'IFV'), 'zsu23_4': (21, 'IFV'),
+    'marder_1a2': (28.5, 'IFV'), 'marder_1a5': (37.4, 'IFV'), 'puma_ifv': (43, 'IFV'), '9k22_tunguska': (34, 'IFV'), 'zsu23_4': (21, 'IFV'),
     'btr_90': (20.9, 'WHEELED'), 'vbci': (28, 'WHEELED'), 'lav25': (13, 'WHEELED'), 'btr80a': (14.6, 'WHEELED'),
     'btr_60pb': (10.3, 'WHEELED'), 'zbd_09': (21, 'WHEELED'), 'zsl_92': (15.8, 'WHEELED'), 'ztl_09': (23, 'WHEELED'),
     'm1128': (18.8, 'WHEELED'), '9p148': (7, 'WHEELED'), 'gaz_3937_vodnik_aa': (7.5, 'WHEELED'),

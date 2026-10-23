@@ -1484,6 +1484,33 @@
       }
     ]
   },
+  "engine/puma_idle": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/puma_idle",
+        "stream": false
+      }
+    ]
+  },
+  "engine/puma_start": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/puma_start",
+        "stream": false
+      }
+    ]
+  },
+  "engine/puma_stop": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:engine/puma_stop",
+        "stream": false
+      }
+    ]
+  },
   "engine/scimitar_idle": {
     "category": "neutral",
     "sounds": [
@@ -2605,6 +2632,42 @@
     "sounds": [
       {
         "name": "bvp_audio:weapon/mg3_veryfar",
+        "stream": false
+      }
+    ]
+  },
+  "weapon/mg4_1p": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:weapon/mg4_1p",
+        "stream": false
+      }
+    ]
+  },
+  "weapon/mg4_3p": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:weapon/mg4_3p",
+        "stream": false
+      }
+    ]
+  },
+  "weapon/mg4_far": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:weapon/mg4_far",
+        "stream": false
+      }
+    ]
+  },
+  "weapon/mg4_veryfar": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "bvp_audio:weapon/mg4_veryfar",
         "stream": false
       }
     ]

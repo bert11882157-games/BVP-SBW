@@ -25,7 +25,8 @@
     "vab": "land/fr_apc_vab/sounds/vab_start_idle_stop.wav",
     "uaz": "land/mec_jep_uaz/sounds/mec_jeep_start_idle_stop.wav",
     "pickup": "civilian/civ_jep_technical/sounds/mono/civi_pickup_start_idle_stop.wav",
-    "scimitar": "land/gb_ifv_scimitar/sounds/scim_start_idle_stop.wav"
+    "scimitar": "land/gb_ifv_scimitar/sounds/scim_start_idle_stop.wav",
+    "puma": "land/ger_ifv_puma/sounds/puma_power.wav"
   },
   "tracks": {
     "t90": "land/ru_tnk_t90/sounds/t90_tracks.wav",
@@ -149,6 +150,11 @@
       "m1a2",
       "m1a2",
       "abrams"
+    ],
+    "puma_ifv": [
+      "puma",
+      "puma",
+      "warrior"
     ],
     "m1a1_tusk": [
       "m1a2",
@@ -554,6 +560,15 @@
       ],
       "auto": true
     },
+    "mg4": {
+      "src": [
+        "weapons:armament/coaxial_mgs/sounds/mg4_coax_fire_1p.wav",
+        "weapons:armament/coaxial_mgs/sounds/mg4_coax_fire_3p.wav",
+        "weapons:common/sounds/distantshots/mg3_distant.ogg",
+        "weapons:common/sounds/distantshots/mg42_distant.ogg"
+      ],
+      "auto": true
+    },
     "china_mg": {
       "src": [
         "weapons:armament/coaxial_mgs/sounds/china_coax_1p_fire.wav",
@@ -716,6 +731,7 @@
     "m1128.Missile": "tow",
     "lav25.Missile": "tow",
     "marder_1a5.Missile": "tow",
+    "puma_ifv.MainMachineGun": "mg4",
     "leopard_2a4.MachineGun": "mg3",
     "leopard_2a4.PassengerMachineGun": "mg3",
     "gepard.Cannon": "rh202_20",

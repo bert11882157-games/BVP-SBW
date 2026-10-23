@@ -50,6 +50,7 @@ MAIN = {
     'fv721_fox': (0.8, 'WT FV721 Fox 30 mm L21A1 RARDEN, 3-round clip, aced'),
     't64bv': (6.0, 'WT T-64B (1984) 125 mm 2A46 autoloader (shotFreq 0.16666)'),
     'm1a1_tusk': (5.0, 'WT M1A1 HC 120 mm M256, aced'),
+    'puma_ifv': (0.2, 'WT Puma 30 mm MK 30-2/ABM, 100-round cartridge reloadTime 0.2, aced (basic 0.3 s)'),
 }
 MAIN_WEAPON = {'bmp3m_elite': 'Cannon', 'toyota_jihad_bmp1': 'BMP1Cannon'}
 
@@ -57,10 +58,11 @@ MAIN_WEAPON = {'bmp3m_elite': 'Cannon', 'toyota_jihad_bmp1': 'BMP1Cannon'}
 WT_MG = {('fv721_fox', 'MachineGun'): (8.0, 'WT L37A2, 100-round belt, aced (basic crew 10.4 s)'),
          ('t64bv', 'MachineGun'): (8.0, 'WT PKT, 250-round belt (reloadTime 8.0)'),
          ('t64bv', 'PassengerMachineGun'): (5.0, 'WT NSVT, 150-round belt (reloadTime 5.0)'),
+         ('puma_ifv', 'MainMachineGun'): (8.0, 'WT MG4, 1,000-round belt, aced (basic crew 10.4 s)'),
          ('m1a1_tusk', 'MachineGun'): (8.0, 'WT M240, 200-round belt (reloadTime 8.0)'),
          ('m1a1_tusk', 'MainMachineGun'): (8.0, 'WT M2HB (TUSK CSAMM), 100-round belt (reloadTime 8.0)')}
 # Guns whose reload is too short for any crew reload clip: no clip is set.
-NO_CLIP = {('fv721_fox', 'Cannon'), ('t64bv', 'PassengerMachineGun')}
+NO_CLIP = {('fv721_fox', 'Cannon'), ('puma_ifv', 'Cannon'), ('t64bv', 'PassengerMachineGun')}
 RULE = {'LMG': 20.0, 'HMG': 10.0, 'AUTOCANNON': 20.0, 'ATGM': 12.0}
 # autocannon belt change by how much of the belt was fired: [fraction fired, seconds]; the fixed reload times are
 # set to the empty-belt value (12 s) as the fallback
@@ -70,7 +72,7 @@ GRENADE = re.compile(r'AG-30|AGS-30|AGS|grenade|Mk ?19|QLZ', re.I)
 # WT rounds per minute by gun.
 RPM = {
     'PKT': 700, 'M240': 940, 'MG3': 1200, 'M73': 500, 'SGMT': 600, 'TYPE74': 700, 'TYPE86': 700, 'L94A1': 600,
-    'L37A2': 650, 'QJT': 800, 'AANF1': 900, 'KSP': 650,
+    'L37A2': 650, 'QJT': 800, 'AANF1': 900, 'KSP': 650, 'MG4': 890,
     'M2HB': 575, 'NSVT': 700, 'KORD': 700, 'DSHK': 600, 'M85': 625, 'QJC88A': 600, 'KPVT': 600,
     '2A42': 550, '2A72': 330, '2A14x2': 1600,
 }
@@ -92,7 +94,7 @@ def gun_of(vid, name):
     for key, pat in (('M2HB', 'M2HB'), ('NSVT', 'NSVT'), ('KORD', 'KORD'), ('DSHK', 'DSHK'), ('M85', 'M85'),
                      ('QJC88A', 'QJC88A'), ('KPVT', 'KPVT'), ('PKT', 'PKT'), ('MG3', 'MG3'), ('M240', 'M240'),
                      ('L94A1', 'L94A1'), ('L37A2', 'L37A2'), ('TYPE74', 'TYPE74'), ('TYPE86', 'TYPE86'),
-                     ('QJT', 'QJT'), ('AANF1', 'AANF1')):
+                     ('QJT', 'QJT'), ('AANF1', 'AANF1'), ('MG4', 'MG4')):
         if pat in n:
             return key
     if 'COAX' in n:
