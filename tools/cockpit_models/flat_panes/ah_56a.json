@@ -1,0 +1,133 @@
+{
+  "why": "AH-56A Cheyenne canopy: tandem crew sections of flat panes in slim frames (the real Cheyenne has flat plates, a V-shaped windscreen centre post, flat side panes and separate raised rear and lower front sections). Layout from the model's own frame bars (canopy_ah_56a.py): every pane is a face of one convex canopy solid, so each is one exact plane; pane count and sizes are UNVERIFIED against photographs. Glazed: pilot side / shoulder / roof (two, either side of a centre spine), gunner side / shoulder / overhead / corner / windscreen (two, meeting in the V). The fairing between the crews and the rear fairing are opaque.",
+  "panes": [
+    {
+      "name": "gunner corner pane",
+      "mirror": true,
+      "box": [
+        [
+          0.3697,
+          2.9517,
+          7.9844
+        ],
+        [
+          0.8487,
+          3.772,
+          9.0526
+        ]
+      ]
+    },
+    {
+      "name": "gunner overhead pane",
+      "mirror": false,
+      "box": [
+        [
+          -0.3315,
+          3.6181,
+          7.3608
+        ],
+        [
+          0.3315,
+          4.2595,
+          8.6013
+        ]
+      ]
+    },
+    {
+      "name": "gunner shoulder pane",
+      "mirror": true,
+      "box": [
+        [
+          0.3764,
+          3.6829,
+          7.3613
+        ],
+        [
+          0.6373,
+          4.2483,
+          8.4547
+        ]
+      ]
+    },
+    {
+      "name": "gunner side pane",
+      "mirror": true,
+      "box": [
+        [
+          0.5977,
+          2.9528,
+          6.9817
+        ],
+        [
+          0.8746,
+          4.1185,
+          8.2656
+        ]
+      ]
+    },
+    {
+      "name": "gunner windscreen pane",
+      "mirror": true,
+      "box": [
+        [
+          0.0234,
+          2.9486,
+          8.5601
+        ],
+        [
+          0.3316,
+          3.6281,
+          9.125
+        ]
+      ]
+    },
+    {
+      "name": "pilot roof pane",
+      "mirror": true,
+      "box": [
+        [
+          0.0235,
+          4.3895,
+          5.494
+        ],
+        [
+          0.3315,
+          4.3905,
+          6.7765
+        ]
+      ]
+    },
+    {
+      "name": "pilot shoulder pane",
+      "mirror": true,
+      "box": [
+        [
+          0.376,
+          4.2679,
+          5.4734
+        ],
+        [
+          0.5986,
+          4.3798,
+          6.7765
+        ]
+      ]
+    },
+    {
+      "name": "pilot side pane",
+      "mirror": true,
+      "box": [
+        [
+          0.5806,
+          3.1323,
+          5.3023
+        ],
+        [
+          0.8746,
+          4.2571,
+          6.7665
+        ]
+      ]
+    }
+  ]
+}
