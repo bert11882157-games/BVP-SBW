@@ -219,7 +219,7 @@
         0,
         0
       ],
-      "maxDegrees": 25
+      "maxDegrees": 24
     },
     "elevator_right": {
       "pivot": [
@@ -232,7 +232,7 @@
         0,
         0
       ],
-      "maxDegrees": 25
+      "maxDegrees": 24
     },
     "rudder_0": {
       "pivot": [
@@ -344,7 +344,7 @@
     "FlightDisplays",
     "HeadUpDisplay"
   ],
-  "note_rig": "Rig on the model's own hinges (geo px = source x 0.71497 + [0, 7.1497, -13.668]): trailing-edge surfaces (part 10/11) +-25 deg; stabilators on a lateral spindle near mid chord, +-25 deg, 0.2 roll; canted rudders on their leading edges, +-30 deg; twin nose wheels (r 4.29 px) and mains (r 6.435 px) at the model's own centres.",
+  "note_rig": "Rig on the model's own hinges (geo px = source x 0.71497 + [0, 7.1497, -13.668]): trailing-edge surfaces (part 10/11) +-25 deg; stabilators on a lateral spindle near mid chord, +-24 deg (published stabilator nose-up limit), 0.2 roll; canted rudders on their leading edges, +-30 deg; twin nose wheels (r 4.29 px) and mains (r 6.435 px) at the model's own centres.",
   "armamentOverrides": {
     "Name": "F/A-18C Hornet",
     "MaxPayloadKg": 7031,

@@ -280,7 +280,7 @@
         0,
         0
       ],
-      "maxDegrees": 25
+      "maxDegrees": 24
     },
     "elevator_right": {
       "pivot": [
@@ -293,7 +293,7 @@
         0,
         0
       ],
-      "maxDegrees": 25
+      "maxDegrees": 24
     },
     "rudder_0": {
       "pivot": [
@@ -357,7 +357,7 @@
       ]
     }
   },
-  "note_rig": "Rig on the model's own hinges: the trailing-edge surfaces (part 10, one element a side) on their leading edge, +-25 deg roll; flat all-moving stabilators on a lateral spindle near mid root chord, +-25 deg, 0.2 roll; the canted rudders (new bones) on their leading edges, +-30 deg; twin nose wheels and mains at the model's own centres (nose r 4.34 px, mains r 5.43 px).",
+  "note_rig": "Rig on the model's own hinges: the trailing-edge surfaces (part 10, one element a side) on their leading edge, +-25 deg roll; flat all-moving stabilators on a lateral spindle near mid root chord, +-24 deg (published stabilator nose-up limit), 0.2 roll; the canted rudders (new bones) on their leading edges, +-30 deg; twin nose wheels and mains at the model's own centres (nose r 4.34 px, mains r 5.43 px).",
   "clientSet": {
     "AircraftRig.Surfaces.Bone=elevator_left.ControlWeights.RightRoll": 0.2,
     "AircraftRig.Surfaces.Bone=elevator_right.ControlWeights.RightRoll": -0.2,
