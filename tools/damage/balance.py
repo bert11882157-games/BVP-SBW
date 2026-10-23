@@ -126,7 +126,7 @@ HELI_MASS = {'mi24_hind_a': 11500, 'mi_24a': 11500, 'mi_24d': 11500, 'mi24v': 11
 ARMOURED = {'a_10': 1.35, 'su_25': 1.35, 'su_39': 1.35, 'il_10': 1.35, 'mi24_hind_a': 1.25, 'mi_24a': 1.25,
             'mi_24d': 1.25, 'mi24v': 1.25, 'mi28n': 1.25, 'ka50': 1.25, 'ah_64d': 1.25, 'eurocopter_tiger': 1.25,
             'ah1w_super_cobra': 1.25}
-MASS_ALIAS = {'mig19': 'mig_19s'}
+MASS_ALIAS = {}
 WING_IDS = {'superbwarfare:wing_left', 'superbwarfare:wing_right'}
 WING_FRACTION = 0.4
 

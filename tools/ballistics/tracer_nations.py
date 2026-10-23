@@ -35,7 +35,7 @@ EAST_VEHICLES = {
     # helicopters
     'ka50', 'mi24v', 'mi28n', 'mi_24a', 'mi_24d',
     # aircraft
-    'an_12b', 'il_10', 'il_76m', 'j_10a', 'j_11a', 'j_15d', 'j_2', 'j_26', 'j_5', 'mig19', 'mig_15bis', 'mig_19s',
+    'an_12b', 'il_10', 'il_76m', 'j_10a', 'j_11a', 'j_15d', 'j_2', 'j_26', 'j_5', 'mig_15bis', 'mig_19s',
     'mig_21bis', 'mig_23mld', 'mig_29', 'mig_9', 'q_5', 'su_17', 'su_24', 'su_25', 'su_27', 'su_30', 'su_35', 'su_39',
     'su_57', 'tu_22m', 'tu_95ms', 'yak_15p', 'yak_3', 'yak_9u',
 }

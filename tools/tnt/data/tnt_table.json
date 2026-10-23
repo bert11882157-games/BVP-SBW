@@ -2132,8 +2132,6 @@
    "label": "30x155 mm NR-30 OFZ HE-I(-T)",
    "group": "autocannon",
    "names": [
-    "HEF_I (mig19)",
-    "HEFI_T (mig19)",
     "NR30 AIR GAME",
     "Air Belt (mig_19s)",
     "Air Belt (su_17)"
@@ -2146,25 +2144,7 @@
    "source": "https://github.com/gszabi99/War-Thunder-Datamine/blob/2e2b2e050d80802a64dc1e155d16e088cf2cf122/aces.vromfs.bin_u/gamedata/weapons/cannonnr30.blkx :: bullet/0",
    "confidence": "high",
    "notes": "",
-   "row_count": 16
-  },
-  {
-   "key": "30x155_nr30_aphe",
-   "label": "30x155 mm NR-30 AP-HE",
-   "group": "autocannon",
-   "names": [
-    "NR30 APHE",
-    "Air Belt (mig19)"
-   ],
-   "tnt_kg": 0.0225,
-   "explosive_type": "A-IX-2",
-   "explosive_mass_kg": 0.0146,
-   "multiplier": 1.54,
-   "method": "wt_datamine",
-   "source": "https://github.com/gszabi99/War-Thunder-Datamine/blob/2e2b2e050d80802a64dc1e155d16e088cf2cf122/aces.vromfs.bin_u/gamedata/weapons/cannonnr30.blkx :: bullet/3",
-   "confidence": "high",
-   "notes": "",
-   "row_count": 6
+   "row_count": 10
   },
   {
    "key": "30x184_mk103_mine",
@@ -4903,19 +4883,6 @@
   "berts_vehicle_pack:mi_24d/PassengerGun1": "12_7x108_mdz",
   "berts_vehicle_pack:mi_24d/PassengerGun1[AmmoType[0]]": "12_7x108_mdz",
   "berts_vehicle_pack:mi_26#destroy": null,
-  "berts_vehicle_pack:mig19#destroy": null,
-  "berts_vehicle_pack:mig19/Cannon": "30x155_nr30_aphe",
-  "berts_vehicle_pack:mig19/Cannon[AmmoType[0]]": "30x155_nr30_aphe",
-  "berts_vehicle_pack:mig19/Cannon[ProjectileBeltAmmoType[0]]": "30x155_nr30_ofz",
-  "berts_vehicle_pack:mig19/Cannon[ProjectileBeltAmmoType[1]]": "30x155_nr30_ofz",
-  "berts_vehicle_pack:mig19/Cannon2": "30x155_nr30_aphe",
-  "berts_vehicle_pack:mig19/Cannon2[AmmoType[0]]": "30x155_nr30_aphe",
-  "berts_vehicle_pack:mig19/Cannon2[ProjectileBeltAmmoType[0]]": "30x155_nr30_ofz",
-  "berts_vehicle_pack:mig19/Cannon2[ProjectileBeltAmmoType[1]]": "30x155_nr30_ofz",
-  "berts_vehicle_pack:mig19/Cannon3": "30x155_nr30_aphe",
-  "berts_vehicle_pack:mig19/Cannon3[AmmoType[0]]": "30x155_nr30_aphe",
-  "berts_vehicle_pack:mig19/Cannon3[ProjectileBeltAmmoType[0]]": "30x155_nr30_ofz",
-  "berts_vehicle_pack:mig19/Cannon3[ProjectileBeltAmmoType[1]]": "30x155_nr30_ofz",
   "berts_vehicle_pack:mig_15bis#destroy": null,
   "berts_vehicle_pack:mig_15bis/Cannon37": "37x155_n37_ofz",
   "berts_vehicle_pack:mig_15bis/Cannon37[AmmoType[0]]": "37x155_n37_ofz",
@@ -5604,7 +5571,6 @@
   "berts_vehicle_pack:mi_24a#destroy": "vehicle destruction / cook-off / wreck explosion - not a munition",
   "berts_vehicle_pack:mi_24d#destroy": "vehicle destruction / cook-off / wreck explosion - not a munition",
   "berts_vehicle_pack:mi_26#destroy": "vehicle destruction / cook-off / wreck explosion - not a munition",
-  "berts_vehicle_pack:mig19#destroy": "vehicle destruction / cook-off / wreck explosion - not a munition",
   "berts_vehicle_pack:mig_15bis#destroy": "vehicle destruction / cook-off / wreck explosion - not a munition",
   "berts_vehicle_pack:mig_19s#destroy": "vehicle destruction / cook-off / wreck explosion - not a munition",
   "berts_vehicle_pack:mig_21bis#destroy": "vehicle destruction / cook-off / wreck explosion - not a munition",
