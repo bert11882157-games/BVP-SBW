@@ -36,10 +36,14 @@ SPLIT = 0.44                     # the canopy's front edge, against the windscre
 FRONT_PANE_X = 0.12              # the flat front pane's edges, out from the centre line
 
 
+PANE = (0.49, 1.32, 0.13, 0.13, 0.035)   # the flat armoured front pane: apex z, foot z, half width, corner radius, frame width
+
+
 def build(atlas, E, skin):
     m = H.Mesh(atlas)
     out, inner, dark = atlas.swatch(skin), atlas.swatch((40, 42, 44)), atlas.swatch((26, 27, 28))
-    sh = C.Shape(SECTIONS)
+    # the armoured front pane is a flat slab: the windscreen made flat round it
+    sh = C.Shape(C.flat_pane(SECTIONS, *PANE))
     glass = C.glass_triangles(sh, E, -0.45, SPLIT, nz=12) + C.glass_triangles(sh, E, SPLIT + 0.05, 1.32, nz=10)
     # the canopy: its rear bow, its front bow, the sill rails, the periscope
     C.bow(m, sh, E, -0.43, 0.045, 0.03, out, inner)
@@ -49,7 +53,7 @@ def build(atlas, E, skin):
     # the windscreen: the arch, the front pane's two posts, the base frame on the nose, the side rails
     C.bow(m, sh, E, SPLIT + 0.03, 0.04, 0.022, out, inner)
     # the Su-7 family's armoured front pane: tall, its top one round arch (photos of the type head-on: its round top reaches the windscreen's top frame)
-    C.arched_pane(m, sh, E, 0.49, 1.32, 0.13, 0.13, 0.035, 0.022, out, inner)
+    C.arched_pane(m, sh, E, 0.49, 1.32, 0.13, 0.13, 0.035, 0.022, out, inner, flat_to=1.27)
     C.bow(m, sh, E, 1.30, 0.035, 0.02, out, inner)
     C.member(m, sh, E, 0.0, SPLIT + 0.05, 1.32, 0.045, 0.035, out, inner)
     return m, glass

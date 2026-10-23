@@ -251,6 +251,53 @@ def combiner(m, foot, up, toward, w, h, shape, k, frames, bar, rect, depth=None,
     return c
 
 
+def canopy_surface(vid):
+    """the canopy's inside surface height, f(x, z) -> y eye-relative (None outside it), from the canopy script's
+    sections (the windscreen made flat round its armoured pane where it has one, as the canopy step builds it)"""
+    import importlib
+    import handbuilt_canopy as C
+    M = importlib.import_module('canopy_' + vid)
+    shs = []
+    for attr in ('SECTIONS', 'CANOPY', 'WINDSCREEN'):
+        if hasattr(M, attr):
+            sec = getattr(M, attr)
+            if hasattr(M, 'PANE') and attr in ('SECTIONS', 'WINDSCREEN'):
+                sec = C.flat_pane(sec, *M.PANE)
+            shs.append(C.Shape(sec))
+
+    def y_at(x, z):
+        for sh in shs:
+            if sh.z[0] <= z <= sh.z[-1]:
+                sec = sh.section(z)
+                if abs(x) <= sec[0][0]:
+                    return float(np.interp(abs(x), sec[::-1, 0], sec[::-1, 1]))
+        return None
+    return y_at
+
+
+def fit_sight_under(vid, E, centre, up, h, half_w, clear=0.015, h_min=0.07, back_max=0.15):
+    """a gunsight's reflector glass kept under the windscreen: its top edge [clear] under the glass. The centre stays
+    on the pilot's eye line (the reticle's boresight); the glass is made smaller first (down to [h_min], a real
+    reflector's size), then moved back toward the pilot. Returns (centre, h)."""
+    y_at = canopy_surface(vid)
+    U = unit(up); R = np.array([1.0, 0, 0])
+
+    def ok(c, hh):
+        for u in np.linspace(-half_w, half_w, 7):
+            p = np.array(c, float) + U * hh / 2 + R * u - np.array(E, float)
+            y = y_at(p[0], p[2])
+            if y is not None and p[1] > y - clear:
+                return False
+        return True
+    c = np.array(centre, float)
+    while not ok(c, h) and h > h_min:
+        h = max(h_min, h - 0.005)
+    moved = 0.0
+    while not ok(c, h) and moved < back_max:
+        c = c - np.array([0, 0, 0.005]); moved += 0.005
+    return c, h
+
+
 def facet_box(m, f, a, y, w, h, depth, rect, front=None, lift=0.0025):
     """a box standing on facet f at (a, y): w x h across the panel, [depth] toward the pilot, its back face [lift]
     off the panel face (so nothing lies on the panel); front: a rect for the face toward the pilot"""

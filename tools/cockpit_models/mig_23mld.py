@@ -401,6 +401,7 @@ def build(atlas, E):
     g_n = H.unit(np.cross(X, g_up))
     base_y = E[1] + TOP_C + 0.045                                  # the coaming's top
     g_c = np.array([E[0], E[1], E[2] + PANEL_Z + 0.14])
+    g_c, g_h = H.fit_sight_under(VID, E, g_c, g_up, g_h, g_hw)   # (the reflector under the windscreen glass)
     g_bot, g_top = g_c - g_up * g_h / 2, g_c + g_up * g_h / 2
     body_top = base_y + 0.07                                       # the sight head's own height
     body_c = np.array([E[0], (base_y + body_top) / 2, E[2] + PANEL_Z + 0.11])

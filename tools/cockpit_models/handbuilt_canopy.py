@@ -157,7 +157,41 @@ def member(m, shape, E, s, z0, z1, width, depth, rect_out, rect_in, sides=(1, -1
             m.flat([b0, d0, d1, b1], rect_in, toward=(b0 + d1) / 2 + (b0 - a0))
 
 
-def arched_pane(m, shape, E, z_top, z_base, half_w, radius, width, depth, rect_out, rect_in, steps=28):
+def pane_x(z_top, half_w, radius, slope):
+    """the half width at station z of a pane with straight sides [half_w] and top corners of [radius], its apex at
+    z_top on a windscreen whose top falls at [slope] (radians)"""
+    def x_at(z):
+        d = max(0.0, (z - z_top) / math.cos(slope))
+        if d >= radius:
+            return half_w
+        return half_w - radius + math.sqrt(max(0.0, radius ** 2 - (radius - d) ** 2))
+    return x_at
+
+
+def flat_pane(sections, z_top, z_base, half_w, radius, width, step=0.025):
+    """the windscreen sections remade so the armoured front pane's region is one flat plane (a flat slab, as the real
+    one): across x level, along z straight from the windscreen's top at z_top to its top at z_base; up to the outer
+    edge of the pane's frame the sections lie on that plane, outboard the side panes are bent down to meet it
+    (the change fading out to nothing at the sill). Stations every [step] over the pane; the others unchanged."""
+    sh = Shape(sections)
+    y0, y1 = sh.point(z_top, 1.0)[1], sh.point(z_base, 1.0)[1]
+    slope = math.atan2(y0 - y1, z_base - z_top)
+    x_at = pane_x(z_top, half_w, radius, slope)
+    out = [(z, p) for z, p in sections if z < z_top - 1e-6 or z > z_base + 1e-6]
+    for z in list(np.arange(z_top, z_base - 1e-6, step)) + [z_base]:
+        sec = sh.section(z)
+        yp = y0 + (y1 - y0) * (z - z_top) / (z_base - z_top)
+        xf = min(x_at(z) + width / 2 + 0.025, sec[0][0] - 0.03)   # (flat a little past the frame's outer edge)
+        xs, ys = sec[::-1, 0], sec[::-1, 1]
+        dy = yp - float(np.interp(xf, xs, ys))
+        x_sill = sec[0][0]
+        outer = [(float(x), float(y + dy * ((x - x_sill) / (xf - x_sill)) ** 2)) for x, y in sec if x > xf + 0.005]
+        out.append((float(z), outer + [(xf, yp), (xf * 0.66, yp), (xf * 0.33, yp), (0.0, yp)]))
+    out.sort(key=lambda t: t[0])
+    return out
+
+
+def arched_pane(m, shape, E, z_top, z_base, half_w, radius, width, depth, rect_out, rect_in, steps=28, flat_to=None):
     """the frame round a windscreen's flat front pane whose top is rounded (the Soviet armoured front panes: the
     MiG-21's round arch, the Su-7 family's tall round-topped pane, the MiG-15/17's rounded corners): straight sides
     [half_w] out from the centre line, the top corners rounded with [radius] (radius == half_w: one round arch), the
@@ -174,8 +208,20 @@ def arched_pane(m, shape, E, z_top, z_base, half_w, radius, width, depth, rect_o
     bow(m, shape, E, z_cap, width * 0.7, depth, rect_out, rect_in, s0=shape.s_at_x(z_cap, max(x_at(z_cap), 0.03)))   # (its ends inside the sides' frame)
     member(m, shape, E, lambda z: shape.s_at_x(z, max(x_at(z), 0.02)), z_cap, z_base, width, depth, rect_out, rect_in,
            steps=steps)
+    if flat_to is not None:
+        # the pane itself: one flat sheet of glass (the windscreen's top line here is the pane's plane, flat_pane),
+        # its edge just inside the frame; the windscreen's own glass is cut away inside the outline (cut_glass)
+        _FRAMES.append((shape, 'pane', x_at, z_cap, flat_to))
+        zs = np.arange(z_cap + width * 0.35 + 0.006, flat_to, 0.01).tolist() + [flat_to]
+        rows = []
+        for z in zs:
+            xin = x_at(z) - width / 2 - 0.006
+            if xin > 0.004:
+                yp = shape.point(z, 1.0)[1]
+                rows.append((np.array([xin, yp, z]), np.array([-xin, yp, z])))
+        for (a, b), (c, d) in zip(rows[:-1], rows[1:]):
+            _EXTRA.extend([a + E, c + E, d + E, a + E, d + E, b + E])
     return x_at
-
 
 def cut_glass(E, pad=0.006):
     """the glass patches asked for, remade with every frame cut out of them: the glass stops at each bow's and
@@ -186,6 +232,7 @@ def cut_glass(E, pad=0.006):
         frames = [f for f in _FRAMES if f[0] is sh]
         bows = [(f[2] - f[3] / 2 - pad, f[2] + f[3] / 2 + pad, f[4], f[5]) for f in frames if f[1] == 'bow']
         mems = [f for f in frames if f[1] == 'member']
+        panes = [f for f in frames if f[1] == 'pane']
         zb = set(np.linspace(z0, z1, nz + 1).tolist())
         for a, b, _, _ in bows:
             zb |= {a, b}
@@ -207,7 +254,8 @@ def cut_glass(E, pad=0.006):
                 return f[2](z) if callable(f[2]) else f[2]
             # what the glass stops short of: the members here, and the bows that cross only part of the section
             cuts = [('m', f) for f in live] + [('b', sb) for sb in here]
-            cuts.sort(key=lambda c: mid(c[1], zm) if c[0] == 'm' else (c[1][0] + c[1][1]) / 2)
+            cuts += [('p', f) for f in panes if f[3] - 1e-6 <= zm <= f[4] + pad + 1e-6]   # a flat pane's inside
+            cuts.sort(key=lambda c: mid(c[1], zm) if c[0] == 'm' else ((c[1][0] + c[1][1]) / 2 if c[0] == 'b' else 1.0))
             def bounds(z):
                 L = sh.arclen(z) or 1.0
                 b, prev = [], s0
@@ -215,8 +263,10 @@ def cut_glass(E, pad=0.006):
                     if kind == 'm':
                         h = (f[5] / 2 + (2 * pad if callable(f[2]) else pad)) / L   # (a curving frame leans further over)
                         lo, hi = mid(f, z) - h, mid(f, z) + h
-                    else:
+                    elif kind == 'b':
                         lo, hi = f[0] - pad / L, f[1] + pad / L
+                    else:
+                        lo, hi = sh.s_at_x(z, max(f[2](z), 0.0)), 1.0 + pad / L
                     b.append((prev, max(prev, min(lo, s1))))
                     prev = min(s1, max(prev, hi))
                 b.append((prev, s1))

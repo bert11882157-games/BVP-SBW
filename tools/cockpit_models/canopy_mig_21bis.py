@@ -40,10 +40,14 @@ PANE_W = 0.20                    # its half width, metres (the side panes only n
 PANE_TOP = 0.733                 # the apex of its arch: it reaches the windscreen's top frame (the arch at 0.715)
 
 
+PANE = (PANE_TOP, 1.42, PANE_W, PANE_W, 0.04)   # the flat armoured front pane (flat_pane)
+
+
 def build(atlas, E, skin):
     m = H.Mesh(atlas)
     out, inner, dark = atlas.swatch(skin), atlas.swatch((40, 42, 44)), atlas.swatch((26, 27, 28))
-    can, ws = C.Shape(CANOPY), C.Shape(WINDSCREEN)
+    # the armoured front pane is a flat slab: the windscreen made flat round it
+    can, ws = C.Shape(CANOPY), C.Shape(C.flat_pane(WINDSCREEN, *PANE))
     glass = C.glass_triangles(can, E, -0.30, 0.66) + C.glass_triangles(ws, E, 0.70, 1.42)
     # the canopy's frame: rear bow, front bow, sill rails
     C.bow(m, can, E, -0.28, 0.05, 0.03, out, inner)
@@ -54,7 +58,7 @@ def build(atlas, E, skin):
     C.member(m, can, E, 1.0, -0.28, 0.645, 0.035, 0.022, out, inner, sides=(1,), steps=14)
     # the windscreen: its arch against the canopy, the front pane's arched frame, the base frame, the side rails
     C.bow(m, ws, E, 0.715, 0.035, 0.022, out, inner)
-    C.arched_pane(m, ws, E, PANE_TOP, 1.42, PANE_W, PANE_W, 0.04, 0.025, out, inner)
+    C.arched_pane(m, ws, E, PANE_TOP, 1.42, PANE_W, PANE_W, 0.04, 0.025, out, inner, flat_to=1.37)
     C.bow(m, ws, E, 1.40, 0.04, 0.025, out, inner)
     C.member(m, ws, E, 0.0, 0.70, 1.42, 0.045, 0.035, out, inner)
     # the periscope housing on the canopy's top

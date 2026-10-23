@@ -37,10 +37,14 @@ SPLIT = 0.46                     # the canopy's front edge, against the windscre
 FRONT_PANE_X = 0.10              # the flat front pane's edges, out from the centre line
 
 
+PANE = (0.505, 0.94, 0.15, 0.06, 0.03)   # the flat armoured front pane: apex z, foot z, half width, corner radius, frame width
+
+
 def build(atlas, E, skin):
     m = H.Mesh(atlas)
     out, inner = atlas.swatch(skin), atlas.swatch((40, 42, 44))
-    sh = C.Shape(SECTIONS)
+    # the armoured front pane is a flat slab: the windscreen made flat round it
+    sh = C.Shape(C.flat_pane(SECTIONS, *PANE))
     glass = C.glass_triangles(sh, E, -0.90, SPLIT, nz=16) + C.glass_triangles(sh, E, SPLIT + 0.045, 0.94, nz=8)
     # the canopy: its tail frame, its front bow, the sill rails
     C.bow(m, sh, E, -0.88, 0.035, 0.025, out, inner)
@@ -49,7 +53,7 @@ def build(atlas, E, skin):
     # the windscreen: the arch, the front pane's two posts, the base frame on the nose, the side rails
     C.bow(m, sh, E, SPLIT + 0.027, 0.035, 0.02, out, inner)
     # the MiG-17's armoured front pane: wide, its top corners well rounded (photos of the type head-on: its round top reaches the windscreen's top frame)
-    C.arched_pane(m, sh, E, 0.505, 0.94, 0.15, 0.06, 0.03, 0.02, out, inner)
+    C.arched_pane(m, sh, E, 0.505, 0.94, 0.15, 0.06, 0.03, 0.02, out, inner, flat_to=0.9)
     C.bow(m, sh, E, 0.925, 0.03, 0.02, out, inner)
     C.member(m, sh, E, 0.0, SPLIT + 0.045, 0.94, 0.04, 0.03, out, inner)
     return m, glass
