@@ -752,6 +752,10 @@ public class ModEntities {
             ENTITIES.register("mi_24d", () -> vehicle(
                     (type, level) -> new AuthoredHelicopter(type, level, "mi_24d"),
                     28.44752f, 9.35451f, "mi_24d"));
+    public static final RegistryObject<EntityType<AuthoredHelicopter>> MI_24P =
+            ENTITIES.register("mi_24p", () -> vehicle(
+                    (type, level) -> new AuthoredHelicopter(type, level, "mi_24p"),
+                    28.44752f, 9.35451f, "mi_24p"));
     public static final RegistryObject<EntityType<AuthoredHelicopter>> MI_26 =
             ENTITIES.register("mi_26", () -> vehicle(
                     (type, level) -> new AuthoredHelicopter(type, level, "mi_26"),

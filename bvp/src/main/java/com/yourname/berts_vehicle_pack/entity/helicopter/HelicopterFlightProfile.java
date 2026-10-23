@@ -52,6 +52,8 @@ public final class HelicopterFlightProfile {
     private static final double GAZELLE_KMH = 306.0D, GAZELLE_CLIMB = 14.3D;
     // AH-56A Cheyenne: real top speed about 393 km/h (WT fm/ah_56a maxSpeedNom 393.8 km/h at 3,000 m), maxClimbRateNom 17.3 m/s.
     private static final double AH56A_KMH = 393.0D, AH56A_CLIMB = 17.3D;
+    // War Thunder mi_24p: 335 km/h (wiki; fm/mi_24p maxSpeedNom 349.6 km/h at sea level), climb 11.2 m/s (wiki, UNVERIFIED which of its four figures).
+    private static final double MI24P_KMH = 335.0D, MI24P_CLIMB = 11.2D;
     private static final double MI26_KMH = 295.0D, MI26_CLIMB = 7.5D;
     private static final double TIGER_KMH = 315.0D, TIGER_CLIMB = 10.7D;
     private static final double AH64D_KMH = 293.0D, AH64D_CLIMB = 12.7D;
@@ -128,6 +130,15 @@ public final class HelicopterFlightProfile {
             lin(0.030D, 83.75D, MI24_KMH), quad(0.0007727918703541040D, 83.75D, MI24_KMH), 0.145D, 0.0130D,
             0.060D, 0.0090D, 0.9D * climb(MI24_CLIMB, 2.80D), climb(MI24_CLIMB, 2.80D),
             new HelicopterPhysicalControls(.24D, .95D, .28D, .20D, cap(MI24_KMH), true,
+                    new HelicopterAttitudeProfile(20.0D, 18.0D, 30.0D, 3.2D, 60.0D, 75.0D, 8.0D)));
+    // Mi-24P: War Thunder fm/mi_24p EmptyMass 8,690 kg + MaxFuelMass0 1,790 kg; two TV3-117 (the Mi-24D's rotor acceleration of 12.2 m/s2,
+    // drag, control and attitude tuning, the rotational inertia scaled to the 2 % lower mass).
+    private static final HelicopterFlightProfile MI24P = new HelicopterFlightProfile(
+            soft(MI24P_KMH), cap(MI24P_KMH), 10480.0D, 127000.0D * POWER_UPLIFT / 163300.0D, 0.20D,
+            HelicopterHandlingProfile.of(0.97D, 0.92D, 0.78D, 0.92D, 0.76D, 1.17D),
+            lin(0.030D, 83.75D, MI24P_KMH), quad(0.0007727918703541040D, 83.75D, MI24P_KMH), 0.145D, 0.0130D,
+            0.060D, 0.0090D, 0.9D * climb(MI24P_CLIMB, 2.80D), climb(MI24P_CLIMB, 2.80D),
+            new HelicopterPhysicalControls(.24D, .95D, .28D, .20D, cap(MI24P_KMH), true,
                     new HelicopterAttitudeProfile(20.0D, 18.0D, 30.0D, 3.2D, 60.0D, 75.0D, 8.0D)));
     private static final HelicopterFlightProfile AH1F = new HelicopterFlightProfile(
             soft(AH1F_KMH), cap(AH1F_KMH), 3990.0D, 52000.0D * POWER_UPLIFT / 163300.0D, 0.12D,
@@ -292,6 +303,10 @@ public final class HelicopterFlightProfile {
 
     public static HelicopterFlightProfile mi24d() {
         return MI24D;
+    }
+
+    public static HelicopterFlightProfile mi24p() {
+        return MI24P;
     }
 
     public static HelicopterFlightProfile ah1f() {

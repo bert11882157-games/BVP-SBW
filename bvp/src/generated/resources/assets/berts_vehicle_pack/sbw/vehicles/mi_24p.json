@@ -1,0 +1,54 @@
+{
+  "ID": "berts_vehicle_pack:mi_24p",
+  "Model": {
+    "GeometryBackend": "berts_vehicle_pack:vehicle/mi_24p",
+    "Model": "berts_vehicle_pack:geo/native_fallback/mi_24p.geo.json",
+    "Texture": "berts_vehicle_pack:textures/entity/mi_24p.png",
+    "WreckTexture": "berts_vehicle_pack:textures/entity_dead/mi_24p.png"
+  },
+  "MouseSpeed": [
+    0.2,
+    0.2
+  ],
+  "AircraftRig": {
+    "Schema": 1,
+    "Frame": "GENERATED_MODEL_PIXELS",
+    "Surfaces": [],
+    "Rotors": [
+      {
+        "Bone": "main_rotor",
+        "Parent": "hull",
+        "Pivot": [
+          0.0,
+          88.7094,
+          -25.0117
+        ],
+        "Axis": [
+          0,
+          -1,
+          0
+        ],
+        "SpeedChannel": "engineSpool",
+        "Direction": -1,
+        "DegreesPerTickAtFullSpeed": 72
+      },
+      {
+        "Bone": "tail_rotor",
+        "Parent": "hull",
+        "Pivot": [
+          10.00155,
+          95.84094,
+          172.23626
+        ],
+        "Axis": [
+          1,
+          0,
+          0
+        ],
+        "SpeedChannel": "engineSpool",
+        "Direction": 1,
+        "DegreesPerTickAtFullSpeed": 392
+      }
+    ]
+  }
+}
