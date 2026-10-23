@@ -38,6 +38,8 @@ Usage: python tools/cockpit_models/yak_141.py [--dry-run]
 """
 import json, math, os, sys
 import numpy as np
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import throttle_lib
 from PIL import Image, ImageDraw, ImageFont
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -54,6 +56,7 @@ TEX = os.path.join(GEN, 'assets/berts_vehicle_pack/textures/entity/yak_141.png')
 TEX_DEAD = os.path.join(GEN, 'assets/berts_vehicle_pack/textures/entity_dead/yak_141.png')
 
 BONE = 'wreck_fuselage_0__cockpit'
+THR = []                                 # the throttle levers (throttle_lib), one bone each
 SOURCE_BONES = ('wreck_fuselage_0__hull', 'wreck_fuselage_1__hull')
 STICK_BONE = 'wreck_fuselage_0__control_stick_pitch'
 ATLAS = [(1100, 0, 2900, 2900)]        # free texture area (x, y, w, h): no UV of the model, its fallback or the wreck lands here
@@ -821,11 +824,10 @@ def build(atlas, nose_y):
     m.box([0.345, CONSOLE_Y + 0.011, tz], (X, Y, Z), (0.068, 0.011, 0.130), sw['dgrey'])
     lev = (X, unit([0, 1, 0.25]), unit([0, -0.25, 1]))
     gax = (X, unit([0, 1, 0.45]), unit([0, -0.45, 1]))
-    xl = 0.322
-    m.box([xl, CONSOLE_Y + 0.07, tz + 0.04], lev, (0.008, 0.060, 0.010), sw['metal'])            # throttle lever
-    m.box([xl, CONSOLE_Y + 0.140, tz + 0.075], gax, (0.017, 0.044, 0.034), sw['black'])          # grip
-    m.box([xl, CONSOLE_Y + 0.188, tz + 0.090], gax, (0.014, 0.008, 0.028), sw['dgrey'])
-    m.box(np.array([xl, CONSOLE_Y + 0.152, tz + 0.075]) - gax[2] * 0.036 + gax[1] * 0.012, gax, (0.006, 0.006, 0.004), sw['red'])
+    # The RUD throttle lever is its own bone (throttle_lever), hinged under the console top, modelled at idle (throttle_lib);
+    # the old plate stays, and so does the nozzle-angle lever below (not part of the throttle pass).
+    THR.clear()
+    THR.extend(throttle_lib.jet_levers(m, Mesh, sw, 'rud', x=0.322, top_y=CONSOLE_Y, z_idle=tz - 0.06, plate=False))
     xn = 0.380
     m.box([xn, CONSOLE_Y + 0.045, tz + 0.01], lev, (0.007, 0.035, 0.009), sw['metal'])          # nozzle lever
     m.box([xn, CONSOLE_Y + 0.092, tz + 0.022], gax, (0.012, 0.016, 0.016), sw['red'])            # its knob
@@ -973,6 +975,7 @@ def main(argv):
             b['pivot'] = list(foot_px)
         if b['name'] == STICK_BONE:
             b['poly_mesh'] = stick.poly_mesh()
+    thr = throttle_lib.add_bones(g['bones'], THR, BONE, EYE)
     for s in asset['AircraftRig']['Surfaces']:
         if s['Bone'] in ('control_stick_roll', 'control_stick_pitch'):
             s['Pivot'] = list(foot_px)
@@ -992,7 +995,7 @@ def main(argv):
         tri = [list(map(float, p)) for p in t[keep].reshape(-1, 3)]
         cg['Triangles'] = [round(v, 4) + 0.0 for p in tri + both for v in p]
     print(f'yak_141: {removed} old frame / dash / sight / seat faces removed; new cockpit {len(pm["polys"])} faces, {len(gauges)} game gauges, '
-          f'{len(displays)} display(s), HUD combiner {len(glass) // 3} triangles; stick foot {foot_px} px; '
+          f'{len(displays)} display(s), HUD combiner {len(glass) // 3} triangles; stick foot {foot_px} px; throttle bones {[(n, p) for n, p, _ in thr]}; '
           f'atlas {atlas.used()} of {sum(a[2] * a[3] for a in ATLAS)} texels')
     if dry:
         return

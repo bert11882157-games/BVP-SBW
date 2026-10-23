@@ -304,7 +304,7 @@ def names(n):
 
 
 def jet_levers(m, Mesh_, sw, style, x, top_y, z_idle, n=1, pitch=0.050, hx=None, hz=None, z_plate=None, sides=None,
-               lean0=-28.0, rise=0.115, depth=0.10, mil=22.0, ab=30.0, gate=True):
+               lean0=-28.0, rise=0.115, depth=0.10, mil=22.0, ab=30.0, gate=True, plate=True):
     """a jet throttle quadrant at (x, top_y): `n` levers `pitch` apart centred on x (lever 1 on the pilot's left,
     +x), the plate and slots into `m`. style: f16 f15 f18 f22 a10 f4 f14 rud ball pistol bomber"""
     grip = {'f15': 'f15', 'f18': 'f18', 'f22': 'f22', 'a10': 'a10', 'f4': 'f4', 'f14': 'f14'}.get(style, style)
@@ -313,7 +313,8 @@ def jet_levers(m, Mesh_, sw, style, x, top_y, z_idle, n=1, pitch=0.050, hx=None,
     trav = depth * (math.tan(math.radians(ab)) - math.tan(math.radians(lean0)))
     zp = z_idle + trav / 2 if z_plate is None else z_plate
     hz = trav / 2 + 0.035 if hz is None else hz
-    quadrant(m, sw, x, top_y, zp, hx, hz, slots=[xx - x for xx in xs], gate_dz=(hz * .55 if gate else None))
+    if plate:
+        quadrant(m, sw, x, top_y, zp, hx, hz, slots=[xx - x for xx in xs], gate_dz=(hz * .55 if gate else None))
     out = []
     for k, (nm, xx) in enumerate(zip(names(n), xs)):
         sd = 0 if n == 1 else (1 if k == 0 else -1)

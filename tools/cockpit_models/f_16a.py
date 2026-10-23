@@ -42,6 +42,7 @@ Usage: python tools/cockpit_models/f_16a.py [--dry-run]
 """
 import json, math, os, sys
 import numpy as np
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import throttle_lib
 from PIL import Image, ImageDraw, ImageFont
 

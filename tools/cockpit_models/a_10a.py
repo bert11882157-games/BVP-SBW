@@ -43,6 +43,7 @@ import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 from scipy.sparse import coo_matrix
 from scipy.sparse.csgraph import connected_components
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import throttle_lib
 
 HERE = os.path.dirname(os.path.abspath(__file__))
