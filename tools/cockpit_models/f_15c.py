@@ -14,8 +14,10 @@ of the DCS Flaming Cliffs 3 manual (work/cockpit_diagrams/f_15c) and photographs
     with airspeed / AoA / g to their left and altimeter / VVI / clock to their right, the MPCD on the lower left, the
     paired engine gauges (rpm, FTIT, fuel flow, nozzle position) and the fuel quantity on the right, the armament and
     gear panels on the left wing, the caution panel and the ECS panel on the right;
-  * the HUD on the glareshield: one unit with its control strip low on the pilot's face, two side posts, and the
-    combiner glass (added to CanopyGlass) centred on the neutral eye line, slightly larger than life;
+  * the HUD on the glareshield: one unit with its control strip low on the pilot's face (3.6 cm), and the Kaiser
+    combiner: one wide glass (20 x 16 degree field), top corners cut, a heavier top bar, two side posts; the glass
+    (added to CanopyGlass) is centred on the neutral eye line, slightly larger than life, and HeadUpDisplay is the
+    picture rectangle inside it;
   * side consoles (the two throttles on the left, the utility panels on the right), liners, floor, kick panel with the
     centre stick's boot, rudder pedals;
   * an ACES II seat reclined 15 degrees at its real place, with the rails, the headbox, the ejection handles and
@@ -302,6 +304,33 @@ def r5(v):
 
 
 X, Y, Z = np.array([1.0, 0, 0]), np.array([0, 1.0, 0]), np.array([0, 0, 1.0])
+
+
+def hud_combiner(m, rect, bot, up, n, H, hb, ht, ch, bw, bw_top, bt):
+    """A HUD combiner standing on its foot at `bot` (eye-relative), leaning along `up` (n = the glass normal): the glass
+    outline is H high, half hb wide at the foot and ht at the top, the top corners cut off by ch. The frame is a bar
+    bt thick round the sides and top (bw wide, bw_top on the top edge), always outside the glass edge, with the two side
+    bars running 16 mm further down as the posts, and a base plate under the foot. Returns the glass triangles
+    (eye-relative points, three per triangle) for CanopyGlass."""
+    ol = [(-hb, 0.0), (hb, 0.0), (ht, H - ch), (ht - ch, H), (-(ht - ch), H), (-ht, H - ch)]
+    P = [bot + X * r + up * v for r, v in ol]
+    tris = [P[0], P[1], P[2], P[0], P[2], P[3], P[0], P[3], P[4], P[0], P[4], P[5]]
+    centre = bot + up * H / 2
+    for i in range(1, 6):
+        a, b = P[i].copy(), P[(i + 1) % 6].copy()
+        d = unit(b - a)
+        if i == 1:
+            a = a - d * 0.016                    # the right post
+        if i == 5:
+            b = b + d * 0.016                    # the left post
+        w = bw_top if i == 3 else bw
+        p = unit(np.cross(n, d))
+        if (a + b) @ p / 2 - centre @ p < 0:
+            p = -p                               # outward in the glass plane
+        ln = float(np.linalg.norm(b - a))
+        m.box((a + b) / 2 + p * w / 2, (d, p, n), (ln / 2 + w / 2, w / 2, bt / 2), rect)
+    m.box(bot - up * 0.008, (X, up, n), (hb + bw + 0.002, 0.008, bt / 2), rect)
+    return tris
 
 # ---------------------------------------------------------------- the measured cockpit (metres from the eye)
 # Absolute heights of the airframe: floor top 2.304 (liner 2.312), hull sill 2.937, side walls at x 0.542, the rear
@@ -829,22 +858,21 @@ def build(atlas):
         m.flat([pts[i] + lift, pts[i + 1] + lift, fwd[i + 1] + lift, fwd[i] + lift], cs, normal=[0, 1, 0])
     # -- the HUD: one unit (the housing on the glareshield's hump with its control strip low on the pilot's face, two
     # side posts) and the combiner glass centred on the neutral eye line, leaning back toward the pilot
-    hz0, hz1, hy0, hy1, hhw = 0.730, 0.880, -0.118, -0.062, 0.118
-    ctrl = atlas.paint(200, 44, p_hud_ctrl)
+    # The McDonnell Douglas / Kaiser HUD of the F-15C: ONE wide combiner glass (the 20 x 16 degree field makes it wider than
+    # it is high), rectangular with its top corners cut, a heavier top bar and two side posts into the unit's housing. The
+    # housing is a low strip (3.6 cm) on the glareshield's hump; nothing of it stands in front of the glass.
+    hz0, hz1, hy0, hy1, hhw = 0.730, 0.880, -0.118, -0.082, 0.140
+    ctrl = atlas.paint(320, 40, p_hud_ctrl)
     m.box([0, (hy0 + hy1) / 2, (hz0 + hz1) / 2], (X, Y, Z), (hhw, (hy1 - hy0) / 2, (hz1 - hz0) / 2), sw['dgrey'],
           front=(2, -1, ctrl, -X, Y))
     lean = math.radians(20)
     g_up = np.array([0, math.cos(lean), -math.sin(lean)])
     g_n = unit(np.cross(X, g_up))
-    g_h, g_hw = 0.190, 0.105
-    g_bot = np.array([0, -0.0925, 0.800])
-    g_top = g_bot + g_up * g_h
-    m.box(g_bot - g_up * 0.004 + [0, 0.002, 0], (X, g_up, g_n), (g_hw + 0.010, 0.005, 0.010), sw['dgrey'])
-    for s in (-1, 1):
-        m.box((g_bot + g_top) / 2 + X * s * (g_hw + 0.007), (X, g_up, g_n), (0.005, g_h / 2 + 0.004, 0.006), sw['dgrey'])
-    corners = [g_bot - X * g_hw, g_bot + X * g_hw, g_top + X * g_hw, g_top - X * g_hw]
-    glass += [corners[0] + EYE, corners[1] + EYE, corners[2] + EYE, corners[0] + EYE, corners[2] + EYE, corners[3] + EYE]
-    hud = dict(centre=(g_bot + g_top) / 2 + EYE, normal=-g_n, up=g_up, width=2 * g_hw, height=g_h)
+    g_h = 0.190
+    g_bot = np.array([0, hy1, 0.800])
+    glass += [p + EYE for p in hud_combiner(m, sw['dgrey'], g_bot, g_up, g_n, g_h, 0.125, 0.125, 0.022, 0.012, 0.018, 0.014)]
+    # the picture: the rectangle inside the glass
+    hud = dict(centre=g_bot + g_up * g_h / 2 + EYE, normal=-g_n, up=g_up, width=0.220, height=0.165)
 
     # -- side walls' liners, consoles, floor, rear bulkhead, kick panel
     fy = FLOOR_Y
@@ -1096,7 +1124,7 @@ def main(argv):
     if cg and cg.get('Schema') == 1:
         t = np.array(cg['Triangles'], float).reshape(-1, 3, 3)
         c = t.mean(1) - EYE                                  # (an earlier combiner of this script goes)
-        keep = ~((np.abs(c[:, 0]) < 0.14) & (c[:, 1] > -0.12) & (c[:, 1] < 0.12) & (c[:, 2] > 0.65) & (c[:, 2] < 0.85))
+        keep = ~((np.abs(c[:, 0]) < 0.16) & (c[:, 1] > -0.14) & (c[:, 1] < 0.14) & (c[:, 2] > 0.65) & (c[:, 2] < 0.90))
         tri = [list(map(float, p)) for p in t[keep].reshape(-1, 3)]
         G = [list(map(float, p)) for p in glass]
         both = G + [G[i] for k in range(0, len(G), 3) for i in (k, k + 2, k + 1)]

@@ -10,10 +10,11 @@ The airframe already carries exactly that frame (bone wreck_fuselage_0__canopy, 
 rear arch, the bow behind the headrest, the front arch leaning forward over the HUD), so this script keeps it as THE frame,
 never adds a second one, and fits the glass to it:
 
-  * three glass patches: the bubble's rear panel (from the front face of the rear arch to the rear face of the bow), its front
-    panel (from the bow's front face to the rear face of the front arch) and the windscreen (from the front arch's front
-    face to the nose deck). Every patch starts on the inner top edge of the sill rail, and each stops at the face of the
-    frame member it meets (the arches lean, so the cut leans with them), never running under it;
+  * retrofit (owner standard, real F-15C framing): the canopy is ONE piece of glass from the rear arch (the frame behind
+    the seat) to the windscreen's front arch, so the airframe's extra bow right behind the headrest is dropped; the
+    windscreen is its own glass between the front arch and a strip across the nose deck, closed by two foot strips along
+    its feet (this script builds those: the airframe has no frame there). The glass starts on the inner top edge of the sill
+    rail and stops at the face of each frame member it meets (the arches lean, so the cut leans with them), never under it;
   * the section at every station is a super-ellipse from the rail up to the crown, the crown line taken from the frame's own
     centre strip (3.67 over the pilot, falling to 3.49 at the front arch); the windscreen's crown follows the airframe's own
     windscreen stand-in down to the nose deck (3.46 at the arch, 3.11 at its foot);
@@ -101,7 +102,7 @@ def base_crown(z):
     zs = [r[0] for r in RAIL]
     if z <= RAIL[-1][0]:
         zc = [c[0] for c in CROWN]
-        return (float(np.interp(z, zs, [r[1] for r in RAIL])), float(np.interp(z, zs, [r[2] for r in RAIL])),
+        return (float(np.interp(z, zs, [r[1] for r in RAIL])) - 0.0045, float(np.interp(z, zs, [r[2] for r in RAIL])),    # (4.5 mm clear of the rail's inner face)
                 float(np.interp(z, zc, [c[1] for c in CROWN])))
     if z >= WS_Z[0]:
         t = (z - WS_Z[0]) / (WS_Z[1] - WS_Z[0])
@@ -181,10 +182,88 @@ def patch(zf0, zf1, z_lo, z_hi, nz, ns=14):
 
 
 def glass_triangles():
-    tris = patch(z_rear_arch, z_bow_rear, 2.20, 3.70, 22)             # rear panel: rear arch -> bow
-    tris += patch(z_bow_front, z_front_rear, 3.55, 5.22, 30)           # front panel: bow -> front arch
-    tris += patch(z_front_front, lambda y: WS_Z[1], 5.27, WS_Z[1], 14)  # the windscreen: front arch -> nose deck
+    # the canopy is ONE piece of glass from the rear arch to the front arch (the real F-15C has no bow between them), and
+    # the windscreen is its own piece from the front arch to the frame strip across the nose deck
+    tris = patch(z_rear_arch, z_front_rear, 2.20, 5.22, 52)            # canopy: rear arch -> front arch
+    tris += patch(z_front_front, lambda y: WS_Z[1], 5.27, WS_Z[1], 14)  # the windscreen: front arch -> nose strip
     return tris
+
+
+# ---- the frame members the airframe lacks: the windscreen's front strip across the nose deck and its two foot strips
+FRAME_Z = 5.326                  # the airframe's frame ends at z 5.323; whatever the canopy bone holds ahead of it is this script's
+WS_STRIP = 0.030                 # the front strip's depth (z) and the foot strips' width / height
+
+
+def _sweep(points, normals, hu, hv, uvc, ref):
+    """quads of a box swept along a polyline: cross-section half sizes hu along `ref`, hv along the in-plane normal.
+    Returns [(4 corner points, outward normal)]; both end caps included."""
+    pts = [np.array(p, float) for p in points]
+    rings = []
+    for k, p in enumerate(pts):
+        n = np.array(normals[k], float)
+        u = np.array(ref, float)
+        rings.append([p - u * hu - n * hv, p + u * hu - n * hv, p + u * hu + n * hv, p - u * hu + n * hv])
+    out = []
+    for k, (a, b) in enumerate(zip(rings[:-1], rings[1:])):
+        mid = (pts[k] + pts[k + 1]) / 2
+        for i in range(4):
+            j = (i + 1) % 4
+            q = [a[i], a[j], b[j], b[i]]
+            out.append((q, np.mean(q, axis=0) - mid))
+    out.append((rings[0][::-1], pts[0] - pts[1]))
+    out.append((rings[-1], pts[-1] - pts[-2]))
+    return out
+
+
+def strip_faces():
+    """the windscreen's frame strips as quads: the front strip over the glass's front edge (the curve at z 5.90, from foot to
+    foot over the crown) and the two foot strips along the glass's feet, on the outside of its edge"""
+    quads = []
+    z0, z1 = WS_Z[1], WS_Z[1] + WS_STRIP
+    sec = section(z0)
+    curve = [(-x, y) for x, y in sec] + [(x, y) for x, y in sec[::-1]][1:]          # left foot -> crown -> right foot
+    ps = [np.array([x, y, (z0 + z1) / 2]) for x, y in curve]
+    ns = []
+    for k in range(len(ps)):
+        a, b = ps[max(0, k - 1)], ps[min(len(ps) - 1, k + 1)]
+        t = (b - a)[:2]; t /= np.linalg.norm(t)
+        ns.append([-t[1], t[0], 0.0])
+    # (the strip is centred on the glass's end curve, hv = 0.014 each way)
+    quads += _sweep(ps, ns, WS_STRIP / 2, 0.014, None, [0, 0, 1])
+    for side in (1, -1):
+        zs = np.linspace(FRAME_Z + 0.004, WS_Z[1] + WS_STRIP, 9)
+        ps = []
+        for z in zs:
+            xb = base_crown(min(z, WS_Z[1]))[0]
+            ps.append(np.array([side * (xb + WS_STRIP / 2 + 0.0045), skin_y(xb) + 0.020, z]))    # (4.5 mm clear of the glass edge)
+        quads += _sweep(ps, [[1, 0, 0]] * len(ps), WS_STRIP / 2, 0.015, None, [0, 1, 0])
+    return quads
+
+
+def add_strips(canopy_bone, uv):
+    """append the strip quads to the canopy bone (model pixels (x, y, -z) * 16), all one colour (the frame's own swatch)"""
+    pm = canopy_bone['poly_mesh']
+    for q, out in strip_faces():
+        P = np.array(q, float)
+        n = np.cross(P[1] - P[0], P[2] - P[0])
+        if np.linalg.norm(n) < 1e-12:
+            continue
+        n /= np.linalg.norm(n)
+        if n @ out < 0:
+            n = -n
+        c = P.mean(0)
+        pxs = [[float(p[0]) * 16, float(p[1]) * 16, -float(p[2]) * 16] for p in P]
+        npx = np.array([n[0], n[1], -n[2]])
+        a, b, c3 = (np.array(v) for v in pxs[:3])
+        if np.cross(b - a, c3 - a) @ npx > 0:        # the loader wants the file-pixel winding clockwise from the front
+            pxs = pxs[::-1]
+        ni = len(pm['normals']); pm['normals'].append([round(float(-npx[0]), 5) + 0.0, round(float(-npx[1]), 5) + 0.0, round(float(-npx[2]), 5) + 0.0])
+        poly = []
+        for p in pxs:
+            poly.append([len(pm['positions']), ni, len(pm['uvs'])])
+            pm['positions'].append([round(p[0], 4) + 0.0, round(p[1], 4) + 0.0, round(p[2], 4) + 0.0])
+            pm['uvs'].append(list(uv))
+        pm['polys'].append(poly)
 
 
 def _overlap2d(a, b):
@@ -249,6 +328,56 @@ def drop_buried(bones, gap=0.002):
     return len(gone)
 
 
+def drop_bow(canopy_bone):
+    """The airframe's bow standing right behind the headrest (z 3.56..3.77, the real canopy is one piece there) with its
+    knuckle on the rail, and the strips an earlier run of this script added ahead of the front arch. Returns (bow, strips)."""
+    pm = canopy_bone['poly_mesh']
+    P = np.array(pm['positions'], float) * np.array([1, 1, -1]) / 16.0
+    keep, bow, old = [], 0, 0
+    for poly in pm['polys']:
+        V = P[[v[0] for v in poly]] if poly else None
+        if V is not None:
+            if V[:, 2].min() >= FRAME_Z:
+                old += 1
+                continue
+            if V[:, 2].min() >= 3.555 and V[:, 2].max() <= 3.77 and V[:, 1].min() >= 3.055:
+                bow += 1
+                continue
+            if V[:, 2].min() >= 3.555 and V[:, 2].max() <= 3.655 and V[:, 1].min() >= 2.955 and V[:, 1].max() <= 3.075:
+                bow += 1
+                continue
+        keep.append(poly)
+    pm['polys'] = keep
+    return bow, old
+
+
+def compact(canopy_bone):
+    """drop the positions / normals / uvs no face uses any more (so a re-run writes the same bytes), keeping the order"""
+    pm = canopy_bone['poly_mesh']
+    maps = [{}, {}, {}]
+    new = [[], [], []]
+    src = [pm['positions'], pm['normals'], pm['uvs']]
+    polys = []
+    for poly in pm['polys']:
+        np_ = []
+        for v in poly:
+            idx = []
+            for k in range(3):
+                if v[k] not in maps[k]:
+                    maps[k][v[k]] = len(new[k]); new[k].append(src[k][v[k]])
+                idx.append(maps[k][v[k]])
+            np_.append(idx)
+        polys.append(np_)
+    pm['positions'], pm['normals'], pm['uvs'], pm['polys'] = new[0], new[1], new[2], polys
+
+
+def frame_uv(canopy_bone):
+    """the frame's own swatch: the first face of the canopy bone, one colour"""
+    pm = canopy_bone['poly_mesh']
+    U = np.array(pm['uvs'], float)
+    return U[[v[2] for v in pm['polys'][0]]].mean(0)
+
+
 def main(argv):
     dry = '--dry-run' in argv
     geo = json.load(open(GEO, encoding='utf-8'))
@@ -269,11 +398,15 @@ def main(argv):
                 continue
             keep.append(poly)
         pm['polys'] = keep
+    canopy = next(b for b in bones if b['name'] == CANOPY_BONE)
+    gone_bow, old_strips = drop_bow(canopy)
     gone_twin = drop_buried(bones)
+    add_strips(canopy, frame_uv(canopy))
+    compact(canopy)
     tris = glass_triangles()
     both = [list(map(float, p)) for t in tris for p in t] + [list(map(float, t[k])) for t in tris for k in (0, 2, 1)]
     asset['CanopyGlass'] = {'Schema': 1, 'Frame': 'VEHICLE_LOCAL_BLOCKS', 'Triangles': [round(v, 4) + 0.0 for p in both for v in p]}
-    print(f'f_15c canopy: {gone} stand-in faces removed (frame centre strips, nose windscreen slab), {gone_twin} doubled frame faces dropped; {len(tris)} glass triangles (x2 windings)')
+    print(f'f_15c canopy: {gone} stand-in faces removed (frame centre strips, nose windscreen slab), {gone_twin} doubled frame faces dropped, {gone_bow} faces of the extra bow dropped, windscreen strips rebuilt (replaced {old_strips} faces); {len(tris)} glass triangles (x2 windings)')
     if dry:
         return
     with open(GEO, 'w', encoding='utf-8', newline='\n') as f:
