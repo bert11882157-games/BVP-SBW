@@ -366,19 +366,59 @@
         "Volume": 1.0
       },
       "SoundRadius": 26,
-      "Velocity": 54.0,
+      "Velocity": 58.75,
       "Spread": 0.45,
       "ProjectileLife": 40,
-      "ShellType": "APHE",
-      "ApDurability": 53,
-      "Damage": 60,
+      "ShellType": "APDS",
+      "ApDurability": 110,
+      "Damage": 72,
       "ExplosionDamage": 0,
       "ExplosionRadius": 0,
       "Projectile": {
         "Type": "superbwarfare:small_cannon_shell",
-        "Profile": "berts_vehicle_pack:fv721_fox/rarden_30_aphe_i"
+        "Profile": "berts_vehicle_pack:fv721_fox/rarden_30_apds_t"
       },
       "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_gs",
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
+          "Override": {
+            "Name": "APDS-T",
+            "ShellType": "APDS",
+            "Velocity": 58.75,
+            "ApDurability": 110,
+            "Damage": 72,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:fv721_fox/rarden_30_apds_t"
+            },
+            "ShootShake": [
+              8,
+              10,
+              12
+            ],
+            "ProjectileBelt": {
+              "Name": "APDS-T",
+              "Family": "GENERIC",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "rarden_30_apds_t",
+                  "Ammo": "superbwarfare:small_shell_gs",
+                  "Tracer": "RED"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:fv721_fox/rarden_30_apds_t",
+              "ProjectileLife": 40
+            }
+          }
+        },
         {
           "Ammo": "superbwarfare:small_shell_ap",
           "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
@@ -460,46 +500,6 @@
               "ProjectileLife": 40
             }
           }
-        },
-        {
-          "Ammo": "superbwarfare:small_shell_gs",
-          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
-          "Override": {
-            "Name": "APDS-T",
-            "ShellType": "APDS",
-            "Velocity": 58.75,
-            "ApDurability": 110,
-            "Damage": 72,
-            "ExplosionDamage": 0,
-            "ExplosionRadius": 0,
-            "Projectile": {
-              "Type": "superbwarfare:small_cannon_shell",
-              "Profile": "berts_vehicle_pack:fv721_fox/rarden_30_apds_t"
-            },
-            "ShootShake": [
-              8,
-              10,
-              12
-            ],
-            "ProjectileBelt": {
-              "Name": "APDS-T",
-              "Family": "GENERIC",
-              "Rounds": [
-                {
-                  "Shots": 1,
-                  "Round": "rarden_30_apds_t",
-                  "Ammo": "superbwarfare:small_shell_gs",
-                  "Tracer": "RED"
-                }
-              ]
-            },
-            "NominalBallistics": {
-              "Supported": true,
-              "ProjectileType": "superbwarfare:small_cannon_shell",
-              "ProjectileProfile": "berts_vehicle_pack:fv721_fox/rarden_30_apds_t",
-              "ProjectileLife": 40
-            }
-          }
         }
       ],
       "ShootPos": {
@@ -541,7 +541,7 @@
       "NominalBallistics": {
         "Supported": true,
         "ProjectileType": "superbwarfare:small_cannon_shell",
-        "ProjectileProfile": "berts_vehicle_pack:fv721_fox/rarden_30_aphe_i",
+        "ProjectileProfile": "berts_vehicle_pack:fv721_fox/rarden_30_apds_t",
         "ProjectileLife": 40
       },
       "NaturalCooldown": 1,

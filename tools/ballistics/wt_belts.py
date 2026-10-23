@@ -102,10 +102,10 @@ BOFORS = std('slsgr_m90_he', 'slpprj_m01_apfsds', 'slpprj_m01_apfsds', 'slsgr_m9
 ZPT99 = std('dty02_30_hefi', 'dtc04_30_apds', 'dtc10_30_apfsds', 'dty02_30_hefi')
 
 # The RARDEN is a hand-fed 3-round clip gun and WT offers its three rounds as separate ammunition, so each is a pure
-# belt (WT default first: APHE-I); the coax is WT's ap_ball, ap_ball, t_ball belt. Bert's mixed two-belt standard is
+# belt, the best armour-piercing one first (owner 2026-10-02, docs/WT_BELTS.md: APDS-T, then WT's APHE-I, HE-I-T); the coax is WT's ap_ball, ap_ball, t_ball belt. Bert's mixed two-belt standard is
 # not applied here (expansion rule: armament as War Thunder).
-RARDEN = [('APHE-I', [('rarden_30_aphe_i', 1)]), ('HE-I-T', [('rarden_30_hei_t', 1)]),
-          ('APDS-T', [('rarden_30_apds_t', 1)])]
+RARDEN = [('APDS-T', [('rarden_30_apds_t', 1)]), ('APHE-I', [('rarden_30_aphe_i', 1)]),
+          ('HE-I-T', [('rarden_30_hei_t', 1)])]
 L37A2 = [('AP Belt', [('l37a2_762_ap_t', 2, 'NONE'), ('l37a2_762_ap_t', 1, 'T')])]
 
 WEAPONS = {
