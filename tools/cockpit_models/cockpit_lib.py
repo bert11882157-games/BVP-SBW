@@ -624,13 +624,22 @@ FRENCH = {
 }
 
 
+SWEDISH = {
+    'MASTER|CAUTION': 'HUVUD|VARNING', 'GEAR|DOWN': 'LANDST|NERE', 'GEAR|UNSAFE': 'LANDST|OLÅST', 'FUEL|LOW': 'BRÄNSLE|REST',
+    'OIL|PRESS': 'OLJE|TRYCK', 'ENGINE|FIRE': 'BRAND|MOTOR', 'GEN': 'GENERATOR', 'FIRE': 'BRAND', 'ENG|OUT': 'MOTOR|STOPP',
+    'HYD|PRESS': 'HYDR', 'STALL': 'ANFALL|VINKEL', 'OVER G': 'ÖVERLAST', 'RWR|LOCK': 'RADAR|VARNING', 'LAUNCH': 'ROBOT',
+    'LOW|ALT': 'LÅG|HÖJD', 'DAMAGE': 'SKADA', 'A/B': 'EBK', 'OVER|SPEED': 'ÖVERFART', 'SPD|BRK': 'LUFT|BROMS',
+    'AMMO|LOW': 'AMMO',
+}
+
+
 def lamps_of(name, pal_name):
     """the lamp set [name] with its legends in the cockpit's language: Russian for the Soviet palettes, German for the
-    Luftwaffe's, French for the Armee de l'Air's, else English"""
+    Luftwaffe's, French for the Armee de l'Air's, Swedish for the Flygvapnet's, else English"""
     spec = LAMP_SETS[name]
     cyr = pal_name.startswith('soviet') or pal_name == 'ussr_ww2'
     lang = (RUSSIAN if cyr else GERMAN if pal_name.startswith('luftwaffe') else
-            FRENCH if pal_name.startswith('armee_air') else {})
+            FRENCH if pal_name.startswith('armee_air') else SWEDISH if pal_name.startswith('flygvapnet') else {})
     return spec['columns'], [{'Text': lang.get(t, t), 'Condition': c, 'Colour': k} for t, c, k in spec['lamps']]
 
 
