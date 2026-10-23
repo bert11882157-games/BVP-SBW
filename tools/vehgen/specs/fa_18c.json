@@ -35,6 +35,16 @@
     "Import aim7m"
   ],
   "keepBoxes": [],
+  "dropRules": [
+    {
+      "absXMin": 60.0,
+      "absXMax": 63.0,
+      "yMax": 30.2,
+      "zMin": 3.0,
+      "zMax": 40.0
+    }
+  ],
+  "note_outer_pylon": "Owner 2026-10-23: the outermost wing pylon (source |x| 86 = geo px 61.5; two thin boxes a side) is removed. WT keeps two pylons a wing (47 and 69). The dropRules box (geo px) matches its boxes only; work/elite_expansion_2/fa18c/drop_outer_pylon.py applies the same cut to the committed geo.",
   "fuselageCuts": [
     -75,
     -10,
