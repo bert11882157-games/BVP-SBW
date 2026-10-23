@@ -18,6 +18,10 @@ the arch is a slim hoop, the posts stand to the side of the sight line.
 Frame members are the bone frame_bars__canopy (rebuilt every run), painted with a texel of the airframe's own colour. The glass
 (CanopyGlass in the client json, both windings) is written fresh; fa_18c.py then appends the HUD combiner to it.
 
+Flat panes (owner rule: framing as on the real aircraft, never bend glass to fit a frame): the windscreen's centre pane is ONE PLANE (canopy_flat_ws.py,
+checked by planarity_check.py against flat_panes/fa_18c.json); the posts, arch, foot strips and front cap are built around it, the curved quarter panes
+beyond the posts are the only curved windscreen glass.
+
 CANOPY (eye-relative sections, the right half from the sill up over the top) is what the checks in
 work/elite_expansion_2/checks read for the canopy outline. Frames: vehicle-local blocks, model pixels (x, y, -z) * 16.
 
@@ -29,6 +33,7 @@ import numpy as np
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
+from canopy_flat_ws import FlatWS
 
 GEN = os.path.join(HERE, '..', '..', 'bvp', 'src', 'generated', 'resources')
 GEO = os.path.join(GEN, 'assets/berts_vehicle_pack/custom_geo/fa_18c.geo.json')
@@ -64,7 +69,7 @@ def z_front_front(y):
 
 
 # the windscreen: from the arch to the cowl: half width of its foot and the crown's height
-WS_Z = (4.935, 5.76)
+WS_Z = (4.925, 5.76)
 WS_X = (0.440, 0.300)
 WSC = [(4.935, 3.135), (5.05, 3.105), (5.20, 3.030), (5.40, 2.915), (5.60, 2.800), (5.76, 2.712)]
 
@@ -99,6 +104,11 @@ def skin_y(x, z):
     return float(np.interp(abs(x), _SK_X, row)) + 0.010
 
 
+# the windscreen's centre pane is ONE PLANE (flat on the real Hornet: the plate behind the HUD combiner): the line through the arch's
+# front face crown and the cowl's edge; posts at 60% of the foot's half width, quarter panes curved beyond them
+WS = FlatWS(WS_Z[0], WS_Z[1], ((4.935, 3.135), (5.76, 2.712)), WS_X, skin_y, z_front_front)
+
+
 def base_crown(z):
     """(x of the glass's foot, y of the foot, y of the crown) at station z: on the rim, or on the cowl for the windscreen"""
     zs = [r[0] for r in RAIL]
@@ -107,22 +117,51 @@ def base_crown(z):
         return (float(np.interp(z, zs, [r[1] for r in RAIL])), float(np.interp(z, zs, [r[2] for r in RAIL])),
                 float(np.interp(z, zc, [c[1] for c in CROWN])))
     if z >= WS_Z[0]:
-        t = (z - WS_Z[0]) / (WS_Z[1] - WS_Z[0])
-        xb = WS_X[0] + (WS_X[1] - WS_X[0]) * t
-        return (xb, skin_y(xb, z), float(np.interp(z, [c[0] for c in WSC], [c[1] for c in WSC])))
+        return (WS.XB(z), WS.YB(z), WS.YT(z))
     # over the arch: between the rail's end and the windscreen's start
     t = (z - RAIL[-1][0]) / (WS_Z[0] - RAIL[-1][0])
     a, b = base_crown(RAIL[-1][0]), base_crown(WS_Z[0])
     return tuple(a[i] + (b[i] - a[i]) * t for i in range(3))
 
 
-def section(z, n=22):
-    """the right half-section at station z: absolute (x, y) points from the foot up to the crown (x = 0)"""
+def resample(pts, k):
+    p = np.array(pts, float)
+    d = np.r_[0, np.cumsum(np.linalg.norm(np.diff(p, axis=0), axis=1))]
+    t = np.linspace(0, d[-1], k)
+    return np.c_[np.interp(t, d, p[:, 0]), np.interp(t, d, p[:, 1])]
+
+
+Z_MORPH = 3.90                  # from here the bubble's section turns into the windscreen's (flat top, curved flanks) by the arch
+
+
+def _se_section(z, n=22):
+    """the right half-section at station z (super-ellipse): absolute (x, y) points from the foot up to the crown (x = 0)"""
     xb, yb, yt = base_crown(z)
     us = np.linspace(0, 1, n)
     pts = [(xb * (1 - u ** NEXP) ** (1 / NEXP), yb + (yt - yb) * u) for u in us]
     pts[-1] = (0.0, yt)
     return pts
+
+
+def section(z, n=22):
+    """the right half-section at station z: from the foot up to the crown. The bubble's super-ellipse turns into the
+    windscreen's section (flat centre, curved flanks) over the last stretch before the arch, at the same foot and crown, so the
+    arch (one member) joins two congruent sections, its rear face the bubble's glass edge and its front face the windscreen's"""
+    if z >= RAIL[-1][0]:
+        return WS.section(z, n - 1)             # the arch and the windscreen: flat centre pane, post, curved quarter pane
+    se = _se_section(z, n)
+    s = (z - Z_MORPH) / (RAIL[-1][0] - Z_MORPH)
+    if s <= 0:
+        return se
+    w = s * s * (3 - 2 * min(s, 1.0))
+    ws = WS.section(z, n - 1)
+    (xs, ybs), yts = se[0], se[-1][1]
+    (xw, ybw), ytw = ws[0], ws[-1][1]
+    ws = [(x * xs / xw, ybs + (y - ybw) * (yts - ybs) / (ytw - ybw)) for x, y in ws]      # (the windscreen's shape on the bubble's foot and crown)
+    a, b = resample(se, n), resample(ws, n)
+    pts = a * (1 - w) + b * w
+    pts[0], pts[-1] = se[0], (0.0, yts)
+    return [(float(x), float(y)) for x, y in pts]
 
 
 STATIONS = [2.40, 2.50, 2.60, 2.80, 3.00, 3.20, 3.40, 3.60, 3.80, 4.00, 4.20, 4.40, 4.60, 4.75, 4.88, 4.935, 5.05, 5.20,
@@ -141,13 +180,6 @@ def sections_rel(eye):
 
 
 CANOPY = sections_rel(_eye())            # eye-relative, as handbuilt_canopy.Shape wants it (the checks read this)
-
-
-def resample(pts, k):
-    p = np.array(pts, float)
-    d = np.r_[0, np.cumsum(np.linalg.norm(np.diff(p, axis=0), axis=1))]
-    t = np.linspace(0, d[-1], k)
-    return np.c_[np.interp(t, d, p[:, 0]), np.interp(t, d, p[:, 1])]
 
 
 def edge(zf, j, z, ns, lo, hi):
@@ -196,9 +228,6 @@ Z_BOW = (3.66, 3.72)
 BOW_OUT, BOW_IN = 0.012, 0.030               # the hoop stands this far out of the glass surface and this far in
 NS = 22                                      # the bubble's rows
 RAIL_ROWS = (0, 1)                           # the sill rail fills this band of the bubble's section (rows of NS)
-WS_NS = 28
-POST_ROWS = (11, 13)                         # the post fills this band of the windscreen section (rows of WS_NS)
-BASE_ROWS = (0, 2)                           # the windscreen's base frame along the cowl fills this band
 POST_OUT, POST_IN = 0.008, 0.018
 ARCH_OUT, ARCH_IN = 0.012, 0.030
 
@@ -298,30 +327,15 @@ def frame_bars(uv):
         A = [_pt(edge(z_front_rear, j, ARCH_REAR, arch_rows, 4.7, 5.0), j, side, arch_rows) for j in range(arch_rows + 1)]
         B = [_pt(edge(z_front_front, j, ARCH_FRONT, arch_rows, 4.88, 5.2), j, side, arch_rows) for j in range(arch_rows + 1)]
         b.bar(A, B, ARCH_OUT, ARCH_IN)
-    # the quarter-pane posts and the base frame (the windscreen's rows are finer: its own ring set)
-    for side in (1, -1):
-        j0, j1 = POST_ROWS
-        e0 = [edge(z_front_front, j, 4.92, WS_NS, 4.92, WS_Z[1]) for j in (j0, j1)]
-        e1 = [edge(lambda y: WS_Z[1], j, WS_Z[1], WS_NS, 4.92, WS_Z[1]) for j in (j0, j1)]
-        n = 14
-        A = [_pt(e0[0] + (e1[0] - e0[0]) * i / n, j0, side, WS_NS) for i in range(n + 1)]
-        B = [_pt(e0[1] + (e1[1] - e0[1]) * i / n, j1, side, WS_NS) for i in range(n + 1)]
-        b.bar(A, B, POST_OUT, POST_IN)
-        k0, k1 = BASE_ROWS
-        g0 = [edge(z_front_front, j, 4.92, WS_NS, 4.92, WS_Z[1]) for j in (k0, k1)]
-        g1 = [edge(lambda y: WS_Z[1], j, WS_Z[1], WS_NS, 4.92, WS_Z[1]) for j in (k0, k1)]
-        A = [_pt(g0[0] + (g1[0] - g0[0]) * i / n, k0, side, WS_NS) for i in range(n + 1)]
-        B = [_pt(g0[1] + (g1[1] - g0[1]) * i / n, k1, side, WS_NS) for i in range(n + 1)]
-        b.bar(A, B, POST_OUT, POST_IN)
+    # the windscreen's posts, foot strips and front cap (canopy_flat_ws.py): built around the flat centre pane
+    WS.add_bars(b, (POST_OUT, POST_IN))
     return b
 
 
 def glass_triangles():
     r0, r1 = RAIL_ROWS
     tris = patch(lambda y: Z_BOW[1], z_front_rear, Z_BOW[1], 4.94, 26, ns=NS, jr=(r1, NS))   # the bubble: rear bow -> arch
-    j0, j1 = POST_ROWS
-    tris += patch(z_front_front, lambda y: WS_Z[1], 4.92, WS_Z[1], 14, ns=WS_NS, jr=(BASE_ROWS[1], j0))   # quarter panes
-    tris += patch(z_front_front, lambda y: WS_Z[1], 4.92, WS_Z[1], 14, ns=WS_NS, jr=(j1, WS_NS))        # front panel
+    tris += WS.glass()                                                          # the windscreen: centre pane (one plane), quarter panes
     return tris
 
 
