@@ -408,6 +408,8 @@ public class ModEntityRenderers {
                 "custom_geo/f_102a.geo.json", "textures/entity/f_102a.png", "f_102a"));
         registerVehicle(event, ModEntities.MIRAGE_4A, "mirage_4a", standardVehicle(
                 "custom_geo/mirage_4a.geo.json", "textures/entity/mirage_4a.png", "mirage_4a"));
+        registerVehicle(event, ModEntities.VULCAN_B2, "vulcan_b2", standardVehicle(
+                "custom_geo/vulcan_b2.geo.json", "textures/entity/vulcan_b2.png", "vulcan_b2"));
         registerVehicle(event, ModEntities.MIRAGE_3E, "mirage_3e", standardVehicle(
                 "custom_geo/mirage_3e.geo.json", "textures/entity/mirage_3e.png", "mirage_3e"));
         registerVehicle(event, ModEntities.RAFALE, "rafale", standardVehicle(

@@ -1,0 +1,146 @@
+{
+  "Schema": 1,
+  "SuspendedWeapons": [],
+  "Pairs": [
+    {
+      "Id": "outer",
+      "Name": "Outboard wing pylons · Shrike / ECM pod",
+      "Left": [
+        9.7,
+        2.425,
+        -0.485
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            9.7,
+            2.425,
+            -0.485
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Right": [
+        -9.7,
+        2.425,
+        -0.485
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -9.7,
+            2.425,
+            -0.485
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/agm45a",
+        "berts_vehicle_pack:munition/alq101"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 400
+    },
+    {
+      "Id": "inner",
+      "Name": "Inboard wing pylons · Shrike / ECM pod",
+      "Left": [
+        5.82,
+        2.328,
+        -0.485
+      ],
+      "LeftStations": [
+        {
+          "Point": [
+            5.82,
+            2.328,
+            -0.485
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "Right": [
+        -5.82,
+        2.328,
+        -0.485
+      ],
+      "RightStations": [
+        {
+          "Point": [
+            -5.82,
+            2.328,
+            -0.485
+          ],
+          "Face": "bottom"
+        }
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/agm45a",
+        "berts_vehicle_pack:munition/alq101"
+      ],
+      "MaxWeaponsPerPylon": 1,
+      "MaxPylonMassKg": 400
+    }
+  ],
+  "StoreGroups": {},
+  "Name": "Avro Vulcan B.2",
+  "BuiltInWeapons": [],
+  "MaxPayloadKg": 10500,
+  "MaxPylonMassKg": 3200,
+  "MaxWeaponsPerPylon": 7,
+  "Singles": [
+    {
+      "Id": "bay_1",
+      "Name": "Bomb bay carrier 1 · up to 7 x 1,000 lb",
+      "Position": [
+        0.0,
+        3.977,
+        -0.485
+      ],
+      "Internal": true,
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/mc1000"
+      ],
+      "MaxWeaponsPerPylon": 7,
+      "MaxPylonMassKg": 3200,
+      "QuantitySelectable": true
+    },
+    {
+      "Id": "bay_2",
+      "Name": "Bomb bay carrier 2 · up to 7 x 1,000 lb",
+      "Position": [
+        0.0,
+        3.977,
+        -2.91
+      ],
+      "Internal": true,
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/mc1000"
+      ],
+      "MaxWeaponsPerPylon": 7,
+      "MaxPylonMassKg": 3200,
+      "QuantitySelectable": true
+    },
+    {
+      "Id": "bay_3",
+      "Name": "Bomb bay carrier 3 · up to 7 x 1,000 lb",
+      "Position": [
+        0.0,
+        3.977,
+        -5.335
+      ],
+      "Internal": true,
+      "AllowedStores": [
+        "berts_vehicle_pack:munition/mc1000"
+      ],
+      "MaxWeaponsPerPylon": 7,
+      "MaxPylonMassKg": 3200,
+      "QuantitySelectable": true
+    }
+  ],
+  "Radar": {
+    "Enabled": true,
+    "Range": 3000
+  }
+}
