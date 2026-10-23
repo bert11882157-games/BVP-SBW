@@ -28,27 +28,52 @@ import free_atlas as FA   # noqa: E402
 import heli_station as HS  # noqa: E402
 
 VID = 'mi_24a'
+PANE_FILL = '0,1'               # (run_heli.ps1: a flat pane in every window the crew sees out of with no glass)
 L.INTERIOR_BONES.add('hull')
 FA.also_used(VID, 'ad56207c', 'suspended_')
 
 COLOURS = dict(panel=(78, 140, 146), panel_d=(54, 100, 106), wall=(64, 118, 122))   # the Mi-24's turquoise
 FLOOR = (46, 50, 50)
 
-PILOT_LAYOUT = [
-    ('adi',      0, -0.070, -0.420, ('game', 'ATTITUDE', 0.095), 'AGB-3K attitude indicator'),
-    ('hsi',      0, -0.070, -0.570, ('game', 'HEADING', 0.090), 'PNP-72 situation indicator'),
-    ('vvi',      0,  0.080, -0.420, ('game', 'VVI', 0.070), 'VR-30 vertical speed'),
-    ('radalt',   0,  0.080, -0.560, ('game', 'RADAR_ALT', 0.065), 'RV-5 radio altimeter'),
-    ('warning',  0,  0.000, -0.720, ('annunciator', 0.240, 0.070), 'warning lights'),
-    ('ias',     -1,  0.080, -0.430, ('game', 'AIRSPEED', 0.070), 'US-450 airspeed'),
-    ('alt',     -1,  0.200, -0.430, ('game', 'ALTIMETER', 0.070), 'VD-10 altimeter'),
-    ('clock',   -1,  0.080, -0.570, ('game', 'CLOCK', 0.045), 'AChS clock'),
-    ('weapons', -1,  0.200, -0.580, ('paint_rect', 0.100, 0.080), 'weapons panel'),
-    ('rotor',    1,  0.080, -0.430, ('game', 'ENGINE_RPM', 0.070), 'rotor and engine speed'),
-    ('egt_l',    1,  0.195, -0.430, ('game', 'EGT', 0.055), 'gas temperature, left engine'),
-    ('egt_r',    1,  0.195, -0.560, ('game', 'EGT', 0.055), 'gas temperature, right engine'),
-    ('fuel',     1,  0.080, -0.570, ('game', 'FUEL_QTY', 0.060), 'fuel quantity'),
-]
+# the pilot's panel as photographed head-on (flankers-site Samara Mi-24A, mi-24_11; Monino mi-24_35): one wide teal
+# panel, three rows of instruments, the flight group left and centre (two attitude indicators), the engine and rotor
+# group right, the external-stores block top left, the warning lights low in the middle, the clock on a post above
+# the panel's top left. Columns measured off the photo (its panel 600 px wide = 1.1 m at this model's 1.3x scale);
+# a < 0 is to the pilot's left, the centre facet spans +-0.36, the wings run on from there
+def _col(a):
+    return (0, a) if abs(a) <= 0.36 else ((-1 if a < 0 else 1), abs(a) - 0.36)
+
+
+def _row(y, items):
+    return [(n, *_col(a), y, spec, lab) for n, a, spec, lab in items]
+
+
+PILOT_LAYOUT = (
+    _row(-0.370, [('weapons', -0.405, ('paint_rect', 0.085, 0.075), 'external stores'),
+                  ('ias',     -0.31, ('game', 'AIRSPEED', 0.100), 'US-450 airspeed'),
+                  ('adi',     -0.16, ('game', 'ATTITUDE', 0.120), 'AGB-3K attitude indicator'),
+                  ('vvi',     -0.02, ('game', 'VVI', 0.100), 'VR-30 vertical speed'),
+                  ('adi2',     0.12, ('game', 'ATTITUDE', 0.100), 'standby attitude indicator'),
+                  ('radalt',   0.23, ('game', 'RADAR_ALT', 0.080), 'RV-3 radio altimeter'),
+                  ('volts',    0.33, ('game', 'FILLER_VOLTS', 0.075), 'voltmeter')]) +
+    _row(-0.510, [('turn',    -0.41, ('game', 'TURN_SLIP', 0.080), 'turn and slip'),
+                  ('hyd',     -0.31, ('game', 'FILLER_HYDRAULIC', 0.100), 'hydraulic pressure'),
+                  ('hsi',     -0.16, ('game', 'HEADING', 0.115), 'compass / course indicator'),
+                  ('alt',     -0.02, ('game', 'ALTIMETER', 0.120), 'VD-10 altimeter'),
+                  ('nr',       0.12, ('game', 'ENGINE_RPM', 0.100), 'engine speed'),
+                  ('egt_l',    0.23, ('game', 'EGT', 0.085), 'gas temperature, left engine'),
+                  ('egt_r',    0.33, ('game', 'EGT', 0.085), 'gas temperature, right engine'),
+                  ('oil_t',    0.43, ('game', 'FILLER_TEMP', 0.080), 'gearbox oil temperature')]) +
+    _row(-0.650, [('rotor',   -0.41, ('game', 'FILLER_RPM', 0.085), 'rotor speed'),
+                  ('fuelp',   -0.30, ('game', 'FILLER_FUEL', 0.090), 'fuel pressure'),
+                  ('oxy',     -0.22, ('game', 'FILLER_OXYGEN', 0.070), 'oxygen'),
+                  ('oil_p',   -0.11, ('game', 'FILLER_OIL', 0.090), 'oil pressure'),
+                  ('temp2',    0.12, ('game', 'FILLER_TEMP', 0.090), 'engine oil temperature'),
+                  ('oil_p2',   0.23, ('game', 'FILLER_OIL', 0.090), 'engine oil pressure'),
+                  ('fuel',     0.42, ('game', 'FUEL_QTY', 0.090), 'fuel quantity')]) +
+    _row(-0.780, [('warning',  0.02, ('annunciator', 0.300, 0.075), 'warning lights')]))
+PILOT_CLOCK = (-0.34, -0.215)          # the AChS clock on its post above the panel's top left: (x from the eye, y)
+PILOT_SWITCHES = [(a, -0.835) for a in (-0.30, -0.24, -0.18, 0.20, 0.26, 0.32)]   # guarded switches under the lamps
 OPERATOR_LAYOUT = [
     ('guidance', 0,  0.000, -0.560, ('paint_rect', 0.200, 0.080), 'Falanga-M missile guidance box'),
     ('warning',  0,  0.000, -0.700, ('annunciator', 0.180, 0.060), 'warning lights'),
@@ -79,7 +104,7 @@ def cabin_panels(m, atlas, E0):
     rack facing forward (power, the circuit breakers, the warning lamps and the generators), where the old panels
     were"""
     import numpy as np
-    x_in, x_wall = E0[0] - 1.40, E0[0] - 1.66                       # the console's inner face, the cabin wall
+    x_in, x_wall = E0[0] - 1.30, E0[0] - 1.42                       # the console's inner face, the cabin wall
     cy, fy = E0[1] - 0.70, E0[1] - 1.33                             # the console top, the cabin floor (lower here)
     zb, zf = E0[2] - 0.55, E0[2] + 0.90
     top = atlas.paint(70, 360, HS.p_console(CABIN_CONSOLE, False, COLOURS['panel']))
@@ -90,16 +115,51 @@ def cabin_panels(m, atlas, E0):
     m.flat([[x_in, fy, zb], [x_wall, fy, zb], [x_wall, cy, zb], [x_in, cy, zb]], wall, normal=[0, 0, -1])
     m.flat([[x_in, fy, zf], [x_wall, fy, zf], [x_wall, cy, zf], [x_in, cy, zf]], wall, normal=[0, 0, 1])
     X, Y, Z = np.array([1.0, 0, 0]), np.array([0, 1.0, 0]), np.array([0, 0, 1.0])
-    rack = (E0[0] - 1.58, E0[0] - 0.75, E0[1] - 1.30, E0[1] - 0.12, E0[2] - 0.98, E0[2] - 0.57)
+    rack = (E0[0] - 1.42, E0[0] - 0.75, E0[1] - 1.30, E0[1] - 0.12, E0[2] - 0.98, E0[2] - 0.57)
     face = atlas.paint(220, 280, HS.p_console(CABIN_WALL, False, COLOURS['panel']))   # its rows top to bottom
     c = [(rack[0] + rack[1]) / 2, (rack[2] + rack[3]) / 2, (rack[4] + rack[5]) / 2]
     half = ((rack[1] - rack[0]) / 2, (rack[3] - rack[2]) / 2, (rack[5] - rack[4]) / 2)
     m.box(c, (X, Y, Z), half, wall, front=(2, 1, face, X, Y))       # the electrical rack behind him, its face forward
 
 
+def pilot_details(m, atlas, st):
+    """what makes the pilot's panel a panel and not a painted board: a raised bezel round every instrument, the clock
+    on its post above the coaming, the row of guarded switches under the warning lights; returns the clock gauge"""
+    import numpy as np
+    S = HS.Station(st)
+    E = S.E
+    bezel, black, red, metal = (atlas.swatch(c) for c in ((30, 31, 32), (24, 25, 26), (176, 34, 28), (128, 132, 134)))
+    for name, side, a, y, spec, _ in st['layout']:
+        if spec[0] != 'game':
+            continue
+        f = S.fac[side]
+        c = S.at(side, a, y)
+        r0 = spec[2] / 2 * 1.06
+        m.ring(c, f.N, f.U, r0, r0 + 0.009, 0.007, bezel, seg=20)
+    # the clock on its post: a square case on a short column standing on the coaming's lip, its face to the pilot
+    f = S.fac[0]
+    cx, cy = PILOT_CLOCK
+    c = S.at(0, -cx if False else cx, cy) + f.N * 0.03
+    top = E[1] + st['TOP_C'] + 0.03
+    m.box(c - f.N * 0.02, (f.R, f.U, f.N), (0.05, 0.05, 0.02), black)
+    m.box(np.array([c[0], (c[1] - 0.05 + top) / 2, c[2] - 0.02 * f.N[2]]), (f.R, f.U, f.N),
+          (0.012, max(0.005, (c[1] - 0.05 - top) / 2), 0.012), black)
+    clock = {'Seat': st['seat'], 'Kind': 'CLOCK', 'Center': H.r5(c + f.N * 0.002), 'Normal': H.r5(f.N), 'Up': H.r5(f.U),
+             'Diameter': 0.075, 'Depth': 0.02}
+    # guarded switches: a base plate, the toggle standing up, the red guard hinged over it
+    for a, y in PILOT_SWITCHES:
+        side, aa = _col(a)
+        f = S.fac[side]
+        c = S.at(side, aa, y)
+        m.box(c + f.N * 0.002, (f.R, f.U, f.N), (0.016, 0.022, 0.002), black)
+        m.box(c + f.N * 0.014 + f.U * 0.004, (f.R, f.U, f.N), (0.003, 0.003, 0.012), metal)
+        m.box(c + f.N * 0.012 - f.U * 0.006, (f.R, f.U, f.N), (0.012, 0.016, 0.003), red)
+    return clock
+
+
 def remove_inner(ac, boxes):
     """the model's faces (not the new cockpit's) whose centre lies in an eye-relative (E, lo, hi) box, except those
-    facing out to the right (stored normal within 45 degrees of -x): the skin"""
+    facing out to the right (stored normal within 45 degrees of -x) at least 1.40 m out from the eye: the skin"""
     import numpy as np
     n = 0
     for b in ac.bones:
@@ -115,7 +175,7 @@ def remove_inner(ac, boxes):
                 nv = N[[v[1] for v in poly]].mean(0)
                 nv = nv / (np.linalg.norm(nv) or 1)
                 inside = any(np.all(c - np.array(E) >= lo) and np.all(c - np.array(E) <= hi) for E, lo, hi in boxes)
-                if inside and nv[0] > -0.7:
+                if inside and (nv[0] > -0.7 or c[0] - boxes[0][0][0] > -1.40):   # (the skin: facing out, 1.40+ m out)
                     n += 1
                     continue
             out.append(poly)
@@ -125,20 +185,20 @@ def remove_inner(ac, boxes):
 
 def stations(ac):
     pilot = dict(seat=0, E=ac.eye(0), S=1.25, colours=COLOURS, layout=PILOT_LAYOUT, consoles=CONSOLES_PILOT,
-                 PANEL_Z=0.66, LEAN=12, HINGE=0.18, WING=30, WALL_X=0.44, TOP_C=-0.330, TOP_W=-0.370,
-                 BOT_C=-0.950, BOT_W=-0.910, FRONT_Z=0.80, FRONT_Y_C=-0.370, FRONT_Y_W=-0.390, COAMING_X=0.32,
+                 PANEL_Z=0.70, LEAN=8, HINGE=0.36, WING=10, WALL_X=0.45, TOP_C=-0.295, TOP_W=-0.300,
+                 BOT_C=-0.870, BOT_W=-0.860, FRONT_Z=0.86, FRONT_Y_C=-0.330, FRONT_Y_W=-0.350, COAMING_X=0.42,
                  CONSOLE_Y=-0.700, CONSOLE_IN=0.33, CONSOLE_OUT=0.48, CONSOLE_FRONT=0.44, CONSOLE_FOOT=-1.15,
                  CONSOLE_BACK=-0.25, CUSHION_Y=-0.92, SEAT_Z=0.05, SEAT_FOOT=-1.19, BACK_TOP=0.04,
                  seat_kind='armoured', seat_label='Ми-24А', STICK_Z=0.40, STICK_FOOT=-1.19, PEDAL_Z=0.72,
                  PEDAL_Y=-1.02, PEDAL_HANG=True, FLOOR_Y=-1.21,
-                 hud=dict(z=0.66, w=0.12, h=0.11, lean=30, body_top=-0.255, body_w=0.075, body_d=0.04, style='REFLECTOR'))
+                 hud=dict(z=0.62, w=0.10, h=0.07, lean=30, body_top=-0.09, body_w=0.045, body_d=0.055, style='REFLECTOR'))   # the PKV: a compact collimator body on the coaming, its glass just above
     operator = dict(seat=1, E=ac.eye(1), S=1.25, colours=COLOURS, layout=OPERATOR_LAYOUT, consoles=CONSOLES_OPERATOR,
                     PANEL_Z=0.70, LEAN=12, HINGE=0.14, WING=32, WALL_X=0.32, TOP_C=-0.450, TOP_W=-0.480,
                     BOT_C=-0.900, BOT_W=-0.870, FRONT_Z=0.82, FRONT_Y_C=-0.470, FRONT_Y_W=-0.490, COAMING_X=0.24,
                     CONSOLE_Y=-0.620, CONSOLE_IN=0.23, CONSOLE_OUT=0.32, CONSOLE_FRONT=0.40, CONSOLE_FOOT=-0.95,
                     CONSOLE_BACK=-0.08, CUSHION_Y=-0.80, SEAT_Z=0.02, SEAT_FOOT=-1.03, BACK_TOP=0.02,
                     seat_kind='armoured', seat_label='Ми-24А', STICK_Z=None, COLLECTIVE=False, FLOOR_Y=-1.05,
-                    sight=dict(z=0.46, y=-0.120, w=0.12, h=0.08, d=0.10,
+                    sight=dict(z=0.50, y=-0.110, w=0.085, h=0.065, d=0.085,   # the PKV head as at Monino: modest, grey
                                glass=dict(z=0.42, w=0.075, h=0.065, lean=25, style='REFLECTOR')))
     return pilot, operator
 
@@ -151,7 +211,8 @@ def main(argv):
         (E0, (-0.36, -0.55, -0.62), (0.36, 0.30, 0.95), 0.36, -0.55),     # his old seat, panel and sight above it
         (E1, (-0.40, -1.03, -0.60), (0.40, -0.55, 0.95), 0.40, -0.55),    # the operator's nose up to its sill
         (E1, (-0.62, -1.03, -0.60), (0.62, -0.58, 0.40), 0.62, -0.58),    # its old consoles where the cabin is wider
-        (E1, (-0.30, -0.55, -0.60), (0.30, 0.20, 0.70), 0.30, -0.55)])}   # his old seat and sight above it
+        (E1, (-0.30, -0.55, -0.60), (0.30, 0.20, 0.70), 0.30, -0.55),     # his old seat and sight above it
+        (E0, (-0.76, -0.20, 1.24), (-0.24, 0.03, 1.56), 2.0, -9.0)])}     # a loose box over the operator's head
     # the old right-hand cabin panels, the rack behind him and the boxes between, but not the cabin's right wall:
     # that side is built of boxes whose outer faces are the fuselage skin (1.44-1.69 m out), so every face facing out
     # to the right stays (bert's rule: the exterior never changes)
@@ -172,6 +233,7 @@ def main(argv):
     for st in (pilot, operator):
         g, d, h = HS.build(m, atlas, st, painters=painters)
         gauges += g; displays += d; huds.append(h)
+    gauges.append(pilot_details(m, atlas, pilot))
     cabin_panels(m, atlas, E0)
     pm, line = HS.install(ac, m, gauges, displays, huds, [E0, E1])
     print(f'{VID}: removed {removed}; new cockpit {len(pm["polys"])} faces, {len(gauges)} gauges, '
