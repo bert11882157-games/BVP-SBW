@@ -290,17 +290,27 @@ def arched_pane(m, shape, E, z_top, z_base, half_w, radius, width, depth, rect_o
     return x_at
 
 
-def fill(m, shape, E, z0, z1, top, rect_out, rect_in, steps=24, proud=0.003, depth=0.015):
+def cap(m, shape, E, z0, z1, bottom, rect_out, rect_in, steps=24, proud=0.003, depth=0.015):
+    """fill's twin from the top down: a solid metal panel over [z0, z1] from bottom(z) (an s) up to the top (s = 1),
+    on both sides; e.g. a canopy pane's rounded top corners, bottom(z) dipping toward the bows"""
+    fill(m, shape, E, z0, z1, bottom, rect_out, rect_in, steps, proud, depth, upper=True)
+
+
+def fill(m, shape, E, z0, z1, top, rect_out, rect_in, steps=24, proud=0.003, depth=0.015, upper=False):
     """a solid metal panel in the windscreen's surface where the real one has no glass (the MiG-21's filled lower
     corners and the band under its front pane): over [z0, z1], from the sill (s = 0) up to top(z) (an s), on both
-    sides, standing [proud] out of the surface and [depth] in, its top edge closed; the glass is cut away under it"""
-    _FRAMES.append((shape, 'fill', top, z0, z1))
+    sides, standing [proud] out of the surface and [depth] in, its top edge closed; the glass is cut away under it.
+    upper: from top(z) up to s = 1 instead (cap)"""
+    _FRAMES.append((shape, 'cap' if upper else 'fill', top, z0, z1))
     zs = np.linspace(z0, z1, steps + 1)
     for side in (1, -1):
         for i in range(steps):
             za, zb = zs[i], zs[i + 1]
             ta, tb = top(za), top(zb)
-            ss_a, ss_b = np.linspace(0, ta, 7), np.linspace(0, tb, 7)
+            if upper:
+                ss_a, ss_b = np.linspace(ta, 1, 7), np.linspace(tb, 1, 7)
+            else:
+                ss_a, ss_b = np.linspace(0, ta, 7), np.linspace(0, tb, 7)
             for j in range(6):
                 q = []
                 for z, s in ((za, ss_a[j]), (zb, ss_b[j]), (zb, ss_b[j + 1]), (za, ss_a[j + 1])):
@@ -310,11 +320,12 @@ def fill(m, shape, E, z0, z1, top, rect_out, rect_in, steps=24, proud=0.003, dep
                 c_o = np.mean(o, 0); c_i = np.mean(i_, 0)
                 m.flat(o, rect_out, toward=c_o + (c_o - c_i))
                 m.flat(i_, rect_in, toward=c_i + (c_i - c_o))
-            # the top edge, where the glass begins
+            # the top edge (a cap's lower edge), where the glass begins
             pa, pb = shape.point(za, ta, side), shape.point(zb, tb, side)
             na, nb = shape.normal(za, ta, side), shape.normal(zb, tb, side)
             e = [pa + na * proud + E, pb + nb * proud + E, pb - nb * depth + E, pa - na * depth + E]
-            up = shape.point((za + zb) / 2, min(1, (ta + tb) / 2 + 0.05), side) + E
+            sm = (ta + tb) / 2
+            up = shape.point((za + zb) / 2, max(0, sm - 0.05) if upper else min(1, sm + 0.05), side) + E
             m.flat(e, rect_in, toward=up)
 
 
@@ -376,6 +387,7 @@ def cut_glass(E, pad=0.006):
         mems = [f for f in frames if f[1] == 'member']
         panes = [f for f in frames if f[1] == 'pane']
         fills = [f for f in frames if f[1] == 'fill']
+        caps = [f for f in frames if f[1] == 'cap']
         lbows = [f for f in frames if f[1] == 'lbow']
         zb = set(np.linspace(z0, z1, nz + 1).tolist())
         for f in lbows:                                # a leaning bow: the glass's slanting edge every 5 mm
@@ -387,7 +399,7 @@ def cut_glass(E, pad=0.006):
             zb |= {f[3] - pad, f[4] + pad}
             if callable(f[2]):                         # a curving frame: the glass's edge follows it every 5 mm
                 zb |= set(np.arange(f[3], f[4], 0.005).tolist())
-        for f in panes + fills:                        # an oval pane's frame and a metal fill likewise
+        for f in panes + fills + caps:                 # an oval pane's frame and a metal fill likewise
             zb |= set(np.arange(f[3], f[4], 0.005).tolist()) | {f[3] - pad, f[4] + pad}
         zb = sorted(z for z in zb if z0 - 1e-9 <= z <= z1 + 1e-9)
         for i in range(len(zb) - 1):
@@ -405,6 +417,7 @@ def cut_glass(E, pad=0.006):
             cuts = [('m', f) for f in live] + [('b', sb) for sb in here]
             cuts += [('p', f) for f in panes if f[3] - 1e-6 <= zm <= f[4] + pad + 1e-6]   # a flat pane's inside
             cuts += [('f', f) for f in fills if f[3] - pad - 1e-6 <= zm <= f[4] + pad + 1e-6]   # a metal fill from the sill up
+            cuts += [('c', f) for f in caps if f[3] - pad - 1e-6 <= zm <= f[4] + pad + 1e-6]    # and one from the top down
 
             def lspan(f, z):                           # the s over which a leaning bow covers station z (and its pad)
                 zc_, w_, ln = f[2], f[3], f[4]
@@ -428,6 +441,8 @@ def cut_glass(E, pad=0.006):
                     return (c[1][0] + c[1][1]) / 2
                 if c[0] in ('f', 'lf'):
                     return 0.0
+                if c[0] == 'c':
+                    return c[1][2](min(max(zm, c[1][3]), c[1][4]))
                 if c[0] in ('l', 'la'):
                     return min(1.0, max(0.0, sum(lspan(c[1], zm)) / 2))
                 return 1.0
@@ -443,6 +458,8 @@ def cut_glass(E, pad=0.006):
                         lo, hi = f[0] - pad / L, f[1] + pad / L
                     elif kind == 'f':
                         lo, hi = s0, min(1.0, f[2](min(max(z, f[3]), f[4])) + pad / L)
+                    elif kind == 'c':
+                        lo, hi = max(0.0, f[2](min(max(z, f[3]), f[4])) - pad / L), 1.0 + pad / L
                     elif kind in ('l', 'la', 'lf'):
                         lo, hi = lspan(f, z)
                         if kind == 'la':
