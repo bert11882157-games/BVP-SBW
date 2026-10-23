@@ -38,6 +38,9 @@ SECTIONS = [
     (1.00, [(0.156, -0.269), (0.17, -0.215), (0.143, -0.166), (0.102, -0.136), (0.057, -0.13), (0.024, -0.132), (0.0, -0.138)]),
 ]
 SPLIT = 0.50                     # the canopy's front edge, against the windscreen arch over the HUD
+BOW_LEAN = 0.20                  # the front bow leans back: its foot on the sill 10 cm ahead of BOW_Z, its top 10 cm
+                                 # behind (bert's War Thunder side shot, 2026-10-23)
+BOW_Z, BOW_W = SPLIT + 0.02, 0.085
 HOOP_Z = -0.62                  # the canopy's hoop just behind the headrest (the glass runs on behind it)
 
 
@@ -46,17 +49,18 @@ def build(atlas, E, skin):
     out, inner = atlas.swatch(skin), atlas.swatch((40, 42, 44))
     mback, mglass = atlas.swatch((34, 36, 38)), atlas.swatch((150, 170, 180))
     sh = C.Shape(SECTIONS)
-    glass = C.glass_triangles(sh, E, -1.60, SPLIT, nz=24) + C.glass_triangles(sh, E, SPLIT + 0.05, 1.00, nz=8)
+    glass = (C.glass_triangles(sh, E, -1.60, BOW_Z + BOW_LEAN / 2 + BOW_W / 2 + 0.01, nz=24, keep='aft') +
+             C.glass_triangles(sh, E, BOW_Z - BOW_LEAN / 2 - BOW_W / 2 - 0.01, 1.00, nz=12, keep='fore'))
     # the canopy: its tail frame, the hoop behind the headrest, the thick front bow with its three mirrors, the sill rails
     C.bow(m, sh, E, -1.58, 0.04, 0.03, out, inner)
     C.bow(m, sh, E, HOOP_Z, 0.05, 0.035, out, inner)
     # the canopy's front bow and the windscreen's arch: one thick bar (the Su-27's, bert's War Thunder reference)
-    C.bow(m, sh, E, SPLIT + 0.02, 0.095, 0.045, out, inner)
-    C.mirrors(m, sh, E, SPLIT + 0.0, 0.045, mback, mglass)
-    C.member(m, sh, E, 0.0, -1.60, SPLIT, 0.05, 0.035, out, inner, steps=24)
+    C.bow(m, sh, E, BOW_Z, BOW_W, 0.045, out, inner, lean=BOW_LEAN)
+    C.mirrors(m, sh, E, BOW_Z - 0.02, 0.045, mback, mglass, lean=BOW_LEAN)
+    C.member(m, sh, E, 0.0, -1.60, BOW_Z + BOW_LEAN / 2, 0.05, 0.035, out, inner, steps=24)
     # the windscreen, one piece (no posts): the base frame on the nose, the side rails
     C.bow(m, sh, E, 0.98, 0.04, 0.025, out, inner)
-    C.member(m, sh, E, 0.0, SPLIT + 0.05, 1.00, 0.05, 0.035, out, inner)
+    C.member(m, sh, E, 0.0, BOW_Z + BOW_LEAN / 2, 1.00, 0.05, 0.035, out, inner)
     # one smooth shell under the windscreen ahead of the coaming, inside the glass, its top under the sight line over
     # the coaming's front edge (0.82 m ahead, 0.17 m under the eye): the nose under the glass one dark deck
     C.shell(m, sh, E, 0.80, 0.98, atlas.swatch((24, 25, 26)), sight=lambda z: -0.17 / 0.82 * z - 0.012, inset=0.045)

@@ -2,10 +2,10 @@
 """Su-30 canopy, made by hand: the shape from the model's old glass (glass_sections.py), cleaned up into smooth
 sections, and the real frame layout.
 
-The Su-30 canopy (side views and photos of the type): the Su-27's windscreen (a flat armoured front pane between two
-curved side panes, its two posts down to the base frame on the nose, its arch over the HUD), and one long canopy over
-both seats, hinged at the back, with no bow across it: only the frame round its edge (the front bow against the
-windscreen arch, the sill rails, the frame at its tail on the spine).
+The Su-30 canopy (side views and photos of the type): the Su-27's windscreen (one piece, no posts, down to the base
+frame on the nose), the canopy's front bow and the windscreen's arch one thick bar leaning back with the three mirrors
+on it (bert's War Thunder Su-27 reference), and one long canopy over both seats, hinged at the back, with no bow
+across it: only the frame round its edge (the sill rails, the frame at its tail on the spine).
 
 Run after the cockpits (su_30.py), on their output. Usage: python3 tools/cockpit_models/canopy_su_30.py
 """
@@ -43,24 +43,30 @@ SECTIONS = [
     (0.92, [(0.22, -0.315), (0.20, -0.28), (0.15, -0.26), (0.09, -0.235), (0.04, -0.228), (0.0, -0.226)]),
 ]
 SPLIT = 0.46                     # the canopy's front edge, against the windscreen arch over the HUD
-FRONT_PANE_S = 0.80              # the flat front pane's edges across the windscreen's sections
+BOW_LEAN = 0.20                  # the front bow leans back: its foot on the sill 10 cm ahead of BOW_Z, its top 10 cm
+                                 # behind (bert's War Thunder side shot, 2026-10-23)
+BOW_Z, BOW_W = SPLIT + 0.02, 0.085
 NOSE_RGB = (24, 25, 26)          # (lower_skin.py: that anti-glare is the shell's black)
 
 
 def build(atlas, E, skin):
     m = H.Mesh(atlas)
     out, inner = atlas.swatch(skin), atlas.swatch((40, 42, 44))
+    mback, mglass = atlas.swatch((34, 36, 38)), atlas.swatch((150, 170, 180))
     sh = C.Shape(SECTIONS)
-    glass = C.glass_triangles(sh, E, -2.75, SPLIT, nz=34) + C.glass_triangles(sh, E, SPLIT + 0.05, 0.90, nz=8)     # (ends under the base frame: the nose tip's skin lies at its edge)
-    # the canopy: its tail frame, its front bow, the sill rails
+    glass = (C.glass_triangles(sh, E, -2.75, BOW_Z + BOW_LEAN / 2 + BOW_W / 2 + 0.01, nz=34, keep='aft') +
+             C.glass_triangles(sh, E, BOW_Z - BOW_LEAN / 2 - BOW_W / 2 - 0.01, 0.90, nz=12, keep='fore'))     # (ends under the base frame: the nose tip's skin lies at its edge)
+    # the canopy: its tail frame, the sill rails (no frame between the seats: one transparency over both)
     C.bow(m, sh, E, -2.73, 0.04, 0.03, out, inner)
-    C.bow(m, sh, E, SPLIT - 0.005, 0.03, 0.018, out, inner)
-    C.member(m, sh, E, 0.0, -2.75, SPLIT, 0.05, 0.035, out, inner, steps=34)
-    # the windscreen: the arch, the front pane's two posts, the base frame on the nose, the side rails
-    C.bow(m, sh, E, SPLIT + 0.03, 0.04, 0.02, out, inner)
-    C.member(m, sh, E, FRONT_PANE_S, 0.66, 0.92, 0.03, 0.022, out, inner)
+    C.member(m, sh, E, 0.0, -2.75, BOW_Z + BOW_LEAN / 2, 0.05, 0.035, out, inner, steps=34)
+    # the canopy's front bow and the windscreen's arch: one thick bar leaning back, the three mirrors on it (the
+    # Su-27's, bert's War Thunder reference); the windscreen one piece, no posts: the base frame, the side rails
+    C.bow(m, sh, E, BOW_Z, BOW_W, 0.045, out, inner, lean=BOW_LEAN)
+    C.mirrors(m, sh, E, BOW_Z - 0.02, 0.045, mback, mglass, lean=BOW_LEAN)
     C.bow(m, sh, E, 0.905, 0.03, 0.02, out, inner)
-    C.member(m, sh, E, 0.0, SPLIT + 0.05, 0.92, 0.05, 0.035, out, inner)
+    C.member(m, sh, E, 0.0, BOW_Z + BOW_LEAN / 2, 0.92, 0.05, 0.035, out, inner)
+    # the windscreen's lower edge where the nose skin rises up to it (the skin lies just under the glass there): metal
+    C.fill(m, sh, E, 0.72, 0.905, lambda z: min(0.32, max(0.06, sh.s_at_y(z, -0.25))), out, inner, steps=14)
     # one smooth shell under the windscreen ahead of the coaming, inside the glass, its top under the sight line over
     # the coaming's front edge (0.80 m ahead, 0.30 m under the eye): the nose under the glass one dark deck
     C.shell(m, sh, E, 0.80, 0.905, atlas.swatch((24, 25, 26)), sight=lambda z: -0.30 / 0.80 * z - 0.012, inset=0.045, nz=4)

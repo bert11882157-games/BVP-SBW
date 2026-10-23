@@ -108,10 +108,11 @@ class Shape:
         return n
 
 
-def glass_triangles(shape, E, z0, z1, s0=0.0, s1=1.0, nz=12, ns=10, sides=(1, -1)):
+def glass_triangles(shape, E, z0, z1, s0=0.0, s1=1.0, nz=12, ns=10, sides=(1, -1), keep=None):
     """the glass over [z0, z1] x [s0, s1] of the shape, vehicle-local, both halves; flat list of points (run() then
-    remakes it with the frames cut out of it: cut_glass)"""
-    _GLASS.append((shape, z0, z1, s0, s1, nz, ns, tuple(sides)))
+    remakes it with the frames cut out of it: cut_glass). keep='aft' or 'fore': only the glass behind (ahead of) the
+    shape's leaning bow (bow(lean=...)), so the canopy's and the windscreen's patches each end on its slanting edge"""
+    _GLASS.append((shape, z0, z1, s0, s1, nz, ns, tuple(sides), keep))
     out = []
     zs = np.linspace(z0, z1, nz + 1)
     ss = np.linspace(s0, s1, ns + 1)
@@ -124,17 +125,23 @@ def glass_triangles(shape, E, z0, z1, s0=0.0, s1=1.0, nz=12, ns=10, sides=(1, -1
     return out
 
 
-def bow(m, shape, E, z, width, depth, rect_out, rect_in, s0=0.0, s1=1.0, proud=0.004):
+def bow(m, shape, E, z, width, depth, rect_out, rect_in, s0=0.0, s1=1.0, proud=0.004, lean=0.0):
     """a transverse frame at station z over the shape from s0 to s1 on both sides (one arch over the top), [width]
-    along the aircraft, [depth] deep inward, standing [proud] outside the glass"""
-    _FRAMES.append((shape, 'bow', z, width, s0, s1))
-    ss = np.linspace(s0, s1, 12)
+    along the aircraft, [depth] deep inward, standing [proud] outside the glass. With [lean] the frame slants: its
+    foot on the sill (s = 0) lean/2 ahead of z, its top (s = 1) lean/2 behind (the Flanker's front bow); then the glass
+    patches either side of it are glass_triangles(keep='aft' / 'fore')"""
+    if lean:
+        _FRAMES.append((shape, 'lbow', z, width, lean))
+    else:
+        _FRAMES.append((shape, 'bow', z, width, s0, s1))
+    ss = np.linspace(s0, s1, 24 if lean else 12)
     for side in (1, -1):
-        for zz in ((z - width / 2, z + width / 2),):
+        for _ in (0,):
             for j in range(len(ss) - 1):
                 q = []
                 for s in (ss[j], ss[j + 1]):
-                    for zc in zz:
+                    zs = z + lean * (0.5 - s)
+                    for zc in (zs - width / 2, zs + width / 2):
                         p = shape.point(zc, s, side); n = shape.normal(zc, s, side)
                         q.append((p + n * proud + E, p - n * depth + E))
                 (a0, a1), (b0, b1), (c0, c1), (d0, d1) = q          # (s_j, z-), (s_j, z+), (s_j+1, z-), (s_j+1, z+)
@@ -363,13 +370,17 @@ def cut_glass(E, pad=0.006):
     member's edge (less [pad], as the frames' faces lean out over their footprint where the glass curves) instead of
     running on under it, so no frame face lies a few millimetres over the glass (they flicker through each other)"""
     out = []
-    for sh, z0, z1, s0, s1, nz, ns, sides in _GLASS:
+    for sh, z0, z1, s0, s1, nz, ns, sides, keep in _GLASS:
         frames = [f for f in _FRAMES if f[0] is sh]
         bows = [(f[2] - f[3] / 2 - pad, f[2] + f[3] / 2 + pad, f[4], f[5]) for f in frames if f[1] == 'bow']
         mems = [f for f in frames if f[1] == 'member']
         panes = [f for f in frames if f[1] == 'pane']
         fills = [f for f in frames if f[1] == 'fill']
+        lbows = [f for f in frames if f[1] == 'lbow']
         zb = set(np.linspace(z0, z1, nz + 1).tolist())
+        for f in lbows:                                # a leaning bow: the glass's slanting edge every 5 mm
+            r = abs(f[4]) / 2 + f[3] / 2 + pad
+            zb |= set(np.arange(f[2] - r - 0.005, f[2] + r + 0.005, 0.005).tolist())
         for a, b, _, _ in bows:
             zb |= {a, b}
         for f in mems:
@@ -394,8 +405,33 @@ def cut_glass(E, pad=0.006):
             cuts = [('m', f) for f in live] + [('b', sb) for sb in here]
             cuts += [('p', f) for f in panes if f[3] - 1e-6 <= zm <= f[4] + pad + 1e-6]   # a flat pane's inside
             cuts += [('f', f) for f in fills if f[3] - pad - 1e-6 <= zm <= f[4] + pad + 1e-6]   # a metal fill from the sill up
-            cuts.sort(key=lambda c: mid(c[1], zm) if c[0] == 'm' else ((c[1][0] + c[1][1]) / 2 if c[0] == 'b' else
-                                                                         (0.0 if c[0] == 'f' else 1.0)))
+
+            def lspan(f, z):                           # the s over which a leaning bow covers station z (and its pad)
+                zc_, w_, ln = f[2], f[3], f[4]
+                h = w_ / 2 + pad
+                s_of = lambda zv: (zc_ + ln / 2 - zv) / ln      # the s at which the bow's centre line is at zv
+                a_, b_ = sorted((s_of(z + h), s_of(z - h)))
+                return a_, b_
+            for f in lbows:
+                if abs(zm - f[2]) <= abs(f[4]) / 2 + f[3] / 2 + pad + 0.005:
+                    if keep == 'aft':                  # the glass behind the bow: from it up to the top cut away
+                        cuts.append(('la', f))
+                    elif keep == 'fore':               # the glass ahead of it: from the sill up to it cut away
+                        cuts.append(('lf', f))
+                    else:
+                        cuts.append(('l', f))
+
+            def key(c):
+                if c[0] == 'm':
+                    return mid(c[1], zm)
+                if c[0] == 'b':
+                    return (c[1][0] + c[1][1]) / 2
+                if c[0] in ('f', 'lf'):
+                    return 0.0
+                if c[0] in ('l', 'la'):
+                    return min(1.0, max(0.0, sum(lspan(c[1], zm)) / 2))
+                return 1.0
+            cuts.sort(key=key)
             def bounds(z):
                 L = sh.arclen(z) or 1.0
                 b, prev = [], s0
@@ -407,6 +443,12 @@ def cut_glass(E, pad=0.006):
                         lo, hi = f[0] - pad / L, f[1] + pad / L
                     elif kind == 'f':
                         lo, hi = s0, min(1.0, f[2](min(max(z, f[3]), f[4])) + pad / L)
+                    elif kind in ('l', 'la', 'lf'):
+                        lo, hi = lspan(f, z)
+                        if kind == 'la':
+                            hi = s1 + 1.0
+                        elif kind == 'lf':
+                            lo = s0
                     else:
                         lo, hi = sh.s_at_x(z, max(f[2](z), 0.0)), 1.0 + pad / L
                     b.append((prev, max(prev, min(lo, s1))))
@@ -667,12 +709,14 @@ def clear_skin(ac, shape, E, z0, z1, depth=0.07, above=0.03, outside=0.0):
     return n
 
 
-def mirrors(m, shape, E, z, depth, rect_back, rect_glass, at=(1.0, 0.62), size=(0.11, 0.035)):
+def mirrors(m, shape, E, z, depth, rect_back, rect_glass, at=(1.0, 0.62), size=(0.11, 0.035), lean=0.0):
     """rear-view mirrors on the inside of a bow at station z: one at the top (s = 1) and a pair at s = at[1] on the
-    sides, standing a little inside the bow, their glass toward the pilot"""
+    sides, standing a little inside the bow, their glass toward the pilot (on a leaning bow: the bow's [lean])"""
     X, Y, Z = np.array([1.0, 0, 0]), np.array([0, 1.0, 0]), np.array([0, 0, 1.0])
     spots = [(at[0], 1)] + [(at[1], s) for s in (1, -1)]
+    z0 = z
     for s_, side in spots:
+        z = z0 + lean * (0.5 - s_)
         p = shape.point(z, s_, side); n = shape.normal(z, s_, side)
         c = p - n * (depth + 0.016) + E
         t = shape.point(z, min(1, s_ + 0.02), side) - shape.point(z, max(0, s_ - 0.02), side)
