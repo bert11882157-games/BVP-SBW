@@ -1,0 +1,54 @@
+{
+  "ID": "berts_vehicle_pack:sa341f_gazelle",
+  "Model": {
+    "GeometryBackend": "berts_vehicle_pack:vehicle/sa341f_gazelle",
+    "Model": "berts_vehicle_pack:geo/native_fallback/sa341f_gazelle.geo.json",
+    "Texture": "berts_vehicle_pack:textures/entity/sa341f_gazelle.png",
+    "WreckTexture": "berts_vehicle_pack:textures/entity_dead/sa341f_gazelle.png"
+  },
+  "MouseSpeed": [
+    0.2,
+    0.2
+  ],
+  "AircraftRig": {
+    "Schema": 1,
+    "Frame": "GENERATED_MODEL_PIXELS",
+    "Surfaces": [],
+    "Rotors": [
+      {
+        "Bone": "main_rotor",
+        "Parent": "hull",
+        "Pivot": [
+          0.0,
+          47.139,
+          -26.999
+        ],
+        "Axis": [
+          0,
+          -1,
+          0
+        ],
+        "SpeedChannel": "engineSpool",
+        "Direction": 1,
+        "DegreesPerTickAtFullSpeed": 98
+      },
+      {
+        "Bone": "tail_rotor",
+        "Parent": "hull",
+        "Pivot": [
+          0.0,
+          28.5315,
+          78.4435
+        ],
+        "Axis": [
+          1,
+          0,
+          0
+        ],
+        "SpeedChannel": "engineSpool",
+        "Direction": 1,
+        "DegreesPerTickAtFullSpeed": 392
+      }
+    ]
+  }
+}

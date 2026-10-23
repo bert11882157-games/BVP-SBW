@@ -859,6 +859,10 @@
     "tiger": {
       "kind": "heli",
       "src": "air/ger_ahe_tiger/sounds/tiger_start_idle_stop.wav"
+    },
+    "sa342": {
+      "kind": "heli",
+      "src": "air/fr_ahe_sa342/sounds/sa342_start_idle_stop.wav"
     }
   },
   "air_layer": {
@@ -1473,6 +1477,13 @@
     "berts_vehicle_pack:ah_6j": {
       "kind": "heli",
       "engine": "littlebird",
+      "pitch": 1.0,
+      "distant": "kiowa_far",
+      "rotor": "littlebird_rotor"
+    },
+    "berts_vehicle_pack:sa341f_gazelle": {
+      "kind": "heli",
+      "engine": "sa342",
       "pitch": 1.0,
       "distant": "kiowa_far",
       "rotor": "littlebird_rotor"
