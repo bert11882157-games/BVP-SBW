@@ -1021,28 +1021,43 @@ def move_eyes(data):
         seat['DismountInfo']['Position'][2] = ez
 
 
+# The airframe's regeneration left four fin boxes of the baked front Sparrows under the forward fuselage (two per hull piece,
+# |x| 0.556 to 0.869, y 1.2 to 1.51; source units |x| 12.5..19.5, y 17..24, z -79..-68 and -43..-32): cut by box
+FIN_BOXES = [((0.55, 1.15, 4.30), (0.88, 1.55, 4.88)), ((0.55, 1.15, 2.65), (0.88, 1.55, 3.28))]       # |x| lo, y lo, z lo / hi
+
+
+def find_run(mins, maxs, a, c, lo, hi, tol=0.012):
+    """the first face of the run of c - a + 1 faces near index a whose bounding box is (lo, hi), or None (the list may
+    have shifted: an earlier cut, a regeneration)"""
+    n = c - a + 1
+    for s in sorted(range(max(0, a - 600), min(len(mins) - n, a + 600) + 1), key=lambda s: abs(s - a)):
+        if np.all(np.abs(mins[s:s + n].min(0) - lo) < tol) and np.all(np.abs(maxs[s:s + n].max(0) - hi) < tol):
+            return s
+    return None
+
+
 def remove_old(geo):
-    """cut the airframe's own panels, consoles and loose boxes (runs of the hull bones' face lists, each verified by its
-    bounding box first). Every run matching: cut. None matching: already cut (a second run). Some matching: stop."""
-    removed = 0
-    for b in geo['minecraft:geometry'][0]['bones']:
+    """cut the airframe's own panels, consoles and loose boxes (runs of the hull bones' face lists, each found by its bounding
+    box) and the four leftover Sparrow fin boxes. A run that is not found stops the script, unless this geo already carries
+    the new cockpits (a second run: the runs are gone)."""
+    removed = fins = 0
+    bones = geo['minecraft:geometry'][0]['bones']
+    already = any(b['name'] == BONE and b.get('poly_mesh', {}).get('polys') for b in bones)
+    for b in bones:
         if b['name'] not in OLD_INTERIOR:
             continue
         pm = b['poly_mesh']
         P = np.array(pm['positions'], float) * np.array([1, 1, -1]) / 16.0
-        n = len(pm['polys'])
-        ok = []
-        for a, c, lo, hi in OLD_INTERIOR[b['name']]:
-            good = c < n
-            if good:
-                V = np.concatenate([P[[q[0] for q in pm['polys'][i]]] for i in range(a, c + 1)])
-                good = bool(np.all(np.abs(V.min(0) - lo) < 0.02) and np.all(np.abs(V.max(0) - hi) < 0.02))
-            ok.append(good)
-        if not any(ok):
-            continue
-        if not all(ok):
-            raise SystemExit(f'{b["name"]}: the old interior runs no longer match the airframe ({ok}); re-read them')
-        gone = set(i for a, c, _, _ in OLD_INTERIOR[b['name']] for i in range(a, c + 1))
+        mins = np.array([P[[q[0] for q in p]].min(0) if p else np.full(3, 9e9) for p in pm['polys']])
+        maxs = np.array([P[[q[0] for q in p]].max(0) if p else np.full(3, -9e9) for p in pm['polys']])
+        gone = set()
+        if not already:
+            for a, c, lo, hi in OLD_INTERIOR[b['name']]:
+                s = find_run(mins, maxs, a, c, lo, hi)
+                if s is None:
+                    raise SystemExit(f'{b["name"]}: old interior run {a}-{c} (box {lo}, {hi}) is not in the airframe: the face '
+                                     'list changed; re-read OLD_INTERIOR (nothing was written)')
+                gone.update(range(s, s + c - a + 1))
         for i in sorted(gone):
             V = P[[q[0] for q in pm['polys'][i]]]
             # the boxes' outer skins stay: the faces against the tub walls (|x| 0.49), the rear console boxes' backs
@@ -1051,9 +1066,16 @@ def remove_old(geo):
             if (np.abs(V[:, 0]) > 0.489).all() or (b['name'] == HULL1 and (V[:, 2] < 3.645).all()) or \
                     (b['name'] == HULL0 and V[:, 2].max() > 6.74 and np.ptp(V[:, 2]) < 0.3):
                 gone.discard(i)
-        pm['polys'] = [p for i, p in enumerate(pm['polys']) if i not in gone]
         removed += len(gone)
-    return removed
+        fin = set()
+        for (xlo, ylo, zlo), (xhi, yhi, zhi) in FIN_BOXES:
+            ax = np.abs(np.stack([mins[:, 0], maxs[:, 0]]))
+            inside = (ax.min(0) >= xlo) & (ax.max(0) <= xhi) & (mins[:, 1] >= ylo) & (maxs[:, 1] <= yhi) & \
+                     (mins[:, 2] >= zlo) & (maxs[:, 2] <= zhi) & (np.sign(mins[:, 0]) * np.sign(maxs[:, 0]) >= 0)
+            fin.update(int(i) for i in np.where(inside)[0])
+        fins += len(fin)
+        pm['polys'] = [p for i, p in enumerate(pm['polys']) if i not in gone and i not in fin]
+    return removed, fins
 
 def main(argv):
     dry = '--dry-run' in argv
@@ -1061,7 +1083,7 @@ def main(argv):
     asset = json.load(open(ASSET, encoding='utf-8'))
     data = json.load(open(DATA, encoding='utf-8'))
     g = geo['minecraft:geometry'][0]
-    removed = remove_old(geo)
+    removed, fins = remove_old(geo)
     atlas = Atlas()
     mesh, gauges, displays, glass, stick, hud, foot = build(atlas)
     pm = mesh.poly_mesh()
@@ -1104,7 +1126,7 @@ def main(argv):
         both = G + [G[i] for k in range(0, len(G), 3) for i in (k, k + 2, k + 1)]
         cg['Triangles'] = [round(v, 4) + 0.0 for p in tri + both for v in p]
     move_eyes(data)
-    print(f'f_4c: {removed} old interior faces removed; new cockpits {len(pm["polys"])} faces, {len(gauges)} game gauges, '
+    print(f'f_4c: {removed} old interior faces and {fins} leftover Sparrow fin faces removed; new cockpits {len(pm["polys"])} faces, {len(gauges)} game gauges, '
           f'{len(displays)} display(s), LCOSS glass {len(glass) // 3} triangles; stick foot {foot_px} px; '
           f'atlas {atlas.used()} of {sum(a[2] * a[3] for a in ATLAS)} texels')
     if dry:
