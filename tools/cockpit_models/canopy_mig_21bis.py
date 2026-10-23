@@ -40,17 +40,18 @@ PANE_W = 0.17                    # its half width (bert's head-on reference: the
 PANE_TOP = 0.733                 # the apex of its arch: it reaches the windscreen's top frame (the arch at 0.715)
 
 
-PANE_FOOT = 1.32                 # its frame's foot: under it the windscreen is solid metal to the base frame
+PANE_FOOT = 1.35                 # its frame's foot: under it a narrow metal band to the base frame (was 1.32)
 # the flat armoured front pane (flat_pane): bert's head-on reference (War Thunder, 2026-10-23): an arch, its top
 # fully round to the top frame, its sides straight, its foot flat (n_bot 8: small lower corners), on a metal band
 PANE = (PANE_TOP, 1.42, PANE_W, PANE_W, 0.04, PANE_FOOT, 2.0, 8.0)
 
 
 def side_floor(z):
-    """the side panes' lower edge (the reference's side views: each side pane a triangle): metal under it, rising
-    from just above the sill at the arch to the front pane's frame 0.42 m further forward"""
+    """the side panes' lower edge: metal under it only as a thin rail along the sill, rising 4 cm to the front pane's
+    frame (bert, 2026-10-23: the filled areas cut the view; his shots 003857/003904/003912/003917 show the side
+    panes' glass running nearly down to the sill)"""
     t = (z - 0.735) / (1.15 - 0.735)
-    return -0.24 + 0.20 * min(1.0, max(0.0, t))
+    return -0.24 + 0.04 * min(1.0, max(0.0, t))
 
 
 def build(atlas, E, skin):
