@@ -1,0 +1,65 @@
+{
+  "why": "Mi-24P canopies: two separate bubbles, each with ONE flat armoured windscreen (operator: lower, leaning back 16 degrees from the vertical; pilot: raised on the hump, leaning back 37 degrees from the vertical). Only these two windscreens are flat on the real helicopter; the side blisters and the roofs of both canopies are curved (lofted, not listed). Pane sizes UNVERIFIED against drawings (canopy_mi_24p.py).",
+  "panes": [
+    {
+      "name": "operator windscreen",
+      "mirror": false,
+      "boxes": [
+        [
+          [
+            -0.0971,
+            1.9933,
+            7.5442
+          ],
+          [
+            -0.0963,
+            1.9941,
+            7.545
+          ]
+        ],
+        [
+          [
+            0.1248,
+            2.2659,
+            7.465
+          ],
+          [
+            0.1256,
+            2.2667,
+            7.4658
+          ]
+        ]
+      ]
+    },
+    {
+      "name": "pilot windscreen",
+      "mirror": false,
+      "boxes": [
+        [
+          [
+            -0.1069,
+            3.1054,
+            6.1685
+          ],
+          [
+            -0.1061,
+            3.1062,
+            6.1693
+          ]
+        ],
+        [
+          [
+            0.125,
+            3.3138,
+            6.0107
+          ],
+          [
+            0.1258,
+            3.3146,
+            6.0115
+          ]
+        ]
+      ]
+    }
+  ]
+}
