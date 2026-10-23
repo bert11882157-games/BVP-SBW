@@ -32,7 +32,7 @@ VID = 'b_47e'
 SOURCE_BONE = 'wreck_fuselage_0__hull'
 STICK_BONE = 'wreck_fuselage_0__control_stick_pitch'
 
-TURQ = (58, 60, 63)            # the F-14's dark grey panels and consoles
+TURQ = (58, 60, 63)            # dark grey panels and consoles
 TURQ_D = (44, 46, 48)
 BLACK = (24, 25, 26)
 DGREY = (44, 46, 48)
@@ -285,7 +285,7 @@ def p_headbox(d, im):
     S, Hh = im.width, im.height
     H.noisy(d, im, HEADPAD, 5, seed=60)
     d.rectangle([S * .1, Hh * .1, S * .9, Hh * .9], outline=(60, 62, 58, 255), width=6)
-    H.text(d, (S * .5, Hh * .5), 'ACES II', Hh * .2, fill=(40, 40, 40), bold=True)
+    H.text(d, (S * .5, Hh * .5), 'B-47E', Hh * .2, fill=(40, 40, 40), bold=True)
 
 
 # ---------------------------------------------------------------- build
@@ -500,7 +500,7 @@ def build(atlas, E, m=None):
     m.box(P(0.265, CONSOLE_Y + 0.185, tz + 0.03), grip_ax, (0.026, 0.01, 0.032), sw['dgrey'])
     m.box(P(0.242, CONSOLE_Y + 0.15, tz + 0.045), grip_ax, (0.004, 0.008, 0.008), sw['red'])
 
-    # -- ACES II ejection seat, on this model's floor
+    # -- the ejection seat, on this model's floor
     PS = lambda x, y, z: P(x, y + SEAT_DY, z)   # noqa: E731 (the MiG-29 seat's dimensions: the floor sits at the same depth under the eye)
     cushion = atlas.paint(64, 64, H.p_cushion(CUSHION))
     back = atlas.paint(64, 96, H.p_cushion(CUSHION, straps=True))
