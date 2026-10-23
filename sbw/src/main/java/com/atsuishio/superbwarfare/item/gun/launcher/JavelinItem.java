@@ -8,6 +8,7 @@ import com.atsuishio.superbwarfare.entity.projectile.JavelinMissileEntity;
 import com.atsuishio.superbwarfare.init.ModRarities;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.item.gun.GunGeoItem;
+import com.atsuishio.superbwarfare.item.gun.ProjectileFactory;
 import com.atsuishio.superbwarfare.network.NetworkRegistry;
 import com.atsuishio.superbwarfare.network.message.receive.ShootClientMessage;
 import com.atsuishio.superbwarfare.perk.Perk;
@@ -66,6 +67,10 @@ public class JavelinItem extends GunGeoItem {
 
         if (shooter.level() instanceof ServerLevel serverLevel) {
             Entity targetEntity = EntityFindUtil.findEntity(serverLevel, String.valueOf(targetUUID));
+            // The lock target comes from the client: ignore it when it lies outside the weapon's seek range
+            if (targetEntity != null && !ProjectileFactory.isLockTargetAllowed(parameters, targetEntity)) {
+                targetEntity = null;
+            }
             int guideType = targetEntity == null ? 1 : 0;
 
             JavelinMissileEntity missileEntity = new JavelinMissileEntity(shooter, level,

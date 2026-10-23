@@ -6,7 +6,6 @@ import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity
 import com.atsuishio.superbwarfare.init.ModItems
 import com.google.gson.JsonObject
 import net.minecraft.world.item.ItemStack
-import java.util.WeakHashMap
 
 data class AircraftWeaponPresentation(val category: String, val name: String, val ammo: Int, val capacity: Int,
                                       val guidance: String = "")
@@ -33,7 +32,9 @@ object AircraftStoreWeapons {
         }
     }.getOrElse { profile }
     private data class Cached(val store: JsonObject, val capacity: Int, val data: GunData)
-    private val cache = WeakHashMap<VehicleEntity, MutableMap<String, Cached>>()
+    // Identity weak keys: shared by the render and integrated-server threads and by both copies of one vehicle.
+    private val cache: MutableMap<VehicleEntity, MutableMap<String, Cached>> =
+        com.google.common.collect.MapMaker().weakKeys().makeMap()
     fun mountId(weapon: String): String? = weapon.takeIf { it.startsWith(PREFIX) }?.removePrefix(PREFIX)
     internal fun launchable(store: JsonObject): Boolean = when (store["Category"]?.asString) {
         "LASER_GUIDED", "COMMAND_GUIDED" -> true

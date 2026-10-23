@@ -7,6 +7,7 @@ import com.atsuishio.superbwarfare.data.gun.ShootParameters;
 import com.atsuishio.superbwarfare.entity.projectile.IglaMissileEntity;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.item.gun.GunGeoItem;
+import com.atsuishio.superbwarfare.item.gun.ProjectileFactory;
 import com.atsuishio.superbwarfare.network.NetworkRegistry;
 import com.atsuishio.superbwarfare.network.message.receive.ShootClientMessage;
 import com.atsuishio.superbwarfare.perk.Perk;
@@ -65,6 +66,10 @@ public class IglaItem extends GunGeoItem {
 
         if (shooter.level() instanceof ServerLevel serverLevel) {
             Entity targetEntity = EntityFindUtil.findEntity(serverLevel, String.valueOf(targetUUID));
+            // The lock target comes from the client: ignore it when it lies outside the weapon's seek range
+            if (targetEntity != null && !ProjectileFactory.isLockTargetAllowed(parameters, targetEntity)) {
+                targetEntity = null;
+            }
 
             IglaMissileEntity iglaMissileEntity = new IglaMissileEntity(shooter, level,
                     data.get(GunProp.DAMAGE).floatValue(),

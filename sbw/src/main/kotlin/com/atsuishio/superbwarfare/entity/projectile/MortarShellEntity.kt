@@ -156,7 +156,7 @@ open class MortarShellEntity : FastThrowableProjectile, BasicGeoProjectileEntity
             )
 
             if (type == Type.WP) {
-                findNearEntity(result.getLocation(), getOwner()!!)
+                owner?.let { findNearEntity(result.getLocation(), it) }
             }
 
             if (this.level() is ServerLevel) {

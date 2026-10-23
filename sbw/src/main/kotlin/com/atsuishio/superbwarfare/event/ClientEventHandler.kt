@@ -2937,6 +2937,8 @@ object ClientEventHandler {
     fun onClientLoggingOut(event: ClientPlayerNetworkEvent.LoggingOut) {
         com.atsuishio.superbwarfare.client.sound.VehicleReloadSounds.clear()
         VehicleHudScaleController.reset()
+        // Team-deathmatch membership is per world: do not carry it into the next server/world
+        tdmSavedData = TDMSavedData()
     }
 
     @SubscribeEvent

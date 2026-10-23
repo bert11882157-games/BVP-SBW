@@ -10,7 +10,9 @@ object AircraftGunPodGroups {
     const val GROUP = "AircraftGunPods"
     const val MAX_GROUP_MEMBERS = 16
     private data class Alias(val source: GunData, val tick: Int, val identity: String, val data: GunData)
-    private val aliases = java.util.WeakHashMap<VehicleEntity, MutableMap<String, Alias>>()
+    // Identity weak keys: shared by the render and integrated-server threads and by both copies of one vehicle.
+    private val aliases: MutableMap<VehicleEntity, MutableMap<String, Alias>> =
+        com.google.common.collect.MapMaker().weakKeys().makeMap()
     fun equipped(vehicle: VehicleEntity): List<String> = AircraftArmamentManager.gunPodChannels(vehicle, true)
     fun isPod(vehicle: VehicleEntity, name: String) = name in AircraftArmamentManager.gunPodChannels(vehicle, false)
     fun isAlias(name: String): Boolean = name == GROUP || name.startsWith("$GROUP:")

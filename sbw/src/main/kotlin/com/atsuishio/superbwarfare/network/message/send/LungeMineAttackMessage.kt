@@ -28,19 +28,29 @@ data class LungeMineAttackMessage(
 
         if (stack.`is`(ModItems.LUNGE_MINE.get())) {
             if (type == 0) {
+                // The client picks the target: it must be a living entity of this level within strike reach
+                val lookingEntity = EntityFindUtil.findEntity(player.level(), uuid.toString())
+                if (lookingEntity == null || lookingEntity === player || !lookingEntity.isAlive
+                    || lookingEntity.level() !== player.level()
+                ) return
+                // Slack for a moving target: the client sees it a few ticks late
+                val strikeReach = player.getEntityReach() + 2.5 + 6.0 * lookingEntity.deltaMovement.length()
+                if (lookingEntity.boundingBox.distanceToSqr(player.eyePosition) > strikeReach * strikeReach) return
+
                 if (!player.isCreative) {
                     stack.shrink(1)
                 }
-                val lookingEntity = EntityFindUtil.findEntity(player.level(), uuid.toString())
-                if (lookingEntity != null) {
-                    val damage = ExplosionConfig.LUNGE_MINE_ATTACK_DAMAGE.get().toFloat()
-                    lookingEntity.forceHurt(
-                        ModDamageTypes.causeLungeMineDamage(player.level().registryAccess(), player, player),
-                        if (lookingEntity is VehicleEntity) damage else damage / 4f
-                    )
-                    causeLungeMineExplode(player, lookingEntity)
-                }
+                val damage = ExplosionConfig.LUNGE_MINE_ATTACK_DAMAGE.get().toFloat()
+                lookingEntity.forceHurt(
+                    ModDamageTypes.causeLungeMineDamage(player.level().registryAccess(), player, player),
+                    if (lookingEntity is VehicleEntity) damage else damage / 4f
+                )
+                causeLungeMineExplode(player, lookingEntity)
             } else if (type == 1) {
+                // The client picks the blast position: it must be within block reach of the player's eyes
+                val blastReach = player.getBlockReach() + 1.5
+                if (!(pos.distanceToSqr(player.eyePosition) <= blastReach * blastReach)) return
+
                 if (!player.isCreative) {
                     stack.shrink(1)
                 }

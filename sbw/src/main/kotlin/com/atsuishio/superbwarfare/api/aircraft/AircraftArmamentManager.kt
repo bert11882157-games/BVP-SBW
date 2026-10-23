@@ -53,9 +53,13 @@ object AircraftArmamentManager {
     private val farReceipts = WeakHashMap<ServerPlayer, LinkedHashMap<UUID, VisualReceipt>>()
     private data class GroupCache(val tick: Int, val revision: Long, val catalogue: Long,
                                   val definition: JsonObject, val groups: List<AircraftWeaponGroups.Group>)
-    private val groupCache = WeakHashMap<VehicleEntity, GroupCache>()
+    // Identity weak keys: render and integrated-server threads both use this, and Entity.equals/hashCode compare ids,
+    // so a plain WeakHashMap would be racy and would merge the client and server copies of one vehicle.
+    private val groupCache: MutableMap<VehicleEntity, GroupCache> =
+        com.google.common.collect.MapMaker().weakKeys().makeMap()
     private var nextEpoch = 1L
     private var nextSeekRevision = 1L
+    private var lastRequestFailureLog = 0L
 
     internal fun diagnosticRequest(player: ServerPlayer, vehicle: VehicleEntity, operation: String,
         body: JsonObject, staleEpoch: Boolean = false, wrongDimension: Boolean = false) {
@@ -627,14 +631,22 @@ object AircraftArmamentManager {
             }
         } catch (e: IllegalArgumentException) {
             reply(player, lease, message = e.message?.take(160) ?: "Invalid armament request.")
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            // TV requests arrive every tick, so a handler that keeps throwing is logged at most once per 10 s
+            val now = System.nanoTime()
+            if (lastRequestFailureLog == 0L || now - lastRequestFailureLog >= 10_000_000_000L) {
+                lastRequestFailureLog = now
+                com.atsuishio.superbwarfare.Mod.LOGGER.warn(
+                    "Aircraft armament request {} failed for player {} (repeats suppressed for 10 s)",
+                    request.operation, player.gameProfile.name, e)
+            }
             reply(player, lease, message = "Invalid armament request.")
         }
     }
 
     private fun presetName(body: JsonObject): String {
         val name = body["Name"]?.asString?.trim() ?: ""
-        require(name.length in 1..32 && name.none { it.isISOControl() }) { "Use a preset name of 1â€“32 characters." }
+        require(name.length in 1..32 && name.none { it.isISOControl() }) { "Use a preset name of 1-32 characters." }
         return name
     }
     private fun validateSelections(vehicle: VehicleEntity, choices: JsonObject?, rawCounts: JsonObject?,
