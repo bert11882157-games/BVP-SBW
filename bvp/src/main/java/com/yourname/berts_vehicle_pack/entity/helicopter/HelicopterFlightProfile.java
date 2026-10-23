@@ -48,6 +48,8 @@ public final class HelicopterFlightProfile {
     private static final double AH1F_KMH = 277.0D, AH1F_CLIMB = 8.0D;
     // War Thunder ah_1w: 309 km/h at 1,000 m (wiki), maxClimbRateNom 17.3 m/s (fm/ah_1w).
     private static final double AH1W_KMH = 309.0D, AH1W_CLIMB = 17.3D;
+    // War Thunder sa_341f: 306 km/h (wiki), climb UNVERIFIED (the wiki figure does not parse; fm/sa_341f 198.7 s to 1,000 m).
+    private static final double GAZELLE_KMH = 306.0D, GAZELLE_CLIMB = 14.3D;
     // AH-56A Cheyenne: real top speed about 393 km/h (WT fm/ah_56a maxSpeedNom 393.8 km/h at 3,000 m), maxClimbRateNom 17.3 m/s.
     private static final double AH56A_KMH = 393.0D, AH56A_CLIMB = 17.3D;
     private static final double MI26_KMH = 295.0D, MI26_CLIMB = 7.5D;
@@ -142,6 +144,15 @@ public final class HelicopterFlightProfile {
             lin(0.040D, 69.25D, AH1W_KMH), quad(0.004229106199018914D, 69.25D, AH1W_KMH), 0.130D, 0.0110D,
             0.050D, 0.0075D, 0.9D * climb(AH1W_CLIMB, 2.05D), climb(AH1W_CLIMB, 2.05D),
             new HelicopterPhysicalControls(.33D, 1.10D, .40D, .32D, cap(AH1W_KMH), true,
+                    new HelicopterAttitudeProfile(28.0D, 28.0D, 42.0D, 4.0D, 65.0D, 80.0D, 8.0D)));
+    // SA 341F Gazelle: War Thunder fm/sa_341f EmptyMass 990 kg + MaxFuelMass0 453 kg; one Astazou IIIB (the AH-1W's rotor and control
+    // tuning, rotor force scaled to the mass at 14 m/s2 like the AH-1W).
+    private static final HelicopterFlightProfile SA341F_GAZELLE = new HelicopterFlightProfile(
+            soft(GAZELLE_KMH), cap(GAZELLE_KMH), 1443.0D, 20230.0D * POWER_UPLIFT / 163300.0D, 0.12D,
+            HelicopterHandlingProfile.of(1.05D, 1.05D, 0.98D, 1.04D, 1.08D, 1.04D),
+            lin(0.040D, 69.25D, GAZELLE_KMH), quad(0.004229106199018914D, 69.25D, GAZELLE_KMH), 0.130D, 0.0110D,
+            0.050D, 0.0075D, 0.9D * climb(GAZELLE_CLIMB, 2.05D), climb(GAZELLE_CLIMB, 2.05D),
+            new HelicopterPhysicalControls(.33D, 1.10D, .40D, .32D, cap(GAZELLE_KMH), true,
                     new HelicopterAttitudeProfile(28.0D, 28.0D, 42.0D, 4.0D, 65.0D, 80.0D, 8.0D)));
     // AH-56A: War Thunder fm/ah_56a EmptyMass 5,880 kg + MaxFuelMass0 1,290 kg; one T64-GE-16 (rotor force scaled to the mass at
     // 14 m/s2 like the AH-1W). A compound helicopter (pusher propeller and stub wings): the pack's flight model has no
@@ -289,6 +300,10 @@ public final class HelicopterFlightProfile {
 
     public static HelicopterFlightProfile ah1w() {
         return AH1W;
+    }
+
+    public static HelicopterFlightProfile sa341fGazelle() {
+        return SA341F_GAZELLE;
     }
 
     public static HelicopterFlightProfile ah56a() {
