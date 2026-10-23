@@ -456,8 +456,8 @@ def build(m, atlas, st, ppm=400, painters=None):
                        style=gl.get('style', 'REFLECTOR'))
 
     # -- side consoles, their inner, back and front faces down to the console foot
-    left_rows, right_rows = st['consoles']
-    for side in (1, -1):                                            # +1 = left (x > 0)
+    left_rows, right_rows = st['consoles'] or ((), ())
+    for side in ((1, -1) if st['consoles'] else ()):                # +1 = left (x > 0); none: no side consoles
         wing = S.fac[-1] if side > 0 else S.fac[1]
         a_in = (st['CONSOLE_IN'] - st['HINGE']) / math.cos(S.wing)
         zw = wing.at(min(max(a_in, 0.0), S.wing_len), E[1] + st['BOT_W'])[2] - 0.02
