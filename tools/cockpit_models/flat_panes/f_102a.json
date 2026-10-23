@@ -1,0 +1,15 @@
+{
+  "why": "Early F-102A windscreen: a fixed V of two flat, thick, bullet-resistant front panes meeting at a narrow central post, with a flat quarter light each side (a large triangle between the pane's outer post and the sill), under ONE blown (curved) canopy hinged at the rear, whose front bow is the windscreen's arch; the canopy has no flat panes and is not listed. References used: the owner's brief (two flat front panes meeting at a central post, flat side quarter lights, one blown canopy), model-kit reviews and type histories (the TF-102A trainer test of a cut-down canopy and windshield; production F-102A kept the heavily framed V windscreen) and the airframe model's own frame lines (a long, 29 degree raked windscreen with a heavy central ridge). No pane-level drawing or photo description was reachable (web search found none), so the exact pane angles are UNVERIFIED; later F-102As were refitted with a clearer windscreen, the model shows the early heavy frame. Each pane is one plane (y = E_y + 0.36 - 0.55 (z - E_z - 0.5) - 0.7 |x - E_x|, from the central post's edge to the outer post at |x| 0.26) and each quarter light one plane through the outer post (falling 4.24 per block of |x| beyond it); every triangle of each is listed by its centroid. The pane box starts at |x| 0.07 only to leave out the reflector sight's own small flat glass near the centre line (z about +0.55).",
+  "panes": [
+    {
+      "name": "V windscreen pane",
+      "box": [[0.07, 2.247, 4.956], [0.26, 3.247, 6.296]],
+      "mirror": true
+    },
+    {
+      "name": "quarter light",
+      "box": [[0.2601, 2.247, 4.956], [0.43, 3.147, 6.296]],
+      "mirror": true
+    }
+  ]
+}
