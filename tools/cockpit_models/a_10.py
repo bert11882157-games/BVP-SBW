@@ -827,24 +827,53 @@ def build(atlas):
                    'Up': r5(unit(np.cross(cn, X) * -1)), 'Diameter': 0.056, 'Depth': 0.02})
     m.ring(ch + [0, 0, -0.008], cn, unit(np.cross(cn, X) * -1), 0.028, 0.032, 0.008, sw['bezel'], back=0.0)
 
-    # -- the HUD: the unit on its narrow centre pedestal on the glareshield (the UFC right under it), with a low control
-    # strip toward the pilot, and the combiner glass centred on the neutral eye line, leaning back toward the pilot
-    hz0, hz1, hy0, hy1, hhw = 5.330 - EZ, 5.430 - EZ, 3.020 - 3.20, 3.112 - 3.20, 0.075
+    # -- the HUD: the unit on its narrow centre pedestal on the glareshield (the UFC right under it) with a low control
+    # strip (4.5 cm) toward the pilot, and ONE combiner glass (the A-10C Suite 3 HUD: a single flat-topped trapezoid, a
+    # little wider at its foot than at its top, from photographs of the A-10C and the A-10's HUD pedestal; DCS's A-10C
+    # model carries no HUD to measure) centred on the neutral eye line, 15% over life size, leaning back toward the pilot,
+    # in a slim bezel with two side posts standing on the pedestal
+    hz0, hz1, hy0, hy1, hhw = 5.330 - EZ, 5.430 - EZ, 3.020 - 3.20, 3.065 - 3.20, 0.075
     ctrl = atlas.paint(150, 30, p_hud_ctrl)
     m.box([0, (hy0 + hy1) / 2, (hz0 + hz1) / 2], (X, Y, Z), (hhw, (hy1 - hy0) / 2, (hz1 - hz0) / 2), sw['dgrey'],
           front=(2, -1, ctrl, -X, Y))
-    lean = math.radians(20)
+    lean = math.radians(28)
     g_up = np.array([0, math.cos(lean), -math.sin(lean)])
-    g_n = unit(np.cross(X, g_up))
-    g_h, g_hw = 0.165, 0.100
-    g_bot = np.array([0, 3.118 - 3.20, 5.385 - EZ])
-    g_top = g_bot + g_up * g_h
-    m.box(g_bot - g_up * 0.004 + [0, 0.002, 0], (X, g_up, g_n), (g_hw + 0.010, 0.005, 0.010), sw['dgrey'])
-    for s in (-1, 1):
-        m.box((g_bot + g_top) / 2 + X * s * (g_hw + 0.007), (X, g_up, g_n), (0.005, g_h / 2 + 0.004, 0.006), sw['dgrey'])
-    corners = [g_bot - X * g_hw, g_bot + X * g_hw, g_top + X * g_hw, g_top - X * g_hw]
-    glass += [corners[0] + EYE, corners[1] + EYE, corners[2] + EYE, corners[0] + EYE, corners[2] + EYE, corners[3] + EYE]
-    hud = dict(centre=(g_bot + g_top) / 2 + EYE, normal=-g_n, up=g_up, width=2 * g_hw, height=g_h)
+    g_n = unit(np.cross(X, g_up))                              # (away from the pilot)
+    g_h = 0.270                                                # slant length of the glass
+    g_bot = np.array([0, 3.062 - 3.20, 5.385 - EZ])
+    # outline (half width, height) from the bottom edge: a trapezoid with its corners eased
+    OUTLINE = [(0.100, 0.0), (0.105, 0.020), (0.090, 0.245), (0.080, 0.270)]
+    poly2 = [(-OUTLINE[0][0], 0.0), (OUTLINE[0][0], 0.0)] + [(u, v) for u, v in OUTLINE[1:]] + [(-u, v) for u, v in OUTLINE[:0:-1]]
+    q3 = lambda u, v, d=0.0: g_bot + X * u + g_up * v + g_n * d
+    glass_pts = [q3(u, v) for u, v in poly2]
+    for k in range(1, len(glass_pts) - 1):
+        glass += [glass_pts[0] + EYE, glass_pts[k] + EYE, glass_pts[k + 1] + EYE]
+    # the bezel: a mitred ring round the glass (1.4 cm wide, 1.2 cm deep, centred on the glass plane); the bottom edge sits
+    # in the pedestal and is left open
+    rim, dep = 0.014, 0.006
+    nP = len(poly2)
+    outn = []
+    for i in range(nP):
+        a, b = np.array(poly2[i]), np.array(poly2[(i + 1) % nP])
+        e = b - a; e /= np.linalg.norm(e)
+        outn.append(np.array([e[1], -e[0]]))
+    outer2 = []
+    for i in range(nP):
+        n1, n2 = outn[i - 1], outn[i]
+        outer2.append(np.array(poly2[i]) + (n1 + n2) / (1 + n1 @ n2) * rim)
+    for i in range(1, nP):
+        j = (i + 1) % nP
+        a, b = q3(*poly2[i]), q3(*poly2[j])
+        a2, b2 = q3(*outer2[i]), q3(*outer2[j])
+        on = X * outn[i][0] + g_up * outn[i][1]
+        m.flat([a - g_n * dep, b - g_n * dep, b2 - g_n * dep, a2 - g_n * dep], sw['dgrey'], normal=-g_n)
+        m.flat([a + g_n * dep, b + g_n * dep, b2 + g_n * dep, a2 + g_n * dep], sw['dgrey'], normal=g_n)
+        m.flat([a2 - g_n * dep, b2 - g_n * dep, b2 + g_n * dep, a2 + g_n * dep], sw['dgrey'], normal=on)
+        m.flat([a - g_n * dep, b - g_n * dep, b + g_n * dep, a + g_n * dep], sw['dgrey'], normal=-on)
+    for s in (-1, 1):                                          # the two side posts, up the glass's sides to the shoulders
+        base = q3(s * (0.105 + rim + 0.012), 0.0)
+        m.box(base + g_up * 0.110, (X, g_up, g_n), (0.006, 0.110, 0.007), sw['dgrey'])
+    hud = dict(centre=q3(0, 0.135) + EYE, normal=-g_n, up=g_up, width=0.170, height=0.190)
 
     # -- the AHCP: tilted on the left of the glareshield, beside the windscreen bar (a painted face)
     ahcp = atlas.paint(220, 130, p_ahcp)
