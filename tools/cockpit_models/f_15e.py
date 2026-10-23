@@ -1275,6 +1275,13 @@ def build_front(atlas, sw, geo):
     gauges, displays = [], []
     for q in deck_cover(geo, EYE_F, (4.98, 5.22), (2.93, 3.26), (0.18, 0.545), need_up=0.3):
         m.flat(q, sw['coaming'], toward=[0, 0, 0])
+    # the dash block's rear wall (z 4.984) shows above the panel wings with the old patchwork texture: covered with the same dark
+    # coaming, 4 mm toward the eye (the deck_cover window above skips it, since its normal is horizontal)
+    for q in deck_cover(geo, EYE_F, (4.97, 4.995), (2.93, 3.26), (0.0, 0.545)):
+        m.flat(q, sw['coaming'], toward=[0, 0, 0])
+    # and the centre pod's two side walls (x +-0.181), which show a speckled sliver of old texture beside the UFC
+    for q in deck_cover(geo, EYE_F, (4.89, 5.22), (2.93, 3.26), (0.17, 0.19)):
+        m.flat(q, sw['coaming'], toward=[0, 0, 0])
     cache = {'bar_h': atlas.paint(96, 16, bar_h), 'bar_v': atlas.paint(16, 96, bar_v)}
     P = PANEL_F
     build_panel(m, atlas, sw, P, LAYOUT_F, 'ufc_f', 0, gauges, displays, 3, cache, lip=(0.642, 0.724))
