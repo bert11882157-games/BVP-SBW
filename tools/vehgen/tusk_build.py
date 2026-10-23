@@ -181,7 +181,9 @@ def build_geo(model, tpl):
 
 TRACK_X = {}
 M2_MUZZLE = (64.0, -35.0, -1.0)         # toolbox: front of the M2 barrel
-EXHAUST = (-72.0, -17.0, 0.0)            # toolbox: over the rear grille, behind the turret
+# the two louvre boxes of the hull rear plate (outer face z 76.56 px, centres x -12.99 / 11.14, y 24.24), final model
+# px, +Z = rear; 0.24 px outside the louvres, behind the slat rack (its outer face is z 79.81)
+EXHAUST_PX = ((-12.99, 24.24, 76.8), (11.14, 24.24, 76.8))
 
 
 def bounds_of(geo):
@@ -340,11 +342,13 @@ def finish(model, spec):
                 fh.write(body)
             os.remove(os.path.join(old, name))
         os.rmdir(old)
-    # exhaust: the AGT-1500 grille on the rear deck (the Abrams template's origin is at the glacis)
+    # exhaust: one origin per louvred AGT-1500 grille on the rear plate, behind the slat rack. EngineExhaust is in the
+    # model frame (the renderer negates Z, rear = +Z), so it is the final model px / 16, not geo_to_data
     cpath = fit_existing.files_of(VID)['client']
     c = load(cpath)
-    c['EngineExhaust']['Origins'][0]['Position'] = [round(float(v), 5) for v in
-                                                    mtbgeo.geo_to_data(np.array(px(model, EXHAUST)))]
+    c['EngineExhaust']['Origins'] = [
+        {'Id': f'engine_exhaust_group_origin_{i:03d}', 'Position': [round(v / 16, 5) for v in p]}
+        for i, p in enumerate(EXHAUST_PX)]
     with open(cpath, 'w') as fh:
         fh.write(json.dumps(c, indent=2) + '\n')
     return [round(float(v), 5) for v in eye]

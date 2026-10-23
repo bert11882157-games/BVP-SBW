@@ -470,7 +470,8 @@ def main(argv):
 
     client = load(os.path.join(ASSETS, 'sbw', 'vehicles', f'{tid}.json'))
     client = json.loads(json.dumps(client).replace(f'/{tid}', f'/{b.id}').replace(f':{tid}', f':{b.id}'))
-    exhaust = mtbgeo.geo_to_data(b.point(spec['points']['exhaust']))
+    # EngineExhaust is in the model frame (BvpEngineExhaustRenderer negates Z, rear = +Z): model px / 16, not geo_to_data
+    exhaust = np.array(b.point(spec['points']['exhaust'])) / 16
     client['EngineExhaust']['Origins'][0]['Position'] = r5(exhaust)
     for key, val in spec.get('clientSet', {}).items():       # dotted paths into the client model definition
         node = client
