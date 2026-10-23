@@ -1,24 +1,52 @@
 {
-  "why": "Avro Vulcan B.2 flight-deck canopy: a flat, upright, multi-pane windscreen. The centre pair is ONE plane (y = Y_B + K (Z_B - z), independent of x) split by a centre post at x 0, out to the outer posts at |x| 0.69; each corner pane is a flat parallelogram turned 50 degrees about the outer post (the post's raked line and a horizontal direction span it: planar by construction); the two eyebrow windows lie in the flat roof plane (y = H(z)) between the mid bow and the arch, split by a centre rib; each side window lies in the vertical side wall (x = 0.86). Photographs and type descriptions of the B.2 agree on a small heavily framed canopy with flat windscreen panes, overhead eyebrow windows and small side windows; no drawing with dimensions or pane sizes was found, so the pane layout and sizes are the model's own line and UNVERIFIED against the real jet (see canopy_vulcan_b2.py). The rear crew compartment has no windows and no glass.",
+  "why": "Avro Vulcan B.2 flight-deck canopy: mostly metal, a smooth fairing blended into the dorsal hump (the model's own mould line, the envelope of its frame lumps), with small thick heavily framed windows. Descriptions of the B.2 give a five-panel windscreen with its framing and small round side windows; pilots complained about the view; no roof (eyebrow) windows were found. Flat panes here: one small pane in front of each pilot on the windscreen's flat raked plane (y = Y_B + K (Z_B - z), independent of x; a broad metal centre structure and a centre rib between them), one small quarter pane each side on the flat vertical side facet beside it (the plane x = XF), and one small round side window each side (a 16-gon in the plane x = x0 + sl (y - yc), tangent to the fairing). The pane layout and sizes (and the fifth windscreen panel of the description) are not documented with dimensions, so they are the model's own line and UNVERIFIED against the real jet (see canopy_vulcan_b2.py). The rear crew compartment has no windows and no glass.",
   "panes": [
     {
-      "name": "flat windscreen centre pane",
-      "box": [[0.02, 4.95, 12.44], [0.68, 5.52, 12.91]],
+      "name": "flat windscreen front pane",
+      "box": [
+        [
+          0.02,
+          5.0,
+          12.12
+        ],
+        [
+          0.62,
+          5.5,
+          12.6
+        ]
+      ],
       "mirror": true
     },
     {
-      "name": "corner windscreen pane",
-      "box": [[0.69, 4.95, 12.20], [0.87, 5.52, 12.71]],
+      "name": "flat quarter pane",
+      "box": [
+        [
+          0.8,
+          5.0,
+          12.12
+        ],
+        [
+          0.92,
+          5.4,
+          12.5
+        ]
+      ],
       "mirror": true
     },
     {
-      "name": "eyebrow window",
-      "box": [[0.02, 5.50, 12.06], [0.68, 5.66, 12.41]],
-      "mirror": true
-    },
-    {
-      "name": "side window",
-      "box": [[0.80, 5.02, 11.50], [0.90, 5.26, 12.08]],
+      "name": "round side window",
+      "box": [
+        [
+          0.7,
+          5.05,
+          11.65
+        ],
+        [
+          0.92,
+          5.3,
+          11.95
+        ]
+      ],
       "mirror": true
     }
   ]

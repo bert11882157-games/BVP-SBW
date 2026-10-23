@@ -754,7 +754,7 @@ def flight_deck(m, atlas, sw, gauges, displays):
     # -- the bulkhead's front face (toward the pilots) with the doorway; the rear face is the rear crew's. Its top follows the canopy's
     # inner outline at the rear bow and stays under the hump's front face
     xs_b = [0.85, 0.80, 0.75, 0.69, 0.60, 0.50, 0.40, 0.30, 0.20, 0.10, 0.0]
-    cin = lambda x: float(np.interp(x, [0.0, 0.677, 0.848], [5.685, 5.685, 5.275]))      # noqa: E731
+    cin = lambda x: CM.section_y(Z_BK + 0.002, min(x, 0.85)) - 0.02      # noqa: E731  (the canopy skin's inner face at the rear bow)
     topb = [min(cin(x), (hull_top(x, Z_BK - 0.02) or 5.2) - 0.012) for x in xs_b]
     pieces = [[(0.20, F_Y), (XW_U, F_Y), (XW_U, 4.80), (0.20, 4.80)], [(XW_U, F_Y), (XW_L, F_Y), (XW_L, Y_LEDGE), (XW_U, Y_LEDGE)],
               [(0.0, 4.80), (XW_U, 4.80), (XW_U, Y_SILL), (0.0, Y_SILL)]]
