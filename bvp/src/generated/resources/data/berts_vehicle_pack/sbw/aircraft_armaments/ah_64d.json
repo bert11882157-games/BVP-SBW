@@ -5,73 +5,138 @@
     "M230"
   ],
   "SuspendedWeapons": [
-    "HydraOuter"
+    "HydraS2",
+    "HydraS3",
+    "HydraS4",
+    "HydraS5"
   ],
-  "Pairs": [
+  "Pairs": [],
+  "Singles": [
     {
-      "Id": "inner",
-      "Name": "Inner wing",
-      "Left": [
-        1.9333,
-        1.6198,
-        0.2743
-      ],
-      "Right": [
-        -1.9333,
-        1.6198,
-        0.2743
+      "Id": "slot_1",
+      "Name": "Left wingtip",
+      "Position": [
+        3.3,
+        2.02,
+        0.05
       ],
       "AllowedStores": [
-        "berts_vehicle_pack:heli/m299_hellfire",
-        "berts_vehicle_pack:ah_64d/agm114_proxy"
+        "berts_vehicle_pack:heli/atas_stinger",
+        "berts_vehicle_pack:heli/ltc"
       ],
-      "StoreGroups": {
-        "berts_vehicle_pack:heli/m299_hellfire": [
-          "suspended_inner_l",
-          "suspended_inner_r"
-        ]
-      },
-      "MaxWeaponsPerPylon": 1,
-      "MaxPylonMassKg": 1000
+      "MaxPylonMassKg": 1000,
+      "MaxWeaponsPerPylon": 12
     },
     {
-      "Id": "outer",
-      "Name": "Outer wing",
-      "Left": [
-        2.9783,
-        1.5936,
-        0.3331
-      ],
-      "Right": [
-        -2.9783,
-        1.5936,
-        0.3331
+      "Id": "slot_2",
+      "Name": "Left outboard",
+      "Position": [
+        2.975,
+        1.57,
+        0.18
       ],
       "AllowedStores": [
-        "berts_vehicle_pack:heli/m261",
-        "berts_vehicle_pack:ah_64d/agm114_proxy"
+        "berts_vehicle_pack:heli/m261_m247",
+        "berts_vehicle_pack:heli/lau131_apkws_m151",
+        "berts_vehicle_pack:heli/lau131_apkws_m282",
+        "berts_vehicle_pack:heli/m279_agm114k",
+        "berts_vehicle_pack:heli/m272_agm114k"
       ],
-      "StoreGroups": {
-        "berts_vehicle_pack:heli/m261": [
-          "suspended_outer_l",
-          "suspended_outer_r"
-        ]
-      },
-      "MaxWeaponsPerPylon": 1,
       "MaxPylonMassKg": 1000,
+      "MaxWeaponsPerPylon": 12,
       "NativeWeaponIds": {
-        "berts_vehicle_pack:heli/m261": "HydraOuter"
+        "berts_vehicle_pack:heli/m261_m247": "HydraS2"
       }
+    },
+    {
+      "Id": "slot_3",
+      "Name": "Left inboard",
+      "Position": [
+        1.935,
+        1.55,
+        0.18
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:heli/m261_m247",
+        "berts_vehicle_pack:heli/lau131_apkws_m151",
+        "berts_vehicle_pack:heli/lau131_apkws_m282",
+        "berts_vehicle_pack:heli/m279_agm114k",
+        "berts_vehicle_pack:heli/m272_agm114k"
+      ],
+      "MaxPylonMassKg": 1000,
+      "MaxWeaponsPerPylon": 12,
+      "NativeWeaponIds": {
+        "berts_vehicle_pack:heli/m261_m247": "HydraS3"
+      }
+    },
+    {
+      "Id": "slot_4",
+      "Name": "Right inboard",
+      "Position": [
+        -1.935,
+        1.55,
+        0.18
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:heli/m261_m247",
+        "berts_vehicle_pack:heli/lau131_apkws_m151",
+        "berts_vehicle_pack:heli/lau131_apkws_m282",
+        "berts_vehicle_pack:heli/m279_agm114k",
+        "berts_vehicle_pack:heli/m272_agm114k"
+      ],
+      "MaxPylonMassKg": 1000,
+      "MaxWeaponsPerPylon": 12,
+      "NativeWeaponIds": {
+        "berts_vehicle_pack:heli/m261_m247": "HydraS4"
+      }
+    },
+    {
+      "Id": "slot_5",
+      "Name": "Right outboard",
+      "Position": [
+        -2.975,
+        1.57,
+        0.18
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:heli/m261_m247",
+        "berts_vehicle_pack:heli/lau131_apkws_m151",
+        "berts_vehicle_pack:heli/lau131_apkws_m282",
+        "berts_vehicle_pack:heli/m279_agm114k",
+        "berts_vehicle_pack:heli/m272_agm114k"
+      ],
+      "MaxPylonMassKg": 1000,
+      "MaxWeaponsPerPylon": 12,
+      "NativeWeaponIds": {
+        "berts_vehicle_pack:heli/m261_m247": "HydraS5"
+      }
+    },
+    {
+      "Id": "slot_6",
+      "Name": "Right wingtip",
+      "Position": [
+        -3.3,
+        2.02,
+        0.05
+      ],
+      "AllowedStores": [
+        "berts_vehicle_pack:heli/atas_stinger",
+        "berts_vehicle_pack:heli/ltc"
+      ],
+      "MaxPylonMassKg": 1000,
+      "MaxWeaponsPerPylon": 12
     }
   ],
-  "Singles": [],
-  "StoreGroups": {},
-  "MaxPayloadKg": 1700,
+  "MaxPayloadKg": 5000,
+  "MaxPylonMassKg": 1000,
+  "MaxWeaponsPerPylon": 12,
+  "WeaponSeat": 1,
+  "WeaponSeats": [
+    1,
+    0
+  ],
   "Radar": {
     "Enabled": true,
     "Range": 2000
-  },
-  "MaxPylonMassKg": 1000,
-  "MaxWeaponsPerPylon": 1,
-  "WeaponSeat": 1
+  }
 }

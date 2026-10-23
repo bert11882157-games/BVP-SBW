@@ -49,7 +49,10 @@ Thunder data. Run it with `--check` for a dry run. A second run reports `nothing
 ## Weapons covered
 
 - **2A42:** bmp2, bmp2m, bmpt (both guns), btr_90 and others in `WEAPONS`.
-- **2A72:** btr80a. **BMP-3 belts:** bmp3m_elite. **2A38:** tunguska. **Ka-50 / Mi-28N:** helicopter 2A42 belts.
+- **2A72:** btr80a. **BMP-3 belts:** bmp3m_elite. **2A38:** tunguska.
+- **Helicopters:** every gun, built in or in a pod, has War Thunder's own belts for that helicopter, written by
+  `tools/heli_armament/build.py` (`belts.py`, table in `tools/heli_armament/README.md`; user, 2026-10-18). The tools
+  here skip them (`wt_belts.HELI_ARMAMENT`).
 - **2A14:** zu23_2, zsu23_4.
 - **M242:** m2_bradley, lav25 (+M919). **M811:** vbci.
 - **Rh202:** marder_1a1/1a2/1a5.
@@ -131,8 +134,8 @@ The Begleitpanzer's 57 mm belts are not WT data: they are built in the same styl
 AP-T 3:1 HE-T, HE-T 3:1 AP-T, and all-PFHE for air targets.
 
 A belt's selector identity (`Ammo` of its `AmmoType` entry) may be any round of the belt; SBW's belt phase is
-independent of the selected entry, so the belt itself is never rotated. Helicopter 2A42s (Ka-50, Mi-28N) and all
-aircraft guns keep the owner's Air/Ground standard above. The Marders' DM43 belt uses DM51A1 as its HE round.
+independent of the selected entry, so the belt itself is never rotated. All
+aircraft guns keep the owner's Air/Ground standard above (helicopters: see Weapons covered). The Marders' DM43 belt uses DM51A1 as its HE round.
 
 ## LAV-AD GAU-12/U (SBW vehicle, hand-authored)
 

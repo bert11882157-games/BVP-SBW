@@ -11,7 +11,9 @@ import com.atsuishio.superbwarfare.api.vehicle.camera.VehicleSeatPoseResolver
 import com.atsuishio.superbwarfare.api.vehicle.camera.controlsPlayerLookAim
 import com.atsuishio.superbwarfare.client.aircraft.AircraftArmamentClient
 import com.atsuishio.superbwarfare.data.gun.GunProp
+import com.atsuishio.superbwarfare.data.vehicle.subdata.VehicleType
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity
+import com.atsuishio.superbwarfare.entity.vehicle.utils.VehicleVecUtils
 import com.atsuishio.superbwarfare.entity.vehicle.utils.VehicleVecUtils.getXRotFromVector
 import com.atsuishio.superbwarfare.entity.vehicle.utils.VehicleVecUtils.getYRotFromVector
 import com.atsuishio.superbwarfare.event.ClientMouseHandler
@@ -154,8 +156,12 @@ internal object VehicleCameraResolver {
             }
         }
 
-        vehicle.computed().seats().getOrNull(seatIndex)?.cameraPos ?: return null
+        val cameraData = vehicle.computed().seats().getOrNull(seatIndex)?.cameraPos ?: return null
         if (vehicle.useAircraftCamera(seatIndex)) {
+            if (!firstPerson && isHelicopterChase(vehicle)) {
+                return helicopterChaseRotation(vehicle, partialTicks,
+                    AircraftChaseCameraOffset.chase(vehicle.vehicleType, cameraData.aircraftCameraPos))
+            }
             return if (thirdPersonFlight != null) aircraftRotation(vehicle, partialTicks,
                 thirdPersonFlight.yaw(), thirdPersonFlight.pitch())
             else aircraftRotation(vehicle, partialTicks)
@@ -213,7 +219,8 @@ internal object VehicleCameraResolver {
         }
         if (!vehicle.useAircraftCamera(seatIndex)) return null
 
-        val transform = vehicle.getClientVehicleTransform(partialTicks)
+        val transform = if (isHelicopterChase(vehicle)) helicopterChaseTransform(vehicle, partialTicks)
+            else vehicle.getClientVehicleTransform(partialTicks)
         val heldView = VehicleFreeCameraController.rotationOverride(player, vehicle)
         if (heldView != null) {
             // Reuse the normal chase pivot and authored above/behind offset. Freelook only
@@ -243,6 +250,29 @@ internal object VehicleCameraResolver {
         }
         // Collision remains the same aircraft-pivot-to-camera trace, after the external orbit.
         return maxCameraPosition.maxZoom(transform)
+    }
+
+    private fun isHelicopterChase(vehicle: VehicleEntity) = vehicle.vehicleType == VehicleType.HELICOPTER
+
+    /**
+     * Helicopter chase pivot: the aircraft pivot turned by heading and free-look only. A helicopter flies nose-down and
+     * pitches with every cyclic input, so a camera carried on body pitch swings above the tail and stares at the
+     * ground; this one stays level behind the aircraft.
+     */
+    private fun helicopterChaseTransform(vehicle: VehicleEntity, partialTicks: Float) =
+        VehicleVecUtils.getClientVehicleYawOffsetTransform(vehicle, partialTicks)
+            .rotate(Math.toRadians(ClientMouseHandler.freeCameraPitch.toDouble()), 1.0, 0.0, 0.0)
+
+    /** Looks from the authored chase offset at the middle of the airframe, plus free-look. */
+    private fun helicopterChaseRotation(vehicle: VehicleEntity, partialTicks: Float, offset: Vec3): Vec2 {
+        val distance = ClientMouseHandler.custom3pDistanceLerp
+        val back = (-(offset.z - distance)).coerceAtLeast(1.0)
+        val above = offset.y + 0.1 * distance - (0.5 * vehicle.bbHeight - vehicle.rotateOffsetHeight).coerceAtLeast(0.0)
+        val lookDown = Math.toDegrees(Math.atan2(above, back))
+        return Vec2(
+            (vehicle.getResolvedChassisYaw(partialTicks) - ClientMouseHandler.freeCameraYaw).toFloat(),
+            (lookDown + ClientMouseHandler.freeCameraPitch).toFloat(),
+        )
     }
 
     private fun aircraftRotation(

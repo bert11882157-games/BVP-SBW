@@ -568,7 +568,19 @@
         5.625
       ],
       "Weapons": [
-        "S5PodInner"
+        "S5S2Ub32",
+        "S24S2S24b",
+        "Gsh23S2Upk23",
+        "S5S3Ub32",
+        "S24S3S24b",
+        "Gsh23S3Upk23",
+        "S5S4Ub32",
+        "S24S4S24b",
+        "Gsh23S4Upk23",
+        "S5S5Ub32",
+        "S24S5S24b",
+        "Gsh23S5Upk23",
+        "PassengerGun1"
       ],
       "CanRotateHead": true,
       "CameraPos": {
@@ -588,8 +600,8 @@
         "UseAircraftCamera": true,
         "AircraftCameraPos": [
           0,
-          10.35450688,
-          -20.22375812
+          9.78,
+          -23.88
         ],
         "EyeAttachment": "pilot_eye",
         "ZoomEyeAttachment": "pilot_eye",
@@ -616,7 +628,19 @@
         7.75
       ],
       "Weapons": [
-        "PassengerGun1"
+        "PassengerGun1",
+        "S5S2Ub32",
+        "S24S2S24b",
+        "Gsh23S2Upk23",
+        "S5S3Ub32",
+        "S24S3S24b",
+        "Gsh23S3Upk23",
+        "S5S4Ub32",
+        "S24S4S24b",
+        "Gsh23S4Upk23",
+        "S5S5Ub32",
+        "S24S5S24b",
+        "Gsh23S5Upk23"
       ],
       "CanRotateHead": true,
       "CameraPos": {
@@ -635,9 +659,17 @@
         "AimCameraMode": "PLAYER_LOOK_AIM",
         "UseAircraftCamera": false,
         "EyeAttachment": "gunner_eye",
-        "ZoomEyeAttachment": "gunner_optic",
+        "ZoomEyeAttachment": "gunner_sight",
         "DirectionAttachment": "gunner_eye",
-        "ZoomDirectionAttachment": "gunner_optic"
+        "ZoomDirectionAttachment": "gunner_sight",
+        "ZoomYawRange": [
+          -60,
+          60
+        ],
+        "ZoomPitchRange": [
+          -60,
+          20
+        ]
       },
       "DismountInfo": {
         "Transform": "Vehicle",
@@ -853,7 +885,7 @@
         "Profile": "berts_vehicle_pack:aircraft_rounds/yakb/yakb_air_game"
       },
       "ShellType": "HE",
-      "Velocity": 53.75,
+      "Velocity": 51.25,
       "ApDurability": 3,
       "ExplosionRadius": 0,
       "NominalBallistics": {
@@ -864,11 +896,59 @@
       },
       "AmmoType": [
         {
-          "Ammo": "superbwarfare:small_shell_he",
+          "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
           "Override": {
             "Projectile": {
-              "Type": "superbwarfare:projectile",
-              "Profile": "berts_vehicle_pack:aircraft_rounds/yakb/yakb_air_game"
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:mi_24d/passengergun1/belt_ammo_wt_yakb_api"
+            },
+            "ShellType": "AP",
+            "Velocity": 51.25,
+            "ApDurability": 29,
+            "Damage": 8,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "Default",
+            "ProjectileBelt": {
+              "Name": "Default",
+              "Family": "GENERIC",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "yakb_api",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "yakb_api_t",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "GREEN"
+                },
+                {
+                  "Shots": 4,
+                  "Round": "yakb_api",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:mi_24d/passengergun1/belt_ammo_wt_yakb_api",
+              "ProjectileLife": 400
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_aa",
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:mi_24d/passengergun1/belt_ammo_wt_yakb_iai"
             },
             "ShellType": "HE",
             "Velocity": 53.75,
@@ -876,72 +956,138 @@
             "Damage": 83.33333333333333,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
-            "Name": "Air Belt",
+            "Name": "Universal",
             "ProjectileBelt": {
-              "Name": "Air Belt",
+              "Name": "Universal",
+              "Family": "GENERIC",
               "Rounds": [
                 {
+                  "Shots": 2,
+                  "Round": "yakb_api",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "NONE"
+                },
+                {
                   "Shots": 3,
-                  "Round": "yakb_air_game",
-                  "Ammo": "superbwarfare:small_shell_he",
+                  "Round": "yakb_iai",
+                  "Ammo": "superbwarfare:small_shell_aa",
                   "Tracer": "NONE"
                 },
                 {
                   "Shots": 1,
-                  "Round": "yakb_ground_game",
-                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Round": "yakb_api_t",
+                  "Ammo": "superbwarfare:small_shell_he",
                   "Tracer": "GREEN"
                 }
               ]
             },
             "NominalBallistics": {
               "Supported": true,
-              "ProjectileType": "superbwarfare:projectile",
-              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/yakb/yakb_air_game",
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:mi_24d/passengergun1/belt_ammo_wt_yakb_iai",
               "ProjectileLife": 400
             }
-          },
-          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition"
+          }
         },
         {
-          "Ammo": "superbwarfare:small_shell_ap",
+          "Ammo": "superbwarfare:small_shell_gs",
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
           "Override": {
             "Projectile": {
-              "Type": "superbwarfare:projectile",
-              "Profile": "berts_vehicle_pack:aircraft_rounds/yakb/yakb_ground_game"
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:mi_24d/passengergun1/belt_ammo_wt_yakb_ap"
             },
             "ShellType": "AP",
-            "Velocity": 53.75,
+            "Velocity": 51.125,
+            "ApDurability": 31,
+            "Damage": 8,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "Ground targets",
+            "ProjectileBelt": {
+              "Name": "Ground targets",
+              "Family": "GENERIC",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "yakb_iai",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 3,
+                  "Round": "yakb_ap",
+                  "Ammo": "superbwarfare:small_shell_gs",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "yakb_api_t",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "GREEN"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "yakb_ap",
+                  "Ammo": "superbwarfare:small_shell_gs",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:mi_24d/passengergun1/belt_ammo_wt_yakb_ap",
+              "ProjectileLife": 400
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:mi_24d/passengergun1/belt_ammo_wt_yakb_api_t"
+            },
+            "ShellType": "AP",
+            "Velocity": 54.0625,
             "ApDurability": 29,
             "Damage": 8,
             "ExplosionDamage": 0,
             "ExplosionRadius": 0,
-            "Name": "Ground Belt",
+            "Name": "Air targets",
             "ProjectileBelt": {
-              "Name": "Ground Belt",
+              "Name": "Air targets",
+              "Family": "GENERIC",
               "Rounds": [
                 {
-                  "Shots": 3,
-                  "Round": "yakb_ground_game",
-                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Shots": 1,
+                  "Round": "yakb_iai",
+                  "Ammo": "superbwarfare:small_shell_aa",
                   "Tracer": "NONE"
                 },
                 {
                   "Shots": 1,
-                  "Round": "yakb_air_game",
+                  "Round": "yakb_api_t",
                   "Ammo": "superbwarfare:small_shell_he",
                   "Tracer": "GREEN"
+                },
+                {
+                  "Shots": 4,
+                  "Round": "yakb_iai",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "NONE"
                 }
               ]
             },
             "NominalBallistics": {
               "Supported": true,
-              "ProjectileType": "superbwarfare:projectile",
-              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/yakb/yakb_ground_game",
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:mi_24d/passengergun1/belt_ammo_wt_yakb_api_t",
               "ProjectileLife": 400
             }
-          },
-          "ConsumptionItem": "superbwarfare:medium_machine_gun_ammunition"
+          }
         }
       ],
       "ProjectileBeltAmmoType": [],
@@ -1025,7 +1171,7 @@
       "BeltFed": true,
       "OverheatEnabled": false
     },
-    "S5PodInner": {
+    "S5S2Ub32": {
       "AmmoType": [
         {
           "Ammo": "superbwarfare:small_rocket",
@@ -1039,7 +1185,7 @@
       "DefaultZoom": 2,
       "DefaultFireMode": "Auto",
       "AvailableFireModes": "Auto",
-      "Magazine": 64,
+      "Magazine": 32,
       "EmptyReloadTime": 600,
       "Projectile": {
         "Type": "berts_vehicle_pack:s8ko_rocket",
@@ -1047,7 +1193,7 @@
       },
       "AddShooterDeltaMovement": true,
       "Spread": 0,
-      "Name": "weapon.berts_vehicle_pack.s_8ko_rockets",
+      "Name": "S-5 rocket pod (AI)",
       "RPM": 600,
       "Damage": 100,
       "ExplosionDamage": 0,
@@ -1056,52 +1202,6 @@
       "Gravity": 0.02,
       "Velocity": 9,
       "ProjectileLife": 60,
-      "ShootPos": {
-        "Transform": "Vehicle",
-        "ShootDirectionForHud": [
-          0,
-          0.018,
-          1
-        ],
-        "Positions": [
-          [
-            3.1875,
-            2.0,
-            1.875
-          ],
-          [
-            -3.1875,
-            2.0,
-            1.875
-          ]
-        ],
-        "Directions": [
-          [
-            0,
-            0.018,
-            1
-          ],
-          [
-            0,
-            0.018,
-            1
-          ]
-        ],
-        "MuzzleAttachments": [
-          "S5PodInner_left_0",
-          "S5PodInner_right_0"
-        ],
-        "MuzzleDirectionAttachments": [
-          "Default"
-        ],
-        "EffectAttachments": [
-          "S5PodInner_left_0",
-          "S5PodInner_right_0"
-        ],
-        "EffectDirectionAttachments": [
-          "Default"
-        ]
-      },
       "SoundInfo": {
         "Fire1PGain": 1.0,
         "Fire3PGain": 1.0,
@@ -1124,6 +1224,3259 @@
         "ProjectileType": "berts_vehicle_pack:s8ko_rocket",
         "ProjectileProfile": "berts_vehicle_pack:mi24v/s8korocket/default",
         "ProjectileLife": 60
+      },
+      "ShootPos": {
+        "Transform": "Vehicle",
+        "ShootDirectionForHud": [
+          0,
+          0,
+          1
+        ],
+        "Positions": [
+          [
+            3.1875,
+            2.1328,
+            1.2538
+          ],
+          [
+            3.1321,
+            2.1008,
+            1.2538
+          ],
+          [
+            3.1321,
+            2.0368,
+            1.2538
+          ],
+          [
+            3.1875,
+            2.0048,
+            1.2538
+          ],
+          [
+            3.2429,
+            2.0368,
+            1.2538
+          ],
+          [
+            3.2429,
+            2.1008,
+            1.2538
+          ],
+          [
+            3.1875,
+            2.1968,
+            1.2538
+          ],
+          [
+            3.1235,
+            2.1797,
+            1.2538
+          ],
+          [
+            3.0766,
+            2.1328,
+            1.2538
+          ],
+          [
+            3.0595,
+            2.0688,
+            1.2538
+          ],
+          [
+            3.0766,
+            2.0048,
+            1.2538
+          ],
+          [
+            3.1235,
+            1.9579,
+            1.2538
+          ],
+          [
+            3.1875,
+            1.9408,
+            1.2538
+          ],
+          [
+            3.2515,
+            1.9579,
+            1.2538
+          ],
+          [
+            3.2984,
+            2.0048,
+            1.2538
+          ],
+          [
+            3.3155,
+            2.0688,
+            1.2538
+          ],
+          [
+            3.2984,
+            2.1328,
+            1.2538
+          ],
+          [
+            3.2515,
+            2.1797,
+            1.2538
+          ],
+          [
+            3.1875,
+            2.2608,
+            1.2538
+          ],
+          [
+            3.1042,
+            2.2418,
+            1.2538
+          ],
+          [
+            3.0374,
+            2.1885,
+            1.2538
+          ],
+          [
+            3.0003,
+            2.1115,
+            1.2538
+          ],
+          [
+            3.0003,
+            2.0261,
+            1.2538
+          ],
+          [
+            3.0374,
+            1.9491,
+            1.2538
+          ],
+          [
+            3.1042,
+            1.8958,
+            1.2538
+          ],
+          [
+            3.1875,
+            1.8768,
+            1.2538
+          ],
+          [
+            3.2708,
+            1.8958,
+            1.2538
+          ],
+          [
+            3.3376,
+            1.9491,
+            1.2538
+          ],
+          [
+            3.3747,
+            2.0261,
+            1.2538
+          ],
+          [
+            3.3747,
+            2.1115,
+            1.2538
+          ],
+          [
+            3.3376,
+            2.1885,
+            1.2538
+          ],
+          [
+            3.2708,
+            2.2418,
+            1.2538
+          ]
+        ],
+        "Directions": [
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "MuzzleAttachments": [
+          "S5S2Ub32_left_0",
+          "S5S2Ub32_left_1",
+          "S5S2Ub32_left_2",
+          "S5S2Ub32_left_3",
+          "S5S2Ub32_left_4",
+          "S5S2Ub32_left_5",
+          "S5S2Ub32_left_6",
+          "S5S2Ub32_left_7",
+          "S5S2Ub32_left_8",
+          "S5S2Ub32_left_9",
+          "S5S2Ub32_left_10",
+          "S5S2Ub32_left_11",
+          "S5S2Ub32_left_12",
+          "S5S2Ub32_left_13",
+          "S5S2Ub32_left_14",
+          "S5S2Ub32_left_15",
+          "S5S2Ub32_left_16",
+          "S5S2Ub32_left_17",
+          "S5S2Ub32_left_18",
+          "S5S2Ub32_left_19",
+          "S5S2Ub32_left_20",
+          "S5S2Ub32_left_21",
+          "S5S2Ub32_left_22",
+          "S5S2Ub32_left_23",
+          "S5S2Ub32_left_24",
+          "S5S2Ub32_left_25",
+          "S5S2Ub32_left_26",
+          "S5S2Ub32_left_27",
+          "S5S2Ub32_left_28",
+          "S5S2Ub32_left_29",
+          "S5S2Ub32_left_30",
+          "S5S2Ub32_left_31"
+        ],
+        "MuzzleDirectionAttachments": [
+          "Default"
+        ],
+        "EffectAttachments": [
+          "S5S2Ub32_left_0",
+          "S5S2Ub32_left_1",
+          "S5S2Ub32_left_2",
+          "S5S2Ub32_left_3",
+          "S5S2Ub32_left_4",
+          "S5S2Ub32_left_5",
+          "S5S2Ub32_left_6",
+          "S5S2Ub32_left_7",
+          "S5S2Ub32_left_8",
+          "S5S2Ub32_left_9",
+          "S5S2Ub32_left_10",
+          "S5S2Ub32_left_11",
+          "S5S2Ub32_left_12",
+          "S5S2Ub32_left_13",
+          "S5S2Ub32_left_14",
+          "S5S2Ub32_left_15",
+          "S5S2Ub32_left_16",
+          "S5S2Ub32_left_17",
+          "S5S2Ub32_left_18",
+          "S5S2Ub32_left_19",
+          "S5S2Ub32_left_20",
+          "S5S2Ub32_left_21",
+          "S5S2Ub32_left_22",
+          "S5S2Ub32_left_23",
+          "S5S2Ub32_left_24",
+          "S5S2Ub32_left_25",
+          "S5S2Ub32_left_26",
+          "S5S2Ub32_left_27",
+          "S5S2Ub32_left_28",
+          "S5S2Ub32_left_29",
+          "S5S2Ub32_left_30",
+          "S5S2Ub32_left_31"
+        ],
+        "EffectDirectionAttachments": [
+          "Default"
+        ]
+      }
+    },
+    "S24S2S24b": {
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:medium_rocket_he",
+          "ConsumptionItem": "superbwarfare:medium_unguided_rocket",
+          "Override": {
+            "TntEquivalentKg": 2.772
+          }
+        }
+      ],
+      "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_large_rocket.png",
+      "DefaultZoom": 2,
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "Magazine": 1,
+      "EmptyReloadTime": 600,
+      "Projectile": {
+        "Type": "berts_vehicle_pack:s13_rocket",
+        "Profile": "berts_vehicle_pack:mi24v/b13lrocket/default"
+      },
+      "AddShooterDeltaMovement": true,
+      "Spread": 0.32,
+      "Name": "S-24B rocket (AI)",
+      "RPM": 600,
+      "Damage": 500,
+      "ExplosionDamage": 115,
+      "ExplosionRadius": 10,
+      "TntEquivalentKg": 30.599999999999998,
+      "Gravity": 0.025,
+      "Velocity": 8.5,
+      "ProjectileLife": 70,
+      "SoundInfo": {
+        "Fire1PGain": 1.0,
+        "Fire3PGain": 1.0,
+        "Fire3PFarGain": 1.0,
+        "Fire3PVeryFarGain": 1.0,
+        "Fire1P": "bvp_audio:weapon/s8_1p",
+        "Fire3P": "bvp_audio:weapon/s8_3p",
+        "VehicleReload3p": "superbwarfare:missile_reload",
+        "VehicleReloadSoundTime": 7,
+        "Change": "superbwarfare:into_missile",
+        "Fire3PFar": "bvp_audio:weapon/s8_far",
+        "Fire3PVeryFar": "bvp_audio:weapon/s8_far",
+        "Volume": 2.0
+      },
+      "Crosshair": "@Empty",
+      "SoundRadius": 16,
+      "ShellType": "HE",
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "berts_vehicle_pack:s13_rocket",
+        "ProjectileProfile": "berts_vehicle_pack:mi24v/b13lrocket/default",
+        "ProjectileLife": 70
+      },
+      "ShootPos": {
+        "Transform": "Vehicle",
+        "ShootDirectionForHud": [
+          0,
+          0,
+          1
+        ],
+        "Positions": [
+          [
+            3.1875,
+            2.1238,
+            1.3838
+          ]
+        ],
+        "Directions": [
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "MuzzleAttachments": [
+          "S24S2S24b_left_0"
+        ],
+        "MuzzleDirectionAttachments": [
+          "Default"
+        ],
+        "EffectAttachments": [
+          "S24S2S24b_left_0"
+        ],
+        "EffectDirectionAttachments": [
+          "Default"
+        ]
+      }
+    },
+    "Gsh23S2Upk23": {
+      "Crosshair": "@VehicleCommonGun",
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "ProjectileAmount": 1,
+      "AmmoCostPerShoot": 1,
+      "NormalReloadTime": 400,
+      "EmptyReloadTime": 400,
+      "AutoReload": true,
+      "WithdrawAmmoWhenChangeSlot": false,
+      "Gravity": 0.05,
+      "ProjectileLife": 400,
+      "AddShooterDeltaMovement": true,
+      "HeatPerShoot": 0,
+      "Spread": 0.12,
+      "SoundRadius": 8,
+      "ExplosionDamage": 0,
+      "Name": "23 mm GSh-23L (UPK-23-250) (AI)",
+      "RPM": 3400,
+      "Magazine": 250,
+      "Damage": 191.66666666666669,
+      "SoundInfo": {
+        "Fire1PGain": 0.5,
+        "Fire3PGain": 0.5,
+        "Fire3PFarGain": 0.5,
+        "Fire3PVeryFarGain": 0.5,
+        "Fire1P": "berts_vehicle_pack:su_25_gun_gsh23shoot",
+        "Fire3P": "berts_vehicle_pack:su_25_gun_gsh23shoot",
+        "Fire3PFar": "berts_vehicle_pack:su_25_gun_gsh23shoot",
+        "Fire3PVeryFar": "berts_vehicle_pack:su_25_gun_gsh23shoot",
+        "Volume": 0.85
+      },
+      "Projectile": {
+        "Type": "superbwarfare:small_cannon_shell",
+        "Profile": "berts_vehicle_pack:aircraft_rounds/gsh23l/gsh23l_air_game"
+      },
+      "ShellType": "HE",
+      "Velocity": 44.375,
+      "ApDurability": 4,
+      "ExplosionRadius": 3.8333333333333335,
+      "TntEquivalentKg": 0.0279,
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "superbwarfare:small_cannon_shell",
+        "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/gsh23l/gsh23l_air_game",
+        "ProjectileLife": 400
+      },
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/gsh23l/wt_gsh23_hefi_t"
+            },
+            "ShellType": "HE",
+            "Velocity": 44.375,
+            "ApDurability": 4,
+            "Damage": 191.66666666666669,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 3.8333333333333335,
+            "TntEquivalentKg": 0.0268,
+            "Name": "Default",
+            "ProjectileBelt": {
+              "Name": "Default",
+              "Family": "GENERIC",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "gsh23_hefi_t",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "GREEN"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "gsh23_api",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "gsh23_hefi",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/gsh23l/wt_gsh23_hefi_t",
+              "ProjectileLife": 400
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_aa",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/gsh23l/wt_gsh23_hefi"
+            },
+            "ShellType": "HE",
+            "Velocity": 43.75,
+            "ApDurability": 4,
+            "Damage": 191.66666666666669,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 3.8333333333333335,
+            "TntEquivalentKg": 0.0279,
+            "Name": "AP",
+            "ProjectileBelt": {
+              "Name": "AP",
+              "Family": "GENERIC",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "gsh23_hefi",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 3,
+                  "Round": "gsh23_api",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/gsh23l/wt_gsh23_hefi",
+              "ProjectileLife": 400
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/gsh23l/wt_gsh23_api"
+            },
+            "ShellType": "AP",
+            "Velocity": 44.375,
+            "ApDurability": 31,
+            "Damage": 45,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "Air targets",
+            "ProjectileBelt": {
+              "Name": "Air targets",
+              "Family": "GENERIC",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "gsh23_hefi_t",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "GREEN"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "gsh23_hefi",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "gsh23_hefi_t",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "GREEN"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "gsh23_hefi",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "gsh23_api",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/gsh23l/wt_gsh23_api",
+              "ProjectileLife": 400
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_gs",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/gsh23l/wt_gsh23_api"
+            },
+            "ShellType": "AP",
+            "Velocity": 44.375,
+            "ApDurability": 31,
+            "Damage": 45,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "Stealth",
+            "ProjectileBelt": {
+              "Name": "Stealth",
+              "Family": "GENERIC",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "gsh23_api",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 2,
+                  "Round": "gsh23_hefi",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/gsh23l/wt_gsh23_api",
+              "ProjectileLife": 400
+            }
+          }
+        }
+      ],
+      "ProjectileBeltAmmoType": [],
+      "BeltFed": true,
+      "OverheatEnabled": false,
+      "ShootPos": {
+        "Transform": "Vehicle",
+        "ShootDirectionForHud": [
+          0,
+          0,
+          1
+        ],
+        "Positions": [
+          [
+            3.1875,
+            2.0338,
+            2.0088
+          ]
+        ],
+        "Directions": [
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "MuzzleAttachments": [
+          "Gsh23S2Upk23_left_0"
+        ],
+        "MuzzleDirectionAttachments": [
+          "Default"
+        ],
+        "EffectAttachments": [
+          "Gsh23S2Upk23_left_0"
+        ],
+        "EffectDirectionAttachments": [
+          "Default"
+        ]
+      }
+    },
+    "S5S3Ub32": {
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_rocket",
+          "ConsumptionItem": "superbwarfare:small_unguided_rocket",
+          "Override": {
+            "TntEquivalentKg": 1.375
+          }
+        }
+      ],
+      "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_small_rocket.png",
+      "DefaultZoom": 2,
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "Magazine": 32,
+      "EmptyReloadTime": 600,
+      "Projectile": {
+        "Type": "berts_vehicle_pack:s8ko_rocket",
+        "Profile": "berts_vehicle_pack:mi24v/s8korocket/default"
+      },
+      "AddShooterDeltaMovement": true,
+      "Spread": 0,
+      "Name": "S-5 rocket pod (AI)",
+      "RPM": 600,
+      "Damage": 100,
+      "ExplosionDamage": 0,
+      "ExplosionRadius": 6,
+      "TntEquivalentKg": 1.375,
+      "Gravity": 0.02,
+      "Velocity": 9,
+      "ProjectileLife": 60,
+      "SoundInfo": {
+        "Fire1PGain": 1.0,
+        "Fire3PGain": 1.0,
+        "Fire3PFarGain": 1.0,
+        "Fire3PVeryFarGain": 1.0,
+        "Fire1P": "bvp_audio:weapon/s8_1p",
+        "Fire3P": "bvp_audio:weapon/s8_3p",
+        "VehicleReload3p": "superbwarfare:missile_reload",
+        "VehicleReloadSoundTime": 7,
+        "Change": "superbwarfare:into_missile",
+        "Fire3PFar": "bvp_audio:weapon/s8_far",
+        "Fire3PVeryFar": "bvp_audio:weapon/s8_far",
+        "Volume": 1.7
+      },
+      "Crosshair": "@Empty",
+      "SoundRadius": 16,
+      "ShellType": "HEAT",
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "berts_vehicle_pack:s8ko_rocket",
+        "ProjectileProfile": "berts_vehicle_pack:mi24v/s8korocket/default",
+        "ProjectileLife": 60
+      },
+      "ShootPos": {
+        "Transform": "Vehicle",
+        "ShootDirectionForHud": [
+          0,
+          0,
+          1
+        ],
+        "Positions": [
+          [
+            2.315,
+            2.379,
+            1.255
+          ],
+          [
+            2.2596,
+            2.347,
+            1.255
+          ],
+          [
+            2.2596,
+            2.283,
+            1.255
+          ],
+          [
+            2.315,
+            2.251,
+            1.255
+          ],
+          [
+            2.3704,
+            2.283,
+            1.255
+          ],
+          [
+            2.3704,
+            2.347,
+            1.255
+          ],
+          [
+            2.315,
+            2.443,
+            1.255
+          ],
+          [
+            2.251,
+            2.4259,
+            1.255
+          ],
+          [
+            2.2041,
+            2.379,
+            1.255
+          ],
+          [
+            2.187,
+            2.315,
+            1.255
+          ],
+          [
+            2.2041,
+            2.251,
+            1.255
+          ],
+          [
+            2.251,
+            2.2041,
+            1.255
+          ],
+          [
+            2.315,
+            2.187,
+            1.255
+          ],
+          [
+            2.379,
+            2.2041,
+            1.255
+          ],
+          [
+            2.4259,
+            2.251,
+            1.255
+          ],
+          [
+            2.443,
+            2.315,
+            1.255
+          ],
+          [
+            2.4259,
+            2.379,
+            1.255
+          ],
+          [
+            2.379,
+            2.4259,
+            1.255
+          ],
+          [
+            2.315,
+            2.507,
+            1.255
+          ],
+          [
+            2.2317,
+            2.488,
+            1.255
+          ],
+          [
+            2.1649,
+            2.4347,
+            1.255
+          ],
+          [
+            2.1278,
+            2.3577,
+            1.255
+          ],
+          [
+            2.1278,
+            2.2723,
+            1.255
+          ],
+          [
+            2.1649,
+            2.1953,
+            1.255
+          ],
+          [
+            2.2317,
+            2.142,
+            1.255
+          ],
+          [
+            2.315,
+            2.123,
+            1.255
+          ],
+          [
+            2.3983,
+            2.142,
+            1.255
+          ],
+          [
+            2.4651,
+            2.1953,
+            1.255
+          ],
+          [
+            2.5022,
+            2.2723,
+            1.255
+          ],
+          [
+            2.5022,
+            2.3577,
+            1.255
+          ],
+          [
+            2.4651,
+            2.4347,
+            1.255
+          ],
+          [
+            2.3983,
+            2.488,
+            1.255
+          ]
+        ],
+        "Directions": [
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "MuzzleAttachments": [
+          "S5S3Ub32_left_0",
+          "S5S3Ub32_left_1",
+          "S5S3Ub32_left_2",
+          "S5S3Ub32_left_3",
+          "S5S3Ub32_left_4",
+          "S5S3Ub32_left_5",
+          "S5S3Ub32_left_6",
+          "S5S3Ub32_left_7",
+          "S5S3Ub32_left_8",
+          "S5S3Ub32_left_9",
+          "S5S3Ub32_left_10",
+          "S5S3Ub32_left_11",
+          "S5S3Ub32_left_12",
+          "S5S3Ub32_left_13",
+          "S5S3Ub32_left_14",
+          "S5S3Ub32_left_15",
+          "S5S3Ub32_left_16",
+          "S5S3Ub32_left_17",
+          "S5S3Ub32_left_18",
+          "S5S3Ub32_left_19",
+          "S5S3Ub32_left_20",
+          "S5S3Ub32_left_21",
+          "S5S3Ub32_left_22",
+          "S5S3Ub32_left_23",
+          "S5S3Ub32_left_24",
+          "S5S3Ub32_left_25",
+          "S5S3Ub32_left_26",
+          "S5S3Ub32_left_27",
+          "S5S3Ub32_left_28",
+          "S5S3Ub32_left_29",
+          "S5S3Ub32_left_30",
+          "S5S3Ub32_left_31"
+        ],
+        "MuzzleDirectionAttachments": [
+          "Default"
+        ],
+        "EffectAttachments": [
+          "S5S3Ub32_left_0",
+          "S5S3Ub32_left_1",
+          "S5S3Ub32_left_2",
+          "S5S3Ub32_left_3",
+          "S5S3Ub32_left_4",
+          "S5S3Ub32_left_5",
+          "S5S3Ub32_left_6",
+          "S5S3Ub32_left_7",
+          "S5S3Ub32_left_8",
+          "S5S3Ub32_left_9",
+          "S5S3Ub32_left_10",
+          "S5S3Ub32_left_11",
+          "S5S3Ub32_left_12",
+          "S5S3Ub32_left_13",
+          "S5S3Ub32_left_14",
+          "S5S3Ub32_left_15",
+          "S5S3Ub32_left_16",
+          "S5S3Ub32_left_17",
+          "S5S3Ub32_left_18",
+          "S5S3Ub32_left_19",
+          "S5S3Ub32_left_20",
+          "S5S3Ub32_left_21",
+          "S5S3Ub32_left_22",
+          "S5S3Ub32_left_23",
+          "S5S3Ub32_left_24",
+          "S5S3Ub32_left_25",
+          "S5S3Ub32_left_26",
+          "S5S3Ub32_left_27",
+          "S5S3Ub32_left_28",
+          "S5S3Ub32_left_29",
+          "S5S3Ub32_left_30",
+          "S5S3Ub32_left_31"
+        ],
+        "EffectDirectionAttachments": [
+          "Default"
+        ]
+      }
+    },
+    "S24S3S24b": {
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:medium_rocket_he",
+          "ConsumptionItem": "superbwarfare:medium_unguided_rocket",
+          "Override": {
+            "TntEquivalentKg": 2.772
+          }
+        }
+      ],
+      "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_large_rocket.png",
+      "DefaultZoom": 2,
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "Magazine": 1,
+      "EmptyReloadTime": 600,
+      "Projectile": {
+        "Type": "berts_vehicle_pack:s13_rocket",
+        "Profile": "berts_vehicle_pack:mi24v/b13lrocket/default"
+      },
+      "AddShooterDeltaMovement": true,
+      "Spread": 0.32,
+      "Name": "S-24B rocket (AI)",
+      "RPM": 600,
+      "Damage": 500,
+      "ExplosionDamage": 115,
+      "ExplosionRadius": 10,
+      "TntEquivalentKg": 30.599999999999998,
+      "Gravity": 0.025,
+      "Velocity": 8.5,
+      "ProjectileLife": 70,
+      "SoundInfo": {
+        "Fire1PGain": 1.0,
+        "Fire3PGain": 1.0,
+        "Fire3PFarGain": 1.0,
+        "Fire3PVeryFarGain": 1.0,
+        "Fire1P": "bvp_audio:weapon/s8_1p",
+        "Fire3P": "bvp_audio:weapon/s8_3p",
+        "VehicleReload3p": "superbwarfare:missile_reload",
+        "VehicleReloadSoundTime": 7,
+        "Change": "superbwarfare:into_missile",
+        "Fire3PFar": "bvp_audio:weapon/s8_far",
+        "Fire3PVeryFar": "bvp_audio:weapon/s8_far",
+        "Volume": 2.0
+      },
+      "Crosshair": "@Empty",
+      "SoundRadius": 16,
+      "ShellType": "HE",
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "berts_vehicle_pack:s13_rocket",
+        "ProjectileProfile": "berts_vehicle_pack:mi24v/b13lrocket/default",
+        "ProjectileLife": 70
+      },
+      "ShootPos": {
+        "Transform": "Vehicle",
+        "ShootDirectionForHud": [
+          0,
+          0,
+          1
+        ],
+        "Positions": [
+          [
+            2.315,
+            2.37,
+            1.385
+          ]
+        ],
+        "Directions": [
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "MuzzleAttachments": [
+          "S24S3S24b_left_0"
+        ],
+        "MuzzleDirectionAttachments": [
+          "Default"
+        ],
+        "EffectAttachments": [
+          "S24S3S24b_left_0"
+        ],
+        "EffectDirectionAttachments": [
+          "Default"
+        ]
+      }
+    },
+    "Gsh23S3Upk23": {
+      "Crosshair": "@VehicleCommonGun",
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "ProjectileAmount": 1,
+      "AmmoCostPerShoot": 1,
+      "NormalReloadTime": 400,
+      "EmptyReloadTime": 400,
+      "AutoReload": true,
+      "WithdrawAmmoWhenChangeSlot": false,
+      "Gravity": 0.05,
+      "ProjectileLife": 400,
+      "AddShooterDeltaMovement": true,
+      "HeatPerShoot": 0,
+      "Spread": 0.12,
+      "SoundRadius": 8,
+      "ExplosionDamage": 0,
+      "Name": "23 mm GSh-23L (UPK-23-250) (AI)",
+      "RPM": 3400,
+      "Magazine": 250,
+      "Damage": 191.66666666666669,
+      "SoundInfo": {
+        "Fire1PGain": 0.5,
+        "Fire3PGain": 0.5,
+        "Fire3PFarGain": 0.5,
+        "Fire3PVeryFarGain": 0.5,
+        "Fire1P": "berts_vehicle_pack:su_25_gun_gsh23shoot",
+        "Fire3P": "berts_vehicle_pack:su_25_gun_gsh23shoot",
+        "Fire3PFar": "berts_vehicle_pack:su_25_gun_gsh23shoot",
+        "Fire3PVeryFar": "berts_vehicle_pack:su_25_gun_gsh23shoot",
+        "Volume": 0.85
+      },
+      "Projectile": {
+        "Type": "superbwarfare:small_cannon_shell",
+        "Profile": "berts_vehicle_pack:aircraft_rounds/gsh23l/gsh23l_air_game"
+      },
+      "ShellType": "HE",
+      "Velocity": 44.375,
+      "ApDurability": 4,
+      "ExplosionRadius": 3.8333333333333335,
+      "TntEquivalentKg": 0.0279,
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "superbwarfare:small_cannon_shell",
+        "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/gsh23l/gsh23l_air_game",
+        "ProjectileLife": 400
+      },
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/gsh23l/wt_gsh23_hefi_t"
+            },
+            "ShellType": "HE",
+            "Velocity": 44.375,
+            "ApDurability": 4,
+            "Damage": 191.66666666666669,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 3.8333333333333335,
+            "TntEquivalentKg": 0.0268,
+            "Name": "Default",
+            "ProjectileBelt": {
+              "Name": "Default",
+              "Family": "GENERIC",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "gsh23_hefi_t",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "GREEN"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "gsh23_api",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "gsh23_hefi",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/gsh23l/wt_gsh23_hefi_t",
+              "ProjectileLife": 400
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_aa",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/gsh23l/wt_gsh23_hefi"
+            },
+            "ShellType": "HE",
+            "Velocity": 43.75,
+            "ApDurability": 4,
+            "Damage": 191.66666666666669,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 3.8333333333333335,
+            "TntEquivalentKg": 0.0279,
+            "Name": "AP",
+            "ProjectileBelt": {
+              "Name": "AP",
+              "Family": "GENERIC",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "gsh23_hefi",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 3,
+                  "Round": "gsh23_api",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/gsh23l/wt_gsh23_hefi",
+              "ProjectileLife": 400
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/gsh23l/wt_gsh23_api"
+            },
+            "ShellType": "AP",
+            "Velocity": 44.375,
+            "ApDurability": 31,
+            "Damage": 45,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "Air targets",
+            "ProjectileBelt": {
+              "Name": "Air targets",
+              "Family": "GENERIC",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "gsh23_hefi_t",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "GREEN"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "gsh23_hefi",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "gsh23_hefi_t",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "GREEN"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "gsh23_hefi",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "gsh23_api",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/gsh23l/wt_gsh23_api",
+              "ProjectileLife": 400
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_gs",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/gsh23l/wt_gsh23_api"
+            },
+            "ShellType": "AP",
+            "Velocity": 44.375,
+            "ApDurability": 31,
+            "Damage": 45,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "Stealth",
+            "ProjectileBelt": {
+              "Name": "Stealth",
+              "Family": "GENERIC",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "gsh23_api",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 2,
+                  "Round": "gsh23_hefi",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/gsh23l/wt_gsh23_api",
+              "ProjectileLife": 400
+            }
+          }
+        }
+      ],
+      "ProjectileBeltAmmoType": [],
+      "BeltFed": true,
+      "OverheatEnabled": false,
+      "ShootPos": {
+        "Transform": "Vehicle",
+        "ShootDirectionForHud": [
+          0,
+          0,
+          1
+        ],
+        "Positions": [
+          [
+            2.315,
+            2.28,
+            2.01
+          ]
+        ],
+        "Directions": [
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "MuzzleAttachments": [
+          "Gsh23S3Upk23_left_0"
+        ],
+        "MuzzleDirectionAttachments": [
+          "Default"
+        ],
+        "EffectAttachments": [
+          "Gsh23S3Upk23_left_0"
+        ],
+        "EffectDirectionAttachments": [
+          "Default"
+        ]
+      }
+    },
+    "S5S4Ub32": {
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_rocket",
+          "ConsumptionItem": "superbwarfare:small_unguided_rocket",
+          "Override": {
+            "TntEquivalentKg": 1.375
+          }
+        }
+      ],
+      "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_small_rocket.png",
+      "DefaultZoom": 2,
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "Magazine": 32,
+      "EmptyReloadTime": 600,
+      "Projectile": {
+        "Type": "berts_vehicle_pack:s8ko_rocket",
+        "Profile": "berts_vehicle_pack:mi24v/s8korocket/default"
+      },
+      "AddShooterDeltaMovement": true,
+      "Spread": 0,
+      "Name": "S-5 rocket pod (AI)",
+      "RPM": 600,
+      "Damage": 100,
+      "ExplosionDamage": 0,
+      "ExplosionRadius": 6,
+      "TntEquivalentKg": 1.375,
+      "Gravity": 0.02,
+      "Velocity": 9,
+      "ProjectileLife": 60,
+      "SoundInfo": {
+        "Fire1PGain": 1.0,
+        "Fire3PGain": 1.0,
+        "Fire3PFarGain": 1.0,
+        "Fire3PVeryFarGain": 1.0,
+        "Fire1P": "bvp_audio:weapon/s8_1p",
+        "Fire3P": "bvp_audio:weapon/s8_3p",
+        "VehicleReload3p": "superbwarfare:missile_reload",
+        "VehicleReloadSoundTime": 7,
+        "Change": "superbwarfare:into_missile",
+        "Fire3PFar": "bvp_audio:weapon/s8_far",
+        "Fire3PVeryFar": "bvp_audio:weapon/s8_far",
+        "Volume": 1.7
+      },
+      "Crosshair": "@Empty",
+      "SoundRadius": 16,
+      "ShellType": "HEAT",
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "berts_vehicle_pack:s8ko_rocket",
+        "ProjectileProfile": "berts_vehicle_pack:mi24v/s8korocket/default",
+        "ProjectileLife": 60
+      },
+      "ShootPos": {
+        "Transform": "Vehicle",
+        "ShootDirectionForHud": [
+          0,
+          0,
+          1
+        ],
+        "Positions": [
+          [
+            -2.315,
+            2.379,
+            1.255
+          ],
+          [
+            -2.3704,
+            2.347,
+            1.255
+          ],
+          [
+            -2.3704,
+            2.283,
+            1.255
+          ],
+          [
+            -2.315,
+            2.251,
+            1.255
+          ],
+          [
+            -2.2596,
+            2.283,
+            1.255
+          ],
+          [
+            -2.2596,
+            2.347,
+            1.255
+          ],
+          [
+            -2.315,
+            2.443,
+            1.255
+          ],
+          [
+            -2.379,
+            2.4259,
+            1.255
+          ],
+          [
+            -2.4259,
+            2.379,
+            1.255
+          ],
+          [
+            -2.443,
+            2.315,
+            1.255
+          ],
+          [
+            -2.4259,
+            2.251,
+            1.255
+          ],
+          [
+            -2.379,
+            2.2041,
+            1.255
+          ],
+          [
+            -2.315,
+            2.187,
+            1.255
+          ],
+          [
+            -2.251,
+            2.2041,
+            1.255
+          ],
+          [
+            -2.2041,
+            2.251,
+            1.255
+          ],
+          [
+            -2.187,
+            2.315,
+            1.255
+          ],
+          [
+            -2.2041,
+            2.379,
+            1.255
+          ],
+          [
+            -2.251,
+            2.4259,
+            1.255
+          ],
+          [
+            -2.315,
+            2.507,
+            1.255
+          ],
+          [
+            -2.3983,
+            2.488,
+            1.255
+          ],
+          [
+            -2.4651,
+            2.4347,
+            1.255
+          ],
+          [
+            -2.5022,
+            2.3577,
+            1.255
+          ],
+          [
+            -2.5022,
+            2.2723,
+            1.255
+          ],
+          [
+            -2.4651,
+            2.1953,
+            1.255
+          ],
+          [
+            -2.3983,
+            2.142,
+            1.255
+          ],
+          [
+            -2.315,
+            2.123,
+            1.255
+          ],
+          [
+            -2.2317,
+            2.142,
+            1.255
+          ],
+          [
+            -2.1649,
+            2.1953,
+            1.255
+          ],
+          [
+            -2.1278,
+            2.2723,
+            1.255
+          ],
+          [
+            -2.1278,
+            2.3577,
+            1.255
+          ],
+          [
+            -2.1649,
+            2.4347,
+            1.255
+          ],
+          [
+            -2.2317,
+            2.488,
+            1.255
+          ]
+        ],
+        "Directions": [
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "MuzzleAttachments": [
+          "S5S4Ub32_right_0",
+          "S5S4Ub32_right_1",
+          "S5S4Ub32_right_2",
+          "S5S4Ub32_right_3",
+          "S5S4Ub32_right_4",
+          "S5S4Ub32_right_5",
+          "S5S4Ub32_right_6",
+          "S5S4Ub32_right_7",
+          "S5S4Ub32_right_8",
+          "S5S4Ub32_right_9",
+          "S5S4Ub32_right_10",
+          "S5S4Ub32_right_11",
+          "S5S4Ub32_right_12",
+          "S5S4Ub32_right_13",
+          "S5S4Ub32_right_14",
+          "S5S4Ub32_right_15",
+          "S5S4Ub32_right_16",
+          "S5S4Ub32_right_17",
+          "S5S4Ub32_right_18",
+          "S5S4Ub32_right_19",
+          "S5S4Ub32_right_20",
+          "S5S4Ub32_right_21",
+          "S5S4Ub32_right_22",
+          "S5S4Ub32_right_23",
+          "S5S4Ub32_right_24",
+          "S5S4Ub32_right_25",
+          "S5S4Ub32_right_26",
+          "S5S4Ub32_right_27",
+          "S5S4Ub32_right_28",
+          "S5S4Ub32_right_29",
+          "S5S4Ub32_right_30",
+          "S5S4Ub32_right_31"
+        ],
+        "MuzzleDirectionAttachments": [
+          "Default"
+        ],
+        "EffectAttachments": [
+          "S5S4Ub32_right_0",
+          "S5S4Ub32_right_1",
+          "S5S4Ub32_right_2",
+          "S5S4Ub32_right_3",
+          "S5S4Ub32_right_4",
+          "S5S4Ub32_right_5",
+          "S5S4Ub32_right_6",
+          "S5S4Ub32_right_7",
+          "S5S4Ub32_right_8",
+          "S5S4Ub32_right_9",
+          "S5S4Ub32_right_10",
+          "S5S4Ub32_right_11",
+          "S5S4Ub32_right_12",
+          "S5S4Ub32_right_13",
+          "S5S4Ub32_right_14",
+          "S5S4Ub32_right_15",
+          "S5S4Ub32_right_16",
+          "S5S4Ub32_right_17",
+          "S5S4Ub32_right_18",
+          "S5S4Ub32_right_19",
+          "S5S4Ub32_right_20",
+          "S5S4Ub32_right_21",
+          "S5S4Ub32_right_22",
+          "S5S4Ub32_right_23",
+          "S5S4Ub32_right_24",
+          "S5S4Ub32_right_25",
+          "S5S4Ub32_right_26",
+          "S5S4Ub32_right_27",
+          "S5S4Ub32_right_28",
+          "S5S4Ub32_right_29",
+          "S5S4Ub32_right_30",
+          "S5S4Ub32_right_31"
+        ],
+        "EffectDirectionAttachments": [
+          "Default"
+        ]
+      }
+    },
+    "S24S4S24b": {
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:medium_rocket_he",
+          "ConsumptionItem": "superbwarfare:medium_unguided_rocket",
+          "Override": {
+            "TntEquivalentKg": 2.772
+          }
+        }
+      ],
+      "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_large_rocket.png",
+      "DefaultZoom": 2,
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "Magazine": 1,
+      "EmptyReloadTime": 600,
+      "Projectile": {
+        "Type": "berts_vehicle_pack:s13_rocket",
+        "Profile": "berts_vehicle_pack:mi24v/b13lrocket/default"
+      },
+      "AddShooterDeltaMovement": true,
+      "Spread": 0.32,
+      "Name": "S-24B rocket (AI)",
+      "RPM": 600,
+      "Damage": 500,
+      "ExplosionDamage": 115,
+      "ExplosionRadius": 10,
+      "TntEquivalentKg": 30.599999999999998,
+      "Gravity": 0.025,
+      "Velocity": 8.5,
+      "ProjectileLife": 70,
+      "SoundInfo": {
+        "Fire1PGain": 1.0,
+        "Fire3PGain": 1.0,
+        "Fire3PFarGain": 1.0,
+        "Fire3PVeryFarGain": 1.0,
+        "Fire1P": "bvp_audio:weapon/s8_1p",
+        "Fire3P": "bvp_audio:weapon/s8_3p",
+        "VehicleReload3p": "superbwarfare:missile_reload",
+        "VehicleReloadSoundTime": 7,
+        "Change": "superbwarfare:into_missile",
+        "Fire3PFar": "bvp_audio:weapon/s8_far",
+        "Fire3PVeryFar": "bvp_audio:weapon/s8_far",
+        "Volume": 2.0
+      },
+      "Crosshair": "@Empty",
+      "SoundRadius": 16,
+      "ShellType": "HE",
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "berts_vehicle_pack:s13_rocket",
+        "ProjectileProfile": "berts_vehicle_pack:mi24v/b13lrocket/default",
+        "ProjectileLife": 70
+      },
+      "ShootPos": {
+        "Transform": "Vehicle",
+        "ShootDirectionForHud": [
+          0,
+          0,
+          1
+        ],
+        "Positions": [
+          [
+            -2.315,
+            2.37,
+            1.385
+          ]
+        ],
+        "Directions": [
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "MuzzleAttachments": [
+          "S24S4S24b_right_0"
+        ],
+        "MuzzleDirectionAttachments": [
+          "Default"
+        ],
+        "EffectAttachments": [
+          "S24S4S24b_right_0"
+        ],
+        "EffectDirectionAttachments": [
+          "Default"
+        ]
+      }
+    },
+    "Gsh23S4Upk23": {
+      "Crosshair": "@VehicleCommonGun",
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "ProjectileAmount": 1,
+      "AmmoCostPerShoot": 1,
+      "NormalReloadTime": 400,
+      "EmptyReloadTime": 400,
+      "AutoReload": true,
+      "WithdrawAmmoWhenChangeSlot": false,
+      "Gravity": 0.05,
+      "ProjectileLife": 400,
+      "AddShooterDeltaMovement": true,
+      "HeatPerShoot": 0,
+      "Spread": 0.12,
+      "SoundRadius": 8,
+      "ExplosionDamage": 0,
+      "Name": "23 mm GSh-23L (UPK-23-250) (AI)",
+      "RPM": 3400,
+      "Magazine": 250,
+      "Damage": 191.66666666666669,
+      "SoundInfo": {
+        "Fire1PGain": 0.5,
+        "Fire3PGain": 0.5,
+        "Fire3PFarGain": 0.5,
+        "Fire3PVeryFarGain": 0.5,
+        "Fire1P": "berts_vehicle_pack:su_25_gun_gsh23shoot",
+        "Fire3P": "berts_vehicle_pack:su_25_gun_gsh23shoot",
+        "Fire3PFar": "berts_vehicle_pack:su_25_gun_gsh23shoot",
+        "Fire3PVeryFar": "berts_vehicle_pack:su_25_gun_gsh23shoot",
+        "Volume": 0.85
+      },
+      "Projectile": {
+        "Type": "superbwarfare:small_cannon_shell",
+        "Profile": "berts_vehicle_pack:aircraft_rounds/gsh23l/gsh23l_air_game"
+      },
+      "ShellType": "HE",
+      "Velocity": 44.375,
+      "ApDurability": 4,
+      "ExplosionRadius": 3.8333333333333335,
+      "TntEquivalentKg": 0.0279,
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "superbwarfare:small_cannon_shell",
+        "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/gsh23l/gsh23l_air_game",
+        "ProjectileLife": 400
+      },
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/gsh23l/wt_gsh23_hefi_t"
+            },
+            "ShellType": "HE",
+            "Velocity": 44.375,
+            "ApDurability": 4,
+            "Damage": 191.66666666666669,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 3.8333333333333335,
+            "TntEquivalentKg": 0.0268,
+            "Name": "Default",
+            "ProjectileBelt": {
+              "Name": "Default",
+              "Family": "GENERIC",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "gsh23_hefi_t",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "GREEN"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "gsh23_api",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "gsh23_hefi",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/gsh23l/wt_gsh23_hefi_t",
+              "ProjectileLife": 400
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_aa",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/gsh23l/wt_gsh23_hefi"
+            },
+            "ShellType": "HE",
+            "Velocity": 43.75,
+            "ApDurability": 4,
+            "Damage": 191.66666666666669,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 3.8333333333333335,
+            "TntEquivalentKg": 0.0279,
+            "Name": "AP",
+            "ProjectileBelt": {
+              "Name": "AP",
+              "Family": "GENERIC",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "gsh23_hefi",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 3,
+                  "Round": "gsh23_api",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/gsh23l/wt_gsh23_hefi",
+              "ProjectileLife": 400
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/gsh23l/wt_gsh23_api"
+            },
+            "ShellType": "AP",
+            "Velocity": 44.375,
+            "ApDurability": 31,
+            "Damage": 45,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "Air targets",
+            "ProjectileBelt": {
+              "Name": "Air targets",
+              "Family": "GENERIC",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "gsh23_hefi_t",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "GREEN"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "gsh23_hefi",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "gsh23_hefi_t",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "GREEN"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "gsh23_hefi",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "gsh23_api",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/gsh23l/wt_gsh23_api",
+              "ProjectileLife": 400
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_gs",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/gsh23l/wt_gsh23_api"
+            },
+            "ShellType": "AP",
+            "Velocity": 44.375,
+            "ApDurability": 31,
+            "Damage": 45,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "Stealth",
+            "ProjectileBelt": {
+              "Name": "Stealth",
+              "Family": "GENERIC",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "gsh23_api",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 2,
+                  "Round": "gsh23_hefi",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/gsh23l/wt_gsh23_api",
+              "ProjectileLife": 400
+            }
+          }
+        }
+      ],
+      "ProjectileBeltAmmoType": [],
+      "BeltFed": true,
+      "OverheatEnabled": false,
+      "ShootPos": {
+        "Transform": "Vehicle",
+        "ShootDirectionForHud": [
+          0,
+          0,
+          1
+        ],
+        "Positions": [
+          [
+            -2.315,
+            2.28,
+            2.01
+          ]
+        ],
+        "Directions": [
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "MuzzleAttachments": [
+          "Gsh23S4Upk23_right_0"
+        ],
+        "MuzzleDirectionAttachments": [
+          "Default"
+        ],
+        "EffectAttachments": [
+          "Gsh23S4Upk23_right_0"
+        ],
+        "EffectDirectionAttachments": [
+          "Default"
+        ]
+      }
+    },
+    "S5S5Ub32": {
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_rocket",
+          "ConsumptionItem": "superbwarfare:small_unguided_rocket",
+          "Override": {
+            "TntEquivalentKg": 1.375
+          }
+        }
+      ],
+      "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_small_rocket.png",
+      "DefaultZoom": 2,
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "Magazine": 32,
+      "EmptyReloadTime": 600,
+      "Projectile": {
+        "Type": "berts_vehicle_pack:s8ko_rocket",
+        "Profile": "berts_vehicle_pack:mi24v/s8korocket/default"
+      },
+      "AddShooterDeltaMovement": true,
+      "Spread": 0,
+      "Name": "S-5 rocket pod (AI)",
+      "RPM": 600,
+      "Damage": 100,
+      "ExplosionDamage": 0,
+      "ExplosionRadius": 6,
+      "TntEquivalentKg": 1.375,
+      "Gravity": 0.02,
+      "Velocity": 9,
+      "ProjectileLife": 60,
+      "SoundInfo": {
+        "Fire1PGain": 1.0,
+        "Fire3PGain": 1.0,
+        "Fire3PFarGain": 1.0,
+        "Fire3PVeryFarGain": 1.0,
+        "Fire1P": "bvp_audio:weapon/s8_1p",
+        "Fire3P": "bvp_audio:weapon/s8_3p",
+        "VehicleReload3p": "superbwarfare:missile_reload",
+        "VehicleReloadSoundTime": 7,
+        "Change": "superbwarfare:into_missile",
+        "Fire3PFar": "bvp_audio:weapon/s8_far",
+        "Fire3PVeryFar": "bvp_audio:weapon/s8_far",
+        "Volume": 1.7
+      },
+      "Crosshair": "@Empty",
+      "SoundRadius": 16,
+      "ShellType": "HEAT",
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "berts_vehicle_pack:s8ko_rocket",
+        "ProjectileProfile": "berts_vehicle_pack:mi24v/s8korocket/default",
+        "ProjectileLife": 60
+      },
+      "ShootPos": {
+        "Transform": "Vehicle",
+        "ShootDirectionForHud": [
+          0,
+          0,
+          1
+        ],
+        "Positions": [
+          [
+            -3.1875,
+            2.1328,
+            1.2538
+          ],
+          [
+            -3.2429,
+            2.1008,
+            1.2538
+          ],
+          [
+            -3.2429,
+            2.0368,
+            1.2538
+          ],
+          [
+            -3.1875,
+            2.0048,
+            1.2538
+          ],
+          [
+            -3.1321,
+            2.0368,
+            1.2538
+          ],
+          [
+            -3.1321,
+            2.1008,
+            1.2538
+          ],
+          [
+            -3.1875,
+            2.1968,
+            1.2538
+          ],
+          [
+            -3.2515,
+            2.1797,
+            1.2538
+          ],
+          [
+            -3.2984,
+            2.1328,
+            1.2538
+          ],
+          [
+            -3.3155,
+            2.0688,
+            1.2538
+          ],
+          [
+            -3.2984,
+            2.0048,
+            1.2538
+          ],
+          [
+            -3.2515,
+            1.9579,
+            1.2538
+          ],
+          [
+            -3.1875,
+            1.9408,
+            1.2538
+          ],
+          [
+            -3.1235,
+            1.9579,
+            1.2538
+          ],
+          [
+            -3.0766,
+            2.0048,
+            1.2538
+          ],
+          [
+            -3.0595,
+            2.0688,
+            1.2538
+          ],
+          [
+            -3.0766,
+            2.1328,
+            1.2538
+          ],
+          [
+            -3.1235,
+            2.1797,
+            1.2538
+          ],
+          [
+            -3.1875,
+            2.2608,
+            1.2538
+          ],
+          [
+            -3.2708,
+            2.2418,
+            1.2538
+          ],
+          [
+            -3.3376,
+            2.1885,
+            1.2538
+          ],
+          [
+            -3.3747,
+            2.1115,
+            1.2538
+          ],
+          [
+            -3.3747,
+            2.0261,
+            1.2538
+          ],
+          [
+            -3.3376,
+            1.9491,
+            1.2538
+          ],
+          [
+            -3.2708,
+            1.8958,
+            1.2538
+          ],
+          [
+            -3.1875,
+            1.8768,
+            1.2538
+          ],
+          [
+            -3.1042,
+            1.8958,
+            1.2538
+          ],
+          [
+            -3.0374,
+            1.9491,
+            1.2538
+          ],
+          [
+            -3.0003,
+            2.0261,
+            1.2538
+          ],
+          [
+            -3.0003,
+            2.1115,
+            1.2538
+          ],
+          [
+            -3.0374,
+            2.1885,
+            1.2538
+          ],
+          [
+            -3.1042,
+            2.2418,
+            1.2538
+          ]
+        ],
+        "Directions": [
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "MuzzleAttachments": [
+          "S5S5Ub32_right_0",
+          "S5S5Ub32_right_1",
+          "S5S5Ub32_right_2",
+          "S5S5Ub32_right_3",
+          "S5S5Ub32_right_4",
+          "S5S5Ub32_right_5",
+          "S5S5Ub32_right_6",
+          "S5S5Ub32_right_7",
+          "S5S5Ub32_right_8",
+          "S5S5Ub32_right_9",
+          "S5S5Ub32_right_10",
+          "S5S5Ub32_right_11",
+          "S5S5Ub32_right_12",
+          "S5S5Ub32_right_13",
+          "S5S5Ub32_right_14",
+          "S5S5Ub32_right_15",
+          "S5S5Ub32_right_16",
+          "S5S5Ub32_right_17",
+          "S5S5Ub32_right_18",
+          "S5S5Ub32_right_19",
+          "S5S5Ub32_right_20",
+          "S5S5Ub32_right_21",
+          "S5S5Ub32_right_22",
+          "S5S5Ub32_right_23",
+          "S5S5Ub32_right_24",
+          "S5S5Ub32_right_25",
+          "S5S5Ub32_right_26",
+          "S5S5Ub32_right_27",
+          "S5S5Ub32_right_28",
+          "S5S5Ub32_right_29",
+          "S5S5Ub32_right_30",
+          "S5S5Ub32_right_31"
+        ],
+        "MuzzleDirectionAttachments": [
+          "Default"
+        ],
+        "EffectAttachments": [
+          "S5S5Ub32_right_0",
+          "S5S5Ub32_right_1",
+          "S5S5Ub32_right_2",
+          "S5S5Ub32_right_3",
+          "S5S5Ub32_right_4",
+          "S5S5Ub32_right_5",
+          "S5S5Ub32_right_6",
+          "S5S5Ub32_right_7",
+          "S5S5Ub32_right_8",
+          "S5S5Ub32_right_9",
+          "S5S5Ub32_right_10",
+          "S5S5Ub32_right_11",
+          "S5S5Ub32_right_12",
+          "S5S5Ub32_right_13",
+          "S5S5Ub32_right_14",
+          "S5S5Ub32_right_15",
+          "S5S5Ub32_right_16",
+          "S5S5Ub32_right_17",
+          "S5S5Ub32_right_18",
+          "S5S5Ub32_right_19",
+          "S5S5Ub32_right_20",
+          "S5S5Ub32_right_21",
+          "S5S5Ub32_right_22",
+          "S5S5Ub32_right_23",
+          "S5S5Ub32_right_24",
+          "S5S5Ub32_right_25",
+          "S5S5Ub32_right_26",
+          "S5S5Ub32_right_27",
+          "S5S5Ub32_right_28",
+          "S5S5Ub32_right_29",
+          "S5S5Ub32_right_30",
+          "S5S5Ub32_right_31"
+        ],
+        "EffectDirectionAttachments": [
+          "Default"
+        ]
+      }
+    },
+    "S24S5S24b": {
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:medium_rocket_he",
+          "ConsumptionItem": "superbwarfare:medium_unguided_rocket",
+          "Override": {
+            "TntEquivalentKg": 2.772
+          }
+        }
+      ],
+      "Icon": "berts_vehicle_pack:textures/overlay/vehicle/weapon/icons/generic_large_rocket.png",
+      "DefaultZoom": 2,
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "Magazine": 1,
+      "EmptyReloadTime": 600,
+      "Projectile": {
+        "Type": "berts_vehicle_pack:s13_rocket",
+        "Profile": "berts_vehicle_pack:mi24v/b13lrocket/default"
+      },
+      "AddShooterDeltaMovement": true,
+      "Spread": 0.32,
+      "Name": "S-24B rocket (AI)",
+      "RPM": 600,
+      "Damage": 500,
+      "ExplosionDamage": 115,
+      "ExplosionRadius": 10,
+      "TntEquivalentKg": 30.599999999999998,
+      "Gravity": 0.025,
+      "Velocity": 8.5,
+      "ProjectileLife": 70,
+      "SoundInfo": {
+        "Fire1PGain": 1.0,
+        "Fire3PGain": 1.0,
+        "Fire3PFarGain": 1.0,
+        "Fire3PVeryFarGain": 1.0,
+        "Fire1P": "bvp_audio:weapon/s8_1p",
+        "Fire3P": "bvp_audio:weapon/s8_3p",
+        "VehicleReload3p": "superbwarfare:missile_reload",
+        "VehicleReloadSoundTime": 7,
+        "Change": "superbwarfare:into_missile",
+        "Fire3PFar": "bvp_audio:weapon/s8_far",
+        "Fire3PVeryFar": "bvp_audio:weapon/s8_far",
+        "Volume": 2.0
+      },
+      "Crosshair": "@Empty",
+      "SoundRadius": 16,
+      "ShellType": "HE",
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "berts_vehicle_pack:s13_rocket",
+        "ProjectileProfile": "berts_vehicle_pack:mi24v/b13lrocket/default",
+        "ProjectileLife": 70
+      },
+      "ShootPos": {
+        "Transform": "Vehicle",
+        "ShootDirectionForHud": [
+          0,
+          0,
+          1
+        ],
+        "Positions": [
+          [
+            -3.1875,
+            2.1238,
+            1.3838
+          ]
+        ],
+        "Directions": [
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "MuzzleAttachments": [
+          "S24S5S24b_right_0"
+        ],
+        "MuzzleDirectionAttachments": [
+          "Default"
+        ],
+        "EffectAttachments": [
+          "S24S5S24b_right_0"
+        ],
+        "EffectDirectionAttachments": [
+          "Default"
+        ]
+      }
+    },
+    "Gsh23S5Upk23": {
+      "Crosshair": "@VehicleCommonGun",
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "ProjectileAmount": 1,
+      "AmmoCostPerShoot": 1,
+      "NormalReloadTime": 400,
+      "EmptyReloadTime": 400,
+      "AutoReload": true,
+      "WithdrawAmmoWhenChangeSlot": false,
+      "Gravity": 0.05,
+      "ProjectileLife": 400,
+      "AddShooterDeltaMovement": true,
+      "HeatPerShoot": 0,
+      "Spread": 0.12,
+      "SoundRadius": 8,
+      "ExplosionDamage": 0,
+      "Name": "23 mm GSh-23L (UPK-23-250) (AI)",
+      "RPM": 3400,
+      "Magazine": 250,
+      "Damage": 191.66666666666669,
+      "SoundInfo": {
+        "Fire1PGain": 0.5,
+        "Fire3PGain": 0.5,
+        "Fire3PFarGain": 0.5,
+        "Fire3PVeryFarGain": 0.5,
+        "Fire1P": "berts_vehicle_pack:su_25_gun_gsh23shoot",
+        "Fire3P": "berts_vehicle_pack:su_25_gun_gsh23shoot",
+        "Fire3PFar": "berts_vehicle_pack:su_25_gun_gsh23shoot",
+        "Fire3PVeryFar": "berts_vehicle_pack:su_25_gun_gsh23shoot",
+        "Volume": 0.85
+      },
+      "Projectile": {
+        "Type": "superbwarfare:small_cannon_shell",
+        "Profile": "berts_vehicle_pack:aircraft_rounds/gsh23l/gsh23l_air_game"
+      },
+      "ShellType": "HE",
+      "Velocity": 44.375,
+      "ApDurability": 4,
+      "ExplosionRadius": 3.8333333333333335,
+      "TntEquivalentKg": 0.0279,
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "superbwarfare:small_cannon_shell",
+        "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/gsh23l/gsh23l_air_game",
+        "ProjectileLife": 400
+      },
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/gsh23l/wt_gsh23_hefi_t"
+            },
+            "ShellType": "HE",
+            "Velocity": 44.375,
+            "ApDurability": 4,
+            "Damage": 191.66666666666669,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 3.8333333333333335,
+            "TntEquivalentKg": 0.0268,
+            "Name": "Default",
+            "ProjectileBelt": {
+              "Name": "Default",
+              "Family": "GENERIC",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "gsh23_hefi_t",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "GREEN"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "gsh23_api",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "gsh23_hefi",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/gsh23l/wt_gsh23_hefi_t",
+              "ProjectileLife": 400
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_aa",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/gsh23l/wt_gsh23_hefi"
+            },
+            "ShellType": "HE",
+            "Velocity": 43.75,
+            "ApDurability": 4,
+            "Damage": 191.66666666666669,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 3.8333333333333335,
+            "TntEquivalentKg": 0.0279,
+            "Name": "AP",
+            "ProjectileBelt": {
+              "Name": "AP",
+              "Family": "GENERIC",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "gsh23_hefi",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 3,
+                  "Round": "gsh23_api",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/gsh23l/wt_gsh23_hefi",
+              "ProjectileLife": 400
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_he",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/gsh23l/wt_gsh23_api"
+            },
+            "ShellType": "AP",
+            "Velocity": 44.375,
+            "ApDurability": 31,
+            "Damage": 45,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "Air targets",
+            "ProjectileBelt": {
+              "Name": "Air targets",
+              "Family": "GENERIC",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "gsh23_hefi_t",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "GREEN"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "gsh23_hefi",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "gsh23_hefi_t",
+                  "Ammo": "superbwarfare:small_shell_ap",
+                  "Tracer": "GREEN"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "gsh23_hefi",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 1,
+                  "Round": "gsh23_api",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/gsh23l/wt_gsh23_api",
+              "ProjectileLife": 400
+            }
+          }
+        },
+        {
+          "Ammo": "superbwarfare:small_shell_gs",
+          "ConsumptionItem": "superbwarfare:small_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/gsh23l/wt_gsh23_api"
+            },
+            "ShellType": "AP",
+            "Velocity": 44.375,
+            "ApDurability": 31,
+            "Damage": 45,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 0,
+            "Name": "Stealth",
+            "ProjectileBelt": {
+              "Name": "Stealth",
+              "Family": "GENERIC",
+              "Rounds": [
+                {
+                  "Shots": 1,
+                  "Round": "gsh23_api",
+                  "Ammo": "superbwarfare:small_shell_he",
+                  "Tracer": "NONE"
+                },
+                {
+                  "Shots": 2,
+                  "Round": "gsh23_hefi",
+                  "Ammo": "superbwarfare:small_shell_aa",
+                  "Tracer": "NONE"
+                }
+              ]
+            },
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/gsh23l/wt_gsh23_api",
+              "ProjectileLife": 400
+            }
+          }
+        }
+      ],
+      "ProjectileBeltAmmoType": [],
+      "BeltFed": true,
+      "OverheatEnabled": false,
+      "ShootPos": {
+        "Transform": "Vehicle",
+        "ShootDirectionForHud": [
+          0,
+          0,
+          1
+        ],
+        "Positions": [
+          [
+            -3.1875,
+            2.0338,
+            2.0088
+          ]
+        ],
+        "Directions": [
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "MuzzleAttachments": [
+          "Gsh23S5Upk23_right_0"
+        ],
+        "MuzzleDirectionAttachments": [
+          "Default"
+        ],
+        "EffectAttachments": [
+          "Gsh23S5Upk23_right_0"
+        ],
+        "EffectDirectionAttachments": [
+          "Default"
+        ]
       }
     }
   },
@@ -1143,7 +4496,7 @@
     "Speed": 1,
     "EngineStartSound": "berts_vehicle_pack:mi_24d_engine_start"
   },
-  "HasDecoy": false,
+  "HasDecoy": true,
   "DamageModifiers": [
     "minecraft:arrow 0",
     "minecraft:trident 0",
@@ -1184,9 +4537,9 @@
     "SympatheticDetonationChance": 0.55
   },
   "ThirdPersonCameraPos": [
-    0.86696,
-    1.5,
-    5
+    0,
+    6.8,
+    13.6
   ],
   "VehicleIcon": "berts_vehicle_pack:textures/vehicle_icon/mi_24d.png",
   "ContainerIcon": "superbwarfare:textures/gui/vehicle/type/aircraft.png",
@@ -1338,12 +4691,12 @@
         1
       ]
     },
-    "S5PodInner_left_0": {
+    "gunner_sight": {
       "Parent": "Vehicle",
       "Position": [
-        3.1875,
-        2.0,
-        1.875
+        -0.62,
+        0.78,
+        8.1
       ],
       "Direction": [
         0,
@@ -1351,12 +4704,1767 @@
         1
       ]
     },
-    "S5PodInner_right_0": {
+    "S5S2Ub32_left_0": {
+      "Parent": "Vehicle",
+      "Position": [
+        3.1875,
+        2.1328,
+        1.2538
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S2Ub32_left_1": {
+      "Parent": "Vehicle",
+      "Position": [
+        3.1321,
+        2.1008,
+        1.2538
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S2Ub32_left_2": {
+      "Parent": "Vehicle",
+      "Position": [
+        3.1321,
+        2.0368,
+        1.2538
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S2Ub32_left_3": {
+      "Parent": "Vehicle",
+      "Position": [
+        3.1875,
+        2.0048,
+        1.2538
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S2Ub32_left_4": {
+      "Parent": "Vehicle",
+      "Position": [
+        3.2429,
+        2.0368,
+        1.2538
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S2Ub32_left_5": {
+      "Parent": "Vehicle",
+      "Position": [
+        3.2429,
+        2.1008,
+        1.2538
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S2Ub32_left_6": {
+      "Parent": "Vehicle",
+      "Position": [
+        3.1875,
+        2.1968,
+        1.2538
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S2Ub32_left_7": {
+      "Parent": "Vehicle",
+      "Position": [
+        3.1235,
+        2.1797,
+        1.2538
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S2Ub32_left_8": {
+      "Parent": "Vehicle",
+      "Position": [
+        3.0766,
+        2.1328,
+        1.2538
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S2Ub32_left_9": {
+      "Parent": "Vehicle",
+      "Position": [
+        3.0595,
+        2.0688,
+        1.2538
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S2Ub32_left_10": {
+      "Parent": "Vehicle",
+      "Position": [
+        3.0766,
+        2.0048,
+        1.2538
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S2Ub32_left_11": {
+      "Parent": "Vehicle",
+      "Position": [
+        3.1235,
+        1.9579,
+        1.2538
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S2Ub32_left_12": {
+      "Parent": "Vehicle",
+      "Position": [
+        3.1875,
+        1.9408,
+        1.2538
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S2Ub32_left_13": {
+      "Parent": "Vehicle",
+      "Position": [
+        3.2515,
+        1.9579,
+        1.2538
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S2Ub32_left_14": {
+      "Parent": "Vehicle",
+      "Position": [
+        3.2984,
+        2.0048,
+        1.2538
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S2Ub32_left_15": {
+      "Parent": "Vehicle",
+      "Position": [
+        3.3155,
+        2.0688,
+        1.2538
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S2Ub32_left_16": {
+      "Parent": "Vehicle",
+      "Position": [
+        3.2984,
+        2.1328,
+        1.2538
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S2Ub32_left_17": {
+      "Parent": "Vehicle",
+      "Position": [
+        3.2515,
+        2.1797,
+        1.2538
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S2Ub32_left_18": {
+      "Parent": "Vehicle",
+      "Position": [
+        3.1875,
+        2.2608,
+        1.2538
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S2Ub32_left_19": {
+      "Parent": "Vehicle",
+      "Position": [
+        3.1042,
+        2.2418,
+        1.2538
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S2Ub32_left_20": {
+      "Parent": "Vehicle",
+      "Position": [
+        3.0374,
+        2.1885,
+        1.2538
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S2Ub32_left_21": {
+      "Parent": "Vehicle",
+      "Position": [
+        3.0003,
+        2.1115,
+        1.2538
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S2Ub32_left_22": {
+      "Parent": "Vehicle",
+      "Position": [
+        3.0003,
+        2.0261,
+        1.2538
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S2Ub32_left_23": {
+      "Parent": "Vehicle",
+      "Position": [
+        3.0374,
+        1.9491,
+        1.2538
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S2Ub32_left_24": {
+      "Parent": "Vehicle",
+      "Position": [
+        3.1042,
+        1.8958,
+        1.2538
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S2Ub32_left_25": {
+      "Parent": "Vehicle",
+      "Position": [
+        3.1875,
+        1.8768,
+        1.2538
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S2Ub32_left_26": {
+      "Parent": "Vehicle",
+      "Position": [
+        3.2708,
+        1.8958,
+        1.2538
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S2Ub32_left_27": {
+      "Parent": "Vehicle",
+      "Position": [
+        3.3376,
+        1.9491,
+        1.2538
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S2Ub32_left_28": {
+      "Parent": "Vehicle",
+      "Position": [
+        3.3747,
+        2.0261,
+        1.2538
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S2Ub32_left_29": {
+      "Parent": "Vehicle",
+      "Position": [
+        3.3747,
+        2.1115,
+        1.2538
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S2Ub32_left_30": {
+      "Parent": "Vehicle",
+      "Position": [
+        3.3376,
+        2.1885,
+        1.2538
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S2Ub32_left_31": {
+      "Parent": "Vehicle",
+      "Position": [
+        3.2708,
+        2.2418,
+        1.2538
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S24S2S24b_left_0": {
+      "Parent": "Vehicle",
+      "Position": [
+        3.1875,
+        2.1238,
+        1.3838
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "Gsh23S2Upk23_left_0": {
+      "Parent": "Vehicle",
+      "Position": [
+        3.1875,
+        2.0338,
+        2.0088
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S3Ub32_left_0": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.315,
+        2.379,
+        1.255
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S3Ub32_left_1": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.2596,
+        2.347,
+        1.255
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S3Ub32_left_2": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.2596,
+        2.283,
+        1.255
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S3Ub32_left_3": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.315,
+        2.251,
+        1.255
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S3Ub32_left_4": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.3704,
+        2.283,
+        1.255
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S3Ub32_left_5": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.3704,
+        2.347,
+        1.255
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S3Ub32_left_6": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.315,
+        2.443,
+        1.255
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S3Ub32_left_7": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.251,
+        2.4259,
+        1.255
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S3Ub32_left_8": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.2041,
+        2.379,
+        1.255
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S3Ub32_left_9": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.187,
+        2.315,
+        1.255
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S3Ub32_left_10": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.2041,
+        2.251,
+        1.255
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S3Ub32_left_11": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.251,
+        2.2041,
+        1.255
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S3Ub32_left_12": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.315,
+        2.187,
+        1.255
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S3Ub32_left_13": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.379,
+        2.2041,
+        1.255
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S3Ub32_left_14": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.4259,
+        2.251,
+        1.255
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S3Ub32_left_15": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.443,
+        2.315,
+        1.255
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S3Ub32_left_16": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.4259,
+        2.379,
+        1.255
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S3Ub32_left_17": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.379,
+        2.4259,
+        1.255
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S3Ub32_left_18": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.315,
+        2.507,
+        1.255
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S3Ub32_left_19": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.2317,
+        2.488,
+        1.255
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S3Ub32_left_20": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.1649,
+        2.4347,
+        1.255
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S3Ub32_left_21": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.1278,
+        2.3577,
+        1.255
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S3Ub32_left_22": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.1278,
+        2.2723,
+        1.255
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S3Ub32_left_23": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.1649,
+        2.1953,
+        1.255
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S3Ub32_left_24": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.2317,
+        2.142,
+        1.255
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S3Ub32_left_25": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.315,
+        2.123,
+        1.255
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S3Ub32_left_26": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.3983,
+        2.142,
+        1.255
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S3Ub32_left_27": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.4651,
+        2.1953,
+        1.255
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S3Ub32_left_28": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.5022,
+        2.2723,
+        1.255
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S3Ub32_left_29": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.5022,
+        2.3577,
+        1.255
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S3Ub32_left_30": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.4651,
+        2.4347,
+        1.255
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S3Ub32_left_31": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.3983,
+        2.488,
+        1.255
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S24S3S24b_left_0": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.315,
+        2.37,
+        1.385
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "Gsh23S3Upk23_left_0": {
+      "Parent": "Vehicle",
+      "Position": [
+        2.315,
+        2.28,
+        2.01
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S4Ub32_right_0": {
+      "Parent": "Vehicle",
+      "Position": [
+        -2.315,
+        2.379,
+        1.255
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S4Ub32_right_1": {
+      "Parent": "Vehicle",
+      "Position": [
+        -2.3704,
+        2.347,
+        1.255
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S4Ub32_right_2": {
+      "Parent": "Vehicle",
+      "Position": [
+        -2.3704,
+        2.283,
+        1.255
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S4Ub32_right_3": {
+      "Parent": "Vehicle",
+      "Position": [
+        -2.315,
+        2.251,
+        1.255
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S4Ub32_right_4": {
+      "Parent": "Vehicle",
+      "Position": [
+        -2.2596,
+        2.283,
+        1.255
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S4Ub32_right_5": {
+      "Parent": "Vehicle",
+      "Position": [
+        -2.2596,
+        2.347,
+        1.255
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S4Ub32_right_6": {
+      "Parent": "Vehicle",
+      "Position": [
+        -2.315,
+        2.443,
+        1.255
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S4Ub32_right_7": {
+      "Parent": "Vehicle",
+      "Position": [
+        -2.379,
+        2.4259,
+        1.255
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S4Ub32_right_8": {
+      "Parent": "Vehicle",
+      "Position": [
+        -2.4259,
+        2.379,
+        1.255
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S4Ub32_right_9": {
+      "Parent": "Vehicle",
+      "Position": [
+        -2.443,
+        2.315,
+        1.255
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S4Ub32_right_10": {
+      "Parent": "Vehicle",
+      "Position": [
+        -2.4259,
+        2.251,
+        1.255
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S4Ub32_right_11": {
+      "Parent": "Vehicle",
+      "Position": [
+        -2.379,
+        2.2041,
+        1.255
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S4Ub32_right_12": {
+      "Parent": "Vehicle",
+      "Position": [
+        -2.315,
+        2.187,
+        1.255
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S4Ub32_right_13": {
+      "Parent": "Vehicle",
+      "Position": [
+        -2.251,
+        2.2041,
+        1.255
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S4Ub32_right_14": {
+      "Parent": "Vehicle",
+      "Position": [
+        -2.2041,
+        2.251,
+        1.255
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S4Ub32_right_15": {
+      "Parent": "Vehicle",
+      "Position": [
+        -2.187,
+        2.315,
+        1.255
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S4Ub32_right_16": {
+      "Parent": "Vehicle",
+      "Position": [
+        -2.2041,
+        2.379,
+        1.255
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S4Ub32_right_17": {
+      "Parent": "Vehicle",
+      "Position": [
+        -2.251,
+        2.4259,
+        1.255
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S4Ub32_right_18": {
+      "Parent": "Vehicle",
+      "Position": [
+        -2.315,
+        2.507,
+        1.255
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S4Ub32_right_19": {
+      "Parent": "Vehicle",
+      "Position": [
+        -2.3983,
+        2.488,
+        1.255
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S4Ub32_right_20": {
+      "Parent": "Vehicle",
+      "Position": [
+        -2.4651,
+        2.4347,
+        1.255
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S4Ub32_right_21": {
+      "Parent": "Vehicle",
+      "Position": [
+        -2.5022,
+        2.3577,
+        1.255
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S4Ub32_right_22": {
+      "Parent": "Vehicle",
+      "Position": [
+        -2.5022,
+        2.2723,
+        1.255
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S4Ub32_right_23": {
+      "Parent": "Vehicle",
+      "Position": [
+        -2.4651,
+        2.1953,
+        1.255
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S4Ub32_right_24": {
+      "Parent": "Vehicle",
+      "Position": [
+        -2.3983,
+        2.142,
+        1.255
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S4Ub32_right_25": {
+      "Parent": "Vehicle",
+      "Position": [
+        -2.315,
+        2.123,
+        1.255
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S4Ub32_right_26": {
+      "Parent": "Vehicle",
+      "Position": [
+        -2.2317,
+        2.142,
+        1.255
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S4Ub32_right_27": {
+      "Parent": "Vehicle",
+      "Position": [
+        -2.1649,
+        2.1953,
+        1.255
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S4Ub32_right_28": {
+      "Parent": "Vehicle",
+      "Position": [
+        -2.1278,
+        2.2723,
+        1.255
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S4Ub32_right_29": {
+      "Parent": "Vehicle",
+      "Position": [
+        -2.1278,
+        2.3577,
+        1.255
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S4Ub32_right_30": {
+      "Parent": "Vehicle",
+      "Position": [
+        -2.1649,
+        2.4347,
+        1.255
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S4Ub32_right_31": {
+      "Parent": "Vehicle",
+      "Position": [
+        -2.2317,
+        2.488,
+        1.255
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S24S4S24b_right_0": {
+      "Parent": "Vehicle",
+      "Position": [
+        -2.315,
+        2.37,
+        1.385
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "Gsh23S4Upk23_right_0": {
+      "Parent": "Vehicle",
+      "Position": [
+        -2.315,
+        2.28,
+        2.01
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S5Ub32_right_0": {
       "Parent": "Vehicle",
       "Position": [
         -3.1875,
-        2.0,
-        1.875
+        2.1328,
+        1.2538
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S5Ub32_right_1": {
+      "Parent": "Vehicle",
+      "Position": [
+        -3.2429,
+        2.1008,
+        1.2538
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S5Ub32_right_2": {
+      "Parent": "Vehicle",
+      "Position": [
+        -3.2429,
+        2.0368,
+        1.2538
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S5Ub32_right_3": {
+      "Parent": "Vehicle",
+      "Position": [
+        -3.1875,
+        2.0048,
+        1.2538
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S5Ub32_right_4": {
+      "Parent": "Vehicle",
+      "Position": [
+        -3.1321,
+        2.0368,
+        1.2538
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S5Ub32_right_5": {
+      "Parent": "Vehicle",
+      "Position": [
+        -3.1321,
+        2.1008,
+        1.2538
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S5Ub32_right_6": {
+      "Parent": "Vehicle",
+      "Position": [
+        -3.1875,
+        2.1968,
+        1.2538
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S5Ub32_right_7": {
+      "Parent": "Vehicle",
+      "Position": [
+        -3.2515,
+        2.1797,
+        1.2538
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S5Ub32_right_8": {
+      "Parent": "Vehicle",
+      "Position": [
+        -3.2984,
+        2.1328,
+        1.2538
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S5Ub32_right_9": {
+      "Parent": "Vehicle",
+      "Position": [
+        -3.3155,
+        2.0688,
+        1.2538
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S5Ub32_right_10": {
+      "Parent": "Vehicle",
+      "Position": [
+        -3.2984,
+        2.0048,
+        1.2538
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S5Ub32_right_11": {
+      "Parent": "Vehicle",
+      "Position": [
+        -3.2515,
+        1.9579,
+        1.2538
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S5Ub32_right_12": {
+      "Parent": "Vehicle",
+      "Position": [
+        -3.1875,
+        1.9408,
+        1.2538
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S5Ub32_right_13": {
+      "Parent": "Vehicle",
+      "Position": [
+        -3.1235,
+        1.9579,
+        1.2538
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S5Ub32_right_14": {
+      "Parent": "Vehicle",
+      "Position": [
+        -3.0766,
+        2.0048,
+        1.2538
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S5Ub32_right_15": {
+      "Parent": "Vehicle",
+      "Position": [
+        -3.0595,
+        2.0688,
+        1.2538
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S5Ub32_right_16": {
+      "Parent": "Vehicle",
+      "Position": [
+        -3.0766,
+        2.1328,
+        1.2538
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S5Ub32_right_17": {
+      "Parent": "Vehicle",
+      "Position": [
+        -3.1235,
+        2.1797,
+        1.2538
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S5Ub32_right_18": {
+      "Parent": "Vehicle",
+      "Position": [
+        -3.1875,
+        2.2608,
+        1.2538
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S5Ub32_right_19": {
+      "Parent": "Vehicle",
+      "Position": [
+        -3.2708,
+        2.2418,
+        1.2538
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S5Ub32_right_20": {
+      "Parent": "Vehicle",
+      "Position": [
+        -3.3376,
+        2.1885,
+        1.2538
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S5Ub32_right_21": {
+      "Parent": "Vehicle",
+      "Position": [
+        -3.3747,
+        2.1115,
+        1.2538
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S5Ub32_right_22": {
+      "Parent": "Vehicle",
+      "Position": [
+        -3.3747,
+        2.0261,
+        1.2538
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S5Ub32_right_23": {
+      "Parent": "Vehicle",
+      "Position": [
+        -3.3376,
+        1.9491,
+        1.2538
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S5Ub32_right_24": {
+      "Parent": "Vehicle",
+      "Position": [
+        -3.2708,
+        1.8958,
+        1.2538
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S5Ub32_right_25": {
+      "Parent": "Vehicle",
+      "Position": [
+        -3.1875,
+        1.8768,
+        1.2538
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S5Ub32_right_26": {
+      "Parent": "Vehicle",
+      "Position": [
+        -3.1042,
+        1.8958,
+        1.2538
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S5Ub32_right_27": {
+      "Parent": "Vehicle",
+      "Position": [
+        -3.0374,
+        1.9491,
+        1.2538
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S5Ub32_right_28": {
+      "Parent": "Vehicle",
+      "Position": [
+        -3.0003,
+        2.0261,
+        1.2538
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S5Ub32_right_29": {
+      "Parent": "Vehicle",
+      "Position": [
+        -3.0003,
+        2.1115,
+        1.2538
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S5Ub32_right_30": {
+      "Parent": "Vehicle",
+      "Position": [
+        -3.0374,
+        2.1885,
+        1.2538
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S5S5Ub32_right_31": {
+      "Parent": "Vehicle",
+      "Position": [
+        -3.1042,
+        2.2418,
+        1.2538
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "S24S5S24b_right_0": {
+      "Parent": "Vehicle",
+      "Position": [
+        -3.1875,
+        2.1238,
+        1.3838
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "Gsh23S5Upk23_right_0": {
+      "Parent": "Vehicle",
+      "Position": [
+        -3.1875,
+        2.0338,
+        2.0088
       ],
       "Direction": [
         0,
@@ -1385,8 +6493,8 @@
     60
   ],
   "PassengerWeaponStationPitchRange": [
-    -10,
-    40
+    -60,
+    20
   ],
   "RemoteWeaponStation": true,
   "PassengerWeaponStationBinding": {

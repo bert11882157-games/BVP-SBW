@@ -20,7 +20,8 @@ object DoubleJumpMessage : ServerPacketPayload() {
         level.playSound(null, BlockPos.containing(x, y, z), ModSounds.DOUBLE_JUMP.get(), SoundSource.BLOCKS, 1f, 1f)
 
         val vehicle = player.getRootVehicle()
-        if (vehicle !== player) {
+        // Only the driver (first seat) may launch the vehicle; other passengers cannot throw it around
+        if (vehicle !== player && vehicle.firstPassenger === player) {
             vehicle.deltaMovement = Vec3(vehicle.lookAngle.x, 0.8, vehicle.lookAngle.z)
         }
     }

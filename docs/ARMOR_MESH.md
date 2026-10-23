@@ -189,6 +189,10 @@ without plugin v1.1.0 - from the same-named bone of `--original`. It reads Block
 Meshy's export exactly (round trip of an unedited project is identical). Keep the edited project in
 `tools/armor_authoring/projects/` and add the id to `auto_mesh.HAND_TUNED`.
 
+> Not in this repository (2026-10-12): `to_bbmodel.mjs`, `from_bbmodel.mjs` and `projects/` were never pushed. A copy of
+> `to_bbmodel.mjs` (2026-09-29) survives in the development workspace; `from_bbmodel.mjs` has to be recovered or rewritten
+> before owner-edited projects can be imported again.
+
 ### Start from a template (recommended)
 
 Every registered BVP vehicle (171: tanks, IFVs, trucks, helicopters, aircraft, tripods) has a file:

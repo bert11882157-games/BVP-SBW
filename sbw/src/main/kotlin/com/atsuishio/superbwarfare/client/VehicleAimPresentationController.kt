@@ -74,6 +74,11 @@ object VehicleAimPresentationController {
         }
 
         for (channel in VehicleAimChannel.entries) {
+            if (vehicle.isVehicleAimChannelStowed(channel)) {
+                // A stowed gun follows nobody: the server's neutral sample is the only pose.
+                resetChannel(channelStates, channel)
+                continue
+            }
             val profile = vehicle.getVehicleAimPresentationProfile(player, channel)
             val localMode = profile?.defaultMode ?: VehicleAimMode.INACTIVE
             val ownsChannel = profile != null &&

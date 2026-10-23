@@ -30,7 +30,7 @@ snapshot incorporates them.
 
 Every BVP/SBW build that is installed for testing is also pushed here: its sealed checkpoint tree is
 copied over main on a sync/<version> branch (files that only this repository has, such as
-tools/, are kept), merged into main through a pull request, and published as a prerelease with
+tools/, are kept), merged into main with a local `--no-ff` merge, and published as a prerelease with
 the BVP, SBW and FFA JARs and their .sha256 files, listed in [DOWNLOADS.md](../DOWNLOADS.md).
 main therefore always matches the newest build. The next development checkpoint starts from that
 build's tree and takes DOWNLOADS.md and this file from main.

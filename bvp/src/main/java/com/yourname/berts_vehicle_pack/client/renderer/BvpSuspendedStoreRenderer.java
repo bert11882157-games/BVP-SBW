@@ -27,7 +27,8 @@ import java.util.List;
 
 /** Exact authored groups and static external stores; no entity/weapon/effect renderer is invoked. */
 final class BvpSuspendedStoreRenderer {
-    private static final int MAX_EXTERNAL_MODELS = 64;
+    // every distinct store and rack model in the catalogue (fixed-wing and helicopter stores) fits without eviction
+    private static final int MAX_EXTERNAL_MODELS = 256;
     // Keep ownership aligned with BaseVehicleRenderer's global lifetime; never orphan loader instances.
     private static final Map<String, StoreAsset> ASSETS = new LinkedHashMap<>();
     private PolyMeshModel model;

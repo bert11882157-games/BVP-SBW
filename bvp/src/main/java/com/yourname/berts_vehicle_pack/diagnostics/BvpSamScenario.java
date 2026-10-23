@@ -95,7 +95,7 @@ public final class BvpSamScenario {
         EntityType<?> type = ForgeRegistries.ENTITY_TYPES.getValue(targetType);
         if (type == null) return 0;
         int seat = vehicle.getSeatIndex(player);
-        for (int i = 0; i < 8; i++) if (weapon.equals(vehicle.getGunName(seat, i))) vehicle.changeWeapon(seat, i, false);
+        for (int i = 0; i < 8; i++) if (weapon.equals(vehicle.getGunName(seat, i))) vehicle.setWeaponIndex(seat, i);
         Vec3 forward = vehicle.getShootVec(weapon, 1f);
         Vec3 flat = new Vec3(forward.x, 0, forward.z);
         flat = flat.lengthSqr() < 1e-6 ? new Vec3(0, 0, 1) : flat.normalize();

@@ -21,10 +21,13 @@ data class ShootMessage(
         val stack = player.mainHandItem
         if (stack.item !is GunItem) return
 
+        // The client chooses the spread; bound it so absurd values cannot hang the server
+        if (spread.isNaN()) return
+        val clampedSpread = spread.coerceIn(0.0, 64.0)
         if (targetPos == null) {
-            from(stack).shoot(player, spread, zoom, uuid)
+            from(stack).shoot(player, clampedSpread, zoom, uuid)
         } else {
-            from(stack).shoot(player, spread, zoom, uuid, targetPos.toVec3())
+            from(stack).shoot(player, clampedSpread, zoom, uuid, targetPos.toVec3())
         }
     }
 }

@@ -10,7 +10,9 @@ object AircraftGunPodGroups {
     const val GROUP = "AircraftGunPods"
     const val MAX_GROUP_MEMBERS = 16
     private data class Alias(val source: GunData, val tick: Int, val identity: String, val data: GunData)
-    private val aliases = java.util.WeakHashMap<VehicleEntity, MutableMap<String, Alias>>()
+    // Identity weak keys: shared by the render and integrated-server threads and by both copies of one vehicle.
+    private val aliases: MutableMap<VehicleEntity, MutableMap<String, Alias>> =
+        com.google.common.collect.MapMaker().weakKeys().makeMap()
     fun equipped(vehicle: VehicleEntity): List<String> = AircraftArmamentManager.gunPodChannels(vehicle, true)
     fun isPod(vehicle: VehicleEntity, name: String) = name in AircraftArmamentManager.gunPodChannels(vehicle, false)
     fun isAlias(name: String): Boolean = name == GROUP || name.startsWith("$GROUP:")
@@ -39,13 +41,21 @@ object AircraftGunPodGroups {
     }
     /** Equipment identity includes empty feeds; filtering live ammo happens only at event admission. */
     fun bank(selection: VehicleWeaponSelection): List<String>? {
-        if (selection.seatIndex != 0) return null
         val vehicle = selection.vehicle
         val definition = AircraftArmamentManager.definition(vehicle) ?: return null
+        // a pod alias fires its pods from whichever seat selected it (AircraftStoreWeapons.ids offers it); the
+        // built-in gun bank stays the pilot's
+        if (isAlias(selection.weaponName)) return members(vehicle, selection.weaponName)
+        if (selection.seatIndex != 0) return null
         val builtIn = definition.getAsJsonArray("BuiltInWeapons")?.map { it.asString } ?: emptyList()
-        return if (isAlias(selection.weaponName)) members(vehicle, selection.weaponName)
-        else members(selection.weaponName, builtIn, emptyList())
+        val bank = members(selection.weaponName, builtIn, emptyList()) ?: return null
+        // A turret gun (Barrel / Turret: a helicopter's chin gun, aimed by its turret) fires on its own; the bank only
+        // fans hull-fixed and station guns (VehicleFixedGunBanks.validGun refuses the others, which left the Ka-50,
+        // Mi-24V and Mi-28N pilots unable to fire their built-in gun at all).
+        return bank.takeIf { members -> members.all { fixedBankable(vehicle, it) } }
     }
+    private fun fixedBankable(vehicle: VehicleEntity, name: String): Boolean =
+        vehicle.gunDataMap[name]?.get(GunProp.SHOOT_POS)?.transform.let { it == "Vehicle" || it == "WeaponStationBarrel" }
     internal fun members(trigger: String, builtIn: List<String>, pods: List<String>): List<String>? = when {
         trigger == GROUP -> pods.distinct()
         trigger in builtIn -> builtIn.distinct()

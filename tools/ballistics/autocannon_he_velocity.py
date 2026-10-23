@@ -4,13 +4,16 @@ the BTR-80A 2A72, whose APDS belt sat at 18 (the 3UBR8 is the same round as the 
 
     python3 tools/ballistics/autocannon_he_velocity.py [--check]
 
-Only ground/helicopter guns that carry an APDS or APFSDS belt are touched; guns without one (Tunguska 2A38, aircraft
+Only ground guns that carry an APDS or APFSDS belt are touched; guns without one (Tunguska 2A38, aircraft
 air/ground belts) keep their War Thunder muzzle velocities.
 """
 import glob
 import json
 import os
 import sys
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from wt_belts import HELI_ARMAMENT  # noqa: E402
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 SBW = os.path.join(HERE, '..', '..', 'bvp', 'src', 'generated', 'resources', 'data', 'berts_vehicle_pack', 'sbw')
@@ -28,6 +31,8 @@ def combat(pid):
 
 def fix(vid, d):
     changes = []
+    if vid in HELI_ARMAMENT:     # tools/heli_armament/belts.py applies the rule per round (AP-T keeps WT's speed)
+        return changes
     for wn, w in (d.get('Weapons') or {}).items():
         ammo = w.get('AmmoType') or []
         rounds = []

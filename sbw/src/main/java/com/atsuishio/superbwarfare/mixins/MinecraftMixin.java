@@ -12,6 +12,7 @@ import net.minecraft.client.CameraType;
 import net.minecraft.client.Options;
 import net.minecraft.client.player.LocalPlayer;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -78,13 +79,20 @@ public class MinecraftMixin {
             if (!options.keyShift.isDown()
                     && !VehicleWeaponSelectionInput.defersPrimary(options.keyHotbarSlots[index])
                     && vehicle.hasWeapon(seatIndex)
-                    && vehicle.getWeaponIndex(seatIndex) != index) {
+                    && selectsOtherWeapon(vehicle, seatIndex, index)) {
                 if (ClientEventHandler.switchVehicleWeaponCooldown <= 0) {
                     NetworkRegistry.PACKET_HANDLER.sendToServer(new SwitchVehicleWeaponMessage(seatIndex, index, false));
                     ClientEventHandler.switchVehicleWeaponCooldown = 3;
                 }
             }
         }
+    }
+
+    /** Key N picks the Nth selectable weapon of the seat (VehicleEntity.selectionKeyWeaponIndex), on every seat. */
+    @Unique
+    private static boolean selectsOtherWeapon(VehicleEntity vehicle, int seatIndex, int key) {
+        Integer target = vehicle.selectionKeyWeaponIndex(seatIndex, key);
+        return target != null && target != vehicle.getWeaponIndex(seatIndex);
     }
 
 }

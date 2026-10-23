@@ -1,5 +1,8 @@
 package com.yourname.berts_vehicle_pack.entity;
 
+import com.atsuishio.superbwarfare.api.vehicle.aim.VehicleAimChannel;
+import com.atsuishio.superbwarfare.api.vehicle.aim.VehicleAimMode;
+import com.atsuishio.superbwarfare.api.vehicle.aim.VehicleAimProfile;
 import com.atsuishio.superbwarfare.api.vehicle.weapon.VehicleWeaponScheduleSnapshot;
 import com.yourname.berts_vehicle_pack.entity.helicopter.BvpHelicopterEntity;
 import com.yourname.berts_vehicle_pack.entity.helicopter.HelicopterFlightProfile;
@@ -12,7 +15,6 @@ import net.minecraft.world.phys.Vec3;
 
 public class Mi24VEntity extends BvpHelicopterEntity {
     private static final int DEFAULT_AUTOCANNON_SEAT_INDEX = 1;
-    private static final int DEFAULT_AUTOCANNON_WEAPON_INDEX = 0;
     private static final String DEFAULT_AUTOCANNON_WEAPON_NAME = "Cannon";
 
     public Mi24VEntity(EntityType<Mi24VEntity> type, Level world) {
@@ -32,8 +34,15 @@ public class Mi24VEntity extends BvpHelicopterEntity {
         return DEFAULT_AUTOCANNON_SEAT_INDEX;
     }
 
+    /** The cannon's place in the gun seat's weapon list, resolved by name (-1 when that seat does not carry it). */
     protected int autocannonWeaponIndex() {
-        return DEFAULT_AUTOCANNON_WEAPON_INDEX;
+        return getWeaponIds(autocannonSeatIndex()).indexOf(DEFAULT_AUTOCANNON_WEAPON_NAME);
+    }
+
+    /** Whether the weapon at {@code weaponIndex} of {@code seatIndex} is the cannon fired from its own gun seat. */
+    protected boolean isAutocannonSeatWeapon(int seatIndex, int weaponIndex) {
+        return seatIndex == autocannonSeatIndex() && weaponIndex >= 0
+                && DEFAULT_AUTOCANNON_WEAPON_NAME.equals(getGunName(seatIndex, weaponIndex));
     }
 
     @Override
@@ -50,6 +59,25 @@ public class Mi24VEntity extends BvpHelicopterEntity {
     @Override
     protected boolean usesNativeTurretAimProfile() {
         return false;
+    }
+
+    /**
+     * The operator's sight drives the nose turret at its authored rates and limits whatever he has selected (the
+     * gun follows the sight it is slaved to); the pilot never steers it. Ka-50 replaces this with its pilot-aimed
+     * cannon profile.
+     */
+    @Override
+    public VehicleAimProfile createVehicleAimProfile(int seatIndex, int selectedWeaponIndex) {
+        if (seatIndex != autocannonSeatIndex() || !hasTurret() || getBarrelPosition() == null) {
+            return null;
+        }
+        return VehicleAimProfile.builder(VehicleAimChannel.TURRET)
+                .rates(bvpTurretAimYawRateDegreesPerSecond(), bvpTurretAimPitchRateDegreesPerSecond())
+                .yawRange(-getTurretMaxYaw(), -getTurretMinYaw())
+                .pitchRange(-getTurretMaxPitch(), -getTurretMinPitch())
+                .lockTolerance(bvpTurretAimToleranceDegrees())
+                .defaultMode(VehicleAimMode.PLAYER_LOOK_AIM)
+                .build();
     }
 
     @Override
@@ -80,8 +108,10 @@ public class Mi24VEntity extends BvpHelicopterEntity {
         }
     }
 
+    /** The nose gun fired from the operator's seat, or from the pilot's (who shares it, see the armament seats). */
     public boolean isBvpAutocannonSelection(int seatIndex, String weaponName) {
-        return seatIndex == autocannonSeatIndex() && DEFAULT_AUTOCANNON_WEAPON_NAME.equals(weaponName);
+        return (seatIndex == autocannonSeatIndex() || seatIndex == 0)
+                && DEFAULT_AUTOCANNON_WEAPON_NAME.equals(weaponName);
     }
 
     public float getAutocannonBarrelSpinStrength() {
@@ -124,7 +154,16 @@ public class Mi24VEntity extends BvpHelicopterEntity {
         return snapshot == null ? "idle" : snapshot.getLastDecision();
     }
 
+    /** The operator's schedule, or the pilot's while only the pilot is firing the shared gun. */
     private VehicleWeaponScheduleSnapshot autocannonScheduleSnapshot() {
-        return getWeaponScheduleSnapshot(autocannonSeatIndex(), autocannonWeaponIndex());
+        int operatorIndex = autocannonWeaponIndex();
+        VehicleWeaponScheduleSnapshot operator = operatorIndex < 0
+                ? null : getWeaponScheduleSnapshot(autocannonSeatIndex(), operatorIndex);
+        if (operator != null && operator.getTriggerHeld() || autocannonSeatIndex() == 0) {
+            return operator;
+        }
+        int pilotIndex = getWeaponIds(0).indexOf(DEFAULT_AUTOCANNON_WEAPON_NAME);
+        VehicleWeaponScheduleSnapshot pilot = pilotIndex < 0 ? null : getWeaponScheduleSnapshot(0, pilotIndex);
+        return pilot != null && pilot.getTriggerHeld() ? pilot : operator;
     }
 }

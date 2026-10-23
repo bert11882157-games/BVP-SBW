@@ -1,5 +1,6 @@
 package com.atsuishio.superbwarfare.api.aircraft
 
+import com.atsuishio.superbwarfare.Mod
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity
 import com.google.gson.JsonObject
 import net.minecraft.nbt.CompoundTag
@@ -46,7 +47,21 @@ object AircraftMissileLauncher {
                     CompoundTag::class.java) }.getOrNull(),
                 cls.getMethod("clearLock", Entity::class.java), cls.getMethod("clearLock", Entity::class.java, String::class.java),
                 cls.getMethod("getLockState", Entity::class.java, String::class.java))
+        }.onFailure {
+            // `lazy` runs this lookup once, so this is logged once: the FFA hooks are missing or incompatible.
+            Mod.LOGGER.warn("FFA aircraft missile hooks are unavailable; aircraft missiles cannot lock or launch", it)
         }.getOrNull()
+    }
+    /** At most one warning per operation every 10 s (200 ticks) so a per-tick failure cannot flood the log. */
+    private const val FAILURE_LOG_INTERVAL_MS = 10_000L
+    private val lastFailureLog = java.util.concurrent.ConcurrentHashMap<String, Long>()
+    private fun logFailure(operation: String, failure: Throwable) {
+        val now = System.currentTimeMillis()
+        val last = lastFailureLog[operation]
+        if (last != null && now - last < FAILURE_LOG_INTERVAL_MS) return
+        lastFailureLog[operation] = now
+        Mod.LOGGER.warn("FFA aircraft missile hook '{}' failed (repeats suppressed for {} s)", operation,
+            FAILURE_LOG_INTERVAL_MS / 1000, failure)
     }
     internal fun visualModel(store: JsonObject): String? {
         val path = store["Model"]?.asString ?: return null
@@ -66,12 +81,12 @@ object AircraftMissileLauncher {
     fun update(vehicle: VehicleEntity, player: ServerPlayer, channel: String, store: JsonObject): Int = runCatching {
         val p = guidance(store) ?: return -1
         (api?.update?.invoke(null, vehicle, player, channel, forward(vehicle), p.mode, p.lockTicks, p.range, p.cone) as? Int) ?: -1
-    }.getOrDefault(-1)
+    }.onFailure { logFailure("update", it) }.getOrDefault(-1)
     /** Lock toward an explicit world [forward] (a turret or launcher bore) instead of the hull nose. */
     fun updateToward(vehicle: VehicleEntity, player: ServerPlayer, channel: String, forward: Vec3, store: JsonObject): Int = runCatching {
         val p = guidance(store) ?: return -1
         (api?.update?.invoke(null, vehicle, player, channel, forward, p.mode, p.lockTicks, p.range, p.cone) as? Int) ?: -1
-    }.getOrDefault(-1)
+    }.onFailure { logFailure("updateToward", it) }.getOrDefault(-1)
     fun available(): Boolean = api?.launchProfile != null
     /** Launch from a world [origin] along a world [forward] (a ground launcher's muzzle frame). */
     fun launchAt(vehicle: VehicleEntity, player: ServerPlayer, channel: String, origin: Vec3, forward: Vec3,
@@ -86,7 +101,7 @@ object AircraftMissileLauncher {
                     p.vulnerability, profile) == true
             }
         }
-    }.getOrDefault(false)
+    }.onFailure { logFailure("launchAt", it) }.getOrDefault(false)
     /** The entity the [channel] lock holds, read before launch so the missile warning knows whom it homes on. */
     private fun lockedTarget(vehicle: VehicleEntity, channel: String): java.util.UUID? =
         state(vehicle, channel).takeIf { it.hasUUID("TargetUUID") }?.getUUID("TargetUUID")
@@ -122,5 +137,5 @@ object AircraftMissileLauncher {
                 else method?.invoke(null, *args) == true
             }
         }
-    }.getOrDefault(false)
+    }.onFailure { logFailure("launch", it) }.getOrDefault(false)
 }

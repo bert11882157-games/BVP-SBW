@@ -1,6 +1,7 @@
 import json,glob,os,collections,hashlib,sys
-OUT=sys.argv[1] if len(sys.argv)>1 else '/home/claude/tnt/munition_inventory.tsv'
-os.chdir('/home/claude/bvp-sbw')
+HERE=os.path.dirname(os.path.abspath(__file__))
+OUT=sys.argv[1] if len(sys.argv)>1 else os.path.join(HERE,'munition_inventory.tsv')
+os.chdir(os.path.normpath(os.path.join(HERE,'..','..','..')))
 B='bvp/src/generated/resources/data/berts_vehicle_pack/sbw'; S='sbw/src/main/resources/data/superbwarfare/sbw'
 lang={}
 for f in ('bvp/src/generated/resources/assets/berts_vehicle_pack/lang/en_us.json','sbw/src/main/resources/assets/superbwarfare/lang/en_us.json'): lang.update(json.load(open(f)))

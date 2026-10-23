@@ -1,0 +1,26 @@
+{
+  "Schema": 1,
+  "Name": "UB-32A-24 · 32 × S-5K (AI)",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/heli_ub32.geo.json",
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/heli_stores.png",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "MountAxis": [
+    0.0,
+    -0.275,
+    0.0
+  ],
+  "LaunchOffset": [
+    0.0,
+    -0.275,
+    0.0
+  ],
+  "Category": "ROCKET_POD",
+  "Capacity": 32,
+  "MassKg": 8.2287,
+  "AmmoItem": "superbwarfare:small_unguided_rocket"
+}

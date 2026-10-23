@@ -1,0 +1,26 @@
+{
+  "Schema": 1,
+  "Name": "S-24B · APU-68 rail (AI)",
+  "Model": "berts_vehicle_pack:custom_geo/aircraft_stores/heli_s24.geo.json",
+  "Texture": "berts_vehicle_pack:textures/aircraft_stores/heli_stores.png",
+  "ModelForward": "-Z",
+  "MountAnchor": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "MountAxis": [
+    0.0,
+    -0.22,
+    0.0
+  ],
+  "LaunchOffset": [
+    0.0,
+    -0.22,
+    0.0
+  ],
+  "Category": "ROCKET_POD",
+  "Capacity": 1,
+  "MassKg": 270.0,
+  "AmmoItem": "superbwarfare:medium_unguided_rocket"
+}
