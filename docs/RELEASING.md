@@ -43,3 +43,10 @@ The JARs it names must live at a permanent location, `work/claude_jobs/compiler-
 candidate folder under `work/production_repository_snapshots/`: those folders are cleaned up, and a manifest pointing
 into a deleted one fails the build step with ENOENT (as it did for 0.11.122beta, before packaging, so no version was
 spent). If a pin must change, copy the new JAR into `compiler-deps/` and update its size and hash together.
+
+## Contract lock-in tests
+
+The SBW test suite includes `ContractSnapshotTest`, which fails when a registry ID, packet, synched-data field, NBT or
+config key is removed or changed. Use strict mode (`-Pcontract.strict=true`) plus `tools/jar_compare/jar_compare.py`
+for behaviour-neutral refactors. Regenerate its golden files only for a reviewed contract change; see
+[CONTRACT_TESTS.md](development/CONTRACT_TESTS.md).
