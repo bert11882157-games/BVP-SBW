@@ -895,8 +895,12 @@ def bar_v(d, im):
 PANEL_F = Panel(p0=(0.0, -0.40, 0.585), lean=8, hinge=0.30, wall_end=WALL_X, top_c=-0.140, top_k=0.17, top_h=-0.175,
                 top_w=-0.44, bot_c=-0.77, bot_w=CONSOLE_ABS - EYE_F[1])
 # REAR: under the ledge on the block's front face (centre 3.208, sides 3.163), the MPDs on the wings
-PANEL_R = Panel(p0=(0.0, -0.45, 0.625), lean=8, hinge=0.225, wall_end=WALL_X, top_c=-0.162, top_k=0.12, top_h=-0.205,
-                top_w=-0.215, bot_c=-0.74, bot_w=CONSOLE_ABS - EYE_R[1])
+PANEL_R = Panel(p0=(0.0, -0.45, 0.580), lean=14, hinge=0.225, wall_end=WALL_X, top_c=-0.075, top_k=0.12, top_h=-0.115,
+                top_w=-0.165, bot_c=-0.74, bot_w=CONSOLE_ABS - EYE_R[1])
+# (the WSO's panel is TALL and leans back 14 degrees (its top stays flush with the block's front face at z 3.267), so the four displays face the crew's eyes; a glareshield
+# lip hoods them: it juts 8 cm out toward the WSO from the panel's top edge)
+LIP_R = (PANEL_R.CENTRE.at(0, PANEL_R.TOP_C)[2] - 0.08,
+         min(PANEL_R.LEFT.at(a, PANEL_R.LEFT.top(a))[2] for a in (0.0, PANEL_R.WING_LEN)) - 0.08)
 
 C_, R_, L_ = 'C', 'R', 'L'
 # (name, facet, a, y, spec, label). Positions: a along the facet (see Facet.at), y from the eye. Specs: ('game', kind, dia) a live
@@ -928,15 +932,15 @@ LAYOUT_F = [
     ('oxy',    R_, 0.105, -0.610, ('game', 'FILLER_OXYGEN', 0.040), 'oxygen quantity'),
 ]
 LAYOUT_R = [
-    ('caut',    C_, 0.000, -0.188, ('paint_rect', 0.400, 0.034), 'caution light row'),
-    ('mpcd_l',  C_, -0.106, -0.335, ('display', 'PFD', 0.135, 'LCD'), 'left MPCD'),
-    ('mpcd_r',  C_, 0.106, -0.335, ('display', 'RADAR', 0.135, 'LCD'), 'right MPCD'),
+    ('caut',    C_, 0.000, -0.118, ('paint_rect', 0.400, 0.034), 'caution light row'),
+    ('mpcd_l',  C_, -0.106, -0.275, ('display', 'PFD', 0.135, 'LCD'), 'left MPCD'),
+    ('mpcd_r',  C_, 0.106, -0.275, ('display', 'RADAR', 0.135, 'LCD'), 'right MPCD'),
     ('ufc',     C_, 0.000, -0.575, ('paint_rect', 0.140, 0.150), 'up-front controller'),
     ('r_alt',   C_, -0.155, -0.520, ('game', 'ALTIMETER', 0.058), 'standby altimeter'),
     ('r_asi',   C_, 0.155, -0.520, ('game', 'AIRSPEED', 0.058), 'standby airspeed'),
-    ('mpd_l',   L_, 0.165, -0.340, ('display', 'RADAR', 0.125, 'CRT'), 'left MPD'),
+    ('mpd_l',   L_, 0.165, -0.285, ('display', 'RADAR', 0.125, 'CRT'), 'left MPD'),
     ('tews',    L_, 0.165, -0.545, ('paint_rect', 0.150, 0.150), 'TEWS control'),
-    ('mpd_r',   R_, 0.165, -0.340, ('display', 'STORES', 0.125, 'CRT'), 'right MPD'),
+    ('mpd_r',   R_, 0.165, -0.285, ('display', 'STORES', 0.125, 'CRT'), 'right MPD'),
     ('radar',   R_, 0.165, -0.545, ('paint_rect', 0.150, 0.150), 'radar / sensor control'),
 ]
 
@@ -1327,7 +1331,7 @@ def build_rear(atlas, sw, geo):
         m.flat(q, sw['coaming'], toward=[0, 0, 0])
     cache = {'bar_h': atlas.paint(96, 16, bar_h), 'bar_v': atlas.paint(16, 96, bar_v)}
     P = PANEL_R
-    build_panel(m, atlas, sw, P, LAYOUT_R, 'ufc_r', 1, gauges, displays, 5, cache, lip=(0.677, 0.677))
+    build_panel(m, atlas, sw, P, LAYOUT_R, 'ufc_r', 1, gauges, displays, 5, cache, lip=LIP_R)
     con_l = atlas.paint(64, 340, p_console(1, [0.11, 0.09, 0.13, 0.12, 0.10, 0.14, 0.09, 0.12], 23))
     con_r = atlas.paint(64, 340, p_console(-1, [0.09, 0.13, 0.11, 0.10, 0.14, 0.12, 0.09, 0.12], 24))
     kick = atlas.paint(180, 60, p_kick)
