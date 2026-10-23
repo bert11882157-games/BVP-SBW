@@ -501,7 +501,8 @@ def build(m, atlas, st, ppm=400, painters=None):
     lean = math.radians(g('SEAT_LEAN', 12))
     ax_b = (X, np.array([0, math.cos(lean), -math.sin(lean)]), np.array([0, math.sin(lean), math.cos(lean)]))
     base_bot = st.get('SEAT_FOOT', cu - 0.40 * sc)
-    m.box(P(0, (cu - 0.035 * sc + base_bot) / 2, sz), (X, Y, Z), (0.21 * sc, max(0.02, (cu - 0.035 * sc - base_bot) / 2),
+    base_top = cu - 0.035 * sc - 0.003                                 # (just under the cushion, not on it)
+    m.box(P(0, (base_top + base_bot) / 2, sz), (X, Y, Z), (0.21 * sc, max(0.02, (base_top - base_bot) / 2),
                                                                    0.23 * sc), sw['frame'])
     m.box(P(0, cu - 0.017 * sc, sz + 0.01), (X, Y, Z), (0.20 * sc, 0.018 * sc, 0.22 * sc), sw['cushion'], front=(1, 1, pan, -X, Z))
     for s in (1, -1):
@@ -531,7 +532,7 @@ def build(m, atlas, st, ppm=400, painters=None):
     if g('STICK_Z') is not None:
         kz, kf = st['STICK_Z'], st['STICK_FOOT']
         grip_y = cu + 0.30 * sc
-        m.box(P(0, kf + 0.04, kz), (X, Y, Z), (0.06 * sc, 0.04, 0.06 * sc), sw['black'])
+        m.box(P(0, kf + 0.042, kz), (X, Y, Z), (0.06 * sc, 0.04, 0.06 * sc), sw['black'])   # (2 mm off the floor plane)
         col_ax = (X, H.unit([0, 1, -0.10]), H.unit([0, 0.10, 1]))
         ln = grip_y - 0.06 * sc - (kf + 0.08)
         m.box(P(0, kf + 0.08 + ln / 2, kz + 0.01), col_ax, (0.014, ln / 2, 0.014), sw['metal'])
@@ -544,7 +545,7 @@ def build(m, atlas, st, ppm=400, painters=None):
 
     # -- the collective on the left
     if g('COLLECTIVE', True):
-        cx_ = 0.30 * sc
+        cx_ = g('COLLECTIVE_X', 0.30 * sc)
         y0 = max(cu - 0.12 * sc, st['FLOOR_Y'] + 0.07) if 'FLOOR_Y' in st else cu - 0.12 * sc   # (its pivot over the floor)
         p0, p1 = P(cx_, y0, sz - 0.10 * sc), P(cx_, cu + 0.12 * sc, sz + 0.32 * sc)
         d_ = H.unit(p1 - p0); up_ = H.unit(np.cross(d_, X))
