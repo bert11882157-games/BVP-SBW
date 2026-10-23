@@ -615,12 +615,22 @@ GERMAN = {
 }
 
 
+FRENCH = {
+    'MASTER|CAUTION': 'PANNE', 'GEAR|DOWN': 'TRAIN|SORTI', 'GEAR|UNSAFE': 'TRAIN|TRANSIT', 'FUEL|LOW': 'BINGO',
+    'OIL|PRESS': 'PRESS|HUILE', 'ENGINE|FIRE': 'FEU|MOTEUR', 'GEN': 'ALTERN', 'FIRE': 'FEU', 'ENG|OUT': 'MOTEUR',
+    'HYD|PRESS': 'HYDR', 'STALL': 'INCID', 'OVER G': 'FACTEUR|CHARGE', 'RWR|LOCK': 'ALERTE|RADAR', 'LAUNCH': 'MISSILE',
+    'LOW|ALT': 'ALTI|BASSE', 'DAMAGE': 'AVARIE', 'A/B': 'PC', 'OVER|SPEED': 'VITESSE|MAXI', 'SPD|BRK': 'AÉRO|FREINS',
+    'AMMO|LOW': 'MUNITIONS',
+}
+
+
 def lamps_of(name, pal_name):
     """the lamp set [name] with its legends in the cockpit's language: Russian for the Soviet palettes, German for the
-    Luftwaffe's, else English"""
+    Luftwaffe's, French for the Armee de l'Air's, else English"""
     spec = LAMP_SETS[name]
     cyr = pal_name.startswith('soviet') or pal_name == 'ussr_ww2'
-    lang = RUSSIAN if cyr else GERMAN if pal_name.startswith('luftwaffe') else {}
+    lang = (RUSSIAN if cyr else GERMAN if pal_name.startswith('luftwaffe') else
+            FRENCH if pal_name.startswith('armee_air') else {})
     return spec['columns'], [{'Text': lang.get(t, t), 'Condition': c, 'Colour': k} for t, c, k in spec['lamps']]
 
 
