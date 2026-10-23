@@ -531,7 +531,7 @@
         "Ter3Outer",
         "PassengerGun1",
         "PassengerGun2",
-        "PassengerGun3"
+        "BellyGun"
       ],
       "CanRotateHead": true,
       "CameraPos": {
@@ -581,7 +581,7 @@
       "Weapons": [
         "PassengerGun1",
         "PassengerGun2",
-        "PassengerGun3",
+        "BellyGun",
         "Lau3aInner",
         "Lau3aOuter",
         "Ter3Outer"
@@ -693,7 +693,7 @@
       ],
       "ProjectileBeltAmmoType": [],
       "ShootPos": {
-        "Transform": "WeaponStationBarrel",
+        "Transform": "Barrel",
         "Positions": [
           [
             0.09694,
@@ -804,7 +804,7 @@
       ],
       "ProjectileBeltAmmoType": [],
       "ShootPos": {
-        "Transform": "WeaponStationBarrel",
+        "Transform": "Barrel",
         "Positions": [
           [
             -0.09694,
@@ -835,117 +835,6 @@
         ],
         "EffectDirectionAttachments": [
           "gunner_muzzle_2"
-        ]
-      },
-      "SoundRadius": 8,
-      "BeltFed": true,
-      "OverheatEnabled": false
-    },
-    "PassengerGun3": {
-      "Crosshair": "@VehicleCommonGun",
-      "DefaultFireMode": "Auto",
-      "AvailableFireModes": "Auto",
-      "ProjectileAmount": 1,
-      "AmmoCostPerShoot": 1,
-      "NormalReloadTime": 400,
-      "EmptyReloadTime": 400,
-      "AutoReload": true,
-      "WithdrawAmmoWhenChangeSlot": false,
-      "Gravity": 0.05,
-      "ProjectileLife": 400,
-      "AddShooterDeltaMovement": true,
-      "HeatPerShoot": 0,
-      "Spread": 0.21,
-      "ExplosionDamage": 0,
-      "Name": "30 mm XM140",
-      "RPM": 450,
-      "Magazine": 2010,
-      "Damage": 78.33457777777778,
-      "SoundInfo": {
-        "Fire1PGain": 0.5,
-        "Fire3PGain": 0.5,
-        "Fire3PFarGain": 0.5,
-        "Fire3PVeryFarGain": 0.5,
-        "Fire1P": "berts_vehicle_pack:ah_64d_m230_fire",
-        "Fire3P": "berts_vehicle_pack:ah_64d_m230_fire",
-        "Fire3PFar": "berts_vehicle_pack:ah_64d_m230_fire",
-        "Fire3PVeryFar": "berts_vehicle_pack:ah_64d_m230_fire",
-        "Volume": 1.0
-      },
-      "Projectile": {
-        "Type": "superbwarfare:small_cannon_shell",
-        "Profile": "berts_vehicle_pack:aircraft_rounds/ah56a/xm140_hedp"
-      },
-      "ShellType": "HE",
-      "Velocity": 41.91,
-      "ApDurability": 51,
-      "ExplosionRadius": 1.91,
-      "TntEquivalentKg": 0.051,
-      "NominalBallistics": {
-        "Supported": true,
-        "ProjectileType": "superbwarfare:small_cannon_shell",
-        "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/ah56a/xm140_hedp",
-        "ProjectileLife": 400
-      },
-      "AmmoType": [
-        {
-          "Ammo": "superbwarfare:small_shell_ap",
-          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
-          "Override": {
-            "Projectile": {
-              "Type": "superbwarfare:small_cannon_shell",
-              "Profile": "berts_vehicle_pack:aircraft_rounds/ah56a/xm140_hedp"
-            },
-            "ShellType": "HE",
-            "Velocity": 41.91,
-            "ApDurability": 51,
-            "Damage": 78.33457777777778,
-            "ExplosionDamage": 0,
-            "ExplosionRadius": 1.91,
-            "TntEquivalentKg": 0.051,
-            "Name": "30 mm XM140",
-            "NominalBallistics": {
-              "Supported": true,
-              "ProjectileType": "superbwarfare:small_cannon_shell",
-              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/ah56a/xm140_hedp",
-              "ProjectileLife": 400
-            }
-          }
-        }
-      ],
-      "ProjectileBeltAmmoType": [],
-      "ShootPos": {
-        "Transform": "WeaponStationBarrel",
-        "Positions": [
-          [
-            0.0,
-            0.12925,
-            0.38775
-          ]
-        ],
-        "Directions": [
-          [
-            0,
-            0,
-            1
-          ]
-        ],
-        "ViewPosition": [
-          0.0,
-          0.12925,
-          0.38775
-        ],
-        "MuzzleAttachments": [
-          "gunner_muzzle_3"
-        ],
-        "MuzzleDirectionAttachments": [
-          "gunner_muzzle_3"
-        ],
-        "EffectAttachments": [
-          "gunner_muzzle_3"
-        ],
-        "EffectDirectionAttachments": [
-          "gunner_muzzle_3"
         ]
       },
       "SoundRadius": 8,
@@ -1304,6 +1193,117 @@
         "ProjectileProfile": "berts_vehicle_pack:ah_1g_cobra/rocket/default",
         "ProjectileLife": 100
       }
+    },
+    "BellyGun": {
+      "Crosshair": "@VehicleCommonGun",
+      "DefaultFireMode": "Auto",
+      "AvailableFireModes": "Auto",
+      "ProjectileAmount": 1,
+      "AmmoCostPerShoot": 1,
+      "NormalReloadTime": 400,
+      "EmptyReloadTime": 400,
+      "AutoReload": true,
+      "WithdrawAmmoWhenChangeSlot": false,
+      "Gravity": 0.05,
+      "ProjectileLife": 400,
+      "AddShooterDeltaMovement": true,
+      "HeatPerShoot": 0,
+      "Spread": 0.21,
+      "ExplosionDamage": 0,
+      "Name": "30 mm XM140",
+      "RPM": 450,
+      "Magazine": 2010,
+      "Damage": 78.33457777777778,
+      "SoundInfo": {
+        "Fire1PGain": 0.5,
+        "Fire3PGain": 0.5,
+        "Fire3PFarGain": 0.5,
+        "Fire3PVeryFarGain": 0.5,
+        "Fire1P": "berts_vehicle_pack:ah_64d_m230_fire",
+        "Fire3P": "berts_vehicle_pack:ah_64d_m230_fire",
+        "Fire3PFar": "berts_vehicle_pack:ah_64d_m230_fire",
+        "Fire3PVeryFar": "berts_vehicle_pack:ah_64d_m230_fire",
+        "Volume": 1.0
+      },
+      "Projectile": {
+        "Type": "superbwarfare:small_cannon_shell",
+        "Profile": "berts_vehicle_pack:aircraft_rounds/ah56a/xm140_hedp"
+      },
+      "ShellType": "HE",
+      "Velocity": 41.91,
+      "ApDurability": 51,
+      "ExplosionRadius": 1.91,
+      "TntEquivalentKg": 0.051,
+      "NominalBallistics": {
+        "Supported": true,
+        "ProjectileType": "superbwarfare:small_cannon_shell",
+        "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/ah56a/xm140_hedp",
+        "ProjectileLife": 400
+      },
+      "AmmoType": [
+        {
+          "Ammo": "superbwarfare:small_shell_ap",
+          "ConsumptionItem": "superbwarfare:medium_autocannon_shell",
+          "Override": {
+            "Projectile": {
+              "Type": "superbwarfare:small_cannon_shell",
+              "Profile": "berts_vehicle_pack:aircraft_rounds/ah56a/xm140_hedp"
+            },
+            "ShellType": "HE",
+            "Velocity": 41.91,
+            "ApDurability": 51,
+            "Damage": 78.33457777777778,
+            "ExplosionDamage": 0,
+            "ExplosionRadius": 1.91,
+            "TntEquivalentKg": 0.051,
+            "Name": "30 mm XM140",
+            "NominalBallistics": {
+              "Supported": true,
+              "ProjectileType": "superbwarfare:small_cannon_shell",
+              "ProjectileProfile": "berts_vehicle_pack:aircraft_rounds/ah56a/xm140_hedp",
+              "ProjectileLife": 400
+            }
+          }
+        }
+      ],
+      "ProjectileBeltAmmoType": [],
+      "ShootPos": {
+        "Transform": "WeaponStationBarrel",
+        "Positions": [
+          [
+            0.0,
+            0.0,
+            1.15625
+          ]
+        ],
+        "Directions": [
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "ViewPosition": [
+          0.0,
+          0.0,
+          1.15625
+        ],
+        "MuzzleAttachments": [
+          "belly_muzzle_1"
+        ],
+        "MuzzleDirectionAttachments": [
+          "belly_muzzle_1"
+        ],
+        "EffectAttachments": [
+          "belly_muzzle_1"
+        ],
+        "EffectDirectionAttachments": [
+          "belly_muzzle_1"
+        ]
+      },
+      "SoundRadius": 8,
+      "BeltFed": true,
+      "OverheatEnabled": false
     }
   },
   "HUDColor": "0xFFC700",
@@ -1375,7 +1375,7 @@
   "TerrainCompat": [],
   "Attachments": {
     "gunner_muzzle_1": {
-      "Parent": "WeaponStationBarrel",
+      "Parent": "Barrel",
       "Position": [
         0.09694,
         -0.12925,
@@ -1388,24 +1388,11 @@
       ]
     },
     "gunner_muzzle_2": {
-      "Parent": "WeaponStationBarrel",
+      "Parent": "Barrel",
       "Position": [
         -0.09694,
         -0.12925,
         0.45237
-      ],
-      "Direction": [
-        0,
-        0,
-        1
-      ]
-    },
-    "gunner_muzzle_3": {
-      "Parent": "WeaponStationBarrel",
-      "Position": [
-        0.0,
-        0.12925,
-        0.38775
       ],
       "Direction": [
         0,
@@ -1440,7 +1427,7 @@
       ]
     },
     "gunner_optic": {
-      "Parent": "WeaponStationBarrel",
+      "Parent": "Barrel",
       "Position": [
         0.0,
         0.48469,
@@ -1581,45 +1568,91 @@
         0,
         1
       ]
+    },
+    "belly_muzzle_1": {
+      "Parent": "WeaponStationBarrel",
+      "Position": [
+        0.0,
+        0.0,
+        1.15625
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
+    },
+    "belly_optic": {
+      "Parent": "WeaponStationBarrel",
+      "Position": [
+        0.0,
+        0.0,
+        0.25
+      ],
+      "Direction": [
+        0,
+        0,
+        1
+      ]
     }
   },
   "PassengerWeaponStationPos": [
     0.0,
-    1.93875,
-    9.896
+    0.905,
+    6.375
   ],
   "PassengerWeaponStationBarrelPos": [
     0,
-    0.54931,
+    -0.12375,
     0
   ],
   "PassengerWeaponStationControllerIndex": 1,
   "PassengerWeaponStationTurnSpeed": [
-    21.74,
-    86.96
+    45,
+    60
   ],
   "PassengerWeaponStationYawRange": [
-    -100,
-    100
+    -180,
+    180
   ],
   "PassengerWeaponStationPitchRange": [
-    -70,
-    18
+    -60,
+    3
   ],
   "RemoteWeaponStation": true,
   "PassengerWeaponStationBinding": {
     "Schema": "berts_vehicle_pack:passenger_bed_weapon_station/v1",
     "Parent": "HULL",
     "BaseYawDegrees": 0,
-    "WeaponId": "PassengerGun1",
+    "WeaponId": "BellyGun",
     "WeaponIds": [
-      "PassengerGun1",
-      "PassengerGun2",
-      "PassengerGun3"
+      "BellyGun"
     ],
     "WeaponKind": "AUTOCANNON",
-    "CameraAttachment": "gunner_optic",
-    "MuzzleAttachment": "gunner_muzzle_1"
+    "FireExclusions": [
+      {
+        "Yaw": [
+          150,
+          180
+        ],
+        "Pitch": [
+          -16,
+          3
+        ]
+      },
+      {
+        "Yaw": [
+          -180,
+          -150
+        ],
+        "Pitch": [
+          -16,
+          3
+        ]
+      }
+    ],
+    "CameraAttachment": "belly_optic",
+    "MuzzleAttachment": "belly_muzzle_1"
   },
   "EngineSound": "berts_vehicle_pack:ah_1f_engine_loop",
   "AircraftTerrainContact": {
@@ -1671,5 +1704,28 @@
       -3.2
     ],
     "FlareEjectionSpeed": 0.7
-  }
+  },
+  "TurretPos": [
+    0.0,
+    1.93875,
+    9.896
+  ],
+  "BarrelPos": [
+    0,
+    0.54931,
+    0
+  ],
+  "TurretTurnSpeed": [
+    21.74,
+    86.96
+  ],
+  "TurretYawRange": [
+    -100,
+    100
+  ],
+  "TurretPitchRange": [
+    -70,
+    18
+  ],
+  "TurretControllerIndex": 1
 }
