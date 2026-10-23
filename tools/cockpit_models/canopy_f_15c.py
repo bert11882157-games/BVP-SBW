@@ -334,21 +334,20 @@ def windscreen_frame_paths(z_start):
 
 
 def mirror_boxes(m, y_arch, z_face):
-    """the rear-view mirror under the front arch's crown: a 25 x 8 cm dark face in a 1 cm frame, 2.5 cm deep, on a short stalk;
+    """the rear-view mirror under the front arch's crown: a 25 x 8 cm dark face in a 1 cm frame, 2.5 cm deep;
     y_arch is the arch's lower edge at the crown, z_face the arch's rear face there"""
     w, h, d, t = 0.25, 0.08, 0.025, 0.0135
-    y1 = y_arch - 0.012; y0 = y1 - h               # the housing's top 12 mm under the arch (the stalk spans it)
-    z1 = z_face + 0.003; z0 = z1 - d               # the face looks back at the pilot (-z); the stalk bites 3 mm into the arch
+    y1 = y_arch + 0.010; y0 = y1 - h               # the housing's top 10 mm into the arch (the box hangs straight off it)
+    z1 = z_face + 0.003; z0 = z1 - d               # the face looks back at the pilot (-z); the housing's front bites 3 mm into the arch
     m.box((-w / 2, y0, z0), (w / 2, y1, z1), 'mfr')                                       # the housing: a plain box, the frame round the face
-    m.box((-w / 2 + t, y0 + t, z0 - 0.002), (w / 2 - t, y1 - t, z0 + 0.0005), 'mirror')   # the mirror face, 2 mm proud of the housing, looking -z
-    m.box((-0.012, y1 - 0.006, z1 - 0.024), (0.012, y_arch + 0.015, z1 - 0.004), 'mfr')   # the stalk up into the arch
+    m.box((-w / 2 + t, y0 + t, z0 - 0.014), (w / 2 - t, y1 - t, z0 + 0.004), 'mirror')   # the mirror face: a dark plate 14 mm proud of the housing, looking -z
 
 RAIL_Z = [2.14, 2.20, 2.30, 2.50, 2.615, 2.655, 2.80, 3.10, 3.202, 3.242, 3.40, 3.609, 3.649, 4.00, 4.151, 4.191, 4.40, 4.80, 5.00, 5.13]
 RAIL_W = [(2.14, 0.120), (3.00, 0.100), (4.20, 0.090), (5.13, 0.080)]       # the rail's width (inner face to outer face)
 # its underside, 8 mm into the sill slab that the hull's own steps make (it steps down toward the nose in short ramps, clear of the hull's steps)
 RAIL_BOT = [(2.14, 3.126), (2.615, 3.126), (2.655, 3.035), (3.202, 3.035), (3.242, 2.968), (3.609, 2.968), (3.649, 2.925),
             (4.151, 2.925), (4.191, 2.900), (5.13, 2.900)]
-RAIL_IN = 0.015                  # the rail's top reaches this far inboard of the glass foot's line
+RAIL_IN = 0.045                  # the rail's top reaches this far inboard of the glass foot's line
 
 
 def rail_rects(side):
