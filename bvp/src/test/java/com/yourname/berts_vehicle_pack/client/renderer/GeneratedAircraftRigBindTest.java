@@ -15,7 +15,8 @@ import java.util.List;
 /**
  * Binds every generated aircraft rig against its generated geometry with the production binder, so a bad pivot,
  * parent chain or steering entry fails here instead of silently dropping the whole rig in game. Also pins the
- * rudder / nose-wheel sense to the flight model's yaw.
+ * rudder / nose-wheel sense to the flight model's yaw, and binds each DefensiveStationPresentation with
+ * bindStation (a non-null station, no IllegalArgumentException).
  * Usage: GeneratedAircraftRigBindTest <assets/berts_vehicle_pack dir>
  */
 public final class GeneratedAircraftRigBindTest {
@@ -26,7 +27,8 @@ public final class GeneratedAircraftRigBindTest {
         net.minecraft.server.Bootstrap.bootStrap();
         Path assets = Path.of(args[0]);
         List<String> failures = new ArrayList<>();
-        int bound = 0, steered = 0;
+        int bound = 0, steered = 0, stations = 0;
+        List<String> stationIds = new ArrayList<>();
         try (var files = Files.list(assets.resolve("sbw/vehicles"))) {
             for (Path vehicle : files.sorted().toList()) {
                 String id = vehicle.getFileName().toString().replace(".json", "");
@@ -72,14 +74,34 @@ public final class GeneratedAircraftRigBindTest {
                             }
                         }
                     }
+                    // The renderer binds the defensive station right after the rig; a pivot that differs from the
+                    // geo's makes bindStation throw, which drops the station ("Aircraft rig skipped ... pivot
+                    // mismatch" in the log) and leaves its bones frozen.
+                    if (root.has("DefensiveStationPresentation")) {
+                        var stationWrapper = new com.google.gson.JsonObject();
+                        stationWrapper.add("DefensiveStationPresentation", root.get("DefensiveStationPresentation"));
+                        var presentation = GSON.fromJson(stationWrapper, DefaultVehicleResource.class)
+                                .getDefensiveStationPresentation();
+                        var station = AircraftRigAnimator.bindStation(presentation, binding, model::getBone);
+                        if (station == null) failures.add(id + ": station binding is null");
+                        else {
+                            stations++;
+                            stationIds.add(id);
+                            station.apply(true, 25, 15);
+                            station.restore();
+                        }
+                    }
                 } catch (IllegalArgumentException invalid) {
                     failures.add(id + ": " + invalid.getMessage());
                 }
             }
         }
+        // the Cheyenne's belly station must be bound, not merely absent from the scan (the 23230ae7 pivot regression)
+        if (!stationIds.contains("ah_56a")) failures.add("ah_56a: DefensiveStationPresentation not bound");
         failures.forEach(failure -> System.out.println("FAIL " + failure));
         System.out.println((failures.isEmpty() ? "PASS" : "FAIL") + " generated aircraft rigs: " + bound
-                + " bound, " + steered + " with nose steering, " + failures.size() + " failures");
+                + " bound, " + steered + " with nose steering, " + stations + " with a bound station, "
+                + failures.size() + " failures");
         if (!failures.isEmpty()) System.exit(1);
     }
 }
