@@ -22,3 +22,4 @@ Remove-Item Env:\MIRAGE_SKIN_REF
 & $py "$W\checks\restore_exterior.py" mirage_3e "$W\mirage3e\restore_list.json" wreck_fuselage_1__hull 2>&1 | select -last 2
 if (-not $NoCockpit) { & $py tools/cockpit_models/mirage_3e.py 2>&1 | select -last 2 }
 & $py tools/cockpit_models/nozzle_check.py mirage_3e --fix 2>&1 | select -last 2
+& $py tools/cockpit_models/mirage_3e_muzzle_sync.py 2>&1 | select -last 1

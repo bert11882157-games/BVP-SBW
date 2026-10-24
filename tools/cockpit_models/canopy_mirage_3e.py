@@ -515,7 +515,7 @@ def foot_blocks(b):
     z0, z1 = Z_ARCH[0] - 0.020, Z_ARCH[1] + 0.030
     fx, fy = foot_x(Z_ARCH[0]), foot_y(Z_ARCH[0])
     top = ys(x_out(Z_ARCH[1]), Z_ARCH[1]) - 0.006         # up into the arch leg
-    xo0, xo1 = rail_outer_x(z0), fx + 0.032
+    xo0, xo1 = rail_outer_x(z0), fx + 0.022                                              # the front end 1 cm proud of the strip's skirt (nearer flush opens a 12 mm sawtooth)
     for side in (1, -1):
         A = [V(side * (fx - 0.030), top, z0), V(side * (fx - 0.030), top, z1)]
         B = [V(side * xo0, top, z0), V(side * xo1, top, z1)]
@@ -600,6 +600,21 @@ def mirror_bars(b, seg=14):
                 b.quad(q, inside)
 
 
+HAND_FILL = os.path.join(HERE, 'mirage_3e_hand_fill.json')
+
+
+def hand_fill_bars(b):
+    """the hand-built filler pieces of mirage_3e_hand_fill.json: every vertex is written out there, vehicle-local blocks; this only emits
+    each face as written (the normal pointing away from the piece's own middle), in the frame's own colour"""
+    if not os.path.exists(HAND_FILL):
+        return
+    for piece in json.load(open(HAND_FILL, encoding='utf-8'))['pieces']:
+        v = [np.array(p, float) for p in piece['vertices']]
+        mid = np.mean(v, 0)
+        for f in piece['faces']:
+            b.quad([v[i] for i in f], mid)
+
+
 def frame_bars():
     b = Bars(UV_FRAME)
     rail_bars(b)
@@ -609,6 +624,7 @@ def frame_bars():
     arch_bars(b)
     windscreen_bars(b)
     mirror_bars(b)
+    hand_fill_bars(b)
     return b
 
 
