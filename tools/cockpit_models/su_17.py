@@ -49,7 +49,8 @@ METAL = (128, 132, 134)
 FLOOR = (46, 50, 50)
 
 # ---------------------------------------------------------------- the measured cockpit (metres from the eye)
-WALL_X = 0.450                 # the panel's wings end here, inside the side rails
+WALL_X = 0.380                 # the panel's wings end here, inside the canopy's sides (at 0.45 their top corners
+                               # stood out through the raised metal sides, 2026-10-24)
 CONSOLE_OUT = 0.550            # the consoles run out to the rails
 SILL_Y = -0.50                 # the rails' tops
 FLOOR_Y = -1.09
@@ -61,7 +62,7 @@ LEAN = math.radians(12)
 HINGE = 0.210                  # centre facet half width
 WING = math.radians(25)
 WING_LEN = (WALL_X - HINGE) / math.cos(WING)
-TOP_C, TOP_W = -0.240, -0.400  # centre facet top, wing top at its end
+TOP_C, TOP_W = -0.240, -0.420  # centre facet top, wing top at its end
 BOT_C, BOT_W = -0.700, -0.700
 FRONT_Z = 0.95                 # the coaming runs forward down the deck
 FRONT_Y_C, FRONT_Y_W = -0.300, -0.440
@@ -105,12 +106,12 @@ LAYOUT = [
     ('ias',     -1,   0.060, -0.341, ('game', 'AIRSPEED', 0.062), 'KUS airspeed'),
     ('aoa',     -1,   0.060, -0.420, ('game', 'AOA', 0.050), 'UUA AoA'),
     ('g',       -1,   0.060, -0.500, ('game', 'G_METER', 0.046), 'accelerometer'),
-    ('gear',    -1,   0.180, -0.450, ('paint_rect', 0.050, 0.100), 'gear control panel'),
-    ('weapons', -1,   0.150, -0.590, ('paint_rect', 0.130, 0.070), 'weapons panel'),
+    ('gear',    -1,   0.140, -0.450, ('paint_rect', 0.050, 0.100), 'gear control panel'),
+    ('weapons', -1,   0.100, -0.590, ('paint_rect', 0.130, 0.070), 'weapons panel'),
     ('spo15',    1,   0.060, -0.337, ('game', 'RWR', 0.058), 'SPO-15 Beryoza'),
     ('fuel',     1,   0.060, -0.420, ('game', 'FUEL_QTY', 0.052), 'fuel quantity'),
     ('hyd',      1,   0.060, -0.500, ('game', 'FILLER_HYDRAULIC', 0.044), 'hydraulic pressures'),
-    ('warning',  1,   0.165, -0.475, ('annunciator', 0.080, 0.120), 'warning lights'),
+    ('warning',  1,   0.130, -0.475, ('annunciator', 0.080, 0.120), 'warning lights'),
 ]
 
 
