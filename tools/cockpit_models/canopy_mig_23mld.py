@@ -92,11 +92,11 @@ def corner(d):
 def periscope_fin(m, sh, E, out, dark):
     """the periscope fairing on the hood's centre bar (the reference's top and side views, 2026-10-24 check): from
     above a shield, pointed at both ends and widest a little behind its middle, about 0.18 wide and 0.42 long on the
-    bar (about a fifth of the hood's width, as the reference), from a tenth of the hood back from the arch; from the side a low fin rising aft to its mirror housing, the
+    bar (about a fifth of the hood's width, as the reference), its point just behind the arch (the real MLD 3/4 photos); from the side a low fin rising aft to its mirror housing, the
     mirror's window dark on top"""
     # (z, half width, height over the hood's top): the shield's plan and the fin's side profile together
-    prof = [(0.17, 0.012, 0.0), (0.10, 0.06, 0.03), (0.02, 0.085, 0.06), (-0.07, 0.09, 0.09), (-0.13, 0.075, 0.09),
-            (-0.20, 0.04, 0.05), (-0.25, 0.012, 0.0)]
+    prof = [(0.21, 0.012, 0.0), (0.15, 0.06, 0.03), (0.07, 0.085, 0.06), (-0.02, 0.09, 0.09), (-0.08, 0.075, 0.09),
+            (-0.15, 0.04, 0.05), (-0.20, 0.012, 0.0)]
     secs = []
     for z, w, h in prof:
         base = sh.point(z, 1.0)[1] - 0.03               # (its foot sunk through the bar and the glass)
@@ -114,7 +114,7 @@ def periscope_fin(m, sh, E, out, dark):
         m.flat([E + np.array([w, b, z]), E + np.array([w, t, z]), E + np.array([-w, t, z]), E + np.array([-w, b, z])],
                out, toward=E + np.array([0, t, z + (1.0 if z > 0 else -1.0)]))
     # the mirror housing's window, dark, on the shield's back
-    z, y = -0.095, secs[3][3]
+    z, y = -0.045, secs[3][3]
     X, Y, Z = np.array([1.0, 0, 0]), np.array([0, 1.0, 0]), np.array([0, 0, 1.0])
     m.box(E + np.array([0, y + 0.003, z]), (X, Y, Z), (0.03, 0.003, 0.03), dark)
 
