@@ -87,9 +87,9 @@ PANE = (PANE_TOP, BASE, PANE_W, PANE_W, RING, PANE_FOOT, 2.6, 8.0)
 
 # the sill line under the side glass (WT: the hood's glass a band about 0.28 of its length tall, the windscreen's side
 # panes tapering down to its foot): (z, height over the eye)
-SILL_LINE = [(-0.45, -0.17), (SPLIT, -0.15), (BASE - 0.02, -0.36)]   # (WT's band would put the sill above this model's
-# eye, which sits low in its tall canopy; the sill is set 0.15 below the eye instead, the glass band about half the
-# hood's length tall, so the pilot still sees out sideways)
+SILL_LINE = [(-0.45, 0.03), (0.0, 0.05), (SPLIT, -0.04), (BASE - 0.02, -0.36)]   # (WT's exactly, bert 2026-10-24:
+# the hood's glass band 0.25 m tall, 0.28 of its length, under its top line; this model's eye sits low in its tall
+# canopy, so the sill comes out a few cm above the eye, the eye left where it is)
 
 
 def sill_s(sh):
