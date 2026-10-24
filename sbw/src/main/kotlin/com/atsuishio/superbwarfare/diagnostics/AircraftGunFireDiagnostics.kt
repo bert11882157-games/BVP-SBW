@@ -81,6 +81,9 @@ object AircraftGunFireDiagnostics {
 
     private data class Case(val seat: Int, val index: Int, val weapon: String, val supplied: Boolean)
 
+    /** The test player left (a client crash or lost connection): every later gun would read silent, so stop. */
+    private class PlayerLost : IllegalStateException("Test player left the server")
+
     private class Run(val player: ServerPlayer) {
         val level = player.serverLevel()
         val oldPosition = player.position()
@@ -186,6 +189,8 @@ object AircraftGunFireDiagnostics {
             attempt.addProperty("clientSendsClick", current.banHand(player) && current.hasWeapon(next.seat) &&
                 current.getGunData(next.seat, next.index) != null)
             attempt.addProperty("ammoBefore", ammoBefore)
+            // the scheduler only serves a live passenger: a controller that fell off reads as "no schedule"
+            attempt.addProperty("controllerAboard", player.isAlive && player.vehicle === current)
             if (data != null) {
                 attempt.addProperty("backpackAmmo", data.useBackpackAmmo())
                 attempt.addProperty("reloadingBefore", data.reloading())
@@ -237,6 +242,7 @@ object AircraftGunFireDiagnostics {
                     it.addProperty("weapon", now.weapon); it.addProperty("pass", attempt["pass"].asString)
                     it.addProperty("lastDecision", attempt["lastDecision"].asString)
                     it.add("decisions", decisions.deepCopy())
+                    it.addProperty("controllerAboard", attempt["controllerAboard"]?.asBoolean ?: false)
                     it.addProperty("directShot", attempt["directShot"].asString)
                 })
             }
@@ -250,6 +256,7 @@ object AircraftGunFireDiagnostics {
          * [HOLD_TICKS], release, cool.
          */
         fun tick(): Boolean {
+            if (player.isRemoved || player.hasDisconnected()) throw PlayerLost()
             if (vehicle == null) {
                 val next = queue.removeFirstOrNull() ?: return true
                 start(next); age = 0
@@ -280,12 +287,18 @@ object AircraftGunFireDiagnostics {
         fun finish(error: Exception?) {
             if (error != null) results.add(JsonObject().also { it.addProperty("error", error.toString()) })
             try {
-                if (case != null) runCatching { conclude() }
+                if (case != null && error !is PlayerLost) runCatching { conclude() }
                 end()
-                player.inventory.items.indices.forEach { player.inventory.items[it] = oldInventory[it] }
-                player.teleportTo(level, oldPosition.x, oldPosition.y, oldPosition.z, oldYaw, oldPitch)
+                if (error !is PlayerLost) {
+                    player.inventory.items.indices.forEach { player.inventory.items[it] = oldInventory[it] }
+                    player.teleportTo(level, oldPosition.x, oldPosition.y, oldPosition.z, oldYaw, oldPitch)
+                }
             } finally {
-                val status = if (error == null && silent.size() == 0) "PASS" else "FAIL"
+                val status = when {
+                    error is PlayerLost -> "ABORTED"
+                    error == null && silent.size() == 0 -> "PASS"
+                    else -> "FAIL"
+                }
                 val output = JsonObject().also {
                     it.addProperty("status", status); it.addProperty("gunsTested", tested)
                     it.add("silent", silent); it.add("aircraft", results)
