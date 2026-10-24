@@ -535,6 +535,8 @@
   "note_crew": "Eyes: pilot 10.6 px over the front seat cushion (cushion top y 41 source = 35.7 px), 4 px ahead of the headrest; RIO eye 3 px higher than that (the RIO instrument panel stands up to the eye line at the same height). Seats are the model's own Martin-Baker Mk 7 groups.",
   "note_flight": "Base: the pack F-14D (War Thunder f_14d: base 19,600 kg, 7,350 kg main fuel, 518 kg/m2, 2,215 km/h, 6,200 / 10,230 kgf per engine). The F-14C was a projected variant of the initial F-14B (Pratt & Whitney F401-PW-400, program ended April 1974) with advanced multi-mission avionics (Wikipedia, Grumman F-14 Tomcat, projected variants). F401-PW-400 vs F110-GE-400 (both Wikipedia): military 16,489 vs 16,333 lbf (x1.0096), afterburner 28,089 vs 26,950 lbf (x1.0423), so the D thrust is scaled by those ratios: 6,260 dry / 10,660 afterburner kgf per engine. Mass, fuel, wing and drag stay the D values (the F401 is 346 kg per engine lighter than the F110; not applied).",
   "clientSet": {
+    "AircraftRig.Surfaces.Bone=rudder_left.ControlWeights.RudderRight": -1,
+    "AircraftRig.Surfaces.Bone=rudder_right.ControlWeights.RudderRight": -1,
     "AfterburnerPresentation.Outlets": [
       {
         "Id": "afterburner_0",

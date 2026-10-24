@@ -474,6 +474,8 @@
   },
   "note_rig": "Rig on the model's own hinges (geo px = source x 0.7993 + [0, 7.993, 0.106]): ailerons (outer part 10/11 element) and the new flaps (inner element; down with the gear, 30 deg) on their leading edges, +-25 deg; elevators (parts 8/9) on their leading edge, +-25 deg; rudders (part 7 fin elements) on their leading edges, vertical hinge, +-25 deg; mains at the model's own wheel centres (r 5.995 px), the offset nose wheel (r 3.597 px, 0.44 m right of the centreline as on the real aircraft) on a new steering bone.",
   "clientSet": {
+    "AircraftRig.Surfaces.Bone=rudder_left.ControlWeights.RudderRight": 1,
+    "AircraftRig.Surfaces.Bone=rudder_right.ControlWeights.RudderRight": 1,
     "AircraftRig.Rotors.Bone=gear_wheel_0.DegreesPerTickAtFullSpeed": 152.93,
     "AircraftRig.Rotors.Bone=gear_wheel_1.DegreesPerTickAtFullSpeed": 152.93,
     "AircraftRig.Rotors.Bone=gear_wheel_2.DegreesPerTickAtFullSpeed": 254.88,
